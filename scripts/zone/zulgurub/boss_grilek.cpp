@@ -29,7 +29,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_grilekAI : public ScriptedAI
 {
-    boss_grilekAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_grilekAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 Avartar_Timer;
     uint32 GroundTremor_Timer;
@@ -55,7 +55,7 @@ struct MANGOS_DLL_DECL boss_grilekAI : public ScriptedAI
 
             target = SelectUnit(SELECT_TARGET_RANDOM,1);
 
-            if(m_creature->getThreatManager().getThreat(m_creature->getVictim()))
+            if (m_creature->getThreatManager().getThreat(m_creature->getVictim()))
                 m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-50);
             if (target)
                 AttackStart(target);
@@ -73,9 +73,9 @@ struct MANGOS_DLL_DECL boss_grilekAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_grilek(Creature *_Creature)
+CreatureAI* GetAI_boss_grilek(Creature* pCreature)
 {
-    return new boss_grilekAI (_Creature);
+    return new boss_grilekAI(pCreature);
 }
 
 void AddSC_boss_grilek()

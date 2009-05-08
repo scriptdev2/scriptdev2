@@ -49,9 +49,9 @@ float AttackArea[2][3]=
     {5510.4815, -2676.7112, 1480.4314}                      // Horde
 };
 
-hyjalAI::hyjalAI(Creature *c) : ScriptedAI(c)
+hyjalAI::hyjalAI(Creature* pCreature) : ScriptedAI(pCreature)
 {
-    pInstance = ((ScriptedInstance*)c->GetInstanceData());
+    pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
     Reset();
 }
 
@@ -225,9 +225,9 @@ void hyjalAI::SummonNextWave(Wave wave[18], uint32 Count, float Base[4][3])
     CheckTimer = 5000;
 }
 
-void hyjalAI::StartEvent(Player* player)
+void hyjalAI::StartEvent(Player* pPlayer)
 {
-    if (!player)
+    if (!pPlayer)
         return;
 
     Talk(BEGIN);
@@ -237,7 +237,7 @@ void hyjalAI::StartEvent(Player* player)
 
     NextWaveTimer = 15000;
     CheckTimer = 5000;
-    PlayerGUID = player->GetGUID();
+    PlayerGUID = pPlayer->GetGUID();
 
     m_creature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
 
@@ -302,8 +302,8 @@ void hyjalAI::UpdateWorldState(uint32 id, uint32 state)
     {
         for(Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
         {
-            if (Player* player = itr->getSource())
-                player->SendUpdateWorldState(id,state);
+            if (Player* pPlayer = itr->getSource())
+                pPlayer->SendUpdateWorldState(id,state);
         }
     }else debug_log("SD2: HyjalAI: UpdateWorldState, but PlayerList is empty");
 

@@ -684,16 +684,16 @@ bool ItemUse_item_tainted_core(Player* pPlayer, Item* pItem, SpellCastTargets co
 {
     ScriptedInstance* pInstance = ((ScriptedInstance*)pPlayer->GetInstanceData());
 
-    if(!pInstance)
+    if (!pInstance)
     {
         error_log("SD2: Lady Vashj Tainted Core: Instance Script Not Initialized");
         return true;
     }
 
     Creature* pVashj = (Creature*)(Unit::GetUnit((*pPlayer), pInstance->GetData64(DATA_LADYVASHJ)));
-    if(pVashj && ((boss_lady_vashjAI*)pVashj->AI())->m_uiPhase == 2)
+    if (pVashj && ((boss_lady_vashjAI*)pVashj->AI())->m_uiPhase == 2)
     {
-        if(sctTargets.getGOTarget() && sctTargets.getGOTarget()->GetTypeId()==TYPEID_GAMEOBJECT)
+        if (sctTargets.getGOTarget() && sctTargets.getGOTarget()->GetTypeId()==TYPEID_GAMEOBJECT)
         {
             uint32 uiIdentifier;
             uint8 uiChannelIdentifier;
@@ -724,7 +724,7 @@ bool ItemUse_item_tainted_core(Player* pPlayer, Item* pItem, SpellCastTargets co
                 return true;
 
             //get and remove channel
-            if(Unit* pChannel = Unit::GetUnit((*pVashj), ((boss_lady_vashjAI*)pVashj->AI())->m_auiShieldGeneratorChannel[uiChannelIdentifier]))
+            if (Unit* pChannel = Unit::GetUnit((*pVashj), ((boss_lady_vashjAI*)pVashj->AI())->m_auiShieldGeneratorChannel[uiChannelIdentifier]))
                 pChannel->setDeathState(JUST_DIED);         //calls Unsummon()
 
             pInstance->SetData(uiIdentifier, DONE);

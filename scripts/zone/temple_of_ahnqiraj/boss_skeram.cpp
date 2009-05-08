@@ -51,9 +51,9 @@ class ov_mycoordinates
 
 struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
 {
-    boss_skeramAI(Creature *c) : ScriptedAI(c)
+    boss_skeramAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         IsImage = false;
         Reset();
     }
@@ -301,9 +301,9 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_skeram(Creature *_Creature)
+CreatureAI* GetAI_boss_skeram(Creature* pCreature)
 {
-    return new boss_skeramAI (_Creature);
+    return new boss_skeramAI(pCreature);
 }
 
 void AddSC_boss_skeram()

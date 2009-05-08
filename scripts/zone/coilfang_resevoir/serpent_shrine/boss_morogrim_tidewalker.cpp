@@ -245,7 +245,7 @@ struct MANGOS_DLL_DECL boss_morogrim_tidewalkerAI : public ScriptedAI
 //Water Globule AI
 struct MANGOS_DLL_DECL mob_water_globuleAI : public ScriptedAI
 {
-    mob_water_globuleAI(Creature* c) : ScriptedAI(c) { Reset(); }
+    mob_water_globuleAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
     // timers
     uint32 m_uiCheck_Timer;

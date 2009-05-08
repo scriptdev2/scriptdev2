@@ -51,10 +51,10 @@ enum
 
 struct MANGOS_DLL_DECL npc_shadowfang_prisonerAI : public npc_escortAI
 {
-    npc_shadowfang_prisonerAI(Creature *c) : npc_escortAI(c)
+    npc_shadowfang_prisonerAI(Creature* pCreature) : npc_escortAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
-        uiNpcEntry = c->GetEntry();
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        uiNpcEntry = pCreature->GetEntry();
         Reset();
     }
 

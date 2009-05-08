@@ -31,7 +31,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
 {
-    boss_jandicebarovAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_jandicebarovAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 CurseOfBlood_Timer;
     uint32 Illusion_Timer;
@@ -68,7 +68,7 @@ struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
         }
         Rand = 0;
         Summoned = DoSpawnCreature(11439, RandX, RandY, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 60000);
-        if(Summoned)
+        if (Summoned)
             ((CreatureAI*)Summoned->AI())->AttackStart(victim);
     }
 
@@ -149,7 +149,7 @@ struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL mob_illusionofjandicebarovAI : public ScriptedAI
 {
-    mob_illusionofjandicebarovAI(Creature *c) : ScriptedAI(c) {Reset();}
+    mob_illusionofjandicebarovAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 Cleave_Timer;
 
@@ -176,14 +176,14 @@ struct MANGOS_DLL_DECL mob_illusionofjandicebarovAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_jandicebarov(Creature *_Creature)
+CreatureAI* GetAI_boss_jandicebarov(Creature* pCreature)
 {
-    return new boss_jandicebarovAI (_Creature);
+    return new boss_jandicebarovAI(pCreature);
 }
 
-CreatureAI* GetAI_mob_illusionofjandicebarov(Creature *_Creature)
+CreatureAI* GetAI_mob_illusionofjandicebarov(Creature* pCreature)
 {
-    return new mob_illusionofjandicebarovAI (_Creature);
+    return new mob_illusionofjandicebarovAI(pCreature);
 }
 
 void AddSC_boss_jandicebarov()

@@ -47,15 +47,15 @@ bool isEventActive()
     return false;
 }
 
-bool GossipHello_npc_innkeeper(Player *player, Creature *_Creature)
+bool GossipHello_npc_innkeeper(Player* pPlayer, Creature* pCreature)
 {
-    if (_Creature->isQuestGiver())
-        player->PrepareQuestMenu( _Creature->GetGUID() );
+    if (pCreature->isQuestGiver())
+        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
 
-    if (isEventActive()&& !player->GetAura(SPELL_TRICK_OR_TREATED,0))
+    if (isEventActive()&& !pPlayer->GetAura(SPELL_TRICK_OR_TREATED,0))
     {
         char* localizedEntry;
-        switch (player->GetSession()->GetSessionDbLocaleIndex())
+        switch (pPlayer->GetSession()->GetSessionDbLocaleIndex())
         {
             case 0:
                 localizedEntry=LOCALE_TRICK_OR_TREAT_0;
@@ -73,25 +73,25 @@ bool GossipHello_npc_innkeeper(Player *player, Creature *_Creature)
                 localizedEntry=LOCALE_TRICK_OR_TREAT_0;
         }
 
-        player->ADD_GOSSIP_ITEM(0, localizedEntry, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+HALLOWEEN_EVENTID);
+        pPlayer->ADD_GOSSIP_ITEM(0, localizedEntry, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+HALLOWEEN_EVENTID);
     }
 
-    player->TalkedToCreature(_Creature->GetEntry(),_Creature->GetGUID());
-    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
+    pPlayer->TalkedToCreature(pCreature->GetEntry(), pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_innkeeper(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+bool GossipSelect_npc_innkeeper(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
-    if (action == GOSSIP_ACTION_INFO_DEF+HALLOWEEN_EVENTID && isEventActive() && !player->GetAura(SPELL_TRICK_OR_TREATED,0))
+    if (action == GOSSIP_ACTION_INFO_DEF+HALLOWEEN_EVENTID && isEventActive() && !pPlayer->GetAura(SPELL_TRICK_OR_TREATED,0))
     {
-        player->CLOSE_GOSSIP_MENU();
-        player->CastSpell(player, SPELL_TRICK_OR_TREATED, true);
+        pPlayer->CLOSE_GOSSIP_MENU();
+        pPlayer->CastSpell(pPlayer, SPELL_TRICK_OR_TREATED, true);
 
         // either trick or treat, 50% chance
-        if(rand()%2)
+        if (rand()%2)
         {
-            player->CastSpell(player, SPELL_TREAT, true);
+            pPlayer->CastSpell(pPlayer, SPELL_TREAT, true);
         }
         else
         {
@@ -126,7 +126,7 @@ bool GossipSelect_npc_innkeeper(Player *player, Creature *_Creature, uint32 send
                     trickspell=24723;                       // skeleton costume
                     break;
             }
-            player->CastSpell(player, trickspell, true);
+            pPlayer->CastSpell(pPlayer, trickspell, true);
         }
         return true;                                        // prevent mangos core handling
     }

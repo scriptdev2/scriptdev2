@@ -33,7 +33,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_angerrelAI : public ScriptedAI
 {
-    boss_angerrelAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_angerrelAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 SunderArmor_Timer;
     uint32 ShieldBlock_Timer;
@@ -76,9 +76,9 @@ struct MANGOS_DLL_DECL boss_angerrelAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_angerrel(Creature *_Creature)
+CreatureAI* GetAI_boss_angerrel(Creature* pCreature)
 {
-    return new boss_angerrelAI (_Creature);
+    return new boss_angerrelAI(pCreature);
 }
 
 #define SPELL_SINISTERSTRIKE        15581
@@ -87,7 +87,7 @@ CreatureAI* GetAI_boss_angerrel(Creature *_Creature)
 
 struct MANGOS_DLL_DECL boss_doperelAI : public ScriptedAI
 {
-    boss_doperelAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_doperelAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 SinisterStrike_Timer;
     uint32 BackStab_Timer;
@@ -130,9 +130,9 @@ struct MANGOS_DLL_DECL boss_doperelAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_doperel(Creature *_Creature)
+CreatureAI* GetAI_boss_doperel(Creature* pCreature)
 {
-    return new boss_doperelAI (_Creature);
+    return new boss_doperelAI(pCreature);
 }
 
 #define SPELL_SHADOWBOLT        17483                       //Not sure if right ID
@@ -141,7 +141,7 @@ CreatureAI* GetAI_boss_doperel(Creature *_Creature)
 
 struct MANGOS_DLL_DECL boss_haterelAI : public ScriptedAI
 {
-    boss_haterelAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_haterelAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 ShadowBolt_Timer;
     uint32 ManaBurn_Timer;
@@ -197,9 +197,9 @@ struct MANGOS_DLL_DECL boss_haterelAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_haterel(Creature *_Creature)
+CreatureAI* GetAI_boss_haterel(Creature* pCreature)
 {
-    return new boss_haterelAI (_Creature);
+    return new boss_haterelAI(pCreature);
 }
 
 #define SPELL_MINDBLAST             15587
@@ -209,7 +209,7 @@ CreatureAI* GetAI_boss_haterel(Creature *_Creature)
 
 struct MANGOS_DLL_DECL boss_vilerelAI : public ScriptedAI
 {
-    boss_vilerelAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_vilerelAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 MindBlast_Timer;
     uint32 Heal_Timer;
@@ -261,9 +261,9 @@ struct MANGOS_DLL_DECL boss_vilerelAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_vilerel(Creature *_Creature)
+CreatureAI* GetAI_boss_vilerel(Creature* pCreature)
 {
-    return new boss_vilerelAI (_Creature);
+    return new boss_vilerelAI(pCreature);
 }
 
 #define SPELL_FROSTBOLT         16799
@@ -274,7 +274,7 @@ CreatureAI* GetAI_boss_vilerel(Creature *_Creature)
 
 struct MANGOS_DLL_DECL boss_seethrelAI : public ScriptedAI
 {
-    boss_seethrelAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_seethrelAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 FrostArmor_Timer;
     uint32 Frostbolt_Timer;
@@ -339,9 +339,9 @@ struct MANGOS_DLL_DECL boss_seethrelAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_seethrel(Creature *_Creature)
+CreatureAI* GetAI_boss_seethrel(Creature* pCreature)
 {
-    return new boss_seethrelAI (_Creature);
+    return new boss_seethrelAI(pCreature);
 }
 
 #define SPELL_HAMSTRING             9080
@@ -350,7 +350,7 @@ CreatureAI* GetAI_boss_seethrel(Creature *_Creature)
 
 struct MANGOS_DLL_DECL boss_gloomrelAI : public ScriptedAI
 {
-    boss_gloomrelAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_gloomrelAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 Hamstring_Timer;
     uint32 Cleave_Timer;
@@ -367,7 +367,7 @@ struct MANGOS_DLL_DECL boss_gloomrelAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //Hamstring_Timer
@@ -395,45 +395,45 @@ struct MANGOS_DLL_DECL boss_gloomrelAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_gloomrel(Creature *_Creature)
+CreatureAI* GetAI_boss_gloomrel(Creature* pCreature)
 {
-    return new boss_gloomrelAI (_Creature);
+    return new boss_gloomrelAI(pCreature);
 }
 
 #define GOSSIP_ITEM_TEACH_1 "Teach me the art of smelting dark iron"
 #define GOSSIP_ITEM_TEACH_2 "Continue..."
 #define GOSSIP_ITEM_TRIBUTE "I want to pay tribute"
 
-bool GossipHello_boss_gloomrel(Player *player, Creature *_Creature)
+bool GossipHello_boss_gloomrel(Player* pPlayer, Creature* pCreature)
 {
-    if (player->GetQuestRewardStatus(4083) == 1 && player->GetSkillValue(SKILL_MINING) >= 230 && !player->HasSpell(14891) )
-        player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_TEACH_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+    if (pPlayer->GetQuestRewardStatus(4083) == 1 && pPlayer->GetSkillValue(SKILL_MINING) >= 230 && !pPlayer->HasSpell(14891))
+        pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_TEACH_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
 
-    if (player->GetQuestRewardStatus(4083) == 0 && player->GetSkillValue(SKILL_MINING) >= 230)
-        player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_TRIBUTE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+    if (pPlayer->GetQuestRewardStatus(4083) == 0 && pPlayer->GetSkillValue(SKILL_MINING) >= 230)
+        pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_TRIBUTE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
 
     return true;
 }
 
-bool GossipSelect_boss_gloomrel(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+bool GossipSelect_boss_gloomrel(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
     switch (action)
     {
         case GOSSIP_ACTION_INFO_DEF+1:
-            player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_TEACH_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
-            player->SEND_GOSSIP_MENU(2606, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_TEACH_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
+            pPlayer->SEND_GOSSIP_MENU(2606, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+11:
-            player->CLOSE_GOSSIP_MENU();
-            _Creature->CastSpell(player, 14894, false);
+            pPlayer->CLOSE_GOSSIP_MENU();
+            pCreature->CastSpell(pPlayer, 14894, false);
             break;
         case GOSSIP_ACTION_INFO_DEF+2:
-            player->ADD_GOSSIP_ITEM(0, "[PH] Continue...", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 22);
-            player->SEND_GOSSIP_MENU(2604, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, "[PH] Continue...", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 22);
+            pPlayer->SEND_GOSSIP_MENU(2604, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+22:
-            player->CLOSE_GOSSIP_MENU();
-            if (ScriptedInstance* pInstance = (ScriptedInstance*)_Creature->GetInstanceData())
+            pPlayer->CLOSE_GOSSIP_MENU();
+            if (ScriptedInstance* pInstance = (ScriptedInstance*)pCreature->GetInstanceData())
             {
                 //are 5 minutes expected? go template may have data to despawn when used at quest
                 pInstance->DoRespawnGameObject(pInstance->GetData64(DATA_GO_CHALICE),MINUTE*5);
@@ -450,7 +450,7 @@ bool GossipSelect_boss_gloomrel(Player *player, Creature *_Creature, uint32 send
 
 struct MANGOS_DLL_DECL boss_doomrelAI : public ScriptedAI
 {
-    boss_doomrelAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_doomrelAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 ShadowVolley_Timer;
     uint32 Immolate_Timer;
@@ -490,13 +490,13 @@ struct MANGOS_DLL_DECL boss_doomrelAI : public ScriptedAI
         }
         Rand = 0;
         Summoned = DoSpawnCreature(16119, RandX, RandY, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 120000);
-        if(Summoned)
+        if (Summoned)
             ((CreatureAI*)Summoned->AI())->AttackStart(victim);
     }
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //ShadowVolley_Timer
@@ -530,7 +530,7 @@ struct MANGOS_DLL_DECL boss_doomrelAI : public ScriptedAI
         }else DemonArmor_Timer -= diff;
 
         //Summon Voidwalkers
-        if (!Voidwalkers && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 51 )
+        if (!Voidwalkers && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 51)
         {
             SummonVoidwalkers(m_creature->getVictim());
             SummonVoidwalkers(m_creature->getVictim());
@@ -542,33 +542,33 @@ struct MANGOS_DLL_DECL boss_doomrelAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_doomrel(Creature *_Creature)
+CreatureAI* GetAI_boss_doomrel(Creature* pCreature)
 {
-    return new boss_doomrelAI (_Creature);
+    return new boss_doomrelAI(pCreature);
 }
 
 #define GOSSIP_ITEM_CHALLENGE   "Your bondage is at an end, Doom'rel. I challenge you!"
 
-bool GossipHello_boss_doomrel(Player *player, Creature *_Creature)
+bool GossipHello_boss_doomrel(Player* pPlayer, Creature* pCreature)
 {
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_CHALLENGE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-    player->SEND_GOSSIP_MENU(2601, _Creature->GetGUID());
+    pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_CHALLENGE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+    pPlayer->SEND_GOSSIP_MENU(2601, pCreature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_boss_doomrel(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+bool GossipSelect_boss_doomrel(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
     switch (action)
     {
         case GOSSIP_ACTION_INFO_DEF+1:
-            player->ADD_GOSSIP_ITEM( 0, "[PH] Continue...", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-            player->SEND_GOSSIP_MENU(2605, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, "[PH] Continue...", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+            pPlayer->SEND_GOSSIP_MENU(2605, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+2:
-            player->CLOSE_GOSSIP_MENU();
+            pPlayer->CLOSE_GOSSIP_MENU();
             //start event here, below code just temporary
-            _Creature->setFaction(FACTION_HOSTILE);
+            pCreature->setFaction(FACTION_HOSTILE);
             break;
     }
     return true;

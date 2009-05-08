@@ -108,7 +108,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL flesh_tentacleAI : public Scripted_NoMovementAI
 {
-    flesh_tentacleAI(Creature *c) : Scripted_NoMovementAI(c), Parent(0) {Reset();}
+    flesh_tentacleAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature), Parent(0) {Reset();}
 
     uint64 Parent;
     uint32 CheckTimer;
@@ -130,16 +130,16 @@ struct MANGOS_DLL_DECL flesh_tentacleAI : public Scripted_NoMovementAI
 
 struct MANGOS_DLL_DECL eye_of_cthunAI : public Scripted_NoMovementAI
 {
-    eye_of_cthunAI(Creature *c) : Scripted_NoMovementAI(c)
+    eye_of_cthunAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
     {
-        pInst = (ScriptedInstance*)c->GetInstanceData();
-        if (!pInst)
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        if (!pInstance)
             error_log("SD2: No Instance eye_of_cthunAI");
 
         Reset();
     }
 
-    ScriptedInstance* pInst;
+    ScriptedInstance* pInstance;
 
     //Global variables
     uint32 PhaseTimer;
@@ -176,8 +176,8 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public Scripted_NoMovementAI
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
 
         //Reset Phase
-        if (pInst)
-            pInst->SetData(DATA_CTHUN_PHASE, 0);
+        if (pInstance)
+            pInstance->SetData(DATA_CTHUN_PHASE, 0);
     }
 
     void Aggro(Unit *who)
@@ -206,10 +206,10 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public Scripted_NoMovementAI
             return;
 
         //No instance
-        if (!pInst)
+        if (!pInstance)
             return;
 
-        switch (pInst->GetData(DATA_CTHUN_PHASE))
+        switch (pInstance->GetData(DATA_CTHUN_PHASE))
         {
             case 0:
             {
@@ -275,7 +275,7 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public Scripted_NoMovementAI
                 if (PhaseTimer < diff)
                 {
                     //Switch to Dark Beam
-                    pInst->SetData(DATA_CTHUN_PHASE, 1);
+                    pInstance->SetData(DATA_CTHUN_PHASE, 1);
 
                     m_creature->InterruptNonMeleeSpells(false);
 
@@ -336,7 +336,7 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public Scripted_NoMovementAI
                 if (PhaseTimer < diff)
                 {
                     //Switch to Eye Beam
-                    pInst->SetData(DATA_CTHUN_PHASE, 0);
+                    pInstance->SetData(DATA_CTHUN_PHASE, 0);
 
                     BeamTimer = 3000;
                     EyeTentacleTimer = 45000;               //Always spawns 5 seconds before Dark Beam
@@ -374,10 +374,10 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public Scripted_NoMovementAI
     void DamageTaken(Unit *done_by, uint32 &damage)
     {
         //No instance
-        if (!pInst)
+        if (!pInstance)
             return;
 
-        switch (pInst->GetData(DATA_CTHUN_PHASE))
+        switch (pInstance->GetData(DATA_CTHUN_PHASE))
         {
             case 0:
             case 1:
@@ -399,7 +399,7 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public Scripted_NoMovementAI
                 m_creature->SetUInt64Value(UNIT_FIELD_TARGET, 0);
 
                 //Death animation/respawning;
-                pInst->SetData(DATA_CTHUN_PHASE, 2);
+                pInstance->SetData(DATA_CTHUN_PHASE, 2);
 
                 m_creature->SetHealth(0);
                 damage = 0;
@@ -428,16 +428,16 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public Scripted_NoMovementAI
 
 struct MANGOS_DLL_DECL cthunAI : public Scripted_NoMovementAI
 {
-    cthunAI(Creature *c) : Scripted_NoMovementAI(c)
+    cthunAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
     {
-        pInst = (ScriptedInstance*)c->GetInstanceData();
-        if (!pInst)
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        if (!pInstance)
             error_log("SD2: No Instance eye_of_cthunAI");
 
         Reset();
     }
 
-    ScriptedInstance* pInst;
+    ScriptedInstance* pInstance;
 
     //Out of combat whisper timer
     uint32 WisperTimer;
@@ -491,8 +491,8 @@ struct MANGOS_DLL_DECL cthunAI : public Scripted_NoMovementAI
         m_creature->RemoveAurasDueToSpell(SPELL_TRANSFORM);
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
 
-        if (pInst)
-            pInst->SetData(DATA_CTHUN_PHASE, 0);
+        if (pInstance)
+            pInstance->SetData(DATA_CTHUN_PHASE, 0);
     }
 
     void Aggro(Unit *who)
@@ -546,7 +546,7 @@ struct MANGOS_DLL_DECL cthunAI : public Scripted_NoMovementAI
 
         //Get random but only if we have more than one unit on threat list
         if (temp.size() > 1)
-            advance ( i , rand() % (temp.size() - 1) );
+            advance (i , rand() % (temp.size() - 1));
 
         return (*j);
     }
@@ -586,10 +586,10 @@ struct MANGOS_DLL_DECL cthunAI : public Scripted_NoMovementAI
         m_creature->SetUInt64Value(UNIT_FIELD_TARGET, 0);
 
         //No instance
-        if (!pInst)
+        if (!pInstance)
             return;
 
-        switch (pInst->GetData(DATA_CTHUN_PHASE))
+        switch (pInstance->GetData(DATA_CTHUN_PHASE))
         {
             //Transition phase
             case 2:
@@ -598,7 +598,7 @@ struct MANGOS_DLL_DECL cthunAI : public Scripted_NoMovementAI
                 if (PhaseTimer < diff)
                 {
                     //Switch
-                    pInst->SetData(DATA_CTHUN_PHASE, 3);
+                    pInstance->SetData(DATA_CTHUN_PHASE, 3);
 
                     //Switch to c'thun model
                     m_creature->InterruptNonMeleeSpells(false);
@@ -656,7 +656,7 @@ struct MANGOS_DLL_DECL cthunAI : public Scripted_NoMovementAI
                 //Weaken
                 if (FleshTentaclesKilled > 1)
                 {
-                    pInst->SetData(DATA_CTHUN_PHASE, 4);
+                    pInstance->SetData(DATA_CTHUN_PHASE, 4);
 
                     DoScriptText(EMOTE_WEAKENED, m_creature);
                     PhaseTimer = 45000;
@@ -831,7 +831,7 @@ struct MANGOS_DLL_DECL cthunAI : public Scripted_NoMovementAI
                 if (PhaseTimer < diff)
                 {
                     //Switch
-                    pInst->SetData(DATA_CTHUN_PHASE, 3);
+                    pInstance->SetData(DATA_CTHUN_PHASE, 3);
 
                     //Remove red coloration
                     m_creature->RemoveAurasDueToSpell(SPELL_RED_COLORATION);
@@ -866,17 +866,17 @@ struct MANGOS_DLL_DECL cthunAI : public Scripted_NoMovementAI
     void JustDied(Unit* pKiller)
     {
         //Switch
-        if( pInst )
-            pInst->SetData(DATA_CTHUN_PHASE, 5);
+        if (pInstance)
+            pInstance->SetData(DATA_CTHUN_PHASE, 5);
     }
 
     void DamageTaken(Unit *done_by, uint32 &damage)
     {
         //No instance
-        if (!pInst)
+        if (!pInstance)
             return;
 
-        switch (pInst->GetData(DATA_CTHUN_PHASE))
+        switch (pInstance->GetData(DATA_CTHUN_PHASE))
         {
             case 3:
             {
@@ -912,7 +912,7 @@ struct MANGOS_DLL_DECL cthunAI : public Scripted_NoMovementAI
 
 struct MANGOS_DLL_DECL eye_tentacleAI : public Scripted_NoMovementAI
 {
-    eye_tentacleAI(Creature *c) : Scripted_NoMovementAI(c)
+    eye_tentacleAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
     {
         Reset();
         Unit* p = DoSpawnCreature(MOB_SMALL_PORTAL,0,0,0,0,TEMPSUMMON_CORPSE_DESPAWN, 0);
@@ -975,7 +975,7 @@ struct MANGOS_DLL_DECL eye_tentacleAI : public Scripted_NoMovementAI
 
 struct MANGOS_DLL_DECL claw_tentacleAI : public Scripted_NoMovementAI
 {
-    claw_tentacleAI(Creature *c) : Scripted_NoMovementAI(c)
+    claw_tentacleAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
     {
         Reset();
         if (Unit* p = DoSpawnCreature(MOB_SMALL_PORTAL,0.0f,0.0f,0.0f,0.0f,TEMPSUMMON_CORPSE_DESPAWN, 0))
@@ -1066,7 +1066,7 @@ struct MANGOS_DLL_DECL claw_tentacleAI : public Scripted_NoMovementAI
 
 struct MANGOS_DLL_DECL giant_claw_tentacleAI : public Scripted_NoMovementAI
 {
-    giant_claw_tentacleAI(Creature *c) : Scripted_NoMovementAI(c)
+    giant_claw_tentacleAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
     {
         Reset();
         if (Unit* p = DoSpawnCreature(MOB_GIANT_PORTAL,0.0f,0.0f,0.0f,0.0f,TEMPSUMMON_CORPSE_DESPAWN, 0))
@@ -1168,7 +1168,7 @@ struct MANGOS_DLL_DECL giant_claw_tentacleAI : public Scripted_NoMovementAI
 
 struct MANGOS_DLL_DECL giant_eye_tentacleAI : public Scripted_NoMovementAI
 {
-    giant_eye_tentacleAI(Creature *c) : Scripted_NoMovementAI(c)
+    giant_eye_tentacleAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
     {
         Reset();
         if (Unit* p = DoSpawnCreature(MOB_GIANT_PORTAL,0.0f,0.0f,0.0f,0.0f,TEMPSUMMON_CORPSE_DESPAWN, 0))
@@ -1255,39 +1255,39 @@ void flesh_tentacleAI::JustDied(Unit* killer)
 }
 
 //GetAIs
-CreatureAI* GetAI_eye_of_cthun(Creature *_Creature)
+CreatureAI* GetAI_eye_of_cthun(Creature* pCreature)
 {
-    return new eye_of_cthunAI (_Creature);
+    return new eye_of_cthunAI(pCreature);
 }
 
-CreatureAI* GetAI_cthun(Creature *_Creature)
+CreatureAI* GetAI_cthun(Creature* pCreature)
 {
-    return new cthunAI (_Creature);
+    return new cthunAI(pCreature);
 }
 
-CreatureAI* GetAI_eye_tentacle(Creature *_Creature)
+CreatureAI* GetAI_eye_tentacle(Creature* pCreature)
 {
-    return new eye_tentacleAI (_Creature);
+    return new eye_tentacleAI(pCreature);
 }
 
-CreatureAI* GetAI_claw_tentacle(Creature *_Creature)
+CreatureAI* GetAI_claw_tentacle(Creature* pCreature)
 {
-    return new claw_tentacleAI (_Creature);
+    return new claw_tentacleAI(pCreature);
 }
 
-CreatureAI* GetAI_giant_claw_tentacle(Creature *_Creature)
+CreatureAI* GetAI_giant_claw_tentacle(Creature* pCreature)
 {
-    return new giant_claw_tentacleAI (_Creature);
+    return new giant_claw_tentacleAI(pCreature);
 }
 
-CreatureAI* GetAI_giant_eye_tentacle(Creature *_Creature)
+CreatureAI* GetAI_giant_eye_tentacle(Creature* pCreature)
 {
-    return new giant_eye_tentacleAI (_Creature);
+    return new giant_eye_tentacleAI(pCreature);
 }
 
-CreatureAI* GetAI_flesh_tentacle(Creature *_Creature)
+CreatureAI* GetAI_flesh_tentacle(Creature* pCreature)
 {
-    return new flesh_tentacleAI (_Creature);
+    return new flesh_tentacleAI(pCreature);
 }
 
 void AddSC_boss_cthun()

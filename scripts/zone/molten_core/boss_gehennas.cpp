@@ -29,7 +29,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_gehennasAI : public ScriptedAI
 {
-    boss_gehennasAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_gehennasAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 ShadowBolt_Timer;
     uint32 RainOfFire_Timer;
@@ -50,7 +50,7 @@ struct MANGOS_DLL_DECL boss_gehennasAI : public ScriptedAI
         //ShadowBolt_Timer
         if (ShadowBolt_Timer < diff)
         {
-            if( Unit* bTarget = SelectUnit(SELECT_TARGET_RANDOM,1) )
+            if (Unit* bTarget = SelectUnit(SELECT_TARGET_RANDOM,1))
                 DoCast(bTarget,SPELL_SHADOWBOLT);
             ShadowBolt_Timer = 7000;
         }else ShadowBolt_Timer -= diff;
@@ -58,7 +58,7 @@ struct MANGOS_DLL_DECL boss_gehennasAI : public ScriptedAI
         //RainOfFire_Timer
         if (RainOfFire_Timer < diff)
         {
-            if( Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0) )
+            if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
                 DoCast(target,SPELL_RAINOFFIRE);
 
             RainOfFire_Timer = 4000 + rand()%8000;
@@ -74,9 +74,9 @@ struct MANGOS_DLL_DECL boss_gehennasAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_gehennas(Creature *_Creature)
+CreatureAI* GetAI_boss_gehennas(Creature* pCreature)
 {
-    return new boss_gehennasAI (_Creature);
+    return new boss_gehennasAI(pCreature);
 }
 
 void AddSC_boss_gehennas()

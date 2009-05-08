@@ -34,7 +34,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_moamAI : public ScriptedAI
 {
-    boss_moamAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_moamAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     Unit *pTarget;
     uint32 TRAMPLE_Timer;
@@ -104,9 +104,9 @@ struct MANGOS_DLL_DECL boss_moamAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_moam(Creature *_Creature)
+CreatureAI* GetAI_boss_moam(Creature* pCreature)
 {
-    return new boss_moamAI (_Creature);
+    return new boss_moamAI(pCreature);
 }
 
 void AddSC_boss_moam()

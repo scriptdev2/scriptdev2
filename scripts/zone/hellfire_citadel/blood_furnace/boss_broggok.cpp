@@ -37,9 +37,9 @@ enum
 
 struct MANGOS_DLL_DECL boss_broggokAI : public ScriptedAI
 {
-    boss_broggokAI(Creature *c) : ScriptedAI(c)
+    boss_broggokAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -113,21 +113,21 @@ struct MANGOS_DLL_DECL boss_broggokAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL mob_broggok_poisoncloudAI : public ScriptedAI
 {
-    mob_broggok_poisoncloudAI(Creature *c) : ScriptedAI(c) {Reset();}
+    mob_broggok_poisoncloudAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     void Reset() { }
     void MoveInLineOfSight(Unit *who) { }
     void AttackStart(Unit *who) { }
 };
 
-CreatureAI* GetAI_boss_broggok(Creature *_Creature)
+CreatureAI* GetAI_boss_broggok(Creature* pCreature)
 {
-    return new boss_broggokAI (_Creature);
+    return new boss_broggokAI(pCreature);
 }
 
-CreatureAI* GetAI_mob_broggok_poisoncloud(Creature *_Creature)
+CreatureAI* GetAI_mob_broggok_poisoncloud(Creature* pCreature)
 {
-    return new mob_broggok_poisoncloudAI (_Creature);
+    return new mob_broggok_poisoncloudAI(pCreature);
 }
 
 void AddSC_boss_broggok()

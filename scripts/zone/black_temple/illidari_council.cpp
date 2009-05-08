@@ -107,7 +107,7 @@ static CouncilYells CouncilEnrage[]=
 
 struct MANGOS_DLL_DECL mob_blood_elf_council_voice_triggerAI : public ScriptedAI
 {
-    mob_blood_elf_council_voice_triggerAI(Creature* c) : ScriptedAI(c)
+    mob_blood_elf_council_voice_triggerAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         for(uint8 i = 0; i < 4; ++i)
             Council[i] = 0;
@@ -189,9 +189,9 @@ struct MANGOS_DLL_DECL mob_blood_elf_council_voice_triggerAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL mob_illidari_councilAI : public ScriptedAI
 {
-    mob_illidari_councilAI(Creature *c) : ScriptedAI(c)
+    mob_illidari_councilAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         for(uint8 i = 0; i < 4; ++i)
             Council[i] = 0;
 
@@ -353,9 +353,9 @@ struct MANGOS_DLL_DECL mob_illidari_councilAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
 {
-    boss_illidari_councilAI(Creature* c) : ScriptedAI(c)
+    boss_illidari_councilAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         for(uint8 i = 0; i < 4; ++i)
             Council[i] = 0;
         LoadedGUIDs = false;
@@ -423,7 +423,7 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL boss_gathios_the_shattererAI : public boss_illidari_councilAI
 {
-    boss_gathios_the_shattererAI(Creature *c) : boss_illidari_councilAI(c) { Reset(); }
+    boss_gathios_the_shattererAI(Creature* pCreature) : boss_illidari_councilAI(pCreature) { Reset(); }
 
     uint32 ConsecrationTimer;
     uint32 HammerOfJusticeTimer;
@@ -539,7 +539,7 @@ struct MANGOS_DLL_DECL boss_gathios_the_shattererAI : public boss_illidari_counc
 
 struct MANGOS_DLL_DECL boss_high_nethermancer_zerevorAI : public boss_illidari_councilAI
 {
-    boss_high_nethermancer_zerevorAI(Creature *c) : boss_illidari_councilAI(c) { Reset(); }
+    boss_high_nethermancer_zerevorAI(Creature* pCreature) : boss_illidari_councilAI(pCreature) { Reset(); }
 
     uint32 BlizzardTimer;
     uint32 FlamestrikeTimer;
@@ -632,7 +632,7 @@ struct MANGOS_DLL_DECL boss_high_nethermancer_zerevorAI : public boss_illidari_c
 
 struct MANGOS_DLL_DECL boss_lady_malandeAI : public boss_illidari_councilAI
 {
-    boss_lady_malandeAI(Creature *c) : boss_illidari_councilAI(c) { Reset(); }
+    boss_lady_malandeAI(Creature* pCreature) : boss_illidari_councilAI(pCreature) { Reset(); }
 
     uint32 EmpoweredSmiteTimer;
     uint32 CircleOfHealingTimer;
@@ -699,7 +699,7 @@ struct MANGOS_DLL_DECL boss_lady_malandeAI : public boss_illidari_councilAI
 
 struct MANGOS_DLL_DECL boss_veras_darkshadowAI : public boss_illidari_councilAI
 {
-    boss_veras_darkshadowAI(Creature *c) : boss_illidari_councilAI(c) { Reset(); }
+    boss_veras_darkshadowAI(Creature* pCreature) : boss_illidari_councilAI(pCreature) { Reset(); }
 
     uint64 EnvenomTargetGUID;
 
@@ -795,34 +795,34 @@ struct MANGOS_DLL_DECL boss_veras_darkshadowAI : public boss_illidari_councilAI
     }
 };
 
-CreatureAI* GetAI_mob_blood_elf_council_voice_trigger(Creature* c)
+CreatureAI* GetAI_mob_blood_elf_council_voice_trigger(Creature* pCreature)
 {
-    return new mob_blood_elf_council_voice_triggerAI(c);
+    return new mob_blood_elf_council_voice_triggerAI(pCreature);
 }
 
-CreatureAI* GetAI_mob_illidari_council(Creature *_Creature)
+CreatureAI* GetAI_mob_illidari_council(Creature* pCreature)
 {
-    return new mob_illidari_councilAI (_Creature);
+    return new mob_illidari_councilAI(pCreature);
 }
 
-CreatureAI* GetAI_boss_gathios_the_shatterer(Creature *_Creature)
+CreatureAI* GetAI_boss_gathios_the_shatterer(Creature* pCreature)
 {
-    return new boss_gathios_the_shattererAI (_Creature);
+    return new boss_gathios_the_shattererAI(pCreature);
 }
 
-CreatureAI* GetAI_boss_lady_malande(Creature *_Creature)
+CreatureAI* GetAI_boss_lady_malande(Creature* pCreature)
 {
-    return new boss_lady_malandeAI (_Creature);
+    return new boss_lady_malandeAI(pCreature);
 }
 
-CreatureAI* GetAI_boss_veras_darkshadow(Creature *_Creature)
+CreatureAI* GetAI_boss_veras_darkshadow(Creature* pCreature)
 {
-    return new boss_veras_darkshadowAI (_Creature);
+    return new boss_veras_darkshadowAI(pCreature);
 }
 
-CreatureAI* GetAI_boss_high_nethermancer_zerevor(Creature *_Creature)
+CreatureAI* GetAI_boss_high_nethermancer_zerevor(Creature* pCreature)
 {
-    return new boss_high_nethermancer_zerevorAI (_Creature);
+    return new boss_high_nethermancer_zerevorAI(pCreature);
 }
 
 void AddSC_boss_illidari_council()

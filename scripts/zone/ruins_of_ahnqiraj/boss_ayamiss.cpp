@@ -35,7 +35,7 @@ make him fly from 70-100%
 
 struct MANGOS_DLL_DECL boss_ayamissAI : public ScriptedAI
 {
-    boss_ayamissAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_ayamissAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     Unit *pTarget;
     uint32 STINGERSPRAY_Timer;
@@ -59,7 +59,7 @@ struct MANGOS_DLL_DECL boss_ayamissAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //If he is 70% start phase 2
@@ -92,9 +92,9 @@ struct MANGOS_DLL_DECL boss_ayamissAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_ayamiss(Creature *_Creature)
+CreatureAI* GetAI_boss_ayamiss(Creature* pCreature)
 {
-    return new boss_ayamissAI (_Creature);
+    return new boss_ayamissAI(pCreature);
 }
 
 void AddSC_boss_ayamiss()

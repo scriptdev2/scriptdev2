@@ -77,7 +77,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_baron_rivendareAI : public ScriptedAI
 {
-    boss_baron_rivendareAI(Creature *c) : ScriptedAI(c)
+    boss_baron_rivendareAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         pInstance = (ScriptedInstance*)m_creature->GetInstanceData();
         Reset();
@@ -170,9 +170,9 @@ struct MANGOS_DLL_DECL boss_baron_rivendareAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_baron_rivendare(Creature *_Creature)
+CreatureAI* GetAI_boss_baron_rivendare(Creature* pCreature)
 {
-    return new boss_baron_rivendareAI (_Creature);
+    return new boss_baron_rivendareAI(pCreature);
 }
 
 void AddSC_boss_baron_rivendare()

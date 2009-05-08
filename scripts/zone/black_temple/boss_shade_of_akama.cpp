@@ -107,7 +107,7 @@ const uint32 spawnEntries[4]= { 23523, 23318, 23524 };
 
 struct MANGOS_DLL_DECL mob_ashtongue_channelerAI : public ScriptedAI
 {
-    mob_ashtongue_channelerAI(Creature* c) : ScriptedAI(c) { Reset(); }
+    mob_ashtongue_channelerAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
     uint64 ShadeGUID;
 
@@ -120,7 +120,7 @@ struct MANGOS_DLL_DECL mob_ashtongue_channelerAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL mob_ashtongue_sorcererAI : public ScriptedAI
 {
-    mob_ashtongue_sorcererAI(Creature* c) : ScriptedAI(c) { Reset(); }
+    mob_ashtongue_sorcererAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
     uint64 ShadeGUID;
     uint32 CheckTimer;
@@ -164,9 +164,9 @@ struct MANGOS_DLL_DECL mob_ashtongue_sorcererAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
 {
-    boss_shade_of_akamaAI(Creature* c) : ScriptedAI(c)
+    boss_shade_of_akamaAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         AkamaGUID = pInstance ? pInstance->GetData64(DATA_AKAMA_SHADE) : 0;
         Reset();
     }
@@ -509,11 +509,11 @@ void mob_ashtongue_sorcererAI::JustDied(Unit* killer)
 
 struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
 {
-    npc_akamaAI(Creature* c) : ScriptedAI(c)
+    npc_akamaAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         ShadeHasDied = false;
         StartCombat = false;
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         ShadeGUID = pInstance ? pInstance->GetData64(DATA_SHADEOFAKAMA) : 0;
         Reset();
     }
@@ -782,43 +782,43 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_shade_of_akama(Creature *_Creature)
+CreatureAI* GetAI_boss_shade_of_akama(Creature* pCreature)
 {
-    return new boss_shade_of_akamaAI (_Creature);
+    return new boss_shade_of_akamaAI(pCreature);
 }
 
-CreatureAI* GetAI_mob_ashtongue_channeler(Creature *_Creature)
+CreatureAI* GetAI_mob_ashtongue_channeler(Creature* pCreature)
 {
-    return new mob_ashtongue_channelerAI (_Creature);
+    return new mob_ashtongue_channelerAI(pCreature);
 }
 
-CreatureAI* GetAI_mob_ashtongue_sorcerer(Creature *_Creature)
+CreatureAI* GetAI_mob_ashtongue_sorcerer(Creature* pCreature)
 {
-    return new mob_ashtongue_sorcererAI (_Creature);
+    return new mob_ashtongue_sorcererAI(pCreature);
 }
 
-CreatureAI* GetAI_npc_akama_shade(Creature *_Creature)
+CreatureAI* GetAI_npc_akama_shade(Creature* pCreature)
 {
-    return new npc_akamaAI (_Creature);
+    return new npc_akamaAI(pCreature);
 }
 
-bool GossipHello_npc_akama(Player *player, Creature *_Creature)
+bool GossipHello_npc_akama(Player* pPlayer, Creature* pCreature)
 {
-    if (player->isAlive())
+    if (pPlayer->isAlive())
     {
-        player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-        player->SEND_GOSSIP_MENU(907, _Creature->GetGUID());
+        pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+        pPlayer->SEND_GOSSIP_MENU(907, pCreature->GetGUID());
     }
 
     return true;
 }
 
-bool GossipSelect_npc_akama(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+bool GossipSelect_npc_akama(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
     if (action == GOSSIP_ACTION_INFO_DEF + 1)               //Fight time
     {
-        player->CLOSE_GOSSIP_MENU();
-        ((npc_akamaAI*)_Creature->AI())->BeginEvent(player);
+        pPlayer->CLOSE_GOSSIP_MENU();
+        ((npc_akamaAI*)pCreature->AI())->BeginEvent(pPlayer);
     }
 
     return true;

@@ -30,19 +30,19 @@ EndContentData */
 #define SPELL_TELE_A_TO   37387
 #define SPELL_TELE_H_TO   37389
 
-bool AreaTrigger_at_legion_teleporter(Player *player, AreaTriggerEntry *at)
+bool AreaTrigger_at_legion_teleporter(Player* pPlayer, AreaTriggerEntry *at)
 {
-    if (player->isAlive() && !player->isInCombat())
+    if (pPlayer->isAlive() && !pPlayer->isInCombat())
     {
-        if (player->GetTeam()== ALLIANCE && player->GetQuestRewardStatus(10589))
+        if (pPlayer->GetTeam()== ALLIANCE && pPlayer->GetQuestRewardStatus(10589))
         {
-            player->CastSpell(player,SPELL_TELE_A_TO,false);
+            pPlayer->CastSpell(pPlayer,SPELL_TELE_A_TO,false);
             return true;
         }
 
-        if (player->GetTeam()== HORDE && player->GetQuestRewardStatus(10604))
+        if (pPlayer->GetTeam()== HORDE && pPlayer->GetQuestRewardStatus(10604))
         {
-            player->CastSpell(player,SPELL_TELE_H_TO,false);
+            pPlayer->CastSpell(pPlayer,SPELL_TELE_H_TO,false);
             return true;
         }
 

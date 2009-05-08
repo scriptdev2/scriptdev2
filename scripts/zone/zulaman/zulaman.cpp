@@ -39,9 +39,9 @@ EndContentData */
 
 struct MANGOS_DLL_DECL npc_forest_frogAI : public ScriptedAI
 {
-    npc_forest_frogAI(Creature* c) : ScriptedAI(c)
+    npc_forest_frogAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -51,7 +51,7 @@ struct MANGOS_DLL_DECL npc_forest_frogAI : public ScriptedAI
 
     void DoSpawnRandom()
     {
-        if( pInstance )
+        if (pInstance)
         {
             uint32 cEntry = 0;
             switch(rand()%11)
@@ -69,31 +69,31 @@ struct MANGOS_DLL_DECL npc_forest_frogAI : public ScriptedAI
                 case 10: cEntry = 24455; break;             //Hollee
             }
 
-            if( !pInstance->GetData(TYPE_RAND_VENDOR_1) )
-                if(rand()%10 == 1) cEntry = 24408;          //Gunter
-            if( !pInstance->GetData(TYPE_RAND_VENDOR_2) )
-                if(rand()%10 == 1) cEntry = 24409;          //Kyren
+            if (!pInstance->GetData(TYPE_RAND_VENDOR_1))
+                if (rand()%10 == 1) cEntry = 24408;          //Gunter
+            if (!pInstance->GetData(TYPE_RAND_VENDOR_2))
+                if (rand()%10 == 1) cEntry = 24409;          //Kyren
 
-            if( cEntry ) m_creature->UpdateEntry(cEntry);
+            if (cEntry) m_creature->UpdateEntry(cEntry);
 
-            if( cEntry == 24408) pInstance->SetData(TYPE_RAND_VENDOR_1,DONE);
-            if( cEntry == 24409) pInstance->SetData(TYPE_RAND_VENDOR_2,DONE);
+            if (cEntry == 24408) pInstance->SetData(TYPE_RAND_VENDOR_1,DONE);
+            if (cEntry == 24409) pInstance->SetData(TYPE_RAND_VENDOR_2,DONE);
         }
     }
 
     void SpellHit(Unit *caster, const SpellEntry *spell)
     {
-        if( spell->Id == SPELL_REMOVE_AMANI_CURSE && caster->GetTypeId() == TYPEID_PLAYER && m_creature->GetEntry() == ENTRY_FOREST_FROG )
+        if (spell->Id == SPELL_REMOVE_AMANI_CURSE && caster->GetTypeId() == TYPEID_PLAYER && m_creature->GetEntry() == ENTRY_FOREST_FROG)
         {
             //increase or decrease chance of mojo?
-            if( rand()%99 == 50 ) DoCast(caster,SPELL_PUSH_MOJO,true);
+            if (rand()%99 == 50) DoCast(caster,SPELL_PUSH_MOJO,true);
             else DoSpawnRandom();
         }
     }
 };
-CreatureAI* GetAI_npc_forest_frog(Creature *_Creature)
+CreatureAI* GetAI_npc_forest_frog(Creature* pCreature)
 {
-    return new npc_forest_frogAI (_Creature);
+    return new npc_forest_frogAI(pCreature);
 }
 
 /*######
@@ -113,9 +113,9 @@ enum
 
 struct MANGOS_DLL_DECL npc_harrison_jones_zaAI : public npc_escortAI
 {
-    npc_harrison_jones_zaAI(Creature *c) : npc_escortAI(c)
+    npc_harrison_jones_zaAI(Creature* pCreature) : npc_escortAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 

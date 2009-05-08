@@ -68,9 +68,9 @@ float fChallengerLoc[4][4]=
 
 struct MANGOS_DLL_DECL npc_kelerun_bloodmournAI : public ScriptedAI
 {
-    npc_kelerun_bloodmournAI(Creature *c) : ScriptedAI(c)
+    npc_kelerun_bloodmournAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        uiNpcFlags = c->GetUInt32Value(UNIT_NPC_FLAGS);
+        uiNpcFlags = pCreature->GetUInt32Value(UNIT_NPC_FLAGS);
         Reset();
     }
 
@@ -219,7 +219,7 @@ CreatureAI* GetAI_npc_kelerun_bloodmourn(Creature* pCreature)
 }
 
 //easiest way is to expect database to respawn GO at quest accept (quest_start_script)
-bool QuestAccept_npc_kelerun_bloodmourn(Player* pPlayer, Creature* pCreature, Quest const* pQuest)
+bool QuestAccept_npc_kelerun_bloodmourn(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_SECOND_TRIAL)
         ((npc_kelerun_bloodmournAI*)(pCreature->AI()))->StartEvent();
@@ -268,23 +268,23 @@ bool GOHello_go_harbinger_second_trial(Player* pPlayer, GameObject* pGO)
 struct MANGOS_DLL_DECL npc_prospector_anvilwardAI : public npc_escortAI
 {
     // CreatureAI functions
-    npc_prospector_anvilwardAI(Creature *c) : npc_escortAI(c) {Reset();}
+    npc_prospector_anvilwardAI(Creature* pCreature) : npc_escortAI(pCreature) {Reset();}
 
     // Pure Virtual Functions
     void WaypointReached(uint32 i)
     {
-        Unit* player = Unit::GetUnit((*m_creature), PlayerGUID);
+        Unit* pPlayer = Unit::GetUnit((*m_creature), PlayerGUID);
 
-        if (!player)
+        if (!pPlayer)
             return;
 
         switch (i)
         {
             case 0:
-                DoScriptText(SAY_ANVIL1, m_creature, player);
+                DoScriptText(SAY_ANVIL1, m_creature, pPlayer);
                 break;
             case 5:
-                DoScriptText(SAY_ANVIL1, m_creature, player);
+                DoScriptText(SAY_ANVIL1, m_creature, pPlayer);
                 break;
             case 6:
                 m_creature->setFaction(24);
@@ -320,27 +320,27 @@ CreatureAI* GetAI_npc_prospector_anvilward(Creature* pCreature)
     return (CreatureAI*)thisAI;
 }
 
-bool GossipHello_npc_prospector_anvilward(Player *player, Creature *_Creature)
+bool GossipHello_npc_prospector_anvilward(Player* pPlayer, Creature* pCreature)
 {
-    if( player->GetQuestStatus(QUEST_THE_DWARVEN_SPY) == QUEST_STATUS_INCOMPLETE )
-        player->ADD_GOSSIP_ITEM(0, "I need a moment of your time, sir.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+    if (pPlayer->GetQuestStatus(QUEST_THE_DWARVEN_SPY) == QUEST_STATUS_INCOMPLETE)
+        pPlayer->ADD_GOSSIP_ITEM(0, "I need a moment of your time, sir.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-    player->SEND_GOSSIP_MENU(8239, _Creature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(8239, pCreature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_prospector_anvilward(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+bool GossipSelect_npc_prospector_anvilward(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
     switch(action)
     {
         case GOSSIP_ACTION_INFO_DEF+1:
-            player->ADD_GOSSIP_ITEM( 0, "Why... yes, of course. I've something to show you right inside this building, Mr. Anvilward.",GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF+2);
-            player->SEND_GOSSIP_MENU(8240, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, "Why... yes, of course. I've something to show you right inside this building, Mr. Anvilward.",GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF+2);
+            pPlayer->SEND_GOSSIP_MENU(8240, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+2:
-            player->CLOSE_GOSSIP_MENU();
+            pPlayer->CLOSE_GOSSIP_MENU();
             //attack,defend,walk
-            ((npc_escortAI*)(_Creature->AI()))->Start(true, true, false, player->GetGUID());
+            ((npc_escortAI*)(pCreature->AI()))->Start(true, true, false, pPlayer->GetGUID());
             break;
     }
     return true;

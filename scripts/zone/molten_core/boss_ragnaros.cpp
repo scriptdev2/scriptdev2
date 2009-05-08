@@ -85,7 +85,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_ragnarosAI : public Scripted_NoMovementAI
 {
-    boss_ragnarosAI(Creature *c) : Scripted_NoMovementAI(c) {Reset();}
+    boss_ragnarosAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature) {Reset();}
 
     uint32 WrathOfRagnaros_Timer;
     uint32 HandOfRagnaros_Timer;
@@ -249,10 +249,10 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public Scripted_NoMovementAI
         }else Submerge_Timer -= diff;
 
         //If we are within range melee the target
-        if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
+        if (m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
         {
             //Make sure our attack is ready and we arn't currently casting
-            if( m_creature->isAttackReady() && !m_creature->IsNonMeleeSpellCasted(false))
+            if (m_creature->isAttackReady() && !m_creature->IsNonMeleeSpellCasted(false))
             {
                 m_creature->AttackerStateUpdate(m_creature->getVictim());
                 m_creature->resetAttackTimer();
@@ -276,9 +276,9 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public Scripted_NoMovementAI
         }
     }
 };
-CreatureAI* GetAI_boss_ragnaros(Creature *_Creature)
+CreatureAI* GetAI_boss_ragnaros(Creature* pCreature)
 {
-    return new boss_ragnarosAI (_Creature);
+    return new boss_ragnarosAI(pCreature);
 }
 
 void AddSC_boss_ragnaros()

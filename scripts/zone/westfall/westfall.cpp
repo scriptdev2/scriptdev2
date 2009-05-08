@@ -49,7 +49,7 @@ enum
 
 struct MANGOS_DLL_DECL npc_daphne_stilwellAI : public npc_escortAI
 {
-    npc_daphne_stilwellAI(Creature *c) : npc_escortAI(c) { Reset(); }
+    npc_daphne_stilwellAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
 
     uint32 uiWPHolder;
     uint32 uiShootTimer;
@@ -163,7 +163,7 @@ struct MANGOS_DLL_DECL npc_daphne_stilwellAI : public npc_escortAI
     }
 };
 
-bool QuestAccept_npc_daphne_stilwell(Player* pPlayer, Creature* pCreature, Quest const* pQuest)
+bool QuestAccept_npc_daphne_stilwell(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_TOME_VALOR)
     {
@@ -197,13 +197,13 @@ CreatureAI* GetAI_npc_daphne_stilwell(Creature* pCreature)
 
 struct MANGOS_DLL_DECL npc_defias_traitorAI : public npc_escortAI
 {
-    npc_defias_traitorAI(Creature *c) : npc_escortAI(c) { Reset(); }
+    npc_defias_traitorAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
 
     void WaypointReached(uint32 i)
     {
-        Unit* player = Unit::GetUnit((*m_creature), PlayerGUID);
+        Unit* pPlayer = Unit::GetUnit((*m_creature), PlayerGUID);
 
-        if (!player || player->GetTypeId() != TYPEID_PLAYER)
+        if (!pPlayer || pPlayer->GetTypeId() != TYPEID_PLAYER)
             return;
 
         switch (i)
@@ -212,11 +212,11 @@ struct MANGOS_DLL_DECL npc_defias_traitorAI : public npc_escortAI
                 SetRun(false);
                 break;
             case 36:
-                DoScriptText(SAY_PROGRESS, m_creature, player);
+                DoScriptText(SAY_PROGRESS, m_creature, pPlayer);
                 break;
             case 44:
-                DoScriptText(SAY_END, m_creature, player);
-                ((Player*)player)->GroupEventHappens(QUEST_DEFIAS_BROTHERHOOD,m_creature);
+                DoScriptText(SAY_END, m_creature, pPlayer);
+                ((Player*)pPlayer)->GroupEventHappens(QUEST_DEFIAS_BROTHERHOOD,m_creature);
                 break;
         }
     }
@@ -236,8 +236,8 @@ struct MANGOS_DLL_DECL npc_defias_traitorAI : public npc_escortAI
     {
         if (PlayerGUID)
         {
-            if (Unit* player = Unit::GetUnit((*m_creature), PlayerGUID))
-                ((Player*)player)->FailQuest(QUEST_DEFIAS_BROTHERHOOD);
+            if (Unit* pPlayer = Unit::GetUnit((*m_creature), PlayerGUID))
+                ((Player*)pPlayer)->FailQuest(QUEST_DEFIAS_BROTHERHOOD);
         }
     }
 
@@ -247,12 +247,12 @@ struct MANGOS_DLL_DECL npc_defias_traitorAI : public npc_escortAI
     }
 };
 
-bool QuestAccept_npc_defias_traitor(Player* player, Creature* creature, Quest const* quest)
+bool QuestAccept_npc_defias_traitor(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
 {
-    if (quest->GetQuestId() == QUEST_DEFIAS_BROTHERHOOD)
+    if (pQuest->GetQuestId() == QUEST_DEFIAS_BROTHERHOOD)
     {
-        ((npc_escortAI*)(creature->AI()))->Start(true, true, true, player->GetGUID());
-        DoScriptText(SAY_START, creature, player);
+        ((npc_escortAI*)(pCreature->AI()))->Start(true, true, true, pPlayer->GetGUID());
+        DoScriptText(SAY_START, pCreature, pPlayer);
     }
 
     return true;

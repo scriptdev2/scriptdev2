@@ -84,7 +84,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_dathrohan_balnazzarAI : public ScriptedAI
 {
-    boss_dathrohan_balnazzarAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_dathrohan_balnazzarAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 CrusadersHammer_Timer;
     uint32 CrusaderStrike_Timer;
@@ -241,7 +241,7 @@ struct MANGOS_DLL_DECL boss_dathrohan_balnazzarAI : public ScriptedAI
                 if (rand()%100 < 60) //60% chance to cast
                 {
                     DoCast(m_creature->getVictim(),SPELL_PSYCHICSCREAM);
-                    if(m_creature->getThreatManager().getThreat(m_creature->getVictim()))
+                    if (m_creature->getThreatManager().getThreat(m_creature->getVictim()))
                         m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-50);
                 }
                 //15 seconds until we should cast this again
@@ -295,9 +295,9 @@ struct MANGOS_DLL_DECL boss_dathrohan_balnazzarAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_dathrohan_balnazzar(Creature *_Creature)
+CreatureAI* GetAI_boss_dathrohan_balnazzar(Creature* pCreature)
 {
-    return new boss_dathrohan_balnazzarAI (_Creature);
+    return new boss_dathrohan_balnazzarAI(pCreature);
 }
 
 void AddSC_boss_dathrohan_balnazzar()

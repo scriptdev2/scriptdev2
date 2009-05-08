@@ -47,7 +47,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_lady_blaumeuxAI : public ScriptedAI
 {
-    boss_lady_blaumeuxAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_lady_blaumeuxAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 Mark_Timer;
     uint32 VoidZone_Timer;
@@ -92,7 +92,7 @@ struct MANGOS_DLL_DECL boss_lady_blaumeuxAI : public ScriptedAI
         // Shield Wall - All 4 horsemen will shield wall at 50% hp and 20% hp for 20 seconds
         if (ShieldWall1 && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 50)
         {
-            if(ShieldWall1)
+            if (ShieldWall1)
             {
                 DoCast(m_creature,SPELL_SHIELDWALL);
                 ShieldWall1 = false;
@@ -118,9 +118,9 @@ struct MANGOS_DLL_DECL boss_lady_blaumeuxAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_lady_blaumeux(Creature *_Creature)
+CreatureAI* GetAI_boss_lady_blaumeux(Creature* pCreature)
 {
-    return new boss_lady_blaumeuxAI (_Creature);
+    return new boss_lady_blaumeuxAI(pCreature);
 }
 
 //baron rivendare
@@ -143,7 +143,7 @@ CreatureAI* GetAI_boss_lady_blaumeux(Creature *_Creature)
 
 struct MANGOS_DLL_DECL boss_rivendare_naxxAI : public ScriptedAI
 {
-    boss_rivendare_naxxAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_rivendare_naxxAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     void Reset()
     {
@@ -182,9 +182,9 @@ struct MANGOS_DLL_DECL boss_rivendare_naxxAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_rivendare_naxx(Creature *_Creature)
+CreatureAI* GetAI_boss_rivendare_naxx(Creature* pCreature)
 {
-    return new boss_rivendare_naxxAI (_Creature);
+    return new boss_rivendare_naxxAI(pCreature);
 }
 
 //thane korthazz
@@ -203,7 +203,7 @@ CreatureAI* GetAI_boss_rivendare_naxx(Creature *_Creature)
 
 struct MANGOS_DLL_DECL boss_thane_korthazzAI : public ScriptedAI
 {
-    boss_thane_korthazzAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_thane_korthazzAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 Mark_Timer;
     uint32 Meteor_Timer;
@@ -274,9 +274,9 @@ struct MANGOS_DLL_DECL boss_thane_korthazzAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_thane_korthazz(Creature *_Creature)
+CreatureAI* GetAI_boss_thane_korthazz(Creature* pCreature)
 {
-    return new boss_thane_korthazzAI (_Creature);
+    return new boss_thane_korthazzAI(pCreature);
 }
 
 //sir zeliek
@@ -298,7 +298,7 @@ CreatureAI* GetAI_boss_thane_korthazz(Creature *_Creature)
 
 struct MANGOS_DLL_DECL boss_sir_zeliekAI : public ScriptedAI
 {
-    boss_sir_zeliekAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_sir_zeliekAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 Mark_Timer;
     uint32 HolyWrath_Timer;
@@ -370,9 +370,9 @@ struct MANGOS_DLL_DECL boss_sir_zeliekAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_sir_zeliek(Creature *_Creature)
+CreatureAI* GetAI_boss_sir_zeliek(Creature* pCreature)
 {
-    return new boss_sir_zeliekAI (_Creature);
+    return new boss_sir_zeliekAI(pCreature);
 }
 
 void AddSC_boss_four_horsemen()

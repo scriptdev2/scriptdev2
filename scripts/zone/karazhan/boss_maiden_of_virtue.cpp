@@ -38,7 +38,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
 {
-    boss_maiden_of_virtueAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_maiden_of_virtueAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 Repentance_Timer;
     uint32 Holyfire_Timer;
@@ -81,7 +81,7 @@ struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         if (Holyground_Timer < diff)
@@ -111,7 +111,7 @@ struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
             for(std::list<HostilReference *>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
             {
                 target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
-                if (target && target->GetDistance2d(m_creature) > 12 )
+                if (target && target->GetDistance2d(m_creature) > 12)
                     target_list.push_back(target);
                 target = NULL;
             }
@@ -135,9 +135,9 @@ struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_maiden_of_virtue(Creature *_Creature)
+CreatureAI* GetAI_boss_maiden_of_virtue(Creature* pCreature)
 {
-    return new boss_maiden_of_virtueAI (_Creature);
+    return new boss_maiden_of_virtueAI(pCreature);
 }
 
 void AddSC_boss_maiden_of_virtue()

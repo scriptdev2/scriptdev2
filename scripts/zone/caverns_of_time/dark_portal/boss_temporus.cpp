@@ -39,9 +39,9 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_temporusAI : public ScriptedAI
 {
-    boss_temporusAI(Creature *c) : ScriptedAI(c)
+    boss_temporusAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         HeroicMode = m_creature->GetMap()->IsHeroic();
         Reset();
     }
@@ -141,9 +141,9 @@ struct MANGOS_DLL_DECL boss_temporusAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_temporus(Creature *_Creature)
+CreatureAI* GetAI_boss_temporus(Creature* pCreature)
 {
-    return new boss_temporusAI (_Creature);
+    return new boss_temporusAI(pCreature);
 }
 
 void AddSC_boss_temporus()

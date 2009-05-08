@@ -27,7 +27,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL generic_creatureAI : public ScriptedAI
 {
-    generic_creatureAI(Creature *c) : ScriptedAI(c) {Reset();}
+    generic_creatureAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 GlobalCooldown;      //This variable acts like the global cooldown that players have (1.5 seconds)
     uint32 BuffTimer;           //This variable keeps track of buffs
@@ -57,7 +57,7 @@ struct MANGOS_DLL_DECL generic_creatureAI : public ScriptedAI
 
         //Buff timer (only buff when we are alive and not in combat
         if (!m_creature->isInCombat() && m_creature->isAlive())
-            if (BuffTimer < diff )
+            if (BuffTimer < diff)
             {
                 //Find a spell that targets friendly and applies an aura (these are generally buffs)
                 SpellEntry const *info = SelectSpell(m_creature, -1, -1, SELECT_TARGET_ANY_FRIEND, 0, 0, 0, 0, SELECT_EFFECT_AURA);
@@ -77,14 +77,14 @@ struct MANGOS_DLL_DECL generic_creatureAI : public ScriptedAI
             }else BuffTimer -= diff;
 
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //If we are within range melee the target
-        if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
+        if (m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
         {
             //Make sure our attack is ready and we arn't currently casting
-            if( m_creature->isAttackReady() && !m_creature->IsNonMeleeSpellCasted(false))
+            if (m_creature->isAttackReady() && !m_creature->IsNonMeleeSpellCasted(false))
             {
                 bool Healing = false;
                 SpellEntry const *info = NULL;
@@ -156,9 +156,9 @@ struct MANGOS_DLL_DECL generic_creatureAI : public ScriptedAI
         }
     }
 };
-CreatureAI* GetAI_generic_creature(Creature *_Creature)
+CreatureAI* GetAI_generic_creature(Creature* pCreature)
 {
-    return new generic_creatureAI (_Creature);
+    return new generic_creatureAI(pCreature);
 }
 
 

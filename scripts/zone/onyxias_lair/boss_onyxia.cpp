@@ -67,7 +67,7 @@ static float SpawnLocations[4][3]=
 
 struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
 {
-    boss_onyxiaAI(Creature* c) : ScriptedAI(c) {Reset();}
+    boss_onyxiaAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 Phase;
 
@@ -217,9 +217,9 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_onyxiaAI(Creature *_Creature)
+CreatureAI* GetAI_boss_onyxiaAI(Creature* pCreature)
 {
-    return new boss_onyxiaAI (_Creature);
+    return new boss_onyxiaAI(pCreature);
 }
 
 void AddSC_boss_onyxia()

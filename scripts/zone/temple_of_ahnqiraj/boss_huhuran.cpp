@@ -35,7 +35,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_huhuranAI : public ScriptedAI
 {
-    boss_huhuranAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_huhuranAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 Frenzy_Timer;
     uint32 Wyvern_Timer;
@@ -79,7 +79,7 @@ struct MANGOS_DLL_DECL boss_huhuranAI : public ScriptedAI
         // Wyvern Timer
         if (Wyvern_Timer < diff)
         {
-            if( Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0) )
+            if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0))
                 DoCast(target,SPELL_WYVERNSTING);
             Wyvern_Timer = 15000 + rand()%17000;
         }else Wyvern_Timer -= diff;
@@ -116,7 +116,7 @@ struct MANGOS_DLL_DECL boss_huhuranAI : public ScriptedAI
             FrenzyBack_Timer = 15000;
         }else FrenzyBack_Timer -= diff;
 
-        if ( !Berserk && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 31 )
+        if (!Berserk && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 31)
         {
             m_creature->InterruptNonMeleeSpells(false);
             DoScriptText(EMOTE_GENERIC_BERSERK, m_creature);
@@ -128,9 +128,9 @@ struct MANGOS_DLL_DECL boss_huhuranAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_huhuran(Creature *_Creature)
+CreatureAI* GetAI_boss_huhuran(Creature* pCreature)
 {
-    return new boss_huhuranAI (_Creature);
+    return new boss_huhuranAI(pCreature);
 }
 
 void AddSC_boss_huhuran()

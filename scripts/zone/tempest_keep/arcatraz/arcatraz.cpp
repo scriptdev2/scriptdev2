@@ -61,9 +61,9 @@ EndContentData */
 
 struct MANGOS_DLL_DECL npc_millhouse_manastormAI : public ScriptedAI
 {
-    npc_millhouse_manastormAI(Creature *c) : ScriptedAI(c)
+    npc_millhouse_manastormAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -124,7 +124,7 @@ struct MANGOS_DLL_DECL npc_millhouse_manastormAI : public ScriptedAI
         DoScriptText(SAY_DEATH, m_creature);
 
         /*for questId 10886 (heroic mode only)
-        if (pInstance && pInstance->GetData(TYPE_HARBINGERSKYRISS) != DONE )
+        if (pInstance && pInstance->GetData(TYPE_HARBINGERSKYRISS) != DONE)
             ->FailQuest();*/
     }
 
@@ -206,9 +206,9 @@ struct MANGOS_DLL_DECL npc_millhouse_manastormAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_millhouse_manastorm(Creature *_Creature)
+CreatureAI* GetAI_npc_millhouse_manastorm(Creature* pCreature)
 {
-    return new npc_millhouse_manastormAI (_Creature);
+    return new npc_millhouse_manastormAI(pCreature);
 }
 
 /*#####
@@ -248,9 +248,9 @@ CreatureAI* GetAI_npc_millhouse_manastorm(Creature *_Creature)
 
 struct MANGOS_DLL_DECL npc_warden_mellicharAI : public ScriptedAI
 {
-    npc_warden_mellicharAI(Creature *c) : ScriptedAI(c)
+    npc_warden_mellicharAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -284,7 +284,7 @@ struct MANGOS_DLL_DECL npc_warden_mellicharAI : public ScriptedAI
         if (IsRunning)
             return;
 
-        if (!m_creature->getVictim() && who->isTargetableForAttack() && ( m_creature->IsHostileTo( who )) && who->isInAccessablePlaceFor(m_creature) )
+        if (!m_creature->getVictim() && who->isTargetableForAttack() && (m_creature->IsHostileTo(who)) && who->isInAccessablePlaceFor(m_creature))
         {
             if (!m_creature->canFly() && m_creature->GetDistanceZ(who) > CREATURE_Z_ATTACK_RANGE)
                 return;
@@ -470,9 +470,9 @@ struct MANGOS_DLL_DECL npc_warden_mellicharAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_warden_mellichar(Creature *_Creature)
+CreatureAI* GetAI_npc_warden_mellichar(Creature* pCreature)
 {
-    return new npc_warden_mellicharAI (_Creature);
+    return new npc_warden_mellicharAI(pCreature);
 }
 
 /*#####
@@ -483,7 +483,7 @@ CreatureAI* GetAI_npc_warden_mellichar(Creature *_Creature)
 
 struct MANGOS_DLL_DECL mob_zerekethvoidzoneAI : public ScriptedAI
 {
-    mob_zerekethvoidzoneAI(Creature *c) : ScriptedAI(c) {Reset();}
+    mob_zerekethvoidzoneAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     void Reset()
     {
@@ -494,9 +494,9 @@ struct MANGOS_DLL_DECL mob_zerekethvoidzoneAI : public ScriptedAI
         DoCast(m_creature,SPELL_VOID_ZONE_DAMAGE);
     }
 };
-CreatureAI* GetAI_mob_zerekethvoidzoneAI(Creature *_Creature)
+CreatureAI* GetAI_mob_zerekethvoidzoneAI(Creature* pCreature)
 {
-    return new mob_zerekethvoidzoneAI (_Creature);
+    return new mob_zerekethvoidzoneAI(pCreature);
 }
 
 void AddSC_arcatraz()

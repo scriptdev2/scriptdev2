@@ -44,9 +44,9 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
 {
-    boss_hakkarAI(Creature *c) : ScriptedAI(c)
+    boss_hakkarAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -235,9 +235,9 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_hakkar(Creature *_Creature)
+CreatureAI* GetAI_boss_hakkar(Creature* pCreature)
 {
-    return new boss_hakkarAI (_Creature);
+    return new boss_hakkarAI(pCreature);
 }
 
 void AddSC_boss_hakkar()

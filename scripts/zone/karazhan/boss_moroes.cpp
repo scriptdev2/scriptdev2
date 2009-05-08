@@ -60,10 +60,10 @@ const uint32 Adds[6]=
 
 struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
 {
-    boss_moroesAI(Creature *c) : ScriptedAI(c)
+    boss_moroesAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         FirstTime = true;
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -367,12 +367,12 @@ struct MANGOS_DLL_DECL boss_moroes_guestAI : public ScriptedAI
 
     uint64 GuestGUID[4];
 
-    boss_moroes_guestAI(Creature* c) : ScriptedAI(c)
+    boss_moroes_guestAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         for(uint8 i = 0; i < 4; ++i)
             GuestGUID[i] = 0;
 
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -430,7 +430,7 @@ struct MANGOS_DLL_DECL boss_moroes_guestAI : public ScriptedAI
 struct MANGOS_DLL_DECL boss_baroness_dorothea_millstipeAI : public boss_moroes_guestAI
 {
     //Shadow Priest
-    boss_baroness_dorothea_millstipeAI(Creature *c) : boss_moroes_guestAI(c) {}
+    boss_baroness_dorothea_millstipeAI(Creature* pCreature) : boss_moroes_guestAI(pCreature) {}
 
     uint32 ManaBurn_Timer;
     uint32 MindFlay_Timer;
@@ -449,7 +449,7 @@ struct MANGOS_DLL_DECL boss_baroness_dorothea_millstipeAI : public boss_moroes_g
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         boss_moroes_guestAI::UpdateAI(diff);
@@ -487,7 +487,7 @@ struct MANGOS_DLL_DECL boss_baroness_dorothea_millstipeAI : public boss_moroes_g
 struct MANGOS_DLL_DECL boss_baron_rafe_dreugerAI : public boss_moroes_guestAI
 {
     //Retr Pally
-    boss_baron_rafe_dreugerAI(Creature *c) : boss_moroes_guestAI(c){}
+    boss_baron_rafe_dreugerAI(Creature* pCreature) : boss_moroes_guestAI(pCreature) {}
 
     uint32 HammerOfJustice_Timer;
     uint32 SealOfCommand_Timer;
@@ -504,7 +504,7 @@ struct MANGOS_DLL_DECL boss_baron_rafe_dreugerAI : public boss_moroes_guestAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         boss_moroes_guestAI::UpdateAI(diff);
@@ -538,7 +538,7 @@ struct MANGOS_DLL_DECL boss_baron_rafe_dreugerAI : public boss_moroes_guestAI
 struct MANGOS_DLL_DECL boss_lady_catriona_von_indiAI : public boss_moroes_guestAI
 {
     //Holy Priest
-    boss_lady_catriona_von_indiAI(Creature *c) : boss_moroes_guestAI(c) {Reset();}
+    boss_lady_catriona_von_indiAI(Creature* pCreature) : boss_moroes_guestAI(pCreature) {Reset();}
 
     uint32 DispelMagic_Timer;
     uint32 GreaterHeal_Timer;
@@ -559,7 +559,7 @@ struct MANGOS_DLL_DECL boss_lady_catriona_von_indiAI : public boss_moroes_guestA
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         boss_moroes_guestAI::UpdateAI(diff);
@@ -586,7 +586,7 @@ struct MANGOS_DLL_DECL boss_lady_catriona_von_indiAI : public boss_moroes_guestA
 
         if (DispelMagic_Timer < diff)
         {
-            if(rand()%2)
+            if (rand()%2)
             {
                 Unit* target = SelectTarget();
                 DoCast(target, SPELL_DISPELMAGIC);
@@ -607,7 +607,7 @@ struct MANGOS_DLL_DECL boss_lady_catriona_von_indiAI : public boss_moroes_guestA
 struct MANGOS_DLL_DECL boss_lady_keira_berrybuckAI : public boss_moroes_guestAI
 {
     //Holy Pally
-    boss_lady_keira_berrybuckAI(Creature *c) : boss_moroes_guestAI(c) {Reset();}
+    boss_lady_keira_berrybuckAI(Creature* pCreature) : boss_moroes_guestAI(pCreature) {Reset();}
 
     uint32 Cleanse_Timer;
     uint32 GreaterBless_Timer;
@@ -673,7 +673,7 @@ struct MANGOS_DLL_DECL boss_lady_keira_berrybuckAI : public boss_moroes_guestAI
 struct MANGOS_DLL_DECL boss_lord_robin_darisAI : public boss_moroes_guestAI
 {
     //Arms Warr
-    boss_lord_robin_darisAI(Creature *c) : boss_moroes_guestAI(c) {}
+    boss_lord_robin_darisAI(Creature* pCreature) : boss_moroes_guestAI(pCreature) {}
 
     uint32 Hamstring_Timer;
     uint32 MortalStrike_Timer;
@@ -723,7 +723,7 @@ struct MANGOS_DLL_DECL boss_lord_robin_darisAI : public boss_moroes_guestAI
 struct MANGOS_DLL_DECL boss_lord_crispin_ferenceAI : public boss_moroes_guestAI
 {
     //Arms Warr
-    boss_lord_crispin_ferenceAI(Creature *c) : boss_moroes_guestAI(c) {Reset();}
+    boss_lord_crispin_ferenceAI(Creature* pCreature) : boss_moroes_guestAI(pCreature) {Reset();}
 
     uint32 Disarm_Timer;
     uint32 HeroicStrike_Timer;
@@ -773,39 +773,39 @@ struct MANGOS_DLL_DECL boss_lord_crispin_ferenceAI : public boss_moroes_guestAI
     }
 };
 
-CreatureAI* GetAI_boss_moroes(Creature *_Creature)
+CreatureAI* GetAI_boss_moroes(Creature* pCreature)
 {
-    return new boss_moroesAI (_Creature);
+    return new boss_moroesAI(pCreature);
 }
 
-CreatureAI* GetAI_baroness_dorothea_millstipe(Creature *_Creature)
+CreatureAI* GetAI_baroness_dorothea_millstipe(Creature* pCreature)
 {
-    return new boss_baroness_dorothea_millstipeAI (_Creature);
+    return new boss_baroness_dorothea_millstipeAI(pCreature);
 }
 
-CreatureAI* GetAI_baron_rafe_dreuger(Creature *_Creature)
+CreatureAI* GetAI_baron_rafe_dreuger(Creature* pCreature)
 {
-    return new boss_baron_rafe_dreugerAI (_Creature);
+    return new boss_baron_rafe_dreugerAI(pCreature);
 }
 
-CreatureAI* GetAI_lady_catriona_von_indi(Creature *_Creature)
+CreatureAI* GetAI_lady_catriona_von_indi(Creature* pCreature)
 {
-    return new boss_lady_catriona_von_indiAI (_Creature);
+    return new boss_lady_catriona_von_indiAI(pCreature);
 }
 
-CreatureAI* GetAI_lady_keira_berrybuck(Creature *_Creature)
+CreatureAI* GetAI_lady_keira_berrybuck(Creature* pCreature)
 {
-    return new boss_lady_keira_berrybuckAI (_Creature);
+    return new boss_lady_keira_berrybuckAI(pCreature);
 }
 
-CreatureAI* GetAI_lord_robin_daris(Creature *_Creature)
+CreatureAI* GetAI_lord_robin_daris(Creature* pCreature)
 {
-    return new boss_lord_robin_darisAI (_Creature);
+    return new boss_lord_robin_darisAI(pCreature);
 }
 
-CreatureAI* GetAI_lord_crispin_ference(Creature *_Creature)
+CreatureAI* GetAI_lord_crispin_ference(Creature* pCreature)
 {
-    return new boss_lord_crispin_ferenceAI (_Creature);
+    return new boss_lord_crispin_ferenceAI(pCreature);
 }
 
 void AddSC_boss_moroes()

@@ -30,7 +30,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_grizzleAI : public ScriptedAI
 {
-    boss_grizzleAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_grizzleAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 GroundTremor_Timer;
     uint32 Frenzy_Timer;
@@ -44,7 +44,7 @@ struct MANGOS_DLL_DECL boss_grizzleAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //GroundTremor_Timer
@@ -55,7 +55,7 @@ struct MANGOS_DLL_DECL boss_grizzleAI : public ScriptedAI
         }else GroundTremor_Timer -= diff;
 
         //Frenzy_Timer
-        if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 51 )
+        if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 51)
         {
             if (Frenzy_Timer < diff)
             {
@@ -68,9 +68,9 @@ struct MANGOS_DLL_DECL boss_grizzleAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_grizzle(Creature *_Creature)
+CreatureAI* GetAI_boss_grizzle(Creature* pCreature)
 {
-    return new boss_grizzleAI (_Creature);
+    return new boss_grizzleAI(pCreature);
 }
 
 void AddSC_boss_grizzle()

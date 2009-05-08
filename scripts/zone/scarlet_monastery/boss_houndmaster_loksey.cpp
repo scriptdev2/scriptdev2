@@ -30,7 +30,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_houndmaster_lokseyAI : public ScriptedAI
 {
-    boss_houndmaster_lokseyAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_houndmaster_lokseyAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 Enrage_Timer;
 
@@ -61,9 +61,9 @@ struct MANGOS_DLL_DECL boss_houndmaster_lokseyAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_houndmaster_loksey(Creature *_Creature)
+CreatureAI* GetAI_boss_houndmaster_loksey(Creature* pCreature)
 {
-    return new boss_houndmaster_lokseyAI (_Creature);
+    return new boss_houndmaster_lokseyAI(pCreature);
 }
 
 void AddSC_boss_houndmaster_loksey()

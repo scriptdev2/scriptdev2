@@ -36,7 +36,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_postmaster_malownAI : public ScriptedAI
 {
-    boss_postmaster_malownAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_postmaster_malownAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 WailingDead_Timer;
     uint32 Backhand_Timer;
@@ -124,9 +124,9 @@ struct MANGOS_DLL_DECL boss_postmaster_malownAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_postmaster_malown(Creature *_Creature)
+CreatureAI* GetAI_boss_postmaster_malown(Creature* pCreature)
 {
-    return new boss_postmaster_malownAI (_Creature);
+    return new boss_postmaster_malownAI(pCreature);
 }
 
 void AddSC_boss_postmaster_malown()

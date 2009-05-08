@@ -33,7 +33,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_ouroAI : public ScriptedAI
 {
-    boss_ouroAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_ouroAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 Sweep_Timer;
     uint32 SandBlast_Timer;
@@ -124,9 +124,9 @@ struct MANGOS_DLL_DECL boss_ouroAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_ouro(Creature *_Creature)
+CreatureAI* GetAI_boss_ouro(Creature* pCreature)
 {
-    return new boss_ouroAI (_Creature);
+    return new boss_ouroAI(pCreature);
 }
 
 void AddSC_boss_ouro()

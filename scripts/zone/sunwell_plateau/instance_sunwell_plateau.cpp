@@ -99,27 +99,27 @@ struct MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
     bool IsEncounterInProgress() const
     {
         for(uint8 i = 0; i < ENCOUNTERS; ++i)
-            if(Encounters[i] == IN_PROGRESS)
+            if (Encounters[i] == IN_PROGRESS)
                 return true;
 
         return false;
     }
 
-    void OnCreatureCreate(Creature* creature, uint32 entry)
+    void OnCreatureCreate(Creature* pCreature, uint32 entry)
     {
-        switch(creature->GetEntry())
+        switch(pCreature->GetEntry())
         {
-            case 24850: Kalecgos_Dragon     = creature->GetGUID(); break;
-            case 24891: Kalecgos_Human      = creature->GetGUID(); break;
-            case 24892: Sathrovarr          = creature->GetGUID(); break;
-            case 24882: Brutallus           = creature->GetGUID(); break;
-            case 25038: Felmyst             = creature->GetGUID(); break;
-            case 25166: Alythess            = creature->GetGUID(); break;
-            case 25165: Sacrolash           = creature->GetGUID(); break;
-            case 25741: Muru                = creature->GetGUID(); break;
-            case 25315: KilJaeden           = creature->GetGUID(); break;
-            case 25608: KilJaedenController = creature->GetGUID(); break;
-            case 26046: Anveena             = creature->GetGUID(); break;
+            case 24850: Kalecgos_Dragon     = pCreature->GetGUID(); break;
+            case 24891: Kalecgos_Human      = pCreature->GetGUID(); break;
+            case 24892: Sathrovarr          = pCreature->GetGUID(); break;
+            case 24882: Brutallus           = pCreature->GetGUID(); break;
+            case 25038: Felmyst             = pCreature->GetGUID(); break;
+            case 25166: Alythess            = pCreature->GetGUID(); break;
+            case 25165: Sacrolash           = pCreature->GetGUID(); break;
+            case 25741: Muru                = pCreature->GetGUID(); break;
+            case 25315: KilJaeden           = pCreature->GetGUID(); break;
+            case 25608: KilJaedenController = pCreature->GetGUID(); break;
+            case 26046: Anveena             = pCreature->GetGUID(); break;
         }
     }
 
@@ -253,8 +253,8 @@ struct MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
     void Update(uint32 diff)
     {
         // Only check for Spectral Realm if Kalecgos Encounter is running
-        if(Encounters[0] == IN_PROGRESS)
-            if(SpectralRealmTimer < diff)
+        if (Encounters[0] == IN_PROGRESS)
+            if (SpectralRealmTimer < diff)
         {
             EjectPlayers();
             SpectralRealmTimer = 5000;

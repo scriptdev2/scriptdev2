@@ -42,9 +42,9 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL mob_naga_distillerAI : public ScriptedAI
 {
-    mob_naga_distillerAI(Creature *c) : ScriptedAI(c)
+    mob_naga_distillerAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -87,9 +87,9 @@ struct MANGOS_DLL_DECL mob_naga_distillerAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL boss_warlord_kalithreshAI : public ScriptedAI
 {
-    boss_warlord_kalithreshAI(Creature *c) : ScriptedAI(c)
+    boss_warlord_kalithreshAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -172,7 +172,7 @@ struct MANGOS_DLL_DECL boss_warlord_kalithreshAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         if (Rage_Timer < diff)
@@ -207,14 +207,14 @@ struct MANGOS_DLL_DECL boss_warlord_kalithreshAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_naga_distiller(Creature *_Creature)
+CreatureAI* GetAI_mob_naga_distiller(Creature* pCreature)
 {
-    return new mob_naga_distillerAI (_Creature);
+    return new mob_naga_distillerAI(pCreature);
 }
 
-CreatureAI* GetAI_boss_warlord_kalithresh(Creature *_Creature)
+CreatureAI* GetAI_boss_warlord_kalithresh(Creature* pCreature)
 {
-    return new boss_warlord_kalithreshAI (_Creature);
+    return new boss_warlord_kalithreshAI(pCreature);
 }
 
 void AddSC_boss_warlord_kalithresh()

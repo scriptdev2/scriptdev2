@@ -31,7 +31,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_vectusAI : public ScriptedAI
 {
-    boss_vectusAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_vectusAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 FireShield_Timer;
     uint32 BlastWave_Timer;
@@ -64,7 +64,7 @@ struct MANGOS_DLL_DECL boss_vectusAI : public ScriptedAI
         }else BlastWave_Timer -= diff;
 
         //Frenzy_Timer
-        if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 25 )
+        if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 25)
         {
             if (Frenzy_Timer < diff)
             {
@@ -77,9 +77,9 @@ struct MANGOS_DLL_DECL boss_vectusAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_vectus(Creature *_Creature)
+CreatureAI* GetAI_boss_vectus(Creature* pCreature)
 {
-    return new boss_vectusAI (_Creature);
+    return new boss_vectusAI(pCreature);
 }
 
 void AddSC_boss_vectus()

@@ -38,7 +38,7 @@ struct MANGOS_DLL_DECL npc_henze_faulkAI : public ScriptedAI
     uint32 lifeTimer;
     bool spellHit;
 
-    npc_henze_faulkAI(Creature *c) : ScriptedAI(c) {Reset();}
+    npc_henze_faulkAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     void Reset()
     {
@@ -54,7 +54,7 @@ struct MANGOS_DLL_DECL npc_henze_faulkAI : public ScriptedAI
     {
         if (m_creature->IsStandState())
         {
-            if(lifeTimer < diff)
+            if (lifeTimer < diff)
                 m_creature->AI()->EnterEvadeMode();
             else
                 lifeTimer -= diff;
@@ -63,7 +63,7 @@ struct MANGOS_DLL_DECL npc_henze_faulkAI : public ScriptedAI
 
     void SpellHit(Unit *Hitter, const SpellEntry *Spellkind)
     {
-        if(Spellkind->Id == 8593 && !spellHit)
+        if (Spellkind->Id == 8593 && !spellHit)
         {
             DoCast(m_creature,32343);
             m_creature->SetStandState(UNIT_STAND_STATE_STAND);
@@ -75,9 +75,9 @@ struct MANGOS_DLL_DECL npc_henze_faulkAI : public ScriptedAI
     }
 
 };
-CreatureAI* GetAI_npc_henze_faulk(Creature *_Creature)
+CreatureAI* GetAI_npc_henze_faulk(Creature* pCreature)
 {
-    return new npc_henze_faulkAI (_Creature);
+    return new npc_henze_faulkAI(pCreature);
 }
 
 void AddSC_elwynn_forest()

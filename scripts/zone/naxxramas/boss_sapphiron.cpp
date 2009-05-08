@@ -35,7 +35,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_sapphironAI : public ScriptedAI
 {
-    boss_sapphironAI(Creature* c) : ScriptedAI(c)
+    boss_sapphironAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         Reset();
     }
@@ -130,7 +130,7 @@ struct MANGOS_DLL_DECL boss_sapphironAI : public ScriptedAI
 
             if (Icebolt_Count == 5 && !landoff)
             {
-                if (FrostBreath_Timer < diff )
+                if (FrostBreath_Timer < diff)
                 {
                     DoScriptText(EMOTE_BREATH, m_creature);
                     DoCast(m_creature->getVictim(),SPELL_FROST_BREATH);
@@ -169,9 +169,9 @@ struct MANGOS_DLL_DECL boss_sapphironAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_sapphiron(Creature *_Creature)
+CreatureAI* GetAI_boss_sapphiron(Creature* pCreature)
 {
-    return new boss_sapphironAI (_Creature);
+    return new boss_sapphironAI(pCreature);
 }
 
 void AddSC_boss_sapphiron()

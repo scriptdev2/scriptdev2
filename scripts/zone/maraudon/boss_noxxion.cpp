@@ -28,7 +28,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_noxxionAI : public ScriptedAI
 {
-    boss_noxxionAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_noxxionAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 ToxicVolley_Timer;
     uint32 Uppercut_Timer;
@@ -66,7 +66,7 @@ struct MANGOS_DLL_DECL boss_noxxionAI : public ScriptedAI
         }
         Rand = 0;
         Summoned = DoSpawnCreature(13456, RandX, RandY, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 90000);
-        if(Summoned)
+        if (Summoned)
             ((CreatureAI*)Summoned->AI())->AttackStart(victim);
     }
 
@@ -89,7 +89,7 @@ struct MANGOS_DLL_DECL boss_noxxionAI : public ScriptedAI
         }
 
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //ToxicVolley_Timer
@@ -130,9 +130,9 @@ struct MANGOS_DLL_DECL boss_noxxionAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_noxxion(Creature *_Creature)
+CreatureAI* GetAI_boss_noxxion(Creature* pCreature)
 {
-    return new boss_noxxionAI (_Creature);
+    return new boss_noxxionAI(pCreature);
 }
 
 void AddSC_boss_noxxion()

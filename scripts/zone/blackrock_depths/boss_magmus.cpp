@@ -28,7 +28,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_magmusAI : public ScriptedAI
 {
-    boss_magmusAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_magmusAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 FieryBurst_Timer;
     uint32 WarStomp_Timer;
@@ -42,7 +42,7 @@ struct MANGOS_DLL_DECL boss_magmusAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //FieryBurst_Timer
@@ -53,7 +53,7 @@ struct MANGOS_DLL_DECL boss_magmusAI : public ScriptedAI
         }else FieryBurst_Timer -= diff;
 
         //WarStomp_Timer
-        if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 51 )
+        if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 51)
         {
             if (WarStomp_Timer < diff)
             {
@@ -65,9 +65,9 @@ struct MANGOS_DLL_DECL boss_magmusAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_magmus(Creature *_Creature)
+CreatureAI* GetAI_boss_magmus(Creature* pCreature)
 {
-    return new boss_magmusAI (_Creature);
+    return new boss_magmusAI(pCreature);
 }
 
 void AddSC_boss_magmus()

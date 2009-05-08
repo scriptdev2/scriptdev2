@@ -27,7 +27,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_ambassador_flamelashAI : public ScriptedAI
 {
-    boss_ambassador_flamelashAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_ambassador_flamelashAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 FireBlast_Timer;
     uint32 Spirit_Timer;
@@ -58,14 +58,14 @@ struct MANGOS_DLL_DECL boss_ambassador_flamelashAI : public ScriptedAI
             case 1: RandY += Rand; break;
         }
         Summoned = DoSpawnCreature(9178, RandX, RandY, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 60000);
-        if(Summoned)
+        if (Summoned)
             ((CreatureAI*)Summoned->AI())->AttackStart(victim);
     }
 
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //FireBlast_Timer
@@ -89,9 +89,9 @@ struct MANGOS_DLL_DECL boss_ambassador_flamelashAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_ambassador_flamelash(Creature *_Creature)
+CreatureAI* GetAI_boss_ambassador_flamelash(Creature* pCreature)
 {
-    return new boss_ambassador_flamelashAI (_Creature);
+    return new boss_ambassador_flamelashAI(pCreature);
 }
 
 void AddSC_boss_ambassador_flamelash()

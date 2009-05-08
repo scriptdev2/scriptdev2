@@ -31,7 +31,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_maleki_the_pallidAI : public ScriptedAI
 {
-    boss_maleki_the_pallidAI(Creature *c) : ScriptedAI(c)
+    boss_maleki_the_pallidAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         pInstance = (ScriptedInstance*)m_creature->GetInstanceData();
         Reset();
@@ -93,9 +93,9 @@ struct MANGOS_DLL_DECL boss_maleki_the_pallidAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_maleki_the_pallid(Creature *_Creature)
+CreatureAI* GetAI_boss_maleki_the_pallid(Creature* pCreature)
 {
-    return new boss_maleki_the_pallidAI (_Creature);
+    return new boss_maleki_the_pallidAI(pCreature);
 }
 
 void AddSC_boss_maleki_the_pallid()

@@ -34,7 +34,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_murmurAI : public Scripted_NoMovementAI
 {
-    boss_murmurAI(Creature *c) : Scripted_NoMovementAI(c) {Reset();}
+    boss_murmurAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature) {Reset();}
 
     uint32 SonicBoom_Timer;
     uint32 MurmursTouch_Timer;
@@ -63,7 +63,7 @@ struct MANGOS_DLL_DECL boss_murmurAI : public Scripted_NoMovementAI
     void SonicBoomEffect()
     {
         std::list<HostilReference *> t_list = m_creature->getThreatManager().getThreatList();
-        for( std::list<HostilReference *>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr )
+        for(std::list<HostilReference *>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
         {
            Unit* target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
            if (target && target->GetTypeId() == TYPEID_PLAYER)
@@ -81,7 +81,7 @@ struct MANGOS_DLL_DECL boss_murmurAI : public Scripted_NoMovementAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //SonicBoom_Timer
@@ -109,7 +109,7 @@ struct MANGOS_DLL_DECL boss_murmurAI : public Scripted_NoMovementAI
         {
             /*Unit* target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if(target)
+            if (target)
                 DoCast(target, SPELL_MURMURS_TOUCH);*/
             DoCast(m_creature, SPELL_MURMURS_TOUCH);
             MurmursTouch_Timer = 25000 + rand()%10000;
@@ -157,9 +157,9 @@ struct MANGOS_DLL_DECL boss_murmurAI : public Scripted_NoMovementAI
             DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_murmur(Creature *_Creature)
+CreatureAI* GetAI_boss_murmur(Creature* pCreature)
 {
-    return new boss_murmurAI (_Creature);
+    return new boss_murmurAI(pCreature);
 }
 
 void AddSC_boss_murmur()

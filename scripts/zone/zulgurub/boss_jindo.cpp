@@ -41,9 +41,9 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_jindoAI : public ScriptedAI
 {
-    boss_jindoAI(Creature *c) : ScriptedAI(c)
+    boss_jindoAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -167,9 +167,9 @@ struct MANGOS_DLL_DECL boss_jindoAI : public ScriptedAI
 //Healing Ward
 struct MANGOS_DLL_DECL mob_healing_wardAI : public ScriptedAI
 {
-    mob_healing_wardAI(Creature *c) : ScriptedAI(c)
+    mob_healing_wardAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -202,9 +202,9 @@ struct MANGOS_DLL_DECL mob_healing_wardAI : public ScriptedAI
 //Shade of Jindo
 struct MANGOS_DLL_DECL mob_shade_of_jindoAI : public ScriptedAI
 {
-    mob_shade_of_jindoAI(Creature *c) : ScriptedAI(c)
+    mob_shade_of_jindoAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -232,19 +232,19 @@ struct MANGOS_DLL_DECL mob_shade_of_jindoAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_jindo(Creature *_Creature)
+CreatureAI* GetAI_boss_jindo(Creature* pCreature)
 {
-    return new boss_jindoAI (_Creature);
+    return new boss_jindoAI(pCreature);
 }
 
-CreatureAI* GetAI_mob_healing_ward(Creature *_Creature)
+CreatureAI* GetAI_mob_healing_ward(Creature* pCreature)
 {
-    return new mob_healing_wardAI (_Creature);
+    return new mob_healing_wardAI(pCreature);
 }
 
-CreatureAI* GetAI_mob_shade_of_jindo(Creature *_Creature)
+CreatureAI* GetAI_mob_shade_of_jindo(Creature* pCreature)
 {
-    return new mob_shade_of_jindoAI (_Creature);
+    return new mob_shade_of_jindoAI(pCreature);
 }
 
 void AddSC_boss_jindo()

@@ -31,7 +31,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_ironayaAI : public ScriptedAI
 {
-    boss_ironayaAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_ironayaAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 Arcing_Timer;
     bool hasCastedWstomp;
@@ -90,9 +90,9 @@ struct MANGOS_DLL_DECL boss_ironayaAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_ironaya(Creature *_Creature)
+CreatureAI* GetAI_boss_ironaya(Creature* pCreature)
 {
-    return new boss_ironayaAI (_Creature);
+    return new boss_ironayaAI(pCreature);
 }
 
 void AddSC_boss_ironaya()

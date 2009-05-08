@@ -33,29 +33,29 @@ EndContentData */
 ## npc_ayren_cloudbreaker
 ######*/
 
-bool GossipHello_npc_ayren_cloudbreaker(Player *player, Creature *_Creature)
+bool GossipHello_npc_ayren_cloudbreaker(Player* pPlayer, Creature* pCreature)
 {
-    if( player->GetQuestStatus(11532) == QUEST_STATUS_INCOMPLETE || player->GetQuestStatus(11533) == QUEST_STATUS_INCOMPLETE)
-        player->ADD_GOSSIP_ITEM(0,"Speaking of action, I've been ordered to undertake an air strike.",GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF+1);
+    if (pPlayer->GetQuestStatus(11532) == QUEST_STATUS_INCOMPLETE || pPlayer->GetQuestStatus(11533) == QUEST_STATUS_INCOMPLETE)
+        pPlayer->ADD_GOSSIP_ITEM(0,"Speaking of action, I've been ordered to undertake an air strike.",GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF+1);
 
-    if( player->GetQuestStatus(11542) == QUEST_STATUS_INCOMPLETE || player->GetQuestStatus(11543) == QUEST_STATUS_INCOMPLETE)
-        player->ADD_GOSSIP_ITEM(0,"I need to intercept the Dawnblade reinforcements.",GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF+2);
+    if (pPlayer->GetQuestStatus(11542) == QUEST_STATUS_INCOMPLETE || pPlayer->GetQuestStatus(11543) == QUEST_STATUS_INCOMPLETE)
+        pPlayer->ADD_GOSSIP_ITEM(0,"I need to intercept the Dawnblade reinforcements.",GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF+2);
 
-    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(),_Creature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_ayren_cloudbreaker(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+bool GossipSelect_npc_ayren_cloudbreaker(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
     if (action == GOSSIP_ACTION_INFO_DEF+1)
     {
-        player->CLOSE_GOSSIP_MENU();
-        player->CastSpell(player,45071,true);               //TaxiPath 779
+        pPlayer->CLOSE_GOSSIP_MENU();
+        pPlayer->CastSpell(pPlayer,45071,true);               //TaxiPath 779
     }
     if (action == GOSSIP_ACTION_INFO_DEF+2)
     {
-        player->CLOSE_GOSSIP_MENU();
-        player->CastSpell(player,45113,true);               //TaxiPath 784
+        pPlayer->CLOSE_GOSSIP_MENU();
+        pPlayer->CastSpell(pPlayer,45113,true);               //TaxiPath 784
     }
     return true;
 }
@@ -71,7 +71,7 @@ bool GossipSelect_npc_ayren_cloudbreaker(Player *player, Creature *_Creature, ui
 
 struct MANGOS_DLL_DECL npc_converted_sentryAI : public ScriptedAI
 {
-    npc_converted_sentryAI(Creature *c) : ScriptedAI(c) { Reset(); }
+    npc_converted_sentryAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
     bool Credit;
     uint32 Timer;
@@ -89,9 +89,9 @@ struct MANGOS_DLL_DECL npc_converted_sentryAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if( !Credit )
+        if (!Credit)
         {
-            if( Timer <= diff )
+            if (Timer <= diff)
             {
                 uint32 i = urand(1,2);
                 if (i==1)
@@ -106,30 +106,30 @@ struct MANGOS_DLL_DECL npc_converted_sentryAI : public ScriptedAI
         }
     }
 };
-CreatureAI* GetAI_npc_converted_sentry(Creature *_Creature)
+CreatureAI* GetAI_npc_converted_sentry(Creature* pCreature)
 {
-    return new npc_converted_sentryAI (_Creature);
+    return new npc_converted_sentryAI(pCreature);
 }
 
 /*######
 ## npc_unrestrained_dragonhawk
 ######*/
 
-bool GossipHello_npc_unrestrained_dragonhawk(Player *player, Creature *_Creature)
+bool GossipHello_npc_unrestrained_dragonhawk(Player* pPlayer, Creature* pCreature)
 {
-    if( player->GetQuestStatus(11542) == QUEST_STATUS_COMPLETE || player->GetQuestStatus(11543) == QUEST_STATUS_COMPLETE )
-        player->ADD_GOSSIP_ITEM(0,"<Ride the dragonhawk to Sun's Reach>",GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF+1);
+    if (pPlayer->GetQuestStatus(11542) == QUEST_STATUS_COMPLETE || pPlayer->GetQuestStatus(11543) == QUEST_STATUS_COMPLETE)
+        pPlayer->ADD_GOSSIP_ITEM(0,"<Ride the dragonhawk to Sun's Reach>",GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF+1);
 
-    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(),_Creature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_unrestrained_dragonhawk(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+bool GossipSelect_npc_unrestrained_dragonhawk(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
     if (action == GOSSIP_ACTION_INFO_DEF+1)
     {
-        player->CLOSE_GOSSIP_MENU();
-        player->CastSpell(player,45353,true);               //TaxiPath 788
+        pPlayer->CLOSE_GOSSIP_MENU();
+        pPlayer->CastSpell(pPlayer,45353,true);               //TaxiPath 788
     }
     return true;
 }

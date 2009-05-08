@@ -51,7 +51,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL mob_doom_blossomAI : public ScriptedAI
 {
-    mob_doom_blossomAI(Creature *c) : ScriptedAI(c)
+    mob_doom_blossomAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         Reset();
     }
@@ -115,7 +115,7 @@ struct TargetDistanceOrder : public std::binary_function<const Unit, const Unit,
 
 struct MANGOS_DLL_DECL mob_shadowy_constructAI : public ScriptedAI
 {
-    mob_shadowy_constructAI(Creature* c) : ScriptedAI(c)
+    mob_shadowy_constructAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         Reset();
     }
@@ -146,7 +146,7 @@ struct MANGOS_DLL_DECL mob_shadowy_constructAI : public ScriptedAI
 /* Comment it out for now. NOTE TO FUTURE DEV: UNCOMMENT THIS OUT ONLY AFTER MIND CONTROL IS IMPLEMENTED
     void DamageTaken(Unit* done_by, uint32 &damage)
     {
-        if(done_by->GetGUID() != GhostGUID)
+        if (done_by->GetGUID() != GhostGUID)
         damage = 0;                                         // Only the ghost can deal damage.
     }
  */
@@ -159,7 +159,7 @@ struct MANGOS_DLL_DECL mob_shadowy_constructAI : public ScriptedAI
 
         std::list<HostilReference*>::iterator itr = m_threatlist.begin();
         std::list<Unit*> targets;
-        for( ; itr != m_threatlist.end(); ++itr)
+        for(; itr != m_threatlist.end(); ++itr)
         {
             Unit* pUnit = Unit::GetUnit((*m_creature), (*itr)->getUnitGuid());
             if (pUnit && pUnit->isAlive())
@@ -196,9 +196,9 @@ struct MANGOS_DLL_DECL mob_shadowy_constructAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
 {
-    boss_teron_gorefiendAI(Creature *c) : ScriptedAI(c)
+    boss_teron_gorefiendAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -352,7 +352,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
             /*float x,y,z;
             Ghost->GetPosition(x,y,z);
             Creature* control = m_creature->SummonCreature(CREATURE_GHOST, x, y, z, 0, TEMPSUMMON_TIMED_DESAWN, 30000);
-            if(control)
+            if (control)
             {
                 ((Player*)Ghost)->Possess(control);
                 Ghost->DealDamage(Ghost, Ghost->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL,
@@ -482,19 +482,19 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
         }else CrushingShadowsTimer -= diff;
 
         /*** NOTE FOR FUTURE DEV: UNCOMMENT BELOW ONLY IF MIND CONTROL IS FULLY IMPLEMENTED **/
-        /*if(ShadowOfDeathTimer < diff)
+        /*if (ShadowOfDeathTimer < diff)
         {
             Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1);
 
-            if(!target)
+            if (!target)
                target = m_creature->getVictim();
 
-            if(target && target->isAlive() && target->GetTypeId() == TYPEID_PLAYER)
+            if (target && target->isAlive() && target->GetTypeId() == TYPEID_PLAYER)
             {
                 DoCast(target, SPELL_SHADOW_OF_DEATH);
                 GhostGUID = target->GetGUID();
                 ShadowOfDeathTimer = 30000;
-                SummonShadowsTimer = 53000; // Make it VERY close but slightly less so that we can check if the aura is still on the player
+                SummonShadowsTimer = 53000; // Make it VERY close but slightly less so that we can check if the aura is still on the pPlayer
             }
         }else ShadowOfDeathTimer -= diff;*/
 
@@ -521,19 +521,19 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_doom_blossom(Creature *_Creature)
+CreatureAI* GetAI_mob_doom_blossom(Creature* pCreature)
 {
-    return new mob_doom_blossomAI(_Creature);
+    return new mob_doom_blossomAI(pCreature);
 }
 
-CreatureAI* GetAI_mob_shadowy_construct(Creature *_Creature)
+CreatureAI* GetAI_mob_shadowy_construct(Creature* pCreature)
 {
-    return new mob_shadowy_constructAI(_Creature);
+    return new mob_shadowy_constructAI(pCreature);
 }
 
-CreatureAI* GetAI_boss_teron_gorefiend(Creature *_Creature)
+CreatureAI* GetAI_boss_teron_gorefiend(Creature* pCreature)
 {
-    return new boss_teron_gorefiendAI (_Creature);
+    return new boss_teron_gorefiendAI(pCreature);
 }
 
 void AddSC_boss_teron_gorefiend()

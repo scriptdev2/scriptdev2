@@ -115,12 +115,12 @@ struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
         return false;
     }
 
-    void OnCreatureCreate(Creature *creature, uint32 creature_entry)
+    void OnCreatureCreate(Creature* pCreature, uint32 creature_entry)
     {
-        switch(creature->GetEntry())
+        switch(pCreature->GetEntry())
         {
-            case 17257: MagtheridonGUID = creature->GetGUID(); break;
-            case 17256: ChannelerGUID.insert(creature->GetGUID()); break;
+            case 17257: MagtheridonGUID = pCreature->GetGUID(); break;
+            case 17256: ChannelerGUID.insert(pCreature->GetGUID()); break;
         }
     }
 
@@ -259,7 +259,7 @@ struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
         return 0;
     }
 
-    void AttackNearestTarget(Creature *creature)
+    void AttackNearestTarget(Creature* pCreature)
     {
         float minRange = VISIBLE_RANGE;
         float range;
@@ -272,7 +272,7 @@ struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
             {
                 if (i_pl->isTargetableForAttack())
                 {
-                    range = i_pl->GetDistance(creature);
+                    range = i_pl->GetDistance(pCreature);
                     if (range < minRange)
                     {
                         minRange = range;
@@ -287,7 +287,7 @@ struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
             debug_log("SD2: Instance Magtheridon: AttackNearestTarget failed. No player.");
             return;
         }
-        creature->AI()->AttackStart(target);
+        pCreature->AI()->AttackStart(target);
     }
 
     void Update(uint32 diff)

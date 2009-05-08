@@ -29,7 +29,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_thebeastAI : public ScriptedAI
 {
-    boss_thebeastAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_thebeastAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 Flamebreak_Timer;
     uint32 Immolate_Timer;
@@ -45,7 +45,7 @@ struct MANGOS_DLL_DECL boss_thebeastAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //Flamebreak_Timer
@@ -74,9 +74,9 @@ struct MANGOS_DLL_DECL boss_thebeastAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_thebeast(Creature *_Creature)
+CreatureAI* GetAI_boss_thebeast(Creature* pCreature)
 {
-    return new boss_thebeastAI (_Creature);
+    return new boss_thebeastAI(pCreature);
 }
 
 void AddSC_boss_thebeast()

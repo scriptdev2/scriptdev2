@@ -50,9 +50,9 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_talon_king_ikissAI : public ScriptedAI
 {
-    boss_talon_king_ikissAI(Creature *c) : ScriptedAI(c)
+    boss_talon_king_ikissAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -84,9 +84,9 @@ struct MANGOS_DLL_DECL boss_talon_king_ikissAI : public ScriptedAI
 
     void MoveInLineOfSight(Unit *who)
     {
-        if( !m_creature->getVictim() && who->isTargetableForAttack() && ( m_creature->IsHostileTo( who )) && who->isInAccessablePlaceFor(m_creature) )
+        if (!m_creature->getVictim() && who->isTargetableForAttack() && (m_creature->IsHostileTo(who)) && who->isInAccessablePlaceFor(m_creature))
         {
-            if(!Intro && m_creature->IsWithinDistInMap(who, 100))
+            if (!Intro && m_creature->IsWithinDistInMap(who, 100))
             {
                 Intro = true;
                 DoScriptText(SAY_INTRO, m_creature);
@@ -96,7 +96,7 @@ struct MANGOS_DLL_DECL boss_talon_king_ikissAI : public ScriptedAI
                 return;
 
             float attackRadius = m_creature->GetAttackDistance(who);
-            if( m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->IsWithinLOSInMap(who) )
+            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->IsWithinLOSInMap(who))
             {
                 who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
                 AttackStart(who);
@@ -204,9 +204,9 @@ struct MANGOS_DLL_DECL boss_talon_king_ikissAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_talon_king_ikiss(Creature *_Creature)
+CreatureAI* GetAI_boss_talon_king_ikiss(Creature* pCreature)
 {
-    return new boss_talon_king_ikissAI (_Creature);
+    return new boss_talon_king_ikissAI(pCreature);
 }
 
 void AddSC_boss_talon_king_ikiss()

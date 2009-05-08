@@ -25,7 +25,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_death_knight_darkreaverAI : public ScriptedAI
 {
-    boss_death_knight_darkreaverAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_death_knight_darkreaverAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     void Reset()
     {
@@ -40,9 +40,9 @@ struct MANGOS_DLL_DECL boss_death_knight_darkreaverAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_death_knight_darkreaver(Creature *_Creature)
+CreatureAI* GetAI_boss_death_knight_darkreaver(Creature* pCreature)
 {
-    return new boss_death_knight_darkreaverAI (_Creature);
+    return new boss_death_knight_darkreaverAI(pCreature);
 }
 
 void AddSC_boss_death_knight_darkreaver()

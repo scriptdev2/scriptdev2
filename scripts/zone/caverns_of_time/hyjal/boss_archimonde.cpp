@@ -73,9 +73,9 @@ EndScriptData */
 
 struct mob_ancient_wispAI : public ScriptedAI
 {
-    mob_ancient_wispAI(Creature* c) : ScriptedAI(c)
+    mob_ancient_wispAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         ArchimondeGUID = 0;
         Reset();
     }
@@ -116,7 +116,7 @@ struct mob_ancient_wispAI : public ScriptedAI
    MoveChase the Doomfire Spirit always, until despawn (AttackStart is called upon it's spawn) */
 struct MANGOS_DLL_DECL mob_doomfireAI : public ScriptedAI
 {
-    mob_doomfireAI(Creature* c) : ScriptedAI(c) { Reset(); }
+    mob_doomfireAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
     void Reset() { }
 
@@ -128,7 +128,7 @@ struct MANGOS_DLL_DECL mob_doomfireAI : public ScriptedAI
    travels in random directions if target cannot be found. */
 struct MANGOS_DLL_DECL mob_doomfire_targettingAI : public ScriptedAI
 {
-    mob_doomfire_targettingAI(Creature* c) : ScriptedAI(c) { Reset(); }
+    mob_doomfire_targettingAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
     uint64 TargetGUID;
     uint32 ChangeTargetTimer;
@@ -192,9 +192,9 @@ struct TargetDistanceOrder : public std::binary_function<const Unit, const Unit,
 
 struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
 {
-    boss_archimondeAI(Creature *c) : ScriptedAI(c)
+    boss_archimondeAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -318,7 +318,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
 
         std::list<Unit*> targets;
         std::list<HostilReference*>::iterator itr = m_threatlist.begin();
-        for( ; itr != m_threatlist.end(); ++itr)
+        for(; itr != m_threatlist.end(); ++itr)
         {
             Unit* pUnit = Unit::GetUnit((*m_creature), (*itr)->getUnitGuid());
             if (pUnit && pUnit->isAlive())
@@ -473,7 +473,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         {
             if (EnrageTimer < diff)
             {
-                if((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) > 10)
+                if ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) > 10)
                 {
                     m_creature->GetMotionMaster()->Clear(false);
                     m_creature->GetMotionMaster()->MoveIdle();
@@ -599,24 +599,24 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_archimonde(Creature *_Creature)
+CreatureAI* GetAI_boss_archimonde(Creature* pCreature)
 {
-    return new boss_archimondeAI (_Creature);
+    return new boss_archimondeAI(pCreature);
 }
 
-CreatureAI* GetAI_mob_doomfire(Creature* _Creature)
+CreatureAI* GetAI_mob_doomfire(Creature* pCreature)
 {
-    return new mob_doomfireAI(_Creature);
+    return new mob_doomfireAI(pCreature);
 }
 
-CreatureAI* GetAI_mob_doomfire_targetting(Creature* _Creature)
+CreatureAI* GetAI_mob_doomfire_targetting(Creature* pCreature)
 {
-    return new mob_doomfire_targettingAI(_Creature);
+    return new mob_doomfire_targettingAI(pCreature);
 }
 
-CreatureAI* GetAI_mob_ancient_wisp(Creature* _Creature)
+CreatureAI* GetAI_mob_ancient_wisp(Creature* pCreature)
 {
-    return new mob_ancient_wispAI(_Creature);
+    return new mob_ancient_wispAI(pCreature);
 }
 
 void AddSC_boss_archimonde()

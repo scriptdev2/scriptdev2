@@ -36,7 +36,7 @@ EndScriptData */
 3 - Warlord Kalithresh Event
 */
 
-bool GOHello_go_main_chambers_access_panel(Player *player, GameObject* _GO)
+bool GOHello_go_main_chambers_access_panel(Player* pPlayer, GameObject* _GO)
 {
     ScriptedInstance* pInstance = (ScriptedInstance*)_GO->GetInstanceData();
 
@@ -88,13 +88,13 @@ struct MANGOS_DLL_DECL instance_steam_vault : public ScriptedInstance
         return false;
     }
 
-    void OnCreatureCreate(Creature *creature, uint32 creature_entry)
+    void OnCreatureCreate(Creature* pCreature, uint32 creature_entry)
     {
-        switch(creature->GetEntry())
+        switch(pCreature->GetEntry())
         {
-            case 17797: ThespiaGUID = creature->GetGUID(); break;
-            case 17796: MekgineerGUID = creature->GetGUID(); break;
-            case 17798: KalithreshGUID = creature->GetGUID(); break;
+            case 17797: ThespiaGUID = pCreature->GetGUID(); break;
+            case 17796: MekgineerGUID = pCreature->GetGUID(); break;
+            case 17798: KalithreshGUID = pCreature->GetGUID(); break;
         }
     }
 

@@ -36,7 +36,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_amnennar_the_coldbringerAI : public ScriptedAI
 {
-    boss_amnennar_the_coldbringerAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_amnennar_the_coldbringerAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 AmnenarsWrath_Timer;
     uint32 FrostBolt_Timer;
@@ -114,9 +114,9 @@ struct MANGOS_DLL_DECL boss_amnennar_the_coldbringerAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_amnennar_the_coldbringer(Creature *_Creature)
+CreatureAI* GetAI_boss_amnennar_the_coldbringer(Creature* pCreature)
 {
-    return new boss_amnennar_the_coldbringerAI (_Creature);
+    return new boss_amnennar_the_coldbringerAI(pCreature);
 }
 
 void AddSC_boss_amnennar_the_coldbringer()

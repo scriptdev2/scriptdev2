@@ -41,7 +41,7 @@ EndContentData */
 
 struct MANGOS_DLL_DECL mob_stolen_soulAI : public ScriptedAI
 {
-    mob_stolen_soulAI(Creature *c) : ScriptedAI(c) {Reset();}
+    mob_stolen_soulAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint8 myClass;
     uint32 Class_Timer;
@@ -108,9 +108,9 @@ struct MANGOS_DLL_DECL mob_stolen_soulAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_stolen_soul(Creature *_Creature)
+CreatureAI* GetAI_mob_stolen_soul(Creature* pCreature)
 {
-    return new mob_stolen_soulAI (_Creature);
+    return new mob_stolen_soulAI(pCreature);
 }
 
 #define SAY_INTRO                   -1558000
@@ -140,7 +140,7 @@ CreatureAI* GetAI_mob_stolen_soul(Creature *_Creature)
 
 struct MANGOS_DLL_DECL boss_exarch_maladaarAI : public ScriptedAI
 {
-    boss_exarch_maladaarAI(Creature *c) : ScriptedAI(c)
+    boss_exarch_maladaarAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         HasTaunted = false;
         Reset();
@@ -289,9 +289,9 @@ struct MANGOS_DLL_DECL boss_exarch_maladaarAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_exarch_maladaar(Creature *_Creature)
+CreatureAI* GetAI_boss_exarch_maladaar(Creature* pCreature)
 {
-    return new boss_exarch_maladaarAI (_Creature);
+    return new boss_exarch_maladaarAI(pCreature);
 }
 
 #define SPELL_AV_MORTAL_STRIKE          16856
@@ -299,7 +299,7 @@ CreatureAI* GetAI_boss_exarch_maladaar(Creature *_Creature)
 
 struct MANGOS_DLL_DECL mob_avatar_of_martyredAI : public ScriptedAI
 {
-    mob_avatar_of_martyredAI(Creature *c) : ScriptedAI(c) {Reset();}
+    mob_avatar_of_martyredAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 Mortal_Strike_timer;
 
@@ -323,9 +323,9 @@ struct MANGOS_DLL_DECL mob_avatar_of_martyredAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_avatar_of_martyred(Creature *_Creature)
+CreatureAI* GetAI_mob_avatar_of_martyred(Creature* pCreature)
 {
-    return new mob_avatar_of_martyredAI (_Creature);
+    return new mob_avatar_of_martyredAI(pCreature);
 }
 
 void AddSC_boss_exarch_maladaar()

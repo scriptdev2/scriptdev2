@@ -52,9 +52,9 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
 {
-    boss_majordomoAI(Creature *c) : ScriptedAI(c)
+    boss_majordomoAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -123,9 +123,9 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_majordomo(Creature *_Creature)
+CreatureAI* GetAI_boss_majordomo(Creature* pCreature)
 {
-    return new boss_majordomoAI (_Creature);
+    return new boss_majordomoAI(pCreature);
 }
 
 void AddSC_boss_majordomo()

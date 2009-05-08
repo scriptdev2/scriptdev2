@@ -48,9 +48,9 @@ EndContentData */
 
 struct MANGOS_DLL_DECL boss_mekgineer_steamriggerAI : public ScriptedAI
 {
-    boss_mekgineer_steamriggerAI(Creature *c) : ScriptedAI(c)
+    boss_mekgineer_steamriggerAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         HeroicMode = m_creature->GetMap()->IsHeroic();
         Reset();
     }
@@ -184,9 +184,9 @@ struct MANGOS_DLL_DECL boss_mekgineer_steamriggerAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_mekgineer_steamrigger(Creature *_Creature)
+CreatureAI* GetAI_boss_mekgineer_steamrigger(Creature* pCreature)
 {
-    return new boss_mekgineer_steamriggerAI (_Creature);
+    return new boss_mekgineer_steamriggerAI(pCreature);
 }
 
 #define SPELL_DISPEL_MAGIC          17201
@@ -198,9 +198,9 @@ CreatureAI* GetAI_boss_mekgineer_steamrigger(Creature *_Creature)
 
 struct MANGOS_DLL_DECL mob_steamrigger_mechanicAI : public ScriptedAI
 {
-    mob_steamrigger_mechanicAI(Creature *c) : ScriptedAI(c)
+    mob_steamrigger_mechanicAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         HeroicMode = m_creature->GetMap()->IsHeroic();
         Reset();
     }
@@ -257,9 +257,9 @@ struct MANGOS_DLL_DECL mob_steamrigger_mechanicAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_steamrigger_mechanic(Creature *_Creature)
+CreatureAI* GetAI_mob_steamrigger_mechanic(Creature* pCreature)
 {
-    return new mob_steamrigger_mechanicAI (_Creature);
+    return new mob_steamrigger_mechanicAI(pCreature);
 }
 
 void AddSC_boss_mekgineer_steamrigger()

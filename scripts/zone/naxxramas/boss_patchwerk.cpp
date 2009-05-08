@@ -39,7 +39,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_patchwerkAI : public ScriptedAI
 {
-    boss_patchwerkAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_patchwerkAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 HatefullStrike_Timer;
     uint32 Enrage_Timer;
@@ -133,9 +133,9 @@ struct MANGOS_DLL_DECL boss_patchwerkAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_patchwerk(Creature *_Creature)
+CreatureAI* GetAI_boss_patchwerk(Creature* pCreature)
 {
-    return new boss_patchwerkAI (_Creature);
+    return new boss_patchwerkAI(pCreature);
 }
 
 void AddSC_boss_patchwerk()

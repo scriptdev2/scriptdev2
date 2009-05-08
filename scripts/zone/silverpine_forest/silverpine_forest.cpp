@@ -35,7 +35,7 @@ EndContentData */
 
 struct MANGOS_DLL_DECL npc_astor_hadrenAI : public ScriptedAI
 {
-    npc_astor_hadrenAI(Creature *c) : ScriptedAI(c) {Reset();}
+    npc_astor_hadrenAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     void Reset()
     {
@@ -53,29 +53,29 @@ CreatureAI* GetAI_npc_astor_hadren(Creature *_creature)
     return new npc_astor_hadrenAI(_creature);
 }
 
-bool GossipHello_npc_astor_hadren(Player *player, Creature *_Creature)
+bool GossipHello_npc_astor_hadren(Player* pPlayer, Creature* pCreature)
 {
-    if (player->GetQuestStatus(1886) == QUEST_STATUS_INCOMPLETE)
-        player->ADD_GOSSIP_ITEM( 0, "You're Astor Hadren, right?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+    if (pPlayer->GetQuestStatus(1886) == QUEST_STATUS_INCOMPLETE)
+        pPlayer->ADD_GOSSIP_ITEM(0, "You're Astor Hadren, right?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
 
-    player->SEND_GOSSIP_MENU(623, _Creature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(623, pCreature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_astor_hadren(Player *player, Creature *_Creature, uint32 sender, uint32 action)
+bool GossipSelect_npc_astor_hadren(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
     switch (action)
     {
         case GOSSIP_ACTION_INFO_DEF + 1:
-            player->ADD_GOSSIP_ITEM( 0, "You've got something I need, Astor. And I'll be taking it now.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-            player->SEND_GOSSIP_MENU(624, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, "You've got something I need, Astor. And I'll be taking it now.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+            pPlayer->SEND_GOSSIP_MENU(624, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 2:
-            player->CLOSE_GOSSIP_MENU();
-            _Creature->setFaction(21);
-            if(player)
-                ((npc_astor_hadrenAI*)_Creature->AI())->AttackStart(player);
+            pPlayer->CLOSE_GOSSIP_MENU();
+            pCreature->setFaction(21);
+            if (pPlayer)
+                ((npc_astor_hadrenAI*)pCreature->AI())->AttackStart(pPlayer);
             break;
     }
     return true;
@@ -108,7 +108,7 @@ enum
 
 struct MANGOS_DLL_DECL npc_deathstalker_erlandAI : public npc_escortAI
 {
-    npc_deathstalker_erlandAI(Creature* c) : npc_escortAI(c)
+    npc_deathstalker_erlandAI(Creature* pCreature) : npc_escortAI(pCreature)
     {
         uiRaneGUID = 0;
         uiQuinnGUID = 0;
@@ -210,7 +210,7 @@ struct MANGOS_DLL_DECL npc_deathstalker_erlandAI : public npc_escortAI
     }
 };
 
-bool QuestAccept_npc_deathstalker_erland(Player* pPlayer, Creature* pCreature, Quest const* pQuest)
+bool QuestAccept_npc_deathstalker_erland(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_ERLAND)
     {

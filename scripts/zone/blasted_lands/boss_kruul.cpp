@@ -33,7 +33,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_kruulAI : public ScriptedAI
 {
-    boss_kruulAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_kruulAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 ShadowVolley_Timer;
     uint32 Cleave_Timer;
@@ -82,14 +82,14 @@ struct MANGOS_DLL_DECL boss_kruulAI : public ScriptedAI
         }
         Rand = 0;
         Summoned = DoSpawnCreature(19207, RandX, RandY, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 300000);
-        if(Summoned)
+        if (Summoned)
             ((CreatureAI*)Summoned->AI())->AttackStart(victim);
     }
 
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //ShadowVolley_Timer
@@ -163,9 +163,9 @@ struct MANGOS_DLL_DECL boss_kruulAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_kruul(Creature *_Creature)
+CreatureAI* GetAI_boss_kruul(Creature* pCreature)
 {
-    return new boss_kruulAI (_Creature);
+    return new boss_kruulAI(pCreature);
 }
 
 void AddSC_boss_kruul()

@@ -29,7 +29,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
 {
-    boss_gythAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_gythAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 Aggro_Timer;
     uint32 Dragons_Timer;
@@ -92,7 +92,7 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
         //char buf[200];
 
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         if (!RootSelf)
@@ -170,7 +170,7 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
 
             //Summon Rend
             if (!SummonedRend && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 11
-                && m_creature->GetHealth() > 0 )
+                && m_creature->GetHealth() > 0)
             {
                 //summon Rend and Change model to normal Gyth
                 //Inturrupt any spell casting
@@ -186,9 +186,9 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_gyth(Creature *_Creature)
+CreatureAI* GetAI_boss_gyth(Creature* pCreature)
 {
-    return new boss_gythAI (_Creature);
+    return new boss_gythAI(pCreature);
 }
 
 void AddSC_boss_gyth()

@@ -44,9 +44,9 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
 {
-    boss_mandokirAI(Creature *c) : ScriptedAI(c)
+    boss_mandokirAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -268,9 +268,9 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
 //Ohgan
 struct MANGOS_DLL_DECL mob_ohganAI : public ScriptedAI
 {
-    mob_ohganAI(Creature *c) : ScriptedAI(c)
+    mob_ohganAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -291,7 +291,7 @@ struct MANGOS_DLL_DECL mob_ohganAI : public ScriptedAI
 
     void UpdateAI (const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //SunderArmor_Timer
@@ -305,14 +305,14 @@ struct MANGOS_DLL_DECL mob_ohganAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_mandokir(Creature *_Creature)
+CreatureAI* GetAI_boss_mandokir(Creature* pCreature)
 {
-    return new boss_mandokirAI (_Creature);
+    return new boss_mandokirAI(pCreature);
 }
 
-CreatureAI* GetAI_mob_ohgan(Creature *_Creature)
+CreatureAI* GetAI_mob_ohgan(Creature* pCreature)
 {
-    return new mob_ohganAI (_Creature);
+    return new mob_ohganAI(pCreature);
 }
 
 void AddSC_boss_mandokir()

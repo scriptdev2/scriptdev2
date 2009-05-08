@@ -37,9 +37,9 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
 {
-    boss_sulfuronAI(Creature *c) : ScriptedAI(c)
+    boss_sulfuronAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -121,9 +121,9 @@ struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL mob_flamewaker_priestAI : public ScriptedAI
 {
-    mob_flamewaker_priestAI(Creature *c) : ScriptedAI(c)
+    mob_flamewaker_priestAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -146,7 +146,7 @@ struct MANGOS_DLL_DECL mob_flamewaker_priestAI : public ScriptedAI
             return;
 
         //Casting Heal to Sulfuron or other Guards.
-        if(Heal_Timer < diff)
+        if (Heal_Timer < diff)
         {
             Unit* pUnit = DoSelectLowestHpFriendly(60.0f, 1);
             if (!pUnit)
@@ -181,14 +181,14 @@ struct MANGOS_DLL_DECL mob_flamewaker_priestAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_sulfuron(Creature *_Creature)
+CreatureAI* GetAI_boss_sulfuron(Creature* pCreature)
 {
-    return new boss_sulfuronAI (_Creature);
+    return new boss_sulfuronAI(pCreature);
 }
 
-CreatureAI* GetAI_mob_flamewaker_priest(Creature *_Creature)
+CreatureAI* GetAI_mob_flamewaker_priest(Creature* pCreature)
 {
-    return new mob_flamewaker_priestAI (_Creature);
+    return new mob_flamewaker_priestAI(pCreature);
 }
 
 void AddSC_boss_sulfuron()

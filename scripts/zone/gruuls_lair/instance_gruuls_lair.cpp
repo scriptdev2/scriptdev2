@@ -62,19 +62,19 @@ struct MANGOS_DLL_DECL instance_gruuls_lair : public ScriptedInstance
     bool IsEncounterInProgress() const
     {
         for(uint8 i = 0; i < ENCOUNTERS; i++)
-            if(Encounters[i]) return true;
+            if (Encounters[i]) return true;
 
         return false;
     }
 
-    void OnCreatureCreate(Creature *creature, uint32 creature_entry)
+    void OnCreatureCreate(Creature* pCreature, uint32 creature_entry)
     {
-        switch(creature->GetEntry())
+        switch(pCreature->GetEntry())
         {
-            case 18835: KigglerTheCrazed = creature->GetGUID(); break;
-            case 18836: BlindeyeTheSeer = creature->GetGUID(); break;
-            case 18834: OlmTheSummoner = creature->GetGUID(); break;
-            case 18832: KroshFirehand = creature->GetGUID(); break;
+            case 18835: KigglerTheCrazed = pCreature->GetGUID(); break;
+            case 18836: BlindeyeTheSeer = pCreature->GetGUID(); break;
+            case 18834: OlmTheSummoner = pCreature->GetGUID(); break;
+            case 18832: KroshFirehand = pCreature->GetGUID(); break;
         }
     }
     
@@ -89,7 +89,7 @@ struct MANGOS_DLL_DECL instance_gruuls_lair : public ScriptedInstance
 
     void SetData64(uint32 type, uint64 data)
     {
-        if(type == DATA_MAULGAREVENT_TANK)
+        if (type == DATA_MAULGAREVENT_TANK)
             MaulgarEvent_Tank = data;
     }
 

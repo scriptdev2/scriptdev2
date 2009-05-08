@@ -33,7 +33,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_halyconAI : public ScriptedAI
 {
-    boss_halyconAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_halyconAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 CrowdPummel_Timer;
     uint32 MightyBlow_Timer;
@@ -49,7 +49,7 @@ struct MANGOS_DLL_DECL boss_halyconAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //CrowdPummel_Timer
@@ -67,7 +67,7 @@ struct MANGOS_DLL_DECL boss_halyconAI : public ScriptedAI
         }else MightyBlow_Timer -= diff;
 
         //Summon Gizrul
-        if ( !Summoned && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 25 )
+        if (!Summoned && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 25)
         {
             m_creature->SummonCreature(10268,ADD_1X,ADD_1Y,ADD_1Z,ADD_1O,TEMPSUMMON_TIMED_DESPAWN,300000);
             Summoned = true;
@@ -76,9 +76,9 @@ struct MANGOS_DLL_DECL boss_halyconAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_halycon(Creature *_Creature)
+CreatureAI* GetAI_boss_halycon(Creature* pCreature)
 {
-    return new boss_halyconAI (_Creature);
+    return new boss_halyconAI(pCreature);
 }
 
 void AddSC_boss_halycon()

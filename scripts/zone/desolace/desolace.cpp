@@ -50,7 +50,7 @@ enum
 
 struct MANGOS_DLL_DECL npc_aged_dying_ancient_kodoAI : public ScriptedAI
 {
-    npc_aged_dying_ancient_kodoAI(Creature *c) : ScriptedAI(c) { Reset(); }
+    npc_aged_dying_ancient_kodoAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
     uint32 uiDespawnTimer;
 

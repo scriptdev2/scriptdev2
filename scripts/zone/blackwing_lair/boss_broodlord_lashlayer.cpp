@@ -33,7 +33,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
 {
-    boss_broodlordAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_broodlordAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 Cleave_Timer;
     uint32 BlastWave_Timer;
@@ -70,7 +70,7 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
             float rx,ry,rz;
             m_creature->GetRespawnCoord(rx, ry, rz);
             float spawndist = m_creature->GetDistance(rx,ry,rz);
-            if ( spawndist > 250 )
+            if (spawndist > 250)
             {
                 DoScriptText(SAY_LEASH, m_creature);
                 EnterEvadeMode();
@@ -113,9 +113,9 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_broodlord(Creature *_Creature)
+CreatureAI* GetAI_boss_broodlord(Creature* pCreature)
 {
-    return new boss_broodlordAI (_Creature);
+    return new boss_broodlordAI(pCreature);
 }
 
 void AddSC_boss_broodlord()

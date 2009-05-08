@@ -175,7 +175,7 @@ struct MANGOS_DLL_DECL hyjalAI : public ScriptedAI
                                                             // Summons the next wave, calls SummonCreature
     void SummonNextWave(Wave wave[18], uint32 Count, float Base[4][3]);
 
-    void StartEvent(Player* player);                        // Begins the event by gossip click
+    void StartEvent(Player* pPlayer);                       // Begins the event by gossip click
 
     uint32 GetInstanceData(uint32 Event);                   // Gets instance data for this instance, used to check if raid has gotten past a certain point and can access the next phase
 

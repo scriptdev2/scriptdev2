@@ -55,10 +55,10 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
 {
-    boss_grandmaster_vorpilAI(Creature *c) : ScriptedAI(c)
+    boss_grandmaster_vorpilAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
-        HeroicMode = c->GetMap()->IsHeroic();
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        HeroicMode = pCreature->GetMap()->IsHeroic();
         Intro = false;
         Reset();
     }
@@ -165,7 +165,7 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
                 float ranZ = LOCZ;
 
                 std::list<HostilReference *> t_list = m_creature->getThreatManager().getThreatList();
-                for( std::list<HostilReference *>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr )
+                for(std::list<HostilReference *>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
                 {
                     Unit* target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
                     if (target && target->GetTypeId() == TYPEID_PLAYER)
@@ -225,9 +225,9 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_grandmaster_vorpil(Creature *_Creature)
+CreatureAI* GetAI_boss_grandmaster_vorpil(Creature* pCreature)
 {
-    return new boss_grandmaster_vorpilAI (_Creature);
+    return new boss_grandmaster_vorpilAI(pCreature);
 }
 
 void AddSC_boss_grandmaster_vorpil()

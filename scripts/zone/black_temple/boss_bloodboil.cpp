@@ -65,9 +65,9 @@ struct TargetDistanceOrder : public std::binary_function<const Unit, const Unit,
 
 struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
 {
-    boss_gurtogg_bloodboilAI(Creature *c) : ScriptedAI(c)
+    boss_gurtogg_bloodboilAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -167,12 +167,12 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
         std::list<HostilReference *>::iterator itr = m_threatlist.begin();
 
         //store the threat list in a different container
-        for( ; itr!= m_threatlist.end(); ++itr)
+        for(; itr!= m_threatlist.end(); ++itr)
         {
             Unit *target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
             //only on alive players
-            if (target && target->isAlive() && target->GetTypeId() == TYPEID_PLAYER )
-                targets.push_back( target);
+            if (target && target->isAlive() && target->GetTypeId() == TYPEID_PLAYER)
+                targets.push_back(target);
         }
 
         //Sort the list of players
@@ -181,13 +181,13 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
         targets.resize(5);
 
         //Aura each player in the targets list with Bloodboil. Aura code copied+pasted from Aura command in Level3.cpp
-        /*SpellEntry const *spellInfo = GetSpellStore()->LookupEntry( SPELL_BLOODBOIL );
-        if(spellInfo)
+        /*SpellEntry const *spellInfo = GetSpellStore()->LookupEntry(SPELL_BLOODBOIL);
+        if (spellInfo)
         {
             for(std::list<Unit *>::iterator itr = targets.begin(); itr != targets.end(); ++itr)
             {
                 Unit* target = *itr;
-                if(!target) return;
+                if (!target) return;
                 for(uint32 i = 0;i<3;i++)
                 {
                     uint8 eff = spellInfo->Effect[i];
@@ -360,9 +360,9 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_gurtogg_bloodboil(Creature *_Creature)
+CreatureAI* GetAI_boss_gurtogg_bloodboil(Creature* pCreature)
 {
-    return new boss_gurtogg_bloodboilAI (_Creature);
+    return new boss_gurtogg_bloodboilAI(pCreature);
 }
 
 void AddSC_boss_gurtogg_bloodboil()

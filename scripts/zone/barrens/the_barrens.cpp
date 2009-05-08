@@ -37,21 +37,21 @@ EndContentData */
 ## npc_beaten_corpse
 ######*/
 
-bool GossipHello_npc_beaten_corpse(Player *player, Creature *_Creature)
+bool GossipHello_npc_beaten_corpse(Player* pPlayer, Creature* pCreature)
 {
-    if( player->GetQuestStatus(4921) == QUEST_STATUS_INCOMPLETE || player->GetQuestStatus(4921) == QUEST_STATUS_COMPLETE)
-        player->ADD_GOSSIP_ITEM(0,"Examine corpse in detail...",GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF+1);
+    if (pPlayer->GetQuestStatus(4921) == QUEST_STATUS_INCOMPLETE || pPlayer->GetQuestStatus(4921) == QUEST_STATUS_COMPLETE)
+        pPlayer->ADD_GOSSIP_ITEM(0,"Examine corpse in detail...",GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF+1);
 
-    player->SEND_GOSSIP_MENU(3557,_Creature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(3557, pCreature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_beaten_corpse(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+bool GossipSelect_npc_beaten_corpse(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
-    if(action == GOSSIP_ACTION_INFO_DEF +1)
+    if (action == GOSSIP_ACTION_INFO_DEF +1)
     {
-        player->SEND_GOSSIP_MENU(3558,_Creature->GetGUID());
-        player->KilledMonster( 10668,_Creature->GetGUID() );
+        pPlayer->SEND_GOSSIP_MENU(3558, pCreature->GetGUID());
+        pPlayer->KilledMonster(10668, pCreature->GetGUID());
     }
     return true;
 }
@@ -60,24 +60,24 @@ bool GossipSelect_npc_beaten_corpse(Player *player, Creature *_Creature, uint32 
 ## npc_sputtervalve
 ######*/
 
-bool GossipHello_npc_sputtervalve(Player *player, Creature *_Creature)
+bool GossipHello_npc_sputtervalve(Player* pPlayer, Creature* pCreature)
 {
-    if (_Creature->isQuestGiver())
-        player->PrepareQuestMenu( _Creature->GetGUID() );
+    if (pCreature->isQuestGiver())
+        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
 
-    if( player->GetQuestStatus(6981) == QUEST_STATUS_INCOMPLETE)
-        player->ADD_GOSSIP_ITEM(0,"Can you tell me about this shard?",GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF);
+    if (pPlayer->GetQuestStatus(6981) == QUEST_STATUS_INCOMPLETE)
+        pPlayer->ADD_GOSSIP_ITEM(0,"Can you tell me about this shard?",GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF);
 
-    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(),_Creature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_sputtervalve(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+bool GossipSelect_npc_sputtervalve(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
-    if(action == GOSSIP_ACTION_INFO_DEF)
+    if (action == GOSSIP_ACTION_INFO_DEF)
     {
-        player->SEND_GOSSIP_MENU(2013,_Creature->GetGUID());
-        player->AreaExploredOrEventHappens(6981);
+        pPlayer->SEND_GOSSIP_MENU(2013, pCreature->GetGUID());
+        pPlayer->AreaExploredOrEventHappens(6981);
     }
     return true;
 }
@@ -95,9 +95,9 @@ enum
 
 struct MANGOS_DLL_DECL npc_taskmaster_fizzuleAI : public ScriptedAI
 {
-    npc_taskmaster_fizzuleAI(Creature* c) : ScriptedAI(c)
+    npc_taskmaster_fizzuleAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        factionNorm = c->getFaction();
+        factionNorm = pCreature->getFaction();
         Reset();
     }
 
@@ -201,7 +201,7 @@ float AffrayChallengerLoc[6][4]=
 
 struct MANGOS_DLL_DECL npc_twiggy_flatheadAI : public ScriptedAI
 {
-    npc_twiggy_flatheadAI(Creature *c) : ScriptedAI(c) {Reset();}
+    npc_twiggy_flatheadAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     bool EventInProgress;
 
@@ -230,13 +230,13 @@ struct MANGOS_DLL_DECL npc_twiggy_flatheadAI : public ScriptedAI
             AffrayChallenger[i] = 0;
     }
 
-    bool CanStartEvent(Player *player)
+    bool CanStartEvent(Player* pPlayer)
     {
         if (!EventInProgress)
         {
             EventInProgress = true;
-            PlayerGUID = player->GetGUID();
-            DoScriptText(SAY_TWIGGY_BEGIN, m_creature, player);
+            PlayerGUID = pPlayer->GetGUID();
+            DoScriptText(SAY_TWIGGY_BEGIN, m_creature, pPlayer);
             return true;
         }
 
@@ -296,8 +296,9 @@ struct MANGOS_DLL_DECL npc_twiggy_flatheadAI : public ScriptedAI
 
         if (Event_Timer < diff)
         {
-            Player *player = (Player*)Unit::GetUnit(*m_creature,PlayerGUID);
-            if (!player || player->isDead())
+            Player* pPlayer = (Player*)Unit::GetUnit(*m_creature,PlayerGUID);
+
+            if (!pPlayer || pPlayer->isDead())
                 Reset();
 
             switch(Step)
@@ -332,7 +333,7 @@ struct MANGOS_DLL_DECL npc_twiggy_flatheadAI : public ScriptedAI
                     if (Unit *will = Unit::GetUnit(*m_creature,BigWillGUID))
                     {
                         will->setFaction(32);
-                        DoScriptText(SAY_BIG_WILL_READY, will, player);
+                        DoScriptText(SAY_BIG_WILL_READY, will, pPlayer);
                     }
                     Event_Timer = 5000;
                     ++Step;
@@ -352,41 +353,41 @@ struct MANGOS_DLL_DECL npc_twiggy_flatheadAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_twiggy_flathead(Creature *_Creature)
+CreatureAI* GetAI_npc_twiggy_flathead(Creature* pCreature)
 {
-    return new npc_twiggy_flatheadAI (_Creature);
+    return new npc_twiggy_flatheadAI(pCreature);
 }
 
-bool AreaTrigger_at_twiggy_flathead(Player *player, AreaTriggerEntry *at)
+bool AreaTrigger_at_twiggy_flathead(Player* pPlayer, AreaTriggerEntry *at)
 {
-    if (!player->isDead() && player->GetQuestStatus(QUEST_AFFRAY) == QUEST_STATUS_INCOMPLETE)
+    if (!pPlayer->isDead() && pPlayer->GetQuestStatus(QUEST_AFFRAY) == QUEST_STATUS_INCOMPLETE)
     {
-        if (uint16 slot = player->FindQuestSlot(QUEST_AFFRAY))
+        if (uint16 slot = pPlayer->FindQuestSlot(QUEST_AFFRAY))
         {
             //we don't want player to start event if failed already.
-            if (player->GetQuestSlotState(slot) == QUEST_STATE_FAIL)
+            if (pPlayer->GetQuestSlotState(slot) == QUEST_STATE_FAIL)
                 return true;
         }
 
         Creature* pCreature = NULL;
 
-        CellPair pair(MaNGOS::ComputeCellPair(player->GetPositionX(), player->GetPositionY()));
+        CellPair pair(MaNGOS::ComputeCellPair(pPlayer->GetPositionX(), pPlayer->GetPositionY()));
         Cell cell(pair);
         cell.data.Part.reserved = ALL_DISTRICT;
         cell.SetNoCreate();
 
-        MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck creature_check(*player, NPC_TWIGGY, true, 30.0f);
-        MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(player, pCreature, creature_check);
+        MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck creature_check(*pPlayer, NPC_TWIGGY, true, 30.0f);
+        MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(pPlayer, pCreature, creature_check);
 
         TypeContainerVisitor<MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck>, GridTypeMapContainer> creature_searcher(searcher);
 
         CellLock<GridReadGuard> cell_lock(cell, pair);
-        cell_lock->Visit(cell_lock, creature_searcher,*(player->GetMap()));
+        cell_lock->Visit(cell_lock, creature_searcher,*(pPlayer->GetMap()));
 
         if (!pCreature)
             return true;
 
-        if (((npc_twiggy_flatheadAI*)pCreature->AI())->CanStartEvent(player))
+        if (((npc_twiggy_flatheadAI*)pCreature->AI())->CanStartEvent(pPlayer))
             return false;                                   //ok to let mangos process further
         else
             return true;
@@ -417,9 +418,9 @@ enum
 
 struct MANGOS_DLL_DECL npc_wizzlecranks_shredderAI : public npc_escortAI
 {
-    npc_wizzlecranks_shredderAI(Creature* c) : npc_escortAI(c)
+    npc_wizzlecranks_shredderAI(Creature* pCreature) : npc_escortAI(pCreature)
     {
-        uiNormFaction = c->getFaction();
+        uiNormFaction = pCreature->getFaction();
         Reset();
     }
 
@@ -512,7 +513,7 @@ struct MANGOS_DLL_DECL npc_wizzlecranks_shredderAI : public npc_escortAI
     }
 };
 
-bool QuestAccept_npc_wizzlecranks_shredder(Player* pPlayer, Creature* pCreature, Quest const* pQuest)
+bool QuestAccept_npc_wizzlecranks_shredder(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_ESCAPE)
     {

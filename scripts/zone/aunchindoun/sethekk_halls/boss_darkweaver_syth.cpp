@@ -57,7 +57,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_darkweaver_sythAI : public ScriptedAI
 {
-    boss_darkweaver_sythAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_darkweaver_sythAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 flameshock_timer;
     uint32 arcaneshock_timer;
@@ -195,16 +195,16 @@ struct MANGOS_DLL_DECL boss_darkweaver_sythAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_darkweaver_syth(Creature *_Creature)
+CreatureAI* GetAI_boss_darkweaver_syth(Creature* pCreature)
 {
-    return new boss_darkweaver_sythAI (_Creature);
+    return new boss_darkweaver_sythAI(pCreature);
 }
 
 /* ELEMENTALS */
 
 struct MANGOS_DLL_DECL mob_syth_fireAI : public ScriptedAI
 {
-    mob_syth_fireAI(Creature *c) : ScriptedAI(c) {Reset();}
+    mob_syth_fireAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 flameshock_timer;
     uint32 flamebuffet_timer;
@@ -221,17 +221,17 @@ struct MANGOS_DLL_DECL mob_syth_fireAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if(flameshock_timer < diff)
+        if (flameshock_timer < diff)
         {
-            if( Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0) )
+            if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0))
                 DoCast(target,SPELL_FLAME_SHOCK);
 
             flameshock_timer = 5000;
         }else flameshock_timer -= diff;
 
-        if(flamebuffet_timer < diff)
+        if (flamebuffet_timer < diff)
         {
-            if( Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0) )
+            if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0))
                 DoCast(target,SPELL_FLAME_BUFFET);
 
             flamebuffet_timer = 5000;
@@ -241,14 +241,14 @@ struct MANGOS_DLL_DECL mob_syth_fireAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_syth_fire(Creature *_Creature)
+CreatureAI* GetAI_mob_syth_fire(Creature* pCreature)
 {
-    return new mob_syth_fireAI (_Creature);
+    return new mob_syth_fireAI(pCreature);
 }
 
 struct MANGOS_DLL_DECL mob_syth_arcaneAI : public ScriptedAI
 {
-    mob_syth_arcaneAI(Creature *c) : ScriptedAI(c) {Reset();}
+    mob_syth_arcaneAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 arcaneshock_timer;
     uint32 arcanebuffet_timer;
@@ -265,17 +265,17 @@ struct MANGOS_DLL_DECL mob_syth_arcaneAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if(arcaneshock_timer < diff)
+        if (arcaneshock_timer < diff)
         {
-            if( Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0) )
+            if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0))
                 DoCast(target,SPELL_ARCANE_SHOCK);
 
             arcaneshock_timer = 5000;
         }else arcaneshock_timer -= diff;
 
-        if(arcanebuffet_timer < diff)
+        if (arcanebuffet_timer < diff)
         {
-            if( Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0) )
+            if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0))
                 DoCast(target,SPELL_ARCANE_BUFFET);
 
             arcanebuffet_timer = 5000;
@@ -285,14 +285,14 @@ struct MANGOS_DLL_DECL mob_syth_arcaneAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_syth_arcane(Creature *_Creature)
+CreatureAI* GetAI_mob_syth_arcane(Creature* pCreature)
 {
-    return new mob_syth_arcaneAI (_Creature);
+    return new mob_syth_arcaneAI(pCreature);
 }
 
 struct MANGOS_DLL_DECL mob_syth_frostAI : public ScriptedAI
 {
-    mob_syth_frostAI(Creature *c) : ScriptedAI(c) {Reset();}
+    mob_syth_frostAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 frostshock_timer;
     uint32 frostbuffet_timer;
@@ -309,17 +309,17 @@ struct MANGOS_DLL_DECL mob_syth_frostAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if(frostshock_timer < diff)
+        if (frostshock_timer < diff)
         {
-            if( Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0) )
+            if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0))
                 DoCast(target,SPELL_FROST_SHOCK);
 
             frostshock_timer = 5000;
         }else frostshock_timer -= diff;
 
-        if(frostbuffet_timer < diff)
+        if (frostbuffet_timer < diff)
         {
-            if( Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0) )
+            if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0))
                 DoCast(target,SPELL_FROST_BUFFET);
 
             frostbuffet_timer = 5000;
@@ -329,14 +329,14 @@ struct MANGOS_DLL_DECL mob_syth_frostAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_syth_frost(Creature *_Creature)
+CreatureAI* GetAI_mob_syth_frost(Creature* pCreature)
 {
-    return new mob_syth_frostAI (_Creature);
+    return new mob_syth_frostAI(pCreature);
 }
 
 struct MANGOS_DLL_DECL mob_syth_shadowAI : public ScriptedAI
 {
-    mob_syth_shadowAI(Creature *c) : ScriptedAI(c) {Reset();}
+    mob_syth_shadowAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 shadowshock_timer;
     uint32 shadowbuffet_timer;
@@ -353,17 +353,17 @@ struct MANGOS_DLL_DECL mob_syth_shadowAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if(shadowshock_timer < diff)
+        if (shadowshock_timer < diff)
         {
-            if( Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0) )
+            if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0))
                 DoCast(target,SPELL_SHADOW_SHOCK);
 
             shadowshock_timer = 5000;
         }else shadowshock_timer -= diff;
 
-        if(shadowbuffet_timer < diff)
+        if (shadowbuffet_timer < diff)
         {
-            if( Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0) )
+            if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0))
                 DoCast(target,SPELL_SHADOW_BUFFET);
 
             shadowbuffet_timer = 5000;
@@ -373,9 +373,9 @@ struct MANGOS_DLL_DECL mob_syth_shadowAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_syth_shadow(Creature *_Creature)
+CreatureAI* GetAI_mob_syth_shadow(Creature* pCreature)
 {
-    return new mob_syth_shadowAI (_Creature);
+    return new mob_syth_shadowAI(pCreature);
 }
 
 void AddSC_boss_darkweaver_syth()

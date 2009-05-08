@@ -21,7 +21,7 @@ enum CastTarget
 
 struct MANGOS_DLL_DECL SimpleAI : public ScriptedAI
 {
-    SimpleAI(Creature *c);// : ScriptedAI(c);
+    SimpleAI(Creature* pCreature);// : ScriptedAI(pCreature);
 
     void Reset();
 

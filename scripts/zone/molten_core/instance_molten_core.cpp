@@ -122,42 +122,42 @@ struct MANGOS_DLL_DECL instance_molten_core : public ScriptedInstance
         }
     }
 
-    void OnCreatureCreate(Creature *creature, uint32 creature_entry)
+    void OnCreatureCreate(Creature* pCreature, uint32 creature_entry)
     {
-        switch (creature->GetEntry())
+        switch(pCreature->GetEntry())
         {
             case ID_LUCIFRON:
-                Lucifron = creature->GetGUID();
+                Lucifron = pCreature->GetGUID();
                 break;
             case ID_MAGMADAR:
-                Magmadar = creature->GetGUID();
+                Magmadar = pCreature->GetGUID();
                 break;
             case ID_GEHENNAS:
-                Gehennas = creature->GetGUID();
+                Gehennas = pCreature->GetGUID();
                 break;
             case ID_GARR:
-                Garr = creature->GetGUID();
+                Garr = pCreature->GetGUID();
                 break;
             case ID_GEDDON:
-                Geddon = creature->GetGUID();
+                Geddon = pCreature->GetGUID();
                 break;
             case ID_SHAZZRAH:
-                Shazzrah = creature->GetGUID();
+                Shazzrah = pCreature->GetGUID();
                 break;
             case ID_SULFURON:
-                Sulfuron = creature->GetGUID();
+                Sulfuron = pCreature->GetGUID();
                 break;
             case ID_GOLEMAGG:
-                Golemagg = creature->GetGUID();
+                Golemagg = pCreature->GetGUID();
                 break;
             case ID_DOMO:
-                Domo = creature->GetGUID();
+                Domo = pCreature->GetGUID();
                 break;
             case ID_RAGNAROS:
-                Ragnaros = creature->GetGUID();
+                Ragnaros = pCreature->GetGUID();
                 break;
             case ID_FLAMEWAKERPRIEST:
-                FlamewakerPriest = creature->GetGUID();
+                FlamewakerPriest = pCreature->GetGUID();
                 break;
         }
     }

@@ -50,7 +50,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_pathaleon_the_calculatorAI : public ScriptedAI
 {
-    boss_pathaleon_the_calculatorAI(Creature *c) : ScriptedAI(c)
+    boss_pathaleon_the_calculatorAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         HeroicMode = m_creature->GetMap()->IsHeroic();
         Reset();
@@ -168,14 +168,14 @@ struct MANGOS_DLL_DECL boss_pathaleon_the_calculatorAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_pathaleon_the_calculator(Creature *_Creature)
+CreatureAI* GetAI_boss_pathaleon_the_calculator(Creature* pCreature)
 {
-    return new boss_pathaleon_the_calculatorAI (_Creature);
+    return new boss_pathaleon_the_calculatorAI(pCreature);
 }
 
 struct MANGOS_DLL_DECL mob_nether_wraithAI : public ScriptedAI
 {
-    mob_nether_wraithAI(Creature *c) : ScriptedAI(c) {Reset();}
+    mob_nether_wraithAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     ScriptedInstance *pInstance;
 
@@ -228,9 +228,9 @@ struct MANGOS_DLL_DECL mob_nether_wraithAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_mob_nether_wraith(Creature *_Creature)
+CreatureAI* GetAI_mob_nether_wraith(Creature* pCreature)
 {
-    return new mob_nether_wraithAI (_Creature);
+    return new mob_nether_wraithAI(pCreature);
 }
 
 void AddSC_boss_pathaleon_the_calculator()

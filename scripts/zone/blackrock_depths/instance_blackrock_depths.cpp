@@ -118,12 +118,12 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
             m_uiEncounter[i] = NOT_STARTED;
     }
 
-    void OnCreatureCreate(Creature *creature, uint32 creature_entry)
+    void OnCreatureCreate(Creature* pCreature, uint32 creature_entry)
     {
-        switch(creature->GetEntry())
+        switch(pCreature->GetEntry())
         {
-            case NPC_EMPEROR: m_uiEmperorGUID = creature->GetGUID(); break;
-            case NPC_PHALANX: m_uiPhalanxGUID = creature->GetGUID(); break;
+            case NPC_EMPEROR: m_uiEmperorGUID = pCreature->GetGUID(); break;
+            case NPC_PHALANX: m_uiPhalanxGUID = pCreature->GetGUID(); break;
         }
     }
 

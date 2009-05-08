@@ -9,7 +9,7 @@
 
 struct MANGOS_DLL_DECL guardAI : public ScriptedAI
 {
-    guardAI(Creature *c) : ScriptedAI(c) {Reset();}
+    guardAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 GlobalCooldown;                                  //This variable acts like the global cooldown that players have (1.5 seconds)
     uint32 BuffTimer;                                       //This variable keeps track of buffs
@@ -29,16 +29,16 @@ struct MANGOS_DLL_DECL guardAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL guardAI_orgrimmar : public guardAI
 {
-    guardAI_orgrimmar(Creature *c) : guardAI(c) {}
+    guardAI_orgrimmar(Creature* pCreature) : guardAI(pCreature) {}
 
-    void ReceiveEmote(Player *player, uint32 text_emote);
+    void ReceiveEmote(Player* pPlayer, uint32 text_emote);
 };
 
 struct MANGOS_DLL_DECL guardAI_stormwind : public guardAI
 {
-    guardAI_stormwind(Creature *c) : guardAI(c) {}
+    guardAI_stormwind(Creature* pCreature) : guardAI(pCreature) {}
 
-    void ReceiveEmote(Player *player, uint32 text_emote);
+    void ReceiveEmote(Player* pPlayer, uint32 text_emote);
 };
 
 #endif

@@ -29,7 +29,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_landslideAI : public ScriptedAI
 {
-    boss_landslideAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_landslideAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 KnockAway_Timer;
     uint32 Trample_Timer;
@@ -44,7 +44,7 @@ struct MANGOS_DLL_DECL boss_landslideAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //KnockAway_Timer
@@ -62,7 +62,7 @@ struct MANGOS_DLL_DECL boss_landslideAI : public ScriptedAI
         }else Trample_Timer -= diff;
 
         //Landslide
-        if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 50 )
+        if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 50)
         {
             if (Landslide_Timer < diff)
             {
@@ -75,9 +75,9 @@ struct MANGOS_DLL_DECL boss_landslideAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_landslide(Creature *_Creature)
+CreatureAI* GetAI_boss_landslide(Creature* pCreature)
 {
-    return new boss_landslideAI (_Creature);
+    return new boss_landslideAI(pCreature);
 }
 
 void AddSC_boss_landslide()

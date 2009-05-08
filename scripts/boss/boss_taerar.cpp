@@ -40,7 +40,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
 {
-    boss_taerarAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_taerarAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 Sleep_Timer;
     uint32 NoxiousBreath_Timer;
@@ -90,7 +90,7 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
         }
         Rand = 0;
         Summoned = DoSpawnCreature(15302, RandX, RandY, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 300000);
-        if(Summoned)
+        if (Summoned)
             ((CreatureAI*)Summoned->AI())->AttackStart(victim);
     }
 
@@ -134,7 +134,7 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
         //Tailsweep every 2 seconds
         if (TailSweep_Timer < diff)
         {
-            if( Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0) )
+            if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0))
                 DoCast(target,SPELL_TAILSWEEP);
 
             TailSweep_Timer = 2000;
@@ -162,7 +162,7 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
         } else BellowingRoar_Timer -= diff;
 
         //Summon 3 Shades
-        if ( !Shades  && (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 75)
+        if (!Shades  && (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 75)
         {
             if (Summon1_Timer < diff)
             {
@@ -185,7 +185,7 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
         }
 
         //Summon 3 Shades
-        if ( !Shades  && (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 50)
+        if (!Shades  && (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 50)
         {
             if (Summon2_Timer < diff)
             {
@@ -208,7 +208,7 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
         }
 
         //Summon 3 Shades
-        if ( !Shades  && (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 25)
+        if (!Shades  && (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 25)
         {
             if (Summon3_Timer < diff)
             {
@@ -238,7 +238,7 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL boss_shadeoftaerarAI : public ScriptedAI
 {
-    boss_shadeoftaerarAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_shadeoftaerarAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 PoisonCloud_Timer;
     uint32 PosionBreath_Timer;
@@ -272,14 +272,14 @@ struct MANGOS_DLL_DECL boss_shadeoftaerarAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_taerar(Creature *_Creature)
+CreatureAI* GetAI_boss_taerar(Creature* pCreature)
 {
-    return new boss_taerarAI (_Creature);
+    return new boss_taerarAI(pCreature);
 }
 
-CreatureAI* GetAI_boss_shadeoftaerar(Creature *_Creature)
+CreatureAI* GetAI_boss_shadeoftaerar(Creature* pCreature)
 {
-    return new boss_shadeoftaerarAI (_Creature);
+    return new boss_shadeoftaerarAI(pCreature);
 }
 
 void AddSC_boss_taerar()

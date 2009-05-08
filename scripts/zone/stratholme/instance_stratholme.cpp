@@ -130,15 +130,15 @@ struct MANGOS_DLL_DECL instance_stratholme : public ScriptedInstance
         }
     }
 
-    void OnCreatureCreate(Creature *creature, uint32 creature_entry)
+    void OnCreatureCreate(Creature* pCreature, uint32 creature_entry)
     {
-        switch(creature->GetEntry())
+        switch(pCreature->GetEntry())
         {
-            case C_BARON:           baronGUID = creature->GetGUID(); break;
-            case C_YSIDA_TRIGGER:   ysidaTriggerGUID = creature->GetGUID(); break;
-            case C_CRYSTAL:         crystalsGUID.insert(creature->GetGUID()); break;
+            case C_BARON:           baronGUID = pCreature->GetGUID(); break;
+            case C_YSIDA_TRIGGER:   ysidaTriggerGUID = pCreature->GetGUID(); break;
+            case C_CRYSTAL:         crystalsGUID.insert(pCreature->GetGUID()); break;
             case C_ABOM_BILE:
-            case C_ABOM_VENOM:      abomnationGUID.insert(creature->GetGUID()); break;
+            case C_ABOM_VENOM:      abomnationGUID.insert(pCreature->GetGUID()); break;
         }
     }
 

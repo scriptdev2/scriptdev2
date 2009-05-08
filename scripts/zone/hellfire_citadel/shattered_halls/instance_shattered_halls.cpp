@@ -47,23 +47,23 @@ struct MANGOS_DLL_DECL instance_shattered_halls : public ScriptedInstance
 
     void OnObjectCreate(GameObject *go)
     {
-        switch( go->GetEntry() )
+        switch(go->GetEntry())
         {
             case DOOR_NETHEKURSE: nethekurseDoorGUID = go->GetGUID(); break;
         }
     }
 
-    void OnCreatureCreate(Creature *creature, uint32 creature_entry)
+    void OnCreatureCreate(Creature* pCreature, uint32 creature_entry)
     {
-        switch(creature->GetEntry())
+        switch(pCreature->GetEntry())
         {
-            case 16807: nethekurseGUID = creature->GetGUID(); break;
+            case 16807: nethekurseGUID = pCreature->GetGUID(); break;
         }
     }
 
     void SetData(uint32 type, uint32 data)
     {
-        switch( type )
+        switch(type)
         {
             case TYPE_NETHEKURSE:
                 Encounter[0] = data;
@@ -76,7 +76,7 @@ struct MANGOS_DLL_DECL instance_shattered_halls : public ScriptedInstance
 
     uint32 GetData(uint32 type)
     {
-        switch( type )
+        switch(type)
         {
             case TYPE_NETHEKURSE:
                 return Encounter[0];

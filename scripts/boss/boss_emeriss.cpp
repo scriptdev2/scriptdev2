@@ -32,7 +32,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_emerissAI : public ScriptedAI
 {
-    boss_emerissAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_emerissAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 Sleep_Timer;
     uint32 NoxiousBreath_Timer;
@@ -64,7 +64,7 @@ struct MANGOS_DLL_DECL boss_emerissAI : public ScriptedAI
         //Sleep_Timer
         if (Sleep_Timer < diff)
         {
-            if( Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0) )
+            if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0))
                 DoCast(target,SPELL_SLEEP);
 
             Sleep_Timer = 8000 + rand()%8000;
@@ -80,7 +80,7 @@ struct MANGOS_DLL_DECL boss_emerissAI : public ScriptedAI
         //Tailsweep every 2 seconds
         if (TailSweep_Timer < diff)
         {
-            if( Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0) )
+            if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0))
                 DoCast(target,SPELL_TAILSWEEP);
 
             TailSweep_Timer = 2000;
@@ -101,7 +101,7 @@ struct MANGOS_DLL_DECL boss_emerissAI : public ScriptedAI
         }else VolatileInfection_Timer -= diff;
 
         //CorruptionofEarth_Timer
-        if ( (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 75)
+        if ((int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 75)
         {
             if (CorruptionofEarth1_Timer < diff)
             {
@@ -113,7 +113,7 @@ struct MANGOS_DLL_DECL boss_emerissAI : public ScriptedAI
         }
 
         //CorruptionofEarth_Timer
-        if ( (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 50)
+        if ((int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 50)
         {
             if (CorruptionofEarth2_Timer < diff)
             {
@@ -125,7 +125,7 @@ struct MANGOS_DLL_DECL boss_emerissAI : public ScriptedAI
         }
 
         //CorruptionofEarth_Timer
-        if ( (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 25)
+        if ((int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 25)
         {
             if (CorruptionofEarth3_Timer < diff)
             {
@@ -139,9 +139,9 @@ struct MANGOS_DLL_DECL boss_emerissAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_emeriss(Creature *_Creature)
+CreatureAI* GetAI_boss_emeriss(Creature* pCreature)
 {
-    return new boss_emerissAI (_Creature);
+    return new boss_emerissAI(pCreature);
 }
 
 void AddSC_boss_emeriss()

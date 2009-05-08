@@ -28,7 +28,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_hungarfenAI : public ScriptedAI
 {
-    boss_hungarfenAI(Creature *c) : ScriptedAI(c)
+    boss_hungarfenAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         HeroicMode = m_creature->GetMap()->IsHeroic();
         Reset();
@@ -51,18 +51,18 @@ struct MANGOS_DLL_DECL boss_hungarfenAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if( (m_creature->GetHealth()*100) / m_creature->GetMaxHealth() <= 20 )
+        if ((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() <= 20)
         {
-            if( !Root )
+            if (!Root)
             {
                 DoCast(m_creature,SPELL_FOUL_SPORES);
                 Root = true;
             }
         }
 
-        if( Mushroom_Timer < diff )
+        if (Mushroom_Timer < diff)
         {
-            if( Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0) )
+            if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0))
                 m_creature->SummonCreature(17990, target->GetPositionX()+(rand()%8), target->GetPositionY()+(rand()%8), target->GetPositionZ(), (rand()%5), TEMPSUMMON_TIMED_DESPAWN, 22000);
             else
                 m_creature->SummonCreature(17990, m_creature->GetPositionX()+(rand()%8), m_creature->GetPositionY()+(rand()%8), m_creature->GetPositionZ(), (rand()%5), TEMPSUMMON_TIMED_DESPAWN, 22000);
@@ -70,9 +70,9 @@ struct MANGOS_DLL_DECL boss_hungarfenAI : public ScriptedAI
             Mushroom_Timer = 10000;
         }else Mushroom_Timer -= diff;
 
-        if( AcidGeyser_Timer < diff )
+        if (AcidGeyser_Timer < diff)
         {
-            if( Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0) )
+            if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0))
                 DoCast(target,SPELL_ACID_GEYSER);
             AcidGeyser_Timer = 10000+rand()%7500;
         }else AcidGeyser_Timer -= diff;
@@ -80,9 +80,9 @@ struct MANGOS_DLL_DECL boss_hungarfenAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_hungarfen(Creature *_Creature)
+CreatureAI* GetAI_boss_hungarfen(Creature* pCreature)
 {
-    return new boss_hungarfenAI (_Creature);
+    return new boss_hungarfenAI(pCreature);
 }
 
 #define SPELL_SPORE_CLOUD       34168
@@ -91,7 +91,7 @@ CreatureAI* GetAI_boss_hungarfen(Creature *_Creature)
 
 struct MANGOS_DLL_DECL mob_underbog_mushroomAI : public ScriptedAI
 {
-    mob_underbog_mushroomAI(Creature *c) : ScriptedAI(c) { Reset(); }
+    mob_underbog_mushroomAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
     bool Stop;
     uint32 Grow_Timer;
@@ -113,25 +113,25 @@ struct MANGOS_DLL_DECL mob_underbog_mushroomAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if( Stop )
+        if (Stop)
             return;
 
-        if( Grow_Timer <= diff )
+        if (Grow_Timer <= diff)
         {
             DoCast(m_creature,SPELL_GROW);
             Grow_Timer = 3000;
         }else Grow_Timer -= diff;
 
-        if( Shrink_Timer <= diff )
+        if (Shrink_Timer <= diff)
         {
             m_creature->RemoveAurasDueToSpell(SPELL_GROW);
             Stop = true;
         }else Shrink_Timer -= diff;
     }
 };
-CreatureAI* GetAI_mob_underbog_mushroom(Creature *_Creature)
+CreatureAI* GetAI_mob_underbog_mushroom(Creature* pCreature)
 {
-    return new mob_underbog_mushroomAI (_Creature);
+    return new mob_underbog_mushroomAI(pCreature);
 }
 
 void AddSC_boss_hungarfen()

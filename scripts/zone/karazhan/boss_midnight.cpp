@@ -46,7 +46,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_midnightAI : public ScriptedAI
 {
-    boss_midnightAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_midnightAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint64 Attumen;
     uint8 Phase;
@@ -162,14 +162,14 @@ struct MANGOS_DLL_DECL boss_midnightAI : public ScriptedAI
     void SetMidnight(Creature *, uint64);                   //Below ..
 };
 
-CreatureAI* GetAI_boss_midnight(Creature *_Creature)
+CreatureAI* GetAI_boss_midnight(Creature* pCreature)
 {
-    return new boss_midnightAI(_Creature);
+    return new boss_midnightAI(pCreature);
 }
 
 struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
 {
-    boss_attumenAI(Creature *c) : ScriptedAI(c)
+    boss_attumenAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         Reset();
         Phase = 1;
@@ -210,7 +210,7 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
         DoScriptText(SAY_DEATH, m_creature);
 
         Unit *pMidnight = Unit::GetUnit(*m_creature, Midnight);
-        if(pMidnight)
+        if (pMidnight)
         {
             pMidnight->DealDamage(pMidnight, pMidnight->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
         }
@@ -240,7 +240,7 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE ))
+        if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE))
             return;
 
         if (CleaveTimer < diff)
@@ -275,7 +275,7 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
                 for(std::list<HostilReference *>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
                 {
                     target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
-                    if(target && target->GetDistance2d(m_creature) > 5)
+                    if (target && target->GetDistance2d(m_creature) > 5)
                         target_list.push_back(target);
                     target = NULL;
                 }
@@ -315,9 +315,9 @@ void boss_midnightAI::SetMidnight(Creature *pAttumen, uint64 value)
     ((boss_attumenAI*)pAttumen->AI())->Midnight = value;
 }
 
-CreatureAI* GetAI_boss_attumen(Creature *_Creature)
+CreatureAI* GetAI_boss_attumen(Creature* pCreature)
 {
-    return new boss_attumenAI (_Creature);
+    return new boss_attumenAI(pCreature);
 }
 
 void AddSC_boss_attumen()

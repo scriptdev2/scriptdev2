@@ -29,7 +29,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_lucifronAI : public ScriptedAI
 {
-    boss_lucifronAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_lucifronAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 ImpendingDoom_Timer;
     uint32 LucifronCurse_Timer;
@@ -71,9 +71,9 @@ struct MANGOS_DLL_DECL boss_lucifronAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_lucifron(Creature *_Creature)
+CreatureAI* GetAI_boss_lucifron(Creature* pCreature)
 {
-    return new boss_lucifronAI (_Creature);
+    return new boss_lucifronAI(pCreature);
 }
 
 void AddSC_boss_lucifron()

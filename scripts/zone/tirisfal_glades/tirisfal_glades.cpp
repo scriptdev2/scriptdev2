@@ -59,27 +59,27 @@ GameObject* SearchMausoleumGo(Unit *source, uint32 entry, float range)
     return pGo;
 }
 
-bool GOHello_go_mausoleum_door(Player *player, GameObject* _GO)
+bool GOHello_go_mausoleum_door(Player* pPlayer, GameObject* _GO)
 {
-    if (player->GetQuestStatus(QUEST_ULAG) != QUEST_STATUS_INCOMPLETE)
+    if (pPlayer->GetQuestStatus(QUEST_ULAG) != QUEST_STATUS_INCOMPLETE)
         return false;
 
-    if (GameObject *trigger = SearchMausoleumGo(player, GO_TRIGGER, 30))
+    if (GameObject *trigger = SearchMausoleumGo(pPlayer, GO_TRIGGER, 30))
     {
         trigger->SetGoState(GO_STATE_READY);
-        player->SummonCreature(C_ULAG, 2390.26, 336.47, 40.01, 2.26, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 300000);
+        pPlayer->SummonCreature(C_ULAG, 2390.26, 336.47, 40.01, 2.26, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 300000);
         return false;
     }
 
     return false;
 }
 
-bool GOHello_go_mausoleum_trigger(Player *player, GameObject* _GO)
+bool GOHello_go_mausoleum_trigger(Player* pPlayer, GameObject* _GO)
 {
-    if (player->GetQuestStatus(QUEST_ULAG) != QUEST_STATUS_INCOMPLETE)
+    if (pPlayer->GetQuestStatus(QUEST_ULAG) != QUEST_STATUS_INCOMPLETE)
         return false;
 
-    if (GameObject *door = SearchMausoleumGo(player, GO_DOOR, 30))
+    if (GameObject *door = SearchMausoleumGo(pPlayer, GO_DOOR, 30))
     {
         _GO->SetGoState(GO_STATE_ACTIVE);
         door->RemoveFlag(GAMEOBJECT_FLAGS,GO_FLAG_INTERACT_COND);
@@ -99,7 +99,7 @@ bool GOHello_go_mausoleum_trigger(Player *player, GameObject* _GO)
 
 struct MANGOS_DLL_DECL npc_calvin_montagueAI : public ScriptedAI
 {
-    npc_calvin_montagueAI(Creature* c) : ScriptedAI(c) { Reset(); }
+    npc_calvin_montagueAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
     void Reset()
     {
@@ -108,8 +108,8 @@ struct MANGOS_DLL_DECL npc_calvin_montagueAI : public ScriptedAI
 
     void JustDied(Unit* Killer)
     {
-        if( Killer->GetTypeId() == TYPEID_PLAYER )
-            if( ((Player*)Killer)->GetQuestStatus(QUEST_590) == QUEST_STATUS_INCOMPLETE )
+        if (Killer->GetTypeId() == TYPEID_PLAYER)
+            if (((Player*)Killer)->GetQuestStatus(QUEST_590) == QUEST_STATUS_INCOMPLETE)
                 ((Player*)Killer)->AreaExploredOrEventHappens(QUEST_590);
     }
 
@@ -122,17 +122,17 @@ struct MANGOS_DLL_DECL npc_calvin_montagueAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_calvin_montague(Creature *_Creature)
+CreatureAI* GetAI_npc_calvin_montague(Creature* pCreature)
 {
-    return new npc_calvin_montagueAI (_Creature);
+    return new npc_calvin_montagueAI(pCreature);
 }
 
-bool QuestAccept_npc_calvin_montague(Player* player, Creature* creature, Quest const* quest)
+bool QuestAccept_npc_calvin_montague(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
 {
-    if( quest->GetQuestId() == QUEST_590 )
+    if (pQuest->GetQuestId() == QUEST_590)
     {
-        creature->setFaction(FACTION_HOSTILE);
-        ((npc_calvin_montagueAI*)creature->AI())->AttackStart(player);
+        pCreature->setFaction(FACTION_HOSTILE);
+        ((npc_calvin_montagueAI*)pCreature->AI())->AttackStart(pPlayer);
     }
     return true;
 }

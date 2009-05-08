@@ -149,7 +149,7 @@ I also don't know the emotes
 
 struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
 {
-    boss_kelthuzadAI(Creature* c) : ScriptedAI(c)
+    boss_kelthuzadAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         GuardiansOfIcecrown[0] = 0;
         GuardiansOfIcecrown[1] = 0;
@@ -433,9 +433,9 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_kelthuzadAI(Creature *_Creature)
+CreatureAI* GetAI_boss_kelthuzadAI(Creature* pCreature)
 {
-    return new boss_kelthuzadAI (_Creature);
+    return new boss_kelthuzadAI(pCreature);
 }
 
 void AddSC_boss_kelthuzad()

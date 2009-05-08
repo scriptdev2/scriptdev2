@@ -56,9 +56,9 @@ EndContentData */
 
 struct MANGOS_DLL_DECL npc_medivh_bmAI : public ScriptedAI
 {
-    npc_medivh_bmAI(Creature *c) : ScriptedAI(c)
+    npc_medivh_bmAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
  
@@ -227,9 +227,9 @@ struct MANGOS_DLL_DECL npc_medivh_bmAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_medivh_bm(Creature *_Creature)
+CreatureAI* GetAI_npc_medivh_bm(Creature* pCreature)
 {
-    return new npc_medivh_bmAI (_Creature);
+    return new npc_medivh_bmAI(pCreature);
 }
 
 struct Wave
@@ -246,9 +246,9 @@ static Wave PortalWaves[]=
 
 struct MANGOS_DLL_DECL npc_time_riftAI : public ScriptedAI
 {
-    npc_time_riftAI(Creature *c) : ScriptedAI(c)
+    npc_time_riftAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
  
@@ -346,9 +346,9 @@ struct MANGOS_DLL_DECL npc_time_riftAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_time_rift(Creature *_Creature)
+CreatureAI* GetAI_npc_time_rift(Creature* pCreature)
 {
-    return new npc_time_riftAI (_Creature);
+    return new npc_time_riftAI(pCreature);
 }
 
 #define SAY_SAAT_WELCOME        -1269019
@@ -357,34 +357,34 @@ CreatureAI* GetAI_npc_time_rift(Creature *_Creature)
 #define SPELL_CHRONO_BEACON     34975
 #define ITEM_CHRONO_BEACON      24289
 
-bool GossipHello_npc_saat(Player *player, Creature *_Creature)
+bool GossipHello_npc_saat(Player* pPlayer, Creature* pCreature)
 {
-    if (_Creature->isQuestGiver())
-        player->PrepareQuestMenu(_Creature->GetGUID());
+    if (pCreature->isQuestGiver())
+        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
 
-    if (player->GetQuestStatus(QUEST_OPENING_PORTAL) == QUEST_STATUS_INCOMPLETE && !player->HasItemCount(ITEM_CHRONO_BEACON,1))
+    if (pPlayer->GetQuestStatus(QUEST_OPENING_PORTAL) == QUEST_STATUS_INCOMPLETE && !pPlayer->HasItemCount(ITEM_CHRONO_BEACON,1))
     {
-        player->ADD_GOSSIP_ITEM(0,GOSSIP_ITEM_OBTAIN,GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF+1);
-        player->SEND_GOSSIP_MENU(10000,_Creature->GetGUID());
+        pPlayer->ADD_GOSSIP_ITEM(0,GOSSIP_ITEM_OBTAIN,GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF+1);
+        pPlayer->SEND_GOSSIP_MENU(10000, pCreature->GetGUID());
         return true;
     }
-    else if (player->GetQuestRewardStatus(QUEST_OPENING_PORTAL) && !player->HasItemCount(ITEM_CHRONO_BEACON,1))
+    else if (pPlayer->GetQuestRewardStatus(QUEST_OPENING_PORTAL) && !pPlayer->HasItemCount(ITEM_CHRONO_BEACON,1))
     {
-        player->ADD_GOSSIP_ITEM(0,GOSSIP_ITEM_OBTAIN,GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF+1);
-        player->SEND_GOSSIP_MENU(10001,_Creature->GetGUID());
+        pPlayer->ADD_GOSSIP_ITEM(0,GOSSIP_ITEM_OBTAIN,GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF+1);
+        pPlayer->SEND_GOSSIP_MENU(10001, pCreature->GetGUID());
         return true;
     }
 
-    player->SEND_GOSSIP_MENU(10002,_Creature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(10002, pCreature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_saat(Player *player, Creature *_Creature, uint32 sender, uint32 action)
+bool GossipSelect_npc_saat(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
     if (action == GOSSIP_ACTION_INFO_DEF+1)
     {
-        player->CLOSE_GOSSIP_MENU();
-        _Creature->CastSpell(player,SPELL_CHRONO_BEACON,false);
+        pPlayer->CLOSE_GOSSIP_MENU();
+        pCreature->CastSpell(pPlayer,SPELL_CHRONO_BEACON,false);
     }
     return true;
 }

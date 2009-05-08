@@ -146,9 +146,9 @@ float KaelthasWeapons[7][5] =
 //Base AI for Advisors
 struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
 {
-    advisorbase_ai(Creature *c) : ScriptedAI(c)
+    advisorbase_ai(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -266,9 +266,9 @@ struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
 //Kael'thas AI
 struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 {
-    boss_kaelthasAI(Creature *c) : ScriptedAI(c)
+    boss_kaelthasAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         AdvisorGuid[0] = 0;
         AdvisorGuid[1] = 0;
         AdvisorGuid[2] = 0;
@@ -471,7 +471,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
                     //Subphase 1 - Unlock advisor
                     case 1:
-                        if(Phase_Timer < diff)
+                        if (Phase_Timer < diff)
                         {
                             Advisor = (Creature*)(Unit::GetUnit((*m_creature), AdvisorGuid[0]));
 
@@ -547,7 +547,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                                 Advisor->setFaction(m_creature->getFaction());
 
                                 target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-                                if(target)
+                                if (target)
                                     Advisor->AI()->AttackStart(target);
                             }
 
@@ -699,7 +699,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
             case 6:
             {
                 //Return since we have no target
-                if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+                if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
                     return;
 
                 //Fireball_Timer
@@ -969,7 +969,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 //Thaladred the Darkener AI
 struct MANGOS_DLL_DECL boss_thaladred_the_darkenerAI : public advisorbase_ai
 {
-    boss_thaladred_the_darkenerAI(Creature *c) : advisorbase_ai(c) {}
+    boss_thaladred_the_darkenerAI(Creature* pCreature) : advisorbase_ai(pCreature) {}
 
     uint32 Gaze_Timer;
     uint32 Silence_Timer;
@@ -1046,7 +1046,7 @@ struct MANGOS_DLL_DECL boss_thaladred_the_darkenerAI : public advisorbase_ai
 //Lord Sanguinar AI
 struct MANGOS_DLL_DECL boss_lord_sanguinarAI : public advisorbase_ai
 {
-    boss_lord_sanguinarAI(Creature *c) : advisorbase_ai(c){}
+    boss_lord_sanguinarAI(Creature* pCreature) : advisorbase_ai(pCreature) {}
 
     uint32 Fear_Timer;
 
@@ -1098,7 +1098,7 @@ struct MANGOS_DLL_DECL boss_lord_sanguinarAI : public advisorbase_ai
 //Grand Astromancer Capernian AI
 struct MANGOS_DLL_DECL boss_grand_astromancer_capernianAI : public advisorbase_ai
 {
-    boss_grand_astromancer_capernianAI(Creature *c) : advisorbase_ai(c){}
+    boss_grand_astromancer_capernianAI(Creature* pCreature) : advisorbase_ai(pCreature) {}
 
     uint32 Fireball_Timer;
     uint32 Conflagration_Timer;
@@ -1220,7 +1220,7 @@ struct MANGOS_DLL_DECL boss_grand_astromancer_capernianAI : public advisorbase_a
 //Master Engineer Telonicus AI
 struct MANGOS_DLL_DECL boss_master_engineer_telonicusAI : public advisorbase_ai
 {
-    boss_master_engineer_telonicusAI(Creature *c) : advisorbase_ai(c){}
+    boss_master_engineer_telonicusAI(Creature* pCreature) : advisorbase_ai(pCreature) {}
 
     uint32 Bomb_Timer;
     uint32 RemoteToy_Timer;
@@ -1258,7 +1258,7 @@ struct MANGOS_DLL_DECL boss_master_engineer_telonicusAI : public advisorbase_ai
             return;
 
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //Bomb_Timer
@@ -1284,7 +1284,7 @@ struct MANGOS_DLL_DECL boss_master_engineer_telonicusAI : public advisorbase_ai
 //Flame Strike AI
 struct MANGOS_DLL_DECL mob_kael_flamestrikeAI : public ScriptedAI
 {
-    mob_kael_flamestrikeAI(Creature *c) : ScriptedAI(c) {Reset();}
+    mob_kael_flamestrikeAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 Timer;
     bool Casting;
@@ -1328,7 +1328,7 @@ struct MANGOS_DLL_DECL mob_kael_flamestrikeAI : public ScriptedAI
 //Phoenix AI
 struct MANGOS_DLL_DECL mob_phoenix_tkAI : public ScriptedAI
 {
-    mob_phoenix_tkAI(Creature *c) : ScriptedAI(c) {Reset();}
+    mob_phoenix_tkAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 Cycle_Timer;
 
@@ -1366,7 +1366,7 @@ struct MANGOS_DLL_DECL mob_phoenix_tkAI : public ScriptedAI
 //Phoenix Egg AI
 struct MANGOS_DLL_DECL mob_phoenix_egg_tkAI : public ScriptedAI
 {
-    mob_phoenix_egg_tkAI(Creature *c) : ScriptedAI(c) {Reset();}
+    mob_phoenix_egg_tkAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 Rebirth_Timer;
 
@@ -1408,44 +1408,44 @@ struct MANGOS_DLL_DECL mob_phoenix_egg_tkAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_kaelthas(Creature *_Creature)
+CreatureAI* GetAI_boss_kaelthas(Creature* pCreature)
 {
-    return new boss_kaelthasAI (_Creature);
+    return new boss_kaelthasAI(pCreature);
 }
 
-CreatureAI* GetAI_boss_thaladred_the_darkener(Creature *_Creature)
+CreatureAI* GetAI_boss_thaladred_the_darkener(Creature* pCreature)
 {
-    return new boss_thaladred_the_darkenerAI (_Creature);
+    return new boss_thaladred_the_darkenerAI(pCreature);
 }
 
-CreatureAI* GetAI_boss_lord_sanguinar(Creature *_Creature)
+CreatureAI* GetAI_boss_lord_sanguinar(Creature* pCreature)
 {
-    return new boss_lord_sanguinarAI (_Creature);
+    return new boss_lord_sanguinarAI(pCreature);
 }
 
-CreatureAI* GetAI_boss_grand_astromancer_capernian(Creature *_Creature)
+CreatureAI* GetAI_boss_grand_astromancer_capernian(Creature* pCreature)
 {
-    return new boss_grand_astromancer_capernianAI (_Creature);
+    return new boss_grand_astromancer_capernianAI(pCreature);
 }
 
-CreatureAI* GetAI_boss_master_engineer_telonicus(Creature *_Creature)
+CreatureAI* GetAI_boss_master_engineer_telonicus(Creature* pCreature)
 {
-    return new boss_master_engineer_telonicusAI (_Creature);
+    return new boss_master_engineer_telonicusAI(pCreature);
 }
 
-CreatureAI* GetAI_mob_kael_flamestrike(Creature *_Creature)
+CreatureAI* GetAI_mob_kael_flamestrike(Creature* pCreature)
 {
-    return new mob_kael_flamestrikeAI (_Creature);
+    return new mob_kael_flamestrikeAI(pCreature);
 }
 
-CreatureAI* GetAI_mob_phoenix_tk(Creature *_Creature)
+CreatureAI* GetAI_mob_phoenix_tk(Creature* pCreature)
 {
-    return new mob_phoenix_tkAI (_Creature);
+    return new mob_phoenix_tkAI(pCreature);
 }
 
-CreatureAI* GetAI_mob_phoenix_egg_tk(Creature *_Creature)
+CreatureAI* GetAI_mob_phoenix_egg_tk(Creature* pCreature)
 {
-    return new mob_phoenix_egg_tkAI (_Creature);
+    return new mob_phoenix_egg_tkAI(pCreature);
 }
 
 void AddSC_boss_kaelthas()

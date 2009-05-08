@@ -111,10 +111,10 @@ float StageLocations[6][2]=
 
 struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
 {
-    npc_barnesAI(Creature* c) : npc_escortAI(c)
+    npc_barnesAI(Creature* pCreature) : npc_escortAI(pCreature)
     {
         RaidWiped = false;
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -344,7 +344,7 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
                 break;
         }
 
-        for( ; index < count; ++index)
+        for(; index < count; ++index)
         {
             uint32 entry = ((uint32)Spawns[index][0]);
             float PosX = Spawns[index][1];
@@ -363,9 +363,9 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
     }
 };
 
-CreatureAI* GetAI_npc_barnesAI(Creature* _Creature)
+CreatureAI* GetAI_npc_barnesAI(Creature* pCreature)
 {
-    npc_barnesAI* Barnes_AI = new npc_barnesAI(_Creature);
+    npc_barnesAI* Barnes_AI = new npc_barnesAI(pCreature);
 
     for(uint8 i = 0; i < 6; ++i)
         Barnes_AI->AddWaypoint(i, StageLocations[i][0], StageLocations[i][1], 90.465);
@@ -373,58 +373,58 @@ CreatureAI* GetAI_npc_barnesAI(Creature* _Creature)
     return ((CreatureAI*)Barnes_AI);
 }
 
-bool GossipHello_npc_barnes(Player* player, Creature* _Creature)
+bool GossipHello_npc_barnes(Player* pPlayer, Creature* pCreature)
 {
-    ScriptedInstance* pInstance = ((ScriptedInstance*)_Creature->GetInstanceData());
+    ScriptedInstance* pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
 
     // Check for death of Moroes
     if (pInstance && (pInstance->GetData(DATA_MOROES_EVENT) >= DONE))
     {
-        player->ADD_GOSSIP_ITEM(0, OZ_GOSSIP1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+        pPlayer->ADD_GOSSIP_ITEM(0, OZ_GOSSIP1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
 
-        if (player->isGameMaster())
+        if (pPlayer->isGameMaster())
         {
-            player->ADD_GOSSIP_ITEM(5, OZ_GM_GOSSIP1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-            player->ADD_GOSSIP_ITEM(5, OZ_GM_GOSSIP2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
-            player->ADD_GOSSIP_ITEM(5, OZ_GM_GOSSIP3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
+            pPlayer->ADD_GOSSIP_ITEM(5, OZ_GM_GOSSIP1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+            pPlayer->ADD_GOSSIP_ITEM(5, OZ_GM_GOSSIP2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+            pPlayer->ADD_GOSSIP_ITEM(5, OZ_GM_GOSSIP3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
         }
 
-        if (!((npc_barnesAI*)_Creature->AI())->RaidWiped)
-            player->SEND_GOSSIP_MENU(8970, _Creature->GetGUID());
+        if (!((npc_barnesAI*)pCreature->AI())->RaidWiped)
+            pPlayer->SEND_GOSSIP_MENU(8970, pCreature->GetGUID());
         else
-            player->SEND_GOSSIP_MENU(8975, _Creature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(8975, pCreature->GetGUID());
     }
-    else player->SEND_GOSSIP_MENU(8978, _Creature->GetGUID());
+    else pPlayer->SEND_GOSSIP_MENU(8978, pCreature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_barnes(Player *player, Creature *_Creature, uint32 sender, uint32 action)
+bool GossipSelect_npc_barnes(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
     switch(action)
     {
         case GOSSIP_ACTION_INFO_DEF+1:
-            player->ADD_GOSSIP_ITEM(0, OZ_GOSSIP2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-            player->SEND_GOSSIP_MENU(8971, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, OZ_GOSSIP2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+            pPlayer->SEND_GOSSIP_MENU(8971, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+2:
-            player->CLOSE_GOSSIP_MENU();
-            ((npc_barnesAI*)_Creature->AI())->StartEvent();
+            pPlayer->CLOSE_GOSSIP_MENU();
+            ((npc_barnesAI*)pCreature->AI())->StartEvent();
             break;
         case GOSSIP_ACTION_INFO_DEF+3:
-            player->CLOSE_GOSSIP_MENU();
-            ((npc_barnesAI*)_Creature->AI())->Event = EVENT_OZ;
-            outstring_log("SD2: player (GUID %i) manually set Opera event to EVENT_OZ",player->GetGUID());
+            pPlayer->CLOSE_GOSSIP_MENU();
+            ((npc_barnesAI*)pCreature->AI())->Event = EVENT_OZ;
+            outstring_log("SD2: pPlayer (GUID %i) manually set Opera event to EVENT_OZ",pPlayer->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+4:
-            player->CLOSE_GOSSIP_MENU();
-            ((npc_barnesAI*)_Creature->AI())->Event = EVENT_HOOD;
-            outstring_log("SD2: player (GUID %i) manually set Opera event to EVENT_HOOD",player->GetGUID());
+            pPlayer->CLOSE_GOSSIP_MENU();
+            ((npc_barnesAI*)pCreature->AI())->Event = EVENT_HOOD;
+            outstring_log("SD2: pPlayer (GUID %i) manually set Opera event to EVENT_HOOD",pPlayer->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+5:
-            player->CLOSE_GOSSIP_MENU();
-            ((npc_barnesAI*)_Creature->AI())->Event = EVENT_RAJ;
-            outstring_log("SD2: player (GUID %i) manually set Opera event to EVENT_RAJ",player->GetGUID());
+            pPlayer->CLOSE_GOSSIP_MENU();
+            ((npc_barnesAI*)pCreature->AI())->Event = EVENT_RAJ;
+            outstring_log("SD2: pPlayer (GUID %i) manually set Opera event to EVENT_RAJ",pPlayer->GetGUID());
             break;
     }
 
@@ -439,23 +439,23 @@ bool GossipSelect_npc_barnes(Player *player, Creature *_Creature, uint32 sender,
 
 #define GOSSIP_ITEM_TELEPORT     "Teleport me to the Guardian's Library"
 
-bool GossipHello_npc_berthold(Player* player, Creature* _Creature)
+bool GossipHello_npc_berthold(Player* pPlayer, Creature* pCreature)
 {
-    ScriptedInstance* pInstance = ((ScriptedInstance*)_Creature->GetInstanceData());
+    ScriptedInstance* pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
                                                             // Check if Shade of Aran is dead or not
     if (pInstance && (pInstance->GetData(DATA_SHADEOFARAN_EVENT) >= DONE))
-        player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_TELEPORT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+        pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_TELEPORT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
 
-    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_berthold(Player* player, Creature* _Creature, uint32 sender, uint32 action)
+bool GossipSelect_npc_berthold(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
     if (action == GOSSIP_ACTION_INFO_DEF + 1)
-        player->CastSpell(player, SPELL_TELEPORT, true);
+        pPlayer->CastSpell(pPlayer, SPELL_TELEPORT, true);
 
-    player->CLOSE_GOSSIP_MENU();
+    pPlayer->CLOSE_GOSSIP_MENU();
     return true;
 }
 

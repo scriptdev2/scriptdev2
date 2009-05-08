@@ -39,11 +39,11 @@ EndScriptData */
 #define SPELL_ENRAGE                28798
 #define H_SPELL_ENRAGE              54100
 
-#define SPELL_RAINOFFIRE            28794                   //Not sure if targeted AoEs work if casted directly upon a player
+#define SPELL_RAINOFFIRE            28794                   //Not sure if targeted AoEs work if casted directly upon a pPlayer
 
 struct MANGOS_DLL_DECL boss_faerlinaAI : public ScriptedAI
 {
-    boss_faerlinaAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_faerlinaAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 PoisonBoltVolley_Timer;
     uint32 RainOfFire_Timer;
@@ -126,9 +126,9 @@ struct MANGOS_DLL_DECL boss_faerlinaAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_faerlina(Creature *_Creature)
+CreatureAI* GetAI_boss_faerlina(Creature* pCreature)
 {
-    return new boss_faerlinaAI (_Creature);
+    return new boss_faerlinaAI(pCreature);
 }
 
 void AddSC_boss_faerlina()

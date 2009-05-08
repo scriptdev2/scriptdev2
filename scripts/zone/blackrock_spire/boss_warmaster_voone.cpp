@@ -32,7 +32,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_warmastervooneAI : public ScriptedAI
 {
-    boss_warmastervooneAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_warmastervooneAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 Snapkick_Timer;
     uint32 Cleave_Timer;
@@ -54,7 +54,7 @@ struct MANGOS_DLL_DECL boss_warmastervooneAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //Snapkick_Timer
@@ -102,9 +102,9 @@ struct MANGOS_DLL_DECL boss_warmastervooneAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_warmastervoone(Creature *_Creature)
+CreatureAI* GetAI_boss_warmastervoone(Creature* pCreature)
 {
-    return new boss_warmastervooneAI (_Creature);
+    return new boss_warmastervooneAI(pCreature);
 }
 
 void AddSC_boss_warmastervoone()

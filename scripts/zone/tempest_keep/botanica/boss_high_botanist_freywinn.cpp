@@ -43,7 +43,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_high_botanist_freywinnAI : public ScriptedAI
 {
-    boss_high_botanist_freywinnAI(Creature *c) : ScriptedAI(c) { Reset(); }
+    boss_high_botanist_freywinnAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
     std::list<uint64> Adds_List;
 
@@ -168,7 +168,7 @@ struct MANGOS_DLL_DECL boss_high_botanist_freywinnAI : public ScriptedAI
             return;
         }
 
-        /*if( m_creature->HasAura(SPELL_TREE_FORM,0) || m_creature->HasAura(SPELL_TRANQUILITY,0) )
+        /*if (m_creature->HasAura(SPELL_TREE_FORM,0) || m_creature->HasAura(SPELL_TRANQUILITY,0))
             return;*/
 
         //one random seedling every 5 secs, but not in tree form
@@ -182,9 +182,9 @@ struct MANGOS_DLL_DECL boss_high_botanist_freywinnAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_high_botanist_freywinn(Creature *_Creature)
+CreatureAI* GetAI_boss_high_botanist_freywinn(Creature* pCreature)
 {
-    return new boss_high_botanist_freywinnAI (_Creature);
+    return new boss_high_botanist_freywinnAI(pCreature);
 }
 
 void AddSC_boss_high_botanist_freywinn()

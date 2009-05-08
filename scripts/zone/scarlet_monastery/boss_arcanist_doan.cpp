@@ -37,7 +37,7 @@ enum
 
 struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
 {
-    boss_arcanist_doanAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_arcanist_doanAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 Polymorph_Timer;
     uint32 AoESilence_Timer;
@@ -112,9 +112,9 @@ struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_arcanist_doan(Creature *_Creature)
+CreatureAI* GetAI_boss_arcanist_doan(Creature* pCreature)
 {
-    return new boss_arcanist_doanAI (_Creature);
+    return new boss_arcanist_doanAI(pCreature);
 }
 
 void AddSC_boss_arcanist_doan()

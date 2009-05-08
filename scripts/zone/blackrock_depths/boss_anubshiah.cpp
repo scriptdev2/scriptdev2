@@ -31,7 +31,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_anubshiahAI : public ScriptedAI
 {
-    boss_anubshiahAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_anubshiahAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 ShadowBolt_Timer;
     uint32 CurseOfTongues_Timer;
@@ -51,7 +51,7 @@ struct MANGOS_DLL_DECL boss_anubshiahAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //ShadowBolt_Timer
@@ -96,9 +96,9 @@ struct MANGOS_DLL_DECL boss_anubshiahAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_anubshiah(Creature *_Creature)
+CreatureAI* GetAI_boss_anubshiah(Creature* pCreature)
 {
-    return new boss_anubshiahAI (_Creature);
+    return new boss_anubshiahAI(pCreature);
 }
 
 void AddSC_boss_anubshiah()

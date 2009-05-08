@@ -75,9 +75,9 @@ static Say PeonDies[]=
 
 struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
 {
-    boss_grand_warlock_nethekurseAI(Creature *c) : ScriptedAI(c)
+    boss_grand_warlock_nethekurseAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         HeroicMode = m_creature->GetMap()->IsHeroic();
         Reset();
     }
@@ -263,7 +263,7 @@ struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
             }
         }
 
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         if (!IsMainEvent)
@@ -309,9 +309,9 @@ struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL mob_fel_orc_convertAI : public ScriptedAI
 {
-    mob_fel_orc_convertAI(Creature *c) : ScriptedAI(c)
+    mob_fel_orc_convertAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -382,26 +382,26 @@ struct MANGOS_DLL_DECL mob_fel_orc_convertAI : public ScriptedAI
 //NOTE: this creature are also summoned by other spells, for different creatures
 struct MANGOS_DLL_DECL mob_lesser_shadow_fissureAI : public ScriptedAI
 {
-    mob_lesser_shadow_fissureAI(Creature *c) : ScriptedAI(c) {Reset();}
+    mob_lesser_shadow_fissureAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     void Reset() { }
     void MoveInLineOfSight(Unit *who) { }
     void AttackStart(Unit* who) { }
 };
 
-CreatureAI* GetAI_boss_grand_warlock_nethekurse(Creature *_Creature)
+CreatureAI* GetAI_boss_grand_warlock_nethekurse(Creature* pCreature)
 {
-    return new boss_grand_warlock_nethekurseAI (_Creature);
+    return new boss_grand_warlock_nethekurseAI(pCreature);
 }
 
-CreatureAI* GetAI_mob_fel_orc_convert(Creature *_Creature)
+CreatureAI* GetAI_mob_fel_orc_convert(Creature* pCreature)
 {
-    return new mob_fel_orc_convertAI (_Creature);
+    return new mob_fel_orc_convertAI(pCreature);
 }
 
-CreatureAI* GetAI_mob_lesser_shadow_fissure(Creature *_Creature)
+CreatureAI* GetAI_mob_lesser_shadow_fissure(Creature* pCreature)
 {
-    return new mob_lesser_shadow_fissureAI (_Creature);
+    return new mob_lesser_shadow_fissureAI(pCreature);
 }
 
 void AddSC_boss_grand_warlock_nethekurse()

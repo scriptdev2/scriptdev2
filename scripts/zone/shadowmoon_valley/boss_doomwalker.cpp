@@ -43,7 +43,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_doomwalkerAI : public ScriptedAI
 {
-    boss_doomwalkerAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_doomwalkerAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 Chain_Timer;
     uint32 Enrage_Timer;
@@ -69,7 +69,7 @@ struct MANGOS_DLL_DECL boss_doomwalkerAI : public ScriptedAI
 
         Victim->CastSpell(Victim,SPELL_MARK_DEATH,0);
 
-        if(rand()%5)
+        if (rand()%5)
             return;
 
         switch(rand()%3)
@@ -111,7 +111,7 @@ struct MANGOS_DLL_DECL boss_doomwalkerAI : public ScriptedAI
         //Spell Enrage, when hp <= 20% gain enrage
         if (((m_creature->GetHealth()*100)/ m_creature->GetMaxHealth()) <= 20)
         {
-            if(Enrage_Timer < diff)
+            if (Enrage_Timer < diff)
             {
                 DoCast(m_creature,SPELL_ENRAGE);
                 Enrage_Timer = 6000;
@@ -178,9 +178,9 @@ struct MANGOS_DLL_DECL boss_doomwalkerAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_doomwalker(Creature *_Creature)
+CreatureAI* GetAI_boss_doomwalker(Creature* pCreature)
 {
-    return new boss_doomwalkerAI (_Creature);
+    return new boss_doomwalkerAI(pCreature);
 }
 
 void AddSC_boss_doomwalker()

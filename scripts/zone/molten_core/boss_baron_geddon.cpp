@@ -32,7 +32,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_baron_geddonAI : public ScriptedAI
 {
-    boss_baron_geddonAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_baron_geddonAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 Inferno_Timer;
     uint32 IgniteMana_Timer;
@@ -89,9 +89,9 @@ struct MANGOS_DLL_DECL boss_baron_geddonAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_baron_geddon(Creature *_Creature)
+CreatureAI* GetAI_boss_baron_geddon(Creature* pCreature)
 {
-    return new boss_baron_geddonAI (_Creature);
+    return new boss_baron_geddonAI(pCreature);
 }
 
 void AddSC_boss_baron_geddon()

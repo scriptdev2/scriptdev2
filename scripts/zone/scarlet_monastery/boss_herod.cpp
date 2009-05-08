@@ -40,7 +40,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_herodAI : public ScriptedAI
 {
-    boss_herodAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_herodAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     bool Enrage;
     uint32 Cleave_Timer;
@@ -109,7 +109,7 @@ CreatureAI* GetAI_boss_herod(Creature* pCreature)
 
 struct MANGOS_DLL_DECL mob_scarlet_traineeAI : public npc_escortAI
 {
-    mob_scarlet_traineeAI(Creature *c) : npc_escortAI(c)
+    mob_scarlet_traineeAI(Creature* pCreature) : npc_escortAI(pCreature)
     {
         Start_Timer = urand(1000,6000);
         Reset();

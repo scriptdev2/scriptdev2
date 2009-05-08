@@ -40,9 +40,9 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_gatewatcher_iron_handAI : public ScriptedAI
 {
-    boss_gatewatcher_iron_handAI(Creature *c) : ScriptedAI(c)
+    boss_gatewatcher_iron_handAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         HeroicMode = m_creature->GetMap()->IsHeroic();
         Reset();
     }
@@ -91,7 +91,7 @@ struct MANGOS_DLL_DECL boss_gatewatcher_iron_handAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //Shadow Power
@@ -131,9 +131,9 @@ struct MANGOS_DLL_DECL boss_gatewatcher_iron_handAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_gatewatcher_iron_hand(Creature *_Creature)
+CreatureAI* GetAI_boss_gatewatcher_iron_hand(Creature* pCreature)
 {
-    return new boss_gatewatcher_iron_handAI (_Creature);
+    return new boss_gatewatcher_iron_handAI(pCreature);
 }
 
 void AddSC_boss_gatewatcher_iron_hand()

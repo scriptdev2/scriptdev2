@@ -24,7 +24,7 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_deadmines.h"
 
-bool GOHello_go_door_lever_dm(Player *player, GameObject* _GO)
+bool GOHello_go_door_lever_dm(Player* pPlayer, GameObject* _GO)
 {
     ScriptedInstance* pInstance = (ScriptedInstance*)_GO->GetInstanceData();
 
@@ -38,7 +38,7 @@ bool GOHello_go_door_lever_dm(Player *player, GameObject* _GO)
     return true;
 }
 
-bool GOHello_go_defias_cannon(Player *player, GameObject* _GO)
+bool GOHello_go_defias_cannon(Player* pPlayer, GameObject* _GO)
 {
     ScriptedInstance* pInstance = (ScriptedInstance*)_GO->GetInstanceData();
 

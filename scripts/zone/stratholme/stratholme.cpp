@@ -35,7 +35,7 @@ EndContentData */
 ## go_gauntlet_gate (this is the _first_ of the gauntlet gates, two exist)
 ######*/
 
-bool GOHello_go_gauntlet_gate(Player *player, GameObject* _GO)
+bool GOHello_go_gauntlet_gate(Player* pPlayer, GameObject* _GO)
 {
     ScriptedInstance* pInstance = (ScriptedInstance*)_GO->GetInstanceData();
 
@@ -45,7 +45,7 @@ bool GOHello_go_gauntlet_gate(Player *player, GameObject* _GO)
     if (pInstance->GetData(TYPE_BARON_RUN) != NOT_STARTED)
         return false;
 
-    if (Group *pGroup = player->GetGroup())
+    if (Group *pGroup = pPlayer->GetGroup())
     {
         for(GroupReference *itr = pGroup->GetFirstMember(); itr != NULL; itr = itr->next())
         {
@@ -58,10 +58,10 @@ bool GOHello_go_gauntlet_gate(Player *player, GameObject* _GO)
                 pGroupie->GetMap() == _GO->GetMap())
                 pGroupie->CastSpell(pGroupie,SPELL_BARON_ULTIMATUM,true);
         }
-    } else if (player->GetQuestStatus(QUEST_DEAD_MAN_PLEA) == QUEST_STATUS_INCOMPLETE &&
-                !player->HasAura(SPELL_BARON_ULTIMATUM,0) &&
-                player->GetMap() == _GO->GetMap())
-                player->CastSpell(player,SPELL_BARON_ULTIMATUM,true);
+    } else if (pPlayer->GetQuestStatus(QUEST_DEAD_MAN_PLEA) == QUEST_STATUS_INCOMPLETE &&
+                !pPlayer->HasAura(SPELL_BARON_ULTIMATUM,0) &&
+                pPlayer->GetMap() == _GO->GetMap())
+                pPlayer->CastSpell(pPlayer,SPELL_BARON_ULTIMATUM,true);
 
     pInstance->SetData(TYPE_BARON_RUN,IN_PROGRESS);
     return false;
@@ -79,7 +79,7 @@ bool GOHello_go_gauntlet_gate(Player *player, GameObject* _GO)
 
 struct MANGOS_DLL_DECL mob_freed_soulAI : public ScriptedAI
 {
-    mob_freed_soulAI(Creature *c) : ScriptedAI(c) {Reset();}
+    mob_freed_soulAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     void Reset()
     {
@@ -93,9 +93,9 @@ struct MANGOS_DLL_DECL mob_freed_soulAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_freed_soul(Creature *_Creature)
+CreatureAI* GetAI_mob_freed_soul(Creature* pCreature)
 {
-    return new mob_freed_soulAI (_Creature);
+    return new mob_freed_soulAI(pCreature);
 }
 
 /*######
@@ -110,7 +110,7 @@ CreatureAI* GetAI_mob_freed_soul(Creature *_Creature)
 
 struct MANGOS_DLL_DECL mob_restless_soulAI : public ScriptedAI
 {
-    mob_restless_soulAI(Creature *c) : ScriptedAI(c) {Reset();}
+    mob_restless_soulAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint64 Tagger;
     uint32 Die_Timer;
@@ -159,9 +159,9 @@ struct MANGOS_DLL_DECL mob_restless_soulAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_restless_soul(Creature *_Creature)
+CreatureAI* GetAI_mob_restless_soul(Creature* pCreature)
 {
-    return new mob_restless_soulAI (_Creature);
+    return new mob_restless_soulAI(pCreature);
 }
 
 /*######
@@ -172,7 +172,7 @@ CreatureAI* GetAI_mob_restless_soul(Creature *_Creature)
 
 struct MANGOS_DLL_DECL mobs_spectral_ghostly_citizenAI : public ScriptedAI
 {
-    mobs_spectral_ghostly_citizenAI(Creature *c) : ScriptedAI(c) {Reset();}
+    mobs_spectral_ghostly_citizenAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 Die_Timer;
     bool Tagged;
@@ -222,7 +222,7 @@ struct MANGOS_DLL_DECL mobs_spectral_ghostly_citizenAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 
-    void ReciveEmote_mobs_spectral_ghostly_citizen(Player *player, uint32 emote)
+    void ReciveEmote_mobs_spectral_ghostly_citizen(Player* pPlayer, uint32 emote)
     {
         switch(emote)
         {
@@ -231,7 +231,7 @@ struct MANGOS_DLL_DECL mobs_spectral_ghostly_citizenAI : public ScriptedAI
                 break;
             case TEXTEMOTE_RUDE:
                 //Should instead cast spell, kicking player back. Spell not found.
-                if (m_creature->IsWithinDistInMap(player, ATTACK_DISTANCE))
+                if (m_creature->IsWithinDistInMap(pPlayer, ATTACK_DISTANCE))
                     m_creature->HandleEmoteCommand(EMOTE_ONESHOT_RUDE);
                 else
                     m_creature->HandleEmoteCommand(EMOTE_ONESHOT_RUDE);
@@ -249,9 +249,9 @@ struct MANGOS_DLL_DECL mobs_spectral_ghostly_citizenAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mobs_spectral_ghostly_citizen(Creature *_Creature)
+CreatureAI* GetAI_mobs_spectral_ghostly_citizen(Creature* pCreature)
 {
-    return new mobs_spectral_ghostly_citizenAI (_Creature);
+    return new mobs_spectral_ghostly_citizenAI(pCreature);
 }
 
 void AddSC_stratholme()

@@ -30,7 +30,7 @@ struct MANGOS_DLL_DECL instance_mechanar : public ScriptedInstance
 
     bool IsBossDied[1];
 
-    void OnCreatureCreate (Creature *creature, uint32 creature_entry)
+    void OnCreatureCreate(Creature* pCreature, uint32 creature_entry)
     {
     }
 
@@ -50,7 +50,7 @@ struct MANGOS_DLL_DECL instance_mechanar : public ScriptedInstance
         switch(type)
         {
             case DATA_SEPETHREAISDEAD:
-                if(IsBossDied[0])
+                if (IsBossDied[0])
                     return 1;
                 break;
         }

@@ -29,7 +29,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_pyroguard_emberseerAI : public ScriptedAI
 {
-    boss_pyroguard_emberseerAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_pyroguard_emberseerAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 FireNova_Timer;
     uint32 FlameBuffet_Timer;
@@ -45,7 +45,7 @@ struct MANGOS_DLL_DECL boss_pyroguard_emberseerAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //FireNova_Timer
@@ -74,9 +74,9 @@ struct MANGOS_DLL_DECL boss_pyroguard_emberseerAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_pyroguard_emberseer(Creature *_Creature)
+CreatureAI* GetAI_boss_pyroguard_emberseer(Creature* pCreature)
 {
-    return new boss_pyroguard_emberseerAI (_Creature);
+    return new boss_pyroguard_emberseerAI(pCreature);
 }
 
 void AddSC_boss_pyroguard_emberseer()

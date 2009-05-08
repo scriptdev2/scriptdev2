@@ -40,9 +40,9 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
 {
-    boss_marliAI(Creature *c) : ScriptedAI(c)
+    boss_marliAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -114,16 +114,16 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
             Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0);
 
             Spider = m_creature->SummonCreature(15041,target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
-            if (target && Spider ) Spider ->AI()->AttackStart(target);
+            if (target && Spider) Spider ->AI()->AttackStart(target);
 
             Spider = m_creature->SummonCreature(15041,target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
-            if (target && Spider ) Spider ->AI()->AttackStart(target);
+            if (target && Spider) Spider ->AI()->AttackStart(target);
 
             Spider = m_creature->SummonCreature(15041,target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
-            if (target && Spider ) Spider ->AI()->AttackStart(target);
+            if (target && Spider) Spider ->AI()->AttackStart(target);
 
             Spider = m_creature->SummonCreature(15041,target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
-            if (target && Spider ) Spider ->AI()->AttackStart(target);
+            if (target && Spider) Spider ->AI()->AttackStart(target);
 
             Spawned = true;
         }else SpawnStartSpiders_Timer -= diff;
@@ -133,7 +133,7 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
             Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0);
 
             Spider = m_creature->SummonCreature(15041,target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
-            if (target && Spider )
+            if (target && Spider)
                 Spider ->AI()->AttackStart(target);
 
             SpawnSpider_Timer = 12000 + rand()%5000;
@@ -202,7 +202,7 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
 //Spawn of Marli
 struct MANGOS_DLL_DECL mob_spawn_of_marliAI : public ScriptedAI
 {
-    mob_spawn_of_marliAI(Creature *c) : ScriptedAI(c) {Reset();}
+    mob_spawn_of_marliAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 LevelUp_Timer;
 
@@ -214,7 +214,7 @@ struct MANGOS_DLL_DECL mob_spawn_of_marliAI : public ScriptedAI
     void UpdateAI (const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //LevelUp_Timer
@@ -228,14 +228,14 @@ struct MANGOS_DLL_DECL mob_spawn_of_marliAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_marli(Creature *_Creature)
+CreatureAI* GetAI_boss_marli(Creature* pCreature)
 {
-    return new boss_marliAI (_Creature);
+    return new boss_marliAI(pCreature);
 }
 
-CreatureAI* GetAI_mob_spawn_of_marli(Creature *_Creature)
+CreatureAI* GetAI_mob_spawn_of_marli(Creature* pCreature)
 {
-    return new mob_spawn_of_marliAI (_Creature);
+    return new mob_spawn_of_marliAI(pCreature);
 }
 
 void AddSC_boss_marli()

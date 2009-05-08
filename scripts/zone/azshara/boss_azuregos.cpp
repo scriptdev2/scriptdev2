@@ -35,7 +35,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_azuregosAI : public ScriptedAI
 {
-    boss_azuregosAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_azuregosAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 MarkOfFrost_Timer;
     uint32 ManaStorm_Timer;
@@ -63,7 +63,7 @@ struct MANGOS_DLL_DECL boss_azuregosAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         if (Teleport_Timer < diff)
@@ -138,9 +138,9 @@ struct MANGOS_DLL_DECL boss_azuregosAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_azuregos(Creature *_Creature)
+CreatureAI* GetAI_boss_azuregos(Creature* pCreature)
 {
-    return new boss_azuregosAI (_Creature);
+    return new boss_azuregosAI(pCreature);
 }
 
 void AddSC_boss_azuregos()

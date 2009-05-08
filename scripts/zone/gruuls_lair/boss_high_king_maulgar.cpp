@@ -60,9 +60,9 @@ EndScriptData */
 //High King Maulgar AI
 struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
 {
-    boss_high_king_maulgarAI(Creature *c) : ScriptedAI(c)
+    boss_high_king_maulgarAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         for(uint8 i = 0; i < 4; ++i)
             Council[i] = 0;
         Reset();
@@ -173,7 +173,7 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
         }
 
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //someone evaded!
@@ -235,9 +235,9 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
 //Olm The Summoner AI
 struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
 {
-    boss_olm_the_summonerAI(Creature *c) : ScriptedAI(c)
+    boss_olm_the_summonerAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -292,7 +292,7 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
         }
 
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //someone evaded!
@@ -307,7 +307,7 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
         }else DarkDecay_Timer -= diff;
 
         //DeathCoil_Timer
-        if(DeathCoil_Timer < diff)
+        if (DeathCoil_Timer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_DEATH_COIL);
             DeathCoil_Timer = 8000 + rand()%5000;
@@ -328,9 +328,9 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
 //Kiggler The Crazed AI
 struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public ScriptedAI
 {
-    boss_kiggler_the_crazedAI(Creature *c) : ScriptedAI(c)
+    boss_kiggler_the_crazedAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -374,7 +374,7 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public ScriptedAI
             {
                 who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
-                if(!m_creature->isInCombat())
+                if (!m_creature->isInCombat())
                 {
                     AttackStart(who);
                     if (pInstance)
@@ -399,17 +399,17 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public ScriptedAI
         }
 
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //someone evaded!
         if (pInstance && !pInstance->GetData(DATA_MAULGAREVENT))
             EnterEvadeMode();
 
-        if(GreatherPolymorph_Timer < diff)
+        if (GreatherPolymorph_Timer < diff)
         {
             Unit *target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-            if(target)
+            if (target)
                 DoCast(target, SPELL_GREATER_POLYMORPH);
 
             GreatherPolymorph_Timer = 15000 + rand()%5000;
@@ -445,9 +445,9 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public ScriptedAI
 //Blindeye The Seer AI
 struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public ScriptedAI
 {
-    boss_blindeye_the_seerAI(Creature *c) : ScriptedAI(c)
+    boss_blindeye_the_seerAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -514,7 +514,7 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public ScriptedAI
         }
 
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //someone evaded!
@@ -549,9 +549,9 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public ScriptedAI
 //Krosh Firehand AI
 struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
 {
-    boss_krosh_firehandAI(Creature *c) : ScriptedAI(c)
+    boss_krosh_firehandAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -618,7 +618,7 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
         }
 
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //someone evaded!
@@ -652,29 +652,29 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_high_king_maulgar(Creature *_Creature)
+CreatureAI* GetAI_boss_high_king_maulgar(Creature* pCreature)
 {
-    return new boss_high_king_maulgarAI (_Creature);
+    return new boss_high_king_maulgarAI(pCreature);
 }
 
-CreatureAI* GetAI_boss_olm_the_summoner(Creature *_Creature)
+CreatureAI* GetAI_boss_olm_the_summoner(Creature* pCreature)
 {
-    return new boss_olm_the_summonerAI (_Creature);
+    return new boss_olm_the_summonerAI(pCreature);
 }
 
-CreatureAI *GetAI_boss_kiggler_the_crazed(Creature *_Creature)
+CreatureAI *GetAI_boss_kiggler_the_crazed(Creature* pCreature)
 {
-    return new boss_kiggler_the_crazedAI (_Creature);
+    return new boss_kiggler_the_crazedAI(pCreature);
 }
 
-CreatureAI *GetAI_boss_blindeye_the_seer(Creature *_Creature)
+CreatureAI *GetAI_boss_blindeye_the_seer(Creature* pCreature)
 {
-    return new boss_blindeye_the_seerAI (_Creature);
+    return new boss_blindeye_the_seerAI(pCreature);
 }
 
-CreatureAI *GetAI_boss_krosh_firehand(Creature *_Creature)
+CreatureAI *GetAI_boss_krosh_firehand(Creature* pCreature)
 {
-    return new boss_krosh_firehandAI (_Creature);
+    return new boss_krosh_firehandAI(pCreature);
 }
 
 void AddSC_boss_high_king_maulgar()

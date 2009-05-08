@@ -40,11 +40,11 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
 {
-    boss_vaelAI(Creature *c) : ScriptedAI(c)
+    boss_vaelAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        c->SetUInt32Value(UNIT_NPC_FLAGS,1);
-        c->setFaction(35);
-        c->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+        pCreature->SetUInt32Value(UNIT_NPC_FLAGS,1);
+        pCreature->setFaction(35);
+        pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         Reset();
     }
 
@@ -142,7 +142,7 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
         }
 
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         // Yell if hp lower than 15%
@@ -207,7 +207,7 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
         if (TailSwipe_Timer < diff)
         {
             //Only cast if we are behind
-            /*if (!m_creature->HasInArc( M_PI, m_creature->getVictim()))
+            /*if (!m_creature->HasInArc(M_PI, m_creature->getVictim()))
             {
             DoCast(m_creature->getVictim(),SPELL_TAILSWIPE);
             }*/
@@ -219,34 +219,34 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
     }
 };
 
-void SendDefaultMenu_boss_vael(Player *player, Creature *_Creature, uint32 action)
+void SendDefaultMenu_boss_vael(Player* pPlayer, Creature* pCreature, uint32 action)
 {
     if (action == GOSSIP_ACTION_INFO_DEF + 1)               //Fight time
     {
-        player->CLOSE_GOSSIP_MENU();
-        ((boss_vaelAI*)_Creature->AI())->BeginSpeach((Unit*)player);
+        pPlayer->CLOSE_GOSSIP_MENU();
+        ((boss_vaelAI*)pCreature->AI())->BeginSpeach((Unit*)pPlayer);
     }
 }
 
-bool GossipSelect_boss_vael(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+bool GossipSelect_boss_vael(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
     if (sender == GOSSIP_SENDER_MAIN)
-        SendDefaultMenu_boss_vael(player, _Creature, action);
+        SendDefaultMenu_boss_vael(pPlayer, pCreature, action);
 
     return true;
 }
 
-bool GossipHello_boss_vael(Player *player, Creature *_Creature)
+bool GossipHello_boss_vael(Player* pPlayer, Creature* pCreature)
 {
-    player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM        , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-    player->SEND_GOSSIP_MENU(907,_Creature->GetGUID());
+    pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM        , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+    pPlayer->SEND_GOSSIP_MENU(907, pCreature->GetGUID());
 
     return true;
 }
 
-CreatureAI* GetAI_boss_vael(Creature *_Creature)
+CreatureAI* GetAI_boss_vael(Creature* pCreature)
 {
-    return new boss_vaelAI (_Creature);
+    return new boss_vaelAI(pCreature);
 }
 
 void AddSC_boss_vael()

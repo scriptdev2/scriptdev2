@@ -32,7 +32,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_instructormaliciaAI : public ScriptedAI
 {
-    boss_instructormaliciaAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_instructormaliciaAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 CallOfGraves_Timer;
     uint32 Corruption_Timer;
@@ -56,7 +56,7 @@ struct MANGOS_DLL_DECL boss_instructormaliciaAI : public ScriptedAI
     void JustDied(Unit *killer)
     {
         ScriptedInstance *pInstance = (m_creature->GetInstanceData()) ? ((ScriptedInstance*)m_creature->GetInstanceData()) : NULL;
-        if(pInstance)
+        if (pInstance)
         {
             pInstance->SetData(DATA_INSTRUCTORMALICIA_DEATH, 0);
 
@@ -133,9 +133,9 @@ struct MANGOS_DLL_DECL boss_instructormaliciaAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_instructormalicia(Creature *_Creature)
+CreatureAI* GetAI_boss_instructormalicia(Creature* pCreature)
 {
-    return new boss_instructormaliciaAI (_Creature);
+    return new boss_instructormaliciaAI(pCreature);
 }
 
 void AddSC_boss_instructormalicia()

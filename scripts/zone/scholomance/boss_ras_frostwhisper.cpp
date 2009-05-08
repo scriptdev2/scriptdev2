@@ -32,7 +32,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_rasfrostAI : public ScriptedAI
 {
-    boss_rasfrostAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_rasfrostAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 IceArmor_Timer;
     uint32 Frostbolt_Timer;
@@ -106,9 +106,9 @@ struct MANGOS_DLL_DECL boss_rasfrostAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_rasfrost(Creature *_Creature)
+CreatureAI* GetAI_boss_rasfrost(Creature* pCreature)
 {
-    return new boss_rasfrostAI (_Creature);
+    return new boss_rasfrostAI(pCreature);
 }
 
 void AddSC_boss_rasfrost()

@@ -31,7 +31,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_renatakiAI : public ScriptedAI
 {
-    boss_renatakiAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_renatakiAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 Invisible_Timer;
     uint32 Ambush_Timer;
@@ -108,13 +108,13 @@ struct MANGOS_DLL_DECL boss_renatakiAI : public ScriptedAI
         }
 
         //Resetting some aggro so he attacks other gamers
-        if(!Invisible)
+        if (!Invisible)
             if (Aggro_Timer < diff)
         {
             Unit* target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM,1);
 
-            if(m_creature->getThreatManager().getThreat(m_creature->getVictim()))
+            if (m_creature->getThreatManager().getThreat(m_creature->getVictim()))
                 m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-50);
 
             if (target)
@@ -124,7 +124,7 @@ struct MANGOS_DLL_DECL boss_renatakiAI : public ScriptedAI
         }else Aggro_Timer -= diff;
 
         if (!Invisible)
-            if(ThousandBlades_Timer < diff)
+            if (ThousandBlades_Timer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_THOUSANDBLADES);
             ThousandBlades_Timer = 7000 + rand()%5000;
@@ -133,9 +133,9 @@ struct MANGOS_DLL_DECL boss_renatakiAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_renataki(Creature *_Creature)
+CreatureAI* GetAI_boss_renataki(Creature* pCreature)
 {
-    return new boss_renatakiAI (_Creature);
+    return new boss_renatakiAI(pCreature);
 }
 
 void AddSC_boss_renataki()

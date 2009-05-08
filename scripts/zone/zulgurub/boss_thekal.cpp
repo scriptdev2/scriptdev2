@@ -52,9 +52,9 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
 {
-    boss_thekalAI(Creature *c) : ScriptedAI(c)
+    boss_thekalAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -234,9 +234,9 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
 //Zealot Lor'Khan
 struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public ScriptedAI
 {
-    mob_zealot_lorkhanAI(Creature *c) : ScriptedAI(c)
+    mob_zealot_lorkhanAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -269,7 +269,7 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public ScriptedAI
 
     void UpdateAI (const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //Shield_Timer
@@ -366,9 +366,9 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public ScriptedAI
 //Zealot Zath
 struct MANGOS_DLL_DECL mob_zealot_zathAI : public ScriptedAI
 {
-    mob_zealot_zathAI(Creature *c) : ScriptedAI(c)
+    mob_zealot_zathAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -403,7 +403,7 @@ struct MANGOS_DLL_DECL mob_zealot_zathAI : public ScriptedAI
 
     void UpdateAI (const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //SweepingStrikes_Timer
@@ -450,7 +450,7 @@ struct MANGOS_DLL_DECL mob_zealot_zathAI : public ScriptedAI
         {
             if (pInstance)
             {
-                if(pInstance->GetData(DATA_LORKHANISDEAD))
+                if (pInstance->GetData(DATA_LORKHANISDEAD))
                 {
                     //Resurrect LorKhan
                     Unit *pLorKhan = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_LORKHAN));
@@ -491,19 +491,19 @@ struct MANGOS_DLL_DECL mob_zealot_zathAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_thekal(Creature *_Creature)
+CreatureAI* GetAI_boss_thekal(Creature* pCreature)
 {
-    return new boss_thekalAI (_Creature);
+    return new boss_thekalAI(pCreature);
 }
 
-CreatureAI* GetAI_mob_zealot_lorkhan(Creature *_Creature)
+CreatureAI* GetAI_mob_zealot_lorkhan(Creature* pCreature)
 {
-    return new mob_zealot_lorkhanAI (_Creature);
+    return new mob_zealot_lorkhanAI(pCreature);
 }
 
-CreatureAI* GetAI_mob_zealot_zath(Creature *_Creature)
+CreatureAI* GetAI_mob_zealot_zath(Creature* pCreature)
 {
-    return new mob_zealot_zathAI (_Creature);
+    return new mob_zealot_zathAI(pCreature);
 }
 
 void AddSC_boss_thekal()

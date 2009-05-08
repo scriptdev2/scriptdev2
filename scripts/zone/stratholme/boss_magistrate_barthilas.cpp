@@ -34,7 +34,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_magistrate_barthilasAI : public ScriptedAI
 {
-    boss_magistrate_barthilasAI(Creature *c) : ScriptedAI(c)
+    boss_magistrate_barthilasAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         pInstance = (ScriptedInstance*)m_creature->GetInstanceData();
         Reset();
@@ -113,9 +113,9 @@ struct MANGOS_DLL_DECL boss_magistrate_barthilasAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_magistrate_barthilas(Creature *_Creature)
+CreatureAI* GetAI_boss_magistrate_barthilas(Creature* pCreature)
 {
-    return new boss_magistrate_barthilasAI (_Creature);
+    return new boss_magistrate_barthilasAI(pCreature);
 }
 
 void AddSC_boss_magistrate_barthilas()

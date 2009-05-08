@@ -38,9 +38,9 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
 {
-    boss_golemaggAI(Creature *c) : ScriptedAI(c)
+    boss_golemaggAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -102,7 +102,7 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
         }
 
         //Casting Buff for Coreragers. Spell is not working right. Players get the buff...
-        //if(Buff_Timer < diff)
+        //if (Buff_Timer < diff)
         //{
         //    DoCast(m_creature, SPELL_BUFF);
         //    Buff_Timer = 2500;
@@ -114,9 +114,9 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL mob_core_ragerAI : public ScriptedAI
 {
-    mob_core_ragerAI(Creature *c) : ScriptedAI(c)
+    mob_core_ragerAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -167,14 +167,14 @@ struct MANGOS_DLL_DECL mob_core_ragerAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_golemagg(Creature *_Creature)
+CreatureAI* GetAI_boss_golemagg(Creature* pCreature)
 {
-    return new boss_golemaggAI (_Creature);
+    return new boss_golemaggAI(pCreature);
 }
 
-CreatureAI* GetAI_mob_core_rager(Creature *_Creature)
+CreatureAI* GetAI_mob_core_rager(Creature* pCreature)
 {
-    return new mob_core_ragerAI (_Creature);
+    return new mob_core_ragerAI(pCreature);
 }
 
 void AddSC_boss_golemagg()

@@ -50,7 +50,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_darkmaster_gandlingAI : public ScriptedAI
 {
-    boss_darkmaster_gandlingAI(Creature *c) : ScriptedAI(c)
+    boss_darkmaster_gandlingAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         pInstance = (ScriptedInstance*)m_creature->GetInstanceData();
         Reset();
@@ -107,15 +107,15 @@ struct MANGOS_DLL_DECL boss_darkmaster_gandlingAI : public ScriptedAI
 
         //Teleporting Random Target to one of the six pre boss rooms and spawn 3-4 skeletons near the gamer.
         //We will only telport if gandling has more than 3% of hp so teleported gamers can always loot.
-        if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() > 3 )
+        if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() > 3)
         {
-            if(Teleport_Timer < diff)
+            if (Teleport_Timer < diff)
             {
                 Unit* target = NULL;
                 target = SelectUnit(SELECT_TARGET_RANDOM,0);
                 if (target && target->GetTypeId() == TYPEID_PLAYER)
                 {
-                    if(m_creature->getThreatManager().getThreat(target))
+                    if (m_creature->getThreatManager().getThreat(target))
                         m_creature->getThreatManager().modifyThreatPercent(target, -100);
 
                     switch(rand()%6)
@@ -207,9 +207,9 @@ struct MANGOS_DLL_DECL boss_darkmaster_gandlingAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_darkmaster_gandling(Creature *_Creature)
+CreatureAI* GetAI_boss_darkmaster_gandling(Creature* pCreature)
 {
-    return new boss_darkmaster_gandlingAI (_Creature);
+    return new boss_darkmaster_gandlingAI(pCreature);
 }
 
 void AddSC_boss_darkmaster_gandling()

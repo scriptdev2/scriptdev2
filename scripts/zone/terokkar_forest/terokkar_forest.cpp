@@ -47,7 +47,7 @@ EndContentData */
 
 struct MANGOS_DLL_DECL mob_unkor_the_ruthlessAI : public ScriptedAI
 {
-    mob_unkor_the_ruthlessAI(Creature* c) : ScriptedAI(c) { Reset(); }
+    mob_unkor_the_ruthlessAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
     bool CanDoQuest;
     uint32 UnkorUnfriendly_Timer;
@@ -75,26 +75,26 @@ struct MANGOS_DLL_DECL mob_unkor_the_ruthlessAI : public ScriptedAI
 
     void DamageTaken(Unit *done_by, uint32 &damage)
     {
-        if( done_by->GetTypeId() == TYPEID_PLAYER )
-            if( (m_creature->GetHealth()-damage)*100 / m_creature->GetMaxHealth() < 30 )
+        if (done_by->GetTypeId() == TYPEID_PLAYER)
+            if ((m_creature->GetHealth()-damage)*100 / m_creature->GetMaxHealth() < 30)
         {
-            if( Group* pGroup = ((Player*)done_by)->GetGroup() )
+            if (Group* pGroup = ((Player*)done_by)->GetGroup())
             {
                 for(GroupReference *itr = pGroup->GetFirstMember(); itr != NULL; itr = itr->next())
                 {
                     Player *pGroupie = itr->getSource();
-                    if( pGroupie &&
+                    if (pGroupie &&
                         pGroupie->GetQuestStatus(QUEST_DONTKILLTHEFATONE) == QUEST_STATUS_INCOMPLETE &&
-                        pGroupie->GetReqKillOrCastCurrentCount(QUEST_DONTKILLTHEFATONE, 18260) == 10 )
+                        pGroupie->GetReqKillOrCastCurrentCount(QUEST_DONTKILLTHEFATONE, 18260) == 10)
                     {
                         pGroupie->AreaExploredOrEventHappens(QUEST_DONTKILLTHEFATONE);
-                        if( !CanDoQuest )
+                        if (!CanDoQuest)
                             CanDoQuest = true;
                     }
                 }
             } else
-            if( ((Player*)done_by)->GetQuestStatus(QUEST_DONTKILLTHEFATONE) == QUEST_STATUS_INCOMPLETE &&
-                ((Player*)done_by)->GetReqKillOrCastCurrentCount(QUEST_DONTKILLTHEFATONE, 18260) == 10 )
+            if (((Player*)done_by)->GetQuestStatus(QUEST_DONTKILLTHEFATONE) == QUEST_STATUS_INCOMPLETE &&
+                ((Player*)done_by)->GetReqKillOrCastCurrentCount(QUEST_DONTKILLTHEFATONE, 18260) == 10)
             {
                 ((Player*)done_by)->AreaExploredOrEventHappens(QUEST_DONTKILLTHEFATONE);
                 CanDoQuest = true;
@@ -104,26 +104,26 @@ struct MANGOS_DLL_DECL mob_unkor_the_ruthlessAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if( CanDoQuest )
+        if (CanDoQuest)
         {
-            if( !UnkorUnfriendly_Timer )
+            if (!UnkorUnfriendly_Timer)
             {
                 //DoCast(m_creature,SPELL_QUID9889);        //not using spell for now
                 DoNice();
             }
             else
             {
-                if( UnkorUnfriendly_Timer < diff )
+                if (UnkorUnfriendly_Timer < diff)
                 {
                     EnterEvadeMode();
                 }else UnkorUnfriendly_Timer -= diff;
             }
         }
 
-        if(!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if( Pulverize_Timer < diff )
+        if (Pulverize_Timer < diff)
         {
             DoCast(m_creature,SPELL_PULVERIZE);
             Pulverize_Timer = 9000;
@@ -133,9 +133,9 @@ struct MANGOS_DLL_DECL mob_unkor_the_ruthlessAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_unkor_the_ruthless(Creature *_Creature)
+CreatureAI* GetAI_mob_unkor_the_ruthless(Creature* pCreature)
 {
-    return new mob_unkor_the_ruthlessAI (_Creature);
+    return new mob_unkor_the_ruthlessAI(pCreature);
 }
 
 /*######
@@ -144,7 +144,7 @@ CreatureAI* GetAI_mob_unkor_the_ruthless(Creature *_Creature)
 
 struct MANGOS_DLL_DECL mob_infested_root_walkerAI : public ScriptedAI
 {
-    mob_infested_root_walkerAI(Creature *c) : ScriptedAI(c) {Reset();}
+    mob_infested_root_walkerAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     void Reset() { }
 
@@ -157,9 +157,9 @@ struct MANGOS_DLL_DECL mob_infested_root_walkerAI : public ScriptedAI
                     m_creature->CastSpell(m_creature,39130,true);
     }
 };
-CreatureAI* GetAI_mob_infested_root_walker(Creature *_Creature)
+CreatureAI* GetAI_mob_infested_root_walker(Creature* pCreature)
 {
-    return new mob_infested_root_walkerAI (_Creature);
+    return new mob_infested_root_walkerAI(pCreature);
 }
 
 /*######
@@ -168,7 +168,7 @@ CreatureAI* GetAI_mob_infested_root_walker(Creature *_Creature)
 
 struct MANGOS_DLL_DECL mob_rotting_forest_ragerAI : public ScriptedAI
 {
-    mob_rotting_forest_ragerAI(Creature *c) : ScriptedAI(c) {Reset();}
+    mob_rotting_forest_ragerAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     void Reset() { }
 
@@ -181,9 +181,9 @@ struct MANGOS_DLL_DECL mob_rotting_forest_ragerAI : public ScriptedAI
                     m_creature->CastSpell(m_creature,39134,true);
     }
 };
-CreatureAI* GetAI_mob_rotting_forest_rager(Creature *_Creature)
+CreatureAI* GetAI_mob_rotting_forest_rager(Creature* pCreature)
 {
-    return new mob_rotting_forest_ragerAI (_Creature);
+    return new mob_rotting_forest_ragerAI(pCreature);
 }
 
 /*######
@@ -199,34 +199,34 @@ const uint32 netherwebVictims[6] =
 };
 struct MANGOS_DLL_DECL mob_netherweb_victimAI : public ScriptedAI
 {
-    mob_netherweb_victimAI(Creature *c) : ScriptedAI(c) {Reset();}
+    mob_netherweb_victimAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     void Reset() { }
     void MoveInLineOfSight(Unit *who) { }
 
     void JustDied(Unit* Killer)
     {
-        if( Killer->GetTypeId() == TYPEID_PLAYER )
+        if (Killer->GetTypeId() == TYPEID_PLAYER)
         {
-            if( ((Player*)Killer)->GetQuestStatus(10873) == QUEST_STATUS_INCOMPLETE )
+            if (((Player*)Killer)->GetQuestStatus(10873) == QUEST_STATUS_INCOMPLETE)
             {
-                if( rand()%100 < 25 )
+                if (rand()%100 < 25)
                 {
                     DoSpawnCreature(QUEST_TARGET,0,0,0,0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,60000);
                     ((Player*)Killer)->KilledMonster(QUEST_TARGET, m_creature->GetGUID());
                 }else
                 DoSpawnCreature(netherwebVictims[rand()%6],0,0,0,0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,60000);
 
-                if( rand()%100 < 75 )
+                if (rand()%100 < 75)
                     DoSpawnCreature(netherwebVictims[rand()%6],0,0,0,0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,60000);
                 DoSpawnCreature(netherwebVictims[rand()%6],0,0,0,0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,60000);
             }
         }
     }
 };
-CreatureAI* GetAI_mob_netherweb_victim(Creature *_Creature)
+CreatureAI* GetAI_mob_netherweb_victim(Creature* pCreature)
 {
-    return new mob_netherweb_victimAI (_Creature);
+    return new mob_netherweb_victimAI(pCreature);
 }
 
 /*######
@@ -246,7 +246,7 @@ CreatureAI* GetAI_mob_netherweb_victim(Creature *_Creature)
 
 struct MANGOS_DLL_DECL npc_floonAI : public ScriptedAI
 {
-    npc_floonAI(Creature* c) : ScriptedAI(c) { Reset(); }
+    npc_floonAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
     uint32 Silence_Timer;
     uint32 Frostbolt_Timer;
@@ -262,22 +262,22 @@ struct MANGOS_DLL_DECL npc_floonAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if(!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if( Silence_Timer < diff )
+        if (Silence_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_SILENCE);
             Silence_Timer = 30000;
         }else Silence_Timer -= diff;
 
-        if( FrostNova_Timer < diff )
+        if (FrostNova_Timer < diff)
         {
             DoCast(m_creature,SPELL_FROST_NOVA);
             FrostNova_Timer = 20000;
         }else FrostNova_Timer -= diff;
 
-        if( Frostbolt_Timer < diff )
+        if (Frostbolt_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_FROSTBOLT);
             Frostbolt_Timer = 5000;
@@ -286,33 +286,33 @@ struct MANGOS_DLL_DECL npc_floonAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_npc_floon(Creature *_Creature)
+CreatureAI* GetAI_npc_floon(Creature* pCreature)
 {
-    return new npc_floonAI (_Creature);
+    return new npc_floonAI(pCreature);
 }
 
-bool GossipHello_npc_floon(Player *player, Creature *_Creature )
+bool GossipHello_npc_floon(Player* pPlayer, Creature* pCreature)
 {
-    if( player->GetQuestStatus(10009) == QUEST_STATUS_INCOMPLETE )
-        player->ADD_GOSSIP_ITEM(1, GOSSIP_FLOON1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+    if (pPlayer->GetQuestStatus(10009) == QUEST_STATUS_INCOMPLETE)
+        pPlayer->ADD_GOSSIP_ITEM(1, GOSSIP_FLOON1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
-    player->SEND_GOSSIP_MENU(9442, _Creature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(9442, pCreature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_floon(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+bool GossipSelect_npc_floon(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
-    if( action == GOSSIP_ACTION_INFO_DEF )
+    if (action == GOSSIP_ACTION_INFO_DEF)
     {
-        player->ADD_GOSSIP_ITEM(1, GOSSIP_FLOON2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-        player->SEND_GOSSIP_MENU(9443, _Creature->GetGUID());
+        pPlayer->ADD_GOSSIP_ITEM(1, GOSSIP_FLOON2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        pPlayer->SEND_GOSSIP_MENU(9443, pCreature->GetGUID());
     }
-    if( action == GOSSIP_ACTION_INFO_DEF+1 )
+    if (action == GOSSIP_ACTION_INFO_DEF+1)
     {
-        player->CLOSE_GOSSIP_MENU();
-        _Creature->setFaction(FACTION_HOSTILE_FL);
-        DoScriptText(SAY_FLOON_ATTACK,_Creature,player);
-        ((npc_floonAI*)_Creature->AI())->AttackStart(player);
+        pPlayer->CLOSE_GOSSIP_MENU();
+        pCreature->setFaction(FACTION_HOSTILE_FL);
+        DoScriptText(SAY_FLOON_ATTACK, pCreature,pPlayer);
+        ((npc_floonAI*)pCreature->AI())->AttackStart(pPlayer);
     }
     return true;
 }
@@ -323,25 +323,25 @@ bool GossipSelect_npc_floon(Player *player, Creature *_Creature, uint32 sender, 
 
 #define GOSSIP_SKYGUARD "Fly me to Ogri'la please"
 
-bool GossipHello_npc_skyguard_handler_deesak(Player *player, Creature *_Creature )
+bool GossipHello_npc_skyguard_handler_deesak(Player* pPlayer, Creature* pCreature)
 {
-    if (_Creature->isQuestGiver())
-        player->PrepareQuestMenu( _Creature->GetGUID() );
+    if (pCreature->isQuestGiver())
+        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
 
-    if (player->GetReputationRank(1031) >= REP_HONORED)
-        player->ADD_GOSSIP_ITEM( 2, GOSSIP_SKYGUARD, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+    if (pPlayer->GetReputationRank(1031) >= REP_HONORED)
+        pPlayer->ADD_GOSSIP_ITEM(2, GOSSIP_SKYGUARD, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_skyguard_handler_deesak(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+bool GossipSelect_npc_skyguard_handler_deesak(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
     if (action == GOSSIP_ACTION_INFO_DEF+1)
     {
-        player->CLOSE_GOSSIP_MENU();
-        player->CastSpell(player,41279,true);               //TaxiPath 705 (Taxi - Skettis to Skyguard Outpost)
+        pPlayer->CLOSE_GOSSIP_MENU();
+        pPlayer->CastSpell(pPlayer,41279,true);               //TaxiPath 705 (Taxi - Skettis to Skyguard Outpost)
     }
     return true;
 }

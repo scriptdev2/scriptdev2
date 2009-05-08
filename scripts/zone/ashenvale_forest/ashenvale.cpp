@@ -44,9 +44,9 @@ enum
 
 struct MANGOS_DLL_DECL npc_ruul_snowhoofAI : public npc_escortAI
 {
-    npc_ruul_snowhoofAI(Creature *c) : npc_escortAI(c)
+    npc_ruul_snowhoofAI(Creature* pCreature) : npc_escortAI(pCreature)
     {
-        normFaction = c->getFaction();
+        normFaction = pCreature->getFaction();
         Reset();
     }
 
@@ -67,10 +67,10 @@ struct MANGOS_DLL_DECL npc_ruul_snowhoofAI : public npc_escortAI
                 m_creature->SummonCreature(ENTRY_T_PATHFINDER, 3503.682373, -489.393799, 186.629684, 4.349232, TEMPSUMMON_DEAD_DESPAWN, 60000);
                 break;
             case 21:
-                if (Unit* player = Unit::GetUnit((*m_creature), PlayerGUID))
+                if (Unit* pPlayer = Unit::GetUnit((*m_creature), PlayerGUID))
                 {
-                    if (player && player->GetTypeId() == TYPEID_PLAYER)
-                        ((Player*)player)->GroupEventHappens(QUEST_FREEDOM_TO_RUUL,m_creature);
+                    if (pPlayer && pPlayer->GetTypeId() == TYPEID_PLAYER)
+                        ((Player*)pPlayer)->GroupEventHappens(QUEST_FREEDOM_TO_RUUL,m_creature);
                 }
                 break;
         }
@@ -91,8 +91,8 @@ struct MANGOS_DLL_DECL npc_ruul_snowhoofAI : public npc_escortAI
     {
         if (PlayerGUID)
         {
-            if (Unit* player = Unit::GetUnit((*m_creature), PlayerGUID))
-                ((Player*)player)->FailQuest(QUEST_FREEDOM_TO_RUUL);
+            if (Unit* pPlayer = Unit::GetUnit((*m_creature), PlayerGUID))
+                ((Player*)pPlayer)->FailQuest(QUEST_FREEDOM_TO_RUUL);
         }
     }
 
@@ -102,7 +102,7 @@ struct MANGOS_DLL_DECL npc_ruul_snowhoofAI : public npc_escortAI
     }
 };
 
-bool QuestAccept_npc_ruul_snowhoof(Player* pPlayer, Creature* pCreature, Quest const* pQuest)
+bool QuestAccept_npc_ruul_snowhoof(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_FREEDOM_TO_RUUL)
     {
@@ -144,25 +144,25 @@ CreatureAI* GetAI_npc_ruul_snowhoofAI(Creature* pCreature)
 
 struct MANGOS_DLL_DECL npc_torekAI : public npc_escortAI
 {
-    npc_torekAI(Creature *c) : npc_escortAI(c) {Reset();}
+    npc_torekAI(Creature* pCreature) : npc_escortAI(pCreature) {Reset();}
 
     uint32 Rend_Timer;
     uint32 Thunderclap_Timer;
 
     void WaypointReached(uint32 i)
     {
-        Unit* player = Unit::GetUnit((*m_creature), PlayerGUID);
+        Unit* pPlayer = Unit::GetUnit((*m_creature), PlayerGUID);
 
-        if (!player)
+        if (!pPlayer)
             return;
 
         switch (i)
         {
             case 1:
-                DoScriptText(SAY_MOVE, m_creature, player);
+                DoScriptText(SAY_MOVE, m_creature, pPlayer);
                 break;
             case 8:
-                DoScriptText(SAY_PREPARE, m_creature, player);
+                DoScriptText(SAY_PREPARE, m_creature, pPlayer);
                 break;
             case 19:
                 //TODO: verify location and creatures amount.
@@ -171,12 +171,12 @@ struct MANGOS_DLL_DECL npc_torekAI : public npc_escortAI
                 m_creature->SummonCreature(ENTRY_SILVERWING_WARRIOR,1778.73,-2049.50,109.83,1.67,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,25000);
                 break;
             case 20:
-                DoScriptText(SAY_WIN, m_creature, player);
-                if (player && player->GetTypeId() == TYPEID_PLAYER)
-                    ((Player*)player)->GroupEventHappens(QUEST_TOREK_ASSULT,m_creature);
+                DoScriptText(SAY_WIN, m_creature, pPlayer);
+                if (pPlayer && pPlayer->GetTypeId() == TYPEID_PLAYER)
+                    ((Player*)pPlayer)->GroupEventHappens(QUEST_TOREK_ASSULT,m_creature);
                 break;
             case 21:
-                DoScriptText(SAY_END, m_creature, player);
+                DoScriptText(SAY_END, m_creature, pPlayer);
                 break;
         }
     }
@@ -199,8 +199,8 @@ struct MANGOS_DLL_DECL npc_torekAI : public npc_escortAI
 
         if (PlayerGUID)
         {
-            if (Unit* player = Unit::GetUnit((*m_creature), PlayerGUID))
-                ((Player*)player)->FailQuest(QUEST_TOREK_ASSULT);
+            if (Unit* pPlayer = Unit::GetUnit((*m_creature), PlayerGUID))
+                ((Player*)pPlayer)->FailQuest(QUEST_TOREK_ASSULT);
         }
     }
 
@@ -225,13 +225,13 @@ struct MANGOS_DLL_DECL npc_torekAI : public npc_escortAI
     }
 };
 
-bool QuestAccept_npc_torek(Player* player, Creature* creature, Quest const* quest)
+bool QuestAccept_npc_torek(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
 {
-    if (quest->GetQuestId() == QUEST_TOREK_ASSULT)
+    if (pQuest->GetQuestId() == QUEST_TOREK_ASSULT)
     {
         //TODO: find companions, make them follow Torek, at any time (possibly done by mangos/database in future?)
-        ((npc_escortAI*)(creature->AI()))->Start(true, true, true, player->GetGUID());
-        DoScriptText(SAY_READY, creature, player);
+        ((npc_escortAI*)(pCreature->AI()))->Start(true, true, true, pPlayer->GetGUID());
+        DoScriptText(SAY_READY, pCreature, pPlayer);
     }
 
     return true;

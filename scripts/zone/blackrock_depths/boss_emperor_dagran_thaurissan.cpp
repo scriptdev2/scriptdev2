@@ -31,7 +31,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_draganthaurissanAI : public ScriptedAI
 {
-    boss_draganthaurissanAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_draganthaurissanAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 HandOfThaurissan_Timer;
     uint32 AvatarOfFlame_Timer;
@@ -88,9 +88,9 @@ struct MANGOS_DLL_DECL boss_draganthaurissanAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_draganthaurissan(Creature *_Creature)
+CreatureAI* GetAI_boss_draganthaurissan(Creature* pCreature)
 {
-    return new boss_draganthaurissanAI (_Creature);
+    return new boss_draganthaurissanAI(pCreature);
 }
 
 void AddSC_boss_draganthaurissan()

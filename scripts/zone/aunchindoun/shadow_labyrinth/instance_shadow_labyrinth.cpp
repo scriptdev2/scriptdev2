@@ -64,7 +64,7 @@ struct MANGOS_DLL_DECL instance_shadow_labyrinth : public ScriptedInstance
     bool IsEncounterInProgress() const
     {
         for(uint8 i = 0; i < ENCOUNTERS; i++)
-            if(Encounter[i]) return true;
+            if (Encounter[i]) return true;
 
         return false;
     }
@@ -86,12 +86,12 @@ struct MANGOS_DLL_DECL instance_shadow_labyrinth : public ScriptedInstance
         }
     }
 
-    void OnCreatureCreate(Creature *creature, uint32 creature_entry)
+    void OnCreatureCreate(Creature* pCreature, uint32 creature_entry)
     {
-        switch(creature->GetEntry())
+        switch(pCreature->GetEntry())
         {
             case 18732:
-                GrandmasterVorpil = creature->GetGUID();
+                GrandmasterVorpil = pCreature->GetGUID();
                 break;
             case 18796:
                 ++FelOverseerCount;

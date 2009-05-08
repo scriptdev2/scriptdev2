@@ -65,7 +65,7 @@ struct MANGOS_DLL_DECL example_creatureAI : public ScriptedAI
 {
     //*** HANDLED FUNCTION ***
     //This is the constructor, called only once when the creature is first created
-    example_creatureAI(Creature *c) : ScriptedAI(c) {Reset();}
+    example_creatureAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     //*** CUSTOM VARIABLES ****
     //These variables are for use only by this individual script.
@@ -192,7 +192,7 @@ struct MANGOS_DLL_DECL example_creatureAI : public ScriptedAI
     }
 
     //Our Recive emote function
-    void ReceiveEmote(Player *player, uint32 text_emote)
+    void ReceiveEmote(Player* pPlayer, uint32 text_emote)
     {
         m_creature->HandleEmoteCommand(text_emote);
 
@@ -207,37 +207,37 @@ struct MANGOS_DLL_DECL example_creatureAI : public ScriptedAI
 
 //This is the GetAI method used by all scripts that involve AI
 //It is called every time a new creature using this script is created
-CreatureAI* GetAI_example_creature(Creature *_Creature)
+CreatureAI* GetAI_example_creature(Creature* pCreature)
 {
-    return new example_creatureAI (_Creature);
+    return new example_creatureAI(pCreature);
 }
 
 //This function is called when the player clicks an option on the gossip menu
-void SendDefaultMenu_example_creature(Player *player, Creature *_Creature, uint32 action)
+void SendDefaultMenu_example_creature(Player* pPlayer, Creature* pCreature, uint32 action)
 {
     if (action == GOSSIP_ACTION_INFO_DEF + 1)               //Fight time
     {
         //Set our faction to hostile twoards all
-        _Creature->setFaction(24);
-        _Creature->Attack(player, true);
-        player->PlayerTalkClass->CloseGossip();
+        pCreature->setFaction(24);
+        pCreature->Attack(pPlayer, true);
+        pPlayer->PlayerTalkClass->CloseGossip();
     }
 }
 
 //This function is called when the player clicks an option on the gossip menu
-bool GossipSelect_example_creature(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+bool GossipSelect_example_creature(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
     if (sender == GOSSIP_SENDER_MAIN)
-        SendDefaultMenu_example_creature(player, _Creature, action);
+        SendDefaultMenu_example_creature(pPlayer, pCreature, action);
 
     return true;
 }
 
 //This function is called when the player opens the gossip menu
-bool GossipHello_example_creature(Player *player, Creature *_Creature)
+bool GossipHello_example_creature(Player* pPlayer, Creature* pCreature)
 {
-    player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM        , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-    player->PlayerTalkClass->SendGossipMenu(907,_Creature->GetGUID());
+    pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM        , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+    pPlayer->PlayerTalkClass->SendGossipMenu(907, pCreature->GetGUID());
 
     return true;
 }

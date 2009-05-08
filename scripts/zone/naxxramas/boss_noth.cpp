@@ -50,7 +50,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_nothAI : public ScriptedAI
 {
-    boss_nothAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_nothAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 Blink_Timer;
     uint32 Curse_Timer;
@@ -129,9 +129,9 @@ struct MANGOS_DLL_DECL boss_nothAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_noth(Creature *_Creature)
+CreatureAI* GetAI_boss_noth(Creature* pCreature)
 {
-    return new boss_nothAI (_Creature);
+    return new boss_nothAI(pCreature);
 }
 
 void AddSC_boss_noth()

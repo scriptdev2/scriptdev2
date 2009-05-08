@@ -37,26 +37,26 @@ EndContentData */
 
 #define GOSSIP_ITEM_INSIGNIA    "Take Blood Knight Insignia"
 
-bool GossipHello_npc_blood_knight_dawnstar(Player *player, Creature *_Creature)
+bool GossipHello_npc_blood_knight_dawnstar(Player* pPlayer, Creature* pCreature)
 {
-    if (player->GetQuestStatus(9692) == QUEST_STATUS_INCOMPLETE && !player->HasItemCount(24226,1,true))
-        player->ADD_GOSSIP_ITEM(0,GOSSIP_ITEM_INSIGNIA,GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF+1);
+    if (pPlayer->GetQuestStatus(9692) == QUEST_STATUS_INCOMPLETE && !pPlayer->HasItemCount(24226,1,true))
+        pPlayer->ADD_GOSSIP_ITEM(0,GOSSIP_ITEM_INSIGNIA,GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF+1);
 
-    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_blood_knight_dawnstar(Player *player, Creature *_Creature, uint32 sender, uint32 action)
+bool GossipSelect_npc_blood_knight_dawnstar(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
     if (action == GOSSIP_ACTION_INFO_DEF+1)
     {
         ItemPosCountVec dest;
-        uint8 msg = player->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, 24226, 1, false);
+        uint8 msg = pPlayer->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, 24226, 1, false);
         if (msg == EQUIP_ERR_OK)
         {
-            player->StoreNewItem( dest, 24226, 1, true);
-            player->PlayerTalkClass->ClearMenus();
+            pPlayer->StoreNewItem(dest, 24226, 1, true);
+            pPlayer->PlayerTalkClass->ClearMenus();
         }
     }
     return true;
@@ -68,24 +68,24 @@ bool GossipSelect_npc_blood_knight_dawnstar(Player *player, Creature *_Creature,
 
 #define GOSSIP_ITEM_DISGUISE        "You gave the crew disguises?"
 
-bool GossipHello_npc_budd_nedreck(Player *player, Creature *_Creature)
+bool GossipHello_npc_budd_nedreck(Player* pPlayer, Creature* pCreature)
 {
-    if (_Creature->isQuestGiver())
-        player->PrepareQuestMenu( _Creature->GetGUID());
+    if (pCreature->isQuestGiver())
+        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
 
-    if (player->GetQuestStatus(11166) == QUEST_STATUS_INCOMPLETE)
-        player->ADD_GOSSIP_ITEM(0,GOSSIP_ITEM_DISGUISE,GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF);
+    if (pPlayer->GetQuestStatus(11166) == QUEST_STATUS_INCOMPLETE)
+        pPlayer->ADD_GOSSIP_ITEM(0,GOSSIP_ITEM_DISGUISE,GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF);
 
-    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(),_Creature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_budd_nedreck(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+bool GossipSelect_npc_budd_nedreck(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
     if (action==GOSSIP_ACTION_INFO_DEF)
     {
-        player->CLOSE_GOSSIP_MENU();
-        _Creature->CastSpell(player, 42540, false);
+        pPlayer->CLOSE_GOSSIP_MENU();
+        pCreature->CastSpell(pPlayer, 42540, false);
     }
     return true;
 }
@@ -112,9 +112,9 @@ enum
 
 struct MANGOS_DLL_DECL npc_ranger_lilathaAI : public npc_escortAI
 {
-    npc_ranger_lilathaAI(Creature *c) : npc_escortAI(c)
+    npc_ranger_lilathaAI(Creature* pCreature) : npc_escortAI(pCreature)
     {
-        m_uiNormFaction = c->getFaction();
+        m_uiNormFaction = pCreature->getFaction();
         m_uiGoCageGUID = 0;
         m_uiHeliosGUID = 0;
         Reset();
@@ -249,7 +249,7 @@ CreatureAI* GetAI_npc_ranger_lilathaAI(Creature* pCreature)
     return (CreatureAI*)ranger_lilathaAI;
 }
 
-bool QuestAccept_npc_ranger_lilatha(Player* pPlayer, Creature* pCreature, Quest const* pQuest)
+bool QuestAccept_npc_ranger_lilatha(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_CATACOMBS)
     {
@@ -263,25 +263,25 @@ bool QuestAccept_npc_ranger_lilatha(Player* pPlayer, Creature* pCreature, Quest 
 ## npc_rathis_tomber
 ######*/
 
-bool GossipHello_npc_rathis_tomber(Player *player, Creature *_Creature)
+bool GossipHello_npc_rathis_tomber(Player* pPlayer, Creature* pCreature)
 {
-    if (_Creature->isQuestGiver())
-        player->PrepareQuestMenu(_Creature->GetGUID());
+    if (pCreature->isQuestGiver())
+        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
 
-    if (_Creature->isVendor() && player->GetQuestRewardStatus(9152))
+    if (pCreature->isVendor() && pPlayer->GetQuestRewardStatus(9152))
     {
-        player->ADD_GOSSIP_ITEM(1, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
-        player->SEND_GOSSIP_MENU(8432,_Creature->GetGUID());
+        pPlayer->ADD_GOSSIP_ITEM(1, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
+        pPlayer->SEND_GOSSIP_MENU(8432, pCreature->GetGUID());
     }else
-        player->SEND_GOSSIP_MENU(8431,_Creature->GetGUID());
+        pPlayer->SEND_GOSSIP_MENU(8431, pCreature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_rathis_tomber(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+bool GossipSelect_npc_rathis_tomber(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
     if (action == GOSSIP_ACTION_TRADE)
-        player->SEND_VENDORLIST(_Creature->GetGUID());
+        pPlayer->SEND_VENDORLIST(pCreature->GetGUID());
 
     return true;
 }

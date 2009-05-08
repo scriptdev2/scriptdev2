@@ -37,7 +37,7 @@ struct MANGOS_DLL_DECL npc_escortAI : public ScriptedAI
         virtual void Reset() = 0;
 
         // CreatureAI functions
-        npc_escortAI(Creature *c) : ScriptedAI(c), IsBeingEscorted(false), PlayerTimer(1000) {}
+        npc_escortAI(Creature* pCreature) : ScriptedAI(pCreature), IsBeingEscorted(false), PlayerTimer(1000) {}
 
         bool IsVisible(Unit*) const;
 

@@ -59,9 +59,9 @@ uint32 RingBoss[]=
     9032,                                                   // Hedrum
 };
 
-bool AreaTrigger_at_ring_of_law(Player *player, AreaTriggerEntry *at)
+bool AreaTrigger_at_ring_of_law(Player* pPlayer, AreaTriggerEntry *at)
 {
-    ScriptedInstance* pInstance = ((ScriptedInstance*)player->GetInstanceData());
+    ScriptedInstance* pInstance = ((ScriptedInstance*)pPlayer->GetInstanceData());
 
     if (pInstance)
     {
@@ -69,7 +69,7 @@ bool AreaTrigger_at_ring_of_law(Player *player, AreaTriggerEntry *at)
             return false;
 
         pInstance->SetData(TYPE_RING_OF_LAW,IN_PROGRESS);
-        player->SummonCreature(C_GRIMSTONE,625.559,-205.618,-52.735,2.609,TEMPSUMMON_DEAD_DESPAWN,0);
+        pPlayer->SummonCreature(C_GRIMSTONE,625.559,-205.618,-52.735,2.609,TEMPSUMMON_DEAD_DESPAWN,0);
 
         return false;
     }
@@ -83,9 +83,9 @@ bool AreaTrigger_at_ring_of_law(Player *player, AreaTriggerEntry *at)
 //TODO: implement quest part of event (different end boss)
 struct MANGOS_DLL_DECL npc_grimstoneAI : public npc_escortAI
 {
-    npc_grimstoneAI(Creature *c) : npc_escortAI(c)
+    npc_grimstoneAI(Creature* pCreature) : npc_escortAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         MobSpawnId = rand()%6;
         Reset();
     }
@@ -302,9 +302,9 @@ struct MANGOS_DLL_DECL npc_grimstoneAI : public npc_escortAI
     }
 };
 
-CreatureAI* GetAI_npc_grimstone(Creature *_Creature)
+CreatureAI* GetAI_npc_grimstone(Creature* pCreature)
 {
-    npc_grimstoneAI* Grimstone_AI = new npc_grimstoneAI(_Creature);
+    npc_grimstoneAI* Grimstone_AI = new npc_grimstoneAI(pCreature);
 
     Grimstone_AI->FillPointMovementListForCreature();
 
@@ -321,7 +321,7 @@ CreatureAI* GetAI_npc_grimstone(Creature *_Creature)
 
 struct MANGOS_DLL_DECL mob_phalanxAI : public ScriptedAI
 {
-    mob_phalanxAI(Creature *c) : ScriptedAI(c) {Reset();}
+    mob_phalanxAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 ThunderClap_Timer;
     uint32 FireballVolley_Timer;
@@ -367,9 +367,9 @@ struct MANGOS_DLL_DECL mob_phalanxAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_phalanx(Creature *_Creature)
+CreatureAI* GetAI_mob_phalanx(Creature* pCreature)
 {
-    return new mob_phalanxAI (_Creature);
+    return new mob_phalanxAI(pCreature);
 }
 
 /*######
@@ -391,68 +391,68 @@ CreatureAI* GetAI_mob_phalanx(Creature *_Creature)
 #define GOSSIP_ITEM_KHARAN_9    "Indeed."
 #define GOSSIP_ITEM_KHARAN_10   "The door is open, Kharan. You are a free man."
 
-bool GossipHello_npc_kharan_mighthammer(Player *player, Creature *_Creature)
+bool GossipHello_npc_kharan_mighthammer(Player* pPlayer, Creature* pCreature)
 {
-    if (_Creature->isQuestGiver())
-        player->PrepareQuestMenu(_Creature->GetGUID());
+    if (pCreature->isQuestGiver())
+        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
 
-    if (player->GetQuestStatus(QUEST_4001) == QUEST_STATUS_INCOMPLETE)
-        player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM_KHARAN_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+    if (pPlayer->GetQuestStatus(QUEST_4001) == QUEST_STATUS_INCOMPLETE)
+        pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_KHARAN_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-    if (player->GetQuestStatus(4342) == QUEST_STATUS_INCOMPLETE)
-        player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM_KHARAN_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
+    if (pPlayer->GetQuestStatus(4342) == QUEST_STATUS_INCOMPLETE)
+        pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_KHARAN_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
 
-    if (player->GetTeam() == HORDE)
-        player->SEND_GOSSIP_MENU(2473, _Creature->GetGUID());
+    if (pPlayer->GetTeam() == HORDE)
+        pPlayer->SEND_GOSSIP_MENU(2473, pCreature->GetGUID());
     else
-        player->SEND_GOSSIP_MENU(2474, _Creature->GetGUID());
+        pPlayer->SEND_GOSSIP_MENU(2474, pCreature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_kharan_mighthammer(Player *player, Creature *_Creature, uint32 sender, uint32 action)
+bool GossipSelect_npc_kharan_mighthammer(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
     switch (action)
     {
         case GOSSIP_ACTION_INFO_DEF+1:
-            player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_KHARAN_3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-            player->SEND_GOSSIP_MENU(2475, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_KHARAN_3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+            pPlayer->SEND_GOSSIP_MENU(2475, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+2:
-            player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_KHARAN_4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
-            player->SEND_GOSSIP_MENU(2476, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_KHARAN_4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
+            pPlayer->SEND_GOSSIP_MENU(2476, pCreature->GetGUID());
             break;
 
         case GOSSIP_ACTION_INFO_DEF+3:
-            player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_KHARAN_5, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
-            player->SEND_GOSSIP_MENU(2477, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_KHARAN_5, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
+            pPlayer->SEND_GOSSIP_MENU(2477, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+4:
-            player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_KHARAN_6, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
-            player->SEND_GOSSIP_MENU(2478, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_KHARAN_6, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
+            pPlayer->SEND_GOSSIP_MENU(2478, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+5:
-            player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_KHARAN_7, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+6);
-            player->SEND_GOSSIP_MENU(2479, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_KHARAN_7, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+6);
+            pPlayer->SEND_GOSSIP_MENU(2479, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+6:
-            player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_KHARAN_8, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+7);
-            player->SEND_GOSSIP_MENU(2480, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_KHARAN_8, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+7);
+            pPlayer->SEND_GOSSIP_MENU(2480, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+7:
-            player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_KHARAN_9, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+8);
-            player->SEND_GOSSIP_MENU(2481, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_KHARAN_9, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+8);
+            pPlayer->SEND_GOSSIP_MENU(2481, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+8:
-            player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_KHARAN_10, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+9);
-            player->SEND_GOSSIP_MENU(2482, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_KHARAN_10, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+9);
+            pPlayer->SEND_GOSSIP_MENU(2482, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+9:
-            player->CLOSE_GOSSIP_MENU();
-            if (player->GetTeam() == HORDE)
-                player->AreaExploredOrEventHappens(QUEST_4001);
+            pPlayer->CLOSE_GOSSIP_MENU();
+            if (pPlayer->GetTeam() == HORDE)
+                pPlayer->AreaExploredOrEventHappens(QUEST_4001);
             else
-                player->AreaExploredOrEventHappens(QUEST_4342);
+                pPlayer->AreaExploredOrEventHappens(QUEST_4342);
             break;
     }
     return true;
@@ -470,39 +470,39 @@ bool GossipSelect_npc_kharan_mighthammer(Player *player, Creature *_Creature, ui
 #define GOSSIP_ITEM_SHOW_ACCESS     "Show me what I have access to, Lothos."
 #define GOSSIP_ITEM_GET_CONTRACT    "Get Thorium Brotherhood Contract"
 
-bool GossipHello_npc_lokhtos_darkbargainer(Player *player, Creature *_Creature)
+bool GossipHello_npc_lokhtos_darkbargainer(Player* pPlayer, Creature* pCreature)
 {
-    if (_Creature->isQuestGiver())
-        player->PrepareQuestMenu(_Creature->GetGUID());
+    if (pCreature->isQuestGiver())
+        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
 
-    if (_Creature->isVendor() && player->GetReputationRank(59) >= REP_FRIENDLY)
-        player->ADD_GOSSIP_ITEM( 1, GOSSIP_ITEM_SHOW_ACCESS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
+    if (pCreature->isVendor() && pPlayer->GetReputationRank(59) >= REP_FRIENDLY)
+        pPlayer->ADD_GOSSIP_ITEM(1, GOSSIP_ITEM_SHOW_ACCESS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
 
-    if (player->GetQuestRewardStatus(QUEST_A_BINDING_CONTRACT) != 1 &&
-        !player->HasItemCount(ITEM_THRORIUM_BROTHERHOOD_CONTRACT, 1, true) &&
-        player->HasItemCount(ITEM_SULFURON_INGOT, 1))
+    if (pPlayer->GetQuestRewardStatus(QUEST_A_BINDING_CONTRACT) != 1 &&
+        !pPlayer->HasItemCount(ITEM_THRORIUM_BROTHERHOOD_CONTRACT, 1, true) &&
+        pPlayer->HasItemCount(ITEM_SULFURON_INGOT, 1))
     {
-        player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_GET_CONTRACT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+        pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_GET_CONTRACT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     }
 
-    if (player->GetReputationRank(59) < REP_FRIENDLY)
-        player->SEND_GOSSIP_MENU(3673, _Creature->GetGUID());
+    if (pPlayer->GetReputationRank(59) < REP_FRIENDLY)
+        pPlayer->SEND_GOSSIP_MENU(3673, pCreature->GetGUID());
     else
-        player->SEND_GOSSIP_MENU(3677, _Creature->GetGUID());
+        pPlayer->SEND_GOSSIP_MENU(3677, pCreature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_lokhtos_darkbargainer(Player *player, Creature *_Creature, uint32 sender, uint32 action)
+bool GossipSelect_npc_lokhtos_darkbargainer(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
     if (action == GOSSIP_ACTION_INFO_DEF + 1)
     {
-        player->CLOSE_GOSSIP_MENU();
-        player->CastSpell(player, SPELL_CREATE_THORIUM_BROTHERHOOD_CONTRACT_DND, false);
+        pPlayer->CLOSE_GOSSIP_MENU();
+        pPlayer->CastSpell(pPlayer, SPELL_CREATE_THORIUM_BROTHERHOOD_CONTRACT_DND, false);
     }
 
     if (action == GOSSIP_ACTION_TRADE)
-        player->SEND_VENDORLIST(_Creature->GetGUID());
+        pPlayer->SEND_VENDORLIST(pCreature->GetGUID());
 
     return true;
 }
@@ -517,9 +517,9 @@ bool GossipSelect_npc_lokhtos_darkbargainer(Player *player, Creature *_Creature,
 
 struct MANGOS_DLL_DECL npc_rocknotAI : public npc_escortAI
 {
-    npc_rocknotAI(Creature *c) : npc_escortAI(c)
+    npc_rocknotAI(Creature* pCreature) : npc_escortAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -607,18 +607,18 @@ struct MANGOS_DLL_DECL npc_rocknotAI : public npc_escortAI
     }
 };
 
-CreatureAI* GetAI_npc_rocknot(Creature *_Creature)
+CreatureAI* GetAI_npc_rocknot(Creature* pCreature)
 {
-    npc_rocknotAI* Rocknot_AI = new npc_rocknotAI(_Creature);
+    npc_rocknotAI* Rocknot_AI = new npc_rocknotAI(pCreature);
 
     Rocknot_AI->FillPointMovementListForCreature();
 
     return (CreatureAI*)Rocknot_AI;
 }
 
-bool ChooseReward_npc_rocknot(Player *player, Creature *_Creature, const Quest *_Quest, uint32 item)
+bool ChooseReward_npc_rocknot(Player* pPlayer, Creature* pCreature, const Quest* pQuest, uint32 item)
 {
-    ScriptedInstance* pInstance = ((ScriptedInstance*)_Creature->GetInstanceData());
+    ScriptedInstance* pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
 
     if (!pInstance)
         return true;
@@ -626,7 +626,7 @@ bool ChooseReward_npc_rocknot(Player *player, Creature *_Creature, const Quest *
     if (pInstance->GetData(TYPE_BAR) == DONE || pInstance->GetData(TYPE_BAR) == SPECIAL)
         return true;
 
-    if (_Quest->GetQuestId() == QUEST_ALE)
+    if (pQuest->GetQuestId() == QUEST_ALE)
     {
         if (pInstance->GetData(TYPE_BAR) != IN_PROGRESS)
             pInstance->SetData(TYPE_BAR,IN_PROGRESS);
@@ -636,9 +636,9 @@ bool ChooseReward_npc_rocknot(Player *player, Creature *_Creature, const Quest *
         //keep track of amount in instance script, returns SPECIAL if amount ok and event in progress
         if (pInstance->GetData(TYPE_BAR) == SPECIAL)
         {
-            DoScriptText(SAY_GOT_BEER, _Creature);
-            _Creature->CastSpell(_Creature,SPELL_DRUNKEN_RAGE,false);
-            ((npc_escortAI*)(_Creature->AI()))->Start(false, false, false);
+            DoScriptText(SAY_GOT_BEER, pCreature);
+            pCreature->CastSpell(pCreature,SPELL_DRUNKEN_RAGE,false);
+            ((npc_escortAI*)(pCreature->AI()))->Start(false, false, false);
         }
     }
 

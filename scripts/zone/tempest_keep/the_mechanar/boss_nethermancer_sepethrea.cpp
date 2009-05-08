@@ -42,9 +42,9 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_nethermancer_sepethreaAI : public ScriptedAI
 {
-    boss_nethermancer_sepethreaAI(Creature *c) : ScriptedAI(c)
+    boss_nethermancer_sepethreaAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         HeroicMode = m_creature->GetMap()->IsHeroic();
         Reset();
     }
@@ -101,7 +101,7 @@ struct MANGOS_DLL_DECL boss_nethermancer_sepethreaAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //Frost Attack
@@ -153,9 +153,9 @@ struct MANGOS_DLL_DECL boss_nethermancer_sepethreaAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_nethermancer_sepethrea(Creature *_Creature)
+CreatureAI* GetAI_boss_nethermancer_sepethrea(Creature* pCreature)
 {
-    return new boss_nethermancer_sepethreaAI (_Creature);
+    return new boss_nethermancer_sepethreaAI(pCreature);
 }
 
 #define SPELL_INFERNO                   35268
@@ -164,9 +164,9 @@ CreatureAI* GetAI_boss_nethermancer_sepethrea(Creature *_Creature)
 
 struct MANGOS_DLL_DECL mob_ragin_flamesAI : public ScriptedAI
 {
-    mob_ragin_flamesAI(Creature *c) : ScriptedAI(c)
+    mob_ragin_flamesAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         HeroicMode = m_creature->GetMap()->IsHeroic();
         Reset();
     }
@@ -237,9 +237,9 @@ struct MANGOS_DLL_DECL mob_ragin_flamesAI : public ScriptedAI
     }
 
 };
-CreatureAI* GetAI_mob_ragin_flames(Creature *_Creature)
+CreatureAI* GetAI_mob_ragin_flames(Creature* pCreature)
 {
-    return new mob_ragin_flamesAI (_Creature);
+    return new mob_ragin_flamesAI(pCreature);
 }
 void AddSC_boss_nethermancer_sepethrea()
 {

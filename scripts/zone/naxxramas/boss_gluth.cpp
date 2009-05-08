@@ -67,7 +67,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_gluthAI : public ScriptedAI
 {
-    boss_gluthAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_gluthAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 MortalWound_Timer;
     uint32 Decimate_Timer;
@@ -155,9 +155,9 @@ struct MANGOS_DLL_DECL boss_gluthAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_gluth(Creature *_Creature)
+CreatureAI* GetAI_boss_gluth(Creature* pCreature)
 {
-    return new boss_gluthAI (_Creature);
+    return new boss_gluthAI(pCreature);
 }
 
 void AddSC_boss_gluth()

@@ -76,7 +76,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_cannon_master_willeyAI : public ScriptedAI
 {
-    boss_cannon_master_willeyAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_cannon_master_willeyAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 KnockAway_Timer;
     uint32 Pummel_Timer;
@@ -200,9 +200,9 @@ struct MANGOS_DLL_DECL boss_cannon_master_willeyAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_cannon_master_willey(Creature *_Creature)
+CreatureAI* GetAI_boss_cannon_master_willey(Creature* pCreature)
 {
-    return new boss_cannon_master_willeyAI (_Creature);
+    return new boss_cannon_master_willeyAI(pCreature);
 }
 
 void AddSC_boss_cannon_master_willey()

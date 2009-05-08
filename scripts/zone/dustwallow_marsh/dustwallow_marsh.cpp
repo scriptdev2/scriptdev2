@@ -41,7 +41,7 @@ EndContentData */
 
 struct MANGOS_DLL_DECL mobs_risen_husk_spiritAI : public ScriptedAI
 {
-    mobs_risen_husk_spiritAI(Creature *c) : ScriptedAI(c) {Reset();}
+    mobs_risen_husk_spiritAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 ConsumeFlesh_Timer;
     uint32 IntangiblePresence_Timer;
@@ -54,8 +54,8 @@ struct MANGOS_DLL_DECL mobs_risen_husk_spiritAI : public ScriptedAI
 
     void DamageTaken(Unit *done_by, uint32 &damage)
     {
-        if( done_by->GetTypeId() == TYPEID_PLAYER )
-            if( damage >= m_creature->GetHealth() && ((Player*)done_by)->GetQuestStatus(11180) == QUEST_STATUS_INCOMPLETE )
+        if (done_by->GetTypeId() == TYPEID_PLAYER)
+            if (damage >= m_creature->GetHealth() && ((Player*)done_by)->GetQuestStatus(11180) == QUEST_STATUS_INCOMPLETE)
                 m_creature->CastSpell(done_by,SPELL_SUMMON_RESTLESS_APPARITION,false);
     }
 
@@ -64,16 +64,16 @@ struct MANGOS_DLL_DECL mobs_risen_husk_spiritAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if( ConsumeFlesh_Timer < diff )
+        if (ConsumeFlesh_Timer < diff)
         {
-            if( m_creature->GetEntry() == 23555 )
+            if (m_creature->GetEntry() == 23555)
                 DoCast(m_creature->getVictim(),SPELL_CONSUME_FLESH);
             ConsumeFlesh_Timer = 15000;
         } else ConsumeFlesh_Timer -= diff;
 
-        if( IntangiblePresence_Timer < diff )
+        if (IntangiblePresence_Timer < diff)
         {
-            if( m_creature->GetEntry() == 23554 )
+            if (m_creature->GetEntry() == 23554)
                 DoCast(m_creature->getVictim(),SPELL_INTANGIBLE_PRESENCE);
             IntangiblePresence_Timer = 20000;
         } else IntangiblePresence_Timer -= diff;
@@ -81,21 +81,21 @@ struct MANGOS_DLL_DECL mobs_risen_husk_spiritAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_mobs_risen_husk_spirit(Creature *_Creature)
+CreatureAI* GetAI_mobs_risen_husk_spirit(Creature* pCreature)
 {
-    return new mobs_risen_husk_spiritAI (_Creature);
+    return new mobs_risen_husk_spiritAI(pCreature);
 }
 
 /*######
 ## npc_restless_apparition
 ######*/
 
-bool GossipHello_npc_restless_apparition(Player *player, Creature *_Creature)
+bool GossipHello_npc_restless_apparition(Player* pPlayer, Creature* pCreature)
 {
-    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
 
-    player->TalkedToCreature(_Creature->GetEntry(), _Creature->GetGUID());
-    _Creature->SetInt32Value(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+    pPlayer->TalkedToCreature(pCreature->GetEntry(), pCreature->GetGUID());
+    pCreature->SetInt32Value(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 
     return true;
 }
@@ -106,7 +106,7 @@ bool GossipHello_npc_restless_apparition(Player *player, Creature *_Creature)
 
 struct MANGOS_DLL_DECL npc_deserter_agitatorAI : public ScriptedAI
 {
-    npc_deserter_agitatorAI(Creature *c) : ScriptedAI(c) {Reset();}
+    npc_deserter_agitatorAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     void Reset()
     {
@@ -114,20 +114,20 @@ struct MANGOS_DLL_DECL npc_deserter_agitatorAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_deserter_agitator(Creature *_Creature)
+CreatureAI* GetAI_npc_deserter_agitator(Creature* pCreature)
 {
-    return new npc_deserter_agitatorAI (_Creature);
+    return new npc_deserter_agitatorAI(pCreature);
 }
 
-bool GossipHello_npc_deserter_agitator(Player *player, Creature *_Creature)
+bool GossipHello_npc_deserter_agitator(Player* pPlayer, Creature* pCreature)
 {
-    if (player->GetQuestStatus(11126) == QUEST_STATUS_INCOMPLETE)
+    if (pPlayer->GetQuestStatus(11126) == QUEST_STATUS_INCOMPLETE)
     {
-        _Creature->setFaction(1883);
-        player->TalkedToCreature(_Creature->GetEntry(), _Creature->GetGUID());
+        pCreature->setFaction(1883);
+        pPlayer->TalkedToCreature(pCreature->GetEntry(), pCreature->GetGUID());
     }
     else
-        player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
+        pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
 
     return true;
 }
@@ -138,25 +138,25 @@ bool GossipHello_npc_deserter_agitator(Player *player, Creature *_Creature)
 
 #define GOSSIP_ITEM_JAINA "I know this is rather silly but i have a young ward who is a bit shy and would like your autograph."
 
-bool GossipHello_npc_lady_jaina_proudmoore(Player *player, Creature *_Creature)
+bool GossipHello_npc_lady_jaina_proudmoore(Player* pPlayer, Creature* pCreature)
 {
-    if (_Creature->isQuestGiver())
-        player->PrepareQuestMenu( _Creature->GetGUID() );
+    if (pCreature->isQuestGiver())
+        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
 
-    if( player->GetQuestStatus(558) == QUEST_STATUS_INCOMPLETE )
-        player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM_JAINA, GOSSIP_SENDER_MAIN, GOSSIP_SENDER_INFO );
+    if (pPlayer->GetQuestStatus(558) == QUEST_STATUS_INCOMPLETE)
+        pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_JAINA, GOSSIP_SENDER_MAIN, GOSSIP_SENDER_INFO);
 
-    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_lady_jaina_proudmoore(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+bool GossipSelect_npc_lady_jaina_proudmoore(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
-    if( action == GOSSIP_SENDER_INFO )
+    if (action == GOSSIP_SENDER_INFO)
     {
-        player->SEND_GOSSIP_MENU( 7012, _Creature->GetGUID() );
-        player->CastSpell( player, 23122, false);
+        pPlayer->SEND_GOSSIP_MENU(7012, pCreature->GetGUID());
+        pPlayer->CastSpell(pPlayer, 23122, false);
     }
     return true;
 }
@@ -165,26 +165,26 @@ bool GossipSelect_npc_lady_jaina_proudmoore(Player *player, Creature *_Creature,
 ## npc_nat_pagle
 ######*/
 
-bool GossipHello_npc_nat_pagle(Player *player, Creature *_Creature)
+bool GossipHello_npc_nat_pagle(Player* pPlayer, Creature* pCreature)
 {
-    if(_Creature->isQuestGiver())
-        player->PrepareQuestMenu( _Creature->GetGUID() );
+    if (pCreature->isQuestGiver())
+        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
 
-    if(_Creature->isVendor() && player->GetQuestRewardStatus(8227))
+    if (pCreature->isVendor() && pPlayer->GetQuestRewardStatus(8227))
     {
-        player->ADD_GOSSIP_ITEM(1, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
-        player->SEND_GOSSIP_MENU( 7640, _Creature->GetGUID() );
+        pPlayer->ADD_GOSSIP_ITEM(1, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
+        pPlayer->SEND_GOSSIP_MENU(7640, pCreature->GetGUID());
     }
     else
-        player->SEND_GOSSIP_MENU( 7638, _Creature->GetGUID() );
+        pPlayer->SEND_GOSSIP_MENU(7638, pCreature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_nat_pagle(Player *player, Creature *_Creature, uint32 sender, uint32 action)
+bool GossipSelect_npc_nat_pagle(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
-    if(action == GOSSIP_ACTION_TRADE)
-        player->SEND_VENDORLIST( _Creature->GetGUID() );
+    if (action == GOSSIP_ACTION_TRADE)
+        pPlayer->SEND_VENDORLIST(pCreature->GetGUID());
 
     return true;
 }

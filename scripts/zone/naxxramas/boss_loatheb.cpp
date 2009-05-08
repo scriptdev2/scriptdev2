@@ -42,7 +42,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_loathebAI : public ScriptedAI
 {
-    boss_loathebAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_loathebAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 CorruptedMind_Timer;
     uint32 PoisonAura_Timer;
@@ -123,9 +123,9 @@ struct MANGOS_DLL_DECL boss_loathebAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_loatheb(Creature *_Creature)
+CreatureAI* GetAI_boss_loatheb(Creature* pCreature)
 {
-    return new boss_loathebAI (_Creature);
+    return new boss_loathebAI(pCreature);
 }
 
 void AddSC_boss_loatheb()

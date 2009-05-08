@@ -86,25 +86,25 @@ EndScriptData */
 #define CREATURE_CYCLONE        18412
 #define CREATURE_CRONE          18168
 
-void SummonCroneIfReady(ScriptedInstance* pInstance, Creature *_Creature)
+void SummonCroneIfReady(ScriptedInstance* pInstance, Creature* pCreature)
 {
     pInstance->SetData(DATA_OPERA_OZ_DEATHCOUNT, 0);        // Increment DeathCount
     if (pInstance->GetData(DATA_OPERA_OZ_DEATHCOUNT) == 4)
     {
-        Creature* Crone = _Creature->SummonCreature(CREATURE_CRONE, -10891.96, -1755.95, _Creature->GetPositionZ(), 4.64, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+        Creature* Crone = pCreature->SummonCreature(CREATURE_CRONE, -10891.96, -1755.95, pCreature->GetPositionZ(), 4.64, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
         if (Crone)
         {
-            if (_Creature->getVictim())
-                Crone->AI()->AttackStart(_Creature->getVictim());
+            if (pCreature->getVictim())
+                Crone->AI()->AttackStart(pCreature->getVictim());
         }
     }
 };
 
 struct MANGOS_DLL_DECL boss_dorotheeAI : public ScriptedAI
 {
-    boss_dorotheeAI(Creature* c) : ScriptedAI(c)
+    boss_dorotheeAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -166,7 +166,7 @@ struct MANGOS_DLL_DECL boss_dorotheeAI : public ScriptedAI
     {
         if (AggroTimer)
         {
-            if(AggroTimer <= diff)
+            if (AggroTimer <= diff)
             {
                 m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                 AggroTimer = 0;
@@ -201,7 +201,7 @@ struct MANGOS_DLL_DECL boss_dorotheeAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL mob_titoAI : public ScriptedAI
 {
-    mob_titoAI(Creature* c) : ScriptedAI(c)
+    mob_titoAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         Reset();
     }
@@ -260,9 +260,9 @@ void boss_dorotheeAI::SummonTito()
 
 struct MANGOS_DLL_DECL boss_strawmanAI : public ScriptedAI
 {
-    boss_strawmanAI(Creature* c) : ScriptedAI(c)
+    boss_strawmanAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -358,9 +358,9 @@ struct MANGOS_DLL_DECL boss_strawmanAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL boss_tinheadAI : public ScriptedAI
 {
-    boss_tinheadAI(Creature* c) : ScriptedAI(c)
+    boss_tinheadAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -452,9 +452,9 @@ struct MANGOS_DLL_DECL boss_tinheadAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL boss_roarAI : public ScriptedAI
 {
-    boss_roarAI(Creature* c) : ScriptedAI(c)
+    boss_roarAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -545,9 +545,9 @@ struct MANGOS_DLL_DECL boss_roarAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL boss_croneAI : public ScriptedAI
 {
-    boss_croneAI(Creature* c) : ScriptedAI(c)
+    boss_croneAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -619,7 +619,7 @@ struct MANGOS_DLL_DECL boss_croneAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL mob_cycloneAI : public ScriptedAI
 {
-    mob_cycloneAI(Creature* c) : ScriptedAI(c)
+    mob_cycloneAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         Reset();
     }
@@ -650,39 +650,39 @@ struct MANGOS_DLL_DECL mob_cycloneAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_dorothee(Creature* _Creature)
+CreatureAI* GetAI_boss_dorothee(Creature* pCreature)
 {
-    return new boss_dorotheeAI(_Creature);
+    return new boss_dorotheeAI(pCreature);
 }
 
-CreatureAI* GetAI_boss_strawman(Creature* _Creature)
+CreatureAI* GetAI_boss_strawman(Creature* pCreature)
 {
-    return new boss_strawmanAI(_Creature);
+    return new boss_strawmanAI(pCreature);
 }
 
-CreatureAI* GetAI_boss_tinhead(Creature* _Creature)
+CreatureAI* GetAI_boss_tinhead(Creature* pCreature)
 {
-    return new boss_tinheadAI(_Creature);
+    return new boss_tinheadAI(pCreature);
 }
 
-CreatureAI* GetAI_boss_roar(Creature* _Creature)
+CreatureAI* GetAI_boss_roar(Creature* pCreature)
 {
-    return new boss_roarAI(_Creature);
+    return new boss_roarAI(pCreature);
 }
 
-CreatureAI* GetAI_boss_crone(Creature* _Creature)
+CreatureAI* GetAI_boss_crone(Creature* pCreature)
 {
-    return new boss_croneAI(_Creature);
+    return new boss_croneAI(pCreature);
 }
 
-CreatureAI* GetAI_mob_tito(Creature* _Creature)
+CreatureAI* GetAI_mob_tito(Creature* pCreature)
 {
-    return new mob_titoAI(_Creature);
+    return new mob_titoAI(pCreature);
 }
 
-CreatureAI* GetAI_mob_cyclone(Creature* _Creature)
+CreatureAI* GetAI_mob_cyclone(Creature* pCreature)
 {
-    return new mob_cycloneAI(_Creature);
+    return new mob_cycloneAI(pCreature);
 }
 
 /**************************************/
@@ -705,29 +705,29 @@ CreatureAI* GetAI_mob_cyclone(Creature* _Creature)
 /**** The Wolf's Entry ****/
 #define CREATURE_BIG_BAD_WOLF           17521
 
-bool GossipHello_npc_grandmother(Player* player, Creature* _Creature)
+bool GossipHello_npc_grandmother(Player* pPlayer, Creature* pCreature)
 {
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_GRANDMA, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
-    player->SEND_GOSSIP_MENU(8990, _Creature->GetGUID());
+    pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_GRANDMA, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+    pPlayer->SEND_GOSSIP_MENU(8990, pCreature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_grandmother(Player* player, Creature* _Creature, uint32 sender, uint32 action)
+bool GossipSelect_npc_grandmother(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
     if (action == GOSSIP_ACTION_INFO_DEF)
     {
-        _Creature->SetVisibility(VISIBILITY_OFF);
+        pCreature->SetVisibility(VISIBILITY_OFF);
         float x,y,z;
-        _Creature->GetPosition(x,y,z);
-        Creature* BigBadWolf = _Creature->SummonCreature(CREATURE_BIG_BAD_WOLF, x, y, z, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+        pCreature->GetPosition(x,y,z);
+        Creature* BigBadWolf = pCreature->SummonCreature(CREATURE_BIG_BAD_WOLF, x, y, z, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
         if (BigBadWolf)
         {
             BigBadWolf->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-            BigBadWolf->AI()->AttackStart(player);
+            BigBadWolf->AI()->AttackStart(pPlayer);
         }
 
-        _Creature->setDeathState(JUST_DIED);
+        pCreature->setDeathState(JUST_DIED);
     }
 
     return true;
@@ -735,9 +735,9 @@ bool GossipSelect_npc_grandmother(Player* player, Creature* _Creature, uint32 se
 
 struct MANGOS_DLL_DECL boss_bigbadwolfAI : public ScriptedAI
 {
-    boss_bigbadwolfAI(Creature* c) : ScriptedAI(c)
+    boss_bigbadwolfAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -848,9 +848,9 @@ struct MANGOS_DLL_DECL boss_bigbadwolfAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_bigbadwolf(Creature* _Creature)
+CreatureAI* GetAI_boss_bigbadwolf(Creature* pCreature)
 {
-    return new boss_bigbadwolfAI(_Creature);
+    return new boss_bigbadwolfAI(pCreature);
 }
 
 /**********************************************/
@@ -900,15 +900,15 @@ enum RAJPhase
     PHASE_BOTH          = 2,
 };
 
-void PretendToDie(Creature* _Creature)
+void PretendToDie(Creature* pCreature)
 {
-    _Creature->InterruptNonMeleeSpells(true);
-    _Creature->RemoveAllAuras();
-    _Creature->SetHealth(0);
-    _Creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-    _Creature->GetMotionMaster()->MovementExpired(false);
-    _Creature->GetMotionMaster()->MoveIdle();
-    _Creature->SetStandState(UNIT_STAND_STATE_DEAD);
+    pCreature->InterruptNonMeleeSpells(true);
+    pCreature->RemoveAllAuras();
+    pCreature->SetHealth(0);
+    pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+    pCreature->GetMotionMaster()->MovementExpired(false);
+    pCreature->GetMotionMaster()->MoveIdle();
+    pCreature->SetStandState(UNIT_STAND_STATE_DEAD);
 };
 
 void Resurrect(Creature* target)
@@ -928,9 +928,9 @@ void Resurrect(Creature* target)
 
 struct MANGOS_DLL_DECL boss_julianneAI : public ScriptedAI
 {
-    boss_julianneAI(Creature* c) : ScriptedAI(c)
+    boss_julianneAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         EntryYellTimer = 1000;
         AggroYellTimer = 10000;
         Reset();
@@ -1042,9 +1042,9 @@ struct MANGOS_DLL_DECL boss_julianneAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL boss_romuloAI : public ScriptedAI
 {
-    boss_romuloAI(Creature* c) : ScriptedAI(c)
+    boss_romuloAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
         EntryYellTimer = 8000;
         AggroYellTimer = 15000;
@@ -1422,14 +1422,14 @@ void boss_romuloAI::UpdateAI(const uint32 diff)
     DoMeleeAttackIfReady();
 }
 
-CreatureAI* GetAI_boss_julianne(Creature* _Creature)
+CreatureAI* GetAI_boss_julianne(Creature* pCreature)
 {
-    return new boss_julianneAI(_Creature);
+    return new boss_julianneAI(pCreature);
 }
 
-CreatureAI* GetAI_boss_romulo(Creature* _Creature)
+CreatureAI* GetAI_boss_romulo(Creature* pCreature)
 {
-    return new boss_romuloAI(_Creature);
+    return new boss_romuloAI(pCreature);
 }
 
 void AddSC_bosses_opera()

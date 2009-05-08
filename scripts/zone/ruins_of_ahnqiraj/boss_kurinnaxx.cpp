@@ -29,7 +29,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_kurinnaxxAI : public ScriptedAI
 {
-    boss_kurinnaxxAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_kurinnaxxAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     Unit *pTarget;
     uint32 MORTALWOUND_Timer;
@@ -78,9 +78,9 @@ struct MANGOS_DLL_DECL boss_kurinnaxxAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_kurinnaxx(Creature *_Creature)
+CreatureAI* GetAI_boss_kurinnaxx(Creature* pCreature)
 {
-    return new boss_kurinnaxxAI (_Creature);
+    return new boss_kurinnaxxAI(pCreature);
 }
 
 void AddSC_boss_kurinnaxx()

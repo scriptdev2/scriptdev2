@@ -30,7 +30,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_ptheradrasAI : public ScriptedAI
 {
-    boss_ptheradrasAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_ptheradrasAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 Dustfield_Timer;
     uint32 Boulder_Timer;
@@ -52,7 +52,7 @@ struct MANGOS_DLL_DECL boss_ptheradrasAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //Dustfield_Timer
@@ -67,7 +67,7 @@ struct MANGOS_DLL_DECL boss_ptheradrasAI : public ScriptedAI
         {
             Unit* target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if( target )
+            if (target)
                 DoCast(target,SPELL_BOULDER);
             Boulder_Timer = 10000;
         }else Boulder_Timer -= diff;
@@ -89,9 +89,9 @@ struct MANGOS_DLL_DECL boss_ptheradrasAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_ptheradras(Creature *_Creature)
+CreatureAI* GetAI_boss_ptheradras(Creature* pCreature)
 {
-    return new boss_ptheradrasAI (_Creature);
+    return new boss_ptheradrasAI(pCreature);
 }
 
 void AddSC_boss_ptheradras()

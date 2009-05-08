@@ -39,7 +39,7 @@ EndContentData */
 
 struct MANGOS_DLL_DECL npc_blood_knight_stillbladeAI : public ScriptedAI
 {
-    npc_blood_knight_stillbladeAI(Creature *c) : ScriptedAI(c) {Reset();}
+    npc_blood_knight_stillbladeAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 lifeTimer;
     bool spellHit;
@@ -58,7 +58,7 @@ struct MANGOS_DLL_DECL npc_blood_knight_stillbladeAI : public ScriptedAI
     {
         if (m_creature->IsStandState())
         {
-            if(lifeTimer < diff)
+            if (lifeTimer < diff)
                 m_creature->AI()->EnterEvadeMode();
             else
                 lifeTimer -= diff;
@@ -67,7 +67,7 @@ struct MANGOS_DLL_DECL npc_blood_knight_stillbladeAI : public ScriptedAI
 
     void SpellHit(Unit *Hitter, const SpellEntry *Spellkind)
     {
-        if((Spellkind->Id == SPELL_SHIMMERING_VESSEL) && !spellHit &&
+        if ((Spellkind->Id == SPELL_SHIMMERING_VESSEL) && !spellHit &&
             (Hitter->GetTypeId() == TYPEID_PLAYER) && (((Player*)Hitter)->IsActiveQuest(QUEST_REDEEMING_THE_DEAD)))
         {
             ((Player*)Hitter)->AreaExploredOrEventHappens(QUEST_REDEEMING_THE_DEAD);
@@ -81,9 +81,9 @@ struct MANGOS_DLL_DECL npc_blood_knight_stillbladeAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_blood_knight_stillblade(Creature *_Creature)
+CreatureAI* GetAI_npc_blood_knight_stillblade(Creature* pCreature)
 {
-    return new npc_blood_knight_stillbladeAI (_Creature);
+    return new npc_blood_knight_stillbladeAI(pCreature);
 }
 
 void AddSC_silvermoon_city()

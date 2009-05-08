@@ -40,9 +40,9 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_aeonusAI : public ScriptedAI
 {
-    boss_aeonusAI(Creature *c) : ScriptedAI(c)
+    boss_aeonusAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         HeroicMode = m_creature->GetMap()->IsHeroic();
         Reset();
     }
@@ -101,7 +101,7 @@ struct MANGOS_DLL_DECL boss_aeonusAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //Sand Breath
@@ -130,9 +130,9 @@ struct MANGOS_DLL_DECL boss_aeonusAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_aeonus(Creature *_Creature)
+CreatureAI* GetAI_boss_aeonus(Creature* pCreature)
 {
-    return new boss_aeonusAI (_Creature);
+    return new boss_aeonusAI(pCreature);
 }
 
 void AddSC_boss_aeonus()

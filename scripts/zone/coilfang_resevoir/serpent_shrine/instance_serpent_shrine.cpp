@@ -130,7 +130,7 @@ struct MANGOS_DLL_DECL instance_serpentshrine_cavern : public ScriptedInstance
                 m_uiEncounter[4] = uiData;
                 break;
             case TYPE_LADYVASHJ_EVENT:
-                if(uiData == NOT_STARTED)
+                if (uiData == NOT_STARTED)
                     memset(&m_uiShieldGenerator, 0, sizeof(m_uiShieldGenerator));
                 m_uiEncounter[5] = uiData;
                 break;

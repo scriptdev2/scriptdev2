@@ -53,9 +53,9 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_blackheart_the_inciterAI : public ScriptedAI
 {
-    boss_blackheart_the_inciterAI(Creature *c) : ScriptedAI(c)
+    boss_blackheart_the_inciterAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -92,7 +92,7 @@ struct MANGOS_DLL_DECL boss_blackheart_the_inciterAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH, m_creature);
 
-        if( pInstance )
+        if (pInstance)
             pInstance->SetData(DATA_BLACKHEARTTHEINCITEREVENT, DONE);
     }
 
@@ -112,7 +112,7 @@ struct MANGOS_DLL_DECL boss_blackheart_the_inciterAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         if (InciteChaos)
@@ -131,7 +131,7 @@ struct MANGOS_DLL_DECL boss_blackheart_the_inciterAI : public ScriptedAI
             DoCast(m_creature, SPELL_INCITE_CHAOS);
 
             std::list<HostilReference *> t_list = m_creature->getThreatManager().getThreatList();
-            for( std::list<HostilReference *>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr )
+            for(std::list<HostilReference *>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
             {
                 Unit* target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
                 if (target && target->GetTypeId() == TYPEID_PLAYER)
@@ -162,9 +162,9 @@ struct MANGOS_DLL_DECL boss_blackheart_the_inciterAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_blackheart_the_inciter(Creature *_Creature)
+CreatureAI* GetAI_boss_blackheart_the_inciter(Creature* pCreature)
 {
-    return new boss_blackheart_the_inciterAI (_Creature);
+    return new boss_blackheart_the_inciterAI(pCreature);
 }
 
 void AddSC_boss_blackheart_the_inciter()

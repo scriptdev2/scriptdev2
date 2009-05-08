@@ -31,7 +31,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_lorekeeperpolkeltAI : public ScriptedAI
 {
-    boss_lorekeeperpolkeltAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_lorekeeperpolkeltAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 VolatileInfection_Timer;
     uint32 Darkplague_Timer;
@@ -49,7 +49,7 @@ struct MANGOS_DLL_DECL boss_lorekeeperpolkeltAI : public ScriptedAI
     void JustDied(Unit *killer)
     {
         ScriptedInstance *pInstance = (m_creature->GetInstanceData()) ? ((ScriptedInstance*)m_creature->GetInstanceData()) : NULL;
-        if(pInstance)
+        if (pInstance)
         {
             pInstance->SetData(DATA_LOREKEEPERPOLKELT_DEATH, 0);
 
@@ -94,9 +94,9 @@ struct MANGOS_DLL_DECL boss_lorekeeperpolkeltAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_lorekeeperpolkelt(Creature *_Creature)
+CreatureAI* GetAI_boss_lorekeeperpolkelt(Creature* pCreature)
 {
-    return new boss_lorekeeperpolkeltAI (_Creature);
+    return new boss_lorekeeperpolkeltAI(pCreature);
 }
 
 void AddSC_boss_lorekeeperpolkelt()

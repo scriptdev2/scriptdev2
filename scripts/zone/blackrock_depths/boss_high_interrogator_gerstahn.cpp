@@ -30,7 +30,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_high_interrogator_gerstahnAI : public ScriptedAI
 {
-    boss_high_interrogator_gerstahnAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_high_interrogator_gerstahnAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 ShadowWordPain_Timer;
     uint32 ManaBurn_Timer;
@@ -48,7 +48,7 @@ struct MANGOS_DLL_DECL boss_high_interrogator_gerstahnAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //ShadowWordPain_Timer
@@ -86,9 +86,9 @@ struct MANGOS_DLL_DECL boss_high_interrogator_gerstahnAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_high_interrogator_gerstahn(Creature *_Creature)
+CreatureAI* GetAI_boss_high_interrogator_gerstahn(Creature* pCreature)
 {
-    return new boss_high_interrogator_gerstahnAI (_Creature);
+    return new boss_high_interrogator_gerstahnAI(pCreature);
 }
 
 void AddSC_boss_high_interrogator_gerstahn()

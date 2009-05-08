@@ -46,7 +46,7 @@ enum
 
 struct MANGOS_DLL_DECL npc_kyle_the_frenziedAI : public ScriptedAI
 {
-    npc_kyle_the_frenziedAI(Creature *c) : ScriptedAI(c) {Reset();}
+    npc_kyle_the_frenziedAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     bool bEvent;
     uint64 uiPlayerGUID;
@@ -156,23 +156,23 @@ CreatureAI* GetAI_npc_kyle_the_frenzied(Creature* pCreature)
 # npc_skorn_whitecloud
 ######*/
 
-bool GossipHello_npc_skorn_whitecloud(Player *player, Creature *_Creature)
+bool GossipHello_npc_skorn_whitecloud(Player* pPlayer, Creature* pCreature)
 {
-    if (_Creature->isQuestGiver())
-        player->PrepareQuestMenu( _Creature->GetGUID() );
+    if (pCreature->isQuestGiver())
+        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
 
-    if (!player->GetQuestRewardStatus(770))
-        player->ADD_GOSSIP_ITEM( 0, "Tell me a story, Skorn.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF );
+    if (!pPlayer->GetQuestRewardStatus(770))
+        pPlayer->ADD_GOSSIP_ITEM(0, "Tell me a story, Skorn.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
-    player->SEND_GOSSIP_MENU(522,_Creature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(522, pCreature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_skorn_whitecloud(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+bool GossipSelect_npc_skorn_whitecloud(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
     if (action == GOSSIP_ACTION_INFO_DEF)
-        player->SEND_GOSSIP_MENU(523,_Creature->GetGUID());
+        pPlayer->SEND_GOSSIP_MENU(523, pCreature->GetGUID());
 
     return true;
 }

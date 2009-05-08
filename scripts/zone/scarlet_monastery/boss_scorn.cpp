@@ -30,7 +30,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_scornAI : public ScriptedAI
 {
-    boss_scornAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_scornAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 LichSlap_Timer;
     uint32 FrostboltVolley_Timer;
@@ -81,9 +81,9 @@ struct MANGOS_DLL_DECL boss_scornAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_scorn(Creature *_Creature)
+CreatureAI* GetAI_boss_scorn(Creature* pCreature)
 {
-    return new boss_scornAI (_Creature);
+    return new boss_scornAI(pCreature);
 }
 
 void AddSC_boss_scorn()

@@ -43,7 +43,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL molten_flameAI : public ScriptedAI
 {
-    molten_flameAI(Creature *c) : ScriptedAI(c)
+    molten_flameAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         Reset();
     }
@@ -109,7 +109,7 @@ struct MANGOS_DLL_DECL molten_flameAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL npc_volcanoAI : public ScriptedAI
 {
-    npc_volcanoAI(Creature *c) : ScriptedAI(c) {Reset();}
+    npc_volcanoAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 CheckTimer;
     uint64 SupremusGUID;
@@ -152,9 +152,9 @@ struct MANGOS_DLL_DECL npc_volcanoAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
 {
-    boss_supremusAI(Creature *c) : ScriptedAI(c)
+    boss_supremusAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -398,19 +398,19 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_supremus(Creature *_Creature)
+CreatureAI* GetAI_boss_supremus(Creature* pCreature)
 {
-    return new boss_supremusAI (_Creature);
+    return new boss_supremusAI(pCreature);
 }
 
-CreatureAI* GetAI_molten_flame(Creature *_Creature)
+CreatureAI* GetAI_molten_flame(Creature* pCreature)
 {
-    return new molten_flameAI (_Creature);
+    return new molten_flameAI(pCreature);
 }
 
-CreatureAI* GetAI_npc_volcano(Creature *_Creature)
+CreatureAI* GetAI_npc_volcano(Creature* pCreature)
 {
-    return new npc_volcanoAI (_Creature);
+    return new npc_volcanoAI(pCreature);
 }
 
 void AddSC_boss_supremus()

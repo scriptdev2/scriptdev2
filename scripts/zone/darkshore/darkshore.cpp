@@ -58,7 +58,7 @@ enum
 
 struct MANGOS_DLL_DECL npc_prospector_remtravelAI : public npc_escortAI
 {
-    npc_prospector_remtravelAI(Creature *c) : npc_escortAI(c) { Reset(); }
+    npc_prospector_remtravelAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
 
     void WaypointReached(uint32 i)
     {
@@ -152,7 +152,7 @@ CreatureAI* GetAI_npc_prospector_remtravel(Creature* pCreature)
     return (CreatureAI*)tempAI;
 }
 
-bool QuestAccept_npc_prospector_remtravel(Player* pPlayer, Creature* pCreature, Quest const* pQuest)
+bool QuestAccept_npc_prospector_remtravel(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_ABSENT_MINDED_PT2)
     {
@@ -180,10 +180,10 @@ enum
 
 struct MANGOS_DLL_DECL npc_threshwackonatorAI : public ScriptedAI
 {
-    npc_threshwackonatorAI(Creature *c) : ScriptedAI(c)
+    npc_threshwackonatorAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        uiFaction = c->getFaction();
-        uiNpcFlags = c->GetUInt32Value(UNIT_NPC_FLAGS);
+        uiFaction = pCreature->getFaction();
+        uiNpcFlags = pCreature->GetUInt32Value(UNIT_NPC_FLAGS);
         uiPlayerGUID = 0;
         Reset();
     }

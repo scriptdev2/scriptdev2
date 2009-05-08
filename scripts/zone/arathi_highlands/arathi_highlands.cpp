@@ -52,9 +52,9 @@ enum
 
 struct MANGOS_DLL_DECL npc_professor_phizzlethorpeAI : public npc_escortAI
 {
-    npc_professor_phizzlethorpeAI(Creature *c) : npc_escortAI(c)
+    npc_professor_phizzlethorpeAI(Creature* pCreature) : npc_escortAI(pCreature)
     {
-        normFaction = c->getFaction();
+        normFaction = pCreature->getFaction();
         Reset();
     }
 
@@ -121,7 +121,7 @@ struct MANGOS_DLL_DECL npc_professor_phizzlethorpeAI : public npc_escortAI
     }
 };
 
-bool QuestAccept_npc_professor_phizzlethorpe(Player* pPlayer, Creature* pCreature, Quest const* pQuest)
+bool QuestAccept_npc_professor_phizzlethorpe(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_SUNKEN_TREASURE)
     {

@@ -73,9 +73,9 @@ struct MANGOS_DLL_DECL boss_twinemperorsAI : public ScriptedAI
     virtual void Reset() = 0;
     virtual void CastSpellOnBug(Creature *target) = 0;
 
-    boss_twinemperorsAI(Creature *c): ScriptedAI(c)
+    boss_twinemperorsAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
     }
 
     void TwinReset()
@@ -94,7 +94,7 @@ struct MANGOS_DLL_DECL boss_twinemperorsAI : public ScriptedAI
 
     Creature *GetOtherBoss()
     {
-        if(pInstance)
+        if (pInstance)
         {
             return (Creature *)Unit::GetUnit((*m_creature), pInstance->GetData64(IAmVeklor() ? DATA_VEKNILASH : DATA_VEKLOR));
         }
@@ -260,7 +260,7 @@ struct MANGOS_DLL_DECL boss_twinemperorsAI : public ScriptedAI
 
         Teleport_Timer = TELEPORTTIME;
 
-        if(IAmVeklor())
+        if (IAmVeklor())
             return;                                         // mechanics handled by veknilash so they teleport exactly at the same time and to correct coordinates
 
         Creature *pOtherBoss = GetOtherBoss();
@@ -350,7 +350,7 @@ struct MANGOS_DLL_DECL boss_twinemperorsAI : public ScriptedAI
                 attackRadius = PULL_RANGE;
             if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= /*CREATURE_Z_ATTACK_RANGE*/7 /*there are stairs*/)
             {
-                if(who->HasStealthAura())
+                if (who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
                 AttackStart(who);
             }
@@ -461,7 +461,7 @@ class MANGOS_DLL_DECL BugAura : public Aura
 struct MANGOS_DLL_DECL boss_veknilashAI : public boss_twinemperorsAI
 {
     bool IAmVeklor() {return false;}
-    boss_veknilashAI(Creature *c) : boss_twinemperorsAI(c)
+    boss_veknilashAI(Creature* pCreature) : boss_twinemperorsAI(pCreature)
     {
         Reset();
     }
@@ -530,7 +530,7 @@ struct MANGOS_DLL_DECL boss_veknilashAI : public boss_twinemperorsAI
         TryHealBrother(diff);
 
         //Teleporting to brother
-        if(Teleport_Timer < diff)
+        if (Teleport_Timer < diff)
         {
             TeleportToMyBrother();
         }else Teleport_Timer -= diff;
@@ -544,7 +544,7 @@ struct MANGOS_DLL_DECL boss_veknilashAI : public boss_twinemperorsAI
 struct MANGOS_DLL_DECL boss_veklorAI : public boss_twinemperorsAI
 {
     bool IAmVeklor() {return true;}
-    boss_veklorAI(Creature *c) : boss_twinemperorsAI(c)
+    boss_veklorAI(Creature* pCreature) : boss_twinemperorsAI(pCreature)
     {
         Reset();
     }
@@ -636,7 +636,7 @@ struct MANGOS_DLL_DECL boss_veklorAI : public boss_twinemperorsAI
         TryHealBrother(diff);
 
         //Teleporting to brother
-        if(Teleport_Timer < diff)
+        if (Teleport_Timer < diff)
         {
             TeleportToMyBrother();
         }else Teleport_Timer -= diff;
@@ -664,14 +664,14 @@ struct MANGOS_DLL_DECL boss_veklorAI : public boss_twinemperorsAI
     }
 };
 
-CreatureAI* GetAI_boss_veknilash(Creature *_Creature)
+CreatureAI* GetAI_boss_veknilash(Creature* pCreature)
 {
-    return new boss_veknilashAI (_Creature);
+    return new boss_veknilashAI(pCreature);
 }
 
-CreatureAI* GetAI_boss_veklor(Creature *_Creature)
+CreatureAI* GetAI_boss_veklor(Creature* pCreature)
 {
-    return new boss_veklorAI (_Creature);
+    return new boss_veklorAI(pCreature);
 }
 
 void AddSC_boss_twinemperors()

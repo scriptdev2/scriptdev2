@@ -29,7 +29,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL mob_treantAI  : public ScriptedAI
 {
-    mob_treantAI (Creature *c) : ScriptedAI(c)
+    mob_treantAI (Creature* pCreature) : ScriptedAI(pCreature)
     {
         WarpGuid = 0;
         Reset();
@@ -39,7 +39,7 @@ struct MANGOS_DLL_DECL mob_treantAI  : public ScriptedAI
 
     void Reset()
     {
-        m_creature->SetSpeed( MOVE_RUN, 0.5f, true);
+        m_creature->SetSpeed(MOVE_RUN, 0.5f, true);
         m_creature->SetUnitMovementFlags(0);
     }
 
@@ -47,7 +47,7 @@ struct MANGOS_DLL_DECL mob_treantAI  : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         if (m_creature->getVictim()->GetGUID() != WarpGuid)
@@ -86,10 +86,10 @@ float treant_pos[6][3] =
 
 struct MANGOS_DLL_DECL boss_warp_splinterAI : public ScriptedAI
 {
-    boss_warp_splinterAI(Creature *c) : ScriptedAI(c)
+    boss_warp_splinterAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        Treant_Spawn_Pos_X = c->GetPositionX();
-        Treant_Spawn_Pos_Y = c->GetPositionY();
+        Treant_Spawn_Pos_X = pCreature->GetPositionX();
+        Treant_Spawn_Pos_Y = pCreature->GetPositionY();
         Reset();
     }
 
@@ -168,7 +168,7 @@ struct MANGOS_DLL_DECL boss_warp_splinterAI : public ScriptedAI
     // Warp Splinter eat treants if they are near him
     void EatTreant()
     {
-        for( int i=0; i<6; ++i )
+        for(int i=0; i<6; ++i)
         {
             Unit *pTreant = Unit::GetUnit(*m_creature, Treant_GUIDs[i]);
 
@@ -189,7 +189,7 @@ struct MANGOS_DLL_DECL boss_warp_splinterAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //Check for War Stomp
@@ -224,14 +224,14 @@ struct MANGOS_DLL_DECL boss_warp_splinterAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_warp_splinter(Creature *_Creature)
+CreatureAI* GetAI_boss_warp_splinter(Creature* pCreature)
 {
-    return new boss_warp_splinterAI (_Creature);
+    return new boss_warp_splinterAI(pCreature);
 }
 
-CreatureAI* GetAI_mob_treant(Creature *_Creature)
+CreatureAI* GetAI_mob_treant(Creature* pCreature)
 {
-    return new mob_treantAI (_Creature);
+    return new mob_treantAI(pCreature);
 }
 
 void AddSC_boss_warp_splinter()

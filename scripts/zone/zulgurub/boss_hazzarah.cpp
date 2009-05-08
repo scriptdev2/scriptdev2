@@ -29,7 +29,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_hazzarahAI : public ScriptedAI
 {
-    boss_hazzarahAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_hazzarahAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 ManaBurn_Timer;
     uint32 Sleep_Timer;
@@ -81,9 +81,9 @@ struct MANGOS_DLL_DECL boss_hazzarahAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_hazzarah(Creature *_Creature)
+CreatureAI* GetAI_boss_hazzarah(Creature* pCreature)
 {
-    return new boss_hazzarahAI (_Creature);
+    return new boss_hazzarahAI(pCreature);
 }
 
 void AddSC_boss_hazzarah()

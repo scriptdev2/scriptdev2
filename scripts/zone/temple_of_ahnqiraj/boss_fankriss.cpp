@@ -37,7 +37,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_fankrissAI : public ScriptedAI
 {
-    boss_fankrissAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_fankrissAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 MortalWound_Timer;
     uint32 SpawnHatchlings_Timer;
@@ -73,7 +73,7 @@ struct MANGOS_DLL_DECL boss_fankrissAI : public ScriptedAI
         }
         Rand = 0;
         Spawn = DoSpawnCreature(15630, RandX, RandY, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
-        if(Spawn)
+        if (Spawn)
             ((CreatureAI*)Spawn->AI())->AttackStart(victim);
     }
 
@@ -113,9 +113,9 @@ struct MANGOS_DLL_DECL boss_fankrissAI : public ScriptedAI
 
         // Teleporting Random Target to one of the three tunnels and spawn 4 hatchlings near the gamer.
         //We will only telport if fankriss has more than 3% of hp so teleported gamers can always loot.
-        if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() > 3 )
+        if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() > 3)
         {
-            if(SpawnHatchlings_Timer< diff)
+            if (SpawnHatchlings_Timer< diff)
             {
                 Unit* target = NULL;
                 target = SelectUnit(SELECT_TARGET_RANDOM,0);
@@ -123,7 +123,7 @@ struct MANGOS_DLL_DECL boss_fankrissAI : public ScriptedAI
                 {
                     DoCast(target, SPELL_ROOT);
 
-                    if(m_creature->getThreatManager().getThreat(target))
+                    if (m_creature->getThreatManager().getThreat(target))
                         m_creature->getThreatManager().modifyThreatPercent(target, -100);
 
                     switch(rand()%3)
@@ -183,9 +183,9 @@ struct MANGOS_DLL_DECL boss_fankrissAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_fankriss(Creature *_Creature)
+CreatureAI* GetAI_boss_fankriss(Creature* pCreature)
 {
-    return new boss_fankrissAI (_Creature);
+    return new boss_fankrissAI(pCreature);
 }
 
 void AddSC_boss_fankriss()

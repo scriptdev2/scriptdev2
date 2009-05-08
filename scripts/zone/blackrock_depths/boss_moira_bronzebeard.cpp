@@ -32,7 +32,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_moira_bronzebeardAI : public ScriptedAI
 {
-    boss_moira_bronzebeardAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_moira_bronzebeardAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 Heal_Timer;
     uint32 MindBlast_Timer;
@@ -54,7 +54,7 @@ struct MANGOS_DLL_DECL boss_moira_bronzebeardAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //MindBlast_Timer
@@ -80,9 +80,9 @@ struct MANGOS_DLL_DECL boss_moira_bronzebeardAI : public ScriptedAI
 
     }
 };
-CreatureAI* GetAI_boss_moira_bronzebeard(Creature *_Creature)
+CreatureAI* GetAI_boss_moira_bronzebeard(Creature* pCreature)
 {
-    return new boss_moira_bronzebeardAI (_Creature);
+    return new boss_moira_bronzebeardAI(pCreature);
 }
 
 void AddSC_boss_moira_bronzebeard()

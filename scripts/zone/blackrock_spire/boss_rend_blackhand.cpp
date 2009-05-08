@@ -29,7 +29,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_rend_blackhandAI : public ScriptedAI
 {
-    boss_rend_blackhandAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_rend_blackhandAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 WhirlWind_Timer;
     uint32 Cleave_Timer;
@@ -45,7 +45,7 @@ struct MANGOS_DLL_DECL boss_rend_blackhandAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //WhirlWind_Timer
@@ -72,9 +72,9 @@ struct MANGOS_DLL_DECL boss_rend_blackhandAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_rend_blackhand(Creature *_Creature)
+CreatureAI* GetAI_boss_rend_blackhand(Creature* pCreature)
 {
-    return new boss_rend_blackhandAI (_Creature);
+    return new boss_rend_blackhandAI(pCreature);
 }
 
 void AddSC_boss_rend_blackhand()

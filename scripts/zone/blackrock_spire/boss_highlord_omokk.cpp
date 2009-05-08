@@ -33,7 +33,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_highlordomokkAI : public ScriptedAI
 {
-    boss_highlordomokkAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_highlordomokkAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 WarStomp_Timer;
     uint32 Cleave_Timer;
@@ -57,7 +57,7 @@ struct MANGOS_DLL_DECL boss_highlordomokkAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //WarStomp_Timer
@@ -112,9 +112,9 @@ struct MANGOS_DLL_DECL boss_highlordomokkAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_highlordomokk(Creature *_Creature)
+CreatureAI* GetAI_boss_highlordomokk(Creature* pCreature)
 {
-    return new boss_highlordomokkAI (_Creature);
+    return new boss_highlordomokkAI(pCreature);
 }
 
 void AddSC_boss_highlordomokk()

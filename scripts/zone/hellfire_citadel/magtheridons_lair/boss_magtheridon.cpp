@@ -91,7 +91,7 @@ typedef std::map<uint64, uint64> CubeMap;
 
 struct MANGOS_DLL_DECL mob_abyssalAI : public ScriptedAI
 {
-    mob_abyssalAI(Creature *c) : ScriptedAI(c)
+    mob_abyssalAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         trigger = 0;
         Despawn_Timer = 60000;
@@ -186,7 +186,7 @@ struct MANGOS_DLL_DECL mob_abyssalAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
 {
-    boss_magtheridonAI(Creature *c) : ScriptedAI(c)
+    boss_magtheridonAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         pInstance = (ScriptedInstance*)m_creature->GetInstanceData();
         m_creature->SetFloatValue(UNIT_FIELD_BOUNDINGRADIUS, 10);
@@ -284,7 +284,7 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
         }
 
         // if 5 clickers from other cubes apply shadow cage
-        if (ClickerNum >= CLICKERS_COUNT && !m_creature->HasAura(SPELL_SHADOW_CAGE, 0) && m_creature->HasAura(SPELL_BLASTNOVA, 0) )
+        if (ClickerNum >= CLICKERS_COUNT && !m_creature->HasAura(SPELL_SHADOW_CAGE, 0) && m_creature->HasAura(SPELL_BLASTNOVA, 0))
         {
             DoScriptText(SAY_BANISH, m_creature);
             m_creature->CastSpell(m_creature, SPELL_SHADOW_CAGE, true);
@@ -472,7 +472,7 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
 {
-    mob_hellfire_channelerAI(Creature *c) : ScriptedAI(c)
+    mob_hellfire_channelerAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         pInstance = (ScriptedInstance*)m_creature->GetInstanceData();
         Reset();
@@ -545,7 +545,7 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //Shadow bolt volley
@@ -593,7 +593,7 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
 };
 
 //Manticron Cube
-bool GOHello_go_manticron_cube(Player *player, GameObject* _GO)
+bool GOHello_go_manticron_cube(Player* pPlayer, GameObject* _GO)
 {
     ScriptedInstance* pInstance = (ScriptedInstance*)_GO->GetInstanceData();
 
@@ -608,30 +608,30 @@ bool GOHello_go_manticron_cube(Player *player, GameObject* _GO)
         return true;
 
     // if exhausted or already channeling return
-    if (player->HasAura(SPELL_MIND_EXHAUSTION, 0) || player->HasAura(SPELL_SHADOW_GRASP, 1))
+    if (pPlayer->HasAura(SPELL_MIND_EXHAUSTION, 0) || pPlayer->HasAura(SPELL_SHADOW_GRASP, 1))
         return true;
 
-    player->InterruptNonMeleeSpells(false);
-    player->CastSpell(player, SPELL_SHADOW_GRASP, true);
-    player->CastSpell(player, SPELL_SHADOW_GRASP_VISUAL, false);
-    ((boss_magtheridonAI*)Magtheridon->AI())->SetClicker(_GO->GetGUID(), player->GetGUID());
+    pPlayer->InterruptNonMeleeSpells(false);
+    pPlayer->CastSpell(pPlayer, SPELL_SHADOW_GRASP, true);
+    pPlayer->CastSpell(pPlayer, SPELL_SHADOW_GRASP_VISUAL, false);
+    ((boss_magtheridonAI*)Magtheridon->AI())->SetClicker(_GO->GetGUID(), pPlayer->GetGUID());
 
     return true;
 }
 
-CreatureAI* GetAI_boss_magtheridon(Creature *_Creature)
+CreatureAI* GetAI_boss_magtheridon(Creature* pCreature)
 {
-    return new boss_magtheridonAI (_Creature);
+    return new boss_magtheridonAI(pCreature);
 }
 
-CreatureAI* GetAI_mob_hellfire_channeler(Creature *_Creature)
+CreatureAI* GetAI_mob_hellfire_channeler(Creature* pCreature)
 {
-    return new mob_hellfire_channelerAI (_Creature);
+    return new mob_hellfire_channelerAI(pCreature);
 }
 
-CreatureAI* GetAI_mob_abyssalAI(Creature *_Creature)
+CreatureAI* GetAI_mob_abyssalAI(Creature* pCreature)
 {
-    return new mob_abyssalAI (_Creature);
+    return new mob_abyssalAI(pCreature);
 }
 
 void AddSC_boss_magtheridon()

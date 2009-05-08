@@ -119,9 +119,9 @@ void TeleportToInnerVeil(Player* plr)
 
 struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
 {
-    boss_kalecgosAI(Creature* c) : ScriptedAI(c)
+    boss_kalecgosAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -377,9 +377,9 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL boss_sathrovarrAI : public ScriptedAI
 {
-    boss_sathrovarrAI(Creature* c) : ScriptedAI(c)
+    boss_sathrovarrAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -498,9 +498,9 @@ struct MANGOS_DLL_DECL boss_sathrovarrAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL boss_kalecgos_humanoidAI : public ScriptedAI
 {
-    boss_kalecgos_humanoidAI(Creature* c) : ScriptedAI(c)
+    boss_kalecgos_humanoidAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -570,25 +570,25 @@ struct MANGOS_DLL_DECL boss_kalecgos_humanoidAI : public ScriptedAI
     }
 };
 
-bool GOHello_go_spectral_rift(Player* player, GameObject* _GO)
+bool GOHello_go_spectral_rift(Player* pPlayer, GameObject* _GO)
 {
-    TeleportToInnerVeil(player);
+    TeleportToInnerVeil(pPlayer);
     return true;
 }
 
-CreatureAI* GetAI_boss_kalecgos(Creature* c)
+CreatureAI* GetAI_boss_kalecgos(Creature* pCreature)
 {
-    return new boss_kalecgosAI(c);
+    return new boss_kalecgosAI(pCreature);
 }
 
-CreatureAI* GetAI_boss_sathrovarr(Creature* c)
+CreatureAI* GetAI_boss_sathrovarr(Creature* pCreature)
 {
-    return new boss_sathrovarrAI(c);
+    return new boss_sathrovarrAI(pCreature);
 }
 
-CreatureAI* GetAI_boss_kalecgos_humanoid(Creature* c)
+CreatureAI* GetAI_boss_kalecgos_humanoid(Creature* pCreature)
 {
-    return new boss_kalecgos_humanoidAI(c);
+    return new boss_kalecgos_humanoidAI(pCreature);
 }
 
 void AddSC_boss_kalecgos()

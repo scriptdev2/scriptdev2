@@ -51,9 +51,9 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
 {
-    boss_gruulAI(Creature *c) : ScriptedAI(c)
+    boss_gruulAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -122,7 +122,7 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH, m_creature);
 
-        if(pInstance)
+        if (pInstance)
         {
             pInstance->SetData(DATA_GRUULEVENT, DONE);
             
@@ -135,7 +135,7 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         // Growth
@@ -198,7 +198,7 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
                         {
                             Unit *target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
 
-                            if(target)
+                            if (target)
                             {
                                 target->RemoveAurasDueToSpell(SPELL_GRONN_LORDS_GRASP);
                                 target->CastSpell(target, SPELL_STONED, true, NULL, NULL, m_creature->GetGUID());
@@ -226,11 +226,11 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
                         {
                             Unit *target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
 
-                            if(target)
+                            if (target)
                             {
                                 target->RemoveAurasDueToSpell(SPELL_STONED);
 
-                                if(target->GetTypeId() == TYPEID_PLAYER)
+                                if (target->GetTypeId() == TYPEID_PLAYER)
                                     target->CastSpell(target, SPELL_SHATTER_EFFECT, false, NULL, NULL, m_creature->GetGUID());
                             }
 
@@ -290,7 +290,7 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
                 if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
                     DoCast(target,SPELL_CAVE_IN);
 
-                if(CaveIn_StaticTimer >= 4000)
+                if (CaveIn_StaticTimer >= 4000)
                     CaveIn_StaticTimer -= 2000;
 
                     CaveIn_Timer = CaveIn_StaticTimer;
@@ -315,9 +315,9 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_gruul(Creature *_Creature)
+CreatureAI* GetAI_boss_gruul(Creature* pCreature)
 {
-    return new boss_gruulAI (_Creature);
+    return new boss_gruulAI(pCreature);
 }
 
 void AddSC_boss_gruul()

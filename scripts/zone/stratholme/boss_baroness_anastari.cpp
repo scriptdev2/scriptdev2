@@ -31,7 +31,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_baroness_anastariAI : public ScriptedAI
 {
-    boss_baroness_anastariAI(Creature *c) : ScriptedAI(c)
+    boss_baroness_anastariAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         pInstance = (ScriptedInstance*)m_creature->GetInstanceData();
         Reset();
@@ -107,9 +107,9 @@ struct MANGOS_DLL_DECL boss_baroness_anastariAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_baroness_anastari(Creature *_Creature)
+CreatureAI* GetAI_boss_baroness_anastari(Creature* pCreature)
 {
-    return new boss_baroness_anastariAI (_Creature);
+    return new boss_baroness_anastariAI(pCreature);
 }
 
 void AddSC_boss_baroness_anastari()

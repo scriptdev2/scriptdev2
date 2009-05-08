@@ -29,7 +29,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_shadowvoshAI : public ScriptedAI
 {
-    boss_shadowvoshAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_shadowvoshAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 CurseOfBlood_Timer;
     uint32 Hex_Timer;
@@ -47,7 +47,7 @@ struct MANGOS_DLL_DECL boss_shadowvoshAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //CurseOfBlood_Timer
@@ -76,9 +76,9 @@ struct MANGOS_DLL_DECL boss_shadowvoshAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_shadowvosh(Creature *_Creature)
+CreatureAI* GetAI_boss_shadowvosh(Creature* pCreature)
 {
-    return new boss_shadowvoshAI (_Creature);
+    return new boss_shadowvoshAI(pCreature);
 }
 
 void AddSC_boss_shadowvosh()

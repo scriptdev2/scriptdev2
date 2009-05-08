@@ -37,7 +37,7 @@ enum
 
 struct MANGOS_DLL_DECL boss_bloodmage_thalnosAI : public ScriptedAI
 {
-    boss_bloodmage_thalnosAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_bloodmage_thalnosAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     bool HpYell;
     uint32 FlameShock_Timer;
@@ -108,9 +108,9 @@ struct MANGOS_DLL_DECL boss_bloodmage_thalnosAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_bloodmage_thalnos(Creature *_Creature)
+CreatureAI* GetAI_boss_bloodmage_thalnos(Creature* pCreature)
 {
-    return new boss_bloodmage_thalnosAI (_Creature);
+    return new boss_bloodmage_thalnosAI(pCreature);
 }
 
 void AddSC_boss_bloodmage_thalnos()

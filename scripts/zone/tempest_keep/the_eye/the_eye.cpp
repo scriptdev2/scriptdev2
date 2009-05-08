@@ -33,7 +33,7 @@ EndContentData */
 
 struct MANGOS_DLL_DECL mob_crystalcore_devastatorAI : public ScriptedAI
 {
-    mob_crystalcore_devastatorAI(Creature *c) : ScriptedAI(c) {Reset();}
+    mob_crystalcore_devastatorAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 Knockaway_Timer;
     uint32 Countercharge_Timer;
@@ -79,9 +79,9 @@ struct MANGOS_DLL_DECL mob_crystalcore_devastatorAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_crystalcore_devastator(Creature *_Creature)
+CreatureAI* GetAI_mob_crystalcore_devastator(Creature* pCreature)
 {
-    return new mob_crystalcore_devastatorAI (_Creature);
+    return new mob_crystalcore_devastatorAI(pCreature);
 }
 
 void AddSC_the_eye()

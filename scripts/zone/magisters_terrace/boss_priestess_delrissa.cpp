@@ -1140,10 +1140,10 @@ struct MANGOS_DLL_DECL boss_apokoAI : public boss_priestess_lackey_commonAI
         {
             // std::vector<Add*>::iterator itr = Group.begin() + rand()%Group.size();
             // uint64 guid = (*itr)->guid;
-            // if(guid)
+            // if (guid)
             // {
             //   Unit* pAdd = Unit::GetUnit(*m_creature, (*itr)->guid);
-            //   if(pAdd && pAdd->isAlive())
+            //   if (pAdd && pAdd->isAlive())
             //   {
             DoCast(m_creature, SPELL_LESSER_HEALING_WAVE);
             Healing_Wave_Timer = 5000;
@@ -1250,7 +1250,7 @@ CreatureAI* GetAI_zelfan(Creature* pCreature)
 
 //struct MANGOS_DLL_DECL mob_high_explosive_sheepAI : public ScriptedAI
 //{
-//    mob_high_explosive_sheepAI(Creature *c) : ScriptedAI(c) {Reset();}
+//    mob_high_explosive_sheepAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 //
 //    uint32 Explosion_Timer;
 //
@@ -1263,7 +1263,7 @@ CreatureAI* GetAI_zelfan(Creature* pCreature)
 //
 //    void UpdateAI(const uint32 diff)
 //    {
-//        if(Explosion_Timer < diff)
+//        if (Explosion_Timer < diff)
 //        {
 //            DoCast(m_creature->getVictim(), SPELL_SHEEP_EXPLOSION);
 //        }else

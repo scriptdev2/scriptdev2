@@ -42,9 +42,9 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_epoch_hunterAI : public ScriptedAI
 {
-    boss_epoch_hunterAI(Creature *c) : ScriptedAI(c)
+    boss_epoch_hunterAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -92,7 +92,7 @@ struct MANGOS_DLL_DECL boss_epoch_hunterAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //Sand Breath
@@ -135,9 +135,9 @@ struct MANGOS_DLL_DECL boss_epoch_hunterAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_epoch_hunter(Creature *_Creature)
+CreatureAI* GetAI_boss_epoch_hunter(Creature* pCreature)
 {
-    return new boss_epoch_hunterAI (_Creature);
+    return new boss_epoch_hunterAI(pCreature);
 }
 
 void AddSC_boss_epoch_hunter()

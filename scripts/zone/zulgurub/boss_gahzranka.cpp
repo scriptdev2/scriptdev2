@@ -29,7 +29,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_gahzrankaAI : public ScriptedAI
 {
-    boss_gahzrankaAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_gahzrankaAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
     uint32 Frostbreath_Timer;
     uint32 MassiveGeyser_Timer;
     uint32 Slam_Timer;
@@ -73,9 +73,9 @@ struct MANGOS_DLL_DECL boss_gahzrankaAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_gahzranka(Creature *_Creature)
+CreatureAI* GetAI_boss_gahzranka(Creature* pCreature)
 {
-    return new boss_gahzrankaAI (_Creature);
+    return new boss_gahzrankaAI(pCreature);
 }
 
 void AddSC_boss_gahzranka()

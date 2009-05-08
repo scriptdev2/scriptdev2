@@ -65,9 +65,9 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
 {
-    boss_high_astromancer_solarianAI(Creature *c) : ScriptedAI(c)
+    boss_high_astromancer_solarianAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
 
         defaultarmor = m_creature->GetArmor();
         defaultsize = m_creature->GetFloatValue(OBJECT_FIELD_SCALE_X);
@@ -192,7 +192,7 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         if (AppearDelay)
@@ -429,9 +429,9 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL mob_solarium_priestAI : public ScriptedAI
 {
-    mob_solarium_priestAI(Creature *c) : ScriptedAI(c)
+    mob_solarium_priestAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -491,14 +491,14 @@ struct MANGOS_DLL_DECL mob_solarium_priestAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_solarium_priest(Creature *_Creature)
+CreatureAI* GetAI_mob_solarium_priest(Creature* pCreature)
 {
-    return new mob_solarium_priestAI (_Creature);
+    return new mob_solarium_priestAI(pCreature);
 }
 
-CreatureAI* GetAI_boss_high_astromancer_solarian(Creature *_Creature)
+CreatureAI* GetAI_boss_high_astromancer_solarian(Creature* pCreature)
 {
-    return new boss_high_astromancer_solarianAI (_Creature);
+    return new boss_high_astromancer_solarianAI(pCreature);
 }
 
 void AddSC_boss_high_astromancer_solarian()

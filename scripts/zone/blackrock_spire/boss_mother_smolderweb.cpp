@@ -29,7 +29,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_mothersmolderwebAI : public ScriptedAI
 {
-    boss_mothersmolderwebAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_mothersmolderwebAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 Crystalize_Timer;
     uint32 MothersMilk_Timer;
@@ -42,25 +42,25 @@ struct MANGOS_DLL_DECL boss_mothersmolderwebAI : public ScriptedAI
 
     void DamageTaken(Unit *done_by, uint32 &damage)
     {
-        if( m_creature->GetHealth() <= damage )
+        if (m_creature->GetHealth() <= damage)
             m_creature->CastSpell(m_creature,SPELL_SUMMON_SPIRE_SPIDERLING,true);
     }
 
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //Crystalize_Timer
-        if( Crystalize_Timer < diff )
+        if (Crystalize_Timer < diff)
         {
             DoCast(m_creature,SPELL_CRYSTALIZE);
             Crystalize_Timer = 15000;
         }else Crystalize_Timer -= diff;
 
         //MothersMilk_Timer
-        if( MothersMilk_Timer < diff )
+        if (MothersMilk_Timer < diff)
         {
             DoCast(m_creature,SPELL_MOTHERSMILK);
             MothersMilk_Timer = 5000+rand()%7500;
@@ -69,9 +69,9 @@ struct MANGOS_DLL_DECL boss_mothersmolderwebAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_mothersmolderweb(Creature *_Creature)
+CreatureAI* GetAI_boss_mothersmolderweb(Creature* pCreature)
 {
-    return new boss_mothersmolderwebAI (_Creature);
+    return new boss_mothersmolderwebAI(pCreature);
 }
 
 void AddSC_boss_mothersmolderweb()

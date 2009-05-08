@@ -64,9 +64,9 @@ float PortalLocations[2][2]=
 
 struct MANGOS_DLL_DECL mob_kilrekAI : public ScriptedAI
 {
-    mob_kilrekAI(Creature *c) : ScriptedAI(c)
+    mob_kilrekAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -111,7 +111,7 @@ struct MANGOS_DLL_DECL mob_kilrekAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         if (AmplifyTimer < diff)
@@ -128,7 +128,7 @@ struct MANGOS_DLL_DECL mob_kilrekAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL mob_demon_chainAI : public ScriptedAI
 {
-    mob_demon_chainAI(Creature *c) : ScriptedAI(c)
+    mob_demon_chainAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         Reset();
     }
@@ -156,12 +156,12 @@ struct MANGOS_DLL_DECL mob_demon_chainAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
 {
-    boss_terestianAI(Creature *c) : ScriptedAI(c)
+    boss_terestianAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         for(uint8 i = 0; i < 2; ++i)
             PortalGUID[i] = 0;
 
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -260,7 +260,7 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         if (CheckKilrekTimer < diff)
@@ -362,7 +362,7 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL mob_karazhan_impAI : public ScriptedAI
 {
-    mob_karazhan_impAI(Creature *c) : ScriptedAI(c) {Reset();}
+    mob_karazhan_impAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 FireboltTimer;
 
@@ -376,7 +376,7 @@ struct MANGOS_DLL_DECL mob_karazhan_impAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         if (FireboltTimer < diff)
@@ -389,24 +389,24 @@ struct MANGOS_DLL_DECL mob_karazhan_impAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_kilrek(Creature *_Creature)
+CreatureAI* GetAI_mob_kilrek(Creature* pCreature)
 {
-    return new mob_kilrekAI (_Creature);
+    return new mob_kilrekAI(pCreature);
 }
 
-CreatureAI* GetAI_mob_karazhan_imp(Creature *_Creature)
+CreatureAI* GetAI_mob_karazhan_imp(Creature* pCreature)
 {
-    return new mob_karazhan_impAI (_Creature);
+    return new mob_karazhan_impAI(pCreature);
 }
 
-CreatureAI* GetAI_mob_demon_chain(Creature *_Creature)
+CreatureAI* GetAI_mob_demon_chain(Creature* pCreature)
 {
-    return new mob_demon_chainAI(_Creature);
+    return new mob_demon_chainAI(pCreature);
 }
 
-CreatureAI* GetAI_boss_terestian_illhoof(Creature *_Creature)
+CreatureAI* GetAI_boss_terestian_illhoof(Creature* pCreature)
 {
-    return new boss_terestianAI (_Creature);
+    return new boss_terestianAI(pCreature);
 }
 
 void AddSC_boss_terestian_illhoof()

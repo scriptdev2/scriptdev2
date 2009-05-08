@@ -29,7 +29,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_lordalexeibarovAI : public ScriptedAI
 {
-    boss_lordalexeibarovAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_lordalexeibarovAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 Immolate_Timer;
     uint32 VeilofShadow_Timer;
@@ -45,7 +45,7 @@ struct MANGOS_DLL_DECL boss_lordalexeibarovAI : public ScriptedAI
     void JustDied(Unit *killer)
     {
         ScriptedInstance *pInstance = (m_creature->GetInstanceData()) ? ((ScriptedInstance*)m_creature->GetInstanceData()) : NULL;
-        if(pInstance)
+        if (pInstance)
         {
             pInstance->SetData(DATA_LORDALEXEIBAROV_DEATH, 0);
 
@@ -79,9 +79,9 @@ struct MANGOS_DLL_DECL boss_lordalexeibarovAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_lordalexeibarov(Creature *_Creature)
+CreatureAI* GetAI_boss_lordalexeibarov(Creature* pCreature)
 {
-    return new boss_lordalexeibarovAI (_Creature);
+    return new boss_lordalexeibarovAI(pCreature);
 }
 
 void AddSC_boss_lordalexeibarov()

@@ -44,7 +44,7 @@ EndContentData */
 
 struct MANGOS_DLL_DECL mob_aquementasAI : public ScriptedAI
 {
-    mob_aquementasAI(Creature *c) : ScriptedAI(c) {Reset();}
+    mob_aquementasAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 SendItem_Timer;
     uint32 SwitchFaction_Timer;
@@ -72,9 +72,9 @@ struct MANGOS_DLL_DECL mob_aquementasAI : public ScriptedAI
             !((Player*)receiver)->HasItemCount(11522,1,true))
         {
             ItemPosCountVec dest;
-            uint8 msg = ((Player*)receiver)->CanStoreNewItem( NULL_BAG, NULL_SLOT, dest, 11522, 1, false);
-            if( msg == EQUIP_ERR_OK )
-                ((Player*)receiver)->StoreNewItem( dest, 11522, 1, true);
+            uint8 msg = ((Player*)receiver)->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, 11522, 1, false);
+            if (msg == EQUIP_ERR_OK)
+                ((Player*)receiver)->StoreNewItem(dest, 11522, 1, true);
         }
     }
 
@@ -85,9 +85,9 @@ struct MANGOS_DLL_DECL mob_aquementasAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if( isFriendly )
+        if (isFriendly)
         {
-            if( SwitchFaction_Timer < diff )
+            if (SwitchFaction_Timer < diff)
             {
                 m_creature->setFaction(91);
                 isFriendly = false;
@@ -97,23 +97,23 @@ struct MANGOS_DLL_DECL mob_aquementasAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if( !isFriendly )
+        if (!isFriendly)
         {
-            if( SendItem_Timer < diff )
+            if (SendItem_Timer < diff)
             {
-                if( m_creature->getVictim()->GetTypeId() == TYPEID_PLAYER )
+                if (m_creature->getVictim()->GetTypeId() == TYPEID_PLAYER)
                     SendItem(m_creature->getVictim());
                 SendItem_Timer = 5000;
             }else SendItem_Timer -= diff;
         }
 
-        if( FrostShock_Timer < diff )
+        if (FrostShock_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_FROST_SHOCK);
             FrostShock_Timer = 15000;
         }else FrostShock_Timer -= diff;
 
-        if( AquaJet_Timer < diff )
+        if (AquaJet_Timer < diff)
         {
             DoCast(m_creature,SPELL_AQUA_JET);
             AquaJet_Timer = 15000;
@@ -122,9 +122,9 @@ struct MANGOS_DLL_DECL mob_aquementasAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_mob_aquementas(Creature *_Creature)
+CreatureAI* GetAI_mob_aquementas(Creature* pCreature)
 {
-    return new mob_aquementasAI (_Creature);
+    return new mob_aquementasAI(pCreature);
 }
 
 /*######
@@ -148,15 +148,15 @@ CreatureAI* GetAI_mob_aquementas(Creature *_Creature)
 
 struct MANGOS_DLL_DECL npc_custodian_of_timeAI : public npc_escortAI
 {
-    npc_custodian_of_timeAI(Creature *c) : npc_escortAI(c) { Reset(); }
+    npc_custodian_of_timeAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
 
     void WaypointReached(uint32 i)
     {
         Unit *pTemp = Unit::GetUnit(*m_creature,PlayerGUID);
-        if( !pTemp )
+        if (!pTemp)
             return;
 
-        switch( i )
+        switch(i)
         {
             case 0: DoScriptText(WHISPER_CUSTODIAN_1, m_creature, pTemp); break;
             case 1: DoScriptText(WHISPER_CUSTODIAN_2, m_creature, pTemp); break;
@@ -186,15 +186,15 @@ struct MANGOS_DLL_DECL npc_custodian_of_timeAI : public npc_escortAI
 
     void MoveInLineOfSight(Unit *who)
     {
-        if( IsBeingEscorted )
+        if (IsBeingEscorted)
             return;
 
-        if( who->GetTypeId() == TYPEID_PLAYER )
+        if (who->GetTypeId() == TYPEID_PLAYER)
         {
-            if( ((Player*)who)->HasAura(34877,1) && ((Player*)who)->GetQuestStatus(10277) == QUEST_STATUS_INCOMPLETE )
+            if (((Player*)who)->HasAura(34877,1) && ((Player*)who)->GetQuestStatus(10277) == QUEST_STATUS_INCOMPLETE)
             {
                 float Radius = 10.0;
-                if( m_creature->IsWithinDistInMap(who, Radius) )
+                if (m_creature->IsWithinDistInMap(who, Radius))
                 {
                     ((npc_escortAI*)(m_creature->AI()))->Start(false, false, false, who->GetGUID());
                 }
@@ -223,23 +223,23 @@ CreatureAI* GetAI_npc_custodian_of_time(Creature* pCreature)
 ## npc_marin_noggenfogger
 ######*/
 
-bool GossipHello_npc_marin_noggenfogger(Player *player, Creature *_Creature)
+bool GossipHello_npc_marin_noggenfogger(Player* pPlayer, Creature* pCreature)
 {
-    if( _Creature->isQuestGiver() )
-        player->PrepareQuestMenu( _Creature->GetGUID() );
+    if (pCreature->isQuestGiver())
+        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
 
-    if( _Creature->isVendor() && player->GetQuestRewardStatus(2662) )
-        player->ADD_GOSSIP_ITEM(1, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
+    if (pCreature->isVendor() && pPlayer->GetQuestRewardStatus(2662))
+        pPlayer->ADD_GOSSIP_ITEM(1, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
 
-    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_marin_noggenfogger(Player *player, Creature *_Creature, uint32 sender, uint32 action)
+bool GossipSelect_npc_marin_noggenfogger(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
-    if( action == GOSSIP_ACTION_TRADE )
-        player->SEND_VENDORLIST( _Creature->GetGUID() );
+    if (action == GOSSIP_ACTION_TRADE)
+        pPlayer->SEND_VENDORLIST(pCreature->GetGUID());
 
     return true;
 }
@@ -268,9 +268,9 @@ enum
 
 struct MANGOS_DLL_DECL npc_oox17tnAI : public npc_escortAI
 {
-    npc_oox17tnAI(Creature *c) : npc_escortAI(c)
+    npc_oox17tnAI(Creature* pCreature) : npc_escortAI(pCreature)
     {
-        normFaction = c->getFaction();
+        normFaction = pCreature->getFaction();
         Reset();
     }
 
@@ -361,7 +361,7 @@ CreatureAI* GetAI_npc_oox17tn(Creature* pCreature)
     return (CreatureAI*)oox17AI;
 }
 
-bool QuestAccept_npc_oox17tn(Player* pPlayer, Creature* pCreature, Quest const* pQuest)
+bool QuestAccept_npc_oox17tn(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_RESCUE_OOX_17TN)
     {
@@ -386,34 +386,34 @@ bool QuestAccept_npc_oox17tn(Player* pPlayer, Creature* pCreature, Quest const* 
 
 #define GOSSIP_ITEM_FLIGHT  "Please take me to the master's lair."
 
-bool GossipHello_npc_steward_of_time(Player *player, Creature *_Creature)
+bool GossipHello_npc_steward_of_time(Player* pPlayer, Creature* pCreature)
 {
-    if( _Creature->isQuestGiver() )
-        player->PrepareQuestMenu( _Creature->GetGUID() );
+    if (pCreature->isQuestGiver())
+        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
 
-    if( player->GetQuestStatus(10279) == QUEST_STATUS_INCOMPLETE || player->GetQuestRewardStatus(10279) )
+    if (pPlayer->GetQuestStatus(10279) == QUEST_STATUS_INCOMPLETE || pPlayer->GetQuestRewardStatus(10279))
     {
-        player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_FLIGHT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-        player->SEND_GOSSIP_MENU(9978,_Creature->GetGUID());
+        pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_FLIGHT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+        pPlayer->SEND_GOSSIP_MENU(9978, pCreature->GetGUID());
     }
     else
-        player->SEND_GOSSIP_MENU(9977,_Creature->GetGUID());
+        pPlayer->SEND_GOSSIP_MENU(9977, pCreature->GetGUID());
 
     return true;
 }
 
-bool QuestAccept_npc_steward_of_time(Player *player, Creature *creature, Quest const *quest )
+bool QuestAccept_npc_steward_of_time(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
 {
-    if( quest->GetQuestId() == 10279 )                      //Quest: To The Master's Lair
-        player->CastSpell(player,34891,true);               //(Flight through Caverns)
+    if (pQuest->GetQuestId() == 10279)                      //Quest: To The Master's Lair
+        pPlayer->CastSpell(pPlayer,34891,true);             //(Flight through Caverns)
 
     return false;
 }
 
-bool GossipSelect_npc_steward_of_time(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+bool GossipSelect_npc_steward_of_time(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
-    if( action == GOSSIP_ACTION_INFO_DEF + 1 )
-        player->CastSpell(player,34891,true);               //(Flight through Caverns)
+    if (action == GOSSIP_ACTION_INFO_DEF + 1)
+        pPlayer->CastSpell(pPlayer,34891,true);             //(Flight through Caverns)
 
     return true;
 }
@@ -429,46 +429,46 @@ bool GossipSelect_npc_steward_of_time(Player *player, Creature *_Creature, uint3
 #define GOSSIP_ITEM_NORGANNON_5     "So, what's inside Uldum?"
 #define GOSSIP_ITEM_NORGANNON_6     "I will return when i have the Plates of Uldum."
 
-bool GossipHello_npc_stone_watcher_of_norgannon(Player *player, Creature *_Creature)
+bool GossipHello_npc_stone_watcher_of_norgannon(Player* pPlayer, Creature* pCreature)
 {
-    if( _Creature->isQuestGiver() )
-        player->PrepareQuestMenu( _Creature->GetGUID() );
+    if (pCreature->isQuestGiver())
+        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
 
-    if( player->GetQuestStatus(2954) == QUEST_STATUS_INCOMPLETE )
-        player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM_NORGANNON_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+    if (pPlayer->GetQuestStatus(2954) == QUEST_STATUS_INCOMPLETE)
+        pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_NORGANNON_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
-    player->SEND_GOSSIP_MENU(1674, _Creature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(1674, pCreature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_stone_watcher_of_norgannon(Player *player, Creature *_Creature, uint32 sender, uint32 action)
+bool GossipSelect_npc_stone_watcher_of_norgannon(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
     switch (action)
     {
         case GOSSIP_ACTION_INFO_DEF:
-            player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM_NORGANNON_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-            player->SEND_GOSSIP_MENU(1675, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_NORGANNON_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+            pPlayer->SEND_GOSSIP_MENU(1675, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+1:
-            player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM_NORGANNON_3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-            player->SEND_GOSSIP_MENU(1676, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_NORGANNON_3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+            pPlayer->SEND_GOSSIP_MENU(1676, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+2:
-            player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM_NORGANNON_4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
-            player->SEND_GOSSIP_MENU(1677, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_NORGANNON_4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
+            pPlayer->SEND_GOSSIP_MENU(1677, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+3:
-            player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM_NORGANNON_5, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
-            player->SEND_GOSSIP_MENU(1678, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_NORGANNON_5, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
+            pPlayer->SEND_GOSSIP_MENU(1678, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+4:
-            player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM_NORGANNON_6, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
-            player->SEND_GOSSIP_MENU(1679, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_NORGANNON_6, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
+            pPlayer->SEND_GOSSIP_MENU(1679, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+5:
-            player->CLOSE_GOSSIP_MENU();
-            player->AreaExploredOrEventHappens(2954);
+            pPlayer->CLOSE_GOSSIP_MENU();
+            pPlayer->AreaExploredOrEventHappens(2954);
             break;
     }
     return true;

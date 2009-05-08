@@ -30,7 +30,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_shazzrahAI : public ScriptedAI
 {
-    boss_shazzrahAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_shazzrahAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 ArcaneExplosion_Timer;
     uint32 ShazzrahCurse_Timer;
@@ -102,9 +102,9 @@ struct MANGOS_DLL_DECL boss_shazzrahAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_shazzrah(Creature *_Creature)
+CreatureAI* GetAI_boss_shazzrah(Creature* pCreature)
 {
-    return new boss_shazzrahAI (_Creature);
+    return new boss_shazzrahAI(pCreature);
 }
 
 void AddSC_boss_shazzrah()

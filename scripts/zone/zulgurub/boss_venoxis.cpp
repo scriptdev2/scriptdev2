@@ -39,9 +39,9 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
 {
-    boss_venoxisAI(Creature *c) : ScriptedAI(c)
+    boss_venoxisAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -179,9 +179,9 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_venoxis(Creature *_Creature)
+CreatureAI* GetAI_boss_venoxis(Creature* pCreature)
 {
-    return new boss_venoxisAI (_Creature);
+    return new boss_venoxisAI(pCreature);
 }
 
 void AddSC_boss_venoxis()

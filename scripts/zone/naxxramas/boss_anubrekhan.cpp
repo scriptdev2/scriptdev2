@@ -41,12 +41,12 @@ EndScriptData */
 //spellId invalid
 #define SPELL_SUMMONGUARD   29508                           //Summons 1 crypt guard at targeted location
 
-#define SPELL_SELF_SPAWN_5  29105                           //This spawns 5 corpse scarabs ontop of us (most likely the player casts this on death)
+#define SPELL_SELF_SPAWN_5  29105                           //This spawns 5 corpse scarabs ontop of us (most likely the pPlayer casts this on death)
 #define SPELL_SELF_SPAWN_10 28864                           //This is used by the crypt guards when they die
 
 struct MANGOS_DLL_DECL boss_anubrekhanAI : public ScriptedAI
 {
-    boss_anubrekhanAI(Creature *c) : ScriptedAI(c)
+    boss_anubrekhanAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         HasTaunted = false;
         Reset();
@@ -140,9 +140,9 @@ struct MANGOS_DLL_DECL boss_anubrekhanAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_anubrekhan(Creature *_Creature)
+CreatureAI* GetAI_boss_anubrekhan(Creature* pCreature)
 {
-    return new boss_anubrekhanAI (_Creature);
+    return new boss_anubrekhanAI(pCreature);
 }
 
 void AddSC_boss_anubrekhan()

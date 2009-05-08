@@ -29,7 +29,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_azshir_the_sleeplessAI : public ScriptedAI
 {
-    boss_azshir_the_sleeplessAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_azshir_the_sleeplessAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 SoulSiphon_Timer;
     uint32 CallOftheGrave_Timer;
@@ -48,7 +48,7 @@ struct MANGOS_DLL_DECL boss_azshir_the_sleeplessAI : public ScriptedAI
             return;
 
         //If we are <50% hp cast Soul Siphon rank 1
-        if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 50 && !m_creature->IsNonMeleeSpellCasted(false))
+        if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 50 && !m_creature->IsNonMeleeSpellCasted(false))
         {
             //SoulSiphon_Timer
             if (SoulSiphon_Timer < diff)
@@ -78,9 +78,9 @@ struct MANGOS_DLL_DECL boss_azshir_the_sleeplessAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_azshir_the_sleepless(Creature *_Creature)
+CreatureAI* GetAI_boss_azshir_the_sleepless(Creature* pCreature)
 {
-    return new boss_azshir_the_sleeplessAI (_Creature);
+    return new boss_azshir_the_sleeplessAI(pCreature);
 }
 
 void AddSC_boss_azshir_the_sleepless()

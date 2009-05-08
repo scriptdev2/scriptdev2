@@ -48,13 +48,13 @@ struct MANGOS_DLL_DECL instance_scarlet_monastery : public ScriptedInstance
             Encounter[i] = NOT_STARTED;
     }
 
-    void OnCreatureCreate(Creature *creature, uint32 creature_entry)
+    void OnCreatureCreate(Creature* pCreature, uint32 creature_entry)
     {
-        switch(creature->GetEntry())
+        switch(pCreature->GetEntry())
         {
-            case 3976: MograineGUID = creature->GetGUID(); break;
-            case 3977: WhitemaneGUID = creature->GetGUID(); break;
-            case 3981: VorrelGUID = creature->GetGUID(); break;
+            case 3976: MograineGUID = pCreature->GetGUID(); break;
+            case 3977: WhitemaneGUID = pCreature->GetGUID(); break;
+            case 3981: VorrelGUID = pCreature->GetGUID(); break;
         }
     }
 

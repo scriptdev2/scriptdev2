@@ -32,7 +32,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_theolenkrastinovAI : public ScriptedAI
 {
-    boss_theolenkrastinovAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_theolenkrastinovAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 Rend_Timer;
     uint32 Cleave_Timer;
@@ -48,7 +48,7 @@ struct MANGOS_DLL_DECL boss_theolenkrastinovAI : public ScriptedAI
     void JustDied(Unit *killer)
     {
         ScriptedInstance *pInstance = (m_creature->GetInstanceData()) ? ((ScriptedInstance*)m_creature->GetInstanceData()) : NULL;
-        if(pInstance)
+        if (pInstance)
         {
             pInstance->SetData(DATA_DOCTORTHEOLENKRASTINOV_DEATH, 0);
 
@@ -77,7 +77,7 @@ struct MANGOS_DLL_DECL boss_theolenkrastinovAI : public ScriptedAI
         }else Cleave_Timer -= diff;
 
         //Frenzy_Timer
-        if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 26 )
+        if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 26)
         {
             if (Frenzy_Timer < diff)
             {
@@ -90,9 +90,9 @@ struct MANGOS_DLL_DECL boss_theolenkrastinovAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_theolenkrastinov(Creature *_Creature)
+CreatureAI* GetAI_boss_theolenkrastinov(Creature* pCreature)
 {
-    return new boss_theolenkrastinovAI (_Creature);
+    return new boss_theolenkrastinovAI(pCreature);
 }
 
 void AddSC_boss_theolenkrastinov()

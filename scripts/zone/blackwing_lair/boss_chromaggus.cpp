@@ -56,7 +56,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
 {
-    boss_chromaggusAI(Creature *c) : ScriptedAI(c)
+    boss_chromaggusAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         //Select the 2 breaths that we are going to use until despawned
         //5 possiblities for the first breath, 4 for the second, 20 total possiblites
@@ -177,7 +177,7 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
         Shimmer_Timer = 0;                                  //Time till we change vurlnerabilites
         Breath1_Timer = 30000;                              //First breath is 30 seconds
         Breath2_Timer = 60000;                              //Second is 1 minute so that we can alternate
-        Affliction_Timer = 10000;                           //This is special - 5 seconds means that we cast this on 1 player every 5 sconds
+        Affliction_Timer = 10000;                           //This is special - 5 seconds means that we cast this on 1 pPlayer every 5 sconds
         Frenzy_Timer = 15000;
 
         Enraged = false;
@@ -185,7 +185,7 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //Shimmer_Timer Timer
@@ -295,9 +295,9 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_chromaggus(Creature *_Creature)
+CreatureAI* GetAI_boss_chromaggus(Creature* pCreature)
 {
-    return new boss_chromaggusAI (_Creature);
+    return new boss_chromaggusAI(pCreature);
 }
 
 void AddSC_boss_chromaggus()

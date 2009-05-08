@@ -37,24 +37,24 @@ struct MANGOS_DLL_DECL instance_zulgurub : public ScriptedInstance
     uint64 ThekalGUID;
     uint64 JindoGUID;
 
-    void OnCreatureCreate (Creature *creature, uint32 creature_entry)
+    void OnCreatureCreate(Creature* pCreature, uint32 creature_entry)
     {
-        switch (creature->GetEntry())
+        switch (pCreature->GetEntry())
         {
             case 11347:
-                LorKhanGUID = creature->GetGUID();
+                LorKhanGUID = pCreature->GetGUID();
                 break;
 
             case 11348:
-                ZathGUID = creature->GetGUID();
+                ZathGUID = pCreature->GetGUID();
                 break;
 
             case 14509:
-                ThekalGUID = creature->GetGUID();
+                ThekalGUID = pCreature->GetGUID();
                 break;
 
             case 11380:
-                JindoGUID = creature->GetGUID();
+                JindoGUID = pCreature->GetGUID();
                 break;
         }
     }
@@ -84,64 +84,64 @@ struct MANGOS_DLL_DECL instance_zulgurub : public ScriptedInstance
         switch(type)
         {
             case DATA_JEKLIKISDEAD:
-                if(IsBossDied[0])
+                if (IsBossDied[0])
                     return 1;
                 break;
 
             case DATA_VENOXISISDEAD:
-                if(IsBossDied[1])
+                if (IsBossDied[1])
                     return 1;
                 break;
 
             case DATA_MARLIISDEAD:
-                if(IsBossDied[2])
+                if (IsBossDied[2])
                     return 1;
                 break;
 
             case DATA_THEKALISDEAD:
-                if(IsBossDied[3])
+                if (IsBossDied[3])
                     return 1;
                 break;
 
             case DATA_ARLOKKISDEAD:
-                if(IsBossDied[4])
+                if (IsBossDied[4])
                     return 1;
                 break;
 
             case DATA_LORKHANISDEAD:
-                if(IsBossDied[5])
+                if (IsBossDied[5])
                     return 1;
                 break;
 
             case DATA_ZATHISDEAD:
-                if(IsBossDied[6])
+                if (IsBossDied[6])
                     return 1;
                 break;
 
             case DATA_THEKALISFAKEDEAD:
-                if(IsBossDied[7])
+                if (IsBossDied[7])
                     return 1;
                 break;
 
             case DATA_OHGANISDEAD:
-                if(IsBossDied[8])
+                if (IsBossDied[8])
                     return 1;
                 break;
 
                 //Boss is not dead. Resetting function for some bosses after killing them but whiping at the complete encounter.
 
             case DATA_THEKALISALIVE:
-                if(IsBossDied[3])
+                if (IsBossDied[3])
                     return 0;
                 break;
 
             case DATA_LORKHANISALIVE:
-                if(IsBossDied[5])
+                if (IsBossDied[5])
                     return 0;
                 break;
 
             case DATA_ZATHISALIVE:
-                if(IsBossDied[6])
+                if (IsBossDied[6])
                     return 0;
                 break;
         }

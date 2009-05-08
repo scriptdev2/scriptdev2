@@ -35,29 +35,29 @@ EndContentData */
 
 #define QUEST_5727  5727
 
-bool GossipHello_npc_neeru_fireblade(Player *player, Creature *_Creature)
+bool GossipHello_npc_neeru_fireblade(Player* pPlayer, Creature* pCreature)
 {
-    if (_Creature->isQuestGiver())
-        player->PrepareQuestMenu( _Creature->GetGUID() );
+    if (pCreature->isQuestGiver())
+        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
 
-    if (player->GetQuestStatus(QUEST_5727) == QUEST_STATUS_INCOMPLETE)
-        player->ADD_GOSSIP_ITEM(0, "You may speak frankly, Neeru...", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+    if (pPlayer->GetQuestStatus(QUEST_5727) == QUEST_STATUS_INCOMPLETE)
+        pPlayer->ADD_GOSSIP_ITEM(0, "You may speak frankly, Neeru...", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-    player->SEND_GOSSIP_MENU(4513, _Creature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(4513, pCreature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_neeru_fireblade(Player *player, Creature *_Creature, uint32 sender, uint32 action)
+bool GossipSelect_npc_neeru_fireblade(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
     switch (action)
     {
         case GOSSIP_ACTION_INFO_DEF+1:
-            player->ADD_GOSSIP_ITEM(0, "[PH] ...", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-            player->SEND_GOSSIP_MENU(4513, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, "[PH] ...", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+            pPlayer->SEND_GOSSIP_MENU(4513, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+2:
-            player->CLOSE_GOSSIP_MENU();
-            player->AreaExploredOrEventHappens(QUEST_5727);
+            pPlayer->CLOSE_GOSSIP_MENU();
+            pPlayer->AreaExploredOrEventHappens(QUEST_5727);
             break;
     }
     return true;
@@ -74,7 +74,7 @@ enum
 
 struct MANGOS_DLL_DECL npc_shenthulAI : public ScriptedAI
 {
-    npc_shenthulAI(Creature* c) : ScriptedAI(c) { Reset(); }
+    npc_shenthulAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
     bool CanTalk;
     bool CanEmote;
@@ -91,13 +91,13 @@ struct MANGOS_DLL_DECL npc_shenthulAI : public ScriptedAI
         playerGUID = 0;
     }
 
-    void ReciveEmote(Player *player, uint32 emote)
+    void ReciveEmote(Player* pPlayer, uint32 emote)
     {
-        if (emote == TEXTEMOTE_SALUTE && player->GetQuestStatus(QUEST_SHATTERED_SALUTE) == QUEST_STATUS_INCOMPLETE)
+        if (emote == TEXTEMOTE_SALUTE && pPlayer->GetQuestStatus(QUEST_SHATTERED_SALUTE) == QUEST_STATUS_INCOMPLETE)
         {
             if (CanEmote)
             {
-                player->AreaExploredOrEventHappens(QUEST_SHATTERED_SALUTE);
+                pPlayer->AreaExploredOrEventHappens(QUEST_SHATTERED_SALUTE);
                 Reset();
             }
         }
@@ -135,17 +135,17 @@ struct MANGOS_DLL_DECL npc_shenthulAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_shenthul(Creature *_Creature)
+CreatureAI* GetAI_npc_shenthul(Creature* pCreature)
 {
-    return new npc_shenthulAI(_Creature);
+    return new npc_shenthulAI(pCreature);
 }
 
-bool QuestAccept_npc_shenthul(Player* player, Creature* creature, Quest const* quest)
+bool QuestAccept_npc_shenthul(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
 {
-    if (quest->GetQuestId() == QUEST_SHATTERED_SALUTE)
+    if (pQuest->GetQuestId() == QUEST_SHATTERED_SALUTE)
     {
-        ((npc_shenthulAI*)creature->AI())->CanTalk = true;
-        ((npc_shenthulAI*)creature->AI())->playerGUID = player->GetGUID();
+        ((npc_shenthulAI*)pCreature->AI())->CanTalk = true;
+        ((npc_shenthulAI*)pCreature->AI())->playerGUID = pPlayer->GetGUID();
     }
     return true;
 }
@@ -162,7 +162,7 @@ bool QuestAccept_npc_shenthul(Player* player, Creature* creature, Quest const* q
 //TODO: verify abilities/timers
 struct MANGOS_DLL_DECL npc_thrall_warchiefAI : public ScriptedAI
 {
-    npc_thrall_warchiefAI(Creature* c) : ScriptedAI(c) { Reset(); }
+    npc_thrall_warchiefAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
     uint32 ChainLightning_Timer;
     uint32 Shock_Timer;
@@ -175,16 +175,16 @@ struct MANGOS_DLL_DECL npc_thrall_warchiefAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if(!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if( ChainLightning_Timer < diff )
+        if (ChainLightning_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_CHAIN_LIGHTNING);
             ChainLightning_Timer = 9000;
         }else ChainLightning_Timer -= diff;
 
-        if( Shock_Timer < diff )
+        if (Shock_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_SHOCK);
             Shock_Timer = 15000;
@@ -193,54 +193,54 @@ struct MANGOS_DLL_DECL npc_thrall_warchiefAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_npc_thrall_warchief(Creature *_Creature)
+CreatureAI* GetAI_npc_thrall_warchief(Creature* pCreature)
 {
-    return new npc_thrall_warchiefAI (_Creature);
+    return new npc_thrall_warchiefAI(pCreature);
 }
 
-bool GossipHello_npc_thrall_warchief(Player *player, Creature *_Creature)
+bool GossipHello_npc_thrall_warchief(Player* pPlayer, Creature* pCreature)
 {
-    if (_Creature->isQuestGiver())
-        player->PrepareQuestMenu( _Creature->GetGUID() );
+    if (pCreature->isQuestGiver())
+        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
 
-    if (player->GetQuestStatus(QUEST_6566) == QUEST_STATUS_INCOMPLETE)
-        player->ADD_GOSSIP_ITEM(0, "Please share your wisdom with me, Warchief.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+    if (pPlayer->GetQuestStatus(QUEST_6566) == QUEST_STATUS_INCOMPLETE)
+        pPlayer->ADD_GOSSIP_ITEM(0, "Please share your wisdom with me, Warchief.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_thrall_warchief(Player *player, Creature *_Creature, uint32 sender, uint32 action)
+bool GossipSelect_npc_thrall_warchief(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
     switch (action)
     {
         case GOSSIP_ACTION_INFO_DEF+1:
-            player->ADD_GOSSIP_ITEM(0, "What discoveries?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-            player->SEND_GOSSIP_MENU(5733, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, "What discoveries?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+            pPlayer->SEND_GOSSIP_MENU(5733, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+2:
-            player->ADD_GOSSIP_ITEM(0, "Usurper?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
-            player->SEND_GOSSIP_MENU(5734, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, "Usurper?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
+            pPlayer->SEND_GOSSIP_MENU(5734, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+3:
-            player->ADD_GOSSIP_ITEM(0, "With all due respect, Warchief - why not allow them to be destroyed? Does this not strengthen our position?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
-            player->SEND_GOSSIP_MENU(5735, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, "With all due respect, Warchief - why not allow them to be destroyed? Does this not strengthen our position?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
+            pPlayer->SEND_GOSSIP_MENU(5735, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+4:
-            player->ADD_GOSSIP_ITEM(0, "I... I did not think of it that way, Warchief.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
-            player->SEND_GOSSIP_MENU(5736, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, "I... I did not think of it that way, Warchief.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
+            pPlayer->SEND_GOSSIP_MENU(5736, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+5:
-            player->ADD_GOSSIP_ITEM(0, "I live only to serve, Warchief! My life is empty and meaningless without your guidance.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+6);
-            player->SEND_GOSSIP_MENU(5737, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, "I live only to serve, Warchief! My life is empty and meaningless without your guidance.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+6);
+            pPlayer->SEND_GOSSIP_MENU(5737, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+6:
-            player->ADD_GOSSIP_ITEM(0, "Of course, Warchief!", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+7);
-            player->SEND_GOSSIP_MENU(5738, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, "Of course, Warchief!", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+7);
+            pPlayer->SEND_GOSSIP_MENU(5738, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+7:
-            player->CLOSE_GOSSIP_MENU();
-            player->AreaExploredOrEventHappens(QUEST_6566);
+            pPlayer->CLOSE_GOSSIP_MENU();
+            pPlayer->AreaExploredOrEventHappens(QUEST_6566);
             break;
     }
     return true;

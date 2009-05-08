@@ -1454,7 +1454,7 @@ void DoScriptText(int32 textEntry, WorldObject* pSource, Unit* target)
 
     debug_log("SD2: DoScriptText: text entry=%i, Sound=%u, Type=%u, Language=%u, Emote=%u",textEntry,(*i).second.SoundId,(*i).second.Type,(*i).second.Language,(*i).second.Emote);
 
-    if((*i).second.SoundId)
+    if ((*i).second.SoundId)
     {
         if (GetSoundEntriesStore()->LookupEntry((*i).second.SoundId))
             pSource->PlayDirectSound((*i).second.SoundId);
@@ -1462,7 +1462,7 @@ void DoScriptText(int32 textEntry, WorldObject* pSource, Unit* target)
             error_log("SD2: DoScriptText entry %i tried to process invalid sound id %u.",textEntry,(*i).second.SoundId);
     }
 
-    if((*i).second.Emote)
+    if ((*i).second.Emote)
     {
         if (pSource->GetTypeId() == TYPEID_UNIT || pSource->GetTypeId() == TYPEID_PLAYER)
         {
@@ -1535,174 +1535,174 @@ char const* ScriptsVersion()
 }
 
 MANGOS_DLL_EXPORT
-bool GossipHello ( Player * player, Creature *_Creature )
+bool GossipHello(Player* pPlayer, Creature* pCreature)
 {
-    Script *tmpscript = m_scripts[_Creature->GetScriptId()];
+    Script *tmpscript = m_scripts[pCreature->GetScriptId()];
     if (!tmpscript || !tmpscript->pGossipHello) return false;
 
-    player->PlayerTalkClass->ClearMenus();
-    return tmpscript->pGossipHello(player,_Creature);
+    pPlayer->PlayerTalkClass->ClearMenus();
+    return tmpscript->pGossipHello(pPlayer, pCreature);
 }
 
 MANGOS_DLL_EXPORT
-bool GossipSelect( Player *player, Creature *_Creature, uint32 sender, uint32 action )
+bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
     debug_log("SD2: Gossip selection, sender: %d, action: %d",sender, action);
 
-    Script *tmpscript = m_scripts[_Creature->GetScriptId()];
+    Script *tmpscript = m_scripts[pCreature->GetScriptId()];
     if (!tmpscript || !tmpscript->pGossipSelect) return false;
 
-    player->PlayerTalkClass->ClearMenus();
-    return tmpscript->pGossipSelect(player,_Creature,sender,action);
+    pPlayer->PlayerTalkClass->ClearMenus();
+    return tmpscript->pGossipSelect(pPlayer, pCreature,sender,action);
 }
 
 MANGOS_DLL_EXPORT
-bool GossipSelectWithCode( Player *player, Creature *_Creature, uint32 sender, uint32 action, const char* sCode )
+bool GossipSelectWithCode(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action, const char* sCode)
 {
     debug_log("SD2: Gossip selection with code, sender: %d, action: %d",sender, action);
 
-    Script *tmpscript = m_scripts[_Creature->GetScriptId()];
+    Script *tmpscript = m_scripts[pCreature->GetScriptId()];
     if (!tmpscript || !tmpscript->pGossipSelectWithCode) return false;
 
-    player->PlayerTalkClass->ClearMenus();
-    return tmpscript->pGossipSelectWithCode(player,_Creature,sender,action,sCode);
+    pPlayer->PlayerTalkClass->ClearMenus();
+    return tmpscript->pGossipSelectWithCode(pPlayer, pCreature,sender,action,sCode);
 }
 
 MANGOS_DLL_EXPORT
-bool QuestAccept( Player *player, Creature *_Creature, Quest const *_Quest )
+bool QuestAccept(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
 {
-    Script *tmpscript = m_scripts[_Creature->GetScriptId()];
+    Script *tmpscript = m_scripts[pCreature->GetScriptId()];
     if (!tmpscript || !tmpscript->pQuestAccept) return false;
 
-    player->PlayerTalkClass->ClearMenus();
-    return tmpscript->pQuestAccept(player,_Creature,_Quest);
+    pPlayer->PlayerTalkClass->ClearMenus();
+    return tmpscript->pQuestAccept(pPlayer, pCreature, pQuest);
 }
 
 MANGOS_DLL_EXPORT
-bool QuestSelect( Player *player, Creature *_Creature, Quest const *_Quest )
+bool QuestSelect(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
 {
-    Script *tmpscript = m_scripts[_Creature->GetScriptId()];
+    Script *tmpscript = m_scripts[pCreature->GetScriptId()];
     if (!tmpscript || !tmpscript->pQuestSelect) return false;
 
-    player->PlayerTalkClass->ClearMenus();
-    return tmpscript->pQuestSelect(player,_Creature,_Quest);
+    pPlayer->PlayerTalkClass->ClearMenus();
+    return tmpscript->pQuestSelect(pPlayer, pCreature, pQuest);
 }
 
 MANGOS_DLL_EXPORT
-bool QuestComplete( Player *player, Creature *_Creature, Quest const *_Quest )
+bool QuestComplete(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
 {
-    Script *tmpscript = m_scripts[_Creature->GetScriptId()];
+    Script *tmpscript = m_scripts[pCreature->GetScriptId()];
     if (!tmpscript || !tmpscript->pQuestComplete) return false;
 
-    player->PlayerTalkClass->ClearMenus();
-    return tmpscript->pQuestComplete(player,_Creature,_Quest);
+    pPlayer->PlayerTalkClass->ClearMenus();
+    return tmpscript->pQuestComplete(pPlayer, pCreature, pQuest);
 }
 
 MANGOS_DLL_EXPORT
-bool ChooseReward( Player *player, Creature *_Creature, Quest const *_Quest, uint32 opt )
+bool ChooseReward(Player* pPlayer, Creature* pCreature, const Quest* pQuest, uint32 opt)
 {
-    Script *tmpscript = m_scripts[_Creature->GetScriptId()];
+    Script *tmpscript = m_scripts[pCreature->GetScriptId()];
     if (!tmpscript || !tmpscript->pChooseReward) return false;
 
-    player->PlayerTalkClass->ClearMenus();
-    return tmpscript->pChooseReward(player,_Creature,_Quest,opt);
+    pPlayer->PlayerTalkClass->ClearMenus();
+    return tmpscript->pChooseReward(pPlayer, pCreature, pQuest, opt);
 }
 
 MANGOS_DLL_EXPORT
-uint32 NPCDialogStatus( Player *player, Creature *_Creature )
+uint32 NPCDialogStatus(Player* pPlayer, Creature* pCreature)
 {
-    Script *tmpscript = m_scripts[_Creature->GetScriptId()];
+    Script *tmpscript = m_scripts[pCreature->GetScriptId()];
     if (!tmpscript || !tmpscript->pNPCDialogStatus) return 100;
 
-    player->PlayerTalkClass->ClearMenus();
-    return tmpscript->pNPCDialogStatus(player,_Creature);
+    pPlayer->PlayerTalkClass->ClearMenus();
+    return tmpscript->pNPCDialogStatus(pPlayer, pCreature);
 }
 
 MANGOS_DLL_EXPORT
-uint32 GODialogStatus( Player *player, GameObject *_GO )
+uint32 GODialogStatus(Player* pPlayer, GameObject *_GO)
 {
     Script *tmpscript = m_scripts[_GO->GetGOInfo()->ScriptId];
     if (!tmpscript || !tmpscript->pGODialogStatus) return 100;
 
-    player->PlayerTalkClass->ClearMenus();
-    return tmpscript->pGODialogStatus(player,_GO);
+    pPlayer->PlayerTalkClass->ClearMenus();
+    return tmpscript->pGODialogStatus(pPlayer,_GO);
 }
 
 MANGOS_DLL_EXPORT
-bool ItemHello( Player *player, Item *_Item, Quest const *_Quest )
+bool ItemHello(Player* pPlayer, Item *_Item, const Quest* pQuest)
 {
     Script *tmpscript = m_scripts[_Item->GetProto()->ScriptId];
     if (!tmpscript || !tmpscript->pItemHello) return false;
 
-    player->PlayerTalkClass->ClearMenus();
-    return tmpscript->pItemHello(player,_Item,_Quest);
+    pPlayer->PlayerTalkClass->ClearMenus();
+    return tmpscript->pItemHello(pPlayer,_Item, pQuest);
 }
 
 MANGOS_DLL_EXPORT
-bool ItemQuestAccept( Player *player, Item *_Item, Quest const *_Quest )
+bool ItemQuestAccept(Player* pPlayer, Item *_Item, const Quest* pQuest)
 {
     Script *tmpscript = m_scripts[_Item->GetProto()->ScriptId];
     if (!tmpscript || !tmpscript->pItemQuestAccept) return false;
 
-    player->PlayerTalkClass->ClearMenus();
-    return tmpscript->pItemQuestAccept(player,_Item,_Quest);
+    pPlayer->PlayerTalkClass->ClearMenus();
+    return tmpscript->pItemQuestAccept(pPlayer,_Item, pQuest);
 }
 
 MANGOS_DLL_EXPORT
-bool GOHello( Player *player, GameObject *_GO )
+bool GOHello(Player* pPlayer, GameObject *_GO)
 {
     Script *tmpscript = m_scripts[_GO->GetGOInfo()->ScriptId];
     if (!tmpscript || !tmpscript->pGOHello) return false;
 
-    player->PlayerTalkClass->ClearMenus();
-    return tmpscript->pGOHello(player,_GO);
+    pPlayer->PlayerTalkClass->ClearMenus();
+    return tmpscript->pGOHello(pPlayer,_GO);
 }
 
 MANGOS_DLL_EXPORT
-bool GOQuestAccept( Player *player, GameObject *_GO, Quest const *_Quest )
+bool GOQuestAccept(Player* pPlayer, GameObject *_GO, const Quest* pQuest)
 {
     Script *tmpscript = m_scripts[_GO->GetGOInfo()->ScriptId];
     if (!tmpscript || !tmpscript->pGOQuestAccept) return false;
 
-    player->PlayerTalkClass->ClearMenus();
-    return tmpscript->pGOQuestAccept(player,_GO,_Quest);
+    pPlayer->PlayerTalkClass->ClearMenus();
+    return tmpscript->pGOQuestAccept(pPlayer,_GO, pQuest);
 }
 
 MANGOS_DLL_EXPORT
-bool GOChooseReward( Player *player, GameObject *_GO, Quest const *_Quest, uint32 opt )
+bool GOChooseReward(Player* pPlayer, GameObject *_GO, const Quest* pQuest, uint32 opt)
 {
     Script *tmpscript = m_scripts[_GO->GetGOInfo()->ScriptId];
     if (!tmpscript || !tmpscript->pGOChooseReward) return false;
 
-    player->PlayerTalkClass->ClearMenus();
-    return tmpscript->pGOChooseReward(player,_GO,_Quest,opt);
+    pPlayer->PlayerTalkClass->ClearMenus();
+    return tmpscript->pGOChooseReward(pPlayer,_GO, pQuest,opt);
 }
 
 MANGOS_DLL_EXPORT
-bool AreaTrigger( Player *player, AreaTriggerEntry * atEntry)
+bool AreaTrigger(Player* pPlayer, AreaTriggerEntry * atEntry)
 {
     Script *tmpscript = m_scripts[GetAreaTriggerScriptId(atEntry->id)];
     if (!tmpscript || !tmpscript->pAreaTrigger) return false;
 
-    return tmpscript->pAreaTrigger(player, atEntry);
+    return tmpscript->pAreaTrigger(pPlayer, atEntry);
 }
 
 MANGOS_DLL_EXPORT
-CreatureAI* GetAI(Creature *_Creature)
+CreatureAI* GetAI(Creature* pCreature)
 {
-    Script *tmpscript = m_scripts[_Creature->GetScriptId()];
+    Script *tmpscript = m_scripts[pCreature->GetScriptId()];
     if (!tmpscript || !tmpscript->GetAI) return NULL;
 
-    return tmpscript->GetAI(_Creature);
+    return tmpscript->GetAI(pCreature);
 }
 
 MANGOS_DLL_EXPORT
-bool ItemUse( Player *player, Item* _Item, SpellCastTargets const& targets)
+bool ItemUse(Player* pPlayer, Item* _Item, SpellCastTargets const& targets)
 {
     Script *tmpscript = m_scripts[_Item->GetProto()->ScriptId];
     if (!tmpscript || !tmpscript->pItemUse) return false;
 
-    return tmpscript->pItemUse(player,_Item,targets);
+    return tmpscript->pItemUse(pPlayer,_Item,targets);
 }
 
 MANGOS_DLL_EXPORT

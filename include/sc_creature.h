@@ -100,7 +100,7 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     void KilledUnit(Unit*){}
 
     // Called when the creature summon successfully other creature
-    void JustSummoned(Creature* ) {}
+    void JustSummoned(Creature*) {}
 
     // Called when a summoned creature is despawned
     void SummonedCreatureDespawn(Creature* /*unit*/) {}
@@ -207,7 +207,7 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
 
 struct MANGOS_DLL_DECL Scripted_NoMovementAI : public ScriptedAI
 {
-    Scripted_NoMovementAI(Creature* creature) : ScriptedAI(creature) {}
+    Scripted_NoMovementAI(Creature* pCreature) : ScriptedAI(pCreature) {}
 
     //Called if IsVisible(Unit *who) is true at each *who move
     void MoveInLineOfSight(Unit *);

@@ -95,7 +95,7 @@ static InfernalPoint InfernalPoints[] =
 //---------Infernal code first
 struct MANGOS_DLL_DECL netherspite_infernalAI : public ScriptedAI
 {
-    netherspite_infernalAI(Creature *c) : ScriptedAI(c) ,
+    netherspite_infernalAI(Creature* pCreature) : ScriptedAI(pCreature) ,
         malchezaar(0), HellfireTimer(0), CleanupTimer(0), point(NULL) {Reset();}
 
     uint32 HellfireTimer;
@@ -110,7 +110,7 @@ struct MANGOS_DLL_DECL netherspite_infernalAI : public ScriptedAI
     {
         if (HellfireTimer)
         {
-            if(HellfireTimer <= diff)
+            if (HellfireTimer <= diff)
             {
                 DoCast(m_creature, SPELL_HELLFIRE);
                 HellfireTimer = 0;
@@ -156,7 +156,7 @@ struct MANGOS_DLL_DECL netherspite_infernalAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
 {
-    boss_malchezaarAI(Creature *c) : ScriptedAI(c)
+    boss_malchezaarAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         for(uint8 i =0; i < 2; ++i)
             axes[i] = 0;
@@ -293,12 +293,12 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
         //begin + 1 , so we don't target the one with the highest threat
         std::list<HostilReference *>::iterator itr = t_list.begin();
         std::advance(itr, 1);
-        for( ; itr!= t_list.end(); ++itr)                   //store the threat list in a different container
+        for(; itr!= t_list.end(); ++itr)                   //store the threat list in a different container
         {
             Unit *target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
                                                             //only on alive players
-            if(target && target->isAlive() && target->GetTypeId() == TYPEID_PLAYER )
-                targets.push_back( target);
+            if (target && target->isAlive() && target->GetTypeId() == TYPEID_PLAYER)
+                targets.push_back(target);
         }
 
         //cut down to size if we have more than 5 targets
@@ -375,7 +375,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         if (EnfeebleResetTimer)
@@ -577,7 +577,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
                 m_creature->resetAttackTimer();
             }
             //Check for offhand attack
-            if (m_creature->isAttackReady(OFF_ATTACK) && m_creature->getVictim() )
+            if (m_creature->isAttackReady(OFF_ATTACK) && m_creature->getVictim())
             {
                 m_creature->AttackerStateUpdate(m_creature->getVictim(), OFF_ATTACK);
                 m_creature->resetAttackTimer(OFF_ATTACK);
@@ -606,14 +606,14 @@ void netherspite_infernalAI::Cleanup()
         ((boss_malchezaarAI*)((Creature*)pMalchezaar)->AI())->Cleanup(m_creature, point);
 }
 
-CreatureAI* GetAI_netherspite_infernal(Creature *_Creature)
+CreatureAI* GetAI_netherspite_infernal(Creature* pCreature)
 {
-    return new netherspite_infernalAI (_Creature);
+    return new netherspite_infernalAI(pCreature);
 }
 
-CreatureAI* GetAI_boss_malchezaar(Creature *_Creature)
+CreatureAI* GetAI_boss_malchezaar(Creature* pCreature)
 {
-    return new boss_malchezaarAI (_Creature);
+    return new boss_malchezaarAI(pCreature);
 }
 
 void AddSC_netherspite_infernal()

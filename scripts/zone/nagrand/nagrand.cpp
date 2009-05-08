@@ -41,7 +41,7 @@ struct MANGOS_DLL_DECL mob_shattered_rumblerAI : public ScriptedAI
 {
     bool Spawn;
 
-    mob_shattered_rumblerAI(Creature *c) : ScriptedAI(c) {Reset();}
+    mob_shattered_rumblerAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     void Reset()
     {
@@ -50,7 +50,7 @@ struct MANGOS_DLL_DECL mob_shattered_rumblerAI : public ScriptedAI
 
     void SpellHit(Unit *Hitter, const SpellEntry *Spellkind)
     {
-        if(Spellkind->Id == 32001 && !Spawn)
+        if (Spellkind->Id == 32001 && !Spawn)
         {
             float x = m_creature->GetPositionX();
             float y = m_creature->GetPositionY();
@@ -65,9 +65,9 @@ struct MANGOS_DLL_DECL mob_shattered_rumblerAI : public ScriptedAI
         return;
     }
 };
-CreatureAI* GetAI_mob_shattered_rumbler(Creature *_Creature)
+CreatureAI* GetAI_mob_shattered_rumbler(Creature* pCreature)
 {
-    return new mob_shattered_rumblerAI (_Creature);
+    return new mob_shattered_rumblerAI(pCreature);
 }
 
 /*######
@@ -83,7 +83,7 @@ CreatureAI* GetAI_mob_shattered_rumbler(Creature *_Creature)
 
 struct MANGOS_DLL_DECL mob_lumpAI : public ScriptedAI
 {
-    mob_lumpAI(Creature *c) : ScriptedAI(c)
+    mob_lumpAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         bReset = false;
         Reset();
@@ -188,35 +188,35 @@ CreatureAI* GetAI_mob_lump(Creature *_creature)
     return new mob_lumpAI(_creature);
 }
 
-bool GossipHello_mob_lump(Player *player, Creature *_Creature)
+bool GossipHello_mob_lump(Player* pPlayer, Creature* pCreature)
 {
-    if (player->GetQuestStatus(9918) == QUEST_STATUS_INCOMPLETE)
-        player->ADD_GOSSIP_ITEM( 0, "I need answers, ogre!", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+    if (pPlayer->GetQuestStatus(9918) == QUEST_STATUS_INCOMPLETE)
+        pPlayer->ADD_GOSSIP_ITEM(0, "I need answers, ogre!", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
-    player->SEND_GOSSIP_MENU(9352, _Creature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(9352, pCreature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_mob_lump(Player *player, Creature *_Creature, uint32 sender, uint32 action)
+bool GossipSelect_mob_lump(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
     switch (action)
     {
         case GOSSIP_ACTION_INFO_DEF:
-            player->ADD_GOSSIP_ITEM( 0, "Why are Boulderfist out this far? You know that this is Kurenai territory.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-            player->SEND_GOSSIP_MENU(9353, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, "Why are Boulderfist out this far? You know that this is Kurenai territory.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+            pPlayer->SEND_GOSSIP_MENU(9353, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+1:
-            player->ADD_GOSSIP_ITEM( 0, "And you think you can just eat anything you want? You're obviously trying to eat the Broken of Telaar.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-            player->SEND_GOSSIP_MENU(9354, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, "And you think you can just eat anything you want? You're obviously trying to eat the Broken of Telaar.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+            pPlayer->SEND_GOSSIP_MENU(9354, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+2:
-            player->ADD_GOSSIP_ITEM( 0, "This means war, Lump! War I say!", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-            player->SEND_GOSSIP_MENU(9355, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, "This means war, Lump! War I say!", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+            pPlayer->SEND_GOSSIP_MENU(9355, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+3:
-            player->SEND_GOSSIP_MENU(9356, _Creature->GetGUID());
-            player->TalkedToCreature(18354, _Creature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(9356, pCreature->GetGUID());
+            pPlayer->TalkedToCreature(18354, pCreature->GetGUID());
             break;
     }
     return true;
@@ -228,7 +228,7 @@ bool GossipSelect_mob_lump(Player *player, Creature *_Creature, uint32 sender, u
 
 struct MANGOS_DLL_DECL mob_sunspring_villagerAI : public ScriptedAI
 {
-    mob_sunspring_villagerAI(Creature *c) : ScriptedAI(c) {Reset();}
+    mob_sunspring_villagerAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     void Reset()
     {
@@ -238,16 +238,16 @@ struct MANGOS_DLL_DECL mob_sunspring_villagerAI : public ScriptedAI
 
     void SpellHit(Unit *caster, const SpellEntry *spell)
     {
-        if(spell->Id == 32146)
+        if (spell->Id == 32146)
         {
             m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
             m_creature->RemoveCorpse();
         }
     }
 };
-CreatureAI* GetAI_mob_sunspring_villager(Creature *_Creature)
+CreatureAI* GetAI_mob_sunspring_villager(Creature* pCreature)
 {
-    return new mob_sunspring_villagerAI (_Creature);
+    return new mob_sunspring_villagerAI(pCreature);
 }
 
 /*######
@@ -328,9 +328,9 @@ bool GossipSelect_npc_altruis_the_sufferer(Player* pPlayer, Creature* pCreature,
     return true;
 }
 
-bool QuestAccept_npc_altruis_the_sufferer(Player* pPlayer, Creature* pCreature, Quest const* pQuest )
+bool QuestAccept_npc_altruis_the_sufferer(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
 {
-    if (!pPlayer->GetQuestRewardStatus(QUEST_SURVEY))        //Survey the Land
+    if (!pPlayer->GetQuestRewardStatus(QUEST_SURVEY))       //Survey the Land
     {
         pPlayer->CLOSE_GOSSIP_MENU();
         pPlayer->ActivateTaxiPathTo(TAXI_PATH_ID);
@@ -343,84 +343,84 @@ bool QuestAccept_npc_altruis_the_sufferer(Player* pPlayer, Creature* pCreature, 
 ######*/
 
 //all the textId's for the below is unknown, but i do believe the gossip item texts are proper.
-bool GossipHello_npc_greatmother_geyah(Player *player, Creature *_Creature)
+bool GossipHello_npc_greatmother_geyah(Player* pPlayer, Creature* pCreature)
 {
-    if (_Creature->isQuestGiver())
-        player->PrepareQuestMenu( _Creature->GetGUID() );
+    if (pCreature->isQuestGiver())
+        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
 
-    if (player->GetQuestStatus(10044) == QUEST_STATUS_INCOMPLETE)
+    if (pPlayer->GetQuestStatus(10044) == QUEST_STATUS_INCOMPLETE)
     {
-        player->ADD_GOSSIP_ITEM( 0, "Hello, Greatmother. Garrosh told me that you wanted to speak with me.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-        player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(),_Creature->GetGUID());
+        pPlayer->ADD_GOSSIP_ITEM(0, "Hello, Greatmother. Garrosh told me that you wanted to speak with me.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+        pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
     }
-    else if (player->GetQuestStatus(10172) == QUEST_STATUS_INCOMPLETE)
+    else if (pPlayer->GetQuestStatus(10172) == QUEST_STATUS_INCOMPLETE)
     {
-        player->ADD_GOSSIP_ITEM( 0, "Garrosh is beyond redemption, Greatmother. I fear that in helping the Mag'har, I have convinced Garrosh that he is unfit to lead.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 10);
-        player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(),_Creature->GetGUID());
+        pPlayer->ADD_GOSSIP_ITEM(0, "Garrosh is beyond redemption, Greatmother. I fear that in helping the Mag'har, I have convinced Garrosh that he is unfit to lead.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 10);
+        pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
     }
     else
 
-        player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(),_Creature->GetGUID());
+        pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_greatmother_geyah(Player *player, Creature *_Creature, uint32 sender, uint32 action)
+bool GossipSelect_npc_greatmother_geyah(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
     switch (action)
     {
         case GOSSIP_ACTION_INFO_DEF + 1:
-            player->ADD_GOSSIP_ITEM( 0, "You raised all of the orcs here, Greatmother?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-            player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, "You raised all of the orcs here, Greatmother?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+            pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 2:
-            player->ADD_GOSSIP_ITEM( 0, "Do you believe that?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-            player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, "Do you believe that?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+            pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 3:
-            player->ADD_GOSSIP_ITEM( 0, "What can be done? I have tried many different things. I have done my best to help the people of Nagrand. Each time I have approached Garrosh, he has dismissed me.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
-            player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, "What can be done? I have tried many different things. I have done my best to help the people of Nagrand. Each time I have approached Garrosh, he has dismissed me.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+            pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 4:
-            player->ADD_GOSSIP_ITEM( 0, "Left? How can you choose to leave?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
-            player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, "Left? How can you choose to leave?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
+            pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 5:
-            player->ADD_GOSSIP_ITEM( 0, "What is this duty?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
-            player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, "What is this duty?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
+            pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 6:
-            player->ADD_GOSSIP_ITEM( 0, "Is there anything I can do for you, Greatmother?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
-            player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, "Is there anything I can do for you, Greatmother?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
+            pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 7:
-            player->AreaExploredOrEventHappens(10044);
-            player->CLOSE_GOSSIP_MENU();
+            pPlayer->AreaExploredOrEventHappens(10044);
+            pPlayer->CLOSE_GOSSIP_MENU();
             break;
 
         case GOSSIP_ACTION_INFO_DEF + 10:
-            player->ADD_GOSSIP_ITEM( 0, "I have done all that I could, Greatmother. I thank you for your kind words.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
-            player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, "I have done all that I could, Greatmother. I thank you for your kind words.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
+            pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 11:
-            player->ADD_GOSSIP_ITEM( 0, "Greatmother, you are the mother of Durotan?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 12);
-            player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, "Greatmother, you are the mother of Durotan?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 12);
+            pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 12:
-            player->ADD_GOSSIP_ITEM( 0, "Greatmother, I never had the honor. Durotan died long before my time, but his heroics are known to all on my world. The orcs of Azeroth reside in a place known as Durotar, named after your son. And ... (You take a moment to breathe and think through what you are about to tell the Greatmother.)", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 13);
-            player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, "Greatmother, I never had the honor. Durotan died long before my time, but his heroics are known to all on my world. The orcs of Azeroth reside in a place known as Durotar, named after your son. And ... (You take a moment to breathe and think through what you are about to tell the Greatmother.)", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 13);
+            pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 13:
-            player->ADD_GOSSIP_ITEM( 0, "It is my Warchief, Greatmother. The leader of my people. From my world. He ... He is the son of Durotan. He is your grandchild.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 14);
-            player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, "It is my Warchief, Greatmother. The leader of my people. From my world. He ... He is the son of Durotan. He is your grandchild.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 14);
+            pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 14:
-            player->ADD_GOSSIP_ITEM( 0, "I will return to Azeroth at once, Greatmother.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 15);
-            player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, "I will return to Azeroth at once, Greatmother.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 15);
+            pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 15:
-            player->AreaExploredOrEventHappens(10172);
-            player->CLOSE_GOSSIP_MENU();
+            pPlayer->AreaExploredOrEventHappens(10172);
+            pPlayer->CLOSE_GOSSIP_MENU();
             break;
     }
     return true;
@@ -430,57 +430,57 @@ bool GossipSelect_npc_greatmother_geyah(Player *player, Creature *_Creature, uin
 ## npc_lantresor_of_the_blade
 ######*/
 
-bool GossipHello_npc_lantresor_of_the_blade(Player *player, Creature *_Creature)
+bool GossipHello_npc_lantresor_of_the_blade(Player* pPlayer, Creature* pCreature)
 {
-    if (_Creature->isQuestGiver())
-        player->PrepareQuestMenu( _Creature->GetGUID() );
+    if (pCreature->isQuestGiver())
+        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
 
-    if (player->GetQuestStatus(10107) == QUEST_STATUS_INCOMPLETE || player->GetQuestStatus(10108) == QUEST_STATUS_INCOMPLETE)
-        player->ADD_GOSSIP_ITEM( 0, "I have killed many of your ogres, Lantresor. I have no fear.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+    if (pPlayer->GetQuestStatus(10107) == QUEST_STATUS_INCOMPLETE || pPlayer->GetQuestStatus(10108) == QUEST_STATUS_INCOMPLETE)
+        pPlayer->ADD_GOSSIP_ITEM(0, "I have killed many of your ogres, Lantresor. I have no fear.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
-    player->SEND_GOSSIP_MENU(9361, _Creature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(9361, pCreature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_lantresor_of_the_blade(Player *player, Creature *_Creature, uint32 sender, uint32 action)
+bool GossipSelect_npc_lantresor_of_the_blade(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
     switch (action)
     {
         case GOSSIP_ACTION_INFO_DEF:
-            player->ADD_GOSSIP_ITEM( 0, "Should I know? You look like an orc to me.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-            player->SEND_GOSSIP_MENU(9362, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, "Should I know? You look like an orc to me.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+            pPlayer->SEND_GOSSIP_MENU(9362, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+1:
-            player->ADD_GOSSIP_ITEM( 0, "And the other half?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-            player->SEND_GOSSIP_MENU(9363, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, "And the other half?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+            pPlayer->SEND_GOSSIP_MENU(9363, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+2:
-            player->ADD_GOSSIP_ITEM( 0, "I have heard of your kind, but I never thought to see the day when I would meet a half-breed.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-            player->SEND_GOSSIP_MENU(9364, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, "I have heard of your kind, but I never thought to see the day when I would meet a half-breed.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+            pPlayer->SEND_GOSSIP_MENU(9364, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+3:
-            player->ADD_GOSSIP_ITEM( 0, "My apologies. I did not mean to offend. I am here on behalf of my people.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
-            player->SEND_GOSSIP_MENU(9365, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, "My apologies. I did not mean to offend. I am here on behalf of my people.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+            pPlayer->SEND_GOSSIP_MENU(9365, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+4:
-            player->ADD_GOSSIP_ITEM( 0, "My people ask that you pull back your Boulderfist ogres and cease all attacks on our territories. In return, we will also pull back our forces.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
-            player->SEND_GOSSIP_MENU(9366, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, "My people ask that you pull back your Boulderfist ogres and cease all attacks on our territories. In return, we will also pull back our forces.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
+            pPlayer->SEND_GOSSIP_MENU(9366, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+5:
-            player->ADD_GOSSIP_ITEM( 0, "We will fight you until the end, then, Lantresor. We will not stand idly by as you pillage our towns and kill our people.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
-            player->SEND_GOSSIP_MENU(9367, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, "We will fight you until the end, then, Lantresor. We will not stand idly by as you pillage our towns and kill our people.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
+            pPlayer->SEND_GOSSIP_MENU(9367, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+6:
-            player->ADD_GOSSIP_ITEM( 0, "What do I need to do?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
-            player->SEND_GOSSIP_MENU(9368, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, "What do I need to do?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
+            pPlayer->SEND_GOSSIP_MENU(9368, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+7:
-            player->SEND_GOSSIP_MENU(9369, _Creature->GetGUID());
-            if (player->GetQuestStatus(10107) == QUEST_STATUS_INCOMPLETE)
-                player->AreaExploredOrEventHappens(10107);
-            if (player->GetQuestStatus(10108) == QUEST_STATUS_INCOMPLETE)
-                player->AreaExploredOrEventHappens(10108);
+            pPlayer->SEND_GOSSIP_MENU(9369, pCreature->GetGUID());
+            if (pPlayer->GetQuestStatus(10107) == QUEST_STATUS_INCOMPLETE)
+                pPlayer->AreaExploredOrEventHappens(10107);
+            if (pPlayer->GetQuestStatus(10108) == QUEST_STATUS_INCOMPLETE)
+                pPlayer->AreaExploredOrEventHappens(10108);
             break;
     }
     return true;
@@ -492,24 +492,24 @@ bool GossipSelect_npc_lantresor_of_the_blade(Player *player, Creature *_Creature
 
 struct MANGOS_DLL_DECL npc_creditmarker_visit_with_ancestorsAI : public ScriptedAI
 {
-    npc_creditmarker_visit_with_ancestorsAI(Creature* c) : ScriptedAI(c) { Reset(); }
+    npc_creditmarker_visit_with_ancestorsAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
     void Reset() {}
 
     void MoveInLineOfSight(Unit *who)
     {
-        if(!who)
+        if (!who)
             return;
 
-        if(who->GetTypeId() == TYPEID_PLAYER)
+        if (who->GetTypeId() == TYPEID_PLAYER)
         {
-            if(((Player*)who)->GetQuestStatus(10085) == QUEST_STATUS_INCOMPLETE)
+            if (((Player*)who)->GetQuestStatus(10085) == QUEST_STATUS_INCOMPLETE)
             {
                 uint32 creditMarkerId = m_creature->GetEntry();
-                if((creditMarkerId >= 18840) && (creditMarkerId <= 18843))
+                if ((creditMarkerId >= 18840) && (creditMarkerId <= 18843))
                 {
                     // 18840: Sunspring, 18841: Laughing, 18842: Garadar, 18843: Bleeding
-                    if(!((Player*)who)->GetReqKillOrCastCurrentCount(10085, creditMarkerId))
+                    if (!((Player*)who)->GetReqKillOrCastCurrentCount(10085, creditMarkerId))
                         ((Player*)who)->KilledMonster(creditMarkerId, m_creature->GetGUID());
                 }
             }
@@ -517,9 +517,9 @@ struct MANGOS_DLL_DECL npc_creditmarker_visit_with_ancestorsAI : public Scripted
     }
 };
 
-CreatureAI* GetAI_npc_creditmarker_visit_with_ancestors(Creature *_Creature)
+CreatureAI* GetAI_npc_creditmarker_visit_with_ancestors(Creature* pCreature)
 {
-    return new npc_creditmarker_visit_with_ancestorsAI (_Creature);
+    return new npc_creditmarker_visit_with_ancestorsAI(pCreature);
 }
 
 /*######

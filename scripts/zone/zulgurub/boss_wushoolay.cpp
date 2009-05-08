@@ -29,7 +29,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_wushoolayAI : public ScriptedAI
 {
-    boss_wushoolayAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_wushoolayAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 LightningCloud_Timer;
     uint32 LightningWave_Timer;
@@ -65,9 +65,9 @@ struct MANGOS_DLL_DECL boss_wushoolayAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_wushoolay(Creature *_Creature)
+CreatureAI* GetAI_boss_wushoolay(Creature* pCreature)
 {
-    return new boss_wushoolayAI (_Creature);
+    return new boss_wushoolayAI(pCreature);
 }
 
 void AddSC_boss_wushoolay()

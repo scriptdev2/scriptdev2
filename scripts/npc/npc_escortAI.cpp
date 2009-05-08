@@ -147,7 +147,7 @@ void npc_escortAI::UpdateAI(const uint32 diff)
                 {
                     if (CurrentWP != WaypointList.end())
                     {
-                        m_creature->GetMotionMaster()->MovePoint(CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z );
+                        m_creature->GetMotionMaster()->MovePoint(CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z);
                         debug_log("SD2: EscortAI Reconnect WP is: %u, %f, %f, %f", CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z);
 
                         WaitTimer = 0;
@@ -181,7 +181,7 @@ void npc_escortAI::UpdateAI(const uint32 diff)
 
             if (!IsOnHold)
             {
-                m_creature->GetMotionMaster()->MovePoint(CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z );
+                m_creature->GetMotionMaster()->MovePoint(CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z);
                 debug_log("SD2: EscortAI Next WP is: %u, %f, %f, %f", CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z);
                 WaitTimer = 0;
             }
@@ -200,7 +200,7 @@ void npc_escortAI::UpdateAI(const uint32 diff)
                 JustDied(m_creature);
                 IsBeingEscorted = false;
 
-                debug_log("SD2: EscortAI Evaded back to spawn point because player was to far away or not found");
+                debug_log("SD2: EscortAI Evaded back to spawn point because pPlayer was to far away or not found");
 
                 m_creature->setDeathState(JUST_DIED);
                 m_creature->SetHealth(0);
@@ -359,7 +359,7 @@ void npc_escortAI::Start(bool bAttack, bool bDefend, bool bRun, uint64 pGUID)
         m_creature->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
 
     //Start WP
-    m_creature->GetMotionMaster()->MovePoint(CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z );
+    m_creature->GetMotionMaster()->MovePoint(CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z);
     debug_log("SD2: EscortAI Next WP is: %d, %f, %f, %f", CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z);
     IsBeingEscorted = true;
     ReconnectWP = false;

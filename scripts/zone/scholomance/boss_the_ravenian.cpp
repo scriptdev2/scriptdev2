@@ -31,7 +31,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_theravenianAI : public ScriptedAI
 {
-    boss_theravenianAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_theravenianAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 Trample_Timer;
     uint32 Cleave_Timer;
@@ -51,7 +51,7 @@ struct MANGOS_DLL_DECL boss_theravenianAI : public ScriptedAI
     void JustDied(Unit *killer)
     {
         ScriptedInstance *pInstance = (m_creature->GetInstanceData()) ? ((ScriptedInstance*)m_creature->GetInstanceData()) : NULL;
-        if(pInstance)
+        if (pInstance)
         {
             pInstance->SetData(DATA_THERAVENIAN_DEATH, 0);
 
@@ -97,9 +97,9 @@ struct MANGOS_DLL_DECL boss_theravenianAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_theravenian(Creature *_Creature)
+CreatureAI* GetAI_boss_theravenian(Creature* pCreature)
 {
-    return new boss_theravenianAI (_Creature);
+    return new boss_theravenianAI(pCreature);
 }
 
 void AddSC_boss_theravenian()

@@ -43,7 +43,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
 {
-    boss_curatorAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_curatorAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 AddTimer;
     uint32 HatefulBoltTimer;
@@ -188,9 +188,9 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_curator(Creature *_Creature)
+CreatureAI* GetAI_boss_curator(Creature* pCreature)
 {
-    return new boss_curatorAI (_Creature);
+    return new boss_curatorAI(pCreature);
 }
 
 void AddSC_boss_curator()

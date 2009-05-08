@@ -51,7 +51,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL mob_webwrapAI : public ScriptedAI
 {
-    mob_webwrapAI(Creature *c) : ScriptedAI(c) {Reset();}
+    mob_webwrapAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint64 victimGUID;
 
@@ -88,7 +88,7 @@ struct MANGOS_DLL_DECL mob_webwrapAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
 {
-    boss_maexxnaAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_maexxnaAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 WebTrap_Timer;
     uint32 WebSpray_Timer;
@@ -113,7 +113,7 @@ struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
         std::vector<Unit *> targets;
 
         //This spell doesn't work if we only have 1 player on threat list
-        if(t_list.size() < 2)
+        if (t_list.size() < 2)
             return;
 
         //begin + 1 , so we don't target the one with the highest threat
@@ -121,7 +121,7 @@ struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
         std::advance(itr, 1);
 
         //store the threat list in a different container
-        for( ; itr!= t_list.end(); ++itr)
+        for(; itr!= t_list.end(); ++itr)
         {
             Unit* target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
 
@@ -211,14 +211,14 @@ struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_webwrap(Creature* _Creature)
+CreatureAI* GetAI_mob_webwrap(Creature* pCreature)
 {
-    return new mob_webwrapAI (_Creature);
+    return new mob_webwrapAI(pCreature);
 }
 
-CreatureAI* GetAI_boss_maexxna(Creature *_Creature)
+CreatureAI* GetAI_boss_maexxna(Creature* pCreature)
 {
-    return new boss_maexxnaAI (_Creature);
+    return new boss_maexxnaAI(pCreature);
 }
 
 void AddSC_boss_maexxna()

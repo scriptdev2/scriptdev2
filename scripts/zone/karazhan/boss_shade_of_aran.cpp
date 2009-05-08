@@ -81,9 +81,9 @@ enum SuperSpell
 
 struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
 {
-    boss_aranAI(Creature *c) : ScriptedAI(c)
+    boss_aranAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -196,8 +196,8 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
         {
             Unit *target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
             //only on alive players
-            if (target && target->isAlive() && target->GetTypeId() == TYPEID_PLAYER )
-                targets.push_back( target);
+            if (target && target->isAlive() && target->GetTypeId() == TYPEID_PLAYER)
+                targets.push_back(target);
         }
 
         //cut down to size if we have more than 3 targets
@@ -220,7 +220,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         if (CloseDoorTimer)
@@ -526,7 +526,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL water_elementalAI : public ScriptedAI
 {
-    water_elementalAI(Creature *c) : ScriptedAI(c) {Reset();}
+    water_elementalAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 CastTimer;
 
@@ -537,7 +537,7 @@ struct MANGOS_DLL_DECL water_elementalAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         if (CastTimer < diff)
@@ -548,21 +548,21 @@ struct MANGOS_DLL_DECL water_elementalAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_aran(Creature *_Creature)
+CreatureAI* GetAI_boss_aran(Creature* pCreature)
 {
-    return new boss_aranAI (_Creature);
+    return new boss_aranAI(pCreature);
 }
 
-CreatureAI* GetAI_water_elemental(Creature *_Creature)
+CreatureAI* GetAI_water_elemental(Creature* pCreature)
 {
-    return new water_elementalAI (_Creature);
+    return new water_elementalAI(pCreature);
 }
 
 // CONVERT TO ACID
-CreatureAI* GetAI_shadow_of_aran(Creature *_Creature)
+CreatureAI* GetAI_shadow_of_aran(Creature* pCreature)
 {
-    outstring_log("SD2: Convert simpleAI script for Creature Entry %u to ACID", _Creature->GetEntry());
-    SimpleAI* ai = new SimpleAI (_Creature);
+    outstring_log("SD2: Convert simpleAI script for Creature Entry %u to ACID", pCreature->GetEntry());
+    SimpleAI* ai = new SimpleAI(pCreature);
 
     ai->Spell[0].Enabled = true;
     ai->Spell[0].Spell_Id = SPELL_SHADOW_PYRO;

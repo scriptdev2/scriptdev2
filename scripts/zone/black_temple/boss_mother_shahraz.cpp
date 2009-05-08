@@ -78,9 +78,9 @@ static Locations TeleportPoint[]=
 
 struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
 {
-    boss_shahrazAI(Creature *c) : ScriptedAI(c)
+    boss_shahrazAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -314,9 +314,9 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_shahraz(Creature *_Creature)
+CreatureAI* GetAI_boss_shahraz(Creature* pCreature)
 {
-    return new boss_shahrazAI (_Creature);
+    return new boss_shahrazAI(pCreature);
 }
 
 void AddSC_boss_mother_shahraz()

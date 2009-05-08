@@ -42,9 +42,9 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
 {
-    boss_jeklikAI(Creature *c) : ScriptedAI(c)
+    boss_jeklikAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -129,22 +129,22 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
 
                 Creature* Bat = NULL;
                 Bat = m_creature->SummonCreature(11368,-12291.6220,-1380.2640,144.8304,5.483, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
-                if (target && Bat ) Bat ->AI()->AttackStart(target);
+                if (target && Bat) Bat ->AI()->AttackStart(target);
 
                 Bat = m_creature->SummonCreature(11368,-12289.6220,-1380.2640,144.8304,5.483, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
-                if (target && Bat ) Bat ->AI()->AttackStart(target);
+                if (target && Bat) Bat ->AI()->AttackStart(target);
 
                 Bat = m_creature->SummonCreature(11368,-12293.6220,-1380.2640,144.8304,5.483, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
-                if (target && Bat ) Bat ->AI()->AttackStart(target);
+                if (target && Bat) Bat ->AI()->AttackStart(target);
 
                 Bat = m_creature->SummonCreature(11368,-12291.6220,-1380.2640,144.8304,5.483, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
-                if (target && Bat ) Bat ->AI()->AttackStart(target);
+                if (target && Bat) Bat ->AI()->AttackStart(target);
 
                 Bat = m_creature->SummonCreature(11368,-12289.6220,-1380.2640,144.8304,5.483, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
-                if (target && Bat ) Bat ->AI()->AttackStart(target);
+                if (target && Bat) Bat ->AI()->AttackStart(target);
 
                 Bat = m_creature->SummonCreature(11368,-12293.6220,-1380.2640,144.8304,5.483, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
-                if (target && Bat ) Bat ->AI()->AttackStart(target);
+                if (target && Bat) Bat ->AI()->AttackStart(target);
 
                 SpawnBats_Timer = 60000;
             }else SpawnBats_Timer -= diff;
@@ -211,9 +211,9 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
 //Flying Bat
 struct MANGOS_DLL_DECL mob_batriderAI : public ScriptedAI
 {
-    mob_batriderAI(Creature *c) : ScriptedAI(c)
+    mob_batriderAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -232,7 +232,7 @@ struct MANGOS_DLL_DECL mob_batriderAI : public ScriptedAI
 
     void UpdateAI (const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //Bomb_Timer
@@ -263,14 +263,14 @@ struct MANGOS_DLL_DECL mob_batriderAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_jeklik(Creature *_Creature)
+CreatureAI* GetAI_boss_jeklik(Creature* pCreature)
 {
-    return new boss_jeklikAI (_Creature);
+    return new boss_jeklikAI(pCreature);
 }
 
-CreatureAI* GetAI_mob_batrider(Creature *_Creature)
+CreatureAI* GetAI_mob_batrider(Creature* pCreature)
 {
-    return new mob_batriderAI (_Creature);
+    return new mob_batriderAI(pCreature);
 }
 
 void AddSC_boss_jeklik()

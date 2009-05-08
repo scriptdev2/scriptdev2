@@ -69,7 +69,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
 {
-    boss_victor_nefariusAI(Creature *c) : ScriptedAI(c)
+    boss_victor_nefariusAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         NefarianGUID = 0;
         Reset();
@@ -217,7 +217,7 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //Only do this if we haven't spawned nef yet
@@ -344,34 +344,34 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_victor_nefarius(Creature *_Creature)
+CreatureAI* GetAI_boss_victor_nefarius(Creature* pCreature)
 {
-    return new boss_victor_nefariusAI (_Creature);
+    return new boss_victor_nefariusAI(pCreature);
 }
 
-bool GossipHello_boss_victor_nefarius(Player *player, Creature *_Creature)
+bool GossipHello_boss_victor_nefarius(Player* pPlayer, Creature* pCreature)
 {
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_1 , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-    player->SEND_GOSSIP_MENU(7134,_Creature->GetGUID());
+    pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_1 , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+    pPlayer->SEND_GOSSIP_MENU(7134, pCreature->GetGUID());
     return true;
 }
 
-bool GossipSelect_boss_victor_nefarius(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+bool GossipSelect_boss_victor_nefarius(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
     switch (action)
     {
         case GOSSIP_ACTION_INFO_DEF+1:
-            player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-            player->SEND_GOSSIP_MENU(7198, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+            pPlayer->SEND_GOSSIP_MENU(7198, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+2:
-            player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
-            player->SEND_GOSSIP_MENU(7199, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
+            pPlayer->SEND_GOSSIP_MENU(7199, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+3:
-            player->CLOSE_GOSSIP_MENU();
-            DoScriptText(SAY_GAMESBEGIN_1, _Creature);
-            ((boss_victor_nefariusAI*)_Creature->AI())->BeginEvent(player);
+            pPlayer->CLOSE_GOSSIP_MENU();
+            DoScriptText(SAY_GAMESBEGIN_1, pCreature);
+            ((boss_victor_nefariusAI*)pCreature->AI())->BeginEvent(pPlayer);
             break;
     }
     return true;

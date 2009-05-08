@@ -34,7 +34,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_garrAI : public ScriptedAI
 {
-    boss_garrAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_garrAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 AntiMagicPulse_Timer;
     uint32 MagmaShackles_Timer;
@@ -74,7 +74,7 @@ struct MANGOS_DLL_DECL boss_garrAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL mob_fireswornAI : public ScriptedAI
 {
-    mob_fireswornAI(Creature *c) : ScriptedAI(c) {Reset();}
+    mob_fireswornAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 Immolate_Timer;
 
@@ -108,14 +108,14 @@ struct MANGOS_DLL_DECL mob_fireswornAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_garr(Creature *_Creature)
+CreatureAI* GetAI_boss_garr(Creature* pCreature)
 {
-    return new boss_garrAI (_Creature);
+    return new boss_garrAI(pCreature);
 }
 
-CreatureAI* GetAI_mob_firesworn(Creature *_Creature)
+CreatureAI* GetAI_mob_firesworn(Creature* pCreature)
 {
-    return new mob_fireswornAI (_Creature);
+    return new mob_fireswornAI(pCreature);
 }
 
 void AddSC_boss_garr()

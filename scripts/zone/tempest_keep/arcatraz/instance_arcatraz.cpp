@@ -102,10 +102,10 @@ struct MANGOS_DLL_DECL instance_arcatraz : public ScriptedInstance
         }
     }
 
-    void OnCreatureCreate(Creature *creature, uint32 creature_entry)
+    void OnCreatureCreate(Creature* pCreature, uint32 creature_entry)
     {
-        if (creature->GetEntry() == MELLICHAR)
-            MellicharGUID = creature->GetGUID();
+        if (pCreature->GetEntry() == MELLICHAR)
+            MellicharGUID = pCreature->GetGUID();
     }
 
     void SetData(uint32 type, uint32 data)

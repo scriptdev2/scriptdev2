@@ -96,9 +96,9 @@ float hatcherway_r[5][3] =
 
 struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
 {
-    boss_janalaiAI(Creature *c) : ScriptedAI(c)
+    boss_janalaiAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -221,7 +221,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
     {
         float dx;
         float dy;
-        for ( int i(0); i < 40; i++)
+        for (int i(0); i < 40; i++)
         {
             dx = (rand()%(area_dx))-(area_dx/2);
             dy = (rand()%(area_dy))-(area_dy/2);
@@ -240,7 +240,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
 
     void throw5Bombs()                                      //throwanimation
     {
-        for ( int i(0); i < 5; i++)
+        for (int i(0); i < 5; i++)
         {
             Unit* ThrowController = NULL;
             Unit* FireBomb = NULL;
@@ -428,14 +428,14 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_janalaiAI(Creature *_Creature)
+CreatureAI* GetAI_boss_janalaiAI(Creature* pCreature)
 {
-    return new boss_janalaiAI (_Creature);
+    return new boss_janalaiAI(pCreature);
 }
 
 struct MANGOS_DLL_DECL mob_jandalai_firebombAI : public ScriptedAI
 {
-    mob_jandalai_firebombAI(Creature *c) : ScriptedAI(c){Reset();}
+    mob_jandalai_firebombAI(Creature* pCreature) : ScriptedAI(pCreature){Reset();}
 
     uint32 bomb_timer;
 
@@ -458,16 +458,16 @@ struct MANGOS_DLL_DECL mob_jandalai_firebombAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_jandalai_firebombAI(Creature *_Creature)
+CreatureAI* GetAI_mob_jandalai_firebombAI(Creature* pCreature)
 {
-    return new mob_jandalai_firebombAI (_Creature);
+    return new mob_jandalai_firebombAI(pCreature);
 }
 
 struct MANGOS_DLL_DECL mob_amanishi_hatcherAI : public ScriptedAI
 {
-    mob_amanishi_hatcherAI(Creature *c) : ScriptedAI(c)
+    mob_amanishi_hatcherAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -502,7 +502,7 @@ struct MANGOS_DLL_DECL mob_amanishi_hatcherAI : public ScriptedAI
         {
             if (!start && !hatch)
             {
-                waytype = ( m_creature->GetPositionY() > 1150);
+                waytype = (m_creature->GetPositionY() > 1150);
                 waypoint = 1;
                 start = true;
             }
@@ -626,16 +626,16 @@ struct MANGOS_DLL_DECL mob_amanishi_hatcherAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_amanishi_hatcherAI(Creature *_Creature)
+CreatureAI* GetAI_mob_amanishi_hatcherAI(Creature* pCreature)
 {
-    return new mob_amanishi_hatcherAI (_Creature);
+    return new mob_amanishi_hatcherAI(pCreature);
 }
 
 struct MANGOS_DLL_DECL mob_hatchlingAI : public ScriptedAI
 {
-    mob_hatchlingAI(Creature *c) : ScriptedAI(c)
+    mob_hatchlingAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -685,9 +685,9 @@ struct MANGOS_DLL_DECL mob_hatchlingAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_hatchlingAI(Creature *_Creature)
+CreatureAI* GetAI_mob_hatchlingAI(Creature* pCreature)
 {
-    return new mob_hatchlingAI (_Creature);
+    return new mob_hatchlingAI(pCreature);
 }
 
 void AddSC_boss_janalai()

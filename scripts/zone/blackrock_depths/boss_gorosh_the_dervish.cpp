@@ -28,7 +28,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_gorosh_the_dervishAI : public ScriptedAI
 {
-    boss_gorosh_the_dervishAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_gorosh_the_dervishAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 WhirlWind_Timer;
     uint32 MortalStrike_Timer;
@@ -42,7 +42,7 @@ struct MANGOS_DLL_DECL boss_gorosh_the_dervishAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //WhirlWind_Timer
@@ -62,9 +62,9 @@ struct MANGOS_DLL_DECL boss_gorosh_the_dervishAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_gorosh_the_dervish(Creature *_Creature)
+CreatureAI* GetAI_boss_gorosh_the_dervish(Creature* pCreature)
 {
-    return new boss_gorosh_the_dervishAI (_Creature);
+    return new boss_gorosh_the_dervishAI(pCreature);
 }
 
 void AddSC_boss_gorosh_the_dervish()

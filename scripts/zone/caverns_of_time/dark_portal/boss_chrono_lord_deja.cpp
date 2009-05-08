@@ -40,9 +40,9 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_chrono_lord_dejaAI : public ScriptedAI
 {
-    boss_chrono_lord_dejaAI(Creature *c) : ScriptedAI(c)
+    boss_chrono_lord_dejaAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         HeroicMode = m_creature->GetMap()->IsHeroic();
         Reset();
     }
@@ -103,7 +103,7 @@ struct MANGOS_DLL_DECL boss_chrono_lord_dejaAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //Arcane Blast
@@ -142,9 +142,9 @@ struct MANGOS_DLL_DECL boss_chrono_lord_dejaAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_chrono_lord_deja(Creature *_Creature)
+CreatureAI* GetAI_boss_chrono_lord_deja(Creature* pCreature)
 {
-    return new boss_chrono_lord_dejaAI (_Creature);
+    return new boss_chrono_lord_dejaAI(pCreature);
 }
 
 void AddSC_boss_chrono_lord_deja()

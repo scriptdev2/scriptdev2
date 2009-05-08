@@ -104,8 +104,8 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
         {
             for(Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
             {
-                if (Player* player = itr->getSource())
-                    player->SendUpdateWorldState(id,state);
+                if (Player* pPlayer = itr->getSource())
+                    pPlayer->SendUpdateWorldState(id,state);
             }
         }else debug_log("SD2: Instance Black Portal: UpdateBMWorldState, but PlayerList is empty!");
     }
@@ -125,18 +125,18 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
         return false;
     }
 
-    void OnPlayerEnter(Player *player)
+    void OnPlayerEnter(Player* pPlayer)
     {
         if (GetData(TYPE_MEDIVH) == IN_PROGRESS)
             return;
 
-        player->SendUpdateWorldState(WORLD_STATE_BM,0);
+        pPlayer->SendUpdateWorldState(WORLD_STATE_BM,0);
     }
 
-    void OnCreatureCreate(Creature *creature, uint32 creature_entry)
+    void OnCreatureCreate(Creature* pCreature, uint32 creature_entry)
     {
-        if (creature->GetEntry() == C_MEDIVH)
-            MedivhGUID = creature->GetGUID();
+        if (pCreature->GetEntry() == C_MEDIVH)
+            MedivhGUID = pCreature->GetGUID();
     }
 
     //what other conditions to check?

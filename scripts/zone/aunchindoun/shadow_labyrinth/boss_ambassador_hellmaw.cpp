@@ -44,9 +44,9 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public ScriptedAI
 {
-    boss_ambassador_hellmawAI(Creature *c) : ScriptedAI(c)
+    boss_ambassador_hellmawAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         HeroicMode = m_creature->GetMap()->IsHeroic();
         Reset();
     }
@@ -164,7 +164,7 @@ struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public ScriptedAI
             //DoWhine("I haz no mount!", LANG_UNIVERSAL, NULL);
         }
 
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         if (CorrosiveAcid_Timer < diff)
@@ -190,9 +190,9 @@ struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_ambassador_hellmaw(Creature *_Creature)
+CreatureAI* GetAI_boss_ambassador_hellmaw(Creature* pCreature)
 {
-    return new boss_ambassador_hellmawAI (_Creature);
+    return new boss_ambassador_hellmawAI(pCreature);
 }
 
 void AddSC_boss_ambassador_hellmaw()

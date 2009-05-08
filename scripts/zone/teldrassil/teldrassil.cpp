@@ -41,9 +41,9 @@ enum
 
 struct MANGOS_DLL_DECL npc_mistAI : public ScriptedAI
 {
-    npc_mistAI(Creature *c) : ScriptedAI(c)
+    npc_mistAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        uiNpcFlags = c->GetUInt32Value(UNIT_NPC_FLAGS);
+        uiNpcFlags = pCreature->GetUInt32Value(UNIT_NPC_FLAGS);
         uiPlayerGUID = 0;
         Reset();
     }
@@ -173,7 +173,7 @@ CreatureAI* GetAI_npc_mist(Creature* pCreature)
     return new npc_mistAI(pCreature);
 }
 
-bool QuestAccept_npc_mist(Player* pPlayer, Creature* pCreature, Quest const* pQuest)
+bool QuestAccept_npc_mist(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_MIST)
         ((npc_mistAI*)(pCreature->AI()))->DoStart(pPlayer->GetGUID());

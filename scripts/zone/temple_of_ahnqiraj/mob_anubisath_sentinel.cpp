@@ -102,7 +102,7 @@ struct MANGOS_DLL_DECL aqsentinelAI : public ScriptedAI
         }
     }
 
-    aqsentinelAI(Creature *c) : ScriptedAI(c)
+    aqsentinelAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         ClearBudyList();
         abselected = 0;                                     // just initialization of variable
@@ -158,7 +158,7 @@ struct MANGOS_DLL_DECL aqsentinelAI : public ScriptedAI
                 if (!c->isInCombat())
                 {
                     c->SetNoCallAssistance(true);
-                    if(c->AI())
+                    if (c->AI())
                         c->AI()->AttackStart(who);
                 }
             }
@@ -300,9 +300,9 @@ struct MANGOS_DLL_DECL aqsentinelAI : public ScriptedAI
         return NULL;
     }
 };
-CreatureAI* GetAI_mob_anubisath_sentinelAI(Creature *_Creature)
+CreatureAI* GetAI_mob_anubisath_sentinelAI(Creature* pCreature)
 {
-    return new aqsentinelAI (_Creature);
+    return new aqsentinelAI(pCreature);
 }
 
 void AddSC_mob_anubisath_sentinel()

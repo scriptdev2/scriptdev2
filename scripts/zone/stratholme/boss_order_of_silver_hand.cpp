@@ -43,9 +43,9 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_silver_hand_bossesAI : public ScriptedAI
 {
-    boss_silver_hand_bossesAI(Creature* c) : ScriptedAI(c)
+    boss_silver_hand_bossesAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -59,7 +59,7 @@ struct MANGOS_DLL_DECL boss_silver_hand_bossesAI : public ScriptedAI
         HolyLight_Timer = 20000;
         DivineShield_Timer = 20000;
 
-        if(pInstance)
+        if (pInstance)
         {
             switch(m_creature->GetEntry())
             {
@@ -84,7 +84,7 @@ struct MANGOS_DLL_DECL boss_silver_hand_bossesAI : public ScriptedAI
 
     void JustDied(Unit* Killer)
     {
-        if(pInstance)
+        if (pInstance)
         {
             switch(m_creature->GetEntry())
             {
@@ -104,7 +104,7 @@ struct MANGOS_DLL_DECL boss_silver_hand_bossesAI : public ScriptedAI
                     pInstance->SetData(TYPE_SH_VICAR, 2);
                     break;
             }
-            if(pInstance->GetData(TYPE_SH_QUEST) && Killer->GetTypeId() == TYPEID_PLAYER)
+            if (pInstance->GetData(TYPE_SH_QUEST) && Killer->GetTypeId() == TYPEID_PLAYER)
                 ((Player*)Killer)->KilledMonster(SH_QUEST_CREDIT,m_creature->GetGUID());
         }
     }
@@ -112,7 +112,7 @@ struct MANGOS_DLL_DECL boss_silver_hand_bossesAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         if (HolyLight_Timer < diff)
@@ -137,9 +137,9 @@ struct MANGOS_DLL_DECL boss_silver_hand_bossesAI : public ScriptedAI
     }
 
 };
-CreatureAI* GetAI_boss_silver_hand_bossesAI(Creature *_Creature)
+CreatureAI* GetAI_boss_silver_hand_bossesAI(Creature* pCreature)
 {
-    return new boss_silver_hand_bossesAI (_Creature);
+    return new boss_silver_hand_bossesAI(pCreature);
 }
 
 

@@ -114,7 +114,7 @@ enum
 
 struct MANGOS_DLL_DECL npc_clintar_dw_spiritAI : public npc_escortAI
 {
-    npc_clintar_dw_spiritAI(Creature *c) : npc_escortAI(c) { Reset(); }
+    npc_clintar_dw_spiritAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
 
     void WaypointReached(uint32 i)
     {
@@ -249,42 +249,42 @@ bool EffectDummyCreature_npc_clintar_dw_spirit(Unit *pCaster, uint32 spellId, ui
 #define GOSSIP_BEAR3 "I seek to understand the importance of strength of the heart."
 #define GOSSIP_BEAR4 "I have heard your words, Great Bear Spirit, and I understand. I now seek your blessings to fully learn the way of the Claw."
 
-bool GossipHello_npc_great_bear_spirit(Player *player, Creature *_Creature)
+bool GossipHello_npc_great_bear_spirit(Player* pPlayer, Creature* pCreature)
 {
     //ally or horde quest
-    if (player->GetQuestStatus(5929) == QUEST_STATUS_INCOMPLETE || player->GetQuestStatus(5930) == QUEST_STATUS_INCOMPLETE)
+    if (pPlayer->GetQuestStatus(5929) == QUEST_STATUS_INCOMPLETE || pPlayer->GetQuestStatus(5930) == QUEST_STATUS_INCOMPLETE)
     {
-        player->ADD_GOSSIP_ITEM( 0, GOSSIP_BEAR1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
-        player->SEND_GOSSIP_MENU(4719, _Creature->GetGUID());
+        pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_BEAR1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+        pPlayer->SEND_GOSSIP_MENU(4719, pCreature->GetGUID());
     }
     else
-        player->SEND_GOSSIP_MENU(4718, _Creature->GetGUID());
+        pPlayer->SEND_GOSSIP_MENU(4718, pCreature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_great_bear_spirit(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+bool GossipSelect_npc_great_bear_spirit(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
     switch (action)
     {
         case GOSSIP_ACTION_INFO_DEF:
-            player->ADD_GOSSIP_ITEM( 0, GOSSIP_BEAR2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-            player->SEND_GOSSIP_MENU(4721, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_BEAR2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+            pPlayer->SEND_GOSSIP_MENU(4721, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 1:
-            player->ADD_GOSSIP_ITEM( 0, GOSSIP_BEAR3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-            player->SEND_GOSSIP_MENU(4733, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_BEAR3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+            pPlayer->SEND_GOSSIP_MENU(4733, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 2:
-            player->ADD_GOSSIP_ITEM( 0, GOSSIP_BEAR4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-            player->SEND_GOSSIP_MENU(4734, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_BEAR4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+            pPlayer->SEND_GOSSIP_MENU(4734, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 3:
-            player->SEND_GOSSIP_MENU(4735, _Creature->GetGUID());
-            if (player->GetQuestStatus(5929)==QUEST_STATUS_INCOMPLETE)
-                player->AreaExploredOrEventHappens(5929);
-            if (player->GetQuestStatus(5930)==QUEST_STATUS_INCOMPLETE)
-                player->AreaExploredOrEventHappens(5930);
+            pPlayer->SEND_GOSSIP_MENU(4735, pCreature->GetGUID());
+            if (pPlayer->GetQuestStatus(5929)==QUEST_STATUS_INCOMPLETE)
+                pPlayer->AreaExploredOrEventHappens(5929);
+            if (pPlayer->GetQuestStatus(5930)==QUEST_STATUS_INCOMPLETE)
+                pPlayer->AreaExploredOrEventHappens(5930);
             break;
     }
     return true;

@@ -47,7 +47,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_doomlordkazzakAI : public ScriptedAI
 {
-    boss_doomlordkazzakAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_doomlordkazzakAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 ShadowVolley_Timer;
     uint32 Cleave_Timer;
@@ -106,7 +106,7 @@ struct MANGOS_DLL_DECL boss_doomlordkazzakAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //ShadowVolley_Timer
@@ -141,7 +141,7 @@ struct MANGOS_DLL_DECL boss_doomlordkazzakAI : public ScriptedAI
         if (MarkOfKazzak_Timer < diff)
         {
             Unit* victim = SelectUnit(SELECT_TARGET_RANDOM, 0);
-            if(victim->GetPower(POWER_MANA))
+            if (victim->GetPower(POWER_MANA))
             {
                 DoCast(victim, SPELL_MARKOFKAZZAK);
                 MarkOfKazzak_Timer = 20000;
@@ -156,7 +156,7 @@ struct MANGOS_DLL_DECL boss_doomlordkazzakAI : public ScriptedAI
             Enrage_Timer = 30000;
         }else Enrage_Timer -= diff;
 
-        if(Twisted_Reflection_Timer < diff)
+        if (Twisted_Reflection_Timer < diff)
         {
             DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), SPELL_TWISTEDREFLECTION);
             Twisted_Reflection_Timer = 15000;
@@ -167,9 +167,9 @@ struct MANGOS_DLL_DECL boss_doomlordkazzakAI : public ScriptedAI
 
 };
 
-CreatureAI* GetAI_boss_doomlordkazzak(Creature *_Creature)
+CreatureAI* GetAI_boss_doomlordkazzak(Creature* pCreature)
 {
-    return new boss_doomlordkazzakAI (_Creature);
+    return new boss_doomlordkazzakAI(pCreature);
 }
 
 void AddSC_boss_doomlordkazzak()

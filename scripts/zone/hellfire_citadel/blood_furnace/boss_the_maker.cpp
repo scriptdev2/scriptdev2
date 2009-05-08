@@ -41,9 +41,9 @@ enum
 
 struct MANGOS_DLL_DECL boss_the_makerAI : public ScriptedAI
 {
-    boss_the_makerAI(Creature *c) : ScriptedAI(c) 
+    boss_the_makerAI(Creature* pCreature) : ScriptedAI(pCreature) 
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -117,7 +117,7 @@ struct MANGOS_DLL_DECL boss_the_makerAI : public ScriptedAI
         }else ExplodingBreaker_Timer -=diff;
 
         /* // Disabled until Core Support for mind control
-        if(domination_timer_timer < diff)
+        if (domination_timer_timer < diff)
         {
         Unit* target;
         target = SelectUnit(SELECT_TARGET_RANDOM,0);
@@ -138,9 +138,9 @@ struct MANGOS_DLL_DECL boss_the_makerAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_the_makerAI(Creature *_Creature)
+CreatureAI* GetAI_boss_the_makerAI(Creature* pCreature)
 {
-    return new boss_the_makerAI (_Creature);
+    return new boss_the_makerAI(pCreature);
 }
 
 void AddSC_boss_the_maker()

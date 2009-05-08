@@ -104,22 +104,22 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
         return false;
     }
 
-    void OnCreatureCreate(Creature *creature, uint32 creature_entry)
+    void OnCreatureCreate(Creature* pCreature, uint32 creature_entry)
     {
-        switch(creature->GetEntry())
+        switch(pCreature->GetEntry())
         {
-            case 22887:    Najentus = creature->GetGUID();                  break;
-            case 23089:    Akama = creature->GetGUID();                     break;
-            case 22990:    Akama_Shade = creature->GetGUID();               break;
-            case 22841:    ShadeOfAkama = creature->GetGUID();              break;
-            case 22898:    Supremus = creature->GetGUID();                  break;
-            case 22917:    IllidanStormrage = creature->GetGUID();          break;
-            case 22949:    GathiosTheShatterer = creature->GetGUID();       break;
-            case 22950:    HighNethermancerZerevor = creature->GetGUID();   break;
-            case 22951:    LadyMalande = creature->GetGUID();               break;
-            case 22952:    VerasDarkshadow = creature->GetGUID();           break;
-            case 23426:    IllidariCouncil = creature->GetGUID();           break;
-            case 23499:    BloodElfCouncilVoice = creature->GetGUID();      break;
+            case 22887:    Najentus = pCreature->GetGUID();                  break;
+            case 23089:    Akama = pCreature->GetGUID();                     break;
+            case 22990:    Akama_Shade = pCreature->GetGUID();               break;
+            case 22841:    ShadeOfAkama = pCreature->GetGUID();              break;
+            case 22898:    Supremus = pCreature->GetGUID();                  break;
+            case 22917:    IllidanStormrage = pCreature->GetGUID();          break;
+            case 22949:    GathiosTheShatterer = pCreature->GetGUID();       break;
+            case 22950:    HighNethermancerZerevor = pCreature->GetGUID();   break;
+            case 22951:    LadyMalande = pCreature->GetGUID();               break;
+            case 22952:    VerasDarkshadow = pCreature->GetGUID();           break;
+            case 23426:    IllidariCouncil = pCreature->GetGUID();           break;
+            case 23499:    BloodElfCouncilVoice = pCreature->GetGUID();      break;
         }
     }
 

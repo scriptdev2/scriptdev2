@@ -55,9 +55,9 @@ EndContentData */
 
 struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
 {
-    boss_harbinger_skyrissAI(Creature *c) : ScriptedAI(c)
+    boss_harbinger_skyrissAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         HeroicMode = m_creature->GetMap()->IsHeroic();
         Intro = false;
         Reset();
@@ -269,9 +269,9 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_harbinger_skyriss(Creature *_Creature)
+CreatureAI* GetAI_boss_harbinger_skyriss(Creature* pCreature)
 {
-    return new boss_harbinger_skyrissAI (_Creature);
+    return new boss_harbinger_skyrissAI(pCreature);
 }
 
 #define SPELL_MIND_REND_IMAGE   36929
@@ -279,9 +279,9 @@ CreatureAI* GetAI_boss_harbinger_skyriss(Creature *_Creature)
 
 struct MANGOS_DLL_DECL boss_harbinger_skyriss_illusionAI : public ScriptedAI
 {
-    boss_harbinger_skyriss_illusionAI(Creature *c) : ScriptedAI(c)
+    boss_harbinger_skyriss_illusionAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         HeroicMode = m_creature->GetMap()->IsHeroic();
         Reset();
     }
@@ -292,9 +292,9 @@ struct MANGOS_DLL_DECL boss_harbinger_skyriss_illusionAI : public ScriptedAI
     void Reset() { }
 };
 
-CreatureAI* GetAI_boss_harbinger_skyriss_illusion(Creature *_Creature)
+CreatureAI* GetAI_boss_harbinger_skyriss_illusion(Creature* pCreature)
 {
-    return new boss_harbinger_skyriss_illusionAI (_Creature);
+    return new boss_harbinger_skyriss_illusionAI(pCreature);
 }
 
 void AddSC_boss_harbinger_skyriss()

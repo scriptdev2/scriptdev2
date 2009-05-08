@@ -30,7 +30,7 @@ struct Script
         pGossipHello(NULL), pQuestAccept(NULL), pGossipSelect(NULL), pGossipSelectWithCode(NULL),
         pQuestSelect(NULL), pQuestComplete(NULL), pNPCDialogStatus(NULL), pGODialogStatus(NULL),
         pChooseReward(NULL), pItemHello(NULL), pGOHello(NULL), pAreaTrigger(NULL), pItemQuestAccept(NULL),
-        pGOQuestAccept(NULL), pGOChooseReward(NULL),pItemUse(NULL),
+        pGOQuestAccept(NULL), pGOChooseReward(NULL), pItemUse(NULL),
         pEffectDummyCreature(NULL), pEffectDummyGameObj(NULL), pEffectDummyItem(NULL),
         GetAI(NULL), GetInstanceData(NULL)
     {}
@@ -39,24 +39,24 @@ struct Script
 
     //Methods to be scripted
     bool (*pGossipHello         )(Player*, Creature*);
-    bool (*pQuestAccept         )(Player*, Creature*, Quest const* );
-    bool (*pGossipSelect        )(Player*, Creature*, uint32 , uint32 );
-    bool (*pGossipSelectWithCode)(Player*, Creature*, uint32 , uint32 , const char* );
-    bool (*pQuestSelect         )(Player*, Creature*, Quest const* );
-    bool (*pQuestComplete       )(Player*, Creature*, Quest const* );
-    uint32 (*pNPCDialogStatus   )(Player*, Creature* );
-    uint32 (*pGODialogStatus    )(Player*, GameObject * _GO );
-    bool (*pChooseReward        )(Player*, Creature*, Quest const*, uint32 );
-    bool (*pItemHello           )(Player*, Item*, Quest const* );
-    bool (*pGOHello             )(Player*, GameObject* );
-    bool (*pAreaTrigger         )(Player*, AreaTriggerEntry* );
-    bool (*pItemQuestAccept     )(Player*, Item *, Quest const* );
-    bool (*pGOQuestAccept       )(Player*, GameObject*, Quest const* );
-    bool (*pGOChooseReward      )(Player*, GameObject*, Quest const*, uint32 );
-    bool (*pItemUse             )(Player*, Item*, SpellCastTargets const& );
-    bool (*pEffectDummyCreature )(Unit*, uint32, uint32, Creature* );
-    bool (*pEffectDummyGameObj  )(Unit*, uint32, uint32, GameObject* );
-    bool (*pEffectDummyItem     )(Unit*, uint32, uint32, Item* );
+    bool (*pQuestAccept         )(Player*, Creature*, const Quest*);
+    bool (*pGossipSelect        )(Player*, Creature*, uint32, uint32);
+    bool (*pGossipSelectWithCode)(Player*, Creature*, uint32, uint32, const char*);
+    bool (*pQuestSelect         )(Player*, Creature*, const Quest*);
+    bool (*pQuestComplete       )(Player*, Creature*, const Quest*);
+    uint32 (*pNPCDialogStatus   )(Player*, Creature*);
+    uint32 (*pGODialogStatus    )(Player*, GameObject*);
+    bool (*pChooseReward        )(Player*, Creature*, const Quest*, uint32);
+    bool (*pItemHello           )(Player*, Item*, const Quest*);
+    bool (*pGOHello             )(Player*, GameObject*);
+    bool (*pAreaTrigger         )(Player*, AreaTriggerEntry*);
+    bool (*pItemQuestAccept     )(Player*, Item*, const Quest*);
+    bool (*pGOQuestAccept       )(Player*, GameObject*, const Quest*);
+    bool (*pGOChooseReward      )(Player*, GameObject*, const Quest*, uint32);
+    bool (*pItemUse             )(Player*, Item*, SpellCastTargets const&);
+    bool (*pEffectDummyCreature )(Unit*, uint32, uint32, Creature*);
+    bool (*pEffectDummyGameObj  )(Unit*, uint32, uint32, GameObject*);
+    bool (*pEffectDummyItem     )(Unit*, uint32, uint32, Item*);
 
     CreatureAI* (*GetAI)(Creature*);
     InstanceData* (*GetInstanceData)(Map*);

@@ -37,7 +37,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
 {
-    boss_razorgoreAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_razorgoreAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 Cleave_Timer;
     uint32 WarStomp_Timer;
@@ -67,7 +67,7 @@ struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //Cleave_Timer
@@ -97,7 +97,7 @@ struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
             DoCast(m_creature->getVictim(),SPELL_CONFLAGRATION);
             //We will remove this threat reduction and add an aura check.
 
-            //if(m_creature->getThreatManager().getThreat(m_creature->getVictim()))
+            //if (m_creature->getThreatManager().getThreat(m_creature->getVictim()))
             //m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-50);
 
             Conflagration_Timer = 12000;
@@ -116,9 +116,9 @@ struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_razorgore(Creature *_Creature)
+CreatureAI* GetAI_boss_razorgore(Creature* pCreature)
 {
-    return new boss_razorgoreAI (_Creature);
+    return new boss_razorgoreAI(pCreature);
 }
 
 void AddSC_boss_razorgore()

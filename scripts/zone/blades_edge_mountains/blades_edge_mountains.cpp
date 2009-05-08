@@ -39,25 +39,28 @@ EndContentData */
 //TODO: add support for quest 10512 + creature abilities
 struct MANGOS_DLL_DECL mobs_bladespire_ogreAI : public ScriptedAI
 {
-    mobs_bladespire_ogreAI(Creature *c) : ScriptedAI(c) {Reset();}
+    mobs_bladespire_ogreAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
-    void Reset()
-    {
-    }
-
-    void Aggro(Unit* who)
-    {
-    }
+    void Reset() { }
 
     void JustDied(Unit* Killer)
     {
         if (Killer->GetTypeId() == TYPEID_PLAYER)
             ((Player*)Killer)->KilledMonster(19995, m_creature->GetGUID());
     }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+            return;
+
+        DoMeleeAttackIfReady();
+    }
 };
-CreatureAI* GetAI_mobs_bladespire_ogre(Creature *_Creature)
+
+CreatureAI* GetAI_mobs_bladespire_ogre(Creature* pCreature)
 {
-    return new mobs_bladespire_ogreAI (_Creature);
+    return new mobs_bladespire_ogreAI(pCreature);
 }
 
 /*######
@@ -84,7 +87,7 @@ CreatureAI* GetAI_mobs_bladespire_ogre(Creature *_Creature)
 
 struct MANGOS_DLL_DECL mobs_nether_drakeAI : public ScriptedAI
 {
-    mobs_nether_drakeAI(Creature *c) : ScriptedAI(c) { Reset(); }
+    mobs_nether_drakeAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
     bool IsNihil;
     uint32 NihilSpeech_Timer;
@@ -104,8 +107,6 @@ struct MANGOS_DLL_DECL mobs_nether_drakeAI : public ScriptedAI
         ManaBurn_Timer = 10000;
         IntangiblePresence_Timer = 15000;
     }
-
-    void Aggro(Unit* who) { }
 
     void MoveInLineOfSight(Unit *who)
     {
@@ -225,9 +226,9 @@ struct MANGOS_DLL_DECL mobs_nether_drakeAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mobs_nether_drake(Creature *_Creature)
+CreatureAI* GetAI_mobs_nether_drake(Creature* pCreature)
 {
-    return new mobs_nether_drakeAI (_Creature);
+    return new mobs_nether_drakeAI(pCreature);
 }
 
 /*######
@@ -238,11 +239,9 @@ CreatureAI* GetAI_mobs_nether_drake(Creature *_Creature)
 
 struct MANGOS_DLL_DECL npc_daranelleAI : public ScriptedAI
 {
-    npc_daranelleAI(Creature *c) : ScriptedAI(c) {Reset();}
+    npc_daranelleAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     void Reset() { }
-
-    void Aggro(Unit* who) { }
 
     void MoveInLineOfSight(Unit *who)
     {
@@ -261,31 +260,31 @@ struct MANGOS_DLL_DECL npc_daranelleAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_daranelle(Creature *_Creature)
+CreatureAI* GetAI_npc_daranelle(Creature* pCreature)
 {
-    return new npc_daranelleAI (_Creature);
+    return new npc_daranelleAI(pCreature);
 }
 
 /*######
 ## npc_overseer_nuaar
 ######*/
 
-bool GossipHello_npc_overseer_nuaar(Player *player, Creature *_Creature)
+bool GossipHello_npc_overseer_nuaar(Player* pPlayer, Creature* pCreature)
 {
-    if (player->GetQuestStatus(10682) == QUEST_STATUS_INCOMPLETE)
-        player->ADD_GOSSIP_ITEM( 0, "Overseer, I am here to negotiate on behalf of the Cenarion Expedition.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+    if (pPlayer->GetQuestStatus(10682) == QUEST_STATUS_INCOMPLETE)
+        pPlayer->ADD_GOSSIP_ITEM(0, "Overseer, I am here to negotiate on behalf of the Cenarion Expedition.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-    player->SEND_GOSSIP_MENU(10532, _Creature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(10532, pCreature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_overseer_nuaar(Player *player, Creature *_Creature, uint32 sender, uint32 action)
+bool GossipSelect_npc_overseer_nuaar(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
     if (action == GOSSIP_ACTION_INFO_DEF+1)
     {
-        player->SEND_GOSSIP_MENU(10533, _Creature->GetGUID());
-        player->AreaExploredOrEventHappens(10682);
+        pPlayer->SEND_GOSSIP_MENU(10533, pCreature->GetGUID());
+        pPlayer->AreaExploredOrEventHappens(10682);
     }
     return true;
 }
@@ -294,27 +293,27 @@ bool GossipSelect_npc_overseer_nuaar(Player *player, Creature *_Creature, uint32
 ## npc_saikkal_the_elder
 ######*/
 
-bool GossipHello_npc_saikkal_the_elder(Player *player, Creature *_Creature)
+bool GossipHello_npc_saikkal_the_elder(Player* pPlayer, Creature* pCreature)
 {
-    if (player->GetQuestStatus(10980) == QUEST_STATUS_INCOMPLETE)
-        player->ADD_GOSSIP_ITEM( 0, "Yes... yes, it's me.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+    if (pPlayer->GetQuestStatus(10980) == QUEST_STATUS_INCOMPLETE)
+        pPlayer->ADD_GOSSIP_ITEM(0, "Yes... yes, it's me.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-    player->SEND_GOSSIP_MENU(10794, _Creature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(10794, pCreature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_saikkal_the_elder(Player *player, Creature *_Creature, uint32 sender, uint32 action)
+bool GossipSelect_npc_saikkal_the_elder(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
     switch (action)
     {
         case GOSSIP_ACTION_INFO_DEF+1:
-            player->ADD_GOSSIP_ITEM( 0, "Yes elder. Tell me more of the book.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-            player->SEND_GOSSIP_MENU(10795, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, "Yes elder. Tell me more of the book.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+            pPlayer->SEND_GOSSIP_MENU(10795, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+2:
-            player->TalkedToCreature(_Creature->GetEntry(), _Creature->GetGUID());
-            player->SEND_GOSSIP_MENU(10796, _Creature->GetGUID());
+            pPlayer->TalkedToCreature(pCreature->GetEntry(), pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(10796, pCreature->GetGUID());
             break;
     }
     return true;
@@ -326,25 +325,25 @@ bool GossipSelect_npc_saikkal_the_elder(Player *player, Creature *_Creature, uin
 
 #define GOSSIP_SKYGUARD "Fly me to Skettis please"
 
-bool GossipHello_npc_skyguard_handler_irena(Player *player, Creature *_Creature )
+bool GossipHello_npc_skyguard_handler_irena(Player* pPlayer, Creature* pCreature)
 {
-    if (_Creature->isQuestGiver())
-        player->PrepareQuestMenu( _Creature->GetGUID() );
+    if (pCreature->isQuestGiver())
+        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
 
-    if (player->GetReputationRank(1031) >= REP_HONORED)
-        player->ADD_GOSSIP_ITEM( 2, GOSSIP_SKYGUARD, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+    if (pPlayer->GetReputationRank(1031) >= REP_HONORED)
+        pPlayer->ADD_GOSSIP_ITEM(2, GOSSIP_SKYGUARD, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_skyguard_handler_irena(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+bool GossipSelect_npc_skyguard_handler_irena(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
     if (action == GOSSIP_ACTION_INFO_DEF+1)
     {
-        player->CLOSE_GOSSIP_MENU();
-        player->CastSpell(player,41278,true);               //TaxiPath 706
+        pPlayer->CLOSE_GOSSIP_MENU();
+        pPlayer->CastSpell(pPlayer,41278,true);               //TaxiPath 706
     }
     return true;
 }

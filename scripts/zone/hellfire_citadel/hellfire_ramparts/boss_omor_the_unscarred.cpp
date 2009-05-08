@@ -43,9 +43,9 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public Scripted_NoMovementAI
 {
-    boss_omor_the_unscarredAI(Creature *c) : Scripted_NoMovementAI(c)
+    boss_omor_the_unscarredAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
     {
-        HeroicMode = m_creature->GetMap()->IsHeroic();
+        HeroicMode = pCreature->GetMap()->IsHeroic();
         Reset();
     }
 
@@ -197,9 +197,9 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public Scripted_NoMovementAI
     }
 };
 
-CreatureAI* GetAI_boss_omor_the_unscarredAI(Creature *_Creature)
+CreatureAI* GetAI_boss_omor_the_unscarredAI(Creature* pCreature)
 {
-    return new boss_omor_the_unscarredAI (_Creature);
+    return new boss_omor_the_unscarredAI(pCreature);
 }
 
 void AddSC_boss_omor_the_unscarred()

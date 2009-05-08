@@ -30,7 +30,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_quatermasterzigrisAI : public ScriptedAI
 {
-    boss_quatermasterzigrisAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_quatermasterzigrisAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 Shoot_Timer;
     uint32 StunBomb_Timer;
@@ -46,7 +46,7 @@ struct MANGOS_DLL_DECL boss_quatermasterzigrisAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //Shoot_Timer
@@ -66,9 +66,9 @@ struct MANGOS_DLL_DECL boss_quatermasterzigrisAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_quatermasterzigris(Creature *_Creature)
+CreatureAI* GetAI_boss_quatermasterzigris(Creature* pCreature)
 {
-    return new boss_quatermasterzigrisAI (_Creature);
+    return new boss_quatermasterzigrisAI(pCreature);
 }
 
 void AddSC_boss_quatermasterzigris()

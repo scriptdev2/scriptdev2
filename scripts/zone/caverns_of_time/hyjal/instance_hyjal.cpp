@@ -85,18 +85,18 @@ struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
         return false;
     }
 
-    void OnCreatureCreate(Creature *creature, uint32 creature_entry)
+    void OnCreatureCreate(Creature* pCreature, uint32 creature_entry)
     {
-        switch(creature->GetEntry())
+        switch(pCreature->GetEntry())
         {
-            case 17767: RageWinterchill = creature->GetGUID(); break;
-            case 17808: Anetheron = creature->GetGUID(); break;
-            case 17888: Kazrogal = creature->GetGUID();  break;
-            case 17842: Azgalor = creature->GetGUID(); break;
-            case 17968: Archimonde = creature->GetGUID(); break;
-            case 17772: JainaProudmoore = creature->GetGUID(); break;
-            case 17852: Thrall = creature->GetGUID(); break;
-            case 17948: TyrandeWhisperwind = creature->GetGUID(); break;
+            case 17767: RageWinterchill = pCreature->GetGUID(); break;
+            case 17808: Anetheron = pCreature->GetGUID(); break;
+            case 17888: Kazrogal = pCreature->GetGUID();  break;
+            case 17842: Azgalor = pCreature->GetGUID(); break;
+            case 17968: Archimonde = pCreature->GetGUID(); break;
+            case 17772: JainaProudmoore = pCreature->GetGUID(); break;
+            case 17852: Thrall = pCreature->GetGUID(); break;
+            case 17948: TyrandeWhisperwind = pCreature->GetGUID(); break;
         }
     }
 
@@ -194,8 +194,8 @@ struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
         {
             for(Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
             {
-                if (Player* player = itr->getSource())
-                    player->SendUpdateWorldState(id,state);
+                if (Player* pPlayer = itr->getSource())
+                    pPlayer->SendUpdateWorldState(id,state);
             }
         }else debug_log("SD2: Instance Hyjal: UpdateWorldState, but PlayerList is empty!");
     }

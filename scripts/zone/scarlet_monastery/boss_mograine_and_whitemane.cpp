@@ -44,7 +44,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
 {
-    boss_scarlet_commander_mograineAI(Creature *c) : ScriptedAI(c)
+    boss_scarlet_commander_mograineAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         pInstance = (ScriptedInstance*)m_creature->GetInstanceData();
         Reset();
@@ -172,7 +172,7 @@ struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
 {
-    boss_high_inquisitor_whitemaneAI(Creature *c) : ScriptedAI(c)
+    boss_high_inquisitor_whitemaneAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         pInstance = (ScriptedInstance*)m_creature->GetInstanceData();
         Reset();
@@ -230,7 +230,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
         */
 
         //If we are <75% hp cast healing spells at self and Mograine
-        if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 75 )
+        if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 75)
         {
             if (Healing_Timer < diff)
             {
@@ -297,14 +297,14 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_scarlet_commander_mograine(Creature *_Creature)
+CreatureAI* GetAI_boss_scarlet_commander_mograine(Creature* pCreature)
 {
-    return new boss_scarlet_commander_mograineAI (_Creature);
+    return new boss_scarlet_commander_mograineAI(pCreature);
 }
 
-CreatureAI* GetAI_boss_high_inquisitor_whitemane(Creature *_Creature)
+CreatureAI* GetAI_boss_high_inquisitor_whitemane(Creature* pCreature)
 {
-    return new boss_high_inquisitor_whitemaneAI (_Creature);
+    return new boss_high_inquisitor_whitemaneAI(pCreature);
 }
 
 void AddSC_boss_mograine_and_whitemane()

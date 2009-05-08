@@ -96,7 +96,7 @@ static Position Coords[]=
 
 struct MANGOS_DLL_DECL npc_enslaved_soulAI : public ScriptedAI
 {
-    npc_enslaved_soulAI(Creature *c) : ScriptedAI(c) {Reset();}
+    npc_enslaved_soulAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint64 ReliquaryGUID;
 
@@ -130,12 +130,12 @@ struct MANGOS_DLL_DECL npc_enslaved_soulAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
 {
-    boss_reliquary_of_soulsAI(Creature *c) : ScriptedAI(c)
+    boss_reliquary_of_soulsAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         SufferingGUID = 0;
         DesireGUID = 0;
         AngerGUID = 0;
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -259,7 +259,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
 
         std::list<HostilReference*>& m_threatlist = target->getThreatManager().getThreatList();
         std::list<HostilReference*>::iterator itr = m_threatlist.begin();
-        for( ; itr != m_threatlist.end(); itr++)
+        for(; itr != m_threatlist.end(); itr++)
         {
             Unit* pUnit = Unit::GetUnit((*m_creature), (*itr)->getUnitGuid());
             if (pUnit)
@@ -573,7 +573,7 @@ struct TargetDistanceOrder : public std::binary_function<const Unit, const Unit,
 
 struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
 {
-    boss_essence_of_sufferingAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_essence_of_sufferingAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint64 StatAuraGUID;
 
@@ -637,7 +637,7 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
 
         std::list<Unit*> targets;
         std::list<HostilReference*>::iterator itr = m_threatlist.begin();
-        for( ; itr != m_threatlist.end(); ++itr)
+        for(; itr != m_threatlist.end(); ++itr)
         {
             Unit* pUnit = Unit::GetUnit((*m_creature), (*itr)->getUnitGuid());
                                                             // Only alive players
@@ -716,7 +716,7 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
 };
 struct MANGOS_DLL_DECL boss_essence_of_desireAI : public ScriptedAI
 {
-    boss_essence_of_desireAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_essence_of_desireAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 AggroYellTimer;
     uint32 RuneShieldTimer;
@@ -823,7 +823,7 @@ struct MANGOS_DLL_DECL boss_essence_of_desireAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
 {
-    boss_essence_of_angerAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_essence_of_angerAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint64 AggroTargetGUID;
 
@@ -951,29 +951,29 @@ void npc_enslaved_soulAI::JustDied(Unit *killer)
     }
 }
 
-CreatureAI* GetAI_boss_reliquary_of_souls(Creature *_Creature)
+CreatureAI* GetAI_boss_reliquary_of_souls(Creature* pCreature)
 {
-    return new boss_reliquary_of_soulsAI (_Creature);
+    return new boss_reliquary_of_soulsAI(pCreature);
 }
 
-CreatureAI* GetAI_boss_essence_of_suffering(Creature *_Creature)
+CreatureAI* GetAI_boss_essence_of_suffering(Creature* pCreature)
 {
-    return new boss_essence_of_sufferingAI (_Creature);
+    return new boss_essence_of_sufferingAI(pCreature);
 }
 
-CreatureAI* GetAI_boss_essence_of_desire(Creature *_Creature)
+CreatureAI* GetAI_boss_essence_of_desire(Creature* pCreature)
 {
-    return new boss_essence_of_desireAI (_Creature);
+    return new boss_essence_of_desireAI(pCreature);
 }
 
-CreatureAI* GetAI_boss_essence_of_anger(Creature *_Creature)
+CreatureAI* GetAI_boss_essence_of_anger(Creature* pCreature)
 {
-    return new boss_essence_of_angerAI (_Creature);
+    return new boss_essence_of_angerAI(pCreature);
 }
 
-CreatureAI* GetAI_npc_enslaved_soul(Creature *_Creature)
+CreatureAI* GetAI_npc_enslaved_soul(Creature* pCreature)
 {
-    return new npc_enslaved_soulAI (_Creature);
+    return new npc_enslaved_soulAI(pCreature);
 }
 
 void AddSC_boss_reliquary_of_souls()

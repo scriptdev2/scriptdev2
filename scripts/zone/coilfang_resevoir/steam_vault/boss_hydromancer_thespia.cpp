@@ -43,9 +43,9 @@ EndContentData */
 
 struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
 {
-    boss_thespiaAI(Creature *c) : ScriptedAI(c)
+    boss_thespiaAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         HeroicMode = m_creature->GetMap()->IsHeroic();
         Reset();
     }
@@ -143,7 +143,7 @@ struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL mob_coilfang_waterelementalAI : public ScriptedAI
 {
-    mob_coilfang_waterelementalAI(Creature *c) : ScriptedAI(c) {Reset();}
+    mob_coilfang_waterelementalAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     bool HeroicMode;
     uint32 WaterBoltVolley_Timer;
@@ -169,14 +169,14 @@ struct MANGOS_DLL_DECL mob_coilfang_waterelementalAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_thespiaAI(Creature *_Creature)
+CreatureAI* GetAI_boss_thespiaAI(Creature* pCreature)
 {
-    return new boss_thespiaAI (_Creature);
+    return new boss_thespiaAI(pCreature);
 }
 
-CreatureAI* GetAI_mob_coilfang_waterelementalAI(Creature *_Creature)
+CreatureAI* GetAI_mob_coilfang_waterelementalAI(Creature* pCreature)
 {
-    return new mob_coilfang_waterelementalAI (_Creature);
+    return new mob_coilfang_waterelementalAI(pCreature);
 }
 
 void AddSC_boss_hydromancer_thespia()

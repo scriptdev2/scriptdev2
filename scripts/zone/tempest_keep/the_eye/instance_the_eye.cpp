@@ -66,21 +66,21 @@ struct MANGOS_DLL_DECL instance_the_eye : public ScriptedInstance
     bool IsEncounterInProgress() const
     {
         for(uint8 i = 0; i < ENCOUNTERS; i++)
-            if(Encounters[i]) return true;
+            if (Encounters[i]) return true;
 
         return false;
     }
 
-    void OnCreatureCreate(Creature *creature, uint32 creature_entry)
+    void OnCreatureCreate(Creature* pCreature, uint32 creature_entry)
     {
-        switch(creature->GetEntry())
+        switch(pCreature->GetEntry())
         {
-            case 20064: ThaladredTheDarkener = creature->GetGUID(); break;
-            case 20063: MasterEngineerTelonicus = creature->GetGUID(); break;
-            case 20062: GrandAstromancerCapernian = creature->GetGUID(); break;
-            case 20060: LordSanguinar = creature->GetGUID(); break;
-            case 19622: Kaelthas = creature->GetGUID(); break;
-            case 18805: Astromancer = creature->GetGUID(); break;
+            case 20064: ThaladredTheDarkener = pCreature->GetGUID(); break;
+            case 20063: MasterEngineerTelonicus = pCreature->GetGUID(); break;
+            case 20062: GrandAstromancerCapernian = pCreature->GetGUID(); break;
+            case 20060: LordSanguinar = pCreature->GetGUID(); break;
+            case 19622: Kaelthas = pCreature->GetGUID(); break;
+            case 18805: Astromancer = pCreature->GetGUID(); break;
         }
     }
 

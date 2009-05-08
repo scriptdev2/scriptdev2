@@ -54,10 +54,10 @@ enum
 
 struct MANGOS_DLL_DECL boss_kelidan_the_breakerAI : public ScriptedAI
 {
-    boss_kelidan_the_breakerAI(Creature *c) : ScriptedAI(c)
+    boss_kelidan_the_breakerAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = (ScriptedInstance*)c->GetInstanceData();
-        HeroicMode = c->GetMap()->IsHeroic();
+        pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        HeroicMode = pCreature->GetMap()->IsHeroic();
         Reset();
     }
 
@@ -154,9 +154,9 @@ struct MANGOS_DLL_DECL boss_kelidan_the_breakerAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_kelidan_the_breaker(Creature *_Creature)
+CreatureAI* GetAI_boss_kelidan_the_breaker(Creature* pCreature)
 {
-    return new boss_kelidan_the_breakerAI (_Creature);
+    return new boss_kelidan_the_breakerAI(pCreature);
 }
 
 /*######
@@ -175,10 +175,10 @@ enum
 
 struct MANGOS_DLL_DECL mob_shadowmoon_channelerAI : public ScriptedAI
 {
-    mob_shadowmoon_channelerAI(Creature *c) : ScriptedAI(c)
+    mob_shadowmoon_channelerAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
-        HeroicMode = c->GetMap()->IsHeroic();
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        HeroicMode = pCreature->GetMap()->IsHeroic();
         Reset();
     }
 
@@ -221,9 +221,9 @@ struct MANGOS_DLL_DECL mob_shadowmoon_channelerAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_shadowmoon_channeler(Creature *_Creature)
+CreatureAI* GetAI_mob_shadowmoon_channeler(Creature* pCreature)
 {
-    return new mob_shadowmoon_channelerAI (_Creature);
+    return new mob_shadowmoon_channelerAI(pCreature);
 }
 
 void AddSC_boss_kelidan_the_breaker()

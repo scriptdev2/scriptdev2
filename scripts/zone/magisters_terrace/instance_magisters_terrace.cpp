@@ -79,7 +79,7 @@ struct MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
     bool IsEncounterInProgress() const
     {
         for(uint8 i = 0; i < NUMBER_OF_ENCOUNTERS; i++)
-            if(Encounters[i] == IN_PROGRESS)
+            if (Encounters[i] == IN_PROGRESS)
                 return true;
         return false;
     }
@@ -126,13 +126,13 @@ struct MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
         }
     }
 
-    void OnCreatureCreate(Creature *creature, uint32 entry)
+    void OnCreatureCreate(Creature* pCreature, uint32 entry)
     {
-        switch(creature->GetEntry())
+        switch(pCreature->GetEntry())
         {
-            case 24723: SelinGUID = creature->GetGUID(); break;
-            case 24560: DelrissaGUID = creature->GetGUID(); break;
-            case 24722: FelCrystals.push_back(creature->GetGUID()); break;
+            case 24723: SelinGUID = pCreature->GetGUID(); break;
+            case 24560: DelrissaGUID = pCreature->GetGUID(); break;
+            case 24722: FelCrystals.push_back(pCreature->GetGUID()); break;
         }
     }
 
@@ -168,13 +168,13 @@ struct MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
 
             case DATA_FEL_CRYSTAL:
             {
-                if(FelCrystals.empty())
+                if (FelCrystals.empty())
                 {
                     error_log("SD2: Magisters Terrace: No Fel Crystals loaded in Inst Data");
                     return 0;
                 }
 
-                if(!InitializedItr)
+                if (!InitializedItr)
                 {
                     CrystalItr = FelCrystals.begin();
                     InitializedItr = true;

@@ -55,7 +55,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_razuviousAI : public ScriptedAI
 {
-    boss_razuviousAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_razuviousAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 UnbalancingStrike_Timer;
     uint32 DisruptingShout_Timer;
@@ -152,9 +152,9 @@ struct MANGOS_DLL_DECL boss_razuviousAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_razuvious(Creature *_Creature)
+CreatureAI* GetAI_boss_razuvious(Creature* pCreature)
 {
-    return new boss_razuviousAI (_Creature);
+    return new boss_razuviousAI(pCreature);
 }
 
 void AddSC_boss_razuvious()

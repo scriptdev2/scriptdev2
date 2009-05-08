@@ -29,7 +29,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_firemawAI : public ScriptedAI
 {
-    boss_firemawAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_firemawAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 ShadowFlame_Timer;
     uint32 WingBuffet_Timer;
@@ -49,7 +49,7 @@ struct MANGOS_DLL_DECL boss_firemawAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //ShadowFlame_Timer
@@ -63,7 +63,7 @@ struct MANGOS_DLL_DECL boss_firemawAI : public ScriptedAI
         if (WingBuffet_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_WINGBUFFET);
-            if(m_creature->getThreatManager().getThreat(m_creature->getVictim()))
+            if (m_creature->getThreatManager().getThreat(m_creature->getVictim()))
                 m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-75);
 
             WingBuffet_Timer = 25000;
@@ -79,9 +79,9 @@ struct MANGOS_DLL_DECL boss_firemawAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_firemaw(Creature *_Creature)
+CreatureAI* GetAI_boss_firemaw(Creature* pCreature)
 {
-    return new boss_firemawAI (_Creature);
+    return new boss_firemawAI(pCreature);
 }
 
 void AddSC_boss_firemaw()

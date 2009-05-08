@@ -30,7 +30,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_ebonrocAI : public ScriptedAI
 {
-    boss_ebonrocAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_ebonrocAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 ShadowFlame_Timer;
     uint32 WingBuffet_Timer;
@@ -52,7 +52,7 @@ struct MANGOS_DLL_DECL boss_ebonrocAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //Shadowflame Timer
@@ -88,9 +88,9 @@ struct MANGOS_DLL_DECL boss_ebonrocAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_ebonroc(Creature *_Creature)
+CreatureAI* GetAI_boss_ebonroc(Creature* pCreature)
 {
-    return new boss_ebonrocAI (_Creature);
+    return new boss_ebonrocAI(pCreature);
 }
 
 void AddSC_boss_ebonroc()

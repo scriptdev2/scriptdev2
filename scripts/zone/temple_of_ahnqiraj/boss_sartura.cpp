@@ -37,7 +37,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_sarturaAI : public ScriptedAI
 {
-    boss_sarturaAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_sarturaAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 WhirlWind_Timer;
     uint32 WhirlWindRandom_Timer;
@@ -170,7 +170,7 @@ struct MANGOS_DLL_DECL boss_sarturaAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL mob_sartura_royal_guardAI : public ScriptedAI
 {
-    mob_sartura_royal_guardAI(Creature *c) : ScriptedAI(c) {Reset();}
+    mob_sartura_royal_guardAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 WhirlWind_Timer;
     uint32 WhirlWindRandom_Timer;
@@ -267,14 +267,14 @@ struct MANGOS_DLL_DECL mob_sartura_royal_guardAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_sartura(Creature *_Creature)
+CreatureAI* GetAI_boss_sartura(Creature* pCreature)
 {
-    return new boss_sarturaAI (_Creature);
+    return new boss_sarturaAI(pCreature);
 }
 
-CreatureAI* GetAI_mob_sartura_royal_guard(Creature *_Creature)
+CreatureAI* GetAI_mob_sartura_royal_guard(Creature* pCreature)
 {
-    return new mob_sartura_royal_guardAI (_Creature);
+    return new mob_sartura_royal_guardAI(pCreature);
 }
 
 void AddSC_boss_sartura()

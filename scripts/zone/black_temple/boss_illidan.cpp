@@ -301,9 +301,9 @@ static Animation DemonTransformation[]=
 /**** Demon Fire will be used for Eye Blast. Illidan needs to have access to it's vars and functions, so we'll set it here ****/
 struct MANGOS_DLL_DECL demonfireAI : public ScriptedAI
 {
-    demonfireAI(Creature *c) : ScriptedAI(c)
+    demonfireAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
@@ -370,9 +370,9 @@ struct MANGOS_DLL_DECL demonfireAI : public ScriptedAI
 /******* Functions and vars for Akama's AI ******/
 struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
 {
-    npc_akama_illidanAI(Creature* c) : ScriptedAI(c)
+    npc_akama_illidanAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         WayPointList.clear();
         Reset();
     }
@@ -499,13 +499,13 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
         }
     }
 
-    void BeginDoorEvent(Player* player)
+    void BeginDoorEvent(Player* pPlayer)
     {
         if (!pInstance)
             return;
 
-        debug_log("SD2: Akama - Door event initiated by player %s", player->GetName());
-        PlayerGUID = player->GetGUID();
+        debug_log("SD2: Akama - Door event initiated by player %s", pPlayer->GetName());
+        PlayerGUID = pPlayer->GetGUID();
 
         if (GameObject* pGate = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GAMEOBJECT_ILLIDAN_GATE)))
         {
@@ -611,7 +611,7 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
             return;
 
         std::list<HostilReference*>::iterator itr = Illidan->getThreatManager().getThreatList().begin();
-        for( ; itr != Illidan->getThreatManager().getThreatList().end(); ++itr)
+        for(; itr != Illidan->getThreatManager().getThreatList().end(); ++itr)
         {
             // Loop through threatlist till our GUID is found in it.
             if ((*itr)->getUnitGuid() == m_creature->GetGUID())
@@ -854,9 +854,9 @@ class AgonizingFlamesTargetCheck
 /************************************** Illidan's AI ***************************************/
 struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
 {
-    boss_illidan_stormrageAI(Creature* c) : ScriptedAI(c)
+    boss_illidan_stormrageAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         for(uint8 i = 0; i < 2; i++)
         {
             FlameGUID[i] = 0;
@@ -1180,11 +1180,11 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
         TalkTimer = Conversation[count].timer;
         uint32 emote = Conversation[count].emote;
         IsTalking = Conversation[count].Talk;
-        Creature* creature = NULL;
+        Creature* pCreature = NULL;
         uint64 GUID = 0;
 
         if (Conversation[count].creature == ILLIDAN_STORMRAGE)
-            creature = m_creature;
+            pCreature = m_creature;
         else if (Conversation[count].creature == AKAMA)
         {
             if (!AkamaGUID)
@@ -1210,20 +1210,20 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
 
         if (GUID)                                           // Now we check if we actually specified a GUID, if so:
                                                             // we grab a pointer to that creature
-            creature = ((Creature*)Unit::GetUnit((*m_creature), GUID));
+            pCreature = ((Creature*)Unit::GetUnit((*m_creature), GUID));
 
-        if (creature)
+        if (pCreature)
         {
             if (emote)
-                creature->HandleEmoteCommand(emote);        // Make the creature do some animation!
+                pCreature->HandleEmoteCommand(emote);        // Make the creature do some animation!
             if (text)
-                DoScriptText(text, creature);               // Have the creature yell out some text
+                DoScriptText(text, pCreature);               // Have the creature yell out some text
         }
     }
 
-    void Move(float X, float Y, float Z, Creature* _Creature)
+    void Move(float X, float Y, float Z, Creature* pCreature)
     {
-        _Creature->GetMotionMaster()->MovePoint(0, X, Y, Z);
+        pCreature->GetMotionMaster()->MovePoint(0, X, Y, Z);
     }
 
     void HandleDemonTransformAnimation(uint32 count)
@@ -1973,37 +1973,37 @@ void npc_akama_illidanAI::BeginEvent(uint64 PlayerGUID)
 
             if (PlayerGUID)
             {
-                Unit* player = Unit::GetUnit((*m_creature), PlayerGUID);
-                if (player)
-                    Illidan->AddThreat(player, 100.0f);
+                Unit* pPlayer = Unit::GetUnit((*m_creature), PlayerGUID);
+                if (pPlayer)
+                    Illidan->AddThreat(pPlayer, 100.0f);
             }
         }
     }
 }
 
-bool GossipHello_npc_akama_at_illidan(Player *player, Creature *_Creature)
+bool GossipHello_npc_akama_at_illidan(Player* pPlayer, Creature* pCreature)
 {
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
-    player->SEND_GOSSIP_MENU(10465, _Creature->GetGUID());
+    pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+    pPlayer->SEND_GOSSIP_MENU(10465, pCreature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_akama_at_illidan(Player *player, Creature *_Creature, uint32 sender, uint32 action)
+bool GossipSelect_npc_akama_at_illidan(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
 {
     if (action == GOSSIP_ACTION_INFO_DEF)                    // Time to begin the event
     {
-        player->CLOSE_GOSSIP_MENU();
-        ((npc_akama_illidanAI*)_Creature->AI())->BeginDoorEvent(player);
+        pPlayer->CLOSE_GOSSIP_MENU();
+        ((npc_akama_illidanAI*)pCreature->AI())->BeginDoorEvent(pPlayer);
     }
     return true;
 }
 
 struct MANGOS_DLL_SPEC boss_maievAI : public ScriptedAI
 {
-    boss_maievAI(Creature *c) : ScriptedAI(c)
+    boss_maievAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     };
 
@@ -2057,7 +2057,7 @@ struct MANGOS_DLL_SPEC boss_maievAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL cage_trap_triggerAI : public ScriptedAI
 {
-    cage_trap_triggerAI(Creature *c) : ScriptedAI(c) {Reset();}
+    cage_trap_triggerAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint64 IllidanGUID;
     uint64 CageTrapGUID;
@@ -2172,7 +2172,7 @@ struct TargetDistanceOrder : public std::binary_function<const Unit, const Unit,
 
 struct MANGOS_DLL_DECL flame_of_azzinothAI : public ScriptedAI
 {
-    flame_of_azzinothAI(Creature *c) : ScriptedAI(c) {Reset();}
+    flame_of_azzinothAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 FlameBlastTimer;
     uint32 SummonBlazeTimer;
@@ -2198,7 +2198,7 @@ struct MANGOS_DLL_DECL flame_of_azzinothAI : public ScriptedAI
         std::list<HostilReference *>::iterator itr = m_threatlist.begin();
 
         //store the threat list in a different container
-        for( ; itr!= m_threatlist.end(); ++itr)
+        for(; itr!= m_threatlist.end(); ++itr)
         {
             Unit *target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
             //only on alive players
@@ -2248,7 +2248,7 @@ struct MANGOS_DLL_DECL flame_of_azzinothAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL shadow_demonAI : public ScriptedAI
 {
-    shadow_demonAI(Creature *c) : ScriptedAI(c) {Reset();}
+    shadow_demonAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint64 TargetGUID;
 
@@ -2287,7 +2287,7 @@ struct MANGOS_DLL_DECL shadow_demonAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL flamecrashAI : public ScriptedAI
 {
-    flamecrashAI(Creature *c) : ScriptedAI(c) {Reset();}
+    flamecrashAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 FlameCrashTimer;
     uint32 DespawnTimer;
@@ -2322,7 +2322,7 @@ struct MANGOS_DLL_DECL flamecrashAI : public ScriptedAI
 // Shadowfiends interact with Illidan, setting more targets in Illidan's hashmap
 struct MANGOS_DLL_SPEC mob_parasitic_shadowfiendAI : public ScriptedAI
 {
-    mob_parasitic_shadowfiendAI(Creature* c) : ScriptedAI(c)
+    mob_parasitic_shadowfiendAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         Reset();
     }
@@ -2349,7 +2349,7 @@ struct MANGOS_DLL_SPEC mob_parasitic_shadowfiendAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL blazeAI : public ScriptedAI
 {
-    blazeAI(Creature *c) : ScriptedAI(c) {Reset();}
+    blazeAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 BlazeTimer;
     uint32 DespawnTimer;
@@ -2382,7 +2382,7 @@ struct MANGOS_DLL_DECL blazeAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL blade_of_azzinothAI : public ScriptedAI
 {
-    blade_of_azzinothAI(Creature* c) : ScriptedAI(c) { Reset(); }
+    blade_of_azzinothAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
     void Reset() {}
 
@@ -2392,14 +2392,14 @@ struct MANGOS_DLL_DECL blade_of_azzinothAI : public ScriptedAI
 
 };
 
-CreatureAI* GetAI_boss_illidan_stormrage(Creature *_Creature)
+CreatureAI* GetAI_boss_illidan_stormrage(Creature* pCreature)
 {
-    return new boss_illidan_stormrageAI (_Creature);
+    return new boss_illidan_stormrageAI(pCreature);
 }
 
-CreatureAI* GetAI_npc_akama_at_illidan(Creature *_Creature)
+CreatureAI* GetAI_npc_akama_at_illidan(Creature* pCreature)
 {
-    npc_akama_illidanAI* Akama_AI = new npc_akama_illidanAI(_Creature);
+    npc_akama_illidanAI* Akama_AI = new npc_akama_illidanAI(pCreature);
 
     for(uint8 i = 0; i < 13; ++i)
         Akama_AI->AddWaypoint(i, AkamaWP[i].x, AkamaWP[i].y, AkamaWP[i].z);
@@ -2407,49 +2407,49 @@ CreatureAI* GetAI_npc_akama_at_illidan(Creature *_Creature)
     return ((CreatureAI*)Akama_AI);
 }
 
-CreatureAI* GetAI_boss_maiev(Creature *_Creature)
+CreatureAI* GetAI_boss_maiev(Creature* pCreature)
 {
-    return new boss_maievAI (_Creature);
+    return new boss_maievAI(pCreature);
 }
 
-CreatureAI* GetAI_mob_flame_of_azzinoth(Creature *_Creature)
+CreatureAI* GetAI_mob_flame_of_azzinoth(Creature* pCreature)
 {
-    return new flame_of_azzinothAI (_Creature);
+    return new flame_of_azzinothAI(pCreature);
 }
 
-CreatureAI* GetAI_cage_trap_trigger(Creature *_Creature)
+CreatureAI* GetAI_cage_trap_trigger(Creature* pCreature)
 {
-    return new cage_trap_triggerAI (_Creature);
+    return new cage_trap_triggerAI(pCreature);
 }
 
-CreatureAI* GetAI_shadow_demon(Creature *_Creature)
+CreatureAI* GetAI_shadow_demon(Creature* pCreature)
 {
-    return new shadow_demonAI (_Creature);
+    return new shadow_demonAI(pCreature);
 }
 
-CreatureAI* GetAI_flamecrash(Creature *_Creature)
+CreatureAI* GetAI_flamecrash(Creature* pCreature)
 {
-    return new flamecrashAI (_Creature);
+    return new flamecrashAI(pCreature);
 }
 
-CreatureAI* GetAI_demonfire(Creature *_Creature)
+CreatureAI* GetAI_demonfire(Creature* pCreature)
 {
-    return new demonfireAI (_Creature);
+    return new demonfireAI(pCreature);
 }
 
-CreatureAI* GetAI_blaze(Creature *_Creature)
+CreatureAI* GetAI_blaze(Creature* pCreature)
 {
-    return new blazeAI (_Creature);
+    return new blazeAI(pCreature);
 }
 
-CreatureAI* GetAI_blade_of_azzinoth(Creature *_Creature)
+CreatureAI* GetAI_blade_of_azzinoth(Creature* pCreature)
 {
-    return new blade_of_azzinothAI (_Creature);
+    return new blade_of_azzinothAI(pCreature);
 }
 
-CreatureAI* GetAI_parasitic_shadowfiend(Creature *_Creature)
+CreatureAI* GetAI_parasitic_shadowfiend(Creature* pCreature)
 {
-    return new mob_parasitic_shadowfiendAI (_Creature);
+    return new mob_parasitic_shadowfiendAI(pCreature);
 }
 
 void AddSC_boss_illidan()
