@@ -51,7 +51,7 @@ EndContentData */
 
 struct MANGOS_DLL_DECL npc_draenei_survivorAI : public ScriptedAI
 {
-    npc_draenei_survivorAI(Creature *c) : ScriptedAI(c) {Reset();}
+    npc_draenei_survivorAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint64 pCaster;
 
@@ -120,7 +120,7 @@ struct MANGOS_DLL_DECL npc_draenei_survivorAI : public ScriptedAI
             {
                 m_creature->RemoveAurasDueToSpell(SPELL_IRRIDATION);
 
-                if (Player *pPlayer = (Player*)Unit::GetUnit(*m_creature,pCaster))
+                if (Player* pPlayer = (Player*)Unit::GetUnit(*m_creature,pCaster))
                 {
                     if (pPlayer->GetTypeId() != TYPEID_PLAYER)
                         return;
@@ -171,9 +171,9 @@ struct MANGOS_DLL_DECL npc_draenei_survivorAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_draenei_survivor(Creature *_Creature)
+CreatureAI* GetAI_npc_draenei_survivor(Creature* pCreature)
 {
-    return new npc_draenei_survivorAI (_Creature);
+    return new npc_draenei_survivorAI(pCreature);
 }
 
 /*######
@@ -197,13 +197,13 @@ enum
 
 struct MANGOS_DLL_DECL npc_engineer_spark_overgrindAI : public ScriptedAI
 {
-    npc_engineer_spark_overgrindAI(Creature *c) : ScriptedAI(c)
+    npc_engineer_spark_overgrindAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        uiNormFaction = c->getFaction();
-        uiNpcFlags = c->GetUInt32Value(UNIT_NPC_FLAGS);
+        uiNormFaction = pCreature->getFaction();
+        uiNpcFlags = pCreature->GetUInt32Value(UNIT_NPC_FLAGS);
         Reset();
 
-        if (c->GetAreaId() == AREA_COVE || c->GetAreaId() == AREA_ISLE)
+        if (pCreature->GetAreaId() == AREA_COVE || pCreature->GetAreaId() == AREA_ISLE)
             bIsTreeEvent = true;
     }
 
@@ -277,7 +277,7 @@ bool GossipHello_npc_engineer_spark_overgrind(Player* pPlayer, Creature* pCreatu
     return true;
 }
 
-bool GossipSelect_npc_engineer_spark_overgrind(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction )
+bool GossipSelect_npc_engineer_spark_overgrind(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF)
     {
@@ -294,7 +294,7 @@ bool GossipSelect_npc_engineer_spark_overgrind(Player* pPlayer, Creature* pCreat
 
 struct MANGOS_DLL_DECL npc_injured_draeneiAI : public ScriptedAI
 {
-    npc_injured_draeneiAI(Creature *c) : ScriptedAI(c) {Reset();}
+    npc_injured_draeneiAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     void Reset()
     {
@@ -318,9 +318,9 @@ struct MANGOS_DLL_DECL npc_injured_draeneiAI : public ScriptedAI
     }
 
 };
-CreatureAI* GetAI_npc_injured_draenei(Creature *_Creature)
+CreatureAI* GetAI_npc_injured_draenei(Creature* pCreature)
 {
-    return new npc_injured_draeneiAI (_Creature);
+    return new npc_injured_draeneiAI(pCreature);
 }
 
 /*######
@@ -338,31 +338,31 @@ CreatureAI* GetAI_npc_injured_draenei(Creature *_Creature)
 
 struct MANGOS_DLL_DECL npc_magwinAI : public npc_escortAI
 {
-    npc_magwinAI(Creature *c) : npc_escortAI(c) {Reset();}
+    npc_magwinAI(Creature* pCreature) : npc_escortAI(pCreature) {Reset();}
 
     void WaypointReached(uint32 i)
     {
-        Unit* player = Unit::GetUnit((*m_creature), PlayerGUID);
+        Unit* pPlayer = Unit::GetUnit((*m_creature), PlayerGUID);
 
-        if (!player)
+        if (!pPlayer)
             return;
 
         switch(i)
         {
             case 0:
-                DoScriptText(SAY_START, m_creature, player);
+                DoScriptText(SAY_START, m_creature, pPlayer);
                 break;
             case 17: 
-                DoScriptText(SAY_PROGRESS, m_creature, player);
+                DoScriptText(SAY_PROGRESS, m_creature, pPlayer);
                 break;
             case 28:
-                DoScriptText(SAY_END1, m_creature, player);
+                DoScriptText(SAY_END1, m_creature, pPlayer);
                 break;
             case 29:
-                DoScriptText(EMOTE_HUG, m_creature, player);
-                DoScriptText(SAY_END2, m_creature, player);
-                if (player && player->GetTypeId() == TYPEID_PLAYER)
-                    ((Player*)player)->GroupEventHappens(QUEST_A_CRY_FOR_HELP,m_creature);
+                DoScriptText(EMOTE_HUG, m_creature, pPlayer);
+                DoScriptText(SAY_END2, m_creature, pPlayer);
+                if (pPlayer && pPlayer->GetTypeId() == TYPEID_PLAYER)
+                    ((Player*)pPlayer)->GroupEventHappens(QUEST_A_CRY_FOR_HELP,m_creature);
                 break;
         }
     }
@@ -382,9 +382,9 @@ struct MANGOS_DLL_DECL npc_magwinAI : public npc_escortAI
     {
         if (PlayerGUID)
         {
-            Unit* player = Unit::GetUnit((*m_creature), PlayerGUID);
-            if (player)
-                ((Player*)player)->FailQuest(QUEST_A_CRY_FOR_HELP);
+            Unit* pPlayer = Unit::GetUnit((*m_creature), PlayerGUID);
+            if (pPlayer)
+                ((Player*)pPlayer)->FailQuest(QUEST_A_CRY_FOR_HELP);
         }
     }
 
@@ -394,12 +394,12 @@ struct MANGOS_DLL_DECL npc_magwinAI : public npc_escortAI
     }
 };
 
-bool QuestAccept_npc_magwin(Player* player, Creature* creature, Quest const* quest)
+bool QuestAccept_npc_magwin(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
 {
-    if (quest->GetQuestId() == QUEST_A_CRY_FOR_HELP)
+    if (pQuest->GetQuestId() == QUEST_A_CRY_FOR_HELP)
     {
-        creature->setFaction(10);
-        ((npc_escortAI*)(creature->AI()))->Start(true, true, false, player->GetGUID());
+        pCreature->setFaction(10);
+        ((npc_escortAI*)(pCreature->AI()))->Start(true, true, false, pPlayer->GetGUID());
     }
     return true;
 }
@@ -426,7 +426,7 @@ enum
 
 struct MANGOS_DLL_DECL npc_nestlewood_owlkinAI : public ScriptedAI
 {
-    npc_nestlewood_owlkinAI(Creature *c) : ScriptedAI(c) {Reset();}
+    npc_nestlewood_owlkinAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 DespawnTimer;
 
@@ -500,7 +500,7 @@ enum
 bool GossipHello_npc_susurrus(Player* pPlayer, Creature* pCreature)
 {
     if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetGUID() );
+        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
 
     if (pPlayer->HasItemCount(ITEM_WHORL_OF_AIR,1,true))
         pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_READY, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
@@ -517,7 +517,6 @@ bool GossipSelect_npc_susurrus(Player* pPlayer, Creature* pCreature, uint32 uiSe
         //spellId is correct, however it gives flight a somewhat funny effect
         pPlayer->CLOSE_GOSSIP_MENU();
         pPlayer->CastSpell(pPlayer,SPELL_BUFFETING_WINDS,true);
-        pPlayer->ActivateTaxiPathTo(TAXI_PATH_ID, SPELL_BUFFETING_WINDS);
     }
     return true;
 }
