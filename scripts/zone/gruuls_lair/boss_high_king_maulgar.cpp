@@ -125,7 +125,7 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
         DoScriptText(SAY_DEATH, m_creature);
 
         if (pInstance)
-        {        
+        {
             pInstance->SetData(DATA_MAULGAREVENT, DONE);
 
             // Open the door leading further in

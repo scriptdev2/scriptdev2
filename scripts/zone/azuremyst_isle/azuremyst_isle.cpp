@@ -352,7 +352,7 @@ struct MANGOS_DLL_DECL npc_magwinAI : public npc_escortAI
             case 0:
                 DoScriptText(SAY_START, m_creature, pPlayer);
                 break;
-            case 17: 
+            case 17:
                 DoScriptText(SAY_PROGRESS, m_creature, pPlayer);
                 break;
             case 28:

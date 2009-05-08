@@ -605,7 +605,7 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
 
         // Create a pointer to Illidan
         Creature* Illidan = ((Creature*)Unit::GetUnit((*m_creature), IllidanGUID));
-        
+
         // No use to continue if Illidan does not exist
         if (!Illidan)
             return;

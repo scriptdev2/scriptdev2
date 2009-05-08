@@ -128,7 +128,7 @@ struct MANGOS_DLL_DECL npc_kelerun_bloodmournAI : public ScriptedAI
     {
         for(uint8 i = 0; i < MAX_CHALLENGER; i++)
         {
-            if (Creature* pCreature = m_creature->SummonCreature(uiChallengerId[i], 
+            if (Creature* pCreature = m_creature->SummonCreature(uiChallengerId[i],
                 fChallengerLoc[i][0], fChallengerLoc[i][1],
                 fChallengerLoc[i][2], fChallengerLoc[i][3],
                 TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000))

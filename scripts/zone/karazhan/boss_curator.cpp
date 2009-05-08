@@ -116,7 +116,7 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
                 return;
             else
                 Evocating = false;
-        }            
+        }
 
         if (!Enraged)
         {

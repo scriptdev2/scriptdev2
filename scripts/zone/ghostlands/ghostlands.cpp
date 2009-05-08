@@ -186,7 +186,7 @@ struct MANGOS_DLL_DECL npc_ranger_lilathaAI : public npc_escortAI
                 DoScriptText(SAY_PROGRESS1, m_creature, pPlayer);
                 break;
             case 11:
-                DoScriptText(SAY_PROGRESS2, m_creature, pPlayer); 
+                DoScriptText(SAY_PROGRESS2, m_creature, pPlayer);
                 break;
             case 18:
                 DoScriptText(SAY_PROGRESS3, m_creature, pPlayer);
@@ -197,7 +197,7 @@ struct MANGOS_DLL_DECL npc_ranger_lilathaAI : public npc_escortAI
                 break;
             case 19:
                 SetRun();
-                break; 
+                break;
             case 25:
                 SetRun(false);
                 break;

@@ -357,7 +357,7 @@ CreatureAI* GetAI_npc_oox17tn(Creature* pCreature)
     npc_oox17tnAI* oox17AI = new npc_oox17tnAI(pCreature);
 
     oox17AI->FillPointMovementListForCreature();
-    
+
     return (CreatureAI*)oox17AI;
 }
 

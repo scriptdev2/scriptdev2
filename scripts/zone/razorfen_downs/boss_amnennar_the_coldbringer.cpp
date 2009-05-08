@@ -44,7 +44,7 @@ struct MANGOS_DLL_DECL boss_amnennar_the_coldbringerAI : public ScriptedAI
     bool Spectrals60;
     bool Spectrals30;
     bool Hp;
- 
+
     void Reset()
     {
         AmnenarsWrath_Timer = 8000;

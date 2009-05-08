@@ -305,7 +305,7 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
             {
                 pTemp->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                 pTemp->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                        
+
                 if (Creature* pBoss = SummonedPortalBoss(pTemp))
                 {
                     if (pBoss->GetEntry() == C_AEONUS)

@@ -355,7 +355,7 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
                 IntroDone();
                 return;
             }
-            
+
             if (RandChat_Timer < diff)
             {
                 DoScriptText(RandomTaunt[rand()%6].id, m_creature);
@@ -511,7 +511,7 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
         {
             if (!Magtheridon->isAlive())
                 return;
-            
+
             if (pInstance->GetData(TYPE_CHANNELER_EVENT) == NOT_STARTED)
                 DoScriptText(EMOTE_BEGIN, Magtheridon);
         }

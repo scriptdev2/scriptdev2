@@ -490,7 +490,7 @@ struct MANGOS_DLL_DECL npc_commander_dawnforgeAI : public ScriptedAI
         //Is event even running?
         if (!isEvent)
             return;
-                
+
         //Phase timing
         if (Phase_Timer >= diff)
         {

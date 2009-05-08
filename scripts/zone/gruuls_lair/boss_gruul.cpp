@@ -125,7 +125,7 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
         if (pInstance)
         {
             pInstance->SetData(DATA_GRUULEVENT, DONE);
-            
+
             // Open the encounter door
             if (GameObject* pEncounterDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GRUUL_ENCOUNTER_DOOR)))
                 pEncounterDoor->SetGoState(GO_STATE_ACTIVE);

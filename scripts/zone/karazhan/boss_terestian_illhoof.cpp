@@ -277,7 +277,7 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
             {
                 Kilrek->Respawn();
                 Kilrek->AI()->AttackStart(m_creature->getVictim());
-                m_creature->RemoveAurasDueToSpell(SPELL_BROKEN_PACT);    
+                m_creature->RemoveAurasDueToSpell(SPELL_BROKEN_PACT);
 
                 SummonKilrek = false;
             }

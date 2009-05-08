@@ -120,7 +120,7 @@ struct MANGOS_DLL_DECL npc_kyle_the_frenziedAI : public ScriptedAI
                         break;
                     case 3:
                         uiEventTimer = 5000;
-                        
+
                         if (Unit* pUnit = Unit::GetUnit(*m_creature,uiPlayerGUID))
                             ((Player*)pUnit)->TalkedToCreature(m_creature->GetEntry(), m_creature->GetGUID());
 

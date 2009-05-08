@@ -77,7 +77,7 @@ struct MANGOS_DLL_DECL instance_gruuls_lair : public ScriptedInstance
             case 18832: KroshFirehand = pCreature->GetGUID(); break;
         }
     }
-    
+
     void OnObjectCreate(GameObject* go)
     {
         switch(go->GetEntry())
