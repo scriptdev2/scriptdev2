@@ -472,23 +472,32 @@ CreatureAI* GetAI_npc_khadgars_servant(Creature* pCreature)
 ## npc_raliq_the_drunk
 ######*/
 
-#define GOSSIP_RALIQ            "You owe Sim'salabim money. Hand them over or die!"
+enum
+{
+    SPELL_UPPERCUT          = 10966,
+    QUEST_CRACK_SKULLS      = 10009,
+    FACTION_HOSTILE_RD      = 45
+};
 
-#define FACTION_HOSTILE_RD      45
-#define FACTION_FRIENDLY_RD     35
-
-#define SPELL_UPPERCUT          10966
+#define GOSSIP_RALIQ        "You owe Sim'salabim money. Hand them over or die!"
 
 struct MANGOS_DLL_DECL npc_raliq_the_drunkAI : public ScriptedAI
 {
-    npc_raliq_the_drunkAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
+    npc_raliq_the_drunkAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_uiNormFaction = pCreature->getFaction();
+        Reset();
+    }
 
-    uint32 Uppercut_Timer;
+    uint32 m_uiNormFaction;
+    uint32 m_uiUppercut_Timer;
 
     void Reset()
     {
-        Uppercut_Timer = 5000;
-        m_creature->setFaction(FACTION_FRIENDLY_RD);
+        m_uiUppercut_Timer = 5000;
+
+        if (m_creature->getFaction() != m_uiNormFaction)
+            m_creature->setFaction(m_uiNormFaction);
     }
 
     void UpdateAI(const uint32 diff)
@@ -496,15 +505,16 @@ struct MANGOS_DLL_DECL npc_raliq_the_drunkAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if (Uppercut_Timer < diff)
+        if (m_uiUppercut_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_UPPERCUT);
-            Uppercut_Timer = 15000;
-        }else Uppercut_Timer -= diff;
+            m_uiUppercut_Timer = 15000;
+        }else m_uiUppercut_Timer -= diff;
 
         DoMeleeAttackIfReady();
     }
 };
+
 CreatureAI* GetAI_npc_raliq_the_drunk(Creature* pCreature)
 {
     return new npc_raliq_the_drunkAI(pCreature);
@@ -512,8 +522,8 @@ CreatureAI* GetAI_npc_raliq_the_drunk(Creature* pCreature)
 
 bool GossipHello_npc_raliq_the_drunk(Player* pPlayer, Creature* pCreature)
 {
-    if (pPlayer->GetQuestStatus(10009) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(1, GOSSIP_RALIQ, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+    if (pPlayer->GetQuestStatus(QUEST_CRACK_SKULLS) == QUEST_STATUS_INCOMPLETE)
+        pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_RALIQ, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
     pPlayer->SEND_GOSSIP_MENU(9440, pCreature->GetGUID());
     return true;
@@ -702,6 +712,7 @@ void AddSC_shattrath_city()
 
     newscript = new Script;
     newscript->Name = "npc_raliq_the_drunk";
+    newscript->GetAI = &GetAI_npc_raliq_the_drunk;
     newscript->pGossipHello = &GossipHello_npc_raliq_the_drunk;
     newscript->pGossipSelect = &GossipSelect_npc_raliq_the_drunk;
     newscript->RegisterSelf();
