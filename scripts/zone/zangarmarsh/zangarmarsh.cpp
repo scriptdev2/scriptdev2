@@ -114,39 +114,49 @@ bool GossipSelect_npcs_ashyen_and_keleth(Player* pPlayer, Creature* pCreature, u
 ## npc_cooshcoosh
 ######*/
 
-#define GOSSIP_COOSH            "You owe Sim'salabim money. Hand them over or die!"
+enum
+{
+    SPELL_LIGHTNING_BOLT    = 9532,
+    QUEST_CRACK_SKULLS      = 10009,
+    FACTION_HOSTILE_CO      = 45
+};
 
-#define FACTION_HOSTILE_CO      45
-#define FACTION_FRIENDLY_CO     35
-
-#define SPELL_LIGHTNING_BOLT    9532
+#define GOSSIP_COOSH        "You owe Sim'salabim money. Hand them over or die!"
 
 struct MANGOS_DLL_DECL npc_cooshcooshAI : public ScriptedAI
 {
-    npc_cooshcooshAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
+    npc_cooshcooshAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_uiNormFaction = pCreature->getFaction();
+        Reset();
+    }
 
-    uint32 LightningBolt_Timer;
+    uint32 m_uiNormFaction;
+    uint32 m_uiLightningBolt_Timer;
 
     void Reset()
     {
-        LightningBolt_Timer = 2000;
-        m_creature->setFaction(FACTION_FRIENDLY_CO);
+        m_uiLightningBolt_Timer = 2000;
+
+        if (m_creature->getFaction() != m_uiNormFaction)
+            m_creature->setFaction(m_uiNormFaction);
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if (LightningBolt_Timer < diff)
+        if (m_uiLightningBolt_Timer < uiDiff)
         {
             DoCast(m_creature->getVictim(),SPELL_LIGHTNING_BOLT);
-            LightningBolt_Timer = 5000;
-        }else LightningBolt_Timer -= diff;
+            m_uiLightningBolt_Timer = 5000;
+        }else m_uiLightningBolt_Timer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
 };
+
 CreatureAI* GetAI_npc_cooshcoosh(Creature* pCreature)
 {
     return new npc_cooshcooshAI(pCreature);
@@ -154,8 +164,8 @@ CreatureAI* GetAI_npc_cooshcoosh(Creature* pCreature)
 
 bool GossipHello_npc_cooshcoosh(Player* pPlayer, Creature* pCreature)
 {
-    if (pPlayer->GetQuestStatus(10009) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(1, GOSSIP_COOSH, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+    if (pPlayer->GetQuestStatus(QUEST_CRACK_SKULLS) == QUEST_STATUS_INCOMPLETE)
+        pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_COOSH, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
     pPlayer->SEND_GOSSIP_MENU(9441, pCreature->GetGUID());
     return true;

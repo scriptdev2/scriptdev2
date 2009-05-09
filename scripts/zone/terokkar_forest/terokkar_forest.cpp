@@ -233,59 +233,71 @@ CreatureAI* GetAI_mob_netherweb_victim(Creature* pCreature)
 ## npc_floon
 ######*/
 
-#define GOSSIP_FLOON1           "You owe Sim'salabim money. Hand them over or die!"
-#define GOSSIP_FLOON2           "Hand over the money or die...again!"
-#define SAY_FLOON_ATTACK        -1000195
+enum
+{
+    SAY_FLOON_ATTACK        = -1000195,
 
-#define FACTION_HOSTILE_FL      1738
-#define FACTION_FRIENDLY_FL     35
+    SPELL_SILENCE           = 6726,
+    SPELL_FROSTBOLT         = 9672,
+    SPELL_FROST_NOVA        = 11831,
 
-#define SPELL_SILENCE           6726
-#define SPELL_FROSTBOLT         9672
-#define SPELL_FROST_NOVA        11831
+    FACTION_HOSTILE_FL      = 1738,
+    QUEST_CRACK_SKULLS      = 10009
+};
+
+#define GOSSIP_FLOON1       "You owe Sim'salabim money. Hand them over or die!"
+#define GOSSIP_FLOON2       "Hand over the money or die...again!"
 
 struct MANGOS_DLL_DECL npc_floonAI : public ScriptedAI
 {
-    npc_floonAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
+    npc_floonAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_uiNormFaction = pCreature->getFaction();
+        Reset();
+    }
 
-    uint32 Silence_Timer;
-    uint32 Frostbolt_Timer;
-    uint32 FrostNova_Timer;
+    uint32 m_uiNormFaction;
+    uint32 m_uiSilence_Timer;
+    uint32 m_uiFrostbolt_Timer;
+    uint32 m_uiFrostNova_Timer;
 
     void Reset()
     {
-        Silence_Timer = 2000;
-        Frostbolt_Timer = 4000;
-        FrostNova_Timer = 9000;
-        m_creature->setFaction(FACTION_FRIENDLY_FL);
+        m_uiSilence_Timer = 2000;
+        m_uiFrostbolt_Timer = 4000;
+        m_uiFrostNova_Timer = 9000;
+
+        if (m_creature->getFaction() != m_uiNormFaction)
+            m_creature->setFaction(m_uiNormFaction);
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if (Silence_Timer < diff)
+        if (m_uiSilence_Timer < uiDiff)
         {
             DoCast(m_creature->getVictim(),SPELL_SILENCE);
-            Silence_Timer = 30000;
-        }else Silence_Timer -= diff;
+            m_uiSilence_Timer = 30000;
+        }else m_uiSilence_Timer -= uiDiff;
 
-        if (FrostNova_Timer < diff)
+        if (m_uiFrostNova_Timer < uiDiff)
         {
             DoCast(m_creature,SPELL_FROST_NOVA);
-            FrostNova_Timer = 20000;
-        }else FrostNova_Timer -= diff;
+            m_uiFrostNova_Timer = 20000;
+        }else m_uiFrostNova_Timer -= uiDiff;
 
-        if (Frostbolt_Timer < diff)
+        if (m_uiFrostbolt_Timer < uiDiff)
         {
             DoCast(m_creature->getVictim(),SPELL_FROSTBOLT);
-            Frostbolt_Timer = 5000;
-        }else Frostbolt_Timer -= diff;
+            m_uiFrostbolt_Timer = 5000;
+        }else m_uiFrostbolt_Timer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
 };
+
 CreatureAI* GetAI_npc_floon(Creature* pCreature)
 {
     return new npc_floonAI(pCreature);
@@ -293,8 +305,8 @@ CreatureAI* GetAI_npc_floon(Creature* pCreature)
 
 bool GossipHello_npc_floon(Player* pPlayer, Creature* pCreature)
 {
-    if (pPlayer->GetQuestStatus(10009) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(1, GOSSIP_FLOON1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+    if (pPlayer->GetQuestStatus(QUEST_CRACK_SKULLS) == QUEST_STATUS_INCOMPLETE)
+        pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_FLOON1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
     pPlayer->SEND_GOSSIP_MENU(9442, pCreature->GetGUID());
     return true;
@@ -304,14 +316,14 @@ bool GossipSelect_npc_floon(Player* pPlayer, Creature* pCreature, uint32 sender,
 {
     if (action == GOSSIP_ACTION_INFO_DEF)
     {
-        pPlayer->ADD_GOSSIP_ITEM(1, GOSSIP_FLOON2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_FLOON2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
         pPlayer->SEND_GOSSIP_MENU(9443, pCreature->GetGUID());
     }
     if (action == GOSSIP_ACTION_INFO_DEF+1)
     {
         pPlayer->CLOSE_GOSSIP_MENU();
         pCreature->setFaction(FACTION_HOSTILE_FL);
-        DoScriptText(SAY_FLOON_ATTACK, pCreature,pPlayer);
+        DoScriptText(SAY_FLOON_ATTACK, pCreature, pPlayer);
         ((npc_floonAI*)pCreature->AI())->AttackStart(pPlayer);
     }
     return true;
