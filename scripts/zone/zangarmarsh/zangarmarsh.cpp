@@ -361,6 +361,7 @@ void AddSC_zangarmarsh()
 
     newscript = new Script;
     newscript->Name = "npc_cooshcoosh";
+    newscript->GetAI = &GetAI_npc_cooshcoosh;
     newscript->pGossipHello =  &GossipHello_npc_cooshcoosh;
     newscript->pGossipSelect = &GossipSelect_npc_cooshcoosh;
     newscript->RegisterSelf();

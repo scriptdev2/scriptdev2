@@ -388,6 +388,7 @@ void AddSC_terokkar_forest()
 
     newscript = new Script;
     newscript->Name = "npc_floon";
+    newscript->GetAI = &GetAI_npc_floon;
     newscript->pGossipHello =  &GossipHello_npc_floon;
     newscript->pGossipSelect = &GossipSelect_npc_floon;
     newscript->RegisterSelf();

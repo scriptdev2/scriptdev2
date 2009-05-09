@@ -837,7 +837,7 @@ UPDATE creature_template SET ScriptName='npc_steward_of_time' WHERE entry=20142;
 UPDATE creature_template SET ScriptName='npc_stone_watcher_of_norgannon' WHERE entry=7918;
 
 /* TELDRASSIL */
-
+UPDATE creature_template SET ScriptName='npc_mist' WHERE entry=3568;
 
 /*  */
 /* TEMPEST KEEP */
