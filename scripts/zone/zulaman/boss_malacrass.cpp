@@ -98,7 +98,7 @@ enum
     SPELL_WR_SPELL_REFLECT      = 43443,
 
     //misc
-    //WEAPON_ID                   = 33494,                    //...? Remove or document what this is.
+    //WEAPON_ID                   = 33494,                    //weapon equip id, must be set by database.
     MAX_ACTIVE_ADDS             = 4
 };
 
@@ -109,16 +109,18 @@ const float ADD_POS_Y       = 921.279;
 const float ADD_POS_Z       = 33.889;
 const float ADD_ORIENT      = 1.527;
 
-static uint32 m_auiAddEntryList[] =
+struct SpawnGroup
 {
-    24240,                                                  //Alyson Antille
-    24241,                                                  //Thurg
-    24242,                                                  //Slither
-    24243,                                                  //Lord Raadan
-    24244,                                                  //Gazakroth
-    24245,                                                  //Fenstalker
-    24246,                                                  //Darkheart
-    24247,                                                  //Koragg
+    uint32 m_uiCreatureEntry;
+    uint32 m_uiCreatureEntryAlt;
+};
+
+SpawnGroup m_auiSpawnEntry[] =
+{
+    {24240, 24241},                                         //Alyson Antille / Thurg
+    {24242, 24243},                                         //Slither / Lord Raadan
+    {24244, 24245},                                         //Gazakroth / Fenstalker
+    {24246, 24247},                                         //Darkheart / Koragg
 };
 
 struct MANGOS_DLL_DECL boss_malacrassAI : public ScriptedAI
@@ -127,13 +129,13 @@ struct MANGOS_DLL_DECL boss_malacrassAI : public ScriptedAI
     {
         m_pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         memset(&m_auiAddGUIDs, 0, sizeof(m_auiAddGUIDs));
-        m_vAddsEntryList.clear();
+        m_lAddsEntryList.clear();
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
 
-    std::vector<uint32> m_vAddsEntryList;
+    std::list<uint32> m_lAddsEntryList;
     uint64 m_auiAddGUIDs[MAX_ACTIVE_ADDS];
 
     void Reset()
@@ -167,21 +169,14 @@ struct MANGOS_DLL_DECL boss_malacrassAI : public ScriptedAI
         uint8 j = 0;
 
         //it's empty, so first time
-        if (m_vAddsEntryList.empty())
+        if (m_lAddsEntryList.empty())
         {
-            //pre-allocate size for speed
-            m_vAddsEntryList.resize((sizeof(m_auiAddEntryList) / sizeof(uint32)));
+            //fill list with entries from creature array
+            for(uint8 i = 0; i < MAX_ACTIVE_ADDS; ++i)
+                m_lAddsEntryList.push_back(rand()%2 ? m_auiSpawnEntry[i].m_uiCreatureEntry : m_auiSpawnEntry[i].m_uiCreatureEntryAlt);
 
-            //fill vector array with entries from creature array
-            for(uint8 i = 0; i < m_vAddsEntryList.size(); ++i)
-                m_vAddsEntryList[i] = m_auiAddEntryList[i];
-
-            //remove random entries
-            while(m_vAddsEntryList.size() > MAX_ACTIVE_ADDS)
-                m_vAddsEntryList.erase(m_vAddsEntryList.begin() + rand()%m_vAddsEntryList.size());
-
-            //summon all the remaining in vector
-            for(std::vector<uint32>::iterator itr = m_vAddsEntryList.begin(); itr != m_vAddsEntryList.end(); ++itr)
+            //summon mobs from the list
+            for(std::list<uint32>::iterator itr = m_lAddsEntryList.begin(); itr != m_lAddsEntryList.end(); ++itr)
             {
                 if (Creature* pAdd = m_creature->SummonCreature((*itr), m_afAddPosX[j], ADD_POS_Y, ADD_POS_Z, ADD_ORIENT, TEMPSUMMON_CORPSE_DESPAWN, 0))
                     m_auiAddGUIDs[j] = pAdd->GetGUID();
@@ -191,7 +186,7 @@ struct MANGOS_DLL_DECL boss_malacrassAI : public ScriptedAI
         }
         else
         {
-            for(std::vector<uint32>::iterator itr = m_vAddsEntryList.begin(); itr != m_vAddsEntryList.end(); ++itr)
+            for(std::list<uint32>::iterator itr = m_lAddsEntryList.begin(); itr != m_lAddsEntryList.end(); ++itr)
             {
                 Unit* pAdd = Unit::GetUnit(*m_creature, m_auiAddGUIDs[j]);
 
@@ -266,7 +261,7 @@ struct MANGOS_DLL_DECL boss_malacrassAI : public ScriptedAI
         }
 
         memset(&m_auiAddGUIDs, 0, sizeof(m_auiAddGUIDs));
-        m_vAddsEntryList.clear();
+        m_lAddsEntryList.clear();
     }
 
     void UpdateAI(const uint32 uiDiff)
