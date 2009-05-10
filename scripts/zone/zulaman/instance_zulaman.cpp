@@ -181,6 +181,15 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
                 }
                 m_uiEncounter[3] = uiData;
                 break;
+            case TYPE_HALAZZI:
+                m_uiEncounter[4] = uiData;
+                break;
+            case TYPE_ZULJIN:
+                m_uiEncounter[5] = uiData;
+                break;
+            case TYPE_MALACRASS:
+                m_uiEncounter[6] = uiData;
+                break;
             case DATA_J_HATCHLEFT:
                 m_uiJanalaiEggCntL -= uiData;
                 break;
@@ -233,8 +242,10 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
             >> m_uiEncounter[4] >> m_uiEncounter[5] >> m_uiEncounter[6];
 
         for(uint8 i = 0; i < ENCOUNTERS; ++i)
+        {
             if (m_uiEncounter[i] == IN_PROGRESS)
                 m_uiEncounter[i] = NOT_STARTED;
+        }
 
         OUT_LOAD_INST_DATA_COMPLETE;
     }
