@@ -536,8 +536,16 @@
 					</File>
 				</Filter>
 				<Filter
-					Name="Blackfathom Depths"
+					Name="Blackfathom Deeps"
 					>
+					<File
+						RelativePath="..\scripts\zone\blackfathom_deeps\def_blackfathom_deeps.h"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackfathom_deeps\instance_blackfathom_deeps.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Arathi Highlands"

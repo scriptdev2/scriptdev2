@@ -220,7 +220,7 @@ UPDATE creature_template SET ScriptName='npc_spirit_of_olum' WHERE entry=23411;
 -- UPDATE creature_template SET ScriptName='mob_shadowy_construct' WHERE entry=23111; -- Shadowy Construct in Teron Gorefiend's encounter. Commented until Mind Control is implemented.
 
 /* BLACKFATHOM DEPTHS */
-
+UPDATE instance_template SET script='instance_blackfathom_deeps' WHERE map=48;
 
 /* BLACKROCK DEPTHS */
 DELETE FROM areatrigger_scripts WHERE entry=1526;

@@ -93,6 +93,8 @@ scripts/zone/black_temple/boss_warlord_najentus.cpp \
 scripts/zone/black_temple/def_black_temple.h \
 scripts/zone/black_temple/illidari_council.cpp \
 scripts/zone/black_temple/instance_black_temple.cpp \
+scripts/zone/blackfathom_deeps/def_blackfathom_deeps.h \
+scripts/zone/blackfathom_deeps/instance_blackfathom_deeps.cpp \
 scripts/zone/blackrock_depths/blackrock_depths.cpp \
 scripts/zone/blackrock_depths/boss_ambassador_flamelash.cpp \
 scripts/zone/blackrock_depths/boss_anubshiah.cpp \

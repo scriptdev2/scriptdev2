@@ -130,7 +130,9 @@ extern void AddSC_boss_najentus();
 extern void AddSC_boss_illidari_council();
 extern void AddSC_instance_black_temple();
 
-//Blackfathom Depths
+//Blackfathom Deeps
+extern void AddSC_instance_blackfathom_deeps();
+
 //Blackrock Depths
 extern void AddSC_blackrock_depths();
 extern void AddSC_boss_ambassador_flamelash();
@@ -977,7 +979,9 @@ void ScriptsInit()
     AddSC_boss_illidari_council();
     AddSC_instance_black_temple();
 
-    //Blackfathom Depths
+    //Blackfathom Deeps
+    AddSC_instance_blackfathom_deeps();
+
     //Blackrock Depths
     AddSC_blackrock_depths();
     AddSC_boss_ambassador_flamelash();
