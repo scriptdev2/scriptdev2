@@ -154,6 +154,9 @@ UPDATE creature_template SET ScriptName='boss_ambassador_hellmaw' WHERE entry=18
 
 
 /* AZSHARA */
+UPDATE creature_template SET ScriptName='npc_rizzle_sprysprocket' WHERE entry=23002;
+UPDATE creature_template SET ScriptName='npc_depth_charge' WHERE entry=23025;
+UPDATE gameobject_template SET ScriptName='go_southfury_moonstone' WHERE entry=185566;
 UPDATE creature_template SET ScriptName='mobs_spitelashes' WHERE entry IN (6190,6193,6194,6195,6196,7885,7886,12204,12205);
 UPDATE creature_template SET ScriptName='npc_loramus_thalipedes' WHERE entry=7783;
 
