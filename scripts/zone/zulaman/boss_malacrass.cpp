@@ -42,10 +42,6 @@ enum
     SPELL_SIPHON_SOUL           = 43501,
     SPELL_DRAIN_POWER           = 44131,
 
-    WEAPON_ID                   = 33494,
-
-    MOB_TEMP_TRIGGER            = 23920,
-
     //for various powers he uses after using soul drain
     //Death Knight
     SPELL_DK_DEATH_AND_DECAY    = 61603,
@@ -101,6 +97,8 @@ enum
     SPELL_WR_WHIRLWIND          = 43442,
     SPELL_WR_SPELL_REFLECT      = 43443,
 
+    //misc
+    //WEAPON_ID                   = 33494,                    //...? Remove or document what this is.
     MAX_ACTIVE_ADDS             = 4
 };
 
