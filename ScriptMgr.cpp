@@ -330,7 +330,7 @@ extern void AddSC_loch_modan();
 
 //Lower Blackrock Spire
 
-// Magister's Terrace
+//Magister's Terrace
 extern void AddSC_boss_felblood_kaelthas();
 extern void AddSC_boss_selin_fireheart();
 extern void AddSC_boss_vexallus();
@@ -378,6 +378,7 @@ extern void AddSC_boss_noth();
 extern void AddSC_boss_patchwerk();
 extern void AddSC_boss_razuvious();
 extern void AddSC_boss_sapphiron();
+extern void AddSC_instance_naxxramas();
 
 //Netherstorm
 extern void AddSC_netherstorm();
@@ -1226,6 +1227,7 @@ void ScriptsInit()
     AddSC_boss_patchwerk();
     AddSC_boss_razuvious();
     AddSC_boss_sapphiron();
+    AddSC_instance_naxxramas();
 
     //Netherstorm
     AddSC_netherstorm();

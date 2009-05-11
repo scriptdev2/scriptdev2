@@ -647,7 +647,7 @@ UPDATE creature_template SET ScriptName='npc_lantresor_of_the_blade' WHERE entry
 UPDATE creature_template SET ScriptName='npc_creditmarker_visit_with_ancestors' WHERE entry IN (18840,18841,18842,18843);
 
 /* NAXXRAMAS */
--- UPDATE instance_template SET script='instance_naxxramas' WHERE map=533;
+UPDATE instance_template SET script='instance_naxxramas' WHERE map=533;
 UPDATE creature_template SET ScriptName='boss_anubrekhan' WHERE entry=15956;
 UPDATE creature_template SET ScriptName='boss_faerlina' WHERE entry=15953;
 UPDATE creature_template SET ScriptName='boss_maexxna' WHERE entry=15952;
