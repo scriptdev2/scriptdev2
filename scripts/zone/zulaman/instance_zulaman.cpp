@@ -120,13 +120,13 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
         {
             case 187359:
                 m_uiStrangeGongGUID = pGo->GetGUID();
-                if (GetData(TYPE_EVENT_RUN) != DONE)
-                    pGo->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
-                else
-                    pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
                 break;
-            case 186728: m_uiMassiveGateGUID        = pGo->GetGUID(); break;
-            case 186305: m_uiMalacrassEntranceGUID  = pGo->GetGUID(); break;
+            case 186728:
+                m_uiMassiveGateGUID = pGo->GetGUID();
+                break;
+            case 186305:
+                m_uiMalacrassEntranceGUID = pGo->GetGUID();
+                break;
         }
     }
 
@@ -207,7 +207,7 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
                 break;
         }
 
-        if (uiData == DONE)
+        if (uiData == DONE || (uiType == TYPE_EVENT_RUN && uiData == IN_PROGRESS))
         {
             OUT_SAVE_INST_DATA;
 
@@ -241,7 +241,8 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
         loadStream >> m_uiEncounter[0] >> m_uiEncounter[1] >> m_uiEncounter[2] >> m_uiEncounter[3]
             >> m_uiEncounter[4] >> m_uiEncounter[5] >> m_uiEncounter[6];
 
-        for(uint8 i = 0; i < ENCOUNTERS; ++i)
+        //not changing m_uiEncounter[0], TYPE_EVENT_RUN must not reset to NOT_STARTED
+        for(uint8 i = 1; i < ENCOUNTERS; ++i)
         {
             if (m_uiEncounter[i] == IN_PROGRESS)
                 m_uiEncounter[i] = NOT_STARTED;
@@ -325,7 +326,6 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
 
                 --m_uiEventMinuteStep;
                 UpdateInstanceWorldState(WORLD_STATE_COUNTER, m_uiEventMinuteStep);
-
                 debug_log("SD2: Instance Zulaman: minute decrease to %u.",m_uiEventMinuteStep);
 
                 m_uiEventTimer = MINUTE*IN_MILISECONDS;
