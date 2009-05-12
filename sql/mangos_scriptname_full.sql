@@ -407,7 +407,10 @@ UPDATE creature_template SET ScriptName='npc_aged_dying_ancient_kodo' WHERE entr
 
 
 /* DRAGONBLIGHT */
+UPDATE creature_template SET ScriptName='npc_afrasastrasz' WHERE entry=27575;
 UPDATE creature_template SET ScriptName='npc_alexstrasza_wr_gate' WHERE entry=31333;
+UPDATE creature_template SET ScriptName='npc_tariolstrasz' WHERE entry=26443;
+UPDATE creature_template SET ScriptName='npc_torastrasza' WHERE entry=26949;
 
 /* DRAK'THARON KEEP */
 
