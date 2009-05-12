@@ -46,7 +46,7 @@ enum
     SPELL_CREATE_NAJENTUS_SPINE     = 39956,
     SPELL_HURL_SPINE                = 39948,
     SPELL_SHIELD_VISUAL             = 37136,
-    SPELL_BERSERK                   = 45078
+    SPELL_BERSERK                   = 26662
 };
 
 struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
@@ -74,7 +74,7 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
         IsShielded = false;
 
         NeedleSpineTimer = 10000;
-        EnrageTimer = 480000;
+        EnrageTimer = MINUTE*8*IN_MILISECONDS;
         SpecialYellTimer = 45000 + (rand()%76)*1000;
         TidalShieldTimer = 60000;
         ImpalingSpineTimer = 45000;
@@ -161,6 +161,16 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
+        if (EnrageTimer < diff)
+        {
+            if (m_creature->IsNonMeleeSpellCasted(false))
+                m_creature->InterruptNonMeleeSpells(false);
+
+            DoScriptText(SAY_ENRAGE2, m_creature);
+            DoCast(m_creature, SPELL_BERSERK);
+            EnrageTimer = MINUTE*5*IN_MILISECONDS;
+        }else EnrageTimer -= diff;
+
         if (CheckTimer < diff)
         {
             //if (m_creature->HasAura(SPELL_TIDAL_SHIELD, 0))
@@ -193,14 +203,7 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
             return;                                         // Don't cast or do anything while Shielded
         }
 
-        if (!m_creature->HasAura(SPELL_BERSERK, 0))
-        {
-            if (EnrageTimer < diff)
-            {
-                DoScriptText(SAY_ENRAGE2, m_creature);
-                DoCast(m_creature, SPELL_BERSERK);
-            }else EnrageTimer -= diff;
-        }
+
 
         // Needle
         if (NeedleSpineTimer < diff)
