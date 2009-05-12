@@ -306,7 +306,7 @@ CreatureAI* GetAI_npc_floon(Creature* pCreature)
 bool GossipHello_npc_floon(Player* pPlayer, Creature* pCreature)
 {
     if (pPlayer->GetQuestStatus(QUEST_CRACK_SKULLS) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_FLOON1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_FLOON1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
     pPlayer->SEND_GOSSIP_MENU(9442, pCreature->GetGUID());
     return true;
@@ -316,7 +316,7 @@ bool GossipSelect_npc_floon(Player* pPlayer, Creature* pCreature, uint32 sender,
 {
     if (action == GOSSIP_ACTION_INFO_DEF)
     {
-        pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_FLOON2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_FLOON2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
         pPlayer->SEND_GOSSIP_MENU(9443, pCreature->GetGUID());
     }
     if (action == GOSSIP_ACTION_INFO_DEF+1)
@@ -341,7 +341,7 @@ bool GossipHello_npc_skyguard_handler_deesak(Player* pPlayer, Creature* pCreatur
         pPlayer->PrepareQuestMenu(pCreature->GetGUID());
 
     if (pPlayer->GetReputationRank(1031) >= REP_HONORED)
-        pPlayer->ADD_GOSSIP_ITEM(2, GOSSIP_SKYGUARD, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SKYGUARD, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
     pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
 

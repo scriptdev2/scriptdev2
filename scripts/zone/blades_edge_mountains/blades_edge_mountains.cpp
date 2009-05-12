@@ -272,7 +272,7 @@ CreatureAI* GetAI_npc_daranelle(Creature* pCreature)
 bool GossipHello_npc_overseer_nuaar(Player* pPlayer, Creature* pCreature)
 {
     if (pPlayer->GetQuestStatus(10682) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(0, "Overseer, I am here to negotiate on behalf of the Cenarion Expedition.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Overseer, I am here to negotiate on behalf of the Cenarion Expedition.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
     pPlayer->SEND_GOSSIP_MENU(10532, pCreature->GetGUID());
 
@@ -296,7 +296,7 @@ bool GossipSelect_npc_overseer_nuaar(Player* pPlayer, Creature* pCreature, uint3
 bool GossipHello_npc_saikkal_the_elder(Player* pPlayer, Creature* pCreature)
 {
     if (pPlayer->GetQuestStatus(10980) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(0, "Yes... yes, it's me.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Yes... yes, it's me.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
     pPlayer->SEND_GOSSIP_MENU(10794, pCreature->GetGUID());
 
@@ -308,7 +308,7 @@ bool GossipSelect_npc_saikkal_the_elder(Player* pPlayer, Creature* pCreature, ui
     switch (action)
     {
         case GOSSIP_ACTION_INFO_DEF+1:
-            pPlayer->ADD_GOSSIP_ITEM(0, "Yes elder. Tell me more of the book.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Yes elder. Tell me more of the book.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
             pPlayer->SEND_GOSSIP_MENU(10795, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+2:
@@ -331,7 +331,7 @@ bool GossipHello_npc_skyguard_handler_irena(Player* pPlayer, Creature* pCreature
         pPlayer->PrepareQuestMenu(pCreature->GetGUID());
 
     if (pPlayer->GetReputationRank(1031) >= REP_HONORED)
-        pPlayer->ADD_GOSSIP_ITEM(2, GOSSIP_SKYGUARD, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SKYGUARD, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
     pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
 

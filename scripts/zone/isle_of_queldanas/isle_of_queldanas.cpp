@@ -36,10 +36,10 @@ EndContentData */
 bool GossipHello_npc_ayren_cloudbreaker(Player* pPlayer, Creature* pCreature)
 {
     if (pPlayer->GetQuestStatus(11532) == QUEST_STATUS_INCOMPLETE || pPlayer->GetQuestStatus(11533) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(0,"Speaking of action, I've been ordered to undertake an air strike.",GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF+1);
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT,"Speaking of action, I've been ordered to undertake an air strike.",GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF+1);
 
     if (pPlayer->GetQuestStatus(11542) == QUEST_STATUS_INCOMPLETE || pPlayer->GetQuestStatus(11543) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(0,"I need to intercept the Dawnblade reinforcements.",GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF+2);
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT,"I need to intercept the Dawnblade reinforcements.",GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF+2);
 
     pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
     return true;
@@ -118,7 +118,7 @@ CreatureAI* GetAI_npc_converted_sentry(Creature* pCreature)
 bool GossipHello_npc_unrestrained_dragonhawk(Player* pPlayer, Creature* pCreature)
 {
     if (pPlayer->GetQuestStatus(11542) == QUEST_STATUS_COMPLETE || pPlayer->GetQuestStatus(11543) == QUEST_STATUS_COMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(0,"<Ride the dragonhawk to Sun's Reach>",GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF+1);
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT,"<Ride the dragonhawk to Sun's Reach>",GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF+1);
 
     pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
     return true;

@@ -673,7 +673,7 @@ bool GossipHello_npc_protectorate_nether_drake(Player* pPlayer, Creature* pCreat
 {
     //On Nethery Wings
     if (pPlayer->GetQuestStatus(QUEST_NETHER_WINGS) == QUEST_STATUS_INCOMPLETE && pPlayer->HasItemCount(ITEM_PH_DISRUPTOR,1))
-        pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_FLY_ULTRIS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_FLY_ULTRIS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
     pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
     return true;
@@ -700,7 +700,7 @@ bool GossipHello_npc_veronia(Player* pPlayer, Creature* pCreature)
 
     //Behind Enemy Lines
     if (pPlayer->GetQuestStatus(10652) && !pPlayer->GetQuestRewardStatus(10652))
-        pPlayer->ADD_GOSSIP_ITEM(0, "Fly me to Manaforge Coruu please", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Fly me to Manaforge Coruu please", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
     pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
 

@@ -1983,7 +1983,7 @@ void npc_akama_illidanAI::BeginEvent(uint64 PlayerGUID)
 
 bool GossipHello_npc_akama_at_illidan(Player* pPlayer, Creature* pCreature)
 {
-    pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
     pPlayer->SEND_GOSSIP_MENU(10465, pCreature->GetGUID());
 
     return true;

@@ -238,7 +238,7 @@ bool GossipSelect_boss_vael(Player* pPlayer, Creature* pCreature, uint32 sender,
 
 bool GossipHello_boss_vael(Player* pPlayer, Creature* pCreature)
 {
-    pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM        , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM        , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     pPlayer->SEND_GOSSIP_MENU(907, pCreature->GetGUID());
 
     return true;

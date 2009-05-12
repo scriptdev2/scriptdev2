@@ -146,12 +146,12 @@ bool GossipHello_npc_wing_commander_dabiree(Player* pPlayer, Creature* pCreature
 
     //Mission: The Murketh and Shaadraz Gateways
     if (pPlayer->GetQuestStatus(QUEST_MISSION_GATEWAYS_A) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM1_DAB, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM1_DAB, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
     //Shatter Point
     if (pPlayer->GetQuestStatus(QUEST_SHATTER_POINT) == QUEST_STATUS_COMPLETE ||
         pPlayer->GetQuestRewardStatus(QUEST_SHATTER_POINT))
-        pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM2_DAB, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM2_DAB, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
 
     pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
     return true;
@@ -198,12 +198,12 @@ bool GossipHello_npc_gryphoneer_windbellow(Player* pPlayer, Creature* pCreature)
     //Mission: The Abyssal Shelf || Return to the Abyssal Shelf
     if (pPlayer->GetQuestStatus(QUEST_ABYSSAL_A) == QUEST_STATUS_INCOMPLETE ||
         pPlayer->GetQuestStatus(QUEST_RETURN_ABYSSAL_A) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM1_WIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM1_WIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
     //Go to the Front
     if (pPlayer->GetQuestStatus(QUEST_TO_THE_FRONT) == QUEST_STATUS_COMPLETE ||
         pPlayer->GetQuestRewardStatus(QUEST_TO_THE_FRONT))
-        pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM2_WIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM2_WIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
 
     pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
     return true;
@@ -252,17 +252,17 @@ bool GossipHello_npc_wing_commander_brack(Player* pPlayer, Creature* pCreature)
 
     //Mission: The Murketh and Shaadraz Gateways
     if (pPlayer->GetQuestStatus(QUEST_MISSION_GATEWAYS_H) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM1_BRA, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM1_BRA, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
     //Mission: The Abyssal Shelf || Return to the Abyssal Shelf
     if (pPlayer->GetQuestStatus(QUEST_ABYSSAL_H) == QUEST_STATUS_INCOMPLETE ||
         pPlayer->GetQuestStatus(QUEST_RETURN_ABYSSAL_H) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM2_BRA, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM2_BRA, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
 
     //Spinebreaker Post
     if (pPlayer->GetQuestStatus(QUEST_SPINEBREAKER) == QUEST_STATUS_COMPLETE ||
         pPlayer->GetQuestRewardStatus(QUEST_SPINEBREAKER))
-        pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM3_BRA, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM3_BRA, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
 
     pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
     return true;

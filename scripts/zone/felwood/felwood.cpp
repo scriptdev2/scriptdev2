@@ -44,7 +44,7 @@ bool GossipHello_npcs_riverbreeze_and_silversky(Player* pPlayer, Creature* pCrea
     {
         if (pPlayer->GetQuestRewardStatus(4101))
         {
-            pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_BEACON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_BEACON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
             pPlayer->SEND_GOSSIP_MENU(2848, pCreature->GetGUID());
         }else if (pPlayer->GetTeam()==HORDE)
         pPlayer->SEND_GOSSIP_MENU(2845, pCreature->GetGUID());
@@ -56,7 +56,7 @@ bool GossipHello_npcs_riverbreeze_and_silversky(Player* pPlayer, Creature* pCrea
     {
         if (pPlayer->GetQuestRewardStatus(4102))
         {
-            pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_BEACON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_BEACON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
             pPlayer->SEND_GOSSIP_MENU(2849, pCreature->GetGUID());
         }else if (pPlayer->GetTeam()==ALLIANCE)
         pPlayer->SEND_GOSSIP_MENU(2843, pCreature->GetGUID());
