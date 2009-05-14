@@ -206,7 +206,7 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
                 float fPosX, fPosY, fPosZ;
                 m_creature->GetCombatStartPosition(fPosX, fPosY, fPosZ);
 
-                if (m_creature->GetDistance2d(fPosX, fPosY) < SWITCH_RADIUS)
+                if (m_creature->IsWithinDist2d(fPosX, fPosY, SWITCH_RADIUS))
                 {
                     DoScriptText(SAY_SWITCH_TO_CLEAN, m_creature);
 
@@ -272,7 +272,7 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
                 float fPosX, fPosY, fPosZ;
                 m_creature->GetCombatStartPosition(fPosX, fPosY, fPosZ);
 
-                if (m_creature->GetDistance2d(fPosX, fPosY) >= SWITCH_RADIUS)
+                if (!m_creature->IsWithinDist2d(fPosX, fPosY, SWITCH_RADIUS))
                 {
                     DoScriptText(SAY_SWITCH_TO_CORRUPT, m_creature);
 

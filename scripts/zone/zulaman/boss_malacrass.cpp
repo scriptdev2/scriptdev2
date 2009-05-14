@@ -349,7 +349,7 @@ struct MANGOS_DLL_DECL boss_malacrass_addAI : public ScriptedAI
             if (pTarget && pTarget->GetTypeId() == TYPEID_PLAYER)
             {
                 //if target further away than maxrange or closer than minrange, statement is false
-                if (m_creature->GetDistance(pTarget) < pSpellRange->maxRange && m_creature->GetDistance(pTarget) >= pSpellRange->minRange)
+                if (m_creature->IsInRange(pTarget, pSpellRange->minRange, pSpellRange->maxRange))
                     return true;
             }
         }

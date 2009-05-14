@@ -111,7 +111,7 @@ struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
             for(std::list<HostilReference *>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
             {
                 target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
-                if (target && target->GetDistance2d(m_creature) > 12)
+                if (target && !target->IsWithinDist(m_creature, 12.0f, false))
                     target_list.push_back(target);
                 target = NULL;
             }

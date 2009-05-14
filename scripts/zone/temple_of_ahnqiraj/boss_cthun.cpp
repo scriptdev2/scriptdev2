@@ -709,7 +709,7 @@ struct MANGOS_DLL_DECL cthunAI : public Scripted_NoMovementAI
                             DoCast(pUnit, SPELL_DIGESTIVE_ACID, true);
 
                             //Check if player should be kicked from stomach
-                            if (pUnit->GetDistance(KICK_X, KICK_Y, KICK_Z) < 15)
+                            if (pUnit->IsWithinDist3d(KICK_X, KICK_Y, KICK_Z, 15.0f))
                             {
                                 //Teleport each player out
                                 DoTeleportPlayer(pUnit, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ()+10, rand()%6);
@@ -1013,7 +1013,7 @@ struct MANGOS_DLL_DECL claw_tentacleAI : public Scripted_NoMovementAI
             return;
 
         //EvadeTimer
-        if (m_creature->GetDistance(m_creature->getVictim()) > ATTACK_DISTANCE)
+        if (!m_creature->IsWithinDist(m_creature->getVictim(), ATTACK_DISTANCE))
             if (EvadeTimer < diff)
         {
             if (Unit* p = Unit::GetUnit(*m_creature, Portal))
@@ -1106,7 +1106,7 @@ struct MANGOS_DLL_DECL giant_claw_tentacleAI : public Scripted_NoMovementAI
             return;
 
         //EvadeTimer
-        if (m_creature->GetDistance(m_creature->getVictim()) > ATTACK_DISTANCE)
+        if (m_creature->IsWithinDist(m_creature->getVictim(), ATTACK_DISTANCE))
             if (EvadeTimer < diff)
         {
             if (Unit* p = Unit::GetUnit(*m_creature, Portal))

@@ -840,8 +840,8 @@ class AgonizingFlamesTargetCheck
         AgonizingFlamesTargetCheck(Unit const* unit) : pUnit(unit) {}
         bool operator() (Player* plr)
         {
-            // Faster than square rooting
-            if (!plr->isGameMaster() && pUnit->GetDistance2d(plr) > 225)
+            // It's only cast on players that are greater than 15 yards away from Illidan. If no one is found, cast it on MT instead (since selecting someone in that 15 yard radius would cause the flames to hit the MT anyway).
+            if (!plr->isGameMaster() && !pUnit->IsWithinDist(plr,15.0f,false))
                 return true;
 
             return false;
@@ -2166,7 +2166,7 @@ struct TargetDistanceOrder : public std::binary_function<const Unit, const Unit,
     // functor for operator ">"
     bool operator()(const Unit* _Left, const Unit* _Right) const
     {
-        return (MainTarget->GetDistance(_Left) > MainTarget->GetDistance(_Right));
+        return !MainTarget->GetDistanceOrder(_Left, _Right);
     }
 };
 

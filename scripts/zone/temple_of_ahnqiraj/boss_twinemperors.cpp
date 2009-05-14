@@ -196,7 +196,7 @@ struct MANGOS_DLL_DECL boss_twinemperorsAI : public ScriptedAI
         if (Heal_Timer < diff)
         {
             Unit *pOtherBoss = GetOtherBoss();
-            if (pOtherBoss && (pOtherBoss->GetDistance((const Creature *)m_creature) <= 60))
+            if (pOtherBoss && pOtherBoss->IsWithinDist(m_creature, 60.0f))
             {
                 DoCast(pOtherBoss, SPELL_HEAL_BROTHER);
                 Heal_Timer = 1000;
@@ -603,7 +603,7 @@ struct MANGOS_DLL_DECL boss_veklorAI : public boss_twinemperorsAI
         //ShadowBolt_Timer
         if (ShadowBolt_Timer < diff)
         {
-            if (m_creature->GetDistance(m_creature->getVictim()) > 45)
+            if (!m_creature->IsWithinDist(m_creature->getVictim(), 45.0f))
                 m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim(), VEKLOR_DIST, 0);
             else
                 DoCast(m_creature->getVictim(),SPELL_SHADOWBOLT);

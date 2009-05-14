@@ -20,7 +20,7 @@ bool npc_escortAI::IsVisible(Unit* who) const
     if (!who)
         return false;
 
-    return (m_creature->GetDistance(who) < VISIBLE_RANGE) && who->isVisibleForOrDetect(m_creature,true);
+    return m_creature->IsWithinDist(who,VISIBLE_RANGE) && who->isVisibleForOrDetect(m_creature,true);
 }
 
 void npc_escortAI::AttackStart(Unit *who)
@@ -195,7 +195,7 @@ void npc_escortAI::UpdateAI(const uint32 diff)
         {
             Unit* p = Unit::GetUnit(*m_creature, PlayerGUID);
 
-            if (!p || m_creature->GetDistance(p) > MAX_PLAYER_DISTANCE)
+            if (!p || !m_creature->IsWithinDist(p,MAX_PLAYER_DISTANCE))
             {
                 JustDied(m_creature);
                 IsBeingEscorted = false;

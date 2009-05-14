@@ -146,7 +146,7 @@ struct MANGOS_DLL_DECL mob_ashtongue_sorcererAI : public ScriptedAI
             Unit* Shade = Unit::GetUnit((*m_creature), ShadeGUID);
             if (Shade && Shade->isAlive() && m_creature->isAlive())
             {
-                if (m_creature->GetDistance2d(Shade) < 20)
+                if (m_creature->IsWithinDist(Shade, 20.0f, false))
                 {
                     m_creature->GetMotionMaster()->Clear(false);
                     m_creature->GetMotionMaster()->MoveIdle();

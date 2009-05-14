@@ -125,7 +125,7 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
                 target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
 
                 //18 yard radius minimum
-                if (target && target->GetDistance2d(m_creature) > 18)
+                if (target && !target->IsWithinDist(m_creature, 18.0f, false))
                     target_list.push_back(target);
 
                 target = NULL;
