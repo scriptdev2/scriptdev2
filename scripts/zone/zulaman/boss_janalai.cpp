@@ -24,41 +24,49 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_zulaman.h"
 
-#define SAY_AGGRO                   -1568000
-#define SAY_FIRE_BOMBS              -1568001
-#define SAY_SUMMON_HATCHER          -1568002
-#define SAY_ALL_EGGS                -1568003
-#define SAY_BERSERK                 -1568004
-#define SAY_SLAY_1                  -1568005
-#define SAY_SLAY_2                  -1568006
-#define SAY_DEATH                   -1568007
-#define SAY_EVENT_STRANGERS         -1568008
-#define SAY_EVENT_FRIENDS           -1568009
+enum
+{
+    SAY_AGGRO                       = -1568000,
+    SAY_FIRE_BOMBS                  = -1568001,
+    SAY_SUMMON_HATCHER              = -1568002,
+    SAY_ALL_EGGS                    = -1568003,
+    SAY_BERSERK                     = -1568004,
+    SAY_SLAY_1                      = -1568005,
+    SAY_SLAY_2                      = -1568006,
+    SAY_DEATH                       = -1568007,
+    SAY_EVENT_STRANGERS             = -1568008,
+    SAY_EVENT_FRIENDS               = -1568009,
 
-// Jan'alai
-// --Spell
-#define SPELL_FLAME_BREATH          43140
-#define SPELL_FIRE_WALL             43113
-#define SPELL_ENRAGE                44779
-#define SPELL_TELETOCENTER          43098
-#define SPELL_SUMMONALL             43097
-#define SPELL_BERSERK               47008
-// -- Fire Bob Spells
-#define MOB_FIRE_BOMB               23920
-#define SPELL_FIRE_BOMB_CHANNEL     42621
-#define SPELL_FIRE_BOMB_THROW       42628
-#define SPELL_FIRE_BOMB_DUMMY       42629
-#define SPELL_FIRE_BOMB_DAMAGE      42630
+    //Jan'alai
+    SPELL_FLAME_BREATH              = 43140,
+    SPELL_FIRE_WALL                 = 43113,
+    SPELL_ENRAGE                    = 44779,
+    SPELL_TELETOCENTER              = 43098,
+    SPELL_SUMMONALL                 = 43097,
+    SPELL_BERSERK                   = 47008,
+    SPELL_SUMMON_HATCHER_1          = 43962,
+    SPELL_SUMMON_HATCHER_2          = 45340,
 
-// --Summons
-#define MOB_AMANI_HATCHER           23818
-#define MOB_HATCHLING               23598
+    //Fire Bob Spells
+    SPELL_FIRE_BOMB_SUMMON          = 42622,
+    SPELL_FIRE_BOMB_CHANNEL         = 42621,
+    SPELL_FIRE_BOMB_THROW           = 42628,
+    SPELL_FIRE_BOMB_DUMMY           = 42629,
+    SPELL_FIRE_BOMB_DAMAGE          = 42630,
 
-// -- Hatcher Spells
-#define SPELL_HATCH_EGG             43734
+    //NPC's
+    NPC_FIRE_BOMB                   = 23920,
+    NPC_AMANI_HATCHER_1             = 23818,
+    NPC_AMANI_HATCHER_2             = 24504,
+    NPC_HATCHLING                   = 23598,
 
-// -- Hatchling Spells
-#define SPELL_FLAMEBUFFED           43299
+    //Hatcher Spells
+    SPELL_HATCH_EGG                 = 43734,                //spell 42471 also exist
+    SPELL_HATCH_ALL_EGGS            = 43144,
+
+    //Hatchling Spells
+    SPELL_FLAMEBUFFED               = 43299
+};
 
 const int area_dx = 44;
 const int area_dy = 51;
@@ -70,10 +78,35 @@ float JanalainPos[1][3] =
 
 float FireWallCoords[4][4] =
 {
-    {-10.13, 1149.27, 19, 3.1415},
-    {-33.93, 1123.90, 19, 0.5*3.1415},
+    {-10.13, 1149.27, 19, M_PI},
+    {-33.93, 1123.90, 19, 0.5*M_PI},
     {-54.80, 1150.08, 19, 0},
-    {-33.93, 1175.68, 19, 1.5*3.1415}
+    {-33.93, 1175.68, 19, 1.5*M_PI}
+};
+
+struct WaypointDef
+{
+    float m_fX, m_fY, m_fZ;
+};
+
+WaypointDef m_aHatcherRight[]=
+{
+    {-86.203, 1136.834, 5.594},                             //this is summon point, not regular waypoint
+    {-74.783, 1145.827, 5.420},
+    {-56.957, 1146.713, 18.725},
+    {-45.428, 1141.697, 18.709},
+    {-34.002, 1124.427, 18.711},
+    {-34.085, 1106.158, 18.711}
+};
+
+WaypointDef m_aHatcherLeft[]=
+{
+    {-85.420, 1167.321, 5.594},                             //this is summon point, not regular waypoint
+    {-73.569, 1154.960, 5.510},
+    {-56.985, 1153.373, 18.608},
+    {-45.515, 1158.356, 18.709},
+    {-33.314, 1174.816, 18.709},
+    {-33.097, 1195.359, 18.709}
 };
 
 float hatcherway_l[5][3] =
@@ -98,6 +131,8 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
 {
     boss_janalaiAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
+        m_uiHatcher1GUID = 0;
+        m_uiHatcher2GUID = 0;
         pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
@@ -118,6 +153,8 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
     bool enraged;
     bool enragetime;
 
+    uint64 m_uiHatcher1GUID;
+    uint64 m_uiHatcher2GUID;
     uint64 FireBombGUIDs[40];
     uint64 ThrowControllerGUID;
 
@@ -125,12 +162,26 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
 
     void Reset()
     {
+        if (Creature* pUnit = (Creature*)Unit::GetUnit(*m_creature, m_uiHatcher1GUID))
+        {
+            pUnit->AI()->EnterEvadeMode();
+            pUnit->setDeathState(JUST_DIED);
+            m_uiHatcher1GUID = 0;
+        }
+
+        if (Creature* pUnit = (Creature*)Unit::GetUnit(*m_creature, m_uiHatcher2GUID))
+        {
+            pUnit->AI()->EnterEvadeMode();
+            pUnit->setDeathState(JUST_DIED);
+            m_uiHatcher2GUID = 0;
+        }
+
         if (pInstance)
             pInstance->SetData(TYPE_JANALAI, NOT_STARTED);
 
         fire_breath_timer = 8000;
         bomb_timer = 30000;
-        enrage_timer = 300000;                              // 5 minutes
+        enrage_timer = MINUTE*5*IN_MILISECONDS;
         finishedbomb_timer = 6000;
         throw_timer = 1000;
         bombcounter = 0;
@@ -173,46 +224,59 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
             pInstance->SetData(TYPE_JANALAI, IN_PROGRESS);
     }
 
+    void JustSummoned(Creature* pSummoned)
+    {
+        switch(pSummoned->GetEntry())
+        {
+            case NPC_AMANI_HATCHER_1:
+                m_uiHatcher1GUID = pSummoned->GetGUID();
+                break;
+            case NPC_AMANI_HATCHER_2:
+                m_uiHatcher2GUID = pSummoned->GetGUID();
+                break;
+        }
+    }
+
     void FireWall()                                         // Create Firewall
     {
         Creature* wall = NULL;
-        wall = m_creature->SummonCreature(MOB_FIRE_BOMB,FireWallCoords[0][0],FireWallCoords[0][1],FireWallCoords[0][2],FireWallCoords[0][3],TEMPSUMMON_TIMED_DESPAWN,11500);
+        wall = m_creature->SummonCreature(NPC_FIRE_BOMB,FireWallCoords[0][0],FireWallCoords[0][1],FireWallCoords[0][2],FireWallCoords[0][3],TEMPSUMMON_TIMED_DESPAWN,11500);
         if (wall)
             wall->CastSpell(wall,SPELL_FIRE_WALL,false);
 
-        wall = m_creature->SummonCreature(MOB_FIRE_BOMB,FireWallCoords[0][0],FireWallCoords[0][1]+5,FireWallCoords[0][2],FireWallCoords[0][3],TEMPSUMMON_TIMED_DESPAWN,11500);
+        wall = m_creature->SummonCreature(NPC_FIRE_BOMB,FireWallCoords[0][0],FireWallCoords[0][1]+5,FireWallCoords[0][2],FireWallCoords[0][3],TEMPSUMMON_TIMED_DESPAWN,11500);
         if (wall)
             wall->CastSpell(wall,SPELL_FIRE_WALL,false);
 
-        wall = m_creature->SummonCreature(MOB_FIRE_BOMB,FireWallCoords[0][0],FireWallCoords[0][1]-5,FireWallCoords[0][2],FireWallCoords[0][3],TEMPSUMMON_TIMED_DESPAWN,11500);
+        wall = m_creature->SummonCreature(NPC_FIRE_BOMB,FireWallCoords[0][0],FireWallCoords[0][1]-5,FireWallCoords[0][2],FireWallCoords[0][3],TEMPSUMMON_TIMED_DESPAWN,11500);
         if (wall)
             wall->CastSpell(wall,SPELL_FIRE_WALL,false);
 
-        wall = m_creature->SummonCreature(MOB_FIRE_BOMB,FireWallCoords[1][0]-2,FireWallCoords[1][1]-2,FireWallCoords[1][2],FireWallCoords[1][3],TEMPSUMMON_TIMED_DESPAWN,11500);
+        wall = m_creature->SummonCreature(NPC_FIRE_BOMB,FireWallCoords[1][0]-2,FireWallCoords[1][1]-2,FireWallCoords[1][2],FireWallCoords[1][3],TEMPSUMMON_TIMED_DESPAWN,11500);
         if (wall)
             wall->CastSpell(wall,SPELL_FIRE_WALL,false);
 
-        wall = m_creature->SummonCreature(MOB_FIRE_BOMB,FireWallCoords[1][0]+2,FireWallCoords[1][1]+2,FireWallCoords[1][2],FireWallCoords[1][3],TEMPSUMMON_TIMED_DESPAWN,11500);
+        wall = m_creature->SummonCreature(NPC_FIRE_BOMB,FireWallCoords[1][0]+2,FireWallCoords[1][1]+2,FireWallCoords[1][2],FireWallCoords[1][3],TEMPSUMMON_TIMED_DESPAWN,11500);
         if (wall)
             wall->CastSpell(wall,SPELL_FIRE_WALL,false);
 
-        wall = m_creature->SummonCreature(MOB_FIRE_BOMB,FireWallCoords[2][0],FireWallCoords[2][1],FireWallCoords[2][2],FireWallCoords[2][3],TEMPSUMMON_TIMED_DESPAWN,11500);
+        wall = m_creature->SummonCreature(NPC_FIRE_BOMB,FireWallCoords[2][0],FireWallCoords[2][1],FireWallCoords[2][2],FireWallCoords[2][3],TEMPSUMMON_TIMED_DESPAWN,11500);
         if (wall)
             wall->CastSpell(wall,SPELL_FIRE_WALL,false);
 
-        wall = m_creature->SummonCreature(MOB_FIRE_BOMB,FireWallCoords[2][0],FireWallCoords[2][1]-5,FireWallCoords[2][2],FireWallCoords[2][3],TEMPSUMMON_TIMED_DESPAWN,11500);
+        wall = m_creature->SummonCreature(NPC_FIRE_BOMB,FireWallCoords[2][0],FireWallCoords[2][1]-5,FireWallCoords[2][2],FireWallCoords[2][3],TEMPSUMMON_TIMED_DESPAWN,11500);
         if (wall)
             wall->CastSpell(wall,SPELL_FIRE_WALL,false);
 
-        wall = m_creature->SummonCreature(MOB_FIRE_BOMB,FireWallCoords[2][0],FireWallCoords[2][1]+5,FireWallCoords[2][2],FireWallCoords[2][3],TEMPSUMMON_TIMED_DESPAWN,11500);
+        wall = m_creature->SummonCreature(NPC_FIRE_BOMB,FireWallCoords[2][0],FireWallCoords[2][1]+5,FireWallCoords[2][2],FireWallCoords[2][3],TEMPSUMMON_TIMED_DESPAWN,11500);
         if (wall)
             wall->CastSpell(wall,SPELL_FIRE_WALL,false);
 
-        wall = m_creature->SummonCreature(MOB_FIRE_BOMB,FireWallCoords[3][0]-2,FireWallCoords[3][1],FireWallCoords[3][2],FireWallCoords[3][3],TEMPSUMMON_TIMED_DESPAWN,11500);
+        wall = m_creature->SummonCreature(NPC_FIRE_BOMB,FireWallCoords[3][0]-2,FireWallCoords[3][1],FireWallCoords[3][2],FireWallCoords[3][3],TEMPSUMMON_TIMED_DESPAWN,11500);
         if (wall)
             wall->CastSpell(wall,SPELL_FIRE_WALL,false);
 
-        wall = m_creature->SummonCreature(MOB_FIRE_BOMB,FireWallCoords[3][0]+2,FireWallCoords[3][1],FireWallCoords[3][2],FireWallCoords[3][3],TEMPSUMMON_TIMED_DESPAWN,11500);
+        wall = m_creature->SummonCreature(NPC_FIRE_BOMB,FireWallCoords[3][0]+2,FireWallCoords[3][1],FireWallCoords[3][2],FireWallCoords[3][3],TEMPSUMMON_TIMED_DESPAWN,11500);
         if (wall)
             wall->CastSpell(wall,SPELL_FIRE_WALL,false);
     }
@@ -226,12 +290,12 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
             dx = (rand()%(area_dx))-(area_dx/2);
             dy = (rand()%(area_dy))-(area_dy/2);
 
-            Creature* bomb = DoSpawnCreature(MOB_FIRE_BOMB, dx, dy, 0, 0, TEMPSUMMON_TIMED_DESPAWN, 13000);
+            Creature* bomb = DoSpawnCreature(NPC_FIRE_BOMB, dx, dy, 0, 0, TEMPSUMMON_TIMED_DESPAWN, 13000);
             if (bomb)
                 FireBombGUIDs[i] = bomb->GetGUID();
         }
 
-        Creature* ThrowController = DoSpawnCreature(MOB_FIRE_BOMB,0,0,1,0,TEMPSUMMON_TIMED_DESPAWN,10000);
+        Creature* ThrowController = DoSpawnCreature(NPC_FIRE_BOMB,0,0,1,0,TEMPSUMMON_TIMED_DESPAWN,10000);
         if (ThrowController)
             ThrowControllerGUID = ThrowController->GetGUID();
 
@@ -292,7 +356,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
                 for (; i != m_creature->getThreatManager().getThreatList().end(); ++i)
                 {
                     Temp = Unit::GetUnit((*m_creature),(*i)->getUnitGuid());
-                    if (Temp && m_creature->GetDistance(Temp) > 30.0)
+                    if (Temp && m_creature->IsWithinDist(Temp, 20.0f))
                         DoTeleportPlayer(Temp, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 0);
                 }
 
@@ -351,19 +415,26 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
         {
             if (hatchertime < diff)
             {
-                if (pInstance->GetData(DATA_J_EGGSLEFT)>0 || pInstance->GetData(DATA_J_EGGSRIGHT) > 0)
+                if (pInstance->GetData(DATA_J_EGGSLEFT) > 0 || pInstance->GetData(DATA_J_EGGSRIGHT) > 0)
                 {
                     DoScriptText(SAY_SUMMON_HATCHER, m_creature);
 
-                    Unit* hatcher = NULL;
-                    hatcher = m_creature->SummonCreature(MOB_AMANI_HATCHER,hatcherway_l[0][0],hatcherway_l[0][1],hatcherway_l[0][2],0,TEMPSUMMON_CORPSE_TIMED_DESPAWN,10000);
-                    if (hatcher)
-                        hatcher->GetMotionMaster()->MovePoint(0, hatcherway_l[0][0], hatcherway_l[0][1], hatcherway_l[0][2]);
+                    Unit* pHatcer1 = Unit::GetUnit(*m_creature, m_uiHatcher1GUID);
+                    Unit* pHatcer2 = Unit::GetUnit(*m_creature, m_uiHatcher2GUID);
 
-                    hatcher = m_creature->SummonCreature(MOB_AMANI_HATCHER,hatcherway_r[0][0],hatcherway_r[0][1],hatcherway_r[0][2],0,TEMPSUMMON_CORPSE_TIMED_DESPAWN,10000);
-                    if (hatcher)
-                        hatcher->GetMotionMaster()->MovePoint(0, hatcherway_r[0][0],hatcherway_r[0][1],hatcherway_r[0][2]);
-                    hatchertime = 45000;
+                    if (!pHatcer1 || (pHatcer1 && !pHatcer1->isAlive()))
+                    {
+                        if (Creature* pHatcher = m_creature->SummonCreature(NPC_AMANI_HATCHER_1, m_aHatcherRight[0].m_fX, m_aHatcherRight[0].m_fY, m_aHatcherRight[0].m_fZ, 0.0f, TEMPSUMMON_CORPSE_DESPAWN, 0))
+                            pHatcher->GetMotionMaster()->MovePoint(1, m_aHatcherRight[1].m_fX, m_aHatcherRight[1].m_fY, m_aHatcherRight[1].m_fZ);
+                    }
+
+                    if (!pHatcer2 || (pHatcer2 && !pHatcer2->isAlive()))
+                    {
+                        if (Creature* pHatcher = m_creature->SummonCreature(NPC_AMANI_HATCHER_2, m_aHatcherLeft[0].m_fX, m_aHatcherLeft[0].m_fY, m_aHatcherLeft[0].m_fZ, 0.0f, TEMPSUMMON_CORPSE_DESPAWN, 0))
+                            pHatcher->GetMotionMaster()->MovePoint(1, m_aHatcherLeft[1].m_fX, m_aHatcherLeft[1].m_fY, m_aHatcherLeft[1].m_fZ);
+                    }
+
+                    hatchertime = 90000;
                 }
                 else
                 {
@@ -393,7 +464,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
             {
                 int r = (rand()%20 - 10);
                 int s = (rand()%20 - 10);
-                m_creature->SummonCreature(MOB_HATCHLING,JanalainPos[0][0]+s,JanalainPos[0][1]+r,JanalainPos[0][2],0,TEMPSUMMON_CORPSE_TIMED_DESPAWN,15000);
+                m_creature->SummonCreature(NPC_HATCHLING,JanalainPos[0][0]+s,JanalainPos[0][1]+r,JanalainPos[0][2],0,TEMPSUMMON_CORPSE_TIMED_DESPAWN,15000);
 
                 if (pInstance)
                     pInstance->SetData(DATA_J_HATCHLEFT,1);
@@ -406,7 +477,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
             {
                 int r = (rand()%20 - 10);
                 int s = (rand()%20 - 10);
-                m_creature->SummonCreature(MOB_HATCHLING,JanalainPos[0][0]+s,JanalainPos[0][1]+r,JanalainPos[0][2],0,TEMPSUMMON_CORPSE_TIMED_DESPAWN,15000);
+                m_creature->SummonCreature(NPC_HATCHLING,JanalainPos[0][0]+s,JanalainPos[0][1]+r,JanalainPos[0][2],0,TEMPSUMMON_CORPSE_TIMED_DESPAWN,15000);
                 if (pInstance)
                     pInstance->SetData(DATA_J_HATCHRIGHT,1);
             }
@@ -467,161 +538,109 @@ struct MANGOS_DLL_DECL mob_amanishi_hatcherAI : public ScriptedAI
 {
     mob_amanishi_hatcherAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance* m_pInstance;
 
-    uint32 waypoint;
-    bool waytype;
-    bool start;
-    bool hatch;
-    bool wait;
-    uint32 hatchlings;
-    uint32 waittimer;
-    uint32 eggs;
-    uint32 delete_timer;
+    uint32 m_uiWaypoint;
+    uint32 m_uiHatchlingTimer;
+    uint32 m_uiHatchlingCount;
+    bool m_bCanMoveNext;
+    bool m_bWaypointEnd;
 
     void Reset()
     {
-        waypoint = 0;
-        waytype = 0;
-        hatch = false;
-        start = false;
-        wait = false;
-        waittimer = 4000;
-        hatchlings = 0;
-        eggs = 0;
-        delete_timer = 10000;
+        m_uiWaypoint = 0;
+        m_uiHatchlingTimer = 1000;
+        m_uiHatchlingCount = 1;
+        m_bCanMoveNext = false;
+        m_bWaypointEnd = false;
+
+        if (m_creature->HasUnitMovementFlag(MOVEMENTFLAG_WALK_MODE))
+            m_creature->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
     }
 
-    void UpdateAI(const uint32 diff)
+    void MoveInLineOfSight(Unit* pWho) {}
+
+    void AttackStart(Unit* pWho)
     {
-        if (pInstance && (pInstance->GetData(TYPE_JANALAI) == IN_PROGRESS))
+        if (!pWho)
+            return;
+
+        if (m_creature->Attack(pWho, false))
         {
-            if (!start && !hatch)
-            {
-                waytype = (m_creature->GetPositionY() > 1150);
-                waypoint = 1;
-                start = true;
-            }
+            m_creature->AddThreat(pWho, 0.0f);
+            m_creature->SetInCombatWith(pWho);
+            pWho->SetInCombatWith(m_creature);
+        }
+    }
 
-            if (start && !hatch)
-            {
-                if (wait)
-                {
-                    if (waittimer < diff)
-                    {
-                        wait = false;
-                        waittimer = 4000;
-                        waypoint++;
+    void MovementInform(uint32 uiType, uint32 uiPointId)
+    {
+        if (uiType != POINT_MOTION_TYPE || m_bWaypointEnd)
+            return;
 
-                        if (waypoint == 5)
-                        {
-                            hatch = true;
-                            waittimer = 0;
-                            hatchlings = 1;
-                        }
-                    }
-                    else
-                    {
-                        waittimer -=diff;
-                    }
-                }
+        uint32 uiCount = (m_creature->GetEntry() == NPC_AMANI_HATCHER_1) ?
+            (sizeof(m_aHatcherRight)/sizeof(WaypointDef)) : (sizeof(m_aHatcherLeft)/sizeof(WaypointDef));
+
+        m_uiWaypoint = uiPointId+1;
+
+        if (uiCount == m_uiWaypoint)
+            m_bWaypointEnd = true;
+
+        m_bCanMoveNext = true;
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (m_bCanMoveNext)
+        {
+            m_bCanMoveNext = false;
+
+            if (m_bWaypointEnd)
+                m_creature->GetMotionMaster()->Clear();
+            else
+            {
+                if (m_creature->GetEntry() == NPC_AMANI_HATCHER_1)
+                    m_creature->GetMotionMaster()->MovePoint(m_uiWaypoint, m_aHatcherRight[m_uiWaypoint].m_fX, m_aHatcherRight[m_uiWaypoint].m_fY, m_aHatcherRight[m_uiWaypoint].m_fZ);
                 else
-                {
-                    m_creature->GetMotionMaster()->Clear();
-                    if (waytype)
-                        m_creature->GetMotionMaster()->MovePoint(0,hatcherway_l[waypoint][0],hatcherway_l[waypoint][1],hatcherway_l[waypoint][2]);
-                    else
-                        m_creature->GetMotionMaster()->MovePoint(0,hatcherway_r[waypoint][0],hatcherway_r[waypoint][1],hatcherway_r[waypoint][2]);
-                    wait= true;
-                }
-            }
-
-            if (start && hatch)
-            {
-                if (waittimer < diff)
-                {
-                    if (!pInstance)
-                        return;
-
-                    waittimer = 4000;
-                    Unit* hatchling;
-
-                    if (waytype)
-                    {
-                        eggs = pInstance->GetData(DATA_J_EGGSLEFT);
-
-                        if (eggs > 0)
-                            DoCast(m_creature,SPELL_HATCH_EGG);
-
-                        int i;
-                        for(i=1;i<=hatchlings;i=i+1)
-                        {
-                            eggs = pInstance->GetData(DATA_J_EGGSLEFT);
-                            if (eggs <= 0)
-                            {
-                                if (waytype) waytype = false; else waytype = true;
-                                waittimer = 15000;
-                                hatch = false;
-                                waypoint = 4;
-                                wait = true;
-                                i = hatchlings;
-                            }
-                            else
-                            {
-                                hatchling = DoSpawnCreature(MOB_HATCHLING,rand()%4-2,rand()%4-2,0,0,TEMPSUMMON_CORPSE_TIMED_DESPAWN,15000);
-                                pInstance->SetData(DATA_J_HATCHLEFT,1);
-                            }
-                        }
-
-                        DoCast(m_creature,SPELL_HATCH_EGG);
-
-                        if (hatchlings < 5)
-                            hatchlings++;
-                    }
-                    else
-                    {
-                        eggs = pInstance->GetData(DATA_J_EGGSRIGHT);
-
-                        if (eggs > 0)
-                            DoCast(m_creature,SPELL_HATCH_EGG);
-
-                        int i;
-                        for(i=1;i<=hatchlings;i=i+1)
-                        {
-                            eggs = pInstance->GetData(DATA_J_EGGSRIGHT);
-                            if (eggs <= 0)
-                            {
-                                if (waytype) waytype = false; else waytype = true;
-                                waittimer = 15000;
-                                hatch = false;
-                                waypoint = 4;
-                                wait = true;
-                                i = hatchlings;
-                            }
-                            else
-                            {
-                                hatchling = DoSpawnCreature(MOB_HATCHLING,rand()%4-2,rand()%4-2,0,0,TEMPSUMMON_CORPSE_TIMED_DESPAWN,15000);
-                                pInstance->SetData(DATA_J_HATCHRIGHT,1);
-                            }
-                        }
-
-                        DoCast(m_creature,SPELL_HATCH_EGG);
-                        hatchlings++;
-                    }
-                }else waittimer -=diff;
+                    m_creature->GetMotionMaster()->MovePoint(m_uiWaypoint, m_aHatcherLeft[m_uiWaypoint].m_fX, m_aHatcherLeft[m_uiWaypoint].m_fY, m_aHatcherLeft[m_uiWaypoint].m_fZ);
             }
         }
-        else
+
+        if (m_bWaypointEnd)
         {
-            if (delete_timer < diff)
+            if (m_uiHatchlingTimer < uiDiff)
             {
-                m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-                delete_timer = 10000;
-            }else delete_timer -=diff;
+                if (!m_pInstance)
+                    return;
+
+                uint32 uiEggsLeftCount = (m_creature->GetEntry() == NPC_AMANI_HATCHER_1) ?
+                    m_pInstance->GetData(DATA_J_EGGSRIGHT) : m_pInstance->GetData(DATA_J_EGGSLEFT);
+
+                if (uiEggsLeftCount > 0)
+                    DoCast(m_creature,SPELL_HATCH_EGG);
+
+                //This is initially wrong way
+                //Spell above should hit a certain amount of eggs.
+                //Those who are hit will then cast summon hatchling (which is also insta kill self)
+                for(uint8 i = 0; i < m_uiHatchlingCount; ++i)
+                {
+                    DoSpawnCreature(NPC_HATCHLING, rand()%4-2, rand()%4-2, 0.0f, 0.0f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 15000);
+
+                    uint32 uiSaveRightOrLeft = (m_creature->GetEntry() == NPC_AMANI_HATCHER_1) ?
+                        DATA_J_HATCHRIGHT : DATA_J_HATCHLEFT;
+
+                    m_pInstance->SetData(uiSaveRightOrLeft,1);
+                }
+
+                //as a workaround, this counter is also wrong way to count
+                ++m_uiHatchlingCount;
+
+                m_uiHatchlingTimer = 15000;
+            }else m_uiHatchlingTimer -= uiDiff;
         }
     }
 };
