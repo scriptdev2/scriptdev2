@@ -17,26 +17,28 @@
 /* ScriptData
 SDName: Boss_Houndmaster_Loksey
 SD%Complete: 100
-SDComment:
+SDComment: TODO: if this guy not involved in some special event, remove (and let ACID script)
 SDCategory: Scarlet Monastery
 EndScriptData */
 
 #include "precompiled.h"
 
-#define SAY_AGGRO                       -1189021
-
-#define SPELL_SUMMONSCARLETHOUND        17164
-#define SPELL_ENRAGE                    6742
+enum
+{
+    SAY_AGGRO                       = -1189021,
+    SPELL_SUMMONSCARLETHOUND        = 17164,
+    SPELL_BLOODLUST                 = 6742
+};
 
 struct MANGOS_DLL_DECL boss_houndmaster_lokseyAI : public ScriptedAI
 {
     boss_houndmaster_lokseyAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
-    uint32 Enrage_Timer;
+    uint32 BloodLust_Timer;
 
     void Reset()
     {
-        Enrage_Timer = 0;
+        BloodLust_Timer = 20000;
     }
 
     void Aggro(Unit *who)
@@ -50,12 +52,11 @@ struct MANGOS_DLL_DECL boss_houndmaster_lokseyAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //If we are <25% hp, bloodlust
-        if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 25 && Enrage_Timer < diff)
+        if (BloodLust_Timer < diff)
         {
-            DoCast(m_creature,SPELL_ENRAGE);
-            Enrage_Timer = 60000;
-        }else Enrage_Timer -= diff;
+            DoCast(m_creature,SPELL_BLOODLUST);
+            BloodLust_Timer = 20000;
+        }else BloodLust_Timer -= diff;
 
         DoMeleeAttackIfReady();
     }
