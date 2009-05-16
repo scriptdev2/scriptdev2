@@ -48,7 +48,6 @@ enum
     SPELL_SUMMON_HATCHER_2          = 45340,
 
     //Fire Bob Spells
-    SPELL_FIRE_BOMB_SUMMON          = 42622,
     SPELL_FIRE_BOMB_CHANNEL         = 42621,
     SPELL_FIRE_BOMB_THROW           = 42628,
     SPELL_FIRE_BOMB_DUMMY           = 42629,
@@ -66,6 +65,12 @@ enum
 
     //Hatchling Spells
     SPELL_FLAMEBUFFED               = 43299
+};
+
+//spells should summon Fire Bomb, used in Throw5Bombs()
+uint32 m_auiSpellFireBombSummon[]=
+{
+    42622, 42623, 42624, 42625, 42626
 };
 
 const int area_dx = 44;
@@ -140,28 +145,33 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
     ScriptedInstance *pInstance;
 
     uint32 fire_breath_timer;
-    uint32 bomb_timer;
-    uint32 throw_timer;
+
+    std::list<uint64> m_lBombsGUIDList;
+
+    uint32 m_uiBombTimer;
+    uint32 m_uiBombSequenzeTimer;
+    uint32 m_uiBombPhase;
+    uint32 m_uiBombCounter;
+
     uint32 enrage_timer;
-    uint32 finishedbomb_timer;
-    uint32 bombcounter;
     uint32 hatchertime;
     uint32 eggs;
     uint32 wipetimer;
     uint32 reset_timer;
+
+    bool m_bIsBombing;
+    bool m_bCanBlowUpBombs;
     bool noeggs;
     bool enraged;
     bool enragetime;
 
     uint64 m_uiHatcher1GUID;
     uint64 m_uiHatcher2GUID;
-    uint64 FireBombGUIDs[40];
-    uint64 ThrowControllerGUID;
-
-    bool bombing;
 
     void Reset()
     {
+        m_lBombsGUIDList.clear();
+
         if (Creature* pUnit = (Creature*)Unit::GetUnit(*m_creature, m_uiHatcher1GUID))
         {
             pUnit->AI()->EnterEvadeMode();
@@ -180,23 +190,21 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
             pInstance->SetData(TYPE_JANALAI, NOT_STARTED);
 
         fire_breath_timer = 8000;
-        bomb_timer = 30000;
+
+        m_uiBombTimer = 30000;
+        m_bIsBombing = false;
+        m_uiBombSequenzeTimer = 1500;
+        m_uiBombPhase = 0;
+        m_uiBombCounter = 0;
+        m_bCanBlowUpBombs = false;
+
         enrage_timer = MINUTE*5*IN_MILISECONDS;
-        finishedbomb_timer = 6000;
-        throw_timer = 1000;
-        bombcounter = 0;
         noeggs = false;
         hatchertime = 10000;
-        wipetimer = 600000;                                 // 10 mins
-        bombing =false;
+        wipetimer = MINUTE*10*IN_MILISECONDS;
         reset_timer = 5000;
         enraged = false;
         enragetime = false;
-
-        ThrowControllerGUID = 0;
-
-        for(uint8 i = 0; i < 40; i++)
-            FireBombGUIDs[i] = 0;
     }
 
     void JustDied(Unit* Killer)
@@ -234,10 +242,30 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
             case NPC_AMANI_HATCHER_2:
                 m_uiHatcher2GUID = pSummoned->GetGUID();
                 break;
+            case NPC_FIRE_BOMB:
+                if (m_bIsBombing)
+                {
+                    //store bombs in list to be used in BlowUpBombs()
+                    m_lBombsGUIDList.push_back(pSummoned->GetGUID());
+
+                    if (pSummoned->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE))
+                        pSummoned->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+
+                    //visual spell, spell hit pSummoned after a short time
+                    m_creature->CastSpell(pSummoned,SPELL_FIRE_BOMB_THROW,true);
+                }
+                break;
         }
     }
 
-    void FireWall()                                         // Create Firewall
+    void SpellHitTarget(Unit* pUnit, const SpellEntry* pSpell)
+    {
+        //when spell actually hit the fire bombs, make then cast spell(making them "visible")
+        if (pUnit->GetEntry() == NPC_FIRE_BOMB && pSpell->Id == SPELL_FIRE_BOMB_THROW)
+            pUnit->CastSpell(pUnit,SPELL_FIRE_BOMB_DUMMY,false);
+    }
+
+    void CreateFireWall()                                   // Create Firewall
     {
         Creature* wall = NULL;
         wall = m_creature->SummonCreature(NPC_FIRE_BOMB,FireWallCoords[0][0],FireWallCoords[0][1],FireWallCoords[0][2],FireWallCoords[0][3],TEMPSUMMON_TIMED_DESPAWN,11500);
@@ -281,46 +309,57 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
             wall->CastSpell(wall,SPELL_FIRE_WALL,false);
     }
 
-    void throwBombs()                                       // create Bombs
+    //workaround for summon to emulate effect. EffectImplicitTarget 73 not implemented
+    void Throw5Bombs()
     {
-        float dx;
-        float dy;
-        for (int i(0); i < 40; i++)
-        {
-            dx = (rand()%(area_dx))-(area_dx/2);
-            dy = (rand()%(area_dy))-(area_dy/2);
+        //all available spells (each spell has different radius for summon location)
+        uint8 uiMaxBombs = sizeof(m_auiSpellFireBombSummon)/sizeof(uint32);
 
-            Creature* bomb = DoSpawnCreature(NPC_FIRE_BOMB, dx, dy, 0, 0, TEMPSUMMON_TIMED_DESPAWN, 13000);
-            if (bomb)
-                FireBombGUIDs[i] = bomb->GetGUID();
+        float fX, fY, fZ;
+        float fRadius = 5.0f;
+
+        for(uint8 i = 0; i < uiMaxBombs; ++i)
+        {
+            m_creature->CastSpell(m_creature, m_auiSpellFireBombSummon[i], true);
+
+            //workaround part
+            m_creature->GetRandomPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), fRadius+(fRadius*i), fX, fY, fZ);
+            m_creature->SummonCreature(NPC_FIRE_BOMB, fX, fY, fZ, 0.0f, TEMPSUMMON_TIMED_DESPAWN, MINUTE*IN_MILISECONDS);
         }
 
-        Creature* ThrowController = DoSpawnCreature(NPC_FIRE_BOMB,0,0,1,0,TEMPSUMMON_TIMED_DESPAWN,10000);
-        if (ThrowController)
-            ThrowControllerGUID = ThrowController->GetGUID();
-
-        bombcounter = 0;
+        ++m_uiBombCounter;
     }
 
-    void throw5Bombs()                                      //throwanimation
+    //Teleport every player into the middle if more than 20 yards away (possibly what spell 43096 should do)
+    void TeleportPlayersOutOfRange()
     {
-        for (int i(0); i < 5; i++)
+        std::list<HostilReference*>::iterator i = m_creature->getThreatManager().getThreatList().begin();
+
+        for (; i != m_creature->getThreatManager().getThreatList().end(); ++i)
         {
-            Unit* ThrowController = NULL;
-            Unit* FireBomb = NULL;
-            if (ThrowControllerGUID)
-                ThrowController = Unit::GetUnit((*m_creature), ThrowControllerGUID);
+            Unit* pTemp = Unit::GetUnit((*m_creature),(*i)->getUnitGuid());
 
-            if (FireBombGUIDs[bombcounter])
-                FireBomb = Unit::GetUnit((*m_creature), FireBombGUIDs[bombcounter]);
+            if (pTemp && pTemp->GetTypeId() == TYPEID_PLAYER && !m_creature->IsWithinDist(pTemp, 20.0f))
+                m_creature->CastSpell(pTemp, SPELL_SUMMONALL, true);
+        }
+    }
 
-            if (ThrowController && FireBomb)
+    void BlowUpBombs()
+    {
+        if (m_lBombsGUIDList.empty())
+            return;
+
+        for(std::list<uint64>::iterator itr = m_lBombsGUIDList.begin(); itr != m_lBombsGUIDList.end(); ++itr)
+        {
+            if (Unit* pUnit = Unit::GetUnit(*m_creature,*itr))
             {
-                ThrowController->CastSpell(FireBomb,SPELL_FIRE_BOMB_THROW,true);
-                FireBomb->CastSpell(FireBomb,SPELL_FIRE_BOMB_DUMMY,false);
-                bombcounter ++;
+                //do damage and then remove aura (making them "disappear")
+                pUnit->CastSpell(pUnit,SPELL_FIRE_BOMB_DAMAGE,false,NULL,NULL,m_creature->GetGUID());
+                pUnit->RemoveAurasDueToSpell(SPELL_FIRE_BOMB_DUMMY);
             }
         }
+
+        m_lBombsGUIDList.clear();
     }
 
     void UpdateAI(const uint32 diff)
@@ -328,8 +367,50 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if (!bombing)                                        // every Spell if NOT Bombing
+        //blow up bombs happen after bombing is over, so handle this here
+        if (m_bCanBlowUpBombs)
         {
+            if (m_uiBombSequenzeTimer < diff)
+            {
+                BlowUpBombs();
+                m_bCanBlowUpBombs = false;
+            }else m_uiBombSequenzeTimer -= diff;
+        }
+
+        if (!m_bIsBombing)                                  // every Spell if NOT Bombing
+        {
+            if (m_uiBombTimer < diff)
+            {
+                if (m_creature->IsNonMeleeSpellCasted(false))
+                    m_creature->InterruptNonMeleeSpells(false);
+
+                DoScriptText(SAY_FIRE_BOMBS, m_creature);
+
+                //first clear movement
+                if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() == TARGETED_MOTION_TYPE)
+                    m_creature->GetMotionMaster()->MovementExpired();
+
+                //then teleport self
+                DoCast(m_creature,SPELL_TELETOCENTER);
+
+                //then players and create the firewall
+                TeleportPlayersOutOfRange();
+                CreateFireWall();
+
+                //prepare variables for bombing sequenze
+                m_lBombsGUIDList.clear();
+
+                m_uiBombPhase = 0;
+                m_uiBombSequenzeTimer = 500;
+                m_uiBombCounter = 0;
+
+                m_uiBombTimer = 20000+rand()%20000;
+                m_bIsBombing = true;
+
+                //we don't want anything else to happen this Update()
+                return;
+            }else m_uiBombTimer -=diff;
+
             //FIRE BREATH  several videos says every 8Secounds
             if (fire_breath_timer < diff)
             {
@@ -337,33 +418,6 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
                     DoCast(target,SPELL_FLAME_BREATH);
                 fire_breath_timer = 8000;
             }else fire_breath_timer -=diff;
-
-            if (bomb_timer < diff)
-            {
-                DoScriptText(SAY_FIRE_BOMBS, m_creature);
-
-                FireWall();
-                bomb_timer = 20000+rand()%20000;
-                m_creature->Relocate(JanalainPos[0][0],JanalainPos[0][1],JanalainPos[0][2],0);
-                m_creature->SendMonsterMove(JanalainPos[0][0], JanalainPos[0][1],JanalainPos[0][2],0,0,100);
-
-                throwBombs();
-                bombing = true;
-
-                //Teleport every Player into the middle
-                Unit* Temp = NULL;
-                std::list<HostilReference*>::iterator i = m_creature->getThreatManager().getThreatList().begin();
-                for (; i != m_creature->getThreatManager().getThreatList().end(); ++i)
-                {
-                    Temp = Unit::GetUnit((*m_creature),(*i)->getUnitGuid());
-                    if (Temp && m_creature->IsWithinDist(Temp, 20.0f))
-                        DoTeleportPlayer(Temp, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 0);
-                }
-
-                DoCast(m_creature,SPELL_TELETOCENTER,true); // only Effect Spell
-                DoCast(m_creature,SPELL_FIRE_BOMB_CHANNEL,false);
-                finishedbomb_timer = 11000;
-            }else bomb_timer -=diff;
 
             //enrage if under 25% hp before 5 min.
             if (((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 25) && !enraged)
@@ -381,6 +435,42 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
                 DoCast(m_creature,SPELL_ENRAGE);
                 enraged = true;
             }
+
+            DoMeleeAttackIfReady();
+        }
+        else                                                // every Spell if Bombing
+        {
+            if (m_uiBombSequenzeTimer < diff)
+            {
+                switch(m_uiBombPhase)
+                {
+                    case 0:
+                        m_creature->CastSpell(m_creature,SPELL_FIRE_BOMB_CHANNEL,true);
+                        m_uiBombSequenzeTimer = 500;
+                        ++m_uiBombPhase;
+                        break;
+                    case 1:
+                        if (m_uiBombCounter < 8)
+                        {
+                            Throw5Bombs();
+                            m_uiBombSequenzeTimer = 500;
+                        }
+                        else
+                        {
+                            m_uiBombSequenzeTimer = 1000;
+                            ++m_uiBombPhase;
+                        }
+                        break;
+                    case 2:
+                        m_bCanBlowUpBombs = true;
+                        m_uiBombSequenzeTimer = 2000;
+                        m_creature->RemoveAurasDueToSpell(SPELL_FIRE_BOMB_CHANNEL);
+                        m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
+                        m_bIsBombing = false;
+                        break;
+                }
+
+            }else m_uiBombSequenzeTimer -= diff;
         }
 
         //Enrage after 5 minutes
@@ -389,26 +479,6 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
             enragetime = true;
             enrage_timer = 600000;
         }else enrage_timer -=diff;
-
-        if (bombing)                                        // every Spell if Bombing
-        {
-            if (bombcounter < 40)
-            {
-                if (throw_timer < diff)
-                {
-                    throw5Bombs();
-                    throw_timer = 1000;
-                }else throw_timer -=diff;
-            }
-
-            if (finishedbomb_timer < diff)
-            {
-                bombing = false;
-                finishedbomb_timer = 6000;
-                m_creature->RemoveAura(SPELL_FIRE_BOMB_CHANNEL,0);
-                m_creature->RemoveAura(SPELL_FIRE_BOMB_CHANNEL,1);
-            }else finishedbomb_timer -=diff;
-        }
 
         //Call Hatcher
         if (!noeggs)
@@ -494,8 +564,6 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
                 reset_timer = 5000;                         //every 5 Seca
             }
         }else reset_timer -=diff;
-
-        DoMeleeAttackIfReady();
     }
 };
 
@@ -506,27 +574,15 @@ CreatureAI* GetAI_boss_janalaiAI(Creature* pCreature)
 
 struct MANGOS_DLL_DECL mob_jandalai_firebombAI : public ScriptedAI
 {
-    mob_jandalai_firebombAI(Creature* pCreature) : ScriptedAI(pCreature){Reset();}
+    mob_jandalai_firebombAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
-    uint32 bomb_timer;
-
-    void Reset()
-    {
-        bomb_timer = 12000;
-    }
+    void Reset() {}
 
     void AttackStart(Unit* who) {}
 
     void MoveInLineOfSight(Unit* who) {}
 
-    void UpdateAI(const uint32 diff)
-    {
-        if (bomb_timer < diff)                               //Boom
-        {
-            m_creature->CastSpell(m_creature,SPELL_FIRE_BOMB_DAMAGE,false);
-            bomb_timer = 1800000;
-        }else bomb_timer -=diff;
-    }
+    void UpdateAI(const uint32 diff) {}
 };
 
 CreatureAI* GetAI_mob_jandalai_firebombAI(Creature* pCreature)
