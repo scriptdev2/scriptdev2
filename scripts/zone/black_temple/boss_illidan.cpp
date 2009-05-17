@@ -2125,36 +2125,22 @@ struct MANGOS_DLL_DECL cage_trap_triggerAI : public ScriptedAI
     }
 };
 
-bool GOHello_cage_trap(Player* plr, GameObject* go)
+bool GOHello_cage_trap(Player* pPlayer, GameObject* pGo)
 {
     float x, y, z;
-    plr->GetPosition(x, y, z);
-
-    Creature* trigger = NULL;
-
-    CellPair pair(MaNGOS::ComputeCellPair(x, y));
-    Cell cell(pair);
-    cell.data.Part.reserved = ALL_DISTRICT;
-    cell.SetNoCreate();
+    pPlayer->GetPosition(x, y, z);
 
     // Grid search for nearest live creature of entry 23304 within 10 yards
-    MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck check(*plr, 23304, true, 10);
-    MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(go, trigger, check);
+    Creature* pTrigger = GetClosestCreatureWithEntry(pGo, 23304, 10.0f);
 
-    TypeContainerVisitor<MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck>, GridTypeMapContainer> cSearcher(searcher);
-
-    CellLock<GridReadGuard> cell_lock(cell, pair);
-    cell_lock->Visit(cell_lock, cSearcher, *(plr->GetMap()));
-
-    if (!trigger)
+    if (!pTrigger)
     {
-        plr->GetSession()->SendNotification("SD2: Summon failed. This trap is now useless.", LANG_UNIVERSAL, 0);
         error_log("SD2: Cage Trap- Unable to find trigger. This Cage Trap is now useless");
         return false;
     }
 
-    ((cage_trap_triggerAI*)trigger->AI())->Active = true;
-    go->SetGoState(GO_STATE_ACTIVE);
+    ((cage_trap_triggerAI*)pTrigger->AI())->Active = true;
+    pGo->SetGoState(GO_STATE_ACTIVE);
     return true;
 }
 

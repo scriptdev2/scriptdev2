@@ -92,26 +92,6 @@ struct MANGOS_DLL_DECL npc_dirty_larryAI : public ScriptedAI
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_UNK_9);
     }
 
-    Creature* SelectCreatureInGrid(uint32 uiEntry, float fRange)
-    {
-        Creature* pCreature = NULL;
-
-        CellPair pair(MaNGOS::ComputeCellPair(m_creature->GetPositionX(), m_creature->GetPositionY()));
-        Cell cell(pair);
-        cell.data.Part.reserved = ALL_DISTRICT;
-        cell.SetNoCreate();
-
-        MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck creature_check(*m_creature, uiEntry, true, fRange);
-        MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(m_creature, pCreature, creature_check);
-
-        TypeContainerVisitor<MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck>, GridTypeMapContainer> creature_searcher(searcher);
-
-        CellLock<GridReadGuard> cell_lock(cell, pair);
-        cell_lock->Visit(cell_lock, creature_searcher,*(m_creature->GetMap()));
-
-        return pCreature;
-    }
-
     void SetRuffies(uint64 guid, bool bAttack, bool bReset)
     {
         Creature* pCreature = (Creature*)Unit::GetUnit(*m_creature, guid);
@@ -158,10 +138,10 @@ struct MANGOS_DLL_DECL npc_dirty_larryAI : public ScriptedAI
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_UNK_8);
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_UNK_9);
 
-        if (Creature* pCreepjack = SelectCreatureInGrid(ENTRY_CREEPJACK, 20.0f))
+        if (Creature* pCreepjack = GetClosestCreatureWithEntry(m_creature, ENTRY_CREEPJACK, 20.0f))
             m_uiCreepjackGUID = pCreepjack->GetGUID();
 
-        if (Creature* pMalone = SelectCreatureInGrid(ENTRY_MALONE, 20.0f))
+        if (Creature* pMalone = GetClosestCreatureWithEntry(m_creature, ENTRY_MALONE, 20.0f))
             m_uiMaloneGUID = pMalone->GetGUID();
 
         bEvent = true;

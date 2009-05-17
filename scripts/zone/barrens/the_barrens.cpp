@@ -358,7 +358,7 @@ CreatureAI* GetAI_npc_twiggy_flathead(Creature* pCreature)
     return new npc_twiggy_flatheadAI(pCreature);
 }
 
-bool AreaTrigger_at_twiggy_flathead(Player* pPlayer, AreaTriggerEntry *at)
+bool AreaTrigger_at_twiggy_flathead(Player* pPlayer, AreaTriggerEntry* pAt)
 {
     if (!pPlayer->isDead() && pPlayer->GetQuestStatus(QUEST_AFFRAY) == QUEST_STATUS_INCOMPLETE)
     {
@@ -369,20 +369,7 @@ bool AreaTrigger_at_twiggy_flathead(Player* pPlayer, AreaTriggerEntry *at)
                 return true;
         }
 
-        Creature* pCreature = NULL;
-
-        CellPair pair(MaNGOS::ComputeCellPair(pPlayer->GetPositionX(), pPlayer->GetPositionY()));
-        Cell cell(pair);
-        cell.data.Part.reserved = ALL_DISTRICT;
-        cell.SetNoCreate();
-
-        MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck creature_check(*pPlayer, NPC_TWIGGY, true, 30.0f);
-        MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(pPlayer, pCreature, creature_check);
-
-        TypeContainerVisitor<MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck>, GridTypeMapContainer> creature_searcher(searcher);
-
-        CellLock<GridReadGuard> cell_lock(cell, pair);
-        cell_lock->Visit(cell_lock, creature_searcher,*(pPlayer->GetMap()));
+        Creature* pCreature = GetClosestCreatureWithEntry(pPlayer, NPC_TWIGGY, 30.0f);
 
         if (!pCreature)
             return true;

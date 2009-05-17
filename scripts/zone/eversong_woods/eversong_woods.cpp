@@ -231,22 +231,7 @@ bool GOHello_go_harbinger_second_trial(Player* pPlayer, GameObject* pGO)
 {
     if (pGO->GetGoType() == GAMEOBJECT_TYPE_GOOBER)
     {
-        Creature* pCreature = NULL;
-
-        CellPair pair(MaNGOS::ComputeCellPair(pGO->GetPositionX(), pGO->GetPositionY()));
-        Cell cell(pair);
-        cell.data.Part.reserved = ALL_DISTRICT;
-        cell.SetNoCreate();
-
-        MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck creature_check(*pGO, NPC_KELERUN, true, 30.0f);
-        MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(pGO, pCreature, creature_check);
-
-        TypeContainerVisitor<MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck>, GridTypeMapContainer> creature_searcher(searcher);
-
-        CellLock<GridReadGuard> cell_lock(cell, pair);
-        cell_lock->Visit(cell_lock, creature_searcher,*(pGO->GetMap()));
-
-        if (pCreature)
+        if (Creature* pCreature = GetClosestCreatureWithEntry(pGO, NPC_KELERUN, 30.0f))
         {
             if (((npc_kelerun_bloodmournAI*)(pCreature->AI()))->CanProgressEvent(pPlayer->GetGUID()))
                 return false;

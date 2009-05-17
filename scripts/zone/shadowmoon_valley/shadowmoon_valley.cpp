@@ -194,27 +194,6 @@ struct MANGOS_DLL_DECL mob_enslaved_netherwing_drakeAI : public ScriptedAI
         m_creature->SetVisibility(VISIBILITY_ON);
     }
 
-    Creature* SelectCreatureInGrid(uint32 entry, float range)
-    {
-        Creature* pCreature = NULL;
-
-        // Time for some omg mind blowing code to search for creature
-        CellPair pair(MaNGOS::ComputeCellPair(m_creature->GetPositionX(), m_creature->GetPositionY()));
-        Cell cell(pair);
-        cell.data.Part.reserved = ALL_DISTRICT;
-        cell.SetNoCreate();
-
-        MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck creature_check(*m_creature, entry, true, range);
-        MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(m_creature, pCreature, creature_check);
-
-        TypeContainerVisitor<MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck>, GridTypeMapContainer> creature_searcher(searcher);
-
-        CellLock<GridReadGuard> cell_lock(cell, pair);
-        cell_lock->Visit(cell_lock, creature_searcher,*(m_creature->GetMap()));
-
-        return pCreature;
-    }
-
     void SpellHit(Unit* caster, const SpellEntry* spell)
     {
         if (!caster)
@@ -228,9 +207,7 @@ struct MANGOS_DLL_DECL mob_enslaved_netherwing_drakeAI : public ScriptedAI
             m_creature->setFaction(FACTION_FRIENDLY);
             DoCast(caster, SPELL_FORCE_OF_NELTHARAKU, true);
 
-            Creature* Dragonmaw = SelectCreatureInGrid(CREATURE_DRAGONMAW_SUBJUGATOR, 50);
-
-            if (Dragonmaw)
+            if (Creature* Dragonmaw = GetClosestCreatureWithEntry(m_creature, CREATURE_DRAGONMAW_SUBJUGATOR, 50.0f))
             {
                 m_creature->AddThreat(Dragonmaw, 100000.0f);
                 AttackStart(Dragonmaw);
@@ -288,8 +265,7 @@ struct MANGOS_DLL_DECL mob_enslaved_netherwing_drakeAI : public ScriptedAI
 
                         float dx, dy, dz;
 
-                        Creature* EscapeDummy = SelectCreatureInGrid(CREATURE_ESCAPE_DUMMY, 30);
-                        if (EscapeDummy)
+                        if (Creature* EscapeDummy = GetClosestCreatureWithEntry(m_creature, CREATURE_ESCAPE_DUMMY, 30.0f))
                             EscapeDummy->GetPosition(dx, dy, dz);
                         else
                         {

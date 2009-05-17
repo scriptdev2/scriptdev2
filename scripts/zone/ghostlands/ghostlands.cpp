@@ -124,26 +124,6 @@ struct MANGOS_DLL_DECL npc_ranger_lilathaAI : public npc_escortAI
     uint64 m_uiGoCageGUID;
     uint64 m_uiHeliosGUID;
 
-    GameObject* GetGoCage()
-    {
-        GameObject* pGo = NULL;
-
-        CellPair pair(MaNGOS::ComputeCellPair(m_creature->GetPositionX(), m_creature->GetPositionY()));
-        Cell cell(pair);
-        cell.data.Part.reserved = ALL_DISTRICT;
-        cell.SetNoCreate();
-
-        MaNGOS::NearestGameObjectEntryInObjectRangeCheck go_check(*m_creature, GO_CAGE, 10);
-        MaNGOS::GameObjectLastSearcher<MaNGOS::NearestGameObjectEntryInObjectRangeCheck> searcher(m_creature, pGo, go_check);
-
-        TypeContainerVisitor<MaNGOS::GameObjectLastSearcher<MaNGOS::NearestGameObjectEntryInObjectRangeCheck>, GridTypeMapContainer> go_searcher(searcher);
-
-        CellLock<GridReadGuard> cell_lock(cell, pair);
-        cell_lock->Visit(cell_lock, go_searcher,*(m_creature->GetMap()));
-
-        return pGo;
-    }
-
     void MoveInLineOfSight(Unit* pUnit)
     {
         if (IsBeingEscorted)
@@ -168,13 +148,13 @@ struct MANGOS_DLL_DECL npc_ranger_lilathaAI : public npc_escortAI
         switch(i)
         {
             case 0:
-                if (GameObject* pGoTemp = GetGoCage())
+                if (GameObject* pGoTemp = GetClosestGameObjectWithEntry(m_creature, GO_CAGE, 10.0f))
+                {
                     m_uiGoCageGUID = pGoTemp->GetGUID();
+                    pGoTemp->SetGoState(GO_STATE_ACTIVE);
+                }
 
                 m_creature->SetStandState(UNIT_STAND_STATE_STAND);
-
-                if (GameObject* pGo = m_creature->GetMap()->GetGameObject(m_uiGoCageGUID))
-                    pGo->SetGoState(GO_STATE_ACTIVE);
 
                 DoScriptText(SAY_START, m_creature, pPlayer);
                 break;

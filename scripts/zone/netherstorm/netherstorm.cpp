@@ -386,27 +386,6 @@ struct MANGOS_DLL_DECL npc_commander_dawnforgeAI : public ScriptedAI
         isEvent = false;
     }
 
-    //Select any creature in a grid
-    Creature* SelectCreatureInGrid(uint32 entry, float range)
-    {
-        Creature* pCreature = NULL;
-
-        CellPair pair(MaNGOS::ComputeCellPair(m_creature->GetPositionX(), m_creature->GetPositionY()));
-        Cell cell(pair);
-        cell.data.Part.reserved = ALL_DISTRICT;
-        cell.SetNoCreate();
-
-        MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck creature_check(*m_creature, entry, true, range);
-        MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(m_creature, pCreature, creature_check);
-
-        TypeContainerVisitor<MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck>, GridTypeMapContainer> creature_searcher(searcher);
-
-        CellLock<GridReadGuard> cell_lock(cell, pair);
-        cell_lock->Visit(cell_lock, creature_searcher,*(m_creature->GetMap()));
-
-        return pCreature;
-    }
-
     void JustSummoned(Creature *summoned)
     {
         pathaleonGUID = summoned->GetGUID();
@@ -468,7 +447,8 @@ struct MANGOS_DLL_DECL npc_commander_dawnforgeAI : public ScriptedAI
     {
         if (!isEvent)
         {
-            Creature *ardonis = SelectCreatureInGrid(uiCreatureEntry[0], 10.0f);
+            Creature* ardonis = GetClosestCreatureWithEntry(m_creature, uiCreatureEntry[0], 10.0f);
+
             if (!ardonis)
                 return false;
 
@@ -630,22 +610,7 @@ bool AreaTrigger_at_commander_dawnforge(Player* pPlayer, AreaTriggerEntry *at)
 
     if (pPlayer->isAlive() && pPlayer->GetQuestStatus(QUEST_INFO_GATHERING) == QUEST_STATUS_INCOMPLETE)
     {
-        Creature* pCreature = NULL;
-
-        uint32 uiEntry = uiCreatureEntry[1];
-
-        CellPair pair(MaNGOS::ComputeCellPair(pPlayer->GetPositionX(), pPlayer->GetPositionY()));
-        Cell cell(pair);
-        cell.data.Part.reserved = ALL_DISTRICT;
-        cell.SetNoCreate();
-
-        MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck creature_check(*pPlayer, uiEntry, true, 30.0f);
-        MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(pPlayer, pCreature, creature_check);
-
-        TypeContainerVisitor<MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck>, GridTypeMapContainer> creature_searcher(searcher);
-
-        CellLock<GridReadGuard> cell_lock(cell, pair);
-        cell_lock->Visit(cell_lock, creature_searcher,*(pPlayer->GetMap()));
+        Creature* pCreature = GetClosestCreatureWithEntry(pPlayer, uiCreatureEntry[1], 30.0f);
 
         if (!pCreature)
             return false;
