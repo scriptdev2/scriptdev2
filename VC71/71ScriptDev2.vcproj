@@ -1720,6 +1720,9 @@
 				RelativePath="..\include\sc_gossip.h">
 			</File>
 			<File
+				RelativePath="..\include\sc_grid_searchers.cpp">
+			</File>
+			<File
 				RelativePath="..\include\sc_grid_searchers.h">
 			</File>
 			<File
