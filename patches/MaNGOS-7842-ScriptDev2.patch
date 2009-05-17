@@ -17,7 +17,7 @@ index fbbc65d..045a4f0 100644
  ## Configure ACE, if needed
 diff --git a/src/bindings/.gitignore b/src/bindings/.gitignore
 new file mode 100644
-index 0000000..d004f0c
+index 0000000..06df6e6
 --- /dev/null
 +++ b/src/bindings/.gitignore
 @@ -0,0 +1,12 @@
@@ -33,7 +33,6 @@ index 0000000..d004f0c
 +
 +# ScriptDev2 directory
 +ScriptDev2
-\ No newline at end of file
 diff --git a/src/bindings/Makefile.am b/src/bindings/Makefile.am
 index 2cc0efd..f2dbbc7 100644
 --- a/src/bindings/Makefile.am
