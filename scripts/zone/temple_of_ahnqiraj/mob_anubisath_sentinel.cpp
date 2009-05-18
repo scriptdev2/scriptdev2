@@ -152,7 +152,8 @@ struct MANGOS_DLL_DECL aqsentinelAI : public ScriptedAI
 
     void AddSentinelsNear(Unit *nears)
     {
-        std::list<Creature*> assistList = GetCreatureListWithEntryInGrid(m_creature,15264,70.0f);
+        std::list<Creature*> assistList;
+        GetCreatureListWithEntryInGrid(assistList,m_creature,15264,70.0f);
 
         if (assistList.empty())
             return;

@@ -331,7 +331,8 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
 
     void FindChannelers()
     {
-        std::list<Creature*> ChannelerList = GetCreatureListWithEntryInGrid(m_creature,CREATURE_CHANNELER,50.0f);
+        std::list<Creature*> ChannelerList;
+        GetCreatureListWithEntryInGrid(ChannelerList,m_creature,CREATURE_CHANNELER,50.0f);
 
         if (!ChannelerList.empty())
         {

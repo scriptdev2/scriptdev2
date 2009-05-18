@@ -16,6 +16,9 @@
 GameObject* GetClosestGameObjectWithEntry(WorldObject* pSource, uint32 uiEntry, float fMaxSearchRange);
 Creature* GetClosestCreatureWithEntry(WorldObject* pSource, uint32 uiEntry, float fMaxSearchRange);
 
+void GetGameObjectListWithEntryInGrid(std::list<GameObject*>& lList , WorldObject* pSource, uint32 uiEntry, float fMaxSearchRange);
+void GetCreatureListWithEntryInGrid(std::list<Creature*>& lList, WorldObject* pSource, uint32 uiEntry, float fMaxSearchRange);
+
 std::list<GameObject*> GetGameObjectListWithEntryInGrid(WorldObject* pSource, uint32 uiEntry, float fMaxSearchRange);
 std::list<Creature*> GetCreatureListWithEntryInGrid(WorldObject* pSource, uint32 uiEntry, float fMaxSearchRange);
 
