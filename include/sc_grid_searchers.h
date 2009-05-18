@@ -13,8 +13,8 @@
 #include "GridNotifiers.h"
 #include "GridNotifiersImpl.h"
 
-GameObject* GetClosestGameObjectWithEntry(WorldObject* pSource, uint32 uiEntry, float fRange);
-Creature* GetClosestCreatureWithEntry(WorldObject* pSource, uint32 uiEntry, float fRange);
+GameObject* GetClosestGameObjectWithEntry(WorldObject* pSource, uint32 uiEntry, float fMaxSearchRange);
+Creature* GetClosestCreatureWithEntry(WorldObject* pSource, uint32 uiEntry, float fMaxSearchRange);
 
 //Used in:
 //hyjalAI.cpp
