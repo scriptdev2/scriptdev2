@@ -74,9 +74,9 @@ std::list<Creature*> GetCreatureListWithEntryInGrid(WorldObject* pSource, uint32
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
 
-    AllCreaturesOfEntryInRange_a check(pSource, uiEntry, fMaxSearchRange);
-    MaNGOS::CreatureListSearcher<AllCreaturesOfEntryInRange_a> searcher(pSource, lCreatureList, check);
-    TypeContainerVisitor<MaNGOS::CreatureListSearcher<AllCreaturesOfEntryInRange_a>, GridTypeMapContainer> visitor(searcher);
+    AllCreaturesOfEntryInRange check(pSource, uiEntry, fMaxSearchRange);
+    MaNGOS::CreatureListSearcher<AllCreaturesOfEntryInRange> searcher(pSource, lCreatureList, check);
+    TypeContainerVisitor<MaNGOS::CreatureListSearcher<AllCreaturesOfEntryInRange>, GridTypeMapContainer> visitor(searcher);
 
     CellLock<GridReadGuard> cell_lock(cell, pair);
     cell_lock->Visit(cell_lock, visitor, *(pSource->GetMap()));

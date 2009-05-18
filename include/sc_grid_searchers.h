@@ -55,10 +55,10 @@ class AllGameObjectsWithEntryInRange
         float m_fRange;
 };
 
-class AllCreaturesOfEntryInRange_a
+class AllCreaturesOfEntryInRange
 {
     public:
-        AllCreaturesOfEntryInRange_a(const WorldObject* pObject, uint32 uiEntry, float fMaxRange) : m_pObject(pObject), m_uiEntry(uiEntry), m_fRange(fMaxRange) {}
+        AllCreaturesOfEntryInRange(const WorldObject* pObject, uint32 uiEntry, float fMaxRange) : m_pObject(pObject), m_uiEntry(uiEntry), m_fRange(fMaxRange) {}
         bool operator() (Unit* pUnit)
         {
             if (pUnit->GetEntry() == m_uiEntry && m_pObject->IsWithinDist(pUnit,m_fRange,false))
@@ -71,24 +71,6 @@ class AllCreaturesOfEntryInRange_a
         const WorldObject* m_pObject;
         uint32 m_uiEntry;
         float m_fRange;
-};
-
-class AllCreaturesOfEntryInRange
-{
-    public:
-        AllCreaturesOfEntryInRange(Unit const* obj, uint32 ent, float ran) : pUnit(obj), entry(ent), range(ran) {}
-        bool operator() (Unit* u)
-        {
-            if (u->GetEntry() == entry && pUnit->IsWithinDistInMap(u, range))
-                return true;
-
-            return false;
-        }
-
-    private:
-        Unit const* pUnit;
-        uint32 entry;
-        float range;
 };
 
 class PlayerAtMinimumRangeAway
