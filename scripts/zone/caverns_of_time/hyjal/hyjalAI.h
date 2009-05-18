@@ -25,7 +25,7 @@
 #define AZGALOR             17842
 #define ARCHIMONDE          17968
 
-#define SPELL_TELEPORT_VISUAL   41232
+#define SPELL_MASS_TELEPORT 16807
 
 // Spells for Jaina
 #define SPELL_BRILLIANCE_AURA     31260                     // The database must handle this spell via creature_addon

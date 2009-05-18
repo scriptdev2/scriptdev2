@@ -337,11 +337,12 @@ void hyjalAI::Retreat()
     {
         for(std::list<Creature*>::iterator itr = creatures.begin(); itr != creatures.end(); ++itr)
         {
-            (*itr)->CastSpell(*itr, SPELL_TELEPORT_VISUAL, true);
+            //probably incorrect, and that spell dummy will trigger 31269 on surrounding npc's
+            (*itr)->CastSpell(*itr, SPELL_MASS_TELEPORT, true);
             CreatureList.push_back((*itr)->GetGUID());
         }
 
-        DoCast(m_creature, SPELL_TELEPORT_VISUAL);
+        DoCast(m_creature, SPELL_MASS_TELEPORT);
         bRetreat = true;
         RetreatTimer = 1000;
     }
