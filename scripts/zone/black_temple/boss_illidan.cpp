@@ -833,24 +833,6 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
     }
 };
 
-/************* Custom check used for Agonizing Flames ***************/
-class AgonizingFlamesTargetCheck
-{
-    public:
-        AgonizingFlamesTargetCheck(Unit const* unit) : pUnit(unit) {}
-        bool operator() (Player* plr)
-        {
-            // It's only cast on players that are greater than 15 yards away from Illidan. If no one is found, cast it on MT instead (since selecting someone in that 15 yard radius would cause the flames to hit the MT anyway).
-            if (!plr->isGameMaster() && !pUnit->IsWithinDist(plr,15.0f,false))
-                return true;
-
-            return false;
-        }
-
-    private:
-        Unit const* pUnit;
-};
-
 /************************************** Illidan's AI ***************************************/
 struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
 {
@@ -1143,26 +1125,13 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
         }
     }
 
-    // It's only cast on players that are greater than 15 yards away from Illidan. If no one is found, cast it on MT instead (since selecting someone in that 15 yard radius would cause the flames to hit the MT anyway).
+    // It's only cast on players that are greater than 15 yards away from Illidan.
+    //If no one is found, cast it on MT instead (since selecting someone in that 15 yard radius would cause the flames to hit the MT anyway).
     void CastAgonizingFlames()
     {
-        // We'll use grid searching for this, using a custom searcher that selects a player that is at a distance >15 yards
-        Player* target = NULL;
-
-        CellPair pair(MaNGOS::ComputeCellPair(m_creature->GetPositionX(), m_creature->GetPositionY()));
-        Cell cell(pair);
-        cell.data.Part.reserved = ALL_DISTRICT;
-        cell.SetNoCreate();
-
-        AgonizingFlamesTargetCheck check(m_creature);
-        MaNGOS::PlayerSearcher<AgonizingFlamesTargetCheck> searcher(m_creature, target, check);
-        TypeContainerVisitor<MaNGOS::PlayerSearcher<AgonizingFlamesTargetCheck>, GridTypeMapContainer> visitor(searcher);
-
-        CellLock<GridReadGuard> cell_lock(cell, pair);
-        cell_lock->Visit(cell_lock, visitor, *(m_creature->GetMap()));
-
-        if (target)
-            DoCast(target, SPELL_AGONIZING_FLAMES);
+        // We'll use a grid searcher that selects a player that is at a distance >15 yards
+        if (Player* pPlayer = GetPlayerAtMinimumRange(15.0f))
+            DoCast(pPlayer, SPELL_AGONIZING_FLAMES);
         else
             DoCast(m_creature->getVictim(), SPELL_AGONIZING_FLAMES);
     }
