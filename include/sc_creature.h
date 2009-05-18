@@ -183,6 +183,9 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     //Returns a list of all friendly units missing a specific buff within range
     std::list<Creature*> DoFindFriendlyMissingBuff(float range, uint32 spellid);
 
+    //Return a player with at least minimumRange from m_creature
+    Player* GetPlayerAtMinimumRange(float fMinimumRange);
+
     //Spawns a creature relative to m_creature
     Creature* DoSpawnCreature(uint32 id, float x, float y, float z, float angle, uint32 type, uint32 despawntime);
 
