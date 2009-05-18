@@ -45,3 +45,41 @@ Creature* GetClosestCreatureWithEntry(WorldObject* pSource, uint32 uiEntry, floa
 
     return pCreature;
 }
+
+std::list<GameObject*> GetGameObjectListWithEntryInGrid(WorldObject* pSource, uint32 uiEntry, float fMaxSearchRange)
+{
+    std::list<GameObject*> lGameObjectList;
+
+    CellPair pair(MaNGOS::ComputeCellPair(pSource->GetPositionX(), pSource->GetPositionY()));
+    Cell cell(pair);
+    cell.data.Part.reserved = ALL_DISTRICT;
+    cell.SetNoCreate();
+
+    AllGameObjectsWithEntryInRange check(pSource, uiEntry, fMaxSearchRange);
+    MaNGOS::GameObjectListSearcher<AllGameObjectsWithEntryInRange> searcher(pSource, lGameObjectList, check);
+    TypeContainerVisitor<MaNGOS::GameObjectListSearcher<AllGameObjectsWithEntryInRange>, GridTypeMapContainer> visitor(searcher);
+
+    CellLock<GridReadGuard> cell_lock(cell, pair);
+    cell_lock->Visit(cell_lock, visitor, *(pSource->GetMap()));
+
+    return lGameObjectList;
+}
+
+std::list<Creature*> GetCreatureListWithEntryInGrid(WorldObject* pSource, uint32 uiEntry, float fMaxSearchRange)
+{
+    std::list<Creature*> lCreatureList;
+
+    CellPair pair(MaNGOS::ComputeCellPair(pSource->GetPositionX(), pSource->GetPositionY()));
+    Cell cell(pair);
+    cell.data.Part.reserved = ALL_DISTRICT;
+    cell.SetNoCreate();
+
+    AllCreaturesOfEntryInRange_a check(pSource, uiEntry, fMaxSearchRange);
+    MaNGOS::CreatureListSearcher<AllCreaturesOfEntryInRange_a> searcher(pSource, lCreatureList, check);
+    TypeContainerVisitor<MaNGOS::CreatureListSearcher<AllCreaturesOfEntryInRange_a>, GridTypeMapContainer> visitor(searcher);
+
+    CellLock<GridReadGuard> cell_lock(cell, pair);
+    cell_lock->Visit(cell_lock, visitor, *(pSource->GetMap()));
+
+    return lCreatureList;
+}

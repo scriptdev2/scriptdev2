@@ -16,6 +16,9 @@
 GameObject* GetClosestGameObjectWithEntry(WorldObject* pSource, uint32 uiEntry, float fMaxSearchRange);
 Creature* GetClosestCreatureWithEntry(WorldObject* pSource, uint32 uiEntry, float fMaxSearchRange);
 
+std::list<GameObject*> GetGameObjectListWithEntryInGrid(WorldObject* pSource, uint32 uiEntry, float fMaxSearchRange);
+std::list<Creature*> GetCreatureListWithEntryInGrid(WorldObject* pSource, uint32 uiEntry, float fMaxSearchRange);
+
 //Used in:
 //hyjalAI.cpp
 class AllFriendlyCreaturesInGrid
@@ -34,21 +37,40 @@ class AllFriendlyCreaturesInGrid
         Unit const* pUnit;
 };
 
-//Used in:
-//hyjalAI.cpp
-class AllGameObjectsWithEntryInGrid
+class AllGameObjectsWithEntryInRange
 {
     public:
-        AllGameObjectsWithEntryInGrid(uint32 ent) : entry(ent) {}
-        bool operator() (GameObject* g)
+        AllGameObjectsWithEntryInRange(const WorldObject* pObject, uint32 uiEntry, float fMaxRange) : m_pObject(pObject), m_uiEntry(uiEntry), m_fRange(fMaxRange) {}
+        bool operator() (GameObject* pGo)
         {
-            if (g->GetEntry() == entry)
+            if (pGo->GetEntry() == m_uiEntry && m_pObject->IsWithinDist(pGo,m_fRange,false))
                 return true;
 
             return false;
         }
+
     private:
-        uint32 entry;
+        const WorldObject* m_pObject;
+        uint32 m_uiEntry;
+        float m_fRange;
+};
+
+class AllCreaturesOfEntryInRange_a
+{
+    public:
+        AllCreaturesOfEntryInRange_a(const WorldObject* pObject, uint32 uiEntry, float fMaxRange) : m_pObject(pObject), m_uiEntry(uiEntry), m_fRange(fMaxRange) {}
+        bool operator() (Unit* pUnit)
+        {
+            if (pUnit->GetEntry() == m_uiEntry && m_pObject->IsWithinDist(pUnit,m_fRange,false))
+                return true;
+
+            return false;
+        }
+
+    private:
+        const WorldObject* m_pObject;
+        uint32 m_uiEntry;
+        float m_fRange;
 };
 
 class AllCreaturesOfEntryInRange
