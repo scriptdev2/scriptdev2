@@ -53,21 +53,6 @@ EndScriptData */
 #define SPELL_STORM_BUFF        2148
 #define SPELL_STORM             26546
 
-class NearbyAQSentinel
-{
-    public:
-        NearbyAQSentinel(Unit const* obj) : i_obj(obj) {}
-        bool operator()(Unit* u)
-        {
-            if (u->GetEntry() == 15264 && i_obj->IsWithinDistInMap(u, 70) && !u->isDead())
-                return true;
-            else
-                return false;
-        }
-    private:
-        Unit const* i_obj;
-};
-
 struct MANGOS_DLL_DECL aqsentinelAI;
 class MANGOS_DLL_DECL SentinelAbilityAura : public Aura
 {
@@ -167,18 +152,10 @@ struct MANGOS_DLL_DECL aqsentinelAI : public ScriptedAI
 
     void AddSentinelsNear(Unit *nears)
     {
-        CellPair p(MaNGOS::ComputeCellPair(nears->GetPositionX(), nears->GetPositionY()));
-        Cell cell(p);
-        cell.data.Part.reserved = ALL_DISTRICT;
-        cell.SetNoCreate();
+        std::list<Creature*> assistList = GetCreatureListWithEntryInGrid(m_creature,15264,70.0f);
 
-        std::list<Creature*> assistList;
-
-        NearbyAQSentinel u_check(nears);
-        MaNGOS::CreatureListSearcher<NearbyAQSentinel> searcher(m_creature, assistList, u_check);
-        TypeContainerVisitor<MaNGOS::CreatureListSearcher<NearbyAQSentinel>, GridTypeMapContainer >  grid_creature_searcher(searcher);
-        CellLock<GridReadGuard> cell_lock(cell, p);
-        cell_lock->Visit(cell_lock, grid_creature_searcher, *(nears->GetMap()));
+        if (assistList.empty())
+            return;
 
         for(std::list<Creature*>::iterator iter = assistList.begin(); iter != assistList.end(); ++iter)
             AddBuddyToList((*iter));

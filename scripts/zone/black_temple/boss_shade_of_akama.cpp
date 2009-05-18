@@ -331,23 +331,12 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
 
     void FindChannelers()
     {
-        CellPair pair(MaNGOS::ComputeCellPair(m_creature->GetPositionX(), m_creature->GetPositionY()));
-        Cell cell(pair);
-        cell.data.Part.reserved = ALL_DISTRICT;
-        cell.SetNoCreate();
-
-        std::list<Creature*> ChannelerList;
-
-        AllCreaturesOfEntryInRange check(m_creature, CREATURE_CHANNELER, 50);
-        MaNGOS::CreatureListSearcher<AllCreaturesOfEntryInRange> searcher(m_creature, ChannelerList, check);
-        TypeContainerVisitor<MaNGOS::CreatureListSearcher<AllCreaturesOfEntryInRange>, GridTypeMapContainer> visitor(searcher);
-
-        CellLock<GridReadGuard> cell_lock(cell, pair);
-        cell_lock->Visit(cell_lock, visitor, *(m_creature->GetMap()));
+        std::list<Creature*> ChannelerList = GetCreatureListWithEntryInGrid(m_creature,CREATURE_CHANNELER,50.0f);
 
         if (!ChannelerList.empty())
         {
             Channelers.clear();
+
             for(std::list<Creature*>::iterator itr = ChannelerList.begin(); itr != ChannelerList.end(); ++itr)
             {
                 ((mob_ashtongue_channelerAI*)(*itr)->AI())->ShadeGUID = m_creature->GetGUID();
