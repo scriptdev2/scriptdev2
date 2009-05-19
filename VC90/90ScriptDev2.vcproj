@@ -2442,6 +2442,10 @@
 					Name="Obsidian Sanctum"
 					>
 					<File
+						RelativePath="..\scripts\zone\obsidian_sanctum\boss_sartharion.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\scripts\zone\obsidian_sanctum\def_obsidian_sanctum.h"
 						>
 					</File>
