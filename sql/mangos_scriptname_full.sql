@@ -693,7 +693,7 @@ UPDATE creature_template SET ScriptName='npc_veronia' WHERE entry=20162;
 
 
 /* OBSIDIAN SANCTUM */
-
+UPDATE instance_template SET script='instance_obsidian_sanctum' WHERE map=615;
 
 /* ONYXIA'S LAIR */
 UPDATE creature_template SET ScriptName='boss_onyxia' WHERE entry=10184;

@@ -383,6 +383,9 @@ extern void AddSC_instance_naxxramas();
 //Netherstorm
 extern void AddSC_netherstorm();
 
+//Obsidian Sanctum
+extern void AddSC_instance_obsidian_sanctum();
+
 //Onyxia's Lair
 extern void AddSC_boss_onyxia();
 
@@ -1231,6 +1234,9 @@ void ScriptsInit()
 
     //Netherstorm
     AddSC_netherstorm();
+
+    //Obsidian Sanctum
+    AddSC_instance_obsidian_sanctum();
 
     //Onyxia's Lair
     AddSC_boss_onyxia();
