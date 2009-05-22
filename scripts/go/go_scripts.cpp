@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: GO_Scripts
 SD%Complete: 100
-SDComment: Quest support: 4285,4287,4288(crystal pylons), 4296, 5088, 10990, 10991, 10992. Field_Repair_Bot->Teaches spell 22704. Barov_journal->Teaches spell 26089
+SDComment: Quest support: 4285,4287,4288(crystal pylons), 4296, 5088, 6481, 10990, 10991, 10992. Field_Repair_Bot->Teaches spell 22704. Barov_journal->Teaches spell 26089
 SDCategory: Game Objects
 EndScriptData */
 
@@ -31,6 +31,7 @@ go_ethereum_prison
 go_ethereum_stasis
 go_field_repair_bot_74A
 go_orb_of_command
+go_resonite_cask
 go_sacred_fire_of_life
 go_shrine_of_the_birds
 go_tablet_of_madness
@@ -234,6 +235,23 @@ bool GOHello_go_orb_of_command(Player* pPlayer, GameObject* _GO)
 }
 
 /*######
+## go_resonite_cask
+######*/
+
+enum
+{
+    NPC_GOGGEROC    = 11920
+};
+
+bool GOHello_go_resonite_cask(Player* pPlayer, GameObject* pGO)
+{
+    if (pGO->GetGoType() == GAMEOBJECT_TYPE_GOOBER)
+        pGO->SummonCreature(NPC_GOGGEROC, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 300000);
+
+    return false;
+}
+
+/*######
 ## go_sacred_fire_of_life
 ######*/
 
@@ -402,6 +420,11 @@ void AddSC_go_scripts()
     newscript = new Script;
     newscript->Name = "go_orb_of_command";
     newscript->pGOHello =           &GOHello_go_orb_of_command;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "go_resonite_cask";
+    newscript->pGOHello =           &GOHello_go_resonite_cask;
     newscript->RegisterSelf();
 
     newscript = new Script;
