@@ -122,7 +122,7 @@ struct MANGOS_DLL_DECL instance_molten_core : public ScriptedInstance
         }
     }
 
-    void OnCreatureCreate(Creature* pCreature, uint32 creature_entry)
+    void OnCreatureCreate(Creature* pCreature)
     {
         switch(pCreature->GetEntry())
         {

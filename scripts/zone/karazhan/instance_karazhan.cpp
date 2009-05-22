@@ -122,7 +122,7 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
         return 0;
     }
 
-    void OnCreatureCreate(Creature* pCreature, uint32 entry)
+    void OnCreatureCreate(Creature* pCreature)
     {
         switch (pCreature->GetEntry())
         {

@@ -37,7 +37,7 @@ struct MANGOS_DLL_DECL instance_zulgurub : public ScriptedInstance
     uint64 ThekalGUID;
     uint64 JindoGUID;
 
-    void OnCreatureCreate(Creature* pCreature, uint32 creature_entry)
+    void OnCreatureCreate(Creature* pCreature)
     {
         switch (pCreature->GetEntry())
         {

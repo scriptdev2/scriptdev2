@@ -59,7 +59,7 @@ struct MANGOS_DLL_DECL instance_temple_of_ahnqiraj : public ScriptedInstance
         CthunPhase = 0;
     }
 
-    void OnCreatureCreate (Creature* pCreature, uint32 creature_entry)
+    void OnCreatureCreate (Creature* pCreature)
     {
         switch (pCreature->GetEntry())
         {

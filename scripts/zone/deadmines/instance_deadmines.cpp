@@ -61,7 +61,7 @@ struct MANGOS_DLL_DECL instance_deadmines : public ScriptedInstance
         Door_Step = 0;
     }
 
-    void OnCreatureCreate(Creature* pCreature, uint32 creature_entry)
+    void OnCreatureCreate(Creature* pCreature)
     {
         if (pCreature->GetEntry() == C_MR_SMITE)
             smiteGUID = pCreature->GetGUID();

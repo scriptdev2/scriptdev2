@@ -126,7 +126,7 @@ struct MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
         }
     }
 
-    void OnCreatureCreate(Creature* pCreature, uint32 entry)
+    void OnCreatureCreate(Creature* pCreature)
     {
         switch(pCreature->GetEntry())
         {

@@ -105,7 +105,7 @@ struct MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
         return false;
     }
 
-    void OnCreatureCreate(Creature* pCreature, uint32 entry)
+    void OnCreatureCreate(Creature* pCreature)
     {
         switch(pCreature->GetEntry())
         {

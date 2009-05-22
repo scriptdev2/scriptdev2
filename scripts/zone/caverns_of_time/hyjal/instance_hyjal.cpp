@@ -85,7 +85,7 @@ struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
         return false;
     }
 
-    void OnCreatureCreate(Creature* pCreature, uint32 creature_entry)
+    void OnCreatureCreate(Creature* pCreature)
     {
         switch(pCreature->GetEntry())
         {

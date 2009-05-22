@@ -66,7 +66,7 @@ struct MANGOS_DLL_DECL instance_shadowfang_keep : public ScriptedInstance
             Encounter[i] = NOT_STARTED;
     }
 
-    void OnCreatureCreate(Creature* pCreature, uint32 uiCreature)
+    void OnCreatureCreate(Creature* pCreature)
     {
         switch(pCreature->GetEntry())
         {

@@ -51,7 +51,7 @@ struct MANGOS_DLL_DECL instance_obsidian_sanctum : public ScriptedInstance
             m_uiEncounter[i] = NOT_STARTED;
     }
 
-    void OnCreatureCreate(Creature* pCreature, uint32 entry)
+    void OnCreatureCreate(Creature* pCreature)
     {
         switch(pCreature->GetEntry())
         {

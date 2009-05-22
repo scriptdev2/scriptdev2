@@ -133,7 +133,7 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
         pPlayer->SendUpdateWorldState(WORLD_STATE_BM,0);
     }
 
-    void OnCreatureCreate(Creature* pCreature, uint32 creature_entry)
+    void OnCreatureCreate(Creature* pCreature)
     {
         if (pCreature->GetEntry() == C_MEDIVH)
             MedivhGUID = pCreature->GetGUID();

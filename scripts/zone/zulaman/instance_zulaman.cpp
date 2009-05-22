@@ -100,7 +100,7 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
             debug_log("SD2: Instance Zulaman: UpdateInstanceWorldState, but PlayerList is empty.");
     }
 
-    void OnCreatureCreate(Creature* pCreature, uint32 uiCreatureEntry)
+    void OnCreatureCreate(Creature* pCreature)
     {
         switch(pCreature->GetEntry())
         {

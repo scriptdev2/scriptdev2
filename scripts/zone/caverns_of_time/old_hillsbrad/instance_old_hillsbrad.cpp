@@ -92,7 +92,7 @@ struct MANGOS_DLL_DECL instance_old_hillsbrad : public ScriptedInstance
             debug_log("SD2: Instance Old Hillsbrad: UpdateOHWorldState, but PlayerList is empty!");
     }
 
-    void OnCreatureCreate(Creature* pCreature, uint32 creature_entry)
+    void OnCreatureCreate(Creature* pCreature)
     {
         switch(pCreature->GetEntry())
         {

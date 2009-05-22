@@ -61,7 +61,7 @@ struct MANGOS_DLL_DECL instance_blackfathom_deeps : public ScriptedInstance
             m_uiEncounter[i] = NOT_STARTED;
     }
 
-    void OnCreatureCreate(Creature* pCreature, uint32 creature_entry)
+    void OnCreatureCreate(Creature* pCreature)
     {
         if (pCreature->GetEntry() == 4832) 
             m_uiTwilightLordKelrisGUID = pCreature->GetGUID();
