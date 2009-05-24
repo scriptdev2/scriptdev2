@@ -192,8 +192,6 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
     void Reset()
     {
         ResetTimer = 2000;
-        m_creature->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TAUNT, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_EFFECT,SPELL_EFFECT_ATTACK_ME, true);
     }
 
     void KilledUnit(Unit *victim)

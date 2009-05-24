@@ -42,7 +42,7 @@ struct MANGOS_DLL_DECL boss_temporusAI : public ScriptedAI
     boss_temporusAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
-        HeroicMode = m_creature->GetMap()->IsHeroic();
+        HeroicMode = pCreature->GetMap()->IsHeroic();
         Reset();
     }
 
@@ -56,9 +56,6 @@ struct MANGOS_DLL_DECL boss_temporusAI : public ScriptedAI
 
     void Reset()
     {
-        m_creature->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TAUNT, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_EFFECT,SPELL_EFFECT_ATTACK_ME, true);
-
         Haste_Timer = 15000+rand()%8000;
         SpellReflection_Timer = 30000;
         MortalWound_Timer = 8000;

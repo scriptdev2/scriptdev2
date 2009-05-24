@@ -219,8 +219,6 @@ struct MANGOS_DLL_DECL aqsentinelAI : public ScriptedAI
         }
         ClearBudyList();
         gatherOthersWhenAggro = true;
-        m_creature->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TAUNT, false);
-        m_creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_ATTACK_ME, false);
     }
 
     void GainSentinelAbility(uint32 id)
@@ -232,11 +230,6 @@ struct MANGOS_DLL_DECL aqsentinelAI : public ScriptedAI
                 continue;
             SentinelAbilityAura *a = new SentinelAbilityAura(this, (SpellEntry *)spell, id, i);
             m_creature->AddAura(a);
-        }
-        if (id == SPELL_KNOCK_BUFF)
-        {
-            m_creature->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TAUNT, true);
-            m_creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_ATTACK_ME, true);
         }
     }
 

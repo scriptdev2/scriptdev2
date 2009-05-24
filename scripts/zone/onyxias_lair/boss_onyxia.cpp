@@ -92,9 +92,6 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
         SummonWhelpsTimer = 45000;
         BellowingRoarTimer = 30000;
         WingBuffetTimer = 17000;
-
-        m_creature->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TAUNT, true);
-        m_creature->ApplySpellImmune(1, IMMUNITY_EFFECT,SPELL_EFFECT_ATTACK_ME, true);
     }
 
     void Aggro(Unit* who)

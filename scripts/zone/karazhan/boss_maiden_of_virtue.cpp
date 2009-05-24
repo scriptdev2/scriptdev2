@@ -51,9 +51,6 @@ struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
         Holyfire_Timer      = 8000+(rand()%17000);
         Holywrath_Timer     = 15000+(rand()%10000);
         Holyground_Timer    = 3000;
-
-        m_creature->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TAUNT, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_EFFECT,SPELL_EFFECT_ATTACK_ME, true);
     }
 
     void KilledUnit(Unit* Victim)
