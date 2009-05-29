@@ -15,9 +15,9 @@
  */
 
 /* ScriptData
-SDName: boss_Kaelthas
+SDName: Boss_Kaelthas
 SD%Complete: 60
-SDComment: SQL, phase 2, phase 3, Mind Control, taunt immunity
+SDComment: SQL, weapon scripts, mind control, need correct spells(interruptible/uninterruptible), phoenix spawn location & animation, phoenix behaviour & spawn during gravity lapse
 SDCategory: Tempest Keep, The Eye
 EndScriptData */
 
@@ -139,7 +139,7 @@ float KaelthasWeapons[7][5] =
 #define GRAVITY_Z 70.0f
 
 #define TIME_PHASE_2_3      120000
-#define TIME_PHASE_3_4      120000
+#define TIME_PHASE_3_4      180000
 
 #define KAEL_VISIBLE_RANGE  50.0f
 
@@ -149,6 +149,7 @@ struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
     advisorbase_ai(Creature* pCreature) : ScriptedAI(pCreature)
     {
         pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        FakeDeath = false;
         Reset();
     }
 
@@ -159,6 +160,9 @@ struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
 
     void Reset()
     {
+        if (FakeDeath)
+            m_creature->SetMaxHealth(m_creature->GetMaxHealth() / 2);
+
         FakeDeath = false;
         DelayRes_Timer = 0;
         DelayRes_Target = 0;
@@ -233,6 +237,9 @@ struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
             m_creature->GetMotionMaster()->Clear();
             m_creature->GetMotionMaster()->MoveIdle();
             m_creature->SetStandState(UNIT_STAND_STATE_DEAD);
+
+            // Double health for Phase 3
+            m_creature->SetMaxHealth(m_creature->GetMaxHealth() * 2);
 
             if (pInstance->GetData(DATA_KAELTHASEVENT) == 3)
                 JustDied(pKiller);
