@@ -606,9 +606,7 @@ void ScriptedAI::SetEquipmentSlots(bool bLoadDefault, int32 uiMainHand, int32 ui
 {
     if (bLoadDefault)
     {
-        if (CreatureInfo const* pInfo = GetCreatureTemplateStore(m_creature->GetEntry()))
-            m_creature->LoadEquipment(pInfo->equipmentId,true);
-
+        m_creature->LoadEquipment(m_creature->GetCreatureInfo()->equipmentId,true);
         return;
     }
 
@@ -620,11 +618,6 @@ void ScriptedAI::SetEquipmentSlots(bool bLoadDefault, int32 uiMainHand, int32 ui
 
     if (uiRanged >= 0)
         m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 2, uint32(uiRanged));
-}
-
-void ScriptedAI::SetSheathState(SheathState newState)
-{
-    m_creature->SetByteValue(UNIT_FIELD_BYTES_2, 0, newState);
 }
 
 void ScriptedAI::SetCombatMovement(bool bCombatMove)
