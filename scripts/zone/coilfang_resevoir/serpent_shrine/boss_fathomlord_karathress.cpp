@@ -48,6 +48,8 @@ enum
     //Sharkkis spells
     SPELL_LEECHING_THROW            = 29436,
     SPELL_THE_BEAST_WITHIN          = 38373,
+    SPELL_HURL_TRIDENT              = 38374,
+    SPELL_MULTI_TOSS                = 38366,
     SPELL_SUMMON_FATHOM_LURKER      = 38433,
     SPELL_SUMMON_FATHOM_SPOREBAT    = 38431,
 
@@ -98,17 +100,12 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
 
         for(uint8 i = 0; i < MAX_ADVISORS; ++i)
         {
-            if (m_auiAdvisors[i])
+            if (Creature* pAdvisor = (Creature*)Unit::GetUnit(*m_creature, m_auiAdvisors[i]))
             {
-                if (Creature* pAdvisor = (Creature*)Unit::GetUnit(*m_creature, m_auiAdvisors[i]))
-                {
-                    if (pAdvisor->isAlive())
-                        pAdvisor->DealDamage(pAdvisor, pAdvisor->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-
-                    pAdvisor->RemoveCorpse();
-                    pAdvisor->Respawn();
+                if (pAdvisor->isAlive() && pAdvisor->getVictim())
                     pAdvisor->AI()->EnterEvadeMode();
-                }
+                else
+                    pAdvisor->Respawn();
             }
         }
 
@@ -270,11 +267,13 @@ struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public ScriptedAI
     ScriptedInstance* m_pInstance;
 
     // timers
+    uint32 m_uiHurlTrident_Timer;
     uint32 m_uiLeechingThrow_Timer;
     uint32 m_uiTheBeastWithin_Timer;
 
     void Reset()
     {
+        m_uiHurlTrident_Timer    = 2500;
         m_uiLeechingThrow_Timer  = 20000;
         m_uiTheBeastWithin_Timer = 30000;
 
@@ -282,13 +281,20 @@ struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public ScriptedAI
             m_pInstance->SetData(TYPE_KARATHRESS_EVENT, NOT_STARTED);
     }
 
-    void JustDied(Unit* pVictim)
+    void AttackStart(Unit* pWho)
     {
-        if (!m_pInstance)
+        if (!pWho)
             return;
 
-        if (Creature* pKarathress = (Creature*)Unit::GetUnit((*m_creature), m_pInstance->GetData64(DATA_KARATHRESS)))
-            ((boss_fathomlord_karathressAI*)pKarathress->AI())->EventAdvisorDeath(DATA_SHARKKIS);
+        if (m_creature->Attack(pWho, false))
+        {
+            m_creature->AddThreat(pWho, 0.0f);
+            m_creature->SetInCombatWith(pWho);
+            pWho->SetInCombatWith(m_creature);
+
+            //using larger distance, since hunter type
+            m_creature->GetMotionMaster()->MoveChase(pWho, 20.0f);
+        }
     }
 
     void Aggro(Unit* pWho)
@@ -298,6 +304,15 @@ struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public ScriptedAI
 
         m_pInstance->SetData64(DATA_KARATHRESS_STARTER, pWho->GetGUID());
         m_pInstance->SetData(TYPE_KARATHRESS_EVENT, IN_PROGRESS);
+    }
+
+    void JustDied(Unit* pVictim)
+    {
+        if (!m_pInstance)
+            return;
+
+        if (Creature* pKarathress = (Creature*)Unit::GetUnit((*m_creature), m_pInstance->GetData64(DATA_KARATHRESS)))
+            ((boss_fathomlord_karathressAI*)pKarathress->AI())->EventAdvisorDeath(DATA_SHARKKIS);
     }
 
     void UpdateAI(const uint32 uiDiff)
@@ -320,9 +335,21 @@ struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public ScriptedAI
             return;
         }
 
-        //spawn pet if not exist or if not alive
-        if (!m_creature->GetPet() || !m_creature->GetPet()->isAlive())
+        //spawn pet if not exist
+        if (!m_creature->GetPetGUID())
             DoCast(m_creature, urand(0,1) ? SPELL_SUMMON_FATHOM_LURKER : SPELL_SUMMON_FATHOM_SPOREBAT);
+
+        //m_uiHurlTrident_Timer
+        if (m_uiHurlTrident_Timer < uiDiff)
+        {
+            if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+            {
+                if (!m_creature->IsWithinDist(pTarget,ATTACK_DISTANCE))
+                    DoCast(pTarget, SPELL_HURL_TRIDENT);
+            }
+
+            m_uiHurlTrident_Timer = 5000;
+        }else m_uiHurlTrident_Timer -= uiDiff;
 
         //m_uiLeechingThrow_Timer
         if (m_uiLeechingThrow_Timer < uiDiff)
