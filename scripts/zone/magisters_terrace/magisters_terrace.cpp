@@ -38,7 +38,7 @@ enum
     POINT_ID_LAND               = 1
 };
 
-const float afKaelLandPoint[] = {225.033, -276.294, -7.865};
+const float afKaelLandPoint[] = {225.045, -276.236, -5.434};
 
 #define GOSSIP_ITEM_KAEL_1      "Who are you?"
 #define GOSSIP_ITEM_KAEL_2      "What can we do to assist you?"
@@ -52,8 +52,12 @@ struct MANGOS_DLL_DECL npc_kalecgosAI : public ScriptedAI
 {
     npc_kalecgosAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
+    uint32 m_uiTransformTimer;
+
     void Reset()
     {
+        m_uiTransformTimer = 0;
+
         // we must assume he appear as dragon somewhere outside the platform of orb, and then move directly to here
         if (m_creature->GetEntry() != NPC_KAEL)
             m_creature->GetMotionMaster()->MovePoint(POINT_ID_LAND, afKaelLandPoint[0], afKaelLandPoint[1], afKaelLandPoint[2]);
@@ -65,10 +69,21 @@ struct MANGOS_DLL_DECL npc_kalecgosAI : public ScriptedAI
             return;
 
         if (uiPointId == POINT_ID_LAND)
+            m_uiTransformTimer = MINUTE*IN_MILISECONDS;
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (m_uiTransformTimer)
         {
-            // Transform and update entry, now ready for quest/read gossip
-            m_creature->CastSpell(m_creature,SPELL_TRANSFORM_TO_KAEL,false);
-            m_creature->UpdateEntry(NPC_KAEL);
+            if (m_uiTransformTimer < uiDiff)
+            {
+                // Transform and update entry, now ready for quest/read gossip
+                m_creature->CastSpell(m_creature,SPELL_TRANSFORM_TO_KAEL,false);
+                m_creature->UpdateEntry(NPC_KAEL);
+
+                m_uiTransformTimer = 0;
+            }else m_uiTransformTimer -= uiDiff;
         }
     }
 };
