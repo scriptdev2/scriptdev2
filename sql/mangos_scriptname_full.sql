@@ -608,6 +608,7 @@ UPDATE creature_template SET ScriptName='mob_arcane_sphere' WHERE entry=24708;
 UPDATE creature_template SET ScriptName='mob_felkael_phoenix' WHERE entry=24674;
 UPDATE creature_template SET ScriptName='mob_felkael_phoenix_egg' WHERE entry=24675;
 UPDATE creature_template SET ScriptName='mob_felkael_flamestrike' WHERE entry=24666;
+UPDATE creature_template SET ScriptName='npc_kalecgos' WHERE entry IN (24844, 24848);
 
 /* MARAUDON */
 UPDATE creature_template SET ScriptName='boss_princess_theradras' WHERE entry=12201;

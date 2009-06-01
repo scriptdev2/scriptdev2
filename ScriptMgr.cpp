@@ -336,6 +336,7 @@ extern void AddSC_boss_selin_fireheart();
 extern void AddSC_boss_vexallus();
 extern void AddSC_boss_priestess_delrissa();
 extern void AddSC_instance_magisters_terrace();
+extern void AddSC_magisters_terrace();
 
 //Maraudon
 extern void AddSC_boss_celebras_the_cursed();
@@ -1189,6 +1190,7 @@ void ScriptsInit()
     AddSC_boss_vexallus();
     AddSC_boss_priestess_delrissa();
     AddSC_instance_magisters_terrace();
+    AddSC_magisters_terrace();
 
     //Maraudon
     AddSC_boss_celebras_the_cursed();
