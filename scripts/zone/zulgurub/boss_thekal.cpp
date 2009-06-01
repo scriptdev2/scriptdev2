@@ -120,21 +120,25 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
                 if (pInstance->GetData(DATA_LORKHANISDEAD))
                 {
                     //Resurrect LorKhan
-                    Unit *pLorKhan = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_LORKHAN));
-                    pLorKhan->SetStandState(UNIT_STAND_STATE_STAND);
-                    pLorKhan->setFaction(14);
-                    pLorKhan->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                    pLorKhan->SetHealth(int(pLorKhan->GetMaxHealth()*1.0));
+                    if (Unit *pLorKhan = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_LORKHAN)))
+                    {
+                        pLorKhan->SetStandState(UNIT_STAND_STATE_STAND);
+                        pLorKhan->setFaction(14);
+                        pLorKhan->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                        pLorKhan->SetHealth(int(pLorKhan->GetMaxHealth()*1.0));
+                    }
                 }
 
                 if (pInstance->GetData(DATA_ZATHISDEAD))
                 {
                     //Resurrect Zath
-                    Unit *pZath = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_ZATH));
-                    pZath->SetStandState(UNIT_STAND_STATE_STAND);
-                    pZath->setFaction(14);
-                    pZath->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                    pZath->SetHealth(int(pZath->GetMaxHealth()*1.0));
+                    if (Unit *pZath = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_ZATH)))
+                    {
+                        pZath->SetStandState(UNIT_STAND_STATE_STAND);
+                        pZath->setFaction(14);
+                        pZath->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                        pZath->SetHealth(int(pZath->GetMaxHealth()*1.0));
+                    }
                 }
             }
             Check_Timer = 5000;
@@ -297,11 +301,11 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public ScriptedAI
                 switch(rand()%2)
                 {
                     case 0:
-                        if (m_creature->IsWithinDistInMap(pThekal, ATTACK_DISTANCE))
+                        if (pThekal && m_creature->IsWithinDistInMap(pThekal, ATTACK_DISTANCE))
                             DoCast(pThekal, SPELL_GREATERHEAL);
                         break;
                     case 1:
-                        if (m_creature->IsWithinDistInMap(pZath, ATTACK_DISTANCE))
+                        if (pZath && m_creature->IsWithinDistInMap(pZath, ATTACK_DISTANCE))
                             DoCast(pZath, SPELL_GREATERHEAL);
                         break;
                 }
@@ -325,21 +329,25 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public ScriptedAI
                 if (pInstance->GetData(DATA_THEKALISFAKEDEAD))
                 {
                     //Resurrect Thekal
-                    Unit *pThekal = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_THEKAL));
-                    pThekal->SetStandState(UNIT_STAND_STATE_STAND);
-                    pThekal->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                    pThekal->setFaction(14);
-                    pThekal->SetHealth(int(pThekal->GetMaxHealth()*1.0));
+                    if (Unit *pThekal = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_THEKAL)))
+                    {
+                        pThekal->SetStandState(UNIT_STAND_STATE_STAND);
+                        pThekal->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                        pThekal->setFaction(14);
+                        pThekal->SetHealth(int(pThekal->GetMaxHealth()*1.0));
+                    }
                 }
 
                 if (pInstance->GetData(DATA_ZATHISDEAD))
                 {
                     //Resurrect Zath
-                    Unit *pZath = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_ZATH));
-                    pZath->SetStandState(UNIT_STAND_STATE_STAND);
-                    pZath->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                    pZath->setFaction(14);
-                    pZath->SetHealth(int(pZath->GetMaxHealth()*1.0));
+                    if (Unit *pZath = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_ZATH)))
+                    {
+                        pZath->SetStandState(UNIT_STAND_STATE_STAND);
+                        pZath->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                        pZath->setFaction(14);
+                        pZath->SetHealth(int(pZath->GetMaxHealth()*1.0));
+                    }
                 }
             }
 
@@ -453,21 +461,25 @@ struct MANGOS_DLL_DECL mob_zealot_zathAI : public ScriptedAI
                 if (pInstance->GetData(DATA_LORKHANISDEAD))
                 {
                     //Resurrect LorKhan
-                    Unit *pLorKhan = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_LORKHAN));
-                    pLorKhan->SetStandState(UNIT_STAND_STATE_STAND);
-                    pLorKhan->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                    pLorKhan->setFaction(14);
-                    pLorKhan->SetHealth(int(pLorKhan->GetMaxHealth()*1.0));
+                    if (Unit *pLorKhan = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_LORKHAN)))
+                    {
+                        pLorKhan->SetStandState(UNIT_STAND_STATE_STAND);
+                        pLorKhan->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                        pLorKhan->setFaction(14);
+                        pLorKhan->SetHealth(int(pLorKhan->GetMaxHealth()*1.0));
+                    }
                 }
 
                 if (pInstance->GetData(DATA_THEKALISFAKEDEAD))
                 {
                     //Resurrect Thekal
-                    Unit *pThekal = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_THEKAL));
-                    pThekal->SetStandState(UNIT_STAND_STATE_STAND);
-                    pThekal->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                    pThekal->setFaction(14);
-                    pThekal->SetHealth(int(pThekal->GetMaxHealth()*1.0));
+                    if (Unit *pThekal = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_THEKAL)))
+                    {
+                        pThekal->SetStandState(UNIT_STAND_STATE_STAND);
+                        pThekal->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                        pThekal->setFaction(14);
+                        pThekal->SetHealth(int(pThekal->GetMaxHealth()*1.0));
+                    }
                 }
             }
 
