@@ -539,6 +539,11 @@ extern void AddSC_undercity();
 
 //Un'Goro Crater
 //Upper blackrock spire
+
+//Utgarde Keep
+extern void AddSC_instance_utgarde_keep();
+extern void AddSC_utgarde_keep();
+
 //Wailing caverns
 
 //Western plaguelands
@@ -1393,6 +1398,11 @@ void ScriptsInit()
 
     //Un'Goro Crater
     //Upper blackrock spire
+
+    //Utgarde Keep
+    AddSC_instance_utgarde_keep();
+    AddSC_utgarde_keep();
+
     //Wailing caverns
 
     //Western plaguelands

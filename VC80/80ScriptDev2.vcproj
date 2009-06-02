@@ -2437,6 +2437,18 @@
 					<Filter
 						Name="Utgarde Keep"
 						>
+						<File
+							RelativePath="..\scripts\zone\utgarde_keep\utgarde_keep\def_utgarde_keep.h"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\zone\utgarde_keep\utgarde_keep\instance_utgarde_keep.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\zone\utgarde_keep\utgarde_keep\utgarde_keep.cpp"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="Utgarde Pinnacle"
