@@ -178,18 +178,6 @@ struct MANGOS_DLL_DECL mob_doomfire_targettingAI : public ScriptedAI
    For Doomfire, we summon a mob (Doomfire Spirit) for the Doomfire mob to follow. It's spirit will
    randomly select it's target to follow and then we create the random movement making it unpredictable. */
 
-// This is used to sort by distance in order to see who is the closest target, when checking for Finger of Death
-struct TargetDistanceOrder : public std::binary_function<const Unit, const Unit, bool>
-{
-    const Unit* MainTarget;
-    TargetDistanceOrder(const Unit* Target) : MainTarget(Target) {};
-    // functor for operator "<"
-    bool operator()(const Unit* _Left, const Unit* _Right) const
-    {
-        return MainTarget->GetDistanceOrder(_Left, _Right);
-    }
-};
-
 struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
 {
     boss_archimondeAI(Creature* pCreature) : ScriptedAI(pCreature)
@@ -328,7 +316,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         if (targets.empty())
             return false;
 
-        targets.sort(TargetDistanceOrder(m_creature));
+        targets.sort(ObjectDistanceOrder(m_creature));
         Unit* target = targets.front();
         if (target)
         {

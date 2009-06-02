@@ -51,18 +51,6 @@ EndScriptData */
 #define SPELL_INSIGNIFIGANCE     40618
 #define SPELL_BERSERK            45078
 
-//This is used to sort the players by distance in preparation for the Bloodboil cast.
-struct TargetDistanceOrder : public std::binary_function<const Unit, const Unit, bool>
-{
-    const Unit* MainTarget;
-    TargetDistanceOrder(const Unit* Target) : MainTarget(Target) {};
-    // functor for operator ">"
-    bool operator()(const Unit* _Left, const Unit* _Right) const
-    {
-        return !MainTarget->GetDistanceOrder(_Left, _Right);
-    }
-};
-
 struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
 {
     boss_gurtogg_bloodboilAI(Creature* pCreature) : ScriptedAI(pCreature)
@@ -176,7 +164,7 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
         }
 
         //Sort the list of players
-        targets.sort(TargetDistanceOrder(m_creature));
+        targets.sort(ObjectDistanceOrderReversed(m_creature));
         //Resize so we only get top 5
         targets.resize(5);
 
