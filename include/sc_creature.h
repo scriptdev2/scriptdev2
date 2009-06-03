@@ -163,7 +163,7 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     //void DoWhisper(const char* text, Unit* reciever, bool IsBossWhisper = false);
 
     //Plays a sound to all nearby players
-    void DoPlaySoundToSet(Unit* unit, uint32 sound);
+    void DoPlaySoundToSet(WorldObject* pSource, uint32 uiSoundId);
 
     //Places the entire map into combat with creature
     void DoZoneInCombat(Unit* pUnit = 0);

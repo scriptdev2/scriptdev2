@@ -195,14 +195,14 @@ void ScriptedAI::DoCastSpell(Unit* who,SpellEntry const *spellInfo, bool trigger
     m_creature->Whisper(text, reciever->GetGUID(), IsBossWhisper);
 }*/
 
-void ScriptedAI::DoPlaySoundToSet(Unit* pSource, uint32 uiSoundId)
+void ScriptedAI::DoPlaySoundToSet(WorldObject* pSource, uint32 uiSoundId)
 {
     if (!pSource)
         return;
 
     if (!GetSoundEntriesStore()->LookupEntry(uiSoundId))
     {
-        error_log("SD2: Invalid soundId %u used in DoPlaySoundToSet (by unit TypeId %u, guid %u)", uiSoundId, pSource->GetTypeId(), pSource->GetGUID());
+        error_log("SD2: Invalid soundId %u used in DoPlaySoundToSet (Source: TypeId %u, GUID %u)", uiSoundId, pSource->GetTypeId(), pSource->GetGUIDLow());
         return;
     }
 
