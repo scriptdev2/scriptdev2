@@ -84,7 +84,14 @@ struct MANGOS_DLL_DECL instance_scarlet_monastery : public ScriptedInstance
     void SetData(uint32 type, uint32 data)
     {
         if (type == TYPE_MOGRAINE_AND_WHITE_EVENT)
+        {
+            if (data == IN_PROGRESS)
+                DoUseDoorOrButton(DoorHighInquisitorGUID);
+            if (data == FAIL)
+                DoUseDoorOrButton(DoorHighInquisitorGUID);
+
             Encounter[0] = data;
+        }
     }
 
     uint32 GetData(uint32 data)
