@@ -8,6 +8,9 @@
 enum
 {
     //also using these as identifier for Set/GetData(), unlike normal naming
+    NPC_SKARVALD                = 24200,
+    NPC_DALRONN                 = 24201,
+
     GO_BELLOW_1                 = 186688,
     GO_BELLOW_2                 = 186689,
     GO_BELLOW_3                 = 186690,

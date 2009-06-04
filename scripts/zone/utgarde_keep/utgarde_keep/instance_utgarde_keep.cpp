@@ -33,6 +33,9 @@ struct MANGOS_DLL_DECL instance_utgarde_keep : public ScriptedInstance
     uint32 m_uiEncounter[ENCOUNTERS];
     std::string str_data;
 
+    uint64 m_uiSkarvaldGUID;
+    uint64 m_uiDalronnGUID;
+
     uint64 m_uiBellow1GUID;
     uint64 m_uiBellow2GUID;
     uint64 m_uiBellow3GUID;
@@ -42,6 +45,9 @@ struct MANGOS_DLL_DECL instance_utgarde_keep : public ScriptedInstance
 
     void Initialize()
     {
+        m_uiSkarvaldGUID = 0;
+        m_uiDalronnGUID = 0;
+
         m_uiBellow1GUID = 0;
         m_uiBellow2GUID = 0;
         m_uiBellow3GUID = 0;
@@ -51,6 +57,15 @@ struct MANGOS_DLL_DECL instance_utgarde_keep : public ScriptedInstance
 
         for(uint8 i = 0; i < ENCOUNTERS; ++i)
             m_uiEncounter[i] = NOT_STARTED;
+    }
+
+    void OnCreatureCreate(Creature* pCreature)
+    {
+        switch(pCreature->GetEntry())
+        {
+            case NPC_SKARVALD: m_uiSkarvaldGUID = pCreature->GetGUID(); break;
+            case NPC_DALRONN: m_uiDalronnGUID = pCreature->GetGUID(); break;
+        }
     }
 
     void OnObjectCreate(GameObject* pGo)
@@ -128,6 +143,10 @@ struct MANGOS_DLL_DECL instance_utgarde_keep : public ScriptedInstance
     {
         switch(uiData)
         {
+            case NPC_SKARVALD:
+                return m_uiSkarvaldGUID;
+            case NPC_DALRONN:
+                return m_uiDalronnGUID;
             case GO_BELLOW_1:
                 return m_uiBellow1GUID;
             case GO_BELLOW_2:

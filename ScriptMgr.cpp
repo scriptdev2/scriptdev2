@@ -541,6 +541,9 @@ extern void AddSC_undercity();
 //Upper blackrock spire
 
 //Utgarde Keep
+extern void AddSC_boss_ingvar();
+extern void AddSC_boss_keleseth();
+extern void AddSC_boss_skarvald_and_dalronn();
 extern void AddSC_instance_utgarde_keep();
 extern void AddSC_utgarde_keep();
 
@@ -1400,6 +1403,9 @@ void ScriptsInit()
     //Upper blackrock spire
 
     //Utgarde Keep
+    AddSC_boss_ingvar();
+    AddSC_boss_keleseth();
+    AddSC_boss_skarvald_and_dalronn();
     AddSC_instance_utgarde_keep();
     AddSC_utgarde_keep();
 
