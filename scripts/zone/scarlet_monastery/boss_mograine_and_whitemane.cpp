@@ -100,6 +100,8 @@ struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
     {
         DoScriptText(SAY_MO_AGGRO, m_creature);
         DoCast(m_creature,SPELL_RETRIBUTIONAURA);
+
+        m_creature->CallForHelp(VISIBLE_RANGE);
     }
 
     void KilledUnit(Unit* pVictim)
@@ -234,6 +236,14 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
         if (m_pInstance)
             if (m_creature->isAlive())
                 m_pInstance->SetData(TYPE_MOGRAINE_AND_WHITE_EVENT, NOT_STARTED);
+    }
+
+    void AttackStart(Unit* pWho)
+    {
+        if (m_pInstance && m_pInstance->GetData(TYPE_MOGRAINE_AND_WHITE_EVENT) == NOT_STARTED)
+            return;
+
+        ScriptedAI::AttackStart(pWho);
     }
 
     void Aggro(Unit* pWho)

@@ -47,6 +47,7 @@ struct MANGOS_DLL_DECL boss_draganthaurissanAI : public ScriptedAI
     void Aggro(Unit *who)
     {
         DoScriptText(SAY_AGGRO, m_creature);
+        m_creature->CallForHelp(VISIBLE_RANGE);
     }
 
     void KilledUnit(Unit* victim)
