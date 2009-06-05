@@ -23,21 +23,43 @@ EndScriptData */
 
 #include "precompiled.h"
 
-#define SAY_AGGRO1              -1533075
-#define SAY_AGGRO2              -1533076
-#define SAY_AGGRO3              -1533077
-#define SAY_SUMMON              -1533078
-#define SAY_SLAY1               -1533079
-#define SAY_SLAY2               -1533080
-#define SAY_DEATH               -1533081
+enum
+{
+    SAY_AGGRO1                          = -1533075,
+    SAY_AGGRO2                          = -1533076,
+    SAY_AGGRO3                          = -1533077,
+    SAY_SUMMON                          = -1533078,
+    SAY_SLAY1                           = -1533079,
+    SAY_SLAY2                           = -1533080,
+    SAY_DEATH                           = -1533081,
 
-#define SPELL_BLINK                     29211               //29208, 29209 and 29210 too
-#define SPELL_CRIPPLE                   29212
-#define H_SPELL_CRIPPLE                 54814
-#define SPELL_CURSE_PLAGUEBRINGER       28213
-#define H_SPELL_CURSE_PLAGUEBRINGER     54835
+    SPELL_BLINK                         = 29211,            //29208, 29209 and 29210 too
+    SPELL_CRIPPLE                       = 29212,
+    SPELL_CRIPPLE_H                     = 54814,
+    SPELL_CURSE_PLAGUEBRINGER           = 29213,
+    SPELL_CURSE_PLAGUEBRINGER_H         = 54835,
 
-#define C_PLAGUED_WARRIOR               16984
+    SPELL_SUMMON_CHAMPION_AND_CONSTRUCT = 29240,
+    SPELL_SUMMON_GUARDIAN_AND_CONSTRUCT = 29269,
+
+    NPC_PLAGUED_WARRIOR                 = 16984,
+
+};
+
+uint32 m_auiSpellSummonPlaguedWarrior[]=
+{
+    29247, 29248, 29249
+};
+
+uint32 m_auiSpellSummonPlaguedChampion[]=
+{
+    29217, 29224, 29225, 29227, 29238, 29255, 29257, 29258, 29262, 29267
+};
+
+uint32 m_auiSpellSummonPlaguedGuardian[]=
+{
+    29226, 29239, 29256, 29268
+};
 
 // Teleport position of Noth on his balcony
 #define TELE_X 2631.370
@@ -50,7 +72,15 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_nothAI : public ScriptedAI
 {
-    boss_nothAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+    boss_nothAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_bIsHeroic = pCreature->GetMap()->IsHeroic();
+        Reset();
+    }
+
+    ScriptedInstance* m_pInstance;
+    bool m_bIsHeroic;
 
     uint32 Blink_Timer;
     uint32 Curse_Timer;
@@ -120,7 +150,7 @@ struct MANGOS_DLL_DECL boss_nothAI : public ScriptedAI
             DoScriptText(SAY_SUMMON, m_creature);
 
             for(uint8 i = 0; i < 6; i++)
-                m_creature->SummonCreature(C_PLAGUED_WARRIOR,2684.804,-3502.517,261.313,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,80000);
+                m_creature->SummonCreature(NPC_PLAGUED_WARRIOR,2684.804,-3502.517,261.313,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,80000);
 
             Summon_Timer = 30500;
         } else Summon_Timer -= diff;
