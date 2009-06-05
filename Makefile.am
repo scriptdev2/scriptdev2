@@ -267,6 +267,10 @@ scripts/zone/naxxramas/boss_sapphiron.cpp \
 scripts/zone/naxxramas/boss_thaddius.cpp \
 scripts/zone/naxxramas/instance_naxxramas.cpp \
 scripts/zone/netherstorm/netherstorm.cpp \
+scripts/zone/nexus/nexus/boss_anomalus.cpp \
+scripts/zone/nexus/nexus/boss_keristrasza.cpp \
+scripts/zone/nexus/nexus/boss_ormorok.cpp \
+scripts/zone/nexus/nexus/boss_telestra.cpp \
 scripts/zone/obsidian_sanctum/boss_sartharion.cpp \
 scripts/zone/obsidian_sanctum/def_obsidian_sanctum.h \
 scripts/zone/obsidian_sanctum/instance_obsidian_sanctum.cpp \

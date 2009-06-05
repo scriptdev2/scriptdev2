@@ -384,6 +384,17 @@ extern void AddSC_instance_naxxramas();
 //Netherstorm
 extern void AddSC_netherstorm();
 
+//The Nexus
+//Eye of Eternety
+
+//Nexus
+extern void AddSC_boss_anomalus();
+extern void AddSC_boss_keristrasza();
+extern void AddSC_boss_ormorok();
+extern void AddSC_boss_telestra();
+
+//Oculus
+
 //Obsidian Sanctum
 extern void AddSC_boss_sartharion();
 extern void AddSC_instance_obsidian_sanctum();
@@ -1245,6 +1256,17 @@ void ScriptsInit()
 
     //Netherstorm
     AddSC_netherstorm();
+
+    //The Nexus
+    //Eye of Eternety
+
+    //Nexus
+    AddSC_boss_anomalus();
+    AddSC_boss_keristrasza();
+    AddSC_boss_ormorok();
+    AddSC_boss_telestra();
+
+    //Oculus
 
     //Obsidian Sanctum
     AddSC_boss_sartharion();

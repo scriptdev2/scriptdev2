@@ -2404,6 +2404,22 @@
 					<Filter
 						Name="Nexus"
 						>
+						<File
+							RelativePath="..\scripts\zone\nexus\nexus\boss_anomalus.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\zone\nexus\nexus\boss_keristrasza.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\zone\nexus\nexus\boss_ormorok.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\zone\nexus\nexus\boss_telestra.cpp"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="Oculus"
