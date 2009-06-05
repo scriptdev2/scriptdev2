@@ -908,7 +908,9 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1533115,'Soon... the world will tremble!',8832,1,0,0,'heigan SAY_TAUNT3'),
 (-1533116,'The end is upon you.',8833,1,0,0,'heigan SAY_TAUNT4'),
 (-1533117,'Hungry worms will feast on your rotten flesh!',8834,1,0,0,'heigan SAY_TAUNT5'),
-(-1533118,'Noo... o...',8828,1,0,0,'heigan SAY_DEATH');
+(-1533118,'Noo... o...',8828,1,0,0,'heigan SAY_DEATH'),
+
+(-1533119,'%s spots a nearby Zombie to devour!',0,3,0,0,'gluth EMOTE_ZOMBIE');
 
 -- -1 534 000 THE BATTLE OF MT. HYJAL
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES

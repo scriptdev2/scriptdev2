@@ -23,34 +23,44 @@ EndScriptData */
 
 #include "precompiled.h"
 
-#define SAY_GREET           -1533000
-#define SAY_AGGRO1          -1533001
-#define SAY_AGGRO2          -1533002
-#define SAY_AGGRO3          -1533003
-#define SAY_TAUNT1          -1533004
-#define SAY_TAUNT2          -1533005
-#define SAY_TAUNT3          -1533006
-#define SAY_TAUNT4          -1533007
-#define SAY_SLAY            -1533008
+enum
+{
+    SAY_GREET                   = -1533000,
+    SAY_AGGRO1                  = -1533001,
+    SAY_AGGRO2                  = -1533002,
+    SAY_AGGRO3                  = -1533003,
+    SAY_TAUNT1                  = -1533004,
+    SAY_TAUNT2                  = -1533005,
+    SAY_TAUNT3                  = -1533006,
+    SAY_TAUNT4                  = -1533007,
+    SAY_SLAY                    = -1533008,
 
-#define SPELL_IMPALE        28783                           //May be wrong spell id. Causes more dmg than I expect
-#define H_SPELL_IMPALE      56090
-#define SPELL_LOCUSTSWARM   28785                           //This is a self buff that triggers the dmg debuff
-#define H_SPELL_LOCUSTSWARM 54021
+    SPELL_IMPALE                = 28783,                    //May be wrong spell id. Causes more dmg than I expect
+    SPELL_IMPALE_H              = 56090,
+    SPELL_LOCUSTSWARM           = 28785,                    //This is a self buff that triggers the dmg debuff
+    SPELL_LOCUSTSWARM_H         = 54021,
 
-//spellId invalid
-#define SPELL_SUMMONGUARD   29508                           //Summons 1 crypt guard at targeted location
+    //spellId invalid
+    SPELL_SUMMONGUARD           = 29508,                    //Summons 1 crypt guard at targeted location
 
-#define SPELL_SELF_SPAWN_5  29105                           //This spawns 5 corpse scarabs ontop of us (most likely the pPlayer casts this on death)
-#define SPELL_SELF_SPAWN_10 28864                           //This is used by the crypt guards when they die
+    SPELL_SELF_SPAWN_5          = 29105,                    //This spawns 5 corpse scarabs ontop of us (most likely the pPlayer casts this on death)
+    SPELL_SELF_SPAWN_10         = 28864,                    //This is used by the crypt guards when they die
+
+    NPC_CRYPT_GUARD             = 16573
+};
 
 struct MANGOS_DLL_DECL boss_anubrekhanAI : public ScriptedAI
 {
     boss_anubrekhanAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_bIsHeroic = pCreature->GetMap()->IsHeroic();
         HasTaunted = false;
         Reset();
     }
+
+    ScriptedInstance* m_pInstance;
+    bool m_bIsHeroic;
 
     uint32 Impale_Timer;
     uint32 LocustSwarm_Timer;
@@ -64,10 +74,11 @@ struct MANGOS_DLL_DECL boss_anubrekhanAI : public ScriptedAI
         Summon_Timer = LocustSwarm_Timer + 45000;           //45 seconds after initial locust swarm
     }
 
-    void KilledUnit(Unit* Victim)
+    void KilledUnit(Unit* pVictim)
     {
         //Force the player to spawn corpse scarabs via spell
-        Victim->CastSpell(Victim, SPELL_SELF_SPAWN_5, true);
+        if (pVictim->GetTypeId() == TYPEID_PLAYER)
+            pVictim->CastSpell(pVictim, SPELL_SELF_SPAWN_5, true);
 
         if (rand()%5)
             return;
@@ -113,10 +124,10 @@ struct MANGOS_DLL_DECL boss_anubrekhanAI : public ScriptedAI
         {
             //Cast Impale on a random target
             //Do NOT cast it when we are afflicted by locust swarm
-            if (!m_creature->HasAura(SPELL_LOCUSTSWARM,1))
+            if (!m_creature->HasAura(SPELL_LOCUSTSWARM) || !m_creature->HasAura(SPELL_LOCUSTSWARM_H))
             {
                 if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
-                    DoCast(target,SPELL_IMPALE);
+                    DoCast(target, m_bIsHeroic ? SPELL_IMPALE_H : SPELL_IMPALE);
             }
 
             Impale_Timer = 15000;
@@ -125,16 +136,16 @@ struct MANGOS_DLL_DECL boss_anubrekhanAI : public ScriptedAI
         //LocustSwarm_Timer
         if (LocustSwarm_Timer < diff)
         {
-            DoCast(m_creature, SPELL_LOCUSTSWARM);
+            DoCast(m_creature, m_bIsHeroic ? SPELL_LOCUSTSWARM_H : SPELL_LOCUSTSWARM);
             LocustSwarm_Timer = 90000;
         }else LocustSwarm_Timer -= diff;
 
         //Summon_Timer
-        if (Summon_Timer < diff)
+        /*if (Summon_Timer < diff)
         {
             DoCast(m_creature, SPELL_SUMMONGUARD);
             Summon_Timer = 45000;
-        }else Summon_Timer -= diff;
+        }else Summon_Timer -= diff;*/
 
         DoMeleeAttackIfReady();
     }
