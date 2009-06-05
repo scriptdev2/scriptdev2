@@ -297,14 +297,14 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
         {
             Creature* pTarget = NULL;
 
-            if (!m_creature->HasAuraState(AURA_STATE_HEALTH_ABOVE_75_PERCENT))
+            if (m_creature->GetHealth() <= m_creature->GetMaxHealth()*0.75f)
                 pTarget = m_creature;
 
             if (m_pInstance)
             {
                 if (Creature* pMograine = (Creature*)Unit::GetUnit((*m_creature), m_pInstance->GetData64(DATA_MOGRAINE)))
                 {
-                    if (pMograine->isAlive() && !pMograine->HasAuraState(AURA_STATE_HEALTH_ABOVE_75_PERCENT))
+                    if (pMograine->isAlive() && m_creature->GetHealth() <= m_creature->GetMaxHealth()*0.75f)
                         pTarget = pMograine;
                 }
             }
