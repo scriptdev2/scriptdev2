@@ -24,30 +24,14 @@ EndScriptData */
 /* ContentData
 item_area_52_special(i28132)        Prevents abuse of this item
 item_arcane_charges                 Prevent use if player is not flying (cannot cast while on ground)
-item_attuned_crystal_cores(i34368)  Prevent abuse(quest 11524 & 11525)
-item_blackwhelp_net(i31129)         Quest Whelps of the Wyrmcult (q10747). Prevents abuse
-item_dart_gun                       Prevent quest provided item instakill anything but the expected
 item_draenei_fishing_net(i23654)    Hacklike implements chance to spawn item or creature
-item_disciplinary_rod               Prevents abuse
 item_nether_wraith_beacon(i31742)   Summons creatures for quest Becoming a Spellfire Tailor (q10832)
 item_flying_machine(i34060,i34061)  Engineering crafted flying machines
 item_gor_dreks_ointment(i30175)     Protecting Our Own(q10488)
-item_muiseks_vessel                 Cast on creature, they must be dead(q 3123,3124,3125,3126,3127)
-item_protovoltaic_magneto_collector Prevents abuse
-item_razorthorn_flayer_gland        Quest Discovering Your Roots (q11520) and Rediscovering Your Roots (q11521). Prevents abuse
-item_tame_beast_rods(many)          Prevent cast on any other creature than the intended (for all tame beast quests)
-item_soul_cannon(i32825)            Prevents abuse of this item
-item_sparrowhawk_net(i32321)        Quest To Catch A Sparrowhawk (q10987). Prevents abuse
-item_voodoo_charm                   Provide proper error message and target(q2561)
-item_vorenthals_presence(i30259)    Prevents abuse of this item
-item_yehkinyas_bramble(i10699)      Allow cast spell on vale screecher only and remove corpse if cast sucessful (q3520)
-item_zezzak_shard(i31463)           Quest The eyes of Grillok (q10813). Prevents abuse
 EndContentData */
 
 #include "precompiled.h"
-#include "SpellMgr.h"
 #include "Spell.h"
-#include "WorldPacket.h"
 
 /*#####
 # item_area_52_special
@@ -69,53 +53,6 @@ bool ItemUse_item_area_52_special(Player* pPlayer, Item* pItem, const SpellCastT
 bool ItemUse_item_arcane_charges(Player* pPlayer, Item* pItem, const SpellCastTargets &pTargets)
 {
     if (pPlayer->isInFlight())
-        return false;
-
-    pPlayer->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW, pItem, NULL);
-    return true;
-}
-
-/*#####
-# item_attuned_crystal_cores
-#####*/
-
-bool ItemUse_item_attuned_crystal_cores(Player* pPlayer, Item* pItem, const SpellCastTargets &pTargets)
-{
-    if (pTargets.getUnitTarget() && pTargets.getUnitTarget()->GetTypeId()==TYPEID_UNIT &&
-        pTargets.getUnitTarget()->GetEntry() == 24972 && pTargets.getUnitTarget()->isDead())
-        return false;
-
-    pPlayer->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW, pItem, NULL);
-    return true;
-}
-
-/*#####
-# item_blackwhelp_net
-#####*/
-
-bool ItemUse_item_blackwhelp_net(Player* pPlayer, Item* pItem, const SpellCastTargets &pTargets)
-{
-    if (pTargets.getUnitTarget() && pTargets.getUnitTarget()->GetTypeId() == TYPEID_UNIT &&
-        pTargets.getUnitTarget()->GetEntry() == 21387)
-        return false;
-
-    pPlayer->SendEquipError(EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM, pItem, NULL);
-    return true;
-}
-
-/*#####
-# item_dart_gun
-#####*/
-
-enum
-{
-    NPC_HAMMER_SCOUT    = 32201
-};
-
-bool ItemUse_item_dart_gun(Player* pPlayer, Item* pItem, const SpellCastTargets &pTargets)
-{
-    if (pTargets.getUnitTarget() && pTargets.getUnitTarget()->GetTypeId() == TYPEID_UNIT &&
-        pTargets.getUnitTarget()->GetEntry() == NPC_HAMMER_SCOUT)
         return false;
 
     pPlayer->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW, pItem, NULL);
@@ -156,20 +93,6 @@ bool ItemUse_item_draenei_fishing_net(Player* pPlayer, Item* pItem, const SpellC
     }
     //}
     return false;
-}
-
-/*#####
-# item_disciplinary_rod
-#####*/
-
-bool ItemUse_item_disciplinary_rod(Player* pPlayer, Item* pItem, const SpellCastTargets &pTargets)
-{
-    if (pTargets.getUnitTarget() && pTargets.getUnitTarget()->GetTypeId() == TYPEID_UNIT &&
-        (pTargets.getUnitTarget()->GetEntry() == 15941 || pTargets.getUnitTarget()->GetEntry() == 15945))
-        return false;
-
-    pPlayer->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW, pItem, NULL);
-    return true;
 }
 
 /*#####
@@ -221,247 +144,6 @@ bool ItemUse_item_gor_dreks_ointment(Player* pPlayer, Item* pItem, const SpellCa
     return true;
 }
 
-/*#####
-# item_muiseks_vessel
-#####*/
-
-bool ItemUse_item_muiseks_vessel(Player* pPlayer, Item* pItem, const SpellCastTargets &pTargets)
-{
-    Unit* uTarget = pTargets.getUnitTarget();
-    uint32 itemSpell = pItem->GetProto()->Spells[0].SpellId;
-    uint32 cEntry = 0;
-    uint32 cEntry2 = 0;
-    uint32 cEntry3 = 0;
-    uint32 cEntry4 = 0;
-
-    if (itemSpell)
-    {
-        switch(itemSpell)
-        {
-            case 11885:                                     //Wandering Forest Walker
-                cEntry =  7584;
-                break;
-            case 11886:                                     //Owlbeasts
-                cEntry =  2927;
-                cEntry2 = 2928;
-                cEntry3 = 2929;
-                cEntry4 = 7808;
-                break;
-            case 11887:                                     //Freyfeather Hippogryphs
-                cEntry =  5300;
-                cEntry2 = 5304;
-                cEntry3 = 5305;
-                cEntry4 = 5306;
-                break;
-            case 11888:                                     //Sprite Dragon Sprite Darters
-                cEntry =  5276;
-                cEntry2 = 5278;
-                break;
-            case 11889:                                     //Zapped Land Walker Land Walker Zapped Cliff Giant Cliff Giant
-                cEntry =  5357;
-                cEntry2 = 5358;
-                cEntry3 = 14640;
-                cEntry4 = 14604;
-                break;
-        }
-        if (uTarget && uTarget->GetTypeId()==TYPEID_UNIT && uTarget->isDead() &&
-            (uTarget->GetEntry()==cEntry || uTarget->GetEntry()==cEntry2 || uTarget->GetEntry()==cEntry3 || uTarget->GetEntry()==cEntry4))
-        {
-            ((Creature*)uTarget)->RemoveCorpse();
-            return false;
-        }
-    }
-
-    WorldPacket data(SMSG_CAST_FAILED, (4+2));              // prepare packet error message
-    data << uint32(pItem->GetEntry());                      // itemId
-    data << uint8(SPELL_FAILED_BAD_TARGETS);                // reason
-    pPlayer->GetSession()->SendPacket(&data);               // send message: Invalid target
-
-    pPlayer->SendEquipError(EQUIP_ERR_NONE, pItem, NULL);   // break spell
-    return true;
-}
-
-/*#####
-# item_razorthorn_flayer_gland
-#####*/
-
-bool ItemUse_item_razorthorn_flayer_gland(Player* pPlayer, Item* pItem, const SpellCastTargets &pTargets)
-{
-    if (pTargets.getUnitTarget() && pTargets.getUnitTarget()->GetTypeId() == TYPEID_UNIT &&
-        pTargets.getUnitTarget()->GetEntry() == 24922)
-        return false;
-
-    pPlayer->SendEquipError(EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM, pItem, NULL);
-    return true;
-}
-
-/*#####
-# item_tame_beast_rods
-#####*/
-
-bool ItemUse_item_tame_beast_rods(Player* pPlayer, Item* pItem, const SpellCastTargets &pTargets)
-{
-    uint32 itemSpell = pItem->GetProto()->Spells[0].SpellId;
-    uint32 cEntry = 0;
-
-    if (itemSpell)
-    {
-        switch(itemSpell)
-        {
-            case 19548: cEntry =  1196; break;              //Ice Claw Bear
-            case 19674: cEntry =  1126; break;              //Large Crag Boar
-            case 19687: cEntry =  1201; break;              //Snow Leopard
-            case 19688: cEntry =  2956; break;              //Adult Plainstrider
-            case 19689: cEntry =  2959; break;              //Prairie Stalker
-            case 19692: cEntry =  2970; break;              //Swoop
-            case 19693: cEntry =  1998; break;              //Webwood Lurker
-            case 19694: cEntry =  3099; break;              //Dire Mottled Boar
-            case 19696: cEntry =  3107; break;              //Surf Crawler
-            case 19697: cEntry =  3126; break;              //Armored Scorpid
-            case 19699: cEntry =  2043; break;              //Nightsaber Stalker
-            case 19700: cEntry =  1996; break;              //Strigid Screecher
-            case 30646: cEntry = 17217; break;              //Barbed Crawler
-            case 30653: cEntry = 17374; break;              //Greater Timberstrider
-            case 30654: cEntry = 17203; break;              //Nightstalker
-            case 30099: cEntry = 15650; break;              //Crazed Dragonhawk
-            case 30102: cEntry = 15652; break;              //Elder Springpaw
-            case 30105: cEntry = 16353; break;              //Mistbat
-        }
-        if (pTargets.getUnitTarget() && pTargets.getUnitTarget()->GetTypeId() == TYPEID_UNIT &&
-            pTargets.getUnitTarget()->GetEntry() == cEntry)
-            return false;
-    }
-
-    WorldPacket data(SMSG_CAST_FAILED, (4+2));              // prepare packet error message
-    data << uint32(pItem->GetEntry());                      // itemId
-    data << uint8(SPELL_FAILED_BAD_TARGETS);                // reason
-    pPlayer->GetSession()->SendPacket(&data);               // send message: Invalid target
-
-    pPlayer->SendEquipError(EQUIP_ERR_NONE, pItem, NULL);   // break spell
-    return true;
-}
-
-/*#####
-# item_protovoltaic_magneto_collector
-#####*/
-
-bool ItemUse_item_protovoltaic_magneto_collector(Player* pPlayer, Item* pItem, const SpellCastTargets &pTargets)
-{
-    if (pTargets.getUnitTarget() && pTargets.getUnitTarget()->GetTypeId() == TYPEID_UNIT &&
-        pTargets.getUnitTarget()->GetEntry() == 21729)
-        return false;
-
-    pPlayer->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW, pItem, NULL);
-    return true;
-}
-
-/*#####
-# item_soul_cannon
-#####*/
-
-bool ItemUse_item_soul_cannon(Player* pPlayer, Item* pItem, const SpellCastTargets &pTargets)
-{
-    // allow use
-    if (pTargets.getUnitTarget() && pTargets.getUnitTarget()->GetTypeId() == TYPEID_UNIT &&
-        pTargets.getUnitTarget()->GetEntry() == 22357)
-        return false;
-
-    // error
-    pPlayer->SendEquipError(EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM, pItem, NULL);
-    return true;
-}
-
-/*#####
-# item_sparrowhawk_net
-#####*/
-
-bool ItemUse_item_sparrowhawk_net(Player* pPlayer, Item* pItem, const SpellCastTargets &pTargets)
-{
-    if (pTargets.getUnitTarget() && pTargets.getUnitTarget()->GetTypeId() == TYPEID_UNIT &&
-        pTargets.getUnitTarget()->GetEntry() == 22979)
-        return false;
-
-    pPlayer->SendEquipError(EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM, pItem, NULL);
-    return true;
-}
-
-/*#####
-# item_voodoo_charm
-#####*/
-
-bool ItemUse_item_voodoo_charm(Player* pPlayer, Item* pItem, const SpellCastTargets &pTargets)
-{
-    if (pTargets.getUnitTarget() && pTargets.getUnitTarget()->GetTypeId()==TYPEID_UNIT &&
-        pTargets.getUnitTarget()->isDead() && pTargets.getUnitTarget()->GetEntry()==7318)
-        return false;
-
-    WorldPacket data(SMSG_CAST_FAILED, (4+2));              // prepare packet error message
-    data << uint32(pItem->GetEntry());                      // itemId
-    data << uint8(SPELL_FAILED_BAD_TARGETS);                // reason
-    pPlayer->GetSession()->SendPacket(&data);               // send message: Invalid target
-
-    pPlayer->SendEquipError(EQUIP_ERR_NONE, pItem, NULL);   // break spell
-    return true;
-}
-
-/*#####
-# item_vorenthals_presence
-#####*/
-
-bool ItemUse_item_vorenthals_presence(Player* pPlayer, Item* pItem, const SpellCastTargets &pTargets)
-{
-    // allow use
-    if (pTargets.getUnitTarget() && pTargets.getUnitTarget()->GetTypeId() == TYPEID_UNIT &&
-        pTargets.getUnitTarget()->GetEntry() == 20132)
-        return false;
-
-    // error
-    pPlayer->SendEquipError(EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM, pItem, NULL);
-    return true;
-}
-
-/*#####
-# item_yehkinyas_bramble
-#####*/
-
-bool ItemUse_item_yehkinyas_bramble(Player* pPlayer, Item* pItem, const SpellCastTargets &pTargets)
-{
-    if (pPlayer->GetQuestStatus(3520) == QUEST_STATUS_INCOMPLETE)
-    {
-        Unit* unit_target = pTargets.getUnitTarget();
-
-        // cast only on corpse 5307 or 5308
-        if (unit_target && unit_target->GetTypeId()==TYPEID_UNIT && unit_target->isDead() &&
-            (unit_target->GetEntry()==5307 || unit_target->GetEntry()==5308))
-        {
-            ((Creature*)unit_target)->RemoveCorpse();       // remove corpse for cancelling second use
-            return false;                                   // all ok
-        }
-    }
-
-    WorldPacket data(SMSG_CAST_FAILED, (4+2));              // prepare packet error message
-    data << uint32(pItem->GetEntry());                      // itemId
-    data << uint8(SPELL_FAILED_BAD_TARGETS);                // reason
-    pPlayer->GetSession()->SendPacket(&data);               // send message: Bad target
-
-    pPlayer->SendEquipError(EQUIP_ERR_NONE, pItem, NULL);   // break spell
-    return true;
-}
-
-/*#####
-# item_zezzak_shard
-#####*/
-
-bool ItemUse_item_zezzak_shard(Player* pPlayer, Item* pItem, const SpellCastTargets &pTargets)
-{
-    if (pTargets.getUnitTarget() && pTargets.getUnitTarget()->GetTypeId() == TYPEID_UNIT &&
-        pTargets.getUnitTarget()->GetEntry() == 19440)
-        return false;
-
-    pPlayer->SendEquipError(EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM, pItem, NULL);
-    return true;
-}
-
 void AddSC_item_scripts()
 {
     Script *newscript;
@@ -474,26 +156,6 @@ void AddSC_item_scripts()
     newscript = new Script;
     newscript->Name = "item_arcane_charges";
     newscript->pItemUse = &ItemUse_item_arcane_charges;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "item_attuned_crystal_cores";
-    newscript->pItemUse = &ItemUse_item_attuned_crystal_cores;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "item_blackwhelp_net";
-    newscript->pItemUse = &ItemUse_item_blackwhelp_net;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "item_dart_gun";
-    newscript->pItemUse = &ItemUse_item_dart_gun;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "item_disciplinary_rod";
-    newscript->pItemUse = &ItemUse_item_disciplinary_rod;
     newscript->RegisterSelf();
 
     newscript = new Script;
@@ -514,55 +176,5 @@ void AddSC_item_scripts()
     newscript = new Script;
     newscript->Name = "item_gor_dreks_ointment";
     newscript->pItemUse = &ItemUse_item_gor_dreks_ointment;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "item_muiseks_vessel";
-    newscript->pItemUse = &ItemUse_item_muiseks_vessel;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "item_razorthorn_flayer_gland";
-    newscript->pItemUse = &ItemUse_item_razorthorn_flayer_gland;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "item_tame_beast_rods";
-    newscript->pItemUse = &ItemUse_item_tame_beast_rods;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "item_protovoltaic_magneto_collector";
-    newscript->pItemUse = &ItemUse_item_protovoltaic_magneto_collector;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "item_soul_cannon";
-    newscript->pItemUse = &ItemUse_item_soul_cannon;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "item_sparrowhawk_net";
-    newscript->pItemUse = &ItemUse_item_sparrowhawk_net;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "item_voodoo_charm";
-    newscript->pItemUse = &ItemUse_item_voodoo_charm;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "item_vorenthals_presence";
-    newscript->pItemUse = &ItemUse_item_vorenthals_presence;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "item_yehkinyas_bramble";
-    newscript->pItemUse = &ItemUse_item_yehkinyas_bramble;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "item_zezzaks_shard";
-    newscript->pItemUse = &ItemUse_item_zezzak_shard;
     newscript->RegisterSelf();
 }
