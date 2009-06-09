@@ -22,7 +22,6 @@ SDCategory: Items
 EndScriptData */
 
 /* ContentData
-item_area_52_special(i28132)        Prevents abuse of this item
 item_arcane_charges                 Prevent use if player is not flying (cannot cast while on ground)
 item_draenei_fishing_net(i23654)    Hacklike implements chance to spawn item or creature
 item_nether_wraith_beacon(i31742)   Summons creatures for quest Becoming a Spellfire Tailor (q10832)
@@ -34,28 +33,24 @@ EndContentData */
 #include "Spell.h"
 
 /*#####
-# item_area_52_special
-#####*/
-
-bool ItemUse_item_area_52_special(Player* pPlayer, Item* pItem, const SpellCastTargets &pTargets)
-{
-    if (pPlayer->GetAreaId() == 3803)
-        return false;
-
-    pPlayer->SendEquipError(EQUIP_ERR_OUT_OF_RANGE, pItem, NULL);
-    return true;
-}
-
-/*#####
 # item_arcane_charges
 #####*/
+
+enum
+{
+    SPELL_ARCANE_CHARGES    = 45072
+};
 
 bool ItemUse_item_arcane_charges(Player* pPlayer, Item* pItem, const SpellCastTargets &pTargets)
 {
     if (pPlayer->isInFlight())
         return false;
 
-    pPlayer->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW, pItem, NULL);
+    pPlayer->SendEquipError(EQUIP_ERR_NONE, pItem, NULL);
+
+    if (const SpellEntry* pSpellInfo = GetSpellStore()->LookupEntry(SPELL_ARCANE_CHARGES))
+        Spell::SendCastResult(pPlayer, pSpellInfo, 1, SPELL_FAILED_NOT_ON_GROUND);
+
     return true;
 }
 
@@ -134,24 +129,30 @@ bool ItemUse_item_flying_machine(Player* pPlayer, Item* pItem, const SpellCastTa
 # item_gor_dreks_ointment
 #####*/
 
+enum
+{
+    NPC_TH_DIRE_WOLF        = 20748,
+    SPELL_GORDREKS_OINTMENT = 32578
+};
+
 bool ItemUse_item_gor_dreks_ointment(Player* pPlayer, Item* pItem, const SpellCastTargets &pTargets)
 {
-    if (pTargets.getUnitTarget() && pTargets.getUnitTarget()->GetTypeId() == TYPEID_UNIT &&
-        pTargets.getUnitTarget()->GetEntry() == 20748 && !pTargets.getUnitTarget()->HasAura(32578,0))
-        return false;
+    if (pTargets.getUnitTarget() && pTargets.getUnitTarget()->GetTypeId() == TYPEID_UNIT && pTargets.getUnitTarget()->HasAura(SPELL_GORDREKS_OINTMENT))
+    {
+        pPlayer->SendEquipError(EQUIP_ERR_NONE, pItem, NULL);
 
-    pPlayer->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW, pItem, NULL);
-    return true;
+        if (const SpellEntry* pSpellInfo = GetSpellStore()->LookupEntry(SPELL_GORDREKS_OINTMENT))
+            Spell::SendCastResult(pPlayer, pSpellInfo, 1, SPELL_FAILED_TARGET_AURASTATE);
+
+        return true;
+    }
+
+    return false;
 }
 
 void AddSC_item_scripts()
 {
     Script *newscript;
-
-    newscript = new Script;
-    newscript->Name = "item_area_52_special";
-    newscript->pItemUse = &ItemUse_item_area_52_special;
-    newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "item_arcane_charges";

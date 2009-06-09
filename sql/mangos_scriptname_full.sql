@@ -58,7 +58,6 @@ UPDATE creature_template SET ScriptName='guard_shattrath_aldor' WHERE entry=1854
 UPDATE creature_template SET ScriptName='guard_shattrath_scryer' WHERE entry=18568;
 
 /* ITEM */
-UPDATE item_template SET ScriptName='item_area_52_special' WHERE entry=28132;
 UPDATE item_template SET ScriptName='item_arcane_charges' WHERE entry=34475;
 UPDATE item_template SET ScriptName='item_draenei_fishing_net' WHERE entry=23654;
 UPDATE item_template SET ScriptName='item_flying_machine' WHERE entry IN (34060,34061);
