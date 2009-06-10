@@ -10,7 +10,8 @@
 enum
 {
     TYPE_VAZRUDEN       = 1,
-    TYPE_NAZAN          = 2
+    TYPE_NAZAN          = 2,
+    DATA_HERALD         = 3
 };
 
 #endif

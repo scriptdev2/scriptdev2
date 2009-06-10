@@ -29,17 +29,26 @@ struct MANGOS_DLL_DECL instance_ramparts : public ScriptedInstance
     instance_ramparts(Map* pMap) : ScriptedInstance(pMap) {Initialize();}
 
     uint32 m_uiEncounter[ENCOUNTERS];
+    uint32 m_uiSentryCounter;
     uint64 m_uiChestNGUID;
     uint64 m_uiChestHGUID;
+    uint64 m_uiHeraldGUID;
 
     void Initialize()
     {
+        m_uiSentryCounter = 0;
         m_uiChestNGUID = 0;
         m_uiChestHGUID = 0;
+        m_uiHeraldGUID = 0;
 
         for(uint8 i = 0; i < ENCOUNTERS; i++)
             m_uiEncounter[i] = NOT_STARTED;
+    }
 
+    void OnCreatureCreate(Creature* pCreature)
+    {
+        if (pCreature->GetEntry() == 17307)
+            m_uiHeraldGUID = pCreature->GetGUID();
     }
 
     void OnObjectCreate(GameObject* pGo)
@@ -63,11 +72,41 @@ struct MANGOS_DLL_DECL instance_ramparts : public ScriptedInstance
                 m_uiEncounter[0] = uiData;
                 break;
             case TYPE_NAZAN:
+                if (uiData == SPECIAL)
+                {
+                    ++m_uiSentryCounter;
+
+                    if (m_uiSentryCounter == 2)
+                        m_uiEncounter[1] = uiData;
+                }
                 if (uiData == DONE && m_uiEncounter[0] == DONE)
+                {
                     DoRespawnGameObject(instance->IsHeroic() ? m_uiChestHGUID : m_uiChestNGUID, HOUR*IN_MILISECONDS);
-                m_uiEncounter[1] = uiData;
+                    m_uiEncounter[1] = uiData;
+                }
+                if (uiData == IN_PROGRESS)
+                    m_uiEncounter[1] = uiData;
                 break;
         }
+    }
+
+    uint32 GetData(uint32 uiType)
+    {
+        if (uiType == TYPE_VAZRUDEN)
+            return m_uiEncounter[0];
+
+        if (uiType == TYPE_NAZAN)
+            return m_uiEncounter[1];
+
+        return 0;
+    }
+
+    uint64 GetData64(uint32 uiData)
+    {
+        if (uiData == DATA_HERALD)
+            return m_uiHeraldGUID;
+
+        return 0;
     }
 };
 

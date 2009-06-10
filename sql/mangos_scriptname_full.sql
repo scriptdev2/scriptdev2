@@ -483,6 +483,8 @@ UPDATE instance_template SET script='instance_blood_furnace' WHERE map=542;
 /* Vazruden,Omor the Unscarred,Watchkeeper Gargolmar */
 UPDATE creature_template SET ScriptName='boss_omor_the_unscarred' WHERE entry=17308;
 UPDATE creature_template SET ScriptName='boss_watchkeeper_gargolmar' WHERE entry=17306;
+UPDATE creature_template SET ScriptName='boss_vazruden_herald' WHERE entry=17307;
+UPDATE creature_template SET ScriptName='boss_vazruden' WHERE entry=17537;
 UPDATE instance_template SET script='instance_ramparts' WHERE map=543;
 
 /* SHATTERED HALLS */
