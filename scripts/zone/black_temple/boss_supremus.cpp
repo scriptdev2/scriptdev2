@@ -154,11 +154,11 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
 {
     boss_supremusAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* m_pInstance;
 
     uint32 SummonFlameTimer;
     uint32 SwitchTargetTimer;
@@ -171,14 +171,14 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
 
     void Reset()
     {
-        if (pInstance)
+        if (m_pInstance)
         {
             if (m_creature->isAlive())
             {
-                pInstance->SetData(DATA_SUPREMUSEVENT, NOT_STARTED);
+                m_pInstance->SetData(DATA_SUPREMUSEVENT, NOT_STARTED);
                 ToggleMainDoors(true);
 
-                if (pInstance->GetData(DATA_HIGHWARLORDNAJENTUSEVENT) == DONE)
+                if (m_pInstance->GetData(DATA_HIGHWARLORDNAJENTUSEVENT) == DONE)
                     ToggleGate(false);
                 else
                     ToggleGate(true);
@@ -204,13 +204,13 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
     {
         DoZoneInCombat();
 
-        if (pInstance)
-            pInstance->SetData(DATA_SUPREMUSEVENT, IN_PROGRESS);
+        if (m_pInstance)
+            m_pInstance->SetData(DATA_SUPREMUSEVENT, IN_PROGRESS);
     }
 
     void ToggleMainDoors(bool close)
     {
-        if (GameObject* pDoors = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GAMEOBJECT_SUPREMUS_DOORS)))
+        if (GameObject* pDoors = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GAMEOBJECT_SUPREMUS_DOORS)))
         {
             if (close)
                 pDoors->SetGoState(GO_STATE_READY);         // Closed
@@ -221,7 +221,7 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
 
     void ToggleGate(bool close)
     {
-        if (GameObject* pDoors = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GAMEOBJECT_NAJENTUS_GATE)))
+        if (GameObject* pDoors = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GAMEOBJECT_NAJENTUS_GATE)))
         {
             if (close)
                 pDoors->SetGoState(GO_STATE_READY);         // Closed
@@ -232,9 +232,9 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
 
     void JustDied(Unit *killer)
     {
-        if (pInstance)
+        if (m_pInstance)
         {
-            pInstance->SetData(DATA_SUPREMUSEVENT, DONE);
+            m_pInstance->SetData(DATA_SUPREMUSEVENT, DONE);
             ToggleMainDoors(false);
         }
     }

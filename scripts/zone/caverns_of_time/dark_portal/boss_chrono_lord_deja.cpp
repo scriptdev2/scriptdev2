@@ -42,13 +42,13 @@ struct MANGOS_DLL_DECL boss_chrono_lord_dejaAI : public ScriptedAI
 {
     boss_chrono_lord_dejaAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
-        HeroicMode = m_creature->GetMap()->IsHeroic();
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
         Reset();
     }
 
-    ScriptedInstance *pInstance;
-    bool HeroicMode;
+    ScriptedInstance* m_pInstance;
+    bool m_bIsHeroicMode;
 
     uint32 ArcaneBlast_Timer;
     uint32 TimeLapse_Timer;
@@ -96,8 +96,8 @@ struct MANGOS_DLL_DECL boss_chrono_lord_dejaAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH, m_creature);
 
-        if (pInstance)
-            pInstance->SetData(TYPE_RIFT,SPECIAL);
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_RIFT,SPECIAL);
     }
 
     void UpdateAI(const uint32 diff)
@@ -109,7 +109,7 @@ struct MANGOS_DLL_DECL boss_chrono_lord_dejaAI : public ScriptedAI
         //Arcane Blast
         if (ArcaneBlast_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),HeroicMode ? H_SPELL_ARCANE_BLAST : SPELL_ARCANE_BLAST);
+            DoCast(m_creature->getVictim(), m_bIsHeroicMode ? H_SPELL_ARCANE_BLAST : SPELL_ARCANE_BLAST);
             ArcaneBlast_Timer = 15000+rand()%10000;
         }else ArcaneBlast_Timer -= diff;
 
@@ -117,7 +117,7 @@ struct MANGOS_DLL_DECL boss_chrono_lord_dejaAI : public ScriptedAI
         if (ArcaneDischarge_Timer < diff)
         {
             Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-            DoCast(target,HeroicMode ? H_SPELL_ARCANE_DISCHARGE : SPELL_ARCANE_DISCHARGE);
+            DoCast(target, m_bIsHeroicMode ? H_SPELL_ARCANE_DISCHARGE : SPELL_ARCANE_DISCHARGE);
             ArcaneDischarge_Timer = 20000+rand()%10000;
         }else ArcaneDischarge_Timer -= diff;
 
@@ -129,7 +129,7 @@ struct MANGOS_DLL_DECL boss_chrono_lord_dejaAI : public ScriptedAI
             TimeLapse_Timer = 15000+rand()%10000;
         }else TimeLapse_Timer -= diff;
 
-        if (HeroicMode)
+        if (m_bIsHeroicMode)
         {
             if (Attraction_Timer < diff)
             {

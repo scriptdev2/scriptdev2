@@ -210,12 +210,12 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
 {
     npc_thrall_old_hillsbradAI(Creature* pCreature) : npc_escortAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         HadMount = false;
         Reset();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance* m_pInstance;
     uint64 TarethaGUID;
 
     bool LowHp;
@@ -223,7 +223,7 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
 
     void WaypointReached(uint32 i)
     {
-        if (!pInstance)
+        if (!m_pInstance)
             return;
 
         switch(i)
@@ -291,7 +291,7 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
                 //make horsie run off
                 IsOnHold = true;
                 m_creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
-                pInstance->SetData(TYPE_THRALL_PART2, DONE);
+                m_pInstance->SetData(TYPE_THRALL_PART2, DONE);
                 SetRun();
                 break;
             case 64:
@@ -329,7 +329,7 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
                 m_creature->SummonCreature(MOB_ENTRY_INN_GUARDSMAN,2656.39,659.77,61.93,2.61,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,5000);
                 break;
             case 94:
-                if (uint64 TarethaGUID = pInstance->GetData64(DATA_TARETHA))
+                if (uint64 TarethaGUID = m_pInstance->GetData64(DATA_TARETHA))
                 {
                     if (Unit* Taretha = Unit::GetUnit((*m_creature), TarethaGUID))
                         DoScriptText(SAY_TA_ESCAPED, Taretha, m_creature);
@@ -337,7 +337,7 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
                 break;
             case 95:
                 DoScriptText(SAY_TH_MEET_TARETHA, m_creature);
-                pInstance->SetData(TYPE_THRALL_PART3,DONE);
+                m_pInstance->SetData(TYPE_THRALL_PART3,DONE);
                 IsOnHold = true;
                 break;
             case 96:
@@ -356,7 +356,7 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
                     break;
 
                 //trigger taretha to run down outside
-                if (uint64 TarethaGUID = pInstance->GetData64(DATA_TARETHA))
+                if (uint64 TarethaGUID = m_pInstance->GetData64(DATA_TARETHA))
                 {
                     if (Creature* Taretha = ((Creature*)Unit::GetUnit(*m_creature, TarethaGUID)))
                         ((npc_escortAI*)(Taretha->AI()))->Start(false, false, true, PlayerGUID);
@@ -470,8 +470,8 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
 
     void JustDied(Unit *slayer)
     {
-        if (pInstance)
-            pInstance->SetData(TYPE_THRALL_EVENT,FAIL);
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_THRALL_EVENT,FAIL);
 
         // Don't do a yell if he kills self (if player goes too far or at the end).
         if (slayer == m_creature)
@@ -600,11 +600,11 @@ struct MANGOS_DLL_DECL npc_tarethaAI : public npc_escortAI
 {
     npc_tarethaAI(Creature* pCreature) : npc_escortAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance* m_pInstance;
 
     void WaypointReached(uint32 i)
     {

@@ -66,11 +66,11 @@ struct MANGOS_DLL_DECL mob_kilrekAI : public ScriptedAI
 {
     mob_kilrekAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* m_pInstance;
 
     uint64 TerestianGUID;
     uint32 AmplifyTimer;
@@ -83,22 +83,22 @@ struct MANGOS_DLL_DECL mob_kilrekAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-        if (!pInstance)
+        if (!m_pInstance)
         {
             ERROR_INST_DATA(m_creature);
             return;
         }
 
-        Creature* Terestian = ((Creature*)Unit::GetUnit(*m_creature, pInstance->GetData64(DATA_TERESTIAN)));
+        Creature* Terestian = ((Creature*)Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_TERESTIAN)));
         if (Terestian && (!Terestian->SelectHostilTarget() && !Terestian->getVictim()))
             Terestian->AddThreat(who, 1.0f);
     }
 
     void JustDied(Unit* Killer)
     {
-        if (pInstance)
+        if (m_pInstance)
         {
-            uint64 TerestianGUID = pInstance->GetData64(DATA_TERESTIAN);
+            uint64 TerestianGUID = m_pInstance->GetData64(DATA_TERESTIAN);
             if (TerestianGUID)
             {
                 Unit* Terestian = Unit::GetUnit((*m_creature), TerestianGUID);
@@ -161,11 +161,11 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
         for(uint8 i = 0; i < 2; ++i)
             PortalGUID[i] = 0;
 
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance* m_pInstance;
 
     uint64 KilrekGUID;
     uint64 PortalGUID[2];
@@ -205,17 +205,17 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
         Berserk             = false;
         ReSummon            = false;
 
-        if (pInstance)
-            pInstance->SetData(DATA_TERESTIAN_EVENT, NOT_STARTED);
+        if (m_pInstance)
+            m_pInstance->SetData(DATA_TERESTIAN_EVENT, NOT_STARTED);
     }
 
     void Aggro(Unit* who)
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
-        if (pInstance)
+        if (m_pInstance)
         {
-            Creature* Kilrek = ((Creature*)Unit::GetUnit(*m_creature, pInstance->GetData64(DATA_KILREK)));
+            Creature* Kilrek = ((Creature*)Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_KILREK)));
 
             // Respawn Kil'rek on aggro if Kil'rek is dead.
             if (Kilrek && !Kilrek->isAlive())
@@ -225,7 +225,7 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
             if (Kilrek && !Kilrek->getVictim())
                 Kilrek->AddThreat(who, 0.0f);
 
-            pInstance->SetData(DATA_TERESTIAN_EVENT, IN_PROGRESS);
+            m_pInstance->SetData(DATA_TERESTIAN_EVENT, IN_PROGRESS);
         } else ERROR_INST_DATA(m_creature);
     }
 
@@ -254,8 +254,8 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
 
         DoScriptText(SAY_DEATH, m_creature);
 
-        if (pInstance)
-            pInstance->SetData(DATA_TERESTIAN_EVENT, DONE);
+        if (m_pInstance)
+            m_pInstance->SetData(DATA_TERESTIAN_EVENT, DONE);
     }
 
     void UpdateAI(const uint32 diff)
@@ -268,11 +268,11 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
 
             CheckKilrekTimer = 5000;
 
-            if (pInstance)
-                uint64 KilrekGUID = pInstance->GetData64(DATA_KILREK);
+            if (m_pInstance)
+                uint64 KilrekGUID = m_pInstance->GetData64(DATA_KILREK);
             else ERROR_INST_DATA(m_creature);
 
-            Creature* Kilrek = ((Creature*)Unit::GetUnit(*m_creature, pInstance->GetData64(DATA_KILREK)));
+            Creature* Kilrek = ((Creature*)Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_KILREK)));
             if (SummonKilrek && Kilrek)
             {
                 Kilrek->Respawn();

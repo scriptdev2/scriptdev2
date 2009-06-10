@@ -48,8 +48,7 @@ struct MANGOS_DLL_DECL boss_illuciabarovAI : public ScriptedAI
 
     void JustDied(Unit *killer)
     {
-        ScriptedInstance *pInstance = (m_creature->GetInstanceData()) ? ((ScriptedInstance*)m_creature->GetInstanceData()) : NULL;
-        if (pInstance)
+        if (ScriptedInstance* pInstance = (ScriptedInstance*)m_creature->GetInstanceData())
         {
             pInstance->SetData(DATA_LADYILLUCIABAROV_DEATH, 0);
 

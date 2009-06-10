@@ -46,11 +46,11 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
 {
     boss_hakkarAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance* m_pInstance;
 
     uint32 BloodSiphon_Timer;
     uint32 CorruptedBlood_Timer;
@@ -147,9 +147,9 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
         //Checking if Jeklik is dead. If not we cast her Aspect
         if (CheckJeklik_Timer < diff)
         {
-            if (pInstance)
+            if (m_pInstance)
             {
-                if (!pInstance->GetData(DATA_JEKLIKISDEAD))
+                if (!m_pInstance->GetData(DATA_JEKLIKISDEAD))
                 {
                     if (AspectOfJeklik_Timer < diff)
                     {
@@ -164,9 +164,9 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
         //Checking if Venoxis is dead. If not we cast his Aspect
         if (CheckVenoxis_Timer < diff)
         {
-            if (pInstance)
+            if (m_pInstance)
             {
-                if (!pInstance->GetData(DATA_VENOXISISDEAD))
+                if (!m_pInstance->GetData(DATA_VENOXISISDEAD))
                 {
                     if (AspectOfVenoxis_Timer < diff)
                     {
@@ -181,9 +181,9 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
         //Checking if Marli is dead. If not we cast her Aspect
         if (CheckMarli_Timer < diff)
         {
-            if (pInstance)
+            if (m_pInstance)
             {
-                if (!pInstance->GetData(DATA_MARLIISDEAD))
+                if (!m_pInstance->GetData(DATA_MARLIISDEAD))
                 {
                     if (AspectOfMarli_Timer < diff)
                     {
@@ -199,9 +199,9 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
         //Checking if Thekal is dead. If not we cast his Aspect
         if (CheckThekal_Timer < diff)
         {
-            if (pInstance)
+            if (m_pInstance)
             {
-                if (!pInstance->GetData(DATA_THEKALISDEAD))
+                if (!m_pInstance->GetData(DATA_THEKALISDEAD))
                 {
                     if (AspectOfThekal_Timer < diff)
                     {
@@ -216,9 +216,9 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
         //Checking if Arlokk is dead. If yes we cast her Aspect
         if (CheckArlokk_Timer < diff)
         {
-            if (pInstance)
+            if (m_pInstance)
             {
-                if (!pInstance->GetData(DATA_ARLOKKISDEAD))
+                if (!m_pInstance->GetData(DATA_ARLOKKISDEAD))
                 {
                     if (AspectOfArlokk_Timer < diff)
                     {

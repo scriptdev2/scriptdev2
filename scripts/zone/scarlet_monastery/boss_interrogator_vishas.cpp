@@ -39,11 +39,11 @@ struct MANGOS_DLL_DECL boss_interrogator_vishasAI : public ScriptedAI
 {
     boss_interrogator_vishasAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = (ScriptedInstance*)m_creature->GetInstanceData();
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* m_pInstance;
 
     bool Yell30;
     bool Yell60;
@@ -68,11 +68,11 @@ struct MANGOS_DLL_DECL boss_interrogator_vishasAI : public ScriptedAI
 
     void JustDied(Unit* Killer)
     {
-        if (!pInstance)
+        if (!m_pInstance)
             return;
 
         //Any other actions to do with vorrel? setStandState?
-        if (Unit *vorrel = Unit::GetUnit(*m_creature,pInstance->GetData64(DATA_VORREL)))
+        if (Unit *vorrel = Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_VORREL)))
             DoScriptText(SAY_TRIGGER_VORREL, vorrel);
     }
 

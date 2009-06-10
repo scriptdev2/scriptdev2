@@ -53,11 +53,11 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
 {
     boss_najentusAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* m_pInstance;
 
     uint32 NeedleSpineTimer;
     uint32 EnrageTimer;
@@ -81,11 +81,11 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
         CheckTimer = 2000;
         DispelShieldTimer = 30000;
 
-        if (pInstance)
+        if (m_pInstance)
         {
             if (m_creature->isAlive())
             {
-                pInstance->SetData(DATA_HIGHWARLORDNAJENTUSEVENT, NOT_STARTED);
+                m_pInstance->SetData(DATA_HIGHWARLORDNAJENTUSEVENT, NOT_STARTED);
                 ToggleGate(true);
             }
             else ToggleGate(false);
@@ -103,9 +103,9 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
 
     void JustDied(Unit *victim)
     {
-        if (pInstance)
+        if (m_pInstance)
         {
-            pInstance->SetData(DATA_HIGHWARLORDNAJENTUSEVENT, DONE);
+            m_pInstance->SetData(DATA_HIGHWARLORDNAJENTUSEVENT, DONE);
             ToggleGate(false);
         }
 
@@ -114,7 +114,7 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
 
     void ToggleGate(bool close)
     {
-        if (GameObject* pGate = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GAMEOBJECT_NAJENTUS_GATE)))
+        if (GameObject* pGate = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GAMEOBJECT_NAJENTUS_GATE)))
         {
             if (close)
                 pGate->SetGoState(GO_STATE_READY);          // Closed
@@ -149,8 +149,8 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-        if (pInstance)
-            pInstance->SetData(DATA_HIGHWARLORDNAJENTUSEVENT, IN_PROGRESS);
+        if (m_pInstance)
+            m_pInstance->SetData(DATA_HIGHWARLORDNAJENTUSEVENT, IN_PROGRESS);
 
         DoScriptText(SAY_AGGRO, m_creature);
         DoZoneInCombat();
@@ -243,7 +243,7 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
             {
                 DoCast(target, SPELL_IMPALING_SPINE);
 
-                //if (pInstance)
+                //if (m_pInstance)
                     //pInstance->SetData64(DATA_SPINED_PLAYER,target->GetGUID());
 
                 ImpalingSpineTimer = 45000;
@@ -283,14 +283,14 @@ bool GOHello_go_najentus_spine(Player* pPlayer, GameObject* pGO)
 {
     if (ScriptedInstance* pInstance = (ScriptedInstance*)pGO->GetInstanceData())
     {
-        uint64 uiPlayerTargetGuid = pInstance->GetData64(DATA_SPINED_PLAYER);
+        uint64 uiPlayerTargetGuid = m_pInstance->GetData64(DATA_SPINED_PLAYER);
 
         if (Player* pPlayerTarget = (Player*)Unit::GetUnit(*pPlayer, uiPlayerTargetGuid))
         {
             if (pPlayerTarget->HasAura(SPELL_IMPALING_SPINE))
                 pPlayerTarget->RemoveAurasDueToSpell(SPELL_IMPALING_SPINE);
 
-            pInstance->SetData64(DATA_SPINED_PLAYER,0);
+            m_pInstance->SetData64(DATA_SPINED_PLAYER,0);
         }
     }
 

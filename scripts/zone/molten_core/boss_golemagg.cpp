@@ -40,11 +40,11 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
 {
     boss_golemaggAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance* m_pInstance;
 
     uint32 Pyroblast_Timer;
     uint32 EarthQuake_Timer;
@@ -63,8 +63,8 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
 
     void JustDied(Unit* Killer)
     {
-        if (pInstance)
-            pInstance->SetData(DATA_GOLEMAGG_DEATH, 0);
+        if (m_pInstance)
+            m_pInstance->SetData(DATA_GOLEMAGG_DEATH, 0);
     }
 
     void UpdateAI(const uint32 diff)
@@ -116,13 +116,13 @@ struct MANGOS_DLL_DECL mob_core_ragerAI : public ScriptedAI
 {
     mob_core_ragerAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
     uint32 Mangle_Timer;
     uint32 Check_Timer;
-    ScriptedInstance *pInstance;
+    ScriptedInstance* m_pInstance;
 
     void Reset()
     {
@@ -152,9 +152,9 @@ struct MANGOS_DLL_DECL mob_core_ragerAI : public ScriptedAI
         //Check_Timer
         if (Check_Timer < diff)
         {
-            if (pInstance)
+            if (m_pInstance)
             {
-                Unit *pGolemagg = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_GOLEMAGG));
+                Unit *pGolemagg = Unit::GetUnit((*m_creature), m_pInstance->GetData64(DATA_GOLEMAGG));
                 if (!pGolemagg || !pGolemagg->isAlive())
                 {
                     m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, true);

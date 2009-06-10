@@ -54,13 +54,13 @@ struct MANGOS_DLL_DECL boss_anubrekhanAI : public ScriptedAI
     boss_anubrekhanAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroic = pCreature->GetMap()->IsHeroic();
+        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
         HasTaunted = false;
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
-    bool m_bIsHeroic;
+    bool m_bIsHeroicMode;
 
     uint32 Impale_Timer;
     uint32 LocustSwarm_Timer;
@@ -127,7 +127,7 @@ struct MANGOS_DLL_DECL boss_anubrekhanAI : public ScriptedAI
             if (!m_creature->HasAura(SPELL_LOCUSTSWARM) || !m_creature->HasAura(SPELL_LOCUSTSWARM_H))
             {
                 if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
-                    DoCast(target, m_bIsHeroic ? SPELL_IMPALE_H : SPELL_IMPALE);
+                    DoCast(target, m_bIsHeroicMode ? SPELL_IMPALE_H : SPELL_IMPALE);
             }
 
             Impale_Timer = 15000;
@@ -136,7 +136,7 @@ struct MANGOS_DLL_DECL boss_anubrekhanAI : public ScriptedAI
         //LocustSwarm_Timer
         if (LocustSwarm_Timer < diff)
         {
-            DoCast(m_creature, m_bIsHeroic ? SPELL_LOCUSTSWARM_H : SPELL_LOCUSTSWARM);
+            DoCast(m_creature, m_bIsHeroicMode ? SPELL_LOCUSTSWARM_H : SPELL_LOCUSTSWARM);
             LocustSwarm_Timer = 90000;
         }else LocustSwarm_Timer -= diff;
 

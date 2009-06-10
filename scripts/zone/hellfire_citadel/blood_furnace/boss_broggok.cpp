@@ -39,11 +39,11 @@ struct MANGOS_DLL_DECL boss_broggokAI : public ScriptedAI
 {
     boss_broggokAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* m_pInstance;
 
     uint32 AcidSpray_Timer;
     uint32 PoisonSpawn_Timer;
@@ -60,14 +60,14 @@ struct MANGOS_DLL_DECL boss_broggokAI : public ScriptedAI
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
-        if (pInstance)
-            pInstance->SetData(TYPE_BROGGOK_EVENT,IN_PROGRESS);
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_BROGGOK_EVENT,IN_PROGRESS);
     }
 
     void JustReachedHome()
     {
-        if (pInstance)
-            pInstance->SetData(TYPE_BROGGOK_EVENT,FAIL);
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_BROGGOK_EVENT,FAIL);
     }
 
     void JustSummoned(Creature *summoned)
@@ -80,8 +80,8 @@ struct MANGOS_DLL_DECL boss_broggokAI : public ScriptedAI
 
     void JustDied(Unit *who)
     {
-        if (pInstance)
-            pInstance->SetData(TYPE_BROGGOK_EVENT,DONE);
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_BROGGOK_EVENT,DONE);
     }
 
     void UpdateAI(const uint32 diff)

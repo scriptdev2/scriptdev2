@@ -188,7 +188,7 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
 {
     boss_magtheridonAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = (ScriptedInstance*)m_creature->GetInstanceData();
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         m_creature->SetFloatValue(UNIT_FIELD_BOUNDINGRADIUS, 10);
         m_creature->SetFloatValue(UNIT_FIELD_COMBATREACH, 10);
         Reset();
@@ -196,7 +196,7 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
 
     CubeMap Cube;
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* m_pInstance;
 
     uint32 RandChat_Timer;
 
@@ -214,10 +214,10 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
 
     void Reset()
     {
-        if (pInstance)
+        if (m_pInstance)
         {
-            pInstance->SetData(TYPE_MAGTHERIDON_EVENT, NOT_STARTED);
-            pInstance->SetData(TYPE_HALL_COLLAPSE, NOT_STARTED);
+            m_pInstance->SetData(TYPE_MAGTHERIDON_EVENT, NOT_STARTED);
+            m_pInstance->SetData(TYPE_HALL_COLLAPSE, NOT_STARTED);
         }
 
         RandChat_Timer = 90000;
@@ -298,13 +298,13 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
 
     void IntroDone()
     {
-        if (!pInstance)
+        if (!m_pInstance)
             return;
 
-        if (pInstance->GetData(TYPE_MAGTHERIDON_EVENT) == NOT_STARTED)
+        if (m_pInstance->GetData(TYPE_MAGTHERIDON_EVENT) == NOT_STARTED)
             return;
 
-        if (pInstance->GetData(TYPE_MAGTHERIDON_EVENT) == DONE)
+        if (m_pInstance->GetData(TYPE_MAGTHERIDON_EVENT) == DONE)
             return;
 
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
@@ -340,8 +340,8 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
 
     void JustDied(Unit* Killer)
     {
-        if (pInstance)
-            pInstance->SetData(TYPE_MAGTHERIDON_EVENT, DONE);
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_MAGTHERIDON_EVENT, DONE);
 
         DoScriptText(SAY_DEATH, m_creature);
     }
@@ -441,8 +441,8 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
                         Phase3_Timer = 2000;
                         break;
                     case 1:
-                        if (pInstance)
-                            pInstance->SetData(TYPE_HALL_COLLAPSE, IN_PROGRESS);
+                        if (m_pInstance)
+                            m_pInstance->SetData(TYPE_HALL_COLLAPSE, IN_PROGRESS);
                         Phase3_Count++;
                         Phase3_Timer = 8000;
                         break;
@@ -474,11 +474,11 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
 {
     mob_hellfire_channelerAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = (ScriptedInstance*)m_creature->GetInstanceData();
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* m_pInstance;
 
     uint32 ShadowBoltVolley_Timer;
     uint32 DarkMending_Timer;
@@ -496,27 +496,27 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
 
         InfernalSpawned = false;
 
-        if (pInstance)
-            pInstance->SetData(TYPE_CHANNELER_EVENT, NOT_STARTED);
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_CHANNELER_EVENT, NOT_STARTED);
     }
 
     void Aggro(Unit *who)
     {
-        if (!pInstance)
+        if (!m_pInstance)
             return;
 
         m_creature->InterruptNonMeleeSpells(false);
 
-        if (Unit *Magtheridon = Unit::GetUnit(*m_creature, pInstance->GetData64(DATA_MAGTHERIDON)))
+        if (Unit *Magtheridon = Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_MAGTHERIDON)))
         {
             if (!Magtheridon->isAlive())
                 return;
 
-            if (pInstance->GetData(TYPE_CHANNELER_EVENT) == NOT_STARTED)
+            if (m_pInstance->GetData(TYPE_CHANNELER_EVENT) == NOT_STARTED)
                 DoScriptText(EMOTE_BEGIN, Magtheridon);
         }
 
-        pInstance->SetData(TYPE_CHANNELER_EVENT, IN_PROGRESS);
+        m_pInstance->SetData(TYPE_CHANNELER_EVENT, IN_PROGRESS);
         DoZoneInCombat();
     }
 
@@ -531,8 +531,8 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
 
     void JustDied(Unit* killer)
     {
-        if (pInstance)
-            pInstance->SetData(TYPE_CHANNELER_EVENT, DONE);
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_CHANNELER_EVENT, DONE);
 
         killer->CastSpell(killer,SPELL_SOUL_TRANSFER,false);
     }

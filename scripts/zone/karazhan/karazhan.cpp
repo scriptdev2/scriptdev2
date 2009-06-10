@@ -114,11 +114,11 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
     npc_barnesAI(Creature* pCreature) : npc_escortAI(pCreature)
     {
         RaidWiped = false;
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* m_pInstance;
 
     uint64 SpotlightGUID;
 
@@ -142,16 +142,16 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
         PerformanceReady = false;
         IsTalking = false;
 
-        if (pInstance)
+        if (m_pInstance)
         {
-            pInstance->SetData(DATA_OPERA_EVENT, NOT_STARTED);
+            m_pInstance->SetData(DATA_OPERA_EVENT, NOT_STARTED);
 
-            Event = pInstance->GetData(DATA_OPERA_PERFORMANCE);
+            Event = m_pInstance->GetData(DATA_OPERA_PERFORMANCE);
 
-            if (GameObject* pDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GAMEOBJECT_STAGEDOORLEFT)))
+            if (GameObject* pDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GAMEOBJECT_STAGEDOORLEFT)))
                 pDoor->SetGoState(GO_STATE_READY);
 
-            if (GameObject* pCurtain = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GAMEOBJECT_CURTAINS)))
+            if (GameObject* pCurtain = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GAMEOBJECT_CURTAINS)))
                 pCurtain->SetGoState(GO_STATE_READY);
         }
     }
@@ -177,9 +177,9 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
                 break;
 
             case 5:
-                if (pInstance)
+                if (m_pInstance)
                 {
-                    if (GameObject* pDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GAMEOBJECT_STAGEDOORLEFT)))
+                    if (GameObject* pDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GAMEOBJECT_STAGEDOORLEFT)))
                         pDoor->SetGoState(GO_STATE_READY);
                 }
                 IsBeingEscorted = false;
@@ -257,10 +257,10 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
                 {
                     PrepareEncounter();
 
-                    if (!pInstance)
+                    if (!m_pInstance)
                         return;
 
-                    if (GameObject* pCurtain = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GAMEOBJECT_CURTAINS)))
+                    if (GameObject* pCurtain = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GAMEOBJECT_CURTAINS)))
                         pCurtain->SetGoState(GO_STATE_ACTIVE);
 
                     CurtainTimer = 0;
@@ -308,12 +308,12 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
 
     void StartEvent()
     {
-        if (!pInstance)
+        if (!m_pInstance)
             return;
 
-        pInstance->SetData(DATA_OPERA_EVENT, IN_PROGRESS);
+        m_pInstance->SetData(DATA_OPERA_EVENT, IN_PROGRESS);
 
-        if (GameObject* pDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GAMEOBJECT_STAGEDOORLEFT)))
+        if (GameObject* pDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GAMEOBJECT_STAGEDOORLEFT)))
             pDoor->SetGoState(GO_STATE_ACTIVE);
 
         m_creature->CastSpell(m_creature, SPELL_TUXEDO, true);

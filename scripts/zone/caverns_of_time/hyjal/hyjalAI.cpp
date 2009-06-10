@@ -51,7 +51,7 @@ float AttackArea[2][3]=
 
 hyjalAI::hyjalAI(Creature* pCreature) : ScriptedAI(pCreature)
 {
-    pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
     Reset();
 }
 
@@ -103,8 +103,8 @@ void hyjalAI::Reset()
     UpdateWorldState(WORLD_STATE_ENEMYCOUNT, 0);
 
     // Reset Instance Data for trash count
-    if (pInstance)
-        pInstance->SetData(DATA_RESET_TRASH_COUNT, 0);
+    if (m_pInstance)
+        m_pInstance->SetData(DATA_RESET_TRASH_COUNT, 0);
     else error_log(ERROR_INST_DATA);
 
     // Visibility
@@ -182,13 +182,13 @@ void hyjalAI::SummonNextWave(Wave wave[18], uint32 Count, float Base[4][3])
     if (rand()%4 == 0)
         Talk(RALLY);
 
-    if (!pInstance)
+    if (!m_pInstance)
     {
         error_log(ERROR_INST_DATA);
         return;
     }
 
-    EnemyCount = pInstance->GetData(DATA_TRASH);
+    EnemyCount = m_pInstance->GetData(DATA_TRASH);
     for(uint8 i = 0; i < 18; ++i)
     {
         if (wave[Count].Mob[i])
@@ -205,7 +205,7 @@ void hyjalAI::SummonNextWave(Wave wave[18], uint32 Count, float Base[4][3])
         UpdateWorldState(WORLD_STATE_WAVES, stateValue);    // Set world state to our current wave number
         UpdateWorldState(WORLD_STATE_ENEMY, 1);             // Enable world state
 
-        pInstance->SetData(DATA_TRASH, EnemyCount);         // Send data for instance script to update count
+        m_pInstance->SetData(DATA_TRASH, EnemyCount);         // Send data for instance script to update count
 
         if (!Debug)
             NextWaveTimer = wave[Count].WaveTimer;
@@ -248,8 +248,8 @@ void hyjalAI::StartEvent(Player* pPlayer)
 
 uint32 hyjalAI::GetInstanceData(uint32 Event)
 {
-    if (pInstance)
-        return pInstance->GetData(Event);
+    if (m_pInstance)
+        return m_pInstance->GetData(Event);
     else error_log(ERROR_INST_DATA);
 
     return 0;
@@ -314,8 +314,8 @@ void hyjalAI::UpdateWorldState(uint32 id, uint32 state)
 void hyjalAI::Retreat()
 {
     //this will trigger ancient gem respawn
-    if (pInstance)
-        pInstance->SetData(TYPE_RETREAT,SPECIAL);
+    if (m_pInstance)
+        m_pInstance->SetData(TYPE_RETREAT,SPECIAL);
 
     CellPair pair(MaNGOS::ComputeCellPair(m_creature->GetPositionX(), m_creature->GetPositionY()));
     Cell cell(pair);
@@ -371,9 +371,9 @@ void hyjalAI::UpdateAI(const uint32 diff)
 
     if (Summon)
     {
-        if (pInstance && EnemyCount)
+        if (m_pInstance && EnemyCount)
         {
-            EnemyCount = pInstance->GetData(DATA_TRASH);
+            EnemyCount = m_pInstance->GetData(DATA_TRASH);
             if (!EnemyCount)
                 NextWaveTimer = 5000;
         }

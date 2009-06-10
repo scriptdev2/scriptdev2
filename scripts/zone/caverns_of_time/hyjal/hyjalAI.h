@@ -185,7 +185,7 @@ struct MANGOS_DLL_DECL hyjalAI : public ScriptedAI
 
     public:
 
-        ScriptedInstance* pInstance;
+        ScriptedInstance* m_pInstance;
 
         uint64 PlayerGUID;
         uint64 BossGUID[2];

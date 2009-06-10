@@ -41,13 +41,13 @@ struct MANGOS_DLL_DECL boss_temporusAI : public ScriptedAI
 {
     boss_temporusAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
-        HeroicMode = pCreature->GetMap()->IsHeroic();
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
         Reset();
     }
 
-    ScriptedInstance *pInstance;
-    bool HeroicMode;
+    ScriptedInstance* m_pInstance;
+    bool m_bIsHeroicMode;
 
     uint32 Haste_Timer;
     uint32 SpellReflection_Timer;
@@ -80,8 +80,8 @@ struct MANGOS_DLL_DECL boss_temporusAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH, m_creature);
 
-        if (pInstance)
-            pInstance->SetData(TYPE_RIFT,SPECIAL);
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_RIFT,SPECIAL);
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -122,11 +122,11 @@ struct MANGOS_DLL_DECL boss_temporusAI : public ScriptedAI
         //Wing ruffet
         if (WingBuffet_Timer < diff)
         {
-            DoCast(m_creature,HeroicMode ? H_SPELL_WING_BUFFET : SPELL_WING_BUFFET);
+            DoCast(m_creature, m_bIsHeroicMode ? H_SPELL_WING_BUFFET : SPELL_WING_BUFFET);
             WingBuffet_Timer = 20000+rand()%10000;
         }else WingBuffet_Timer -= diff;
 
-        if (HeroicMode)
+        if (m_bIsHeroicMode)
         {
             if (SpellReflection_Timer < diff)
             {

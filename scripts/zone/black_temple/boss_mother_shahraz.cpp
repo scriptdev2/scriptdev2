@@ -80,11 +80,11 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
 {
     boss_shahrazAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* m_pInstance;
 
     uint64 TargetGUID[3];
     uint32 BeamTimer;
@@ -118,27 +118,27 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
 
         Enraged = false;
 
-        if (pInstance)
+        if (m_pInstance)
         {
             if (m_creature->isAlive())
             {
-                pInstance->SetData(DATA_MOTHERSHAHRAZEVENT, NOT_STARTED);
+                m_pInstance->SetData(DATA_MOTHERSHAHRAZEVENT, NOT_STARTED);
             }else OpenDoors();
         }
     }
 
     void OpenDoors()
     {
-        if (GameObject* pDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GO_POST_SHAHRAZ_DOOR)))
+        if (GameObject* pDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GO_POST_SHAHRAZ_DOOR)))
             pDoor->SetGoState(GO_STATE_ACTIVE);
-        if (GameObject* pDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GO_COUNCIL_DOOR)))
+        if (GameObject* pDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GO_COUNCIL_DOOR)))
             pDoor->SetGoState(GO_STATE_ACTIVE);
     }
 
     void Aggro(Unit *who)
     {
-        if (pInstance)
-            pInstance->SetData(DATA_MOTHERSHAHRAZEVENT, IN_PROGRESS);
+        if (m_pInstance)
+            m_pInstance->SetData(DATA_MOTHERSHAHRAZEVENT, IN_PROGRESS);
 
         DoZoneInCombat();
         DoScriptText(SAY_AGGRO, m_creature);
@@ -155,9 +155,9 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
 
     void JustDied(Unit *victim)
     {
-        if (pInstance)
+        if (m_pInstance)
         {
-            pInstance->SetData(DATA_MOTHERSHAHRAZEVENT, DONE);
+            m_pInstance->SetData(DATA_MOTHERSHAHRAZEVENT, DONE);
             OpenDoors();
         }
 

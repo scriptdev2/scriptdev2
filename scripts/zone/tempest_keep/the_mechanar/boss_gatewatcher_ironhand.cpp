@@ -42,13 +42,13 @@ struct MANGOS_DLL_DECL boss_gatewatcher_iron_handAI : public ScriptedAI
 {
     boss_gatewatcher_iron_handAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
-        HeroicMode = m_creature->GetMap()->IsHeroic();
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
         Reset();
     }
 
-    ScriptedInstance *pInstance;
-    bool HeroicMode;
+    ScriptedInstance* m_pInstance;
+    bool m_bIsHeroicMode;
 
     uint32 Shadow_Power_Timer;
     uint32 Jackhammer_Timer;
@@ -82,7 +82,7 @@ struct MANGOS_DLL_DECL boss_gatewatcher_iron_handAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH_1, m_creature);
 
-        if (!pInstance)
+        if (!m_pInstance)
             return;
 
         //TODO: Add door check/open code
@@ -97,7 +97,7 @@ struct MANGOS_DLL_DECL boss_gatewatcher_iron_handAI : public ScriptedAI
         //Shadow Power
         if (Shadow_Power_Timer < diff)
         {
-            DoCast(m_creature,HeroicMode ? H_SPELL_SHADOW_POWER : SPELL_SHADOW_POWER);
+            DoCast(m_creature, m_bIsHeroicMode ? H_SPELL_SHADOW_POWER : SPELL_SHADOW_POWER);
             Shadow_Power_Timer = 20000 + rand()%8000;
         }else Shadow_Power_Timer -= diff;
 
@@ -106,7 +106,7 @@ struct MANGOS_DLL_DECL boss_gatewatcher_iron_handAI : public ScriptedAI
         {
             //TODO: expect cast this about 5 times in a row (?), announce it by emote only once
             DoScriptText(EMOTE_HAMMER, m_creature);
-            DoCast(m_creature->getVictim(),HeroicMode ? H_SPELL_JACKHAMMER : SPELL_JACKHAMMER);
+            DoCast(m_creature->getVictim(), m_bIsHeroicMode ? H_SPELL_JACKHAMMER : SPELL_JACKHAMMER);
 
             //chance to yell, but not same time as emote (after spell in fact casted)
             if (rand()%5)

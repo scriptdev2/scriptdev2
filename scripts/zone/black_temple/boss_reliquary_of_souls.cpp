@@ -135,11 +135,11 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
         SufferingGUID = 0;
         DesireGUID = 0;
         AngerGUID = 0;
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* m_pInstance;
 
     uint64 SufferingGUID;
     uint64 DesireGUID;
@@ -177,11 +177,11 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
         m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,0);
         m_creature->GetMotionMaster()->Clear(false);
 
-        if (pInstance)
+        if (m_pInstance)
         {
             if (m_creature->isAlive())
             {
-                pInstance->SetData(DATA_RELIQUARYOFSOULSEVENT, NOT_STARTED);
+                m_pInstance->SetData(DATA_RELIQUARYOFSOULSEVENT, NOT_STARTED);
             }else OpenMotherDoor();
         }
     }
@@ -203,7 +203,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
 
     void OpenMotherDoor()
     {
-        if (GameObject* pDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GO_PRE_SHAHRAZ_DOOR)))
+        if (GameObject* pDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GO_PRE_SHAHRAZ_DOOR)))
             pDoor->SetGoState(GO_STATE_ACTIVE);
     }
 
@@ -220,8 +220,8 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
 
                 if (!m_creature->getVictim())
                 {
-                    if (pInstance)
-                        pInstance->SetData(DATA_RELIQUARYOFSOULSEVENT, IN_PROGRESS);
+                    if (m_pInstance)
+                        m_pInstance->SetData(DATA_RELIQUARYOFSOULSEVENT, IN_PROGRESS);
 
                     Phase = 1;
 
@@ -274,9 +274,9 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
 
     void JustDied(Unit* killer)
     {
-        if (pInstance)
+        if (m_pInstance)
         {
-            pInstance->SetData(DATA_RELIQUARYOFSOULSEVENT, DONE);
+            m_pInstance->SetData(DATA_RELIQUARYOFSOULSEVENT, DONE);
             OpenMotherDoor();
         }
     }

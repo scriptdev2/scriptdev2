@@ -52,13 +52,13 @@ struct MANGOS_DLL_DECL boss_talon_king_ikissAI : public ScriptedAI
 {
     boss_talon_king_ikissAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
         Reset();
     }
 
-    ScriptedInstance* pInstance;
-
-    bool HeroicMode;
+    ScriptedInstance* m_pInstance;
+    bool m_bIsHeroicMode;
 
     uint32 ArcaneVolley_Timer;
     uint32 Sheep_Timer;
@@ -71,8 +71,6 @@ struct MANGOS_DLL_DECL boss_talon_king_ikissAI : public ScriptedAI
 
     void Reset()
     {
-        HeroicMode = m_creature->GetMap()->IsHeroic();
-
         ArcaneVolley_Timer = 5000;
         Sheep_Timer = 8000;
         Blink_Timer = 35000;
@@ -118,8 +116,8 @@ struct MANGOS_DLL_DECL boss_talon_king_ikissAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH, m_creature);
 
-        if (pInstance)
-            pInstance->SetData(DATA_IKISSDOOREVENT, DONE);
+        if (m_pInstance)
+            m_pInstance->SetData(DATA_IKISSDOOREVENT, DONE);
     }
 
     void KilledUnit(Unit* victim)
@@ -138,14 +136,14 @@ struct MANGOS_DLL_DECL boss_talon_king_ikissAI : public ScriptedAI
 
         if (Blink)
         {
-            DoCast(m_creature,HeroicMode ? H_SPELL_ARCANE_EXPLOSION : SPELL_ARCANE_EXPLOSION);
+            DoCast(m_creature, m_bIsHeroicMode ? H_SPELL_ARCANE_EXPLOSION : SPELL_ARCANE_EXPLOSION);
             m_creature->CastSpell(m_creature,SPELL_ARCANE_BUBBLE,true);
             Blink = false;
         }
 
         if (ArcaneVolley_Timer < diff)
         {
-            DoCast(m_creature,HeroicMode ? H_SPELL_ARCANE_VOLLEY : SPELL_ARCANE_VOLLEY);
+            DoCast(m_creature, m_bIsHeroicMode ? H_SPELL_ARCANE_VOLLEY : SPELL_ARCANE_VOLLEY);
             ArcaneVolley_Timer = 7000+rand()%5000;
         }else ArcaneVolley_Timer -= diff;
 
@@ -153,8 +151,8 @@ struct MANGOS_DLL_DECL boss_talon_king_ikissAI : public ScriptedAI
         {
             //second top aggro target in normal, random target in heroic correct?
             Unit *target = NULL;
-            if (HeroicMode ? target = SelectUnit(SELECT_TARGET_RANDOM,0) : target = SelectUnit(SELECT_TARGET_TOPAGGRO,1))
-                DoCast(target,HeroicMode ? H_SPELL_POLYMORPH : SPELL_POLYMORPH);
+            if (m_bIsHeroicMode ? target = SelectUnit(SELECT_TARGET_RANDOM,0) : target = SelectUnit(SELECT_TARGET_TOPAGGRO,1))
+                DoCast(target, m_bIsHeroicMode ? H_SPELL_POLYMORPH : SPELL_POLYMORPH);
             Sheep_Timer = 15000+rand()%2500;
         }else Sheep_Timer -= diff;
 
@@ -165,7 +163,7 @@ struct MANGOS_DLL_DECL boss_talon_king_ikissAI : public ScriptedAI
             ManaShield = true;
         }
 
-        if (HeroicMode)
+        if (m_bIsHeroicMode)
         {
             if (Slow_Timer < diff)
             {

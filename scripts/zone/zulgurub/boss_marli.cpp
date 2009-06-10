@@ -42,11 +42,11 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
 {
     boss_marliAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance* m_pInstance;
 
     uint32 SpawnStartSpiders_Timer;
     uint32 PoisonVolley_Timer;
@@ -83,8 +83,8 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH, m_creature);
 
-        if (pInstance)
-            pInstance->SetData(DATA_MARLI_DEATH, 0);
+        if (m_pInstance)
+            m_pInstance->SetData(DATA_MARLI_DEATH, 0);
     }
 
     void UpdateAI(const uint32 diff)

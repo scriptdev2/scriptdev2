@@ -55,12 +55,12 @@ struct MANGOS_DLL_DECL boss_ormorokAI : public ScriptedAI
     boss_ormorokAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroic = pCreature->GetMap()->IsHeroic();
+        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
-    bool m_bIsHeroic;
+    bool m_bIsHeroicMode;
 
     void Reset() 
     {

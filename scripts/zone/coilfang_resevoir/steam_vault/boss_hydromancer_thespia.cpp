@@ -45,13 +45,13 @@ struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
 {
     boss_thespiaAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
-        HeroicMode = m_creature->GetMap()->IsHeroic();
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
         Reset();
     }
 
-    ScriptedInstance *pInstance;
-    bool HeroicMode;
+    ScriptedInstance* m_pInstance;
+    bool m_bIsHeroicMode;
 
     uint32 LightningCloud_Timer;
     uint32 LungBurst_Timer;
@@ -63,16 +63,16 @@ struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
         LungBurst_Timer = 7000;
         EnvelopingWinds_Timer = 9000;
 
-        if (pInstance && m_creature->isAlive())
-            pInstance->SetData(TYPE_HYDROMANCER_THESPIA,NOT_STARTED);
+        if (m_pInstance && m_creature->isAlive())
+            m_pInstance->SetData(TYPE_HYDROMANCER_THESPIA,NOT_STARTED);
     }
 
     void JustDied(Unit* Killer)
     {
         DoScriptText(SAY_DEAD, m_creature);
 
-        if (pInstance)
-            pInstance->SetData(TYPE_HYDROMANCER_THESPIA, DONE);
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_HYDROMANCER_THESPIA, DONE);
     }
 
     void KilledUnit(Unit* victim)
@@ -93,8 +93,8 @@ struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
             case 2: DoScriptText(SAY_AGGRO_3, m_creature); break;
         }
 
-        if (pInstance)
-            pInstance->SetData(TYPE_HYDROMANCER_THESPIA, IN_PROGRESS);
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_HYDROMANCER_THESPIA, IN_PROGRESS);
     }
 
     void UpdateAI(const uint32 diff)
@@ -108,7 +108,7 @@ struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
             //cast twice in Heroic mode
             if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
                 DoCast(target, SPELL_LIGHTNING_CLOUD);
-            if (HeroicMode)
+            if (m_bIsHeroicMode)
                 if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
                     DoCast(target, SPELL_LIGHTNING_CLOUD);
             LightningCloud_Timer = 15000+rand()%10000;
@@ -128,7 +128,7 @@ struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
             //cast twice in Heroic mode
             if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
                 DoCast(target, SPELL_ENVELOPING_WINDS);
-            if (HeroicMode)
+            if (m_bIsHeroicMode)
                 if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
                     DoCast(target, SPELL_ENVELOPING_WINDS);
             EnvelopingWinds_Timer = 10000+rand()%5000;
@@ -143,14 +143,17 @@ struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL mob_coilfang_waterelementalAI : public ScriptedAI
 {
-    mob_coilfang_waterelementalAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+    mob_coilfang_waterelementalAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
+        Reset();
+    }
 
-    bool HeroicMode;
+    bool m_bIsHeroicMode;
     uint32 WaterBoltVolley_Timer;
 
     void Reset()
     {
-        HeroicMode = m_creature->GetMap()->IsHeroic();
         WaterBoltVolley_Timer = 3000+rand()%3000;
     }
 
@@ -161,7 +164,7 @@ struct MANGOS_DLL_DECL mob_coilfang_waterelementalAI : public ScriptedAI
 
         if (WaterBoltVolley_Timer < diff)
         {
-            DoCast(m_creature, HeroicMode ? H_SPELL_WATER_BOLT_VOLLEY : SPELL_WATER_BOLT_VOLLEY);
+            DoCast(m_creature, m_bIsHeroicMode ? H_SPELL_WATER_BOLT_VOLLEY : SPELL_WATER_BOLT_VOLLEY);
             WaterBoltVolley_Timer = 7000+rand()%5000;
         }else WaterBoltVolley_Timer -= diff;
 

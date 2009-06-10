@@ -53,11 +53,11 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
 {
     boss_gruulAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance* m_pInstance;
 
     uint32 Growth_Timer;
     uint32 CaveIn_Timer;
@@ -79,12 +79,12 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
         HurtfulStrike_Timer= 8000;
         Reverberation_Timer= 60000+45000;
 
-        if (pInstance)
+        if (m_pInstance)
         {
-            pInstance->SetData(DATA_GRUULEVENT, NOT_STARTED);
+            m_pInstance->SetData(DATA_GRUULEVENT, NOT_STARTED);
 
             // Open the encounter door
-            if (GameObject* pEncounterDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GRUUL_ENCOUNTER_DOOR)))
+            if (GameObject* pEncounterDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GRUUL_ENCOUNTER_DOOR)))
                 pEncounterDoor->SetGoState(GO_STATE_ACTIVE);
         }
         else
@@ -95,12 +95,12 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
-        if (pInstance)
+        if (m_pInstance)
         {
-            pInstance->SetData(DATA_GRUULEVENT, IN_PROGRESS);
+            m_pInstance->SetData(DATA_GRUULEVENT, IN_PROGRESS);
 
             //Close the encounter door, open it in JustDied/Reset
-            if (GameObject* pEncounterDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GRUUL_ENCOUNTER_DOOR)))
+            if (GameObject* pEncounterDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GRUUL_ENCOUNTER_DOOR)))
                 pEncounterDoor->SetGoState(GO_STATE_READY);
         }
     }
@@ -119,12 +119,12 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH, m_creature);
 
-        if (pInstance)
+        if (m_pInstance)
         {
-            pInstance->SetData(DATA_GRUULEVENT, DONE);
+            m_pInstance->SetData(DATA_GRUULEVENT, DONE);
 
             // Open the encounter door
-            if (GameObject* pEncounterDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GRUUL_ENCOUNTER_DOOR)))
+            if (GameObject* pEncounterDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GRUUL_ENCOUNTER_DOOR)))
                 pEncounterDoor->SetGoState(GO_STATE_ACTIVE);
         }
     }

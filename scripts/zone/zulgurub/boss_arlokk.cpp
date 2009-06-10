@@ -38,11 +38,11 @@ struct MANGOS_DLL_DECL boss_arlokkAI : public ScriptedAI
 {
     boss_arlokkAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance* m_pInstance;
 
     uint32 ShadowWordPain_Timer;
     uint32 Gouge_Timer;
@@ -91,8 +91,8 @@ struct MANGOS_DLL_DECL boss_arlokkAI : public ScriptedAI
         m_creature->SetDisplayId(15218);
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 
-        if (pInstance)
-            pInstance->SetData(DATA_ARLOKK_DEATH, 0);
+        if (m_pInstance)
+            m_pInstance->SetData(DATA_ARLOKK_DEATH, 0);
     }
 
     void UpdateAI(const uint32 diff)

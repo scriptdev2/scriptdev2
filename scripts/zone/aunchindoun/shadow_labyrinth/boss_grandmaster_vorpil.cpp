@@ -57,14 +57,14 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
 {
     boss_grandmaster_vorpilAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
-        HeroicMode = pCreature->GetMap()->IsHeroic();
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
         Intro = false;
         Reset();
     }
 
-    ScriptedInstance* pInstance;
-    bool HeroicMode;
+    ScriptedInstance* m_pInstance;
+    bool m_bIsHeroicMode;
 
     uint32 ShadowBoltVolley_Timer;
     uint32 DrawShadows_Timer;
@@ -83,8 +83,8 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
         Banish_Timer = 25000;
         Teleport = false;
 
-        if (pInstance)
-            pInstance->SetData(DATA_GRANDMASTERVORPILEVENT, NOT_STARTED);
+        if (m_pInstance)
+            m_pInstance->SetData(DATA_GRANDMASTERVORPILEVENT, NOT_STARTED);
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -114,8 +114,8 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
         m_creature->SummonCreature(ENTRY_VOID_PORTAL,-292.05,-270.37,12.68,0,TEMPSUMMON_CORPSE_DESPAWN,0);
         m_creature->SummonCreature(ENTRY_VOID_PORTAL,-301.64,-255.97,12.68,0,TEMPSUMMON_CORPSE_DESPAWN,0);
 
-        if (pInstance)
-            pInstance->SetData(DATA_GRANDMASTERVORPILEVENT, IN_PROGRESS);
+        if (m_pInstance)
+            m_pInstance->SetData(DATA_GRANDMASTERVORPILEVENT, IN_PROGRESS);
     }
 
     void KilledUnit(Unit *victim)
@@ -143,8 +143,8 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH, m_creature);
 
-        if (pInstance)
-            pInstance->SetData(DATA_GRANDMASTERVORPILEVENT, DONE);
+        if (m_pInstance)
+            m_pInstance->SetData(DATA_GRANDMASTERVORPILEVENT, DONE);
     }
 
     void UpdateAI(const uint32 diff)
@@ -176,7 +176,7 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
                 }
                 Teleport = false;
 
-                DoCast(m_creature->getVictim(), HeroicMode ? H_SPELL_RAIN_OF_FIRE : SPELL_RAIN_OF_FIRE);
+                DoCast(m_creature->getVictim(), m_bIsHeroicMode ? H_SPELL_RAIN_OF_FIRE : SPELL_RAIN_OF_FIRE);
 
                 Teleport_Timer = 1000;
             }else Teleport_Timer -= diff;
@@ -211,7 +211,7 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
             VoidTraveler_Timer = 35000;
         }else VoidTraveler_Timer -= diff;
 
-        if (HeroicMode)
+        if (m_bIsHeroicMode)
         {
             if (Banish_Timer < diff)
             {

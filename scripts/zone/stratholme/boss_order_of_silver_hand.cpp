@@ -45,11 +45,11 @@ struct MANGOS_DLL_DECL boss_silver_hand_bossesAI : public ScriptedAI
 {
     boss_silver_hand_bossesAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance* m_pInstance;
 
     uint32 HolyLight_Timer;
     uint32 DivineShield_Timer;
@@ -59,24 +59,24 @@ struct MANGOS_DLL_DECL boss_silver_hand_bossesAI : public ScriptedAI
         HolyLight_Timer = 20000;
         DivineShield_Timer = 20000;
 
-        if (pInstance)
+        if (m_pInstance)
         {
             switch(m_creature->GetEntry())
             {
                 case SH_AELMAR:
-                    pInstance->SetData(TYPE_SH_AELMAR, 0);
+                    m_pInstance->SetData(TYPE_SH_AELMAR, 0);
                     break;
                 case SH_CATHELA:
-                    pInstance->SetData(TYPE_SH_CATHELA, 0);
+                    m_pInstance->SetData(TYPE_SH_CATHELA, 0);
                     break;
                 case SH_GREGOR:
-                    pInstance->SetData(TYPE_SH_GREGOR, 0);
+                    m_pInstance->SetData(TYPE_SH_GREGOR, 0);
                     break;
                 case SH_NEMAS:
-                    pInstance->SetData(TYPE_SH_NEMAS, 0);
+                    m_pInstance->SetData(TYPE_SH_NEMAS, 0);
                     break;
                 case SH_VICAR:
-                    pInstance->SetData(TYPE_SH_VICAR, 0);
+                    m_pInstance->SetData(TYPE_SH_VICAR, 0);
                     break;
             }
         }
@@ -84,27 +84,27 @@ struct MANGOS_DLL_DECL boss_silver_hand_bossesAI : public ScriptedAI
 
     void JustDied(Unit* Killer)
     {
-        if (pInstance)
+        if (m_pInstance)
         {
             switch(m_creature->GetEntry())
             {
                 case SH_AELMAR:
-                    pInstance->SetData(TYPE_SH_AELMAR, 2);
+                    m_pInstance->SetData(TYPE_SH_AELMAR, 2);
                     break;
                 case SH_CATHELA:
-                    pInstance->SetData(TYPE_SH_CATHELA, 2);
+                    m_pInstance->SetData(TYPE_SH_CATHELA, 2);
                     break;
                 case SH_GREGOR:
-                    pInstance->SetData(TYPE_SH_GREGOR, 2);
+                    m_pInstance->SetData(TYPE_SH_GREGOR, 2);
                     break;
                 case SH_NEMAS:
-                    pInstance->SetData(TYPE_SH_NEMAS, 2);
+                    m_pInstance->SetData(TYPE_SH_NEMAS, 2);
                     break;
                 case SH_VICAR:
-                    pInstance->SetData(TYPE_SH_VICAR, 2);
+                    m_pInstance->SetData(TYPE_SH_VICAR, 2);
                     break;
             }
-            if (pInstance->GetData(TYPE_SH_QUEST) && Killer->GetTypeId() == TYPEID_PLAYER)
+            if (m_pInstance->GetData(TYPE_SH_QUEST) && Killer->GetTypeId() == TYPEID_PLAYER)
                 ((Player*)Killer)->KilledMonster(SH_QUEST_CREDIT,m_creature->GetGUID());
         }
     }

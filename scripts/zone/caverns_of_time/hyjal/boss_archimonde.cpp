@@ -75,12 +75,12 @@ struct mob_ancient_wispAI : public ScriptedAI
 {
     mob_ancient_wispAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         ArchimondeGUID = 0;
         Reset();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* m_pInstance;
     uint64 ArchimondeGUID;
     uint32 CheckTimer;
 
@@ -88,8 +88,8 @@ struct mob_ancient_wispAI : public ScriptedAI
     {
         CheckTimer = 1000;
 
-        if (pInstance)
-            ArchimondeGUID = pInstance->GetData64(DATA_ARCHIMONDE);
+        if (m_pInstance)
+            ArchimondeGUID = m_pInstance->GetData64(DATA_ARCHIMONDE);
 
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
     }
@@ -182,11 +182,11 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
 {
     boss_archimondeAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* m_pInstance;
 
     uint64 DoomfireSpiritGUID;
     uint64 WorldTreeGUID;
@@ -212,8 +212,8 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
 
     void Reset()
     {
-        if (pInstance)
-            pInstance->SetData(DATA_ARCHIMONDEEVENT, NOT_STARTED);
+        if (m_pInstance)
+            m_pInstance->SetData(DATA_ARCHIMONDEEVENT, NOT_STARTED);
 
         DoomfireSpiritGUID = 0;
         WorldTreeGUID = 0;
@@ -243,8 +243,8 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         DoScriptText(SAY_AGGRO, m_creature);
         DoZoneInCombat();
 
-        if (pInstance)
-            pInstance->SetData(DATA_ARCHIMONDEEVENT, IN_PROGRESS);
+        if (m_pInstance)
+            m_pInstance->SetData(DATA_ARCHIMONDEEVENT, IN_PROGRESS);
     }
 
     void KilledUnit(Unit *victim)
@@ -289,8 +289,8 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH, m_creature);
 
-        if (pInstance)
-            pInstance->SetData(DATA_ARCHIMONDEEVENT, DONE);
+        if (m_pInstance)
+            m_pInstance->SetData(DATA_ARCHIMONDEEVENT, DONE);
     }
 
     bool CanUseFingerOfDeath()
@@ -410,15 +410,15 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
     {
         if (!m_creature->isInCombat())
         {
-            if (pInstance)
+            if (m_pInstance)
             {
                 // Do not let the raid skip straight to Archimonde. Visible and hostile ONLY if Azagalor is finished.
-                if ((pInstance->GetData(DATA_AZGALOREVENT) < DONE) && ((m_creature->GetVisibility() != VISIBILITY_OFF) || (m_creature->getFaction() != 35)))
+                if ((m_pInstance->GetData(DATA_AZGALOREVENT) < DONE) && ((m_creature->GetVisibility() != VISIBILITY_OFF) || (m_creature->getFaction() != 35)))
                 {
                     m_creature->SetVisibility(VISIBILITY_OFF);
                     m_creature->setFaction(35);
                 }
-                else if ((pInstance->GetData(DATA_AZGALOREVENT) >= DONE) && ((m_creature->GetVisibility() != VISIBILITY_ON) || (m_creature->getFaction() == 35)))
+                else if ((m_pInstance->GetData(DATA_AZGALOREVENT) >= DONE) && ((m_creature->GetVisibility() != VISIBILITY_ON) || (m_creature->getFaction() == 35)))
                 {
                     m_creature->setFaction(1720);
                     m_creature->SetVisibility(VISIBILITY_ON);

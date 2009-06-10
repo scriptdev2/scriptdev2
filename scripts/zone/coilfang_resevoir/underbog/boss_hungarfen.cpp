@@ -30,11 +30,11 @@ struct MANGOS_DLL_DECL boss_hungarfenAI : public ScriptedAI
 {
     boss_hungarfenAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        HeroicMode = m_creature->GetMap()->IsHeroic();
+        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
         Reset();
     }
 
-    bool HeroicMode;
+    bool m_bIsHeroicMode;
     bool Root;
     uint32 Mushroom_Timer;
     uint32 AcidGeyser_Timer;

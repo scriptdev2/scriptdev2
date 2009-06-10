@@ -36,11 +36,11 @@ struct MANGOS_DLL_DECL boss_magistrate_barthilasAI : public ScriptedAI
 {
     boss_magistrate_barthilasAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = (ScriptedInstance*)m_creature->GetInstanceData();
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* m_pInstance;
 
     uint32 DrainingBlow_Timer;
     uint32 CrowdPummel_Timer;

@@ -33,11 +33,11 @@ struct MANGOS_DLL_DECL boss_nerubenkanAI : public ScriptedAI
 {
     boss_nerubenkanAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = (ScriptedInstance*)m_creature->GetInstanceData();
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* m_pInstance;
 
     uint32 EncasingWebs_Timer;
     uint32 PierceArmor_Timer;
@@ -80,8 +80,8 @@ struct MANGOS_DLL_DECL boss_nerubenkanAI : public ScriptedAI
 
     void JustDied(Unit* Killer)
     {
-        if (pInstance)
-            pInstance->SetData(TYPE_NERUB,IN_PROGRESS);
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_NERUB,IN_PROGRESS);
     }
 
     void UpdateAI(const uint32 diff)

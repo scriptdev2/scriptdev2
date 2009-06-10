@@ -50,13 +50,13 @@ struct MANGOS_DLL_DECL boss_mekgineer_steamriggerAI : public ScriptedAI
 {
     boss_mekgineer_steamriggerAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
-        HeroicMode = m_creature->GetMap()->IsHeroic();
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
         Reset();
     }
 
-    ScriptedInstance *pInstance;
-    bool HeroicMode;
+    ScriptedInstance* m_pInstance;
+    bool m_bIsHeroicMode;
 
     uint32 Shrink_Timer;
     uint32 Saw_Blade_Timer;
@@ -75,16 +75,16 @@ struct MANGOS_DLL_DECL boss_mekgineer_steamriggerAI : public ScriptedAI
         Summon50 = false;
         Summon25 = false;
 
-        if (pInstance && m_creature->isAlive())
-            pInstance->SetData(TYPE_MEKGINEER_STEAMRIGGER,NOT_STARTED);
+        if (m_pInstance && m_creature->isAlive())
+            m_pInstance->SetData(TYPE_MEKGINEER_STEAMRIGGER,NOT_STARTED);
     }
 
     void JustDied(Unit* Killer)
     {
         DoScriptText(SAY_DEATH, m_creature);
 
-        if (pInstance)
-            pInstance->SetData(TYPE_MEKGINEER_STEAMRIGGER, DONE);
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_MEKGINEER_STEAMRIGGER, DONE);
     }
 
     void KilledUnit(Unit* victim)
@@ -106,8 +106,8 @@ struct MANGOS_DLL_DECL boss_mekgineer_steamriggerAI : public ScriptedAI
             case 2: DoScriptText(SAY_AGGRO_3, m_creature); break;
         }
 
-        if (pInstance)
-            pInstance->SetData(TYPE_MEKGINEER_STEAMRIGGER, IN_PROGRESS);
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_MEKGINEER_STEAMRIGGER, IN_PROGRESS);
     }
 
     //no known summon spells exist
@@ -200,13 +200,13 @@ struct MANGOS_DLL_DECL mob_steamrigger_mechanicAI : public ScriptedAI
 {
     mob_steamrigger_mechanicAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
-        HeroicMode = m_creature->GetMap()->IsHeroic();
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
         Reset();
     }
 
-    ScriptedInstance* pInstance;
-    bool HeroicMode;
+    ScriptedInstance* m_pInstance;
+    bool m_bIsHeroicMode;
 
     uint32 Repair_Timer;
 
@@ -225,9 +225,9 @@ struct MANGOS_DLL_DECL mob_steamrigger_mechanicAI : public ScriptedAI
     {
         if (Repair_Timer < diff)
         {
-            if (pInstance && pInstance->GetData64(DATA_MEKGINEERSTEAMRIGGER) && pInstance->GetData(TYPE_MEKGINEER_STEAMRIGGER) == IN_PROGRESS)
+            if (m_pInstance && m_pInstance->GetData64(DATA_MEKGINEERSTEAMRIGGER) && m_pInstance->GetData(TYPE_MEKGINEER_STEAMRIGGER) == IN_PROGRESS)
             {
-                if (Unit* pMekgineer = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_MEKGINEERSTEAMRIGGER)))
+                if (Unit* pMekgineer = Unit::GetUnit((*m_creature), m_pInstance->GetData64(DATA_MEKGINEERSTEAMRIGGER)))
                 {
                     if (m_creature->IsWithinDistInMap(pMekgineer, MAX_REPAIR_RANGE))
                     {
@@ -237,7 +237,7 @@ struct MANGOS_DLL_DECL mob_steamrigger_mechanicAI : public ScriptedAI
                             //m_creature->GetMotionMaster()->MovementExpired();
                             //m_creature->GetMotionMaster()->MoveIdle();
 
-                            DoCast(m_creature,HeroicMode ? H_SPELL_REPAIR : SPELL_REPAIR, true);
+                            DoCast(m_creature, m_bIsHeroicMode ? H_SPELL_REPAIR : SPELL_REPAIR, true);
                         }
                         Repair_Timer = 5000;
                     }

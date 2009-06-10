@@ -46,11 +46,11 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
 {
     boss_mandokirAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance* m_pInstance;
 
     uint32 KillCount;
     uint32 Watch_Timer;
@@ -106,9 +106,9 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
             {
                 DoScriptText(SAY_DING_KILL, m_creature);
 
-                if (pInstance)
+                if (m_pInstance)
                 {
-                    uint64 JindoGUID = pInstance->GetData64(DATA_JINDO);
+                    uint64 JindoGUID = m_pInstance->GetData64(DATA_JINDO);
                     if (JindoGUID)
                     {
                         if (Unit* jTemp = Unit::GetUnit(*m_creature,JindoGUID))
@@ -246,9 +246,9 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
         //Checking if Ohgan is dead. If yes Mandokir will enrage.
         if (Check_Timer < diff)
         {
-            if (pInstance)
+            if (m_pInstance)
             {
-                if (pInstance->GetData(DATA_OHGANISDEAD))
+                if (m_pInstance->GetData(DATA_OHGANISDEAD))
                 {
                     if (!RaptorDead)
                     {
@@ -270,11 +270,11 @@ struct MANGOS_DLL_DECL mob_ohganAI : public ScriptedAI
 {
     mob_ohganAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance* m_pInstance;
 
     uint32 SunderArmor_Timer;
 
@@ -285,8 +285,8 @@ struct MANGOS_DLL_DECL mob_ohganAI : public ScriptedAI
 
     void JustDied(Unit* Killer)
     {
-        if (pInstance)
-            pInstance->SetData(DATA_OHGAN_DEATH, 0);
+        if (m_pInstance)
+            m_pInstance->SetData(DATA_OHGAN_DEATH, 0);
     }
 
     void UpdateAI (const uint32 diff)

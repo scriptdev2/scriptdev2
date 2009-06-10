@@ -59,13 +59,13 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
 {
     boss_vexallusAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
-        Heroic = pCreature->GetMap()->IsHeroic();
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
         Reset();
     }
 
-    ScriptedInstance* pInstance;
-    bool Heroic;
+    ScriptedInstance* m_pInstance;
+    bool m_bIsHeroicMode;
 
     uint32 ChainLightningTimer;
     uint32 ArcaneShockTimer;
@@ -81,8 +81,8 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
         IntervalHealthAmount = 1;
         Enraged = false;
 
-        if (pInstance)
-            pInstance->SetData(DATA_VEXALLUS_EVENT, NOT_STARTED);
+        if (m_pInstance)
+            m_pInstance->SetData(DATA_VEXALLUS_EVENT, NOT_STARTED);
     }
 
     void KilledUnit(Unit *victim)
@@ -92,16 +92,16 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
 
     void JustDied(Unit *victim)
     {
-        if (pInstance)
-            pInstance->SetData(DATA_VEXALLUS_EVENT, DONE);
+        if (m_pInstance)
+            m_pInstance->SetData(DATA_VEXALLUS_EVENT, DONE);
     }
 
     void Aggro(Unit *who)
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
-        if (pInstance)
-            pInstance->SetData(DATA_VEXALLUS_EVENT, IN_PROGRESS);
+        if (m_pInstance)
+            m_pInstance->SetData(DATA_VEXALLUS_EVENT, IN_PROGRESS);
     }
 
     void JustSummoned(Creature *summoned)
@@ -136,7 +136,7 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
                 DoScriptText(SAY_ENERGY, m_creature);
                 DoScriptText(EMOTE_DISCHARGE_ENERGY, m_creature);
 
-                if (Heroic)
+                if (m_bIsHeroicMode)
                 {
                     m_creature->CastSpell(m_creature,H_SPELL_SUMMON_PURE_ENERGY1,false);
                     m_creature->CastSpell(m_creature,H_SPELL_SUMMON_PURE_ENERGY2,false);
@@ -147,7 +147,7 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
                 //below are workaround summons, remove when summoning spells w/implicitTarget 73 implemented in Mangos
                 DoSpawnCreature(NPC_PURE_ENERGY, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_CORPSE_DESPAWN, 0);
 
-                if (Heroic)
+                if (m_bIsHeroicMode)
                     DoSpawnCreature(NPC_PURE_ENERGY, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_CORPSE_DESPAWN, 0);
             }
 

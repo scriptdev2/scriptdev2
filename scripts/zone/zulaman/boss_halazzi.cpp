@@ -62,11 +62,11 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
 {
     boss_halazziAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* m_pInstance;
 
     void Reset()
     {
@@ -90,10 +90,10 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH, m_creature);
 
-        if (!pInstance)
+        if (!m_pInstance)
             return;
 
-        pInstance->SetData(TYPE_HALAZZI, DONE);
+        m_pInstance->SetData(TYPE_HALAZZI, DONE);
     }
 
     void UpdateAI(const uint32 diff)

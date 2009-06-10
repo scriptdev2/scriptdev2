@@ -41,17 +41,17 @@ struct MANGOS_DLL_DECL npc_forest_frogAI : public ScriptedAI
 {
     npc_forest_frogAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance* m_pInstance;
 
     void Reset() { }
 
     void DoSpawnRandom()
     {
-        if (pInstance)
+        if (m_pInstance)
         {
             uint32 cEntry = 0;
             switch(rand()%11)
@@ -69,15 +69,15 @@ struct MANGOS_DLL_DECL npc_forest_frogAI : public ScriptedAI
                 case 10: cEntry = 24455; break;             //Hollee
             }
 
-            if (!pInstance->GetData(TYPE_RAND_VENDOR_1))
+            if (!m_pInstance->GetData(TYPE_RAND_VENDOR_1))
                 if (rand()%10 == 1) cEntry = 24408;          //Gunter
-            if (!pInstance->GetData(TYPE_RAND_VENDOR_2))
+            if (!m_pInstance->GetData(TYPE_RAND_VENDOR_2))
                 if (rand()%10 == 1) cEntry = 24409;          //Kyren
 
             if (cEntry) m_creature->UpdateEntry(cEntry);
 
-            if (cEntry == 24408) pInstance->SetData(TYPE_RAND_VENDOR_1,DONE);
-            if (cEntry == 24409) pInstance->SetData(TYPE_RAND_VENDOR_2,DONE);
+            if (cEntry == 24408) m_pInstance->SetData(TYPE_RAND_VENDOR_1,DONE);
+            if (cEntry == 24409) m_pInstance->SetData(TYPE_RAND_VENDOR_2,DONE);
         }
     }
 
@@ -115,15 +115,15 @@ struct MANGOS_DLL_DECL npc_harrison_jones_zaAI : public npc_escortAI
 {
     npc_harrison_jones_zaAI(Creature* pCreature) : npc_escortAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* m_pInstance;
 
     void WaypointReached(uint32 i)
     {
-        if (!pInstance)
+        if (!m_pInstance)
             return;
 
         switch(i)
@@ -131,7 +131,7 @@ struct MANGOS_DLL_DECL npc_harrison_jones_zaAI : public npc_escortAI
             case 1:
                 DoScriptText(SAY_AT_GONG, m_creature);
 
-                if (GameObject* pEntranceDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GO_GONG)))
+                if (GameObject* pEntranceDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GO_GONG)))
                     pEntranceDoor->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
 
                 //Start bang gong for 2min
@@ -142,7 +142,7 @@ struct MANGOS_DLL_DECL npc_harrison_jones_zaAI : public npc_escortAI
                 DoScriptText(SAY_OPEN_ENTRANCE, m_creature);
                 break;
            case 4:
-                pInstance->SetData(TYPE_EVENT_RUN,IN_PROGRESS);
+                m_pInstance->SetData(TYPE_EVENT_RUN,IN_PROGRESS);
                 //TODO: Spawn group of Amani'shi Savage and make them run to entrance
                 break;
         }
@@ -161,7 +161,7 @@ struct MANGOS_DLL_DECL npc_harrison_jones_zaAI : public npc_escortAI
         IsOnHold = bOnHold;
 
         //Stop banging gong if still
-        if (pInstance && pInstance->GetData(TYPE_EVENT_RUN) == SPECIAL && m_creature->HasAura(SPELL_BANGING_THE_GONG))
+        if (m_pInstance && m_pInstance->GetData(TYPE_EVENT_RUN) == SPECIAL && m_creature->HasAura(SPELL_BANGING_THE_GONG))
             m_creature->RemoveAurasDueToSpell(SPELL_BANGING_THE_GONG);
     }
 

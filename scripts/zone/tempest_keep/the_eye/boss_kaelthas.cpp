@@ -148,12 +148,12 @@ struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
 {
     advisorbase_ai(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         FakeDeath = false;
         Reset();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* m_pInstance;
     bool FakeDeath;
     uint32 DelayRes_Timer;
     uint64 DelayRes_Target;
@@ -172,9 +172,9 @@ struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 
         //reset encounter
-        if (pInstance && (pInstance->GetData(DATA_KAELTHASEVENT) == 1 || pInstance->GetData(DATA_KAELTHASEVENT) == 3))
+        if (m_pInstance && (m_pInstance->GetData(DATA_KAELTHASEVENT) == 1 || m_pInstance->GetData(DATA_KAELTHASEVENT) == 3))
         {
-            if (Creature *Kaelthas = (Creature*)Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_KAELTHAS)))
+            if (Creature *Kaelthas = (Creature*)Unit::GetUnit((*m_creature), m_pInstance->GetData64(DATA_KAELTHAS)))
                 Kaelthas->AI()->EnterEvadeMode();
         }
     }
@@ -218,7 +218,7 @@ struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
         }
 
         //Don't really die in phase 1 & 3, only die after that
-        if (pInstance && pInstance->GetData(DATA_KAELTHASEVENT) != 0)
+        if (m_pInstance && m_pInstance->GetData(DATA_KAELTHASEVENT) != 0)
         {
             //prevent death
             damage = 0;
@@ -241,7 +241,7 @@ struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
             // Double health for Phase 3
             m_creature->SetMaxHealth(m_creature->GetMaxHealth() * 2);
 
-            if (pInstance->GetData(DATA_KAELTHASEVENT) == 3)
+            if (m_pInstance->GetData(DATA_KAELTHASEVENT) == 3)
                 JustDied(pKiller);
         }
     }
@@ -275,7 +275,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 {
     boss_kaelthasAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         AdvisorGuid[0] = 0;
         AdvisorGuid[1] = 0;
         AdvisorGuid[2] = 0;
@@ -283,7 +283,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
         Reset();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* m_pInstance;
 
     uint32 Fireball_Timer;
     uint32 ArcaneDisruption_Timer;
@@ -330,8 +330,8 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
 
-        if (pInstance)
-            pInstance->SetData(DATA_KAELTHASEVENT, 0);
+        if (m_pInstance)
+            m_pInstance->SetData(DATA_KAELTHASEVENT, 0);
     }
 
     void PrepareAdvisors()
@@ -350,13 +350,13 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
     void StartEvent()
     {
-        if (!pInstance)
+        if (!m_pInstance)
             return;
 
-        AdvisorGuid[0] = pInstance->GetData64(DATA_THALADREDTHEDARKENER);
-        AdvisorGuid[1] = pInstance->GetData64(DATA_LORDSANGUINAR);
-        AdvisorGuid[2] = pInstance->GetData64(DATA_GRANDASTROMANCERCAPERNIAN);
-        AdvisorGuid[3] = pInstance->GetData64(DATA_MASTERENGINEERTELONICUS);
+        AdvisorGuid[0] = m_pInstance->GetData64(DATA_THALADREDTHEDARKENER);
+        AdvisorGuid[1] = m_pInstance->GetData64(DATA_LORDSANGUINAR);
+        AdvisorGuid[2] = m_pInstance->GetData64(DATA_GRANDASTROMANCERCAPERNIAN);
+        AdvisorGuid[3] = m_pInstance->GetData64(DATA_MASTERENGINEERTELONICUS);
 
         if (!AdvisorGuid[0] || !AdvisorGuid[1] || !AdvisorGuid[2] || !AdvisorGuid[3])
         {
@@ -366,7 +366,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
             Phase = 4;
 
-            pInstance->SetData(DATA_KAELTHASEVENT, 4);
+            m_pInstance->SetData(DATA_KAELTHASEVENT, 4);
 
             m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
@@ -381,7 +381,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
             DoScriptText(SAY_INTRO, m_creature);
 
-            pInstance->SetData(DATA_KAELTHASEVENT, 1);
+            m_pInstance->SetData(DATA_KAELTHASEVENT, 1);
             m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
 
             PhaseSubphase = 0;
@@ -408,7 +408,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                 }
                 else if (m_creature->GetMap()->IsDungeon())
                 {
-                    if (pInstance && !pInstance->GetData(DATA_KAELTHASEVENT) && !Phase)
+                    if (m_pInstance && !m_pInstance->GetData(DATA_KAELTHASEVENT) && !Phase)
                         StartEvent();
 
                     who->SetInCombatWith(m_creature);
@@ -420,7 +420,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-        if (pInstance && !pInstance->GetData(DATA_KAELTHASEVENT) && !Phase)
+        if (m_pInstance && !m_pInstance->GetData(DATA_KAELTHASEVENT) && !Phase)
             StartEvent();
     }
 
@@ -441,8 +441,8 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
         DoScriptText(SAY_DEATH, m_creature);
 
-        if (pInstance)
-            pInstance->SetData(DATA_KAELTHASEVENT, 0);
+        if (m_pInstance)
+            m_pInstance->SetData(DATA_KAELTHASEVENT, 0);
 
         for(uint8 i = 0; i < 4; i++)
         {
@@ -602,7 +602,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                         if (Advisor && (Advisor->getStandState() == UNIT_STAND_STATE_DEAD))
                         {
                             Phase = 2;
-                            pInstance->SetData(DATA_KAELTHASEVENT, 2);
+                            m_pInstance->SetData(DATA_KAELTHASEVENT, 2);
 
                             DoScriptText(SAY_PHASE2_WEAPON, m_creature);
 
@@ -653,7 +653,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                     if (Phase_Timer < diff)
                     {
                         DoScriptText(SAY_PHASE3_ADVANCE, m_creature);
-                        pInstance->SetData(DATA_KAELTHASEVENT, 3);
+                        m_pInstance->SetData(DATA_KAELTHASEVENT, 3);
                         Phase = 3;
                         PhaseSubphase = 0;
                     }else Phase_Timer -= diff;
@@ -685,7 +685,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                     DoScriptText(SAY_PHASE4_INTRO2, m_creature);
                     Phase = 4;
 
-                    pInstance->SetData(DATA_KAELTHASEVENT, 4);
+                    m_pInstance->SetData(DATA_KAELTHASEVENT, 4);
 
                     // Sometimes people can collect Aggro in Phase 1-3. Reset threat before releasing Kael.
                     DoResetThreat();
@@ -789,7 +789,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                 {
                     if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 50)
                     {
-                        pInstance->SetData(DATA_KAELTHASEVENT, 4);
+                        m_pInstance->SetData(DATA_KAELTHASEVENT, 4);
                         Phase = 5;
                         Phase_Timer = 10000;
 

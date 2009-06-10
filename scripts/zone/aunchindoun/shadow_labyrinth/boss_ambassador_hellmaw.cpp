@@ -46,13 +46,13 @@ struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public ScriptedAI
 {
     boss_ambassador_hellmawAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
-        HeroicMode = m_creature->GetMap()->IsHeroic();
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
         Reset();
     }
 
-    ScriptedInstance* pInstance;
-    bool HeroicMode;
+    ScriptedInstance* m_pInstance;
+    bool m_bIsHeroicMode;
 
     uint32 EventCheck_Timer;
     uint32 CorrosiveAcid_Timer;
@@ -70,16 +70,16 @@ struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public ScriptedAI
         Intro = false;
         IsBanished = false;
 
-        if (pInstance)
+        if (m_pInstance)
         {
-            if (pInstance->GetData(TYPE_HELLMAW) == NOT_STARTED)
+            if (m_pInstance->GetData(TYPE_HELLMAW) == NOT_STARTED)
             {
                 DoCast(m_creature,SPELL_BANISH);
                 IsBanished = true;
             }
-            else pInstance->SetData(TYPE_HELLMAW,FAIL);
+            else m_pInstance->SetData(TYPE_HELLMAW,FAIL);
 
-            if (pInstance->GetData(TYPE_OVERSEER) == DONE)
+            if (m_pInstance->GetData(TYPE_OVERSEER) == DONE)
             {
                 if (m_creature->HasAura(SPELL_BANISH,0))
                     m_creature->RemoveAurasDueToSpell(SPELL_BANISH);
@@ -104,8 +104,8 @@ struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public ScriptedAI
         IsBanished = false;
         Intro = true;
 
-        if (pInstance)
-            pInstance->SetData(TYPE_HELLMAW, IN_PROGRESS);
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_HELLMAW, IN_PROGRESS);
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -139,8 +139,8 @@ struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH, m_creature);
 
-        if (pInstance)
-            pInstance->SetData(TYPE_HELLMAW, DONE);
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_HELLMAW, DONE);
     }
 
     void UpdateAI(const uint32 diff)
@@ -149,9 +149,9 @@ struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public ScriptedAI
         {
             if (EventCheck_Timer < diff)
             {
-                if (pInstance)
+                if (m_pInstance)
                 {
-                    if (pInstance->GetData(TYPE_OVERSEER) == DONE)
+                    if (m_pInstance->GetData(TYPE_OVERSEER) == DONE)
                         DoIntro();
                 }
                 EventCheck_Timer = 5000;

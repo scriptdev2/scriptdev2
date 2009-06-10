@@ -56,14 +56,14 @@ struct MANGOS_DLL_DECL boss_kelidan_the_breakerAI : public ScriptedAI
 {
     boss_kelidan_the_breakerAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        HeroicMode = pCreature->GetMap()->IsHeroic();
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
         Reset();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* m_pInstance;
 
-    bool HeroicMode;
+    bool m_bIsHeroicMode;
 
     uint32 ShadowVolley_Timer;
     uint32 BurningNova_Timer;
@@ -100,8 +100,8 @@ struct MANGOS_DLL_DECL boss_kelidan_the_breakerAI : public ScriptedAI
     {
         DoScriptText(SAY_DIE, m_creature);
 
-        if (pInstance)
-            pInstance->SetData(TYPE_KELIDAN_EVENT,DONE);
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_KELIDAN_EVENT,DONE);
     }
 
     void UpdateAI(const uint32 diff)
@@ -113,7 +113,7 @@ struct MANGOS_DLL_DECL boss_kelidan_the_breakerAI : public ScriptedAI
         {
             if (Firenova_Timer < diff)
             {
-                DoCast(m_creature,HeroicMode ? H_SPELL_FIRE_NOVA : SPELL_FIRE_NOVA);
+                DoCast(m_creature, m_bIsHeroicMode ? H_SPELL_FIRE_NOVA : SPELL_FIRE_NOVA);
                 Firenova = false;
                 ShadowVolley_Timer = 2000;
             }else Firenova_Timer -=diff;
@@ -123,7 +123,7 @@ struct MANGOS_DLL_DECL boss_kelidan_the_breakerAI : public ScriptedAI
 
         if (ShadowVolley_Timer < diff)
         {
-            DoCast(m_creature,HeroicMode ? H_SPELL_SHADOW_BOLT_VOLLEY : SPELL_SHADOW_BOLT_VOLLEY);
+            DoCast(m_creature, m_bIsHeroicMode ? H_SPELL_SHADOW_BOLT_VOLLEY : SPELL_SHADOW_BOLT_VOLLEY);
             ShadowVolley_Timer = 5000+rand()%8000;
         }else ShadowVolley_Timer -=diff;
 
@@ -140,7 +140,7 @@ struct MANGOS_DLL_DECL boss_kelidan_the_breakerAI : public ScriptedAI
 
             DoScriptText(SAY_NOVA, m_creature);
 
-            if (HeroicMode)
+            if (m_bIsHeroicMode)
                 DoCast(m_creature,SPELL_VORTEX);
 
             DoCast(m_creature,SPELL_BURNING_NOVA);
@@ -177,13 +177,13 @@ struct MANGOS_DLL_DECL mob_shadowmoon_channelerAI : public ScriptedAI
 {
     mob_shadowmoon_channelerAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
-        HeroicMode = pCreature->GetMap()->IsHeroic();
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
         Reset();
     }
 
-    ScriptedInstance* pInstance;
-    bool HeroicMode;
+    ScriptedInstance* m_pInstance;
+    bool m_bIsHeroicMode;
 
     uint32 ShadowBolt_Timer;
     uint32 MarkOfShadow_Timer;
@@ -213,7 +213,7 @@ struct MANGOS_DLL_DECL mob_shadowmoon_channelerAI : public ScriptedAI
 
         if (ShadowBolt_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),HeroicMode ? H_SPELL_SHADOW_BOLT : SPELL_SHADOW_BOLT);
+            DoCast(m_creature->getVictim(), m_bIsHeroicMode ? H_SPELL_SHADOW_BOLT : SPELL_SHADOW_BOLT);
             ShadowBolt_Timer = 5000+rand()%1000;
         }else ShadowBolt_Timer -=diff;
 

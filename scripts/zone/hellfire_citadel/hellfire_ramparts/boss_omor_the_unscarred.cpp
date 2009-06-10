@@ -45,11 +45,11 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public Scripted_NoMovementAI
 {
     boss_omor_the_unscarredAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
     {
-        HeroicMode = pCreature->GetMap()->IsHeroic();
+        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
         Reset();
     }
 
-    bool HeroicMode;
+    bool m_bIsHeroicMode;
 
     uint32 OrbitalStrike_Timer;
     uint32 ShadowWhip_Timer;
@@ -176,7 +176,7 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public Scripted_NoMovementAI
 
             if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
             {
-                DoCast(target,HeroicMode ? H_SPELL_BANE_OF_TREACHERY : SPELL_TREACHEROUS_AURA);
+                DoCast(target, m_bIsHeroicMode ? H_SPELL_BANE_OF_TREACHERY : SPELL_TREACHEROUS_AURA);
                 Aura_Timer = 8000+rand()%8000;
             }
         }else Aura_Timer -= diff;
@@ -188,7 +188,7 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public Scripted_NoMovementAI
                 if (target)
                     target = m_creature->getVictim();
 
-                DoCast(target,HeroicMode ? H_SPELL_SHADOW_BOLT : SPELL_SHADOW_BOLT);
+                DoCast(target, m_bIsHeroicMode ? H_SPELL_SHADOW_BOLT : SPELL_SHADOW_BOLT);
                 Shadowbolt_Timer = 4000+rand()%2500;
             }
         }else Shadowbolt_Timer -= diff;

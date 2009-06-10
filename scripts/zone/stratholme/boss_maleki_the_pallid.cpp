@@ -33,11 +33,11 @@ struct MANGOS_DLL_DECL boss_maleki_the_pallidAI : public ScriptedAI
 {
     boss_maleki_the_pallidAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = (ScriptedInstance*)m_creature->GetInstanceData();
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* m_pInstance;
 
     uint32 FrostNova_Timer;
     uint32 Frostbolt_Timer;
@@ -54,8 +54,8 @@ struct MANGOS_DLL_DECL boss_maleki_the_pallidAI : public ScriptedAI
 
     void JustDied(Unit* Killer)
     {
-        if (pInstance)
-            pInstance->SetData(TYPE_PALLID,IN_PROGRESS);
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_PALLID,IN_PROGRESS);
     }
 
     void UpdateAI(const uint32 diff)

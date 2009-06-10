@@ -43,11 +43,11 @@ struct MANGOS_DLL_DECL boss_pandemoniusAI : public ScriptedAI
 {
     boss_pandemoniusAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        HeroicMode = m_creature->GetMap()->IsHeroic();
+        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
         Reset();
     }
 
-    bool HeroicMode;
+    bool m_bIsHeroicMode;
     uint32 VoidBlast_Timer;
     uint32 DarkShell_Timer;
     uint32 VoidBlast_Counter;
@@ -93,7 +93,7 @@ struct MANGOS_DLL_DECL boss_pandemoniusAI : public ScriptedAI
         {
             if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
             {
-                DoCast(target,HeroicMode ? H_SPELL_VOID_BLAST : SPELL_VOID_BLAST);
+                DoCast(target, m_bIsHeroicMode ? H_SPELL_VOID_BLAST : SPELL_VOID_BLAST);
                 VoidBlast_Timer = 500;
                 ++VoidBlast_Counter;
             }
@@ -114,7 +114,7 @@ struct MANGOS_DLL_DECL boss_pandemoniusAI : public ScriptedAI
 
                 DoScriptText(EMOTE_DARK_SHELL, m_creature);
 
-                DoCast(m_creature,HeroicMode ? H_SPELL_DARK_SHELL : SPELL_DARK_SHELL);
+                DoCast(m_creature, m_bIsHeroicMode ? H_SPELL_DARK_SHELL : SPELL_DARK_SHELL);
                 DarkShell_Timer = 20000;
             }else DarkShell_Timer -= diff;
         }

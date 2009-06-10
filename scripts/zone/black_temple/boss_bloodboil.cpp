@@ -55,11 +55,11 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
 {
     boss_gurtogg_bloodboilAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* m_pInstance;
 
     uint64 TargetGUID;
 
@@ -97,18 +97,18 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
 
         Phase1 = true;
 
-        if (pInstance)
+        if (m_pInstance)
         {
             if (m_creature->isAlive())
             {
-                pInstance->SetData(DATA_GURTOGGBLOODBOILEVENT, NOT_STARTED);
+                m_pInstance->SetData(DATA_GURTOGGBLOODBOILEVENT, NOT_STARTED);
             }else OpenMotherDoor();
         }
     }
 
     void OpenMotherDoor()
     {
-        if (GameObject* pDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GO_PRE_SHAHRAZ_DOOR)))
+        if (GameObject* pDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GO_PRE_SHAHRAZ_DOOR)))
             pDoor->SetGoState(GO_STATE_ACTIVE);
     }
 
@@ -117,8 +117,8 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
         DoZoneInCombat();
         DoScriptText(SAY_AGGRO, m_creature);
 
-        if (pInstance)
-            pInstance->SetData(DATA_GURTOGGBLOODBOILEVENT, IN_PROGRESS);
+        if (m_pInstance)
+            m_pInstance->SetData(DATA_GURTOGGBLOODBOILEVENT, IN_PROGRESS);
     }
 
     void KilledUnit(Unit *victim)
@@ -132,9 +132,9 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
 
     void JustDied(Unit *victim)
     {
-        if (pInstance)
+        if (m_pInstance)
         {
-            pInstance->SetData(DATA_GURTOGGBLOODBOILEVENT, DONE);
+            m_pInstance->SetData(DATA_GURTOGGBLOODBOILEVENT, DONE);
             OpenMotherDoor();
         }
 

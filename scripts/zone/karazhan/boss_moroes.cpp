@@ -63,11 +63,11 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
     boss_moroesAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         FirstTime = true;
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance* m_pInstance;
 
     uint64 AddGUID[4];
 
@@ -99,17 +99,17 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
 
-        if (pInstance)
-            pInstance->SetData(DATA_MOROES_EVENT, NOT_STARTED);
+        if (m_pInstance)
+            m_pInstance->SetData(DATA_MOROES_EVENT, NOT_STARTED);
     }
 
     void StartEvent()
     {
-        if (!pInstance)
+        if (!m_pInstance)
             return;
 
-        if (pInstance)
-            pInstance->SetData(DATA_MOROES_EVENT, IN_PROGRESS);
+        if (m_pInstance)
+            m_pInstance->SetData(DATA_MOROES_EVENT, IN_PROGRESS);
     }
 
     void Aggro(Unit* who)
@@ -133,8 +133,8 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH, m_creature);
 
-        if (pInstance)
-            pInstance->SetData(DATA_MOROES_EVENT, DONE);
+        if (m_pInstance)
+            m_pInstance->SetData(DATA_MOROES_EVENT, DONE);
 
         DeSpawnAdds();
 
@@ -262,7 +262,7 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if (pInstance && !pInstance->GetData(DATA_MOROES_EVENT))
+        if (m_pInstance && !m_pInstance->GetData(DATA_MOROES_EVENT))
             EnterEvadeMode();
 
         if (!Enrage && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 30)
@@ -361,7 +361,7 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL boss_moroes_guestAI : public ScriptedAI
 {
-    ScriptedInstance* pInstance;
+    ScriptedInstance* m_pInstance;
 
     uint64 GuestGUID[4];
 
@@ -370,22 +370,22 @@ struct MANGOS_DLL_DECL boss_moroes_guestAI : public ScriptedAI
         for(uint8 i = 0; i < 4; ++i)
             GuestGUID[i] = 0;
 
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
     void Reset()
     {
-        if (pInstance)
-            pInstance->SetData(DATA_MOROES_EVENT, NOT_STARTED);
+        if (m_pInstance)
+            m_pInstance->SetData(DATA_MOROES_EVENT, NOT_STARTED);
     }
 
     void AcquireGUID()
     {
-        if (!pInstance)
+        if (!m_pInstance)
             return;
 
-        GuestGUID[0] = pInstance->GetData64(DATA_MOROES);
+        GuestGUID[0] = m_pInstance->GetData64(DATA_MOROES);
         Creature* Moroes = ((Creature*)Unit::GetUnit((*m_creature), GuestGUID[0]));
         if (Moroes)
         {
@@ -413,7 +413,7 @@ struct MANGOS_DLL_DECL boss_moroes_guestAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (pInstance && !pInstance->GetData(DATA_MOROES_EVENT))
+        if (m_pInstance && !m_pInstance->GetData(DATA_MOROES_EVENT))
             EnterEvadeMode();
 
         DoMeleeAttackIfReady();

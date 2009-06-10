@@ -41,11 +41,11 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
 {
     boss_venoxisAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance* m_pInstance;
 
     uint32 HolyFire_Timer;
     uint32 HolyWrath_Timer;
@@ -78,8 +78,8 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH, m_creature);
 
-        if (pInstance)
-            pInstance->SetData(DATA_VENOXIS_DEATH, 0);
+        if (m_pInstance)
+            m_pInstance->SetData(DATA_VENOXIS_DEATH, 0);
     }
 
     void UpdateAI(const uint32 diff)

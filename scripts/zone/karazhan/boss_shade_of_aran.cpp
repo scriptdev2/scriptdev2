@@ -83,11 +83,11 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
 {
     boss_aranAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* m_pInstance;
 
     uint32 SecondarySpellTimer;
     uint32 NormalCastTimer;
@@ -138,12 +138,12 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
         Drinking = false;
         DrinkInturrupted = false;
 
-        if (pInstance)
+        if (m_pInstance)
         {
                                                             // Not in progress
-            pInstance->SetData(DATA_SHADEOFARAN_EVENT, NOT_STARTED);
+            m_pInstance->SetData(DATA_SHADEOFARAN_EVENT, NOT_STARTED);
 
-            if (GameObject* pDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GAMEOBJECT_LIBRARY_DOOR)))
+            if (GameObject* pDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GAMEOBJECT_LIBRARY_DOOR)))
                 pDoor->SetGoState(GO_STATE_ACTIVE);
         }
     }
@@ -161,11 +161,11 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH, m_creature);
 
-        if (pInstance)
+        if (m_pInstance)
         {
-            pInstance->SetData(DATA_SHADEOFARAN_EVENT, DONE);
+            m_pInstance->SetData(DATA_SHADEOFARAN_EVENT, DONE);
 
-            if (GameObject* pDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GAMEOBJECT_LIBRARY_DOOR)))
+            if (GameObject* pDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GAMEOBJECT_LIBRARY_DOOR)))
                 pDoor->SetGoState(GO_STATE_ACTIVE);
         }
     }
@@ -179,8 +179,8 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
             case 2: DoScriptText(SAY_AGGRO3, m_creature); break;
         }
 
-        if (pInstance)
-            pInstance->SetData(DATA_SHADEOFARAN_EVENT, IN_PROGRESS);
+        if (m_pInstance)
+            m_pInstance->SetData(DATA_SHADEOFARAN_EVENT, IN_PROGRESS);
     }
 
     void FlameWreathEffect()
@@ -227,9 +227,9 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
         {
             if (CloseDoorTimer <= diff)
             {
-                if (pInstance)
+                if (m_pInstance)
                 {
-                    if (GameObject* pDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GAMEOBJECT_LIBRARY_DOOR)))
+                    if (GameObject* pDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GAMEOBJECT_LIBRARY_DOOR)))
                         pDoor->SetGoState(GO_STATE_READY);
 
                     CloseDoorTimer = 0;

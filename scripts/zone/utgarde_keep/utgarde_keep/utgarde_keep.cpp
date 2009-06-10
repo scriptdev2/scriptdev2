@@ -45,14 +45,14 @@ struct MANGOS_DLL_DECL mob_dragonflayer_forge_masterAI : public ScriptedAI
 {
     mob_dragonflayer_forge_masterAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        m_pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
-        m_bHeroicMode = pCreature->GetMap()->IsHeroic();
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
         m_uiForgeEncounterId = 0;
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
-    bool m_bHeroicMode;
+    bool m_bIsHeroicMode;
 
     uint32 m_uiForgeEncounterId;
     uint32 m_uiBurningBrandTimer;
@@ -135,7 +135,7 @@ struct MANGOS_DLL_DECL mob_dragonflayer_forge_masterAI : public ScriptedAI
 
         if (m_uiBurningBrandTimer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), m_bHeroicMode ? SPELL_BURNING_BRAND_H : SPELL_BURNING_BRAND);
+            DoCast(m_creature->getVictim(), m_bIsHeroicMode ? SPELL_BURNING_BRAND_H : SPELL_BURNING_BRAND);
             m_uiBurningBrandTimer = 15000;
         }
         else m_uiBurningBrandTimer -= uiDiff;

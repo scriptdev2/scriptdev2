@@ -44,13 +44,13 @@ struct MANGOS_DLL_DECL boss_nethermancer_sepethreaAI : public ScriptedAI
 {
     boss_nethermancer_sepethreaAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
-        HeroicMode = m_creature->GetMap()->IsHeroic();
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
         Reset();
     }
 
-    ScriptedInstance *pInstance;
-    bool HeroicMode;
+    ScriptedInstance* m_pInstance;
+    bool m_bIsHeroicMode;
 
     uint32 frost_attack_Timer;
     uint32 arcane_blast_Timer;
@@ -72,7 +72,7 @@ struct MANGOS_DLL_DECL boss_nethermancer_sepethreaAI : public ScriptedAI
         DoScriptText(SAY_AGGRO, m_creature);
 
         //Summon two guards, three in heroic
-        uint8 am = (HeroicMode ? 1 : 2);
+        uint8 am = (m_bIsHeroicMode ? 1 : 2);
         for(int i = 0; i < am; i++)
         {
             DoCast(who,SPELL_SUMMON_RAGIN_FLAMES);
@@ -94,8 +94,8 @@ struct MANGOS_DLL_DECL boss_nethermancer_sepethreaAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH, m_creature);
 
-        if (pInstance)
-            pInstance->SetData(DATA_SEPETHREA_DEATH, 0);
+        if (m_pInstance)
+            m_pInstance->SetData(DATA_SEPETHREA_DEATH, 0);
     }
 
     void UpdateAI(const uint32 diff)
@@ -166,13 +166,13 @@ struct MANGOS_DLL_DECL mob_ragin_flamesAI : public ScriptedAI
 {
     mob_ragin_flamesAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
-        HeroicMode = m_creature->GetMap()->IsHeroic();
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
         Reset();
     }
 
-    ScriptedInstance *pInstance;
-    bool HeroicMode;
+    ScriptedInstance* m_pInstance;
+    bool m_bIsHeroicMode;
 
     uint32 inferno_Timer;
     uint32 flame_timer;
@@ -204,7 +204,7 @@ struct MANGOS_DLL_DECL mob_ragin_flamesAI : public ScriptedAI
 
         if (inferno_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),HeroicMode ? H_SPELL_INFERNO : SPELL_INFERNO);
+            DoCast(m_creature->getVictim(), m_bIsHeroicMode ? H_SPELL_INFERNO : SPELL_INFERNO);
 
             m_creature->TauntApply(m_creature->getVictim());
 
@@ -220,9 +220,9 @@ struct MANGOS_DLL_DECL mob_ragin_flamesAI : public ScriptedAI
         //Check_Timer
         if (Check_Timer < diff)
         {
-            if (pInstance)
+            if (m_pInstance)
             {
-                if (pInstance->GetData(DATA_SEPETHREAISDEAD))
+                if (m_pInstance->GetData(DATA_SEPETHREAISDEAD))
                 {
                     //remove
                     m_creature->setDeathState(JUST_DIED);

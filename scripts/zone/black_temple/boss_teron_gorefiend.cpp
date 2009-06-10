@@ -186,11 +186,11 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
 {
     boss_teron_gorefiendAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* m_pInstance;
 
     uint32 IncinerateTimer;
     uint32 SummonDoomBlossomTimer;
@@ -223,18 +223,18 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
         AggroTargetGUID = 0;
         Intro = false;
 
-        if (pInstance)
+        if (m_pInstance)
         {
             if (m_creature->isAlive())
             {
-                pInstance->SetData(DATA_TERONGOREFIENDEVENT, NOT_STARTED);
+                m_pInstance->SetData(DATA_TERONGOREFIENDEVENT, NOT_STARTED);
             }else OpenMotherDoor();
         }
     }
 
     void OpenMotherDoor()
     {
-        if (GameObject* pDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GO_PRE_SHAHRAZ_DOOR)))
+        if (GameObject* pDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GO_PRE_SHAHRAZ_DOOR)))
             pDoor->SetGoState(GO_STATE_ACTIVE);
     }
 
@@ -255,8 +255,8 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
 
             if (!m_creature->isInCombat() && !Intro && m_creature->IsWithinDistInMap(who, 200.0f) && (who->GetTypeId() == TYPEID_PLAYER))
             {
-                if (pInstance)
-                    pInstance->SetData(DATA_TERONGOREFIENDEVENT, IN_PROGRESS);
+                if (m_pInstance)
+                    m_pInstance->SetData(DATA_TERONGOREFIENDEVENT, IN_PROGRESS);
 
                 m_creature->GetMotionMaster()->Clear(false);
                 m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -281,9 +281,9 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
 
     void JustDied(Unit *victim)
     {
-        if (pInstance)
+        if (m_pInstance)
         {
-            pInstance->SetData(DATA_TERONGOREFIENDEVENT, DONE);
+            m_pInstance->SetData(DATA_TERONGOREFIENDEVENT, DONE);
             OpenMotherDoor();
         }
 

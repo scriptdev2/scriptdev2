@@ -44,11 +44,11 @@ struct MANGOS_DLL_DECL boss_epoch_hunterAI : public ScriptedAI
 {
     boss_epoch_hunterAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance* m_pInstance;
 
     uint32 SandBreath_Timer;
     uint32 ImpendingDeath_Timer;
@@ -85,8 +85,8 @@ struct MANGOS_DLL_DECL boss_epoch_hunterAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH, m_creature);
 
-        if (pInstance && pInstance->GetData(TYPE_THRALL_EVENT) == IN_PROGRESS)
-            pInstance->SetData(TYPE_THRALL_PART4, DONE);
+        if (m_pInstance && m_pInstance->GetData(TYPE_THRALL_EVENT) == IN_PROGRESS)
+            m_pInstance->SetData(TYPE_THRALL_PART4, DONE);
     }
 
     void UpdateAI(const uint32 diff)

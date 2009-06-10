@@ -52,11 +52,11 @@ struct MANGOS_DLL_DECL boss_darkmaster_gandlingAI : public ScriptedAI
 {
     boss_darkmaster_gandlingAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = (ScriptedInstance*)m_creature->GetInstanceData();
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* m_pInstance;
 
     uint32 ArcaneMissiles_Timer;
     uint32 ShadowShield_Timer;
@@ -75,8 +75,8 @@ struct MANGOS_DLL_DECL boss_darkmaster_gandlingAI : public ScriptedAI
 
     void JustDied(Unit *killer)
     {
-        if (pInstance)
-            pInstance->SetData(TYPE_GANDLING, DONE);
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_GANDLING, DONE);
     }
 
     void UpdateAI(const uint32 diff)

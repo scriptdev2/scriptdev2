@@ -199,18 +199,18 @@ struct MANGOS_DLL_DECL mob_ethereal_beaconAI : public ScriptedAI
 {
     mob_ethereal_beaconAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        m_bHeroicMode = pCreature->GetMap()->IsHeroic();
+        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
         Reset();
     }
 
-    bool m_bHeroicMode;
+    bool m_bIsHeroicMode;
 
     uint32 m_uiApprentice_Timer;
     uint32 m_uiArcaneBolt_Timer;
 
     void Reset()
     {
-        m_uiApprentice_Timer = m_bHeroicMode ? 10000 : 20000;
+        m_uiApprentice_Timer = m_bIsHeroicMode ? 10000 : 20000;
         m_uiArcaneBolt_Timer = 1000;
     }
 

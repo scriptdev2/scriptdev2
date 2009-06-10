@@ -89,15 +89,15 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
 {
     boss_priestess_delrissaAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        m_pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
-        m_bHeroicMode = pCreature->GetMap()->IsHeroic();
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
         memset(&m_auiLackeyGUID, 0, sizeof(m_auiLackeyGUID));
         LackeyEntryList.clear();
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
-    bool m_bHeroicMode;
+    bool m_bIsHeroicMode;
 
     std::vector<uint32> LackeyEntryList;
     uint64 m_auiLackeyGUID[MAX_ACTIVE_LACKEY];
@@ -261,7 +261,7 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
                 }
             }
 
-            DoCast(target, m_bHeroicMode ? SPELL_RENEW_HEROIC : SPELL_RENEW_NORMAL);
+            DoCast(target, m_bIsHeroicMode ? SPELL_RENEW_HEROIC : SPELL_RENEW_NORMAL);
             RenewTimer = 5000;
         }else RenewTimer -= diff;
 
@@ -314,7 +314,7 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
         if (SWPainTimer < diff)
         {
             if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                DoCast(pTarget, m_bHeroicMode ? SPELL_SW_PAIN_HEROIC : SPELL_SW_PAIN_NORMAL);
+                DoCast(pTarget, m_bIsHeroicMode ? SPELL_SW_PAIN_HEROIC : SPELL_SW_PAIN_NORMAL);
 
             SWPainTimer = 10000;
         }else SWPainTimer -= diff;
@@ -338,7 +338,7 @@ struct MANGOS_DLL_DECL boss_priestess_lackey_commonAI : public ScriptedAI
 {
     boss_priestess_lackey_commonAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        m_pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         memset(&m_auiLackeyGUIDs, 0, sizeof(m_auiLackeyGUIDs));
         Reset();
         AcquireGUIDs();

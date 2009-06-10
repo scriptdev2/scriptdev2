@@ -43,11 +43,11 @@ struct MANGOS_DLL_DECL boss_the_makerAI : public ScriptedAI
 {
     boss_the_makerAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* m_pInstance;
 
     uint32 AcidSpray_Timer;
     uint32 ExplodingBreaker_Timer;
@@ -71,14 +71,14 @@ struct MANGOS_DLL_DECL boss_the_makerAI : public ScriptedAI
             case 2: DoScriptText(SAY_AGGRO_3, m_creature); break;
         }
 
-        if (pInstance)
-            pInstance->SetData(TYPE_THE_MAKER_EVENT,IN_PROGRESS);
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_THE_MAKER_EVENT,IN_PROGRESS);
     }
 
     void JustReachedHome()
     {
-        if (pInstance)
-            pInstance->SetData(TYPE_THE_MAKER_EVENT,FAIL);
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_THE_MAKER_EVENT,FAIL);
     }
 
     void KilledUnit(Unit* victim)
@@ -94,8 +94,8 @@ struct MANGOS_DLL_DECL boss_the_makerAI : public ScriptedAI
     {
         DoScriptText(SAY_DIE, m_creature);
 
-        if (pInstance)
-            pInstance->SetData(TYPE_THE_MAKER_EVENT,DONE);
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_THE_MAKER_EVENT,DONE);
     }
 
     void UpdateAI(const uint32 diff)

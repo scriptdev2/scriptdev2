@@ -166,12 +166,12 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
 {
     boss_shade_of_akamaAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
-        AkamaGUID = pInstance ? pInstance->GetData64(DATA_AKAMA_SHADE) : 0;
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        AkamaGUID = m_pInstance ? m_pInstance->GetData64(DATA_AKAMA_SHADE) : 0;
         Reset();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* m_pInstance;
 
     std::list<uint64> Channelers;
     std::list<uint64> Sorcerers;
@@ -250,18 +250,18 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
         m_creature->GetMotionMaster()->MoveIdle();
         m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_STUN);
 
-        if (pInstance)
+        if (m_pInstance)
         {
             if (m_creature->isAlive())
             {
-                pInstance->SetData(DATA_SHADEOFAKAMAEVENT, NOT_STARTED);
+                m_pInstance->SetData(DATA_SHADEOFAKAMAEVENT, NOT_STARTED);
             } else OpenMotherDoor();
         }
     }
 
     void OpenMotherDoor()
     {
-        if (GameObject* pDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GO_PRE_SHAHRAZ_DOOR)))
+        if (GameObject* pDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GO_PRE_SHAHRAZ_DOOR)))
             pDoor->SetGoState(GO_STATE_ACTIVE);
     }
 
@@ -367,9 +367,9 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
 
     void JustDied(Unit *killer)
     {
-        if (pInstance)
+        if (m_pInstance)
         {
-            pInstance->SetData(DATA_SHADEOFAKAMAEVENT, DONE);
+            m_pInstance->SetData(DATA_SHADEOFAKAMAEVENT, DONE);
             OpenMotherDoor();
         }
     }
@@ -503,12 +503,12 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
     {
         ShadeHasDied = false;
         StartCombat = false;
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
-        ShadeGUID = pInstance ? pInstance->GetData64(DATA_SHADEOFAKAMA) : 0;
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        ShadeGUID = m_pInstance ? m_pInstance->GetData64(DATA_SHADEOFAKAMA) : 0;
         Reset();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* m_pInstance;
 
     uint64 ShadeGUID;
 
@@ -551,10 +551,10 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
 
     void BeginEvent(Player* pl)
     {
-        if (!pInstance)
+        if (!m_pInstance)
             return;
 
-        ShadeGUID = pInstance->GetData64(DATA_SHADEOFAKAMA);
+        ShadeGUID = m_pInstance->GetData64(DATA_SHADEOFAKAMA);
         if (!ShadeGUID)
             return;
 
@@ -562,7 +562,7 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
         if (Shade)
         {
             // Prevent players from trying to restart event
-            pInstance->SetData(DATA_SHADEOFAKAMAEVENT, IN_PROGRESS);
+            m_pInstance->SetData(DATA_SHADEOFAKAMAEVENT, IN_PROGRESS);
             m_creature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
 
             ((boss_shade_of_akamaAI*)Shade->AI())->SetAkamaGUID(m_creature->GetGUID());

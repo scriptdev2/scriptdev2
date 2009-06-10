@@ -67,12 +67,12 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
 {
     boss_leotheras_the_blindAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        m_pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         m_uiShadowLeo = 0;
         Reset();
     }
 
-    ScriptedInstance *m_pInstance;                          // the instance
+    ScriptedInstance* m_pInstance;                          // the instance
 
     // timers
     uint32 m_uiWhirlwind_Timer;

@@ -57,14 +57,14 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
 {
     boss_harbinger_skyrissAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
-        HeroicMode = m_creature->GetMap()->IsHeroic();
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
         Intro = false;
         Reset();
     }
 
-    ScriptedInstance *pInstance;
-    bool HeroicMode;
+    ScriptedInstance* m_pInstance;
+    bool m_bIsHeroicMode;
 
     bool Intro;
     bool IsImage33;
@@ -117,8 +117,8 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH, m_creature);
 
-        if (pInstance)
-            pInstance->SetData(TYPE_HARBINGERSKYRISS,DONE);
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_HARBINGERSKYRISS,DONE);
     }
 
     void KilledUnit(Unit* victim)
@@ -156,7 +156,7 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
     {
         if (!Intro && !m_creature->isInCombat())
         {
-            if (!pInstance)
+            if (!m_pInstance)
                 return;
 
             if (Intro_Timer < diff)
@@ -165,14 +165,14 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
                 {
                     case 1:
                         DoScriptText(SAY_INTRO, m_creature);
-                        if (GameObject* pSphere = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_SPHERE_SHIELD)))
+                        if (GameObject* pSphere = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_SPHERE_SHIELD)))
                             pSphere->SetGoState(GO_STATE_ACTIVE);
                         ++Intro_Phase;
                         Intro_Timer = 25000;
                         break;
                     case 2:
                         DoScriptText(SAY_AGGRO, m_creature);
-                        if (Unit *mellic = Unit::GetUnit(*m_creature,pInstance->GetData64(DATA_MELLICHAR)))
+                        if (Unit *mellic = Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_MELLICHAR)))
                         {
                             //should have a better way to do this. possibly spell exist.
                             mellic->setDeathState(JUST_DIED);
@@ -206,9 +206,9 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
         if (MindRend_Timer < diff)
         {
             if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,1))
-                DoCast(target,HeroicMode ? H_SPELL_MIND_REND : SPELL_MIND_REND);
+                DoCast(target, m_bIsHeroicMode ? H_SPELL_MIND_REND : SPELL_MIND_REND);
             else
-                DoCast(m_creature->getVictim(),HeroicMode ? H_SPELL_MIND_REND : SPELL_MIND_REND);
+                DoCast(m_creature->getVictim(), m_bIsHeroicMode ? H_SPELL_MIND_REND : SPELL_MIND_REND);
 
             MindRend_Timer = 8000;
         }else MindRend_Timer -=diff;
@@ -244,14 +244,14 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
             }
 
             if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,1))
-                DoCast(target,HeroicMode ? H_SPELL_DOMINATION : SPELL_DOMINATION);
+                DoCast(target, m_bIsHeroicMode ? H_SPELL_DOMINATION : SPELL_DOMINATION);
             else
-                DoCast(m_creature->getVictim(),HeroicMode ? H_SPELL_DOMINATION : SPELL_DOMINATION);
+                DoCast(m_creature->getVictim(), m_bIsHeroicMode ? H_SPELL_DOMINATION : SPELL_DOMINATION);
 
             Domination_Timer = 16000+rand()%16000;
         }else Domination_Timer -=diff;
 
-        if (HeroicMode)
+        if (m_bIsHeroicMode)
         {
             if (ManaBurn_Timer < diff)
             {
@@ -281,13 +281,13 @@ struct MANGOS_DLL_DECL boss_harbinger_skyriss_illusionAI : public ScriptedAI
 {
     boss_harbinger_skyriss_illusionAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
-        HeroicMode = m_creature->GetMap()->IsHeroic();
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
         Reset();
     }
 
-    ScriptedInstance *pInstance;
-    bool HeroicMode;
+    ScriptedInstance* m_pInstance;
+    bool m_bIsHeroicMode;
 
     void Reset() { }
 };

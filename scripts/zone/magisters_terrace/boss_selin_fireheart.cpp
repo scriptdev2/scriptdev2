@@ -53,26 +53,26 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
 {
     boss_selin_fireheartAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
 
         Crystals.clear();
         //GUIDs per instance is static, so we only need to load them once.
-        if (pInstance)
+        if (m_pInstance)
         {
-            uint32 size = pInstance->GetData(DATA_FEL_CRYSTAL_SIZE);
+            uint32 size = m_pInstance->GetData(DATA_FEL_CRYSTAL_SIZE);
             for(uint8 i = 0; i < size; ++i)
             {
-                uint64 guid = pInstance->GetData64(DATA_FEL_CRYSTAL);
+                uint64 guid = m_pInstance->GetData64(DATA_FEL_CRYSTAL);
                 debug_log("SD2: Selin: Adding Fel Crystal %u to list", guid);
                 Crystals.push_back(guid);
             }
         }
         Reset();
-        Heroic = pCreature->GetMap()->IsHeroic();
     }
 
-    ScriptedInstance* pInstance;
-    bool Heroic;
+    ScriptedInstance* m_pInstance;
+    bool m_bIsHeroicMode;
 
     std::list<uint64> Crystals;
 
@@ -89,7 +89,7 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
 
     void Reset()
     {
-        if (pInstance)
+        if (m_pInstance)
         {
             //for(uint8 i = 0; i < CRYSTALS_NUMBER; ++i)
             for(std::list<uint64>::iterator itr = Crystals.begin(); itr != Crystals.end(); ++itr)
@@ -106,11 +106,11 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
                 }
             }
 
-            if (GameObject* pDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_SELIN_ENCOUNTER_DOOR)))
+            if (GameObject* pDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_SELIN_ENCOUNTER_DOOR)))
                 pDoor->SetGoState(GO_STATE_ACTIVE);         // Open the big encounter door. Close it in Aggro and open it only in JustDied(and here)
                                                             // Small door opened after event are expected to be closed by default
             // Set Inst data for encounter
-            pInstance->SetData(DATA_SELIN_EVENT, NOT_STARTED);
+            m_pInstance->SetData(DATA_SELIN_EVENT, NOT_STARTED);
         }else error_log(ERROR_INST_DATA);
 
         DrainLifeTimer = 3000 + rand()%4000;
@@ -185,10 +185,10 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
-        if (pInstance)
+        if (m_pInstance)
         {
             //Close the encounter door, open it in JustDied/Reset
-            if (GameObject* pEncounterDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_SELIN_ENCOUNTER_DOOR)))
+            if (GameObject* pEncounterDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_SELIN_ENCOUNTER_DOOR)))
                 pEncounterDoor->SetGoState(GO_STATE_READY);
         }
     }
@@ -228,18 +228,18 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH, m_creature);
 
-        if (!pInstance)
+        if (!m_pInstance)
         {
             error_log(ERROR_INST_DATA);
             return;
         }
 
-        pInstance->SetData(DATA_SELIN_EVENT, DONE);         // Encounter complete!
+        m_pInstance->SetData(DATA_SELIN_EVENT, DONE);         // Encounter complete!
 
-        if (GameObject* pEncounterDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_SELIN_ENCOUNTER_DOOR)))
+        if (GameObject* pEncounterDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_SELIN_ENCOUNTER_DOOR)))
             pEncounterDoor->SetGoState(GO_STATE_ACTIVE);    // Open the encounter door
 
-        if (GameObject* pContinueDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_SELIN_DOOR)))
+        if (GameObject* pContinueDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_SELIN_DOOR)))
             pContinueDoor->SetGoState(GO_STATE_ACTIVE);     // Open the door leading further in
 
         ShatterRemainingCrystals();
@@ -262,7 +262,7 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
                 }else DrainLifeTimer -= diff;
 
                 // Heroic only
-                if (Heroic)
+                if (m_bIsHeroicMode)
                 {
                     if (DrainManaTimer < diff)
                     {
@@ -288,8 +288,12 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
                 if (DrainCrystalTimer < diff)
                 {
                     SelectNearestCrystal();
-                    if (Heroic) DrainCrystalTimer = 10000 + rand()%5000;
-                    else        DrainCrystalTimer = 20000 + rand()%5000;
+
+                    if (m_bIsHeroicMode)
+                        DrainCrystalTimer = 10000 + rand()%5000;
+                    else
+                        DrainCrystalTimer = 20000 + rand()%5000;
+
                 }else DrainCrystalTimer -= diff;
             }
 

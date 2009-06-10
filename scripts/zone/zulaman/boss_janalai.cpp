@@ -138,11 +138,11 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
     {
         m_uiHatcher1GUID = 0;
         m_uiHatcher2GUID = 0;
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance* m_pInstance;
 
     uint32 fire_breath_timer;
 
@@ -186,8 +186,8 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
             m_uiHatcher2GUID = 0;
         }
 
-        if (pInstance)
-            pInstance->SetData(TYPE_JANALAI, NOT_STARTED);
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_JANALAI, NOT_STARTED);
 
         fire_breath_timer = 8000;
 
@@ -211,8 +211,8 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH, m_creature);
 
-        if (pInstance)
-            pInstance->SetData(TYPE_JANALAI, DONE);
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_JANALAI, DONE);
     }
 
     void KilledUnit(Unit* victim)
@@ -228,8 +228,8 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
-        if (pInstance)
-            pInstance->SetData(TYPE_JANALAI, IN_PROGRESS);
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_JANALAI, IN_PROGRESS);
     }
 
     void JustSummoned(Creature* pSummoned)
@@ -485,7 +485,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
         {
             if (hatchertime < diff)
             {
-                if (pInstance->GetData(DATA_J_EGGSLEFT) > 0 || pInstance->GetData(DATA_J_EGGSRIGHT) > 0)
+                if (m_pInstance->GetData(DATA_J_EGGSLEFT) > 0 || m_pInstance->GetData(DATA_J_EGGSRIGHT) > 0)
                 {
                     DoScriptText(SAY_SUMMON_HATCHER, m_creature);
 
@@ -526,8 +526,8 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
         {
             DoScriptText(SAY_ALL_EGGS, m_creature);
 
-            if (pInstance)
-                eggs = pInstance->GetData(DATA_J_EGGSLEFT);
+            if (m_pInstance)
+                eggs = m_pInstance->GetData(DATA_J_EGGSLEFT);
 
             int i;
             for(i=1;i<=eggs;i=i+1)
@@ -536,20 +536,20 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
                 int s = (rand()%20 - 10);
                 m_creature->SummonCreature(NPC_HATCHLING,JanalainPos[0][0]+s,JanalainPos[0][1]+r,JanalainPos[0][2],0,TEMPSUMMON_CORPSE_TIMED_DESPAWN,15000);
 
-                if (pInstance)
-                    pInstance->SetData(DATA_J_HATCHLEFT,1);
+                if (m_pInstance)
+                    m_pInstance->SetData(DATA_J_HATCHLEFT,1);
             }
 
-            if (pInstance)
-                eggs = pInstance->GetData(DATA_J_EGGSRIGHT);
+            if (m_pInstance)
+                eggs = m_pInstance->GetData(DATA_J_EGGSRIGHT);
 
             for(i=1;i<=eggs;i=i+1)
             {
                 int r = (rand()%20 - 10);
                 int s = (rand()%20 - 10);
                 m_creature->SummonCreature(NPC_HATCHLING,JanalainPos[0][0]+s,JanalainPos[0][1]+r,JanalainPos[0][2],0,TEMPSUMMON_CORPSE_TIMED_DESPAWN,15000);
-                if (pInstance)
-                    pInstance->SetData(DATA_J_HATCHRIGHT,1);
+                if (m_pInstance)
+                    m_pInstance->SetData(DATA_J_HATCHRIGHT,1);
             }
 
             noeggs = true;
@@ -594,7 +594,7 @@ struct MANGOS_DLL_DECL mob_amanishi_hatcherAI : public ScriptedAI
 {
     mob_amanishi_hatcherAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        m_pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
@@ -710,11 +710,11 @@ struct MANGOS_DLL_DECL mob_hatchlingAI : public ScriptedAI
 {
     mob_hatchlingAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance* m_pInstance;
 
     uint32 buffer_timer;
     uint32 delete_timer;
@@ -738,7 +738,7 @@ struct MANGOS_DLL_DECL mob_hatchlingAI : public ScriptedAI
             start = true;
         }
 
-        if (delete_timer < diff && (pInstance && !(pInstance->GetData(TYPE_JANALAI) == IN_PROGRESS)))
+        if (delete_timer < diff && (m_pInstance && !(m_pInstance->GetData(TYPE_JANALAI) == IN_PROGRESS)))
         {
             if (!(m_creature->getVictim()))
                 m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);

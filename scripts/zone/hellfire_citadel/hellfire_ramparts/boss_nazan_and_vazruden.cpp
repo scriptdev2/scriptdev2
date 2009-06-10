@@ -29,12 +29,12 @@ struct MANGOS_DLL_DECL boss_nazanAI : public ScriptedAI
     boss_nazanAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bHeroicMode = pCreature->GetMap()->IsHeroic();
+        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
-    bool m_bHeroicMode;
+    bool m_bIsHeroicMode;
 
     void Reset() { }
 
@@ -52,12 +52,12 @@ struct MANGOS_DLL_DECL boss_vazrudenAI : public ScriptedAI
     boss_vazrudenAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bHeroicMode = pCreature->GetMap()->IsHeroic();
+        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
-    bool m_bHeroicMode;
+    bool m_bIsHeroicMode;
 
     void Reset() { }
 

@@ -43,11 +43,11 @@ struct MANGOS_DLL_DECL boss_jindoAI : public ScriptedAI
 {
     boss_jindoAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance* m_pInstance;
 
     uint32 BrainWashTotem_Timer;
     uint32 HealingWard_Timer;
@@ -169,11 +169,11 @@ struct MANGOS_DLL_DECL mob_healing_wardAI : public ScriptedAI
 {
     mob_healing_wardAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance* m_pInstance;
 
     uint32 Heal_Timer;
 
@@ -187,9 +187,9 @@ struct MANGOS_DLL_DECL mob_healing_wardAI : public ScriptedAI
         //Heal_Timer
         if (Heal_Timer < diff)
         {
-            if (pInstance)
+            if (m_pInstance)
             {
-                Unit *pJindo = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_JINDO));
+                Unit *pJindo = Unit::GetUnit((*m_creature), m_pInstance->GetData64(DATA_JINDO));
                 DoCast(pJindo, SPELL_HEAL);
             }
             Heal_Timer = 3000;
@@ -204,11 +204,11 @@ struct MANGOS_DLL_DECL mob_shade_of_jindoAI : public ScriptedAI
 {
     mob_shade_of_jindoAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance* m_pInstance;
 
     uint32 ShadowShock_Timer;
 
