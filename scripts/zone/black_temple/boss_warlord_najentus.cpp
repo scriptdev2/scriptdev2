@@ -45,7 +45,6 @@ enum
     SPELL_IMPALING_SPINE            = 39837,
     SPELL_CREATE_NAJENTUS_SPINE     = 39956,
     SPELL_HURL_SPINE                = 39948,
-    SPELL_SHIELD_VISUAL             = 37136,
     SPELL_BERSERK                   = 26662
 };
 
@@ -59,27 +58,23 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    uint32 NeedleSpineTimer;
-    uint32 EnrageTimer;
-    uint32 SpecialYellTimer;
-    uint32 TidalShieldTimer;
-    uint32 ImpalingSpineTimer;
-    uint32 CheckTimer;                                      // This timer checks if Najentus is Tidal Shielded and if so, regens health. If not, sets IsShielded to false
-    uint32 DispelShieldTimer;                               // This shield is only supposed to last 30 seconds, but the SPELL_SHIELD_VISUAL lasts forever
+    uint32 m_uiNeedleSpineTimer;
+    uint32 m_uiEnrageTimer;
+    uint32 m_uiSpecialYellTimer;
+    uint32 m_uiTidalShieldTimer;
+    uint32 m_uiImpalingSpineTimer;
 
-    bool IsShielded;
+    bool m_bIsShielded;
 
     void Reset()
     {
-        IsShielded = false;
+        m_bIsShielded = false;
 
-        NeedleSpineTimer = 10000;
-        EnrageTimer = MINUTE*8*IN_MILISECONDS;
-        SpecialYellTimer = 45000 + (rand()%76)*1000;
-        TidalShieldTimer = 60000;
-        ImpalingSpineTimer = 45000;
-        CheckTimer = 2000;
-        DispelShieldTimer = 30000;
+        m_uiNeedleSpineTimer = 10000;
+        m_uiEnrageTimer = MINUTE*8*IN_MILISECONDS;
+        m_uiSpecialYellTimer = 45000 + (rand()%76)*1000;
+        m_uiTidalShieldTimer = 60000;
+        m_uiImpalingSpineTimer = 20000;
 
         if (m_pInstance)
         {
@@ -125,26 +120,17 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
 
     void SpellHit(Unit *caster, const SpellEntry *spell)
     {
-        if (IsShielded)
+        if (m_bIsShielded)
         {
             if (spell->Id == SPELL_HURL_SPINE)
             {
-                if (m_creature->HasAura(SPELL_SHIELD_VISUAL, 0))
-                    m_creature->RemoveAurasDueToSpell(SPELL_SHIELD_VISUAL);
-
                 if (m_creature->HasAura(SPELL_TIDAL_SHIELD, 0))
                     m_creature->RemoveAurasDueToSpell(SPELL_TIDAL_SHIELD);
 
                 DoCast(m_creature->getVictim(), SPELL_TIDAL_BURST);
-                IsShielded = false;
+                m_bIsShielded = false;
             }
         }
-    }
-
-    void DamageTaken(Unit *done_by, uint32 &damage)
-    {
-        if (IsShielded)
-            damage = 0;
     }
 
     void Aggro(Unit *who)
@@ -161,52 +147,26 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if (EnrageTimer < diff)
+        if (m_uiEnrageTimer < diff)
         {
             if (m_creature->IsNonMeleeSpellCasted(false))
                 m_creature->InterruptNonMeleeSpells(false);
 
             DoScriptText(SAY_ENRAGE2, m_creature);
             DoCast(m_creature, SPELL_BERSERK);
-            EnrageTimer = MINUTE*5*IN_MILISECONDS;
-        }else EnrageTimer -= diff;
+            m_uiEnrageTimer = MINUTE*8*IN_MILISECONDS;
+        }else m_uiEnrageTimer -= diff;
 
-        if (CheckTimer < diff)
-        {
-            //if (m_creature->HasAura(SPELL_TIDAL_SHIELD, 0))
-            if (m_creature->HasAura(SPELL_SHIELD_VISUAL, 0))
-                m_creature->SetHealth(m_creature->GetHealth() + (m_creature->GetMaxHealth()/100));
-            else
-                IsShielded = false;
-
-            CheckTimer = 2000;
-        }else CheckTimer -= diff;
-
-        if (IsShielded)
+        if (m_bIsShielded)
         {
             m_creature->GetMotionMaster()->Clear(false);
             m_creature->GetMotionMaster()->MoveIdle();
 
-            if (!m_creature->HasAura(SPELL_SHIELD_VISUAL, 0))
-                DoCast(m_creature, SPELL_SHIELD_VISUAL);
-
-            if (DispelShieldTimer < diff)
-            {
-                m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
-
-                if (m_creature->HasAura(SPELL_SHIELD_VISUAL, 0))
-                    m_creature->RemoveAurasDueToSpell(SPELL_SHIELD_VISUAL);
-
-                IsShielded = false;
-            }else DispelShieldTimer -= diff;
-
             return;                                         // Don't cast or do anything while Shielded
         }
 
-
-
         // Needle
-        if (NeedleSpineTimer < diff)
+        if (m_uiNeedleSpineTimer < diff)
         {
             for(uint8 i = 0; i < 3; ++i)
             {
@@ -219,20 +179,20 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
                 target->CastSpell(target, SPELL_NEEDLE_AOE, false);
             }
 
-            NeedleSpineTimer = 60000;
-        }else NeedleSpineTimer -= diff;
+            m_uiNeedleSpineTimer = 3000;
+        }else m_uiNeedleSpineTimer -= diff;
 
-        if (SpecialYellTimer < diff)
+        if (m_uiSpecialYellTimer < diff)
         {
             switch(rand()%2)
             {
                 case 0: DoScriptText(SAY_SPECIAL1, m_creature); break;
                 case 1: DoScriptText(SAY_SPECIAL2, m_creature); break;
             }
-            SpecialYellTimer = 25000 + (rand()%76)*1000;
-        }else SpecialYellTimer -= diff;
+            m_uiSpecialYellTimer = 25000 + (rand()%76)*1000;
+        }else m_uiSpecialYellTimer -= diff;
 
-        if (ImpalingSpineTimer < diff)
+        if (m_uiImpalingSpineTimer < diff)
         {
             Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1);
 
@@ -242,11 +202,7 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
             if (target && (target->GetTypeId() == TYPEID_PLAYER))
             {
                 DoCast(target, SPELL_IMPALING_SPINE);
-
-                //if (m_pInstance)
-                    //pInstance->SetData64(DATA_SPINED_PLAYER,target->GetGUID());
-
-                ImpalingSpineTimer = 45000;
+                m_uiImpalingSpineTimer = 20000;
 
                 switch(rand()%2)
                 {
@@ -254,20 +210,19 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
                     case 1: DoScriptText(SAY_NEEDLE2, m_creature); break;
                 }
             }
-        }else ImpalingSpineTimer -= diff;
+        }else m_uiImpalingSpineTimer -= diff;
 
-        if (TidalShieldTimer < diff)
+        if (m_uiTidalShieldTimer < diff)
         {
             m_creature->InterruptNonMeleeSpells(false);
-            DoCast(m_creature, SPELL_SHIELD_VISUAL, true);
-            // DoCast(m_creature, SPELL_TIDAL_SHIELD);
+            DoCast(m_creature, SPELL_TIDAL_SHIELD, true);
+
             m_creature->GetMotionMaster()->Clear(false);
             m_creature->GetMotionMaster()->MoveIdle();
-            IsShielded = true;
-            TidalShieldTimer = 60000;
-            CheckTimer = 2000;
-            DispelShieldTimer = 30000;
-        }else TidalShieldTimer -= diff;
+
+            m_bIsShielded = true;
+            m_uiTidalShieldTimer = 60000;
+        }else m_uiTidalShieldTimer -= diff;
 
         DoMeleeAttackIfReady();
     }
@@ -278,26 +233,6 @@ CreatureAI* GetAI_boss_najentus(Creature* pCreature)
     return new boss_najentusAI(pCreature);
 }
 
-/*
-bool GOHello_go_najentus_spine(Player* pPlayer, GameObject* pGO)
-{
-    if (ScriptedInstance* pInstance = (ScriptedInstance*)pGO->GetInstanceData())
-    {
-        uint64 uiPlayerTargetGuid = m_pInstance->GetData64(DATA_SPINED_PLAYER);
-
-        if (Player* pPlayerTarget = (Player*)Unit::GetUnit(*pPlayer, uiPlayerTargetGuid))
-        {
-            if (pPlayerTarget->HasAura(SPELL_IMPALING_SPINE))
-                pPlayerTarget->RemoveAurasDueToSpell(SPELL_IMPALING_SPINE);
-
-            m_pInstance->SetData64(DATA_SPINED_PLAYER,0);
-        }
-    }
-
-    return false;
-}
-*/
-
 void AddSC_boss_najentus()
 {
     Script *newscript;
@@ -305,9 +240,4 @@ void AddSC_boss_najentus()
     newscript->Name = "boss_najentus";
     newscript->GetAI = &GetAI_boss_najentus;
     newscript->RegisterSelf();
-
-    /*newscript = new Script;
-    newscript->Name = "go_najentus_spine";
-    newscript->pGOHello = &GOHello_go_najentus_spine;
-    newscript->RegisterSelf();*/
 }

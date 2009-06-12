@@ -35,8 +35,7 @@ enum
     DATA_BLOOD_ELF_COUNCIL_VOICE        = 26,
     DATA_GO_PRE_SHAHRAZ_DOOR            = 27,
     DATA_GO_POST_SHAHRAZ_DOOR           = 28,
-    DATA_GO_COUNCIL_DOOR                = 29,
-    DATA_SPINED_PLAYER                  = 30
+    DATA_GO_COUNCIL_DOOR                = 29
 };
 
 #endif
