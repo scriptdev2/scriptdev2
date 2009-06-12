@@ -215,8 +215,8 @@ struct MANGOS_DLL_DECL boss_warbringer_omroggAI : public ScriptedAI
 
     void Aggro(Unit* pWho)
     {
-        DoSpawnCreature(NPC_LEFT_HEAD,0.0f,0.0f,0.0f,0.0f,TEMPSUMMON_DEAD_DESPAWN,0);
-        DoSpawnCreature(NPC_RIGHT_HEAD,0.0f,0.0f,0.0f,0.0f,TEMPSUMMON_DEAD_DESPAWN,0);
+        m_creature->SummonCreature(NPC_LEFT_HEAD, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_DEAD_DESPAWN, 0);
+        m_creature->SummonCreature(NPC_RIGHT_HEAD, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_DEAD_DESPAWN, 0);
 
         if (Unit* pLeftHead = Unit::GetUnit(*m_creature,m_uiLeftHeadGUID))
         {

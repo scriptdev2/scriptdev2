@@ -915,9 +915,9 @@ struct MANGOS_DLL_DECL eye_tentacleAI : public Scripted_NoMovementAI
     eye_tentacleAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
     {
         Reset();
-        Unit* p = DoSpawnCreature(MOB_SMALL_PORTAL,0,0,0,0,TEMPSUMMON_CORPSE_DESPAWN, 0);
-        if (p)
-            Portal = p->GetGUID();
+
+        if (Unit* pPortal = m_creature->SummonCreature(MOB_SMALL_PORTAL, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_CORPSE_DESPAWN, 0))
+            Portal = pPortal->GetGUID();
     }
 
     uint32 MindflayTimer;
@@ -978,8 +978,9 @@ struct MANGOS_DLL_DECL claw_tentacleAI : public Scripted_NoMovementAI
     claw_tentacleAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
     {
         Reset();
-        if (Unit* p = DoSpawnCreature(MOB_SMALL_PORTAL,0.0f,0.0f,0.0f,0.0f,TEMPSUMMON_CORPSE_DESPAWN, 0))
-            Portal = p->GetGUID();
+
+        if (Unit* pPortal = m_creature->SummonCreature(MOB_SMALL_PORTAL, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_CORPSE_DESPAWN, 0))
+            Portal = pPortal->GetGUID();
     }
 
     uint32 GroundRuptureTimer;
@@ -1033,8 +1034,8 @@ struct MANGOS_DLL_DECL claw_tentacleAI : public Scripted_NoMovementAI
             {
                 m_creature->GetMap()->CreatureRelocation(m_creature, target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0);
 
-                if (Unit* p = DoSpawnCreature(MOB_SMALL_PORTAL,0.0f,0.0f,0.0f,0.0f,TEMPSUMMON_CORPSE_DESPAWN, 0))
-                    Portal = p->GetGUID();
+                if (Unit* pPortal = m_creature->SummonCreature(MOB_SMALL_PORTAL, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_CORPSE_DESPAWN, 0))
+                    Portal = pPortal->GetGUID();
 
                 GroundRuptureTimer = 500;
                 HamstringTimer = 2000;
@@ -1069,8 +1070,9 @@ struct MANGOS_DLL_DECL giant_claw_tentacleAI : public Scripted_NoMovementAI
     giant_claw_tentacleAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
     {
         Reset();
-        if (Unit* p = DoSpawnCreature(MOB_GIANT_PORTAL,0.0f,0.0f,0.0f,0.0f,TEMPSUMMON_CORPSE_DESPAWN, 0))
-            Portal = p->GetGUID();
+
+        if (Unit* pPortal = m_creature->SummonCreature(MOB_GIANT_PORTAL, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_CORPSE_DESPAWN, 0))
+            Portal = pPortal->GetGUID();
     }
 
     uint32 GroundRuptureTimer;
@@ -1127,8 +1129,8 @@ struct MANGOS_DLL_DECL giant_claw_tentacleAI : public Scripted_NoMovementAI
             {
                 m_creature->GetMap()->CreatureRelocation(m_creature, target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0);
 
-                if (Unit* p = DoSpawnCreature(MOB_GIANT_PORTAL,0.0f,0.0f,0.0f,0.0f,TEMPSUMMON_CORPSE_DESPAWN, 0))
-                    Portal = p->GetGUID();
+                if (Unit* pPortal = m_creature->SummonCreature(MOB_GIANT_PORTAL, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_CORPSE_DESPAWN, 0))
+                    Portal = pPortal->GetGUID();
 
                 GroundRuptureTimer = 500;
                 HamstringTimer = 2000;
@@ -1171,8 +1173,9 @@ struct MANGOS_DLL_DECL giant_eye_tentacleAI : public Scripted_NoMovementAI
     giant_eye_tentacleAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
     {
         Reset();
-        if (Unit* p = DoSpawnCreature(MOB_GIANT_PORTAL,0.0f,0.0f,0.0f,0.0f,TEMPSUMMON_CORPSE_DESPAWN, 0))
-            Portal = p->GetGUID();
+
+        if (Unit* pPortal = m_creature->SummonCreature(MOB_GIANT_PORTAL, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_CORPSE_DESPAWN, 0))
+            Portal = pPortal->GetGUID();
     }
 
     uint32 BeamTimer;

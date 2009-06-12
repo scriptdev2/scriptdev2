@@ -767,13 +767,14 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                 if (Phoenix_Timer < diff)
                 {
                     DoCast(m_creature, SPELL_PHOENIX_ANIMATION);
-                    Creature *Phoenix = DoSpawnCreature(PHOENIX, 0, 0, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 45000);
 
-                    if (Phoenix)
+                    if (Creature* pPhoenix = m_creature->SummonCreature(PHOENIX, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 45000))
                     {
-                        if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                            Phoenix->AI()->AttackStart(target);
-                    }else error_log("SD2: Kael'Thas Phoenix could not be spawned");
+                        if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                            pPhoenix->AI()->AttackStart(pTarget);
+                    }
+                    else
+                        error_log("SD2: Kael'Thas Phoenix could not be spawned");
 
                     switch(rand()%2)
                     {

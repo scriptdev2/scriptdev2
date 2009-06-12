@@ -1598,7 +1598,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                 {
                     //It spawns multiple flames sometimes. Therefore, we'll do this manually.
                     //DoCast(m_creature->getVictim(), SPELL_FLAME_CRASH);
-                    DoSpawnCreature(FLAME_CRASH, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN, 40000);
+                    m_creature->SummonCreature(FLAME_CRASH, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN, 40000);
                     FlameCrashTimer = 35000;
                     GlobalTimer += 2000;
                 }else FlameCrashTimer -= diff;
@@ -1816,7 +1816,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                     // only on players.
                     if (target && target->GetTypeId() == TYPEID_PLAYER)
                     {
-                        ShadowDemon = DoSpawnCreature(SHADOW_DEMON, 0,0,0,0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,25000);
+                        ShadowDemon = m_creature->SummonCreature(SHADOW_DEMON, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 25000);
                         if (ShadowDemon)
                         {
                             ShadowDemon->AddThreat(target, 5000000.0f);
