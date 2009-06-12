@@ -48,17 +48,17 @@ struct MANGOS_DLL_DECL npc_kyle_the_frenziedAI : public ScriptedAI
 {
     npc_kyle_the_frenziedAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
-    bool bEvent;
-    uint64 uiPlayerGUID;
-    uint32 uiEventTimer;
-    uint8 uiEventPhase;
+    bool m_bEvent;
+    uint64 m_uiPlayerGUID;
+    uint32 m_uiEventTimer;
+    uint8 m_uiEventPhase;
 
     void Reset()
     {
-        bEvent = false;
-        uiPlayerGUID = 0;
-        uiEventTimer = 5000;
-        uiEventPhase = 1;
+        m_bEvent = false;
+        m_uiPlayerGUID = 0;
+        m_uiEventTimer = 5000;
+        m_uiEventPhase = 1;
 
         if (m_creature->GetEntry() == NPC_KYLE_FRIENDLY)
             m_creature->UpdateEntry(NPC_KYLE_FRENZIED);
@@ -66,10 +66,10 @@ struct MANGOS_DLL_DECL npc_kyle_the_frenziedAI : public ScriptedAI
 
     void SpellHit(Unit* pCaster, SpellEntry const* pSpell)
     {
-        if (!m_creature->isInCombat() && !bEvent && pSpell->Id == SPELL_LUNCH)
+        if (!m_creature->isInCombat() && !m_bEvent && pSpell->Id == SPELL_LUNCH)
         {
             if (pCaster->GetTypeId() == TYPEID_PLAYER)
-                uiPlayerGUID = pCaster->GetGUID();
+                m_uiPlayerGUID = pCaster->GetGUID();
 
             if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() == WAYPOINT_MOTION_TYPE)
             {
@@ -78,7 +78,7 @@ struct MANGOS_DLL_DECL npc_kyle_the_frenziedAI : public ScriptedAI
                 m_creature->StopMoving();
             }
 
-            bEvent = true;
+            m_bEvent = true;
             DoScriptText(EMOTE_SEE_LUNCH, m_creature);
             m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_ONESHOT_CREATURE_SPECIAL);
         }
@@ -86,48 +86,48 @@ struct MANGOS_DLL_DECL npc_kyle_the_frenziedAI : public ScriptedAI
 
     void MovementInform(uint32 uiType, uint32 uiPointId)
     {
-        if (uiType != POINT_MOTION_TYPE || !bEvent)
+        if (uiType != POINT_MOTION_TYPE || !m_bEvent)
             return;
 
         if (uiPointId == POINT_ID)
-            uiEventTimer = 5000;
+            m_uiEventTimer = 5000;
     }
 
     void UpdateAI(const uint32 diff)
     {
-        if (bEvent)
+        if (m_bEvent)
         {
-            if (!uiEventTimer)
+            if (!m_uiEventTimer)
                 return;
 
-            if (uiEventTimer < diff)
+            if (m_uiEventTimer < diff)
             {
-                switch(uiEventPhase)
+                switch(m_uiEventPhase)
                 {
                     case 1:
-                        uiEventTimer = 0;
+                        m_uiEventTimer = 0;
 
-                        if (Unit* pUnit = Unit::GetUnit(*m_creature,uiPlayerGUID))
+                        if (Unit* pUnit = Unit::GetUnit(*m_creature,m_uiPlayerGUID))
                         {
                             if (GameObject* pGo = pUnit->GetGameObject(SPELL_LUNCH))
                                 m_creature->GetMotionMaster()->MovePoint(POINT_ID, pGo->GetPositionX(), pGo->GetPositionY(), pGo->GetPositionZ());
                         }
                         break;
                     case 2:
-                        uiEventTimer = 5000;
+                        m_uiEventTimer = 5000;
                         DoScriptText(EMOTE_EAT_LUNCH, m_creature);
                         m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_USESTANDING);
                         break;
                     case 3:
-                        uiEventTimer = 5000;
+                        m_uiEventTimer = 5000;
 
-                        if (Unit* pUnit = Unit::GetUnit(*m_creature,uiPlayerGUID))
+                        if (Unit* pUnit = Unit::GetUnit(*m_creature,m_uiPlayerGUID))
                             ((Player*)pUnit)->TalkedToCreature(m_creature->GetEntry(), m_creature->GetGUID());
 
                         m_creature->UpdateEntry(NPC_KYLE_FRIENDLY);
                         break;
                     case 4:
-                        uiEventTimer = 30000;
+                        m_uiEventTimer = 30000;
                         DoScriptText(EMOTE_DANCE, m_creature);
                         m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_DANCESPECIAL);
                         break;
@@ -138,11 +138,11 @@ struct MANGOS_DLL_DECL npc_kyle_the_frenziedAI : public ScriptedAI
                         break;
                 }
 
-                if (uiEventPhase != 5)
-                    ++uiEventPhase;
+                if (m_uiEventPhase != 5)
+                    ++m_uiEventPhase;
             }
             else
-                uiEventTimer -= diff;
+                m_uiEventTimer -= diff;
         }
     }
 };

@@ -43,21 +43,21 @@ struct MANGOS_DLL_DECL npc_mistAI : public ScriptedAI
 {
     npc_mistAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        uiNpcFlags = pCreature->GetUInt32Value(UNIT_NPC_FLAGS);
-        uiPlayerGUID = 0;
+        m_uiNpcFlags = pCreature->GetUInt32Value(UNIT_NPC_FLAGS);
+        m_uiPlayerGUID = 0;
         Reset();
     }
 
-    uint64 uiPlayerGUID;
-    uint32 uiNpcFlags;
-    uint32 uiCheckPlayerTimer;
+    uint64 m_uiPlayerGUID;
+    uint32 m_uiNpcFlags;
+    uint32 m_uiCheckPlayerTimer;
 
     void Reset()
     {
-        uiCheckPlayerTimer = 2500;
+        m_uiCheckPlayerTimer = 2500;
 
-        if (!uiPlayerGUID)
-            m_creature->SetUInt32Value(UNIT_NPC_FLAGS, uiNpcFlags);
+        if (!m_uiPlayerGUID)
+            m_creature->SetUInt32Value(UNIT_NPC_FLAGS, m_uiNpcFlags);
     }
 
     void MoveInLineOfSight(Unit *pWho)
@@ -81,7 +81,7 @@ struct MANGOS_DLL_DECL npc_mistAI : public ScriptedAI
 
         if (m_creature->isAlive())
         {
-            if (Unit* pUnit = Unit::GetUnit(*m_creature,uiPlayerGUID))
+            if (Unit* pUnit = Unit::GetUnit(*m_creature,m_uiPlayerGUID))
                 m_creature->GetMotionMaster()->MoveFollow(pUnit, PET_FOLLOW_DIST, PET_FOLLOW_ANGLE);
             else
             {
@@ -97,7 +97,7 @@ struct MANGOS_DLL_DECL npc_mistAI : public ScriptedAI
 
     void DoStart(uint64 uiPlayer)
     {
-        uiPlayerGUID = uiPlayer;
+        m_uiPlayerGUID = uiPlayer;
         m_creature->SetUInt32Value(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_NONE);
 
         if (Unit* pUnit = Unit::GetUnit(*m_creature,uiPlayer))
@@ -108,7 +108,7 @@ struct MANGOS_DLL_DECL npc_mistAI : public ScriptedAI
     {
         DoScriptText(EMOTE_AT_HOME, m_creature);
 
-        if (Unit* pUnit = Unit::GetUnit(*m_creature,uiPlayerGUID))
+        if (Unit* pUnit = Unit::GetUnit(*m_creature,m_uiPlayerGUID))
         {
             if (pUnit->GetTypeId() == TYPEID_PLAYER)
             {
@@ -125,39 +125,39 @@ struct MANGOS_DLL_DECL npc_mistAI : public ScriptedAI
             }
         }
 
-        uiPlayerGUID = 0;
+        m_uiPlayerGUID = 0;
         EnterEvadeMode();
     }
 
     void JustDied(Unit* pKiller)
     {
-        if (Unit* pUnit = Unit::GetUnit(*m_creature,uiPlayerGUID))
+        if (Unit* pUnit = Unit::GetUnit(*m_creature,m_uiPlayerGUID))
             ((Player*)pUnit)->FailTimedQuest(QUEST_MIST);
 
-        uiPlayerGUID = 0;
+        m_uiPlayerGUID = 0;
         m_creature->GetMotionMaster()->MovementExpired();
     }
 
     void UpdateAI(const uint32 diff)
     {
-        if (uiPlayerGUID)
+        if (m_uiPlayerGUID)
         {
             if (!m_creature->isInCombat())
             {
-                if (uiCheckPlayerTimer < diff)
+                if (m_uiCheckPlayerTimer < diff)
                 {
-                    uiCheckPlayerTimer = 5000;
+                    m_uiCheckPlayerTimer = 5000;
 
-                    Unit* pUnit = Unit::GetUnit(*m_creature,uiPlayerGUID);
+                    Unit* pUnit = Unit::GetUnit(*m_creature,m_uiPlayerGUID);
 
                     if (pUnit && !pUnit->isAlive())
                     {
-                        uiPlayerGUID = 0;
+                        m_uiPlayerGUID = 0;
                         EnterEvadeMode();
                     }
                 }
                 else
-                    uiCheckPlayerTimer -= diff;
+                    m_uiCheckPlayerTimer -= diff;
             }
         }
 

@@ -54,35 +54,35 @@ struct MANGOS_DLL_DECL npc_shadowfang_prisonerAI : public npc_escortAI
     npc_shadowfang_prisonerAI(Creature* pCreature) : npc_escortAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        uiNpcEntry = pCreature->GetEntry();
+        m_uiNpcEntry = pCreature->GetEntry();
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
-    uint32 uiNpcEntry;
+    uint32 m_uiNpcEntry;
 
     void WaypointReached(uint32 uiPoint)
     {
         switch(uiPoint)
         {
             case 0:
-                if (uiNpcEntry == NPC_ASH)
+                if (m_uiNpcEntry == NPC_ASH)
                     DoScriptText(SAY_FREE_AS, m_creature);
                 else
                     DoScriptText(SAY_FREE_AD, m_creature);
                 break;
             case 10:
-                if (uiNpcEntry == NPC_ASH)
+                if (m_uiNpcEntry == NPC_ASH)
                     DoScriptText(SAY_OPEN_DOOR_AS, m_creature);
                 else
                     DoScriptText(SAY_OPEN_DOOR_AD, m_creature);
                 break;
             case 11:
-                if (uiNpcEntry == NPC_ASH)
+                if (m_uiNpcEntry == NPC_ASH)
                     DoCast(m_creature, SPELL_UNLOCK);
                 break;
             case 12:
-                if (uiNpcEntry == NPC_ASH)
+                if (m_uiNpcEntry == NPC_ASH)
                     DoScriptText(SAY_POST_DOOR_AS, m_creature);
                 else
                     DoScriptText(SAY_POST1_DOOR_AD, m_creature);
@@ -91,7 +91,7 @@ struct MANGOS_DLL_DECL npc_shadowfang_prisonerAI : public npc_escortAI
                     m_pInstance->SetData(TYPE_FREE_NPC, DONE);
                 break;
             case 13:
-                if (uiNpcEntry != NPC_ASH)
+                if (m_uiNpcEntry != NPC_ASH)
                     DoScriptText(SAY_POST2_DOOR_AD, m_creature);
                 break;
         }

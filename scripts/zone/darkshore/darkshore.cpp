@@ -182,25 +182,25 @@ struct MANGOS_DLL_DECL npc_threshwackonatorAI : public ScriptedAI
 {
     npc_threshwackonatorAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        uiFaction = pCreature->getFaction();
-        uiNpcFlags = pCreature->GetUInt32Value(UNIT_NPC_FLAGS);
-        uiPlayerGUID = 0;
+        m_uiFaction = pCreature->getFaction();
+        m_uiNpcFlags = pCreature->GetUInt32Value(UNIT_NPC_FLAGS);
+        m_uiPlayerGUID = 0;
         Reset();
     }
 
-    uint64 uiPlayerGUID;
-    uint32 uiFaction;
-    uint32 uiNpcFlags;
-    uint32 uiCheckPlayerTimer;
+    uint64 m_uiPlayerGUID;
+    uint32 m_uiFaction;
+    uint32 m_uiNpcFlags;
+    uint32 m_uiCheckPlayerTimer;
 
     void Reset()
     {
-        uiCheckPlayerTimer = 2500;
+        m_uiCheckPlayerTimer = 2500;
 
-        if (!uiPlayerGUID)
+        if (!m_uiPlayerGUID)
         {
-            m_creature->setFaction(uiFaction);
-            m_creature->SetUInt32Value(UNIT_NPC_FLAGS, uiNpcFlags);
+            m_creature->setFaction(m_uiFaction);
+            m_creature->SetUInt32Value(UNIT_NPC_FLAGS, m_uiNpcFlags);
         }
     }
 
@@ -208,7 +208,7 @@ struct MANGOS_DLL_DECL npc_threshwackonatorAI : public ScriptedAI
     {
         if (pWho->GetEntry() == NPC_GELKAK)
         {
-            if (uiPlayerGUID && m_creature->IsWithinDistInMap(pWho, 10.0f))
+            if (m_uiPlayerGUID && m_creature->IsWithinDistInMap(pWho, 10.0f))
             {
                 DoScriptText(SAY_AT_CLOSE, pWho);
                 DoAtEnd();
@@ -227,7 +227,7 @@ struct MANGOS_DLL_DECL npc_threshwackonatorAI : public ScriptedAI
 
         if (m_creature->isAlive())
         {
-            if (Unit* pUnit = Unit::GetUnit(*m_creature,uiPlayerGUID))
+            if (Unit* pUnit = Unit::GetUnit(*m_creature, m_uiPlayerGUID))
                 m_creature->GetMotionMaster()->MoveFollow(pUnit, PET_FOLLOW_DIST, PET_FOLLOW_ANGLE);
             else
             {
@@ -243,7 +243,7 @@ struct MANGOS_DLL_DECL npc_threshwackonatorAI : public ScriptedAI
 
     void DoStart(uint64 uiPlayer)
     {
-        uiPlayerGUID = uiPlayer;
+        m_uiPlayerGUID = uiPlayer;
         m_creature->SetUInt32Value(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_NONE);
 
         if (Unit* pUnit = Unit::GetUnit(*m_creature,uiPlayer))
@@ -256,41 +256,41 @@ struct MANGOS_DLL_DECL npc_threshwackonatorAI : public ScriptedAI
     {
         m_creature->setFaction(FACTION_HOSTILE);
 
-        if (Unit* pHolder = Unit::GetUnit(*m_creature,uiPlayerGUID))
+        if (Unit* pHolder = Unit::GetUnit(*m_creature,m_uiPlayerGUID))
             m_creature->AI()->AttackStart(pHolder);
 
-        uiPlayerGUID = 0;
+        m_uiPlayerGUID = 0;
     }
 
     void JustDied(Unit* pKiller)
     {
-        if (uiPlayerGUID)
+        if (m_uiPlayerGUID)
         {
-            uiPlayerGUID = 0;
+            m_uiPlayerGUID = 0;
             m_creature->GetMotionMaster()->MovementExpired();
         }
     }
 
     void UpdateAI(const uint32 diff)
     {
-        if (uiPlayerGUID)
+        if (m_uiPlayerGUID)
         {
             if (!m_creature->isInCombat())
             {
-                if (uiCheckPlayerTimer < diff)
+                if (m_uiCheckPlayerTimer < diff)
                 {
-                    uiCheckPlayerTimer = 5000;
+                    m_uiCheckPlayerTimer = 5000;
 
-                    Unit* pUnit = Unit::GetUnit(*m_creature,uiPlayerGUID);
+                    Unit* pUnit = Unit::GetUnit(*m_creature,m_uiPlayerGUID);
 
                     if (pUnit && !pUnit->isAlive())
                     {
-                        uiPlayerGUID = 0;
+                        m_uiPlayerGUID = 0;
                         EnterEvadeMode();
                     }
                 }
                 else
-                    uiCheckPlayerTimer -= diff;
+                    m_uiCheckPlayerTimer -= diff;
             }
         }
 

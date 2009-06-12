@@ -70,53 +70,53 @@ struct MANGOS_DLL_DECL npc_kelerun_bloodmournAI : public ScriptedAI
 {
     npc_kelerun_bloodmournAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        uiNpcFlags = pCreature->GetUInt32Value(UNIT_NPC_FLAGS);
+        m_uiNpcFlags = pCreature->GetUInt32Value(UNIT_NPC_FLAGS);
         Reset();
     }
 
-    uint32 uiNpcFlags;
-    uint64 uiPlayerGUID;
+    uint32 m_uiNpcFlags;
+    uint64 m_uiPlayerGUID;
     uint64 uiChallengerGUID[MAX_CHALLENGER];
 
-    uint8 uiChallengerCount;
+    uint8 m_uiChallengerCount;
 
-    uint32 uiTimeOutTimer;
-    uint32 uiCheckAliveStateTimer;
-    uint32 uiEngageTimer;
+    uint32 m_uiTimeOutTimer;
+    uint32 m_uiCheckAliveStateTimer;
+    uint32 m_uiEngageTimer;
 
-    bool bIsEventInProgress;
+    bool m_bIsEventInProgress;
 
     void Reset()
     {
-        m_creature->SetUInt32Value(UNIT_NPC_FLAGS, uiNpcFlags);
+        m_creature->SetUInt32Value(UNIT_NPC_FLAGS, m_uiNpcFlags);
 
-        uiPlayerGUID = 0;
+        m_uiPlayerGUID = 0;
 
         for(uint8 i = 0; i < MAX_CHALLENGER; i++)
             uiChallengerGUID[i] = 0;
 
-        uiChallengerCount = 0;
+        m_uiChallengerCount = 0;
 
-        uiTimeOutTimer = 60000;
-        uiCheckAliveStateTimer = 2500;
-        uiEngageTimer = 0;
+        m_uiTimeOutTimer = 60000;
+        m_uiCheckAliveStateTimer = 2500;
+        m_uiEngageTimer = 0;
 
-        bIsEventInProgress = false;
+        m_bIsEventInProgress = false;
     }
 
     void StartEvent()
     {
         m_creature->SetUInt32Value(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_NONE);
-        bIsEventInProgress = true;
+        m_bIsEventInProgress = true;
     }
 
     bool CanProgressEvent(uint64 uiPlayer)
     {
-        if (bIsEventInProgress)
+        if (m_bIsEventInProgress)
         {
-            uiPlayerGUID = uiPlayer;
+            m_uiPlayerGUID = uiPlayer;
             DoSpawnChallengers();
-            uiEngageTimer = 15000;
+            m_uiEngageTimer = 15000;
 
             return true;
         }
@@ -141,29 +141,29 @@ struct MANGOS_DLL_DECL npc_kelerun_bloodmournAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (bIsEventInProgress)
+        if (m_bIsEventInProgress)
         {
-            if (uiTimeOutTimer && uiTimeOutTimer < diff)
+            if (m_uiTimeOutTimer && m_uiTimeOutTimer < diff)
             {
-                if (!uiPlayerGUID)
+                if (!m_uiPlayerGUID)
                 {
                     //player are expected to use GO within a minute, if not, event will fail.
                     Reset();
                     return;
                 }
 
-                uiTimeOutTimer = 0;
+                m_uiTimeOutTimer = 0;
             }
             else
-                uiTimeOutTimer -= diff;
+                m_uiTimeOutTimer -= diff;
 
-            if (uiCheckAliveStateTimer < diff)
+            if (m_uiCheckAliveStateTimer < diff)
             {
-                if (Unit* pChallenger = Unit::GetUnit(*m_creature,uiChallengerGUID[uiChallengerCount]))
+                if (Unit* pChallenger = Unit::GetUnit(*m_creature,uiChallengerGUID[m_uiChallengerCount]))
                 {
                     if (!pChallenger->isAlive())
                     {
-                        Player* pPlayer = (Player*)Unit::GetUnit(*m_creature,uiPlayerGUID);
+                        Player* pPlayer = (Player*)Unit::GetUnit(*m_creature,m_uiPlayerGUID);
 
                         if (pPlayer && !pPlayer->isAlive())
                         {
@@ -171,10 +171,10 @@ struct MANGOS_DLL_DECL npc_kelerun_bloodmournAI : public ScriptedAI
                             return;
                         }
 
-                        ++uiChallengerCount;
+                        ++m_uiChallengerCount;
 
                         //count starts at 0
-                        if (uiChallengerCount == MAX_CHALLENGER)
+                        if (m_uiChallengerCount == MAX_CHALLENGER)
                         {
                             if (pPlayer && pPlayer->isAlive())
                                 pPlayer->GroupEventHappens(QUEST_SECOND_TRIAL,m_creature);
@@ -183,32 +183,32 @@ struct MANGOS_DLL_DECL npc_kelerun_bloodmournAI : public ScriptedAI
                             return;
                         }
                         else
-                            uiEngageTimer = 15000;
+                            m_uiEngageTimer = 15000;
                     }
                 }
-                uiCheckAliveStateTimer = 2500;
+                m_uiCheckAliveStateTimer = 2500;
             }
             else
-                uiCheckAliveStateTimer -= diff;
+                m_uiCheckAliveStateTimer -= diff;
 
-            if (uiEngageTimer && uiEngageTimer < diff)
+            if (m_uiEngageTimer && m_uiEngageTimer < diff)
             {
-                Unit* pPlayer = Unit::GetUnit(*m_creature,uiPlayerGUID);
+                Unit* pPlayer = Unit::GetUnit(*m_creature,m_uiPlayerGUID);
 
                 if (pPlayer && pPlayer->isAlive())
                 {
-                    if (Creature* pCreature = (Creature*)Unit::GetUnit(*m_creature,uiChallengerGUID[uiChallengerCount]))
+                    if (Creature* pCreature = (Creature*)Unit::GetUnit(*m_creature,uiChallengerGUID[m_uiChallengerCount]))
                     {
-                        DoScriptText(uiSayId[uiChallengerCount], m_creature, pPlayer);
+                        DoScriptText(uiSayId[m_uiChallengerCount], m_creature, pPlayer);
                         pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                         pCreature->AI()->AttackStart(pPlayer);
                     }
                 }
 
-                uiEngageTimer = 0;
+                m_uiEngageTimer = 0;
             }
             else
-                uiEngageTimer -= diff;
+                m_uiEngageTimer -= diff;
         }
     }
 };

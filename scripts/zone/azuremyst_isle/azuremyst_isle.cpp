@@ -199,31 +199,31 @@ struct MANGOS_DLL_DECL npc_engineer_spark_overgrindAI : public ScriptedAI
 {
     npc_engineer_spark_overgrindAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        uiNormFaction = pCreature->getFaction();
-        uiNpcFlags = pCreature->GetUInt32Value(UNIT_NPC_FLAGS);
+        m_uiNormFaction = pCreature->getFaction();
+        m_uiNpcFlags = pCreature->GetUInt32Value(UNIT_NPC_FLAGS);
         Reset();
 
         if (pCreature->GetAreaId() == AREA_COVE || pCreature->GetAreaId() == AREA_ISLE)
-            bIsTreeEvent = true;
+            m_bIsTreeEvent = true;
     }
 
-    uint32 uiNpcFlags;
-    uint32 uiNormFaction;
+    uint32 m_uiNpcFlags;
+    uint32 m_uiNormFaction;
 
-    uint32 uiDynamiteTimer;
-    uint32 uiEmoteTimer;
+    uint32 m_uiDynamiteTimer;
+    uint32 m_uiEmoteTimer;
 
-    bool bIsTreeEvent;
+    bool m_bIsTreeEvent;
 
     void Reset()
     {
-        m_creature->setFaction(uiNormFaction);
-        m_creature->SetUInt32Value(UNIT_NPC_FLAGS, uiNpcFlags);
+        m_creature->setFaction(m_uiNormFaction);
+        m_creature->SetUInt32Value(UNIT_NPC_FLAGS, m_uiNpcFlags);
 
-        uiDynamiteTimer = 8000;
-        uiEmoteTimer = 120000 + rand()%30000;
+        m_uiDynamiteTimer = 8000;
+        m_uiEmoteTimer = 120000 + rand()%30000;
 
-        bIsTreeEvent = false;
+        m_bIsTreeEvent = false;
     }
 
     void Aggro(Unit *who)
@@ -233,17 +233,17 @@ struct MANGOS_DLL_DECL npc_engineer_spark_overgrindAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->isInCombat() && !bIsTreeEvent)
+        if (!m_creature->isInCombat() && !m_bIsTreeEvent)
         {
-            if (uiEmoteTimer < diff)
+            if (m_uiEmoteTimer < diff)
             {
                 DoScriptText(SAY_TEXT, m_creature);
                 DoScriptText(EMOTE_SHELL, m_creature);
-                uiEmoteTimer = 120000 + rand()%30000;
+                m_uiEmoteTimer = 120000 + rand()%30000;
             }
-            else uiEmoteTimer -= diff;
+            else m_uiEmoteTimer -= diff;
         }
-        else if (bIsTreeEvent)
+        else if (m_bIsTreeEvent)
         {
             //nothing here yet
             return;
@@ -252,12 +252,12 @@ struct MANGOS_DLL_DECL npc_engineer_spark_overgrindAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if (uiDynamiteTimer < diff)
+        if (m_uiDynamiteTimer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_DYNAMITE);
-            uiDynamiteTimer = 8000;
+            m_uiDynamiteTimer = 8000;
         }
-        else uiDynamiteTimer -= diff;
+        else m_uiDynamiteTimer -= diff;
 
         DoMeleeAttackIfReady();
     }

@@ -52,11 +52,11 @@ struct MANGOS_DLL_DECL npc_aged_dying_ancient_kodoAI : public ScriptedAI
 {
     npc_aged_dying_ancient_kodoAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
-    uint32 uiDespawnTimer;
+    uint32 m_uiDespawnTimer;
 
     void Reset()
     {
-        uiDespawnTimer = 0;
+        m_uiDespawnTimer = 0;
     }
 
     void MoveInLineOfSight(Unit* pWho)
@@ -86,14 +86,14 @@ struct MANGOS_DLL_DECL npc_aged_dying_ancient_kodoAI : public ScriptedAI
         if (pSpell->Id == SPELL_KODO_KOMBO_GOSSIP)
         {
             m_creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
-            uiDespawnTimer = 60000;
+            m_uiDespawnTimer = 60000;
         }
     }
 
     void UpdateAI(const uint32 diff)
     {
         //timer should always be == 0 unless we already updated entry of creature. Then not expect this updated to ever be in combat.
-        if (uiDespawnTimer && uiDespawnTimer <= diff)
+        if (m_uiDespawnTimer && m_uiDespawnTimer <= diff)
         {
             if (!m_creature->getVictim() && m_creature->isAlive())
             {
@@ -102,7 +102,7 @@ struct MANGOS_DLL_DECL npc_aged_dying_ancient_kodoAI : public ScriptedAI
                 m_creature->Respawn();
                 return;
             }
-        } else uiDespawnTimer -= diff;
+        } else m_uiDespawnTimer -= diff;
 
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
