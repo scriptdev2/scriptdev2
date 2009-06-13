@@ -252,6 +252,8 @@ extern void AddSC_dun_morogh();
 //Dustwallow marsh
 extern void AddSC_dustwallow_marsh();
 
+extern void AddSC_ebon_hold();
+
 //Eversong Woods
 extern void AddSC_eversong_woods();
 
@@ -1124,6 +1126,8 @@ void ScriptsInit()
     //Duskwood
     //Dustwallow marsh
     AddSC_dustwallow_marsh();
+
+    AddSC_ebon_hold();
 
     //Eversong Woods
     AddSC_eversong_woods();
