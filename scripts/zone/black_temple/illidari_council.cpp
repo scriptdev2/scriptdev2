@@ -258,7 +258,7 @@ struct MANGOS_DLL_DECL mob_illidari_councilAI : public ScriptedAI
         if (!m_pInstance)
             return;
 
-        if (target && target->isAlive())
+        if (target && target->isAlive() && !EventBegun)
         {
             Council[0] = m_pInstance->GetData64(DATA_GATHIOSTHESHATTERER);
             Council[1] = m_pInstance->GetData64(DATA_HIGHNETHERMANCERZEREVOR);
@@ -346,9 +346,10 @@ struct MANGOS_DLL_DECL mob_illidari_councilAI : public ScriptedAI
 
                 if (EvadeCheck > 3)
                     Reset();
-            }
-            CheckTimer = 2000;
-        }else CheckTimer -= diff;
+
+                CheckTimer = 2000;
+            }else CheckTimer -= diff;
+        }
     }
 };
 
