@@ -106,6 +106,10 @@ extern void AddSC_boss_grandmaster_vorpil();
 extern void AddSC_boss_murmur();
 extern void AddSC_instance_shadow_labyrinth();
 
+//Azjol-Nerub
+//--Azjol-Nerub
+extern void AddSC_instance_azjol_nerub();
+
 //Azshara
 extern void AddSC_boss_azuregos();
 extern void AddSC_azshara();
@@ -981,6 +985,10 @@ void ScriptsInit()
     AddSC_boss_grandmaster_vorpil();
     AddSC_boss_murmur();
     AddSC_instance_shadow_labyrinth();
+
+    //Azjol-Nerub
+    //--Azjol-Nerub
+    AddSC_instance_azjol_nerub();
 
     //Azshara
     AddSC_boss_azuregos();

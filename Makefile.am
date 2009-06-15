@@ -78,6 +78,8 @@ scripts/zone/aunchindoun/shadow_labyrinth/boss_grandmaster_vorpil.cpp \
 scripts/zone/aunchindoun/shadow_labyrinth/boss_murmur.cpp \
 scripts/zone/aunchindoun/shadow_labyrinth/def_shadow_labyrinth.h \
 scripts/zone/aunchindoun/shadow_labyrinth/instance_shadow_labyrinth.cpp \
+scripts/zone/azjol-nerub/azjol-nerub/def_azjol-nerub.h \
+scripts/zone/azjol-nerub/azjol-nerub/instance_azjol-nerub.cpp \
 scripts/zone/azshara/azshara.cpp \
 scripts/zone/azshara/boss_azuregos.cpp \
 scripts/zone/azuremyst_isle/azuremyst_isle.cpp \

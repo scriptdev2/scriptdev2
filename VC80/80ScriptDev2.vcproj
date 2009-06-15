@@ -2389,6 +2389,14 @@
 					<Filter
 						Name="Azjol-Nerub"
 						>
+						<File
+							RelativePath="..\scripts\zone\azjol-nerub\azjol-nerub\def_azjol-nerub.h"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\zone\azjol-nerub\azjol-nerub\instance_azjol-nerub.cpp"
+							>
+						</File>
 					</Filter>
 				</Filter>
 				<Filter
