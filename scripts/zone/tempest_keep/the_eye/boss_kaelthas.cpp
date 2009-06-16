@@ -149,19 +149,23 @@ struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
     advisorbase_ai(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        FakeDeath = false;
+        m_bDoubled_Health = false;
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
     bool FakeDeath;
+    bool m_bDoubled_Health;
     uint32 DelayRes_Timer;
     uint64 DelayRes_Target;
 
     void Reset()
     {
-        if (FakeDeath)
+        if (m_bDoubled_Health)
+        {
             m_creature->SetMaxHealth(m_creature->GetMaxHealth() / 2);
+            m_bDoubled_Health = false;
+        }
 
         FakeDeath = false;
         DelayRes_Timer = 0;
@@ -198,6 +202,9 @@ struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
     void Revive(Unit* Target)
     {
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+        // double health for phase 3
+        m_creature->SetMaxHealth(m_creature->GetMaxHealth() * 2);
+        m_bDoubled_Health = true;
         m_creature->SetHealth(m_creature->GetMaxHealth());
         m_creature->SetStandState(UNIT_STAND_STATE_STAND);
 
@@ -211,7 +218,7 @@ struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
             return;
 
         //Prevent glitch if in fake death
-        if (FakeDeath)
+        if (FakeDeath && m_pInstance && m_pInstance->GetData(DATA_KAELTHASEVENT) != 0)
         {
             damage = 0;
             return;
@@ -237,12 +244,7 @@ struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
             m_creature->GetMotionMaster()->Clear();
             m_creature->GetMotionMaster()->MoveIdle();
             m_creature->SetStandState(UNIT_STAND_STATE_DEAD);
-
-            // Double health for Phase 3
-            m_creature->SetMaxHealth(m_creature->GetMaxHealth() * 2);
-
-            if (m_pInstance->GetData(DATA_KAELTHASEVENT) == 3)
-                JustDied(pKiller);
+            JustDied(pKiller);
         }
     }
 
@@ -1006,7 +1008,8 @@ struct MANGOS_DLL_DECL boss_thaladred_the_darkenerAI : public advisorbase_ai
 
     void JustDied(Unit* pKiller)
     {
-        DoScriptText(SAY_THALADRED_DEATH, m_creature);
+        if (m_pInstance && m_pInstance->GetData(DATA_KAELTHASEVENT) == 3)
+            DoScriptText(SAY_THALADRED_DEATH, m_creature);
     }
 
     void UpdateAI(const uint32 diff)
@@ -1077,7 +1080,8 @@ struct MANGOS_DLL_DECL boss_lord_sanguinarAI : public advisorbase_ai
 
     void JustDied(Unit* Killer)
     {
-        DoScriptText(SAY_SANGUINAR_DEATH, m_creature);
+        if (m_pInstance && m_pInstance->GetData(DATA_KAELTHASEVENT) == 3)
+            DoScriptText(SAY_SANGUINAR_DEATH, m_creature);
     }
 
     void UpdateAI(const uint32 diff)
@@ -1127,7 +1131,8 @@ struct MANGOS_DLL_DECL boss_grand_astromancer_capernianAI : public advisorbase_a
 
     void JustDied(Unit* pKiller)
     {
-        DoScriptText(SAY_CAPERNIAN_DEATH, m_creature);
+        if (m_pInstance && m_pInstance->GetData(DATA_KAELTHASEVENT) == 3)
+            DoScriptText(SAY_CAPERNIAN_DEATH, m_creature);
     }
 
     void AttackStart(Unit* who)
@@ -1243,7 +1248,8 @@ struct MANGOS_DLL_DECL boss_master_engineer_telonicusAI : public advisorbase_ai
 
     void JustDied(Unit* pKiller)
     {
-        DoScriptText(SAY_TELONICUS_DEATH, m_creature);
+        if (m_pInstance && m_pInstance->GetData(DATA_KAELTHASEVENT) == 3)
+            DoScriptText(SAY_TELONICUS_DEATH, m_creature);
     }
 
     void Aggro(Unit *who)
