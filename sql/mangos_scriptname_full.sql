@@ -683,6 +683,10 @@ UPDATE creature_template SET ScriptName='npc_veronia' WHERE entry=20162;
 /* EYE OF ETERNITY */
 
 /* NEXUS */
+UPDATE creature_template SET ScriptName='boss_anomalus' WHERE entry=26763;
+UPDATE creature_template SET ScriptName='boss_keristrasza' WHERE entry=26723;
+UPDATE creature_template SET ScriptName='boss_ormorok' WHERE entry=26794;
+UPDATE creature_template SET ScriptName='boss_telestra' WHERE entry=26731;
 
 /* OCULUS */
 
@@ -965,6 +969,10 @@ UPDATE creature_template SET ScriptName='npc_parqual_fintallas' WHERE entry=4488
 /* UTGARDE KEEP */
 UPDATE instance_template SET script='instance_utgarde_keep' WHERE map=574;
 UPDATE creature_template SET ScriptName='mob_dragonflayer_forge_master' WHERE entry=24079;
+UPDATE creature_template SET ScriptName='boss_skarvald' WHERE entry=24200;
+UPDATE creature_template SET ScriptName='boss_dalronn' WHERE entry=24201;
+UPDATE creature_template SET ScriptName='boss_ingvar' WHERE entry=23954;
+UPDATE creature_template SET ScriptName='boss_keleseth' WHERE entry=23953;
 
 /* UTGARDE PINNACLE */
 
