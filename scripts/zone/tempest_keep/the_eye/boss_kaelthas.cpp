@@ -25,123 +25,120 @@ EndScriptData */
 #include "def_the_eye.h"
 #include "WorldPacket.h"
 
-//kael'thas Speech
-#define SAY_INTRO                           -1550016
-#define SAY_INTRO_CAPERNIAN                 -1550017
-#define SAY_INTRO_TELONICUS                 -1550018
-#define SAY_INTRO_THALADRED                 -1550019
-#define SAY_INTRO_SANGUINAR                 -1550020
-#define SAY_PHASE2_WEAPON                   -1550021
-#define SAY_PHASE3_ADVANCE                  -1550022
-#define SAY_PHASE4_INTRO2                   -1550023
-#define SAY_PHASE5_NUTS                     -1550024
-#define SAY_SLAY1                           -1550025
-#define SAY_SLAY2                           -1550026
-#define SAY_SLAY3                           -1550027
-#define SAY_MINDCONTROL1                    -1550028
-#define SAY_MINDCONTROL2                    -1550029
-#define SAY_GRAVITYLAPSE1                   -1550030
-#define SAY_GRAVITYLAPSE2                   -1550031
-#define SAY_SUMMON_PHOENIX1                 -1550032
-#define SAY_SUMMON_PHOENIX2                 -1550033
-#define SAY_DEATH                           -1550034
-
-//Thaladred the Darkener speech
-#define SAY_THALADRED_AGGRO                 -1550035
-#define SAY_THALADRED_DEATH                 -1550036
-#define EMOTE_THALADRED_GAZE                -1550037
-
-//Lord Sanguinar speech
-#define SAY_SANGUINAR_AGGRO                 -1550038
-#define SAY_SANGUINAR_DEATH                 -1550039
-
-//Grand Astromancer Capernian speech
-#define SAY_CAPERNIAN_AGGRO                 -1550040
-#define SAY_CAPERNIAN_DEATH                 -1550041
-
-//Master Engineer Telonicus speech
-#define SAY_TELONICUS_AGGRO                 -1550042
-#define SAY_TELONICUS_DEATH                 -1550043
-
-//Phase 2 spells (Not used)
-#define SPELL_SUMMON_WEAPONS                36976
-#define SPELL_SUMMON_WEAPONA                36958
-#define SPELL_SUMMON_WEAPONB                36959
-#define SPELL_SUMMON_WEAPONC                36960
-#define SPELL_SUMMON_WEAPOND                36961
-#define SPELL_SUMMON_WEAPONE                36962
-#define SPELL_SUMMON_WEAPONF                36963
-#define SPELL_SUMMON_WEAPONG                36964
-#define SPELL_RES_VISUAL                    24171
-#define SPELL_WEAPON_SPAWN                  41236
-
-//Phase 4 spells
-#define SPELL_FIREBALL                      22088           //wrong but works with CastCustomSpell
-#define SPELL_PYROBLAST                     36819
-#define SPELL_FLAME_STRIKE                  36735
-#define SPELL_FLAME_STRIKE_VIS              36730
-#define SPELL_FLAME_STRIKE_DMG              36731
-#define SPELL_ARCANE_DISRUPTION             36834
-#define SPELL_SHOCK_BARRIER                 36815
-#define SPELL_PHOENIX_ANIMATION             36723
-#define SPELL_MIND_CONTROL                  32830
-
-//Phase 5 spells
-#define SPELL_EXPLODE                       36092
-#define SPELL_FULLPOWER                     36187
-#define SPELL_KNOCKBACK                     11027
-#define SPELL_GRAVITY_LAPSE                 34480
-#define SPELL_GRAVITY_LAPSE_AURA            39432
-#define SPELL_NETHER_BEAM                   35873
-
-//Thaladred the Darkener spells
-#define SPELL_PSYCHIC_BLOW                  10689
-#define SPELL_SILENCE                       30225
-//Lord Sanguinar spells
-#define SPELL_BELLOWING_ROAR                40636
-//Grand Astromancer Capernian spells
-#define CAPERNIAN_DISTANCE                  20              //she casts away from the target
-#define SPELL_CAPERNIAN_FIREBALL            36971
-#define SPELL_CONFLAGRATION                 37018
-#define SPELL_ARCANE_EXPLOSION              36970
-//Master Engineer Telonicus spells
-#define SPELL_BOMB                          37036
-#define SPELL_REMOTE_TOY                    37027
-//Nether Vapor spell
-#define SPELL_NETHER_VAPOR                  35859
-//Phoenix spell
-#define SPELL_BURN                          36720
-#define SPELL_EMBER_BLAST                   34341
-#define SPELL_REBIRTH                       41587
-
-//Creature IDs
-#define PHOENIX                             21362
-#define PHOENIX_EGG                         21364
-
-//Phoenix egg and phoenix model
-#define PHOENIX_MODEL                       19682
-#define PHOENIX_EGG_MODEL                   20245
-
-//weapon id + position
-float KaelthasWeapons[7][5] =
+enum
 {
-    {21270, 794.38, 15, 48.72, 2.9},                        //[Cosmic Infuser]
-    {21269, 785.47, 12.12, 48.72, 3.14},                    //[Devastation]
-    {21271, 781.25, 4.39, 48.72, 3.14},                     //[Infinity Blade]
-    {21273, 777.38, -0.81, 48.72, 3.06},                    //[Phaseshift Bulwark]
-    {21274, 781.48, -6.08, 48.72, 3.9},                     //[Staff of Disintegration]
-    {21272, 785.42, -13.59, 48.72, 3.4},                    //[Warp Slicer]
-    {21268, 793.06, -16.61, 48.72, 3.10}                    //[Netherstrand Longbow]
+    //kael'thas Speech
+    SAY_INTRO                           = -1550016,
+    SAY_INTRO_CAPERNIAN                 = -1550017,
+    SAY_INTRO_TELONICUS                 = -1550018,
+    SAY_INTRO_THALADRED                 = -1550019,
+    SAY_INTRO_SANGUINAR                 = -1550020,
+    SAY_PHASE2_WEAPON                   = -1550021,
+    SAY_PHASE3_ADVANCE                  = -1550022,
+    SAY_PHASE4_INTRO2                   = -1550023,
+    SAY_PHASE5_NUTS                     = -1550024,
+    SAY_SLAY1                           = -1550025,
+    SAY_SLAY2                           = -1550026,
+    SAY_SLAY3                           = -1550027,
+    SAY_MINDCONTROL1                    = -1550028,
+    SAY_MINDCONTROL2                    = -1550029,
+    SAY_GRAVITYLAPSE1                   = -1550030,
+    SAY_GRAVITYLAPSE2                   = -1550031,
+    SAY_SUMMON_PHOENIX1                 = -1550032,
+    SAY_SUMMON_PHOENIX2                 = -1550033,
+    SAY_DEATH                           = -1550034,
+
+    //Thaladred the Darkener speech
+    SAY_THALADRED_AGGRO                 = -1550035,
+    SAY_THALADRED_DEATH                 = -1550036,
+    EMOTE_THALADRED_GAZE                = -1550037,
+
+    //Lord Sanguinar speech
+    SAY_SANGUINAR_AGGRO                 = -1550038,
+    SAY_SANGUINAR_DEATH                 = -1550039,
+
+    //Grand Astromancer Capernian speech
+    SAY_CAPERNIAN_AGGRO                 = -1550040,
+    SAY_CAPERNIAN_DEATH                 = -1550041,
+
+    //Master Engineer Telonicus speech
+    SAY_TELONICUS_AGGRO                 = -1550042,
+    SAY_TELONICUS_DEATH                 = -1550043,
+
+    //Phase 2 spells
+    SPELL_SUMMON_WEAPONS                = 36976,
+    SPELL_SUMMON_WEAPONA                = 36958,
+    SPELL_SUMMON_WEAPONB                = 36959,
+    SPELL_SUMMON_WEAPONC                = 36960,
+    SPELL_SUMMON_WEAPOND                = 36961,
+    SPELL_SUMMON_WEAPONE                = 36962,
+    SPELL_SUMMON_WEAPONF                = 36963,
+    SPELL_SUMMON_WEAPONG                = 36964,
+    SPELL_RES_VISUAL                    = 24171,
+
+    //Phase 4 spells
+    SPELL_FIREBALL                      = 22088,           //wrong but works with CastCustomSpell
+    SPELL_PYROBLAST                     = 36819,
+    SPELL_FLAME_STRIKE                  = 36735,
+    SPELL_FLAME_STRIKE_VIS              = 36730,
+    SPELL_FLAME_STRIKE_DMG              = 36731,
+    SPELL_ARCANE_DISRUPTION             = 36834,
+    SPELL_SHOCK_BARRIER                 = 36815,
+    SPELL_PHOENIX_ANIMATION             = 36723,
+    SPELL_MIND_CONTROL                  = 32830,
+
+    //Phase 5 spells
+    SPELL_EXPLODE                       = 36092,
+    SPELL_FULLPOWER                     = 36187,
+    SPELL_KNOCKBACK                     = 11027,
+    SPELL_GRAVITY_LAPSE                 = 34480,
+    SPELL_GRAVITY_LAPSE_AURA            = 39432,
+    SPELL_NETHER_BEAM                   = 35873,
+
+    //Thaladred the Darkener spells
+    SPELL_PSYCHIC_BLOW                  = 10689,
+    SPELL_SILENCE                       = 30225,
+    //Lord Sanguinar spells
+    SPELL_BELLOWING_ROAR                = 40636,
+    //Grand Astromancer Capernian spells
+
+    SPELL_CAPERNIAN_FIREBALL            = 36971,
+    SPELL_CONFLAGRATION                 = 37018,
+    SPELL_ARCANE_EXPLOSION              = 36970,
+    //Master Engineer Telonicus spells
+    SPELL_BOMB                          = 37036,
+    SPELL_REMOTE_TOY                    = 37027,
+    //Nether Vapor spell
+    SPELL_NETHER_VAPOR                  = 35859,
+    //Phoenix spell
+    SPELL_BURN                          = 36720,
+    SPELL_EMBER_BLAST                   = 34341,
+    SPELL_REBIRTH                       = 41587,
+
+    //Creature IDs
+    NPC_PHOENIX                         = 21362,
+    NPC_PHOENIX_EGG                     = 21364,
+
+    //Phoenix egg and phoenix model
+    MODEL_ID_PHOENIX                    = 19682,
+    MODEL_ID_PHOENIX_EGG                = 20245,
+
+    MAX_ADVISORS                        = 4
 };
 
-#define GRAVITY_X 795.0f
-#define GRAVITY_Y 0.0f
-#define GRAVITY_Z 70.0f
+uint32 m_auiSpellSummonWeapon[]=
+{
+    SPELL_SUMMON_WEAPONA, SPELL_SUMMON_WEAPONB, SPELL_SUMMON_WEAPONC, SPELL_SUMMON_WEAPOND,
+    SPELL_SUMMON_WEAPONE, SPELL_SUMMON_WEAPONF, SPELL_SUMMON_WEAPONG
+};
+
+const float CAPERNIAN_DISTANCE          = 20.0f;            //she casts away from the target
+const float KAEL_VISIBLE_RANGE          = 50.0f;
+
+const float afGravityPos[3]             = {795.0f, 0.0f, 70.0f};
 
 #define TIME_PHASE_2_3      120000
 #define TIME_PHASE_3_4      180000
-
-#define KAEL_VISIBLE_RANGE  50.0f
 
 //Base AI for Advisors
 struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
@@ -278,10 +275,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
     boss_kaelthasAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        AdvisorGuid[0] = 0;
-        AdvisorGuid[1] = 0;
-        AdvisorGuid[2] = 0;
-        AdvisorGuid[3] = 0;
+        memset(&m_auiAdvisorGuid, 0, sizeof(m_auiAdvisorGuid));
         Reset();
     }
 
@@ -306,7 +300,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
     bool IsCastingFireball;
     bool ChainPyros;
 
-    uint64 AdvisorGuid[4];
+    uint64 m_auiAdvisorGuid[MAX_ADVISORS];
 
     void Reset()
     {
@@ -338,9 +332,9 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
     void PrepareAdvisors()
     {
-        for(uint8 i = 0; i < 4; i++)
+        for(uint8 i = 0; i < MAX_ADVISORS; i++)
         {
-            if (Creature *pCreature = (Creature*)Unit::GetUnit((*m_creature), AdvisorGuid[i]))
+            if (Creature *pCreature = (Creature*)Unit::GetUnit((*m_creature), m_auiAdvisorGuid[i]))
             {
                 pCreature->Respawn();
                 pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
@@ -355,12 +349,12 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
         if (!m_pInstance)
             return;
 
-        AdvisorGuid[0] = m_pInstance->GetData64(DATA_THALADREDTHEDARKENER);
-        AdvisorGuid[1] = m_pInstance->GetData64(DATA_LORDSANGUINAR);
-        AdvisorGuid[2] = m_pInstance->GetData64(DATA_GRANDASTROMANCERCAPERNIAN);
-        AdvisorGuid[3] = m_pInstance->GetData64(DATA_MASTERENGINEERTELONICUS);
+        m_auiAdvisorGuid[0] = m_pInstance->GetData64(DATA_THALADREDTHEDARKENER);
+        m_auiAdvisorGuid[1] = m_pInstance->GetData64(DATA_LORDSANGUINAR);
+        m_auiAdvisorGuid[2] = m_pInstance->GetData64(DATA_GRANDASTROMANCERCAPERNIAN);
+        m_auiAdvisorGuid[3] = m_pInstance->GetData64(DATA_MASTERENGINEERTELONICUS);
 
-        if (!AdvisorGuid[0] || !AdvisorGuid[1] || !AdvisorGuid[2] || !AdvisorGuid[3])
+        if (!m_auiAdvisorGuid[0] || !m_auiAdvisorGuid[1] || !m_auiAdvisorGuid[2] || !m_auiAdvisorGuid[3])
         {
             error_log("SD2: Kael'Thas One or more advisors missing, Skipping Phases 1-3");
 
@@ -436,6 +430,16 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
         }
     }
 
+    void JustSummoned(Creature* pSummoned)
+    {
+        // if not phoenix, then it's one of the 7 weapons
+        if (pSummoned->GetEntry() != NPC_PHOENIX)
+        {
+            if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                pSummoned->AI()->AttackStart(pTarget);
+        }
+    }
+
     void JustDied(Unit* Killer)
     {
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -446,10 +450,10 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
         if (m_pInstance)
             m_pInstance->SetData(DATA_KAELTHASEVENT, 0);
 
-        for(uint8 i = 0; i < 4; i++)
+        for(uint8 i = 0; i < MAX_ADVISORS; i++)
         {
-            if (Creature *pCreature = (Creature*)Unit::GetUnit((*m_creature), AdvisorGuid[i]))
-                pCreature->DealDamage(pCreature, pCreature->GetMaxHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+            if (Unit* pAdvisor = Unit::GetUnit((*m_creature), m_auiAdvisorGuid[i]))
+                pAdvisor->DealDamage(pAdvisor, pAdvisor->GetMaxHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
         }
     }
 
@@ -460,8 +464,8 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
         {
             case 1:
             {
-                Unit *target;
-                Creature* Advisor;
+                Unit *target = NULL;
+                Creature* Advisor = NULL;
 
                 //Subphase switch
                 switch(PhaseSubphase)
@@ -482,7 +486,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                     case 1:
                         if (Phase_Timer < diff)
                         {
-                            Advisor = (Creature*)(Unit::GetUnit((*m_creature), AdvisorGuid[0]));
+                            Advisor = (Creature*)(Unit::GetUnit((*m_creature), m_auiAdvisorGuid[0]));
 
                             if (Advisor)
                             {
@@ -500,7 +504,8 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
                     //Subphase 2 - Start
                     case 2:
-                        Advisor = (Creature*)(Unit::GetUnit((*m_creature), AdvisorGuid[0]));
+                        Advisor = (Creature*)(Unit::GetUnit((*m_creature), m_auiAdvisorGuid[0]));
+
                         if (Advisor && (Advisor->getStandState() == UNIT_STAND_STATE_DEAD))
                         {
                             DoScriptText(SAY_INTRO_SANGUINAR, m_creature);
@@ -515,7 +520,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                     case 3:
                         if (Phase_Timer < diff)
                         {
-                            Advisor = (Creature*)(Unit::GetUnit((*m_creature), AdvisorGuid[1]));
+                            Advisor = (Creature*)(Unit::GetUnit((*m_creature), m_auiAdvisorGuid[1]));
 
                             if (Advisor)
                             {
@@ -533,7 +538,8 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
                     //Subphase 3 - Start
                     case 4:
-                        Advisor = (Creature*)(Unit::GetUnit((*m_creature), AdvisorGuid[1]));
+                        Advisor = (Creature*)(Unit::GetUnit((*m_creature), m_auiAdvisorGuid[1]));
+
                         if (Advisor && (Advisor->getStandState() == UNIT_STAND_STATE_DEAD))
                         {
                             DoScriptText(SAY_INTRO_CAPERNIAN, m_creature);
@@ -548,7 +554,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                     case 5:
                         if (Phase_Timer < diff)
                         {
-                            Advisor = (Creature*)(Unit::GetUnit((*m_creature), AdvisorGuid[2]));
+                            Advisor = (Creature*)(Unit::GetUnit((*m_creature), m_auiAdvisorGuid[2]));
 
                             if (Advisor)
                             {
@@ -566,7 +572,8 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
                     //Subphase 4 - Start
                     case 6:
-                        Advisor = (Creature*)(Unit::GetUnit((*m_creature), AdvisorGuid[2]));
+                        Advisor = (Creature*)(Unit::GetUnit((*m_creature), m_auiAdvisorGuid[2]));
+
                         if (Advisor && (Advisor->getStandState() == UNIT_STAND_STATE_DEAD))
                         {
                             DoScriptText(SAY_INTRO_TELONICUS, m_creature);
@@ -581,7 +588,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                     case 7:
                         if (Phase_Timer < diff)
                         {
-                            Advisor = (Creature*)(Unit::GetUnit((*m_creature), AdvisorGuid[3]));
+                            Advisor = (Creature*)(Unit::GetUnit((*m_creature), m_auiAdvisorGuid[3]));
 
                             if (Advisor)
                             {
@@ -600,7 +607,8 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
                     //End of phase 1
                     case 8:
-                        Advisor = (Creature*)(Unit::GetUnit((*m_creature), AdvisorGuid[3]));
+                        Advisor = (Creature*)(Unit::GetUnit((*m_creature), m_auiAdvisorGuid[3]));
+
                         if (Advisor && (Advisor->getStandState() == UNIT_STAND_STATE_DEAD))
                         {
                             Phase = 2;
@@ -629,22 +637,12 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                 //Spawn weapons
                 if (PhaseSubphase == 1)
                 {
-                    Unit* Target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                    m_creature->CastSpell(m_creature, SPELL_SUMMON_WEAPONS, false);
 
-                    Creature* Weapon;
-                    for (uint32 i = 0; i < 7; i++)
-                    {
-                        Weapon = m_creature->SummonCreature(((uint32)KaelthasWeapons[i][0]),KaelthasWeapons[i][1],KaelthasWeapons[i][2],KaelthasWeapons[i][3],0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 60000);
+                    uint8 uiMaxWeapon = sizeof(m_auiSpellSummonWeapon)/sizeof(uint32);
 
-                        if (!Weapon)
-                            error_log("SD2: Kael'thas weapon %i could not be spawned", i);
-                        else
-                        {
-                            Weapon->setFaction(m_creature->getFaction());
-                            Weapon->AI()->AttackStart(Target);
-                            Weapon->CastSpell(Weapon, SPELL_WEAPON_SPAWN, false);
-                        }
-                    }
+                    for (uint32 i = 0; i < uiMaxWeapon; ++i)
+                        m_creature->CastSpell(m_creature,m_auiSpellSummonWeapon[i],true);
 
                     PhaseSubphase = 2;
                     Phase_Timer = TIME_PHASE_2_3;
@@ -670,12 +668,14 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                     Unit* Target = SelectUnit(SELECT_TARGET_RANDOM, 0);
 
                     Creature* Advisor;
-                    for (uint32 i = 0; i < 4; i++)
+                    for (uint32 i = 0; i < MAX_ADVISORS; i++)
                     {
-                        Advisor = (Creature*)(Unit::GetUnit((*m_creature), AdvisorGuid[i]));
+                        Advisor = (Creature*)(Unit::GetUnit((*m_creature), m_auiAdvisorGuid[i]));
+
                         if (!Advisor)
                             error_log("SD2: Kael'Thas Advisor %u does not exist. Possibly despawned? Incorrectly Killed?", i);
-                        else ((advisorbase_ai*)Advisor->AI())->Revive(Target);
+                        else
+                            ((advisorbase_ai*)Advisor->AI())->Revive(Target);
                     }
 
                     PhaseSubphase = 1;
@@ -770,7 +770,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                 {
                     DoCast(m_creature, SPELL_PHOENIX_ANIMATION);
 
-                    if (Creature* pPhoenix = m_creature->SummonCreature(PHOENIX, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 45000))
+                    if (Creature* pPhoenix = m_creature->SummonCreature(NPC_PHOENIX, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 45000))
                     {
                         if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                             pPhoenix->AI()->AttackStart(pTarget);
@@ -801,8 +801,8 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                         m_creature->StopMoving();
                         m_creature->GetMotionMaster()->Clear();
                         m_creature->GetMotionMaster()->MoveIdle();
-                        m_creature->Relocate(GRAVITY_X, GRAVITY_Y, GRAVITY_Z, 0);
-                        m_creature->SendMonsterMove(GRAVITY_X, GRAVITY_Y,GRAVITY_Z, 0, 0, 0);
+                        m_creature->Relocate(afGravityPos[0], afGravityPos[1], afGravityPos[2], 0);
+                        m_creature->SendMonsterMove(afGravityPos[0], afGravityPos[1], afGravityPos[2], 0, 0, 0);
 
                         m_creature->InterruptNonMeleeSpells(false);
                         DoCast(m_creature, SPELL_FULLPOWER);
@@ -865,8 +865,8 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                                 m_creature->StopMoving();
                                 m_creature->GetMotionMaster()->Clear();
                                 m_creature->GetMotionMaster()->MoveIdle();
-                                m_creature->Relocate(GRAVITY_X, GRAVITY_Y, GRAVITY_Z, 0);
-                                m_creature->SendMonsterMove(GRAVITY_X, GRAVITY_Y, GRAVITY_Z, 0, 0, 0);
+                                m_creature->Relocate(afGravityPos[0], afGravityPos[1], afGravityPos[2], 0);
+                                m_creature->SendMonsterMove(afGravityPos[0], afGravityPos[1], afGravityPos[2], 0, 0, 0);
 
                                 // 1) Kael'thas will portal the whole raid right into his body
                                 for (i = m_creature->getThreatManager().getThreatList().begin(); i!= m_creature->getThreatManager().getThreatList().end();++i)
@@ -875,7 +875,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                                     if (pUnit && (pUnit->GetTypeId() == TYPEID_PLAYER))
                                     {
                                         //Use work around packet to prevent player from being dropped from combat
-                                        DoTeleportPlayer(pUnit, GRAVITY_X, GRAVITY_Y, GRAVITY_Z, pUnit->GetOrientation());
+                                        DoTeleportPlayer(pUnit, afGravityPos[0], afGravityPos[1], afGravityPos[2], pUnit->GetOrientation());
                                     }
                                 }
 
@@ -1146,7 +1146,7 @@ struct MANGOS_DLL_DECL boss_grand_astromancer_capernianAI : public advisorbase_a
             m_creature->SetInCombatWith(who);
             who->SetInCombatWith(m_creature);
 
-            DoStartMovement(who, CAPERNIAN_DISTANCE, M_PI/2);
+            m_creature->GetMotionMaster()->MoveChase(who, CAPERNIAN_DISTANCE);
         }
     }
 
@@ -1356,7 +1356,7 @@ struct MANGOS_DLL_DECL mob_phoenix_tkAI : public ScriptedAI
     {
         //is this spell in use anylonger?
         //m_creature->CastSpell(m_creature,SPELL_EMBER_BLAST,true);
-        m_creature->SummonCreature(PHOENIX_EGG,m_creature->GetPositionX(),m_creature->GetPositionY(),m_creature->GetPositionZ(),m_creature->GetOrientation(),TEMPSUMMON_TIMED_DESPAWN,16000);
+        m_creature->SummonCreature(NPC_PHOENIX_EGG,m_creature->GetPositionX(),m_creature->GetPositionY(),m_creature->GetPositionZ(),m_creature->GetOrientation(),TEMPSUMMON_TIMED_DESPAWN,16000);
     }
 
     void UpdateAI(const uint32 diff)
@@ -1416,7 +1416,7 @@ struct MANGOS_DLL_DECL mob_phoenix_egg_tkAI : public ScriptedAI
 
         if (Rebirth_Timer <= diff)
         {
-            m_creature->SummonCreature(PHOENIX,m_creature->GetPositionX(),m_creature->GetPositionY(),m_creature->GetPositionZ(),m_creature->GetOrientation(),TEMPSUMMON_CORPSE_DESPAWN,5000);
+            m_creature->SummonCreature(NPC_PHOENIX,m_creature->GetPositionX(),m_creature->GetPositionY(),m_creature->GetPositionZ(),m_creature->GetOrientation(),TEMPSUMMON_CORPSE_DESPAWN,5000);
             Rebirth_Timer = 0;
         }else Rebirth_Timer -= diff;
     }
