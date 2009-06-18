@@ -76,28 +76,98 @@ bool GOHello_go_mausoleum_trigger(Player* pPlayer, GameObject* pGo)
 ## npc_calvin_montague
 ######*/
 
-#define QUEST_590           590
-#define FACTION_FRIENDLY    68
-#define FACTION_HOSTILE     16
+enum
+{
+    SAY_COMPLETE        = -1000356,
+    SPELL_DRINK         = 2639,                             // possibly not correct spell (but iconId is correct)
+    QUEST_590           = 590,
+    FACTION_HOSTILE     = 168
+};
 
 struct MANGOS_DLL_DECL npc_calvin_montagueAI : public ScriptedAI
 {
-    npc_calvin_montagueAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
+    npc_calvin_montagueAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_uiNormFaction = pCreature->getFaction();
+        Reset();
+    }
+
+    uint32 m_uiNormFaction;
+    uint32 m_uiPhase;
+    uint32 m_uiPhaseTimer;
+    uint64 m_uiPlayerGUID;
 
     void Reset()
     {
-        m_creature->setFaction(FACTION_FRIENDLY);
+        m_uiPhase = 0;
+        m_uiPhaseTimer = 5000;
+        m_uiPlayerGUID = 0;
+
+        if (m_creature->getFaction() != m_uiNormFaction)
+            m_creature->setFaction(m_uiNormFaction);
+
+        if (!m_creature->HasFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_UNK_8))
+            m_creature->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_UNK_8);
     }
 
-    void JustDied(Unit* Killer)
+    void AttackedBy(Unit* pAttacker)
     {
-        if (Killer->GetTypeId() == TYPEID_PLAYER)
-            if (((Player*)Killer)->GetQuestStatus(QUEST_590) == QUEST_STATUS_INCOMPLETE)
-                ((Player*)Killer)->AreaExploredOrEventHappens(QUEST_590);
+        if (m_creature->getVictim() || m_creature->IsFriendlyTo(pAttacker))
+            return;
+
+        AttackStart(pAttacker);
     }
 
-    void UpdateAI(const uint32 diff)
+    void DamageTaken(Unit* pDoneBy, uint32 &uiDamage)
     {
+        if (uiDamage > m_creature->GetHealth() || ((m_creature->GetHealth() - uiDamage)*100 / m_creature->GetMaxHealth() < 15))
+        {
+            uiDamage = 0;
+
+            m_creature->setFaction(m_uiNormFaction);
+            m_creature->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_UNK_8);
+            m_creature->CombatStop(true);
+
+            m_uiPhase = 1;
+
+            if (pDoneBy->GetTypeId() == TYPEID_PLAYER)
+                m_uiPlayerGUID = pDoneBy->GetGUID();
+        }
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (m_uiPhase)
+        {
+            if (m_uiPhaseTimer < uiDiff)
+                m_uiPhaseTimer = 7500;
+            else
+            {
+                m_uiPhaseTimer -= uiDiff;
+                return;
+            }
+
+            switch(m_uiPhase)
+            {
+                case 1:
+                    DoScriptText(SAY_COMPLETE, m_creature);
+                    ++m_uiPhase;
+                    break;
+                case 2:
+                    if (Unit* pUnit = Unit::GetUnit(*m_creature, m_uiPlayerGUID))
+                        ((Player*)pUnit)->AreaExploredOrEventHappens(QUEST_590);
+
+                    m_creature->CastSpell(m_creature,SPELL_DRINK,true);
+                    ++m_uiPhase;
+                    break;
+                case 3:
+                    EnterEvadeMode();
+                    break;
+            }
+
+            return;
+        }
+
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
@@ -115,7 +185,8 @@ bool QuestAccept_npc_calvin_montague(Player* pPlayer, Creature* pCreature, const
     if (pQuest->GetQuestId() == QUEST_590)
     {
         pCreature->setFaction(FACTION_HOSTILE);
-        ((npc_calvin_montagueAI*)pCreature->AI())->AttackStart(pPlayer);
+        pCreature->RemoveFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_UNK_8);
+        pCreature->AI()->AttackStart(pPlayer);
     }
     return true;
 }
