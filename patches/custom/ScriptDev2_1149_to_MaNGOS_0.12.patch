@@ -1,6 +1,6 @@
 Index: include/precompiled.h
 ===================================================================
---- include/precompiled.h	(revision 1131)
+--- include/precompiled.h	(revision 1149)
 +++ include/precompiled.h	(working copy)
 @@ -11,6 +11,16 @@
  #include "sc_grid_searchers.h"
@@ -21,7 +21,7 @@ Index: include/precompiled.h
  BOOL APIENTRY DllMain( HANDLE hModule,
 Index: include/sc_creature.cpp
 ===================================================================
---- include/sc_creature.cpp	(revision 1131)
+--- include/sc_creature.cpp	(revision 1149)
 +++ include/sc_creature.cpp	(working copy)
 @@ -530,7 +530,7 @@
      Unit* pUnit = NULL;
@@ -61,7 +61,7 @@ Index: include/sc_creature.cpp
      CellLock<GridReadGuard> cell_lock(cell, pair);
 Index: include/sc_gossip.h
 ===================================================================
---- include/sc_gossip.h	(revision 1131)
+--- include/sc_gossip.h	(revision 1149)
 +++ include/sc_gossip.h	(working copy)
 @@ -42,9 +42,7 @@
  #define GOSSIP_TEXT_WARSONGULCH         "Warsong Gulch"
@@ -105,7 +105,7 @@ Index: include/sc_gossip.h
      GOSSIP_ACTION_TRADE            = 1,
 Index: include/sc_grid_searchers.cpp
 ===================================================================
---- include/sc_grid_searchers.cpp	(revision 1131)
+--- include/sc_grid_searchers.cpp	(revision 1149)
 +++ include/sc_grid_searchers.cpp	(working copy)
 @@ -15,7 +15,7 @@
      cell.SetNoCreate();
@@ -145,7 +145,7 @@ Index: include/sc_grid_searchers.cpp
      CellLock<GridReadGuard> cell_lock(cell, pair);
 Index: scripts/item/item_scripts.cpp
 ===================================================================
---- scripts/item/item_scripts.cpp	(revision 1131)
+--- scripts/item/item_scripts.cpp	(revision 1149)
 +++ scripts/item/item_scripts.cpp	(working copy)
 @@ -49,7 +49,7 @@
      pPlayer->SendEquipError(EQUIP_ERR_NONE, pItem, NULL);
@@ -158,7 +158,7 @@ Index: scripts/item/item_scripts.cpp
  }
 Index: scripts/npc/npcs_special.cpp
 ===================================================================
---- scripts/npc/npcs_special.cpp	(revision 1131)
+--- scripts/npc/npcs_special.cpp	(revision 1149)
 +++ scripts/npc/npcs_special.cpp	(working copy)
 @@ -701,9 +701,6 @@
  
@@ -172,9 +172,9 @@ Index: scripts/npc/npcs_special.cpp
  
 Index: scripts/zone/azuremyst_isle/azuremyst_isle.cpp
 ===================================================================
---- scripts/zone/azuremyst_isle/azuremyst_isle.cpp	(revision 1131)
+--- scripts/zone/azuremyst_isle/azuremyst_isle.cpp	(revision 1149)
 +++ scripts/zone/azuremyst_isle/azuremyst_isle.cpp	(working copy)
-@@ -73,7 +73,6 @@
+@@ -76,7 +76,6 @@
  
          m_creature->CastSpell(m_creature, SPELL_IRRIDATION, true);
  
@@ -182,21 +182,20 @@ Index: scripts/zone/azuremyst_isle/azuremyst_isle.cpp
          m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IN_COMBAT);
          m_creature->SetHealth(int(m_creature->GetMaxHealth()*.1));
          m_creature->SetStandState(UNIT_STAND_STATE_SLEEP);
-@@ -99,9 +98,9 @@
+@@ -103,9 +102,8 @@
  
-     void SpellHit(Unit *Caster, const SpellEntry *Spell)
+     void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
      {
--        if (Spell->SpellFamilyFlags2 & 0x080000000)
-+        if (Spell->Id == 28880)
+-        if (pSpell->SpellFamilyFlags2 & 0x080000000)
++        if (pSpell->Id == 28880)
          {
 -            m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PVP_ATTACKABLE);
-+//            m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PVP_ATTACKABLE);
              m_creature->SetStandState(UNIT_STAND_STATE_STAND);
  
              m_creature->CastSpell(m_creature, SPELL_STUNNED, true);
 Index: scripts/zone/black_temple/boss_illidan.cpp
 ===================================================================
---- scripts/zone/black_temple/boss_illidan.cpp	(revision 1131)
+--- scripts/zone/black_temple/boss_illidan.cpp	(revision 1149)
 +++ scripts/zone/black_temple/boss_illidan.cpp	(working copy)
 @@ -206,8 +206,6 @@
  #define CENTER_Y            305.297
@@ -269,7 +268,7 @@ Index: scripts/zone/black_temple/boss_illidan.cpp
                          LandTimer = 5000;
 Index: scripts/zone/caverns_of_time/hyjal/hyjalAI.cpp
 ===================================================================
---- scripts/zone/caverns_of_time/hyjal/hyjalAI.cpp	(revision 1131)
+--- scripts/zone/caverns_of_time/hyjal/hyjalAI.cpp	(revision 1149)
 +++ scripts/zone/caverns_of_time/hyjal/hyjalAI.cpp	(working copy)
 @@ -325,8 +325,10 @@
      // Get all creatures.
@@ -286,7 +285,7 @@ Index: scripts/zone/caverns_of_time/hyjal/hyjalAI.cpp
      // Get Creatures
 Index: scripts/zone/caverns_of_time/old_hillsbrad/old_hillsbrad.cpp
 ===================================================================
---- scripts/zone/caverns_of_time/old_hillsbrad/old_hillsbrad.cpp	(revision 1131)
+--- scripts/zone/caverns_of_time/old_hillsbrad/old_hillsbrad.cpp	(revision 1149)
 +++ scripts/zone/caverns_of_time/old_hillsbrad/old_hillsbrad.cpp	(working copy)
 @@ -161,8 +161,10 @@
  #define SPEED_RUN                   (1.0f)
@@ -331,7 +330,7 @@ Index: scripts/zone/caverns_of_time/old_hillsbrad/old_hillsbrad.cpp
  
 Index: scripts/zone/dragonblight/dragonblight.cpp
 ===================================================================
---- scripts/zone/dragonblight/dragonblight.cpp	(revision 1131)
+--- scripts/zone/dragonblight/dragonblight.cpp	(revision 1149)
 +++ scripts/zone/dragonblight/dragonblight.cpp	(working copy)
 @@ -100,7 +100,6 @@
      if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
@@ -343,7 +342,7 @@ Index: scripts/zone/dragonblight/dragonblight.cpp
      return true;
 Index: scripts/zone/karazhan/boss_prince_malchezaar.cpp
 ===================================================================
---- scripts/zone/karazhan/boss_prince_malchezaar.cpp	(revision 1131)
+--- scripts/zone/karazhan/boss_prince_malchezaar.cpp	(revision 1149)
 +++ scripts/zone/karazhan/boss_prince_malchezaar.cpp	(working copy)
 @@ -90,8 +90,8 @@
  #define INFERNAL_MODEL_INVISIBLE    11686                   //Infernal Effects
@@ -391,7 +390,7 @@ Index: scripts/zone/karazhan/boss_prince_malchezaar.cpp
  
 Index: scripts/zone/zulgurub/boss_renataki.cpp
 ===================================================================
---- scripts/zone/zulgurub/boss_renataki.cpp	(revision 1131)
+--- scripts/zone/zulgurub/boss_renataki.cpp	(revision 1149)
 +++ scripts/zone/zulgurub/boss_renataki.cpp	(working copy)
 @@ -27,7 +27,6 @@
  #define SPELL_AMBUSH            24337
