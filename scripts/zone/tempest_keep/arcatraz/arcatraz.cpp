@@ -97,16 +97,15 @@ struct MANGOS_DLL_DECL npc_millhouse_manastormAI : public ScriptedAI
         }
     }
 
-    void AttackStart(Unit* who)
+    void AttackStart(Unit* pWho)
     {
-        if (m_creature->Attack(who, true))
+        if (m_creature->Attack(pWho, true))
         {
-            m_creature->AddThreat(who, 0.0f);
-            m_creature->SetInCombatWith(who);
-            who->SetInCombatWith(m_creature);
+            m_creature->AddThreat(pWho, 0.0f);
+            m_creature->SetInCombatWith(pWho);
+            pWho->SetInCombatWith(m_creature);
 
-            //TODO: Make it so he moves when target out of range
-            DoStartNoMovement(who);
+            m_creature->GetMotionMaster()->MoveChase(pWho, 25.0f);
         }
     }
 
