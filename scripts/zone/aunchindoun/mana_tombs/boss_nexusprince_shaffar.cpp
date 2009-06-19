@@ -238,21 +238,7 @@ struct MANGOS_DLL_DECL mob_ethereal_beaconAI : public ScriptedAI
 
             m_creature->CastSpell(m_creature,SPELL_ETHEREAL_APPRENTICE,true);
 
-            //we are summoned and will despawn after some time
-            if (m_creature->GetOwner())
-            {
-                m_creature->SetVisibility(VISIBILITY_OFF);
-                EnterEvadeMode();
-            }
-            //else, we are regular, so remove us in a different way
-            else
-            {
-                m_creature->RemoveAllAuras();
-                m_creature->setDeathState(JUST_DIED);
-                m_creature->SetHealth(0);
-                m_creature->CombatStop(true);
-                m_creature->DeleteThreatList();
-            }
+            m_creature->ForcedDespawn();
             return;
 
         }else m_uiApprentice_Timer -= uiDiff;

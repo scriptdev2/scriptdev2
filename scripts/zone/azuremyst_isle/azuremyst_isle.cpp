@@ -37,39 +37,42 @@ EndContentData */
 ## npc_draenei_survivor
 ######*/
 
-#define SAY_HEAL1       -1000176
-#define SAY_HEAL2       -1000177
-#define SAY_HEAL3       -1000178
-#define SAY_HEAL4       -1000179
-#define SAY_HELP1       -1000180
-#define SAY_HELP2       -1000181
-#define SAY_HELP3       -1000182
-#define SAY_HELP4       -1000183
+enum
+{
+    SAY_HEAL1           = -1000176,
+    SAY_HEAL2           = -1000177,
+    SAY_HEAL3           = -1000178,
+    SAY_HEAL4           = -1000179,
+    SAY_HELP1           = -1000180,
+    SAY_HELP2           = -1000181,
+    SAY_HELP3           = -1000182,
+    SAY_HELP4           = -1000183,
 
-#define SPELL_IRRIDATION    35046
-#define SPELL_STUNNED       28630
+    SPELL_IRRIDATION    = 35046,
+    SPELL_STUNNED       = 28630
+};
 
 struct MANGOS_DLL_DECL npc_draenei_survivorAI : public ScriptedAI
 {
     npc_draenei_survivorAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
-    uint64 pCaster;
+    uint64 m_uiCaster;
 
-    uint32 SayThanksTimer;
-    uint32 RunAwayTimer;
-    uint32 SayHelpTimer;
+    uint32 m_uiSayThanksTimer;
+    uint32 m_uiRunAwayTimer;
+    uint32 m_uiSayHelpTimer;
 
-    bool CanSayHelp;
+    bool m_bCanSayHelp;
 
     void Reset()
     {
-        pCaster = 0;
+        m_uiCaster = 0;
 
-        SayThanksTimer = 0;
-        RunAwayTimer = 0;
-        SayHelpTimer = 10000;
+        m_uiSayThanksTimer = 0;
+        m_uiRunAwayTimer = 0;
+        m_uiSayHelpTimer = 10000;
 
-        CanSayHelp = true;
+        m_bCanSayHelp = true;
 
         m_creature->CastSpell(m_creature, SPELL_IRRIDATION, true);
 
@@ -79,48 +82,49 @@ struct MANGOS_DLL_DECL npc_draenei_survivorAI : public ScriptedAI
         m_creature->SetStandState(UNIT_STAND_STATE_SLEEP);
     }
 
-    void MoveInLineOfSight(Unit *who)
+    void MoveInLineOfSight(Unit* pWho)
     {
-        if (CanSayHelp && who->GetTypeId() == TYPEID_PLAYER && m_creature->IsFriendlyTo(who) && m_creature->IsWithinDistInMap(who, 25.0f))
+        if (m_bCanSayHelp && pWho->GetTypeId() == TYPEID_PLAYER && m_creature->IsFriendlyTo(pWho) &&
+            m_creature->IsWithinDistInMap(pWho, 25.0f))
         {
             //Random switch between 4 texts
             switch (rand()%4)
             {
-                case 0: DoScriptText(SAY_HELP1, m_creature, who); break;
-                case 1: DoScriptText(SAY_HELP2, m_creature, who); break;
-                case 2: DoScriptText(SAY_HELP3, m_creature, who); break;
-                case 3: DoScriptText(SAY_HELP4, m_creature, who); break;
+                case 0: DoScriptText(SAY_HELP1, m_creature, pWho); break;
+                case 1: DoScriptText(SAY_HELP2, m_creature, pWho); break;
+                case 2: DoScriptText(SAY_HELP3, m_creature, pWho); break;
+                case 3: DoScriptText(SAY_HELP4, m_creature, pWho); break;
             }
 
-            SayHelpTimer = 20000;
-            CanSayHelp = false;
+            m_uiSayHelpTimer = 20000;
+            m_bCanSayHelp = false;
         }
     }
 
-    void SpellHit(Unit *Caster, const SpellEntry *Spell)
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
     {
-        if (Spell->SpellFamilyFlags2 & 0x080000000)
+        if (pSpell->SpellFamilyFlags2 & 0x080000000)
         {
             m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PVP_ATTACKABLE);
             m_creature->SetStandState(UNIT_STAND_STATE_STAND);
 
             m_creature->CastSpell(m_creature, SPELL_STUNNED, true);
 
-            pCaster = Caster->GetGUID();
+            m_uiCaster = pCaster->GetGUID();
 
-            SayThanksTimer = 5000;
+            m_uiSayThanksTimer = 5000;
         }
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
-        if (SayThanksTimer)
+        if (m_uiSayThanksTimer)
         {
-            if (SayThanksTimer <= diff)
+            if (m_uiSayThanksTimer <= uiDiff)
             {
                 m_creature->RemoveAurasDueToSpell(SPELL_IRRIDATION);
 
-                if (Player* pPlayer = (Player*)Unit::GetUnit(*m_creature,pCaster))
+                if (Player* pPlayer = (Player*)Unit::GetUnit(*m_creature,m_uiCaster))
                 {
                     if (pPlayer->GetTypeId() != TYPEID_PLAYER)
                         return;
@@ -139,35 +143,28 @@ struct MANGOS_DLL_DECL npc_draenei_survivorAI : public ScriptedAI
                 m_creature->GetMotionMaster()->Clear();
                 m_creature->GetMotionMaster()->MovePoint(0, -4115.053711f, -13754.831055f, 73.508949f);
 
-                RunAwayTimer = 10000;
-                SayThanksTimer = 0;
-            }else SayThanksTimer -= diff;
+                m_uiRunAwayTimer = 10000;
+                m_uiSayThanksTimer = 0;
+            }else m_uiSayThanksTimer -= uiDiff;
 
             return;
         }
 
-        if (RunAwayTimer)
+        if (m_uiRunAwayTimer)
         {
-            if (RunAwayTimer <= diff)
-            {
-                m_creature->RemoveAllAuras();
-                m_creature->GetMotionMaster()->Clear();
-                m_creature->GetMotionMaster()->MoveIdle();
-                m_creature->setDeathState(JUST_DIED);
-                m_creature->SetHealth(0);
-                m_creature->CombatStop(true);
-                m_creature->DeleteThreatList();
-                m_creature->RemoveCorpse();
-            }else RunAwayTimer -= diff;
+            if (m_uiRunAwayTimer <= uiDiff)
+                m_creature->ForcedDespawn();
+            else
+                m_uiRunAwayTimer -= uiDiff;
 
             return;
         }
 
-        if (SayHelpTimer < diff)
+        if (m_uiSayHelpTimer < uiDiff)
         {
-            CanSayHelp = true;
-            SayHelpTimer = 20000;
-        }else SayHelpTimer -= diff;
+            m_bCanSayHelp = true;
+            m_uiSayHelpTimer = 20000;
+        }else m_uiSayHelpTimer -= uiDiff;
     }
 };
 
@@ -428,29 +425,26 @@ struct MANGOS_DLL_DECL npc_nestlewood_owlkinAI : public ScriptedAI
 {
     npc_nestlewood_owlkinAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
-    uint32 DespawnTimer;
+    uint32 m_uiDespawnTimer;
 
     void Reset()
     {
-        DespawnTimer = 0;
-        m_creature->SetVisibility(VISIBILITY_ON);
+        m_uiDespawnTimer = 0;
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         //timer gets adjusted by the triggered aura effect
-        if (DespawnTimer)
+        if (m_uiDespawnTimer)
         {
-            if (DespawnTimer <= diff)
+            if (m_uiDespawnTimer <= uiDiff)
             {
                 //once we are able to, despawn us
-                m_creature->SetVisibility(VISIBILITY_OFF);
-                m_creature->setDeathState(JUST_DIED);
-                m_creature->SetHealth(0);
-                m_creature->CombatStop(true);
-                m_creature->DeleteThreatList();
-                m_creature->RemoveCorpse();
-            }else DespawnTimer -= diff;
+                m_creature->ForcedDespawn();
+                return;
+            }
+            else
+                m_uiDespawnTimer -= uiDiff;
         }
 
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
@@ -465,10 +459,10 @@ CreatureAI* GetAI_npc_nestlewood_owlkin(Creature* pCreature)
     return new npc_nestlewood_owlkinAI(pCreature);
 }
 
-bool EffectDummyCreature_npc_nestlewood_owlkin(Unit *pCaster, uint32 spellId, uint32 effIndex, Creature *pCreatureTarget)
+bool EffectDummyCreature_npc_nestlewood_owlkin(Unit* pCaster, uint32 uiSpellId, uint32 uiEffIndex, Creature* pCreatureTarget)
 {
     //always check spellid and effectindex
-    if (spellId == SPELL_INOCULATE_OWLKIN && effIndex == 0)
+    if (uiSpellId == SPELL_INOCULATE_OWLKIN && uiEffIndex == 0)
     {
         if (pCreatureTarget->GetEntry() != ENTRY_OWLKIN)
             return true;
@@ -476,7 +470,7 @@ bool EffectDummyCreature_npc_nestlewood_owlkin(Unit *pCaster, uint32 spellId, ui
         pCreatureTarget->UpdateEntry(ENTRY_OWLKIN_INOC);
 
         //set despawn timer, since we want to remove creature after a short time
-        ((npc_nestlewood_owlkinAI*)pCreatureTarget->AI())->DespawnTimer = 15000;
+        ((npc_nestlewood_owlkinAI*)pCreatureTarget->AI())->m_uiDespawnTimer = 15000;
 
         //always return true when we are handling this spell and effect
         return true;
