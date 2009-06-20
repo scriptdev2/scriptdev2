@@ -46,8 +46,8 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
     uint64 m_uiMassiveGateGUID;
     uint64 m_uiMalacrassEntranceGUID;
 
-    uint32 m_uiJanalaiEggCntL;
-    uint32 m_uiJanalaiEggCntR;
+    uint32 m_uiEggsRemainingCount_Left;
+    uint32 m_uiEggsRemainingCount_Right;
 
     uint32 m_uiEncounter[ENCOUNTERS];
     uint32 m_uiRandVendor[RAND_VENDOR];
@@ -71,8 +71,8 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
         m_uiMassiveGateGUID = 0;
         m_uiMalacrassEntranceGUID = 0;
 
-        m_uiJanalaiEggCntL = 20;
-        m_uiJanalaiEggCntR = 20;
+        m_uiEggsRemainingCount_Left = 20;
+        m_uiEggsRemainingCount_Right = 20;
 
         for(uint8 i = 0; i < ENCOUNTERS; i++)
             m_uiEncounter[i] = NOT_STARTED;
@@ -176,8 +176,8 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
             case TYPE_JANALAI:
                 if (uiData == NOT_STARTED)
                 {
-                    m_uiJanalaiEggCntL = 20;
-                    m_uiJanalaiEggCntR = 20;
+                    m_uiEggsRemainingCount_Left = 20;
+                    m_uiEggsRemainingCount_Right = 20;
                 }
                 m_uiEncounter[3] = uiData;
                 break;
@@ -190,12 +190,14 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
             case TYPE_MALACRASS:
                 m_uiEncounter[6] = uiData;
                 break;
-            case DATA_J_HATCHLEFT:
-                m_uiJanalaiEggCntL -= uiData;
+
+            case DATA_J_EGGS_RIGHT:
+                --m_uiEggsRemainingCount_Right;
                 break;
-            case DATA_J_HATCHRIGHT:
-                m_uiJanalaiEggCntR -= uiData;
+            case DATA_J_EGGS_LEFT:
+                --m_uiEggsRemainingCount_Left;
                 break;
+
             case TYPE_RAND_VENDOR_1:
                 m_uiRandVendor[0] = uiData;
                 break;
@@ -270,10 +272,10 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
             case TYPE_MALACRASS:
                 return m_uiEncounter[6];
 
-            case DATA_J_EGGSLEFT:
-                return m_uiJanalaiEggCntL;
-            case DATA_J_EGGSRIGHT:
-                return m_uiJanalaiEggCntR;
+            case DATA_J_EGGS_LEFT:
+                return m_uiEggsRemainingCount_Left;
+            case DATA_J_EGGS_RIGHT:
+                return m_uiEggsRemainingCount_Right;
 
             case TYPE_RAND_VENDOR_1:
                 return m_uiRandVendor[0];
