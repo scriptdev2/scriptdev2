@@ -1017,6 +1017,7 @@ UPDATE gameobject_template SET ScriptName='go_strange_gong' WHERE entry=187359;
 UPDATE creature_template SET ScriptName='boss_akilzon' WHERE entry=23574;
 UPDATE creature_template SET ScriptName='mob_soaring_eagle' WHERE entry=24858;
 UPDATE creature_template SET ScriptName='boss_halazzi' WHERE entry=23577;
+UPDATE creature_template SET ScriptName='boss_spirit_lynx' WHERE entry=24143;
 UPDATE creature_template SET ScriptName='boss_janalai' WHERE entry=23578;
 UPDATE creature_template SET ScriptName='boss_malacrass' WHERE entry=24239;
 UPDATE creature_template SET ScriptName='mob_alyson_antille' WHERE entry=24240;

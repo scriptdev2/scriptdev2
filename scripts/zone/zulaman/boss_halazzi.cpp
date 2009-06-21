@@ -46,16 +46,13 @@ enum
     SPELL_TRANSFORM_SPLIT   = 43142,
     SPELL_TRANSFORM_SPLIT2  = 43573,
     SPELL_TRANSFORM_MERGE   = 43271,
-    SPELL_SUMMON_LYNX       = 43143,
-    SPELL_SUMMON_TOTEM      = 43302,
     SPELL_BERSERK           = 45078,
 
-    MOB_SPIRIT_LYNX         = 24143,
-    SPELL_LYNX_FRENZY       = 43290,
-    SPELL_SHRED_ARMOR       = 43243,
+    SPELL_SUMMON_LYNX       = 43143,
+    SPELL_SUMMON_TOTEM      = 43302,
 
-    MOB_TOTEM               = 24224,
-    SPELL_LIGHTNING         = 43301
+    NPC_SPIRIT_LYNX         = 24143,
+    NPC_TOTEM               = 24224
 };
 
 struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
@@ -68,17 +65,27 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    void Reset()
+    void Reset() { }
+
+    void JustReachedHome()
     {
+        m_pInstance->SetData(TYPE_HALAZZI, NOT_STARTED);
     }
 
     void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
+        m_creature->SetInCombatWithZone();
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_HALAZZI, IN_PROGRESS);
     }
 
     void KilledUnit(Unit* pVictim)
     {
+        if (pVictim->GetTypeId() != TYPEID_PLAYER)
+            return;
+
         switch(rand()%2)
         {
             case 0: DoScriptText(SAY_KILL1, m_creature); break;
@@ -96,7 +103,7 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
         m_pInstance->SetData(TYPE_HALAZZI, DONE);
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
@@ -110,11 +117,86 @@ CreatureAI* GetAI_boss_halazzi(Creature* pCreature)
     return new boss_halazziAI(pCreature);
 }
 
+enum
+{
+    SPELL_LYNX_FRENZY       = 43290,
+    SPELL_SHRED_ARMOR       = 43243
+};
+
+struct MANGOS_DLL_DECL boss_spirit_lynxAI : public ScriptedAI
+{
+    boss_spirit_lynxAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        Reset();
+    }
+
+    ScriptedInstance* m_pInstance;
+
+    uint32 m_uiFrenzyTimer;
+    uint32 m_uiShredArmorTimer;
+
+    void Reset()
+    {
+        m_uiFrenzyTimer = (10+rand()%10)*1000;              //first frenzy after 10-20 seconds
+        m_uiShredArmorTimer = 4000;
+    }
+
+    void Aggro(Unit* pWho)
+    {
+        m_creature->SetInCombatWithZone();
+    }
+
+    void KilledUnit(Unit* pVictim)
+    {
+        if (!m_pInstance)
+            return;
+
+        if (Creature* pHalazzi = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_HALAZZI)))
+            pHalazzi->AI()->KilledUnit(pVictim);
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+            return;
+
+        if (m_uiFrenzyTimer < uiDiff)
+        {
+            DoCast(m_creature, SPELL_LYNX_FRENZY);
+            m_uiFrenzyTimer = (20+rand()%10)*1000;          //subsequent frenzys casted every 20-30 seconds
+        }
+        else
+            m_uiFrenzyTimer -= uiDiff;
+
+        if (m_uiShredArmorTimer < uiDiff)
+        {
+            DoCast(m_creature->getVictim(), SPELL_SHRED_ARMOR);
+            m_uiShredArmorTimer = 4000;
+        }
+        else
+            m_uiShredArmorTimer -= uiDiff;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_boss_spirit_lynx(Creature* pCreature)
+{
+    return new boss_spirit_lynxAI(pCreature);
+}
+
 void AddSC_boss_halazzi()
 {
-    Script *newscript;
+    Script* newscript;
+
     newscript = new Script;
     newscript->Name = "boss_halazzi";
     newscript->GetAI = &GetAI_boss_halazzi;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "boss_spirit_lynx";
+    newscript->GetAI = &GetAI_boss_spirit_lynx;
     newscript->RegisterSelf();
 }
