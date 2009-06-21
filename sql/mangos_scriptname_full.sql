@@ -1015,6 +1015,7 @@ UPDATE instance_template SET script='instance_zulaman' WHERE map=568;
 UPDATE creature_template SET ScriptName='npc_harrison_jones_za' WHERE entry=24358;
 UPDATE gameobject_template SET ScriptName='go_strange_gong' WHERE entry=187359;
 UPDATE creature_template SET ScriptName='boss_akilzon' WHERE entry=23574;
+UPDATE creature_template SET ScriptName='mob_soaring_eagle' WHERE entry=24858;
 UPDATE creature_template SET ScriptName='boss_halazzi' WHERE entry=23577;
 UPDATE creature_template SET ScriptName='boss_janalai' WHERE entry=23578;
 UPDATE creature_template SET ScriptName='boss_malacrass' WHERE entry=24239;
