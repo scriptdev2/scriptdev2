@@ -1289,13 +1289,7 @@ void boss_julianneAI::UpdateAI(const uint32 diff)
                 ((boss_romuloAI*)Romulo->AI())->JulianneGUID = m_creature->GetGUID();
                 ((boss_romuloAI*)Romulo->AI())->Phase = PHASE_ROMULO;
                 Romulo->setFaction(16);
-
-                if (m_creature->getVictim())
-                {
-                    Romulo->AddThreat(m_creature->getVictim(), 0.0f);
-                }
-
-                DoZoneInCombat(Romulo);
+                Romulo->SetInCombatWithZone();
             }
             SummonedRomulo = true;
         }else SummonRomuloTimer -= diff;

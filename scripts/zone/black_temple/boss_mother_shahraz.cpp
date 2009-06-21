@@ -135,12 +135,13 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
             pDoor->SetGoState(GO_STATE_ACTIVE);
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
         if (m_pInstance)
             m_pInstance->SetData(DATA_MOTHERSHAHRAZEVENT, IN_PROGRESS);
 
-        DoZoneInCombat();
+        m_creature->SetInCombatWithZone();
+
         DoScriptText(SAY_AGGRO, m_creature);
     }
 

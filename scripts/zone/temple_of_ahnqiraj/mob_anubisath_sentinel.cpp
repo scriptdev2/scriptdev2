@@ -233,13 +233,14 @@ struct MANGOS_DLL_DECL aqsentinelAI : public ScriptedAI
         }
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
         if (gatherOthersWhenAggro)
-            GetOtherSentinels(who);
+            GetOtherSentinels(pWho);
 
         GainSentinelAbility(ability);
-        DoZoneInCombat();
+
+        m_creature->SetInCombatWithZone();
     }
 
     void JustDied(Unit*)

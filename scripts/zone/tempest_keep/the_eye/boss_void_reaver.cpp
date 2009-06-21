@@ -84,10 +84,10 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
             m_pInstance->SetData(DATA_VOIDREAVEREVENT, NOT_STARTED);
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
-        DoZoneInCombat();
+        m_creature->SetInCombatWithZone();
 
         if (m_pInstance)
             m_pInstance->SetData(DATA_VOIDREAVEREVENT, IN_PROGRESS);

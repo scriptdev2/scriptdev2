@@ -94,7 +94,7 @@ struct MANGOS_DLL_DECL boss_nefarianAI : public ScriptedAI
         DoScriptText(SAY_DEATH, m_creature);
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
         switch (rand()%3)
         {
@@ -103,8 +103,9 @@ struct MANGOS_DLL_DECL boss_nefarianAI : public ScriptedAI
             case 2: DoScriptText(SAY_SHADOWFLAME, m_creature); break;
         }
 
-        DoCast(who,SPELL_SHADOWFLAME_INITIAL);
-        DoZoneInCombat();
+        DoCast(pWho,SPELL_SHADOWFLAME_INITIAL);
+
+        m_creature->SetInCombatWithZone();
     }
 
     void UpdateAI(const uint32 diff)

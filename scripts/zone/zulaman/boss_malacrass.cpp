@@ -203,7 +203,7 @@ struct MANGOS_DLL_DECL boss_malacrassAI : public ScriptedAI
 
     void Aggro(Unit* pWho)
     {
-        DoZoneInCombat();
+        m_creature->SetInCombatWithZone();
 
         DoScriptText(SAY_AGGRO, m_creature);
         AddsAttack(pWho);
@@ -293,7 +293,7 @@ struct MANGOS_DLL_DECL boss_malacrass_addAI : public ScriptedAI
 
     void Aggro(Unit* pWho)
     {
-        DoZoneInCombat();
+        m_creature->SetInCombatWithZone();
     }
 
     void MoveInLineOfSight(Unit* pWho)

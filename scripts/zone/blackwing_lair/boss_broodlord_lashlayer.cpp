@@ -50,10 +50,10 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
         LeashCheck_Timer = 2000;
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
-        DoZoneInCombat();
+        m_creature->SetInCombatWithZone();
     }
 
     void UpdateAI(const uint32 diff)

@@ -180,9 +180,9 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public Scripted_NoMovementAI
             m_pInstance->SetData(DATA_CTHUN_PHASE, 0);
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
-        DoZoneInCombat();
+        m_creature->SetInCombatWithZone();
     }
 
     void SpawnEyeTentacle(float x, float y)
@@ -495,9 +495,9 @@ struct MANGOS_DLL_DECL cthunAI : public Scripted_NoMovementAI
             m_pInstance->SetData(DATA_CTHUN_PHASE, 0);
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
-        DoZoneInCombat();
+        m_creature->SetInCombatWithZone();
     }
 
     void SpawnEyeTentacle(float x, float y)
@@ -609,7 +609,7 @@ struct MANGOS_DLL_DECL cthunAI : public Scripted_NoMovementAI
 
                     //Emerging phase
                     //AttackStart(Unit::GetUnit(*m_creature, HoldPlayer));
-                    DoZoneInCombat();
+                    m_creature->SetInCombatWithZone();
 
                     //Place all units in threat list on outside of stomach
                     Stomach_Map.clear();
@@ -940,9 +940,9 @@ struct MANGOS_DLL_DECL eye_tentacleAI : public Scripted_NoMovementAI
         KillSelfTimer = 35000;
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
-        DoZoneInCombat();
+        m_creature->SetInCombatWithZone();
     }
 
     void UpdateAI(const uint32 diff)
@@ -1002,9 +1002,9 @@ struct MANGOS_DLL_DECL claw_tentacleAI : public Scripted_NoMovementAI
         EvadeTimer = 5000;
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
-        DoZoneInCombat();
+        m_creature->SetInCombatWithZone();
     }
 
     void UpdateAI(const uint32 diff)
@@ -1096,9 +1096,9 @@ struct MANGOS_DLL_DECL giant_claw_tentacleAI : public Scripted_NoMovementAI
         EvadeTimer = 5000;
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
-        DoZoneInCombat();
+        m_creature->SetInCombatWithZone();
     }
 
     void UpdateAI(const uint32 diff)
@@ -1193,9 +1193,9 @@ struct MANGOS_DLL_DECL giant_eye_tentacleAI : public Scripted_NoMovementAI
         BeamTimer = 500;
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
-        DoZoneInCombat();
+        m_creature->SetInCombatWithZone();
     }
 
     void UpdateAI(const uint32 diff)

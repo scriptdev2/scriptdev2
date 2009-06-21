@@ -479,9 +479,10 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
             if (pPlayer)
                 pShade->AddThreat(pPlayer, 0.0f);
 
-            DoZoneInCombat();
             m_creature->SetInCombatWith(pShade);
             pShade->SetInCombatWith(m_creature);
+
+            m_creature->SetInCombatWithZone();
 
             EventBegun = true;
         }

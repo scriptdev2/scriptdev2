@@ -447,46 +447,6 @@ void FillSpellSummary()
     }
 }
 
-void ScriptedAI::DoZoneInCombat(Unit* pUnit)
-{
-    if (!pUnit)
-        pUnit = m_creature;
-
-    Map* pMap = pUnit->GetMap();
-
-    if (!pMap->IsDungeon())                                 //use IsDungeon instead of Instanceable, in case battlegrounds will be instantiated
-    {
-        error_log("SD2: DoZoneInCombat call for map that isn't an instance (pUnit entry = %d)", pUnit->GetTypeId() == TYPEID_UNIT ? ((Creature*)pUnit)->GetEntry() : 0);
-        return;
-    }
-
-    if (!pUnit->CanHaveThreatList() || pUnit->getThreatManager().isThreatListEmpty())
-    {
-        error_log("SD2: DoZoneInCombat called for creature that either cannot have threat list or has empty threat list (pUnit entry = %d)", pUnit->GetTypeId() == TYPEID_UNIT ? ((Creature*)pUnit)->GetEntry() : 0);
-        return;
-    }
-
-    Map::PlayerList const &PlList = pMap->GetPlayers();
-
-    if (PlList.isEmpty())
-        return;
-
-    for(Map::PlayerList::const_iterator i = PlList.begin(); i != PlList.end(); ++i)
-    {
-        if (Player* pPlayer = i->getSource())
-        {
-            if (pPlayer->isGameMaster())
-                continue;
-
-            if (pPlayer->isAlive())
-            {
-                pPlayer->SetInCombatWith(pUnit);
-                pUnit->AddThreat(pPlayer, 0.0f);
-            }
-        }
-    }
-}
-
 void ScriptedAI::DoResetThreat()
 {
     if (!m_creature->CanHaveThreatList() || m_creature->getThreatManager().isThreatListEmpty())

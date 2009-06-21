@@ -237,7 +237,8 @@ struct MANGOS_DLL_DECL boss_sartharionAI : public ScriptedAI
     void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_SARTHARION_AGGRO,m_creature);
-        DoZoneInCombat();
+
+        m_creature->SetInCombatWithZone();
 
         if (m_pInstance)
             m_pInstance->SetData(TYPE_SARTHARION_EVENT, IN_PROGRESS);
@@ -535,11 +536,12 @@ struct MANGOS_DLL_DECL dummy_dragonAI : public ScriptedAI
             return;
         }
 
-        //this is end, if we reach this, don't do much
+        //this is the end (!)
         if (uiPointId == POINT_ID_LAND)
         {
             m_creature->GetMotionMaster()->Clear();
             m_bCanMoveFree = false;
+            m_creature->SetInCombatWithZone();
             return;
         }
 
@@ -709,7 +711,6 @@ struct MANGOS_DLL_DECL mob_tenebronAI : public dummy_dragonAI
     void Aggro(Unit* pWho) 
     {
         DoScriptText(SAY_TENEBRON_AGGRO, m_creature);
-        DoZoneInCombat();
         DoCast(m_creature, SPELL_POWER_OF_TENEBRON);
     }
 
@@ -785,7 +786,6 @@ struct MANGOS_DLL_DECL mob_shadronAI : public dummy_dragonAI
     void Aggro(Unit* pWho) 
     {
         DoScriptText(SAY_SHADRON_AGGRO,m_creature);
-        DoZoneInCombat();
         DoCast(m_creature, SPELL_POWER_OF_SHADRON);
     }
 
@@ -855,7 +855,6 @@ struct MANGOS_DLL_DECL mob_vesperonAI : public dummy_dragonAI
     void Aggro(Unit* pWho) 
     {
         DoScriptText(SAY_VESPERON_AGGRO,m_creature);
-        DoZoneInCombat();
         DoCast(m_creature, SPELL_POWER_OF_VESPERON);
     }
 

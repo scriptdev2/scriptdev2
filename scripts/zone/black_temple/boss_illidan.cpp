@@ -989,7 +989,10 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
             m_pInstance->SetData(DATA_ILLIDANSTORMRAGEEVENT, NOT_STARTED);
     }
 
-    void Aggro(Unit *who) { DoZoneInCombat(); }
+    void Aggro(Unit* pWho)
+    {
+        m_creature->SetInCombatWithZone();
+    }
 
     void AttackStart(Unit *who)
     {
@@ -1821,7 +1824,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                         {
                             ShadowDemon->AddThreat(target, 5000000.0f);
                             ShadowDemon->AI()->AttackStart(target);
-                            DoZoneInCombat(ShadowDemon);
+                            ShadowDemon->SetInCombatWithZone();
                         }
                     }
                 }

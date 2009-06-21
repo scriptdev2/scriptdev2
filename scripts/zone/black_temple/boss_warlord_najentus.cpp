@@ -133,13 +133,14 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
         }
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
         if (m_pInstance)
             m_pInstance->SetData(DATA_HIGHWARLORDNAJENTUSEVENT, IN_PROGRESS);
 
         DoScriptText(SAY_AGGRO, m_creature);
-        DoZoneInCombat();
+
+        m_creature->SetInCombatWithZone();
     }
 
     void UpdateAI(const uint32 diff)

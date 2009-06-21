@@ -140,9 +140,9 @@ struct MANGOS_DLL_DECL boss_twinemperorsAI : public ScriptedAI
         DoPlaySoundToSet(m_creature, IAmVeklor() ? SOUND_VL_KILL : SOUND_VN_KILL);
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
-        DoZoneInCombat();
+        m_creature->SetInCombatWithZone();
 
         Creature *pOtherBoss = GetOtherBoss();
         if (pOtherBoss)
@@ -152,7 +152,7 @@ struct MANGOS_DLL_DECL boss_twinemperorsAI : public ScriptedAI
             if (!pOtherBoss->isInCombat())
             {
                 DoPlaySoundToSet(m_creature, IAmVeklor() ? SOUND_VL_AGGRO : SOUND_VN_AGGRO);
-                pOtherBoss->AI()->AttackStart(who);
+                pOtherBoss->AI()->AttackStart(pWho);
             }
         }
     }

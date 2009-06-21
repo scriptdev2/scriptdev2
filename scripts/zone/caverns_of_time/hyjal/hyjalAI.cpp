@@ -164,8 +164,8 @@ void hyjalAI::SummonCreature(uint32 entry, float Base[4][3])
         pCreature->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
         pCreature->GetMotionMaster()->MovePoint(0, AttackLoc[0],AttackLoc[1],AttackLoc[2]);
         pCreature->AddThreat(m_creature, 0.0f);
-        DoZoneInCombat(pCreature);
-
+        pCreature->SetInCombatWithZone();
+        
         // Check if creature is a boss.
         if (pCreature->isWorldBoss())
         {

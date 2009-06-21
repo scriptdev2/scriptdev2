@@ -76,7 +76,7 @@ struct MANGOS_DLL_DECL mob_doom_blossomAI : public ScriptedAI
         {
             if (TeronGUID)
             {
-                DoZoneInCombat();
+                m_creature->SetInCombatWithZone();
 
                 Creature* Teron = ((Creature*)Unit::GetUnit((*m_creature), TeronGUID));
                 if ((Teron) && (!Teron->isAlive() || Teron->IsInEvadeMode()))
@@ -382,7 +382,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
                     if (pUnit)
                         AttackStart(pUnit);
 
-                    DoZoneInCombat();
+                    m_creature->SetInCombatWithZone();
                 }else EnterEvadeMode();
             }else AggroTimer -= diff;
         }

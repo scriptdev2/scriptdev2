@@ -42,9 +42,9 @@ struct MANGOS_DLL_DECL boss_firemawAI : public ScriptedAI
         FlameBuffet_Timer = 5000;
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
-        DoZoneInCombat();
+        m_creature->SetInCombatWithZone();
     }
 
     void UpdateAI(const uint32 diff)

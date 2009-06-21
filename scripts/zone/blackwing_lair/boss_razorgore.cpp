@@ -52,9 +52,9 @@ struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
         Conflagration_Timer = 12000;
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
-        DoZoneInCombat();
+        m_creature->SetInCombatWithZone();
     }
 
     void JustDied(Unit* Killer)

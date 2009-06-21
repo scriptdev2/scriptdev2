@@ -237,11 +237,12 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         IsChanneling = false;
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
         m_creature->InterruptSpell(CURRENT_CHANNELED_SPELL);
         DoScriptText(SAY_AGGRO, m_creature);
-        DoZoneInCombat();
+
+        m_creature->SetInCombatWithZone();
 
         if (m_pInstance)
             m_pInstance->SetData(DATA_ARCHIMONDEEVENT, IN_PROGRESS);

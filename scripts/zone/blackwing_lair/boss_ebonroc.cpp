@@ -45,9 +45,9 @@ struct MANGOS_DLL_DECL boss_ebonrocAI : public ScriptedAI
         Heal_Timer = 1000;
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
-        DoZoneInCombat();
+        m_creature->SetInCombatWithZone();
     }
 
     void UpdateAI(const uint32 diff)

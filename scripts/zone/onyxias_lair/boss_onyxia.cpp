@@ -94,10 +94,10 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
         WingBuffetTimer = 17000;
     }
 
-    void Aggro(Unit* who)
+    void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
-        DoZoneInCombat();
+        m_creature->SetInCombatWithZone();
     }
 
     void KilledUnit(Unit *victim)

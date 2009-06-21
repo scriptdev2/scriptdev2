@@ -371,13 +371,13 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
 
     bool LoadedGUIDs;
 
-    void Aggro(Unit* who)
+    void Aggro(Unit* pWho)
     {
         if (m_pInstance)
         {
             Creature* Controller = ((Creature*)Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_ILLIDARICOUNCIL)));
             if (Controller)
-                ((mob_illidari_councilAI*)Controller->AI())->StartEvent(who);
+                ((mob_illidari_councilAI*)Controller->AI())->StartEvent(pWho);
         }
         else
         {
@@ -385,7 +385,8 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
             EnterEvadeMode();
         }
 
-        DoZoneInCombat();
+        m_creature->SetInCombatWithZone();
+
         // Load GUIDs on first aggro because the creature guids are only set as the creatures are created in world-
         // this means that for each creature, it will attempt to LoadGUIDs even though some of the other creatures are
         // not in world, and thus have no GUID set in the instance data system. Putting it in aggro ensures that all the creatures

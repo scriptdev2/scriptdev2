@@ -96,10 +96,10 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
         DoScriptText(SAY_KILLTARGET, m_creature, victim);
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
         DoCast(m_creature,SPELL_ESSENCEOFTHERED);
-        DoZoneInCombat();
+        m_creature->SetInCombatWithZone();
     }
 
     void UpdateAI(const uint32 diff)
