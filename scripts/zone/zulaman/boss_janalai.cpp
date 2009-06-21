@@ -58,7 +58,6 @@ enum
     NPC_AMANI_HATCHER_1             = 23818,
     NPC_AMANI_HATCHER_2             = 24504,
     NPC_HATCHLING                   = 23598,
-    NPC_EGG                         = 23817,
 
     //Hatcher Spells
     SPELL_HATCH_EGG                 = 43734,                //spell 42471 also exist
@@ -151,6 +150,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
     uint32 fire_breath_timer;
 
     std::list<uint64> m_lBombsGUIDList;
+    std::list<Creature*> m_lEggsRemainingList;
 
     uint32 m_uiBombTimer;
     uint32 m_uiBombSequenzeTimer;
@@ -165,7 +165,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
 
     bool m_bIsBombing;
     bool m_bCanBlowUpBombs;
-    bool noeggs;
+    bool b_mIsEggRemaining;
     bool enraged;
     bool enragetime;
 
@@ -175,6 +175,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
     void Reset()
     {
         m_lBombsGUIDList.clear();
+        m_lEggsRemainingList.clear();
 
         if (Creature* pUnit = (Creature*)Unit::GetUnit(*m_creature, m_uiHatcher1GUID))
         {
@@ -198,9 +199,9 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
         m_uiBombPhase = 0;
         m_uiBombCounter = 0;
         m_bCanBlowUpBombs = false;
+        b_mIsEggRemaining = true;
 
         enrage_timer = MINUTE*5*IN_MILISECONDS;
-        noeggs = false;
         hatchertime = 10000;
         wipetimer = MINUTE*10*IN_MILISECONDS;
         reset_timer = 5000;
@@ -369,6 +370,34 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
         m_lBombsGUIDList.clear();
     }
 
+    void DoHatchRemainingEggs()
+    {
+        GetCreatureListWithEntryInGrid(m_lEggsRemainingList, m_creature, NPC_EGG, 125.0f);
+
+        if (!m_lEggsRemainingList.empty())
+        {
+            for(std::list<Creature*>::iterator itr = m_lEggsRemainingList.begin(); itr != m_lEggsRemainingList.end(); ++itr)
+                (*itr)->CastSpell((*itr), SPELL_SUMMON_DRAGONHAWK, true);
+
+            b_mIsEggRemaining = false;
+
+            if (!m_pInstance)
+                return;
+
+            if (uint32 uiEggsRemaining_Right = m_pInstance->GetData(DATA_J_EGGS_RIGHT))
+            {
+                for(uint32 i = 0; i < uiEggsRemaining_Right; ++i)
+                    m_pInstance->SetData(DATA_J_EGGS_RIGHT, SPECIAL);
+            }
+
+            if (uint32 uiEggsRemaining_Left = m_pInstance->GetData(DATA_J_EGGS_LEFT))
+            {
+                for(uint32 i = 0; i < uiEggsRemaining_Left; ++i)
+                    m_pInstance->SetData(DATA_J_EGGS_LEFT, SPECIAL);
+            }
+        }
+    }
+
     void UpdateAI(const uint32 diff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
@@ -443,6 +472,19 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
                 enraged = true;
             }
 
+            //Hatch All
+            if (b_mIsEggRemaining && (m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 35)
+            {
+                DoScriptText(SAY_ALL_EGGS, m_creature);
+
+                if (m_creature->IsNonMeleeSpellCasted(false))
+                    m_creature->InterruptNonMeleeSpells(false);
+
+                DoCast(m_creature, SPELL_HATCH_ALL_EGGS);
+
+                DoHatchRemainingEggs();
+            }
+
             DoMeleeAttackIfReady();
         }
         else                                                // every Spell if Bombing
@@ -488,7 +530,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
         }else enrage_timer -=diff;
 
         //Call Hatcher
-        if (!noeggs)
+        if (b_mIsEggRemaining)
         {
             if (hatchertime < diff)
             {
@@ -514,9 +556,8 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
                     hatchertime = 90000;
                 }
                 else
-                {
-                    noeggs = true;
-                }
+                    b_mIsEggRemaining = false;
+
             }else hatchertime -=diff;
         }
 
@@ -527,40 +568,6 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
             DoCast(m_creature,SPELL_ENRAGE);
             wipetimer = 30000;
         }else wipetimer -=diff;
-
-        //Hatch All
-        if (!noeggs && (m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 35)
-        {
-            DoScriptText(SAY_ALL_EGGS, m_creature);
-
-            if (m_pInstance)
-                eggs = m_pInstance->GetData(DATA_J_EGGS_LEFT);
-
-            int i;
-            for(i=1;i<=eggs;i=i+1)
-            {
-                int r = (rand()%20 - 10);
-                int s = (rand()%20 - 10);
-                m_creature->SummonCreature(NPC_HATCHLING,JanalainPos[0][0]+s,JanalainPos[0][1]+r,JanalainPos[0][2],0,TEMPSUMMON_CORPSE_TIMED_DESPAWN,15000);
-
-                if (m_pInstance)
-                    m_pInstance->SetData(DATA_J_EGGS_LEFT, SPECIAL);
-            }
-
-            if (m_pInstance)
-                eggs = m_pInstance->GetData(DATA_J_EGGS_RIGHT);
-
-            for(i=1;i<=eggs;i=i+1)
-            {
-                int r = (rand()%20 - 10);
-                int s = (rand()%20 - 10);
-                m_creature->SummonCreature(NPC_HATCHLING,JanalainPos[0][0]+s,JanalainPos[0][1]+r,JanalainPos[0][2],0,TEMPSUMMON_CORPSE_TIMED_DESPAWN,15000);
-                if (m_pInstance)
-                    m_pInstance->SetData(DATA_J_EGGS_RIGHT, SPECIAL);
-            }
-
-            noeggs = true;
-        }
 
         //check for reset ... exploit preventing ... pulled from his podest
         if (reset_timer < diff)

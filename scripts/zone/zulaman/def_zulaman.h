@@ -50,7 +50,9 @@ enum InstanceZA
 
     DATA_GO_GONG            = 21,
     DATA_GO_MALACRASS_GATE  = 22,
-    DATA_GO_ENTRANCE        = 23
+    DATA_GO_ENTRANCE        = 23,
+
+    NPC_EGG                 = 23817
 };
 
 #endif
