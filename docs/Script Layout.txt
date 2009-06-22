@@ -1,5 +1,5 @@
 --- Script Layout ---
-A quick explination of the layout I hope everyone will follow for scriptdev2.
+A quick explanation of the layout I hope everyone will follow for scriptdev2.
 
 --- Sub Folders ---
 

@@ -6,13 +6,13 @@ Scriptdev2 Revision 695 introduces a new format for using texts in EventAI and S
 This information relates to the *_texts tables located in the ScriptDev Database.
 
 Any script can at any time access and use text from any of the three text tables, as long as the entry does in fact exist.
-Custom scripters are adviced to store their text data in custom_texts.
+Custom scripters are advised to store their text data in custom_texts.
 
 The different tables has ranges of entries allowed for that table.
 Reserved EventAI in Mangos     entry -1       -> -999999
 script_texts:                  entry -1000000 -> -1999999
 custom_texts:                  entry -2000000 -> -2999999
-Any entry out of range for that table will display a startup error.
+Any entry out of range for that table will display a start-up error.
 
 
 =========================================
@@ -40,13 +40,13 @@ language              This value is the Language that the text is native in (Def
 emote                 Value from enum Emote (defined in Emotes.dbc). Only source of text will play this emote (not target, if target are defined in DoScriptText)
 comment               This is a comment regarding the text entry (For ACID, accepted format is to use Creature ID of NPC using it).
 
-Note: Fields `content_loc1` to `content_loc8` are NULL values by default and are handled by seperate localization projects.
+Note: Fields `content_loc1` to `content_loc8` are NULL values by default and are handled by separate localization projects.
 
 
 =========================================
 Text Types (type)
 =========================================
-Below is the list of current Text types that texts tables can handle. These were previously seperate Actions in ACID.
+Below is the list of current Text types that texts tables can handle. These were previously separate Actions in ACID.
 
 #    Internal Name                 Description
 -----------------------------------------------------------
@@ -72,7 +72,7 @@ This is the Race Language that the text is native to (So it will display properl
 3    TAURAHE                      Text in this language is understood ONLY by the Tauren Race.
 6    DWARVISH                     Text in this language is understood ONLY by the Dwarf Race.
 7    COMMON                       Text in this language is understood ONLY by Alliance Races.
-8    DEMONIC                      Text in this language is understood ONLY by the Demon Race (Not Implimented).
+8    DEMONIC                      Text in this language is understood ONLY by the Demon Race (Not Implemented).
 9    TITAN                        This language was used by Sargeras to speak with other Titians (Not Implemented).
 10   THALASSIAN                   Text in this language is understood ONLY by the Blood Elf Race.
 11   DRACONIC                     Text in this language is understood ONLY by the Dragon Race.
@@ -83,4 +83,4 @@ This is the Race Language that the text is native to (So it will display properl
 35   DRAENEI                      Text in this language is understood ONLY by the Draenai Race.
 36   ZOMBIE                       (not currently used?)
 37   GNOMISH BINARY               Binary language used by Alliance when drinking Binary Brew
-38   GOBLIN BINARY                Binary language used by Horce when drinking Binary Brew
+38   GOBLIN BINARY                Binary language used by Horde when drinking Binary Brew
