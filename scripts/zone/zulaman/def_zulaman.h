@@ -44,6 +44,7 @@ enum InstanceZA
     DATA_MALACRASS          = 14,
     DATA_ZULJIN             = 15,
     DATA_HARRISON           = 16,
+    DATA_SPIRIT_LYNX        = 17,
 
     DATA_J_EGGS_RIGHT       = 19,
     DATA_J_EGGS_LEFT        = 20,
@@ -52,7 +53,8 @@ enum InstanceZA
     DATA_GO_MALACRASS_GATE  = 22,
     DATA_GO_ENTRANCE        = 23,
 
-    NPC_EGG                 = 23817
+    NPC_EGG                 = 23817,
+    NPC_SPIRIT_LYNX         = 24143
 };
 
 #endif

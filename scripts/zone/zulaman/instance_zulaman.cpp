@@ -38,6 +38,7 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
     uint64 m_uiNalorakkGUID;
     uint64 m_uiJanalaiGUID;
     uint64 m_uiHalazziGUID;
+    uint64 m_uiSpiritLynxGUID;
     uint64 m_uiZuljinGUID;
     uint64 m_uiMalacrassGUID;
     uint64 m_uiHarrisonGUID;
@@ -64,6 +65,7 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
         m_uiNalorakkGUID = 0;
         m_uiJanalaiGUID = 0;
         m_uiHalazziGUID = 0;
+        m_uiSpiritLynxGUID = 0;
         m_uiZuljinGUID = 0;
         m_uiMalacrassGUID = 0;
         m_uiHarrisonGUID = 0;
@@ -113,6 +115,7 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
             case 23863: m_uiZuljinGUID      = pCreature->GetGUID(); break;
             case 24239: m_uiMalacrassGUID   = pCreature->GetGUID(); break;
             case 24358: m_uiHarrisonGUID    = pCreature->GetGUID(); break;
+            case NPC_SPIRIT_LYNX: m_uiSpiritLynxGUID  = pCreature->GetGUID(); break;
             case NPC_EGG:
                 if (m_uiEncounter[3] != DONE)
                     m_lEggsGUIDList.push_back(pCreature->GetGUID());
@@ -230,6 +233,10 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
                 break;
         }
 
+        if (m_uiEncounter[1] == DONE && m_uiEncounter[2] == DONE && m_uiEncounter[3] == DONE &&
+            m_uiEncounter[4] == DONE && m_uiEncounter[5] != IN_PROGRESS)
+            DoUseDoorOrButton(m_uiMalacrassEntranceGUID);
+
         if (uiData == DONE || (uiType == TYPE_EVENT_RUN && uiData == IN_PROGRESS))
         {
             OUT_SAVE_INST_DATA;
@@ -318,6 +325,8 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
                 return m_uiJanalaiGUID;
             case DATA_HALAZZI:
                 return m_uiHalazziGUID;
+            case DATA_SPIRIT_LYNX:
+                return m_uiSpiritLynxGUID;
             case DATA_ZULJIN:
                 return m_uiZuljinGUID;
             case DATA_MALACRASS:
