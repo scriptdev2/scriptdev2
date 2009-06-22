@@ -137,10 +137,10 @@ void npc_escortAI::UpdateAI(const uint32 diff)
             if (ReconnectWP)
             {
                 //Correct movement speed
-                if (bIsRunning && m_creature->HasUnitMovementFlag(MOVEMENTFLAG_WALK_MODE))
-                    m_creature->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                else if (!bIsRunning && !m_creature->HasUnitMovementFlag(MOVEMENTFLAG_WALK_MODE))
-                    m_creature->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
+                if (bIsRunning && m_creature->HasUnitMovementFlag(MONSTER_MOVE_WALK))
+                    m_creature->RemoveUnitMovementFlag(MONSTER_MOVE_WALK);
+                else if (!bIsRunning && !m_creature->HasUnitMovementFlag(MONSTER_MOVE_WALK))
+                    m_creature->AddUnitMovementFlag(MONSTER_MOVE_WALK);
 
                 //Continue with waypoints
                 if (!IsOnHold)
@@ -292,14 +292,14 @@ void npc_escortAI::SetRun(bool bRun)
     if (bRun)
     {
         if (!bIsRunning)
-            m_creature->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
+            m_creature->RemoveUnitMovementFlag(MONSTER_MOVE_WALK);
         else
             debug_log("SD2: EscortAI attempt to set run mode, but is already running.");
     }
     else
     {
         if (bIsRunning)
-            m_creature->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
+            m_creature->AddUnitMovementFlag(MONSTER_MOVE_WALK);
         else
             debug_log("SD2: EscortAI attempt to set walk mode, but is already walking.");
     }
@@ -351,9 +351,7 @@ void npc_escortAI::Start(bool bAttack, bool bDefend, bool bRun, uint64 pGUID)
 
     //Set initial speed
     if (bIsRunning)
-        m_creature->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-    else
-        m_creature->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
+        m_creature->RemoveUnitMovementFlag(MONSTER_MOVE_WALK);
 
     //Start WP
     m_creature->GetMotionMaster()->MovePoint(CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z);
