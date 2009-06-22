@@ -192,6 +192,8 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
                 else
                 {
                     m_uiPhase = PHASE_TOTEM;
+                    m_uiShockTimer = 10*IN_MILISECONDS;
+                    m_uiTotemTimer = 12*IN_MILISECONDS;
 
                     DoScriptText(SAY_SPLIT, m_creature);
                     m_creature->CastSpell(m_creature, SPELL_TRANSFIGURE_TO_TROLL, false);
