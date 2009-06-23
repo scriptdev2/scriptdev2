@@ -154,7 +154,7 @@ struct MANGOS_DLL_DECL npc_taskmaster_fizzuleAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 
-    void ReciveEmote(Player* pPlayer, uint32 emote)
+    void ReceiveEmote(Player* pPlayer, uint32 emote)
     {
         if (emote == TEXTEMOTE_SALUTE)
         {

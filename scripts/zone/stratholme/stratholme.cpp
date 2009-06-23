@@ -168,7 +168,11 @@ CreatureAI* GetAI_mob_restless_soul(Creature* pCreature)
 ## mobs_spectral_ghostly_citizen
 ######*/
 
-#define SPELL_HAUNTING_PHANTOM  16336
+enum
+{
+    SPELL_HAUNTING_PHANTOM  = 16336,
+    SPELL_SLAP              = 6754
+};
 
 struct MANGOS_DLL_DECL mobs_spectral_ghostly_citizenAI : public ScriptedAI
 {
@@ -222,7 +226,7 @@ struct MANGOS_DLL_DECL mobs_spectral_ghostly_citizenAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 
-    void ReciveEmote_mobs_spectral_ghostly_citizen(Player* pPlayer, uint32 emote)
+    void ReceiveEmote(Player* pPlayer, uint32 emote)
     {
         switch(emote)
         {
@@ -230,9 +234,8 @@ struct MANGOS_DLL_DECL mobs_spectral_ghostly_citizenAI : public ScriptedAI
                 EnterEvadeMode();
                 break;
             case TEXTEMOTE_RUDE:
-                //Should instead cast spell, kicking player back. Spell not found.
                 if (m_creature->IsWithinDistInMap(pPlayer, ATTACK_DISTANCE))
-                    m_creature->HandleEmoteCommand(EMOTE_ONESHOT_RUDE);
+                    m_creature->CastSpell(pPlayer,SPELL_SLAP,false);
                 else
                     m_creature->HandleEmoteCommand(EMOTE_ONESHOT_RUDE);
                 break;

@@ -91,7 +91,7 @@ struct MANGOS_DLL_DECL npc_shenthulAI : public ScriptedAI
         playerGUID = 0;
     }
 
-    void ReciveEmote(Player* pPlayer, uint32 emote)
+    void ReceiveEmote(Player* pPlayer, uint32 emote)
     {
         if (emote == TEXTEMOTE_SALUTE && pPlayer->GetQuestStatus(QUEST_SHATTERED_SALUTE) == QUEST_STATUS_INCOMPLETE)
         {
