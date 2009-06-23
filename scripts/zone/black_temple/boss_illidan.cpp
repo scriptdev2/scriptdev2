@@ -480,7 +480,7 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
         IsReturningToIllidan = true;
         WayPoint = WayPointList.begin();
         m_creature->SetSpeed(MOVE_RUN, 2.0f);
-        m_creature->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
+        m_creature->RemoveUnitMovementFlag(MONSTER_MOVE_WALK);
         IsWalking = true;
     }
 
@@ -665,7 +665,7 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
                                 IsWalking = true;
                                 WayPoint = WayPointList.begin();
                                 std::advance(WayPoint, 9);
-                                m_creature->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
+                                m_creature->RemoveUnitMovementFlag(MONSTER_MOVE_WALK);
                                 break;
                         }
                     }else TalkTimer -= diff;
@@ -755,7 +755,7 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
                         }
 
                         WayPoint = WayPointList.begin();
-                        m_creature->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
+                        m_creature->AddUnitMovementFlag(MONSTER_MOVE_WALK);
                         m_creature->GetMotionMaster()->MovePoint(WayPoint->id, WayPoint->x, WayPoint->y, WayPoint->z);
                         IsWalking = true;
                         break;

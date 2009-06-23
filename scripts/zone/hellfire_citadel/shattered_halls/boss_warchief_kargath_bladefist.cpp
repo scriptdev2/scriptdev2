@@ -81,7 +81,6 @@ struct MANGOS_DLL_DECL boss_warchief_kargath_bladefistAI : public ScriptedAI
         removeAdds();
 
         m_creature->SetSpeed(MOVE_RUN,2);
-        m_creature->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
 
         summoned = 2;
         InBlade = false;
@@ -159,30 +158,26 @@ struct MANGOS_DLL_DECL boss_warchief_kargath_bladefistAI : public ScriptedAI
 
     void removeAdds()
     {
+        if (!m_pInstance)
+            return;
+
         for(std::vector<uint64>::iterator itr = adds.begin(); itr!= adds.end(); ++itr)
         {
-            Unit* temp = Unit::GetUnit((*m_creature),*itr);
-            if (temp && temp->isAlive())
-            {
-                (*temp).GetMotionMaster()->Clear(true);
-                m_creature->DealDamage(temp,temp->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-                ((Creature*)temp)->RemoveCorpse();
-            }
+            if (Creature* pTemp = m_pInstance->instance->GetCreature(*itr))
+                pTemp->ForcedDespawn();
         }
+
         adds.clear();
 
         for(std::vector<uint64>::iterator itr = assassins.begin(); itr!= assassins.end(); ++itr)
         {
-            Unit* temp = Unit::GetUnit((*m_creature),*itr);
-            if (temp && temp->isAlive())
-            {
-                (*temp).GetMotionMaster()->Clear(true);
-                m_creature->DealDamage(temp,temp->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-                ((Creature*)temp)->RemoveCorpse();
-            }
+            if (Creature* pTemp = m_pInstance->instance->GetCreature(*itr))
+                pTemp->ForcedDespawn();
         }
+
         assassins.clear();
     }
+
     void SpawnAssassin()
     {
         m_creature->SummonCreature(MOB_SHATTERED_ASSASSIN,AssassEntrance[0],AssassEntrance[1]+8, AssassEntrance[2], 0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,30000);

@@ -628,8 +628,8 @@ struct MANGOS_DLL_DECL mob_amanishi_hatcherAI : public ScriptedAI
         m_bCanMoveNext = false;
         m_bWaypointEnd = false;
 
-        if (m_creature->HasUnitMovementFlag(MOVEMENTFLAG_WALK_MODE))
-            m_creature->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
+        if (m_creature->HasUnitMovementFlag(MONSTER_MOVE_WALK))
+            m_creature->RemoveUnitMovementFlag(MONSTER_MOVE_WALK);
     }
 
     void MoveInLineOfSight(Unit* pWho) {}

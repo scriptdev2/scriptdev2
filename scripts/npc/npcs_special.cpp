@@ -530,7 +530,7 @@ struct MANGOS_DLL_DECL npc_injured_patientAI : public ScriptedAI
             }
 
             uint32 mobId = m_creature->GetEntry();
-            m_creature->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
+            m_creature->RemoveUnitMovementFlag(MONSTER_MOVE_WALK);
 
             switch (mobId)
             {

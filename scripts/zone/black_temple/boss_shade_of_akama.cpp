@@ -243,13 +243,12 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
         // max of 6 sorcerers can be summoned
         if ((rand()%3 == 0) && (DeathCount > 0) && (SorcererCount < 7))
         {
-            Creature* Sorcerer = m_creature->SummonCreature(CREATURE_SORCERER, X, Y, Z_SPAWN, 0, TEMPSUMMON_DEAD_DESPAWN, 0);
-            if (Sorcerer)
+            if (Creature* pSorcerer = m_creature->SummonCreature(CREATURE_SORCERER, X, Y, Z_SPAWN, 0, TEMPSUMMON_DEAD_DESPAWN, 0))
             {
-                Sorcerer->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                Sorcerer->GetMotionMaster()->MovePoint(0, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ());
-                Sorcerer->SetUInt64Value(UNIT_FIELD_TARGET, m_creature->GetGUID());
-                Sorcerers.push_back(Sorcerer->GetGUID());
+                pSorcerer->RemoveUnitMovementFlag(MONSTER_MOVE_WALK);
+                pSorcerer->GetMotionMaster()->MovePoint(0, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ());
+                pSorcerer->SetUInt64Value(UNIT_FIELD_TARGET, m_creature->GetGUID());
+                Sorcerers.push_back(pSorcerer->GetGUID());
                 --DeathCount;
                 ++SorcererCount;
             }
@@ -258,11 +257,10 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
         {
             for(uint8 i = 0; i < 3; ++i)
             {
-                Creature* Spawn = m_creature->SummonCreature(spawnEntries[i], X, Y, Z_SPAWN, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 25000);
-                if (Spawn)
+                if (Creature* pSpawn = m_creature->SummonCreature(spawnEntries[i], X, Y, Z_SPAWN, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 25000))
                 {
-                    Spawn->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                    Spawn->GetMotionMaster()->MovePoint(0, AGGRO_X, AGGRO_Y, AGGRO_Z);
+                    pSpawn->RemoveUnitMovementFlag(MONSTER_MOVE_WALK);
+                    pSpawn->GetMotionMaster()->MovePoint(0, AGGRO_X, AGGRO_Y, AGGRO_Z);
                 }
             }
         }
@@ -321,19 +319,16 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
             if (DefenderTimer < diff)
             {
                 uint32 ran = rand()%2;
-                Creature* Defender = m_creature->SummonCreature(CREATURE_DEFENDER, SpawnLocations[ran].x, SpawnLocations[ran].y, Z_SPAWN, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 25000);
-                if (Defender)
+
+                if (Creature* pDefender = m_creature->SummonCreature(CREATURE_DEFENDER, SpawnLocations[ran].x, SpawnLocations[ran].y, Z_SPAWN, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 25000))
                 {
-                    Defender->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                    bool move = true;
-
                     if (Unit* pAkama = Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_AKAMA_SHADE)))
-                        Defender->AI()->AttackStart(pAkama);
+                        pDefender->AI()->AttackStart(pAkama);
                     else
-                        move = false;
-
-                    if (!move)
-                        Defender->GetMotionMaster()->MovePoint(0, AKAMA_X, AKAMA_Y, AKAMA_Z);
+                    {
+                        pDefender->RemoveUnitMovementFlag(MONSTER_MOVE_WALK);
+                        pDefender->GetMotionMaster()->MovePoint(0, AKAMA_X, AKAMA_Y, AKAMA_Z);
+                    }
                 }
                 DefenderTimer = 15000;
             }else DefenderTimer -= diff;
@@ -555,7 +550,7 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
                     {
                         ShadeHasDied = true;
                         WayPointId = 0;
-                        m_creature->SetUnitMovementFlags(MOVEMENTFLAG_WALK_MODE);
+                        m_creature->SetUnitMovementFlags(MONSTER_MOVE_WALK);
                         m_creature->GetMotionMaster()->MovePoint(WayPointId, AkamaWP[0].x, AkamaWP[0].y, AkamaWP[0].z);
                     }
                 }

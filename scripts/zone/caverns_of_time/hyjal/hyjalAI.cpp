@@ -155,13 +155,12 @@ void hyjalAI::SummonCreature(uint32 entry, float Base[4][3])
         AttackLoc[i] = AttackArea[Faction][i];
     }
 
-    Creature* pCreature = m_creature->SummonCreature(entry, SpawnLoc[0], SpawnLoc[1], SpawnLoc[2], 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 120000);
-    if (pCreature)
+    if (Creature* pCreature = m_creature->SummonCreature(entry, SpawnLoc[0], SpawnLoc[1], SpawnLoc[2], 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 120000))
     {
         // Increment Enemy Count to be used in World States and instance script
         ++EnemyCount;
 
-        pCreature->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
+        pCreature->RemoveUnitMovementFlag(MONSTER_MOVE_WALK);
         pCreature->GetMotionMaster()->MovePoint(0, AttackLoc[0],AttackLoc[1],AttackLoc[2]);
         pCreature->AddThreat(m_creature, 0.0f);
         pCreature->SetInCombatWithZone();

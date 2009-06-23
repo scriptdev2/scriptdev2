@@ -111,8 +111,8 @@ struct MANGOS_DLL_DECL boss_vazrudenAI : public ScriptedAI
     {
         if (Unit* pUnit = Unit::GetUnit(*m_creature,m_pInstance->GetData64(DATA_HERALD)))
         {
-            if (pUnit->HasUnitMovementFlag(MOVEMENTFLAG_WALK_MODE))
-                pUnit->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
+            if (pUnit->HasUnitMovementFlag(MONSTER_MOVE_WALK))
+                pUnit->RemoveUnitMovementFlag(MONSTER_MOVE_WALK);
 
             pUnit->GetMotionMaster()->MovePoint(POINT_ID_COMBAT, afCombatPos[0], afCombatPos[1], afCombatPos[2]);
 
