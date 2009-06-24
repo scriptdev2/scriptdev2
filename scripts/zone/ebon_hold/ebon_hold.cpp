@@ -34,6 +34,11 @@ enum
     SPELL_CHAINED_PESANT_BREATH     = 54613,
     SPELL_INITIATE_VISUAL           = 51519,
 
+    SPELL_BLOOD_STRIKE              = 52374,
+    SPELL_DEATH_COIL                = 52375,
+    SPELL_ICY_TOUCH                 = 52372,
+    SPELL_PLAGUE_STRIKE             = 52373,
+
     NPC_ANCHOR                      = 29521,
     NPC_INITATE_QCREDIT             = 29519,
     FACTION_MONSTER                 = 16,
@@ -135,6 +140,10 @@ struct MANGOS_DLL_DECL npc_unworthy_initiateAI : public ScriptedAI
     uint32 m_uiAnchorCheckTimer;
     uint32 m_uiPhase;
     uint32 m_uiPhaseTimer;
+    uint32 m_uiBloodStrike_Timer;
+    uint32 m_uiDeathCoil_Timer;
+    uint32 m_uiIcyTouch_Timer;
+    uint32 m_uiPlagueStrike_Timer;
 
     void Reset()
     {
@@ -144,6 +153,10 @@ struct MANGOS_DLL_DECL npc_unworthy_initiateAI : public ScriptedAI
         m_uiAnchorCheckTimer = 5000;
         m_uiPhase = PHASE_INACTIVE_OR_COMBAT;
         m_uiPhaseTimer = 7500;
+        m_uiBloodStrike_Timer = 4000;
+        m_uiDeathCoil_Timer = 6000;
+        m_uiIcyTouch_Timer = 2000;
+        m_uiPlagueStrike_Timer = 5000;
 
         m_creature->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_UNK_8);
     }
@@ -208,7 +221,29 @@ struct MANGOS_DLL_DECL npc_unworthy_initiateAI : public ScriptedAI
             if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
                 return;
 
-            // TODO: spells
+            if (m_uiBloodStrike_Timer < uiDiff)
+            {
+                DoCast(m_creature->getVictim(),SPELL_BLOOD_STRIKE);
+                m_uiBloodStrike_Timer = 9000;
+            }else m_uiBloodStrike_Timer -= uiDiff;
+
+            if (m_uiDeathCoil_Timer < uiDiff)
+            {
+                DoCast(m_creature->getVictim(),SPELL_DEATH_COIL);
+                m_uiDeathCoil_Timer = 8000;
+            }else m_uiDeathCoil_Timer -= uiDiff;
+
+            if (m_uiIcyTouch_Timer < uiDiff)
+            {
+                DoCast(m_creature->getVictim(),SPELL_ICY_TOUCH);
+                m_uiIcyTouch_Timer = 8000;
+            }else m_uiIcyTouch_Timer -= uiDiff;
+
+            if (m_uiPlagueStrike_Timer < uiDiff)
+            {
+                DoCast(m_creature->getVictim(),SPELL_PLAGUE_STRIKE);
+                m_uiPlagueStrike_Timer = 8000;
+            }else m_uiPlagueStrike_Timer -= uiDiff;
 
             DoMeleeAttackIfReady();
         }
@@ -255,7 +290,6 @@ CreatureAI* GetAI_npc_unworthy_initiate(Creature* pCreature)
     return new npc_unworthy_initiateAI(pCreature);
 }
 
-//simlilar approach as we would expect if spellEffect was implemented fully
 bool GOHello_go_acherus_soul_prison(Player* pPlayer, GameObject* pGo)
 {
     if (Creature* pAnchor = GetClosestCreatureWithEntry(pGo, NPC_ANCHOR, INTERACTION_DISTANCE))
