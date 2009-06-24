@@ -585,6 +585,47 @@ void ScriptedAI::SetCombatMovement(bool bCombatMove)
     bCombatMovement = bCombatMove;
 }
 
+// Hacklike storage used for misc creatures that are expected to evade of outside of a certain area.
+// It is assumed the information is found elswehere and can be handled by mangos. So far no luck finding such information/way to extract it.
+void ScriptedAI::EnterEvadeIfOutOfCombatArea(const uint32 uiDiff)
+{
+    if (m_uiEvadeCheckCooldown < uiDiff)
+        m_uiEvadeCheckCooldown = 2500;
+    else
+    {
+        m_uiEvadeCheckCooldown -= uiDiff;
+        return;
+    }
+
+    if (m_creature->IsInEvadeMode() || !m_creature->getVictim())
+        return;
+
+    float fX = m_creature->GetPositionX();
+    float fY = m_creature->GetPositionY();
+    float fZ = m_creature->GetPositionZ();
+
+    switch(m_creature->GetEntry())
+    {
+        case 23578:                                         // jan'alai (calculate by Z)
+            if (fZ > 12.0f)
+                return;
+            break;
+        case 28860:                                         // sartharion (calculate box)
+            if (fX > 3218.86f && fX < 3275.69f && fY > 572.40f && fY < 484.68f)
+                return;
+            break;
+        case 19516:                                         // void reaver (calculate from center of room)
+            if (m_creature->GetDistance2d(432.59f, 371.93f) < 105.0f)
+                return;
+            break;
+        default:
+            error_log("SD2: EnterEvadeIfOutOfCombatArea used for creature entry %u, but does not have any definition.", m_creature->GetEntry());
+            return;
+    }
+
+    EnterEvadeMode();
+}
+
 void Scripted_NoMovementAI::MoveInLineOfSight(Unit *who)
 {
     if (!m_creature->hasUnitState(UNIT_STAT_STUNNED) && who->isTargetableForAttack() &&

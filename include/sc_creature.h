@@ -59,7 +59,7 @@ struct PointMovement
 
 struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
 {
-    explicit ScriptedAI(Creature* pCreature) : CreatureAI(pCreature), bCombatMovement(true) {}
+    explicit ScriptedAI(Creature* pCreature) : CreatureAI(pCreature), bCombatMovement(true), m_uiEvadeCheckCooldown(2500) {}
     ~ScriptedAI() {}
 
     //*************
@@ -199,8 +199,13 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
 
     void SetCombatMovement(bool bCombatMove);
 
+    void EnterEvadeIfOutOfCombatArea(const uint32 uiDiff);
+
     protected:
         bool bCombatMovement;
+
+    private:
+        uint32 m_uiEvadeCheckCooldown;
 };
 
 struct MANGOS_DLL_DECL Scripted_NoMovementAI : public ScriptedAI
