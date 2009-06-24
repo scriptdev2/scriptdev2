@@ -166,6 +166,8 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
         }else Berserk_Timer -= diff;
 
         DoMeleeAttackIfReady();
+
+        EnterEvadeIfOutOfCombatArea(diff);
     }
 };
 

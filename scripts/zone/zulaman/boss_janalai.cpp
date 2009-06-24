@@ -161,7 +161,6 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
     uint32 hatchertime;
     uint32 eggs;
     uint32 wipetimer;
-    uint32 reset_timer;
 
     bool m_bIsBombing;
     bool m_bCanBlowUpBombs;
@@ -204,7 +203,6 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
         enrage_timer = MINUTE*5*IN_MILISECONDS;
         hatchertime = 10000;
         wipetimer = MINUTE*10*IN_MILISECONDS;
-        reset_timer = 5000;
         enraged = false;
         enragetime = false;
     }
@@ -570,14 +568,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
         }else wipetimer -=diff;
 
         //check for reset ... exploit preventing ... pulled from his podest
-        if (reset_timer < diff)
-        {
-            if (m_creature->GetPositionX() < -70 || m_creature->GetPositionX() > 0)
-            {
-                EnterEvadeMode();
-                reset_timer = 5000;                         //every 5 Seca
-            }
-        }else reset_timer -=diff;
+        EnterEvadeIfOutOfCombatArea(diff);
     }
 };
 
