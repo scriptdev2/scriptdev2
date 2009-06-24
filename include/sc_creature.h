@@ -199,7 +199,7 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
 
     void SetCombatMovement(bool bCombatMove);
 
-    void EnterEvadeIfOutOfCombatArea(const uint32 uiDiff);
+    bool EnterEvadeIfOutOfCombatArea(const uint32 uiDiff);
 
     protected:
         bool bCombatMovement;

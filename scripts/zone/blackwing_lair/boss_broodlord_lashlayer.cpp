@@ -39,7 +39,6 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
     uint32 BlastWave_Timer;
     uint32 MortalStrike_Timer;
     uint32 KnockBack_Timer;
-    uint32 LeashCheck_Timer;
 
     void Reset()
     {
@@ -47,7 +46,6 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
         BlastWave_Timer = 12000;
         MortalStrike_Timer = 20000;
         KnockBack_Timer = 30000;
-        LeashCheck_Timer = 2000;
     }
 
     void Aggro(Unit* pWho)
@@ -60,20 +58,6 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
-
-        //LeashCheck_Timer
-        if (LeashCheck_Timer < diff)
-        {
-            float rx,ry,rz;
-            m_creature->GetRespawnCoord(rx, ry, rz);
-            if(!m_creature->IsWithinDist3d(rx,ry,rz,250.0f))
-            {
-                DoScriptText(SAY_LEASH, m_creature);
-                EnterEvadeMode();
-                return;
-            }
-            LeashCheck_Timer = 2000;
-        }else LeashCheck_Timer -= diff;
 
         //Cleave_Timer
         if (Cleave_Timer < diff)
@@ -107,6 +91,9 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
         }else KnockBack_Timer -= diff;
 
         DoMeleeAttackIfReady();
+
+        if (EnterEvadeIfOutOfCombatArea(diff))
+            DoScriptText(SAY_LEASH, m_creature);
     }
 };
 CreatureAI* GetAI_boss_broodlord(Creature* pCreature)
