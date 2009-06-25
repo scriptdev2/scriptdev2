@@ -75,7 +75,7 @@ DisplayToSpell m_aDisplayToSpell[] =
     {25370, 51545},                                         // troll F
     {25371, 51548},                                         // tauren F
     {25372, 51550},                                         // forsaken F
-    {25373, 51541}                                          // belf M
+    {25373, 51551}                                          // belf M
 };
 
 struct MANGOS_DLL_DECL npc_unworthy_initiate_anchorAI : public ScriptedAI
