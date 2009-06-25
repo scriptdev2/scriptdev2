@@ -1896,7 +1896,14 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1609012,'There is no hope for our future...',0,0,0,0,'unworthy SAY_AGGRO_5'),
 (-1609013,'Sate your hunger on cold steel, $R',0,0,0,0,'unworthy SAY_AGGRO_6'),
 (-1609014,'It ends here!',0,0,0,0,'unworthy SAY_AGGRO_7'),
-(-1609015,'Death is the only cure!',0,0,0,0,'unworthy SAY_AGGRO_8');
+(-1609015,'Death is the only cure!',0,0,0,0,'unworthy SAY_AGGRO_8'),
+
+(-1609016,'No potions!',0,0,0,0,'dk_initiate SAY_DUEL_A'),
+(-1609017,'Remember this day, $n, for it is the day that you will be thoroughly owned.',0,0,0,0,'dk_initiate SAY_DUEL_B'),
+(-1609018,'I\'m going to tear your heart out, cupcake!',0,0,0,0,'dk_initiate SAY_DUEL_C'),
+(-1609019,'Don\'t make me laugh.',0,0,0,0,'dk_initiate SAY_DUEL_D'),
+(-1609020,'Here come the tears...',0,0,0,0,'dk_initiate SAY_DUEL_E'),
+(-1609021,'You have challenged death itself!',0,0,0,0,'dk_initiate SAY_DUEL_F');
 
 -- -1 615 000 OBSIDIAN SANCTUM
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
