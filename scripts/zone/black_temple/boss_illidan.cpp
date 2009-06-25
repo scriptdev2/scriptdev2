@@ -346,7 +346,7 @@ struct MANGOS_DLL_DECL demonfireAI : public ScriptedAI
                 if (IllidanGUID)
                 {
                     Unit* Illidan = Unit::GetUnit((*m_creature), IllidanGUID);
-                    if (Illidan && !Illidan->HasUnitMovementFlag(MOVEMENTFLAG_LEVITATING))
+                    if (Illidan && !Illidan->HasUnitMovementFlag(MONSTER_MOVE_LEVITATING))
                         m_creature->setDeathState(JUST_DIED);
                 }
             }
@@ -978,7 +978,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
         // Unequip warglaives if needed
         SetEquipmentSlots(false, EQUIP_UNEQUIP, EQUIP_UNEQUIP, EQUIP_NO_CHANGE);
 
-        m_creature->RemoveUnitMovementFlag(MOVEMENTFLAG_LEVITATING);
+        m_creature->RemoveUnitMovementFlag(MONSTER_MOVE_LEVITATING);
 
         IsTalking = false;
 
@@ -1280,7 +1280,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
 
         // We now hover!
-        m_creature->AddUnitMovementFlag(MOVEMENTFLAG_LEVITATING);
+        m_creature->AddUnitMovementFlag(MONSTER_MOVE_LEVITATING);
 
         m_creature->GetMotionMaster()->MovePoint(0, CENTER_X, CENTER_Y, CENTER_Z);
         for(uint8 i = 0; i < 2; ++i)
@@ -1722,7 +1722,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
 
                         // anndddd touchdown!
                         m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LAND);
-                        m_creature->RemoveUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT + MOVEMENTFLAG_LEVITATING);
+                        m_creature->RemoveUnitMovementFlag(MONSTER_MOVE_LEVITATING);
                         Phase = PHASE_NORMAL_2;
 
                         // We should let the raid fight us =)

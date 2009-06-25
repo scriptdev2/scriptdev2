@@ -291,7 +291,6 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
                 debug_log("SD2: KALEC: Exiting the arena");
                 DoScriptText(SAY_GOOD_PLRWIN, m_creature);
 
-                m_creature->AddUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT + MOVEMENTFLAG_LEVITATING);
                 float x, y, z;
                 float iniX, iniY, iniZ;
                 m_creature->GetPosition(iniX, iniY, iniZ);
