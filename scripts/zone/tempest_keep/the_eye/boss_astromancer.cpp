@@ -255,7 +255,7 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
 
                 //After these 50 seconds she portals to the middle of the room and disappears, leaving 3 light portals behind.
                 m_creature->GetMotionMaster()->Clear();
-                m_creature->Relocate(CENTER_X, CENTER_Y, CENTER_Z, CENTER_O);
+                m_creature->GetMap()->CreatureRelocation(m_creature, CENTER_X, CENTER_Y, CENTER_Z, CENTER_O);
 
                 for(int i = 0; i <= 2; ++i)
                 {
@@ -329,7 +329,7 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
                 //15 seconds later Solarian reappears out of one of the 3 portals. Simultaneously, 2 healers appear in the two other portals.
                 int i = rand()%3;
                 m_creature->GetMotionMaster()->Clear();
-                m_creature->Relocate(Portals[i][0], Portals[i][1], Portals[i][2], CENTER_O);
+                m_creature->GetMap()->CreatureRelocation(m_creature, Portals[i][0], Portals[i][1], Portals[i][2], CENTER_O);
 
                 for (int j = 0; j <= 2; ++j)
                     if (j != i)

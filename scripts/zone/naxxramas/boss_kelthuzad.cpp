@@ -219,11 +219,12 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
         {
             if (GuardiansOfIcecrown[i])
             {
-                Unit* pUnit = Unit::GetUnit((*m_creature), GuardiansOfIcecrown[i]);
-                if (!pUnit || !pUnit->isAlive())
+                Creature* pGuardian = (Creature*)Unit::GetUnit(*m_creature, GuardiansOfIcecrown[i]);
+
+                if (!pGuardian || !pGuardian->isAlive())
                     continue;
 
-                pUnit->CombatStop();
+                pGuardian->CombatStop();
 
                 float Walk_Pos_X = 0.0f;
                 float Walk_Pos_Y = 0.0f;
@@ -263,7 +264,7 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
                         break;
                 }
 
-                pUnit->SendMonsterMoveWithSpeed(Walk_Pos_X, Walk_Pos_Y, Walk_Pos_Z);
+                pGuardian->SendMonsterMoveWithSpeed(Walk_Pos_X, Walk_Pos_Y, Walk_Pos_Z);
             }
         }
     }
@@ -359,7 +360,7 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
             {
                 //Summon a Guardian of Icecrown in a random alcove (Creature # 16441)
                 //uint32 TimeToWalk;
-                Unit* pUnit = NULL;
+                Creature* pGuardian = NULL;
 
                 float Walk_Pos_X;
                 float Walk_Pos_Y;
@@ -368,42 +369,42 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
                 switch(rand()%6)
                 {
                     case 0:
-                        pUnit = m_creature->SummonCreature(16441,ADDX_LEFT_FAR,ADDY_LEFT_FAR,ADDZ_LEFT_FAR,ADDO_LEFT_FAR,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,1000);
+                        pGuardian = m_creature->SummonCreature(16441,ADDX_LEFT_FAR,ADDY_LEFT_FAR,ADDZ_LEFT_FAR,ADDO_LEFT_FAR,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,1000);
                         //Setting walk position
                         Walk_Pos_X = WALKX_LEFT_FAR;
                         Walk_Pos_Y = WALKY_LEFT_FAR;
                         Walk_Pos_Z = WALKZ_LEFT_FAR;
                         break;
                     case 1:
-                        pUnit = m_creature->SummonCreature(16441,ADDX_LEFT_MIDDLE,ADDY_LEFT_MIDDLE,ADDZ_LEFT_MIDDLE,ADDO_LEFT_MIDDLE,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,1000);
+                        pGuardian = m_creature->SummonCreature(16441,ADDX_LEFT_MIDDLE,ADDY_LEFT_MIDDLE,ADDZ_LEFT_MIDDLE,ADDO_LEFT_MIDDLE,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,1000);
                         //Start moving guardian towards the center of the room
                         Walk_Pos_X = WALKX_LEFT_MIDDLE;
                         Walk_Pos_Y = WALKY_LEFT_MIDDLE;
                         Walk_Pos_Z = WALKZ_LEFT_MIDDLE;
                         break;
                     case 2:
-                        pUnit = m_creature->SummonCreature(16441,ADDX_LEFT_NEAR,ADDY_LEFT_NEAR,ADDZ_LEFT_NEAR,ADDO_LEFT_NEAR,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,1000);
+                        pGuardian = m_creature->SummonCreature(16441,ADDX_LEFT_NEAR,ADDY_LEFT_NEAR,ADDZ_LEFT_NEAR,ADDO_LEFT_NEAR,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,1000);
                         //Start moving guardian towards the center of the room
                         Walk_Pos_X = WALKX_LEFT_NEAR;
                         Walk_Pos_Y = WALKY_LEFT_NEAR;
                         Walk_Pos_Z = WALKZ_LEFT_NEAR;
                         break;
                     case 3:
-                        pUnit = m_creature->SummonCreature(16441,ADDX_RIGHT_FAR,ADDY_RIGHT_FAR,ADDZ_RIGHT_FAR,ADDO_RIGHT_FAR,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,1000);
+                        pGuardian = m_creature->SummonCreature(16441,ADDX_RIGHT_FAR,ADDY_RIGHT_FAR,ADDZ_RIGHT_FAR,ADDO_RIGHT_FAR,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,1000);
                         //Start moving guardian towards the center of the room
                         Walk_Pos_X = WALKX_RIGHT_FAR;
                         Walk_Pos_Y = WALKY_RIGHT_FAR;
                         Walk_Pos_Z = WALKZ_RIGHT_FAR;
                         break;
                     case 4:
-                        pUnit = m_creature->SummonCreature(16441,ADDX_RIGHT_MIDDLE,ADDY_RIGHT_MIDDLE,ADDZ_RIGHT_MIDDLE,ADDO_RIGHT_MIDDLE,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,1000);
+                        pGuardian = m_creature->SummonCreature(16441,ADDX_RIGHT_MIDDLE,ADDY_RIGHT_MIDDLE,ADDZ_RIGHT_MIDDLE,ADDO_RIGHT_MIDDLE,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,1000);
                         //Start moving guardian towards the center of the room
                         Walk_Pos_X = WALKX_RIGHT_MIDDLE;
                         Walk_Pos_Y = WALKY_RIGHT_MIDDLE;
                         Walk_Pos_Z = WALKZ_RIGHT_MIDDLE;
                         break;
                     case 5:
-                        pUnit = m_creature->SummonCreature(16441,ADDX_RIGHT_NEAR,ADDY_RIGHT_NEAR,ADDZ_RIGHT_NEAR,ADDO_RIGHT_NEAR,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,1000);
+                        pGuardian = m_creature->SummonCreature(16441,ADDX_RIGHT_NEAR,ADDY_RIGHT_NEAR,ADDZ_RIGHT_NEAR,ADDO_RIGHT_NEAR,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,1000);
                         //Start moving guardian towards the center of the room
                         Walk_Pos_X = WALKX_RIGHT_NEAR;
                         Walk_Pos_Y = WALKY_RIGHT_NEAR;
@@ -411,14 +412,14 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
                         break;
                 }
 
-                if (pUnit)
+                if (pGuardian)
                 {
                     //if we find no one to figth walk to the center
-                    if (!pUnit->isInCombat())
-                        pUnit->SendMonsterMoveWithSpeed(Walk_Pos_X,Walk_Pos_Y,Walk_Pos_Z);
+                    if (!pGuardian->getVictim())
+                        pGuardian->SendMonsterMoveWithSpeed(Walk_Pos_X,Walk_Pos_Y,Walk_Pos_Z);
 
                     //Safe storing of creatures
-                    GuardiansOfIcecrown[GuardiansOfIcecrown_Count] = pUnit->GetGUID();
+                    GuardiansOfIcecrown[GuardiansOfIcecrown_Count] = pGuardian->GetGUID();
 
                     //Update guardian count
                     GuardiansOfIcecrown_Count++;

@@ -91,8 +91,9 @@ struct MANGOS_DLL_DECL boss_shazzrahAI : public ScriptedAI
             Unit* target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
 
-            m_creature->Relocate(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0);
-            m_creature->SendMonsterMove(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0,true,0);
+            m_creature->GetMap()->CreatureRelocation(m_creature, target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0.0f);
+            m_creature->SendMonsterMove(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, MONSTER_MOVE_WALK, 1);
+
             DoCast(target,SPELL_ARCANEEXPLOSION);
             DoResetThreat();
 

@@ -143,8 +143,6 @@ struct MANGOS_DLL_DECL boss_midnightAI : public ScriptedAI
         float newY = m_creature->GetPositionY() + sin(angle)*(distance/2) ;
         float newZ = 50;
 
-        //m_creature->Relocate(newX,newY,newZ,angle);
-        //m_creature->SendMonsterMove(newX, newY, newZ, 0, true, 1000);
         m_creature->GetMotionMaster()->Clear();
         m_creature->GetMotionMaster()->MovePoint(0, newX, newY, newZ);
 
@@ -154,8 +152,7 @@ struct MANGOS_DLL_DECL boss_midnightAI : public ScriptedAI
 
         pAttumen->GetMotionMaster()->Clear();
         pAttumen->GetMotionMaster()->MovePoint(0, newX, newY, newZ);
-        //pAttumen->Relocate(newX,newY,newZ,-angle);
-        //pAttumen->SendMonsterMove(newX, newY, newZ, 0, true, 1000);
+
         Mount_Timer = 1000;
     }
 

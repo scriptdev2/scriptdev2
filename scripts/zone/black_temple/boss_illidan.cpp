@@ -342,11 +342,11 @@ struct MANGOS_DLL_DECL demonfireAI : public ScriptedAI
         {
             if (!IllidanGUID && m_pInstance)
             {
-                IllidanGUID = m_pInstance->GetData64(DATA_ILLIDANSTORMRAGE);
-                if (IllidanGUID)
+                if (Creature* pIllidan = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_ILLIDANSTORMRAGE)))
                 {
-                    Unit* Illidan = Unit::GetUnit((*m_creature), IllidanGUID);
-                    if (Illidan && !Illidan->HasUnitMovementFlag(MONSTER_MOVE_LEVITATING))
+                    IllidanGUID = m_pInstance->GetData64(DATA_ILLIDANSTORMRAGE);
+
+                    if (!pIllidan->HasMonsterMoveFlag(MONSTER_MOVE_LEVITATING))
                         m_creature->setDeathState(JUST_DIED);
                 }
             }
@@ -480,7 +480,7 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
         IsReturningToIllidan = true;
         WayPoint = WayPointList.begin();
         m_creature->SetSpeed(MOVE_RUN, 2.0f);
-        m_creature->RemoveUnitMovementFlag(MONSTER_MOVE_WALK);
+        m_creature->RemoveMonsterMoveFlag(MONSTER_MOVE_WALK);
         IsWalking = true;
     }
 
@@ -665,7 +665,7 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
                                 IsWalking = true;
                                 WayPoint = WayPointList.begin();
                                 std::advance(WayPoint, 9);
-                                m_creature->RemoveUnitMovementFlag(MONSTER_MOVE_WALK);
+                                m_creature->RemoveMonsterMoveFlag(MONSTER_MOVE_WALK);
                                 break;
                         }
                     }else TalkTimer -= diff;
@@ -755,7 +755,7 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
                         }
 
                         WayPoint = WayPointList.begin();
-                        m_creature->AddUnitMovementFlag(MONSTER_MOVE_WALK);
+                        m_creature->AddMonsterMoveFlag(MONSTER_MOVE_WALK);
                         m_creature->GetMotionMaster()->MovePoint(WayPoint->id, WayPoint->x, WayPoint->y, WayPoint->z);
                         IsWalking = true;
                         break;
@@ -978,7 +978,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
         // Unequip warglaives if needed
         SetEquipmentSlots(false, EQUIP_UNEQUIP, EQUIP_UNEQUIP, EQUIP_NO_CHANGE);
 
-        m_creature->RemoveUnitMovementFlag(MONSTER_MOVE_LEVITATING);
+        m_creature->RemoveMonsterMoveFlag(MONSTER_MOVE_LEVITATING);
 
         IsTalking = false;
 
@@ -1280,7 +1280,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
 
         // We now hover!
-        m_creature->AddUnitMovementFlag(MONSTER_MOVE_LEVITATING);
+        m_creature->AddMonsterMoveFlag(MONSTER_MOVE_LEVITATING);
 
         m_creature->GetMotionMaster()->MovePoint(0, CENTER_X, CENTER_Y, CENTER_Z);
         for(uint8 i = 0; i < 2; ++i)
@@ -1403,19 +1403,22 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
         m_creature->GetMotionMaster()->Clear(false);        // No moving!
         m_creature->GetMotionMaster()->MoveIdle();
+
         if (MaievGUID)
         {
-            Creature* Maiev = ((Creature*)Unit::GetUnit((*m_creature), MaievGUID));
-            if (Maiev)
+            if (Creature* Maiev = ((Creature*)Unit::GetUnit((*m_creature), MaievGUID)))
             {
                 Maiev->CombatStop(true);                    // Maiev shouldn't do anything either. No point in her attacking us =]
                 Maiev->GetMotionMaster()->Clear(false);     // Stop her from moving as well
                 Maiev->GetMotionMaster()->MoveIdle();
+
                 float distance = 10.0f;
                 float dx = m_creature->GetPositionX() + (distance*cos(m_creature->GetOrientation()));
                 float dy = m_creature->GetPositionY() + (distance*sin(m_creature->GetOrientation()));
-                Maiev->Relocate(dx,dy,Maiev->GetPositionZ());
-                Maiev->SendMonsterMove(dx,dy,Maiev->GetPositionZ(), 0, 0, 0);
+
+                Maiev->GetMap()->CreatureRelocation(m_creature, dx, dy, Maiev->GetPositionZ(), 0.0f);
+                Maiev->SendMonsterMove(dx, dy, Maiev->GetPositionZ(), 0, MONSTER_MOVE_NONE, 0);
+
                 Maiev->CastSpell(Maiev, SPELL_TELEPORT_VISUAL, true);
                 Maiev->SetUInt64Value(UNIT_FIELD_TARGET, m_creature->GetGUID());
             }
@@ -1722,7 +1725,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
 
                         // anndddd touchdown!
                         m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LAND);
-                        m_creature->RemoveUnitMovementFlag(MONSTER_MOVE_LEVITATING);
+                        m_creature->RemoveMonsterMoveFlag(MONSTER_MOVE_LEVITATING);
                         Phase = PHASE_NORMAL_2;
 
                         // We should let the raid fight us =)
@@ -1879,7 +1882,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
 
                     float X, Y, Z;
                     target->GetPosition(X, Y, Z);
-                    Maiev->Relocate(X, Y, Z, Maiev->GetOrientation());
+                    Maiev->GetMap()->CreatureRelocation(m_creature, X, Y, Z, Maiev->GetOrientation());
 
                     // Make it look like she 'teleported'
                     Maiev->CastSpell(Maiev, SPELL_TELEPORT_VISUAL, true);

@@ -303,8 +303,8 @@ struct MANGOS_DLL_DECL boss_sartharionAI : public ScriptedAI
 
             if (pTemp && pTemp->isAlive() && !pTemp->getVictim())
             {
-                if (pTemp->HasUnitMovementFlag(MONSTER_MOVE_WALK))
-                    pTemp->RemoveUnitMovementFlag(MONSTER_MOVE_WALK);
+                if (pTemp->HasMonsterMoveFlag(MONSTER_MOVE_WALK))
+                    pTemp->RemoveMonsterMoveFlag(MONSTER_MOVE_WALK);
 
                 if (pTemp->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE))
                     pTemp->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);

@@ -158,15 +158,9 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
                     pUnit->isInCombat()))
                 {
                     if (m_creature->IsWithinDistInMap(pUnit, ATTACK_DISTANCE))
-                    {
                         DoCast(pUnit,24316);
-                    }
                     else
-                    {
                         DoCast(pUnit,SPELL_CHARGE);
-                        m_creature->SendMonsterMove(pUnit->GetPositionX(), pUnit->GetPositionY(), pUnit->GetPositionZ(), 0, true,1);
-                        AttackStart(pUnit);
-                    }
                 }
             }
             someWatched = false;

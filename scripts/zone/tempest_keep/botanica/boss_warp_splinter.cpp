@@ -40,7 +40,6 @@ struct MANGOS_DLL_DECL mob_treantAI  : public ScriptedAI
     void Reset()
     {
         m_creature->SetSpeed(MOVE_RUN, 0.5f, true);
-        m_creature->SetUnitMovementFlags(0);
     }
 
     void MoveInLineOfSight(Unit *who) { }

@@ -109,14 +109,14 @@ struct MANGOS_DLL_DECL boss_vazrudenAI : public ScriptedAI
 
     void PrepareAndDescendMount()
     {
-        if (Unit* pUnit = Unit::GetUnit(*m_creature,m_pInstance->GetData64(DATA_HERALD)))
+        if (Creature* pHerald = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_HERALD)))
         {
-            if (pUnit->HasUnitMovementFlag(MONSTER_MOVE_WALK))
-                pUnit->RemoveUnitMovementFlag(MONSTER_MOVE_WALK);
+            if (pHerald->HasMonsterMoveFlag(MONSTER_MOVE_WALK))
+                pHerald->RemoveMonsterMoveFlag(MONSTER_MOVE_WALK);
 
-            pUnit->GetMotionMaster()->MovePoint(POINT_ID_COMBAT, afCombatPos[0], afCombatPos[1], afCombatPos[2]);
+            pHerald->GetMotionMaster()->MovePoint(POINT_ID_COMBAT, afCombatPos[0], afCombatPos[1], afCombatPos[2]);
 
-            DoScriptText(EMOTE_DESCEND, pUnit);
+            DoScriptText(EMOTE_DESCEND, pHerald);
         }
     }
 

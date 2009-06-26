@@ -168,13 +168,9 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
                         if (target->getPowerType() == POWER_MANA)
                             i=3;
                 }
+
                 if (target)
-                {
                     DoCast(target, SPELL_CHARGE);
-                    //m_creature->Relocate(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0);
-                    //m_creature->SendMonsterMove(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, true,1);
-                    AttackStart(target);
-                }
 
                 Charge_Timer = 8000;
             }else Charge_Timer -= diff;

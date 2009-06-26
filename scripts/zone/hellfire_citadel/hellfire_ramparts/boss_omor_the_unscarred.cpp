@@ -129,13 +129,13 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public Scripted_NoMovementAI
         {
             if (ShadowWhip_Timer < diff)
             {
-                if (Unit* temp = Unit::GetUnit(*m_creature,playerGUID))
+                if (Player* pPlayer = (Player*)Unit::GetUnit(*m_creature,playerGUID))
                 {
                     //if unit dosen't have this flag, then no pulling back (script will attempt cast, even if orbital strike was resisted)
-                    if (temp->HasUnitMovementFlag(MOVEMENTFLAG_FALLING))
+                    if (pPlayer->HasMovementFlag(MOVEMENTFLAG_FALLING))
                     {
                         m_creature->InterruptNonMeleeSpells(false);
-                        DoCast(temp,SPELL_SHADOW_WHIP);
+                        DoCast(pPlayer,SPELL_SHADOW_WHIP);
                     }
                 }
                 playerGUID = 0;

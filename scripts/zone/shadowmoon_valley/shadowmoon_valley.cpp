@@ -320,7 +320,7 @@ struct MANGOS_DLL_DECL mob_dragonmaw_peonAI : public ScriptedAI
             float x, y, z;
             caster->GetClosePoint(x, y, z, m_creature->GetObjectSize());
 
-            m_creature->RemoveUnitMovementFlag(MONSTER_MOVE_WALK);
+            m_creature->RemoveMonsterMoveFlag(MONSTER_MOVE_WALK);
             m_creature->GetMotionMaster()->MovePoint(1, x, y, z);
         }
     }

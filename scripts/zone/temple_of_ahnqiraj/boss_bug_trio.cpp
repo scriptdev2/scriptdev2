@@ -163,14 +163,8 @@ struct MANGOS_DLL_DECL boss_vemAI : public ScriptedAI
         //Charge_Timer
         if (Charge_Timer < diff)
         {
-            Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if (target)
-            {
+            if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
                 DoCast(target, SPELL_CHARGE);
-                m_creature->SendMonsterMove(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, true,1);
-                AttackStart(target);
-            }
 
             Charge_Timer = 8000 + rand()%8000;
         }else Charge_Timer -= diff;
