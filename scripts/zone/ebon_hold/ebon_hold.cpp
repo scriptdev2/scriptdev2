@@ -42,6 +42,9 @@ enum
     SAY_DUEL_D                  = -1609019,
     SAY_DUEL_E                  = -1609020,
     SAY_DUEL_F                  = -1609021,
+    SAY_DUEL_G                  = -1609022,
+    SAY_DUEL_H                  = -1609023,
+    SAY_DUEL_I                  = -1609024,
 
     SPELL_DUEL                  = 52996,
     SPELL_DUEL_TRIGGERED        = 52990,
@@ -54,10 +57,10 @@ enum
 
 int32 m_auiRandomSay[] =
 {
-    SAY_DUEL_A, SAY_DUEL_B, SAY_DUEL_C, SAY_DUEL_D, SAY_DUEL_E, SAY_DUEL_F
+    SAY_DUEL_A, SAY_DUEL_B, SAY_DUEL_C, SAY_DUEL_D, SAY_DUEL_E, SAY_DUEL_F, SAY_DUEL_G, SAY_DUEL_H, SAY_DUEL_I
 };
 
-#define GOSSIP_ACCEPT_DUEL      "[PH] I challenge you!"
+#define GOSSIP_ACCEPT_DUEL      "I challenge you!"
 
 struct MANGOS_DLL_DECL npc_death_knight_initiateAI : public ScriptedAI
 {

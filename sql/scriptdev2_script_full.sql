@@ -1903,7 +1903,10 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1609018,'I\'m going to tear your heart out, cupcake!',0,0,0,0,'dk_initiate SAY_DUEL_C'),
 (-1609019,'Don\'t make me laugh.',0,0,0,0,'dk_initiate SAY_DUEL_D'),
 (-1609020,'Here come the tears...',0,0,0,0,'dk_initiate SAY_DUEL_E'),
-(-1609021,'You have challenged death itself!',0,0,0,0,'dk_initiate SAY_DUEL_F');
+(-1609021,'You have challenged death itself!',0,0,0,0,'dk_initiate SAY_DUEL_F'),
+(-1609022,'The Lich King will see his true champion on this day!',0,0,0,0,'dk_initiate SAY_DUEL_G'),
+(-1609023,'You\'re going down!',0,0,0,0,'dk_initiate SAY_DUEL_H'),
+(-1609024,'You don\'t stand a chance, $n',0,0,0,0,'dk_initiate SAY_DUEL_I');
 
 -- -1 615 000 OBSIDIAN SANCTUM
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
