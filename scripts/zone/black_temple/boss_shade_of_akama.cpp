@@ -158,12 +158,11 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
         {
             for(std::list<uint64>::iterator itr = Sorcerers.begin(); itr != Sorcerers.end(); ++itr)
             {
-                if (Creature* Sorcerer = ((Creature*)Unit::GetUnit(*m_creature, *itr)))
-                    if (Sorcerer->isAlive())
-                    {
-                        Sorcerer->SetVisibility(VISIBILITY_OFF);
-                        Sorcerer->DealDamage(Sorcerer, Sorcerer->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-                    }
+                if (Creature* pSorcerer = (Creature*)Unit::GetUnit(*m_creature, *itr))
+                {
+                    if (pSorcerer->isAlive())
+                        pSorcerer->ForcedDespawn();
+                }
             }
         }
 

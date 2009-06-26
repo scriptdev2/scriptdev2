@@ -189,10 +189,11 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
             if (GuardiansOfIcecrown[i])
             {
                 //delete creature
-                Unit* pUnit = Unit::GetUnit((*m_creature), GuardiansOfIcecrown[i]);
-
-                if (pUnit && pUnit->isAlive())
-                    pUnit->DealDamage(pUnit, pUnit->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+                if (Creature* pGuardian = (Creature*)Unit::GetUnit(*m_creature, GuardiansOfIcecrown[i]))
+                {
+                    if (pGuardian->isAlive())
+                        pGuardian->ForcedDespawn();
+                }
 
                 GuardiansOfIcecrown[i] = 0;
             }

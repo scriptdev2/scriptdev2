@@ -188,17 +188,17 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
 
     void DespawnEssences()
     {
-        Unit* Essence = NULL;
+        Creature* pEssence = NULL;
 
         if (SufferingGUID)
-            Essence = ((Creature*)Unit::GetUnit((*m_creature), SufferingGUID));
+            pEssence = (Creature*)Unit::GetUnit((*m_creature), SufferingGUID);
         else if (DesireGUID)
-            Essence = ((Creature*)Unit::GetUnit((*m_creature), DesireGUID));
+            pEssence = (Creature*)Unit::GetUnit((*m_creature), DesireGUID);
         else if (AngerGUID)
-            Essence = ((Creature*)Unit::GetUnit((*m_creature), AngerGUID));
+            pEssence = (Creature*)Unit::GetUnit((*m_creature), AngerGUID);
 
-        if (Essence && Essence->isAlive())
-            Essence->setDeathState(JUST_DIED);
+        if (pEssence && pEssence->isAlive())
+            pEssence->ForcedDespawn();
     }
 
     void OpenMotherDoor()

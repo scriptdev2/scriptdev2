@@ -187,9 +187,8 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
         {
             if (PortalGUID[i])
             {
-                Unit* Portal = Unit::GetUnit((*m_creature), PortalGUID[i]);
-                if (Portal)
-                    Portal->DealDamage(Portal, Portal->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+                if (Creature* pPortal = (Creature*)Unit::GetUnit(*m_creature, PortalGUID[i]))
+                    pPortal->ForcedDespawn();
 
                 PortalGUID[i] = 0;
             }
@@ -244,9 +243,8 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
         {
             if (PortalGUID[i])
             {
-                Unit* Portal = Unit::GetUnit((*m_creature), PortalGUID[i]);
-                if (Portal)
-                    Portal->DealDamage(Portal, Portal->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+                if (Creature* pPortal = (Creature*)Unit::GetUnit(*m_creature, PortalGUID[i]))
+                    pPortal->ForcedDespawn();
 
                 PortalGUID[i] = 0;
             }

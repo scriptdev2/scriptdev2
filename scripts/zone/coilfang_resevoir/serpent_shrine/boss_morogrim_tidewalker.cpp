@@ -277,12 +277,13 @@ struct MANGOS_DLL_DECL mob_water_globuleAI : public ScriptedAI
 
         if (m_uiCheck_Timer < uiDiff)
         {
-            if (m_creature->IsWithinDistInMap(m_creature->getVictim(), 5))
+            if (m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
             {
                 m_creature->DealDamage(m_creature->getVictim(), 4000+rand()%2000, NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_FROST, NULL, false);
 
                 //despawn
-                m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+                m_creature->ForcedDespawn();
+                return;
             }
             m_uiCheck_Timer = 500;
         }else m_uiCheck_Timer -= uiDiff;

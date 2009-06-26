@@ -168,7 +168,8 @@ struct MANGOS_DLL_DECL mob_abyssalAI : public ScriptedAI
 
         if (Despawn_Timer < diff)
         {
-            m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+            m_creature->ForcedDespawn();
+            return;
         }else Despawn_Timer -= diff;
 
         if (!m_creature->SelectHostilTarget() && !m_creature->getVictim())
