@@ -929,6 +929,7 @@ UPDATE creature_template SET ScriptName='mob_rotting_forest_rager' WHERE entry=2
 UPDATE creature_template SET ScriptName='mob_unkor_the_ruthless' WHERE entry=18262;
 UPDATE creature_template SET ScriptName='npc_floon' WHERE entry=18588;
 UPDATE creature_template SET ScriptName='npc_skyguard_handler_irena' WHERE entry=23413;
+UPDATE creature_template SET ScriptName='npc_slim' WHERE entry=19679;
 
 /* THOUSAND NEEDLES */
 UPDATE creature_template SET ScriptName='npc_plucky_johnson' WHERE entry=6626;

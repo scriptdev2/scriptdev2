@@ -28,6 +28,7 @@ mob_rotting_forest_rager
 mob_netherweb_victim
 npc_floon
 npc_skyguard_handler_deesak
+npc_slim
 EndContentData */
 
 #include "precompiled.h"
@@ -361,8 +362,34 @@ bool GossipSelect_npc_skyguard_handler_deesak(Player* pPlayer, Creature* pCreatu
 }
 
 /*######
-## AddSC
+## npc_slim
 ######*/
+
+enum
+{
+    FACTION_CONSORTIUM  = 933
+};
+
+bool GossipHello_npc_slim(Player* pPlayer, Creature* pCreature)
+{
+    if (pCreature->isVendor() && pPlayer->GetReputationRank(FACTION_CONSORTIUM) >= REP_FRIENDLY)
+    {
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
+        pPlayer->SEND_GOSSIP_MENU(9896, pCreature->GetGUID());
+    }
+    else
+        pPlayer->SEND_GOSSIP_MENU(9895, pCreature->GetGUID());
+
+    return true;
+}
+
+bool GossipSelect_npc_slim(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+{
+    if (uiAction == GOSSIP_ACTION_TRADE)
+        pPlayer->SEND_VENDORLIST(pCreature->GetGUID());
+
+    return true;
+}
 
 void AddSC_terokkar_forest()
 {
@@ -399,5 +426,11 @@ void AddSC_terokkar_forest()
     newscript->Name = "npc_skyguard_handler_deesak";
     newscript->pGossipHello =  &GossipHello_npc_skyguard_handler_deesak;
     newscript->pGossipSelect = &GossipSelect_npc_skyguard_handler_deesak;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "npc_slim";
+    newscript->pGossipHello =  &GossipHello_npc_slim;
+    newscript->pGossipSelect = &GossipSelect_npc_slim;
     newscript->RegisterSelf();
 }
