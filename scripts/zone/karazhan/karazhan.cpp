@@ -299,11 +299,6 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
                 }else WipeTimer -= diff;
             }
         }
-
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
-            return;
-
-        DoMeleeAttackIfReady();
     }
 
     void StartEvent()
