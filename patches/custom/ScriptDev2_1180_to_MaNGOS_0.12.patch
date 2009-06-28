@@ -1,18 +1,13 @@
 Index: include/precompiled.h
 ===================================================================
---- include/precompiled.h	(revision 1149)
-+++ include/precompiled.h	(working copy)
-@@ -11,6 +11,16 @@
+--- include/precompiled.h   (revision 1180)
++++ include/precompiled.h   (working copy)
+@@ -11,6 +11,11 @@
  #include "sc_grid_searchers.h"
  #include "sc_instance.h"
  
 +enum backports
 +{
-+    UNIT_FLAG_UNK_8           = UNIT_FLAG_UNKNOWN2,
-+    UNIT_FLAG_UNK_9           = UNIT_FLAG_UNKNOWN11,
-+
-+    TARGET_CASTER_COORDINATES = TARGET_ALL_AROUND_CASTER,
-+
 +    UNIT_VIRTUAL_ITEM_SLOT_ID = UNIT_VIRTUAL_ITEM_SLOT_DISPLAY
 +};
 +
@@ -21,9 +16,9 @@ Index: include/precompiled.h
  BOOL APIENTRY DllMain( HANDLE hModule,
 Index: include/sc_creature.cpp
 ===================================================================
---- include/sc_creature.cpp	(revision 1149)
-+++ include/sc_creature.cpp	(working copy)
-@@ -530,7 +530,7 @@
+--- include/sc_creature.cpp (revision 1180)
++++ include/sc_creature.cpp (working copy)
+@@ -490,7 +490,7 @@
      Unit* pUnit = NULL;
  
      MaNGOS::MostHPMissingInRange u_check(m_creature, range, MinHPDiff);
@@ -32,7 +27,7 @@ Index: include/sc_creature.cpp
  
      /*
      typedef TYPELIST_4(GameObject, Creature*except pets*, DynamicObject, Corpse*Bones*) AllGridObjectTypes;
-@@ -553,7 +553,7 @@
+@@ -513,7 +513,7 @@
      std::list<Creature*> pList;
  
      MaNGOS::FriendlyCCedInRange u_check(m_creature, range);
@@ -41,7 +36,7 @@ Index: include/sc_creature.cpp
  
      TypeContainerVisitor<MaNGOS::CreatureListSearcher<MaNGOS::FriendlyCCedInRange>, GridTypeMapContainer >  grid_creature_searcher(searcher);
  
-@@ -573,7 +573,7 @@
+@@ -533,7 +533,7 @@
      std::list<Creature*> pList;
  
      MaNGOS::FriendlyMissingBuffInRange u_check(m_creature, range, spellid);
@@ -50,7 +45,7 @@ Index: include/sc_creature.cpp
  
      TypeContainerVisitor<MaNGOS::CreatureListSearcher<MaNGOS::FriendlyMissingBuffInRange>, GridTypeMapContainer >  grid_creature_searcher(searcher);
  
-@@ -593,7 +593,7 @@
+@@ -553,7 +553,7 @@
      cell.SetNoCreate();
  
      PlayerAtMinimumRangeAway check(m_creature, fMinimumRange);
@@ -61,8 +56,8 @@ Index: include/sc_creature.cpp
      CellLock<GridReadGuard> cell_lock(cell, pair);
 Index: include/sc_gossip.h
 ===================================================================
---- include/sc_gossip.h	(revision 1149)
-+++ include/sc_gossip.h	(working copy)
+--- include/sc_gossip.h (revision 1180)
++++ include/sc_gossip.h (working copy)
 @@ -42,9 +42,7 @@
  #define GOSSIP_TEXT_WARSONGULCH         "Warsong Gulch"
  #define GOSSIP_TEXT_ARENA               "Arena"
@@ -105,8 +100,8 @@ Index: include/sc_gossip.h
      GOSSIP_ACTION_TRADE            = 1,
 Index: include/sc_grid_searchers.cpp
 ===================================================================
---- include/sc_grid_searchers.cpp	(revision 1149)
-+++ include/sc_grid_searchers.cpp	(working copy)
+--- include/sc_grid_searchers.cpp   (revision 1180)
++++ include/sc_grid_searchers.cpp   (working copy)
 @@ -15,7 +15,7 @@
      cell.SetNoCreate();
  
@@ -145,8 +140,8 @@ Index: include/sc_grid_searchers.cpp
      CellLock<GridReadGuard> cell_lock(cell, pair);
 Index: scripts/item/item_scripts.cpp
 ===================================================================
---- scripts/item/item_scripts.cpp	(revision 1149)
-+++ scripts/item/item_scripts.cpp	(working copy)
+--- scripts/item/item_scripts.cpp   (revision 1180)
++++ scripts/item/item_scripts.cpp   (working copy)
 @@ -49,7 +49,7 @@
      pPlayer->SendEquipError(EQUIP_ERR_NONE, pItem, NULL);
  
@@ -158,9 +153,9 @@ Index: scripts/item/item_scripts.cpp
  }
 Index: scripts/npc/npcs_special.cpp
 ===================================================================
---- scripts/npc/npcs_special.cpp	(revision 1149)
-+++ scripts/npc/npcs_special.cpp	(working copy)
-@@ -701,9 +701,6 @@
+--- scripts/npc/npcs_special.cpp    (revision 1180)
++++ scripts/npc/npcs_special.cpp    (working copy)
+@@ -702,9 +702,6 @@
  
              if (Patient)
              {
@@ -172,8 +167,8 @@ Index: scripts/npc/npcs_special.cpp
  
 Index: scripts/zone/azuremyst_isle/azuremyst_isle.cpp
 ===================================================================
---- scripts/zone/azuremyst_isle/azuremyst_isle.cpp	(revision 1149)
-+++ scripts/zone/azuremyst_isle/azuremyst_isle.cpp	(working copy)
+--- scripts/zone/azuremyst_isle/azuremyst_isle.cpp  (revision 1180)
++++ scripts/zone/azuremyst_isle/azuremyst_isle.cpp  (working copy)
 @@ -76,7 +76,6 @@
  
          m_creature->CastSpell(m_creature, SPELL_IRRIDATION, true);
@@ -195,8 +190,8 @@ Index: scripts/zone/azuremyst_isle/azuremyst_isle.cpp
              m_creature->CastSpell(m_creature, SPELL_STUNNED, true);
 Index: scripts/zone/black_temple/boss_illidan.cpp
 ===================================================================
---- scripts/zone/black_temple/boss_illidan.cpp	(revision 1149)
-+++ scripts/zone/black_temple/boss_illidan.cpp	(working copy)
+--- scripts/zone/black_temple/boss_illidan.cpp  (revision 1180)
++++ scripts/zone/black_temple/boss_illidan.cpp  (working copy)
 @@ -206,8 +206,6 @@
  #define CENTER_Y            305.297
  #define CENTER_Z            353.192
@@ -206,18 +201,19 @@ Index: scripts/zone/black_temple/boss_illidan.cpp
  
  /*** Phase Names ***/
  enum Phase
-@@ -976,8 +974,9 @@
+@@ -976,10 +974,9 @@
          m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
  
          // Unequip warglaives if needed
 -        SetEquipmentSlots(false, EQUIP_UNEQUIP, EQUIP_UNEQUIP, EQUIP_NO_CHANGE);
  
+         m_creature->RemoveMonsterMoveFlag(MONSTER_MOVE_LEVITATING);
+-
 +        m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, 0);
-+        m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY+1, 0);
-         m_creature->RemoveUnitMovementFlag(MOVEMENTFLAG_LEVITATING);
- 
          IsTalking = false;
-@@ -1227,12 +1226,14 @@
+ 
+         TalkCount = 0;
+@@ -1230,12 +1227,14 @@
          if (DemonTransformation[count].equip)
          {
              // Requip warglaives if needed
@@ -234,7 +230,7 @@ Index: scripts/zone/black_temple/boss_illidan.cpp
          }
  
          if (DemonTransformation[count].phase != 8)
-@@ -1304,8 +1305,10 @@
+@@ -1307,8 +1306,10 @@
          DoCast(m_creature, SPELL_THROW_GLAIVE2);
  
          // We no longer wear the glaives!
@@ -246,7 +242,7 @@ Index: scripts/zone/black_temple/boss_illidan.cpp
  
          for(uint8 i = 0; i < 2; ++i)
          {
-@@ -1436,7 +1439,8 @@
+@@ -1442,7 +1443,8 @@
                          break;
                      case 8:
                          // Equip our warglaives!
@@ -256,7 +252,7 @@ Index: scripts/zone/black_temple/boss_illidan.cpp
                          // Hostile if we weren't before
                          m_creature->setFaction(14);
                          break;
-@@ -1702,7 +1706,8 @@
+@@ -1708,7 +1710,8 @@
                          }
  
                          // Re-equip our warblades!
@@ -268,9 +264,9 @@ Index: scripts/zone/black_temple/boss_illidan.cpp
                          LandTimer = 5000;
 Index: scripts/zone/caverns_of_time/hyjal/hyjalAI.cpp
 ===================================================================
---- scripts/zone/caverns_of_time/hyjal/hyjalAI.cpp	(revision 1149)
-+++ scripts/zone/caverns_of_time/hyjal/hyjalAI.cpp	(working copy)
-@@ -325,8 +325,10 @@
+--- scripts/zone/caverns_of_time/hyjal/hyjalAI.cpp  (revision 1180)
++++ scripts/zone/caverns_of_time/hyjal/hyjalAI.cpp  (working copy)
+@@ -324,8 +324,10 @@
      // Get all creatures.
      std::list<Creature*> creatures;
      AllFriendlyCreaturesInGrid creature_check(m_creature);
@@ -285,8 +281,8 @@ Index: scripts/zone/caverns_of_time/hyjal/hyjalAI.cpp
      // Get Creatures
 Index: scripts/zone/caverns_of_time/old_hillsbrad/old_hillsbrad.cpp
 ===================================================================
---- scripts/zone/caverns_of_time/old_hillsbrad/old_hillsbrad.cpp	(revision 1149)
-+++ scripts/zone/caverns_of_time/old_hillsbrad/old_hillsbrad.cpp	(working copy)
+--- scripts/zone/caverns_of_time/old_hillsbrad/old_hillsbrad.cpp    (revision 1180)
++++ scripts/zone/caverns_of_time/old_hillsbrad/old_hillsbrad.cpp    (working copy)
 @@ -161,8 +161,10 @@
  #define SPEED_RUN                   (1.0f)
  #define SPEED_MOUNT                 (1.6f)
@@ -330,8 +326,8 @@ Index: scripts/zone/caverns_of_time/old_hillsbrad/old_hillsbrad.cpp
  
 Index: scripts/zone/dragonblight/dragonblight.cpp
 ===================================================================
---- scripts/zone/dragonblight/dragonblight.cpp	(revision 1149)
-+++ scripts/zone/dragonblight/dragonblight.cpp	(working copy)
+--- scripts/zone/dragonblight/dragonblight.cpp  (revision 1180)
++++ scripts/zone/dragonblight/dragonblight.cpp  (working copy)
 @@ -100,7 +100,6 @@
      if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
      {
@@ -342,8 +338,8 @@ Index: scripts/zone/dragonblight/dragonblight.cpp
      return true;
 Index: scripts/zone/karazhan/boss_prince_malchezaar.cpp
 ===================================================================
---- scripts/zone/karazhan/boss_prince_malchezaar.cpp	(revision 1149)
-+++ scripts/zone/karazhan/boss_prince_malchezaar.cpp	(working copy)
+--- scripts/zone/karazhan/boss_prince_malchezaar.cpp    (revision 1180)
++++ scripts/zone/karazhan/boss_prince_malchezaar.cpp    (working copy)
 @@ -90,8 +90,8 @@
  #define INFERNAL_MODEL_INVISIBLE    11686                   //Infernal Effects
  #define SPELL_INFERNAL_RELAY        30834
@@ -390,8 +386,8 @@ Index: scripts/zone/karazhan/boss_prince_malchezaar.cpp
  
 Index: scripts/zone/zulgurub/boss_renataki.cpp
 ===================================================================
---- scripts/zone/zulgurub/boss_renataki.cpp	(revision 1149)
-+++ scripts/zone/zulgurub/boss_renataki.cpp	(working copy)
+--- scripts/zone/zulgurub/boss_renataki.cpp (revision 1180)
++++ scripts/zone/zulgurub/boss_renataki.cpp (working copy)
 @@ -27,7 +27,6 @@
  #define SPELL_AMBUSH            24337
  #define SPELL_THOUSANDBLADES    24649
@@ -415,7 +411,7 @@ Index: scripts/zone/zulgurub/boss_renataki.cpp
              Invisible = true;
  
              Invisible_Timer = 15000 + rand()%15000;
-@@ -98,9 +100,12 @@
+@@ -96,9 +98,12 @@
                  m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
  
                  m_creature->SetDisplayId(15268);
@@ -429,3 +425,4 @@ Index: scripts/zone/zulgurub/boss_renataki.cpp
                  Invisible = false;
  
                  Visible_Timer = 4000;
+
