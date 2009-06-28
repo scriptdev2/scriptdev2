@@ -28,6 +28,10 @@ struct Escort_Waypoint
 struct MANGOS_DLL_DECL npc_escortAI : public ScriptedAI
 {
     public:
+        explicit npc_escortAI(Creature* pCreature) : ScriptedAI(pCreature),
+            IsBeingEscorted(false), IsOnHold(false), PlayerGUID(0), m_uiPlayerCheckTimer(1000), m_uiWPWaitTimer(0),
+            m_bIsReturning(false), m_bIsActiveAttacker(true), m_bCanDefendSelf(true), m_bIsRunning(false) {}
+        ~npc_escortAI() {}
 
         // Pure Virtual Functions
         virtual void WaypointReached(uint32) = 0;
@@ -37,8 +41,6 @@ struct MANGOS_DLL_DECL npc_escortAI : public ScriptedAI
         virtual void Reset() = 0;
 
         // CreatureAI functions
-        npc_escortAI(Creature* pCreature) : ScriptedAI(pCreature), IsBeingEscorted(false), PlayerTimer(1000) {}
-
         bool IsVisible(Unit*) const;
 
         void AttackStart(Unit*);
@@ -60,7 +62,7 @@ struct MANGOS_DLL_DECL npc_escortAI : public ScriptedAI
 
         void FillPointMovementListForCreature();
 
-        void Start(bool bAttack, bool bDefend, bool bRun, uint64 pGUID = 0);
+        void Start(bool bIsActiveAttacker = true, bool bCanDefendSelf = true, bool bRun = false, uint64 uiPlayerGUID = 0);
 
         void SetRun(bool bRun = true);
 
@@ -71,17 +73,15 @@ struct MANGOS_DLL_DECL npc_escortAI : public ScriptedAI
         bool IsOnHold;
 
     private:
-        uint32 WaitTimer;
-        uint32 PlayerTimer;
-        uint32 m_uiNpcFlags;
-
+        uint32 m_uiWPWaitTimer;
+        uint32 m_uiPlayerCheckTimer;
+ 
         std::list<Escort_Waypoint> WaypointList;
         std::list<Escort_Waypoint>::iterator CurrentWP;
 
-        bool Attack;
-        bool Defend;
-        bool Returning;
-        bool ReconnectWP;
-        bool bIsRunning;
+        bool m_bIsActiveAttacker;                           //possible obsolete, and should be determined with db only (civilian)
+        bool m_bCanDefendSelf;                              //rarely used, is true in 99%
+        bool m_bIsReturning;                                //in use when creature leave combat, and are returning to combat start position
+        bool m_bIsRunning;                                  //all creatures are walking by default (has flag MONSTER_MOVE_WALK)
 };
 #endif

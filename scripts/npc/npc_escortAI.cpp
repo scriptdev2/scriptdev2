@@ -28,7 +28,7 @@ void npc_escortAI::AttackStart(Unit *who)
     if (!who)
         return;
 
-    if (IsBeingEscorted && !Defend)
+    if (IsBeingEscorted && !m_bCanDefendSelf)
         return;
 
     if (m_creature->Attack(who, true))
@@ -37,11 +37,11 @@ void npc_escortAI::AttackStart(Unit *who)
         m_creature->SetInCombatWith(who);
         who->SetInCombatWith(m_creature);
 
-        if (bCombatMovement)
-        {
+        if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() == POINT_MOTION_TYPE)
             m_creature->GetMotionMaster()->MovementExpired();
+
+        if (bCombatMovement)
             m_creature->GetMotionMaster()->MoveChase(who);
-        }
     }
 }
 
@@ -59,7 +59,7 @@ void npc_escortAI::Aggro(Unit* pEnemy)
 
 void npc_escortAI::MoveInLineOfSight(Unit *who)
 {
-    if (IsBeingEscorted && !Attack)
+    if (IsBeingEscorted && !m_bIsActiveAttacker)
         return;
 
     if (!m_creature->hasUnitState(UNIT_STAT_STUNNED) && who->isTargetableForAttack() &&
@@ -91,8 +91,7 @@ void npc_escortAI::JustRespawned()
     IsOnHold = false;
     bCombatMovement = true;
 
-    //Restore original NpcFlags
-    m_creature->SetUInt32Value(UNIT_NPC_FLAGS, m_uiNpcFlags);
+    m_uiWPWaitTimer = 0;
 
     Reset();
 }
@@ -107,21 +106,20 @@ void npc_escortAI::EnterEvadeMode()
     if (IsBeingEscorted)
     {
         debug_log("SD2: EscortAI has left combat and is now returning to CombatStartPosition.");
-        Returning = true;
-        m_creature->GetMotionMaster()->MovementExpired();
 
-        //if default is WAYPOINT_MOTION_TYPE, must MoveIdle to prevent from using
-        if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() == WAYPOINT_MOTION_TYPE)
-            m_creature->GetMotionMaster()->MoveIdle();
+        if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() == TARGETED_MOTION_TYPE)
+        {
+            m_bIsReturning = true;
 
-        float fPosX, fPosY, fPosZ;
-        m_creature->GetCombatStartPosition(fPosX, fPosY, fPosZ);
-        m_creature->GetMotionMaster()->MovePoint(WP_LAST_POINT, fPosX, fPosY, fPosZ);
+            float fPosX, fPosY, fPosZ;
+            m_creature->GetCombatStartPosition(fPosX, fPosY, fPosZ);
+            m_creature->GetMotionMaster()->MovePoint(WP_LAST_POINT, fPosX, fPosY, fPosZ);
+        }
     }
     else
     {
-        m_creature->GetMotionMaster()->MovementExpired();
-        m_creature->GetMotionMaster()->MoveTargetedHome();
+        if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() == TARGETED_MOTION_TYPE)
+            m_creature->GetMotionMaster()->MoveTargetedHome();
     }
 
     Reset();
@@ -130,49 +128,20 @@ void npc_escortAI::EnterEvadeMode()
 void npc_escortAI::UpdateAI(const uint32 diff)
 {
     //Waypoint Updating
-    if (IsBeingEscorted && !m_creature->isInCombat() && WaitTimer && !Returning)
+    if (IsBeingEscorted && !m_creature->getVictim() && m_uiWPWaitTimer && !m_bIsReturning)
     {
-        if (WaitTimer <= diff)
+        if (m_uiWPWaitTimer <= diff)
         {
-            if (ReconnectWP)
-            {
-                //Correct movement speed
-                if (bIsRunning && m_creature->HasMonsterMoveFlag(MONSTER_MOVE_WALK))
-                    m_creature->RemoveMonsterMoveFlag(MONSTER_MOVE_WALK);
-                else if (!bIsRunning && !m_creature->HasMonsterMoveFlag(MONSTER_MOVE_WALK))
-                    m_creature->AddMonsterMoveFlag(MONSTER_MOVE_WALK);
-
-                //Continue with waypoints
-                if (!IsOnHold)
-                {
-                    if (CurrentWP != WaypointList.end())
-                    {
-                        m_creature->GetMotionMaster()->MovePoint(CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z);
-                        debug_log("SD2: EscortAI Reconnect WP is: %u, %f, %f, %f", CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z);
-
-                        WaitTimer = 0;
-                        ReconnectWP = false;
-                        return;
-                    }
-                    else
-                        debug_log("SD2: EscortAI Reconnected to end of WP list");
-                }
-            }
-
             //End of the line, Despawn self then immediatly respawn
             if (CurrentWP == WaypointList.end())
             {
                 debug_log("SD2: EscortAI reached end of waypoints");
 
                 m_creature->setDeathState(JUST_DIED);
+
+                //TODO: add option to set instant respawn? Then use db respawn value as default
                 m_creature->Respawn();
-                m_creature->GetMotionMaster()->Clear(true);
 
-                //Restore original NpcFlags
-                m_creature->SetUInt32Value(UNIT_NPC_FLAGS, m_uiNpcFlags);
-
-                IsBeingEscorted = false;
-                WaitTimer = 0;
                 return;
             }
 
@@ -180,15 +149,15 @@ void npc_escortAI::UpdateAI(const uint32 diff)
             {
                 m_creature->GetMotionMaster()->MovePoint(CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z);
                 debug_log("SD2: EscortAI Next WP is: %u, %f, %f, %f", CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z);
-                WaitTimer = 0;
+                m_uiWPWaitTimer = 0;
             }
-        }else WaitTimer -= diff;
+        }else m_uiWPWaitTimer -= diff;
     }
 
     //Check if player or any member of his group is within range
-    if (IsBeingEscorted && PlayerGUID && !m_creature->getVictim() && !m_creature->IsInEvadeMode())
+    if (IsBeingEscorted && PlayerGUID && !m_creature->getVictim() && !m_bIsReturning)
     {
-        if (PlayerTimer < diff)
+        if (m_uiPlayerCheckTimer < diff)
         {
             bool bIsMaxRangeExceeded = true;
 
@@ -216,37 +185,26 @@ void npc_escortAI::UpdateAI(const uint32 diff)
 
             if (bIsMaxRangeExceeded)
             {
-                JustDied(m_creature);
-                IsBeingEscorted = false;
-
                 debug_log("SD2: EscortAI Evaded back to spawn point because player/group was to far away or not found");
 
+                JustDied(m_creature);
                 m_creature->setDeathState(JUST_DIED);
 
                 //TODO: add option to set instant respawn? Then use db respawn value as default
                 m_creature->Respawn();
 
-                //Restore original NpcFlags
-                m_creature->SetUInt32Value(UNIT_NPC_FLAGS, m_creature->GetCreatureInfo()->npcflag);
+                return;
             }
 
-            PlayerTimer = 1000;
-        }else PlayerTimer -= diff;
+            m_uiPlayerCheckTimer = 1000;
+        }else m_uiPlayerCheckTimer -= diff;
     }
 
     //Check if we have a current target
-    if (m_creature->isAlive() && m_creature->SelectHostilTarget() && m_creature->getVictim())
-    {
-        //If we are within range melee the target
-        if (m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
-        {
-            if (m_creature->isAttackReady())
-            {
-                m_creature->AttackerStateUpdate(m_creature->getVictim());
-                m_creature->resetAttackTimer();
-            }
-        }
-    }
+    if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        return;
+
+    DoMeleeAttackIfReady();
 }
 
 void npc_escortAI::MovementInform(uint32 type, uint32 id)
@@ -254,15 +212,20 @@ void npc_escortAI::MovementInform(uint32 type, uint32 id)
     if (type != POINT_MOTION_TYPE || !IsBeingEscorted)
         return;
 
-    //Original position reached, continue waypoint movement
+    //Combat start position reached, continue waypoint movement
     if (id == WP_LAST_POINT)
     {
         debug_log("SD2: EscortAI has returned to original position before combat");
-        ReconnectWP = true;
-        Returning = false;
 
-        if (!WaitTimer)
-            WaitTimer = 1;
+        if (m_bIsRunning && m_creature->HasMonsterMoveFlag(MONSTER_MOVE_WALK))
+            m_creature->RemoveMonsterMoveFlag(MONSTER_MOVE_WALK);
+        else if (!m_bIsRunning && !m_creature->HasMonsterMoveFlag(MONSTER_MOVE_WALK))
+            m_creature->AddMonsterMoveFlag(MONSTER_MOVE_WALK);
+
+        m_bIsReturning = false;
+
+        if (!m_uiWPWaitTimer)
+            m_uiWPWaitTimer = 1;
     }
     else
     {
@@ -278,7 +241,7 @@ void npc_escortAI::MovementInform(uint32 type, uint32 id)
         //Call WP function
         WaypointReached(CurrentWP->id);
 
-        WaitTimer = CurrentWP->WaitTimeMs + 1;
+        m_uiWPWaitTimer = CurrentWP->WaitTimeMs + 1;
 
         ++CurrentWP;
     }
@@ -311,24 +274,24 @@ void npc_escortAI::SetRun(bool bRun)
 {
     if (bRun)
     {
-        if (!bIsRunning)
+        if (!m_bIsRunning)
             m_creature->RemoveMonsterMoveFlag(MONSTER_MOVE_WALK);
         else
             debug_log("SD2: EscortAI attempt to set run mode, but is already running.");
     }
     else
     {
-        if (bIsRunning)
+        if (m_bIsRunning)
             m_creature->AddMonsterMoveFlag(MONSTER_MOVE_WALK);
         else
             debug_log("SD2: EscortAI attempt to set walk mode, but is already walking.");
     }
-    bIsRunning = bRun;
+    m_bIsRunning = bRun;
 }
 
-void npc_escortAI::Start(bool bAttack, bool bDefend, bool bRun, uint64 pGUID)
+void npc_escortAI::Start(bool bIsActiveAttacker, bool bCanDefendSelf, bool bRun, uint64 uiPlayerGUID)
 {
-    if (m_creature->isInCombat())
+    if (m_creature->getVictim())
     {
         debug_log("SD2 ERROR: EscortAI attempt to Start while in combat");
         return;
@@ -353,32 +316,25 @@ void npc_escortAI::Start(bool bAttack, bool bDefend, bool bRun, uint64 pGUID)
         debug_log("SD2: EscortAI start with WAYPOINT_MOTION_TYPE, changed to MoveIdle.");
     }
 
-    Attack = bAttack;
-    Defend = bDefend;
-    bIsRunning = bRun;
-    PlayerGUID = pGUID;
+    m_bIsActiveAttacker = bIsActiveAttacker;
+    m_bCanDefendSelf = bCanDefendSelf;
+    m_bIsRunning = bRun;
+    PlayerGUID = uiPlayerGUID;
 
-    //store original NpcFlags
-    m_uiNpcFlags = m_creature->GetUInt32Value(UNIT_NPC_FLAGS);
+    //disable npcflags
+    m_creature->SetUInt32Value(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_NONE);
 
-    //remove them if any
-    if (m_uiNpcFlags)
-        m_creature->SetUInt32Value(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_NONE);
-
-    debug_log("SD2: EscortAI started with %d waypoints. Attack = %d, Defend = %d, Run = %d, PlayerGUID = %d", WaypointList.size(), Attack, Defend, bIsRunning, PlayerGUID);
+    debug_log("SD2: EscortAI started with %d waypoints. ActiveAttacker = %d, Defend = %d, Run = %d, PlayerGUID = %d", WaypointList.size(), m_bIsActiveAttacker, m_bCanDefendSelf, m_bIsRunning, PlayerGUID);
 
     CurrentWP = WaypointList.begin();
 
     //Set initial speed
-    if (bIsRunning)
+    if (m_bIsRunning)
         m_creature->RemoveMonsterMoveFlag(MONSTER_MOVE_WALK);
 
     //Start WP
     m_creature->GetMotionMaster()->MovePoint(CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z);
     debug_log("SD2: EscortAI Next WP is: %d, %f, %f, %f", CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z);
+
     IsBeingEscorted = true;
-    ReconnectWP = false;
-    Returning = false;
-    IsOnHold = false;
-    bCombatMovement = true;
 }
