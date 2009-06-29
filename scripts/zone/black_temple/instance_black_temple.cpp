@@ -199,7 +199,7 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
             case TYPE_BLOODBOIL:  m_uiEncounter[4] = uiData; break;
             case TYPE_RELIQUIARY: m_uiEncounter[5] = uiData; break;
             case TYPE_SHAHRAZ:    m_uiEncounter[6] = uiData; break;
-            case TYPE_CONCUIL:    m_uiEncounter[7] = uiData; break;
+            case TYPE_COUNCIL:    m_uiEncounter[7] = uiData; break;
             case TYPE_ILLIDAN:    m_uiEncounter[8] = uiData; break;
             default:
                 error_log("SD2: Instance Black Temple: ERROR SetData = %u for type %u does not exist/not implemented.",uiType,uiData);
@@ -233,7 +233,7 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
             case TYPE_BLOODBOIL:  return m_uiEncounter[4];
             case TYPE_RELIQUIARY: return m_uiEncounter[5];
             case TYPE_SHAHRAZ:    return m_uiEncounter[6];
-            case TYPE_CONCUIL:    return m_uiEncounter[7];
+            case TYPE_COUNCIL:    return m_uiEncounter[7];
             case TYPE_ILLIDAN:    return m_uiEncounter[8];
         }
 

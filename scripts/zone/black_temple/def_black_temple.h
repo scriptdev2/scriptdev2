@@ -16,7 +16,7 @@ enum
     TYPE_BLOODBOIL                 = 5,
     TYPE_RELIQUIARY                = 6,
     TYPE_SHAHRAZ                   = 7,
-    TYPE_CONCUIL                   = 8,
+    TYPE_COUNCIL                   = 8,
     TYPE_ILLIDAN                   = 9,
 
     DATA_HIGHWARLORDNAJENTUS       = 10,
