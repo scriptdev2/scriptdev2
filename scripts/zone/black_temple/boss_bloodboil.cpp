@@ -101,7 +101,7 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
         {
             if (m_creature->isAlive())
             {
-                m_pInstance->SetData(DATA_GURTOGGBLOODBOILEVENT, NOT_STARTED);
+                m_pInstance->SetData(TYPE_BLOODBOIL, NOT_STARTED);
             }else OpenMotherDoor();
         }
     }
@@ -119,7 +119,7 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
         DoScriptText(SAY_AGGRO, m_creature);
 
         if (m_pInstance)
-            m_pInstance->SetData(DATA_GURTOGGBLOODBOILEVENT, IN_PROGRESS);
+            m_pInstance->SetData(TYPE_BLOODBOIL, IN_PROGRESS);
     }
 
     void KilledUnit(Unit *victim)
@@ -135,7 +135,7 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
     {
         if (m_pInstance)
         {
-            m_pInstance->SetData(DATA_GURTOGGBLOODBOILEVENT, DONE);
+            m_pInstance->SetData(TYPE_BLOODBOIL, DONE);
             OpenMotherDoor();
         }
 

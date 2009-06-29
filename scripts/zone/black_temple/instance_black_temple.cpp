@@ -24,8 +24,6 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_black_temple.h"
 
-#define ENCOUNTERS     9
-
 /* Black Temple encounters:
 0 - High Warlord Naj'entus event
 1 - Supremus Event
@@ -40,64 +38,64 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
 {
-    instance_black_temple(Map *map) : ScriptedInstance(map) {Initialize();};
+    instance_black_temple(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
 
-    uint32 Encounters[ENCOUNTERS];
-    std::string str_data;
+    uint32 m_uiEncounter[ENCOUNTERS];
+    std::string strInstData;
 
-    uint64 Najentus;
-    uint64 Akama;                                           // This is the Akama that starts the Illidan encounter.
-    uint64 Akama_Shade;                                     // This is the Akama that starts the Shade of Akama encounter.
-    uint64 ShadeOfAkama;
-    uint64 Supremus;
-    uint64 LadyMalande;
-    uint64 GathiosTheShatterer;
-    uint64 HighNethermancerZerevor;
-    uint64 VerasDarkshadow;
-    uint64 IllidariCouncil;
-    uint64 BloodElfCouncilVoice;
-    uint64 IllidanStormrage;
+    uint64 m_uiNajentusGUID;
+    uint64 m_uiAkamaGUID;                                   // This is the Akama that starts the Illidan encounter.
+    uint64 m_uiAkama_ShadeGUID;                             // This is the Akama that starts the Shade of Akama encounter.
+    uint64 m_uiShadeOfAkamaGUID;
+    uint64 m_uiSupremusGUID;
+    uint64 m_uiLadyMalandeGUID;
+    uint64 m_uiGathiosTheShattererGUID;
+    uint64 m_uiHighNethermancerZerevorGUID;
+    uint64 m_uiVerasDarkshadowGUID;
+    uint64 m_uiIllidariCouncilGUID;
+    uint64 m_uiBloodElfCouncilVoiceGUID;
+    uint64 m_uiIllidanStormrageGUID;
 
-    uint64 NajentusGate;
-    uint64 MainTempleDoors;
-    uint64 IllidanGate;
-    uint64 IllidanDoor[2];
-    uint64 ShahrazPreDoor;
-    uint64 ShahrazPostDoor;
-    uint64 CouncilDoor;
+    uint64 m_uiNajentusGateGUID;
+    uint64 m_uiMainTempleDoorsGUID;
+    uint64 m_uiIllidanGateGUID;
+    uint64 m_uiIllidanDoorGUID[2];
+    uint64 m_uiShahrazPreDoorGUID;
+    uint64 m_uiShahrazPostDoorGUID;
+    uint64 m_uiCouncilDoorGUID;
 
     void Initialize()
     {
-        Najentus = 0;
-        Akama = 0;
-        Akama_Shade = 0;
-        ShadeOfAkama = 0;
-        Supremus = 0;
-        LadyMalande = 0;
-        GathiosTheShatterer = 0;
-        HighNethermancerZerevor = 0;
-        VerasDarkshadow = 0;
-        IllidariCouncil = 0;
-        BloodElfCouncilVoice = 0;
-        IllidanStormrage = 0;
+        m_uiNajentusGUID = 0;
+        m_uiAkamaGUID = 0;
+        m_uiAkama_ShadeGUID = 0;
+        m_uiShadeOfAkamaGUID = 0;
+        m_uiSupremusGUID = 0;
+        m_uiLadyMalandeGUID = 0;
+        m_uiGathiosTheShattererGUID = 0;
+        m_uiHighNethermancerZerevorGUID = 0;
+        m_uiVerasDarkshadowGUID = 0;
+        m_uiIllidariCouncilGUID = 0;
+        m_uiBloodElfCouncilVoiceGUID = 0;
+        m_uiIllidanStormrageGUID = 0;
 
-        NajentusGate    = 0;
-        MainTempleDoors = 0;
-        IllidanGate     = 0;
-        IllidanDoor[0]  = 0;
-        IllidanDoor[1]  = 0;
-        ShahrazPreDoor  = 0;
-        ShahrazPostDoor = 0;
-        CouncilDoor     = 0;
+        m_uiNajentusGateGUID    = 0;
+        m_uiMainTempleDoorsGUID = 0;
+        m_uiIllidanGateGUID     = 0;
+        m_uiIllidanDoorGUID[0]  = 0;
+        m_uiIllidanDoorGUID[1]  = 0;
+        m_uiShahrazPreDoorGUID  = 0;
+        m_uiShahrazPostDoorGUID = 0;
+        m_uiCouncilDoorGUID     = 0;
 
         for(uint8 i = 0; i < ENCOUNTERS; i++)
-            Encounters[i] = NOT_STARTED;
+            m_uiEncounter[i] = NOT_STARTED;
     }
 
     bool IsEncounterInProgress() const
     {
         for(uint8 i = 0; i < ENCOUNTERS; i++)
-            if (Encounters[i] == IN_PROGRESS) return true;
+            if (m_uiEncounter[i] == IN_PROGRESS) return true;
 
         return false;
     }
@@ -106,132 +104,137 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
     {
         switch(pCreature->GetEntry())
         {
-            case 22887:    Najentus = pCreature->GetGUID();                  break;
-            case 23089:    Akama = pCreature->GetGUID();                     break;
-            case 22990:    Akama_Shade = pCreature->GetGUID();               break;
-            case 22841:    ShadeOfAkama = pCreature->GetGUID();              break;
-            case 22898:    Supremus = pCreature->GetGUID();                  break;
-            case 22917:    IllidanStormrage = pCreature->GetGUID();          break;
-            case 22949:    GathiosTheShatterer = pCreature->GetGUID();       break;
-            case 22950:    HighNethermancerZerevor = pCreature->GetGUID();   break;
-            case 22951:    LadyMalande = pCreature->GetGUID();               break;
-            case 22952:    VerasDarkshadow = pCreature->GetGUID();           break;
-            case 23426:    IllidariCouncil = pCreature->GetGUID();           break;
-            case 23499:    BloodElfCouncilVoice = pCreature->GetGUID();      break;
+            case 22887: m_uiNajentusGUID                = pCreature->GetGUID(); break;
+            case 23089: m_uiAkamaGUID                   = pCreature->GetGUID(); break;
+            case 22990: m_uiAkama_ShadeGUID             = pCreature->GetGUID(); break;
+            case 22841: m_uiShadeOfAkamaGUID            = pCreature->GetGUID(); break;
+            case 22898: m_uiSupremusGUID                = pCreature->GetGUID(); break;
+            case 22917: m_uiIllidanStormrageGUID        = pCreature->GetGUID(); break;
+            case 22949: m_uiGathiosTheShattererGUID     = pCreature->GetGUID(); break;
+            case 22950: m_uiHighNethermancerZerevorGUID = pCreature->GetGUID(); break;
+            case 22951: m_uiLadyMalandeGUID             = pCreature->GetGUID(); break;
+            case 22952: m_uiVerasDarkshadowGUID         = pCreature->GetGUID(); break;
+            case 23426: m_uiIllidariCouncilGUID         = pCreature->GetGUID(); break;
+            case 23499: m_uiBloodElfCouncilVoiceGUID    = pCreature->GetGUID(); break;
         }
     }
 
-    void OnObjectCreate(GameObject* go)
+    void OnObjectCreate(GameObject* pGo)
     {
-        switch(go->GetEntry())
+        switch(pGo->GetEntry())
         {
             case 185483:                                    // Gate past Naj'entus (at the entrance to Supermoose's courtyards)
-                NajentusGate = go->GetGUID();
+                m_uiNajentusGateGUID = pGo->GetGUID();
                 break;
             case 185882:                                    // Main Temple Doors - right past Supermoose (Supremus)
-                MainTempleDoors = go->GetGUID();
+                m_uiMainTempleDoorsGUID = pGo->GetGUID();
                 break;
             case 185479:                                    // Door leading to Mother Sharaz
-                ShahrazPreDoor = go->GetGUID();
+                m_uiShahrazPreDoorGUID = pGo->GetGUID();
                 break;
             case 185481:                                    // Door leading to the Council (grand promenade)
-                CouncilDoor = go->GetGUID();
+                m_uiCouncilDoorGUID = pGo->GetGUID();
                 break;
             case 185482:                                    // Door after shahraz
-                ShahrazPostDoor = go->GetGUID();
+                m_uiShahrazPostDoorGUID = pGo->GetGUID();
                 break;
             case 185905:                                    // Gate leading to Temple Summit
-                IllidanGate = go->GetGUID();
+                m_uiIllidanGateGUID = pGo->GetGUID();
                 break;
             case 186261:                                    // Right door at Temple Summit
-                IllidanDoor[0] = go->GetGUID();
+                m_uiIllidanDoorGUID[0] = pGo->GetGUID();
                 break;
             case 186262:                                    // Left door at Temple Summit
-                IllidanDoor[1] = go->GetGUID();
+                m_uiIllidanDoorGUID[1] = pGo->GetGUID();
                 break;
         }
     }
 
-    uint64 GetData64(uint32 identifier)
+    uint64 GetData64(uint32 uiData)
     {
-        switch(identifier)
+        switch(uiData)
         {
-            case DATA_HIGHWARLORDNAJENTUS:          return Najentus;
-            case DATA_AKAMA:                        return Akama;
-            case DATA_AKAMA_SHADE:                  return Akama_Shade;
-            case DATA_SHADEOFAKAMA:                 return ShadeOfAkama;
-            case DATA_SUPREMUS:                     return Supremus;
-            case DATA_ILLIDANSTORMRAGE:             return IllidanStormrage;
-            case DATA_GATHIOSTHESHATTERER:          return GathiosTheShatterer;
-            case DATA_HIGHNETHERMANCERZEREVOR:      return HighNethermancerZerevor;
-            case DATA_LADYMALANDE:                  return LadyMalande;
-            case DATA_VERASDARKSHADOW:              return VerasDarkshadow;
-            case DATA_ILLIDARICOUNCIL:              return IllidariCouncil;
-            case DATA_GAMEOBJECT_NAJENTUS_GATE:     return NajentusGate;
-            case DATA_GAMEOBJECT_ILLIDAN_GATE:      return IllidanGate;
-            case DATA_GAMEOBJECT_ILLIDAN_DOOR_R:    return IllidanDoor[0];
-            case DATA_GAMEOBJECT_ILLIDAN_DOOR_L:    return IllidanDoor[1];
-            case DATA_GAMEOBJECT_SUPREMUS_DOORS:    return MainTempleDoors;
-            case DATA_BLOOD_ELF_COUNCIL_VOICE:      return BloodElfCouncilVoice;
+            case DATA_HIGHWARLORDNAJENTUS:       return m_uiNajentusGUID;
+            case DATA_AKAMA:                     return m_uiAkamaGUID;
+            case DATA_AKAMA_SHADE:               return m_uiAkama_ShadeGUID;
+            case DATA_SHADEOFAKAMA:              return m_uiShadeOfAkamaGUID;
+            case DATA_SUPREMUS:                  return m_uiSupremusGUID;
+            case DATA_ILLIDANSTORMRAGE:          return m_uiIllidanStormrageGUID;
+            case DATA_GATHIOSTHESHATTERER:       return m_uiGathiosTheShattererGUID;
+            case DATA_HIGHNETHERMANCERZEREVOR:   return m_uiHighNethermancerZerevorGUID;
+            case DATA_LADYMALANDE:               return m_uiLadyMalandeGUID;
+            case DATA_VERASDARKSHADOW:           return m_uiVerasDarkshadowGUID;
+            case DATA_ILLIDARICOUNCIL:           return m_uiIllidariCouncilGUID;
+            case DATA_GAMEOBJECT_NAJENTUS_GATE:  return m_uiNajentusGateGUID;
+            case DATA_GAMEOBJECT_ILLIDAN_GATE:   return m_uiIllidanGateGUID;
+            case DATA_GAMEOBJECT_ILLIDAN_DOOR_R: return m_uiIllidanDoorGUID[0];
+            case DATA_GAMEOBJECT_ILLIDAN_DOOR_L: return m_uiIllidanDoorGUID[1];
+            case DATA_GAMEOBJECT_SUPREMUS_DOORS: return m_uiMainTempleDoorsGUID;
+            case DATA_BLOOD_ELF_COUNCIL_VOICE:   return m_uiBloodElfCouncilVoiceGUID;
             case DATA_GO_PRE_SHAHRAZ_DOOR:
-                if (Encounters[2] == DONE && Encounters[3] == DONE && Encounters[4] == DONE && Encounters[5] == DONE)
+                if (m_uiEncounter[2] == DONE && m_uiEncounter[3] == DONE && m_uiEncounter[4] == DONE && m_uiEncounter[5] == DONE)
                 {
                     debug_log("SD2: Black Temple: Opening door to Mother Shahraz.");
-                    return ShahrazPreDoor;
+                    return m_uiShahrazPreDoorGUID;
                 }
-                debug_log("SD2: Black Temple: Door data to Mother Shahraz requested, cannot open yet (Encounter data: %u %u %u %u)",Encounters[2],Encounters[3],Encounters[4],Encounters[5]);
+                debug_log("SD2: Black Temple: Door data to Mother Shahraz requested, cannot open yet (Encounter data: %u %u %u %u)",m_uiEncounter[2],m_uiEncounter[3],m_uiEncounter[4],m_uiEncounter[5]);
                 return 0;
-            case DATA_GO_POST_SHAHRAZ_DOOR:         return ShahrazPostDoor;
-            case DATA_GO_COUNCIL_DOOR:              return CouncilDoor;
+            case DATA_GO_POST_SHAHRAZ_DOOR:      return m_uiShahrazPostDoorGUID;
+            case DATA_GO_COUNCIL_DOOR:           return m_uiCouncilDoorGUID;
         }
 
         return 0;
     }
 
-    void SetData(uint32 type, uint32 data)
+    void SetData(uint32 uiType, uint32 uiData)
     {
-        switch(type)
+        debug_log("SD2: Instance Black Temple: SetData received for type %u with data %u",uiType,uiData);
+
+        switch(uiType)
         {
-            case DATA_HIGHWARLORDNAJENTUSEVENT:   Encounters[0] = data;         break;
-            case DATA_SUPREMUSEVENT:              Encounters[1] = data;         break;
-            case DATA_SHADEOFAKAMAEVENT:          Encounters[2] = data;         break;
-            case DATA_TERONGOREFIENDEVENT:        Encounters[3] = data;         break;
-            case DATA_GURTOGGBLOODBOILEVENT:      Encounters[4] = data;         break;
-            case DATA_RELIQUARYOFSOULSEVENT:      Encounters[5] = data;         break;
-            case DATA_MOTHERSHAHRAZEVENT:         Encounters[6] = data;         break;
-            case DATA_ILLIDARICOUNCILEVENT:       Encounters[7] = data;         break;
-            case DATA_ILLIDANSTORMRAGEEVENT:      Encounters[8] = data;         break;
+            case TYPE_NAJENTUS:   m_uiEncounter[0] = uiData; break;
+            case TYPE_SUPREMUS:   m_uiEncounter[1] = uiData; break;
+            case TYPE_SHADE:      m_uiEncounter[2] = uiData; break;
+            case TYPE_GOREFIEND:  m_uiEncounter[3] = uiData; break;
+            case TYPE_BLOODBOIL:  m_uiEncounter[4] = uiData; break;
+            case TYPE_RELIQUIARY: m_uiEncounter[5] = uiData; break;
+            case TYPE_SHAHRAZ:    m_uiEncounter[6] = uiData; break;
+            case TYPE_CONCUIL:    m_uiEncounter[7] = uiData; break;
+            case TYPE_ILLIDAN:    m_uiEncounter[8] = uiData; break;
+            default:
+                error_log("SD2: Instance Black Temple: ERROR SetData = %u for type %u does not exist/not implemented.",uiType,uiData);
+                break;
         }
 
-        if (data == DONE)
+        if (uiData == DONE)
         {
             OUT_SAVE_INST_DATA;
 
             std::ostringstream saveStream;
-            saveStream << Encounters[0] << " " << Encounters[1] << " " << Encounters[2] << " "
-                << Encounters[3] << " " << Encounters[4] << " " << Encounters[5] << " "
-                << Encounters[6] << " " << Encounters[7] << " " << Encounters[8];
+            saveStream << m_uiEncounter[0] << " " << m_uiEncounter[1] << " " << m_uiEncounter[2] << " "
+                << m_uiEncounter[3] << " " << m_uiEncounter[4] << " " << m_uiEncounter[5] << " "
+                << m_uiEncounter[6] << " " << m_uiEncounter[7] << " " << m_uiEncounter[8];
 
-            str_data = saveStream.str();
+            strInstData = saveStream.str();
 
             SaveToDB();
             OUT_SAVE_INST_DATA_COMPLETE;
         }
     }
 
-    uint32 GetData(uint32 type)
+    uint32 GetData(uint32 uiType)
     {
-        switch(type)
+        switch(uiType)
         {
-            case DATA_HIGHWARLORDNAJENTUSEVENT:         return Encounters[0];
-            case DATA_SUPREMUSEVENT:                    return Encounters[1];
-            case DATA_SHADEOFAKAMAEVENT:                return Encounters[2];
-            case DATA_TERONGOREFIENDEVENT:              return Encounters[3];
-            case DATA_GURTOGGBLOODBOILEVENT:            return Encounters[4];
-            case DATA_RELIQUARYOFSOULSEVENT:            return Encounters[5];
-            case DATA_MOTHERSHAHRAZEVENT:               return Encounters[6];
-            case DATA_ILLIDARICOUNCILEVENT:             return Encounters[7];
-            case DATA_ILLIDANSTORMRAGEEVENT:            return Encounters[8];
+            case TYPE_NAJENTUS:   return m_uiEncounter[0];
+            case TYPE_SUPREMUS:   return m_uiEncounter[1];
+            case TYPE_SHADE:      return m_uiEncounter[2];
+            case TYPE_GOREFIEND:  return m_uiEncounter[3];
+            case TYPE_BLOODBOIL:  return m_uiEncounter[4];
+            case TYPE_RELIQUIARY: return m_uiEncounter[5];
+            case TYPE_SHAHRAZ:    return m_uiEncounter[6];
+            case TYPE_CONCUIL:    return m_uiEncounter[7];
+            case TYPE_ILLIDAN:    return m_uiEncounter[8];
         }
 
         return 0;
@@ -239,39 +242,39 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
 
     const char* Save()
     {
-        return str_data.c_str();
+        return strInstData.c_str();
     }
 
-    void Load(const char* in)
+    void Load(const char* chrIn)
     {
-        if (!in)
+        if (!chrIn)
         {
             OUT_LOAD_INST_DATA_FAIL;
             return;
         }
 
-        OUT_LOAD_INST_DATA(in);
+        OUT_LOAD_INST_DATA(chrIn);
 
-        std::istringstream loadStream(in);
-        loadStream >> Encounters[0] >> Encounters[1] >> Encounters[2] >> Encounters[3]
-            >> Encounters[4] >> Encounters[5] >> Encounters[6] >> Encounters[7] >> Encounters[8];
+        std::istringstream loadStream(chrIn);
+        loadStream >> m_uiEncounter[0] >> m_uiEncounter[1] >> m_uiEncounter[2] >> m_uiEncounter[3]
+            >> m_uiEncounter[4] >> m_uiEncounter[5] >> m_uiEncounter[6] >> m_uiEncounter[7] >> m_uiEncounter[8];
 
         for(uint8 i = 0; i < ENCOUNTERS; ++i)
-            if (Encounters[i] == IN_PROGRESS)               // Do not load an encounter as "In Progress" - reset it instead.
-                Encounters[i] = NOT_STARTED;
+            if (m_uiEncounter[i] == IN_PROGRESS)            // Do not load an encounter as "In Progress" - reset it instead.
+                m_uiEncounter[i] = NOT_STARTED;
 
         OUT_LOAD_INST_DATA_COMPLETE;
     }
 };
 
-InstanceData* GetInstanceData_instance_black_temple(Map* map)
+InstanceData* GetInstanceData_instance_black_temple(Map* pMap)
 {
-    return new instance_black_temple(map);
+    return new instance_black_temple(pMap);
 }
 
 void AddSC_instance_black_temple()
 {
-    Script *newscript;
+    Script* newscript;
     newscript = new Script;
     newscript->Name = "instance_black_temple";
     newscript->GetInstanceData = &GetInstanceData_instance_black_temple;

@@ -240,13 +240,13 @@ struct MANGOS_DLL_DECL mob_illidari_councilAI : public ScriptedAI
         if (m_pInstance)
         {
             //if already done, not do anything
-            if (m_pInstance->GetData(DATA_ILLIDARICOUNCILEVENT) == DONE)
+            if (m_pInstance->GetData(TYPE_CONCUIL) == DONE)
                 return;
 
             if (Creature* VoiceTrigger = ((Creature*)Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_BLOOD_ELF_COUNCIL_VOICE))))
                 VoiceTrigger->AI()->EnterEvadeMode();
 
-            m_pInstance->SetData(DATA_ILLIDARICOUNCILEVENT, NOT_STARTED);
+            m_pInstance->SetData(TYPE_CONCUIL, NOT_STARTED);
         }
     }
 
@@ -283,7 +283,7 @@ struct MANGOS_DLL_DECL mob_illidari_councilAI : public ScriptedAI
                 }
             }
 
-            m_pInstance->SetData(DATA_ILLIDARICOUNCILEVENT, IN_PROGRESS);
+            m_pInstance->SetData(TYPE_CONCUIL, IN_PROGRESS);
 
             EventBegun = true;
         }
@@ -305,7 +305,7 @@ struct MANGOS_DLL_DECL mob_illidari_councilAI : public ScriptedAI
                         if (Creature* VoiceTrigger = ((Creature*)Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_BLOOD_ELF_COUNCIL_VOICE))))
                             VoiceTrigger->DealDamage(VoiceTrigger, VoiceTrigger->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
 
-                        m_pInstance->SetData(DATA_ILLIDARICOUNCILEVENT, DONE);
+                        m_pInstance->SetData(TYPE_CONCUIL, DONE);
                     }
                     m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
                     return;

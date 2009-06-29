@@ -181,7 +181,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
         {
             if (m_creature->isAlive())
             {
-                m_pInstance->SetData(DATA_RELIQUARYOFSOULSEVENT, NOT_STARTED);
+                m_pInstance->SetData(TYPE_RELIQUIARY, NOT_STARTED);
             }else OpenMotherDoor();
         }
     }
@@ -221,7 +221,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                 if (!m_creature->getVictim())
                 {
                     if (m_pInstance)
-                        m_pInstance->SetData(DATA_RELIQUARYOFSOULSEVENT, IN_PROGRESS);
+                        m_pInstance->SetData(TYPE_RELIQUIARY, IN_PROGRESS);
 
                     Phase = 1;
 
@@ -276,7 +276,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
     {
         if (m_pInstance)
         {
-            m_pInstance->SetData(DATA_RELIQUARYOFSOULSEVENT, DONE);
+            m_pInstance->SetData(TYPE_RELIQUIARY, DONE);
             OpenMotherDoor();
         }
     }

@@ -227,7 +227,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
         {
             if (m_creature->isAlive())
             {
-                m_pInstance->SetData(DATA_TERONGOREFIENDEVENT, NOT_STARTED);
+                m_pInstance->SetData(TYPE_GOREFIEND, NOT_STARTED);
             }else OpenMotherDoor();
         }
     }
@@ -246,7 +246,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
             if (m_creature->IsWithinDistInMap(pWho, VISIBLE_RANGE) && m_creature->IsWithinLOSInMap(pWho))
             {
                 if (m_pInstance)
-                    m_pInstance->SetData(DATA_TERONGOREFIENDEVENT, IN_PROGRESS);
+                    m_pInstance->SetData(TYPE_GOREFIEND, IN_PROGRESS);
 
                 m_creature->GetMotionMaster()->Clear(false);
                 m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -275,7 +275,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
     {
         if (m_pInstance)
         {
-            m_pInstance->SetData(DATA_TERONGOREFIENDEVENT, DONE);
+            m_pInstance->SetData(TYPE_GOREFIEND, DONE);
             OpenMotherDoor();
         }
 

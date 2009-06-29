@@ -121,9 +121,9 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
         if (m_pInstance)
         {
             if (m_creature->isAlive())
-            {
-                m_pInstance->SetData(DATA_MOTHERSHAHRAZEVENT, NOT_STARTED);
-            }else OpenDoors();
+                m_pInstance->SetData(TYPE_SHAHRAZ, TYPE_SHAHRAZ);
+            else
+                OpenDoors();
         }
     }
 
@@ -138,7 +138,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
     void Aggro(Unit* pWho)
     {
         if (m_pInstance)
-            m_pInstance->SetData(DATA_MOTHERSHAHRAZEVENT, IN_PROGRESS);
+            m_pInstance->SetData(TYPE_SHAHRAZ, IN_PROGRESS);
 
         m_creature->SetInCombatWithZone();
 
@@ -158,7 +158,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
     {
         if (m_pInstance)
         {
-            m_pInstance->SetData(DATA_MOTHERSHAHRAZEVENT, DONE);
+            m_pInstance->SetData(TYPE_SHAHRAZ, DONE);
             OpenDoors();
         }
 

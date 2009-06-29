@@ -190,7 +190,7 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
         {
             if (m_creature->isAlive())
             {
-                m_pInstance->SetData(DATA_SHADEOFAKAMAEVENT, NOT_STARTED);
+                m_pInstance->SetData(TYPE_SHADE, NOT_STARTED);
             } else OpenMotherDoor();
 
             if (Unit* pAkama = Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_AKAMA_SHADE)))
@@ -299,7 +299,7 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
     {
         if (m_pInstance)
         {
-            m_pInstance->SetData(DATA_SHADEOFAKAMAEVENT, DONE);
+            m_pInstance->SetData(TYPE_SHADE, DONE);
             OpenMotherDoor();
         }
     }
@@ -460,7 +460,7 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
             ((boss_shade_of_akamaAI*)pShade->AI())->Reset();
 
             // Prevent players from trying to restart event
-            m_pInstance->SetData(DATA_SHADEOFAKAMAEVENT, IN_PROGRESS);
+            m_pInstance->SetData(TYPE_SHADE, IN_PROGRESS);
             m_creature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
 
             ((boss_shade_of_akamaAI*)pShade->AI())->SetSelectableChannelers();

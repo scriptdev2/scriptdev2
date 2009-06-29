@@ -175,10 +175,10 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
         {
             if (m_creature->isAlive())
             {
-                m_pInstance->SetData(DATA_SUPREMUSEVENT, NOT_STARTED);
+                m_pInstance->SetData(TYPE_SUPREMUS, NOT_STARTED);
                 ToggleMainDoors(true);
 
-                if (m_pInstance->GetData(DATA_HIGHWARLORDNAJENTUSEVENT) == DONE)
+                if (m_pInstance->GetData(TYPE_NAJENTUS) == DONE)
                     ToggleGate(false);
                 else
                     ToggleGate(true);
@@ -205,7 +205,7 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
         m_creature->SetInCombatWithZone();
 
         if (m_pInstance)
-            m_pInstance->SetData(DATA_SUPREMUSEVENT, IN_PROGRESS);
+            m_pInstance->SetData(TYPE_SUPREMUS, IN_PROGRESS);
     }
 
     void ToggleMainDoors(bool close)
@@ -234,7 +234,7 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
     {
         if (m_pInstance)
         {
-            m_pInstance->SetData(DATA_SUPREMUSEVENT, DONE);
+            m_pInstance->SetData(TYPE_SUPREMUS, DONE);
             ToggleMainDoors(false);
         }
     }

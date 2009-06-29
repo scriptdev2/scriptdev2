@@ -5,37 +5,41 @@
 #ifndef DEF_BLACK_TEMPLE_H
 #define DEF_BLACK_TEMPLE_H
 
+#define ENCOUNTERS    9
+
 enum
 {
-    DATA_AKAMA                          = 1,
-    DATA_AKAMA_SHADE                    = 2,
-    DATA_GURTOGGBLOODBOILEVENT          = 3,
-    DATA_HIGHWARLORDNAJENTUS            = 4,
-    DATA_HIGHWARLORDNAJENTUSEVENT       = 5,
-    DATA_ILLIDANSTORMRAGE               = 6,
-    DATA_ILLIDANSTORMRAGEEVENT          = 7,
-    DATA_ILLIDARICOUNCILEVENT           = 8,
-    DATA_ILLIDARICOUNCIL                = 9,
-    DATA_LADYMALANDE                    = 10,
-    DATA_HIGHNETHERMANCERZEREVOR        = 11,
-    DATA_GATHIOSTHESHATTERER            = 12,
-    DATA_VERASDARKSHADOW                = 13,
-    DATA_MOTHERSHAHRAZEVENT             = 14,
-    DATA_RELIQUARYOFSOULSEVENT          = 15,
-    DATA_SHADEOFAKAMA                   = 16,
-    DATA_SHADEOFAKAMAEVENT              = 17,
-    DATA_SUPREMUS                       = 18,
-    DATA_SUPREMUSEVENT                  = 19,
-    DATA_TERONGOREFIENDEVENT            = 20,
-    DATA_GAMEOBJECT_NAJENTUS_GATE       = 21,
-    DATA_GAMEOBJECT_ILLIDAN_GATE        = 22,
-    DATA_GAMEOBJECT_ILLIDAN_DOOR_R      = 23,
-    DATA_GAMEOBJECT_ILLIDAN_DOOR_L      = 24,
-    DATA_GAMEOBJECT_SUPREMUS_DOORS      = 25,
-    DATA_BLOOD_ELF_COUNCIL_VOICE        = 26,
-    DATA_GO_PRE_SHAHRAZ_DOOR            = 27,
-    DATA_GO_POST_SHAHRAZ_DOOR           = 28,
-    DATA_GO_COUNCIL_DOOR                = 29
+    TYPE_NAJENTUS                  = 1,
+    TYPE_SUPREMUS                  = 2,
+    TYPE_SHADE                     = 3,
+    TYPE_GOREFIEND                 = 4,
+    TYPE_BLOODBOIL                 = 5,
+    TYPE_RELIQUIARY                = 6,
+    TYPE_SHAHRAZ                   = 7,
+    TYPE_CONCUIL                   = 8,
+    TYPE_ILLIDAN                   = 9,
+
+    DATA_HIGHWARLORDNAJENTUS       = 10,
+    DATA_SUPREMUS                  = 11,
+    DATA_SHADEOFAKAMA              = 12,
+    DATA_AKAMA_SHADE               = 13,
+    DATA_ILLIDARICOUNCIL           = 14,
+    DATA_BLOOD_ELF_COUNCIL_VOICE   = 15,
+    DATA_LADYMALANDE               = 16,
+    DATA_HIGHNETHERMANCERZEREVOR   = 17,
+    DATA_GATHIOSTHESHATTERER       = 18,
+    DATA_VERASDARKSHADOW           = 19,
+    DATA_AKAMA                     = 20,
+    DATA_ILLIDANSTORMRAGE          = 21,
+
+    DATA_GAMEOBJECT_NAJENTUS_GATE  = 22,
+    DATA_GAMEOBJECT_SUPREMUS_DOORS = 23,
+    DATA_GO_PRE_SHAHRAZ_DOOR       = 24,
+    DATA_GO_POST_SHAHRAZ_DOOR      = 25,
+    DATA_GO_COUNCIL_DOOR           = 26,
+    DATA_GAMEOBJECT_ILLIDAN_GATE   = 27,
+    DATA_GAMEOBJECT_ILLIDAN_DOOR_R = 28,
+    DATA_GAMEOBJECT_ILLIDAN_DOOR_L = 29
 };
 
 #endif

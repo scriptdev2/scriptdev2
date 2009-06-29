@@ -80,7 +80,7 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
         {
             if (m_creature->isAlive())
             {
-                m_pInstance->SetData(DATA_HIGHWARLORDNAJENTUSEVENT, NOT_STARTED);
+                m_pInstance->SetData(TYPE_NAJENTUS, NOT_STARTED);
                 ToggleGate(true);
             }
             else ToggleGate(false);
@@ -100,7 +100,7 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
     {
         if (m_pInstance)
         {
-            m_pInstance->SetData(DATA_HIGHWARLORDNAJENTUSEVENT, DONE);
+            m_pInstance->SetData(TYPE_NAJENTUS, DONE);
             ToggleGate(false);
         }
 
@@ -136,7 +136,7 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
     void Aggro(Unit* pWho)
     {
         if (m_pInstance)
-            m_pInstance->SetData(DATA_HIGHWARLORDNAJENTUSEVENT, IN_PROGRESS);
+            m_pInstance->SetData(TYPE_NAJENTUS, IN_PROGRESS);
 
         DoScriptText(SAY_AGGRO, m_creature);
 
