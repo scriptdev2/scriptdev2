@@ -417,6 +417,7 @@ UPDATE creature_template SET ScriptName='mobs_risen_husk_spirit' WHERE entry IN 
 UPDATE creature_template SET ScriptName='npc_deserter_agitator' WHERE entry=23602;
 UPDATE creature_template SET ScriptName='npc_lady_jaina_proudmoore' WHERE entry=4968;
 UPDATE creature_template SET ScriptName='npc_nat_pagle' WHERE entry=12919;
+UPDATE `creature_template` SET `ScriptName` = 'npc_cassa_crimsonwing' WHERE `entry` =23704;
 UPDATE creature_template SET ScriptName='npc_restless_apparition' WHERE entry=23861;
 
 /* EASTERN PLAGUELANDS */
