@@ -8,7 +8,7 @@
 MS Windows:
 - Create a new folder under "src\bindings\" within the MaNGOS source called "ScriptDev2"
 - Checkout the ScriptDev2 trunk from "https://scriptdev2.svn.sourceforge.net/svnroot/scriptdev2"
-- Apply the Git patch to Mangos - "git apply src/bindings/ScriptDev2/patches/MaNGOS-XXXX-ScriptDev2.patch" ('XXXX' is revision number for Mangos).
+- Apply the Git patch to Mangos - "git am src/bindings/ScriptDev2/patches/MaNGOS-XXXX-ScriptDev2.patch" ('XXXX' is revision number for Mangos). (Note this is not required for compile, but needed to avoid deletion of untracked folders/files in GIT-directory when using certain GIT commands (example: git clean -f -d))
 - Compile MaNGOS
 - Compile ScriptDev2 using the ScriptVC80 or ScriptVC90 Solution within the ScriptDev2 folder (this will overwrite the Mangoscript dll in the output directory)
 
@@ -17,7 +17,7 @@ GNU/Linux:
 SVN:
 - Apply MaNGOS-XXXX-ScriptDev2.patch to Mangos, where XXXX is the highest version to that of your MaNGOS revision.
 GIT:
-- Apply the Git patch to Mangos - "git apply src/bindings/ScriptDev2/patches/MaNGOS-XXXX-ScriptDev2.patch"
+- Apply the Git patch to Mangos - "git am src/bindings/ScriptDev2/patches/MaNGOS-XXXX-ScriptDev2.patch"
 
 - Compile MaNGOS (ScriptDev2 will automatically be built when compiling Mangos from here on)
 
