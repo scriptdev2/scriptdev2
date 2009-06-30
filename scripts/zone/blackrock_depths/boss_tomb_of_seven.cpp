@@ -17,19 +17,22 @@
 /* ScriptData
 SDName: Boss_Tomb_Of_Seven
 SD%Complete: 50
-SDComment: Learning Smelt Dark Iron if tribute quest rewarded. Missing event and re-spawn GO Spectral Chalice
+SDComment: Learning Smelt Dark Iron if tribute quest rewarded. Missing event.
 SDCategory: Blackrock Depths
 EndScriptData */
 
 #include "precompiled.h"
 #include "def_blackrock_depths.h"
 
-#define FACTION_NEUTRAL             734
-#define FACTION_HOSTILE             754
+enum
+{
+    FACTION_NEUTRAL             = 734,
+    FACTION_HOSTILE             = 754,
 
-#define SPELL_SUNDERARMOR           24317
-#define SPELL_SHIELDBLOCK           12169
-#define SPELL_STRIKE                15580
+    SPELL_SUNDERARMOR           = 24317,
+    SPELL_SHIELDBLOCK           = 12169,
+    SPELL_STRIKE                = 15580
+};
 
 struct MANGOS_DLL_DECL boss_angerrelAI : public ScriptedAI
 {
@@ -81,9 +84,12 @@ CreatureAI* GetAI_boss_angerrel(Creature* pCreature)
     return new boss_angerrelAI(pCreature);
 }
 
-#define SPELL_SINISTERSTRIKE        15581
-#define SPELL_BACKSTAB              15582
-#define SPELL_GOUGE                 13579
+enum
+{
+    SPELL_SINISTERSTRIKE        = 15581,
+    SPELL_BACKSTAB              = 15582,
+    SPELL_GOUGE                 = 13579
+};
 
 struct MANGOS_DLL_DECL boss_doperelAI : public ScriptedAI
 {
@@ -135,9 +141,12 @@ CreatureAI* GetAI_boss_doperel(Creature* pCreature)
     return new boss_doperelAI(pCreature);
 }
 
-#define SPELL_SHADOWBOLT        17483                       //Not sure if right ID
-#define SPELL_MANABURN          10876
-#define SPELL_SHADOWSHIELD      22417
+enum
+{
+    SPELL_SHADOWBOLT        = 17483,                        //Not sure if right ID
+    SPELL_MANABURN          = 10876,
+    SPELL_SHADOWSHIELD      = 22417,
+};
 
 struct MANGOS_DLL_DECL boss_haterelAI : public ScriptedAI
 {
@@ -202,10 +211,13 @@ CreatureAI* GetAI_boss_haterel(Creature* pCreature)
     return new boss_haterelAI(pCreature);
 }
 
-#define SPELL_MINDBLAST             15587
-#define SPELL_HEAL                  15586
-#define SPELL_PRAYEROFHEALING       15585
-#define SPELL_SHIELD                10901
+enum
+{
+    SPELL_MINDBLAST             = 15587,
+    SPELL_HEAL                  = 15586,
+    SPELL_PRAYEROFHEALING       = 15585,
+    SPELL_SHIELD                = 10901
+};
 
 struct MANGOS_DLL_DECL boss_vilerelAI : public ScriptedAI
 {
@@ -266,11 +278,14 @@ CreatureAI* GetAI_boss_vilerel(Creature* pCreature)
     return new boss_vilerelAI(pCreature);
 }
 
-#define SPELL_FROSTBOLT         16799
-#define SPELL_FROSTARMOR        15784                       //This is actually a buff he gives himself
-#define SPELL_BLIZZARD          19099
-#define SPELL_FROSTNOVA         15063
-#define SPELL_FROSTWARD         15004
+enum
+{
+    SPELL_FROSTBOLT         = 16799,
+    SPELL_FROSTARMOR        = 15784,                        //This is actually a buff he gives himself
+    SPELL_BLIZZARD          = 19099,
+    SPELL_FROSTNOVA         = 15063,
+    SPELL_FROSTWARD         = 15004
+};
 
 struct MANGOS_DLL_DECL boss_seethrelAI : public ScriptedAI
 {
@@ -344,9 +359,12 @@ CreatureAI* GetAI_boss_seethrel(Creature* pCreature)
     return new boss_seethrelAI(pCreature);
 }
 
-#define SPELL_HAMSTRING             9080
-#define SPELL_CLEAVE                15579
-#define SPELL_MORTALSTRIKE          15708
+enum
+{
+    SPELL_HAMSTRING             = 9080,
+    SPELL_CLEAVE                = 15579,
+    SPELL_MORTALSTRIKE          = 15708
+};
 
 struct MANGOS_DLL_DECL boss_gloomrelAI : public ScriptedAI
 {
@@ -444,14 +462,24 @@ bool GossipSelect_boss_gloomrel(Player* pPlayer, Creature* pCreature, uint32 sen
     return true;
 }
 
-#define SPELL_SHADOWBOLTVOLLEY               17228
-#define SPELL_IMMOLATE                       15505
-#define SPELL_CURSEOFWEAKNESS                17227
-#define SPELL_DEMONARMOR                     11735
+enum
+{
+    SPELL_SHADOWBOLTVOLLEY               = 17228,
+    SPELL_IMMOLATE                       = 15505,
+    SPELL_CURSEOFWEAKNESS                = 17227,
+    SPELL_DEMONARMOR                     = 11735,
+    SPELL_SUMMON_VOIDWALKERS             = 15092
+};
 
 struct MANGOS_DLL_DECL boss_doomrelAI : public ScriptedAI
 {
-    boss_doomrelAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+    boss_doomrelAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        Reset();
+    }
+
+    ScriptedInstance* m_pInstance;
 
     uint32 ShadowVolley_Timer;
     uint32 Immolate_Timer;
@@ -472,27 +500,15 @@ struct MANGOS_DLL_DECL boss_doomrelAI : public ScriptedAI
         Voidwalkers = false;
 
         m_creature->setFaction(FACTION_NEUTRAL);
+
+        // was set before event start, so set again
+        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_UNK_8);
     }
 
-    void SummonVoidwalkers(Unit* victim)
+    void JustDied(Unit *victim)
     {
-        Rand = rand()%5;
-        switch (rand()%2)
-        {
-            case 0: RandX = 0 - Rand; break;
-            case 1: RandX = 0 + Rand; break;
-        }
-        Rand = 0;
-        Rand = rand()%5;
-        switch (rand()%2)
-        {
-            case 0: RandY = 0 - Rand; break;
-            case 1: RandY = 0 + Rand; break;
-        }
-        Rand = 0;
-        Summoned = DoSpawnCreature(16119, RandX, RandY, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 120000);
-        if (Summoned)
-            ((CreatureAI*)Summoned->AI())->AttackStart(victim);
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_TOMB_OF_SEVEN, DONE);
     }
 
     void UpdateAI(const uint32 diff)
@@ -533,9 +549,7 @@ struct MANGOS_DLL_DECL boss_doomrelAI : public ScriptedAI
         //Summon Voidwalkers
         if (!Voidwalkers && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 51)
         {
-            SummonVoidwalkers(m_creature->getVictim());
-            SummonVoidwalkers(m_creature->getVictim());
-            SummonVoidwalkers(m_creature->getVictim());
+            m_creature->CastSpell(m_creature->getVictim(), SPELL_SUMMON_VOIDWALKERS, true);
             Voidwalkers = true;
         }
 
@@ -570,6 +584,8 @@ bool GossipSelect_boss_doomrel(Player* pPlayer, Creature* pCreature, uint32 send
             pPlayer->CLOSE_GOSSIP_MENU();
             //start event here, below code just temporary
             pCreature->setFaction(FACTION_HOSTILE);
+            pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_UNK_8); //unattackable
+            pCreature->AI()->AttackStart(pPlayer);
             break;
     }
     return true;

@@ -25,7 +25,8 @@ enum
     DATA_GO_BAR_KEG         = 16,
     DATA_GO_BAR_KEG_TRAP    = 17,
     DATA_GO_BAR_DOOR        = 18,
-    DATA_GO_CHALICE         = 19
+    DATA_GO_CHALICE         = 19,
+    DATA_GO_TOMB_EXIT       = 20
 };
 
 #endif

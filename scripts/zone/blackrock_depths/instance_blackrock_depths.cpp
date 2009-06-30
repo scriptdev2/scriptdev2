@@ -173,7 +173,10 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
                 break;
             case TYPE_TOMB_OF_SEVEN:
                 if (uiData == DONE)
+                {
                     DoRespawnGameObject(m_uiSevensChestGUID, HOUR*IN_MILISECONDS);
+                    DoUseDoorOrButton(m_uiGoTombExitGUID);
+                }
                 m_uiEncounter[3] = uiData;
                 break;
             case TYPE_LYCEUM:
@@ -248,6 +251,8 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
                 return m_uiGoBarDoorGUID;
             case DATA_GO_CHALICE:
                 return m_uiSpectralChaliceGUID;
+            case DATA_GO_TOMB_EXIT:
+                return m_uiGoTombExitGUID;
         }
         return 0;
     }
