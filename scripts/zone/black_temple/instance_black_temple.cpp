@@ -125,18 +125,28 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
         {
             case 185483:                                    // Gate past Naj'entus (at the entrance to Supermoose's courtyards)
                 m_uiNajentusGateGUID = pGo->GetGUID();
+                if (m_uiEncounter[0] == DONE)
+                    pGo->SetGoState(GO_STATE_ACTIVE);
                 break;
             case 185882:                                    // Main Temple Doors - right past Supermoose (Supremus)
                 m_uiMainTempleDoorsGUID = pGo->GetGUID();
+                if (m_uiEncounter[1] == DONE)
+                    pGo->SetGoState(GO_STATE_ACTIVE);
                 break;
-            case 185479:                                    // Door leading to Mother Sharaz
+            case 185479:                                    // Door leading to Mother Shahraz
                 m_uiShahrazPreDoorGUID = pGo->GetGUID();
+                if (CanPreMotherDoorOpen())
+                    pGo->SetGoState(GO_STATE_ACTIVE);
                 break;
             case 185481:                                    // Door leading to the Council (grand promenade)
                 m_uiCouncilDoorGUID = pGo->GetGUID();
+                if (m_uiEncounter[6] == DONE)
+                    pGo->SetGoState(GO_STATE_ACTIVE);
                 break;
             case 185482:                                    // Door after shahraz
                 m_uiShahrazPostDoorGUID = pGo->GetGUID();
+                if (m_uiEncounter[6] == DONE)
+                    pGo->SetGoState(GO_STATE_ACTIVE);
                 break;
             case 185905:                                    // Gate leading to Temple Summit
                 m_uiIllidanGateGUID = pGo->GetGUID();
@@ -150,40 +160,16 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
         }
     }
 
-    uint64 GetData64(uint32 uiData)
+    bool CanPreMotherDoorOpen()
     {
-        switch(uiData)
+        if (m_uiEncounter[2] == DONE && m_uiEncounter[3] == DONE && m_uiEncounter[4] == DONE && m_uiEncounter[5] == DONE)
         {
-            case DATA_HIGHWARLORDNAJENTUS:       return m_uiNajentusGUID;
-            case DATA_AKAMA:                     return m_uiAkamaGUID;
-            case DATA_AKAMA_SHADE:               return m_uiAkama_ShadeGUID;
-            case DATA_SHADEOFAKAMA:              return m_uiShadeOfAkamaGUID;
-            case DATA_SUPREMUS:                  return m_uiSupremusGUID;
-            case DATA_ILLIDANSTORMRAGE:          return m_uiIllidanStormrageGUID;
-            case DATA_GATHIOSTHESHATTERER:       return m_uiGathiosTheShattererGUID;
-            case DATA_HIGHNETHERMANCERZEREVOR:   return m_uiHighNethermancerZerevorGUID;
-            case DATA_LADYMALANDE:               return m_uiLadyMalandeGUID;
-            case DATA_VERASDARKSHADOW:           return m_uiVerasDarkshadowGUID;
-            case DATA_ILLIDARICOUNCIL:           return m_uiIllidariCouncilGUID;
-            case DATA_GAMEOBJECT_NAJENTUS_GATE:  return m_uiNajentusGateGUID;
-            case DATA_GAMEOBJECT_ILLIDAN_GATE:   return m_uiIllidanGateGUID;
-            case DATA_GAMEOBJECT_ILLIDAN_DOOR_R: return m_uiIllidanDoorGUID[0];
-            case DATA_GAMEOBJECT_ILLIDAN_DOOR_L: return m_uiIllidanDoorGUID[1];
-            case DATA_GAMEOBJECT_SUPREMUS_DOORS: return m_uiMainTempleDoorsGUID;
-            case DATA_BLOOD_ELF_COUNCIL_VOICE:   return m_uiBloodElfCouncilVoiceGUID;
-            case DATA_GO_PRE_SHAHRAZ_DOOR:
-                if (m_uiEncounter[2] == DONE && m_uiEncounter[3] == DONE && m_uiEncounter[4] == DONE && m_uiEncounter[5] == DONE)
-                {
-                    debug_log("SD2: Black Temple: Opening door to Mother Shahraz.");
-                    return m_uiShahrazPreDoorGUID;
-                }
-                debug_log("SD2: Black Temple: Door data to Mother Shahraz requested, cannot open yet (Encounter data: %u %u %u %u)",m_uiEncounter[2],m_uiEncounter[3],m_uiEncounter[4],m_uiEncounter[5]);
-                return 0;
-            case DATA_GO_POST_SHAHRAZ_DOOR:      return m_uiShahrazPostDoorGUID;
-            case DATA_GO_COUNCIL_DOOR:           return m_uiCouncilDoorGUID;
+            debug_log("SD2: Black Temple: door to Mother Shahraz can open");
+            return true;
         }
 
-        return 0;
+        debug_log("SD2: Black Temple: Door data to Mother Shahraz requested, cannot open yet (Encounter data: %u %u %u %u)",m_uiEncounter[2],m_uiEncounter[3],m_uiEncounter[4],m_uiEncounter[5]);
+        return false;
     }
 
     void SetData(uint32 uiType, uint32 uiData)
@@ -192,13 +178,44 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
 
         switch(uiType)
         {
-            case TYPE_NAJENTUS:   m_uiEncounter[0] = uiData; break;
-            case TYPE_SUPREMUS:   m_uiEncounter[1] = uiData; break;
-            case TYPE_SHADE:      m_uiEncounter[2] = uiData; break;
-            case TYPE_GOREFIEND:  m_uiEncounter[3] = uiData; break;
-            case TYPE_BLOODBOIL:  m_uiEncounter[4] = uiData; break;
-            case TYPE_RELIQUIARY: m_uiEncounter[5] = uiData; break;
-            case TYPE_SHAHRAZ:    m_uiEncounter[6] = uiData; break;
+            case TYPE_NAJENTUS:
+                m_uiEncounter[0] = uiData;
+                if (uiData == DONE)
+                    DoUseDoorOrButton(m_uiNajentusGateGUID);
+                break;
+            case TYPE_SUPREMUS:
+                m_uiEncounter[1] = uiData;
+                if (uiData == DONE)
+                    DoUseDoorOrButton(m_uiMainTempleDoorsGUID);
+                break;
+            case TYPE_SHADE:
+                m_uiEncounter[2] = uiData;
+                if (uiData == DONE && CanPreMotherDoorOpen())
+                    DoUseDoorOrButton(m_uiShahrazPreDoorGUID);
+                break;
+            case TYPE_GOREFIEND:
+                m_uiEncounter[3] = uiData;
+                if (uiData == DONE && CanPreMotherDoorOpen())
+                    DoUseDoorOrButton(m_uiShahrazPreDoorGUID);
+                break;
+            case TYPE_BLOODBOIL:
+                m_uiEncounter[4] = uiData;
+                if (uiData == DONE && CanPreMotherDoorOpen())
+                    DoUseDoorOrButton(m_uiShahrazPreDoorGUID);
+                break;
+            case TYPE_RELIQUIARY:
+                m_uiEncounter[5] = uiData;
+                if (uiData == DONE && CanPreMotherDoorOpen())
+                    DoUseDoorOrButton(m_uiShahrazPreDoorGUID);
+                break;
+            case TYPE_SHAHRAZ:
+                if (uiData == DONE)
+                {
+                    DoUseDoorOrButton(m_uiCouncilDoorGUID);
+                    DoUseDoorOrButton(m_uiShahrazPostDoorGUID);
+                }
+                m_uiEncounter[6] = uiData;
+                break;
             case TYPE_COUNCIL:    m_uiEncounter[7] = uiData; break;
             case TYPE_ILLIDAN:    m_uiEncounter[8] = uiData; break;
             default:
@@ -235,6 +252,35 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
             case TYPE_SHAHRAZ:    return m_uiEncounter[6];
             case TYPE_COUNCIL:    return m_uiEncounter[7];
             case TYPE_ILLIDAN:    return m_uiEncounter[8];
+        }
+
+        return 0;
+    }
+
+    uint64 GetData64(uint32 uiData)
+    {
+        switch(uiData)
+        {
+            case DATA_HIGHWARLORDNAJENTUS:       return m_uiNajentusGUID;
+            case DATA_AKAMA:                     return m_uiAkamaGUID;
+            case DATA_AKAMA_SHADE:               return m_uiAkama_ShadeGUID;
+            case DATA_SHADEOFAKAMA:              return m_uiShadeOfAkamaGUID;
+            case DATA_SUPREMUS:                  return m_uiSupremusGUID;
+            case DATA_ILLIDANSTORMRAGE:          return m_uiIllidanStormrageGUID;
+            case DATA_GATHIOSTHESHATTERER:       return m_uiGathiosTheShattererGUID;
+            case DATA_HIGHNETHERMANCERZEREVOR:   return m_uiHighNethermancerZerevorGUID;
+            case DATA_LADYMALANDE:               return m_uiLadyMalandeGUID;
+            case DATA_VERASDARKSHADOW:           return m_uiVerasDarkshadowGUID;
+            case DATA_ILLIDARICOUNCIL:           return m_uiIllidariCouncilGUID;
+            case DATA_GAMEOBJECT_NAJENTUS_GATE:  return m_uiNajentusGateGUID;
+            case DATA_GAMEOBJECT_ILLIDAN_GATE:   return m_uiIllidanGateGUID;
+            case DATA_GAMEOBJECT_ILLIDAN_DOOR_R: return m_uiIllidanDoorGUID[0];
+            case DATA_GAMEOBJECT_ILLIDAN_DOOR_L: return m_uiIllidanDoorGUID[1];
+            case DATA_GAMEOBJECT_SUPREMUS_DOORS: return m_uiMainTempleDoorsGUID;
+            case DATA_BLOOD_ELF_COUNCIL_VOICE:   return m_uiBloodElfCouncilVoiceGUID;
+            case DATA_GO_PRE_SHAHRAZ_DOOR:       return m_uiShahrazPreDoorGUID;
+            case DATA_GO_POST_SHAHRAZ_DOOR:      return m_uiShahrazPostDoorGUID;
+            case DATA_GO_COUNCIL_DOOR:           return m_uiCouncilDoorGUID;
         }
 
         return 0;

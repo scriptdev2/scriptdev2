@@ -222,20 +222,12 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
         AggroTimer = 20000;
         AggroTargetGUID = 0;
         Intro = false;
-
-        if (m_pInstance)
-        {
-            if (m_creature->isAlive())
-            {
-                m_pInstance->SetData(TYPE_GOREFIEND, NOT_STARTED);
-            }else OpenMotherDoor();
-        }
     }
 
-    void OpenMotherDoor()
+    void JustReachedHome()
     {
-        if (GameObject* pDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GO_PRE_SHAHRAZ_DOOR)))
-            pDoor->SetGoState(GO_STATE_ACTIVE);
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_GOREFIEND, NOT_STARTED);
     }
 
     void MoveInLineOfSight(Unit* pWho)
@@ -274,10 +266,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
     void JustDied(Unit *victim)
     {
         if (m_pInstance)
-        {
             m_pInstance->SetData(TYPE_GOREFIEND, DONE);
-            OpenMotherDoor();
-        }
 
         DoScriptText(SAY_DEATH, m_creature);
     }

@@ -75,16 +75,12 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
         m_uiSpecialYellTimer = 45000 + (rand()%76)*1000;
         m_uiTidalShieldTimer = 60000;
         m_uiImpalingSpineTimer = 20000;
+    }
 
+    void JustReachedHome()
+    {
         if (m_pInstance)
-        {
-            if (m_creature->isAlive())
-            {
-                m_pInstance->SetData(TYPE_NAJENTUS, NOT_STARTED);
-                ToggleGate(true);
-            }
-            else ToggleGate(false);
-        }
+            m_pInstance->SetData(TYPE_NAJENTUS, NOT_STARTED);
     }
 
     void KilledUnit(Unit *victim)
@@ -99,23 +95,9 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
     void JustDied(Unit *victim)
     {
         if (m_pInstance)
-        {
             m_pInstance->SetData(TYPE_NAJENTUS, DONE);
-            ToggleGate(false);
-        }
 
         DoScriptText(SAY_DEATH, m_creature);
-    }
-
-    void ToggleGate(bool close)
-    {
-        if (GameObject* pGate = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GAMEOBJECT_NAJENTUS_GATE)))
-        {
-            if (close)
-                pGate->SetGoState(GO_STATE_READY);          // Closed
-            else
-                pGate->SetGoState(GO_STATE_ACTIVE);         // Opened
-        }
     }
 
     void SpellHit(Unit *caster, const SpellEntry *spell)

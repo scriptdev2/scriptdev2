@@ -96,20 +96,12 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
         PhaseChangeTimer = 60000;
 
         Phase1 = true;
-
-        if (m_pInstance)
-        {
-            if (m_creature->isAlive())
-            {
-                m_pInstance->SetData(TYPE_BLOODBOIL, NOT_STARTED);
-            }else OpenMotherDoor();
-        }
     }
 
-    void OpenMotherDoor()
+    void JustReachedHome()
     {
-        if (GameObject* pDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GO_PRE_SHAHRAZ_DOOR)))
-            pDoor->SetGoState(GO_STATE_ACTIVE);
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_BLOODBOIL, NOT_STARTED);
     }
 
     void Aggro(Unit *who)
@@ -134,10 +126,7 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
     void JustDied(Unit *victim)
     {
         if (m_pInstance)
-        {
             m_pInstance->SetData(TYPE_BLOODBOIL, DONE);
-            OpenMotherDoor();
-        }
 
         DoScriptText(SAY_DEATH, m_creature);
     }

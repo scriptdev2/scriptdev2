@@ -171,25 +171,6 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
 
     void Reset()
     {
-        if (m_pInstance)
-        {
-            if (m_creature->isAlive())
-            {
-                m_pInstance->SetData(TYPE_SUPREMUS, NOT_STARTED);
-                ToggleMainDoors(true);
-
-                if (m_pInstance->GetData(TYPE_NAJENTUS) == DONE)
-                    ToggleGate(false);
-                else
-                    ToggleGate(true);
-            }
-            else
-            {
-                ToggleGate(false);
-                ToggleMainDoors(false);
-            }
-        }
-
         HurtfulStrikeTimer = 5000;
         SummonFlameTimer = 20000;
         SwitchTargetTimer = 90000;
@@ -200,6 +181,12 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
         Phase1 = true;
     }
 
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_SUPREMUS, NOT_STARTED);
+    }
+
     void Aggro(Unit* pWho)
     {
         m_creature->SetInCombatWithZone();
@@ -208,35 +195,10 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
             m_pInstance->SetData(TYPE_SUPREMUS, IN_PROGRESS);
     }
 
-    void ToggleMainDoors(bool close)
-    {
-        if (GameObject* pDoors = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GAMEOBJECT_SUPREMUS_DOORS)))
-        {
-            if (close)
-                pDoors->SetGoState(GO_STATE_READY);         // Closed
-            else
-                pDoors->SetGoState(GO_STATE_ACTIVE);        // Open
-        }
-    }
-
-    void ToggleGate(bool close)
-    {
-        if (GameObject* pDoors = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GAMEOBJECT_NAJENTUS_GATE)))
-        {
-            if (close)
-                pDoors->SetGoState(GO_STATE_READY);         // Closed
-            else
-                pDoors->SetGoState(GO_STATE_ACTIVE);        // Open
-        }
-    }
-
     void JustDied(Unit *killer)
     {
         if (m_pInstance)
-        {
             m_pInstance->SetData(TYPE_SUPREMUS, DONE);
-            ToggleMainDoors(false);
-        }
     }
 
     float CalculateRandomCoord(float initial)

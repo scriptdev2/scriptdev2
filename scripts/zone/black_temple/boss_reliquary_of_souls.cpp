@@ -176,14 +176,12 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,0);
         m_creature->GetMotionMaster()->Clear(false);
+    }
 
+    void JustReachedHome()
+    {
         if (m_pInstance)
-        {
-            if (m_creature->isAlive())
-            {
-                m_pInstance->SetData(TYPE_RELIQUIARY, NOT_STARTED);
-            }else OpenMotherDoor();
-        }
+            m_pInstance->SetData(TYPE_RELIQUIARY, NOT_STARTED);
     }
 
     void DespawnEssences()
@@ -199,12 +197,6 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
 
         if (pEssence && pEssence->isAlive())
             pEssence->ForcedDespawn();
-    }
-
-    void OpenMotherDoor()
-    {
-        if (GameObject* pDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GO_PRE_SHAHRAZ_DOOR)))
-            pDoor->SetGoState(GO_STATE_ACTIVE);
     }
 
     void AttackStart(Unit* who) { }
@@ -275,10 +267,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
     void JustDied(Unit* killer)
     {
         if (m_pInstance)
-        {
             m_pInstance->SetData(TYPE_RELIQUIARY, DONE);
-            OpenMotherDoor();
-        }
     }
 
     void UpdateAI(const uint32 diff)

@@ -189,19 +189,11 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
         if (m_pInstance)
         {
             if (m_creature->isAlive())
-            {
                 m_pInstance->SetData(TYPE_SHADE, NOT_STARTED);
-            } else OpenMotherDoor();
 
             if (Unit* pAkama = Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_AKAMA_SHADE)))
                 pAkama->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
         }
-    }
-
-    void OpenMotherDoor()
-    {
-        if (GameObject* pDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GO_PRE_SHAHRAZ_DOOR)))
-            pDoor->SetGoState(GO_STATE_ACTIVE);
     }
 
     void AttackStart(Unit* who)
@@ -298,10 +290,7 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
     void JustDied(Unit *killer)
     {
         if (m_pInstance)
-        {
             m_pInstance->SetData(TYPE_SHADE, DONE);
-            OpenMotherDoor();
-        }
     }
 
     void UpdateAI(const uint32 diff)
