@@ -241,9 +241,10 @@ struct MANGOS_DLL_DECL boss_sartharionAI : public ScriptedAI
         m_creature->SetInCombatWithZone();
 
         if (m_pInstance)
+        {
             m_pInstance->SetData(TYPE_SARTHARION_EVENT, IN_PROGRESS);
-
-        FetchDragons();
+            FetchDragons();
+        }
     }
 
     void JustDied(Unit* pKiller)
