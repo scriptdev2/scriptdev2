@@ -16,17 +16,24 @@ enum
 
     DATA_EMPEROR            = 10,
     DATA_PHALANX            = 11,
+    DATA_HATEREL            = 12,
+    DATA_ANGERREL           = 13,
+    DATA_VILEREL            = 14,
+    DATA_GLOOMREL           = 15,
+    DATA_SEETHREL           = 16,
+    DATA_DOOMREL            = 17,
+    DATA_DOPEREL            = 18,
 
-    DATA_ARENA1             = 12,
-    DATA_ARENA2             = 13,
-    DATA_ARENA3             = 14,
-    DATA_ARENA4             = 15,
+    DATA_ARENA1             = 19,
+    DATA_ARENA2             = 20,
+    DATA_ARENA3             = 21,
+    DATA_ARENA4             = 22,
 
-    DATA_GO_BAR_KEG         = 16,
-    DATA_GO_BAR_KEG_TRAP    = 17,
-    DATA_GO_BAR_DOOR        = 18,
-    DATA_GO_CHALICE         = 19,
-    DATA_GO_TOMB_EXIT       = 20
+    DATA_GO_BAR_KEG         = 23,
+    DATA_GO_BAR_KEG_TRAP    = 24,
+    DATA_GO_BAR_DOOR        = 25,
+    DATA_GO_CHALICE         = 26,
+    DATA_GO_TOMB_EXIT       = 27
 };
 
 #endif

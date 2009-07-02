@@ -30,6 +30,13 @@ enum
 
     NPC_EMPEROR             = 9019,
     NPC_PHALANX             = 9502,
+    NPC_HATEREL             = 9034,
+    NPC_ANGERREL            = 9035,
+    NPC_VILEREL             = 9036,
+    NPC_GLOOMREL            = 9037,
+    NPC_SEETHREL            = 9038,
+    NPC_DOOMREL             = 9039,
+    NPC_DOPEREL             = 9040,
 
     GO_ARENA1               = 161525,
     GO_ARENA2               = 161522,
@@ -62,6 +69,13 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
 
     uint64 m_uiEmperorGUID;
     uint64 m_uiPhalanxGUID;
+    uint64 m_uiHaterelGUID;
+    uint64 m_uiAngerrelGUID;
+    uint64 m_uiVilerelGUID;
+    uint64 m_uiGloomrelGUID;
+    uint64 m_uiSeethrelGUID;
+    uint64 m_uiDoomrelGUID;
+    uint64 m_uiDoperelGUID;
 
     uint64 m_uiGoArena1GUID;
     uint64 m_uiGoArena2GUID;
@@ -90,6 +104,13 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
     {
         m_uiEmperorGUID = 0;
         m_uiPhalanxGUID = 0;
+        m_uiHaterelGUID = 0;
+        m_uiAngerrelGUID = 0;
+        m_uiVilerelGUID = 0;
+        m_uiGloomrelGUID = 0;
+        m_uiSeethrelGUID = 0;
+        m_uiDoomrelGUID = 0;
+        m_uiDoperelGUID = 0;
 
         m_uiGoArena1GUID = 0;
         m_uiGoArena2GUID = 0;
@@ -124,6 +145,13 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
         {
             case NPC_EMPEROR: m_uiEmperorGUID = pCreature->GetGUID(); break;
             case NPC_PHALANX: m_uiPhalanxGUID = pCreature->GetGUID(); break;
+            case NPC_HATEREL: m_uiHaterelGUID = pCreature->GetGUID(); break;
+            case NPC_ANGERREL: m_uiAngerrelGUID = pCreature->GetGUID(); break;
+            case NPC_VILEREL: m_uiVilerelGUID = pCreature->GetGUID(); break;
+            case NPC_GLOOMREL: m_uiGloomrelGUID = pCreature->GetGUID(); break;
+            case NPC_SEETHREL: m_uiSeethrelGUID = pCreature->GetGUID(); break;
+            case NPC_DOOMREL: m_uiDoomrelGUID = pCreature->GetGUID(); break;
+            case NPC_DOPEREL: m_uiDoperelGUID = pCreature->GetGUID(); break;
         }
     }
 
@@ -172,10 +200,20 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
                     m_uiEncounter[2] = uiData;
                 break;
             case TYPE_TOMB_OF_SEVEN:
-                if (uiData == DONE)
+                switch(uiData)
                 {
-                    DoRespawnGameObject(m_uiSevensChestGUID, HOUR*IN_MILISECONDS);
-                    DoUseDoorOrButton(m_uiGoTombExitGUID);
+                    case IN_PROGRESS:
+                        DoUseDoorOrButton(m_uiGoTombEnterGUID);
+                        break;
+                    case FAIL:
+                        if (m_uiEncounter[3] == IN_PROGRESS)//prevent use more than one time
+                            DoUseDoorOrButton(m_uiGoTombEnterGUID);
+                        break;
+                    case DONE:
+                        DoRespawnGameObject(m_uiSevensChestGUID, HOUR*IN_MILISECONDS);
+                        DoUseDoorOrButton(m_uiGoTombExitGUID);
+                        DoUseDoorOrButton(m_uiGoTombEnterGUID);
+                        break;
                 }
                 m_uiEncounter[3] = uiData;
                 break;
@@ -233,6 +271,20 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
                 return m_uiEmperorGUID;
             case DATA_PHALANX:
                 return m_uiPhalanxGUID;
+            case DATA_HATEREL:
+                return m_uiHaterelGUID;
+            case DATA_ANGERREL:
+                return m_uiAngerrelGUID;
+            case DATA_VILEREL:
+                return m_uiVilerelGUID;
+            case DATA_GLOOMREL:
+                return m_uiGloomrelGUID;
+            case DATA_SEETHREL:
+                return m_uiSeethrelGUID;
+            case DATA_DOOMREL:
+                return m_uiDoomrelGUID;
+            case DATA_DOPEREL:
+                return m_uiDoperelGUID;
 
             case DATA_ARENA1:
                 return m_uiGoArena1GUID;
