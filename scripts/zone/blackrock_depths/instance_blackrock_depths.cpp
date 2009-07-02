@@ -62,7 +62,7 @@ enum
 
 struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
 {
-    instance_blackrock_depths(Map *map) : ScriptedInstance(map) {Initialize();};
+    instance_blackrock_depths(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
 
     uint32 m_uiEncounter[ENCOUNTERS];
     std::string str_data;
