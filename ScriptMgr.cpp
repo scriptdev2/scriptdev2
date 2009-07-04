@@ -494,6 +494,11 @@ extern void AddSC_instance_stratholme();
 extern void AddSC_stratholme();
 
 //Sunken Temple
+
+//Sunwell Plateau
+extern void AddSC_boss_kalecgos();
+extern void AddSC_instance_sunwell_plateau();
+
 //Tanaris
 extern void AddSC_tanaris();
 
@@ -1373,6 +1378,11 @@ void ScriptsInit()
     AddSC_stratholme();
 
     //Sunken Temple
+
+    //Sunwell Plateau
+    AddSC_boss_kalecgos();
+    AddSC_instance_sunwell_plateau();
+
     //Tanaris
     AddSC_tanaris();
 

@@ -16,157 +16,124 @@
 
 /* ScriptData
 SDName: Boss_Kalecgos
-SD%Complete: 0
-SDComment: VERIFY SCRIPT
+SD%Complete: 40
+SDComment: Script must be considered not complete.
 SDCategory: Sunwell Plateau
 EndScriptData */
 
 #include "precompiled.h"
-#include "WorldPacket.h"
 #include "def_sunwell_plateau.h"
 
-//kalecgos dragon form
-#define SAY_EVIL_AGGRO                  -1580000
-#define SAY_EVIL_SPELL1                 -1580001
-#define SAY_EVIL_SPELL2                 -1580002
-#define SAY_EVIL_SLAY1                  -1580003
-#define SAY_EVIL_SLAY2                  -1580004
-#define SAY_EVIL_ENRAGE                 -1580005
-//kalecgos humanoid form
-#define SAY_GOOD_AGGRO                  -1580006
-#define SAY_GOOD_NEAR_DEATH             -1580007
-#define SAY_GOOD_NEAR_DEATH2            -1580008
-#define SAY_GOOD_PLRWIN                 -1580009
+enum KalecgosEncounter
+{
+    //kalecgos dragon form
+    SAY_EVIL_AGGRO                  = -1580000,
+    SAY_EVIL_SPELL1                 = -1580001,
+    SAY_EVIL_SPELL2                 = -1580002,
+    SAY_EVIL_SLAY1                  = -1580003,
+    SAY_EVIL_SLAY2                  = -1580004,
+    SAY_EVIL_ENRAGE                 = -1580005,
 
-#define SAY_SATH_AGGRO                  -1580010
-#define SAY_SATH_DEATH                  -1580011
-#define SAY_SATH_SPELL1                 -1580012
-#define SAY_SATH_SPELL2                 -1580013
-#define SAY_SATH_SLAY1                  -1580014
-#define SAY_SATH_SLAY2                  -1580015
-#define SAY_SATH_ENRAGE                 -1580016
+    //kalecgos humanoid form
+    SAY_GOOD_AGGRO                  = -1580006,
+    SAY_GOOD_NEAR_DEATH             = -1580007,
+    SAY_GOOD_NEAR_DEATH2            = -1580008,
+    SAY_GOOD_PLRWIN                 = -1580009,
+    
+    SAY_SATH_AGGRO                  = -1580010,
+    SAY_SATH_DEATH                  = -1580011,
+    SAY_SATH_SPELL1                 = -1580012,
+    SAY_SATH_SPELL2                 = -1580013,
+    SAY_SATH_SLAY1                  = -1580014,
+    SAY_SATH_SLAY2                  = -1580015,
+    SAY_SATH_ENRAGE                 = -1580016,
 
-#define SPELL_SPECTRAL_EXHAUSTION       44867
-#define SPELL_TELEPORT_SPECTRAL_REALM   46019
-#define SPELL_SPECTRAL_REALM            46021
+    //Kalecgos
+    SPELL_SPECTRAL_BLAST_DUMMY      = 44869,
+    SPELL_SPECTRAL_BLAST            = 44866,
 
-#define NOTIFY_SPECTRALLY_EXHAUSTED     "Your body is too exhausted to travel to the Spectral Realm."
-#define ERROR_INST_DATA                 "SD2: Instance Data not set properly for Sunwell Plateau. Kalecgos Encounter will be buggy."
-#define ERROR_INST_DATA_PLR             "SD2 ERROR: Instance Data not set properly for Sunwell Plateau. Please report this to your administrator."
-#define ERROR_UNABLE_TO_TELEPORT        "SD2: Unable to select target for Spectral Blast. Threatlist has too few players."
-#define ERROR_MISSING_TELEPORT_GUID     "SD2: [Kalecgos] Invalid TeleportTargetGUID. Unable to teleport player."
-#define ERROR_KALECGOS_NOT_FOUND        "SD2: Unable to create pointer to Kalecgos from Sathrovarr."
+    SPELL_ARCANE_BUFFET             = 45018,
+    SPELL_FROST_BREATH              = 44799,
+    SPELL_HEROIC_STRIKE             = 45026,
+    SPELL_REVITALIZE                = 45027,
+    SPELL_TAIL_LASH                 = 45122,
+    SPELL_TRANSFORM_KALEC           = 45027,
+    SPELL_CRAZED_RAGE               = 44806,
 
-#define KALECGOS_ARENA_X                1704.34
-#define KALECGOS_ARENA_Y                928.17
-#define KALECGOS_ARENA_Z                53.08
+     //Sathrovarr
+    SPELL_SPECTRAL_INVIS            = 44801,
+    SPELL_CORRUPTING_STRIKE         = 45029,
+    SPELL_CURSE_OF_BOUNDLESS_AGONY  = 45032,
+    SPELL_SHADOW_BOLT_VOLLEY        = 45031,
 
-/*** Kalecgos ****/
-#define SPELL_SPECTRAL_BLAST            44866
-#define SPELL_ARCANE_BUFFET             45018
-#define SPELL_FROST_BREATH              44799
-#define SPELL_HEROIC_STRIKE             45026
-#define SPELL_REVITALIZE                45027
-#define SPELL_TAIL_LASH                 45122
-#define SPELL_TRANSFORM_KALEC           45027
-#define SPELL_CRAZED_RAGE               44806
+    //Misc
+    SPELL_BANISH                    = 44836
+};
 
 uint32 WildMagic[]= { 44978, 45001, 45002, 45004, 45006, 45010 };
 
-/*** Sathrovarr ***/
-#define SPELL_CORRUPTING_STRIKE         45029
-#define SPELL_CURSE_OF_BOUNDLESS_AGONY  45032
-#define SPELL_SHADOW_BOLT_VOLLEY        45031
+const float KALECGOS_ARENA[3] = { 1704.34f, 928.17f, 53.08f };
 
-/*** Misc ***/
-#define SPELL_BANISH                    44836
-
-void TeleportToInnerVeil(Player* plr)
-{
-    if (plr->HasAura(SPELL_SPECTRAL_EXHAUSTION, 0))
-    {
-        plr->GetSession()->SendNotification(NOTIFY_SPECTRALLY_EXHAUSTED);
-        return;
-    }
-
-    ScriptedInstance* pInstance = ((ScriptedInstance*)plr->GetInstanceData());
-    if (!pInstance)
-    {
-        error_log(ERROR_INST_DATA);
-        plr->GetSession()->SendNotification(ERROR_INST_DATA_PLR);
-        return;
-    }
-
-    pInstance->SetData64(DATA_PLAYER_SPECTRAL_REALM, plr->GetGUID());
-    // Remove the player from Kalecgos' Threat List
-    Creature* Kalecgos = ((Creature*)Unit::GetUnit(*plr, pInstance->GetData64(DATA_KALECGOS_DRAGON)));
-    if (Kalecgos)
-    {
-        HostilReference* ref = Kalecgos->getThreatManager().getOnlineContainer().getReferenceByTarget(plr);
-        if (ref)
-            ref->removeReference();
-    }
-
-    // Add the player to Sathrovarr's Threat List
-    Creature* Sathrovarr = ((Creature*)Unit::GetUnit(*plr, pInstance->GetData64(DATA_SATHROVARR)));
-    if (Sathrovarr)
-        Sathrovarr->AddThreat(plr, 1.0f);
-
-    // Make them able to see Sathrovarr (he's invisible for some reason). Also, when this buff wears off, they get teleported back to Normal Realm (this is handled by Instance Script)
-    plr->CastSpell(plr, SPELL_SPECTRAL_REALM, true);
-    plr->CastSpell(plr, SPELL_TELEPORT_SPECTRAL_REALM, true);
-}
+//#define NOTIFY_SPECTRALLY_EXHAUSTED      "Your body is too exhausted to travel to the Spectral Realm."
 
 struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
 {
     boss_kalecgosAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+
+        /*if (pCreature->getFaction() != 14)
+        {
+            error_db_log("SD2: creature entry %u has faction %u but spellId %u requires different.", pCreature->GetEntry(), pCreature->getFaction(), SPELL_SPECTRAL_REALM_FORCE_FACTION);
+            pCreature->setFaction(14);
+        }*/
+
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
 
-    uint64 TeleportTargetGUID;
+    uint32 m_uiArcaneBuffetTimer;
+    uint32 m_uiFrostBreathTimer;
+    uint32 m_uiWildMagicTimer;
+    uint32 m_uiSpectralBlastTimer;
+    uint32 m_uiExitTimer;
 
-    uint32 ArcaneBuffetTimer;
-    uint32 FrostBreathTimer;
-    uint32 WildMagicTimer;
-    uint32 SpectralBlastTimer;
-    uint32 SpectralTeleportTimer;
-    uint32 ForceFieldTimer;
-    uint32 ExitTimer;
-
-    bool LockedArena;
-    bool Uncorrupted;
-    bool Banished;
-    bool Checked;
-    bool Enraged;
+    bool m_bUncorrupted;
+    bool m_bBanished;
+    bool m_bChecked;
+    bool m_bEnraged;
+    bool m_bHasSpectralTarget;
 
     void Reset()
     {
-        TeleportTargetGUID = 0;
+        m_uiArcaneBuffetTimer       = 8000;
+        m_uiFrostBreathTimer        = 24000;
+        m_uiWildMagicTimer          = 18000;
+        m_uiSpectralBlastTimer      = 30000;
 
-        // TODO: Fix timers
-        ArcaneBuffetTimer       = 8000;
-        FrostBreathTimer        = 24000;
-        WildMagicTimer          = 18000;
-        SpectralBlastTimer      = 30000;
-        SpectralTeleportTimer   = SpectralBlastTimer + 2000;
+        m_uiExitTimer = 0;
 
-        ForceFieldTimer = 20000;
-        ExitTimer = 0;
+        m_bUncorrupted = false;
+        m_bBanished    = false;
+        m_bChecked     = false;
+        m_bEnraged     = false;
+        m_bHasSpectralTarget = false;
+    }
 
-        LockedArena = false;
-        Uncorrupted = false;
-        Banished    = false;
-        Checked     = false;
-        Enraged     = false;
-
-        // Reset Sathrovarr too
+    void JustReachedHome()
+    {
         if (m_pInstance)
-            if (Creature* Sath = ((Creature*)Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_SATHROVARR))))
-                Sath->AI()->EnterEvadeMode();
+        {
+            // Reset Sathrovarr too
+            if (Creature* pSath = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_SATHROVARR)))
+            {
+                if (pSath->isAlive() && pSath->getVictim())
+                    pSath->AI()->EnterEvadeMode();
+            }
+
+            m_pInstance->SetData(TYPE_KALECGOS, NOT_STARTED);
+        }
     }
 
     void Aggro(Unit* who)
@@ -174,17 +141,17 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
         DoScriptText(SAY_EVIL_AGGRO, m_creature);
 
         if (m_pInstance)
-            m_pInstance->SetData(DATA_KALECGOS_EVENT, IN_PROGRESS);
+            m_pInstance->SetData(TYPE_KALECGOS, IN_PROGRESS);
     }
 
     void DamageTaken(Unit* done_by, uint32 &damage)
     {
-        if (damage > m_creature->GetHealth() && done_by != m_creature)
+        if (damage >= m_creature->GetHealth() && done_by != m_creature)
         {
-            if (!Uncorrupted)
+            if (!m_bUncorrupted)
             {
                 damage = 0;
-                Banished = true;
+                m_bBanished = true;
                 DoCast(m_creature, SPELL_BANISH, true);
                 m_creature->GetMotionMaster()->MoveIdle();
             }
@@ -196,7 +163,7 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
         }
     }
 
-    void KilledUnit(Unit* victim)
+    void KilledUnit(Unit* pVictim)
     {
         switch(rand()%2)
         {
@@ -205,33 +172,65 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
         }
     }
 
+    void SendToInnerVeil(Unit* pTarget)
+    {
+        if (m_pInstance)
+        {
+            //just a hack for not implemented spell effect 144
+            ((Player*)pTarget)->TeleportTo(pTarget->GetMapId(), pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ()-125.0f, pTarget->GetOrientation());
+
+            pTarget->CastSpell(pTarget, SPELL_SPECTRAL_REALM_FORCE_FACTION, true);
+            pTarget->CastSpell(pTarget, SPELL_SPECTRAL_REALM, true);
+
+            m_pInstance->SetData64(DATA_PLAYER_SPECTRAL_REALM, pTarget->GetGUID());
+        }
+    }
+
+    void SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell)
+    {
+        if (pSpell->Id == SPELL_SPECTRAL_BLAST_DUMMY && !m_bHasSpectralTarget)
+        {
+            if (pTarget->GetTypeId() != TYPEID_PLAYER)
+                return;
+
+            if (pTarget->HasAura(SPELL_SPECTRAL_EXHAUSTION,0) || pTarget->HasAura(SPELL_SPECTRAL_REALM))
+                return;
+
+            if (pTarget == m_creature->getVictim())
+                return;
+
+            m_bHasSpectralTarget = true;
+            pTarget->CastSpell(pTarget, SPELL_SPECTRAL_BLAST, true);
+
+            SendToInnerVeil(pTarget);
+        }
+    }
+
     void BeginOutro()
     {
         debug_log("SD2: KALEC: Beginning Outro");
 
         if (!m_pInstance)
-        {
-            error_log(ERROR_INST_DATA);
             return;
-        }
 
         if (Creature* pSathrovarr = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_SATHROVARR)))
         {
             pSathrovarr->DealDamage(pSathrovarr, pSathrovarr->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
 
-            pSathrovarr->GetMap()->CreatureRelocation(pSathrovarr, KALECGOS_ARENA_X, KALECGOS_ARENA_Y, KALECGOS_ARENA_Z, 0.0f);
-            pSathrovarr->SendMonsterMove(KALECGOS_ARENA_X, KALECGOS_ARENA_Y, KALECGOS_ARENA_Z, 0, MONSTER_MOVE_NONE, 0);
+            pSathrovarr->GetMap()->CreatureRelocation(pSathrovarr, KALECGOS_ARENA[0], KALECGOS_ARENA[1], KALECGOS_ARENA[2], 0.0f);
+            pSathrovarr->SendMonsterMove(KALECGOS_ARENA[0], KALECGOS_ARENA[1], KALECGOS_ARENA[2], 0, MONSTER_MOVE_NONE, 0);
         }
 
-        Creature* Kalec = ((Creature*)Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_KALECGOS_HUMAN)));
-        if (Kalec)
+        if (Creature* pKalec = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_KALECGOS_HUMAN)))
         {
-            Kalec->DeleteThreatList();
-            Kalec->SetVisibility(VISIBILITY_OFF);
+            pKalec->DeleteThreatList();
+            pKalec->SetVisibility(VISIBILITY_OFF);
         }
 
         m_creature->GetMotionMaster()->MoveIdle();
         m_creature->setFaction(35);
+        DoScriptText(SAY_GOOD_PLRWIN, m_creature);
+        m_uiExitTimer = 1000;
     }
 
     void MovementInform(uint32 type, uint32 id)
@@ -242,13 +241,7 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
         if (id)
         {
             if (m_pInstance)
-            {
-                if (GameObject* pForceField = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GO_FORCEFIELD)))
-                    pForceField->SetGoState(GO_STATE_READY);
-
-                m_pInstance->SetData(DATA_KALECGOS_EVENT, DONE);
-            }
-            else error_log(ERROR_INST_DATA);
+                m_pInstance->SetData(TYPE_KALECGOS, DONE);
 
             m_creature->SetVisibility(VISIBILITY_OFF);
             m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
@@ -257,25 +250,25 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->getVictim() || !m_creature->SelectHostilTarget() || Banished)
+        if (!m_creature->getVictim() || !m_creature->SelectHostilTarget() || m_bBanished)
             return;
 
-        if (((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 10) && !Enraged)
+        if (!m_bEnraged && ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 10))
         {
-            Unit* Sathrovarr = Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_SATHROVARR));
-            if (Sathrovarr)
-                Sathrovarr->CastSpell(Sathrovarr, SPELL_CRAZED_RAGE, true);
+            if (Unit* pSathrovarr = Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_SATHROVARR)))
+                pSathrovarr->CastSpell(pSathrovarr, SPELL_CRAZED_RAGE, true);
+
             DoCast(m_creature, SPELL_CRAZED_RAGE, true);
-            Enraged = true;
+            m_bEnraged = true;
         }
 
-        if (((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 1) && !Checked)
+        if (!m_bChecked && ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 1))
         {
-            Checked = true;
+            m_bChecked = true;
 
-            if (!Uncorrupted)
+            if (!m_bUncorrupted)
             {
-                Banished = true;
+                m_bBanished = true;
                 DoCast(m_creature, SPELL_BANISH, true);
                 m_creature->GetMotionMaster()->MoveIdle();
             }
@@ -283,92 +276,64 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
                 BeginOutro();
         }
 
-        if (ExitTimer)
+        if (m_uiExitTimer)
         {
-            if (ExitTimer <= diff)
+            if (m_uiExitTimer <= diff)
             {
                 debug_log("SD2: KALEC: Exiting the arena");
-                DoScriptText(SAY_GOOD_PLRWIN, m_creature);
 
                 float x, y, z;
-                float iniX, iniY, iniZ;
-                m_creature->GetPosition(iniX, iniY, iniZ);
-                m_creature->GetRandomPoint(iniX, iniY, iniZ, 30, x, y, z);
-                z = 70;
+                m_creature->GetRandomPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 30, x, y, z);
+
+                z = 70.0f;
+
                 m_creature->GetMotionMaster()->MovePoint(1, x, y, z);
-            }else ExitTimer -= diff;
+                m_uiExitTimer = 0;
+            }else m_uiExitTimer -= diff;
         }
 
-        if (!LockedArena)
-        {
-            if (ForceFieldTimer < diff)
-            {
-                if (m_pInstance)
-                {
-                    if (GameObject* pForceField = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GO_FORCEFIELD)))
-                        pForceField->SetGoState(GO_STATE_ACTIVE);
-
-                    LockedArena = true;
-                }else error_log(ERROR_INST_DATA);
-            }else ForceFieldTimer -= diff;
-        }
-
-        if (ArcaneBuffetTimer < diff)
+        if (m_uiArcaneBuffetTimer < diff)
         {
             if (rand()%3 == 0)
                 DoScriptText(SAY_EVIL_SPELL1, m_creature);
 
             DoCast(m_creature->getVictim(), SPELL_ARCANE_BUFFET);
-            ArcaneBuffetTimer = 20000;
-        }else ArcaneBuffetTimer -= diff;
+            m_uiArcaneBuffetTimer = 20000;
+        }
+        else
+            m_uiArcaneBuffetTimer -= diff;
 
-        if (FrostBreathTimer < diff)
+        if (m_uiFrostBreathTimer < diff)
         {
-            if (rand()%2 == 0)
+            if (!(rand()%2))
                 DoScriptText(SAY_EVIL_SPELL2, m_creature);
 
             DoCast(m_creature->getVictim(), SPELL_FROST_BREATH);
-            FrostBreathTimer = 25000;
-        }else FrostBreathTimer -= diff;
+            m_uiFrostBreathTimer = 25000;
+        }
+        else
+            m_uiFrostBreathTimer -= diff;
 
-        if (WildMagicTimer < diff)
+        if (m_uiWildMagicTimer < diff)
         {
-            DoCast(m_creature->getVictim(), WildMagic[rand()%6]);
-            WildMagicTimer = 19000;
-        }else WildMagicTimer -= diff;
+            if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                DoCast(target, WildMagic[rand()%6]);
 
-        if (SpectralBlastTimer < diff)
+            m_uiWildMagicTimer = 19000;
+        }
+        else
+            m_uiWildMagicTimer -= diff;
+
+        if (m_uiSpectralBlastTimer < diff)
         {
-            if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1))
-            {
-                TeleportTargetGUID = target->GetGUID();
-                m_creature->SetUInt64Value(UNIT_FIELD_TARGET, TeleportTargetGUID);
-                SpectralBlastTimer = 30000;
-                SpectralTeleportTimer = 2000;
-            }
-        }else SpectralBlastTimer -= diff;
+            m_bHasSpectralTarget = false;
+            m_creature->CastSpell(m_creature, SPELL_SPECTRAL_BLAST_DUMMY, false);
+            m_uiSpectralBlastTimer = 30000;
+        }
+        else
+            m_uiSpectralBlastTimer -= diff;
 
-        if (SpectralTeleportTimer < diff)
-        {
-            if (TeleportTargetGUID)
-            {
-                Unit* pUnit = Unit::GetUnit((*m_creature), TeleportTargetGUID);
-                if (pUnit)
-                {
-                    pUnit->CastSpell(pUnit, SPELL_SPECTRAL_BLAST, true);
-                    TeleportToInnerVeil((Player*)pUnit);
-                }
-                else error_log(ERROR_MISSING_TELEPORT_GUID);
-            }
-            else error_log(ERROR_MISSING_TELEPORT_GUID);
-
-            m_creature->SetUInt64Value(UNIT_FIELD_TARGET, m_creature->getVictim()->GetGUID());
-            TeleportTargetGUID = 0;
-            SpectralTeleportTimer = SpectralBlastTimer + 2000;
-
-        }else SpectralTeleportTimer -= diff;
-
-        if (!Banished)
+        if (!m_bBanished)
             DoMeleeAttackIfReady();
     }
 };
@@ -386,8 +351,8 @@ struct MANGOS_DLL_DECL boss_sathrovarrAI : public ScriptedAI
     uint32 CorruptingStrikeTimer;
     uint32 CurseOfBoundlessAgonyTimer;
     uint32 ShadowBoltVolleyTimer;
-    bool Banished;
-    bool Enraged;
+    bool m_bBanished;
+    bool m_bEnraged;
 
     void Reset()
     {
@@ -396,21 +361,23 @@ struct MANGOS_DLL_DECL boss_sathrovarrAI : public ScriptedAI
         CurseOfBoundlessAgonyTimer = 15000;
         ShadowBoltVolleyTimer = 10000;
 
-        Banished = false;
-        Enraged  = false;
+        m_bBanished = false;
+        m_bEnraged  = false;
 
-        DoCast(m_creature, SPELL_SPECTRAL_REALM, true);
+        m_creature->CastSpell(m_creature, SPELL_SPECTRAL_INVIS, true);
     }
 
     void Aggro(Unit* who)
     {
         DoScriptText(SAY_SATH_AGGRO, m_creature);
 
-        Creature* Kalec = ((Creature*)Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_KALECGOS_HUMAN)));
-        if (Kalec)
+        if (!m_pInstance)
+            return;
+
+        if (Unit* pKalec = Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_KALECGOS_HUMAN)))
         {
-            m_creature->AddThreat(Kalec, 10000000.0f);
-            Kalec->AddThreat(m_creature, 10000000.0f);
+            m_creature->AddThreat(pKalec, 10000000.0f);
+            pKalec->AddThreat(m_creature, 10000000.0f);
         }
     }
 
@@ -420,25 +387,20 @@ struct MANGOS_DLL_DECL boss_sathrovarrAI : public ScriptedAI
         {
             damage = 0;
             DoCast(m_creature, SPELL_BANISH, true);
-            Banished = true;
+            m_bBanished = true;
 
             DoScriptText(SAY_SATH_DEATH, m_creature);
 
             if (!m_pInstance)
-            {
-                error_log(ERROR_INST_DATA);
                 return;
-            }
 
             m_pInstance->SetData(DATA_SET_SPECTRAL_CHECK, 5000);
 
-            Creature* Kalecgos = ((Creature*)Unit::GetUnit((*m_creature), m_pInstance->GetData64(DATA_KALECGOS_DRAGON)));
-            if (Kalecgos)
+            if (Creature* pKalecgos = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_KALECGOS_DRAGON)))
             {
-                ((boss_kalecgosAI*)Kalecgos->AI())->Checked = false;
-                ((boss_kalecgosAI*)Kalecgos->AI())->Uncorrupted = true;
+                ((boss_kalecgosAI*)pKalecgos->AI())->m_bChecked = false;
+                ((boss_kalecgosAI*)pKalecgos->AI())->m_bUncorrupted = true;
             }
-            else error_log(ERROR_KALECGOS_NOT_FOUND);
         }
     }
 
@@ -453,21 +415,21 @@ struct MANGOS_DLL_DECL boss_sathrovarrAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->getVictim() || !m_creature->SelectHostilTarget() || Banished)
+        if (!m_creature->getVictim() || !m_creature->SelectHostilTarget() || m_bBanished)
             return;
 
-        if (((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 10) && !Enraged)
+        if (!m_bEnraged && ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) <= 10))
         {
-            Unit* Kalecgos = Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_KALECGOS_DRAGON));
-            if (Kalecgos)
-                Kalecgos->CastSpell(Kalecgos, SPELL_CRAZED_RAGE, true);
+            if (Unit* pKalecgos = Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_KALECGOS_DRAGON)))
+                pKalecgos->CastSpell(pKalecgos, SPELL_CRAZED_RAGE, true);
+
             DoCast(m_creature, SPELL_CRAZED_RAGE, true);
-            Enraged = true;
+            m_bEnraged = true;
         }
 
         if (CorruptingStrikeTimer < diff)
         {
-            if (rand()%2 == 0)
+            if (!(rand()%2))
                 DoScriptText(SAY_SATH_SPELL2, m_creature);
 
             DoCast(m_creature->getVictim(), SPELL_CORRUPTING_STRIKE);
@@ -476,14 +438,15 @@ struct MANGOS_DLL_DECL boss_sathrovarrAI : public ScriptedAI
 
         if (CurseOfBoundlessAgonyTimer < diff)
         {
-            DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), SPELL_CURSE_OF_BOUNDLESS_AGONY);
+            if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                DoCast(pTarget, SPELL_CURSE_OF_BOUNDLESS_AGONY);
+
             CurseOfBoundlessAgonyTimer = 35000;
-            DoCast(m_creature, SPELL_SPECTRAL_REALM, true);
         }else CurseOfBoundlessAgonyTimer -= diff;
 
         if (ShadowBoltVolleyTimer < diff)
         {
-            if (rand()%2 == 0)
+            if (!(rand()%2))
                 DoScriptText(SAY_SATH_SPELL1, m_creature);
 
             DoCast(m_creature->getVictim(), SPELL_SHADOW_BOLT_VOLLEY);
@@ -519,7 +482,7 @@ struct MANGOS_DLL_DECL boss_kalecgos_humanoidAI : public ScriptedAI
         HasYelled10Percent = false;
         HasYelled20Percent = false;
 
-        DoCast(m_creature, SPELL_SPECTRAL_REALM, true);
+        m_creature->CastSpell(m_creature, SPELL_SPECTRAL_INVIS, true);
     }
 
     void Aggro(Unit* who)
@@ -541,9 +504,9 @@ struct MANGOS_DLL_DECL boss_kalecgos_humanoidAI : public ScriptedAI
         {
             if (m_pInstance)
             {
-                Unit* pUnit = Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_RANDOM_SPECTRAL_PLAYER));
+                /*Unit* pUnit = Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_RANDOM_SPECTRAL_PLAYER));
                 if (pUnit)
-                    DoCast(pUnit, SPELL_REVITALIZE);
+                    DoCast(pUnit, SPELL_REVITALIZE);*/
                 RevitalizeTimer = 30000;
             }
         }else RevitalizeTimer -= diff;
@@ -568,9 +531,47 @@ struct MANGOS_DLL_DECL boss_kalecgos_humanoidAI : public ScriptedAI
     }
 };
 
-bool GOHello_go_spectral_rift(Player* pPlayer, GameObject* _GO)
+bool GOHello_go_spectral_rift(Player* pPlayer, GameObject* pGo)
 {
-    TeleportToInnerVeil(pPlayer);
+    if (pGo->GetGoType() != GAMEOBJECT_TYPE_GOOBER)
+        return true;
+
+    if (ScriptedInstance* pInstance = (ScriptedInstance*)pPlayer->GetInstanceData())
+    {
+        if (pPlayer->HasAura(SPELL_SPECTRAL_EXHAUSTION, 0))
+            return true;
+
+        // Make them able to see Sathrovarr (he's invisible for some reason). Also, when this buff wears off, they get teleported back to Normal Realm (this is handled by Instance Script)
+        pPlayer->CastSpell(pPlayer, SPELL_TELEPORT_TO_SPECTRAL_REALM, true);
+        pPlayer->CastSpell(pPlayer, SPELL_SPECTRAL_REALM_FORCE_FACTION, true);
+        pPlayer->CastSpell(pPlayer, SPELL_SPECTRAL_REALM, true);
+
+        // Add player to pSath's threat list
+        /*if (Creature* pSath = pInstance->instance->GetCreature(pInstance->GetData64(DATA_KALECGOS_DRAGON)))
+        {
+            if (pSath->isAlive())
+            {
+                debug_log("SD2: Adding %s in pSath' threatlist", pPlayer->GetName());
+                pSath->AddThreat(pPlayer, 0.0f);
+            }
+        }
+
+        // Remove player from Sathrovarr's threat list
+        if (Creature* pKalecgos = pInstance->instance->GetCreature(pInstance->GetData64(DATA_SATHROVARR)))
+        {
+            if (pKalecgos->isAlive())
+            {
+                if (HostilReference* pRef = pKalecgos->getThreatManager().getOnlineContainer().getReferenceByTarget(pPlayer))
+                {
+                    pRef->removeReference();
+                    debug_log("SD2: Deleting %s from pKalecgos's threatlist", pPlayer->GetName());
+                }
+            }
+        }*/
+
+        pInstance->SetData64(DATA_PLAYER_SPECTRAL_REALM, pPlayer->GetGUID());
+    }
+
     return true;
 }
 

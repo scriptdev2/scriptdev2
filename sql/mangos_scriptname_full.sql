@@ -417,7 +417,7 @@ UPDATE creature_template SET ScriptName='mobs_risen_husk_spirit' WHERE entry IN 
 UPDATE creature_template SET ScriptName='npc_deserter_agitator' WHERE entry=23602;
 UPDATE creature_template SET ScriptName='npc_lady_jaina_proudmoore' WHERE entry=4968;
 UPDATE creature_template SET ScriptName='npc_nat_pagle' WHERE entry=12919;
-UPDATE `creature_template` SET `ScriptName` = 'npc_cassa_crimsonwing' WHERE `entry` =23704;
+UPDATE creature_template SET ScriptName='npc_cassa_crimsonwing' WHERE entry=23704;
 UPDATE creature_template SET ScriptName='npc_restless_apparition' WHERE entry=23861;
 
 /* EASTERN PLAGUELANDS */
@@ -838,7 +838,11 @@ UPDATE gameobject_template SET ScriptName='go_gauntlet_gate' WHERE entry=175357;
 
 
 /* SUNWELL PLATEAU */
-
+UPDATE instance_template SET script='instance_sunwell_plateau' WHERE map=580;
+UPDATE creature_template SET ScriptName='boss_kalecgos' WHERE entry=24850;
+UPDATE creature_template SET ScriptName='boss_kalecgos_humanoid' WHERE entry=24891;
+UPDATE creature_template SET ScriptName='boss_sathrovarr' WHERE entry=24892;
+UPDATE gameobject_template SET ScriptName='go_spectral_rift' WHERE entry=187055;
 
 /* SWAMP OF SORROWS */
 
