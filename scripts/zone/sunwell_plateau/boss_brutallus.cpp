@@ -155,11 +155,30 @@ CreatureAI* GetAI_boss_brutallus(Creature* pCreature)
     return new boss_brutallusAI(pCreature);
 }
 
+bool AreaTrigger_at_madrigosa(Player* pPlayer, AreaTriggerEntry* pAt)
+{
+    if (ScriptedInstance* pInstance = (ScriptedInstance*)pPlayer->GetInstanceData())
+    {
+        //this simply set encounter state, and trigger ice barrier become active
+        //bosses can start pre-event based on this new state
+        if (pInstance->GetData(TYPE_BRUTALLUS) == NOT_STARTED)
+            pInstance->SetData(TYPE_BRUTALLUS, SPECIAL);
+    }
+
+    return false;
+}
+
 void AddSC_boss_brutallus()
 {
     Script *newscript;
+
     newscript = new Script;
     newscript->Name = "boss_brutallus";
     newscript->GetAI = &GetAI_boss_brutallus;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "at_madrigosa";
+    newscript->pAreaTrigger = &AreaTrigger_at_madrigosa;
     newscript->RegisterSelf();
 }

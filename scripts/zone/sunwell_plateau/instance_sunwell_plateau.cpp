@@ -46,7 +46,8 @@ struct MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
     uint64 m_uiForceFieldGUID;                                      // Kalecgos Encounter
     uint64 m_uiBossCollision1GUID;
     uint64 m_uiBossCollision2GUID;
-    uint64 m_uiDoorFireBarrierGUID;                                 // Brutallus Encounter
+    uint64 m_uiIceBarrierGUID;                                      // Brutallus Encounter
+    uint64 m_uiDoorFireBarrierGUID;
     uint64 m_uiDoorTheFirstGateGUID;                                // Felmyst Encounter
     uint64 m_uiDoorTheSecondGateGUID;                               // Alythess Encounter
     uint64 m_uiDoorRaid_Gate_07GUID;                                // Sacrolash Encounter
@@ -77,6 +78,7 @@ struct MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
         m_uiForceFieldGUID              = 0;
         m_uiBossCollision1GUID          = 0;
         m_uiBossCollision2GUID          = 0;
+        m_uiIceBarrierGUID              = 0;
         m_uiDoorFireBarrierGUID         = 0;
         m_uiDoorTheFirstGateGUID        = 0;
         m_uiDoorTheSecondGateGUID       = 0;
@@ -132,6 +134,9 @@ struct MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
                 break;
             case 188524:
                 m_uiBossCollision2GUID = pGo->GetGUID();
+                break;
+            case 188119:
+                m_uiIceBarrierGUID = pGo->GetGUID();
                 break;
             case 188075:
                 m_uiDoorFireBarrierGUID = pGo->GetGUID();
@@ -214,7 +219,12 @@ struct MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
 
                 m_uiEncounter[0] = uiData;
                 break;
-            case TYPE_BRUTALLUS: m_uiEncounter[1] = uiData; break;
+            case TYPE_BRUTALLUS:
+                if (uiData == SPECIAL)
+                    DoUseDoorOrButton(m_uiIceBarrierGUID,MINUTE);
+
+                m_uiEncounter[1] = uiData;
+                break;
             case TYPE_FELMYST:
                 m_uiEncounter[2] = uiData; 
                 if (uiData == DONE)
