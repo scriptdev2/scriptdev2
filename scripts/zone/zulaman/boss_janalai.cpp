@@ -164,7 +164,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
 
     bool m_bIsBombing;
     bool m_bCanBlowUpBombs;
-    bool b_mIsEggRemaining;
+    bool m_bIsEggRemaining;
     bool enraged;
     bool enragetime;
 
@@ -198,7 +198,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
         m_uiBombPhase = 0;
         m_uiBombCounter = 0;
         m_bCanBlowUpBombs = false;
-        b_mIsEggRemaining = true;
+        m_bIsEggRemaining = true;
 
         enrage_timer = MINUTE*5*IN_MILISECONDS;
         hatchertime = 10000;
@@ -375,9 +375,12 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
         if (!m_lEggsRemainingList.empty())
         {
             for(std::list<Creature*>::iterator itr = m_lEggsRemainingList.begin(); itr != m_lEggsRemainingList.end(); ++itr)
-                (*itr)->CastSpell((*itr), SPELL_SUMMON_DRAGONHAWK, true);
+            {
+                if ((*itr)->isAlive())
+                    (*itr)->CastSpell((*itr), SPELL_SUMMON_DRAGONHAWK, true);
+            }
 
-            b_mIsEggRemaining = false;
+            m_bIsEggRemaining = false;
 
             if (!m_pInstance)
                 return;
@@ -471,7 +474,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
             }
 
             //Hatch All
-            if (b_mIsEggRemaining && (m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 35)
+            if (m_bIsEggRemaining && (m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 35)
             {
                 DoScriptText(SAY_ALL_EGGS, m_creature);
 
@@ -528,7 +531,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
         }else enrage_timer -=diff;
 
         //Call Hatcher
-        if (b_mIsEggRemaining)
+        if (m_bIsEggRemaining)
         {
             if (hatchertime < diff)
             {
@@ -554,7 +557,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
                     hatchertime = 90000;
                 }
                 else
-                    b_mIsEggRemaining = false;
+                    m_bIsEggRemaining = false;
 
             }else hatchertime -=diff;
         }
