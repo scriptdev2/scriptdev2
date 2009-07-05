@@ -47,8 +47,7 @@ enum
 
     //Defines for Troll form
     SPELL_BRUTALSWIPE       = 42384,
-    //SPELL_MANGLE            = 42389,                        //This doesn't seem to apply the mangle debuff after all
-    SPELL_MANGLEEFFECT      = 44955,
+    SPELL_MANGLE            = 42389,
     SPELL_SURGE             = 42402,
     SPELL_BEARFORM          = 42377,
 
@@ -172,7 +171,7 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
             //Mangle
             if (Mangle_Timer < diff)
             {
-                DoCast(m_creature->getVictim(), SPELL_MANGLEEFFECT);
+                DoCast(m_creature->getVictim(), SPELL_MANGLE);
                 Mangle_Timer = 3000 + rand()%17000;
             }else Mangle_Timer -= diff;
 
