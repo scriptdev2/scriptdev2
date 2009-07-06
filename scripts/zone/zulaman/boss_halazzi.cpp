@@ -39,7 +39,7 @@ enum
     SAY_EVENT1                      = -1568043,
     SAY_EVENT2                      = -1568044,
 
-    SPELL_DUAL_WIELD                = 29651,
+    SPELL_DUAL_WIELD                = 42459,
     SPELL_SABER_LASH                = 43267,
     SPELL_FRENZY                    = 43139,
     SPELL_FLAMESHOCK                = 43303,

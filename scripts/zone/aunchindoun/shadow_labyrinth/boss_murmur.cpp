@@ -22,6 +22,7 @@ SDCategory: Auchindoun, Shadow Labyrinth
 EndScriptData */
 
 #include "precompiled.h"
+#include "def_shadow_labyrinth.h"
 
 #define EMOTE_SONIC_BOOM            -1555036
 
@@ -32,14 +33,27 @@ EndScriptData */
 #define SPELL_RESONANCE             33657
 #define SPELL_SHOCKWAVE             33686
 
+#define SPELL_SONIC_SHOCK           38797    //Heroic Spell
+#define SPELL_THUNDERING_STORM      39365    //Heroic Spell
+
 struct MANGOS_DLL_DECL boss_murmurAI : public Scripted_NoMovementAI
 {
-    boss_murmurAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature) {Reset();}
+    boss_murmurAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
+    {
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        HeroicMode = m_creature->GetMap()->IsHeroic();
+        Reset();
+    }
+
+    ScriptedInstance* pInstance;
+    bool HeroicMode;
 
     uint32 SonicBoom_Timer;
     uint32 MurmursTouch_Timer;
     uint32 Resonance_Timer;
     uint32 MagneticPull_Timer;
+    uint32 SonicShock_Timer;
+    uint32 ThunderingStorm_Timer;
     bool CanSonicBoom;
     bool CanShockWave;
     uint64 pTarget;
@@ -50,6 +64,8 @@ struct MANGOS_DLL_DECL boss_murmurAI : public Scripted_NoMovementAI
         MurmursTouch_Timer = 8000 + rand()%12000;
         Resonance_Timer = 5000;
         MagneticPull_Timer = 15000 + rand()%15000;
+        SonicShock_Timer = 4000 + rand()%6000;
+        ThunderingStorm_Timer = 12000;                //Casting directly after Sonic Boom.
         CanSonicBoom = false;
         CanShockWave = false;
         pTarget = 0;
@@ -121,8 +137,24 @@ struct MANGOS_DLL_DECL boss_murmurAI : public Scripted_NoMovementAI
             if (Resonance_Timer < diff)
             {
                 DoCast(m_creature->getVictim(), SPELL_RESONANCE);
-                Resonance_Timer = 5000;
+                Resonance_Timer = HeroicMode ? 3000 : 5000;
             }else Resonance_Timer -= diff;
+        }
+
+        if (HeroicMode)
+        {
+            if (SonicShock_Timer < diff)
+            {
+                if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                    DoCast(target, SPELL_SONIC_SHOCK);
+                SonicShock_Timer = 8000 + rand()%4000;
+            }else SonicShock_Timer -= diff;
+
+            if (ThunderingStorm_Timer < diff)
+            {
+                DoCast(m_creature->getVictim(), SPELL_THUNDERING_STORM);
+                ThunderingStorm_Timer = 12000; 
+            }else ThunderingStorm_Timer -= diff;
         }
 
         //MagneticPull_Timer

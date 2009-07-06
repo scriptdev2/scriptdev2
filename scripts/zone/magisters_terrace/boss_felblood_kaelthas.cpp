@@ -276,6 +276,8 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
                 {
                     if (PyroblastTimer < diff)
                     {
+                        m_creature->InterruptSpell(CURRENT_CHANNELED_SPELL);  
+                        m_creature->InterruptSpell(CURRENT_GENERIC_SPELL); 
                         DoCast(m_creature, SPELL_SHOCK_BARRIER, true);
                         DoCast(m_creature->getVictim(), SPELL_PYROBLAST);
                         PyroblastTimer = 60000;
@@ -315,6 +317,8 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
                 {
                     if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
                     {
+                        m_creature->InterruptSpell(CURRENT_CHANNELED_SPELL);  
+                        m_creature->InterruptSpell(CURRENT_GENERIC_SPELL); 
                         DoCast(target, SPELL_FLAMESTRIKE3, true);
                         DoScriptText(SAY_FLAMESTRIKE, m_creature);
                     }
@@ -472,7 +476,7 @@ struct MANGOS_DLL_DECL mob_felkael_phoenixAI : public ScriptedAI
         m_creature->CastSpell(m_creature,SPELL_PHOENIX_BURN,true);
 
         BurnTimer = 2000;
-        Death_Timer = 2700;
+        Death_Timer = 3000;
         Rebirth = false;
         FakeDeath = false;
     }
@@ -600,7 +604,6 @@ struct MANGOS_DLL_DECL mob_arcane_sphereAI : public ScriptedAI
         ChangeTargetTimer = 6000 + rand()%6000;
 
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-
         DoCast(m_creature, SPELL_ARCANE_SPHERE_PASSIVE, true);
     }
 

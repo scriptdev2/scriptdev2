@@ -40,7 +40,7 @@ EndScriptData */
 #define SPELL_BANISH            30231
 #define SPELL_CORROSIVE_ACID    33551
 #define SPELL_FEAR              33547
-#define SPELL_ENRAGE            0                           //need to find proper spell
+#define SPELL_ENRAGE            34970                         
 
 struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public ScriptedAI
 {
@@ -60,15 +60,17 @@ struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public ScriptedAI
     uint32 Enrage_Timer;
     bool Intro;
     bool IsBanished;
+    bool Enraged;
 
     void Reset()
     {
         EventCheck_Timer = 5000;
-        CorrosiveAcid_Timer = 25000;
-        Fear_Timer = 40000;
+        CorrosiveAcid_Timer = 5000 + rand()%5000;
+        Fear_Timer = 25000 + rand()%5000;
         Enrage_Timer = 180000;
         Intro = false;
         IsBanished = false;
+        Enraged = false;
 
         if (m_pInstance)
         {
@@ -179,13 +181,14 @@ struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public ScriptedAI
             Fear_Timer = 20000 + rand()%15000;
         }else Fear_Timer -= diff;
 
-        /*if (HeroicMode)
+        if (m_bIsHeroicMode)
         {
-            if (Enrage_Timer < diff)
+            if (!Enraged && Enrage_Timer < diff)
             {
                 DoCast(m_creature,SPELL_ENRAGE);
+                Enraged = true;
             }else Enrage_Timer -= diff;
-        }*/
+        }
 
         DoMeleeAttackIfReady();
     }

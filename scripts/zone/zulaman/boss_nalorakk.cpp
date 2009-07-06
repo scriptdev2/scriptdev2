@@ -165,14 +165,14 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
             if (BrutalSwipe_Timer < diff)
             {
                 DoCast(m_creature->getVictim(), SPELL_BRUTALSWIPE);
-                BrutalSwipe_Timer = 7000 + rand()%13000;
+                BrutalSwipe_Timer = 7000 + rand()%8000;
             }else BrutalSwipe_Timer -= diff;
 
             //Mangle
             if (Mangle_Timer < diff)
             {
                 DoCast(m_creature->getVictim(), SPELL_MANGLE);
-                Mangle_Timer = 3000 + rand()%17000;
+                Mangle_Timer = 3000 + rand()%12000;
             }else Mangle_Timer -= diff;
 
             //Surge
@@ -194,6 +194,8 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
             //Change to Bear Form if we're in Troll Form for 45sec
             if (ChangeForm_Timer < diff)
             {
+                m_creature->InterruptSpell(CURRENT_CHANNELED_SPELL);  
+                m_creature->InterruptSpell(CURRENT_GENERIC_SPELL); 
                 DoCast(m_creature, SPELL_BEARFORM);
                 //And 30sec (bear form) + 45sec (troll form) before we should cast this again
                 ChangeForm_Timer = 75000;
@@ -220,14 +222,14 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
             if (LaceratingSlash_Timer < diff)
             {
                 DoCast(m_creature->getVictim(), SPELL_LACERATINGSLASH);
-                LaceratingSlash_Timer = 6000 + rand()%19000;
+                LaceratingSlash_Timer = 6000 + rand()%14000;
             }else LaceratingSlash_Timer -= diff;
 
             //Rend Flesh
             if (RendFlesh_Timer < diff)
             {
                 DoCast(m_creature->getVictim(), SPELL_RENDFLESH);
-                RendFlesh_Timer = 6000 + rand()%19000;
+                RendFlesh_Timer = 6000 + rand()%14000;
             }else RendFlesh_Timer -= diff;
 
             //Deafening Roar
