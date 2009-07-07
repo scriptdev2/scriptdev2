@@ -74,6 +74,9 @@ struct MANGOS_DLL_DECL boss_s_and_d_dummyAI : public ScriptedAI
 
     Creature* GetBuddy()
     {
+        if (!m_pInstance)
+            return NULL;
+
         return m_pInstance->instance->GetCreature(m_pInstance->GetData64(m_creature->GetEntry() == NPC_DALRONN ? NPC_SKARVALD : NPC_DALRONN));
     }
 
