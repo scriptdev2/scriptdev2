@@ -556,6 +556,13 @@ extern void AddSC_tirisfal_glades();
 extern void AddSC_boss_ironaya();
 extern void AddSC_uldaman();
 
+//Ulduar
+extern void AddSC_boss_bjarngrim();
+extern void AddSC_boss_ionar();
+extern void AddSC_boss_loken();
+extern void AddSC_boss_volkhan();
+extern void AddSC_instance_halls_of_lightning();
+
 //Undercity
 extern void AddSC_undercity();
 
@@ -1439,6 +1446,13 @@ void ScriptsInit()
     //Uldaman
     AddSC_boss_ironaya();
     AddSC_uldaman();
+
+    //Ulduar
+    AddSC_boss_bjarngrim();
+    AddSC_boss_ionar();
+    AddSC_boss_loken();
+    AddSC_boss_volkhan();
+    AddSC_instance_halls_of_lightning();
 
     //Undercity
     AddSC_undercity();
