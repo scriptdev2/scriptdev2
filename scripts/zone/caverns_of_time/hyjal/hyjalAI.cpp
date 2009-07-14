@@ -43,11 +43,11 @@ float HordeBase[4][3]=
 };
 
 // used to inform the wave where to move and attack to
-float AttackArea[2][3]=
+/*float AttackArea[2][3]=
 {
     {5042.9189, -1776.2562, 1323.0621},                     // Alliance
     {5510.4815, -2676.7112, 1480.4314}                      // Horde
-};
+};*/
 
 hyjalAI::hyjalAI(Creature* pCreature) : ScriptedAI(pCreature)
 {
@@ -147,12 +147,14 @@ void hyjalAI::SummonCreature(uint32 entry, float Base[4][3])
 {
     uint32 random = rand()%4;
     float SpawnLoc[3];
-    float AttackLoc[3];
+    //float AttackLoc[3];
 
     for(uint8 i = 0; i < 3; ++i)
     {
         SpawnLoc[i] = Base[random][i];
-        AttackLoc[i] = AttackArea[Faction][i];
+
+        //not needed, we already make creature attack and then targeted movegen initialized
+        //AttackLoc[i] = AttackArea[Faction][i];
     }
 
     if (Creature* pCreature = m_creature->SummonCreature(entry, SpawnLoc[0], SpawnLoc[1], SpawnLoc[2], 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 120000))
@@ -160,16 +162,19 @@ void hyjalAI::SummonCreature(uint32 entry, float Base[4][3])
         // Increment Enemy Count to be used in World States and instance script
         ++EnemyCount;
 
-        pCreature->RemoveMonsterMoveFlag(MONSTER_MOVE_WALK);
-        pCreature->GetMotionMaster()->MovePoint(0, AttackLoc[0],AttackLoc[1],AttackLoc[2]);
+        pCreature->SetInCombatWith(m_creature);
         pCreature->AddThreat(m_creature, 0.0f);
+
         pCreature->SetInCombatWithZone();
-        
+
         // Check if creature is a boss.
         if (pCreature->isWorldBoss())
         {
-            if (!FirstBossDead) BossGUID[0] = pCreature->GetGUID();
-            else                BossGUID[1] = pCreature->GetGUID();
+            if (!FirstBossDead)
+                BossGUID[0] = pCreature->GetGUID();
+            else
+                BossGUID[1] = pCreature->GetGUID();
+
             CheckTimer = 5000;
         }
     }
