@@ -16,55 +16,88 @@
 
 /* ScriptData
 SDName: Boss_Magmus
-SD%Complete: 100
-SDComment:
+SD%Complete: 80
+SDComment: Missing pre-event to open doors
 SDCategory: Blackrock Depths
 EndScriptData */
 
 #include "precompiled.h"
+#include "def_blackrock_depths.h"
 
-#define SPELL_FIERYBURST        13900
-#define SPELL_WARSTOMP          24375
+enum
+{
+    SPELL_FIERYBURST        = 13900,
+    SPELL_WARSTOMP          = 24375
+};
 
 struct MANGOS_DLL_DECL boss_magmusAI : public ScriptedAI
 {
-    boss_magmusAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+    boss_magmusAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        Reset();
+    }
 
-    uint32 FieryBurst_Timer;
-    uint32 WarStomp_Timer;
+    ScriptedInstance* m_pInstance;
+
+    uint32 m_uiFieryBurst_Timer;
+    uint32 m_uiWarStomp_Timer;
 
     void Reset()
     {
-        FieryBurst_Timer = 5000;
-        WarStomp_Timer =0;
+        m_uiFieryBurst_Timer = 5000;
+        m_uiWarStomp_Timer = 0;
     }
 
-    void UpdateAI(const uint32 diff)
+    void Aggro(Unit* pWho)
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_IRON_HALL, IN_PROGRESS);
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_IRON_HALL, FAIL);
+    }
+
+    void JustDied(Unit* pVictim)
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_IRON_HALL, DONE);
+    }
+
+    void UpdateAI(const uint32 uiDiff)
     {
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //FieryBurst_Timer
-        if (FieryBurst_Timer < diff)
+        if (m_uiFieryBurst_Timer < uiDiff)
         {
             DoCast(m_creature->getVictim(),SPELL_FIERYBURST);
-            FieryBurst_Timer = 6000;
-        }else FieryBurst_Timer -= diff;
+            m_uiFieryBurst_Timer = 6000;
+        }
+        else
+            m_uiFieryBurst_Timer -= uiDiff;
 
         //WarStomp_Timer
         if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 51)
         {
-            if (WarStomp_Timer < diff)
+            if (m_uiWarStomp_Timer < uiDiff)
             {
                 DoCast(m_creature->getVictim(),SPELL_WARSTOMP);
-                WarStomp_Timer = 8000;
-            }else WarStomp_Timer -= diff;
+                m_uiWarStomp_Timer = 8000;
+            }
+            else
+                m_uiWarStomp_Timer -= uiDiff;
         }
 
         DoMeleeAttackIfReady();
     }
 };
+
 CreatureAI* GetAI_boss_magmus(Creature* pCreature)
 {
     return new boss_magmusAI(pCreature);

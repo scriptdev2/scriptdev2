@@ -16,74 +16,104 @@
 
 /* ScriptData
 SDName: Boss_Emperor_Dagran_Thaurissan
-SD%Complete: 99
-SDComment:
+SD%Complete: 90
 SDCategory: Blackrock Depths
 EndScriptData */
 
 #include "precompiled.h"
+#include "def_blackrock_depths.h"
 
-#define SAY_AGGRO                       -1230001
-#define SAY_SLAY                        -1230002
+enum
+{
+    FACTION_NEUTRAL             = 734,
+    SAY_AGGRO                   = -1230001,
+    SAY_SLAY                    = -1230002,
 
-#define SPELL_HANDOFTHAURISSAN          17492
-#define SPELL_AVATAROFFLAME             15636
+    SPELL_HANDOFTHAURISSAN      = 17492,
+    SPELL_AVATAROFFLAME         = 15636
+};
 
 struct MANGOS_DLL_DECL boss_draganthaurissanAI : public ScriptedAI
 {
-    boss_draganthaurissanAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+    boss_draganthaurissanAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        Reset();
+    }
 
-    uint32 HandOfThaurissan_Timer;
-    uint32 AvatarOfFlame_Timer;
-    //uint32 Counter;
+    ScriptedInstance* m_pInstance;
+
+    uint32 m_uiHandOfThaurissan_Timer;
+    uint32 m_uiAvatarOfFlame_Timer;
+    Creature* pPrincess;
+    //uint32 m_uiCounter;
 
     void Reset()
     {
-        HandOfThaurissan_Timer = 4000;
-        AvatarOfFlame_Timer = 25000;
-        //Counter= 0;
+        m_uiHandOfThaurissan_Timer = 4000;
+        m_uiAvatarOfFlame_Timer = 25000;
+        pPrincess = NULL;
+        //m_uiCounter= 0;
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
         m_creature->CallForHelp(VISIBLE_RANGE);
+
+        if (m_pInstance)
+            pPrincess = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_PRINCESS));
     }
 
-    void KilledUnit(Unit* victim)
+    void JustDied(Unit* pVictim)
+    {
+        if (pPrincess)
+            if (pPrincess->isAlive() && !pPrincess->isDead()) // is there a difference between isalive and !isdead?
+            {
+                pPrincess->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                pPrincess->setFaction(FACTION_NEUTRAL);
+                pPrincess->AI()->EnterEvadeMode();
+            }
+    }
+
+    void KilledUnit(Unit* pVictim)
     {
         DoScriptText(SAY_SLAY, m_creature);
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if (HandOfThaurissan_Timer < diff)
+        if (m_uiHandOfThaurissan_Timer < uiDiff)
         {
-            if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
-                DoCast(target,SPELL_HANDOFTHAURISSAN);
+            if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+                DoCast(pTarget,SPELL_HANDOFTHAURISSAN);
 
             //3 Hands of Thaurissan will be casted
-            //if (Counter < 3)
+            //if (m_uiCounter < 3)
             //{
-            //    HandOfThaurissan_Timer = 1000;
-            //    Counter++;
+            //    m_uiHandOfThaurissan_Timer = 1000;
+            //    m_uiCounter++;
             //}
             //else
             //{
-                HandOfThaurissan_Timer = 5000;
+                m_uiHandOfThaurissan_Timer = 5000;
                 //Counter=0;
             //}
-        }else HandOfThaurissan_Timer -= diff;
+        }
+        else
+            m_uiHandOfThaurissan_Timer -= uiDiff;
 
         //AvatarOfFlame_Timer
-        if (AvatarOfFlame_Timer < diff)
+        if (m_uiAvatarOfFlame_Timer < uiDiff)
         {
             DoCast(m_creature->getVictim(),SPELL_AVATAROFFLAME);
-            AvatarOfFlame_Timer = 18000;
-        }else AvatarOfFlame_Timer -= diff;
+            m_uiAvatarOfFlame_Timer = 18000;
+        }
+        else
+            m_uiAvatarOfFlame_Timer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }

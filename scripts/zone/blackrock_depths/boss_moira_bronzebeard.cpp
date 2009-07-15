@@ -16,70 +16,105 @@
 
 /* ScriptData
 SDName: Boss_Moira_Bronzbeard
-SD%Complete: 90
-SDComment: Healing of Emperor NYI
+SD%Complete: 95
 SDCategory: Blackrock Depths
 EndScriptData */
 
 #include "precompiled.h"
+#include "def_blackrock_depths.h"
 
-#define SPELL_HEAL              10917
-#define SPELL_RENEW             10929
-#define SPELL_SHIELD            10901
-#define SPELL_MINDBLAST         10947
-#define SPELL_SHADOWWORDPAIN    10894
-#define SPELL_SMITE             10934
+enum
+{
+    SPELL_HEAL                  = 15586,
+    SPELL_RENEW                 = 10929,
+    SPELL_SHIELD                = 10901,
+    SPELL_MINDBLAST             = 15587,
+    SPELL_SHADOWWORDPAIN        = 15654,
+    SPELL_SMITE                 = 10934
+};
 
 struct MANGOS_DLL_DECL boss_moira_bronzebeardAI : public ScriptedAI
 {
-    boss_moira_bronzebeardAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+    boss_moira_bronzebeardAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        Reset();
+    }
 
-    uint32 Heal_Timer;
-    uint32 MindBlast_Timer;
-    uint32 ShadowWordPain_Timer;
-    uint32 Smite_Timer;
-    Unit* PlayerHolder;
-    Unit* Target;
-    bool Heal;
+    ScriptedInstance* m_pInstance;
+
+    uint32 m_uiHeal_Timer;
+    uint32 m_uiMindBlast_Timer;
+    uint32 m_uiShadowWordPain_Timer;
+    uint32 m_uiSmite_Timer;
+
+    Creature* pEmperor;
 
     void Reset()
     {
-        Target = NULL;
-        Heal_Timer = 12000;                                 //These times are probably wrong
-        MindBlast_Timer = 16000;
-        ShadowWordPain_Timer = 2000;
-        Smite_Timer = 8000;
+        pEmperor = NULL;
+
+        m_uiHeal_Timer = 12000;                                 //These times are probably wrong
+        m_uiMindBlast_Timer = 16000;
+        m_uiShadowWordPain_Timer = 2000;
+        m_uiSmite_Timer = 8000;
     }
 
-    void UpdateAI(const uint32 diff)
+    void Aggro(Unit* pWho)
+    {
+        if (m_pInstance)
+            pEmperor = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_EMPEROR));
+
+        if (pEmperor)
+            pEmperor->SetInCombatWithZone();
+    }
+
+    void UpdateAI(const uint32 uiDiff)
     {
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //MindBlast_Timer
-        if (MindBlast_Timer < diff)
+        if (m_uiMindBlast_Timer < uiDiff)
         {
             DoCast(m_creature->getVictim(),SPELL_MINDBLAST);
-            MindBlast_Timer = 14000;
-        }else MindBlast_Timer -= diff;
+            m_uiMindBlast_Timer = 14000;
+        }
+        else
+            m_uiMindBlast_Timer -= uiDiff;
 
         //ShadowWordPain_Timer
-        if (ShadowWordPain_Timer < diff)
+        if (m_uiShadowWordPain_Timer < uiDiff)
         {
             DoCast(m_creature->getVictim(),SPELL_SHADOWWORDPAIN);
-            ShadowWordPain_Timer = 18000;
-        }else ShadowWordPain_Timer -= diff;
+            m_uiShadowWordPain_Timer = 18000;
+        }
+        else
+            m_uiShadowWordPain_Timer -= uiDiff;
 
         //Smite_Timer
-        if (Smite_Timer < diff)
+        if (m_uiSmite_Timer < uiDiff)
         {
             DoCast(m_creature->getVictim(),SPELL_SMITE);
-            Smite_Timer = 10000;
-        }else Smite_Timer -= diff;
+            m_uiSmite_Timer = 10000;
+        }
+        else
+            m_uiSmite_Timer -= uiDiff;
 
+        //Heal_Timer
+        if (m_uiHeal_Timer < uiDiff && pEmperor)
+        {
+            DoCast(pEmperor,SPELL_HEAL);
+            m_uiHeal_Timer = 10000;
+        }
+        else
+            m_uiHeal_Timer -= uiDiff;
+
+        //No meele?
     }
 };
+
 CreatureAI* GetAI_boss_moira_bronzebeard(Creature* pCreature)
 {
     return new boss_moira_bronzebeardAI(pCreature);

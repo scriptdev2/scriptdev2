@@ -29,6 +29,7 @@ enum
     ENCOUNTERS              = 6,
 
     NPC_EMPEROR             = 9019,
+    NPC_PRINCESS            = 8929,
     NPC_PHALANX             = 9502,
     NPC_HATEREL             = 9034,
     NPC_ANGERREL            = 9035,
@@ -54,7 +55,7 @@ enum
     GO_LYCEUM               = 170558,
     GO_GOLEM_ROOM_N         = 170573,
     GO_GOLEM_ROOM_S         = 170574,
-    GO_THONE_ROOM           = 170575,
+    GO_THRONE_ROOM          = 170575,
 
     GO_SPECTRAL_CHALICE     = 164869,
     GO_CHEST_SEVEN          = 169243
@@ -68,6 +69,7 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
     std::string str_data;
 
     uint64 m_uiEmperorGUID;
+    uint64 m_uiPrincessGUID;
     uint64 m_uiPhalanxGUID;
     uint64 m_uiHaterelGUID;
     uint64 m_uiAngerrelGUID;
@@ -93,7 +95,7 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
     uint64 m_uiGoLyceumGUID;
     uint64 m_uiGoGolemNGUID;
     uint64 m_uiGoGolemSGUID;
-    uint64 m_uiGoThoneGUID;
+    uint64 m_uiGoThroneGUID;
 
     uint64 m_uiSpectralChaliceGUID;
     uint64 m_uiSevensChestGUID;
@@ -103,6 +105,7 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
     void Initialize()
     {
         m_uiEmperorGUID = 0;
+        m_uiPrincessGUID = 0;
         m_uiPhalanxGUID = 0;
         m_uiHaterelGUID = 0;
         m_uiAngerrelGUID = 0;
@@ -128,7 +131,7 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
         m_uiGoLyceumGUID = 0;
         m_uiGoGolemNGUID = 0;
         m_uiGoGolemSGUID = 0;
-        m_uiGoThoneGUID = 0;
+        m_uiGoThroneGUID = 0;
 
         m_uiSpectralChaliceGUID = 0;
         m_uiSevensChestGUID = 0;
@@ -144,6 +147,7 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
         switch(pCreature->GetEntry())
         {
             case NPC_EMPEROR: m_uiEmperorGUID = pCreature->GetGUID(); break;
+            case NPC_PRINCESS: m_uiPrincessGUID = pCreature->GetGUID(); break;
             case NPC_PHALANX: m_uiPhalanxGUID = pCreature->GetGUID(); break;
             case NPC_HATEREL: m_uiHaterelGUID = pCreature->GetGUID(); break;
             case NPC_ANGERREL: m_uiAngerrelGUID = pCreature->GetGUID(); break;
@@ -175,7 +179,7 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
             case GO_LYCEUM: m_uiGoLyceumGUID = pGo->GetGUID(); break;
             case GO_GOLEM_ROOM_N: m_uiGoGolemNGUID = pGo->GetGUID(); break;
             case GO_GOLEM_ROOM_S: m_uiGoGolemSGUID = pGo->GetGUID(); break;
-            case GO_THONE_ROOM: m_uiGoThoneGUID = pGo->GetGUID(); break;
+            case GO_THRONE_ROOM: m_uiGoThroneGUID = pGo->GetGUID(); break;
             case GO_SPECTRAL_CHALICE: m_uiSpectralChaliceGUID = pGo->GetGUID(); break;
             case GO_CHEST_SEVEN: m_uiSevensChestGUID = pGo->GetGUID(); break;
         }
@@ -218,9 +222,30 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
                 m_uiEncounter[3] = uiData;
                 break;
             case TYPE_LYCEUM:
+                if (uiData == DONE)
+                {
+                    DoUseDoorOrButton(m_uiGoGolemNGUID);
+                    DoUseDoorOrButton(m_uiGoGolemSGUID);
+                }
                 m_uiEncounter[4] = uiData;
                 break;
             case TYPE_IRON_HALL:
+                switch(uiData)
+                {
+                    case IN_PROGRESS:
+                        DoUseDoorOrButton(m_uiGoGolemNGUID);
+                        DoUseDoorOrButton(m_uiGoGolemSGUID);
+                        break;
+                    case FAIL:
+                        DoUseDoorOrButton(m_uiGoGolemNGUID);
+                        DoUseDoorOrButton(m_uiGoGolemSGUID);
+                        break;
+                    case DONE:
+                        DoUseDoorOrButton(m_uiGoGolemNGUID);
+                        DoUseDoorOrButton(m_uiGoGolemSGUID);
+                        DoUseDoorOrButton(m_uiGoThroneGUID);
+                        break;
+                }
                 m_uiEncounter[5] = uiData;
                 break;
         }
@@ -269,6 +294,8 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
         {
             case DATA_EMPEROR:
                 return m_uiEmperorGUID;
+            case DATA_PRINCESS:
+                return m_uiPrincessGUID;
             case DATA_PHALANX:
                 return m_uiPhalanxGUID;
             case DATA_HATEREL:
