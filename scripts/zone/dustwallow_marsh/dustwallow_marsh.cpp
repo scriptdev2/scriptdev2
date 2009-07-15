@@ -227,7 +227,7 @@ void AddSC_dustwallow_marsh()
 
     newscript = new Script;
     newscript->Name = "npc_restless_apparition";
-    newscript->pGossipHello =   &GossipHello_npc_restless_apparition;
+    newscript->pGossipHello = &GossipHello_npc_restless_apparition;
     newscript->RegisterSelf();
 
     newscript = new Script;

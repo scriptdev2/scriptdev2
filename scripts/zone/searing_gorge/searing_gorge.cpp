@@ -147,8 +147,8 @@ void AddSC_searing_gorge()
 
     newscript = new Script;
     newscript->Name = "npc_lothos_riftwaker";
-    newscript->pGossipHello          = &GossipHello_npc_lothos_riftwaker;
-    newscript->pGossipSelect         = &GossipSelect_npc_lothos_riftwaker;
+    newscript->pGossipHello =  &GossipHello_npc_lothos_riftwaker;
+    newscript->pGossipSelect = &GossipSelect_npc_lothos_riftwaker;
     newscript->RegisterSelf();
 
     newscript = new Script;

@@ -552,7 +552,7 @@ void AddSC_the_barrens()
     newscript->RegisterSelf();
 
     newscript = new Script;
-    newscript->Name="npc_wizzlecranks_shredder";
+    newscript->Name = "npc_wizzlecranks_shredder";
     newscript->GetAI = &GetAI_npc_wizzlecranks_shredder;
     newscript->pQuestAccept = &QuestAccept_npc_wizzlecranks_shredder;
     newscript->RegisterSelf();
