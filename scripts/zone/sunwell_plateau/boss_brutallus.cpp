@@ -18,38 +18,42 @@
 SDName: Boss_Brutallus
 SD%Complete: 50
 SDComment: Intro not made. Script for Madrigosa to be added here.
+SDCategory: Sunwell Plateau
 EndScriptData */
 
 #include "precompiled.h"
 #include "def_sunwell_plateau.h"
 
-#define YELL_INTRO                      -1580017
-#define YELL_INTRO_BREAK_ICE            -1580018
-#define YELL_INTRO_CHARGE               -1580019
-#define YELL_INTRO_KILL_MADRIGOSA       -1580020
-#define YELL_INTRO_TAUNT                -1580021
+enum Brutallus
+{
+    YELL_INTRO                      = -1580017,
+    YELL_INTRO_BREAK_ICE            = -1580018,
+    YELL_INTRO_CHARGE               = -1580019,
+    YELL_INTRO_KILL_MADRIGOSA       = -1580020,
+    YELL_INTRO_TAUNT                = -1580021,
 
-#define YELL_MADR_ICE_BARRIER           -1580031
-#define YELL_MADR_INTRO                 -1580032
-#define YELL_MADR_ICE_BLOCK             -1580033
-#define YELL_MADR_TRAP                  -1580034
-#define YELL_MADR_DEATH                 -1580035
+    YELL_MADR_ICE_BARRIER           = -1580031,
+    YELL_MADR_INTRO                 = -1580032,
+    YELL_MADR_ICE_BLOCK             = -1580033,
+    YELL_MADR_TRAP                  = -1580034,
+    YELL_MADR_DEATH                 = -1580035,
 
-#define YELL_AGGRO                      -1580022
-#define YELL_KILL1                      -1580023
-#define YELL_KILL2                      -1580024
-#define YELL_KILL3                      -1580025
-#define YELL_LOVE1                      -1580026
-#define YELL_LOVE2                      -1580027
-#define YELL_LOVE3                      -1580028
-#define YELL_BERSERK                    -1580029
-#define YELL_DEATH                      -1580030
+    YELL_AGGRO                      = -1580022,
+    YELL_KILL1                      = -1580023,
+    YELL_KILL2                      = -1580024,
+    YELL_KILL3                      = -1580025,
+    YELL_LOVE1                      = -1580026,
+    YELL_LOVE2                      = -1580027,
+    YELL_LOVE3                      = -1580028,
+    YELL_BERSERK                    = -1580029,
+    YELL_DEATH                      = -1580030,
 
-#define SPELL_METEOR_SLASH              45150
-#define SPELL_BURN                      45141
-//#define SPELL_BURN_AURA_EFFECT          46394
-#define SPELL_STOMP                     45185
-#define SPELL_BERSERK                   26662
+    SPELL_METEOR_SLASH              = 45150,
+    SPELL_BURN                      = 45141,
+    SPELL_BURN_AURA_EFFECT          = 46394,
+    SPELL_STOMP                     = 45185,
+    SPELL_BERSERK                   = 26662
+};
 
 struct MANGOS_DLL_DECL boss_brutallusAI : public ScriptedAI
 {
@@ -61,27 +65,34 @@ struct MANGOS_DLL_DECL boss_brutallusAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    uint32 SlashTimer;
-    uint32 BurnTimer;
-    uint32 StompTimer;
-    uint32 BerserkTimer;
-    uint32 LoveTimer;
+    uint32 m_uiSlashTimer;
+    uint32 m_uiBurnTimer;
+    uint32 m_uiStompTimer;
+    uint32 m_uiBerserkTimer;
+    uint32 m_uiLoveTimer;
 
     void Reset()
     {
-        SlashTimer = 11000;
-        StompTimer = 30000;
-        BurnTimer = 60000;
-        BerserkTimer = 360000;
-        LoveTimer = 10000 + rand()%7000;
+        m_uiSlashTimer = 11000;
+        m_uiStompTimer = 30000;
+        m_uiBurnTimer = 60000;
+        m_uiBerserkTimer = 360000;
+        m_uiLoveTimer = 10000 + rand()%7000;
+
+        //TODO: correct me when pre-event implemented
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_BRUTALLUS, NOT_STARTED);
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
         DoScriptText(YELL_AGGRO, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_BRUTALLUS, IN_PROGRESS);
     }
 
-    void KilledUnit(Unit* victim)
+    void KilledUnit(Unit* pVictim)
     {
         switch(rand()%3)
         {
@@ -91,17 +102,26 @@ struct MANGOS_DLL_DECL boss_brutallusAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* Killer)
+    void JustDied(Unit* pKiller)
     {
         DoScriptText(YELL_DEATH, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_BRUTALLUS, DONE);
     }
 
-    void UpdateAI(const uint32 diff)
+    void SpellHitTarget(Unit* pCaster, const SpellEntry* pSpell)
+    {
+        if (pSpell->Id == SPELL_BURN)
+            pCaster->CastSpell(pCaster, SPELL_BURN_AURA_EFFECT, true, NULL, NULL, m_creature->GetGUID());
+    }
+
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if (LoveTimer < diff)
+        if (m_uiLoveTimer < uiDiff)
         {
             switch(rand()%3)
             {
@@ -109,42 +129,57 @@ struct MANGOS_DLL_DECL boss_brutallusAI : public ScriptedAI
                 case 1: DoScriptText(YELL_LOVE2, m_creature); break;
                 case 2: DoScriptText(YELL_LOVE3, m_creature); break;
             }
-            LoveTimer = 15000 + rand()%8000;
-        }else LoveTimer -= diff;
+            m_uiLoveTimer = 15000 + rand()%8000;
+        }
+        else
+            m_uiLoveTimer -= uiDiff;
 
-        if (SlashTimer < diff)
+        if (m_uiSlashTimer < uiDiff)
         {
             DoCast(m_creature->getVictim(),SPELL_METEOR_SLASH);
-            SlashTimer = 11000;
-        }else SlashTimer -= diff;
-
-        if (StompTimer < diff)
-        {
-            Unit* target = m_creature->getVictim();
-            if (target)
-            {
-                DoCast(target,SPELL_STOMP);
-                //if (target->HasAura(SPELL_BURN_AURA_EFFECT,0))
-                    //target->RemoveAura(SPELL_BURN_AURA_EFFECT,0);
-            }
-            StompTimer = 30000;
-        }else StompTimer -= diff;
-
-        if (BurnTimer < diff)
-        {
-            if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                DoCast(target,SPELL_BURN);
-            BurnTimer = 60000;
+            m_uiSlashTimer = 11000;
         }
-        else BurnTimer -= diff;
+        else
+            m_uiSlashTimer -= uiDiff;
 
-        if (BerserkTimer < diff)
+        if (m_uiStompTimer < uiDiff)
+        {
+            if (Unit* pTarget = m_creature->getVictim())
+            {
+                DoCast(pTarget,SPELL_STOMP);
+
+                if (pTarget->HasAura(SPELL_BURN_AURA_EFFECT,0))
+                    pTarget->RemoveAurasDueToSpell(SPELL_BURN_AURA_EFFECT);
+            }
+
+            m_uiStompTimer = 30000;
+        }
+        else
+            m_uiStompTimer -= uiDiff;
+
+        if (m_uiBurnTimer < uiDiff)
+        {
+            //returns any unit
+            if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            {
+                //so we get owner, in case unit was pet/totem/etc
+                if (Player* pPlayer = pTarget->GetCharmerOrOwnerPlayerOrPlayerItself())
+                    DoCast(pPlayer, SPELL_BURN);
+            }
+
+            m_uiBurnTimer = 60000;
+        }
+        else
+            m_uiBurnTimer -= uiDiff;
+
+        if (m_uiBerserkTimer < uiDiff)
         {
             DoScriptText(YELL_BERSERK, m_creature);
             DoCast(m_creature,SPELL_BERSERK);
-            BerserkTimer = 20000;
+            m_uiBerserkTimer = 20000;
         }
-        else BerserkTimer -= diff;
+        else
+            m_uiBerserkTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }

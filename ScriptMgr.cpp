@@ -495,6 +495,7 @@ extern void AddSC_stratholme();
 //Sunken Temple
 
 //Sunwell Plateau
+extern void AddSC_boss_brutallus();
 extern void AddSC_boss_kalecgos();
 extern void AddSC_instance_sunwell_plateau();
 
@@ -1385,6 +1386,7 @@ void ScriptsInit()
     //Sunken Temple
 
     //Sunwell Plateau
+    AddSC_boss_brutallus();
     AddSC_boss_kalecgos();
     AddSC_instance_sunwell_plateau();
 
