@@ -59,7 +59,8 @@ struct PointMovement
 
 struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
 {
-    explicit ScriptedAI(Creature* pCreature) : CreatureAI(pCreature), bCombatMovement(true), m_uiEvadeCheckCooldown(2500) {}
+    explicit ScriptedAI(Creature* pCreature) : CreatureAI(pCreature),
+        m_bCombatMovement(true), m_uiEvadeCheckCooldown(2500) {}
     ~ScriptedAI() {}
 
     //*************
@@ -197,14 +198,14 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
 
     void SetEquipmentSlots(bool bLoadDefault, int32 uiMainHand = EQUIP_NO_CHANGE, int32 uiOffHand = EQUIP_NO_CHANGE, int32 uiRanged = EQUIP_NO_CHANGE);
 
+    //Generally used to control if MoveChase() is to be used or not in AttackStart(). Some creatures does not chase victims
     void SetCombatMovement(bool bCombatMove);
+    bool IsCombatMovement() { return m_bCombatMovement; }
 
     bool EnterEvadeIfOutOfCombatArea(const uint32 uiDiff);
 
-    protected:
-        bool bCombatMovement;
-
     private:
+        bool m_bCombatMovement;
         uint32 m_uiEvadeCheckCooldown;
 };
 

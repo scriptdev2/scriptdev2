@@ -58,8 +58,8 @@ void ScriptedAI::AttackStart(Unit* who)
         m_creature->SetInCombatWith(who);
         who->SetInCombatWith(m_creature);
 
-        if (bCombatMovement)
-            DoStartMovement(who);
+        if (IsCombatMovement())
+            m_creature->GetMotionMaster()->MoveChase(who);
     }
 }
 
@@ -582,7 +582,7 @@ void ScriptedAI::SetEquipmentSlots(bool bLoadDefault, int32 uiMainHand, int32 ui
 
 void ScriptedAI::SetCombatMovement(bool bCombatMove)
 {
-    bCombatMovement = bCombatMove;
+    m_bCombatMovement = bCombatMove;
 }
 
 // Hacklike storage used for misc creatures that are expected to evade of outside of a certain area.
