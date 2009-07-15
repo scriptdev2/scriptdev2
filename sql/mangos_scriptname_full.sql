@@ -804,6 +804,7 @@ UPDATE creature_template SET ScriptName='npc_deathstalker_erland' WHERE entry=19
 
 /* STONETALON MOUNTAINS */
 UPDATE creature_template SET ScriptName='npc_braug_dimspirit' WHERE entry=4489;
+UPDATE creature_template SET ScriptName='npc_kaya' WHERE entry=11856;
 
 /* STORM PEAKS */
 
