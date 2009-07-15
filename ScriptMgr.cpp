@@ -147,7 +147,6 @@ extern void AddSC_boss_gorosh_the_dervish();
 extern void AddSC_boss_grizzle();
 extern void AddSC_boss_high_interrogator_gerstahn();
 extern void AddSC_boss_magmus();
-extern void AddSC_boss_moira_bronzebeard();
 extern void AddSC_boss_tomb_of_seven();
 extern void AddSC_instance_blackrock_depths();
 
@@ -1039,7 +1038,6 @@ void ScriptsInit()
     AddSC_boss_grizzle();
     AddSC_boss_high_interrogator_gerstahn();
     AddSC_boss_magmus();
-    AddSC_boss_moira_bronzebeard();
     AddSC_boss_tomb_of_seven();
     AddSC_instance_blackrock_depths();
 

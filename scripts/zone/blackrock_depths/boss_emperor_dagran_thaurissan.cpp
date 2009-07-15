@@ -17,13 +17,14 @@
 /* ScriptData
 SDName: Boss_Emperor_Dagran_Thaurissan
 SD%Complete: 90
+SDComment: With script for Moria
 SDCategory: Blackrock Depths
 EndScriptData */
 
 #include "precompiled.h"
 #include "def_blackrock_depths.h"
 
-enum
+enum eEmperor
 {
     FACTION_NEUTRAL             = 734,
     SAY_AGGRO                   = -1230001,
@@ -33,9 +34,9 @@ enum
     SPELL_AVATAROFFLAME         = 15636
 };
 
-struct MANGOS_DLL_DECL boss_draganthaurissanAI : public ScriptedAI
+struct MANGOS_DLL_DECL boss_emperor_dagran_thaurissanAI : public ScriptedAI
 {
-    boss_draganthaurissanAI(Creature* pCreature) : ScriptedAI(pCreature)
+    boss_emperor_dagran_thaurissanAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
@@ -45,35 +46,34 @@ struct MANGOS_DLL_DECL boss_draganthaurissanAI : public ScriptedAI
 
     uint32 m_uiHandOfThaurissan_Timer;
     uint32 m_uiAvatarOfFlame_Timer;
-    Creature* pPrincess;
     //uint32 m_uiCounter;
 
     void Reset()
     {
         m_uiHandOfThaurissan_Timer = 4000;
         m_uiAvatarOfFlame_Timer = 25000;
-        pPrincess = NULL;
-        //m_uiCounter= 0;
+        //m_uiCounter = 0;
     }
 
     void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
         m_creature->CallForHelp(VISIBLE_RANGE);
-
-        if (m_pInstance)
-            pPrincess = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_PRINCESS));
     }
 
     void JustDied(Unit* pVictim)
     {
-        if (pPrincess)
-            if (pPrincess->isAlive() && !pPrincess->isDead()) // is there a difference between isalive and !isdead?
+        if (!m_pInstance)
+            return;
+
+        if (Creature* pPrincess = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_PRINCESS)))
+        {
+            if (pPrincess->isAlive())
             {
-                pPrincess->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                 pPrincess->setFaction(FACTION_NEUTRAL);
                 pPrincess->AI()->EnterEvadeMode();
             }
+        }
     }
 
     void KilledUnit(Unit* pVictim)
@@ -95,12 +95,12 @@ struct MANGOS_DLL_DECL boss_draganthaurissanAI : public ScriptedAI
             //if (m_uiCounter < 3)
             //{
             //    m_uiHandOfThaurissan_Timer = 1000;
-            //    m_uiCounter++;
+            //    ++m_uiCounter;
             //}
             //else
             //{
                 m_uiHandOfThaurissan_Timer = 5000;
-                //Counter=0;
+                //m_uiCounter = 0;
             //}
         }
         else
@@ -119,16 +119,142 @@ struct MANGOS_DLL_DECL boss_draganthaurissanAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_draganthaurissan(Creature* pCreature)
+CreatureAI* GetAI_boss_emperor_dagran_thaurissan(Creature* pCreature)
 {
-    return new boss_draganthaurissanAI(pCreature);
+    return new boss_emperor_dagran_thaurissanAI(pCreature);
+}
+
+/*######
+## boss_moira_bronzebeard
+######*/
+
+enum ePrincess
+{
+    SPELL_HEAL                  = 15586,
+    SPELL_RENEW                 = 10929,
+    SPELL_SHIELD                = 10901,
+    SPELL_MINDBLAST             = 15587,
+    SPELL_SHADOWWORDPAIN        = 15654,
+    SPELL_SMITE                 = 10934,
+    SPELL_SHADOW_BOLT           = 15537,
+    SPELL_OPEN_PORTAL           = 13912
+};
+
+struct MANGOS_DLL_DECL boss_moira_bronzebeardAI : public ScriptedAI
+{
+    boss_moira_bronzebeardAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        Reset();
+    }
+
+    ScriptedInstance* m_pInstance;
+
+    uint32 m_uiHeal_Timer;
+    uint32 m_uiMindBlast_Timer;
+    uint32 m_uiShadowWordPain_Timer;
+    uint32 m_uiSmite_Timer;
+
+    void Reset()
+    {
+        m_uiHeal_Timer = 12000;                                 //These times are probably wrong
+        m_uiMindBlast_Timer = 16000;
+        m_uiShadowWordPain_Timer = 2000;
+        m_uiSmite_Timer = 8000;
+    }
+
+    void AttackStart(Unit* pWho)
+    {
+        if (m_creature->Attack(pWho, false))
+        {
+            m_creature->AddThreat(pWho, 0.0f);
+            m_creature->SetInCombatWith(pWho);
+            pWho->SetInCombatWith(m_creature);
+
+            m_creature->GetMotionMaster()->MoveChase(pWho, 25.0f);
+        }
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+        {
+            if (Creature* pEmperor = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_EMPEROR)))
+            {
+                // if evade, then check if he is alive. If not, start make portal
+                if (!pEmperor->isAlive())
+                    m_creature->CastSpell(m_creature, SPELL_OPEN_PORTAL, false);
+            }
+        }
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        //Return since we have no target
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+            return;
+
+        //MindBlast_Timer
+        if (m_uiMindBlast_Timer < uiDiff)
+        {
+            DoCast(m_creature->getVictim(),SPELL_MINDBLAST);
+            m_uiMindBlast_Timer = 14000;
+        }
+        else
+            m_uiMindBlast_Timer -= uiDiff;
+
+        //ShadowWordPain_Timer
+        if (m_uiShadowWordPain_Timer < uiDiff)
+        {
+            DoCast(m_creature->getVictim(),SPELL_SHADOWWORDPAIN);
+            m_uiShadowWordPain_Timer = 18000;
+        }
+        else
+            m_uiShadowWordPain_Timer -= uiDiff;
+
+        //Smite_Timer
+        if (m_uiSmite_Timer < uiDiff)
+        {
+            DoCast(m_creature->getVictim(),SPELL_SMITE);
+            m_uiSmite_Timer = 10000;
+        }
+        else
+            m_uiSmite_Timer -= uiDiff;
+
+        //Heal_Timer
+        if (m_uiHeal_Timer < uiDiff)
+        {
+            if (Creature* pEmperor = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_EMPEROR)))
+            {
+                if (pEmperor->isAlive() && pEmperor->GetHealth() < pEmperor->GetMaxHealth())
+                    DoCast(pEmperor, SPELL_HEAL);
+            }
+
+            m_uiHeal_Timer = 10000;
+        }
+        else
+            m_uiHeal_Timer -= uiDiff;
+
+        //No meele?
+    }
+};
+
+CreatureAI* GetAI_boss_moira_bronzebeard(Creature* pCreature)
+{
+    return new boss_moira_bronzebeardAI(pCreature);
 }
 
 void AddSC_boss_draganthaurissan()
 {
     Script *newscript;
+
     newscript = new Script;
     newscript->Name = "boss_emperor_dagran_thaurissan";
-    newscript->GetAI = &GetAI_boss_draganthaurissan;
+    newscript->GetAI = &GetAI_boss_emperor_dagran_thaurissan;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "boss_moira_bronzebeard";
+    newscript->GetAI = &GetAI_boss_moira_bronzebeard;
     newscript->RegisterSelf();
 }

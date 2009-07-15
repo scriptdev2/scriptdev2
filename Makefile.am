@@ -106,7 +106,6 @@ scripts/zone/blackrock_depths/boss_gorosh_the_dervish.cpp \
 scripts/zone/blackrock_depths/boss_grizzle.cpp \
 scripts/zone/blackrock_depths/boss_high_interrogator_gerstahn.cpp \
 scripts/zone/blackrock_depths/boss_magmus.cpp \
-scripts/zone/blackrock_depths/boss_moira_bronzebeard.cpp \
 scripts/zone/blackrock_depths/boss_tomb_of_seven.cpp \
 scripts/zone/blackrock_depths/def_blackrock_depths.h \
 scripts/zone/blackrock_depths/instance_blackrock_depths.cpp \

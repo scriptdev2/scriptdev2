@@ -2298,10 +2298,6 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackrock_depths\boss_moira_bronzebeard.cpp"
-						>
-					</File>
-					<File
 						RelativePath="..\scripts\zone\blackrock_depths\boss_tomb_of_seven.cpp"
 						>
 					</File>
