@@ -18,10 +18,10 @@ TRUNCATE script_texts;
 
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
 (-1000000,'<ScriptDev2 Text Entry Missing!>',0,0,0,0,'DEFAULT_TEXT'),
-(-1000001,'goes into a killing frenzy!',0,2,0,0,'EMOTE_GENERIC_FRENZY_KILL'),
-(-1000002,'goes into a frenzy!',0,2,0,0,'EMOTE_GENERIC_FRENZY'),
-(-1000003,'becomes enraged!',0,2,0,0,'EMOTE_GENERIC_ENRAGED'),
-(-1000004,'goes into a berserker rage!',0,2,0,0,'EMOTE_GENERIC_BERSERK');
+(-1000001,'%s goes into a killing frenzy!',0,2,0,0,'EMOTE_GENERIC_FRENZY_KILL'),
+(-1000002,'%s goes into a frenzy!',0,2,0,0,'EMOTE_GENERIC_FRENZY'),
+(-1000003,'%s becomes enraged!',0,2,0,0,'EMOTE_GENERIC_ENRAGED'),
+(-1000004,'%s goes into a berserker rage!',0,2,0,0,'EMOTE_GENERIC_BERSERK');
 
 --
 -- Normal text entries below. Say/Yell/Whisper/Emote for any regular world object.
@@ -59,7 +59,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000113, 'My poor family. Everything has been destroyed.',0,0,7,0,'magwin SAY_PROGRESS'),
 (-1000114, 'Father! Father! You\'re alive!',0,0,7,0,'magwin SAY_END1'),
 (-1000115, 'You can thank $N for getting me back here safely, father.',0,0,7,0,'magwin SAY_END2'),
-(-1000116, 'hugs her father.',0,2,7,0,'magwin EMOTE_HUG'),
+(-1000116, '%s hugs her father.',0,2,7,0,'magwin EMOTE_HUG'),
 
 (-1000117, 'Thank you for agreeing to help. Now, let\'s get out of here $N.',0,0,1,0,'wounded elf SAY_ELF_START'),
 (-1000118, 'Over there! They\'re following us!',0,0,1,0,'wounded elf SAY_ELF_SUMMON1'),
@@ -141,7 +141,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000183,'I don\'t know if I can make it, please help me...',0,0,7,0,'draenei_survivor SAY_HELP4'),
 
 (-1000184,'Yes Master, all goes along as planned.',0,0,7,0,'engineer_spark SAY_TEXT'),
-(-1000185,'puts the shell to his ear.',0,2,7,0,'engineer_spark EMOTE_SHELL'),
+(-1000185,'%s puts the shell to his ear.',0,2,7,0,'engineer_spark EMOTE_SHELL'),
 (-1000186,'Now I cut you!',0,1,7,0,'engineer_spark SAY_ATTACK'),
 
 (-1000187,'Thank you, dear $C, you just saved my life.',0,0,7,0,'faulk SAY_HEAL'),
@@ -160,7 +160,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000195,'I choose the third option: KILLING YOU!',0,0,0,0,'floon SAY_FLOON_ATTACK'),
 
 (-1000196,'Belore...',0,0,1,0,'lady_sylvanas SAY_LAMENT_END'),
-(-1000197,'kneels down and pick up the amulet.',0,2,1,0,'lady_sylvanas EMOTE_LAMENT_END'),
+(-1000197,'%s kneels down and pick up the amulet.',0,2,1,0,'lady_sylvanas EMOTE_LAMENT_END'),
 
 (-1000198,'Taste blade, mongrel!',0,0,0,0,'SAY_GUARD_SIL_AGGRO1'),
 (-1000199,'Please tell me that you didn\'t just do what I think you just did. Please tell me that I\'m not going to have to hurt you...',0,0,0,0,'SAY_GUARD_SIL_AGGRO2'),
@@ -170,9 +170,9 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000202,'HOORAY! I AM SAVED!',0,0,0,0,'injured_patient SAY_DOC2'),
 (-1000203,'Sweet, sweet embrace... take me...',0,0,0,0,'injured_patient SAY_DOC3'),
 
-(-1000204,'looks up at you quizzically. Maybe you should inspect it?',0,2,0,0,'cluck EMOTE_A_HELLO'),
-(-1000205,'looks at you unexpectadly.',0,2,0,0,'cluck EMOTE_H_HELLO'),
-(-1000206,'starts pecking at the feed.',0,2,0,0,'cluck EMOTE_CLUCK_TEXT2'),
+(-1000204,'%s looks up at you quizzically. Maybe you should inspect it?',0,2,0,0,'cluck EMOTE_A_HELLO'),
+(-1000205,'%s looks at you unexpectadly.',0,2,0,0,'cluck EMOTE_H_HELLO'),
+(-1000206,'%s starts pecking at the feed.',0,2,0,0,'cluck EMOTE_CLUCK_TEXT2'),
 
 (-1000207,'You have my blessing',0,0,0,0,'ashyen_and_keleth SAY_REWARD_BLESS'),
 
@@ -181,7 +181,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000209,'Very well. Let\'s see what you have to show me, $N.',0,0,1,0,'anvilward SAY_ANVIL1'),
 (-1000210,'What manner of trick is this, $R? If you seek to ambush me, I warn you I will not go down quietly!',0,0,1,0,'anvilward SAY_ANVIL2'),
 
-(-1000211,'Warning! Emergency shutdown process initiated by $N. Shutdown will complete in two minutes.',0,2,0,0,'manaforge_control EMOTE_START'),
+(-1000211,'Warning! %s emergency shutdown process initiated by $N. Shutdown will complete in two minutes.',0,2,0,0,'manaforge_control EMOTE_START'),
 (-1000212,'Emergency shutdown will complete in one minute.',0,2,0,0,'manaforge_control EMOTE_60'),
 (-1000213,'Emergency shutdown will complete in thirty seconds.',0,2,0,0,'manaforge_control EMOTE_30'),
 (-1000214,'Emergency shutdown will complete in ten seconds.',0,2,0,0,'manaforge_control EMOTE_10'),
@@ -242,12 +242,12 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000264,'Ok, $N. Follow me to the cave where I\'ll attempt to harness the power of the rune stone into these goggles.',0,0,0,1,'phizzlethorpe SAY_PROGRESS_1'),
 (-1000265,'I discovered this cave on our first day here. I believe the energy in the stone can be used to our advantage.',0,0,0,1,'phizzlethorpe SAY_PROGRESS_2'),
 (-1000266,'I\'ll begin drawing energy from the stone. Your job, $N, is to defend me. This place is cursed... trust me.',0,0,0,1,'phizzlethorpe SAY_PROGRESS_3'),
-(-1000267,'begins tinkering with the goggles before the stone.',0,2,0,0,'phizzlethorpe EMOTE_PROGRESS_4'),
+(-1000267,'%s begins tinkering with the goggles before the stone.',0,2,0,0,'phizzlethorpe EMOTE_PROGRESS_4'),
 (-1000268,'Help!!! Get these things off me so I can get my work done!',0,0,0,0,'phizzlethorpe SAY_AGGRO'),
 (-1000269,'Almost done! Just a little longer!',0,0,0,1,'phizzlethorpe SAY_PROGRESS_5'),
 (-1000270,'I\'ve done it! I have harnessed the power of the stone into the goggles! Let\'s get out of here!',0,0,0,1,'phizzlethorpe SAY_PROGRESS_6'),
 (-1000271,'Phew! Glad to be back from that creepy cave.',0,0,0,1,'phizzlethorpe SAY_PROGRESS_7'),
-(-1000272,'hands one glowing goggles over to Doctor Draxlegauge.',0,2,0,0,'phizzlethorpe EMOTE_PROGRESS_8'),
+(-1000272,'%s hands one glowing goggles over to Doctor Draxlegauge.',0,2,0,0,'phizzlethorpe EMOTE_PROGRESS_8'),
 (-1000273,'Doctor Draxlegauge will give you further instructions, $N. Many thanks for your help!',0,0,0,1,'phizzlethorpe SAY_PROGRESS_9'),
 
 (-1000274,'Time to teach you a lesson in manners, little $Gboy:girl;!',0,0,0,0,'larry SAY_START'),
@@ -307,7 +307,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000322, 'Show $n the meaning of pain, Sunstriker!',0,1,1,0,'kelerun SayId4'),
 
 (-1000323, 'Mist! I feared I would never see you again! Yes, I am well, do not worry for me. You must rest and recover your health.',0,0,7,0,'mist SAY_AT_HOME'),
-(-1000324, 'growls in acknowledgement before straightening and making her way off into the forest.',0,2,0,0,'mist EMOTE_AT_HOME'),
+(-1000324, '%s growls in acknowledgement before straightening and making her way off into the forest.',0,2,0,0,'mist EMOTE_AT_HOME'),
 
 (-1000325, '"Threshwackonator First Mate unit prepared to follow"',0,2,0,0,'threshwackonator EMOTE_START'),
 (-1000326, 'YARRR! Swabie, what have ye done?! He\'s gone mad! Baton him down the hatches! Hoist the mast! ARRRR! Every man for hi\'self!',0,0,7,0,'threshwackonator SAY_AT_CLOSE'),
@@ -401,7 +401,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1189001,'Blades of Light!',5832,1,0,0,'herod SAY_WHIRLWIND'),
 (-1189002,'Light, give me strength!',5833,1,0,0,'herod SAY_ENRAGE'),
 (-1189003,'Hah, is that all?',5831,1,0,0,'herod SAY_KILL'),
-(-1189004,'becomes enraged!',0,2,0,0,'herod EMOTE_ENRAGE'),
+(-1189004,'%s becomes enraged!',0,2,0,0,'herod EMOTE_ENRAGE'),
 
 (-1189005,'Infidels! They must be purified!',5835,1,0,0,'mograine SAY_MO_AGGRO'),
 (-1189006,'Unworthy!',5836,1,0,0,'mograine SAY_MO_KILL'),
@@ -442,7 +442,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1249001,'Learn your place mortal!',0,1,0,0,'onyxia SAY_KILL'),
 (-1249002,'This meaningless exertion bores me. I\'ll incinerate you all from above!',0,1,0,254,'onyxia SAY_PHASE_2_TRANS'),
 (-1249003,'It seems you\'ll need another lesson, mortals!',0,1,0,293,'onyxia SAY_PHASE_3_TRANS'),
-(-1249004,'takes in a deep breath...',0,1,0,0,'onyxia EMOTE_BREATH');
+(-1249004,'%s takes in a deep breath...',0,1,0,0,'onyxia EMOTE_BREATH');
 
 -- -1 269 000 OPENING OF THE DARK PORTAL (BLACK MORASS)
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
@@ -466,7 +466,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1269015,'One less obstacle in our way!',10403,1,0,0,'aeonus SAY_SLAY1'),
 (-1269016,'No one can stop us! No one!',10404,1,0,0,'aeonus SAY_SLAY2'),
 (-1269017,'It is only a matter...of time.',10405,1,0,0,'aeonus SAY_DEATH'),
-(-1269018,'goes into a frenzy!',0,2,0,0,'aeonus EMOTE_FRENZY'),
+(-1269018,'%s goes into a frenzy!',0,2,0,0,'aeonus EMOTE_FRENZY'),
 
 (-1269019,'Stop! Do not go further, mortals. You are ill-prepared to face the forces of the Infinite Dragonflight. Come, let me help you.',0,0,0,0,'saat SAY_SAAT_WELCOME'),
 
@@ -529,9 +529,9 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 
 -- -1 409 000 MOLTEN CORE
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
-(-1409000,'performs one last service for Ragnaros.',0,2,0,0,'geddon EMOTE_SERVICE'),
-(-1409001,'goes into a killing frenzy!',0,2,0,0,'magmadar EMOTE_FRENZY'),
-(-1409002,'refuses to die while its master is in trouble.',0,2,0,0,'core rager EMOTE_AEGIS'),
+(-1409000,'%s performs one last service for Ragnaros.',0,2,0,0,'geddon EMOTE_SERVICE'),
+(-1409001,'%s goes into a killing frenzy!',0,2,0,0,'magmadar EMOTE_FRENZY'),
+(-1409002,'%s refuses to die while its master is in trouble.',0,2,0,0,'core rager EMOTE_AEGIS'),
 
 (-1409003,'Reckless mortals, none may challenge the sons of the living flame!',8035,1,0,0,'majordomo SAY_AGGRO'),
 (-1409004,'The runes of warding have been destroyed! Hunt down the infedels my bretheren.',8039,1,0,0,'majordomo SAY_SPAWN'),
@@ -559,8 +559,8 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1469000,'None of your kind should be here! You\'ve doomed only yourselves!',8286,1,0,0,'broodlord SAY_AGGRO'),
 (-1469001,'Clever Mortals but I am not so easily lured away from my sanctum!',8287,1,0,0,'broodlord SAY_LEASH'),
 
-(-1469002,'goes into a killing frenzy!',0,2,0,0,'chromaggus EMOTE_FRENZY'),
-(-1469003,'flinches as its skin shimmers.',0,2,0,0,'chromaggus EMOTE_SHIMMER'),
+(-1469002,'%s goes into a killing frenzy!',0,2,0,0,'chromaggus EMOTE_FRENZY'),
+(-1469003,'%s flinches as its skin shimmers.',0,2,0,0,'chromaggus EMOTE_SHIMMER'),
 
 (-1469004,'In this world where time is your enemy, it is my greatest ally. This grand game of life that you think you play in fact plays you. To that I say...',0,0,0,0,'victor_nefarius SAY_GAMESBEGIN_1'),
 (-1469005,'Let the games begin!',8280,1,0,0,'victor_nefarius SAY_GAMESBEGIN_2'),
@@ -593,14 +593,14 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1469029,'Nefarius\' hate has made me stronger than ever before. You should have fled, while you could, mortals! The fury of Blackrock courses through my veins!',8285,1,0,0,'vaelastrasz SAY_HALFLIFE'),
 (-1469030,'Forgive me $N, your death only adds to my failure.',8284,1,0,0,'vaelastrasz SAY_KILLTARGET'),
 
-(-1469031,'goes into a frenzy!',0,2,0,0,'flamegor EMOTE_FRENZY');
+(-1469031,'%s goes into a frenzy!',0,2,0,0,'flamegor EMOTE_FRENZY');
 
 -- -1 509 000 RUINS OF AHN'QIRAJ
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
-(-1509000,'senses your fear.',0,2,0,0,'moam EMOTE_AGGRO'),
-(-1509001,'bristles with energy!',0,2,0,0,'moan EMOTE_MANA_FULL'),
+(-1509000,'%s senses your fear.',0,2,0,0,'moam EMOTE_AGGRO'),
+(-1509001,'%s bristles with energy!',0,2,0,0,'moan EMOTE_MANA_FULL'),
 
-(-1509002,'sets eyes on $N!',0,2,0,0,'buru EMOTE_TARGET'),
+(-1509002,'%s sets eyes on $N!',0,2,0,0,'buru EMOTE_TARGET'),
 
 (-1509003,'They come now. Try not to get yourself killed, young blood.',0,1,0,0,'andorov SAY_ANDOROV_INTRO'),
 (-1509004,'Remember, Rajaxx, when I said I\'d kill you last? I lied...',0,1,0,0,'andorov SAY_ANDOROV_ATTACK'),
@@ -645,7 +645,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1531009,'I sentence you to death!',8647,1,0,0,'sartura SAY_SLAY'),
 (-1531010,'I serve to the last!',8648,1,0,0,'sartura SAY_DEATH'),
 
-(-1531011,'is weakened!',0,2,0,0,'cthun EMOTE_WEAKENED');
+(-1531011,'%s is weakened!',0,2,0,0,'cthun EMOTE_WEAKENED');
 
 -- -1 532 000 KARAZHAN
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
@@ -693,7 +693,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1532035,'I could really use a heart. Say, can I have yours?',9268,1,0,0,'tinhead SAY_TINHEAD_AGGRO'),
 (-1532036,'Back to being an old rustbucket.',9270,1,0,0,'tinhead SAY_TINHEAD_DEATH'),
 (-1532037,'Guess I\'m not so rusty, after all.',9271,1,0,0,'tinhead SAY_TINHEAD_SLAY'),
-(-1532038,'begins to rust.',0,2,0,0,'tinhead EMOTE_RUST'),
+(-1532038,'%s begins to rust.',0,2,0,0,'tinhead EMOTE_RUST'),
 
 (-1532039,'Woe to each and every one of you my pretties! <cackles>',9179,1,0,0,'crone SAY_CRONE_AGGRO'),
 (-1532040,'It will all be over soon! <cackles>',9307,1,0,0,'crone SAY_CRONE_AGGRO2'),
@@ -752,8 +752,8 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1532087,'At last... The nightmare is.. over...',9244,1,0,0,'aran SAY_DEATH'),
 (-1532088,'Where did you get that?! Did HE send you?!',9249,1,0,0,'aran SAY_ATIESH'),
 
-(-1532089,'cries out in withdrawal, opening gates to the warp.',0,2,0,0,'netherspite EMOTE_PHASE_PORTAL'),
-(-1532090,'goes into a nether-fed rage!',0,2,0,0,'netherspite EMOTE_PHASE_BANISH'),
+(-1532089,'%s cries out in withdrawal, opening gates to the warp.',0,2,0,0,'netherspite EMOTE_PHASE_PORTAL'),
+(-1532090,'%s goes into a nether-fed rage!',0,2,0,0,'netherspite EMOTE_PHASE_BANISH'),
 
 (-1532091,'Madness has brought you here to me. I shall be your undoing!',9218,1,0,0,'malchezaar SAY_AGGRO'),
 (-1532092,'Simple fools! Time is the fire in which you\'ll burn!',9220,1,0,0,'malchezaar SAY_AXE_TOSS1'),
@@ -806,8 +806,8 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1533018,'Kel\'Thuzad make Patchwerk his Avatar of War!',8910,1,0,0,'patchwerk SAY_AGGRO2'),
 (-1533019,'No more play?',8912,1,0,0,'patchwerk SAY_SLAY'),
 (-1533020,'What happened to... Patch...',8911,1,0,0,'patchwerk SAY_DEATH'),
-(-1533021,'goes into a berserker rage!',0,2,0,0,'patchwerk EMOTE_BERSERK'),
-(-1533022,'becomes enraged!',0,2,0,0,'patchwerk EMOTE_ENRAGE'),
+(-1533021,'%s goes into a berserker rage!',0,2,0,0,'patchwerk EMOTE_BERSERK'),
+(-1533022,'%s becomes enraged!',0,2,0,0,'patchwerk EMOTE_ENRAGE'),
 
 (-1533023,'Stalagg crush you!',8864,1,0,0,'stalagg SAY_STAL_AGGRO'),
 (-1533024,'Stalagg kill!',8866,1,0,0,'stalagg SAY_STAL_SLAY'),
@@ -876,8 +876,8 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1533080,'Breathe no more!',8850,1,0,0,'noth SAY_SLAY2'),
 (-1533081,'I will serve the master... in... death!',8848,1,0,0,'noth SAY_DEATH'),
 
-(-1533082,'takes in a deep breath...',0,2,0,0,'sapphiron EMOTE_BREATH'),
-(-1533083,'enrages!',0,2,0,0,'sapphiron EMOTE_ENRAGE'),
+(-1533082,'%s takes in a deep breath...',0,2,0,0,'sapphiron EMOTE_BREATH'),
+(-1533083,'%s enrages!',0,2,0,0,'sapphiron EMOTE_ENRAGE'),
 
 (-1533084,'Our preparations continue as planned, master.',14467,1,0,0,'kelthuzad SAY_SAPP_DIALOG1'),
 (-1533085,'It is good that you serve me so faithfully. Soon, all will serve the Lich King and in the end, you shall be rewarded...so long as you do not falter.',8881,1,0,0,'kelthuzad SAY_SAPP_DIALOG2_LICH'),
@@ -998,7 +998,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1540038,'That\'s because I do all the hard work!',10321,1,0,0,'omrogg KillingDelay_1'),
 (-1540039,'This all...your fault!',10311,1,0,0,'omrogg YELL_DIE_L'),
 (-1540040,'I...hate...you...',10322,1,0,0,'omrogg YELL_DIE_R'),
-(-1540041,'enrages',0,2,0,0,'omrogg EMOTE_ENRAGE'),
+(-1540041,'%s enrages!',0,2,0,0,'omrogg EMOTE_ENRAGE'),
 
 (-1540042,'Ours is the true Horde! The only Horde!',10323,1,0,0,'kargath SAY_AGGRO1'),
 (-1540043,'I\'ll carve the meat from your bones!',10324,1,0,0,'kargath SAY_AGGRO2'),
@@ -1072,10 +1072,10 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1544009,'I will not be taken so easily. Let the walls of this prison tremble...and FALL!!!',10257,1,0,0,'magtheridon SAY_CHAMBER_DESTROY'),
 (-1544010,'Did you think me weak? Soft? Who is the weak one now?!',10255,1,0,0,'magtheridon SAY_PLAYER_KILLED'),
 (-1544011,'The Legion...will consume you...all...',10258,1,0,0,'magtheridon SAY_DEATH'),
-(-1544012,'becomes enraged!',0,2,0,0,'magtheridon EMOTE_BERSERK'),
-(-1544013,'begins to cast Blast Nova!',0,3,0,0,'magtheridon EMOTE_BLASTNOVA'),
-(-1544014,'\'s bonds begin to weaken!',0,2,0,0,'magtheridon EMOTE_BEGIN'),
-(-1544015,'breaks free!',0,2,0,0,'magtheridon EMOTE_FREED');
+(-1544012,'%s becomes enraged!',0,2,0,0,'magtheridon EMOTE_BERSERK'),
+(-1544013,'%s begins to cast Blast Nova!',0,3,0,0,'magtheridon EMOTE_BLASTNOVA'),
+(-1544014,'%s\'s bonds begin to weaken!',0,2,0,0,'magtheridon EMOTE_BEGIN'),
+(-1544015,'%s breaks free!',0,2,0,0,'magtheridon EMOTE_FREED');
 
 -- -1 545 000 THE STEAMVAULT
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
@@ -1154,9 +1154,9 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1548036,'Strugging only makes it worse.',11327,1,0,0,'morogrim SAY_SLAY2'),
 (-1548037,'Only the strong survive.',11328,1,0,0,'morogrim SAY_SLAY3'),
 (-1548038,'Great... currents of... Ageon.',11329,1,0,0,'morogrim SAY_DEATH'),
-(-1548039,'sends his enemies to their watery graves!',0,2,0,0,'morogrim EMOTE_WATERY_GRAVE'),
+(-1548039,'%s sends his enemies to their watery graves!',0,2,0,0,'morogrim EMOTE_WATERY_GRAVE'),
 (-1548040,'The violent earthquake has alerted nearby murlocs!',0,3,0,0,'morogrim EMOTE_EARTHQUAKE'),
-(-1548041,'summons Watery Globules!',0,2,0,0,'morogrim EMOTE_WATERY_GLOBULES'),
+(-1548041,'%s summons Watery Globules!',0,2,0,0,'morogrim EMOTE_WATERY_GLOBULES'),
 
 (-1548042,'Water is life. It has become a rare commodity here in Outland. A commodity that we alone shall control. We are the Highborne, and the time has come at last for us to retake our rightful place in the world!',11531,1,0,0,'vashj SAY_INTRO'),
 (-1548043,'I\'ll split you from stem to stern!',11532,1,0,0,'vashj SAY_AGGRO1'),
@@ -1215,7 +1215,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 
 (-1550035,'Prepare yourselves!',11203,1,0,0,'thaladred SAY_THALADRED_AGGRO'),
 (-1550036,'Forgive me, my prince! I have... failed.',11204,1,0,0,'thaladred SAY_THALADRED_DEATH'),
-(-1550037,'sets his gaze on $N!',0,2,0,0,'thaladred EMOTE_THALADRED_GAZE'),
+(-1550037,'%s sets his gaze on $N!',0,2,0,0,'thaladred EMOTE_THALADRED_GAZE'),
 
 (-1550038,'Blood for blood!',11152,1,0,0,'sanguinar SAY_SANGUINAR_AGGRO'),
 (-1550039,'NO! I ...will... not...',11153,1,0,0,'sanguinar SAY_SANGUINAR_DEATH'),
@@ -1271,7 +1271,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1553004,'Nature bends to my will!',11148,1,0,0,'freywinn SAY_TREE_2'),
 (-1553005,'The specimens...must be preserved.',11149,1,0,0,'freywinn SAY_DEATH'),
 
-(-1553006,'emits a strange noise.',0,2,0,0,'laj EMOTE_SUMMON'),
+(-1553006,'%s emits a strange noise.',0,2,0,0,'laj EMOTE_SUMMON'),
 
 (-1553007,'Who disturbs this sanctuary?',11230,1,0,0,'warp SAY_AGGRO'),
 (-1553008,'You must die! But wait: this does not--No, no... you must die!',11231,1,0,0,'warp SAY_SLAY_1'),
@@ -1295,7 +1295,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1554009,'A foregone conclusion.',11110,1,0,0,'ironhand SAY_SLAY_1'),
 (-1554010,'The processing will continue a schedule!',11111,1,0,0,'ironhand SAY_SLAY_2'),
 (-1554011,'My calculations did not...',11114,1,0,0,'ironhand SAY_DEATH_1'),
-(-1554012,'raises his hammer menacingly...',0,3,0,0,'ironhand EMOTE_HAMMER'),
+(-1554012,'%s raises his hammer menacingly...',0,3,0,0,'ironhand EMOTE_HAMMER'),
 
 (-1554013,'Don\'t value your life very much, do you?',11186,1,0,0,'sepethrea SAY_AGGRO'),
 (-1554014,'I am not alone.',11191,1,0,0,'sepethrea SAY_SUMMON'),
@@ -1356,7 +1356,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1555034,'Your death is for the greater cause!',10528,1,0,0,'vorpil SAY_SLAY2'),
 (-1555035,'I give my life... Gladly.',10529,1,0,0,'vorpil SAY_DEATH'),
 
-(-1555036,'draws energy from the air.',0,2,0,0,'murmur EMOTE_SONIC_BOOM');
+(-1555036,'%s draws energy from the air.',0,2,0,0,'murmur EMOTE_SONIC_BOOM');
 
 -- -1 556 000 SETHEKK HALLS
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
@@ -1375,7 +1375,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1556011,'You die..<squawk>..stay away from Trinkets',10558,1,0,0,'ikiss SAY_SLAY_1'),
 (-1556012,'<squawk>',10559,1,0,0,'ikiss SAY_SLAY_2'),
 (-1556013,'Ikiss will not..<squawk>..die',10560,1,0,0,'ikiss SAY_DEATH'),
-(-1556015,'begins to channel arcane energy...',0,3,0,0,'ikiss EMOTE_ARCANE_EXP');
+(-1556015,'%s begins to channel arcane energy...',0,3,0,0,'ikiss EMOTE_ARCANE_EXP');
 
 -- -1 557 000 MANA TOMBS
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
@@ -1394,7 +1394,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1557011,'Yes! I am... empowered!',10564,1,0,0,'pandemonius SAY_KILL_1'),
 (-1557012,'More... I must have more!',10565,1,0,0,'pandemonius SAY_KILL_2'),
 (-1557013,'To the void... once... more..',10566,1,0,0,'pandemonius SAY_DEATH'),
-(-1557014,'shifts into the void...',0,3,0,0,'pandemonius EMOTE_DARK_SHELL');
+(-1557014,'%s shifts into the void...',0,3,0,0,'pandemonius EMOTE_DARK_SHELL');
 
 -- -1 558 000 AUCHENAI CRYPTS
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
@@ -1637,7 +1637,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1565016,'Unworthy',11361,1,0,0,'gruul SAY_SLAY2'),
 (-1565017,'Die',11362,1,0,0,'gruul SAY_SLAY3'),
 (-1565018,'Aaargh...',11363,1,0,0,'gruul SAY_DEATH'),
-(-1565019,'grows in size!',0,2,0,0,'gruul EMOTE_GROW');
+(-1565019,'%s grows in size!',0,2,0,0,'gruul EMOTE_GROW');
 
 -- -1 568 000 ZUL'AMAN
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
@@ -1838,13 +1838,13 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1585003,'Enough distractions!',12388,1,0,0,'selin SAY_KILL_1'),
 (-1585004,'I am invincible!',12385,1,0,0,'selin SAY_KILL_2'),
 (-1585005,'No! More... I must have more!',12383,1,0,0,'selin SAY_DEATH'),
-(-1585006,'begins to channel from the nearby Fel Crystal...',0,3,0,0,'selin EMOTE_CRYSTAL'),
+(-1585006,'%s begins to channel from the nearby Fel Crystal...',0,3,0,0,'selin EMOTE_CRYSTAL'),
 
 (-1585007,'Drain...life!',12389,1,0,0,'vexallus SAY_AGGRO'),
 (-1585008,'Un...con...tainable.',12392,1,0,0,'vexallus SAY_ENERGY'),
 (-1585009,'Un...leash...',12390,1,0,0,'vexallus SAY_OVERLOAD'),
 (-1585010,'Con...sume.',12393,1,0,0,'vexallus SAY_KILL'),
-(-1585011,'discharges pure energy!',0,3,0,0,'vexallus EMOTE_DISCHARGE_ENERGY'),
+(-1585011,'%s discharges pure energy!',0,3,0,0,'vexallus EMOTE_DISCHARGE_ENERGY'),
 
 (-1585012,'Annihilate them!',12395,1,0,0,'delrissa SAY_AGGRO'),
 (-1585013,'Oh, the horror.',12398,1,0,0,'delrissa LackeyDeath1'),
@@ -1882,11 +1882,11 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1602003,'...',14155,1,0,0,'bjarngrim SAY_SLAY_3'),
 (-1602004,'How can it be...? Flesh is not... stronger!',14156,1,0,0,'bjarngrim SAY_DEATH'),
 (-1602005,'Defend yourself, for all the good it will do!',14151,1,0,0,'bjarngrim SAY_BATTLE_STANCE'),
-(-1602006,'switches to Battle Stance!',0,3,0,0,'bjarngrim EMOTE_BATTLE_STANCE'),
+(-1602006,'%s switches to Battle Stance!',0,3,0,0,'bjarngrim EMOTE_BATTLE_STANCE'),
 (-1602007,'GRAAAAAH! Behold the fury of iron and steel!',14152,1,0,0,'bjarngrim SAY_BERSEKER_STANCE'),
-(-1602008,'switches to Berserker Stance!',0,3,0,0,'bjarngrim EMOTE_BERSEKER_STANCE'),
+(-1602008,'%s switches to Berserker Stance!',0,3,0,0,'bjarngrim EMOTE_BERSEKER_STANCE'),
 (-1602009,'Give me your worst!',14150,1,0,0,'bjarngrim SAY_DEFENSIVE_STANCE'),
-(-1602010,'switches to Defensive Stance!',0,3,0,0,'bjarngrim EMOTE_DEFENSIVE_STANCE'),
+(-1602010,'%s switches to Defensive Stance!',0,3,0,0,'bjarngrim EMOTE_DEFENSIVE_STANCE'),
 
 (-1602011,'You wish to confront the master? You must weather the storm!',14453,1,0,0,'ionar SAY_AGGRO'),
 (-1602012,'Shocking ... I know!',14456,1,0,0,'ionar SAY_SLAY_1'),
@@ -1909,7 +1909,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1602028,'You stare blindly into the abyss!',14169,1,0,0,'loken SAY_75HEALTH'),
 (-1602029,'Your ignorance is profound. Can you not see where this path leads?',14170,1,0,0,'loken SAY_50HEALTH'),
 (-1602030,'You cross the precipice of oblivion!',14171,1,0,0,'loken SAY_25HEALTH'),
-(-1602031,'begins to cast Lightning Nova!',0,3,0,0,'loken EMOTE_NOVA'),
+(-1602031,'%s begins to cast Lightning Nova!',0,3,0,0,'loken EMOTE_NOVA'),
 
 (-1602032,'It is you who have destroyed my children? You... shall... pay!',13960,1,0,0,'volkhan SAY_AGGRO'),
 (-1602033,'The armies of iron will conquer all!',13965, 1,0,0,'volkhan SAY_SLAY_1'),
@@ -1920,8 +1920,8 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1602038,'All my work... undone!',13964,1,0,0,'volkhan SAY_STOMP_2'),
 (-1602039,'Life from the lifelessness... death for you.',13961,1,0,0,'volkhan SAY_FORGE_1'),
 (-1602040,'Nothing is wasted in the process. You will see....',13962,1,0,0,'volkhan SAY_FORGE_2'),
-(-1602041,'runs to his anvil!',0,3,0,0,'volkhan EMOTE_TO_ANVIL'),
-(-1602042,'prepares to shatter his Brittle Golems!',0,3,0,0,'volkhan EMOTE_SHATTER');
+(-1602041,'%s runs to his anvil!',0,3,0,0,'volkhan EMOTE_TO_ANVIL'),
+(-1602042,'%s prepares to shatter his Brittle Golems!',0,3,0,0,'volkhan EMOTE_SHATTER');
 
 -- -1 603 000 ULDUAR
 
@@ -2021,7 +2021,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1609076,'Der... Der\'s no more time for me. I be done for. Finish me off $N. Do it or they\'ll kill us both. $N... Remember Sen\'jin Village, mon! Dis world be worth saving!',0,0,0,18,'special_surprise SAY_EXEC_TIME_10'),
 
 (-1609077,'Do it, $N! Put me out of my misery!',0,0,0,1,'special_surprise SAY_EXEC_WAITING'),
-(-1609078,'dies from his wounds.',0,2,0,0,'special_surprise EMOTE_DIES'),
+(-1609078,'%s dies from his wounds.',0,2,0,0,'special_surprise EMOTE_DIES'),
 
 (-1609079, 'I\'ll need to get my runeblade and armor... Just need a little more time.',0,0,0,399,'koltira SAY_BREAKOUT1'),
 (-1609080, 'I\'m still weak, but I think I can get an anti-magic barrier up. Stay inside it or you\'ll be destroyed by their spells.',0,0,0,0,'koltira SAY_BREAKOUT2'),
