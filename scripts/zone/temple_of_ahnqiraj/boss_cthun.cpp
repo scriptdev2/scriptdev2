@@ -106,9 +106,13 @@ EndScriptData */
 #define KICK_Y                              1984.0f
 #define KICK_Z                              -96.0f
 
-struct MANGOS_DLL_DECL flesh_tentacleAI : public Scripted_NoMovementAI
+struct MANGOS_DLL_DECL flesh_tentacleAI : public ScriptedAI
 {
-    flesh_tentacleAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature), Parent(0) {Reset();}
+    flesh_tentacleAI(Creature* pCreature) : ScriptedAI(pCreature), Parent(0)
+    {
+        SetCombatMovement(false);
+        Reset();
+    }
 
     uint64 Parent;
     uint32 CheckTimer;
@@ -128,10 +132,12 @@ struct MANGOS_DLL_DECL flesh_tentacleAI : public Scripted_NoMovementAI
     void JustDied(Unit* killer);
 };
 
-struct MANGOS_DLL_DECL eye_of_cthunAI : public Scripted_NoMovementAI
+struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
 {
-    eye_of_cthunAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
+    eye_of_cthunAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
+        SetCombatMovement(false);
+
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         if (!m_pInstance)
             error_log("SD2: No Instance eye_of_cthunAI");
@@ -426,10 +432,12 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public Scripted_NoMovementAI
     }
 };
 
-struct MANGOS_DLL_DECL cthunAI : public Scripted_NoMovementAI
+struct MANGOS_DLL_DECL cthunAI : public ScriptedAI
 {
-    cthunAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
+    cthunAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
+        SetCombatMovement(false);
+
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         if (!m_pInstance)
             error_log("SD2: No Instance eye_of_cthunAI");
@@ -910,10 +918,11 @@ struct MANGOS_DLL_DECL cthunAI : public Scripted_NoMovementAI
     }
 };
 
-struct MANGOS_DLL_DECL eye_tentacleAI : public Scripted_NoMovementAI
+struct MANGOS_DLL_DECL eye_tentacleAI : public ScriptedAI
 {
-    eye_tentacleAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
+    eye_tentacleAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
+        SetCombatMovement(false);
         Reset();
 
         if (Unit* pPortal = m_creature->SummonCreature(MOB_SMALL_PORTAL, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_CORPSE_DESPAWN, 0))
@@ -973,10 +982,11 @@ struct MANGOS_DLL_DECL eye_tentacleAI : public Scripted_NoMovementAI
     }
 };
 
-struct MANGOS_DLL_DECL claw_tentacleAI : public Scripted_NoMovementAI
+struct MANGOS_DLL_DECL claw_tentacleAI : public ScriptedAI
 {
-    claw_tentacleAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
+    claw_tentacleAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
+        SetCombatMovement(false);
         Reset();
 
         if (Unit* pPortal = m_creature->SummonCreature(MOB_SMALL_PORTAL, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_CORPSE_DESPAWN, 0))
@@ -1065,10 +1075,11 @@ struct MANGOS_DLL_DECL claw_tentacleAI : public Scripted_NoMovementAI
     }
 };
 
-struct MANGOS_DLL_DECL giant_claw_tentacleAI : public Scripted_NoMovementAI
+struct MANGOS_DLL_DECL giant_claw_tentacleAI : public ScriptedAI
 {
-    giant_claw_tentacleAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
+    giant_claw_tentacleAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
+        SetCombatMovement(false);
         Reset();
 
         if (Unit* pPortal = m_creature->SummonCreature(MOB_GIANT_PORTAL, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_CORPSE_DESPAWN, 0))
@@ -1168,10 +1179,11 @@ struct MANGOS_DLL_DECL giant_claw_tentacleAI : public Scripted_NoMovementAI
     }
 };
 
-struct MANGOS_DLL_DECL giant_eye_tentacleAI : public Scripted_NoMovementAI
+struct MANGOS_DLL_DECL giant_eye_tentacleAI : public ScriptedAI
 {
-    giant_eye_tentacleAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
+    giant_eye_tentacleAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
+        SetCombatMovement(false);
         Reset();
 
         if (Unit* pPortal = m_creature->SummonCreature(MOB_GIANT_PORTAL, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_CORPSE_DESPAWN, 0))

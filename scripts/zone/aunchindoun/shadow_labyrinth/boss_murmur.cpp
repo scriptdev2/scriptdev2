@@ -36,17 +36,18 @@ EndScriptData */
 #define SPELL_SONIC_SHOCK           38797    //Heroic Spell
 #define SPELL_THUNDERING_STORM      39365    //Heroic Spell
 
-struct MANGOS_DLL_DECL boss_murmurAI : public Scripted_NoMovementAI
+struct MANGOS_DLL_DECL boss_murmurAI : public ScriptedAI
 {
-    boss_murmurAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
+    boss_murmurAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
-        HeroicMode = m_creature->GetMap()->IsHeroic();
+        SetCombatMovement(false);
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
         Reset();
     }
 
-    ScriptedInstance* pInstance;
-    bool HeroicMode;
+    ScriptedInstance* m_pInstance;
+    bool m_bIsHeroicMode;
 
     uint32 SonicBoom_Timer;
     uint32 MurmursTouch_Timer;
@@ -137,11 +138,11 @@ struct MANGOS_DLL_DECL boss_murmurAI : public Scripted_NoMovementAI
             if (Resonance_Timer < diff)
             {
                 DoCast(m_creature->getVictim(), SPELL_RESONANCE);
-                Resonance_Timer = HeroicMode ? 3000 : 5000;
+                Resonance_Timer = m_bIsHeroicMode ? 3000 : 5000;
             }else Resonance_Timer -= diff;
         }
 
-        if (HeroicMode)
+        if (m_bIsHeroicMode)
         {
             if (SonicShock_Timer < diff)
             {
