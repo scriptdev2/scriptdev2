@@ -3,6 +3,8 @@
 /* AREATRIGGER */
 DELETE FROM areatrigger_scripts WHERE entry=4560;
 INSERT INTO areatrigger_scripts VALUES (4560,'at_legion_teleporter');
+DELETE FROM areatrigger_scripts WHERE entry=3066;
+INSERT INTO areatrigger_scripts VALUES (3066,'at_ravenholdt');
 
 /* WORLD BOSS */
 UPDATE creature_template SET ScriptName='boss_ysondre' WHERE entry=14887;
@@ -88,7 +90,7 @@ UPDATE creature_template SET ScriptName='npc_sayge' WHERE entry=14822;
 /* */
 
 /* ALTERAC MOUNTAINS */
-UPDATE creature_template SET ScriptName='npc_ravenholdt' WHERE entry=13936;
+
 
 /* ALTERAC VALLEY */
 

@@ -43,12 +43,6 @@ struct MANGOS_DLL_DECL mobs_bladespire_ogreAI : public ScriptedAI
 
     void Reset() { }
 
-    void JustDied(Unit* Killer)
-    {
-        if (Killer->GetTypeId() == TYPEID_PLAYER)
-            ((Player*)Killer)->KilledMonster(19995, m_creature->GetGUID());
-    }
-
     void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
@@ -235,7 +229,12 @@ CreatureAI* GetAI_mobs_nether_drake(Creature* pCreature)
 ## npc_daranelle
 ######*/
 
-#define SAY_SPELL_INFLUENCE     -1000174
+enum
+{
+    SAY_SPELL_INFLUENCE     = -1000174,
+    NPC_KALIRI_AURA_DISPEL  = 21511,
+    SPELL_LASHHAN_CHANNEL   = 36904
+};
 
 struct MANGOS_DLL_DECL npc_daranelleAI : public ScriptedAI
 {
@@ -243,20 +242,21 @@ struct MANGOS_DLL_DECL npc_daranelleAI : public ScriptedAI
 
     void Reset() { }
 
-    void MoveInLineOfSight(Unit *who)
+    void MoveInLineOfSight(Unit* pWho)
     {
-        if (who->GetTypeId() == TYPEID_PLAYER)
+        if (pWho->GetTypeId() == TYPEID_PLAYER)
         {
-            if (who->HasAura(36904,0) && m_creature->IsWithinDistInMap(who, 10.0f))
+            if (pWho->HasAura(SPELL_LASHHAN_CHANNEL,0) && m_creature->IsWithinDistInMap(pWho, 10.0f))
             {
-                DoScriptText(SAY_SPELL_INFLUENCE, m_creature, who);
+                DoScriptText(SAY_SPELL_INFLUENCE, m_creature, pWho);
+
                 //TODO: Move the below to updateAI and run if this statement == true
-                ((Player*)who)->KilledMonster(21511, m_creature->GetGUID());
-                ((Player*)who)->RemoveAurasDueToSpell(36904);
+                ((Player*)pWho)->KilledMonsterCredit(NPC_KALIRI_AURA_DISPEL, m_creature->GetGUID());
+                pWho->RemoveAurasDueToSpell(SPELL_LASHHAN_CHANNEL);
             }
         }
 
-        ScriptedAI::MoveInLineOfSight(who);
+        ScriptedAI::MoveInLineOfSight(pWho);
     }
 };
 

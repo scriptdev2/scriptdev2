@@ -490,27 +490,29 @@ bool GossipSelect_npc_lantresor_of_the_blade(Player* pPlayer, Creature* pCreatur
 ## npc_creditmarker_visist_with_ancestors (Quest 10085)
 ######*/
 
+enum
+{
+    QUEST_VISIT_WITH_ANCESTORS  = 10085
+};
+
 struct MANGOS_DLL_DECL npc_creditmarker_visit_with_ancestorsAI : public ScriptedAI
 {
     npc_creditmarker_visit_with_ancestorsAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
     void Reset() {}
 
-    void MoveInLineOfSight(Unit *who)
+    void MoveInLineOfSight(Unit* pWho)
     {
-        if (!who)
-            return;
-
-        if (who->GetTypeId() == TYPEID_PLAYER)
+        if (pWho->GetTypeId() == TYPEID_PLAYER && m_creature->IsWithinDistInMap(pWho, 30.0f))
         {
-            if (((Player*)who)->GetQuestStatus(10085) == QUEST_STATUS_INCOMPLETE)
+            if (((Player*)pWho)->GetQuestStatus(QUEST_VISIT_WITH_ANCESTORS) == QUEST_STATUS_INCOMPLETE)
             {
                 uint32 creditMarkerId = m_creature->GetEntry();
                 if ((creditMarkerId >= 18840) && (creditMarkerId <= 18843))
                 {
                     // 18840: Sunspring, 18841: Laughing, 18842: Garadar, 18843: Bleeding
-                    if (!((Player*)who)->GetReqKillOrCastCurrentCount(10085, creditMarkerId))
-                        ((Player*)who)->KilledMonster(creditMarkerId, m_creature->GetGUID());
+                    if (!((Player*)pWho)->GetReqKillOrCastCurrentCount(QUEST_VISIT_WITH_ANCESTORS, creditMarkerId))
+                        ((Player*)pWho)->KilledMonsterCredit(creditMarkerId, m_creature->GetGUID());
                 }
             }
         }

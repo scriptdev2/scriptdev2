@@ -191,8 +191,12 @@ CreatureAI* GetAI_mob_rotting_forest_rager(Creature* pCreature)
 ## mob_netherweb_victim
 ######*/
 
-#define QUEST_TARGET        22459
-//#define SPELL_FREE_WEBBED   38950
+enum
+{
+    NPC_FREED_WARRIOR       = 22459,
+    QUEST_TAKEN_IN_NIGHT    = 10873
+    //SPELL_FREE_WEBBED       = 38950
+};
 
 const uint32 netherwebVictims[6] =
 {
@@ -203,18 +207,18 @@ struct MANGOS_DLL_DECL mob_netherweb_victimAI : public ScriptedAI
     mob_netherweb_victimAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     void Reset() { }
-    void MoveInLineOfSight(Unit *who) { }
+    void MoveInLineOfSight(Unit* pWho) { }
 
-    void JustDied(Unit* Killer)
+    void JustDied(Unit* pKiller)
     {
-        if (Killer->GetTypeId() == TYPEID_PLAYER)
+        if (pKiller->GetTypeId() == TYPEID_PLAYER)
         {
-            if (((Player*)Killer)->GetQuestStatus(10873) == QUEST_STATUS_INCOMPLETE)
+            if (((Player*)pKiller)->GetQuestStatus(QUEST_TAKEN_IN_NIGHT) == QUEST_STATUS_INCOMPLETE)
             {
                 if (rand()%100 < 25)
                 {
-                    m_creature->SummonCreature(QUEST_TARGET, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
-                    ((Player*)Killer)->KilledMonster(QUEST_TARGET, m_creature->GetGUID());
+                    m_creature->SummonCreature(NPC_FREED_WARRIOR, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
+                    ((Player*)pKiller)->KilledMonsterCredit(NPC_FREED_WARRIOR, m_creature->GetGUID());
                 }
                 else
                     m_creature->SummonCreature(netherwebVictims[rand()%6], 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
@@ -227,6 +231,7 @@ struct MANGOS_DLL_DECL mob_netherweb_victimAI : public ScriptedAI
         }
     }
 };
+
 CreatureAI* GetAI_mob_netherweb_victim(Creature* pCreature)
 {
     return new mob_netherweb_victimAI(pCreature);

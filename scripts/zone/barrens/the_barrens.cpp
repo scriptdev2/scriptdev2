@@ -37,21 +37,27 @@ EndContentData */
 ## npc_beaten_corpse
 ######*/
 
+enum
+{
+    QUEST_LOST_IN_BATTLE    = 4921
+};
+
 bool GossipHello_npc_beaten_corpse(Player* pPlayer, Creature* pCreature)
 {
-    if (pPlayer->GetQuestStatus(4921) == QUEST_STATUS_INCOMPLETE || pPlayer->GetQuestStatus(4921) == QUEST_STATUS_COMPLETE)
+    if (pPlayer->GetQuestStatus(QUEST_LOST_IN_BATTLE) == QUEST_STATUS_INCOMPLETE ||
+        pPlayer->GetQuestStatus(QUEST_LOST_IN_BATTLE) == QUEST_STATUS_COMPLETE)
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT,"Examine corpse in detail...",GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF+1);
 
     pPlayer->SEND_GOSSIP_MENU(3557, pCreature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_beaten_corpse(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
+bool GossipSelect_npc_beaten_corpse(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    if (action == GOSSIP_ACTION_INFO_DEF +1)
+    if (uiAction == GOSSIP_ACTION_INFO_DEF +1)
     {
         pPlayer->SEND_GOSSIP_MENU(3558, pCreature->GetGUID());
-        pPlayer->KilledMonster(10668, pCreature->GetGUID());
+        pPlayer->TalkedToCreature(pCreature->GetEntry(), pCreature->GetGUID());
     }
     return true;
 }

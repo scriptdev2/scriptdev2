@@ -128,7 +128,7 @@ struct MANGOS_DLL_DECL mob_mature_netherwing_drakeAI : public ScriptedAI
                     DoScriptText(SAY_JUST_EATEN, m_creature);
 
                     if (Player* pPlr = (Player*)Unit::GetUnit((*m_creature), uiPlayerGUID))
-                        pPlr->KilledMonster(NPC_EVENT_PINGER, m_creature->GetGUID());
+                        pPlr->KilledMonsterCredit(NPC_EVENT_PINGER, m_creature->GetGUID());
 
                     Reset();
                     m_creature->GetMotionMaster()->Clear();
@@ -162,14 +162,19 @@ CreatureAI* GetAI_mob_mature_netherwing_drake(Creature* pCreature)
 # mob_enslaved_netherwing_drake
 ####*/
 
-#define FACTION_DEFAULT     62
-#define FACTION_FRIENDLY    1840                            // Not sure if this is correct, it was taken off of Mordenai.
+enum
+{
+    FACTION_DEFAULT                 = 62,
+    FACTION_FRIENDLY                = 1840,                 // Not sure if this is correct, it was taken off of Mordenai.
 
-#define SPELL_HIT_FORCE_OF_NELTHARAKU   38762
-#define SPELL_FORCE_OF_NELTHARAKU       38775
+    SPELL_HIT_FORCE_OF_NELTHARAKU   = 38762,
+    SPELL_FORCE_OF_NELTHARAKU       = 38775,
 
-#define CREATURE_DRAGONMAW_SUBJUGATOR   21718
-#define CREATURE_ESCAPE_DUMMY           22317
+    QUEST_FORCE_OF_NELT             = 10854,
+    NPC_DRAGONMAW_SUBJUGATOR        = 21718,
+    NPC_ESCAPE_DUMMY                = 22317,
+    NPC_ENSLAVED_DRAKE_KILL_CREDIT  = 22316
+};
 
 struct MANGOS_DLL_DECL mob_enslaved_netherwing_drakeAI : public ScriptedAI
 {
@@ -205,7 +210,7 @@ struct MANGOS_DLL_DECL mob_enslaved_netherwing_drakeAI : public ScriptedAI
             m_creature->setFaction(FACTION_FRIENDLY);
             DoCast(caster, SPELL_FORCE_OF_NELTHARAKU, true);
 
-            if (Creature* Dragonmaw = GetClosestCreatureWithEntry(m_creature, CREATURE_DRAGONMAW_SUBJUGATOR, 50.0f))
+            if (Creature* Dragonmaw = GetClosestCreatureWithEntry(m_creature, NPC_DRAGONMAW_SUBJUGATOR, 50.0f))
             {
                 m_creature->AddThreat(Dragonmaw, 100000.0f);
                 AttackStart(Dragonmaw);
@@ -242,37 +247,41 @@ struct MANGOS_DLL_DECL mob_enslaved_netherwing_drakeAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
         {
             if (Tapped)
-                if (FlyTimer < diff)
             {
-                Tapped = false;
-                if (PlayerGUID)
+                if (FlyTimer <= diff)
                 {
-                    Player* plr = ((Player*)Unit::GetUnit((*m_creature), PlayerGUID));
-                    if (plr && plr->GetQuestStatus(10854) == QUEST_STATUS_INCOMPLETE)
+                    Tapped = false;
+                    if (Player* pPlayer = (Player*)Unit::GetUnit(*m_creature, PlayerGUID))
                     {
-                        plr->KilledMonster(22316, m_creature->GetGUID());
-                        /*
-                        float x,y,z;
-                        m_creature->GetPosition(x,y,z);
-
-                        float dx,dy,dz;
-                        m_creature->GetRandomPoint(x, y, z, 20, dx, dy, dz);
-                        dz += 20; // so it's in the air, not ground*/
-
-                        float dx, dy, dz;
-
-                        if (Creature* EscapeDummy = GetClosestCreatureWithEntry(m_creature, CREATURE_ESCAPE_DUMMY, 30.0f))
-                            EscapeDummy->GetPosition(dx, dy, dz);
-                        else
+                        if (pPlayer->GetQuestStatus(QUEST_FORCE_OF_NELT) == QUEST_STATUS_INCOMPLETE)
                         {
-                            m_creature->GetRandomPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 20, dx, dy, dz);
-                            dz += 25;
-                        }
+                            pPlayer->KilledMonsterCredit(NPC_ENSLAVED_DRAKE_KILL_CREDIT, m_creature->GetGUID());
 
-                        m_creature->GetMotionMaster()->MovePoint(1, dx, dy, dz);
+                            /*
+                            float x,y,z;
+                            m_creature->GetPosition(x,y,z);
+
+                            float dx,dy,dz;
+                            m_creature->GetRandomPoint(x, y, z, 20, dx, dy, dz);
+                            dz += 20; // so it's in the air, not ground*/
+
+                            float dx, dy, dz;
+
+                            if (Creature* EscapeDummy = GetClosestCreatureWithEntry(m_creature, NPC_ESCAPE_DUMMY, 30.0f))
+                                EscapeDummy->GetPosition(dx, dy, dz);
+                            else
+                            {
+                                m_creature->GetRandomPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 20, dx, dy, dz);
+                                dz += 25;
+                            }
+
+                            m_creature->GetMotionMaster()->MovePoint(1, dx, dy, dz);
+                        }
                     }
                 }
-            }else FlyTimer -= diff;
+                else
+                    FlyTimer -= diff;
+            }
             return;
         }
 
@@ -289,68 +298,78 @@ CreatureAI* GetAI_mob_enslaved_netherwing_drake(Creature* pCreature)
 # mob_dragonmaw_peon
 #####*/
 
+enum
+{
+    SPELL_SERVING_MUTTON            = 40468,
+    NPC_DRAGONMAW_KILL_CREDIT       = 23209,
+    QUEST_SLOW_DEATH                = 11020,
+    POINT_DEST                      = 1
+};
+
 struct MANGOS_DLL_DECL mob_dragonmaw_peonAI : public ScriptedAI
 {
-    mob_dragonmaw_peonAI(Creature* pCreature) : ScriptedAI(pCreature)
-    {
-        Reset();
-    }
+    mob_dragonmaw_peonAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
-    uint64 PlayerGUID;
-    bool Tapped;
-    uint32 PoisonTimer;
+    uint64 m_uiPlayerGUID;
+    bool m_bIsTapped;
+    uint32 m_uiPoisonTimer;
 
     void Reset()
     {
-        PlayerGUID = 0;
-        Tapped = false;
-        PoisonTimer = 0;
+        m_uiPlayerGUID = 0;
+        m_bIsTapped = false;
+        m_uiPoisonTimer = 0;
     }
 
-    void SpellHit(Unit* caster, const SpellEntry* spell)
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
     {
-        if (!caster)
+        if (!pCaster)
             return;
 
-        if (caster->GetTypeId() == TYPEID_PLAYER && spell->Id == 40468 && !Tapped)
+        if (pCaster->GetTypeId() == TYPEID_PLAYER && pSpell->Id == SPELL_SERVING_MUTTON && !m_bIsTapped)
         {
-            PlayerGUID = caster->GetGUID();
+            m_uiPlayerGUID = pCaster->GetGUID();
 
-            Tapped = true;
-            float x, y, z;
-            caster->GetClosePoint(x, y, z, m_creature->GetObjectSize());
+            m_bIsTapped = true;
+
+            float fX, fY, fZ;
+            pCaster->GetClosePoint(fX, fY, fZ, m_creature->GetObjectSize());
 
             m_creature->RemoveMonsterMoveFlag(MONSTER_MOVE_WALK);
-            m_creature->GetMotionMaster()->MovePoint(1, x, y, z);
+            m_creature->GetMotionMaster()->MovePoint(POINT_DEST, fX, fY, fZ);
         }
     }
 
-    void MovementInform(uint32 type, uint32 id)
+    void MovementInform(uint32 uiType, uint32 uiPointId)
     {
-        if (type != POINT_MOTION_TYPE)
+        if (uiType != POINT_MOTION_TYPE)
             return;
 
-        if (id)
+        if (uiPointId == POINT_DEST)
         {
             m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_ONESHOT_EAT);
-            PoisonTimer = 15000;
+            m_uiPoisonTimer = 15000;
         }
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
-        if (PoisonTimer)
-            if (PoisonTimer <= diff)
+        if (m_uiPoisonTimer)
         {
-            if (PlayerGUID)
+            if (m_uiPoisonTimer <= uiDiff)
             {
-                Player* plr = ((Player*)Unit::GetUnit((*m_creature), PlayerGUID));
-                if (plr && plr->GetQuestStatus(11020) == QUEST_STATUS_INCOMPLETE)
-                    plr->KilledMonster(23209, m_creature->GetGUID());
+                if (Player* pPlayer = (Player*)Unit::GetUnit(*m_creature, m_uiPlayerGUID))
+                {
+                    if (pPlayer->GetQuestStatus(QUEST_SLOW_DEATH) == QUEST_STATUS_INCOMPLETE)
+                        pPlayer->KilledMonsterCredit(NPC_DRAGONMAW_KILL_CREDIT, m_creature->GetGUID());
+                }
+
+                m_uiPoisonTimer = 0;
+                m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
             }
-            PoisonTimer = 0;
-            m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-        }else PoisonTimer -= diff;
+            else
+                m_uiPoisonTimer -= uiDiff;
+        }
     }
 };
 

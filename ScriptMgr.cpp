@@ -79,7 +79,7 @@ extern void AddSC_npcs_special();
 //------ ZONE --------
 
 //Alterac Mountains
-extern void AddSC_alterac_mountains();
+//extern void AddSC_alterac_mountains();
 
 //Arathi Highlands
 extern void AddSC_arathi_highlands();
@@ -970,7 +970,7 @@ void ScriptsInit()
     //------ ZONE --------
 
     //Alterac Mountains
-    AddSC_alterac_mountains();
+    //AddSC_alterac_mountains();
 
     //Arathi Highlands
     AddSC_arathi_highlands();

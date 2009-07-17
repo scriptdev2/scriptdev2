@@ -256,7 +256,7 @@ struct MANGOS_DLL_DECL npc_manaforge_control_consoleAI : public ScriptedAI
                     break;
                 case 5:
                     DoScriptText(EMOTE_COMPLETE, m_creature, playertarget);
-                    ((Player*)playertarget)->KilledMonster(m_creature->GetEntry(),m_creature->GetGUID());
+                    ((Player*)playertarget)->KilledMonsterCredit(m_creature->GetEntry(),m_creature->GetGUID());
                     DoCast(m_creature,SPELL_DISABLE_VISUAL);
                     if (goConsole)
                     {

@@ -52,7 +52,7 @@ struct MANGOS_DLL_DECL mob_webbed_creatureAI : public ScriptedAI
             case 0:
                 spawnCreatureID = 17681;
                 if (Killer->GetTypeId() == TYPEID_PLAYER)
-                    ((Player*)Killer)->KilledMonster(spawnCreatureID, m_creature->GetGUID());
+                    ((Player*)Killer)->KilledMonsterCredit(spawnCreatureID, m_creature->GetGUID());
                 break;
             case 1:
             case 2:

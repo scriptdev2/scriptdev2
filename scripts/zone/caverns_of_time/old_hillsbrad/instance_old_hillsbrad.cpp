@@ -26,12 +26,14 @@ EndScriptData */
 
 #define ENCOUNTERS              6
 
-#define THRALL_ENTRY            17876
-#define TARETHA_ENTRY           18887
-#define DRAKE_ENTRY             17848
-
-#define QUEST_ENTRY_DIVERSION   10283
-#define LODGE_QUEST_TRIGGER     20155
+enum
+{
+    NPC_THRALL                  = 17876,
+    NPC_TARETHA                 = 18887,
+    NPC_DRAKE                   = 17848,
+    NPC_LODGE_QUEST_TRIGGER     = 20155,
+    QUEST_ENTRY_DIVERSION       = 10283
+};
 
 struct MANGOS_DLL_DECL instance_old_hillsbrad : public ScriptedInstance
 {
@@ -85,7 +87,7 @@ struct MANGOS_DLL_DECL instance_old_hillsbrad : public ScriptedInstance
                     pPlayer->SendUpdateWorldState(WORLD_STATE_OH,mBarrelCount);
 
                     if (mBarrelCount == 5)
-                        pPlayer->KilledMonster(LODGE_QUEST_TRIGGER,0);
+                        pPlayer->KilledMonsterCredit(NPC_LODGE_QUEST_TRIGGER, 0);
                 }
             }
         }else
@@ -96,10 +98,10 @@ struct MANGOS_DLL_DECL instance_old_hillsbrad : public ScriptedInstance
     {
         switch(pCreature->GetEntry())
         {
-            case THRALL_ENTRY:
+            case NPC_THRALL:
                 ThrallGUID = pCreature->GetGUID();
                 break;
-            case TARETHA_ENTRY:
+            case NPC_TARETHA:
                 TarethaGUID = pCreature->GetGUID();
                 break;
         }
@@ -133,7 +135,7 @@ struct MANGOS_DLL_DECL instance_old_hillsbrad : public ScriptedInstance
 
                     if (mBarrelCount == 5)
                     {
-                        pPlayer->SummonCreature(DRAKE_ENTRY,2128.43,71.01,64.42,1.74,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,1800000);
+                        pPlayer->SummonCreature(NPC_DRAKE,2128.43,71.01,64.42,1.74,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,1800000);
                         Encounter[0] = DONE;
                     }
                 }

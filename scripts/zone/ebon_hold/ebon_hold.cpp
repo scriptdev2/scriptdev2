@@ -841,7 +841,6 @@ enum
     SPELL_PLAGUE_STRIKE             = 52373,
 
     NPC_ANCHOR                      = 29521,
-    NPC_INITATE_QCREDIT             = 29519,
     FACTION_MONSTER                 = 16,
 
     PHASE_INACTIVE_OR_COMBAT        = 0,
@@ -993,15 +992,6 @@ struct MANGOS_DLL_DECL npc_unworthy_initiateAI : public ScriptedAI
         }
 
         m_uiAnchorCheckTimer = 5000;
-    }
-
-    void JustDied(Unit* pKiller)
-    {
-        if (m_creature->GetEntry() != NPC_INITATE_QCREDIT)
-        {
-            if (Player* pPlayer = m_creature->GetLootRecipient())
-                pPlayer->KilledMonster(NPC_INITATE_QCREDIT,0);
-        }
     }
 
     void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
