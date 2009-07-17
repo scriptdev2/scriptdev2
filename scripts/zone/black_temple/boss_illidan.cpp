@@ -368,7 +368,7 @@ struct MANGOS_DLL_DECL demonfireAI : public ScriptedAI
 };
 
 /******* Functions and vars for Akama's AI ******/
-struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
+struct MANGOS_DLL_DECL npc_akama_illidanAI : public ScriptedAI
 {
     npc_akama_illidanAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
@@ -834,7 +834,7 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
 };
 
 /************************************** Illidan's AI ***************************************/
-struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
+struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
 {
     boss_illidan_stormrageAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
@@ -1975,7 +1975,7 @@ bool GossipSelect_npc_akama_at_illidan(Player* pPlayer, Creature* pCreature, uin
     return true;
 }
 
-struct MANGOS_DLL_SPEC boss_maievAI : public ScriptedAI
+struct MANGOS_DLL_DECL boss_maievAI : public ScriptedAI
 {
     boss_maievAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
@@ -2270,7 +2270,7 @@ struct MANGOS_DLL_DECL flamecrashAI : public ScriptedAI
 };
 
 // Shadowfiends interact with Illidan, setting more targets in Illidan's hashmap
-struct MANGOS_DLL_SPEC mob_parasitic_shadowfiendAI : public ScriptedAI
+struct MANGOS_DLL_DECL mob_parasitic_shadowfiendAI : public ScriptedAI
 {
     mob_parasitic_shadowfiendAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
