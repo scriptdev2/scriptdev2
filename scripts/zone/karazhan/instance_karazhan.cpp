@@ -137,8 +137,16 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
         switch(pGo->GetEntry())
         {
             case 183932: m_uiCurtainGUID        = pGo->GetGUID(); break;
-            case 184278: m_uiStageDoorLeftGUID  = pGo->GetGUID(); break;
-            case 184279: m_uiStageDoorRightGUID = pGo->GetGUID(); break;
+            case 184278:
+                m_uiStageDoorLeftGUID = pGo->GetGUID();
+                if (m_uiEncounter[4] == DONE)
+                    pGo->SetGoState(GO_STATE_ACTIVE);
+                break;
+            case 184279:
+                m_uiStageDoorRightGUID = pGo->GetGUID();
+                if (m_uiEncounter[4] == DONE)
+                    pGo->SetGoState(GO_STATE_ACTIVE);
+                break;
             case 184517: m_uiLibraryDoor        = pGo->GetGUID(); break;
             case 185521: m_uiMassiveDoor        = pGo->GetGUID(); break;
             case 184276: m_uiGamesmansDoor      = pGo->GetGUID(); break;

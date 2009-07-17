@@ -90,16 +90,6 @@ float Spawns[6][2]=
     {17534, -10900},                                        // Julianne
 };
 
-float StageLocations[6][2]=
-{
-    {-10866.711, -1779.816},                                // Open door, begin walking (0)
-    {-10894.917, -1775.467},                                // (1)
-    {-10896.044, -1782.619},                                // Begin Speech after this (2)
-    {-10894.917, -1775.467},                                // Resume walking (back to spawn point now) after speech (3)
-    {-10866.711, -1779.816},                                // (4)
-    {-10866.700, -1781.030}                                 // Summon mobs, open curtains, close door (5)
-};
-
 #define CREATURE_SPOTLIGHT  19525
 
 #define SPELL_SPOTLIGHT     25824
@@ -114,77 +104,82 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
     npc_barnesAI(Creature* pCreature) : npc_escortAI(pCreature)
     {
         RaidWiped = false;
+        m_uiEventId = 0;
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
 
-    uint64 SpotlightGUID;
+    uint64 m_uiSpotlightGUID;
 
     uint32 TalkCount;
     uint32 TalkTimer;
-    uint32 CurtainTimer;
     uint32 WipeTimer;
-    uint32 Event;
+    uint32 m_uiEventId;
 
     bool PerformanceReady;
     bool RaidWiped;
-    bool IsTalking;
 
     void Reset()
     {
+        m_uiSpotlightGUID = 0;
+
         TalkCount = 0;
         TalkTimer = 2000;
-        CurtainTimer = 5000;
         WipeTimer = 5000;
 
         PerformanceReady = false;
-        IsTalking = false;
 
         if (m_pInstance)
-        {
-            m_pInstance->SetData(DATA_OPERA_EVENT, NOT_STARTED);
-
-            Event = m_pInstance->GetData(DATA_OPERA_PERFORMANCE);
-
-            if (GameObject* pDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GAMEOBJECT_STAGEDOORLEFT)))
-                pDoor->SetGoState(GO_STATE_READY);
-
-            if (GameObject* pCurtain = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GAMEOBJECT_CURTAINS)))
-                pCurtain->SetGoState(GO_STATE_READY);
-        }
+            m_uiEventId = m_pInstance->GetData(DATA_OPERA_PERFORMANCE);
     }
 
-    void WaypointReached(uint32 i)
+    void StartEvent()
     {
-        switch(i)
+        if (!m_pInstance)
+            return;
+
+        m_pInstance->SetData(DATA_OPERA_EVENT, IN_PROGRESS);
+
+        //resets count for this event, in case earlier failed
+        if (m_uiEventId == EVENT_OZ)
+            m_pInstance->SetData(DATA_OPERA_OZ_DEATHCOUNT, IN_PROGRESS);
+
+        Start(false, false, false);
+    }
+
+    void WaypointReached(uint32 uiPointId)
+    {
+        if (!m_pInstance)
+            return;
+
+        switch(uiPointId)
         {
-            case 2:
-                IsBeingEscorted = false;
+            case 0:
+                m_creature->CastSpell(m_creature, SPELL_TUXEDO, false);
+                m_pInstance->DoUseDoorOrButton(m_pInstance->GetData64(DATA_GAMEOBJECT_STAGEDOORLEFT));
+                break;
+            case 4:
                 TalkCount = 0;
-                IsTalking = true;
+                IsOnHold = true;
 
-                float x,y,z;
-                m_creature->GetPosition(x, y, z);
-
-                if (Creature* Spotlight = m_creature->SummonCreature(CREATURE_SPOTLIGHT, x, y, z, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 50000))
+                if (Creature* pSpotlight = m_creature->SummonCreature(CREATURE_SPOTLIGHT,
+                    m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 0.0f,
+                    TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 60000))
                 {
-                    Spotlight->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                    Spotlight->CastSpell(Spotlight, SPELL_SPOTLIGHT, false);
-                    SpotlightGUID = Spotlight->GetGUID();
+                    pSpotlight->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                    pSpotlight->CastSpell(pSpotlight, SPELL_SPOTLIGHT, false);
+                    m_uiSpotlightGUID = pSpotlight->GetGUID();
                 }
                 break;
-
-            case 5:
-                if (m_pInstance)
-                {
-                    if (GameObject* pDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GAMEOBJECT_STAGEDOORLEFT)))
-                        pDoor->SetGoState(GO_STATE_READY);
-                }
-                IsBeingEscorted = false;
+            case 8:
+                m_pInstance->DoUseDoorOrButton(m_pInstance->GetData64(DATA_GAMEOBJECT_STAGEDOORLEFT));
                 PerformanceReady = true;
-                m_creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+                break;
+            case 9:
+                PrepareEncounter();
+                m_pInstance->DoUseDoorOrButton(m_pInstance->GetData64(DATA_GAMEOBJECT_CURTAINS));
                 break;
         }
     }
@@ -193,7 +188,7 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
     {
         int32 text = 0;
 
-        switch(Event)
+        switch(m_uiEventId)
         {
             case EVENT_OZ:
                 if (OzDialogue[count].textid)
@@ -221,52 +216,70 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
             DoScriptText(text, m_creature);
     }
 
+    void PrepareEncounter()
+    {
+        debug_log("SD2: Barnes Opera Event - Introduction complete - preparing encounter %d", m_uiEventId);
+        uint8 index = 0;
+        uint8 count = 0;
+
+        switch(m_uiEventId)
+        {
+            case EVENT_OZ:
+                index = 0;
+                count = 4;
+                break;
+            case EVENT_HOOD:
+                index = 4;
+                count = index+1;
+                break;
+            case EVENT_RAJ:
+                index = 5;
+                count = index+1;
+                break;
+        }
+
+        for(; index < count; ++index)
+        {
+            uint32 entry = ((uint32)Spawns[index][0]);
+            float PosX = Spawns[index][1];
+
+            if (Creature* pCreature = m_creature->SummonCreature(entry, PosX, SPAWN_Y, SPAWN_Z, SPAWN_O, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, HOUR*2*IN_MILISECONDS))
+            {
+                // In case database has bad flags
+                pCreature->SetUInt32Value(UNIT_FIELD_FLAGS, 0);
+                pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+            }
+        }
+
+        RaidWiped = false;
+    }
+
     void UpdateAI(const uint32 diff)
     {
         npc_escortAI::UpdateAI(diff);
 
-        if (IsTalking)
+        if (IsOnHold)
         {
             if (TalkTimer < diff)
             {
                 if (TalkCount > 3)
                 {
-                    if (Unit* Spotlight = Unit::GetUnit((*m_creature), SpotlightGUID))
-                    {
-                        Spotlight->RemoveAllAuras();
-                        Spotlight->SetVisibility(VISIBILITY_OFF);
-                    }
+                    if (Creature* pSpotlight = (Creature*)Unit::GetUnit(*m_creature, m_uiSpotlightGUID))
+                        pSpotlight->ForcedDespawn();
 
-                    m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_STAND);
-                    IsTalking = false;
-                    IsBeingEscorted = true;
+                    IsOnHold = false;
                     return;
                 }
 
-                m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_TALK);
                 Talk(TalkCount);
                 ++TalkCount;
-            } else TalkTimer -= diff;
+            }
+            else
+                TalkTimer -= diff;
         }
 
         if (PerformanceReady)
         {
-            if (CurtainTimer)
-            {
-                if (CurtainTimer <= diff)
-                {
-                    PrepareEncounter();
-
-                    if (!m_pInstance)
-                        return;
-
-                    if (GameObject* pCurtain = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GAMEOBJECT_CURTAINS)))
-                        pCurtain->SetGoState(GO_STATE_ACTIVE);
-
-                    CurtainTimer = 0;
-                }else CurtainTimer -= diff;
-            }
-
             if (!RaidWiped)
             {
                 if (WipeTimer < diff)
@@ -300,107 +313,54 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
             }
         }
     }
-
-    void StartEvent()
-    {
-        if (!m_pInstance)
-            return;
-
-        m_pInstance->SetData(DATA_OPERA_EVENT, IN_PROGRESS);
-
-        //resets count for this event, in case earlier failed
-        if (Event == EVENT_OZ)
-            m_pInstance->SetData(DATA_OPERA_OZ_DEATHCOUNT, IN_PROGRESS);
-
-        if (GameObject* pDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GAMEOBJECT_STAGEDOORLEFT)))
-            pDoor->SetGoState(GO_STATE_ACTIVE);
-
-        m_creature->CastSpell(m_creature, SPELL_TUXEDO, true);
-        m_creature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
-
-        Start(false, false, false);
-    }
-
-    void PrepareEncounter()
-    {
-        debug_log("SD2: Barnes Opera Event - Introduction complete - preparing encounter %d", Event);
-        uint8 index = 0;
-        uint8 count = 0;
-
-        switch(Event)
-        {
-            case EVENT_OZ:
-                index = 0;
-                count = 4;
-                break;
-            case EVENT_HOOD:
-                index = 4;
-                count = index+1;
-                break;
-            case EVENT_RAJ:
-                index = 5;
-                count = index+1;
-                break;
-        }
-
-        for(; index < count; ++index)
-        {
-            uint32 entry = ((uint32)Spawns[index][0]);
-            float PosX = Spawns[index][1];
-
-            if (Creature* pCreature = m_creature->SummonCreature(entry, PosX, SPAWN_Y, SPAWN_Z, SPAWN_O, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, HOUR*2*IN_MILISECONDS))
-            {
-                // In case database has bad flags
-                pCreature->SetUInt32Value(UNIT_FIELD_FLAGS, 0);
-                pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-            }
-        }
-
-        CurtainTimer = 10000;
-        PerformanceReady = true;
-        RaidWiped = false;
-    }
 };
 
 CreatureAI* GetAI_npc_barnesAI(Creature* pCreature)
 {
     npc_barnesAI* Barnes_AI = new npc_barnesAI(pCreature);
 
-    for(uint8 i = 0; i < 6; ++i)
-        Barnes_AI->AddWaypoint(i, StageLocations[i][0], StageLocations[i][1], 90.465);
+    Barnes_AI->FillPointMovementListForCreature();
 
-    return ((CreatureAI*)Barnes_AI);
+    return (CreatureAI*)Barnes_AI;
 }
 
 bool GossipHello_npc_barnes(Player* pPlayer, Creature* pCreature)
 {
-    ScriptedInstance* pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
-
-    // Check for death of Moroes
-    if (pInstance && (pInstance->GetData(DATA_MOROES_EVENT) >= DONE))
+    if (ScriptedInstance* pInstance = (ScriptedInstance*)pCreature->GetInstanceData())
     {
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, OZ_GOSSIP1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-
-        if (pPlayer->isGameMaster())
+        // Check for death of Moroes and if opera event is not done already
+        if (pInstance->GetData(DATA_MOROES_EVENT) == DONE && pInstance->GetData(DATA_OPERA_EVENT) != DONE)
         {
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, OZ_GM_GOSSIP1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, OZ_GM_GOSSIP2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, OZ_GM_GOSSIP3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, OZ_GOSSIP1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+
+            if (pPlayer->isGameMaster())
+            {
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, OZ_GM_GOSSIP1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, OZ_GM_GOSSIP2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, OZ_GM_GOSSIP3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
+            }
+
+            if (npc_barnesAI* pBarnesAI = dynamic_cast<npc_barnesAI*>(pCreature->AI()))
+            {
+                if (!pBarnesAI->RaidWiped)
+                    pPlayer->SEND_GOSSIP_MENU(8970, pCreature->GetGUID());
+                else
+                    pPlayer->SEND_GOSSIP_MENU(8975, pCreature->GetGUID());
+
+                return true;
+            }
         }
-
-        if (!((npc_barnesAI*)pCreature->AI())->RaidWiped)
-            pPlayer->SEND_GOSSIP_MENU(8970, pCreature->GetGUID());
-        else
-            pPlayer->SEND_GOSSIP_MENU(8975, pCreature->GetGUID());
     }
-    else pPlayer->SEND_GOSSIP_MENU(8978, pCreature->GetGUID());
 
+    pPlayer->SEND_GOSSIP_MENU(8978, pCreature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_barnes(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
+bool GossipSelect_npc_barnes(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    switch(action)
+    npc_barnesAI* pBarnesAI = dynamic_cast<npc_barnesAI*>(pCreature->AI());
+
+    switch(uiAction)
     {
         case GOSSIP_ACTION_INFO_DEF+1:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, OZ_GOSSIP2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
@@ -408,21 +368,25 @@ bool GossipSelect_npc_barnes(Player* pPlayer, Creature* pCreature, uint32 sender
             break;
         case GOSSIP_ACTION_INFO_DEF+2:
             pPlayer->CLOSE_GOSSIP_MENU();
-            ((npc_barnesAI*)pCreature->AI())->StartEvent();
+            if (pBarnesAI)
+                pBarnesAI->StartEvent();
             break;
         case GOSSIP_ACTION_INFO_DEF+3:
             pPlayer->CLOSE_GOSSIP_MENU();
-            ((npc_barnesAI*)pCreature->AI())->Event = EVENT_OZ;
+            if (pBarnesAI)
+                pBarnesAI->m_uiEventId = EVENT_OZ;
             outstring_log("SD2: pPlayer (GUID %i) manually set Opera event to EVENT_OZ",pPlayer->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+4:
             pPlayer->CLOSE_GOSSIP_MENU();
-            ((npc_barnesAI*)pCreature->AI())->Event = EVENT_HOOD;
+            if (pBarnesAI)
+                pBarnesAI->m_uiEventId = EVENT_HOOD;
             outstring_log("SD2: pPlayer (GUID %i) manually set Opera event to EVENT_HOOD",pPlayer->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+5:
             pPlayer->CLOSE_GOSSIP_MENU();
-            ((npc_barnesAI*)pCreature->AI())->Event = EVENT_RAJ;
+            if (pBarnesAI)
+                pBarnesAI->m_uiEventId = EVENT_RAJ;
             outstring_log("SD2: pPlayer (GUID %i) manually set Opera event to EVENT_RAJ",pPlayer->GetGUID());
             break;
     }
@@ -434,24 +398,29 @@ bool GossipSelect_npc_barnes(Player* pPlayer, Creature* pCreature, uint32 sender
 # npc_berthold
 ####*/
 
-#define SPELL_TELEPORT           39567
+enum
+{
+    SPELL_TELEPORT              = 39567
+};
 
-#define GOSSIP_ITEM_TELEPORT     "Teleport me to the Guardian's Library"
+#define GOSSIP_ITEM_TELEPORT    "Teleport me to the Guardian's Library"
 
 bool GossipHello_npc_berthold(Player* pPlayer, Creature* pCreature)
 {
-    ScriptedInstance* pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
-                                                            // Check if Shade of Aran is dead or not
-    if (pInstance && (pInstance->GetData(DATA_SHADEOFARAN_EVENT) >= DONE))
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TELEPORT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+    if (ScriptedInstance* pInstance = (ScriptedInstance*)pCreature->GetInstanceData())
+    {
+        // Check if Shade of Aran event is done
+        if (pInstance->GetData(DATA_SHADEOFARAN_EVENT) == DONE)
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TELEPORT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+    }
 
     pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_berthold(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
+bool GossipSelect_npc_berthold(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    if (action == GOSSIP_ACTION_INFO_DEF + 1)
+    if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)
         pPlayer->CastSpell(pPlayer, SPELL_TELEPORT, true);
 
     pPlayer->CLOSE_GOSSIP_MENU();
