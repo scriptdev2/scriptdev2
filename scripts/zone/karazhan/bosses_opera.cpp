@@ -88,7 +88,7 @@ EndScriptData */
 
 void SummonCroneIfReady(ScriptedInstance* pInstance, Creature* pCreature)
 {
-    pInstance->SetData(DATA_OPERA_OZ_DEATHCOUNT, 0);        // Increment DeathCount
+    pInstance->SetData(DATA_OPERA_OZ_DEATHCOUNT, SPECIAL);  // Increment DeathCount
 
     if (pInstance->GetData(DATA_OPERA_OZ_DEATHCOUNT) == 4)
     {

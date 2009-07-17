@@ -211,7 +211,12 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
                 break;
             case DATA_MALCHEZZAR_EVENT:         m_uiEncounter[10] = uiData; break;
             case DATA_NIGHTBANE_EVENT:          m_uiEncounter[11] = uiData; break;
-            case DATA_OPERA_OZ_DEATHCOUNT:      ++m_uiOzDeathCount; break;
+            case DATA_OPERA_OZ_DEATHCOUNT:
+                if (uiData == SPECIAL)
+                    ++m_uiOzDeathCount;
+                else if (uiData == IN_PROGRESS)
+                    m_uiOzDeathCount = 0;
+                break;
         }
 
         if (uiData == DONE)

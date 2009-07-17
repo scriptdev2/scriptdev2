@@ -308,6 +308,10 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
 
         m_pInstance->SetData(DATA_OPERA_EVENT, IN_PROGRESS);
 
+        //resets count for this event, in case earlier failed
+        if (Event == EVENT_OZ)
+            m_pInstance->SetData(DATA_OPERA_OZ_DEATHCOUNT, IN_PROGRESS);
+
         if (GameObject* pDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GAMEOBJECT_STAGEDOORLEFT)))
             pDoor->SetGoState(GO_STATE_ACTIVE);
 
