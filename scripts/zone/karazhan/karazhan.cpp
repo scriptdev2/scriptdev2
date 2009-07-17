@@ -140,7 +140,7 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
         if (!m_pInstance)
             return;
 
-        m_pInstance->SetData(DATA_OPERA_EVENT, IN_PROGRESS);
+        m_pInstance->SetData(TYPE_OPERA, IN_PROGRESS);
 
         //resets count for this event, in case earlier failed
         if (m_uiEventId == EVENT_OZ)
@@ -158,7 +158,7 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
         {
             case 0:
                 m_creature->CastSpell(m_creature, SPELL_TUXEDO, false);
-                m_pInstance->DoUseDoorOrButton(m_pInstance->GetData64(DATA_GAMEOBJECT_STAGEDOORLEFT));
+                m_pInstance->DoUseDoorOrButton(m_pInstance->GetData64(DATA_GO_STAGEDOORLEFT));
                 break;
             case 4:
                 TalkCount = 0;
@@ -174,12 +174,12 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
                 }
                 break;
             case 8:
-                m_pInstance->DoUseDoorOrButton(m_pInstance->GetData64(DATA_GAMEOBJECT_STAGEDOORLEFT));
+                m_pInstance->DoUseDoorOrButton(m_pInstance->GetData64(DATA_GO_STAGEDOORLEFT));
                 PerformanceReady = true;
                 break;
             case 9:
                 PrepareEncounter();
-                m_pInstance->DoUseDoorOrButton(m_pInstance->GetData64(DATA_GAMEOBJECT_CURTAINS));
+                m_pInstance->DoUseDoorOrButton(m_pInstance->GetData64(DATA_GO_CURTAINS));
                 break;
         }
     }
@@ -329,7 +329,7 @@ bool GossipHello_npc_barnes(Player* pPlayer, Creature* pCreature)
     if (ScriptedInstance* pInstance = (ScriptedInstance*)pCreature->GetInstanceData())
     {
         // Check for death of Moroes and if opera event is not done already
-        if (pInstance->GetData(DATA_MOROES_EVENT) == DONE && pInstance->GetData(DATA_OPERA_EVENT) != DONE)
+        if (pInstance->GetData(TYPE_MOROES) == DONE && pInstance->GetData(TYPE_OPERA) != DONE)
         {
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, OZ_GOSSIP1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
 
@@ -410,7 +410,7 @@ bool GossipHello_npc_berthold(Player* pPlayer, Creature* pCreature)
     if (ScriptedInstance* pInstance = (ScriptedInstance*)pCreature->GetInstanceData())
     {
         // Check if Shade of Aran event is done
-        if (pInstance->GetData(DATA_SHADEOFARAN_EVENT) == DONE)
+        if (pInstance->GetData(TYPE_ARAN) == DONE)
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TELEPORT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     }
 

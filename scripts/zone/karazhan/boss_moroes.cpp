@@ -100,7 +100,7 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
 
         if (m_pInstance)
-            m_pInstance->SetData(DATA_MOROES_EVENT, NOT_STARTED);
+            m_pInstance->SetData(TYPE_MOROES, NOT_STARTED);
     }
 
     void StartEvent()
@@ -109,7 +109,7 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
             return;
 
         if (m_pInstance)
-            m_pInstance->SetData(DATA_MOROES_EVENT, IN_PROGRESS);
+            m_pInstance->SetData(TYPE_MOROES, IN_PROGRESS);
     }
 
     void Aggro(Unit* who)
@@ -134,7 +134,7 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
         DoScriptText(SAY_DEATH, m_creature);
 
         if (m_pInstance)
-            m_pInstance->SetData(DATA_MOROES_EVENT, DONE);
+            m_pInstance->SetData(TYPE_MOROES, DONE);
 
         DeSpawnAdds();
 
@@ -262,7 +262,7 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if (m_pInstance && !m_pInstance->GetData(DATA_MOROES_EVENT))
+        if (m_pInstance && !m_pInstance->GetData(TYPE_MOROES))
             EnterEvadeMode();
 
         if (!Enrage && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 30)
@@ -377,7 +377,7 @@ struct MANGOS_DLL_DECL boss_moroes_guestAI : public ScriptedAI
     void Reset()
     {
         if (m_pInstance)
-            m_pInstance->SetData(DATA_MOROES_EVENT, NOT_STARTED);
+            m_pInstance->SetData(TYPE_MOROES, NOT_STARTED);
     }
 
     void AcquireGUID()
@@ -413,7 +413,7 @@ struct MANGOS_DLL_DECL boss_moroes_guestAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (m_pInstance && !m_pInstance->GetData(DATA_MOROES_EVENT))
+        if (m_pInstance && !m_pInstance->GetData(TYPE_MOROES))
             EnterEvadeMode();
 
         DoMeleeAttackIfReady();
