@@ -12,8 +12,13 @@ EndScriptData */
 #include "precompiled.h"
 #include "npc_escortAI.h"
 
-#define WP_LAST_POINT   -1
-#define MAX_PLAYER_DISTANCE 50
+const float MAX_PLAYER_DISTANCE = 50.0f;
+
+enum
+{
+    POINT_LAST_POINT    = 0xFFFFFF,
+    POINT_HOME          = 0xFFFFFE
+};
 
 bool npc_escortAI::IsVisible(Unit* who) const
 {
@@ -115,7 +120,7 @@ void npc_escortAI::EnterEvadeMode()
 
             float fPosX, fPosY, fPosZ;
             m_creature->GetCombatStartPosition(fPosX, fPosY, fPosZ);
-            m_creature->GetMotionMaster()->MovePoint(WP_LAST_POINT, fPosX, fPosY, fPosZ);
+            m_creature->GetMotionMaster()->MovePoint(POINT_LAST_POINT, fPosX, fPosY, fPosZ);
         }
     }
     else
@@ -134,15 +139,31 @@ void npc_escortAI::UpdateAI(const uint32 diff)
     {
         if (m_uiWPWaitTimer <= diff)
         {
-            //End of the line, Despawn self then immediatly respawn
+            //End of the line
             if (CurrentWP == WaypointList.end())
             {
                 debug_log("SD2: EscortAI reached end of waypoints");
 
-                m_creature->setDeathState(JUST_DIED);
+                if (m_bCanReturnToStart)
+                {
+                    float fRetX, fRetY, fRetZ;
+                    m_creature->GetRespawnCoord(fRetX, fRetY, fRetZ);
 
-                //TODO: add option to set instant respawn? Then use db respawn value as default
-                m_creature->Respawn();
+                    m_creature->GetMotionMaster()->MovePoint(POINT_HOME, fRetX, fRetY, fRetZ);
+
+                    m_uiWPWaitTimer = 0;
+
+                    debug_log("SD2: EscortAI are returning home to spawn location: %u, %f, %f, %f", POINT_HOME, fRetX, fRetY, fRetZ);
+                    return;
+                }
+
+                if (m_bCanInstantRespawn)
+                {
+                    m_creature->setDeathState(JUST_DIED);
+                    m_creature->Respawn();
+                }
+                else
+                    m_creature->ForcedDespawn();
 
                 return;
             }
@@ -190,10 +211,14 @@ void npc_escortAI::UpdateAI(const uint32 diff)
                 debug_log("SD2: EscortAI Evaded back to spawn point because player/group was to far away or not found");
 
                 JustDied(m_creature);
-                m_creature->setDeathState(JUST_DIED);
 
-                //TODO: add option to set instant respawn? Then use db respawn value as default
-                m_creature->Respawn();
+                if (m_bCanInstantRespawn)
+                {
+                    m_creature->setDeathState(JUST_DIED);
+                    m_creature->Respawn();
+                }
+                else
+                    m_creature->ForcedDespawn();
 
                 return;
             }
@@ -215,7 +240,7 @@ void npc_escortAI::MovementInform(uint32 type, uint32 id)
         return;
 
     //Combat start position reached, continue waypoint movement
-    if (id == WP_LAST_POINT)
+    if (id == POINT_LAST_POINT)
     {
         debug_log("SD2: EscortAI has returned to original position before combat");
 
@@ -228,6 +253,13 @@ void npc_escortAI::MovementInform(uint32 type, uint32 id)
 
         if (!m_uiWPWaitTimer)
             m_uiWPWaitTimer = 1;
+    }
+    else if (id == POINT_HOME)
+    {
+        debug_log("SD2: EscortAI has returned to original home location and will continue from beginning of waypoint list.");
+
+        CurrentWP = WaypointList.begin();
+        m_uiWPWaitTimer = 1;
     }
     else
     {
@@ -291,7 +323,8 @@ void npc_escortAI::SetRun(bool bRun)
     m_bIsRunning = bRun;
 }
 
-void npc_escortAI::Start(bool bIsActiveAttacker, bool bCanDefendSelf, bool bRun, uint64 uiPlayerGUID)
+//TODO: get rid of this many variables passed in function.
+void npc_escortAI::Start(bool bIsActiveAttacker, bool bCanDefendSelf, bool bRun, uint64 uiPlayerGUID, const Quest* pQuest, bool bInstantRespawn, bool bCanLoopPath)
 {
     if (m_creature->getVictim())
     {
@@ -311,17 +344,26 @@ void npc_escortAI::Start(bool bIsActiveAttacker, bool bCanDefendSelf, bool bRun,
         return;
     }
 
+    //set variables
+    m_bIsActiveAttacker = bIsActiveAttacker;
+    m_bCanDefendSelf = bCanDefendSelf;
+    m_bIsRunning = bRun;
+
+    PlayerGUID = uiPlayerGUID;
+    m_pQuestForEscort = pQuest;
+
+    m_bCanInstantRespawn = bInstantRespawn;
+    m_bCanReturnToStart = bCanLoopPath;
+
+    if (m_bCanReturnToStart && m_bCanInstantRespawn)
+        debug_log("SD2: EscortAI is set to return home after waypoint end and instant respawn at waypoint end. Creature will never despawn.");
+
     if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() == WAYPOINT_MOTION_TYPE)
     {
         m_creature->GetMotionMaster()->MovementExpired();
         m_creature->GetMotionMaster()->MoveIdle();
         debug_log("SD2: EscortAI start with WAYPOINT_MOTION_TYPE, changed to MoveIdle.");
     }
-
-    m_bIsActiveAttacker = bIsActiveAttacker;
-    m_bCanDefendSelf = bCanDefendSelf;
-    m_bIsRunning = bRun;
-    PlayerGUID = uiPlayerGUID;
 
     //disable npcflags
     m_creature->SetUInt32Value(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_NONE);
