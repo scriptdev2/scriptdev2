@@ -257,20 +257,15 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
     }
 };
 
-// Base AI for every counsil member
-struct MANGOS_DLL_DECL Counsil_Base_AI : public ScriptedAI
+// Base AI for every council member
+struct MANGOS_DLL_DECL Council_Base_AI : public ScriptedAI
 {
-    Counsil_Base_AI(Creature* pCreature) : ScriptedAI(pCreature)
+    Council_Base_AI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        Reset();
     }
 
     ScriptedInstance* m_pInstance;
-
-    void Reset()
-    {
-    }
 
     void JustReachedHome()
     {
@@ -302,9 +297,9 @@ struct MANGOS_DLL_DECL Counsil_Base_AI : public ScriptedAI
 };
 
 //Olm The Summoner AI
-struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public Counsil_Base_AI
+struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public Council_Base_AI
 {
-    boss_olm_the_summonerAI(Creature* pCreature) : Counsil_Base_AI(pCreature) {Reset();}
+    boss_olm_the_summonerAI(Creature* pCreature) : Council_Base_AI(pCreature) {Reset();}
 
     uint32 m_uiDarkDecay_Timer;
     uint32 m_uiDeathCoil_Timer;
@@ -362,9 +357,9 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public Counsil_Base_AI
 };
 
 //Kiggler The Crazed AI
-struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public Counsil_Base_AI
+struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public Council_Base_AI
 {
-    boss_kiggler_the_crazedAI(Creature* pCreature) : Counsil_Base_AI(pCreature) {Reset();}
+    boss_kiggler_the_crazedAI(Creature* pCreature) : Council_Base_AI(pCreature) {Reset();}
 
     uint32 m_uiGreatherPolymorph_Timer;
     uint32 m_uiLightningBolt_Timer;
@@ -461,9 +456,9 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public Counsil_Base_AI
 };
 
 //Blindeye The Seer AI
-struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public Counsil_Base_AI
+struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public Council_Base_AI
 {
-    boss_blindeye_the_seerAI(Creature* pCreature) : Counsil_Base_AI(pCreature) {Reset();}
+    boss_blindeye_the_seerAI(Creature* pCreature) : Council_Base_AI(pCreature) {Reset();}
 
     uint32 m_uiGreaterPowerWordShield_Timer;
     uint32 m_uiHeal_Timer;
@@ -521,9 +516,9 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public Counsil_Base_AI
 };
 
 //Krosh Firehand AI
-struct MANGOS_DLL_DECL boss_krosh_firehandAI : public Counsil_Base_AI
+struct MANGOS_DLL_DECL boss_krosh_firehandAI : public Council_Base_AI
 {
-    boss_krosh_firehandAI(Creature* pCreature) : Counsil_Base_AI(pCreature) {Reset();}
+    boss_krosh_firehandAI(Creature* pCreature) : Council_Base_AI(pCreature) {Reset();}
 
     uint32 m_uiGreaterFireball_Timer;
     uint32 m_uiSpellShield_Timer;
