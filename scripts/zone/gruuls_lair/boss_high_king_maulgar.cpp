@@ -104,23 +104,23 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
         m_uiFear_Timer          = 10000 + rand()%15000;
         m_uiCouncilDeathCount   = 0;
         m_bPhase2               = false;
+    }
 
+    void JustReachedHome()
+    {
         for (uint8 i = 0; i < MAX_COUNCIL; ++i)
         {
             if (Creature* pCreature = (Creature*)Unit::GetUnit((*m_creature), m_auiCouncil[i]))
             {
-                if (pCreature->isAlive() && pCreature->getVictim())
-                    pCreature->AI()->EnterEvadeMode();
-                else
+                if (!pCreature->isAlive())
                     pCreature->Respawn();
+                else if (pCreature->getVictim())
+                    pCreature->AI()->EnterEvadeMode();
             }
         }
 
-        //reset encounter
-        if (m_pInstance)
+        if (m_pInstance && m_pInstance->GetData(TYPE_MAULGAR_EVENT) == IN_PROGRESS)
             m_pInstance->SetData(TYPE_MAULGAR_EVENT, NOT_STARTED);
-        else
-            error_log(ERROR_INST_DATA);
     }
 
     void KilledUnit()
@@ -140,11 +140,8 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
         if (!m_pInstance)
             return;
 
+        //we risk being DONE before adds are in fact dead
         m_pInstance->SetData(TYPE_MAULGAR_EVENT, DONE);
-
-        // Open the door leading further in
-        if (GameObject* pContinueDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_MAULGAR_DOOR)))
-            pContinueDoor->SetGoState(GO_STATE_ACTIVE);
     }
 
     void Aggro(Unit *pWho)
@@ -156,8 +153,10 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
 
         DoScriptText(SAY_AGGRO, m_creature);
 
-        m_pInstance->SetData64(DATA_MAULGAR_STARTER, pWho->GetGUID());
-        m_pInstance->SetData(TYPE_MAULGAR_EVENT, IN_PROGRESS);
+        m_creature->CallForHelp(50.0f);
+
+        if (m_pInstance->GetData(TYPE_MAULGAR_EVENT) == NOT_STARTED)
+            m_pInstance->SetData(TYPE_MAULGAR_EVENT, IN_PROGRESS);
     }
 
     void GetCouncil()
@@ -187,18 +186,7 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
     {
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
-        {
-            //Only if not incombat, check if the event is started
-            if (m_pInstance && m_pInstance->GetData(TYPE_MAULGAR_EVENT) == IN_PROGRESS)
-            {
-                if (Unit* pTarget = Unit::GetUnit((*m_creature), m_pInstance->GetData64(DATA_MAULGAR_STARTER)))
-                {
-                    if (pTarget->isAlive())
-                        AttackStart(pTarget);
-                }
-            }
             return;
-        }
 
         //someone evaded!
         if (m_pInstance && m_pInstance->GetData(TYPE_MAULGAR_EVENT) == NOT_STARTED)
@@ -282,20 +270,20 @@ struct MANGOS_DLL_DECL Counsil_Base_AI : public ScriptedAI
 
     void Reset()
     {
-        //reset encounter
-        if (m_pInstance && m_pInstance->GetData(TYPE_MAULGAR_EVENT) != DONE)
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance && m_pInstance->GetData(TYPE_MAULGAR_EVENT) == IN_PROGRESS)
             m_pInstance->SetData(TYPE_MAULGAR_EVENT, NOT_STARTED);
     }
 
     void Aggro(Unit *pWho)
     {
-        if (!m_pInstance)
-            return;
-
-        if (m_pInstance->GetData(TYPE_MAULGAR_EVENT) != DONE)
+        if (m_pInstance && m_pInstance->GetData(TYPE_MAULGAR_EVENT) == NOT_STARTED)
             m_pInstance->SetData(TYPE_MAULGAR_EVENT, IN_PROGRESS);
 
-        m_pInstance->SetData64(DATA_MAULGAR_STARTER, pWho->GetGUID());
+        m_creature->CallForHelp(50.0f);
     }
 
     void JustDied(Unit* pVictim)
@@ -309,16 +297,6 @@ struct MANGOS_DLL_DECL Counsil_Base_AI : public ScriptedAI
         {
             if (boss_high_king_maulgarAI* pMaulgarAI = dynamic_cast<boss_high_king_maulgarAI*>(pMaulgar->AI()))
                 pMaulgarAI->EventCouncilDeath();
-        }
-    }
-
-    void UpdateAI(const uint32 uiDiff)
-    {
-        //Only if not incombat check if the event is started
-        if (!m_creature->getVictim() && m_pInstance && m_pInstance->GetData(TYPE_MAULGAR_EVENT) == IN_PROGRESS)
-        {
-            if (Unit* pTarget = Unit::GetUnit((*m_creature), m_pInstance->GetData64(DATA_MAULGAR_STARTER)))
-                AttackStart(pTarget);
         }
     }
 };
@@ -337,14 +315,10 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public Counsil_Base_AI
         m_uiDarkDecay_Timer = 18000;
         m_uiDeathCoil_Timer = 14000;
         m_uiSummon_Timer    = 10000;
-
-        Counsil_Base_AI::Reset();
     }
 
     void UpdateAI(const uint32 uiDiff)
     {
-        Counsil_Base_AI::UpdateAI(uiDiff);
-
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
@@ -403,8 +377,6 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public Counsil_Base_AI
         m_uiLightningBolt_Timer = 10000;
         m_uiArcaneShock_Timer = 20000;
         m_uiArcaneExplosion_Timer = 30000;
-
-        Counsil_Base_AI::Reset();
     }
 
     void SpellHitTarget(Unit* pVictim, const SpellEntry* pSpell)
@@ -437,8 +409,6 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public Counsil_Base_AI
 
     void UpdateAI(const uint32 uiDiff)
     {
-        Counsil_Base_AI::UpdateAI(uiDiff);
-
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
@@ -504,14 +474,10 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public Counsil_Base_AI
         m_uiGreaterPowerWordShield_Timer    = 5000;
         m_uiHeal_Timer                      = 25000 + rand()%15000;
         m_uiPrayerofHealing_Timer           = 45000 + rand()%10000;
-
-        Counsil_Base_AI::Reset();
     }
 
     void UpdateAI(const uint32 uiDiff)
     {
-        Counsil_Base_AI::UpdateAI(uiDiff);
-
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
@@ -568,8 +534,6 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public Counsil_Base_AI
         m_uiGreaterFireball_Timer = 4000;
         m_uiSpellShield_Timer = 1000;
         m_uiBlastWave_Timer = 12000;
-
-        Counsil_Base_AI::Reset();
     }
 
     void AttackStart(Unit* pWho)
@@ -589,8 +553,6 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public Counsil_Base_AI
 
     void UpdateAI(const uint32 uiDiff)
     {
-        Counsil_Base_AI::UpdateAI(uiDiff);
-
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;

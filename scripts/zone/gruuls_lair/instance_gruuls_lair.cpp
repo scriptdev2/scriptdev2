@@ -38,7 +38,6 @@ struct MANGOS_DLL_DECL instance_gruuls_lair : public ScriptedInstance
     uint32 m_auiEncounter[ENCOUNTERS];
     std::string strSaveData;
 
-    uint64 m_uiMaulgar_StarterGUID;
     uint64 m_uiMaulgarGUID;
     uint64 m_uiKigglerGUID;
     uint64 m_uiBlindeyeGUID;
@@ -52,7 +51,6 @@ struct MANGOS_DLL_DECL instance_gruuls_lair : public ScriptedInstance
         for (uint8 i = 0; i < ENCOUNTERS; ++i)
             m_auiEncounter[i] = NOT_STARTED;
 
-        m_uiMaulgar_StarterGUID     = 0;
         m_uiMaulgarGUID             = 0;
         m_uiKigglerGUID             = 0;
         m_uiBlindeyeGUID            = 0;
@@ -99,20 +97,17 @@ struct MANGOS_DLL_DECL instance_gruuls_lair : public ScriptedInstance
         }
     }
 
-    void SetData64(uint32 uiType, uint64 uiData)
-    {
-        if (uiType == DATA_MAULGAR_STARTER)
-            m_uiMaulgar_StarterGUID = uiData;
-    }
-
     void SetData(uint32 uiType, uint32 uiData)
     {
         switch (uiType)
         {
             case TYPE_MAULGAR_EVENT:
+                if (uiData == DONE)
+                    DoUseDoorOrButton(m_uiMaulgarDoorGUID);
                 m_auiEncounter[0] = uiData;
                 break;
             case TYPE_GRUUL_EVENT:
+                DoUseDoorOrButton(m_uiGruulEncounterDoorGUID);
                 m_auiEncounter[1] = uiData;
                 break;
         }
@@ -155,9 +150,6 @@ struct MANGOS_DLL_DECL instance_gruuls_lair : public ScriptedInstance
             case DATA_KIGGLER:              return m_uiKigglerGUID;
             case DATA_KROSH:                return m_uiKroshGUID;
             case DATA_OLM:                  return m_uiOlmGUID;
-            case DATA_MAULGAR_STARTER:      return m_uiMaulgar_StarterGUID;
-            case DATA_MAULGAR_DOOR:         return m_uiMaulgarDoorGUID;
-            case DATA_GRUUL_ENCOUNTER_DOOR: return m_uiGruulEncounterDoorGUID;
         }
         return 0;
     }

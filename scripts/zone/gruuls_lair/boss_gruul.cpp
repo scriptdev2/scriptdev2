@@ -83,18 +83,6 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
         m_uiHurtfulStrike_Timer     = 8000;
         m_uiReverberation_Timer     = 60000+45000;
         m_bPerformingGroundSlam     = false;
-
-        if (!m_pInstance)
-        {
-            error_log(ERROR_INST_DATA);
-            return;
-        }
-
-        m_pInstance->SetData(TYPE_GRUUL_EVENT, NOT_STARTED);
-
-        // Open the encounter door
-        if (GameObject* pEncounterDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GRUUL_ENCOUNTER_DOOR)))
-            pEncounterDoor->SetGoState(GO_STATE_ACTIVE);
     }
 
     void Aggro(Unit *pWho)
@@ -105,10 +93,12 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
             return;
 
         m_pInstance->SetData(TYPE_GRUUL_EVENT, IN_PROGRESS);
+    }
 
-        //Close the encounter door, open it in JustDied/Reset
-        if (GameObject* pEncounterDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GRUUL_ENCOUNTER_DOOR)))
-            pEncounterDoor->SetGoState(GO_STATE_READY);
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_GRUUL_EVENT, NOT_STARTED);
     }
 
     void KilledUnit(Unit* pVictim)
@@ -129,10 +119,6 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
             return;
 
         m_pInstance->SetData(TYPE_GRUUL_EVENT, DONE);
-
-        // Open the encounter door
-        if (GameObject* pEncounterDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GRUUL_ENCOUNTER_DOOR)))
-            pEncounterDoor->SetGoState(GO_STATE_ACTIVE);
     }
 
     void UpdateAI(const uint32 uiDiff)

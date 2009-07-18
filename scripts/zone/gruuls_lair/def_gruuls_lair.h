@@ -16,15 +16,7 @@ enum
     DATA_BLINDEYE                   = 4,
     DATA_KIGGLER                    = 5,
     DATA_KROSH                      = 6,
-    DATA_OLM                        = 7,
-
-    // PC GUIDs
-    DATA_MAULGAR_STARTER            = 8,
-
-    // GO GUIDs
-    DATA_MAULGAR_DOOR               = 9,
-    DATA_GRUUL_ENCOUNTER_DOOR       = 10
+    DATA_OLM                        = 7
 };
 
-#define ERROR_INST_DATA "SD2 Error: Instance Data not set properly for Gruul's Lair instance (map 565). Encounters will be buggy."
 #endif
