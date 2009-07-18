@@ -431,7 +431,7 @@ struct MANGOS_DLL_DECL npc_khadgars_servantAI : public npc_escortAI
     {
         if (!IsBeingEscorted && pguid)
         {
-            Start(false, false, false, pguid);
+            Start(false, false, pguid);
             pguid = 0;
         }
 

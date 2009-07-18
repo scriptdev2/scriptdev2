@@ -108,7 +108,7 @@ bool QuestAccept_npc_ruul_snowhoof(Player* pPlayer, Creature* pCreature, const Q
     {
         pCreature->setFaction(FACTION_R_ESCORTEE);
         pCreature->SetStandState(UNIT_STAND_STATE_STAND);
-        ((npc_escortAI*)(pCreature->AI()))->Start(true, true, false, pPlayer->GetGUID());
+        ((npc_escortAI*)(pCreature->AI()))->Start(true, false, pPlayer->GetGUID());
     }
     return true;
 }
@@ -230,7 +230,7 @@ bool QuestAccept_npc_torek(Player* pPlayer, Creature* pCreature, const Quest* pQ
     if (pQuest->GetQuestId() == QUEST_TOREK_ASSULT)
     {
         //TODO: find companions, make them follow Torek, at any time (possibly done by mangos/database in future?)
-        ((npc_escortAI*)(pCreature->AI()))->Start(true, true, true, pPlayer->GetGUID());
+        ((npc_escortAI*)(pCreature->AI()))->Start(true, true, pPlayer->GetGUID());
         DoScriptText(SAY_READY, pCreature, pPlayer);
     }
 

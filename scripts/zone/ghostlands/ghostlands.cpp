@@ -234,7 +234,7 @@ bool QuestAccept_npc_ranger_lilatha(Player* pPlayer, Creature* pCreature, const 
     if (pQuest->GetQuestId() == QUEST_CATACOMBS)
     {
         pCreature->setFaction(FACTION_SMOON_E);
-        ((npc_escortAI*)(pCreature->AI()))->Start(true, true, false, pPlayer->GetGUID());
+        ((npc_escortAI*)(pCreature->AI()))->Start(true, false, pPlayer->GetGUID());
     }
     return true;
 }

@@ -127,7 +127,7 @@ bool QuestAccept_npc_professor_phizzlethorpe(Player* pPlayer, Creature* pCreatur
     {
         pCreature->setFaction(FACTION_ESCORTEE);
         DoScriptText(SAY_PROGRESS_1, pCreature, pPlayer);
-        ((npc_escortAI*)(pCreature->AI()))->Start(false, true, false, pPlayer->GetGUID());
+        ((npc_escortAI*)(pCreature->AI()))->Start(false, false, pPlayer->GetGUID());
     }
     return true;
 }

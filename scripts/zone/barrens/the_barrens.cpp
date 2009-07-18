@@ -512,7 +512,7 @@ bool QuestAccept_npc_wizzlecranks_shredder(Player* pPlayer, Creature* pCreature,
     {
         DoScriptText(SAY_START, pCreature);
         pCreature->setFaction(FACTION_RATCHET);
-        ((npc_escortAI*)(pCreature->AI()))->Start(true, true, true, pPlayer->GetGUID());
+        ((npc_escortAI*)(pCreature->AI()))->Start(true, true, pPlayer->GetGUID());
     }
     return true;
 }

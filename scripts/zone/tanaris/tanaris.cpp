@@ -196,7 +196,7 @@ struct MANGOS_DLL_DECL npc_custodian_of_timeAI : public npc_escortAI
                 float Radius = 10.0;
                 if (m_creature->IsWithinDistInMap(who, Radius))
                 {
-                    ((npc_escortAI*)(m_creature->AI()))->Start(false, false, false, who->GetGUID());
+                    ((npc_escortAI*)(m_creature->AI()))->Start(false, false, who->GetGUID());
                 }
             }
         }
@@ -375,7 +375,7 @@ bool QuestAccept_npc_oox17tn(Player* pPlayer, Creature* pCreature, const Quest* 
         if (pPlayer->GetTeam() == HORDE)
             pCreature->setFaction(FACTION_ESCORTEE_H);
 
-        ((npc_escortAI*)(pCreature->AI()))->Start(true, true, false, pPlayer->GetGUID());
+        ((npc_escortAI*)(pCreature->AI()))->Start(true, false, pPlayer->GetGUID());
     }
     return true;
 }

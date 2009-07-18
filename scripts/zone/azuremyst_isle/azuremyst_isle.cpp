@@ -396,7 +396,7 @@ bool QuestAccept_npc_magwin(Player* pPlayer, Creature* pCreature, const Quest* p
     if (pQuest->GetQuestId() == QUEST_A_CRY_FOR_HELP)
     {
         pCreature->setFaction(10);
-        ((npc_escortAI*)(pCreature->AI()))->Start(true, true, false, pPlayer->GetGUID());
+        ((npc_escortAI*)(pCreature->AI()))->Start(true, false, pPlayer->GetGUID());
     }
     return true;
 }

@@ -33,9 +33,6 @@ void npc_escortAI::AttackStart(Unit *who)
     if (!who)
         return;
 
-    if (IsBeingEscorted && !m_bCanDefendSelf)
-        return;
-
     if (m_creature->Attack(who, true))
     {
         m_creature->AddThreat(who, 0.0f);
@@ -324,7 +321,7 @@ void npc_escortAI::SetRun(bool bRun)
 }
 
 //TODO: get rid of this many variables passed in function.
-void npc_escortAI::Start(bool bIsActiveAttacker, bool bCanDefendSelf, bool bRun, uint64 uiPlayerGUID, const Quest* pQuest, bool bInstantRespawn, bool bCanLoopPath)
+void npc_escortAI::Start(bool bIsActiveAttacker, bool bRun, uint64 uiPlayerGUID, const Quest* pQuest, bool bInstantRespawn, bool bCanLoopPath)
 {
     if (m_creature->getVictim())
     {
@@ -346,7 +343,6 @@ void npc_escortAI::Start(bool bIsActiveAttacker, bool bCanDefendSelf, bool bRun,
 
     //set variables
     m_bIsActiveAttacker = bIsActiveAttacker;
-    m_bCanDefendSelf = bCanDefendSelf;
     m_bIsRunning = bRun;
 
     PlayerGUID = uiPlayerGUID;
@@ -368,7 +364,7 @@ void npc_escortAI::Start(bool bIsActiveAttacker, bool bCanDefendSelf, bool bRun,
     //disable npcflags
     m_creature->SetUInt32Value(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_NONE);
 
-    debug_log("SD2: EscortAI started with %d waypoints. ActiveAttacker = %d, Defend = %d, Run = %d, PlayerGUID = %d", WaypointList.size(), m_bIsActiveAttacker, m_bCanDefendSelf, m_bIsRunning, PlayerGUID);
+    debug_log("SD2: EscortAI started with %d waypoints. ActiveAttacker = %d, Run = %d, PlayerGUID = %d", WaypointList.size(), m_bIsActiveAttacker, m_bIsRunning, PlayerGUID);
 
     CurrentWP = WaypointList.begin();
 
