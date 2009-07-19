@@ -242,7 +242,7 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
         {
             if (m_pInstance)
             {
-                if (m_pInstance->GetData(DATA_OHGANISDEAD))
+                if (m_pInstance->GetData(TYPE_OHGAN) == DONE)
                 {
                     if (!RaptorDead)
                     {
@@ -280,7 +280,7 @@ struct MANGOS_DLL_DECL mob_ohganAI : public ScriptedAI
     void JustDied(Unit* Killer)
     {
         if (m_pInstance)
-            m_pInstance->SetData(DATA_OHGAN_DEATH, 0);
+            m_pInstance->SetData(TYPE_OHGAN, DONE);
     }
 
     void UpdateAI (const uint32 diff)

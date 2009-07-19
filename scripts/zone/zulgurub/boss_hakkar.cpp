@@ -149,7 +149,7 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
         {
             if (m_pInstance)
             {
-                if (!m_pInstance->GetData(DATA_JEKLIKISDEAD))
+                if (m_pInstance->GetData(TYPE_JEKLIK) != DONE)
                 {
                     if (AspectOfJeklik_Timer < diff)
                     {
@@ -166,7 +166,7 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
         {
             if (m_pInstance)
             {
-                if (!m_pInstance->GetData(DATA_VENOXISISDEAD))
+                if (m_pInstance->GetData(TYPE_VENOXIS) != DONE)
                 {
                     if (AspectOfVenoxis_Timer < diff)
                     {
@@ -183,7 +183,7 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
         {
             if (m_pInstance)
             {
-                if (!m_pInstance->GetData(DATA_MARLIISDEAD))
+                if (m_pInstance->GetData(TYPE_MARLI) != DONE)
                 {
                     if (AspectOfMarli_Timer < diff)
                     {
@@ -201,7 +201,7 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
         {
             if (m_pInstance)
             {
-                if (!m_pInstance->GetData(DATA_THEKALISDEAD))
+                if (m_pInstance->GetData(TYPE_THEKAL) != DONE)
                 {
                     if (AspectOfThekal_Timer < diff)
                     {
@@ -218,7 +218,7 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
         {
             if (m_pInstance)
             {
-                if (!m_pInstance->GetData(DATA_ARLOKKISDEAD))
+                if (m_pInstance->GetData(TYPE_ARLOKK) != DONE)
                 {
                     if (AspectOfArlokk_Timer < diff)
                     {
@@ -235,6 +235,7 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
+
 CreatureAI* GetAI_boss_hakkar(Creature* pCreature)
 {
     return new boss_hakkarAI(pCreature);

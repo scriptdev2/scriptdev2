@@ -88,7 +88,7 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
         DoScriptText(SAY_DEATH, m_creature);
 
         if (m_pInstance)
-            m_pInstance->SetData(DATA_JEKLIK_DEATH, 0);
+            m_pInstance->SetData(TYPE_JEKLIK, DONE);
     }
 
     void UpdateAI(const uint32 diff)
@@ -245,10 +245,11 @@ struct MANGOS_DLL_DECL mob_batriderAI : public ScriptedAI
         {
             if (m_pInstance)
             {
-                if (m_pInstance->GetData(DATA_JEKLIKISDEAD))
+                if (m_pInstance->GetData(TYPE_JEKLIK) == DONE)
                 {
                     m_creature->setDeathState(JUST_DIED);
                     m_creature->RemoveCorpse();
+                    return;
                 }
             }
             Check_Timer = 1000;

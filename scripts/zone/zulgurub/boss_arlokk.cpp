@@ -24,6 +24,19 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_zulgurub.h"
 
+bool GOHello_go_gong_of_bethekk(Player* pPlayer, GameObject* pGo)
+{
+    if (ScriptedInstance* pInstance = (ScriptedInstance*)pGo->GetInstanceData())
+    {
+        if (pInstance->GetData(TYPE_ARLOKK) == DONE || pInstance->GetData(TYPE_ARLOKK) == IN_PROGRESS)
+            return true;
+
+        pInstance->SetData(TYPE_ARLOKK) == IN_PROGRESS);
+    }
+
+    return false;
+}
+
 #define SAY_AGGRO                   -1309011
 #define SAY_FEAST_PANTHER           -1309012
 #define SAY_DEATH                   -1309013
@@ -84,6 +97,15 @@ struct MANGOS_DLL_DECL boss_arlokkAI : public ScriptedAI
         DoScriptText(SAY_AGGRO, m_creature);
     }
 
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_ARLOKK, NOT_STARTED);
+
+        //we should be summoned, so despawn
+        m_creature->ForcedDespawn();
+    }
+
     void JustDied(Unit* Killer)
     {
         DoScriptText(SAY_DEATH, m_creature);
@@ -92,7 +114,7 @@ struct MANGOS_DLL_DECL boss_arlokkAI : public ScriptedAI
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 
         if (m_pInstance)
-            m_pInstance->SetData(DATA_ARLOKK_DEATH, 0);
+            m_pInstance->SetData(TYPE_ARLOKK, DONE);
     }
 
     void UpdateAI(const uint32 diff)
@@ -201,6 +223,7 @@ struct MANGOS_DLL_DECL boss_arlokkAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
+
 CreatureAI* GetAI_boss_arlokk(Creature* pCreature)
 {
     return new boss_arlokkAI(pCreature);
@@ -209,6 +232,12 @@ CreatureAI* GetAI_boss_arlokk(Creature* pCreature)
 void AddSC_boss_arlokk()
 {
     Script *newscript;
+
+    newscript = new Script;
+    newscript->Name = "go_gong_of_bethekk";
+    newscript->pGOHello = &GOHello_go_gong_of_bethekk;
+    newscript->RegisterSelf();
+
     newscript = new Script;
     newscript->Name = "boss_arlokk";
     newscript->GetAI = &GetAI_boss_arlokk;

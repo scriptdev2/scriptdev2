@@ -84,7 +84,7 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
         DoScriptText(SAY_DEATH, m_creature);
 
         if (m_pInstance)
-            m_pInstance->SetData(DATA_MARLI_DEATH, 0);
+            m_pInstance->SetData(TYPE_MARLI, DONE);
     }
 
     void UpdateAI(const uint32 diff)
