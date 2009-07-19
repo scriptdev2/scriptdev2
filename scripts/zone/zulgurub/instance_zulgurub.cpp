@@ -126,13 +126,13 @@ struct MANGOS_DLL_DECL instance_zulgurub : public ScriptedInstance
         switch(uiData)
         {
             case DATA_LORKHAN:
-                return LorKhanGUID;
+                return m_uiLorKhanGUID;
             case DATA_ZATH:
-                return ZathGUID;
+                return m_uiZathGUID;
             case DATA_THEKAL:
-                return ThekalGUID;
+                return m_uiThekalGUID;
             case DATA_JINDO:
-                return JindoGUID;
+                return m_uiJindoGUID;
         }
         return 0;
     }
