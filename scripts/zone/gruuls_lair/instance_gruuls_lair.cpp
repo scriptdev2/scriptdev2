@@ -24,7 +24,7 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_gruuls_lair.h"
 
-#define ENCOUNTERS 2
+#define MAX_ENCOUNTER 2
 
 /* Gruuls Lair encounters:
 1 - High King Maulgar event
@@ -35,7 +35,7 @@ struct MANGOS_DLL_DECL instance_gruuls_lair : public ScriptedInstance
 {
     instance_gruuls_lair(Map *pMap) : ScriptedInstance(pMap) {Initialize();}
 
-    uint32 m_auiEncounter[ENCOUNTERS];
+    uint32 m_auiEncounter[MAX_ENCOUNTER];
     std::string strSaveData;
 
     uint64 m_uiMaulgarGUID;
@@ -48,8 +48,7 @@ struct MANGOS_DLL_DECL instance_gruuls_lair : public ScriptedInstance
 
     void Initialize()
     {
-        for (uint8 i = 0; i < ENCOUNTERS; ++i)
-            m_auiEncounter[i] = NOT_STARTED;
+        memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
 
         m_uiMaulgarGUID             = 0;
         m_uiKigglerGUID             = 0;
@@ -63,7 +62,7 @@ struct MANGOS_DLL_DECL instance_gruuls_lair : public ScriptedInstance
 
     bool IsEncounterInProgress() const
     {
-        for (uint8 i = 0; i < ENCOUNTERS; ++i)
+        for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
             if (m_auiEncounter[i] == IN_PROGRESS)
                 return true;
 
@@ -168,7 +167,7 @@ struct MANGOS_DLL_DECL instance_gruuls_lair : public ScriptedInstance
 
         loadStream >> m_auiEncounter[0] >> m_auiEncounter[1];
 
-        for(uint8 i = 0; i < ENCOUNTERS; ++i)
+        for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
             if (m_auiEncounter[i] == IN_PROGRESS)
                 m_auiEncounter[i] = NOT_STARTED;
 

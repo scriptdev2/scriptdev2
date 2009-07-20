@@ -26,7 +26,7 @@ EndScriptData */
 
 enum
 {
-    ENCOUNTERS              = 6,
+    MAX_ENCOUNTER           = 6,
 
     NPC_EMPEROR             = 9019,
     NPC_PRINCESS            = 8929,
@@ -65,7 +65,7 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
 {
     instance_blackrock_depths(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
 
-    uint32 m_uiEncounter[ENCOUNTERS];
+    uint32 m_auiEncounter[MAX_ENCOUNTER];
     std::string str_data;
 
     uint64 m_uiEmperorGUID;
@@ -104,6 +104,8 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
 
     void Initialize()
     {
+        memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
+
         m_uiEmperorGUID = 0;
         m_uiPrincessGUID = 0;
         m_uiPhalanxGUID = 0;
@@ -137,9 +139,6 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
         m_uiSevensChestGUID = 0;
 
         m_uiBarAleCount = 0;
-
-        for(uint8 i = 0; i < ENCOUNTERS; ++i)
-            m_uiEncounter[i] = NOT_STARTED;
     }
 
     void OnCreatureCreate(Creature* pCreature)
@@ -192,16 +191,16 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
         switch(uiType)
         {
             case TYPE_RING_OF_LAW:
-                m_uiEncounter[0] = uiData;
+                m_auiEncounter[0] = uiData;
                 break;
             case TYPE_VAULT:
-                m_uiEncounter[1] = uiData;
+                m_auiEncounter[1] = uiData;
                 break;
             case TYPE_BAR:
                 if (uiData == SPECIAL)
                     ++m_uiBarAleCount;
                 else
-                    m_uiEncounter[2] = uiData;
+                    m_auiEncounter[2] = uiData;
                 break;
             case TYPE_TOMB_OF_SEVEN:
                 switch(uiData)
@@ -210,7 +209,7 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
                         DoUseDoorOrButton(m_uiGoTombEnterGUID);
                         break;
                     case FAIL:
-                        if (m_uiEncounter[3] == IN_PROGRESS)//prevent use more than one time
+                        if (m_auiEncounter[3] == IN_PROGRESS)//prevent use more than one time
                             DoUseDoorOrButton(m_uiGoTombEnterGUID);
                         break;
                     case DONE:
@@ -219,7 +218,7 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
                         DoUseDoorOrButton(m_uiGoTombEnterGUID);
                         break;
                 }
-                m_uiEncounter[3] = uiData;
+                m_auiEncounter[3] = uiData;
                 break;
             case TYPE_LYCEUM:
                 if (uiData == DONE)
@@ -227,7 +226,7 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
                     DoUseDoorOrButton(m_uiGoGolemNGUID);
                     DoUseDoorOrButton(m_uiGoGolemSGUID);
                 }
-                m_uiEncounter[4] = uiData;
+                m_auiEncounter[4] = uiData;
                 break;
             case TYPE_IRON_HALL:
                 switch(uiData)
@@ -246,7 +245,7 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
                         DoUseDoorOrButton(m_uiGoThroneGUID);
                         break;
                 }
-                m_uiEncounter[5] = uiData;
+                m_auiEncounter[5] = uiData;
                 break;
         }
 
@@ -255,8 +254,8 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
             OUT_SAVE_INST_DATA;
 
             std::ostringstream saveStream;
-            saveStream << m_uiEncounter[0] << " " << m_uiEncounter[1] << " " << m_uiEncounter[2] << " "
-                << m_uiEncounter[3] << " " << m_uiEncounter[4] << " " << m_uiEncounter[5];
+            saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " "
+                << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5];
 
             str_data = saveStream.str();
 
@@ -270,20 +269,20 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
         switch(uiType)
         {
             case TYPE_RING_OF_LAW:
-                return m_uiEncounter[0];
+                return m_auiEncounter[0];
             case TYPE_VAULT:
-                return m_uiEncounter[1];
+                return m_auiEncounter[1];
             case TYPE_BAR:
-                if (m_uiEncounter[2] == IN_PROGRESS && m_uiBarAleCount == 3)
+                if (m_auiEncounter[2] == IN_PROGRESS && m_uiBarAleCount == 3)
                     return SPECIAL;
                 else
-                    return m_uiEncounter[2];
+                    return m_auiEncounter[2];
             case TYPE_TOMB_OF_SEVEN:
-                return m_uiEncounter[3];
+                return m_auiEncounter[3];
             case TYPE_LYCEUM:
-                return m_uiEncounter[4];
+                return m_auiEncounter[4];
             case TYPE_IRON_HALL:
-                return m_uiEncounter[5];
+                return m_auiEncounter[5];
         }
         return 0;
     }
@@ -352,12 +351,12 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
         OUT_LOAD_INST_DATA(in);
 
         std::istringstream loadStream(in);
-        loadStream >> m_uiEncounter[0] >> m_uiEncounter[1] >> m_uiEncounter[2] >> m_uiEncounter[3]
-            >> m_uiEncounter[4] >> m_uiEncounter[5];
+        loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3]
+            >> m_auiEncounter[4] >> m_auiEncounter[5];
 
-        for(uint8 i = 0; i < ENCOUNTERS; ++i)
-            if (m_uiEncounter[i] == IN_PROGRESS)
-                m_uiEncounter[i] = NOT_STARTED;
+        for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+            if (m_auiEncounter[i] == IN_PROGRESS)
+                m_auiEncounter[i] = NOT_STARTED;
 
         OUT_LOAD_INST_DATA_COMPLETE;
     }

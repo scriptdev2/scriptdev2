@@ -33,7 +33,7 @@ EndScriptData */
 5 - Lady Vashj Event
 */
 
-const int ENCOUNTERS    = 6;
+const int MAX_ENCOUNTER = 6;
 const int MAX_GENERATOR = 4;
 
 struct MANGOS_DLL_DECL instance_serpentshrine_cavern : public ScriptedInstance
@@ -47,26 +47,26 @@ struct MANGOS_DLL_DECL instance_serpentshrine_cavern : public ScriptedInstance
     uint64 m_uiKarathress;
     uint64 m_uiKarathressEvent_Starter;
 
-    uint32 m_uiShieldGenerator[MAX_GENERATOR];
-    uint32 m_uiEncounter[ENCOUNTERS];
+    uint32 m_auiShieldGenerator[MAX_GENERATOR];
+    uint32 m_auiEncounter[MAX_ENCOUNTER];
 
     void Initialize()
     {
+        memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
+        memset(&m_auiShieldGenerator, 0, sizeof(m_auiShieldGenerator));
+
         m_uiSharkkis = 0;
         m_uiTidalvess = 0;
         m_uiCaribdis = 0;
         m_uiLadyVashj = 0;
         m_uiKarathress = 0;
         m_uiKarathressEvent_Starter = 0;
-
-        memset(&m_uiShieldGenerator, 0, sizeof(m_uiShieldGenerator));
-        memset(&m_uiEncounter, 0, sizeof(m_uiEncounter));
     }
 
     bool IsEncounterInProgress()
     {
-        for(uint8 i = 0; i < ENCOUNTERS; ++i)
-            if (m_uiEncounter[i] == IN_PROGRESS)
+        for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+            if (m_auiEncounter[i] == IN_PROGRESS)
                 return true;
 
         return false;
@@ -115,36 +115,36 @@ struct MANGOS_DLL_DECL instance_serpentshrine_cavern : public ScriptedInstance
         switch(uiType)
         {
             case TYPE_HYDROSS_EVENT:
-                m_uiEncounter[0] = uiData;
+                m_auiEncounter[0] = uiData;
                 break;
             case TYPE_LEOTHERAS_EVENT:
-                m_uiEncounter[1] = uiData;
+                m_auiEncounter[1] = uiData;
                 break;
             case TYPE_THELURKER_EVENT:
-                m_uiEncounter[2] = uiData;
+                m_auiEncounter[2] = uiData;
                 break;
             case TYPE_KARATHRESS_EVENT:
-                m_uiEncounter[3] = uiData;
+                m_auiEncounter[3] = uiData;
                 break;
             case TYPE_MOROGRIM_EVENT:
-                m_uiEncounter[4] = uiData;
+                m_auiEncounter[4] = uiData;
                 break;
             case TYPE_LADYVASHJ_EVENT:
                 if (uiData == NOT_STARTED)
-                    memset(&m_uiShieldGenerator, 0, sizeof(m_uiShieldGenerator));
-                m_uiEncounter[5] = uiData;
+                    memset(&m_auiShieldGenerator, 0, sizeof(m_auiShieldGenerator));
+                m_auiEncounter[5] = uiData;
                 break;
             case TYPE_SHIELDGENERATOR1:
-                m_uiShieldGenerator[0] = uiData;
+                m_auiShieldGenerator[0] = uiData;
                 break;
             case TYPE_SHIELDGENERATOR2:
-                m_uiShieldGenerator[1] = uiData;
+                m_auiShieldGenerator[1] = uiData;
                 break;
             case TYPE_SHIELDGENERATOR3:
-                m_uiShieldGenerator[2] = uiData;
+                m_auiShieldGenerator[2] = uiData;
                 break;
             case TYPE_SHIELDGENERATOR4:
-                m_uiShieldGenerator[3] = uiData;
+                m_auiShieldGenerator[3] = uiData;
                 break;
         }
     }
@@ -154,39 +154,39 @@ struct MANGOS_DLL_DECL instance_serpentshrine_cavern : public ScriptedInstance
         switch(uiType)
         {
             case TYPE_HYDROSS_EVENT:
-                return m_uiEncounter[0];
+                return m_auiEncounter[0];
 
             case TYPE_LEOTHERAS_EVENT:
-                return m_uiEncounter[1];
+                return m_auiEncounter[1];
 
             case TYPE_THELURKER_EVENT:
-                return m_uiEncounter[2];
+                return m_auiEncounter[2];
 
             case TYPE_KARATHRESS_EVENT:
-                return m_uiEncounter[3];
+                return m_auiEncounter[3];
 
             case TYPE_MOROGRIM_EVENT:
-                return m_uiEncounter[4];
+                return m_auiEncounter[4];
 
             case TYPE_LADYVASHJ_EVENT:
-                return m_uiEncounter[5];
+                return m_auiEncounter[5];
 
             case TYPE_SHIELDGENERATOR1:
-                return m_uiShieldGenerator[0];
+                return m_auiShieldGenerator[0];
 
             case TYPE_SHIELDGENERATOR2:
-                return m_uiShieldGenerator[1];
+                return m_auiShieldGenerator[1];
 
             case TYPE_SHIELDGENERATOR3:
-                return m_uiShieldGenerator[2];
+                return m_auiShieldGenerator[2];
 
             case TYPE_SHIELDGENERATOR4:
-                return m_uiShieldGenerator[3];
+                return m_auiShieldGenerator[3];
 
             case TYPE_VASHJ_PHASE3_CHECK:
                 for(uint8 i = 0; i < MAX_GENERATOR; ++i)
                 {
-                    if (m_uiShieldGenerator[i] != DONE)
+                    if (m_auiShieldGenerator[i] != DONE)
                         return NOT_STARTED;
                 }
                 return DONE;

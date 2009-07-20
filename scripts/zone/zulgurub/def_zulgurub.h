@@ -7,7 +7,7 @@
 
 enum
 {
-    MAX_ENCOUNTERS          = 8,
+    MAX_ENCOUNTER           = 8,
 
     TYPE_ARLOKK             = 1,
     TYPE_JEKLIK             = 2,

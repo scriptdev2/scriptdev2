@@ -24,13 +24,13 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_blood_furnace.h"
 
-#define ENCOUNTERS 3
+#define MAX_ENCOUNTER 3
 
 struct MANGOS_DLL_DECL instance_blood_furnace : public ScriptedInstance
 {
     instance_blood_furnace(Map* pMap) : ScriptedInstance(pMap) {Initialize();}
 
-    uint32 m_auiEncounter[ENCOUNTERS];
+    uint32 m_auiEncounter[MAX_ENCOUNTER];
     std::string str_data;
 
     uint64 m_uiMakerGUID;
@@ -55,6 +55,8 @@ struct MANGOS_DLL_DECL instance_blood_furnace : public ScriptedInstance
 
     void Initialize()
     {
+        memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
+
         m_uiMakerGUID = 0;
         m_uiBroggokGUID = 0;
         m_uiKelidanGUID = 0;
@@ -74,9 +76,6 @@ struct MANGOS_DLL_DECL instance_blood_furnace : public ScriptedInstance
         m_uiPrisonCell6GUID = 0;
         m_uiPrisonCell7GUID = 0;
         m_uiPrisonCell8GUID = 0;
-
-        for(uint8 i = 0; i < ENCOUNTERS; i++)
-            m_auiEncounter[i] = NOT_STARTED;
     }
 
     void OnCreatureCreate(Creature* pCreature)
@@ -234,7 +233,7 @@ struct MANGOS_DLL_DECL instance_blood_furnace : public ScriptedInstance
         std::istringstream loadStream(in);
         loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2];
 
-        for(uint8 i = 0; i < ENCOUNTERS; ++i)
+        for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
             if (m_auiEncounter[i] == IN_PROGRESS || m_auiEncounter[i] == FAIL)
                 m_auiEncounter[i] = NOT_STARTED;
 

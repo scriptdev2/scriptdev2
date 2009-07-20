@@ -33,11 +33,11 @@ EndScriptData */
 #define CHAMBER_CENTER_Y              1.8
 #define CHAMBER_CENTER_Z             -0.4
 
-#define ENCOUNTERS                  2
+#define MAX_ENCOUNTER               2
 
 struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
 {
-    instance_magtheridons_lair(Map *map) : ScriptedInstance(map)
+    instance_magtheridons_lair(Map* pMap) : ScriptedInstance(pMap)
     {
          Initialize();
 
@@ -83,33 +83,32 @@ struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
          */
     }
 
-    uint32 Encounters[ENCOUNTERS];
+    uint32 m_auiEncounter[MAX_ENCOUNTER];
 
-    uint64 MagtheridonGUID;
+    uint64 m_uiMagtheridonGUID;
     std::set<uint64> ChannelerGUID;
-    uint64 DoorGUID;
+    uint64 m_uiDoorGUID;
     std::set<uint64> ColumnGUID;
 
-    uint32 CageTimer;
-    uint32 RespawnTimer;
+    uint32 m_uiCageTimer;
+    uint32 m_uiRespawnTimer;
 
     void Initialize()
     {
-        for(uint8 i = 0; i < ENCOUNTERS; i++)
-            Encounters[i] = NOT_STARTED;
+        memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
 
-        MagtheridonGUID = 0;
+        m_uiMagtheridonGUID = 0;
         ChannelerGUID.clear();
-        DoorGUID = 0;
+        m_uiDoorGUID = 0;
         ColumnGUID.clear();
-        CageTimer = 0;
-        RespawnTimer = 0;
+        m_uiCageTimer = 0;
+        m_uiRespawnTimer = 0;
     }
 
     bool IsEncounterInProgress() const
     {
-        for(uint8 i = 0; i < ENCOUNTERS; i++)
-            if (Encounters[i] == IN_PROGRESS)
+        for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+            if (m_auiEncounter[i] == IN_PROGRESS)
                 return true;
 
         return false;
@@ -119,20 +118,20 @@ struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
     {
         switch(pCreature->GetEntry())
         {
-            case 17257: MagtheridonGUID = pCreature->GetGUID(); break;
+            case 17257: m_uiMagtheridonGUID = pCreature->GetGUID(); break;
             case 17256: ChannelerGUID.insert(pCreature->GetGUID()); break;
         }
     }
 
-    void OnObjectCreate(GameObject *go)
+    void OnObjectCreate(GameObject* pGo)
     {
-        switch(go->GetEntry())
+        switch(pGo->GetEntry())
         {
             case 181713:
-                go->SetUInt32Value(GAMEOBJECT_FLAGS, 0);
+                pGo->SetUInt32Value(GAMEOBJECT_FLAGS, 0);
                 break;
             case 183847:                                    //event door
-                DoorGUID = go->GetGUID();
+                m_uiDoorGUID = pGo->GetGUID();
                 break;
             case 184653:                                    // hall
             case 184634:                                    // six columns
@@ -141,7 +140,7 @@ struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
             case 184637:
             case 184638:
             case 184639:
-                ColumnGUID.insert(go->GetGUID());
+                ColumnGUID.insert(pGo->GetGUID());
                 break;
         }
     }
@@ -151,7 +150,7 @@ struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
         switch(type)
         {
             case DATA_MAGTHERIDON:
-                return MagtheridonGUID;
+                return m_uiMagtheridonGUID;
         }
         return 0;
     }
@@ -161,12 +160,12 @@ struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
         switch(type)
         {
             case TYPE_MAGTHERIDON_EVENT:
-                Encounters[0] = data;
+                m_auiEncounter[0] = data;
                 if (data == NOT_STARTED)
-                    RespawnTimer = 10000;
+                    m_uiRespawnTimer = 10000;
                 if (data != IN_PROGRESS)
                 {
-                    if (GameObject* pDoor = instance->GetGameObject(DoorGUID))
+                    if (GameObject* pDoor = instance->GetGameObject(m_uiDoorGUID))
                         pDoor->SetGoState(GO_STATE_ACTIVE);
                 }
                 break;
@@ -174,9 +173,9 @@ struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
                 switch(data)
                 {
                     case NOT_STARTED:                       // Reset all channelers once one is reset.
-                        if (Encounters[1] != NOT_STARTED)
+                        if (m_auiEncounter[1] != NOT_STARTED)
                         {
-                            Encounters[1] = NOT_STARTED;
+                            m_auiEncounter[1] = NOT_STARTED;
 
                             if (ChannelerGUID.empty())
                                 debug_log("SD2: Instance Magtheridon: Channeler GUID list are empty.");
@@ -192,16 +191,16 @@ struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
                                 }
                             }
 
-                            CageTimer = 0;
+                            m_uiCageTimer = 0;
 
-                            if (GameObject* pDoor = instance->GetGameObject(DoorGUID))
+                            if (GameObject* pDoor = instance->GetGameObject(m_uiDoorGUID))
                                 pDoor->SetGoState(GO_STATE_ACTIVE);
                         }
                         break;
                     case IN_PROGRESS:                       // Event start.
-                        if (Encounters[1] != IN_PROGRESS)
+                        if (m_auiEncounter[1] != IN_PROGRESS)
                         {
-                            Encounters[1] = IN_PROGRESS;
+                            m_auiEncounter[1] = IN_PROGRESS;
 
                             // Let all five channelers aggro.
                             for(std::set<uint64>::iterator i = ChannelerGUID.begin(); i != ChannelerGUID.end(); ++i)
@@ -213,12 +212,12 @@ struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
                             }
 
                             // Magtheridon breaks free after two minutes.
-                            Creature* pMagtheridon = instance->GetCreature(MagtheridonGUID);
+                            Creature* pMagtheridon = instance->GetCreature(m_uiMagtheridonGUID);
 
                             if (pMagtheridon && pMagtheridon->isAlive())
-                                CageTimer = 120000;
+                                m_uiCageTimer = 120000;
 
-                            if (GameObject* pDoor = instance->GetGameObject(DoorGUID))
+                            if (GameObject* pDoor = instance->GetGameObject(m_uiDoorGUID))
                                 pDoor->SetGoState(GO_STATE_READY);
                         }
                         break;
@@ -237,7 +236,7 @@ struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
                         }
                         break;
                 }
-                Encounters[1] = data;
+                m_auiEncounter[1] = data;
                 break;
             case TYPE_HALL_COLLAPSE:
                 // IN_PROGRESS - collapse / NOT_STARTED - reset
@@ -252,9 +251,9 @@ struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
     uint32 GetData(uint32 type)
     {
         if (type == TYPE_MAGTHERIDON_EVENT)
-            return Encounters[0];
+            return m_auiEncounter[0];
         if (type == TYPE_CHANNELER_EVENT)
-            return Encounters[1];
+            return m_auiEncounter[1];
 
         return 0;
     }
@@ -292,18 +291,20 @@ struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
 
     void Update(uint32 diff)
     {
-        if (CageTimer)
+        if (m_uiCageTimer)
         {
-            if (CageTimer <= diff)
+            if (m_uiCageTimer <= diff)
             {
                 SetData(TYPE_MAGTHERIDON_EVENT, IN_PROGRESS);
-                CageTimer = 0;
-            }else CageTimer -= diff;
+                m_uiCageTimer = 0;
+            }
+            else
+                m_uiCageTimer -= diff;
         }
 
-        if (RespawnTimer)
+        if (m_uiRespawnTimer)
         {
-            if (RespawnTimer <= diff)
+            if (m_uiRespawnTimer <= diff)
             {
                 for(std::set<uint64>::iterator i = ChannelerGUID.begin(); i != ChannelerGUID.end(); ++i)
                 {
@@ -316,15 +317,17 @@ struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
                     }
                 }
 
-                RespawnTimer = 0;
-            }else RespawnTimer -= diff;
+                m_uiRespawnTimer = 0;
+            }
+            else
+                m_uiRespawnTimer -= diff;
         }
     }
 };
 
-InstanceData* GetInstanceData_instance_magtheridons_lair(Map* map)
+InstanceData* GetInstanceData_instance_magtheridons_lair(Map* pMap)
 {
-    return new instance_magtheridons_lair(map);
+    return new instance_magtheridons_lair(pMap);
 }
 
 void AddSC_instance_magtheridons_lair()

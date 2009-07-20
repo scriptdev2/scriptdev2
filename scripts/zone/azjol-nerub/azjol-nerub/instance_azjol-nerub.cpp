@@ -24,13 +24,13 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_azjol-nerub.h"
 
-#define ENCOUNTERS     3
+#define MAX_ENCOUNTER   3
 
 struct MANGOS_DLL_DECL instance_azjol_nerub : public ScriptedInstance
 {
     instance_azjol_nerub(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
 
-    uint32 m_uiEncounter[ENCOUNTERS];
+    uint32 m_auiEncounter[MAX_ENCOUNTER];
     std::string str_data;
 
     uint64 m_uiDoor_KrikthirGUID;
@@ -40,13 +40,12 @@ struct MANGOS_DLL_DECL instance_azjol_nerub : public ScriptedInstance
 
     void Initialize()
     {
+        memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
+
         m_uiDoor_KrikthirGUID = 0;
         m_uiDoor_Anubarak_1GUID = 0;
         m_uiDoor_Anubarak_2GUID = 0;
         m_uiDoor_Anubarak_3GUID = 0;
-
-        for(uint8 i = 0; i < ENCOUNTERS; ++i)
-            m_uiEncounter[i] = NOT_STARTED;
     }
 
     void OnObjectCreate(GameObject* pGo)
@@ -55,22 +54,22 @@ struct MANGOS_DLL_DECL instance_azjol_nerub : public ScriptedInstance
         {
             case GO_DOOR_KRIKTHIR:
                 m_uiDoor_KrikthirGUID = pGo->GetGUID();
-                if (m_uiEncounter[0] == DONE)
+                if (m_auiEncounter[0] == DONE)
                     pGo->SetGoState(GO_STATE_ACTIVE);
                 break;
             case GO_DOOR_ANUBARAK_1:
                 m_uiDoor_Anubarak_1GUID = pGo->GetGUID();
-                if (m_uiEncounter[2] == DONE || m_uiEncounter[2] == NOT_STARTED)
+                if (m_auiEncounter[2] == DONE || m_auiEncounter[2] == NOT_STARTED)
                     pGo->SetGoState(GO_STATE_ACTIVE);
                 break;
             case GO_DOOR_ANUBARAK_2:
                 m_uiDoor_Anubarak_2GUID = pGo->GetGUID();
-                if (m_uiEncounter[2] == DONE || m_uiEncounter[2] == NOT_STARTED)
+                if (m_auiEncounter[2] == DONE || m_auiEncounter[2] == NOT_STARTED)
                     pGo->SetGoState(GO_STATE_ACTIVE);
                 break;
             case GO_DOOR_ANUBARAK_3:
                 m_uiDoor_Anubarak_3GUID = pGo->GetGUID();
-                if (m_uiEncounter[2] == DONE || m_uiEncounter[2] == NOT_STARTED)
+                if (m_auiEncounter[2] == DONE || m_auiEncounter[2] == NOT_STARTED)
                     pGo->SetGoState(GO_STATE_ACTIVE);
                 break;
         }
@@ -81,16 +80,16 @@ struct MANGOS_DLL_DECL instance_azjol_nerub : public ScriptedInstance
         switch(uiType)
         {
             case EVENT_KRIKTHIR:
-                m_uiEncounter[0] = uiData;
+                m_auiEncounter[0] = uiData;
                 if (uiData == DONE)
                     if (GameObject* pGo = instance->GetGameObject(m_uiDoor_KrikthirGUID))
                         pGo->SetGoState(GO_STATE_ACTIVE);
                 break;
             case EVENT_HADRONOX:
-                m_uiEncounter[1] = uiData;
+                m_auiEncounter[1] = uiData;
                 break;
             case EVENT_ANUBARAK:
-                m_uiEncounter[2] = uiData;
+                m_auiEncounter[2] = uiData;
                 if (uiData == DONE || uiData == NOT_STARTED)
                 {
                     if (GameObject* pGo = instance->GetGameObject(m_uiDoor_Anubarak_1GUID))
@@ -117,7 +116,7 @@ struct MANGOS_DLL_DECL instance_azjol_nerub : public ScriptedInstance
             OUT_SAVE_INST_DATA;
 
             std::ostringstream saveStream;
-            saveStream << m_uiEncounter[0] << " " << m_uiEncounter[1] << " " << m_uiEncounter[2];
+            saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2];
 
             str_data = saveStream.str();
 
@@ -142,12 +141,12 @@ struct MANGOS_DLL_DECL instance_azjol_nerub : public ScriptedInstance
         OUT_LOAD_INST_DATA(in);
 
         std::istringstream loadStream(in);
-        loadStream >> m_uiEncounter[0] >> m_uiEncounter[1] >> m_uiEncounter[2];
+        loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2];
 
-        for(uint8 i = 0; i < ENCOUNTERS; ++i)
+        for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
         {
-            if (m_uiEncounter[i] == IN_PROGRESS)
-                m_uiEncounter[i] = NOT_STARTED;
+            if (m_auiEncounter[i] == IN_PROGRESS)
+                m_auiEncounter[i] = NOT_STARTED;
         }
 
         OUT_LOAD_INST_DATA_COMPLETE;

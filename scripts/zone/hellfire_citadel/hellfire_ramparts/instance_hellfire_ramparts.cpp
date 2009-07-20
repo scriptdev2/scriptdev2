@@ -28,7 +28,7 @@ struct MANGOS_DLL_DECL instance_ramparts : public ScriptedInstance
 {
     instance_ramparts(Map* pMap) : ScriptedInstance(pMap) {Initialize();}
 
-    uint32 m_uiEncounter[ENCOUNTERS];
+    uint32 m_auiEncounter[MAX_ENCOUNTER];
     uint32 m_uiSentryCounter;
     uint64 m_uiChestNGUID;
     uint64 m_uiChestHGUID;
@@ -36,13 +36,12 @@ struct MANGOS_DLL_DECL instance_ramparts : public ScriptedInstance
 
     void Initialize()
     {
+        memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
+
         m_uiSentryCounter = 0;
         m_uiChestNGUID = 0;
         m_uiChestHGUID = 0;
         m_uiHeraldGUID = 0;
-
-        for(uint8 i = 0; i < ENCOUNTERS; i++)
-            m_uiEncounter[i] = NOT_STARTED;
     }
 
     void OnCreatureCreate(Creature* pCreature)
@@ -67,9 +66,9 @@ struct MANGOS_DLL_DECL instance_ramparts : public ScriptedInstance
         switch(uiType)
         {
             case TYPE_VAZRUDEN:
-                if (uiData == DONE && m_uiEncounter[1] == DONE)
+                if (uiData == DONE && m_auiEncounter[1] == DONE)
                     DoRespawnGameObject(instance->IsHeroic() ? m_uiChestHGUID : m_uiChestNGUID, HOUR*IN_MILISECONDS);
-                m_uiEncounter[0] = uiData;
+                m_auiEncounter[0] = uiData;
                 break;
             case TYPE_NAZAN:
                 if (uiData == SPECIAL)
@@ -77,15 +76,15 @@ struct MANGOS_DLL_DECL instance_ramparts : public ScriptedInstance
                     ++m_uiSentryCounter;
 
                     if (m_uiSentryCounter == 2)
-                        m_uiEncounter[1] = uiData;
+                        m_auiEncounter[1] = uiData;
                 }
-                if (uiData == DONE && m_uiEncounter[0] == DONE)
+                if (uiData == DONE && m_auiEncounter[0] == DONE)
                 {
                     DoRespawnGameObject(instance->IsHeroic() ? m_uiChestHGUID : m_uiChestNGUID, HOUR*IN_MILISECONDS);
-                    m_uiEncounter[1] = uiData;
+                    m_auiEncounter[1] = uiData;
                 }
                 if (uiData == IN_PROGRESS)
-                    m_uiEncounter[1] = uiData;
+                    m_auiEncounter[1] = uiData;
                 break;
         }
     }
@@ -93,10 +92,10 @@ struct MANGOS_DLL_DECL instance_ramparts : public ScriptedInstance
     uint32 GetData(uint32 uiType)
     {
         if (uiType == TYPE_VAZRUDEN)
-            return m_uiEncounter[0];
+            return m_auiEncounter[0];
 
         if (uiType == TYPE_NAZAN)
-            return m_uiEncounter[1];
+            return m_auiEncounter[1];
 
         return 0;
     }

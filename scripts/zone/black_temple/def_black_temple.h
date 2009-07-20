@@ -5,7 +5,7 @@
 #ifndef DEF_BLACK_TEMPLE_H
 #define DEF_BLACK_TEMPLE_H
 
-#define ENCOUNTERS    9
+#define MAX_ENCOUNTER   9
 
 enum
 {

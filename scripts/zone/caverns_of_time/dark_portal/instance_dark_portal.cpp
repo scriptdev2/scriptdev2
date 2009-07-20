@@ -24,7 +24,7 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_dark_portal.h"
 
-#define ENCOUNTERS              2
+#define MAX_ENCOUNTER           2
 
 #define C_MEDIVH                15608
 #define C_TIME_RIFT             17838
@@ -61,39 +61,38 @@ static Wave RiftWaves[]=
 
 struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
 {
-    instance_dark_portal(Map *map) : ScriptedInstance(map) {Initialize();};
+    instance_dark_portal(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
 
-    uint32 Encounter[ENCOUNTERS];
+    uint32 m_auiEncounter[MAX_ENCOUNTER];
 
-    uint32 mRiftPortalCount;
-    uint32 mShieldPercent;
-    uint8 mRiftWaveCount;
-    uint8 mRiftWaveId;
+    uint32 m_uiRiftPortalCount;
+    uint32 m_uiShieldPercent;
+    uint8 m_uiRiftWaveCount;
+    uint8 m_uiRiftWaveId;
 
-    uint32 NextPortal_Timer;
+    uint32 m_uiNextPortal_Timer;
 
-    uint64 MedivhGUID;
-    uint8 CurrentRiftId;
+    uint64 m_uiMedivhGUID;
+    uint8 m_uiCurrentRiftId;
 
     void Initialize()
     {
-        MedivhGUID          = 0;
+        m_uiMedivhGUID = 0;
         Clear();
     }
 
     void Clear()
     {
-        for(uint8 i = 0; i < ENCOUNTERS; i++)
-            Encounter[i] = NOT_STARTED;
+        memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
 
-        mRiftPortalCount    = 0;
-        mShieldPercent      = 100;
-        mRiftWaveCount      = 0;
-        mRiftWaveId         = 0;
+        m_uiRiftPortalCount = 0;
+        m_uiShieldPercent = 100;
+        m_uiRiftWaveCount = 0;
+        m_uiRiftWaveId = 0;
 
-        CurrentRiftId = 0;
+        m_uiCurrentRiftId = 0;
 
-        NextPortal_Timer    = 0;
+        m_uiNextPortal_Timer = 0;
     }
 
     void UpdateBMWorldState(uint32 id, uint32 state)
@@ -136,7 +135,7 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
     void OnCreatureCreate(Creature* pCreature)
     {
         if (pCreature->GetEntry() == C_MEDIVH)
-            MedivhGUID = pCreature->GetGUID();
+            m_uiMedivhGUID = pCreature->GetGUID();
     }
 
     //what other conditions to check?
@@ -150,18 +149,18 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
 
     uint8 GetRiftWaveId()
     {
-        switch(mRiftPortalCount)
+        switch(m_uiRiftPortalCount)
         {
             case 6:
-                mRiftWaveId = 2;
+                m_uiRiftWaveId = 2;
                 return 1;
             case 12:
-                mRiftWaveId = 4;
+                m_uiRiftWaveId = 4;
                 return 3;
             case 18:
                 return 5;
             default:
-                return mRiftWaveId;
+                return m_uiRiftWaveId;
         }
     }
 
@@ -170,20 +169,20 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
         switch(type)
         {
             case TYPE_MEDIVH:
-                if (data == SPECIAL && Encounter[0] == IN_PROGRESS)
+                if (data == SPECIAL && m_auiEncounter[0] == IN_PROGRESS)
                 {
-                    --mShieldPercent;
-                    UpdateBMWorldState(WORLD_STATE_BM_SHIELD,mShieldPercent);
+                    --m_uiShieldPercent;
+                    UpdateBMWorldState(WORLD_STATE_BM_SHIELD, m_uiShieldPercent);
 
-                    if (!mShieldPercent)
+                    if (!m_uiShieldPercent)
                     {
-                        if (Creature* pMedivh = instance->GetCreature(MedivhGUID))
+                        if (Creature* pMedivh = instance->GetCreature(m_uiMedivhGUID))
                         {
                             if (pMedivh->isAlive())
                             {
                                 pMedivh->DealDamage(pMedivh, pMedivh->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-                                Encounter[0] = FAIL;
-                                Encounter[1] = NOT_STARTED;
+                                m_auiEncounter[0] = FAIL;
+                                m_auiEncounter[1] = NOT_STARTED;
                             }
                         }
                     }
@@ -194,8 +193,8 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
                     {
                         debug_log("SD2: Instance Dark Portal: Starting event.");
                         InitWorldState();
-                        Encounter[1] = IN_PROGRESS;
-                        NextPortal_Timer = 15000;
+                        m_auiEncounter[1] = IN_PROGRESS;
+                        m_uiNextPortal_Timer = 15000;
                     }
 
                     if (data == DONE)
@@ -221,17 +220,17 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
                         }
                     }
 
-                    Encounter[0] = data;
+                    m_auiEncounter[0] = data;
                 }
                 break;
             case TYPE_RIFT:
                 if (data == SPECIAL)
                 {
-                    if (mRiftPortalCount < 7)
-                        NextPortal_Timer = 5000;
+                    if (m_uiRiftPortalCount < 7)
+                        m_uiNextPortal_Timer = 5000;
                 }
                 else
-                    Encounter[1] = data;
+                    m_auiEncounter[1] = data;
                 break;
         }
     }
@@ -241,13 +240,13 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
         switch(type)
         {
             case TYPE_MEDIVH:
-                return Encounter[0];
+                return m_auiEncounter[0];
             case TYPE_RIFT:
-                return Encounter[1];
+                return m_auiEncounter[1];
             case DATA_PORTAL_COUNT:
-                return mRiftPortalCount;
+                return m_uiRiftPortalCount;
             case DATA_SHIELD:
-                return mShieldPercent;
+                return m_uiShieldPercent;
         }
         return 0;
     }
@@ -255,7 +254,7 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
     uint64 GetData64(uint32 data)
     {
         if (data == DATA_MEDIVH)
-            return MedivhGUID;
+            return m_uiMedivhGUID;
 
         return 0;
     }
@@ -286,16 +285,16 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
 
     void DoSpawnPortal()
     {
-        if (Creature* pMedivh = instance->GetCreature(MedivhGUID))
+        if (Creature* pMedivh = instance->GetCreature(m_uiMedivhGUID))
         {
             int tmp = rand()%(4-1);
 
-            if (tmp >= CurrentRiftId)
-                tmp++;
+            if (tmp >= m_uiCurrentRiftId)
+                ++tmp;
 
-            debug_log("SD2: Instance Dark Portal: Creating Time Rift at locationId %i (old locationId was %u).",tmp,CurrentRiftId);
+            debug_log("SD2: Instance Dark Portal: Creating Time Rift at locationId %i (old locationId was %u).", tmp, m_uiCurrentRiftId);
 
-            CurrentRiftId = tmp;
+            m_uiCurrentRiftId = tmp;
 
             Creature* pTemp = pMedivh->SummonCreature(C_TIME_RIFT,
                 PortalLocation[tmp][0],PortalLocation[tmp][1],PortalLocation[tmp][2],PortalLocation[tmp][3],
@@ -322,9 +321,9 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
         }
     }
 
-    void Update(uint32 diff)
+    void Update(uint32 uiDiff)
     {
-        if (Encounter[1] != IN_PROGRESS)
+        if (m_auiEncounter[1] != IN_PROGRESS)
             return;
 
         //add delay timer?
@@ -334,23 +333,25 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
             return;
         }
 
-        if (NextPortal_Timer)
+        if (m_uiNextPortal_Timer)
         {
-            if (NextPortal_Timer <= diff)
+            if (m_uiNextPortal_Timer <= uiDiff)
             {
-                ++mRiftPortalCount;
-                UpdateBMWorldState(WORLD_STATE_BM_RIFT,mRiftPortalCount);
+                ++m_uiRiftPortalCount;
+                UpdateBMWorldState(WORLD_STATE_BM_RIFT, m_uiRiftPortalCount);
 
                 DoSpawnPortal();
-                NextPortal_Timer = RiftWaves[GetRiftWaveId()].NextPortalTime;
-            }else NextPortal_Timer -= diff;
+                m_uiNextPortal_Timer = RiftWaves[GetRiftWaveId()].NextPortalTime;
+            }
+            else
+                m_uiNextPortal_Timer -= uiDiff;
         }
     }
 };
 
-InstanceData* GetInstanceData_instance_dark_portal(Map* map)
+InstanceData* GetInstanceData_instance_dark_portal(Map* pMap)
 {
-    return new instance_dark_portal(map);
+    return new instance_dark_portal(pMap);
 }
 
 void AddSC_instance_dark_portal()

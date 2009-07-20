@@ -29,7 +29,7 @@ struct MANGOS_DLL_DECL instance_zulgurub : public ScriptedInstance
     instance_zulgurub(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
 
     //If all High Priest bosses were killed. Lorkhan, Zath and Ohgan are added too.
-    uint32 m_auiEncounter[MAX_ENCOUNTERS];
+    uint32 m_auiEncounter[MAX_ENCOUNTER];
 
     //Storing Lorkhan, Zath and Thekal because we need to cast on them later. Jindo is needed for healfunction too.
     uint64 m_uiLorKhanGUID;
@@ -39,13 +39,12 @@ struct MANGOS_DLL_DECL instance_zulgurub : public ScriptedInstance
 
     void Initialize()
     {
+        memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
+
         m_uiLorKhanGUID = 0;
         m_uiZathGUID = 0;
         m_uiThekalGUID = 0;
         m_uiJindoGUID = 0;
-
-        for(uint8 i = 0; i < MAX_ENCOUNTERS; ++i)
-            m_auiEncounter[i] = NOT_STARTED;
     }
 
     bool IsEncounterInProgress() const

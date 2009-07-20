@@ -24,7 +24,7 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_steam_vault.h"
 
-#define ENCOUNTERS 4
+#define MAX_ENCOUNTER 4
 
 #define MAIN_CHAMBERS_DOOR      183049
 #define ACCESS_PANEL_HYDRO      184125
@@ -54,35 +54,34 @@ bool GOHello_go_main_chambers_access_panel(Player* pPlayer, GameObject* _GO)
 
 struct MANGOS_DLL_DECL instance_steam_vault : public ScriptedInstance
 {
-    instance_steam_vault(Map *map) : ScriptedInstance(map) {Initialize();};
+    instance_steam_vault(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
 
-    uint32 Encounter[ENCOUNTERS];
+    uint32 m_auiEncounter[MAX_ENCOUNTER];
 
-    uint64 ThespiaGUID;
-    uint64 MekgineerGUID;
-    uint64 KalithreshGUID;
+    uint64 m_uiThespiaGUID;
+    uint64 m_uiMekgineerGUID;
+    uint64 m_uiKalithreshGUID;
 
-    uint64 MainChambersDoor;
-    uint64 AccessPanelHydro;
-    uint64 AccessPanelMek;
+    uint64 m_uiMainChambersDoor;
+    uint64 m_uiAccessPanelHydro;
+    uint64 m_uiAccessPanelMek;
 
     void Initialize()
     {
-        ThespiaGUID = 0;
-        MekgineerGUID = 0;
-        KalithreshGUID = 0;
-        MainChambersDoor = 0;
-        AccessPanelHydro = 0;
-        AccessPanelMek = 0;
+        memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
 
-        for(uint8 i = 0; i < ENCOUNTERS; i++)
-            Encounter[i] = NOT_STARTED;
+        m_uiThespiaGUID = 0;
+        m_uiMekgineerGUID = 0;
+        m_uiKalithreshGUID = 0;
+        m_uiMainChambersDoor = 0;
+        m_uiAccessPanelHydro = 0;
+        m_uiAccessPanelMek = 0;
     }
 
     bool IsEncounterInProgress() const
     {
-        for(uint8 i = 0; i < ENCOUNTERS; i++)
-            if (Encounter[i] == IN_PROGRESS)
+        for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+            if (m_auiEncounter[i] == IN_PROGRESS)
                 return true;
 
         return false;
@@ -92,19 +91,19 @@ struct MANGOS_DLL_DECL instance_steam_vault : public ScriptedInstance
     {
         switch(pCreature->GetEntry())
         {
-            case 17797: ThespiaGUID = pCreature->GetGUID(); break;
-            case 17796: MekgineerGUID = pCreature->GetGUID(); break;
-            case 17798: KalithreshGUID = pCreature->GetGUID(); break;
+            case 17797: m_uiThespiaGUID = pCreature->GetGUID(); break;
+            case 17796: m_uiMekgineerGUID = pCreature->GetGUID(); break;
+            case 17798: m_uiKalithreshGUID = pCreature->GetGUID(); break;
         }
     }
 
-    void OnObjectCreate(GameObject *go)
+    void OnObjectCreate(GameObject* pGo)
     {
-        switch(go->GetEntry())
+        switch(pGo->GetEntry())
         {
-            case MAIN_CHAMBERS_DOOR: MainChambersDoor = go->GetGUID(); break;
-            case ACCESS_PANEL_HYDRO: AccessPanelHydro = go->GetGUID(); break;
-            case ACCESS_PANEL_MEK:   AccessPanelMek = go->GetGUID(); break;
+            case MAIN_CHAMBERS_DOOR: m_uiMainChambersDoor = pGo->GetGUID(); break;
+            case ACCESS_PANEL_HYDRO: m_uiAccessPanelHydro = pGo->GetGUID(); break;
+            case ACCESS_PANEL_MEK:   m_uiAccessPanelMek = pGo->GetGUID(); break;
         }
     }
 
@@ -115,40 +114,40 @@ struct MANGOS_DLL_DECL instance_steam_vault : public ScriptedInstance
             case TYPE_HYDROMANCER_THESPIA:
                 if (data == SPECIAL)
                 {
-                    if (GameObject* pGo = instance->GetGameObject(AccessPanelHydro))
+                    if (GameObject* pGo = instance->GetGameObject(m_uiAccessPanelHydro))
                         pGo->SetGoState(GO_STATE_ACTIVE);
 
                     if (GetData(TYPE_MEKGINEER_STEAMRIGGER) == SPECIAL)
                     {
-                        if (GameObject* pGo = instance->GetGameObject(MainChambersDoor))
+                        if (GameObject* pGo = instance->GetGameObject(m_uiMainChambersDoor))
                             pGo->SetGoState(GO_STATE_ACTIVE);
                     }
 
                     debug_log("SD2: Instance Steamvault: Access panel used.");
                 }
-                Encounter[0] = data;
+                m_auiEncounter[0] = data;
                 break;
             case TYPE_MEKGINEER_STEAMRIGGER:
                 if (data == SPECIAL)
                 {
-                    if (GameObject* pGo = instance->GetGameObject(AccessPanelMek))
+                    if (GameObject* pGo = instance->GetGameObject(m_uiAccessPanelMek))
                         pGo->SetGoState(GO_STATE_ACTIVE);
 
                     if (GetData(TYPE_HYDROMANCER_THESPIA) == SPECIAL)
                     {
-                        if (GameObject* pGo = instance->GetGameObject(MainChambersDoor))
+                        if (GameObject* pGo = instance->GetGameObject(m_uiMainChambersDoor))
                             pGo->SetGoState(GO_STATE_ACTIVE);
                     }
 
                     debug_log("SD2: Instance Steamvault: Access panel used.");
                 }
-                Encounter[1] = data;
+                m_auiEncounter[1] = data;
                 break;
             case TYPE_WARLORD_KALITHRESH:
-                Encounter[2] = data;
+                m_auiEncounter[2] = data;
                 break;
             case TYPE_DISTILLER:
-                Encounter[3] = data;
+                m_auiEncounter[3] = data;
                 break;
         }
     }
@@ -158,13 +157,13 @@ struct MANGOS_DLL_DECL instance_steam_vault : public ScriptedInstance
         switch(type)
         {
             case TYPE_HYDROMANCER_THESPIA:
-                return Encounter[0];
+                return m_auiEncounter[0];
             case TYPE_MEKGINEER_STEAMRIGGER:
-                return Encounter[1];
+                return m_auiEncounter[1];
             case TYPE_WARLORD_KALITHRESH:
-                return Encounter[2];
+                return m_auiEncounter[2];
             case TYPE_DISTILLER:
-                return Encounter[3];
+                return m_auiEncounter[3];
         }
         return 0;
     }
@@ -174,19 +173,19 @@ struct MANGOS_DLL_DECL instance_steam_vault : public ScriptedInstance
         switch(data)
         {
             case DATA_THESPIA:
-                return ThespiaGUID;
+                return m_uiThespiaGUID;
             case DATA_MEKGINEERSTEAMRIGGER:
-                return MekgineerGUID;
+                return m_uiMekgineerGUID;
             case DATA_KALITRESH:
-                return KalithreshGUID;
+                return m_uiKalithreshGUID;
         }
         return 0;
     }
 };
 
-InstanceData* GetInstanceData_instance_steam_vault(Map* map)
+InstanceData* GetInstanceData_instance_steam_vault(Map* pMap)
 {
-    return new instance_steam_vault(map);
+    return new instance_steam_vault(pMap);
 }
 
 void AddSC_instance_steam_vault()
