@@ -112,12 +112,12 @@ struct MANGOS_DLL_DECL npc_medivh_bmAI : public ScriptedAI
                 return;
 
             uint32 entry = who->GetEntry();
-            if (entry == C_ASSAS || entry == C_WHELP || entry == C_CHRON || entry == C_EXECU || entry == C_VANQU)
+            if (entry == NPC_ASSAS || entry == NPC_WHELP || entry == NPC_CHRON || entry == NPC_EXECU || entry == NPC_VANQU)
             {
                 who->StopMoving();
                 who->CastSpell(m_creature,SPELL_CORRUPT,false);
             }
-            else if (entry == C_AEONUS)
+            else if (entry == NPC_AEONUS)
             {
                 who->StopMoving();
                 who->CastSpell(m_creature,SPELL_CORRUPT_AEONUS,false);
@@ -239,9 +239,9 @@ struct Wave
 
 static Wave PortalWaves[]=
 {
-    {C_ASSAS, C_WHELP, C_CHRON, 0},
-    {C_EXECU, C_CHRON, C_WHELP, C_ASSAS},
-    {C_EXECU, C_VANQU, C_CHRON, C_ASSAS}
+    {NPC_ASSAS, NPC_WHELP, NPC_CHRON, 0},
+    {NPC_EXECU, NPC_CHRON, NPC_WHELP, NPC_ASSAS},
+    {NPC_EXECU, NPC_VANQU, NPC_CHRON, NPC_ASSAS}
 };
 
 struct MANGOS_DLL_DECL npc_time_riftAI : public ScriptedAI
@@ -317,7 +317,7 @@ struct MANGOS_DLL_DECL npc_time_riftAI : public ScriptedAI
 
         ++mRiftWaveCount;
 
-        if (entry == C_WHELP)
+        if (entry == NPC_WHELP)
         {
             for(uint8 i = 0; i < 3; i++)
                 DoSummonAtRift(entry);

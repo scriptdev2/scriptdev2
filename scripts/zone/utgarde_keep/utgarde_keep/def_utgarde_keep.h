@@ -7,6 +7,8 @@
 
 enum
 {
+    MAX_ENCOUNTER               = 3,
+
     //also using these as identifier for Set/GetData(), unlike normal naming
     NPC_SKARVALD                = 24200,
     NPC_DALRONN                 = 24201,

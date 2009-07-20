@@ -24,8 +24,6 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_the_eye.h"
 
-#define ENCOUNTERS 5
-
 /* The Eye encounters:
 0 - Kael'thas event
 1 - Al' ar event
@@ -35,38 +33,37 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL instance_the_eye : public ScriptedInstance
 {
-    instance_the_eye(Map *map) : ScriptedInstance(map) {Initialize();};
+    instance_the_eye(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
 
-    uint64 ThaladredTheDarkener;
-    uint64 LordSanguinar;
-    uint64 GrandAstromancerCapernian;
-    uint64 MasterEngineerTelonicus;
-    uint64 Kaelthas;
-    uint64 Astromancer;
+    uint32 m_auiEncounter[MAX_ENCOUNTER];
 
-    uint8 KaelthasEventPhase;
+    uint64 m_uiThaladredGUID;
+    uint64 m_uiSanguinarGUID;
+    uint64 m_uiCapernianGUID;
+    uint64 m_uiTelonicusGUID;
+    uint64 m_uiKaelthasGUID;
+    uint64 m_uiAstromancerGUID;
 
-    bool Encounters[ENCOUNTERS];
+    uint32 m_uiKaelthasEventPhase;
 
     void Initialize()
     {
-        ThaladredTheDarkener = 0;
-        LordSanguinar = 0;
-        GrandAstromancerCapernian = 0;
-        MasterEngineerTelonicus = 0;
-        Kaelthas = 0;
-        Astromancer = 0;
+        memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
 
-        KaelthasEventPhase = 0;
+        m_uiThaladredGUID = 0;
+        m_uiSanguinarGUID = 0;
+        m_uiCapernianGUID = 0;
+        m_uiTelonicusGUID = 0;
+        m_uiKaelthasGUID = 0;
+        m_uiAstromancerGUID = 0;
 
-        for(uint8 i = 0; i < ENCOUNTERS; i++)
-            Encounters[i] = false;
+        m_uiKaelthasEventPhase = 0;
     }
 
     bool IsEncounterInProgress() const
     {
-        for(uint8 i = 0; i < ENCOUNTERS; i++)
-            if (Encounters[i]) return true;
+        for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+            if (m_auiEncounter[i]) return true;
 
         return false;
     }
@@ -75,97 +72,83 @@ struct MANGOS_DLL_DECL instance_the_eye : public ScriptedInstance
     {
         switch(pCreature->GetEntry())
         {
-            case 20064: ThaladredTheDarkener = pCreature->GetGUID(); break;
-            case 20063: MasterEngineerTelonicus = pCreature->GetGUID(); break;
-            case 20062: GrandAstromancerCapernian = pCreature->GetGUID(); break;
-            case 20060: LordSanguinar = pCreature->GetGUID(); break;
-            case 19622: Kaelthas = pCreature->GetGUID(); break;
-            case 18805: Astromancer = pCreature->GetGUID(); break;
+            case 20064: m_uiThaladredGUID = pCreature->GetGUID(); break;
+            case 20063: m_uiTelonicusGUID = pCreature->GetGUID(); break;
+            case 20062: m_uiCapernianGUID = pCreature->GetGUID(); break;
+            case 20060: m_uiSanguinarGUID = pCreature->GetGUID(); break;
+            case 19622: m_uiKaelthasGUID = pCreature->GetGUID(); break;
+            case 18805: m_uiAstromancerGUID = pCreature->GetGUID(); break;
         }
     }
 
-    uint64 GetData64(uint32 identifier)
+    void SetData(uint32 uiType, uint32 uiData)
     {
-        switch(identifier)
+        switch(uiType)
         {
-            case DATA_THALADREDTHEDARKENER:
-                return ThaladredTheDarkener;
+            case TYPE_ALAR:
+                m_auiEncounter[0] = uiData;
+                break;
+            case TYPE_SOLARIAN:
+                m_auiEncounter[1] = uiData;
+                break;
+            case TYPE_VOIDREAVER:
+                m_auiEncounter[2] = uiData;
+                break;
+            case TYPE_ASTROMANCER:
+                m_auiEncounter[3] = uiData;
+                break;
 
-            case DATA_LORDSANGUINAR:
-                return LordSanguinar;
+            case TYPE_KAELTHAS_PHASE:
+                m_uiKaelthasEventPhase = uiData;
+                break;
+        }
+    }
 
-            case DATA_GRANDASTROMANCERCAPERNIAN:
-                return GrandAstromancerCapernian;
+    uint32 GetData(uint32 uiType)
+    {
+        switch(uiType)
+        {
+            case TYPE_ALAR:
+                return m_auiEncounter[0];
+            case TYPE_SOLARIAN:
+                return m_auiEncounter[1];
+            case TYPE_VOIDREAVER:
+                return m_auiEncounter[2];
+            case TYPE_ASTROMANCER:
+                return m_auiEncounter[3];
 
-            case DATA_MASTERENGINEERTELONICUS:
-                return MasterEngineerTelonicus;
-
-            case DATA_KAELTHAS:
-                return Kaelthas;
-
-            case DATA_ASTROMANCER:
-                return Astromancer;
+            case TYPE_KAELTHAS_PHASE:
+                return m_uiKaelthasEventPhase;
         }
 
         return 0;
     }
 
-    void SetData(uint32 type, uint32 data)
+    uint64 GetData64(uint32 uiData)
     {
-        switch(type)
+        switch(uiData)
         {
-            case DATA_ALAREVENT:
-                Encounters[0] = (data) ? true : false;
-                break;
-
-            case DATA_SOLARIANEVENT:
-                Encounters[1] = (data) ? true : false;
-                break;
-
-            case DATA_VOIDREAVEREVENT:
-                Encounters[2] = (data) ? true : false;
-                break;
-
-                //Kael'thas
-            case DATA_KAELTHASEVENT:
-                KaelthasEventPhase = data;
-                Encounters[3] = (data) ? true : false;
-                break;
-
-            case DATA_HIGHASTROMANCERSOLARIANEVENT:
-                Encounters[4] = (data) ? true : false;
-                break;
-        }
-    }
-
-    uint32 GetData(uint32 type)
-    {
-        switch(type)
-        {
-            case DATA_ALAREVENT:
-                return Encounters[0];
-
-            case DATA_SOLARIANEVENT:
-                return Encounters[1];
-
-            case DATA_VOIDREAVEREVENT:
-                return Encounters[2];
-
-            case DATA_HIGHASTROMANCERSOLARIANEVENT:
-                return Encounters[4];
-
-                //Kael'thas
-            case DATA_KAELTHASEVENT:
-                return KaelthasEventPhase;
+            case DATA_THALADRED:
+                return m_uiThaladredGUID;
+            case DATA_SANGUINAR:
+                return m_uiSanguinarGUID;
+            case DATA_CAPERNIAN:
+                return m_uiCapernianGUID;
+            case DATA_TELONICUS:
+                return m_uiTelonicusGUID;
+            case DATA_KAELTHAS:
+                return m_uiKaelthasGUID;
+            case DATA_ASTROMANCER:
+                return m_uiAstromancerGUID;
         }
 
         return 0;
     }
 };
 
-InstanceData* GetInstanceData_instance_the_eye(Map* map)
+InstanceData* GetInstanceData_instance_the_eye(Map* pMap)
 {
-    return new instance_the_eye(map);
+    return new instance_the_eye(pMap);
 }
 
 void AddSC_instance_the_eye()

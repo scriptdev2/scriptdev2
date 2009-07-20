@@ -7,6 +7,8 @@
 
 enum
 {
+    MAX_ENCOUNTER           = 4,
+
     DATA_BJARNGRIM          = 1,
     DATA_IONAR              = 2,
     DATA_LOKEN              = 3,

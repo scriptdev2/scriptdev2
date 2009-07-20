@@ -7,6 +7,8 @@
 
 enum
 {
+    MAX_ENCOUNTER               = 2,
+
     DATA_SHRINE1                = 1,
     DATA_SHRINE2                = 2,
     DATA_SHRINE3                = 3,

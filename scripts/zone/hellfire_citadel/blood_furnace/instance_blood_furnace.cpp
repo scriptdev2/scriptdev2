@@ -31,7 +31,7 @@ struct MANGOS_DLL_DECL instance_blood_furnace : public ScriptedInstance
     instance_blood_furnace(Map* pMap) : ScriptedInstance(pMap) {Initialize();}
 
     uint32 m_auiEncounter[MAX_ENCOUNTER];
-    std::string str_data;
+    std::string strInstData;
 
     uint64 m_uiMakerGUID;
     uint64 m_uiBroggokGUID;
@@ -196,7 +196,7 @@ struct MANGOS_DLL_DECL instance_blood_furnace : public ScriptedInstance
             std::ostringstream saveStream;
             saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2];
 
-            str_data = saveStream.str();
+            strInstData = saveStream.str();
 
             SaveToDB();
             OUT_SAVE_INST_DATA_COMPLETE;
@@ -217,7 +217,7 @@ struct MANGOS_DLL_DECL instance_blood_furnace : public ScriptedInstance
 
     const char* Save()
     {
-        return str_data.c_str();
+        return strInstData.c_str();
     }
 
     void Load(const char* in)

@@ -24,14 +24,12 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_utgarde_keep.h"
 
-#define ENCOUNTERS     3
-
 struct MANGOS_DLL_DECL instance_utgarde_keep : public ScriptedInstance
 {
     instance_utgarde_keep(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
 
-    uint32 m_uiEncounter[ENCOUNTERS];
-    std::string str_data;
+    uint32 m_auiEncounter[MAX_ENCOUNTER];
+    std::string strInstData;
 
     uint64 m_uiSkarvaldGUID;
     uint64 m_uiDalronnGUID;
@@ -45,6 +43,8 @@ struct MANGOS_DLL_DECL instance_utgarde_keep : public ScriptedInstance
 
     void Initialize()
     {
+        memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
+
         m_uiSkarvaldGUID = 0;
         m_uiDalronnGUID = 0;
 
@@ -54,9 +54,6 @@ struct MANGOS_DLL_DECL instance_utgarde_keep : public ScriptedInstance
         m_uiForgeFire1GUID = 0;
         m_uiForgeFire2GUID = 0;
         m_uiForgeFire3GUID = 0;
-
-        for(uint8 i = 0; i < ENCOUNTERS; ++i)
-            m_uiEncounter[i] = NOT_STARTED;
     }
 
     void OnCreatureCreate(Creature* pCreature)
@@ -74,32 +71,32 @@ struct MANGOS_DLL_DECL instance_utgarde_keep : public ScriptedInstance
         {
             case GO_BELLOW_1:
                 m_uiBellow1GUID = pGo->GetGUID();
-                if (m_uiEncounter[0] == DONE)
+                if (m_auiEncounter[0] == DONE)
                     pGo->SetGoState(GO_STATE_ACTIVE);
                 break;
             case GO_BELLOW_2:
                 m_uiBellow2GUID = pGo->GetGUID();
-                if (m_uiEncounter[1] == DONE)
+                if (m_auiEncounter[1] == DONE)
                     pGo->SetGoState(GO_STATE_ACTIVE);
                 break;
             case GO_BELLOW_3:
                 m_uiBellow3GUID = pGo->GetGUID();
-                if (m_uiEncounter[2] == DONE)
+                if (m_auiEncounter[2] == DONE)
                     pGo->SetGoState(GO_STATE_ACTIVE);
                 break;
             case GO_FORGEFIRE_1:
                 m_uiForgeFire1GUID = pGo->GetGUID();
-                if (m_uiEncounter[0] == DONE)
+                if (m_auiEncounter[0] == DONE)
                     pGo->SetGoState(GO_STATE_ACTIVE);
                 break;
             case GO_FORGEFIRE_2:
                 m_uiForgeFire2GUID = pGo->GetGUID();
-                if (m_uiEncounter[1] == DONE)
+                if (m_auiEncounter[1] == DONE)
                     pGo->SetGoState(GO_STATE_ACTIVE);
                 break;
             case GO_FORGEFIRE_3:
                 m_uiForgeFire3GUID = pGo->GetGUID();
-                if (m_uiEncounter[2] == DONE)
+                if (m_auiEncounter[2] == DONE)
                     pGo->SetGoState(GO_STATE_ACTIVE);
                 break;
         }
@@ -110,13 +107,13 @@ struct MANGOS_DLL_DECL instance_utgarde_keep : public ScriptedInstance
         switch(uiType)
         {
             case GO_BELLOW_1:
-                m_uiEncounter[0] = uiData;
+                m_auiEncounter[0] = uiData;
                 break;
             case GO_BELLOW_2:
-                m_uiEncounter[1] = uiData;
+                m_auiEncounter[1] = uiData;
                 break;
             case GO_BELLOW_3:
-                m_uiEncounter[2] = uiData;
+                m_auiEncounter[2] = uiData;
                 break;
         }
 
@@ -125,9 +122,9 @@ struct MANGOS_DLL_DECL instance_utgarde_keep : public ScriptedInstance
             OUT_SAVE_INST_DATA;
 
             std::ostringstream saveStream;
-            saveStream << m_uiEncounter[0] << " " << m_uiEncounter[1] << " " << m_uiEncounter[2];
+            saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2];
 
-            str_data = saveStream.str();
+            strInstData = saveStream.str();
 
             SaveToDB();
             OUT_SAVE_INST_DATA_COMPLETE;
@@ -136,7 +133,7 @@ struct MANGOS_DLL_DECL instance_utgarde_keep : public ScriptedInstance
 
     const char* Save()
     {
-        return str_data.c_str();
+        return strInstData.c_str();
     }
 
     uint64 GetData64(uint32 uiData)
@@ -174,12 +171,12 @@ struct MANGOS_DLL_DECL instance_utgarde_keep : public ScriptedInstance
         OUT_LOAD_INST_DATA(in);
 
         std::istringstream loadStream(in);
-        loadStream >> m_uiEncounter[0] >> m_uiEncounter[1] >> m_uiEncounter[2];
+        loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2];
 
-        for(uint8 i = 0; i < ENCOUNTERS; ++i)
+        for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
         {
-            if (m_uiEncounter[i] == IN_PROGRESS)
-                m_uiEncounter[i] = NOT_STARTED;
+            if (m_auiEncounter[i] == IN_PROGRESS)
+                m_auiEncounter[i] = NOT_STARTED;
         }
 
         OUT_LOAD_INST_DATA_COMPLETE;

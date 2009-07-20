@@ -66,7 +66,7 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
     instance_blackrock_depths(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
 
     uint32 m_auiEncounter[MAX_ENCOUNTER];
-    std::string str_data;
+    std::string strInstData;
 
     uint64 m_uiEmperorGUID;
     uint64 m_uiPrincessGUID;
@@ -257,7 +257,7 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
             saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " "
                 << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5];
 
-            str_data = saveStream.str();
+            strInstData = saveStream.str();
 
             SaveToDB();
             OUT_SAVE_INST_DATA_COMPLETE;
@@ -337,7 +337,7 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
 
     const char* Save()
     {
-        return str_data.c_str();
+        return strInstData.c_str();
     }
 
     void Load(const char* in)

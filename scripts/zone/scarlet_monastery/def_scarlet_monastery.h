@@ -5,9 +5,16 @@
 #ifndef DEF_SCARLETM_H
 #define DEF_SCARLETM_H
 
-#define TYPE_MOGRAINE_AND_WHITE_EVENT   1
-#define DATA_MOGRAINE                   2
-#define DATA_WHITEMANE                  3
-#define DATA_DOOR_WHITEMANE             4
-#define DATA_VORREL                     5
+enum
+{
+    MAX_ENCOUNTER                   = 1,
+
+    TYPE_MOGRAINE_AND_WHITE_EVENT   = 1,
+
+    DATA_MOGRAINE                   = 2,
+    DATA_WHITEMANE                  = 3,
+    DATA_DOOR_WHITEMANE             = 4,
+    DATA_VORREL                     = 5
+};
+
 #endif

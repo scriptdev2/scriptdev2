@@ -24,8 +24,6 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_blackfathom_deeps.h"
 
-#define MAX_ENCOUNTER 2
-
 /* Encounter 0 = Twilight Lord Kelris
    Encounter 1 = Shrine event
    Must kill twilight lord for shrine event to be possible

@@ -29,7 +29,7 @@ struct MANGOS_DLL_DECL instance_molten_core : public ScriptedInstance
     instance_molten_core(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
 
     uint32 m_auiEncounter[MAX_ENCOUNTER];
-    std::string strSaveData;
+    std::string strInstData;
 
     uint64 m_uiLucifronGUID, m_uiMagmadarGUID, m_uiGehennasGUID, m_uiGarrGUID, m_uiGeddonGUID, m_uiShazzrahGUID, m_uiSulfuronGUID, m_uiGolemaggGUID, m_uiMajorDomoGUID, m_uiRagnarosGUID, m_uiFlamewakerPriestGUID;
     uint64 m_uiRuneKoroGUID, m_uiRuneZethGUID, m_uiRuneMazjGUID, m_uiRuneTheriGUID, m_uiRuneBlazGUID, m_uiRuneKressGUID, m_uiRuneMohnGUID, m_uiFirelordCacheGUID;
@@ -185,7 +185,7 @@ struct MANGOS_DLL_DECL instance_molten_core : public ScriptedInstance
                 << m_auiEncounter[6] << " " << m_auiEncounter[7] << " " << m_auiEncounter[8] << " "
                 << m_auiEncounter[9];
 
-            strSaveData = saveStream.str();
+            strInstData = saveStream.str();
 
             SaveToDB();
             OUT_SAVE_INST_DATA_COMPLETE;
@@ -194,7 +194,7 @@ struct MANGOS_DLL_DECL instance_molten_core : public ScriptedInstance
 
     const char* Save()
     {
-        return strSaveData.c_str();
+        return strInstData.c_str();
     }
 
     bool CanSpawnMajorDomo()

@@ -7,6 +7,8 @@
 
 enum
 {
+    MAX_ENCOUNTER               = 1,
+
     TYPE_SARTHARION_EVENT       = 1,
 
     DATA_SARTHARION             = 10,

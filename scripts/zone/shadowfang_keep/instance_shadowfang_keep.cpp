@@ -24,10 +24,10 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_shadowfang_keep.h"
 
-#define ENCOUNTERS              4
-
 enum
 {
+    MAX_ENCOUNTER           = 4,
+
     SAY_BOSS_DIE_AD         = -1033007,
     SAY_BOSS_DIE_AS         = -1033008,
 
@@ -41,66 +41,65 @@ enum
 
 struct MANGOS_DLL_DECL instance_shadowfang_keep : public ScriptedInstance
 {
-    instance_shadowfang_keep(Map *map) : ScriptedInstance(map) {Initialize();};
+    instance_shadowfang_keep(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
 
-    uint32 Encounter[ENCOUNTERS];
-    std::string str_data;
+    uint32 m_auiEncounter[MAX_ENCOUNTER];
+    std::string strInstData;
 
-    uint64 uiAshGUID;
-    uint64 uiAdaGUID;
+    uint64 m_uiAshGUID;
+    uint64 m_uiAdaGUID;
 
-    uint64 DoorCourtyardGUID;
-    uint64 DoorSorcererGUID;
-    uint64 DoorArugalGUID;
+    uint64 m_uiDoorCourtyardGUID;
+    uint64 m_uiDoorSorcererGUID;
+    uint64 m_uiDoorArugalGUID;
 
     void Initialize()
     {
-        uiAshGUID = 0;
-        uiAdaGUID = 0;
+        memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
 
-        DoorCourtyardGUID = 0;
-        DoorSorcererGUID = 0;
-        DoorArugalGUID = 0;
+        m_uiAshGUID = 0;
+        m_uiAdaGUID = 0;
 
-        for(uint8 i=0; i < ENCOUNTERS; ++i)
-            Encounter[i] = NOT_STARTED;
+        m_uiDoorCourtyardGUID = 0;
+        m_uiDoorSorcererGUID = 0;
+        m_uiDoorArugalGUID = 0;
     }
 
     void OnCreatureCreate(Creature* pCreature)
     {
         switch(pCreature->GetEntry())
         {
-            case NPC_ASH: uiAshGUID = pCreature->GetGUID(); break;
-            case NPC_ADA: uiAdaGUID = pCreature->GetGUID(); break;
+            case NPC_ASH: m_uiAshGUID = pCreature->GetGUID(); break;
+            case NPC_ADA: m_uiAdaGUID = pCreature->GetGUID(); break;
         }
     }
 
-    void OnObjectCreate(GameObject *go)
+    void OnObjectCreate(GameObject* pGo)
     {
-        switch(go->GetEntry())
+        switch(pGo->GetEntry())
         {
             case GO_COURTYARD_DOOR:
-                DoorCourtyardGUID = go->GetGUID();
-                if (Encounter[0] == DONE)
-                    DoUseDoorOrButton(DoorCourtyardGUID);
+                m_uiDoorCourtyardGUID = pGo->GetGUID();
+                if (m_auiEncounter[0] == DONE)
+                    pGo->SetGoState(GO_STATE_ACTIVE);
                 break;
             case GO_SORCERER_DOOR:
-                DoorSorcererGUID = go->GetGUID();
-                if (Encounter[2] == DONE)
-                    DoUseDoorOrButton(DoorSorcererGUID);
+                m_uiDoorSorcererGUID = pGo->GetGUID();
+                if (m_auiEncounter[2] == DONE)
+                    pGo->SetGoState(GO_STATE_ACTIVE);
                 break;
             case GO_ARUGAL_DOOR:
-                DoorArugalGUID = go->GetGUID();
-                if (Encounter[3] == DONE)
-                    DoUseDoorOrButton(DoorArugalGUID);
+                m_uiDoorArugalGUID = pGo->GetGUID();
+                if (m_auiEncounter[3] == DONE)
+                    pGo->SetGoState(GO_STATE_ACTIVE);
                 break;
         }
     }
 
     void DoSpeech()
     {
-        Creature* pAda = instance->GetCreature(uiAdaGUID);
-        Creature* pAsh = instance->GetCreature(uiAshGUID);
+        Creature* pAda = instance->GetCreature(m_uiAdaGUID);
+        Creature* pAsh = instance->GetCreature(m_uiAshGUID);
 
         if (pAda && pAda->isAlive() && pAsh && pAsh->isAlive())
         {
@@ -109,93 +108,93 @@ struct MANGOS_DLL_DECL instance_shadowfang_keep : public ScriptedInstance
         }
     }
 
-    void SetData(uint32 type, uint32 data)
+    void SetData(uint32 uiType, uint32 uiData)
     {
-        switch(type)
+        switch(uiType)
         {
             case TYPE_FREE_NPC:
-                if (data == DONE)
-                    DoUseDoorOrButton(DoorCourtyardGUID);
-                Encounter[0] = data;
+                if (uiData == DONE)
+                    DoUseDoorOrButton(m_uiDoorCourtyardGUID);
+                m_auiEncounter[0] = uiData;
                 break;
             case TYPE_RETHILGORE:
-                if (data == DONE)
+                if (uiData == DONE)
                     DoSpeech();
-                Encounter[1] = data;
+                m_auiEncounter[1] = uiData;
                 break;
             case TYPE_FENRUS:
-                if (data == DONE)
-                    DoUseDoorOrButton(DoorSorcererGUID);
-                Encounter[2] = data;
+                if (uiData == DONE)
+                    DoUseDoorOrButton(m_uiDoorSorcererGUID);
+                m_auiEncounter[2] = uiData;
                 break;
             case TYPE_NANDOS:
-                if (data == DONE)
-                    DoUseDoorOrButton(DoorArugalGUID);
-                Encounter[3] = data;
+                if (uiData == DONE)
+                    DoUseDoorOrButton(m_uiDoorArugalGUID);
+                m_auiEncounter[3] = uiData;
                 break;
         }
 
-        if (data == DONE)
+        if (uiData == DONE)
         {
             OUT_SAVE_INST_DATA;
 
             std::ostringstream saveStream;
-            saveStream << Encounter[0] << " " << Encounter[1] << " " << Encounter[2] << " " << Encounter[3];
+            saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " " << m_auiEncounter[3];
 
-            str_data = saveStream.str();
+            strInstData = saveStream.str();
 
             SaveToDB();
             OUT_SAVE_INST_DATA_COMPLETE;
         }
     }
 
-    uint32 GetData(uint32 type)
+    uint32 GetData(uint32 uiType)
     {
-        switch(type)
+        switch(uiType)
         {
             case TYPE_FREE_NPC:
-                return Encounter[0];
+                return m_auiEncounter[0];
             case TYPE_RETHILGORE:
-                return Encounter[1];
+                return m_auiEncounter[1];
             case TYPE_FENRUS:
-                return Encounter[2];
+                return m_auiEncounter[2];
             case TYPE_NANDOS:
-                return Encounter[3];
+                return m_auiEncounter[3];
         }
         return 0;
     }
 
     const char* Save()
     {
-        return str_data.c_str();
+        return strInstData.c_str();
     }
 
-    void Load(const char* in)
+    void Load(const char* chrIn)
     {
-        if (!in)
+        if (!chrIn)
         {
             OUT_LOAD_INST_DATA_FAIL;
             return;
         }
 
-        OUT_LOAD_INST_DATA(in);
+        OUT_LOAD_INST_DATA(chrIn);
 
-        std::istringstream loadStream(in);
-        loadStream >> Encounter[0] >> Encounter[1] >> Encounter[2] >> Encounter[3];
+        std::istringstream loadStream(chrIn);
+        loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3];
 
-        for(uint8 i = 0; i < ENCOUNTERS; ++i)
+        for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
         {
-            if (Encounter[i] == IN_PROGRESS)
-                Encounter[i] = NOT_STARTED;
+            if (m_auiEncounter[i] == IN_PROGRESS)
+                m_auiEncounter[i] = NOT_STARTED;
         }
 
         OUT_LOAD_INST_DATA_COMPLETE;
     }
 };
 
-InstanceData* GetInstanceData_instance_shadowfang_keep(Map* map)
+InstanceData* GetInstanceData_instance_shadowfang_keep(Map* pMap)
 {
-    return new instance_shadowfang_keep(map);
+    return new instance_shadowfang_keep(pMap);
 }
 
 void AddSC_instance_shadowfang_keep()

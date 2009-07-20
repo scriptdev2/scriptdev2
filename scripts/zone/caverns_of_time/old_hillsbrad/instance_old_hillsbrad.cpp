@@ -24,10 +24,10 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_old_hillsbrad.h"
 
-#define MAX_ENCOUNTER           6
-
 enum
 {
+    MAX_ENCOUNTER               = 6,
+
     NPC_THRALL                  = 17876,
     NPC_TARETHA                 = 18887,
     NPC_DRAKE                   = 17848,
@@ -106,21 +106,21 @@ struct MANGOS_DLL_DECL instance_old_hillsbrad : public ScriptedInstance
         }
     }
 
-    void SetData(uint32 type, uint32 data)
+    void SetData(uint32 uiType, uint32 uiData)
     {
         Player* pPlayer = GetPlayerInMap();
 
         if (!pPlayer)
         {
-            debug_log("SD2: Instance Old Hillsbrad: SetData (Type: %u Data %u) cannot find any pPlayer.", type, data);
+            debug_log("SD2: Instance Old Hillsbrad: SetData (Type: %u Data %u) cannot find any pPlayer.", uiType, uiData);
             return;
         }
 
-        switch(type)
+        switch(uiType)
         {
             case TYPE_BARREL_DIVERSION:
             {
-                if (data == IN_PROGRESS)
+                if (uiData == IN_PROGRESS)
                 {
                     if (m_uiBarrelCount >= 5)
                         return;
@@ -142,7 +142,7 @@ struct MANGOS_DLL_DECL instance_old_hillsbrad : public ScriptedInstance
             }
             case TYPE_THRALL_EVENT:
             {
-                if (data == FAIL)
+                if (uiData == FAIL)
                 {
                     if (m_uiThrallEventCount <= 20)
                     {
@@ -158,42 +158,42 @@ struct MANGOS_DLL_DECL instance_old_hillsbrad : public ScriptedInstance
                     }
                     else if (m_uiThrallEventCount > 20)
                     {
-                        m_auiEncounter[1] = data;
-                        m_auiEncounter[2] = data;
-                        m_auiEncounter[3] = data;
-                        m_auiEncounter[4] = data;
-                        m_auiEncounter[5] = data;
+                        m_auiEncounter[1] = uiData;
+                        m_auiEncounter[2] = uiData;
+                        m_auiEncounter[3] = uiData;
+                        m_auiEncounter[4] = uiData;
+                        m_auiEncounter[5] = uiData;
                         debug_log("SD2: Instance Old Hillsbrad: Thrall event failed %u times. Reset instance required.", m_uiThrallEventCount);
                     }
                 }
                 else
-                    m_auiEncounter[1] = data;
+                    m_auiEncounter[1] = uiData;
 
-                debug_log("SD2: Instance Old Hillsbrad: Thrall escort event adjusted to data %u.",data);
+                debug_log("SD2: Instance Old Hillsbrad: Thrall escort event adjusted to data %u.",uiData);
                 break;
             }
             case TYPE_THRALL_PART1:
-                m_auiEncounter[2] = data;
-                debug_log("SD2: Instance Old Hillsbrad: Thrall event part I adjusted to data %u.",data);
+                m_auiEncounter[2] = uiData;
+                debug_log("SD2: Instance Old Hillsbrad: Thrall event part I adjusted to data %u.",uiData);
                 break;
             case TYPE_THRALL_PART2:
-                m_auiEncounter[3] = data;
-                debug_log("SD2: Instance Old Hillsbrad: Thrall event part II adjusted to data %u.",data);
+                m_auiEncounter[3] = uiData;
+                debug_log("SD2: Instance Old Hillsbrad: Thrall event part II adjusted to data %u.",uiData);
                 break;
             case TYPE_THRALL_PART3:
-                m_auiEncounter[4] = data;
-                debug_log("SD2: Instance Old Hillsbrad: Thrall event part III adjusted to data %u.",data);
+                m_auiEncounter[4] = uiData;
+                debug_log("SD2: Instance Old Hillsbrad: Thrall event part III adjusted to data %u.",uiData);
                 break;
             case TYPE_THRALL_PART4:
-                m_auiEncounter[5] = data;
-                debug_log("SD2: Instance Old Hillsbrad: Thrall event part IV adjusted to data %u.",data);
+                m_auiEncounter[5] = uiData;
+                debug_log("SD2: Instance Old Hillsbrad: Thrall event part IV adjusted to data %u.",uiData);
                 break;
         }
     }
 
-    uint32 GetData(uint32 data)
+    uint32 GetData(uint32 uiData)
     {
-        switch(data)
+        switch(uiData)
         {
             case TYPE_BARREL_DIVERSION:
                 return m_auiEncounter[0];
@@ -211,9 +211,9 @@ struct MANGOS_DLL_DECL instance_old_hillsbrad : public ScriptedInstance
         return 0;
     }
 
-    uint64 GetData64(uint32 data)
+    uint64 GetData64(uint32 uiData)
     {
-        switch(data)
+        switch(uiData)
         {
             case DATA_THRALL:
                 return m_uiThrallGUID;

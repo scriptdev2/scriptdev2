@@ -7,9 +7,11 @@
 
 enum
 {
-    EVENT_KRIKTHIR              = 1,
-    EVENT_HADRONOX              = 2,
-    EVENT_ANUBARAK              = 3,
+    MAX_ENCOUNTER               = 3,
+
+    TYPE_KRIKTHIR               = 1,
+    TYPE_HADRONOX               = 2,
+    TYPE_ANUBARAK               = 3,
 
     GO_DOOR_KRIKTHIR            = 192395,
     GO_DOOR_ANUBARAK_1          = 192396,

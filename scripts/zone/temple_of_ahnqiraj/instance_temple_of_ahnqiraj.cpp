@@ -26,48 +26,45 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL instance_temple_of_ahnqiraj : public ScriptedInstance
 {
-    instance_temple_of_ahnqiraj(Map *map) : ScriptedInstance(map) {Initialize();};
+    instance_temple_of_ahnqiraj(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
 
-    //If Vem is dead...
-    bool IsBossDied[3];
+    uint32 m_auiEncounter[MAX_ENCOUNTER];
 
     //Storing Skeram, Vem and Kri.
-    uint64 SkeramGUID;
-    uint64 VemGUID;
-    uint64 KriGUID;
-    uint64 VeklorGUID;
-    uint64 VeknilashGUID;
+    uint64 m_uiSkeramGUID;
+    uint64 m_uiVemGUID;
+    uint64 m_uiKriGUID;
+    uint64 m_uiVeklorGUID;
+    uint64 m_uiVeknilashGUID;
 
-    uint32 BugTrioDeathCount;
+    uint32 m_uiBugTrioDeathCount;
 
-    uint32 CthunPhase;
+    uint32 m_uiCthunPhase;
 
     void Initialize()
     {
-        IsBossDied[0] = false;
-        IsBossDied[1] = false;
-        IsBossDied[2] = false;
+        memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
 
-        SkeramGUID = 0;
-        VemGUID = 0;
-        KriGUID = 0;
-        VeklorGUID = 0;
-        VeknilashGUID = 0;
+        m_uiSkeramGUID = 0;
+        m_uiVemGUID = 0;
+        m_uiKriGUID = 0;
+        m_uiVeklorGUID = 0;
+        m_uiVeknilashGUID = 0;
 
-        BugTrioDeathCount = 0;
+        m_uiBugTrioDeathCount = 0;
 
-        CthunPhase = 0;
+        m_uiCthunPhase = 0;
     }
 
     void OnCreatureCreate (Creature* pCreature)
     {
         switch (pCreature->GetEntry())
         {
-            case 15263: SkeramGUID = pCreature->GetGUID(); break;
-            case 15544: VemGUID = pCreature->GetGUID(); break;
-            case 15511: KriGUID = pCreature->GetGUID(); break;
-            case 15276: VeklorGUID = pCreature->GetGUID(); break;
-            case 15275: VeknilashGUID = pCreature->GetGUID(); break;
+            case 15263: m_uiSkeramGUID = pCreature->GetGUID(); break;
+            case 15544: m_uiVemGUID = pCreature->GetGUID(); break;
+            case 15511: m_uiKriGUID = pCreature->GetGUID(); break;
+            case 15276: m_uiVeklorGUID = pCreature->GetGUID(); break;
+            case 15275: m_uiVeknilashGUID = pCreature->GetGUID(); break;
         }
     }
 
@@ -77,82 +74,68 @@ struct MANGOS_DLL_DECL instance_temple_of_ahnqiraj : public ScriptedInstance
         return false;
     }
 
-    uint32 GetData(uint32 type)
+    void SetData(uint32 uiType, uint32 uiData)
     {
-        switch(type)
+        switch(uiType)
         {
-            case DATA_VEMISDEAD:
-                if (IsBossDied[0])
-                    return 1;
+            case TYPE_VEM:
+                m_auiEncounter[0] = uiData;
                 break;
-
-            case DATA_VEKLORISDEAD:
-                if (IsBossDied[1])
-                    return 1;
+            case TYPE_VEKLOR:
+                m_auiEncounter[1] = uiData;
                 break;
-
-            case DATA_VEKNILASHISDEAD:
-                if (IsBossDied[2])
-                    return 1;
+            case TYPE_VEKNILASH:
+                m_auiEncounter[2] = uiData;
                 break;
 
             case DATA_BUG_TRIO_DEATH:
-                return BugTrioDeathCount;
+                ++m_uiBugTrioDeathCount;
+                break;
 
-            case DATA_CTHUN_PHASE:
-                return CthunPhase;
+            case TYPE_CTHUN_PHASE:
+                m_uiCthunPhase = uiData;
+                break;
+        }
+    }
+
+    uint32 GetData(uint32 uiType)
+    {
+        switch(uiType)
+        {
+            case TYPE_VEM:
+                return m_auiEncounter[0];
+
+            case DATA_BUG_TRIO_DEATH:
+                return m_uiBugTrioDeathCount;
+
+            case TYPE_CTHUN_PHASE:
+                return m_uiCthunPhase;
         }
         return 0;
     }
 
-    uint64 GetData64 (uint32 identifier)
+    uint64 GetData64(uint32 uiData)
     {
-        switch(identifier)
+        switch(uiData)
         {
             case DATA_SKERAM:
-                return SkeramGUID;
+                return m_uiSkeramGUID;
             case DATA_VEM:
-                return VemGUID;
+                return m_uiVemGUID;
             case DATA_KRI:
-                return KriGUID;
+                return m_uiKriGUID;
             case DATA_VEKLOR:
-                return VeklorGUID;
+                return m_uiVeklorGUID;
             case DATA_VEKNILASH:
-                return VeknilashGUID;
+                return m_uiVeknilashGUID;
         }
         return 0;
-    }                                                       // end GetData64
-
-    void SetData(uint32 type, uint32 data)
-    {
-        switch(type)
-        {
-            case DATA_VEM_DEATH:
-                IsBossDied[0] = true;
-                break;
-
-            case DATA_BUG_TRIO_DEATH:
-                BugTrioDeathCount++;
-                break;
-
-            case DATA_VEKLOR_DEATH:
-                IsBossDied[1] = true;
-                break;
-
-            case DATA_VEKNILASH_DEATH:
-                IsBossDied[2] = true;
-                break;
-
-            case DATA_CTHUN_PHASE:
-                CthunPhase = data;
-                break;
-        }
     }
 };
 
-InstanceData* GetInstanceData_instance_temple_of_ahnqiraj(Map* map)
+InstanceData* GetInstanceData_instance_temple_of_ahnqiraj(Map* pMap)
 {
-    return new instance_temple_of_ahnqiraj(map);
+    return new instance_temple_of_ahnqiraj(pMap);
 }
 
 void AddSC_instance_temple_of_ahnqiraj()

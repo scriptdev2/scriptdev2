@@ -5,10 +5,12 @@
 #ifndef DEF_BLACK_TEMPLE_H
 #define DEF_BLACK_TEMPLE_H
 
-#define MAX_ENCOUNTER   9
+
 
 enum
 {
+    MAX_ENCOUNTER                  = 9,
+
     TYPE_NAJENTUS                  = 1,
     TYPE_SUPREMUS                  = 2,
     TYPE_SHADE                     = 3,

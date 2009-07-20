@@ -16,7 +16,7 @@
 
 /* ScriptData
 SDName: Instance_Mechanar
-SD%Complete: 100
+SD%Complete: 20
 SDComment:
 SDCategory: Mechanar
 EndScriptData */
@@ -26,57 +26,37 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL instance_mechanar : public ScriptedInstance
 {
-    instance_mechanar(Map *map) : ScriptedInstance(map) {Initialize();};
+    instance_mechanar(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
 
-    bool IsBossDied[1];
-
-    void OnCreatureCreate(Creature* pCreature)
-    {
-    }
+    uint32 m_auiEncounter[MAX_ENCOUNTER];
 
     void Initialize()
     {
-        IsBossDied[0] = false;
+        memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
     }
 
-    bool IsEncounterInProgress() const
+    void SetData(uint32 uiType, uint32 uiData)
     {
-        //not active
-        return false;
-    }
-
-    uint32 GetData(uint32 type)
-    {
-        switch(type)
+        switch(uiType)
         {
-            case DATA_SEPETHREAISDEAD:
-                if (IsBossDied[0])
-                    return 1;
+            case TYPE_SEPETHREA:
+                m_auiEncounter[0] = uiData;
                 break;
         }
-
-        return 0;
     }
 
-    uint64 GetData64 (uint32 identifier)
+    uint32 GetData(uint32 uiType)
     {
-        return 0;
-    }
+        if (uiType == TYPE_SEPETHREA)
+            return m_auiEncounter[0];
 
-    void SetData(uint32 type, uint32 data)
-    {
-        switch(type)
-        {
-            case DATA_SEPETHREA_DEATH:
-                IsBossDied[0] = true;
-                break;
-        }
+        return 0;
     }
 };
 
-InstanceData* GetInstanceData_instance_mechanar(Map* map)
+InstanceData* GetInstanceData_instance_mechanar(Map* pMap)
 {
-    return new instance_mechanar(map);
+    return new instance_mechanar(pMap);
 }
 
 void AddSC_instance_mechanar()

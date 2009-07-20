@@ -7,6 +7,8 @@
 
 enum
 {
+    MAX_ENCOUNTER                   = 2,
+
     // Encounter Status
     TYPE_MAULGAR_EVENT              = 1,
     TYPE_GRUUL_EVENT                = 2,

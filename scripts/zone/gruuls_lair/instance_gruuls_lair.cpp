@@ -24,8 +24,6 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_gruuls_lair.h"
 
-#define MAX_ENCOUNTER 2
-
 /* Gruuls Lair encounters:
 1 - High King Maulgar event
 2 - Gruul event

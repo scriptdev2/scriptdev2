@@ -24,8 +24,6 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_scarlet_monastery.h"
 
-#define MAX_ENCOUNTER 1
-
 struct MANGOS_DLL_DECL instance_scarlet_monastery : public ScriptedInstance
 {
     instance_scarlet_monastery(Map* pMap) : ScriptedInstance(pMap) {Initialize();};

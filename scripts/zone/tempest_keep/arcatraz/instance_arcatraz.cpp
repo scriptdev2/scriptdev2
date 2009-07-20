@@ -24,19 +24,6 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_arcatraz.h"
 
-#define ENCOUNTERS 9
-
-#define CONTAINMENT_CORE_SECURITY_FIELD_ALPHA 184318        //door opened when Wrath-Scryer Soccothrates dies
-#define CONTAINMENT_CORE_SECURITY_FIELD_BETA  184319        //door opened when Dalliah the Doomsayer dies
-#define SEAL_SPHERE 184802                                  //shield 'protecting' mellichar
-#define POD_ALPHA   183961                                  //pod first boss wave
-#define POD_BETA    183963                                  //pod second boss wave
-#define POD_DELTA   183964                                  //pod third boss wave
-#define POD_GAMMA   183962                                  //pod fourth boss wave
-#define POD_OMEGA   183965                                  //pod fifth boss wave
-
-#define MELLICHAR   20904                                   //skyriss will kill this unit
-
 /* Arcatraz encounters:
 1 - Zereketh the Unbound event
 2 - Dalliah the Doomsayer event
@@ -46,175 +33,167 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL instance_arcatraz : public ScriptedInstance
 {
-    instance_arcatraz(Map *map) : ScriptedInstance(map) {Initialize();};
+    instance_arcatraz(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
 
-    uint32 Encounter[ENCOUNTERS];
+    uint32 m_auiEncounter[MAX_ENCOUNTER];
 
-    GameObject *Containment_Core_Security_Field_Alpha;
-    GameObject *Containment_Core_Security_Field_Beta;
-    GameObject *Pod_Alpha;
-    GameObject *Pod_Gamma;
-    GameObject *Pod_Beta;
-    GameObject *Pod_Delta;
-    GameObject *Pod_Omega;
+    uint64 m_uiCore_Security_Field_AlphaGUID;
+    uint64 m_uiCore_Security_Field_BetaGUID;
+    uint64 m_uiPod_AlphaGUID;
+    uint64 m_uiPod_GammaGUID;
+    uint64 m_uiPod_BetaGUID;
+    uint64 m_uiPod_DeltaGUID;
+    uint64 m_uiPod_OmegaGUID;
 
-    uint64 GoSphereGUID;
-    uint64 MellicharGUID;
+    uint64 m_uiGoSphereGUID;
+    uint64 m_uiMellicharGUID;
 
     void Initialize()
     {
-        Containment_Core_Security_Field_Alpha = NULL;
-        Containment_Core_Security_Field_Beta  = NULL;
-        Pod_Alpha = NULL;
-        Pod_Beta  = NULL;
-        Pod_Delta = NULL;
-        Pod_Gamma = NULL;
-        Pod_Omega = NULL;
+        memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
 
-        GoSphereGUID = 0;
-        MellicharGUID = 0;
+        m_uiCore_Security_Field_AlphaGUID = 0;
+        m_uiCore_Security_Field_BetaGUID = 0;
+        m_uiPod_AlphaGUID = 0;
+        m_uiPod_BetaGUID = 0;
+        m_uiPod_DeltaGUID = 0;
+        m_uiPod_GammaGUID = 0;
+        m_uiPod_OmegaGUID = 0;
 
-        for(uint8 i = 0; i < ENCOUNTERS; i++)
-            Encounter[i] = NOT_STARTED;
+        m_uiGoSphereGUID = 0;
+        m_uiMellicharGUID = 0;
     }
 
     bool IsEncounterInProgress() const
     {
-        for(uint8 i = 0; i < ENCOUNTERS; i++)
-            if (Encounter[i])
+        for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+            if (m_auiEncounter[i])
                 return true;
 
         return false;
     }
 
-    void OnObjectCreate(GameObject *go)
+    void OnObjectCreate(GameObject* pGo)
     {
-        switch(go->GetEntry())
+        switch(pGo->GetEntry())
         {
-            case CONTAINMENT_CORE_SECURITY_FIELD_ALPHA: Containment_Core_Security_Field_Alpha = go; break;
-            case CONTAINMENT_CORE_SECURITY_FIELD_BETA:  Containment_Core_Security_Field_Beta =  go; break;
-            case SEAL_SPHERE: GoSphereGUID = go->GetGUID(); break;
-            case POD_ALPHA: Pod_Alpha = go; break;
-            case POD_BETA:  Pod_Beta =  go; break;
-            case POD_DELTA: Pod_Delta = go; break;
-            case POD_GAMMA: Pod_Gamma = go; break;
-            case POD_OMEGA: Pod_Omega = go; break;
+            case GO_CORE_SECURITY_FIELD_ALPHA: m_uiCore_Security_Field_AlphaGUID = pGo->GetGUID(); break;
+            case GO_CORE_SECURITY_FIELD_BETA:  m_uiCore_Security_Field_BetaGUID =  pGo->GetGUID(); break;
+            case GO_SEAL_SPHERE: m_uiGoSphereGUID = pGo->GetGUID(); break;
+            case GO_POD_ALPHA: m_uiPod_AlphaGUID = pGo->GetGUID(); break;
+            case GO_POD_BETA:  m_uiPod_BetaGUID =  pGo->GetGUID(); break;
+            case GO_POD_DELTA: m_uiPod_DeltaGUID = pGo->GetGUID(); break;
+            case GO_POD_GAMMA: m_uiPod_GammaGUID = pGo->GetGUID(); break;
+            case GO_POD_OMEGA: m_uiPod_OmegaGUID = pGo->GetGUID(); break;
         }
     }
 
     void OnCreatureCreate(Creature* pCreature)
     {
-        if (pCreature->GetEntry() == MELLICHAR)
-            MellicharGUID = pCreature->GetGUID();
+        if (pCreature->GetEntry() == NPC_MELLICHAR)
+            m_uiMellicharGUID = pCreature->GetGUID();
     }
 
-    void SetData(uint32 type, uint32 data)
+    void SetData(uint32 uiType, uint32 uiData)
     {
-        switch(type)
+        switch(uiType)
         {
             case TYPE_ZEREKETH:
-                Encounter[0] = data;
+                m_auiEncounter[0] = uiData;
                 break;
 
             case TYPE_DALLIAH:
-                if (data == DONE)
-                    if (Containment_Core_Security_Field_Beta)
-                        Containment_Core_Security_Field_Beta->UseDoorOrButton();
-                Encounter[1] = data;
+                if (uiData == DONE)
+                    DoUseDoorOrButton(m_uiCore_Security_Field_BetaGUID);
+                m_auiEncounter[1] = uiData;
                 break;
 
             case TYPE_SOCCOTHRATES:
-                if (data == DONE)
-                    if (Containment_Core_Security_Field_Alpha)
-                        Containment_Core_Security_Field_Alpha->UseDoorOrButton();
-                Encounter[2] = data;
+                if (uiData == DONE)
+                    DoUseDoorOrButton(m_uiCore_Security_Field_AlphaGUID);
+                m_auiEncounter[2] = uiData;
                 break;
 
             case TYPE_HARBINGERSKYRISS:
-                if (data == NOT_STARTED || data == FAIL)
+                if (uiData == NOT_STARTED || uiData == FAIL)
                 {
-                    Encounter[4] = NOT_STARTED;
-                    Encounter[5] = NOT_STARTED;
-                    Encounter[6] = NOT_STARTED;
-                    Encounter[7] = NOT_STARTED;
-                    Encounter[8] = NOT_STARTED;
+                    m_auiEncounter[4] = NOT_STARTED;
+                    m_auiEncounter[5] = NOT_STARTED;
+                    m_auiEncounter[6] = NOT_STARTED;
+                    m_auiEncounter[7] = NOT_STARTED;
+                    m_auiEncounter[8] = NOT_STARTED;
                 }
-                Encounter[3] = data;
+                m_auiEncounter[3] = uiData;
                 break;
 
             case TYPE_WARDEN_1:
-                if (data == IN_PROGRESS)
-                    if (Pod_Alpha)
-                        Pod_Alpha->UseDoorOrButton();
-                Encounter[4] = data;
+                if (uiData == IN_PROGRESS)
+                    DoUseDoorOrButton(m_uiPod_AlphaGUID);
+                m_auiEncounter[4] = uiData;
                 break;
 
             case TYPE_WARDEN_2:
-                if (data == IN_PROGRESS)
-                    if (Pod_Beta)
-                        Pod_Beta->UseDoorOrButton();
-                Encounter[5] = data;
+                if (uiData == IN_PROGRESS)
+                    DoUseDoorOrButton(m_uiPod_BetaGUID);
+                m_auiEncounter[5] = uiData;
                 break;
 
             case TYPE_WARDEN_3:
-                if (data == IN_PROGRESS)
-                    if (Pod_Delta)
-                        Pod_Delta->UseDoorOrButton();
-                Encounter[6] = data;
+                if (uiData == IN_PROGRESS)
+                    DoUseDoorOrButton(m_uiPod_DeltaGUID);
+                m_auiEncounter[6] = uiData;
                 break;
 
             case TYPE_WARDEN_4:
-                if (data == IN_PROGRESS)
-                    if (Pod_Gamma)
-                        Pod_Gamma->UseDoorOrButton();
-                Encounter[7] = data;
+                if (uiData == IN_PROGRESS)
+                    DoUseDoorOrButton(m_uiPod_GammaGUID);
+                m_auiEncounter[7] = uiData;
                 break;
 
             case TYPE_WARDEN_5:
-                if (data == IN_PROGRESS)
-                    if (Pod_Omega)
-                        Pod_Omega->UseDoorOrButton();
-                Encounter[8] = data;
+                if (uiData == IN_PROGRESS)
+                    DoUseDoorOrButton(m_uiPod_OmegaGUID);
+                m_auiEncounter[8] = uiData;
                 break;
         }
     }
 
-    uint32 GetData(uint32 type)
+    uint32 GetData(uint32 uiType)
     {
-        switch(type)
+        switch(uiType)
         {
             case TYPE_HARBINGERSKYRISS:
-                return Encounter[3];
+                return m_auiEncounter[3];
             case TYPE_WARDEN_1:
-                return Encounter[4];
+                return m_auiEncounter[4];
             case TYPE_WARDEN_2:
-                return Encounter[5];
+                return m_auiEncounter[5];
             case TYPE_WARDEN_3:
-                return Encounter[6];
+                return m_auiEncounter[6];
             case TYPE_WARDEN_4:
-                return Encounter[7];
+                return m_auiEncounter[7];
             case TYPE_WARDEN_5:
-                return Encounter[8];
+                return m_auiEncounter[8];
         }
         return 0;
     }
 
-    uint64 GetData64(uint32 data)
+    uint64 GetData64(uint32 uiData)
     {
-        switch(data)
+        switch(uiData)
         {
             case DATA_MELLICHAR:
-                return MellicharGUID;
+                return m_uiMellicharGUID;
             case DATA_SPHERE_SHIELD:
-                return GoSphereGUID;
+                return m_uiGoSphereGUID;
         }
         return 0;
     }
 };
 
-InstanceData* GetInstanceData_instance_arcatraz(Map* map)
+InstanceData* GetInstanceData_instance_arcatraz(Map* pMap)
 {
-    return new instance_arcatraz(map);
+    return new instance_arcatraz(pMap);
 }
 
 void AddSC_instance_arcatraz()

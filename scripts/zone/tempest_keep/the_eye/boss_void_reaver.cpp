@@ -63,7 +63,7 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
         Berserk_Timer = 600000;
 
         if (m_pInstance && m_creature->isAlive())
-            m_pInstance->SetData(DATA_VOIDREAVEREVENT, NOT_STARTED);
+            m_pInstance->SetData(TYPE_VOIDREAVER, NOT_STARTED);
     }
 
     void KilledUnit(Unit *victim)
@@ -81,7 +81,7 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
         DoScriptText(SAY_DEATH, m_creature);
 
         if (m_pInstance)
-            m_pInstance->SetData(DATA_VOIDREAVEREVENT, NOT_STARTED);
+            m_pInstance->SetData(TYPE_VOIDREAVER, DONE);
     }
 
     void Aggro(Unit* pWho)
@@ -90,7 +90,7 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
         m_creature->SetInCombatWithZone();
 
         if (m_pInstance)
-            m_pInstance->SetData(DATA_VOIDREAVEREVENT, IN_PROGRESS);
+            m_pInstance->SetData(TYPE_VOIDREAVER, IN_PROGRESS);
     }
 
     void UpdateAI(const uint32 diff)

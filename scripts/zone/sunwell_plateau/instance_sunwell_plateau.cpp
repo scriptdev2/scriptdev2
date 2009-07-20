@@ -25,7 +25,7 @@ struct MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
 {
     instance_sunwell_plateau(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
 
-    uint32 m_uiEncounter[ENCOUNTERS];
+    uint32 m_auiEncounter[MAX_ENCOUNTER];
     std::string strInstData;
 
     // Creatures
@@ -55,11 +55,13 @@ struct MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
     uint64 m_uiDoorTheThirdGateGUID;                                // Entropius Encounter
 
     // Misc
-    uint32 m_SpectralRealmTimer;
+    uint32 m_uiSpectralRealmTimer;
     std::list<uint64> SpectralRealmList;
 
     void Initialize()
     {
+        memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
+
         // Creatures
         m_uiKalecgos_DragonGUID         = 0;
         m_uiKalecgos_HumanGUID          = 0;
@@ -86,18 +88,14 @@ struct MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
         m_uiDoorRaid_Gate_08GUID        = 0;
         m_uiDoorTheThirdGateGUID        = 0;
 
-        // Encounters
-        for(uint8 i = 0; i < ENCOUNTERS; ++i)
-            m_uiEncounter[i] = NOT_STARTED;
-
         // Misc
-        m_SpectralRealmTimer = 5000;
+        m_uiSpectralRealmTimer = 5000;
     }
 
     bool IsEncounterInProgress() const
     {
-        for(uint8 i = 0; i < ENCOUNTERS; ++i)
-            if (m_uiEncounter[i] == IN_PROGRESS)
+        for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+            if (m_auiEncounter[i] == IN_PROGRESS)
                 return true;
 
         return false;
@@ -140,7 +138,7 @@ struct MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
                 break;
             case 188075:
                 m_uiDoorFireBarrierGUID = pGo->GetGUID();
-                if (m_uiEncounter[0] == DONE && m_uiEncounter[1] == DONE && m_uiEncounter[2] == DONE)
+                if (m_auiEncounter[0] == DONE && m_auiEncounter[1] == DONE && m_auiEncounter[2] == DONE)
                     pGo->SetGoState(GO_STATE_ACTIVE);
                 break;
             case 187766:
@@ -148,22 +146,22 @@ struct MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
                 break;
             case 187764:
                 m_uiDoorTheSecondGateGUID = pGo->GetGUID();
-                if (m_uiEncounter[3] == DONE)
+                if (m_auiEncounter[3] == DONE)
                     pGo->SetGoState(GO_STATE_ACTIVE);
                 break;
             case 187990:
                 m_uiDoorRaid_Gate_07GUID = pGo->GetGUID();
-                if (m_uiEncounter[3] == DONE)
+                if (m_auiEncounter[3] == DONE)
                     pGo->SetGoState(GO_STATE_ACTIVE);
                 break;
             case 188118:
                 m_uiDoorRaid_Gate_08GUID = pGo->GetGUID();
-                if (m_uiEncounter[4] == DONE)
+                if (m_auiEncounter[4] == DONE)
                     pGo->SetGoState(GO_STATE_ACTIVE);
                 break;
             case 187765:
                 m_uiDoorTheThirdGateGUID = pGo->GetGUID();
-                if (m_uiEncounter[4] == DONE)
+                if (m_auiEncounter[4] == DONE)
                     pGo->SetGoState(GO_STATE_ACTIVE);
                 break;
         }
@@ -173,12 +171,12 @@ struct MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
     {
         switch(uiType)
         {
-            case TYPE_KALECGOS:     return m_uiEncounter[0];
-            case TYPE_BRUTALLUS:    return m_uiEncounter[1];
-            case TYPE_FELMYST:      return m_uiEncounter[2];
-            case TYPE_EREDAR_TWINS: return m_uiEncounter[3];
-            case TYPE_MURU:         return m_uiEncounter[4];
-            case TYPE_KILJAEDEN:    return m_uiEncounter[5];
+            case TYPE_KALECGOS:     return m_auiEncounter[0];
+            case TYPE_BRUTALLUS:    return m_auiEncounter[1];
+            case TYPE_FELMYST:      return m_auiEncounter[2];
+            case TYPE_EREDAR_TWINS: return m_auiEncounter[3];
+            case TYPE_MURU:         return m_auiEncounter[4];
+            case TYPE_KILJAEDEN:    return m_auiEncounter[5];
         }
 
         return 0;
@@ -217,21 +215,21 @@ struct MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
                 DoUseDoorOrButton(m_uiBossCollision1GUID);
                 DoUseDoorOrButton(m_uiBossCollision2GUID);
 
-                m_uiEncounter[0] = uiData;
+                m_auiEncounter[0] = uiData;
                 break;
             case TYPE_BRUTALLUS:
                 if (uiData == SPECIAL)
                     DoUseDoorOrButton(m_uiIceBarrierGUID,MINUTE);
 
-                m_uiEncounter[1] = uiData;
+                m_auiEncounter[1] = uiData;
                 break;
             case TYPE_FELMYST:
-                m_uiEncounter[2] = uiData; 
+                m_auiEncounter[2] = uiData; 
                 if (uiData == DONE)
                     DoUseDoorOrButton(m_uiDoorFireBarrierGUID);
                 break;
             case TYPE_EREDAR_TWINS:  
-                m_uiEncounter[3] = uiData; 
+                m_auiEncounter[3] = uiData; 
                 if (uiData == DONE)
                 {
                     DoUseDoorOrButton(m_uiDoorTheSecondGateGUID);
@@ -239,12 +237,12 @@ struct MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
                 }
                 break;
             case TYPE_MURU:
-                m_uiEncounter[4] = uiData;
+                m_auiEncounter[4] = uiData;
                 if (uiData == DONE)
                     DoUseDoorOrButton(m_uiDoorRaid_Gate_08GUID);
                 break;
-            case TYPE_KILJAEDEN: m_uiEncounter[5] = uiData; break;
-            case DATA_SET_SPECTRAL_CHECK:  m_SpectralRealmTimer = uiData; break;
+            case TYPE_KILJAEDEN: m_auiEncounter[5] = uiData; break;
+            case DATA_SET_SPECTRAL_CHECK:  m_uiSpectralRealmTimer = uiData; break;
         }
 
         if (uiData == DONE)
@@ -252,8 +250,8 @@ struct MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
             OUT_SAVE_INST_DATA;
 
             std::ostringstream saveStream;
-            saveStream << m_uiEncounter[0] << " " << m_uiEncounter[1] << " " << m_uiEncounter[2] << " "
-                << m_uiEncounter[3] << " " << m_uiEncounter[4] << " " << m_uiEncounter[5];
+            saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " "
+                << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5];
 
             strInstData = saveStream.str();
 
@@ -267,14 +265,10 @@ struct MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
         return strInstData.c_str();
     }
 
-    void SetData64(uint32 id, uint64 guid)
+    void SetData64(uint32 uiData, uint64 uiGuid)
     {
-        switch(id)
-        {
-            case DATA_PLAYER_SPECTRAL_REALM:
-                SpectralRealmList.push_back(guid);
-                break;
-        }
+        if (uiData == DATA_PLAYER_SPECTRAL_REALM)
+            SpectralRealmList.push_back(uiGuid);
     }
 
     void EjectPlayer(Player* pPlayer)
@@ -329,18 +323,18 @@ struct MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
         //SpectralRealmList.clear();
     }
 
-    void Update(uint32 diff)
+    void Update(uint32 uiDiff)
     {
         // Only check for Spectral Realm if Kalecgos Encounter is running
-        if (m_uiEncounter[0] == IN_PROGRESS)
+        if (m_auiEncounter[0] == IN_PROGRESS)
         {
-            if (m_SpectralRealmTimer <= diff)
+            if (m_uiSpectralRealmTimer <= uiDiff)
             {
                 EjectPlayers();
-                m_SpectralRealmTimer = 1000;
+                m_uiSpectralRealmTimer = 1000;
             }
             else
-                m_SpectralRealmTimer -= diff;
+                m_uiSpectralRealmTimer -= uiDiff;
         }
     }
 
@@ -355,13 +349,13 @@ struct MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
         OUT_LOAD_INST_DATA(in);
 
         std::istringstream loadStream(in);
-        loadStream >> m_uiEncounter[0] >> m_uiEncounter[1] >> m_uiEncounter[2] >>
-            m_uiEncounter[3] >> m_uiEncounter[4] >> m_uiEncounter[5];
+        loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >>
+            m_auiEncounter[3] >> m_auiEncounter[4] >> m_auiEncounter[5];
 
-        for(uint8 i = 0; i < ENCOUNTERS; ++i)
+        for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
         {
-            if (m_uiEncounter[i] == IN_PROGRESS)
-                m_uiEncounter[i] = NOT_STARTED;
+            if (m_auiEncounter[i] == IN_PROGRESS)
+                m_auiEncounter[i] = NOT_STARTED;
         }
 
         OUT_LOAD_INST_DATA_COMPLETE;

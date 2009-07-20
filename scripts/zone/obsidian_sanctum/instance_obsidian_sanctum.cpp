@@ -24,8 +24,6 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_obsidian_sanctum.h"
 
-#define MAX_ENCOUNTER   1
-
 /* Obsidian Sanctum encounters:
 0 - Sartharion
 */

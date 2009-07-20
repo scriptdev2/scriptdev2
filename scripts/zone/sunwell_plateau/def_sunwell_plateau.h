@@ -5,10 +5,10 @@
 #ifndef DEF_SUNWELLPLATEAU_H
 #define DEF_SUNWELLPLATEAU_H
 
-#define ENCOUNTERS 6
-
 enum InstanceSWP
 {
+    MAX_ENCOUNTER               = 6,
+
     TYPE_KALECGOS               = 0,
     TYPE_BRUTALLUS              = 1,
     TYPE_FELMYST                = 2,

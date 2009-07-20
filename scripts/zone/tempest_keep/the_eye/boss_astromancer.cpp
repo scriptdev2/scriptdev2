@@ -113,7 +113,7 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
         Phase = 1;
 
         if (m_pInstance)
-            m_pInstance->SetData(DATA_HIGHASTROMANCERSOLARIANEVENT, NOT_STARTED);
+            m_pInstance->SetData(TYPE_ASTROMANCER, NOT_STARTED);
 
         m_creature->SetArmor(defaultarmor);
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -140,7 +140,7 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
         DoScriptText(SAY_DEATH, m_creature);
 
         if (m_pInstance)
-            m_pInstance->SetData(DATA_HIGHASTROMANCERSOLARIANEVENT, NOT_STARTED);
+            m_pInstance->SetData(TYPE_ASTROMANCER, DONE);
     }
 
     void Aggro(Unit *who)
@@ -149,7 +149,7 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
         m_creature->SetInCombatWithZone();
 
         if (m_pInstance)
-            m_pInstance->SetData(DATA_HIGHASTROMANCERSOLARIANEVENT, IN_PROGRESS);
+            m_pInstance->SetData(TYPE_ASTROMANCER, IN_PROGRESS);
     }
 
     void SummonMinion(uint32 entry, float x, float y, float z)

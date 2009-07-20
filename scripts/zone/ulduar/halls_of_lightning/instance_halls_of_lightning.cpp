@@ -24,8 +24,6 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_halls_of_lightning.h"
 
-#define ENCOUNTERS     4
-
 /* Halls of Lightning encounters:
 0 - General Bjarngrim
 1 - Volkhan
@@ -36,6 +34,8 @@ EndScriptData */
 struct MANGOS_DLL_DECL instance_halls_of_lightning : public ScriptedInstance
 {
     instance_halls_of_lightning(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
+
+    uint32 m_auiEncounter[MAX_ENCOUNTER];
 
     uint64 m_uiGeneralBjarngrimGUID;
     uint64 m_uiIonarGUID;
@@ -48,23 +48,20 @@ struct MANGOS_DLL_DECL instance_halls_of_lightning : public ScriptedInstance
     uint64 m_uiLokenDoorGUID;
     uint64 m_uiLokenGlobeGUID;
 
-    uint32 m_auiEncounter[ENCOUNTERS];
+    void Initialize()
+    {
+        memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
 
-   void Initialize()
-   {
-       m_uiGeneralBjarngrimGUID = 0;
-       m_uiVolkhanGUID          = 0;
-       m_uiIonarGUID            = 0;
-       m_uiLokenGUID            = 0;
+        m_uiGeneralBjarngrimGUID = 0;
+        m_uiVolkhanGUID          = 0;
+        m_uiIonarGUID            = 0;
+        m_uiLokenGUID            = 0;
 
-       m_uiBjarngrimDoorGUID    = 0;
-       m_uiVolkhanDoorGUID      = 0;
-       m_uiIonarDoorGUID        = 0;
-       m_uiLokenDoorGUID        = 0;
-       m_uiLokenGlobeGUID       = 0;
-
-       for(uint8 i = 0; i < ENCOUNTERS; ++i)
-           m_auiEncounter[i] = NOT_STARTED;
+        m_uiBjarngrimDoorGUID    = 0;
+        m_uiVolkhanDoorGUID      = 0;
+        m_uiIonarDoorGUID        = 0;
+        m_uiLokenDoorGUID        = 0;
+        m_uiLokenGlobeGUID       = 0;
     }
 
     void OnCreatureCreate(Creature* pCreature)

@@ -24,11 +24,6 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_shadow_labyrinth.h"
 
-#define MAX_ENCOUNTER 5
-
-#define REFECTORY_DOOR          183296                      //door opened when blackheart the inciter dies
-#define SCREAMING_HALL_DOOR     183295                      //door opened when grandmaster vorpil dies
-
 /* Shadow Labyrinth encounters:
 1 - Ambassador Hellmaw event
 2 - Blackheart the Inciter event
@@ -41,23 +36,23 @@ struct MANGOS_DLL_DECL instance_shadow_labyrinth : public ScriptedInstance
     instance_shadow_labyrinth(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
 
     uint32 m_auiEncounter[MAX_ENCOUNTER];
-    std::string str_data;
+    std::string strInstData;
 
-    uint64 RefectoryDoorGUID;
-    uint64 ScreamingHallDoorGUID;
+    uint64 m_uiRefectoryDoorGUID;
+    uint64 m_uiScreamingHallDoorGUID;
 
-    uint64 GrandmasterVorpil;
-    uint32 FelOverseerCount;
+    uint64 m_uiGrandmasterVorpil;
+    uint32 m_uiFelOverseerCount;
 
     void Initialize()
     {
         memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
 
-        RefectoryDoorGUID = 0;
-        ScreamingHallDoorGUID = 0;
+        m_uiRefectoryDoorGUID = 0;
+        m_uiScreamingHallDoorGUID = 0;
 
-        GrandmasterVorpil = 0;
-        FelOverseerCount = 0;
+        m_uiGrandmasterVorpil = 0;
+        m_uiFelOverseerCount = 0;
     }
 
     bool IsEncounterInProgress() const
@@ -68,19 +63,19 @@ struct MANGOS_DLL_DECL instance_shadow_labyrinth : public ScriptedInstance
         return false;
     }
 
-    void OnObjectCreate(GameObject *go)
+    void OnObjectCreate(GameObject* pGo)
     {
-        switch(go->GetEntry())
+        switch(pGo->GetEntry())
         {
-            case REFECTORY_DOOR:
-                RefectoryDoorGUID = go->GetGUID();
+            case GO_REFECTORY_DOOR:
+                m_uiRefectoryDoorGUID = pGo->GetGUID();
                 if (m_auiEncounter[2] == DONE)
-                    DoUseDoorOrButton(RefectoryDoorGUID);
+                    DoUseDoorOrButton(m_uiRefectoryDoorGUID);
                 break;
-            case SCREAMING_HALL_DOOR:
-                ScreamingHallDoorGUID = go->GetGUID();
+            case GO_SCREAMING_HALL_DOOR:
+                m_uiScreamingHallDoorGUID = pGo->GetGUID();
                 if (m_auiEncounter[3] == DONE)
-                    DoUseDoorOrButton(ScreamingHallDoorGUID);
+                    DoUseDoorOrButton(m_uiScreamingHallDoorGUID);
                 break;
         }
     }
@@ -90,58 +85,58 @@ struct MANGOS_DLL_DECL instance_shadow_labyrinth : public ScriptedInstance
         switch(pCreature->GetEntry())
         {
             case 18732:
-                GrandmasterVorpil = pCreature->GetGUID();
+                m_uiGrandmasterVorpil = pCreature->GetGUID();
                 break;
             case 18796:
-                ++FelOverseerCount;
-                debug_log("SD2: Shadow Labyrinth: counting %u Fel Overseers.",FelOverseerCount);
+                ++m_uiFelOverseerCount;
+                debug_log("SD2: Shadow Labyrinth: counting %u Fel Overseers.", m_uiFelOverseerCount);
                 break;
         }
     }
 
-    void SetData(uint32 type, uint32 data)
+    void SetData(uint32 uiType, uint32 uiData)
     {
-        switch(type)
+        switch(uiType)
         {
             case TYPE_HELLMAW:
-                m_auiEncounter[0] = data;
+                m_auiEncounter[0] = uiData;
                 break;
 
             case TYPE_OVERSEER:
-                if (data != DONE)
+                if (uiData != DONE)
                     error_log("SD2: Shadow Labyrinth: TYPE_OVERSEER did not expect other data than DONE");
-                if (FelOverseerCount)
+                if (m_uiFelOverseerCount)
                 {
-                    --FelOverseerCount;
-                    debug_log("SD2: Shadow Labyrinth: %u Fel Overseers left to kill.",FelOverseerCount);
+                    --m_uiFelOverseerCount;
+                    debug_log("SD2: Shadow Labyrinth: %u Fel Overseers left to kill.", m_uiFelOverseerCount);
                 }
-                if (FelOverseerCount == 0)
+                if (m_uiFelOverseerCount == 0)
                 {
                     m_auiEncounter[1] = DONE;
                     debug_log("SD2: Shadow Labyrinth: TYPE_OVERSEER == DONE");
                 }
                 break;
 
-            case DATA_BLACKHEARTTHEINCITEREVENT:
-                if (data == DONE)
-                    DoUseDoorOrButton(RefectoryDoorGUID);
-                m_auiEncounter[2] = data;
+            case TYPE_INCITER:
+                if (uiData == DONE)
+                    DoUseDoorOrButton(m_uiRefectoryDoorGUID);
+                m_auiEncounter[2] = uiData;
                 break;
 
-            case DATA_GRANDMASTERVORPILEVENT:
-                if (data == DONE)
-                    DoUseDoorOrButton(ScreamingHallDoorGUID);
-                m_auiEncounter[3] = data;
+            case TYPE_VORPIL:
+                if (uiData == DONE)
+                    DoUseDoorOrButton(m_uiScreamingHallDoorGUID);
+                m_auiEncounter[3] = uiData;
                 break;
 
-            case DATA_MURMUREVENT:
-                m_auiEncounter[4] = data;
+            case TYPE_MURMUR:
+                m_auiEncounter[4] = uiData;
                 break;
         }
 
-        if (data == DONE)
+        if (uiData == DONE)
         {
-            if (type == TYPE_OVERSEER && FelOverseerCount != 0)
+            if (uiType == TYPE_OVERSEER && m_uiFelOverseerCount != 0)
                 return;
 
             OUT_SAVE_INST_DATA;
@@ -150,16 +145,16 @@ struct MANGOS_DLL_DECL instance_shadow_labyrinth : public ScriptedInstance
             saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " "
                 << m_auiEncounter[2] << " " << m_auiEncounter[3] << " " << m_auiEncounter[4];
 
-            str_data = saveStream.str();
+            strInstData = saveStream.str();
 
             SaveToDB();
             OUT_SAVE_INST_DATA_COMPLETE;
         }
     }
 
-    uint32 GetData(uint32 type)
+    uint32 GetData(uint32 uiType)
     {
-        switch(type)
+        switch(uiType)
         {
             case TYPE_HELLMAW:
                 return m_auiEncounter[0];
@@ -171,7 +166,7 @@ struct MANGOS_DLL_DECL instance_shadow_labyrinth : public ScriptedInstance
 
     const char* Save()
     {
-        return str_data.c_str();
+        return strInstData.c_str();
     }
 
     void Load(const char* in)

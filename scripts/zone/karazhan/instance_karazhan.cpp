@@ -24,8 +24,6 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_karazhan.h"
 
-#define MAX_ENCOUNTER   12
-
 /*
 0  - Attumen + Midnight (optional)
 1  - Moroes
@@ -46,7 +44,7 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
     instance_karazhan(Map* pMap) : ScriptedInstance(pMap) {Initialize();}
 
     uint32 m_auiEncounter[MAX_ENCOUNTER];
-    std::string strSaveData;
+    std::string strInstData;
 
     uint32 m_uiOperaEvent;
     uint32 m_uiOzDeathCount;
@@ -193,7 +191,7 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
                 << m_auiEncounter[6] << " " << m_auiEncounter[7] << " " << m_auiEncounter[8] << " "
                 << m_auiEncounter[9] << " " << m_auiEncounter[10] << " " << m_auiEncounter[11];
 
-            strSaveData = saveStream.str();
+            strInstData = saveStream.str();
 
             SaveToDB();
             OUT_SAVE_INST_DATA_COMPLETE;
@@ -202,7 +200,7 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
 
     const char* Save()
     {
-        return strSaveData.c_str();
+        return strInstData.c_str();
     }
 
     uint32 GetData(uint32 uiType)

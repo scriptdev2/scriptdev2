@@ -95,7 +95,7 @@ struct MANGOS_DLL_DECL boss_nethermancer_sepethreaAI : public ScriptedAI
         DoScriptText(SAY_DEATH, m_creature);
 
         if (m_pInstance)
-            m_pInstance->SetData(DATA_SEPETHREA_DEATH, 0);
+            m_pInstance->SetData(TYPE_SEPETHREA, DONE);
     }
 
     void UpdateAI(const uint32 diff)
@@ -222,11 +222,12 @@ struct MANGOS_DLL_DECL mob_ragin_flamesAI : public ScriptedAI
         {
             if (m_pInstance)
             {
-                if (m_pInstance->GetData(DATA_SEPETHREAISDEAD))
+                if (m_pInstance->GetData(TYPE_SEPETHREA) == DONE)
                 {
                     //remove
                     m_creature->setDeathState(JUST_DIED);
                     m_creature->RemoveCorpse();
+                    return;
                 }
             }
 

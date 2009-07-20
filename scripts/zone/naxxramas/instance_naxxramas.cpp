@@ -23,10 +23,10 @@ EndScriptData */
 
 #include "precompiled.h"
 
-#define MAX_ENCOUNTER           1
-
 enum
 {
+    MAX_ENCOUNTER               = 1,
+
     GO_ARAC_ANUB_GATE           = 181195,                   //open when anub dead?
     GO_ARAC_ANUB_DOOR           = 181126,                   //encounter door
     GO_ARAC_FAER_WEB            = 181235,                   //encounter door

@@ -24,14 +24,12 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_azjol-nerub.h"
 
-#define MAX_ENCOUNTER   3
-
 struct MANGOS_DLL_DECL instance_azjol_nerub : public ScriptedInstance
 {
     instance_azjol_nerub(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
 
     uint32 m_auiEncounter[MAX_ENCOUNTER];
-    std::string str_data;
+    std::string strInstData;
 
     uint64 m_uiDoor_KrikthirGUID;
     uint64 m_uiDoor_Anubarak_1GUID;
@@ -79,16 +77,16 @@ struct MANGOS_DLL_DECL instance_azjol_nerub : public ScriptedInstance
     {
         switch(uiType)
         {
-            case EVENT_KRIKTHIR:
+            case TYPE_KRIKTHIR:
                 m_auiEncounter[0] = uiData;
                 if (uiData == DONE)
                     if (GameObject* pGo = instance->GetGameObject(m_uiDoor_KrikthirGUID))
                         pGo->SetGoState(GO_STATE_ACTIVE);
                 break;
-            case EVENT_HADRONOX:
+            case TYPE_HADRONOX:
                 m_auiEncounter[1] = uiData;
                 break;
-            case EVENT_ANUBARAK:
+            case TYPE_ANUBARAK:
                 m_auiEncounter[2] = uiData;
                 if (uiData == DONE || uiData == NOT_STARTED)
                 {
@@ -118,7 +116,7 @@ struct MANGOS_DLL_DECL instance_azjol_nerub : public ScriptedInstance
             std::ostringstream saveStream;
             saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2];
 
-            str_data = saveStream.str();
+            strInstData = saveStream.str();
 
             SaveToDB();
             OUT_SAVE_INST_DATA_COMPLETE;
@@ -127,7 +125,7 @@ struct MANGOS_DLL_DECL instance_azjol_nerub : public ScriptedInstance
 
     const char* Save()
     {
-        return str_data.c_str();
+        return strInstData.c_str();
     }
 
     void Load(const char* in)

@@ -5,10 +5,10 @@
 #ifndef DEF_RAMPARTS_H
 #define DEF_RAMPARTS_H
 
-#define MAX_ENCOUNTER   2
-
 enum
 {
+    MAX_ENCOUNTER       = 2,
+
     TYPE_VAZRUDEN       = 1,
     TYPE_NAZAN          = 2,
     DATA_HERALD         = 3

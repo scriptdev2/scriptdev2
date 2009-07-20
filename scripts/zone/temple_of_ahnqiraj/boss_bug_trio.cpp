@@ -104,7 +104,7 @@ struct MANGOS_DLL_DECL boss_kriAI : public ScriptedAI
             //Checking if Vem is dead. If yes we will enrage.
             if (Check_Timer < diff)
             {
-                if (m_pInstance && m_pInstance->GetData(DATA_VEMISDEAD))
+                if (m_pInstance && m_pInstance->GetData(TYPE_VEM) == DONE)
                 {
                     DoCast(m_creature, SPELL_ENRAGE);
                     VemDead = true;
@@ -146,10 +146,12 @@ struct MANGOS_DLL_DECL boss_vemAI : public ScriptedAI
     {
         if (m_pInstance)
         {
-            m_pInstance->SetData(DATA_VEM_DEATH, 0);
+            m_pInstance->SetData(TYPE_VEM, DONE);
+
+            // Unlootable if death
             if (m_pInstance->GetData(DATA_BUG_TRIO_DEATH) < 2)
-                                                            // Unlootable if death
                 m_creature->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
+
             m_pInstance->SetData(DATA_BUG_TRIO_DEATH, 1);
         }
     }
@@ -281,7 +283,7 @@ struct MANGOS_DLL_DECL boss_yaujAI : public ScriptedAI
             {
                 if (m_pInstance)
                 {
-                    if (m_pInstance->GetData(DATA_VEMISDEAD))
+                    if (m_pInstance->GetData(TYPE_VEM) == DONE)
                     {
                         DoCast(m_creature, SPELL_ENRAGE);
                         VemDead = true;

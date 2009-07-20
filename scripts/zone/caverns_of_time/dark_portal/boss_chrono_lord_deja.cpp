@@ -71,7 +71,7 @@ struct MANGOS_DLL_DECL boss_chrono_lord_dejaAI : public ScriptedAI
     void MoveInLineOfSight(Unit *who)
     {
         //Despawn Time Keeper
-        if (who->GetTypeId() == TYPEID_UNIT && who->GetEntry() == C_TIME_KEEPER)
+        if (who->GetTypeId() == TYPEID_UNIT && who->GetEntry() == NPC_TIME_KEEPER)
         {
             if (m_creature->IsWithinDistInMap(who,20.0f))
             {

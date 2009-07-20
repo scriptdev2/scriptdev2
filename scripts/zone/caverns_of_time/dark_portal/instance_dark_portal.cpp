@@ -24,16 +24,7 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_dark_portal.h"
 
-#define MAX_ENCOUNTER           2
-
-#define C_MEDIVH                15608
-#define C_TIME_RIFT             17838
-
-#define SPELL_RIFT_CHANNEL      31387
-
-#define RIFT_BOSS               1
-
-inline uint32 RandRiftBoss() { return ((rand()%2) ? C_RKEEP : C_RLORD); }
+inline uint32 RandRiftBoss() { return ((rand()%2) ? NPC_RKEEP : NPC_RLORD); }
 
 float PortalLocation[4][4]=
 {
@@ -52,11 +43,11 @@ struct Wave
 static Wave RiftWaves[]=
 {
     {RIFT_BOSS, 0},
-    {C_DEJA, 0},
+    {NPC_DEJA, 0},
     {RIFT_BOSS, 120000},
-    {C_TEMPO, 140000},
+    {NPC_TEMPO, 140000},
     {RIFT_BOSS, 120000},
-    {C_AEONUS, 0}
+    {NPC_AEONUS, 0}
 };
 
 struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
@@ -134,7 +125,7 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
 
     void OnCreatureCreate(Creature* pCreature)
     {
-        if (pCreature->GetEntry() == C_MEDIVH)
+        if (pCreature->GetEntry() == NPC_MEDIVH)
             m_uiMedivhGUID = pCreature->GetGUID();
     }
 
@@ -296,7 +287,7 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
 
             m_uiCurrentRiftId = tmp;
 
-            Creature* pTemp = pMedivh->SummonCreature(C_TIME_RIFT,
+            Creature* pTemp = pMedivh->SummonCreature(NPC_TIME_RIFT,
                 PortalLocation[tmp][0],PortalLocation[tmp][1],PortalLocation[tmp][2],PortalLocation[tmp][3],
                 TEMPSUMMON_CORPSE_DESPAWN,0);
 
@@ -307,7 +298,7 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
 
                 if (Creature* pBoss = SummonedPortalBoss(pTemp))
                 {
-                    if (pBoss->GetEntry() == C_AEONUS)
+                    if (pBoss->GetEntry() == NPC_AEONUS)
                     {
                         pBoss->AddThreat(pMedivh,0.0f);
                     }

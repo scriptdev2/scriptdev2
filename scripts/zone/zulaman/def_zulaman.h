@@ -5,11 +5,11 @@
 #ifndef DEF_ZULAMAN_H
 #define DEF_ZULAMAN_H
 
-#define ENCOUNTERS     7
-#define RAND_VENDOR    2
-
 enum InstanceZA
 {
+    MAX_ENCOUNTER           = 7,
+    MAX_VENDOR              = 2,
+
     SAY_INST_RELEASE        = -1568067,
     SAY_INST_BEGIN          = -1568068,
     SAY_INST_PROGRESS_1     = -1568069,

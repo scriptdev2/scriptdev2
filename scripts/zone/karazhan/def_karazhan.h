@@ -7,6 +7,8 @@
 
 enum
 {
+    MAX_ENCOUNTER                   = 12,
+
     TYPE_ATTUMEN                    = 1,
     TYPE_MOROES                     = 2,
     TYPE_MAIDEN                     = 3,

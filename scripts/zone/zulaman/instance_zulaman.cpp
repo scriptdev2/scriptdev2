@@ -28,7 +28,10 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
 {
     instance_zulaman(Map* pMap) : ScriptedInstance(pMap) {Initialize();}
 
+    uint32 m_auiEncounter[MAX_ENCOUNTER];
+    uint32 m_auiRandVendor[MAX_VENDOR];
     std::string strInstData;
+
     uint32 m_uiEventTimer;
     uint32 m_uiEventMinuteStep;
 
@@ -51,11 +54,11 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
     uint32 m_uiEggsRemainingCount_Left;
     uint32 m_uiEggsRemainingCount_Right;
 
-    uint32 m_uiEncounter[ENCOUNTERS];
-    uint32 m_uiRandVendor[RAND_VENDOR];
-
     void Initialize()
     {
+        memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
+        memset(&m_auiRandVendor, 0, sizeof(m_auiRandVendor));
+
         m_uiEventTimer = MINUTE*IN_MILISECONDS;
         m_uiEventMinuteStep = MINUTE/3;
 
@@ -77,12 +80,6 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
         m_lEggsGUIDList.clear();
         m_uiEggsRemainingCount_Left = 20;
         m_uiEggsRemainingCount_Right = 20;
-
-        for(uint8 i = 0; i < ENCOUNTERS; i++)
-            m_uiEncounter[i] = NOT_STARTED;
-
-        for(uint8 i = 0; i < RAND_VENDOR; i++)
-            m_uiRandVendor[i] = NOT_STARTED;
     }
 
     void UpdateInstanceWorldState(uint32 uiId, uint32 uiState)
@@ -117,7 +114,7 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
             case 24358: m_uiHarrisonGUID    = pCreature->GetGUID(); break;
             case NPC_SPIRIT_LYNX: m_uiSpiritLynxGUID  = pCreature->GetGUID(); break;
             case NPC_EGG:
-                if (m_uiEncounter[3] != DONE)
+                if (m_auiEncounter[3] != DONE)
                     m_lEggsGUIDList.push_back(pCreature->GetGUID());
                 break;
         }
@@ -150,37 +147,37 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
                 {
                     ++m_uiGongCount;
                     if (m_uiGongCount == 5)
-                        m_uiEncounter[0] = uiData;
+                        m_auiEncounter[0] = uiData;
                 }
                 if (uiData == IN_PROGRESS)
                 {
                     DoUseDoorOrButton(m_uiMassiveGateGUID);
                     UpdateInstanceWorldState(WORLD_STATE_COUNTER,m_uiEventMinuteStep);
                     UpdateInstanceWorldState(WORLD_STATE_ID,1);
-                    m_uiEncounter[0] = uiData;
+                    m_auiEncounter[0] = uiData;
                 }
                 break;
             case TYPE_AKILZON:
                 if (uiData == DONE)
                 {
-                    if (m_uiEncounter[0] == IN_PROGRESS)
+                    if (m_auiEncounter[0] == IN_PROGRESS)
                     {
                         m_uiEventMinuteStep += MINUTE/6;    //add 10 minutes
                         UpdateInstanceWorldState(WORLD_STATE_COUNTER,m_uiEventMinuteStep);
                     }
                 }
-                m_uiEncounter[1] = uiData;
+                m_auiEncounter[1] = uiData;
                 break;
             case TYPE_NALORAKK:
                 if (uiData == DONE)
                 {
-                    if (m_uiEncounter[0] == IN_PROGRESS)
+                    if (m_auiEncounter[0] == IN_PROGRESS)
                     {
                         m_uiEventMinuteStep += MINUTE/4;    //add 15 minutes
                         UpdateInstanceWorldState(WORLD_STATE_COUNTER,m_uiEventMinuteStep);
                     }
                 }
-                m_uiEncounter[2] = uiData;
+                m_auiEncounter[2] = uiData;
                 break;
             case TYPE_JANALAI:
                 if (uiData == NOT_STARTED)
@@ -203,16 +200,16 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
                 if (uiData == DONE)
                     m_lEggsGUIDList.clear();
 
-                m_uiEncounter[3] = uiData;
+                m_auiEncounter[3] = uiData;
                 break;
             case TYPE_HALAZZI:
-                m_uiEncounter[4] = uiData;
+                m_auiEncounter[4] = uiData;
                 break;
             case TYPE_ZULJIN:
-                m_uiEncounter[5] = uiData;
+                m_auiEncounter[5] = uiData;
                 break;
             case TYPE_MALACRASS:
-                m_uiEncounter[6] = uiData;
+                m_auiEncounter[6] = uiData;
                 break;
 
             case DATA_J_EGGS_RIGHT:
@@ -223,18 +220,18 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
                 break;
 
             case TYPE_RAND_VENDOR_1:
-                m_uiRandVendor[0] = uiData;
+                m_auiRandVendor[0] = uiData;
                 break;
             case TYPE_RAND_VENDOR_2:
-                m_uiRandVendor[1] = uiData;
+                m_auiRandVendor[1] = uiData;
                 break;
             default:
                 error_log("SD2: Instance Zulaman: ERROR SetData = %u for type %u does not exist/not implemented.",uiType,uiData);
                 break;
         }
 
-        if (m_uiEncounter[1] == DONE && m_uiEncounter[2] == DONE && m_uiEncounter[3] == DONE &&
-            m_uiEncounter[4] == DONE && m_uiEncounter[5] != IN_PROGRESS)
+        if (m_auiEncounter[1] == DONE && m_auiEncounter[2] == DONE && m_auiEncounter[3] == DONE &&
+            m_auiEncounter[4] == DONE && m_auiEncounter[5] != IN_PROGRESS)
             DoUseDoorOrButton(m_uiMalacrassEntranceGUID);
 
         if (uiData == DONE || (uiType == TYPE_EVENT_RUN && uiData == IN_PROGRESS))
@@ -242,8 +239,9 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
             OUT_SAVE_INST_DATA;
 
             std::ostringstream saveStream;
-            saveStream << m_uiEncounter[0] << " " << m_uiEncounter[1] << " " << m_uiEncounter[2] << " "
-                << m_uiEncounter[3] << " " << m_uiEncounter[4] << " " << m_uiEncounter[5] << " " << m_uiEncounter[6];
+            saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " "
+                << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5] << " "
+                << m_auiEncounter[6];
 
             strInstData = saveStream.str();
 
@@ -268,14 +266,14 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
         OUT_LOAD_INST_DATA(chrIn);
 
         std::istringstream loadStream(chrIn);
-        loadStream >> m_uiEncounter[0] >> m_uiEncounter[1] >> m_uiEncounter[2] >> m_uiEncounter[3]
-            >> m_uiEncounter[4] >> m_uiEncounter[5] >> m_uiEncounter[6];
+        loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3]
+            >> m_auiEncounter[4] >> m_auiEncounter[5] >> m_auiEncounter[6];
 
         //not changing m_uiEncounter[0], TYPE_EVENT_RUN must not reset to NOT_STARTED
-        for(uint8 i = 1; i < ENCOUNTERS; ++i)
+        for(uint8 i = 1; i < MAX_ENCOUNTER; ++i)
         {
-            if (m_uiEncounter[i] == IN_PROGRESS)
-                m_uiEncounter[i] = NOT_STARTED;
+            if (m_auiEncounter[i] == IN_PROGRESS)
+                m_auiEncounter[i] = NOT_STARTED;
         }
 
         OUT_LOAD_INST_DATA_COMPLETE;
@@ -286,19 +284,19 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
         switch(uiType)
         {
             case TYPE_EVENT_RUN:
-                return m_uiEncounter[0];
+                return m_auiEncounter[0];
             case TYPE_AKILZON:
-                return m_uiEncounter[1];
+                return m_auiEncounter[1];
             case TYPE_NALORAKK:
-                return m_uiEncounter[2];
+                return m_auiEncounter[2];
             case TYPE_JANALAI:
-                return m_uiEncounter[3];
+                return m_auiEncounter[3];
             case TYPE_HALAZZI:
-                return m_uiEncounter[4];
+                return m_auiEncounter[4];
             case TYPE_ZULJIN:
-                return m_uiEncounter[5];
+                return m_auiEncounter[5];
             case TYPE_MALACRASS:
-                return m_uiEncounter[6];
+                return m_auiEncounter[6];
 
             case DATA_J_EGGS_LEFT:
                 return m_uiEggsRemainingCount_Left;
@@ -306,9 +304,9 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
                 return m_uiEggsRemainingCount_Right;
 
             case TYPE_RAND_VENDOR_1:
-                return m_uiRandVendor[0];
+                return m_auiRandVendor[0];
             case TYPE_RAND_VENDOR_2:
-                return m_uiRandVendor[1];
+                return m_auiRandVendor[1];
         }
         return 0;
     }
@@ -352,7 +350,7 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
                 if (m_uiEventMinuteStep == 0)
                 {
                     debug_log("SD2: Instance Zulaman: event time reach end, event failed.");
-                    m_uiEncounter[0] = FAIL;
+                    m_auiEncounter[0] = FAIL;
                     return;
                 }
 
