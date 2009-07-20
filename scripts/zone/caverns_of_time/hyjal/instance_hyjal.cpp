@@ -123,20 +123,20 @@ struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
         return 0;
     }
 
-    void SetData(uint32 type, uint32 data)
+    void SetData(uint32 uiType, uint32 uiData)
     {
-        switch(type)
+        switch(uiType)
         {
-            case DATA_RAGEWINTERCHILLEVENT: m_auiEncounter[0] = data; break;
-            case DATA_ANETHERONEVENT:       m_auiEncounter[1] = data; break;
-            case DATA_KAZROGALEVENT:        m_auiEncounter[2] = data; break;
-            case DATA_AZGALOREVENT:         m_auiEncounter[3] = data; break;
-            case DATA_ARCHIMONDEEVENT:      m_auiEncounter[4] = data; break;
+            case DATA_RAGEWINTERCHILLEVENT: m_auiEncounter[0] = uiData; break;
+            case DATA_ANETHERONEVENT:       m_auiEncounter[1] = uiData; break;
+            case DATA_KAZROGALEVENT:        m_auiEncounter[2] = uiData; break;
+            case DATA_AZGALOREVENT:         m_auiEncounter[3] = uiData; break;
+            case DATA_ARCHIMONDEEVENT:      m_auiEncounter[4] = uiData; break;
             case DATA_RESET_TRASH_COUNT:    m_uiTrashCount = 0;       break;
 
             case DATA_TRASH:
-                if (data)
-                    m_uiTrashCount = data;
+                if (uiData)
+                    m_uiTrashCount = uiData;
                 else
                     --m_uiTrashCount;
 
@@ -144,7 +144,7 @@ struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
                 break;
 
             case TYPE_RETREAT:
-                if (data == SPECIAL)
+                if (uiData == SPECIAL)
                 {
                     if (!lAncientGemGUIDList.empty())
                     {
@@ -158,9 +158,9 @@ struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
                 break;
         }
 
-        debug_log("SD2: Instance Hyjal: Instance data updated for event %u (Data=%u)",type,data);
+        debug_log("SD2: Instance Hyjal: Instance data updated for event %u (Data=%u)", uiType, uiData);
 
-        if (data == DONE)
+        if (uiData == DONE)
         {
             OUT_SAVE_INST_DATA;
 

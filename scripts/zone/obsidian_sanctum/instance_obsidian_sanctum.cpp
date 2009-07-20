@@ -24,7 +24,7 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_obsidian_sanctum.h"
 
-#define ENCOUNTERS     1
+#define MAX_ENCOUNTER   1
 
 /* Obsidian Sanctum encounters:
 0 - Sartharion
@@ -34,7 +34,7 @@ struct MANGOS_DLL_DECL instance_obsidian_sanctum : public ScriptedInstance
 {
     instance_obsidian_sanctum(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
 
-    uint32 m_uiEncounter[ENCOUNTERS];
+    uint32 m_auiEncounter[MAX_ENCOUNTER];
     uint64 m_uiSartharionGUID;
     uint64 m_uiTenebronGUID;
     uint64 m_uiShadronGUID;
@@ -42,13 +42,12 @@ struct MANGOS_DLL_DECL instance_obsidian_sanctum : public ScriptedInstance
 
     void Initialize()
     {
+        memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
+
         m_uiSartharionGUID = 0;
         m_uiTenebronGUID   = 0;
         m_uiShadronGUID    = 0;
         m_uiVesperonGUID   = 0;
-
-        for(uint8 i = 0; i < ENCOUNTERS; ++i)
-            m_uiEncounter[i] = NOT_STARTED;
     }
 
     void OnCreatureCreate(Creature* pCreature)
@@ -78,13 +77,13 @@ struct MANGOS_DLL_DECL instance_obsidian_sanctum : public ScriptedInstance
     void SetData(uint32 uiType, uint32 uiData)
     {
         if (uiType == TYPE_SARTHARION_EVENT)
-            m_uiEncounter[0] = uiData;
+            m_auiEncounter[0] = uiData;
     }
 
     uint32 GetData(uint32 uiType)
     {
         if (uiType == TYPE_SARTHARION_EVENT)
-            return m_uiEncounter[0];
+            return m_auiEncounter[0];
 
         return 0;
     }

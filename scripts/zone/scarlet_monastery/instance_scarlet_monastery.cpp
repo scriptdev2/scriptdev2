@@ -24,44 +24,43 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_scarlet_monastery.h"
 
-#define ENCOUNTERS 1
+#define MAX_ENCOUNTER 1
 
 struct MANGOS_DLL_DECL instance_scarlet_monastery : public ScriptedInstance
 {
-    instance_scarlet_monastery(Map *map) : ScriptedInstance(map) {Initialize();};
+    instance_scarlet_monastery(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
 
-    uint64 MograineGUID;
-    uint64 WhitemaneGUID;
-    uint64 VorrelGUID;
-    uint64 DoorHighInquisitorGUID;
+    uint32 m_auiEncounter[MAX_ENCOUNTER];
 
-    uint32 Encounter[ENCOUNTERS];
+    uint64 m_uiMograineGUID;
+    uint64 m_uiWhitemaneGUID;
+    uint64 m_uiVorrelGUID;
+    uint64 m_uiDoorHighInquisitorGUID;
 
     void Initialize()
     {
-        MograineGUID = 0;
-        WhitemaneGUID = 0;
-        VorrelGUID = 0;
-        DoorHighInquisitorGUID = 0;
+        memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
 
-        for(uint8 i = 0; i < ENCOUNTERS; i++)
-            Encounter[i] = NOT_STARTED;
+        m_uiMograineGUID = 0;
+        m_uiWhitemaneGUID = 0;
+        m_uiVorrelGUID = 0;
+        m_uiDoorHighInquisitorGUID = 0;
     }
 
     void OnCreatureCreate(Creature* pCreature)
     {
         switch(pCreature->GetEntry())
         {
-            case 3976: MograineGUID = pCreature->GetGUID(); break;
-            case 3977: WhitemaneGUID = pCreature->GetGUID(); break;
-            case 3981: VorrelGUID = pCreature->GetGUID(); break;
+            case 3976: m_uiMograineGUID = pCreature->GetGUID(); break;
+            case 3977: m_uiWhitemaneGUID = pCreature->GetGUID(); break;
+            case 3981: m_uiVorrelGUID = pCreature->GetGUID(); break;
         }
     }
 
-    void OnObjectCreate(GameObject *go)
+    void OnObjectCreate(GameObject* pGo)
     {
-        if (go->GetEntry() == 104600)
-            DoorHighInquisitorGUID = go->GetGUID();
+        if (pGo->GetEntry() == 104600)
+            m_uiDoorHighInquisitorGUID = pGo->GetGUID();
     }
 
     uint64 GetData64(uint32 data)
@@ -69,43 +68,43 @@ struct MANGOS_DLL_DECL instance_scarlet_monastery : public ScriptedInstance
         switch(data)
         {
             case DATA_MOGRAINE:
-                return MograineGUID;
+                return m_uiMograineGUID;
             case DATA_WHITEMANE:
-                return WhitemaneGUID;
+                return m_uiWhitemaneGUID;
             case DATA_VORREL:
-                return VorrelGUID;
+                return m_uiVorrelGUID;
             case DATA_DOOR_WHITEMANE:
-                return DoorHighInquisitorGUID;
+                return m_uiDoorHighInquisitorGUID;
         }
 
         return 0;
     }
 
-    void SetData(uint32 type, uint32 data)
+    void SetData(uint32 uiType, uint32 uiData)
     {
-        if (type == TYPE_MOGRAINE_AND_WHITE_EVENT)
+        if (uiType == TYPE_MOGRAINE_AND_WHITE_EVENT)
         {
-            if (data == IN_PROGRESS)
-                DoUseDoorOrButton(DoorHighInquisitorGUID);
-            if (data == FAIL)
-                DoUseDoorOrButton(DoorHighInquisitorGUID);
+            if (uiData == IN_PROGRESS)
+                DoUseDoorOrButton(m_uiDoorHighInquisitorGUID);
+            if (uiData == FAIL)
+                DoUseDoorOrButton(m_uiDoorHighInquisitorGUID);
 
-            Encounter[0] = data;
+            m_auiEncounter[0] = uiData;
         }
     }
 
-    uint32 GetData(uint32 data)
+    uint32 GetData(uint32 uiData)
     {
-        if (data == TYPE_MOGRAINE_AND_WHITE_EVENT)
-            return Encounter[0];
+        if (uiData == TYPE_MOGRAINE_AND_WHITE_EVENT)
+            return m_auiEncounter[0];
 
         return 0;
     }
 };
 
-InstanceData* GetInstanceData_instance_scarlet_monastery(Map* map)
+InstanceData* GetInstanceData_instance_scarlet_monastery(Map* pMap)
 {
-    return new instance_scarlet_monastery(map);
+    return new instance_scarlet_monastery(pMap);
 }
 
 void AddSC_instance_scarlet_monastery()

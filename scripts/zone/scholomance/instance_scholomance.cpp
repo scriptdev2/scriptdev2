@@ -24,106 +24,90 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_scholomance.h"
 
-#define GO_GATE_KIRTONOS    175570
-#define GO_GATE_GANDLING    177374
-#define GO_GATE_MALICIA     177375
-#define GO_GATE_THEOLEN     177377
-#define GO_GATE_POLKELT     177376
-#define GO_GATE_RAVENIAN    177372
-#define GO_GATE_BAROV       177373
-#define GO_GATE_ILLUCIA     177371
-
-#define ENCOUNTERS          2
-
 struct MANGOS_DLL_DECL instance_scholomance : public ScriptedInstance
 {
-    instance_scholomance(Map *map) : ScriptedInstance(map) {Initialize();};
+    instance_scholomance(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
 
-    //Lord Alexei Barov, Doctor Theolen Krastinov, The Ravenian, Lorekeeper Polkelt, Instructor Malicia and the Lady Illucia Barov.
-    bool IsBossDied[6];
-    uint32 Encounter[ENCOUNTERS];
+    uint32 m_auiEncounter[MAX_ENCOUNTER];
 
-    uint64 GateKirtonosGUID;
-    uint64 GateGandlingGUID;
-    uint64 GateMiliciaGUID;
-    uint64 GateTheolenGUID;
-    uint64 GatePolkeltGUID;
-    uint64 GateRavenianGUID;
-    uint64 GateBarovGUID;
-    uint64 GateIlluciaGUID;
+    uint64 m_uiGateKirtonosGUID;
+    uint64 m_uiGateGandlingGUID;
+    uint64 m_uiGateMiliciaGUID;
+    uint64 m_uiGateTheolenGUID;
+    uint64 m_uiGatePolkeltGUID;
+    uint64 m_uiGateRavenianGUID;
+    uint64 m_uiGateBarovGUID;
+    uint64 m_uiGateIlluciaGUID;
 
     void Initialize()
     {
-        GateKirtonosGUID = 0;
-        GateGandlingGUID = 0;
-        GateMiliciaGUID = 0;
-        GateTheolenGUID = 0;
-        GatePolkeltGUID = 0;
-        GateRavenianGUID = 0;
-        GateBarovGUID = 0;
-        GateIlluciaGUID = 0;
+        memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
 
-        for(uint8 i = 0; i < 6; i++)
-            IsBossDied[i] = false;
-
-        for(uint8 i = 0; i < ENCOUNTERS; i++)
-            Encounter[i] = NOT_STARTED;
+        m_uiGateKirtonosGUID = 0;
+        m_uiGateGandlingGUID = 0;
+        m_uiGateMiliciaGUID = 0;
+        m_uiGateTheolenGUID = 0;
+        m_uiGatePolkeltGUID = 0;
+        m_uiGateRavenianGUID = 0;
+        m_uiGateBarovGUID = 0;
+        m_uiGateIlluciaGUID = 0;
     }
 
-    void OnObjectCreate(GameObject *go)
+    void OnObjectCreate(GameObject* pGo)
     {
-        switch(go->GetEntry())
+        switch(pGo->GetEntry())
         {
-            case GO_GATE_KIRTONOS:  GateKirtonosGUID = go->GetGUID(); break;
-            case GO_GATE_GANDLING:  GateGandlingGUID = go->GetGUID(); break;
-            case GO_GATE_MALICIA:   GateMiliciaGUID = go->GetGUID(); break;
-            case GO_GATE_THEOLEN:   GateTheolenGUID = go->GetGUID(); break;
-            case GO_GATE_POLKELT:   GatePolkeltGUID = go->GetGUID(); break;
-            case GO_GATE_RAVENIAN:  GateRavenianGUID = go->GetGUID(); break;
-            case GO_GATE_BAROV:     GateBarovGUID = go->GetGUID(); break;
-            case GO_GATE_ILLUCIA:   GateIlluciaGUID = go->GetGUID(); break;
+            case GO_GATE_KIRTONOS: m_uiGateKirtonosGUID = pGo->GetGUID(); break;
+            case GO_GATE_GANDLING: m_uiGateGandlingGUID = pGo->GetGUID(); break;
+            case GO_GATE_MALICIA:  m_uiGateMiliciaGUID = pGo->GetGUID(); break;
+            case GO_GATE_THEOLEN:  m_uiGateTheolenGUID = pGo->GetGUID(); break;
+            case GO_GATE_POLKELT:  m_uiGatePolkeltGUID = pGo->GetGUID(); break;
+            case GO_GATE_RAVENIAN: m_uiGateRavenianGUID = pGo->GetGUID(); break;
+            case GO_GATE_BAROV:    m_uiGateBarovGUID = pGo->GetGUID(); break;
+            case GO_GATE_ILLUCIA:  m_uiGateIlluciaGUID = pGo->GetGUID(); break;
         }
     }
 
-    void SetData(uint32 type, uint32 data)
+    void SetData(uint32 uiType, uint32 uiData)
     {
-        switch(type)
+        switch(uiType)
         {
-            case DATA_LORDALEXEIBAROV_DEATH:
-                IsBossDied[0] = true;
-                break;
-            case DATA_DOCTORTHEOLENKRASTINOV_DEATH:
-                IsBossDied[1] = true;
-                break;
-            case DATA_THERAVENIAN_DEATH:
-                IsBossDied[2] = true;
-                break;
-            case DATA_LOREKEEPERPOLKELT_DEATH:
-                IsBossDied[3] = true;
-                break;
-            case DATA_INSTRUCTORMALICIA_DEATH:
-                IsBossDied[4] = true;
-                break;
-            case DATA_LADYILLUCIABAROV_DEATH:
-                IsBossDied[5] = true;
-                break;
             case TYPE_GANDLING:
-                Encounter[0] = data;
+                m_auiEncounter[0] = uiData;
                 break;
             case TYPE_KIRTONOS:
-                Encounter[1] = data;
+                m_auiEncounter[1] = uiData;
+                break;
+            case TYPE_ALEXEIBAROV:
+                m_auiEncounter[2] = uiData;
+                break;
+            case TYPE_THEOLEN:
+                m_auiEncounter[3] = uiData;
+                break;
+            case TYPE_RAVENIAN:
+                m_auiEncounter[4] = uiData;
+                break;
+            case TYPE_POLKELT:
+                m_auiEncounter[5] = uiData;
+                break;
+            case TYPE_MALICIA:
+                m_auiEncounter[6] = uiData;
+                break;
+            case TYPE_ILLUCIABAROV:
+                m_auiEncounter[7] = uiData;
                 break;
         }
     }
 
-    uint32 GetData(uint32 type)
+    uint32 GetData(uint32 uiType)
     {
-        if (type == TYPE_GANDLING)
+        if (uiType == TYPE_GANDLING)
         {
-            if (IsBossDied[0] && IsBossDied[1] && IsBossDied[2] && IsBossDied[3] && IsBossDied[4] && IsBossDied[5])
+            if (m_auiEncounter[2] == DONE && m_auiEncounter[3] == DONE && m_auiEncounter[4] == DONE &&
+                m_auiEncounter[5] == DONE && m_auiEncounter[6] == DONE && m_auiEncounter[7] == DONE)
             {
-                Encounter[0] = IN_PROGRESS;
-                return IN_PROGRESS;
+                m_auiEncounter[0] = SPECIAL;
+                return SPECIAL;
             }
         }
 
@@ -131,9 +115,9 @@ struct MANGOS_DLL_DECL instance_scholomance : public ScriptedInstance
     }
 };
 
-InstanceData* GetInstanceData_instance_scholomance(Map* map)
+InstanceData* GetInstanceData_instance_scholomance(Map* pMap)
 {
-    return new instance_scholomance(map);
+    return new instance_scholomance(pMap);
 }
 
 void AddSC_instance_scholomance()

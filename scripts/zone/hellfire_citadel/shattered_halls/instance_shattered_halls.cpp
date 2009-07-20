@@ -24,84 +24,82 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_shattered_halls.h"
 
-#define ENCOUNTERS  2
-
-#define DOOR_NETHEKURSE     1
+enum
+{
+    MAX_ENCOUNTER       = 2,
+    GO_DOOR_NETHEKURSE  = 1,                                //entry unknown
+    NPC_NETHEKURSE      = 16807
+};
 
 struct MANGOS_DLL_DECL instance_shattered_halls : public ScriptedInstance
 {
-    instance_shattered_halls(Map *map) : ScriptedInstance(map) {Initialize();};
+    instance_shattered_halls(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
 
-    uint32 Encounter[ENCOUNTERS];
-    uint64 nethekurseGUID;
-    uint64 nethekurseDoorGUID;
+    uint32 m_auiEncounter[MAX_ENCOUNTER];
+    uint64 m_uiNethekurseGUID;
+    uint64 m_uiNethekurseDoorGUID;
 
     void Initialize()
     {
-        nethekurseGUID = 0;
-        nethekurseDoorGUID = 0;
+        memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
 
-        for(uint8 i = 0; i < ENCOUNTERS; i++)
-            Encounter[i] = NOT_STARTED;
+        m_uiNethekurseGUID = 0;
+        m_uiNethekurseDoorGUID = 0;
     }
 
-    void OnObjectCreate(GameObject *go)
+    void OnObjectCreate(GameObject* pGo)
     {
-        switch(go->GetEntry())
-        {
-            case DOOR_NETHEKURSE: nethekurseDoorGUID = go->GetGUID(); break;
-        }
+        if (pGo->GetEntry() == GO_DOOR_NETHEKURSE)
+            m_uiNethekurseDoorGUID = pGo->GetGUID();
     }
 
     void OnCreatureCreate(Creature* pCreature)
     {
-        switch(pCreature->GetEntry())
-        {
-            case 16807: nethekurseGUID = pCreature->GetGUID(); break;
-        }
+        if (pCreature->GetEntry() == NPC_NETHEKURSE)
+            m_uiNethekurseGUID = pCreature->GetGUID();
     }
 
-    void SetData(uint32 type, uint32 data)
+    void SetData(uint32 uiType, uint32 uiData)
     {
-        switch(type)
+        switch(uiType)
         {
             case TYPE_NETHEKURSE:
-                Encounter[0] = data;
+                m_auiEncounter[0] = uiData;
                 break;
             case TYPE_OMROGG:
-                Encounter[1] = data;
+                m_auiEncounter[1] = uiData;
                 break;
         }
     }
 
-    uint32 GetData(uint32 type)
+    uint32 GetData(uint32 uiType)
     {
-        switch(type)
+        switch(uiType)
         {
             case TYPE_NETHEKURSE:
-                return Encounter[0];
+                return m_auiEncounter[0];
             case TYPE_OMROGG:
-                return Encounter[1];
+                return m_auiEncounter[1];
         }
         return 0;
     }
 
-    uint64 GetData64(uint32 data)
+    uint64 GetData64(uint32 uiData)
     {
-        switch(data)
+        switch(uiData)
         {
             case DATA_NETHEKURSE:
-                return nethekurseGUID;
+                return m_uiNethekurseGUID;
             case DATA_NETHEKURSE_DOOR:
-                return nethekurseDoorGUID;
+                return m_uiNethekurseDoorGUID;
         }
         return 0;
     }
 };
 
-InstanceData* GetInstanceData_instance_shattered_halls(Map* map)
+InstanceData* GetInstanceData_instance_shattered_halls(Map* pMap)
 {
-    return new instance_shattered_halls(map);
+    return new instance_shattered_halls(pMap);
 }
 
 void AddSC_instance_shattered_halls()

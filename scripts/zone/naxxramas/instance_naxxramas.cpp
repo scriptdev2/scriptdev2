@@ -23,7 +23,7 @@ EndScriptData */
 
 #include "precompiled.h"
 
-#define ENCOUNTERS              1
+#define MAX_ENCOUNTER           1
 
 enum
 {
@@ -71,12 +71,11 @@ struct MANGOS_DLL_DECL instance_naxxramas : public ScriptedInstance
     instance_naxxramas(Map* pMap) : ScriptedInstance(pMap) {Initialize();}
 
     std::string strInstData;
-    uint32 m_uiEncounter[ENCOUNTERS];
+    uint32 m_auiEncounter[MAX_ENCOUNTER];
 
     void Initialize()
     {
-        for(uint8 i = 0; i < ENCOUNTERS; i++)
-            m_uiEncounter[i] = NOT_STARTED;
+        memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
     }
 
     void OnCreatureCreate(Creature* pCreature)

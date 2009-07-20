@@ -49,9 +49,9 @@ struct MANGOS_DLL_DECL boss_theolenkrastinovAI : public ScriptedAI
     {
         if (ScriptedInstance* pInstance = (ScriptedInstance*)m_creature->GetInstanceData())
         {
-            pInstance->SetData(DATA_DOCTORTHEOLENKRASTINOV_DEATH, 0);
+            pInstance->SetData(TYPE_THEOLEN, DONE);
 
-            if (pInstance->GetData(TYPE_GANDLING) == IN_PROGRESS)
+            if (pInstance->GetData(TYPE_GANDLING) == SPECIAL)
                 m_creature->SummonCreature(1853, 180.73, -9.43856, 75.507, 1.61399, TEMPSUMMON_DEAD_DESPAWN, 0);
         }
     }
