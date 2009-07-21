@@ -350,7 +350,10 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 
 (-1000357,'Let\'s go before they find out I\'m free!',0,0,0,1,'KAYA_SAY_START'),
 (-1000358,'Look out! We\'re under attack!',0,0,0,0,'KAYA_AMBUSH'),
-(-1000359,'Thank you for helping me. I know my way back from here.',0,0,0,0,'KAYA_END');
+(-1000359,'Thank you for helping me. I know my way back from here.',0,0,0,0,'KAYA_END'),
+
+(-1000360,'The strands of LIFE have been severed! The Dreamers must be avenged!',0,1,0,0,' ysondre SAY_AGGRO'),
+(-1000361,'Come forth, ye Dreamers – and claim your vengeance!',0,1,0,0,' ysondre SAY_SUMMONDRUIDS');
 
 -- -1 033 000 SHADOWFANG KEEP
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
