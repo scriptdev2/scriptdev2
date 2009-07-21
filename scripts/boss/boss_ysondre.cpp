@@ -138,7 +138,7 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
             {
                 // summon 10 druids
                 Unit* target = NULL;
-                for(int i = 0; i < 10;i++)
+                for(int i = 0; i < 10; ++i)
                 {
                     target = SelectUnit(SELECT_TARGET_RANDOM,0);
                     SummonDruids(target);
@@ -155,7 +155,7 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
             {
                 // summon 10 druids
                 Unit* target = NULL;
-                for(int i = 0; i < 10;i++)
+                for(int i = 0; i < 10; ++i)
                 {
                     target = SelectUnit(SELECT_TARGET_RANDOM,0);
                     SummonDruids(target);
@@ -172,7 +172,7 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
             {
                 // summon 10 druids
                 Unit* target = NULL;
-                for(int i = 0; i < 10;i++)
+                for(int i = 0; i < 10; ++i)
                 {
                     target = SelectUnit(SELECT_TARGET_RANDOM,0);
                     SummonDruids(target);

@@ -343,7 +343,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
     void PrepareAdvisors()
     {
-        for(uint8 i = 0; i < MAX_ADVISORS; i++)
+        for(uint8 i = 0; i < MAX_ADVISORS; ++i)
         {
             if (Creature *pCreature = (Creature*)Unit::GetUnit((*m_creature), m_auiAdvisorGuid[i]))
             {
@@ -461,7 +461,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
         if (m_pInstance)
             m_pInstance->SetData(TYPE_KAELTHAS_PHASE, PHASE_6_COMPLETE);
 
-        for(uint8 i = 0; i < MAX_ADVISORS; i++)
+        for(uint8 i = 0; i < MAX_ADVISORS; ++i)
         {
             if (Unit* pAdvisor = Unit::GetUnit((*m_creature), m_auiAdvisorGuid[i]))
                 pAdvisor->DealDamage(pAdvisor, pAdvisor->GetMaxHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
@@ -489,7 +489,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
                             //start advisor within 7 seconds
                             Phase_Timer = 7000;
-                            PhaseSubphase++;
+                            ++PhaseSubphase;
                         }else Phase_Timer -= diff;
                         break;
 
@@ -509,7 +509,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                                     Advisor->AI()->AttackStart(target);
                             }
 
-                            PhaseSubphase++;
+                            ++PhaseSubphase;
                         }else Phase_Timer -= diff;
                         break;
 
@@ -523,7 +523,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
                             //start advisor within 12.5 seconds
                             Phase_Timer = 12500;
-                            PhaseSubphase++;
+                            ++PhaseSubphase;
                         }
                         break;
 
@@ -543,7 +543,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                                     Advisor->AI()->AttackStart(target);
                             }
 
-                            PhaseSubphase++;
+                            ++PhaseSubphase;
                         }else Phase_Timer -= diff;
                         break;
 
@@ -557,7 +557,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
                             //start advisor within 7 seconds
                             Phase_Timer = 7000;
-                            PhaseSubphase++;
+                            ++PhaseSubphase;
                         }
                         break;
 
@@ -577,7 +577,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                                     Advisor->AI()->AttackStart(target);
                             }
 
-                            PhaseSubphase++;
+                            ++PhaseSubphase;
                         }else Phase_Timer -= diff;
                         break;
 
@@ -591,7 +591,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
                             //start advisor within 8.4 seconds
                             Phase_Timer = 8400;
-                            PhaseSubphase++;
+                            ++PhaseSubphase;
                         }
                         break;
 
@@ -612,7 +612,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                             }
 
                             Phase_Timer = 3000;
-                            PhaseSubphase++;
+                            ++PhaseSubphase;
                         }else Phase_Timer -= diff;
                         break;
 
@@ -679,7 +679,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                     Unit* Target = SelectUnit(SELECT_TARGET_RANDOM, 0);
 
                     Creature* Advisor;
-                    for (uint32 i = 0; i < MAX_ADVISORS; i++)
+                    for (uint32 i = 0; i < MAX_ADVISORS; ++i)
                     {
                         Advisor = (Creature*)(Unit::GetUnit((*m_creature), m_auiAdvisorGuid[i]));
 
@@ -766,7 +766,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                     if (MindControl_Timer < diff)
                     {
                         if (m_creature->getThreatManager().getThreatList().size() >= 2)
-                            for (uint32 i = 0; i < 3; i++)
+                            for (uint32 i = 0; i < 3; ++i)
                         {
                             debug_log("SD2: Kael'Thas mind control not supported.");
                             //DoCast(pUnit, SPELL_MIND_CONTROL);
@@ -836,7 +836,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                         if (PyrosCasted < 3)
                         {
                             DoCast(m_creature->getVictim(), SPELL_PYROBLAST);
-                            PyrosCasted++;
+                            ++PyrosCasted;
 
                         }
                         else
@@ -906,7 +906,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                                 }
 
                                 // 2) At that point he will put a Gravity Lapse debuff on everyone
-                                for (i = m_creature->getThreatManager().getThreatList().begin(); i!= m_creature->getThreatManager().getThreatList().end();i++)
+                                for (i = m_creature->getThreatManager().getThreatList().begin(); i!= m_creature->getThreatManager().getThreatList().end(); ++i)
                                 {
                                     if (Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid()))
                                     {
@@ -925,7 +925,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                                     }
                                 }
                                 GravityLapse_Timer = 10000;
-                                GravityLapse_Phase++;
+                                ++GravityLapse_Phase;
                                 break;
 
                             case 2:
@@ -934,12 +934,12 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                                 DoCast(m_creature, SPELL_NETHER_VAPOR);
 
                                 GravityLapse_Timer = 20000;
-                                GravityLapse_Phase++;
+                                ++GravityLapse_Phase;
                                 break;
 
                             case 3:
                                 //Remove flight
-                                for (i = m_creature->getThreatManager().getThreatList().begin(); i!= m_creature->getThreatManager().getThreatList().end();i++)
+                                for (i = m_creature->getThreatManager().getThreatList().begin(); i!= m_creature->getThreatManager().getThreatList().end(); ++i)
                                 {
                                     if (Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid()))
                                     {

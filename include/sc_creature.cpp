@@ -268,7 +268,7 @@ SpellEntry const* ScriptedAI::SelectSpell(Unit* Target, int32 School, int32 Mech
     SpellRangeEntry const* TempRange;
 
     //Check if each spell is viable(set it to null if not)
-    for (uint32 i = 0; i < 4; i++)
+    for (uint32 i = 0; i < 4; ++i)
     {
         TempSpell = GetSpellStore()->LookupEntry(m_creature->m_spells[i]);
 
@@ -323,7 +323,7 @@ SpellEntry const* ScriptedAI::SelectSpell(Unit* Target, int32 School, int32 Mech
 
         //All good so lets add it to the spell list
         Spell[SpellCount] = TempSpell;
-        SpellCount++;
+        ++SpellCount;
     }
 
     //We got our usable spells so now lets randomly pick one
@@ -368,7 +368,7 @@ void FillSpellSummary()
 
     SpellEntry const* TempSpell;
 
-    for (int i=0; i < GetSpellStore()->GetNumRows(); i++)
+    for (int i=0; i < GetSpellStore()->GetNumRows(); ++i)
     {
         SpellSummary[i].Effects = 0;
         SpellSummary[i].Targets = 0;
@@ -378,7 +378,7 @@ void FillSpellSummary()
         if (!TempSpell)
             continue;
 
-        for (int j=0; j<3; j++)
+        for (int j=0; j<3; ++j)
         {
             //Spell targets self
             if (TempSpell->EffectImplicitTargetA[j] == TARGET_SELF)

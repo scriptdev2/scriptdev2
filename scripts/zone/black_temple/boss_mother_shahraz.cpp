@@ -102,7 +102,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
 
     void Reset()
     {
-        for(uint8 i = 0; i<3; i++)
+        for(uint8 i = 0; i<3; ++i)
             TargetGUID[i] = 0;
 
         BeamTimer = 60000;                                  // Timers may be incorrect
@@ -159,7 +159,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
         float Y = TeleportPoint[random].y;
         float Z = TeleportPoint[random].z;
 
-        for(uint8 i = 0; i < 3; i++)
+        for(uint8 i = 0; i < 3; ++i)
         {
             Unit* pUnit = SelectUnit(SELECT_TARGET_RANDOM, 1);
             if (pUnit && pUnit->isAlive() && (pUnit->GetTypeId() == TYPEID_PLAYER))
@@ -207,7 +207,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
                     DoCast(target, SPELL_BEAM_SINFUL);
                     break;
             }
-            BeamCount++;
+            ++BeamCount;
             uint32 Beam = CurrentBeam;
 
             if (BeamCount > 3)
@@ -259,7 +259,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
                     }
                 }
 
-                ExplosionCount++;
+                ++ExplosionCount;
                 FatalAttractionExplodeTimer = 1000;
             }
             else

@@ -281,7 +281,9 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
             {
                 DebuffClicker(clicker);
                 (*i).second = 0;
-            }else ClickerNum++;
+            }
+            else
+                ++ClickerNum;
         }
 
         // if 5 clickers from other cubes apply shadow cage
@@ -438,18 +440,18 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
                 {
                     case 0:
                         m_creature->CastSpell(m_creature, SPELL_CAMERA_SHAKE, true);
-                        Phase3_Count++;
+                        ++Phase3_Count;
                         Phase3_Timer = 2000;
                         break;
                     case 1:
                         if (m_pInstance)
                             m_pInstance->SetData(TYPE_HALL_COLLAPSE, IN_PROGRESS);
-                        Phase3_Count++;
+                        ++Phase3_Count;
                         Phase3_Timer = 8000;
                         break;
                     case 2:
                         m_creature->CastSpell(m_creature, SPELL_DEBRIS_KNOCKDOWN, true);
-                        Phase3_Count++;
+                        ++Phase3_Count;
                         Phase3_Timer = 15000;
                         break;
                     case 3:

@@ -115,13 +115,13 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
                         //16 seconds till next line
                         DoScriptText(SAY_LINE2, m_creature);
                         SpeachTimer = 16000;
-                        SpeachNum++;
+                        ++SpeachNum;
                         break;
                     case 1:
                         //This one is actually 16 seconds but we only go to 10 seconds because he starts attacking after he says "I must fight this!"
                         DoScriptText(SAY_LINE3, m_creature);
                         SpeachTimer = 10000;
-                        SpeachNum++;
+                        ++SpeachNum;
                         break;
                     case 2:
                         m_creature->setFaction(103);

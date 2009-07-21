@@ -184,7 +184,7 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
         FrostBlast_Timer = (rand()%30+30)*1000;             //Random time between 30-60 seconds
         GuardiansOfIcecrown_Timer = 5000;                   //5 seconds for summoning each Guardian of Icecrown in phase 3
 
-        for(int i=0; i<5; i++)
+        for(int i=0; i<5; ++i)
         {
             if (GuardiansOfIcecrown[i])
             {
@@ -216,7 +216,7 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH, m_creature);
 
-        for(int i=0; i<5; i++)
+        for(int i=0; i<5; ++i)
         {
             if (GuardiansOfIcecrown[i])
             {
@@ -423,7 +423,7 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
                     GuardiansOfIcecrown[GuardiansOfIcecrown_Count] = pGuardian->GetGUID();
 
                     //Update guardian count
-                    GuardiansOfIcecrown_Count++;
+                    ++GuardiansOfIcecrown_Count;
                 }
 
                 //5 seconds until summoning next guardian

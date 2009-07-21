@@ -240,7 +240,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
             ((npc_enslaved_soulAI*)Soul->AI())->ReliquaryGUID = m_creature->GetGUID();
             Soul->CastSpell(Soul, ENSLAVED_SOUL_PASSIVE, true);
             Soul->AddThreat(target, 1.0f);
-            SoulCount++;
+            ++SoulCount;
         }
     }
 
@@ -251,7 +251,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
 
         std::list<HostilReference*>& m_threatlist = target->getThreatManager().getThreatList();
         std::list<HostilReference*>::iterator itr = m_threatlist.begin();
-        for(; itr != m_threatlist.end(); itr++)
+        for(; itr != m_threatlist.end(); ++itr)
         {
             Unit* pUnit = Unit::GetUnit((*m_creature), (*itr)->getUnitGuid());
             if (pUnit)
@@ -904,7 +904,7 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
 
         if (SpiteTimer < diff)
         {
-            for(uint8 i = 0; i < 4; i++)
+            for(uint8 i = 0; i < 4; ++i)
             {
                 if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
                     DoCast(target, SPELL_SPITE);

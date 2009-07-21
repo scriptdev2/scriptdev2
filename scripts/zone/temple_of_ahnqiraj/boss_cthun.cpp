@@ -332,7 +332,7 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
                     m_creature->CastSpell(NULL, SPELL_DARK_GLARE, false);
 
                     //Increase tick
-                    DarkGlareTick++;
+                    ++DarkGlareTick;
 
                     //1 second per tick
                     DarkGlareTickTimer = 1000;
@@ -638,7 +638,7 @@ struct MANGOS_DLL_DECL cthunAI : public ScriptedAI
                     Spawned = (Creature*)m_creature->SummonCreature(MOB_FLESH_TENTACLE, TENTACLE_POS1_X, TENTACLE_POS1_Y, TENTACLE_POS1_Z, TENTACLE_POS1_O, TEMPSUMMON_CORPSE_DESPAWN, 0);
 
                     if (!Spawned)
-                        FleshTentaclesKilled++;
+                        ++FleshTentaclesKilled;
                     else
                         ((flesh_tentacleAI*)(Spawned->AI()))->SpawnedByCthun(m_creature->GetGUID());
 
@@ -646,7 +646,7 @@ struct MANGOS_DLL_DECL cthunAI : public ScriptedAI
                     Spawned = (Creature*)m_creature->SummonCreature(MOB_FLESH_TENTACLE, TENTACLE_POS2_X, TENTACLE_POS2_Y, TENTACLE_POS2_Z, TENTACLE_POS2_O, TEMPSUMMON_CORPSE_DESPAWN, 0);
 
                     if (!Spawned)
-                        FleshTentaclesKilled++;
+                        ++FleshTentaclesKilled;
                     else
                         ((flesh_tentacleAI*)(Spawned->AI()))->SpawnedByCthun(m_creature->GetGUID());
 
@@ -853,7 +853,7 @@ struct MANGOS_DLL_DECL cthunAI : public ScriptedAI
                     Spawned = (Creature*)m_creature->SummonCreature(MOB_FLESH_TENTACLE, TENTACLE_POS1_X, TENTACLE_POS1_Y, TENTACLE_POS1_Z, TENTACLE_POS1_O, TEMPSUMMON_CORPSE_DESPAWN, 0);
 
                     if (!Spawned)
-                        FleshTentaclesKilled++;
+                        ++FleshTentaclesKilled;
                     else
                         ((flesh_tentacleAI*)(Spawned->AI()))->SpawnedByCthun(m_creature->GetGUID());
 
@@ -861,7 +861,7 @@ struct MANGOS_DLL_DECL cthunAI : public ScriptedAI
                     Spawned = (Creature*)m_creature->SummonCreature(MOB_FLESH_TENTACLE, TENTACLE_POS2_X, TENTACLE_POS2_Y, TENTACLE_POS2_Z, TENTACLE_POS2_O, TEMPSUMMON_CORPSE_DESPAWN, 0);
 
                     if (!Spawned)
-                        FleshTentaclesKilled++;
+                        ++FleshTentaclesKilled;
                     else
                         ((flesh_tentacleAI*)(Spawned->AI()))->SpawnedByCthun(m_creature->GetGUID());
 
@@ -914,7 +914,7 @@ struct MANGOS_DLL_DECL cthunAI : public ScriptedAI
 
     void FleshTentcleKilled()
     {
-        FleshTentaclesKilled++;
+        ++FleshTentaclesKilled;
     }
 };
 

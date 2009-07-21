@@ -218,7 +218,7 @@ struct MANGOS_DLL_DECL boss_twinemperorsAI : public ScriptedAI
                 if (!totallyRandom)
                     return pUnit;
                 candidates.push_back((*i));
-                cnt ++;
+                ++cnt;
             }
         }
         if (!cnt)
@@ -469,7 +469,7 @@ struct MANGOS_DLL_DECL boss_veknilashAI : public boss_twinemperorsAI
         target->setFaction(14);
         ((CreatureAI*)target->AI())->AttackStart(m_creature->getThreatManager().getHostilTarget());
         SpellEntry *spell = (SpellEntry *)GetSpellStore()->LookupEntry(SPELL_MUTATE_BUG);
-        for (int i=0; i<3; i++)
+        for (int i=0; i<3; ++i)
         {
             if (!spell->Effect[i])
                 continue;
@@ -555,7 +555,7 @@ struct MANGOS_DLL_DECL boss_veklorAI : public boss_twinemperorsAI
     {
         target->setFaction(14);
         SpellEntry *spell = (SpellEntry *)GetSpellStore()->LookupEntry(SPELL_EXPLODEBUG);
-        for (int i=0; i<3; i++)
+        for (int i=0; i<3; ++i)
         {
             if (!spell->Effect[i])
                 continue;

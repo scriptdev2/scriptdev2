@@ -149,7 +149,7 @@ struct MANGOS_DLL_DECL boss_nothAI : public ScriptedAI
         {
             DoScriptText(SAY_SUMMON, m_creature);
 
-            for(uint8 i = 0; i < 6; i++)
+            for(uint8 i = 0; i < 6; ++i)
                 m_creature->SummonCreature(NPC_PLAGUED_WARRIOR,2684.804,-3502.517,261.313,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,80000);
 
             Summon_Timer = 30500;

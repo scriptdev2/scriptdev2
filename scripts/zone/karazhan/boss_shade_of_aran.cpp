@@ -213,7 +213,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
                 FWTargPosX[i] = (*itr)->GetPositionX();
                 FWTargPosY[i] = (*itr)->GetPositionY();
                 m_creature->CastSpell((*itr), SPELL_FLAME_WREATH, true);
-                i++;
+                ++i;
             }
         }
     }
@@ -322,17 +322,17 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
                 if (!ArcaneCooldown)
                 {
                     Spells[AvailableSpells] = SPELL_ARCMISSLE;
-                    AvailableSpells++;
+                    ++AvailableSpells;
                 }
                 if (!FireCooldown)
                 {
                     Spells[AvailableSpells] = SPELL_FIREBALL;
-                    AvailableSpells++;
+                    ++AvailableSpells;
                 }
                 if (!FrostCooldown)
                 {
                     Spells[AvailableSpells] = SPELL_FROSTBOLT;
-                    AvailableSpells++;
+                    ++AvailableSpells;
                 }
 
                 //If no available spells wait 1 second and try again
@@ -433,7 +433,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
         {
             ElementalsSpawned = true;
 
-            for (uint32 i = 0; i < 4; i++)
+            for (uint32 i = 0; i < 4; ++i)
             {
                 if (Creature* pUnit = m_creature->SummonCreature(CREATURE_WATER_ELEMENTAL, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN, 90000))
                 {
@@ -447,7 +447,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
 
         if (BerserkTimer < diff)
         {
-            for (uint32 i = 0; i < 5; i++)
+            for (uint32 i = 0; i < 5; ++i)
             {
                 if (Creature* pUnit = m_creature->SummonCreature(CREATURE_SHADOW_OF_ARAN, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000))
                 {
@@ -470,7 +470,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
 
             if (FlameWreathCheckTime < diff)
             {
-                for (uint32 i = 0; i < 3; i++)
+                for (uint32 i = 0; i < 3; ++i)
                 {
                     if (!FlameWreathTarget[i])
                         continue;

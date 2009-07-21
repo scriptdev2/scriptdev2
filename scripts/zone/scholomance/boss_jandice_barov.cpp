@@ -111,7 +111,7 @@ struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
 
             //Summon 10 Illusions attacking random gamers
             Unit* target = NULL;
-            for(int i = 0; i < 10;i++)
+            for(int i = 0; i < 10; ++i)
             {
                 target = SelectUnit(SELECT_TARGET_RANDOM,0);
                 SummonIllusions(target);
@@ -132,7 +132,7 @@ struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
         //                  if (Illusioncounter < 3)
         //                  {
         //                    Illusion_Timer = 500;
-        //                    Illusioncounter++;
+        //                    ++Illusioncounter;
         //                  }
         //                  else {
         //                      //15 seconds until we should cast this again

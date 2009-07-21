@@ -183,7 +183,7 @@ struct MANGOS_DLL_DECL example_creatureAI : public ScriptedAI
             if (Phase_Timer < diff)
         {
             //Go to next phase
-            Phase++;
+            ++Phase;
             DoScriptText(SAY_PHASE, m_creature);
             DoCast(m_creature,SPELL_ENRAGE);
         }else Phase_Timer -= diff;

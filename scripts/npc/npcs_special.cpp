@@ -720,7 +720,7 @@ void npc_doctorAI::UpdateAI(const uint32 diff)
                 Coordinates.erase(itr);
             }
             SummonPatient_Timer = 10000;
-            SummonPatientCount++;
+            ++SummonPatientCount;
         }else SummonPatient_Timer -= diff;
     }
 }

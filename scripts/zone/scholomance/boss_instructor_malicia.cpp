@@ -102,7 +102,7 @@ struct MANGOS_DLL_DECL boss_instructormaliciaAI : public ScriptedAI
             if (FlashCounter < 2)
             {
                 FlashHeal_Timer = 5000;
-                FlashCounter++;
+                ++FlashCounter;
             }
             else
             {
@@ -120,7 +120,7 @@ struct MANGOS_DLL_DECL boss_instructormaliciaAI : public ScriptedAI
             if (HealingTouch_Timer < 2)
             {
                 HealingTouch_Timer = 5500;
-                TouchCounter++;
+                ++TouchCounter;
             }
             else
             {

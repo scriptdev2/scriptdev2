@@ -92,7 +92,7 @@ struct MANGOS_DLL_DECL npc_kelerun_bloodmournAI : public ScriptedAI
 
         m_uiPlayerGUID = 0;
 
-        for(uint8 i = 0; i < MAX_CHALLENGER; i++)
+        for(uint8 i = 0; i < MAX_CHALLENGER; ++i)
             uiChallengerGUID[i] = 0;
 
         m_uiChallengerCount = 0;
@@ -126,7 +126,7 @@ struct MANGOS_DLL_DECL npc_kelerun_bloodmournAI : public ScriptedAI
 
     void DoSpawnChallengers()
     {
-        for(uint8 i = 0; i < MAX_CHALLENGER; i++)
+        for(uint8 i = 0; i < MAX_CHALLENGER; ++i)
         {
             if (Creature* pCreature = m_creature->SummonCreature(uiChallengerId[i],
                 fChallengerLoc[i][0], fChallengerLoc[i][1],

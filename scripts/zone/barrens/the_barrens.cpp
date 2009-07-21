@@ -232,7 +232,7 @@ struct MANGOS_DLL_DECL npc_twiggy_flatheadAI : public ScriptedAI
         PlayerGUID = 0;
         BigWillGUID = 0;
 
-        for(uint8 i = 0; i < 6; i++)
+        for(uint8 i = 0; i < 6; ++i)
             AffrayChallenger[i] = 0;
     }
 
@@ -252,7 +252,7 @@ struct MANGOS_DLL_DECL npc_twiggy_flatheadAI : public ScriptedAI
 
     void SetChallengers()
     {
-        for(uint8 i = 0; i < 6; i++)
+        for(uint8 i = 0; i < 6; ++i)
         {
             Creature* pCreature = m_creature->SummonCreature(NPC_AFFRAY_CHALLENGER, AffrayChallengerLoc[i][0], AffrayChallengerLoc[i][1], AffrayChallengerLoc[i][2], AffrayChallengerLoc[i][3], TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
             if (!pCreature)
@@ -285,7 +285,7 @@ struct MANGOS_DLL_DECL npc_twiggy_flatheadAI : public ScriptedAI
         {
             if (ChallengerDeath_Timer < diff)
             {
-                for(uint8 i = 0; i < 6; i++)
+                for(uint8 i = 0; i < 6; ++i)
                 {
                     Creature *challenger = (Creature*)Unit::GetUnit(*m_creature,AffrayChallenger[i]);
                     if (challenger && !challenger->isAlive() && challenger->isDead())

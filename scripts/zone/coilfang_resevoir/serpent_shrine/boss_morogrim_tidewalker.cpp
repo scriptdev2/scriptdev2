@@ -196,7 +196,7 @@ struct MANGOS_DLL_DECL boss_morogrim_tidewalkerAI : public ScriptedAI
             if (m_uiWateryGrave_Timer < uiDiff)
             {
                 //Teleport 4 players under the waterfalls
-                for(uint8 i = 0; i < 4; i++)
+                for(uint8 i = 0; i < 4; ++i)
                 {
                     Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
 

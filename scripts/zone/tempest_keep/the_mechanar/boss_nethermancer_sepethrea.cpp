@@ -73,7 +73,7 @@ struct MANGOS_DLL_DECL boss_nethermancer_sepethreaAI : public ScriptedAI
 
         //Summon two guards, three in heroic
         uint8 am = (m_bIsHeroicMode ? 1 : 2);
-        for(int i = 0; i < am; i++)
+        for(int i = 0; i < am; ++i)
         {
             DoCast(who,SPELL_SUMMON_RAGIN_FLAMES);
         }

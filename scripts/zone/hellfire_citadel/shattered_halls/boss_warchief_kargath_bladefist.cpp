@@ -151,7 +151,7 @@ struct MANGOS_DLL_DECL boss_warchief_kargath_bladefistAI : public ScriptedAI
             {
                 Wait_Timer = 1;
                 DoCast(m_creature,SPELL_BLADE_DANCE,true);
-                target_num--;
+                --target_num;
             }
         }
     }
@@ -251,7 +251,7 @@ struct MANGOS_DLL_DECL boss_warchief_kargath_bladefistAI : public ScriptedAI
             {
                 Unit* target = NULL;
 
-                for(int i = 0; i < summoned; i++)
+                for(int i = 0; i < summoned; ++i)
                 {
                     switch(rand()%3)
                     {
@@ -260,9 +260,14 @@ struct MANGOS_DLL_DECL boss_warchief_kargath_bladefistAI : public ScriptedAI
                         case 2: m_creature->SummonCreature(MOB_REAVER_GUARD,AddsEntrance[0],AddsEntrance[1], AddsEntrance[2], 0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,30000); break;
                     }
                 }
-                if (rand()%100 < 20) summoned++;
-                    Summon_Assistant_Timer = 25000 + (rand()%10000) ;
-            }else Summon_Assistant_Timer -= diff;
+
+                if (rand()%100 < 20)
+                    ++summoned;
+
+                Summon_Assistant_Timer = 25000 + (rand()%10000) ;
+            }
+            else
+                Summon_Assistant_Timer -= diff;
 
             DoMeleeAttackIfReady();
         }

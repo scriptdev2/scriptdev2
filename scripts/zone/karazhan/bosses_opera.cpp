@@ -453,7 +453,7 @@ struct MANGOS_DLL_DECL boss_tinheadAI : public ScriptedAI
         {
             if (RustTimer < diff)
             {
-                RustCount++;
+                ++RustCount;
                 DoScriptText(EMOTE_RUST, m_creature);
                 DoCast(m_creature, SPELL_RUST);
                 RustTimer = 6000;

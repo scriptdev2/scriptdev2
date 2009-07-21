@@ -258,7 +258,7 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
                     CreatureID = CREATURE_CHROMATIC_DRAKANOID;
                 else CreatureID = DrakType1;
 
-                SpawnedAdds++;
+                ++SpawnedAdds;
 
                 //Spawn creature and force it to start attacking a random target
                 Spawned = m_creature->SummonCreature(CreatureID,ADD_X1,ADD_Y1,ADD_Z1,5.000,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,5000);
@@ -274,7 +274,7 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
                     CreatureID = CREATURE_CHROMATIC_DRAKANOID;
                 else CreatureID = DrakType2;
 
-                SpawnedAdds++;
+                ++SpawnedAdds;
 
                 target = NULL;
                 Spawned = NULL;

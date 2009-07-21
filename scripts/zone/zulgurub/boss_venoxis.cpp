@@ -110,11 +110,11 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
             if (HolyNova_Timer < diff)
             {
                 TargetInRange = 0;
-                for(int i=0; i<10; i++)
+                for(int i=0; i<10; ++i)
                 {
                     if (Unit* target = SelectUnit(SELECT_TARGET_TOPAGGRO,i))
                         if (m_creature->IsWithinDistInMap(target, ATTACK_DISTANCE))
-                            TargetInRange++;
+                            ++TargetInRange;
                 }
 
                 if (TargetInRange > 1)
