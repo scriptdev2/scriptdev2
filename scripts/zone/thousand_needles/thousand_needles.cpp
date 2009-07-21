@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Thousand_Needles
 SD%Complete: 90
-SDComment: Quest support: 1950, 4770
+SDComment: Quest support: 1950, 4770, 4904
 SDCategory: Thousand Needles
 EndScriptData
 */
@@ -29,6 +29,106 @@ EndContentData */
 
 #include "precompiled.h"
 #include "../../npc/npc_escortAI.h"
+
+/*######
+# npc_lakota_windsong
+######*/
+
+enum
+{
+    SAY_LAKO_START              = -1000365,
+    SAY_LAKO_LOOK_OUT           = -1000366,
+    SAY_LAKO_HERE_COME          = -1000367,
+    SAY_LAKO_MORE               = -1000368,
+    SAY_LAKO_END                = -1000369,
+
+    QUEST_FREE_AT_LAST          = 4904,
+    NPC_GRIM_BANDIT             = 10758,
+    FACTION_ESCORTEE_LAKO       = 232,                      //guessed
+
+    ID_AMBUSH_1                 = 0,
+    ID_AMBUSH_2                 = 2,
+    ID_AMBUSH_3                 = 4
+};
+
+float m_afBanditLoc[6][6]=
+{
+    {-4905.479492, -2062.732666, 84.352},
+    {-4915.201172, -2073.528320, 84.733},
+    {-4878.883301, -1986.947876, 91.966},
+    {-4877.503906, -1966.113403, 91.859},
+    {-4767.985352, -1873.169189, 90.192},
+    {-4788.861328, -1888.007813, 89.888}
+};
+
+struct MANGOS_DLL_DECL npc_lakota_windsongAI : public npc_escortAI
+{
+    npc_lakota_windsongAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
+
+    void Reset() { }
+
+    void WaypointReached(uint32 uiPointId)
+    {
+        switch(uiPointId)
+        {
+            case 8:
+                DoScriptText(SAY_LAKO_LOOK_OUT, m_creature);
+                DoSpawnBandits(ID_AMBUSH_1);
+                break;
+            case 14:
+                DoScriptText(SAY_LAKO_HERE_COME, m_creature);
+                DoSpawnBandits(ID_AMBUSH_2);
+                break;
+            case 21:
+                DoScriptText(SAY_LAKO_MORE, m_creature);
+                DoSpawnBandits(ID_AMBUSH_3);
+                break;
+            case 45:
+                if (Player* pPlayer = (Player*)Unit::GetUnit(*m_creature, PlayerGUID))
+                    pPlayer->GroupEventHappens(QUEST_FREE_AT_LAST, m_creature);
+                break;
+        }
+    }
+
+    void DoSpawnBandits(int uiAmbushId)
+    {
+        for(int i = 0; i < 2; ++i)
+            m_creature->SummonCreature(NPC_GRIM_BANDIT,
+            m_afBanditLoc[i+uiAmbushId][0], m_afBanditLoc[i+uiAmbushId][1], m_afBanditLoc[i+uiAmbushId][2], 0.0f,
+            TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 60000);
+    }
+
+    void JustDied(Unit* pKiller)
+    {
+        if (Player* pPlayer = (Player*)Unit::GetUnit(*m_creature, PlayerGUID))
+        {
+            if (pPlayer->GetQuestStatus(QUEST_FREE_AT_LAST) == QUEST_STATUS_INCOMPLETE)
+                pPlayer->FailQuest(QUEST_FREE_AT_LAST);
+        }
+    }
+};
+
+CreatureAI* GetAI_npc_lakota_windsong(Creature* pCreature)
+{
+    npc_lakota_windsongAI* pTempAI = new npc_lakota_windsongAI(pCreature);
+
+    pTempAI->FillPointMovementListForCreature();
+
+    return (CreatureAI*)pTempAI;
+}
+
+bool QuestAccept_npc_lakota_windsong(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
+{
+    if (pQuest->GetQuestId() == QUEST_FREE_AT_LAST)
+    {
+        DoScriptText(SAY_LAKO_START, pCreature, pPlayer);
+        pCreature->setFaction(FACTION_ESCORTEE_LAKO);
+
+        if (npc_lakota_windsongAI* pEscortAI = dynamic_cast<npc_lakota_windsongAI*>(pCreature->AI()))
+            pEscortAI->Start(false, false, pPlayer->GetGUID(), pQuest);
+    }
+    return true;
+}
 
 /*######
 # npc_paoka_swiftmountain
@@ -232,6 +332,12 @@ bool GossipSelect_npc_plucky_johnson(Player* pPlayer, Creature* pCreature, uint3
 void AddSC_thousand_needles()
 {
     Script* newscript;
+
+    newscript = new Script;
+    newscript->Name = "npc_lakota_windsong";
+    newscript->GetAI = &GetAI_npc_lakota_windsong;
+    newscript->pQuestAccept = &QuestAccept_npc_lakota_windsong;
+    newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "npc_paoka_swiftmountain";

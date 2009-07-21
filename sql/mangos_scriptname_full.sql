@@ -947,6 +947,7 @@ UPDATE creature_template SET ScriptName='npc_slim' WHERE entry=19679;
 /* THOUSAND NEEDLES */
 UPDATE creature_template SET ScriptName='npc_plucky_johnson' WHERE entry=6626;
 UPDATE creature_template SET ScriptName='npc_paoka_swiftmountain' WHERE entry=10427;
+UPDATE creature_template SET ScriptName='npc_lakota_windsong' WHERE entry=10646;
 
 /* THUNDER BLUFF */
 UPDATE creature_template SET ScriptName='npc_cairne_bloodhoof' WHERE entry=3057;
