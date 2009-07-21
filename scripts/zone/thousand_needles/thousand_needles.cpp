@@ -17,16 +17,104 @@
 /* ScriptData
 SDName: Thousand_Needles
 SD%Complete: 90
-SDComment: Quest support: 1950
+SDComment: Quest support: 1950, 4770
 SDCategory: Thousand Needles
 EndScriptData
 */
 
 /* ContentData
+npc_paoka_swiftmountain
 npc_plucky_johnson
 EndContentData */
 
 #include "precompiled.h"
+#include "../../npc/npc_escortAI.h"
+
+/*######
+# npc_paoka_swiftmountain
+######*/
+
+enum
+{
+    SAY_START           = -1000362,
+    SAY_WYVERN          = -1000363,
+    SAY_COMPLETE        = -1000364,
+
+    QUEST_HOMEWARD      = 4770,
+    NPC_WYVERN          = 4107,
+    FACTION_ESCORTEE    = 232                               //guessed
+};
+
+float m_afWyvernLoc[3][3]=
+{
+    {-4990.606, -906.057, -5.343},
+    {-4970.241, -927.378, -4.951},
+    {-4985.364, -952.528, -5.199}
+};
+
+struct MANGOS_DLL_DECL npc_paoka_swiftmountainAI : public npc_escortAI
+{
+    npc_paoka_swiftmountainAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
+
+    void Reset() { }
+
+    void WaypointReached(uint32 uiPointId)
+    {
+        switch(uiPointId)
+        {
+            case 15:
+                DoScriptText(SAY_WYVERN, m_creature);
+                DoSpawnWyvern();
+                break;
+            case 26:
+                DoScriptText(SAY_COMPLETE, m_creature);
+                break;
+            case 27:
+                if (Player* pPlayer = (Player*)Unit::GetUnit(*m_creature, PlayerGUID))
+                    pPlayer->GroupEventHappens(QUEST_HOMEWARD, m_creature);
+                break;
+        }
+    }
+
+    void DoSpawnWyvern()
+    {
+        for(int i = 0; i < 3; ++i)
+            m_creature->SummonCreature(NPC_WYVERN,
+            m_afWyvernLoc[i][0], m_afWyvernLoc[i][1], m_afWyvernLoc[i][2], 0.0f,
+            TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 60000);
+    }
+
+    void JustDied(Unit* pKiller)
+    {
+        if (Player* pPlayer = (Player*)Unit::GetUnit(*m_creature, PlayerGUID))
+        {
+            if (pPlayer->GetQuestStatus(QUEST_HOMEWARD) == QUEST_STATUS_INCOMPLETE)
+                pPlayer->FailQuest(QUEST_HOMEWARD);
+        }
+    }
+};
+
+CreatureAI* GetAI_npc_paoka_swiftmountain(Creature* pCreature)
+{
+    npc_paoka_swiftmountainAI* pTempAI = new npc_paoka_swiftmountainAI(pCreature);
+
+    pTempAI->FillPointMovementListForCreature();
+
+    return (CreatureAI*)pTempAI;
+}
+
+bool QuestAccept_npc_paoka_swiftmountain(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
+{
+    if (pQuest->GetQuestId() == QUEST_HOMEWARD)
+    {
+        DoScriptText(SAY_START, pCreature, pPlayer);
+        pCreature->setFaction(FACTION_ESCORTEE);
+
+        if (npc_paoka_swiftmountainAI* pEscortAI = dynamic_cast<npc_paoka_swiftmountainAI*>(pCreature->AI()))
+            pEscortAI->Start(false, false, pPlayer->GetGUID(), pQuest);
+    }
+    return true;
+}
 
 /*######
 # "Plucky" Johnson
@@ -144,6 +232,12 @@ bool GossipSelect_npc_plucky_johnson(Player* pPlayer, Creature* pCreature, uint3
 void AddSC_thousand_needles()
 {
     Script* newscript;
+
+    newscript = new Script;
+    newscript->Name = "npc_paoka_swiftmountain";
+    newscript->GetAI = &GetAI_npc_paoka_swiftmountain;
+    newscript->pQuestAccept = &QuestAccept_npc_paoka_swiftmountain;
+    newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "npc_plucky_johnson";
