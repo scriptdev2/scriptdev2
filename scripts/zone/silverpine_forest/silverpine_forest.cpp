@@ -215,7 +215,9 @@ bool QuestAccept_npc_deathstalker_erland(Player* pPlayer, Creature* pCreature, c
     if (pQuest->GetQuestId() == QUEST_ERLAND)
     {
         DoScriptText(SAY_START_1, pCreature);
-        ((npc_escortAI*)(pCreature->AI()))->Start(true, false, pPlayer->GetGUID());
+
+        if (npc_deathstalker_erlandAI* pEscortAI = dynamic_cast<npc_deathstalker_erlandAI*>(pCreature->AI()))
+            pEscortAI->Start(true, false, pPlayer->GetGUID(), pQuest);
     }
     return true;
 }

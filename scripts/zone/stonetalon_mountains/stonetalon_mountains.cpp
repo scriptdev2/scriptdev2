@@ -162,9 +162,11 @@ bool QuestAccept_npc_kaya(Player* pPlayer, Creature* pCreature, Quest const* pQu
 
     if (pQuest->GetQuestId() == QUEST_PROTECT_KAYA)
     {
-        ((npc_escortAI*)(pCreature->AI()))->Start(true, false, pPlayer->GetGUID());
         pCreature->setFaction(FACTION_ESCORTEE_H);
         DoScriptText(SAY_START,pCreature);
+
+        if (npc_kayaAI* pEscortAI = dynamic_cast<npc_kayaAI*>(pCreature->AI()))
+            pEscortAI->Start(true, false, pPlayer->GetGUID(), pQuest);
     }
     return true;
 }

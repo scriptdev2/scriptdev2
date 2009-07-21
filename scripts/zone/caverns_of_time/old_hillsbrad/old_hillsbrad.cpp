@@ -561,7 +561,9 @@ bool GossipSelect_npc_thrall_old_hillsbrad(Player* pPlayer, Creature* pCreature,
 
             DoScriptText(SAY_TH_START_EVENT_PART1, pCreature);
 
-            ((npc_escortAI*)(pCreature->AI()))->Start(true, true, pPlayer->GetGUID());
+            if (npc_thrall_old_hillsbradAI* pEscortAI = dynamic_cast<npc_thrall_old_hillsbradAI*>(pCreature->AI()))
+                pEscortAI->Start(true, true, pPlayer->GetGUID());
+
             break;
 
         case GOSSIP_ACTION_INFO_DEF+2:

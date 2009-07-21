@@ -818,7 +818,9 @@ bool QuestAccept_npc_koltira_deathweaver(Player* pPlayer, Creature* pCreature, c
     if (pQuest->GetQuestId() == QUEST_BREAKOUT)
     {
         pCreature->SetStandState(UNIT_STAND_STATE_STAND);
-        ((npc_escortAI*)(pCreature->AI()))->Start(false, false, pPlayer->GetGUID());
+
+        if (npc_koltira_deathweaverAI* pEscortAI = dynamic_cast<npc_koltira_deathweaverAI*>(pCreature->AI()))
+            pEscortAI->Start(false, false, pPlayer->GetGUID(), pQuest);
     }
     return true;
 }

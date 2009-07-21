@@ -194,10 +194,9 @@ struct MANGOS_DLL_DECL npc_custodian_of_timeAI : public npc_escortAI
             if (((Player*)who)->HasAura(34877,1) && ((Player*)who)->GetQuestStatus(10277) == QUEST_STATUS_INCOMPLETE)
             {
                 float Radius = 10.0;
+
                 if (m_creature->IsWithinDistInMap(who, Radius))
-                {
-                    ((npc_escortAI*)(m_creature->AI()))->Start(false, false, who->GetGUID());
-                }
+                    Start(false, false, who->GetGUID());
             }
         }
     }
@@ -375,7 +374,8 @@ bool QuestAccept_npc_oox17tn(Player* pPlayer, Creature* pCreature, const Quest* 
         if (pPlayer->GetTeam() == HORDE)
             pCreature->setFaction(FACTION_ESCORTEE_H);
 
-        ((npc_escortAI*)(pCreature->AI()))->Start(true, false, pPlayer->GetGUID());
+        if (npc_oox17tnAI* pEscortAI = dynamic_cast<npc_oox17tnAI*>(pCreature->AI()))
+            pEscortAI->Start(true, false, pPlayer->GetGUID(), pQuest);
     }
     return true;
 }

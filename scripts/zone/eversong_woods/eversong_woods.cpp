@@ -324,8 +324,10 @@ bool GossipSelect_npc_prospector_anvilward(Player* pPlayer, Creature* pCreature,
             break;
         case GOSSIP_ACTION_INFO_DEF+2:
             pPlayer->CLOSE_GOSSIP_MENU();
-            //attack,defend,walk
-            ((npc_escortAI*)(pCreature->AI()))->Start(true, false, pPlayer->GetGUID());
+
+            if (npc_prospector_anvilwardAI* pEscortAI = dynamic_cast<npc_prospector_anvilwardAI*>(pCreature->AI()))
+                pEscortAI->Start(false, false, pPlayer->GetGUID());
+
             break;
     }
     return true;
