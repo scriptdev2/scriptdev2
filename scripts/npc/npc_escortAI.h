@@ -29,7 +29,7 @@ struct MANGOS_DLL_DECL npc_escortAI : public ScriptedAI
 {
     public:
         explicit npc_escortAI(Creature* pCreature) : ScriptedAI(pCreature),
-            IsBeingEscorted(false), IsOnHold(false), PlayerGUID(0), m_uiPlayerCheckTimer(1000), m_uiWPWaitTimer(0),
+            IsBeingEscorted(false), IsOnHold(false), PlayerGUID(0), m_uiPlayerCheckTimer(1000), m_uiWPWaitTimer(2500),
             m_bIsReturning(false), m_bIsActiveAttacker(true), m_bIsRunning(false),
             m_pQuestForEscort(NULL), m_bCanInstantRespawn(false), m_bCanReturnToStart(false) {}
         ~npc_escortAI() {}

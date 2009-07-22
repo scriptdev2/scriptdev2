@@ -121,7 +121,8 @@ void npc_escortAI::JustRespawned()
     if (!IsCombatMovement())
         SetCombatMovement(true);
 
-    m_uiWPWaitTimer = 0;
+    //add a small delay before going to first waypoint, normal in near all cases
+    m_uiWPWaitTimer = 2500;
 
     if (m_creature->getFaction() != m_creature->GetCreatureInfo()->faction_A)
         m_creature->setFaction(m_creature->GetCreatureInfo()->faction_A);
@@ -402,10 +403,6 @@ void npc_escortAI::Start(bool bIsActiveAttacker, bool bRun, uint64 uiPlayerGUID,
     //Set initial speed
     if (m_bIsRunning)
         m_creature->RemoveMonsterMoveFlag(MONSTER_MOVE_WALK);
-
-    //Start WP
-    m_creature->GetMotionMaster()->MovePoint(CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z);
-    debug_log("SD2: EscortAI Next WP is: %d, %f, %f, %f", CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z);
 
     IsBeingEscorted = true;
 }
