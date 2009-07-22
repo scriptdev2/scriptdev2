@@ -44,13 +44,7 @@ enum
 
 struct MANGOS_DLL_DECL npc_ruul_snowhoofAI : public npc_escortAI
 {
-    npc_ruul_snowhoofAI(Creature* pCreature) : npc_escortAI(pCreature)
-    {
-        normFaction = pCreature->getFaction();
-        Reset();
-    }
-
-    uint32 normFaction;
+    npc_ruul_snowhoofAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
 
     void WaypointReached(uint32 i)
     {
@@ -76,29 +70,11 @@ struct MANGOS_DLL_DECL npc_ruul_snowhoofAI : public npc_escortAI
         }
     }
 
-    void Reset()
-    {
-        if (!IsBeingEscorted)
-            m_creature->setFaction(normFaction);
-    }
+    void Reset() { }
 
     void JustSummoned(Creature* summoned)
     {
         summoned->AI()->AttackStart(m_creature);
-    }
-
-    void JustDied(Unit* killer)
-    {
-        if (PlayerGUID)
-        {
-            if (Unit* pPlayer = Unit::GetUnit((*m_creature), PlayerGUID))
-                ((Player*)pPlayer)->FailQuest(QUEST_FREEDOM_TO_RUUL);
-        }
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        npc_escortAI::UpdateAI(diff);
     }
 };
 
@@ -192,18 +168,6 @@ struct MANGOS_DLL_DECL npc_torekAI : public npc_escortAI
     void JustSummoned(Creature* summoned)
     {
         summoned->AI()->AttackStart(m_creature);
-    }
-
-    void JustDied(Unit* killer)
-    {
-        if (killer->GetEntry() == m_creature->GetEntry())
-            return;
-
-        if (PlayerGUID)
-        {
-            if (Unit* pPlayer = Unit::GetUnit((*m_creature), PlayerGUID))
-                ((Player*)pPlayer)->FailQuest(QUEST_TOREK_ASSULT);
-        }
     }
 
     void UpdateAI(const uint32 diff)

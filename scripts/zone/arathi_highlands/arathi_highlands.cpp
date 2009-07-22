@@ -52,13 +52,7 @@ enum
 
 struct MANGOS_DLL_DECL npc_professor_phizzlethorpeAI : public npc_escortAI
 {
-    npc_professor_phizzlethorpeAI(Creature* pCreature) : npc_escortAI(pCreature)
-    {
-        normFaction = pCreature->getFaction();
-        Reset();
-    }
-
-    uint32 normFaction;
+    npc_professor_phizzlethorpeAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
 
     void WaypointReached(uint32 i)
     {
@@ -87,11 +81,7 @@ struct MANGOS_DLL_DECL npc_professor_phizzlethorpeAI : public npc_escortAI
         }
     }
 
-    void Reset()
-    {
-        if (!IsBeingEscorted)
-            m_creature->setFaction(normFaction);
-    }
+    void Reset() { }
 
     void Aggro(Unit* who)
     {
@@ -101,23 +91,6 @@ struct MANGOS_DLL_DECL npc_professor_phizzlethorpeAI : public npc_escortAI
     void JustSummoned(Creature *summoned)
     {
         summoned->AI()->AttackStart(m_creature);
-    }
-
-    void JustDied(Unit* killer)
-    {
-        if (IsBeingEscorted)
-        {
-            if (Unit* pUnit = Unit::GetUnit((*m_creature), PlayerGUID))
-            {
-                if (pUnit->GetTypeId() == TYPEID_PLAYER)
-                    ((Player*)pUnit)->FailQuest(QUEST_SUNKEN_TREASURE);
-            }
-        }
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        npc_escortAI::UpdateAI(diff);
     }
 };
 

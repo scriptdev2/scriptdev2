@@ -148,18 +148,6 @@ struct MANGOS_DLL_DECL npc_daphne_stilwellAI : public npc_escortAI
         pSummoned->AI()->AttackStart(m_creature);
     }
 
-    void JustDied(Unit* pKiller)
-    {
-        if (Unit* pUnit = Unit::GetUnit(*m_creature, PlayerGUID))
-        {
-            if (pUnit->GetTypeId() == TYPEID_PLAYER)
-            {
-                if (((Player*)pUnit)->GetQuestStatus(QUEST_TOME_VALOR) == QUEST_STATUS_INCOMPLETE)
-                    ((Player*)pUnit)->FailQuest(QUEST_TOME_VALOR);
-            }
-        }
-    }
-
     void UpdateAI(const uint32 uiDiff)
     {
         npc_escortAI::UpdateAI(uiDiff);
@@ -248,20 +236,6 @@ struct MANGOS_DLL_DECL npc_defias_traitorAI : public npc_escortAI
     }
 
     void Reset() { }
-
-    void JustDied(Unit* killer)
-    {
-        if (PlayerGUID)
-        {
-            if (Unit* pPlayer = Unit::GetUnit((*m_creature), PlayerGUID))
-                ((Player*)pPlayer)->FailQuest(QUEST_DEFIAS_BROTHERHOOD);
-        }
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        npc_escortAI::UpdateAI(diff);
-    }
 };
 
 bool QuestAccept_npc_defias_traitor(Player* pPlayer, Creature* pCreature, const Quest* pQuest)

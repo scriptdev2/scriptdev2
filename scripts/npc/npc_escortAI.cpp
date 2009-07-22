@@ -87,6 +87,32 @@ void npc_escortAI::MoveInLineOfSight(Unit* pWho)
     }
 }
 
+void npc_escortAI::JustDied(Unit* pKiller)
+{
+    if (!IsBeingEscorted || !PlayerGUID || !m_pQuestForEscort)
+        return;
+
+    if (Player* pPlayer = (Player*)Unit::GetUnit(*m_creature, PlayerGUID))
+    {
+        if (Group* pGroup = pPlayer->GetGroup())
+        {
+            for(GroupReference* pRef = pGroup->GetFirstMember(); pRef != NULL; pRef = pRef->next())
+            {
+                if (Player* pMember = pRef->getSource())
+                {
+                    if (pPlayer->GetQuestStatus(m_pQuestForEscort->GetQuestId()) == QUEST_STATUS_INCOMPLETE)
+                        pPlayer->FailQuest(m_pQuestForEscort->GetQuestId());
+                }
+            }
+        }
+        else
+        {
+            if (pPlayer->GetQuestStatus(m_pQuestForEscort->GetQuestId()) == QUEST_STATUS_INCOMPLETE)
+                pPlayer->FailQuest(m_pQuestForEscort->GetQuestId());
+        }
+    }
+}
+
 void npc_escortAI::JustRespawned()
 {
     IsBeingEscorted = false;
@@ -96,6 +122,9 @@ void npc_escortAI::JustRespawned()
         SetCombatMovement(true);
 
     m_uiWPWaitTimer = 0;
+
+    if (m_creature->getFaction() != m_creature->GetCreatureInfo()->faction_A)
+        m_creature->setFaction(m_creature->GetCreatureInfo()->faction_A);
 
     Reset();
 }

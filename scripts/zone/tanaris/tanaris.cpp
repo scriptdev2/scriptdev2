@@ -267,13 +267,7 @@ enum
 
 struct MANGOS_DLL_DECL npc_oox17tnAI : public npc_escortAI
 {
-    npc_oox17tnAI(Creature* pCreature) : npc_escortAI(pCreature)
-    {
-        normFaction = pCreature->getFaction();
-        Reset();
-    }
-
-    uint32 normFaction;
+    npc_oox17tnAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
 
     void WaypointReached(uint32 i)
     {
@@ -311,11 +305,7 @@ struct MANGOS_DLL_DECL npc_oox17tnAI : public npc_escortAI
         }
     }
 
-    void Reset()
-    {
-        if (!IsBeingEscorted)
-            m_creature->setFaction(normFaction);
-    }
+    void Reset() { }
 
     void Aggro(Unit* who)
     {
@@ -330,24 +320,6 @@ struct MANGOS_DLL_DECL npc_oox17tnAI : public npc_escortAI
     void JustSummoned(Creature* summoned)
     {
         summoned->AI()->AttackStart(m_creature);
-    }
-
-    void JustDied(Unit* killer)
-    {
-        if (!IsBeingEscorted)
-            return;
-
-        if (Unit* pPlayer = Unit::GetUnit(*m_creature, PlayerGUID))
-        {
-            // If NPC dies, player fails the quest
-            if (pPlayer && pPlayer->GetTypeId() == TYPEID_PLAYER)
-                ((Player*)pPlayer)->FailQuest(QUEST_RESCUE_OOX_17TN);
-        }
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        npc_escortAI::UpdateAI(diff);
     }
 };
 

@@ -86,19 +86,9 @@ enum
 
 struct MANGOS_DLL_DECL npc_kayaAI : public npc_escortAI
 {
-    npc_kayaAI(Creature* pCreature) : npc_escortAI(pCreature)
-    {
-        uiNormFaction = pCreature->getFaction();
-        Reset();
-    }
+    npc_kayaAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
 
-    uint32 uiNormFaction;
-
-    void Reset()
-    {
-        if (!IsBeingEscorted)
-            m_creature->setFaction(uiNormFaction);
-    }
+    void Reset() { }
 
     void JustSummoned(Creature* pSummoned)
     {
@@ -129,21 +119,6 @@ struct MANGOS_DLL_DECL npc_kayaAI : public npc_escortAI
                     ((Player*)pPlayer)->GroupEventHappens(QUEST_PROTECT_KAYA, m_creature);
                 break;
         }
-    }
-
-    void JustDied(Unit* pKiller)
-    {
-        if (Unit* pPlayer = Unit::GetUnit((*m_creature), PlayerGUID))
-        {
-            // If NPC dies, player fails the quest
-            if (pPlayer->GetTypeId() == TYPEID_PLAYER && ((Player*)pPlayer)->GetQuestStatus(QUEST_PROTECT_KAYA) == QUEST_STATUS_INCOMPLETE)
-                ((Player*)pPlayer)->FailQuest(QUEST_PROTECT_KAYA);
-        }
-    }
-
-    void UpdateAI(const uint32 uiDiff)
-    {
-        npc_escortAI::UpdateAI(uiDiff);
     }
 };
 

@@ -286,15 +286,6 @@ struct MANGOS_DLL_DECL npc_kayra_longmaneAI : public npc_escortAI
 
     void Reset() { }
 
-    void JustDied(Unit* killer)
-    {
-        if (Unit* pUnit = Unit::GetUnit(*m_creature, PlayerGUID))
-        {
-            if (((Player*)pUnit)->GetQuestStatus(QUEST_ESCAPE_FROM) == QUEST_STATUS_INCOMPLETE)
-                ((Player*)pUnit)->FailQuest(QUEST_ESCAPE_FROM);
-        }
-    }
-
     void UpdateAI(const uint32 diff)
     {
         //TODO: abilities

@@ -411,13 +411,7 @@ enum
 
 struct MANGOS_DLL_DECL npc_wizzlecranks_shredderAI : public npc_escortAI
 {
-    npc_wizzlecranks_shredderAI(Creature* pCreature) : npc_escortAI(pCreature)
-    {
-        uiNormFaction = pCreature->getFaction();
-        Reset();
-    }
-
-    uint32 uiNormFaction;
+    npc_wizzlecranks_shredderAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
 
     void MoveInLineOfSight(Unit* pUnit)
     {
@@ -474,7 +468,6 @@ struct MANGOS_DLL_DECL npc_wizzlecranks_shredderAI : public npc_escortAI
     {
         if (!IsBeingEscorted)
         {
-            m_creature->setFaction(uiNormFaction);
             if (m_creature->getStandState() == UNIT_STAND_STATE_DEAD)
                 m_creature->SetStandState(UNIT_STAND_STATE_STAND);
         }
@@ -489,20 +482,6 @@ struct MANGOS_DLL_DECL npc_wizzlecranks_shredderAI : public npc_escortAI
     void JustSummoned(Creature* pSummoned)
     {
         m_creature->SetStandState(UNIT_STAND_STATE_DEAD);
-    }
-
-    void JustDied(Unit* killer)
-    {
-        if (Unit* pUnit = Unit::GetUnit(*m_creature, PlayerGUID))
-        {
-            if (((Player*)pUnit)->GetQuestStatus(QUEST_ESCAPE) == QUEST_STATUS_INCOMPLETE)
-                ((Player*)pUnit)->FailQuest(QUEST_ESCAPE);
-        }
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        npc_escortAI::UpdateAI(diff);
     }
 };
 

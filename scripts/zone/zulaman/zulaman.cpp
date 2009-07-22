@@ -164,11 +164,6 @@ struct MANGOS_DLL_DECL npc_harrison_jones_zaAI : public npc_escortAI
         if (m_pInstance && m_pInstance->GetData(TYPE_EVENT_RUN) == SPECIAL && m_creature->HasAura(SPELL_BANGING_THE_GONG))
             m_creature->RemoveAurasDueToSpell(SPELL_BANGING_THE_GONG);
     }
-
-    void UpdateAI(const uint32 diff)
-    {
-        npc_escortAI::UpdateAI(diff);
-    }
 };
 
 bool GossipHello_npc_harrison_jones_za(Player* pPlayer, Creature* pCreature)

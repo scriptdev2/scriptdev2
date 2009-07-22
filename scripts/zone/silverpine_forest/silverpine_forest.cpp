@@ -194,20 +194,6 @@ struct MANGOS_DLL_DECL npc_deathstalker_erlandAI : public npc_escortAI
             case 2: DoScriptText(SAY_AGGRO_3, m_creature, who); break;
         }
     }
-
-    void JustDied(Unit* killer)
-    {
-        if (Unit* pUnit = Unit::GetUnit(*m_creature, PlayerGUID))
-        {
-            if (((Player*)pUnit)->GetQuestStatus(QUEST_ERLAND) == QUEST_STATUS_INCOMPLETE)
-                ((Player*)pUnit)->FailQuest(QUEST_ERLAND);
-        }
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        npc_escortAI::UpdateAI(diff);
-    }
 };
 
 bool QuestAccept_npc_deathstalker_erland(Player* pPlayer, Creature* pCreature, const Quest* pQuest)

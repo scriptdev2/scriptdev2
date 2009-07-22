@@ -50,6 +50,8 @@ struct MANGOS_DLL_DECL npc_escortAI : public ScriptedAI
 
         void MoveInLineOfSight(Unit*);
 
+        void JustDied(Unit*);
+
         void JustRespawned();
 
         void EnterEvadeMode();
