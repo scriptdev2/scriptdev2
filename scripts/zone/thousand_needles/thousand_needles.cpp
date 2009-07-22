@@ -23,6 +23,7 @@ EndScriptData
 */
 
 /* ContentData
+npc_lakota_windsong
 npc_paoka_swiftmountain
 npc_plucky_johnson
 EndContentData */
