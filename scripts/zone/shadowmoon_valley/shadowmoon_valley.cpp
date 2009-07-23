@@ -30,9 +30,11 @@ npc_murkblood_overseer
 npc_neltharaku
 npc_karynaku
 npc_oronok_tornheart
+npc_wilda
 EndContentData */
 
 #include "precompiled.h"
+#include "../../npc/npc_escortAI.h"
 
 /*#####
 # mob_mature_netherwing_drake
@@ -617,6 +619,193 @@ bool QuestAccept_npc_karynaku(Player* pPlayer, Creature* pCreature, const Quest*
     return true;
 }
 
+/*######
+# npc_wilda
+######*/
+
+enum
+{
+    SAY_WIL_START               = -1000381,
+    SAY_WIL_AGGRO1              = -1000382,
+    SAY_WIL_AGGRO2              = -1000383,
+    SAY_WIL_PROGRESS1           = -1000384,
+    SAY_WIL_PROGRESS2           = -1000385,
+    SAY_WIL_FIND_EXIT           = -1000386,
+    SAY_WIL_PROGRESS4           = -1000387,
+    SAY_WIL_PROGRESS5           = -1000388,
+    SAY_WIL_JUST_AHEAD          = -1000389,
+    SAY_WIL_END                 = -1000390,
+
+    SPELL_CHAIN_LIGHTNING       = 16006,
+    SPELL_EARTHBING_TOTEM       = 15786,
+    SPELL_FROST_SHOCK           = 12548,
+    SPELL_HEALING_WAVE          = 12491,
+
+    QUEST_ESCAPE_COILSCAR       = 10451,
+    NPC_COILSKAR_ASSASSIN       = 21044,
+    FACTION_EARTHEN             = 1726                      //guessed
+};
+
+//this script needs verification
+struct MANGOS_DLL_DECL npc_wildaAI : public npc_escortAI
+{
+    npc_wildaAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
+
+    uint32 m_uiHealingTimer;
+
+    void Reset()
+    {
+        m_uiHealingTimer = 0;
+    }
+
+    void WaypointReached(uint32 uiPointId)
+    {
+        Player* pPlayer = (Player*)Unit::GetUnit(*m_creature, PlayerGUID);
+
+        if (!pPlayer)
+            return;
+
+        switch(uiPointId)
+        {
+            case 13:
+                DoScriptText(SAY_WIL_PROGRESS1, m_creature, pPlayer);
+                DoSpawnAssassin();
+                break;
+            case 14:
+                DoSpawnAssassin();
+                break;
+            case 15:
+                DoScriptText(SAY_WIL_FIND_EXIT, m_creature, pPlayer);
+                break;
+            case 19:
+                DoRandomSay();
+                break;
+            case 20:
+                DoSpawnAssassin();
+                break;
+            case 26:
+                DoRandomSay();
+                break;
+            case 27:
+                DoSpawnAssassin();
+                break;
+            case 33:
+                DoRandomSay();
+                break;
+            case 34:
+                DoSpawnAssassin();
+                break;
+            case 37:
+                DoRandomSay();
+                break;
+            case 38:
+                DoSpawnAssassin();
+                break;
+            case 39:
+                DoScriptText(SAY_WIL_JUST_AHEAD, m_creature, pPlayer);
+                break;
+            case 43:
+                DoRandomSay();
+                break;
+            case 44:
+                DoSpawnAssassin();
+                break;
+            case 50:
+                DoScriptText(SAY_WIL_END, m_creature, pPlayer);
+
+                if (Player* pPlayer = (Player*)Unit::GetUnit(*m_creature, PlayerGUID))
+                    pPlayer->GroupEventHappens(QUEST_ESCAPE_COILSCAR, m_creature);
+                break;
+        }
+    }
+
+    void JustSummoned(Creature* pSummoned)
+    {
+        if (pSummoned->GetEntry() == NPC_COILSKAR_ASSASSIN)
+            pSummoned->AI()->AttackStart(m_creature);
+    }
+
+    //this is very unclear, random say without no real relevance to script/event
+    void DoRandomSay()
+    {
+        switch(rand()%3)
+        {
+            case 0: DoScriptText(SAY_WIL_PROGRESS2, m_creature); break;
+            case 1: DoScriptText(SAY_WIL_PROGRESS4, m_creature); break;
+            case 2: DoScriptText(SAY_WIL_PROGRESS5, m_creature); break;
+        }
+    }
+
+    void DoSpawnAssassin()
+    {
+        //unknown where they actually appear
+        float fX, fY, fZ;
+        m_creature->GetRandomPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 15.0f, fX, fY, fZ);
+
+        m_creature->SummonCreature(NPC_COILSKAR_ASSASSIN, fX, fY, fZ, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
+    }
+
+    void Aggro(Unit* pWho)
+    {
+        //don't always use
+        if (rand()%5)
+            return;
+
+        //only aggro text if not player
+        if (pWho->GetTypeId() != TYPEID_PLAYER)
+        {
+            //appears to be random
+            switch(rand()%4)
+            {
+                case 0: DoScriptText(SAY_WIL_AGGRO1, m_creature, pWho); break;
+                case 1: DoScriptText(SAY_WIL_AGGRO2, m_creature, pWho); break;
+            }
+        }
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        npc_escortAI::UpdateAI(uiDiff);
+
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+            return;
+
+        //TODO: add more abilities
+        if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 30)
+        {
+            if (m_uiHealingTimer < uiDiff)
+            {
+                DoCast(m_creature, SPELL_HEALING_WAVE);
+                m_uiHealingTimer = 15000;
+            }
+            else
+                m_uiHealingTimer -= uiDiff;
+        }
+    }
+};
+
+CreatureAI* GetAI_npc_wilda(Creature* pCreature)
+{
+    npc_wildaAI* pTempAI = new npc_wildaAI(pCreature);
+
+    pTempAI->FillPointMovementListForCreature();
+
+    return (CreatureAI*)pTempAI;
+}
+
+bool QuestAccept_npc_wilda(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
+{
+    if (pQuest->GetQuestId() == QUEST_ESCAPE_COILSCAR)
+    {
+        DoScriptText(SAY_WIL_START, pCreature, pPlayer);
+        pCreature->setFaction(FACTION_EARTHEN);
+
+        if (npc_wildaAI* pEscortAI = dynamic_cast<npc_wildaAI*>(pCreature->AI()))
+            pEscortAI->Start(false, false, pPlayer->GetGUID(), pQuest);
+    }
+    return true;
+}
+
 void AddSC_shadowmoon_valley()
 {
     Script *newscript;
@@ -664,5 +853,11 @@ void AddSC_shadowmoon_valley()
     newscript->Name = "npc_oronok_tornheart";
     newscript->pGossipHello =  &GossipHello_npc_oronok_tornheart;
     newscript->pGossipSelect = &GossipSelect_npc_oronok_tornheart;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "npc_wilda";
+    newscript->GetAI = &GetAI_npc_wilda;
+    newscript->pQuestAccept = &QuestAccept_npc_wilda;
     newscript->RegisterSelf();
 }
