@@ -16,12 +16,13 @@
 
 /* ScriptData
 SDName: Boss_Ambassador_Hellmaw
-SD%Complete: 75
-SDComment: Waypoints after Intro not implemented. Enrage spell missing/not known
+SD%Complete: 80
+SDComment: Enrage spell missing/not known
 SDCategory: Auchindoun, Shadow Labyrinth
 EndScriptData */
 
 #include "precompiled.h"
+#include "../../../npc/npc_escortAI.h"
 #include "def_shadow_labyrinth.h"
 
 #define SAY_INTRO       -1555000
@@ -42,9 +43,9 @@ EndScriptData */
 #define SPELL_FEAR              33547
 #define SPELL_ENRAGE            34970                         
 
-struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public ScriptedAI
+struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public npc_escortAI
 {
-    boss_ambassador_hellmawAI(Creature* pCreature) : ScriptedAI(pCreature)
+    boss_ambassador_hellmawAI(Creature* pCreature) : npc_escortAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
@@ -69,37 +70,28 @@ struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public ScriptedAI
         Fear_Timer = 25000 + rand()%5000;
         Enrage_Timer = 180000;
         Intro = false;
-        IsBanished = false;
+        IsBanished = true;
         Enraged = false;
 
-        if (m_pInstance)
+        if (m_pInstance && m_creature->isAlive())
         {
-            if (m_pInstance->GetData(TYPE_HELLMAW) == NOT_STARTED)
-            {
-                DoCast(m_creature,SPELL_BANISH);
-                IsBanished = true;
-            }
-            else m_pInstance->SetData(TYPE_HELLMAW,FAIL);
-
-            if (m_pInstance->GetData(TYPE_OVERSEER) == DONE)
-            {
-                if (m_creature->HasAura(SPELL_BANISH,0))
-                    m_creature->RemoveAurasDueToSpell(SPELL_BANISH);
-                Intro = true;
-            }
+            if (m_pInstance->GetData(TYPE_OVERSEER) != DONE)
+                m_creature->CastSpell(m_creature, SPELL_BANISH, true);
         }
     }
 
-    void MovementInform(uint32 type, uint32 id)
+    void JustReachedHome()
     {
-        if (type != POINT_MOTION_TYPE)
-            return;
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_HELLMAW, FAIL);
+    }
+
+    void WaypointReached(uint32 i)
+    {
     }
 
     void DoIntro()
     {
-        DoScriptText(SAY_INTRO, m_creature);
-
         if (m_creature->HasAura(SPELL_BANISH,0))
             m_creature->RemoveAurasDueToSpell(SPELL_BANISH);
 
@@ -107,7 +99,15 @@ struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public ScriptedAI
         Intro = true;
 
         if (m_pInstance)
+        {
+            if (m_pInstance->GetData(TYPE_HELLMAW) != FAIL)
+            {
+                DoScriptText(SAY_INTRO, m_creature);
+                Start(true, false, 0, NULL, false, true);
+            }
+
             m_pInstance->SetData(TYPE_HELLMAW, IN_PROGRESS);
+        }
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -115,7 +115,7 @@ struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public ScriptedAI
         if (m_creature->HasAura(SPELL_BANISH,0))
             return;
 
-        ScriptedAI::MoveInLineOfSight(who);
+        npc_escortAI::MoveInLineOfSight(who);
     }
 
     void Aggro(Unit *who)
@@ -147,24 +147,29 @@ struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!Intro)
+        if (!Intro && !IsBeingEscorted)
         {
             if (EventCheck_Timer < diff)
             {
                 if (m_pInstance)
                 {
                     if (m_pInstance->GetData(TYPE_OVERSEER) == DONE)
+                    {
                         DoIntro();
+                        return;
+                    }
                 }
                 EventCheck_Timer = 5000;
-            }else EventCheck_Timer -= diff;
+                return;
+            }
+            else
+            {
+                EventCheck_Timer -= diff;
+                return;
+            }
         }
 
-        if (!m_creature->isInCombat() && !IsBanished)
-        {
-            //this is where we add MovePoint()
-            //DoWhine("I haz no mount!", LANG_UNIVERSAL, NULL);
-        }
+        npc_escortAI::UpdateAI(diff);
 
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
@@ -189,13 +194,16 @@ struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public ScriptedAI
                 Enraged = true;
             }else Enrage_Timer -= diff;
         }
-
-        DoMeleeAttackIfReady();
     }
 };
+
 CreatureAI* GetAI_boss_ambassador_hellmaw(Creature* pCreature)
 {
-    return new boss_ambassador_hellmawAI(pCreature);
+    boss_ambassador_hellmawAI* pHellAI = new boss_ambassador_hellmawAI(pCreature);
+
+    pHellAI->FillPointMovementListForCreature();
+
+    return (CreatureAI*)pHellAI;
 }
 
 void AddSC_boss_ambassador_hellmaw()
