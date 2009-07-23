@@ -118,13 +118,16 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
     boss_shade_of_akamaAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_lChannelersGUIDList.clear();
+        m_lSorcerersGUIDList.clear();
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
 
-    std::list<uint64> Channelers;
-    std::list<uint64> Sorcerers;
+    std::list<uint64> m_lChannelersGUIDList;
+    std::list<uint64> m_lSorcerersGUIDList;
+
     uint64 AkamaGUID;
 
     uint32 SorcererCount;
@@ -140,43 +143,6 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
 
     void Reset()
     {
-        FindChannelers();
-
-        if (!Channelers.empty())
-        {
-            for(std::list<uint64>::iterator itr = Channelers.begin(); itr != Channelers.end(); ++itr)
-            {
-                Creature* Channeler = NULL;
-                Channeler = ((Creature*)Unit::GetUnit(*m_creature, *itr));
-
-                if (Channeler)
-                {
-                    if (Channeler->isDead())
-                    {
-                        Channeler->RemoveCorpse();
-                        Channeler->Respawn();
-                    }
-
-                    Channeler->CastSpell(m_creature, SPELL_SHADE_SOUL_CHANNEL, true);
-                    Channeler->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                }
-            }
-        }else error_log("SD2 ERROR: No Channelers are stored in the list. This encounter will not work properly");
-
-        if (!Sorcerers.empty())
-        {
-            for(std::list<uint64>::iterator itr = Sorcerers.begin(); itr != Sorcerers.end(); ++itr)
-            {
-                if (Creature* pSorcerer = (Creature*)Unit::GetUnit(*m_creature, *itr))
-                {
-                    if (pSorcerer->isAlive())
-                        pSorcerer->ForcedDespawn();
-                }
-            }
-        }
-
-        Sorcerers.clear();
-
         SorcererCount = 0;
         DeathCount = 0;
 
@@ -189,20 +155,10 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
         HasKilledAkama = false;
 
         m_creature->SetVisibility(VISIBILITY_ON);
-        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-        m_creature->GetMotionMaster()->Clear();
-        m_creature->GetMotionMaster()->MoveIdle();
+
         m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_STUN);
-
-        if (m_pInstance)
-        {
-            if (m_creature->isAlive())
-                m_pInstance->SetData(TYPE_SHADE, NOT_STARTED);
-
-            if (Unit* pAkama = Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_AKAMA_SHADE)))
-                pAkama->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
-        }
     }
 
     void AttackStart(Unit* who)
@@ -221,6 +177,14 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
         ScriptedAI::MoveInLineOfSight(who);
     }
 
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_SHADE, NOT_STARTED);
+
+        RespawnChannelersIfDeadOrEvade();
+    }
+
     void IncrementDeathCount(uint64 guid = 0)               // If guid is set, will remove it from list of sorcerer
     {
         debug_log("SD2: Increasing Death Count for Shade of Akama encounter");
@@ -228,9 +192,10 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
 
         if (guid)
         {
-            if (Sorcerers.empty())
+            if (m_lSorcerersGUIDList.empty())
                 error_log("SD2 ERROR: Shade of Akama - attempt to remove guid %u from Sorcerers list but list is already empty", guid);
-            else Sorcerers.remove(guid);
+            else
+                m_lSorcerersGUIDList.remove(guid);
         }
     }
 
@@ -248,7 +213,9 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
                 pSorcerer->RemoveMonsterMoveFlag(MONSTER_MOVE_WALK);
                 pSorcerer->GetMotionMaster()->MovePoint(0, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ());
                 pSorcerer->SetUInt64Value(UNIT_FIELD_TARGET, m_creature->GetGUID());
-                Sorcerers.push_back(pSorcerer->GetGUID());
+
+                m_lSorcerersGUIDList.push_back(pSorcerer->GetGUID());
+
                 --DeathCount;
                 ++SorcererCount;
             }
@@ -266,34 +233,60 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
         }
     }
 
-    void FindChannelers()
+    void DespawnSorceres()
     {
-        std::list<Creature*> ChannelerList;
-        GetCreatureListWithEntryInGrid(ChannelerList,m_creature,CREATURE_CHANNELER,50.0f);
-
-        if (!ChannelerList.empty())
+        if (!m_lSorcerersGUIDList.empty() && m_pInstance)
         {
-            Channelers.clear();
-
-            for(std::list<Creature*>::iterator itr = ChannelerList.begin(); itr != ChannelerList.end(); ++itr)
+            for(std::list<uint64>::iterator itr = m_lSorcerersGUIDList.begin(); itr != m_lSorcerersGUIDList.end(); ++itr)
             {
-                Channelers.push_back((*itr)->GetGUID());
-                debug_log("SD2: Shade of Akama Grid Search found channeler %u. Adding to list", (*itr)->GetGUID());
+                if (Creature* pSorcerer = m_pInstance->instance->GetCreature(*itr))
+                {
+                    if (pSorcerer->isAlive())
+                        pSorcerer->ForcedDespawn();
+                }
             }
-        }else error_log("SD2 ERROR: Grid Search was unable to find any channelers. Shade of Akama encounter will be buggy");
+        }
     }
 
-    void SetSelectableChannelers()
+    void RespawnChannelersIfDeadOrEvade()
     {
-        if (Channelers.empty())
+        if (!m_lChannelersGUIDList.empty() && m_pInstance)
         {
-            error_log("SD2 ERROR: Channeler List is empty, Shade of Akama encounter will be buggy");
-            return;
+            for(std::list<uint64>::iterator itr = m_lChannelersGUIDList.begin(); itr != m_lChannelersGUIDList.end(); ++itr)
+            {
+                if (Creature* pChanneler = m_pInstance->instance->GetCreature(*itr))
+                {
+                    if (!pChanneler->isAlive())
+                        pChanneler->Respawn();
+                    else
+                        pChanneler->AI()->EnterEvadeMode();
+                }
+            }
         }
+        else
+            error_log("SD2: boss_shade_of_akamaAI not able to respawn channelers, list is empty.");
+    }
 
-        for(std::list<uint64>::iterator itr = Channelers.begin(); itr != Channelers.end(); ++itr)
-            if (Creature* Channeler = ((Creature*)Unit::GetUnit(*m_creature, *itr)))
-                Channeler->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+    void PrepareChannelers()
+    {
+        std::list<Creature*> lChannelerList;
+        GetCreatureListWithEntryInGrid(lChannelerList,m_creature,CREATURE_CHANNELER,50.0f);
+
+        if (!lChannelerList.empty())
+        {
+            //clear this, we want a clean start
+            m_lChannelersGUIDList.clear();
+
+            for(std::list<Creature*>::iterator itr = lChannelerList.begin(); itr != lChannelerList.end(); ++itr)
+            {
+                m_lChannelersGUIDList.push_back((*itr)->GetGUID());
+                debug_log("SD2: boss_shade_of_akamaAI found channeler %u. Adding to list", (*itr)->GetGUID());
+
+                (*itr)->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+            }
+        }
+        else
+            error_log("SD2: boss_shade_of_akamaAI unable to find any channelers.");
     }
 
     void JustDied(Unit *killer)
@@ -456,10 +449,7 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
         if (Creature* pShade = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_SHADEOFAKAMA)))
         {
             if (boss_shade_of_akamaAI* pShadeAI = dynamic_cast<boss_shade_of_akamaAI*>(pShade->AI()))
-            {
-                pShadeAI->FindChannelers();
-                pShadeAI->SetSelectableChannelers();
-            }
+                pShadeAI->PrepareChannelers();
 
             // Prevent players from trying to restart event
             m_pInstance->SetData(TYPE_SHADE, IN_PROGRESS);
@@ -672,12 +662,13 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
 
 bool GossipHello_npc_akama(Player* pPlayer, Creature* pCreature)
 {
-    if (pPlayer->isAlive())
+    if (ScriptedInstance* pInstance = (ScriptedInstance*)pCreature->GetInstanceData())
     {
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-        pPlayer->SEND_GOSSIP_MENU(907, pCreature->GetGUID());
+        if (pInstance->GetData(TYPE_SHADE) != DONE)
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     }
 
+    pPlayer->SEND_GOSSIP_MENU(907, pCreature->GetGUID());
     return true;
 }
 
@@ -704,7 +695,17 @@ struct MANGOS_DLL_DECL mob_ashtongue_channelerAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    void Reset() {}
+    void Reset()
+    {
+        if (m_pInstance)
+        {
+            //self-resurrect if encounter not done and we are dead
+            if (!m_creature->isAlive() && m_pInstance->GetData(TYPE_SHADE) != DONE)
+                m_creature->Respawn();
+
+            m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+        }
+    }
 
     void AttackStart(Unit* pWho) {}
     void MoveInLineOfSight(Unit* pWho) {}
@@ -714,15 +715,30 @@ struct MANGOS_DLL_DECL mob_ashtongue_channelerAI : public ScriptedAI
         if (!m_pInstance)
             return;
 
-        Creature* pShade = (Creature*)Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_SHADEOFAKAMA));
-
-        if (pShade && pShade->isAlive())
-            ((boss_shade_of_akamaAI*)pShade->AI())->IncrementDeathCount();
-        else
-            error_log("SD2 ERROR: Channeler dead but unable to increment DeathCount for Shade of Akama.");
+        if (Creature* pShade = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_SHADEOFAKAMA)))
+        {
+            if (pShade->isAlive())
+            {
+                if (boss_shade_of_akamaAI* pShadeAI = dynamic_cast<boss_shade_of_akamaAI*>(pShade->AI()))
+                    pShadeAI->IncrementDeathCount();
+                else
+                    error_log("SD2: mob_ashtongue_channelerAI dead but unable to increment DeathCount for Shade of Akama.");
+            }
+        }
     }
 
-    void UpdateAI(const uint32 uiDiff) {}
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (!m_creature->isAlive())
+            return;
+
+        //start channel (not nice way to start channeling)
+        if (!m_creature->IsNonMeleeSpellCasted(false) && !m_creature->getVictim() && m_pInstance)
+        {
+            if (Creature* pShade = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_SHADEOFAKAMA)))
+                m_creature->CastSpell(pShade, SPELL_SHADE_SOUL_CHANNEL, false);
+        }
+    }
 };
 
 struct MANGOS_DLL_DECL mob_ashtongue_sorcererAI : public ScriptedAI
