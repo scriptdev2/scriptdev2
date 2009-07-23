@@ -70,12 +70,12 @@ struct MANGOS_DLL_DECL instance_shadow_labyrinth : public ScriptedInstance
             case GO_REFECTORY_DOOR:
                 m_uiRefectoryDoorGUID = pGo->GetGUID();
                 if (m_auiEncounter[2] == DONE)
-                    DoUseDoorOrButton(m_uiRefectoryDoorGUID);
+                    pGo->SetGoState(GO_STATE_ACTIVE);
                 break;
             case GO_SCREAMING_HALL_DOOR:
                 m_uiScreamingHallDoorGUID = pGo->GetGUID();
                 if (m_auiEncounter[3] == DONE)
-                    DoUseDoorOrButton(m_uiScreamingHallDoorGUID);
+                    pGo->SetGoState(GO_STATE_ACTIVE);
                 break;
         }
     }
@@ -88,8 +88,11 @@ struct MANGOS_DLL_DECL instance_shadow_labyrinth : public ScriptedInstance
                 m_uiGrandmasterVorpil = pCreature->GetGUID();
                 break;
             case 18796:
-                ++m_uiFelOverseerCount;
-                debug_log("SD2: Shadow Labyrinth: counting %u Fel Overseers.", m_uiFelOverseerCount);
+                if (pCreature->isAlive())
+                {
+                    ++m_uiFelOverseerCount;
+                    debug_log("SD2: Shadow Labyrinth: counting %u Fel Overseers.", m_uiFelOverseerCount);
+                }
                 break;
         }
     }
@@ -104,16 +107,21 @@ struct MANGOS_DLL_DECL instance_shadow_labyrinth : public ScriptedInstance
 
             case TYPE_OVERSEER:
                 if (uiData != DONE)
+                {
                     error_log("SD2: Shadow Labyrinth: TYPE_OVERSEER did not expect other data than DONE");
+                    return;
+                }
                 if (m_uiFelOverseerCount)
                 {
                     --m_uiFelOverseerCount;
-                    debug_log("SD2: Shadow Labyrinth: %u Fel Overseers left to kill.", m_uiFelOverseerCount);
-                }
-                if (m_uiFelOverseerCount == 0)
-                {
-                    m_auiEncounter[1] = DONE;
-                    debug_log("SD2: Shadow Labyrinth: TYPE_OVERSEER == DONE");
+
+                    if (m_uiFelOverseerCount)
+                        debug_log("SD2: Shadow Labyrinth: %u Fel Overseers left to kill.", m_uiFelOverseerCount);
+                    else
+                    {
+                        m_auiEncounter[1] = DONE;
+                        debug_log("SD2: Shadow Labyrinth: TYPE_OVERSEER == DONE");
+                    }
                 }
                 break;
 
