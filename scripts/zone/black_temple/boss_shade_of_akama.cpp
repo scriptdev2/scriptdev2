@@ -16,10 +16,19 @@
 
 /* ScriptData
 SDName: Boss_Shade_of_Akama
-SD%Complete: 90
-SDComment: Seems to be complete.
+SD%Complete: 85
+SDComment: Seems to be complete. Some little details/cosmetics left (see next comment section).
 SDCategory: Black Temple
 EndScriptData */
+
+/* ToDo:
+(1) After start event Akama should walk a bit towards Shade of Akama, then stop (between the two pillars) and begin to channel.
+(2) Some minor changes to post event (after killing Shade of Akama):
+(2.1) After Shade of Akama is dead Akama should roar in direction to the door (he must turn around if he reached the stage).
+(2.2) Positioning of broken NPCs.
+(3) The channelers are casting their spell somestimes even if they are daed (move out of view distance and then move in - they are dead but they channel - maybe some clientspecific issue?).
+(4) Unbanish Shade of Akama if a ashtongue sorcerer is spawned but not reached Shade of Akama and channels his spell?
+*/
 
 #include "precompiled.h"
 #include "def_black_temple.h"
@@ -360,7 +369,7 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
                 {
                     if (pAkama && pAkama->isAlive())
                     {
-                        //10 % less health every few seconds.
+                        // 10 % less health every few seconds.
                         m_creature->DealDamage(pAkama, pAkama->GetMaxHealth()/10, NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
                         ReduceHealthTimer = 12000;
                     }
@@ -439,33 +448,32 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
         m_creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
     }
 
-    void BeginEvent(Player* pPlayer)
+    void BeginEvent()
     {
         if (!m_pInstance)
             return;
 
-        if (Creature* pShade = (Creature*)Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_SHADEOFAKAMA)))
+        if (Creature* pShade = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_SHADEOFAKAMA)))
         {
-            ((boss_shade_of_akamaAI*)pShade->AI())->Reset();
+            if (boss_shade_of_akamaAI* pShadeAI = dynamic_cast<boss_shade_of_akamaAI*>(pShade->AI()))
+            {
+                pShadeAI->FindChannelers();
+                pShadeAI->SetSelectableChannelers();
+            }
 
             // Prevent players from trying to restart event
             m_pInstance->SetData(TYPE_SHADE, IN_PROGRESS);
+
             m_creature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
 
-            ((boss_shade_of_akamaAI*)pShade->AI())->SetSelectableChannelers();
-
             pShade->AddThreat(m_creature, 1000000.0f);
+            pShade->SetInCombatWith(m_creature);
+            m_creature->SetInCombatWith(pShade);
 
             pShade->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_NONE);
             pShade->SetUInt64Value(UNIT_FIELD_TARGET, m_creature->GetGUID());
 
-            if (pPlayer)
-                pShade->AddThreat(pPlayer, 0.0f);
-
-            m_creature->SetInCombatWith(pShade);
-            pShade->SetInCombatWith(m_creature);
-
-            m_creature->SetInCombatWithZone();
+            pShade->SetInCombatWithZone();
 
             EventBegun = true;
         }
@@ -662,6 +670,30 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
     }
 };
 
+bool GossipHello_npc_akama(Player* pPlayer, Creature* pCreature)
+{
+    if (pPlayer->isAlive())
+    {
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+        pPlayer->SEND_GOSSIP_MENU(907, pCreature->GetGUID());
+    }
+
+    return true;
+}
+
+bool GossipSelect_npc_akama(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+{
+    if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)               //Fight time
+    {
+        pPlayer->CLOSE_GOSSIP_MENU();
+
+        if (npc_akamaAI* pAkamaAI = dynamic_cast<npc_akamaAI*>(pCreature->AI()))
+            pAkamaAI->BeginEvent();
+    }
+
+    return true;
+}
+
 struct MANGOS_DLL_DECL mob_ashtongue_channelerAI : public ScriptedAI
 {
     mob_ashtongue_channelerAI(Creature* pCreature) : ScriptedAI(pCreature)
@@ -759,6 +791,11 @@ CreatureAI* GetAI_boss_shade_of_akama(Creature* pCreature)
     return new boss_shade_of_akamaAI(pCreature);
 }
 
+CreatureAI* GetAI_npc_akama_shade(Creature* pCreature)
+{
+    return new npc_akamaAI(pCreature);
+}
+
 CreatureAI* GetAI_mob_ashtongue_channeler(Creature* pCreature)
 {
     return new mob_ashtongue_channelerAI(pCreature);
@@ -767,33 +804,6 @@ CreatureAI* GetAI_mob_ashtongue_channeler(Creature* pCreature)
 CreatureAI* GetAI_mob_ashtongue_sorcerer(Creature* pCreature)
 {
     return new mob_ashtongue_sorcererAI(pCreature);
-}
-
-CreatureAI* GetAI_npc_akama_shade(Creature* pCreature)
-{
-    return new npc_akamaAI(pCreature);
-}
-
-bool GossipHello_npc_akama(Player* pPlayer, Creature* pCreature)
-{
-    if (pPlayer->isAlive())
-    {
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-        pPlayer->SEND_GOSSIP_MENU(907, pCreature->GetGUID());
-    }
-
-    return true;
-}
-
-bool GossipSelect_npc_akama(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
-{
-    if (action == GOSSIP_ACTION_INFO_DEF + 1)               //Fight time
-    {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        ((npc_akamaAI*)pCreature->AI())->BeginEvent(pPlayer);
-    }
-
-    return true;
 }
 
 void AddSC_boss_shade_of_akama()
@@ -805,6 +815,13 @@ void AddSC_boss_shade_of_akama()
     newscript->RegisterSelf();
 
     newscript = new Script;
+    newscript->Name = "npc_akama_shade";
+    newscript->GetAI = &GetAI_npc_akama_shade;
+    newscript->pGossipHello = &GossipHello_npc_akama;
+    newscript->pGossipSelect = &GossipSelect_npc_akama;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
     newscript->Name = "mob_ashtongue_channeler";
     newscript->GetAI = &GetAI_mob_ashtongue_channeler;
     newscript->RegisterSelf();
@@ -812,12 +829,5 @@ void AddSC_boss_shade_of_akama()
     newscript = new Script;
     newscript->Name = "mob_ashtongue_sorcerer";
     newscript->GetAI = &GetAI_mob_ashtongue_sorcerer;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_akama_shade";
-    newscript->GetAI = &GetAI_npc_akama_shade;
-    newscript->pGossipHello = &GossipHello_npc_akama;
-    newscript->pGossipSelect = &GossipSelect_npc_akama;
     newscript->RegisterSelf();
 }
