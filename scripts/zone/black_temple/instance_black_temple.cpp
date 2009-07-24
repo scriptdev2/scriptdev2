@@ -58,6 +58,7 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
 
     uint64 m_uiNajentusGateGUID;
     uint64 m_uiMainTempleDoorsGUID;
+    uint64 m_uiShadeAkamaDoorGUID;
     uint64 m_uiIllidanGateGUID;
     uint64 m_uiIllidanDoorGUID[2];
     uint64 m_uiShahrazPreDoorGUID;
@@ -83,6 +84,7 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
 
         m_uiNajentusGateGUID    = 0;
         m_uiMainTempleDoorsGUID = 0;
+        m_uiShadeAkamaDoorGUID  = 0;
         m_uiIllidanGateGUID     = 0;
         m_uiIllidanDoorGUID[0]  = 0;
         m_uiIllidanDoorGUID[1]  = 0;
@@ -131,6 +133,9 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
                 m_uiMainTempleDoorsGUID = pGo->GetGUID();
                 if (m_auiEncounter[1] == DONE)
                     pGo->SetGoState(GO_STATE_ACTIVE);
+                break;
+            case 185478:
+                m_uiShadeAkamaDoorGUID = pGo->GetGUID();    // Door close during encounter
                 break;
             case 185479:                                    // Door leading to Mother Shahraz
                 m_uiShahrazPreDoorGUID = pGo->GetGUID();
