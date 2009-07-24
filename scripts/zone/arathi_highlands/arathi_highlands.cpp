@@ -54,14 +54,16 @@ struct MANGOS_DLL_DECL npc_professor_phizzlethorpeAI : public npc_escortAI
 {
     npc_professor_phizzlethorpeAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
 
-    void WaypointReached(uint32 i)
+    void Reset() { }
+
+    void WaypointReached(uint32 uiPointId)
     {
         Unit* pUnit = Unit::GetUnit((*m_creature), PlayerGUID);
 
         if (!pUnit || pUnit->GetTypeId() != TYPEID_PLAYER)
             return;
 
-        switch(i)
+        switch(uiPointId)
         {
             case 4: DoScriptText(SAY_PROGRESS_2, m_creature, pUnit); break;
             case 5: DoScriptText(SAY_PROGRESS_3, m_creature, pUnit); break;
@@ -71,7 +73,10 @@ struct MANGOS_DLL_DECL npc_professor_phizzlethorpeAI : public npc_escortAI
                 m_creature->SummonCreature(ENTRY_VENGEFUL_SURGE, -2050.17, -2140.02, 19.54, 5.17, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 600000);
                 break;
             case 10: DoScriptText(SAY_PROGRESS_5, m_creature, pUnit); break;
-            case 11: DoScriptText(SAY_PROGRESS_6, m_creature, pUnit); break;
+            case 11:
+                DoScriptText(SAY_PROGRESS_6, m_creature, pUnit);
+                SetRun();
+                break;
             case 19: DoScriptText(SAY_PROGRESS_7, m_creature, pUnit); break;
             case 20:
                 DoScriptText(EMOTE_PROGRESS_8, m_creature);
@@ -81,16 +86,14 @@ struct MANGOS_DLL_DECL npc_professor_phizzlethorpeAI : public npc_escortAI
         }
     }
 
-    void Reset() { }
-
-    void Aggro(Unit* who)
+    void Aggro(Unit* pWho)
     {
-        DoScriptText(SAY_AGGRO, m_creature, NULL);
+        DoScriptText(SAY_AGGRO, m_creature);
     }
 
-    void JustSummoned(Creature *summoned)
+    void JustSummoned(Creature* pSummoned)
     {
-        summoned->AI()->AttackStart(m_creature);
+        pSummoned->AI()->AttackStart(m_creature);
     }
 };
 
@@ -102,7 +105,7 @@ bool QuestAccept_npc_professor_phizzlethorpe(Player* pPlayer, Creature* pCreatur
         DoScriptText(SAY_PROGRESS_1, pCreature, pPlayer);
 
         if (npc_professor_phizzlethorpeAI* pEscortAI = dynamic_cast<npc_professor_phizzlethorpeAI*>(pCreature->AI()))
-            pEscortAI->Start(false, false, pPlayer->GetGUID(), pQuest);
+            pEscortAI->Start(false, false, pPlayer->GetGUID(), pQuest, true);
     }
     return true;
 }
