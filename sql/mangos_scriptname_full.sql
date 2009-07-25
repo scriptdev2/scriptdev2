@@ -864,6 +864,7 @@ UPDATE creature_template SET ScriptName='npc_marin_noggenfogger' WHERE entry=756
 UPDATE creature_template SET ScriptName='npc_oox17tn' WHERE entry=7784;
 UPDATE creature_template SET ScriptName='npc_steward_of_time' WHERE entry=20142;
 UPDATE creature_template SET ScriptName='npc_stone_watcher_of_norgannon' WHERE entry=7918;
+UPDATE creature_template SET ScriptName='npc_tooga' WHERE entry=5955;
 
 /* TELDRASSIL */
 UPDATE creature_template SET ScriptName='npc_mist' WHERE entry=3568;
