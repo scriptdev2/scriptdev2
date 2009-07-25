@@ -237,6 +237,7 @@ UPDATE creature_template SET ScriptName='npc_grimstone' WHERE entry=10096;
 UPDATE creature_template SET ScriptName='npc_lokhtos_darkbargainer' WHERE entry=12944;
 UPDATE creature_template SET ScriptName='npc_kharan_mighthammer' WHERE entry=9021;
 UPDATE creature_template SET ScriptName='npc_rocknot' WHERE entry=9503;
+UPDATE gameobject_template SET ScriptName='go_shadowforge_brazier' WHERE entry IN (174744, 174745);
 
 /* BLACKROCK SPIRE */
 /* BLACKROCK SPIRE Lower bosses */
