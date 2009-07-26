@@ -51,9 +51,9 @@ struct PointMovement
 {
     uint32 m_uiCreatureEntry;
     uint32 m_uiPointId;
-    float m_fX;
-    float m_fY;
-    float m_fZ;
+    float  m_fX;
+    float  m_fY;
+    float  m_fZ;
     uint32 m_uiWaitTime;
 };
 
@@ -68,25 +68,25 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     //*************
 
     //Called if IsVisible(Unit *who) is true at each *who move
-    void MoveInLineOfSight(Unit *);
+    void MoveInLineOfSight(Unit*);
 
     //Called at each attack of m_creature by any victim
-    void AttackStart(Unit *);
+    void AttackStart(Unit*);
 
     // Called for reaction at enter to combat if not in combat yet (enemy can be NULL)
-    void EnterCombat(Unit *);
+    void EnterCombat(Unit*);
 
     //Called at stoping attack by any attacker
     void EnterEvadeMode();
 
     //Called at any heal cast/item used (call non implemented in mangos)
-    void HealBy(Unit *healer, uint32 amount_healed) {}
+    void HealBy(Unit* pHealer, uint32 uiAmountHealed) {}
 
     // Called at any Damage to any victim (before damage apply)
-    void DamageDeal(Unit *done_to, uint32 &damage) {}
+    void DamageDeal(Unit* pDoneTo, uint32& uiDamage) {}
 
     // Called at any Damage from any attacker (before damage apply)
-    void DamageTaken(Unit *done_by, uint32 &damage) {}
+    void DamageTaken(Unit* pDoneBy, uint32& uiDamage) {}
 
     //Is unit visible for MoveInLineOfSight
     bool IsVisible(Unit *who) const;
@@ -95,16 +95,16 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     void UpdateAI(const uint32);
 
     //Called at creature death
-    void JustDied(Unit*){}
+    void JustDied(Unit*) {}
 
     //Called at creature killing another unit
-    void KilledUnit(Unit*){}
+    void KilledUnit(Unit*) {}
 
     // Called when the creature summon successfully other creature
     void JustSummoned(Creature*) {}
 
     // Called when a summoned creature is despawned
-    void SummonedCreatureDespawn(Creature* /*unit*/) {}
+    void SummonedCreatureDespawn(Creature*) {}
 
     // Called when hit by a spell
     void SpellHit(Unit*, const SpellEntry*) {}
@@ -113,7 +113,7 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     void JustRespawned();
 
     //Called at waypoint reached or PointMovement end
-    void MovementInform(uint32, uint32){}
+    void MovementInform(uint32, uint32) {}
 
     //*************
     // Variables
@@ -134,10 +134,10 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     //*************
 
     //Start movement toward victim
-    void DoStartMovement(Unit* victim, float distance = 0, float angle = 0);
+    void DoStartMovement(Unit* pVictim, float fDistance = 0, float fAngle = 0);
 
     //Start no movement on victim
-    void DoStartNoMovement(Unit* victim);
+    void DoStartNoMovement(Unit* pVictim);
 
     //Do melee swing of current victim if in rnage and ready and not casting
     void DoMeleeAttackIfReady();
@@ -146,22 +146,10 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     void DoStopAttack();
 
     //Cast spell by Id
-    void DoCast(Unit* victim, uint32 spellId, bool triggered = false);
+    void DoCast(Unit* pVictim, uint32 uiSpellId, bool bTriggered = false);
 
     //Cast spell by spell info
-    void DoCastSpell(Unit* who,SpellEntry const *spellInfo, bool triggered = false);
-
-    //Creature say
-    //void DoSay(const char* text, uint32 language, Unit* target);
-
-    //Creature Yell
-    //void DoYell(const char* text, uint32 language, Unit* target);
-
-    //Creature Text emote, optional bool for boss emote text
-    //void DoTextEmote(const char* text, Unit* target, bool IsBossEmote = false);
-
-    //Creature whisper, optional bool for boss whisper
-    //void DoWhisper(const char* text, Unit* reciever, bool IsBossWhisper = false);
+    void DoCastSpell(Unit* pwho, SpellEntry const* pSpellInfo, bool bTriggered = false);
 
     //Plays a sound to all nearby players
     void DoPlaySoundToSet(WorldObject* pSource, uint32 uiSoundId);
@@ -170,31 +158,31 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     void DoResetThreat();
 
     //Teleports a player without dropping threat (only teleports to same map)
-    void DoTeleportPlayer(Unit* pUnit, float x, float y, float z, float o);
+    void DoTeleportPlayer(Unit* pUnit, float fX, float fY, float fZ, float fO);
 
     //Returns friendly unit with the most amount of hp missing from max hp
-    Unit* DoSelectLowestHpFriendly(float range, uint32 MinHPDiff = 1);
+    Unit* DoSelectLowestHpFriendly(float fRange, uint32 uiMinHPDiff = 1);
 
     //Returns a list of friendly CC'd units within range
-    std::list<Creature*> DoFindFriendlyCC(float range);
+    std::list<Creature*> DoFindFriendlyCC(float fRange);
 
     //Returns a list of all friendly units missing a specific buff within range
-    std::list<Creature*> DoFindFriendlyMissingBuff(float range, uint32 spellid);
+    std::list<Creature*> DoFindFriendlyMissingBuff(float fRange, uint32 uiSpellId);
 
     //Return a player with at least minimumRange from m_creature
     Player* GetPlayerAtMinimumRange(float fMinimumRange);
 
     //Spawns a creature relative to m_creature
-    Creature* DoSpawnCreature(uint32 id, float x, float y, float z, float angle, uint32 type, uint32 despawntime);
+    Creature* DoSpawnCreature(uint32 uiId, float fX, float fY, float fZ, float fAngle, uint32 uiType, uint32 uiDespawntime);
 
     //Selects a unit from the creature's current aggro list
-    Unit* SelectUnit(SelectAggroTarget target, uint32 position);
+    Unit* SelectUnit(SelectAggroTarget target, uint32 uiPosition);
 
     //Returns spells that meet the specified criteria from the creatures spell list
-    SpellEntry const* SelectSpell(Unit* Target, int32 School, int32 Mechanic, SelectTarget Targets,  uint32 PowerCostMin, uint32 PowerCostMax, float RangeMin, float RangeMax, SelectEffect Effect);
+    SpellEntry const* SelectSpell(Unit* pTarget, int32 uiSchool, int32 uiMechanic, SelectTarget selectTargets, uint32 uiPowerCostMin, uint32 uiPowerCostMax, float fRangeMin, float fRangeMax, SelectEffect selectEffect);
 
     //Checks if you can cast the specified spell
-    bool CanCast(Unit* Target, SpellEntry const *Spell, bool Triggered = false);
+    bool CanCast(Unit* pTarget, SpellEntry const* pSpell, bool bTriggered = false);
 
     void SetEquipmentSlots(bool bLoadDefault, int32 uiMainHand = EQUIP_NO_CHANGE, int32 uiOffHand = EQUIP_NO_CHANGE, int32 uiRanged = EQUIP_NO_CHANGE);
 
@@ -205,7 +193,7 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     bool EnterEvadeIfOutOfCombatArea(const uint32 uiDiff);
 
     private:
-        bool m_bCombatMovement;
+        bool   m_bCombatMovement;
         uint32 m_uiEvadeCheckCooldown;
 };
 
@@ -214,6 +202,7 @@ struct MANGOS_DLL_DECL Scripted_NoMovementAI : public ScriptedAI
     Scripted_NoMovementAI(Creature* pCreature) : ScriptedAI(pCreature) {}
 
     //Called at each attack of m_creature by any victim
-    void AttackStart(Unit *);
+    void AttackStart(Unit*);
 };
+
 #endif
