@@ -17,12 +17,13 @@
 /* ScriptData
 SDName: Thousand_Needles
 SD%Complete: 90
-SDComment: Quest support: 1950, 4770, 4904
+SDComment: Quest support: 1950, 4770, 4904, 4966
 SDCategory: Thousand Needles
 EndScriptData
 */
 
 /* ContentData
+npc_kanati
 npc_lakota_windsong
 npc_paoka_swiftmountain
 npc_plucky_johnson
@@ -30,6 +31,74 @@ EndContentData */
 
 #include "precompiled.h"
 #include "../../npc/npc_escortAI.h"
+
+/*######
+# npc_kanati
+######*/
+
+enum
+{
+    SAY_KAN_START              = -1000410,
+
+    QUEST_PROTECT_KANATI        = 4966,
+    NPC_GALAK_ASS               = 10720
+};
+
+const float m_afGalakLoc[]= {-4867.387695, -1357.353760, -48.226 };
+
+struct MANGOS_DLL_DECL npc_kanatiAI : public npc_escortAI
+{
+    npc_kanatiAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
+
+    void Reset() { }
+
+    void WaypointReached(uint32 uiPointId)
+    {
+        switch(uiPointId)
+        {
+            case 0:
+                DoScriptText(SAY_KAN_START, m_creature);
+                DoSpawnGalak();
+                break;
+            case 1:
+                if (Player* pPlayer = (Player*)Unit::GetUnit(*m_creature, PlayerGUID))
+                    pPlayer->GroupEventHappens(QUEST_PROTECT_KANATI, m_creature);
+                break;
+        }
+    }
+
+    void DoSpawnGalak()
+    {
+        for(int i = 0; i < 3; ++i)
+            m_creature->SummonCreature(NPC_GALAK_ASS,
+            m_afGalakLoc[0], m_afGalakLoc[1], m_afGalakLoc[2], 0.0f,
+            TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
+    }
+
+    void JustSummoned(Creature* pSummoned)
+    {
+        pSummoned->AI()->AttackStart(m_creature);
+    }
+};
+
+CreatureAI* GetAI_npc_kanati(Creature* pCreature)
+{
+    npc_kanatiAI* pTempAI = new npc_kanatiAI(pCreature);
+
+    pTempAI->FillPointMovementListForCreature();
+
+    return (CreatureAI*)pTempAI;
+}
+
+bool QuestAccept_npc_kanati(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
+{
+    if (pQuest->GetQuestId() == QUEST_PROTECT_KANATI)
+    {
+        if (npc_kanatiAI* pEscortAI = dynamic_cast<npc_kanatiAI*>(pCreature->AI()))
+            pEscortAI->Start(false, false, pPlayer->GetGUID(), pQuest, true);
+    }
+    return true;
+}
 
 /*######
 # npc_lakota_windsong
@@ -315,6 +384,12 @@ bool GossipSelect_npc_plucky_johnson(Player* pPlayer, Creature* pCreature, uint3
 void AddSC_thousand_needles()
 {
     Script* newscript;
+
+    newscript = new Script;
+    newscript->Name = "npc_kanati";
+    newscript->GetAI = &GetAI_npc_kanati;
+    newscript->pQuestAccept = &QuestAccept_npc_kanati;
+    newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "npc_lakota_windsong";

@@ -409,7 +409,9 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000406,'Rin\'ji is being attacked!',0,0,1,0,'SAY_RIN_HELP_2'),
 (-1000407,'Rin\'ji can see road now, $n. Rin\'ji knows the way home.',0,0,1,0,'SAY_RIN_COMPLETE'),
 (-1000408,'Rin\'ji will tell you secret now... $n, should go to the Overlook Cliffs. Rin\'ji hid something on island  there',0,0,1,0,'SAY_RIN_PROGRESS_1'),
-(-1000409,'You find it, you keep it! Don\'t tell no one that Rin\'ji talked to you!',0,0,1,0,'SAY_RIN_PROGRESS_2');
+(-1000409,'You find it, you keep it! Don\'t tell no one that Rin\'ji talked to you!',0,0,1,0,'SAY_RIN_PROGRESS_2'),
+
+(-1000410,'Here they come! Defend yourself!',0,0,1,5,'kanati SAY_KAN_START');
 
 -- -1 033 000 SHADOWFANG KEEP
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
@@ -2658,6 +2660,11 @@ INSERT INTO script_waypoint VALUES
 (10427, 25, -4929.553, -1101.268, -50.637, 0, ''),
 (10427, 26, -4920.679, -1100.028, -51.944, 10000, 'SAY_COMPLETE'),
 (10427, 27, -4920.679, -1100.028, -51.944, 0, 'quest complete');
+
+DELETE FROM script_waypoint WHERE entry=10638;
+INSERT INTO script_waypoint VALUES
+(10638, 0, -4903.521973, -1368.339844, -52.611, 5000, 'SAY_KAN_START'),
+(10638, 1, -4906.004395, -1367.048096, -52.611, 0, '');
 
 DELETE FROM script_waypoint WHERE entry=10646;
 INSERT INTO script_waypoint VALUES
