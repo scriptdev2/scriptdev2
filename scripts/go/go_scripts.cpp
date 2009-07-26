@@ -147,22 +147,24 @@ bool GOHello_go_ethereum_prison(Player* pPlayer, GameObject* pGo)
         if (!pCreature->IsHostileTo(pPlayer))
         {
             uint32 uiSpell = 0;
-            FactionTemplateEntry const* pFaction = pCreature->getFactionTemplateEntry();
 
-            switch(pFaction->faction)
+            if (FactionTemplateEntry const* pFaction = pCreature->getFactionTemplateEntry())
             {
-                case 1011: uiSpell = SPELL_REP_LC; break;
-                case 935: uiSpell = SPELL_REP_SHAT; break;
-                case 942: uiSpell = SPELL_REP_CE; break;
-                case 933: uiSpell = SPELL_REP_CON; break;
-                case 989: uiSpell = SPELL_REP_KT; break;
-                case 970: uiSpell = SPELL_REP_SPOR; break;
-            }
+                switch(pFaction->faction)
+                {
+                    case 1011: uiSpell = SPELL_REP_LC; break;
+                    case 935: uiSpell = SPELL_REP_SHAT; break;
+                    case 942: uiSpell = SPELL_REP_CE; break;
+                    case 933: uiSpell = SPELL_REP_CON; break;
+                    case 989: uiSpell = SPELL_REP_KT; break;
+                    case 970: uiSpell = SPELL_REP_SPOR; break;
+                }
 
-            if (uiSpell)
-                pCreature->CastSpell(pPlayer,uiSpell,false);
-            else
-                error_log("SD2: go_ethereum_prison summoned creature (entry %u) but faction (%u) are not expected by script.",pCreature->GetEntry(),pCreature->getFaction());
+                if (uiSpell)
+                    pCreature->CastSpell(pPlayer,uiSpell,false);
+                else
+                    error_log("SD2: go_ethereum_prison summoned creature (entry %u) but faction (%u) are not expected by script.",pCreature->GetEntry(),pCreature->getFaction());
+            }
         }
     }
 
