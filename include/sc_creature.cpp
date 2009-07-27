@@ -227,10 +227,7 @@ SpellEntry const* ScriptedAI::SelectSpell(Unit* pTarget, int32 uiSchool, int32 u
 
     //Using the extended script system we first create a list of viable spells
     SpellEntry const* apSpell[4];
-    apSpell[0] = 0;
-    apSpell[1] = 0;
-    apSpell[2] = 0;
-    apSpell[3] = 0;
+    memset(apSpell, 0, sizeof(SpellEntry*)*4);
 
     uint32 uiSpellCount = 0;
 
