@@ -123,7 +123,7 @@ CreatureAI* GetAI_npc_thrall(Creature* pCreature)
     pTempAI->m_aSpells[0].m_uiCooldown = 2000 + rand()%5000;
     pTempAI->m_aSpells[0].m_pType = TARGETTYPE_VICTIM;
 
-    pTempAI->m_aSpells[1].m_uiSpellId = SPELL_SUMMON_DIRE_WOLF;
+    pTempAI->m_aSpells[1].m_uiSpellId = SPELL_FERAL_SPIRIT;
     pTempAI->m_aSpells[1].m_uiCooldown = 6000 + rand()%35000;
     pTempAI->m_aSpells[1].m_pType = TARGETTYPE_RANDOM;
 

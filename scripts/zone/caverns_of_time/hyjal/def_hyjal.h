@@ -31,6 +31,9 @@ enum eNPC
     NPC_GIANT               = 17908,
     NPC_STALK               = 17916,
 
+    NPC_WATER_ELEMENTAL     = 18001,
+    NPC_DIRE_WOLF           = 17854,
+
     GO_ANCIENT_GEM          = 185557
 };
 

@@ -162,7 +162,7 @@ void hyjalAI::Aggro(Unit *who)
     DoTalk(ATTACKED);
 }
 
-void hyjalAI::SummonCreature(uint32 entry, float Base[4][3])
+void hyjalAI::SpawnCreatureForWave(uint32 entry, float Base[4][3])
 {
     uint32 random = rand()%4;
     float SpawnLoc[3];
@@ -176,26 +176,32 @@ void hyjalAI::SummonCreature(uint32 entry, float Base[4][3])
         //AttackLoc[i] = AttackArea[Faction][i];
     }
 
-    if (Creature* pCreature = m_creature->SummonCreature(entry, SpawnLoc[0], SpawnLoc[1], SpawnLoc[2], 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 120000))
+    m_creature->SummonCreature(entry, SpawnLoc[0], SpawnLoc[1], SpawnLoc[2], 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 120000);
+}
+
+void hyjalAI::JustSummoned(Creature* pSummoned)
+{
+    // not interesting for us
+    if (pSummoned->GetEntry() == NPC_WATER_ELEMENTAL || pSummoned->GetEntry() == NPC_DIRE_WOLF)
+        return;
+
+    // Increment Enemy Count to be used in World States and instance script
+    ++m_uiEnemyCount;
+
+    pSummoned->SetInCombatWith(m_creature);
+    pSummoned->AddThreat(m_creature, 0.0f);
+
+    pSummoned->SetInCombatWithZone();
+
+    // Check if creature is a boss.
+    if (pSummoned->isWorldBoss())
     {
-        // Increment Enemy Count to be used in World States and instance script
-        ++m_uiEnemyCount;
+        if (!m_bIsFirstBossDead)
+            m_uiBossGUID[0] = pSummoned->GetGUID();
+        else
+            m_uiBossGUID[1] = pSummoned->GetGUID();
 
-        pCreature->SetInCombatWith(m_creature);
-        pCreature->AddThreat(m_creature, 0.0f);
-
-        pCreature->SetInCombatWithZone();
-
-        // Check if creature is a boss.
-        if (pCreature->isWorldBoss())
-        {
-            if (!m_bIsFirstBossDead)
-                m_uiBossGUID[0] = pCreature->GetGUID();
-            else
-                m_uiBossGUID[1] = pCreature->GetGUID();
-
-            m_uiCheckTimer = 5000;
-        }
+        m_uiCheckTimer = 5000;
     }
 }
 
@@ -216,7 +222,7 @@ void hyjalAI::SummonNextWave(Wave wave[18], uint32 Count, float Base[4][3])
     for(uint8 i = 0; i < MAX_WAVE_MOB; ++i)
     {
         if (wave[Count].Mob[i])
-            SummonCreature(wave[Count].Mob[i], Base);
+            SpawnCreatureForWave(wave[Count].Mob[i], Base);
     }
 
     if (!wave[Count].IsBoss)

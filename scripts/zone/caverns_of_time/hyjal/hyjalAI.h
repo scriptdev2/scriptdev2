@@ -34,7 +34,7 @@ enum eSpell
 
     // Thrall spells
     SPELL_CHAIN_LIGHTNING   = 31330,
-    SPELL_SUMMON_DIRE_WOLF  = 31331
+    SPELL_FERAL_SPIRIT      = 31331
 };
 
 struct Wave
@@ -145,7 +145,9 @@ struct MANGOS_DLL_DECL hyjalAI : public ScriptedAI
     void Retreat();
 
     // Summons a creature for that wave in that base
-    void SummonCreature(uint32 entry, float Base[4][3]);
+    void SpawnCreatureForWave(uint32 entry, float Base[4][3]);
+
+    void JustSummoned(Creature*);
 
     // Summons the next wave, calls SummonCreature
     void SummonNextWave(Wave wave[18], uint32 Count, float Base[4][3]);
