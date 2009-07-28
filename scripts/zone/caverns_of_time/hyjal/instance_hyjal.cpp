@@ -24,13 +24,6 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_hyjal.h"
 
-enum
-{
-    MAX_ENCOUNTER       = 5,
-
-    GO_ANCIENT_GEM      = 185557
-};
-
 /* Battle of Mount Hyjal encounters:
 0 - Rage Winterchill event
 1 - Anetheron event
@@ -89,14 +82,14 @@ struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
     {
         switch(pCreature->GetEntry())
         {
-            case 17767: m_uiRageWinterchill = pCreature->GetGUID(); break;
-            case 17808: m_uiAnetheron = pCreature->GetGUID(); break;
-            case 17888: m_uiKazrogal = pCreature->GetGUID();  break;
-            case 17842: m_uiAzgalor = pCreature->GetGUID(); break;
-            case 17968: m_uiArchimonde = pCreature->GetGUID(); break;
-            case 17772: m_uiJainaProudmoore = pCreature->GetGUID(); break;
-            case 17852: m_uiThrall = pCreature->GetGUID(); break;
-            case 17948: m_uiTyrandeWhisperwind = pCreature->GetGUID(); break;
+            case NPC_WINTERCHILL: m_uiRageWinterchill = pCreature->GetGUID(); break;
+            case NPC_ANETHERON: m_uiAnetheron = pCreature->GetGUID(); break;
+            case NPC_KAZROGAL: m_uiKazrogal = pCreature->GetGUID();  break;
+            case NPC_AZGALOR: m_uiAzgalor = pCreature->GetGUID(); break;
+            case NPC_ARCHIMONDE: m_uiArchimonde = pCreature->GetGUID(); break;
+            case NPC_JAINA: m_uiJainaProudmoore = pCreature->GetGUID(); break;
+            case NPC_THRALL: m_uiThrall = pCreature->GetGUID(); break;
+            case NPC_TYRANDE: m_uiTyrandeWhisperwind = pCreature->GetGUID(); break;
         }
     }
 
@@ -127,12 +120,33 @@ struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
     {
         switch(uiType)
         {
-            case DATA_RAGEWINTERCHILLEVENT: m_auiEncounter[0] = uiData; break;
-            case DATA_ANETHERONEVENT:       m_auiEncounter[1] = uiData; break;
-            case DATA_KAZROGALEVENT:        m_auiEncounter[2] = uiData; break;
-            case DATA_AZGALOREVENT:         m_auiEncounter[3] = uiData; break;
-            case DATA_ARCHIMONDEEVENT:      m_auiEncounter[4] = uiData; break;
-            case DATA_RESET_TRASH_COUNT:    m_uiTrashCount = 0;       break;
+            case TYPE_WINTERCHILL:
+                if (m_auiEncounter[0] == DONE)
+                    return;
+                m_auiEncounter[0] = uiData;
+                break;
+            case TYPE_ANETHERON:
+                if (m_auiEncounter[1] == DONE)
+                    return;
+                m_auiEncounter[1] = uiData;
+                break;
+            case TYPE_KAZROGAL:
+                if (m_auiEncounter[2] == DONE)
+                    return;
+                m_auiEncounter[2] = uiData;
+                break;
+            case TYPE_AZGALOR:
+                if (m_auiEncounter[3] == DONE)
+                    return;
+                m_auiEncounter[3] = uiData;
+                break;
+            case TYPE_ARCHIMONDE:
+                m_auiEncounter[4] = uiData;
+                break;
+
+            case DATA_RESET_TRASH_COUNT:
+                m_uiTrashCount = 0;
+                break;
 
             case DATA_TRASH:
                 if (uiData)
@@ -179,12 +193,12 @@ struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
     {
         switch(uiType)
         {
-            case DATA_RAGEWINTERCHILLEVENT: return m_auiEncounter[0];
-            case DATA_ANETHERONEVENT:       return m_auiEncounter[1];
-            case DATA_KAZROGALEVENT:        return m_auiEncounter[2];
-            case DATA_AZGALOREVENT:         return m_auiEncounter[3];
-            case DATA_ARCHIMONDEEVENT:      return m_auiEncounter[4];
-            case DATA_TRASH:                return m_uiTrashCount;
+            case TYPE_WINTERCHILL:  return m_auiEncounter[0];
+            case TYPE_ANETHERON:    return m_auiEncounter[1];
+            case TYPE_KAZROGAL:     return m_auiEncounter[2];
+            case TYPE_AZGALOR:      return m_auiEncounter[3];
+            case TYPE_ARCHIMONDE:   return m_auiEncounter[4];
+            case DATA_TRASH:        return m_uiTrashCount;
         }
         return 0;
     }

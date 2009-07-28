@@ -213,7 +213,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
     void Reset()
     {
         if (m_pInstance)
-            m_pInstance->SetData(DATA_ARCHIMONDEEVENT, NOT_STARTED);
+            m_pInstance->SetData(TYPE_ARCHIMONDE, NOT_STARTED);
 
         DoomfireSpiritGUID = 0;
         WorldTreeGUID = 0;
@@ -245,7 +245,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         m_creature->SetInCombatWithZone();
 
         if (m_pInstance)
-            m_pInstance->SetData(DATA_ARCHIMONDEEVENT, IN_PROGRESS);
+            m_pInstance->SetData(TYPE_ARCHIMONDE, IN_PROGRESS);
     }
 
     void KilledUnit(Unit *victim)
@@ -291,7 +291,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         DoScriptText(SAY_DEATH, m_creature);
 
         if (m_pInstance)
-            m_pInstance->SetData(DATA_ARCHIMONDEEVENT, DONE);
+            m_pInstance->SetData(TYPE_ARCHIMONDE, DONE);
     }
 
     bool CanUseFingerOfDeath()
@@ -414,12 +414,12 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
             if (m_pInstance)
             {
                 // Do not let the raid skip straight to Archimonde. Visible and hostile ONLY if Azagalor is finished.
-                if ((m_pInstance->GetData(DATA_AZGALOREVENT) < DONE) && ((m_creature->GetVisibility() != VISIBILITY_OFF) || (m_creature->getFaction() != 35)))
+                if ((m_pInstance->GetData(TYPE_AZGALOR) < DONE) && ((m_creature->GetVisibility() != VISIBILITY_OFF) || (m_creature->getFaction() != 35)))
                 {
                     m_creature->SetVisibility(VISIBILITY_OFF);
                     m_creature->setFaction(35);
                 }
-                else if ((m_pInstance->GetData(DATA_AZGALOREVENT) >= DONE) && ((m_creature->GetVisibility() != VISIBILITY_ON) || (m_creature->getFaction() == 35)))
+                else if ((m_pInstance->GetData(TYPE_AZGALOR) >= DONE) && ((m_creature->GetVisibility() != VISIBILITY_ON) || (m_creature->getFaction() == 35)))
                 {
                     m_creature->setFaction(1720);
                     m_creature->SetVisibility(VISIBILITY_ON);
