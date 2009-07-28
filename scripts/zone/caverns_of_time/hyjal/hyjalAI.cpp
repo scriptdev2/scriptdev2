@@ -24,22 +24,23 @@ EndScriptData */
 #include "precompiled.h"
 #include "hyjalAI.h"
 
-// Locations for summoning waves in Alliance base
-float AllianceBase[4][3]=
+struct sHyjalSpawnLoc
 {
-    {4979.010, -1709.134, 1339.674},
-    {4969.123, -1705.904, 1341.363},
-    {4970.260, -1698.546, 1341.200},
-    {4975.262, -1698.239, 1341.427}
+    eBaseArea m_pBaseArea;
+    float m_fX, m_fY, m_fZ;
 };
 
-// Locations for summoning waves in Horde base
-float HordeBase[4][3]=
+// Locations for summoning waves
+sHyjalSpawnLoc m_aHyjalSpawnLoc[]=
 {
-    {5554.399, -2581.419, 1480.820},
-    {5538.996, -2577.742, 1479.790},
-    {5565.642, -2565.666, 1481.635},
-    {5547.218, -2574.589, 1479.194}
+    {BASE_ALLY,  4979.010, -1709.134, 1339.674},
+    {BASE_ALLY,  4969.123, -1705.904, 1341.363},
+    {BASE_ALLY,  4970.260, -1698.546, 1341.200},
+    {BASE_ALLY,  4975.262, -1698.239, 1341.427},
+    {BASE_HORDE, 5554.399, -2581.419, 1480.820},
+    {BASE_HORDE, 5538.996, -2577.742, 1479.790},
+    {BASE_HORDE, 5565.642, -2565.666, 1481.635},
+    {BASE_HORDE, 5547.218, -2574.589, 1479.194}
 };
 
 // used to inform the wave where to move and attack to
@@ -49,14 +50,14 @@ float HordeBase[4][3]=
     {5510.4815, -2676.7112, 1480.4314}                      // Horde
 };*/
 
-struct Yells
+struct sHyjalYells
 {
     uint32   uiCreatureEntry;
     YellType m_pYellType;                                   // Used to determine the type of yell (attack, rally, etc)
     int32    m_iTextId;                                     // The text id to be yelled
 };
 
-Yells m_aYell[]=
+sHyjalYells m_aHyjalYell[]=
 {
     {NPC_JAINA,  ATTACKED, -1534000},
     {NPC_JAINA,  ATTACKED, -1534001},
@@ -162,21 +163,31 @@ void hyjalAI::Aggro(Unit *who)
     DoTalk(ATTACKED);
 }
 
-void hyjalAI::SpawnCreatureForWave(uint32 entry, float Base[4][3])
+void hyjalAI::SpawnCreatureForWave(uint32 uiMobEntry)
 {
-    uint32 random = rand()%4;
-    float SpawnLoc[3];
-    //float AttackLoc[3];
+    sHyjalSpawnLoc* pSpawn = NULL;
 
-    for(uint8 i = 0; i < 3; ++i)
+    uint32 uiMaxCount = sizeof(m_aHyjalSpawnLoc)/sizeof(sHyjalSpawnLoc);
+    uint32 uiRandId = urand(0, uiMaxCount/2);               //unsafe, if array becomes uneven.
+
+    uint32 uiJ = 0;
+
+    for (uint32 i = 0; i < uiMaxCount; ++i)
     {
-        SpawnLoc[i] = Base[random][i];
+        if (m_aHyjalSpawnLoc[i].m_pBaseArea != m_uiBase)
+            continue;
 
-        //not needed, we already make creature attack and then targeted movegen initialized
-        //AttackLoc[i] = AttackArea[Faction][i];
+        if (uiJ == uiRandId)
+        {
+            pSpawn = &m_aHyjalSpawnLoc[i];
+            break;
+        }
+
+        ++uiJ;
     }
 
-    m_creature->SummonCreature(entry, SpawnLoc[0], SpawnLoc[1], SpawnLoc[2], 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 120000);
+    if (pSpawn)
+        m_creature->SummonCreature(uiMobEntry, pSpawn->m_fX, pSpawn->m_fY, pSpawn->m_fZ, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 120000);
 }
 
 void hyjalAI::JustSummoned(Creature* pSummoned)
@@ -205,7 +216,7 @@ void hyjalAI::JustSummoned(Creature* pSummoned)
     }
 }
 
-void hyjalAI::SummonNextWave(Wave wave[18], uint32 Count, float Base[4][3])
+void hyjalAI::SummonNextWave(Wave wave[18], uint32 Count)
 {
     // 1 in 4 chance we give a rally yell. Not sure if the chance is offilike.
     if (rand()%4 == 0)
@@ -222,7 +233,7 @@ void hyjalAI::SummonNextWave(Wave wave[18], uint32 Count, float Base[4][3])
     for(uint8 i = 0; i < MAX_WAVE_MOB; ++i)
     {
         if (wave[Count].Mob[i])
-            SpawnCreatureForWave(wave[Count].Mob[i], Base);
+            SpawnCreatureForWave(wave[Count].Mob[i]);
     }
 
     if (!wave[Count].IsBoss)
@@ -275,14 +286,14 @@ void hyjalAI::StartEvent()
 
 void hyjalAI::DoTalk(YellType pYellType)
 {
-    Yells* pYell = NULL;
+    sHyjalYells* pYell = NULL;
 
-    uint32 uiMaxCount = sizeof(m_aYell)/sizeof(Yells);
+    uint32 uiMaxCount = sizeof(m_aHyjalYell)/sizeof(sHyjalYells);
     bool bGetNext = false;
 
     for (uint32 i = 0; i < uiMaxCount; ++i)
     {
-        if (m_aYell[i].uiCreatureEntry == m_creature->GetEntry() && m_aYell[i].m_pYellType == pYellType)
+        if (m_aHyjalYell[i].uiCreatureEntry == m_creature->GetEntry() && m_aHyjalYell[i].m_pYellType == pYellType)
         {
             //this would not be safe unless we knew these had two entries in m_aYell
             if (pYellType == ATTACKED || pYellType== RALLY)
@@ -294,7 +305,7 @@ void hyjalAI::DoTalk(YellType pYellType)
                 }
             }
 
-            pYell = &m_aYell[i];
+            pYell = &m_aHyjalYell[i];
             break;
         }
     }
@@ -369,9 +380,9 @@ void hyjalAI::UpdateAI(const uint32 uiDiff)
         if (m_uiNextWaveTimer < uiDiff)
         {
             if (m_uiBase == BASE_HORDE)
-                SummonNextWave(HordeWaves, m_uiWaveCount, HordeBase);
+                SummonNextWave(HordeWaves, m_uiWaveCount);
             else
-                SummonNextWave(AllianceWaves, m_uiWaveCount, AllianceBase);
+                SummonNextWave(AllianceWaves, m_uiWaveCount);
 
             ++m_uiWaveCount;
         }

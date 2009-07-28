@@ -145,12 +145,12 @@ struct MANGOS_DLL_DECL hyjalAI : public ScriptedAI
     void Retreat();
 
     // Summons a creature for that wave in that base
-    void SpawnCreatureForWave(uint32 entry, float Base[4][3]);
+    void SpawnCreatureForWave(uint32 uiMobEntry);
 
     void JustSummoned(Creature*);
 
     // Summons the next wave, calls SummonCreature
-    void SummonNextWave(Wave wave[18], uint32 Count, float Base[4][3]);
+    void SummonNextWave(Wave wave[18], uint32 Count);
 
     // Begins the event by gossip click
     void StartEvent();
