@@ -236,7 +236,7 @@ void hyjalAI::JustSummoned(Creature* pSummoned)
         lWaveMobGUIDList.push_back(pSummoned->GetGUID());
 }
 
-void hyjalAI::SummonNextWave(Wave wave[18], uint32 Count)
+void hyjalAI::SummonNextWave()
 {
     // 1 in 4 chance we give a rally yell. Not sure if the chance is offilike.
     if (rand()%4 == 0)
@@ -248,17 +248,25 @@ void hyjalAI::SummonNextWave(Wave wave[18], uint32 Count)
         return;
     }
 
+    sHyjalWave* pWaveData = m_uiBase ? &m_aHyjalWavesHorde[m_uiWaveCount] : &m_aHyjalWavesAlliance[m_uiWaveCount];
+
+    if (!pWaveData)
+    {
+        error_log("SD2: hyjalAI not able to obtain wavedata for SummonNextWave.");
+        return;
+    }
+
     m_uiEnemyCount = m_pInstance->GetData(DATA_TRASH);
 
     for(uint8 i = 0; i < MAX_WAVE_MOB; ++i)
     {
-        if (wave[Count].Mob[i])
-            SpawnCreatureForWave(wave[Count].Mob[i]);
+        if (pWaveData->m_auiMobEntry[i])
+            SpawnCreatureForWave(pWaveData->m_auiMobEntry[i]);
     }
 
-    if (!wave[Count].IsBoss)
+    if (!pWaveData->m_bIsBoss)
     {
-        uint32 stateValue = Count+1;
+        uint32 stateValue = m_uiWaveCount+1;
 
         if (m_bIsFirstBossDead)
             stateValue -= MAX_WAVES;                        // Subtract 9 from it to give the proper wave number if we are greater than 8
@@ -271,7 +279,7 @@ void hyjalAI::SummonNextWave(Wave wave[18], uint32 Count)
         m_pInstance->SetData(DATA_TRASH, m_uiEnemyCount);   // Send data for instance script to update count
 
         if (!m_bDebugMode)
-            m_uiNextWaveTimer = wave[Count].WaveTimer;
+            m_uiNextWaveTimer = pWaveData->m_uiWaveTimer;
         else
         {
             m_uiNextWaveTimer = 15000;
@@ -292,6 +300,7 @@ void hyjalAI::SummonNextWave(Wave wave[18], uint32 Count)
 
     m_uiWaveMoveTimer = 15000;
     m_uiCheckTimer = 5000;
+    ++m_uiWaveCount;
 }
 
 void hyjalAI::StartEvent()
@@ -380,6 +389,13 @@ void hyjalAI::UpdateAI(const uint32 uiDiff)
     {
         if (m_uiWaveMoveTimer < uiDiff)
         {
+            // Skip the master timer, and start next wave in 5. Clear the list, it should not be any here now.
+            if (!m_pInstance->GetData(DATA_TRASH))
+            {
+                lWaveMobGUIDList.clear();
+                m_uiNextWaveTimer = 5000;
+            }
+
             if (!lWaveMobGUIDList.empty())
             {
                 for(std::list<uint64>::iterator itr = lWaveMobGUIDList.begin(); itr != lWaveMobGUIDList.end(); ++itr)
@@ -400,14 +416,7 @@ void hyjalAI::UpdateAI(const uint32 uiDiff)
             m_uiWaveMoveTimer -= uiDiff;
 
         if (m_uiNextWaveTimer < uiDiff)
-        {
-            if (m_uiBase == BASE_HORDE)
-                SummonNextWave(HordeWaves, m_uiWaveCount);
-            else
-                SummonNextWave(AllianceWaves, m_uiWaveCount);
-
-            ++m_uiWaveCount;
-        }
+            SummonNextWave();
         else
             m_uiNextWaveTimer -= uiDiff;
     }
