@@ -172,6 +172,7 @@ struct MANGOS_DLL_DECL hyjalAI : public ScriptedAI
 
         uint32 m_uiNextWaveTimer;
         uint32 m_uiWaveCount;
+        uint32 m_uiWaveMoveTimer;
         uint32 m_uiCheckTimer;
         uint32 m_uiEnemyCount;
         uint32 m_uiRetreatTimer;
@@ -193,7 +194,7 @@ struct MANGOS_DLL_DECL hyjalAI : public ScriptedAI
 
     private:
         uint32 m_uiSpellTimer[MAX_SPELL];
-        std::list<uint64> CreatureList;
+        std::list<uint64> lWaveMobGUIDList;
 };
 
 #endif
