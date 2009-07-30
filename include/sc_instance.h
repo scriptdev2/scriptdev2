@@ -35,5 +35,8 @@ class MANGOS_DLL_DECL ScriptedInstance : public InstanceData
 
         //Respawns a GO having negative spawntimesecs in gameobject-table
         void DoRespawnGameObject(uint64 uiGuid, uint32 uiTimeToDespawn = MINUTE);
+
+        //sends world state update to all players in instance
+        void DoUpdateWorldState(uint32 uiStateId, uint32 uiStateData);
 };
 #endif

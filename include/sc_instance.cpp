@@ -41,3 +41,19 @@ void ScriptedInstance::DoRespawnGameObject(uint64 uiGuid, uint32 uiTimeToDespawn
         pGo->SetRespawnTime(uiTimeToDespawn);
     }
 }
+
+void ScriptedInstance::DoUpdateWorldState(uint32 uiStateId, uint32 uiStateData)
+{
+    Map::PlayerList const& lPlayers = instance->GetPlayers();
+
+    if (!lPlayers.isEmpty())
+    {
+        for(Map::PlayerList::const_iterator itr = lPlayers.begin(); itr != lPlayers.end(); ++itr)
+        {
+            if (Player* pPlayer = itr->getSource())
+                pPlayer->SendUpdateWorldState(uiStateId, uiStateData);
+        }
+    }
+    else
+        debug_log("SD2: DoUpdateWorldState attempt send data but no players in map.");
+}
