@@ -82,25 +82,6 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
         m_uiEggsRemainingCount_Right = 20;
     }
 
-    void UpdateInstanceWorldState(uint32 uiId, uint32 uiState)
-    {
-        Map::PlayerList const& players = instance->GetPlayers();
-
-        if (!players.isEmpty())
-        {
-            for(Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
-            {
-                if (Player* pPlayer = itr->getSource())
-                {
-                    pPlayer->SendUpdateWorldState(uiId, uiState);
-                    debug_log("SD2: Instance Zulaman: UpdateInstanceWorldState for id %u with state %u",uiId,uiState);
-                }
-            }
-        }
-        else
-            debug_log("SD2: Instance Zulaman: UpdateInstanceWorldState, but PlayerList is empty.");
-    }
-
     void OnCreatureCreate(Creature* pCreature)
     {
         switch(pCreature->GetEntry())
@@ -152,8 +133,8 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
                 if (uiData == IN_PROGRESS)
                 {
                     DoUseDoorOrButton(m_uiMassiveGateGUID);
-                    UpdateInstanceWorldState(WORLD_STATE_COUNTER,m_uiEventMinuteStep);
-                    UpdateInstanceWorldState(WORLD_STATE_ID,1);
+                    DoUpdateWorldState(WORLD_STATE_COUNTER,m_uiEventMinuteStep);
+                    DoUpdateWorldState(WORLD_STATE_ID,1);
                     m_auiEncounter[0] = uiData;
                 }
                 break;
@@ -163,7 +144,7 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
                     if (m_auiEncounter[0] == IN_PROGRESS)
                     {
                         m_uiEventMinuteStep += MINUTE/6;    //add 10 minutes
-                        UpdateInstanceWorldState(WORLD_STATE_COUNTER,m_uiEventMinuteStep);
+                        DoUpdateWorldState(WORLD_STATE_COUNTER,m_uiEventMinuteStep);
                     }
                 }
                 m_auiEncounter[1] = uiData;
@@ -174,7 +155,7 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
                     if (m_auiEncounter[0] == IN_PROGRESS)
                     {
                         m_uiEventMinuteStep += MINUTE/4;    //add 15 minutes
-                        UpdateInstanceWorldState(WORLD_STATE_COUNTER,m_uiEventMinuteStep);
+                        DoUpdateWorldState(WORLD_STATE_COUNTER,m_uiEventMinuteStep);
                     }
                 }
                 m_auiEncounter[2] = uiData;
@@ -355,7 +336,7 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
                 }
 
                 --m_uiEventMinuteStep;
-                UpdateInstanceWorldState(WORLD_STATE_COUNTER, m_uiEventMinuteStep);
+                DoUpdateWorldState(WORLD_STATE_COUNTER, m_uiEventMinuteStep);
                 debug_log("SD2: Instance Zulaman: minute decrease to %u.",m_uiEventMinuteStep);
 
                 m_uiEventTimer = MINUTE*IN_MILISECONDS;

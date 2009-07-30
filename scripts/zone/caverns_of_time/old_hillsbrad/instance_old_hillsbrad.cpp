@@ -73,7 +73,7 @@ struct MANGOS_DLL_DECL instance_old_hillsbrad : public ScriptedInstance
         return NULL;
     }
 
-    void UpdateOHWorldState()
+    void UpdateQuestCredit()
     {
         Map::PlayerList const& players = instance->GetPlayers();
 
@@ -82,15 +82,9 @@ struct MANGOS_DLL_DECL instance_old_hillsbrad : public ScriptedInstance
             for(Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
             {
                 if (Player* pPlayer = itr->getSource())
-                {
-                    pPlayer->SendUpdateWorldState(WORLD_STATE_OH, m_uiBarrelCount);
-
-                    if (m_uiBarrelCount == 5)
-                        pPlayer->KilledMonsterCredit(NPC_LODGE_QUEST_TRIGGER, 0);
-                }
+                    pPlayer->KilledMonsterCredit(NPC_LODGE_QUEST_TRIGGER, 0);
             }
-        }else
-            debug_log("SD2: Instance Old Hillsbrad: UpdateOHWorldState, but PlayerList is empty!");
+        }
     }
 
     void OnCreatureCreate(Creature* pCreature)
@@ -126,7 +120,7 @@ struct MANGOS_DLL_DECL instance_old_hillsbrad : public ScriptedInstance
                         return;
 
                     ++m_uiBarrelCount;
-                    UpdateOHWorldState();
+                    DoUpdateWorldState(WORLD_STATE_OH, m_uiBarrelCount);
 
                     debug_log("SD2: Instance Old Hillsbrad: go_barrel_old_hillsbrad count %u", m_uiBarrelCount);
 
@@ -134,6 +128,7 @@ struct MANGOS_DLL_DECL instance_old_hillsbrad : public ScriptedInstance
 
                     if (m_uiBarrelCount == 5)
                     {
+                        UpdateQuestCredit();
                         pPlayer->SummonCreature(NPC_DRAKE,2128.43,71.01,64.42,1.74,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,1800000);
                         m_auiEncounter[0] = DONE;
                     }

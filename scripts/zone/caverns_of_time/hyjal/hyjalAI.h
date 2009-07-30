@@ -158,9 +158,6 @@ struct MANGOS_DLL_DECL hyjalAI : public ScriptedAI
     // Searches for the appropriate yell and sound and uses it to inform the raid of various things
     void DoTalk(YellType pYellType);
 
-    // Updates the world state counter at the top of the UI.
-    void UpdateWorldState(uint32 field, uint32 value);
-
     // Used to filter who to despawn after mass teleport
     void SpellHitTarget(Unit*, const SpellEntry*);
 

@@ -154,7 +154,7 @@ struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
                 else
                     --m_uiTrashCount;
 
-                UpdateWorldState(WORLD_STATE_ENEMYCOUNT, m_uiTrashCount);
+                DoUpdateWorldState(WORLD_STATE_ENEMYCOUNT, m_uiTrashCount);
                 break;
 
             case TYPE_RETREAT:
@@ -201,22 +201,6 @@ struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
             case DATA_TRASH:        return m_uiTrashCount;
         }
         return 0;
-    }
-
-    void UpdateWorldState(uint32 id, uint32 state)
-    {
-        Map::PlayerList const& players = instance->GetPlayers();
-
-        if (!players.isEmpty())
-        {
-            for(Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
-            {
-                if (Player* pPlayer = itr->getSource())
-                    pPlayer->SendUpdateWorldState(id,state);
-            }
-        }
-        else
-            debug_log("SD2: Instance Hyjal: UpdateWorldState, but PlayerList is empty!");
     }
 
     const char* Save()

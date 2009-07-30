@@ -29,17 +29,15 @@ EndScriptData */
 ## go_barrel_old_hillsbrad
 ######*/
 
-bool GOHello_go_barrel_old_hillsbrad(Player* pPlayer, GameObject* _GO)
+bool GOHello_go_barrel_old_hillsbrad(Player* pPlayer, GameObject* pGo)
 {
-    ScriptedInstance* pInstance = (ScriptedInstance*)_GO->GetInstanceData();
+    if (ScriptedInstance* pInstance = (ScriptedInstance*)pGo->GetInstanceData())
+    {
+        if (pInstance->GetData(TYPE_BARREL_DIVERSION) == DONE)
+            return false;
 
-    if (!pInstance)
-        return false;
-
-    if (pInstance->GetData(TYPE_BARREL_DIVERSION) == DONE)
-        return false;
-
-    pInstance->SetData(TYPE_BARREL_DIVERSION, IN_PROGRESS);
+        pInstance->SetData(TYPE_BARREL_DIVERSION, IN_PROGRESS);
+    }
     return false;
 }
 
