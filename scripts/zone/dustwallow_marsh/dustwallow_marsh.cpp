@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Dustwallow_Marsh
 SD%Complete: 95
-SDComment: Quest support: 11180, 558, 11126, 11142. Vendor Nat Pagle
+SDComment: Quest support: 558, 1324, 11126, 11142, 11180. Vendor Nat Pagle
 SDCategory: Dustwallow Marsh
 EndScriptData */
 
@@ -27,6 +27,7 @@ npc_restless_apparition
 npc_deserter_agitator
 npc_lady_jaina_proudmoore
 npc_nat_pagle
+npc_private_hendel
 npc_cassa_crimsonwing
 EndContentData */
 
@@ -224,6 +225,76 @@ bool GossipSelect_npc_nat_pagle(Player* pPlayer, Creature* pCreature, uint32 uiS
 }
 
 /*######
+## npc_private_hendel
+######*/
+
+enum
+{
+    SAY_PROGRESS_1_TER          = -1000411,
+    SAY_PROGRESS_2_HEN          = -1000412,
+    SAY_PROGRESS_3_TER          = -1000413,
+    SAY_PROGRESS_4_TER          = -1000414,
+    EMOTE_SURRENDER             = -1000415,
+
+    QUEST_MISSING_DIPLO_PT16    = 1324,
+    FACTION_HOSTILE             = 168,                      //guessed, may be different
+
+    NPC_SENTRY                  = 5184,                     //helps hendel
+    NPC_JAINA                   = 4968,                     //appears once hendel gives up
+    NPC_TERVOSH                 = 4967
+};
+
+//TODO: develop this further, end event not created
+struct MANGOS_DLL_DECL npc_private_hendelAI : public ScriptedAI
+{
+    npc_private_hendelAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
+
+    void Reset()
+    {
+        if (m_creature->getFaction() != m_creature->GetCreatureInfo()->faction_A)
+            m_creature->setFaction(m_creature->GetCreatureInfo()->faction_A);
+    }
+
+    void AttackedBy(Unit* pAttacker)
+    {
+        if (m_creature->getVictim())
+            return;
+
+        if (m_creature->IsFriendlyTo(pAttacker))
+            return;
+
+        AttackStart(pAttacker);
+    }
+
+    void DamageTaken(Unit* pDoneBy, uint32 &uiDamage)
+    {
+        if (uiDamage > m_creature->GetHealth() || ((m_creature->GetHealth() - uiDamage)*100 / m_creature->GetMaxHealth() < 20))
+        {
+            uiDamage = 0;
+
+            if (Player* pPlayer = pDoneBy->GetCharmerOrOwnerPlayerOrPlayerItself())
+                pPlayer->GroupEventHappens(QUEST_MISSING_DIPLO_PT16, m_creature);
+
+            DoScriptText(EMOTE_SURRENDER, m_creature);
+            EnterEvadeMode();
+        }
+    }
+};
+
+bool QuestAccept_npc_private_hendel(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
+{
+    if (pQuest->GetQuestId() == QUEST_MISSING_DIPLO_PT16)
+        pCreature->setFaction(FACTION_HOSTILE);
+
+    return true;
+}
+
+CreatureAI* GetAI_npc_private_hendel(Creature* pCreature)
+{
+    return new npc_private_hendelAI(pCreature);
+}
+
+/*######
 ## npc_cassa_crimsonwing
 ######*/
 
@@ -288,6 +359,12 @@ void AddSC_dustwallow_marsh()
     newscript->Name = "npc_nat_pagle";
     newscript->pGossipHello = &GossipHello_npc_nat_pagle;
     newscript->pGossipSelect = &GossipSelect_npc_nat_pagle;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "npc_private_hendel";
+    newscript->GetAI = &GetAI_npc_private_hendel;
+    newscript->pQuestAccept = &QuestAccept_npc_private_hendel;
     newscript->RegisterSelf();
 
     newscript = new Script;
