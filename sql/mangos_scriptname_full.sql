@@ -279,8 +279,9 @@ UPDATE creature_template SET ScriptName='mob_webbed_creature' WHERE entry=17680;
 UPDATE creature_template SET ScriptName='npc_captured_sunhawk_agent' WHERE entry=17824;
 
 /* BOREAN TUNDRA */
-UPDATE creature_template SET ScriptName='npc_tiare' WHERE entry=30051;
+UPDATE creature_template SET ScriptName='npc_fizzcrank_fullthrottle' WHERE entry=25590;
 UPDATE creature_template SET ScriptName='npc_surristrasz' WHERE entry=24795;
+UPDATE creature_template SET ScriptName='npc_tiare' WHERE entry=30051;
 
 /* BURNING STEPPES */
 UPDATE creature_template SET ScriptName='npc_ragged_john' WHERE entry=9563;
