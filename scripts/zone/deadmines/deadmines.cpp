@@ -24,23 +24,24 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_deadmines.h"
 
-bool GOHello_go_door_lever_dm(Player* pPlayer, GameObject* _GO)
+bool GOHello_go_door_lever_dm(Player* pPlayer, GameObject* pGo)
 {
-    ScriptedInstance* pInstance = (ScriptedInstance*)_GO->GetInstanceData();
+    ScriptedInstance* pInstance = (ScriptedInstance*)pGo->GetInstanceData();
 
     if (!pInstance)
         return false;
 
-    GameObject* pGo = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_DEFIAS_DOOR));
-    if (pGo && pGo->GetGoState() == 1)
+    GameObject* pGoDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_DEFIAS_DOOR));
+
+    if (pGoDoor && pGoDoor->GetGoState() == 1)
         return false;
 
     return true;
 }
 
-bool GOHello_go_defias_cannon(Player* pPlayer, GameObject* _GO)
+bool GOHello_go_defias_cannon(Player* pPlayer, GameObject* pGo)
 {
-    ScriptedInstance* pInstance = (ScriptedInstance*)_GO->GetInstanceData();
+    ScriptedInstance* pInstance = (ScriptedInstance*)pGo->GetInstanceData();
 
     if (!pInstance)
         return false;

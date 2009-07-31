@@ -51,7 +51,7 @@ enum
     SPELL_SUMMON_GHOST_SABER    = 5968,
 };
 
-bool GOHello_go_cat_figurine(Player* pPlayer, GameObject* _GO)
+bool GOHello_go_cat_figurine(Player* pPlayer, GameObject* pGo)
 {
     pPlayer->CastSpell(pPlayer,SPELL_SUMMON_GHOST_SABER,true);
     return false;
@@ -61,12 +61,12 @@ bool GOHello_go_cat_figurine(Player* pPlayer, GameObject* _GO)
 ## go_crystal_pylons (3x)
 ######*/
 
-bool GOHello_go_northern_crystal_pylon(Player* pPlayer, GameObject* _GO)
+bool GOHello_go_northern_crystal_pylon(Player* pPlayer, GameObject* pGo)
 {
-    if (_GO->GetGoType() == GAMEOBJECT_TYPE_QUESTGIVER)
+    if (pGo->GetGoType() == GAMEOBJECT_TYPE_QUESTGIVER)
     {
-        pPlayer->PrepareQuestMenu(_GO->GetGUID());
-        pPlayer->SendPreparedQuest(_GO->GetGUID());
+        pPlayer->PrepareQuestMenu(pGo->GetGUID());
+        pPlayer->SendPreparedQuest(pGo->GetGUID());
     }
 
     if (pPlayer->GetQuestStatus(4285) == QUEST_STATUS_INCOMPLETE)
@@ -75,12 +75,12 @@ bool GOHello_go_northern_crystal_pylon(Player* pPlayer, GameObject* _GO)
     return true;
 }
 
-bool GOHello_go_eastern_crystal_pylon(Player* pPlayer, GameObject* _GO)
+bool GOHello_go_eastern_crystal_pylon(Player* pPlayer, GameObject* pGo)
 {
-    if (_GO->GetGoType() == GAMEOBJECT_TYPE_QUESTGIVER)
+    if (pGo->GetGoType() == GAMEOBJECT_TYPE_QUESTGIVER)
     {
-        pPlayer->PrepareQuestMenu(_GO->GetGUID());
-        pPlayer->SendPreparedQuest(_GO->GetGUID());
+        pPlayer->PrepareQuestMenu(pGo->GetGUID());
+        pPlayer->SendPreparedQuest(pGo->GetGUID());
     }
 
     if (pPlayer->GetQuestStatus(4287) == QUEST_STATUS_INCOMPLETE)
@@ -89,12 +89,12 @@ bool GOHello_go_eastern_crystal_pylon(Player* pPlayer, GameObject* _GO)
     return true;
 }
 
-bool GOHello_go_western_crystal_pylon(Player* pPlayer, GameObject* _GO)
+bool GOHello_go_western_crystal_pylon(Player* pPlayer, GameObject* pGo)
 {
-    if (_GO->GetGoType() == GAMEOBJECT_TYPE_QUESTGIVER)
+    if (pGo->GetGoType() == GAMEOBJECT_TYPE_QUESTGIVER)
     {
-        pPlayer->PrepareQuestMenu(_GO->GetGUID());
-        pPlayer->SendPreparedQuest(_GO->GetGUID());
+        pPlayer->PrepareQuestMenu(pGo->GetGUID());
+        pPlayer->SendPreparedQuest(pGo->GetGUID());
     }
 
     if (pPlayer->GetQuestStatus(4288) == QUEST_STATUS_INCOMPLETE)
@@ -107,7 +107,7 @@ bool GOHello_go_western_crystal_pylon(Player* pPlayer, GameObject* _GO)
 ## go_barov_journal
 ######*/
 
-bool GOHello_go_barov_journal(Player* pPlayer, GameObject* _GO)
+bool GOHello_go_barov_journal(Player* pPlayer, GameObject* pGo)
 {
     if (pPlayer->HasSkill(SKILL_TAILORING) && pPlayer->GetBaseSkillValue(SKILL_TAILORING) >= 280 && !pPlayer->HasSpell(26086))
     {
@@ -195,7 +195,7 @@ bool GOHello_go_ethereum_stasis(Player* pPlayer, GameObject* pGo)
 ## go_field_repair_bot_74A
 ######*/
 
-bool GOHello_go_field_repair_bot_74A(Player* pPlayer, GameObject* _GO)
+bool GOHello_go_field_repair_bot_74A(Player* pPlayer, GameObject* pGo)
 {
     if (pPlayer->HasSkill(SKILL_ENGINERING) && pPlayer->GetBaseSkillValue(SKILL_ENGINERING) >= 300 && !pPlayer->HasSpell(22704))
     {
@@ -228,7 +228,7 @@ bool GOHello_go_gilded_brazier(Player* pPlayer, GameObject* pGO)
 ## go_orb_of_command
 ######*/
 
-bool GOHello_go_orb_of_command(Player* pPlayer, GameObject* _GO)
+bool GOHello_go_orb_of_command(Player* pPlayer, GameObject* pGo)
 {
     if (pPlayer->GetQuestRewardStatus(7761))
         pPlayer->CastSpell(pPlayer,23460,true);
@@ -314,7 +314,7 @@ bool GOHello_go_shrine_of_the_birds(Player* pPlayer, GameObject* pGo)
 ## go_tablet_of_madness
 ######*/
 
-bool GOHello_go_tablet_of_madness(Player* pPlayer, GameObject* _GO)
+bool GOHello_go_tablet_of_madness(Player* pPlayer, GameObject* pGo)
 {
     if (pPlayer->HasSkill(SKILL_ALCHEMY) && pPlayer->GetSkillValue(SKILL_ALCHEMY) >= 300 && !pPlayer->HasSpell(24266))
     {
@@ -328,9 +328,9 @@ bool GOHello_go_tablet_of_madness(Player* pPlayer, GameObject* _GO)
 ######*/
 
 //TODO: use gossip option ("Transcript the Tablet") instead, if Mangos adds support.
-bool GOHello_go_tablet_of_the_seven(Player* pPlayer, GameObject* _GO)
+bool GOHello_go_tablet_of_the_seven(Player* pPlayer, GameObject* pGo)
 {
-    if (_GO->GetGoType() != GAMEOBJECT_TYPE_QUESTGIVER)
+    if (pGo->GetGoType() != GAMEOBJECT_TYPE_QUESTGIVER)
         return true;
 
     if (pPlayer->GetQuestStatus(4296) == QUEST_STATUS_INCOMPLETE)

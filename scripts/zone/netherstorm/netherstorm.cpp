@@ -287,17 +287,17 @@ CreatureAI* GetAI_npc_manaforge_control_console(Creature* pCreature)
 ######*/
 
 //TODO: clean up this workaround when mangos adds support to do it properly (with gossip selections instead of instant summon)
-bool GOHello_go_manaforge_control_console(Player* pPlayer, GameObject* _GO)
+bool GOHello_go_manaforge_control_console(Player* pPlayer, GameObject* pGo)
 {
-    if (_GO->GetGoType() == GAMEOBJECT_TYPE_QUESTGIVER)
+    if (pGo->GetGoType() == GAMEOBJECT_TYPE_QUESTGIVER)
     {
-        pPlayer->PrepareQuestMenu(_GO->GetGUID());
-        pPlayer->SendPreparedQuest(_GO->GetGUID());
+        pPlayer->PrepareQuestMenu(pGo->GetGUID());
+        pPlayer->SendPreparedQuest(pGo->GetGUID());
     }
 
     Creature* manaforge = NULL;
 
-    switch(_GO->GetAreaId())
+    switch(pGo->GetAreaId())
     {
         case 3726:                                          //b'naar
             if ((pPlayer->GetQuestStatus(10299) == QUEST_STATUS_INCOMPLETE || pPlayer->GetQuestStatus(10329) == QUEST_STATUS_INCOMPLETE) &&
@@ -324,8 +324,8 @@ bool GOHello_go_manaforge_control_console(Player* pPlayer, GameObject* _GO)
     if (manaforge)
     {
         ((npc_manaforge_control_consoleAI*)manaforge->AI())->someplayer = pPlayer->GetGUID();
-        ((npc_manaforge_control_consoleAI*)manaforge->AI())->goConsole = _GO->GetGUID();
-        _GO->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_IN_USE);
+        ((npc_manaforge_control_consoleAI*)manaforge->AI())->goConsole = pGo->GetGUID();
+        pGo->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_IN_USE);
     }
     return true;
 }

@@ -36,17 +36,17 @@ EndScriptData */
 3 - Warlord Kalithresh Event
 */
 
-bool GOHello_go_main_chambers_access_panel(Player* pPlayer, GameObject* _GO)
+bool GOHello_go_main_chambers_access_panel(Player* pPlayer, GameObject* pGo)
 {
-    ScriptedInstance* pInstance = (ScriptedInstance*)_GO->GetInstanceData();
+    ScriptedInstance* pInstance = (ScriptedInstance*)pGo->GetInstanceData();
 
     if (!pInstance)
         return false;
 
-    if (_GO->GetEntry() == ACCESS_PANEL_HYDRO && pInstance->GetData(TYPE_HYDROMANCER_THESPIA) == DONE)
+    if (pGo->GetEntry() == ACCESS_PANEL_HYDRO && pInstance->GetData(TYPE_HYDROMANCER_THESPIA) == DONE)
         pInstance->SetData(TYPE_HYDROMANCER_THESPIA,SPECIAL);
 
-    if (_GO->GetEntry() == ACCESS_PANEL_MEK && pInstance->GetData(TYPE_MEKGINEER_STEAMRIGGER) == DONE)
+    if (pGo->GetEntry() == ACCESS_PANEL_MEK && pInstance->GetData(TYPE_MEKGINEER_STEAMRIGGER) == DONE)
         pInstance->SetData(TYPE_MEKGINEER_STEAMRIGGER,SPECIAL);
 
     return true;

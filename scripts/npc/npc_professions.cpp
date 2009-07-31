@@ -1286,11 +1286,11 @@ bool GossipSelect_npc_prof_tailor(Player* pPlayer, Creature* pCreature, uint32 u
 # start menues for GO (engineering and leatherworking)
 ###*/
 
-/*bool GOHello_go_soothsaying_for_dummies(Player* pPlayer, GameObject* _GO)
+/*bool GOHello_go_soothsaying_for_dummies(Player* pPlayer, GameObject* pGo)
 {
     pPlayer->PlayerTalkClass->GetGossipMenu()->AddMenuItem(0,GOSSIP_LEARN_DRAGON, GOSSIP_SENDER_INFO, GOSSIP_ACTION_INFO_DEF, "", 0);
 
-    pPlayer->SEND_GOSSIP_MENU(5584, _GO->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(5584, pGo->GetGUID());
 
     return true;
 }*/

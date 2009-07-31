@@ -597,9 +597,9 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
 };
 
 //Manticron Cube
-bool GOHello_go_manticron_cube(Player* pPlayer, GameObject* _GO)
+bool GOHello_go_manticron_cube(Player* pPlayer, GameObject* pGo)
 {
-    ScriptedInstance* pInstance = (ScriptedInstance*)_GO->GetInstanceData();
+    ScriptedInstance* pInstance = (ScriptedInstance*)pGo->GetInstanceData();
 
     if (!pInstance)
         return true;
@@ -607,7 +607,7 @@ bool GOHello_go_manticron_cube(Player* pPlayer, GameObject* _GO)
     if (pInstance->GetData(TYPE_MAGTHERIDON_EVENT) != IN_PROGRESS)
         return true;
 
-    Creature *Magtheridon =(Creature*)Unit::GetUnit(*_GO, pInstance->GetData64(DATA_MAGTHERIDON));
+    Creature *Magtheridon =(Creature*)Unit::GetUnit(*pGo, pInstance->GetData64(DATA_MAGTHERIDON));
     if (!Magtheridon || !Magtheridon->isAlive())
         return true;
 
@@ -618,7 +618,7 @@ bool GOHello_go_manticron_cube(Player* pPlayer, GameObject* _GO)
     pPlayer->InterruptNonMeleeSpells(false);
     pPlayer->CastSpell(pPlayer, SPELL_SHADOW_GRASP, true);
     pPlayer->CastSpell(pPlayer, SPELL_SHADOW_GRASP_VISUAL, false);
-    ((boss_magtheridonAI*)Magtheridon->AI())->SetClicker(_GO->GetGUID(), pPlayer->GetGUID());
+    ((boss_magtheridonAI*)Magtheridon->AI())->SetClicker(pGo->GetGUID(), pPlayer->GetGUID());
 
     return true;
 }
