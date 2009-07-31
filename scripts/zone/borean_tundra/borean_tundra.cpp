@@ -38,17 +38,17 @@ EndContentData */
 
 enum
 {
-    GOSSIP_TEXT_FIZZCRANK1  = 12456,
-    GOSSIP_TEXT_FIZZCRANK2  = 12457,
-    GOSSIP_TEXT_FIZZCRANK3  = 12458,
-    GOSSIP_TEXT_FIZZCRANK4  = 12459,
-    GOSSIP_TEXT_FIZZCRANK5  = 12460,
-    GOSSIP_TEXT_FIZZCRANK6  = 12461,
-    GOSSIP_TEXT_FIZZCRANK7  = 12462,
-    GOSSIP_TEXT_FIZZCRANK8  = 12463,
-    GOSSIP_TEXT_FIZZCRANK9  = 12464,
+    GOSSIP_TEXTID_FIZZCRANK1    = 12456,
+    GOSSIP_TEXTID_FIZZCRANK2    = 12457,
+    GOSSIP_TEXTID_FIZZCRANK3    = 12458,
+    GOSSIP_TEXTID_FIZZCRANK4    = 12459,
+    GOSSIP_TEXTID_FIZZCRANK5    = 12460,
+    GOSSIP_TEXTID_FIZZCRANK6    = 12461,
+    GOSSIP_TEXTID_FIZZCRANK7    = 12462,
+    GOSSIP_TEXTID_FIZZCRANK8    = 12463,
+    GOSSIP_TEXTID_FIZZCRANK9    = 12464,
 
-    QUEST_THE_MECHAGNOMES   = 11708
+    QUEST_THE_MECHAGNOMES       = 11708
 };
 
 bool GossipHello_npc_fizzcrank_fullthrottle(Player* pPlayer, Creature* pCreature)
@@ -57,7 +57,7 @@ bool GossipHello_npc_fizzcrank_fullthrottle(Player* pPlayer, Creature* pCreature
         pPlayer->PrepareQuestMenu(pCreature->GetGUID());
 
     if (pPlayer->GetQuestStatus(QUEST_THE_MECHAGNOMES) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT,GOSSIP_ITEM_TELL_ME,GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF+1);
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TELL_ME, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
     pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
     return true;
@@ -69,38 +69,38 @@ bool GossipSelect_npc_fizzcrank_fullthrottle(Player* pPlayer, Creature* pCreatur
     {
         case GOSSIP_ACTION_INFO_DEF+1:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_GO_ON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_FIZZCRANK1, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_FIZZCRANK1, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+2:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_GO_ON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_FIZZCRANK2, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_FIZZCRANK2, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+3:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_GO_ON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_FIZZCRANK3, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_FIZZCRANK3, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+4:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_GO_ON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_FIZZCRANK4, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_FIZZCRANK4, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+5:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_GO_ON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_FIZZCRANK5, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_FIZZCRANK5, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+6:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_GO_ON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_FIZZCRANK6, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_FIZZCRANK6, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+7:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_GO_ON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 8);
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_FIZZCRANK7, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_FIZZCRANK7, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+8:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_GO_ON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 9);
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_FIZZCRANK8, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_FIZZCRANK8, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+9:
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_FIZZCRANK9, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_FIZZCRANK9, pCreature->GetGUID());
             pPlayer->AreaExploredOrEventHappens(QUEST_THE_MECHAGNOMES);
             break;
     }

@@ -2369,6 +2369,10 @@
 				<Filter
 					Name="Icecrown"
 					>
+					<File
+						RelativePath="..\scripts\zone\icecrown\icecrown.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Sholazar Basin"
