@@ -1103,9 +1103,9 @@ bool GossipHello_npc_mount_vendor(Player* pPlayer, Creature* pCreature)
     return true;
 }
 
-bool GossipSelect_npc_mount_vendor(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
+bool GossipSelect_npc_mount_vendor(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    if (action == GOSSIP_ACTION_TRADE)
+    if (uiAction == GOSSIP_ACTION_TRADE)
         pPlayer->SEND_VENDORLIST(pCreature->GetGUID());
 
     return true;
@@ -1136,9 +1136,9 @@ bool GossipHello_npc_rogue_trainer(Player* pPlayer, Creature* pCreature)
     return true;
 }
 
-bool GossipSelect_npc_rogue_trainer(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
+bool GossipSelect_npc_rogue_trainer(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    switch(action)
+    switch(uiAction)
     {
         case GOSSIP_ACTION_INFO_DEF+1:
             pPlayer->CLOSE_GOSSIP_MENU();
@@ -1192,9 +1192,9 @@ bool GossipHello_npc_sayge(Player* pPlayer, Creature* pCreature)
     return true;
 }
 
-void SendAction_npc_sayge(Player* pPlayer, Creature* pCreature, uint32 action)
+void SendAction_npc_sayge(Player* pPlayer, Creature* pCreature, uint32 uiAction)
 {
-    switch(action)
+    switch(uiAction)
     {
         case GOSSIP_ACTION_INFO_DEF+1:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Slay the Man",                      GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
@@ -1238,52 +1238,52 @@ void SendAction_npc_sayge(Player* pPlayer, Creature* pCreature, uint32 action)
     }
 }
 
-bool GossipSelect_npc_sayge(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
+bool GossipSelect_npc_sayge(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    switch(sender)
+    switch(uiSender)
     {
         case GOSSIP_SENDER_MAIN:
-            SendAction_npc_sayge(pPlayer, pCreature, action);
+            SendAction_npc_sayge(pPlayer, pCreature, uiAction);
             break;
         case GOSSIP_SENDER_MAIN+1:
             pCreature->CastSpell(pPlayer, SPELL_DMG, false);
             pPlayer->AddSpellCooldown(SPELL_DMG,0,time(NULL) + 7200);
-            SendAction_npc_sayge(pPlayer, pCreature, action);
+            SendAction_npc_sayge(pPlayer, pCreature, uiAction);
             break;
         case GOSSIP_SENDER_MAIN+2:
             pCreature->CastSpell(pPlayer, SPELL_RES, false);
             pPlayer->AddSpellCooldown(SPELL_RES,0,time(NULL) + 7200);
-            SendAction_npc_sayge(pPlayer, pCreature, action);
+            SendAction_npc_sayge(pPlayer, pCreature, uiAction);
             break;
         case GOSSIP_SENDER_MAIN+3:
             pCreature->CastSpell(pPlayer, SPELL_ARM, false);
             pPlayer->AddSpellCooldown(SPELL_ARM,0,time(NULL) + 7200);
-            SendAction_npc_sayge(pPlayer, pCreature, action);
+            SendAction_npc_sayge(pPlayer, pCreature, uiAction);
             break;
         case GOSSIP_SENDER_MAIN+4:
             pCreature->CastSpell(pPlayer, SPELL_SPI, false);
             pPlayer->AddSpellCooldown(SPELL_SPI,0,time(NULL) + 7200);
-            SendAction_npc_sayge(pPlayer, pCreature, action);
+            SendAction_npc_sayge(pPlayer, pCreature, uiAction);
             break;
         case GOSSIP_SENDER_MAIN+5:
             pCreature->CastSpell(pPlayer, SPELL_INT, false);
             pPlayer->AddSpellCooldown(SPELL_INT,0,time(NULL) + 7200);
-            SendAction_npc_sayge(pPlayer, pCreature, action);
+            SendAction_npc_sayge(pPlayer, pCreature, uiAction);
             break;
         case GOSSIP_SENDER_MAIN+6:
             pCreature->CastSpell(pPlayer, SPELL_STM, false);
             pPlayer->AddSpellCooldown(SPELL_STM,0,time(NULL) + 7200);
-            SendAction_npc_sayge(pPlayer, pCreature, action);
+            SendAction_npc_sayge(pPlayer, pCreature, uiAction);
             break;
         case GOSSIP_SENDER_MAIN+7:
             pCreature->CastSpell(pPlayer, SPELL_STR, false);
             pPlayer->AddSpellCooldown(SPELL_STR,0,time(NULL) + 7200);
-            SendAction_npc_sayge(pPlayer, pCreature, action);
+            SendAction_npc_sayge(pPlayer, pCreature, uiAction);
             break;
         case GOSSIP_SENDER_MAIN+8:
             pCreature->CastSpell(pPlayer, SPELL_AGI, false);
             pPlayer->AddSpellCooldown(SPELL_AGI,0,time(NULL) + 7200);
-            SendAction_npc_sayge(pPlayer, pCreature, action);
+            SendAction_npc_sayge(pPlayer, pCreature, uiAction);
             break;
     }
     return true;

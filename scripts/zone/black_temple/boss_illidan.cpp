@@ -1965,9 +1965,9 @@ bool GossipHello_npc_akama_at_illidan(Player* pPlayer, Creature* pCreature)
     return true;
 }
 
-bool GossipSelect_npc_akama_at_illidan(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
+bool GossipSelect_npc_akama_at_illidan(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    if (action == GOSSIP_ACTION_INFO_DEF)                    // Time to begin the event
+    if (uiAction == GOSSIP_ACTION_INFO_DEF)                    // Time to begin the event
     {
         pPlayer->CLOSE_GOSSIP_MENU();
         ((npc_akama_illidanAI*)pCreature->AI())->BeginDoorEvent(pPlayer);

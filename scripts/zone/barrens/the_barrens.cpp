@@ -184,9 +184,9 @@ bool GossipHello_npc_sputtervalve(Player* pPlayer, Creature* pCreature)
     return true;
 }
 
-bool GossipSelect_npc_sputtervalve(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
+bool GossipSelect_npc_sputtervalve(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    if (action == GOSSIP_ACTION_INFO_DEF)
+    if (uiAction == GOSSIP_ACTION_INFO_DEF)
     {
         pPlayer->SEND_GOSSIP_MENU(2013, pCreature->GetGUID());
         pPlayer->AreaExploredOrEventHappens(6981);

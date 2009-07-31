@@ -233,9 +233,9 @@ bool GossipHello_npc_dirty_larry(Player* pPlayer, Creature* pCreature)
     return true;
 }
 
-bool GossipSelect_npc_dirty_larry(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
+bool GossipSelect_npc_dirty_larry(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    if (action == GOSSIP_ACTION_INFO_DEF+1)
+    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
     {
         ((npc_dirty_larryAI*)pCreature->AI())->m_uiPlayerGUID = pPlayer->GetGUID();
         ((npc_dirty_larryAI*)pCreature->AI())->StartEvent();
@@ -269,11 +269,11 @@ bool GossipHello_npc_ishanah(Player* pPlayer, Creature* pCreature)
     return true;
 }
 
-bool GossipSelect_npc_ishanah(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
+bool GossipSelect_npc_ishanah(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    if (action == GOSSIP_ACTION_INFO_DEF+1)
+    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
         pPlayer->SEND_GOSSIP_MENU(9458, pCreature->GetGUID());
-    else if (action == GOSSIP_ACTION_INFO_DEF+2)
+    else if (uiAction == GOSSIP_ACTION_INFO_DEF+2)
         pPlayer->SEND_GOSSIP_MENU(9459, pCreature->GetGUID());
 
     return true;
@@ -307,9 +307,9 @@ bool GossipHello_npc_khadgar(Player* pPlayer, Creature* pCreature)
     return true;
 }
 
-bool GossipSelect_npc_khadgar(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
+bool GossipSelect_npc_khadgar(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    switch(action)
+    switch(uiAction)
     {
         case GOSSIP_ACTION_INFO_DEF+1:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, KHADGAR_GOSSIP_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
@@ -509,9 +509,9 @@ bool GossipHello_npc_raliq_the_drunk(Player* pPlayer, Creature* pCreature)
     return true;
 }
 
-bool GossipSelect_npc_raliq_the_drunk(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
+bool GossipSelect_npc_raliq_the_drunk(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    if (action == GOSSIP_ACTION_INFO_DEF+1)
+    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
     {
         pPlayer->CLOSE_GOSSIP_MENU();
         pCreature->setFaction(FACTION_HOSTILE_RD);
@@ -632,9 +632,9 @@ bool GossipHello_npc_shattrathflaskvendors(Player* pPlayer, Creature* pCreature)
     return true;
 }
 
-bool GossipSelect_npc_shattrathflaskvendors(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
+bool GossipSelect_npc_shattrathflaskvendors(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    if (action == GOSSIP_ACTION_TRADE)
+    if (uiAction == GOSSIP_ACTION_TRADE)
         pPlayer->SEND_VENDORLIST(pCreature->GetGUID());
 
     return true;
@@ -654,9 +654,9 @@ bool GossipHello_npc_zephyr(Player* pPlayer, Creature* pCreature)
     return true;
 }
 
-bool GossipSelect_npc_zephyr(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
+bool GossipSelect_npc_zephyr(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    if (action == GOSSIP_ACTION_INFO_DEF+1)
+    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
         pPlayer->CastSpell(pPlayer,37778,false);
 
     return true;

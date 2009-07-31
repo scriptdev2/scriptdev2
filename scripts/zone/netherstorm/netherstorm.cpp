@@ -672,9 +672,9 @@ bool GossipHello_npc_veronia(Player* pPlayer, Creature* pCreature)
     return true;
 }
 
-bool GossipSelect_npc_veronia(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
+bool GossipSelect_npc_veronia(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    if (action == GOSSIP_ACTION_INFO_DEF)
+    if (uiAction == GOSSIP_ACTION_INFO_DEF)
     {
         pPlayer->CLOSE_GOSSIP_MENU();
         pPlayer->CastSpell(pPlayer,34905,true);               //TaxiPath 606

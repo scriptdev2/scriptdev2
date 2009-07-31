@@ -1653,27 +1653,27 @@ bool GossipHello(Player* pPlayer, Creature* pCreature)
 }
 
 MANGOS_DLL_EXPORT
-bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
+bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    debug_log("SD2: Gossip selection, sender: %d, action: %d",sender, action);
+    debug_log("SD2: Gossip selection, sender: %u, action: %u", uiSender, uiAction);
 
     Script *tmpscript = m_scripts[pCreature->GetScriptId()];
     if (!tmpscript || !tmpscript->pGossipSelect) return false;
 
     pPlayer->PlayerTalkClass->ClearMenus();
-    return tmpscript->pGossipSelect(pPlayer, pCreature,sender,action);
+    return tmpscript->pGossipSelect(pPlayer, pCreature, uiSender, uiAction);
 }
 
 MANGOS_DLL_EXPORT
-bool GossipSelectWithCode(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action, const char* sCode)
+bool GossipSelectWithCode(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction, const char* sCode)
 {
-    debug_log("SD2: Gossip selection with code, sender: %d, action: %d",sender, action);
+    debug_log("SD2: Gossip selection with code, sender: %u, action: %u", uiSender, uiAction);
 
     Script *tmpscript = m_scripts[pCreature->GetScriptId()];
     if (!tmpscript || !tmpscript->pGossipSelectWithCode) return false;
 
     pPlayer->PlayerTalkClass->ClearMenus();
-    return tmpscript->pGossipSelectWithCode(pPlayer, pCreature,sender,action,sCode);
+    return tmpscript->pGossipSelectWithCode(pPlayer, pCreature, uiSender, uiAction, sCode);
 }
 
 MANGOS_DLL_EXPORT
