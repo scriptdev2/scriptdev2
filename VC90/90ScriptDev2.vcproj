@@ -2361,6 +2361,10 @@
 				<Filter
 					Name="Grizzly Hills"
 					>
+					<File
+						RelativePath="..\scripts\zone\grizzly_hills\grizzly_hills.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Icecrown"

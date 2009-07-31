@@ -183,6 +183,7 @@ scripts/zone/eversong_woods/eversong_woods.cpp \
 scripts/zone/felwood/felwood.cpp \
 scripts/zone/feralas/feralas.cpp \
 scripts/zone/ghostlands/ghostlands.cpp \
+scripts/zone/grizzly_hills/grizzly_hills.cpp \
 scripts/zone/gruuls_lair/boss_gruul.cpp \
 scripts/zone/gruuls_lair/boss_high_king_maulgar.cpp \
 scripts/zone/gruuls_lair/def_gruuls_lair.h \

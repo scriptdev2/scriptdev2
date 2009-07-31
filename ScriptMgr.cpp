@@ -277,6 +277,10 @@ extern void AddSC_feralas();
 extern void AddSC_ghostlands();
 
 //Gnomeregan
+
+//Grizzly Hills
+extern void AddSC_grizzly_hills();
+
 //Gruul's Lair
 extern void AddSC_boss_gruul();
 extern void AddSC_boss_high_king_maulgar();
@@ -1170,6 +1174,10 @@ void ScriptsInit()
     AddSC_ghostlands();
 
     //Gnomeregan
+
+    //Grizzly Hills
+    AddSC_grizzly_hills();
+
     //Gruul's Lair
     AddSC_boss_gruul();
     AddSC_boss_high_king_maulgar();

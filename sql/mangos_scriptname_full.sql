@@ -460,7 +460,7 @@ UPDATE creature_template SET ScriptName='npc_rathis_tomber' WHERE entry=16224;
 
 
 /* GRIZZLY HILLS */
-
+UPDATE creature_template SET ScriptName='npc_orsonn_and_kodian' WHERE entry IN (27274, 27275);
 
 /* GRUUL'S LAIR */
 UPDATE instance_template SET script='instance_gruuls_lair' WHERE map =565;
