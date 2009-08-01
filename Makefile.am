@@ -39,12 +39,6 @@ include/sc_grid_searchers.cpp \
 include/sc_grid_searchers.h \
 include/sc_instance.cpp \
 include/sc_instance.h \
-scripts/areatrigger/areatrigger_scripts.cpp \
-scripts/boss/boss_emeriss.cpp \
-scripts/boss/boss_lethon.cpp \
-scripts/boss/boss_taerar.cpp \
-scripts/boss/boss_ysondre.cpp \
-scripts/creature/mob_generic_creature.cpp \
 scripts/creature/simple_ai.cpp \
 scripts/creature/simple_ai.h \
 scripts/eastern_kingdoms/alterac_mountains.cpp \
@@ -74,11 +68,9 @@ scripts/examples/example_creature.cpp \
 scripts/examples/example_escort.cpp \
 scripts/examples/example_gossip_codebox.cpp \
 scripts/examples/example_misc.cpp \
-scripts/go/go_scripts.cpp \
 scripts/guard/guard_ai.cpp \
 scripts/guard/guard_ai.h \
 scripts/guard/guards.cpp \
-scripts/item/item_scripts.cpp \
 scripts/kalimdor/ashenvale.cpp \
 scripts/kalimdor/azshara.cpp \
 scripts/kalimdor/azuremyst_isle.cpp \
@@ -106,9 +98,6 @@ scripts/northrend/grizzly_hills.cpp \
 scripts/northrend/icecrown.cpp \
 scripts/npc/npc_escortAI.cpp \
 scripts/npc/npc_escortAI.h \
-scripts/npc/npc_innkeeper.cpp \
-scripts/npc/npc_professions.cpp \
-scripts/npc/npcs_special.cpp \
 scripts/outland/blades_edge_mountains.cpp \
 scripts/outland/boss_doomlord_kazzak.cpp \
 scripts/outland/boss_doomwalker.cpp \
@@ -427,6 +416,17 @@ scripts/zone/zulgurub/boss_venoxis.cpp \
 scripts/zone/zulgurub/boss_wushoolay.cpp \
 scripts/zone/zulgurub/def_zulgurub.h \
 scripts/zone/zulgurub/instance_zulgurub.cpp \
+scripts/world/areatrigger_scripts.cpp \
+scripts/world/boss_emeriss.cpp \
+scripts/world/boss_lethon.cpp \
+scripts/world/boss_taerar.cpp \
+scripts/world/boss_ysondre.cpp \
+scripts/world/go_scripts.cpp \
+scripts/world/item_scripts.cpp \
+scripts/world/mob_generic_creature.cpp \
+scripts/world/npc_innkeeper.cpp \
+scripts/world/npc_professions.cpp \
+scripts/world/npcs_special.cpp \
 revision.h \
 system.cpp
 
