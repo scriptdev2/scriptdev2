@@ -21,7 +21,7 @@ SUBDIRS = sql
 BUILT_SOURCES = revision.h
 CLEANFILES = revision.h
 ## CPP flags for includes, defines, etc.
-AM_CPPFLAGS = $(MANGOS_INCLUDES) -I$(srcdir) -I$(srcdir)/../../../dep/include -I$(srcdir)/../../shared/ -I$(srcdir)/../../framework/ -I$(srcdir)/../../game/ -I$(srcdir)/include/
+AM_CPPFLAGS = $(MANGOS_INCLUDES) -I$(srcdir) -I$(srcdir)/../../../dep/include -I$(srcdir)/../../shared/ -I$(srcdir)/../../framework/ -I$(srcdir)/../../game/ -I$(srcdir)/include/ -I$(srcdir)/base/
 
 ## Build MaNGOS script library as shared library.
 # libmangosscript shared library will later be reused by world server daemon.
@@ -30,6 +30,13 @@ libmangosscript_la_SOURCES = \
 ScriptMgr.cpp \
 ScriptMgr.h \
 config.h \
+base/escort_ai.cpp \
+base/escort_ai.h \
+base/guard_ai.cpp \
+base/guard_ai.h \
+base/guards.cpp \
+base/simple_ai.cpp \
+base/simple_ai.h \
 include/precompiled.cpp \
 include/precompiled.h \
 include/sc_creature.cpp \
@@ -39,8 +46,6 @@ include/sc_grid_searchers.cpp \
 include/sc_grid_searchers.h \
 include/sc_instance.cpp \
 include/sc_instance.h \
-scripts/creature/simple_ai.cpp \
-scripts/creature/simple_ai.h \
 scripts/eastern_kingdoms/alterac_mountains.cpp \
 scripts/eastern_kingdoms/arathi_highlands.cpp \
 scripts/eastern_kingdoms/blasted_lands.cpp \
@@ -68,9 +73,6 @@ scripts/examples/example_creature.cpp \
 scripts/examples/example_escort.cpp \
 scripts/examples/example_gossip_codebox.cpp \
 scripts/examples/example_misc.cpp \
-scripts/guard/guard_ai.cpp \
-scripts/guard/guard_ai.h \
-scripts/guard/guards.cpp \
 scripts/kalimdor/ashenvale.cpp \
 scripts/kalimdor/azshara.cpp \
 scripts/kalimdor/azuremyst_isle.cpp \
@@ -96,8 +98,6 @@ scripts/northrend/borean_tundra.cpp \
 scripts/northrend/dragonblight.cpp \
 scripts/northrend/grizzly_hills.cpp \
 scripts/northrend/icecrown.cpp \
-scripts/npc/npc_escortAI.cpp \
-scripts/npc/npc_escortAI.h \
 scripts/outland/blades_edge_mountains.cpp \
 scripts/outland/boss_doomlord_kazzak.cpp \
 scripts/outland/boss_doomwalker.cpp \

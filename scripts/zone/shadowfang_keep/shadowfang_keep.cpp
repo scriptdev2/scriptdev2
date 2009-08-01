@@ -26,7 +26,7 @@ npc_shadowfang_prisoner
 EndContentData */
 
 #include "precompiled.h"
-#include "../../npc/npc_escortAI.h"
+#include "escort_ai.h"
 #include "def_shadowfang_keep.h"
 
 /*######

@@ -28,7 +28,7 @@ npc_prospector_anvilward
 EndContentData */
 
 #include "precompiled.h"
-#include "../npc/npc_escortAI.h"
+#include "escort_ai.h"
 
 /*######
 ## npc_kelerun_bloodmourn

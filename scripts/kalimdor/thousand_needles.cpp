@@ -30,7 +30,7 @@ npc_plucky_johnson
 EndContentData */
 
 #include "precompiled.h"
-#include "../npc/npc_escortAI.h"
+#include "escort_ai.h"
 
 /*######
 # npc_kanati

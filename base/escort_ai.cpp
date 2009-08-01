@@ -3,14 +3,14 @@
  * Please see the included DOCS/LICENSE.TXT for more information */
 
 /* ScriptData
-SDName: Npc_EscortAI
+SDName: EscortAI
 SD%Complete: 100
 SDComment:
 SDCategory: Npc
 EndScriptData */
 
 #include "precompiled.h"
-#include "npc_escortAI.h"
+#include "escort_ai.h"
 
 const float MAX_PLAYER_DISTANCE = 66.0f;
 

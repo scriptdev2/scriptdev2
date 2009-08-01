@@ -22,8 +22,8 @@ SDCategory: Auchindoun, Shadow Labyrinth
 EndScriptData */
 
 #include "precompiled.h"
-#include "../../../npc/npc_escortAI.h"
 #include "def_shadow_labyrinth.h"
+#include "escort_ai.h"
 
 #define SAY_INTRO       -1555000
 

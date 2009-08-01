@@ -23,7 +23,7 @@ EndScriptData
 */
 
 #include "precompiled.h"
-#include "../npc/npc_escortAI.h"
+#include "escort_ai.h"
 #include "ObjectMgr.h"
 
 /* ContentData

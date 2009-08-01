@@ -34,7 +34,7 @@ npc_wilda
 EndContentData */
 
 #include "precompiled.h"
-#include "../npc/npc_escortAI.h"
+#include "escort_ai.h"
 
 /*#####
 # mob_mature_netherwing_drake

@@ -30,7 +30,7 @@ go_acherus_soul_prison
 EndContentData */
 
 #include "precompiled.h"
-#include "../../npc/npc_escortAI.h"
+#include "escort_ai.h"
 
 /*######
 ## npc_a_special_surprise

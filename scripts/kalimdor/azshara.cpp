@@ -30,7 +30,7 @@ npc_loramus_thalipedes
 EndContentData */
 
 #include "precompiled.h"
-#include "../npc/npc_escortAI.h"
+#include "escort_ai.h"
 
 /*#####
 ## npc_rizzle_sprysprocket

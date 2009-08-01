@@ -27,7 +27,7 @@ npc_torek
 EndContentData */
 
 #include "precompiled.h"
-#include "../npc/npc_escortAI.h"
+#include "escort_ai.h"
 
 /*####
 # npc_ruul_snowhoof

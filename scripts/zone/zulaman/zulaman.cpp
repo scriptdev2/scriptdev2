@@ -27,7 +27,7 @@ EndContentData */
 
 #include "precompiled.h"
 #include "def_zulaman.h"
-#include "../../npc/npc_escortAI.h"
+#include "escort_ai.h"
 
 /*######
 ## npc_forest_frog

@@ -32,7 +32,7 @@ EndContentData */
 
 #include "precompiled.h"
 #include "def_blackrock_depths.h"
-#include "../../npc/npc_escortAI.h"
+#include "escort_ai.h"
 
 /*######
 ## go_shadowforge_brazier

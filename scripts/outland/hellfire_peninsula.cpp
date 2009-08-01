@@ -31,7 +31,7 @@ npc_wounded_blood_elf
 EndContentData */
 
 #include "precompiled.h"
-#include "../npc/npc_escortAI.h"
+#include "escort_ai.h"
 
 /*######
 ## npc_aeranas

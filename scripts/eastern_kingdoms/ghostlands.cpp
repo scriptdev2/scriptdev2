@@ -29,7 +29,7 @@ npc_rathis_tomber
 EndContentData */
 
 #include "precompiled.h"
-#include "../npc/npc_escortAI.h"
+#include "escort_ai.h"
 
 /*######
 ## npc_blood_knight_dawnstar

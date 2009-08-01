@@ -32,7 +32,7 @@ npc_wizzlecrank_shredder
 EndContentData */
 
 #include "precompiled.h"
-#include "../npc/npc_escortAI.h"
+#include "escort_ai.h"
 
 /*######
 ## npc_beaten_corpse
