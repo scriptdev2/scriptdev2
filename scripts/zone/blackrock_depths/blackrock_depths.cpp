@@ -326,11 +326,7 @@ struct MANGOS_DLL_DECL npc_grimstoneAI : public npc_escortAI
 
 CreatureAI* GetAI_npc_grimstone(Creature* pCreature)
 {
-    npc_grimstoneAI* Grimstone_AI = new npc_grimstoneAI(pCreature);
-
-    Grimstone_AI->FillPointMovementListForCreature();
-
-    return (CreatureAI*)Grimstone_AI;
+    return new npc_grimstoneAI(pCreature);
 }
 
 /*######
@@ -631,11 +627,7 @@ struct MANGOS_DLL_DECL npc_rocknotAI : public npc_escortAI
 
 CreatureAI* GetAI_npc_rocknot(Creature* pCreature)
 {
-    npc_rocknotAI* Rocknot_AI = new npc_rocknotAI(pCreature);
-
-    Rocknot_AI->FillPointMovementListForCreature();
-
-    return (CreatureAI*)Rocknot_AI;
+    return new npc_rocknotAI(pCreature);
 }
 
 bool ChooseReward_npc_rocknot(Player* pPlayer, Creature* pCreature, const Quest* pQuest, uint32 item)

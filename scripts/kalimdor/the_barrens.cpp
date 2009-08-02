@@ -146,11 +146,7 @@ struct MANGOS_DLL_DECL npc_giltharesAI : public npc_escortAI
 
 CreatureAI* GetAI_npc_gilthares(Creature* pCreature)
 {
-    npc_giltharesAI* pTempAI = new npc_giltharesAI(pCreature);
-
-    pTempAI->FillPointMovementListForCreature();
-
-    return (CreatureAI*)pTempAI;
+    return new npc_giltharesAI(pCreature);
 }
 
 bool QuestAccept_npc_gilthares(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
@@ -606,11 +602,7 @@ bool QuestAccept_npc_wizzlecranks_shredder(Player* pPlayer, Creature* pCreature,
 
 CreatureAI* GetAI_npc_wizzlecranks_shredder(Creature* pCreature)
 {
-    npc_wizzlecranks_shredderAI* thisAI = new npc_wizzlecranks_shredderAI(pCreature);
-
-    thisAI->FillPointMovementListForCreature();
-
-    return (CreatureAI*)thisAI;
+    return new npc_wizzlecranks_shredderAI(pCreature);
 }
 
 void AddSC_the_barrens()

@@ -207,11 +207,7 @@ struct MANGOS_DLL_DECL npc_clintar_dw_spiritAI : public npc_escortAI
 
 CreatureAI* GetAI_npc_clintar_dw_spirit(Creature* pCreature)
 {
-    npc_clintar_dw_spiritAI* tempAI = new npc_clintar_dw_spiritAI(pCreature);
-
-    tempAI->FillPointMovementListForCreature();
-
-    return (CreatureAI*)tempAI;
+    return new npc_clintar_dw_spiritAI(pCreature);
 }
 
 //we expect this spell to be triggered from spell casted at questAccept

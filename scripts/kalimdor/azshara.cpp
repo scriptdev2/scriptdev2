@@ -182,11 +182,7 @@ struct MANGOS_DLL_DECL npc_rizzle_sprysprocketAI : public npc_escortAI
 
 CreatureAI* GetAI_npc_rizzle_sprysprocket(Creature* pCreature)
 {
-    npc_rizzle_sprysprocketAI* thisAI = new npc_rizzle_sprysprocketAI(pCreature);
-
-    thisAI->FillPointMovementListForCreature();
-
-    return (CreatureAI*)thisAI;
+    return new npc_rizzle_sprysprocketAI(pCreature);
 }
 
 bool GossipHello_npc_rizzle_sprysprocket(Player* pPlayer, Creature* pCreature)

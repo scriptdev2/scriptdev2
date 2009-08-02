@@ -945,11 +945,7 @@ struct MANGOS_DLL_DECL npc_garments_of_questsAI : public npc_escortAI
 
 CreatureAI* GetAI_npc_garments_of_quests(Creature* pCreature)
 {
-    npc_garments_of_questsAI* tempAI = new npc_garments_of_questsAI(pCreature);
-
-    tempAI->FillPointMovementListForCreature();
-
-    return (CreatureAI*)tempAI;
+    return new npc_garments_of_questsAI(pCreature);
 }
 
 /*######

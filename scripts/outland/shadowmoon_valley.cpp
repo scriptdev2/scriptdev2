@@ -786,11 +786,7 @@ struct MANGOS_DLL_DECL npc_wildaAI : public npc_escortAI
 
 CreatureAI* GetAI_npc_wilda(Creature* pCreature)
 {
-    npc_wildaAI* pTempAI = new npc_wildaAI(pCreature);
-
-    pTempAI->FillPointMovementListForCreature();
-
-    return (CreatureAI*)pTempAI;
+    return new npc_wildaAI(pCreature);
 }
 
 bool QuestAccept_npc_wilda(Player* pPlayer, Creature* pCreature, const Quest* pQuest)

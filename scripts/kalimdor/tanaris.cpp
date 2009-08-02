@@ -212,11 +212,7 @@ struct MANGOS_DLL_DECL npc_custodian_of_timeAI : public npc_escortAI
 
 CreatureAI* GetAI_npc_custodian_of_time(Creature* pCreature)
 {
-    npc_custodian_of_timeAI* custodian_of_timeAI = new npc_custodian_of_timeAI(pCreature);
-
-    custodian_of_timeAI->FillPointMovementListForCreature();
-
-    return (CreatureAI*)custodian_of_timeAI;
+    return new npc_custodian_of_timeAI(pCreature);
 }
 
 /*######
@@ -326,11 +322,7 @@ struct MANGOS_DLL_DECL npc_oox17tnAI : public npc_escortAI
 
 CreatureAI* GetAI_npc_oox17tn(Creature* pCreature)
 {
-    npc_oox17tnAI* oox17AI = new npc_oox17tnAI(pCreature);
-
-    oox17AI->FillPointMovementListForCreature();
-
-    return (CreatureAI*)oox17AI;
+    return new npc_oox17tnAI(pCreature);
 }
 
 bool QuestAccept_npc_oox17tn(Player* pPlayer, Creature* pCreature, const Quest* pQuest)

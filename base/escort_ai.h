@@ -61,7 +61,7 @@ struct MANGOS_DLL_DECL npc_escortAI : public ScriptedAI
         void MovementInform(uint32, uint32);
 
         // EscortAI functions
-        void AddWaypoint(uint32 id, float x, float y, float z, uint32 WaitTimeMs = 0);
+        //void AddWaypoint(uint32 id, float x, float y, float z, uint32 WaitTimeMs = 0);
 
         void FillPointMovementListForCreature();
 

@@ -359,11 +359,7 @@ struct MANGOS_DLL_DECL npc_wounded_blood_elfAI : public npc_escortAI
 
 CreatureAI* GetAI_npc_wounded_blood_elf(Creature* pCreature)
 {
-    npc_wounded_blood_elfAI* welfAI = new npc_wounded_blood_elfAI(pCreature);
-
-    welfAI->FillPointMovementListForCreature();
-
-    return (CreatureAI*)welfAI;
+    return new npc_wounded_blood_elfAI(pCreature);
 }
 
 bool QuestAccept_npc_wounded_blood_elf(Player* pPlayer, Creature* pCreature, const Quest* pQuest)

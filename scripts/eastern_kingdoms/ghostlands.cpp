@@ -205,11 +205,7 @@ struct MANGOS_DLL_DECL npc_ranger_lilathaAI : public npc_escortAI
 
 CreatureAI* GetAI_npc_ranger_lilathaAI(Creature* pCreature)
 {
-    npc_ranger_lilathaAI* ranger_lilathaAI = new npc_ranger_lilathaAI(pCreature);
-
-    ranger_lilathaAI->FillPointMovementListForCreature();
-
-    return (CreatureAI*)ranger_lilathaAI;
+    return new npc_ranger_lilathaAI(pCreature);
 }
 
 bool QuestAccept_npc_ranger_lilatha(Player* pPlayer, Creature* pCreature, const Quest* pQuest)

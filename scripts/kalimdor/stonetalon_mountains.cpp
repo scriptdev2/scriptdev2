@@ -124,11 +124,7 @@ struct MANGOS_DLL_DECL npc_kayaAI : public npc_escortAI
 
 CreatureAI* GetAI_npc_kaya(Creature* pCreature)
 {
-    npc_kayaAI* kayaAI = new npc_kayaAI(pCreature);
-
-    kayaAI->FillPointMovementListForCreature();
-
-    return (CreatureAI*)kayaAI;
+    return new npc_kayaAI(pCreature);
 }
 
 bool QuestAccept_npc_kaya(Player* pPlayer, Creature* pCreature, Quest const* pQuest)

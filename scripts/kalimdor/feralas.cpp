@@ -142,11 +142,7 @@ struct MANGOS_DLL_DECL npc_oox22feAI : public npc_escortAI
 
 CreatureAI* GetAI_npc_oox22fe(Creature* pCreature)
 {
-    npc_oox22feAI* oox22AI = new npc_oox22feAI(pCreature);
-
-    oox22AI->FillPointMovementListForCreature();
-
-    return (CreatureAI*)oox22AI;
+    return new npc_oox22feAI(pCreature);
 }
 
 bool QuestAccept_npc_oox22fe(Player* pPlayer, Creature* pCreature, const Quest* pQuest)

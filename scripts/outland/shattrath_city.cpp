@@ -441,11 +441,7 @@ struct MANGOS_DLL_DECL npc_khadgars_servantAI : public npc_escortAI
 
 CreatureAI* GetAI_npc_khadgars_servant(Creature* pCreature)
 {
-    npc_khadgars_servantAI* servantAI = new npc_khadgars_servantAI(pCreature);
-
-    servantAI->FillPointMovementListForCreature();
-
-    return (CreatureAI*)servantAI;
+    return new npc_khadgars_servantAI(pCreature);
 }
 
 /*######

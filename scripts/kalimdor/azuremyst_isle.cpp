@@ -386,11 +386,7 @@ bool QuestAccept_npc_magwin(Player* pPlayer, Creature* pCreature, const Quest* p
 
 CreatureAI* GetAI_npc_magwinAI(Creature* pCreature)
 {
-    npc_magwinAI* magwinAI = new npc_magwinAI(pCreature);
-
-    magwinAI->FillPointMovementListForCreature();
-
-    return (CreatureAI*)magwinAI;
+    return new npc_magwinAI(pCreature);
 }
 
 /*######
