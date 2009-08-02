@@ -2332,6 +2332,18 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="system"
+			>
+			<File
+				RelativePath="..\system\ScriptLoader.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\system\ScriptLoader.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath="..\config.h"
 			>
