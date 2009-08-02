@@ -34,7 +34,6 @@ base/escort_ai.cpp \
 base/escort_ai.h \
 base/guard_ai.cpp \
 base/guard_ai.h \
-base/guards.cpp \
 base/simple_ai.cpp \
 base/simple_ai.h \
 include/precompiled.cpp \
@@ -422,6 +421,7 @@ scripts/world/boss_lethon.cpp \
 scripts/world/boss_taerar.cpp \
 scripts/world/boss_ysondre.cpp \
 scripts/world/go_scripts.cpp \
+scripts/world/guards.cpp \
 scripts/world/item_scripts.cpp \
 scripts/world/mob_generic_creature.cpp \
 scripts/world/npc_innkeeper.cpp \

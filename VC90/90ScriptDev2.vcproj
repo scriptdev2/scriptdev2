@@ -377,10 +377,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\base\guards.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\base\simple_ai.cpp"
 				>
 			</File>
@@ -2236,6 +2232,10 @@
 				</File>
 				<File
 					RelativePath="..\scripts\world\go_scripts.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\world\guards.cpp"
 					>
 				</File>
 				<File
