@@ -24,6 +24,7 @@ EndScriptData */
 /* ContentData
 npc_aeranas
 go_haaleshi_altar
+npc_naladu
 npc_wing_commander_dabiree
 npc_gryphoneer_windbellow
 npc_wing_commander_brack
@@ -227,6 +228,35 @@ bool GossipSelect_npc_gryphoneer_windbellow(Player* pPlayer, Creature* pCreature
 }
 
 /*######
+## npc_naladu
+######*/
+
+#define GOSSIP_NALADU_ITEM1 "Why don't you escape?"
+
+enum
+{
+    GOSSIP_TEXTID_NALADU1   = 9788
+};
+
+bool GossipHello_npc_naladu(Player* pPlayer, Creature* pCreature)
+{
+    if (pCreature->isQuestGiver())
+        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+
+    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_NALADU_ITEM1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+    pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
+    return true;
+}
+
+bool GossipSelect_npc_naladu(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+{
+    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
+        pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_NALADU1, pCreature->GetGUID());
+
+    return true;
+}
+
+/*######
 ## npc_wing_commander_brack
 ######*/
 
@@ -400,6 +430,12 @@ void AddSC_hellfire_peninsula()
     newscript->Name = "npc_gryphoneer_windbellow";
     newscript->pGossipHello = &GossipHello_npc_gryphoneer_windbellow;
     newscript->pGossipSelect = &GossipSelect_npc_gryphoneer_windbellow;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "npc_naladu";
+    newscript->pGossipHello = &GossipHello_npc_naladu;
+    newscript->pGossipSelect = &GossipSelect_npc_naladu;
     newscript->RegisterSelf();
 
     newscript = new Script;
