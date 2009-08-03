@@ -598,7 +598,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
 (-1409000,'%s performs one last service for Ragnaros.',0,2,0,0,'geddon EMOTE_SERVICE'),
 (-1409001,'%s goes into a killing frenzy!',0,2,0,0,'magmadar EMOTE_FRENZY'),
-(-1409002,'%s refuses to die while its master is in trouble.',0,2,0,0,'core rager EMOTE_AEGIS'),
+(-1409002,'%s refuses to die while its master is in trouble.',0,2,0,0,'core rager EMOTE_LOWHP'),
 
 (-1409003,'Reckless mortals, none may challenge the sons of the living flame!',8035,1,0,0,'majordomo SAY_AGGRO'),
 (-1409004,'The runes of warding have been destroyed! Hunt down the infedels my bretheren.',8039,1,0,0,'majordomo SAY_SPAWN'),
