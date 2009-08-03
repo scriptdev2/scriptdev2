@@ -238,7 +238,7 @@ struct MANGOS_DLL_DECL instance_molten_core : public ScriptedInstance
             case DATA_SULFURON:
                 return m_uiSulfuronGUID;
             case DATA_GOLEMAGG:
-                return m_uiSulfuronGUID;
+                return m_uiGolemaggGUID;
             case DATA_GARR:
                 return m_uiGarrGUID;
             case DATA_MAJORDOMO:
