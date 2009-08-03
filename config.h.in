@@ -38,6 +38,11 @@
   #define _VERSION "Revision [" REVISION_ID "] " REVISION_DATE " " REVISION_TIME
 #endif
 
+// The path to config files
+#ifndef SYSCONFDIR
+  #define SYSCONFDIR ""
+#endif
+
 #if PLATFORM == PLATFORM_WINDOWS
   #ifdef _WIN64
     #define _FULLVERSION _VERSION " (Win64)"
@@ -47,7 +52,7 @@
   #define _SCRIPTDEV2_CONFIG  "scriptdev2.conf"
 #else
   #define _FULLVERSION _VERSION " (Unix)"
-  #define _SCRIPTDEV2_CONFIG  "@sysconfdir@/scriptdev2.conf"
+  #define _SCRIPTDEV2_CONFIG  SYSCONFDIR"scriptdev2.conf"
 #endif
 
 #endif
