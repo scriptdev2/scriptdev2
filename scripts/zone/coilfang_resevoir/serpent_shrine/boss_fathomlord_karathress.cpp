@@ -104,9 +104,9 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
         {
             if (Creature* pAdvisor = (Creature*)Unit::GetUnit(*m_creature, m_auiAdvisors[i]))
             {
-                if (pAdvisor->isAlive() && pAdvisor->getVictim())
+                if (pAdvisor->getVictim())
                     pAdvisor->AI()->EnterEvadeMode();
-                else
+                else if (!pAdvisor->isAlive())
                     pAdvisor->Respawn();
             }
         }
@@ -190,23 +190,27 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
 
     void UpdateAI(const uint32 uiDiff)
     {
-        //Only if not incombat check if the event is started
-        if (!m_creature->isInCombat() && m_pInstance && m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == NOT_STARTED)
-        {
-            if (Unit* pTarget = Unit::GetUnit((*m_creature), m_pInstance->GetData64(DATA_KARATHRESS_STARTER)))
-            {
-                AttackStart(pTarget);
-                GetAdvisors();
-            }
-        }
-
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        {
+            //check if the event is started
+            if (m_pInstance && m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == IN_PROGRESS)
+            {
+                if (Unit* pTarget = Unit::GetUnit((*m_creature), m_pInstance->GetData64(DATA_KARATHRESS_STARTER)))
+                {
+                    AttackStart(pTarget);
+                    GetAdvisors();
+                }
+            }
             return;
+        }
 
         //someone evaded!
         if (m_pInstance && m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == NOT_STARTED)
+        {
             EnterEvadeMode();
+            return;
+        }
 
         //m_uiCataclysmicBolt_Timer
         if (m_uiCataclysmicBolt_Timer < uiDiff)
@@ -340,16 +344,17 @@ struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public ScriptedAI
 
     void UpdateAI(const uint32 uiDiff)
     {
-        //Only if not incombat check if the event is started
-        if (!m_creature->isInCombat() && m_pInstance && m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == IN_PROGRESS)
-        {
-            if (Unit* pTarget = Unit::GetUnit((*m_creature), m_pInstance->GetData64(DATA_KARATHRESS_STARTER)))
-                AttackStart(pTarget);
-        }
-
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        {
+            //check if the event is started
+            if (m_pInstance && m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == IN_PROGRESS)
+            {
+                if (Unit* pTarget = Unit::GetUnit((*m_creature), m_pInstance->GetData64(DATA_KARATHRESS_STARTER)))
+                    AttackStart(pTarget);
+            }
             return;
+        }
 
         //someone evaded!
         if (m_pInstance && m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == NOT_STARTED)
@@ -442,20 +447,24 @@ struct MANGOS_DLL_DECL boss_fathomguard_tidalvessAI : public ScriptedAI
 
     void UpdateAI(const uint32 uiDiff)
     {
-        //Only if not incombat check if the event is started
-        if (!m_creature->isInCombat() && m_pInstance && m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == IN_PROGRESS)
-        {
-            if (Unit* pTarget = Unit::GetUnit((*m_creature), m_pInstance->GetData64(DATA_KARATHRESS_STARTER)))
-                AttackStart(pTarget);
-        }
-
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        {
+            //check if the event is started
+            if (m_pInstance && m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == IN_PROGRESS)
+            {
+                if (Unit* pTarget = Unit::GetUnit((*m_creature), m_pInstance->GetData64(DATA_KARATHRESS_STARTER)))
+                    AttackStart(pTarget);
+            }
             return;
+        }
 
         //someone evaded!
         if (m_pInstance && m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == NOT_STARTED)
+        {
             EnterEvadeMode();
+            return;
+        }
 
         //m_FrostShock_Timer
         if (m_uiFrostShock_Timer < uiDiff)
@@ -514,20 +523,24 @@ struct MANGOS_DLL_DECL boss_fathomguard_caribdisAI : public ScriptedAI
 
     void UpdateAI(const uint32 uiDiff)
     {
-        //Only if not incombat check if the event is started
-        if (!m_creature->isInCombat() && m_pInstance && m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == IN_PROGRESS)
-        {
-            if (Unit* pTarget = Unit::GetUnit((*m_creature), m_pInstance->GetData64(DATA_KARATHRESS_STARTER)))
-                AttackStart(pTarget);
-        }
-
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        {
+            //check if the event is started
+            if (m_pInstance && m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == IN_PROGRESS)
+            {
+                if (Unit* pTarget = Unit::GetUnit((*m_creature), m_pInstance->GetData64(DATA_KARATHRESS_STARTER)))
+                    AttackStart(pTarget);
+            }
             return;
+        }
 
         //someone evaded!
         if (m_pInstance && m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == NOT_STARTED)
+        {
             EnterEvadeMode();
+            return;
+        }
 
         //m_uiWaterBoltVolley_Timer
         if (m_uiWaterBoltVolley_Timer < uiDiff)
