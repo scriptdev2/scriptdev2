@@ -395,6 +395,14 @@
 			<Filter
 				Name="eastern_kingdoms"
 				>
+				<Filter
+					Name="scarlet_enclave"
+					>
+					<File
+						RelativePath="..\scripts\eastern_kingdoms\scarlet_enclave\ebon_hold.cpp"
+						>
+					</File>
+				</Filter>
 				<File
 					RelativePath="..\scripts\eastern_kingdoms\alterac_mountains.cpp"
 					>
@@ -2031,14 +2039,6 @@
 					</File>
 					<File
 						RelativePath="..\scripts\zone\blackrock_depths\instance_blackrock_depths.cpp"
-						>
-					</File>
-				</Filter>
-				<Filter
-					Name="Ebon Hold"
-					>
-					<File
-						RelativePath="..\scripts\zone\ebon_hold\ebon_hold.cpp"
 						>
 					</File>
 				</Filter>

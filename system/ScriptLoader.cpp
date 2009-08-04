@@ -25,6 +25,7 @@ extern void AddSC_npc_professions();
 extern void AddSC_npcs_special();
 
 //eastern kingdoms
+extern void AddSC_ebon_hold();                              //scarlet_enclave
 //extern void AddSC_alterac_mountains();
 extern void AddSC_arathi_highlands();
 extern void AddSC_blasted_lands();
@@ -37,6 +38,7 @@ extern void AddSC_eversong_woods();
 extern void AddSC_ghostlands();
 extern void AddSC_hinterlands();
 extern void AddSC_ironforge();
+extern void AddSC_isle_of_queldanas();
 extern void AddSC_loch_modan();
 extern void AddSC_searing_gorge();
 extern void AddSC_silvermoon_city();
@@ -83,7 +85,6 @@ extern void AddSC_blades_edge_mountains();
 extern void AddSC_boss_doomlordkazzak();
 extern void AddSC_boss_doomwalker();
 extern void AddSC_hellfire_peninsula();
-extern void AddSC_isle_of_queldanas();
 extern void AddSC_nagrand();
 extern void AddSC_netherstorm();
 extern void AddSC_shadowmoon_valley();
@@ -214,9 +215,6 @@ extern void AddSC_boss_hungarfen();
 //Deadmines
 extern void AddSC_deadmines();
 extern void AddSC_instance_deadmines();
-
-//Scarlet Enclave
-extern void AddSC_ebon_hold();
 
 //Gruul's Lair
 extern void AddSC_boss_gruul();
@@ -490,6 +488,7 @@ void AddScripts()
     AddSC_npcs_special();
 
     //eastern kingdoms
+    AddSC_ebon_hold();                                      //scarlet_enclave
     //AddSC_alterac_mountains();
     AddSC_arathi_highlands();
     AddSC_blasted_lands();
@@ -502,6 +501,7 @@ void AddScripts()
     AddSC_ghostlands();
     AddSC_hinterlands();
     AddSC_ironforge();
+    AddSC_isle_of_queldanas();
     AddSC_loch_modan();
     AddSC_searing_gorge();
     AddSC_silvermoon_city();
@@ -548,7 +548,6 @@ void AddScripts()
     AddSC_boss_doomlordkazzak();
     AddSC_boss_doomwalker();
     AddSC_hellfire_peninsula();
-    AddSC_isle_of_queldanas();
     AddSC_nagrand();
     AddSC_netherstorm();
     AddSC_shadowmoon_valley();
@@ -679,9 +678,6 @@ void AddScripts()
     //Deadmines
     AddSC_deadmines();
     AddSC_instance_deadmines();
-
-    //Scarlet Enclave
-    AddSC_ebon_hold();
 
     //Gruul's Lair
     AddSC_boss_gruul();

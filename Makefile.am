@@ -69,6 +69,7 @@ scripts/eastern_kingdoms/undercity.cpp \
 scripts/eastern_kingdoms/western_plaguelands.cpp \
 scripts/eastern_kingdoms/westfall.cpp \
 scripts/eastern_kingdoms/wetlands.cpp \
+scripts/eastern_kingdoms/scarlet_enclave/ebon_hold.cpp \
 scripts/examples/example_creature.cpp \
 scripts/examples/example_escort.cpp \
 scripts/examples/example_gossip_codebox.cpp \
@@ -205,7 +206,6 @@ scripts/zone/coilfang_resevoir/underbog/boss_hungarfen.cpp \
 scripts/zone/deadmines/deadmines.cpp \
 scripts/zone/deadmines/def_deadmines.h \
 scripts/zone/deadmines/instance_deadmines.cpp \
-scripts/zone/ebon_hold/ebon_hold.cpp \
 scripts/zone/gruuls_lair/boss_gruul.cpp \
 scripts/zone/gruuls_lair/boss_high_king_maulgar.cpp \
 scripts/zone/gruuls_lair/def_gruuls_lair.h \
