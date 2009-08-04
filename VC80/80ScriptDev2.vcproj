@@ -1167,6 +1167,14 @@
 				<Filter
 					Name="blackfathom_deeps"
 					>
+					<File
+						RelativePath="..\scripts\kalimdor\blackfathom_deeps\def_blackfathom_deeps.h"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\kalimdor\blackfathom_deeps\instance_blackfathom_deeps.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="caverns_of_time"
@@ -1178,14 +1186,86 @@
 					<Filter
 						Name="dark_portal"
 						>
+						<File
+							RelativePath="..\scripts\kalimdor\caverns_of_time\dark_portal\boss_aeonus.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\kalimdor\caverns_of_time\dark_portal\boss_chrono_lord_deja.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\kalimdor\caverns_of_time\dark_portal\boss_temporus.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\kalimdor\caverns_of_time\dark_portal\dark_portal.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\kalimdor\caverns_of_time\dark_portal\def_dark_portal.h"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\kalimdor\caverns_of_time\dark_portal\instance_dark_portal.cpp"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="hyjal"
 						>
+						<File
+							RelativePath="..\scripts\kalimdor\caverns_of_time\hyjal\boss_archimonde.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\kalimdor\caverns_of_time\hyjal\def_hyjal.h"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\kalimdor\caverns_of_time\hyjal\hyjal.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\kalimdor\caverns_of_time\hyjal\hyjalAI.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\kalimdor\caverns_of_time\hyjal\hyjalAI.h"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\kalimdor\caverns_of_time\hyjal\instance_hyjal.cpp"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="old_hillsbrad"
 						>
+						<File
+							RelativePath="..\scripts\kalimdor\caverns_of_time\old_hillsbrad\boss_captain_skarloc.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\kalimdor\caverns_of_time\old_hillsbrad\boss_epoch_hunter.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\kalimdor\caverns_of_time\old_hillsbrad\boss_leutenant_drake.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\kalimdor\caverns_of_time\old_hillsbrad\def_old_hillsbrad.h"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\kalimdor\caverns_of_time\old_hillsbrad\instance_old_hillsbrad.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\kalimdor\caverns_of_time\old_hillsbrad\old_hillsbrad.cpp"
+							>
+						</File>
 					</Filter>
 				</Filter>
 				<Filter
@@ -1195,10 +1275,30 @@
 				<Filter
 					Name="maraudon"
 					>
+					<File
+						RelativePath="..\scripts\kalimdor\maraudon\boss_celebras_the_cursed.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\kalimdor\maraudon\boss_landslide.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\kalimdor\maraudon\boss_noxxion.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\kalimdor\maraudon\boss_princess_theradras.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="onyxias_lair"
 					>
+					<File
+						RelativePath="..\scripts\kalimdor\onyxias_lair\boss_onyxia.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="ragefire_chasm"
@@ -1207,6 +1307,14 @@
 				<Filter
 					Name="razorfen_downs"
 					>
+					<File
+						RelativePath="..\scripts\kalimdor\razorfen_downs\boss_amnennar_the_coldbringer.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\kalimdor\razorfen_downs\razorfen_downs.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="razorfen_kraul"
@@ -1215,18 +1323,102 @@
 				<Filter
 					Name="ruins_of_ahnqiraj"
 					>
+					<File
+						RelativePath="..\scripts\kalimdor\ruins_of_ahnqiraj\boss_ayamiss.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\kalimdor\ruins_of_ahnqiraj\boss_buru.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\kalimdor\ruins_of_ahnqiraj\boss_kurinnaxx.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\kalimdor\ruins_of_ahnqiraj\boss_moam.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\kalimdor\ruins_of_ahnqiraj\boss_ossirian.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\kalimdor\ruins_of_ahnqiraj\boss_rajaxx.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\kalimdor\ruins_of_ahnqiraj\instance_ruins_of_ahnqiraj.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="temple_of_ahnqiraj"
 					>
+					<File
+						RelativePath="..\scripts\kalimdor\temple_of_ahnqiraj\boss_bug_trio.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\kalimdor\temple_of_ahnqiraj\boss_cthun.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\kalimdor\temple_of_ahnqiraj\boss_fankriss.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\kalimdor\temple_of_ahnqiraj\boss_huhuran.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\kalimdor\temple_of_ahnqiraj\boss_ouro.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\kalimdor\temple_of_ahnqiraj\boss_sartura.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\kalimdor\temple_of_ahnqiraj\boss_skeram.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\kalimdor\temple_of_ahnqiraj\boss_twinemperors.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\kalimdor\temple_of_ahnqiraj\boss_viscidus.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\kalimdor\temple_of_ahnqiraj\def_temple_of_ahnqiraj.h"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\kalimdor\temple_of_ahnqiraj\instance_temple_of_ahnqiraj.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\kalimdor\temple_of_ahnqiraj\mob_anubisath_sentinel.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="wailing_caverns"
 					>
+					<File
+						RelativePath="..\scripts\kalimdor\wailing_caverns\instance_wailing_caverns.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="zulfarrak"
 					>
+					<File
+						RelativePath="..\scripts\kalimdor\zulfarrak\zulfarrak.cpp"
+						>
+					</File>
 				</Filter>
 				<File
 					RelativePath="..\scripts\kalimdor\ashenvale.cpp"
@@ -1553,18 +1745,6 @@
 				Name="zone"
 				>
 				<Filter
-					Name="Blackfathom Deeps"
-					>
-					<File
-						RelativePath="..\scripts\zone\blackfathom_deeps\def_blackfathom_deeps.h"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\blackfathom_deeps\instance_blackfathom_deeps.cpp"
-						>
-					</File>
-				</Filter>
-				<Filter
 					Name="Gruul&apos;s Lair"
 					>
 					<File
@@ -1581,58 +1761,6 @@
 					</File>
 					<File
 						RelativePath="..\scripts\zone\gruuls_lair\instance_gruuls_lair.cpp"
-						>
-					</File>
-				</Filter>
-				<Filter
-					Name="Ruins of Ahn&apos;Qiraj"
-					>
-					<File
-						RelativePath="..\scripts\zone\ruins_of_ahnqiraj\boss_ayamiss.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\ruins_of_ahnqiraj\boss_buru.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\ruins_of_ahnqiraj\boss_kurinnaxx.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\ruins_of_ahnqiraj\boss_moam.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\ruins_of_ahnqiraj\boss_ossirian.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\ruins_of_ahnqiraj\boss_rajaxx.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\ruins_of_ahnqiraj\instance_ruins_of_ahnqiraj.cpp"
-						>
-					</File>
-				</Filter>
-				<Filter
-					Name="Maraudon"
-					>
-					<File
-						RelativePath="..\scripts\zone\maraudon\boss_celebras_the_cursed.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\maraudon\boss_landslide.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\maraudon\boss_noxxion.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\maraudon\boss_princess_theradras.cpp"
 						>
 					</File>
 				</Filter>
@@ -1701,94 +1829,6 @@
 					</File>
 					<File
 						RelativePath="..\scripts\zone\naxxramas\instance_naxxramas.cpp"
-						>
-					</File>
-				</Filter>
-				<Filter
-					Name="Onyxia&apos;s Lair"
-					>
-					<File
-						RelativePath="..\scripts\zone\onyxias_lair\boss_onyxia.cpp"
-						>
-					</File>
-				</Filter>
-				<Filter
-					Name="Razorfen Downs"
-					>
-					<File
-						RelativePath="..\scripts\zone\razorfen_downs\boss_amnennar_the_coldbringer.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\razorfen_downs\razorfen_downs.cpp"
-						>
-					</File>
-				</Filter>
-				<Filter
-					Name="Temple of Ahn&apos;Qiraj"
-					>
-					<File
-						RelativePath="..\scripts\zone\temple_of_ahnqiraj\boss_bug_trio.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\temple_of_ahnqiraj\boss_cthun.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\temple_of_ahnqiraj\boss_fankriss.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\temple_of_ahnqiraj\boss_huhuran.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\temple_of_ahnqiraj\boss_ouro.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\temple_of_ahnqiraj\boss_sartura.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\temple_of_ahnqiraj\boss_skeram.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\temple_of_ahnqiraj\boss_twinemperors.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\temple_of_ahnqiraj\boss_viscidus.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\temple_of_ahnqiraj\def_temple_of_ahnqiraj.h"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\temple_of_ahnqiraj\instance_temple_of_ahnqiraj.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\temple_of_ahnqiraj\mob_anubisath_sentinel.cpp"
-						>
-					</File>
-				</Filter>
-				<Filter
-					Name="Wailing Caverns"
-					>
-					<File
-						RelativePath="..\scripts\zone\wailing_caverns\instance_wailing_caverns.cpp"
-						>
-					</File>
-				</Filter>
-				<Filter
-					Name="Zul&apos;Farrak"
-					>
-					<File
-						RelativePath="..\scripts\zone\zulfarrak\zulfarrak.cpp"
 						>
 					</File>
 				</Filter>
@@ -2171,98 +2211,6 @@
 						>
 						<File
 							RelativePath="..\scripts\zone\coilfang_resevoir\underbog\boss_hungarfen.cpp"
-							>
-						</File>
-					</Filter>
-				</Filter>
-				<Filter
-					Name="Caverns of Time"
-					>
-					<Filter
-						Name="The Dark Portal"
-						>
-						<File
-							RelativePath="..\scripts\zone\caverns_of_time\dark_portal\boss_aeonus.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\caverns_of_time\dark_portal\boss_chrono_lord_deja.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\caverns_of_time\dark_portal\boss_temporus.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\caverns_of_time\dark_portal\dark_portal.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\caverns_of_time\dark_portal\def_dark_portal.h"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\caverns_of_time\dark_portal\instance_dark_portal.cpp"
-							>
-						</File>
-					</Filter>
-					<Filter
-						Name="Battle for Mt. Hyjal"
-						>
-						<File
-							RelativePath="..\scripts\zone\caverns_of_time\hyjal\boss_archimonde.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\caverns_of_time\hyjal\def_hyjal.h"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\caverns_of_time\hyjal\hyjal.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\caverns_of_time\hyjal\hyjalAI.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\caverns_of_time\hyjal\hyjalAI.h"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\caverns_of_time\hyjal\instance_hyjal.cpp"
-							>
-						</File>
-					</Filter>
-					<Filter
-						Name="Culling of Stratholme"
-						>
-					</Filter>
-					<Filter
-						Name="Old Hillsbrad"
-						>
-						<File
-							RelativePath="..\scripts\zone\caverns_of_time\old_hillsbrad\boss_captain_skarloc.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\caverns_of_time\old_hillsbrad\boss_epoch_hunter.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\caverns_of_time\old_hillsbrad\boss_leutenant_drake.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\caverns_of_time\old_hillsbrad\def_old_hillsbrad.h"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\caverns_of_time\old_hillsbrad\instance_old_hillsbrad.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\caverns_of_time\old_hillsbrad\old_hillsbrad.cpp"
 							>
 						</File>
 					</Filter>
