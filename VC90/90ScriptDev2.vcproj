@@ -1517,6 +1517,14 @@
 					<Filter
 						Name="azjol-nerub"
 						>
+						<File
+							RelativePath="..\scripts\northrend\azjol-nerub\azjol-nerub\def_azjol-nerub.h"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\northrend\azjol-nerub\azjol-nerub\instance_azjol-nerub.cpp"
+							>
+						</File>
 					</Filter>
 				</Filter>
 				<Filter
@@ -1530,6 +1538,70 @@
 				<Filter
 					Name="naxxramas"
 					>
+					<File
+						RelativePath="..\scripts\northrend\naxxramas\boss_anubrekhan.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\northrend\naxxramas\boss_faerlina.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\northrend\naxxramas\boss_four_horsemen.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\northrend\naxxramas\boss_gluth.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\northrend\naxxramas\boss_gothik.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\northrend\naxxramas\boss_grobbulus.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\northrend\naxxramas\boss_heigan.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\northrend\naxxramas\boss_kelthuzad.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\northrend\naxxramas\boss_loatheb.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\northrend\naxxramas\boss_maexxna.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\northrend\naxxramas\boss_noth.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\northrend\naxxramas\boss_patchwerk.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\northrend\naxxramas\boss_razuvious.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\northrend\naxxramas\boss_sapphiron.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\northrend\naxxramas\boss_thaddius.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\northrend\naxxramas\instance_naxxramas.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="nexus"
@@ -1541,6 +1613,22 @@
 					<Filter
 						Name="nexus"
 						>
+						<File
+							RelativePath="..\scripts\northrend\nexus\nexus\boss_anomalus.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\northrend\nexus\nexus\boss_keristrasza.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\northrend\nexus\nexus\boss_ormorok.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\northrend\nexus\nexus\boss_telestra.cpp"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="oculus"
@@ -1550,6 +1638,18 @@
 				<Filter
 					Name="obsidian_sanctum"
 					>
+					<File
+						RelativePath="..\scripts\northrend\obsidian_sanctum\boss_sartharion.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\northrend\obsidian_sanctum\def_obsidian_sanctum.h"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\northrend\obsidian_sanctum\instance_obsidian_sanctum.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="ulduar"
@@ -1557,6 +1657,30 @@
 					<Filter
 						Name="halls_of_lightning"
 						>
+						<File
+							RelativePath="..\scripts\northrend\ulduar\halls_of_lightning\boss_bjarngrim.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\northrend\ulduar\halls_of_lightning\boss_ionar.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\northrend\ulduar\halls_of_lightning\boss_loken.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\northrend\ulduar\halls_of_lightning\boss_volkhan.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\northrend\ulduar\halls_of_lightning\def_halls_of_lightning.h"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\northrend\ulduar\halls_of_lightning\instance_halls_of_lightning.cpp"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="halls_of_stone"
@@ -1573,6 +1697,30 @@
 					<Filter
 						Name="utgarde_keep"
 						>
+						<File
+							RelativePath="..\scripts\northrend\utgarde_keep\utgarde_keep\boss_ingvar.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\northrend\utgarde_keep\utgarde_keep\boss_keleseth.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\northrend\utgarde_keep\utgarde_keep\boss_skarvald_and_dalronn.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\northrend\utgarde_keep\utgarde_keep\def_utgarde_keep.h"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\northrend\utgarde_keep\utgarde_keep\instance_utgarde_keep.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\northrend\utgarde_keep\utgarde_keep\utgarde_keep.cpp"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="utgarde_pinnacle"
@@ -1617,23 +1765,123 @@
 					<Filter
 						Name="auchenai_crypts"
 						>
+						<File
+							RelativePath="..\scripts\outland\aunchindoun\auchenai_crypts\boss_exarch_maladaar.cpp"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="mana_tombs"
 						>
+						<File
+							RelativePath="..\scripts\outland\aunchindoun\mana_tombs\boss_nexusprince_shaffar.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\aunchindoun\mana_tombs\boss_pandemonius.cpp"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="sethekk_halls"
 						>
+						<File
+							RelativePath="..\scripts\outland\aunchindoun\sethekk_halls\boss_darkweaver_syth.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\aunchindoun\sethekk_halls\boss_tailonking_ikiss.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\aunchindoun\sethekk_halls\def_sethekk_halls.h"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\aunchindoun\sethekk_halls\instance_sethekk_halls.cpp"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="shadow_labyrinth"
 						>
+						<File
+							RelativePath="..\scripts\outland\aunchindoun\shadow_labyrinth\boss_ambassador_hellmaw.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\aunchindoun\shadow_labyrinth\boss_blackheart_the_inciter.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\aunchindoun\shadow_labyrinth\boss_grandmaster_vorpil.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\aunchindoun\shadow_labyrinth\boss_murmur.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\aunchindoun\shadow_labyrinth\def_shadow_labyrinth.h"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\aunchindoun\shadow_labyrinth\instance_shadow_labyrinth.cpp"
+							>
+						</File>
 					</Filter>
 				</Filter>
 				<Filter
 					Name="black_temple"
 					>
+					<File
+						RelativePath="..\scripts\outland\black_temple\black_temple.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\outland\black_temple\boss_bloodboil.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\outland\black_temple\boss_illidan.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\outland\black_temple\boss_mother_shahraz.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\outland\black_temple\boss_reliquary_of_souls.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\outland\black_temple\boss_shade_of_akama.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\outland\black_temple\boss_supremus.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\outland\black_temple\boss_teron_gorefiend.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\outland\black_temple\boss_warlord_najentus.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\outland\black_temple\def_black_temple.h"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\outland\black_temple\illidari_council.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\outland\black_temple\instance_black_temple.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="coilfang_resevoir"
@@ -1641,23 +1889,95 @@
 					<Filter
 						Name="serpent_shrine"
 						>
+						<File
+							RelativePath="..\scripts\outland\coilfang_resevoir\serpent_shrine\boss_fathomlord_karathress.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\coilfang_resevoir\serpent_shrine\boss_hydross_the_unstable.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\coilfang_resevoir\serpent_shrine\boss_lady_vashj.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\coilfang_resevoir\serpent_shrine\boss_leotheras_the_blind.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\coilfang_resevoir\serpent_shrine\boss_morogrim_tidewalker.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\coilfang_resevoir\serpent_shrine\def_serpent_shrine.h"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\coilfang_resevoir\serpent_shrine\instance_serpent_shrine.cpp"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="slave_pens"
 						>
+						<File
+							RelativePath="..\scripts\outland\coilfang_resevoir\slave_pens\boss_rokmar.cpp"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="steam_vault"
 						>
+						<File
+							RelativePath="..\scripts\outland\coilfang_resevoir\steam_vault\boss_hydromancer_thespia.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\coilfang_resevoir\steam_vault\boss_mekgineer_steamrigger.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\coilfang_resevoir\steam_vault\boss_warlord_kalithresh.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\coilfang_resevoir\steam_vault\def_steam_vault.h"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\coilfang_resevoir\steam_vault\instance_steam_vault.cpp"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="underbog"
 						>
+						<File
+							RelativePath="..\scripts\outland\coilfang_resevoir\underbog\boss_hungarfen.cpp"
+							>
+						</File>
 					</Filter>
 				</Filter>
 				<Filter
 					Name="gruuls_lair"
 					>
+					<File
+						RelativePath="..\scripts\outland\gruuls_lair\boss_gruul.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\outland\gruuls_lair\boss_high_king_maulgar.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\outland\gruuls_lair\def_gruuls_lair.h"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\outland\gruuls_lair\instance_gruuls_lair.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="hellfire_citadel"
@@ -1665,18 +1985,89 @@
 					<Filter
 						Name="blood_furnace"
 						>
+						<File
+							RelativePath="..\scripts\outland\hellfire_citadel\blood_furnace\boss_broggok.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\hellfire_citadel\blood_furnace\boss_kelidan_the_breaker.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\hellfire_citadel\blood_furnace\boss_the_maker.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\hellfire_citadel\blood_furnace\def_blood_furnace.h"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\hellfire_citadel\blood_furnace\instance_blood_furnace.cpp"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="hellfire_ramparts"
 						>
+						<File
+							RelativePath="..\scripts\outland\hellfire_citadel\hellfire_ramparts\boss_nazan_and_vazruden.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\hellfire_citadel\hellfire_ramparts\boss_omor_the_unscarred.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\hellfire_citadel\hellfire_ramparts\boss_watchkeeper_gargolmar.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\hellfire_citadel\hellfire_ramparts\def_hellfire_ramparts.h"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\hellfire_citadel\hellfire_ramparts\instance_hellfire_ramparts.cpp"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="magtheridons_lair"
 						>
+						<File
+							RelativePath="..\scripts\outland\hellfire_citadel\magtheridons_lair\boss_magtheridon.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\hellfire_citadel\magtheridons_lair\def_magtheridons_lair.h"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\hellfire_citadel\magtheridons_lair\instance_magtheridons_lair.cpp"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="shattered_halls"
 						>
+						<File
+							RelativePath="..\scripts\outland\hellfire_citadel\shattered_halls\boss_nethekurse.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\hellfire_citadel\shattered_halls\boss_warbringer_omrogg.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\hellfire_citadel\shattered_halls\boss_warchief_kargath_bladefist.cpp">
+						</File>
+						<File
+							RelativePath="..\scripts\outland\hellfire_citadel\shattered_halls\def_shattered_halls.h"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\hellfire_citadel\shattered_halls\instance_shattered_halls.cpp"
+							>
+						</File>
 					</Filter>
 				</Filter>
 				<Filter
@@ -1685,18 +2076,94 @@
 					<Filter
 						Name="arcatraz"
 						>
+						<File
+							RelativePath="..\scripts\outland\tempest_keep\arcatraz\arcatraz.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\tempest_keep\arcatraz\boss_harbinger_skyriss.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\tempest_keep\arcatraz\def_arcatraz.h"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\tempest_keep\arcatraz\instance_arcatraz.cpp"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="botanica"
 						>
+						<File
+							RelativePath="..\scripts\outland\tempest_keep\botanica\boss_high_botanist_freywinn.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\tempest_keep\botanica\boss_laj.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\tempest_keep\botanica\boss_warp_splinter.cpp"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="the_eye"
 						>
+						<File
+							RelativePath="..\scripts\outland\tempest_keep\the_eye\boss_astromancer.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\tempest_keep\the_eye\boss_kaelthas.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\tempest_keep\the_eye\boss_void_reaver.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\tempest_keep\the_eye\def_the_eye.h"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\tempest_keep\the_eye\instance_the_eye.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\tempest_keep\the_eye\the_eye.cpp"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="the_mechanar"
 						>
+						<File
+							RelativePath="..\scripts\outland\tempest_keep\the_mechanar\boss_gatewatcher_gyrokill.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\tempest_keep\the_mechanar\boss_gatewatcher_ironhand.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\tempest_keep\the_mechanar\boss_nethermancer_sepethrea.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\tempest_keep\the_mechanar\boss_pathaleon_the_calculator.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\tempest_keep\the_mechanar\def_mechanar.h"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\tempest_keep\the_mechanar\instance_mechanar.cpp"
+							>
+						</File>
 					</Filter>
 				</Filter>
 				<File
@@ -1739,625 +2206,6 @@
 					RelativePath="..\scripts\outland\zangarmarsh.cpp"
 					>
 				</File>
-			</Filter>
-			<Filter
-				Name="zone"
-				>
-				<Filter
-					Name="Gruul&apos;s Lair"
-					>
-					<File
-						RelativePath="..\scripts\zone\gruuls_lair\boss_gruul.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\gruuls_lair\boss_high_king_maulgar.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\gruuls_lair\def_gruuls_lair.h"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\gruuls_lair\instance_gruuls_lair.cpp"
-						>
-					</File>
-				</Filter>
-				<Filter
-					Name="Naxxramas"
-					>
-					<File
-						RelativePath="..\scripts\zone\naxxramas\boss_anubrekhan.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\naxxramas\boss_faerlina.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\naxxramas\boss_four_horsemen.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\naxxramas\boss_gluth.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\naxxramas\boss_gothik.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\naxxramas\boss_grobbulus.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\naxxramas\boss_heigan.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\naxxramas\boss_kelthuzad.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\naxxramas\boss_loatheb.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\naxxramas\boss_maexxna.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\naxxramas\boss_noth.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\naxxramas\boss_patchwerk.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\naxxramas\boss_razuvious.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\naxxramas\boss_sapphiron.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\naxxramas\boss_thaddius.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\naxxramas\instance_naxxramas.cpp"
-						>
-					</File>
-				</Filter>
-				<Filter
-					Name="Aunchindoun"
-					>
-					<Filter
-						Name="Auchenai Crypts"
-						>
-						<File
-							RelativePath="..\scripts\zone\aunchindoun\auchenai_crypts\boss_exarch_maladaar.cpp"
-							>
-						</File>
-					</Filter>
-					<Filter
-						Name="Mana Tombs"
-						>
-						<File
-							RelativePath="..\scripts\zone\aunchindoun\mana_tombs\boss_nexusprince_shaffar.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\aunchindoun\mana_tombs\boss_pandemonius.cpp"
-							>
-						</File>
-					</Filter>
-					<Filter
-						Name="Sethekk Halls"
-						>
-						<File
-							RelativePath="..\scripts\zone\aunchindoun\sethekk_halls\boss_darkweaver_syth.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\aunchindoun\sethekk_halls\boss_tailonking_ikiss.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\aunchindoun\sethekk_halls\def_sethekk_halls.h"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\aunchindoun\sethekk_halls\instance_sethekk_halls.cpp"
-							>
-						</File>
-					</Filter>
-					<Filter
-						Name="Shadow Labyrinth"
-						>
-						<File
-							RelativePath="..\scripts\zone\aunchindoun\shadow_labyrinth\boss_ambassador_hellmaw.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\aunchindoun\shadow_labyrinth\boss_blackheart_the_inciter.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\aunchindoun\shadow_labyrinth\boss_grandmaster_vorpil.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\aunchindoun\shadow_labyrinth\boss_murmur.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\aunchindoun\shadow_labyrinth\def_shadow_labyrinth.h"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\aunchindoun\shadow_labyrinth\instance_shadow_labyrinth.cpp"
-							>
-						</File>
-					</Filter>
-				</Filter>
-				<Filter
-					Name="Black Temple"
-					>
-					<File
-						RelativePath="..\scripts\zone\black_temple\black_temple.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\black_temple\boss_bloodboil.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\black_temple\boss_illidan.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\black_temple\boss_mother_shahraz.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\black_temple\boss_reliquary_of_souls.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\black_temple\boss_shade_of_akama.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\black_temple\boss_supremus.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\black_temple\boss_teron_gorefiend.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\black_temple\boss_warlord_najentus.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\black_temple\def_black_temple.h"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\black_temple\illidari_council.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\black_temple\instance_black_temple.cpp"
-						>
-					</File>
-				</Filter>
-				<Filter
-					Name="Hellfire Citadel"
-					>
-					<Filter
-						Name="Blood Furnace"
-						>
-						<File
-							RelativePath="..\scripts\zone\hellfire_citadel\blood_furnace\boss_broggok.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\hellfire_citadel\blood_furnace\boss_kelidan_the_breaker.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\hellfire_citadel\blood_furnace\boss_the_maker.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\hellfire_citadel\blood_furnace\def_blood_furnace.h"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\hellfire_citadel\blood_furnace\instance_blood_furnace.cpp"
-							>
-						</File>
-					</Filter>
-					<Filter
-						Name="Magtheridon&apos;s lair"
-						>
-						<File
-							RelativePath="..\scripts\zone\hellfire_citadel\magtheridons_lair\boss_magtheridon.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\hellfire_citadel\magtheridons_lair\def_magtheridons_lair.h"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\hellfire_citadel\magtheridons_lair\instance_magtheridons_lair.cpp"
-							>
-						</File>
-					</Filter>
-					<Filter
-						Name="Hellfire Ramparts"
-						>
-						<File
-							RelativePath="..\scripts\zone\hellfire_citadel\hellfire_ramparts\boss_nazan_and_vazruden.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\hellfire_citadel\hellfire_ramparts\boss_omor_the_unscarred.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\hellfire_citadel\hellfire_ramparts\boss_watchkeeper_gargolmar.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\hellfire_citadel\hellfire_ramparts\def_hellfire_ramparts.h"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\hellfire_citadel\hellfire_ramparts\instance_hellfire_ramparts.cpp"
-							>
-						</File>
-					</Filter>
-					<Filter
-						Name="Shattered Halls"
-						>
-						<File
-							RelativePath="..\scripts\zone\hellfire_citadel\shattered_halls\boss_nethekurse.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\hellfire_citadel\shattered_halls\boss_warbringer_omrogg.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\hellfire_citadel\shattered_halls\boss_warchief_kargath_bladefist.cpp">
-						</File>
-						<File
-							RelativePath="..\scripts\zone\hellfire_citadel\shattered_halls\def_shattered_halls.h"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\hellfire_citadel\shattered_halls\instance_shattered_halls.cpp"
-							>
-						</File>
-					</Filter>
-				</Filter>
-				<Filter
-					Name="Tempest Keep"
-					>
-					<Filter
-						Name="Arcatraz"
-						>
-						<File
-							RelativePath="..\scripts\zone\tempest_keep\arcatraz\arcatraz.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\tempest_keep\arcatraz\boss_harbinger_skyriss.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\tempest_keep\arcatraz\def_arcatraz.h"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\tempest_keep\arcatraz\instance_arcatraz.cpp"
-							>
-						</File>
-					</Filter>
-					<Filter
-						Name="Botanica"
-						>
-						<File
-							RelativePath="..\scripts\zone\tempest_keep\botanica\boss_high_botanist_freywinn.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\tempest_keep\botanica\boss_laj.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\tempest_keep\botanica\boss_warp_splinter.cpp"
-							>
-						</File>
-					</Filter>
-					<Filter
-						Name="The Eye"
-						>
-						<File
-							RelativePath="..\scripts\zone\tempest_keep\the_eye\boss_astromancer.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\tempest_keep\the_eye\boss_kaelthas.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\tempest_keep\the_eye\boss_void_reaver.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\tempest_keep\the_eye\def_the_eye.h"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\tempest_keep\the_eye\instance_the_eye.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\tempest_keep\the_eye\the_eye.cpp"
-							>
-						</File>
-					</Filter>
-					<Filter
-						Name="The Mechanar"
-						>
-						<File
-							RelativePath="..\scripts\zone\tempest_keep\the_mechanar\boss_gatewatcher_gyrokill.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\tempest_keep\the_mechanar\boss_gatewatcher_ironhand.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\tempest_keep\the_mechanar\boss_nethermancer_sepethrea.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\tempest_keep\the_mechanar\boss_pathaleon_the_calculator.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\tempest_keep\the_mechanar\def_mechanar.h"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\tempest_keep\the_mechanar\instance_mechanar.cpp"
-							>
-						</File>
-					</Filter>
-				</Filter>
-				<Filter
-					Name="Coilfang Resevoir"
-					>
-					<Filter
-						Name="Serpent Shrine Cavern"
-						>
-						<File
-							RelativePath="..\scripts\zone\coilfang_resevoir\serpent_shrine\boss_fathomlord_karathress.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\coilfang_resevoir\serpent_shrine\boss_hydross_the_unstable.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\coilfang_resevoir\serpent_shrine\boss_lady_vashj.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\coilfang_resevoir\serpent_shrine\boss_leotheras_the_blind.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\coilfang_resevoir\serpent_shrine\boss_morogrim_tidewalker.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\coilfang_resevoir\serpent_shrine\def_serpent_shrine.h"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\coilfang_resevoir\serpent_shrine\instance_serpent_shrine.cpp"
-							>
-						</File>
-					</Filter>
-					<Filter
-						Name="Slave Pens"
-						>
-					</Filter>
-					<Filter
-						Name="Steam Vault"
-						>
-						<File
-							RelativePath="..\scripts\zone\coilfang_resevoir\steam_vault\boss_hydromancer_thespia.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\coilfang_resevoir\steam_vault\boss_mekgineer_steamrigger.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\coilfang_resevoir\steam_vault\boss_warlord_kalithresh.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\coilfang_resevoir\steam_vault\def_steam_vault.h"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\coilfang_resevoir\steam_vault\instance_steam_vault.cpp"
-							>
-						</File>
-					</Filter>
-					<Filter
-						Name="Underbog"
-						>
-						<File
-							RelativePath="..\scripts\zone\coilfang_resevoir\underbog\boss_hungarfen.cpp"
-							>
-						</File>
-					</Filter>
-				</Filter>
-				<Filter
-					Name="Azjol-Nerub"
-					>
-					<Filter
-						Name="Ahn&apos;kahet"
-						>
-					</Filter>
-					<Filter
-						Name="Azjol-Nerub"
-						>
-						<File
-							RelativePath="..\scripts\zone\azjol-nerub\azjol-nerub\def_azjol-nerub.h"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\azjol-nerub\azjol-nerub\instance_azjol-nerub.cpp"
-							>
-						</File>
-					</Filter>
-				</Filter>
-				<Filter
-					Name="Nexus"
-					>
-					<Filter
-						Name="Nexus"
-						>
-						<File
-							RelativePath="..\scripts\zone\nexus\nexus\boss_anomalus.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\nexus\nexus\boss_keristrasza.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\nexus\nexus\boss_ormorok.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\nexus\nexus\boss_telestra.cpp"
-							>
-						</File>
-					</Filter>
-					<Filter
-						Name="Oculus"
-						>
-					</Filter>
-					<Filter
-						Name="Eye of Eternity"
-						>
-					</Filter>
-				</Filter>
-				<Filter
-					Name="Ulduar"
-					>
-					<Filter
-						Name="Halls of Stone"
-						>
-					</Filter>
-					<Filter
-						Name="Halls of Lightning"
-						>
-						<File
-							RelativePath="..\scripts\zone\ulduar\halls_of_lightning\boss_bjarngrim.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\ulduar\halls_of_lightning\boss_ionar.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\ulduar\halls_of_lightning\boss_loken.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\ulduar\halls_of_lightning\boss_volkhan.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\ulduar\halls_of_lightning\def_halls_of_lightning.h"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\ulduar\halls_of_lightning\instance_halls_of_lightning.cpp"
-							>
-						</File>
-					</Filter>
-					<Filter
-						Name="Ulduar"
-						>
-					</Filter>
-				</Filter>
-				<Filter
-					Name="Utgarde Keep"
-					>
-					<Filter
-						Name="Utgarde Keep"
-						>
-						<File
-							RelativePath="..\scripts\zone\utgarde_keep\utgarde_keep\boss_ingvar.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\utgarde_keep\utgarde_keep\boss_keleseth.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\utgarde_keep\utgarde_keep\boss_skarvald_and_dalronn.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\utgarde_keep\utgarde_keep\def_utgarde_keep.h"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\utgarde_keep\utgarde_keep\instance_utgarde_keep.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\utgarde_keep\utgarde_keep\utgarde_keep.cpp"
-							>
-						</File>
-					</Filter>
-					<Filter
-						Name="Utgarde Pinnacle"
-						>
-					</Filter>
-				</Filter>
-				<Filter
-					Name="Obsidian Sanctum"
-					>
-					<File
-						RelativePath="..\scripts\zone\obsidian_sanctum\boss_sartharion.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\obsidian_sanctum\def_obsidian_sanctum.h"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\obsidian_sanctum\instance_obsidian_sanctum.cpp"
-						>
-					</File>
-				</Filter>
 			</Filter>
 			<Filter
 				Name="world"

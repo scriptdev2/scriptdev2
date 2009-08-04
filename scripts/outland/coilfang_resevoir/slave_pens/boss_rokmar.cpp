@@ -21,7 +21,8 @@ SDComment:
 SDCategory: Coilfang Resevoir, Slave Pens
 EndScriptData */
 
-#include "../../../creature/simple_ai.h"
+#include "precompiled.h"
+#include "simple_ai.h"
 
 #define SPELL_WATTER_SPIT     40086
 #define SPELL_GRIEVOUS_WOUND  31956
@@ -61,5 +62,5 @@ void AddSC_boss_rokmar_the_crackler()
     newscript = new Script;
     newscript->Name="boss_rokmar_the_crackler";
     newscript->GetAI = GetAI_boss_rokmar_the_crackler;
-    m_scripts[nrscripts++] = newscript;
+    newscript->RegisterSelf();
 }
