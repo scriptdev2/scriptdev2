@@ -25,7 +25,136 @@ extern void AddSC_npc_professions();
 extern void AddSC_npcs_special();
 
 //eastern kingdoms
+extern void AddSC_blackrock_depths();                       //blackrock_depths
+extern void AddSC_boss_ambassador_flamelash();
+extern void AddSC_boss_anubshiah();
+extern void AddSC_boss_draganthaurissan();
+extern void AddSC_boss_general_angerforge();
+extern void AddSC_boss_gorosh_the_dervish();
+extern void AddSC_boss_grizzle();
+extern void AddSC_boss_high_interrogator_gerstahn();
+extern void AddSC_boss_magmus();
+extern void AddSC_boss_tomb_of_seven();
+extern void AddSC_instance_blackrock_depths();
+extern void AddSC_boss_drakkisath();                        //blackrock_spire
+extern void AddSC_boss_halycon();
+extern void AddSC_boss_highlordomokk();
+extern void AddSC_boss_mothersmolderweb();
+extern void AddSC_boss_overlordwyrmthalak();
+extern void AddSC_boss_shadowvosh();
+extern void AddSC_boss_thebeast();
+extern void AddSC_boss_warmastervoone();
+extern void AddSC_boss_quatermasterzigris();
+extern void AddSC_boss_pyroguard_emberseer();
+extern void AddSC_boss_gyth();
+extern void AddSC_boss_rend_blackhand();
+extern void AddSC_boss_razorgore();                         //blackwing_lair
+extern void AddSC_boss_vael();
+extern void AddSC_boss_broodlord();
+extern void AddSC_boss_firemaw();
+extern void AddSC_boss_ebonroc();
+extern void AddSC_boss_flamegor();
+extern void AddSC_boss_chromaggus();
+extern void AddSC_boss_nefarian();
+extern void AddSC_boss_victor_nefarius();
+extern void AddSC_deadmines();                              //deadmines
+extern void AddSC_instance_deadmines();
+extern void AddSC_boss_attumen();                           //karazhan
+extern void AddSC_boss_curator();
+extern void AddSC_boss_maiden_of_virtue();
+extern void AddSC_boss_shade_of_aran();
+extern void AddSC_boss_malchezaar();
+extern void AddSC_boss_terestian_illhoof();
+extern void AddSC_netherspite_infernal();
+extern void AddSC_boss_moroes();
+extern void AddSC_bosses_opera();
+extern void AddSC_instance_karazhan();
+extern void AddSC_karazhan();
+extern void AddSC_boss_felblood_kaelthas();                 //magisters_terrace
+extern void AddSC_boss_selin_fireheart();
+extern void AddSC_boss_vexallus();
+extern void AddSC_boss_priestess_delrissa();
+extern void AddSC_instance_magisters_terrace();
+extern void AddSC_magisters_terrace();
+extern void AddSC_boss_lucifron();                          //molten_core
+extern void AddSC_boss_magmadar();
+extern void AddSC_boss_gehennas();
+extern void AddSC_boss_garr();
+extern void AddSC_boss_baron_geddon();
+extern void AddSC_boss_shazzrah();
+extern void AddSC_boss_golemagg();
+extern void AddSC_boss_sulfuron();
+extern void AddSC_boss_majordomo();
+extern void AddSC_boss_ragnaros();
+extern void AddSC_instance_molten_core();
+extern void AddSC_molten_core();
 extern void AddSC_ebon_hold();                              //scarlet_enclave
+extern void AddSC_boss_arcanist_doan();                     //scarlet_monastery
+extern void AddSC_boss_azshir_the_sleepless();
+extern void AddSC_boss_bloodmage_thalnos();
+extern void AddSC_boss_herod();
+extern void AddSC_boss_high_inquisitor_fairbanks();
+extern void AddSC_boss_houndmaster_loksey();
+extern void AddSC_boss_interrogator_vishas();
+extern void AddSC_boss_mograine_and_whitemane();
+extern void AddSC_boss_scorn();
+extern void AddSC_instance_scarlet_monastery();
+extern void AddSC_boss_darkmaster_gandling();               //scholomance
+extern void AddSC_boss_death_knight_darkreaver();
+extern void AddSC_boss_theolenkrastinov();
+extern void AddSC_boss_illuciabarov();
+extern void AddSC_boss_instructormalicia();
+extern void AddSC_boss_jandicebarov();
+extern void AddSC_boss_kormok();
+extern void AddSC_boss_lordalexeibarov();
+extern void AddSC_boss_lorekeeperpolkelt();
+extern void AddSC_boss_rasfrost();
+extern void AddSC_boss_theravenian();
+extern void AddSC_boss_vectus();
+extern void AddSC_instance_scholomance();
+extern void AddSC_shadowfang_keep();                        //shadowfang_keep
+extern void AddSC_instance_shadowfang_keep();
+extern void AddSC_boss_magistrate_barthilas();              //stratholme
+extern void AddSC_boss_maleki_the_pallid();
+extern void AddSC_boss_nerubenkan();
+extern void AddSC_boss_cannon_master_willey();
+extern void AddSC_boss_baroness_anastari();
+extern void AddSC_boss_ramstein_the_gorger();
+extern void AddSC_boss_timmy_the_cruel();
+extern void AddSC_boss_postmaster_malown();
+extern void AddSC_boss_baron_rivendare();
+extern void AddSC_boss_dathrohan_balnazzar();
+extern void AddSC_boss_order_of_silver_hand();
+extern void AddSC_instance_stratholme();
+extern void AddSC_stratholme();
+extern void AddSC_boss_brutallus();                         //sunwell_plateau
+extern void AddSC_boss_kalecgos();
+extern void AddSC_instance_sunwell_plateau();
+extern void AddSC_boss_ironaya();                           //uldaman
+extern void AddSC_uldaman();
+extern void AddSC_boss_akilzon();                           //zulaman
+extern void AddSC_boss_halazzi();
+extern void AddSC_boss_janalai();
+extern void AddSC_boss_malacrass();
+extern void AddSC_boss_nalorakk();
+extern void AddSC_instance_zulaman();
+extern void AddSC_zulaman();
+extern void AddSC_boss_zuljin();
+extern void AddSC_boss_arlokk();                            //zulgurub
+extern void AddSC_boss_gahzranka();
+extern void AddSC_boss_grilek();
+extern void AddSC_boss_hakkar();
+extern void AddSC_boss_hazzarah();
+extern void AddSC_boss_jeklik();
+extern void AddSC_boss_jindo();
+extern void AddSC_boss_mandokir();
+extern void AddSC_boss_marli();
+extern void AddSC_boss_ouro();
+extern void AddSC_boss_renataki();
+extern void AddSC_boss_thekal();
+extern void AddSC_boss_venoxis();
+extern void AddSC_boss_wushoolay();
+extern void AddSC_instance_zulgurub();
 //extern void AddSC_alterac_mountains();
 extern void AddSC_arathi_highlands();
 extern void AddSC_blasted_lands();
@@ -134,44 +263,6 @@ extern void AddSC_instance_black_temple();
 //Blackfathom Deeps
 extern void AddSC_instance_blackfathom_deeps();
 
-//Blackrock Depths
-extern void AddSC_blackrock_depths();
-extern void AddSC_boss_ambassador_flamelash();
-extern void AddSC_boss_anubshiah();
-extern void AddSC_boss_draganthaurissan();
-extern void AddSC_boss_general_angerforge();
-extern void AddSC_boss_gorosh_the_dervish();
-extern void AddSC_boss_grizzle();
-extern void AddSC_boss_high_interrogator_gerstahn();
-extern void AddSC_boss_magmus();
-extern void AddSC_boss_tomb_of_seven();
-extern void AddSC_instance_blackrock_depths();
-
-//Blackrock Spire
-extern void AddSC_boss_drakkisath();
-extern void AddSC_boss_halycon();
-extern void AddSC_boss_highlordomokk();
-extern void AddSC_boss_mothersmolderweb();
-extern void AddSC_boss_overlordwyrmthalak();
-extern void AddSC_boss_shadowvosh();
-extern void AddSC_boss_thebeast();
-extern void AddSC_boss_warmastervoone();
-extern void AddSC_boss_quatermasterzigris();
-extern void AddSC_boss_pyroguard_emberseer();
-extern void AddSC_boss_gyth();
-extern void AddSC_boss_rend_blackhand();
-
-//Blackwing lair
-extern void AddSC_boss_razorgore();
-extern void AddSC_boss_vael();
-extern void AddSC_boss_broodlord();
-extern void AddSC_boss_firemaw();
-extern void AddSC_boss_ebonroc();
-extern void AddSC_boss_flamegor();
-extern void AddSC_boss_chromaggus();
-extern void AddSC_boss_nefarian();
-extern void AddSC_boss_victor_nefarius();
-
 //Caverns of Time
 //Battle for Mt. Hyjal
 extern void AddSC_hyjal();
@@ -212,10 +303,6 @@ extern void AddSC_instance_steam_vault();
 //Underbog
 extern void AddSC_boss_hungarfen();
 
-//Deadmines
-extern void AddSC_deadmines();
-extern void AddSC_instance_deadmines();
-
 //Gruul's Lair
 extern void AddSC_boss_gruul();
 extern void AddSC_boss_high_king_maulgar();
@@ -244,48 +331,11 @@ extern void AddSC_boss_omor_the_unscarred();
 extern void AddSC_boss_watchkeeper_gargolmar();
 extern void AddSC_instance_ramparts();
 
-//Karazhan
-extern void AddSC_boss_attumen();
-extern void AddSC_boss_curator();
-extern void AddSC_boss_maiden_of_virtue();
-extern void AddSC_boss_shade_of_aran();
-extern void AddSC_boss_malchezaar();
-extern void AddSC_boss_terestian_illhoof();
-extern void AddSC_netherspite_infernal();
-extern void AddSC_boss_moroes();
-extern void AddSC_bosses_opera();
-extern void AddSC_instance_karazhan();
-extern void AddSC_karazhan();
-
-//Lower Blackrock Spire
-
-//Magister's Terrace
-extern void AddSC_boss_felblood_kaelthas();
-extern void AddSC_boss_selin_fireheart();
-extern void AddSC_boss_vexallus();
-extern void AddSC_boss_priestess_delrissa();
-extern void AddSC_instance_magisters_terrace();
-extern void AddSC_magisters_terrace();
-
 //Maraudon
 extern void AddSC_boss_celebras_the_cursed();
 extern void AddSC_boss_landslide();
 extern void AddSC_boss_noxxion();
 extern void AddSC_boss_ptheradras();
-
-//Molten core
-extern void AddSC_boss_lucifron();
-extern void AddSC_boss_magmadar();
-extern void AddSC_boss_gehennas();
-extern void AddSC_boss_garr();
-extern void AddSC_boss_baron_geddon();
-extern void AddSC_boss_shazzrah();
-extern void AddSC_boss_golemagg();
-extern void AddSC_boss_sulfuron();
-extern void AddSC_boss_majordomo();
-extern void AddSC_boss_ragnaros();
-extern void AddSC_instance_molten_core();
-extern void AddSC_molten_core();
 
 //Naxxramas
 extern void AddSC_boss_anubrekhan();
@@ -326,58 +376,7 @@ extern void AddSC_razorfen_downs();
 
 //Ruins of Ahn'Qiraj
 
-//Scarlet Monastery
-extern void AddSC_boss_arcanist_doan();
-extern void AddSC_boss_azshir_the_sleepless();
-extern void AddSC_boss_bloodmage_thalnos();
-extern void AddSC_boss_herod();
-extern void AddSC_boss_high_inquisitor_fairbanks();
-extern void AddSC_boss_houndmaster_loksey();
-extern void AddSC_boss_interrogator_vishas();
-extern void AddSC_boss_mograine_and_whitemane();
-extern void AddSC_boss_scorn();
-extern void AddSC_instance_scarlet_monastery();
-
-//Scholomance
-extern void AddSC_boss_darkmaster_gandling();
-extern void AddSC_boss_death_knight_darkreaver();
-extern void AddSC_boss_theolenkrastinov();
-extern void AddSC_boss_illuciabarov();
-extern void AddSC_boss_instructormalicia();
-extern void AddSC_boss_jandicebarov();
-extern void AddSC_boss_kormok();
-extern void AddSC_boss_lordalexeibarov();
-extern void AddSC_boss_lorekeeperpolkelt();
-extern void AddSC_boss_rasfrost();
-extern void AddSC_boss_theravenian();
-extern void AddSC_boss_vectus();
-extern void AddSC_instance_scholomance();
-
-//Shadowfang keep
-extern void AddSC_shadowfang_keep();
-extern void AddSC_instance_shadowfang_keep();
-
-//Stratholme
-extern void AddSC_boss_magistrate_barthilas();
-extern void AddSC_boss_maleki_the_pallid();
-extern void AddSC_boss_nerubenkan();
-extern void AddSC_boss_cannon_master_willey();
-extern void AddSC_boss_baroness_anastari();
-extern void AddSC_boss_ramstein_the_gorger();
-extern void AddSC_boss_timmy_the_cruel();
-extern void AddSC_boss_postmaster_malown();
-extern void AddSC_boss_baron_rivendare();
-extern void AddSC_boss_dathrohan_balnazzar();
-extern void AddSC_boss_order_of_silver_hand();
-extern void AddSC_instance_stratholme();
-extern void AddSC_stratholme();
-
 //Sunken Temple
-
-//Sunwell Plateau
-extern void AddSC_boss_brutallus();
-extern void AddSC_boss_kalecgos();
-extern void AddSC_instance_sunwell_plateau();
 
 //Tempest Keep
 //Arcatraz
@@ -414,10 +413,6 @@ extern void AddSC_boss_twinemperors();
 extern void AddSC_mob_anubisath_sentinel();
 extern void AddSC_instance_temple_of_ahnqiraj();
 
-//Uldaman
-extern void AddSC_boss_ironaya();
-extern void AddSC_uldaman();
-
 //Ulduar
 extern void AddSC_boss_bjarngrim();
 extern void AddSC_boss_ionar();
@@ -437,33 +432,6 @@ extern void AddSC_utgarde_keep();
 
 //Zul'Farrak
 extern void AddSC_zulfarrak();
-
-//Zul'Gurub
-extern void AddSC_boss_arlokk();
-extern void AddSC_boss_gahzranka();
-extern void AddSC_boss_grilek();
-extern void AddSC_boss_hakkar();
-extern void AddSC_boss_hazzarah();
-extern void AddSC_boss_jeklik();
-extern void AddSC_boss_jindo();
-extern void AddSC_boss_mandokir();
-extern void AddSC_boss_marli();
-extern void AddSC_boss_ouro();
-extern void AddSC_boss_renataki();
-extern void AddSC_boss_thekal();
-extern void AddSC_boss_venoxis();
-extern void AddSC_boss_wushoolay();
-extern void AddSC_instance_zulgurub();
-
-//Zul'Aman
-extern void AddSC_boss_akilzon();
-extern void AddSC_boss_halazzi();
-extern void AddSC_boss_janalai();
-extern void AddSC_boss_malacrass();
-extern void AddSC_boss_nalorakk();
-extern void AddSC_instance_zulaman();
-extern void AddSC_zulaman();
-extern void AddSC_boss_zuljin();
 
 void AddScripts()
 {
@@ -488,7 +456,136 @@ void AddScripts()
     AddSC_npcs_special();
 
     //eastern kingdoms
+    AddSC_blackrock_depths();                               //blackrock_depths
+    AddSC_boss_ambassador_flamelash();
+    AddSC_boss_anubshiah();
+    AddSC_boss_draganthaurissan();
+    AddSC_boss_general_angerforge();
+    AddSC_boss_gorosh_the_dervish();
+    AddSC_boss_grizzle();
+    AddSC_boss_high_interrogator_gerstahn();
+    AddSC_boss_magmus();
+    AddSC_boss_tomb_of_seven();
+    AddSC_instance_blackrock_depths();
+    AddSC_boss_drakkisath();                                //blackrock_spire
+    AddSC_boss_halycon();
+    AddSC_boss_highlordomokk();
+    AddSC_boss_mothersmolderweb();
+    AddSC_boss_overlordwyrmthalak();
+    AddSC_boss_shadowvosh();
+    AddSC_boss_thebeast();
+    AddSC_boss_warmastervoone();
+    AddSC_boss_quatermasterzigris();
+    AddSC_boss_pyroguard_emberseer();
+    AddSC_boss_gyth();
+    AddSC_boss_rend_blackhand();
+    AddSC_boss_razorgore();                                 //blackwing_lair
+    AddSC_boss_vael();
+    AddSC_boss_broodlord();
+    AddSC_boss_firemaw();
+    AddSC_boss_ebonroc();
+    AddSC_boss_flamegor();
+    AddSC_boss_chromaggus();
+    AddSC_boss_nefarian();
+    AddSC_boss_victor_nefarius();
+    AddSC_deadmines();                                      //deadmines
+    AddSC_instance_deadmines();
+    AddSC_boss_attumen();                                   //karazhan
+    AddSC_boss_curator();
+    AddSC_boss_maiden_of_virtue();
+    AddSC_boss_shade_of_aran();
+    AddSC_boss_malchezaar();
+    AddSC_boss_terestian_illhoof();
+    AddSC_netherspite_infernal();
+    AddSC_boss_moroes();
+    AddSC_bosses_opera();
+    AddSC_instance_karazhan();
+    AddSC_karazhan();
+    AddSC_boss_felblood_kaelthas();                         //magisters_terrace
+    AddSC_boss_selin_fireheart();
+    AddSC_boss_vexallus();
+    AddSC_boss_priestess_delrissa();
+    AddSC_instance_magisters_terrace();
+    AddSC_magisters_terrace();
+    AddSC_boss_lucifron();                                  //molten_core
+    AddSC_boss_magmadar();
+    AddSC_boss_gehennas();
+    AddSC_boss_garr();
+    AddSC_boss_baron_geddon();
+    AddSC_boss_shazzrah();
+    AddSC_boss_golemagg();
+    AddSC_boss_sulfuron();
+    AddSC_boss_majordomo();
+    AddSC_boss_ragnaros();
+    AddSC_instance_molten_core();
+    AddSC_molten_core();
     AddSC_ebon_hold();                                      //scarlet_enclave
+    AddSC_boss_arcanist_doan();                             //scarlet_monastery
+    AddSC_boss_azshir_the_sleepless();
+    AddSC_boss_bloodmage_thalnos();
+    AddSC_boss_herod();
+    AddSC_boss_high_inquisitor_fairbanks();
+    AddSC_boss_houndmaster_loksey();
+    AddSC_boss_interrogator_vishas();
+    AddSC_boss_mograine_and_whitemane();
+    AddSC_boss_scorn();
+    AddSC_instance_scarlet_monastery();
+    AddSC_boss_darkmaster_gandling();                       //scholomance
+    AddSC_boss_death_knight_darkreaver();
+    AddSC_boss_theolenkrastinov();
+    AddSC_boss_illuciabarov();
+    AddSC_boss_instructormalicia();
+    AddSC_boss_jandicebarov();
+    AddSC_boss_kormok();
+    AddSC_boss_lordalexeibarov();
+    AddSC_boss_lorekeeperpolkelt();
+    AddSC_boss_rasfrost();
+    AddSC_boss_theravenian();
+    AddSC_boss_vectus();
+    AddSC_instance_scholomance();
+    AddSC_shadowfang_keep();                                //shadowfang_keep
+    AddSC_instance_shadowfang_keep();
+    AddSC_boss_magistrate_barthilas();                      //stratholme
+    AddSC_boss_maleki_the_pallid();
+    AddSC_boss_nerubenkan();
+    AddSC_boss_cannon_master_willey();
+    AddSC_boss_baroness_anastari();
+    AddSC_boss_ramstein_the_gorger();
+    AddSC_boss_timmy_the_cruel();
+    AddSC_boss_postmaster_malown();
+    AddSC_boss_baron_rivendare();
+    AddSC_boss_dathrohan_balnazzar();
+    AddSC_boss_order_of_silver_hand();
+    AddSC_instance_stratholme();
+    AddSC_stratholme();
+    AddSC_boss_brutallus();                                 //sunwell_plateau
+    AddSC_boss_kalecgos();
+    AddSC_instance_sunwell_plateau();
+    AddSC_boss_ironaya();                                   //uldaman
+    AddSC_uldaman();
+    AddSC_boss_akilzon();                                   //zulaman
+    AddSC_boss_halazzi();
+    AddSC_boss_janalai();
+    AddSC_boss_malacrass();
+    AddSC_boss_nalorakk();
+    AddSC_instance_zulaman();
+    AddSC_zulaman();
+    AddSC_boss_zuljin();
+    AddSC_boss_arlokk();                                    //zulgurub
+    AddSC_boss_gahzranka();
+    AddSC_boss_grilek();
+    AddSC_boss_hakkar();
+    AddSC_boss_hazzarah();
+    AddSC_boss_jeklik();
+    AddSC_boss_jindo();
+    AddSC_boss_mandokir();
+    AddSC_boss_marli();
+    AddSC_boss_ouro();
+    AddSC_boss_renataki();
+    AddSC_boss_thekal();
+    AddSC_boss_venoxis();
+    AddSC_boss_wushoolay();
+    AddSC_instance_zulgurub();
     //AddSC_alterac_mountains();
     AddSC_arathi_highlands();
     AddSC_blasted_lands();
@@ -597,44 +694,6 @@ void AddScripts()
     //Blackfathom Deeps
     AddSC_instance_blackfathom_deeps();
 
-    //Blackrock Depths
-    AddSC_blackrock_depths();
-    AddSC_boss_ambassador_flamelash();
-    AddSC_boss_anubshiah();
-    AddSC_boss_draganthaurissan();
-    AddSC_boss_general_angerforge();
-    AddSC_boss_gorosh_the_dervish();
-    AddSC_boss_grizzle();
-    AddSC_boss_high_interrogator_gerstahn();
-    AddSC_boss_magmus();
-    AddSC_boss_tomb_of_seven();
-    AddSC_instance_blackrock_depths();
-
-    //Blackrock Spire
-    AddSC_boss_drakkisath();
-    AddSC_boss_halycon();
-    AddSC_boss_highlordomokk();
-    AddSC_boss_mothersmolderweb();
-    AddSC_boss_overlordwyrmthalak();
-    AddSC_boss_shadowvosh();
-    AddSC_boss_thebeast();
-    AddSC_boss_warmastervoone();
-    AddSC_boss_quatermasterzigris();
-    AddSC_boss_pyroguard_emberseer();
-    AddSC_boss_gyth();
-    AddSC_boss_rend_blackhand();
-
-    //Blackwing lair
-    AddSC_boss_razorgore();
-    AddSC_boss_vael();
-    AddSC_boss_broodlord();
-    AddSC_boss_firemaw();
-    AddSC_boss_ebonroc();
-    AddSC_boss_flamegor();
-    AddSC_boss_chromaggus();
-    AddSC_boss_nefarian();
-    AddSC_boss_victor_nefarius();
-
     //Caverns of Time
     //Battle for Mt. Hyjal
     AddSC_hyjal();
@@ -675,10 +734,6 @@ void AddScripts()
     //Underbog
     AddSC_boss_hungarfen();
 
-    //Deadmines
-    AddSC_deadmines();
-    AddSC_instance_deadmines();
-
     //Gruul's Lair
     AddSC_boss_gruul();
     AddSC_boss_high_king_maulgar();
@@ -707,48 +762,11 @@ void AddScripts()
     AddSC_boss_watchkeeper_gargolmar();
     AddSC_instance_ramparts();
 
-    //Karazhan
-    AddSC_boss_attumen();
-    AddSC_boss_curator();
-    AddSC_boss_maiden_of_virtue();
-    AddSC_boss_shade_of_aran();
-    AddSC_boss_malchezaar();
-    AddSC_boss_terestian_illhoof();
-    AddSC_netherspite_infernal();
-    AddSC_boss_moroes();
-    AddSC_bosses_opera();
-    AddSC_instance_karazhan();
-    AddSC_karazhan();
-
-    //Lower Blackrock Spire
-
-    //Magister's Terrace
-    AddSC_boss_felblood_kaelthas();
-    AddSC_boss_selin_fireheart();
-    AddSC_boss_vexallus();
-    AddSC_boss_priestess_delrissa();
-    AddSC_instance_magisters_terrace();
-    AddSC_magisters_terrace();
-
     //Maraudon
     AddSC_boss_celebras_the_cursed();
     AddSC_boss_landslide();
     AddSC_boss_noxxion();
     AddSC_boss_ptheradras();
-
-    //Molten core
-    AddSC_boss_lucifron();
-    AddSC_boss_magmadar();
-    AddSC_boss_gehennas();
-    AddSC_boss_garr();
-    AddSC_boss_baron_geddon();
-    AddSC_boss_shazzrah();
-    AddSC_boss_golemagg();
-    AddSC_boss_sulfuron();
-    AddSC_boss_majordomo();
-    AddSC_boss_ragnaros();
-    AddSC_instance_molten_core();
-    AddSC_molten_core();
 
     //Naxxramas
     AddSC_boss_anubrekhan();
@@ -789,58 +807,7 @@ void AddScripts()
 
     //Ruins of Ahn'Qiraj
 
-    //Scarlet Monastery
-    AddSC_boss_arcanist_doan();
-    AddSC_boss_azshir_the_sleepless();
-    AddSC_boss_bloodmage_thalnos();
-    AddSC_boss_herod();
-    AddSC_boss_high_inquisitor_fairbanks();
-    AddSC_boss_houndmaster_loksey();
-    AddSC_boss_interrogator_vishas();
-    AddSC_boss_mograine_and_whitemane();
-    AddSC_boss_scorn();
-    AddSC_instance_scarlet_monastery();
-
-    //Scholomance
-    AddSC_boss_darkmaster_gandling();
-    AddSC_boss_death_knight_darkreaver();
-    AddSC_boss_theolenkrastinov();
-    AddSC_boss_illuciabarov();
-    AddSC_boss_instructormalicia();
-    AddSC_boss_jandicebarov();
-    AddSC_boss_kormok();
-    AddSC_boss_lordalexeibarov();
-    AddSC_boss_lorekeeperpolkelt();
-    AddSC_boss_rasfrost();
-    AddSC_boss_theravenian();
-    AddSC_boss_vectus();
-    AddSC_instance_scholomance();
-
-    //Shadowfang keep
-    AddSC_shadowfang_keep();
-    AddSC_instance_shadowfang_keep();
-
-    //Stratholme
-    AddSC_boss_magistrate_barthilas();
-    AddSC_boss_maleki_the_pallid();
-    AddSC_boss_nerubenkan();
-    AddSC_boss_cannon_master_willey();
-    AddSC_boss_baroness_anastari();
-    AddSC_boss_ramstein_the_gorger();
-    AddSC_boss_timmy_the_cruel();
-    AddSC_boss_postmaster_malown();
-    AddSC_boss_baron_rivendare();
-    AddSC_boss_dathrohan_balnazzar();
-    AddSC_boss_order_of_silver_hand();
-    AddSC_instance_stratholme();
-    AddSC_stratholme();
-
     //Sunken Temple
-
-    //Sunwell Plateau
-    AddSC_boss_brutallus();
-    AddSC_boss_kalecgos();
-    AddSC_instance_sunwell_plateau();
 
     //Tempest Keep
     //Arcatraz
@@ -877,10 +844,6 @@ void AddScripts()
     AddSC_mob_anubisath_sentinel();
     AddSC_instance_temple_of_ahnqiraj();
 
-    //Uldaman
-    AddSC_boss_ironaya();
-    AddSC_uldaman();
-
     //Ulduar
     AddSC_boss_bjarngrim();
     AddSC_boss_ionar();
@@ -900,31 +863,4 @@ void AddScripts()
 
     //Zul'Farrak
     AddSC_zulfarrak();
-
-    //Zul'Gurub
-    AddSC_boss_arlokk();
-    AddSC_boss_gahzranka();
-    AddSC_boss_grilek();
-    AddSC_boss_hakkar();
-    AddSC_boss_hazzarah();
-    AddSC_boss_jeklik();
-    AddSC_boss_jindo();
-    AddSC_boss_mandokir();
-    AddSC_boss_marli();
-    AddSC_boss_ouro();
-    AddSC_boss_renataki();
-    AddSC_boss_thekal();
-    AddSC_boss_venoxis();
-    AddSC_boss_wushoolay();
-    AddSC_instance_zulgurub();
-
-    //Zul'Aman
-    AddSC_boss_akilzon();
-    AddSC_boss_halazzi();
-    AddSC_boss_janalai();
-    AddSC_boss_malacrass();
-    AddSC_boss_nalorakk();
-    AddSC_instance_zulaman();
-    AddSC_zulaman();
-    AddSC_boss_zuljin();
 }
