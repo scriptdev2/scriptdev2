@@ -429,8 +429,9 @@ scripts/world/npc_professions.cpp \
 scripts/world/npcs_special.cpp \
 system/ScriptLoader.cpp \
 system/ScriptLoader.h \
-revision.h \
-system.cpp
+system/system.cpp \
+system/system.h \
+revision.h
 
 
 ## magic to include revision data in SD2 version string

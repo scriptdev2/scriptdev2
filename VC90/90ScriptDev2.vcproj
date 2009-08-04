@@ -2343,6 +2343,14 @@
 				RelativePath="..\system\ScriptLoader.h"
 				>
 			</File>
+			<File
+				RelativePath="..\system\system.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\system\system.h"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath="..\config.h"
@@ -2402,10 +2410,6 @@
 		</File>
 		<File
 			RelativePath="..\ScriptMgr.h"
-			>
-		</File>
-		<File
-			RelativePath="..\system.cpp"
 			>
 		</File>
 	</Files>
