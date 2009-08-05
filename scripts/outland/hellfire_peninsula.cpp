@@ -24,9 +24,10 @@ EndScriptData */
 /* ContentData
 npc_aeranas
 go_haaleshi_altar
-npc_naladu
-npc_wing_commander_dabiree
 npc_gryphoneer_windbellow
+npc_naladu
+npc_tracy_proudwell
+npc_wing_commander_dabiree
 npc_wing_commander_brack
 npc_wounded_blood_elf
 EndContentData */
@@ -126,56 +127,6 @@ bool GOHello_go_haaleshi_altar(Player* pPlayer, GameObject* pGo)
 }
 
 /*######
-## npc_wing_commander_dabiree
-######*/
-
-enum
-{
-    SPELL_TAXI_TO_GATEWAYS      = 33768,
-    SPELL_TAXI_TO_SHATTER       = 35069,
-    QUEST_MISSION_GATEWAYS_A    = 10146,
-    QUEST_SHATTER_POINT         = 10340
-};
-
-#define GOSSIP_ITEM1_DAB        "Fly me to Murketh and Shaadraz Gateways"
-#define GOSSIP_ITEM2_DAB        "Fly me to Shatter Point"
-
-bool GossipHello_npc_wing_commander_dabiree(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
-
-    //Mission: The Murketh and Shaadraz Gateways
-    if (pPlayer->GetQuestStatus(QUEST_MISSION_GATEWAYS_A) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM1_DAB, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-
-    //Shatter Point
-    if (pPlayer->GetQuestStatus(QUEST_SHATTER_POINT) == QUEST_STATUS_COMPLETE ||
-        pPlayer->GetQuestRewardStatus(QUEST_SHATTER_POINT))
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM2_DAB, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-
-    pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
-    return true;
-}
-
-bool GossipSelect_npc_wing_commander_dabiree(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
-    {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        //TaxiPath 585
-        pPlayer->CastSpell(pPlayer,SPELL_TAXI_TO_GATEWAYS,true);
-    }
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+2)
-    {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        //TaxiPath 612
-        pPlayer->CastSpell(pPlayer,SPELL_TAXI_TO_SHATTER,true);
-    }
-    return true;
-}
-
-/*######
 ## npc_gryphoneer_windbellow
 ######*/
 
@@ -253,6 +204,104 @@ bool GossipSelect_npc_naladu(Player* pPlayer, Creature* pCreature, uint32 uiSend
     if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
         pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_NALADU1, pCreature->GetGUID());
 
+    return true;
+}
+
+/*######
+## npc_tracy_proudwell
+######*/
+
+#define GOSSIP_TEXT_REDEEM_MARKS        "I have marks to redeem!"
+#define GOSSIP_TRACY_PROUDWELL_ITEM1    "I heard that your dog Fei Fei took Klatu's prayer beads..."
+#define GOSSIP_TRACY_PROUDWELL_ITEM2    "<back>"
+
+enum
+{
+    GOSSIP_TEXTID_TRACY_PROUDWELL1       = 10689,
+    QUEST_DIGGING_FOR_PRAYER_BEADS       = 10916
+};
+
+bool GossipHello_npc_tracy_proudwell(Player* pPlayer, Creature* pCreature)
+{
+    if (pCreature->isQuestGiver())
+        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+
+    if (pCreature->isVendor())
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_TEXT_REDEEM_MARKS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
+
+    if (pPlayer->GetQuestStatus(QUEST_DIGGING_FOR_PRAYER_BEADS) == QUEST_STATUS_INCOMPLETE)
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_TRACY_PROUDWELL_ITEM1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+
+    pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
+    return true;
+}
+
+bool GossipSelect_npc_tracy_proudwell(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+{
+    switch(uiAction)
+    {
+        case GOSSIP_ACTION_INFO_DEF+1:
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_TRACY_PROUDWELL_ITEM2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_TRACY_PROUDWELL1, pCreature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+2:
+            pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
+            break;
+        case GOSSIP_ACTION_TRADE:
+            pPlayer->SEND_VENDORLIST(pCreature->GetGUID());
+            break;
+    }
+
+    return true;
+}
+
+/*######
+## npc_wing_commander_dabiree
+######*/
+
+enum
+{
+    SPELL_TAXI_TO_GATEWAYS      = 33768,
+    SPELL_TAXI_TO_SHATTER       = 35069,
+    QUEST_MISSION_GATEWAYS_A    = 10146,
+    QUEST_SHATTER_POINT         = 10340
+};
+
+#define GOSSIP_ITEM1_DAB        "Fly me to Murketh and Shaadraz Gateways"
+#define GOSSIP_ITEM2_DAB        "Fly me to Shatter Point"
+
+bool GossipHello_npc_wing_commander_dabiree(Player* pPlayer, Creature* pCreature)
+{
+    if (pCreature->isQuestGiver())
+        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+
+    //Mission: The Murketh and Shaadraz Gateways
+    if (pPlayer->GetQuestStatus(QUEST_MISSION_GATEWAYS_A) == QUEST_STATUS_INCOMPLETE)
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM1_DAB, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+
+    //Shatter Point
+    if (pPlayer->GetQuestStatus(QUEST_SHATTER_POINT) == QUEST_STATUS_COMPLETE ||
+        pPlayer->GetQuestRewardStatus(QUEST_SHATTER_POINT))
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM2_DAB, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+
+    pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
+    return true;
+}
+
+bool GossipSelect_npc_wing_commander_dabiree(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+{
+    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
+    {
+        pPlayer->CLOSE_GOSSIP_MENU();
+        //TaxiPath 585
+        pPlayer->CastSpell(pPlayer,SPELL_TAXI_TO_GATEWAYS,true);
+    }
+    if (uiAction == GOSSIP_ACTION_INFO_DEF+2)
+    {
+        pPlayer->CLOSE_GOSSIP_MENU();
+        //TaxiPath 612
+        pPlayer->CastSpell(pPlayer,SPELL_TAXI_TO_SHATTER,true);
+    }
     return true;
 }
 
@@ -421,12 +470,6 @@ void AddSC_hellfire_peninsula()
     newscript->RegisterSelf();
 
     newscript = new Script;
-    newscript->Name = "npc_wing_commander_dabiree";
-    newscript->pGossipHello = &GossipHello_npc_wing_commander_dabiree;
-    newscript->pGossipSelect = &GossipSelect_npc_wing_commander_dabiree;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
     newscript->Name = "npc_gryphoneer_windbellow";
     newscript->pGossipHello = &GossipHello_npc_gryphoneer_windbellow;
     newscript->pGossipSelect = &GossipSelect_npc_gryphoneer_windbellow;
@@ -436,6 +479,18 @@ void AddSC_hellfire_peninsula()
     newscript->Name = "npc_naladu";
     newscript->pGossipHello = &GossipHello_npc_naladu;
     newscript->pGossipSelect = &GossipSelect_npc_naladu;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "npc_tracy_proudwell";
+    newscript->pGossipHello = &GossipHello_npc_tracy_proudwell;
+    newscript->pGossipSelect = &GossipSelect_npc_tracy_proudwell;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "npc_wing_commander_dabiree";
+    newscript->pGossipHello = &GossipHello_npc_wing_commander_dabiree;
+    newscript->pGossipSelect = &GossipSelect_npc_wing_commander_dabiree;
     newscript->RegisterSelf();
 
     newscript = new Script;
