@@ -1884,37 +1884,37 @@
 					</File>
 				</Filter>
 				<Filter
-					Name="coilfang_resevoir"
+					Name="coilfang_reservoir"
 					>
 					<Filter
 						Name="serpent_shrine"
 						>
 						<File
-							RelativePath="..\scripts\outland\coilfang_resevoir\serpent_shrine\boss_fathomlord_karathress.cpp"
+							RelativePath="..\scripts\outland\coilfang_reservoir\serpent_shrine\boss_fathomlord_karathress.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\scripts\outland\coilfang_resevoir\serpent_shrine\boss_hydross_the_unstable.cpp"
+							RelativePath="..\scripts\outland\coilfang_reservoir\serpent_shrine\boss_hydross_the_unstable.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\scripts\outland\coilfang_resevoir\serpent_shrine\boss_lady_vashj.cpp"
+							RelativePath="..\scripts\outland\coilfang_reservoir\serpent_shrine\boss_lady_vashj.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\scripts\outland\coilfang_resevoir\serpent_shrine\boss_leotheras_the_blind.cpp"
+							RelativePath="..\scripts\outland\coilfang_reservoir\serpent_shrine\boss_leotheras_the_blind.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\scripts\outland\coilfang_resevoir\serpent_shrine\boss_morogrim_tidewalker.cpp"
+							RelativePath="..\scripts\outland\coilfang_reservoir\serpent_shrine\boss_morogrim_tidewalker.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\scripts\outland\coilfang_resevoir\serpent_shrine\def_serpent_shrine.h"
+							RelativePath="..\scripts\outland\coilfang_reservoir\serpent_shrine\def_serpent_shrine.h"
 							>
 						</File>
 						<File
-							RelativePath="..\scripts\outland\coilfang_resevoir\serpent_shrine\instance_serpent_shrine.cpp"
+							RelativePath="..\scripts\outland\coilfang_reservoir\serpent_shrine\instance_serpent_shrine.cpp"
 							>
 						</File>
 					</Filter>
@@ -1922,7 +1922,7 @@
 						Name="slave_pens"
 						>
 						<File
-							RelativePath="..\scripts\outland\coilfang_resevoir\slave_pens\boss_rokmar.cpp"
+							RelativePath="..\scripts\outland\coilfang_reservoir\slave_pens\boss_rokmar.cpp"
 							>
 						</File>
 					</Filter>
@@ -1930,23 +1930,23 @@
 						Name="steam_vault"
 						>
 						<File
-							RelativePath="..\scripts\outland\coilfang_resevoir\steam_vault\boss_hydromancer_thespia.cpp"
+							RelativePath="..\scripts\outland\coilfang_reservoir\steam_vault\boss_hydromancer_thespia.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\scripts\outland\coilfang_resevoir\steam_vault\boss_mekgineer_steamrigger.cpp"
+							RelativePath="..\scripts\outland\coilfang_reservoir\steam_vault\boss_mekgineer_steamrigger.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\scripts\outland\coilfang_resevoir\steam_vault\boss_warlord_kalithresh.cpp"
+							RelativePath="..\scripts\outland\coilfang_reservoir\steam_vault\boss_warlord_kalithresh.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\scripts\outland\coilfang_resevoir\steam_vault\def_steam_vault.h"
+							RelativePath="..\scripts\outland\coilfang_reservoir\steam_vault\def_steam_vault.h"
 							>
 						</File>
 						<File
-							RelativePath="..\scripts\outland\coilfang_resevoir\steam_vault\instance_steam_vault.cpp"
+							RelativePath="..\scripts\outland\coilfang_reservoir\steam_vault\instance_steam_vault.cpp"
 							>
 						</File>
 					</Filter>
@@ -1954,7 +1954,7 @@
 						Name="underbog"
 						>
 						<File
-							RelativePath="..\scripts\outland\coilfang_resevoir\underbog\boss_hungarfen.cpp"
+							RelativePath="..\scripts\outland\coilfang_reservoir\underbog\boss_hungarfen.cpp"
 							>
 						</File>
 					</Filter>
