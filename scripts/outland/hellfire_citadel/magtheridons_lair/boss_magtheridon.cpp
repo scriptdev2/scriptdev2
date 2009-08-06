@@ -215,12 +215,6 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
 
     void Reset()
     {
-        if (m_pInstance)
-        {
-            m_pInstance->SetData(TYPE_MAGTHERIDON_EVENT, NOT_STARTED);
-            m_pInstance->SetData(TYPE_HALL_COLLAPSE, NOT_STARTED);
-        }
-
         RandChat_Timer = 90000;
 
         Berserk_Timer = 1320000;
@@ -238,6 +232,15 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_UNK_8);
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+        {
+            m_pInstance->SetData(TYPE_MAGTHERIDON_EVENT, NOT_STARTED);
+            m_pInstance->SetData(TYPE_HALL_COLLAPSE, NOT_STARTED);
+        }
     }
 
     void SetClicker(uint64 cubeGUID, uint64 clickerGUID)
@@ -498,9 +501,6 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
         Infernal_Timer = 10000 + rand()%40000;
 
         InfernalSpawned = false;
-
-        if (m_pInstance)
-            m_pInstance->SetData(TYPE_CHANNELER_EVENT, NOT_STARTED);
     }
 
     void Aggro(Unit* pWho)
@@ -543,6 +543,9 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
 
     void JustReachedHome()
     {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_CHANNELER_EVENT, NOT_STARTED);
+
         DoCast(m_creature, SPELL_SHADOW_GRASP_C);
     }
 
