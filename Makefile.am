@@ -32,6 +32,8 @@ ScriptMgr.h \
 config.h \
 base/escort_ai.cpp \
 base/escort_ai.h \
+base/follower_ai.cpp \
+base/follower_ai.h \
 base/guard_ai.cpp \
 base/guard_ai.h \
 base/simple_ai.cpp \

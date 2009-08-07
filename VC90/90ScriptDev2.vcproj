@@ -369,6 +369,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\base\follower_ai.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\base\follower_ai.h"
+				>
+			</File>
+			<File
 				RelativePath="..\base\guard_ai.cpp"
 				>
 			</File>
