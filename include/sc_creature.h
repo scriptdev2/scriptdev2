@@ -47,16 +47,6 @@ enum SCEquip
     EQUIP_UNEQUIP   = 0
 };
 
-struct PointMovement
-{
-    uint32 m_uiCreatureEntry;
-    uint32 m_uiPointId;
-    float  m_fX;
-    float  m_fY;
-    float  m_fZ;
-    uint32 m_uiWaitTime;
-};
-
 struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
 {
     explicit ScriptedAI(Creature* pCreature) : CreatureAI(pCreature),
