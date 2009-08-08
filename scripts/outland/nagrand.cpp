@@ -232,7 +232,7 @@ struct MANGOS_DLL_DECL mob_sunspring_villagerAI : public ScriptedAI
 
     void Reset()
     {
-        m_creature->SetUInt32Value(UNIT_DYNAMIC_FLAGS, 32);
+        m_creature->SetUInt32Value(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_DEAD);
         m_creature->SetStandState(UNIT_STAND_STATE_DEAD);
     }
 
