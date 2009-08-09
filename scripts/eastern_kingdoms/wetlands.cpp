@@ -50,29 +50,20 @@ struct MANGOS_DLL_DECL npc_tapoke_slim_jahnAI : public npc_escortAI
 
     void Reset()
     {
-        m_bFriendSummoned = false;
+        if (!IsBeingEscorted)
+            m_bFriendSummoned = false;
     }
 
     void WaypointReached(uint32 uiPointId)
     {
-        Unit* pPlayer = Unit::GetUnit((*m_creature), PlayerGUID);
-
-        if (!pPlayer)
-            return;
-
         switch(uiPointId)
         {
             case 2:
                 if (m_creature->HasStealthAura())
                     m_creature->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
-                SetRun(true);
+                SetRun();
                 m_creature->setFaction(FACTION_ENEMY);
-                break;
-            case 6:
-                ((Player*)pPlayer)->FailQuest(QUEST_MISSING_DIPLO_PT11);
-                m_creature->setFaction(m_creature->GetCreatureInfo()->faction_A);
-                EnterEvadeMode();
                 break;
         }
     }
@@ -81,7 +72,7 @@ struct MANGOS_DLL_DECL npc_tapoke_slim_jahnAI : public npc_escortAI
     {
         Unit* pPlayer = Unit::GetUnit(*m_creature, PlayerGUID);
 
-        if (pPlayer && !m_bFriendSummoned && pWho == pPlayer)
+        if (IsBeingEscorted && !m_bFriendSummoned && pPlayer)
         {
             m_creature->SummonCreature(NPC_SLIMS_FRIEND, 0.0f, 0.0f, 0.0f, 3.10f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000);
             m_creature->SummonCreature(NPC_SLIMS_FRIEND, 0.0f, 0.0f, 0.0f, 2.35f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000);
@@ -98,38 +89,34 @@ struct MANGOS_DLL_DECL npc_tapoke_slim_jahnAI : public npc_escortAI
 
     void AttackedBy(Unit* pAttacker)
     {
-        Unit* pPlayer = Unit::GetUnit(*m_creature, PlayerGUID);
-        if (pPlayer && pPlayer->IsFriendlyTo(pAttacker) && pAttacker != pPlayer)
-        {
-            pAttacker->CombatStop(true);
-            return;
-        }
-
         if (m_creature->getVictim())
+            return;
+
+        if (m_creature->IsFriendlyTo(pAttacker))
             return;
 
         AttackStart(pAttacker);
     }
 
-    void UpdateEscortAI(const uint32 uiDiff)
+    void DamageTaken(Unit* pDoneBy, uint32& uiDamage)
     {
-        if ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 20)
+        if (m_creature->GetHealth()*100 < m_creature->GetMaxHealth()*20)
         {
             if (Unit* pPlayer = Unit::GetUnit(*m_creature, PlayerGUID))
             {
                 if (pPlayer->GetTypeId() == TYPEID_PLAYER)
-                    ((Player*)pPlayer)->AreaExploredOrEventHappens(QUEST_MISSING_DIPLO_PT11);
+                    ((Player*)pPlayer)->GroupEventHappens(QUEST_MISSING_DIPLO_PT11, m_creature);
 
-                IsBeingEscorted = false;
-                EnterEvadeMode();
-                return;
+                uiDamage = 0;
+
+                m_creature->setFaction(m_creature->GetCreatureInfo()->faction_A);
+                m_creature->RemoveAllAuras();
+                m_creature->DeleteThreatList();
+                m_creature->CombatStop(true);
+
+                SetRun(false);
             }
         }
-
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
-            return;
-
-        DoMeleeAttackIfReady();
     }
 };
 

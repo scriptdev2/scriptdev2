@@ -179,7 +179,7 @@ extern void AddSC_tirisfal_glades();
 extern void AddSC_undercity();
 extern void AddSC_western_plaguelands();
 extern void AddSC_westfall();
-//extern void AddSC_wetlands();
+extern void AddSC_wetlands();
 
 //kalimdor
 extern void AddSC_instance_blackfathom_deeps();             //blackfathom_deeps
@@ -530,7 +530,7 @@ void AddScripts()
     AddSC_undercity();
     AddSC_western_plaguelands();
     AddSC_westfall();
-    //AddSC_wetlands();
+    AddSC_wetlands();
 
     //kalimdor
     AddSC_instance_blackfathom_deeps();                     //blackfathom_deeps
