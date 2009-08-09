@@ -21,6 +21,20 @@ enum
     POINT_HOME          = 0xFFFFFE
 };
 
+npc_escortAI::npc_escortAI(Creature* pCreature) : ScriptedAI(pCreature),
+    IsBeingEscorted(false),
+    IsOnHold(false),
+    PlayerGUID(0),
+    m_uiPlayerCheckTimer(1000),
+    m_uiWPWaitTimer(2500),
+    m_bIsReturning(false),
+    m_bIsActiveAttacker(true),
+    m_bIsRunning(false),
+    m_pQuestForEscort(NULL),
+    m_bCanInstantRespawn(false),
+    m_bCanReturnToStart(false)
+{}
+
 bool npc_escortAI::IsVisible(Unit* pWho) const
 {
     if (!pWho)

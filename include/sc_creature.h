@@ -49,8 +49,7 @@ enum SCEquip
 
 struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
 {
-    explicit ScriptedAI(Creature* pCreature) : CreatureAI(pCreature),
-        m_bCombatMovement(true), m_uiEvadeCheckCooldown(2500) {}
+    explicit ScriptedAI(Creature* pCreature);
     ~ScriptedAI() {}
 
     //*************

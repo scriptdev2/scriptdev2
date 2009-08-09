@@ -32,6 +32,11 @@ EndScriptData */
 #define SAY_GUARD_SIL_AGGRO2        -1000199
 #define SAY_GUARD_SIL_AGGRO3        -1000200
 
+guardAI::guardAI(Creature* pCreature) : ScriptedAI(pCreature),
+    GlobalCooldown(0),
+    BuffTimer(0)
+{}
+
 void guardAI::Reset()
 {
     GlobalCooldown = 0;
@@ -194,4 +199,3 @@ void guardAI_stormwind::ReceiveEmote(Player* pPlayer, uint32 text_emote)
     if (pPlayer->GetTeam() == ALLIANCE)
         DoReplyToTextEmote(text_emote);
 }
-

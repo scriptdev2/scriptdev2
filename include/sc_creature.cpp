@@ -15,6 +15,11 @@ struct TSpellSummary
     uint8 Effects;                                          // set of enum SelectEffect
 } *SpellSummary;
 
+ScriptedAI::ScriptedAI(Creature* pCreature) : CreatureAI(pCreature),
+    m_bCombatMovement(true),
+    m_uiEvadeCheckCooldown(2500)
+{}
+
 bool ScriptedAI::IsVisible(Unit* pWho) const
 {
     if (!pWho)
