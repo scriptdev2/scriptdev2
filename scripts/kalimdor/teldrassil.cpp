@@ -26,6 +26,7 @@ npc_mist
 EndContentData */
 
 #include "precompiled.h"
+#include "follower_ai.h"
 
 /*####
 # npc_mist
@@ -37,32 +38,20 @@ enum
     EMOTE_AT_HOME           = -1000324,
     QUEST_MIST              = 938,
     NPC_ARYNIA              = 3519,
+    FACTION_DARNASSUS       = 79
 };
 
-struct MANGOS_DLL_DECL npc_mistAI : public ScriptedAI
+struct MANGOS_DLL_DECL npc_mistAI : public FollowerAI
 {
-    npc_mistAI(Creature* pCreature) : ScriptedAI(pCreature)
-    {
-        m_uiNpcFlags = pCreature->GetUInt32Value(UNIT_NPC_FLAGS);
-        m_uiPlayerGUID = 0;
-        Reset();
-    }
+    npc_mistAI(Creature* pCreature) : FollowerAI(pCreature) { Reset(); }
 
-    uint64 m_uiPlayerGUID;
-    uint32 m_uiNpcFlags;
-    uint32 m_uiCheckPlayerTimer;
-
-    void Reset()
-    {
-        m_uiCheckPlayerTimer = 2500;
-
-        if (!m_uiPlayerGUID)
-            m_creature->SetUInt32Value(UNIT_NPC_FLAGS, m_uiNpcFlags);
-    }
+    void Reset() { }
 
     void MoveInLineOfSight(Unit *pWho)
     {
-        if (pWho->GetEntry() == NPC_ARYNIA)
+        FollowerAI::MoveInLineOfSight(pWho);
+
+        if (!m_creature->getVictim() && !IsFollowComplete() && pWho->GetEntry() == NPC_ARYNIA)
         {
             if (m_creature->IsWithinDistInMap(pWho, 10.0f))
             {
@@ -72,100 +61,37 @@ struct MANGOS_DLL_DECL npc_mistAI : public ScriptedAI
         }
     }
 
-    void EnterEvadeMode()
-    {
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop(true);
-        m_creature->LoadCreaturesAddon();
-
-        if (m_creature->isAlive())
-        {
-            if (Unit* pUnit = Unit::GetUnit(*m_creature,m_uiPlayerGUID))
-                m_creature->GetMotionMaster()->MoveFollow(pUnit, PET_FOLLOW_DIST, PET_FOLLOW_ANGLE);
-            else
-            {
-                m_creature->GetMotionMaster()->MovementExpired();
-                m_creature->GetMotionMaster()->MoveTargetedHome();
-            }
-        }
-
-        m_creature->SetLootRecipient(NULL);
-
-        Reset();
-    }
-
-    void DoStart(uint64 uiPlayer)
-    {
-        m_uiPlayerGUID = uiPlayer;
-        m_creature->SetUInt32Value(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_NONE);
-
-        if (Unit* pUnit = Unit::GetUnit(*m_creature,uiPlayer))
-            m_creature->GetMotionMaster()->MoveFollow(pUnit, PET_FOLLOW_DIST, PET_FOLLOW_ANGLE);
-    }
-
     void DoComplete()
     {
         DoScriptText(EMOTE_AT_HOME, m_creature);
 
-        if (Unit* pUnit = Unit::GetUnit(*m_creature,m_uiPlayerGUID))
+        if (Player* pPlayer = GetLeaderForFollower())
         {
-            if (pUnit->GetTypeId() == TYPEID_PLAYER)
+            if (pPlayer->GetQuestStatus(QUEST_MIST) == QUEST_STATUS_INCOMPLETE)
             {
-                if (((Player*)pUnit)->GetQuestStatus(QUEST_MIST) == QUEST_STATUS_INCOMPLETE)
-                {
-                    uint16 uiQuestLogSlot = ((Player*)pUnit)->FindQuestSlot(QUEST_MIST);
+                uint16 uiQuestLogSlot = pPlayer->FindQuestSlot(QUEST_MIST);
 
-                    if (uiQuestLogSlot < MAX_QUEST_LOG_SIZE)
-                    {
-                        if (((Player*)pUnit)->GetQuestSlotState(uiQuestLogSlot) != QUEST_STATE_FAIL)
-                            ((Player*)pUnit)->AreaExploredOrEventHappens(QUEST_MIST);
-                    }
+                if (uiQuestLogSlot < MAX_QUEST_LOG_SIZE)
+                {
+                    //This will be wrong, need to check all group members (if any) for state before event
+                    if (pPlayer->GetQuestSlotState(uiQuestLogSlot) != QUEST_STATE_FAIL)
+                        pPlayer->AreaExploredOrEventHappens(QUEST_MIST);
                 }
             }
         }
 
-        m_uiPlayerGUID = 0;
-        EnterEvadeMode();
+        //The follow is over (and for later development to indicate a post event can now run)
+        SetFollowComplete();
     }
 
-    void JustDied(Unit* pKiller)
+    //call not needed here, no known abilities
+    /*void UpdateFollowerAI(const uint32 uiDiff)
     {
-        if (Unit* pUnit = Unit::GetUnit(*m_creature,m_uiPlayerGUID))
-            ((Player*)pUnit)->FailTimedQuest(QUEST_MIST);
-
-        m_uiPlayerGUID = 0;
-        m_creature->GetMotionMaster()->MovementExpired();
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        if (m_uiPlayerGUID)
-        {
-            if (!m_creature->isInCombat())
-            {
-                if (m_uiCheckPlayerTimer < diff)
-                {
-                    m_uiCheckPlayerTimer = 5000;
-
-                    Unit* pUnit = Unit::GetUnit(*m_creature,m_uiPlayerGUID);
-
-                    if (pUnit && !pUnit->isAlive())
-                    {
-                        m_uiPlayerGUID = 0;
-                        EnterEvadeMode();
-                    }
-                }
-                else
-                    m_uiCheckPlayerTimer -= diff;
-            }
-        }
-
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         DoMeleeAttackIfReady();
-    }
+    }*/
 };
 
 CreatureAI* GetAI_npc_mist(Creature* pCreature)
@@ -176,7 +102,10 @@ CreatureAI* GetAI_npc_mist(Creature* pCreature)
 bool QuestAccept_npc_mist(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_MIST)
-        ((npc_mistAI*)(pCreature->AI()))->DoStart(pPlayer->GetGUID());
+    {
+        if (npc_mistAI* pMistAI = dynamic_cast<npc_mistAI*>(pCreature->AI()))
+            pMistAI->StartFollow(pPlayer, FACTION_DARNASSUS, pQuest);
+    }
 
     return true;
 }
