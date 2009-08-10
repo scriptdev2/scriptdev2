@@ -30,7 +30,8 @@ struct MANGOS_DLL_DECL npc_escortAI : public ScriptedAI
         ~npc_escortAI() {}
 
         // Pure Virtual Functions
-        virtual void WaypointReached(uint32) = 0;
+        virtual void WaypointReached(uint32 uiPointId) = 0;
+        virtual void WaypointStart(uint32 uiPointId) {}
 
         virtual void Aggro(Unit*);
 
