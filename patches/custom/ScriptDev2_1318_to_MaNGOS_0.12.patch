@@ -1,0 +1,409 @@
+Index: include/precompiled.h
+===================================================================
+--- include/precompiled.h	(revision 1318)
++++ include/precompiled.h	(working copy)
+@@ -11,6 +11,11 @@
+ #include "sc_grid_searchers.h"
+ #include "sc_instance.h"
+ 
++enum backports
++{
++    UNIT_VIRTUAL_ITEM_SLOT_ID = UNIT_VIRTUAL_ITEM_SLOT_DISPLAY
++};
++
+ #ifdef WIN32
+ #include <windows.h>
+ BOOL APIENTRY DllMain( HANDLE hModule,
+Index: include/sc_creature.cpp
+===================================================================
+--- include/sc_creature.cpp	(revision 1318)
++++ include/sc_creature.cpp	(working copy)
+@@ -460,7 +460,7 @@
+     Unit* pUnit = NULL;
+ 
+     MaNGOS::MostHPMissingInRange u_check(m_creature, fRange, uiMinHPDiff);
+-    MaNGOS::UnitLastSearcher<MaNGOS::MostHPMissingInRange> searcher(m_creature, pUnit, u_check);
++    MaNGOS::UnitLastSearcher<MaNGOS::MostHPMissingInRange> searcher(pUnit, u_check);
+ 
+     /*
+     typedef TYPELIST_4(GameObject, Creature*except pets*, DynamicObject, Corpse*Bones*) AllGridObjectTypes;
+@@ -484,7 +484,7 @@
+     std::list<Creature*> pList;
+ 
+     MaNGOS::FriendlyCCedInRange u_check(m_creature, fRange);
+-    MaNGOS::CreatureListSearcher<MaNGOS::FriendlyCCedInRange> searcher(m_creature, pList, u_check);
++    MaNGOS::CreatureListSearcher<MaNGOS::FriendlyCCedInRange> searcher(pList, u_check);
+ 
+     TypeContainerVisitor<MaNGOS::CreatureListSearcher<MaNGOS::FriendlyCCedInRange>, GridTypeMapContainer >  grid_creature_searcher(searcher);
+ 
+@@ -504,7 +504,7 @@
+     std::list<Creature*> pList;
+ 
+     MaNGOS::FriendlyMissingBuffInRange u_check(m_creature, fRange, uiSpellId);
+-    MaNGOS::CreatureListSearcher<MaNGOS::FriendlyMissingBuffInRange> searcher(m_creature, pList, u_check);
++    MaNGOS::CreatureListSearcher<MaNGOS::FriendlyMissingBuffInRange> searcher(pList, u_check);
+ 
+     TypeContainerVisitor<MaNGOS::CreatureListSearcher<MaNGOS::FriendlyMissingBuffInRange>, GridTypeMapContainer >  grid_creature_searcher(searcher);
+ 
+@@ -524,7 +524,7 @@
+     cell.SetNoCreate();
+ 
+     PlayerAtMinimumRangeAway check(m_creature, fMinimumRange);
+-    MaNGOS::PlayerSearcher<PlayerAtMinimumRangeAway> searcher(m_creature, pPlayer, check);
++    MaNGOS::PlayerSearcher<PlayerAtMinimumRangeAway> searcher(pPlayer, check);
+     TypeContainerVisitor<MaNGOS::PlayerSearcher<PlayerAtMinimumRangeAway>, GridTypeMapContainer> visitor(searcher);
+ 
+     CellLock<GridReadGuard> cell_lock(cell, pair);
+Index: include/sc_gossip.h
+===================================================================
+--- include/sc_gossip.h	(revision 1318)
++++ include/sc_gossip.h	(working copy)
+@@ -42,9 +42,7 @@
+ #define GOSSIP_TEXT_WARSONGULCH         "Warsong Gulch"
+ #define GOSSIP_TEXT_ARENA               "Arena"
+ #define GOSSIP_TEXT_EYEOFTHESTORM       "Eye of The Storm"
+-#define GOSSIP_TEXT_STRANDOFANCIENT     "Strand of the Ancients"
+ 
+-#define GOSSIP_TEXT_DEATH_KNIGHT        "Death Knight"
+ #define GOSSIP_TEXT_DRUID               "Druid"
+ #define GOSSIP_TEXT_HUNTER              "Hunter"
+ #define GOSSIP_TEXT_PRIEST              "Priest"
+@@ -63,12 +61,12 @@
+ #define GOSSIP_TEXT_FIRSTAID            "First Aid"
+ #define GOSSIP_TEXT_HERBALISM           "Herbalism"
+ #define GOSSIP_TEXT_LEATHERWORKING      "Leatherworking"
++#define GOSSIP_TEXT_POISONS             "Poisons"
+ #define GOSSIP_TEXT_TAILORING           "Tailoring"
+ #define GOSSIP_TEXT_MINING              "Mining"
+ #define GOSSIP_TEXT_FISHING             "Fishing"
+ #define GOSSIP_TEXT_SKINNING            "Skinning"
+ #define GOSSIP_TEXT_JEWELCRAFTING       "Jewelcrafting"
+-#define GOSSIP_TEXT_INSCRIPTION         "Inscription"
+ 
+ enum
+ {
+@@ -87,7 +85,6 @@
+     TRADESKILL_FISHING             = 12,
+     TRADESKILL_SKINNING            = 13,
+     TRADESKILL_JEWLCRAFTING        = 14,
+-    TRADESKILL_INSCRIPTION         = 15,
+ 
+     TRADESKILL_LEVEL_NONE          = 0,
+     TRADESKILL_LEVEL_APPRENTICE    = 1,
+@@ -95,7 +92,6 @@
+     TRADESKILL_LEVEL_EXPERT        = 3,
+     TRADESKILL_LEVEL_ARTISAN       = 4,
+     TRADESKILL_LEVEL_MASTER        = 5,
+-    TRADESKILL_LEVEL_GRAND_MASTER  = 6,
+ 
+     // Gossip defines
+     GOSSIP_ACTION_TRADE            = 1,
+Index: include/sc_grid_searchers.cpp
+===================================================================
+--- include/sc_grid_searchers.cpp	(revision 1318)
++++ include/sc_grid_searchers.cpp	(working copy)
+@@ -15,7 +15,7 @@
+     cell.SetNoCreate();
+ 
+     MaNGOS::NearestGameObjectEntryInObjectRangeCheck go_check(*pSource, uiEntry, fMaxSearchRange);
+-    MaNGOS::GameObjectLastSearcher<MaNGOS::NearestGameObjectEntryInObjectRangeCheck> searcher(pSource, pGo, go_check);
++    MaNGOS::GameObjectLastSearcher<MaNGOS::NearestGameObjectEntryInObjectRangeCheck> searcher(pGo, go_check);
+ 
+     TypeContainerVisitor<MaNGOS::GameObjectLastSearcher<MaNGOS::NearestGameObjectEntryInObjectRangeCheck>, GridTypeMapContainer> go_searcher(searcher);
+ 
+@@ -36,7 +36,7 @@
+     cell.SetNoCreate();
+ 
+     MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck creature_check(*pSource, uiEntry, true, fMaxSearchRange);
+-    MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(pSource, pCreature, creature_check);
++    MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(pCreature, creature_check);
+ 
+     TypeContainerVisitor<MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck>, GridTypeMapContainer> creature_searcher(searcher);
+ 
+@@ -54,7 +54,7 @@
+     cell.SetNoCreate();
+ 
+     AllGameObjectsWithEntryInRange check(pSource, uiEntry, fMaxSearchRange);
+-    MaNGOS::GameObjectListSearcher<AllGameObjectsWithEntryInRange> searcher(pSource, lList, check);
++    MaNGOS::GameObjectListSearcher<AllGameObjectsWithEntryInRange> searcher(lList, check);
+     TypeContainerVisitor<MaNGOS::GameObjectListSearcher<AllGameObjectsWithEntryInRange>, GridTypeMapContainer> visitor(searcher);
+ 
+     CellLock<GridReadGuard> cell_lock(cell, pair);
+@@ -69,7 +69,7 @@
+     cell.SetNoCreate();
+ 
+     AllCreaturesOfEntryInRange check(pSource, uiEntry, fMaxSearchRange);
+-    MaNGOS::CreatureListSearcher<AllCreaturesOfEntryInRange> searcher(pSource, lList, check);
++    MaNGOS::CreatureListSearcher<AllCreaturesOfEntryInRange> searcher(lList, check);
+     TypeContainerVisitor<MaNGOS::CreatureListSearcher<AllCreaturesOfEntryInRange>, GridTypeMapContainer> visitor(searcher);
+ 
+     CellLock<GridReadGuard> cell_lock(cell, pair);
+Index: scripts/eastern_kingdoms/karazhan/boss_prince_malchezaar.cpp
+===================================================================
+--- scripts/eastern_kingdoms/karazhan/boss_prince_malchezaar.cpp	(revision 1318)
++++ scripts/eastern_kingdoms/karazhan/boss_prince_malchezaar.cpp	(working copy)
+@@ -90,7 +90,8 @@
+ #define INFERNAL_MODEL_INVISIBLE    11686                   //Infernal Effects
+ #define SPELL_INFERNAL_RELAY        30834
+ 
+-#define EQUIP_ID_AXE                33542                   //Axes info
++#define AXE_EQUIP_MODEL          40066                      //Axes info
++#define AXE_EQUIP_INFO           33448898
+ 
+ //---------Infernal code first
+ struct MANGOS_DLL_DECL netherspite_infernalAI : public ScriptedAI
+@@ -269,7 +270,10 @@
+ 
+     void ClearWeapons()
+     {
+-        SetEquipmentSlots(false, EQUIP_UNEQUIP, EQUIP_UNEQUIP, EQUIP_NO_CHANGE);
++        m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, 0);
++        m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO, 0);
++        m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY+1, 0);
++        m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO+2, 0);
+ 
+         //damage
+         const CreatureInfo *cinfo = m_creature->GetCreatureInfo();
+@@ -411,7 +415,10 @@
+                 m_creature->CastSpell(m_creature, SPELL_THRASH_AURA, true);
+ 
+                 //models
+-                SetEquipmentSlots(false, EQUIP_ID_AXE, EQUIP_ID_AXE, EQUIP_NO_CHANGE);
++                m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, AXE_EQUIP_MODEL);
++                m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO, AXE_EQUIP_INFO);
++                m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY+1, AXE_EQUIP_MODEL);
++                m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO+2, AXE_EQUIP_INFO);
+ 
+                 //damage
+                 const CreatureInfo *cinfo = m_creature->GetCreatureInfo();
+@@ -449,6 +456,8 @@
+                     Creature *axe = m_creature->SummonCreature(MALCHEZARS_AXE, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 1000);
+                     if (axe)
+                     {
++                        axe->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, AXE_EQUIP_MODEL);
++                        axe->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO, AXE_EQUIP_INFO);
+                         axe->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                         axe->setFaction(m_creature->getFaction());
+ 
+Index: scripts/eastern_kingdoms/zulgurub/boss_renataki.cpp
+===================================================================
+--- scripts/eastern_kingdoms/zulgurub/boss_renataki.cpp	(revision 1318)
++++ scripts/eastern_kingdoms/zulgurub/boss_renataki.cpp	(working copy)
+@@ -27,8 +27,6 @@
+ #define SPELL_AMBUSH            24337
+ #define SPELL_THOUSANDBLADES    24649
+ 
+-#define EQUIP_ID_MAIN_HAND      0                           //was item display id 31818, but this id does not exist
+-
+ struct MANGOS_DLL_DECL boss_renatakiAI : public ScriptedAI
+ {
+     boss_renatakiAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+@@ -64,10 +62,13 @@
+         {
+             m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+ 
+-            SetEquipmentSlots(false, EQUIP_UNEQUIP, EQUIP_NO_CHANGE, EQUIP_NO_CHANGE);
+             m_creature->SetDisplayId(11686);
+ 
++            m_creature->SetUInt32Value( UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, 0);
++            m_creature->SetUInt32Value( UNIT_VIRTUAL_ITEM_INFO , 218171138);
++            m_creature->SetUInt32Value( UNIT_VIRTUAL_ITEM_INFO  + 1, 3);
+             m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
++            m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11686);
+             Invisible = true;
+ 
+             Invisible_Timer = 15000 + rand()%15000;
+@@ -96,9 +97,12 @@
+                 m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+ 
+                 m_creature->SetDisplayId(15268);
+-                SetEquipmentSlots(false, EQUIP_ID_MAIN_HAND, EQUIP_NO_CHANGE, EQUIP_NO_CHANGE);
+ 
+                 m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
++                m_creature->SetUInt32Value( UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, 31818);
++                m_creature->SetUInt32Value( UNIT_VIRTUAL_ITEM_INFO , 218171138);
++                m_creature->SetUInt32Value( UNIT_VIRTUAL_ITEM_INFO  + 1, 3);
++                m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                 Invisible = false;
+ 
+                 Visible_Timer = 4000;
+Index: scripts/kalimdor/azuremyst_isle.cpp
+===================================================================
+--- scripts/kalimdor/azuremyst_isle.cpp	(revision 1318)
++++ scripts/kalimdor/azuremyst_isle.cpp	(working copy)
+@@ -76,7 +76,6 @@
+ 
+         m_creature->CastSpell(m_creature, SPELL_IRRIDATION, true);
+ 
+-        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PVP_ATTACKABLE);
+         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IN_COMBAT);
+         m_creature->SetHealth(int(m_creature->GetMaxHealth()*.1));
+         m_creature->SetStandState(UNIT_STAND_STATE_SLEEP);
+@@ -103,9 +102,8 @@
+ 
+     void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
+     {
+-        if (pSpell->SpellFamilyFlags2 & 0x080000000)
++        if (pSpell->Id == 28880)
+         {
+-            m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PVP_ATTACKABLE);
+             m_creature->SetStandState(UNIT_STAND_STATE_STAND);
+ 
+             m_creature->CastSpell(m_creature, SPELL_STUNNED, true);
+Index: scripts/kalimdor/caverns_of_time/old_hillsbrad/old_hillsbrad.cpp
+===================================================================
+--- scripts/kalimdor/caverns_of_time/old_hillsbrad/old_hillsbrad.cpp	(revision 1318)
++++ scripts/kalimdor/caverns_of_time/old_hillsbrad/old_hillsbrad.cpp	(working copy)
+@@ -161,8 +161,10 @@
+ #define SPEED_RUN                   (1.0f)
+ #define SPEED_MOUNT                 (1.6f)
+ 
+-#define EQUIP_ID_WEAPON             927
+-#define EQUIP_ID_SHIELD             20913
++#define THRALL_WEAPON_MODEL         22106
++#define THRALL_WEAPON_INFO          218169346
++#define THRALL_SHIELD_MODEL         18662
++#define THRALL_SHIELD_INFO          234948100
+ #define THRALL_MODEL_UNEQUIPPED     17292
+ #define THRALL_MODEL_EQUIPPED       18165
+ 
+@@ -235,7 +237,12 @@
+                 break;
+             case 9:
+                 DoScriptText(SAY_TH_ARMORY, m_creature);
+-                SetEquipmentSlots(false, EQUIP_ID_WEAPON, EQUIP_ID_SHIELD, EQUIP_NO_CHANGE);
++                m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, THRALL_WEAPON_MODEL);
++                m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO, THRALL_WEAPON_INFO);
++                m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO+1, 781);
++                m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY+1, THRALL_SHIELD_MODEL);
++                m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO+2, THRALL_SHIELD_INFO);
++                m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO+3, 1038);
+                 break;
+             case 10:
+                 m_creature->SetDisplayId(THRALL_MODEL_EQUIPPED);
+@@ -392,7 +399,12 @@
+         {
+             DoUnmount();
+             HadMount = false;
+-            SetEquipmentSlots(true);
++            m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, 0);
++            m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO, 0);
++            m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO+1, 0);
++            m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY+1, 0);
++            m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO+2, 0);
++            m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO+3, 0);
+             m_creature->SetDisplayId(THRALL_MODEL_UNEQUIPPED);
+         }
+ 
+Index: scripts/northrend/dragonblight.cpp
+===================================================================
+--- scripts/northrend/dragonblight.cpp	(revision 1318)
++++ scripts/northrend/dragonblight.cpp	(working copy)
+@@ -100,7 +100,6 @@
+     if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
+     {
+         pPlayer->CLOSE_GOSSIP_MENU();
+-        pPlayer->SendMovieStart(MOVIE_ID_GATES);
+     }
+ 
+     return true;
+Index: scripts/outland/black_temple/boss_illidan.cpp
+===================================================================
+--- scripts/outland/black_temple/boss_illidan.cpp	(revision 1318)
++++ scripts/outland/black_temple/boss_illidan.cpp	(working copy)
+@@ -206,9 +206,6 @@
+ #define CENTER_Y            305.297
+ #define CENTER_Z            353.192
+ 
+-#define EQUIP_ID_MAIN_HAND  32837
+-#define EQUIP_ID_OFF_HAND   32838
+-
+ /*** Phase Names ***/
+ enum Phase
+ {
+@@ -976,10 +973,9 @@
+         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+ 
+         // Unequip warglaives if needed
+-        SetEquipmentSlots(false, EQUIP_UNEQUIP, EQUIP_UNEQUIP, EQUIP_NO_CHANGE);
+ 
+         m_creature->RemoveMonsterMoveFlag(MONSTER_MOVE_LEVITATING);
+-
++        m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, 0);
+         IsTalking = false;
+ 
+         TalkCount = 0;
+@@ -1230,12 +1226,14 @@
+         if (DemonTransformation[count].equip)
+         {
+             // Requip warglaives if needed
+-            SetEquipmentSlots(false, EQUIP_ID_MAIN_HAND, EQUIP_ID_OFF_HAND, EQUIP_NO_CHANGE);
++            m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, 45479);
++            m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY+1, 45481);
+         }
+         else
+         {
+             // Unequip warglaives if needed
+-            SetEquipmentSlots(false, EQUIP_UNEQUIP, EQUIP_UNEQUIP, EQUIP_NO_CHANGE);
++            m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, 0);
++            m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY+1, 0);
+         }
+ 
+         if (DemonTransformation[count].phase != 8)
+@@ -1308,7 +1306,8 @@
+ 
+         // We no longer wear the glaives!
+         // since they are now channeling the flames (or will be)
+-        SetEquipmentSlots(false, EQUIP_UNEQUIP, EQUIP_UNEQUIP, EQUIP_NO_CHANGE);
++        m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, 0);
++        m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY+1, 0);
+ 
+         for(uint8 i = 0; i < 2; ++i)
+         {
+@@ -1442,7 +1441,8 @@
+                         break;
+                     case 8:
+                         // Equip our warglaives!
+-                        SetEquipmentSlots(false, EQUIP_ID_MAIN_HAND, EQUIP_ID_OFF_HAND, EQUIP_NO_CHANGE);
++                        m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, 45479);
++                        m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY+1, 45481);
+                         // Hostile if we weren't before
+                         m_creature->setFaction(14);
+                         break;
+@@ -1708,7 +1708,8 @@
+                         }
+ 
+                         // Re-equip our warblades!
+-                        SetEquipmentSlots(false, EQUIP_ID_MAIN_HAND, EQUIP_ID_OFF_HAND, EQUIP_NO_CHANGE);
++                        m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, 45479);
++                        m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY+1, 45481);
+ 
+                         // Prepare for landin'!
+                         LandTimer = 5000;
+Index: scripts/world/item_scripts.cpp
+===================================================================
+--- scripts/world/item_scripts.cpp	(revision 1318)
++++ scripts/world/item_scripts.cpp	(working copy)
+@@ -49,7 +49,7 @@
+     pPlayer->SendEquipError(EQUIP_ERR_NONE, pItem, NULL);
+ 
+     if (const SpellEntry* pSpellInfo = GetSpellStore()->LookupEntry(SPELL_ARCANE_CHARGES))
+-        Spell::SendCastResult(pPlayer, pSpellInfo, 1, SPELL_FAILED_NOT_ON_GROUND);
++        Spell::SendCastResult(pPlayer, pSpellInfo, 1, SPELL_FAILED_ERROR);
+ 
+     return true;
+ }
+Index: scripts/world/npcs_special.cpp
+===================================================================
+--- scripts/world/npcs_special.cpp	(revision 1318)
++++ scripts/world/npcs_special.cpp	(working copy)
+@@ -708,9 +708,6 @@
+ 
+             if (Patient)
+             {
+-                //303, this flag appear to be required for client side item->spell to work (TARGET_SINGLE_FRIEND)
+-                Patient->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PVP_ATTACKABLE);
+-
+                 Patients.push_back(Patient->GetGUID());
+                 ((npc_injured_patientAI*)Patient->AI())->Doctorguid = m_creature->GetGUID();
+ 
