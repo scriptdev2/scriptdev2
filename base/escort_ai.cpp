@@ -25,6 +25,7 @@ npc_escortAI::npc_escortAI(Creature* pCreature) : ScriptedAI(pCreature),
     IsBeingEscorted(false),
     IsOnHold(false),
     PlayerGUID(0),
+    m_uiPlayerGUID(0),
     m_uiPlayerCheckTimer(1000),
     m_uiWPWaitTimer(2500),
     m_bIsReturning(false),
@@ -408,6 +409,8 @@ void npc_escortAI::Start(bool bIsActiveAttacker, bool bRun, uint64 uiPlayerGUID,
     m_bIsRunning = bRun;
 
     PlayerGUID = uiPlayerGUID;
+
+    m_uiPlayerGUID = uiPlayerGUID;
     m_pQuestForEscort = pQuest;
 
     m_bCanInstantRespawn = bInstantRespawn;
