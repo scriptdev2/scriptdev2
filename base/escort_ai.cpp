@@ -174,6 +174,32 @@ void npc_escortAI::EnterEvadeMode()
     Reset();
 }
 
+bool npc_escortAI::IsPlayerOrGroupInRange()
+{
+    if (Player* pPlayer = (Player*)Unit::GetUnit(*m_creature, PlayerGUID))
+    {
+        if (Group* pGroup = pPlayer->GetGroup())
+        {
+            for(GroupReference* pRef = pGroup->GetFirstMember(); pRef != NULL; pRef = pRef->next())
+            {
+                Player* pMember = pRef->getSource();
+
+                if (pMember && m_creature->IsWithinDistInMap(pMember, MAX_PLAYER_DISTANCE))
+                {
+                    return true;
+                    break;
+                }
+            }
+        }
+        else
+        {
+            if (m_creature->IsWithinDistInMap(pPlayer, MAX_PLAYER_DISTANCE))
+                return true;
+        }
+    }
+    return false;
+}
+
 void npc_escortAI::UpdateAI(const uint32 uiDiff)
 {
     //Waypoint Updating
@@ -229,31 +255,7 @@ void npc_escortAI::UpdateAI(const uint32 uiDiff)
     {
         if (m_uiPlayerCheckTimer < uiDiff)
         {
-            bool bIsMaxRangeExceeded = true;
-
-            if (Player* pPlayer = (Player*)Unit::GetUnit(*m_creature, PlayerGUID))
-            {
-                if (Group* pGroup = pPlayer->GetGroup())
-                {
-                    for(GroupReference* pRef = pGroup->GetFirstMember(); pRef != NULL; pRef = pRef->next())
-                    {
-                        Player* pMember = pRef->getSource();
-
-                        if (pMember && m_creature->IsWithinDistInMap(pMember, MAX_PLAYER_DISTANCE))
-                        {
-                            bIsMaxRangeExceeded = false;
-                            break;
-                        }
-                    }
-                }
-                else
-                {
-                    if (m_creature->IsWithinDistInMap(pPlayer, MAX_PLAYER_DISTANCE))
-                        bIsMaxRangeExceeded = false;
-                }
-            }
-
-            if (bIsMaxRangeExceeded)
+            if (!IsPlayerOrGroupInRange())
             {
                 debug_log("SD2: EscortAI failed because player/group was to far away or not found");
 
