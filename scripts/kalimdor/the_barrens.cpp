@@ -513,58 +513,17 @@ enum
 
 struct MANGOS_DLL_DECL npc_wizzlecranks_shredderAI : public npc_escortAI
 {
-    npc_wizzlecranks_shredderAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
-
-    void MoveInLineOfSight(Unit* pUnit)
+    npc_wizzlecranks_shredderAI(Creature* pCreature) : npc_escortAI(pCreature)
     {
-        if (IsBeingEscorted && !m_creature->getVictim())
-        {
-            if (pUnit->GetEntry() == NPC_MERCENARY)
-            {
-                if (m_creature->IsWithinDistInMap(pUnit, 50.0f))
-                    pUnit->AddThreat(m_creature, 0.0f);
-            }
-        }
-
-        npc_escortAI::MoveInLineOfSight(pUnit);
+        m_bIsPostEvent = false;
+        m_uiPostEventTimer = 1000;
+        m_uiPostEventCount = 0;
+        Reset();
     }
 
-    void WaypointReached(uint32 i)
-    {
-        Unit* pUnit = Unit::GetUnit(*m_creature, PlayerGUID);
-
-        if (!pUnit || pUnit->GetTypeId() != TYPEID_PLAYER)
-            return;
-
-        switch(i)
-        {
-            case 3:
-                DoScriptText(SAY_STARTUP1, m_creature, pUnit);
-                break;
-            case 10:
-                DoScriptText(SAY_STARTUP2, m_creature, pUnit);
-                SetRun(false);
-                break;
-            case 21:
-                DoScriptText(SAY_PROGRESS_1, m_creature, pUnit);
-                SetRun();
-                break;
-            case 27:
-                DoScriptText(SAY_PROGRESS_2, m_creature, pUnit);
-                break;
-            case 29:
-                DoScriptText(SAY_PROGRESS_3, m_creature, pUnit);
-                SetRun(false);
-                break;
-            case 30:
-                DoScriptText(SAY_END, m_creature, pUnit);
-                break;
-            case 31:
-                ((Player*)pUnit)->GroupEventHappens(QUEST_ESCAPE, m_creature);
-                m_creature->SummonCreature(NPC_PILOT_WIZZ, 1089.837, -2986.644, 91.752, 3.807, TEMPSUMMON_TIMED_DESPAWN, 180000);
-                break;
-        }
-    }
+    bool m_bIsPostEvent;
+    uint32 m_uiPostEventTimer;
+    uint32 m_uiPostEventCount;
 
     void Reset()
     {
@@ -572,18 +531,108 @@ struct MANGOS_DLL_DECL npc_wizzlecranks_shredderAI : public npc_escortAI
         {
             if (m_creature->getStandState() == UNIT_STAND_STATE_DEAD)
                 m_creature->SetStandState(UNIT_STAND_STATE_STAND);
+
+            m_bIsPostEvent = false;
+            m_uiPostEventTimer = 1000;
+            m_uiPostEventCount = 0;
         }
     }
 
-    void Aggro(Unit* who)
+    void WaypointReached(uint32 uiPointId)
     {
-        if (who->GetEntry() == NPC_MERCENARY)
-            DoScriptText(SAY_MERCENARY, who);
+        Unit* pUnit = Unit::GetUnit(*m_creature, PlayerGUID);
+
+        if (!pUnit || pUnit->GetTypeId() != TYPEID_PLAYER)
+            return;
+
+        switch(uiPointId)
+        {
+            case 0:
+                DoScriptText(SAY_STARTUP1, m_creature, pUnit);
+                break;
+            case 9:
+                SetRun(false);
+                break;
+            case 17:
+                if (Creature* pTemp = m_creature->SummonCreature(NPC_MERCENARY, 1128.489f, -3037.611f, 92.701f, 1.472f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 120000))
+                {
+                    DoScriptText(SAY_MERCENARY, pTemp);
+                    m_creature->SummonCreature(NPC_MERCENARY, 1160.172f, -2980.168f, 97.313f, 3.690f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 120000);
+                }
+                break;
+            case 24:
+                m_bIsPostEvent = true;
+                break;
+        }
+    }
+
+    void WaypointStart(uint32 uiPointId)
+    {
+        Unit* pUnit = Unit::GetUnit(*m_creature, PlayerGUID);
+
+        if (!pUnit || pUnit->GetTypeId() != TYPEID_PLAYER)
+            return;
+
+        switch(uiPointId)
+        {
+            case 9:
+                DoScriptText(SAY_STARTUP2, m_creature, pUnit);
+                break;
+            case 18:
+                DoScriptText(SAY_PROGRESS_1, m_creature, pUnit);
+                SetRun();
+                break;
+        }
     }
 
     void JustSummoned(Creature* pSummoned)
     {
-        m_creature->SetStandState(UNIT_STAND_STATE_DEAD);
+        if (pSummoned->GetEntry() == NPC_PILOT_WIZZ)
+            m_creature->SetStandState(UNIT_STAND_STATE_DEAD);
+
+        if (pSummoned->GetEntry() == NPC_MERCENARY)
+            pSummoned->AI()->AttackStart(m_creature);
+    }
+
+    void UpdateEscortAI(const uint32 uiDiff)
+    {
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        {
+            if (m_bIsPostEvent)
+            {
+                if (m_uiPostEventTimer < uiDiff)
+                {
+                    switch(m_uiPostEventCount)
+                    {
+                        case 0:
+                            DoScriptText(SAY_PROGRESS_2, m_creature);
+                            break;
+                        case 1:
+                            DoScriptText(SAY_PROGRESS_3, m_creature);
+                            break;
+                        case 2:
+                            DoScriptText(SAY_END, m_creature);
+                            break;
+                        case 3:
+                            if (Player* pPlayer = (Player*)Unit::GetUnit(*m_creature, PlayerGUID))
+                            {
+                                pPlayer->GroupEventHappens(QUEST_ESCAPE, m_creature);
+                                m_creature->SummonCreature(NPC_PILOT_WIZZ, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN, 180000);
+                            }
+                            break;
+                    }
+
+                    ++m_uiPostEventCount;
+                    m_uiPostEventTimer = 5000;
+                }
+                else
+                    m_uiPostEventTimer -= uiDiff;
+            }
+
+            return;
+        }
+
+        DoMeleeAttackIfReady();
     }
 };
 
@@ -595,7 +644,7 @@ bool QuestAccept_npc_wizzlecranks_shredder(Player* pPlayer, Creature* pCreature,
         pCreature->setFaction(FACTION_RATCHET);
 
         if (npc_wizzlecranks_shredderAI* pEscortAI = dynamic_cast<npc_wizzlecranks_shredderAI*>(pCreature->AI()))
-            pEscortAI->Start(true, true, pPlayer->GetGUID(), pQuest);
+            pEscortAI->Start(false, true, pPlayer->GetGUID(), pQuest);
     }
     return true;
 }
