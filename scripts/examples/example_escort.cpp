@@ -76,7 +76,7 @@ struct MANGOS_DLL_DECL example_escortAI : public npc_escortAI
                 m_creature->SummonCreature(NPC_FELBOAR, m_creature->GetPositionX()+5.0f, m_creature->GetPositionY()+7.0f, m_creature->GetPositionZ(), 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 3000);
                 break;
             case 4:
-                if (Unit* pTmpPlayer = Unit::GetUnit(*m_creature, PlayerGUID))
+                if (Player* pTmpPlayer = GetPlayerForEscort())
                 {
                     //pTmpPlayer is the target of the text
                     DoScriptText(SAY_WP_3, m_creature, pTmpPlayer);
@@ -91,7 +91,7 @@ struct MANGOS_DLL_DECL example_escortAI : public npc_escortAI
     {
         if (IsBeingEscorted)
         {
-            if (Unit* pTemp = Unit::GetUnit(*m_creature, PlayerGUID))
+            if (Player* pTemp = GetPlayerForEscort())
                 DoScriptText(SAY_AGGRO1, m_creature, pTemp);
         }
         else
@@ -108,7 +108,7 @@ struct MANGOS_DLL_DECL example_escortAI : public npc_escortAI
     {
         if (IsBeingEscorted)
         {
-            if (Unit *pTemp = Unit::GetUnit(*m_creature,PlayerGUID))
+            if (Player* pTemp = GetPlayerForEscort())
             {
                 // not a likely case, code here for the sake of example
                 if (pKiller == m_creature)

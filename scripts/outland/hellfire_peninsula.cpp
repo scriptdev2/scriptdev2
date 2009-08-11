@@ -389,9 +389,9 @@ struct MANGOS_DLL_DECL npc_wounded_blood_elfAI : public npc_escortAI
 
     void WaypointReached(uint32 i)
     {
-        Unit* pPlayer = Unit::GetUnit((*m_creature), PlayerGUID);
+        Player* pPlayer = GetPlayerForEscort();
 
-        if (!pPlayer || pPlayer->GetTypeId() != TYPEID_PLAYER)
+        if (!pPlayer)
             return;
 
         switch (i)
@@ -417,7 +417,7 @@ struct MANGOS_DLL_DECL npc_wounded_blood_elfAI : public npc_escortAI
             case 27:
                 DoScriptText(SAY_ELF_COMPLETE, m_creature, pPlayer);
                 // Award quest credit
-                ((Player*)pPlayer)->GroupEventHappens(QUEST_ROAD_TO_FALCON_WATCH,m_creature);
+                pPlayer->GroupEventHappens(QUEST_ROAD_TO_FALCON_WATCH, m_creature);
                 break;
         }
     }

@@ -353,14 +353,11 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
                 //from here, thrall should not never be allowed to move to point 106 which he currently does.
                 break;
             case 106:
-                if (!PlayerGUID)
-                    break;
-
                 //trigger taretha to run down outside
-                if (uint64 TarethaGUID = m_pInstance->GetData64(DATA_TARETHA))
+                if (Creature* pTaretha = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_TARETHA)))
                 {
-                    if (Creature* Taretha = ((Creature*)Unit::GetUnit(*m_creature, TarethaGUID)))
-                        ((npc_escortAI*)(Taretha->AI()))->Start(false, true, PlayerGUID);
+                    if (Player* pPlayer = GetPlayerForEscort())
+                        ((npc_escortAI*)(pTaretha->AI()))->Start(false, true, pPlayer->GetGUID());
                 }
 
                 //kill credit creature for quest

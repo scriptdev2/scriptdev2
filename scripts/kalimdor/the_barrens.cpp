@@ -94,7 +94,7 @@ struct MANGOS_DLL_DECL npc_giltharesAI : public npc_escortAI
 
     void WaypointReached(uint32 uiPointId)
     {
-        Player* pPlayer = (Player*)Unit::GetUnit(*m_creature, PlayerGUID);
+        Player* pPlayer = GetPlayerForEscort();
 
         if (!pPlayer)
             return;
@@ -540,15 +540,11 @@ struct MANGOS_DLL_DECL npc_wizzlecranks_shredderAI : public npc_escortAI
 
     void WaypointReached(uint32 uiPointId)
     {
-        Unit* pUnit = Unit::GetUnit(*m_creature, PlayerGUID);
-
-        if (!pUnit || pUnit->GetTypeId() != TYPEID_PLAYER)
-            return;
-
         switch(uiPointId)
         {
             case 0:
-                DoScriptText(SAY_STARTUP1, m_creature, pUnit);
+                if (Player* pPlayer = GetPlayerForEscort())
+                    DoScriptText(SAY_STARTUP1, m_creature, pPlayer);
                 break;
             case 9:
                 SetRun(false);
@@ -568,18 +564,15 @@ struct MANGOS_DLL_DECL npc_wizzlecranks_shredderAI : public npc_escortAI
 
     void WaypointStart(uint32 uiPointId)
     {
-        Unit* pUnit = Unit::GetUnit(*m_creature, PlayerGUID);
-
-        if (!pUnit || pUnit->GetTypeId() != TYPEID_PLAYER)
-            return;
-
         switch(uiPointId)
         {
             case 9:
-                DoScriptText(SAY_STARTUP2, m_creature, pUnit);
+                if (Player* pPlayer = GetPlayerForEscort())
+                    DoScriptText(SAY_STARTUP2, m_creature, pPlayer);
                 break;
             case 18:
-                DoScriptText(SAY_PROGRESS_1, m_creature, pUnit);
+                if (Player* pPlayer = GetPlayerForEscort())
+                    DoScriptText(SAY_PROGRESS_1, m_creature, pPlayer);
                 SetRun();
                 break;
         }
@@ -614,7 +607,7 @@ struct MANGOS_DLL_DECL npc_wizzlecranks_shredderAI : public npc_escortAI
                             DoScriptText(SAY_END, m_creature);
                             break;
                         case 3:
-                            if (Player* pPlayer = (Player*)Unit::GetUnit(*m_creature, PlayerGUID))
+                            if (Player* pPlayer = GetPlayerForEscort())
                             {
                                 pPlayer->GroupEventHappens(QUEST_ESCAPE, m_creature);
                                 m_creature->SummonCreature(NPC_PILOT_WIZZ, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN, 180000);

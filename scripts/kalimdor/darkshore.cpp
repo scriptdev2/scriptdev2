@@ -62,48 +62,48 @@ struct MANGOS_DLL_DECL npc_prospector_remtravelAI : public npc_escortAI
 
     void WaypointReached(uint32 i)
     {
-        Unit* pUnit = Unit::GetUnit(*m_creature, PlayerGUID);
+        Player* pPlayer = GetPlayerForEscort();
 
-        if (!pUnit || pUnit->GetTypeId() != TYPEID_PLAYER)
+        if (!pPlayer)
             return;
 
         switch(i)
         {
             case 0:
-                DoScriptText(SAY_REM_START, m_creature, pUnit);
+                DoScriptText(SAY_REM_START, m_creature, pPlayer);
                 break;
             case 5:
-                DoScriptText(SAY_REM_RAMP1_1, m_creature, pUnit);
+                DoScriptText(SAY_REM_RAMP1_1, m_creature, pPlayer);
                 break;
             case 6:
                 DoSpawnCreature(NPC_GRAVEL_SCOUT, -10.0f, 5.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
                 DoSpawnCreature(NPC_GRAVEL_BONE, -10.0f, 7.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
                 break;
             case 9:
-                DoScriptText(SAY_REM_RAMP1_2, m_creature, pUnit);
+                DoScriptText(SAY_REM_RAMP1_2, m_creature, pPlayer);
                 break;
             case 14:
                 //depend quest rewarded?
-                DoScriptText(SAY_REM_BOOK, m_creature, pUnit);
+                DoScriptText(SAY_REM_BOOK, m_creature, pPlayer);
                 break;
             case 15:
-                DoScriptText(SAY_REM_TENT1_1, m_creature, pUnit);
+                DoScriptText(SAY_REM_TENT1_1, m_creature, pPlayer);
                 break;
             case 16:
                 DoSpawnCreature(NPC_GRAVEL_SCOUT, -10.0f, 5.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
                 DoSpawnCreature(NPC_GRAVEL_BONE, -10.0f, 7.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
                 break;
             case 17:
-                DoScriptText(SAY_REM_TENT1_2, m_creature, pUnit);
+                DoScriptText(SAY_REM_TENT1_2, m_creature, pPlayer);
                 break;
             case 26:
-                DoScriptText(SAY_REM_MOSS, m_creature, pUnit);
+                DoScriptText(SAY_REM_MOSS, m_creature, pPlayer);
                 break;
             case 27:
-                DoScriptText(EMOTE_REM_MOSS, m_creature, pUnit);
+                DoScriptText(EMOTE_REM_MOSS, m_creature, pPlayer);
                 break;
             case 28:
-                DoScriptText(SAY_REM_MOSS_PROGRESS, m_creature, pUnit);
+                DoScriptText(SAY_REM_MOSS_PROGRESS, m_creature, pPlayer);
                 break;
             case 29:
                 DoSpawnCreature(NPC_GRAVEL_SCOUT, -15.0f, 3.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
@@ -111,14 +111,14 @@ struct MANGOS_DLL_DECL npc_prospector_remtravelAI : public npc_escortAI
                 DoSpawnCreature(NPC_GRAVEL_GEO, -15.0f, 7.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
                 break;
             case 31:
-                DoScriptText(SAY_REM_PROGRESS, m_creature, pUnit);
+                DoScriptText(SAY_REM_PROGRESS, m_creature, pPlayer);
                 break;
             case 41:
-                DoScriptText(SAY_REM_REMEMBER, m_creature, pUnit);
+                DoScriptText(SAY_REM_REMEMBER, m_creature, pPlayer);
                 break;
             case 42:
-                DoScriptText(EMOTE_REM_END, m_creature, pUnit);
-                ((Player*)pUnit)->GroupEventHappens(QUEST_ABSENT_MINDED_PT2,m_creature);
+                DoScriptText(EMOTE_REM_END, m_creature, pPlayer);
+                pPlayer->GroupEventHappens(QUEST_ABSENT_MINDED_PT2, m_creature);
                 break;
         }
     }
@@ -135,11 +135,6 @@ struct MANGOS_DLL_DECL npc_prospector_remtravelAI : public npc_escortAI
     {
         //unsure if it should be any
         //pSummoned->AI()->AttackStart(m_creature);
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        npc_escortAI::UpdateAI(diff);
     }
 };
 

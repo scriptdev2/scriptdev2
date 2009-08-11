@@ -339,7 +339,7 @@ struct MANGOS_DLL_DECL npc_magwinAI : public npc_escortAI
 
     void WaypointReached(uint32 i)
     {
-        Unit* pPlayer = Unit::GetUnit((*m_creature), PlayerGUID);
+        Player* pPlayer = GetPlayerForEscort();
 
         if (!pPlayer)
             return;
@@ -358,8 +358,7 @@ struct MANGOS_DLL_DECL npc_magwinAI : public npc_escortAI
             case 29:
                 DoScriptText(EMOTE_HUG, m_creature, pPlayer);
                 DoScriptText(SAY_END2, m_creature, pPlayer);
-                if (pPlayer && pPlayer->GetTypeId() == TYPEID_PLAYER)
-                    ((Player*)pPlayer)->GroupEventHappens(QUEST_A_CRY_FOR_HELP,m_creature);
+                pPlayer->GroupEventHappens(QUEST_A_CRY_FOR_HELP, m_creature);
                 break;
         }
     }

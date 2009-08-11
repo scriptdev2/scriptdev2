@@ -118,28 +118,28 @@ struct MANGOS_DLL_DECL npc_clintar_dw_spiritAI : public npc_escortAI
 
     void WaypointReached(uint32 i)
     {
-        Unit* pUnit = Unit::GetUnit(*m_creature, PlayerGUID);
+        Player* pPlayer = GetPlayerForEscort();
 
-        if (!pUnit || pUnit->GetTypeId() != TYPEID_PLAYER)
+        if (!pPlayer)
             return;
 
         //visual details here probably need refinement
         switch(i)
         {
             case 0:
-                DoScriptText(SAY_START, m_creature, pUnit);
+                DoScriptText(SAY_START, m_creature, pPlayer);
                 break;
             case 13:
                 m_creature->HandleEmoteCommand(EMOTE_STATE_USESTANDING_NOSHEATHE);
                 break;
             case 14:
-                DoScriptText(SAY_RELIC1, m_creature, pUnit);
+                DoScriptText(SAY_RELIC1, m_creature, pPlayer);
                 break;
             case 26:
                 m_creature->HandleEmoteCommand(EMOTE_STATE_USESTANDING_NOSHEATHE);
                 break;
             case 27:
-                DoScriptText(SAY_RELIC2, m_creature, pUnit);
+                DoScriptText(SAY_RELIC2, m_creature, pPlayer);
                 break;
             case 31:
                 m_creature->SummonCreature(NPC_ASPECT_OF_RAVEN, 7465.321, -3088.515, 429.006, 5.550, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10000);
@@ -148,11 +148,11 @@ struct MANGOS_DLL_DECL npc_clintar_dw_spiritAI : public npc_escortAI
                 m_creature->HandleEmoteCommand(EMOTE_STATE_USESTANDING_NOSHEATHE);
                 break;
             case 36:
-                DoScriptText(SAY_RELIC3, m_creature, pUnit);
+                DoScriptText(SAY_RELIC3, m_creature, pPlayer);
                 break;
             case 49:
-                DoScriptText(SAY_END, m_creature, pUnit);
-                ((Player*)pUnit)->TalkedToCreature(m_creature->GetEntry(),m_creature->GetGUID());
+                DoScriptText(SAY_END, m_creature, pPlayer);
+                pPlayer->TalkedToCreature(m_creature->GetEntry(), m_creature->GetGUID());
                 break;
         }
     }
@@ -197,11 +197,6 @@ struct MANGOS_DLL_DECL npc_clintar_dw_spiritAI : public npc_escortAI
     void JustSummoned(Creature* summoned)
     {
         summoned->AI()->AttackStart(m_creature);
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        npc_escortAI::UpdateAI(diff);
     }
 };
 

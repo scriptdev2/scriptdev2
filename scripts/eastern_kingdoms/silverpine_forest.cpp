@@ -139,19 +139,19 @@ struct MANGOS_DLL_DECL npc_deathstalker_erlandAI : public npc_escortAI
 
     void WaypointReached(uint32 i)
     {
-        Unit* pUnit = Unit::GetUnit(*m_creature, PlayerGUID);
+        Player* pPlayer = GetPlayerForEscort();
 
-        if (!pUnit || pUnit->GetTypeId() != TYPEID_PLAYER)
+        if (!pPlayer)
             return;
 
         switch(i)
         {
             case 0:
-                DoScriptText(SAY_START_2, m_creature, pUnit);
+                DoScriptText(SAY_START_2, m_creature, pPlayer);
                 break;
             case 13:
-                DoScriptText(SAY_END, m_creature, pUnit);
-                ((Player*)pUnit)->GroupEventHappens(QUEST_ERLAND, m_creature);
+                DoScriptText(SAY_END, m_creature, pPlayer);
+                pPlayer->GroupEventHappens(QUEST_ERLAND, m_creature);
                 break;
             case 14:
                 if (Unit* pRane = Unit::GetUnit(*m_creature, uiRaneGUID))

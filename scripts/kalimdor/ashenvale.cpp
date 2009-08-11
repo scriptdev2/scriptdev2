@@ -61,11 +61,8 @@ struct MANGOS_DLL_DECL npc_ruul_snowhoofAI : public npc_escortAI
                 m_creature->SummonCreature(ENTRY_T_PATHFINDER, 3503.682373, -489.393799, 186.629684, 4.349232, TEMPSUMMON_DEAD_DESPAWN, 60000);
                 break;
             case 21:
-                if (Unit* pPlayer = Unit::GetUnit((*m_creature), PlayerGUID))
-                {
-                    if (pPlayer && pPlayer->GetTypeId() == TYPEID_PLAYER)
-                        ((Player*)pPlayer)->GroupEventHappens(QUEST_FREEDOM_TO_RUUL,m_creature);
-                }
+                if (Player* pPlayer = GetPlayerForEscort())
+                    pPlayer->GroupEventHappens(QUEST_FREEDOM_TO_RUUL, m_creature);
                 break;
         }
     }
@@ -125,7 +122,7 @@ struct MANGOS_DLL_DECL npc_torekAI : public npc_escortAI
 
     void WaypointReached(uint32 i)
     {
-        Unit* pPlayer = Unit::GetUnit((*m_creature), PlayerGUID);
+        Player* pPlayer = GetPlayerForEscort();
 
         if (!pPlayer)
             return;
@@ -146,8 +143,7 @@ struct MANGOS_DLL_DECL npc_torekAI : public npc_escortAI
                 break;
             case 20:
                 DoScriptText(SAY_WIN, m_creature, pPlayer);
-                if (pPlayer && pPlayer->GetTypeId() == TYPEID_PLAYER)
-                    ((Player*)pPlayer)->GroupEventHappens(QUEST_TOREK_ASSULT,m_creature);
+                pPlayer->GroupEventHappens(QUEST_TOREK_ASSULT, m_creature);
                 break;
             case 21:
                 DoScriptText(SAY_END, m_creature, pPlayer);

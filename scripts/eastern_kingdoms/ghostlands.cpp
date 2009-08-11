@@ -138,9 +138,9 @@ struct MANGOS_DLL_DECL npc_ranger_lilathaAI : public npc_escortAI
 
     void WaypointReached(uint32 i)
     {
-        Unit* pPlayer = Unit::GetUnit((*m_creature), PlayerGUID);
+        Player* pPlayer = GetPlayerForEscort();
 
-        if (!pPlayer || pPlayer->GetTypeId() != TYPEID_PLAYER)
+        if (!pPlayer)
             return;
 
         switch(i)
@@ -180,7 +180,7 @@ struct MANGOS_DLL_DECL npc_ranger_lilathaAI : public npc_escortAI
                 SetRun(false);
                 break;
             case 30:
-                ((Player*)pPlayer)->GroupEventHappens(QUEST_CATACOMBS,m_creature);
+                pPlayer->GroupEventHappens(QUEST_CATACOMBS, m_creature);
                 break;
             case 32:
                 DoScriptText(SAY_END1, m_creature, pPlayer);

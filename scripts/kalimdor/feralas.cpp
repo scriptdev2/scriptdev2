@@ -109,11 +109,8 @@ struct MANGOS_DLL_DECL npc_oox22feAI : public npc_escortAI
             case 37:
                 DoScriptText(SAY_END,m_creature);
                 // Award quest credit
-                if (Unit* pUnit = Unit::GetUnit((*m_creature), PlayerGUID))
-                {
-                    if (pUnit->GetTypeId() == TYPEID_PLAYER)
-                        ((Player*)pUnit)->GroupEventHappens(QUEST_RESCUE_OOX22FE,m_creature);
-                }
+                if (Player* pPlayer = GetPlayerForEscort())
+                    pPlayer->GroupEventHappens(QUEST_RESCUE_OOX22FE, m_creature);
                 break;
         }
     }

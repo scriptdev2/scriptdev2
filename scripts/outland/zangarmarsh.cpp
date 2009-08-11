@@ -254,44 +254,37 @@ struct MANGOS_DLL_DECL npc_kayra_longmaneAI : public npc_escortAI
 
     void WaypointReached(uint32 i)
     {
-        Unit* pUnit = Unit::GetUnit(*m_creature, PlayerGUID);
+        Player* pPlayer = GetPlayerForEscort();
 
-        if (!pUnit || pUnit->GetTypeId() != TYPEID_PLAYER)
+        if (!pPlayer)
             return;
 
         switch(i)
         {
             case 4:
-                DoScriptText(SAY_AMBUSH1, m_creature, pUnit);
+                DoScriptText(SAY_AMBUSH1, m_creature, pPlayer);
                 DoSpawnCreature(NPC_SLAVEBINDER, -10.0f, -5.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
                 DoSpawnCreature(NPC_SLAVEBINDER, -8.0f, 5.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
                 break;
             case 5:
-                DoScriptText(SAY_PROGRESS, m_creature, pUnit);
+                DoScriptText(SAY_PROGRESS, m_creature, pPlayer);
                 SetRun();
                 break;
             case 16:
-                DoScriptText(SAY_AMBUSH2, m_creature, pUnit);
+                DoScriptText(SAY_AMBUSH2, m_creature, pPlayer);
                 DoSpawnCreature(NPC_SLAVEBINDER, -10.0f, -5.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
                 DoSpawnCreature(NPC_SLAVEBINDER, -8.0f, 5.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
                 break;
             case 17:
-                DoScriptText(SAY_END, m_creature, pUnit);
+                DoScriptText(SAY_END, m_creature, pPlayer);
                 break;
             case 25:
-                ((Player*)pUnit)->GroupEventHappens(QUEST_ESCAPE_FROM, m_creature);
+                pPlayer->GroupEventHappens(QUEST_ESCAPE_FROM, m_creature);
                 break;
         }
     }
 
     void Reset() { }
-
-    void UpdateAI(const uint32 diff)
-    {
-        //TODO: abilities
-
-        npc_escortAI::UpdateAI(diff);
-    }
 };
 
 bool QuestAccept_npc_kayra_longmane(Player* pPlayer, Creature* pCreature, const Quest* pQuest)

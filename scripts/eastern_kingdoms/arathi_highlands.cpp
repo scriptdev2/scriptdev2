@@ -58,30 +58,30 @@ struct MANGOS_DLL_DECL npc_professor_phizzlethorpeAI : public npc_escortAI
 
     void WaypointReached(uint32 uiPointId)
     {
-        Unit* pUnit = Unit::GetUnit((*m_creature), PlayerGUID);
+        Player* pPlayer = GetPlayerForEscort();
 
-        if (!pUnit || pUnit->GetTypeId() != TYPEID_PLAYER)
+        if (!pPlayer)
             return;
 
         switch(uiPointId)
         {
-            case 4: DoScriptText(SAY_PROGRESS_2, m_creature, pUnit); break;
-            case 5: DoScriptText(SAY_PROGRESS_3, m_creature, pUnit); break;
+            case 4: DoScriptText(SAY_PROGRESS_2, m_creature, pPlayer); break;
+            case 5: DoScriptText(SAY_PROGRESS_3, m_creature, pPlayer); break;
             case 8: DoScriptText(EMOTE_PROGRESS_4, m_creature); break;
             case 9:
                 m_creature->SummonCreature(ENTRY_VENGEFUL_SURGE, -2056.41, -2144.01, 20.59, 5.70, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 600000);
                 m_creature->SummonCreature(ENTRY_VENGEFUL_SURGE, -2050.17, -2140.02, 19.54, 5.17, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 600000);
                 break;
-            case 10: DoScriptText(SAY_PROGRESS_5, m_creature, pUnit); break;
+            case 10: DoScriptText(SAY_PROGRESS_5, m_creature, pPlayer); break;
             case 11:
-                DoScriptText(SAY_PROGRESS_6, m_creature, pUnit);
+                DoScriptText(SAY_PROGRESS_6, m_creature, pPlayer);
                 SetRun();
                 break;
-            case 19: DoScriptText(SAY_PROGRESS_7, m_creature, pUnit); break;
+            case 19: DoScriptText(SAY_PROGRESS_7, m_creature, pPlayer); break;
             case 20:
                 DoScriptText(EMOTE_PROGRESS_8, m_creature);
-                DoScriptText(SAY_PROGRESS_9, m_creature, pUnit);
-                ((Player*)pUnit)->GroupEventHappens(QUEST_SUNKEN_TREASURE, m_creature);
+                DoScriptText(SAY_PROGRESS_9, m_creature, pPlayer);
+                pPlayer->GroupEventHappens(QUEST_SUNKEN_TREASURE, m_creature);
                 break;
         }
     }

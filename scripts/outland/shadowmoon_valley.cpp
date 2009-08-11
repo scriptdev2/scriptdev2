@@ -660,7 +660,7 @@ struct MANGOS_DLL_DECL npc_wildaAI : public npc_escortAI
 
     void WaypointReached(uint32 uiPointId)
     {
-        Player* pPlayer = (Player*)Unit::GetUnit(*m_creature, PlayerGUID);
+        Player* pPlayer = GetPlayerForEscort();
 
         if (!pPlayer)
             return;
@@ -712,9 +712,7 @@ struct MANGOS_DLL_DECL npc_wildaAI : public npc_escortAI
                 break;
             case 50:
                 DoScriptText(SAY_WIL_END, m_creature, pPlayer);
-
-                if (Player* pPlayer = (Player*)Unit::GetUnit(*m_creature, PlayerGUID))
-                    pPlayer->GroupEventHappens(QUEST_ESCAPE_COILSCAR, m_creature);
+                pPlayer->GroupEventHappens(QUEST_ESCAPE_COILSCAR, m_creature);
                 break;
         }
     }
@@ -763,10 +761,8 @@ struct MANGOS_DLL_DECL npc_wildaAI : public npc_escortAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateEscortAI(const uint32 uiDiff)
     {
-        npc_escortAI::UpdateAI(uiDiff);
-
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
@@ -781,6 +777,8 @@ struct MANGOS_DLL_DECL npc_wildaAI : public npc_escortAI
             else
                 m_uiHealingTimer -= uiDiff;
         }
+
+        DoMeleeAttackIfReady();
     }
 };
 

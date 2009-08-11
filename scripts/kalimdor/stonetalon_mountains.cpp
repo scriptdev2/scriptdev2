@@ -113,10 +113,8 @@ struct MANGOS_DLL_DECL npc_kayaAI : public npc_escortAI
             case 18:
                 DoScriptText(SAY_END, m_creature);
 
-                Unit* pPlayer = Unit::GetUnit((*m_creature), PlayerGUID);
-
-                if (pPlayer && pPlayer->GetTypeId() == TYPEID_PLAYER)
-                    ((Player*)pPlayer)->GroupEventHappens(QUEST_PROTECT_KAYA, m_creature);
+                if (Player* pPlayer = GetPlayerForEscort())
+                    pPlayer->GroupEventHappens(QUEST_PROTECT_KAYA, m_creature);
                 break;
         }
     }

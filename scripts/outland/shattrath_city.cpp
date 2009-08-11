@@ -392,37 +392,37 @@ struct MANGOS_DLL_DECL npc_khadgars_servantAI : public npc_escortAI
 
     void WaypointReached(uint32 i)
     {
-        Unit *pUnit = Unit::GetUnit(*m_creature,PlayerGUID);
+        Player* pPlayer = GetPlayerForEscort();
 
-        if (!pUnit || pUnit->GetTypeId() != TYPEID_PLAYER)
+        if (!pPlayer)
             return;
 
         switch(i)
         {
-            case 1: DoScriptText(SAY_KHAD_SERV_0, m_creature, pUnit); break;
-            case 4: DoScriptText(SAY_KHAD_SERV_1, m_creature, pUnit); break;
-            case 6: DoScriptText(SAY_KHAD_SERV_2, m_creature, pUnit); break;
-            case 7: DoScriptText(SAY_KHAD_SERV_3, m_creature, pUnit); break;
-            case 8: DoScriptText(SAY_KHAD_SERV_4, m_creature, pUnit); break;
-            case 17: DoScriptText(SAY_KHAD_SERV_5, m_creature, pUnit); break;
-            case 18: DoScriptText(SAY_KHAD_SERV_6, m_creature, pUnit); break;
-            case 19: DoScriptText(SAY_KHAD_SERV_7, m_creature, pUnit); break;
-            case 33: DoScriptText(SAY_KHAD_SERV_8, m_creature, pUnit); break;
-            case 34: DoScriptText(SAY_KHAD_SERV_9, m_creature, pUnit); break;
-            case 35: DoScriptText(SAY_KHAD_SERV_10, m_creature, pUnit); break;
-            case 36: DoScriptText(SAY_KHAD_SERV_11, m_creature, pUnit); break;
-            case 43: DoScriptText(SAY_KHAD_SERV_12, m_creature, pUnit); break;
-            case 44: DoScriptText(SAY_KHAD_SERV_13, m_creature, pUnit); break;
-            case 49: DoScriptText(SAY_KHAD_SERV_14, m_creature, pUnit); break;
-            case 50: DoScriptText(SAY_KHAD_SERV_15, m_creature, pUnit); break;
-            case 51: DoScriptText(SAY_KHAD_SERV_16, m_creature, pUnit); break;
-            case 52: DoScriptText(SAY_KHAD_SERV_17, m_creature, pUnit); break;
-            case 53: DoScriptText(SAY_KHAD_SERV_18, m_creature, pUnit); break;
-            case 54: DoScriptText(SAY_KHAD_SERV_19, m_creature, pUnit); break;
-            case 55: DoScriptText(SAY_KHAD_SERV_20, m_creature, pUnit); break;
+            case 1: DoScriptText(SAY_KHAD_SERV_0, m_creature, pPlayer); break;
+            case 4: DoScriptText(SAY_KHAD_SERV_1, m_creature, pPlayer); break;
+            case 6: DoScriptText(SAY_KHAD_SERV_2, m_creature, pPlayer); break;
+            case 7: DoScriptText(SAY_KHAD_SERV_3, m_creature, pPlayer); break;
+            case 8: DoScriptText(SAY_KHAD_SERV_4, m_creature, pPlayer); break;
+            case 17: DoScriptText(SAY_KHAD_SERV_5, m_creature, pPlayer); break;
+            case 18: DoScriptText(SAY_KHAD_SERV_6, m_creature, pPlayer); break;
+            case 19: DoScriptText(SAY_KHAD_SERV_7, m_creature, pPlayer); break;
+            case 33: DoScriptText(SAY_KHAD_SERV_8, m_creature, pPlayer); break;
+            case 34: DoScriptText(SAY_KHAD_SERV_9, m_creature, pPlayer); break;
+            case 35: DoScriptText(SAY_KHAD_SERV_10, m_creature, pPlayer); break;
+            case 36: DoScriptText(SAY_KHAD_SERV_11, m_creature, pPlayer); break;
+            case 43: DoScriptText(SAY_KHAD_SERV_12, m_creature, pPlayer); break;
+            case 44: DoScriptText(SAY_KHAD_SERV_13, m_creature, pPlayer); break;
+            case 49: DoScriptText(SAY_KHAD_SERV_14, m_creature, pPlayer); break;
+            case 50: DoScriptText(SAY_KHAD_SERV_15, m_creature, pPlayer); break;
+            case 51: DoScriptText(SAY_KHAD_SERV_16, m_creature, pPlayer); break;
+            case 52: DoScriptText(SAY_KHAD_SERV_17, m_creature, pPlayer); break;
+            case 53: DoScriptText(SAY_KHAD_SERV_18, m_creature, pPlayer); break;
+            case 54: DoScriptText(SAY_KHAD_SERV_19, m_creature, pPlayer); break;
+            case 55: DoScriptText(SAY_KHAD_SERV_20, m_creature, pPlayer); break;
             case 56:
-                DoScriptText(SAY_KHAD_SERV_21, m_creature, pUnit);
-                ((Player*)pUnit)->AreaExploredOrEventHappens(QUEST_CITY_LIGHT);
+                DoScriptText(SAY_KHAD_SERV_21, m_creature, pPlayer);
+                pPlayer->AreaExploredOrEventHappens(QUEST_CITY_LIGHT);
                 break;
         }
     }

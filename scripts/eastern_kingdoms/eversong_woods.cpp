@@ -258,7 +258,7 @@ struct MANGOS_DLL_DECL npc_prospector_anvilwardAI : public npc_escortAI
     // Pure Virtual Functions
     void WaypointReached(uint32 i)
     {
-        Unit* pPlayer = Unit::GetUnit((*m_creature), PlayerGUID);
+        Player* pPlayer = GetPlayerForEscort();
 
         if (!pPlayer)
             return;
@@ -287,12 +287,6 @@ struct MANGOS_DLL_DECL npc_prospector_anvilwardAI : public npc_escortAI
     {
         //Default npc faction
         m_creature->setFaction(35);
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        npc_escortAI::UpdateAI(diff);                       //Must update npc_escortAI
-
     }
 };
 

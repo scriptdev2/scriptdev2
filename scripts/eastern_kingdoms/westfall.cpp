@@ -77,11 +77,6 @@ struct MANGOS_DLL_DECL npc_daphne_stilwellAI : public npc_escortAI
 
     void WaypointReached(uint32 uiPoint)
     {
-        Unit* pUnit = Unit::GetUnit(*m_creature, PlayerGUID);
-
-        if (!pUnit || pUnit->GetTypeId() != TYPEID_PLAYER)
-            return;
-
         m_uiWPHolder = uiPoint;
 
         switch(uiPoint)
@@ -123,7 +118,8 @@ struct MANGOS_DLL_DECL npc_daphne_stilwellAI : public npc_escortAI
                 m_creature->HandleEmoteCommand(EMOTE_STATE_USESTANDING_NOSHEATHE);
                 break;
             case 17:
-                ((Player*)pUnit)->GroupEventHappens(QUEST_TOME_VALOR, m_creature);
+                if (Player* pPlayer = GetPlayerForEscort())
+                    pPlayer->GroupEventHappens(QUEST_TOME_VALOR, m_creature);
                 break;
         }
     }
@@ -148,10 +144,8 @@ struct MANGOS_DLL_DECL npc_daphne_stilwellAI : public npc_escortAI
         pSummoned->AI()->AttackStart(m_creature);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateEscortAI(const uint32 uiDiff)
     {
-        npc_escortAI::UpdateAI(uiDiff);
-
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
@@ -162,7 +156,11 @@ struct MANGOS_DLL_DECL npc_daphne_stilwellAI : public npc_escortAI
             if (!m_creature->IsWithinDist(m_creature->getVictim(), ATTACK_DISTANCE))
                 DoCast(m_creature->getVictim(), SPELL_SHOOT);
 
-        }else m_uiShootTimer -= uiDiff;
+        }
+        else
+            m_uiShootTimer -= uiDiff;
+
+        DoMeleeAttackIfReady();
     }
 };
 
@@ -202,22 +200,21 @@ struct MANGOS_DLL_DECL npc_defias_traitorAI : public npc_escortAI
 
     void WaypointReached(uint32 i)
     {
-        Unit* pPlayer = Unit::GetUnit((*m_creature), PlayerGUID);
-
-        if (!pPlayer || pPlayer->GetTypeId() != TYPEID_PLAYER)
-            return;
-
         switch (i)
         {
             case 35:
                 SetRun(false);
                 break;
             case 36:
-                DoScriptText(SAY_PROGRESS, m_creature, pPlayer);
+                if (Player* pPlayer = GetPlayerForEscort())
+                    DoScriptText(SAY_PROGRESS, m_creature, pPlayer);
                 break;
             case 44:
-                DoScriptText(SAY_END, m_creature, pPlayer);
-                ((Player*)pPlayer)->GroupEventHappens(QUEST_DEFIAS_BROTHERHOOD,m_creature);
+                if (Player* pPlayer = GetPlayerForEscort())
+                {
+                    DoScriptText(SAY_END, m_creature, pPlayer);
+                    pPlayer->GroupEventHappens(QUEST_DEFIAS_BROTHERHOOD, m_creature);
+                }
                 break;
         }
     }

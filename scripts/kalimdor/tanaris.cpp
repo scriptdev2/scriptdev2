@@ -153,34 +153,35 @@ struct MANGOS_DLL_DECL npc_custodian_of_timeAI : public npc_escortAI
 
     void WaypointReached(uint32 i)
     {
-        Unit *pTemp = Unit::GetUnit(*m_creature,PlayerGUID);
-        if (!pTemp)
+        Player* pPlayer = GetPlayerForEscort();
+
+        if (!pPlayer)
             return;
 
         switch(i)
         {
-            case 0: DoScriptText(WHISPER_CUSTODIAN_1, m_creature, pTemp); break;
-            case 1: DoScriptText(WHISPER_CUSTODIAN_2, m_creature, pTemp); break;
-            case 2: DoScriptText(WHISPER_CUSTODIAN_3, m_creature, pTemp); break;
-            case 3: DoScriptText(WHISPER_CUSTODIAN_4, m_creature, pTemp); break;
-            case 5: DoScriptText(WHISPER_CUSTODIAN_5, m_creature, pTemp); break;
-            case 6: DoScriptText(WHISPER_CUSTODIAN_6, m_creature, pTemp); break;
-            case 7: DoScriptText(WHISPER_CUSTODIAN_7, m_creature, pTemp); break;
-            case 8: DoScriptText(WHISPER_CUSTODIAN_8, m_creature, pTemp); break;
-            case 9: DoScriptText(WHISPER_CUSTODIAN_9, m_creature, pTemp); break;
-            case 10: DoScriptText(WHISPER_CUSTODIAN_4, m_creature, pTemp); break;
-            case 13: DoScriptText(WHISPER_CUSTODIAN_10, m_creature, pTemp); break;
-            case 14: DoScriptText(WHISPER_CUSTODIAN_4, m_creature, pTemp); break;
-            case 16: DoScriptText(WHISPER_CUSTODIAN_11, m_creature, pTemp); break;
-            case 17: DoScriptText(WHISPER_CUSTODIAN_12, m_creature, pTemp); break;
-            case 18: DoScriptText(WHISPER_CUSTODIAN_4, m_creature, pTemp); break;
-            case 22: DoScriptText(WHISPER_CUSTODIAN_13, m_creature, pTemp); break;
-            case 23: DoScriptText(WHISPER_CUSTODIAN_4, m_creature, pTemp); break;
+            case 0: DoScriptText(WHISPER_CUSTODIAN_1, m_creature, pPlayer); break;
+            case 1: DoScriptText(WHISPER_CUSTODIAN_2, m_creature, pPlayer); break;
+            case 2: DoScriptText(WHISPER_CUSTODIAN_3, m_creature, pPlayer); break;
+            case 3: DoScriptText(WHISPER_CUSTODIAN_4, m_creature, pPlayer); break;
+            case 5: DoScriptText(WHISPER_CUSTODIAN_5, m_creature, pPlayer); break;
+            case 6: DoScriptText(WHISPER_CUSTODIAN_6, m_creature, pPlayer); break;
+            case 7: DoScriptText(WHISPER_CUSTODIAN_7, m_creature, pPlayer); break;
+            case 8: DoScriptText(WHISPER_CUSTODIAN_8, m_creature, pPlayer); break;
+            case 9: DoScriptText(WHISPER_CUSTODIAN_9, m_creature, pPlayer); break;
+            case 10: DoScriptText(WHISPER_CUSTODIAN_4, m_creature, pPlayer); break;
+            case 13: DoScriptText(WHISPER_CUSTODIAN_10, m_creature, pPlayer); break;
+            case 14: DoScriptText(WHISPER_CUSTODIAN_4, m_creature, pPlayer); break;
+            case 16: DoScriptText(WHISPER_CUSTODIAN_11, m_creature, pPlayer); break;
+            case 17: DoScriptText(WHISPER_CUSTODIAN_12, m_creature, pPlayer); break;
+            case 18: DoScriptText(WHISPER_CUSTODIAN_4, m_creature, pPlayer); break;
+            case 22: DoScriptText(WHISPER_CUSTODIAN_13, m_creature, pPlayer); break;
+            case 23: DoScriptText(WHISPER_CUSTODIAN_4, m_creature, pPlayer); break;
             case 24:
-                DoScriptText(WHISPER_CUSTODIAN_14, m_creature, pTemp);
-                DoCast(pTemp,34883);
+                DoScriptText(WHISPER_CUSTODIAN_14, m_creature, pPlayer);
+                DoCast(pPlayer, 34883);
                 //below here is temporary workaround, to be removed when spell works properly
-                ((Player*)pTemp)->AreaExploredOrEventHappens(10277);
+                pPlayer->AreaExploredOrEventHappens(10277);
                 break;
         }
     }
@@ -203,11 +204,6 @@ struct MANGOS_DLL_DECL npc_custodian_of_timeAI : public npc_escortAI
     }
 
     void Reset() { }
-
-    void UpdateAI(const uint32 diff)
-    {
-        npc_escortAI::UpdateAI(diff);
-    }
 };
 
 CreatureAI* GetAI_npc_custodian_of_time(Creature* pCreature)
@@ -268,7 +264,7 @@ struct MANGOS_DLL_DECL npc_oox17tnAI : public npc_escortAI
 
     void WaypointReached(uint32 i)
     {
-        Unit* pPlayer = Unit::GetUnit((*m_creature), PlayerGUID);
+        Player* pPlayer = GetPlayerForEscort();
 
         if (!pPlayer)
             return;
@@ -296,8 +292,7 @@ struct MANGOS_DLL_DECL npc_oox17tnAI : public npc_escortAI
             case 34:
                 DoScriptText(SAY_END,m_creature);
                 // Award quest credit
-                if (pPlayer && pPlayer->GetTypeId() == TYPEID_PLAYER)
-                    ((Player*)pPlayer)->GroupEventHappens(QUEST_RESCUE_OOX_17TN,m_creature);
+                pPlayer->GroupEventHappens(QUEST_RESCUE_OOX_17TN, m_creature);
                 break;
         }
     }
