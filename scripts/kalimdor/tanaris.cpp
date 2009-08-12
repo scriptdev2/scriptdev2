@@ -601,8 +601,11 @@ struct MANGOS_DLL_DECL npc_toogaAI : public ScriptedAI
 
     void JustDied(Unit* pKiller)
     {
-        if (Unit* pUnit = Unit::GetUnit(*m_creature,m_uiPlayerGUID))
-            ((Player*)pUnit)->FailTimedQuest(QUEST_TOOGA);
+        if (Player* pPlayer = (Player*)Unit::GetUnit(*m_creature, m_uiPlayerGUID))
+        {
+            if (pPlayer->GetQuestStatus(QUEST_TOOGA) == QUEST_STATUS_INCOMPLETE)
+                pPlayer->FailQuest(QUEST_TOOGA);
+        }
 
         m_uiPlayerGUID = 0;
         m_creature->GetMotionMaster()->MovementExpired();
