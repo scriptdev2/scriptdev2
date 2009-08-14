@@ -43,10 +43,8 @@ EndScriptData */
 #define SPELL_PHOENIX_BURN            44197                 // A spell Phoenix uses to damage everything around
 #define SPELL_REBIRTH_DMG             44196                 // DMG if a Phoenix rebirth happen
 
-#define SPELL_FLAMESTRIKE1_NORMAL     44190                 // Damage part
-#define SPELL_FLAMESTRIKE1_HEROIC     46163                 // Heroic damage part
-#define SPELL_FLAMESTRIKE2            44191                 // Flamestrike indicator before the damage
-#define SPELL_FLAMESTRIKE3            44192                 // Summons the trigger + animation (projectile)
+#define SPELL_FLAME_STRIKE_DUMMY      44191                 // Flamestrike indicator before the damage
+#define SPELL_FLAME_STRIKE            44192                 // Summons the trigger + animation (projectile)
 
 #define SPELL_SHOCK_BARRIER           46165                 // Heroic only; 10k damage shield, followed by Pyroblast
 #define SPELL_PYROBLAST               36819                 // Heroic only; 45-55k fire damage
@@ -61,6 +59,7 @@ EndScriptData */
 #define SPELL_POWER_FEEDBACK          44233                 // Stuns him, making him take 50% more damage for 10 seconds. Cast after Gravity Lapse
 
 /*** Creatures ***/
+#define NPC_FLAME_STRIKE_TRIGGER      24666
 #define CREATURE_PHOENIX              24674
 #define CREATURE_PHOENIX_EGG          24675
 #define CREATURE_ARCANE_SPHERE        24708
@@ -174,6 +173,12 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
         }
 
         ScriptedAI::MoveInLineOfSight(who);
+    }
+
+    void JustSummoned(Creature* pSummoned)
+    {
+        if (pSummoned->GetEntry() == NPC_FLAME_STRIKE_TRIGGER)
+            pSummoned->CastSpell(pSummoned, SPELL_FLAME_STRIKE_DUMMY, false, NULL, NULL, m_creature->GetGUID());
     }
 
     void SetThreatList(Creature* SummonedUnit)
@@ -315,11 +320,12 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
 
                 if (FlameStrikeTimer < diff)
                 {
-                    if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                    if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                     {
-                        m_creature->InterruptSpell(CURRENT_CHANNELED_SPELL);  
-                        m_creature->InterruptSpell(CURRENT_GENERIC_SPELL); 
-                        DoCast(target, SPELL_FLAMESTRIKE3, true);
+                        if (m_creature->IsNonMeleeSpellCasted(false))
+                            m_creature->InterruptNonMeleeSpells(false);
+
+                        DoCast(pTarget, SPELL_FLAME_STRIKE);
                         DoScriptText(SAY_FLAMESTRIKE, m_creature);
                     }
                     FlameStrikeTimer = 15000 + rand()%10000;
@@ -421,38 +427,6 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
             }
             break;
         }
-    }
-};
-
-struct MANGOS_DLL_DECL mob_felkael_flamestrikeAI : public ScriptedAI
-{
-    mob_felkael_flamestrikeAI(Creature* pCreature) : ScriptedAI(pCreature)
-    {
-        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
-        Reset();
-    }
-
-    uint32 FlameStrikeTimer;
-    bool m_bIsHeroicMode;
-
-    void Reset()
-    {
-        FlameStrikeTimer = 5000;
-
-        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-        m_creature->setFaction(14);
-
-        DoCast(m_creature, SPELL_FLAMESTRIKE2, true);
-    }
-
-    void MoveInLineOfSight(Unit *who) {}
-    void UpdateAI(const uint32 diff)
-    {
-        if (FlameStrikeTimer < diff)
-        {
-            DoCast(m_creature, m_bIsHeroicMode ? SPELL_FLAMESTRIKE1_HEROIC : SPELL_FLAMESTRIKE1_NORMAL, true);
-            m_creature->DealDamage(m_creature, m_creature->GetMaxHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-        }else FlameStrikeTimer -= diff;
     }
 };
 
@@ -651,11 +625,6 @@ CreatureAI* GetAI_mob_felkael_phoenix_egg(Creature* pCreature)
     return new mob_felkael_phoenix_eggAI(pCreature);
 }
 
-CreatureAI* GetAI_mob_felkael_flamestrike(Creature* pCreature)
-{
-    return new mob_felkael_flamestrikeAI(pCreature);
-}
-
 void AddSC_boss_felblood_kaelthas()
 {
     Script *newscript;
@@ -678,10 +647,5 @@ void AddSC_boss_felblood_kaelthas()
     newscript = new Script;
     newscript->Name = "mob_felkael_phoenix_egg";
     newscript->GetAI = &GetAI_mob_felkael_phoenix_egg;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "mob_felkael_flamestrike";
-    newscript->GetAI = &GetAI_mob_felkael_flamestrike;
     newscript->RegisterSelf();
 }

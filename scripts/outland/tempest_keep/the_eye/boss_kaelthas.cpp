@@ -77,11 +77,10 @@ enum
     SPELL_RES_VISUAL                    = 24171,
 
     //Phase 4 spells
-    SPELL_FIREBALL                      = 22088,           //wrong but works with CastCustomSpell
+    SPELL_FIREBALL                      = 22088,            //wrong but works with CastCustomSpell
     SPELL_PYROBLAST                     = 36819,
-    SPELL_FLAME_STRIKE                  = 36735,
-    SPELL_FLAME_STRIKE_VIS              = 36730,
-    SPELL_FLAME_STRIKE_DMG              = 36731,
+    SPELL_FLAME_STRIKE                  = 36735,            // summons
+    SPELL_FLAME_STRIKE_DUMMY            = 36730,
     SPELL_ARCANE_DISRUPTION             = 36834,
     SPELL_SHOCK_BARRIER                 = 36815,
     SPELL_PHOENIX_ANIMATION             = 36723,
@@ -116,6 +115,7 @@ enum
     SPELL_REBIRTH                       = 41587,
 
     //Creature IDs
+    NPC_FLAME_STRIKE_TRIGGER            = 21369,
     NPC_PHOENIX                         = 21362,
     NPC_PHOENIX_EGG                     = 21364,
 
@@ -454,12 +454,20 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
     void JustSummoned(Creature* pSummoned)
     {
-        // if not phoenix, then it's one of the 7 weapons
-        if (pSummoned->GetEntry() != NPC_PHOENIX)
+        if (pSummoned->GetEntry() == NPC_FLAME_STRIKE_TRIGGER)
         {
-            if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                pSummoned->AI()->AttackStart(pTarget);
+            pSummoned->CastSpell(pSummoned, SPELL_FLAME_STRIKE_DUMMY, false, NULL, NULL, m_creature->GetGUID());
+            return;
         }
+
+        if (pSummoned->GetEntry() == NPC_PHOENIX)
+        {
+            return;
+        }
+
+        // if not phoenix or trigger, then it's one of the 7 weapons
+        if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            pSummoned->AI()->AttackStart(pTarget);
     }
 
     void JustDied(Unit* pKiller)
@@ -1367,68 +1375,6 @@ struct MANGOS_DLL_DECL boss_master_engineer_telonicusAI : public advisorbase_ai
     }
 };
 
-//Flame Strike AI
-struct MANGOS_DLL_DECL mob_kael_flamestrikeAI : public ScriptedAI
-{
-    mob_kael_flamestrikeAI(Creature* pCreature) : ScriptedAI(pCreature)
-    {
-        Reset();
-    }
-
-    uint32 m_uiTimer;
-    bool m_bCasting;
-    bool m_bKillSelf;
-
-    void Reset()
-    {
-        m_uiTimer = 5000;
-        m_bCasting = false;
-        m_bKillSelf = false;
-
-        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-        m_creature->setFaction(14);
-    }
-
-    void AttackStart(Unit* pWho)
-    {
-        if (m_creature->Attack(pWho, false))
-        {
-            m_creature->SetInCombatWith(pWho);
-            pWho->SetInCombatWith(m_creature);
-
-            DoStartNoMovement(pWho);
-        }
-    }
-
-    void MoveInLineOfSight(Unit* pWho) { }
-
-    void UpdateAI(const uint32 uiDiff)
-    {
-        if (!m_bCasting)
-        {
-            DoCast(m_creature, SPELL_FLAME_STRIKE_VIS);
-            m_bCasting = true;
-        }
-
-        //Timer
-        if (m_uiTimer < uiDiff)
-        {
-            if (!m_bKillSelf)
-            {
-                m_creature->InterruptNonMeleeSpells(false);
-                DoCast(m_creature, SPELL_FLAME_STRIKE_DMG);
-            }
-            else
-                m_creature->DealDamage(m_creature, m_creature->GetMaxHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-
-            m_bKillSelf = true;
-            m_uiTimer = 1000;
-        }
-        else
-            m_uiTimer -= uiDiff;
-    }
-};
-
 //Phoenix AI
 struct MANGOS_DLL_DECL mob_phoenix_tkAI : public ScriptedAI
 {
@@ -1543,11 +1489,6 @@ CreatureAI* GetAI_boss_master_engineer_telonicus(Creature* pCreature)
     return new boss_master_engineer_telonicusAI(pCreature);
 }
 
-CreatureAI* GetAI_mob_kael_flamestrike(Creature* pCreature)
-{
-    return new mob_kael_flamestrikeAI(pCreature);
-}
-
 CreatureAI* GetAI_mob_phoenix_tk(Creature* pCreature)
 {
     return new mob_phoenix_tkAI(pCreature);
@@ -1584,11 +1525,6 @@ void AddSC_boss_kaelthas()
     newscript = new Script;
     newscript->Name = "boss_master_engineer_telonicus";
     newscript->GetAI = &GetAI_boss_master_engineer_telonicus;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "mob_kael_flamestrike";
-    newscript->GetAI = &GetAI_mob_kael_flamestrike;
     newscript->RegisterSelf();
 
     newscript = new Script;

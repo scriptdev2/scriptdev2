@@ -607,7 +607,6 @@ UPDATE creature_template SET ScriptName='boss_felblood_kaelthas' WHERE entry=246
 UPDATE creature_template SET ScriptName='mob_arcane_sphere' WHERE entry=24708;
 UPDATE creature_template SET ScriptName='mob_felkael_phoenix' WHERE entry=24674;
 UPDATE creature_template SET ScriptName='mob_felkael_phoenix_egg' WHERE entry=24675;
-UPDATE creature_template SET ScriptName='mob_felkael_flamestrike' WHERE entry=24666;
 UPDATE creature_template SET ScriptName='npc_kalecgos' WHERE entry IN (24844, 24848);
 
 /* MARAUDON */
@@ -913,7 +912,6 @@ UPDATE creature_template SET ScriptName='boss_grand_astromancer_capernian' WHERE
 UPDATE creature_template SET ScriptName='boss_master_engineer_telonicus' WHERE entry=20063;
 UPDATE creature_template SET ScriptName='mob_phoenix_tk' WHERE entry=21362;
 UPDATE creature_template SET ScriptName='mob_phoenix_egg_tk' WHERE entry=21364;
-UPDATE creature_template SET ScriptName='mob_kael_flamestrike' WHERE entry=21369;
 
 /* TEMPLE OF AHN'QIRAJ */
 UPDATE instance_template SET script='instance_temple_of_ahnqiraj' WHERE map=531;
