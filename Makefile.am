@@ -291,6 +291,7 @@ scripts/northrend/borean_tundra.cpp \
 scripts/northrend/dragonblight.cpp \
 scripts/northrend/grizzly_hills.cpp \
 scripts/northrend/icecrown.cpp \
+scripts/northrend/sholazar_basin.cpp \
 scripts/northrend/azjol-nerub/azjol-nerub/def_azjol-nerub.h \
 scripts/northrend/azjol-nerub/azjol-nerub/instance_azjol-nerub.cpp \
 scripts/northrend/naxxramas/boss_anubrekhan.cpp \

@@ -1764,6 +1764,10 @@
 					RelativePath="..\scripts\northrend\icecrown.cpp"
 					>
 				</File>
+				<File
+					RelativePath="..\scripts\northrend\sholazar_basin.cpp"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="outland"
