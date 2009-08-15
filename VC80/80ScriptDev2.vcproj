@@ -28,7 +28,6 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				CommandLine=""
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -112,7 +111,6 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				CommandLine=""
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -197,7 +195,6 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				CommandLine=""
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -280,7 +277,6 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				CommandLine=""
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -404,6 +400,102 @@
 			<Filter
 				Name="eastern_kingdoms"
 				>
+				<File
+					RelativePath="..\scripts\eastern_kingdoms\alterac_mountains.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\eastern_kingdoms\arathi_highlands.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\eastern_kingdoms\blasted_lands.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\eastern_kingdoms\boss_kruul.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\eastern_kingdoms\burning_steppes.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\eastern_kingdoms\dun_morogh.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\eastern_kingdoms\eastern_plaguelands.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\eastern_kingdoms\elwynn_forest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\eastern_kingdoms\eversong_woods.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\eastern_kingdoms\ghostlands.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\eastern_kingdoms\hinterlands.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\eastern_kingdoms\ironforge.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\eastern_kingdoms\isle_of_queldanas.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\eastern_kingdoms\loch_modan.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\eastern_kingdoms\searing_gorge.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\eastern_kingdoms\silvermoon_city.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\eastern_kingdoms\silverpine_forest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\eastern_kingdoms\stormwind_city.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\eastern_kingdoms\stranglethorn_vale.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\eastern_kingdoms\tirisfal_glades.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\eastern_kingdoms\undercity.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\eastern_kingdoms\western_plaguelands.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\eastern_kingdoms\westfall.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\eastern_kingdoms\wetlands.cpp"
+					>
+				</File>
 				<Filter
 					Name="blackrock_depths"
 					>
@@ -1052,102 +1144,6 @@
 						>
 					</File>
 				</Filter>
-				<File
-					RelativePath="..\scripts\eastern_kingdoms\alterac_mountains.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\eastern_kingdoms\arathi_highlands.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\eastern_kingdoms\blasted_lands.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\eastern_kingdoms\boss_kruul.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\eastern_kingdoms\burning_steppes.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\eastern_kingdoms\dun_morogh.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\eastern_kingdoms\eastern_plaguelands.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\eastern_kingdoms\elwynn_forest.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\eastern_kingdoms\eversong_woods.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\eastern_kingdoms\ghostlands.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\eastern_kingdoms\hinterlands.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\eastern_kingdoms\ironforge.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\eastern_kingdoms\isle_of_queldanas.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\eastern_kingdoms\loch_modan.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\eastern_kingdoms\searing_gorge.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\eastern_kingdoms\silvermoon_city.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\eastern_kingdoms\silverpine_forest.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\eastern_kingdoms\stormwind_city.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\eastern_kingdoms\stranglethorn_vale.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\eastern_kingdoms\tirisfal_glades.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\eastern_kingdoms\undercity.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\eastern_kingdoms\western_plaguelands.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\eastern_kingdoms\westfall.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\eastern_kingdoms\wetlands.cpp"
-					>
-				</File>
 			</Filter>
 			<Filter
 				Name="examples"
@@ -1172,6 +1168,90 @@
 			<Filter
 				Name="kalimdor"
 				>
+				<File
+					RelativePath="..\scripts\kalimdor\ashenvale.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\kalimdor\azshara.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\kalimdor\azuremyst_isle.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\kalimdor\bloodmyst_isle.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\kalimdor\boss_azuregos.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\kalimdor\darkshore.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\kalimdor\desolace.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\kalimdor\dustwallow_marsh.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\kalimdor\felwood.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\kalimdor\feralas.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\kalimdor\moonglade.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\kalimdor\mulgore.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\kalimdor\orgrimmar.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\kalimdor\silithus.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\kalimdor\stonetalon_mountains.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\kalimdor\tanaris.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\kalimdor\teldrassil.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\kalimdor\the_barrens.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\kalimdor\thousand_needles.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\kalimdor\thunder_bluff.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\kalimdor\winterspring.cpp"
+					>
+				</File>
 				<Filter
 					Name="blackfathom_deeps"
 					>
@@ -1428,94 +1508,30 @@
 						>
 					</File>
 				</Filter>
-				<File
-					RelativePath="..\scripts\kalimdor\ashenvale.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\kalimdor\azshara.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\kalimdor\azuremyst_isle.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\kalimdor\bloodmyst_isle.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\kalimdor\boss_azuregos.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\kalimdor\darkshore.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\kalimdor\desolace.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\kalimdor\dustwallow_marsh.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\kalimdor\felwood.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\kalimdor\feralas.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\kalimdor\moonglade.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\kalimdor\mulgore.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\kalimdor\orgrimmar.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\kalimdor\silithus.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\kalimdor\stonetalon_mountains.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\kalimdor\tanaris.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\kalimdor\teldrassil.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\kalimdor\the_barrens.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\kalimdor\thousand_needles.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\kalimdor\thunder_bluff.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\kalimdor\winterspring.cpp"
-					>
-				</File>
 			</Filter>
 			<Filter
 				Name="northrend"
 				>
+				<File
+					RelativePath="..\scripts\northrend\borean_tundra.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\northrend\dragonblight.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\northrend\grizzly_hills.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\northrend\icecrown.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\northrend\sholazar_basin.cpp"
+					>
+				</File>
 				<Filter
 					Name="azjol-nerub"
 					>
@@ -1748,30 +1764,50 @@
 					Name="zuldrak"
 					>
 				</Filter>
-				<File
-					RelativePath="..\scripts\northrend\borean_tundra.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\northrend\dragonblight.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\northrend\grizzly_hills.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\northrend\icecrown.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\northrend\sholazar_basin.cpp"
-					>
-				</File>
 			</Filter>
 			<Filter
 				Name="outland"
 				>
+				<File
+					RelativePath="..\scripts\outland\blades_edge_mountains.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\outland\boss_doomlord_kazzak.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\outland\boss_doomwalker.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\outland\hellfire_peninsula.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\outland\nagrand.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\outland\netherstorm.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\outland\shadowmoon_valley.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\outland\shattrath_city.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\outland\terokkar_forest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\outland\zangarmarsh.cpp"
+					>
+				</File>
 				<Filter
 					Name="auchindoun"
 					>
@@ -2071,7 +2107,8 @@
 							>
 						</File>
 						<File
-							RelativePath="..\scripts\outland\hellfire_citadel\shattered_halls\boss_warchief_kargath_bladefist.cpp">
+							RelativePath="..\scripts\outland\hellfire_citadel\shattered_halls\boss_warchief_kargath_bladefist.cpp"
+							>
 						</File>
 						<File
 							RelativePath="..\scripts\outland\hellfire_citadel\shattered_halls\def_shattered_halls.h"
@@ -2179,46 +2216,6 @@
 						</File>
 					</Filter>
 				</Filter>
-				<File
-					RelativePath="..\scripts\outland\blades_edge_mountains.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\outland\boss_doomlord_kazzak.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\outland\boss_doomwalker.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\outland\hellfire_peninsula.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\outland\nagrand.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\outland\netherstorm.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\outland\shadowmoon_valley.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\outland\shattrath_city.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\outland\terokkar_forest.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\outland\zangarmarsh.cpp"
-					>
-				</File>
 			</Filter>
 			<Filter
 				Name="world"
@@ -2377,8 +2374,8 @@
 				>
 				<Tool
 					Name="VCCustomBuildTool"
-					Description="Extracting Revision"
-					CommandLine="echo on&#x0D;&#x0A;cd &quot;$(SolutionDir)&quot;&#x0D;&#x0A;&quot;..\..\..\win\VC80\genrevision__Win32_$(ConfigurationName)\genrevision.exe&quot;"
+					Description="Extracting revision"
+					CommandLine="cd &quot;$(SolutionDir)&quot;&#x0D;&#x0A;&quot;$(SolutionDir)..\..\..\win\VC80\genrevision__Win32_$(ConfigurationName)\genrevision.exe&quot;&#x0D;&#x0A;"
 					AdditionalDependencies=".svn/entries"
 					Outputs="revision.h"
 				/>
@@ -2388,8 +2385,8 @@
 				>
 				<Tool
 					Name="VCCustomBuildTool"
-					Description="Extracting Revision"
-					CommandLine="echo on&#x0D;&#x0A;cd &quot;$(SolutionDir)&quot;&#x0D;&#x0A;&quot;..\..\..\win\VC80\genrevision__Win32_$(ConfigurationName)\genrevision.exe&quot;"
+					Description="Extracting revision"
+					CommandLine="cd &quot;$(SolutionDir)&quot;&#x0D;&#x0A;&quot;$(SolutionDir)..\..\..\win\VC80\genrevision__Win32_$(ConfigurationName)\genrevision.exe&quot;&#x0D;&#x0A;"
 					AdditionalDependencies=".svn/entries"
 					Outputs="revision.h"
 				/>
@@ -2399,8 +2396,8 @@
 				>
 				<Tool
 					Name="VCCustomBuildTool"
-					Description="Extracting Revision"
-					CommandLine="echo on&#x0D;&#x0A;cd &quot;$(SolutionDir)&quot;&#x0D;&#x0A;&quot;..\..\..\win\VC80\genrevision__Win32_$(ConfigurationName)\genrevision.exe&quot;"
+					Description="Extracting revision"
+					CommandLine="cd &quot;$(SolutionDir)&quot;&#x0D;&#x0A;&quot;$(SolutionDir)..\..\..\win\VC80\genrevision__Win32_$(ConfigurationName)\genrevision.exe&quot;&#x0D;&#x0A;"
 					AdditionalDependencies=".svn/entries"
 					Outputs="revision.h"
 				/>
@@ -2410,8 +2407,8 @@
 				>
 				<Tool
 					Name="VCCustomBuildTool"
-					Description="Extracting Revision"
-					CommandLine="echo on&#x0D;&#x0A;cd &quot;$(SolutionDir)&quot;&#x0D;&#x0A;&quot;..\..\..\win\VC80\genrevision__Win32_$(ConfigurationName)\genrevision.exe&quot;"
+					Description="Extracting revision"
+					CommandLine="cd &quot;$(SolutionDir)&quot;&#x0D;&#x0A;&quot;$(SolutionDir)..\..\..\win\VC80\genrevision__Win32_$(ConfigurationName)\genrevision.exe&quot;&#x0D;&#x0A;"
 					AdditionalDependencies=".svn/entries"
 					Outputs="revision.h"
 				/>
