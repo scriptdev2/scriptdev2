@@ -332,7 +332,7 @@ struct MANGOS_DLL_DECL boss_malacrass_addAI : public ScriptedAI
         //if spell not valid
         if (!pSpell)
             return false;
-        
+
         //spell known, so lookup using rangeIndex
         SpellRangeEntry const* pSpellRange = GetSpellRangeStore()->LookupEntry(pSpell->rangeIndex);
 
@@ -754,11 +754,11 @@ struct MANGOS_DLL_DECL mob_fenstalkerAI : public boss_malacrass_addAI
             return;
 
         if (m_uiVolatileInfectionTimer < uiDiff)
-        { 
+        {
             DoCast(m_creature->getVictim(), SPELL_VOLATILE_INFECTION);
             m_uiVolatileInfectionTimer = 12000;
         }
-        else 
+        else
             m_uiVolatileInfectionTimer -= uiDiff;
 
         DoMeleeAttackIfReady();

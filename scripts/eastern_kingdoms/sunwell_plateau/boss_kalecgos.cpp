@@ -39,7 +39,7 @@ enum KalecgosEncounter
     SAY_GOOD_NEAR_DEATH             = -1580007,
     SAY_GOOD_NEAR_DEATH2            = -1580008,
     SAY_GOOD_PLRWIN                 = -1580009,
-    
+
     SAY_SATH_AGGRO                  = -1580010,
     SAY_SATH_DEATH                  = -1580011,
     SAY_SATH_SPELL1                 = -1580012,

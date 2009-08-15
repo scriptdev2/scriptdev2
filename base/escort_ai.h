@@ -84,7 +84,7 @@ struct MANGOS_DLL_DECL npc_escortAI : public ScriptedAI
         uint32 m_uiPlayerCheckTimer;
 
         const Quest* m_pQuestForEscort;                     //generally passed in Start() when regular escort script.
- 
+
         std::list<Escort_Waypoint> WaypointList;
         std::list<Escort_Waypoint>::iterator CurrentWP;
 

@@ -52,7 +52,7 @@ struct MANGOS_DLL_DECL boss_ingvarAI : public ScriptedAI
 
     bool m_bIsResurrected;
 
-    void Reset() 
+    void Reset()
     {
         m_bIsResurrected = false;
     }

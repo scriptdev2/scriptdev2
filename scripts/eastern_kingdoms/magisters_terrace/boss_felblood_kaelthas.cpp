@@ -281,8 +281,8 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
                 {
                     if (PyroblastTimer < diff)
                     {
-                        m_creature->InterruptSpell(CURRENT_CHANNELED_SPELL);  
-                        m_creature->InterruptSpell(CURRENT_GENERIC_SPELL); 
+                        m_creature->InterruptSpell(CURRENT_CHANNELED_SPELL);
+                        m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
                         DoCast(m_creature, SPELL_SHOCK_BARRIER, true);
                         DoCast(m_creature->getVictim(), SPELL_PYROBLAST);
                         PyroblastTimer = 60000;

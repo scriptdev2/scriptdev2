@@ -39,7 +39,7 @@ enum
     SAY_DAL_SKA_DIES_REPLY              = -1574020,
 
     SPELL_SUMMON_DAL_GHOST              = 48612,
-    SPELL_SUMMON_SKA_GHOST              = 48613, 
+    SPELL_SUMMON_SKA_GHOST              = 48613,
 
     NPC_DAL_GHOST                       = 27389,
     NPC_SKA_GHOST                       = 27390

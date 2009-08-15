@@ -41,7 +41,7 @@ EndScriptData */
 #define SPELL_BANISH            30231
 #define SPELL_CORROSIVE_ACID    33551
 #define SPELL_FEAR              33547
-#define SPELL_ENRAGE            34970                         
+#define SPELL_ENRAGE            34970
 
 struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public npc_escortAI
 {

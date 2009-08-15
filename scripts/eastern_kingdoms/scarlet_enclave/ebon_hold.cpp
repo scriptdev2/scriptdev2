@@ -171,7 +171,7 @@ struct MANGOS_DLL_DECL npc_a_special_surpriseAI : public ScriptedAI
             m_uiPlayerGUID = pWho->GetGUID();
     }
 
-    void UpdateAI(const uint32 uiDiff) 
+    void UpdateAI(const uint32 uiDiff)
     {
         if (m_uiPlayerGUID && !m_creature->getVictim() && m_creature->isAlive())
         {

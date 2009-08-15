@@ -320,7 +320,7 @@ bool GossipSelect_npc_cassa_crimsonwing(Player* pPlayer, Creature* pCreature, ui
     if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
     {
         pPlayer->CLOSE_GOSSIP_MENU();
-        pPlayer->CastSpell(pPlayer, SPELL_ALCAZ_SURVEY, false);   
+        pPlayer->CastSpell(pPlayer, SPELL_ALCAZ_SURVEY, false);
     }
     return true;
 }

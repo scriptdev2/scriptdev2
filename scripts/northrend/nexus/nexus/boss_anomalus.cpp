@@ -55,7 +55,7 @@ struct MANGOS_DLL_DECL boss_anomalusAI : public ScriptedAI
     ScriptedInstance* m_pInstance;
     bool m_bIsHeroicMode;
 
-    void Reset() 
+    void Reset()
     {
     }
 

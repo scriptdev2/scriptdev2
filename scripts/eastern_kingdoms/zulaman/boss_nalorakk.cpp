@@ -194,8 +194,8 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
             //Change to Bear Form if we're in Troll Form for 45sec
             if (ChangeForm_Timer < diff)
             {
-                m_creature->InterruptSpell(CURRENT_CHANNELED_SPELL);  
-                m_creature->InterruptSpell(CURRENT_GENERIC_SPELL); 
+                m_creature->InterruptSpell(CURRENT_CHANNELED_SPELL);
+                m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
                 DoCast(m_creature, SPELL_BEARFORM);
                 //And 30sec (bear form) + 45sec (troll form) before we should cast this again
                 ChangeForm_Timer = 75000;

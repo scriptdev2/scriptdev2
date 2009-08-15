@@ -62,7 +62,7 @@ struct MANGOS_DLL_DECL boss_ormorokAI : public ScriptedAI
     ScriptedInstance* m_pInstance;
     bool m_bIsHeroicMode;
 
-    void Reset() 
+    void Reset()
     {
     }
 

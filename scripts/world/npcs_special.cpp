@@ -150,7 +150,7 @@ struct MANGOS_DLL_DECL npc_air_force_botsAI : public ScriptedAI
 
         return pSummoned;
     }
-    
+
     Creature* GetSummonedGuard()
     {
         Creature* pCreature = (Creature*)Unit::GetUnit(*m_creature, m_uiSpawnedGUID);

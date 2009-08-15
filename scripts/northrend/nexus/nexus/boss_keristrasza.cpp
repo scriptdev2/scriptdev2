@@ -35,7 +35,7 @@ enum
     SPELL_CRYSTALFIRE_BREATH_H  = 57091,
 
     SPELL_CRYSTALLIZE           = 48179,
-    
+
     SPELL_CRYSTAL_CHAINS        = 50997,
     SPELL_CRYSTAL_CHAINS_H      = 57050,
 
@@ -61,7 +61,7 @@ struct MANGOS_DLL_DECL boss_keristraszaAI : public ScriptedAI
     ScriptedInstance* m_pInstance;
     bool m_bIsHeroicMode;
 
-    void Reset() 
+    void Reset()
     {
     }
 

@@ -154,7 +154,7 @@ struct MANGOS_DLL_DECL boss_murmurAI : public ScriptedAI
             if (ThunderingStorm_Timer < diff)
             {
                 DoCast(m_creature->getVictim(), SPELL_THUNDERING_STORM);
-                ThunderingStorm_Timer = 12000; 
+                ThunderingStorm_Timer = 12000;
             }else ThunderingStorm_Timer -= diff;
         }
 

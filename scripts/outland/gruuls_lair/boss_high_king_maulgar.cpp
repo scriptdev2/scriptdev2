@@ -601,7 +601,7 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public Council_Base_AI
             if (bInRange)
             {
                 m_creature->InterruptNonMeleeSpells(false);
-                DoCast(pTarget, SPELL_BLAST_WAVE);           
+                DoCast(pTarget, SPELL_BLAST_WAVE);
             }
         }
         else

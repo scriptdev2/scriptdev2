@@ -224,12 +224,12 @@ struct MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
                 m_auiEncounter[1] = uiData;
                 break;
             case TYPE_FELMYST:
-                m_auiEncounter[2] = uiData; 
+                m_auiEncounter[2] = uiData;
                 if (uiData == DONE)
                     DoUseDoorOrButton(m_uiDoorFireBarrierGUID);
                 break;
-            case TYPE_EREDAR_TWINS:  
-                m_auiEncounter[3] = uiData; 
+            case TYPE_EREDAR_TWINS:
+                m_auiEncounter[3] = uiData;
                 if (uiData == DONE)
                 {
                     DoUseDoorOrButton(m_uiDoorTheSecondGateGUID);

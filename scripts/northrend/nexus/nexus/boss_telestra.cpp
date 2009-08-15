@@ -77,7 +77,7 @@ struct MANGOS_DLL_DECL boss_telestraAI : public ScriptedAI
     ScriptedInstance* m_pInstance;
     bool m_bIsHeroicMode;
 
-    void Reset() 
+    void Reset()
     {
     }
 
