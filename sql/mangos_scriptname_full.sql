@@ -521,6 +521,7 @@ UPDATE gameobject_template SET ScriptName='go_haaleshi_altar' WHERE entry=181606
 UPDATE creature_template SET ScriptName='npc_gryphoneer_windbellow' WHERE entry=20235;
 UPDATE creature_template SET ScriptName='npc_naladu' WHERE entry=19361;
 UPDATE creature_template SET ScriptName='npc_tracy_proudwell' WHERE entry=18266;
+UPDATE creature_template SET ScriptName='npc_trollbane' WHERE entry=16819;
 UPDATE creature_template SET ScriptName='npc_wing_commander_brack' WHERE entry=19401;
 UPDATE creature_template SET ScriptName='npc_wing_commander_dabiree' WHERE entry=19409;
 UPDATE creature_template SET ScriptName='npc_wounded_blood_elf' WHERE entry=16993;
@@ -1039,6 +1040,7 @@ UPDATE creature_template SET ScriptName='npc_cooshcoosh' WHERE entry=18586;
 UPDATE creature_template SET ScriptName='npc_elder_kuruti' WHERE entry=18197;
 UPDATE creature_template SET ScriptName='npc_kayra_longmane' WHERE entry=17969;
 UPDATE creature_template SET ScriptName='npc_mortog_steamhead' WHERE entry=23373;
+UPDATE creature_template SET ScriptName='npc_timothy_daniels' WHERE entry=18019;
 
 /* ZUL'AMAN */
 UPDATE instance_template SET script='instance_zulaman' WHERE map=568;
