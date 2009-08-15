@@ -95,6 +95,8 @@ enum
     SPELL_DEMONARMOR                    = 13787,
     SPELL_SUMMON_VOIDWALKERS            = 15092,
 
+    SAY_DOOMREL_START_EVENT             = -1230003,
+
     MAX_DWARF                           = 7
 };
 
@@ -152,17 +154,17 @@ struct MANGOS_DLL_DECL boss_doomrelAI : public ScriptedAI
         switch(uiPhase)
         {
             case 0:
-                return m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_SEETHREL));
-            case 1:
-                return m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_VILEREL));
-            case 2:
-                return m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_HATEREL));
-            case 3:
                 return m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_ANGERREL));
-            case 4:
-                return m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_GLOOMREL));
-            case 5:
+            case 1:
+                return m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_SEETHREL));
+            case 2:
                 return m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_DOPEREL));
+            case 3:
+                return m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_GLOOMREL));
+            case 4:
+                return m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_VILEREL));
+            case 5:
+                return m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_HATEREL));
             case 6:
                 return m_creature;
         }
@@ -295,12 +297,8 @@ bool GossipSelect_boss_doomrel(Player* pPlayer, Creature* pCreature, uint32 uiSe
     switch(uiAction)
     {
         case GOSSIP_ACTION_INFO_DEF+1:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "[PH] Continue...", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-            pPlayer->SEND_GOSSIP_MENU(2605, pCreature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+2:
             pPlayer->CLOSE_GOSSIP_MENU();
-
+            DoScriptText(SAY_DOOMREL_START_EVENT, pCreature, pPlayer);
             // start event
             if (ScriptedInstance* pInstance = (ScriptedInstance*)pCreature->GetInstanceData())
                 pInstance->SetData(TYPE_TOMB_OF_SEVEN, IN_PROGRESS);

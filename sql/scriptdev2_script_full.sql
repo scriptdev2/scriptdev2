@@ -506,7 +506,8 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
 (-1230000,'Ah, hits the spot!',0,0,0,0,'rocknot SAY_GOT_BEER'),
 (-1230001,'Come to aid the Throne!',0,1,0,0,'dagran SAY_AGGRO'),
-(-1230002,'Hail to the king, baby!',0,1,0,0,'dagran SAY_SLAY');
+(-1230002,'Hail to the king, baby!',0,1,0,0,'dagran SAY_SLAY'),
+(-1230003,'You have challenged the Seven, and now you will die!',0,0,0,0,'doomrel SAY_DOOMREL_START_EVENT'),
 
 -- -1 249 000 ONYXIA'S LAIR
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
