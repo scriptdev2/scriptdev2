@@ -242,12 +242,12 @@ bool GossipSelect_npc_marin_noggenfogger(Player* pPlayer, Creature* pCreature, u
 
 enum
 {
-    SAY_START               = -1000287,
-    SAY_AGGRO1              = -1000288,
-    SAY_AGGRO2              = -1000289,
-    SAY_AMBUSH              = -1000290,
-    SAY_AMBUSH_REPLY        = -1000291,
-    SAY_END                 = -1000292,
+    SAY_OOX_START           = -1000287,
+    SAY_OOX_AGGRO1          = -1000288,
+    SAY_OOX_AGGRO2          = -1000289,
+    SAY_OOX_AMBUSH          = -1000290,
+    SAY_OOX17_AMBUSH_REPLY  = -1000291,
+    SAY_OOX_END             = -1000292,
 
     QUEST_RESCUE_OOX_17TN   = 648,
     FACTION_ESCORTEE_A      = 774,
@@ -273,24 +273,24 @@ struct MANGOS_DLL_DECL npc_oox17tnAI : public npc_escortAI
         {
             //1. Ambush: 3 scorpions
             case 22:
-                DoScriptText(SAY_AMBUSH,m_creature);
+                DoScriptText(SAY_OOX_AMBUSH, m_creature);
                 m_creature->SummonCreature(NPC_SCORPION, -8340.70, -4448.17, 9.17, 3.10, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000);
                 m_creature->SummonCreature(NPC_SCORPION, -8343.18, -4444.35, 9.44, 2.35, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000);
                 m_creature->SummonCreature(NPC_SCORPION, -8348.70, -4457.80, 9.58, 2.02, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000);
                 break;
             //2. Ambush: 2 Rogues & 1 Shadow Mage
             case 28:
-                DoScriptText(SAY_AMBUSH,m_creature);
+                DoScriptText(SAY_OOX_AMBUSH, m_creature);
 
                 m_creature->SummonCreature(NPC_SCOFFLAW, -7488.02, -4786.56 ,10.67, 3.74, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
                 m_creature->SummonCreature(NPC_SHADOW_MAGE, -7486.41, -4791.55 ,10.54, 3.26, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000);
 
                 if (Creature* pCreature = m_creature->SummonCreature(NPC_SCOFFLAW, -7488.47, -4800.77, 9.77, 2.50,TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000))
-                    DoScriptText(SAY_AMBUSH_REPLY,pCreature);
+                    DoScriptText(SAY_OOX17_AMBUSH_REPLY,pCreature);
 
                 break;
             case 34:
-                DoScriptText(SAY_END,m_creature);
+                DoScriptText(SAY_OOX_END, m_creature);
                 // Award quest credit
                 pPlayer->GroupEventHappens(QUEST_RESCUE_OOX_17TN, m_creature);
                 break;
@@ -304,8 +304,8 @@ struct MANGOS_DLL_DECL npc_oox17tnAI : public npc_escortAI
         //For an small probability he say something when it aggros
         switch(rand()%10)
         {
-           case 0: DoScriptText(SAY_AGGRO1,m_creature); break;
-           case 1: DoScriptText(SAY_AGGRO2,m_creature); break;
+           case 0: DoScriptText(SAY_OOX_AGGRO1, m_creature); break;
+           case 1: DoScriptText(SAY_OOX_AGGRO2, m_creature); break;
         }
     }
 
@@ -324,7 +324,7 @@ bool QuestAccept_npc_oox17tn(Player* pPlayer, Creature* pCreature, const Quest* 
 {
     if (pQuest->GetQuestId() == QUEST_RESCUE_OOX_17TN)
     {
-        DoScriptText(SAY_START, pCreature);
+        DoScriptText(SAY_OOX_START, pCreature);
 
         pCreature->SetStandState(UNIT_STAND_STATE_STAND);
 

@@ -538,7 +538,6 @@ UPDATE creature_template SET ScriptName='npc_rinji' WHERE entry=7780;
 
 /* ICECROWN */
 UPDATE creature_template SET ScriptName='npc_arete' WHERE entry=29344;
-UPDATE creature_template SET ScriptName='npc_vekjik' WHERE entry=28315;
 
 /* IRONFORGE */
 UPDATE creature_template SET ScriptName='npc_royal_historian_archesonus' WHERE entry=8879;
@@ -794,7 +793,7 @@ UPDATE creature_template SET ScriptName='npc_shattrathflaskvendors' WHERE entry 
 UPDATE creature_template SET ScriptName='npc_zephyr' WHERE entry=25967;
 
 /* SHOLAZAR BASIN */
-
+UPDATE creature_template SET ScriptName='npc_vekjik' WHERE entry=28315;
 
 /* SILITHUS */
 UPDATE creature_template SET ScriptName='npc_highlord_demitrian' WHERE entry=14347;
