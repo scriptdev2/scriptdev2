@@ -538,6 +538,7 @@ UPDATE creature_template SET ScriptName='npc_rinji' WHERE entry=7780;
 
 /* ICECROWN */
 UPDATE creature_template SET ScriptName='npc_arete' WHERE entry=29344;
+UPDATE creature_template SET ScriptName='npc_vekjik' WHERE entry=28315;
 
 /* IRONFORGE */
 UPDATE creature_template SET ScriptName='npc_royal_historian_archesonus' WHERE entry=8879;
