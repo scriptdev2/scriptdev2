@@ -80,7 +80,7 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    uint32 m_uiPhase; 
+    uint32 m_uiPhase;
     uint32 m_uiPhaseCounter;
     uint32 m_uiFrenzyTimer;
     uint32 m_uiSaberLashTimer;
@@ -208,7 +208,7 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
                 (pSpiritLynx && pSpiritLynx->GetHealth()*10 < pSpiritLynx->GetMaxHealth()))
             {
                 m_uiPhase = PHASE_SINGLE;
- 
+
                 DoScriptText(SAY_MERGE, m_creature);
 
                 uint32 uiSpellId;
@@ -308,9 +308,9 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
                         DoCast(pTarget, SPELL_FLAMESHOCK);
 
                     m_uiShockTimer = (10+rand()%5)*IN_MILISECONDS;
-                }   
+                }
             }
-            else 
+            else
                 m_uiShockTimer -= uiDiff;
         }
 

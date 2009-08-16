@@ -15,21 +15,3 @@ UPDATE `creature_template` SET `ScriptName` = 'mob_lavaspawn' WHERE `entry` = 12
 UPDATE `creature_template` SET `ScriptName` = 'mob_molten_destroyer' WHERE `entry` = 11659;
 UPDATE `creature_template` SET `ScriptName` = 'mob_molten_giant' WHERE `entry` = 11658;
 UPDATE `creature_template` SET `ScriptName` = 'boss_azuregos' WHERE `entry` = 6109;
-
-
-
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 

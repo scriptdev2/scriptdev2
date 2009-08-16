@@ -1,7 +1,7 @@
--- 
+--
 -- NOTE: if you have temporary stored data in table `script_localized_texts` make sure to make backup of this before running this update!
 -- Also note if you have any texts in current script_texts and they are not using entries valid for *_texts table, you _will_ get error messages on startup.
--- 
+--
 
 -- drop obsolete table
 DROP TABLE script_localized_texts;

@@ -20,10 +20,9 @@ ALTER TABLE `eventai_scripts`
   MODIFY `action3_param3` int(11) signed NOT NULL default '0',
 
   ADD `comment` varchar(255) NOT NULL default '' COMMENT 'Event Comment';
-   
+
 ALTER TABLE `localized_texts`
   DROP PRIMARY KEY,
   DROP `id`,
   ADD `id` int(11) unsigned NOT NULL COMMENT 'Identifier' PRIMARY KEY AUTO_INCREMENT FIRST,
   ADD `comment` varchar(255) NOT NULL default '' COMMENT 'Text Comment';
-  

@@ -23,7 +23,7 @@ CREATE TABLE `script_localized_texts` (
 `locale_7` varchar(255) NOT NULL default '',
 `locale_8` varchar(255) NOT NULL default '',
 `comment` varchar(255) NOT NULL default '' COMMENT 'Text Comment',
-PRIMARY KEY  (`id`)            
+PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED COMMENT='Localized Script Text';
 
 
