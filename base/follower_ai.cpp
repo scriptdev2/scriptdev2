@@ -25,7 +25,8 @@ FollowerAI::FollowerAI(Creature* pCreature) : ScriptedAI(pCreature),
     m_uiUpdateFollowTimer(2500),
     m_bIsFollowing(false),
     m_bIsReturnToLeader(false),
-    m_bIsFollowComplete(false)
+    m_bIsFollowComplete(false),
+    m_bIsEndEvent(false)
 {}
 
 void FollowerAI::AttackStart(Unit* pWho)
@@ -120,6 +121,7 @@ void FollowerAI::JustRespawned()
     m_bIsFollowing = false;
     m_bIsReturnToLeader = false;
     m_bIsFollowComplete = false;
+    m_bIsEndEvent = false;
 
     if (!IsCombatMovement())
         SetCombatMovement(true);
@@ -163,7 +165,7 @@ void FollowerAI::UpdateAI(const uint32 uiDiff)
     {
         if (m_uiUpdateFollowTimer < uiDiff)
         {
-            if (m_bIsFollowComplete)
+            if (m_bIsFollowComplete && !m_bIsEndEvent)
             {
                 debug_log("SD2: FollowerAI is set completed, despawns.");
                 m_creature->ForcedDespawn();
@@ -306,4 +308,18 @@ Player* FollowerAI::GetLeaderForFollower()
 
     debug_log("SD2: FollowerAI GetLeader can not find suitable leader.");
     return NULL;
+}
+
+void FollowerAI::SetFollowComplete(bool bWithEndEvent)
+{
+    if (m_creature->hasUnitState(UNIT_STAT_FOLLOW))
+    {
+        m_creature->clearUnitState(UNIT_STAT_FOLLOW);
+
+        m_creature->GetMotionMaster()->MovementExpired();
+        m_creature->GetMotionMaster()->MoveIdle();
+    }
+
+    m_bIsEndEvent = bWithEndEvent;
+    m_bIsFollowComplete = true;
 }
