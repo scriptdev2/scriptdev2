@@ -28,6 +28,7 @@ EndContentData */
 
 #include "precompiled.h"
 #include "escort_ai.h"
+#include "follower_ai.h"
 
 /*####
 # npc_prospector_remtravel
@@ -171,126 +172,34 @@ enum
 
 #define GOSSIP_ITEM_INSERT_KEY  "[PH] Insert key"
 
-struct MANGOS_DLL_DECL npc_threshwackonatorAI : public ScriptedAI
+struct MANGOS_DLL_DECL npc_threshwackonatorAI : public FollowerAI
 {
-    npc_threshwackonatorAI(Creature* pCreature) : ScriptedAI(pCreature)
-    {
-        m_uiFaction = pCreature->getFaction();
-        m_uiNpcFlags = pCreature->GetUInt32Value(UNIT_NPC_FLAGS);
-        m_uiPlayerGUID = 0;
-        Reset();
-    }
+    npc_threshwackonatorAI(Creature* pCreature) : FollowerAI(pCreature) { Reset(); }
 
-    uint64 m_uiPlayerGUID;
-    uint32 m_uiFaction;
-    uint32 m_uiNpcFlags;
-    uint32 m_uiCheckPlayerTimer;
-
-    void Reset()
-    {
-        m_uiCheckPlayerTimer = 2500;
-
-        if (!m_uiPlayerGUID)
-        {
-            m_creature->setFaction(m_uiFaction);
-            m_creature->SetUInt32Value(UNIT_NPC_FLAGS, m_uiNpcFlags);
-        }
-    }
+    void Reset() {}
 
     void MoveInLineOfSight(Unit* pWho)
     {
-        if (pWho->GetEntry() == NPC_GELKAK)
+        FollowerAI::MoveInLineOfSight(pWho);
+
+        if (!m_creature->getVictim() && !IsFollowComplete() && pWho->GetEntry() == NPC_GELKAK)
         {
-            if (m_uiPlayerGUID && m_creature->IsWithinDistInMap(pWho, 10.0f))
+            if (m_creature->IsWithinDistInMap(pWho, 10.0f))
             {
                 DoScriptText(SAY_AT_CLOSE, pWho);
                 DoAtEnd();
             }
         }
-
-        ScriptedAI::MoveInLineOfSight(pWho);
-    }
-
-    void EnterEvadeMode()
-    {
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop(true);
-        m_creature->LoadCreaturesAddon();
-
-        if (m_creature->isAlive())
-        {
-            if (Unit* pUnit = Unit::GetUnit(*m_creature, m_uiPlayerGUID))
-                m_creature->GetMotionMaster()->MoveFollow(pUnit, PET_FOLLOW_DIST, PET_FOLLOW_ANGLE);
-            else
-            {
-                m_creature->GetMotionMaster()->MovementExpired();
-                m_creature->GetMotionMaster()->MoveTargetedHome();
-            }
-        }
-
-        m_creature->SetLootRecipient(NULL);
-
-        Reset();
-    }
-
-    void DoStart(uint64 uiPlayer)
-    {
-        m_uiPlayerGUID = uiPlayer;
-        m_creature->SetUInt32Value(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_NONE);
-
-        if (Unit* pUnit = Unit::GetUnit(*m_creature,uiPlayer))
-            m_creature->GetMotionMaster()->MoveFollow(pUnit, PET_FOLLOW_DIST, PET_FOLLOW_ANGLE);
-
-        DoScriptText(EMOTE_START,m_creature);
     }
 
     void DoAtEnd()
     {
         m_creature->setFaction(FACTION_HOSTILE);
 
-        if (Unit* pHolder = Unit::GetUnit(*m_creature,m_uiPlayerGUID))
+        if (Player* pHolder = GetLeaderForFollower())
             m_creature->AI()->AttackStart(pHolder);
 
-        m_uiPlayerGUID = 0;
-    }
-
-    void JustDied(Unit* pKiller)
-    {
-        if (m_uiPlayerGUID)
-        {
-            m_uiPlayerGUID = 0;
-            m_creature->GetMotionMaster()->MovementExpired();
-        }
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        if (m_uiPlayerGUID)
-        {
-            if (!m_creature->isInCombat())
-            {
-                if (m_uiCheckPlayerTimer < diff)
-                {
-                    m_uiCheckPlayerTimer = 5000;
-
-                    Unit* pUnit = Unit::GetUnit(*m_creature,m_uiPlayerGUID);
-
-                    if (pUnit && !pUnit->isAlive())
-                    {
-                        m_uiPlayerGUID = 0;
-                        EnterEvadeMode();
-                    }
-                }
-                else
-                    m_uiCheckPlayerTimer -= diff;
-            }
-        }
-
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
-            return;
-
-        DoMeleeAttackIfReady();
+        SetFollowComplete();
     }
 };
 
@@ -312,8 +221,13 @@ bool GossipSelect_npc_threshwackonator(Player* pPlayer, Creature* pCreature, uin
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
     {
-        ((npc_threshwackonatorAI*)(pCreature->AI()))->DoStart(pPlayer->GetGUID());
         pPlayer->CLOSE_GOSSIP_MENU();
+
+        if (npc_threshwackonatorAI* pThreshAI = dynamic_cast<npc_threshwackonatorAI*>(pCreature->AI()))
+        {
+            DoScriptText(EMOTE_START, pCreature);
+            pThreshAI->StartFollow(pPlayer);
+        }
     }
 
     return true;
