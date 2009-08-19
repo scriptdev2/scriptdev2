@@ -24,64 +24,9 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_magtheridons_lair.h"
 
-#define SPELL_SOUL_TRANSFER         30531                   // core, does not support effectImplicitTarget 7
-#define SPELL_BLAZE_TARGET          30541                   // core, does not support effectImplicitTarget 7
-#define SPELL_DEBRIS_DAMAGE         30631                   // core, does not fully support effectImplicitTarget 8
-#define SPELL_DEBRIS_KNOCKDOWN      36449                   // core, does not fully support effectImplicitTarget 8
-
-#define CHAMBER_CENTER_X            -15.14
-#define CHAMBER_CENTER_Y              1.8
-#define CHAMBER_CENTER_Z             -0.4
-
-#define MAX_ENCOUNTER               2
-
 struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
 {
-    instance_magtheridons_lair(Map* pMap) : ScriptedInstance(pMap)
-    {
-         Initialize();
-
-         // below here are pure spell hacks, feel free to experiment yourself
-         // effectImplicitTarget 7, random target with certain entry spell, need implemntation in mangos
-
-         /*
-         SpellEntry *TempSpell = (SpellEntry*)GetSpellStore()->LookupEntry(SPELL_BLAZE_TARGET);
-         if (TempSpell && TempSpell->EffectImplicitTargetA[0] != 6)
-         {
-               TempSpell->EffectImplicitTargetA[0] = 6;
-               TempSpell->EffectImplicitTargetB[0] = 0;
-         }
-
-         TempSpell = (SpellEntry*)GetSpellStore()->LookupEntry(SPELL_SOUL_TRANSFER);
-         if (TempSpell && TempSpell->EffectImplicitTargetB[0] != 30)
-         {
-               TempSpell->EffectImplicitTargetA[0] = 1;
-               TempSpell->EffectImplicitTargetA[1] = 1;
-               TempSpell->EffectImplicitTargetA[2] = 1;
-               TempSpell->EffectImplicitTargetB[0] = 0;
-               TempSpell->EffectImplicitTargetB[1] = 0;
-               TempSpell->EffectImplicitTargetB[2] = 0;
-         }
-
-         // effectImplicitTarget 8, but core only push back the caster
-
-         TempSpell = (SpellEntry*)GetSpellStore()->LookupEntry(SPELL_DEBRIS_DAMAGE);
-         if (TempSpell && TempSpell->EffectImplicitTargetA[0] != 53)
-         {
-               TempSpell->EffectImplicitTargetA[0] = 53;
-               TempSpell->EffectImplicitTargetB[0] = 16;
-         }
-
-         TempSpell = (SpellEntry*)GetSpellStore()->LookupEntry(SPELL_DEBRIS_KNOCKDOWN);
-         if (TempSpell && TempSpell->EffectImplicitTargetA[0] != 53)
-         {
-               TempSpell->EffectImplicitTargetA[0] = 53;
-               TempSpell->EffectImplicitTargetB[0] = 16;
-               TempSpell->EffectImplicitTargetA[1] = 53;
-               TempSpell->EffectImplicitTargetB[1] = 16;
-         }
-         */
-    }
+    instance_magtheridons_lair(Map* pMap) : ScriptedInstance(pMap) { Initialize(); }
 
     uint32 m_auiEncounter[MAX_ENCOUNTER];
 
@@ -97,10 +42,12 @@ struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
     {
         memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
 
-        m_uiMagtheridonGUID = 0;
         ChannelerGUID.clear();
-        m_uiDoorGUID = 0;
         ColumnGUID.clear();
+
+        m_uiMagtheridonGUID = 0;
+        m_uiDoorGUID = 0;
+
         m_uiCageTimer = 0;
         m_uiRespawnTimer = 0;
     }
@@ -118,8 +65,8 @@ struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
     {
         switch(pCreature->GetEntry())
         {
-            case 17257: m_uiMagtheridonGUID = pCreature->GetGUID(); break;
-            case 17256: ChannelerGUID.insert(pCreature->GetGUID()); break;
+            case NPC_MAGTHERION: m_uiMagtheridonGUID = pCreature->GetGUID(); break;
+            case NPC_CHANNELER: ChannelerGUID.insert(pCreature->GetGUID()); break;
         }
     }
 
@@ -128,7 +75,7 @@ struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
         switch(pGo->GetEntry())
         {
             case 181713:
-                pGo->SetUInt32Value(GAMEOBJECT_FLAGS, 0);
+                pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
                 break;
             case 183847:                                    //event door
                 m_uiDoorGUID = pGo->GetGUID();
@@ -145,32 +92,22 @@ struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
         }
     }
 
-    uint64 GetData64(uint32 type)
+    void SetData(uint32 uiType, uint32 uiData)
     {
-        switch(type)
-        {
-            case DATA_MAGTHERIDON:
-                return m_uiMagtheridonGUID;
-        }
-        return 0;
-    }
-
-    void SetData(uint32 type, uint32 data)
-    {
-        switch(type)
+        switch(uiType)
         {
             case TYPE_MAGTHERIDON_EVENT:
-                m_auiEncounter[0] = data;
-                if (data == NOT_STARTED)
+                m_auiEncounter[0] = uiData;
+                if (uiData == NOT_STARTED)
                     m_uiRespawnTimer = 10000;
-                if (data != IN_PROGRESS)
+                if (uiData != IN_PROGRESS)
                 {
                     if (GameObject* pDoor = instance->GetGameObject(m_uiDoorGUID))
                         pDoor->SetGoState(GO_STATE_ACTIVE);
                 }
                 break;
             case TYPE_CHANNELER_EVENT:
-                switch(data)
+                switch(uiData)
                 {
                     case NOT_STARTED:                       // Reset all channelers once one is reset.
                         if (m_auiEncounter[1] != NOT_STARTED)
@@ -178,7 +115,10 @@ struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
                             m_auiEncounter[1] = NOT_STARTED;
 
                             if (ChannelerGUID.empty())
+                            {
                                 debug_log("SD2: Instance Magtheridon: Channeler GUID list are empty.");
+                                break;
+                            }
 
                             for(std::set<uint64>::iterator i = ChannelerGUID.begin(); i != ChannelerGUID.end(); ++i)
                             {
@@ -230,13 +170,13 @@ struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
                             {
                                 //Channeler->InterruptNonMeleeSpells(false);
                                 //Channeler->CastSpell(Channeler, SPELL_SOUL_TRANSFER, false);
-                                data = IN_PROGRESS;
+                                uiData = IN_PROGRESS;
                                 break;
                             }
                         }
                         break;
                 }
-                m_auiEncounter[1] = data;
+                m_auiEncounter[1] = uiData;
                 break;
             case TYPE_HALL_COLLAPSE:
                 // IN_PROGRESS - collapse / NOT_STARTED - reset
@@ -248,12 +188,20 @@ struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
         }
     }
 
-    uint32 GetData(uint32 type)
+    uint32 GetData(uint32 uiType)
     {
-        if (type == TYPE_MAGTHERIDON_EVENT)
+        if (uiType == TYPE_MAGTHERIDON_EVENT)
             return m_auiEncounter[0];
-        if (type == TYPE_CHANNELER_EVENT)
+        if (uiType == TYPE_CHANNELER_EVENT)
             return m_auiEncounter[1];
+
+        return 0;
+    }
+
+    uint64 GetData64(uint32 uiData)
+    {
+        if (uiData == DATA_MAGTHERIDON)
+            return m_uiMagtheridonGUID;
 
         return 0;
     }
@@ -289,22 +237,22 @@ struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
         pCreature->AI()->AttackStart(target);
     }
 
-    void Update(uint32 diff)
+    void Update(uint32 uiDiff)
     {
         if (m_uiCageTimer)
         {
-            if (m_uiCageTimer <= diff)
+            if (m_uiCageTimer <= uiDiff)
             {
                 SetData(TYPE_MAGTHERIDON_EVENT, IN_PROGRESS);
                 m_uiCageTimer = 0;
             }
             else
-                m_uiCageTimer -= diff;
+                m_uiCageTimer -= uiDiff;
         }
 
         if (m_uiRespawnTimer)
         {
-            if (m_uiRespawnTimer <= diff)
+            if (m_uiRespawnTimer <= uiDiff)
             {
                 for(std::set<uint64>::iterator i = ChannelerGUID.begin(); i != ChannelerGUID.end(); ++i)
                 {
@@ -320,7 +268,7 @@ struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
                 m_uiRespawnTimer = 0;
             }
             else
-                m_uiRespawnTimer -= diff;
+                m_uiRespawnTimer -= uiDiff;
         }
     }
 };
