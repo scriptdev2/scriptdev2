@@ -17,11 +17,12 @@
 /* ScriptData
 SDName: Darkshore
 SD%Complete: 100
-SDComment: Quest support: 731, 2078
+SDComment: Quest support: 731, 2078, 5321
 SDCategory: Darkshore
 EndScriptData */
 
 /* ContentData
+npc_kerlonian
 npc_prospector_remtravel
 npc_threshwackonator
 EndContentData */
@@ -29,6 +30,85 @@ EndContentData */
 #include "precompiled.h"
 #include "escort_ai.h"
 #include "follower_ai.h"
+
+/*####
+# npc_kerlonian
+####*/
+
+enum
+{
+    SAY_KER_START               = -1000434,
+
+    EMOTE_KER_SLEEP_1           = -1000435,
+    EMOTE_KER_SLEEP_2           = -1000436,
+    EMOTE_KER_SLEEP_3           = -1000437,
+
+    SAY_KER_SLEEP_1             = -1000438,
+    SAY_KER_SLEEP_2             = -1000439,
+    SAY_KER_SLEEP_3             = -1000440,
+    SAY_KER_SLEEP_4             = -1000441,
+
+    SAY_KER_ALERT_1             = -1000442,
+    SAY_KER_ALERT_2             = -1000443,
+
+    SAY_KER_END                 = -1000444,
+
+    SPELL_AWAKEN                = 17536,
+    QUEST_SLEEPER_AWAKENED      = 5321,
+    NPC_LILADRIS                = 11219,                    //attackers entries unknown
+    FACTION_KER_ESCORTEE        = 113
+};
+
+//TODO: make concept similar as "ringo" -escort. Find a way to run the scripted attacks, _if_ player are choosing road.
+struct MANGOS_DLL_DECL npc_kerlonianAI : public FollowerAI
+{
+    npc_kerlonianAI(Creature* pCreature) : FollowerAI(pCreature) { Reset(); }
+
+    void Reset()
+    {
+    }
+
+    void MoveInLineOfSight(Unit *pWho)
+    {
+        FollowerAI::MoveInLineOfSight(pWho);
+
+        if (!m_creature->getVictim() && !IsFollowComplete() && pWho->GetEntry() == NPC_LILADRIS)
+        {
+            if (m_creature->IsWithinDistInMap(pWho, INTERACTION_DISTANCE*2))
+            {
+                if (Player* pPlayer = GetLeaderForFollower())
+                {
+                    if (pPlayer->GetQuestStatus(QUEST_SLEEPER_AWAKENED) == QUEST_STATUS_INCOMPLETE)
+                        pPlayer->GroupEventHappens(QUEST_SLEEPER_AWAKENED, m_creature);
+
+                    DoScriptText(SAY_KER_END, m_creature);
+                }
+
+                SetFollowComplete();
+            }
+        }
+    }
+};
+
+CreatureAI* GetAI_npc_kerlonian(Creature* pCreature)
+{
+    return new npc_kerlonianAI(pCreature);
+}
+
+bool QuestAccept_npc_kerlonian(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
+{
+    if (pQuest->GetQuestId() == QUEST_SLEEPER_AWAKENED)
+    {
+        if (npc_kerlonianAI* pKerlonianAI = dynamic_cast<npc_kerlonianAI*>(pCreature->AI()))
+        {
+            pCreature->SetStandState(UNIT_STAND_STATE_STAND);
+            DoScriptText(SAY_KER_START, pCreature);
+            pKerlonianAI->StartFollow(pPlayer, FACTION_KER_ESCORTEE, pQuest);
+        }
+    }
+
+    return true;
+}
 
 /*####
 # npc_prospector_remtravel
@@ -236,6 +316,12 @@ bool GossipSelect_npc_threshwackonator(Player* pPlayer, Creature* pCreature, uin
 void AddSC_darkshore()
 {
     Script *newscript;
+
+    newscript = new Script;
+    newscript->Name = "npc_kerlonian";
+    newscript->GetAI = &GetAI_npc_kerlonian;
+    newscript->pQuestAccept = &QuestAccept_npc_kerlonian;
+    newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "npc_prospector_remtravel";
