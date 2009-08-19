@@ -1248,6 +1248,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\scripts\kalimdor\ungoro_crater.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\scripts\kalimdor\winterspring.cpp"
 					>
 				</File>

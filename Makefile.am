@@ -238,6 +238,7 @@ scripts/kalimdor/teldrassil.cpp \
 scripts/kalimdor/the_barrens.cpp \
 scripts/kalimdor/thousand_needles.cpp \
 scripts/kalimdor/thunder_bluff.cpp \
+scripts/kalimdor/ungoro_crater.cpp \
 scripts/kalimdor/winterspring.cpp \
 scripts/kalimdor/blackfathom_deeps/def_blackfathom_deeps.h \
 scripts/kalimdor/blackfathom_deeps/instance_blackfathom_deeps.cpp \

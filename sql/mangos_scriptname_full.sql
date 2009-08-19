@@ -985,7 +985,7 @@ UPDATE creature_template SET ScriptName='boss_loken' WHERE entry=28923;
 
 
 /* UN'GORO CRATER */
-
+UPDATE creature_template SET ScriptName='npc_ringo' WHERE entry=9999;
 
 /* UNDERCITY */
 UPDATE creature_template SET ScriptName='npc_lady_sylvanas_windrunner' WHERE entry=10181;

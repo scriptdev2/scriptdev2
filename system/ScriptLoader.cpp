@@ -237,6 +237,7 @@ extern void AddSC_teldrassil();
 extern void AddSC_the_barrens();
 extern void AddSC_thousand_needles();
 extern void AddSC_thunder_bluff();
+extern void AddSC_ungoro_crater();
 extern void AddSC_winterspring();
 
 //northrend
@@ -589,6 +590,7 @@ void AddScripts()
     AddSC_the_barrens();
     AddSC_thousand_needles();
     AddSC_thunder_bluff();
+    AddSC_ungoro_crater();
     AddSC_winterspring();
 
     //northrend
