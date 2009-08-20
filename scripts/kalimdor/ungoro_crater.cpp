@@ -83,7 +83,7 @@ struct MANGOS_DLL_DECL npc_ringoAI : public FollowerAI
     {
         FollowerAI::MoveInLineOfSight(pWho);
 
-        if (!m_creature->getVictim() && !IsFollowComplete() && pWho->GetEntry() == NPC_SPRAGGLE)
+        if (!m_creature->getVictim() && !HasFollowState(STATE_FOLLOW_COMPLETE) && pWho->GetEntry() == NPC_SPRAGGLE)
         {
             if (m_creature->IsWithinDistInMap(pWho, INTERACTION_DISTANCE))
             {
@@ -103,7 +103,7 @@ struct MANGOS_DLL_DECL npc_ringoAI : public FollowerAI
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
         {
-            if (IsEndEventInProgress())
+            if (HasFollowState(STATE_FOLLOW_POSTEVENT))
             {
                 if (m_uiEndEventTimer < uiDiff)
                 {
