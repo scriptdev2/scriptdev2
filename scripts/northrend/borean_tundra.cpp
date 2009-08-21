@@ -17,12 +17,13 @@
 /* ScriptData
 SDName: Borean_Tundra
 SD%Complete: 100
-SDComment: Quest support: 11708. Taxi vendors.
+SDComment: Quest support: 11708, 11692. Taxi vendors.
 SDCategory: Borean Tundra
 EndScriptData */
 
 /* ContentData
 npc_fizzcrank_fullthrottle
+npc_kara_thricestar
 npc_surristrasz
 npc_tiare
 EndContentData */
@@ -108,6 +109,47 @@ bool GossipSelect_npc_fizzcrank_fullthrottle(Player* pPlayer, Creature* pCreatur
 }
 
 /*######
+## npc_kara_thricestar
+######*/
+
+#define GOSSIP_ITEM_THRICESTAR1      "Do you think I could take a ride on one of those flying machines?"
+#define GOSSIP_ITEM_THRICESTAR2      "Kara, I need to be flown out the Dens of Dying to find Bixie."
+
+enum
+{
+    QUEST_CHECK_IN_WITH_BIXIE       = 11692,
+    SPELL_FIZZCRANK_AIRSTRIP        = 51446
+};
+
+bool GossipHello_npc_kara_thricestar(Player* pPlayer, Creature* pCreature)
+{
+    if (pCreature->isTaxi())
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, GOSSIP_ITEM_THRICESTAR1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+
+    if (pPlayer->GetQuestStatus(QUEST_CHECK_IN_WITH_BIXIE) == QUEST_STATUS_COMPLETE)
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_THRICESTAR2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+
+    pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
+    return true;
+}
+
+bool GossipSelect_npc_kara_thricestar(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+{
+    switch(uiAction)
+    {
+        case GOSSIP_ACTION_INFO_DEF + 1:
+            pPlayer->GetSession()->SendTaxiMenu(pCreature);
+            break;
+        case GOSSIP_ACTION_INFO_DEF + 2:
+            pPlayer->CLOSE_GOSSIP_MENU();
+            pPlayer->CastSpell(pPlayer, SPELL_FIZZCRANK_AIRSTRIP, false);
+            break;
+    }
+
+    return true;
+}
+
+/*######
 ## npc_surristrasz
 ######*/
 
@@ -186,6 +228,12 @@ void AddSC_borean_tundra()
     newscript->Name = "npc_fizzcrank_fullthrottle";
     newscript->pGossipHello = &GossipHello_npc_fizzcrank_fullthrottle;
     newscript->pGossipSelect = &GossipSelect_npc_fizzcrank_fullthrottle;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "npc_kara_thricestar";
+    newscript->pGossipHello = &GossipHello_npc_kara_thricestar;
+    newscript->pGossipSelect = &GossipSelect_npc_kara_thricestar;
     newscript->RegisterSelf();
 
     newscript = new Script;
