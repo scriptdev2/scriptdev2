@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Ungoro_Crater
 SD%Complete: 100
-SDComment: Quest support: 4491
+SDComment: Quest support: 4245, 4491
 SDCategory: Un'Goro Crater
 EndScriptData */
 
@@ -26,7 +26,95 @@ npc_ringo
 EndContentData */
 
 #include "precompiled.h"
+#include "escort_ai.h"
 #include "follower_ai.h"
+
+/*######
+## npc_ame01
+######*/
+
+enum
+{
+    SAY_AME_START           = -1000446,
+    SAY_AME_PROGRESS        = -1000447,
+    SAY_AME_END             = -1000448,
+    SAY_AME_AGGRO1          = -1000449,
+    SAY_AME_AGGRO2          = -1000450,
+    SAY_AME_AGGRO3          = -1000451,
+
+    QUEST_CHASING_AME       = 4245,
+
+    FACTION_ESCORTEE_A      = 774,
+    FACTION_ESCORTEE_H      = 775
+};
+
+struct MANGOS_DLL_DECL npc_ame01AI : public npc_escortAI
+{
+    npc_ame01AI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
+
+    void Reset() { }
+
+    void WaypointReached(uint32 uiPointId)
+    {
+        switch(uiPointId)
+        {
+            case 0:
+                DoScriptText(SAY_AME_START, m_creature);
+                break;
+            case 19:
+                DoScriptText(SAY_AME_PROGRESS, m_creature);
+                break;
+            case 37:
+                DoScriptText(SAY_AME_END, m_creature);
+                if (Player* pPlayer = GetPlayerForEscort())
+                    pPlayer->GroupEventHappens(QUEST_CHASING_AME, m_creature);
+                break;
+        }
+    }
+
+    void Aggro(Unit* pWho)
+    {
+        if (pWho->GetTypeId() == TYPEID_PLAYER)
+            return;
+
+        if (Player* pPlayer = GetPlayerForEscort())
+        {
+            if (pPlayer->getVictim() && pPlayer->getVictim() == pWho)
+                return;
+
+            switch(rand()%3)
+            {
+                case 0: DoScriptText(SAY_AME_AGGRO1, m_creature); break;
+                case 1: DoScriptText(SAY_AME_AGGRO2, m_creature); break;
+                case 2: DoScriptText(SAY_AME_AGGRO3, m_creature); break;
+            }
+        }
+    }
+};
+
+bool QuestAccept_npc_ame01(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
+{
+    if (pQuest->GetQuestId() == QUEST_CHASING_AME)
+    {
+        if (npc_ame01AI* pAmeAI = dynamic_cast<npc_ame01AI*>(pCreature->AI()))
+        {
+            pCreature->SetStandState(UNIT_STAND_STATE_STAND);
+
+            if (pPlayer->GetTeam() == ALLIANCE)
+                pCreature->setFaction(FACTION_ESCORTEE_A);
+            else if (pPlayer->GetTeam() == HORDE)
+                pCreature->setFaction(FACTION_ESCORTEE_H);
+
+            pAmeAI->Start(false, false, pPlayer->GetGUID(), pQuest);
+        }
+    }
+    return true;
+}
+
+CreatureAI* GetAI_npc_ame01(Creature* pCreature)
+{
+    return new npc_ame01AI(pCreature);
+}
 
 /*####
 # npc_ringo
@@ -246,6 +334,12 @@ bool QuestAccept_npc_ringo(Player* pPlayer, Creature* pCreature, const Quest* pQ
 void AddSC_ungoro_crater()
 {
     Script *newscript;
+
+    newscript = new Script;
+    newscript->Name = "npc_ame01";
+    newscript->GetAI = &GetAI_npc_ame01;
+    newscript->pQuestAccept = &QuestAccept_npc_ame01;
+    newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "npc_ringo";
