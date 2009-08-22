@@ -451,8 +451,7 @@ enum
     QUEST_TOOGA                 = 1560,
     NPC_TORTA                   = 6015,
 
-    POINT_ID_TO_WATER           = 1,
-    FACTION_TOOG_ESCORTEE       = 113
+    POINT_ID_TO_WATER           = 1
 };
 
 const float m_afToWaterLoc[] = {-7032.664551, -4906.199219, -1.606446};
@@ -587,7 +586,7 @@ bool QuestAccept_npc_tooga(Player* pPlayer, Creature* pCreature, const Quest* pQ
     if (pQuest->GetQuestId() == QUEST_TOOGA)
     {
         if (npc_toogaAI* pToogaAI = dynamic_cast<npc_toogaAI*>(pCreature->AI()))
-            pToogaAI->StartFollow(pPlayer, FACTION_TOOG_ESCORTEE, pQuest);
+            pToogaAI->StartFollow(pPlayer, FACTION_ESCORT_N_FRIEND_PASSIVE, pQuest);
     }
 
     return true;

@@ -58,8 +58,7 @@ enum
     SPELL_SLEEP_VISUAL          = 25148,
     SPELL_AWAKEN                = 17536,
     QUEST_SLEEPER_AWAKENED      = 5321,
-    NPC_LILADRIS                = 11219,                    //attackers entries unknown
-    FACTION_KER_ESCORTEE        = 113
+    NPC_LILADRIS                = 11219                     //attackers entries unknown
 };
 
 //TODO: make concept similar as "ringo" -escort. Find a way to run the scripted attacks, _if_ player are choosing road.
@@ -172,7 +171,7 @@ bool QuestAccept_npc_kerlonian(Player* pPlayer, Creature* pCreature, const Quest
         {
             pCreature->SetStandState(UNIT_STAND_STATE_STAND);
             DoScriptText(SAY_KER_START, pCreature, pPlayer);
-            pKerlonianAI->StartFollow(pPlayer, FACTION_KER_ESCORTEE, pQuest);
+            pKerlonianAI->StartFollow(pPlayer, FACTION_ESCORT_N_FRIEND_PASSIVE, pQuest);
         }
     }
 
