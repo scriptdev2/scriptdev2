@@ -5,6 +5,8 @@
 #ifndef SC_ESCORTAI_H
 #define SC_ESCORTAI_H
 
+#include "../system/system.h"
+
 struct Escort_Waypoint
 {
     Escort_Waypoint(uint32 _id, float _x, float _y, float _z, uint32 _w)
