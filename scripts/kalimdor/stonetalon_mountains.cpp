@@ -71,8 +71,6 @@ bool GossipSelect_npc_braug_dimspirit(Player* pPlayer, Creature* pCreature, uint
 
 enum
 {
-    FACTION_ESCORTEE_H          = 775,
-
     NPC_GRIMTOTEM_RUFFIAN       = 11910,
     NPC_GRIMTOTEM_BRUTE         = 11912,
     NPC_GRIMTOTEM_SORCERER      = 11913,
@@ -131,7 +129,7 @@ bool QuestAccept_npc_kaya(Player* pPlayer, Creature* pCreature, Quest const* pQu
 
     if (pQuest->GetQuestId() == QUEST_PROTECT_KAYA)
     {
-        pCreature->setFaction(FACTION_ESCORTEE_H);
+        pCreature->setFaction(FACTION_ESCORT_H_PASSIVE);
         DoScriptText(SAY_START,pCreature);
 
         if (npc_kayaAI* pEscortAI = dynamic_cast<npc_kayaAI*>(pCreature->AI()))

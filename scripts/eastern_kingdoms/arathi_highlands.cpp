@@ -46,8 +46,7 @@ enum
     SAY_PROGRESS_9          = -1000273,
 
     QUEST_SUNKEN_TREASURE   = 665,
-    ENTRY_VENGEFUL_SURGE    = 2776,
-    FACTION_ESCORTEE        = 113,
+    ENTRY_VENGEFUL_SURGE    = 2776
 };
 
 struct MANGOS_DLL_DECL npc_professor_phizzlethorpeAI : public npc_escortAI
@@ -101,7 +100,7 @@ bool QuestAccept_npc_professor_phizzlethorpe(Player* pPlayer, Creature* pCreatur
 {
     if (pQuest->GetQuestId() == QUEST_SUNKEN_TREASURE)
     {
-        pCreature->setFaction(FACTION_ESCORTEE);
+        pCreature->setFaction(FACTION_ESCORT_N_NEUTRAL_PASSIVE);
         DoScriptText(SAY_PROGRESS_1, pCreature, pPlayer);
 
         if (npc_professor_phizzlethorpeAI* pEscortAI = dynamic_cast<npc_professor_phizzlethorpeAI*>(pCreature->AI()))

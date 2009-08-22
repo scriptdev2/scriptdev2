@@ -38,8 +38,7 @@ enum
     QUEST_FREEDOM_TO_RUUL   = 6482,
     ENTRY_T_URSA            = 3921,
     ENTRY_T_TOTEMIC         = 3922,
-    ENTRY_T_PATHFINDER      = 3926,
-    FACTION_R_ESCORTEE      = 113,
+    ENTRY_T_PATHFINDER      = 3926
 };
 
 struct MANGOS_DLL_DECL npc_ruul_snowhoofAI : public npc_escortAI
@@ -79,7 +78,7 @@ bool QuestAccept_npc_ruul_snowhoof(Player* pPlayer, Creature* pCreature, const Q
 {
     if (pQuest->GetQuestId() == QUEST_FREEDOM_TO_RUUL)
     {
-        pCreature->setFaction(FACTION_R_ESCORTEE);
+        pCreature->setFaction(FACTION_ESCORT_N_NEUTRAL_PASSIVE);
         pCreature->SetStandState(UNIT_STAND_STATE_STAND);
 
         if (npc_ruul_snowhoofAI* pEscortAI = dynamic_cast<npc_ruul_snowhoofAI*>(pCreature->AI()))

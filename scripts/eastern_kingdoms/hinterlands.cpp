@@ -44,10 +44,7 @@ enum
     QUEST_RESQUE_OOX_09     = 836,
 
     NPC_MARAUDING_OWL       = 7808,
-    NPC_VILE_AMBUSHER       = 7809,
-
-    FACTION_ESCORTEE_A      = 774,
-    FACTION_ESCORTEE_H      = 775
+    NPC_VILE_AMBUSHER       = 7809
 };
 
 struct MANGOS_DLL_DECL npc_00x09hlAI : public npc_escortAI
@@ -123,9 +120,9 @@ bool QuestAccept_npc_00x09hl(Player* pPlayer, Creature* pCreature, const Quest* 
         pCreature->SetStandState(UNIT_STAND_STATE_STAND);
 
         if (pPlayer->GetTeam() == ALLIANCE)
-            pCreature->setFaction(FACTION_ESCORTEE_A);
+            pCreature->setFaction(FACTION_ESCORT_A_PASSIVE);
         else if (pPlayer->GetTeam() == HORDE)
-            pCreature->setFaction(FACTION_ESCORTEE_H);
+            pCreature->setFaction(FACTION_ESCORT_H_PASSIVE);
 
         DoScriptText(SAY_OOX_START, pCreature, pPlayer);
 

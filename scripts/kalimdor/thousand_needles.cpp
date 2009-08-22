@@ -110,7 +110,6 @@ enum
 
     QUEST_FREE_AT_LAST          = 4904,
     NPC_GRIM_BANDIT             = 10758,
-    FACTION_ESCORTEE_LAKO       = 232,                      //guessed
 
     ID_AMBUSH_1                 = 0,
     ID_AMBUSH_2                 = 2,
@@ -175,7 +174,7 @@ bool QuestAccept_npc_lakota_windsong(Player* pPlayer, Creature* pCreature, const
     if (pQuest->GetQuestId() == QUEST_FREE_AT_LAST)
     {
         DoScriptText(SAY_LAKO_START, pCreature, pPlayer);
-        pCreature->setFaction(FACTION_ESCORTEE_LAKO);
+        pCreature->setFaction(FACTION_ESCORT_H_NEUTRAL_ACTIVE);
 
         if (npc_lakota_windsongAI* pEscortAI = dynamic_cast<npc_lakota_windsongAI*>(pCreature->AI()))
             pEscortAI->Start(false, false, pPlayer->GetGUID(), pQuest);
@@ -194,8 +193,7 @@ enum
     SAY_COMPLETE        = -1000364,
 
     QUEST_HOMEWARD      = 4770,
-    NPC_WYVERN          = 4107,
-    FACTION_ESCORTEE    = 232                               //guessed
+    NPC_WYVERN          = 4107
 };
 
 float m_afWyvernLoc[3][3]=
@@ -248,7 +246,7 @@ bool QuestAccept_npc_paoka_swiftmountain(Player* pPlayer, Creature* pCreature, c
     if (pQuest->GetQuestId() == QUEST_HOMEWARD)
     {
         DoScriptText(SAY_START, pCreature, pPlayer);
-        pCreature->setFaction(FACTION_ESCORTEE);
+        pCreature->setFaction(FACTION_ESCORT_H_NEUTRAL_ACTIVE);
 
         if (npc_paoka_swiftmountainAI* pEscortAI = dynamic_cast<npc_paoka_swiftmountainAI*>(pCreature->AI()))
             pEscortAI->Start(false, false, pPlayer->GetGUID(), pQuest);

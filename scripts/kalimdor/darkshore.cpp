@@ -199,7 +199,6 @@ enum
     SAY_REM_REMEMBER            = -1000337,
     EMOTE_REM_END               = -1000338,
 
-    FACTION_ESCORTEE            = 10,
     QUEST_ABSENT_MINDED_PT2     = 731,
     NPC_GRAVEL_SCOUT            = 2158,
     NPC_GRAVEL_BONE             = 2159,
@@ -297,7 +296,7 @@ bool QuestAccept_npc_prospector_remtravel(Player* pPlayer, Creature* pCreature, 
 {
     if (pQuest->GetQuestId() == QUEST_ABSENT_MINDED_PT2)
     {
-        pCreature->setFaction(FACTION_ESCORTEE);
+        pCreature->setFaction(FACTION_ESCORT_A_NEUTRAL_PASSIVE);
 
         if (npc_prospector_remtravelAI* pEscortAI = dynamic_cast<npc_prospector_remtravelAI*>(pCreature->AI()))
             pEscortAI->Start(false, false, pPlayer->GetGUID(), pQuest, true);

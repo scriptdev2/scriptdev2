@@ -71,9 +71,7 @@ enum
     NPC_WOODPAW_ALPHA       = 5258,
     NPC_WOODPAW_MYSTIC      = 5254,
 
-    QUEST_RESCUE_OOX22FE    = 2767,
-    FACTION_ESCORTEE_A      = 774,
-    FACTION_ESCORTEE_H      = 775
+    QUEST_RESCUE_OOX22FE    = 2767
 };
 
 struct MANGOS_DLL_DECL npc_oox22feAI : public npc_escortAI
@@ -151,10 +149,10 @@ bool QuestAccept_npc_oox22fe(Player* pPlayer, Creature* pCreature, const Quest* 
         pCreature->SetStandState(UNIT_STAND_STATE_STAND);
 
         if (pPlayer->GetTeam() == ALLIANCE)
-            pCreature->setFaction(FACTION_ESCORTEE_A);
+            pCreature->setFaction(FACTION_ESCORT_A_PASSIVE);
 
         if (pPlayer->GetTeam() == HORDE)
-            pCreature->setFaction(FACTION_ESCORTEE_H);
+            pCreature->setFaction(FACTION_ESCORT_H_PASSIVE);
 
         if (npc_oox22feAI* pEscortAI = dynamic_cast<npc_oox22feAI*>(pCreature->AI()))
             pEscortAI->Start(true, false, pPlayer->GetGUID(), pQuest);
