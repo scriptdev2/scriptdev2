@@ -56,6 +56,8 @@ class MANGOS_DLL_DECL FollowerAI : public ScriptedAI
         void AddFollowState(uint32 uiFollowState) { m_uiFollowState |= uiFollowState; }
         void RemoveFollowState(uint32 uiFollowState) { m_uiFollowState &= ~uiFollowState; }
 
+        bool AssistPlayerInCombat(Unit* pWho);
+
         uint64 m_uiLeaderGUID;
         uint32 m_uiUpdateFollowTimer;
         uint32 m_uiFollowState;

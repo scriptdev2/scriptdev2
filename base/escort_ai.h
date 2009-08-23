@@ -81,6 +81,8 @@ struct MANGOS_DLL_DECL npc_escortAI : public ScriptedAI
         bool IsOnHold;
 
     private:
+        bool AssistPlayerInCombat(Unit* pWho);
+
         uint64 m_uiPlayerGUID;
         uint32 m_uiWPWaitTimer;
         uint32 m_uiPlayerCheckTimer;

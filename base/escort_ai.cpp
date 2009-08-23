@@ -73,29 +73,69 @@ void npc_escortAI::Aggro(Unit* pEnemy)
 {
 }
 
+//see followerAI
+bool npc_escortAI::AssistPlayerInCombat(Unit* pWho)
+{
+    if (!pWho || !pWho->getVictim())
+        return false;
+
+    //experimental (unknown) flag not present
+    if (!(m_creature->GetCreatureInfo()->type_flags & CREATURE_TYPEFLAGS_UNK13))
+        return false;
+
+    //not a player
+    if (!pWho->getVictim()->GetCharmerOrOwnerPlayerOrPlayerItself())
+        return false;
+
+    //never attack friendly
+    if (m_creature->IsFriendlyTo(pWho))
+        return false;
+
+    //too far away and no free sight?
+    if (m_creature->IsWithinDistInMap(pWho, MAX_PLAYER_DISTANCE) && m_creature->IsWithinLOSInMap(pWho))
+    {
+        //already fighting someone?
+        if (!m_creature->getVictim())
+        {
+            AttackStart(pWho);
+            return true;
+        }
+        else
+        {
+            pWho->SetInCombatWith(m_creature);
+            m_creature->AddThreat(pWho, 0.0f);
+            return true;
+        }
+    }
+
+    return false;
+}
+
 void npc_escortAI::MoveInLineOfSight(Unit* pWho)
 {
-    if (IsBeingEscorted && !m_bIsActiveAttacker)
-        return;
-
-    if (!m_creature->hasUnitState(UNIT_STAT_STUNNED) && pWho->isTargetableForAttack() &&
-        m_creature->IsHostileTo(pWho) && pWho->isInAccessablePlaceFor(m_creature))
+    if (!m_creature->hasUnitState(UNIT_STAT_STUNNED) && pWho->isTargetableForAttack() && pWho->isInAccessablePlaceFor(m_creature))
     {
+        if (IsBeingEscorted && AssistPlayerInCombat(pWho))
+            return;
+
         if (!m_creature->canFly() && m_creature->GetDistanceZ(pWho) > CREATURE_Z_ATTACK_RANGE)
             return;
 
-        float attackRadius = m_creature->GetAttackDistance(pWho);
-        if (m_creature->IsWithinDistInMap(pWho, attackRadius) && m_creature->IsWithinLOSInMap(pWho))
+        if (m_creature->IsHostileTo(pWho))
         {
-            if (!m_creature->getVictim())
+            float fAttackRadius = m_creature->GetAttackDistance(pWho);
+            if (m_creature->IsWithinDistInMap(pWho, fAttackRadius) && m_creature->IsWithinLOSInMap(pWho))
             {
-                AttackStart(pWho);
-                pWho->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-            }
-            else if (m_creature->GetMap()->IsDungeon())
-            {
-                pWho->SetInCombatWith(m_creature);
-                m_creature->AddThreat(pWho, 0.0f);
+                if (!m_creature->getVictim())
+                {
+                    pWho->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+                    AttackStart(pWho);
+                }
+                else if (m_creature->GetMap()->IsDungeon())
+                {
+                    pWho->SetInCombatWith(m_creature);
+                    m_creature->AddThreat(pWho, 0.0f);
+                }
             }
         }
     }
