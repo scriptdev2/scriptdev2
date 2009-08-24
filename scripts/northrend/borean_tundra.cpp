@@ -17,12 +17,13 @@
 /* ScriptData
 SDName: Borean_Tundra
 SD%Complete: 100
-SDComment: Quest support: 11708, 11692. Taxi vendors.
+SDComment: Quest support: 11708, 11692, 11961. Taxi vendors.
 SDCategory: Borean Tundra
 EndScriptData */
 
 /* ContentData
 npc_fizzcrank_fullthrottle
+npc_iruk
 npc_kara_thricestar
 npc_surristrasz
 npc_tiare
@@ -105,6 +106,38 @@ bool GossipSelect_npc_fizzcrank_fullthrottle(Player* pPlayer, Creature* pCreatur
             pPlayer->AreaExploredOrEventHappens(QUEST_THE_MECHAGNOMES);
             break;
     }
+    return true;
+}
+
+/*######
+## npc_iruk
+######*/
+
+#define GOSSIP_ITEM_IRUK        "<Search corpse for Issliruk's Totem.>"
+
+enum
+{
+    QUEST_SPIRITS_WATCH_OVER_US     = 11961,
+    SPELL_CREATE_TOTEM              = 46816
+};
+
+bool GossipHello_npc_iruk(Player* pPlayer, Creature* pCreature)
+{
+    if (pPlayer->GetQuestStatus(QUEST_SPIRITS_WATCH_OVER_US) == QUEST_STATUS_INCOMPLETE)
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_IRUK, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+
+    pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
+    return true;
+}
+
+bool GossipSelect_npc_iruk(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+{
+    if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)
+    {
+        pPlayer->CLOSE_GOSSIP_MENU();
+        pPlayer->CastSpell(pPlayer,SPELL_CREATE_TOTEM,true);
+    }
+
     return true;
 }
 
@@ -228,6 +261,12 @@ void AddSC_borean_tundra()
     newscript->Name = "npc_fizzcrank_fullthrottle";
     newscript->pGossipHello = &GossipHello_npc_fizzcrank_fullthrottle;
     newscript->pGossipSelect = &GossipSelect_npc_fizzcrank_fullthrottle;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "npc_iruk";
+    newscript->pGossipHello = &GossipHello_npc_iruk;
+    newscript->pGossipSelect = &GossipSelect_npc_iruk;
     newscript->RegisterSelf();
 
     newscript = new Script;
