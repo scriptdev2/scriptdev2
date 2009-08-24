@@ -60,7 +60,7 @@ struct MANGOS_DLL_DECL npc_daphne_stilwellAI : public npc_escortAI
 
     void Reset()
     {
-        if (IsBeingEscorted)
+        if (HasEscortState(STATE_ESCORT_ESCORTING))
         {
             switch(m_uiWPHolder)
             {

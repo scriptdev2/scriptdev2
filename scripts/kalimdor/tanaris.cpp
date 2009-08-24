@@ -189,7 +189,7 @@ struct MANGOS_DLL_DECL npc_custodian_of_timeAI : public npc_escortAI
 
     void MoveInLineOfSight(Unit *who)
     {
-        if (IsBeingEscorted)
+        if (HasEscortState(STATE_ESCORT_ESCORTING))
             return;
 
         if (who->GetTypeId() == TYPEID_PLAYER)

@@ -162,7 +162,7 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
                 break;
             case 4:
                 TalkCount = 0;
-                IsOnHold = true;
+                SetEscortPaused(true);
 
                 if (Creature* pSpotlight = m_creature->SummonCreature(CREATURE_SPOTLIGHT,
                     m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 0.0f,
@@ -258,7 +258,7 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
     {
         npc_escortAI::UpdateAI(diff);
 
-        if (IsOnHold)
+        if (HasEscortState(STATE_ESCORT_PAUSED))
         {
             if (TalkTimer < diff)
             {
@@ -267,7 +267,7 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
                     if (Creature* pSpotlight = (Creature*)Unit::GetUnit(*m_creature, m_uiSpotlightGUID))
                         pSpotlight->ForcedDespawn();
 
-                    IsOnHold = false;
+                    SetEscortPaused(false);
                     return;
                 }
 

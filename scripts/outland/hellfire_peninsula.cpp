@@ -472,7 +472,7 @@ struct MANGOS_DLL_DECL npc_wounded_blood_elfAI : public npc_escortAI
 
     void Aggro(Unit* who)
     {
-        if (IsBeingEscorted)
+        if (HasEscortState(STATE_ESCORT_ESCORTING))
             DoScriptText(SAY_ELF_AGGRO, m_creature);
     }
 

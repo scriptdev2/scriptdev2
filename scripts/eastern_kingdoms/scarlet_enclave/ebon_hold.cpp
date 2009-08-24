@@ -680,7 +680,7 @@ struct MANGOS_DLL_DECL npc_koltira_deathweaverAI : public npc_escortAI
 
     void Reset()
     {
-        if (!IsBeingEscorted)
+        if (!HasEscortState(STATE_ESCORT_ESCORTING))
         {
             m_uiWave = 0;
             m_uiWave_Timer = 3000;
@@ -704,7 +704,7 @@ struct MANGOS_DLL_DECL npc_koltira_deathweaverAI : public npc_escortAI
                 DoCast(m_creature, SPELL_KOLTIRA_TRANSFORM);
                 break;
             case 3:
-                IsOnHold = true;
+                SetEscortPaused(true);
                 m_creature->SetStandState(UNIT_STAND_STATE_KNEEL);
                 DoScriptText(SAY_BREAKOUT2, m_creature);
                 DoCast(m_creature, SPELL_ANTI_MAGIC_ZONE);  // cast again that makes bubble up
@@ -743,7 +743,7 @@ struct MANGOS_DLL_DECL npc_koltira_deathweaverAI : public npc_escortAI
     {
         npc_escortAI::UpdateAI(uiDiff);
 
-        if (IsOnHold)
+        if (HasEscortState(STATE_ESCORT_PAUSED))
         {
             if (m_uiWave_Timer < uiDiff)
             {
@@ -792,7 +792,7 @@ struct MANGOS_DLL_DECL npc_koltira_deathweaverAI : public npc_escortAI
                         break;
                     case 6:
                         DoScriptText(SAY_BREAKOUT10, m_creature);
-                        IsOnHold = false;
+                        SetEscortPaused(false);
                         break;
                 }
 

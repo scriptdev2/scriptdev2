@@ -526,7 +526,7 @@ struct MANGOS_DLL_DECL npc_wizzlecranks_shredderAI : public npc_escortAI
 
     void Reset()
     {
-        if (!IsBeingEscorted)
+        if (!HasEscortState(STATE_ESCORT_ESCORTING))
         {
             if (m_creature->getStandState() == UNIT_STAND_STATE_DEAD)
                 m_creature->SetStandState(UNIT_STAND_STATE_STAND);

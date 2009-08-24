@@ -429,7 +429,7 @@ struct MANGOS_DLL_DECL npc_khadgars_servantAI : public npc_escortAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!IsBeingEscorted && pguid)
+        if (!HasEscortState(STATE_ESCORT_ESCORTING) && pguid)
         {
             Start(false, false, pguid);
             pguid = 0;

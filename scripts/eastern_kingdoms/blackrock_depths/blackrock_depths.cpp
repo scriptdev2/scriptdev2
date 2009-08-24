@@ -548,7 +548,7 @@ struct MANGOS_DLL_DECL npc_rocknotAI : public npc_escortAI
 
     void Reset()
     {
-        if (IsBeingEscorted)
+        if (HasEscortState(STATE_ESCORT_ESCORTING))
             return;
 
         BreakKeg_Timer = 0;

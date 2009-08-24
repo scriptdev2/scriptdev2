@@ -89,7 +89,7 @@ struct MANGOS_DLL_DECL example_escortAI : public npc_escortAI
 
     void Aggro(Unit* pWho)
     {
-        if (IsBeingEscorted)
+        if (HasEscortState(STATE_ESCORT_ESCORTING))
         {
             if (Player* pTemp = GetPlayerForEscort())
                 DoScriptText(SAY_AGGRO1, m_creature, pTemp);
@@ -106,7 +106,7 @@ struct MANGOS_DLL_DECL example_escortAI : public npc_escortAI
 
     void JustDied(Unit* pKiller)
     {
-        if (IsBeingEscorted)
+        if (HasEscortState(STATE_ESCORT_ESCORTING))
         {
             if (Player* pTemp = GetPlayerForEscort())
             {
@@ -144,7 +144,7 @@ struct MANGOS_DLL_DECL example_escortAI : public npc_escortAI
         else
         {
             //Out of combat but being escorted
-            if (IsBeingEscorted)
+            if (HasEscortState(STATE_ESCORT_ESCORTING))
             {
                 if (m_uiChatTimer < uiDiff)
                 {

@@ -136,7 +136,7 @@ struct MANGOS_DLL_DECL npc_harrison_jones_zaAI : public npc_escortAI
 
                 //Start bang gong for 2min
                 m_creature->CastSpell(m_creature, SPELL_BANGING_THE_GONG, false);
-                IsOnHold = true;
+                SetEscortPaused(true);
                 break;
             case 3:
                 DoScriptText(SAY_OPEN_ENTRANCE, m_creature);
@@ -158,7 +158,7 @@ struct MANGOS_DLL_DECL npc_harrison_jones_zaAI : public npc_escortAI
 
     void SetHoldState(bool bOnHold)
     {
-        IsOnHold = bOnHold;
+        SetEscortPaused(bOnHold);
 
         //Stop banging gong if still
         if (m_pInstance && m_pInstance->GetData(TYPE_EVENT_RUN) == SPECIAL && m_creature->HasAura(SPELL_BANGING_THE_GONG))

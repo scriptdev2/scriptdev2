@@ -120,7 +120,7 @@ struct MANGOS_DLL_DECL npc_deathstalker_erlandAI : public npc_escortAI
 
     void MoveInLineOfSight(Unit* pUnit)
     {
-        if (IsBeingEscorted)
+        if (HasEscortState(STATE_ESCORT_ESCORTING))
         {
             if (!uiRaneGUID && pUnit->GetEntry() == NPC_RANE)
             {
@@ -178,7 +178,7 @@ struct MANGOS_DLL_DECL npc_deathstalker_erlandAI : public npc_escortAI
 
     void Reset()
     {
-        if (!IsBeingEscorted)
+        if (!HasEscortState(STATE_ESCORT_ESCORTING))
         {
             uiRaneGUID = 0;
             uiQuinnGUID = 0;

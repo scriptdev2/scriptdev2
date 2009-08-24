@@ -147,7 +147,7 @@ struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public npc_escortAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!Intro && !IsBeingEscorted)
+        if (!Intro && !HasEscortState(STATE_ESCORT_ESCORTING))
         {
             if (EventCheck_Timer < diff)
             {

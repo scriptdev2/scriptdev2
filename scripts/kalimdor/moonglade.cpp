@@ -168,7 +168,7 @@ struct MANGOS_DLL_DECL npc_clintar_dw_spiritAI : public npc_escortAI
 
     void Reset()
     {
-        if (IsBeingEscorted)
+        if (HasEscortState(STATE_ESCORT_ESCORTING))
             return;
 
         //m_creature are expected to always be spawned, but not visible for player
@@ -186,7 +186,7 @@ struct MANGOS_DLL_DECL npc_clintar_dw_spiritAI : public npc_escortAI
     void DoStart(uint64 uiPlayerGuid)
     {
         //not the best way, maybe check in DummyEffect if this creature are "free" and not in escort.
-        if (IsBeingEscorted)
+        if (HasEscortState(STATE_ESCORT_ESCORTING))
             return;
 
         m_creature->SetVisibility(VISIBILITY_ON);

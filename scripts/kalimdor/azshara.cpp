@@ -88,9 +88,9 @@ struct MANGOS_DLL_DECL npc_rizzle_sprysprocketAI : public npc_escortAI
 
     void MoveInLineOfSight(Unit* pUnit)
     {
-        if (IsBeingEscorted && pUnit->GetTypeId() == TYPEID_PLAYER)
+        if (HasEscortState(STATE_ESCORT_ESCORTING) && pUnit->GetTypeId() == TYPEID_PLAYER)
         {
-            if (!IsOnHold && m_creature->IsWithinDistInMap(pUnit, INTERACTION_DISTANCE) && m_creature->IsWithinLOSInMap(pUnit))
+            if (!HasEscortState(STATE_ESCORT_PAUSED) && m_creature->IsWithinDistInMap(pUnit, INTERACTION_DISTANCE) && m_creature->IsWithinLOSInMap(pUnit))
             {
                 if (((Player*)pUnit)->GetQuestStatus(QUEST_MOONSTONE) == QUEST_STATUS_INCOMPLETE)
                     m_creature->CastSpell(m_creature,SPELL_SURRENDER,true);
@@ -116,7 +116,7 @@ struct MANGOS_DLL_DECL npc_rizzle_sprysprocketAI : public npc_escortAI
     {
         if (pSpell->Id == SPELL_SURRENDER)
         {
-            IsOnHold = true;
+            SetEscortPaused(true);
             DoScriptText(SAY_END, m_creature);
             m_creature->SetUInt32Value(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
         }
@@ -170,7 +170,7 @@ struct MANGOS_DLL_DECL npc_rizzle_sprysprocketAI : public npc_escortAI
 
         if (m_uiDepthChargeTimer < uiDiff)
         {
-            if (!IsOnHold)
+            if (!HasEscortState(STATE_ESCORT_PAUSED))
                 m_creature->CastSpell(m_creature,SPELL_SUMMON_DEPTH_CHARGE,false);
 
             m_uiDepthChargeTimer = 10000 + rand()%5000;

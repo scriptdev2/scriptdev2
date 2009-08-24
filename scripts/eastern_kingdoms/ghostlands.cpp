@@ -124,7 +124,7 @@ struct MANGOS_DLL_DECL npc_ranger_lilathaAI : public npc_escortAI
 
     void MoveInLineOfSight(Unit* pUnit)
     {
-        if (IsBeingEscorted)
+        if (HasEscortState(STATE_ESCORT_ESCORTING))
         {
             if (!m_uiHeliosGUID && pUnit->GetEntry() == NPC_CAPTAIN_HELIOS)
             {
@@ -195,7 +195,7 @@ struct MANGOS_DLL_DECL npc_ranger_lilathaAI : public npc_escortAI
 
     void Reset()
     {
-        if (!IsBeingEscorted)
+        if (!HasEscortState(STATE_ESCORT_ESCORTING))
         {
             m_uiGoCageGUID = 0;
             m_uiHeliosGUID = 0;
