@@ -1535,6 +1535,10 @@
 					RelativePath="..\scripts\northrend\sholazar_basin.cpp"
 					>
 				</File>
+				<File
+					RelativePath="..\scripts\northrend\storm_peaks.cpp"
+					>
+				</File>
 				<Filter
 					Name="azjol-nerub"
 					>
