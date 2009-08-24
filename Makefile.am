@@ -289,6 +289,7 @@ scripts/kalimdor/temple_of_ahnqiraj/mob_anubisath_sentinel.cpp \
 scripts/kalimdor/wailing_caverns/instance_wailing_caverns.cpp \
 scripts/kalimdor/zulfarrak/zulfarrak.cpp \
 scripts/northrend/borean_tundra.cpp \
+scripts/northrend/dalaran.cpp \
 scripts/northrend/dragonblight.cpp \
 scripts/northrend/grizzly_hills.cpp \
 scripts/northrend/icecrown.cpp \

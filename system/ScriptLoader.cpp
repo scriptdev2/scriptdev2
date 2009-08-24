@@ -272,6 +272,7 @@ extern void AddSC_instance_utgarde_keep();
 extern void AddSC_utgarde_keep();
 
 extern void AddSC_borean_tundra();
+extern void AddSC_dalaran();
 extern void AddSC_dragonblight();
 extern void AddSC_grizzly_hills();
 extern void AddSC_icecrown();
@@ -626,6 +627,7 @@ void AddScripts()
     AddSC_utgarde_keep();
 
     AddSC_borean_tundra();
+    AddSC_dalaran();
     AddSC_dragonblight();
     AddSC_grizzly_hills();
     AddSC_icecrown();
