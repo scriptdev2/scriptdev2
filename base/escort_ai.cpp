@@ -26,6 +26,7 @@ npc_escortAI::npc_escortAI(Creature* pCreature) : ScriptedAI(pCreature),
     m_uiPlayerGUID(0),
     m_uiPlayerCheckTimer(1000),
     m_uiWPWaitTimer(2500),
+    m_uiEscortState(STATE_ESCORT_NONE),
     m_bIsReturning(false),
     m_bIsActiveAttacker(true),
     m_bIsRunning(false),
@@ -474,4 +475,15 @@ void npc_escortAI::Start(bool bIsActiveAttacker, bool bRun, uint64 uiPlayerGUID,
         m_creature->RemoveMonsterMoveFlag(MONSTER_MOVE_WALK);
 
     IsBeingEscorted = true;
+}
+
+void npc_escortAI::SetEscortPaused(bool bPaused)
+{
+    if (!HasEscortState(STATE_ESCORT_ESCORTING))
+        return;
+
+    if (bPaused)
+        AddEscortState(STATE_ESCORT_PAUSED);
+    else
+        RemoveEscortState(STATE_ESCORT_PAUSED);
 }
