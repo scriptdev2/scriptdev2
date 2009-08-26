@@ -356,11 +356,11 @@ void npc_escortAI::MovementInform(uint32 uiMoveType, uint32 uiPointId)
         //Make sure that we are still on the right waypoint
         if (CurrentWP->id != uiPointId)
         {
-            debug_log("SD2 ERROR: EscortAI reached waypoint out of order %d, expected %d", uiPointId, CurrentWP->id);
+            error_log("SD2: EscortAI reached waypoint out of order %u, expected %u.", uiPointId, CurrentWP->id);
             return;
         }
 
-        debug_log("SD2: EscortAI Waypoint %d reached", CurrentWP->id);
+        debug_log("SD2: EscortAI waypoint %u reached.", CurrentWP->id);
 
         //Call WP function
         WaypointReached(CurrentWP->id);
@@ -418,13 +418,13 @@ void npc_escortAI::Start(bool bIsActiveAttacker, bool bRun, uint64 uiPlayerGUID,
 {
     if (m_creature->getVictim())
     {
-        debug_log("SD2 ERROR: EscortAI attempt to Start while in combat");
+        error_log("SD2: EscortAI attempt to Start while in combat.");
         return;
     }
 
     if (HasEscortState(STATE_ESCORT_ESCORTING))
     {
-        error_log("SD2: EscortAI attempt to Start while already escorting");
+        error_log("SD2: EscortAI attempt to Start while already escorting.");
         return;
     }
 
@@ -435,7 +435,7 @@ void npc_escortAI::Start(bool bIsActiveAttacker, bool bRun, uint64 uiPlayerGUID,
 
     if (WaypointList.empty())
     {
-        error_db_log("SD2: EscortAI Start with 0 waypoints (possible missing entry in script_waypoint)");
+        error_db_log("SD2: EscortAI Start with 0 waypoints (possible missing entry in script_waypoint).");
         return;
     }
 
@@ -462,7 +462,7 @@ void npc_escortAI::Start(bool bIsActiveAttacker, bool bRun, uint64 uiPlayerGUID,
     //disable npcflags
     m_creature->SetUInt32Value(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_NONE);
 
-    debug_log("SD2: EscortAI started with %d waypoints. ActiveAttacker = %d, Run = %d, PlayerGUID = %d", WaypointList.size(), m_bIsActiveAttacker, m_bIsRunning, m_uiPlayerGUID);
+    debug_log("SD2: EscortAI started with %u waypoints. ActiveAttacker = %d, Run = %d, PlayerGUID = %u", WaypointList.size(), m_bIsActiveAttacker, m_bIsRunning, m_uiPlayerGUID);
 
     CurrentWP = WaypointList.begin();
 
