@@ -24,6 +24,7 @@ EndScriptData */
 /* ContentData
 npc_aeranas
 go_haaleshi_altar
+npc_demoniac_scryer
 npc_gryphoneer_windbellow
 npc_naladu
 npc_tracy_proudwell
@@ -125,58 +126,6 @@ bool GOHello_go_haaleshi_altar(Player* pPlayer, GameObject* pGo)
 {
     pGo->SummonCreature(C_AERANAS,-1321.79, 4043.80, 116.24, 1.25, TEMPSUMMON_TIMED_DESPAWN, 180000);
     return false;
-}
-
-/*######
-## npc_gryphoneer_windbellow
-######*/
-
-enum
-{
-    QUEST_ABYSSAL_A             = 10163,
-    QUEST_RETURN_ABYSSAL_A      = 10346,
-    QUEST_TO_THE_FRONT          = 10382,
-    SPELL_TAXI_AERIAL_ASSULT    = 33899,
-    SPELL_TAXI_TO_BEACH_HEAD    = 35065
-};
-
-#define GOSSIP_ITEM1_WIN        "Fly me to The Abyssal Shelf"
-#define GOSSIP_ITEM2_WIN        "Fly me to Honor Point"
-
-bool GossipHello_npc_gryphoneer_windbellow(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
-
-    //Mission: The Abyssal Shelf || Return to the Abyssal Shelf
-    if (pPlayer->GetQuestStatus(QUEST_ABYSSAL_A) == QUEST_STATUS_INCOMPLETE ||
-        pPlayer->GetQuestStatus(QUEST_RETURN_ABYSSAL_A) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM1_WIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-
-    //Go to the Front
-    if (pPlayer->GetQuestStatus(QUEST_TO_THE_FRONT) == QUEST_STATUS_COMPLETE ||
-        pPlayer->GetQuestRewardStatus(QUEST_TO_THE_FRONT))
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM2_WIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-
-    pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
-    return true;
-}
-
-bool GossipSelect_npc_gryphoneer_windbellow(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
-    {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        //TaxiPath 589
-        pPlayer->CastSpell(pPlayer,SPELL_TAXI_AERIAL_ASSULT,true);
-    }
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+2)
-    {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        //TaxiPath 607
-        pPlayer->CastSpell(pPlayer,SPELL_TAXI_TO_BEACH_HEAD,true);
-    }
-    return true;
 }
 
 /*######
@@ -352,6 +301,58 @@ bool GossipSelect_npc_demoniac_scryer(Player* pPlayer, Creature* pCreature, uint
         pCreature->CastSpell(pPlayer, SPELL_DEMONIAC_VISITATION, false);
     }
 
+    return true;
+}
+
+/*######
+## npc_gryphoneer_windbellow
+######*/
+
+enum
+{
+    QUEST_ABYSSAL_A             = 10163,
+    QUEST_RETURN_ABYSSAL_A      = 10346,
+    QUEST_TO_THE_FRONT          = 10382,
+    SPELL_TAXI_AERIAL_ASSULT    = 33899,
+    SPELL_TAXI_TO_BEACH_HEAD    = 35065
+};
+
+#define GOSSIP_ITEM1_WIN        "Fly me to The Abyssal Shelf"
+#define GOSSIP_ITEM2_WIN        "Fly me to Honor Point"
+
+bool GossipHello_npc_gryphoneer_windbellow(Player* pPlayer, Creature* pCreature)
+{
+    if (pCreature->isQuestGiver())
+        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+
+    //Mission: The Abyssal Shelf || Return to the Abyssal Shelf
+    if (pPlayer->GetQuestStatus(QUEST_ABYSSAL_A) == QUEST_STATUS_INCOMPLETE ||
+        pPlayer->GetQuestStatus(QUEST_RETURN_ABYSSAL_A) == QUEST_STATUS_INCOMPLETE)
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM1_WIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+
+    //Go to the Front
+    if (pPlayer->GetQuestStatus(QUEST_TO_THE_FRONT) == QUEST_STATUS_COMPLETE ||
+        pPlayer->GetQuestRewardStatus(QUEST_TO_THE_FRONT))
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM2_WIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+
+    pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
+    return true;
+}
+
+bool GossipSelect_npc_gryphoneer_windbellow(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+{
+    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
+    {
+        pPlayer->CLOSE_GOSSIP_MENU();
+        //TaxiPath 589
+        pPlayer->CastSpell(pPlayer,SPELL_TAXI_AERIAL_ASSULT,true);
+    }
+    if (uiAction == GOSSIP_ACTION_INFO_DEF+2)
+    {
+        pPlayer->CLOSE_GOSSIP_MENU();
+        //TaxiPath 607
+        pPlayer->CastSpell(pPlayer,SPELL_TAXI_TO_BEACH_HEAD,true);
+    }
     return true;
 }
 

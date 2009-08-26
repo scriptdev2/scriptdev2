@@ -37,7 +37,7 @@ bool npc_escortAI::IsVisible(Unit* pWho) const
     if (!pWho)
         return false;
 
-    return m_creature->IsWithinDist(pWho, VISIBLE_RANGE) && pWho->isVisibleForOrDetect(m_creature,true);
+    return m_creature->IsWithinDist(pWho, VISIBLE_RANGE) && pWho->isVisibleForOrDetect(m_creature, m_creature, true);
 }
 
 void npc_escortAI::AttackStart(Unit* pWho)
