@@ -543,7 +543,7 @@ enum
     SPELL_TAXI_SPINEBREAKER     = 34578
 };
 
-#define GOSSIP_ITEM1_BRA        "Fly me to Murketh and Shaadraz Gateways"
+#define GOSSIP_ITEM1_BRA        "I'm on a bombing mission for Forward Commander To'arch. I need a wyvern destroyer!"
 #define GOSSIP_ITEM2_BRA        "Fly me to The Abyssal Shelf"
 #define GOSSIP_ITEM3_BRA        "Lend me a Wind Rider, I'm going to Spinebreaker Post."
 
