@@ -297,7 +297,7 @@ struct MANGOS_DLL_DECL npc_ogronAI : public npc_escortAI
         if (HasEscortState(STATE_ESCORT_PAUSED) && m_uiPhase == PHASE_FIGHT)
             m_uiPhase = PHASE_COMPLETE;
 
-        if (!HasEscortState(STATE_ESCORT_ESCORTING)
+        if (!HasEscortState(STATE_ESCORT_ESCORTING))
         {
             lCreatureList.clear();
             m_uiPhase = 0;
