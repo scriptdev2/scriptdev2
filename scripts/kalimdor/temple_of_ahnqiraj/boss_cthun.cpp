@@ -554,7 +554,7 @@ struct MANGOS_DLL_DECL cthunAI : public ScriptedAI
 
         //Get random but only if we have more than one unit on threat list
         if (temp.size() > 1)
-            advance (i , rand() % (temp.size() - 1));
+            advance (j , rand() % (temp.size() - 1));
 
         return (*j);
     }
