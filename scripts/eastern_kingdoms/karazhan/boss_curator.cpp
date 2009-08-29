@@ -16,54 +16,58 @@
 
 /* ScriptData
 SDName: Boss_Curator
-SD%Complete: 100
+SD%Complete: 80%
 SDComment:
 SDCategory: Karazhan
 EndScriptData */
 
 #include "precompiled.h"
 
-#define SAY_AGGRO                       -1532057
-#define SAY_SUMMON1                     -1532058
-#define SAY_SUMMON2                     -1532059
-#define SAY_EVOCATE                     -1532060
-#define SAY_ENRAGE                      -1532061
-#define SAY_KILL1                       -1532062
-#define SAY_KILL2                       -1532063
-#define SAY_DEATH                       -1532064
+enum
+{
+    SAY_AGGRO                   = -1532057,
+    SAY_SUMMON1                 = -1532058,
+    SAY_SUMMON2                 = -1532059,
+    SAY_EVOCATE                 = -1532060,
+    SAY_ENRAGE                  = -1532061,
+    SAY_KILL1                   = -1532062,
+    SAY_KILL2                   = -1532063,
+    SAY_DEATH                   = -1532064,
 
-//Flare spell info
-#define SPELL_ASTRAL_FLARE_PASSIVE      30234               //Visual effect + Flare damage
+    // Flare
+    NPC_ASTRAL_FLARE            = 17096,
+    SPELL_ASTRAL_FLARE_PASSIVE  = 30234,
 
-//Curator spell info
-#define SPELL_HATEFUL_BOLT              30383
-#define SPELL_EVOCATION                 30254
-#define SPELL_ENRAGE                    30403               //Arcane Infusion: Transforms Curator and adds damage.
-#define SPELL_BERSERK                   26662
+    // The Curator
+    SPELL_HATEFUL_BOLT          = 30383,
+    SPELL_EVOCATION             = 30254,
+    SPELL_ENRAGE                = 30403,
+    SPELL_BERSERK               = 26662
+};
 
 struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
 {
     boss_curatorAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
-    uint32 AddTimer;
-    uint32 HatefulBoltTimer;
-    uint32 BerserkTimer;
+    uint32 m_uiFlareTimer;
+    uint32 m_uiHatefulBoltTimer;
+    uint32 m_uiBerserkTimer;
 
-    bool Enraged;
-    bool Evocating;
+    bool m_bIsBerserk;
+    bool m_bIsEnraged;
 
     void Reset()
     {
-        AddTimer = 10000;
-        HatefulBoltTimer = 15000;                           //This time may be wrong
-        BerserkTimer = 720000;                              //12 minutes
-        Enraged = false;
-        Evocating = false;
+        m_uiFlareTimer = 10000;
+        m_uiHatefulBoltTimer = 15000;                       // This time may be wrong
+        m_uiBerserkTimer = 12*MINUTE*IN_MILISECONDS;
+        m_bIsBerserk = false;
+        m_bIsEnraged = false;
 
         m_creature->ApplySpellImmune(0, IMMUNITY_DAMAGE, SPELL_SCHOOL_MASK_ARCANE, true);
     }
 
-    void KilledUnit(Unit *victim)
+    void KilledUnit(Unit* pVictim)
     {
         switch(rand()%2)
         {
@@ -72,81 +76,90 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit *victim)
+    void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DEATH, m_creature);
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
     }
 
-    void UpdateAI(const uint32 diff)
+    void JustSummoned(Creature* pSummoned)
+    {
+        // Flare start with agro on it's target, should be immune to arcane
+        pSummoned->CastSpell(pSummoned, SPELL_ASTRAL_FLARE_PASSIVE, false);
+        pSummoned->ApplySpellImmune(0, IMMUNITY_DAMAGE, SPELL_SCHOOL_MASK_ARCANE, true);
+
+        if (m_creature->getVictim())
+        {
+            Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
+
+            pSummoned->AddThreat(pTarget ? pTarget : m_creature->getVictim(), 1000.0f);
+        }
+    }
+
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //always decrease BerserkTimer
-        if (BerserkTimer < diff)
+        // always decrease BerserkTimer
+        if (!m_bIsBerserk)
         {
-            //if evocate, then break evocate
-            if (Evocating)
+            if (m_uiBerserkTimer < uiDiff)
             {
+                // break evocation if we are under it's effect
                 if (m_creature->HasAura(SPELL_EVOCATION))
                     m_creature->RemoveAurasDueToSpell(SPELL_EVOCATION);
 
-                Evocating = false;
+                // ScriptText needs confirmation
+                DoScriptText(SAY_ENRAGE, m_creature);
+
+                if (m_creature->IsNonMeleeSpellCasted(false))
+                    m_creature->InterruptNonMeleeSpells(false);
+
+                DoCast(m_creature, SPELL_BERSERK);
+
+                // don't know if he's supposed to do summon/evocate after hard enrage (probably not)
+                m_bIsBerserk = true;
             }
-
-            //may not be correct SAY (generic hard enrage)
-            DoScriptText(SAY_ENRAGE, m_creature);
-
-            m_creature->InterruptNonMeleeSpells(true);
-            DoCast(m_creature, SPELL_BERSERK);
-
-            //don't know if he's supposed to do summon/evocate after hard enrage (probably not)
-            Enraged = true;
-        }else BerserkTimer -= diff;
-
-        if (Evocating)
-        {
-            //not supposed to do anything while evocate
-            if (m_creature->HasAura(SPELL_EVOCATION))
-                return;
             else
-                Evocating = false;
+                m_uiBerserkTimer -= uiDiff;
         }
 
-        if (!Enraged)
+        // not supposed to do anything while evocate
+        if (m_creature->HasAura(SPELL_EVOCATION))
+            return;
+
+        if (!m_bIsEnraged && !m_bIsBerserk)
         {
-            if (AddTimer < diff)
+            if (m_uiFlareTimer < uiDiff)
             {
-                //Summon Astral Flare
-                Creature* AstralFlare = DoSpawnCreature(17096, rand()%37, rand()%37, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                m_uiFlareTimer = 10000;
 
-                if (AstralFlare && target)
+                // summon Astral Flare
+                DoSpawnCreature(NPC_ASTRAL_FLARE, rand()%37, rand()%37, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
+
+                // reduce mana by 10% of maximum
+                if (int32 iMana = m_creature->GetMaxPower(POWER_MANA))
                 {
-                    AstralFlare->CastSpell(AstralFlare, SPELL_ASTRAL_FLARE_PASSIVE, false);
-                    AstralFlare->AI()->AttackStart(target);
-                }
+                    iMana /= 10;
+                    m_creature->ModifyPower(POWER_MANA, -iMana);
 
-                //Reduce Mana by 10% of max health
-                if (int32 mana = m_creature->GetMaxPower(POWER_MANA))
-                {
-                    mana /= 10;
-                    m_creature->ModifyPower(POWER_MANA, -mana);
-
-                    //if this get's us below 10%, then we evocate (the 10th should be summoned now)
-                    if (m_creature->GetPower(POWER_MANA)*100 / m_creature->GetMaxPower(POWER_MANA) < 10)
+                    //if this get's us below 10%, then we evocate (the 10th should be summoned now
+                    if (m_creature->GetPower(POWER_MANA)*100 < m_creature->GetMaxPower(POWER_MANA)*10)
                     {
                         DoScriptText(SAY_EVOCATE, m_creature);
-                        m_creature->InterruptNonMeleeSpells(false);
-                        DoCast(m_creature, SPELL_EVOCATION);
-                        Evocating = true;
-                        //no AddTimer cooldown, this will make first flare appear instantly after evocate end, like expected
+
+                        if (m_creature->IsNonMeleeSpellCasted(false))
+                            m_creature->InterruptNonMeleeSpells(false);
+
+                        m_creature->CastSpell(m_creature, SPELL_EVOCATION, false);
+
+                        //this small delay should make first flare appear fast after evocate, and also prevent possible spawn flood
+                        m_uiFlareTimer = 1000;
                         return;
                     }
                     else
@@ -158,29 +171,30 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
                         }
                     }
                 }
+            }
+            else
+                m_uiFlareTimer -= uiDiff;
 
-                AddTimer = 10000;
-            }else AddTimer -= diff;
-
-            if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 15)
+            if (m_creature->GetHealth()*100 < m_creature->GetMaxHealth()*15)
             {
-                Enraged = true;
-                DoCast(m_creature, SPELL_ENRAGE);
-                DoScriptText(SAY_ENRAGE, m_creature);
+                if (!m_creature->IsNonMeleeSpellCasted(false))
+                {
+                    m_bIsEnraged = true;
+                    DoScriptText(SAY_ENRAGE, m_creature);
+                    DoCast(m_creature, SPELL_ENRAGE);
+                }
             }
         }
 
-        if (HatefulBoltTimer < diff)
+        if (m_uiHatefulBoltTimer < uiDiff)
         {
-            if (Enraged)
-                HatefulBoltTimer = 7000;
-            else
-                HatefulBoltTimer = 15000;
+            if (Unit* pTarget = SelectUnit(SELECT_TARGET_TOPAGGRO, 1))
+                m_creature->CastSpell(pTarget, SPELL_HATEFUL_BOLT, false);
 
-            if (Unit* target = SelectUnit(SELECT_TARGET_TOPAGGRO, 1))
-                DoCast(target, SPELL_HATEFUL_BOLT);
-
-        }else HatefulBoltTimer -= diff;
+            m_uiHatefulBoltTimer = m_bIsEnraged ? 7000 : 15000;
+        }
+        else
+            m_uiHatefulBoltTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
@@ -193,7 +207,7 @@ CreatureAI* GetAI_boss_curator(Creature* pCreature)
 
 void AddSC_boss_curator()
 {
-    Script *newscript;
+    Script* newscript;
     newscript = new Script;
     newscript->Name = "boss_curator";
     newscript->GetAI = &GetAI_boss_curator;
