@@ -367,6 +367,125 @@ bool GossipSelect_npc_skyguard_handler_deesak(Player* pPlayer, Creature* pCreatu
 }
 
 /*######
+## npc_mana_bomb_exp_trigger
+######*/
+
+enum
+{
+    SAY_COUNT_1                 = -1000472,
+    SAY_COUNT_2                 = -1000473,
+    SAY_COUNT_3                 = -1000474,
+    SAY_COUNT_4                 = -1000475,
+    SAY_COUNT_5                 = -1000476,
+
+    SPELL_MANA_BOMB_LIGHTNING   = 37843,
+    SPELL_MANA_BOMB_EXPL        = 35513,
+
+    NPC_MANA_BOMB_EXPL_TRIGGER  = 20767,
+    NPC_MANA_BOMB_KILL_TRIGGER  = 21039
+};
+
+struct MANGOS_DLL_DECL npc_mana_bomb_exp_triggerAI : public ScriptedAI
+{
+    npc_mana_bomb_exp_triggerAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
+
+    GameObject* pManaBomb;
+
+    bool m_bIsActivated;
+    uint32 m_uiEventTimer;
+    uint32 m_uiEventCounter;
+
+    void Reset()
+    {
+        pManaBomb = NULL;
+        m_bIsActivated = false;
+        m_uiEventTimer = 1000;
+        m_uiEventCounter = 0;
+    }
+
+    void DoTrigger(Player* pPlayer, GameObject* pGo)
+    {
+        if (m_bIsActivated)
+            return;
+
+        m_bIsActivated = true;
+
+        pPlayer->KilledMonsterCredit(NPC_MANA_BOMB_KILL_TRIGGER, 0);
+
+        pManaBomb = pGo;
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (!m_bIsActivated)
+            return;
+
+        if (m_uiEventTimer < uiDiff)
+        {
+            m_uiEventTimer = 1000;
+
+            if (m_uiEventCounter < 10)
+                m_creature->CastSpell(m_creature, SPELL_MANA_BOMB_LIGHTNING, false);
+
+            switch(m_uiEventCounter)
+            {
+                case 5:
+                    if (pManaBomb)
+                        pManaBomb->SetGoState(GO_STATE_ACTIVE);
+
+                    DoScriptText(SAY_COUNT_1, m_creature);
+                    break;
+                case 6:
+                    DoScriptText(SAY_COUNT_2, m_creature);
+                    break;
+                case 7:
+                    DoScriptText(SAY_COUNT_3, m_creature);
+                    break;
+                case 8:
+                    DoScriptText(SAY_COUNT_4, m_creature);
+                    break;
+                case 9:
+                    DoScriptText(SAY_COUNT_5, m_creature);
+                    break;
+                case 10:
+                    m_creature->CastSpell(m_creature, SPELL_MANA_BOMB_EXPL, false);
+                    break;
+                case 30:
+                    if (pManaBomb)
+                        pManaBomb->SetGoState(GO_STATE_READY);
+
+                    Reset();
+                    break;
+            }
+
+            ++m_uiEventCounter;
+        }
+        else
+            m_uiEventTimer -= uiDiff;
+    }
+};
+
+CreatureAI* GetAI_npc_mana_bomb_exp_trigger(Creature* pCreature)
+{
+    return new npc_mana_bomb_exp_triggerAI(pCreature);
+}
+
+/*######
+## go_mana_bomb
+######*/
+
+bool GOHello_go_mana_bomb(Player* pPlayer, GameObject* pGo)
+{
+    if (Creature* pCreature = GetClosestCreatureWithEntry(pGo, NPC_MANA_BOMB_EXPL_TRIGGER, INTERACTION_DISTANCE))
+    {
+        if (npc_mana_bomb_exp_triggerAI* pBombAI = dynamic_cast<npc_mana_bomb_exp_triggerAI*>(pCreature->AI()))
+            pBombAI->DoTrigger(pPlayer, pGo);
+    }
+
+    return true;
+}
+
+/*######
 ## npc_slim
 ######*/
 
@@ -425,6 +544,16 @@ void AddSC_terokkar_forest()
     newscript->GetAI = &GetAI_npc_floon;
     newscript->pGossipHello =  &GossipHello_npc_floon;
     newscript->pGossipSelect = &GossipSelect_npc_floon;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "npc_mana_bomb_exp_trigger";
+    newscript->GetAI = &GetAI_npc_mana_bomb_exp_trigger;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "go_mana_bomb";
+    newscript->pGOHello = &GOHello_go_mana_bomb;
     newscript->RegisterSelf();
 
     newscript = new Script;

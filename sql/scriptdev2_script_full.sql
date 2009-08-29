@@ -477,7 +477,13 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000468,'Damn it! You\'d better not die on me, human!',0,0,1,0,'ogron SAY_OGR_NODIE'),
 (-1000469,'Still with us, Reethe?',0,0,1,0,'ogron SAY_OGR_SURVIVE'),
 (-1000470,'Must be your lucky day. Alright, I\'ll talk. Just leave me alone. Look, you\'re not going to believe me, but it wa... oh, Light, looks like the girl could shoot...',0,0,0,0,'ogron SAY_OGR_RET_LUCKY'),
-(-1000471,'By the way, thanks for watching my back.',0,0,1,0,'ogron SAY_OGR_THANKS');
+(-1000471,'By the way, thanks for watching my back.',0,0,1,0,'ogron SAY_OGR_THANKS'),
+
+(-1000472,'1...',0,3,0,0,'mana bomb SAY_COUNT_1'),
+(-1000473,'2...',0,3,0,0,'mana bomb SAY_COUNT_2'),
+(-1000474,'3...',0,3,0,0,'mana bomb SAY_COUNT_3'),
+(-1000475,'4...',0,3,0,0,'mana bomb SAY_COUNT_4'),
+(-1000476,'5...',0,3,0,0,'mana bomb SAY_COUNT_5');
 
 -- -1 033 000 SHADOWFANG KEEP
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
