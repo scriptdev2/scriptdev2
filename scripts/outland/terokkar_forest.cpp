@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Terokkar_Forest
 SD%Complete: 80
-SDComment: Quest support: 9889(test script only, sql inside script), 10009, 10873, 10896, 11096. Skettis->Ogri'la Flight
+SDComment: Quest support: 9889(test script only, sql inside script), 10009, 10873, 10896, 10446/10447, 10887, 11096. Skettis->Ogri'la Flight
 SDCategory: Terokkar Forest
 EndScriptData */
 
@@ -26,12 +26,16 @@ mob_unkor_the_ruthless
 mob_infested_root_walker
 mob_rotting_forest_rager
 mob_netherweb_victim
+npc_akuno
 npc_floon
+npc_mana_bomb_exp_trigger
+go_mana_bomb
 npc_skyguard_handler_deesak
 npc_slim
 EndContentData */
 
 #include "precompiled.h"
+#include "escort_ai.h"
 
 /*######
 ## mob_unkor_the_ruthless
@@ -235,6 +239,110 @@ struct MANGOS_DLL_DECL mob_netherweb_victimAI : public ScriptedAI
 CreatureAI* GetAI_mob_netherweb_victim(Creature* pCreature)
 {
     return new mob_netherweb_victimAI(pCreature);
+}
+
+/*#####
+## npc_akuno
+#####*/
+
+enum
+{
+    SAY_AKU_START           = -1000477,
+    SAY_AKU_AMBUSH_A        = -1000478,
+    SAY_AKU_AMBUSH_B        = -1000479,
+    SAY_AKU_AMBUSH_B_REPLY  = -1000480,
+    SAY_AKU_COMPLETE        = -1000481,
+
+    SPELL_CHAIN_LIGHTNING   = 39945,
+
+    QUEST_ESCAPING_TOMB     = 10887,
+    NPC_CABAL_SKIRMISHER    = 21661
+};
+
+static float m_afAmbushB1[]= {-2895.525879, 5336.431641, -11.800};
+static float m_afAmbushB2[]= {-2890.604980, 5331.938965, -11.282};
+
+struct MANGOS_DLL_DECL npc_akunoAI : public npc_escortAI
+{
+    npc_akunoAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
+
+    uint32 m_uiChainLightningTimer;
+
+    void Reset()
+    {
+        m_uiChainLightningTimer = 1000;
+    }
+
+    void WaypointReached(uint32 uiPointId)
+    {
+        switch(uiPointId)
+        {
+            case 5:
+                DoScriptText(SAY_AKU_AMBUSH_A, m_creature);
+                m_creature->SummonCreature(NPC_CABAL_SKIRMISHER, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
+                break;
+            case 14:
+                DoScriptText(SAY_AKU_AMBUSH_B, m_creature);
+
+                if (Creature* pTemp = m_creature->SummonCreature(NPC_CABAL_SKIRMISHER, m_afAmbushB1[0], m_afAmbushB1[1], m_afAmbushB1[2], 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000))
+                    DoScriptText(SAY_AKU_AMBUSH_B_REPLY, pTemp);
+
+                m_creature->SummonCreature(NPC_CABAL_SKIRMISHER, m_afAmbushB2[0], m_afAmbushB2[1], m_afAmbushB2[2], 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
+                break;
+            case 15:
+                SetRun();
+                break;
+            case 18:
+                DoScriptText(SAY_AKU_COMPLETE, m_creature);
+
+                if (Player* pPlayer = GetPlayerForEscort())
+                    pPlayer->GroupEventHappens(QUEST_ESCAPING_TOMB, m_creature);
+
+                break;
+        }
+    }
+
+    void JustSummoned(Creature* pSummoned)
+    {
+        pSummoned->AI()->AttackStart(m_creature);
+    }
+
+    void UpdateEscortAI(const uint32 uiDiff)
+    {
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+            return;
+
+        if (m_uiChainLightningTimer < uiDiff)
+        {
+            DoCast(m_creature->getVictim(), SPELL_CHAIN_LIGHTNING);
+            m_uiChainLightningTimer = urand(7000, 14000);
+        }
+        else
+            m_uiChainLightningTimer -= uiDiff;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+bool QuestAccept_npc_akuno(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
+{
+    if (pQuest->GetQuestId() == QUEST_ESCAPING_TOMB)
+    {
+        if (npc_akunoAI* pEscortAI = dynamic_cast<npc_akunoAI*>(pCreature->AI()))
+        {
+            pCreature->SetStandState(UNIT_STAND_STATE_STAND);
+            pCreature->setFaction(FACTION_ESCORT_N_NEUTRAL_ACTIVE);
+
+            DoScriptText(SAY_AKU_START, pCreature);
+            pEscortAI->Start(true, false, pPlayer->GetGUID(), pQuest);
+        }
+    }
+    return true;
+}
+
+CreatureAI* GetAI_npc_akuno(Creature* pCreature)
+{
+    return new npc_akunoAI(pCreature);
 }
 
 /*######
@@ -537,6 +645,12 @@ void AddSC_terokkar_forest()
     newscript = new Script;
     newscript->Name = "mob_netherweb_victim";
     newscript->GetAI = &GetAI_mob_netherweb_victim;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "npc_akuno";
+    newscript->GetAI = &GetAI_npc_akuno;
+    newscript->pQuestAccept = &QuestAccept_npc_akuno;
     newscript->RegisterSelf();
 
     newscript = new Script;
