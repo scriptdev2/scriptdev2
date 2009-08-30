@@ -47,6 +47,14 @@ struct MANGOS_DLL_DECL instance_shattered_halls : public ScriptedInstance
         m_uiNethekurseDoorGUID = 0;
     }
 
+    bool IsEncounterInProgress() const
+    {
+        for(uint8 i = 0; i < MAX_ENCOUNTER; i++)
+            if (m_auiEncounter[i] == IN_PROGRESS)
+                return true;
+        return false;
+    }
+
     void OnObjectCreate(GameObject* pGo)
     {
         if (pGo->GetEntry() == GO_DOOR_NETHEKURSE)
