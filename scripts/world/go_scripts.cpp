@@ -225,6 +225,24 @@ bool GOHello_go_gilded_brazier(Player* pPlayer, GameObject* pGO)
 }
 
 /*######
+## go_jump_a_tron
+######*/
+
+enum
+{
+    SPELL_JUMP_A_TRON   = 33382,
+    NPC_JUMP_A_TRON     = 19041
+};
+
+bool GOHello_go_jump_a_tron(Player* pPlayer, GameObject* pGo)
+{
+    if (Creature* pCreature = GetClosestCreatureWithEntry(pGo, NPC_JUMP_A_TRON, INTERACTION_DISTANCE))
+        pCreature->CastSpell(pPlayer, SPELL_JUMP_A_TRON, false);
+
+    return false;
+}
+
+/*######
 ## go_orb_of_command
 ######*/
 
@@ -417,6 +435,11 @@ void AddSC_go_scripts()
     newscript = new Script;
     newscript->Name = "go_gilded_brazier";
     newscript->pGOHello =           &GOHello_go_gilded_brazier;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "go_jump_a_tron";
+    newscript->pGOHello =           &GOHello_go_jump_a_tron;
     newscript->RegisterSelf();
 
     newscript = new Script;
