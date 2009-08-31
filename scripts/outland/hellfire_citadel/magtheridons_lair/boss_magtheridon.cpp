@@ -232,7 +232,6 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
         m_bNeedCheckCube = false;
 
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_UNK_8);
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     }
 
@@ -320,7 +319,6 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
             return;
 
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_UNK_8);
         m_creature->RemoveAurasDueToSpell(SPELL_SHADOW_CAGE_DUMMY);
         m_creature->clearUnitState(UNIT_STAT_STUNNED);
 

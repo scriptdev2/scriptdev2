@@ -52,9 +52,9 @@ enum
 
 struct MANGOS_DLL_DECL npc_dirty_larryAI : public ScriptedAI
 {
-    npc_dirty_larryAI(Creature* pC) : ScriptedAI(pC)
+    npc_dirty_larryAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        m_uiNpcFlags = pC->GetUInt32Value(UNIT_NPC_FLAGS);
+        m_uiNpcFlags = pCreature->GetUInt32Value(UNIT_NPC_FLAGS);
         m_uiCreepjackGUID = 0;
         m_uiMaloneGUID = 0;
         Reset();
@@ -88,7 +88,6 @@ struct MANGOS_DLL_DECL npc_dirty_larryAI : public ScriptedAI
 
         //expect database to have correct faction (1194) and then only unit flags set/remove needed
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_UNK_8);
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_UNK_9);
     }
 
@@ -105,13 +104,11 @@ struct MANGOS_DLL_DECL npc_dirty_larryAI : public ScriptedAI
                 pCreature->AI()->EnterEvadeMode();
 
             pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-            pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_UNK_8);
             pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_UNK_9);
         }
         else
         {
             pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-            pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_UNK_8);
             pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_UNK_9);
 
             if (!pCreature->isAlive())
@@ -135,7 +132,6 @@ struct MANGOS_DLL_DECL npc_dirty_larryAI : public ScriptedAI
         m_creature->SetUInt32Value(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_NONE);
 
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_UNK_8);
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_UNK_9);
 
         if (Creature* pCreepjack = GetClosestCreatureWithEntry(m_creature, ENTRY_CREEPJACK, 20.0f))
@@ -377,16 +373,14 @@ struct MANGOS_DLL_DECL npc_khadgars_servantAI : public npc_escortAI
 {
     npc_khadgars_servantAI(Creature* pCreature) : npc_escortAI(pCreature)
     {
-        if (pCreature->GetOwnerGUID() && IS_PLAYER_GUID(pCreature->GetOwnerGUID()))
-            pguid = pCreature->GetOwnerGUID();
+        if (pCreature->GetOwner() && pCreature->GetOwner()->GetTypeId() == TYPEID_PLAYER)
+            Start(false, false, pCreature->GetOwner()->GetGUID());
         else
-            error_log("SD2: npc_khadgars_servant can not obtain ownerGUID or ownerGUID is not a player.");
+            error_log("SD2: npc_khadgars_servant can not obtain owner or owner is not a player.");
 
         pCreature->SetSpeed(MOVE_WALK,1.3f);
         Reset();
     }
-
-    uint64 pguid;
 
     void Reset() {}
 
@@ -425,17 +419,6 @@ struct MANGOS_DLL_DECL npc_khadgars_servantAI : public npc_escortAI
                 pPlayer->AreaExploredOrEventHappens(QUEST_CITY_LIGHT);
                 break;
         }
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        if (!HasEscortState(STATE_ESCORT_ESCORTING) && pguid)
-        {
-            Start(false, false, pguid);
-            pguid = 0;
-        }
-
-        npc_escortAI::UpdateAI(diff);
     }
 };
 

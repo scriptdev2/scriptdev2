@@ -79,8 +79,6 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
 
     void Reset()
     {
-        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_UNK_8);
-
         IsImage33 = false;
         IsImage66 = false;
 
@@ -106,11 +104,6 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
             return;
 
         ScriptedAI::AttackStart(who);
-    }
-
-    void Aggro(Unit *who)
-    {
-        m_creature->RemoveFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_UNK_8);
     }
 
     void JustDied(Unit* Killer)
