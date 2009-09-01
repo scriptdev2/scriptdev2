@@ -523,6 +523,7 @@ UPDATE creature_template SET ScriptName='mob_hellfire_channeler' WHERE entry=172
 UPDATE creature_template SET ScriptName='boss_doomlord_kazzak' WHERE entry=18728;
 UPDATE creature_template SET ScriptName='npc_aeranas' WHERE entry=17085;
 UPDATE gameobject_template SET ScriptName='go_haaleshi_altar' WHERE entry=181606;
+UPDATE creature_template SET ScriptName='npc_ancestral_wolf' WHERE entry=17077;
 UPDATE creature_template SET ScriptName='npc_demoniac_scryer' WHERE entry=22258;
 UPDATE creature_template SET ScriptName='npc_gryphoneer_windbellow' WHERE entry=20235;
 UPDATE creature_template SET ScriptName='npc_naladu' WHERE entry=19361;

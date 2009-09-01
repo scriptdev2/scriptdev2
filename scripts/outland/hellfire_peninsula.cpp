@@ -17,13 +17,14 @@
 /* ScriptData
 SDName: Hellfire_Peninsula
 SD%Complete: 100
-SDComment: Quest support: 9375, 9418, 10129, 10146, 10162, 10163, 10340, 10346, 10347, 10382 (Special flight paths), 10838
+SDComment: Quest support: 9375, 9410, 9418, 10129, 10146, 10162, 10163, 10340, 10346, 10347, 10382 (Special flight paths), 10838
 SDCategory: Hellfire Peninsula
 EndScriptData */
 
 /* ContentData
 npc_aeranas
 go_haaleshi_altar
+npc_ancestral_wolf
 npc_demoniac_scryer
 npc_gryphoneer_windbellow
 npc_naladu
@@ -126,6 +127,73 @@ bool GOHello_go_haaleshi_altar(Player* pPlayer, GameObject* pGo)
 {
     pGo->SummonCreature(C_AERANAS,-1321.79, 4043.80, 116.24, 1.25, TEMPSUMMON_TIMED_DESPAWN, 180000);
     return false;
+}
+
+/*######
+## npc_ancestral_wolf
+######*/
+
+enum
+{
+    EMOTE_WOLF_LIFT_HEAD            = -1000496,
+    EMOTE_WOLF_HOWL                 = -1000497,
+    SAY_WOLF_WELCOME                = -1000498,
+
+    SPELL_ANCESTRAL_WOLF_BUFF       = 29981,
+
+    NPC_RYGA                        = 17123
+};
+
+struct MANGOS_DLL_DECL npc_ancestral_wolfAI : public npc_escortAI
+{
+    npc_ancestral_wolfAI(Creature* pCreature) : npc_escortAI(pCreature)
+    {
+        if (pCreature->GetOwner() && pCreature->GetOwner()->GetTypeId() == TYPEID_PLAYER)
+            Start(false, false, pCreature->GetOwner()->GetGUID());
+        else
+            error_log("SD2: npc_ancestral_wolf can not obtain owner or owner is not a player.");
+
+        pCreature->SetSpeed(MOVE_WALK, 1.5f);
+        Reset();
+    }
+
+    Unit* pRyga;
+
+    void Reset()
+    {
+        pRyga = NULL;
+        m_creature->CastSpell(m_creature, SPELL_ANCESTRAL_WOLF_BUFF, true);
+    }
+
+    void MoveInLineOfSight(Unit* pWho)
+    {
+        if (!pRyga && pWho->GetTypeId() == TYPEID_UNIT && pWho->GetEntry() == NPC_RYGA && m_creature->IsWithinDistInMap(pWho, 15.0f))
+            pRyga = pWho;
+
+        npc_escortAI::MoveInLineOfSight(pWho);
+    }
+
+    void WaypointReached(uint32 uiPointId)
+    {
+        switch(uiPointId)
+        {
+            case 0:
+                DoScriptText(EMOTE_WOLF_LIFT_HEAD, m_creature);
+                break;
+            case 2:
+                DoScriptText(EMOTE_WOLF_HOWL, m_creature);
+                break;
+            case 50:
+                if (pRyga && pRyga->isAlive() && !pRyga->isInCombat())
+                    DoScriptText(SAY_WOLF_WELCOME, pRyga);
+                break;
+        }
+    }
+};
+
+CreatureAI* GetAI_npc_ancestral_wolf(Creature* pCreature)
+{
+    return new npc_ancestral_wolfAI(pCreature);
 }
 
 /*######
@@ -690,6 +758,11 @@ void AddSC_hellfire_peninsula()
     newscript = new Script;
     newscript->Name = "go_haaleshi_altar";
     newscript->pGOHello = &GOHello_go_haaleshi_altar;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "npc_ancestral_wolf";
+    newscript->GetAI = &GetAI_npc_ancestral_wolf;
     newscript->RegisterSelf();
 
     newscript = new Script;
