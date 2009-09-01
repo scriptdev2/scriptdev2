@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Dustwallow_Marsh
 SD%Complete: 95
-SDComment: Quest support: 558, 1273, 1324, 11126, 11142, 11180. Vendor Nat Pagle
+SDComment: Quest support: 558, 1173, 1273, 1324, 11126, 11142, 11180. Vendor Nat Pagle
 SDCategory: Dustwallow Marsh
 EndScriptData */
 
@@ -26,6 +26,7 @@ mobs_risen_husk_spirit
 npc_restless_apparition
 npc_deserter_agitator
 npc_lady_jaina_proudmoore
+npc_morokk
 npc_nat_pagle
 npc_ogron
 npc_private_hendel
@@ -68,7 +69,7 @@ struct MANGOS_DLL_DECL mobs_risen_husk_spiritAI : public ScriptedAI
         if (pDoneBy->GetTypeId() == TYPEID_PLAYER)
         {
             if (damage >= m_creature->GetHealth() && ((Player*)pDoneBy)->GetQuestStatus(QUEST_WHATS_HAUNTING_WITCH_HILL) == QUEST_STATUS_INCOMPLETE)
-                m_creature->CastSpell(pDoneBy, SPELL_SUMMON_RESTLESS_APPARITION, false);
+                m_creature->CastSpell(pDoneBy, SPELL_SUMMON_RESTLESS_APPARITION, true);
         }
     }
 
@@ -193,6 +194,123 @@ bool GossipSelect_npc_lady_jaina_proudmoore(Player* pPlayer, Creature* pCreature
     return true;
 }
 
+/*######
+## npc_morokk
+######*/
+
+enum
+{
+    SAY_MOR_CHALLENGE               = -1000499,
+    SAY_MOR_SCARED                  = -1000500,
+
+    QUEST_CHALLENGE_MOROKK          = 1173,
+
+    FACTION_MOR_HOSTILE             = 168,
+    FACTION_MOR_RUNNING             = 35
+};
+
+struct MANGOS_DLL_DECL npc_morokkAI : public npc_escortAI
+{
+    npc_morokkAI(Creature* pCreature) : npc_escortAI(pCreature)
+    {
+        m_bIsSuccess = false;
+        Reset();
+    }
+
+    bool m_bIsSuccess;
+
+    void Reset() {}
+
+    void WaypointReached(uint32 uiPointId)
+    {
+        switch(uiPointId)
+        {
+            case 0:
+                SetEscortPaused(true);
+                break;
+            case 1:
+                if (m_bIsSuccess)
+                    DoScriptText(SAY_MOR_SCARED, m_creature);
+                else
+                {
+                    m_creature->setDeathState(JUST_DIED);
+                    m_creature->Respawn();
+                }
+                break;
+        }
+    }
+
+    void AttackedBy(Unit* pAttacker)
+    {
+        if (m_creature->getVictim())
+            return;
+
+        if (m_creature->IsFriendlyTo(pAttacker))
+            return;
+
+        AttackStart(pAttacker);
+    }
+
+    void DamageTaken(Unit* pDoneBy, uint32 &uiDamage)
+    {
+        if (HasEscortState(STATE_ESCORT_ESCORTING))
+        {
+            if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 30)
+            {
+                if (Player* pPlayer = GetPlayerForEscort())
+                    pPlayer->GroupEventHappens(QUEST_CHALLENGE_MOROKK, m_creature);
+
+                m_creature->setFaction(FACTION_MOR_RUNNING);
+
+                m_bIsSuccess = true;
+                EnterEvadeMode();
+
+                uiDamage = 0;
+            }
+        }
+    }
+
+    void UpdateEscortAI(const uint32 uiDiff)
+    {
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        {
+            if (HasEscortState(STATE_ESCORT_PAUSED))
+            {
+                if (Player* pPlayer = GetPlayerForEscort())
+                {
+                    m_bIsSuccess = false;
+                    DoScriptText(SAY_MOR_CHALLENGE, m_creature, pPlayer);
+                    m_creature->setFaction(FACTION_MOR_HOSTILE);
+                    AttackStart(pPlayer);
+                }
+
+                SetEscortPaused(false);
+            }
+
+            return;
+        }
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_npc_morokk(Creature* pCreature)
+{
+    return new npc_morokkAI(pCreature);
+}
+
+bool QuestAccept_npc_morokk(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
+{
+    if (pQuest->GetQuestId() == QUEST_CHALLENGE_MOROKK)
+    {
+        if (npc_morokkAI* pEscortAI = dynamic_cast<npc_morokkAI*>(pCreature->AI()))
+            pEscortAI->Start(true, true, pPlayer->GetGUID(), pQuest);
+
+        return true;
+    }
+
+    return false;
+}
 /*######
 ## npc_nat_pagle
 ######*/
@@ -659,6 +777,12 @@ void AddSC_dustwallow_marsh()
     newscript->Name = "npc_lady_jaina_proudmoore";
     newscript->pGossipHello = &GossipHello_npc_lady_jaina_proudmoore;
     newscript->pGossipSelect = &GossipSelect_npc_lady_jaina_proudmoore;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "npc_morokk";
+    newscript->GetAI = &GetAI_npc_morokk;
+    newscript->pQuestAccept = &QuestAccept_npc_morokk;
     newscript->RegisterSelf();
 
     newscript = new Script;
