@@ -36,28 +36,30 @@ EndContentData */
 enum
 {
     QUEST_FREEDOM_TO_RUUL   = 6482,
-    ENTRY_T_URSA            = 3921,
-    ENTRY_T_TOTEMIC         = 3922,
-    ENTRY_T_PATHFINDER      = 3926
+    NPC_T_URSA              = 3921,
+    NPC_T_TOTEMIC           = 3922,
+    NPC_T_PATHFINDER        = 3926
 };
 
 struct MANGOS_DLL_DECL npc_ruul_snowhoofAI : public npc_escortAI
 {
     npc_ruul_snowhoofAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
 
-    void WaypointReached(uint32 i)
+    void Reset() {}
+
+    void WaypointReached(uint32 uiPointId)
     {
-        switch(i)
+        switch(uiPointId)
         {
             case 13:
-                m_creature->SummonCreature(ENTRY_T_TOTEMIC, 3449.218018, -587.825073, 174.978867, 4.714445, TEMPSUMMON_DEAD_DESPAWN, 60000);
-                m_creature->SummonCreature(ENTRY_T_URSA, 3446.384521, -587.830872, 175.186279, 4.714445, TEMPSUMMON_DEAD_DESPAWN, 60000);
-                m_creature->SummonCreature(ENTRY_T_PATHFINDER, 3444.218994, -587.835327, 175.380600, 4.714445, TEMPSUMMON_DEAD_DESPAWN, 60000);
+                m_creature->SummonCreature(NPC_T_TOTEMIC, 3449.218018, -587.825073, 174.978867, 4.714445, TEMPSUMMON_DEAD_DESPAWN, 60000);
+                m_creature->SummonCreature(NPC_T_URSA, 3446.384521, -587.830872, 175.186279, 4.714445, TEMPSUMMON_DEAD_DESPAWN, 60000);
+                m_creature->SummonCreature(NPC_T_PATHFINDER, 3444.218994, -587.835327, 175.380600, 4.714445, TEMPSUMMON_DEAD_DESPAWN, 60000);
                 break;
             case 19:
-                m_creature->SummonCreature(ENTRY_T_TOTEMIC, 3508.344482, -492.024261, 186.929031, 4.145029, TEMPSUMMON_DEAD_DESPAWN, 60000);
-                m_creature->SummonCreature(ENTRY_T_URSA, 3506.265625, -490.531006, 186.740128, 4.239277, TEMPSUMMON_DEAD_DESPAWN, 60000);
-                m_creature->SummonCreature(ENTRY_T_PATHFINDER, 3503.682373, -489.393799, 186.629684, 4.349232, TEMPSUMMON_DEAD_DESPAWN, 60000);
+                m_creature->SummonCreature(NPC_T_TOTEMIC, 3508.344482, -492.024261, 186.929031, 4.145029, TEMPSUMMON_DEAD_DESPAWN, 60000);
+                m_creature->SummonCreature(NPC_T_URSA, 3506.265625, -490.531006, 186.740128, 4.239277, TEMPSUMMON_DEAD_DESPAWN, 60000);
+                m_creature->SummonCreature(NPC_T_PATHFINDER, 3503.682373, -489.393799, 186.629684, 4.349232, TEMPSUMMON_DEAD_DESPAWN, 60000);
                 break;
             case 21:
                 if (Player* pPlayer = GetPlayerForEscort())
@@ -65,8 +67,6 @@ struct MANGOS_DLL_DECL npc_ruul_snowhoofAI : public npc_escortAI
                 break;
         }
     }
-
-    void Reset() { }
 
     void JustSummoned(Creature* summoned)
     {
@@ -96,37 +96,46 @@ CreatureAI* GetAI_npc_ruul_snowhoofAI(Creature* pCreature)
 # npc_torek
 ####*/
 
-#define SAY_READY                   -1000106
-#define SAY_MOVE                    -1000107
-#define SAY_PREPARE                 -1000108
-#define SAY_WIN                     -1000109
-#define SAY_END                     -1000110
+enum
+{
+    SAY_READY                   = -1000106,
+    SAY_MOVE                    = -1000107,
+    SAY_PREPARE                 = -1000108,
+    SAY_WIN                     = -1000109,
+    SAY_END                     = -1000110,
 
-#define SPELL_REND                  11977
-#define SPELL_THUNDERCLAP           8078
+    SPELL_REND                  = 11977,
+    SPELL_THUNDERCLAP           = 8078,
 
-#define QUEST_TOREK_ASSULT          6544
+    QUEST_TOREK_ASSULT          = 6544,
 
-#define ENTRY_SPLINTERTREE_RAIDER   12859
-#define ENTRY_DURIEL                12860
-#define ENTRY_SILVERWING_SENTINEL   12896
-#define ENTRY_SILVERWING_WARRIOR    12897
+    NPC_SPLINTERTREE_RAIDER     = 12859,
+    NPC_DURIEL                  = 12860,
+    NPC_SILVERWING_SENTINEL     = 12896,
+    NPC_SILVERWING_WARRIOR      = 12897
+};
 
 struct MANGOS_DLL_DECL npc_torekAI : public npc_escortAI
 {
     npc_torekAI(Creature* pCreature) : npc_escortAI(pCreature) {Reset();}
 
-    uint32 Rend_Timer;
-    uint32 Thunderclap_Timer;
+    uint32 m_uiRend_Timer;
+    uint32 m_uiThunderclap_Timer;
 
-    void WaypointReached(uint32 i)
+    void Reset()
+    {
+        m_uiRend_Timer = 5000;
+        m_uiThunderclap_Timer = 8000;
+    }
+
+    void WaypointReached(uint32 uiPointId)
     {
         Player* pPlayer = GetPlayerForEscort();
 
         if (!pPlayer)
             return;
 
-        switch (i)
+        switch(uiPointId)
         {
             case 1:
                 DoScriptText(SAY_MOVE, m_creature, pPlayer);
@@ -136,9 +145,9 @@ struct MANGOS_DLL_DECL npc_torekAI : public npc_escortAI
                 break;
             case 19:
                 //TODO: verify location and creatures amount.
-                m_creature->SummonCreature(ENTRY_DURIEL,1776.73,-2049.06,109.83,1.54,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,25000);
-                m_creature->SummonCreature(ENTRY_SILVERWING_SENTINEL,1774.64,-2049.41,109.83,1.40,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,25000);
-                m_creature->SummonCreature(ENTRY_SILVERWING_WARRIOR,1778.73,-2049.50,109.83,1.67,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,25000);
+                m_creature->SummonCreature(NPC_DURIEL,1776.73,-2049.06,109.83,1.54,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,25000);
+                m_creature->SummonCreature(NPC_SILVERWING_SENTINEL,1774.64,-2049.41,109.83,1.40,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,25000);
+                m_creature->SummonCreature(NPC_SILVERWING_WARRIOR,1778.73,-2049.50,109.83,1.67,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,25000);
                 break;
             case 20:
                 DoScriptText(SAY_WIN, m_creature, pPlayer);
@@ -150,35 +159,33 @@ struct MANGOS_DLL_DECL npc_torekAI : public npc_escortAI
         }
     }
 
-    void Reset()
+    void JustSummoned(Creature* pSummoned)
     {
-        Rend_Timer = 5000;
-        Thunderclap_Timer = 8000;
+        pSummoned->AI()->AttackStart(m_creature);
     }
 
-    void JustSummoned(Creature* summoned)
+    void UpdateEscortAI(const uint32 uiDiff)
     {
-        summoned->AI()->AttackStart(m_creature);
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        npc_escortAI::UpdateAI(diff);
-
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if (Rend_Timer < diff)
+        if (m_uiRend_Timer < uiDiff)
         {
-            DoCast(m_creature->getVictim(),SPELL_REND);
-            Rend_Timer = 20000;
-        }else Rend_Timer -= diff;
+            DoCast(m_creature->getVictim(), SPELL_REND);
+            m_uiRend_Timer = 20000;
+        }
+        else
+            m_uiRend_Timer -= uiDiff;
 
-        if (Thunderclap_Timer < diff)
+        if (m_uiThunderclap_Timer < uiDiff)
         {
-            DoCast(m_creature,SPELL_THUNDERCLAP);
-            Thunderclap_Timer = 30000;
-        }else Thunderclap_Timer -= diff;
+            DoCast(m_creature, SPELL_THUNDERCLAP);
+            m_uiThunderclap_Timer = 30000;
+        }
+        else
+            m_uiThunderclap_Timer -= uiDiff;
+
+        DoMeleeAttackIfReady();
     }
 };
 
