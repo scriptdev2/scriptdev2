@@ -228,7 +228,7 @@ struct MANGOS_DLL_DECL npc_demoniac_scryerAI : public ScriptedAI
 {
     npc_demoniac_scryerAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        m_bIsComplete = true;
+        m_bIsComplete = false;
         m_uiSpawnDemonTimer = 15000;
         m_uiSpawnButtressTimer = 45000;
         m_uiButtressCount = 0;
