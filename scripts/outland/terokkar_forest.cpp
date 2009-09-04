@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Terokkar_Forest
 SD%Complete: 80
-SDComment: Quest support: 9889(test script only, sql inside script), 10009, 10873, 10896, 10446/10447, 10887, 11096. Skettis->Ogri'la Flight
+SDComment: Quest support: 9889, 10009, 10873, 10896, 10446/10447, 10887, 10922, 11096. Skettis->Ogri'la Flight
 SDCategory: Terokkar Forest
 EndScriptData */
 
@@ -28,6 +28,7 @@ mob_rotting_forest_rager
 mob_netherweb_victim
 npc_akuno
 npc_floon
+npc_letoll
 npc_mana_bomb_exp_trigger
 go_mana_bomb
 npc_skyguard_handler_deesak
@@ -475,6 +476,256 @@ bool GossipSelect_npc_skyguard_handler_deesak(Player* pPlayer, Creature* pCreatu
 }
 
 /*######
+## npc_letoll
+######*/
+
+enum
+{
+    SAY_LE_START                    = -1000511,
+    SAY_LE_KEEP_SAFE                = -1000512,
+    SAY_LE_NORTH                    = -1000513,
+    SAY_LE_ARRIVE                   = -1000514,
+    SAY_LE_BURIED                   = -1000515,
+    SAY_LE_ALMOST                   = -1000516,
+    SAY_LE_DRUM                     = -1000517,
+    SAY_LE_DRUM_REPLY               = -1000518,
+    SAY_LE_DISCOVERY                = -1000519,
+    SAY_LE_DISCOVERY_REPLY          = -1000520,
+    SAY_LE_NO_LEAVE                 = -1000521,
+    SAY_LE_NO_LEAVE_REPLY1          = -1000522,
+    SAY_LE_NO_LEAVE_REPLY2          = -1000523,
+    SAY_LE_NO_LEAVE_REPLY3          = -1000524,
+    SAY_LE_NO_LEAVE_REPLY4          = -1000525,
+    SAY_LE_SHUT                     = -1000526,
+    SAY_LE_REPLY_HEAR               = -1000527,
+    SAY_LE_IN_YOUR_FACE             = -1000528,
+    SAY_LE_HELP_HIM                 = -1000529,
+    EMOTE_LE_PICK_UP                = -1000530,
+    SAY_LE_THANKS                   = -1000531,
+
+    QUEST_DIGGING_BONES             = 10922,
+
+    NPC_RESEARCHER                  = 22464,
+    NPC_BONE_SIFTER                 = 22466,
+
+    MAX_RESEARCHER                  = 4
+};
+
+//Some details still missing from here, and will also have issues if followers evade for any reason.
+struct MANGOS_DLL_DECL npc_letollAI : public npc_escortAI
+{
+    npc_letollAI(Creature* pCreature) : npc_escortAI(pCreature)
+    {
+        m_uiEventTimer = 5000;
+        m_uiEventCount = 0;
+        Reset();
+    }
+
+    std::list<Creature*> m_lResearchersList;
+
+    uint32 m_uiEventTimer;
+    uint32 m_uiEventCount;
+
+    void Reset() {}
+
+    //will make them follow, but will only work until they enter combat with any unit
+    void SetFormation()
+    {
+        uint32 uiCount = 0;
+
+        for(std::list<Creature*>::iterator itr = m_lResearchersList.begin(); itr != m_lResearchersList.end(); ++itr)
+        {
+            float fAngle = uiCount < MAX_RESEARCHER ? M_PI/MAX_RESEARCHER - (uiCount*2*M_PI/MAX_RESEARCHER) : 0.0f;
+
+            if ((*itr)->isAlive() && !(*itr)->isInCombat())
+                (*itr)->GetMotionMaster()->MoveFollow(m_creature, 2.5f, fAngle);
+
+            ++uiCount;
+        }
+    }
+
+    Creature* GetAvailableResearcher(uint8 uiListNum)
+    {
+        if (!m_lResearchersList.empty())
+        {
+            uint8 uiNum = 1;
+
+            for(std::list<Creature*>::iterator itr = m_lResearchersList.begin(); itr != m_lResearchersList.end(); ++itr)
+            {
+                if (uiListNum && uiListNum != uiNum)
+                {
+                    ++uiNum;
+                    continue;
+                }
+
+                if ((*itr)->isAlive() && (*itr)->IsWithinDistInMap(m_creature, 20.0f))
+                    return (*itr);
+            }
+        }
+
+        return NULL;
+    }
+
+    void JustStartedEscort()
+    {
+        m_uiEventTimer = 5000;
+        m_uiEventCount = 0;
+
+        m_lResearchersList.clear();
+
+        GetCreatureListWithEntryInGrid(m_lResearchersList, m_creature, NPC_RESEARCHER, 25.0f);
+
+        if (!m_lResearchersList.empty())
+            SetFormation();
+    }
+
+    void WaypointReached(uint32 uiPointId)
+    {
+        switch(uiPointId)
+        {
+            case 0:
+                if (Player* pPlayer = GetPlayerForEscort())
+                    DoScriptText(SAY_LE_KEEP_SAFE, m_creature, pPlayer);
+                break;
+            case 1:
+                DoScriptText(SAY_LE_NORTH, m_creature);
+                break;
+            case 10:
+                DoScriptText(SAY_LE_ARRIVE, m_creature);
+                break;
+            case 12:
+                DoScriptText(SAY_LE_BURIED, m_creature);
+                SetEscortPaused(true);
+                break;
+            case 13:
+                SetRun();
+                break;
+        }
+    }
+
+    void Aggro(Unit* pWho)
+    {
+        if (pWho->isInCombat() && pWho->GetTypeId() == TYPEID_UNIT && pWho->GetEntry() == NPC_BONE_SIFTER)
+            DoScriptText(SAY_LE_HELP_HIM, m_creature);
+    }
+
+    void JustSummoned(Creature* pSummoned)
+    {
+        Player* pPlayer = GetPlayerForEscort();
+
+        if (pPlayer && pPlayer->isAlive())
+            pSummoned->AI()->AttackStart(pPlayer);
+        else
+            pSummoned->AI()->AttackStart(m_creature);
+    }
+
+    void UpdateEscortAI(const uint32 uiDiff)
+    {
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        {
+            if (HasEscortState(STATE_ESCORT_PAUSED))
+            {
+                if (m_uiEventTimer < uiDiff)
+                {
+                    m_uiEventTimer = 7000;
+
+                    switch(m_uiEventCount)
+                    {
+                        case 0:
+                            DoScriptText(SAY_LE_ALMOST, m_creature);
+                            break;
+                        case 1:
+                            DoScriptText(SAY_LE_DRUM, m_creature);
+                            break;
+                        case 2:
+                            if (Creature* pResearcher = GetAvailableResearcher(0))
+                                DoScriptText(SAY_LE_DRUM_REPLY, pResearcher);
+                            break;
+                        case 3:
+                            DoScriptText(SAY_LE_DISCOVERY, m_creature);
+                            break;
+                        case 4:
+                            if (Creature* pResearcher = GetAvailableResearcher(0))
+                                DoScriptText(SAY_LE_DISCOVERY_REPLY, pResearcher);
+                            break;
+                        case 5:
+                            DoScriptText(SAY_LE_NO_LEAVE, m_creature);
+                            break;
+                        case 6:
+                            if (Creature* pResearcher = GetAvailableResearcher(1))
+                                DoScriptText(SAY_LE_NO_LEAVE_REPLY1, pResearcher);
+                            break;
+                        case 7:
+                            if (Creature* pResearcher = GetAvailableResearcher(2))
+                                DoScriptText(SAY_LE_NO_LEAVE_REPLY2, pResearcher);
+                            break;
+                        case 8:
+                            if (Creature* pResearcher = GetAvailableResearcher(3))
+                                DoScriptText(SAY_LE_NO_LEAVE_REPLY3, pResearcher);
+                            break;
+                        case 9:
+                            if (Creature* pResearcher = GetAvailableResearcher(4))
+                                DoScriptText(SAY_LE_NO_LEAVE_REPLY4, pResearcher);
+                            break;
+                        case 10:
+                            DoScriptText(SAY_LE_SHUT, m_creature);
+                            break;
+                        case 11:
+                            if (Creature* pResearcher = GetAvailableResearcher(0))
+                                DoScriptText(SAY_LE_REPLY_HEAR, pResearcher);
+                            break;
+                        case 12:
+                            DoScriptText(SAY_LE_IN_YOUR_FACE, m_creature);
+                            m_creature->SummonCreature(NPC_BONE_SIFTER, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+                            break;
+                        case 13:
+                            DoScriptText(EMOTE_LE_PICK_UP, m_creature);
+
+                            if (Player* pPlayer = GetPlayerForEscort())
+                            {
+                                DoScriptText(SAY_LE_THANKS, m_creature, pPlayer);
+                                pPlayer->GroupEventHappens(QUEST_DIGGING_BONES, m_creature);
+                            }
+
+                            SetEscortPaused(false);
+                            break;
+                    }
+
+                    ++m_uiEventCount;
+                }
+                else
+                    m_uiEventTimer -= uiDiff;
+            }
+
+            return;
+        }
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_npc_letoll(Creature* pCreature)
+{
+    return new npc_letollAI(pCreature);
+}
+
+bool QuestAccept_npc_letoll(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
+{
+    if (pQuest->GetQuestId() == QUEST_DIGGING_BONES)
+    {
+        if (npc_letollAI* pEscortAI = dynamic_cast<npc_letollAI*>(pCreature->AI()))
+        {
+            DoScriptText(SAY_LE_START, pCreature);
+            pCreature->setFaction(FACTION_ESCORT_N_NEUTRAL_PASSIVE);
+
+            pEscortAI->Start(false, false, pPlayer->GetGUID(), pQuest, true);
+        }
+    }
+
+    return true;
+}
+
+/*######
 ## npc_mana_bomb_exp_trigger
 ######*/
 
@@ -658,6 +909,12 @@ void AddSC_terokkar_forest()
     newscript->GetAI = &GetAI_npc_floon;
     newscript->pGossipHello =  &GossipHello_npc_floon;
     newscript->pGossipSelect = &GossipSelect_npc_floon;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "npc_letoll";
+    newscript->GetAI = &GetAI_npc_letoll;
+    newscript->pQuestAccept = &QuestAccept_npc_letoll;
     newscript->RegisterSelf();
 
     newscript = new Script;

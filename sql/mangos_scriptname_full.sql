@@ -956,6 +956,7 @@ UPDATE creature_template SET ScriptName='mob_rotting_forest_rager' WHERE entry=2
 UPDATE creature_template SET ScriptName='mob_unkor_the_ruthless' WHERE entry=18262;
 UPDATE creature_template SET ScriptName='npc_akuno' WHERE entry=22377;
 UPDATE creature_template SET ScriptName='npc_floon' WHERE entry=18588;
+UPDATE creature_template SET ScriptName='npc_letoll' WHERE entry=22458;
 UPDATE creature_template SET ScriptName='npc_mana_bomb_exp_trigger' WHERE entry=20767;
 UPDATE gameobject_template SET ScriptName='go_mana_bomb' WHERE entry=184725;
 UPDATE creature_template SET ScriptName='npc_skyguard_handler_irena' WHERE entry=23413;
