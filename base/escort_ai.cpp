@@ -471,6 +471,8 @@ void npc_escortAI::Start(bool bIsActiveAttacker, bool bRun, uint64 uiPlayerGUID,
         m_creature->RemoveMonsterMoveFlag(MONSTER_MOVE_WALK);
 
     AddEscortState(STATE_ESCORT_ESCORTING);
+
+    JustStartedEscort();
 }
 
 void npc_escortAI::SetEscortPaused(bool bPaused)

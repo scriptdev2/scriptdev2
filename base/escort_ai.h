@@ -78,6 +78,7 @@ struct MANGOS_DLL_DECL npc_escortAI : public ScriptedAI
 
     protected:
         Player* GetPlayerForEscort() { return (Player*)Unit::GetUnit(*m_creature, m_uiPlayerGUID); }
+        virtual void JustStartedEscort() {}
 
     private:
         bool AssistPlayerInCombat(Unit* pWho);
