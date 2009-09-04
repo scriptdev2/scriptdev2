@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Shadowmoon_Valley
 SD%Complete: 100
-SDComment: Quest support: 10519, 10583, 10601, 10814, 10804, 10854, 11082. Vendor Drake Dealer Hurlunk.
+SDComment: Quest support: 10519, 10583, 10601, 10781, 10814, 10804, 10854, 11082. Vendor Drake Dealer Hurlunk.
 SDCategory: Shadowmoon Valley
 EndScriptData */
 
@@ -31,6 +31,8 @@ npc_neltharaku
 npc_karynaku
 npc_oronok_tornheart
 npc_wilda
+mob_torloth
+npc_lord_illidan_stormrage
 EndContentData */
 
 #include "precompiled.h"
@@ -800,6 +802,177 @@ bool QuestAccept_npc_wilda(Player* pPlayer, Creature* pCreature, const Quest* pQ
     return true;
 }
 
+/*#####
+# Quest: Battle of the Crimson Watch
+#####*/
+
+enum
+{
+    QUEST_BATTLE_OF_THE_CRIMSON_WATCH = 10781,
+
+    EVENT_COOLDOWN                    = 30000,
+
+    SAY_TORLOTH_DIALOGUE1             = -1000532,
+    SAY_TORLOTH_DIALOGUE2             = -1000533, 
+    SAY_TORLOTH_DIALOGUE3             = -1000534,
+    SAY_ILLIDAN_DIALOGUE              = -1000535,
+    SAY_ILLIDAN_SUMMON1               = -1000536,
+    SAY_ILLIDAN_SUMMON2               = -1000537,
+    SAY_ILLIDAN_SUMMON3               = -1000538,
+    SAY_ILLIDAN_SUMMON4               = -1000539,
+    SAY_EVENT_COMPLETED               = -1000540,
+
+    MODEL_ID_FELGUARD                 = 18654,
+    MODEL_ID_DREADLORD                = 19991,
+
+    NPC_ILLIDARI_SOLDIER              = 22075,
+    NPC_ILLIDARI_MIND_BREAKER         = 22074,
+    NPC_ILLIDARI_HIGHLORD             = 19797,
+    NPC_TORLOTH_THE_MAGNIFICENT       = 22076,
+    NPC_LORD_ILLIDAN                  = 22083
+};
+
+enum CinematicCreature
+{
+    LORD_ILLIDAN = 1,
+    TORLOTH      = 0
+};
+
+const float EVENT_AREA_RADIUS = 65.0;
+
+struct TorlothCinematic
+{
+    int32  iTextId;
+    uint32 uiCreature;
+    uint32 uiTimer;
+};
+
+static TorlothCinematic TorlothAnim[]=
+{
+    {SAY_TORLOTH_DIALOGUE1, TORLOTH, 2000},
+    {SAY_ILLIDAN_DIALOGUE, LORD_ILLIDAN, 7000},
+    {SAY_TORLOTH_DIALOGUE2, TORLOTH, 3000},
+    {NULL, TORLOTH, 2000},                                  // Torloth stand
+    {SAY_TORLOTH_DIALOGUE3, TORLOTH, 1000}, 
+    {NULL, TORLOTH, 3000},
+    {NULL, TORLOTH, NULL}
+};
+
+struct Location
+{
+    float fLocX;
+    float fLocY;
+    float fLocZ;
+    float fOrient;
+};
+
+static Location SpawnLocation[]=
+{
+    {-4615.8556, 1342.2532, 139.9, 1.612},                  // Illidari Soldier
+    {-4598.9365, 1377.3182, 139.9, 3.917},                  // Illidari Soldier
+    {-4598.4697, 1360.8999, 139.9, 2.427},                  // Illidari Soldier
+    {-4589.3599, 1369.1061, 139.9, 3.165},                  // Illidari Soldier
+    {-4608.3477, 1386.0076, 139.9, 4.108},                  // Illidari Soldier
+    {-4633.1889, 1359.8033, 139.9, 0.949},                  // Illidari Soldier
+    {-4623.5791, 1351.4574, 139.9, 0.971},                  // Illidari Soldier
+    {-4607.2988, 1351.6099, 139.9, 2.416},                  // Illidari Soldier
+    {-4633.7764, 1376.0417, 139.9, 5.608},                  // Illidari Soldier
+    {-4600.2461, 1369.1240, 139.9, 3.056},                  // Illidari Mind Breaker
+    {-4631.7808, 1367.9459, 139.9, 0.020},                  // Illidari Mind Breaker
+    {-4600.2461, 1369.1240, 139.9, 3.056},                  // Illidari Highlord
+    {-4631.7808, 1367.9459, 139.9, 0.020},                  // Illidari Highlord
+    {-4615.5586, 1353.0031, 139.9, 1.540},                  // Illidari Highlord
+    {-4616.4736, 1384.2170, 139.9, 4.971},                  // Illidari Highlord
+    {-4627.1240, 1378.8752, 139.9, 2.544}                   // Torloth The Magnificent
+};
+
+struct WaveData
+{
+    uint8  uiSpawnCount;
+    uint8  uiUsedSpawnPoint;
+    uint32 uiCreatureId; 
+    uint32 uiSpawnTimer;
+    uint32 uiYellTimer;
+    int32  iTextId;
+};
+
+static WaveData WavesInfo[]=
+{
+    // Illidari Soldier
+    {9, 0, NPC_ILLIDARI_SOLDIER, 10000, 7000, SAY_ILLIDAN_SUMMON1},
+    // Illidari Mind Breaker
+    {2, 9, NPC_ILLIDARI_MIND_BREAKER, 10000, 7000, SAY_ILLIDAN_SUMMON2},
+    // Illidari Highlord
+    {4, 11, NPC_ILLIDARI_HIGHLORD, 10000, 7000, SAY_ILLIDAN_SUMMON3},
+    // Torloth The Magnificent
+    {1, 15, NPC_TORLOTH_THE_MAGNIFICENT, 10000, 7000, SAY_ILLIDAN_SUMMON4}
+};
+
+/*######
+# mob_torloth
+#####*/
+
+enum
+{
+    SPELL_CLEAVE           = 15284,
+    SPELL_SHADOWFURY       = 39082,
+    SPELL_SPELL_REFLECTION = 33961
+};
+
+struct MANGOS_DLL_DECL mob_torlothAI : public ScriptedAI
+{
+    mob_torlothAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+
+    uint32 m_uiCleaveTimer;
+    uint32 m_uiShadowfuryTimer;
+    uint32 m_uiSpellReflectionTimer;
+
+    void Reset()
+    {
+        m_uiCleaveTimer = 10000;
+        m_uiShadowfuryTimer = 18000;
+        m_uiSpellReflectionTimer = 25000;
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+            return;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_mob_torloth(Creature* pCreature)
+{
+    return new mob_torlothAI(pCreature);
+}
+
+/*#####
+# npc_lord_illidan_stormrage
+#####*/
+
+struct MANGOS_DLL_DECL npc_lord_illidan_stormrageAI : public Scripted_NoMovementAI
+{
+    npc_lord_illidan_stormrageAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature) {Reset();}
+
+    uint32 m_uiWaveTimer;
+    uint32 m_uiAnnounceTimer;
+    uint32 m_uiCheckTimer;
+
+    void Reset()
+    {
+        m_uiWaveTimer = 10000;
+        m_uiAnnounceTimer = 7000;
+        m_uiCheckTimer = 2000;
+    }
+};
+
+CreatureAI* GetAI_npc_lord_illidan_stormrage(Creature* (pCreature))
+{
+    return new npc_lord_illidan_stormrageAI(pCreature);
+}
+
 void AddSC_shadowmoon_valley()
 {
     Script *newscript;
@@ -853,5 +1026,15 @@ void AddSC_shadowmoon_valley()
     newscript->Name = "npc_wilda";
     newscript->GetAI = &GetAI_npc_wilda;
     newscript->pQuestAccept = &QuestAccept_npc_wilda;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "npc_lord_illidan_stormrage";
+    newscript->GetAI = &GetAI_npc_lord_illidan_stormrage;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "mob_torloth";
+    newscript->GetAI = &GetAI_mob_torloth;
     newscript->RegisterSelf();
 }
