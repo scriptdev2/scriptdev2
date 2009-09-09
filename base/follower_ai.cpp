@@ -184,8 +184,6 @@ void FollowerAI::EnterEvadeMode()
 
 void FollowerAI::UpdateAI(const uint32 uiDiff)
 {
-    Unit* pUnit = m_creature->getVictim();
-
     if (HasFollowState(STATE_FOLLOW_INPROGRESS) && !m_creature->getVictim())
     {
         if (m_uiUpdateFollowTimer < uiDiff)
