@@ -44,12 +44,11 @@ class MANGOS_DLL_DECL FollowerAI : public ScriptedAI
         void StartFollow(Player* pPlayer, uint32 uiFactionForFollower = 0, const Quest* pQuest = NULL);
 
         void SetFollowPaused(bool bPaused);                 //if special event require follow mode to hold/resume during the follow
+        void SetFollowComplete(bool bWithEndEvent = false);
 
         bool HasFollowState(uint32 uiFollowState) { return (m_uiFollowState & uiFollowState); }
 
     protected:
-        void SetFollowComplete(bool bWithEndEvent = false);
-
         Player* GetLeaderForFollower();
 
     private:
