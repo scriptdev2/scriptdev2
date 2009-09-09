@@ -452,6 +452,8 @@ UPDATE gameobject_template SET ScriptName='go_harbinger_second_trial' WHERE entr
 UPDATE creature_template SET ScriptName='npc_prospector_anvilward' WHERE entry=15420;
 
 /* FELWOOD */
+UPDATE creature_template SET ScriptName='npc_kitten' WHERE entry=9937;
+UPDATE creature_template SET ScriptName='npc_corrupt_saber' WHERE entry=10042;
 UPDATE creature_template SET ScriptName='npcs_riverbreeze_and_silversky' WHERE entry IN (9528,9529);
 
 /* FERALAS */
