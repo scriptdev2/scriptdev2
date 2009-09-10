@@ -209,7 +209,11 @@ const uint32 netherwebVictims[6] =
 };
 struct MANGOS_DLL_DECL mob_netherweb_victimAI : public ScriptedAI
 {
-    mob_netherweb_victimAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+    mob_netherweb_victimAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        SetCombatMovement(false);
+        Reset();
+    }
 
     void Reset() { }
     void MoveInLineOfSight(Unit* pWho) { }
@@ -227,11 +231,6 @@ struct MANGOS_DLL_DECL mob_netherweb_victimAI : public ScriptedAI
                 }
                 else
                     m_creature->SummonCreature(netherwebVictims[rand()%6], 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
-
-                if (rand()%100 < 75)
-                    m_creature->SummonCreature(netherwebVictims[rand()%6], 0.0f, 0.0f, 0.0f,0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
-
-                m_creature->SummonCreature(netherwebVictims[rand()%6], 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
             }
         }
     }
