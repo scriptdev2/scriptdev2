@@ -16,147 +16,160 @@
 
 /* ScriptData
 SDName: Boss_Midnight
-SD%Complete: 98
-SDComment:
+SD%Complete: 90
+SDComment: Use SPELL_SUMMON_ATTUMEN and SPELL_SUMMON_ATTUMEN_MOUNTED instead of SummonCreature.
 SDCategory: Karazhan
 EndScriptData */
 
 #include "precompiled.h"
 
-#define SAY_MIDNIGHT_KILL           -1532000
-#define SAY_APPEAR1                 -1532001
-#define SAY_APPEAR2                 -1532002
-#define SAY_APPEAR3                 -1532003
-#define SAY_MOUNT                   -1532004
-#define SAY_KILL1                   -1532005
-#define SAY_KILL2                   -1532006
-#define SAY_DISARMED                -1532007
-#define SAY_DEATH                   -1532008
-#define SAY_RANDOM1                 -1532009
-#define SAY_RANDOM2                 -1532010
+enum
+{
+    SAY_MIDNIGHT_KILL           = -1532000,
+    SAY_APPEAR1                 = -1532001,
+    SAY_APPEAR2                 = -1532002,
+    SAY_APPEAR3                 = -1532003,
+    SAY_MOUNT                   = -1532004,
+    SAY_KILL1                   = -1532005,
+    SAY_KILL2                   = -1532006,
+    SAY_DISARMED                = -1532007,
+    SAY_DEATH                   = -1532008,
+    SAY_RANDOM1                 = -1532009,
+    SAY_RANDOM2                 = -1532010,
 
-#define SPELL_SHADOWCLEAVE          29832
-#define SPELL_INTANGIBLE_PRESENCE   29833
-#define SPELL_BERSERKER_CHARGE      26561                   //Only when mounted
+    SPELL_SHADOWCLEAVE          = 29832,
+    SPELL_INTANGIBLE_PRESENCE   = 29833,
+    SPELL_BERSERKER_CHARGE      = 26561,                    //Only when mounted
+    SPELL_SUMMON_ATTUMEN        = 29714,
+    SPELL_SUMMON_ATTUMEN_MOUNTED= 29799,
 
-#define MOUNTED_DISPLAYID           16040
+    MOUNTED_DISPLAYID           = 16040,                    // should use creature 16152 instead of changing displayid
 
-//Attumen (TODO: Use the summoning spell instead of creature id. It works , but is not convenient for us)
-#define SUMMON_ATTUMEN 15550
+    //Attumen (TODO: Use the summoning spell instead of creature id. It works , but is not convenient for us)
+    SUMMON_ATTUMEN              = 15550
+};
 
 struct MANGOS_DLL_DECL boss_midnightAI : public ScriptedAI
 {
     boss_midnightAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
-    uint64 Attumen;
-    uint8 Phase;
-    uint32 Mount_Timer;
+    uint64 m_uiAttumenGUID;
+    uint8  m_uiPhase;
+    uint32 m_uiMount_Timer;
 
     void Reset()
     {
-        Phase = 1;
-        Attumen = 0;
-        Mount_Timer = 0;
+        m_uiPhase = 1;
+        m_uiAttumenGUID = 0;
+        m_uiMount_Timer = 0;
 
         m_creature->SetVisibility(VISIBILITY_ON);
     }
 
-    void KilledUnit(Unit *victim)
+    void KilledUnit(Unit* pVictim)
     {
-        if (Phase == 2)
+        if (m_uiPhase == 2)
         {
-            if (Unit *pUnit = Unit::GetUnit(*m_creature, Attumen))
+            if (Unit* pUnit = Unit::GetUnit(*m_creature, m_uiAttumenGUID))
                 DoScriptText(SAY_MIDNIGHT_KILL, pUnit);
         }
     }
 
-    void UpdateAI(const uint32 diff)
-    {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
-            return;
-
-        if (Phase == 1 && (m_creature->GetHealth()*100)/m_creature->GetMaxHealth() < 95)
-        {
-            Phase = 2;
-
-            if (Creature* pAttumen = m_creature->SummonCreature(SUMMON_ATTUMEN, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 30000))
-            {
-                Attumen = pAttumen->GetGUID();
-                pAttumen->AI()->AttackStart(m_creature->getVictim());
-                SetMidnight(pAttumen, m_creature->GetGUID());
-
-                switch(rand()%3)
-                {
-                    case 0: DoScriptText(SAY_APPEAR1, pAttumen); break;
-                    case 1: DoScriptText(SAY_APPEAR2, pAttumen); break;
-                    case 2: DoScriptText(SAY_APPEAR3, pAttumen); break;
-                }
-            }
-        }
-        else if (Phase == 2 && (m_creature->GetHealth()*100)/m_creature->GetMaxHealth() < 25)
-        {
-            if (Unit *pAttumen = Unit::GetUnit(*m_creature, Attumen))
-                Mount(pAttumen);
-        }
-        else if (Phase ==3)
-        {
-            if (Mount_Timer)
-            {
-                if (Mount_Timer <= diff)
-                {
-                    Mount_Timer = 0;
-                    m_creature->SetVisibility(VISIBILITY_OFF);
-                    m_creature->GetMotionMaster()->MoveIdle();
-
-                    if (Unit *pAttumen = Unit::GetUnit(*m_creature, Attumen))
-                    {
-                        pAttumen->SetDisplayId(MOUNTED_DISPLAYID);
-                        pAttumen->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-
-                        if (pAttumen->getVictim())
-                        {
-                            pAttumen->GetMotionMaster()->MoveChase(pAttumen->getVictim());
-                            pAttumen->SetUInt64Value(UNIT_FIELD_TARGET, pAttumen->getVictim()->GetGUID());
-                        }
-                        pAttumen->SetFloatValue(OBJECT_FIELD_SCALE_X,1);
-                    }
-                } else Mount_Timer -= diff;
-            }
-        }
-
-        if (Phase != 3)
-            DoMeleeAttackIfReady();
-    }
-
-    void Mount(Unit *pAttumen)
+    void Mount(Unit* pAttumen)
     {
         DoScriptText(SAY_MOUNT, pAttumen);
-        Phase = 3;
+        m_uiPhase = 3;
 
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
         pAttumen->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
 
-        float angle = m_creature->GetAngle(pAttumen);
-        float distance = m_creature->GetDistance2d(pAttumen);
+        float fAngle = m_creature->GetAngle(pAttumen);
+        float fDistance = m_creature->GetDistance2d(pAttumen);
 
-        float newX = m_creature->GetPositionX() + cos(angle)*(distance/2) ;
-        float newY = m_creature->GetPositionY() + sin(angle)*(distance/2) ;
-        float newZ = 50;
+        float fNewX = m_creature->GetPositionX() + cos(fAngle)*(fDistance/2) ;
+        float fNewY = m_creature->GetPositionY() + sin(fAngle)*(fDistance/2) ;
+        float fNewZ = 50.0f;
 
         m_creature->GetMotionMaster()->Clear();
-        m_creature->GetMotionMaster()->MovePoint(0, newX, newY, newZ);
+        m_creature->GetMotionMaster()->MovePoint(0, fNewX, fNewY, fNewZ);
 
-        distance += 10;
-        newX = m_creature->GetPositionX() + cos(angle)*(distance/2);
-        newY = m_creature->GetPositionY() + sin(angle)*(distance/2);
+        fDistance += 10.0f;
+        fNewX = m_creature->GetPositionX() + cos(fAngle)*(fDistance/2);
+        fNewY = m_creature->GetPositionY() + sin(fAngle)*(fDistance/2);
 
         pAttumen->GetMotionMaster()->Clear();
-        pAttumen->GetMotionMaster()->MovePoint(0, newX, newY, newZ);
+        pAttumen->GetMotionMaster()->MovePoint(0, fNewX, fNewY, fNewZ);
 
-        Mount_Timer = 1000;
+        m_uiMount_Timer = 1000;
     }
 
     void SetMidnight(Creature *, uint64);                   //Below ..
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+            return;
+
+        switch(m_uiPhase)
+        {
+            case 1:
+                if ((m_creature->GetHealth()*100)/m_creature->GetMaxHealth() < 95)
+                {
+                    m_uiPhase = 2;
+
+                    if (Creature* pAttumen = m_creature->SummonCreature(SUMMON_ATTUMEN, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 30000))
+                    {
+                        m_uiAttumenGUID = pAttumen->GetGUID();
+                        pAttumen->AI()->AttackStart(m_creature->getVictim());
+                        SetMidnight(pAttumen, m_creature->GetGUID());
+
+                        switch(rand()%3)
+                        {
+                            case 0: DoScriptText(SAY_APPEAR1, pAttumen); break;
+                            case 1: DoScriptText(SAY_APPEAR2, pAttumen); break;
+                            case 2: DoScriptText(SAY_APPEAR3, pAttumen); break;
+                        }
+                    }
+                }
+                break;
+            case 2:
+                if ((m_creature->GetHealth()*100)/m_creature->GetMaxHealth() < 25)
+                {
+                    if (Unit *pAttumen = Unit::GetUnit(*m_creature, m_uiAttumenGUID))
+                        Mount(pAttumen);
+                }
+                break;
+            case 3:
+                if (m_uiMount_Timer)
+                {
+                    if (m_uiMount_Timer <= uiDiff)
+                    {
+                        m_uiMount_Timer = 0;
+                        m_creature->SetVisibility(VISIBILITY_OFF);
+                        m_creature->GetMotionMaster()->MoveIdle();
+
+                        if (Unit *pAttumen = Unit::GetUnit(*m_creature, m_uiAttumenGUID))
+                        {
+                            pAttumen->SetDisplayId(MOUNTED_DISPLAYID);
+                            pAttumen->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+
+                            if (pAttumen->getVictim())
+                            {
+                                pAttumen->GetMotionMaster()->MoveChase(pAttumen->getVictim());
+                                pAttumen->SetUInt64Value(UNIT_FIELD_TARGET, pAttumen->getVictim()->GetGUID());
+                            }
+                            pAttumen->SetFloatValue(OBJECT_FIELD_SCALE_X,1);
+                        }
+                    }
+                    else
+                        m_uiMount_Timer -= uiDiff;
+                }
+                break;
+        }
+
+        if (m_uiPhase != 3)
+            DoMeleeAttackIfReady();
+    }
 };
 
 CreatureAI* GetAI_boss_midnight(Creature* pCreature)
@@ -169,66 +182,67 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
     boss_attumenAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         Reset();
-        Phase = 1;
+        m_uiPhase = 1;
 
-        CleaveTimer = 10000 + (rand()%6)*1000;
-        CurseTimer = 30000;
-        RandomYellTimer = 30000 + (rand()%31)*1000;         //Occasionally yell
-        ChargeTimer = 20000;
-        ResetTimer = 0;
+        m_uiCleaveTimer = 10000 + (rand()%6)*1000;
+        m_uiCurseTimer = 30000;
+        m_uiRandomYellTimer = 30000 + (rand()%31)*1000;     //Occasionally yell
+        m_uiChargeTimer = 20000;
+        m_uiResetTimer = 0;
     }
 
-    uint64 Midnight;
-    uint8 Phase;
-    uint32 CleaveTimer;
-    uint32 CurseTimer;
-    uint32 RandomYellTimer;
-    uint32 ChargeTimer;                                     //only when mounted
-    uint32 ResetTimer;
+    uint64 m_uiMidnightGUID;
+    uint8  m_uiPhase;
+    uint32 m_uiCleaveTimer;
+    uint32 m_uiCurseTimer;
+    uint32 m_uiRandomYellTimer;
+    uint32 m_uiChargeTimer;                                 //only when mounted
+    uint32 m_uiResetTimer;
 
     void Reset()
     {
-        ResetTimer = 2000;
+        m_uiResetTimer = 2000;
     }
 
-    void KilledUnit(Unit *victim)
+    void KilledUnit(Unit* pVictim)
     {
-        switch(rand()%2)
-        {
-            case 0: DoScriptText(SAY_KILL1, m_creature); break;
-            case 1: DoScriptText(SAY_KILL2, m_creature); break;
-        }
+        DoScriptText((rand()%2) ? SAY_KILL1 : SAY_KILL2, m_creature);
     }
 
-    void JustDied(Unit *victim)
+    void SpellHit(Unit* pSource, const SpellEntry* pSpell)
+    {
+        if (pSpell->Mechanic == MECHANIC_DISARM)
+            DoScriptText(SAY_DISARMED, m_creature);
+    }
+
+    void JustDied(Unit* pVictim)
     {
         DoScriptText(SAY_DEATH, m_creature);
 
-        Unit *pMidnight = Unit::GetUnit(*m_creature, Midnight);
-        if (pMidnight)
-        {
+        if (Unit* pMidnight = Unit::GetUnit(*m_creature, m_uiMidnightGUID))
             pMidnight->DealDamage(pMidnight, pMidnight->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-        }
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
-        if (ResetTimer)
+        if (m_uiResetTimer)
         {
-            if (ResetTimer <= diff)
+            if (m_uiResetTimer <= uiDiff)
             {
-                ResetTimer = 0;
+                m_uiResetTimer = 0;
 
-                if (Unit *pMidnight = Unit::GetUnit(*m_creature, Midnight))
+                if (Unit *pMidnight = Unit::GetUnit(*m_creature, m_uiMidnightGUID))
                 {
                     pMidnight->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     pMidnight->SetVisibility(VISIBILITY_ON);
                 }
-                Midnight = 0;
+                m_uiMidnightGUID = 0;
 
                 m_creature->SetVisibility(VISIBILITY_OFF);
                 m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-            } else ResetTimer -= diff;
+            }
+            else
+                m_uiResetTimer -= uiDiff;
         }
 
         //Return since we have no target
@@ -238,31 +252,33 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
         if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE))
             return;
 
-        if (CleaveTimer < diff)
+        if (m_uiCleaveTimer < uiDiff)
         {
             DoCast(m_creature->getVictim(), SPELL_SHADOWCLEAVE);
-            CleaveTimer = 10000 + (rand()%6)*1000;
-        } else CleaveTimer -= diff;
+            m_uiCleaveTimer = 10000 + (rand()%6)*1000;
+        }
+        else
+            m_uiCleaveTimer -= uiDiff;
 
-        if (CurseTimer < diff)
+        if (m_uiCurseTimer < uiDiff)
         {
             DoCast(m_creature->getVictim(), SPELL_INTANGIBLE_PRESENCE);
-            CurseTimer = 30000;
-        } else CurseTimer -= diff;
+            m_uiCurseTimer = 30000;
+        }
+        else
+            m_uiCurseTimer -= uiDiff;
 
-        if (RandomYellTimer < diff)
+        if (m_uiRandomYellTimer < uiDiff)
         {
-            switch(rand()%2)
-            {
-                case 0: DoScriptText(SAY_RANDOM1, m_creature); break;
-                case 1: DoScriptText(SAY_RANDOM2, m_creature); break;
-            }
-            RandomYellTimer = 30000 + (rand()%31)*1000;
-        } else RandomYellTimer -= diff;
+            DoScriptText((rand()%2) ? SAY_RANDOM1 : SAY_RANDOM2, m_creature);
+            m_uiRandomYellTimer = 30000 + (rand()%31)*1000;
+        }
+        else
+            m_uiRandomYellTimer -= uiDiff;
 
         if (m_creature->GetDisplayId() == MOUNTED_DISPLAYID)
         {
-            if (ChargeTimer < diff)
+            if (m_uiChargeTimer < uiDiff)
             {
                 Unit *target;
                 std::list<HostilReference *> t_list = m_creature->getThreatManager().getThreatList();
@@ -278,14 +294,17 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
                     target = *(target_list.begin()+rand()%target_list.size());
 
                 DoCast(target, SPELL_BERSERKER_CHARGE);
-                ChargeTimer = 20000;
-            } else ChargeTimer -= diff;
+                m_uiChargeTimer = 20000;
+            }
+            else
+                m_uiChargeTimer -= uiDiff;
         }
         else
         {
             if ((m_creature->GetHealth()*100)/m_creature->GetMaxHealth() < 25)
             {
-                Creature *pMidnight = (Creature*)Unit::GetUnit(*m_creature, Midnight);
+                Creature *pMidnight = (Creature*)Unit::GetUnit(*m_creature, m_uiMidnightGUID);
+
                 if (pMidnight && pMidnight->GetTypeId() == TYPEID_UNIT)
                 {
                     ((boss_midnightAI*)(pMidnight->AI()))->Mount(m_creature);
@@ -297,17 +316,11 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
 
         DoMeleeAttackIfReady();
     }
-
-    void SpellHit(Unit *source, const SpellEntry *spell)
-    {
-        if (spell->Mechanic == MECHANIC_DISARM)
-            DoScriptText(SAY_DISARMED, m_creature);
-    }
 };
 
-void boss_midnightAI::SetMidnight(Creature *pAttumen, uint64 value)
+void boss_midnightAI::SetMidnight(Creature* pAttumen, uint64 uiValue)
 {
-    ((boss_attumenAI*)pAttumen->AI())->Midnight = value;
+    ((boss_attumenAI*)pAttumen->AI())->m_uiMidnightGUID = uiValue;
 }
 
 CreatureAI* GetAI_boss_attumen(Creature* pCreature)
@@ -317,7 +330,8 @@ CreatureAI* GetAI_boss_attumen(Creature* pCreature)
 
 void AddSC_boss_attumen()
 {
-    Script *newscript;
+    Script* newscript;
+
     newscript = new Script;
     newscript->Name = "boss_attumen";
     newscript->GetAI = &GetAI_boss_attumen;

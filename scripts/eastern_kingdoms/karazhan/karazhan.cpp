@@ -51,11 +51,11 @@ EndContentData */
 
 struct Dialogue
 {
-    int32 textid;
-    uint32 timer;
+    int32  iTextId;
+    uint32 uiTimer;
 };
 
-static Dialogue OzDialogue[]=
+static Dialogue aOzDialogue[4]=
 {
     {-1532103, 6000},
     {-1532104, 18000},
@@ -63,7 +63,7 @@ static Dialogue OzDialogue[]=
     {-1532106, 15000}
 };
 
-static Dialogue HoodDialogue[]=
+static Dialogue aHoodDialogue[4]=
 {
     {-1532107, 6000},
     {-1532108, 10000},
@@ -71,7 +71,7 @@ static Dialogue HoodDialogue[]=
     {-1532110, 15000}
 };
 
-static Dialogue RAJDialogue[]=
+static Dialogue aRAJDialogue[4]=
 {
     {-1532111, 5000},
     {-1532112, 7000},
@@ -79,33 +79,42 @@ static Dialogue RAJDialogue[]=
     {-1532114, 14000}
 };
 
-// Entries and spawn locations for creatures in Oz event
-float Spawns[6][2]=
+struct Spawn
 {
-    {17535, -10896},                                        // Dorothee
-    {17546, -10891},                                        // Roar
-    {17547, -10884},                                        // Tinhead
-    {17543, -10902},                                        // Strawman
-    {17603, -10892},                                        // Grandmother
-    {17534, -10900},                                        // Julianne
+    uint32  uiEntry;
+    float   fPosX;
 };
 
-#define CREATURE_SPOTLIGHT  19525
+// Entries and spawn locations for creatures in Oz event
+Spawn aSpawns_OZ[4]=
+{
+    {17535, -10896.0f},                                     // Dorothee
+    {17546, -10891.0f},                                     // Roar
+    {17547, -10884.0f},                                     // Tinhead
+    {17543, -10902.0f},                                     // Strawman
+};
+Spawn Spawn_HOOD = {17603, -10892.0f};                      // Grandmother
+Spawn Spawn_RAJ  = {17534, -10900.0f};                      // Julianne
 
-#define SPELL_SPOTLIGHT     25824
-#define SPELL_TUXEDO        32616
+enum
+{
+    NPC_SPOTLIGHT       = 19525,
 
-#define SPAWN_Z             90.5
-#define SPAWN_Y             -1758
-#define SPAWN_O             4.738
+    SPELL_SPOTLIGHT     = 25824,
+    SPELL_TUXEDO        = 32616
+};
+
+const float SPAWN_Z = 90.5f;
+const float SPAWN_Y = -1758.0f;
+const float SPAWN_O = 4.738f;
 
 struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
 {
     npc_barnesAI(Creature* pCreature) : npc_escortAI(pCreature)
     {
-        RaidWiped = false;
-        m_uiEventId = 0;
-        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_bRaidWiped = false;
+        m_uiEventId  = 0;
+        m_pInstance  = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
@@ -113,23 +122,23 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
 
     uint64 m_uiSpotlightGUID;
 
-    uint32 TalkCount;
-    uint32 TalkTimer;
-    uint32 WipeTimer;
+    uint32 m_uiTalkCount;
+    uint32 m_uiTalkTimer;
+    uint32 m_uiWipeTimer;
     uint32 m_uiEventId;
 
-    bool PerformanceReady;
-    bool RaidWiped;
+    bool m_bPerformanceReady;
+    bool m_bRaidWiped;
 
     void Reset()
     {
         m_uiSpotlightGUID = 0;
 
-        TalkCount = 0;
-        TalkTimer = 2000;
-        WipeTimer = 5000;
+        m_uiTalkCount = 0;
+        m_uiTalkTimer = 2000;
+        m_uiWipeTimer = 5000;
 
-        PerformanceReady = false;
+        m_bPerformanceReady = false;
 
         if (m_pInstance)
             m_uiEventId = m_pInstance->GetData(DATA_OPERA_PERFORMANCE);
@@ -146,7 +155,7 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
         if (m_uiEventId == EVENT_OZ)
             m_pInstance->SetData(DATA_OPERA_OZ_DEATHCOUNT, IN_PROGRESS);
 
-        Start(false, false, false);
+        Start(false, false, 0, NULL, true);
     }
 
     void WaypointReached(uint32 uiPointId)
@@ -161,10 +170,10 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
                 m_pInstance->DoUseDoorOrButton(m_pInstance->GetData64(DATA_GO_STAGEDOORLEFT));
                 break;
             case 4:
-                TalkCount = 0;
+                m_uiTalkCount = 0;
                 SetEscortPaused(true);
 
-                if (Creature* pSpotlight = m_creature->SummonCreature(CREATURE_SPOTLIGHT,
+                if (Creature* pSpotlight = m_creature->SummonCreature(NPC_SPOTLIGHT,
                     m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 0.0f,
                     TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 60000))
                 {
@@ -175,7 +184,7 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
                 break;
             case 8:
                 m_pInstance->DoUseDoorOrButton(m_pInstance->GetData64(DATA_GO_STAGEDOORLEFT));
-                PerformanceReady = true;
+                m_bPerformanceReady = true;
                 break;
             case 9:
                 PrepareEncounter();
@@ -184,85 +193,69 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
         }
     }
 
-    void Talk(uint32 count)
+    void Talk(uint32 uiCount)
     {
-        int32 text = 0;
+        int32 iTextId = 0;
 
         switch(m_uiEventId)
         {
             case EVENT_OZ:
-                if (OzDialogue[count].textid)
-                    text = OzDialogue[count].textid;
-                if (OzDialogue[count].timer)
-                    TalkTimer = OzDialogue[count].timer;
+                if (aOzDialogue[uiCount].iTextId)
+                    iTextId = aOzDialogue[uiCount].iTextId;
+                if (aOzDialogue[uiCount].uiTimer)
+                    m_uiTalkTimer = aOzDialogue[uiCount].uiTimer;
                 break;
 
             case EVENT_HOOD:
-                if (HoodDialogue[count].textid)
-                    text = HoodDialogue[count].textid;
-                if (HoodDialogue[count].timer)
-                    TalkTimer = HoodDialogue[count].timer;
+                if (aHoodDialogue[uiCount].iTextId)
+                    iTextId = aHoodDialogue[uiCount].iTextId;
+                if (aHoodDialogue[uiCount].uiTimer)
+                    m_uiTalkTimer = aHoodDialogue[uiCount].uiTimer;
                 break;
 
             case EVENT_RAJ:
-                if (RAJDialogue[count].textid)
-                    text = RAJDialogue[count].textid;
-                if (RAJDialogue[count].timer)
-                    TalkTimer = RAJDialogue[count].timer;
+                if (aRAJDialogue[uiCount].iTextId)
+                    iTextId = aRAJDialogue[uiCount].iTextId;
+                if (aRAJDialogue[uiCount].uiTimer)
+                    m_uiTalkTimer = aRAJDialogue[uiCount].uiTimer;
                 break;
         }
 
-        if (text)
-            DoScriptText(text, m_creature);
+        if (iTextId)
+            DoScriptText(iTextId, m_creature);
     }
 
     void PrepareEncounter()
     {
         debug_log("SD2: Barnes Opera Event - Introduction complete - preparing encounter %d", m_uiEventId);
-        uint8 index = 0;
-        uint8 count = 0;
 
         switch(m_uiEventId)
         {
             case EVENT_OZ:
-                index = 0;
-                count = 4;
+                for(int i=0; i < 4; ++i)
+                    m_creature->SummonCreature(aSpawns_OZ[i].uiEntry, aSpawns_OZ[i].fPosX, SPAWN_Y, SPAWN_Z, SPAWN_O, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, HOUR*2*IN_MILISECONDS);
                 break;
             case EVENT_HOOD:
-                index = 4;
-                count = index+1;
+                m_creature->SummonCreature(Spawn_HOOD.uiEntry, Spawn_HOOD.fPosX, SPAWN_Y, SPAWN_Z, SPAWN_O, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, HOUR*2*IN_MILISECONDS);
                 break;
             case EVENT_RAJ:
-                index = 5;
-                count = index+1;
+                m_creature->SummonCreature(Spawn_RAJ.uiEntry, Spawn_RAJ.fPosX, SPAWN_Y, SPAWN_Z, SPAWN_O, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, HOUR*2*IN_MILISECONDS);
+                break;
+            default:
+                error_log("SD2: Barnes Opera Event - Wrong EventId set: %d", m_uiEventId);
                 break;
         }
 
-        for(; index < count; ++index)
-        {
-            uint32 entry = ((uint32)Spawns[index][0]);
-            float PosX = Spawns[index][1];
-
-            if (Creature* pCreature = m_creature->SummonCreature(entry, PosX, SPAWN_Y, SPAWN_Z, SPAWN_O, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, HOUR*2*IN_MILISECONDS))
-            {
-                // In case database has bad flags
-                pCreature->SetUInt32Value(UNIT_FIELD_FLAGS, 0);
-                pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-            }
-        }
-
-        RaidWiped = false;
+        m_bRaidWiped = false;
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateEscortAI(const uint32 uiDiff)
     {
-        npc_escortAI::UpdateAI(diff);
-
         if (HasEscortState(STATE_ESCORT_PAUSED))
         {
-            if (TalkTimer < diff)
+            if (m_uiTalkTimer < uiDiff)
             {
-                if (TalkCount > 3)
+                if (m_uiTalkCount > 3)
                 {
                     if (Creature* pSpotlight = (Creature*)Unit::GetUnit(*m_creature, m_uiSpotlightGUID))
                         pSpotlight->ForcedDespawn();
@@ -271,45 +264,43 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
                     return;
                 }
 
-                Talk(TalkCount);
-                ++TalkCount;
+                Talk(m_uiTalkCount++);
             }
             else
-                TalkTimer -= diff;
+                m_uiTalkTimer -= uiDiff;
         }
 
-        if (PerformanceReady)
+        if (m_bPerformanceReady)
         {
-            if (!RaidWiped)
+            if (!m_bRaidWiped)
             {
-                if (WipeTimer < diff)
+                if (m_uiWipeTimer < uiDiff)
                 {
-                    Map *map = m_creature->GetMap();
-                    if (!map->IsDungeon())
+                    Map *pMap = m_creature->GetMap();
+                    if (!pMap->IsDungeon())
                         return;
 
-                    Map::PlayerList const &PlayerList = map->GetPlayers();
+                    Map::PlayerList const &PlayerList = pMap->GetPlayers();
                     if (PlayerList.isEmpty())
                         return;
 
-                    RaidWiped = true;
+                    m_bRaidWiped = true;
                     for(Map::PlayerList::const_iterator i = PlayerList.begin();i != PlayerList.end(); ++i)
                     {
                         if (i->getSource()->isAlive() && !i->getSource()->isGameMaster())
                         {
-                            RaidWiped = false;
+                            m_bRaidWiped = false;
                             break;
                         }
                     }
 
-                    if (RaidWiped)
-                    {
-                        RaidWiped = true;
+                    if (m_bRaidWiped)
                         EnterEvadeMode();
-                    }
 
-                    WipeTimer = 15000;
-                }else WipeTimer -= diff;
+                    m_uiWipeTimer = 15000;
+                }
+                else
+                    m_uiWipeTimer -= uiDiff;
             }
         }
     }
@@ -329,7 +320,7 @@ bool GossipHello_npc_barnes(Player* pPlayer, Creature* pCreature)
         {
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, OZ_GOSSIP1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
 
-            if (pPlayer->isGameMaster())
+            if (pPlayer->isGameMaster())                    // for GMs we add the possibility to change the event
             {
                 pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, OZ_GM_GOSSIP1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
                 pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, OZ_GM_GOSSIP2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
@@ -338,7 +329,7 @@ bool GossipHello_npc_barnes(Player* pPlayer, Creature* pCreature)
 
             if (npc_barnesAI* pBarnesAI = dynamic_cast<npc_barnesAI*>(pCreature->AI()))
             {
-                if (!pBarnesAI->RaidWiped)
+                if (!pBarnesAI->m_bRaidWiped)
                     pPlayer->SEND_GOSSIP_MENU(8970, pCreature->GetGUID());
                 else
                     pPlayer->SEND_GOSSIP_MENU(8975, pCreature->GetGUID());

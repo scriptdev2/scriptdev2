@@ -155,9 +155,8 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
         {
             case TYPE_ATTUMEN:              m_auiEncounter[0] = uiData; break;
             case TYPE_MOROES:
-                if (m_auiEncounter[1] == DONE)
-                    break;
-                m_auiEncounter[1] = uiData;
+                if (m_auiEncounter[1] != DONE)
+                    m_auiEncounter[1] = uiData;
                 break;
             case TYPE_MAIDEN:               m_auiEncounter[2] = uiData; break;
             case TYPE_OPTIONAL_BOSS:        m_auiEncounter[3] = uiData; break;
@@ -278,7 +277,7 @@ InstanceData* GetInstanceData_instance_karazhan(Map* pMap)
 
 void AddSC_instance_karazhan()
 {
-    Script *newscript;
+    Script* newscript;
     newscript = new Script;
     newscript->Name = "instance_karazhan";
     newscript->GetInstanceData = &GetInstanceData_instance_karazhan;
