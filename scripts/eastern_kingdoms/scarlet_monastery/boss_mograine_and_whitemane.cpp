@@ -70,6 +70,9 @@ struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
 
     void Reset()
     {
+        Unit* Whitemane = Unit::GetUnit((*m_creature), m_pInstance->GetData64(DATA_WHITEMANE));
+        if(Whitemane && !Whitemane->isAlive())
+            ((Creature*)Whitemane)->Respawn();
         m_uiCrusaderStrike_Timer = 10000;
         m_uiHammerOfJustice_Timer = 10000;
 
@@ -78,22 +81,9 @@ struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->SetStandState(UNIT_STAND_STATE_STAND);
 
-        if (m_pInstance)
-            if (m_creature->isAlive())
-                m_pInstance->SetData(TYPE_MOGRAINE_AND_WHITE_EVENT,NOT_STARTED);
-
         m_bHasDied = false;
         m_bHeal = false;
         m_bFakeDeath = false;
-    }
-
-    void JustReachedHome()
-    {
-        if (m_pInstance)
-        {
-            if (m_pInstance->GetData(TYPE_MOGRAINE_AND_WHITE_EVENT != NOT_STARTED))
-                m_pInstance->SetData(TYPE_MOGRAINE_AND_WHITE_EVENT, FAIL);
-        }
     }
 
     void Aggro(Unit* pWho)
@@ -123,6 +113,7 @@ struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
             m_pInstance->SetData(TYPE_MOGRAINE_AND_WHITE_EVENT, IN_PROGRESS);
 
             Whitemane->GetMotionMaster()->MovePoint(1,1163.113370,1398.856812,32.527786);
+            ((Creature*)Whitemane)->AI()->AttackStart(pDoneBy);
 
             m_creature->GetMotionMaster()->MovementExpired();
             m_creature->GetMotionMaster()->MoveIdle();
@@ -225,6 +216,9 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
 
     void Reset()
     {
+        Unit* Mograine = Unit::GetUnit((*m_creature), m_pInstance->GetData64(DATA_MOGRAINE));
+        if(Mograine && !Mograine->isAlive())
+            ((Creature*)Mograine)->Respawn();
         m_uiWait_Timer = 7000;
         m_uiHeal_Timer = 10000;
         m_uiPowerWordShield_Timer = 15000;
@@ -232,15 +226,39 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
 
         m_bCanResurrectCheck = false;
         m_bCanResurrect = false;
+    }
 
+
+    void JustReachedHome()
+    {
+        
         if (m_pInstance)
-            if (m_creature->isAlive())
-                m_pInstance->SetData(TYPE_MOGRAINE_AND_WHITE_EVENT, NOT_STARTED);
+        {
+            if (!(m_pInstance->GetData(TYPE_MOGRAINE_AND_WHITE_EVENT) == NOT_STARTED) || !(m_pInstance->GetData(TYPE_MOGRAINE_AND_WHITE_EVENT) == FAIL))
+                m_pInstance->SetData(TYPE_MOGRAINE_AND_WHITE_EVENT, FAIL);
+        }
+    }
+
+    void MoveInLineOfSight()
+    {
+        //This needs to be empty because Whitemane should NOT aggro while fighting Mograine. Mograine will give us a target.
+    }
+
+    void DamageTaken(Unit* pDoneBy, uint32 &uiDamage)
+    {
+        if (uiDamage < m_creature->GetHealth())
+            return;
+
+        if(!m_bCanResurrectCheck || m_bCanResurrect)
+        {
+            // prevent killing blow before rezzing commander
+            m_creature->SetHealth(uiDamage+1);
+        }
     }
 
     void AttackStart(Unit* pWho)
     {
-        if (m_pInstance && m_pInstance->GetData(TYPE_MOGRAINE_AND_WHITE_EVENT) == NOT_STARTED)
+        if (m_pInstance && (m_pInstance->GetData(TYPE_MOGRAINE_AND_WHITE_EVENT) == NOT_STARTED || m_pInstance->GetData(TYPE_MOGRAINE_AND_WHITE_EVENT) == FAIL))
             return;
 
         ScriptedAI::AttackStart(pWho);
