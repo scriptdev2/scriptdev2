@@ -250,62 +250,55 @@ CreatureAI* GetAI_npc_air_force_bots(Creature* pCreature)
 # npc_chicken_cluck
 #########*/
 
-#define EMOTE_A_HELLO       -1000204
-#define EMOTE_H_HELLO       -1000205
-#define EMOTE_CLUCK_TEXT2   -1000206
+enum
+{
+    EMOTE_A_HELLO           = -1000204,
+    EMOTE_H_HELLO           = -1000205,
+    EMOTE_CLUCK_TEXT2       = -1000206,
 
-#define QUEST_CLUCK         3861
-#define FACTION_FRIENDLY    84
-#define FACTION_CHICKEN     31
+    QUEST_CLUCK             = 3861,
+    FACTION_FRIENDLY        = 35,
+    FACTION_CHICKEN         = 31
+};
 
 struct MANGOS_DLL_DECL npc_chicken_cluckAI : public ScriptedAI
 {
     npc_chicken_cluckAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
-    uint32 ResetFlagTimer;
+    uint32 m_uiResetFlagTimer;
 
     void Reset()
     {
-        ResetFlagTimer = 120000;
+        m_uiResetFlagTimer = 120000;
 
         m_creature->setFaction(FACTION_CHICKEN);
         m_creature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER);
     }
 
-    void UpdateAI(const uint32 diff)
+    void ReceiveEmote(Player* pPlayer, uint32 uiEmote)
     {
-        // Reset flags after a certain time has passed so that the next player has to start the 'event' again
-        if (m_creature->HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER))
+        if (uiEmote == TEXTEMOTE_CHICKEN)
         {
-            if (ResetFlagTimer < diff)
-                EnterEvadeMode();
-            else ResetFlagTimer -= diff;
-        }
-
-        if (m_creature->SelectHostilTarget() && m_creature->getVictim())
-            DoMeleeAttackIfReady();
-    }
-
-    void ReceiveEmote (Player* pPlayer, uint32 emote)
-    {
-        if (emote == TEXTEMOTE_CHICKEN)
-        {
-            if (pPlayer->GetTeam() == ALLIANCE)
+            if (rand()%30 == 1)
             {
-                if (rand()%30 == 1)
+                if (pPlayer->GetQuestStatus(QUEST_CLUCK) == QUEST_STATUS_NONE)
                 {
-                    if (pPlayer->GetQuestStatus(QUEST_CLUCK) == QUEST_STATUS_NONE)
-                    {
-                        m_creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER);
-                        m_creature->setFaction(FACTION_FRIENDLY);
+                    m_creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER);
+                    m_creature->setFaction(FACTION_FRIENDLY);
+
+                    DoScriptText(EMOTE_A_HELLO, m_creature);
+
+                    /* are there any difference in texts, after 3.x ?
+                    if (pPlayer->GetTeam() == HORDE)
+                        DoScriptText(EMOTE_H_HELLO, m_creature);
+                    else
                         DoScriptText(EMOTE_A_HELLO, m_creature);
-                    }
+                    */
                 }
             }
-            else
-                DoScriptText(EMOTE_H_HELLO,m_creature);
         }
-        if (emote == TEXTEMOTE_CHEER && pPlayer->GetTeam() == ALLIANCE)
+
+        if (uiEmote == TEXTEMOTE_CHEER)
         {
             if (pPlayer->GetQuestStatus(QUEST_CLUCK) == QUEST_STATUS_COMPLETE)
             {
@@ -314,6 +307,21 @@ struct MANGOS_DLL_DECL npc_chicken_cluckAI : public ScriptedAI
                 DoScriptText(EMOTE_CLUCK_TEXT2, m_creature);
             }
         }
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        // Reset flags after a certain time has passed so that the next player has to start the 'event' again
+        if (m_creature->HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER))
+        {
+            if (m_uiResetFlagTimer < uiDiff)
+                EnterEvadeMode();
+            else
+                m_uiResetFlagTimer -= uiDiff;
+        }
+
+        if (m_creature->SelectHostilTarget() && m_creature->getVictim())
+            DoMeleeAttackIfReady();
     }
 };
 
@@ -325,7 +333,10 @@ CreatureAI* GetAI_npc_chicken_cluck(Creature* pCreature)
 bool QuestAccept_npc_chicken_cluck(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_CLUCK)
-        ((npc_chicken_cluckAI*)pCreature->AI())->Reset();
+    {
+        if (npc_chicken_cluckAI* pChickenAI = dynamic_cast<npc_chicken_cluckAI*>(pCreature->AI()))
+            pChickenAI->Reset();
+    }
 
     return true;
 }
@@ -333,7 +344,10 @@ bool QuestAccept_npc_chicken_cluck(Player* pPlayer, Creature* pCreature, const Q
 bool QuestComplete_npc_chicken_cluck(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_CLUCK)
-        ((npc_chicken_cluckAI*)pCreature->AI())->Reset();
+    {
+        if (npc_chicken_cluckAI* pChickenAI = dynamic_cast<npc_chicken_cluckAI*>(pCreature->AI()))
+            pChickenAI->Reset();
+    }
 
     return true;
 }
