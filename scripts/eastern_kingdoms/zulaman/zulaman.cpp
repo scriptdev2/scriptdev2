@@ -153,7 +153,7 @@ struct MANGOS_DLL_DECL npc_harrison_jones_zaAI : public npc_escortAI
     void StartEvent()
     {
         DoScriptText(SAY_START, m_creature);
-        Start(false,true,false,0);
+        Start(false,false);
     }
 
     void SetHoldState(bool bOnHold)

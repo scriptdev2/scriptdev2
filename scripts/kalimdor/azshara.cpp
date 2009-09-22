@@ -160,7 +160,7 @@ struct MANGOS_DLL_DECL npc_rizzle_sprysprocketAI : public npc_escortAI
                 case 2:
                     m_creature->CastSpell(m_creature,SPELL_SWIM_SPEED,false);
                     m_bIsIntro = false;
-                    Start(false,true,false);
+                    Start(false,true);
                     break;
             }
 
