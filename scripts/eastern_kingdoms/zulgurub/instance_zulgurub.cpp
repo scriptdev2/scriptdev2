@@ -36,6 +36,7 @@ struct MANGOS_DLL_DECL instance_zulgurub : public ScriptedInstance
     uint64 m_uiZathGUID;
     uint64 m_uiThekalGUID;
     uint64 m_uiJindoGUID;
+    uint64 m_uiHakkarGUID;
 
     void Initialize()
     {
@@ -45,6 +46,7 @@ struct MANGOS_DLL_DECL instance_zulgurub : public ScriptedInstance
         m_uiZathGUID = 0;
         m_uiThekalGUID = 0;
         m_uiJindoGUID = 0;
+        m_uiHakkarGUID = 0;
     }
 
     bool IsEncounterInProgress() const
@@ -57,10 +59,11 @@ struct MANGOS_DLL_DECL instance_zulgurub : public ScriptedInstance
     {
         switch(pCreature->GetEntry())
         {
-            case 11347: m_uiLorKhanGUID = pCreature->GetGUID(); break;
-            case 11348: m_uiZathGUID = pCreature->GetGUID(); break;
-            case 14509: m_uiThekalGUID = pCreature->GetGUID(); break;
-            case 11380: m_uiJindoGUID = pCreature->GetGUID(); break;
+            case NPC_LORKHAN: m_uiLorKhanGUID = pCreature->GetGUID(); break;
+            case NPC_ZATH: m_uiZathGUID = pCreature->GetGUID(); break;
+            case NPC_THEKAL: m_uiThekalGUID = pCreature->GetGUID(); break;
+            case NPC_JINDO: m_uiJindoGUID = pCreature->GetGUID(); break;
+            case NPC_HAKKAR: m_uiHakkarGUID = pCreature->GetGUID(); break;
         }
     }
 
@@ -92,6 +95,9 @@ struct MANGOS_DLL_DECL instance_zulgurub : public ScriptedInstance
             case TYPE_OHGAN:
                 m_auiEncounter[7] = uiData;
                 break;
+            case TYPE_HAKKAR:
+                m_auiEncounter[8] = uiData;
+                break;
         }
     }
 
@@ -115,6 +121,8 @@ struct MANGOS_DLL_DECL instance_zulgurub : public ScriptedInstance
                 return m_auiEncounter[6];
             case TYPE_OHGAN:
                 return m_auiEncounter[7];
+            case TYPE_HAKKAR:
+                return m_auiEncounter[8];
         }
 
         return 0;
@@ -132,6 +140,8 @@ struct MANGOS_DLL_DECL instance_zulgurub : public ScriptedInstance
                 return m_uiThekalGUID;
             case DATA_JINDO:
                 return m_uiJindoGUID;
+            case DATA_HAKKAR:
+                return m_uiHakkarGUID;
         }
         return 0;
     }
