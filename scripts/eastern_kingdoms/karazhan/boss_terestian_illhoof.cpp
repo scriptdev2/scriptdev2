@@ -24,42 +24,45 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_karazhan.h"
 
-#define SAY_SLAY1                   -1532065
-#define SAY_SLAY2                   -1532066
-#define SAY_DEATH                   -1532067
-#define SAY_AGGRO                   -1532068
-#define SAY_SACRIFICE1              -1532069
-#define SAY_SACRIFICE2              -1532070
-#define SAY_SUMMON1                 -1532071
-#define SAY_SUMMON2                 -1532072
-
-#define SPELL_SUMMON_DEMONCHAINS    30120                   // Summons demonic chains that maintain the ritual of sacrifice.
-#define SPELL_DEMON_CHAINS          30206                   // Instant - Visual Effect
-#define SPELL_ENRAGE                23537                   // Increases the caster's attack speed by 50% and the Physical damage it deals by 219 to 281 for 10 min.
-#define SPELL_SHADOW_BOLT           30055                   // Hurls a bolt of dark magic at an enemy, inflicting Shadow damage.
-#define SPELL_SACRIFICE             30115                   // Teleports and adds the debuff
-#define SPELL_BERSERK               32965                   // Increases attack speed by 75%. Periodically casts Shadow Bolt Volley.
-
-#define SPELL_SUMMON_IMP            30066                   // Summons Kil'rek
-
-#define SPELL_FIENDISH_PORTAL       30171                   // Opens portal and summons Fiendish Portal, 2 sec cast
-#define SPELL_FIENDISH_PORTAL_1     30179                   // Opens portal and summons Fiendish Portal, instant cast
-
-#define SPELL_FIREBOLT              30050                   // Blasts a target for 150 Fire damage.
-
-#define SPELL_BROKEN_PACT           30065                   // All damage taken increased by 25%.
-#define SPELL_AMPLIFY_FLAMES        30053                   // Increases the Fire damage taken by an enemy by 500 for 25 sec.
-
-#define CREATURE_DEMONCHAINS        17248
-#define CREATURE_FIENDISHIMP        17267
-#define CREATURE_PORTAL             17265
-
-#define PORTAL_Z                    179.434
-
-float PortalLocations[2][2]=
+enum
 {
-    {-11249.6933, -1704.61023},
-    {-11242.1160, -1713.33325},
+    SAY_SLAY1                   = -1532065,
+    SAY_SLAY2                   = -1532066,
+    SAY_DEATH                   = -1532067,
+    SAY_AGGRO                   = -1532068,
+    SAY_SACRIFICE1              = -1532069,
+    SAY_SACRIFICE2              = -1532070,
+    SAY_SUMMON1                 = -1532071,
+    SAY_SUMMON2                 = -1532072,
+
+    SPELL_SUMMON_DEMONCHAINS    = 30120,                    // Summons demonic chains that maintain the ritual of sacrifice.
+    SPELL_DEMON_CHAINS          = 30206,                    // Instant - Visual Effect
+    SPELL_ENRAGE                = 23537,                    // Increases the caster's attack speed by 50% and the Physical damage it deals by 219 to 281 for 10 min.
+    SPELL_SHADOW_BOLT           = 30055,                    // Hurls a bolt of dark magic at an enemy, inflicting Shadow damage.
+    SPELL_SACRIFICE             = 30115,                    // Teleports and adds the debuff
+    SPELL_BERSERK               = 32965,                    // Increases attack speed by 75%. Periodically casts Shadow Bolt Volley.
+
+    SPELL_SUMMON_IMP            = 30066,                    // Summons Kil'rek
+
+    SPELL_FIENDISH_PORTAL       = 30171,                    // Opens portal and summons Fiendish Portal, 2 sec cast
+    SPELL_FIENDISH_PORTAL_1     = 30179,                    // Opens portal and summons Fiendish Portal, instant cast
+
+    SPELL_FIREBOLT              = 30050,                    // Blasts a target for 150 Fire damage.
+
+    SPELL_BROKEN_PACT           = 30065,                    // All damage taken increased by 25%.
+    SPELL_AMPLIFY_FLAMES        = 30053,                    // Increases the Fire damage taken by an enemy by 500 for 25 sec.
+
+    NPC_DEMONCHAINS             = 17248,
+    NPC_FIENDISHIMP             = 17267,
+    NPC_PORTAL                  = 17265
+};
+
+const float PORTAL_Z = 179.434f;
+
+float afPortalLocations[2][2]=
+{
+    {-11249.6933f, -1704.61023f},
+    {-11242.1160f, -1713.33325f}
 };
 
 struct MANGOS_DLL_DECL mob_kilrekAI : public ScriptedAI
@@ -72,16 +75,16 @@ struct MANGOS_DLL_DECL mob_kilrekAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    uint64 TerestianGUID;
-    uint32 AmplifyTimer;
+    uint64 m_uiTerestianGUID;
+    uint32 m_uiAmplify_Timer;
 
     void Reset()
     {
-        TerestianGUID = 0;
-        AmplifyTimer = 2000;
+        m_uiTerestianGUID = 0;
+        m_uiAmplify_Timer = 2000;
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
         if (!m_pInstance)
         {
@@ -89,38 +92,42 @@ struct MANGOS_DLL_DECL mob_kilrekAI : public ScriptedAI
             return;
         }
 
-        Creature* Terestian = ((Creature*)Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_TERESTIAN)));
-        if (Terestian && (!Terestian->SelectHostilTarget() && !Terestian->getVictim()))
-            Terestian->AddThreat(who, 1.0f);
+        Creature* pTerestian = ((Creature*)Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_TERESTIAN)));
+        if (pTerestian && (!pTerestian->SelectHostilTarget() && !pTerestian->getVictim()))
+            pTerestian->AddThreat(pWho, 1.0f);
     }
 
-    void JustDied(Unit* Killer)
+    void JustDied(Unit* pKiller)
     {
         if (m_pInstance)
         {
-            uint64 TerestianGUID = m_pInstance->GetData64(DATA_TERESTIAN);
-            if (TerestianGUID)
+            uint64 m_uiTerestianGUID = m_pInstance->GetData64(DATA_TERESTIAN);
+            if (m_uiTerestianGUID)
             {
-                Unit* Terestian = Unit::GetUnit((*m_creature), TerestianGUID);
-                if (Terestian && Terestian->isAlive())
-                    DoCast(Terestian, SPELL_BROKEN_PACT, true);
+                Unit* pTerestian = Unit::GetUnit((*m_creature), m_uiTerestianGUID);
+                if (pTerestian && pTerestian->isAlive())
+                    DoCast(pTerestian, SPELL_BROKEN_PACT, true);
             }
-        } else ERROR_INST_DATA(m_creature);
+        }
+        else
+            ERROR_INST_DATA(m_creature);
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if (AmplifyTimer < diff)
+        if (m_uiAmplify_Timer < uiDiff)
         {
             m_creature->InterruptNonMeleeSpells(false);
-            DoCast(m_creature->getVictim(),SPELL_AMPLIFY_FLAMES);
+            DoCast(m_creature->getVictim(), SPELL_AMPLIFY_FLAMES);
 
-            AmplifyTimer = 10000 + rand()%10000;
-        }else AmplifyTimer -= diff;
+            m_uiAmplify_Timer = 10000 + rand()%10000;
+        }
+        else
+            m_uiAmplify_Timer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
@@ -133,24 +140,21 @@ struct MANGOS_DLL_DECL mob_demon_chainAI : public ScriptedAI
         Reset();
     }
 
-    uint64 SacrificeGUID;
+    uint64 m_uiSacrificeGUID;
 
     void Reset()
     {
-        SacrificeGUID = 0;
+        m_uiSacrificeGUID = 0;
     }
 
-    void AttackStart(Unit* who) {}
-    void MoveInLineOfSight(Unit* who) {}
+    void AttackStart(Unit* pWho) {}
+    void MoveInLineOfSight(Unit* pWho) {}
 
-    void JustDied(Unit *killer)
+    void JustDied(Unit* pKiller)
     {
-        if (SacrificeGUID)
-        {
-            Unit* Sacrifice = Unit::GetUnit((*m_creature),SacrificeGUID);
-            if (Sacrifice)
-                Sacrifice->RemoveAurasDueToSpell(SPELL_SACRIFICE);
-        }
+        if (m_uiSacrificeGUID)
+            if (Unit* pSacrifice = Unit::GetUnit((*m_creature), m_uiSacrificeGUID))
+                pSacrifice->RemoveAurasDueToSpell(SPELL_SACRIFICE);
     }
 };
 
@@ -158,71 +162,69 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
 {
     boss_terestianAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        for(uint8 i = 0; i < 2; ++i)
-            PortalGUID[i] = 0;
-
+        memset(&m_uiPortalGUID, 0, sizeof(m_uiPortalGUID));
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
 
-    uint64 KilrekGUID;
-    uint64 PortalGUID[2];
+    uint64 m_uiKilrekGUID;
+    uint64 m_uiPortalGUID[2];
 
-    uint32 CheckKilrekTimer;
-    uint32 SacrificeTimer;
-    uint32 ShadowboltTimer;
-    uint32 SummonTimer;
-    uint32 BerserkTimer;
+    uint32 m_uiCheckKilrek_Timer;
+    uint32 m_uiSacrifice_Timer;
+    uint32 m_uiShadowbolt_Timer;
+    uint32 m_uiSummon_Timer;
+    uint32 m_uiBerserk_Timer;
 
-    bool ReSummon;
-    bool SummonKilrek;
-    bool SummonedPortals;
-    bool Berserk;
+    bool m_bReSummon;
+    bool m_bSummonKilrek;
+    bool m_bSummonedPortals;
+    bool m_bBerserk;
 
     void Reset()
     {
         for(uint8 i = 0; i < 2; ++i)
         {
-            if (PortalGUID[i])
+            if (m_uiPortalGUID[i])
             {
-                if (Creature* pPortal = (Creature*)Unit::GetUnit(*m_creature, PortalGUID[i]))
+                if (Creature* pPortal = (Creature*)Unit::GetUnit(*m_creature, m_uiPortalGUID[i]))
                     pPortal->ForcedDespawn();
 
-                PortalGUID[i] = 0;
+                m_uiPortalGUID[i] = 0;
             }
         }
 
-        CheckKilrekTimer    =  5000;
-        SacrificeTimer      = 30000;
-        ShadowboltTimer     =  5000;
-        SummonTimer         = 10000;
-        BerserkTimer        = 600000;
+        m_uiCheckKilrek_Timer   = 5000;
+        m_uiSacrifice_Timer     = 30000;
+        m_uiShadowbolt_Timer    = 5000;
+        m_uiSummon_Timer        = 10000;
+        m_uiBerserk_Timer       = 600000;
 
-        SummonedPortals     = false;
-        Berserk             = false;
-        ReSummon            = false;
+        m_bSummonedPortals      = false;
+        m_bBerserk              = false;
+        m_bReSummon             = false;
 
         if (m_pInstance)
             m_pInstance->SetData(TYPE_TERESTIAN, NOT_STARTED);
     }
 
-    void Aggro(Unit* who)
+    void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
         if (m_pInstance)
         {
-            Creature* Kilrek = ((Creature*)Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_KILREK)));
+            Creature* pKilrek = ((Creature*)Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_KILREK)));
 
             // Respawn Kil'rek on aggro if Kil'rek is dead.
-            if (Kilrek && !Kilrek->isAlive())
-                Kilrek->Respawn();
+            if (pKilrek && !pKilrek->isAlive())
+                pKilrek->Respawn();
 
             // Put Kil'rek in combat against our target so players don't skip him
-            if (Kilrek && !Kilrek->getVictim())
-                Kilrek->AddThreat(who, 0.0f);
+            if (pKilrek && !pKilrek->getVictim())
+                pKilrek->AddThreat(pWho, 0.0f);
 
             m_pInstance->SetData(TYPE_TERESTIAN, IN_PROGRESS);
         }
@@ -230,25 +232,21 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
             ERROR_INST_DATA(m_creature);
     }
 
-    void KilledUnit(Unit *victim)
+    void KilledUnit(Unit* pVictim)
     {
-        switch(rand()%2)
-        {
-            case 0: DoScriptText(SAY_SLAY1, m_creature); break;
-            case 1: DoScriptText(SAY_SLAY2, m_creature); break;
-        }
+        DoScriptText((rand()%2) ? SAY_SLAY1 : SAY_SLAY2, m_creature);
     }
 
-    void JustDied(Unit *killer)
+    void JustDied(Unit* pKiller)
     {
         for(uint8 i = 0; i < 2; ++i)
         {
-            if (PortalGUID[i])
+            if (m_uiPortalGUID[i])
             {
-                if (Creature* pPortal = (Creature*)Unit::GetUnit(*m_creature, PortalGUID[i]))
+                if (Creature* pPortal = (Creature*)Unit::GetUnit(*m_creature, m_uiPortalGUID[i]))
                     pPortal->ForcedDespawn();
 
-                PortalGUID[i] = 0;
+                m_uiPortalGUID[i] = 0;
             }
         }
 
@@ -258,102 +256,107 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
             m_pInstance->SetData(TYPE_TERESTIAN, DONE);
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if (CheckKilrekTimer < diff)
+        if (m_uiCheckKilrek_Timer < uiDiff)
         {
 
-            CheckKilrekTimer = 5000;
+            m_uiCheckKilrek_Timer = 5000;
 
             if (m_pInstance)
-                uint64 KilrekGUID = m_pInstance->GetData64(DATA_KILREK);
-            else ERROR_INST_DATA(m_creature);
+                uint64 m_uiKilrekGUID = m_pInstance->GetData64(DATA_KILREK);
+            else
+                ERROR_INST_DATA(m_creature);
 
-            Creature* Kilrek = ((Creature*)Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_KILREK)));
-            if (SummonKilrek && Kilrek)
+            Creature* pKilrek = ((Creature*)Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_KILREK)));
+            if (m_bSummonKilrek && pKilrek)
             {
-                Kilrek->Respawn();
-                Kilrek->AI()->AttackStart(m_creature->getVictim());
+                pKilrek->Respawn();
+                pKilrek->AI()->AttackStart(m_creature->getVictim());
                 m_creature->RemoveAurasDueToSpell(SPELL_BROKEN_PACT);
 
-                SummonKilrek = false;
+                m_bSummonKilrek = false;
             }
 
-            if (!Kilrek || !Kilrek->isAlive())
+            if (!pKilrek || !pKilrek->isAlive())
             {
-                SummonKilrek = true;
-                CheckKilrekTimer = 45000;
+                m_bSummonKilrek = true;
+                m_uiCheckKilrek_Timer = 45000;
             }
-        }else CheckKilrekTimer -= diff;
+        }
+        else
+            m_uiCheckKilrek_Timer -= uiDiff;
 
-        if (SacrificeTimer < diff)
+        if (m_uiSacrifice_Timer < uiDiff)
         {
-            Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1);
-            if (target && target->isAlive() && target->GetTypeId() == TYPEID_PLAYER)
+            Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
+            if (pTarget && pTarget->isAlive() && pTarget->GetTypeId() == TYPEID_PLAYER)
             {
-                DoCast(target, SPELL_SACRIFICE, true);
+                DoCast(pTarget, SPELL_SACRIFICE, true);
 
-                Creature* Chains = m_creature->SummonCreature(CREATURE_DEMONCHAINS, target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 21000);
-                if (Chains)
+                Creature* pChains = m_creature->SummonCreature(NPC_DEMONCHAINS, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 21000);
+                if (pChains)
                 {
-                    ((mob_demon_chainAI*)Chains->AI())->SacrificeGUID = target->GetGUID();
-                    Chains->CastSpell(Chains, SPELL_DEMON_CHAINS, true);
+                    ((mob_demon_chainAI*)pChains->AI())->m_uiSacrificeGUID = pTarget->GetGUID();
+                    pChains->CastSpell(pChains, SPELL_DEMON_CHAINS, true);
 
-                    switch(rand()%2)
-                    {
-                        case 0: DoScriptText(SAY_SACRIFICE1, m_creature); break;
-                        case 1: DoScriptText(SAY_SACRIFICE2, m_creature); break;
-                    }
+                    DoScriptText((rand()%2) ? SAY_SACRIFICE1 : SAY_SACRIFICE2, m_creature);
 
-                    SacrificeTimer = 30000;
+                    m_uiSacrifice_Timer = 30000;
                 }
             }
-        }else SacrificeTimer -= diff;
+        }
+        else
+            m_uiSacrifice_Timer -= uiDiff;
 
-        if (ShadowboltTimer < diff)
+        if (m_uiShadowbolt_Timer < uiDiff)
         {
-            DoCast(SelectUnit(SELECT_TARGET_TOPAGGRO, 0), SPELL_SHADOW_BOLT);
-            ShadowboltTimer = 10000;
-        } else ShadowboltTimer -= diff;
+            if (Unit* pTarget = SelectUnit(SELECT_TARGET_TOPAGGRO, 0))
+                DoCast(pTarget, SPELL_SHADOW_BOLT);
 
-        if (SummonTimer < diff)
+            m_uiShadowbolt_Timer = 10000;
+        }
+        else
+            m_uiShadowbolt_Timer -= uiDiff;
+
+        if (m_uiSummon_Timer < uiDiff)
         {
-            if (!SummonedPortals)
+            if (!m_bSummonedPortals)
             {
                 for(uint8 i = 0; i < 2; ++i)
                 {
-                    Creature* Portal = m_creature->SummonCreature(CREATURE_PORTAL, PortalLocations[i][0], PortalLocations[i][1], PORTAL_Z, 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
-                    if (Portal)
-                        PortalGUID[i] = Portal->GetGUID();
+                    if (Creature* pPortal = m_creature->SummonCreature(NPC_PORTAL, afPortalLocations[i][0], afPortalLocations[i][1], PORTAL_Z, 0, TEMPSUMMON_CORPSE_DESPAWN, 0))
+                        m_uiPortalGUID[i] = pPortal->GetGUID();
                 }
-                SummonedPortals = true;
+                m_bSummonedPortals = true;
 
-                switch(rand()%2)
-                {
-                    case 0: DoScriptText(SAY_SUMMON1, m_creature); break;
-                    case 1: DoScriptText(SAY_SUMMON2, m_creature); break;
-                }
+                DoScriptText((rand()%2) ? SAY_SUMMON1 : SAY_SUMMON2, m_creature);
             }
-            uint32 random = rand()%2;
-            Creature* Imp = m_creature->SummonCreature(CREATURE_FIENDISHIMP, PortalLocations[random][0], PortalLocations[random][1], PORTAL_Z, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 15000);
-            if (Imp)
+            uint32 uiRnd = rand()%2;
+            Creature* pImp = m_creature->SummonCreature(NPC_FIENDISHIMP, afPortalLocations[uiRnd][0], afPortalLocations[uiRnd][1], PORTAL_Z, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 15000);
+            if (pImp)
             {
-                Imp->AddThreat(m_creature->getVictim(), 1.0f);
-                Imp->AI()->AttackStart(SelectUnit(SELECT_TARGET_RANDOM, 1));
+                pImp->AddThreat(m_creature->getVictim(), 1.0f);
+                if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
+                    pImp->AI()->AttackStart(pTarget);
             }
-            SummonTimer = 5000;
-        }else SummonTimer -= diff;
+            m_uiSummon_Timer = 5000;
+        }
+        else
+            m_uiSummon_Timer -= uiDiff;
 
-        if (!Berserk)
+        if (!m_bBerserk)
         {
-            if (BerserkTimer < diff)
+            if (m_uiBerserk_Timer < uiDiff)
             {
                 DoCast(m_creature, SPELL_BERSERK);
-                Berserk = true;
-            } else BerserkTimer -= diff;
+                m_bBerserk = true;
+            }
+            else
+                m_uiBerserk_Timer -= uiDiff;
         }
 
         DoMeleeAttackIfReady();
@@ -364,26 +367,28 @@ struct MANGOS_DLL_DECL mob_karazhan_impAI : public ScriptedAI
 {
     mob_karazhan_impAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
-    uint32 FireboltTimer;
+    uint32 m_uiFirebolt_Timer;
 
     void Reset()
     {
-        FireboltTimer = 2000;
+        m_uiFirebolt_Timer = 2000;
 
         m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_FIRE, true);
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if (FireboltTimer < diff)
+        if (m_uiFirebolt_Timer < uiDiff)
         {
             DoCast(m_creature->getVictim(), SPELL_FIREBOLT);
-            FireboltTimer = 2200;
-        }else FireboltTimer -= diff;
+            m_uiFirebolt_Timer = 2200;
+        }
+        else
+            m_uiFirebolt_Timer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
@@ -411,7 +416,8 @@ CreatureAI* GetAI_boss_terestian_illhoof(Creature* pCreature)
 
 void AddSC_boss_terestian_illhoof()
 {
-    Script *newscript;
+    Script* newscript;
+
     newscript = new Script;
     newscript->Name = "boss_terestian_illhoof";
     newscript->GetAI = &GetAI_boss_terestian_illhoof;

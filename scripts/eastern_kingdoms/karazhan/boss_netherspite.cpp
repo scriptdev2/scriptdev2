@@ -23,18 +23,21 @@ EndScriptData */
 
 #include "precompiled.h"
 
-#define EMOTE_PHASE_PORTAL          -1532089
-#define EMOTE_PHASE_BANISH          -1532090
+enum
+{
+    EMOTE_PHASE_PORTAL          = -1532089,
+    EMOTE_PHASE_BANISH          = -1532090,
 
-#define SPELL_NETHERBURN_AURA       30522
-#define SPELL_VOIDZONE              37014                   //Probably won't work
-#define SPELL_BERSERK               26662
-#define SPELL_NETHERBREATH          36631
+    SPELL_NETHERBURN_AURA       = 30522,
+    SPELL_VOIDZONE              = 37014,                    //Probably won't work
+    SPELL_BERSERK               = 26662,
+    SPELL_NETHERBREATH          = 36631,
 
-//Beams (no idea how these are going to work in Mangos)
-#define SPELL_DOMINANCE_ENEMY       30423
-#define SPELL_DOMINANCE_SELF        30468
-#define SPELL_PERSEVERANCE_ENEMY    30421
-#define SPELL_PERSEVERANCE_SELF     30466
-#define SPELL_SERENITY_ENEMY        30422
-#define SPELL_SERENITY_SELF         30467
+    //Beams (no idea how these are going to work in Mangos)
+    SPELL_DOMINANCE_ENEMY       = 30423,
+    SPELL_DOMINANCE_SELF        = 30468,
+    SPELL_PERSEVERANCE_ENEMY    = 30421,
+    SPELL_PERSEVERANCE_SELF     = 30466,
+    SPELL_SERENITY_ENEMY        = 30422,
+    SPELL_SERENITY_SELF         = 30467
+};
