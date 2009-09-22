@@ -174,7 +174,7 @@ struct MANGOS_DLL_DECL mob_abyssalAI : public ScriptedAI
         else
             m_uiDespawn_Timer -= uiDiff;
 
-        if (!m_creature->SelectHostilTarget() && !m_creature->getVictim())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         if (m_uiFireBlast_Timer < uiDiff)
@@ -565,15 +565,17 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_CHANNELER_EVENT, NOT_STARTED);
-
-        DoCast(m_creature, SPELL_SHADOW_GRASP_DUMMY);
     }
 
     void UpdateAI(const uint32 uiDiff)
     {
-        //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        {
+            if (!m_creature->IsNonMeleeSpellCasted(false) && !m_creature->IsInEvadeMode())
+                DoCast(m_creature, SPELL_SHADOW_GRASP_DUMMY);
+
             return;
+        }
 
         //Shadow bolt volley
         if (m_uiShadowBoltVolley_Timer < uiDiff)

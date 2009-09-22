@@ -112,7 +112,7 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->getVictim() && !m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //Check_Timer for the death of LorKhan and Zath.
