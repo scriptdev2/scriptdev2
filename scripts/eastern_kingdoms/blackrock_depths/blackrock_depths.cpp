@@ -260,7 +260,7 @@ struct MANGOS_DLL_DECL npc_grimstoneAI : public npc_escortAI
                     case 0:
                         DoScriptText(-1000000, m_creature);//1
                         DoGate(DATA_ARENA4,1);
-                        Start(false, false, false);
+                        Start(false, false);
                         CanWalk = true;
                         Event_Timer = 0;
                         break;
@@ -587,7 +587,7 @@ struct MANGOS_DLL_DECL npc_rocknotAI : public npc_escortAI
         }
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateEscortAI(const uint32 diff)
     {
         if (!m_pInstance)
             return;
@@ -620,8 +620,6 @@ struct MANGOS_DLL_DECL npc_rocknotAI : public npc_escortAI
                 BreakDoor_Timer = 0;
             }else BreakDoor_Timer -= diff;
         }
-
-        npc_escortAI::UpdateAI(diff);
     }
 };
 

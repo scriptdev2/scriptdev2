@@ -120,7 +120,7 @@ struct MANGOS_DLL_DECL mob_scarlet_traineeAI : public npc_escortAI
     void Reset() { }
     void WaypointReached(uint32 uiPoint) { }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateEscortAI(const uint32 diff)
     {
         if (Start_Timer)
         {
@@ -131,7 +131,10 @@ struct MANGOS_DLL_DECL mob_scarlet_traineeAI : public npc_escortAI
             }else Start_Timer -= diff;
         }
 
-        npc_escortAI::UpdateAI(diff);
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+            return;
+
+        DoMeleeAttackIfReady();
     }
 };
 

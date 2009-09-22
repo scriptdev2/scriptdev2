@@ -737,10 +737,8 @@ struct MANGOS_DLL_DECL npc_koltira_deathweaverAI : public npc_escortAI
             m_creature->SummonCreature(NPC_CRIMSON_ACOLYTE, 1642.329, -6045.818, 127.583, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateEscortAI(const uint32 uiDiff)
     {
-        npc_escortAI::UpdateAI(uiDiff);
-
         if (HasEscortState(STATE_ESCORT_PAUSED))
         {
             if (m_uiWave_Timer < uiDiff)
@@ -799,6 +797,11 @@ struct MANGOS_DLL_DECL npc_koltira_deathweaverAI : public npc_escortAI
             else
                 m_uiWave_Timer -= uiDiff;
         }
+
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+            return;
+
+        DoMeleeAttackIfReady();
     }
 };
 

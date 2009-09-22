@@ -145,7 +145,7 @@ struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public npc_escortAI
             m_pInstance->SetData(TYPE_HELLMAW, DONE);
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateEscortAI(const uint32 diff)
     {
         if (!Intro && !HasEscortState(STATE_ESCORT_ESCORTING))
         {
@@ -168,8 +168,6 @@ struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public npc_escortAI
                 return;
             }
         }
-
-        npc_escortAI::UpdateAI(diff);
 
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
@@ -194,6 +192,8 @@ struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public npc_escortAI
                 Enraged = true;
             }else Enrage_Timer -= diff;
         }
+
+        DoMeleeAttackIfReady();
     }
 };
 

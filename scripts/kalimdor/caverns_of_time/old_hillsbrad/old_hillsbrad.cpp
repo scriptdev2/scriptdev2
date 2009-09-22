@@ -482,10 +482,8 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
         }
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateEscortAI(const uint32 diff)
     {
-        npc_escortAI::UpdateAI(diff);
-
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
@@ -500,6 +498,8 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
             }
             LowHp = true;
         }
+
+        DoMeleeAttackIfReady();
     }
 };
 
@@ -616,12 +616,8 @@ struct MANGOS_DLL_DECL npc_tarethaAI : public npc_escortAI
     }
 
     void Reset() {}
-
-    void UpdateAI(const uint32 diff)
-    {
-        npc_escortAI::UpdateAI(diff);
-    }
 };
+
 CreatureAI* GetAI_npc_taretha(Creature* pCreature)
 {
     return new npc_tarethaAI(pCreature);
