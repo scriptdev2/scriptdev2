@@ -1725,6 +1725,14 @@
 					<Filter
 						Name="ulduar"
 						>
+						<File
+							RelativePath="..\scripts\northrend\ulduar\ulduar\def_ulduar.h"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\northrend\ulduar\ulduar\instance_ulduar.cpp"
+							>
+						</File>
 					</Filter>
 				</Filter>
 				<Filter

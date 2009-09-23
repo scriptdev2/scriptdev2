@@ -1003,6 +1003,9 @@ UPDATE creature_template SET ScriptName='boss_loken' WHERE entry=28923;
 /* HALLS OF STONE */
 
 
+/* ULDUAR */
+UPDATE instance_template SET script='instance_ulduar' WHERE map=603;
+
 /* UN'GORO CRATER */
 UPDATE creature_template SET ScriptName='npc_ame01' WHERE entry=9623;
 UPDATE creature_template SET ScriptName='npc_ringo' WHERE entry=9999;
