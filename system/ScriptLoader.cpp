@@ -242,6 +242,10 @@ extern void AddSC_winterspring();
 
 //northrend
 extern void AddSC_instance_azjol_nerub();                   //azjol-nerub
+extern void AddSC_boss_colossus();                          //gundrak
+extern void AddSC_boss_galdarah();
+extern void AddSC_boss_moorabi();
+extern void AddSC_boss_sladran();
 extern void AddSC_boss_anubrekhan();                        //naxxramas
 extern void AddSC_boss_four_horsemen();
 extern void AddSC_boss_faerlina();
@@ -602,6 +606,10 @@ void AddScripts()
 
     //northrend
     AddSC_instance_azjol_nerub();                           //azjol-nerub
+    AddSC_boss_colossus();                                  //gundrak
+    AddSC_boss_galdarah();
+    AddSC_boss_moorabi();
+    AddSC_boss_sladran();
     AddSC_boss_anubrekhan();                                //naxxramas
     AddSC_boss_four_horsemen();
     AddSC_boss_faerlina();

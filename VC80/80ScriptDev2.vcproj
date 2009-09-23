@@ -1571,6 +1571,22 @@
 				<Filter
 					Name="gundrak"
 					>
+					<File
+						RelativePath="..\scripts\northrend\gundrak\boss_colossus.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\northrend\gundrak\boss_galdarah.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\northrend\gundrak\boss_moorabi.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\northrend\gundrak\boss_sladran.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="naxxramas"
