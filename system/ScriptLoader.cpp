@@ -270,6 +270,10 @@ extern void AddSC_boss_keleseth();
 extern void AddSC_boss_skarvald_and_dalronn();
 extern void AddSC_instance_utgarde_keep();
 extern void AddSC_utgarde_keep();
+extern void AddSC_boss_gortok();                           //utgarde_pinnacle
+extern void AddSC_boss_skadi();
+extern void AddSC_boss_svala();
+extern void AddSC_boss_ymiron();
 
 extern void AddSC_borean_tundra();
 extern void AddSC_dalaran();
@@ -625,6 +629,10 @@ void AddScripts()
     AddSC_boss_skarvald_and_dalronn();
     AddSC_instance_utgarde_keep();
     AddSC_utgarde_keep();
+    AddSC_boss_gortok();                                    //utgarde_pinnacle
+    AddSC_boss_skadi();
+    AddSC_boss_svala();
+    AddSC_boss_ymiron();
 
     AddSC_borean_tundra();
     AddSC_dalaran();

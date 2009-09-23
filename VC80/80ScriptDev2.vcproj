@@ -1762,6 +1762,22 @@
 					<Filter
 						Name="utgarde_pinnacle"
 						>
+						<File
+							RelativePath="..\scripts\northrend\utgarde_keep\utgarde_pinnacle\boss_gortok.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\northrend\utgarde_keep\utgarde_pinnacle\boss_skadi.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\northrend\utgarde_keep\utgarde_pinnacle\boss_svala.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\northrend\utgarde_keep\utgarde_pinnacle\boss_ymiron.cpp"
+							>
+						</File>
 					</Filter>
 				</Filter>
 				<Filter
