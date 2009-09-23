@@ -406,7 +406,9 @@ UPDATE creature_template SET ScriptName='npc_tariolstrasz' WHERE entry=26443;
 UPDATE creature_template SET ScriptName='npc_torastrasza' WHERE entry=26949;
 
 /* DRAK'THARON KEEP */
-
+UPDATE creature_template SET ScriptName='boss_novos' WHERE entry=26631;
+UPDATE creature_template SET ScriptName='boss_tharonja' WHERE entry=26632;
+UPDATE creature_template SET ScriptName='boss_trollgore' WHERE entry=26630;
 
 /* DUN MOROGH */
 UPDATE creature_template SET ScriptName='npc_narm_faulk' WHERE entry=6177;

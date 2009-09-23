@@ -297,6 +297,9 @@ scripts/northrend/sholazar_basin.cpp \
 scripts/northrend/storm_peaks.cpp \
 scripts/northrend/azjol-nerub/azjol-nerub/def_azjol-nerub.h \
 scripts/northrend/azjol-nerub/azjol-nerub/instance_azjol-nerub.cpp \
+scripts/northrend/draktharon_keep/boss_novos.cpp \
+scripts/northrend/draktharon_keep/boss_tharonja.cpp \
+scripts/northrend/draktharon_keep/boss_trollgore.cpp \
 scripts/northrend/gundrak/boss_colossus.cpp \
 scripts/northrend/gundrak/boss_galdarah.cpp \
 scripts/northrend/gundrak/boss_moorabi.cpp \

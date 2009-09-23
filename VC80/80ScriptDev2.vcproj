@@ -1567,6 +1567,18 @@
 				<Filter
 					Name="draktharon_keep"
 					>
+					<File
+						RelativePath="..\scripts\northrend\draktharon_keep\boss_novos.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\northrend\draktharon_keep\boss_tharonja.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\northrend\draktharon_keep\boss_trollgore.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="gundrak"
