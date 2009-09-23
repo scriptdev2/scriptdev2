@@ -64,7 +64,7 @@ struct MANGOS_DLL_DECL boss_ymironAI : public ScriptedAI
 
     void KilledUnit(Unit* pVictim)
     {
-        switch(rand()%3)
+        switch(rand()%4)
         {
             case 0: DoScriptText(SAY_SLAY_1, m_creature); break;
             case 1: DoScriptText(SAY_SLAY_2, m_creature); break;
