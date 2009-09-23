@@ -31,6 +31,7 @@ struct MANGOS_DLL_DECL instance_utgarde_keep : public ScriptedInstance
     uint32 m_auiEncounter[MAX_ENCOUNTER];
     std::string strInstData;
 
+    uint64 m_uiKelesethGUID;
     uint64 m_uiSkarvaldGUID;
     uint64 m_uiDalronnGUID;
 
@@ -45,6 +46,7 @@ struct MANGOS_DLL_DECL instance_utgarde_keep : public ScriptedInstance
     {
         memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
 
+        m_uiKelesethGUID = 0;
         m_uiSkarvaldGUID = 0;
         m_uiDalronnGUID = 0;
 
@@ -60,6 +62,7 @@ struct MANGOS_DLL_DECL instance_utgarde_keep : public ScriptedInstance
     {
         switch(pCreature->GetEntry())
         {
+            case NPC_KELESETH: m_uiKelesethGUID = pCreature->GetGUID(); break;
             case NPC_SKARVALD: m_uiSkarvaldGUID = pCreature->GetGUID(); break;
             case NPC_DALRONN: m_uiDalronnGUID = pCreature->GetGUID(); break;
         }
@@ -140,6 +143,8 @@ struct MANGOS_DLL_DECL instance_utgarde_keep : public ScriptedInstance
     {
         switch(uiData)
         {
+            case NPC_KELESETH:
+                return m_uiKelesethGUID;
             case NPC_SKARVALD:
                 return m_uiSkarvaldGUID;
             case NPC_DALRONN:
