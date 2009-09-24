@@ -1758,6 +1758,10 @@
 							RelativePath="..\scripts\northrend\ulduar\halls_of_stone\boss_sjonnir.cpp"
 							>
 						</File>
+						<File
+							RelativePath="..\scripts\northrend\ulduar\halls_of_stone\halls_of_stone.cpp"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="ulduar"

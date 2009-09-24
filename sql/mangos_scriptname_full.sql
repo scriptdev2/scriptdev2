@@ -1008,6 +1008,7 @@ UPDATE creature_template SET ScriptName='boss_loken' WHERE entry=28923;
 /* HALLS OF STONE */
 UPDATE creature_template SET ScriptName='boss_maiden_of_grief' WHERE entry=27975;
 UPDATE creature_template SET ScriptName='boss_sjonnir' WHERE entry=27978;
+UPDATE creature_template SET ScriptName='npc_brann_hos' WHERE entry=28070;
 
 /* ULDUAR */
 UPDATE instance_template SET script='instance_ulduar' WHERE map=603;
