@@ -333,6 +333,8 @@ scripts/northrend/ulduar/halls_of_lightning/boss_loken.cpp \
 scripts/northrend/ulduar/halls_of_lightning/boss_volkhan.cpp \
 scripts/northrend/ulduar/halls_of_lightning/def_halls_of_lightning.h \
 scripts/northrend/ulduar/halls_of_lightning/instance_halls_of_lightning.cpp \
+scripts/northrend/ulduar/halls_of_stone/boss_maiden_of_grief.cpp \
+scripts/northrend/ulduar/halls_of_stone/boss_sjonnir.cpp \
 scripts/northrend/ulduar/ulduar/def_ulduar.h \
 scripts/northrend/ulduar/ulduar/instance_ulduar.cpp \
 scripts/northrend/utgarde_keep/utgarde_keep/boss_ingvar.cpp \
