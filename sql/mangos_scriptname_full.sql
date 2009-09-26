@@ -143,6 +143,9 @@ UPDATE creature_template SET ScriptName='boss_ambassador_hellmaw' WHERE entry=18
 
 
 /* AZJOL-NERUB */
+UPDATE creature_template SET ScriptName='boss_anubarak' WHERE entry=29120;
+UPDATE creature_template SET ScriptName='boss_hadronox' WHERE entry=28921;
+UPDATE creature_template SET ScriptName='boss_krikthir' WHERE entry=28684;
 UPDATE instance_template SET script='instance_azjol-nerub' WHERE map=601;
 
 /* AZSHARA */

@@ -1554,6 +1554,18 @@
 						Name="azjol-nerub"
 						>
 						<File
+							RelativePath="..\scripts\northrend\azjol-nerub\azjol-nerub\boss_anubarak.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\northrend\azjol-nerub\azjol-nerub\boss_hadronox.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\northrend\azjol-nerub\azjol-nerub\boss_krikthir.cpp"
+							>
+						</File>
+						<File
 							RelativePath="..\scripts\northrend\azjol-nerub\azjol-nerub\def_azjol-nerub.h"
 							>
 						</File>

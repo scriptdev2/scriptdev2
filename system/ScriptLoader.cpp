@@ -241,7 +241,10 @@ extern void AddSC_ungoro_crater();
 extern void AddSC_winterspring();
 
 //northrend
-extern void AddSC_instance_azjol_nerub();                   //azjol-nerub
+extern void AddSC_boss_anubarak();                          //azjol-nerub
+extern void AddSC_boss_hadronox();
+extern void AddSC_boss_krikthir();
+extern void AddSC_instance_azjol_nerub();
 extern void AddSC_boss_novos();                             //draktharon_keep
 extern void AddSC_boss_tharonja();
 extern void AddSC_boss_trollgore();
@@ -611,7 +614,10 @@ void AddScripts()
     AddSC_winterspring();
 
     //northrend
-    AddSC_instance_azjol_nerub();                           //azjol-nerub
+    AddSC_boss_anubarak();                                  //azjol-nerub
+    AddSC_boss_hadronox();
+    AddSC_boss_krikthir();
+    AddSC_instance_azjol_nerub();
     AddSC_boss_novos();                                     //draktharon_keep
     AddSC_boss_tharonja();
     AddSC_boss_trollgore();
