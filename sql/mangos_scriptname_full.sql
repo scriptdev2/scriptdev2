@@ -841,6 +841,7 @@ UPDATE creature_template SET ScriptName='npc_braug_dimspirit' WHERE entry=4489;
 UPDATE creature_template SET ScriptName='npc_kaya' WHERE entry=11856;
 
 /* STORM PEAKS */
+UPDATE creature_template SET ScriptName='npc_loklira_the_crone' WHERE entry=29975;
 UPDATE creature_template SET ScriptName='npc_roxi_ramrocket' WHERE entry=31247;
 
 /* STORMWIND CITY */

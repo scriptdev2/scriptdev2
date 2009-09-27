@@ -17,15 +17,77 @@
 /* ScriptData
 SDName: Storm_Peaks
 SD%Complete: 100
-SDComment: Vendor Support (31247)
+SDComment: Vendor Support (31247). Quest support: 12970
 SDCategory: Storm Peaks
 EndScriptData */
 
 /* ContentData
+npc_loklira_the_crone
 npc_roxi_ramrocket
 EndContentData */
 
 #include "precompiled.h"
+
+/*######
+## npc_loklira_the_crone
+######*/
+
+#define GOSSIP_ITEM_TELL_ME         "Tell me about this proposal."
+#define GOSSIP_ITEM_WHAT_HAPPENED   "What happened then?"
+#define GOSSIP_ITEM_YOU_WANT_ME     "You want me to take part in the Hyldsmeet to end the war?"
+#define GOSSIP_ITEM_VERY_WELL       "Very well. I'll take part in this competition."
+
+enum
+{
+    GOSSIP_TEXTID_LOKLIRA1    = 13777,
+    GOSSIP_TEXTID_LOKLIRA2    = 13778,
+    GOSSIP_TEXTID_LOKLIRA3    = 13779,
+    GOSSIP_TEXTID_LOKLIRA4    = 13780,
+
+    QUEST_THE_HYLDSMEET       = 12970,
+
+    CREDIT_LOKLIRA            = 30467
+};
+
+bool GossipHello_npc_loklira_the_crone(Player* pPlayer, Creature* pCreature)
+{
+    if (pCreature->isQuestGiver())
+        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+
+    if (pPlayer->GetQuestStatus(QUEST_THE_HYLDSMEET) == QUEST_STATUS_INCOMPLETE)
+    {
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TELL_ME, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_LOKLIRA1, pCreature->GetGUID());
+        return true;
+    }
+
+    pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
+    return true;
+}
+
+bool GossipSelect_npc_loklira_the_crone(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+{
+    switch(uiAction)
+    {
+        case GOSSIP_ACTION_INFO_DEF+1:
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_WHAT_HAPPENED, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_LOKLIRA2, pCreature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+2:
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_YOU_WANT_ME, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_LOKLIRA3, pCreature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+3:
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_VERY_WELL, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_LOKLIRA4, pCreature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+4:
+            pPlayer->TalkedToCreature(CREDIT_LOKLIRA, pCreature->GetGUID());
+            pPlayer->CLOSE_GOSSIP_MENU();
+            break;
+    }
+    return true;
+}
 
 /*######
 ## npc_roxi_ramrocket
@@ -76,6 +138,12 @@ bool GossipSelect_npc_roxi_ramrocket(Player* pPlayer, Creature* pCreature, uint3
 void AddSC_storm_peaks()
 {
     Script *newscript;
+
+    newscript = new Script;
+    newscript->Name = "npc_loklira_the_crone";
+    newscript->pGossipHello = &GossipHello_npc_loklira_the_crone;
+    newscript->pGossipSelect = &GossipSelect_npc_loklira_the_crone;
+    newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "npc_roxi_ramrocket";
