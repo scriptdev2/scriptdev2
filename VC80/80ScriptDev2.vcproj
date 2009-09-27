@@ -1550,6 +1550,22 @@
 					<Filter
 						Name="ahnkahet"
 						>
+						<File
+							RelativePath="..\scripts\northrend\azjol-nerub\ahnkahet\boss_jedoga.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\northrend\azjol-nerub\ahnkahet\boss_nadox.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\northrend\azjol-nerub\ahnkahet\boss_taldaram.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\northrend\azjol-nerub\ahnkahet\boss_volazj.cpp"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="azjol-nerub"

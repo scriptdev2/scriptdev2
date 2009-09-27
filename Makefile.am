@@ -295,6 +295,10 @@ scripts/northrend/grizzly_hills.cpp \
 scripts/northrend/icecrown.cpp \
 scripts/northrend/sholazar_basin.cpp \
 scripts/northrend/storm_peaks.cpp \
+scripts/northrend/azjol-nerub/ahnkahet/boss_jedoga.cpp \
+scripts/northrend/azjol-nerub/ahnkahet/boss_nadox.cpp \
+scripts/northrend/azjol-nerub/ahnkahet/boss_taldaram.cpp \
+scripts/northrend/azjol-nerub/ahnkahet/boss_volazj.cpp \
 scripts/northrend/azjol-nerub/azjol-nerub/boss_anubarak.cpp \
 scripts/northrend/azjol-nerub/azjol-nerub/boss_hadronox.cpp \
 scripts/northrend/azjol-nerub/azjol-nerub/boss_krikthir.cpp \
