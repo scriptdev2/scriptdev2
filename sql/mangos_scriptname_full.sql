@@ -498,6 +498,8 @@ UPDATE creature_template SET ScriptName='boss_colossus' WHERE entry=29307;
 UPDATE creature_template SET ScriptName='boss_galdarah' WHERE entry=29306;
 UPDATE creature_template SET ScriptName='boss_moorabi' WHERE entry=29305;
 UPDATE creature_template SET ScriptName='boss_sladran' WHERE entry=29304;
+UPDATE gameobject_template SET ScriptName='go_gundrak_altar' WHERE entry IN (192518, 192519, 192520);
+UPDATE instance_template SET script='instance_gundrak' WHERE map=604;
 
 /*  */
 /* HELLFIRE CITADEL */

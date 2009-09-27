@@ -1626,6 +1626,14 @@
 						RelativePath="..\scripts\northrend\gundrak\boss_sladran.cpp"
 						>
 					</File>
+					<File
+						RelativePath="..\scripts\northrend\gundrak\def_gundrak.h"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\northrend\gundrak\instance_gundrak.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="naxxramas"

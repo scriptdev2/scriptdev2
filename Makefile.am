@@ -311,6 +311,8 @@ scripts/northrend/gundrak/boss_colossus.cpp \
 scripts/northrend/gundrak/boss_galdarah.cpp \
 scripts/northrend/gundrak/boss_moorabi.cpp \
 scripts/northrend/gundrak/boss_sladran.cpp \
+scripts/northrend/gundrak/def_gundrak.h \
+scripts/northrend/gundrak/instance_gundrak.cpp \
 scripts/northrend/naxxramas/boss_anubrekhan.cpp \
 scripts/northrend/naxxramas/boss_faerlina.cpp \
 scripts/northrend/naxxramas/boss_four_horsemen.cpp \
