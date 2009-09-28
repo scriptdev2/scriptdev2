@@ -6,6 +6,9 @@ INSERT INTO areatrigger_scripts VALUES (4560,'at_legion_teleporter');
 DELETE FROM areatrigger_scripts WHERE entry=3066;
 INSERT INTO areatrigger_scripts VALUES (3066,'at_ravenholdt');
 
+/* BATTLEGROUNDS */
+UPDATE creature_template SET ScriptName='npc_spirit_guide' WHERE entry IN (13116, 13117);
+
 /* WORLD BOSS */
 UPDATE creature_template SET ScriptName='boss_ysondre' WHERE entry=14887;
 UPDATE creature_template SET ScriptName='boss_emeriss' WHERE entry=14889;

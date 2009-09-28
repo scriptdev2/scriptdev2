@@ -394,6 +394,14 @@
 			Name="scripts"
 			>
 			<Filter
+				Name="battlegrounds"
+				>
+				<File
+					RelativePath="..\scripts\battlegrounds\battleground.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
 				Name="custom"
 				>
 			</Filter>

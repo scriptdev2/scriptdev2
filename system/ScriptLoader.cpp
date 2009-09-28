@@ -4,6 +4,9 @@
 
 #include "precompiled.h"
 
+//battlegrounds
+extern void AddSC_battleground();
+
 //custom
 
 //examples
@@ -382,6 +385,9 @@ extern void AddSC_zangarmarsh();
 
 void AddScripts()
 {
+    //battlegrounds
+    AddSC_battleground();
+
     //custom
 
     //examples
