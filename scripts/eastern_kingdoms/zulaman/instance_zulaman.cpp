@@ -110,6 +110,8 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
                 break;
             case 186728:
                 m_uiMassiveGateGUID = pGo->GetGUID();
+                if (m_auiEncounter[0] == IN_PROGRESS || m_auiEncounter[0] == DONE)
+                    pGo->SetGoState(GO_STATE_ACTIVE);
                 break;
             case 186305:
                 m_uiMalacrassEntranceGUID = pGo->GetGUID();
