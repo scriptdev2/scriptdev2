@@ -206,7 +206,7 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
 
     void KilledUnit()
     {
-        if (rand()%2)
+        if (urand(0, 1))
             DoScriptText(SAY_SLAY1, m_creature);
         else
             DoScriptText(SAY_SLAY2, m_creature);
@@ -231,7 +231,7 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
                 float Walk_Pos_Y = 0.0f;
                 float Walk_Pos_Z = 0.0f;
 
-                switch(rand()%6)
+                switch(urand(0, 5))
                 {
                     case 0:
                         Walk_Pos_X = ADDX_LEFT_FAR;
@@ -272,7 +272,7 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
 
     void Aggro(Unit* who)
     {
-        switch(rand()%3)
+        switch(urand(0, 2))
         {
             case 0: DoScriptText(SAY_AGGRO1, m_creature); break;
             case 1: DoScriptText(SAY_AGGRO2, m_creature); break;
@@ -304,7 +304,7 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
         {
             //DoCast(m_creature->getVictim(),SPELL_CHAINS_OF_KELTHUZAD);
 
-            //if (rand()%2)
+            //if (urand(0, 1))
                 //DoScriptText(SAY_CHAIN1, m_creature);
             //else
                 //DoScriptText(SAY_CHAIN2, m_creature);
@@ -317,7 +317,7 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
         {
             DoCast(m_creature->getVictim(),SPELL_MANA_DETONATION);
 
-            if (rand()%2)
+            if (urand(0, 1))
                 DoScriptText(SAY_SPECIAL1_MANA_DET, m_creature);
 
             ManaDetonation_Timer = 20000;
@@ -328,7 +328,7 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
         {
             DoCast(m_creature->getVictim(),SPELL_SHADOW_FISURE);
 
-            if (rand()%2)
+            if (urand(0, 1))
                 DoScriptText(SAY_SPECIAL3_MANA_DET, m_creature);
 
             ShadowFisure_Timer = 25000;
@@ -339,7 +339,7 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
         {
             DoCast(m_creature->getVictim(),SPELL_FROST_BLAST);
 
-            if (rand()%2)
+            if (urand(0, 1))
                 DoScriptText(SAY_FROST_BLAST, m_creature);
 
             FrostBlast_Timer = (rand()%30+30)*1000;
@@ -367,7 +367,7 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
                 float Walk_Pos_Y;
                 float Walk_Pos_Z;
 
-                switch(rand()%6)
+                switch(urand(0, 5))
                 {
                     case 0:
                         pGuardian = m_creature->SummonCreature(16441,ADDX_LEFT_FAR,ADDY_LEFT_FAR,ADDZ_LEFT_FAR,ADDO_LEFT_FAR,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,1000);

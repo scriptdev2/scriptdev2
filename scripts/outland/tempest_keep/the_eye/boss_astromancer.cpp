@@ -124,7 +124,7 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
 
     void KilledUnit(Unit *victim)
     {
-        switch(rand()%3)
+        switch(urand(0, 2))
         {
             case 0: DoScriptText(SAY_KILL1, m_creature); break;
             case 1: DoScriptText(SAY_KILL2, m_creature); break;
@@ -164,7 +164,7 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
 
     float Portal_X(float radius)
     {
-        if ((rand()%2)==1)
+        if (urand(0, 1))
             radius = -radius;
 
         return (radius * (float)(rand()%100)/100.0f + CENTER_X);
@@ -174,7 +174,7 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
     {
         float z = 0.0f;
 
-        switch(rand()%2)
+        switch(urand(0, 1))
         {
             case 0: z = 1; break;
             case 1: z = -1; break;
@@ -412,7 +412,7 @@ struct MANGOS_DLL_DECL mob_solarium_priestAI : public ScriptedAI
         {
             Unit* target = NULL;
 
-            switch(rand()%2)
+            switch(urand(0, 1))
             {
                 case 0:
                     if (m_pInstance)

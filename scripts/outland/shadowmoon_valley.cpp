@@ -728,7 +728,7 @@ struct MANGOS_DLL_DECL npc_wildaAI : public npc_escortAI
     //this is very unclear, random say without no real relevance to script/event
     void DoRandomSay()
     {
-        switch(rand()%3)
+        switch(urand(0, 2))
         {
             case 0: DoScriptText(SAY_WIL_PROGRESS2, m_creature); break;
             case 1: DoScriptText(SAY_WIL_PROGRESS4, m_creature); break;
@@ -748,14 +748,14 @@ struct MANGOS_DLL_DECL npc_wildaAI : public npc_escortAI
     void Aggro(Unit* pWho)
     {
         //don't always use
-        if (rand()%5)
+        if (urand(0, 4))
             return;
 
         //only aggro text if not player
         if (pWho->GetTypeId() != TYPEID_PLAYER)
         {
             //appears to be random
-            switch(rand()%4)
+            switch(urand(0, 3))
             {
                 case 0: DoScriptText(SAY_WIL_AGGRO1, m_creature, pWho); break;
                 case 1: DoScriptText(SAY_WIL_AGGRO2, m_creature, pWho); break;

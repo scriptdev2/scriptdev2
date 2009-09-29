@@ -104,14 +104,14 @@ struct MANGOS_DLL_DECL npc_kerlonianAI : public FollowerAI
     {
         SetFollowPaused(true);
 
-        switch(rand()%3)
+        switch(urand(0, 2))
         {
             case 0: DoScriptText(EMOTE_KER_SLEEP_1, m_creature); break;
             case 1: DoScriptText(EMOTE_KER_SLEEP_2, m_creature); break;
             case 2: DoScriptText(EMOTE_KER_SLEEP_3, m_creature); break;
         }
 
-        switch(rand()%4)
+        switch(urand(0, 3))
         {
             case 0: DoScriptText(SAY_KER_SLEEP_1, m_creature); break;
             case 1: DoScriptText(SAY_KER_SLEEP_2, m_creature); break;
@@ -275,7 +275,7 @@ struct MANGOS_DLL_DECL npc_prospector_remtravelAI : public npc_escortAI
 
     void Aggro(Unit* who)
     {
-        if (rand()%2)
+        if (urand(0, 1))
             DoScriptText(SAY_REM_AGGRO, m_creature, who);
     }
 

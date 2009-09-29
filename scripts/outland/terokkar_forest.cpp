@@ -158,7 +158,7 @@ struct MANGOS_DLL_DECL mob_infested_root_walkerAI : public ScriptedAI
     {
         if (done_by && done_by->GetTypeId() == TYPEID_PLAYER)
             if (m_creature->GetHealth() <= damage)
-                if (rand()%100 < 75)
+                if (urand(0, 3))
                     //Summon Wood Mites
                     m_creature->CastSpell(m_creature,39130,true);
     }
@@ -182,7 +182,7 @@ struct MANGOS_DLL_DECL mob_rotting_forest_ragerAI : public ScriptedAI
     {
         if (done_by->GetTypeId() == TYPEID_PLAYER)
             if (m_creature->GetHealth() <= damage)
-                if (rand()%100 < 75)
+                if (urand(0, 3))
                     //Summon Lots of Wood Mights
                     m_creature->CastSpell(m_creature,39134,true);
     }
@@ -224,7 +224,7 @@ struct MANGOS_DLL_DECL mob_netherweb_victimAI : public ScriptedAI
         {
             if (((Player*)pKiller)->GetQuestStatus(QUEST_TAKEN_IN_NIGHT) == QUEST_STATUS_INCOMPLETE)
             {
-                if (rand()%100 < 25)
+                if (!urand(0, 3))
                 {
                     m_creature->SummonCreature(NPC_FREED_WARRIOR, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
                     ((Player*)pKiller)->KilledMonsterCredit(NPC_FREED_WARRIOR, m_creature->GetGUID());

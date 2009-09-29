@@ -89,14 +89,14 @@ bool GossipSelect_npc_innkeeper(Player* pPlayer, Creature* pCreature, uint32 uiS
         pPlayer->CastSpell(pPlayer, SPELL_TRICK_OR_TREATED, true);
 
         // either trick or treat, 50% chance
-        if (rand()%2)
+        if (urand(0, 1))
         {
             pPlayer->CastSpell(pPlayer, SPELL_TREAT, true);
         }
         else
         {
             int32 trickspell=0;
-            switch (rand()%9)                               // note that female characters can get male costumes and vice versa
+            switch(urand(0, 8))                             // note that female characters can get male costumes and vice versa
             {
                 case 0:
                     trickspell=24753;                       // cannot cast, random 30sec

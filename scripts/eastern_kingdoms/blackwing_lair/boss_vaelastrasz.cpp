@@ -90,7 +90,7 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
 
     void KilledUnit(Unit *victim)
     {
-        if (rand()%5)
+        if (urand(0, 4))
             return;
 
         DoScriptText(SAY_KILLTARGET, m_creature, victim);

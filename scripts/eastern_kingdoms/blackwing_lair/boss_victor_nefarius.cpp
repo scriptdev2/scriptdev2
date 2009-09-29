@@ -74,7 +74,7 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
         NefarianGUID = 0;
         Reset();
         srand(time(NULL));
-        switch (rand()%20)
+        switch(urand(0, 19))
         {
             case 0:
                 DrakType1 = CREATURE_BRONZE_DRAKANOID;
@@ -254,7 +254,7 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
                 Unit* target = NULL;
 
                 //1 in 3 chance it will be a chromatic
-                if (rand()%3 == 0)
+                if (!urand(0, 2))
                     CreatureID = CREATURE_CHROMATIC_DRAKANOID;
                 else CreatureID = DrakType1;
 
@@ -270,7 +270,7 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
                 }
 
                 //1 in 3 chance it will be a chromatic
-                if (rand()%3 == 0)
+                if (!urand(0, 2))
                     CreatureID = CREATURE_CHROMATIC_DRAKANOID;
                 else CreatureID = DrakType2;
 

@@ -83,11 +83,7 @@ struct MANGOS_DLL_DECL boss_nethermancer_sepethreaAI : public ScriptedAI
 
     void KilledUnit(Unit* victim)
     {
-        switch(rand()%2)
-        {
-            case 0: DoScriptText(SAY_SLAY1, m_creature); break;
-            case 1: DoScriptText(SAY_SLAY2, m_creature); break;
-        }
+        DoScriptText(urand(0, 1) ? SAY_SLAY1 : SAY_SLAY2, m_creature);
     }
 
     void JustDied(Unit* Killer)
@@ -123,14 +119,8 @@ struct MANGOS_DLL_DECL boss_nethermancer_sepethreaAI : public ScriptedAI
         {
             DoCast(m_creature->getVictim(),SPELL_DRAGONS_BREATH);
 
-            if (rand()%2)
-            {
-                switch(rand()%2)
-                {
-                    case 0: DoScriptText(SAY_DRAGONS_BREATH_1, m_creature); break;
-                    case 1: DoScriptText(SAY_DRAGONS_BREATH_2, m_creature); break;
-                }
-            }
+            if (urand(0, 1))
+                DoScriptText(urand(0, 1) ? SAY_DRAGONS_BREATH_1 : SAY_DRAGONS_BREATH_2, m_creature);
 
             dragons_breath_Timer = 12000 + rand()%10000;
         }else dragons_breath_Timer -= diff;

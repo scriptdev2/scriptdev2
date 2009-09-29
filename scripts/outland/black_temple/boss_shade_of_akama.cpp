@@ -204,7 +204,7 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
         uint32 uiRand = sizeof(m_afSpawnLoc)/sizeof(Location);
 
         // max of 6 sorcerers can be summoned
-        if ((rand()%3 == 0) && (m_uiDeathCount > 0) && (m_uiSorcererCount < 7))
+        if (!urand(0, 2) && (m_uiDeathCount > 0) && (m_uiSorcererCount < 7))
         {
             if (Creature* pSorcerer = m_creature->SummonCreature(NPC_ASH_SORCERER,
                 m_afSpawnLoc[uiRand].m_fX, m_afSpawnLoc[uiRand].m_fY, m_afSpawnLoc[uiRand].m_fZ, m_afSpawnLoc[uiRand].m_fO,

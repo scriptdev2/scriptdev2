@@ -70,10 +70,10 @@ struct MANGOS_DLL_DECL boss_razuviousAI : public ScriptedAI
 
     void KilledUnit(Unit* Victim)
     {
-        if (rand()%3)
+        if (urand(0, 3))
             return;
 
-        switch (rand()%2)
+        switch(urand(0, 1))
         {
             case 0:
                 DoPlaySoundToSet(m_creature, SOUND_SLAY1);
@@ -91,7 +91,7 @@ struct MANGOS_DLL_DECL boss_razuviousAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-        switch (rand()%3)
+        switch(urand(0, 2))
         {
             case 0:
                 DoPlaySoundToSet(m_creature, SOUND_AGGRO1);
@@ -127,7 +127,7 @@ struct MANGOS_DLL_DECL boss_razuviousAI : public ScriptedAI
         //CommandSound_Timer
         if (CommandSound_Timer < diff)
         {
-            switch (rand()%5)
+            switch(urand(0, 4))
             {
                 case 0:
                     DoPlaySoundToSet(m_creature, SOUND_COMMND1);

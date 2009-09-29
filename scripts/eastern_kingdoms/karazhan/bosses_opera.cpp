@@ -588,11 +588,7 @@ struct MANGOS_DLL_DECL boss_croneAI : public ScriptedAI
 
     void Aggro(Unit* who)
     {
-        switch(rand()%2)
-        {
-            case 0: DoScriptText(SAY_CRONE_AGGRO, m_creature); break;
-            case 1: DoScriptText(SAY_CRONE_AGGRO2, m_creature); break;
-        }
+        DoScriptText(urand(0, 1) ? SAY_CRONE_AGGRO : SAY_CRONE_AGGRO2, m_creature);
 
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
     }
@@ -1377,7 +1373,7 @@ void boss_julianneAI::UpdateAI(const uint32 diff)
 
     if (EternalAffectionTimer < diff)
     {
-        if (rand()%2 == 1 && SummonedRomulo)
+        if (urand(0, 1) && SummonedRomulo)
         {
             Creature* Romulo = ((Creature*)Unit::GetUnit((*m_creature), RomuloGUID));
             if (Romulo && Romulo->isAlive() && !RomuloDead)

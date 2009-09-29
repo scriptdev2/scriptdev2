@@ -123,11 +123,7 @@ struct MANGOS_DLL_DECL boss_warp_splinterAI : public ScriptedAI
 
     void KilledUnit(Unit* victim)
     {
-        switch(rand()%2)
-        {
-            case 0: DoScriptText(SAY_SLAY_1, m_creature); break;
-            case 1: DoScriptText(SAY_SLAY_2, m_creature); break;
-        }
+        DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
     }
 
     void JustDied(Unit* Killer)
@@ -157,11 +153,7 @@ struct MANGOS_DLL_DECL boss_warp_splinterAI : public ScriptedAI
             }
         }
 
-        switch(rand()%2)
-        {
-            case 0: DoScriptText(SAY_SUMMON_1, m_creature); break;
-            case 1: DoScriptText(SAY_SUMMON_2, m_creature); break;
-        }
+        DoScriptText(urand(0, 1) ? SAY_SUMMON_1 : SAY_SUMMON_2, m_creature);
     }
 
     // Warp Splinter eat treants if they are near him

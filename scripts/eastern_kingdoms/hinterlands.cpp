@@ -101,7 +101,7 @@ struct MANGOS_DLL_DECL npc_00x09hlAI : public npc_escortAI
         if (pWho->GetEntry() == NPC_MARAUDING_OWL || pWho->GetEntry() == NPC_VILE_AMBUSHER)
             return;
 
-        if (rand()%1)
+        if (urand(0, 1))
             DoScriptText(SAY_OOX_AGGRO1, m_creature);
         else
             DoScriptText(SAY_OOX_AGGRO2, m_creature);
@@ -212,15 +212,11 @@ struct MANGOS_DLL_DECL npc_rinjiAI : public npc_escortAI
                 m_bIsByOutrunner = true;
             }
 
-            if (rand()%4)
+            if (urand(0, 3))
                 return;
 
             //only if attacked and escorter is not in combat?
-            switch(rand()%2)
-            {
-                case 0: DoScriptText(SAY_RIN_HELP_1, m_creature); break;
-                case 1: DoScriptText(SAY_RIN_HELP_2, m_creature); break;
-            }
+            DoScriptText(urand(0, 1) ? SAY_RIN_HELP_1 : SAY_RIN_HELP_2, m_creature);
         }
     }
 

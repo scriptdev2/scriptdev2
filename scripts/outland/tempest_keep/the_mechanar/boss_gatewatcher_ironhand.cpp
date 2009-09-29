@@ -68,14 +68,10 @@ struct MANGOS_DLL_DECL boss_gatewatcher_iron_handAI : public ScriptedAI
 
     void KilledUnit(Unit* victim)
     {
-        if (rand()%2)
+        if (urand(0, 1))
             return;
 
-        switch(rand()%2)
-        {
-            case 0: DoScriptText(SAY_SLAY_1, m_creature); break;
-            case 1: DoScriptText(SAY_SLAY_2, m_creature); break;
-        }
+        DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
     }
 
     void JustDied(Unit* Killer)
@@ -109,14 +105,8 @@ struct MANGOS_DLL_DECL boss_gatewatcher_iron_handAI : public ScriptedAI
             DoCast(m_creature->getVictim(), m_bIsHeroicMode ? H_SPELL_JACKHAMMER : SPELL_JACKHAMMER);
 
             //chance to yell, but not same time as emote (after spell in fact casted)
-            if (rand()%5)
-            {
-                switch(rand()%2)
-                {
-                    case 0: DoScriptText(SAY_HAMMER_1, m_creature); break;
-                    case 1: DoScriptText(SAY_HAMMER_2, m_creature); break;
-                }
-            }
+            if (urand(0, 4))
+                DoScriptText(urand(0, 1) ? SAY_HAMMER_1 : SAY_HAMMER_2, m_creature);
 
             Jackhammer_Timer = 30000;
         }else Jackhammer_Timer -= diff;

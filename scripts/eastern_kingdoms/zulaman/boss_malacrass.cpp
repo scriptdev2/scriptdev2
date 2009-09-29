@@ -231,11 +231,7 @@ struct MANGOS_DLL_DECL boss_malacrassAI : public ScriptedAI
         if (pVictim->GetTypeId() != TYPEID_PLAYER)
             return;
 
-        switch(rand()%2)
-        {
-            case 0: DoScriptText(SAY_KILL1, m_creature); break;
-            case 1: DoScriptText(SAY_KILL2, m_creature); break;
-        }
+        DoScriptText(urand(0, 1) ? SAY_KILL1 : SAY_KILL2, m_creature);
     }
 
     void JustDied(Unit* pKiller)
@@ -316,7 +312,7 @@ struct MANGOS_DLL_DECL boss_malacrass_addAI : public ScriptedAI
 
         if (Unit* pMalacrass = Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_MALACRASS)))
         {
-            switch(rand()%3)
+            switch(urand(0, 2))
             {
                 case 0: DoScriptText(SAY_ADD_DIED1, pMalacrass); break;
                 case 1: DoScriptText(SAY_ADD_DIED2, pMalacrass); break;

@@ -68,7 +68,7 @@ struct MANGOS_DLL_DECL npc_aged_dying_ancient_kodoAI : public ScriptedAI
 
             if (m_creature->IsWithinDistInMap(pWho, 10.0f))
             {
-                switch(rand()%3)
+                switch(urand(0, 2))
                 {
                     case 0: DoScriptText(SAY_SMEED_HOME_1, pWho); break;
                     case 1: DoScriptText(SAY_SMEED_HOME_2, pWho); break;

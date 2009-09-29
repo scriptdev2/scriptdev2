@@ -125,7 +125,7 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public ScriptedAI
 
     void KilledUnit(Unit* victim)
     {
-        if (rand()%5)
+        if (urand(0, 4))
             return;
 
         DoScriptText(SAY_KILL, m_creature);
@@ -156,10 +156,8 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public ScriptedAI
         {
             DoCast(m_creature->getVictim(),SPELL_WRATHOFRAGNAROS);
 
-            if (rand()%2 == 0)
-            {
+            if (urand(0, 1))
                 DoScriptText(SAY_WRATH, m_creature);
-            }
 
             WrathOfRagnaros_Timer = 30000;
         }else WrathOfRagnaros_Timer -= diff;
@@ -169,10 +167,8 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public ScriptedAI
         {
             DoCast(m_creature,SPELL_HANDOFRAGNAROS);
 
-            if (rand()%2==0)
-            {
+            if (urand(0, 1))
                 DoScriptText(SAY_HAND, m_creature);
-            }
 
             HandOfRagnaros_Timer = 25000;
         }else HandOfRagnaros_Timer -= diff;

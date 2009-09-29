@@ -62,7 +62,7 @@ struct MANGOS_DLL_DECL boss_volazjAI : public ScriptedAI
 
     void KilledUnit(Unit* pVictim)
     {
-        switch(rand()%3)
+        switch(urand(0, 2))
         {
             case 0: DoScriptText(SAY_SLAY_1, m_creature); break;
             case 1: DoScriptText(SAY_SLAY_2, m_creature); break;
@@ -72,7 +72,7 @@ struct MANGOS_DLL_DECL boss_volazjAI : public ScriptedAI
 
     void JustDied(Unit* pKiller)
     {
-        DoScriptText(rand()%2 ? SAY_DEATH_1 : SAY_DEATH_2, m_creature);
+        DoScriptText(urand(0, 1) ? SAY_DEATH_1 : SAY_DEATH_2, m_creature);
     }
 
     void UpdateAI(const uint32 uiDiff)

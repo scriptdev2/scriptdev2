@@ -460,7 +460,7 @@ struct MANGOS_DLL_DECL boss_gathios_the_shattererAI : public boss_illidari_counc
         Unit* pUnit = m_creature;
         uint32 member = 0;                                  // He chooses Lady Malande most often
 
-        if (rand()%10 == 0)                                 // But there is a chance he picks someone else.
+        if (!urand(0, 9))                                   // But there is a chance he picks someone else.
             member = urand(1, 3);
 
         if (member != 2)                                    // No need to create another pointer to us using Unit::GetUnit
@@ -472,7 +472,7 @@ struct MANGOS_DLL_DECL boss_gathios_the_shattererAI : public boss_illidari_counc
     void CastAuraOnCouncil()
     {
         uint32 spellid = 0;
-        switch(rand()%2)
+        switch(urand(0, 1))
         {
             case 0: spellid = SPELL_DEVOTION_AURA;   break;
             case 1: spellid = SPELL_CHROMATIC_AURA;  break;
@@ -493,13 +493,8 @@ struct MANGOS_DLL_DECL boss_gathios_the_shattererAI : public boss_illidari_counc
         if (BlessingTimer < diff)
         {
             if (Unit* pUnit = SelectCouncilMember())
-            {
-                switch(rand()%2)
-                {
-                    case 0: DoCast(pUnit, SPELL_BLESS_SPELLWARD);  break;
-                    case 1: DoCast(pUnit, SPELL_BLESS_PROTECTION); break;
-                }
-            }
+                DoCast(pUnit, urand(0, 1) ? SPELL_BLESS_SPELLWARD : SPELL_BLESS_PROTECTION);
+
             BlessingTimer = 60000;
         }else BlessingTimer -= diff;
 
@@ -524,11 +519,7 @@ struct MANGOS_DLL_DECL boss_gathios_the_shattererAI : public boss_illidari_counc
 
         if (SealTimer < diff)
         {
-            switch(rand()%2)
-            {
-                case 0: DoCast(m_creature, SPELL_SEAL_OF_COMMAND);  break;
-                case 1: DoCast(m_creature, SPELL_SEAL_OF_BLOOD);    break;
-            }
+            DoCast(m_creature, urand(0, 1) ? SPELL_SEAL_OF_COMMAND : SPELL_SEAL_OF_BLOOD);
             SealTimer = 40000;
         }else SealTimer -= diff;
 

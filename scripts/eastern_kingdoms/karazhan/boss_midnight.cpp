@@ -123,7 +123,7 @@ struct MANGOS_DLL_DECL boss_midnightAI : public ScriptedAI
                         pAttumen->AI()->AttackStart(m_creature->getVictim());
                         SetMidnight(pAttumen, m_creature->GetGUID());
 
-                        switch(rand()%3)
+                        switch(urand(0, 2))
                         {
                             case 0: DoScriptText(SAY_APPEAR1, pAttumen); break;
                             case 1: DoScriptText(SAY_APPEAR2, pAttumen); break;
@@ -206,7 +206,7 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
 
     void KilledUnit(Unit* pVictim)
     {
-        DoScriptText((rand()%2) ? SAY_KILL1 : SAY_KILL2, m_creature);
+        DoScriptText(urand(0, 1) ? SAY_KILL1 : SAY_KILL2, m_creature);
     }
 
     void SpellHit(Unit* pSource, const SpellEntry* pSpell)
@@ -270,7 +270,7 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
 
         if (m_uiRandomYellTimer < uiDiff)
         {
-            DoScriptText((rand()%2) ? SAY_RANDOM1 : SAY_RANDOM2, m_creature);
+            DoScriptText(urand(0, 1) ? SAY_RANDOM1 : SAY_RANDOM2, m_creature);
             m_uiRandomYellTimer = 30000 + (rand()%31)*1000;
         }
         else

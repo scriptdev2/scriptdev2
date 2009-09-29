@@ -88,7 +88,7 @@ struct MANGOS_DLL_DECL npc_draenei_survivorAI : public ScriptedAI
             m_creature->IsWithinDistInMap(pWho, 25.0f))
         {
             //Random switch between 4 texts
-            switch (rand()%4)
+            switch(urand(0, 3))
             {
                 case 0: DoScriptText(SAY_HELP1, m_creature, pWho); break;
                 case 1: DoScriptText(SAY_HELP2, m_creature, pWho); break;
@@ -129,7 +129,7 @@ struct MANGOS_DLL_DECL npc_draenei_survivorAI : public ScriptedAI
                     if (pPlayer->GetTypeId() != TYPEID_PLAYER)
                         return;
 
-                    switch (rand()%4)
+                    switch(urand(0, 3))
                     {
                         case 0: DoScriptText(SAY_HEAL1, m_creature, pPlayer); break;
                         case 1: DoScriptText(SAY_HEAL2, m_creature, pPlayer); break;
@@ -297,7 +297,7 @@ struct MANGOS_DLL_DECL npc_injured_draeneiAI : public ScriptedAI
     {
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IN_COMBAT);
         m_creature->SetHealth(int(m_creature->GetMaxHealth()*.15));
-        switch (rand()%2)
+        switch(urand(0, 1))
         {
             case 0: m_creature->SetStandState(UNIT_STAND_STATE_SIT); break;
             case 1: m_creature->SetStandState(UNIT_STAND_STATE_SLEEP); break;

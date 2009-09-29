@@ -47,7 +47,7 @@ void guardAI::Aggro(Unit *who)
 {
     if (m_creature->GetEntry() == 15184)
     {
-        switch(rand()%3)
+        switch(urand(0, 2))
         {
             case 0: DoScriptText(SAY_GUARD_SIL_AGGRO1, m_creature, who); break;
             case 1: DoScriptText(SAY_GUARD_SIL_AGGRO1, m_creature, who); break;

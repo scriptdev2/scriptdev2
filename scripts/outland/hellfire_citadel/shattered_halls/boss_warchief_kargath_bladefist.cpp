@@ -95,11 +95,11 @@ struct MANGOS_DLL_DECL boss_warchief_kargath_bladefistAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-        switch (rand()%3)
+        switch(urand(0, 2))
         {
-            case 0:DoScriptText(SAY_AGGRO1, m_creature);break;
-            case 1:DoScriptText(SAY_AGGRO2, m_creature);break;
-            case 2:DoScriptText(SAY_AGGRO3, m_creature);break;
+            case 0: DoScriptText(SAY_AGGRO1, m_creature); break;
+            case 1: DoScriptText(SAY_AGGRO2, m_creature); break;
+            case 2: DoScriptText(SAY_AGGRO3, m_creature); break;
         }
     }
 
@@ -122,13 +122,7 @@ struct MANGOS_DLL_DECL boss_warchief_kargath_bladefistAI : public ScriptedAI
     void KilledUnit(Unit *victim)
     {
         if (victim->GetTypeId() == TYPEID_PLAYER)
-        {
-            switch(rand()%2)
-            {
-                case 0: DoScriptText(SAY_SLAY1, m_creature); break;
-                case 1: DoScriptText(SAY_SLAY2, m_creature); break;
-            }
-        }
+            DoScriptText(urand(0, 1) ? SAY_SLAY1 : SAY_SLAY2, m_creature);
     }
 
     void JustDied(Unit* Killer)
@@ -253,7 +247,7 @@ struct MANGOS_DLL_DECL boss_warchief_kargath_bladefistAI : public ScriptedAI
 
                 for(int i = 0; i < summoned; ++i)
                 {
-                    switch(rand()%3)
+                    switch(urand(0, 2))
                     {
                         case 0: m_creature->SummonCreature(MOB_HEARTHEN_GUARD,AddsEntrance[0],AddsEntrance[1], AddsEntrance[2], 0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,30000); break;
                         case 1: m_creature->SummonCreature(MOB_SHARPSHOOTER_GUARD,AddsEntrance[0],AddsEntrance[1], AddsEntrance[2], 0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,30000); break;
@@ -261,7 +255,7 @@ struct MANGOS_DLL_DECL boss_warchief_kargath_bladefistAI : public ScriptedAI
                     }
                 }
 
-                if (rand()%100 < 20)
+                if (!urand(0, 4))
                     ++summoned;
 
                 Summon_Assistant_Timer = 25000 + (rand()%10000) ;

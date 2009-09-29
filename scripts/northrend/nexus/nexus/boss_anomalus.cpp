@@ -71,7 +71,7 @@ struct MANGOS_DLL_DECL boss_anomalusAI : public ScriptedAI
 
     void KilledUnit(Unit* pVictim)
     {
-        if (rand()%2)
+        if (urand(0, 1))
             DoScriptText(SAY_KILL, m_creature);
     }
 

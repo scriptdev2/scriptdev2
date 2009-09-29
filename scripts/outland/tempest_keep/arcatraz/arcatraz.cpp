@@ -111,11 +111,7 @@ struct MANGOS_DLL_DECL npc_millhouse_manastormAI : public ScriptedAI
 
     void KilledUnit(Unit *victim)
     {
-        switch(rand()%2)
-        {
-            case 0: DoScriptText(SAY_KILL_1, m_creature); break;
-            case 1: DoScriptText(SAY_KILL_2, m_creature); break;
-        }
+        DoScriptText(urand(0, 1) ? SAY_KILL_1 : SAY_KILL_2, m_creature);
     }
 
     void JustDied(Unit *victim)
@@ -392,7 +388,7 @@ struct MANGOS_DLL_DECL npc_warden_mellicharAI : public ScriptedAI
                 switch(Phase)
                 {
                     case 2:
-                        switch(rand()%2)
+                        switch(urand(0, 1))
                         {
                             case 0: m_creature->SummonCreature(ENTRY_TRICKSTER,478.326,-148.505,42.56,3.19,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,600000); break;
                             case 1: m_creature->SummonCreature(ENTRY_PH_HUNTER,478.326,-148.505,42.56,3.19,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,600000); break;
@@ -405,14 +401,14 @@ struct MANGOS_DLL_DECL npc_warden_mellicharAI : public ScriptedAI
                         DoScriptText(YELL_RELEASE2B, m_creature);
                         break;
                     case 5:
-                        switch(rand()%2)
+                        switch(urand(0, 1))
                         {
                             case 0: m_creature->SummonCreature(ENTRY_AKKIRIS,420.179,-174.396,42.58,0.02,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,600000); break;
                             case 1: m_creature->SummonCreature(ENTRY_SULFURON,420.179,-174.396,42.58,0.02,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,600000); break;
                         }
                         break;
                     case 6:
-                        switch(rand()%2)
+                        switch(urand(0, 1))
                         {
                             case 0: m_creature->SummonCreature(ENTRY_TW_DRAK,471.795,-174.58,42.58,3.06,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,600000); break;
                             case 1: m_creature->SummonCreature(ENTRY_BL_DRAK,471.795,-174.58,42.58,3.06,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,600000); break;

@@ -57,14 +57,14 @@ struct MANGOS_DLL_DECL boss_general_angerforgeAI : public ScriptedAI
     void SummonAdds(Unit* victim)
     {
         Rand1 = rand()%15;
-        switch (rand()%2)
+        switch(urand(0, 1))
         {
             case 0: Rand1X = 0 - Rand1; break;
             case 1: Rand1X = 0 + Rand1; break;
         }
         Rand1 = 0;
         Rand1 = rand()%15;
-        switch (rand()%2)
+        switch(urand(0, 1))
         {
             case 0: Rand1Y = 0 - Rand1; break;
             case 1: Rand1Y = 0 + Rand1; break;
@@ -78,14 +78,14 @@ struct MANGOS_DLL_DECL boss_general_angerforgeAI : public ScriptedAI
     void SummonMedics(Unit* victim)
     {
         Rand2 = rand()%10;
-        switch (rand()%2)
+        switch(urand(0, 1))
         {
             case 0: Rand2X = 0 - Rand2; break;
             case 1: Rand2X = 0 + Rand2; break;
         }
         Rand2 = 0;
         Rand2 = rand()%10;
-        switch (rand()%2)
+        switch(urand(0, 1))
         {
             case 0: Rand2Y = 0 - Rand2; break;
             case 1: Rand2Y = 0 + Rand2; break;

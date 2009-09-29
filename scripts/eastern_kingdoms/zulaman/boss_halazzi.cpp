@@ -131,11 +131,7 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
         if (pVictim->GetTypeId() != TYPEID_PLAYER)
             return;
 
-        switch(rand()%2)
-        {
-            case 0: DoScriptText(SAY_KILL1, m_creature); break;
-            case 1: DoScriptText(SAY_KILL2, m_creature); break;
-        }
+        DoScriptText(urand(0, 1) ? SAY_KILL1 : SAY_KILL2, m_creature);
     }
 
     void JustDied(Unit* pKiller)
@@ -275,11 +271,7 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
 
             if (m_uiSaberLashTimer < uiDiff)
             {
-                switch(rand()%2)
-                {
-                    case 0: DoScriptText(SAY_SABERLASH1, m_creature); break;
-                    case 1: DoScriptText(SAY_SABERLASH2, m_creature); break;
-                }
+                DoScriptText(urand(0, 1) ? SAY_SABERLASH1 : SAY_SABERLASH2, m_creature);
 
                 DoCast(m_creature->getVictim(), SPELL_SABER_LASH);
                 m_uiSaberLashTimer = 20*IN_MILISECONDS;

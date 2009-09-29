@@ -280,7 +280,7 @@ struct MANGOS_DLL_DECL npc_chicken_cluckAI : public ScriptedAI
     {
         if (uiEmote == TEXTEMOTE_CHICKEN)
         {
-            if (rand()%30 == 1)
+            if (!urand(0, 29))
             {
                 if (pPlayer->GetQuestStatus(QUEST_CLUCK) == QUEST_STATUS_NONE)
                 {
@@ -542,7 +542,7 @@ struct MANGOS_DLL_DECL npc_injured_patientAI : public ScriptedAI
             //stand up
             m_creature->SetStandState(UNIT_STAND_STATE_STAND);
 
-            switch(rand()%3)
+            switch(urand(0, 2))
             {
                 case 0: DoScriptText(SAY_DOC1,m_creature); break;
                 case 1: DoScriptText(SAY_DOC2,m_creature); break;

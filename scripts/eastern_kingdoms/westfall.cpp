@@ -221,11 +221,7 @@ struct MANGOS_DLL_DECL npc_defias_traitorAI : public npc_escortAI
 
     void Aggro(Unit* who)
     {
-        switch(rand()%2)
-        {
-            case 0: DoScriptText(SAY_AGGRO_1, m_creature, who); break;
-            case 1: DoScriptText(SAY_AGGRO_2, m_creature, who); break;
-        }
+        DoScriptText(urand(0, 1) ? SAY_AGGRO_1 : SAY_AGGRO_2, m_creature);
     }
 
     void Reset() { }

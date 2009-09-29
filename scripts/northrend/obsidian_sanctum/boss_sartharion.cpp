@@ -247,7 +247,7 @@ struct MANGOS_DLL_DECL boss_sartharionAI : public ScriptedAI
 
     void KilledUnit(Unit* pVictim)
     {
-        switch(rand()%3)
+        switch(urand(0, 2))
         {
             case 0: DoScriptText(SAY_SARTHARION_SLAY_1, m_creature); break;
             case 1: DoScriptText(SAY_SARTHARION_SLAY_2, m_creature); break;
@@ -428,7 +428,7 @@ struct MANGOS_DLL_DECL boss_sartharionAI : public ScriptedAI
             {
                 DoCast(pTarget, SPELL_LAVA_STRIKE);
 
-                switch(rand()%15)
+                switch(urand(0, 15))
                 {
                     case 0: DoScriptText(SAY_SARTHARION_SPECIAL_1, m_creature); break;
                     case 1: DoScriptText(SAY_SARTHARION_SPECIAL_2, m_creature); break;
@@ -739,11 +739,7 @@ struct MANGOS_DLL_DECL mob_tenebronAI : public dummy_dragonAI
 
     void KilledUnit(Unit* pVictim)
     {
-        switch(rand()%2)
-        {
-            case 0: DoScriptText(SAY_TENEBRON_SLAY_1, m_creature); break;
-            case 1: DoScriptText(SAY_TENEBRON_SLAY_2, m_creature); break;
-        }
+        DoScriptText(urand(0, 1) ? SAY_TENEBRON_SLAY_1 : SAY_TENEBRON_SLAY_2, m_creature);
     }
 
     void UpdateAI(const uint32 uiDiff)
@@ -818,11 +814,7 @@ struct MANGOS_DLL_DECL mob_shadronAI : public dummy_dragonAI
 
     void KilledUnit(Unit* pVictim)
     {
-        switch(rand()%2)
-        {
-            case 0: DoScriptText(SAY_SHADRON_SLAY_1, m_creature); break;
-            case 1: DoScriptText(SAY_SHADRON_SLAY_2, m_creature); break;
-        }
+        DoScriptText(urand(0, 1) ? SAY_SHADRON_SLAY_1 : SAY_SHADRON_SLAY_2, m_creature);
     }
 
     void UpdateAI(const uint32 uiDiff)
@@ -891,11 +883,7 @@ struct MANGOS_DLL_DECL mob_vesperonAI : public dummy_dragonAI
 
     void KilledUnit(Unit* pVictim)
     {
-        switch(rand()%2)
-        {
-            case 0: DoScriptText(SAY_VESPERON_SLAY_1, m_creature); break;
-            case 1: DoScriptText(SAY_VESPERON_SLAY_2, m_creature); break;
-        }
+        DoScriptText(urand(0, 1) ? SAY_VESPERON_SLAY_1 : SAY_VESPERON_SLAY_2, m_creature);
     }
 
     void UpdateAI(const uint32 uiDiff)

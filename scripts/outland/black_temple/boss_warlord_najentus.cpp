@@ -85,11 +85,7 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
 
     void KilledUnit(Unit *victim)
     {
-        switch(rand()%2)
-        {
-            case 0: DoScriptText(SAY_SLAY1, m_creature); break;
-            case 1: DoScriptText(SAY_SLAY2, m_creature); break;
-        }
+        DoScriptText(urand(0, 1) ? SAY_SLAY1 : SAY_SLAY2, m_creature);
     }
 
     void JustDied(Unit *victim)
@@ -167,11 +163,7 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
 
         if (m_uiSpecialYellTimer < diff)
         {
-            switch(rand()%2)
-            {
-                case 0: DoScriptText(SAY_SPECIAL1, m_creature); break;
-                case 1: DoScriptText(SAY_SPECIAL2, m_creature); break;
-            }
+            DoScriptText(urand(0, 1) ? SAY_SPECIAL1 : SAY_SPECIAL2, m_creature);
             m_uiSpecialYellTimer = 25000 + (rand()%76)*1000;
         }else m_uiSpecialYellTimer -= diff;
 
@@ -187,11 +179,7 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
                 DoCast(target, SPELL_IMPALING_SPINE);
                 m_uiImpalingSpineTimer = 20000;
 
-                switch(rand()%2)
-                {
-                    case 0: DoScriptText(SAY_NEEDLE1, m_creature); break;
-                    case 1: DoScriptText(SAY_NEEDLE2, m_creature); break;
-                }
+                DoScriptText(urand(0, 1) ? SAY_NEEDLE1 : SAY_NEEDLE2, m_creature);
             }
         }else m_uiImpalingSpineTimer -= diff;
 

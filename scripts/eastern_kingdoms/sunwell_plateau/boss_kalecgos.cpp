@@ -165,11 +165,7 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
 
     void KilledUnit(Unit* pVictim)
     {
-        switch(rand()%2)
-        {
-            case 0: DoScriptText(SAY_EVIL_SLAY1, m_creature); break;
-            case 1: DoScriptText(SAY_EVIL_SLAY2, m_creature); break;
-        }
+        DoScriptText(urand(0, 1) ? SAY_EVIL_SLAY1 : SAY_EVIL_SLAY2, m_creature);
     }
 
     void SendToInnerVeil(Unit* pTarget)
@@ -294,7 +290,7 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
 
         if (m_uiArcaneBuffetTimer < diff)
         {
-            if (rand()%3 == 0)
+            if (!urand(0, 2))
                 DoScriptText(SAY_EVIL_SPELL1, m_creature);
 
             DoCast(m_creature->getVictim(), SPELL_ARCANE_BUFFET);
@@ -305,7 +301,7 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
 
         if (m_uiFrostBreathTimer < diff)
         {
-            if (!(rand()%2))
+            if (!urand(0, 1))
                 DoScriptText(SAY_EVIL_SPELL2, m_creature);
 
             DoCast(m_creature->getVictim(), SPELL_FROST_BREATH);
@@ -406,11 +402,7 @@ struct MANGOS_DLL_DECL boss_sathrovarrAI : public ScriptedAI
 
     void KilledUnit(Unit* victim)
     {
-        switch(rand()%2)
-        {
-            case 0: DoScriptText(SAY_SATH_SLAY1, m_creature); break;
-            case 1: DoScriptText(SAY_SATH_SLAY2, m_creature); break;
-        }
+        DoScriptText(urand(0, 1) ? SAY_SATH_SLAY1 : SAY_SATH_SLAY2, m_creature);
     }
 
     void UpdateAI(const uint32 diff)
@@ -429,7 +421,7 @@ struct MANGOS_DLL_DECL boss_sathrovarrAI : public ScriptedAI
 
         if (CorruptingStrikeTimer < diff)
         {
-            if (!(rand()%2))
+            if (!urand(0, 1))
                 DoScriptText(SAY_SATH_SPELL2, m_creature);
 
             DoCast(m_creature->getVictim(), SPELL_CORRUPTING_STRIKE);
@@ -446,7 +438,7 @@ struct MANGOS_DLL_DECL boss_sathrovarrAI : public ScriptedAI
 
         if (ShadowBoltVolleyTimer < diff)
         {
-            if (!(rand()%2))
+            if (!urand(0, 1))
                 DoScriptText(SAY_SATH_SPELL1, m_creature);
 
             DoCast(m_creature->getVictim(), SPELL_SHADOW_BOLT_VOLLEY);

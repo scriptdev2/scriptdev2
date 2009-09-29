@@ -234,7 +234,7 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
 
     void KilledUnit(Unit* pVictim)
     {
-        DoScriptText((rand()%2) ? SAY_SLAY1 : SAY_SLAY2, m_creature);
+        DoScriptText(urand(0, 1) ? SAY_SLAY1 : SAY_SLAY2, m_creature);
     }
 
     void JustDied(Unit* pKiller)
@@ -303,7 +303,7 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
                     ((mob_demon_chainAI*)pChains->AI())->m_uiSacrificeGUID = pTarget->GetGUID();
                     pChains->CastSpell(pChains, SPELL_DEMON_CHAINS, true);
 
-                    DoScriptText((rand()%2) ? SAY_SACRIFICE1 : SAY_SACRIFICE2, m_creature);
+                    DoScriptText(urand(0, 1) ? SAY_SACRIFICE1 : SAY_SACRIFICE2, m_creature);
 
                     m_uiSacrifice_Timer = 30000;
                 }
@@ -333,7 +333,7 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
                 }
                 m_bSummonedPortals = true;
 
-                DoScriptText((rand()%2) ? SAY_SUMMON1 : SAY_SUMMON2, m_creature);
+                DoScriptText(urand(0, 1) ? SAY_SUMMON1 : SAY_SUMMON2, m_creature);
             }
             uint32 uiRnd = rand()%2;
             Creature* pImp = m_creature->SummonCreature(NPC_FIENDISHIMP, afPortalLocations[uiRnd][0], afPortalLocations[uiRnd][1], PORTAL_Z, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 15000);

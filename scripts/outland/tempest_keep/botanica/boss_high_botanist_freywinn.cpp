@@ -77,7 +77,7 @@ struct MANGOS_DLL_DECL boss_high_botanist_freywinnAI : public ScriptedAI
 
     void DoSummonSeedling()
     {
-        switch(rand()%4)
+        switch(urand(0, 3))
         {
             case 0: DoCast(m_creature,SPELL_PLANT_WHITE); break;
             case 1: DoCast(m_creature,SPELL_PLANT_GREEN); break;
@@ -88,11 +88,7 @@ struct MANGOS_DLL_DECL boss_high_botanist_freywinnAI : public ScriptedAI
 
     void KilledUnit(Unit* victim)
     {
-        switch(rand()%2)
-        {
-            case 0: DoScriptText(SAY_KILL_1, m_creature); break;
-            case 1: DoScriptText(SAY_KILL_2, m_creature); break;
-        }
+        DoScriptText(urand(0, 1) ? SAY_KILL_1 : SAY_KILL_2, m_creature);
     }
 
     void JustDied(Unit* Killer)
@@ -107,11 +103,7 @@ struct MANGOS_DLL_DECL boss_high_botanist_freywinnAI : public ScriptedAI
 
         if (TreeForm_Timer < diff)
         {
-            switch(rand()%2)
-            {
-                case 0: DoScriptText(SAY_TREE_1, m_creature); break;
-                case 1: DoScriptText(SAY_TREE_2, m_creature); break;
-            }
+            DoScriptText(urand(0, 1) ? SAY_TREE_1 : SAY_TREE_2, m_creature);
 
             if (m_creature->IsNonMeleeSpellCasted(false))
                 m_creature->InterruptNonMeleeSpells(true);

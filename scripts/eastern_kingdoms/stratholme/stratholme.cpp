@@ -83,7 +83,7 @@ struct MANGOS_DLL_DECL mob_freed_soulAI : public ScriptedAI
 
     void Reset()
     {
-        switch (rand()%4)
+        switch(urand(0, 3))
         {
             case 0: DoScriptText(SAY_ZAPPED0, m_creature); break;
             case 1: DoScriptText(SAY_ZAPPED1, m_creature); break;

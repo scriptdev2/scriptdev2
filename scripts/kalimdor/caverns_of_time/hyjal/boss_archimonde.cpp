@@ -250,7 +250,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
 
     void KilledUnit(Unit *victim)
     {
-        switch(rand()%2)
+        switch(urand(0, 2))
         {
             case 0: DoScriptText(SAY_SLAY1, m_creature); break;
             case 1: DoScriptText(SAY_SLAY2, m_creature); break;
@@ -379,7 +379,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         uint32 chargeSpell = 0;
         uint32 unleashSpell = 0;
 
-        switch(rand()%3)
+        switch(urand(0, 2))
         {
             case 0:
                 chargeSpell = SPELL_SOUL_CHARGE_RED;
@@ -540,7 +540,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
 
         if (AirBurstTimer < diff)
         {
-            if (rand()%2 == 0)
+            if (!urand(0, 1))
                 DoScriptText(SAY_AIR_BURST1, m_creature);
             else
                 DoScriptText(SAY_AIR_BURST2, m_creature);
@@ -557,7 +557,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
 
         if (DoomfireTimer < diff)
         {
-            if (rand()%2 == 0)
+            if (!urand(0, 1))
                 DoScriptText(SAY_DOOMFIRE1, m_creature);
             else
                 DoScriptText(SAY_DOOMFIRE2, m_creature);

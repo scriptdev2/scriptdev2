@@ -118,7 +118,7 @@ struct MANGOS_DLL_DECL boss_darkmaster_gandlingAI : public ScriptedAI
                     if (m_creature->getThreatManager().getThreat(target))
                         m_creature->getThreatManager().modifyThreatPercent(target, -100);
 
-                    switch(rand()%6)
+                    switch(urand(0, 5))
                     {
                         case 0:
                             DoTeleportPlayer(target, 250.0696,0.3921,84.8408,3.149);

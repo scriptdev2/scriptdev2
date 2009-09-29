@@ -147,7 +147,7 @@ struct MANGOS_DLL_DECL boss_ionarAI : public ScriptedAI
 
     void KilledUnit(Unit *victim)
     {
-        switch(rand()%3)
+        switch(urand(0, 2))
         {
             case 0: DoScriptText(SAY_SLAY_1, m_creature); break;
             case 1: DoScriptText(SAY_SLAY_2, m_creature); break;
@@ -288,11 +288,7 @@ struct MANGOS_DLL_DECL boss_ionarAI : public ScriptedAI
         {
             ++m_uiHealthAmountModifier;
 
-            switch(rand()%2)
-            {
-                case 0: DoScriptText(SAY_SPLIT_1, m_creature); break;
-                case 1: DoScriptText(SAY_SPLIT_2, m_creature); break;
-            }
+            DoScriptText(urand(0, 1) ? SAY_SPLIT_1 : SAY_SPLIT_2, m_creature);
 
             if (m_creature->IsNonMeleeSpellCasted(false))
                 m_creature->InterruptNonMeleeSpells(false);

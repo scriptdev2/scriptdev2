@@ -132,7 +132,7 @@ struct MANGOS_DLL_DECL npc_manaforge_control_consoleAI : public ScriptedAI
         switch(pCreature->GetEntry())
         {
             case ENTRY_BNAAR_C_CONSOLE:
-                if (rand()%2)
+                if (urand(0, 1))
                 {
                     add = m_creature->SummonCreature(ENTRY_SUNFURY_TECH,2933.68,4162.55,164.00,1.60,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 120000);
                     if (add) add->GetMotionMaster()->MovePoint(0,2927.36,4212.97,164.00);
@@ -159,7 +159,7 @@ struct MANGOS_DLL_DECL npc_manaforge_control_consoleAI : public ScriptedAI
                 Wave_Timer = 15000;
                 break;
             case ENTRY_ARA_C_CONSOLE:
-                if (rand()%2)
+                if (urand(0, 1))
                 {
                     add = m_creature->SummonCreature(ENTRY_ARA_TECH,4035.11,4038.97,194.27,2.57,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 120000);
                     if (add) add->GetMotionMaster()->MovePoint(0,4003.42,4040.19,193.49);

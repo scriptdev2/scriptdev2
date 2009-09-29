@@ -594,7 +594,7 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
 
     void KilledUnit(Unit *victim)
     {
-        switch(rand()%3)
+        switch(urand(0, 2))
         {
             case 0: DoScriptText(SUFF_SAY_SLAY1, m_creature); break;
             case 1: DoScriptText(SUFF_SAY_SLAY2, m_creature); break;
@@ -730,7 +730,7 @@ struct MANGOS_DLL_DECL boss_essence_of_desireAI : public ScriptedAI
 
     void KilledUnit(Unit *victim)
     {
-        switch(rand()%3)
+        switch(urand(0, 2))
         {
             case 0: DoScriptText(DESI_SAY_SLAY1, m_creature); break;
             case 1: DoScriptText(DESI_SAY_SLAY2, m_creature); break;
@@ -789,7 +789,7 @@ struct MANGOS_DLL_DECL boss_essence_of_desireAI : public ScriptedAI
             DoCast(m_creature->getVictim(), SPELL_SOUL_SHOCK);
             SoulShockTimer = 40000;
 
-            if (rand()%2 == 0)
+            if (urand(0, 1))
                 DoScriptText(DESI_SAY_SPEC, m_creature);
 
         }else SoulShockTimer -= diff;
@@ -857,11 +857,7 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
 
     void KilledUnit(Unit *victim)
     {
-        switch(rand()%2)
-        {
-            case 0: DoScriptText(ANGER_SAY_SLAY1, m_creature); break;
-            case 1: DoScriptText(ANGER_SAY_SLAY2, m_creature); break;
-        }
+        DoScriptText(urand(0, 1) ? ANGER_SAY_SLAY1 : ANGER_SAY_SLAY2, m_creature);
     }
 
     void UpdateAI(const uint32 diff)

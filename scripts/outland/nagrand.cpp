@@ -145,15 +145,7 @@ struct MANGOS_DLL_DECL mob_lumpAI : public ScriptedAI
         if (!m_creature->IsStandState())
             m_creature->SetStandState(UNIT_STAND_STATE_STAND);
 
-        switch(rand()%2)
-        {
-            case 0:
-                DoScriptText(SAY_LUMP_0, m_creature, who);
-                break;
-            case 1:
-                DoScriptText(SAY_LUMP_1, m_creature, who);
-                break;
-        }
+        DoScriptText(urand(0, 1) ? SAY_LUMP_0 : SAY_LUMP_1, m_creature, who);
     }
 
     void UpdateAI(const uint32 diff)
@@ -580,7 +572,7 @@ struct MANGOS_DLL_DECL npc_maghar_captiveAI : public npc_escortAI
     {
         if (pSpell->Id == SPELL_CHAIN_LIGHTNING)
         {
-            if (rand()%10)
+            if (urand(0, 9))
                 return;
 
             DoScriptText(SAY_MAG_LIGHTNING, m_creature);

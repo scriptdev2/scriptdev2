@@ -65,20 +65,12 @@ struct MANGOS_DLL_DECL boss_epoch_hunterAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-        switch(rand()%2)
-        {
-            case 0: DoScriptText(SAY_AGGRO1, m_creature); break;
-            case 1: DoScriptText(SAY_AGGRO2, m_creature); break;
-        }
+        DoScriptText(urand(0, 1) ? SAY_AGGRO1 : SAY_AGGRO2, m_creature);
     }
 
     void KilledUnit(Unit *victim)
     {
-        switch(rand()%2)
-        {
-            case 0: DoScriptText(SAY_SLAY1, m_creature); break;
-            case 1: DoScriptText(SAY_SLAY2, m_creature); break;
-        }
+        DoScriptText(urand(0, 1) ? SAY_SLAY1 : SAY_SLAY2, m_creature);
     }
 
     void JustDied(Unit *victim)
@@ -103,11 +95,7 @@ struct MANGOS_DLL_DECL boss_epoch_hunterAI : public ScriptedAI
 
             DoCast(m_creature->getVictim(),SPELL_SAND_BREATH);
 
-            switch(rand()%2)
-            {
-                case 0: DoScriptText(SAY_BREATH1, m_creature); break;
-                case 1: DoScriptText(SAY_BREATH2, m_creature); break;
-            }
+            DoScriptText(urand(0, 1) ? SAY_BREATH1 : SAY_BREATH2, m_creature);
 
             SandBreath_Timer = 10000 + rand()%10000;
         }else SandBreath_Timer -= diff;

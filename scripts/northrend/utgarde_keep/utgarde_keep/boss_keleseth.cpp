@@ -160,7 +160,7 @@ struct MANGOS_DLL_DECL mob_vrykul_skeletonAI : public ScriptedAI
         {
             if (m_bIsHeroicMode)
             {
-                if (rand()%4)
+                if (urand(0, 3))
                     DoCast(m_creature->getVictim(), SPELL_DECREPIFY_H);
                 else if (m_pKeleseth && m_pKeleseth->isAlive())
                     DoCast(m_pKeleseth, SPELL_BONE_ARMOR);

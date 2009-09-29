@@ -1059,11 +1059,7 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
         if (victim == m_creature)
             return;
 
-        switch(rand()%2)
-        {
-            case 0: DoScriptText(SAY_KILL1, m_creature, victim); break;
-            case 1: DoScriptText(SAY_KILL2, m_creature, victim); break;
-        }
+        DoScriptText(urand(0, 1) ? SAY_KILL1 : SAY_KILL2, m_creature);
     }
 
     void DamageTaken(Unit *done_by, uint32 &damage)

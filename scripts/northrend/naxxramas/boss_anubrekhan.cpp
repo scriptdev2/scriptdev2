@@ -80,7 +80,7 @@ struct MANGOS_DLL_DECL boss_anubrekhanAI : public ScriptedAI
         if (pVictim->GetTypeId() == TYPEID_PLAYER)
             pVictim->CastSpell(pVictim, SPELL_SELF_SPAWN_5, true);
 
-        if (rand()%5)
+        if (urand(0, 4))
             return;
 
         DoScriptText(SAY_SLAY, m_creature);
@@ -88,7 +88,7 @@ struct MANGOS_DLL_DECL boss_anubrekhanAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-        switch(rand()%3)
+        switch(urand(0, 2))
         {
             case 0: DoScriptText(SAY_AGGRO1, m_creature); break;
             case 1: DoScriptText(SAY_AGGRO2, m_creature); break;
@@ -100,7 +100,7 @@ struct MANGOS_DLL_DECL boss_anubrekhanAI : public ScriptedAI
     {
         if (!HasTaunted && m_creature->IsWithinDistInMap(who, 60.0f))
         {
-            switch(rand()%5)
+            switch(urand(0, 4))
             {
                 case 0: DoScriptText(SAY_GREET, m_creature); break;
                 case 1: DoScriptText(SAY_TAUNT1, m_creature); break;

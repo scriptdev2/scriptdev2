@@ -66,16 +66,14 @@ struct MANGOS_DLL_DECL boss_baroness_anastariAI : public ScriptedAI
         //BansheeWail
         if (BansheeWail_Timer < diff)
         {
-            if (rand()%100 < 95)
-                DoCast(m_creature->getVictim(),SPELL_BANSHEEWAIL);
-
+            DoCast(m_creature->getVictim(),SPELL_BANSHEEWAIL);
             BansheeWail_Timer = 4000;
         }else BansheeWail_Timer -= diff;
 
         //BansheeCurse
         if (BansheeCurse_Timer < diff)
         {
-            if (rand()%100 < 75)
+            if (!urand(0, 3))
                 DoCast(m_creature->getVictim(),SPELL_BANSHEECURSE);
 
             BansheeCurse_Timer = 18000;
@@ -84,9 +82,7 @@ struct MANGOS_DLL_DECL boss_baroness_anastariAI : public ScriptedAI
         //Silence
         if (Silence_Timer < diff)
         {
-            if (rand()%100 < 80)
-                DoCast(m_creature->getVictim(),SPELL_SILENCE);
-
+            DoCast(m_creature->getVictim(),SPELL_SILENCE);
             Silence_Timer = 13000;
         }else Silence_Timer -= diff;
 

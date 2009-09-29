@@ -145,7 +145,7 @@ struct MANGOS_DLL_DECL boss_cannon_master_willeyAI : public ScriptedAI
         if (SummonRifleman_Timer < diff)
         {
             //Cast
-            switch (rand()%9)
+            switch(urand(0, 8))
             {
             case 0:
                 m_creature->SummonCreature(11054,ADD_1X,ADD_1Y,ADD_1Z,ADD_1O,TEMPSUMMON_TIMED_DESPAWN,240000);

@@ -125,14 +125,14 @@ struct MANGOS_DLL_DECL npc_giltharesAI : public npc_escortAI
     void Aggro(Unit* pWho)
     {
         //not always use
-        if (rand()%4)
+        if (urand(0, 3))
             return;
 
         //only aggro text if not player and only in this area
         if (pWho->GetTypeId() != TYPEID_PLAYER && m_creature->GetAreaId() == AREA_MERCHANT_COAST)
         {
             //appears to be pretty much random (possible only if escorter not in combat with pWho yet?)
-            switch(rand()%4)
+            switch(urand(0, 3))
             {
                 case 0: DoScriptText(SAY_GIL_AGGRO_1, m_creature, pWho); break;
                 case 1: DoScriptText(SAY_GIL_AGGRO_2, m_creature, pWho); break;

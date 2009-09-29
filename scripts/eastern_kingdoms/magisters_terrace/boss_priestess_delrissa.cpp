@@ -252,7 +252,7 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
         {
             Unit* target = m_creature;
 
-            if (rand()%2 == 1)
+            if (urand(0, 1))
             {
                 if (Unit* pAdd = Unit::GetUnit(*m_creature, m_auiLackeyGUID[rand()%MAX_ACTIVE_LACKEY]))
                 {
@@ -269,7 +269,7 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
         {
             Unit* target = m_creature;
 
-            if (rand()%2 == 1)
+            if (urand(0, 1))
             {
                 if (Unit* pAdd = Unit::GetUnit(*m_creature, m_auiLackeyGUID[rand()%MAX_ACTIVE_LACKEY]))
                 {
@@ -287,13 +287,13 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
             Unit* target = NULL;
             bool friendly = false;
 
-            if (rand()%2 == 1)
+            if (urand(0, 1))
                 target = SelectUnit(SELECT_TARGET_RANDOM, 0);
             else
             {
                 friendly = true;
 
-                if (rand()%2 == 1)
+                if (urand(0, 1))
                     target = m_creature;
                 else
                 {
@@ -1106,7 +1106,7 @@ struct MANGOS_DLL_DECL boss_apokoAI : public boss_priestess_lackey_commonAI
 
         if (Totem_Timer < diff)
         {
-            switch(rand()%3)
+            switch(urand(0, 2))
             {
                 case 0: DoCast(m_creature, SPELL_WINDFURY_TOTEM); break;
                 case 1: DoCast(m_creature, SPELL_FIRE_NOVA_TOTEM); break;

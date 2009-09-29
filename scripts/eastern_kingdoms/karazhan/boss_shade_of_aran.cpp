@@ -156,7 +156,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
 
     void KilledUnit(Unit* pVictim)
     {
-        DoScriptText((rand()%2) ? SAY_KILL1 : SAY_KILL2, m_creature);
+        DoScriptText(urand(0, 1) ? SAY_KILL1 : SAY_KILL2, m_creature);
     }
 
     void JustDied(Unit* pVictim)
@@ -174,7 +174,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
 
     void Aggro(Unit* pWho)
     {
-        switch(rand()%3)
+        switch(urand(0, 2))
         {
             case 0: DoScriptText(SAY_AGGRO1, m_creature); break;
             case 1: DoScriptText(SAY_AGGRO2, m_creature); break;
@@ -346,7 +346,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
 
         if (m_uiSecondarySpell_Timer < uiDiff)
         {
-            switch (rand()%2)
+            switch(urand(0, 1))
             {
                 case 0:
                     DoCast(m_creature, SPELL_AOE_CS);
@@ -386,7 +386,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
             switch (m_uiLastSuperSpell)
             {
                 case SUPER_AE:
-                    DoScriptText((rand()%2) ? SAY_EXPLOSION1 : SAY_EXPLOSION2, m_creature);
+                    DoScriptText(urand(0, 1) ? SAY_EXPLOSION1 : SAY_EXPLOSION2, m_creature);
 
                     m_creature->CastSpell(m_creature, SPELL_BLINK_CENTER, true);
                     m_creature->CastSpell(m_creature, SPELL_PLAYERPULL, true);
@@ -395,7 +395,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
                     break;
 
                 case SUPER_FLAME:
-                    DoScriptText((rand()%2) ? SAY_FLAMEWREATH1 : SAY_FLAMEWREATH2, m_creature);
+                    DoScriptText(urand(0, 1) ? SAY_FLAMEWREATH1 : SAY_FLAMEWREATH2, m_creature);
 
                     m_uiFlameWreath_Timer = 20000;
                     m_uiFlameWreathCheck_Timer = 500;
@@ -406,7 +406,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
                     break;
 
                 case SUPER_BLIZZARD:
-                    DoScriptText((rand()%2) ? SAY_BLIZZARD1 : SAY_BLIZZARD2, m_creature);
+                    DoScriptText(urand(0, 1) ? SAY_BLIZZARD1 : SAY_BLIZZARD2, m_creature);
 
                     if (Creature* pSpawn = m_creature->SummonCreature(NPC_ARAN_BLIZZARD, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN, 25000))
                     {

@@ -75,11 +75,7 @@ struct MANGOS_DLL_DECL boss_doomlordkazzakAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-        switch(rand()%2)
-        {
-            case 0: DoScriptText(SAY_AGGRO1, m_creature); break;
-            case 1: DoScriptText(SAY_AGGRO2, m_creature); break;
-        }
+        DoScriptText(urand(0, 1) ? SAY_AGGRO1 : SAY_AGGRO2, m_creature);
     }
 
     void KilledUnit(Unit* victim)
@@ -90,7 +86,7 @@ struct MANGOS_DLL_DECL boss_doomlordkazzakAI : public ScriptedAI
 
         DoCast(m_creature,SPELL_CAPTURESOUL);
 
-        switch(rand()%3)
+        switch(urand(0, 2))
         {
             case 0: DoScriptText(SAY_KILL1, m_creature); break;
             case 1: DoScriptText(SAY_KILL2, m_creature); break;

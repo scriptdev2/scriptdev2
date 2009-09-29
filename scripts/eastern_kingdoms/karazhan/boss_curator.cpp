@@ -69,7 +69,7 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
 
     void KilledUnit(Unit* pVictim)
     {
-        DoScriptText((rand()%2) ? SAY_KILL1 : SAY_KILL2, m_creature);
+        DoScriptText(urand(0, 1) ? SAY_KILL1 : SAY_KILL2, m_creature);
     }
 
     void JustDied(Unit* pKiller)
@@ -162,7 +162,7 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
                     }
                     else
                     {
-                        switch(rand()%4)
+                        switch(urand(0, 3))
                         {
                             case 0: DoScriptText(SAY_SUMMON1, m_creature); break;
                             case 1: DoScriptText(SAY_SUMMON2, m_creature); break;

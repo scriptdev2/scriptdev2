@@ -187,7 +187,7 @@ struct MANGOS_DLL_DECL npc_deathstalker_erlandAI : public npc_escortAI
 
     void Aggro(Unit* who)
     {
-        switch(rand()%3)
+        switch(urand(0, 2))
         {
             case 0: DoScriptText(SAY_AGGRO_1, m_creature, who); break;
             case 1: DoScriptText(SAY_AGGRO_2, m_creature, who); break;

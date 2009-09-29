@@ -239,7 +239,7 @@ void hyjalAI::JustSummoned(Creature* pSummoned)
 void hyjalAI::SummonNextWave()
 {
     // 1 in 4 chance we give a rally yell. Not sure if the chance is offilike.
-    if (rand()%4 == 0)
+    if (!urand(0, 3))
         DoTalk(RALLY);
 
     if (!m_pInstance)

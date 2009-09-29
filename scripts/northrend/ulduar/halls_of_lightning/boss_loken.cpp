@@ -108,7 +108,7 @@ struct MANGOS_DLL_DECL boss_lokenAI : public ScriptedAI
 
     void KilledUnit(Unit* pVictim)
     {
-        switch(rand()%3)
+        switch(urand(0, 2))
         {
             case 0: DoScriptText(SAY_SLAY_1, m_creature);break;
             case 1: DoScriptText(SAY_SLAY_2, m_creature);break;
@@ -179,7 +179,7 @@ struct MANGOS_DLL_DECL boss_lokenAI : public ScriptedAI
 
         if (m_uiLightningNova_Timer < uiDiff)
         {
-            switch(rand()%3)
+            switch(urand(0, 2))
             {
                 case 0: DoScriptText(SAY_NOVA_1, m_creature);break;
                 case 1: DoScriptText(SAY_NOVA_2, m_creature);break;

@@ -58,7 +58,7 @@ struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
 
     void KilledUnit(Unit* pVictim)
     {
-        switch(rand()%6)                                    // 50% chance to say something out of 3 texts
+        switch(urand(0, 5))                                    // 50% chance to say something out of 3 texts
         {
             case 0: DoScriptText(SAY_SLAY1, m_creature); break;
             case 1: DoScriptText(SAY_SLAY2, m_creature); break;
@@ -92,12 +92,8 @@ struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
         if (m_uiRepentance_Timer < uiDiff)
         {
             DoCast(m_creature->getVictim(),SPELL_REPENTANCE);
+            DoScriptText(urand(0, 1) ? SAY_REPENTANCE1 : SAY_REPENTANCE2, m_creature);
 
-            switch(rand()%2)
-            {
-                case 0: DoScriptText(SAY_REPENTANCE1, m_creature); break;
-                case 1: DoScriptText(SAY_REPENTANCE2, m_creature); break;
-            }
             m_uiRepentance_Timer = 25000 + rand()%10000;    //A little randomness on that spell
         }
         else

@@ -395,7 +395,7 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
 
         if (HasEscortState(STATE_ESCORT_ESCORTING))
         {
-            switch(rand()%3)
+            switch(urand(0, 2))
             {
                 case 0: DoScriptText(SAY_TH_LEAVE_COMBAT1, m_creature); break;
                 case 1: DoScriptText(SAY_TH_LEAVE_COMBAT2, m_creature); break;
@@ -424,7 +424,7 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
 
     void Aggro(Unit* who)
     {
-        switch(rand()%4)
+        switch(urand(0, 3))
         {
             case 0: DoScriptText(SAY_TH_RANDOM_AGGRO1, m_creature); break;
             case 1: DoScriptText(SAY_TH_RANDOM_AGGRO2, m_creature); break;
@@ -458,7 +458,7 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
 
     void KilledUnit(Unit *victim)
     {
-        switch(rand()%3)
+        switch(urand(0, 2))
         {
             case 0: DoScriptText(SAY_TH_RANDOM_KILL1, m_creature); break;
             case 1: DoScriptText(SAY_TH_RANDOM_KILL2, m_creature); break;
@@ -475,11 +475,7 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
         if (slayer == m_creature)
             return;
 
-        switch(rand()%2)
-        {
-            case 0: DoScriptText(SAY_TH_RANDOM_DIE1, m_creature); break;
-            case 1: DoScriptText(SAY_TH_RANDOM_DIE2, m_creature); break;
-        }
+        DoScriptText(urand(0, 1) ? SAY_TH_RANDOM_DIE1 : SAY_TH_RANDOM_DIE2, m_creature);
     }
 
     void UpdateEscortAI(const uint32 diff)
@@ -491,11 +487,7 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
 
         if (!LowHp && ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 20))
         {
-            switch(rand()%2)
-            {
-                case 0: DoScriptText(SAY_TH_RANDOM_LOW_HP1, m_creature); break;
-                case 1: DoScriptText(SAY_TH_RANDOM_LOW_HP2, m_creature); break;
-            }
+            DoScriptText(urand(0, 1) ? SAY_TH_RANDOM_LOW_HP1 : SAY_TH_RANDOM_LOW_HP2, m_creature);
             LowHp = true;
         }
 

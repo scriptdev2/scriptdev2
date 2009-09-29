@@ -121,7 +121,7 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
 
     void KilledUnit(Unit* victim)
     {
-        switch (rand()%3)
+        switch(urand(0, 2))
         {
             case 0: DoScriptText(SAY_KILL_1, m_creature); break;
             case 1: DoScriptText(SAY_KILL_2, m_creature); break;
@@ -305,11 +305,7 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
             {
                 if (Wait_Timer < diff)
                 {
-                    switch(rand()%2)
-                    {
-                        case 0: DoScriptText(SAY_SPECIAL_1, m_creature); break;
-                        case 1: DoScriptText(SAY_SPECIAL_2, m_creature); break;
-                    }
+                    DoScriptText(urand(0, 1) ? SAY_SPECIAL_1 : SAY_SPECIAL_2, m_creature);
 
                     if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
                         target->CastSpell(target, SPELL_GARROTE, true);
@@ -584,7 +580,7 @@ struct MANGOS_DLL_DECL boss_lady_catriona_von_indiAI : public boss_moroes_guestA
 
         if (DispelMagic_Timer < diff)
         {
-            if (rand()%2)
+            if (urand(0, 1))
             {
                 Unit* target = SelectTarget();
                 DoCast(target, SPELL_DISPELMAGIC);

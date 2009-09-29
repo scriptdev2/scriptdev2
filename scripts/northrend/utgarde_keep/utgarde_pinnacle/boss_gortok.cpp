@@ -58,7 +58,7 @@ struct MANGOS_DLL_DECL boss_gortokAI : public ScriptedAI
 
     void KilledUnit(Unit* pVictim)
     {
-        DoScriptText(rand()%2 ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
+        DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
     }
 
     void JustDied(Unit* pKiller)

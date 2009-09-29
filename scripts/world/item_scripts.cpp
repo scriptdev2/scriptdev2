@@ -67,7 +67,7 @@ bool ItemUse_item_draenei_fishing_net(Player* pPlayer, Item* pItem, const SpellC
     //{
     if (pPlayer->GetQuestStatus(9452) == QUEST_STATUS_INCOMPLETE)
     {
-        if (rand()%100 < 35)
+        if (!urand(0, 2))
         {
             Creature *Murloc = pPlayer->SummonCreature(17102,pPlayer->GetPositionX() ,pPlayer->GetPositionY()+20, pPlayer->GetPositionZ(), 0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,10000);
             if (Murloc)

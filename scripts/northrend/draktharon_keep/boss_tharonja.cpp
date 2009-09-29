@@ -62,7 +62,7 @@ struct MANGOS_DLL_DECL boss_tharonjaAI : public ScriptedAI
 
     void KilledUnit(Unit* pVictim)
     {
-        DoScriptText(rand()%2 ? SAY_KILL_1 : SAY_KILL_2, m_creature);
+        DoScriptText(urand(0, 1) ? SAY_KILL_1 : SAY_KILL_2, m_creature);
     }
 
     void JustDied(Unit* pKiller)

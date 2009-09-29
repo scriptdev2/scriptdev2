@@ -79,7 +79,7 @@ struct MANGOS_DLL_DECL npc_ame01AI : public npc_escortAI
             if (pPlayer->getVictim() && pPlayer->getVictim() == pWho)
                 return;
 
-            switch(rand()%3)
+            switch(urand(0, 2))
             {
                 case 0: DoScriptText(SAY_AME_AGGRO1, m_creature); break;
                 case 1: DoScriptText(SAY_AME_AGGRO2, m_creature); break;
@@ -196,7 +196,7 @@ struct MANGOS_DLL_DECL npc_ringoAI : public FollowerAI
         {
             SetFollowPaused(true);
 
-            switch(rand()%4)
+            switch(urand(0, 3))
             {
                 case 0: DoScriptText(SAY_FAINT_1, m_creature); break;
                 case 1: DoScriptText(SAY_FAINT_2, m_creature); break;
@@ -216,7 +216,7 @@ struct MANGOS_DLL_DECL npc_ringoAI : public FollowerAI
         if (HasFollowState(STATE_FOLLOW_POSTEVENT))
             return;
 
-        switch(rand()%4)
+        switch(urand(0, 3))
         {
             case 0: DoScriptText(SAY_WAKE_1, m_creature); break;
             case 1: DoScriptText(SAY_WAKE_2, m_creature); break;

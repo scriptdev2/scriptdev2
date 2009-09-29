@@ -59,14 +59,14 @@ struct MANGOS_DLL_DECL boss_fankrissAI : public ScriptedAI
     void SummonSpawn(Unit* victim)
     {
         Rand = 10 + (rand()%10);
-        switch (rand()%2)
+        switch(urand(0, 1))
         {
             case 0: RandX = 0 - Rand; break;
             case 1: RandX = 0 + Rand; break;
         }
         Rand = 0;
         Rand =  10 + (rand()%10);
-        switch (rand()%2)
+        switch(urand(0, 1))
         {
             case 0: RandY = 0 - Rand; break;
             case 1: RandY = 0 + Rand; break;
@@ -93,7 +93,7 @@ struct MANGOS_DLL_DECL boss_fankrissAI : public ScriptedAI
         //Summon 1-3 Spawns of Fankriss at random time.
         if (SpawnSpawns_Timer < diff)
         {
-            switch(rand()%3)
+            switch(urand(0, 2))
             {
                 case 0:
                     SummonSpawn(SelectUnit(SELECT_TARGET_RANDOM,0));
@@ -126,7 +126,7 @@ struct MANGOS_DLL_DECL boss_fankrissAI : public ScriptedAI
                     if (m_creature->getThreatManager().getThreat(target))
                         m_creature->getThreatManager().modifyThreatPercent(target, -100);
 
-                    switch(rand()%3)
+                    switch(urand(0, 2))
                     {
                         case 0:
                             DoTeleportPlayer(target, -8106.0142,1289.2900,-74.419533,5.112);

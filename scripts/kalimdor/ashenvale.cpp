@@ -108,7 +108,7 @@ struct MANGOS_DLL_DECL npc_muglashAI : public npc_escortAI
     {
         if (HasEscortState(STATE_ESCORT_PAUSED))
         {
-            if (rand()%1)
+            if (urand(0, 1))
                 return;
 
             DoScriptText(SAY_MUG_ON_GUARD, m_creature);

@@ -69,7 +69,7 @@ struct MANGOS_DLL_DECL boss_ingvarAI : public ScriptedAI
 
     void KilledUnit(Unit* pVictim)
     {
-        if (rand()%2)
+        if (urand(0, 1))
             DoScriptText(m_bIsResurrected ? SAY_KILL_SECOND : SAY_KILL_FIRST, m_creature);
     }
 

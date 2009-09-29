@@ -137,11 +137,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
 
     void KilledUnit(Unit *victim)
     {
-        switch(rand()%2)
-        {
-            case 0: DoScriptText(SAY_SLAY1, m_creature); break;
-            case 1: DoScriptText(SAY_SLAY2, m_creature); break;
-        }
+        DoScriptText(urand(0, 1) ? SAY_SLAY1 : SAY_SLAY2, m_creature);
     }
 
     void JustDied(Unit *victim)
@@ -232,11 +228,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
 
             TeleportPlayers();
 
-            switch(rand()%2)
-            {
-                case 0: DoScriptText(SAY_SPELL2, m_creature); break;
-                case 1: DoScriptText(SAY_SPELL3, m_creature); break;
-            }
+            DoScriptText(urand(0, 1) ? SAY_SPELL2 : SAY_SPELL3, m_creature);
 
             FatalAttractionExplodeTimer = 2000;
             FatalAttractionTimer = 40000 + rand()%31 * 1000;
@@ -288,7 +280,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
         //Random taunts
         if (RandomYellTimer < diff)
         {
-            switch(rand()%3)
+            switch(urand(0, 2))
             {
                 case 0: DoScriptText(SAY_TAUNT1, m_creature); break;
                 case 1: DoScriptText(SAY_TAUNT2, m_creature); break;
