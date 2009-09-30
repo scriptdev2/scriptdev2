@@ -79,6 +79,10 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
     uint32 SummonWhelpsTimer;
     uint32 BellowingRoarTimer;
     uint32 WingBuffetTimer;
+    uint32 WhelpTimer;
+
+    uint8 m_uiSummonCount;
+    bool m_bIsSummoningWhelps;
 
     void Reset()
     {
@@ -92,12 +96,24 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
         SummonWhelpsTimer = 45000;
         BellowingRoarTimer = 30000;
         WingBuffetTimer = 17000;
+        WhelpTimer = 1000;
+
+        m_uiSummonCount = 0;
+        m_bIsSummoningWhelps = false;
     }
 
     void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
         m_creature->SetInCombatWithZone();
+    }
+
+    void JustSummoned(Creature *pSummoned)
+    {
+        if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+            pSummoned->AI()->AttackStart(pTarget);
+
+        ++m_uiSummonCount;
     }
 
     void KilledUnit(Unit *victim)
@@ -183,22 +199,39 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
 
             if (EngulfingFlamesTimer < diff)
             {
-                DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), SPELL_ENGULFINGFLAMES);
-                EngulfingFlamesTimer = 8000;
-            }else EngulfingFlamesTimer -= diff;
+                if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                    DoCast(pTarget, SPELL_FIREBALL);
 
-            if (SummonWhelpsTimer < diff)
+                EngulfingFlamesTimer = 8000;
+            }else EngulfingFlamesTimer -= diff;             //engulfingflames is supposed to be activated by a fireball but haven't come by
+
+            if (m_bIsSummoningWhelps)
             {
-                uint32 max = rand()%20;
-                for(uint8 i = 0; i < max; ++i)
+                if (m_uiSummonCount <= 14)
                 {
-                    uint8 random = rand()%4;
-                    Creature* Whelp = m_creature->SummonCreature(CREATURE_WHELP, SpawnLocations[random][0], SpawnLocations[random][1], SpawnLocations[random][2], 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 30000);
-                    if (Whelp)
-                        Whelp->AI()->AttackStart(SelectUnit(SELECT_TARGET_RANDOM, 0));
+                    if (WhelpTimer < diff)
+                    {
+                        m_creature->SummonCreature(CREATURE_WHELP, SpawnLocations[0][0], SpawnLocations[0][1], SpawnLocations[0][2], 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 30000);
+                        m_creature->SummonCreature(CREATURE_WHELP, SpawnLocations[1][0], SpawnLocations[1][1], SpawnLocations[1][2], 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 30000);
+                        WhelpTimer = 1000;
+                    }
+                    else
+                        WhelpTimer -= diff;
                 }
-                SummonWhelpsTimer = 30000;
-            }else SummonWhelpsTimer -= diff;
+                else
+                {
+                    m_bIsSummoningWhelps = false;
+                    m_uiSummonCount = 0;
+                    SummonWhelpsTimer = 30000;
+                }
+            }
+            else
+            {
+                if (SummonWhelpsTimer < diff)
+                    m_bIsSummoningWhelps = true;
+                else
+                    SummonWhelpsTimer -= diff;
+            }
         }
 
         if (Phase == 3)
