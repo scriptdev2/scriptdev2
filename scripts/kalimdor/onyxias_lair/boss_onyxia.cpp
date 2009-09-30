@@ -23,28 +23,37 @@ EndScriptData */
 
 #include "precompiled.h"
 
-#define SAY_AGGRO                   -1249000
-#define SAY_KILL                    -1249001
-#define SAY_PHASE_2_TRANS           -1249002
-#define SAY_PHASE_3_TRANS           -1249003
-#define EMOTE_BREATH                -1249004
+enum
+{
+    SAY_AGGRO                   = -1249000,
+    SAY_KILL                    = -1249001,
+    SAY_PHASE_2_TRANS           = -1249002,
+    SAY_PHASE_3_TRANS           = -1249003,
+    EMOTE_BREATH                = -1249004,
 
-#define SPELL_WINGBUFFET            18500
-#define SPELL_FLAMEBREATH           18435
-#define SPELL_CLEAVE                19983
-#define SPELL_TAILSWEEP             15847
-#define SPELL_KNOCK_AWAY            19633
+    SPELL_WINGBUFFET            = 18500,
+    SPELL_FLAMEBREATH           = 18435,
+    SPELL_CLEAVE                = 19983,
+    SPELL_TAILSWEEP             = 15847,
+    SPELL_KNOCK_AWAY            = 19633,
 
-#define SPELL_ENGULFINGFLAMES       20019
-#define SPELL_DEEPBREATH            23461
-#define SPELL_FIREBALL              18392
+    SPELL_ENGULFINGFLAMES       = 20019,
+    SPELL_DEEPBREATH            = 23461,
+    SPELL_FIREBALL              = 18392,
 
-#define SPELL_BELLOWINGROAR         18431
-#define SPELL_HEATED_GROUND         22191
+    SPELL_BELLOWINGROAR         = 18431,
+    SPELL_HEATED_GROUND         = 22191,
 
-#define SPELL_SUMMONWHELP           17646
+    SPELL_SUMMONWHELP           = 17646,
+    NPC_WHELP                   = 11262,
+    MAX_WHELP                   = 16,
 
-static float MovementLocations[7][3]=
+    PHASE_START                 = 1,
+    PHASE_BREATH                = 2,
+    PHASE_END                   = 3
+};
+
+static float afMovementLocations[7][3]=
 {
     {-65.8444, -213.809, -60.2985},
     {22.87639, -217.152, -60.0548},
@@ -55,48 +64,48 @@ static float MovementLocations[7][3]=
     {10.56655, -241.478, -60.9426},
 };
 
-static float SpawnLocations[4][3]=
+static float afSpawnLocations[2][3]=
 {
     {-30.127, -254.463, -89.440},
-    {-30.817, -177.106, -89.258},
-    {14.480, -241.560, -85.6300},
-    {17.372, -190.840, -85.2810},
+    {-30.817, -177.106, -89.258}
 };
-
-#define CREATURE_WHELP              11262
 
 struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
 {
     boss_onyxiaAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
-    uint32 Phase;
+    uint32 m_uiPhase;
 
-    uint32 FlameBreathTimer;
-    uint32 CleaveTimer;
-    uint32 TailSweepTimer;
-    uint32 MovementTimer;
-    uint32 EngulfingFlamesTimer;
-    uint32 SummonWhelpsTimer;
-    uint32 BellowingRoarTimer;
-    uint32 WingBuffetTimer;
-    uint32 WhelpTimer;
+    uint32 m_uiFlameBreathTimer;
+    uint32 m_uiCleaveTimer;
+    uint32 m_uiTailSweepTimer;
+    uint32 m_uiWingBuffetTimer;
+
+    uint32 m_uiMovementTimer;
+
+    uint32 m_uiEngulfingFlamesTimer;
+    uint32 m_uiSummonWhelpsTimer;
+    uint32 m_uiBellowingRoarTimer;
+    uint32 m_uiWhelpTimer;
 
     uint8 m_uiSummonCount;
     bool m_bIsSummoningWhelps;
 
     void Reset()
     {
-        Phase = 1;
+        m_uiPhase = PHASE_START;
 
-        FlameBreathTimer = 20000;
-        TailSweepTimer = 2000;
-        CleaveTimer = 15000;
-        MovementTimer = 5000;
-        EngulfingFlamesTimer = 15000;
-        SummonWhelpsTimer = 45000;
-        BellowingRoarTimer = 30000;
-        WingBuffetTimer = 17000;
-        WhelpTimer = 1000;
+        m_uiFlameBreathTimer = urand(10000, 20000);
+        m_uiTailSweepTimer = urand(15000, 20000);
+        m_uiCleaveTimer = urand(2000, 5000);
+        m_uiWingBuffetTimer = urand(10000, 20000);
+
+        m_uiMovementTimer = 5000;
+
+        m_uiEngulfingFlamesTimer = 15000;
+        m_uiSummonWhelpsTimer = 45000;
+        m_uiBellowingRoarTimer = 30000;
+        m_uiWhelpTimer = 1000;
 
         m_uiSummonCount = 0;
         m_bIsSummoningWhelps = false;
@@ -116,131 +125,146 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
         ++m_uiSummonCount;
     }
 
-    void KilledUnit(Unit *victim)
+    void KilledUnit(Unit* pVictim)
     {
         DoScriptText(SAY_KILL, m_creature);
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if (((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 60) && (Phase == 1))
+        if (m_uiPhase == PHASE_START || m_uiPhase == PHASE_END)
         {
-            Phase = 2;
-            m_creature->GetMotionMaster()->Clear(false);
-            m_creature->GetMotionMaster()->MoveIdle();
-            DoScriptText(SAY_PHASE_2_TRANS, m_creature);
-        }
-
-        if (((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 40) && (Phase == 2))
-        {
-            Phase = 3;
-            DoScriptText(SAY_PHASE_3_TRANS, m_creature);
-            m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
-        }
-
-        if (Phase == 1 || Phase == 3)
-        {
-            if (FlameBreathTimer < diff)
+            if (m_uiFlameBreathTimer < uiDiff)
             {
                 DoCast(m_creature->getVictim(), SPELL_FLAMEBREATH);
-                FlameBreathTimer = 15000;
-            }else FlameBreathTimer -= diff;
+                m_uiFlameBreathTimer = urand(10000, 20000);
+            }
+            else
+                m_uiFlameBreathTimer -= uiDiff;
 
-            if (TailSweepTimer < diff)
+            if (m_uiTailSweepTimer < uiDiff)
             {
-                Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1);
-                if (target && !m_creature->HasInArc(M_PI, target))
-                    DoCast(target, SPELL_TAILSWEEP);
+                DoCast(m_creature, SPELL_TAILSWEEP);
+                m_uiTailSweepTimer = urand(15000, 20000);
+            }
+            else
+                m_uiTailSweepTimer -= uiDiff;
 
-                TailSweepTimer = 10000;
-            }else TailSweepTimer -= diff;
-
-            if (CleaveTimer < diff)
+            if (m_uiCleaveTimer < uiDiff)
             {
                 DoCast(m_creature->getVictim(), SPELL_CLEAVE);
-                CleaveTimer = 7000;
-            }else CleaveTimer -= diff;
+                m_uiCleaveTimer = urand(2000, 5000);
+            }
+            else
+                m_uiCleaveTimer -= uiDiff;
 
-            if (WingBuffetTimer < diff)
+            if (m_uiWingBuffetTimer < uiDiff)
             {
                 DoCast(m_creature->getVictim(), SPELL_WINGBUFFET);
-                WingBuffetTimer = urand(7000, 14000);
-            }else WingBuffetTimer -= diff;
+                m_uiWingBuffetTimer = urand(15000, 30000);
+            }
+            else
+                m_uiWingBuffetTimer -= uiDiff;
+
+            if (m_uiPhase == PHASE_END)
+            {
+                if (m_uiBellowingRoarTimer < uiDiff)
+                {
+                    DoCast(m_creature->getVictim(), SPELL_BELLOWINGROAR);
+                    m_uiBellowingRoarTimer = 30000;
+                }
+                else
+                    m_uiBellowingRoarTimer -= uiDiff;
+            }
+            else
+            {
+                if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 60)
+                {
+                    m_uiPhase = PHASE_BREATH;
+
+                    SetCombatMovement(false);
+
+                    m_creature->GetMotionMaster()->Clear(false);
+                    m_creature->GetMotionMaster()->MoveIdle();
+
+                    DoScriptText(SAY_PHASE_2_TRANS, m_creature);
+
+                    m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LIFTOFF);
+                }
+            }
 
             DoMeleeAttackIfReady();
         }
-
-        if (Phase == 2)
+        else
         {
-            if (!m_creature->isHover())
+            if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 40)
             {
-                m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LIFTOFF);
-                m_creature->SetHover(true);
+                m_uiPhase = PHASE_END;
+                DoScriptText(SAY_PHASE_3_TRANS, m_creature);
+
+                SetCombatMovement(true);
+                m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
+
+                return;
             }
 
-            if (!m_creature->GetMotionMaster()->empty() && (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() != POINT_MOTION_TYPE))
-                m_creature->GetMotionMaster()->Clear(false);
-
-            if (MovementTimer < diff)
+            if (m_uiMovementTimer < uiDiff)
             {
-                uint32 random = rand()%8;
-                if (random < 7)
-                    m_creature->GetMotionMaster()->MovePoint(0, MovementLocations[random][0], MovementLocations[random][1], MovementLocations[random][2]);
+                uint32 uiRandom = urand(0, 7);
+
+                if (uiRandom < 7)
+                    m_creature->GetMotionMaster()->MovePoint(0, afMovementLocations[uiRandom][0], afMovementLocations[uiRandom][1], afMovementLocations[uiRandom][2]);
                 else
                 {
                     DoScriptText(EMOTE_BREATH, m_creature);
                     DoCast(m_creature->getVictim(), SPELL_DEEPBREATH);
                 }
-                MovementTimer = 25000;
-            }else MovementTimer -= diff;
 
-            if (EngulfingFlamesTimer < diff)
+                m_uiMovementTimer = 25000;
+            }
+            else
+                m_uiMovementTimer -= uiDiff;
+
+            if (m_uiEngulfingFlamesTimer < uiDiff)
             {
                 if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                     DoCast(pTarget, SPELL_FIREBALL);
 
-                EngulfingFlamesTimer = 8000;
-            }else EngulfingFlamesTimer -= diff;             //engulfingflames is supposed to be activated by a fireball but haven't come by
+                m_uiEngulfingFlamesTimer = 8000;
+            }
+            else
+                m_uiEngulfingFlamesTimer -= uiDiff;           //engulfingflames is supposed to be activated by a fireball but haven't come by
 
             if (m_bIsSummoningWhelps)
             {
-                if (m_uiSummonCount <= 14)
+                if (m_uiSummonCount < MAX_WHELP)
                 {
-                    if (WhelpTimer < diff)
+                    if (m_uiWhelpTimer < uiDiff)
                     {
-                        m_creature->SummonCreature(CREATURE_WHELP, SpawnLocations[0][0], SpawnLocations[0][1], SpawnLocations[0][2], 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 30000);
-                        m_creature->SummonCreature(CREATURE_WHELP, SpawnLocations[1][0], SpawnLocations[1][1], SpawnLocations[1][2], 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 30000);
-                        WhelpTimer = 1000;
+                        m_creature->SummonCreature(NPC_WHELP, afSpawnLocations[0][0], afSpawnLocations[0][1], afSpawnLocations[0][2], 0.0f, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 30000);
+                        m_creature->SummonCreature(NPC_WHELP, afSpawnLocations[1][0], afSpawnLocations[1][1], afSpawnLocations[1][2], 0.0f, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 30000);
+                        m_uiWhelpTimer = 1000;
                     }
                     else
-                        WhelpTimer -= diff;
+                        m_uiWhelpTimer -= uiDiff;
                 }
                 else
                 {
                     m_bIsSummoningWhelps = false;
                     m_uiSummonCount = 0;
-                    SummonWhelpsTimer = 30000;
+                    m_uiSummonWhelpsTimer = 30000;
                 }
             }
             else
             {
-                if (SummonWhelpsTimer < diff)
+                if (m_uiSummonWhelpsTimer < uiDiff)
                     m_bIsSummoningWhelps = true;
                 else
-                    SummonWhelpsTimer -= diff;
+                    m_uiSummonWhelpsTimer -= uiDiff;
             }
-        }
-
-        if (Phase == 3)
-        {
-            if (BellowingRoarTimer < diff)
-            {
-                DoCast(m_creature->getVictim(), SPELL_BELLOWINGROAR);
-                BellowingRoarTimer = 30000;
-            }else BellowingRoarTimer -= diff;
         }
     }
 };
