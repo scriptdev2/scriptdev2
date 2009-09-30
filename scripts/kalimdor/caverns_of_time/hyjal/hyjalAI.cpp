@@ -337,7 +337,7 @@ void hyjalAI::DoTalk(YellType pYellType)
             //this would not be safe unless we knew these had two entries in m_aYell
             if (pYellType == ATTACKED || pYellType== RALLY)
             {
-                if (!bGetNext && rand()%2)
+                if (!bGetNext && urand(0, 1))
                 {
                     bGetNext = true;
                     continue;

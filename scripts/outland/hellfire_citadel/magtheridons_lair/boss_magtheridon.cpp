@@ -598,7 +598,7 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
                 DoCast(m_creature, SPELL_DARK_MENDING);
             }
 
-            m_uiDarkMending_Timer = 10000 + (rand() % 10000);
+            m_uiDarkMending_Timer = urand(10000, 20000);
         }
         else
             m_uiDarkMending_Timer -= uiDiff;

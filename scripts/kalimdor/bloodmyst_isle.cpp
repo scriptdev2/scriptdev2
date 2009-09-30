@@ -56,7 +56,7 @@ struct MANGOS_DLL_DECL mob_webbed_creatureAI : public ScriptedAI
                 break;
             case 1:
             case 2:
-                spawnCreatureID = possibleSpawns[rand()%31];
+                spawnCreatureID = possibleSpawns[urand(0, 31)];
                 break;
         }
 

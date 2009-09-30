@@ -301,7 +301,7 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
                     Unit* target = NULL;
                     target = SelectUnit(SELECT_TARGET_RANDOM,1);
 
-                    uint32 random = rand()%2 + 1;
+                    uint32 random = urand(1, 2);
                     float x = KaelLocations[random][0];
                     float y = KaelLocations[random][1];
 

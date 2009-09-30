@@ -197,7 +197,7 @@ struct MANGOS_DLL_DECL boss_nefarianAI : public ScriptedAI
                     break;
             }
 
-            ClassCall_Timer = 35000 + (rand() % 5000);
+            ClassCall_Timer = urand(35000, 40000);
         }else ClassCall_Timer -= diff;
 
         //Phase3 begins when we are below X health

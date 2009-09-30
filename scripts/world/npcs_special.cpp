@@ -710,8 +710,8 @@ void npc_doctorAI::UpdateAI(const uint32 diff)
 
             switch(m_creature->GetEntry())
             {
-                case DOCTOR_ALLIANCE: patientEntry = AllianceSoldierId[rand()%3]; break;
-                case DOCTOR_HORDE:    patientEntry = HordeSoldierId[rand()%3]; break;
+                case DOCTOR_ALLIANCE: patientEntry = AllianceSoldierId[urand(0, 2)]; break;
+                case DOCTOR_HORDE:    patientEntry = HordeSoldierId[urand(0, 2)]; break;
                 default:
                     error_log("SD2: Invalid entry for Triage doctor. Please check your database");
                     return;

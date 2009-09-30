@@ -150,7 +150,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
 
     void TeleportPlayers()
     {
-        uint32 random = rand()%7;
+        uint32 random = urand(0, 6);
         float X = TeleportPoint[random].x;
         float Y = TeleportPoint[random].y;
         float Z = TeleportPoint[random].z;
@@ -208,14 +208,14 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
 
             if (BeamCount > 3)
                 while(CurrentBeam == Beam)
-                    CurrentBeam = rand()%3;
+                    CurrentBeam = urand(0, 2);
 
         }else BeamTimer -= diff;
 
         // Random Prismatic Shield every 15 seconds.
         if (PrismaticShieldTimer < diff)
         {
-            uint32 random = rand()%6;
+            uint32 random = urand(0, 5);
             if (PrismaticAuras[random])
                 DoCast(m_creature, PrismaticAuras[random]);
             PrismaticShieldTimer = 15000;

@@ -108,7 +108,7 @@ struct MANGOS_DLL_DECL npc_grimstoneAI : public npc_escortAI
     npc_grimstoneAI(Creature* pCreature) : npc_escortAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        MobSpawnId = rand()%6;
+        MobSpawnId = urand(0, 5);
         Reset();
     }
 

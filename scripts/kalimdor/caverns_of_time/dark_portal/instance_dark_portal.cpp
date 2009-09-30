@@ -24,7 +24,7 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_dark_portal.h"
 
-inline uint32 RandRiftBoss() { return ((rand()%2) ? NPC_RKEEP : NPC_RLORD); }
+inline uint32 RandRiftBoss() { return (urand(0, 1) ? NPC_RKEEP : NPC_RLORD); }
 
 float PortalLocation[4][4]=
 {

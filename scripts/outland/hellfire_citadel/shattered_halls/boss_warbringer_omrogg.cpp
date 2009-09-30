@@ -203,7 +203,7 @@ struct MANGOS_DLL_DECL boss_warbringer_omroggAI : public ScriptedAI
         if (!pLeftHead || !pRightHead)
             return;
 
-        m_iThreat = rand()%4;
+        m_iThreat = irand(0, 3);
 
         Unit* pSource = (pLeftHead->GetEntry() == Threat[m_iThreat].creature ? pLeftHead : pRightHead);
 
@@ -220,7 +220,7 @@ struct MANGOS_DLL_DECL boss_warbringer_omroggAI : public ScriptedAI
 
         if (Unit* pLeftHead = Unit::GetUnit(*m_creature,m_uiLeftHeadGUID))
         {
-            m_iAggro = rand()%3;
+            m_iAggro = irand(0, 2);
 
             DoScriptText(GoCombat[m_iAggro].id, pLeftHead);
 
@@ -253,7 +253,7 @@ struct MANGOS_DLL_DECL boss_warbringer_omroggAI : public ScriptedAI
         if (!pLeftHead || !pRightHead)
             return;
 
-        m_iKilling = rand()%2;
+        m_iKilling = irand(0, 1);
 
         Unit* pSource = (pLeftHead->GetEntry() == Killing[m_iKilling].creature ? pLeftHead : pRightHead);
 

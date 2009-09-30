@@ -379,7 +379,7 @@ struct MANGOS_DLL_DECL boss_twinemperorsAI : public ScriptedAI
             }
             if (c->IsWithinDistInMap(m_creature, ABUSE_BUG_RANGE))
             {
-                if (!nearb || (rand()%4)==0)
+                if (!nearb || !urand(0, 3))
                     nearb = c;
             }
         }

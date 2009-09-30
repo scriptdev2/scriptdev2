@@ -298,7 +298,7 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
                         DarkGlareAngle = m_creature->GetAngle(target);
                         DarkGlareTickTimer = 1000;
                         DarkGlareTick = 0;
-                        ClockWise = rand()%2;
+                        ClockWise = urand(0, 1);
                     }
 
                     //Add red coloration to C'thun

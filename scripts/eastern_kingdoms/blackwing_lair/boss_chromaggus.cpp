@@ -282,7 +282,7 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
         {
             DoCast(m_creature,SPELL_FRENZY);
             DoScriptText(EMOTE_FRENZY, m_creature);
-            Frenzy_Timer = 10000 + (rand() % 5000);
+            Frenzy_Timer = urand(10000, 15000);
         }else Frenzy_Timer -= diff;
 
         //Enrage if not already enraged and below 20%

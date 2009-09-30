@@ -116,7 +116,7 @@ void guardAI::UpdateAI(const uint32 diff)
             else info = SelectSpell(m_creature->getVictim(), -1, -1, SELECT_TARGET_ANY_ENEMY, 0, 0, 0, 0, SELECT_EFFECT_DONTCARE);
 
             //20% chance to replace our white hit with a spell
-            if (info && rand() % 5 == 0 && !GlobalCooldown)
+            if (info && !urand(0, 4) && !GlobalCooldown)
             {
                 //Cast the spell
                 if (Healing)DoCastSpell(m_creature, info);
@@ -139,7 +139,7 @@ void guardAI::UpdateAI(const uint32 diff)
             SpellEntry const *info = NULL;
 
             //Select a healing spell if less than 30% hp ONLY 33% of the time
-            if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 30 && rand() % 3 == 0)
+            if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 30 && !urand(0, 2))
                 info = SelectSpell(m_creature, -1, -1, SELECT_TARGET_ANY_FRIEND, 0, 0, 0, 0, SELECT_EFFECT_HEALING);
 
             //No healing spell available, See if we can cast a ranged spell (Range must be greater than ATTACK_DISTANCE)

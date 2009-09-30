@@ -1090,7 +1090,7 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
 
         DoScriptText(SAY_EYE_BLAST, m_creature);
 
-        uint32 initial = rand()%4;
+        uint32 initial = urand(0, 3);
         uint32 final = 0;
 
         if (initial < 3)
@@ -1578,7 +1578,7 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
         {
             if (TauntTimer < diff)                           // His random taunt/yell timer.
             {
-                uint32 random = rand()%4;
+                uint32 random = urand(0, 3);
                 int32 yell = RandomTaunts[random].textId;
                 if (yell)
                     DoScriptText(yell, m_creature);
@@ -2014,7 +2014,7 @@ struct MANGOS_DLL_DECL boss_maievAI : public ScriptedAI
 
         if (TauntTimer < diff)
         {
-            uint32 random = rand()%4;
+            uint32 random = urand(0, 3);
             int32 text = MaievTaunts[random].textId;
 
             DoScriptText(text, m_creature);

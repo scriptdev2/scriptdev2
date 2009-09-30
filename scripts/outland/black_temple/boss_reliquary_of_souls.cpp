@@ -229,7 +229,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
 
     void SummonSoul()
     {
-        uint32 random = rand()%6;
+        uint32 random = urand(0, 5);
         float x = Coords[random].x;
         float y = Coords[random].y;
 
