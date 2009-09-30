@@ -292,7 +292,7 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
                 if (FireballTimer < diff)
                 {
                     DoCast(m_creature->getVictim(), m_bIsHeroicMode ? SPELL_FIREBALL_HEROIC : SPELL_FIREBALL_NORMAL);
-                    FireballTimer = 2000 + rand()%4000;
+                    FireballTimer = urand(2000, 6000);
                 }else FireballTimer -= diff;
 
                 if (PhoenixTimer < diff)
@@ -328,7 +328,7 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
                         DoCast(pTarget, SPELL_FLAME_STRIKE);
                         DoScriptText(SAY_FLAMESTRIKE, m_creature);
                     }
-                    FlameStrikeTimer = 15000 + rand()%10000;
+                    FlameStrikeTimer = urand(15000, 25000);
                 }else FlameStrikeTimer -= diff;
 
                 // Below 50%
@@ -575,7 +575,7 @@ struct MANGOS_DLL_DECL mob_arcane_sphereAI : public ScriptedAI
     void Reset()
     {
         DespawnTimer = 30000;
-        ChangeTargetTimer = 6000 + rand()%6000;
+        ChangeTargetTimer = urand(6000, 12000);
 
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         DoCast(m_creature, SPELL_ARCANE_SPHERE_PASSIVE, true);
@@ -600,7 +600,7 @@ struct MANGOS_DLL_DECL mob_arcane_sphereAI : public ScriptedAI
                 m_creature->TauntApply(target);
                 AttackStart(target);
 
-            ChangeTargetTimer = 5000 + rand()%10000;
+            ChangeTargetTimer = urand(5000, 15000);
         }else ChangeTargetTimer -= diff;
     }
 };

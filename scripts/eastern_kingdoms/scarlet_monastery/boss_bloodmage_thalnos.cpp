@@ -80,7 +80,7 @@ struct MANGOS_DLL_DECL boss_bloodmage_thalnosAI : public ScriptedAI
         if (FlameShock_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_FLAMESHOCK);
-            FlameShock_Timer = 10000 + rand()%5000;
+            FlameShock_Timer = urand(10000, 15000);
         }else FlameShock_Timer -= diff;
 
         //FlameSpike_Timer

@@ -120,13 +120,13 @@ struct MANGOS_DLL_DECL boss_kelidan_the_breakerAI : public ScriptedAI
         if (ShadowVolley_Timer < diff)
         {
             DoCast(m_creature, m_bIsHeroicMode ? H_SPELL_SHADOW_BOLT_VOLLEY : SPELL_SHADOW_BOLT_VOLLEY);
-            ShadowVolley_Timer = 5000+rand()%8000;
+            ShadowVolley_Timer = urand(5000, 13000);
         }else ShadowVolley_Timer -=diff;
 
         if (Corruption_Timer < diff)
         {
             DoCast(m_creature,SPELL_CORRUPTION);
-            Corruption_Timer = 30000+rand()%20000;
+            Corruption_Timer = urand(30000, 50000);
         }else Corruption_Timer -=diff;
 
         if (BurningNova_Timer < diff)
@@ -141,7 +141,7 @@ struct MANGOS_DLL_DECL boss_kelidan_the_breakerAI : public ScriptedAI
 
             DoCast(m_creature,SPELL_BURNING_NOVA);
 
-            BurningNova_Timer = 20000+rand()%8000;
+            BurningNova_Timer = urand(20000, 28000);
             Firenova_Timer= 5000;
             Firenova = true;
         }else BurningNova_Timer -=diff;
@@ -186,8 +186,8 @@ struct MANGOS_DLL_DECL mob_shadowmoon_channelerAI : public ScriptedAI
 
     void Reset()
     {
-        ShadowBolt_Timer = 1000+rand()%1000;
-        MarkOfShadow_Timer = 5000+rand()%2000;
+        ShadowBolt_Timer = urand(1000, 2000);
+        MarkOfShadow_Timer = urand(5000, 7000);
     }
 
     void Aggro(Unit* who)
@@ -204,13 +204,13 @@ struct MANGOS_DLL_DECL mob_shadowmoon_channelerAI : public ScriptedAI
         {
             if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM, 0))
                 DoCast(target,SPELL_MARK_OF_SHADOW);
-            MarkOfShadow_Timer = 15000+rand()%5000;
+            MarkOfShadow_Timer = urand(15000, 20000);
         }else MarkOfShadow_Timer -=diff;
 
         if (ShadowBolt_Timer < diff)
         {
             DoCast(m_creature->getVictim(), m_bIsHeroicMode ? H_SPELL_SHADOW_BOLT : SPELL_SHADOW_BOLT);
-            ShadowBolt_Timer = 5000+rand()%1000;
+            ShadowBolt_Timer = urand(5000, 6000);
         }else ShadowBolt_Timer -=diff;
 
         DoMeleeAttackIfReady();

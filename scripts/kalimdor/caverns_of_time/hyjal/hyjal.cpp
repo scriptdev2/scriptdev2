@@ -44,15 +44,15 @@ CreatureAI* GetAI_npc_jaina_proudmoore(Creature* pCreature)
     hyjalAI* pTempAI = new hyjalAI(pCreature);
 
     pTempAI->m_aSpells[0].m_uiSpellId = SPELL_BLIZZARD;
-    pTempAI->m_aSpells[0].m_uiCooldown = 15000 + rand()%20000;
+    pTempAI->m_aSpells[0].m_uiCooldown = urand(15000, 35000);
     pTempAI->m_aSpells[0].m_pType = TARGETTYPE_RANDOM;
 
     pTempAI->m_aSpells[1].m_uiSpellId = SPELL_PYROBLAST;
-    pTempAI->m_aSpells[1].m_uiCooldown = 2000 + rand()%7000;
+    pTempAI->m_aSpells[1].m_uiCooldown = urand(2000, 9000);
     pTempAI->m_aSpells[1].m_pType = TARGETTYPE_RANDOM;
 
     pTempAI->m_aSpells[2].m_uiSpellId = SPELL_SUMMON_ELEMENTALS;
-    pTempAI->m_aSpells[2].m_uiCooldown = 15000 + rand()%30000;
+    pTempAI->m_aSpells[2].m_uiCooldown = urand(15000, 45000);
     pTempAI->m_aSpells[2].m_pType = TARGETTYPE_SELF;
 
     return pTempAI;
@@ -120,11 +120,11 @@ CreatureAI* GetAI_npc_thrall(Creature* pCreature)
     hyjalAI* pTempAI = new hyjalAI(pCreature);
 
     pTempAI->m_aSpells[0].m_uiSpellId = SPELL_CHAIN_LIGHTNING;
-    pTempAI->m_aSpells[0].m_uiCooldown = 2000 + rand()%5000;
+    pTempAI->m_aSpells[0].m_uiCooldown = urand(2000, 7000);
     pTempAI->m_aSpells[0].m_pType = TARGETTYPE_VICTIM;
 
     pTempAI->m_aSpells[1].m_uiSpellId = SPELL_FERAL_SPIRIT;
-    pTempAI->m_aSpells[1].m_uiCooldown = 6000 + rand()%35000;
+    pTempAI->m_aSpells[1].m_uiCooldown = urand(6000, 41000);
     pTempAI->m_aSpells[1].m_pType = TARGETTYPE_RANDOM;
 
     return pTempAI;

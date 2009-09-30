@@ -113,11 +113,11 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
             m_pInstance->SetData(DATA_SELIN_EVENT, NOT_STARTED);
         }else error_log(ERROR_INST_DATA);
 
-        DrainLifeTimer = 3000 + rand()%4000;
+        DrainLifeTimer = urand(3000, 7000);
         DrainManaTimer = DrainLifeTimer + 5000;
         FelExplosionTimer = 2100;
-        DrainCrystalTimer = 10000 + rand()%5000;
-        DrainCrystalTimer = 20000 + rand()%5000;
+        DrainCrystalTimer = urand(10000, 15000);
+        DrainCrystalTimer = urand(20000, 25000);
         EmpowerTimer = 10000;
 
         IsDraining = false;
@@ -286,9 +286,9 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
                     SelectNearestCrystal();
 
                     if (m_bIsHeroicMode)
-                        DrainCrystalTimer = 10000 + rand()%5000;
+                        DrainCrystalTimer = urand(10000, 15000);
                     else
-                        DrainCrystalTimer = 20000 + rand()%5000;
+                        DrainCrystalTimer = urand(20000, 25000);
 
                 }else DrainCrystalTimer -= diff;
             }

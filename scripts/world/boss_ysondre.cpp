@@ -55,7 +55,7 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
 
     void Reset()
     {
-        m_uiSleep_Timer = 15000 + rand()%5000;
+        m_uiSleep_Timer = urand(15000, 20000);
         m_uiNoxiousBreath_Timer = 8000;
         m_uiTailSweep_Timer = 4000;
         //m_uiMarkOfNature_Timer = 45000;
@@ -85,7 +85,7 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
             if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                 DoCast(pTarget, SPELL_SLEEP);
 
-            m_uiSleep_Timer = 8000 + rand()%7000;
+            m_uiSleep_Timer = urand(8000, 15000);
         }
         else
             m_uiSleep_Timer -= uiDiff;
@@ -94,7 +94,7 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
         if (m_uiNoxiousBreath_Timer < uiDiff)
         {
             DoCast(m_creature->getVictim(), SPELL_NOXIOUSBREATH);
-            m_uiNoxiousBreath_Timer = 14000 + rand()%6000;
+            m_uiNoxiousBreath_Timer = urand(14000, 20000);
         }
         else
             m_uiNoxiousBreath_Timer -= uiDiff;
@@ -124,7 +124,7 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
             if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                 DoCast(pTarget, SPELL_LIGHTNINGWAVE);
 
-            m_uiLightningWave_Timer = 7000 + rand()%5000;
+            m_uiLightningWave_Timer = urand(7000, 12000);
         }
         else
             m_uiLightningWave_Timer -= uiDiff;

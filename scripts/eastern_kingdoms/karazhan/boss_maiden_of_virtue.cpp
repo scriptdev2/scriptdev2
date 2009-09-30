@@ -50,9 +50,9 @@ struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
 
     void Reset()
     {
-        m_uiRepentance_Timer    = 25000+(rand()%15000);
-        m_uiHolyfire_Timer      = 8000+(rand()%17000);
-        m_uiHolywrath_Timer     = 15000+(rand()%10000);
+        m_uiRepentance_Timer    = urand(25000, 40000);
+        m_uiHolyfire_Timer      = urand(8000, 25000);
+        m_uiHolywrath_Timer     = urand(15000, 25000);
         m_uiHolyground_Timer    = 3000;
     }
 
@@ -94,7 +94,7 @@ struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
             DoCast(m_creature->getVictim(),SPELL_REPENTANCE);
             DoScriptText(urand(0, 1) ? SAY_REPENTANCE1 : SAY_REPENTANCE2, m_creature);
 
-            m_uiRepentance_Timer = 25000 + rand()%10000;    //A little randomness on that spell
+            m_uiRepentance_Timer = urand(25000, 35000);     //A little randomness on that spell
         }
         else
             m_uiRepentance_Timer -= uiDiff;
@@ -117,7 +117,7 @@ struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
 
             DoCast(pTarget,SPELL_HOLYFIRE);
 
-            m_uiHolyfire_Timer = 8000 + rand()%15000;       //Anywhere from 8 to 23 seconds, good luck having several of those in a row!
+            m_uiHolyfire_Timer = urand(8000, 23000);        //Anywhere from 8 to 23 seconds, good luck having several of those in a row!
         }
         else
             m_uiHolyfire_Timer -= uiDiff;
@@ -127,7 +127,7 @@ struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
             if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
                 DoCast(pTarget, SPELL_HOLYWRATH);
 
-            m_uiHolywrath_Timer = 20000+(rand()%5000);      //20-25 secs sounds nice
+            m_uiHolywrath_Timer = urand(20000, 25000);      //20-25 secs sounds nice
         }
         else
             m_uiHolywrath_Timer -= uiDiff;

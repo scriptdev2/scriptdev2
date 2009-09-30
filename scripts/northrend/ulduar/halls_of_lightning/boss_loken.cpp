@@ -172,7 +172,7 @@ struct MANGOS_DLL_DECL boss_lokenAI : public ScriptedAI
             if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                 DoCast(pTarget, SPELL_ARC_LIGHTNING);
 
-            m_uiArcLightning_Timer = 15000 + rand()%1000;
+            m_uiArcLightning_Timer = urand(15000, 16000);
         }
         else
             m_uiArcLightning_Timer -= uiDiff;
@@ -190,7 +190,7 @@ struct MANGOS_DLL_DECL boss_lokenAI : public ScriptedAI
 
             m_bIsAura = false;
             m_uiResumePulsingShockwave_Timer = (m_bIsHeroic ? 4000 : 5000); // Pause Pulsing Shockwave aura
-            m_uiLightningNova_Timer = 20000 + rand()%1000;
+            m_uiLightningNova_Timer = urand(20000, 21000);
         }
         else
             m_uiLightningNova_Timer -= uiDiff;

@@ -437,7 +437,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
                 m_uiBombSequenzeTimer = 500;
                 m_uiBombCounter = 0;
 
-                m_uiBombTimer = 20000+rand()%20000;
+                m_uiBombTimer = urand(20000, 40000);
                 m_bIsBombing = true;
 
                 //we don't want anything else to happen this Update()

@@ -116,7 +116,7 @@ struct MANGOS_DLL_DECL boss_dathrohan_balnazzarAI : public ScriptedAI
             if (m_uiMindBlast_Timer < uiDiff)
             {
                 DoCast(m_creature->getVictim(),SPELL_MINDBLAST);
-                m_uiMindBlast_Timer = 15000 + rand()%5000;
+                m_uiMindBlast_Timer = urand(15000, 20000);
             }else m_uiMindBlast_Timer -= uiDiff;
 
             //CrusadersHammer
@@ -158,7 +158,7 @@ struct MANGOS_DLL_DECL boss_dathrohan_balnazzarAI : public ScriptedAI
             if (m_uiMindBlast_Timer < uiDiff)
             {
                 DoCast(m_creature->getVictim(),SPELL_MINDBLAST);
-                m_uiMindBlast_Timer = 15000 + rand()%5000;
+                m_uiMindBlast_Timer = urand(15000, 20000);
             }else m_uiMindBlast_Timer -= uiDiff;
 
             //ShadowShock

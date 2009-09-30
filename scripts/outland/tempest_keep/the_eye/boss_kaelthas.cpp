@@ -326,7 +326,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
     void Reset()
     {
-        m_uiFireball_Timer = 5000+rand()%10000;
+        m_uiFireball_Timer = urand(5000, 15000);
         m_uiArcaneDisruption_Timer = 45000;
         m_uiMindControl_Timer = 40000;
         m_uiPhoenix_Timer = 50000;
@@ -773,7 +773,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                             {
                                 //interruptable
                                 m_creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, false);
-                                int32 uiDmg = 20000+rand()%5000;
+                                int32 uiDmg = irand(20000, 25000);
                                 m_creature->CastCustomSpell(m_creature->getVictim(), SPELL_FIREBALL, &uiDmg, 0, 0, false);
                                 m_bIsCastingFireball = true;
                                 m_uiFireball_Timer = 2500;
@@ -784,7 +784,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                             //apply resistance
                             m_creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);
                             m_bIsCastingFireball = false;
-                            m_uiFireball_Timer = 5000+rand()%10000;
+                            m_uiFireball_Timer = urand(5000, 15000);
                         }
                     }
                     else
@@ -1112,7 +1112,7 @@ struct MANGOS_DLL_DECL boss_thaladred_the_darkenerAI : public advisorbase_ai
         if (m_uiPsychicBlow_Timer < uiDiff)
         {
             DoCast(m_creature->getVictim(), SPELL_PSYCHIC_BLOW);
-            m_uiPsychicBlow_Timer = 20000+rand()%5000;
+            m_uiPsychicBlow_Timer = urand(20000, 25000);
         }
         else
             m_uiPsychicBlow_Timer -= uiDiff;
@@ -1164,7 +1164,7 @@ struct MANGOS_DLL_DECL boss_lord_sanguinarAI : public advisorbase_ai
         if (m_uiFear_Timer < uiDiff)
         {
             DoCast(m_creature->getVictim(), SPELL_BELLOWING_ROAR);
-            m_uiFear_Timer = 25000+rand()%10000;                //approximately every 30 seconds
+            m_uiFear_Timer = urand(25000, 35000);           //approximately every 30 seconds
         }
         else
             m_uiFear_Timer -= uiDiff;
@@ -1265,7 +1265,7 @@ struct MANGOS_DLL_DECL boss_grand_astromancer_capernianAI : public advisorbase_a
             else
                 DoCast(m_creature->getVictim(), SPELL_CONFLAGRATION);
 
-            m_uiConflagration_Timer = 10000+rand()%5000;
+            m_uiConflagration_Timer = urand(10000, 15000);
         }
         else
             m_uiConflagration_Timer -= uiDiff;
@@ -1292,7 +1292,7 @@ struct MANGOS_DLL_DECL boss_grand_astromancer_capernianAI : public advisorbase_a
             if (m_bInMeleeRange)
                 DoCast(pTarget, SPELL_ARCANE_EXPLOSION);
 
-            m_uiArcaneExplosion_Timer = 4000+rand()%2000;
+            m_uiArcaneExplosion_Timer = urand(4000, 6000);
         }
         else
             m_uiArcaneExplosion_Timer -= uiDiff;
@@ -1358,7 +1358,7 @@ struct MANGOS_DLL_DECL boss_master_engineer_telonicusAI : public advisorbase_ai
             if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                 DoCast(pTarget, SPELL_REMOTE_TOY);
 
-            m_uiRemoteToy_Timer = 10000+rand()%5000;
+            m_uiRemoteToy_Timer = urand(10000, 15000);
         }
         else
             m_uiRemoteToy_Timer -= uiDiff;

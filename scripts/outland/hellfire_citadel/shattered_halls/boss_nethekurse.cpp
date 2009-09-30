@@ -276,7 +276,7 @@ struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
             if (Cleave_Timer < diff)
             {
                 DoCast(m_creature->getVictim(), m_bIsHeroicMode ? H_SPELL_SHADOW_SLAM : SPELL_SHADOW_CLEAVE);
-                Cleave_Timer = 6000+rand()%2500;
+                Cleave_Timer = urand(6000, 8500);
             }else Cleave_Timer -= diff;
         }
         else
@@ -285,14 +285,14 @@ struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
             {
                 if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0))
                     DoCast(target,SPELL_SHADOW_FISSURE);
-                ShadowFissure_Timer = 7500+rand()%7500;
+                ShadowFissure_Timer = urand(7500, 15000);
             }else ShadowFissure_Timer -= diff;
 
             if (DeathCoil_Timer < diff)
             {
                 if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0))
                     DoCast(target,SPELL_DEATH_COIL);
-                DeathCoil_Timer = 15000+rand()%5000;
+                DeathCoil_Timer = urand(15000, 20000);
             }else DeathCoil_Timer -= diff;
 
             if ((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() <= 20)

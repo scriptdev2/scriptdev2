@@ -467,7 +467,7 @@ struct MANGOS_DLL_DECL boss_fathomguard_tidalvessAI : public Advisor_Base_AI
         if (m_uiFrostShock_Timer < uiDiff)
         {
             DoCast(m_creature->getVictim(), SPELL_FROST_SHOCK);
-            m_uiFrostShock_Timer = 25000+rand()%5000;
+            m_uiFrostShock_Timer = urand(25000, 30000);
         }else m_uiFrostShock_Timer -= uiDiff;
 
         DoMeleeAttackIfReady();
@@ -491,7 +491,7 @@ struct MANGOS_DLL_DECL boss_fathomguard_caribdisAI : public Advisor_Base_AI
     void Reset()
     {
         m_uiWaterBoltVolley_Timer = 35000;
-        m_uiTidalSurge_Timer      = 15000+rand()%5000;
+        m_uiTidalSurge_Timer      = urand(15000, 20000);
         m_uiHeal_Timer            = 55000;
     }
 
@@ -528,7 +528,7 @@ struct MANGOS_DLL_DECL boss_fathomguard_caribdisAI : public Advisor_Base_AI
         {
             // the victim has to cast it on himself because in the spell.dbc the EffectImplicitTargetA1 is 1 (TARGET_SELF)
             m_creature->getVictim()->CastSpell(m_creature->getVictim(), SPELL_TIDAL_SURGE, true);
-            m_uiTidalSurge_Timer = 15000+rand()%5000;
+            m_uiTidalSurge_Timer = urand(15000, 20000);
         }else m_uiTidalSurge_Timer -= uiDiff;
 
         //m_uiHeal_Timer

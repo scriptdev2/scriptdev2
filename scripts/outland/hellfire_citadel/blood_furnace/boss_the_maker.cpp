@@ -102,14 +102,14 @@ struct MANGOS_DLL_DECL boss_the_makerAI : public ScriptedAI
         if (AcidSpray_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_ACID_SPRAY);
-            AcidSpray_Timer = 15000+rand()%8000;
+            AcidSpray_Timer = urand(15000, 23000);
         }else AcidSpray_Timer -=diff;
 
         if (ExplodingBreaker_Timer < diff)
         {
             if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
                 DoCast(target,SPELL_EXPLODING_BREAKER);
-            ExplodingBreaker_Timer = 4000+rand()%8000;
+            ExplodingBreaker_Timer = urand(4000, 12000);
         }else ExplodingBreaker_Timer -=diff;
 
         /* // Disabled until Core Support for mind control
@@ -127,7 +127,7 @@ struct MANGOS_DLL_DECL boss_the_makerAI : public ScriptedAI
         if (Knockdown_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_KNOCKDOWN);
-            Knockdown_Timer = 4000+rand()%8000;
+            Knockdown_Timer = urand(4000, 12000);
         }else Knockdown_Timer -=diff;
 
         DoMeleeAttackIfReady();

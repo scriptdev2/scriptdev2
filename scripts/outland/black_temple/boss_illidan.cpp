@@ -822,7 +822,7 @@ struct MANGOS_DLL_DECL npc_akama_illidanAI : public ScriptedAI
                     Elite->AddThreat(m_creature, 1000000.0f);
                     AttackStart(Elite);
                 }
-                SummonMinionTimer = 10000 + rand()%6000;
+                SummonMinionTimer = urand(10000, 16000);
             }else SummonMinionTimer -= diff;
         }
 
@@ -942,7 +942,7 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
         DemonFormSequence = 0;
 
         /** Normal Form **/
-        ShearTimer = 20000 + (rand()%11 * 1000);            // 20 to 30 seconds
+        ShearTimer = urand(20000, 30000);                   // 20 to 30 seconds
         FlameCrashTimer = 30000;                            // 30 seconds
         ParasiticShadowFiendTimer = 25000;                  // 25 seconds
         DrawSoulTimer = 50000;                              // 50 seconds
@@ -1591,7 +1591,7 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
                 if (ShearTimer < diff)
                 {
                     DoCast(m_creature->getVictim(), SPELL_SHEAR);
-                    ShearTimer = 25000 + (rand()%16 * 1000);
+                    ShearTimer = urand(25000, 40000);
                     GlobalTimer += 2000;
                 }else ShearTimer -= diff;
 
@@ -2019,7 +2019,7 @@ struct MANGOS_DLL_DECL boss_maievAI : public ScriptedAI
 
             DoScriptText(text, m_creature);
 
-            TauntTimer = 22000 + rand()%21 * 1000;
+            TauntTimer = urand(22000, 42000);
         }else TauntTimer -= diff;
 
         DoMeleeAttackIfReady();
@@ -2125,8 +2125,8 @@ struct MANGOS_DLL_DECL flame_of_azzinothAI : public ScriptedAI
 
     void Reset()
     {
-        FlameBlastTimer = 15000 + rand()%15000;
-        SummonBlazeTimer = 10000 + rand()%20000;
+        FlameBlastTimer = urand(15000, 30000);
+        SummonBlazeTimer = urand(10000, 30000);
         ChargeTimer = 5000;
     }
 
@@ -2178,7 +2178,7 @@ struct MANGOS_DLL_DECL flame_of_azzinothAI : public ScriptedAI
         if (SummonBlazeTimer < diff)
         {
             DoCast(m_creature, SPELL_BLAZE_SUMMON);
-            SummonBlazeTimer = 30000 + rand()%20000;
+            SummonBlazeTimer = urand(30000, 50000);
         }else SummonBlazeTimer -= diff;
 
         if (ChargeTimer < diff)
@@ -2239,7 +2239,7 @@ struct MANGOS_DLL_DECL flamecrashAI : public ScriptedAI
 
     void Reset()
     {
-        FlameCrashTimer = 3000 +rand()%5000;
+        FlameCrashTimer = urand(3000, 8000);
         DespawnTimer = 60000;
     }
 

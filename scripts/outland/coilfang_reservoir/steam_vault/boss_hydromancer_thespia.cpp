@@ -107,7 +107,7 @@ struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
             if (m_bIsHeroicMode)
                 if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
                     DoCast(target, SPELL_LIGHTNING_CLOUD);
-            LightningCloud_Timer = 15000+rand()%10000;
+            LightningCloud_Timer = urand(15000, 25000);
         }else LightningCloud_Timer -=diff;
 
         //LungBurst_Timer
@@ -115,7 +115,7 @@ struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
         {
             if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
                 DoCast(target, SPELL_LUNG_BURST);
-            LungBurst_Timer = 7000+rand()%5000;
+            LungBurst_Timer = urand(7000, 12000);
         }else LungBurst_Timer -=diff;
 
         //EnvelopingWinds_Timer
@@ -127,7 +127,7 @@ struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
             if (m_bIsHeroicMode)
                 if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
                     DoCast(target, SPELL_ENVELOPING_WINDS);
-            EnvelopingWinds_Timer = 10000+rand()%5000;
+            EnvelopingWinds_Timer = urand(10000, 15000);
         }else EnvelopingWinds_Timer -=diff;
 
         DoMeleeAttackIfReady();
@@ -150,7 +150,7 @@ struct MANGOS_DLL_DECL mob_coilfang_waterelementalAI : public ScriptedAI
 
     void Reset()
     {
-        WaterBoltVolley_Timer = 3000+rand()%3000;
+        WaterBoltVolley_Timer = urand(3000, 6000);
     }
 
     void UpdateAI(const uint32 diff)
@@ -161,7 +161,7 @@ struct MANGOS_DLL_DECL mob_coilfang_waterelementalAI : public ScriptedAI
         if (WaterBoltVolley_Timer < diff)
         {
             DoCast(m_creature, m_bIsHeroicMode ? H_SPELL_WATER_BOLT_VOLLEY : SPELL_WATER_BOLT_VOLLEY);
-            WaterBoltVolley_Timer = 7000+rand()%5000;
+            WaterBoltVolley_Timer = urand(7000, 12000);
         }else WaterBoltVolley_Timer -= diff;
 
         DoMeleeAttackIfReady();

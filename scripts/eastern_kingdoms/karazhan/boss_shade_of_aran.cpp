@@ -128,7 +128,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
         m_uiBerserk_Timer = 720000;
         m_uiCloseDoor_Timer = 15000;
 
-        m_uiLastSuperSpell = rand()%3;
+        m_uiLastSuperSpell = urand(0, 2);
 
         m_uiFlameWreath_Timer = 0;
         m_uiFlameWreathCheck_Timer = 0;
@@ -356,7 +356,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
                         DoCast(pUnit, SPELL_CHAINSOFICE);
                     break;
             }
-            m_uiSecondarySpell_Timer = 5000 + (rand()%15000);
+            m_uiSecondarySpell_Timer = urand(5000, 20000);
         }
         else
             m_uiSecondarySpell_Timer -= uiDiff;
@@ -381,7 +381,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
                     break;
             }
 
-            m_uiLastSuperSpell = auiAvailable[rand()%2];
+            m_uiLastSuperSpell = auiAvailable[urand(0, 2)];
 
             switch (m_uiLastSuperSpell)
             {
@@ -416,7 +416,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
                     break;
             }
 
-            m_uiSuperCast_Timer = 35000 + (rand()%5000);
+            m_uiSuperCast_Timer = urand(35000, 40000);
         }
         else
             m_uiSuperCast_Timer -= uiDiff;
@@ -525,7 +525,7 @@ struct MANGOS_DLL_DECL water_elementalAI : public ScriptedAI
 
     void Reset()
     {
-        m_uiCast_Timer = 2000 + (rand()%3000);
+        m_uiCast_Timer = urand(2000, 5000);
     }
 
     void UpdateAI(const uint32 uiDiff)
@@ -536,7 +536,7 @@ struct MANGOS_DLL_DECL water_elementalAI : public ScriptedAI
         if (m_uiCast_Timer < uiDiff)
         {
             DoCast(m_creature->getVictim(), SPELL_WATERBOLT);
-            m_uiCast_Timer = 2000 + (rand()%3000);
+            m_uiCast_Timer = urand(2000, 5000);
         }
         else
             m_uiCast_Timer -= uiDiff;

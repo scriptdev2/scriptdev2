@@ -76,7 +76,7 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
 
     void Reset()
     {
-        ShadowBoltVolley_Timer = 7000 + rand()%7000;
+        ShadowBoltVolley_Timer = urand(7000, 14000);
         DrawShadows_Timer = 40000;
         Teleport_Timer = 1000;
         VoidTraveler_Timer = 20000;
@@ -181,7 +181,7 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
         if (ShadowBoltVolley_Timer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_SHADOW_BOLT_VOLLEY);
-            ShadowBoltVolley_Timer = 15000 + rand()%15000;
+            ShadowBoltVolley_Timer = urand(15000, 30000);
         }else ShadowBoltVolley_Timer -= diff;
 
         if (DrawShadows_Timer < diff)

@@ -36,8 +36,8 @@ struct MANGOS_DLL_DECL boss_grilekAI : public ScriptedAI
 
     void Reset()
     {
-        Avartar_Timer = 15000 + rand()%10000;
-        GroundTremor_Timer = 8000 + rand()%8000;
+        Avartar_Timer = urand(15000, 25000);
+        GroundTremor_Timer = urand(8000, 16000);
     }
 
     void UpdateAI(const uint32 diff)
@@ -60,14 +60,14 @@ struct MANGOS_DLL_DECL boss_grilekAI : public ScriptedAI
             if (target)
                 AttackStart(target);
 
-            Avartar_Timer = 25000 + rand()%10000;
+            Avartar_Timer = urand(25000, 35000);
         }else Avartar_Timer -= diff;
 
         //GroundTremor_Timer
         if (GroundTremor_Timer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_GROUNDTREMOR);
-            GroundTremor_Timer = 12000 + rand()%4000;
+            GroundTremor_Timer = urand(12000, 16000);
         }else GroundTremor_Timer -= diff;
 
         DoMeleeAttackIfReady();

@@ -78,7 +78,7 @@ struct MANGOS_DLL_DECL boss_jindoAI : public ScriptedAI
         if (BrainWashTotem_Timer < diff)
         {
             DoCast(m_creature, SPELL_BRAINWASHTOTEM);
-            BrainWashTotem_Timer = 18000 + rand()%8000;
+            BrainWashTotem_Timer = urand(18000, 26000);
         }else BrainWashTotem_Timer -= diff;
 
         //HealingWard_Timer
@@ -86,7 +86,7 @@ struct MANGOS_DLL_DECL boss_jindoAI : public ScriptedAI
         {
             //DoCast(m_creature, SPELL_POWERFULLHEALINGWARD);
             m_creature->SummonCreature(14987, m_creature->GetPositionX()+3, m_creature->GetPositionY()-2, m_creature->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,30000);
-            HealingWard_Timer = 14000 + rand()%6000;
+            HealingWard_Timer = urand(14000, 20000);
         }else HealingWard_Timer -= diff;
 
         //Hex_Timer
@@ -97,7 +97,7 @@ struct MANGOS_DLL_DECL boss_jindoAI : public ScriptedAI
             if (m_creature->getThreatManager().getThreat(m_creature->getVictim()))
                 m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-80);
 
-            Hex_Timer = 12000 + rand()%8000;
+            Hex_Timer = urand(12000, 20000);
         }else Hex_Timer -= diff;
 
         //Casting the delusion curse with a shade. So shade will attack the same target with the curse.
@@ -112,7 +112,7 @@ struct MANGOS_DLL_DECL boss_jindoAI : public ScriptedAI
                     Shade->AI()->AttackStart(target);
             }
 
-            Delusions_Timer = 4000 + rand()%8000;
+            Delusions_Timer = urand(4000, 12000);
         }else Delusions_Timer -= diff;
 
         //Teleporting a random gamer and spawning 9 skeletons that will attack this gamer
@@ -157,7 +157,7 @@ struct MANGOS_DLL_DECL boss_jindoAI : public ScriptedAI
                     Skeletons->AI()->AttackStart(target);
             }
 
-            Teleport_Timer = 15000 + rand()%8000;
+            Teleport_Timer = urand(15000, 23000);
         }else Teleport_Timer -= diff;
 
         DoMeleeAttackIfReady();

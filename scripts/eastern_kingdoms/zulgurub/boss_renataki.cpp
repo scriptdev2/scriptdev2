@@ -44,11 +44,11 @@ struct MANGOS_DLL_DECL boss_renatakiAI : public ScriptedAI
 
     void Reset()
     {
-        Invisible_Timer = 8000 + rand()%10000;
+        Invisible_Timer = urand(8000, 18000);
         Ambush_Timer = 3000;
         Visible_Timer = 4000;
-        Aggro_Timer = 15000 + rand()%10000;
-        ThousandBlades_Timer = 4000 + rand()%4000;
+        Aggro_Timer = urand(15000, 25000);
+        ThousandBlades_Timer = urand(4000, 8000);
 
         Invisible = false;
         Ambushed = false;
@@ -70,7 +70,7 @@ struct MANGOS_DLL_DECL boss_renatakiAI : public ScriptedAI
             m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             Invisible = true;
 
-            Invisible_Timer = 15000 + rand()%15000;
+            Invisible_Timer = urand(15000, 30000);
         }else Invisible_Timer -= diff;
 
         if (Invisible)
@@ -118,14 +118,14 @@ struct MANGOS_DLL_DECL boss_renatakiAI : public ScriptedAI
             if (target)
                 AttackStart(target);
 
-            Aggro_Timer = 7000 + rand()%13000;
+            Aggro_Timer = urand(7000, 20000);
         }else Aggro_Timer -= diff;
 
         if (!Invisible)
             if (ThousandBlades_Timer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_THOUSANDBLADES);
-            ThousandBlades_Timer = 7000 + rand()%5000;
+            ThousandBlades_Timer = urand(7000, 12000);
         }else ThousandBlades_Timer -= diff;
 
         DoMeleeAttackIfReady();

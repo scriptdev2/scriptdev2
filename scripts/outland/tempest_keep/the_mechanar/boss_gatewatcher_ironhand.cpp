@@ -94,7 +94,7 @@ struct MANGOS_DLL_DECL boss_gatewatcher_iron_handAI : public ScriptedAI
         if (Shadow_Power_Timer < diff)
         {
             DoCast(m_creature, m_bIsHeroicMode ? H_SPELL_SHADOW_POWER : SPELL_SHADOW_POWER);
-            Shadow_Power_Timer = 20000 + rand()%8000;
+            Shadow_Power_Timer = urand(20000, 28000);
         }else Shadow_Power_Timer -= diff;
 
         //Jack Hammer
@@ -115,7 +115,7 @@ struct MANGOS_DLL_DECL boss_gatewatcher_iron_handAI : public ScriptedAI
         if (Stream_of_Machine_Fluid_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_STREAM_OF_MACHINE_FLUID);
-            Stream_of_Machine_Fluid_Timer = 35000 + rand()%15000;
+            Stream_of_Machine_Fluid_Timer = urand(35000, 50000);
         }else Stream_of_Machine_Fluid_Timer -= diff;
 
         DoMeleeAttackIfReady();

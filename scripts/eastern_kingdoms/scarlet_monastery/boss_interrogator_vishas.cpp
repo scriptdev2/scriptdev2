@@ -98,7 +98,7 @@ struct MANGOS_DLL_DECL boss_interrogator_vishasAI : public ScriptedAI
         if (ShadowWordPain_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_SHADOWWORDPAIN);
-            ShadowWordPain_Timer = 5000 + rand()%10000;;
+            ShadowWordPain_Timer = urand(5000, 15000);
         }else ShadowWordPain_Timer -= diff;
 
         DoMeleeAttackIfReady();

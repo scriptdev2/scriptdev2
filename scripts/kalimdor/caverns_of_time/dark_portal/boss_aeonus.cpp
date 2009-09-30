@@ -56,9 +56,9 @@ struct MANGOS_DLL_DECL boss_aeonusAI : public ScriptedAI
 
     void Reset()
     {
-        SandBreath_Timer = 15000+rand()%15000;
-        TimeStop_Timer = 10000+rand()%5000;
-        Frenzy_Timer = 30000+rand()%15000;
+        SandBreath_Timer = urand(15000, 30000);
+        TimeStop_Timer = urand(10000, 15000);
+        Frenzy_Timer = urand(30000, 45000);
     }
 
     void Aggro(Unit *who)
@@ -104,14 +104,14 @@ struct MANGOS_DLL_DECL boss_aeonusAI : public ScriptedAI
         if (SandBreath_Timer < diff)
         {
             DoCast(m_creature->getVictim(), m_bIsHeroicMode ? H_SPELL_SAND_BREATH : SPELL_SAND_BREATH);
-            SandBreath_Timer = 15000+rand()%10000;
+            SandBreath_Timer = urand(15000, 25000);
         }else SandBreath_Timer -= diff;
 
         //Time Stop
         if (TimeStop_Timer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_TIME_STOP);
-            TimeStop_Timer = 20000+rand()%15000;
+            TimeStop_Timer = urand(20000, 35000);
         }else TimeStop_Timer -= diff;
 
         //Frenzy
@@ -119,7 +119,7 @@ struct MANGOS_DLL_DECL boss_aeonusAI : public ScriptedAI
         {
             DoScriptText(EMOTE_FRENZY, m_creature);
             DoCast(m_creature, SPELL_ENRAGE);
-            Frenzy_Timer = 20000+rand()%15000;
+            Frenzy_Timer = urand(20000, 35000);
         }else Frenzy_Timer -= diff;
 
         DoMeleeAttackIfReady();

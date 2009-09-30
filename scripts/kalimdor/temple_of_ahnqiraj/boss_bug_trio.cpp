@@ -54,8 +54,8 @@ struct MANGOS_DLL_DECL boss_kriAI : public ScriptedAI
 
     void Reset()
     {
-        Cleave_Timer = 4000 + rand()%4000;
-        ToxicVolley_Timer = 6000 + rand()%6000;
+        Cleave_Timer = urand(4000, 8000);
+        ToxicVolley_Timer = urand(6000, 12000);
         Check_Timer = 2000;
 
         VemDead = false;
@@ -83,14 +83,14 @@ struct MANGOS_DLL_DECL boss_kriAI : public ScriptedAI
         if (Cleave_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_CLEAVE);
-            Cleave_Timer = 5000 + rand()%7000;
+            Cleave_Timer = urand(5000, 12000);
         }else Cleave_Timer -= diff;
 
         //ToxicVolley_Timer
         if (ToxicVolley_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_TOXIC_VOLLEY);
-            ToxicVolley_Timer = 10000 + rand()%5000;
+            ToxicVolley_Timer = urand(10000, 15000);
         }else ToxicVolley_Timer -= diff;
 
         if (m_creature->GetHealth() <= m_creature->GetMaxHealth() * 0.05 && !Death)
@@ -135,8 +135,8 @@ struct MANGOS_DLL_DECL boss_vemAI : public ScriptedAI
 
     void Reset()
     {
-        Charge_Timer = 15000 + rand()%12000;
-        KnockBack_Timer = 8000 + rand()%12000;
+        Charge_Timer = urand(15000, 27000);
+        KnockBack_Timer = urand(8000, 20000);
         Enrage_Timer = 120000;
 
         Enraged = false;
@@ -168,7 +168,7 @@ struct MANGOS_DLL_DECL boss_vemAI : public ScriptedAI
             if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
                 DoCast(target, SPELL_CHARGE);
 
-            Charge_Timer = 8000 + rand()%8000;
+            Charge_Timer = urand(8000, 16000);
         }else Charge_Timer -= diff;
 
         //KnockBack_Timer
@@ -177,7 +177,7 @@ struct MANGOS_DLL_DECL boss_vemAI : public ScriptedAI
             DoCast(m_creature->getVictim(),SPELL_KNOCKBACK);
             if (m_creature->getThreatManager().getThreat(m_creature->getVictim()))
                 m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-80);
-            KnockBack_Timer = 15000 + rand()%10000;
+            KnockBack_Timer = urand(15000, 25000);
         }else KnockBack_Timer -= diff;
 
         //Enrage_Timer
@@ -209,8 +209,8 @@ struct MANGOS_DLL_DECL boss_yaujAI : public ScriptedAI
 
     void Reset()
     {
-        Heal_Timer = 25000 + rand()%15000;
-        Fear_Timer = 12000 + rand()%12000;
+        Heal_Timer = urand(25000, 40000);
+        Fear_Timer = urand(12000, 24000);
         Check_Timer = 2000;
 
         VemDead = false;
@@ -273,7 +273,7 @@ struct MANGOS_DLL_DECL boss_yaujAI : public ScriptedAI
                 }
             }
 
-            Heal_Timer = 15000+rand()%15000;
+            Heal_Timer = urand(15000, 30000);
         }else Heal_Timer -= diff;
 
         //Checking if Vem is dead. If yes we will enrage.

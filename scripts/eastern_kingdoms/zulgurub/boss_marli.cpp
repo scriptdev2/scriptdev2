@@ -184,7 +184,7 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
             if (m_uiPoisonVolley_Timer < uiDiff)
             {
                 DoCast(m_creature->getVictim(),SPELL_POISONVOLLEY);
-                m_uiPoisonVolley_Timer = 10000 + rand()%10000;
+                m_uiPoisonVolley_Timer = urand(10000, 20000);
             }
             else
                 m_uiPoisonVolley_Timer -= uiDiff;
@@ -192,7 +192,7 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
             if (m_uiDrainLife_Timer < uiDiff)
             {
                 DoCast(m_creature->getVictim(), SPELL_DRAIN_LIFE);
-                m_uiDrainLife_Timer = 20000 + rand()%30000;
+                m_uiDrainLife_Timer = urand(20000, 50000);
             }
             else
                 m_uiDrainLife_Timer -= uiDiff;
@@ -204,7 +204,7 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
                     pEgg->SetGoState(GO_STATE_ACTIVE);
                     m_creature->SummonCreature(NPC_SPAWN_OF_MARLI, pEgg->GetPositionX(), pEgg->GetPositionY(), pEgg->GetPositionZ(),0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
                 }
-                m_uiSpawnSpider_Timer = 20000 + rand()%10000;
+                m_uiSpawnSpider_Timer = urand(20000, 30000);
             }
             else
                 m_uiSpawnSpider_Timer -= uiDiff;
@@ -214,7 +214,7 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
             if (!m_bHasWebbed && m_uiWebs_Timer < uiDiff)
             {
                 DoCast(m_creature->getVictim(),SPELL_ENVELOPINGWEBS);
-                m_uiWebs_Timer = 10000 + rand()%5000;
+                m_uiWebs_Timer = urand(10000, 15000);
                 m_uiCharge_Timer = 1000;
                 m_bHasWebbed = true;
             }
@@ -243,7 +243,7 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
                         }
                     */
                 }
-                m_uiWebs_Timer = 10000 + rand()%10000;
+                m_uiWebs_Timer = urand(10000, 20000);
             }
             else
                 m_uiCharge_Timer -= uiDiff;
@@ -251,7 +251,7 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
             if (m_uiCorrosivePoison_Timer < uiDiff)
             {
                 DoCast(m_creature->getVictim(), SPELL_CORROSIVE_POISON);
-                m_uiCorrosivePoison_Timer = 25000 +rand()%10000;
+                m_uiCorrosivePoison_Timer = urand(25000, 35000);
             }
             else
                 m_uiCorrosivePoison_Timer -= uiDiff;
@@ -294,7 +294,7 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
                 m_bIsInPhaseTwo = false;
             }
 
-            m_uiTransformBack_Timer = 55000 + rand()%15000;
+            m_uiTransformBack_Timer = urand(55000, 70000);
         }
         else
             m_uiTransformBack_Timer -= uiDiff;
@@ -302,7 +302,7 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
         if (m_uiTrash_Timer < uiDiff)
         {
             DoCast(m_creature->getVictim(), SPELL_TRASH);
-            m_uiTrash_Timer = 10000 + rand()%10000;
+            m_uiTrash_Timer = urand(10000, 20000);
         }
         else
             m_uiTrash_Timer -= uiDiff;

@@ -155,7 +155,7 @@ struct MANGOS_DLL_DECL mob_illusionofjandicebarovAI : public ScriptedAI
 
     void Reset()
     {
-        Cleave_Timer = 2000 + rand()%6000;
+        Cleave_Timer = urand(2000, 8000);
         m_creature->ApplySpellImmune(0, IMMUNITY_DAMAGE, SPELL_SCHOOL_MASK_MAGIC, true);
     }
 
@@ -169,7 +169,7 @@ struct MANGOS_DLL_DECL mob_illusionofjandicebarovAI : public ScriptedAI
         if (Cleave_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_CLEAVE);
-            Cleave_Timer = 5000 + rand()%3000;
+            Cleave_Timer = urand(5000, 8000);
         }else Cleave_Timer -= diff;
 
         DoMeleeAttackIfReady();

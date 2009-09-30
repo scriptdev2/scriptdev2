@@ -77,7 +77,7 @@ struct MANGOS_DLL_DECL boss_brutallusAI : public ScriptedAI
         m_uiStompTimer = 30000;
         m_uiBurnTimer = 60000;
         m_uiBerserkTimer = 360000;
-        m_uiLoveTimer = 10000 + rand()%7000;
+        m_uiLoveTimer = urand(10000, 17000);
 
         //TODO: correct me when pre-event implemented
         if (m_pInstance)
@@ -129,7 +129,7 @@ struct MANGOS_DLL_DECL boss_brutallusAI : public ScriptedAI
                 case 1: DoScriptText(YELL_LOVE2, m_creature); break;
                 case 2: DoScriptText(YELL_LOVE3, m_creature); break;
             }
-            m_uiLoveTimer = 15000 + rand()%8000;
+            m_uiLoveTimer = urand(15000, 23000);
         }
         else
             m_uiLoveTimer -= uiDiff;

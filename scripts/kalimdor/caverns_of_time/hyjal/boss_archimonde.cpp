@@ -221,9 +221,9 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         DrainNordrassilTimer = 0;
         FearTimer = 42000;
         AirBurstTimer = 30000;
-        GripOfTheLegionTimer = 5000 + rand()%20000;
+        GripOfTheLegionTimer = urand(5000, 25000);
         DoomfireTimer = 20000;
-        SoulChargeTimer = 2000 + rand()%27000;
+        SoulChargeTimer = urand(2000, 29000);
         SoulChargeCount = 0;
         MeleeRangeCheckTimer = 15000;
         HandOfDeathTimer = 2000;
@@ -282,7 +282,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
                 break;
         }
 
-        SoulChargeTimer = 2000 + rand()%28000;
+        SoulChargeTimer = urand(2000, 30000);
         ++SoulChargeCount;
     }
 
@@ -404,7 +404,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         }
 
         if (HasCast)
-            SoulChargeTimer = 2000 + rand()%28000;
+            SoulChargeTimer = urand(2000, 30000);
     }
 
     void UpdateAI(const uint32 diff)
@@ -535,7 +535,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         if (GripOfTheLegionTimer < diff)
         {
             DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), SPELL_GRIP_OF_THE_LEGION);
-            GripOfTheLegionTimer = 5000 + rand()%20000;
+            GripOfTheLegionTimer = urand(5000, 25000);
         }else GripOfTheLegionTimer -= diff;
 
         if (AirBurstTimer < diff)
@@ -546,7 +546,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
                 DoScriptText(SAY_AIR_BURST2, m_creature);
 
             DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), SPELL_AIR_BURST);
-            AirBurstTimer = 25000 + rand()%15000;
+            AirBurstTimer = urand(25000, 40000);
         }else AirBurstTimer -= diff;
 
         if (FearTimer < diff)

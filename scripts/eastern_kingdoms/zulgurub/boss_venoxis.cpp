@@ -158,7 +158,7 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
             if (m_uiDispell_Timer < uiDiff)
             {
                 DoCast(m_creature, SPELL_DISPELL);
-                m_uiDispell_Timer = 15000 + rand()%15000;
+                m_uiDispell_Timer = urand(15000, 30000);
             }
             else
                 m_uiDispell_Timer -= uiDiff;
@@ -166,7 +166,7 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
             if (m_uiRenew_Timer < uiDiff)
             {
                 DoCast(m_creature, SPELL_RENEW);
-                m_uiRenew_Timer = 20000 + rand()%10000;
+                m_uiRenew_Timer = urand(20000, 30000);
             }
             else
                 m_uiRenew_Timer -= uiDiff;
@@ -174,7 +174,7 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
             if (m_uiHolyWrath_Timer < uiDiff)
             {
                 DoCast(m_creature->getVictim(), SPELL_HOLY_WRATH);
-                m_uiHolyWrath_Timer = 15000 + rand()%10000;
+                m_uiHolyWrath_Timer = urand(15000, 25000);
             }
             else
                 m_uiHolyWrath_Timer -= uiDiff;
@@ -227,7 +227,7 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
                 if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
                     DoCast(pTarget, SPELL_VENOMSPIT);
 
-                m_uiVenomSpit_Timer = 15000 + rand()%5000;
+                m_uiVenomSpit_Timer = urand(15000, 20000);
             }
             else
                 m_uiVenomSpit_Timer -= uiDiff;
@@ -246,7 +246,7 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
         if (m_uiTrash_Timer < uiDiff)
         {
             DoCast(m_creature->getVictim(), SPELL_TRASH);
-            m_uiTrash_Timer = 10000 + rand()%10000;
+            m_uiTrash_Timer = urand(10000, 20000);
         }
         else
             m_uiTrash_Timer -= uiDiff;

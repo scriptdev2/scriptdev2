@@ -226,7 +226,7 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
             else
                 DoCast(m_creature->getVictim(), m_bIsHeroicMode ? H_SPELL_DOMINATION : SPELL_DOMINATION);
 
-            Domination_Timer = 16000+rand()%16000;
+            Domination_Timer = urand(16000, 32000);
         }else Domination_Timer -=diff;
 
         if (m_bIsHeroicMode)
@@ -239,7 +239,7 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
                 if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,1))
                     DoCast(target,H_SPELL_MANA_BURN);
 
-                ManaBurn_Timer = 16000+rand()%16000;
+                ManaBurn_Timer = urand(16000, 32000);
             }else ManaBurn_Timer -=diff;
         }
 

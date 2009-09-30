@@ -47,12 +47,12 @@ struct MANGOS_DLL_DECL boss_ouroAI : public ScriptedAI
 
     void Reset()
     {
-        Sweep_Timer = 5000 + rand()%5000;
-        SandBlast_Timer = 20000 + rand()%15000;
-        Submerge_Timer = 90000 + rand()%60000;
-        Back_Timer = 30000 + rand()%15000;
-        ChangeTarget_Timer = 5000 + rand()%3000;
-        Spawn_Timer = 10000 + rand()%10000;
+        Sweep_Timer = urand(5000, 10000);
+        SandBlast_Timer = urand(20000, 35000);
+        Submerge_Timer = urand(90000, 150000);
+        Back_Timer = urand(30000, 45000);
+        ChangeTarget_Timer = urand(5000, 8000);
+        Spawn_Timer = urand(10000, 20000);
 
         Enrage = false;
         Submerged = false;
@@ -73,14 +73,14 @@ struct MANGOS_DLL_DECL boss_ouroAI : public ScriptedAI
         if (!Submerged && Sweep_Timer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_SWEEP);
-            Sweep_Timer = 15000 + rand()%15000;
+            Sweep_Timer = urand(15000, 30000);
         }else Sweep_Timer -= diff;
 
         //SandBlast_Timer
         if (!Submerged && SandBlast_Timer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_SANDBLAST);
-            SandBlast_Timer = 20000 + rand()%15000;
+            SandBlast_Timer = urand(20000, 35000);
         }else SandBlast_Timer -= diff;
 
         //Submerge_Timer
@@ -93,7 +93,7 @@ struct MANGOS_DLL_DECL boss_ouroAI : public ScriptedAI
             DoCast(m_creature, SPELL_DIRTMOUND_PASSIVE);
 
             Submerged = true;
-            Back_Timer = 30000 + rand()%15000;
+            Back_Timer = urand(30000, 45000);
         }else Submerge_Timer -= diff;
 
         //ChangeTarget_Timer
@@ -105,7 +105,7 @@ struct MANGOS_DLL_DECL boss_ouroAI : public ScriptedAI
                 m_creature->SendMonsterMove(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, MONSTER_MOVE_WALK, 1);
             }
 
-            ChangeTarget_Timer = 10000 + rand()%10000;
+            ChangeTarget_Timer = urand(10000, 20000);
         }else ChangeTarget_Timer -= diff;
 
         //Back_Timer
@@ -117,7 +117,7 @@ struct MANGOS_DLL_DECL boss_ouroAI : public ScriptedAI
             DoCast(m_creature->getVictim(), SPELL_GROUND_RUPTURE);
 
             Submerged = false;
-            Submerge_Timer = 60000 + rand()%60000;
+            Submerge_Timer = urand(60000, 120000);
         }else Back_Timer -= diff;
 
         DoMeleeAttackIfReady();

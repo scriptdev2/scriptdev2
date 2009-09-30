@@ -60,10 +60,10 @@ struct MANGOS_DLL_DECL boss_nethermancer_sepethreaAI : public ScriptedAI
 
     void Reset()
     {
-        frost_attack_Timer = 7000 + rand()%3000;
-        arcane_blast_Timer = 12000 + rand()%6000;
-        dragons_breath_Timer = 18000 + rand()%4000;
-        knockback_Timer = 22000 + rand()%6000;
+        frost_attack_Timer = urand(7000, 10000);
+        arcane_blast_Timer = urand(12000, 18000);
+        dragons_breath_Timer = urand(18000, 22000);
+        knockback_Timer = urand(22000, 28000);
         solarburn_Timer = 30000;
     }
 
@@ -104,7 +104,7 @@ struct MANGOS_DLL_DECL boss_nethermancer_sepethreaAI : public ScriptedAI
         if (frost_attack_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_FROST_ATTACK);
-            frost_attack_Timer = 7000 + rand()%3000;
+            frost_attack_Timer = urand(7000, 10000);
         }else frost_attack_Timer -= diff;
 
         //Arcane Blast
@@ -122,14 +122,14 @@ struct MANGOS_DLL_DECL boss_nethermancer_sepethreaAI : public ScriptedAI
             if (urand(0, 1))
                 DoScriptText(urand(0, 1) ? SAY_DRAGONS_BREATH_1 : SAY_DRAGONS_BREATH_2, m_creature);
 
-            dragons_breath_Timer = 12000 + rand()%10000;
+            dragons_breath_Timer = urand(12000, 22000);
         }else dragons_breath_Timer -= diff;
 
         //Check for Knockback
         if (knockback_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_KNOCKBACK);
-            knockback_Timer = 15000 + rand()%10000;
+            knockback_Timer = urand(15000, 25000);
         }else knockback_Timer -= diff;
 
         //Check for Solarburn

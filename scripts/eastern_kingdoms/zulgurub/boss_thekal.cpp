@@ -154,13 +154,13 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
         if (!PhaseTwo && MortalCleave_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_MORTALCLEAVE);
-            MortalCleave_Timer = 15000 + rand()%5000;
+            MortalCleave_Timer = urand(15000, 20000);
         }else MortalCleave_Timer -= diff;
 
         if (!PhaseTwo && Silence_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_SILENCE);
-            Silence_Timer = 20000 + rand()%5000;
+            Silence_Timer = urand(20000, 25000);
         }else Silence_Timer -= diff;
 
         if (!PhaseTwo && !WasDead && m_creature->GetHealth() <= m_creature->GetMaxHealth() * 0.05)
@@ -209,7 +209,7 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
                     DoResetThreat();
                     AttackStart(target);
                 }
-                Charge_Timer = 15000 + rand()%7000;
+                Charge_Timer = urand(15000, 22000);
             }else Charge_Timer -= diff;
 
             if (Frenzy_Timer < diff)
@@ -221,13 +221,13 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
             if (ForcePunch_Timer < diff)
             {
                 DoCast(m_creature->getVictim(),SPELL_SILENCE);
-                ForcePunch_Timer = 16000 + rand()%5000;
+                ForcePunch_Timer = urand(16000, 21000);
             }else ForcePunch_Timer -= diff;
 
             if (SummonTigers_Timer < diff)
             {
                 DoCast(m_creature->getVictim(),SPELL_SUMMONTIGERS);
-                SummonTigers_Timer = 10000 + rand()%4000;
+                SummonTigers_Timer = urand(10000, 14000);
             }else SummonTigers_Timer -= diff;
 
             if ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 11) && !Enraged)
@@ -293,7 +293,7 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public ScriptedAI
         if (BloodLust_Timer < diff)
         {
             DoCast(m_creature,SPELL_BLOODLUST);
-            BloodLust_Timer = 20000+rand()%8000;
+            BloodLust_Timer = urand(20000, 28000);
         }else BloodLust_Timer -= diff;
 
         //Casting Greaterheal to Thekal or Zath if they are in meele range.
@@ -317,14 +317,14 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public ScriptedAI
                 }
             }
 
-            GreaterHeal_Timer = 15000+rand()%5000;
+            GreaterHeal_Timer = urand(15000, 20000);
         }else GreaterHeal_Timer -= diff;
 
         //Disarm_Timer
         if (Disarm_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_DISARM);
-            Disarm_Timer = 15000+rand()%10000;
+            Disarm_Timer = urand(15000, 25000);
         }else Disarm_Timer -= diff;
 
         //Check_Timer for the death of LorKhan and Zath.
@@ -424,14 +424,14 @@ struct MANGOS_DLL_DECL mob_zealot_zathAI : public ScriptedAI
         if (SweepingStrikes_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_SWEEPINGSTRIKES);
-            SweepingStrikes_Timer = 22000+rand()%4000;
+            SweepingStrikes_Timer = urand(22000, 26000);
         }else SweepingStrikes_Timer -= diff;
 
         //SinisterStrike_Timer
         if (SinisterStrike_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_SINISTERSTRIKE);
-            SinisterStrike_Timer = 8000+rand()%8000;
+            SinisterStrike_Timer = urand(8000, 16000);
         }else SinisterStrike_Timer -= diff;
 
         //Gouge_Timer
@@ -442,21 +442,21 @@ struct MANGOS_DLL_DECL mob_zealot_zathAI : public ScriptedAI
             if (m_creature->getThreatManager().getThreat(m_creature->getVictim()))
                 m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-100);
 
-            Gouge_Timer = 17000+rand()%10000;
+            Gouge_Timer = urand(17000, 27000);
         }else Gouge_Timer -= diff;
 
         //Kick_Timer
         if (Kick_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_KICK);
-            Kick_Timer = 15000+rand()%10000;
+            Kick_Timer = urand(15000, 25000);
         }else Kick_Timer -= diff;
 
         //Blind_Timer
         if (Blind_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_BLIND);
-            Blind_Timer = 10000+rand()%10000;
+            Blind_Timer = urand(10000, 20000);
         }else Blind_Timer -= diff;
 
         //Check_Timer for the death of LorKhan and Zath.

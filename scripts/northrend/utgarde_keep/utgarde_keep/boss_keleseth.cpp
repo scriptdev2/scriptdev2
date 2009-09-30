@@ -76,7 +76,7 @@ struct MANGOS_DLL_DECL mob_vrykul_skeletonAI : public ScriptedAI
     void Reset()
     {
         m_uiReviveTimer = 0;
-        m_uiCastTimer = 5000 + rand()%5000;                              // taken out of thin air
+        m_uiCastTimer = urand(5000, 10000);                 // taken out of thin air
 
         if (!m_pInstance)
             return;
@@ -168,7 +168,7 @@ struct MANGOS_DLL_DECL mob_vrykul_skeletonAI : public ScriptedAI
             else
                 DoCast(m_creature->getVictim(), SPELL_DECREPIFY);
 
-            m_uiCastTimer = 5000 + rand()%10000;
+            m_uiCastTimer = urand(5000, 15000);
         }
         else
             m_uiCastTimer -= uiDiff;

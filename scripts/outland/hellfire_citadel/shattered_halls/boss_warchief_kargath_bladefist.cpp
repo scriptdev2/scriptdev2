@@ -258,7 +258,7 @@ struct MANGOS_DLL_DECL boss_warchief_kargath_bladefistAI : public ScriptedAI
                 if (!urand(0, 4))
                     ++summoned;
 
-                Summon_Assistant_Timer = 25000 + (rand()%10000) ;
+                Summon_Assistant_Timer = urand(25000, 35000);
             }
             else
                 Summon_Assistant_Timer -= diff;

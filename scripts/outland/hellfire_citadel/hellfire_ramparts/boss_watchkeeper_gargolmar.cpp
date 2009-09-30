@@ -114,7 +114,7 @@ struct MANGOS_DLL_DECL boss_watchkeeper_gargolmarAI : public ScriptedAI
         if (MortalWound_Timer < diff)
         {
             DoCast(m_creature->getVictim(), m_bIsHeroicMode ? H_SPELL_MORTAL_WOUND : SPELL_MORTAL_WOUND);
-            MortalWound_Timer = 5000+rand()%8000;
+            MortalWound_Timer = urand(5000, 13000);
         }else MortalWound_Timer -= diff;
 
         if (Surge_Timer < diff)
@@ -124,7 +124,7 @@ struct MANGOS_DLL_DECL boss_watchkeeper_gargolmarAI : public ScriptedAI
             if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
                 DoCast(target,SPELL_SURGE);
 
-            Surge_Timer = 5000+rand()%8000;
+            Surge_Timer = urand(5000, 12000);
         }else Surge_Timer -= diff;
 
         if ((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 20)

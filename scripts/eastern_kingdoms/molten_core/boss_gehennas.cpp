@@ -61,14 +61,14 @@ struct MANGOS_DLL_DECL boss_gehennasAI : public ScriptedAI
             if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
                 DoCast(target,SPELL_RAINOFFIRE);
 
-            RainOfFire_Timer = 4000 + rand()%8000;
+            RainOfFire_Timer = urand(4000, 12000);
         }else RainOfFire_Timer -= diff;
 
         //GehennasCurse_Timer
         if (GehennasCurse_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_GEHENNASCURSE);
-            GehennasCurse_Timer = 22000 + rand()%8000;
+            GehennasCurse_Timer = urand(22000, 30000);
         }else GehennasCurse_Timer -= diff;
 
         DoMeleeAttackIfReady();

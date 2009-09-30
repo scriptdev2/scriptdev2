@@ -49,7 +49,7 @@ CreatureAI* GetAI_boss_rokmar_the_crackler(Creature *_Creature)
     //Ensaring Moss
     ai->Spell[2].Enabled = true;
     ai->Spell[2].Spell_Id = SPELL_ENSARING_MOSS;
-    ai->Spell[2].Cooldown = 15000 + (rand()%10000);
+    ai->Spell[2].Cooldown = urand(15000, 25000);
     ai->Spell[2].First_Cast = 25000;
     ai->Spell[2].Cast_Target_Type = CAST_HOSTILE_TARGET;
 

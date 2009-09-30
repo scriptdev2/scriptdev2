@@ -59,9 +59,9 @@ struct MANGOS_DLL_DECL boss_doomlordkazzakAI : public ScriptedAI
 
     void Reset()
     {
-        ShadowVolley_Timer = 6000 + rand()%4000;
+        ShadowVolley_Timer = urand(6000, 10000);
         Cleave_Timer = 7000;
-        ThunderClap_Timer = 14000 + rand()%4000;
+        ThunderClap_Timer = urand(14000, 18000);
         VoidBolt_Timer = 30000;
         MarkOfKazzak_Timer = 25000;
         Enrage_Timer = 60000;
@@ -109,28 +109,28 @@ struct MANGOS_DLL_DECL boss_doomlordkazzakAI : public ScriptedAI
         if (ShadowVolley_Timer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_SHADOWVOLLEY);
-            ShadowVolley_Timer = 4000 + rand()%2000;
+            ShadowVolley_Timer = urand(4000, 6000);
         }else ShadowVolley_Timer -= diff;
 
         //Cleave_Timer
         if (Cleave_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_CLEAVE);
-            Cleave_Timer = 8000 + rand()%4000;
+            Cleave_Timer = urand(8000, 12000);
         }else Cleave_Timer -= diff;
 
         //ThunderClap_Timer
         if (ThunderClap_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_THUNDERCLAP);
-            ThunderClap_Timer = 10000 + rand()%4000;
+            ThunderClap_Timer = urand(10000, 14000);
         }else ThunderClap_Timer -= diff;
 
         //VoidBolt_Timer
         if (VoidBolt_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_VOIDBOLT);
-            VoidBolt_Timer = 15000 + rand()%3000;
+            VoidBolt_Timer = urand(15000, 18000);
         }else VoidBolt_Timer -= diff;
 
         //MarkOfKazzak_Timer

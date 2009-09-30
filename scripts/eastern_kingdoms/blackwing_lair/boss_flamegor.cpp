@@ -58,7 +58,7 @@ struct MANGOS_DLL_DECL boss_flamegorAI : public ScriptedAI
         if (ShadowFlame_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_SHADOWFLAME);
-            ShadowFlame_Timer = 15000 + rand()%7000;
+            ShadowFlame_Timer = urand(15000, 22000);
         }else ShadowFlame_Timer -= diff;
 
         //WingBuffet_Timer
@@ -76,7 +76,7 @@ struct MANGOS_DLL_DECL boss_flamegorAI : public ScriptedAI
         {
             DoScriptText(EMOTE_FRENZY, m_creature);
             DoCast(m_creature,SPELL_FRENZY);
-            Frenzy_Timer = 8000 + (rand()%2000);
+            Frenzy_Timer = urand(8000, 1000);
         }else Frenzy_Timer -= diff;
 
         DoMeleeAttackIfReady();

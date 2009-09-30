@@ -57,10 +57,10 @@ struct MANGOS_DLL_DECL boss_chrono_lord_dejaAI : public ScriptedAI
 
     void Reset()
     {
-        ArcaneBlast_Timer = 18000+rand()%5000;
-        TimeLapse_Timer = 10000+rand()%5000;
-        ArcaneDischarge_Timer = 20000+rand()%10000;
-        Attraction_Timer = 25000+rand()%10000;
+        ArcaneBlast_Timer = urand(18000, 23000);
+        TimeLapse_Timer = urand(10000, 15000);
+        ArcaneDischarge_Timer = urand(20000, 30000);
+        Attraction_Timer = urand(25000, 35000);
     }
 
     void Aggro(Unit *who)
@@ -106,7 +106,7 @@ struct MANGOS_DLL_DECL boss_chrono_lord_dejaAI : public ScriptedAI
         if (ArcaneBlast_Timer < diff)
         {
             DoCast(m_creature->getVictim(), m_bIsHeroicMode ? H_SPELL_ARCANE_BLAST : SPELL_ARCANE_BLAST);
-            ArcaneBlast_Timer = 15000+rand()%10000;
+            ArcaneBlast_Timer = urand(15000, 25000);
         }else ArcaneBlast_Timer -= diff;
 
         //Arcane Discharge
@@ -114,7 +114,7 @@ struct MANGOS_DLL_DECL boss_chrono_lord_dejaAI : public ScriptedAI
         {
             Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0);
             DoCast(target, m_bIsHeroicMode ? H_SPELL_ARCANE_DISCHARGE : SPELL_ARCANE_DISCHARGE);
-            ArcaneDischarge_Timer = 20000+rand()%10000;
+            ArcaneDischarge_Timer = urand(20000, 30000);
         }else ArcaneDischarge_Timer -= diff;
 
         //Time Lapse
@@ -122,7 +122,7 @@ struct MANGOS_DLL_DECL boss_chrono_lord_dejaAI : public ScriptedAI
         {
             DoScriptText(SAY_BANISH, m_creature);
             DoCast(m_creature, SPELL_TIME_LAPSE);
-            TimeLapse_Timer = 15000+rand()%10000;
+            TimeLapse_Timer = urand(15000, 25000);
         }else TimeLapse_Timer -= diff;
 
         if (m_bIsHeroicMode)
@@ -130,7 +130,7 @@ struct MANGOS_DLL_DECL boss_chrono_lord_dejaAI : public ScriptedAI
             if (Attraction_Timer < diff)
             {
                 DoCast(m_creature,SPELL_ATTRACTION);
-                Attraction_Timer = 25000+rand()%10000;
+                Attraction_Timer = urand(25000, 35000);
             }else Attraction_Timer -= diff;
         }
 

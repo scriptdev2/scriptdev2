@@ -103,7 +103,7 @@ struct MANGOS_DLL_DECL boss_warlord_kalithreshAI : public ScriptedAI
     void Reset()
     {
         Reflection_Timer = 10000;
-        Impale_Timer = 7000+rand()%7000;
+        Impale_Timer = urand(7000, 14000);
         Rage_Timer = 45000;
         CanRage = false;
 
@@ -159,14 +159,14 @@ struct MANGOS_DLL_DECL boss_warlord_kalithreshAI : public ScriptedAI
                 DoCast(m_creature,SPELL_WARLORDS_RAGE);
                 ((mob_naga_distillerAI*)pDistiller->AI())->StartRageGen(m_creature);
             }
-            Rage_Timer = 3000+rand()%15000;
+            Rage_Timer = urand(3000, 18000);
         }else Rage_Timer -= diff;
 
         //Reflection_Timer
         if (Reflection_Timer < diff)
         {
             DoCast(m_creature, SPELL_SPELL_REFLECTION);
-            Reflection_Timer = 15000+rand()%10000;
+            Reflection_Timer = urand(15000, 25000);
         }else Reflection_Timer -= diff;
 
         //Impale_Timer
@@ -175,7 +175,7 @@ struct MANGOS_DLL_DECL boss_warlord_kalithreshAI : public ScriptedAI
             if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
                 DoCast(target,SPELL_IMPALE);
 
-            Impale_Timer = 7500+rand()%5000;
+            Impale_Timer = urand(7500, 12500);
         }else Impale_Timer -= diff;
 
         DoMeleeAttackIfReady();

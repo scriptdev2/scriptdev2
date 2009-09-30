@@ -63,7 +63,7 @@ struct MANGOS_DLL_DECL boss_mothersmolderwebAI : public ScriptedAI
         if (MothersMilk_Timer < diff)
         {
             DoCast(m_creature,SPELL_MOTHERSMILK);
-            MothersMilk_Timer = 5000+rand()%7500;
+            MothersMilk_Timer = urand(5000, 12500);
         }else MothersMilk_Timer -= diff;
 
         DoMeleeAttackIfReady();

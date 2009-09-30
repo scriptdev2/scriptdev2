@@ -72,7 +72,7 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
 
         m_uiNeedleSpineTimer = 10000;
         m_uiEnrageTimer = MINUTE*8*IN_MILISECONDS;
-        m_uiSpecialYellTimer = 45000 + (rand()%76)*1000;
+        m_uiSpecialYellTimer = urand(45000, 120000);
         m_uiTidalShieldTimer = 60000;
         m_uiImpalingSpineTimer = 20000;
     }
@@ -164,7 +164,7 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
         if (m_uiSpecialYellTimer < diff)
         {
             DoScriptText(urand(0, 1) ? SAY_SPECIAL1 : SAY_SPECIAL2, m_creature);
-            m_uiSpecialYellTimer = 25000 + (rand()%76)*1000;
+            m_uiSpecialYellTimer = urand(25000, 100000);
         }else m_uiSpecialYellTimer -= diff;
 
         if (m_uiImpalingSpineTimer < diff)

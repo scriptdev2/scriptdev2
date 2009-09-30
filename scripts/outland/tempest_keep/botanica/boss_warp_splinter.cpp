@@ -104,9 +104,9 @@ struct MANGOS_DLL_DECL boss_warp_splinterAI : public ScriptedAI
 
     void Reset()
     {
-        War_Stomp_Timer = 25000 + rand()%15000;
+        War_Stomp_Timer = urand(25000, 40000);
         Summon_Treants_Timer = 45000;
-        Arcane_Volley_Timer = 8000 + rand()%12000;
+        Arcane_Volley_Timer = urand(8000, 20000);
         CheckTreantLOS_Timer = 1000;
         TreantLife_Timer = 999999;
 
@@ -187,14 +187,14 @@ struct MANGOS_DLL_DECL boss_warp_splinterAI : public ScriptedAI
         if (War_Stomp_Timer < diff)
         {
             DoCast(m_creature->getVictim(),WAR_STOMP);
-            War_Stomp_Timer = 25000 + rand()%15000;
+            War_Stomp_Timer = urand(25000, 40000);
         } else War_Stomp_Timer -= diff;
 
         //Check for Arcane Volley
         if (Arcane_Volley_Timer < diff)
         {
             DoCast(m_creature->getVictim(),ARCANE_VOLLEY);
-            Arcane_Volley_Timer = 20000 + rand()%15000;
+            Arcane_Volley_Timer = urand(20000, 35000);
         } else Arcane_Volley_Timer -= diff;
 
         //Check for Summon Treants

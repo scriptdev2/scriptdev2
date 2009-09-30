@@ -179,7 +179,7 @@ struct MANGOS_DLL_DECL boss_morogrim_tidewalkerAI : public ScriptedAI
                 DoScriptText(EMOTE_EARTHQUAKE, m_creature);
 
                 m_bEarthquake = false;
-                m_uiEarthquake_Timer = 40000+rand()%5000;
+                m_uiEarthquake_Timer = urand(40000, 45000);
             }
         }else m_uiEarthquake_Timer -= uiDiff;
 

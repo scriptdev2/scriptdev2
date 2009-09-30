@@ -49,11 +49,11 @@ struct MANGOS_DLL_DECL boss_huhuranAI : public ScriptedAI
 
     void Reset()
     {
-        Frenzy_Timer = 25000 + rand()%10000;
-        Wyvern_Timer = 18000 + rand()%10000;
+        Frenzy_Timer = urand(25000, 35000);
+        Wyvern_Timer = urand(18000, 28000);
         Spit_Timer = 8000;
         PoisonBolt_Timer = 4000;
-        NoxiousPoison_Timer = 10000 + rand()%10000;
+        NoxiousPoison_Timer = urand(10000, 20000);
         FrenzyBack_Timer = 15000;
 
         Frenzy = false;
@@ -73,7 +73,7 @@ struct MANGOS_DLL_DECL boss_huhuranAI : public ScriptedAI
             DoScriptText(EMOTE_GENERIC_FRENZY_KILL, m_creature);
             Frenzy = true;
             PoisonBolt_Timer = 3000;
-            Frenzy_Timer = 25000 + rand()%10000;
+            Frenzy_Timer = urand(25000, 35000);
         }else Frenzy_Timer -= diff;
 
         // Wyvern Timer
@@ -81,21 +81,21 @@ struct MANGOS_DLL_DECL boss_huhuranAI : public ScriptedAI
         {
             if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0))
                 DoCast(target,SPELL_WYVERNSTING);
-            Wyvern_Timer = 15000 + rand()%17000;
+            Wyvern_Timer = urand(15000, 32000);
         }else Wyvern_Timer -= diff;
 
         //Spit Timer
         if (Spit_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_ACIDSPIT);
-            Spit_Timer = 5000 + rand()%5000;
+            Spit_Timer = urand(5000, 10000);
         }else Spit_Timer -= diff;
 
         //NoxiousPoison_Timer
         if (NoxiousPoison_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_NOXIOUSPOISON);
-            NoxiousPoison_Timer = 12000 + rand()%12000;
+            NoxiousPoison_Timer = urand(12000, 24000);
         }else NoxiousPoison_Timer -= diff;
 
         //PoisonBolt only if frenzy or berserk

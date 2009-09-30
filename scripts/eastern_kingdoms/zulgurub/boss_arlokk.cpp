@@ -192,7 +192,7 @@ struct MANGOS_DLL_DECL boss_arlokkAI : public ScriptedAI
                 if (m_creature->getThreatManager().getThreat(m_creature->getVictim()))
                     m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-80);
 
-                m_uiGouge_Timer = 17000+rand()%10000;
+                m_uiGouge_Timer = urand(17000, 27000);
             }
             else
                 m_uiGouge_Timer -= uiDiff;

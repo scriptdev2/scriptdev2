@@ -781,7 +781,7 @@ struct MANGOS_DLL_DECL boss_essence_of_desireAI : public ScriptedAI
         if (DeadenTimer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_DEADEN);
-            DeadenTimer = 30000 + rand()%30001;
+            DeadenTimer = urand(30000, 60000);
         }else DeadenTimer -= diff;
 
         if (SoulShockTimer < diff)

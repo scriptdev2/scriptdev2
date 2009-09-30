@@ -74,7 +74,7 @@ struct MANGOS_DLL_DECL boss_hungarfenAI : public ScriptedAI
         {
             if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0))
                 DoCast(target,SPELL_ACID_GEYSER);
-            AcidGeyser_Timer = 10000+rand()%7500;
+            AcidGeyser_Timer = urand(10000, 17500);
         }else AcidGeyser_Timer -= diff;
 
         DoMeleeAttackIfReady();

@@ -54,7 +54,7 @@ struct MANGOS_DLL_DECL boss_pandemoniusAI : public ScriptedAI
 
     void Reset()
     {
-        VoidBlast_Timer = 8000+rand()%15000;
+        VoidBlast_Timer = urand(8000, 23000);
         DarkShell_Timer = 20000;
         VoidBlast_Counter = 0;
     }
@@ -96,7 +96,7 @@ struct MANGOS_DLL_DECL boss_pandemoniusAI : public ScriptedAI
 
             if (VoidBlast_Counter == 5)
             {
-                VoidBlast_Timer = 15000+rand()%10000;
+                VoidBlast_Timer = urand(15000, 25000);
                 VoidBlast_Counter = 0;
             }
         }else VoidBlast_Timer -= diff;

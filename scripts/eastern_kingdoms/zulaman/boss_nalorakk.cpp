@@ -151,9 +151,9 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
                 ChangedToTroll = true;
                 ChangedToBear = false;
                 //Reset spell timers
-                LaceratingSlash_Timer = 6000 + rand()%19000;
-                RendFlesh_Timer = 6000 + rand()%19000;
-                DeafeningRoar_Timer = 15000 + rand()%10000;
+                LaceratingSlash_Timer = urand(6000, 25000);
+                RendFlesh_Timer = urand(6000, 25000);
+                DeafeningRoar_Timer = urand(15000, 25000);
                 ShapeShiftCheck_Timer = 40000;
             }
 
@@ -161,14 +161,14 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
             if (BrutalSwipe_Timer < diff)
             {
                 DoCast(m_creature->getVictim(), SPELL_BRUTALSWIPE);
-                BrutalSwipe_Timer = 7000 + rand()%8000;
+                BrutalSwipe_Timer = urand(7000, 15000);
             }else BrutalSwipe_Timer -= diff;
 
             //Mangle
             if (Mangle_Timer < diff)
             {
                 DoCast(m_creature->getVictim(), SPELL_MANGLE);
-                Mangle_Timer = 3000 + rand()%12000;
+                Mangle_Timer = urand(3000, 15000);
             }else Mangle_Timer -= diff;
 
             //Surge
@@ -184,7 +184,7 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
                 DoCast(target, SPELL_SURGE);
                 DoScriptText(SAY_SURGE, m_creature);
 
-                Surge_Timer = 15000 + rand()%17500;
+                Surge_Timer = urand(15000, 32500);
             }else Surge_Timer -= diff;
 
             //Change to Bear Form if we're in Troll Form for 45sec
@@ -208,9 +208,9 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
                 ChangedToBear = true;
                 ChangedToTroll = false;
                 //Reset spell timers
-                Surge_Timer = 15000 + rand()%17500;
-                BrutalSwipe_Timer = 7000 + rand()%13000;
-                Mangle_Timer = 3000 + rand()%17000;
+                Surge_Timer = urand(15000, 32000);
+                BrutalSwipe_Timer = urand(7000, 20000);
+                Mangle_Timer = urand(3000, 20000);
                 ShapeShiftCheck_Timer = 25000;
             }
 
@@ -218,21 +218,21 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
             if (LaceratingSlash_Timer < diff)
             {
                 DoCast(m_creature->getVictim(), SPELL_LACERATINGSLASH);
-                LaceratingSlash_Timer = 6000 + rand()%14000;
+                LaceratingSlash_Timer = urand(6000, 20000);
             }else LaceratingSlash_Timer -= diff;
 
             //Rend Flesh
             if (RendFlesh_Timer < diff)
             {
                 DoCast(m_creature->getVictim(), SPELL_RENDFLESH);
-                RendFlesh_Timer = 6000 + rand()%14000;
+                RendFlesh_Timer = urand(6000, 20000);
             }else RendFlesh_Timer -= diff;
 
             //Deafening Roar
             if (DeafeningRoar_Timer < diff)
             {
                 DoCast(m_creature->getVictim(), SPELL_DEAFENINGROAR);
-                DeafeningRoar_Timer = 15000 + rand()%10000;
+                DeafeningRoar_Timer = urand(15000, 25000);
             }else DeafeningRoar_Timer -= diff;
         }
 

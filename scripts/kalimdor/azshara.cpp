@@ -173,7 +173,7 @@ struct MANGOS_DLL_DECL npc_rizzle_sprysprocketAI : public npc_escortAI
             if (!HasEscortState(STATE_ESCORT_PAUSED))
                 m_creature->CastSpell(m_creature,SPELL_SUMMON_DEPTH_CHARGE,false);
 
-            m_uiDepthChargeTimer = 10000 + rand()%5000;
+            m_uiDepthChargeTimer = urand(10000, 15000);
         }else m_uiDepthChargeTimer -= uiDiff;
     }
 };

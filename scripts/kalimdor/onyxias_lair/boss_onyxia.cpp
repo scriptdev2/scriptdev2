@@ -151,7 +151,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
             if (WingBuffetTimer < diff)
             {
                 DoCast(m_creature->getVictim(), SPELL_WINGBUFFET);
-                WingBuffetTimer = 7000 + ((rand()%8)*1000);
+                WingBuffetTimer = urand(7000, 14000);
             }else WingBuffetTimer -= diff;
 
             DoMeleeAttackIfReady();

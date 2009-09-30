@@ -92,13 +92,13 @@ struct MANGOS_DLL_DECL boss_broggokAI : public ScriptedAI
         if (AcidSpray_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_SLIME_SPRAY);
-            AcidSpray_Timer = 4000+rand()%8000;
+            AcidSpray_Timer = urand(4000, 12000);
         }else AcidSpray_Timer -=diff;
 
         if (PoisonBolt_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_POISON_BOLT);
-            PoisonBolt_Timer = 4000+rand()%8000;
+            PoisonBolt_Timer = urand(4000, 12000);
         }else PoisonBolt_Timer -=diff;
 
         if (PoisonSpawn_Timer < diff)

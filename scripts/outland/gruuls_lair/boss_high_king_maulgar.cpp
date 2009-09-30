@@ -97,11 +97,11 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
 
     void Reset()
     {
-        m_uiArcingSmash_Timer   = 8000 + rand()%6000;
-        m_uiMightyBlow_Timer    = 15000 + rand()%10000;
+        m_uiArcingSmash_Timer   = urand(8000, 14000);
+        m_uiMightyBlow_Timer    = urand(15000, 25000);
         m_uiWhirlwind_Timer     = 30000;
         m_uiCharge_Timer        = 2000;
-        m_uiFear_Timer          = 10000 + rand()%15000;
+        m_uiFear_Timer          = urand(10000, 25000);
         m_uiCouncilDeathCount   = 0;
         m_bPhase2               = false;
     }
@@ -199,7 +199,7 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
         if (m_uiArcingSmash_Timer < uiDiff)
         {
             DoCast(m_creature->getVictim(), SPELL_ARCING_SMASH);
-            m_uiArcingSmash_Timer = 8000+rand()%4000;
+            m_uiArcingSmash_Timer = urand(8000, 12000);
         }
         else
             m_uiArcingSmash_Timer -= uiDiff;
@@ -208,7 +208,7 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
         if (m_uiWhirlwind_Timer < uiDiff)
         {
             DoCast(m_creature->getVictim(), SPELL_WHIRLWIND);
-            m_uiWhirlwind_Timer = 30000+rand()%10000;
+            m_uiWhirlwind_Timer = urand(30000, 40000);
         }
         else
             m_uiWhirlwind_Timer -= uiDiff;
@@ -217,7 +217,7 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
         if (m_uiMightyBlow_Timer < uiDiff)
         {
             DoCast(m_creature->getVictim(), SPELL_MIGHTY_BLOW);
-            m_uiMightyBlow_Timer = 20000+rand()%15000;
+            m_uiMightyBlow_Timer = urand(20000, 35000);
         }
         else
             m_uiMightyBlow_Timer -= uiDiff;
@@ -238,7 +238,7 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
                 if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
                     DoCast(pTarget, SPELL_CHARGE);
 
-                m_uiCharge_Timer = 14000 + rand()%6000;
+                m_uiCharge_Timer = urand(14000, 20000);
             }
             else
                 m_uiCharge_Timer -= uiDiff;
@@ -247,7 +247,7 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
             if (m_uiFear_Timer < uiDiff)
             {
                 DoCast(m_creature->getVictim(), SPELL_FEAR);
-                m_uiFear_Timer = 20000+rand()%15000;
+                m_uiFear_Timer = urand(20000, 35000);
             }
             else
                 m_uiFear_Timer -= uiDiff;
@@ -338,7 +338,7 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public Council_Base_AI
         if (m_uiDeathCoil_Timer < uiDiff)
         {
             DoCast(m_creature->getVictim(), SPELL_DEATH_COIL);
-            m_uiDeathCoil_Timer = 8000 + rand()%5000;
+            m_uiDeathCoil_Timer = urand(8000, 13000);
         }
         else
             m_uiDeathCoil_Timer -= uiDiff;
@@ -347,7 +347,7 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public Council_Base_AI
         if (m_uiSummon_Timer < uiDiff)
         {
             DoCast(m_creature->getVictim(), SPELL_SUMMON_WILD_FELHUNTER);
-            m_uiSummon_Timer = 25000+rand()%10000;
+            m_uiSummon_Timer = urand(25000, 35000);
         }
         else
             m_uiSummon_Timer -= uiDiff;
@@ -419,7 +419,7 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public Council_Base_AI
         {
             if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                 DoCast(pTarget, SPELL_GREATER_POLYMORPH);
-            m_uiGreatherPolymorph_Timer = 15000 + rand()%5000;
+            m_uiGreatherPolymorph_Timer = urand(15000, 20000);
         }
         else
             m_uiGreatherPolymorph_Timer -= uiDiff;
@@ -428,7 +428,7 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public Council_Base_AI
         if (m_uiLightningBolt_Timer < uiDiff)
         {
             DoCast(m_creature->getVictim(), SPELL_LIGHTNING_BOLT);
-            m_uiLightningBolt_Timer = 2500 + rand()%1500;
+            m_uiLightningBolt_Timer = urand(2500, 4000);
         }
         else
             m_uiLightningBolt_Timer -= uiDiff;
@@ -437,7 +437,7 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public Council_Base_AI
         if (m_uiArcaneShock_Timer < uiDiff)
         {
             DoCast(m_creature->getVictim(), SPELL_ARCANE_SHOCK);
-            m_uiArcaneShock_Timer = 15000 + rand()%5000;
+            m_uiArcaneShock_Timer = urand(15000, 20000);
         }
         else
             m_uiArcaneShock_Timer -= uiDiff;
@@ -467,8 +467,8 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public Council_Base_AI
     void Reset()
     {
         m_uiGreaterPowerWordShield_Timer    = 5000;
-        m_uiHeal_Timer                      = 25000 + rand()%15000;
-        m_uiPrayerofHealing_Timer           = 45000 + rand()%10000;
+        m_uiHeal_Timer                      = urand(25000, 40000);
+        m_uiPrayerofHealing_Timer           = urand(45000, 55000);
     }
 
     void UpdateAI(const uint32 uiDiff)
@@ -488,7 +488,7 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public Council_Base_AI
         if (m_uiGreaterPowerWordShield_Timer < uiDiff)
         {
             DoCast(m_creature, SPELL_GREATER_PW_SHIELD);
-            m_uiGreaterPowerWordShield_Timer = 30000 + rand()%10000;
+            m_uiGreaterPowerWordShield_Timer = urand(30000, 40000);
         }
         else
             m_uiGreaterPowerWordShield_Timer -= uiDiff;
@@ -497,7 +497,7 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public Council_Base_AI
         if (m_uiHeal_Timer < uiDiff)
         {
             DoCast(m_creature, SPELL_HEAL);
-            m_uiHeal_Timer = 15000 + rand()%25000;
+            m_uiHeal_Timer = urand(15000, 40000);
         }
         else
             m_uiHeal_Timer -= uiDiff;
@@ -506,7 +506,7 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public Council_Base_AI
         if (m_uiPrayerofHealing_Timer < uiDiff)
         {
             DoCast(m_creature, SPELL_PRAYEROFHEALING);
-            m_uiPrayerofHealing_Timer = 35000 + rand()%15000;
+            m_uiPrayerofHealing_Timer = urand(35000, 50000);
         }
         else
             m_uiPrayerofHealing_Timer -= uiDiff;

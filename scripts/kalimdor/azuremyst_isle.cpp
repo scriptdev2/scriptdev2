@@ -218,7 +218,7 @@ struct MANGOS_DLL_DECL npc_engineer_spark_overgrindAI : public ScriptedAI
         m_creature->SetUInt32Value(UNIT_NPC_FLAGS, m_uiNpcFlags);
 
         m_uiDynamiteTimer = 8000;
-        m_uiEmoteTimer = 120000 + rand()%30000;
+        m_uiEmoteTimer = urand(120000, 150000);
 
         m_bIsTreeEvent = false;
     }
@@ -236,7 +236,7 @@ struct MANGOS_DLL_DECL npc_engineer_spark_overgrindAI : public ScriptedAI
             {
                 DoScriptText(SAY_TEXT, m_creature);
                 DoScriptText(EMOTE_SHELL, m_creature);
-                m_uiEmoteTimer = 120000 + rand()%30000;
+                m_uiEmoteTimer = urand(120000, 150000);
             }
             else m_uiEmoteTimer -= diff;
         }

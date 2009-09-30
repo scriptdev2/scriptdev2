@@ -358,7 +358,7 @@ struct MANGOS_DLL_DECL boss_priestess_lackey_commonAI : public ScriptedAI
         // For later development, some alternative threat system should be made
         // We do not know what this system is based upon, but one theory is class (healers=high threat, dps=medium, etc)
         // We reset their threat frequently as an alternative until such a system exist
-        m_uiResetThreatTimer = 5000 + rand()%15000;
+        m_uiResetThreatTimer = urand(5000, 15000);
 
         // in case she is not alive and Reset was for some reason called, respawn her (most likely party wipe after killing her)
         if (Creature* pDelrissa = (Creature*)Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_DELRISSA)))
@@ -464,7 +464,7 @@ struct MANGOS_DLL_DECL boss_priestess_lackey_commonAI : public ScriptedAI
         if (m_uiResetThreatTimer < uiDiff)
         {
             DoResetThreat();
-            m_uiResetThreatTimer = 5000 + rand()%15000;
+            m_uiResetThreatTimer = urand(5000, 15000);
         }else m_uiResetThreatTimer -= uiDiff;
     }
 };

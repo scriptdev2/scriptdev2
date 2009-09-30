@@ -292,7 +292,7 @@ struct MANGOS_DLL_DECL mob_ohganAI : public ScriptedAI
         if (SunderArmor_Timer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_SUNDERARMOR);
-            SunderArmor_Timer = 10000 + rand()%5000;
+            SunderArmor_Timer = urand(10000, 15000);
         }else SunderArmor_Timer -= diff;
 
         DoMeleeAttackIfReady();

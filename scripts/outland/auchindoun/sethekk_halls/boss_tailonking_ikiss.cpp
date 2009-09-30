@@ -74,7 +74,7 @@ struct MANGOS_DLL_DECL boss_talon_king_ikissAI : public ScriptedAI
         ArcaneVolley_Timer = 5000;
         Sheep_Timer = 8000;
         Blink_Timer = 35000;
-        Slow_Timer = 15000+rand()%15000;
+        Slow_Timer = urand(15000, 30000);
         Blink = false;
         Intro = false;
         ManaShield = false;
@@ -140,7 +140,7 @@ struct MANGOS_DLL_DECL boss_talon_king_ikissAI : public ScriptedAI
         if (ArcaneVolley_Timer < diff)
         {
             DoCast(m_creature, m_bIsHeroicMode ? H_SPELL_ARCANE_VOLLEY : SPELL_ARCANE_VOLLEY);
-            ArcaneVolley_Timer = 7000+rand()%5000;
+            ArcaneVolley_Timer = urand(7000, 12000);
         }else ArcaneVolley_Timer -= diff;
 
         if (Sheep_Timer < diff)
@@ -149,7 +149,7 @@ struct MANGOS_DLL_DECL boss_talon_king_ikissAI : public ScriptedAI
             Unit *target = NULL;
             if (m_bIsHeroicMode ? target = SelectUnit(SELECT_TARGET_RANDOM,0) : target = SelectUnit(SELECT_TARGET_TOPAGGRO,1))
                 DoCast(target, m_bIsHeroicMode ? H_SPELL_POLYMORPH : SPELL_POLYMORPH);
-            Sheep_Timer = 15000+rand()%2500;
+            Sheep_Timer = urand(15000, 17500);
         }else Sheep_Timer -= diff;
 
         //may not be correct time to cast
@@ -164,7 +164,7 @@ struct MANGOS_DLL_DECL boss_talon_king_ikissAI : public ScriptedAI
             if (Slow_Timer < diff)
             {
                 DoCast(m_creature,H_SPELL_SLOW);
-                Slow_Timer = 15000+rand()%25000;
+                Slow_Timer = urand(15000, 40000);
             }else Slow_Timer -= diff;
         }
 
@@ -190,7 +190,7 @@ struct MANGOS_DLL_DECL boss_talon_king_ikissAI : public ScriptedAI
                 DoCast(target,SPELL_BLINK_TELEPORT);
                 Blink = true;
             }
-            Blink_Timer = 35000+rand()%5000;
+            Blink_Timer = urand(35000, 40000);
         }else Blink_Timer -= diff;
 
         if (!Blink)

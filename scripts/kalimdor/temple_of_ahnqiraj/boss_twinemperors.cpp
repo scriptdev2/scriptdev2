@@ -85,7 +85,7 @@ struct MANGOS_DLL_DECL boss_twinemperorsAI : public ScriptedAI
         AfterTeleport = false;
         tspellcasted = false;
         AfterTeleportTimer = 0;
-        Abuse_Bug_Timer = 10000 + rand()%7000;
+        Abuse_Bug_Timer = urand(10000, 17000);
         BugsTimer = 2000;
         m_creature->clearUnitState(UNIT_STAT_STUNNED);
         DontYellWhenDead = false;
@@ -396,7 +396,7 @@ struct MANGOS_DLL_DECL boss_twinemperorsAI : public ScriptedAI
                 if (c)
                 {
                     CastSpellOnBug(c);
-                    Abuse_Bug_Timer = 10000 + rand()%7000;
+                    Abuse_Bug_Timer = urand(10000, 17000);
                 }
                 else
                 {
@@ -456,11 +456,11 @@ struct MANGOS_DLL_DECL boss_veknilashAI : public boss_twinemperorsAI
     void Reset()
     {
         TwinReset();
-        UpperCut_Timer = 14000 + rand()%15000;
-        UnbalancingStrike_Timer = 8000 + rand()%10000;
-        Scarabs_Timer = 7000 + rand()%7000;
+        UpperCut_Timer = urand(14000, 29000);
+        UnbalancingStrike_Timer = urand(8000, 18000);
+        Scarabs_Timer = urand(7000, 14000);
 
-                                                            //Added. Can be removed if its included in DB.
+        //Added. Can be removed if its included in DB.
         m_creature->ApplySpellImmune(0, IMMUNITY_DAMAGE, SPELL_SCHOOL_MASK_MAGIC, true);
     }
 
@@ -491,7 +491,7 @@ struct MANGOS_DLL_DECL boss_veknilashAI : public boss_twinemperorsAI
         if (UnbalancingStrike_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_UNBALANCING_STRIKE);
-            UnbalancingStrike_Timer = 8000+rand()%12000;
+            UnbalancingStrike_Timer = urand(8000, 20000);
         }else UnbalancingStrike_Timer -= diff;
 
         if (UpperCut_Timer < diff)
@@ -499,7 +499,7 @@ struct MANGOS_DLL_DECL boss_veknilashAI : public boss_twinemperorsAI
             Unit* randomMelee = GetAnyoneCloseEnough(ATTACK_DISTANCE, true);
             if (randomMelee)
                 DoCast(randomMelee,SPELL_UPPERCUT);
-            UpperCut_Timer = 15000+rand()%15000;
+            UpperCut_Timer = urand(15000, 30000);
         }else UpperCut_Timer -= diff;
 
         HandleBugs(diff);
@@ -541,9 +541,9 @@ struct MANGOS_DLL_DECL boss_veklorAI : public boss_twinemperorsAI
     {
         TwinReset();
         ShadowBolt_Timer = 0;
-        Blizzard_Timer = 15000 + rand()%5000;;
+        Blizzard_Timer = urand(15000, 20000);
         ArcaneBurst_Timer = 1000;
-        Scorpions_Timer = 7000 + rand()%7000;
+        Scorpions_Timer = urand(7000, 14000);
 
         //Added. Can be removed if its included in DB.
         m_creature->ApplySpellImmune(0, IMMUNITY_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, true);
@@ -595,7 +595,7 @@ struct MANGOS_DLL_DECL boss_veklorAI : public boss_twinemperorsAI
             target = GetAnyoneCloseEnough(45, true);
             if (target)
                 DoCast(target,SPELL_BLIZZARD);
-            Blizzard_Timer = 15000+rand()%15000;
+            Blizzard_Timer = urand(15000, 30000);
         }else Blizzard_Timer -= diff;
 
         if (ArcaneBurst_Timer < diff)

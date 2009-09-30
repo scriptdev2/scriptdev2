@@ -231,7 +231,7 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
                 if (target)
                     DoCast(target,SPELL_SHADOWBOLT);
 
-                ShadowBoltTimer = 3000 + (rand()%7000);
+                ShadowBoltTimer = urand(3000, 10000);
             }else ShadowBoltTimer -= diff;
 
             //FearTimer
@@ -242,7 +242,7 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
                 if (target)
                     DoCast(target,SPELL_FEAR);
 
-                FearTimer = 10000 + (rand()%10000);
+                FearTimer = urand(10000, 20000);
             }else FearTimer -= diff;
 
             //Add spawning mechanism

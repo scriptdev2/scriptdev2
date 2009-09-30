@@ -208,8 +208,8 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
         Cleave_Timer = 8000;
         InfernalTimer = 45000;
         InfernalCleanupTimer = 47000;
-        AxesTargetSwitchTimer = 7500 + rand()%12500;
-        SunderArmorTimer = 5000 + rand()%5000;
+        AxesTargetSwitchTimer = urand(7500, 20000);
+        SunderArmorTimer = urand(5000, 10000);
         phase = 1;
     }
 
@@ -468,14 +468,14 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
             if (SunderArmorTimer < diff)
             {
                 DoCast(m_creature->getVictim(), SPELL_SUNDER_ARMOR);
-                SunderArmorTimer = 10000 + rand()%8000;
+                SunderArmorTimer = urand(10000, 18000);
 
             }else SunderArmorTimer -= diff;
 
             if (Cleave_Timer < diff)
             {
                 DoCast(m_creature->getVictim(), SPELL_CLEAVE);
-                Cleave_Timer = 6000 + rand()%6000;
+                Cleave_Timer = urand(6000, 12000);
 
             }else Cleave_Timer -= diff;
         }
@@ -483,7 +483,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
         {
             if (AxesTargetSwitchTimer < diff)
             {
-                AxesTargetSwitchTimer = 7500 + rand()%12500 ;
+                AxesTargetSwitchTimer = urand(7500, 20000);
 
                 Unit *target = SelectUnit(SELECT_TARGET_RANDOM, 0);
                 if (target)
@@ -511,7 +511,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
             if (AmplifyDamageTimer < diff)
             {
                 DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), SPELL_AMPLIFY_DAMAGE);
-                AmplifyDamageTimer = 20000 + rand()%10000;
+                AmplifyDamageTimer = urand(20000, 30000);
             }else AmplifyDamageTimer -= diff;
         }
 

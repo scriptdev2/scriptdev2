@@ -145,14 +145,14 @@ struct MANGOS_DLL_DECL boss_blackheart_the_inciterAI : public ScriptedAI
         {
             if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM, 0))
                 DoCast(target, SPELL_CHARGE);
-            Charge_Timer = 15000 + rand()%10000;
+            Charge_Timer = urand(15000, 25000);
         }else Charge_Timer -= diff;
 
         //Knockback_Timer
         if (Knockback_Timer < diff)
         {
             DoCast(m_creature, SPELL_WAR_STOMP);
-            Knockback_Timer = 18000 + rand()%6000;
+            Knockback_Timer = urand(18000, 24000);
         }else Knockback_Timer -= diff;
 
         DoMeleeAttackIfReady();

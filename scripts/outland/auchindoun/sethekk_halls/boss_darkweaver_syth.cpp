@@ -152,7 +152,7 @@ struct MANGOS_DLL_DECL boss_darkweaver_sythAI : public ScriptedAI
             if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0))
                 DoCast(target,SPELL_FLAME_SHOCK);
 
-            flameshock_timer = 10000 + rand()%5000;
+            flameshock_timer = urand(10000, 15000);
         } else flameshock_timer -= diff;
 
         if (arcaneshock_timer < diff)
@@ -160,7 +160,7 @@ struct MANGOS_DLL_DECL boss_darkweaver_sythAI : public ScriptedAI
             if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0))
                 DoCast(target,SPELL_ARCANE_SHOCK);
 
-            arcaneshock_timer = 10000 + rand()%5000;
+            arcaneshock_timer = urand(10000, 15000);
         } else arcaneshock_timer -= diff;
 
         if (frostshock_timer < diff)
@@ -168,7 +168,7 @@ struct MANGOS_DLL_DECL boss_darkweaver_sythAI : public ScriptedAI
             if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0))
                 DoCast(target,SPELL_FROST_SHOCK);
 
-            frostshock_timer = 10000 + rand()%5000;
+            frostshock_timer = urand(10000, 15000);
         } else frostshock_timer -= diff;
 
         if (shadowshock_timer < diff)
@@ -176,7 +176,7 @@ struct MANGOS_DLL_DECL boss_darkweaver_sythAI : public ScriptedAI
             if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0))
                 DoCast(target,SPELL_SHADOW_SHOCK);
 
-            shadowshock_timer = 10000 + rand()%5000;
+            shadowshock_timer = urand(10000, 15000);
         } else shadowshock_timer -= diff;
 
         if (chainlightning_timer < diff)

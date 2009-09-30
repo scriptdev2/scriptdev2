@@ -160,7 +160,7 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
         if (FlameBreath_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_FLAMEBREATH);
-            FlameBreath_Timer = 4000 + rand()%4000;
+            FlameBreath_Timer = urand(4000, 8000);
         }else FlameBreath_Timer -= diff;
 
         //BurningAdrenalineCaster_Timer

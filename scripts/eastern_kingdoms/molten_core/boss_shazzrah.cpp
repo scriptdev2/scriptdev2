@@ -56,7 +56,7 @@ struct MANGOS_DLL_DECL boss_shazzrahAI : public ScriptedAI
         if (ArcaneExplosion_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_ARCANEEXPLOSION);
-            ArcaneExplosion_Timer = 5000 + rand()%4000;
+            ArcaneExplosion_Timer = urand(5000, 9000);
         }else ArcaneExplosion_Timer -= diff;
 
         //ShazzrahCurse_Timer
@@ -66,7 +66,7 @@ struct MANGOS_DLL_DECL boss_shazzrahAI : public ScriptedAI
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
             if (target) DoCast(target,SPELL_SHAZZRAHCURSE);
 
-            ShazzrahCurse_Timer = 25000 + rand()%5000;
+            ShazzrahCurse_Timer = urand(25000, 30000);
         }else ShazzrahCurse_Timer -= diff;
 
         //DeadenMagic_Timer
@@ -80,7 +80,7 @@ struct MANGOS_DLL_DECL boss_shazzrahAI : public ScriptedAI
         if (Countspell_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_COUNTERSPELL);
-            Countspell_Timer = 16000 + rand()%4000;
+            Countspell_Timer = urand(16000, 20000);
         }else Countspell_Timer -= diff;
 
         //Blink_Timer

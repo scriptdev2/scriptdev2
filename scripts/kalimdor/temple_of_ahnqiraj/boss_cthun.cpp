@@ -585,7 +585,7 @@ struct MANGOS_DLL_DECL cthunAI : public ScriptedAI
                 }
 
                 //One random wisper every 90 - 300 seconds
-                WisperTimer = 90000 + (rand()% 210000);
+                WisperTimer = urand(90000, 300000);
             }else WisperTimer -= diff;
 
             return;

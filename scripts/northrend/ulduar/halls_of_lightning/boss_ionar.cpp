@@ -89,8 +89,8 @@ struct MANGOS_DLL_DECL boss_ionarAI : public ScriptedAI
         m_uiSplit_Timer = 25000;
         m_uiSparkAtHomeCount = 0;
 
-        m_uiStaticOverload_Timer = 5000 + rand()%1000;
-        m_uiBallLightning_Timer = 10000 + rand()%1000;
+        m_uiStaticOverload_Timer = urand(5000, 6000);
+        m_uiBallLightning_Timer = urand(10000, 11000);
 
         m_uiHealthAmountModifier = 1;
 
@@ -270,7 +270,7 @@ struct MANGOS_DLL_DECL boss_ionarAI : public ScriptedAI
             if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                 DoCast(pTarget, m_bIsHeroic ? SPELL_STATIC_OVERLOAD_H : SPELL_STATIC_OVERLOAD_N);
 
-            m_uiStaticOverload_Timer = 5000 + rand()%1000;
+            m_uiStaticOverload_Timer = urand(5000, 6000);
         }
         else
             m_uiStaticOverload_Timer -= uiDiff;
@@ -278,7 +278,7 @@ struct MANGOS_DLL_DECL boss_ionarAI : public ScriptedAI
         if (m_uiBallLightning_Timer < uiDiff)
         {
             DoCast(m_creature->getVictim(), m_bIsHeroic ? SPELL_BALL_LIGHTNING_H : SPELL_BALL_LIGHTNING_N);
-            m_uiBallLightning_Timer = 10000 + rand()%1000;
+            m_uiBallLightning_Timer = urand(10000, 11000);
         }
         else
             m_uiBallLightning_Timer -= uiDiff;

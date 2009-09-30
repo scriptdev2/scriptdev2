@@ -184,9 +184,9 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
         Reset();
         m_uiPhase = 1;
 
-        m_uiCleaveTimer = 10000 + (rand()%6)*1000;
+        m_uiCleaveTimer = urand(10000, 16000);
         m_uiCurseTimer = 30000;
-        m_uiRandomYellTimer = 30000 + (rand()%31)*1000;     //Occasionally yell
+        m_uiRandomYellTimer = urand(30000, 60000);          //Occasionally yell
         m_uiChargeTimer = 20000;
         m_uiResetTimer = 0;
     }
@@ -255,7 +255,7 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
         if (m_uiCleaveTimer < uiDiff)
         {
             DoCast(m_creature->getVictim(), SPELL_SHADOWCLEAVE);
-            m_uiCleaveTimer = 10000 + (rand()%6)*1000;
+            m_uiCleaveTimer = urand(10000, 16000);
         }
         else
             m_uiCleaveTimer -= uiDiff;
@@ -271,7 +271,7 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
         if (m_uiRandomYellTimer < uiDiff)
         {
             DoScriptText(urand(0, 1) ? SAY_RANDOM1 : SAY_RANDOM2, m_creature);
-            m_uiRandomYellTimer = 30000 + (rand()%31)*1000;
+            m_uiRandomYellTimer = urand(30000, 60000);
         }
         else
             m_uiRandomYellTimer -= uiDiff;

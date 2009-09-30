@@ -103,19 +103,19 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
                 if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
                     DoCast(target,SPELL_CHARGE);
 
-                Charge_Timer = 15000 + rand()%15000;
+                Charge_Timer = urand(15000, 30000);
             }else Charge_Timer -= diff;
 
             if (SonicBurst_Timer < diff)
             {
                 DoCast(m_creature->getVictim(),SPELL_SONICBURST);
-                SonicBurst_Timer = 8000 + rand()%5000;
+                SonicBurst_Timer = urand(8000, 13000);
             }else SonicBurst_Timer -= diff;
 
             if (Screech_Timer < diff)
             {
                 DoCast(m_creature->getVictim(),SPELL_SCREECH);
-                Screech_Timer = 18000 + rand()%8000;
+                Screech_Timer = urand(18000, 26000);
             }else Screech_Timer -= diff;
 
             if (SpawnBats_Timer < diff)
@@ -153,7 +153,7 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
                     if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
                     {
                         DoCast(target, SPELL_SHADOW_WORD_PAIN);
-                        ShadowWordPain_Timer = 12000 + rand()%6000;
+                        ShadowWordPain_Timer = urand(12000, 18000);
                     }
                 }ShadowWordPain_Timer -=diff;
 
@@ -167,14 +167,14 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
                 {
                     m_creature->InterruptNonMeleeSpells(false);
                     DoCast(m_creature->getVictim(), SPELL_CHAIN_MIND_FLAY);
-                    ChainMindFlay_Timer = 15000 + rand()%15000;
+                    ChainMindFlay_Timer = urand(15000, 30000);
                 }ChainMindFlay_Timer -=diff;
 
                 if (GreaterHeal_Timer < diff)
                 {
                     m_creature->InterruptNonMeleeSpells(false);
                     DoCast(m_creature,SPELL_GREATERHEAL);
-                    GreaterHeal_Timer = 25000 + rand()%10000;
+                    GreaterHeal_Timer = urand(25000, 35000);
                 }GreaterHeal_Timer -=diff;
 
                 if (SpawnFlyingBats_Timer < diff)
@@ -188,7 +188,7 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
                             FlyingBat->AI()->AttackStart(target);
                     }
 
-                    SpawnFlyingBats_Timer = 10000 + rand()%5000;
+                    SpawnFlyingBats_Timer = urand(10000, 15000);
                 } else SpawnFlyingBats_Timer -=diff;
             }
             else

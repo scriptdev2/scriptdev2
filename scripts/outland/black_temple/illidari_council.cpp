@@ -546,8 +546,8 @@ struct MANGOS_DLL_DECL boss_high_nethermancer_zerevorAI : public boss_illidari_c
 
     void Reset()
     {
-        BlizzardTimer = 30000 + rand()%61 * 1000;
-        FlamestrikeTimer = 30000 + rand()%61 * 1000;
+        BlizzardTimer = urand(30000, 90000);
+        FlamestrikeTimer = urand(30000, 90000);
         ArcaneBoltTimer = 10000;
         DampenMagicTimer = 2000;
         ArcaneExplosionTimer = 14000;
@@ -607,7 +607,7 @@ struct MANGOS_DLL_DECL boss_high_nethermancer_zerevorAI : public boss_illidari_c
             if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
             {
                 DoCast(target, SPELL_BLIZZARD);
-                BlizzardTimer = 45000 + rand()%46 * 1000;
+                BlizzardTimer = urand(45000, 90000);
                 FlamestrikeTimer += 10000;
                 Cooldown = 1000;
             }
@@ -618,7 +618,7 @@ struct MANGOS_DLL_DECL boss_high_nethermancer_zerevorAI : public boss_illidari_c
             if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
             {
                 DoCast(target, SPELL_FLAMESTRIKE);
-                FlamestrikeTimer = 55000 + rand()%46 * 1000;
+                FlamestrikeTimer = urand(55000, 100000);
                 BlizzardTimer += 10000;
                 Cooldown = 2000;
             }
@@ -679,7 +679,7 @@ struct MANGOS_DLL_DECL boss_lady_malandeAI : public boss_illidari_councilAI
             if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
             {
                 DoCast(target, SPELL_DIVINE_WRATH);
-                DivineWrathTimer = 40000 + rand()%41 * 1000;
+                DivineWrathTimer = urand(40000, 80000);
             }
         }else DivineWrathTimer -= diff;
 
@@ -710,7 +710,7 @@ struct MANGOS_DLL_DECL boss_veras_darkshadowAI : public boss_illidari_councilAI
         EnvenomTargetGUID = 0;
 
         DeadlyPoisonTimer = 20000;
-        VanishTimer = 60000 + rand()%61 * 1000;
+        VanishTimer = urand(60000, 120000);
         AppearEnvenomTimer = 150000;
 
         HasVanished = false;
@@ -738,7 +738,7 @@ struct MANGOS_DLL_DECL boss_veras_darkshadowAI : public boss_illidari_councilAI
             if (DeadlyPoisonTimer < diff)
             {
                 DoCast(m_creature->getVictim(), SPELL_DEADLY_POISON);
-                DeadlyPoisonTimer = 15000 + rand()%31 * 1000;
+                DeadlyPoisonTimer = urand(15000, 45000);
             }else DeadlyPoisonTimer -= diff;
 
             if (AppearEnvenomTimer < diff)                  // Cast Envenom. This is cast 4 seconds after Vanish is over

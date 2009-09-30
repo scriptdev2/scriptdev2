@@ -71,21 +71,21 @@ struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
         if (Cleave_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_CLEAVE);
-            Cleave_Timer = 7000 + rand()%3000;
+            Cleave_Timer = urand(7000, 10000);
         }else Cleave_Timer -= diff;
 
         //WarStomp_Timer
         if (WarStomp_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_WARSTOMP);
-            WarStomp_Timer = 15000 + rand()%10000;
+            WarStomp_Timer = urand(15000, 25000);
         }else WarStomp_Timer -= diff;
 
         //FireballVolley_Timer
         if (FireballVolley_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_FIREBALLVOLLEY);
-            FireballVolley_Timer = 12000 + rand()%3000;
+            FireballVolley_Timer = urand(12000, 15000);
         }else FireballVolley_Timer -= diff;
 
         //Conflagration_Timer

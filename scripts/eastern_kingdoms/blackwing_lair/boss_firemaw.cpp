@@ -56,7 +56,7 @@ struct MANGOS_DLL_DECL boss_firemawAI : public ScriptedAI
         if (ShadowFlame_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_SHADOWFLAME);
-            ShadowFlame_Timer = 15000 + rand()%3000;
+            ShadowFlame_Timer = urand(15000, 18000);
         }else ShadowFlame_Timer -= diff;
 
         //WingBuffet_Timer

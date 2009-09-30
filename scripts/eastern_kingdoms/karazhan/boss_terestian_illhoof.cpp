@@ -124,7 +124,7 @@ struct MANGOS_DLL_DECL mob_kilrekAI : public ScriptedAI
             m_creature->InterruptNonMeleeSpells(false);
             DoCast(m_creature->getVictim(), SPELL_AMPLIFY_FLAMES);
 
-            m_uiAmplify_Timer = 10000 + rand()%10000;
+            m_uiAmplify_Timer = urand(10000, 20000);
         }
         else
             m_uiAmplify_Timer -= uiDiff;
@@ -335,7 +335,7 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
 
                 DoScriptText(urand(0, 1) ? SAY_SUMMON1 : SAY_SUMMON2, m_creature);
             }
-            uint32 uiRnd = rand()%2;
+            uint32 uiRnd = urand(0, 1);
             Creature* pImp = m_creature->SummonCreature(NPC_FIENDISHIMP, afPortalLocations[uiRnd][0], afPortalLocations[uiRnd][1], PORTAL_Z, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 15000);
             if (pImp)
             {

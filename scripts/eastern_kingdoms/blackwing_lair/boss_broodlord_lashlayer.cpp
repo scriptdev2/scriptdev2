@@ -70,14 +70,14 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
         if (BlastWave_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_BLASTWAVE);
-            BlastWave_Timer = 8000 + rand()%8000;
+            BlastWave_Timer = urand(8000, 16000);
         }else BlastWave_Timer -= diff;
 
         //MortalStrike_Timer
         if (MortalStrike_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_MORTALSTRIKE);
-            MortalStrike_Timer = 25000 + rand()%10000;
+            MortalStrike_Timer = urand(25000, 35000);
         }else MortalStrike_Timer -= diff;
 
         if (KnockBack_Timer < diff)
@@ -87,7 +87,7 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
             if (m_creature->getThreatManager().getThreat(m_creature->getVictim()))
                 m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-50);
 
-            KnockBack_Timer = 15000 + rand()%15000;
+            KnockBack_Timer = urand(15000, 30000);
         }else KnockBack_Timer -= diff;
 
         DoMeleeAttackIfReady();

@@ -99,7 +99,7 @@ struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
         if (AoESilence_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_AOESILENCE);
-            AoESilence_Timer = 15000 + rand()%5000;
+            AoESilence_Timer = urand(15000, 20000);
         }else AoESilence_Timer -= diff;
 
         //ArcaneExplosion_Timer

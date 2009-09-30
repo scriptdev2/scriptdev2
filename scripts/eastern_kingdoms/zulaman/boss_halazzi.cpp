@@ -299,7 +299,7 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
                     else
                         DoCast(pTarget, SPELL_FLAMESHOCK);
 
-                    m_uiShockTimer = (10+rand()%5)*IN_MILISECONDS;
+                    m_uiShockTimer = urand(10000, 14000);
                 }
             }
             else
@@ -336,7 +336,7 @@ struct MANGOS_DLL_DECL boss_spirit_lynxAI : public ScriptedAI
 
     void Reset()
     {
-        m_uiFrenzyTimer = (10+rand()%10)*1000;              //first frenzy after 10-20 seconds
+        m_uiFrenzyTimer = urand(10000, 20000);              //first frenzy after 10-20 seconds
         m_uiShredArmorTimer = 4000;
     }
 
@@ -362,7 +362,7 @@ struct MANGOS_DLL_DECL boss_spirit_lynxAI : public ScriptedAI
         if (m_uiFrenzyTimer < uiDiff)
         {
             DoCast(m_creature, SPELL_LYNX_FRENZY);
-            m_uiFrenzyTimer = (20+rand()%10)*1000;          //subsequent frenzys casted every 20-30 seconds
+            m_uiFrenzyTimer = urand(20000, 30000);          //subsequent frenzys casted every 20-30 seconds
         }
         else
             m_uiFrenzyTimer -= uiDiff;

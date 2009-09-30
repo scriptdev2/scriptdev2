@@ -158,20 +158,20 @@ struct MANGOS_DLL_DECL boss_lajAI : public ScriptedAI
         if (Allergic_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_ALLERGIC_REACTION);
-            Allergic_Timer = 25000+rand()%15000;
+            Allergic_Timer = urand(25000, 40000);
         }else Allergic_Timer -= diff;
 
         if (Teleport_Timer < diff)
         {
             DoCast(m_creature,SPELL_TELEPORT_SELF);
-            Teleport_Timer = 30000+rand()%10000;
+            Teleport_Timer = urand(30000, 40000);
             CanSummon = true;
         }else Teleport_Timer -= diff;
 
         if (Transform_Timer < diff)
         {
             DoTransform();
-            Transform_Timer = 25000+rand()%15000;
+            Transform_Timer = urand(25000, 40000);
         }else Transform_Timer -= diff;
 
         DoMeleeAttackIfReady();

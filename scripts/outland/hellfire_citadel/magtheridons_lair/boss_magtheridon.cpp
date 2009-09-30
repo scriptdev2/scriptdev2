@@ -180,7 +180,7 @@ struct MANGOS_DLL_DECL mob_abyssalAI : public ScriptedAI
         if (m_uiFireBlast_Timer < uiDiff)
         {
             DoCast(m_creature->getVictim(), SPELL_FIRE_BLAST);
-            m_uiFireBlast_Timer = 5000+rand()%10000;
+            m_uiFireBlast_Timer = urand(5000, 15000);
         }
         else
             m_uiFireBlast_Timer -= uiDiff;
@@ -223,7 +223,7 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
         m_uiQuake_Timer = 40000;
         m_uiPhase3_Timer = 5000;
         m_uiPhase3_Count = 0;
-        m_uiBlaze_Timer = 10000+rand()%20000;
+        m_uiBlaze_Timer = urand(10000, 30000);
         m_uiBlastNova_Timer = 60000;
         m_uiCleave_Timer = 15000;
 
@@ -439,7 +439,7 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
                 }
             }
 
-            m_uiBlaze_Timer = 20000 + rand()%20000;
+            m_uiBlaze_Timer = urand(20000, 40000);
         }
         else
             m_uiBlaze_Timer -= uiDiff;
@@ -514,10 +514,10 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
 
     void Reset()
     {
-        m_uiShadowBoltVolley_Timer = 8000 + rand()%2000;
+        m_uiShadowBoltVolley_Timer = urand(8000, 10000);
         m_uiDarkMending_Timer = 10000;
-        m_uiFear_Timer = 15000 + rand()%5000;
-        m_uiInfernal_Timer = 10000 + rand()%40000;
+        m_uiFear_Timer = urand(15000, 20000);
+        m_uiInfernal_Timer = urand(10000, 50000);
 
         m_bIsInfernalSpawned = false;
     }
@@ -581,7 +581,7 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
         if (m_uiShadowBoltVolley_Timer < uiDiff)
         {
             DoCast(m_creature, SPELL_SHADOW_BOLT_VOLLEY);
-            m_uiShadowBoltVolley_Timer = 10000 + (rand()%10000);
+            m_uiShadowBoltVolley_Timer = urand(10000, 20000);
         }
         else
             m_uiShadowBoltVolley_Timer -= uiDiff;
@@ -609,7 +609,7 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
             if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
                 DoCast(pTarget, SPELL_FEAR);
 
-            m_uiFear_Timer = 25000 + (rand()%15000);
+            m_uiFear_Timer = urand(25000, 40000);
         }
         else
             m_uiFear_Timer -= uiDiff;

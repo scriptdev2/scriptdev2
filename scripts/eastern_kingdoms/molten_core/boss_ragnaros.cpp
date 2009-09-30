@@ -184,14 +184,14 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public ScriptedAI
         if (LavaBurst_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_ERRUPTION);
-            Erruption_Timer = 20000 + rand()%25000;
+            Erruption_Timer = urand(20000, 45000);
         }else Erruption_Timer -= diff;
 
         //ElementalFire_Timer
         if (ElementalFire_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_ELEMENTALFIRE);
-            ElementalFire_Timer = 10000 + rand()%4000;
+            ElementalFire_Timer = urand(10000, 14000);
         }else ElementalFire_Timer -= diff;
 
         //Submerge_Timer

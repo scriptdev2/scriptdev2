@@ -68,7 +68,7 @@ struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
         if (DemoralizingShout_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_DEMORALIZINGSHOUT);
-            DemoralizingShout_Timer = 15000 + rand()%5000;
+            DemoralizingShout_Timer = urand(15000, 20000);
         }else DemoralizingShout_Timer -= diff;
 
         //Inspire_Timer
@@ -88,14 +88,14 @@ struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
 
             DoCast(m_creature,SPELL_INSPIRE);
 
-            Inspire_Timer = 20000 + rand()%6000;
+            Inspire_Timer = urand(20000, 26000);
         }else Inspire_Timer -= diff;
 
         //Knockdown_Timer
         if (Knockdown_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_KNOCKDOWN);
-            Knockdown_Timer = 12000 + rand()%3000;
+            Knockdown_Timer = urand(12000, 15000);
         }else Knockdown_Timer -= diff;
 
         //Flamespear_Timer
@@ -105,14 +105,14 @@ struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
             if (target) DoCast(target,SPELL_FLAMESPEAR);
 
-            Flamespear_Timer = 12000 + rand()%4000;
+            Flamespear_Timer = urand(12000, 16000);
         }else Flamespear_Timer -= diff;
 
         //DarkStrike_Timer
         if (Darkstrike_Timer < diff)
         {
             DoCast(m_creature, SPELL_DARKSTRIKE);
-            Darkstrike_Timer = 15000 + rand()%3000;
+            Darkstrike_Timer = urand(15000, 18000);
         }else Darkstrike_Timer -= diff;
 
         DoMeleeAttackIfReady();
@@ -135,7 +135,7 @@ struct MANGOS_DLL_DECL mob_flamewaker_priestAI : public ScriptedAI
 
     void Reset()
     {
-        Heal_Timer = 15000+rand()%15000;
+        Heal_Timer = urand(15000, 30000);
         ShadowWordPain_Timer = 2000;
         Immolate_Timer = 8000;
     }
@@ -154,7 +154,7 @@ struct MANGOS_DLL_DECL mob_flamewaker_priestAI : public ScriptedAI
 
             DoCast(pUnit, SPELL_HEAL);
 
-            Heal_Timer = 15000+rand()%5000;
+            Heal_Timer = urand(15000, 20000);
         }else Heal_Timer -= diff;
 
         //ShadowWordPain_Timer
@@ -164,7 +164,7 @@ struct MANGOS_DLL_DECL mob_flamewaker_priestAI : public ScriptedAI
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
             if (target) DoCast(target,SPELL_SHADOWWORDPAIN);
 
-            ShadowWordPain_Timer = 18000+rand()%8000;
+            ShadowWordPain_Timer = urand(18000, 26000);
         }else ShadowWordPain_Timer -= diff;
 
         //Immolate_Timer
@@ -174,7 +174,7 @@ struct MANGOS_DLL_DECL mob_flamewaker_priestAI : public ScriptedAI
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
             if (target) DoCast(target,SPELL_IMMOLATE);
 
-            Immolate_Timer = 15000+rand()%10000;
+            Immolate_Timer = urand(15000, 25000);
         }else Immolate_Timer -= diff;
 
         DoMeleeAttackIfReady();

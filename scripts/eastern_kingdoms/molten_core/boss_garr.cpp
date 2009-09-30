@@ -58,14 +58,14 @@ struct MANGOS_DLL_DECL boss_garrAI : public ScriptedAI
         if (AntiMagicPulse_Timer < diff)
         {
             DoCast(m_creature,SPELL_ANTIMAGICPULSE);
-            AntiMagicPulse_Timer = 10000 + rand()%5000;
+            AntiMagicPulse_Timer = urand(10000, 15000);
         }else AntiMagicPulse_Timer -= diff;
 
         //MagmaShackles_Timer
         if (MagmaShackles_Timer < diff)
         {
             DoCast(m_creature,SPELL_MAGMASHACKLES);
-            MagmaShackles_Timer = 8000 + rand()%4000;
+            MagmaShackles_Timer = urand(8000, 12000);
         }else MagmaShackles_Timer -= diff;
 
         DoMeleeAttackIfReady();
@@ -94,7 +94,7 @@ struct MANGOS_DLL_DECL mob_fireswornAI : public ScriptedAI
             if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
                 DoCast(target,SPELL_IMMOLATE);
 
-            Immolate_Timer = 5000 + rand()%5000;
+            Immolate_Timer = urand(5000, 10000);
         }else Immolate_Timer -= diff;
 
         //Cast Erruption and let them die

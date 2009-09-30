@@ -116,7 +116,7 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
         if (CorruptedBlood_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_CORRUPTEDBLOOD);
-            CorruptedBlood_Timer = 30000 + rand()%15000;
+            CorruptedBlood_Timer = urand(30000, 45000);
         }else CorruptedBlood_Timer -= diff;
 
         //CauseInsanity_Timer
@@ -125,7 +125,7 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
             if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
                 DoCast(target,SPELL_CAUSEINSANITY);
 
-            CauseInsanity_Timer = 35000 + rand()%8000;
+            CauseInsanity_Timer = urand(35000, 43000);
         }else CauseInsanity_Timer -= diff;*/
 
         //WillOfHakkar_Timer
@@ -135,7 +135,7 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
             if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
                 DoCast(target,SPELL_WILLOFHAKKAR);
 
-            WillOfHakkar_Timer = 25000 + rand()%10000;
+            WillOfHakkar_Timer = urand(25000, 35000);
         }else WillOfHakkar_Timer -= diff;
 
         if (!Enraged && Enrage_Timer < diff)
@@ -154,7 +154,7 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
                     if (AspectOfJeklik_Timer < diff)
                     {
                         DoCast(m_creature->getVictim(),SPELL_ASPECT_OF_JEKLIK);
-                        AspectOfJeklik_Timer = 10000 + rand()%4000;
+                        AspectOfJeklik_Timer = urand(10000, 14000);
                     }else AspectOfJeklik_Timer -= diff;
                 }
             }
@@ -225,7 +225,7 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
                         DoCast(m_creature,SPELL_ASPECT_OF_ARLOKK);
                         DoResetThreat();
 
-                        AspectOfArlokk_Timer = 10000 + rand()%5000;
+                        AspectOfArlokk_Timer = urand(10000, 15000);
                     }else AspectOfArlokk_Timer -= diff;
                 }
             }

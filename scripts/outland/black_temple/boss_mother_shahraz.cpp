@@ -112,7 +112,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
         FatalAttractionTimer = 60000;
         FatalAttractionExplodeTimer = 70000;
         ShriekTimer = 30000;
-        RandomYellTimer = 70000 + rand()%41 * 1000;
+        RandomYellTimer = urand(70000, 110000);
         EnrageTimer = 600000;
         ExplosionCount = 0;
 
@@ -231,7 +231,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
             DoScriptText(urand(0, 1) ? SAY_SPELL2 : SAY_SPELL3, m_creature);
 
             FatalAttractionExplodeTimer = 2000;
-            FatalAttractionTimer = 40000 + rand()%31 * 1000;
+            FatalAttractionTimer = urand(40000, 70000);
         }else FatalAttractionTimer -= diff;
 
         if (FatalAttractionExplodeTimer < diff)
@@ -287,7 +287,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
                 case 2: DoScriptText(SAY_TAUNT3, m_creature); break;
             }
 
-            RandomYellTimer = 60000 + rand()%91 * 1000;
+            RandomYellTimer = urand(60000, 150000);
         }else RandomYellTimer -= diff;
 
         DoMeleeAttackIfReady();

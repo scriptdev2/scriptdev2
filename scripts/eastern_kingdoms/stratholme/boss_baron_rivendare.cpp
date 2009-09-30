@@ -136,14 +136,14 @@ struct MANGOS_DLL_DECL boss_baron_rivendareAI : public ScriptedAI
         if (Cleave_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_CLEAVE);
-            Cleave_Timer = 7000 + (rand()%10000);
+            Cleave_Timer = urand(7000, 17000);
         }else Cleave_Timer -= diff;
 
         //MortalStrike
         if (MortalStrike_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_MORTALSTRIKE);
-            MortalStrike_Timer = 10000 + (rand()%15000);
+            MortalStrike_Timer = urand(10000, 25000);
         }else MortalStrike_Timer -= diff;
 
         //RaiseDead
