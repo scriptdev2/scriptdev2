@@ -1737,6 +1737,14 @@
 							RelativePath="..\scripts\northrend\nexus\nexus\boss_telestra.cpp"
 							>
 						</File>
+						<File
+							RelativePath="..\scripts\northrend\nexus\nexus\def_nexus.h"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\northrend\nexus\nexus\instance_nexus.cpp"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="oculus"

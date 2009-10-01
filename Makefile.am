@@ -334,6 +334,8 @@ scripts/northrend/nexus/nexus/boss_anomalus.cpp \
 scripts/northrend/nexus/nexus/boss_keristrasza.cpp \
 scripts/northrend/nexus/nexus/boss_ormorok.cpp \
 scripts/northrend/nexus/nexus/boss_telestra.cpp \
+scripts/northrend/nexus/nexus/def_nexus.h \
+scripts/northrend/nexus/nexus/instance_nexus.cpp \
 scripts/northrend/obsidian_sanctum/boss_sartharion.cpp \
 scripts/northrend/obsidian_sanctum/def_obsidian_sanctum.h \
 scripts/northrend/obsidian_sanctum/instance_obsidian_sanctum.cpp \
