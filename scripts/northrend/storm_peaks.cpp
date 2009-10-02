@@ -90,6 +90,63 @@ bool GossipSelect_npc_loklira_the_crone(Player* pPlayer, Creature* pCreature, ui
 }
 
 /*######
+## npc_thorim
+######*/
+
+#define GOSSIP_ITEM_THORIM1         "Can you tell me what became of Sif?"
+#define GOSSIP_ITEM_THORIM2         "He did more than that, Thorim. He controls Ulduar now."
+#define GOSSIP_ITEM_THORIM3         "It needn't end this way."
+
+enum
+{
+    QUEST_SIBLING_RIVALRY           = 13064,
+
+    SPELL_THORIM_STORY_KILL_CREDIT  = 56940,
+
+    GOSSIP_TEXTID_THORIM1           = 13799,
+    GOSSIP_TEXTID_THORIM2           = 13801,
+    GOSSIP_TEXTID_THORIM3           = 13802,
+    GOSSIP_TEXTID_THORIM4           = 13803
+};
+
+bool GossipHello_npc_thorim(Player* pPlayer, Creature* pCreature)
+{
+    if (pCreature->isQuestGiver())
+        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+
+    if (pPlayer->GetQuestStatus(QUEST_SIBLING_RIVALRY) == QUEST_STATUS_INCOMPLETE)
+    {
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_THORIM1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_THORIM1, pCreature->GetGUID());
+    }
+    else
+        pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
+
+    return true;
+}
+
+bool GossipSelect_npc_thorim(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+{
+    switch(uiAction)
+    {
+        case GOSSIP_ACTION_INFO_DEF+1:
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_THORIM2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_THORIM2, pCreature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+2:
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_THORIM3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
+            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_THORIM3, pCreature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+3:
+            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_THORIM4, pCreature->GetGUID());
+            pCreature->CastSpell(pPlayer, SPELL_THORIM_STORY_KILL_CREDIT, true);
+            break;
+    }
+
+    return true;
+}
+
+/*######
 ## npc_roxi_ramrocket
 ######*/
 
@@ -143,6 +200,12 @@ void AddSC_storm_peaks()
     newscript->Name = "npc_loklira_the_crone";
     newscript->pGossipHello = &GossipHello_npc_loklira_the_crone;
     newscript->pGossipSelect = &GossipSelect_npc_loklira_the_crone;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "npc_thorim";
+    newscript->pGossipHello = &GossipHello_npc_thorim;
+    newscript->pGossipSelect = &GossipSelect_npc_thorim;
     newscript->RegisterSelf();
 
     newscript = new Script;

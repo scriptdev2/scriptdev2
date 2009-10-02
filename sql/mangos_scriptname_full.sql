@@ -732,7 +732,7 @@ UPDATE creature_template SET ScriptName='boss_keristrasza' WHERE entry=26723;
 UPDATE creature_template SET ScriptName='boss_ormorok' WHERE entry=26794;
 UPDATE creature_template SET ScriptName='boss_telestra' WHERE entry=26731;
 UPDATE gameobject_template SET ScriptName='go_containment_sphere' WHERE entry IN (188526, 188527, 188528);
-UPDATE instance_template SET Script='instance_nexus' WHERE map=576;
+UPDATE instance_template SET script='instance_nexus' WHERE map=576;
 
 /* OCULUS */
 
@@ -855,6 +855,7 @@ UPDATE creature_template SET ScriptName='npc_kaya' WHERE entry=11856;
 
 /* STORM PEAKS */
 UPDATE creature_template SET ScriptName='npc_loklira_the_crone' WHERE entry=29975;
+UPDATE creature_template SET ScriptName='npc_thorim' WHERE entry=29445;
 UPDATE creature_template SET ScriptName='npc_roxi_ramrocket' WHERE entry=31247;
 
 /* STORMWIND CITY */
