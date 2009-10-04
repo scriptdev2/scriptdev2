@@ -111,7 +111,7 @@ struct MANGOS_DLL_DECL boss_temporusAI : public ScriptedAI
         //MortalWound_Timer
         if (MortalWound_Timer < diff)
         {
-            DoCast(m_creature, SPELL_MORTAL_WOUND);
+            DoCast(m_creature->getVictim(), SPELL_MORTAL_WOUND);
             MortalWound_Timer = urand(10000, 20000);
         }else MortalWound_Timer -= diff;
 
@@ -126,10 +126,11 @@ struct MANGOS_DLL_DECL boss_temporusAI : public ScriptedAI
         {
             if (SpellReflection_Timer < diff)
             {
-                DoCast(m_creature,SPELL_REFLECT);
+                DoCast(m_creature, SPELL_REFLECT);
                 SpellReflection_Timer = urand(25000, 35000);
             }else SpellReflection_Timer -= diff;
         }
+
         DoMeleeAttackIfReady();
     }
 };
