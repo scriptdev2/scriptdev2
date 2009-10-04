@@ -30,6 +30,8 @@ enum
     SAY_SHIELD              = -1576008,
     SAY_KILL                = -1576009,
     SAY_DEATH               = -1576010,
+    EMOTE_OPEN_RIFT         = -1576021,
+    EMOTE_SHIELD            = -1576022,
 
     SPELL_CREATE_RIFT       = 47743,
     SPELL_CHARGE_RIFT       = 47747,
