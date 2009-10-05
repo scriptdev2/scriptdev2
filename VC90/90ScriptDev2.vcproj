@@ -1540,7 +1540,7 @@
 					>
                 </File>
                 <File
-                    RelativePatch="..\scripts\northrend\howling_fjord.cpp"
+                    RelativePath="..\scripts\northrend\howling_fjord.cpp"
                     >
                 </File>
 				<File
