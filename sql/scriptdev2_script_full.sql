@@ -2053,7 +2053,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1576020,'Dragonqueen... Life-Binder... preserve... me.',13454,1,0,0,'keristrasza SAY_DEATH'),
 
 (-1576021,'%s opens a Chaotic Rift!',0,3,0,0,'anomalus EMOTE_OPEN_RIFT'),
-(-1576022,'%s shields himself and divert his power to the rifts!',0,3,0,0,'anomalus SAY_DEATH');
+(-1576022,'%s shields himself and divert his power to the rifts!',0,3,0,0,'anomalus EMOTE_SHIELD');
 
 -- -1 578 000 OCULUS
 
