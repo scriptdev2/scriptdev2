@@ -119,7 +119,7 @@ struct MANGOS_DLL_DECL mob_unkor_the_ruthlessAI : public ScriptedAI
             }
             else
             {
-                if (UnkorUnfriendly_Timer < diff)
+                if (UnkorUnfriendly_Timer <= diff)
                 {
                     EnterEvadeMode();
                 }else UnkorUnfriendly_Timer -= diff;

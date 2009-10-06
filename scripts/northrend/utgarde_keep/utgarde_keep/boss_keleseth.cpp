@@ -148,7 +148,7 @@ struct MANGOS_DLL_DECL mob_vrykul_skeletonAI : public ScriptedAI
 
         if (m_uiReviveTimer)
         {
-            if (m_uiReviveTimer < uiDiff)
+            if (m_uiReviveTimer <= uiDiff)
                 Revive();
             else
                 m_uiReviveTimer -= uiDiff;

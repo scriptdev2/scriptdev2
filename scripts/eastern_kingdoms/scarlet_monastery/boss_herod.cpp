@@ -124,7 +124,7 @@ struct MANGOS_DLL_DECL mob_scarlet_traineeAI : public npc_escortAI
     {
         if (Start_Timer)
         {
-            if (Start_Timer < diff)
+            if (Start_Timer <= diff)
             {
                 Start(true,true);
                 Start_Timer = 0;

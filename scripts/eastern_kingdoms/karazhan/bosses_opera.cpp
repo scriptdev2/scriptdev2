@@ -433,7 +433,7 @@ struct MANGOS_DLL_DECL boss_tinheadAI : public ScriptedAI
     {
         if (AggroTimer)
         {
-            if (AggroTimer < diff)
+            if (AggroTimer <= diff)
             {
                 m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                 AggroTimer = 0;

@@ -384,7 +384,7 @@ struct MANGOS_DLL_DECL npc_twiggy_flatheadAI : public ScriptedAI
 
         if (ChallengerDeath_Timer)
         {
-            if (ChallengerDeath_Timer < diff)
+            if (ChallengerDeath_Timer <= diff)
             {
                 for(uint8 i = 0; i < 6; ++i)
                 {

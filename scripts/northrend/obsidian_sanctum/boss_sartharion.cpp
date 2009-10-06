@@ -698,7 +698,7 @@ struct MANGOS_DLL_DECL dummy_dragonAI : public ScriptedAI
     {
         if (m_bCanMoveFree && m_uiMoveNextTimer)
         {
-            if (m_uiMoveNextTimer < uiDiff)
+            if (m_uiMoveNextTimer <= uiDiff)
             {
                 m_creature->GetMotionMaster()->MovePoint(m_uiWaypointId,
                     m_aDragonCommon[m_uiWaypointId].m_fX, m_aDragonCommon[m_uiWaypointId].m_fY, m_aDragonCommon[m_uiWaypointId].m_fZ);

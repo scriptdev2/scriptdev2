@@ -660,7 +660,7 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
         // Prevent overlapping yells
         if (AggroYellTimer)
         {
-            if (AggroYellTimer < diff)
+            if (AggroYellTimer <= diff)
             {
                 DoScriptText(SUFF_SAY_AGGRO, m_creature);
                 AggroYellTimer = 0;
@@ -873,7 +873,7 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
 
         if (AggroYellTimer)
         {
-            if (AggroYellTimer < diff)
+            if (AggroYellTimer <= diff)
             {
                 DoScriptText(ANGER_SAY_FREED2, m_creature);
                 AggroYellTimer = 0;

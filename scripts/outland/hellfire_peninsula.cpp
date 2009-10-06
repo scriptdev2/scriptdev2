@@ -77,7 +77,7 @@ struct MANGOS_DLL_DECL npc_aeranasAI : public ScriptedAI
     {
         if (Faction_Timer)
         {
-            if (Faction_Timer < diff)
+            if (Faction_Timer <= diff)
             {
                 m_creature->setFaction(FACTION_HOSTILE);
                 Faction_Timer = 0;

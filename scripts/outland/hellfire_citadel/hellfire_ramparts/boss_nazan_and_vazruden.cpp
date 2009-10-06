@@ -249,7 +249,7 @@ struct MANGOS_DLL_DECL boss_vazruden_heraldAI : public ScriptedAI
     {
         if (!m_creature->getVictim() && m_uiMovementTimer)
         {
-            if (m_uiMovementTimer < uiDiff)
+            if (m_uiMovementTimer <= uiDiff)
             {
                 if (m_pInstance)
                 {

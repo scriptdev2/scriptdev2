@@ -2081,7 +2081,7 @@ struct MANGOS_DLL_DECL cage_trap_triggerAI : public ScriptedAI
     {
         if (DespawnTimer)
         {
-            if (DespawnTimer < diff)
+            if (DespawnTimer <= diff)
                 m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
             else DespawnTimer -= diff;
         }
