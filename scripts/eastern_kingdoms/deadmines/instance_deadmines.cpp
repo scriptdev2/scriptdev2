@@ -22,7 +22,7 @@ SDCategory: Deadmines
 EndScriptData */
 
 #include "precompiled.h"
-#include "def_deadmines.h"
+#include "deadmines.h"
 
 struct MANGOS_DLL_DECL instance_deadmines : public ScriptedInstance
 {

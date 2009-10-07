@@ -27,7 +27,7 @@ npc_berthold
 EndContentData */
 
 #include "precompiled.h"
-#include "def_karazhan.h"
+#include "karazhan.h"
 #include "escort_ai.h"
 
 /*######

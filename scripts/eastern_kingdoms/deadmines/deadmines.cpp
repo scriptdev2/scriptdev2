@@ -22,7 +22,7 @@ SDCategory: Deadmines
 EndScriptData */
 
 #include "precompiled.h"
-#include "def_deadmines.h"
+#include "deadmines.h"
 
 bool GOHello_go_door_lever_dm(Player* pPlayer, GameObject* pGo)
 {

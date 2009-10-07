@@ -22,7 +22,7 @@ SDCategory: Scarlet Monastery
 EndScriptData */
 
 #include "precompiled.h"
-#include "def_scarlet_monastery.h"
+#include "scarlet_monastery.h"
 
 struct MANGOS_DLL_DECL instance_scarlet_monastery : public ScriptedInstance
 {

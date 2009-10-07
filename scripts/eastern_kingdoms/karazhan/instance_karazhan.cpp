@@ -22,7 +22,7 @@ SDCategory: Karazhan
 EndScriptData */
 
 #include "precompiled.h"
-#include "def_karazhan.h"
+#include "karazhan.h"
 
 /*
 0  - Attumen + Midnight (optional)

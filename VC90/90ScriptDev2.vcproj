@@ -511,6 +511,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\scripts\eastern_kingdoms\blackrock_depths\blackrock_depths.h"
+						>
+					</File>
+					<File
 						RelativePath="..\scripts\eastern_kingdoms\blackrock_depths\boss_ambassador_flamelash.cpp"
 						>
 					</File>
@@ -544,10 +548,6 @@
 					</File>
 					<File
 						RelativePath="..\scripts\eastern_kingdoms\blackrock_depths\boss_tomb_of_seven.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\eastern_kingdoms\blackrock_depths\def_blackrock_depths.h"
 						>
 					</File>
 					<File
@@ -659,7 +659,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\eastern_kingdoms\deadmines\def_deadmines.h"
+						RelativePath="..\scripts\eastern_kingdoms\deadmines\deadmines.h"
 						>
 					</File>
 					<File
@@ -715,15 +715,15 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\eastern_kingdoms\karazhan\def_karazhan.h"
-						>
-					</File>
-					<File
 						RelativePath="..\scripts\eastern_kingdoms\karazhan\instance_karazhan.cpp"
 						>
 					</File>
 					<File
 						RelativePath="..\scripts\eastern_kingdoms\karazhan\karazhan.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\eastern_kingdoms\karazhan\karazhan.h"
 						>
 					</File>
 				</Filter>
@@ -747,15 +747,15 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\eastern_kingdoms\magisters_terrace\def_magisters_terrace.h"
-						>
-					</File>
-					<File
 						RelativePath="..\scripts\eastern_kingdoms\magisters_terrace\instance_magisters_terrace.cpp"
 						>
 					</File>
 					<File
 						RelativePath="..\scripts\eastern_kingdoms\magisters_terrace\magisters_terrace.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\eastern_kingdoms\magisters_terrace\magisters_terrace.h"
 						>
 					</File>
 				</Filter>
@@ -803,15 +803,15 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\eastern_kingdoms\molten_core\def_molten_core.h"
-						>
-					</File>
-					<File
 						RelativePath="..\scripts\eastern_kingdoms\molten_core\instance_molten_core.cpp"
 						>
 					</File>
 					<File
 						RelativePath="..\scripts\eastern_kingdoms\molten_core\molten_core.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\eastern_kingdoms\molten_core\molten_core.h"
 						>
 					</File>
 				</Filter>
@@ -863,11 +863,11 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\eastern_kingdoms\scarlet_monastery\def_scarlet_monastery.h"
+						RelativePath="..\scripts\eastern_kingdoms\scarlet_monastery\instance_scarlet_monastery.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\eastern_kingdoms\scarlet_monastery\instance_scarlet_monastery.cpp"
+						RelativePath="..\scripts\eastern_kingdoms\scarlet_monastery\scarlet_monastery.h"
 						>
 					</File>
 				</Filter>
@@ -923,11 +923,11 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\eastern_kingdoms\scholomance\def_scholomance.h"
+						RelativePath="..\scripts\eastern_kingdoms\scholomance\instance_scholomance.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\eastern_kingdoms\scholomance\instance_scholomance.cpp"
+						RelativePath="..\scripts\eastern_kingdoms\scholomance\scholomance.h"
 						>
 					</File>
 				</Filter>
@@ -935,15 +935,15 @@
 					Name="shadowfang_keep"
 					>
 					<File
-						RelativePath="..\scripts\eastern_kingdoms\shadowfang_keep\def_shadowfang_keep.h"
-						>
-					</File>
-					<File
 						RelativePath="..\scripts\eastern_kingdoms\shadowfang_keep\instance_shadowfang_keep.cpp"
 						>
 					</File>
 					<File
 						RelativePath="..\scripts\eastern_kingdoms\shadowfang_keep\shadowfang_keep.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\eastern_kingdoms\shadowfang_keep\shadowfang_keep.h"
 						>
 					</File>
 				</Filter>
@@ -999,15 +999,15 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\eastern_kingdoms\stratholme\def_stratholme.h"
-						>
-					</File>
-					<File
 						RelativePath="..\scripts\eastern_kingdoms\stratholme\instance_stratholme.cpp"
 						>
 					</File>
 					<File
 						RelativePath="..\scripts\eastern_kingdoms\stratholme\stratholme.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\eastern_kingdoms\stratholme\stratholme.h"
 						>
 					</File>
 				</Filter>
@@ -1027,11 +1027,11 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\eastern_kingdoms\sunwell_plateau\def_sunwell_plateau.h"
+						RelativePath="..\scripts\eastern_kingdoms\sunwell_plateau\instance_sunwell_plateau.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\eastern_kingdoms\sunwell_plateau\instance_sunwell_plateau.cpp"
+						RelativePath="..\scripts\eastern_kingdoms\sunwell_plateau\sunwell_plateau.h"
 						>
 					</File>
 				</Filter>
@@ -1075,15 +1075,15 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\eastern_kingdoms\zulaman\def_zulaman.h"
-						>
-					</File>
-					<File
 						RelativePath="..\scripts\eastern_kingdoms\zulaman\instance_zulaman.cpp"
 						>
 					</File>
 					<File
 						RelativePath="..\scripts\eastern_kingdoms\zulaman\zulaman.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\eastern_kingdoms\zulaman\zulaman.h"
 						>
 					</File>
 				</Filter>
@@ -1143,11 +1143,11 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\eastern_kingdoms\zulgurub\def_zulgurub.h"
+						RelativePath="..\scripts\eastern_kingdoms\zulgurub\instance_zulgurub.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\eastern_kingdoms\zulgurub\instance_zulgurub.cpp"
+						RelativePath="..\scripts\eastern_kingdoms\zulgurub\zulgurub.h"
 						>
 					</File>
 				</Filter>

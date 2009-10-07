@@ -31,7 +31,7 @@ npc_lokhtos_darkbargainer
 EndContentData */
 
 #include "precompiled.h"
-#include "def_blackrock_depths.h"
+#include "blackrock_depths.h"
 #include "escort_ai.h"
 
 /*######
