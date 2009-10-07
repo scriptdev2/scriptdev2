@@ -22,7 +22,7 @@ SDCategory: Coilfang Resevoir, Serpent Shrine Cavern
 EndScriptData */
 
 #include "precompiled.h"
-#include "def_serpent_shrine.h"
+#include "serpent_shrine.h"
 
 /* Serpentshrine cavern encounters:
 0 - Hydross The Unstable event

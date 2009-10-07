@@ -22,7 +22,7 @@ SDCategory: Black Temple
 EndScriptData */
 
 #include "precompiled.h"
-#include "def_black_temple.h"
+#include "black_temple.h"
 
 /* Black Temple encounters:
 0 - High Warlord Naj'entus event

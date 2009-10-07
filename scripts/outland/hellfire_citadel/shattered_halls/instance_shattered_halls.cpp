@@ -22,7 +22,7 @@ SDCategory: Hellfire Citadel, Shattered Halls
 EndScriptData */
 
 #include "precompiled.h"
-#include "def_shattered_halls.h"
+#include "shattered_halls.h"
 
 enum
 {

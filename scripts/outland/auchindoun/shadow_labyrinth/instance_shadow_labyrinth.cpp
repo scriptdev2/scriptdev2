@@ -22,7 +22,7 @@ SDCategory: Auchindoun, Shadow Labyrinth
 EndScriptData */
 
 #include "precompiled.h"
-#include "def_shadow_labyrinth.h"
+#include "shadow_labyrinth.h"
 
 /* Shadow Labyrinth encounters:
 1 - Ambassador Hellmaw event

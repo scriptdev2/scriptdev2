@@ -31,7 +31,7 @@ EndScriptData */
 */
 
 #include "precompiled.h"
-#include "def_black_temple.h"
+#include "black_temple.h"
 
 #define GOSSIP_ITEM                 "We are ready to fight alongside you, Akama"
 

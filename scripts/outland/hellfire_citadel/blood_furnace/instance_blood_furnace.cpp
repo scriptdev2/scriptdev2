@@ -22,7 +22,7 @@ SDCategory: Blood Furnace
 EndScriptData */
 
 #include "precompiled.h"
-#include "def_blood_furnace.h"
+#include "blood_furnace.h"
 
 #define MAX_ENCOUNTER 3
 

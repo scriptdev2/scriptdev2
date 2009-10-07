@@ -22,7 +22,7 @@ SDCategory: Hellfire Citadel, Hellfire Ramparts
 EndScriptData */
 
 #include "precompiled.h"
-#include "def_hellfire_ramparts.h"
+#include "hellfire_ramparts.h"
 
 enum
 {

@@ -22,7 +22,7 @@ SDCategory: Tempest Keep, The Eye
 EndScriptData */
 
 #include "precompiled.h"
-#include "def_the_eye.h"
+#include "the_eye.h"
 
 #define SAY_AGGRO                   -1550000
 #define SAY_SLAY1                   -1550001

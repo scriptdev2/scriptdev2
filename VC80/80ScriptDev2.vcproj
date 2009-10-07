@@ -1983,11 +1983,11 @@
 							>
 						</File>
 						<File
-							RelativePath="..\scripts\outland\auchindoun\sethekk_halls\def_sethekk_halls.h"
+							RelativePath="..\scripts\outland\auchindoun\sethekk_halls\instance_sethekk_halls.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\scripts\outland\auchindoun\sethekk_halls\instance_sethekk_halls.cpp"
+							RelativePath="..\scripts\outland\auchindoun\sethekk_halls\sethekk_halls.h"
 							>
 						</File>
 					</Filter>
@@ -2011,11 +2011,11 @@
 							>
 						</File>
 						<File
-							RelativePath="..\scripts\outland\auchindoun\shadow_labyrinth\def_shadow_labyrinth.h"
+							RelativePath="..\scripts\outland\auchindoun\shadow_labyrinth\instance_shadow_labyrinth.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\scripts\outland\auchindoun\shadow_labyrinth\instance_shadow_labyrinth.cpp"
+							RelativePath="..\scripts\outland\auchindoun\shadow_labyrinth\shadow_labyrinth.h"
 							>
 						</File>
 					</Filter>
@@ -2025,6 +2025,10 @@
 					>
 					<File
 						RelativePath="..\scripts\outland\black_temple\black_temple.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\outland\black_temple\black_temple.h"
 						>
 					</File>
 					<File
@@ -2057,10 +2061,6 @@
 					</File>
 					<File
 						RelativePath="..\scripts\outland\black_temple\boss_warlord_najentus.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\outland\black_temple\def_black_temple.h"
 						>
 					</File>
 					<File
@@ -2099,11 +2099,11 @@
 							>
 						</File>
 						<File
-							RelativePath="..\scripts\outland\coilfang_reservoir\serpent_shrine\def_serpent_shrine.h"
+							RelativePath="..\scripts\outland\coilfang_reservoir\serpent_shrine\instance_serpent_shrine.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\scripts\outland\coilfang_reservoir\serpent_shrine\instance_serpent_shrine.cpp"
+							RelativePath="..\scripts\outland\coilfang_reservoir\serpent_shrine\serpent_shrine.h"
 							>
 						</File>
 					</Filter>
@@ -2131,11 +2131,11 @@
 							>
 						</File>
 						<File
-							RelativePath="..\scripts\outland\coilfang_reservoir\steam_vault\def_steam_vault.h"
+							RelativePath="..\scripts\outland\coilfang_reservoir\steam_vault\instance_steam_vault.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\scripts\outland\coilfang_reservoir\steam_vault\instance_steam_vault.cpp"
+							RelativePath="..\scripts\outland\coilfang_reservoir\steam_vault\steam_vault.h"
 							>
 						</File>
 					</Filter>
@@ -2160,7 +2160,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\outland\gruuls_lair\def_gruuls_lair.h"
+						RelativePath="..\scripts\outland\gruuls_lair\gruuls_lair.h"
 						>
 					</File>
 					<File
@@ -2175,6 +2175,10 @@
 						Name="blood_furnace"
 						>
 						<File
+							RelativePath="..\scripts\outland\hellfire_citadel\blood_furnace\blood_furnace.h"
+							>
+						</File>
+						<File
 							RelativePath="..\scripts\outland\hellfire_citadel\blood_furnace\boss_broggok.cpp"
 							>
 						</File>
@@ -2184,10 +2188,6 @@
 						</File>
 						<File
 							RelativePath="..\scripts\outland\hellfire_citadel\blood_furnace\boss_the_maker.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\outland\hellfire_citadel\blood_furnace\def_blood_furnace.h"
 							>
 						</File>
 						<File
@@ -2211,7 +2211,7 @@
 							>
 						</File>
 						<File
-							RelativePath="..\scripts\outland\hellfire_citadel\hellfire_ramparts\def_hellfire_ramparts.h"
+							RelativePath="..\scripts\outland\hellfire_citadel\hellfire_ramparts\hellfire_ramparts.h"
 							>
 						</File>
 						<File
@@ -2227,11 +2227,11 @@
 							>
 						</File>
 						<File
-							RelativePath="..\scripts\outland\hellfire_citadel\magtheridons_lair\def_magtheridons_lair.h"
+							RelativePath="..\scripts\outland\hellfire_citadel\magtheridons_lair\instance_magtheridons_lair.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\scripts\outland\hellfire_citadel\magtheridons_lair\instance_magtheridons_lair.cpp"
+							RelativePath="..\scripts\outland\hellfire_citadel\magtheridons_lair\magtheridons_lair.h"
 							>
 						</File>
 					</Filter>
@@ -2251,11 +2251,11 @@
 							>
 						</File>
 						<File
-							RelativePath="..\scripts\outland\hellfire_citadel\shattered_halls\def_shattered_halls.h"
+							RelativePath="..\scripts\outland\hellfire_citadel\shattered_halls\instance_shattered_halls.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\scripts\outland\hellfire_citadel\shattered_halls\instance_shattered_halls.cpp"
+							RelativePath="..\scripts\outland\hellfire_citadel\shattered_halls\shattered_halls.h"
 							>
 						</File>
 					</Filter>
@@ -2271,11 +2271,11 @@
 							>
 						</File>
 						<File
-							RelativePath="..\scripts\outland\tempest_keep\arcatraz\boss_harbinger_skyriss.cpp"
+							RelativePath="..\scripts\outland\tempest_keep\arcatraz\arcatraz.h"
 							>
 						</File>
 						<File
-							RelativePath="..\scripts\outland\tempest_keep\arcatraz\def_arcatraz.h"
+							RelativePath="..\scripts\outland\tempest_keep\arcatraz\boss_harbinger_skyriss.cpp"
 							>
 						</File>
 						<File
@@ -2315,15 +2315,15 @@
 							>
 						</File>
 						<File
-							RelativePath="..\scripts\outland\tempest_keep\the_eye\def_the_eye.h"
-							>
-						</File>
-						<File
 							RelativePath="..\scripts\outland\tempest_keep\the_eye\instance_the_eye.cpp"
 							>
 						</File>
 						<File
 							RelativePath="..\scripts\outland\tempest_keep\the_eye\the_eye.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\outland\tempest_keep\the_eye\the_eye.h"
 							>
 						</File>
 					</Filter>
@@ -2347,11 +2347,11 @@
 							>
 						</File>
 						<File
-							RelativePath="..\scripts\outland\tempest_keep\the_mechanar\def_mechanar.h"
+							RelativePath="..\scripts\outland\tempest_keep\the_mechanar\instance_mechanar.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\scripts\outland\tempest_keep\the_mechanar\instance_mechanar.cpp"
+							RelativePath="..\scripts\outland\tempest_keep\the_mechanar\mechanar.h"
 							>
 						</File>
 					</Filter>

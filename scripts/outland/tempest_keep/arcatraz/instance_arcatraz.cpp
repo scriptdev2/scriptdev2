@@ -22,7 +22,7 @@ SDCategory: Tempest Keep, The Arcatraz
 EndScriptData */
 
 #include "precompiled.h"
-#include "def_arcatraz.h"
+#include "arcatraz.h"
 
 /* Arcatraz encounters:
 1 - Zereketh the Unbound event

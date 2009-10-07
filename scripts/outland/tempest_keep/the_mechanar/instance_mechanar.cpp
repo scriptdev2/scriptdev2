@@ -22,7 +22,7 @@ SDCategory: Mechanar
 EndScriptData */
 
 #include "precompiled.h"
-#include "def_mechanar.h"
+#include "mechanar.h"
 
 struct MANGOS_DLL_DECL instance_mechanar : public ScriptedInstance
 {
