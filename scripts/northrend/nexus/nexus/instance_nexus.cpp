@@ -22,7 +22,7 @@ SDCategory: The Nexus
 EndScriptData */
 
 #include "precompiled.h"
-#include "def_nexus.h"
+#include "nexus.h"
 
 bool GOHello_go_containment_sphere(Player* pPlayer, GameObject* pGo)
 {

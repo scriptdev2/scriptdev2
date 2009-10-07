@@ -22,7 +22,7 @@ SDCategory: Ulduar
 EndScriptData */
 
 #include "precompiled.h"
-#include "def_ulduar.h"
+#include "ulduar.h"
 
 struct MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance
 {

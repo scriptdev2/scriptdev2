@@ -22,7 +22,7 @@ SDCategory: Utgarde Keep
 EndScriptData */
 
 #include "precompiled.h"
-#include "def_utgarde_keep.h"
+#include "utgarde_keep.h"
 
 struct MANGOS_DLL_DECL instance_utgarde_keep : public ScriptedInstance
 {

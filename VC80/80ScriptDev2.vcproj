@@ -1583,6 +1583,10 @@
 						Name="azjol-nerub"
 						>
 						<File
+							RelativePath="..\scripts\northrend\azjol-nerub\azjol-nerub\azjol-nerub.h"
+							>
+						</File>
+						<File
 							RelativePath="..\scripts\northrend\azjol-nerub\azjol-nerub\boss_anubarak.cpp"
 							>
 						</File>
@@ -1592,10 +1596,6 @@
 						</File>
 						<File
 							RelativePath="..\scripts\northrend\azjol-nerub\azjol-nerub\boss_krikthir.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\northrend\azjol-nerub\azjol-nerub\def_azjol-nerub.h"
 							>
 						</File>
 						<File
@@ -1652,7 +1652,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\northrend\gundrak\def_gundrak.h"
+						RelativePath="..\scripts\northrend\gundrak\gundrak.h"
 						>
 					</File>
 					<File
@@ -1755,11 +1755,11 @@
 							>
 						</File>
 						<File
-							RelativePath="..\scripts\northrend\nexus\nexus\def_nexus.h"
+							RelativePath="..\scripts\northrend\nexus\nexus\instance_nexus.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\scripts\northrend\nexus\nexus\instance_nexus.cpp"
+							RelativePath="..\scripts\northrend\nexus\nexus\nexus.h"
 							>
 						</File>
 					</Filter>
@@ -1776,11 +1776,11 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\northrend\obsidian_sanctum\def_obsidian_sanctum.h"
+						RelativePath="..\scripts\northrend\obsidian_sanctum\instance_obsidian_sanctum.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\northrend\obsidian_sanctum\instance_obsidian_sanctum.cpp"
+						RelativePath="..\scripts\northrend\obsidian_sanctum\obsidian_sanctum.h"
 						>
 					</File>
 				</Filter>
@@ -1807,7 +1807,7 @@
 							>
 						</File>
 						<File
-							RelativePath="..\scripts\northrend\ulduar\halls_of_lightning\def_halls_of_lightning.h"
+							RelativePath="..\scripts\northrend\ulduar\halls_of_lightning\halls_of_lightning.h"
 							>
 						</File>
 						<File
@@ -1835,11 +1835,11 @@
 						Name="ulduar"
 						>
 						<File
-							RelativePath="..\scripts\northrend\ulduar\ulduar\def_ulduar.h"
+							RelativePath="..\scripts\northrend\ulduar\ulduar\instance_ulduar.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\scripts\northrend\ulduar\ulduar\instance_ulduar.cpp"
+							RelativePath="..\scripts\northrend\ulduar\ulduar\ulduar.h"
 							>
 						</File>
 					</Filter>
@@ -1863,15 +1863,15 @@
 							>
 						</File>
 						<File
-							RelativePath="..\scripts\northrend\utgarde_keep\utgarde_keep\def_utgarde_keep.h"
-							>
-						</File>
-						<File
 							RelativePath="..\scripts\northrend\utgarde_keep\utgarde_keep\instance_utgarde_keep.cpp"
 							>
 						</File>
 						<File
 							RelativePath="..\scripts\northrend\utgarde_keep\utgarde_keep\utgarde_keep.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\northrend\utgarde_keep\utgarde_keep\utgarde_keep.h"
 							>
 						</File>
 					</Filter>

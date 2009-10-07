@@ -26,7 +26,7 @@ mob_dragonflayer_forge_master
 EndContentData */
 
 #include "precompiled.h"
-#include "def_utgarde_keep.h"
+#include "utgarde_keep.h"
 
 /*######
 ## mob_dragonflayer_forge_master

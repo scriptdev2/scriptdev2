@@ -22,7 +22,7 @@ SDCategory: Gundrak
 EndScriptData */
 
 #include "precompiled.h"
-#include "def_gundrak.h"
+#include "gundrak.h"
 
 bool GOHello_go_gundrak_altar(Player* pPlayer, GameObject* pGo)
 {

@@ -22,7 +22,7 @@ SDCategory: Azjol-Nerub
 EndScriptData */
 
 #include "precompiled.h"
-#include "def_azjol-nerub.h"
+#include "azjol-nerub.h"
 
 struct MANGOS_DLL_DECL instance_azjol_nerub : public ScriptedInstance
 {
