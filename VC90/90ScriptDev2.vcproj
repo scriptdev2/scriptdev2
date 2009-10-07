@@ -1267,7 +1267,7 @@
 					Name="blackfathom_deeps"
 					>
 					<File
-						RelativePath="..\scripts\kalimdor\blackfathom_deeps\def_blackfathom_deeps.h"
+						RelativePath="..\scripts\kalimdor\blackfathom_deeps\blackfathom_deeps.h"
 						>
 					</File>
 					<File
@@ -1302,7 +1302,7 @@
 							>
 						</File>
 						<File
-							RelativePath="..\scripts\kalimdor\caverns_of_time\dark_portal\def_dark_portal.h"
+							RelativePath="..\scripts\kalimdor\caverns_of_time\dark_portal\dark_portal.h"
 							>
 						</File>
 						<File
@@ -1318,11 +1318,11 @@
 							>
 						</File>
 						<File
-							RelativePath="..\scripts\kalimdor\caverns_of_time\hyjal\def_hyjal.h"
+							RelativePath="..\scripts\kalimdor\caverns_of_time\hyjal\hyjal.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\scripts\kalimdor\caverns_of_time\hyjal\hyjal.cpp"
+							RelativePath="..\scripts\kalimdor\caverns_of_time\hyjal\hyjal.h"
 							>
 						</File>
 						<File
@@ -1354,15 +1354,15 @@
 							>
 						</File>
 						<File
-							RelativePath="..\scripts\kalimdor\caverns_of_time\old_hillsbrad\def_old_hillsbrad.h"
-							>
-						</File>
-						<File
 							RelativePath="..\scripts\kalimdor\caverns_of_time\old_hillsbrad\instance_old_hillsbrad.cpp"
 							>
 						</File>
 						<File
 							RelativePath="..\scripts\kalimdor\caverns_of_time\old_hillsbrad\old_hillsbrad.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\kalimdor\caverns_of_time\old_hillsbrad\old_hillsbrad.h"
 							>
 						</File>
 					</Filter>
@@ -1491,15 +1491,15 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\kalimdor\temple_of_ahnqiraj\def_temple_of_ahnqiraj.h"
-						>
-					</File>
-					<File
 						RelativePath="..\scripts\kalimdor\temple_of_ahnqiraj\instance_temple_of_ahnqiraj.cpp"
 						>
 					</File>
 					<File
 						RelativePath="..\scripts\kalimdor\temple_of_ahnqiraj\mob_anubisath_sentinel.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\kalimdor\temple_of_ahnqiraj\temple_of_ahnqiraj.h"
 						>
 					</File>
 				</Filter>

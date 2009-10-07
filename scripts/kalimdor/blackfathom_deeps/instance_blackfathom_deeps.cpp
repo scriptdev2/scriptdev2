@@ -22,7 +22,7 @@ SDCategory: Blackfathom Deeps
 EndScriptData */
 
 #include "precompiled.h"
-#include "def_blackfathom_deeps.h"
+#include "blackfathom_deeps.h"
 
 /* Encounter 0 = Twilight Lord Kelris
    Encounter 1 = Shrine event

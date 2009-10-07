@@ -5,7 +5,7 @@
 #ifndef SC_HYJALAI_H
 #define SC_HYJALAI_H
 
-#include "def_hyjal.h"
+#include "hyjal.h"
 
 enum eBaseArea
 {

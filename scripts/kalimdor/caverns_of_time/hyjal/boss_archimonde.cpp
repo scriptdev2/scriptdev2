@@ -22,7 +22,7 @@ SDCategory: Caverns of Time, Mount Hyjal
 EndScriptData */
 
 #include "precompiled.h"
-#include "def_hyjal.h"
+#include "hyjal.h"
 #include "SpellAuras.h"
 
 //text id -1534018 are the text used when previous events complete. Not part of this script.

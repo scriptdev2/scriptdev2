@@ -22,7 +22,7 @@ SDCategory: Caverns of Time, Mount Hyjal
 EndScriptData */
 
 #include "precompiled.h"
-#include "def_hyjal.h"
+#include "hyjal.h"
 
 /* Battle of Mount Hyjal encounters:
 0 - Rage Winterchill event

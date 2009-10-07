@@ -22,7 +22,7 @@ SDCategory: Caverns of Time, The Dark Portal
 EndScriptData */
 
 #include "precompiled.h"
-#include "def_dark_portal.h"
+#include "dark_portal.h"
 
 #define SAY_ENTER         -1269012
 #define SAY_AGGRO         -1269013

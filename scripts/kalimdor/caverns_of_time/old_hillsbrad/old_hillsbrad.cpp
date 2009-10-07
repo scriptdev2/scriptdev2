@@ -29,7 +29,7 @@ npc_taretha
 EndContentData */
 
 #include "precompiled.h"
-#include "def_old_hillsbrad.h"
+#include "old_hillsbrad.h"
 #include "escort_ai.h"
 
 enum

@@ -22,7 +22,7 @@ SDCategory: Caverns of Time, The Dark Portal
 EndScriptData */
 
 #include "precompiled.h"
-#include "def_dark_portal.h"
+#include "dark_portal.h"
 
 inline uint32 RandRiftBoss() { return (urand(0, 1) ? NPC_RKEEP : NPC_RLORD); }
 
