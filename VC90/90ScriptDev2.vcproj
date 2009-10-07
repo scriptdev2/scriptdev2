@@ -1604,6 +1604,18 @@
 					</Filter>
 				</Filter>
 				<Filter
+					Name="crusaders_coliseum"
+					>
+					<Filter
+						Name="trial_of_the_champion"
+						>
+					</Filter>
+					<Filter
+						Name="trial_of_the_crusader"
+						>
+					</Filter>
+				</Filter>
+				<Filter
 					Name="draktharon_keep"
 					>
 					<File
