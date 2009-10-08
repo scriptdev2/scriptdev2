@@ -103,7 +103,6 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
     uint32 m_uiCheck_Timer;
 
     uint8 m_uiKillCount;
-    uint8 m_uiTargetInRangeCount;
 
     bool m_bRaptorDead;
 
@@ -120,7 +119,6 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
         m_uiCheck_Timer = 1000;
 
         m_uiKillCount = 0;
-        m_uiTargetInRangeCount = 0;
 
         m_bRaptorDead = false;
 
@@ -280,17 +278,18 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
             //If more then 3 targets in melee range mandokir will cast fear
             if (m_uiFear_Timer < uiDiff)
             {
-                m_uiTargetInRangeCount = 0;
+                uint8 uiTargetInRangeCount = 0;
 
                 std::list<HostilReference*>::iterator i = m_creature->getThreatManager().getThreatList().begin();
                 for(; i != m_creature->getThreatManager().getThreatList().end(); ++i)
                 {
                     Unit* pTarget = Unit::GetUnit(*m_creature, (*i)->getUnitGuid());
-                    if (pTarget && m_creature->IsWithinDistInMap(pTarget, ATTACK_DISTANCE))
-                        ++m_uiTargetInRangeCount;
+
+                    if (pTarget && pTarget->GetTypeId() == TYPEID_PLAYER && m_creature->IsWithinDistInMap(pTarget, ATTACK_DISTANCE))
+                        ++uiTargetInRangeCount;
                 }
 
-                if (m_uiTargetInRangeCount > 3)
+                if (uiTargetInRangeCount > 3)
                     DoCast(m_creature->getVictim(), SPELL_FEAR);
 
                 m_uiFear_Timer = 4000;
