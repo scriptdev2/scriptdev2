@@ -47,7 +47,7 @@ enum
     SPELL_SUMMON_PLAYER = 25104,
     SPELL_LEVEL_UP      = 24312,
 
-    SPELL_MOUNT         = 23243,
+    SPELL_MOUNT         = 23243,                            //this spell may not be correct, it's the spell used by item
 
     //Ohgans Spells
     SPELL_SUNDERARMOR   = 24317,
@@ -128,8 +128,6 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
         m_uiWatchTarget = 0;
 
         DoCast(m_creature, SPELL_MOUNT);
-
-        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_UNK_9);
     }
 
     void JustReachedHome()
@@ -190,12 +188,19 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
             m_creature->SummonCreature(NPC_CHAINED_SPIRIT, aSpirits[i].fX, aSpirits[i].fY, aSpirits[i].fZ, aSpirits[i].fAng, TEMPSUMMON_CORPSE_DESPAWN, 0);
 
         //At combat start Mandokir is mounted so we must unmount it first, and set his flags for attackable
-        m_creature->Unmount();
-
-        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_UNK_9);
+        m_creature->RemoveAurasDueToSpell(SPELL_MOUNT);
 
         //And summon his raptor
-        m_creature->SummonCreature(NPC_OHGAN, pWho->GetPositionX(), pWho->GetPositionY(), pWho->GetPositionZ(), 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 35000);
+        m_creature->SummonCreature(NPC_OHGAN, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 35000);
+    }
+
+    void JustSummoned(Creature* pSummoned)
+    {
+        if (!m_creature->getVictim())
+            return;
+
+        if (pSummoned->GetEntry() == NPC_OHGAN)
+            pSummoned->AI()->AttackStart(m_creature->getVictim());
     }
 
     void SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell)
