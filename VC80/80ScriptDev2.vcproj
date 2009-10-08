@@ -1578,6 +1578,14 @@
 							RelativePath="..\scripts\northrend\azjol-nerub\ahnkahet\boss_volazj.cpp"
 							>
 						</File>
+						<File
+							RelativePath="..\scripts\northrend\azjol-nerub\ahnkahet\ahnkahet.h"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\northrend\azjol-nerub\ahnkahet\instance_ahnkahet.cpp"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="azjol-nerub"

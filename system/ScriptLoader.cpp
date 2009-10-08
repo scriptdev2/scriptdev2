@@ -248,6 +248,7 @@ extern void AddSC_boss_jedoga();                            //ahnkahet
 extern void AddSC_boss_nadox();
 extern void AddSC_boss_taldaram();
 extern void AddSC_boss_volazj();
+extern void AddSC_instance_ahnkahet();
 extern void AddSC_boss_anubarak();                          //azjol-nerub
 extern void AddSC_boss_hadronox();
 extern void AddSC_boss_krikthir();
@@ -631,6 +632,7 @@ void AddScripts()
     AddSC_boss_nadox();
     AddSC_boss_taldaram();
     AddSC_boss_volazj();
+    AddSC_instance_ahnkahet();
     AddSC_boss_anubarak();                                  //azjol-nerub
     AddSC_boss_hadronox();
     AddSC_boss_krikthir();

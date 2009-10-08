@@ -22,6 +22,7 @@ SDCategory: Ahn'kahet
 EndScriptData */
 
 #include "precompiled.h"
+#include "ahnkahet.h"
 
 enum
 {
@@ -74,6 +75,9 @@ struct MANGOS_DLL_DECL boss_taldaramAI : public ScriptedAI
     void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DEATH, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_TALDARAM, DONE);
     }
 
     void UpdateAI(const uint32 uiDiff)
@@ -96,12 +100,19 @@ CreatureAI* GetAI_boss_taldaram(Creature* pCreature)
 
 bool GOHello_go_nerubian_device(Player* pPlayer, GameObject* pGo)
 {
+    ScriptedInstance* pInstance = (ScriptedInstance*)pGo->GetInstanceData();
+
+    if (!pInstance)
+        return false;
+
+    pInstance->SetData(TYPE_TALDARAM, SPECIAL);
+    pGo->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
     return false;
 }
 
 void AddSC_boss_taldaram()
 {
-    Script *newscript;
+    Script* newscript;
 
     newscript = new Script;
     newscript->Name = "boss_taldaram";
