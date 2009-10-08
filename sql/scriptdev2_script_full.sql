@@ -21,7 +21,8 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000001,'%s goes into a killing frenzy!',0,2,0,0,'EMOTE_GENERIC_FRENZY_KILL'),
 (-1000002,'%s goes into a frenzy!',0,2,0,0,'EMOTE_GENERIC_FRENZY'),
 (-1000003,'%s becomes enraged!',0,2,0,0,'EMOTE_GENERIC_ENRAGED'),
-(-1000004,'%s goes into a berserker rage!',0,2,0,0,'EMOTE_GENERIC_BERSERK');
+(-1000004,'%s goes into a berserker rage!',0,2,0,0,'EMOTE_GENERIC_BERSERK'),
+(-1000005,'%s goes into a frenzy!',0,3,0,0,'EMOTE_BOSS_GENERIC_FRENZY');
 
 --
 -- Normal text entries below. Say/Yell/Whisper/Emote for any regular world object.
@@ -105,7 +106,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000153,'Contemptible wretch!',11338,1,0,0,'kazzak SAY_KILL2'),
 (-1000154,'The universe will be remade.',11339,1,0,0,'kazzak SAY_KILL3'),
 (-1000155,'The Legion... will never... fall.',11340,1,0,0,'kazzak SAY_DEATH'),
-(-1000156,'%s goes into a frenzy!',0,2,0,0,'kazzak EMOTE_FRENZY'),
+(-1000156,'REUSE ME',0,0,0,0,'REUSE ME'),
 (-1000157,'Invaders, you dangle upon the precipice of oblivion! The Burning Legion comes and with it comes your end.',0,1,0,0,'kazzak SAY_RAND1'),
 (-1000158,'Impudent whelps, you only delay the inevitable. Where one has fallen, ten shall rise. Such is the will of Kazzak...',0,1,0,0,'kazzak SAY_RAND2'),
 
@@ -684,7 +685,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1269015,'One less obstacle in our way!',10403,1,0,0,'aeonus SAY_SLAY1'),
 (-1269016,'No one can stop us! No one!',10404,1,0,0,'aeonus SAY_SLAY2'),
 (-1269017,'It is only a matter...of time.',10405,1,0,0,'aeonus SAY_DEATH'),
-(-1269018,'%s goes into a frenzy!',0,2,0,0,'aeonus EMOTE_FRENZY'),
+(-1269018,'REUSE ME',0,0,0,0,'REUSE ME'),
 
 (-1269019,'Stop! Do not go further, mortals. You are ill-prepared to face the forces of the Infinite Dragonflight. Come, let me help you.',0,0,0,0,'saat SAY_SAAT_WELCOME'),
 
@@ -750,7 +751,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 -- -1 409 000 MOLTEN CORE
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
 (-1409000,'%s performs one last service for Ragnaros.',0,2,0,0,'geddon EMOTE_SERVICE'),
-(-1409001,'%s goes into a killing frenzy!',0,2,0,0,'magmadar EMOTE_FRENZY'),
+(-1409001,'REUSE ME',0,0,0,0,'REUSE ME'),
 (-1409002,'%s refuses to die while its master is in trouble.',0,2,0,0,'core rager EMOTE_LOWHP'),
 
 (-1409003,'Reckless mortals, none may challenge the sons of the living flame!',8035,1,0,0,'majordomo SAY_AGGRO'),
@@ -779,7 +780,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1469000,'None of your kind should be here! You\'ve doomed only yourselves!',8286,1,0,0,'broodlord SAY_AGGRO'),
 (-1469001,'Clever Mortals but I am not so easily lured away from my sanctum!',8287,1,0,0,'broodlord SAY_LEASH'),
 
-(-1469002,'%s goes into a killing frenzy!',0,2,0,0,'chromaggus EMOTE_FRENZY'),
+(-1469002,'REUSE ME',0,0,0,0,'REUSE ME'),
 (-1469003,'%s flinches as its skin shimmers.',0,2,0,0,'chromaggus EMOTE_SHIMMER'),
 
 (-1469004,'In this world where time is your enemy, it is my greatest ally. This grand game of life that you think you play in fact plays you. To that I say...',0,0,0,0,'victor_nefarius SAY_GAMESBEGIN_1'),
@@ -813,7 +814,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1469029,'Nefarius\' hate has made me stronger than ever before. You should have fled, while you could, mortals! The fury of Blackrock courses through my veins!',8285,1,0,0,'vaelastrasz SAY_HALFLIFE'),
 (-1469030,'Forgive me $N, your death only adds to my failure.',8284,1,0,0,'vaelastrasz SAY_KILLTARGET'),
 
-(-1469031,'%s goes into a frenzy!',0,2,0,0,'flamegor EMOTE_FRENZY');
+(-1469031,'REUSE ME',0,0,0,0,'REUSE ME');
 
 -- -1 509 000 RUINS OF AHN'QIRAJ
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
@@ -2257,7 +2258,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1601010,'They hunger.',14085,1,0,0,'krikthir SAY_SWARM_1'),
 (-1601011,'Dinner time, my pets.',14086,1,0,0,'krikthir SAY_SWARM_2'),
 (-1601012,'I should be grateful. But I long ago lost the capacity.',14087,1,0,0,'krikthir SAY_DEATH'),
-(-1601013,'%s goes into a frenzy!',0,3,0,0,'krikthir EMOTE_FRENZY'),
+(-1601013,'REUSE ME',0,0,0,0,'REUSE ME'),
 
 (-1601014,'I was king of this empire once, long ago. In life I stood as champion. In death I returned as conqueror. Now I protect the kingdom once more. Ironic, yes?',14053,1,0,0,'anubarak SAY_INTRO'),
 (-1601015,'Eternal agony awaits you!',14054,1,0,0,'anubarak SAY_AGGRO'),

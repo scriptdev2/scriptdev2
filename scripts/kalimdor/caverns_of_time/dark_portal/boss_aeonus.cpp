@@ -24,19 +24,22 @@ EndScriptData */
 #include "precompiled.h"
 #include "dark_portal.h"
 
-#define SAY_ENTER         -1269012
-#define SAY_AGGRO         -1269013
-#define SAY_BANISH        -1269014
-#define SAY_SLAY1         -1269015
-#define SAY_SLAY2         -1269016
-#define SAY_DEATH         -1269017
-#define EMOTE_FRENZY      -1269018
+enum
+{
+    SAY_ENTER               = -1269012,
+    SAY_AGGRO               = -1269013,
+    SAY_BANISH              = -1269014,
+    SAY_SLAY1               = -1269015,
+    SAY_SLAY2               = -1269016,
+    SAY_DEATH               = -1269017,
+    EMOTE_GENERIC_FRENZY    = -1000002,
 
-#define SPELL_CLEAVE        40504
-#define SPELL_TIME_STOP     31422
-#define SPELL_ENRAGE        37605
-#define SPELL_SAND_BREATH   31473
-#define H_SPELL_SAND_BREATH 39049
+    SPELL_CLEAVE            = 40504,
+    SPELL_TIME_STOP         = 31422,
+    SPELL_ENRAGE            = 37605,
+    SPELL_SAND_BREATH       = 31473,
+    H_SPELL_SAND_BREATH     = 39049
+};
 
 struct MANGOS_DLL_DECL boss_aeonusAI : public ScriptedAI
 {
@@ -117,7 +120,7 @@ struct MANGOS_DLL_DECL boss_aeonusAI : public ScriptedAI
         //Frenzy
         if (Frenzy_Timer < diff)
         {
-            DoScriptText(EMOTE_FRENZY, m_creature);
+            DoScriptText(EMOTE_GENERIC_FRENZY, m_creature);
             DoCast(m_creature, SPELL_ENRAGE);
             Frenzy_Timer = urand(20000, 35000);
         }else Frenzy_Timer -= diff;

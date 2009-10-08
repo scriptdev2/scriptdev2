@@ -39,7 +39,7 @@ enum
     SAY_SWARM_1                     = -1601010,
     SAY_SWARM_2                     = -1601011,
     SAY_DEATH                       = -1601012,
-    EMOTE_FRENZY                    = -1601013
+    EMOTE_BOSS_GENERIC_FRENZY       = -1000005
 };
 
 /*######

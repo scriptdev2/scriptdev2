@@ -23,13 +23,16 @@ EndScriptData */
 
 #include "precompiled.h"
 
-#define EMOTE_FRENZY                -1409001
+enum
+{
+    EMOTE_GENERIC_FRENZY_KILL   = -1000001,
 
-#define SPELL_FRENZY                19451
-#define SPELL_MAGMASPIT             19449                   //This is actually a buff he gives himself
-#define SPELL_PANIC                 19408
-#define SPELL_LAVABOMB              19411                   //This calls a dummy server side effect that isn't implemented yet
-#define SPELL_LAVABOMB_ALT          19428                   //This is the spell that the lava bomb casts
+    SPELL_FRENZY                = 19451,
+    SPELL_MAGMASPIT             = 19449,                    //This is actually a buff he gives himself
+    SPELL_PANIC                 = 19408,
+    SPELL_LAVABOMB              = 19411,                    //This calls a dummy server side effect that isn't implemented yet
+    SPELL_LAVABOMB_ALT          = 19428                     //This is the spell that the lava bomb casts
+};
 
 struct MANGOS_DLL_DECL boss_magmadarAI : public ScriptedAI
 {
@@ -56,7 +59,7 @@ struct MANGOS_DLL_DECL boss_magmadarAI : public ScriptedAI
         //Frenzy_Timer
         if (Frenzy_Timer < diff)
         {
-            DoScriptText(EMOTE_FRENZY, m_creature);
+            DoScriptText(EMOTE_GENERIC_FRENZY_KILL, m_creature);
             DoCast(m_creature,SPELL_FRENZY);
             Frenzy_Timer = 15000;
         }else Frenzy_Timer -= diff;

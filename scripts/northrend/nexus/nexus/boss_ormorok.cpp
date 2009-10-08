@@ -30,6 +30,7 @@ enum
     SAY_REFLECT                 = -1576013,
     SAY_ICESPIKE                = -1576014,
     SAY_DEATH                   = -1576015,
+    EMOTE_BOSS_GENERIC_FRENZY   = -1000005,
 
     SPELL_REFLECTION            = 47981,
 

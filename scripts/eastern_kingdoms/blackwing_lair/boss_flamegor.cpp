@@ -23,11 +23,14 @@ EndScriptData */
 
 #include "precompiled.h"
 
-#define EMOTE_FRENZY            -1469031
+enum
+{
+    EMOTE_GENERIC_FRENZY        = -1000002,
 
-#define SPELL_SHADOWFLAME        22539
-#define SPELL_WINGBUFFET         23339
-#define SPELL_FRENZY             23342                      //This spell periodically triggers fire nova
+    SPELL_SHADOWFLAME           = 22539,
+    SPELL_WINGBUFFET            = 23339,
+    SPELL_FRENZY                = 23342                     //This spell periodically triggers fire nova
+};
 
 struct MANGOS_DLL_DECL boss_flamegorAI : public ScriptedAI
 {
@@ -74,7 +77,7 @@ struct MANGOS_DLL_DECL boss_flamegorAI : public ScriptedAI
         //Frenzy_Timer
         if (Frenzy_Timer < diff)
         {
-            DoScriptText(EMOTE_FRENZY, m_creature);
+            DoScriptText(EMOTE_GENERIC_FRENZY, m_creature);
             DoCast(m_creature,SPELL_FRENZY);
             Frenzy_Timer = urand(8000, 1000);
         }else Frenzy_Timer -= diff;
