@@ -40,11 +40,11 @@ enum
     SPELL_CHARGE        = 24315,
     SPELL_CLEAVE        = 20691,
     SPELL_FEAR          = 29321,
-    SPELL_GUILLOTINE    = 24316,
     SPELL_WHIRLWIND     = 24236,
     SPELL_MORTAL_STRIKE = 24573,
     SPELL_ENRAGE        = 23537,
     SPELL_WATCH         = 24314,
+    SPELL_SUMMON_PLAYER = 25104,
     SPELL_LEVEL_UP      = 24312,
 
     SPELL_MOUNT         = 23243,
@@ -105,16 +105,9 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
     uint8 m_uiKillCount;
     uint8 m_uiTargetInRangeCount;
 
-    float fTargetPositionX;
-    float fTargetPositionY;
-    float fTargetPositionZ;
-    float fTargetsThreat;
-
-    bool m_bEndWatch;
-    bool m_bSomeWatched;
     bool m_bRaptorDead;
-    bool m_bCombatStart;
 
+    float m_fTargetThreat;
     uint64 m_uiWatchTarget;
 
     void Reset()
@@ -127,18 +120,12 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
         m_uiCheck_Timer = 1000;
 
         m_uiKillCount = 0;
-
-        fTargetPositionX = 0.0f;
-        fTargetPositionY = 0.0f;
-        fTargetPositionZ = 0.0f;
         m_uiTargetInRangeCount = 0;
 
-        m_uiWatchTarget = 0;
-
-        m_bSomeWatched = false;
-        m_bEndWatch = false;
         m_bRaptorDead = false;
-        m_bCombatStart = false;
+
+        m_fTargetThreat = 0.0f;
+        m_uiWatchTarget = 0;
 
         DoCast(m_creature, SPELL_MOUNT);
 
@@ -195,6 +182,8 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
+        m_creature->SetInCombatWithZone();
+
         uint32 uiCount = sizeof(aSpirits)/sizeof(SpawnLocations);
 
         for(uint8 i = 0; i < uiCount; ++i)
@@ -209,72 +198,61 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
         m_creature->SummonCreature(NPC_OHGAN, pWho->GetPositionX(), pWho->GetPositionY(), pWho->GetPositionZ(), 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 35000);
     }
 
+    void SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell)
+    {
+        if (pSpell->Id == SPELL_WATCH)
+        {
+            DoScriptText(SAY_WATCH, m_creature, pTarget);
+            DoScriptText(SAY_WATCH_WHISPER, m_creature, pTarget);
+
+            m_uiWatchTarget = pTarget->GetGUID();
+            m_fTargetThreat = m_creature->getThreatManager().getThreat(pTarget);
+            m_uiWatch_Timer = 6000;
+
+            //Could use this instead of hard coded timer for the above (but no script access),
+            //but would still a hack since we should better use the dummy, at aura removal
+            //SpellDurationEntry* const pDuration = sSpellDurationStore.LookupEntry(pSpell->DurationIndex);
+        }
+    }
+
     void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if (m_uiWatch_Timer < uiDiff)                       //Every 20 Sec Mandokir will check this
+        if (m_uiWatch_Timer < uiDiff)
         {
-            if (m_uiWatchTarget)                            //If someone is watched and If the Position of the watched target is uiDifferent from the one stored, or are attacking, mandokir will charge him
+            //If someone is watched
+            if (m_uiWatchTarget)
             {
-                Unit* pUnit = Unit::GetUnit(*m_creature, m_uiWatchTarget);
+                Unit* pWatchTarget = Unit::GetUnit(*m_creature, m_uiWatchTarget);
 
-                if (pUnit && pUnit->isAlive() && (
-                    fTargetPositionX != pUnit->GetPositionX() ||
-                    fTargetPositionY != pUnit->GetPositionY() ||
-                    fTargetPositionZ != pUnit->GetPositionZ() ||
-                    fTargetsThreat < m_creature->getThreatManager().getThreat(pUnit)))
+                 //If threat is higher that previously saved, mandokir will act
+                if (pWatchTarget && pWatchTarget->isAlive() && m_creature->getThreatManager().getThreat(pWatchTarget) > m_fTargetThreat)
                 {
-                    if (m_creature->IsWithinDistInMap(pUnit, ATTACK_DISTANCE))
-                        DoCast(pUnit, SPELL_GUILLOTINE);
-                    else
-                        DoCast(pUnit, SPELL_CHARGE);
+                    if (!m_creature->IsWithinLOSInMap(pWatchTarget))
+                        m_creature->CastSpell(pWatchTarget, SPELL_SUMMON_PLAYER, true);
+
+                    DoCast(pWatchTarget, SPELL_CHARGE);
+                }
+
+                m_uiWatchTarget = 0;
+            }
+            else
+            {
+                if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                {
+                    if (Player* pPlayer = pTarget->GetCharmerOrOwnerPlayerOrPlayerItself())
+                        m_creature->CastSpell(pPlayer, SPELL_WATCH, false);
                 }
             }
 
-            m_bSomeWatched = false;
             m_uiWatch_Timer = 20000;
         }
         else
             m_uiWatch_Timer -= uiDiff;
 
-        if ((m_uiWatch_Timer < 8000) && !m_bSomeWatched)    //8 sec(cast time + expire time) before the check for the watch effect mandokir will cast watch debuff on a random target
-        {
-            if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
-            {
-                if (Player* pPlayer = pTarget->GetCharmerOrOwnerPlayerOrPlayerItself())
-                {
-                    DoScriptText(SAY_WATCH, m_creature, pPlayer);
-                    DoScriptText(SAY_WATCH_WHISPER, m_creature, pPlayer);
-
-                    DoCast(pPlayer, SPELL_WATCH);
-                    m_uiWatchTarget = pPlayer->GetGUID();
-                    m_bSomeWatched = true;
-                    m_bEndWatch = true;
-                }
-                else
-                {
-                    m_uiWatch_Timer = 8000;
-                }
-            }
-        }
-
-        if ((m_uiWatch_Timer < 1000) && m_bEndWatch)        //1 sec before the debuf expire, store the target position
-        {
-            if (Unit* pWatchTarget = Unit::GetUnit(*m_creature, m_uiWatchTarget))
-            {
-                fTargetPositionX = pWatchTarget->GetPositionX();
-                fTargetPositionY = pWatchTarget->GetPositionY();
-                fTargetPositionZ = pWatchTarget->GetPositionZ();
-                fTargetsThreat = m_creature->getThreatManager().getThreat(pWatchTarget);
-                //based on fTargetsThreateat, needs improvements
-            }
-
-            m_bEndWatch = false;
-        }
-
-        if (!m_bSomeWatched)
+        if (!m_uiWatchTarget)
         {
             //Cleave
             if (m_uiCleave_Timer < uiDiff)
