@@ -33,7 +33,9 @@ enum
     SAY_DING_KILL       = -1309016,
     SAY_GRATS_JINDO     = -1309017,
     SAY_WATCH           = -1309018,
-    SAY_WATCH_WHISPER   = -1309019,                         //is this text for real? easter egg?
+    SAY_WATCH_WHISPER   = -1309019,
+
+    EMOTE_RAGE          = -1309024,
 
     SPELL_CHARGE        = 24315,
     SPELL_CLEAVE        = 20691,
@@ -244,6 +246,8 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
                 if (Player* pPlayer = pTarget->GetCharmerOrOwnerPlayerOrPlayerItself())
                 {
                     DoScriptText(SAY_WATCH, m_creature, pPlayer);
+                    DoScriptText(SAY_WATCH_WHISPER, m_creature, pPlayer);
+
                     DoCast(pPlayer, SPELL_WATCH);
                     m_uiWatchTarget = pPlayer->GetGUID();
                     m_bSomeWatched = true;
@@ -328,6 +332,7 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
         if (!m_bRaptorDead && m_pInstance && m_pInstance->GetData(TYPE_OHGAN) == DONE)
         {
             DoCast(m_creature, SPELL_ENRAGE);
+            DoScriptText(EMOTE_RAGE, m_creature);
             m_bRaptorDead = true;
         }
 

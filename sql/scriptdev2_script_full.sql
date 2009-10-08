@@ -726,13 +726,15 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1309015,'I\'ll feed your souls to Hakkar himself!',8413,1,0,0,'mandokir SAY_AGGRO'),
 (-1309016,'DING!',0,1,0,0,'mandokir SAY_DING_KILL'),
 (-1309017,'GRATS!',0,1,0,0,'mandokir SAY_GRATS_JINDO'),
-(-1309018,'I\'m keeping my eye on you, $N!',0,1,0,0,'mandokir SAY_WATCH'),
-(-1309019,'Don\'t make me angry. You won\'t like it when I\'m angry.',0,1,0,0,'mandokir SAY_WATCH_WHISPER'),
+(-1309018,'$N! I\'m watching you!',0,1,0,0,'mandokir SAY_WATCH'),
+(-1309019,'Don\'t make me angry. You won\'t like it when I\'m angry.',0,4,0,0,'mandokir SAY_WATCH_WHISPER'),
 
 (-1309020,'PRIDE HERALDS THE END OF YOUR WORLD. COME, MORTALS! FACE THE WRATH OF THE SOULFLAYER!',8414,1,0,0,'hakkar SAY_AGGRO'),
 (-1309021,'Fleeing will do you no good, mortals!',0,1,0,0,'hakkar SAY_FLEEING'),
 (-1309022,'You dare set foot upon Hakkari holy ground? Minions of Hakkar, destroy the infidels!',0,1,0,0,'hakkar SAY_MINION_DESTROY'),
-(-1309023,'Minions of Hakkar, hear your God. The sanctity of this temple has been compromised. Invaders encroach upon holy ground! The Altar of Blood must be protected. Kill them all!',0,1,0,0,'hakkar SAY_PROTECT_ALTAR');
+(-1309023,'Minions of Hakkar, hear your God. The sanctity of this temple has been compromised. Invaders encroach upon holy ground! The Altar of Blood must be protected. Kill them all!',0,1,0,0,'hakkar SAY_PROTECT_ALTAR'),
+
+(-1309024,'%s goes into a rage after seeing his raptor fall in battle!',0,2,0,0,'mandokir EMOTE_RAGE');
 
 -- -1 329 000 STRATHOLME
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
