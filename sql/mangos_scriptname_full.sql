@@ -154,7 +154,7 @@ UPDATE creature_template SET ScriptName='boss_nadox' WHERE entry=29309;
 UPDATE creature_template SET ScriptName='boss_taldaram' WHERE entry=29308;
 UPDATE gameobject_template SET ScriptName='go_nerubian_device' WHERE entry IN (193093,193094);
 UPDATE creature_template SET ScriptName='boss_volazj' WHERE entry=29311;
-UPDATE instance_template SET script="instance_ahnkahet" WHERE map=619;
+UPDATE instance_template SET script='instance_ahnkahet' WHERE map=619;
 
 /* AZJOL-NERUB */
 UPDATE creature_template SET ScriptName='boss_anubarak' WHERE entry=29120;
@@ -731,6 +731,7 @@ UPDATE creature_template SET ScriptName='npc_veronia' WHERE entry=20162;
 
 /* NEXUS */
 UPDATE creature_template SET ScriptName='boss_anomalus' WHERE entry=26763;
+UPDATE creature_template SET ScriptName='mob_chaotic_rift' WHERE entry=26918;
 UPDATE creature_template SET ScriptName='boss_keristrasza' WHERE entry=26723;
 UPDATE creature_template SET ScriptName='boss_ormorok' WHERE entry=26794;
 UPDATE creature_template SET ScriptName='boss_telestra' WHERE entry=26731;
