@@ -1059,6 +1059,7 @@ UPDATE creature_template SET ScriptName='mob_dragonflayer_forge_master' WHERE en
 UPDATE creature_template SET ScriptName='boss_skarvald' WHERE entry=24200;
 UPDATE creature_template SET ScriptName='boss_dalronn' WHERE entry=24201;
 UPDATE creature_template SET ScriptName='boss_ingvar' WHERE entry=23954;
+UPDATE creature_template SET ScriptName='npc_annhylde' WHERE entry=24068;
 UPDATE creature_template SET ScriptName='boss_keleseth' WHERE entry=23953;
 UPDATE creature_template SET ScriptName='mob_vrykul_skeleton' WHERE entry=23970;
 

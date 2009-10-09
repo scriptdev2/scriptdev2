@@ -1979,7 +1979,9 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1574019,'You may serve me yet.',13202,1,0,0,'dalronn SAY_DAL_KILL'),
 (-1574020,'Skarvald, you incompetent slug! Return and make yourself useful!',13203,1,0,0,'dalronn SAY_DAL_SKA_DIES_REPLY'),
 
-(-1574021,'%s casts Frost Tomb on $N',0,3,0,0,'keleseth EMOTE_FROST_TOMB');
+(-1574021,'%s casts Frost Tomb on $N',0,3,0,0,'keleseth EMOTE_FROST_TOMB'),
+
+(-1574022,'%s roars!',0,3,0,0,'ingvar EMOTE_ROAR');
 
 -- -1 575 000 UTGARDE PINNACLE
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
