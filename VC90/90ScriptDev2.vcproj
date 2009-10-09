@@ -1901,6 +1901,14 @@
 							RelativePath="..\scripts\northrend\utgarde_keep\utgarde_pinnacle\boss_ymiron.cpp"
 							>
 						</File>
+						<File
+							RelativePath="..\scripts\northrend\utgarde_keep\utgarde_pinnacle\instance_utgarde_pinnacle.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\northrend\utgarde_keep\utgarde_pinnacle\utgarde_pinnacle.h"
+							>
+						</File>
 					</Filter>
 				</Filter>
 				<Filter

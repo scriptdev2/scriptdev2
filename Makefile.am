@@ -363,6 +363,8 @@ scripts/northrend/utgarde_keep/utgarde_pinnacle/boss_gortok.cpp \
 scripts/northrend/utgarde_keep/utgarde_pinnacle/boss_skadi.cpp \
 scripts/northrend/utgarde_keep/utgarde_pinnacle/boss_svala.cpp \
 scripts/northrend/utgarde_keep/utgarde_pinnacle/boss_ymiron.cpp \
+scripts/northrend/utgarde_keep/utgarde_pinnacle/instance_utgarde_pinnacle.cpp \
+scripts/northrend/utgarde_keep/utgarde_pinnacle/utgarde_pinnacle.h \
 scripts/outland/blades_edge_mountains.cpp \
 scripts/outland/boss_doomlord_kazzak.cpp \
 scripts/outland/boss_doomwalker.cpp \

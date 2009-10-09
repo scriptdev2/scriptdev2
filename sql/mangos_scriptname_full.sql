@@ -1067,7 +1067,10 @@ UPDATE creature_template SET ScriptName='mob_vrykul_skeleton' WHERE entry=23970;
 UPDATE creature_template SET ScriptName='boss_gortok' WHERE entry=26687;
 UPDATE creature_template SET ScriptName='boss_skadi' WHERE entry=26693;
 UPDATE creature_template SET ScriptName='boss_svala' WHERE entry=29281;
+DELETE FROM areatrigger_scripts WHERE entry=5140;
+INSERT INTO areatrigger_scripts VALUES (5140,'at_svala_intro');
 UPDATE creature_template SET ScriptName='boss_ymiron' WHERE entry=26861;
+UPDATE instance_template SET script='instance_pinnacle' WHERE map=575;
 
 /* VAULT OF ARCHAVON */
 

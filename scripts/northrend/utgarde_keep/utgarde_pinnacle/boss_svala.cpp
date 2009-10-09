@@ -22,6 +22,7 @@ SDCategory: Utgarde Pinnacle
 EndScriptData */
 
 #include "precompiled.h"
+#include "utgarde_pinnacle.h"
 
 enum
 {
@@ -40,7 +41,18 @@ enum
     SAY_SACRIFICE_3             = -1575011,
     SAY_SACRIFICE_4             = -1575012,
     SAY_SACRIFICE_5             = -1575013,
-    SAY_DEATH                   = -1575014
+    SAY_DEATH                   = -1575014,
+
+    NPC_SVALA_SORROW            = 26668,
+    NPC_ARTHAS_IMAGE            = 29280,
+
+    SPELL_ARTHAS_VISUAL         = 54134,
+    SPELL_TRANSFORMING          = 54205,
+
+    SPELL_RITUAL_OF_SWORD       = 48276,
+    SPELL_CALL_FLAMES           = 48258,
+    SPELL_SINISTER_STRIKE       = 15667,
+    SPELL_SINISTER_STRIKE_H     = 59409
 };
 
 /*######
@@ -97,6 +109,17 @@ CreatureAI* GetAI_boss_svala(Creature* pCreature)
     return new boss_svalaAI(pCreature);
 }
 
+bool AreaTrigger_at_svala_intro(Player* pPlayer, AreaTriggerEntry* pAt)
+{
+    if (ScriptedInstance* pInstance = (ScriptedInstance*)pPlayer->GetInstanceData())
+    {
+        if (pInstance->GetData(TYPE_SVALA) == NOT_STARTED)
+            pInstance->SetData(TYPE_SVALA, SPECIAL);
+    }
+
+    return false;
+}
+
 void AddSC_boss_svala()
 {
     Script *newscript;
@@ -104,5 +127,10 @@ void AddSC_boss_svala()
     newscript = new Script;
     newscript->Name = "boss_svala";
     newscript->GetAI = &GetAI_boss_svala;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "at_svala_intro";
+    newscript->pAreaTrigger = &AreaTrigger_at_svala_intro;
     newscript->RegisterSelf();
 }
