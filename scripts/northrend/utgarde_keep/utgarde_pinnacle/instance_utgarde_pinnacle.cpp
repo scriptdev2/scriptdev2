@@ -76,7 +76,8 @@ struct MANGOS_DLL_DECL instance_pinnacle : public ScriptedInstance
                 break;
         }
 
-        if (uiData == DONE)
+        //saving also SPECIAL for this instance
+        if (uiData == DONE || uiData == SPECIAL)
         {
             OUT_SAVE_INST_DATA;
 
