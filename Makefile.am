@@ -332,6 +332,7 @@ scripts/northrend/naxxramas/boss_patchwerk.cpp \
 scripts/northrend/naxxramas/boss_razuvious.cpp \
 scripts/northrend/naxxramas/boss_sapphiron.cpp \
 scripts/northrend/naxxramas/boss_thaddius.cpp \
+scripts/northrend/naxxramas/naxxramas.h \
 scripts/northrend/naxxramas/instance_naxxramas.cpp \
 scripts/northrend/nexus/nexus/boss_anomalus.cpp \
 scripts/northrend/nexus/nexus/boss_keristrasza.cpp \
