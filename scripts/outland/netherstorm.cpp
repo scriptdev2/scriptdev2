@@ -407,10 +407,10 @@ struct MANGOS_DLL_DECL npc_commander_dawnforgeAI : public ScriptedAI
 
         //Turn Dawnforge and update
         m_creature->SetOrientation(angle_dawnforge);
-        m_creature->SendUpdateToPlayer(pPlayer);
+        m_creature->SendCreateUpdateToPlayer(pPlayer);
         //Turn Ardonis and update
         ardonis->SetOrientation(angle_ardonis);
-        ardonis->SendUpdateToPlayer(pPlayer);
+        ardonis->SendCreateUpdateToPlayer(pPlayer);
 
         //Set them to kneel
         m_creature->SetStandState(UNIT_STAND_STATE_KNEEL);
@@ -432,10 +432,10 @@ struct MANGOS_DLL_DECL npc_commander_dawnforgeAI : public ScriptedAI
 
             //Turn Dawnforge and update
             m_creature->SetOrientation(angle_dawnforge);
-            m_creature->SendUpdateToPlayer(pPlayer);
+            m_creature->SendCreateUpdateToPlayer(pPlayer);
             //Turn Ardonis and update
             ardonis->SetOrientation(angle_ardonis);
-            ardonis->SendUpdateToPlayer(pPlayer);
+            ardonis->SendCreateUpdateToPlayer(pPlayer);
 
             //Set state
             m_creature->SetStandState(UNIT_STAND_STATE_STAND);
