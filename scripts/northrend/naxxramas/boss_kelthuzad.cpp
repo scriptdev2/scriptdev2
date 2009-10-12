@@ -22,44 +22,7 @@ SDCategory: Naxxramas
 EndScriptData */
 
 #include "precompiled.h"
-
-//when shappiron dies. dialog between kel and lich king (in this order)
-#define SAY_SAPP_DIALOG1            -1533084
-#define SAY_SAPP_DIALOG2_LICH       -1533085
-#define SAY_SAPP_DIALOG3            -1533086
-#define SAY_SAPP_DIALOG4_LICH       -1533087
-#define SAY_SAPP_DIALOG5            -1533088
-
-//when cat dies
-#define SAY_CAT_DIED                -1533089
-
-//when each of the 4 wing bosses dies
-#define SAY_TAUNT1                  -1533090
-#define SAY_TAUNT2                  -1533091
-#define SAY_TAUNT3                  -1533092
-#define SAY_TAUNT4                  -1533093
-
-#define SAY_SUMMON_MINIONS          -1533105                //start of phase 1
-
-#define SAY_AGGRO1                  -1533094                //start of phase 2
-#define SAY_AGGRO2                  -1533095
-#define SAY_AGGRO3                  -1533096
-
-#define SAY_SLAY1                   -1533097
-#define SAY_SLAY2                   -1533098
-
-#define SAY_DEATH                   -1533099
-
-#define SAY_CHAIN1                  -1533100
-#define SAY_CHAIN2                  -1533101
-#define SAY_FROST_BLAST             -1533102
-
-#define SAY_REQUEST_AID             -1533103                //start of phase 3
-#define SAY_ANSWER_REQUEST          -1533104                //lich king answer
-
-#define SAY_SPECIAL1_MANA_DET       -1533106
-#define SAY_SPECIAL3_MANA_DET       -1533107
-#define SAY_SPECIAL2_DISPELL        -1533108
+#include "naxxramas.h"
 
 //***THIS SCRIPTS IS UNDER DEVELOPMENT***
 /*
@@ -74,6 +37,58 @@ them first.
 Need DISPELL efect
 I also don't know the emotes
 */
+
+enum
+{
+    //when shappiron dies. dialog between kel and lich king (in this order)
+    SAY_SAPP_DIALOG1          = -1533084,
+    SAY_SAPP_DIALOG2_LICH     = -1533085,
+    SAY_SAPP_DIALOG3          = -1533086,
+    SAY_SAPP_DIALOG4_LICH     = -1533087,
+    SAY_SAPP_DIALOG5          = -1533088,
+
+    //when cat dies
+    SAY_CAT_DIED              = -1533089,
+
+    //when each of the 4 wing bosses dies
+    SAY_TAUNT1                = -1533090,
+    SAY_TAUNT2                = -1533091,
+    SAY_TAUNT3                = -1533092,
+    SAY_TAUNT4                = -1533093,
+
+    SAY_SUMMON_MINIONS        = -1533105,                   //start of phase 1
+
+    SAY_AGGRO1                = -1533094,                   //start of phase 2
+    SAY_AGGRO2                = -1533095,
+    SAY_AGGRO3                = -1533096,
+
+    SAY_SLAY1                 = -1533097,
+    SAY_SLAY2                 = -1533098,
+
+    SAY_DEATH                 = -1533099,
+
+    SAY_CHAIN1                = -1533100,
+    SAY_CHAIN2                = -1533101,
+    SAY_FROST_BLAST           = -1533102,
+
+    SAY_REQUEST_AID           = -1533103,                   //start of phase 3
+    SAY_ANSWER_REQUEST        = -1533104,                   //lich king answer
+
+    SAY_SPECIAL1_MANA_DET     = -1533106,
+    SAY_SPECIAL3_MANA_DET     = -1533107,
+    SAY_SPECIAL2_DISPELL      = -1533108,
+
+    //spells to be casted
+    SPELL_FROST_BOLT          = 28478,
+    H_SPELL_FROST_BOLT        = 55802,
+    SPELL_FROST_BOLT_NOVA     = 28479,
+    H_SPELL_FROST_BOLT_NOVA   = 55807,
+
+    SPELL_CHAINS_OF_KELTHUZAD = 28410,                      //casted spell should be 28408. Also as of 303, heroic only
+    SPELL_MANA_DETONATION     = 27819,
+    SPELL_SHADOW_FISURE       = 27810,
+    SPELL_FROST_BLAST         = 27808
+};
 
 //Positional defines
 #define ADDX_LEFT_FAR               3783.272705
@@ -136,29 +151,20 @@ I also don't know the emotes
 #define WALKZ_RIGHT_NEAR            142.0141130
 #define WALKO_RIGHT_NEAR            2.121412
 
-//spells to be casted
-#define SPELL_FROST_BOLT            28478
-#define H_SPELL_FROST_BOLT          55802
-#define SPELL_FROST_BOLT_NOVA       28479
-#define H_SPELL_FROST_BOLT_NOVA     55807
-
-#define SPELL_CHAINS_OF_KELTHUZAD   28410                   //casted spell should be 28408. Also as of 303, heroic only
-#define SPELL_MANA_DETONATION       27819
-#define SPELL_SHADOW_FISURE         27810
-#define SPELL_FROST_BLAST           27808
-
 struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
 {
     boss_kelthuzadAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        GuardiansOfIcecrown[0] = 0;
-        GuardiansOfIcecrown[1] = 0;
-        GuardiansOfIcecrown[2] = 0;
-        GuardiansOfIcecrown[3] = 0;
-        GuardiansOfIcecrown[4] = 0;
+        memset(&GuardiansOfIcecrown, 0, sizeof(GuardiansOfIcecrown));
         GuardiansOfIcecrown_Count = 0;
+
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
         Reset();
     }
+
+    ScriptedInstance* m_pInstance;
+    bool m_bIsHeroicMode;
 
     uint64 GuardiansOfIcecrown[5];
     uint32 GuardiansOfIcecrown_Count;
@@ -204,15 +210,12 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
         Phase3 = false;
     }
 
-    void KilledUnit()
+    void KilledUnit(Unit* pVictim)
     {
-        if (urand(0, 1))
-            DoScriptText(SAY_SLAY1, m_creature);
-        else
-            DoScriptText(SAY_SLAY2, m_creature);
+        DoScriptText(urand(0, 1)?SAY_SLAY1:SAY_SLAY2, m_creature);
     }
 
-    void JustDied(Unit* Killer)
+    void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -268,9 +271,12 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
                 pGuardian->SendMonsterMoveWithSpeed(Walk_Pos_X, Walk_Pos_Y, Walk_Pos_Z);
             }
         }
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_KELTHUZAD, DONE);
     }
 
-    void Aggro(Unit* who)
+    void Aggro(Unit* pWho)
     {
         switch(urand(0, 2))
         {
@@ -278,29 +284,32 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
             case 1: DoScriptText(SAY_AGGRO2, m_creature); break;
             case 2: DoScriptText(SAY_AGGRO3, m_creature); break;
         }
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_KELTHUZAD, IN_PROGRESS);
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //Check for Frost Bolt
-        if (FrostBolt_Timer < diff)
+        if (FrostBolt_Timer < uiDiff)
         {
             DoCast(m_creature->getVictim(),SPELL_FROST_BOLT);
             FrostBolt_Timer = urand(1000, 60000);
-        }else FrostBolt_Timer -= diff;
+        }else FrostBolt_Timer -= uiDiff;
 
         //Check for Frost Bolt Nova
-        if (FrostBoltNova_Timer < diff)
+        if (FrostBoltNova_Timer < uiDiff)
         {
             DoCast(m_creature->getVictim(),SPELL_FROST_BOLT_NOVA);
             FrostBoltNova_Timer = 15000;
-        }else FrostBoltNova_Timer -= diff;
+        }else FrostBoltNova_Timer -= uiDiff;
 
         //Check for Chains Of Kelthuzad
-        if (ChainsOfKelthuzad_Timer < diff)
+        if (ChainsOfKelthuzad_Timer < uiDiff)
         {
             //DoCast(m_creature->getVictim(),SPELL_CHAINS_OF_KELTHUZAD);
 
@@ -310,10 +319,10 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
                 //DoScriptText(SAY_CHAIN2, m_creature);
 
             ChainsOfKelthuzad_Timer = urand(30000, 60000);
-        }else ChainsOfKelthuzad_Timer -= diff;
+        }else ChainsOfKelthuzad_Timer -= uiDiff;
 
         //Check for Mana Detonation
-        if (ManaDetonation_Timer < diff)
+        if (ManaDetonation_Timer < uiDiff)
         {
             DoCast(m_creature->getVictim(),SPELL_MANA_DETONATION);
 
@@ -321,10 +330,10 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
                 DoScriptText(SAY_SPECIAL1_MANA_DET, m_creature);
 
             ManaDetonation_Timer = 20000;
-        }else ManaDetonation_Timer -= diff;
+        }else ManaDetonation_Timer -= uiDiff;
 
         //Check for Shadow Fissure
-        if (ShadowFisure_Timer < diff)
+        if (ShadowFisure_Timer < uiDiff)
         {
             DoCast(m_creature->getVictim(),SPELL_SHADOW_FISURE);
 
@@ -332,10 +341,10 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
                 DoScriptText(SAY_SPECIAL3_MANA_DET, m_creature);
 
             ShadowFisure_Timer = 25000;
-        }else ShadowFisure_Timer -= diff;
+        }else ShadowFisure_Timer -= uiDiff;
 
         //Check for Frost Blast
-        if (FrostBlast_Timer < diff)
+        if (FrostBlast_Timer < uiDiff)
         {
             DoCast(m_creature->getVictim(),SPELL_FROST_BLAST);
 
@@ -343,7 +352,7 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
                 DoScriptText(SAY_FROST_BLAST, m_creature);
 
             FrostBlast_Timer = urand(30000, 60000);
-        }else FrostBlast_Timer -= diff;
+        }else FrostBlast_Timer -= uiDiff;
 
         //start phase 3 when we are 40% health
         if (!Phase3 && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 40)
@@ -357,7 +366,7 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
 
         if (Phase3 && (GuardiansOfIcecrown_Count < 5))
         {
-            if (GuardiansOfIcecrown_Timer < diff)
+            if (GuardiansOfIcecrown_Timer < uiDiff)
             {
                 //Summon a Guardian of Icecrown in a random alcove (Creature # 16441)
                 //uint32 TimeToWalk;
@@ -428,7 +437,7 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
 
                 //5 seconds until summoning next guardian
                 GuardiansOfIcecrown_Timer = 5000;
-            }else GuardiansOfIcecrown_Timer -= diff;
+            }else GuardiansOfIcecrown_Timer -= uiDiff;
         }
 
         DoMeleeAttackIfReady();
@@ -442,9 +451,9 @@ CreatureAI* GetAI_boss_kelthuzadAI(Creature* pCreature)
 
 void AddSC_boss_kelthuzad()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_kelthuzad";
-    newscript->GetAI = &GetAI_boss_kelthuzadAI;
-    newscript->RegisterSelf();
+    Script* NewScript;
+    NewScript = new Script;
+    NewScript->Name = "boss_kelthuzad";
+    NewScript->GetAI = &GetAI_boss_kelthuzadAI;
+    NewScript->RegisterSelf();
 }

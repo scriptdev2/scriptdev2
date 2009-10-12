@@ -22,24 +22,28 @@ SDCategory: Naxxramas
 EndScriptData */
 
 #include "precompiled.h"
+#include "naxxramas.h"
 
-#define SAY_AGGRO1          -1533109
-#define SAY_AGGRO2          -1533110
-#define SAY_AGGRO3          -1533111
-#define SAY_SLAY            -1533112
-#define SAY_TAUNT1          -1533113
-#define SAY_TAUNT2          -1533114
-#define SAY_TAUNT3          -1533115
-#define SAY_TAUNT4          -1533116
-#define SAY_TAUNT5          -1533117
-#define SAY_DEATH           -1533118
+enum
+{
+    SAY_AGGRO1      = -1533109,
+    SAY_AGGRO2      = -1533110,
+    SAY_AGGRO3      = -1533111,
+    SAY_SLAY        = -1533112,
+    SAY_TAUNT1      = -1533113,
+    SAY_TAUNT2      = -1533114,
+    SAY_TAUNT3      = -1533115,
+    SAY_TAUNT4      = -1533116,
+    SAY_TAUNT5      = -1533117,
+    SAY_DEATH       = -1533118,
 
-//Spell used by floor peices to cause damage to players
-#define SPELL_ERUPTION      29371
+    //Spell used by floor peices to cause damage to players
+    SPELL_ERUPTION  = 29371,
 
-//Spells by boss
-#define SPELL_WILT          23772
-#define SPELL_FEAVER        29998
+    //Spells by boss
+    SPELL_WILT      = 23772,
+    SPELL_FEAVER    = 29998,
 
-//Spell by eye stalks
-#define SPELL_MIND_FLAY     26143
+    //Spell by eye stalks
+    SPELL_MIND_FLAY = 26143
+};

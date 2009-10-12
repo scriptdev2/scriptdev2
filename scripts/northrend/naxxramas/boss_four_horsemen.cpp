@@ -22,28 +22,79 @@ SDCategory: Naxxramas
 EndScriptData */
 
 #include "precompiled.h"
+#include "naxxramas.h"
 
-//all horsemen
-#define SPELL_SHIELDWALL            29061
-#define SPELL_BESERK                26662
+enum
+{
+    //all horsemen
+    SPELL_SHIELDWALL        = 29061,
+    SPELL_BESERK            = 26662,
 
-//lady blaumeux
-#define SAY_BLAU_AGGRO              -1533044
-#define SAY_BLAU_TAUNT1             -1533045
-#define SAY_BLAU_TAUNT2             -1533046
-#define SAY_BLAU_TAUNT3             -1533047
-#define SAY_BLAU_SPECIAL            -1533048
-#define SAY_BLAU_SLAY               -1533049
-#define SAY_BLAU_DEATH              -1533050
+    //lady blaumeux
+    SAY_BLAU_AGGRO          = -1533044,
+    SAY_BLAU_TAUNT1         = -1533045,
+    SAY_BLAU_TAUNT2         = -1533046,
+    SAY_BLAU_TAUNT3         = -1533047,
+    SAY_BLAU_SPECIAL        = -1533048,
+    SAY_BLAU_SLAY           = -1533049,
+    SAY_BLAU_DEATH          = -1533050,
 
-#define SPELL_MARK_OF_BLAUMEUX      28833
-#define SPELL_UNYILDING_PAIN        57381
-#define SPELL_VOIDZONE              28863
-#define H_SPELL_VOIDZONE            57463
-#define SPELL_SHADOW_BOLT           57374
-#define H_SPELL_SHADOW_BOLT         57464
+    SPELL_MARK_OF_BLAUMEUX  = 28833,
+    SPELL_UNYILDING_PAIN    = 57381,
+    SPELL_VOIDZONE          = 28863,
+    H_SPELL_VOIDZONE        = 57463,
+    SPELL_SHADOW_BOLT       = 57374,
+    H_SPELL_SHADOW_BOLT     = 57464,
 
-#define C_SPIRIT_OF_BLAUMEUX        16776
+    //baron rivendare
+    SAY_RIVE_AGGRO1         = -1533065,
+    SAY_RIVE_AGGRO2         = -1533066,
+    SAY_RIVE_AGGRO3         = -1533067,
+    SAY_RIVE_SLAY1          = -1533068,
+    SAY_RIVE_SLAY2          = -1533069,
+    SAY_RIVE_SPECIAL        = -1533070,
+    SAY_RIVE_TAUNT1         = -1533071,
+    SAY_RIVE_TAUNT2         = -1533072,
+    SAY_RIVE_TAUNT3         = -1533073,
+    SAY_RIVE_DEATH          = -1533074,
+
+    SPELL_MARK_OF_RIVENDARE = 28834,
+    SPELL_UNHOLY_SHADOW     = 28882,
+    H_SPELL_UNHOLY_SHADOW   = 57369,
+
+    //thane korthazz
+    SAY_KORT_AGGRO          = -1533051,
+    SAY_KORT_TAUNT1         = -1533052,
+    SAY_KORT_TAUNT2         = -1533053,
+    SAY_KORT_TAUNT3         = -1533054,
+    SAY_KORT_SPECIAL        = -1533055,
+    SAY_KORT_SLAY           = -1533056,
+    SAY_KORT_DEATH          = -1533057,
+
+    SPELL_MARK_OF_KORTHAZZ  = 28832,
+    SPELL_METEOR            = 26558,                        // m_creature->getVictim() auto-area spell but with a core problem
+
+    //sir zeliek
+    SAY_ZELI_AGGRO          = -1533058,
+    SAY_ZELI_TAUNT1         = -1533059,
+    SAY_ZELI_TAUNT2         = -1533060,
+    SAY_ZELI_TAUNT3         = -1533061,
+    SAY_ZELI_SPECIAL        = -1533062,
+    SAY_ZELI_SLAY           = -1533063,
+    SAY_ZELI_DEATH          = -1533064,
+
+    SPELL_MARK_OF_ZELIEK    = 28835,
+    SPELL_HOLY_WRATH        = 28883,
+    H_SPELL_HOLY_WRATH      = 57466,
+    SPELL_HOLY_BOLT         = 57376,
+    H_SPELL_HOLY_BOLT       = 57465,
+
+    // horseman spirits
+    NPC_SPIRIT_OF_BLAUMEUX    = 16776,
+    NPC_SPIRIT_OF_RIVENDARE   = 0,                          //creature entry not known yet
+    NPC_SPIRIT_OF_KORTHAZZ    = 16778,
+    NPC_SPIRIT_OF_ZELIREK     = 16777
+};
 
 struct MANGOS_DLL_DECL boss_lady_blaumeuxAI : public ScriptedAI
 {
@@ -77,17 +128,17 @@ struct MANGOS_DLL_DECL boss_lady_blaumeuxAI : public ScriptedAI
         DoScriptText(SAY_BLAU_DEATH, m_creature);
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         // Mark of Blaumeux
-        if (Mark_Timer < diff)
+        if (Mark_Timer < uiDiff)
         {
             DoCast(m_creature->getVictim(),SPELL_MARK_OF_BLAUMEUX);
             Mark_Timer = 12000;
-        }else Mark_Timer -= diff;
+        }else Mark_Timer -= uiDiff;
 
         // Shield Wall - All 4 horsemen will shield wall at 50% hp and 20% hp for 20 seconds
         if (ShieldWall1 && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 50)
@@ -108,11 +159,11 @@ struct MANGOS_DLL_DECL boss_lady_blaumeuxAI : public ScriptedAI
         }
 
         // Void Zone
-        if (VoidZone_Timer < diff)
+        if (VoidZone_Timer < uiDiff)
         {
             DoCast(m_creature->getVictim(),SPELL_VOIDZONE);
             VoidZone_Timer = 12000;
-        }else VoidZone_Timer -= diff;
+        }else VoidZone_Timer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
@@ -122,24 +173,6 @@ CreatureAI* GetAI_boss_lady_blaumeux(Creature* pCreature)
 {
     return new boss_lady_blaumeuxAI(pCreature);
 }
-
-//baron rivendare
-#define SAY_RIVE_AGGRO1             -1533065
-#define SAY_RIVE_AGGRO2             -1533066
-#define SAY_RIVE_AGGRO3             -1533067
-#define SAY_RIVE_SLAY1              -1533068
-#define SAY_RIVE_SLAY2              -1533069
-#define SAY_RIVE_SPECIAL            -1533070
-#define SAY_RIVE_TAUNT1             -1533071
-#define SAY_RIVE_TAUNT2             -1533072
-#define SAY_RIVE_TAUNT3             -1533073
-#define SAY_RIVE_DEATH              -1533074
-
-#define SPELL_MARK_OF_RIVENDARE     28834
-#define SPELL_UNHOLY_SHADOW         28882
-#define H_SPELL_UNHOLY_SHADOW       57369
-
-#define C_SPIRIT_OF_RIVENDARE       0                       //creature entry not known yet
 
 struct MANGOS_DLL_DECL boss_rivendare_naxxAI : public ScriptedAI
 {
@@ -169,7 +202,7 @@ struct MANGOS_DLL_DECL boss_rivendare_naxxAI : public ScriptedAI
         DoScriptText(SAY_RIVE_DEATH, m_creature);
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
@@ -182,20 +215,6 @@ CreatureAI* GetAI_boss_rivendare_naxx(Creature* pCreature)
 {
     return new boss_rivendare_naxxAI(pCreature);
 }
-
-//thane korthazz
-#define SAY_KORT_AGGRO              -1533051
-#define SAY_KORT_TAUNT1             -1533052
-#define SAY_KORT_TAUNT2             -1533053
-#define SAY_KORT_TAUNT3             -1533054
-#define SAY_KORT_SPECIAL            -1533055
-#define SAY_KORT_SLAY               -1533056
-#define SAY_KORT_DEATH              -1533057
-
-#define SPELL_MARK_OF_KORTHAZZ      28832
-#define SPELL_METEOR                26558                   // m_creature->getVictim() auto-area spell but with a core problem
-
-#define C_SPIRIT_OF_KORTHAZZ        16778
 
 struct MANGOS_DLL_DECL boss_thane_korthazzAI : public ScriptedAI
 {
@@ -229,17 +248,17 @@ struct MANGOS_DLL_DECL boss_thane_korthazzAI : public ScriptedAI
         DoScriptText(SAY_KORT_DEATH, m_creature);
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         // Mark of Korthazz
-        if (Mark_Timer < diff)
+        if (Mark_Timer < uiDiff)
         {
             DoCast(m_creature->getVictim(),SPELL_MARK_OF_KORTHAZZ);
             Mark_Timer = 12000;
-        }else Mark_Timer -= diff;
+        }else Mark_Timer -= uiDiff;
 
         // Shield Wall - All 4 horsemen will shield wall at 50% hp and 20% hp for 20 seconds
         if (ShieldWall1 && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 50)
@@ -260,11 +279,11 @@ struct MANGOS_DLL_DECL boss_thane_korthazzAI : public ScriptedAI
         }
 
         // Meteor
-        if (Meteor_Timer < diff)
+        if (Meteor_Timer < uiDiff)
         {
             DoCast(m_creature->getVictim(),SPELL_METEOR);
             Meteor_Timer = 20000;                           // wrong
-        }else Meteor_Timer -= diff;
+        }else Meteor_Timer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
@@ -274,23 +293,6 @@ CreatureAI* GetAI_boss_thane_korthazz(Creature* pCreature)
 {
     return new boss_thane_korthazzAI(pCreature);
 }
-
-//sir zeliek
-#define SAY_ZELI_AGGRO              -1533058
-#define SAY_ZELI_TAUNT1             -1533059
-#define SAY_ZELI_TAUNT2             -1533060
-#define SAY_ZELI_TAUNT3             -1533061
-#define SAY_ZELI_SPECIAL            -1533062
-#define SAY_ZELI_SLAY               -1533063
-#define SAY_ZELI_DEATH              -1533064
-
-#define SPELL_MARK_OF_ZELIEK        28835
-#define SPELL_HOLY_WRATH            28883
-#define H_SPELL_HOLY_WRATH          57466
-#define SPELL_HOLY_BOLT             57376
-#define H_SPELL_HOLY_BOLT           57465
-
-#define C_SPIRIT_OF_ZELIREK         16777
 
 struct MANGOS_DLL_DECL boss_sir_zeliekAI : public ScriptedAI
 {
@@ -324,18 +326,18 @@ struct MANGOS_DLL_DECL boss_sir_zeliekAI : public ScriptedAI
         DoScriptText(SAY_ZELI_DEATH, m_creature);
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         // Mark of Zeliek
-        if (Mark_Timer < diff)
+        if (Mark_Timer < uiDiff)
         {
             DoCast(m_creature->getVictim(),SPELL_MARK_OF_ZELIEK);
             Mark_Timer = 12000;
-        }else Mark_Timer -= diff;
+        }else Mark_Timer -= uiDiff;
 
         // Shield Wall - All 4 horsemen will shield wall at 50% hp and 20% hp for 20 seconds
         if (ShieldWall1 && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 50)
@@ -356,11 +358,11 @@ struct MANGOS_DLL_DECL boss_sir_zeliekAI : public ScriptedAI
         }
 
         // Holy Wrath
-        if (HolyWrath_Timer < diff)
+        if (HolyWrath_Timer < uiDiff)
         {
             DoCast(m_creature->getVictim(),SPELL_HOLY_WRATH);
             HolyWrath_Timer = 12000;
-        }else HolyWrath_Timer -= diff;
+        }else HolyWrath_Timer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
@@ -373,25 +375,25 @@ CreatureAI* GetAI_boss_sir_zeliek(Creature* pCreature)
 
 void AddSC_boss_four_horsemen()
 {
-    Script *newscript;
+    Script* NewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_lady_blaumeux";
-    newscript->GetAI = &GetAI_boss_lady_blaumeux;
-    newscript->RegisterSelf();
+    NewScript = new Script;
+    NewScript->Name = "boss_lady_blaumeux";
+    NewScript->GetAI = &GetAI_boss_lady_blaumeux;
+    NewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "boss_rivendare_naxx";
-    newscript->GetAI = &GetAI_boss_rivendare_naxx;
-    newscript->RegisterSelf();
+    NewScript = new Script;
+    NewScript->Name = "boss_rivendare_naxx";
+    NewScript->GetAI = &GetAI_boss_rivendare_naxx;
+    NewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "boss_thane_korthazz";
-    newscript->GetAI = &GetAI_boss_thane_korthazz;
-    newscript->RegisterSelf();
+    NewScript = new Script;
+    NewScript->Name = "boss_thane_korthazz";
+    NewScript->GetAI = &GetAI_boss_thane_korthazz;
+    NewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "boss_sir_zeliek";
-    newscript->GetAI = &GetAI_boss_sir_zeliek;
-    newscript->RegisterSelf();
+    NewScript = new Script;
+    NewScript->Name = "boss_sir_zeliek";
+    NewScript->GetAI = &GetAI_boss_sir_zeliek;
+    NewScript->RegisterSelf();
 }

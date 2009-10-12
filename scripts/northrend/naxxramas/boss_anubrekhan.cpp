@@ -22,6 +22,7 @@ SDCategory: Naxxramas
 EndScriptData */
 
 #include "precompiled.h"
+#include "naxxramas.h"
 
 enum
 {
@@ -55,23 +56,23 @@ struct MANGOS_DLL_DECL boss_anubrekhanAI : public ScriptedAI
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
-        HasTaunted = false;
+        m_bHasTaunted = false;
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
     bool m_bIsHeroicMode;
 
-    uint32 Impale_Timer;
-    uint32 LocustSwarm_Timer;
-    uint32 Summon_Timer;
-    bool HasTaunted;
+    uint32 m_uiImpaleTimer;
+    uint32 m_uiLocustSwarmTimer;
+    uint32 m_uiSummonTimer;
+    bool   m_bHasTaunted;
 
     void Reset()
     {
-        Impale_Timer = 15000;                               //15 seconds
-        LocustSwarm_Timer = urand(80000, 120000);           //Random time between 80 seconds and 2 minutes for initial cast
-        Summon_Timer = LocustSwarm_Timer + 45000;           //45 seconds after initial locust swarm
+        m_uiImpaleTimer = 15000;                            // 15 seconds
+        m_uiLocustSwarmTimer = urand(80000, 120000);        // Random time between 80 seconds and 2 minutes for initial cast
+        m_uiSummonTimer = m_uiLocustSwarmTimer + 45000;     // 45 seconds after initial locust swarm
     }
 
     void KilledUnit(Unit* pVictim)
@@ -86,7 +87,7 @@ struct MANGOS_DLL_DECL boss_anubrekhanAI : public ScriptedAI
         DoScriptText(SAY_SLAY, m_creature);
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
         switch(urand(0, 2))
         {
@@ -94,11 +95,20 @@ struct MANGOS_DLL_DECL boss_anubrekhanAI : public ScriptedAI
             case 1: DoScriptText(SAY_AGGRO2, m_creature); break;
             case 2: DoScriptText(SAY_AGGRO3, m_creature); break;
         }
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_ANUB_REKHAN, IN_PROGRESS);
     }
 
-    void MoveInLineOfSight(Unit *who)
+    void JustDied(Unit* pKiller)
     {
-        if (!HasTaunted && m_creature->IsWithinDistInMap(who, 60.0f))
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_ANUB_REKHAN, DONE);
+    }
+
+    void MoveInLineOfSight(Unit* pWho)
+    {
+        if (!m_bHasTaunted && m_creature->IsWithinDistInMap(pWho, 60.0f))
         {
             switch(urand(0, 4))
             {
@@ -108,19 +118,19 @@ struct MANGOS_DLL_DECL boss_anubrekhanAI : public ScriptedAI
                 case 3: DoScriptText(SAY_TAUNT3, m_creature); break;
                 case 4: DoScriptText(SAY_TAUNT4, m_creature); break;
             }
-            HasTaunted = true;
+            m_bHasTaunted = true;
         }
 
-        ScriptedAI::MoveInLineOfSight(who);
+        ScriptedAI::MoveInLineOfSight(pWho);
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Impale_Timer
-        if (Impale_Timer < diff)
+        // Impale
+        if (m_uiImpaleTimer < uiDiff)
         {
             //Cast Impale on a random target
             //Do NOT cast it when we are afflicted by locust swarm
@@ -130,22 +140,28 @@ struct MANGOS_DLL_DECL boss_anubrekhanAI : public ScriptedAI
                     DoCast(target, m_bIsHeroicMode ? SPELL_IMPALE_H : SPELL_IMPALE);
             }
 
-            Impale_Timer = 15000;
-        }else Impale_Timer -= diff;
+            m_uiImpaleTimer = 15000;
+        }
+        else
+            m_uiImpaleTimer -= uiDiff;
 
-        //LocustSwarm_Timer
-        if (LocustSwarm_Timer < diff)
+        // Locust Swarm
+        if (m_uiLocustSwarmTimer < uiDiff)
         {
-            DoCast(m_creature, m_bIsHeroicMode ? SPELL_LOCUSTSWARM_H : SPELL_LOCUSTSWARM);
-            LocustSwarm_Timer = 90000;
-        }else LocustSwarm_Timer -= diff;
+            DoCast(m_creature, m_bIsHeroicMode?SPELL_LOCUSTSWARM_H:SPELL_LOCUSTSWARM);
+            m_uiLocustSwarmTimer = 90000;
+        }
+        else
+            m_uiLocustSwarmTimer -= uiDiff;
 
-        //Summon_Timer
-        /*if (Summon_Timer < diff)
+        // Summon
+        /*if (m_uiSummonTimer < uiDiff)
         {
             DoCast(m_creature, SPELL_SUMMONGUARD);
             Summon_Timer = 45000;
-        }else Summon_Timer -= diff;*/
+        }
+        else
+            m_uiSummonTimer -= uiDiff;*/
 
         DoMeleeAttackIfReady();
     }
@@ -158,9 +174,9 @@ CreatureAI* GetAI_boss_anubrekhan(Creature* pCreature)
 
 void AddSC_boss_anubrekhan()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_anubrekhan";
-    newscript->GetAI = &GetAI_boss_anubrekhan;
-    newscript->RegisterSelf();
+    Script* NewScript;
+    NewScript = new Script;
+    NewScript->Name = "boss_anubrekhan";
+    NewScript->GetAI = &GetAI_boss_anubrekhan;
+    NewScript->RegisterSelf();
 }

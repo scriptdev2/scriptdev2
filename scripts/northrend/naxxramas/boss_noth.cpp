@@ -22,6 +22,7 @@ SDCategory: Naxxramas
 EndScriptData */
 
 #include "precompiled.h"
+#include "naxxramas.h"
 
 enum
 {
@@ -69,6 +70,7 @@ uint32 m_auiSpellSummonPlaguedGuardian[]=
 
 // IMPORTANT: BALCONY TELEPORT NOT ADDED YET! WILL BE ADDED SOON!
 // Dev note 26.12.2008: When is soon? :)
+// Dev note 12.10.2009: http://www.wowwiki.com/Soon
 
 struct MANGOS_DLL_DECL boss_nothAI : public ScriptedAI
 {
@@ -82,18 +84,18 @@ struct MANGOS_DLL_DECL boss_nothAI : public ScriptedAI
     ScriptedInstance* m_pInstance;
     bool m_bIsHeroicMode;
 
-    uint32 Blink_Timer;
-    uint32 Curse_Timer;
-    uint32 Summon_Timer;
+    uint32 m_uiBlinkTimer;
+    uint32 m_uiCurseTimer;
+    uint32 m_uiSummonTimer;
 
     void Reset()
     {
-        Blink_Timer = 25000;
-        Curse_Timer = 4000;
-        Summon_Timer = 12000;
+        m_uiBlinkTimer = 25000;
+        m_uiCurseTimer = 4000;
+        m_uiSummonTimer = 12000;
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
         switch(urand(0, 2))
         {
@@ -101,55 +103,67 @@ struct MANGOS_DLL_DECL boss_nothAI : public ScriptedAI
             case 1: DoScriptText(SAY_AGGRO2, m_creature); break;
             case 2: DoScriptText(SAY_AGGRO3, m_creature); break;
         }
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_NOTH, IN_PROGRESS);
     }
 
-    void JustSummoned(Creature* summoned)
+    void JustSummoned(Creature* pSummoned)
     {
-        if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
-            summoned->AddThreat(target,0.0f);
+        if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            pSummoned->AddThreat(pTarget, 0.0f);
     }
 
-    void KilledUnit(Unit* victim)
+    void KilledUnit(Unit* pVictim)
     {
-        DoScriptText(urand(0, 1) ? SAY_SLAY1 : SAY_SLAY2, m_creature);
+        DoScriptText(urand(0, 1)?SAY_SLAY1:SAY_SLAY2, m_creature);
     }
 
-    void JustDied(Unit* Killer)
+    void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DEATH, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_NOTH, DONE);
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Blink_Timer
-        if (Blink_Timer < diff)
+        // Blink
+        if (m_uiBlinkTimer < uiDiff)
         {
-            DoCast(m_creature->getVictim(),SPELL_CRIPPLE);
-            DoCast(m_creature,SPELL_BLINK);
+            DoCast(m_creature->getVictim(), SPELL_CRIPPLE);
+            DoCast(m_creature, SPELL_BLINK);
 
-            Blink_Timer = 25000;
-        }else Blink_Timer -= diff;
+            m_uiBlinkTimer = 25000;
+        }
+        else
+            m_uiBlinkTimer -= uiDiff;
 
-        //Curse_Timer
-        if (Curse_Timer < diff)
+        // Curse
+        if (m_uiCurseTimer < uiDiff)
         {
-            DoCast(m_creature->getVictim(),SPELL_CURSE_PLAGUEBRINGER);
-            Curse_Timer = 28000;
-        }else Curse_Timer -= diff;
+            DoCast(m_creature->getVictim(), SPELL_CURSE_PLAGUEBRINGER);
+            m_uiCurseTimer = 28000;
+        }
+        else
+            m_uiCurseTimer -= uiDiff;
 
-        //Summon_Timer
-        if (Summon_Timer < diff)
+        // Summon
+        if (m_uiSummonTimer < uiDiff)
         {
             DoScriptText(SAY_SUMMON, m_creature);
 
             for(uint8 i = 0; i < 6; ++i)
-                m_creature->SummonCreature(NPC_PLAGUED_WARRIOR,2684.804,-3502.517,261.313,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,80000);
+                m_creature->SummonCreature(NPC_PLAGUED_WARRIOR, 2684.804, -3502.517, 261.313, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 80000);
 
-            Summon_Timer = 30500;
-        } else Summon_Timer -= diff;
+            m_uiSummonTimer = 30500;
+        }
+        else
+            m_uiSummonTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
@@ -162,9 +176,9 @@ CreatureAI* GetAI_boss_noth(Creature* pCreature)
 
 void AddSC_boss_noth()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_noth";
-    newscript->GetAI = &GetAI_boss_noth;
-    newscript->RegisterSelf();
+    Script* NewScript;
+    NewScript = new Script;
+    NewScript->Name = "boss_noth";
+    NewScript->GetAI = &GetAI_boss_noth;
+    NewScript->RegisterSelf();
 }
