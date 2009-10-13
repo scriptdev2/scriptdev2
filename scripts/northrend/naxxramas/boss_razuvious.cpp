@@ -16,45 +16,32 @@
 
 /* ScriptData
 SDName: Boss_Razuvious
-SD%Complete: 50
-SDComment: Missing adds and event is impossible without Mind Control
+SD%Complete: 75%
+SDComment: TODO: Timers and sounds need confirmation, implement spell Hopeless
 SDCategory: Naxxramas
 EndScriptData */
 
 #include "precompiled.h"
 #include "naxxramas.h"
 
-//Razuvious - NO TEXT sound only
-//8852 aggro01 - Hah hah, I'm just getting warmed up!
-//8853 aggro02 Stand and fight!
-//8854 aggro03 Show me what you've got!
-//8861 slay1 - You should've stayed home!
-//8863 slay2-
-//8858 cmmnd3 - You disappoint me, students!
-//8855 cmmnd1 - Do as I taught you!
-//8856 cmmnd2 - Show them no mercy!
-//8859 cmmnd4 - The time for practice is over! Show me what you've learned!
-//8861 Sweep the leg! Do you have a problem with that?
-//8860 death - An honorable... death...
-//8947 - Aggro Mixed? - ?
-
 enum
 {
-    SOUND_AGGRO1            = 8852,
-    SOUND_AGGRO2            = 8853,
-    SOUND_AGGRO3            = 8854,
-    SOUND_SLAY1             = 8861,
-    SOUND_SLAY2             = 8863,
-    SOUND_COMMND1           = 8855,
-    SOUND_COMMND2           = 8856,
-    SOUND_COMMND3           = 8858,
-    SOUND_COMMND4           = 8859,
-    SOUND_COMMND5           = 8861,
-    SOUND_DEATH             = 8860,
-    SOUND_AGGROMIX          = 8847,
+    SAY_AGGRO1               = -1533120,
+    SAY_AGGRO2               = -1533121,
+    SAY_AGGRO3               = -1533122,
+    SAY_SLAY1                = -1533123,
+    SAY_SLAY2                = -1533124,
+    SAY_COMMAND1             = -1533125,
+    SAY_COMMAND2             = -1533126,
+    SAY_COMMAND3             = -1533127,
+    SAY_COMMAND4             = -1533128,
+    SAY_DEATH                = -1533129,
 
-    SPELL_UNBALANCINGSTRIKE = 26613,
-    SPELL_DISRUPTINGSHOUT   = 29107
+    SPELL_UNBALANCING_STRIKE = 26613,
+    SPELL_DISRUPTING_SHOUT   = 55543,
+    SPELL_DISRUPTING_SHOUT_H = 29107,
+    SPELL_JAGGED_KNIFE       = 55550,
+    SPELL_HOPELESS           = 29125
 };
 
 struct MANGOS_DLL_DECL boss_razuviousAI : public ScriptedAI
@@ -71,13 +58,15 @@ struct MANGOS_DLL_DECL boss_razuviousAI : public ScriptedAI
 
     uint32 m_uiUnbalancingStrikeTimer;
     uint32 m_uiDisruptingShoutTimer;
+    uint32 m_uiJaggedKnifeTimer;
     uint32 m_uiCommandSoundTimer;
 
     void Reset()
     {
-        m_uiUnbalancingStrikeTimer = 30000;                 //30 seconds
-        m_uiDisruptingShoutTimer = 25000;                   //25 seconds
-        m_uiCommandSoundTimer = 40000;                      //40 seconds
+        m_uiUnbalancingStrikeTimer = 30000;                 // 30 seconds
+        m_uiDisruptingShoutTimer   = 15000;                 // 15 seconds
+        m_uiJaggedKnifeTimer       = urand(10000, 15000);
+        m_uiCommandSoundTimer      = 40000;                 // 40 seconds
     }
 
     void KilledUnit(Unit* Victim)
@@ -87,18 +76,14 @@ struct MANGOS_DLL_DECL boss_razuviousAI : public ScriptedAI
 
         switch(urand(0, 1))
         {
-            case 0:
-                DoPlaySoundToSet(m_creature, SOUND_SLAY1);
-                break;
-            case 1:
-                DoPlaySoundToSet(m_creature, SOUND_SLAY2);
-                break;
+            case 0: DoScriptText(SAY_SLAY1, m_creature); break;
+            case 1: DoScriptText(SAY_SLAY2, m_creature); break;
         }
     }
 
     void JustDied(Unit* pKiller)
     {
-        DoPlaySoundToSet(m_creature, SOUND_DEATH);
+        DoScriptText(SAY_DEATH, m_creature);
 
         if (m_pInstance)
             m_pInstance->SetData(TYPE_RAZUVIOUS, DONE);
@@ -108,15 +93,9 @@ struct MANGOS_DLL_DECL boss_razuviousAI : public ScriptedAI
     {
         switch(urand(0, 2))
         {
-            case 0:
-                DoPlaySoundToSet(m_creature, SOUND_AGGRO1);
-                break;
-            case 1:
-                DoPlaySoundToSet(m_creature, SOUND_AGGRO2);
-                break;
-            case 2:
-                DoPlaySoundToSet(m_creature, SOUND_AGGRO3);
-                break;
+            case 0: DoScriptText(SAY_AGGRO1, m_creature); break;
+            case 1: DoScriptText(SAY_AGGRO2, m_creature); break;
+            case 2: DoScriptText(SAY_AGGRO3, m_creature); break;
         }
 
         if (m_pInstance)
@@ -131,7 +110,7 @@ struct MANGOS_DLL_DECL boss_razuviousAI : public ScriptedAI
         // Unbalancing Strike
         if (m_uiUnbalancingStrikeTimer < uiDiff)
         {
-            DoCast(m_creature->getVictim(),SPELL_UNBALANCINGSTRIKE);
+            DoCast(m_creature->getVictim(),SPELL_UNBALANCING_STRIKE);
             m_uiUnbalancingStrikeTimer = 30000;
         }
         else
@@ -140,32 +119,31 @@ struct MANGOS_DLL_DECL boss_razuviousAI : public ScriptedAI
         // Disrupting Shout
         if (m_uiDisruptingShoutTimer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), SPELL_DISRUPTINGSHOUT);
+            DoCast(m_creature->getVictim(), m_bIsHeroicMode?SPELL_DISRUPTING_SHOUT_H:SPELL_DISRUPTING_SHOUT);
             m_uiDisruptingShoutTimer = 25000;
         }
         else
             m_uiDisruptingShoutTimer -= uiDiff;
 
-        // Command Sound
+        // Jagged Knife
+        if (m_uiJaggedKnifeTimer < uiDiff)
+        {
+            if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                DoCast(pTarget, SPELL_JAGGED_KNIFE);
+            m_uiJaggedKnifeTimer = 10000;
+        }
+        else
+            m_uiJaggedKnifeTimer -= uiDiff;
+
+        // Random say
         if (m_uiCommandSoundTimer < uiDiff)
         {
-            switch(urand(0, 4))
+            switch(urand(0, 3))
             {
-                case 0:
-                    DoPlaySoundToSet(m_creature, SOUND_COMMND1);
-                    break;
-                case 1:
-                    DoPlaySoundToSet(m_creature, SOUND_COMMND2);
-                    break;
-                case 2:
-                    DoPlaySoundToSet(m_creature, SOUND_COMMND3);
-                    break;
-                case 3:
-                    DoPlaySoundToSet(m_creature, SOUND_COMMND4);
-                    break;
-                case 4:
-                    DoPlaySoundToSet(m_creature, SOUND_COMMND5);
-                    break;
+                case 0: DoScriptText(SAY_COMMAND1, m_creature); break;
+                case 1: DoScriptText(SAY_COMMAND2, m_creature); break;
+                case 2: DoScriptText(SAY_COMMAND3, m_creature); break;
+                case 3: DoScriptText(SAY_COMMAND4, m_creature); break;
             }
 
             m_uiCommandSoundTimer = 40000;
