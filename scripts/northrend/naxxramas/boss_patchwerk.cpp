@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Boss_Patchwerk
 SD%Complete: 80
-SDComment: Some issues with hateful strike inturrupting the melee swing timer.
+SDComment: TODO: confirm how hateful strike work
 SDCategory: Naxxramas
 EndScriptData */
 
@@ -35,11 +35,13 @@ enum
     EMOTE_ENRAGE          = -1533022,
 
     SPELL_HATEFULSTRIKE   = 28308,
-    H_SPELL_HATEFULSTRIKE = 59192,
+    SPELL_HATEFULSTRIKE_H = 59192,
     SPELL_ENRAGE          = 28131,
     SPELL_BERSERK         = 26662,
     SPELL_SLIMEBOLT       = 32309
 };
+
+const float MELEE_DISTANCE = 5.0;
 
 struct MANGOS_DLL_DECL boss_patchwerkAI : public ScriptedAI
 {
@@ -53,20 +55,22 @@ struct MANGOS_DLL_DECL boss_patchwerkAI : public ScriptedAI
     ScriptedInstance* m_pInstance;
     bool m_bIsHeroicMode;
 
-    uint32 m_uiHatefullStrikeTimer;
-    uint32 m_uiEnrageTimer;
+    uint32 m_uiHatefulStrikeTimer;
+    uint32 m_uiBerserkTimer;
     uint32 m_uiSlimeboltTimer;
-    bool m_bEnraged;
+    bool   m_bEnraged;
+    bool   m_bBerserk;
 
     void Reset()
     {
-        m_uiHatefullStrikeTimer = 1200;                     //1.2 seconds
-        m_uiEnrageTimer = 420000;                           //7 minutes 420,000
-        m_uiSlimeboltTimer = 450000;                        //7.5 minutes 450,000
+        m_uiHatefulStrikeTimer = 1000;                      //1 second
+        m_uiBerserkTimer = MINUTE*6*IN_MILISECONDS;         //6 minutes
+        m_uiSlimeboltTimer = 10000;
         m_bEnraged = false;
+        m_bBerserk = false;
     }
 
-    void KilledUnit(Unit* Victim)
+    void KilledUnit(Unit* pVictim)
     {
         if (urand(0, 4))
             return;
@@ -74,7 +78,7 @@ struct MANGOS_DLL_DECL boss_patchwerkAI : public ScriptedAI
         DoScriptText(SAY_SLAY, m_creature);
     }
 
-    void JustDied(Unit* Killer)
+    void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -82,7 +86,7 @@ struct MANGOS_DLL_DECL boss_patchwerkAI : public ScriptedAI
             m_pInstance->SetData(TYPE_PATCHWERK, DONE);
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
         DoScriptText(urand(0, 1)?SAY_AGGRO1:SAY_AGGRO2, m_creature);
 
@@ -90,64 +94,82 @@ struct MANGOS_DLL_DECL boss_patchwerkAI : public ScriptedAI
             m_pInstance->SetData(TYPE_PATCHWERK, IN_PROGRESS);
     }
 
+    void DoHatefulStrike()
+    {
+        // The ability is used on highest HP target choosen of the top 2 (3 heroic) targets on threat list being in melee range
+        Unit* pTarget = NULL;
+        uint32 uiHighestHP = 0;
+        uint32 uiTargets = m_bIsHeroicMode?3:2;
+
+        std::list<HostilReference*>::iterator iter = m_creature->getThreatManager().getThreatList().begin();
+        for (iter = m_creature->getThreatManager().getThreatList().begin(); iter != m_creature->getThreatManager().getThreatList().end(); ++iter)
+        {
+            if (!uiTargets)
+                return;
+
+            if (Unit* pTempTarget = Unit::GetUnit((*m_creature), (*iter)->getUnitGuid()))
+            {
+                if (pTempTarget->GetHealth() > uiHighestHP && m_creature->IsWithinDistInMap(pTempTarget, MELEE_DISTANCE))
+                {
+                    uiHighestHP = pTempTarget->GetHealth();
+                    pTarget = pTempTarget;
+                }
+            }
+
+            --uiTargets;
+        }
+
+        if (pTarget)
+            DoCast(pTarget, m_bIsHeroicMode?SPELL_HATEFULSTRIKE_H:SPELL_HATEFULSTRIKE);
+    }
+
     void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        // Hatefull Strike
-        if (m_uiHatefullStrikeTimer < uiDiff)
+        // Hateful Strike
+        if (m_uiHatefulStrikeTimer < uiDiff)
         {
-            //Cast Hateful strike on the player with the highest
-            //amount of HP within melee distance
-            uint32 MostHP = 0;
-            Unit* pMostHPTarget = NULL;
-            Unit* pTemp = NULL;
-            std::list<HostilReference*>::iterator i = m_creature->getThreatManager().getThreatList().begin();
+            DoHatefulStrike();
+            m_uiHatefulStrikeTimer = 1000;
+        }
+        else
+            m_uiHatefulStrikeTimer -= uiDiff;
 
-            for (i = m_creature->getThreatManager().getThreatList().begin(); i!=m_creature->getThreatManager().getThreatList().end(); ++i)
+        // Soft Enrage at 5%
+        if (!m_bEnraged)
+        {
+            if (m_creature->GetHealth()*20 < m_creature->GetMaxHealth())
             {
-                pTemp = Unit::GetUnit((*m_creature),(*i)->getUnitGuid());
-                if (pTemp && pTemp->isAlive() && pTemp->GetHealth() > MostHP && m_creature->IsWithinDist(pTemp, 5.0f, false))
-                {
-                    MostHP = pTemp->GetHealth();
-                    pMostHPTarget = pTemp;
-                }
+                DoCast(m_creature, SPELL_ENRAGE);
+                DoScriptText(EMOTE_ENRAGE, m_creature);
+                m_bEnraged = true;
             }
+        }
 
-            if (pMostHPTarget)
-                DoCast(pMostHPTarget, SPELL_HATEFULSTRIKE);
-
-            m_uiHatefullStrikeTimer = 1200;
+        // Berserk after 6 minutes
+        if (!m_bBerserk)
+        {
+            if (m_uiBerserkTimer < uiDiff)
+            {
+                DoCast(m_creature, SPELL_BERSERK);
+                DoScriptText(EMOTE_BERSERK, m_creature);
+                m_bBerserk = true;
+            }
+            else
+                m_uiBerserkTimer -= uiDiff;
         }
         else
-            m_uiHatefullStrikeTimer -= uiDiff;
-
-        // Enrage
-        if (m_uiEnrageTimer < uiDiff)
         {
-            DoCast(m_creature, SPELL_BERSERK);
-            DoScriptText(EMOTE_BERSERK, m_creature);
-            m_uiEnrageTimer = 300000;
-        }
-        else
-            m_uiEnrageTimer -= uiDiff;
-
-        // Slimebolt
-        if (m_uiSlimeboltTimer < uiDiff)
-        {
-            DoCast(m_creature->getVictim(), SPELL_SLIMEBOLT);
-            m_uiSlimeboltTimer = 5000;
-        }
-        else
-            m_uiSlimeboltTimer -= uiDiff;
-
-        //Enrage if not already enraged and below 5%
-        if (!m_bEnraged && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 5)
-        {
-            DoCast(m_creature, SPELL_ENRAGE);
-            DoScriptText(EMOTE_ENRAGE, NULL);
-            m_bEnraged = true;
+            // Slimebolt - casted only while Berserking to prevent kiting
+            if (m_uiSlimeboltTimer < uiDiff)
+            {
+                DoCast(m_creature->getVictim(), SPELL_SLIMEBOLT);
+                m_uiSlimeboltTimer = 5000;
+            }
+            else
+                m_uiSlimeboltTimer -= uiDiff;
         }
 
         DoMeleeAttackIfReady();
