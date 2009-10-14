@@ -246,7 +246,7 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->getVictim() || !m_creature->SelectHostilTarget() || m_bBanished)
+        if (!m_creature->getVictim() || !m_creature->SelectHostileTarget() || m_bBanished)
             return;
 
         if (!m_bEnraged && ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 10))
@@ -407,7 +407,7 @@ struct MANGOS_DLL_DECL boss_sathrovarrAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->getVictim() || !m_creature->SelectHostilTarget() || m_bBanished)
+        if (!m_creature->getVictim() || !m_creature->SelectHostileTarget() || m_bBanished)
             return;
 
         if (!m_bEnraged && ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) <= 10))
@@ -489,7 +489,7 @@ struct MANGOS_DLL_DECL boss_kalecgos_humanoidAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->getVictim() || !m_creature->SelectHostilTarget())
+        if (!m_creature->getVictim() || !m_creature->SelectHostileTarget())
             return;
 
         if (RevitalizeTimer < diff)
@@ -553,7 +553,7 @@ bool GOHello_go_spectral_rift(Player* pPlayer, GameObject* pGo)
         {
             if (pKalecgos->isAlive())
             {
-                if (HostilReference* pRef = pKalecgos->getThreatManager().getOnlineContainer().getReferenceByTarget(pPlayer))
+                if (HostileReference* pRef = pKalecgos->getThreatManager().getOnlineContainer().getReferenceByTarget(pPlayer))
                 {
                     pRef->removeReference();
                     debug_log("SD2: Deleting %s from pKalecgos's threatlist", pPlayer->GetName());

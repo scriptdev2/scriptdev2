@@ -188,7 +188,7 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         //Shimmer_Timer Timer
@@ -244,7 +244,7 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
                 case 4: SpellAfflict = SPELL_BROODAF_GREEN; break;
             }
 
-            std::list<HostilReference*>::iterator i;
+            std::list<HostileReference*>::iterator i;
 
             for (i = m_creature->getThreatManager().getThreatList().begin();i != m_creature->getThreatManager().getThreatList().end(); ++i)
             {

@@ -84,7 +84,7 @@ struct MANGOS_DLL_DECL npc_aeranasAI : public ScriptedAI
             }else Faction_Timer -= diff;
         }
 
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         if ((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 30)

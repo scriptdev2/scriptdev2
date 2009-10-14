@@ -282,7 +282,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
     void UpdateAI(const uint32 uiDiff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         if (m_uiPhase == PHASE_1 || m_uiPhase == PHASE_3)
@@ -373,8 +373,8 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
             if (m_uiCheck_Timer < uiDiff)
             {
                 bool bInMeleeRange = false;
-                std::list<HostilReference *> t_list = m_creature->getThreatManager().getThreatList();
-                for(std::list<HostilReference *>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
+                std::list<HostileReference *> t_list = m_creature->getThreatManager().getThreatList();
+                for(std::list<HostileReference *>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
                 {
                     Unit* pTarget = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
 
@@ -548,7 +548,7 @@ struct MANGOS_DLL_DECL mob_tainted_elementalAI : public ScriptedAI
 
     void UpdateAI(const uint32 uiDiff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         //m_uiPoisonBolt_Timer
@@ -589,7 +589,7 @@ struct MANGOS_DLL_DECL mob_toxic_sporebatAI : public ScriptedAI
     void UpdateAI(const uint32 uiDiff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         //m_uiToxicSpore_Timer

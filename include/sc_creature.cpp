@@ -83,7 +83,7 @@ void ScriptedAI::Aggro(Unit* pEnemy)
 void ScriptedAI::UpdateAI(const uint32 uiDiff)
 {
     //Check if we have a current target
-    if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+    if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
         return;
 
     if (m_creature->isAttackReady())
@@ -192,9 +192,9 @@ Creature* ScriptedAI::DoSpawnCreature(uint32 uiId, float fX, float fY, float fZ,
 Unit* ScriptedAI::SelectUnit(SelectAggroTarget target, uint32 uiPosition)
 {
     //ThreatList m_threatlist;
-    std::list<HostilReference*>& threatlist = m_creature->getThreatManager().getThreatList();
-    std::list<HostilReference*>::iterator itr = threatlist.begin();
-    std::list<HostilReference*>::reverse_iterator ritr = threatlist.rbegin();
+    std::list<HostileReference*>& threatlist = m_creature->getThreatManager().getThreatList();
+    std::list<HostileReference*>::iterator itr = threatlist.begin();
+    std::list<HostileReference*>::reverse_iterator ritr = threatlist.rbegin();
 
     if (uiPosition >= threatlist.size() || !threatlist.size())
         return NULL;
@@ -426,9 +426,9 @@ void ScriptedAI::DoResetThreat()
         return;
     }
 
-    std::list<HostilReference*>& threatlist = m_creature->getThreatManager().getThreatList();
+    std::list<HostileReference*>& threatlist = m_creature->getThreatManager().getThreatList();
 
-    for(std::list<HostilReference*>::iterator itr = threatlist.begin(); itr != threatlist.end(); ++itr)
+    for(std::list<HostileReference*>::iterator itr = threatlist.begin(); itr != threatlist.end(); ++itr)
     {
         Unit* pUnit = Unit::GetUnit((*m_creature), (*itr)->getUnitGuid());
 

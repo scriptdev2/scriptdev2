@@ -666,7 +666,7 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
                 m_uiSoulRetrieveTimer -= uiDiff;
         }
 
-        if (!m_creature->getVictim() || !m_creature->SelectHostilTarget())
+        if (!m_creature->getVictim() || !m_creature->SelectHostileTarget())
             return;
 
         if (!m_bHasYelledOnce && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 15)

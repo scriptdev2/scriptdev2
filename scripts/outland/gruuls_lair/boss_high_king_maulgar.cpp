@@ -185,7 +185,7 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
     void UpdateAI(const uint32 uiDiff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         //someone evaded!
@@ -315,7 +315,7 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public Council_Base_AI
     void UpdateAI(const uint32 uiDiff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         //someone evaded!
@@ -405,7 +405,7 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public Council_Base_AI
     void UpdateAI(const uint32 uiDiff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         //someone evaded!
@@ -474,7 +474,7 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public Council_Base_AI
     void UpdateAI(const uint32 uiDiff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         //someone evaded!
@@ -549,7 +549,7 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public Council_Base_AI
     void UpdateAI(const uint32 uiDiff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         //someone evaded!
@@ -584,8 +584,8 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public Council_Base_AI
             bool bInRange = false;
             Unit* pTarget = NULL;
 
-            std::list<HostilReference*>& threatlist = m_creature->getThreatManager().getThreatList();
-            for (std::list<HostilReference*>::iterator i = threatlist.begin(); i!= threatlist.end(); ++i)
+            std::list<HostileReference*>& threatlist = m_creature->getThreatManager().getThreatList();
+            for (std::list<HostileReference*>::iterator i = threatlist.begin(); i!= threatlist.end(); ++i)
             {
                 Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
                 if (pUnit && pUnit->IsWithinDistInMap(m_creature, 15.0f))

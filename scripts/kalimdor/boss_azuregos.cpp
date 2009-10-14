@@ -63,15 +63,15 @@ struct MANGOS_DLL_DECL boss_azuregosAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         if (Teleport_Timer < diff)
         {
             DoScriptText(SAY_TELEPORT, m_creature);
 
-            std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
-            std::list<HostilReference*>::iterator i = m_threatlist.begin();
+            std::list<HostileReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
+            std::list<HostileReference*>::iterator i = m_threatlist.begin();
             for (i = m_threatlist.begin(); i!= m_threatlist.end();++i)
             {
                 Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());

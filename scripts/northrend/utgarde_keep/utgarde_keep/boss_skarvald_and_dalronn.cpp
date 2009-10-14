@@ -182,7 +182,7 @@ struct MANGOS_DLL_DECL boss_skarvaldAI : public boss_s_and_d_dummyAI
 
     void UpdateAI(const uint32 uiDiff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         if (m_uiYellDelayTimer)
@@ -259,7 +259,7 @@ struct MANGOS_DLL_DECL boss_dalronnAI : public boss_s_and_d_dummyAI
 
     void UpdateAI(const uint32 uiDiff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         if (m_uiDebilitateTimer < uiDiff)

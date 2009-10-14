@@ -209,7 +209,7 @@ struct MANGOS_DLL_DECL boss_volkhanAI : public ScriptedAI
     void UpdateAI(const uint32 uiDiff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         if (m_bIsStriking)
@@ -434,7 +434,7 @@ struct MANGOS_DLL_DECL mob_molten_golemAI : public ScriptedAI
     void UpdateAI(const uint32 uiDiff)
     {
         //Return since we have no target or if we are frozen
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() || m_bIsFrozen)
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim() || m_bIsFrozen)
             return;
 
         if (m_uiBlast_Timer < uiDiff)

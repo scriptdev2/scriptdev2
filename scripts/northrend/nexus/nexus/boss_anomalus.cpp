@@ -146,7 +146,7 @@ struct MANGOS_DLL_DECL boss_anomalusAI : public ScriptedAI
 
     void UpdateAI(const uint32 uiDiff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() || m_creature->HasAura(SPELL_RIFT_SHIELD))
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim() || m_creature->HasAura(SPELL_RIFT_SHIELD))
              return;
 
         // Create additional Chaotic Rift at 75%, 50% and 25% HP
@@ -217,7 +217,7 @@ struct MANGOS_DLL_DECL mob_chaotic_riftAI : public Scripted_NoMovementAI
 
     void UpdateAI(const uint32 uiDiff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         if (!m_creature->HasAura(SPELL_ARCANE_FORM))

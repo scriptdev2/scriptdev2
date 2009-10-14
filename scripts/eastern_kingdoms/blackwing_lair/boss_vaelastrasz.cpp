@@ -139,7 +139,7 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
         }
 
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         // Yell if hp lower than 15%

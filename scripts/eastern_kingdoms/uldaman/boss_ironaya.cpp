@@ -52,7 +52,7 @@ struct MANGOS_DLL_DECL boss_ironayaAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         //If we are <50% hp do knockaway ONCE

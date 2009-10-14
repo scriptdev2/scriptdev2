@@ -208,7 +208,7 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Check if we have a target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         //No instance
@@ -562,7 +562,7 @@ struct MANGOS_DLL_DECL cthunAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Check if we have a target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
         {
             //No target so we'll use this section to do our random wispers instance wide
             //WisperTimer
@@ -622,7 +622,7 @@ struct MANGOS_DLL_DECL cthunAI : public ScriptedAI
                     //Place all units in threat list on outside of stomach
                     Stomach_Map.clear();
 
-                    std::list<HostilReference*>::iterator i = m_creature->getThreatManager().getThreatList().begin();
+                    std::list<HostileReference*>::iterator i = m_creature->getThreatManager().getThreatList().begin();
                     for (; i != m_creature->getThreatManager().getThreatList().end(); ++i)
                     {
                         //Outside stomach
@@ -957,7 +957,7 @@ struct MANGOS_DLL_DECL eye_tentacleAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Check if we have a target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         //KillSelfTimer
@@ -1020,7 +1020,7 @@ struct MANGOS_DLL_DECL claw_tentacleAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Check if we have a target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         //EvadeTimer
@@ -1115,7 +1115,7 @@ struct MANGOS_DLL_DECL giant_claw_tentacleAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Check if we have a target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         //EvadeTimer
@@ -1213,7 +1213,7 @@ struct MANGOS_DLL_DECL giant_eye_tentacleAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Check if we have a target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         //BeamTimer
@@ -1233,7 +1233,7 @@ struct MANGOS_DLL_DECL giant_eye_tentacleAI : public ScriptedAI
 void flesh_tentacleAI::UpdateAI(const uint32 diff)
 {
     //Check if we have a target
-    if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+    if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
         return;
 
     if (Parent)

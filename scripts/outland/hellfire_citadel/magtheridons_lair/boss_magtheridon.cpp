@@ -174,7 +174,7 @@ struct MANGOS_DLL_DECL mob_abyssalAI : public ScriptedAI
         else
             m_uiDespawn_Timer -= uiDiff;
 
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         if (m_uiFireBlast_Timer < uiDiff)
@@ -358,7 +358,7 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
 
     void UpdateAI(const uint32 uiDiff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
         {
             if (!m_bIsIntroDone)
             {
@@ -569,7 +569,7 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
 
     void UpdateAI(const uint32 uiDiff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
         {
             if (!m_creature->IsNonMeleeSpellCasted(false) && !m_creature->IsInEvadeMode())
                 DoCast(m_creature, SPELL_SHADOW_GRASP_DUMMY);

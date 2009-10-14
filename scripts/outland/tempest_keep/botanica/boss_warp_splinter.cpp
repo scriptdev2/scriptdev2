@@ -46,7 +46,7 @@ struct MANGOS_DLL_DECL mob_treantAI  : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         if (m_creature->getVictim()->GetGUID() != WarpGuid)
@@ -180,7 +180,7 @@ struct MANGOS_DLL_DECL boss_warp_splinterAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         //Check for War Stomp

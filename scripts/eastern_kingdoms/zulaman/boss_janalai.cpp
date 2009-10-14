@@ -335,7 +335,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
     //Teleport every player into the middle if more than 20 yards away (possibly what spell 43096 should do)
     void TeleportPlayersOutOfRange()
     {
-        std::list<HostilReference*>::iterator i = m_creature->getThreatManager().getThreatList().begin();
+        std::list<HostileReference*>::iterator i = m_creature->getThreatManager().getThreatList().begin();
 
         for (; i != m_creature->getThreatManager().getThreatList().end(); ++i)
         {
@@ -397,7 +397,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         //blow up bombs happen after bombing is over, so handle this here
@@ -755,7 +755,7 @@ struct MANGOS_DLL_DECL mob_hatchlingAI : public ScriptedAI
             return;
         }
 
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         if (buffer_timer < diff)

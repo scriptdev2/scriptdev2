@@ -249,8 +249,8 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
         if (!target)
             return;
 
-        std::list<HostilReference*>& m_threatlist = target->getThreatManager().getThreatList();
-        std::list<HostilReference*>::iterator itr = m_threatlist.begin();
+        std::list<HostileReference*>& m_threatlist = target->getThreatManager().getThreatList();
+        std::list<HostileReference*>::iterator itr = m_threatlist.begin();
         for(; itr != m_threatlist.end(); ++itr)
         {
             Unit* pUnit = Unit::GetUnit((*m_creature), (*itr)->getUnitGuid());
@@ -608,12 +608,12 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
 
     void CastFixate()
     {
-        std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
+        std::list<HostileReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
         if (m_threatlist.empty())
             return;                                         // No point continuing if empty threatlist.
 
         std::list<Unit*> targets;
-        std::list<HostilReference*>::iterator itr = m_threatlist.begin();
+        std::list<HostileReference*>::iterator itr = m_threatlist.begin();
         for(; itr != m_threatlist.end(); ++itr)
         {
             Unit* pUnit = Unit::GetUnit((*m_creature), (*itr)->getUnitGuid());
@@ -636,7 +636,7 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         if (m_creature->GetHealth() <= (m_creature->GetMaxHealth()*0.1))
@@ -762,7 +762,7 @@ struct MANGOS_DLL_DECL boss_essence_of_desireAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         if (m_creature->GetHealth() <= (m_creature->GetMaxHealth()*0.1))
@@ -862,7 +862,7 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         if (!CheckedAggro)

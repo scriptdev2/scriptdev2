@@ -321,7 +321,7 @@ struct MANGOS_DLL_DECL npc_chicken_cluckAI : public ScriptedAI
                 m_uiResetFlagTimer -= uiDiff;
         }
 
-        if (m_creature->SelectHostilTarget() && m_creature->getVictim())
+        if (m_creature->SelectHostileTarget() && m_creature->getVictim())
             DoMeleeAttackIfReady();
     }
 };
@@ -954,7 +954,7 @@ struct MANGOS_DLL_DECL npc_garments_of_questsAI : public npc_escortAI
             }else RunAwayTimer -= diff;
         }
 
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         DoMeleeAttackIfReady();
@@ -983,7 +983,7 @@ struct MANGOS_DLL_DECL npc_guardianAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         if (m_creature->isAttackReady())

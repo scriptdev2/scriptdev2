@@ -93,7 +93,7 @@ struct MANGOS_DLL_DECL mob_kilrekAI : public ScriptedAI
         }
 
         Creature* pTerestian = ((Creature*)Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_TERESTIAN)));
-        if (pTerestian && (!pTerestian->SelectHostilTarget() && !pTerestian->getVictim()))
+        if (pTerestian && (!pTerestian->SelectHostileTarget() && !pTerestian->getVictim()))
             pTerestian->AddThreat(pWho, 1.0f);
     }
 
@@ -116,7 +116,7 @@ struct MANGOS_DLL_DECL mob_kilrekAI : public ScriptedAI
     void UpdateAI(const uint32 uiDiff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         if (m_uiAmplify_Timer < uiDiff)
@@ -258,7 +258,7 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
 
     void UpdateAI(const uint32 uiDiff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         if (m_uiCheckKilrek_Timer < uiDiff)
@@ -379,7 +379,7 @@ struct MANGOS_DLL_DECL mob_karazhan_impAI : public ScriptedAI
     void UpdateAI(const uint32 uiDiff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         if (m_uiFirebolt_Timer < uiDiff)

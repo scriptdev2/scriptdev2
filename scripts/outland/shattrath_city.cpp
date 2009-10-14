@@ -210,7 +210,7 @@ struct MANGOS_DLL_DECL npc_dirty_larryAI : public ScriptedAI
                 m_uiSayTimer -= diff;
         }
 
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         DoMeleeAttackIfReady();
@@ -663,7 +663,7 @@ struct MANGOS_DLL_DECL npc_raliq_the_drunkAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         if (m_uiUppercut_Timer < diff)
@@ -736,7 +736,7 @@ struct MANGOS_DLL_DECL npc_salsalabimAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         if (MagneticPull_Timer < diff)

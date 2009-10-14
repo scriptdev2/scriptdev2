@@ -164,7 +164,7 @@ struct MANGOS_DLL_DECL npc_calvin_montagueAI : public ScriptedAI
             return;
         }
 
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         DoMeleeAttackIfReady();

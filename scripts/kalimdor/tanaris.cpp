@@ -96,7 +96,7 @@ struct MANGOS_DLL_DECL mob_aquementasAI : public ScriptedAI
             }else SwitchFaction_Timer -= diff;
         }
 
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         if (!isFriendly)
@@ -508,7 +508,7 @@ struct MANGOS_DLL_DECL npc_toogaAI : public FollowerAI
 
     void UpdateFollowerAI(const uint32 uiDiff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
         {
             //we are doing the post-event, or...
             if (HasFollowState(STATE_FOLLOW_POSTEVENT))

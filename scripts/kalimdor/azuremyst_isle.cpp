@@ -246,7 +246,7 @@ struct MANGOS_DLL_DECL npc_engineer_spark_overgrindAI : public ScriptedAI
             return;
         }
 
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         if (m_uiDynamiteTimer < diff)
@@ -425,7 +425,7 @@ struct MANGOS_DLL_DECL npc_nestlewood_owlkinAI : public ScriptedAI
                 m_uiDespawnTimer -= uiDiff;
         }
 
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         DoMeleeAttackIfReady();

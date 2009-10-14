@@ -186,8 +186,8 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
         if (!SummonedUnit)
             return;
 
-        std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
-        std::list<HostilReference*>::iterator i = m_threatlist.begin();
+        std::list<HostileReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
+        std::list<HostileReference*>::iterator i = m_threatlist.begin();
         for(i = m_threatlist.begin(); i != m_threatlist.end(); ++i)
         {
             Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
@@ -205,7 +205,7 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
         float y = KaelLocations[0][1];
         m_creature->GetMap()->CreatureRelocation(m_creature, x, y, LOCATION_Z, 0.0f);
         //m_creature->SendMonsterMove(x, y, LOCATION_Z, 0, 0, 0); // causes some issues...
-        std::list<HostilReference*>::iterator i = m_creature->getThreatManager().getThreatList().begin();
+        std::list<HostileReference*>::iterator i = m_creature->getThreatManager().getThreatList().begin();
         for (i = m_creature->getThreatManager().getThreatList().begin(); i!= m_creature->getThreatManager().getThreatList().end();++i)
         {
             Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
@@ -217,7 +217,7 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
 
     void CastGravityLapseKnockUp()
     {
-        std::list<HostilReference*>::iterator i = m_creature->getThreatManager().getThreatList().begin();
+        std::list<HostileReference*>::iterator i = m_creature->getThreatManager().getThreatList().begin();
         for (i = m_creature->getThreatManager().getThreatList().begin(); i!= m_creature->getThreatManager().getThreatList().end();++i)
         {
             Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
@@ -229,7 +229,7 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
 
     void CastGravityLapseFly()                              // Use Fly Packet hack for now as players can't cast "fly" spells unless in map 530. Has to be done a while after they get knocked into the air...
     {
-        std::list<HostilReference*>::iterator i = m_creature->getThreatManager().getThreatList().begin();
+        std::list<HostileReference*>::iterator i = m_creature->getThreatManager().getThreatList().begin();
         for (i = m_creature->getThreatManager().getThreatList().begin(); i!= m_creature->getThreatManager().getThreatList().end();++i)
         {
             Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
@@ -249,7 +249,7 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
 
     void RemoveGravityLapse()
     {
-        std::list<HostilReference*>::iterator i = m_creature->getThreatManager().getThreatList().begin();
+        std::list<HostileReference*>::iterator i = m_creature->getThreatManager().getThreatList().begin();
         for (i = m_creature->getThreatManager().getThreatList().begin(); i!= m_creature->getThreatManager().getThreatList().end();++i)
         {
             Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
@@ -269,7 +269,7 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         switch(Phase)
@@ -524,7 +524,7 @@ struct MANGOS_DLL_DECL mob_felkael_phoenixAI : public ScriptedAI
 
         }
 
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         if (BurnTimer < diff)
@@ -587,7 +587,7 @@ struct MANGOS_DLL_DECL mob_arcane_sphereAI : public ScriptedAI
             m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
         else DespawnTimer -= diff;
 
-        if (!m_creature->getVictim() || !m_creature->SelectHostilTarget())
+        if (!m_creature->getVictim() || !m_creature->SelectHostileTarget())
             return;
 
         if (ChangeTargetTimer < diff)

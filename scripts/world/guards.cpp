@@ -2495,7 +2495,7 @@ struct MANGOS_DLL_DECL guard_shattrath_aldorAI : public guardAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         if (CanTeleport)
@@ -2689,7 +2689,7 @@ struct MANGOS_DLL_DECL guard_shattrath_scryerAI : public guardAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         if (CanTeleport)

@@ -220,7 +220,7 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
 
     void UpdateAI(const uint32 uiDiff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         if (m_uiWatch_Timer < uiDiff)
@@ -280,7 +280,7 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
             {
                 uint8 uiTargetInRangeCount = 0;
 
-                std::list<HostilReference*>::iterator i = m_creature->getThreatManager().getThreatList().begin();
+                std::list<HostileReference*>::iterator i = m_creature->getThreatManager().getThreatList().begin();
                 for(; i != m_creature->getThreatManager().getThreatList().end(); ++i)
                 {
                     Unit* pTarget = Unit::GetUnit(*m_creature, (*i)->getUnitGuid());
@@ -360,7 +360,7 @@ struct MANGOS_DLL_DECL mob_ohganAI : public ScriptedAI
 
     void UpdateAI(const uint32 uiDiff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         // SunderArmor

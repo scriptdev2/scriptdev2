@@ -290,7 +290,7 @@ struct MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
         {
             if (pSath->isAlive())
             {
-                if (HostilReference* pRef = pSath->getThreatManager().getOnlineContainer().getReferenceByTarget(pPlayer))
+                if (HostileReference* pRef = pSath->getThreatManager().getOnlineContainer().getReferenceByTarget(pPlayer))
                 {
                     pRef->removeReference();
                     debug_log("SD2: Deleting %s from Sathrovarr's threatlist", pPlayer->GetName());

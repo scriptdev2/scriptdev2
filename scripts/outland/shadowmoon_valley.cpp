@@ -145,7 +145,7 @@ struct MANGOS_DLL_DECL mob_mature_netherwing_drakeAI : public ScriptedAI
             return;
         }
 
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         if (CastTimer < diff)
@@ -221,7 +221,7 @@ struct MANGOS_DLL_DECL mob_enslaved_netherwing_drakeAI : public ScriptedAI
                 AttackStart(Dragonmaw);
             }
 
-            HostilReference* ref = m_creature->getThreatManager().getOnlineContainer().getReferenceByTarget(caster);
+            HostileReference* ref = m_creature->getThreatManager().getOnlineContainer().getReferenceByTarget(caster);
             if (ref)
                 ref->removeReference();
         }
@@ -249,7 +249,7 @@ struct MANGOS_DLL_DECL mob_enslaved_netherwing_drakeAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
         {
             if (Tapped)
             {
@@ -766,7 +766,7 @@ struct MANGOS_DLL_DECL npc_wildaAI : public npc_escortAI
 
     void UpdateEscortAI(const uint32 uiDiff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         //TODO: add more abilities
@@ -1032,7 +1032,7 @@ struct MANGOS_DLL_DECL mob_torlothAI : public ScriptedAI
         }
         else
         {
-            if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+            if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
                 return;
 
             if (m_uiCleaveTimer < uiDiff)

@@ -460,7 +460,7 @@ void hyjalAI::UpdateAI(const uint32 uiDiff)
     else
         m_uiCheckTimer -= uiDiff;
 
-    if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+    if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
         return;
 
     for(uint8 i = 0; i < MAX_SPELL; ++i)

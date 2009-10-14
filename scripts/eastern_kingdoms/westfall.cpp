@@ -146,7 +146,7 @@ struct MANGOS_DLL_DECL npc_daphne_stilwellAI : public npc_escortAI
 
     void UpdateEscortAI(const uint32 uiDiff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         if (m_uiShootTimer < uiDiff)

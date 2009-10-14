@@ -759,7 +759,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
             case 6:
             {
                 //Return since we have no target
-                if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+                if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
                     return;
 
                 //m_uiFireball_Timer
@@ -920,7 +920,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                     //m_uiGravityLapse_Timer
                     if (m_uiGravityLapse_Timer < uiDiff)
                     {
-                        std::list<HostilReference*>::iterator i = m_creature->getThreatManager().getThreatList().begin();
+                        std::list<HostileReference*>::iterator i = m_creature->getThreatManager().getThreatList().begin();
                         switch(m_uiGravityLapse_Phase)
                         {
                             case 0:
@@ -1082,7 +1082,7 @@ struct MANGOS_DLL_DECL boss_thaladred_the_darkenerAI : public advisorbase_ai
             return;
 
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         //m_uiGaze_Timer
@@ -1157,7 +1157,7 @@ struct MANGOS_DLL_DECL boss_lord_sanguinarAI : public advisorbase_ai
             return;
 
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         //m_uiFear_Timer
@@ -1231,7 +1231,7 @@ struct MANGOS_DLL_DECL boss_grand_astromancer_capernianAI : public advisorbase_a
             return;
 
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         //m_uiYell_Timer
@@ -1275,8 +1275,8 @@ struct MANGOS_DLL_DECL boss_grand_astromancer_capernianAI : public advisorbase_a
         {
             bool m_bInMeleeRange = false;
             Unit* pTarget = NULL;
-            std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
-            for (std::list<HostilReference*>::iterator i = m_threatlist.begin(); i!= m_threatlist.end();++i)
+            std::list<HostileReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
+            for (std::list<HostileReference*>::iterator i = m_threatlist.begin(); i!= m_threatlist.end();++i)
             {
                 Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
 
@@ -1340,7 +1340,7 @@ struct MANGOS_DLL_DECL boss_master_engineer_telonicusAI : public advisorbase_ai
             return;
 
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         //m_uiBomb_Timer
@@ -1389,7 +1389,7 @@ struct MANGOS_DLL_DECL mob_phoenix_tkAI : public ScriptedAI
 
     void UpdateAI(const uint32 uiDiff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         if (m_uiCycle_Timer < uiDiff)

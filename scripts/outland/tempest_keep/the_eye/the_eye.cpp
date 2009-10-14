@@ -46,7 +46,7 @@ struct MANGOS_DLL_DECL mob_crystalcore_devastatorAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         //Check if we have a current target

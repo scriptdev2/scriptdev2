@@ -95,7 +95,7 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         // Pounding
@@ -111,9 +111,9 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
         if (ArcaneOrb_Timer < diff)
         {
             Unit *target = NULL;
-            std::list<HostilReference *> t_list = m_creature->getThreatManager().getThreatList();
+            std::list<HostileReference *> t_list = m_creature->getThreatManager().getThreatList();
             std::vector<Unit *> target_list;
-            for(std::list<HostilReference *>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
+            for(std::list<HostileReference *>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
             {
                 target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
                 // exclude pets & totems

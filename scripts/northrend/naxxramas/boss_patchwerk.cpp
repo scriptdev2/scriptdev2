@@ -101,7 +101,7 @@ struct MANGOS_DLL_DECL boss_patchwerkAI : public ScriptedAI
         uint32 uiHighestHP = 0;
         uint32 uiTargets = m_bIsHeroicMode?3:2;
 
-        std::list<HostilReference*>::iterator iter = m_creature->getThreatManager().getThreatList().begin();
+        std::list<HostileReference*>::iterator iter = m_creature->getThreatManager().getThreatList().begin();
         for (iter = m_creature->getThreatManager().getThreatList().begin(); iter != m_creature->getThreatManager().getThreatList().end(); ++iter)
         {
             if (!uiTargets)
@@ -125,7 +125,7 @@ struct MANGOS_DLL_DECL boss_patchwerkAI : public ScriptedAI
 
     void UpdateAI(const uint32 uiDiff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         // Hateful Strike

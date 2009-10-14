@@ -227,7 +227,7 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         if (HealTimer < diff)
@@ -506,7 +506,7 @@ struct MANGOS_DLL_DECL boss_kagani_nightstrikeAI : public boss_priestess_lackey_
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         boss_priestess_lackey_commonAI::UpdateAI(diff);
@@ -606,7 +606,7 @@ struct MANGOS_DLL_DECL boss_ellris_duskhallowAI : public boss_priestess_lackey_c
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         boss_priestess_lackey_commonAI::UpdateAI(diff);
@@ -680,7 +680,7 @@ struct MANGOS_DLL_DECL boss_eramas_brightblazeAI : public boss_priestess_lackey_
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         boss_priestess_lackey_commonAI::UpdateAI(diff);
@@ -751,7 +751,7 @@ struct MANGOS_DLL_DECL boss_yazzaiAI : public boss_priestess_lackey_commonAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         boss_priestess_lackey_commonAI::UpdateAI(diff);
@@ -800,8 +800,8 @@ struct MANGOS_DLL_DECL boss_yazzaiAI : public boss_priestess_lackey_commonAI
         if (Blink_Timer < diff)
         {
             bool InMeleeRange = false;
-            std::list<HostilReference*>& t_list = m_creature->getThreatManager().getThreatList();
-            for(std::list<HostilReference*>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
+            std::list<HostileReference*>& t_list = m_creature->getThreatManager().getThreatList();
+            for(std::list<HostileReference*>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
             {
                 if (Unit* target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid()))
                 {
@@ -872,7 +872,7 @@ struct MANGOS_DLL_DECL boss_warlord_salarisAI : public boss_priestess_lackey_com
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         boss_priestess_lackey_commonAI::UpdateAI(diff);
@@ -880,8 +880,8 @@ struct MANGOS_DLL_DECL boss_warlord_salarisAI : public boss_priestess_lackey_com
         if (Intercept_Stun_Timer < diff)
         {
             bool InMeleeRange = false;
-            std::list<HostilReference*>& t_list = m_creature->getThreatManager().getThreatList();
-            for(std::list<HostilReference*>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
+            std::list<HostileReference*>& t_list = m_creature->getThreatManager().getThreatList();
+            for(std::list<HostileReference*>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
             {
                 if (Unit* target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid()))
                 {
@@ -997,7 +997,7 @@ struct MANGOS_DLL_DECL boss_garaxxasAI : public boss_priestess_lackey_commonAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         boss_priestess_lackey_commonAI::UpdateAI(diff);
@@ -1099,7 +1099,7 @@ struct MANGOS_DLL_DECL boss_apokoAI : public boss_priestess_lackey_commonAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         boss_priestess_lackey_commonAI::UpdateAI(diff);
@@ -1194,7 +1194,7 @@ struct MANGOS_DLL_DECL boss_zelfanAI : public boss_priestess_lackey_commonAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         boss_priestess_lackey_commonAI::UpdateAI(diff);

@@ -259,7 +259,7 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         if (m_pInstance && !m_pInstance->GetData(TYPE_MOROES))
@@ -280,7 +280,7 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
                 {
                     Temp = Unit::GetUnit((*m_creature),AddGUID[i]);
                     if (Temp && Temp->isAlive())
-                        if (!Temp->SelectHostilTarget() || !Temp->getVictim())
+                        if (!Temp->SelectHostileTarget() || !Temp->getVictim())
                             ((Creature*)Temp)->AI()->AttackStart(m_creature->getVictim());
                 }
             }
@@ -328,13 +328,13 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
             if (Blind_Timer < diff)
             {
                 Unit* target = NULL;
-                std::list<HostilReference*> t_list = m_creature->getThreatManager().getThreatList();
+                std::list<HostileReference*> t_list = m_creature->getThreatManager().getThreatList();
 
                 if (t_list.empty())
                     return;
 
                 std::vector<Unit*> target_list;
-                for (std::list<HostilReference*>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
+                for (std::list<HostileReference*>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
                 {
                     target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
                     if (target && target->IsWithinDist(m_creature, ATTACK_DISTANCE, false))
@@ -443,7 +443,7 @@ struct MANGOS_DLL_DECL boss_baroness_dorothea_millstipeAI : public boss_moroes_g
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         boss_moroes_guestAI::UpdateAI(diff);
@@ -498,7 +498,7 @@ struct MANGOS_DLL_DECL boss_baron_rafe_dreugerAI : public boss_moroes_guestAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         boss_moroes_guestAI::UpdateAI(diff);
@@ -553,7 +553,7 @@ struct MANGOS_DLL_DECL boss_lady_catriona_von_indiAI : public boss_moroes_guestA
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         boss_moroes_guestAI::UpdateAI(diff);
@@ -622,7 +622,7 @@ struct MANGOS_DLL_DECL boss_lady_keira_berrybuckAI : public boss_moroes_guestAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         boss_moroes_guestAI::UpdateAI(diff);
@@ -684,7 +684,7 @@ struct MANGOS_DLL_DECL boss_lord_robin_darisAI : public boss_moroes_guestAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         boss_moroes_guestAI::UpdateAI(diff);
@@ -736,7 +736,7 @@ struct MANGOS_DLL_DECL boss_lord_crispin_ferenceAI : public boss_moroes_guestAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         boss_moroes_guestAI::UpdateAI(diff);

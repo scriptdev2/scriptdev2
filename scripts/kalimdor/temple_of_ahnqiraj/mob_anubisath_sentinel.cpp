@@ -262,7 +262,7 @@ struct MANGOS_DLL_DECL aqsentinelAI : public ScriptedAI
 
     Unit *GetHatedManaUser()
     {
-        std::list<HostilReference*>::iterator i;
+        std::list<HostileReference*>::iterator i;
         for (i = m_creature->getThreatManager().getThreatList().begin();i != m_creature->getThreatManager().getThreatList().end(); ++i)
         {
             Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());

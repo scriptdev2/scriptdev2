@@ -108,7 +108,7 @@ struct MANGOS_DLL_DECL boss_ormorokAI : public ScriptedAI
 
     void UpdateAI(const uint32 uiDiff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         if (!m_bIsEnraged && m_creature->GetHealth()*100 < m_creature->GetMaxHealth()*25)

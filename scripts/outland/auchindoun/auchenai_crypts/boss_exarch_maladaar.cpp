@@ -58,7 +58,7 @@ struct MANGOS_DLL_DECL mob_stolen_soulAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         if (Class_Timer < diff)
@@ -226,7 +226,7 @@ struct MANGOS_DLL_DECL boss_exarch_maladaarAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         if (!Avatar_summoned && ((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 25))
@@ -307,7 +307,7 @@ struct MANGOS_DLL_DECL mob_avatar_of_martyredAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         if (Mortal_Strike_timer < diff)

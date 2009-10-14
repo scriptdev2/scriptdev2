@@ -146,7 +146,7 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         if (Teleport)
@@ -160,8 +160,8 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
                 float ranY = LOCY;
                 float ranZ = LOCZ;
 
-                std::list<HostilReference *> t_list = m_creature->getThreatManager().getThreatList();
-                for(std::list<HostilReference *>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
+                std::list<HostileReference *> t_list = m_creature->getThreatManager().getThreatList();
+                for(std::list<HostileReference *>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
                 {
                     Unit* target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
                     if (target && target->GetTypeId() == TYPEID_PLAYER)

@@ -131,14 +131,14 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
     void CastBloodboil()
     {
         // Get the Threat List
-        std::list<HostilReference *> m_threatlist = m_creature->getThreatManager().getThreatList();
+        std::list<HostileReference *> m_threatlist = m_creature->getThreatManager().getThreatList();
 
         // He doesn't have anyone in his threatlist, useless to continue
         if (!m_threatlist.size())
             return;
 
         std::list<Unit *> targets;
-        std::list<HostilReference *>::iterator itr = m_threatlist.begin();
+        std::list<HostileReference *>::iterator itr = m_threatlist.begin();
 
         //store the threat list in a different container
         for(; itr!= m_threatlist.end(); ++itr)
@@ -192,7 +192,7 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         if (ArcingSmashTimer < diff)

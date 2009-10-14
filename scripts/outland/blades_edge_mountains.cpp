@@ -45,7 +45,7 @@ struct MANGOS_DLL_DECL mobs_bladespire_ogreAI : public ScriptedAI
 
     void UpdateAI(const uint32 uiDiff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         DoMeleeAttackIfReady();
@@ -193,7 +193,7 @@ struct MANGOS_DLL_DECL mobs_nether_drakeAI : public ScriptedAI
             return;
         }
 
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         if (IntangiblePresence_Timer <= diff)

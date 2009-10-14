@@ -77,7 +77,7 @@ struct MANGOS_DLL_DECL generic_creatureAI : public ScriptedAI
             }else BuffTimer -= diff;
 
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         //If we are within range melee the target

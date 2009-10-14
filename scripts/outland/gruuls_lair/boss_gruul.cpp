@@ -161,7 +161,7 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
     void UpdateAI(const uint32 uiDiff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         // Growth
@@ -198,8 +198,8 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
             {
                 // Find 2nd-aggro target within melee range.
                 Unit *pTarget = NULL;
-                std::list<HostilReference *> t_list = m_creature->getThreatManager().getThreatList();
-                std::list<HostilReference *>::iterator itr = t_list.begin();
+                std::list<HostileReference *> t_list = m_creature->getThreatManager().getThreatList();
+                std::list<HostileReference *>::iterator itr = t_list.begin();
                 std::advance(itr, 1);
                 for(; itr!= t_list.end(); ++itr)
                 {

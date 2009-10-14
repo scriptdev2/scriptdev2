@@ -575,7 +575,7 @@ struct MANGOS_DLL_DECL npc_death_knight_initiateAI : public ScriptedAI
 
     void UpdateAI(const uint32 uiDiff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
         {
             if (m_bIsDuelInProgress)
             {
@@ -798,7 +798,7 @@ struct MANGOS_DLL_DECL npc_koltira_deathweaverAI : public npc_escortAI
                 m_uiWave_Timer -= uiDiff;
         }
 
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         DoMeleeAttackIfReady();
@@ -1017,7 +1017,7 @@ struct MANGOS_DLL_DECL npc_unworthy_initiateAI : public ScriptedAI
 
         if (m_uiPhase == PHASE_INACTIVE_OR_COMBAT)
         {
-            if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+            if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
                 return;
 
             if (m_uiBloodStrike_Timer < uiDiff)

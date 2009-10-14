@@ -49,7 +49,7 @@ struct MANGOS_DLL_DECL boss_mothersmolderwebAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         //Crystalize_Timer

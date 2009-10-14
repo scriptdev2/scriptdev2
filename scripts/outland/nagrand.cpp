@@ -163,7 +163,7 @@ struct MANGOS_DLL_DECL mob_lumpAI : public ScriptedAI
         }
 
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         //Spear_Throw_Timer
@@ -581,7 +581,7 @@ struct MANGOS_DLL_DECL npc_maghar_captiveAI : public npc_escortAI
 
     void UpdateEscortAI(const uint32 uiDiff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         if (m_uiChainLightningTimer < uiDiff)

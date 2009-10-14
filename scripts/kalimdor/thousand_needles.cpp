@@ -335,7 +335,7 @@ struct MANGOS_DLL_DECL npc_plucky_johnsonAI : public ScriptedAI
                 m_uiResetTimer -= uiDiff;
         }
 
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         DoMeleeAttackIfReady();
