@@ -152,6 +152,7 @@ scripts/eastern_kingdoms/scarlet_monastery/boss_houndmaster_loksey.cpp \
 scripts/eastern_kingdoms/scarlet_monastery/boss_interrogator_vishas.cpp \
 scripts/eastern_kingdoms/scarlet_monastery/boss_mograine_and_whitemane.cpp \
 scripts/eastern_kingdoms/scarlet_monastery/boss_scorn.cpp \
+scripts/eastern_kingdoms/scarlet_monastery/boss_headless_horseman.cpp \
 scripts/eastern_kingdoms/scarlet_monastery/instance_scarlet_monastery.cpp \
 scripts/eastern_kingdoms/scarlet_monastery/scarlet_monastery.h \
 scripts/eastern_kingdoms/scholomance/boss_darkmaster_gandling.cpp \

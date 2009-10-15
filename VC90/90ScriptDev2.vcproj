@@ -863,6 +863,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\scripts\eastern_kingdoms\scarlet_monastery\boss_headless_horseman.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\scripts\eastern_kingdoms\scarlet_monastery\instance_scarlet_monastery.cpp"
 						>
 					</File>
