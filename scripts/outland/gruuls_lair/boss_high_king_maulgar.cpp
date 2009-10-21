@@ -394,7 +394,7 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public Council_Base_AI
 
         if (m_creature->Attack(pWho, false))
         {
-            m_creature->AddThreat(pWho, 0.0f);
+            m_creature->AddThreat(pWho);
             m_creature->SetInCombatWith(pWho);
             pWho->SetInCombatWith(m_creature);
 
@@ -538,7 +538,7 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public Council_Base_AI
 
         if (m_creature->Attack(pWho, true))
         {
-            m_creature->AddThreat(pWho, 0.0f);
+            m_creature->AddThreat(pWho);
             m_creature->SetInCombatWith(pWho);
             pWho->SetInCombatWith(m_creature);
 

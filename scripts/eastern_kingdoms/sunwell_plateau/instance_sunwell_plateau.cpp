@@ -281,7 +281,7 @@ struct MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
             if (pKalecgos->isAlive())
             {
                 debug_log("SD2: Adding %s in Kalecgos' threatlist", pPlayer->GetName());
-                pKalecgos->AddThreat(pPlayer, 0.0f);
+                pKalecgos->AddThreat(pPlayer);
             }
         }
 

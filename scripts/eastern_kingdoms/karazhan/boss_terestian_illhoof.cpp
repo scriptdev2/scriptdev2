@@ -94,7 +94,7 @@ struct MANGOS_DLL_DECL mob_kilrekAI : public ScriptedAI
 
         Creature* pTerestian = ((Creature*)Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_TERESTIAN)));
         if (pTerestian && (!pTerestian->SelectHostileTarget() && !pTerestian->getVictim()))
-            pTerestian->AddThreat(pWho, 1.0f);
+            pTerestian->AddThreat(pWho);
     }
 
     void JustDied(Unit* pKiller)
@@ -224,7 +224,7 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
 
             // Put Kil'rek in combat against our target so players don't skip him
             if (pKilrek && !pKilrek->getVictim())
-                pKilrek->AddThreat(pWho, 0.0f);
+                pKilrek->AddThreat(pWho);
 
             m_pInstance->SetData(TYPE_TERESTIAN, IN_PROGRESS);
         }
@@ -339,7 +339,7 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
             Creature* pImp = m_creature->SummonCreature(NPC_FIENDISHIMP, afPortalLocations[uiRnd][0], afPortalLocations[uiRnd][1], PORTAL_Z, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 15000);
             if (pImp)
             {
-                pImp->AddThreat(m_creature->getVictim(), 1.0f);
+                pImp->AddThreat(m_creature->getVictim());
                 if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
                     pImp->AI()->AttackStart(pTarget);
             }

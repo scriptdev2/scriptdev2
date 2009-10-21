@@ -131,7 +131,7 @@ struct MANGOS_DLL_DECL npc_daphne_stilwellAI : public npc_escortAI
 
         if (m_creature->Attack(pWho, false))
         {
-            m_creature->AddThreat(pWho, 0.0f);
+            m_creature->AddThreat(pWho);
             m_creature->SetInCombatWith(pWho);
             pWho->SetInCombatWith(m_creature);
 

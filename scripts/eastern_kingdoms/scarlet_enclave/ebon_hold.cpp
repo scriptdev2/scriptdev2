@@ -724,7 +724,7 @@ struct MANGOS_DLL_DECL npc_koltira_deathweaverAI : public npc_escortAI
         if (Player* pPlayer = GetPlayerForEscort())
         {
             pSummoned->AI()->AttackStart(pPlayer);
-            pSummoned->AddThreat(m_creature, 0.0f);
+            pSummoned->AddThreat(m_creature);
         }
 
         if (pSummoned->GetEntry() == NPC_HIGH_INQUISITOR_VALROTH)

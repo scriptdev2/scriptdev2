@@ -410,7 +410,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
                 {
                     DoomBlossom->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                     DoomBlossom->setFaction(m_creature->getFaction());
-                    DoomBlossom->AddThreat(target, 1.0f);
+                    DoomBlossom->AddThreat(target);
                     ((mob_doom_blossomAI*)DoomBlossom->AI())->SetTeronGUID(m_creature->GetGUID());
 
                     SetThreatList(DoomBlossom);

@@ -1004,7 +1004,7 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
 
         if (m_creature->Attack(who, true))
         {
-            m_creature->AddThreat(who, 0.0f);
+            m_creature->AddThreat(who);
             m_creature->SetInCombatWith(who);
             who->SetInCombatWith(m_creature);
 

@@ -83,7 +83,7 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
         {
             Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0);
             if (target)
-                Summoned->AddThreat(target, 1.0f);
+                Summoned->AddThreat(target);
         }
     }
 

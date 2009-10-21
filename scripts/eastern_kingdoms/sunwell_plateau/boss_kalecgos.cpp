@@ -544,7 +544,7 @@ bool GOHello_go_spectral_rift(Player* pPlayer, GameObject* pGo)
             if (pSath->isAlive())
             {
                 debug_log("SD2: Adding %s in pSath' threatlist", pPlayer->GetName());
-                pSath->AddThreat(pPlayer, 0.0f);
+                pSath->AddThreat(pPlayer);
             }
         }
 

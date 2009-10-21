@@ -46,7 +46,7 @@ void ScriptedAI::MoveInLineOfSight(Unit* pWho)
             else if (m_creature->GetMap()->IsDungeon())
             {
                 pWho->SetInCombatWith(m_creature);
-                m_creature->AddThreat(pWho, 0.0f);
+                m_creature->AddThreat(pWho);
             }
         }
     }
@@ -59,7 +59,7 @@ void ScriptedAI::AttackStart(Unit* pWho)
 
     if (m_creature->Attack(pWho, true))
     {
-        m_creature->AddThreat(pWho, 0.0f);
+        m_creature->AddThreat(pWho);
         m_creature->SetInCombatWith(pWho);
         pWho->SetInCombatWith(m_creature);
 
@@ -617,7 +617,7 @@ void Scripted_NoMovementAI::AttackStart(Unit* pWho)
 
     if (m_creature->Attack(pWho, true))
     {
-        m_creature->AddThreat(pWho, 0.0f);
+        m_creature->AddThreat(pWho);
         m_creature->SetInCombatWith(pWho);
         pWho->SetInCombatWith(m_creature);
 

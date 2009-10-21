@@ -141,7 +141,7 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
                 if (!pAdd->getVictim())
                 {
                     pWho->SetInCombatWith(pAdd);
-                    pAdd->AddThreat(pWho, 0.0f);
+                    pAdd->AddThreat(pWho);
                 }
             }
         }
@@ -382,7 +382,7 @@ struct MANGOS_DLL_DECL boss_priestess_lackey_commonAI : public ScriptedAI
                     if (!pAdd->getVictim() && pAdd != m_creature)
                     {
                         pWho->SetInCombatWith(pAdd);
-                        pAdd->AddThreat(pWho, 0.0f);
+                        pAdd->AddThreat(pWho);
                     }
                 }
             }
@@ -392,7 +392,7 @@ struct MANGOS_DLL_DECL boss_priestess_lackey_commonAI : public ScriptedAI
                 if (pDelrissa->isAlive() && !pDelrissa->getVictim())
                 {
                     pWho->SetInCombatWith(pDelrissa);
-                    pDelrissa->AddThreat(pWho, 0.0f);
+                    pDelrissa->AddThreat(pWho);
                 }
             }
         }

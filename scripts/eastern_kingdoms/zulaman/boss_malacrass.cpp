@@ -441,7 +441,7 @@ struct MANGOS_DLL_DECL mob_alyson_antilleAI : public boss_malacrass_addAI
 
         if (m_creature->Attack(pWho, false))
         {
-            m_creature->AddThreat(pWho, 0.0f);
+            m_creature->AddThreat(pWho);
             m_creature->SetInCombatWith(pWho);
             pWho->SetInCombatWith(m_creature);
 
@@ -546,7 +546,7 @@ struct MANGOS_DLL_DECL mob_gazakrothAI : public boss_malacrass_addAI
 
         if (m_creature->Attack(pWho, false))
         {
-            m_creature->AddThreat(pWho, 0.0f);
+            m_creature->AddThreat(pWho);
             m_creature->SetInCombatWith(pWho);
             pWho->SetInCombatWith(m_creature);
 
@@ -696,7 +696,7 @@ struct MANGOS_DLL_DECL mob_slitherAI : public boss_malacrass_addAI
 
         if (m_creature->Attack(pWho, false))
         {
-            m_creature->AddThreat(pWho, 0.0f);
+            m_creature->AddThreat(pWho);
             m_creature->SetInCombatWith(pWho);
             pWho->SetInCombatWith(m_creature);
 

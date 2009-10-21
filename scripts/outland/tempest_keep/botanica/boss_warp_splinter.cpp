@@ -147,7 +147,7 @@ struct MANGOS_DLL_DECL boss_warp_splinterAI : public ScriptedAI
             if (pTreant)
             {
                 //pTreant->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*m_creature));
-                pTreant->AddThreat(m_creature, 0.1f);
+                pTreant->AddThreat(m_creature);
                 Treant_GUIDs[i] = pTreant->GetGUID();
                 ((mob_treantAI*)pTreant->AI())->WarpGuid = m_creature->GetGUID();
             }

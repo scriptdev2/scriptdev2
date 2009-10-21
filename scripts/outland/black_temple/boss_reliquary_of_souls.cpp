@@ -221,7 +221,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                     m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,375);
                     SummonEssenceTimer = 8000;
                     AnimationTimer = 5100;
-                    m_creature->AddThreat(who, 1.0f);
+                    m_creature->AddThreat(who);
                 }
             }
         }
@@ -239,7 +239,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
         {
             ((npc_enslaved_soulAI*)Soul->AI())->ReliquaryGUID = m_creature->GetGUID();
             Soul->CastSpell(Soul, ENSLAVED_SOUL_PASSIVE, true);
-            Soul->AddThreat(target, 1.0f);
+            Soul->AddThreat(target);
             ++SoulCount;
         }
     }
@@ -256,7 +256,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
             Unit* pUnit = Unit::GetUnit((*m_creature), (*itr)->getUnitGuid());
             if (pUnit)
             {
-                m_creature->AddThreat(pUnit, 1.0f);         // This is so that we make sure the unit is in Reliquary's threat list before we reset the unit's threat.
+                m_creature->AddThreat(pUnit);                // This is so that we make sure the unit is in Reliquary's threat list before we reset the unit's threat.
                 m_creature->getThreatManager().modifyThreatPercent(pUnit, -100);
                 float threat = target->getThreatManager().getThreat(pUnit);
                 m_creature->AddThreat(pUnit, threat);       // This makes it so that the unit has the same amount of threat in Reliquary's threatlist as in the target creature's (One of the Essences).
@@ -301,7 +301,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
 
                     if (Unit* target = SelectUnit(SELECT_TARGET_TOPAGGRO, 0))
                     {
-                        EssenceSuffering->AddThreat(target, 1.0f);
+                        EssenceSuffering->AddThreat(target);
                         EssenceSuffering->AI()->AttackStart(target);
                     }
 
@@ -405,7 +405,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
 
                         if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
                         {
-                            EssenceDesire->AddThreat(target, 1.0f);
+                            EssenceDesire->AddThreat(target);
                             EssenceDesire->AI()->AttackStart(target);
                         }
 
@@ -511,7 +511,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                     {
                         if (Unit* target = SelectUnit(SELECT_TARGET_TOPAGGRO, 0))
                         {
-                            EssenceAnger->AddThreat(target, 1.0f);
+                            EssenceAnger->AddThreat(target);
                             EssenceAnger->AI()->AttackStart(target);
                         }
 

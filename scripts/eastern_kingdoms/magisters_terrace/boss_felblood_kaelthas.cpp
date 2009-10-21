@@ -405,7 +405,7 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
                                 if (Orb && target)
                                 {
                                     //SetThreatList(Orb);
-                                    Orb->AddThreat(target, 1.0f);
+                                    Orb->AddThreat(target);
                                     Orb->AI()->AttackStart(target);
                                 }
 
@@ -596,7 +596,7 @@ struct MANGOS_DLL_DECL mob_arcane_sphereAI : public ScriptedAI
             Unit* target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
             if (target)
-                m_creature->AddThreat(target, 1.0f);
+                m_creature->AddThreat(target);
                 m_creature->TauntApply(target);
                 AttackStart(target);
 

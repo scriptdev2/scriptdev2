@@ -127,7 +127,7 @@ struct MANGOS_DLL_DECL boss_ionarAI : public ScriptedAI
     {
         if (m_creature->Attack(pWho, true))
         {
-            m_creature->AddThreat(pWho, 0.0f);
+            m_creature->AddThreat(pWho);
             m_creature->SetInCombatWith(pWho);
             pWho->SetInCombatWith(m_creature);
 

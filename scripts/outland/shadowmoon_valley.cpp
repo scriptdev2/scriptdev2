@@ -985,7 +985,7 @@ struct MANGOS_DLL_DECL mob_torlothAI : public ScriptedAI
             case 5:
                 if (Unit* pTarget = Unit::GetUnit((*m_creature), m_uiPlayerGUID))
                 {
-                    m_creature->AddThreat(pTarget, 0.0f);
+                    m_creature->AddThreat(pTarget);
                     m_creature->SetFacingToObject(pTarget);
                     m_creature->HandleEmoteCommand(EMOTE_ONESHOT_POINT);
                 }

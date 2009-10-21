@@ -360,7 +360,7 @@ struct MANGOS_DLL_DECL boss_warbringer_omroggAI : public ScriptedAI
             {
                 DoYellForThreat();
                 DoResetThreat();
-                m_creature->AddThreat(target, 0.0f);
+                m_creature->AddThreat(target);
             }
             m_uiResetThreat_Timer = urand(25000, 40000);
         }else m_uiResetThreat_Timer -= uiDiff;

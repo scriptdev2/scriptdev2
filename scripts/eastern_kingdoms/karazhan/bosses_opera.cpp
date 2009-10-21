@@ -1113,7 +1113,7 @@ struct MANGOS_DLL_DECL boss_romuloAI : public ScriptedAI
             Creature* Julianne = ((Creature*)Unit::GetUnit((*m_creature), JulianneGUID));
             if (Julianne && Julianne->getVictim())
             {
-                m_creature->AddThreat(Julianne->getVictim(), 1.0f);
+                m_creature->AddThreat(Julianne->getVictim());
             }
         }
     }

@@ -111,7 +111,7 @@ struct MANGOS_DLL_DECL boss_nothAI : public ScriptedAI
     void JustSummoned(Creature* pSummoned)
     {
         if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
-            pSummoned->AddThreat(pTarget, 0.0f);
+            pSummoned->AddThreat(pTarget);
     }
 
     void KilledUnit(Unit* pVictim)

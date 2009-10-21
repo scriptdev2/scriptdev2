@@ -282,7 +282,7 @@ struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
                 AttackStart(pTarget);
                 m_creature->GetMotionMaster()->Clear();
                 m_creature->GetMotionMaster()->MoveChase(pTarget);
-                m_creature->AddThreat(pTarget, 0.0f);
+                m_creature->AddThreat(pTarget);
             }
             else
                 m_uiDelayRes_Timer -= uiDiff;
@@ -430,7 +430,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                         StartEvent();
 
                     pWho->SetInCombatWith(m_creature);
-                    m_creature->AddThreat(pWho, 0.0f);
+                    m_creature->AddThreat(pWho);
                 }
             }
         }
@@ -1205,7 +1205,7 @@ struct MANGOS_DLL_DECL boss_grand_astromancer_capernianAI : public advisorbase_a
 
         if (m_creature->Attack(pWho, true))
         {
-            m_creature->AddThreat(pWho, 0.0f);
+            m_creature->AddThreat(pWho);
             m_creature->SetInCombatWith(pWho);
             pWho->SetInCombatWith(m_creature);
 
@@ -1437,7 +1437,7 @@ struct MANGOS_DLL_DECL mob_phoenix_egg_tkAI : public ScriptedAI
 
     void JustSummoned(Creature* pSummoned)
     {
-        pSummoned->AddThreat(m_creature->getVictim(), 0.0f);
+        pSummoned->AddThreat(m_creature->getVictim());
         pSummoned->CastSpell(pSummoned,SPELL_REBIRTH,false);
     }
 

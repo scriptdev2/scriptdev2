@@ -146,7 +146,7 @@ struct MANGOS_DLL_DECL boss_loathebAI : public ScriptedAI
             if (pSummonedSpores)
             {
                 if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
-                    pSummonedSpores->AddThreat(pTarget,1.0f);
+                    pSummonedSpores->AddThreat(pTarget);
             }
 
             m_uiSummonTimer = 28000;

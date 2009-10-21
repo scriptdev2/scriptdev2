@@ -301,7 +301,7 @@ struct MANGOS_DLL_DECL npc_time_riftAI : public ScriptedAI
         if (Summon)
         {
             if (Unit *temp = Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_MEDIVH)))
-                Summon->AddThreat(temp,0.0f);
+                Summon->AddThreat(temp);
         }
     }
 

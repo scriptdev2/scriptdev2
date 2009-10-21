@@ -214,7 +214,7 @@ struct MANGOS_DLL_DECL boss_kelesethAI : public ScriptedAI
     {
         if (m_creature->Attack(pWho, true))
         {
-            m_creature->AddThreat(pWho, 0.0f);
+            m_creature->AddThreat(pWho);
             m_creature->SetInCombatWith(pWho);
             pWho->SetInCombatWith(m_creature);
 
@@ -286,7 +286,7 @@ struct MANGOS_DLL_DECL boss_kelesethAI : public ScriptedAI
 
                 if (Creature* pFrostTomb = m_creature->SummonCreature(NPC_FROST_TOMB, fPosX, fPosY, fPosZ, 0, TEMPSUMMON_TIMED_DESPAWN, 20000))
                 {
-                    pFrostTomb->AddThreat(pTombTarget, 0.0);
+                    pFrostTomb->AddThreat(pTombTarget);
                     pFrostTomb->CastSpell(pTombTarget, SPELL_FROST_TOMB, false);
                 }
 

@@ -211,7 +211,7 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
         if (who && who->GetTypeId() == TYPEID_PLAYER && m_creature->IsHostileTo(who))
         {
             //Add them to our threat list
-            m_creature->AddThreat(who,0.0f);
+            m_creature->AddThreat(who);
         }
     }
 

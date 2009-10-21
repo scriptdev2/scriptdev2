@@ -125,7 +125,7 @@ struct MANGOS_DLL_DECL boss_volkhanAI : public ScriptedAI
     {
         if (m_creature->Attack(pWho, true))
         {
-            m_creature->AddThreat(pWho, 0.0f);
+            m_creature->AddThreat(pWho);
             m_creature->SetInCombatWith(pWho);
             pWho->SetInCombatWith(m_creature);
 
@@ -383,7 +383,7 @@ struct MANGOS_DLL_DECL mob_molten_golemAI : public ScriptedAI
     {
         if (m_creature->Attack(pWho, true))
         {
-            m_creature->AddThreat(pWho, 0.0f);
+            m_creature->AddThreat(pWho);
             m_creature->SetInCombatWith(pWho);
             pWho->SetInCombatWith(m_creature);
 

@@ -47,7 +47,7 @@ void npc_escortAI::AttackStart(Unit* pWho)
 
     if (m_creature->Attack(pWho, true))
     {
-        m_creature->AddThreat(pWho, 0.0f);
+        m_creature->AddThreat(pWho);
         m_creature->SetInCombatWith(pWho);
         pWho->SetInCombatWith(m_creature);
 
@@ -101,7 +101,7 @@ bool npc_escortAI::AssistPlayerInCombat(Unit* pWho)
         else
         {
             pWho->SetInCombatWith(m_creature);
-            m_creature->AddThreat(pWho, 0.0f);
+            m_creature->AddThreat(pWho);
             return true;
         }
     }
@@ -132,7 +132,7 @@ void npc_escortAI::MoveInLineOfSight(Unit* pWho)
                 else if (m_creature->GetMap()->IsDungeon())
                 {
                     pWho->SetInCombatWith(m_creature);
-                    m_creature->AddThreat(pWho, 0.0f);
+                    m_creature->AddThreat(pWho);
                 }
             }
         }

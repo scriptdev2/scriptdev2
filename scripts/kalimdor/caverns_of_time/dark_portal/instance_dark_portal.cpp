@@ -287,11 +287,11 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
                 {
                     if (pBoss->GetEntry() == NPC_AEONUS)
                     {
-                        pBoss->AddThreat(pMedivh,0.0f);
+                        pBoss->AddThreat(pMedivh);
                     }
                     else
                     {
-                        pBoss->AddThreat(pTemp,0.0f);
+                        pBoss->AddThreat(pTemp);
                         pTemp->CastSpell(pBoss,SPELL_RIFT_CHANNEL,false);
                     }
                 }
