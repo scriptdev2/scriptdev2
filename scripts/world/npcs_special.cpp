@@ -125,8 +125,8 @@ struct MANGOS_DLL_DECL npc_air_force_botsAI : public ScriptedAI
 
             if (!spawnedTemplate)
             {
-                m_pSpawnAssoc = NULL;
                 error_db_log("SD2: Creature template entry %u does not exist in DB, which is required by npc_air_force_bots", m_pSpawnAssoc->m_uiSpawnedCreatureEntry);
+                m_pSpawnAssoc = NULL;
                 return;
             }
         }
