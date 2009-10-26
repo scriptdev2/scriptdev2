@@ -1,9 +1,8 @@
-From 52a2f249eb5f94ea070c169e5c0f15e212fa9b5e Mon Sep 17 00:00:00 2001
-From: NoFantasy <nofantasy@nf.no>
-Date: Wed, 29 Jul 2009 15:22:04 +0200
-Subject: [PATCH] ScriptDev2 patch
+From 87122c1232f145cbaac4e90339b4321fb03a0613 Mon Sep 17 00:00:00 2001
+From: Reve <reve@scriptdev2.com>
+Date: Mon, 26 Oct 2009 13:42:30 +0100
+Subject: [PATCH] ScriptDev2 patch.
 
-Signed-off-by: NoFantasy <nofantasy@nf.no>
 ---
  configure.ac             |    6 +++++-
  src/bindings/.gitignore  |    2 +-
@@ -12,7 +11,7 @@ Signed-off-by: NoFantasy <nofantasy@nf.no>
  4 files changed, 9 insertions(+), 5 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
-index 7a1b219..8cc9bfe 100644
+index e016db0..b29d062 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -276,7 +276,11 @@ AC_CONFIG_FILES([
@@ -49,7 +48,7 @@ index 2cc0efd..f2dbbc7 100644
 -SUBDIRS = universal
 +SUBDIRS = ScriptDev2
 diff --git a/src/mangosd/Makefile.am b/src/mangosd/Makefile.am
-index 3fd4068..076d8d8 100644
+index 608d0a1..62ee2ba 100644
 --- a/src/mangosd/Makefile.am
 +++ b/src/mangosd/Makefile.am
 @@ -34,7 +34,7 @@ mangos_worldd_SOURCES = \
@@ -61,15 +60,15 @@ index 3fd4068..076d8d8 100644
  	../game/libmangosgame.a \
  	../shared/Database/libmangosdatabase.a \
  	../shared/Config/libmangosconfig.a \
-@@ -45,7 +45,7 @@ mangos_worldd_LDADD = \
- 	../../dep/src/sockets/libmangossockets.a \
- 	../../dep/src/g3dlite/libg3dlite.a
+@@ -46,7 +46,7 @@ mangos_worldd_LDADD = \
+ 	../../dep/src/g3dlite/libg3dlite.a \
+ 	../../dep/tbb/libtbbmalloc.so
  
--mangos_worldd_LDFLAGS = -L../../dep/src/sockets -L../../dep/src/g3dlite -L../bindings/universal/ -L$(libdir) $(MANGOS_LIBS) -export-dynamic
-+mangos_worldd_LDFLAGS = -L../../dep/src/sockets -L../../dep/src/g3dlite -L../bindings/ScriptDev2/ -L$(libdir) $(MANGOS_LIBS) -export-dynamic
+-mangos_worldd_LDFLAGS = -L../../dep/src/sockets -L../../dep/src/g3dlite -L../bindings/universal/ -L../../dep/tbb -L$(libdir) $(MANGOS_LIBS) -export-dynamic
++mangos_worldd_LDFLAGS = -L../../dep/src/sockets -L../../dep/src/g3dlite -L../bindings/ScriptDev2/ -L../../dep/tbb -L$(libdir) $(MANGOS_LIBS) -export-dynamic
  
  ## Additional files to include when running 'make dist'
  #  Include world daemon configuration
 -- 
-1.6.3.2.1299.gee46c
+1.6.4.msysgit.0
 
