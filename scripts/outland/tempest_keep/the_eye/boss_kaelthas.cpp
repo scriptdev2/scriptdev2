@@ -825,20 +825,14 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                         m_uiMindControl_Timer -= uiDiff;
                 }
 
-                //m_uiPhoenix_Timer
-                if (m_uiPhoenix_Timer < uiDiff)
-                {
-                    DoCast(m_creature, SPELL_PHOENIX_ANIMATION);
-
-                    if (Creature* pPhoenix = m_creature->SummonCreature(NPC_PHOENIX, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 45000))
+                 // Summon Phoenix
+                 if (m_uiPhoenix_Timer < uiDiff)
+                 {
+                    if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                     {
-                        if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                            pPhoenix->AI()->AttackStart(pTarget);
+                        DoCast(pTarget, SPELL_PHOENIX_ANIMATION);
+                        DoScriptText(urand(0, 1) ? SAY_SUMMON_PHOENIX1 : SAY_SUMMON_PHOENIX2, pTarget);
                     }
-                    else
-                        error_log("SD2: Kael'Thas Phoenix could not be spawned");
-
-                    DoScriptText(urand(0, 1) ? SAY_SUMMON_PHOENIX1 : SAY_SUMMON_PHOENIX2, m_creature);
 
                     m_uiPhoenix_Timer = 60000;
                 }
