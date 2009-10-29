@@ -25,6 +25,7 @@ EndScriptData
 #include "precompiled.h"
 #include "escort_ai.h"
 #include "ObjectMgr.h"
+#include "GameEventMgr.h"
 
 /* ContentData
 npc_air_force_bots       80%    support for misc (invisible) guard bots in areas where player allowed to fly. Summon guards after a preset time if tagged by spell
@@ -34,6 +35,7 @@ npc_guardian            100%    guardianAI used to prevent players from accessin
 npc_garments_of_quests  80%     NPC's related to all Garments of-quests 5621, 5624, 5625, 5648, 5650
 npc_injured_patient     100%    patients for triage-quests (6622 and 6624)
 npc_doctor              100%    Gustaf Vanhowzen and Gregory Victor, quest 6622 and 6624 (Triage)
+npc_innkeeper           25%     Innkeepers in general. A lot do be done here (misc options for events)
 npc_kingdom_of_dalaran_quests   Misc NPC's gossip option related to quests 12791, 12794 and 12796
 npc_lunaclaw_spirit     100%    Appears at two different locations, quest 6001/6002
 npc_mount_vendor        100%    Regular mount vendors all over the world. Display gossip if player doesn't meet the requirements to buy
@@ -999,6 +1001,96 @@ CreatureAI* GetAI_npc_guardian(Creature* pCreature)
     return new npc_guardianAI(pCreature);
 }
 
+/*########
+# npc_innkeeper
+#########*/
+
+// Script applied to all innkeepers by npcflag.
+// Are there any known innkeepers that does not hape the options in the below?
+// (remember gossipHello is not called unless npcflag|1 is present)
+
+enum
+{
+    TEXT_ID_WHAT_TO_DO              = 1853,
+
+    SPELL_TRICK_OR_TREAT            = 24751,                 // create item or random buff
+    SPELL_TRICK_OR_TREATED          = 24755,                 // buff player get when tricked or treated
+    SPELL_TREAT                     = 24715,
+    SPELL_TRICK_NO_ATTACK           = 24753,
+    SPELL_TRICK_GNOME               = 24713,
+    SPELL_TRICK_GHOST_MALE          = 24735,
+    SPELL_TRICK_GHOST_FEMALE        = 24736,
+    SPELL_TRICK_NINJA_MALE          = 24710,
+    SPELL_TRICK_NINJA_FEMALE        = 24711,
+    SPELL_TRICK_PIRATE_MALE         = 24708,
+    SPELL_TRICK_PIRATE_FEMALE       = 24709,
+    SPELL_TRICK_SKELETON            = 24723,
+    SPELL_TRICK_BAT                 = 24732
+};
+
+#define GOSSIP_ITEM_TRICK_OR_TREAT  "Trick or Treat!"
+#define GOSSIP_ITEM_WHAT_TO_DO      "What can I do at an Inn?"
+
+bool GossipHello_npc_innkeeper(Player* pPlayer, Creature* pCreature)
+{
+    pCreature->prepareGossipMenu(pPlayer);
+
+    if (IsHolidayActive(HOLIDAY_HALLOWS_END) && !pPlayer->HasAura(SPELL_TRICK_OR_TREATED,0))
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TRICK_OR_TREAT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+
+    // Should only apply to innkeeper close to start areas. Area flag or other unknown fields?
+    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_WHAT_TO_DO, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+
+    pPlayer->TalkedToCreature(pCreature->GetEntry(), pCreature->GetGUID());
+    pCreature->sendPreparedGossip(pPlayer);
+    return true;
+}
+
+bool GossipSelect_npc_innkeeper(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+{
+    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
+    {
+        pPlayer->SEND_GOSSIP_MENU(TEXT_ID_WHAT_TO_DO, pCreature->GetGUID());
+        return true;
+    }
+
+    if (uiAction == GOSSIP_ACTION_INFO_DEF+2)
+    {
+        pPlayer->CLOSE_GOSSIP_MENU();
+
+        // either trick or treat, 50% chance
+        if (urand(0, 1))
+        {
+            pPlayer->CastSpell(pPlayer, SPELL_TREAT, true);
+        }
+        else
+        {
+            uint32 uiTrickSpell = 0;
+
+            switch(urand(0, 9))                             // note that female characters can get male costumes and vice versa
+            {
+                case 0: uiTrickSpell = SPELL_TRICK_NO_ATTACK; break;
+                case 1: uiTrickSpell = SPELL_TRICK_GNOME; break;
+                case 2: uiTrickSpell = SPELL_TRICK_GHOST_MALE; break;
+                case 3: uiTrickSpell = SPELL_TRICK_GHOST_FEMALE; break;
+                case 4: uiTrickSpell = SPELL_TRICK_NINJA_MALE; break;
+                case 5: uiTrickSpell = SPELL_TRICK_NINJA_FEMALE; break;
+                case 6: uiTrickSpell = SPELL_TRICK_PIRATE_MALE; break;
+                case 7: uiTrickSpell = SPELL_TRICK_PIRATE_FEMALE; break;
+                case 8: uiTrickSpell = SPELL_TRICK_SKELETON; break;
+                case 9: uiTrickSpell = SPELL_TRICK_BAT; break;
+            }
+
+            pPlayer->CastSpell(pPlayer, uiTrickSpell, true);
+        }
+
+        pPlayer->CastSpell(pPlayer, SPELL_TRICK_OR_TREATED, true);
+        return true;                                        // prevent mangos handling
+    }
+
+    return false;                                           // player didn't select scripted gossip, normal core handling
+}
+
 /*######
 ## npc_kingdom_of_dalaran_quests
 ######*/
@@ -1377,6 +1469,12 @@ void AddSC_npcs_special()
     newscript = new Script;
     newscript->Name = "npc_guardian";
     newscript->GetAI = &GetAI_npc_guardian;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "npc_innkeeper";
+    newscript->pGossipHello = &GossipHello_npc_innkeeper;
+    newscript->pGossipSelect = &GossipSelect_npc_innkeeper;
     newscript->RegisterSelf();
 
     newscript = new Script;

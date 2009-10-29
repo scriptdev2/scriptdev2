@@ -465,7 +465,6 @@ scripts/world/go_scripts.cpp \
 scripts/world/guards.cpp \
 scripts/world/item_scripts.cpp \
 scripts/world/mob_generic_creature.cpp \
-scripts/world/npc_innkeeper.cpp \
 scripts/world/npc_professions.cpp \
 scripts/world/npcs_special.cpp \
 system/ScriptLoader.cpp \
