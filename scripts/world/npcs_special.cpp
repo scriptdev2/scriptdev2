@@ -381,14 +381,20 @@ CreatureAI* GetAI_npc_dancing_flames(Creature* pCreature)
 ## Triage quest
 ######*/
 
-#define SAY_DOC1    -1000201
-#define SAY_DOC2    -1000202
-#define SAY_DOC3    -1000203
+enum
+{
+    SAY_DOC1                    = -1000201,
+    SAY_DOC2                    = -1000202,
+    SAY_DOC3                    = -1000203,
 
-#define DOCTOR_ALLIANCE     12939
-#define DOCTOR_HORDE        12920
-#define ALLIANCE_COORDS     7
-#define HORDE_COORDS        6
+    QUEST_TRIAGE_H              = 6622,
+    QUEST_TRIAGE_A              = 6624,
+
+    DOCTOR_ALLIANCE             = 12939,
+    DOCTOR_HORDE                = 12920,
+    ALLIANCE_COORDS             = 7,
+    HORDE_COORDS                = 6
+};
 
 struct Location
 {
@@ -639,10 +645,10 @@ void npc_doctorAI::PatientDied(Location* Point)
 
         if (PatientDiedCount > 5 && Event)
         {
-            if (pPlayer->GetQuestStatus(6624) == QUEST_STATUS_INCOMPLETE)
-                pPlayer->FailQuest(6624);
-            else if (pPlayer->GetQuestStatus(6622) == QUEST_STATUS_INCOMPLETE)
-                pPlayer->FailQuest(6622);
+            if (pPlayer->GetQuestStatus(QUEST_TRIAGE_A) == QUEST_STATUS_INCOMPLETE)
+                pPlayer->FailQuest(QUEST_TRIAGE_A);
+            else if (pPlayer->GetQuestStatus(QUEST_TRIAGE_H) == QUEST_STATUS_INCOMPLETE)
+                pPlayer->FailQuest(QUEST_TRIAGE_H);
 
             Reset();
             return;
@@ -659,7 +665,7 @@ void npc_doctorAI::PatientSaved(Creature* soldier, Player* pPlayer, Location* Po
 {
     if (pPlayer && Playerguid == pPlayer->GetGUID())
     {
-        if ((pPlayer->GetQuestStatus(6624) == QUEST_STATUS_INCOMPLETE) || (pPlayer->GetQuestStatus(6622) == QUEST_STATUS_INCOMPLETE))
+        if ((pPlayer->GetQuestStatus(QUEST_TRIAGE_A) == QUEST_STATUS_INCOMPLETE) || (pPlayer->GetQuestStatus(QUEST_TRIAGE_H) == QUEST_STATUS_INCOMPLETE))
         {
             ++PatientSavedCount;
 
@@ -675,10 +681,10 @@ void npc_doctorAI::PatientSaved(Creature* soldier, Player* pPlayer, Location* Po
                     }
                 }
 
-                if (pPlayer->GetQuestStatus(6624) == QUEST_STATUS_INCOMPLETE)
-                    pPlayer->AreaExploredOrEventHappens(6624);
-                else if (pPlayer->GetQuestStatus(6622) == QUEST_STATUS_INCOMPLETE)
-                    pPlayer->AreaExploredOrEventHappens(6622);
+                if (pPlayer->GetQuestStatus(QUEST_TRIAGE_A) == QUEST_STATUS_INCOMPLETE)
+                    pPlayer->GroupEventHappens(QUEST_TRIAGE_A, m_creature);
+                else if (pPlayer->GetQuestStatus(QUEST_TRIAGE_H) == QUEST_STATUS_INCOMPLETE)
+                    pPlayer->GroupEventHappens(QUEST_TRIAGE_H, m_creature);
 
                 Reset();
                 return;
@@ -744,8 +750,11 @@ void npc_doctorAI::UpdateAI(const uint32 diff)
 
 bool QuestAccept_npc_doctor(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
 {
-    if ((pQuest->GetQuestId() == 6624) || (pQuest->GetQuestId() == 6622))
-        ((npc_doctorAI*)pCreature->AI())->BeginEvent(pPlayer);
+    if ((pQuest->GetQuestId() == QUEST_TRIAGE_A) || (pQuest->GetQuestId() == QUEST_TRIAGE_H))
+    {
+        if (npc_doctorAI* pDocAI = dynamic_cast<npc_doctorAI*>(pCreature->AI()))
+            pDocAI->BeginEvent(pPlayer);
+    }
 
     return true;
 }
