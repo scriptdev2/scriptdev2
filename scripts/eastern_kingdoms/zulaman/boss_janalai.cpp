@@ -71,7 +71,7 @@ enum
 };
 
 //spells should summon Fire Bomb, used in Throw5Bombs()
-uint32 m_auiSpellFireBombSummon[]=
+static uint32 m_auiSpellFireBombSummon[]=
 {
     42622, 42623, 42624, 42625, 42626
 };
@@ -256,6 +256,10 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
                     //visual spell, spell hit pSummoned after a short time
                     m_creature->CastSpell(pSummoned,SPELL_FIRE_BOMB_THROW,true);
                 }
+                else
+                {
+                    pSummoned->CastSpell(pSummoned, SPELL_FIRE_WALL, true);
+                }
                 break;
         }
     }
@@ -269,64 +273,42 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
 
     void CreateFireWall()                                   // Create Firewall
     {
-        Creature* wall = NULL;
-        wall = m_creature->SummonCreature(NPC_FIRE_BOMB,FireWallCoords[0][0],FireWallCoords[0][1],FireWallCoords[0][2],FireWallCoords[0][3],TEMPSUMMON_TIMED_DESPAWN,11500);
-        if (wall)
-            wall->CastSpell(wall,SPELL_FIRE_WALL,false);
+        m_creature->SummonCreature(NPC_FIRE_BOMB,FireWallCoords[0][0],FireWallCoords[0][1],FireWallCoords[0][2],FireWallCoords[0][3],TEMPSUMMON_TIMED_DESPAWN,11500);
 
-        wall = m_creature->SummonCreature(NPC_FIRE_BOMB,FireWallCoords[0][0],FireWallCoords[0][1]+5,FireWallCoords[0][2],FireWallCoords[0][3],TEMPSUMMON_TIMED_DESPAWN,11500);
-        if (wall)
-            wall->CastSpell(wall,SPELL_FIRE_WALL,false);
+        m_creature->SummonCreature(NPC_FIRE_BOMB,FireWallCoords[0][0],FireWallCoords[0][1]+5,FireWallCoords[0][2],FireWallCoords[0][3],TEMPSUMMON_TIMED_DESPAWN,11500);
 
-        wall = m_creature->SummonCreature(NPC_FIRE_BOMB,FireWallCoords[0][0],FireWallCoords[0][1]-5,FireWallCoords[0][2],FireWallCoords[0][3],TEMPSUMMON_TIMED_DESPAWN,11500);
-        if (wall)
-            wall->CastSpell(wall,SPELL_FIRE_WALL,false);
+        m_creature->SummonCreature(NPC_FIRE_BOMB,FireWallCoords[0][0],FireWallCoords[0][1]-5,FireWallCoords[0][2],FireWallCoords[0][3],TEMPSUMMON_TIMED_DESPAWN,11500);
 
-        wall = m_creature->SummonCreature(NPC_FIRE_BOMB,FireWallCoords[1][0]-2,FireWallCoords[1][1]-2,FireWallCoords[1][2],FireWallCoords[1][3],TEMPSUMMON_TIMED_DESPAWN,11500);
-        if (wall)
-            wall->CastSpell(wall,SPELL_FIRE_WALL,false);
+        m_creature->SummonCreature(NPC_FIRE_BOMB,FireWallCoords[1][0]-2,FireWallCoords[1][1]-2,FireWallCoords[1][2],FireWallCoords[1][3],TEMPSUMMON_TIMED_DESPAWN,11500);
 
-        wall = m_creature->SummonCreature(NPC_FIRE_BOMB,FireWallCoords[1][0]+2,FireWallCoords[1][1]+2,FireWallCoords[1][2],FireWallCoords[1][3],TEMPSUMMON_TIMED_DESPAWN,11500);
-        if (wall)
-            wall->CastSpell(wall,SPELL_FIRE_WALL,false);
+        m_creature->SummonCreature(NPC_FIRE_BOMB,FireWallCoords[1][0]+2,FireWallCoords[1][1]+2,FireWallCoords[1][2],FireWallCoords[1][3],TEMPSUMMON_TIMED_DESPAWN,11500);
 
-        wall = m_creature->SummonCreature(NPC_FIRE_BOMB,FireWallCoords[2][0],FireWallCoords[2][1],FireWallCoords[2][2],FireWallCoords[2][3],TEMPSUMMON_TIMED_DESPAWN,11500);
-        if (wall)
-            wall->CastSpell(wall,SPELL_FIRE_WALL,false);
+        m_creature->SummonCreature(NPC_FIRE_BOMB,FireWallCoords[2][0],FireWallCoords[2][1],FireWallCoords[2][2],FireWallCoords[2][3],TEMPSUMMON_TIMED_DESPAWN,11500);
 
-        wall = m_creature->SummonCreature(NPC_FIRE_BOMB,FireWallCoords[2][0],FireWallCoords[2][1]-5,FireWallCoords[2][2],FireWallCoords[2][3],TEMPSUMMON_TIMED_DESPAWN,11500);
-        if (wall)
-            wall->CastSpell(wall,SPELL_FIRE_WALL,false);
+        m_creature->SummonCreature(NPC_FIRE_BOMB,FireWallCoords[2][0],FireWallCoords[2][1]-5,FireWallCoords[2][2],FireWallCoords[2][3],TEMPSUMMON_TIMED_DESPAWN,11500);
 
-        wall = m_creature->SummonCreature(NPC_FIRE_BOMB,FireWallCoords[2][0],FireWallCoords[2][1]+5,FireWallCoords[2][2],FireWallCoords[2][3],TEMPSUMMON_TIMED_DESPAWN,11500);
-        if (wall)
-            wall->CastSpell(wall,SPELL_FIRE_WALL,false);
+        m_creature->SummonCreature(NPC_FIRE_BOMB,FireWallCoords[2][0],FireWallCoords[2][1]+5,FireWallCoords[2][2],FireWallCoords[2][3],TEMPSUMMON_TIMED_DESPAWN,11500);
 
-        wall = m_creature->SummonCreature(NPC_FIRE_BOMB,FireWallCoords[3][0]-2,FireWallCoords[3][1],FireWallCoords[3][2],FireWallCoords[3][3],TEMPSUMMON_TIMED_DESPAWN,11500);
-        if (wall)
-            wall->CastSpell(wall,SPELL_FIRE_WALL,false);
+        m_creature->SummonCreature(NPC_FIRE_BOMB,FireWallCoords[3][0]-2,FireWallCoords[3][1],FireWallCoords[3][2],FireWallCoords[3][3],TEMPSUMMON_TIMED_DESPAWN,11500);
 
-        wall = m_creature->SummonCreature(NPC_FIRE_BOMB,FireWallCoords[3][0]+2,FireWallCoords[3][1],FireWallCoords[3][2],FireWallCoords[3][3],TEMPSUMMON_TIMED_DESPAWN,11500);
-        if (wall)
-            wall->CastSpell(wall,SPELL_FIRE_WALL,false);
+        m_creature->SummonCreature(NPC_FIRE_BOMB,FireWallCoords[3][0]+2,FireWallCoords[3][1],FireWallCoords[3][2],FireWallCoords[3][3],TEMPSUMMON_TIMED_DESPAWN,11500);
     }
 
-    //workaround for summon to emulate effect. EffectImplicitTarget 73 not implemented
     void Throw5Bombs()
     {
         //all available spells (each spell has different radius for summon location)
         uint8 uiMaxBombs = sizeof(m_auiSpellFireBombSummon)/sizeof(uint32);
 
-        float fX, fY, fZ;
-        float fRadius = 5.0f;
+        //float fX, fY, fZ;
+        //float fRadius = 5.0f;
 
         for(uint8 i = 0; i < uiMaxBombs; ++i)
         {
             m_creature->CastSpell(m_creature, m_auiSpellFireBombSummon[i], true);
 
             //workaround part
-            m_creature->GetRandomPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), fRadius+(fRadius*i), fX, fY, fZ);
-            m_creature->SummonCreature(NPC_FIRE_BOMB, fX, fY, fZ, 0.0f, TEMPSUMMON_TIMED_DESPAWN, MINUTE*IN_MILISECONDS);
+            //m_creature->GetRandomPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), fRadius+(fRadius*i), fX, fY, fZ);
+            //m_creature->SummonCreature(NPC_FIRE_BOMB, fX, fY, fZ, 0.0f, TEMPSUMMON_TIMED_DESPAWN, MINUTE*IN_MILISECONDS);
         }
 
         ++m_uiBombCounter;
