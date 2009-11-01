@@ -116,15 +116,16 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
             for(std::list<HostileReference *>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
             {
                 target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
+
                 // exclude pets & totems
-                if (target->GetTypeId() != TYPEID_PLAYER)
+                if (!target || target->GetTypeId() != TYPEID_PLAYER)
                     continue;
 
                 //18 yard radius minimum
-                if (target && !target->IsWithinDist(m_creature, 18.0f, false))
-                    target_list.push_back(target);
+                if (target->IsWithinDist(m_creature, 18.0f, false))
+                    continue;
 
-                target = NULL;
+                target_list.push_back(target);
             }
 
             if (target_list.size())
