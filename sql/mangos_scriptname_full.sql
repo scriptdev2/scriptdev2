@@ -1,6 +1,8 @@
 /*  */
 
 /* AREATRIGGER */
+DELETE FROM areatrigger_scripts WHERE entry=4591;
+INSERT INTO areatrigger_scripts VALUES (4591,'at_coilfang_waterfall');
 DELETE FROM areatrigger_scripts WHERE entry=4560;
 INSERT INTO areatrigger_scripts VALUES (4560,'at_legion_teleporter');
 DELETE FROM areatrigger_scripts WHERE entry=3066;

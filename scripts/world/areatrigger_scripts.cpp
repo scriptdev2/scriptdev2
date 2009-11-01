@@ -22,10 +22,35 @@ SDCategory: Areatrigger
 EndScriptData */
 
 /* ContentData
-at_legion_teleporter    4560 Teleporter TO Invasion Point: Cataclysm
+at_coilfang_waterfall           4591
+at_legion_teleporter            4560 Teleporter TO Invasion Point: Cataclysm
+at_ravenholdt
+at_warsong_slaughterhouse
+at_warsong_grainery
+at_torp_farm
 EndContentData */
 
 #include "precompiled.h"
+
+/*######
+## at_coilfang_waterfall
+######*/
+
+enum
+{
+    GO_COILFANG_WATERFALL   = 184212
+};
+
+bool AreaTrigger_at_coilfang_waterfall(Player* pPlayer, AreaTriggerEntry* pAt)
+{
+    if (GameObject* pGo = GetClosestGameObjectWithEntry(pPlayer, GO_COILFANG_WATERFALL, 35.0f))
+    {
+        if (pGo->getLootState() == GO_READY)
+            pGo->UseDoorOrButton();
+    }
+
+    return false;
+}
 
 /*######
 ## at_legion_teleporter
@@ -118,6 +143,11 @@ bool AreaTrigger_at_torp_farm(Player* pPlayer, AreaTriggerEntry *pAt)
 void AddSC_areatrigger_scripts()
 {
     Script *newscript;
+
+    newscript = new Script;
+    newscript->Name = "at_coilfang_waterfall";
+    newscript->pAreaTrigger = &AreaTrigger_at_coilfang_waterfall;
+    newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "at_legion_teleporter";
