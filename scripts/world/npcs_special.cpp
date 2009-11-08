@@ -1180,7 +1180,7 @@ bool GossipSelect_npc_lunaclaw_spirit(Player* pPlayer, Creature* pCreature, uint
     if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
     {
         pPlayer->SEND_GOSSIP_MENU(TEXT_ID_PROGRESS, pCreature->GetGUID());
-        pPlayer->AreaExploredOrEventHappens((pPlayer->getRace() == ALLIANCE) ? QUEST_BODY_HEART_A : QUEST_BODY_HEART_H);
+        pPlayer->AreaExploredOrEventHappens((pPlayer->GetTeam() == ALLIANCE) ? QUEST_BODY_HEART_A : QUEST_BODY_HEART_H);
     }
     return true;
 }
