@@ -128,13 +128,11 @@ struct MANGOS_DLL_DECL boss_nadoxAI : public ScriptedAI
         std::list<Creature* > lCreatureList;
         GetCreatureListWithEntryInGrid(lCreatureList, m_creature, uiEntry, fRange);
 
-        if (!lCreatureList.size())
+        if (lCreatureList.empty())
             return NULL;
 
-        uint32 uiCount = urand(1, lCreatureList.size());
         std::list<Creature* >::iterator iter = lCreatureList.begin();
-        for(; uiCount != 0; --uiCount)
-             ++iter;
+        advance(iter, urand(0, lCreatureList.size()-1));
 
         return *iter;
     }
