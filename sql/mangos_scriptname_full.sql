@@ -867,6 +867,7 @@ UPDATE creature_template SET ScriptName='npc_kaya' WHERE entry=11856;
 UPDATE creature_template SET ScriptName='npc_loklira_the_crone' WHERE entry=29975;
 UPDATE creature_template SET ScriptName='npc_thorim' WHERE entry=29445;
 UPDATE creature_template SET ScriptName='npc_roxi_ramrocket' WHERE entry=31247;
+UPDATE creature_template SET ScriptName = 'npc_frostborn_scout' WHERE entry = 29811;
 
 /* STORMWIND CITY */
 UPDATE creature_template SET ScriptName='npc_archmage_malin' WHERE entry=2708;
