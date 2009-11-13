@@ -107,6 +107,12 @@ struct MANGOS_DLL_DECL boss_faerlinaAI : public ScriptedAI
             m_pInstance->SetData(TYPE_FAERLINA, DONE);
     }
 
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_FAERLINA, FAIL);
+    }
+
     void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())

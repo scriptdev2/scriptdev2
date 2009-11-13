@@ -106,6 +106,12 @@ struct MANGOS_DLL_DECL boss_anubrekhanAI : public ScriptedAI
             m_pInstance->SetData(TYPE_ANUB_REKHAN, DONE);
     }
 
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_ANUB_REKHAN, FAIL);
+    }
+
     void MoveInLineOfSight(Unit* pWho)
     {
         if (!m_bHasTaunted && m_creature->IsWithinDistInMap(pWho, 60.0f))

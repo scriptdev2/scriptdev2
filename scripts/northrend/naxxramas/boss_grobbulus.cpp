@@ -28,4 +28,4 @@ Mutating Injection 28169
 Enrages 26527*/
 
 #include "precompiled.h"
-#include "precompiled.h"
+#include "naxxramas.h"
