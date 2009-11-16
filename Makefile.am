@@ -299,6 +299,7 @@ scripts/northrend/icecrown.cpp \
 scripts/northrend/sholazar_basin.cpp \
 scripts/northrend/storm_peaks.cpp \
 scripts/northrend/howling_fjord.cpp \
+scripts/northrend/zuldrak.cpp \
 scripts/northrend/azjol-nerub/ahnkahet/boss_jedoga.cpp \
 scripts/northrend/azjol-nerub/ahnkahet/boss_nadox.cpp \
 scripts/northrend/azjol-nerub/ahnkahet/boss_taldaram.cpp \
