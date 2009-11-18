@@ -43,7 +43,7 @@ struct MANGOS_DLL_DECL boss_chrono_lord_dejaAI : public ScriptedAI
     boss_chrono_lord_dejaAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
+        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
         Reset();
     }
 

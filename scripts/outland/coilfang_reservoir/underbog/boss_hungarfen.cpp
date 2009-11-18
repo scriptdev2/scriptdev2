@@ -30,7 +30,7 @@ struct MANGOS_DLL_DECL boss_hungarfenAI : public ScriptedAI
 {
     boss_hungarfenAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
+        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
         Reset();
     }
 

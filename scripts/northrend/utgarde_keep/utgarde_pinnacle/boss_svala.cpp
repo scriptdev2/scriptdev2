@@ -68,7 +68,7 @@ struct MANGOS_DLL_DECL boss_svalaAI : public ScriptedAI
     boss_svalaAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
+        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
         m_bIsIntroDone = false;
         Reset();
     }

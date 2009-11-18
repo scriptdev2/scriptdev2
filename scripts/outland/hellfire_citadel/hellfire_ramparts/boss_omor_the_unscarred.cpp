@@ -46,7 +46,7 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
     boss_omor_the_unscarredAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         SetCombatMovement(false);
-        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
+        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
         Reset();
     }
 

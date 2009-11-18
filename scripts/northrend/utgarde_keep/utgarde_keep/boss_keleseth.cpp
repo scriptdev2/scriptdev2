@@ -62,7 +62,7 @@ struct MANGOS_DLL_DECL mob_vrykul_skeletonAI : public ScriptedAI
     mob_vrykul_skeletonAI(Creature* pCreature) : ScriptedAI(pCreature) 
     {
         m_pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
-        m_bIsHeroicMode = m_creature->GetMap()->IsHeroic();
+        m_bIsHeroicMode = m_creature->GetMap()->IsRaidOrHeroicDungeon();
         Reset();
     }
 
@@ -191,7 +191,7 @@ struct MANGOS_DLL_DECL boss_kelesethAI : public ScriptedAI
     boss_kelesethAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
+        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
         Reset();
     }
 
@@ -208,6 +208,8 @@ struct MANGOS_DLL_DECL boss_kelesethAI : public ScriptedAI
         m_uiFrostTombTimer = 20000;
         m_uiSummonTimer = 5000 ;
         m_uiShadowboltTimer = 0;
+
+        DespawnAdds();
     }
 
     void AttackStart(Unit* pWho)
@@ -231,6 +233,16 @@ struct MANGOS_DLL_DECL boss_kelesethAI : public ScriptedAI
     {
         for (uint8 i=0; i<4; ++i)
             m_creature->SummonCreature(NPC_VRYKUL_SKELETON, fAddPosition[0]+rand()%7, fAddPosition[1]+rand()%7, fAddPosition[2], fAddPosition[3], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, MINUTE*IN_MILISECONDS);
+    }
+
+    void DespawnAdds()
+    {
+        std::list<Creature*> lAddsList;
+        GetCreatureListWithEntryInGrid(lAddsList, m_creature, NPC_VRYKUL_SKELETON, 100.0f);
+
+        if (!lAddsList.empty())
+            for(std::list<Creature*>::iterator itr = lAddsList.begin(); itr != lAddsList.end(); ++itr)
+                (*itr)->ForcedDespawn();
     }
 
     void JustSummoned(Creature* pSummoned)

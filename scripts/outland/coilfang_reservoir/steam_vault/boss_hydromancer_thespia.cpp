@@ -46,7 +46,7 @@ struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
     boss_thespiaAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
+        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
         Reset();
     }
 
@@ -141,7 +141,7 @@ struct MANGOS_DLL_DECL mob_coilfang_waterelementalAI : public ScriptedAI
 {
     mob_coilfang_waterelementalAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
+        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
         Reset();
     }
 

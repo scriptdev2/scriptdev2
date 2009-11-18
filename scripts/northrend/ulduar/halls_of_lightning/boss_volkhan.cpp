@@ -75,7 +75,7 @@ struct MANGOS_DLL_DECL boss_volkhanAI : public ScriptedAI
     boss_volkhanAI(Creature *pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroic = pCreature->GetMap()->IsHeroic();
+        m_bIsHeroic = pCreature->GetMap()->IsRaidOrHeroicDungeon();
         Reset();
     }
 
@@ -357,7 +357,7 @@ struct MANGOS_DLL_DECL mob_molten_golemAI : public ScriptedAI
     mob_molten_golemAI(Creature *pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroic = pCreature->GetMap()->IsHeroic();
+        m_bIsHeroic = pCreature->GetMap()->IsRaidOrHeroicDungeon();
         Reset();
     }
 

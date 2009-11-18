@@ -48,7 +48,7 @@ struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public npc_escortAI
     boss_ambassador_hellmawAI(Creature* pCreature) : npc_escortAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
+        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
         Reset();
     }
 

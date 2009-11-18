@@ -165,7 +165,7 @@ struct MANGOS_DLL_DECL boss_sartharionAI : public ScriptedAI
     boss_sartharionAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
-        m_bIsHeroic = pCreature->GetMap()->IsHeroic();
+        m_bIsHeroic = pCreature->GetMap()->IsRaidOrHeroicDungeon();
         Reset();
     }
 
@@ -520,7 +520,7 @@ struct MANGOS_DLL_DECL dummy_dragonAI : public ScriptedAI
     dummy_dragonAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
-        m_bIsHeroic = pCreature->GetMap()->IsHeroic();
+        m_bIsHeroic = pCreature->GetMap()->IsRaidOrHeroicDungeon();
         Reset();
     }
 

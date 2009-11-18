@@ -137,7 +137,7 @@ struct MANGOS_DLL_DECL boss_warbringer_omroggAI : public ScriptedAI
         m_uiLeftHeadGUID  = 0;
         m_uiRightHeadGUID = 0;
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
+        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
         Reset();
     }
 

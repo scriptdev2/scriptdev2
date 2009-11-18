@@ -78,7 +78,7 @@ struct MANGOS_DLL_DECL npc_kalecgosAI : public ScriptedAI
     {
         Map* pMap = m_creature->GetMap();
 
-        if (!pMap || pMap->IsHeroic())
+        if (!pMap || pMap->IsRaidOrHeroicDungeon())
             return;
 
         Map::PlayerList const &lList = pMap->GetPlayers();

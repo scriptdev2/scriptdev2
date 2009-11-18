@@ -66,7 +66,7 @@ struct MANGOS_DLL_DECL boss_vazrudenAI : public ScriptedAI
     boss_vazrudenAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
+        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
         Reset();
     }
 
@@ -147,7 +147,7 @@ struct MANGOS_DLL_DECL boss_vazruden_heraldAI : public ScriptedAI
     {
         pCreature->SetActiveObjectState(true);
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
+        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
         Reset();
     }
 

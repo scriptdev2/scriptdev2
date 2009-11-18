@@ -105,7 +105,7 @@ struct MANGOS_DLL_DECL npc_brann_hosAI : public npc_escortAI
     npc_brann_hosAI(Creature* pCreature) : npc_escortAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
+        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
         Reset();
     }
 

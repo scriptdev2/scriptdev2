@@ -42,7 +42,7 @@ struct MANGOS_DLL_DECL boss_murmurAI : public ScriptedAI
     {
         SetCombatMovement(false);
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
+        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
         Reset();
     }
 

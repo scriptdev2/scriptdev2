@@ -90,7 +90,7 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
     boss_priestess_delrissaAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
+        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
         memset(&m_auiLackeyGUID, 0, sizeof(m_auiLackeyGUID));
         LackeyEntryList.clear();
         Reset();

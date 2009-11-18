@@ -54,7 +54,7 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
     boss_selin_fireheartAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
+        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
 
         Crystals.clear();
         //GUIDs per instance is static, so we only need to load them once.

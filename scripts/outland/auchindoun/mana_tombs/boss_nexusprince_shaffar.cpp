@@ -195,7 +195,7 @@ struct MANGOS_DLL_DECL mob_ethereal_beaconAI : public ScriptedAI
 {
     mob_ethereal_beaconAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
+        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
         Reset();
     }
 

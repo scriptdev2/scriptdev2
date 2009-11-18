@@ -79,7 +79,7 @@ struct MANGOS_DLL_DECL boss_s_and_d_dummyAI : public ScriptedAI
     boss_s_and_d_dummyAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroicMode = pCreature->GetMap()->IsHeroic();
+        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
         m_uiGhostGUID = 0;
         Reset();
     }

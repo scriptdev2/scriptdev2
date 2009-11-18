@@ -98,7 +98,7 @@ struct MANGOS_DLL_DECL instance_gundrak : public ScriptedInstance
         {
             case GO_ECK_DOOR:
                 m_uiEckDoorGUID = pGo->GetGUID();
-                if ((m_auiEncounter[1] == DONE) && instance->IsHeroic())
+                if ((m_auiEncounter[1] == DONE) && instance->IsRaidOrHeroicDungeon())
                     DoUseDoorOrButton(m_uiEckDoorGUID);
                 break;
             case GO_ECK_UNDERWATER_DOOR:
@@ -174,7 +174,7 @@ struct MANGOS_DLL_DECL instance_gundrak : public ScriptedInstance
                 m_auiEncounter[1] = uiData;
                 if (uiData == DONE)
                 {
-                    if (instance->IsHeroic())
+                    if (instance->IsRaidOrHeroicDungeon())
                         DoUseDoorOrButton(m_uiEckDoorGUID);
                     if (GameObject* pGo = instance->GetGameObject(m_uiAltarOfMoorabiGUID))
                         pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
