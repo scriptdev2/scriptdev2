@@ -49,12 +49,12 @@ struct MANGOS_DLL_DECL boss_loathebAI : public ScriptedAI
     boss_loathebAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
-    bool m_bIsHeroicMode;
+    bool m_bIsRegularMode;
 
     uint32 m_uiCorruptedMindTimer;
     uint32 m_uiPoisonAuraTimer;

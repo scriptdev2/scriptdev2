@@ -79,12 +79,12 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
     boss_felblood_kaelthasAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
-    bool m_bIsHeroicMode;
+    bool m_bIsRegularMode;
 
     uint32 FireballTimer;
     uint32 PhoenixTimer;
@@ -277,7 +277,7 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
             case 0:
             {
                 // *Heroic mode only:
-                if (m_bIsHeroicMode)
+                if (!m_bIsRegularMode)
                 {
                     if (PyroblastTimer < diff)
                     {
@@ -291,7 +291,7 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
 
                 if (FireballTimer < diff)
                 {
-                    DoCast(m_creature->getVictim(), m_bIsHeroicMode ? SPELL_FIREBALL_HEROIC : SPELL_FIREBALL_NORMAL);
+                    DoCast(m_creature->getVictim(), m_bIsRegularMode ? SPELL_FIREBALL_NORMAL : SPELL_FIREBALL_HEROIC);
                     FireballTimer = urand(2000, 6000);
                 }else FireballTimer -= diff;
 

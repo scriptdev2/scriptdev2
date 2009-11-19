@@ -84,7 +84,7 @@ struct MANGOS_DLL_DECL boss_bjarngrimAI : public ScriptedAI
     boss_bjarngrimAI(Creature *pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroic = pCreature->GetMap()->IsRaidOrHeroicDungeon();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         m_uiStance = STANCE_DEFENSIVE;
         memset(&m_auiStormforgedLieutenantGUID, 0, sizeof(m_auiStormforgedLieutenantGUID));
         Reset();
@@ -92,7 +92,7 @@ struct MANGOS_DLL_DECL boss_bjarngrimAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    bool m_bIsHeroic;
+    bool m_bIsRegularMode;
     bool m_bIsChangingStance;
 
     uint8 m_uiChargingStatus;
@@ -356,12 +356,12 @@ struct MANGOS_DLL_DECL mob_stormforged_lieutenantAI : public ScriptedAI
     mob_stormforged_lieutenantAI(Creature *pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
-        m_bIsHeroic = pCreature->GetMap()->IsRaidOrHeroicDungeon();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
-    bool m_bIsHeroic;
+    bool m_bIsRegularMode;
 
     uint32 m_uiArcWeld_Timer;
     uint32 m_uiRenewSteel_Timer;
@@ -405,7 +405,7 @@ struct MANGOS_DLL_DECL mob_stormforged_lieutenantAI : public ScriptedAI
                 if (Creature* pBjarngrim = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_BJARNGRIM)))
                 {
                     if (pBjarngrim->isAlive())
-                        DoCast(pBjarngrim, m_bIsHeroic ? SPELL_RENEW_STEEL_H : SPELL_RENEW_STEEL_N);
+                        DoCast(pBjarngrim, m_bIsRegularMode ? SPELL_RENEW_STEEL_N : SPELL_RENEW_STEEL_H);
                 }
             }
             m_uiRenewSteel_Timer = urand(10000, 14000);

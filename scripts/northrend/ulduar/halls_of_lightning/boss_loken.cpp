@@ -59,13 +59,13 @@ struct MANGOS_DLL_DECL boss_lokenAI : public ScriptedAI
     boss_lokenAI(Creature *pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroic = pCreature->GetMap()->IsRaidOrHeroicDungeon();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
 
-    bool m_bIsHeroic;
+    bool m_bIsRegularMode;
     bool m_bIsAura;
 
     uint32 m_uiArcLightning_Timer;
@@ -142,11 +142,11 @@ struct MANGOS_DLL_DECL boss_lokenAI : public ScriptedAI
                             float m_fDist = m_creature->GetDistance(i->getSource());
 
                             if (m_fDist <= 1.0f) // Less than 1 yard
-                                dmg = (m_bIsHeroic ? 850 : 800); // need to correct damage
+                                dmg = (m_bIsRegularMode ? 800 : 850); // need to correct damage
                             else // Further from 1 yard
-                                dmg = round((m_bIsHeroic ? 250 : 200) * m_fDist) + (m_bIsHeroic ? 850 : 800); // need to correct damage
+                                dmg = round((m_bIsRegularMode ? 200 : 250) * m_fDist) + (m_bIsRegularMode ? 800 : 850); // need to correct damage
 
-                            m_creature->CastCustomSpell(i->getSource(), (m_bIsHeroic ? 59837 : 52942), &dmg, 0, 0, false);
+                            m_creature->CastCustomSpell(i->getSource(), (m_bIsRegularMode ? 52942 : 59837), &dmg, 0, 0, false);
                         }
                 }
                 m_uiPulsingShockwave_Timer = 2000;
@@ -159,7 +159,7 @@ struct MANGOS_DLL_DECL boss_lokenAI : public ScriptedAI
                 //breaks at movement, can we assume when it's time, this spell is casted and also must stop movement?
                 //m_creature->CastSpell(m_creature, SPELL_PULSING_SHOCKWAVE_AURA, true);
 
-                  //DoCast(m_creature, m_bIsHeroic ? SPELL_PULSING_SHOCKWAVE_H : SPELL_PULSING_SHOCKWAVE_N); // need core support
+                  //DoCast(m_creature, m_bIsRegularMode ? SPELL_PULSING_SHOCKWAVE_N : SPELL_PULSING_SHOCKWAVE_H); // need core support
                 m_bIsAura = true;
                 m_uiResumePulsingShockwave_Timer = 0;
             }
@@ -186,10 +186,10 @@ struct MANGOS_DLL_DECL boss_lokenAI : public ScriptedAI
                 case 2: DoScriptText(SAY_NOVA_3, m_creature);break;
             }
 
-            DoCast(m_creature, m_bIsHeroic ? SPELL_LIGHTNING_NOVA_H : SPELL_LIGHTNING_NOVA_N);
+            DoCast(m_creature, m_bIsRegularMode ? SPELL_LIGHTNING_NOVA_N : SPELL_LIGHTNING_NOVA_H);
 
             m_bIsAura = false;
-            m_uiResumePulsingShockwave_Timer = (m_bIsHeroic ? 4000 : 5000); // Pause Pulsing Shockwave aura
+            m_uiResumePulsingShockwave_Timer = (m_bIsRegularMode ? 5000 : 4000); // Pause Pulsing Shockwave aura
             m_uiLightningNova_Timer = urand(20000, 21000);
         }
         else

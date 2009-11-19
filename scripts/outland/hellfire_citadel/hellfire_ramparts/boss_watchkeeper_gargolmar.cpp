@@ -42,11 +42,11 @@ struct MANGOS_DLL_DECL boss_watchkeeper_gargolmarAI : public ScriptedAI
 {
     boss_watchkeeper_gargolmarAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Reset();
     }
 
-    bool m_bIsHeroicMode;
+    bool m_bIsRegularMode;
 
     uint32 Surge_Timer;
     uint32 MortalWound_Timer;
@@ -113,7 +113,7 @@ struct MANGOS_DLL_DECL boss_watchkeeper_gargolmarAI : public ScriptedAI
 
         if (MortalWound_Timer < diff)
         {
-            DoCast(m_creature->getVictim(), m_bIsHeroicMode ? H_SPELL_MORTAL_WOUND : SPELL_MORTAL_WOUND);
+            DoCast(m_creature->getVictim(), m_bIsRegularMode ? SPELL_MORTAL_WOUND : H_SPELL_MORTAL_WOUND);
             MortalWound_Timer = urand(5000, 13000);
         }else MortalWound_Timer -= diff;
 

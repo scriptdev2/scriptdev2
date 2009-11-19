@@ -51,12 +51,12 @@ struct MANGOS_DLL_DECL boss_mekgineer_steamriggerAI : public ScriptedAI
     boss_mekgineer_steamriggerAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
-    bool m_bIsHeroicMode;
+    bool m_bIsRegularMode;
 
     uint32 Shrink_Timer;
     uint32 Saw_Blade_Timer;
@@ -202,12 +202,12 @@ struct MANGOS_DLL_DECL mob_steamrigger_mechanicAI : public ScriptedAI
     mob_steamrigger_mechanicAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
-    bool m_bIsHeroicMode;
+    bool m_bIsRegularMode;
 
     uint32 Repair_Timer;
 
@@ -238,7 +238,7 @@ struct MANGOS_DLL_DECL mob_steamrigger_mechanicAI : public ScriptedAI
                             //m_creature->GetMotionMaster()->MovementExpired();
                             //m_creature->GetMotionMaster()->MoveIdle();
 
-                            DoCast(m_creature, m_bIsHeroicMode ? H_SPELL_REPAIR : SPELL_REPAIR, true);
+                            DoCast(m_creature, m_bIsRegularMode ? SPELL_REPAIR : H_SPELL_REPAIR, true);
                         }
                         Repair_Timer = 5000;
                     }

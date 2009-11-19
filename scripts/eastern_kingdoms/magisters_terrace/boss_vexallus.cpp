@@ -62,12 +62,12 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
     boss_vexallusAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
-    bool m_bIsHeroicMode;
+    bool m_bIsRegularMode;
 
     uint32 ChainLightningTimer;
     uint32 ArcaneShockTimer;
@@ -138,25 +138,25 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
                 DoScriptText(SAY_ENERGY, m_creature);
                 DoScriptText(EMOTE_DISCHARGE_ENERGY, m_creature);
 
-                if (m_bIsHeroicMode)
+                if (m_bIsRegularMode)
+                    m_creature->CastSpell(m_creature,SPELL_SUMMON_PURE_ENERGY,false);
+                else
                 {
                     m_creature->CastSpell(m_creature,H_SPELL_SUMMON_PURE_ENERGY1,false);
                     m_creature->CastSpell(m_creature,H_SPELL_SUMMON_PURE_ENERGY2,false);
                 }
-                else
-                    m_creature->CastSpell(m_creature,SPELL_SUMMON_PURE_ENERGY,false);
 
                 //below are workaround summons, remove when summoning spells w/implicitTarget 73 implemented in Mangos
                 m_creature->SummonCreature(NPC_PURE_ENERGY, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_CORPSE_DESPAWN, 0);
 
-                if (m_bIsHeroicMode)
+                if (!m_bIsRegularMode)
                     m_creature->SummonCreature(NPC_PURE_ENERGY, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_CORPSE_DESPAWN, 0);
             }
 
             if (ChainLightningTimer < diff)
             {
                 if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                    DoCast(target, m_bIsHeroicMode ? SPELL_H_CHAIN_LIGHTNING : SPELL_CHAIN_LIGHTNING);
+                    DoCast(target, m_bIsRegularMode ? SPELL_CHAIN_LIGHTNING : SPELL_H_CHAIN_LIGHTNING);
 
                 ChainLightningTimer = 8000;
             }else ChainLightningTimer -= diff;
@@ -164,7 +164,7 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
             if (ArcaneShockTimer < diff)
             {
                 if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                    DoCast(target, m_bIsHeroicMode ? SPELL_H_ARCANE_SHOCK : SPELL_ARCANE_SHOCK);
+                    DoCast(target, m_bIsRegularMode ? SPELL_ARCANE_SHOCK : SPELL_H_ARCANE_SHOCK);
 
                 ArcaneShockTimer = 8000;
             }else ArcaneShockTimer -= diff;

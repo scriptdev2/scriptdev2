@@ -57,13 +57,13 @@ struct MANGOS_DLL_DECL boss_kelidan_the_breakerAI : public ScriptedAI
     boss_kelidan_the_breakerAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
 
-    bool m_bIsHeroicMode;
+    bool m_bIsRegularMode;
 
     uint32 ShadowVolley_Timer;
     uint32 BurningNova_Timer;
@@ -109,7 +109,7 @@ struct MANGOS_DLL_DECL boss_kelidan_the_breakerAI : public ScriptedAI
         {
             if (Firenova_Timer < diff)
             {
-                DoCast(m_creature, m_bIsHeroicMode ? H_SPELL_FIRE_NOVA : SPELL_FIRE_NOVA);
+                DoCast(m_creature, m_bIsRegularMode ? SPELL_FIRE_NOVA : H_SPELL_FIRE_NOVA);
                 Firenova = false;
                 ShadowVolley_Timer = 2000;
             }else Firenova_Timer -=diff;
@@ -119,7 +119,7 @@ struct MANGOS_DLL_DECL boss_kelidan_the_breakerAI : public ScriptedAI
 
         if (ShadowVolley_Timer < diff)
         {
-            DoCast(m_creature, m_bIsHeroicMode ? H_SPELL_SHADOW_BOLT_VOLLEY : SPELL_SHADOW_BOLT_VOLLEY);
+            DoCast(m_creature, m_bIsRegularMode ? SPELL_SHADOW_BOLT_VOLLEY : H_SPELL_SHADOW_BOLT_VOLLEY);
             ShadowVolley_Timer = urand(5000, 13000);
         }else ShadowVolley_Timer -=diff;
 
@@ -136,8 +136,8 @@ struct MANGOS_DLL_DECL boss_kelidan_the_breakerAI : public ScriptedAI
 
             DoScriptText(SAY_NOVA, m_creature);
 
-            if (m_bIsHeroicMode)
-                DoCast(m_creature,SPELL_VORTEX);
+            if (!m_bIsRegularMode)
+                DoCast(m_creature, SPELL_VORTEX);
 
             DoCast(m_creature,SPELL_BURNING_NOVA);
 
@@ -174,12 +174,12 @@ struct MANGOS_DLL_DECL mob_shadowmoon_channelerAI : public ScriptedAI
     mob_shadowmoon_channelerAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
-    bool m_bIsHeroicMode;
+    bool m_bIsRegularMode;
 
     uint32 ShadowBolt_Timer;
     uint32 MarkOfShadow_Timer;
@@ -209,7 +209,7 @@ struct MANGOS_DLL_DECL mob_shadowmoon_channelerAI : public ScriptedAI
 
         if (ShadowBolt_Timer < diff)
         {
-            DoCast(m_creature->getVictim(), m_bIsHeroicMode ? H_SPELL_SHADOW_BOLT : SPELL_SHADOW_BOLT);
+            DoCast(m_creature->getVictim(), m_bIsRegularMode ? SPELL_SHADOW_BOLT : H_SPELL_SHADOW_BOLT);
             ShadowBolt_Timer = urand(5000, 6000);
         }else ShadowBolt_Timer -=diff;
 

@@ -79,13 +79,13 @@ struct MANGOS_DLL_DECL boss_s_and_d_dummyAI : public ScriptedAI
     boss_s_and_d_dummyAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         m_uiGhostGUID = 0;
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
-    bool m_bIsHeroicMode;
+    bool m_bIsRegularMode;
     uint64 m_uiGhostGUID;
 
     Creature* GetBuddy()
@@ -265,7 +265,7 @@ struct MANGOS_DLL_DECL boss_dalronnAI : public boss_s_and_d_dummyAI
         if (m_uiDebilitateTimer < uiDiff)
         {
             if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                DoCast(pTarget, m_bIsHeroicMode ? SPELL_DEBILITATE_H : SPELL_DEBILITATE);
+                DoCast(pTarget, m_bIsRegularMode ? SPELL_DEBILITATE : SPELL_DEBILITATE_H);
 
             m_uiDebilitateTimer = urand(12000, 20000);
         }
@@ -275,14 +275,14 @@ struct MANGOS_DLL_DECL boss_dalronnAI : public boss_s_and_d_dummyAI
         if (m_uiShadowBoltTimer < uiDiff)
         {
             if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                DoCast(pTarget, m_bIsHeroicMode ? SPELL_SHADOW_BOLT_H : SPELL_SHADOW_BOLT);
+                DoCast(pTarget, m_bIsRegularMode ? SPELL_SHADOW_BOLT : SPELL_SHADOW_BOLT_H);
 
             m_uiShadowBoltTimer = urand(3000, 6000);
         }
         else
             m_uiShadowBoltTimer -= uiDiff;
 
-        if (m_bIsHeroicMode)
+        if (!m_bIsRegularMode)
         {
             if (m_uiSkeletonTimer < uiDiff)
             {

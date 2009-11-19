@@ -62,7 +62,7 @@ struct MANGOS_DLL_DECL boss_ionarAI : public ScriptedAI
     boss_ionarAI(Creature *pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroic = pCreature->GetMap()->IsRaidOrHeroicDungeon();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Reset();
     }
 
@@ -70,7 +70,7 @@ struct MANGOS_DLL_DECL boss_ionarAI : public ScriptedAI
 
     std::list<uint64> m_lSparkGUIDList;
 
-    bool m_bIsHeroic;
+    bool m_bIsRegularMode;
 
     bool m_bIsSplitPhase;
     uint32 m_uiSplit_Timer;
@@ -204,7 +204,7 @@ struct MANGOS_DLL_DECL boss_ionarAI : public ScriptedAI
     {
         if (pSummoned->GetEntry() == NPC_SPARK_OF_IONAR)
         {
-            pSummoned->CastSpell(pSummoned, m_bIsHeroic ? SPELL_SPARK_VISUAL_TRIGGER_H : SPELL_SPARK_VISUAL_TRIGGER_N, true);
+            pSummoned->CastSpell(pSummoned, m_bIsRegularMode ? SPELL_SPARK_VISUAL_TRIGGER_N : SPELL_SPARK_VISUAL_TRIGGER_H, true);
 
             Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
 
@@ -268,7 +268,7 @@ struct MANGOS_DLL_DECL boss_ionarAI : public ScriptedAI
         if (m_uiStaticOverload_Timer < uiDiff)
         {
             if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                DoCast(pTarget, m_bIsHeroic ? SPELL_STATIC_OVERLOAD_H : SPELL_STATIC_OVERLOAD_N);
+                DoCast(pTarget, m_bIsRegularMode ? SPELL_STATIC_OVERLOAD_N : SPELL_STATIC_OVERLOAD_H);
 
             m_uiStaticOverload_Timer = urand(5000, 6000);
         }
@@ -277,7 +277,7 @@ struct MANGOS_DLL_DECL boss_ionarAI : public ScriptedAI
 
         if (m_uiBallLightning_Timer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), m_bIsHeroic ? SPELL_BALL_LIGHTNING_H : SPELL_BALL_LIGHTNING_N);
+            DoCast(m_creature->getVictim(), m_bIsRegularMode ? SPELL_BALL_LIGHTNING_N : SPELL_BALL_LIGHTNING_H);
             m_uiBallLightning_Timer = urand(10000, 11000);
         }
         else

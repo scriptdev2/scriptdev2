@@ -195,18 +195,18 @@ struct MANGOS_DLL_DECL mob_ethereal_beaconAI : public ScriptedAI
 {
     mob_ethereal_beaconAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Reset();
     }
 
-    bool m_bIsHeroicMode;
+    bool m_bIsRegularMode;
 
     uint32 m_uiApprentice_Timer;
     uint32 m_uiArcaneBolt_Timer;
 
     void Reset()
     {
-        m_uiApprentice_Timer = m_bIsHeroicMode ? 10000 : 20000;
+        m_uiApprentice_Timer = m_bIsRegularMode ? 20000 : 10000;
         m_uiArcaneBolt_Timer = 1000;
     }
 
@@ -223,7 +223,7 @@ struct MANGOS_DLL_DECL mob_ethereal_beaconAI : public ScriptedAI
 
         if (m_uiArcaneBolt_Timer < uiDiff)
         {
-            DoCast(m_creature->getVictim(),SPELL_ARCANE_BOLT);
+            DoCast(m_creature->getVictim(), SPELL_ARCANE_BOLT);
             m_uiArcaneBolt_Timer = urand(2000, 4500);
         }else m_uiArcaneBolt_Timer -= uiDiff;
 
@@ -232,7 +232,7 @@ struct MANGOS_DLL_DECL mob_ethereal_beaconAI : public ScriptedAI
             if (m_creature->IsNonMeleeSpellCasted(false))
                 m_creature->InterruptNonMeleeSpells(true);
 
-            m_creature->CastSpell(m_creature,SPELL_ETHEREAL_APPRENTICE,true);
+            m_creature->CastSpell(m_creature, SPELL_ETHEREAL_APPRENTICE, true);
 
             m_creature->ForcedDespawn();
             return;

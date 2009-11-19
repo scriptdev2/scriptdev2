@@ -54,7 +54,7 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
     boss_selin_fireheartAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
 
         Crystals.clear();
         //GUIDs per instance is static, so we only need to load them once.
@@ -72,7 +72,7 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
     }
 
     ScriptedInstance* m_pInstance;
-    bool m_bIsHeroicMode;
+    bool m_bIsRegularMode;
 
     std::list<uint64> Crystals;
 
@@ -258,7 +258,7 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
                 }else DrainLifeTimer -= diff;
 
                 // Heroic only
-                if (m_bIsHeroicMode)
+                if (!m_bIsRegularMode)
                 {
                     if (DrainManaTimer < diff)
                     {
@@ -285,10 +285,10 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
                 {
                     SelectNearestCrystal();
 
-                    if (m_bIsHeroicMode)
-                        DrainCrystalTimer = urand(10000, 15000);
-                    else
+                    if (m_bIsRegularMode)
                         DrainCrystalTimer = urand(20000, 25000);
+                    else
+                        DrainCrystalTimer = urand(10000, 15000);
 
                 }else DrainCrystalTimer -= diff;
             }

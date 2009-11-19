@@ -42,12 +42,12 @@ struct MANGOS_DLL_DECL boss_temporusAI : public ScriptedAI
     boss_temporusAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
-    bool m_bIsHeroicMode;
+    bool m_bIsRegularMode;
 
     uint32 Haste_Timer;
     uint32 SpellReflection_Timer;
@@ -118,11 +118,11 @@ struct MANGOS_DLL_DECL boss_temporusAI : public ScriptedAI
         //Wing ruffet
         if (WingBuffet_Timer < diff)
         {
-            DoCast(m_creature, m_bIsHeroicMode ? H_SPELL_WING_BUFFET : SPELL_WING_BUFFET);
+            DoCast(m_creature, m_bIsRegularMode ? SPELL_WING_BUFFET : H_SPELL_WING_BUFFET);
             WingBuffet_Timer = urand(20000, 30000);
         }else WingBuffet_Timer -= diff;
 
-        if (m_bIsHeroicMode)
+        if (!m_bIsRegularMode)
         {
             if (SpellReflection_Timer < diff)
             {

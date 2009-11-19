@@ -53,12 +53,12 @@ struct MANGOS_DLL_DECL boss_talon_king_ikissAI : public ScriptedAI
     boss_talon_king_ikissAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
-    bool m_bIsHeroicMode;
+    bool m_bIsRegularMode;
 
     uint32 ArcaneVolley_Timer;
     uint32 Sheep_Timer;
@@ -132,14 +132,14 @@ struct MANGOS_DLL_DECL boss_talon_king_ikissAI : public ScriptedAI
 
         if (Blink)
         {
-            DoCast(m_creature, m_bIsHeroicMode ? H_SPELL_ARCANE_EXPLOSION : SPELL_ARCANE_EXPLOSION);
+            DoCast(m_creature, m_bIsRegularMode ? SPELL_ARCANE_EXPLOSION : H_SPELL_ARCANE_EXPLOSION);
             m_creature->CastSpell(m_creature,SPELL_ARCANE_BUBBLE,true);
             Blink = false;
         }
 
         if (ArcaneVolley_Timer < diff)
         {
-            DoCast(m_creature, m_bIsHeroicMode ? H_SPELL_ARCANE_VOLLEY : SPELL_ARCANE_VOLLEY);
+            DoCast(m_creature, m_bIsRegularMode ? SPELL_ARCANE_VOLLEY : H_SPELL_ARCANE_VOLLEY);
             ArcaneVolley_Timer = urand(7000, 12000);
         }else ArcaneVolley_Timer -= diff;
 
@@ -147,8 +147,8 @@ struct MANGOS_DLL_DECL boss_talon_king_ikissAI : public ScriptedAI
         {
             //second top aggro target in normal, random target in heroic correct?
             Unit *target = NULL;
-            if (m_bIsHeroicMode ? target = SelectUnit(SELECT_TARGET_RANDOM,0) : target = SelectUnit(SELECT_TARGET_TOPAGGRO,1))
-                DoCast(target, m_bIsHeroicMode ? H_SPELL_POLYMORPH : SPELL_POLYMORPH);
+            if (m_bIsRegularMode ? target = SelectUnit(SELECT_TARGET_TOPAGGRO, 1) : target = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                DoCast(target, m_bIsRegularMode ? SPELL_POLYMORPH : H_SPELL_POLYMORPH);
             Sheep_Timer = urand(15000, 17500);
         }else Sheep_Timer -= diff;
 
@@ -159,7 +159,7 @@ struct MANGOS_DLL_DECL boss_talon_king_ikissAI : public ScriptedAI
             ManaShield = true;
         }
 
-        if (m_bIsHeroicMode)
+        if (!m_bIsRegularMode)
         {
             if (Slow_Timer < diff)
             {

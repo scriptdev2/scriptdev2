@@ -62,12 +62,12 @@ struct MANGOS_DLL_DECL mob_vrykul_skeletonAI : public ScriptedAI
     mob_vrykul_skeletonAI(Creature* pCreature) : ScriptedAI(pCreature) 
     {
         m_pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
-        m_bIsHeroicMode = m_creature->GetMap()->IsRaidOrHeroicDungeon();
+        m_bIsRegularMode = m_creature->GetMap()->IsRegularDifficulty();
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
-    bool m_bIsHeroicMode;
+    bool m_bIsRegularMode;
 
     Creature* m_pKeleseth;
     uint32 m_uiCastTimer;
@@ -158,15 +158,15 @@ struct MANGOS_DLL_DECL mob_vrykul_skeletonAI : public ScriptedAI
 
         if (m_uiCastTimer < uiDiff)
         {
-            if (m_bIsHeroicMode)
+            if (m_bIsRegularMode)
+                DoCast(m_creature->getVictim(), SPELL_DECREPIFY);
+            else
             {
                 if (urand(0, 3))
                     DoCast(m_creature->getVictim(), SPELL_DECREPIFY_H);
                 else if (m_pKeleseth && m_pKeleseth->isAlive())
                     DoCast(m_pKeleseth, SPELL_BONE_ARMOR);
             }
-            else
-                DoCast(m_creature->getVictim(), SPELL_DECREPIFY);
 
             m_uiCastTimer = urand(5000, 15000);
         }
@@ -191,12 +191,12 @@ struct MANGOS_DLL_DECL boss_kelesethAI : public ScriptedAI
     boss_kelesethAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
-    bool m_bIsHeroicMode;
+    bool m_bIsRegularMode;
 
     uint32 m_uiFrostTombTimer; 
     uint32 m_uiSummonTimer;
@@ -282,7 +282,7 @@ struct MANGOS_DLL_DECL boss_kelesethAI : public ScriptedAI
 
         if (m_uiShadowboltTimer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), m_bIsHeroicMode ? SPELL_SHADOWBOLT_H : SPELL_SHADOWBOLT);
+            DoCast(m_creature->getVictim(), m_bIsRegularMode ? SPELL_SHADOWBOLT : SPELL_SHADOWBOLT_H);
             m_uiShadowboltTimer = 3000;
         }
         else

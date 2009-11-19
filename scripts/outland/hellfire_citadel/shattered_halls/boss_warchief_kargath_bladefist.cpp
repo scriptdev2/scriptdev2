@@ -53,12 +53,12 @@ struct MANGOS_DLL_DECL boss_warchief_kargath_bladefistAI : public ScriptedAI
     boss_warchief_kargath_bladefistAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
-    bool m_bIsHeroicMode;
+    bool m_bIsRegularMode;
 
     std::vector<uint64> adds;
     std::vector<uint64> assassins;
@@ -204,7 +204,7 @@ struct MANGOS_DLL_DECL boss_warchief_kargath_bladefistAI : public ScriptedAI
                         m_creature->SetSpeed(MOVE_RUN,2);
                         (*m_creature).GetMotionMaster()->MoveChase(m_creature->getVictim());
                         Wait_Timer = 0;
-                        if (m_bIsHeroicMode)
+                        if (!m_bIsRegularMode)
                             Charge_timer = 5000;
                     }
                     else

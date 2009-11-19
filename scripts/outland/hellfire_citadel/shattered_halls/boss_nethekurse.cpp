@@ -78,12 +78,12 @@ struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
     boss_grand_warlock_nethekurseAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
-    bool m_bIsHeroicMode;
+    bool m_bIsRegularMode;
 
     bool IntroOnce;
     bool IsIntroEvent;
@@ -275,7 +275,7 @@ struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
 
             if (Cleave_Timer < diff)
             {
-                DoCast(m_creature->getVictim(), m_bIsHeroicMode ? H_SPELL_SHADOW_SLAM : SPELL_SHADOW_CLEAVE);
+                DoCast(m_creature->getVictim(), m_bIsRegularMode ? SPELL_SHADOW_CLEAVE : H_SPELL_SHADOW_SLAM);
                 Cleave_Timer = urand(6000, 8500);
             }else Cleave_Timer -= diff;
         }

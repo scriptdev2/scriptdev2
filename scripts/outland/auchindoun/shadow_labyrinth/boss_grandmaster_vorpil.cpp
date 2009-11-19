@@ -58,13 +58,13 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
     boss_grandmaster_vorpilAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Intro = false;
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
-    bool m_bIsHeroicMode;
+    bool m_bIsRegularMode;
 
     uint32 ShadowBoltVolley_Timer;
     uint32 DrawShadows_Timer;
@@ -172,7 +172,7 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
                 }
                 Teleport = false;
 
-                DoCast(m_creature->getVictim(), m_bIsHeroicMode ? H_SPELL_RAIN_OF_FIRE : SPELL_RAIN_OF_FIRE);
+                DoCast(m_creature->getVictim(), m_bIsRegularMode ? SPELL_RAIN_OF_FIRE : H_SPELL_RAIN_OF_FIRE);
 
                 Teleport_Timer = 1000;
             }else Teleport_Timer -= diff;
@@ -207,7 +207,7 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
             VoidTraveler_Timer = 35000;
         }else VoidTraveler_Timer -= diff;
 
-        if (m_bIsHeroicMode)
+        if (!m_bIsRegularMode)
         {
             if (Banish_Timer < diff)
             {

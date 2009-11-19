@@ -48,12 +48,12 @@ struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public npc_escortAI
     boss_ambassador_hellmawAI(Creature* pCreature) : npc_escortAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
-    bool m_bIsHeroicMode;
+    bool m_bIsRegularMode;
 
     uint32 EventCheck_Timer;
     uint32 CorrosiveAcid_Timer;
@@ -180,7 +180,7 @@ struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public npc_escortAI
             Fear_Timer = urand(20000, 35000);
         }else Fear_Timer -= diff;
 
-        if (m_bIsHeroicMode)
+        if (!m_bIsRegularMode)
         {
             if (!Enraged && Enrage_Timer < diff)
             {

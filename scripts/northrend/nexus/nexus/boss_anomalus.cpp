@@ -65,12 +65,12 @@ struct MANGOS_DLL_DECL boss_anomalusAI : public ScriptedAI
     boss_anomalusAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
-    bool m_bIsHeroicMode;
+    bool m_bIsRegularMode;
 
     uint32 m_uiSparkTimer;
     uint32 m_uiCreateRiftTimer;
@@ -172,7 +172,7 @@ struct MANGOS_DLL_DECL boss_anomalusAI : public ScriptedAI
         if (m_uiSparkTimer < uiDiff)
         {
             if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                DoCast(pTarget, m_bIsHeroicMode?SPELL_SPARK_H:SPELL_SPARK);
+                DoCast(pTarget, m_bIsRegularMode ? SPELL_SPARK : SPELL_SPARK_H);
 
             m_uiSparkTimer = 5000;
         }

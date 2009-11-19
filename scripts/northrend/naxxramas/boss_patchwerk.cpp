@@ -48,12 +48,12 @@ struct MANGOS_DLL_DECL boss_patchwerkAI : public ScriptedAI
     boss_patchwerkAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
-    bool m_bIsHeroicMode;
+    bool m_bIsRegularMode;
 
     uint32 m_uiHatefulStrikeTimer;
     uint32 m_uiBerserkTimer;
@@ -105,7 +105,7 @@ struct MANGOS_DLL_DECL boss_patchwerkAI : public ScriptedAI
         // The ability is used on highest HP target choosen of the top 2 (3 heroic) targets on threat list being in melee range
         Unit* pTarget = NULL;
         uint32 uiHighestHP = 0;
-        uint32 uiTargets = m_bIsHeroicMode?3:2;
+        uint32 uiTargets = m_bIsRegularMode ? 2 : 3;
 
         std::list<HostileReference*>::iterator iter = m_creature->getThreatManager().getThreatList().begin();
         for (iter = m_creature->getThreatManager().getThreatList().begin(); iter != m_creature->getThreatManager().getThreatList().end(); ++iter)
@@ -126,7 +126,7 @@ struct MANGOS_DLL_DECL boss_patchwerkAI : public ScriptedAI
         }
 
         if (pTarget)
-            DoCast(pTarget, m_bIsHeroicMode?SPELL_HATEFULSTRIKE_H:SPELL_HATEFULSTRIKE);
+            DoCast(pTarget, m_bIsRegularMode ? SPELL_HATEFULSTRIKE : SPELL_HATEFULSTRIKE_H);
     }
 
     void UpdateAI(const uint32 uiDiff)

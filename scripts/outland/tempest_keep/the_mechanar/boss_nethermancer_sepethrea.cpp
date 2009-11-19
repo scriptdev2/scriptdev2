@@ -45,12 +45,12 @@ struct MANGOS_DLL_DECL boss_nethermancer_sepethreaAI : public ScriptedAI
     boss_nethermancer_sepethreaAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
-    bool m_bIsHeroicMode;
+    bool m_bIsRegularMode;
 
     uint32 frost_attack_Timer;
     uint32 arcane_blast_Timer;
@@ -72,7 +72,7 @@ struct MANGOS_DLL_DECL boss_nethermancer_sepethreaAI : public ScriptedAI
         DoScriptText(SAY_AGGRO, m_creature);
 
         //Summon two guards, three in heroic
-        uint8 am = (m_bIsHeroicMode ? 1 : 2);
+        uint8 am = (m_bIsRegularMode ? 2 : 1);
         for(int i = 0; i < am; ++i)
         {
             DoCast(who,SPELL_SUMMON_RAGIN_FLAMES);
@@ -157,12 +157,12 @@ struct MANGOS_DLL_DECL mob_ragin_flamesAI : public ScriptedAI
     mob_ragin_flamesAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
-    bool m_bIsHeroicMode;
+    bool m_bIsRegularMode;
 
     uint32 inferno_Timer;
     uint32 flame_timer;
@@ -194,7 +194,7 @@ struct MANGOS_DLL_DECL mob_ragin_flamesAI : public ScriptedAI
 
         if (inferno_Timer < diff)
         {
-            DoCast(m_creature->getVictim(), m_bIsHeroicMode ? H_SPELL_INFERNO : SPELL_INFERNO);
+            DoCast(m_creature->getVictim(), m_bIsRegularMode ? SPELL_INFERNO : H_SPELL_INFERNO);
 
             m_creature->TauntApply(m_creature->getVictim());
 

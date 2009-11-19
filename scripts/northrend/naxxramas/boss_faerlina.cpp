@@ -49,13 +49,13 @@ struct MANGOS_DLL_DECL boss_faerlinaAI : public ScriptedAI
     boss_faerlinaAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         m_bHasTaunted = false;
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
-    bool m_bIsHeroicMode;
+    bool m_bIsRegularMode;
 
     uint32 m_uiPoisonBoltVolleyTimer;
     uint32 m_uiRainOfFireTimer;

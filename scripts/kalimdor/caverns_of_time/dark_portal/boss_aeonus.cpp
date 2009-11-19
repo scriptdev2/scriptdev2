@@ -46,12 +46,12 @@ struct MANGOS_DLL_DECL boss_aeonusAI : public ScriptedAI
     boss_aeonusAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
-    bool m_bIsHeroicMode;
+    bool m_bIsRegularMode;
 
     uint32 SandBreath_Timer;
     uint32 TimeStop_Timer;
@@ -106,7 +106,7 @@ struct MANGOS_DLL_DECL boss_aeonusAI : public ScriptedAI
         //Sand Breath
         if (SandBreath_Timer < diff)
         {
-            DoCast(m_creature->getVictim(), m_bIsHeroicMode ? H_SPELL_SAND_BREATH : SPELL_SAND_BREATH);
+            DoCast(m_creature->getVictim(), m_bIsRegularMode ? SPELL_SAND_BREATH : H_SPELL_SAND_BREATH);
             SandBreath_Timer = urand(15000, 25000);
         }else SandBreath_Timer -= diff;
 

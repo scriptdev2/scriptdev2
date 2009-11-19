@@ -101,12 +101,12 @@ struct MANGOS_DLL_DECL boss_nadoxAI : public ScriptedAI
     boss_nadoxAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
-    bool m_bIsHeroicMode;
+    bool m_bIsRegularMode;
 
     bool   m_bBerserk;
     uint8  m_uiGuardianCount;
@@ -193,14 +193,14 @@ struct MANGOS_DLL_DECL boss_nadoxAI : public ScriptedAI
         if (m_uiBroodPlagueTimer < uiDiff)
         {
             if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                DoCast(pTarget, m_bIsHeroicMode?SPELL_BROOD_PLAGUE_H:SPELL_BROOD_PLAGUE);
+                DoCast(pTarget, m_bIsRegularMode ? SPELL_BROOD_PLAGUE : SPELL_BROOD_PLAGUE_H);
 
             m_uiBroodPlagueTimer = 20000;
         }
         else
             m_uiBroodPlagueTimer -= uiDiff;
 
-        if(m_bIsHeroicMode)
+        if(!m_bIsRegularMode)
         {
             if (m_uiBroodRageTimer < uiDiff)
             {

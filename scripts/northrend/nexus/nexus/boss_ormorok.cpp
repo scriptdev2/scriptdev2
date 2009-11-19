@@ -57,12 +57,12 @@ struct MANGOS_DLL_DECL boss_ormorokAI : public ScriptedAI
     boss_ormorokAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
-    bool m_bIsHeroicMode;
+    bool m_bIsRegularMode;
 
     bool m_bIsEnraged;
 
@@ -117,13 +117,13 @@ struct MANGOS_DLL_DECL boss_ormorokAI : public ScriptedAI
             {
                 m_bIsEnraged = true;
                 DoScriptText(EMOTE_BOSS_GENERIC_FRENZY, m_creature);
-                DoCast(m_creature, m_bIsHeroicMode ? SPELL_FRENZY_H : SPELL_FRENZY);
+                DoCast(m_creature, m_bIsRegularMode ? SPELL_FRENZY : SPELL_FRENZY_H);
             }
         }
 
         if (m_uiTrampleTimer < uiDiff)
         {
-            DoCast(m_creature, m_bIsHeroicMode ? SPELL_TRAMPLE_H : SPELL_TRAMPLE);
+            DoCast(m_creature, m_bIsRegularMode ? SPELL_TRAMPLE : SPELL_TRAMPLE_H);
             m_uiTrampleTimer = urand(10000, 35000);
         }
         else
@@ -146,7 +146,7 @@ struct MANGOS_DLL_DECL boss_ormorokAI : public ScriptedAI
         else
             m_uiCrystalSpikeTimer -= uiDiff;
 
-        if (m_bIsHeroicMode)
+        if (!m_bIsRegularMode)
         {
             if (m_uiTanglerTimer < uiDiff)
             {

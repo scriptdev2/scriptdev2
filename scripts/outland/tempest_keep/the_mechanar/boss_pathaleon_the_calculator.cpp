@@ -52,11 +52,11 @@ struct MANGOS_DLL_DECL boss_pathaleon_the_calculatorAI : public ScriptedAI
 {
     boss_pathaleon_the_calculatorAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Reset();
     }
 
-    bool m_bIsHeroicMode;
+    bool m_bIsRegularMode;
 
     uint32 Summon_Timer;
     uint32 ManaTap_Timer;
@@ -140,7 +140,7 @@ struct MANGOS_DLL_DECL boss_pathaleon_the_calculatorAI : public ScriptedAI
         }else Domination_Timer -= diff;
 
         //Only casting if Heroic Mode is used
-        if (m_bIsHeroicMode)
+        if (!m_bIsRegularMode)
         {
             if (ArcaneExplosion_Timer < diff)
             {

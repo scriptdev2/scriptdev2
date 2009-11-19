@@ -137,12 +137,12 @@ struct MANGOS_DLL_DECL boss_warbringer_omroggAI : public ScriptedAI
         m_uiLeftHeadGUID  = 0;
         m_uiRightHeadGUID = 0;
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
-    bool m_bIsHeroicMode;
+    bool m_bIsRegularMode;
 
     uint64 m_uiLeftHeadGUID;
     uint64 m_uiRightHeadGUID;
@@ -348,7 +348,7 @@ struct MANGOS_DLL_DECL boss_warbringer_omroggAI : public ScriptedAI
         if (m_uiBurningMaul_Timer < uiDiff)
         {
             DoScriptText(EMOTE_ENRAGE, m_creature);
-            DoCast(m_creature, m_bIsHeroicMode ? H_SPELL_BURNING_MAUL : SPELL_BURNING_MAUL);
+            DoCast(m_creature, m_bIsRegularMode ? SPELL_BURNING_MAUL : H_SPELL_BURNING_MAUL);
             m_uiBurningMaul_Timer = 40000;
             m_uiBlastWave_Timer = 16000;
             m_uiBlastCount = 1;

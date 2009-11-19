@@ -81,12 +81,12 @@ struct MANGOS_DLL_DECL boss_ingvarAI : public ScriptedAI
     boss_ingvarAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
-    bool m_bIsHeroicMode;
+    bool m_bIsRegularMode;
 
     bool m_bIsResurrected;
 
@@ -157,7 +157,7 @@ struct MANGOS_DLL_DECL boss_ingvarAI : public ScriptedAI
 
             if (m_uiSmashTimer < uiDiff)
             {
-                DoCast(m_creature, m_bIsHeroicMode ? SPELL_SMASH_H : SPELL_SMASH);
+                DoCast(m_creature, m_bIsRegularMode ? SPELL_SMASH : SPELL_SMASH_H);
                 m_uiSmashTimer = urand(8000, 15000);
             }
             else
@@ -166,7 +166,7 @@ struct MANGOS_DLL_DECL boss_ingvarAI : public ScriptedAI
             if (m_uiStaggeringRoarTimer < uiDiff)
             {
                 DoScriptText(EMOTE_ROAR, m_creature);
-                DoCast(m_creature, m_bIsHeroicMode ? SPELL_STAGGERING_ROAR_H : SPELL_STAGGERING_ROAR);
+                DoCast(m_creature, m_bIsRegularMode ? SPELL_STAGGERING_ROAR : SPELL_STAGGERING_ROAR_H);
                 m_uiStaggeringRoarTimer = urand(15000, 30000);
             }
             else
@@ -174,7 +174,7 @@ struct MANGOS_DLL_DECL boss_ingvarAI : public ScriptedAI
 
             if (m_uiEnrageTimer < uiDiff)
             {
-                DoCast(m_creature, m_bIsHeroicMode ? SPELL_ENRAGE_H : SPELL_ENRAGE);
+                DoCast(m_creature, m_bIsRegularMode ? SPELL_ENRAGE : SPELL_ENRAGE_H);
                 m_uiEnrageTimer = urand(10000, 20000);
             }
             else
@@ -199,12 +199,12 @@ struct MANGOS_DLL_DECL npc_annhyldeAI : public ScriptedAI
     npc_annhyldeAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_bIsHeroicMode = pCreature->GetMap()->IsRaidOrHeroicDungeon();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
-    bool m_bIsHeroicMode;
+    bool m_bIsRegularMode;
 
     void Reset()
     {
