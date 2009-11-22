@@ -207,10 +207,10 @@ struct MANGOS_DLL_DECL boss_twinemperorsAI : public ScriptedAI
     Unit *GetAnyoneCloseEnough(float dist, bool totallyRandom)
     {
         int cnt = 0;
-        std::list<HostileReference*>::iterator i;
         std::list<HostileReference*> candidates;
 
-        for (i = m_creature->getThreatManager().getThreatList().begin();i != m_creature->getThreatManager().getThreatList().end(); ++i)
+        ThreatList const& tList = m_creature->getThreatManager().getThreatList();
+        for (ThreatList::const_iterator i = tList.begin();i != tList.end(); ++i)
         {
             Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
             if (m_creature->IsWithinDistInMap(pUnit, dist))
@@ -226,8 +226,7 @@ struct MANGOS_DLL_DECL boss_twinemperorsAI : public ScriptedAI
         for (int randomi = rand() % cnt; randomi > 0; randomi --)
             candidates.pop_front();
 
-        i = candidates.begin();
-        Unit *ret = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
+        Unit *ret = Unit::GetUnit((*m_creature), candidates.front()->getUnitGuid());
         candidates.clear();
         return ret;
     }
@@ -236,8 +235,8 @@ struct MANGOS_DLL_DECL boss_twinemperorsAI : public ScriptedAI
     {
         Unit *nearp = NULL;
         float neardist = 0.0f;
-        std::list<HostileReference*>::iterator i;
-        for (i = m_creature->getThreatManager().getThreatList().begin();i != m_creature->getThreatManager().getThreatList().end(); ++i)
+        ThreatList const& tList = m_creature->getThreatManager().getThreatList();
+        for (ThreatList::const_iterator i = tList.begin();i != tList.end(); ++i)
         {
             Unit* pUnit = NULL;
             pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());

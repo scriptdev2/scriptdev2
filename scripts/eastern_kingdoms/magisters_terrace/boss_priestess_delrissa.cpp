@@ -800,8 +800,8 @@ struct MANGOS_DLL_DECL boss_yazzaiAI : public boss_priestess_lackey_commonAI
         if (Blink_Timer < diff)
         {
             bool InMeleeRange = false;
-            std::list<HostileReference*>& t_list = m_creature->getThreatManager().getThreatList();
-            for(std::list<HostileReference*>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
+            ThreatList const& tList = m_creature->getThreatManager().getThreatList();
+            for (ThreatList::const_iterator itr = tList.begin();itr != tList.end(); ++itr)
             {
                 if (Unit* target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid()))
                 {
@@ -880,8 +880,8 @@ struct MANGOS_DLL_DECL boss_warlord_salarisAI : public boss_priestess_lackey_com
         if (Intercept_Stun_Timer < diff)
         {
             bool InMeleeRange = false;
-            std::list<HostileReference*>& t_list = m_creature->getThreatManager().getThreatList();
-            for(std::list<HostileReference*>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
+            ThreatList const& tList = m_creature->getThreatManager().getThreatList();
+            for (ThreatList::const_iterator itr = tList.begin();itr != tList.end(); ++itr)
             {
                 if (Unit* target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid()))
                 {

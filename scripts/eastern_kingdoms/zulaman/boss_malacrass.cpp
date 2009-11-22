@@ -336,9 +336,8 @@ struct MANGOS_DLL_DECL boss_malacrass_addAI : public ScriptedAI
         if (!pSpellRange)
             return false;
 
-        std::list<HostileReference*>& lThreatList = m_creature->getThreatManager().getThreatList();
-
-        for(std::list<HostileReference*>::iterator iter = lThreatList.begin(); iter != lThreatList.end(); ++iter)
+        ThreatList const& tList = m_creature->getThreatManager().getThreatList();
+        for (ThreatList::const_iterator iter = tList.begin();iter != tList.end(); ++iter)
         {
             Unit* pTarget = Unit::GetUnit((*m_creature), (*iter)->getUnitGuid());
 

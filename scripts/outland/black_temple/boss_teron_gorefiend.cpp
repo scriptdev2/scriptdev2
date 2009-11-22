@@ -141,13 +141,13 @@ struct MANGOS_DLL_DECL mob_shadowy_constructAI : public ScriptedAI
 
     void CheckPlayers()
     {
-        std::list<HostileReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
-        if (m_threatlist.empty())
+        ThreatList const& tList = m_creature->getThreatManager().getThreatList();
+        if (tList.empty())
             return;                                         // No threat list. Don't continue.
 
-        std::list<HostileReference*>::iterator itr = m_threatlist.begin();
         std::list<Unit*> targets;
-        for(; itr != m_threatlist.end(); ++itr)
+
+        for (ThreatList::const_iterator itr = tList.begin();itr != tList.end(); ++itr)
         {
             Unit* pUnit = Unit::GetUnit((*m_creature), (*itr)->getUnitGuid());
             if (pUnit && pUnit->isAlive())
@@ -287,9 +287,8 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
         if (!Blossom)
             return;
 
-        std::list<HostileReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
-        std::list<HostileReference*>::iterator i = m_threatlist.begin();
-        for(i = m_threatlist.begin(); i != m_threatlist.end(); ++i)
+        ThreatList const& tList = m_creature->getThreatManager().getThreatList();
+        for (ThreatList::const_iterator i = tList.begin();i != tList.end(); ++i)
         {
             Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
             if (pUnit && pUnit->isAlive())

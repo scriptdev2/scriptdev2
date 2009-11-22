@@ -328,19 +328,20 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
             if (Blind_Timer < diff)
             {
                 Unit* target = NULL;
-                std::list<HostileReference*> t_list = m_creature->getThreatManager().getThreatList();
 
-                if (t_list.empty())
+                ThreatList const& tList = m_creature->getThreatManager().getThreatList();
+                if (tList.empty())
                     return;
 
                 std::vector<Unit*> target_list;
-                for (std::list<HostileReference*>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
+
+                for (ThreatList::const_iterator itr = tList.begin();itr != tList.end(); ++itr)
                 {
                     target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
                     if (target && target->IsWithinDist(m_creature, ATTACK_DISTANCE, false))
                         target_list.push_back(target);
                 }
-                if (target_list.size())
+                if (!target_list.empty())
                     target = *(target_list.begin()+rand()%target_list.size());
 
                 if (target)

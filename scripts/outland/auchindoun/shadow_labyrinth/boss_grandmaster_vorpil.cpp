@@ -160,8 +160,8 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
                 float ranY = LOCY;
                 float ranZ = LOCZ;
 
-                std::list<HostileReference *> t_list = m_creature->getThreatManager().getThreatList();
-                for(std::list<HostileReference *>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
+                ThreatList const& tList = m_creature->getThreatManager().getThreatList();
+                for (ThreatList::const_iterator itr = tList.begin();itr != tList.end(); ++itr)
                 {
                     Unit* target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
                     if (target && target->GetTypeId() == TYPEID_PLAYER)

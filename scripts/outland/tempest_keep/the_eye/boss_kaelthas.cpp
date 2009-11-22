@@ -914,10 +914,10 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                     //m_uiGravityLapse_Timer
                     if (m_uiGravityLapse_Timer < uiDiff)
                     {
-                        std::list<HostileReference*>::iterator i = m_creature->getThreatManager().getThreatList().begin();
                         switch(m_uiGravityLapse_Phase)
                         {
                             case 0:
+                            {
                                 m_creature->StopMoving();
                                 m_creature->GetMotionMaster()->Clear();
                                 m_creature->GetMotionMaster()->MoveIdle();
@@ -925,7 +925,8 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                                 m_creature->SendMonsterMove(afGravityPos[0], afGravityPos[1], afGravityPos[2], 0, MONSTER_MOVE_NONE, 0);
 
                                 // 1) Kael'thas will portal the whole raid right into his body
-                                for (i = m_creature->getThreatManager().getThreatList().begin(); i!= m_creature->getThreatManager().getThreatList().end();++i)
+                                ThreatList const& tList = m_creature->getThreatManager().getThreatList();
+                                for (ThreatList::const_iterator i = tList.begin();i != tList.end(); ++i)
                                 {
                                     Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
                                     if (pUnit && (pUnit->GetTypeId() == TYPEID_PLAYER))
@@ -941,12 +942,14 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                                 m_uiShockBarrier_Timer = 1000;
                                 m_uiNetherBeam_Timer = 5000;
                                 break;
-
+                            }
                             case 1:
+                            {
                                 DoScriptText(urand(0, 1) ? SAY_GRAVITYLAPSE1 : SAY_GRAVITYLAPSE2, m_creature);
 
                                 // 2) At that point he will put a Gravity Lapse debuff on everyone
-                                for (i = m_creature->getThreatManager().getThreatList().begin(); i!= m_creature->getThreatManager().getThreatList().end(); ++i)
+                                ThreatList const& tList = m_creature->getThreatManager().getThreatList();
+                                for (ThreatList::const_iterator i = tList.begin();i != tList.end(); ++i)
                                 {
                                     if (Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid()))
                                     {
@@ -967,7 +970,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                                 m_uiGravityLapse_Timer = 10000;
                                 ++m_uiGravityLapse_Phase;
                                 break;
-
+                            }
                             case 2:
                                 //Cast nether vapor aura on self
                                 m_creature->InterruptNonMeleeSpells(false);
@@ -978,8 +981,10 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                                 break;
 
                             case 3:
+                            {
                                 //Remove flight
-                                for (i = m_creature->getThreatManager().getThreatList().begin(); i!= m_creature->getThreatManager().getThreatList().end(); ++i)
+                                ThreatList const& tList = m_creature->getThreatManager().getThreatList();
+                                for (ThreatList::const_iterator i = tList.begin();i != tList.end(); ++i)
                                 {
                                     if (Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid()))
                                     {
@@ -998,6 +1003,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                                 m_uiGravityLapse_Phase = 0;
                                 AttackStart(m_creature->getVictim());
                                 break;
+                            }
                         }
                     }
                     else
@@ -1269,8 +1275,8 @@ struct MANGOS_DLL_DECL boss_grand_astromancer_capernianAI : public advisorbase_a
         {
             bool m_bInMeleeRange = false;
             Unit* pTarget = NULL;
-            std::list<HostileReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
-            for (std::list<HostileReference*>::iterator i = m_threatlist.begin(); i!= m_threatlist.end();++i)
+            ThreatList const& tList = m_creature->getThreatManager().getThreatList();
+            for (ThreatList::const_iterator i = tList.begin();i != tList.end(); ++i)
             {
                 Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
 

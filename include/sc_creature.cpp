@@ -192,29 +192,29 @@ Creature* ScriptedAI::DoSpawnCreature(uint32 uiId, float fX, float fY, float fZ,
 Unit* ScriptedAI::SelectUnit(SelectAggroTarget target, uint32 uiPosition)
 {
     //ThreatList m_threatlist;
-    std::list<HostileReference*>& threatlist = m_creature->getThreatManager().getThreatList();
-    std::list<HostileReference*>::iterator itr = threatlist.begin();
-    std::list<HostileReference*>::reverse_iterator ritr = threatlist.rbegin();
+    ThreatList const& threatlist = m_creature->getThreatManager().getThreatList();
+    ThreatList::const_iterator itr = threatlist.begin();
+    ThreatList::const_reverse_iterator ritr = threatlist.rbegin();
 
-    if (uiPosition >= threatlist.size() || !threatlist.size())
+    if (uiPosition >= threatlist.size() || threatlist.empty())
         return NULL;
 
     switch (target)
     {
-    case SELECT_TARGET_RANDOM:
-        advance(itr, uiPosition +  (rand() % (threatlist.size() - uiPosition)));
-        return Unit::GetUnit((*m_creature),(*itr)->getUnitGuid());
-        break;
+        case SELECT_TARGET_RANDOM:
+            advance(itr, uiPosition +  (rand() % (threatlist.size() - uiPosition)));
+            return Unit::GetUnit((*m_creature),(*itr)->getUnitGuid());
+            break;
 
-    case SELECT_TARGET_TOPAGGRO:
-        advance(itr, uiPosition);
-        return Unit::GetUnit((*m_creature),(*itr)->getUnitGuid());
-        break;
+        case SELECT_TARGET_TOPAGGRO:
+            advance(itr, uiPosition);
+            return Unit::GetUnit((*m_creature),(*itr)->getUnitGuid());
+            break;
 
-    case SELECT_TARGET_BOTTOMAGGRO:
-        advance(ritr, uiPosition);
-        return Unit::GetUnit((*m_creature),(*ritr)->getUnitGuid());
-        break;
+        case SELECT_TARGET_BOTTOMAGGRO:
+            advance(ritr, uiPosition);
+            return Unit::GetUnit((*m_creature),(*ritr)->getUnitGuid());
+            break;
     }
 
     return NULL;
@@ -426,9 +426,8 @@ void ScriptedAI::DoResetThreat()
         return;
     }
 
-    std::list<HostileReference*>& threatlist = m_creature->getThreatManager().getThreatList();
-
-    for(std::list<HostileReference*>::iterator itr = threatlist.begin(); itr != threatlist.end(); ++itr)
+    ThreatList const& tList = m_creature->getThreatManager().getThreatList();
+    for (ThreatList::const_iterator itr = tList.begin();itr != tList.end(); ++itr)
     {
         Unit* pUnit = Unit::GetUnit((*m_creature), (*itr)->getUnitGuid());
 

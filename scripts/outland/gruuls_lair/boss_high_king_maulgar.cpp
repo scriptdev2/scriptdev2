@@ -584,8 +584,8 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public Council_Base_AI
             bool bInRange = false;
             Unit* pTarget = NULL;
 
-            std::list<HostileReference*>& threatlist = m_creature->getThreatManager().getThreatList();
-            for (std::list<HostileReference*>::iterator i = threatlist.begin(); i!= threatlist.end(); ++i)
+            ThreatList const& tList = m_creature->getThreatManager().getThreatList();
+            for (ThreatList::const_iterator i = tList.begin();i != tList.end(); ++i)
             {
                 Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
                 if (pUnit && pUnit->IsWithinDistInMap(m_creature, 15.0f))

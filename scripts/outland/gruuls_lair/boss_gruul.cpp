@@ -198,10 +198,10 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
             {
                 // Find 2nd-aggro target within melee range.
                 Unit *pTarget = NULL;
-                std::list<HostileReference *> t_list = m_creature->getThreatManager().getThreatList();
-                std::list<HostileReference *>::iterator itr = t_list.begin();
+                ThreatList const& tList = m_creature->getThreatManager().getThreatList();
+                ThreatList::const_iterator itr = tList.begin();
                 std::advance(itr, 1);
-                for(; itr!= t_list.end(); ++itr)
+                for (;itr != tList.end(); ++itr)
                 {
                     pTarget = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
                     // exclude pets, totems & player out of melee range

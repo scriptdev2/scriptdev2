@@ -249,9 +249,8 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
         if (!target)
             return;
 
-        std::list<HostileReference*>& m_threatlist = target->getThreatManager().getThreatList();
-        std::list<HostileReference*>::iterator itr = m_threatlist.begin();
-        for(; itr != m_threatlist.end(); ++itr)
+        ThreatList const& tList = m_creature->getThreatManager().getThreatList();
+        for (ThreatList::const_iterator itr = tList.begin();itr != tList.end(); ++itr)
         {
             Unit* pUnit = Unit::GetUnit((*m_creature), (*itr)->getUnitGuid());
             if (pUnit)
@@ -608,13 +607,13 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
 
     void CastFixate()
     {
-        std::list<HostileReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
-        if (m_threatlist.empty())
+        ThreatList const& tList = m_creature->getThreatManager().getThreatList();
+        if (tList.empty())
             return;                                         // No point continuing if empty threatlist.
 
         std::list<Unit*> targets;
-        std::list<HostileReference*>::iterator itr = m_threatlist.begin();
-        for(; itr != m_threatlist.end(); ++itr)
+
+        for (ThreatList::const_iterator itr = tList.begin();itr != tList.end(); ++itr)
         {
             Unit* pUnit = Unit::GetUnit((*m_creature), (*itr)->getUnitGuid());
                                                             // Only alive players

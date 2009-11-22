@@ -464,8 +464,8 @@ struct MANGOS_DLL_DECL npc_akama_illidanAI : public ScriptedAI
 
     void KillAllElites()
     {
-        std::list<HostileReference*>::iterator itr;
-        for(itr = m_creature->getThreatManager().getThreatList().begin(); itr != m_creature->getThreatManager().getThreatList().end(); ++itr)
+        ThreatList const& tList = m_creature->getThreatManager().getThreatList();
+        for (ThreatList::const_iterator itr = tList.begin();itr != tList.end(); ++itr)
         {
             Unit* pUnit = Unit::GetUnit((*m_creature), (*itr)->getUnitGuid());
             if (pUnit && (pUnit->GetTypeId() == TYPEID_UNIT) && (pUnit->GetEntry() == ILLIDARI_ELITE))
@@ -610,8 +610,8 @@ struct MANGOS_DLL_DECL npc_akama_illidanAI : public ScriptedAI
         if (!Illidan)
             return;
 
-        std::list<HostileReference*>::iterator itr = Illidan->getThreatManager().getThreatList().begin();
-        for(; itr != Illidan->getThreatManager().getThreatList().end(); ++itr)
+        ThreatList const& tList = m_creature->getThreatManager().getThreatList();
+        for (ThreatList::const_iterator itr = tList.begin();itr != tList.end(); ++itr)
         {
             // Loop through threatlist till our GUID is found in it.
             if ((*itr)->getUnitGuid() == m_creature->GetGUID())
@@ -2133,17 +2133,16 @@ struct MANGOS_DLL_DECL flame_of_azzinothAI : public ScriptedAI
     void Charge()
     {
         // Get the Threat List
-        std::list<HostileReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
+        ThreatList const& tList = m_creature->getThreatManager().getThreatList();
 
         // He doesn't have anyone in his threatlist, useless to continue
-        if (!m_threatlist.size())
+        if (tList.empty())
             return;
 
         std::list<Unit*> targets;
-        std::list<HostileReference *>::iterator itr = m_threatlist.begin();
 
         //store the threat list in a different container
-        for(; itr!= m_threatlist.end(); ++itr)
+        for (ThreatList::const_iterator itr = tList.begin();itr != tList.end(); ++itr)
         {
             Unit *target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
             //only on alive players

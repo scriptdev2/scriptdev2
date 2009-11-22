@@ -111,9 +111,10 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
         if (ArcaneOrb_Timer < diff)
         {
             Unit *target = NULL;
-            std::list<HostileReference *> t_list = m_creature->getThreatManager().getThreatList();
             std::vector<Unit *> target_list;
-            for(std::list<HostileReference *>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
+
+            ThreatList const& tList = m_creature->getThreatManager().getThreatList();
+            for (ThreatList::const_iterator itr = tList.begin();itr != tList.end(); ++itr)
             {
                 target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
 

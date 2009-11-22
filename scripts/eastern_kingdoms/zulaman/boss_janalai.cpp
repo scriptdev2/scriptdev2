@@ -317,9 +317,8 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
     //Teleport every player into the middle if more than 20 yards away (possibly what spell 43096 should do)
     void TeleportPlayersOutOfRange()
     {
-        std::list<HostileReference*>::iterator i = m_creature->getThreatManager().getThreatList().begin();
-
-        for (; i != m_creature->getThreatManager().getThreatList().end(); ++i)
+        ThreatList const& tList = m_creature->getThreatManager().getThreatList();
+        for (ThreatList::const_iterator i = tList.begin();i != tList.end(); ++i)
         {
             Unit* pTemp = Unit::GetUnit((*m_creature),(*i)->getUnitGuid());
 

@@ -244,9 +244,8 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
                 case 4: SpellAfflict = SPELL_BROODAF_GREEN; break;
             }
 
-            std::list<HostileReference*>::iterator i;
-
-            for (i = m_creature->getThreatManager().getThreatList().begin();i != m_creature->getThreatManager().getThreatList().end(); ++i)
+            ThreatList const& tList = m_creature->getThreatManager().getThreatList();
+            for (ThreatList::const_iterator i = tList.begin();i != tList.end(); ++i)
             {
                 Unit* pUnit = NULL;
                 pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());

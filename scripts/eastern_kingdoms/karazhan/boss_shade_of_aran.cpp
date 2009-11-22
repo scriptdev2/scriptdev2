@@ -188,13 +188,13 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
     void FlameWreathEffect()
     {
         std::vector<Unit*> targets;
-        std::list<HostileReference *> t_list = m_creature->getThreatManager().getThreatList();
 
-        if (!t_list.size())
+        ThreatList const& tList = m_creature->getThreatManager().getThreatList();
+        if (tList.empty())
             return;
 
         //store the threat list in a different container
-        for(std::list<HostileReference *>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
+        for (ThreatList::const_iterator itr = tList.begin();itr != tList.end(); ++itr)
         {
             Unit* pTarget = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
             //only on alive players

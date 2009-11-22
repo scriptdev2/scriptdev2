@@ -107,8 +107,8 @@ struct MANGOS_DLL_DECL boss_patchwerkAI : public ScriptedAI
         uint32 uiHighestHP = 0;
         uint32 uiTargets = m_bIsRegularMode ? 2 : 3;
 
-        std::list<HostileReference*>::iterator iter = m_creature->getThreatManager().getThreatList().begin();
-        for (iter = m_creature->getThreatManager().getThreatList().begin(); iter != m_creature->getThreatManager().getThreatList().end(); ++iter)
+        ThreatList const& tList = m_creature->getThreatManager().getThreatList();
+        for (ThreatList::const_iterator iter = tList.begin();iter != tList.end(); ++iter)
         {
             if (!uiTargets)
                 return;

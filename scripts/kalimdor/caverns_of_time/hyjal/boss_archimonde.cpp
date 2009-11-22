@@ -301,13 +301,13 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         if (victim && m_creature->IsWithinDistInMap(victim, m_creature->GetAttackDistance(victim)))
             return false;
 
-        std::list<HostileReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
-        if (m_threatlist.empty())
+        ThreatList const& tList = m_creature->getThreatManager().getThreatList();
+        if (tList.empty())
             return false;
 
         std::list<Unit*> targets;
-        std::list<HostileReference*>::iterator itr = m_threatlist.begin();
-        for(; itr != m_threatlist.end(); ++itr)
+
+        for (ThreatList::const_iterator itr = tList.begin();itr != tList.end(); ++itr)
         {
             Unit* pUnit = Unit::GetUnit((*m_creature), (*itr)->getUnitGuid());
             if (pUnit && pUnit->isAlive())
