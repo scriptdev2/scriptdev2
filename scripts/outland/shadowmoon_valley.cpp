@@ -177,8 +177,7 @@ enum
 
     QUEST_FORCE_OF_NELT             = 10854,
     NPC_DRAGONMAW_SUBJUGATOR        = 21718,
-    NPC_ESCAPE_DUMMY                = 22317,
-    NPC_ENSLAVED_DRAKE_KILL_CREDIT  = 22316
+    NPC_ESCAPE_DUMMY                = 21348
 };
 
 struct MANGOS_DLL_DECL mob_enslaved_netherwing_drakeAI : public ScriptedAI
@@ -199,31 +198,23 @@ struct MANGOS_DLL_DECL mob_enslaved_netherwing_drakeAI : public ScriptedAI
         if (!Tapped)
             m_creature->setFaction(FACTION_DEFAULT);
 
-        FlyTimer = 10000;
+        FlyTimer = 2500;
     }
 
-    void SpellHit(Unit* caster, const SpellEntry* spell)
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
     {
-        if (!caster)
-            return;
-
-        if (caster->GetTypeId() == TYPEID_PLAYER && spell->Id == SPELL_HIT_FORCE_OF_NELTHARAKU && !Tapped)
+        if (pSpell->Id == SPELL_HIT_FORCE_OF_NELTHARAKU && !Tapped)
         {
-            Tapped = true;
-            PlayerGUID = caster->GetGUID();
-
-            m_creature->setFaction(FACTION_FRIENDLY);
-            DoCast(caster, SPELL_FORCE_OF_NELTHARAKU, true);
-
-            if (Creature* Dragonmaw = GetClosestCreatureWithEntry(m_creature, NPC_DRAGONMAW_SUBJUGATOR, 50.0f))
+            if (Player* pPlayer = pCaster->GetCharmerOrOwnerPlayerOrPlayerItself())
             {
-                m_creature->AddThreat(Dragonmaw, 100000.0f);
-                AttackStart(Dragonmaw);
-            }
+                Tapped = true;
+                PlayerGUID = pPlayer->GetGUID();
 
-            HostileReference* ref = m_creature->getThreatManager().getOnlineContainer().getReferenceByTarget(caster);
-            if (ref)
-                ref->removeReference();
+                m_creature->setFaction(FACTION_FRIENDLY);
+
+                if (Creature* pDragonmaw = GetClosestCreatureWithEntry(m_creature, NPC_DRAGONMAW_SUBJUGATOR, 50.0f))
+                    AttackStart(pDragonmaw);
+            }
         }
     }
 
@@ -233,18 +224,7 @@ struct MANGOS_DLL_DECL mob_enslaved_netherwing_drakeAI : public ScriptedAI
             return;
 
         if (id == 1)
-        {
-            if (PlayerGUID)
-            {
-                Unit* plr = Unit::GetUnit((*m_creature), PlayerGUID);
-                if (plr)
-                    DoCast(plr, SPELL_FORCE_OF_NELTHARAKU, true);
-
-                PlayerGUID = 0;
-            }
-
             m_creature->ForcedDespawn();
-        }
     }
 
     void UpdateAI(const uint32 diff)
@@ -256,19 +236,13 @@ struct MANGOS_DLL_DECL mob_enslaved_netherwing_drakeAI : public ScriptedAI
                 if (FlyTimer <= diff)
                 {
                     Tapped = false;
+
                     if (Player* pPlayer = (Player*)Unit::GetUnit(*m_creature, PlayerGUID))
                     {
                         if (pPlayer->GetQuestStatus(QUEST_FORCE_OF_NELT) == QUEST_STATUS_INCOMPLETE)
                         {
-                            pPlayer->KilledMonsterCredit(NPC_ENSLAVED_DRAKE_KILL_CREDIT, m_creature->GetGUID());
-
-                            /*
-                            float x,y,z;
-                            m_creature->GetPosition(x,y,z);
-
-                            float dx,dy,dz;
-                            m_creature->GetRandomPoint(x, y, z, 20, dx, dy, dz);
-                            dz += 20; // so it's in the air, not ground*/
+                            DoCast(pPlayer, SPELL_FORCE_OF_NELTHARAKU, true);
+                            PlayerGUID = 0;
 
                             float dx, dy, dz;
 
