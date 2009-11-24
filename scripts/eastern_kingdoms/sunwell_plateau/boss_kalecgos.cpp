@@ -58,7 +58,7 @@ enum KalecgosEncounter
     SPELL_REVITALIZE                = 45027,
     SPELL_TAIL_LASH                 = 45122,
     SPELL_TRANSFORM_KALEC           = 45027,
-    SPELL_CRAZED_RAGE               = 44806,
+    SPELL_CRAZED_RAGE               = 44806,                // this should be 44807 instead
 
      //Sathrovarr
     SPELL_SPECTRAL_INVIS            = 44801,
@@ -252,9 +252,12 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
         if (!m_bEnraged && ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 10))
         {
             if (Unit* pSathrovarr = Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_SATHROVARR)))
-                pSathrovarr->CastSpell(pSathrovarr, SPELL_CRAZED_RAGE, true);
+            {
+                if (pSathrovarr->isAlive())
+                    pSathrovarr->CastSpell(pSathrovarr, SPELL_CRAZED_RAGE, true);
+            }
 
-            DoCast(m_creature, SPELL_CRAZED_RAGE, true);
+            m_creature->CastSpell(m_creature, SPELL_CRAZED_RAGE, true);
             m_bEnraged = true;
         }
 
@@ -413,9 +416,12 @@ struct MANGOS_DLL_DECL boss_sathrovarrAI : public ScriptedAI
         if (!m_bEnraged && ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) <= 10))
         {
             if (Unit* pKalecgos = Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_KALECGOS_DRAGON)))
-                pKalecgos->CastSpell(pKalecgos, SPELL_CRAZED_RAGE, true);
+            {
+                if (pKalecgos->isAlive())
+                    pKalecgos->CastSpell(pKalecgos, SPELL_CRAZED_RAGE, true);
+            }
 
-            DoCast(m_creature, SPELL_CRAZED_RAGE, true);
+            m_creature->CastSpell(m_creature, SPELL_CRAZED_RAGE, true);
             m_bEnraged = true;
         }
 
