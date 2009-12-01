@@ -28,10 +28,11 @@ struct MANGOS_DLL_DECL instance_zulgurub : public ScriptedInstance
 {
     instance_zulgurub(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
 
-    //If all High Priest bosses were killed. Lorkhan, Zath and Ohgan are added too.
+    std::string strInstData;
+    // If all High Priest bosses were killed. Lorkhan, Zath and Ohgan are added too.
     uint32 m_auiEncounter[MAX_ENCOUNTER];
 
-    //Storing Lorkhan, Zath and Thekal because we need to cast on them later. Jindo is needed for healfunction too.
+    // Storing Lorkhan, Zath and Thekal because we need to cast on them later. Jindo is needed for heal function too.
     uint64 m_uiLorKhanGUID;
     uint64 m_uiZathGUID;
     uint64 m_uiThekalGUID;
@@ -43,10 +44,10 @@ struct MANGOS_DLL_DECL instance_zulgurub : public ScriptedInstance
         memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
 
         m_uiLorKhanGUID = 0;
-        m_uiZathGUID = 0;
-        m_uiThekalGUID = 0;
-        m_uiJindoGUID = 0;
-        m_uiHakkarGUID = 0;
+        m_uiZathGUID    = 0;
+        m_uiThekalGUID  = 0;
+        m_uiJindoGUID   = 0;
+        m_uiHakkarGUID  = 0;
     }
 
     bool IsEncounterInProgress() const
@@ -60,10 +61,10 @@ struct MANGOS_DLL_DECL instance_zulgurub : public ScriptedInstance
         switch(pCreature->GetEntry())
         {
             case NPC_LORKHAN: m_uiLorKhanGUID = pCreature->GetGUID(); break;
-            case NPC_ZATH: m_uiZathGUID = pCreature->GetGUID(); break;
-            case NPC_THEKAL: m_uiThekalGUID = pCreature->GetGUID(); break;
-            case NPC_JINDO: m_uiJindoGUID = pCreature->GetGUID(); break;
-            case NPC_HAKKAR: m_uiHakkarGUID = pCreature->GetGUID(); break;
+            case NPC_ZATH:    m_uiZathGUID = pCreature->GetGUID();    break;
+            case NPC_THEKAL:  m_uiThekalGUID = pCreature->GetGUID();  break;
+            case NPC_JINDO:   m_uiJindoGUID = pCreature->GetGUID();   break;
+            case NPC_HAKKAR:  m_uiHakkarGUID = pCreature->GetGUID();  break;
         }
     }
 
@@ -99,6 +100,50 @@ struct MANGOS_DLL_DECL instance_zulgurub : public ScriptedInstance
                 m_auiEncounter[8] = uiData;
                 break;
         }
+
+        if (uiData == DONE)
+        {
+            OUT_SAVE_INST_DATA;
+
+            std::ostringstream saveStream;
+            saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " "
+                << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5] << " "
+                << m_auiEncounter[6] << " " << m_auiEncounter[7] << " " << m_auiEncounter[8];
+
+            strInstData = saveStream.str();
+
+            SaveToDB();
+            OUT_SAVE_INST_DATA_COMPLETE;
+        }
+    }
+
+    const char* Save()
+    {
+        return strInstData.c_str();
+    }
+
+    void Load(const char* chrIn)
+    {
+        if (!chrIn)
+        {
+            OUT_LOAD_INST_DATA_FAIL;
+            return;
+        }
+
+        OUT_LOAD_INST_DATA(chrIn);
+
+        std::istringstream loadStream(chrIn);
+        loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3]
+            >> m_auiEncounter[4] >> m_auiEncounter[5] >> m_auiEncounter[6] >> m_auiEncounter[7]
+            >> m_auiEncounter[8];
+
+        for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+        {
+            if (m_auiEncounter[i] == IN_PROGRESS)
+                m_auiEncounter[i] = NOT_STARTED;
+        }
+
+        OUT_LOAD_INST_DATA_COMPLETE;
     }
 
     uint32 GetData(uint32 uiType)
@@ -124,7 +169,6 @@ struct MANGOS_DLL_DECL instance_zulgurub : public ScriptedInstance
             case TYPE_HAKKAR:
                 return m_auiEncounter[8];
         }
-
         return 0;
     }
 
@@ -154,7 +198,7 @@ InstanceData* GetInstanceData_instance_zulgurub(Map* pMap)
 
 void AddSC_instance_zulgurub()
 {
-    Script *newscript;
+    Script* newscript;
     newscript = new Script;
     newscript->Name = "instance_zulgurub";
     newscript->GetInstanceData = &GetInstanceData_instance_zulgurub;
