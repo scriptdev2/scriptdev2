@@ -114,12 +114,7 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
         DoScriptText(SAY_DEATH, m_creature);
 
         if (m_pInstance)
-        {
             m_pInstance->SetData(TYPE_VENOXIS, DONE);
-
-            if (Unit* pHakkar = Unit::GetUnit((*m_creature), m_pInstance->GetData64(DATA_HAKKAR)))
-                pHakkar->SetMaxHealth(pHakkar->GetMaxHealth() - 60000);
-        }
     }
 
     void DamageTaken(Unit* pDoneBy, uint32 &uiDamage)

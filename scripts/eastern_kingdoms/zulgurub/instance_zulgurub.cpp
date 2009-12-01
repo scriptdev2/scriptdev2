@@ -50,6 +50,19 @@ struct MANGOS_DLL_DECL instance_zulgurub : public ScriptedInstance
         m_uiHakkarGUID  = 0;
     }
 
+    // each time High Priest dies lower Hakkar's HP
+    void LowerHakkarHitPoints()
+    {
+        if (Creature* pHakkar = instance->GetCreature(m_uiHakkarGUID))
+        {
+            if (pHakkar->isAlive())
+            {
+                pHakkar->SetMaxHealth(pHakkar->GetMaxHealth() - 60000);
+                pHakkar->SetHealth(pHakkar->GetHealth() - 60000);
+            }
+        }
+    }
+
     bool IsEncounterInProgress() const
     {
         //not active in Zul'Gurub
@@ -60,11 +73,31 @@ struct MANGOS_DLL_DECL instance_zulgurub : public ScriptedInstance
     {
         switch(pCreature->GetEntry())
         {
-            case NPC_LORKHAN: m_uiLorKhanGUID = pCreature->GetGUID(); break;
-            case NPC_ZATH:    m_uiZathGUID = pCreature->GetGUID();    break;
-            case NPC_THEKAL:  m_uiThekalGUID = pCreature->GetGUID();  break;
-            case NPC_JINDO:   m_uiJindoGUID = pCreature->GetGUID();   break;
-            case NPC_HAKKAR:  m_uiHakkarGUID = pCreature->GetGUID();  break;
+            case NPC_LORKHAN:
+                m_uiLorKhanGUID = pCreature->GetGUID();
+                break;
+            case NPC_ZATH:
+                m_uiZathGUID = pCreature->GetGUID();
+                break;
+            case NPC_THEKAL:
+                m_uiThekalGUID = pCreature->GetGUID();
+                break;
+            case NPC_JINDO:
+                m_uiJindoGUID = pCreature->GetGUID();
+                break;
+            case NPC_HAKKAR:
+                m_uiHakkarGUID = pCreature->GetGUID();
+                if (m_auiEncounter[0] == DONE)
+                    LowerHakkarHitPoints();
+                if (m_auiEncounter[1] == DONE)
+                    LowerHakkarHitPoints();
+                if (m_auiEncounter[2] == DONE)
+                    LowerHakkarHitPoints();
+                if (m_auiEncounter[3] == DONE)
+                    LowerHakkarHitPoints();
+                if (m_auiEncounter[4] == DONE)
+                    LowerHakkarHitPoints();
+                break;
         }
     }
 
@@ -74,18 +107,28 @@ struct MANGOS_DLL_DECL instance_zulgurub : public ScriptedInstance
         {
             case TYPE_ARLOKK:
                 m_auiEncounter[0] = uiData;
+                if (uiData == DONE)
+                    LowerHakkarHitPoints();
                 break;
             case TYPE_JEKLIK:
                 m_auiEncounter[1] = uiData;
+                if (uiData == DONE)
+                    LowerHakkarHitPoints();
                 break;
             case TYPE_VENOXIS:
                 m_auiEncounter[2] = uiData;
+                if (uiData == DONE)
+                    LowerHakkarHitPoints();
                 break;
             case TYPE_MARLI:
                 m_auiEncounter[3] = uiData;
+                if (uiData == DONE)
+                    LowerHakkarHitPoints();
                 break;
             case TYPE_THEKAL:
                 m_auiEncounter[4] = uiData;
+                if (uiData == DONE)
+                    LowerHakkarHitPoints();
                 break;
             case TYPE_LORKHAN:
                 m_auiEncounter[5] = uiData;

@@ -163,15 +163,7 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
         DoScriptText(SAY_DEATH, m_creature);
 
         if (m_pInstance)
-        {
             m_pInstance->SetData(TYPE_MARLI, DONE);
-
-            if (Creature* pHakkar = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_HAKKAR)))
-            {
-                if (pHakkar->isAlive())
-                    pHakkar->SetMaxHealth(pHakkar->GetMaxHealth() - 60000);
-            }
-        }
     }
 
     void UpdateAI(const uint32 uiDiff)

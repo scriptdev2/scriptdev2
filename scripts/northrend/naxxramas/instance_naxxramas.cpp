@@ -361,7 +361,7 @@ struct MANGOS_DLL_DECL instance_naxxramas : public ScriptedInstance
                     DoRespawnGameObject(m_uiHorsemenChestGUID, 30*MINUTE);
                 }
                 break;
-        case TYPE_PATCHWERK:
+            case TYPE_PATCHWERK:
                 m_auiEncounter[9] = uiData;
                 if (uiData == DONE)
                     DoUseDoorOrButton(m_uiPathExitDoorGUID);
