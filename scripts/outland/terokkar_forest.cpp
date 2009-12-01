@@ -459,7 +459,7 @@ bool GossipHello_npc_skyguard_handler_deesak(Player* pPlayer, Creature* pCreatur
     if (pPlayer->GetReputationRank(1031) >= REP_HONORED)
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SKYGUARD, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-    pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
 
     return true;
 }

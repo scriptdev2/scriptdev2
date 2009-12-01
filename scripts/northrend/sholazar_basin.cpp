@@ -58,7 +58,7 @@ bool GossipHello_npc_vekjik(Player* pPlayer, Creature* pCreature)
         return true;
     }
 
-    pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
     return true;
 }
 

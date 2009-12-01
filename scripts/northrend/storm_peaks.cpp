@@ -57,7 +57,7 @@ bool GossipHello_npc_frostborn_scout(Player* pPlayer, Creature* pCreature)
         return true;
     }
 
-    pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
     return true;
 }
 
@@ -114,7 +114,7 @@ bool GossipHello_npc_loklira_the_crone(Player* pPlayer, Creature* pCreature)
         return true;
     }
 
-    pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
     return true;
 }
 
@@ -173,7 +173,7 @@ bool GossipHello_npc_thorim(Player* pPlayer, Creature* pCreature)
         pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_THORIM1, pCreature->GetGUID());
     }
     else
-        pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
+        pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
 
     return true;
 }
@@ -226,7 +226,7 @@ bool GossipHello_npc_roxi_ramrocket(Player* pPlayer, Creature* pCreature)
         }
     }
 
-    pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
     return true;
 }
 
