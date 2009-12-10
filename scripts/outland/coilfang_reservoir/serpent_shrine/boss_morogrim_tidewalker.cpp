@@ -204,10 +204,10 @@ struct MANGOS_DLL_DECL boss_morogrim_tidewalkerAI : public ScriptedAI
                     {
                         switch(i)
                         {
-                            case 0: m_creature->CastSpell(pTarget,SPELL_WATERY_GRAVE_1,false); break;
-                            case 1: m_creature->CastSpell(pTarget,SPELL_WATERY_GRAVE_2,false); break;
-                            case 2: m_creature->CastSpell(pTarget,SPELL_WATERY_GRAVE_3,false); break;
-                            case 3: m_creature->CastSpell(pTarget,SPELL_WATERY_GRAVE_4,false); break;
+                            case 0: pTarget->CastSpell(pTarget,SPELL_WATERY_GRAVE_1,false); break;
+                            case 1: pTarget->CastSpell(pTarget,SPELL_WATERY_GRAVE_2,false); break;
+                            case 2: pTarget->CastSpell(pTarget,SPELL_WATERY_GRAVE_3,false); break;
+                            case 3: pTarget->CastSpell(pTarget,SPELL_WATERY_GRAVE_4,false); break;
                         }
                     }
                 }

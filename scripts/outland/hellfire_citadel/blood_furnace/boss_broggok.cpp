@@ -29,8 +29,10 @@ enum
     SAY_AGGRO               = -1542008,
 
     SPELL_SLIME_SPRAY       = 30913,
+    H_SPELL_SLIME_SPRAY     = 38458,
     SPELL_POISON_CLOUD      = 30916,
     SPELL_POISON_BOLT       = 30917,
+    H_SPELL_POISON_BOLT     = 38459,
 
     SPELL_POISON            = 30914
 };
@@ -40,10 +42,12 @@ struct MANGOS_DLL_DECL boss_broggokAI : public ScriptedAI
     boss_broggokAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
+    bool m_bIsRegularMode;
 
     uint32 AcidSpray_Timer;
     uint32 PoisonSpawn_Timer;
@@ -91,13 +95,13 @@ struct MANGOS_DLL_DECL boss_broggokAI : public ScriptedAI
 
         if (AcidSpray_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_SLIME_SPRAY);
+            DoCast(m_creature->getVictim(), m_bIsRegularMode ? H_SPELL_SLIME_SPRAY : SPELL_SLIME_SPRAY);
             AcidSpray_Timer = urand(4000, 12000);
         }else AcidSpray_Timer -=diff;
 
         if (PoisonBolt_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_POISON_BOLT);
+            DoCast(m_creature->getVictim(), m_bIsRegularMode ? H_SPELL_POISON_BOLT : SPELL_POISON_BOLT);
             PoisonBolt_Timer = urand(4000, 12000);
         }else PoisonBolt_Timer -=diff;
 
