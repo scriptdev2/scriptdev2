@@ -87,16 +87,11 @@ struct MANGOS_DLL_DECL instance_zulgurub : public ScriptedInstance
                 break;
             case NPC_HAKKAR:
                 m_uiHakkarGUID = pCreature->GetGUID();
-                if (m_auiEncounter[0] == DONE)
-                    LowerHakkarHitPoints();
-                if (m_auiEncounter[1] == DONE)
-                    LowerHakkarHitPoints();
-                if (m_auiEncounter[2] == DONE)
-                    LowerHakkarHitPoints();
-                if (m_auiEncounter[3] == DONE)
-                    LowerHakkarHitPoints();
-                if (m_auiEncounter[4] == DONE)
-                    LowerHakkarHitPoints();
+                for(uint8 i = 0; i < 5; ++i)
+                {
+                    if (m_auiEncounter[i] == DONE)
+                        LowerHakkarHitPoints();
+                }
                 break;
         }
     }
