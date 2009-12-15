@@ -2354,7 +2354,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
 (-1604000,'Drakkari gonna kill anybody who trespass on these lands!',14443,1,0,0,'sladran SAY_AGGRO'),
 (-1604001,'Minions of the scale, heed my call!',14444,1,0,0,'sladran SAY_SUMMON_SNAKE'),
-(-1604002,'Our thousand fangs gonna rend your flesh! ',14445,1,0,0,'sladran SAY_SUMMON_CONSTRICT'),
+(-1604002,'Our thousand fangs gonna rend your flesh! ',14445,1,0,0,'sladran SAY_SUMMON_CONSTRICTOR'),
 (-1604003,'Ye not breathin\'! Good.',14446,1,0,0,'sladran SAY_SLAY_1'),
 (-1604004,'You scared now?',14447,1,0,0,'sladran SAY_SLAY_2'),
 (-1604005,'I\'ll eat you next, mon!',14448,1,0,0,'sladran SAY_SLAY_3'),
