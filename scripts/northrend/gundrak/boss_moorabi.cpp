@@ -22,6 +22,7 @@ SDCategory: Gundrak
 EndScriptData */
 
 #include "precompiled.h"
+#include "gundrak.h"
 
 enum
 {
@@ -33,8 +34,20 @@ enum
     SAY_SLAY_3                  = -1604016,
     SAY_DEATH                   = -1604017,
     EMOTE_TRANSFORM             = -1604018,
+    EMOTE_TRANSFORMED           = -1604029,
 
-    SOUND_ID_TRANSFORMED        = 14724
+    // Troll form
+    SPELL_DETERMINED_STAB   = 55104,
+    SPELL_MOJO_FRENZY       = 55163,
+    SPELL_GROUND_TREMOR     = 55142,
+    SPELL_NUMBING_SHOUT     = 55106,
+    SPELL_TRANSFORMATION    = 55098,
+
+    // Mammoth
+    SPELL_DETERMINED_GORE   = 55102,
+    SPELL_DETERMINED_GORE_H = 59444,
+    SPELL_QUAKE             = 55101,
+    SPELL_NUMBING_ROAR      = 55100,
 };
 
 /*######
@@ -53,13 +66,33 @@ struct MANGOS_DLL_DECL boss_moorabiAI : public ScriptedAI
     ScriptedInstance* m_pInstance;
     bool m_bIsRegularMode;
 
+
+    uint32 m_uiStabTimer;                                   // used for stab and gore
+    uint32 m_uiQuakeTimer;                                  // used for quake and ground tremor
+    uint32 m_uiRoarTimer;                                   // both roars on it
+    uint32 m_uiTransformationTimer;
+    uint32 m_uiPreviousTimer;
+
+    bool m_bMammothPhase;
+
     void Reset()
     {
+        m_bMammothPhase = false;
+
+        m_uiStabTimer           = 8000;
+        m_uiQuakeTimer          = 1000;
+        m_uiRoarTimer           = 7000;
+        m_uiTransformationTimer = 10000;
+        m_uiPreviousTimer       = 10000;
     }
 
     void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
+        DoCast(m_creature, SPELL_MOJO_FRENZY);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_MOORABI, IN_PROGRESS);
     }
 
     void KilledUnit(Unit* pVictim)
@@ -75,12 +108,65 @@ struct MANGOS_DLL_DECL boss_moorabiAI : public ScriptedAI
     void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DEATH, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_MOORABI, DONE);
     }
 
     void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
+
+        if (m_creature->HasAura(SPELL_TRANSFORMATION) && !m_bMammothPhase)
+        {
+            DoScriptText(EMOTE_TRANSFORMED, m_creature);
+            m_bMammothPhase = true;
+        }
+
+        if (m_uiRoarTimer < uiDiff)
+        {
+            DoCast(m_creature->getVictim(), m_bMammothPhase ? SPELL_NUMBING_ROAR : SPELL_NUMBING_SHOUT);
+            m_uiRoarTimer = 20000;
+        }
+        else
+            m_uiRoarTimer -= uiDiff;
+
+        if (m_uiQuakeTimer < uiDiff)
+        {
+            DoScriptText(SAY_QUAKE, m_creature);
+            DoCast(m_creature->getVictim(), m_bMammothPhase ? SPELL_QUAKE : SPELL_GROUND_TREMOR);
+            m_uiQuakeTimer = m_bMammothPhase ? 13000 : 18000;
+        }
+        else
+            m_uiQuakeTimer -= uiDiff;
+
+        if (m_uiStabTimer < uiDiff)
+        {
+            if (m_bMammothPhase)
+                DoCast(m_creature->getVictim(), m_bIsRegularMode ? SPELL_DETERMINED_GORE : SPELL_DETERMINED_GORE_H);
+            else
+                DoCast(m_creature->getVictim(), SPELL_DETERMINED_STAB);
+
+            m_uiStabTimer = 7000;
+        }
+        else
+            m_uiStabTimer -= uiDiff;
+
+        // check only in troll phase
+        if (!m_bMammothPhase)
+        {
+            if (m_uiTransformationTimer < uiDiff)
+            {
+                DoScriptText(SAY_TRANSFORM, m_creature);
+                DoScriptText(EMOTE_TRANSFORM, m_creature);
+                DoCast(m_creature, SPELL_TRANSFORMATION);
+                m_uiPreviousTimer *= 0.8;
+                m_uiTransformationTimer = m_uiPreviousTimer;
+            }
+            else
+                m_uiTransformationTimer -= uiDiff;
+        }
 
         DoMeleeAttackIfReady();
     }
@@ -93,7 +179,7 @@ CreatureAI* GetAI_boss_moorabi(Creature* pCreature)
 
 void AddSC_boss_moorabi()
 {
-    Script *newscript;
+    Script* newscript;
 
     newscript = new Script;
     newscript->Name = "boss_moorabi";
