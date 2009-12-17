@@ -1452,11 +1452,15 @@
 						>
 					</File>
 					<File
+						RelativePath="..\scripts\kalimdor\ruins_of_ahnqiraj\ruins_of_ahnqiraj.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\scripts\kalimdor\ruins_of_ahnqiraj\instance_ruins_of_ahnqiraj.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\kalimdor\ruins_of_ahnqiraj\instance_ruins_of_ahnqiraj.h"
+						RelativePath="..\scripts\kalimdor\ruins_of_ahnqiraj\ruins_of_ahnqiraj.h"
 						>
 					</File>
 				</Filter>

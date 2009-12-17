@@ -210,6 +210,7 @@ extern void AddSC_razorfen_downs();
 extern void AddSC_boss_ayamiss();                           //ruins_of_ahnqiraj
 extern void AddSC_boss_kurinnaxx();
 extern void AddSC_boss_moam();
+extern void AddSC_ruins_of_ahnqiraj();
 extern void AddSC_boss_cthun();                             //temple_of_ahnqiraj
 extern void AddSC_boss_fankriss();
 extern void AddSC_boss_huhuran();
@@ -597,6 +598,7 @@ void AddScripts()
     AddSC_boss_ayamiss();                                   //ruins_of_ahnqiraj
     AddSC_boss_kurinnaxx();
     AddSC_boss_moam();
+    AddSC_ruins_of_ahnqiraj();
     AddSC_boss_cthun();                                     //temple_of_ahnqiraj
     AddSC_boss_fankriss();
     AddSC_boss_huhuran();

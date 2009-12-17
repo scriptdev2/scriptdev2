@@ -781,6 +781,7 @@ UPDATE creature_template SET ScriptName='npc_henry_stern' WHERE entry=8696;
 
 /* RUINS OF AHN'QIRAJ */
 UPDATE instance_template SET script='instance_ruins_of_ahnqiraj' WHERE map=509;
+UPDATE creature_template SET ScriptName='mob_anubisath_guardian' WHERE entry=15355;
 
 /* SCARLET MONASTERY */
 UPDATE instance_template SET script='instance_scarlet_monastery' WHERE map=189;
