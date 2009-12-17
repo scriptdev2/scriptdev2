@@ -22,6 +22,7 @@ SDCategory: Nexus
 EndScriptData */
 
 #include "precompiled.h"
+#include "nexus.h"
 
 enum
 {
@@ -89,6 +90,9 @@ struct MANGOS_DLL_DECL boss_telestraAI : public ScriptedAI
     void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DEATH, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_TELESTRA, DONE);
     }
 
     void KilledUnit(Unit* pVictim)

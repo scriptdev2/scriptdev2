@@ -83,17 +83,11 @@ struct MANGOS_DLL_DECL boss_anomalusAI : public ScriptedAI
         m_uiCreateRiftTimer = 25000;
         m_uiChaoticRiftGUID = 0;
         m_uiShieldCount = 3;
-
-        if (m_pInstance)
-            m_pInstance->SetData(TYPE_ANOMALUS, NOT_STARTED);
     }
 
     void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
-
-        if (m_pInstance)
-            m_pInstance->SetData(TYPE_ANOMALUS, IN_PROGRESS);
     }
 
     void JustDied(Unit* pKiller)

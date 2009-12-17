@@ -39,8 +39,7 @@ bool GOHello_go_containment_sphere(Player* pPlayer, GameObject* pGo)
     }
 
     pGo->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
-    pGo->SetGoState(GO_STATE_ACTIVE);
-    return true;
+    return false;
 }
 
 struct MANGOS_DLL_DECL instance_nexus : public ScriptedInstance
@@ -51,6 +50,7 @@ struct MANGOS_DLL_DECL instance_nexus : public ScriptedInstance
     std::string strInstData;
 
     uint64 m_uiAnomalusGUID;
+    uint64 m_uiKeristrazaGUID;
 
     uint64 m_uiTelestrasContainmentSphereGUID;
     uint64 m_uiAnomalusContainmentSphereGUID;
@@ -61,6 +61,7 @@ struct MANGOS_DLL_DECL instance_nexus : public ScriptedInstance
         memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
 
         m_uiAnomalusGUID = 0;
+        m_uiKeristrazaGUID = 0;
 
         m_uiTelestrasContainmentSphereGUID = 0;
         m_uiAnomalusContainmentSphereGUID = 0;
@@ -106,6 +107,9 @@ struct MANGOS_DLL_DECL instance_nexus : public ScriptedInstance
         {
             case NPC_ANOMALUS:
                 m_uiAnomalusGUID = pCreature->GetGUID();
+                break;
+            case NPC_KERISTRASZA:
+                m_uiKeristrazaGUID = pCreature->GetGUID();
                 break;
         }
     }
@@ -179,6 +183,13 @@ struct MANGOS_DLL_DECL instance_nexus : public ScriptedInstance
         if (m_auiEncounter[0] == SPECIAL && m_auiEncounter[1] == SPECIAL && m_auiEncounter[2] == SPECIAL)
         {
             // release Keristrasza from her prison here
+            m_auiEncounter[3] = SPECIAL;
+
+            if (Creature* pCreature = instance->GetCreature(m_uiKeristrazaGUID))
+            {
+                if (pCreature->isAlive())
+                    pCreature->RemoveAurasDueToSpell(SPELL_FROZEN_PRISON);
+            }
         }
 
         if (uiData == DONE)
