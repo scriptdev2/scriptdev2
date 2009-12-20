@@ -1018,6 +1018,14 @@
 				<Filter
 					Name="sunken_temple"
 					>
+					<File
+						RelativePath="..\scripts\eastern_kingdoms\sunken_temple\instance_sunken_temple.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\eastern_kingdoms\sunken_temple\sunken_temple.h"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="sunwell_plateau"

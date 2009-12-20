@@ -902,7 +902,7 @@ UPDATE creature_template SET ScriptName='mob_freed_soul' WHERE entry=11136;
 UPDATE gameobject_template SET ScriptName='go_gauntlet_gate' WHERE entry=175357;
 
 /* SUNKEN TEMPLE */
-
+UPDATE instance_template SET script='instance_sunken_temple' WHERE map=109;
 
 /* SUNWELL PLATEAU */
 UPDATE instance_template SET script='instance_sunwell_plateau' WHERE map=580;
