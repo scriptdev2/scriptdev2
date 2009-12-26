@@ -92,8 +92,8 @@ struct MANGOS_DLL_DECL boss_telestraAI : public ScriptedAI
     {
         m_uiPhase = PHASE_1;
 
-        m_uiFirebombTimer = urand(3000, 5000);
-        m_uiIceNovaTimer = urand(6000, 12000);
+        m_uiFirebombTimer = urand(2000, 4000);
+        m_uiIceNovaTimer = urand(8000, 12000);
         m_uiGravityWellTimer = urand(15000, 25000);
     }
 
@@ -105,7 +105,7 @@ struct MANGOS_DLL_DECL boss_telestraAI : public ScriptedAI
             m_creature->SetInCombatWith(pWho);
             pWho->SetInCombatWith(m_creature);
 
-            m_creature->GetMotionMaster()->MoveChase(pWho, 20.0f);
+            m_creature->GetMotionMaster()->MoveChase(pWho, 15.0f);
         }
     }
 
@@ -137,40 +137,35 @@ struct MANGOS_DLL_DECL boss_telestraAI : public ScriptedAI
         {
             case PHASE_1:
             {
+                if (!m_creature->GetCurrentSpell(CURRENT_CHANNELED_SPELL))
+                {
+                    if (m_uiFirebombTimer < uiDiff)
+                    {
+                        if (DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_FIREBOMB : SPELL_FIREBOMB_H) == CAST_OK)
+                            m_uiFirebombTimer = urand(4000, 6000);
+                    }
+                    else
+                        m_uiFirebombTimer -= uiDiff;
+
+                    if (m_uiIceNovaTimer < uiDiff)
+                    {
+                        if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_ICE_NOVA : SPELL_ICE_NOVA_H, CAST_INTURRUPT_PREVIOUS) == CAST_OK)
+                            m_uiIceNovaTimer = urand(10000, 15000);
+                    }
+                    else
+                        m_uiIceNovaTimer -= uiDiff;
+
+                    DoMeleeAttackIfReady();
+                }
+
                 if (m_uiGravityWellTimer < uiDiff)
                 {
-                    if (!m_creature->IsNonMeleeSpellCasted(false))
-                    {
-                        DoCast(m_creature, SPELL_GRAVITY_WELL);
+                    if (DoCastSpellIfCan(m_creature, SPELL_GRAVITY_WELL) == CAST_OK)
                         m_uiGravityWellTimer = urand(15000, 30000);
-                    }
                 }
                 else
                     m_uiGravityWellTimer -= uiDiff;
 
-                if (m_uiFirebombTimer < uiDiff)
-                {
-                    if (!m_creature->IsNonMeleeSpellCasted(false))
-                    {
-                        DoCast(m_creature->getVictim(), m_bIsRegularMode ? SPELL_FIREBOMB : SPELL_FIREBOMB_H);
-                        m_uiFirebombTimer = urand(3000, 5000);
-                    }
-                }
-                else
-                    m_uiFirebombTimer -= uiDiff;
-
-                if (m_uiIceNovaTimer < uiDiff)
-                {
-                    if (!m_creature->IsNonMeleeSpellCasted(false))
-                    {
-                        DoCast(m_creature, m_bIsRegularMode ? SPELL_ICE_NOVA : SPELL_ICE_NOVA_H);
-                        m_uiIceNovaTimer = urand(10000, 15000);
-                    }
-                }
-                else
-                    m_uiIceNovaTimer -= uiDiff;
-
-                DoMeleeAttackIfReady();
                 break;
             }
             case PHASE_2:
