@@ -903,6 +903,9 @@ UPDATE gameobject_template SET ScriptName='go_gauntlet_gate' WHERE entry=175357;
 
 /* SUNKEN TEMPLE */
 UPDATE instance_template SET script='instance_sunken_temple' WHERE map=109;
+DELETE FROM areatrigger_scripts WHERE entry=4016;
+INSERT INTO areatrigger_scripts VALUES (4016,'at_shade_of_eranikus');
+UPDATE creature_template SET ScriptName='npc_malfurion_stormrage' WHERE entry=15362;
 
 /* SUNWELL PLATEAU */
 UPDATE instance_template SET script='instance_sunwell_plateau' WHERE map=580;

@@ -188,6 +188,7 @@ scripts/eastern_kingdoms/stratholme/stratholme.cpp \
 scripts/eastern_kingdoms/stratholme/stratholme.h \
 scripts/eastern_kingdoms/sunken_temple/instance_sunken_temple.cpp \
 scripts/eastern_kingdoms/sunken_temple/sunken_temple.h \
+scripts/eastern_kingdoms/sunken_temple/sunken_temple.cpp \
 scripts/eastern_kingdoms/sunwell_plateau/boss_brutallus.cpp \
 scripts/eastern_kingdoms/sunwell_plateau/boss_kalecgos.cpp \
 scripts/eastern_kingdoms/sunwell_plateau/instance_sunwell_plateau.cpp \
