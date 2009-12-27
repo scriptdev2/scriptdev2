@@ -171,22 +171,16 @@ struct MANGOS_DLL_DECL boss_keristraszaAI : public ScriptedAI
 
         if (uiTailSweepTimer < uiDiff)
         {
-            if (!m_creature->IsNonMeleeSpellCasted(false))
-            {
-                DoCast(m_creature, SPELL_TAIL_SWEEP);
+            if (DoCastSpellIfCan(m_creature, SPELL_TAIL_SWEEP) == CAST_OK)
                 uiTailSweepTimer = urand(2500, 7500);
-            }
         }
         else
             uiCrystalChainTimer -= uiDiff;
 
         if (uiCrystalfireBreathTimer < uiDiff)
         {
-            if (!m_creature->IsNonMeleeSpellCasted(false))
-            {
-                DoCast(m_creature, m_bIsRegularMode ? SPELL_CRYSTALFIRE_BREATH : SPELL_CRYSTALFIRE_BREATH_H);
+            if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_CRYSTALFIRE_BREATH : SPELL_CRYSTALFIRE_BREATH_H) == CAST_OK)
                 uiCrystalfireBreathTimer = urand(15000, 20000);
-            }
         }
         else
             uiCrystalfireBreathTimer -= uiDiff;
@@ -195,11 +189,10 @@ struct MANGOS_DLL_DECL boss_keristraszaAI : public ScriptedAI
         {
             if (uiCrystallizeTimer < uiDiff)
             {
-                if (!m_creature->IsNonMeleeSpellCasted(false))
+                if (DoCastSpellIfCan(m_creature, SPELL_CRYSTALLIZE) == CAST_OK)
                 {
-                    DoScriptText(SAY_CRYSTAL_NOVA, m_creature);
-                    DoCast(m_creature, SPELL_CRYSTALLIZE);
                     uiCrystallizeTimer = urand(15000, 25000);
+                    DoScriptText(SAY_CRYSTAL_NOVA, m_creature);
                 }
             }
             else
