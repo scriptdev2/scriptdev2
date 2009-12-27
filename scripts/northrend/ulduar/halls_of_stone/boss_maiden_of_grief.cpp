@@ -31,7 +31,18 @@ enum
     SAY_SLAY_3                  = -1599008,
     SAY_SLAY_4                  = -1599009,
     SAY_STUN                    = -1599010,
-    SAY_DEATH                   = -1599011
+    SAY_DEATH                   = -1599011,
+
+    SPELL_STORM_OF_GRIEF        = 50752,
+    SPELL_STORM_OF_GRIEF_H      = 59772,
+
+    SPELL_SHOCK_OF_SORROW       = 50760,
+    SPELL_SHOCK_OF_SORROW_H     = 59726,
+
+    SPELL_PILLAR_OF_WOE         = 50761,
+    SPELL_PILLAR_OF_WOE_H       = 59727,
+
+    SPELL_PARTING_SORROW        = 59723
 };
 
 /*######

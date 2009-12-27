@@ -25,12 +25,39 @@ EndScriptData */
 
 enum
 {
-    SAY_AGGRO                   = -1599000,
-    SAY_SLAY_1                  = -1599001,
-    SAY_SLAY_2                  = -1599002,
-    SAY_SLAY_3                  = -1599003,
-    SAY_DEATH                   = -1599004,
-    EMOTE_GENERIC_FRENZY        = -1000002
+    SAY_AGGRO                       = -1599000,
+    SAY_SLAY_1                      = -1599001,
+    SAY_SLAY_2                      = -1599002,
+    SAY_SLAY_3                      = -1599003,
+    SAY_DEATH                       = -1599004,
+    EMOTE_GENERIC_FRENZY            = -1000002,
+
+    SPELL_FRENZY                    = 28747,
+
+    SPELL_CHAIN_LIGHTNING           = 50830,
+    SPELL_CHAIN_LIGHTNING_H         = 59844,
+
+    SPELL_STATIC_CHARGE             = 50834,
+    SPELL_STATIC_CHARGE_H           = 59846,
+
+    SPELL_LIGHTNING_SHIELD          = 50831,
+    SPELL_LIGHTNING_SHIELD_H        = 59845,
+
+    SPELL_LIGHTNING_RING            = 50840,
+    SPELL_LIGHTNING_RING_H          = 59848,
+
+    SPELL_SUMMON_IRON_TROGG         = 50792,                // periodic dummy aura, tick each 10sec or each 7sec in heroic
+    SPELL_SUMMON_IRON_TROGG_H       = 59859,                // left/right 50790,50791
+
+    SPELL_SUMMON_MALFORMED_OOZE     = 50801,                // periodic dummy aura, tick each 5sec or each 3sec in heroic
+    SPELL_SUMMON_MALFORMED_OOZE_H   = 59858,                // left/right 50802,50803
+
+    SPELL_SUMMON_IRON_SLUDGE        = 50747,                // instakill TARGET_SCRIPT
+    SPELL_IRON_SLUDGE_SPAWN_VISUAL  = 50777,
+
+    NPC_IRON_TROGG                  = 27979,
+    NPC_MALFORMED_OOZE              = 27981,
+    NPC_IRON_SLUDGE                 = 28165
 };
 
 /*######
