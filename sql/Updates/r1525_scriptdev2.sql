@@ -1,4 +1,4 @@
-DELETE FROM script_texts WHERE entry BETWEEN -1109004 AND -11090000;
+DELETE FROM script_texts WHERE entry BETWEEN -1109004 AND -1109000;
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
 (-1109000,'The walls of the chamber tremble. Something is happening...',0,2,0,0,'malfurion stormrage EMOTE_MALFURION'),
 (-1109001,'Be steadfast, champion. I know why it is that you are here and I know what it is that you seek. Eranikus will not give up the shard freely. He has been twisted... twisted by the same force that you seek to destroy.',0,0,0,0,'malfurion stormrge SAY_MALFURION1'),
