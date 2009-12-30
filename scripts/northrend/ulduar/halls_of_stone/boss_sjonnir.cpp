@@ -22,6 +22,7 @@ SDCategory: Halls of Stone
 EndScriptData */
 
 #include "precompiled.h"
+#include "halls_of_stone.h"
 
 enum
 {

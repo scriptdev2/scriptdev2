@@ -359,6 +359,8 @@ scripts/northrend/ulduar/halls_of_lightning/instance_halls_of_lightning.cpp \
 scripts/northrend/ulduar/halls_of_stone/boss_maiden_of_grief.cpp \
 scripts/northrend/ulduar/halls_of_stone/boss_sjonnir.cpp \
 scripts/northrend/ulduar/halls_of_stone/halls_of_stone.cpp \
+scripts/northrend/ulduar/halls_of_stone/halls_of_stone.h \
+scripts/northrend/ulduar/halls_of_stone/instance_halls_of_stone.cpp \
 scripts/northrend/ulduar/ulduar/instance_ulduar.cpp \
 scripts/northrend/ulduar/ulduar/ulduar.h \
 scripts/northrend/utgarde_keep/utgarde_keep/boss_ingvar.cpp \
