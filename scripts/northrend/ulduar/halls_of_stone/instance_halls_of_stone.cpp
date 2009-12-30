@@ -36,7 +36,6 @@ struct MANGOS_DLL_DECL instance_halls_of_stone : public ScriptedInstance
     uint64 m_uiMarnakGUID;
 
     uint64 m_uiSjonnirDoorGUID;
-    uint64 m_uiMaidenDoorGUID;
     uint64 m_uiTribunalDoorGUID;
     uint64 m_uiTribunalChestGUID;
     uint64 m_uiTribunalHeadRightGUID;
@@ -56,7 +55,6 @@ struct MANGOS_DLL_DECL instance_halls_of_stone : public ScriptedInstance
         m_uiMarnakGUID              = 0;
 
         m_uiSjonnirDoorGUID         = 0;
-        m_uiMaidenDoorGUID          = 0;
         m_uiTribunalDoorGUID        = 0;
         m_uiTribunalChestGUID       = 0;
         m_uiTribunalHeadRightGUID   = 0;
@@ -92,9 +90,6 @@ struct MANGOS_DLL_DECL instance_halls_of_stone : public ScriptedInstance
         {
             case GO_DOOR_SJONNIR:
                 m_uiSjonnirDoorGUID = pGo->GetGUID();
-                break;
-            case GO_DOOR_MAIDEN:
-                m_uiMaidenDoorGUID = pGo->GetGUID();
                 break;
             case GO_DOOR_TRIBUNAL:
                 m_uiTribunalDoorGUID = pGo->GetGUID();
@@ -175,8 +170,6 @@ struct MANGOS_DLL_DECL instance_halls_of_stone : public ScriptedInstance
                 return m_uiMarnakGUID;
             case GO_DOOR_SJONNIR:
                 return m_uiSjonnirDoorGUID;
-            case GO_DOOR_MAIDEN:
-                return m_uiMaidenDoorGUID;
             case GO_DOOR_TRIBUNAL:
                 return m_uiTribunalDoorGUID;
             case GO_TRIBUNAL_CHEST:

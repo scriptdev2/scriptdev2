@@ -21,7 +21,6 @@ enum
     NPC_MARNAK              = 30897,
 
     GO_DOOR_SJONNIR         = 191296,
-    GO_DOOR_MAIDEN          = 191292,                       // possibly closed during event?
     GO_DOOR_TRIBUNAL        = 191294,                       // possibly closed during event?
 
     GO_TRIBUNAL_CHEST       = 190586,

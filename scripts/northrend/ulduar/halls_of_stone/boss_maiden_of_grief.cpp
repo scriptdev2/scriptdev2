@@ -16,7 +16,7 @@
 
 /* ScriptData
 SDName: Boss_Maiden_of_Grief
-SD%Complete: 20%
+SD%Complete: 60%
 SDComment:
 SDCategory: Halls of Stone
 EndScriptData */
@@ -62,8 +62,15 @@ struct MANGOS_DLL_DECL boss_maiden_of_griefAI : public ScriptedAI
     ScriptedInstance* m_pInstance;
     bool m_bIsRegularMode;
 
+    uint32 m_uiStormTimer;
+    uint32 m_uiShockTimer;
+    uint32 m_uiPillarTimer;
+
     void Reset()
     {
+        m_uiStormTimer = 5000;
+        m_uiShockTimer = 10000;
+        m_uiPillarTimer = 15000;
     }
 
     void Aggro(Unit* pWho)
@@ -85,12 +92,45 @@ struct MANGOS_DLL_DECL boss_maiden_of_griefAI : public ScriptedAI
     void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DEATH, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_MAIDEN, DONE);
     }
 
     void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
+
+        if (m_uiStormTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_STORM_OF_GRIEF : SPELL_STORM_OF_GRIEF_H) == CAST_OK)
+                m_uiStormTimer = 20000;
+        }
+        else
+            m_uiStormTimer -= uiDiff;
+
+        if (m_uiPillarTimer < uiDiff)
+        {
+            if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_PILLAR_OF_WOE : SPELL_PILLAR_OF_WOE_H) == CAST_OK)
+                    m_uiPillarTimer = 10000;
+            }
+        }
+        else
+            m_uiPillarTimer -= uiDiff;
+
+        if (m_uiShockTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_SHOCK_OF_SORROW : SPELL_SHOCK_OF_SORROW_H) == CAST_OK)
+            {
+                DoScriptText(SAY_STUN, m_creature);
+                m_uiShockTimer = 35000;
+            }
+        }
+        else
+            m_uiShockTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
