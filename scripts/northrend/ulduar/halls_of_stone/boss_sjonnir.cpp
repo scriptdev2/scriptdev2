@@ -46,8 +46,11 @@ enum
     SPELL_LIGHTNING_RING            = 50840,
     SPELL_LIGHTNING_RING_H          = 59848,
 
+    SPELL_SUMMON_IRON_DWARF         = 50789,                // periodic dummy aura, tick each 30sec or each 20sec in heroic
+    SPELL_SUMMON_IRON_DWARF_H       = 59860,                // left/right 50790,50791
+
     SPELL_SUMMON_IRON_TROGG         = 50792,                // periodic dummy aura, tick each 10sec or each 7sec in heroic
-    SPELL_SUMMON_IRON_TROGG_H       = 59859,                // left/right 50790,50791
+    SPELL_SUMMON_IRON_TROGG_H       = 59859,                // left/right 50793,50794
 
     SPELL_SUMMON_MALFORMED_OOZE     = 50801,                // periodic dummy aura, tick each 5sec or each 3sec in heroic
     SPELL_SUMMON_MALFORMED_OOZE_H   = 59858,                // left/right 50802,50803
@@ -56,6 +59,7 @@ enum
     SPELL_IRON_SLUDGE_SPAWN_VISUAL  = 50777,
 
     NPC_IRON_TROGG                  = 27979,
+    NPC_IRON_DWARF                  = 27982,
     NPC_MALFORMED_OOZE              = 27981,
     NPC_IRON_SLUDGE                 = 28165
 };
@@ -78,11 +82,29 @@ struct MANGOS_DLL_DECL boss_sjonnirAI : public ScriptedAI
 
     void Reset()
     {
+        if (m_creature->isAlive())
+            m_creature->CastSpell(m_creature, m_bIsRegularMode ? SPELL_LIGHTNING_SHIELD : SPELL_LIGHTNING_SHIELD_H, false);
     }
 
     void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
+
+        m_creature->CastSpell(m_creature, m_bIsRegularMode ? SPELL_SUMMON_IRON_DWARF : SPELL_SUMMON_IRON_DWARF_H, true);
+        m_creature->CastSpell(m_creature, m_bIsRegularMode ? SPELL_SUMMON_IRON_TROGG : SPELL_SUMMON_IRON_TROGG_H, true);
+    }
+
+
+    void JustSummoned(Creature* pSummoned)
+    {
+        if (pSummoned->GetEntry() == NPC_IRON_TROGG || pSummoned->GetEntry() == NPC_IRON_DWARF || pSummoned->GetEntry() == NPC_MALFORMED_OOZE)
+        {
+            float fX, fY, fZ;
+            pSummoned->GetRandomPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 10.0f, fX, fY, fZ);
+
+            pSummoned->RemoveMonsterMoveFlag(MONSTER_MOVE_WALK);
+            pSummoned->GetMotionMaster()->MovePoint(0, fX, fY, fZ);
+        }
     }
 
     void KilledUnit(Unit* pVictim)
