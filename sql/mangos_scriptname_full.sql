@@ -1081,6 +1081,8 @@ UPDATE creature_template SET ScriptName='mob_vrykul_skeleton' WHERE entry=23970;
 
 /* UTGARDE PINNACLE */
 UPDATE creature_template SET ScriptName='boss_gortok' WHERE entry=26687;
+DELETE FROM areatrigger_scripts WHERE entry=4991;
+INSERT INTO areatrigger_scripts VALUES (4991,'at_skadi');
 UPDATE creature_template SET ScriptName='boss_skadi' WHERE entry=26693;
 UPDATE creature_template SET ScriptName='boss_svala' WHERE entry=29281;
 DELETE FROM areatrigger_scripts WHERE entry=5140;

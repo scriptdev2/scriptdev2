@@ -78,6 +78,12 @@ struct MANGOS_DLL_DECL boss_skadiAI : public ScriptedAI
     {
     }
 
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_SKADI, NOT_STARTED);
+    }
+
     void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
@@ -115,6 +121,17 @@ CreatureAI* GetAI_boss_skadi(Creature* pCreature)
     return new boss_skadiAI(pCreature);
 }
 
+bool AreaTrigger_at_skadi(Player* pPlayer, AreaTriggerEntry* pAt)
+{
+    if (ScriptedInstance* pInstance = (ScriptedInstance*)pPlayer->GetInstanceData())
+    {
+        if (pInstance->GetData(TYPE_SKADI) == NOT_STARTED)
+            pInstance->SetData(TYPE_SKADI, SPECIAL);
+    }
+
+    return false;
+}
+
 void AddSC_boss_skadi()
 {
     Script *newscript;
@@ -122,5 +139,10 @@ void AddSC_boss_skadi()
     newscript = new Script;
     newscript->Name = "boss_skadi";
     newscript->GetAI = &GetAI_boss_skadi;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "at_skadi";
+    newscript->pAreaTrigger = &AreaTrigger_at_skadi;
     newscript->RegisterSelf();
 }
