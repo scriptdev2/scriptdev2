@@ -22,13 +22,24 @@ SDCategory: Utgarde Pinnacle
 EndScriptData */
 
 #include "precompiled.h"
+#include "utgarde_pinnacle.h"
 
 enum
 {
-    SAY_AGGRO           = -1575015,
-    SAY_SLAY_1          = -1575016,
-    SAY_SLAY_2          = -1575017,
-    SAY_DEATH           = -1575018
+    SAY_AGGRO               = -1575015,
+    SAY_SLAY_1              = -1575016,
+    SAY_SLAY_2              = -1575017,
+    SAY_DEATH               = -1575018,
+
+    SPELL_FREEZE_ANIM       = 16245,
+
+    SPELL_IMPALE            = 48261,
+    SPELL_IMPALE_H          = 59268,
+
+    SPELL_WITHERING_ROAR    = 48256,
+    SPELL_WITHERING_ROAR_H  = 59267,
+
+    SPELL_ARCING_SMASH      = 48260
 };
 
 /*######
@@ -64,6 +75,9 @@ struct MANGOS_DLL_DECL boss_gortokAI : public ScriptedAI
     void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DEATH, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_GORTOK, DONE);
     }
 
     void UpdateAI(const uint32 uiDiff)

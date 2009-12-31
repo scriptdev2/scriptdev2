@@ -17,26 +17,45 @@
 /* ScriptData
 SDName: Boss_Skadi
 SD%Complete: 20%
-SDComment:
+SDComment: starts at trigger 4991
 SDCategory: Utgarde Pinnacle
 EndScriptData */
 
 #include "precompiled.h"
+#include "utgarde_pinnacle.h"
 
 enum
 {
-    SAY_AGGRO                   = -1575019,
-    SAY_DRAKEBREATH_1           = -1575020,
-    SAY_DRAKEBREATH_2           = -1575021,
-    SAY_DRAKEBREATH_3           = -1575022,
-    SAY_DRAKE_HARPOON_1         = -1575023,
-    SAY_DRAKE_HARPOON_2         = -1575024,
-    SAY_KILL_1                  = -1575025,
-    SAY_KILL_2                  = -1575026,
-    SAY_KILL_3                  = -1575027,
-    SAY_DEATH                   = -1575028,
-    SAY_DRAKE_DEATH             = -1575029,
-    EMOTE_HARPOON_RANGE         = -1575030
+    SAY_AGGRO                       = -1575019,
+    SAY_DRAKEBREATH_1               = -1575020,
+    SAY_DRAKEBREATH_2               = -1575021,
+    SAY_DRAKEBREATH_3               = -1575022,
+    SAY_DRAKE_HARPOON_1             = -1575023,
+    SAY_DRAKE_HARPOON_2             = -1575024,
+    SAY_KILL_1                      = -1575025,
+    SAY_KILL_2                      = -1575026,
+    SAY_KILL_3                      = -1575027,
+    SAY_DEATH                       = -1575028,
+    SAY_DRAKE_DEATH                 = -1575029,
+    EMOTE_HARPOON_RANGE             = -1575030,
+
+    SPELL_CRUSH                     = 50234,
+    SPELL_CRUSH_H                   = 59330,
+
+    SPELL_WHIRLWIND                 = 50228,
+    SPELL_WHIRLWIND_H               = 59322,
+
+    SPELL_POISONED_SPEAR            = 50255,
+    SPELL_POISONED_SPEAR_H          = 59331,
+
+    // casted with base of creature 22515 (World Trigger), so we must make sure
+    // to use the close one by the door leading further in to instance.
+    SPELL_SUMMON_GAUNTLET_MOBS      = 48630,                // tick every 30 sec
+    SPELL_SUMMON_GAUNTLET_MOBS_H    = 59275,                // tick every 25 sec
+
+    SPELL_GAUNTLET_PERIODIC         = 47546,                // what is this? Unknown use/effect, but probably related
+
+    SPELL_LAUNCH_HARPOON            = 48642,                // this spell hit drake to reduce HP (force triggered from 48641)
 };
 
 /*######
@@ -77,6 +96,9 @@ struct MANGOS_DLL_DECL boss_skadiAI : public ScriptedAI
     void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DEATH, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_SKADI, DONE);
     }
 
     void UpdateAI(const uint32 uiDiff)

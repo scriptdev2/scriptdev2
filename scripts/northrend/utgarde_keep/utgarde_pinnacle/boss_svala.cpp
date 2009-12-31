@@ -174,6 +174,9 @@ struct MANGOS_DLL_DECL boss_svalaAI : public ScriptedAI
     void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DEATH, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_SVALA, DONE);
     }
 
     void DoMoveToPosition()

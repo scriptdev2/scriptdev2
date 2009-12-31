@@ -12,7 +12,15 @@ enum
     TYPE_SVALA                      = 0,
     TYPE_GORTOK                     = 1,
     TYPE_SKADI                      = 2,
-    TYPE_YMIRON                     = 3
+    TYPE_YMIRON                     = 3,
+
+    GO_STASIS_GENERATOR             = 188593,
+    GO_DOOR_SKADI                   = 192173,
+
+    NPC_FURBOLG                     = 26684,
+    NPC_WORGEN                      = 26683,
+    NPC_JORMUNGAR                   = 26685,
+    NPC_RHINO                       = 26686
 };
 
 #endif
