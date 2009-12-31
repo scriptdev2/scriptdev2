@@ -31,26 +31,27 @@ struct MANGOS_DLL_DECL instance_pinnacle : public ScriptedInstance
     uint32 m_auiEncounter[MAX_ENCOUNTER];
     std::string strInstData;
 
+    uint64 m_uiSkadiDoorGUID;
+
     void Initialize()
     {
         memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
+
+        m_uiSkadiDoorGUID = 0;
     }
 
-    uint32 GetData(uint32 uiType)
+    void OnObjectCreate(GameObject* pGo)
     {
-        switch(uiType)
+        switch(pGo->GetEntry())
         {
-            case TYPE_SVALA:
-                return m_auiEncounter[0];
-            case TYPE_GORTOK:
-                return m_auiEncounter[1];
-            case TYPE_SKADI:
-                return m_auiEncounter[2];
-            case TYPE_YMIRON:
-                return m_auiEncounter[3];
-        }
+            case GO_DOOR_SKADI:
+                m_uiSkadiDoorGUID = pGo->GetGUID();
 
-        return 0;
+                if (m_auiEncounter[2] == DONE)
+                    pGo->SetGoState(GO_STATE_ACTIVE);
+
+                break;
+        }
     }
 
     void SetData(uint32 uiType, uint32 uiData)
@@ -66,6 +67,9 @@ struct MANGOS_DLL_DECL instance_pinnacle : public ScriptedInstance
                 m_auiEncounter[1] = uiData;
                 break;
             case TYPE_SKADI:
+                if (uiData == DONE)
+                    DoUseDoorOrButton(m_uiSkadiDoorGUID);
+
                 m_auiEncounter[2] = uiData;
                 break;
             case TYPE_YMIRON:
@@ -89,6 +93,23 @@ struct MANGOS_DLL_DECL instance_pinnacle : public ScriptedInstance
             SaveToDB();
             OUT_SAVE_INST_DATA_COMPLETE;
         }
+    }
+
+    uint32 GetData(uint32 uiType)
+    {
+        switch(uiType)
+        {
+            case TYPE_SVALA:
+                return m_auiEncounter[0];
+            case TYPE_GORTOK:
+                return m_auiEncounter[1];
+            case TYPE_SKADI:
+                return m_auiEncounter[2];
+            case TYPE_YMIRON:
+                return m_auiEncounter[3];
+        }
+
+        return 0;
     }
 
     const char* Save()
