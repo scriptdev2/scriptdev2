@@ -17,13 +17,14 @@
 /* ScriptData
 SDName: Dragonblight
 SD%Complete: 100
-SDComment: Quest support: 12499/12500(end sequenze). Taxi paths Wyrmrest temple.
+SDComment: Quest support: 12166, 12499/12500(end sequenze). Taxi paths Wyrmrest temple.
 SDCategory: Dragonblight
 EndScriptData */
 
 /* ContentData
 npc_afrasastrasz
 npc_alexstrasza_wr_gate
+npc_liquid_fire_of_elune
 npc_tariolstrasz
 npc_torastrasza
 EndContentData */
@@ -104,6 +105,49 @@ bool GossipSelect_npc_alexstrasza_wr_gate(Player* pPlayer, Creature* pCreature, 
     }
 
     return true;
+}
+
+/*######
+## npc_liquid_fire_of_elune (quest 12166)
+######*/
+
+enum
+{
+    NPC_ELK                 = 26616,
+    NPC_ELK_BUNNY           = 27111,
+    NPC_GRIZZLY             = 26643,
+    NPC_GRIZZLY_BUNNY       = 27112,
+
+    SPELL_LIQUID_FIRE       = 46770,
+    SPELL_LIQUID_FIRE_AURA  = 47972
+};
+
+bool EffectDummyCreature_npc_liquid_fire_of_elune(Unit* pCaster, uint32 uiSpellId, uint32 uiEffIndex, Creature* pCreatureTarget)
+{
+    //always check spellid and effectindex
+    if (uiSpellId == SPELL_LIQUID_FIRE && uiEffIndex == 0)
+    {
+        if (pCaster->GetTypeId() == TYPEID_PLAYER)
+        {
+            if (pCreatureTarget->HasAura(SPELL_LIQUID_FIRE_AURA))
+                return true;
+
+            if (pCreatureTarget->GetEntry() == NPC_ELK)
+            {
+                pCreatureTarget->CastSpell(pCreatureTarget, SPELL_LIQUID_FIRE_AURA, true);
+                ((Player*)pCaster)->KilledMonsterCredit(NPC_ELK_BUNNY, 0);
+            }
+            else if (pCreatureTarget->GetEntry() == NPC_GRIZZLY)
+            {
+                pCreatureTarget->CastSpell(pCreatureTarget, SPELL_LIQUID_FIRE_AURA, true);
+                ((Player*)pCaster)->KilledMonsterCredit(NPC_GRIZZLY_BUNNY, 0);
+            }
+        }
+
+        //always return true when we are handling this spell and effect
+        return true;
+    }
+    return false;
 }
 
 /*######
@@ -202,6 +246,11 @@ void AddSC_dragonblight()
     newscript->Name = "npc_alexstrasza_wr_gate";
     newscript->pGossipHello = &GossipHello_npc_alexstrasza_wr_gate;
     newscript->pGossipSelect = &GossipSelect_npc_alexstrasza_wr_gate;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "npc_liquid_fire_of_elune";
+    newscript->pEffectDummyCreature = &EffectDummyCreature_npc_liquid_fire_of_elune;
     newscript->RegisterSelf();
 
     newscript = new Script;
