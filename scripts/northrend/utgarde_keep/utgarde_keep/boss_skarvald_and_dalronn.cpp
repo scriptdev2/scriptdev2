@@ -98,6 +98,21 @@ struct MANGOS_DLL_DECL boss_s_and_d_dummyAI : public ScriptedAI
 
     void Reset() { }
 
+    void JustReachedHome()
+    {
+        if (Creature* pBuddy = GetBuddy())
+        {
+            if (pBuddy->isDead())
+                pBuddy->Respawn();
+        }
+
+        if (Creature* pGhost = (Creature*)Unit::GetUnit(*m_creature, m_uiGhostGUID))
+        {
+            if (pGhost->isAlive())
+                pGhost->ForcedDespawn();
+        }
+    }
+
     void EnterCombat(Unit* pWho)
     {
         if (!pWho)
