@@ -232,6 +232,46 @@ bool GossipSelect_npc_torastrasza(Player* pPlayer, Creature* pCreature, uint32 u
     return true;
 }
 
+/*######
+## npc_woodlands_walker
+######*/
+
+enum
+{
+    SPELL_STRENGTH_ANCIENTS     = 47575,
+    SPELL_CREATE_BARK_WALKERS   = 47550,
+    FACTION_HOSTILE             = 16,
+
+    EMOTE_AGGRO                 = -1000551,
+    EMOTE_CREATE                = -1000552
+};
+
+bool EffectDummyCreature_npc_woodlands_walker(Unit* pCaster, uint32 uiSpellId, uint32 uiEffIndex, Creature* pCreatureTarget)
+{
+    //always check spellid and effectindex
+    if (uiSpellId == SPELL_STRENGTH_ANCIENTS && uiEffIndex == 0)
+    {
+        if (pCaster->GetTypeId() == TYPEID_PLAYER)
+        {
+            if (urand(0, 1))
+            {
+                DoScriptText(EMOTE_AGGRO, pCreatureTarget);
+                pCreatureTarget->setFaction(FACTION_HOSTILE);
+                pCreatureTarget->AI()->AttackStart(pCaster);
+            }
+            else
+            {
+                DoScriptText(EMOTE_CREATE, pCreatureTarget);
+                pCaster->CastSpell(pCaster, SPELL_CREATE_BARK_WALKERS, true);
+                pCreatureTarget->ForcedDespawn();
+            }
+        }
+
+        //always return true when we are handling this spell and effect
+        return true;
+    }
+    return false;
+}
 void AddSC_dragonblight()
 {
     Script *newscript;
@@ -263,5 +303,10 @@ void AddSC_dragonblight()
     newscript->Name = "npc_torastrasza";
     newscript->pGossipHello = &GossipHello_npc_torastrasza;
     newscript->pGossipSelect = &GossipSelect_npc_torastrasza;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "npc_woodlands_walker";
+    newscript->pEffectDummyCreature = &EffectDummyCreature_npc_woodlands_walker;
     newscript->RegisterSelf();
 }
