@@ -189,7 +189,7 @@ void SystemMgr::LoadScriptWaypoints()
         delete pResult;
     }
 
-    outstring_log("SD2: Loading Script Waypoints for %u creature(s)...", uiCreatureCount);
+    outstring_log("SD2: Loading Script Waypoints for " UI64FMTD " creature(s)...", uiCreatureCount);
 
     pResult = SD2Database.PQuery("SELECT entry, pointid, location_x, location_y, location_z, waittime FROM script_waypoint ORDER BY pointid");
 

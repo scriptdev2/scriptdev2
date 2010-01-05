@@ -64,7 +64,7 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
             for(uint8 i = 0; i < size; ++i)
             {
                 uint64 guid = m_pInstance->GetData64(DATA_FEL_CRYSTAL);
-                debug_log("SD2: Selin: Adding Fel Crystal %u to list", guid);
+                debug_log("SD2: Selin: Adding Fel Crystal " UI64FMTD " to list", guid);
                 Crystals.push_back(guid);
             }
         }
