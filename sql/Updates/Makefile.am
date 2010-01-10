@@ -24,46 +24,4 @@ pkgdatadir = $(datadir)/scriptdev2/sql/updates
 ## Files to be installed
 #  Install basic SQL files to datadir
 pkgdata_DATA = \
-	r1453_scriptdev2.sql \
-	r1457_scriptdev2.sql \
-	r1459_mangos.sql \
-	r1460_mangos.sql \
-	r1461_mangos.sql \
-	r1461_scriptdev2.sql \
-	r1463_mangos.sql \
-	r1465_scriptdev2.sql \
-	r1466_scriptdev2.sql \
-	r1470_scriptdev2.sql \
-	r1473_scriptdev2.sql \
-	r1474_scriptdev2.sql \
-	r1476_mangos.sql \
-	r1476_scriptdev2.sql \
-	r1478_scriptdev2.sql \
-	r1486_mangos.sql \
-	r1490_scriptdev2.sql \
-	r1492_mangos.sql \
-	r1493_scriptdev2.sql \
-	r1494_mangos.sql \
-	r1496_mangos.sql \
-	r1498_mangos.sql \
-	r1500_mangos.sql \
-	r1502_mangos.sql \
-	r1503_scriptdev2.sql \
-	r1504_scriptdev2.sql \
-	r1506_scriptdev2.sql \
-	r1508_mangos.sql \
-	r1513_scriptdev2.sql \
-	r1516_mangos.sql \
-	r1516_scriptdev2.sql \
-	r1517_scriptdev2.sql \
-	r1519_mangos.sql \
-	r1523_mangos.sql \
-	r1524_scriptdev2.sql \
-	r1525_mangos.sql \
-	r1525_scriptdev2.sql \
-	r1531_mangos.sql \
-	r1536_mangos.sql \
-	r1538_mangos.sql \
-	r1540_mangos.sql \
-	r1540_scriptdev2.sql \
-	r1542_mangos.sql
+	r1543_scriptdev2.sql
