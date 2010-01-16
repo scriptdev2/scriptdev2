@@ -24,4 +24,5 @@ pkgdatadir = $(datadir)/scriptdev2/sql/updates
 ## Files to be installed
 #  Install basic SQL files to datadir
 pkgdata_DATA = \
-	r1543_scriptdev2.sql
+	r1543_scriptdev2.sql \
+	r1544_mangos.sql

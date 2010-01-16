@@ -183,6 +183,66 @@ bool GossipSelect_npc_kara_thricestar(Player* pPlayer, Creature* pCreature, uint
 }
 
 /*######
+## npc_robot_reprogrammed
+######*/
+
+enum
+{
+    SPELL_ULTRASONIC_SCREWDRIVER    = 46023,
+    SPELL_REPROGRAM_KILL_CREDIT     = 46027,
+
+    NPC_COLLECT_A_TRON              = 25793,
+    SPELL_SUMMON_COLLECT_A_TRON     = 46034,
+
+    NPC_DEFENDO_TANK                = 25758,
+    SPELL_SUMMON_DEFENDO_TANK       = 46058,
+
+    NPC_SCAVENGE_A8                 = 25752,
+    SPELL_SUMMON_SCAVENGE_A8        = 46063,
+
+    NPC_SCAVENGE_B6                 = 25792,
+    SPELL_SUMMON_SCAVENGE_B6        = 46066,
+
+    NPC_SENTRY_BOT                  = 25753,
+    SPELL_SUMMON_SENTRY_BOT         = 46068
+};
+
+bool EffectDummyCreature_npc_robot_reprogrammed(Unit* pCaster, uint32 uiSpellId, uint32 uiEffIndex, Creature* pCreatureTarget)
+{
+    //always check spellid and effectindex
+    if (uiSpellId == SPELL_ULTRASONIC_SCREWDRIVER && uiEffIndex == 0)
+    {
+        if (pCreatureTarget->isDead())
+        {
+            uiSpellId = 0;
+
+            switch(pCreatureTarget->GetEntry())
+            {
+                case NPC_COLLECT_A_TRON:    uiSpellId = SPELL_SUMMON_COLLECT_A_TRON; break;
+                case NPC_DEFENDO_TANK:      uiSpellId = SPELL_SUMMON_DEFENDO_TANK; break;
+                case NPC_SCAVENGE_A8:       uiSpellId = SPELL_SUMMON_SCAVENGE_A8; break;
+                case NPC_SCAVENGE_B6:       uiSpellId = SPELL_SUMMON_SCAVENGE_B6; break;
+                case NPC_SENTRY_BOT:        uiSpellId = SPELL_SUMMON_SENTRY_BOT; break;
+            }
+
+            if (const SpellEntry* pSpell = GetSpellStore()->LookupEntry(uiSpellId))
+            {
+                pCaster->CastSpell(pCreatureTarget, pSpell->Id, true);
+
+                if (Pet* pPet = pCaster->FindGuardianWithEntry(pSpell->EffectMiscValue[uiEffIndex]))
+                    pPet->CastSpell(pCaster, SPELL_REPROGRAM_KILL_CREDIT, true);
+
+                pCreatureTarget->ForcedDespawn();
+            }
+        }
+
+        //always return true when we are handling this spell and effect
+        return true;
+    }
+    return false;
+}
+
+/*######
 ## npc_surristrasz
 ######*/
 
@@ -273,6 +333,11 @@ void AddSC_borean_tundra()
     newscript->Name = "npc_kara_thricestar";
     newscript->pGossipHello = &GossipHello_npc_kara_thricestar;
     newscript->pGossipSelect = &GossipSelect_npc_kara_thricestar;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "npc_robot_reprogrammed";
+    newscript->pEffectDummyCreature = &EffectDummyCreature_npc_robot_reprogrammed;
     newscript->RegisterSelf();
 
     newscript = new Script;
