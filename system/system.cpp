@@ -34,6 +34,8 @@ void SystemMgr::LoadVersion()
 
         outstring_log("Loading %s", strSD2Version.c_str());
         outstring_log("");
+
+        delete pResult;
     }
     else
     {
@@ -95,6 +97,8 @@ void SystemMgr::LoadScriptTexts()
             m_mTextDataMap[iId] = pTemp;
             ++uiCount;
         } while (pResult->NextRow());
+
+        delete pResult;
 
         outstring_log("");
         outstring_log(">> Loaded %u additional Script Texts data.", uiCount);
@@ -161,6 +165,8 @@ void SystemMgr::LoadScriptTextsCustom()
             m_mTextDataMap[iId] = pTemp;
             ++uiCount;
         } while (pResult->NextRow());
+
+        delete pResult;
 
         outstring_log("");
         outstring_log(">> Loaded %u additional Custom Texts data.", uiCount);
