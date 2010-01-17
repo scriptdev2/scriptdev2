@@ -156,7 +156,7 @@ struct MANGOS_DLL_DECL boss_nexusprince_shaffarAI : public ScriptedAI
 
                 //expire movement, will prevent from running right back to victim after cast
                 //(but should MoveChase be used again at a certain time or should he not move?)
-                if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() == TARGETED_MOTION_TYPE)
+                if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() == CHASE_MOTION_TYPE)
                     m_creature->GetMotionMaster()->MovementExpired();
 
                 DoCast(m_creature,SPELL_BLINK);

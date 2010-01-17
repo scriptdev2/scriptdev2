@@ -192,7 +192,7 @@ void npc_escortAI::EnterEvadeMode()
     {
         debug_log("SD2: EscortAI has left combat and is now returning to CombatStartPosition.");
 
-        if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() == TARGETED_MOTION_TYPE)
+        if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() == CHASE_MOTION_TYPE)
         {
             AddEscortState(STATE_ESCORT_RETURNING);
 
@@ -203,7 +203,7 @@ void npc_escortAI::EnterEvadeMode()
     }
     else
     {
-        if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() == TARGETED_MOTION_TYPE)
+        if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() == CHASE_MOTION_TYPE)
             m_creature->GetMotionMaster()->MoveTargetedHome();
     }
 

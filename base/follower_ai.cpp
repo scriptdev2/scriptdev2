@@ -166,7 +166,7 @@ void FollowerAI::EnterEvadeMode()
     {
         debug_log("SD2: FollowerAI left combat, returning to CombatStartPosition.");
 
-        if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() == TARGETED_MOTION_TYPE)
+        if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() == CHASE_MOTION_TYPE)
         {
             float fPosX, fPosY, fPosZ;
             m_creature->GetCombatStartPosition(fPosX, fPosY, fPosZ);
@@ -175,7 +175,7 @@ void FollowerAI::EnterEvadeMode()
     }
     else
     {
-        if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() == TARGETED_MOTION_TYPE)
+        if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() == CHASE_MOTION_TYPE)
             m_creature->GetMotionMaster()->MoveTargetedHome();
     }
 

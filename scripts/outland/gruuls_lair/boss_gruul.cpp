@@ -149,7 +149,7 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
                 m_bPerformingGroundSlam = false;
 
                 //and correct movement, if not already
-                if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() != TARGETED_MOTION_TYPE)
+                if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() != CHASE_MOTION_TYPE)
                 {
                     if (m_creature->getVictim())
                         m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());

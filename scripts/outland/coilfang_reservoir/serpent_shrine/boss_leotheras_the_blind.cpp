@@ -169,7 +169,7 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
                 {
                     DoScriptText(SAY_SWITCH_TO_DEMON, m_creature);
 
-                    if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() == TARGETED_MOTION_TYPE)
+                    if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() == CHASE_MOTION_TYPE)
                     {
                         //set false, so MoveChase is not triggered in AttackStart
                         SetCombatMovement(false);
@@ -217,7 +217,7 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
                 //switch to nightelf form
                 m_creature->SetDisplayId(MODEL_NIGHTELF);
 
-                if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() != TARGETED_MOTION_TYPE)
+                if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() != CHASE_MOTION_TYPE)
                     m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
 
                 //set true
@@ -246,7 +246,7 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
                 //switch to nightelf form
                 m_creature->SetDisplayId(MODEL_NIGHTELF);
 
-                if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() != TARGETED_MOTION_TYPE)
+                if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() != CHASE_MOTION_TYPE)
                     m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
 
                 //set true

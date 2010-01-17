@@ -335,7 +335,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
                 {
                     DoScriptText(SAY_PHASE2, m_creature);
 
-                    if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() == TARGETED_MOTION_TYPE)
+                    if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() == CHASE_MOTION_TYPE)
                     {
                         //set false, so MoveChase is not triggered in AttackStart
                         SetCombatMovement(false);
@@ -478,7 +478,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
                     SetCombatMovement(true);
 
                     //return to chase top aggro
-                    if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() != TARGETED_MOTION_TYPE)
+                    if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() != CHASE_MOTION_TYPE)
                         m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
 
                     m_uiPhase = PHASE_3;

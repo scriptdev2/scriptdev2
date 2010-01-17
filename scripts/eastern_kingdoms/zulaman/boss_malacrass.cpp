@@ -476,13 +476,13 @@ struct MANGOS_DLL_DECL mob_alyson_antilleAI : public boss_malacrass_addAI
                     DoCast(pTarget, SPELL_FLASH_HEAL);
 
                     //if not already chasing, start chase
-                    if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() != TARGETED_MOTION_TYPE)
+                    if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() != CHASE_MOTION_TYPE)
                         m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim(), 20.0f);
                 }
                 else
                 {
                     //if chasing, start follow target instead
-                    if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() == TARGETED_MOTION_TYPE)
+                    if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() == CHASE_MOTION_TYPE)
                     {
                         m_creature->GetMotionMaster()->MovementExpired();
                         m_creature->GetMotionMaster()->MoveFollow(pTarget, 20.0f, 0.0f);
