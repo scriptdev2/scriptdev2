@@ -204,11 +204,8 @@ bool GossipSelect_npc_tyrande_whisperwind(Player* pPlayer, Creature* pCreature, 
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF)
     {
-        ItemPosCountVec vDest;
-        uint8 uiMsg = pPlayer->CanStoreNewItem(NULL_BAG, NULL_SLOT, vDest, ITEM_TEAR_OF_GODDESS, 1);
-
-        if (uiMsg == EQUIP_ERR_OK)
-            pPlayer->StoreNewItem(vDest, ITEM_TEAR_OF_GODDESS, true);
+        if (Item* pItem = pPlayer->StoreNewItemInInventorySlot(ITEM_TEAR_OF_GODDESS, 1))
+            pPlayer->SendNewItem(pItem, 1, true, false);
     }
 
     pPlayer->CLOSE_GOSSIP_MENU();

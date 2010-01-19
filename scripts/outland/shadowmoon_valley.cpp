@@ -394,23 +394,17 @@ bool GossipSelect_npcs_flanis_swiftwing_and_kagrosh(Player* pPlayer, Creature* p
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
     {
-        ItemPosCountVec dest;
-        uint8 msg = pPlayer->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, 30658, 1, false);
-        if (msg == EQUIP_ERR_OK)
-        {
-            pPlayer->StoreNewItem(dest, 30658, 1, true);
-            pPlayer->PlayerTalkClass->ClearMenus();
-        }
+        if (Item* pItem = pPlayer->StoreNewItemInInventorySlot(30658, 1))
+            pPlayer->SendNewItem(pItem, 1, true, false);
+
+        pPlayer->CLOSE_GOSSIP_MENU();
     }
     if (uiAction == GOSSIP_ACTION_INFO_DEF+2)
     {
-        ItemPosCountVec dest;
-        uint8 msg = pPlayer->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, 30659, 1, false);
-        if (msg == EQUIP_ERR_OK)
-        {
-            pPlayer->StoreNewItem(dest, 30659, 1, true);
-            pPlayer->PlayerTalkClass->ClearMenus();
-        }
+        if (Item* pItem = pPlayer->StoreNewItemInInventorySlot(30659, 1))
+            pPlayer->SendNewItem(pItem, 1, true, false);
+
+        pPlayer->CLOSE_GOSSIP_MENU();
     }
     return true;
 }

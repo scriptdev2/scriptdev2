@@ -73,10 +73,8 @@ struct MANGOS_DLL_DECL mob_aquementasAI : public ScriptedAI
             ((Player*)receiver)->HasItemCount(11173,1,false) &&
             !((Player*)receiver)->HasItemCount(11522,1,true))
         {
-            ItemPosCountVec dest;
-            uint8 msg = ((Player*)receiver)->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, 11522, 1, false);
-            if (msg == EQUIP_ERR_OK)
-                ((Player*)receiver)->StoreNewItem(dest, 11522, 1, true);
+            if (Item* pItem = ((Player*)receiver)->StoreNewItemInInventorySlot(11522, 1))
+                ((Player*)receiver)->SendNewItem(pItem, 1, true, false);
         }
     }
 

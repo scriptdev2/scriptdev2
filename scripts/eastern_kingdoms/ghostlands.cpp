@@ -51,13 +51,10 @@ bool GossipSelect_npc_blood_knight_dawnstar(Player* pPlayer, Creature* pCreature
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
     {
-        ItemPosCountVec dest;
-        uint8 msg = pPlayer->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, 24226, 1, false);
-        if (msg == EQUIP_ERR_OK)
-        {
-            pPlayer->StoreNewItem(dest, 24226, 1, true);
-            pPlayer->PlayerTalkClass->ClearMenus();
-        }
+        if (Item* pItem = pPlayer->StoreNewItemInInventorySlot(24226, 1))
+            pPlayer->SendNewItem(pItem, 1, true, false);
+
+        pPlayer->CLOSE_GOSSIP_MENU();
     }
     return true;
 }

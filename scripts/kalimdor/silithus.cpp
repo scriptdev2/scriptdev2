@@ -100,10 +100,9 @@ bool GossipSelect_npc_highlord_demitrian(Player* pPlayer, Creature* pCreature, u
         case GOSSIP_ACTION_INFO_DEF+6:
             pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_DEMITRIAN7, pCreature->GetGUID());
 
-            ItemPosCountVec dest;
-            uint8 msg = pPlayer->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, ITEM_VESSEL_OF_REBIRTH, 1);
-            if (msg == EQUIP_ERR_OK)
-                pPlayer->StoreNewItem(dest, ITEM_VESSEL_OF_REBIRTH, true);
+            if (Item* pItem = pPlayer->StoreNewItemInInventorySlot(ITEM_VESSEL_OF_REBIRTH, 1))
+                pPlayer->SendNewItem(pItem, 1, true, false);
+
             break;
     }
     return true;
