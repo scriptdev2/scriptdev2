@@ -41,6 +41,7 @@ struct MANGOS_DLL_DECL instance_blackfathom_deeps : public ScriptedInstance
     uint64 m_uiShrineOfGelihastGUID;
     uint64 m_uiAltarOfTheDeepsGUID;
     uint64 m_uiMainDoorGUID;
+    uint8  m_uiShrinesLit;
 
     uint32 m_auiEncounter[MAX_ENCOUNTER];
 
@@ -56,6 +57,7 @@ struct MANGOS_DLL_DECL instance_blackfathom_deeps : public ScriptedInstance
         m_uiShrineOfGelihastGUID = 0;
         m_uiAltarOfTheDeepsGUID = 0;
         m_uiMainDoorGUID = 0;
+        m_uiShrinesLit = 0;
     }
 
     void OnCreatureCreate(Creature* pCreature)
@@ -83,9 +85,19 @@ struct MANGOS_DLL_DECL instance_blackfathom_deeps : public ScriptedInstance
         switch(uiType)
         {
             case TYPE_KELRIS:
+                if (uiData == DONE && m_auiEncounter[1] == DONE)
+                    DoUseDoorOrButton(m_uiMainDoorGUID);
+
                 m_auiEncounter[0] = uiData;
                 break;
             case TYPE_SHRINE:
+                if (uiData == SPECIAL)
+                    ++m_uiShrinesLit;
+                if (m_uiShrinesLit > 3)
+                    uiData = DONE;
+                if (uiData == DONE && m_auiEncounter[0] == DONE)
+                    DoUseDoorOrButton(m_uiMainDoorGUID);
+
                 m_auiEncounter[1] = uiData;
                 break;
         }
@@ -133,11 +145,28 @@ InstanceData* GetInstanceData_instance_blackfathom_deeps(Map* pMap)
     return new instance_blackfathom_deeps(pMap);
 }
 
+bool GOHello_go_fire_of_akumai(Player* pPlayer, GameObject* pGo)
+{
+    ScriptedInstance* pInstance = (ScriptedInstance*)pGo->GetInstanceData();
+
+    if (!pInstance)
+        return true;
+
+    pInstance->SetData(TYPE_SHRINE,SPECIAL);
+    return false;
+}
+
 void AddSC_instance_blackfathom_deeps()
 {
     Script *newscript;
+
     newscript = new Script;
     newscript->Name = "instance_blackfathom_deeps";
     newscript->GetInstanceData = &GetInstanceData_instance_blackfathom_deeps;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "go_fire_of_akumai";
+    newscript->pGOHello = &GOHello_go_fire_of_akumai;
     newscript->RegisterSelf();
 }

@@ -239,6 +239,7 @@ UPDATE creature_template SET ScriptName='npc_spirit_of_olum' WHERE entry=23411;
 
 /* BLACKFATHOM DEPTHS */
 UPDATE instance_template SET script='instance_blackfathom_deeps' WHERE map=48;
+UPDATE gameobject_template SET ScriptName='go_fire_of_akumai' WHERE entry IN (21118,21119,21120,21121);
 
 /* BLACKROCK DEPTHS */
 DELETE FROM areatrigger_scripts WHERE entry=1526;
