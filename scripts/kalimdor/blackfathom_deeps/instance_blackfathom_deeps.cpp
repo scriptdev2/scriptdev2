@@ -33,15 +33,11 @@ struct MANGOS_DLL_DECL instance_blackfathom_deeps : public ScriptedInstance
 {
     instance_blackfathom_deeps(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
 
-    uint64 m_uiTwilightLordKelrisGUID;
-    uint64 m_uiShrine1GUID;
-    uint64 m_uiShrine2GUID;
-    uint64 m_uiShrine3GUID;
-    uint64 m_uiShrine4GUID;
+    uint64 m_uiKelrisGUID;
     uint64 m_uiShrineOfGelihastGUID;
     uint64 m_uiAltarOfTheDeepsGUID;
-    uint64 m_uiMainDoorGUID;
-    uint8  m_uiShrinesLit;
+    uint64 m_uiPortalGUID;
+    uint32 m_uiSpawnServantTimer;
 
     uint32 m_auiEncounter[MAX_ENCOUNTER];
 
@@ -49,34 +45,88 @@ struct MANGOS_DLL_DECL instance_blackfathom_deeps : public ScriptedInstance
     {
         memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
 
-        m_uiTwilightLordKelrisGUID = 0;
-        m_uiShrine1GUID = 0;
-        m_uiShrine2GUID = 0;
-        m_uiShrine3GUID = 0;
-        m_uiShrine4GUID = 0;
+        m_uiKelrisGUID = 0;
         m_uiShrineOfGelihastGUID = 0;
         m_uiAltarOfTheDeepsGUID = 0;
-        m_uiMainDoorGUID = 0;
-        m_uiShrinesLit = 0;
+        m_uiPortalGUID = 0;
+        m_uiSpawnServantTimer = 0;
     }
 
     void OnCreatureCreate(Creature* pCreature)
     {
-        if (pCreature->GetEntry() == 4832)
-            m_uiTwilightLordKelrisGUID = pCreature->GetGUID();
+        if (pCreature->GetEntry() == NPC_KELRIS)
+            m_uiKelrisGUID = pCreature->GetGUID();
     }
 
     void OnObjectCreate(GameObject* pGo)
     {
         switch(pGo->GetEntry())
         {
-            case 21118:     m_uiShrine1GUID = pGo->GetGUID();           break;
-            case 21119:     m_uiShrine2GUID = pGo->GetGUID();           break;
-            case 21120:     m_uiShrine3GUID = pGo->GetGUID();           break;
-            case 21121:     m_uiShrine4GUID = pGo->GetGUID();           break;
+            case GO_PORTAL_DOOR:
+                if (m_auiEncounter[1] == DONE)
+                    pGo->SetGoState(GO_STATE_ACTIVE);
+
+                m_uiPortalGUID = pGo->GetGUID();
+                break;
+            case GO_SHRINE_1:
+                if (m_auiEncounter[2] == DONE)
+                    pGo->SetGoState(GO_STATE_ACTIVE);
+                break;
+            case GO_SHRINE_2:
+                if (m_auiEncounter[3] == DONE)
+                    pGo->SetGoState(GO_STATE_ACTIVE);
+                break;
+            case GO_SHRINE_3:
+                if (m_auiEncounter[4] == DONE)
+                    pGo->SetGoState(GO_STATE_ACTIVE);
+                break;
+            case GO_SHRINE_4:
+                if (m_auiEncounter[5] == DONE)
+                    pGo->SetGoState(GO_STATE_ACTIVE);
+                break;
+
             case 103015:    m_uiShrineOfGelihastGUID = pGo->GetGUID();  break;
             case 103016:    m_uiAltarOfTheDeepsGUID = pGo->GetGUID();   break;
-            case 21117:     m_uiMainDoorGUID = pGo->GetGUID();          break;
+            
+        }
+    }
+
+    bool CanOpenEndDoor()
+    {
+        if (m_auiEncounter[0] != DONE)
+            return false;
+
+        if (m_auiEncounter[2] == DONE && m_auiEncounter[3] == DONE && m_auiEncounter[4] == DONE && m_auiEncounter[5] == DONE)
+            return true;
+
+        return false;
+    }
+
+    void SpawnServants()
+    {
+        if (Creature* pKelris = instance->GetCreature(m_uiKelrisGUID))
+        {
+            float fX_resp, fY_resp, fZ_resp;
+            pKelris->GetRespawnCoord(fX_resp, fY_resp, fZ_resp);
+
+            for(uint8 i = 0; i < 5 ; ++i)
+            {
+                // this part gets a random position at circumference point in a circle
+                // fRadius is how far from center to calculate.
+                // here we use kelris's close point coords as base and then move the summoned to the location of his respawn coords
+                float fRadius = 30.0f;
+                float fAngle = 2.0 * M_PI * rand_norm();
+
+                float fX, fY, fZ;
+
+                fRadius *= sqrt(rand_norm());
+
+                pKelris->GetClosePoint(fX, fY, fZ, 0.0f, fRadius, fAngle);
+
+                if (Creature* pServant = pKelris->SummonCreature(NPC_SERVANT, fX, fY, fZ, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 300000))
+                    pServant->GetMotionMaster()->MovePoint(0, fX_resp, fY_resp, fZ_resp);
+            }
+
         }
     }
 
@@ -84,22 +134,38 @@ struct MANGOS_DLL_DECL instance_blackfathom_deeps : public ScriptedInstance
     {
         switch(uiType)
         {
-            case TYPE_KELRIS:
-                if (uiData == DONE && m_auiEncounter[1] == DONE)
-                    DoUseDoorOrButton(m_uiMainDoorGUID);
-
-                m_auiEncounter[0] = uiData;
+            case TYPE_KELRIS:                               // eventAI must set instance data (1,3) at his death
+                if (m_auiEncounter[0] != DONE && uiData == DONE)
+                    m_auiEncounter[0] = uiData;
                 break;
             case TYPE_SHRINE:
-                if (uiData == SPECIAL)
-                    ++m_uiShrinesLit;
-                if (m_uiShrinesLit > 3)
-                    uiData = DONE;
-                if (uiData == DONE && m_auiEncounter[0] == DONE)
-                    DoUseDoorOrButton(m_uiMainDoorGUID);
+            {
+                switch(uiData)
+                {
+                    case GO_SHRINE_1:
+                        m_auiEncounter[2] = DONE;
+                        break;
+                    case GO_SHRINE_2:
+                        m_auiEncounter[3] = DONE;
+                        break;
+                    case GO_SHRINE_3:
+                        m_auiEncounter[4] = DONE;
+                        break;
+                    case GO_SHRINE_4:
+                        m_auiEncounter[5] = DONE;
+                        break;
+                }
 
-                m_auiEncounter[1] = uiData;
+                m_uiSpawnServantTimer = 7500;
+
+                if (CanOpenEndDoor())
+                {
+                    m_auiEncounter[1] = DONE;
+                    DoUseDoorOrButton(m_uiPortalGUID);
+                }
+
                 break;
+            }
         }
     }
 
@@ -121,22 +187,26 @@ struct MANGOS_DLL_DECL instance_blackfathom_deeps : public ScriptedInstance
         switch(uiData)
         {
             case DATA_TWILIGHT_LORD_KELRIS:
-                return m_uiTwilightLordKelrisGUID;
-            case DATA_SHRINE1:
-                return m_uiShrine1GUID;
-            case DATA_SHRINE2:
-                return m_uiShrine2GUID;
-            case DATA_SHRINE3:
-                return m_uiShrine3GUID;
-            case DATA_SHRINE4:
-                return m_uiShrine4GUID;
+                return m_uiKelrisGUID;
             case DATA_SHRINE_OF_GELIHAST:
                 return m_uiShrineOfGelihastGUID;
-            case DATA_MAINDOOR:
-                return m_uiMainDoorGUID;
         }
 
         return 0;
+    }
+
+    void Update(uint32 uiDiff)
+    {
+        if (m_uiSpawnServantTimer)
+        {
+            if (m_uiSpawnServantTimer <= uiDiff)
+            {
+                SpawnServants();
+                m_uiSpawnServantTimer = 0;
+            }
+            else
+                m_uiSpawnServantTimer -= uiDiff;
+        }
     }
 };
 
@@ -152,8 +222,13 @@ bool GOHello_go_fire_of_akumai(Player* pPlayer, GameObject* pGo)
     if (!pInstance)
         return true;
 
-    pInstance->SetData(TYPE_SHRINE,SPECIAL);
-    return false;
+    if (pInstance->GetData(TYPE_KELRIS) == DONE)
+    {
+        pInstance->SetData(TYPE_SHRINE, pGo->GetEntry());
+        return false;
+    }
+
+    return true;
 }
 
 void AddSC_instance_blackfathom_deeps()
