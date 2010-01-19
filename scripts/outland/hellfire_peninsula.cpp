@@ -153,7 +153,6 @@ struct MANGOS_DLL_DECL npc_ancestral_wolfAI : public npc_escortAI
         else
             error_log("SD2: npc_ancestral_wolf can not obtain owner or owner is not a player.");
 
-        pCreature->SetSpeed(MOVE_WALK, 1.5f);
         Reset();
     }
 

@@ -80,7 +80,7 @@ struct MANGOS_DLL_DECL boss_warchief_kargath_bladefistAI : public ScriptedAI
     {
         removeAdds();
 
-        m_creature->SetSpeed(MOVE_RUN,2);
+        m_creature->SetSpeedRate(MOVE_RUN, 2.0f);
 
         summoned = 2;
         InBlade = false;
@@ -201,7 +201,7 @@ struct MANGOS_DLL_DECL boss_warchief_kargath_bladefistAI : public ScriptedAI
                     {
                         // stop bladedance
                         InBlade = false;
-                        m_creature->SetSpeed(MOVE_RUN,2);
+                        m_creature->SetSpeedRate(MOVE_RUN, 2.0f);
                         (*m_creature).GetMotionMaster()->MoveChase(m_creature->getVictim());
                         Wait_Timer = 0;
                         if (!m_bIsRegularMode)
@@ -228,7 +228,7 @@ struct MANGOS_DLL_DECL boss_warchief_kargath_bladefistAI : public ScriptedAI
                 Wait_Timer = 1;
                 InBlade = true;
                 Blade_Dance_Timer = 30000;
-                m_creature->SetSpeed(MOVE_RUN,4);
+                m_creature->SetSpeedRate(MOVE_RUN, 4.0f);
                 return;
             }else Blade_Dance_Timer -= diff;
 

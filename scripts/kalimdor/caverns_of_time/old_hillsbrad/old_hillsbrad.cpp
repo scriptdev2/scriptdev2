@@ -413,13 +413,13 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
     void DoMount()
     {
         m_creature->Mount(SKARLOC_MOUNT_MODEL);
-        m_creature->SetSpeed(MOVE_RUN,SPEED_MOUNT);
+        m_creature->SetSpeedRate(MOVE_RUN, SPEED_MOUNT);
     }
 
     void DoUnmount()
     {
         m_creature->Unmount();
-        m_creature->SetSpeed(MOVE_RUN,SPEED_RUN);
+        m_creature->SetSpeedRate(MOVE_RUN, SPEED_RUN);
     }
 
     void Aggro(Unit* who)

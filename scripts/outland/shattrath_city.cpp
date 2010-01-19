@@ -400,7 +400,6 @@ struct MANGOS_DLL_DECL npc_khadgars_servantAI : public npc_escortAI
         else
             error_log("SD2: npc_khadgars_servant can not obtain owner or owner is not a player.");
 
-        pCreature->SetSpeed(MOVE_WALK,1.5f);
         Reset();
     }
 

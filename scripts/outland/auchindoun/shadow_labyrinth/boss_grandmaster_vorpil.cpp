@@ -126,10 +126,7 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
     void JustSummoned(Creature *summoned)
     {
         if (summoned->GetEntry() == ENTRY_VOID_TRAVELER)
-        {
-            summoned->GetMotionMaster()->MoveChase(m_creature);
-            summoned->SetSpeed(MOVE_WALK,0.8,true);
-        }
+            summoned->GetMotionMaster()->MoveFollow(m_creature, 1.0f, 0.0f);
 
         if (summoned->GetEntry() == ENTRY_VOID_PORTAL)
             summoned->CastSpell(summoned,SPELL_VOID_PORTAL_VISUAL,true);

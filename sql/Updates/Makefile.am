@@ -26,4 +26,5 @@ pkgdatadir = $(datadir)/scriptdev2/sql/updates
 pkgdata_DATA = \
 	r1543_scriptdev2.sql \
 	r1544_mangos.sql \
-	r1545_scriptdev2.sql
+	r1545_scriptdev2.sql \
+	r1548_scriptdev2.sql

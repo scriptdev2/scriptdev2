@@ -479,7 +479,7 @@ struct MANGOS_DLL_DECL npc_akama_illidanAI : public ScriptedAI
         FightMinions = false;
         IsReturningToIllidan = true;
         WayPoint = WayPointList.begin();
-        m_creature->SetSpeed(MOVE_RUN, 2.0f);
+        m_creature->SetSpeedRate(MOVE_RUN, 2.0f);
         m_creature->RemoveMonsterMoveFlag(MONSTER_MOVE_WALK);
         IsWalking = true;
     }

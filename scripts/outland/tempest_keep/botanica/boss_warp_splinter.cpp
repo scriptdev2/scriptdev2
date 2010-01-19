@@ -39,7 +39,7 @@ struct MANGOS_DLL_DECL mob_treantAI  : public ScriptedAI
 
     void Reset()
     {
-        m_creature->SetSpeed(MOVE_RUN, 0.5f, true);
+        m_creature->SetSpeedRate(MOVE_RUN, 0.5f);
     }
 
     void MoveInLineOfSight(Unit *who) { }
@@ -113,7 +113,7 @@ struct MANGOS_DLL_DECL boss_warp_splinterAI : public ScriptedAI
         for(int i = 0; i < 6; ++i)
             Treant_GUIDs[i] = 0;
 
-        m_creature->SetSpeed(MOVE_RUN, 0.7f, true);
+        m_creature->SetSpeedRate(MOVE_RUN, 0.7f);
     }
 
     void Aggro(Unit *who)

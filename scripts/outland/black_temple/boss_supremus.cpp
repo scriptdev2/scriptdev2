@@ -342,7 +342,7 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
                 Phase1 = true;
                 DoResetThreat();
                 PhaseSwitchTimer = 60000;
-                m_creature->SetSpeed(MOVE_RUN, 1.0f);
+                m_creature->SetSpeedRate(MOVE_RUN, 1.0f);
             }
             else
             {
@@ -351,7 +351,7 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
                 SwitchTargetTimer = 10000;
                 SummonVolcanoTimer = 2000;
                 PhaseSwitchTimer = 60000;
-                m_creature->SetSpeed(MOVE_RUN, 0.9f);
+                m_creature->SetSpeedRate(MOVE_RUN, 0.9f);
             }
         }else PhaseSwitchTimer -= diff;
 
