@@ -289,6 +289,38 @@ bool GOHello_go_sacred_fire_of_life(Player* pPlayer, GameObject* pGO)
 }
 
 /*######
+## go_school_of_red_snapper
+######*/
+
+enum
+{
+    ITEM_RED_SNAPPER        = 23614,
+    NPC_ANGRY_MURLOC        = 17102,
+    SPELL_SUMMON_TEST       = 49214                         // ! Just wrong spell name? It summon correct creature (17102)
+};
+
+bool GOHello_go_school_of_red_snapper(Player* pPlayer, GameObject* pGo)
+{
+    if (!urand(0, 2))
+    {
+        // pPlayer->CastSpell(pPlayer, SPELL_SUMMON_TEST, true);
+
+        if (Creature *Murloc = pPlayer->SummonCreature(NPC_ANGRY_MURLOC, pPlayer->GetPositionX(), pPlayer->GetPositionY()+20.0f, pPlayer->GetPositionZ(), 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10000))
+            Murloc->AI()->AttackStart(pPlayer);
+    }
+    else
+    {
+        if (Item* pItem = pPlayer->StoreNewItemInInventorySlot(ITEM_RED_SNAPPER, 1))
+            pPlayer->SendNewItem(pItem, 1, true, false);
+    }
+
+    // not nice, need more research on how this kind of GO behave and how it must be handled in Mangos in such cases.
+    pGo->Delete();
+
+    return true;
+}
+
+/*######
 ## go_shrine_of_the_birds
 ######*/
 
@@ -455,6 +487,11 @@ void AddSC_go_scripts()
     newscript = new Script;
     newscript->Name = "go_sacred_fire_of_life";
     newscript->pGOHello =           &GOHello_go_sacred_fire_of_life;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "go_school_of_red_snapper";
+    newscript->pGOHello =           &GOHello_go_school_of_red_snapper;
     newscript->RegisterSelf();
 
     newscript = new Script;

@@ -41,6 +41,7 @@ UPDATE gameobject_template SET ScriptName='go_jump_a_tron' WHERE entry=183146;
 UPDATE gameobject_template SET ScriptName='go_orb_of_command' WHERE entry=179879;
 UPDATE gameobject_template SET ScriptName='go_resonite_cask' WHERE entry=178145;
 UPDATE gameobject_template SET ScriptName='go_sacred_fire_of_life' WHERE entry=175944;
+UPDATE gameobject_template SET ScriptName='go_school_of_red_snapper' WHERE entry=181616;
 UPDATE gameobject_template SET ScriptName='go_shrine_of_the_birds' WHERE entry IN (185547,185553,185551);
 UPDATE gameobject_template SET ScriptName='go_tablet_of_madness' WHERE entry=180368;
 UPDATE gameobject_template SET ScriptName='go_tablet_of_the_seven' WHERE entry=169294;
@@ -72,7 +73,6 @@ UPDATE creature_template SET ScriptName='guard_shattrath_scryer' WHERE entry=185
 
 /* ITEM */
 UPDATE item_template SET ScriptName='item_arcane_charges' WHERE entry=34475;
-UPDATE item_template SET ScriptName='item_draenei_fishing_net' WHERE entry=23654;
 UPDATE item_template SET ScriptName='item_flying_machine' WHERE entry IN (34060,34061);
 UPDATE item_template SET ScriptName='item_gor_dreks_ointment' WHERE entry=30175;
 UPDATE item_template SET ScriptName='item_nether_wraith_beacon' WHERE entry=31742;
