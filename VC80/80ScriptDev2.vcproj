@@ -1959,6 +1959,18 @@
 				<Filter
 					Name="violet_hold"
 					>
+						<File
+							RelativePath="..\scripts\northrend\violet_hold\violet_hold.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\northrend\violet_hold\violet_hold.h"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\northrend\violet_hold\instance_violet_hold.cpp"
+							>
+						</File>
 				</Filter>
 			</Filter>
 			<Filter
