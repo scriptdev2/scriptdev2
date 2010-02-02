@@ -133,7 +133,7 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
                 if (Player* pPlayer = (Player*)Unit::GetUnit(*m_creature,playerGUID))
                 {
                     //if unit dosen't have this flag, then no pulling back (script will attempt cast, even if orbital strike was resisted)
-                    if (pPlayer->HasMovementFlag(MOVEMENTFLAG_FALLING))
+                    if (pPlayer->HasMovementFlag(MOVEFLAG_FALLING))
                     {
                         m_creature->InterruptNonMeleeSpells(false);
                         DoCast(pPlayer,SPELL_SHADOW_WHIP);
