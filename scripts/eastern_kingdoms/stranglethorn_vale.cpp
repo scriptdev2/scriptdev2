@@ -53,7 +53,7 @@ struct MANGOS_DLL_DECL mob_yennikuAI : public ScriptedAI
         if (caster->GetTypeId() == TYPEID_PLAYER)
         {
                                                             //Yenniku's Release
-            if(!bReset && ((Player*)caster)->GetQuestStatus(592) == QUEST_STATUS_INCOMPLETE && spell->Id == 3607)
+            if (!bReset && ((Player*)caster)->GetQuestStatus(592) == QUEST_STATUS_INCOMPLETE && spell->Id == 3607)
             {
                 m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_STUN);
                 m_creature->CombatStop();                   //stop combat
@@ -72,7 +72,7 @@ struct MANGOS_DLL_DECL mob_yennikuAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         if (bReset)
-            if(Reset_Timer < diff)
+            if (Reset_Timer < diff)
         {
             EnterEvadeMode();
             bReset = false;

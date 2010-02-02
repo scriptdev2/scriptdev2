@@ -143,7 +143,7 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
             if (pCrystal && pCrystal->isAlive())
             {
                 // select nearest
-                if(!CrystalChosen || m_creature->GetDistanceOrder(pCrystal, CrystalChosen, false))
+                if (!CrystalChosen || m_creature->GetDistanceOrder(pCrystal, CrystalChosen, false))
                 {
                     CrystalGUID = pCrystal->GetGUID();
                     CrystalChosen = pCrystal;               // Store a copy of pCrystal so we don't need to recreate a pointer to closest crystal for the movement and yell.

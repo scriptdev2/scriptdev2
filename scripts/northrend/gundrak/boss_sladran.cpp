@@ -183,7 +183,7 @@ struct MANGOS_DLL_DECL boss_sladranAI : public ScriptedAI
                 if (urand(0, 3))
                 {
                     // we don't want to get spammed
-                    if(!urand(0, 4))
+                    if (!urand(0, 4))
                         DoScriptText(SAY_SUMMON_CONSTRICTOR, m_creature);
 
                     pSummonTarget->CastSpell(pSummonTarget, SPELL_SUMMON_CONSTRICTOR, false);
@@ -191,7 +191,7 @@ struct MANGOS_DLL_DECL boss_sladranAI : public ScriptedAI
                 else
                 {
                     // we don't want to get spammed
-                    if(!urand(0, 4))
+                    if (!urand(0, 4))
                         DoScriptText(SAY_SUMMON_SNAKE, m_creature);
 
                     pSummonTarget->CastSpell(pSummonTarget, SPELL_SUMMON_VIPER, false);

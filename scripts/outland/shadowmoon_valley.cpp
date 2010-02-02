@@ -1104,12 +1104,12 @@ struct MANGOS_DLL_DECL npc_lord_illidan_stormrageAI : public Scripted_NoMovement
                     pSpawn->SetDisplayId(MODEL_ID_FELGUARD);
                     ++uiFelguardCount;
                 }
-                else if(uiDreadlordCount < 3)
+                else if (uiDreadlordCount < 3)
                 {
                     pSpawn->SetDisplayId(MODEL_ID_DREADLORD);
                     ++uiDreadlordCount;
                 }
-                else if(uiFelguardCount < 2)
+                else if (uiFelguardCount < 2)
                 {
                     pSpawn->SetDisplayId(MODEL_ID_FELGUARD);
                     ++uiFelguardCount;

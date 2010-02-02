@@ -118,7 +118,7 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
     // select the spell and the text based on the advisor which died
     void EventAdvisorDeath(uint8 uiAdvisor)
     {
-        if(!m_creature->isAlive())
+        if (!m_creature->isAlive())
             return;
 
         int32  iSayGainAbility = 0;

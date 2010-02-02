@@ -200,7 +200,7 @@ struct MANGOS_DLL_DECL boss_nadoxAI : public ScriptedAI
         else
             m_uiBroodPlagueTimer -= uiDiff;
 
-        if(!m_bIsRegularMode)
+        if (!m_bIsRegularMode)
         {
             if (m_uiBroodRageTimer < uiDiff)
             {
