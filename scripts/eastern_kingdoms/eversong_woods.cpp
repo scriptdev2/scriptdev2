@@ -244,11 +244,16 @@ bool GOHello_go_harbinger_second_trial(Player* pPlayer, GameObject* pGO)
 /*######
 ## npc_prospector_anvilward
 ######*/
+enum
+{
+    SAY_ANVIL1            = -1000209,
+    SAY_ANVIL2            = -1000210,
 
-#define SAY_ANVIL1              -1000209
-#define SAY_ANVIL2              -1000210
+    FACTION_DEFAULT       = 35,
+    FACTION_HOSTILE       = 24,
 
-#define QUEST_THE_DWARVEN_SPY   8483
+    QUEST_THE_DWARVEN_SPY = 8483
+};
 
 struct MANGOS_DLL_DECL npc_prospector_anvilwardAI : public npc_escortAI
 {
@@ -269,10 +274,10 @@ struct MANGOS_DLL_DECL npc_prospector_anvilwardAI : public npc_escortAI
                 DoScriptText(SAY_ANVIL1, m_creature, pPlayer);
                 break;
             case 5:
-                DoScriptText(SAY_ANVIL1, m_creature, pPlayer);
+                DoScriptText(SAY_ANVIL2, m_creature, pPlayer);
                 break;
             case 6:
-                m_creature->setFaction(24);
+                m_creature->setFaction(FACTION_HOSTILE);
                 break;
         }
     }
@@ -280,13 +285,13 @@ struct MANGOS_DLL_DECL npc_prospector_anvilwardAI : public npc_escortAI
     void Reset()
     {
         //Default npc faction
-        m_creature->setFaction(35);
+        m_creature->setFaction(FACTION_DEFAULT);
     }
 
-    void JustDied(Unit* killer)
+    void JustDied(Unit* pKiller)
     {
         //Default npc faction
-        m_creature->setFaction(35);
+        m_creature->setFaction(FACTION_DEFAULT);
     }
 };
 
@@ -309,7 +314,7 @@ bool GossipSelect_npc_prospector_anvilward(Player* pPlayer, Creature* pCreature,
     switch(uiAction)
     {
         case GOSSIP_ACTION_INFO_DEF+1:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Why... yes, of course. I've something to show you right inside this building, Mr. Anvilward.",GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF+2);
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Why... yes, of course. I've something to show you right inside this building, Mr. Anvilward.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
             pPlayer->SEND_GOSSIP_MENU(8240, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+2:
@@ -325,7 +330,7 @@ bool GossipSelect_npc_prospector_anvilward(Player* pPlayer, Creature* pCreature,
 
 void AddSC_eversong_woods()
 {
-    Script *newscript;
+    Script* newscript;
 
     newscript = new Script;
     newscript->Name = "npc_kelerun_bloodmourn";
