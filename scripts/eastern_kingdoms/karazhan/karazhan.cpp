@@ -360,19 +360,19 @@ bool GossipSelect_npc_barnes(Player* pPlayer, Creature* pCreature, uint32 uiSend
             break;
         case GOSSIP_ACTION_INFO_DEF+3:
             pPlayer->CLOSE_GOSSIP_MENU();
-            if (pBarnesAI)
+            if (pBarnesAI && pPlayer->isGameMaster())
                 pBarnesAI->m_uiEventId = EVENT_OZ;
             outstring_log("SD2: pPlayer (GUID " UI64FMTD ") manually set Opera event to EVENT_OZ", pPlayer->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+4:
             pPlayer->CLOSE_GOSSIP_MENU();
-            if (pBarnesAI)
+            if (pBarnesAI && pPlayer->isGameMaster())
                 pBarnesAI->m_uiEventId = EVENT_HOOD;
             outstring_log("SD2: pPlayer (GUID " UI64FMTD ") manually set Opera event to EVENT_HOOD", pPlayer->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+5:
             pPlayer->CLOSE_GOSSIP_MENU();
-            if (pBarnesAI)
+            if (pBarnesAI && pPlayer->isGameMaster())
                 pBarnesAI->m_uiEventId = EVENT_RAJ;
             outstring_log("SD2: pPlayer (GUID " UI64FMTD ") manually set Opera event to EVENT_RAJ", pPlayer->GetGUID());
             break;
