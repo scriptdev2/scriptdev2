@@ -70,6 +70,22 @@ struct MANGOS_DLL_DECL instance_sunken_temple : public ScriptedInstance
         }
     }
 
+    uint32 GetData(uint32 uiType)
+    {
+        switch(uiType)
+        {
+            case TYPE_ATALARION:
+                return m_auiEncounter[0];
+            case TYPE_DEFENDERS:
+                return m_auiEncounter[1];
+            case TYPE_JAMMALAIN:
+                return m_auiEncounter[2];
+            case TYPE_MALFURION:
+                return m_auiEncounter[3];
+        }
+        return 0;
+    }
+
     const char* Save()
     {
         return strInstData.c_str();
