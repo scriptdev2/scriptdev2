@@ -24,7 +24,6 @@ enum
     NPC_IONAR               = 28546,
     NPC_LOKEN               = 28923,
 
-    GO_BJARNGRIM_DOOR       = 191416,                       //_doors10
     GO_VOLKHAN_DOOR         = 191325,                       //_doors07
     GO_IONAR_DOOR           = 191326,                       //_doors05
     GO_LOKEN_DOOR           = 191324,                       //_doors02
