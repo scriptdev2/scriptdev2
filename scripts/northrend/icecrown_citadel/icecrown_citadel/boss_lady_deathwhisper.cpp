@@ -15,7 +15,7 @@
  */
 
 /* ScriptData
-SDName: boss_lady_deathwisper
+SDName: boss_lady_deathwhisper
 SD%Complete: 0%
 SDComment:
 SDCategory: Icecrown Citadel
