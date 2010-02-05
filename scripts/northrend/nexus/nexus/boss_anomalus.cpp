@@ -72,17 +72,17 @@ struct MANGOS_DLL_DECL boss_anomalusAI : public ScriptedAI
     ScriptedInstance* m_pInstance;
     bool m_bIsRegularMode;
 
+    bool   m_bChaoticRift;
     uint32 m_uiSparkTimer;
     uint32 m_uiCreateRiftTimer;
     uint64 m_uiChaoticRiftGUID;
-    uint8 m_uiShieldCount;
 
     void Reset()
     {
+        m_bChaoticRift = false;
         m_uiSparkTimer = 5000;
         m_uiCreateRiftTimer = 25000;
         m_uiChaoticRiftGUID = 0;
-        m_uiShieldCount = 3;
     }
 
     void Aggro(Unit* pWho)
@@ -143,15 +143,15 @@ struct MANGOS_DLL_DECL boss_anomalusAI : public ScriptedAI
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim() || m_creature->HasAura(SPELL_RIFT_SHIELD))
              return;
 
-        // Create additional Chaotic Rift at 75%, 50% and 25% HP
-        if (m_creature->GetHealth()*4 < m_creature->GetMaxHealth()*m_uiShieldCount)
+        // Create additional Chaotic Rift at 50% HP
+        if (!m_bChaoticRift && m_creature->GetHealth()*2 < m_creature->GetMaxHealth())
         {
             DoScriptText(EMOTE_SHIELD, m_creature);
             m_uiChaoticRiftGUID = CreateRiftAtRandomPoint();
 
             DoScriptText(SAY_SHIELD, m_creature);
             DoCastSpellIfCan(m_creature, SPELL_RIFT_SHIELD);
-            --m_uiShieldCount;
+            m_bChaoticRift = true;
             return;
         }
 

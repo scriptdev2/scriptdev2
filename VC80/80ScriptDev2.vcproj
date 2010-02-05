@@ -1735,6 +1735,18 @@
 							>
 						</File>
 						<File
+							RelativePath="..\scripts\northrend\icecrown_citadel\icecrown_citadel\boss_sindragosa.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\northrend\icecrown_citadel\icecrown_citadel\boss_the_lich_king.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\northrend\icecrown_citadel\icecrown_citadel\boss_valithria_dreamwalker.cpp"
+							>
+						</File>
+						<File
 							RelativePath="..\scripts\northrend\icecrown_citadel\icecrown_citadel\gunship_battle.cpp"
 							>
 						</File>
