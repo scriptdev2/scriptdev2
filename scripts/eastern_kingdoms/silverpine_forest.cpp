@@ -17,13 +17,14 @@
 /* ScriptData
 SDName: Silverpine_Forest
 SD%Complete: 100
-SDComment: Quest support: 435, 1886
+SDComment: Quest support: 435, 452, 1886
 SDCategory: Silverpine Forest
 EndScriptData */
 
 /* ContentData
 npc_astor_hadren
 npc_deathstalker_erland
+npc_deathstalker_faerleia
 EndContentData */
 
 #include "precompiled.h"
@@ -213,9 +214,186 @@ CreatureAI* GetAI_npc_deathstalker_erland(Creature* pCreature)
     return new npc_deathstalker_erlandAI(pCreature);
 }
 
+/*#####
+## npc_deathstalker_faerleia
+#####*/
+
+enum
+{
+    QUEST_PYREWOOD_AMBUSH    = 452,
+
+    // cast it after every wave
+    SPELL_DRINK_POTION       = 3359,
+
+    SAY_START                = -1000553,
+    SAY_COMPLETED            = -1000554,
+
+    // 1st wave
+    NPC_COUNCILMAN_SMITHERS  = 2060,
+    // 2nd wave
+    NPC_COUNCILMAN_THATHER   = 2061,
+    NPC_COUNCILMAN_HENDRICKS = 2062,
+    // 3rd wave
+    NPC_COUNCILMAN_WILHELM   = 2063,
+    NPC_COUNCILMAN_HARTIN    = 2064,
+    NPC_COUNCILMAN_HIGARTH   = 2066,
+    // final wave
+    NPC_COUNCILMAN_COOPER    = 2065,
+    NPC_COUNCILMAN_BRUNSWICK = 2067,
+    NPC_LORD_MAYOR_MORRISON  = 2068
+};
+
+struct SpawnPoint
+{
+    float fX;
+    float fY;
+    float fZ;
+    float fO;
+};
+
+SpawnPoint SpawnPoints[] =
+{
+    {-397.45, 1509.56, 18.87, 4.73},
+    {-398.35, 1510.75, 18.87, 4.76},
+    {-396.41, 1511.06, 18.87, 4.74}
+};
+
+static float m_afMoveCoords[] = {-410.69, 1498.04, 19.77};
+
+struct MANGOS_DLL_DECL npc_deathstalker_faerleiaAI : public ScriptedAI
+{
+    npc_deathstalker_faerleiaAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+
+    void Reset()
+    {
+    }
+
+    uint64 m_uiPlayerGUID;
+    uint32 m_uiWaveTimer;
+    uint32 m_uiSummonCount;
+    uint8  m_uiWaveCount;
+    bool   m_bEventStarted;
+
+    void StartEvent(uint64 uiPlayerGUID)
+    {
+        m_creature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER);
+
+        m_uiPlayerGUID  = uiPlayerGUID;
+        m_bEventStarted = true;
+        m_uiWaveTimer   = 10000;
+        m_uiSummonCount = 0;
+        m_uiWaveCount   = 0;
+    }
+
+    void FinishEvent()
+    {
+        m_uiPlayerGUID = 0;
+        m_bEventStarted = false;
+        m_creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER);
+    }
+
+    void JustDied(Unit* pKiller)
+    {
+        if (Player* pPlayer = ((Player*)Unit::GetUnit((*m_creature), m_uiPlayerGUID)))
+            pPlayer->SendQuestFailed(QUEST_PYREWOOD_AMBUSH);
+
+        FinishEvent();
+    }
+
+    void JustSummoned(Creature* pSummoned)
+    {
+        ++m_uiSummonCount;
+
+        // put them on correct waypoints later on
+        float fX, fY, fZ;
+        pSummoned->GetRandomPoint(m_afMoveCoords[0], m_afMoveCoords[1], m_afMoveCoords[2], 10.0f, fX, fY, fZ);
+        pSummoned->GetMotionMaster()->MovePoint(0, fX, fY, fZ);
+    }
+
+    void SummonedCreatureJustDied(Creature* pKilled)
+    {
+        --m_uiSummonCount;
+
+        if (!m_uiSummonCount)
+        {
+            DoCast(m_creature, SPELL_DRINK_POTION);
+
+            // final wave
+            if (m_uiWaveCount == 4)
+            {
+                DoScriptText(SAY_COMPLETED, m_creature);
+
+                if (Player* pPlayer = ((Player*)Unit::GetUnit((*m_creature), m_uiPlayerGUID)))
+                    pPlayer->GroupEventHappens(QUEST_PYREWOOD_AMBUSH, m_creature);
+
+                FinishEvent();
+            }
+        }
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (m_bEventStarted && !m_uiSummonCount)
+        {
+            if (m_uiWaveTimer < uiDiff)
+            {
+                switch(m_uiWaveCount)
+                {
+                    case 0:
+                        m_creature->SummonCreature(NPC_COUNCILMAN_SMITHERS,  SpawnPoints[1].fX, SpawnPoints[1].fY, SpawnPoints[1].fZ, SpawnPoints[1].fO, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 20000);
+                        m_uiWaveTimer = 10000;
+                        break;
+                    case 1:
+                        m_creature->SummonCreature(NPC_COUNCILMAN_THATHER,   SpawnPoints[2].fX, SpawnPoints[2].fY, SpawnPoints[2].fZ, SpawnPoints[2].fO, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 20000);
+                        m_creature->SummonCreature(NPC_COUNCILMAN_HENDRICKS, SpawnPoints[1].fX, SpawnPoints[1].fY, SpawnPoints[1].fZ, SpawnPoints[1].fO, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 20000);
+                        m_uiWaveTimer = 10000;
+                        break;
+                    case 2:
+                        m_creature->SummonCreature(NPC_COUNCILMAN_WILHELM,   SpawnPoints[1].fX, SpawnPoints[1].fY, SpawnPoints[1].fZ, SpawnPoints[1].fO, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 20000);
+                        m_creature->SummonCreature(NPC_COUNCILMAN_HARTIN,    SpawnPoints[0].fX, SpawnPoints[0].fY, SpawnPoints[0].fZ, SpawnPoints[0].fO, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 20000);
+                        m_creature->SummonCreature(NPC_COUNCILMAN_HIGARTH,   SpawnPoints[2].fX, SpawnPoints[2].fY, SpawnPoints[2].fZ, SpawnPoints[2].fO, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 20000);
+                        m_uiWaveTimer  = 8000;
+                        break;
+                    case 3:
+                        m_creature->SummonCreature(NPC_COUNCILMAN_COOPER,    SpawnPoints[1].fX, SpawnPoints[1].fY, SpawnPoints[1].fZ, SpawnPoints[1].fO, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 20000);
+                        m_creature->SummonCreature(NPC_COUNCILMAN_BRUNSWICK, SpawnPoints[2].fX, SpawnPoints[2].fY, SpawnPoints[2].fZ, SpawnPoints[2].fO, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 20000);
+                        m_creature->SummonCreature(NPC_LORD_MAYOR_MORRISON,  SpawnPoints[0].fX, SpawnPoints[0].fY, SpawnPoints[0].fZ, SpawnPoints[0].fO, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 20000);
+                        break;
+                }
+
+                ++m_uiWaveCount;
+            }
+            else
+                m_uiWaveTimer -= uiDiff;
+        }
+
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+bool QuestAccept_npc_deathstalker_faerleia(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
+{
+    if (pQuest->GetQuestId() == QUEST_PYREWOOD_AMBUSH)
+    {
+        DoScriptText(SAY_START, pCreature, pPlayer);
+
+        if (npc_deathstalker_faerleiaAI* pFaerleiaAI = dynamic_cast<npc_deathstalker_faerleiaAI*>(pCreature->AI()))
+            pFaerleiaAI->StartEvent(pPlayer->GetGUID());
+    }
+    return true;
+}
+
+CreatureAI* GetAI_npc_deathstalker_faerleia(Creature* pCreature)
+{
+    return new npc_deathstalker_faerleiaAI(pCreature);
+}
+
 void AddSC_silverpine_forest()
 {
-    Script *newscript;
+    Script* newscript;
 
     newscript = new Script;
     newscript->Name = "npc_astor_hadren";
@@ -228,5 +406,11 @@ void AddSC_silverpine_forest()
     newscript->Name = "npc_deathstalker_erland";
     newscript->GetAI = &GetAI_npc_deathstalker_erland;
     newscript->pQuestAccept = &QuestAccept_npc_deathstalker_erland;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "npc_deathstalker_faerleia";
+    newscript->GetAI = &GetAI_npc_deathstalker_faerleia;
+    newscript->pQuestAccept = &QuestAccept_npc_deathstalker_faerleia;
     newscript->RegisterSelf();
 }

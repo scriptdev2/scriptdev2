@@ -867,6 +867,7 @@ UPDATE creature_template SET ScriptName='npc_blood_knight_stillblade' WHERE entr
 /* SILVERPINE FOREST */
 UPDATE creature_template SET ScriptName='npc_astor_hadren' WHERE entry=6497;
 UPDATE creature_template SET ScriptName='npc_deathstalker_erland' WHERE entry=1978;
+UPDATE creature_template SET ScriptName='npc_deathstalker_faerleia' WHERE entry=2058;
 
 /* STOCKADES */
 
