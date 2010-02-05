@@ -169,7 +169,7 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
             DoUpdateStats(pInfo);
 
         if (m_uiPhase == PHASE_TOTEM)
-            DoCast(m_creature, SPELL_SUMMON_LYNX);
+            DoCastSpellIfCan(m_creature, SPELL_SUMMON_LYNX);
     }
 
     void PhaseChange()
@@ -237,7 +237,7 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
             if (m_uiBerserkTimer < uiDiff)
             {
                 DoScriptText(SAY_BERSERK, m_creature);
-                DoCast(m_creature, SPELL_BERSERK,true);
+                DoCastSpellIfCan(m_creature, SPELL_BERSERK, CAST_TRIGGERED);
                 m_bIsBerserk = true;
             }
             else
@@ -263,7 +263,7 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
         {
             if (m_uiFrenzyTimer < uiDiff)
             {
-                DoCast(m_creature, SPELL_FRENZY);
+                DoCastSpellIfCan(m_creature, SPELL_FRENZY);
                 m_uiFrenzyTimer = 16*IN_MILISECONDS;
             }
             else
@@ -273,7 +273,7 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
             {
                 DoScriptText(urand(0, 1) ? SAY_SABERLASH1 : SAY_SABERLASH2, m_creature);
 
-                DoCast(m_creature->getVictim(), SPELL_SABER_LASH);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_SABER_LASH);
                 m_uiSaberLashTimer = 20*IN_MILISECONDS;
             }
             else
@@ -284,7 +284,7 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
         {
             if (m_uiTotemTimer < uiDiff)
             {
-                DoCast(m_creature, SPELL_SUMMON_TOTEM);
+                DoCastSpellIfCan(m_creature, SPELL_SUMMON_TOTEM);
                 m_uiTotemTimer = 20*IN_MILISECONDS;
             }
             else
@@ -295,9 +295,9 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
                 if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
                 {
                     if (pTarget->IsNonMeleeSpellCasted(false))
-                        DoCast(pTarget, SPELL_EARTHSHOCK);
+                        DoCastSpellIfCan(pTarget, SPELL_EARTHSHOCK);
                     else
-                        DoCast(pTarget, SPELL_FLAMESHOCK);
+                        DoCastSpellIfCan(pTarget, SPELL_FLAMESHOCK);
 
                     m_uiShockTimer = urand(10000, 14000);
                 }
@@ -361,7 +361,7 @@ struct MANGOS_DLL_DECL boss_spirit_lynxAI : public ScriptedAI
 
         if (m_uiFrenzyTimer < uiDiff)
         {
-            DoCast(m_creature, SPELL_LYNX_FRENZY);
+            DoCastSpellIfCan(m_creature, SPELL_LYNX_FRENZY);
             m_uiFrenzyTimer = urand(20000, 30000);          //subsequent frenzys casted every 20-30 seconds
         }
         else
@@ -369,7 +369,7 @@ struct MANGOS_DLL_DECL boss_spirit_lynxAI : public ScriptedAI
 
         if (m_uiShredArmorTimer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), SPELL_SHRED_ARMOR);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_SHRED_ARMOR);
             m_uiShredArmorTimer = 4000;
         }
         else

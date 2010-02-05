@@ -186,14 +186,14 @@ struct MANGOS_DLL_DECL boss_warp_splinterAI : public ScriptedAI
         //Check for War Stomp
         if (War_Stomp_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),WAR_STOMP);
+            DoCastSpellIfCan(m_creature->getVictim(),WAR_STOMP);
             War_Stomp_Timer = urand(25000, 40000);
         } else War_Stomp_Timer -= diff;
 
         //Check for Arcane Volley
         if (Arcane_Volley_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),ARCANE_VOLLEY);
+            DoCastSpellIfCan(m_creature->getVictim(),ARCANE_VOLLEY);
             Arcane_Volley_Timer = urand(20000, 35000);
         } else Arcane_Volley_Timer -= diff;
 

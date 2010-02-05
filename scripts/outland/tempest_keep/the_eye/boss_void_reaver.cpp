@@ -101,7 +101,7 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
         // Pounding
         if (Pounding_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_POUNDING);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_POUNDING);
             DoScriptText(urand(0, 1) ? SAY_POUNDING1 : SAY_POUNDING2, m_creature);
 
             Pounding_Timer = 15000;                         //cast time(3000) + cooldown time(12000)
@@ -135,7 +135,7 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
                 target = m_creature->getVictim();
 
             if (target)
-                DoCast(target, SPELL_ARCANE_ORB_MISSILE);
+                DoCastSpellIfCan(target, SPELL_ARCANE_ORB_MISSILE);
 
             ArcaneOrb_Timer = 3000;
         }else ArcaneOrb_Timer -= diff;
@@ -143,7 +143,7 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
         // Single Target knock back, reduces aggro
         if (KnockAway_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_KNOCK_AWAY);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_KNOCK_AWAY);
 
             //Drop 25% aggro
             if (m_creature->getThreatManager().getThreat(m_creature->getVictim()))
@@ -158,7 +158,7 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
             if (m_creature->IsNonMeleeSpellCasted(false))
                 m_creature->InterruptNonMeleeSpells(false);
 
-            DoCast(m_creature,SPELL_BERSERK);
+            DoCastSpellIfCan(m_creature,SPELL_BERSERK);
             Berserk_Timer = 600000;
         }else Berserk_Timer -= diff;
 

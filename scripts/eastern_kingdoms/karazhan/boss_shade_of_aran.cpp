@@ -336,7 +336,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
                 if (uiAvailableSpells)
                 {
                     m_uiCurrentNormalSpell = auiSpells[rand() % uiAvailableSpells];
-                    DoCast(pTarget, m_uiCurrentNormalSpell);
+                    DoCastSpellIfCan(pTarget, m_uiCurrentNormalSpell);
                 }
             }
             m_uiNormalCast_Timer = 1000;
@@ -349,11 +349,11 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
             switch(urand(0, 1))
             {
                 case 0:
-                    DoCast(m_creature, SPELL_AOE_CS);
+                    DoCastSpellIfCan(m_creature, SPELL_AOE_CS);
                     break;
                 case 1:
                     if (Unit* pUnit = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                        DoCast(pUnit, SPELL_CHAINSOFICE);
+                        DoCastSpellIfCan(pUnit, SPELL_CHAINSOFICE);
                     break;
             }
             m_uiSecondarySpell_Timer = urand(5000, 20000);
@@ -535,7 +535,7 @@ struct MANGOS_DLL_DECL water_elementalAI : public ScriptedAI
 
         if (m_uiCast_Timer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), SPELL_WATERBOLT);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_WATERBOLT);
             m_uiCast_Timer = urand(2000, 5000);
         }
         else

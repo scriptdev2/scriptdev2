@@ -120,7 +120,7 @@ struct MANGOS_DLL_DECL boss_keristraszaAI : public ScriptedAI
             {
                 m_bIsEnraged = true;
                 DoScriptText(SAY_ENRAGE, m_creature);
-                DoCast(m_creature, SPELL_ENRAGE);
+                DoCastSpellIfCan(m_creature, SPELL_ENRAGE);
             }
         }
 
@@ -133,7 +133,7 @@ struct MANGOS_DLL_DECL boss_keristraszaAI : public ScriptedAI
                     if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
                     {
                         if (Player* pPlayer = pTarget->GetCharmerOrOwnerPlayerOrPlayerItself())
-                            DoCast(pPlayer, SPELL_CRYSTAL_CHAINS);
+                            DoCastSpellIfCan(pPlayer, SPELL_CRYSTAL_CHAINS);
 
                         uiCrystalChainTimer = 30000;
                     }

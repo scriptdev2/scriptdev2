@@ -86,7 +86,7 @@ struct MANGOS_DLL_DECL mob_anubisath_guardianAI : public ScriptedAI
     void Aggro(Unit* pWho)
     {
         // spell reflection
-        DoCast(m_creature, m_uiSpell3);
+        DoCastSpellIfCan(m_creature, m_uiSpell3);
     }
 
     void JustSummoned(Creature* pSummoned)
@@ -108,11 +108,11 @@ struct MANGOS_DLL_DECL mob_anubisath_guardianAI : public ScriptedAI
             if (m_uiSpell4 == SPELL_ENRAGE)
             {
                 DoScriptText(EMOTE_FRENZY, m_creature);
-                DoCast(m_creature, m_uiSpell4);
+                DoCastSpellIfCan(m_creature, m_uiSpell4);
                 m_bIsEnraged = true;
             }
             else
-                DoCast(m_creature->getVictim(), m_uiSpell4);
+                DoCastSpellIfCan(m_creature->getVictim(), m_uiSpell4);
         }
     }
 
@@ -124,7 +124,7 @@ struct MANGOS_DLL_DECL mob_anubisath_guardianAI : public ScriptedAI
         // Meteor or Plague
         if (m_uiSpell1Timer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), m_uiSpell1);
+            DoCastSpellIfCan(m_creature->getVictim(), m_uiSpell1);
             m_uiSpell1Timer = 15000;
         }
         else
@@ -133,7 +133,7 @@ struct MANGOS_DLL_DECL mob_anubisath_guardianAI : public ScriptedAI
         // Shadow Storm or Thunder Clap
         if (m_uiSpell2Timer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), m_uiSpell2);
+            DoCastSpellIfCan(m_creature->getVictim(), m_uiSpell2);
             m_uiSpell2Timer = 15000;
         }
         else
@@ -144,7 +144,7 @@ struct MANGOS_DLL_DECL mob_anubisath_guardianAI : public ScriptedAI
         {
             // change for summon spell
             if (m_uiSummonCount < 4)
-                DoCast(m_creature->getVictim(), m_uiSpell5);
+                DoCastSpellIfCan(m_creature->getVictim(), m_uiSpell5);
 
             m_uiSpell5Timer = 15000;
         }

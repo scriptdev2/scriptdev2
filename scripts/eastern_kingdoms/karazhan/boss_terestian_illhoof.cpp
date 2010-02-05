@@ -106,7 +106,7 @@ struct MANGOS_DLL_DECL mob_kilrekAI : public ScriptedAI
             {
                 Unit* pTerestian = Unit::GetUnit((*m_creature), m_uiTerestianGUID);
                 if (pTerestian && pTerestian->isAlive())
-                    DoCast(pTerestian, SPELL_BROKEN_PACT, true);
+                    DoCastSpellIfCan(pTerestian, SPELL_BROKEN_PACT, CAST_TRIGGERED);
             }
         }
         else
@@ -122,7 +122,7 @@ struct MANGOS_DLL_DECL mob_kilrekAI : public ScriptedAI
         if (m_uiAmplify_Timer < uiDiff)
         {
             m_creature->InterruptNonMeleeSpells(false);
-            DoCast(m_creature->getVictim(), SPELL_AMPLIFY_FLAMES);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_AMPLIFY_FLAMES);
 
             m_uiAmplify_Timer = urand(10000, 20000);
         }
@@ -295,7 +295,7 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
             Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
             if (pTarget && pTarget->isAlive() && pTarget->GetTypeId() == TYPEID_PLAYER)
             {
-                DoCast(pTarget, SPELL_SACRIFICE, true);
+                DoCastSpellIfCan(pTarget, SPELL_SACRIFICE, CAST_TRIGGERED);
 
                 Creature* pChains = m_creature->SummonCreature(NPC_DEMONCHAINS, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 21000);
                 if (pChains)
@@ -315,7 +315,7 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
         if (m_uiShadowbolt_Timer < uiDiff)
         {
             if (Unit* pTarget = SelectUnit(SELECT_TARGET_TOPAGGRO, 0))
-                DoCast(pTarget, SPELL_SHADOW_BOLT);
+                DoCastSpellIfCan(pTarget, SPELL_SHADOW_BOLT);
 
             m_uiShadowbolt_Timer = 10000;
         }
@@ -352,7 +352,7 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
         {
             if (m_uiBerserk_Timer < uiDiff)
             {
-                DoCast(m_creature, SPELL_BERSERK);
+                DoCastSpellIfCan(m_creature, SPELL_BERSERK);
                 m_bBerserk = true;
             }
             else
@@ -384,7 +384,7 @@ struct MANGOS_DLL_DECL mob_karazhan_impAI : public ScriptedAI
 
         if (m_uiFirebolt_Timer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), SPELL_FIREBOLT);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_FIREBOLT);
             m_uiFirebolt_Timer = 2200;
         }
         else

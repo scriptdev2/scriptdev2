@@ -211,7 +211,7 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
             if (pUnit && (pUnit->GetTypeId() == TYPEID_PLAYER))
                 pUnit->CastSpell(pUnit, SPELL_TELEPORT_CENTER, true);
         }
-        DoCast(m_creature, SPELL_TELEPORT_CENTER, true);
+        DoCastSpellIfCan(m_creature, SPELL_TELEPORT_CENTER, CAST_TRIGGERED);
     }
 
     void CastGravityLapseKnockUp()
@@ -282,15 +282,15 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
                     {
                         m_creature->InterruptSpell(CURRENT_CHANNELED_SPELL);
                         m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
-                        DoCast(m_creature, SPELL_SHOCK_BARRIER, true);
-                        DoCast(m_creature->getVictim(), SPELL_PYROBLAST);
+                        DoCastSpellIfCan(m_creature, SPELL_SHOCK_BARRIER, CAST_TRIGGERED);
+                        DoCastSpellIfCan(m_creature->getVictim(), SPELL_PYROBLAST);
                         PyroblastTimer = 60000;
                     }else PyroblastTimer -= diff;
                 }
 
                 if (FireballTimer < diff)
                 {
-                    DoCast(m_creature->getVictim(), m_bIsRegularMode ? SPELL_FIREBALL_NORMAL : SPELL_FIREBALL_HEROIC);
+                    DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_FIREBALL_NORMAL : SPELL_FIREBALL_HEROIC);
                     FireballTimer = urand(2000, 6000);
                 }else FireballTimer -= diff;
 
@@ -324,7 +324,7 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
                         if (m_creature->IsNonMeleeSpellCasted(false))
                             m_creature->InterruptNonMeleeSpells(false);
 
-                        DoCast(pTarget, SPELL_FLAME_STRIKE);
+                        DoCastSpellIfCan(pTarget, SPELL_FLAME_STRIKE);
                         DoScriptText(SAY_FLAMESTRIKE, m_creature);
                     }
                     FlameStrikeTimer = urand(15000, 25000);
@@ -372,7 +372,7 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
                                 DoScriptText(SAY_RECAST_GRAVITY, m_creature);
                             }
 
-                            DoCast(m_creature, SPELL_GRAVITY_LAPSE_INITIAL);
+                            DoCastSpellIfCan(m_creature, SPELL_GRAVITY_LAPSE_INITIAL);
                             GravityLapseTimer = 2000 + diff;// Don't interrupt the visual spell
                             GravityLapsePhase = 1;
                             break;
@@ -410,13 +410,13 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
 
                             }
 
-                            DoCast(m_creature, SPELL_GRAVITY_LAPSE_CHANNEL);
+                            DoCastSpellIfCan(m_creature, SPELL_GRAVITY_LAPSE_CHANNEL);
                             break;
 
                         case 4:
                             m_creature->InterruptNonMeleeSpells(false);
                             DoScriptText(SAY_TIRED, m_creature);
-                            DoCast(m_creature, SPELL_POWER_FEEDBACK);
+                            DoCastSpellIfCan(m_creature, SPELL_POWER_FEEDBACK);
                             RemoveGravityLapse();
                             GravityLapseTimer = 10000;
                             GravityLapsePhase = 0;
@@ -504,7 +504,7 @@ struct MANGOS_DLL_DECL mob_felkael_phoenixAI : public ScriptedAI
         {
             if (!Rebirth)
             {
-                DoCast(m_creature, SPELL_REBIRTH_DMG);
+                DoCastSpellIfCan(m_creature, SPELL_REBIRTH_DMG);
                 Rebirth = true;
             }
 
@@ -577,7 +577,7 @@ struct MANGOS_DLL_DECL mob_arcane_sphereAI : public ScriptedAI
         ChangeTargetTimer = urand(6000, 12000);
 
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-        DoCast(m_creature, SPELL_ARCANE_SPHERE_PASSIVE, true);
+        DoCastSpellIfCan(m_creature, SPELL_ARCANE_SPHERE_PASSIVE, CAST_TRIGGERED);
     }
 
     void UpdateAI(const uint32 diff)

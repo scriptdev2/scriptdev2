@@ -48,7 +48,7 @@ struct MANGOS_DLL_DECL boss_wushoolayAI : public ScriptedAI
         //LightningCloud_Timer
         if (LightningCloud_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_LIGHTNINGCLOUD);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_LIGHTNINGCLOUD);
             LightningCloud_Timer = urand(15000, 20000);
         }else LightningCloud_Timer -= diff;
 
@@ -57,7 +57,7 @@ struct MANGOS_DLL_DECL boss_wushoolayAI : public ScriptedAI
         {
             Unit* target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if (target) DoCast(target,SPELL_LIGHTNINGWAVE);
+            if (target) DoCastSpellIfCan(target,SPELL_LIGHTNINGWAVE);
 
             LightningWave_Timer = urand(12000, 16000);
         }else LightningWave_Timer -= diff;

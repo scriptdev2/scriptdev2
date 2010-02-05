@@ -219,7 +219,7 @@ struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
         m_creature->SetHealth(m_creature->GetMaxHealth());
         m_creature->SetStandState(UNIT_STAND_STATE_STAND);
 
-        DoCast(m_creature, SPELL_RES_VISUAL, false);
+        DoCastSpellIfCan(m_creature, SPELL_RES_VISUAL);
         m_uiDelayRes_Timer = 2000;
     }
 
@@ -660,7 +660,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
                             m_uiPhaseSubphase = 0;
                             m_uiPhase_Timer = 3500;
-                            DoCast(m_creature, SPELL_SUMMON_WEAPONS);
+                            DoCastSpellIfCan(m_creature, SPELL_SUMMON_WEAPONS);
                         }
                         break;
                 }
@@ -793,7 +793,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                     //m_uiArcaneDisruption_Timer
                     if (m_uiArcaneDisruption_Timer < uiDiff)
                     {
-                        DoCast(m_creature->getVictim(), SPELL_ARCANE_DISRUPTION, true);
+                        DoCastSpellIfCan(m_creature->getVictim(), SPELL_ARCANE_DISRUPTION, CAST_TRIGGERED);
                         m_uiArcaneDisruption_Timer = 60000;
                     }
                     else
@@ -803,7 +803,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                     if (m_uiFlameStrike_Timer < uiDiff)
                     {
                         if (Unit* pUnit = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                            DoCast(pUnit, SPELL_FLAME_STRIKE);
+                            DoCastSpellIfCan(pUnit, SPELL_FLAME_STRIKE);
 
                         m_uiFlameStrike_Timer = 30000;
                     }
@@ -816,7 +816,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                             for (uint32 i = 0; i < 3; ++i)
                         {
                             debug_log("SD2: Kael'Thas mind control not supported.");
-                            //DoCast(pUnit, SPELL_MIND_CONTROL);
+                            //DoCastSpellIfCan(pUnit, SPELL_MIND_CONTROL);
                         }
 
                         m_uiMindControl_Timer = 60000;
@@ -830,7 +830,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                  {
                     if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                     {
-                        DoCast(pTarget, SPELL_PHOENIX_ANIMATION);
+                        DoCastSpellIfCan(pTarget, SPELL_PHOENIX_ANIMATION);
                         DoScriptText(urand(0, 1) ? SAY_SUMMON_PHOENIX1 : SAY_SUMMON_PHOENIX2, pTarget);
                     }
 
@@ -858,14 +858,14 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                         m_creature->SendMonsterMove(afGravityPos[0], afGravityPos[1], afGravityPos[2], 0, MONSTER_MOVE_NONE, 0);
 
                         m_creature->InterruptNonMeleeSpells(false);
-                        DoCast(m_creature, SPELL_FULLPOWER);
+                        DoCastSpellIfCan(m_creature, SPELL_FULLPOWER);
                         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     }
 
                     //m_uiShockBarrier_Timer
                     if (m_uiShockBarrier_Timer < uiDiff)
                     {
-                        DoCast(m_creature, SPELL_SHOCK_BARRIER);
+                        DoCastSpellIfCan(m_creature, SPELL_SHOCK_BARRIER);
                         m_bChainPyros = true;
                         m_uiPyrosCasted = 0;
                         m_uiShockBarrier_Timer = 60000;
@@ -878,7 +878,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                     {
                         if (m_uiPyrosCasted < 3)
                         {
-                            DoCast(m_creature->getVictim(), SPELL_PYROBLAST);
+                            DoCastSpellIfCan(m_creature->getVictim(), SPELL_PYROBLAST);
                             ++m_uiPyrosCasted;
                         }
                         else
@@ -897,7 +897,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                         m_creature->InterruptNonMeleeSpells(false);
                         m_creature->RemoveAurasDueToSpell(SPELL_FULLPOWER);
 
-                        DoCast(m_creature, SPELL_EXPLODE);
+                        DoCastSpellIfCan(m_creature, SPELL_EXPLODE);
 
                         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                         m_uiPhase = 6;
@@ -974,7 +974,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                             case 2:
                                 //Cast nether vapor aura on self
                                 m_creature->InterruptNonMeleeSpells(false);
-                                DoCast(m_creature, SPELL_NETHER_VAPOR);
+                                DoCastSpellIfCan(m_creature, SPELL_NETHER_VAPOR);
 
                                 m_uiGravityLapse_Timer = 20000;
                                 ++m_uiGravityLapse_Phase;
@@ -1014,7 +1014,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                         //m_uiShockBarrier_Timer
                         if (m_uiShockBarrier_Timer < uiDiff)
                         {
-                            DoCast(m_creature, SPELL_SHOCK_BARRIER);
+                            DoCastSpellIfCan(m_creature, SPELL_SHOCK_BARRIER);
                             m_uiShockBarrier_Timer = 20000;
                         }
                         else
@@ -1024,7 +1024,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                         if (m_uiNetherBeam_Timer < uiDiff)
                         {
                             if (Unit* pUnit = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                                DoCast(pUnit, SPELL_NETHER_BEAM);
+                                DoCastSpellIfCan(pUnit, SPELL_NETHER_BEAM);
 
                             m_uiNetherBeam_Timer = 4000;
                         }
@@ -1102,7 +1102,7 @@ struct MANGOS_DLL_DECL boss_thaladred_the_darkenerAI : public advisorbase_ai
         //m_uiSilence_Timer
         if (m_uiSilence_Timer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), SPELL_SILENCE);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_SILENCE);
             m_uiSilence_Timer = 20000;
         }
         else
@@ -1111,7 +1111,7 @@ struct MANGOS_DLL_DECL boss_thaladred_the_darkenerAI : public advisorbase_ai
         //m_uiPsychicBlow_Timer
         if (m_uiPsychicBlow_Timer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), SPELL_PSYCHIC_BLOW);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_PSYCHIC_BLOW);
             m_uiPsychicBlow_Timer = urand(20000, 25000);
         }
         else
@@ -1163,7 +1163,7 @@ struct MANGOS_DLL_DECL boss_lord_sanguinarAI : public advisorbase_ai
         //m_uiFear_Timer
         if (m_uiFear_Timer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), SPELL_BELLOWING_ROAR);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_BELLOWING_ROAR);
             m_uiFear_Timer = urand(25000, 35000);           //approximately every 30 seconds
         }
         else
@@ -1249,7 +1249,7 @@ struct MANGOS_DLL_DECL boss_grand_astromancer_capernianAI : public advisorbase_a
         //m_uiFireball_Timer
         if (m_uiFireball_Timer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), SPELL_CAPERNIAN_FIREBALL);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_CAPERNIAN_FIREBALL);
             m_uiFireball_Timer = 4000;
         }
         else
@@ -1261,9 +1261,9 @@ struct MANGOS_DLL_DECL boss_grand_astromancer_capernianAI : public advisorbase_a
             Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
 
             if (pTarget && m_creature->IsWithinDistInMap(pTarget, 30.0f))
-                DoCast(pTarget, SPELL_CONFLAGRATION);
+                DoCastSpellIfCan(pTarget, SPELL_CONFLAGRATION);
             else
-                DoCast(m_creature->getVictim(), SPELL_CONFLAGRATION);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_CONFLAGRATION);
 
             m_uiConflagration_Timer = urand(10000, 15000);
         }
@@ -1290,7 +1290,7 @@ struct MANGOS_DLL_DECL boss_grand_astromancer_capernianAI : public advisorbase_a
             }
 
             if (m_bInMeleeRange)
-                DoCast(pTarget, SPELL_ARCANE_EXPLOSION);
+                DoCastSpellIfCan(pTarget, SPELL_ARCANE_EXPLOSION);
 
             m_uiArcaneExplosion_Timer = urand(4000, 6000);
         }
@@ -1346,7 +1346,7 @@ struct MANGOS_DLL_DECL boss_master_engineer_telonicusAI : public advisorbase_ai
         //m_uiBomb_Timer
         if (m_uiBomb_Timer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), SPELL_BOMB);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_BOMB);
             m_uiBomb_Timer = 25000;
         }
         else
@@ -1356,7 +1356,7 @@ struct MANGOS_DLL_DECL boss_master_engineer_telonicusAI : public advisorbase_ai
         if (m_uiRemoteToy_Timer < uiDiff)
         {
             if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                DoCast(pTarget, SPELL_REMOTE_TOY);
+                DoCastSpellIfCan(pTarget, SPELL_REMOTE_TOY);
 
             m_uiRemoteToy_Timer = urand(10000, 15000);
         }

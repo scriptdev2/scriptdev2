@@ -109,7 +109,7 @@ struct MANGOS_DLL_DECL boss_kelidan_the_breakerAI : public ScriptedAI
         {
             if (Firenova_Timer < diff)
             {
-                DoCast(m_creature, m_bIsRegularMode ? SPELL_FIRE_NOVA : H_SPELL_FIRE_NOVA);
+                DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_FIRE_NOVA : H_SPELL_FIRE_NOVA);
                 Firenova = false;
                 ShadowVolley_Timer = 2000;
             }else Firenova_Timer -=diff;
@@ -119,13 +119,13 @@ struct MANGOS_DLL_DECL boss_kelidan_the_breakerAI : public ScriptedAI
 
         if (ShadowVolley_Timer < diff)
         {
-            DoCast(m_creature, m_bIsRegularMode ? SPELL_SHADOW_BOLT_VOLLEY : H_SPELL_SHADOW_BOLT_VOLLEY);
+            DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_SHADOW_BOLT_VOLLEY : H_SPELL_SHADOW_BOLT_VOLLEY);
             ShadowVolley_Timer = urand(5000, 13000);
         }else ShadowVolley_Timer -=diff;
 
         if (Corruption_Timer < diff)
         {
-            DoCast(m_creature,SPELL_CORRUPTION);
+            DoCastSpellIfCan(m_creature,SPELL_CORRUPTION);
             Corruption_Timer = urand(30000, 50000);
         }else Corruption_Timer -=diff;
 
@@ -137,9 +137,9 @@ struct MANGOS_DLL_DECL boss_kelidan_the_breakerAI : public ScriptedAI
             DoScriptText(SAY_NOVA, m_creature);
 
             if (!m_bIsRegularMode)
-                DoCast(m_creature, SPELL_VORTEX);
+                DoCastSpellIfCan(m_creature, SPELL_VORTEX);
 
-            DoCast(m_creature,SPELL_BURNING_NOVA);
+            DoCastSpellIfCan(m_creature,SPELL_BURNING_NOVA);
 
             BurningNova_Timer = urand(20000, 28000);
             Firenova_Timer= 5000;
@@ -203,13 +203,13 @@ struct MANGOS_DLL_DECL mob_shadowmoon_channelerAI : public ScriptedAI
         if (MarkOfShadow_Timer < diff)
         {
             if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                DoCast(target,SPELL_MARK_OF_SHADOW);
+                DoCastSpellIfCan(target,SPELL_MARK_OF_SHADOW);
             MarkOfShadow_Timer = urand(15000, 20000);
         }else MarkOfShadow_Timer -=diff;
 
         if (ShadowBolt_Timer < diff)
         {
-            DoCast(m_creature->getVictim(), m_bIsRegularMode ? SPELL_SHADOW_BOLT : H_SPELL_SHADOW_BOLT);
+            DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_SHADOW_BOLT : H_SPELL_SHADOW_BOLT);
             ShadowBolt_Timer = urand(5000, 6000);
         }else ShadowBolt_Timer -=diff;
 

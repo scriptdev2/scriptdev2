@@ -103,9 +103,9 @@ struct mob_ancient_wispAI : public ScriptedAI
             if (Unit* Archimonde = Unit::GetUnit((*m_creature), ArchimondeGUID))
             {
                 if ((((Archimonde->GetHealth()*100) / Archimonde->GetMaxHealth()) < 2) || !Archimonde->isAlive())
-                    DoCast(m_creature, SPELL_DENOUEMENT_WISP);
+                    DoCastSpellIfCan(m_creature, SPELL_DENOUEMENT_WISP);
                 else
-                    DoCast(Archimonde, SPELL_ANCIENT_SPARK);
+                    DoCastSpellIfCan(Archimonde, SPELL_ANCIENT_SPARK);
             }
             CheckTimer = 1000;
         }else CheckTimer -= diff;
@@ -398,7 +398,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         if (m_creature->HasAura(chargeSpell, 0))
         {
             m_creature->RemoveSingleAuraFromStack(chargeSpell, 0);
-            DoCast(m_creature->getVictim(), unleashSpell);
+            DoCastSpellIfCan(m_creature->getVictim(), unleashSpell);
             HasCast = true;
             --SoulChargeCount;
         }
@@ -439,7 +439,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
                     {
                         Nordrassil->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                         Nordrassil->SetDisplayId(11686);
-                        DoCast(Nordrassil, SPELL_DRAIN_WORLD_TREE);
+                        DoCastSpellIfCan(Nordrassil, SPELL_DRAIN_WORLD_TREE);
                         IsChanneling = true;
                     }
                 }
@@ -499,7 +499,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
                 m_creature->GetMotionMaster()->MoveIdle();
 
                 //all members of raid must get this buff
-                DoCast(m_creature->getVictim(), SPELL_PROTECTION_OF_ELUNE);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_PROTECTION_OF_ELUNE);
                 HasProtected = true;
                 Enraged = true;
             }
@@ -519,7 +519,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         {
             if (HandOfDeathTimer < diff)
             {
-                DoCast(m_creature->getVictim(), SPELL_HAND_OF_DEATH);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_HAND_OF_DEATH);
                 HandOfDeathTimer = 2000;
             }else HandOfDeathTimer -= diff;
             return;                                         // Don't do anything after this point.
@@ -534,7 +534,9 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
 
         if (GripOfTheLegionTimer < diff)
         {
-            DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), SPELL_GRIP_OF_THE_LEGION);
+            if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                DoCastSpellIfCan(pTarget, SPELL_GRIP_OF_THE_LEGION);
+
             GripOfTheLegionTimer = urand(5000, 25000);
         }else GripOfTheLegionTimer -= diff;
 
@@ -545,13 +547,14 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
             else
                 DoScriptText(SAY_AIR_BURST2, m_creature);
 
-            DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), SPELL_AIR_BURST);
+            if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            DoCastSpellIfCan(pTarget, SPELL_AIR_BURST);
             AirBurstTimer = urand(25000, 40000);
         }else AirBurstTimer -= diff;
 
         if (FearTimer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_FEAR);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_FEAR);
             FearTimer = 42000;
         }else FearTimer -= diff;
 
@@ -577,7 +580,9 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         {
             if (CanUseFingerOfDeath())
             {
-                DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), SPELL_FINGER_OF_DEATH);
+                if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                DoCastSpellIfCan(pTarget, SPELL_FINGER_OF_DEATH);
+
                 MeleeRangeCheckTimer = 1000;
             }
 

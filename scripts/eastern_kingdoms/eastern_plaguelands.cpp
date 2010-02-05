@@ -88,7 +88,7 @@ struct MANGOS_DLL_DECL npc_darrowshire_spiritAI : public ScriptedAI
 
     void Reset()
     {
-        DoCast(m_creature,SPELL_SPIRIT_SPAWNIN);
+        DoCastSpellIfCan(m_creature,SPELL_SPIRIT_SPAWNIN);
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     }
 };

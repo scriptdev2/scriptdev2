@@ -94,42 +94,42 @@ struct MANGOS_DLL_DECL boss_captain_skarlocAI : public ScriptedAI
         //Holy_Light
         if (Holy_Light_Timer < diff)
         {
-            DoCast(m_creature, SPELL_HOLY_LIGHT);
+            DoCastSpellIfCan(m_creature, SPELL_HOLY_LIGHT);
             Holy_Light_Timer = urand(20000, 30000);
         }else Holy_Light_Timer -= diff;
 
         //Cleanse
         if (Cleanse_Timer  < diff)
         {
-            DoCast(m_creature, SPELL_CLEANSE);
+            DoCastSpellIfCan(m_creature, SPELL_CLEANSE);
             Cleanse_Timer = 10000;
         } else Cleanse_Timer -= diff;
 
         //Hammer of Justice
         if (HammerOfJustice_Timer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_HAMMER_OF_JUSTICE);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_HAMMER_OF_JUSTICE);
             HammerOfJustice_Timer = urand(20000, 35000);
         }else HammerOfJustice_Timer -= diff;
 
         //Holy Shield
         if (HolyShield_Timer < diff)
         {
-            DoCast(m_creature, SPELL_HOLY_SHIELD);
+            DoCastSpellIfCan(m_creature, SPELL_HOLY_SHIELD);
             HolyShield_Timer = 240000;
         }else HolyShield_Timer -= diff;
 
         //Devotion_Aura
         if (DevotionAura_Timer < diff)
         {
-            DoCast(m_creature, SPELL_DEVOTION_AURA);
+            DoCastSpellIfCan(m_creature, SPELL_DEVOTION_AURA);
             DevotionAura_Timer = urand(45000, 55000);
         }else DevotionAura_Timer -= diff;
 
         //Consecration
         if (Consecration_Timer < diff)
         {
-            //DoCast(m_creature->getVictim(), SPELL_CONSECRATION);
+            //DoCastSpellIfCan(m_creature->getVictim(), SPELL_CONSECRATION);
             Consecration_Timer = urand(5000, 10000);
         }else Consecration_Timer -= diff;
 

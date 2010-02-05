@@ -251,7 +251,7 @@ struct MANGOS_DLL_DECL npc_engineer_spark_overgrindAI : public ScriptedAI
 
         if (m_uiDynamiteTimer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_DYNAMITE);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_DYNAMITE);
             m_uiDynamiteTimer = 8000;
         }
         else m_uiDynamiteTimer -= diff;

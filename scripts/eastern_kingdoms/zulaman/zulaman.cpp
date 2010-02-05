@@ -90,7 +90,7 @@ struct MANGOS_DLL_DECL npc_forest_frogAI : public ScriptedAI
         {
             //increase or decrease chance of mojo?
             if (!urand(0, 49))
-                DoCast(caster,SPELL_PUSH_MOJO,true);
+                DoCastSpellIfCan(caster, SPELL_PUSH_MOJO, CAST_TRIGGERED);
             else
                 DoSpawnRandom();
         }

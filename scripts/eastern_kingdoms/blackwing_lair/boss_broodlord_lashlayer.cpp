@@ -62,27 +62,27 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
         //Cleave_Timer
         if (Cleave_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_CLEAVE);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_CLEAVE);
             Cleave_Timer = 7000;
         }else Cleave_Timer -= diff;
 
         // BlastWave
         if (BlastWave_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_BLASTWAVE);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_BLASTWAVE);
             BlastWave_Timer = urand(8000, 16000);
         }else BlastWave_Timer -= diff;
 
         //MortalStrike_Timer
         if (MortalStrike_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_MORTALSTRIKE);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_MORTALSTRIKE);
             MortalStrike_Timer = urand(25000, 35000);
         }else MortalStrike_Timer -= diff;
 
         if (KnockBack_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_KNOCKBACK);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_KNOCKBACK);
             //Drop 50% aggro
             if (m_creature->getThreatManager().getThreat(m_creature->getVictim()))
                 m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-50);

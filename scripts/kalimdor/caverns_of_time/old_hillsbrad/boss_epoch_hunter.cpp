@@ -93,7 +93,7 @@ struct MANGOS_DLL_DECL boss_epoch_hunterAI : public ScriptedAI
             if (m_creature->IsNonMeleeSpellCasted(false))
                 m_creature->InterruptNonMeleeSpells(false);
 
-            DoCast(m_creature->getVictim(),SPELL_SAND_BREATH);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_SAND_BREATH);
 
             DoScriptText(urand(0, 1) ? SAY_BREATH1 : SAY_BREATH2, m_creature);
 
@@ -102,20 +102,20 @@ struct MANGOS_DLL_DECL boss_epoch_hunterAI : public ScriptedAI
 
         if (ImpendingDeath_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_IMPENDING_DEATH);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_IMPENDING_DEATH);
             ImpendingDeath_Timer = urand(25000, 30000);
         }else ImpendingDeath_Timer -= diff;
 
         if (WingBuffet_Timer < diff)
         {
             if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0))
-                DoCast(target,SPELL_WING_BUFFET);
+                DoCastSpellIfCan(target,SPELL_WING_BUFFET);
             WingBuffet_Timer = urand(25000, 35000);
         }else WingBuffet_Timer -= diff;
 
         if (Mda_Timer < diff)
         {
-            DoCast(m_creature,SPELL_MAGIC_DISRUPTION_AURA);
+            DoCastSpellIfCan(m_creature,SPELL_MAGIC_DISRUPTION_AURA);
             Mda_Timer = 15000;
         }else Mda_Timer -= diff;
 

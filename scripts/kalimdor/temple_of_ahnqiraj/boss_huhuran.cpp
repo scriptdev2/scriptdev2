@@ -69,7 +69,7 @@ struct MANGOS_DLL_DECL boss_huhuranAI : public ScriptedAI
         //Frenzy_Timer
         if (!Frenzy && Frenzy_Timer < diff)
         {
-            DoCast(m_creature, SPELL_FRENZY);
+            DoCastSpellIfCan(m_creature, SPELL_FRENZY);
             DoScriptText(EMOTE_GENERIC_FRENZY_KILL, m_creature);
             Frenzy = true;
             PoisonBolt_Timer = 3000;
@@ -80,21 +80,21 @@ struct MANGOS_DLL_DECL boss_huhuranAI : public ScriptedAI
         if (Wyvern_Timer < diff)
         {
             if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0))
-                DoCast(target,SPELL_WYVERNSTING);
+                DoCastSpellIfCan(target,SPELL_WYVERNSTING);
             Wyvern_Timer = urand(15000, 32000);
         }else Wyvern_Timer -= diff;
 
         //Spit Timer
         if (Spit_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_ACIDSPIT);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_ACIDSPIT);
             Spit_Timer = urand(5000, 10000);
         }else Spit_Timer -= diff;
 
         //NoxiousPoison_Timer
         if (NoxiousPoison_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_NOXIOUSPOISON);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_NOXIOUSPOISON);
             NoxiousPoison_Timer = urand(12000, 24000);
         }else NoxiousPoison_Timer -= diff;
 
@@ -103,7 +103,7 @@ struct MANGOS_DLL_DECL boss_huhuranAI : public ScriptedAI
         {
             if (PoisonBolt_Timer < diff)
             {
-                DoCast(m_creature->getVictim(),SPELL_POISONBOLT);
+                DoCastSpellIfCan(m_creature->getVictim(),SPELL_POISONBOLT);
                 PoisonBolt_Timer = 3000;
             }else PoisonBolt_Timer -= diff;
         }
@@ -120,7 +120,7 @@ struct MANGOS_DLL_DECL boss_huhuranAI : public ScriptedAI
         {
             m_creature->InterruptNonMeleeSpells(false);
             DoScriptText(EMOTE_GENERIC_BERSERK, m_creature);
-            DoCast(m_creature, SPELL_BERSERK);
+            DoCastSpellIfCan(m_creature, SPELL_BERSERK);
             Berserk = true;
         }
 

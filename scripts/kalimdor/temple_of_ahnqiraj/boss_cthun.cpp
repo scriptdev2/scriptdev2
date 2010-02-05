@@ -228,7 +228,7 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
                     if (target)
                     {
                         m_creature->InterruptNonMeleeSpells(false);
-                        DoCast(target,SPELL_GREEN_BEAM);
+                        DoCastSpellIfCan(target,SPELL_GREEN_BEAM);
 
                         //Correctly update our target
                         m_creature->SetUInt64Value(UNIT_FIELD_TARGET, target->GetGUID());
@@ -302,7 +302,7 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
                     }
 
                     //Add red coloration to C'thun
-                    DoCast(m_creature,SPELL_RED_COLORATION);
+                    DoCastSpellIfCan(m_creature,SPELL_RED_COLORATION);
 
                     //Freeze animation
 
@@ -610,7 +610,7 @@ struct MANGOS_DLL_DECL cthunAI : public ScriptedAI
 
                     //Switch to c'thun model
                     m_creature->InterruptNonMeleeSpells(false);
-                    DoCast(m_creature, SPELL_TRANSFORM, false);
+                    DoCastSpellIfCan(m_creature, SPELL_TRANSFORM);
                     m_creature->SetHealth(m_creature->GetMaxHealth());
 
                     m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
@@ -669,7 +669,7 @@ struct MANGOS_DLL_DECL cthunAI : public ScriptedAI
                     DoScriptText(EMOTE_WEAKENED, m_creature);
                     PhaseTimer = 45000;
 
-                    DoCast(m_creature, SPELL_RED_COLORATION, true);
+                    DoCastSpellIfCan(m_creature, SPELL_RED_COLORATION, CAST_TRIGGERED);
 
                     UNORDERED_MAP<uint64, bool>::iterator i = Stomach_Map.begin();
 
@@ -686,7 +686,7 @@ struct MANGOS_DLL_DECL cthunAI : public ScriptedAI
                             DoTeleportPlayer(pUnit, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ()+10, rand()%6);
 
                             //Cast knockback on them
-                            DoCast(pUnit, SPELL_EXIT_STOMACH_KNOCKBACK, true);
+                            DoCastSpellIfCan(pUnit, SPELL_EXIT_STOMACH_KNOCKBACK, CAST_TRIGGERED);
 
                             //Remove the acid debuff
                             pUnit->RemoveAurasDueToSpell(SPELL_DIGESTIVE_ACID);
@@ -714,7 +714,7 @@ struct MANGOS_DLL_DECL cthunAI : public ScriptedAI
                         if (pUnit && i->second == true)
                         {
                             //Cast digestive acid on them
-                            DoCast(pUnit, SPELL_DIGESTIVE_ACID, true);
+                            DoCastSpellIfCan(pUnit, SPELL_DIGESTIVE_ACID, CAST_TRIGGERED);
 
                             //Check if player should be kicked from stomach
                             if (pUnit->IsWithinDist3d(KICK_X, KICK_Y, KICK_Z, 15.0f))
@@ -723,7 +723,7 @@ struct MANGOS_DLL_DECL cthunAI : public ScriptedAI
                                 DoTeleportPlayer(pUnit, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ()+10, rand()%6);
 
                                 //Cast knockback on them
-                                DoCast(pUnit, SPELL_EXIT_STOMACH_KNOCKBACK, true);
+                                DoCastSpellIfCan(pUnit, SPELL_EXIT_STOMACH_KNOCKBACK, CAST_TRIGGERED);
 
                                 //Remove the acid debuff
                                 pUnit->RemoveAurasDueToSpell(SPELL_DIGESTIVE_ACID);
@@ -974,7 +974,7 @@ struct MANGOS_DLL_DECL eye_tentacleAI : public ScriptedAI
             Unit* target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
             if (target && !target->HasAura(SPELL_DIGESTIVE_ACID, 0))
-                DoCast(target,SPELL_MIND_FLAY);
+                DoCastSpellIfCan(target,SPELL_MIND_FLAY);
 
             //Mindflay every 10 seconds
             MindflayTimer = 10100;
@@ -1060,14 +1060,14 @@ struct MANGOS_DLL_DECL claw_tentacleAI : public ScriptedAI
         //GroundRuptureTimer
         if (GroundRuptureTimer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_GROUND_RUPTURE);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_GROUND_RUPTURE);
             GroundRuptureTimer = 30000;
         }else GroundRuptureTimer -= diff;
 
         //HamstringTimer
         if (HamstringTimer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_HAMSTRING);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_HAMSTRING);
             HamstringTimer = 5000;
         }else HamstringTimer -= diff;
 
@@ -1157,21 +1157,21 @@ struct MANGOS_DLL_DECL giant_claw_tentacleAI : public ScriptedAI
         //GroundRuptureTimer
         if (GroundRuptureTimer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_GROUND_RUPTURE);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_GROUND_RUPTURE);
             GroundRuptureTimer = 30000;
         }else GroundRuptureTimer -= diff;
 
         //ThrashTimer
         if (ThrashTimer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_THRASH);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_THRASH);
             ThrashTimer = 10000;
         }else ThrashTimer -= diff;
 
         //HamstringTimer
         if (HamstringTimer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_HAMSTRING);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_HAMSTRING);
             HamstringTimer = 10000;
         }else HamstringTimer -= diff;
 
@@ -1221,7 +1221,7 @@ struct MANGOS_DLL_DECL giant_eye_tentacleAI : public ScriptedAI
         {
             Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0);
             if (target && !target->HasAura(SPELL_DIGESTIVE_ACID, 0))
-                DoCast(target,SPELL_GREEN_BEAM);
+                DoCastSpellIfCan(target,SPELL_GREEN_BEAM);
 
             //Beam every 2 seconds
             BeamTimer = 2100;

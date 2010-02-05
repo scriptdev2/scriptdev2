@@ -183,13 +183,15 @@ struct MANGOS_DLL_DECL boss_dorotheeAI : public ScriptedAI
 
         if (WaterBoltTimer < diff)
         {
-            DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), SPELL_WATERBOLT);
+            if(Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                DoCastSpellIfCan(pTarget, SPELL_WATERBOLT);
+
             WaterBoltTimer = TitoDied ? 1500 : 5000;
         }else WaterBoltTimer -= diff;
 
         if (FearTimer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_SCREAM);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_SCREAM);
             FearTimer = 30000;
         }else FearTimer -= diff;
 
@@ -240,7 +242,7 @@ struct MANGOS_DLL_DECL mob_titoAI : public ScriptedAI
 
         if (YipTimer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_YIPPING);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_YIPPING);
             YipTimer = 10000;
         }else YipTimer -= diff;
 
@@ -318,7 +320,7 @@ struct MANGOS_DLL_DECL boss_strawmanAI : public ScriptedAI
                     return;
             */
 
-            DoCast(m_creature, SPELL_BURNING_STRAW, true);
+            DoCastSpellIfCan(m_creature, SPELL_BURNING_STRAW, true);
         }
     }
 
@@ -351,13 +353,15 @@ struct MANGOS_DLL_DECL boss_strawmanAI : public ScriptedAI
 
         if (BrainBashTimer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_BRAIN_BASH);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_BRAIN_BASH);
             BrainBashTimer = 15000;
         }else BrainBashTimer -= diff;
 
         if (BrainWipeTimer < diff)
         {
-            DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), SPELL_BRAIN_WIPE);
+            if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                DoCastSpellIfCan(pTarget, SPELL_BRAIN_WIPE);
+
             BrainWipeTimer = 20000;
         }else BrainWipeTimer -= diff;
 
@@ -445,7 +449,7 @@ struct MANGOS_DLL_DECL boss_tinheadAI : public ScriptedAI
 
         if (CleaveTimer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_CLEAVE);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_CLEAVE);
             CleaveTimer = 5000;
         }else CleaveTimer -= diff;
 
@@ -455,7 +459,7 @@ struct MANGOS_DLL_DECL boss_tinheadAI : public ScriptedAI
             {
                 ++RustCount;
                 DoScriptText(EMOTE_RUST, m_creature);
-                DoCast(m_creature, SPELL_RUST);
+                DoCastSpellIfCan(m_creature, SPELL_RUST);
                 RustTimer = 6000;
             }else RustTimer -= diff;
         }
@@ -542,19 +546,19 @@ struct MANGOS_DLL_DECL boss_roarAI : public ScriptedAI
 
         if (MangleTimer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_MANGLE);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_MANGLE);
             MangleTimer = urand(5000, 8000);
         }else MangleTimer -= diff;
 
         if (ShredTimer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_SHRED);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_SHRED);
             ShredTimer = urand(10000, 15000);
         }else ShredTimer -= diff;
 
         if (ScreamTimer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_FRIGHTENED_SCREAM);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_FRIGHTENED_SCREAM);
             ScreamTimer = urand(20000, 30000);
         }else ScreamTimer -= diff;
 
@@ -628,7 +632,7 @@ struct MANGOS_DLL_DECL boss_croneAI : public ScriptedAI
 
         if (ChainLightningTimer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_CHAIN_LIGHTNING);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_CHAIN_LIGHTNING);
             ChainLightningTimer = 15000;
         }else ChainLightningTimer -= diff;
 
@@ -655,7 +659,7 @@ struct MANGOS_DLL_DECL mob_cycloneAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         if (!m_creature->HasAura(SPELL_KNOCKBACK, 0))
-            DoCast(m_creature, SPELL_KNOCKBACK, true);
+            DoCastSpellIfCan(m_creature, SPELL_KNOCKBACK, CAST_TRIGGERED);
 
         if (MoveTimer < diff)
         {
@@ -818,7 +822,7 @@ struct MANGOS_DLL_DECL boss_bigbadwolfAI : public ScriptedAI
                 if (target && target->GetTypeId() == TYPEID_PLAYER)
                 {
                     DoScriptText(SAY_WOLF_HOOD, m_creature);
-                    DoCast(target, SPELL_LITTLE_RED_RIDING_HOOD, true);
+                    DoCastSpellIfCan(target, SPELL_LITTLE_RED_RIDING_HOOD, CAST_TRIGGERED);
 
                     TempThreat = m_creature->getThreatManager().getThreat(target);
                     if (TempThreat)
@@ -853,13 +857,13 @@ struct MANGOS_DLL_DECL boss_bigbadwolfAI : public ScriptedAI
 
         if (FearTimer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_TERRIFYING_HOWL);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_TERRIFYING_HOWL);
             FearTimer = urand(25000, 35000);
         }else FearTimer -= diff;
 
         if (SwipeTimer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_WIDE_SWIPE);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_WIDE_SWIPE);
             SwipeTimer = urand(25000, 30000);
         }else SwipeTimer -= diff;
     }
@@ -1167,7 +1171,7 @@ void boss_julianneAI::DamageTaken(Unit* done_by, uint32 &damage)
             return;
 
         m_creature->InterruptNonMeleeSpells(true);
-        DoCast(m_creature, SPELL_DRINK_POISON);
+        DoCastSpellIfCan(m_creature, SPELL_DRINK_POISON);
 
         IsFakingDeath = true;
         return;
@@ -1355,19 +1359,23 @@ void boss_julianneAI::UpdateAI(const uint32 diff)
 
     if (BlindingPassionTimer < diff)
     {
-        DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), SPELL_BLINDING_PASSION);
+        if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            DoCastSpellIfCan(pTarget, SPELL_BLINDING_PASSION);
+
         BlindingPassionTimer = urand(30000, 45000);
     } else BlindingPassionTimer -= diff;
 
     if (DevotionTimer < diff)
     {
-        DoCast(m_creature, SPELL_DEVOTION);
+        DoCastSpellIfCan(m_creature, SPELL_DEVOTION);
         DevotionTimer = urand(15000, 45000);
     } else DevotionTimer -= diff;
 
     if (PowerfulAttractionTimer < diff)
     {
-        DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), SPELL_POWERFUL_ATTRACTION);
+        if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            DoCastSpellIfCan(pTarget, SPELL_POWERFUL_ATTRACTION);
+
         PowerfulAttractionTimer = urand(5000, 30000);
     } else PowerfulAttractionTimer -= diff;
 
@@ -1377,8 +1385,8 @@ void boss_julianneAI::UpdateAI(const uint32 diff)
         {
             Creature* Romulo = ((Creature*)Unit::GetUnit((*m_creature), RomuloGUID));
             if (Romulo && Romulo->isAlive() && !RomuloDead)
-                DoCast(Romulo, SPELL_ETERNAL_AFFECTION);
-        } else DoCast(m_creature, SPELL_ETERNAL_AFFECTION);
+                DoCastSpellIfCan(Romulo, SPELL_ETERNAL_AFFECTION);
+        } else DoCastSpellIfCan(m_creature, SPELL_ETERNAL_AFFECTION);
 
         EternalAffectionTimer = urand(45000, 60000);
     } else EternalAffectionTimer -= diff;
@@ -1412,26 +1420,28 @@ void boss_romuloAI::UpdateAI(const uint32 diff)
         Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1);
         if (target && !m_creature->HasInArc(M_PI, target))
         {
-            DoCast(target, SPELL_BACKWARD_LUNGE);
+            DoCastSpellIfCan(target, SPELL_BACKWARD_LUNGE);
             BackwardLungeTimer = urand(15000, 30000);
         }
     }else BackwardLungeTimer -= diff;
 
     if (DaringTimer < diff)
     {
-        DoCast(m_creature, SPELL_DARING);
+        DoCastSpellIfCan(m_creature, SPELL_DARING);
         DaringTimer = urand(20000, 40000);
     }else DaringTimer -= diff;
 
     if (DeadlySwatheTimer < diff)
     {
-        DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), SPELL_DEADLY_SWATHE);
+        if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            DoCastSpellIfCan(pTarget, SPELL_DEADLY_SWATHE);
+
         DeadlySwatheTimer = urand(15000, 25000);
     }else DeadlySwatheTimer -= diff;
 
     if (PoisonThrustTimer < diff)
     {
-        DoCast(m_creature->getVictim(), SPELL_POISON_THRUST);
+        DoCastSpellIfCan(m_creature->getVictim(), SPELL_POISON_THRUST);
         PoisonThrustTimer = urand(10000, 20000);
     }else PoisonThrustTimer -= diff;
 

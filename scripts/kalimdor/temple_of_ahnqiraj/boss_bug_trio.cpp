@@ -82,20 +82,20 @@ struct MANGOS_DLL_DECL boss_kriAI : public ScriptedAI
         //Cleave_Timer
         if (Cleave_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_CLEAVE);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_CLEAVE);
             Cleave_Timer = urand(5000, 12000);
         }else Cleave_Timer -= diff;
 
         //ToxicVolley_Timer
         if (ToxicVolley_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_TOXIC_VOLLEY);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_TOXIC_VOLLEY);
             ToxicVolley_Timer = urand(10000, 15000);
         }else ToxicVolley_Timer -= diff;
 
         if (m_creature->GetHealth() <= m_creature->GetMaxHealth() * 0.05 && !Death)
         {
-            DoCast(m_creature->getVictim(),SPELL_POISON_CLOUD);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_POISON_CLOUD);
             Death = true;
         }
 
@@ -106,7 +106,7 @@ struct MANGOS_DLL_DECL boss_kriAI : public ScriptedAI
             {
                 if (m_pInstance && m_pInstance->GetData(TYPE_VEM) == DONE)
                 {
-                    DoCast(m_creature, SPELL_ENRAGE);
+                    DoCastSpellIfCan(m_creature, SPELL_ENRAGE);
                     VemDead = true;
                 }
                 Check_Timer = 2000;
@@ -166,7 +166,7 @@ struct MANGOS_DLL_DECL boss_vemAI : public ScriptedAI
         if (Charge_Timer < diff)
         {
             if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
-                DoCast(target, SPELL_CHARGE);
+                DoCastSpellIfCan(target, SPELL_CHARGE);
 
             Charge_Timer = urand(8000, 16000);
         }else Charge_Timer -= diff;
@@ -174,7 +174,7 @@ struct MANGOS_DLL_DECL boss_vemAI : public ScriptedAI
         //KnockBack_Timer
         if (KnockBack_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_KNOCKBACK);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_KNOCKBACK);
             if (m_creature->getThreatManager().getThreat(m_creature->getVictim()))
                 m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-80);
             KnockBack_Timer = urand(15000, 25000);
@@ -183,7 +183,7 @@ struct MANGOS_DLL_DECL boss_vemAI : public ScriptedAI
         //Enrage_Timer
         if (!Enraged && Enrage_Timer < diff)
         {
-            DoCast(m_creature,SPELL_ENRAGE);
+            DoCastSpellIfCan(m_creature,SPELL_ENRAGE);
             Enraged = true;
         }else Charge_Timer -= diff;
 
@@ -244,7 +244,7 @@ struct MANGOS_DLL_DECL boss_yaujAI : public ScriptedAI
         //Fear_Timer
         if (Fear_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_FEAR);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_FEAR);
             DoResetThreat();
             Fear_Timer = 20000;
         }else Fear_Timer -= diff;
@@ -261,14 +261,14 @@ struct MANGOS_DLL_DECL boss_yaujAI : public ScriptedAI
                 {
                     case 0:
                         if (pKri)
-                            DoCast(pKri, SPELL_HEAL);
+                            DoCastSpellIfCan(pKri, SPELL_HEAL);
                         break;
                     case 1:
                         if (pVem)
-                            DoCast(pVem, SPELL_HEAL);
+                            DoCastSpellIfCan(pVem, SPELL_HEAL);
                         break;
                     case 2:
-                        DoCast(m_creature, SPELL_HEAL);
+                        DoCastSpellIfCan(m_creature, SPELL_HEAL);
                         break;
                 }
             }
@@ -285,7 +285,7 @@ struct MANGOS_DLL_DECL boss_yaujAI : public ScriptedAI
                 {
                     if (m_pInstance->GetData(TYPE_VEM) == DONE)
                     {
-                        DoCast(m_creature, SPELL_ENRAGE);
+                        DoCastSpellIfCan(m_creature, SPELL_ENRAGE);
                         VemDead = true;
                     }
                 }

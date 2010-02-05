@@ -66,7 +66,7 @@ struct MANGOS_DLL_DECL boss_baroness_anastariAI : public ScriptedAI
         //BansheeWail
         if (BansheeWail_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_BANSHEEWAIL);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_BANSHEEWAIL);
             BansheeWail_Timer = 4000;
         }else BansheeWail_Timer -= diff;
 
@@ -74,7 +74,7 @@ struct MANGOS_DLL_DECL boss_baroness_anastariAI : public ScriptedAI
         if (BansheeCurse_Timer < diff)
         {
             if (!urand(0, 3))
-                DoCast(m_creature->getVictim(),SPELL_BANSHEECURSE);
+                DoCastSpellIfCan(m_creature->getVictim(),SPELL_BANSHEECURSE);
 
             BansheeCurse_Timer = 18000;
         }else BansheeCurse_Timer -= diff;
@@ -82,7 +82,7 @@ struct MANGOS_DLL_DECL boss_baroness_anastariAI : public ScriptedAI
         //Silence
         if (Silence_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_SILENCE);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_SILENCE);
             Silence_Timer = 13000;
         }else Silence_Timer -= diff;
 
@@ -94,7 +94,7 @@ struct MANGOS_DLL_DECL boss_baroness_anastariAI : public ScriptedAI
         {
         Unit* target = NULL;
         target = SelectUnit(SELECT_TARGET_RANDOM,0);
-        if (target)DoCast(target,SPELL_POSSESS);
+        if (target)DoCastSpellIfCan(target,SPELL_POSSESS);
         }
         Possess_Timer = 50000;
         }else Possess_Timer -= diff;

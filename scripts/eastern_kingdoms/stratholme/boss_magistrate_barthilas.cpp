@@ -92,21 +92,21 @@ struct MANGOS_DLL_DECL boss_magistrate_barthilasAI : public ScriptedAI
         //DrainingBlow
         if (DrainingBlow_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_DRAININGBLOW);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_DRAININGBLOW);
             DrainingBlow_Timer = 15000;
         }else DrainingBlow_Timer -= diff;
 
         //CrowdPummel
         if (CrowdPummel_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_CROWDPUMMEL);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_CROWDPUMMEL);
             CrowdPummel_Timer = 15000;
         }else CrowdPummel_Timer -= diff;
 
         //MightyBlow
         if (MightyBlow_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_MIGHTYBLOW);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_MIGHTYBLOW);
             MightyBlow_Timer = 20000;
         }else MightyBlow_Timer -= diff;
 

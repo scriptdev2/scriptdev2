@@ -153,13 +153,13 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
 
         if (!PhaseTwo && MortalCleave_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_MORTALCLEAVE);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_MORTALCLEAVE);
             MortalCleave_Timer = urand(15000, 20000);
         }else MortalCleave_Timer -= diff;
 
         if (!PhaseTwo && Silence_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_SILENCE);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_SILENCE);
             Silence_Timer = urand(20000, 25000);
         }else Silence_Timer -= diff;
 
@@ -180,7 +180,7 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
         {
             if (Resurrect_Timer < diff)
             {
-                DoCast(m_creature,SPELL_TIGER_FORM);
+                DoCastSpellIfCan(m_creature,SPELL_TIGER_FORM);
                 m_creature->SetFloatValue(OBJECT_FIELD_SCALE_X, 2.00f);
                 m_creature->SetStandState(UNIT_STAND_STATE_STAND);
                 m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -205,7 +205,7 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
             {
                 if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
                 {
-                    DoCast(target,SPELL_CHARGE);
+                    DoCastSpellIfCan(target,SPELL_CHARGE);
                     DoResetThreat();
                     AttackStart(target);
                 }
@@ -214,25 +214,25 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
 
             if (Frenzy_Timer < diff)
             {
-                DoCast(m_creature,SPELL_FRENZY);
+                DoCastSpellIfCan(m_creature,SPELL_FRENZY);
                 Frenzy_Timer = 30000;
             }else Frenzy_Timer -= diff;
 
             if (ForcePunch_Timer < diff)
             {
-                DoCast(m_creature->getVictim(),SPELL_SILENCE);
+                DoCastSpellIfCan(m_creature->getVictim(),SPELL_SILENCE);
                 ForcePunch_Timer = urand(16000, 21000);
             }else ForcePunch_Timer -= diff;
 
             if (SummonTigers_Timer < diff)
             {
-                DoCast(m_creature->getVictim(),SPELL_SUMMONTIGERS);
+                DoCastSpellIfCan(m_creature->getVictim(),SPELL_SUMMONTIGERS);
                 SummonTigers_Timer = urand(10000, 14000);
             }else SummonTigers_Timer -= diff;
 
             if ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 11) && !Enraged)
             {
-                DoCast(m_creature, SPELL_ENRAGE);
+                DoCastSpellIfCan(m_creature, SPELL_ENRAGE);
                 Enraged = true;
             }
         }
@@ -285,14 +285,14 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public ScriptedAI
         //Shield_Timer
         if (Shield_Timer < diff)
         {
-            DoCast(m_creature,SPELL_SHIELD);
+            DoCastSpellIfCan(m_creature,SPELL_SHIELD);
             Shield_Timer = 61000;
         }else Shield_Timer -= diff;
 
         //BloodLust_Timer
         if (BloodLust_Timer < diff)
         {
-            DoCast(m_creature,SPELL_BLOODLUST);
+            DoCastSpellIfCan(m_creature,SPELL_BLOODLUST);
             BloodLust_Timer = urand(20000, 28000);
         }else BloodLust_Timer -= diff;
 
@@ -308,11 +308,11 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public ScriptedAI
                 {
                     case 0:
                         if (pThekal && m_creature->IsWithinDistInMap(pThekal, ATTACK_DISTANCE))
-                            DoCast(pThekal, SPELL_GREATERHEAL);
+                            DoCastSpellIfCan(pThekal, SPELL_GREATERHEAL);
                         break;
                     case 1:
                         if (pZath && m_creature->IsWithinDistInMap(pZath, ATTACK_DISTANCE))
-                            DoCast(pZath, SPELL_GREATERHEAL);
+                            DoCastSpellIfCan(pZath, SPELL_GREATERHEAL);
                         break;
                 }
             }
@@ -323,7 +323,7 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public ScriptedAI
         //Disarm_Timer
         if (Disarm_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_DISARM);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_DISARM);
             Disarm_Timer = urand(15000, 25000);
         }else Disarm_Timer -= diff;
 
@@ -423,21 +423,21 @@ struct MANGOS_DLL_DECL mob_zealot_zathAI : public ScriptedAI
         //SweepingStrikes_Timer
         if (SweepingStrikes_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_SWEEPINGSTRIKES);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_SWEEPINGSTRIKES);
             SweepingStrikes_Timer = urand(22000, 26000);
         }else SweepingStrikes_Timer -= diff;
 
         //SinisterStrike_Timer
         if (SinisterStrike_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_SINISTERSTRIKE);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_SINISTERSTRIKE);
             SinisterStrike_Timer = urand(8000, 16000);
         }else SinisterStrike_Timer -= diff;
 
         //Gouge_Timer
         if (Gouge_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_GOUGE);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_GOUGE);
 
             if (m_creature->getThreatManager().getThreat(m_creature->getVictim()))
                 m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-100);
@@ -448,14 +448,14 @@ struct MANGOS_DLL_DECL mob_zealot_zathAI : public ScriptedAI
         //Kick_Timer
         if (Kick_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_KICK);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_KICK);
             Kick_Timer = urand(15000, 25000);
         }else Kick_Timer -= diff;
 
         //Blind_Timer
         if (Blind_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_BLIND);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_BLIND);
             Blind_Timer = urand(10000, 20000);
         }else Blind_Timer -= diff;
 

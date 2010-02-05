@@ -114,7 +114,7 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
         if (m_uiSleep_Timer < uiDiff)
         {
             if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                DoCast(pTarget, SPELL_SLEEP);
+                DoCastSpellIfCan(pTarget, SPELL_SLEEP);
 
             m_uiSleep_Timer = urand(8000, 15000);
         }
@@ -124,7 +124,7 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
         //NoxiousBreath_Timer
         if (m_uiNoxiousBreath_Timer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), SPELL_NOXIOUSBREATH);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_NOXIOUSBREATH);
             m_uiNoxiousBreath_Timer = urand(14000, 20000);
         }
         else
@@ -133,7 +133,7 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
         //Tailsweep every 2 seconds
         if (m_uiTailSweep_Timer < uiDiff)
         {
-            DoCast(m_creature, SPELL_TAILSWEEP);
+            DoCastSpellIfCan(m_creature, SPELL_TAILSWEEP);
             m_uiTailSweep_Timer = 2000;
         }
         else
@@ -142,7 +142,7 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
         //MarkOfNature_Timer
         //if (m_uiMarkOfNature_Timer < uiDiff)
         //{
-        //    DoCast(m_creature->getVictim(), SPELL_MARKOFNATURE);
+        //    DoCastSpellIfCan(m_creature->getVictim(), SPELL_MARKOFNATURE);
         //    m_uiMarkOfNature_Timer = 45000;
         //}
         //else
@@ -151,7 +151,7 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
         //ArcaneBlast_Timer
         if (m_uiArcaneBlast_Timer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), SPELL_ARCANEBLAST);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_ARCANEBLAST);
             m_uiArcaneBlast_Timer = urand(7000, 12000);
         }
         else
@@ -160,7 +160,7 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
         //BellowingRoar_Timer
         if (m_uiBellowingRoar_Timer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), SPELL_BELLOWINGROAR);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_BELLOWINGROAR);
             m_uiBellowingRoar_Timer = urand(20000, 30000);
         }
         else
@@ -217,7 +217,7 @@ struct MANGOS_DLL_DECL boss_shadeoftaerarAI : public ScriptedAI
         //PoisonCloud_Timer
         if (m_uiPoisonCloud_Timer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), SPELL_POSIONCLOUD);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_POSIONCLOUD);
             m_uiPoisonCloud_Timer = 30000;
         }
         else
@@ -226,7 +226,7 @@ struct MANGOS_DLL_DECL boss_shadeoftaerarAI : public ScriptedAI
         //PosionBreath_Timer
         if (m_uiPosionBreath_Timer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), SPELL_POSIONBREATH);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_POSIONBREATH);
             m_uiPosionBreath_Timer = 12000;
         }
         else

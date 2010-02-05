@@ -216,7 +216,7 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
                 if (!m_creature->HasInArc(2.5f, target))
                     target = m_creature->getVictim();
                 if (target)
-                    DoCast(target, SPELL_ARCANE_MISSILES);
+                    DoCastSpellIfCan(target, SPELL_ARCANE_MISSILES);
 
                 ArcaneMissiles_Timer = 3000;
             }else ArcaneMissiles_Timer -= diff;
@@ -231,7 +231,7 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
                 {
                     if (pTarget->GetTypeId() == TYPEID_PLAYER)
                     {
-                        DoCast(pTarget, SPELL_WRATH_OF_THE_ASTROMANCER);
+                        DoCastSpellIfCan(pTarget, SPELL_WRATH_OF_THE_ASTROMANCER);
                         m_uiWrathOfTheAstromancer_Timer = 25000;
                     }
                     else
@@ -243,7 +243,7 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
             if (BlindingLight_Timer < diff)
             {
                 //She casts this spell every 45 seconds. It is a kind of Moonfire spell, which she strikes down on the whole raid simultaneously. It hits everyone in the raid for 2280 to 2520 arcane damage.
-                DoCast(m_creature->getVictim(), SPELL_BLINDING_LIGHT);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_BLINDING_LIGHT);
                 BlindingLight_Timer = 45000;
             }else BlindingLight_Timer -= diff;
 
@@ -349,14 +349,14 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
             //Fear_Timer
             if (Fear_Timer < diff)
             {
-                DoCast(m_creature, SPELL_FEAR);
+                DoCastSpellIfCan(m_creature, SPELL_FEAR);
                 Fear_Timer = 20000;
             }else Fear_Timer -= diff;
 
             //VoidBolt_Timer
             if (VoidBolt_Timer < diff)
             {
-                DoCast(m_creature->getVictim(), SPELL_VOID_BOLT);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_VOID_BOLT);
                 VoidBolt_Timer = 10000;
             }else VoidBolt_Timer -= diff;
         }
@@ -425,20 +425,20 @@ struct MANGOS_DLL_DECL mob_solarium_priestAI : public ScriptedAI
 
             if (target)
             {
-                DoCast(target,SPELL_SOLARIUM_GREAT_HEAL);
+                DoCastSpellIfCan(target,SPELL_SOLARIUM_GREAT_HEAL);
                 healTimer = 9000;
             }
         } else healTimer -= diff;
 
         if (holysmiteTimer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_SOLARIUM_HOLY_SMITE);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_SOLARIUM_HOLY_SMITE);
             holysmiteTimer = 4000;
         } else holysmiteTimer -= diff;
 
         if (aoesilenceTimer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_SOLARIUM_ARCANE_TORRENT);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_SOLARIUM_ARCANE_TORRENT);
             aoesilenceTimer = 13000;
         } else aoesilenceTimer -= diff;
 

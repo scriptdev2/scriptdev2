@@ -121,7 +121,7 @@ struct MANGOS_DLL_DECL boss_faerlinaAI : public ScriptedAI
         // Poison Bolt Volley
         if (m_uiPoisonBoltVolleyTimer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), SPELL_POSIONBOLT_VOLLEY);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_POSIONBOLT_VOLLEY);
             m_uiPoisonBoltVolleyTimer = 11000;
         }
         else
@@ -131,7 +131,7 @@ struct MANGOS_DLL_DECL boss_faerlinaAI : public ScriptedAI
         if (m_uiRainOfFireTimer < uiDiff)
         {
             if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                DoCast(pTarget, SPELL_RAINOFFIRE);
+                DoCastSpellIfCan(pTarget, SPELL_RAINOFFIRE);
 
             m_uiRainOfFireTimer = 16000;
         }
@@ -141,7 +141,7 @@ struct MANGOS_DLL_DECL boss_faerlinaAI : public ScriptedAI
         //Enrage_Timer
         if (m_uiEnrageTimer < uiDiff)
         {
-            DoCast(m_creature, SPELL_ENRAGE);
+            DoCastSpellIfCan(m_creature, SPELL_ENRAGE);
             m_uiEnrageTimer = 61000;
         }
         else 

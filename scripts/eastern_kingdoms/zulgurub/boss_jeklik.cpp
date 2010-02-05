@@ -80,7 +80,7 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
     void Aggro(Unit *who)
     {
         DoScriptText(SAY_AGGRO, m_creature);
-        DoCast(m_creature,SPELL_BAT_FORM);
+        DoCastSpellIfCan(m_creature,SPELL_BAT_FORM);
     }
 
     void JustDied(Unit* Killer)
@@ -101,20 +101,20 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
             if (Charge_Timer < diff)
             {
                 if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
-                    DoCast(target,SPELL_CHARGE);
+                    DoCastSpellIfCan(target,SPELL_CHARGE);
 
                 Charge_Timer = urand(15000, 30000);
             }else Charge_Timer -= diff;
 
             if (SonicBurst_Timer < diff)
             {
-                DoCast(m_creature->getVictim(),SPELL_SONICBURST);
+                DoCastSpellIfCan(m_creature->getVictim(),SPELL_SONICBURST);
                 SonicBurst_Timer = urand(8000, 13000);
             }else SonicBurst_Timer -= diff;
 
             if (Screech_Timer < diff)
             {
-                DoCast(m_creature->getVictim(),SPELL_SCREECH);
+                DoCastSpellIfCan(m_creature->getVictim(),SPELL_SCREECH);
                 Screech_Timer = urand(18000, 26000);
             }else Screech_Timer -= diff;
 
@@ -152,28 +152,28 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
                 {
                     if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
                     {
-                        DoCast(target, SPELL_SHADOW_WORD_PAIN);
+                        DoCastSpellIfCan(target, SPELL_SHADOW_WORD_PAIN);
                         ShadowWordPain_Timer = urand(12000, 18000);
                     }
                 }ShadowWordPain_Timer -=diff;
 
                 if (MindFlay_Timer < diff)
                 {
-                    DoCast(m_creature->getVictim(), SPELL_MIND_FLAY);
+                    DoCastSpellIfCan(m_creature->getVictim(), SPELL_MIND_FLAY);
                     MindFlay_Timer = 16000;
                 }MindFlay_Timer -=diff;
 
                 if (ChainMindFlay_Timer < diff)
                 {
                     m_creature->InterruptNonMeleeSpells(false);
-                    DoCast(m_creature->getVictim(), SPELL_CHAIN_MIND_FLAY);
+                    DoCastSpellIfCan(m_creature->getVictim(), SPELL_CHAIN_MIND_FLAY);
                     ChainMindFlay_Timer = urand(15000, 30000);
                 }ChainMindFlay_Timer -=diff;
 
                 if (GreaterHeal_Timer < diff)
                 {
                     m_creature->InterruptNonMeleeSpells(false);
-                    DoCast(m_creature,SPELL_GREATERHEAL);
+                    DoCastSpellIfCan(m_creature,SPELL_GREATERHEAL);
                     GreaterHeal_Timer = urand(25000, 35000);
                 }GreaterHeal_Timer -=diff;
 
@@ -235,7 +235,7 @@ struct MANGOS_DLL_DECL mob_batriderAI : public ScriptedAI
         {
             if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM, 0))
             {
-                DoCast(target, SPELL_BOMB);
+                DoCastSpellIfCan(target, SPELL_BOMB);
                 Bomb_Timer = 5000;
             }
         }else Bomb_Timer -= diff;

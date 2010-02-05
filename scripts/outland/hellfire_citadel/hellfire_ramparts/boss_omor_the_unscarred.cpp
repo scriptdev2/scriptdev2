@@ -121,7 +121,7 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
             if (Summon_Timer < diff)
             {
                 m_creature->InterruptNonMeleeSpells(false);
-                DoCast(m_creature,SPELL_SUMMON_FIENDISH_HOUND);
+                DoCastSpellIfCan(m_creature,SPELL_SUMMON_FIENDISH_HOUND);
                 Summon_Timer = urand(15000, 30000);
             }else Summon_Timer -= diff;
         }
@@ -136,7 +136,7 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
                     if (pPlayer->HasMovementFlag(MOVEFLAG_FALLING))
                     {
                         m_creature->InterruptNonMeleeSpells(false);
-                        DoCast(pPlayer,SPELL_SHADOW_WHIP);
+                        DoCastSpellIfCan(pPlayer,SPELL_SHADOW_WHIP);
                     }
                 }
                 playerGUID = 0;
@@ -153,7 +153,7 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
 
             if (temp && temp->GetTypeId() == TYPEID_PLAYER)
             {
-                DoCast(temp,SPELL_ORBITAL_STRIKE);
+                DoCastSpellIfCan(temp,SPELL_ORBITAL_STRIKE);
                 OrbitalStrike_Timer = urand(14000, 16000);
                 playerGUID = temp->GetGUID();
 
@@ -166,7 +166,7 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
         {
             if (DemonicShield_Timer < diff)
             {
-                DoCast(m_creature,SPELL_DEMONIC_SHIELD);
+                DoCastSpellIfCan(m_creature,SPELL_DEMONIC_SHIELD);
                 DemonicShield_Timer = 15000;
             }else DemonicShield_Timer -= diff;
         }
@@ -177,7 +177,7 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
 
             if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
             {
-                DoCast(target, m_bIsRegularMode ? SPELL_TREACHEROUS_AURA : H_SPELL_BANE_OF_TREACHERY);
+                DoCastSpellIfCan(target, m_bIsRegularMode ? SPELL_TREACHEROUS_AURA : H_SPELL_BANE_OF_TREACHERY);
                 Aura_Timer = urand(8000, 16000);
             }
         }else Aura_Timer -= diff;
@@ -189,7 +189,7 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
                 if (target)
                     target = m_creature->getVictim();
 
-                DoCast(target, m_bIsRegularMode ? SPELL_SHADOW_BOLT : H_SPELL_SHADOW_BOLT);
+                DoCastSpellIfCan(target, m_bIsRegularMode ? SPELL_SHADOW_BOLT : H_SPELL_SHADOW_BOLT);
                 Shadowbolt_Timer = urand(4000, 6500);
             }
         }else Shadowbolt_Timer -= diff;

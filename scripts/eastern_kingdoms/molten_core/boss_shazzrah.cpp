@@ -55,7 +55,7 @@ struct MANGOS_DLL_DECL boss_shazzrahAI : public ScriptedAI
         //ArcaneExplosion_Timer
         if (ArcaneExplosion_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_ARCANEEXPLOSION);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_ARCANEEXPLOSION);
             ArcaneExplosion_Timer = urand(5000, 9000);
         }else ArcaneExplosion_Timer -= diff;
 
@@ -64,7 +64,7 @@ struct MANGOS_DLL_DECL boss_shazzrahAI : public ScriptedAI
         {
             Unit* target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if (target) DoCast(target,SPELL_SHAZZRAHCURSE);
+            if (target) DoCastSpellIfCan(target,SPELL_SHAZZRAHCURSE);
 
             ShazzrahCurse_Timer = urand(25000, 30000);
         }else ShazzrahCurse_Timer -= diff;
@@ -72,14 +72,14 @@ struct MANGOS_DLL_DECL boss_shazzrahAI : public ScriptedAI
         //DeadenMagic_Timer
         if (DeadenMagic_Timer < diff)
         {
-            DoCast(m_creature,SPELL_DEADENMAGIC);
+            DoCastSpellIfCan(m_creature,SPELL_DEADENMAGIC);
             DeadenMagic_Timer = 35000;
         }else DeadenMagic_Timer -= diff;
 
         //Countspell_Timer
         if (Countspell_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_COUNTERSPELL);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_COUNTERSPELL);
             Countspell_Timer = urand(16000, 20000);
         }else Countspell_Timer -= diff;
 
@@ -94,7 +94,7 @@ struct MANGOS_DLL_DECL boss_shazzrahAI : public ScriptedAI
             m_creature->GetMap()->CreatureRelocation(m_creature, target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0.0f);
             m_creature->SendMonsterMove(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, MONSTER_MOVE_WALK, 1);
 
-            DoCast(target,SPELL_ARCANEEXPLOSION);
+            DoCastSpellIfCan(target,SPELL_ARCANEEXPLOSION);
             DoResetThreat();
 
             Blink_Timer = 45000;

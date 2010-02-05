@@ -43,7 +43,7 @@ struct MANGOS_DLL_DECL npc_ragged_johnAI : public ScriptedAI
         {
             if (who->GetTypeId() == TYPEID_PLAYER && m_creature->IsWithinDistInMap(who, 15) && who->isInAccessablePlaceFor(m_creature))
             {
-                DoCast(who,16472);
+                DoCastSpellIfCan(who,16472);
                 ((Player*)who)->AreaExploredOrEventHappens(4866);
             }
         }

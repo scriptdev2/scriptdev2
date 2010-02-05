@@ -95,7 +95,7 @@ struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
         //CurseOfBlood_Timer
         if (CurseOfBlood_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_CURSEOFBLOOD);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_CURSEOFBLOOD);
             CurseOfBlood_Timer = 30000;
         }else CurseOfBlood_Timer -= diff;
 
@@ -127,7 +127,7 @@ struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
         //            if (Illusion_Timer < diff)
         //            {
         //                  //Cast
-        //                DoCast(m_creature->getVictim(),SPELL_ILLUSION);
+        //                DoCastSpellIfCan(m_creature->getVictim(),SPELL_ILLUSION);
         //                  //3 Illusion will be summoned
         //                  if (Illusioncounter < 3)
         //                  {
@@ -168,7 +168,7 @@ struct MANGOS_DLL_DECL mob_illusionofjandicebarovAI : public ScriptedAI
         //Cleave_Timer
         if (Cleave_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_CLEAVE);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_CLEAVE);
             Cleave_Timer = urand(5000, 8000);
         }else Cleave_Timer -= diff;
 

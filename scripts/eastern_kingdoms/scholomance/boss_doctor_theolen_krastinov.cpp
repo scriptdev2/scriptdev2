@@ -67,7 +67,7 @@ struct MANGOS_DLL_DECL boss_theolenkrastinovAI : public ScriptedAI
         //Rend_Timer
         if (m_uiRend_Timer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), SPELL_REND);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_REND);
             m_uiRend_Timer = 10000;
         }
         else
@@ -76,7 +76,7 @@ struct MANGOS_DLL_DECL boss_theolenkrastinovAI : public ScriptedAI
         //m_uiBackhand_Timer
         if (m_uiBackhand_Timer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), SPELL_BACKHAND);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_BACKHAND);
             m_uiBackhand_Timer = 10000;
         }
         else
@@ -87,7 +87,7 @@ struct MANGOS_DLL_DECL boss_theolenkrastinovAI : public ScriptedAI
         {
             if (m_uiFrenzy_Timer < uiDiff)
             {
-                DoCast(m_creature, SPELL_FRENZY);
+                DoCastSpellIfCan(m_creature, SPELL_FRENZY);
                 DoScriptText(EMOTE_GENERIC_FRENZY_KILL, m_creature);
                 m_uiFrenzy_Timer = 120000;
             }

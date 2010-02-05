@@ -104,21 +104,21 @@ struct MANGOS_DLL_DECL boss_temporusAI : public ScriptedAI
         //Attack Haste
         if (Haste_Timer < diff)
         {
-            DoCast(m_creature, SPELL_HASTE);
+            DoCastSpellIfCan(m_creature, SPELL_HASTE);
             Haste_Timer = urand(20000, 25000);
         }else Haste_Timer -= diff;
 
         //MortalWound_Timer
         if (MortalWound_Timer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_MORTAL_WOUND);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_MORTAL_WOUND);
             MortalWound_Timer = urand(10000, 20000);
         }else MortalWound_Timer -= diff;
 
         //Wing ruffet
         if (WingBuffet_Timer < diff)
         {
-            DoCast(m_creature, m_bIsRegularMode ? SPELL_WING_BUFFET : H_SPELL_WING_BUFFET);
+            DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_WING_BUFFET : H_SPELL_WING_BUFFET);
             WingBuffet_Timer = urand(20000, 30000);
         }else WingBuffet_Timer -= diff;
 
@@ -126,7 +126,7 @@ struct MANGOS_DLL_DECL boss_temporusAI : public ScriptedAI
         {
             if (SpellReflection_Timer < diff)
             {
-                DoCast(m_creature, SPELL_REFLECT);
+                DoCastSpellIfCan(m_creature, SPELL_REFLECT);
                 SpellReflection_Timer = urand(25000, 35000);
             }else SpellReflection_Timer -= diff;
         }

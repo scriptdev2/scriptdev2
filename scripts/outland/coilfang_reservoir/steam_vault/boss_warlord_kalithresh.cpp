@@ -71,7 +71,7 @@ struct MANGOS_DLL_DECL mob_naga_distillerAI : public ScriptedAI
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
 
-        DoCast(m_creature,SPELL_WARLORDS_RAGE_NAGA,true);
+        DoCastSpellIfCan(m_creature, SPELL_WARLORDS_RAGE_NAGA, CAST_TRIGGERED);
 
         if (m_pInstance)
             m_pInstance->SetData(TYPE_DISTILLER,IN_PROGRESS);
@@ -156,7 +156,7 @@ struct MANGOS_DLL_DECL boss_warlord_kalithreshAI : public ScriptedAI
             if (Creature* pDistiller = GetClosestCreatureWithEntry(m_creature, 17954, 100.0f))
             {
                 DoScriptText(SAY_REGEN, m_creature);
-                DoCast(m_creature,SPELL_WARLORDS_RAGE);
+                DoCastSpellIfCan(m_creature,SPELL_WARLORDS_RAGE);
                 ((mob_naga_distillerAI*)pDistiller->AI())->StartRageGen(m_creature);
             }
             Rage_Timer = urand(3000, 18000);
@@ -165,7 +165,7 @@ struct MANGOS_DLL_DECL boss_warlord_kalithreshAI : public ScriptedAI
         //Reflection_Timer
         if (Reflection_Timer < diff)
         {
-            DoCast(m_creature, SPELL_SPELL_REFLECTION);
+            DoCastSpellIfCan(m_creature, SPELL_SPELL_REFLECTION);
             Reflection_Timer = urand(15000, 25000);
         }else Reflection_Timer -= diff;
 
@@ -173,7 +173,7 @@ struct MANGOS_DLL_DECL boss_warlord_kalithreshAI : public ScriptedAI
         if (Impale_Timer < diff)
         {
             if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
-                DoCast(target,SPELL_IMPALE);
+                DoCastSpellIfCan(target,SPELL_IMPALE);
 
             Impale_Timer = urand(7500, 12500);
         }else Impale_Timer -= diff;

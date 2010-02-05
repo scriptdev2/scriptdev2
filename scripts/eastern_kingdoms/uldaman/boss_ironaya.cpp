@@ -76,13 +76,13 @@ struct MANGOS_DLL_DECL boss_ironayaAI : public ScriptedAI
         //Arcing_Timer
         if (Arcing_Timer < diff)
         {
-            DoCast(m_creature,SPELL_ARCINGSMASH);
+            DoCastSpellIfCan(m_creature,SPELL_ARCINGSMASH);
             Arcing_Timer = 13000;
         }else Arcing_Timer -= diff;
 
         if (!hasCastedWstomp && m_creature->GetHealth()*4 < m_creature->GetMaxHealth())
         {
-            DoCast(m_creature,SPELL_WSTOMP);
+            DoCastSpellIfCan(m_creature,SPELL_WSTOMP);
             hasCastedWstomp = true;
         }
 

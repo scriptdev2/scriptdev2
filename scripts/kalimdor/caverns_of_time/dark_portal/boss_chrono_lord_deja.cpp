@@ -105,7 +105,7 @@ struct MANGOS_DLL_DECL boss_chrono_lord_dejaAI : public ScriptedAI
         //Arcane Blast
         if (ArcaneBlast_Timer < diff)
         {
-            DoCast(m_creature->getVictim(), m_bIsRegularMode ? SPELL_ARCANE_BLAST : H_SPELL_ARCANE_BLAST);
+            DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_ARCANE_BLAST : H_SPELL_ARCANE_BLAST);
             ArcaneBlast_Timer = urand(15000, 25000);
         }else ArcaneBlast_Timer -= diff;
 
@@ -113,7 +113,7 @@ struct MANGOS_DLL_DECL boss_chrono_lord_dejaAI : public ScriptedAI
         if (ArcaneDischarge_Timer < diff)
         {
             Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-            DoCast(target, m_bIsRegularMode ? SPELL_ARCANE_DISCHARGE : H_SPELL_ARCANE_DISCHARGE);
+            DoCastSpellIfCan(target, m_bIsRegularMode ? SPELL_ARCANE_DISCHARGE : H_SPELL_ARCANE_DISCHARGE);
             ArcaneDischarge_Timer = urand(20000, 30000);
         }else ArcaneDischarge_Timer -= diff;
 
@@ -121,7 +121,7 @@ struct MANGOS_DLL_DECL boss_chrono_lord_dejaAI : public ScriptedAI
         if (TimeLapse_Timer < diff)
         {
             DoScriptText(SAY_BANISH, m_creature);
-            DoCast(m_creature, SPELL_TIME_LAPSE);
+            DoCastSpellIfCan(m_creature, SPELL_TIME_LAPSE);
             TimeLapse_Timer = urand(15000, 25000);
         }else TimeLapse_Timer -= diff;
 
@@ -129,7 +129,7 @@ struct MANGOS_DLL_DECL boss_chrono_lord_dejaAI : public ScriptedAI
         {
             if (Attraction_Timer < diff)
             {
-                DoCast(m_creature,SPELL_ATTRACTION);
+                DoCastSpellIfCan(m_creature,SPELL_ATTRACTION);
                 Attraction_Timer = urand(25000, 35000);
             }else Attraction_Timer -= diff;
         }

@@ -175,7 +175,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
         if (((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 10) && !Enraged)
         {
             Enraged = true;
-            DoCast(m_creature, SPELL_ENRAGE, true);
+            DoCastSpellIfCan(m_creature, SPELL_ENRAGE, CAST_TRIGGERED);
             DoScriptText(SAY_ENRAGE, m_creature);
         }
 
@@ -191,16 +191,16 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
             switch(CurrentBeam)
             {
                 case 0:
-                    DoCast(target, SPELL_BEAM_SINISTER);
+                    DoCastSpellIfCan(target, SPELL_BEAM_SINISTER);
                     break;
                 case 1:
-                    DoCast(target, SPELL_BEAM_VILE);
+                    DoCastSpellIfCan(target, SPELL_BEAM_VILE);
                     break;
                 case 2:
-                    DoCast(target, SPELL_BEAM_WICKED);
+                    DoCastSpellIfCan(target, SPELL_BEAM_WICKED);
                     break;
                 case 3:
-                    DoCast(target, SPELL_BEAM_SINFUL);
+                    DoCastSpellIfCan(target, SPELL_BEAM_SINFUL);
                     break;
             }
             ++BeamCount;
@@ -217,7 +217,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
         {
             uint32 random = urand(0, 5);
             if (PrismaticAuras[random])
-                DoCast(m_creature, PrismaticAuras[random]);
+                DoCastSpellIfCan(m_creature, PrismaticAuras[random]);
             PrismaticShieldTimer = 15000;
         }else PrismaticShieldTimer -= diff;
 
@@ -263,7 +263,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
 
         if (ShriekTimer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_SILENCING_SHRIEK);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_SILENCING_SHRIEK);
             ShriekTimer = 30000;
         }else ShriekTimer -= diff;
 
@@ -272,7 +272,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
         {
             if (EnrageTimer < diff)
             {
-                DoCast(m_creature, SPELL_BERSERK);
+                DoCastSpellIfCan(m_creature, SPELL_BERSERK);
                 DoScriptText(SAY_ENRAGE, m_creature);
             }else EnrageTimer -= diff;
         }

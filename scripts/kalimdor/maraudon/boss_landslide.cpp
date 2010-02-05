@@ -50,14 +50,14 @@ struct MANGOS_DLL_DECL boss_landslideAI : public ScriptedAI
         //KnockAway_Timer
         if (KnockAway_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_KNOCKAWAY);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_KNOCKAWAY);
             KnockAway_Timer = 15000;
         }else KnockAway_Timer -= diff;
 
         //Trample_Timer
         if (Trample_Timer < diff)
         {
-            DoCast(m_creature,SPELL_TRAMPLE);
+            DoCastSpellIfCan(m_creature,SPELL_TRAMPLE);
             Trample_Timer = 8000;
         }else Trample_Timer -= diff;
 
@@ -67,7 +67,7 @@ struct MANGOS_DLL_DECL boss_landslideAI : public ScriptedAI
             if (Landslide_Timer < diff)
             {
                 m_creature->InterruptNonMeleeSpells(false);
-                DoCast(m_creature,SPELL_LANDSLIDE);
+                DoCastSpellIfCan(m_creature,SPELL_LANDSLIDE);
                 Landslide_Timer = 60000;
             } else Landslide_Timer -= diff;
         }

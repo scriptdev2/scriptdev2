@@ -112,7 +112,7 @@ struct MANGOS_DLL_DECL netherspite_infernalAI : public ScriptedAI
         {
             if (HellfireTimer <= diff)
             {
-                DoCast(m_creature, SPELL_HELLFIRE);
+                DoCastSpellIfCan(m_creature, SPELL_HELLFIRE);
                 HellfireTimer = 0;
             } else HellfireTimer -= diff;
         }
@@ -363,7 +363,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
             ((netherspite_infernalAI*)Infernal->AI())->malchezaar=m_creature->GetGUID();
 
             infernals.push_back(Infernal->GetGUID());
-            DoCast(Infernal, SPELL_INFERNAL_RELAY);
+            DoCastSpellIfCan(Infernal, SPELL_INFERNAL_RELAY);
         }
 
         DoScriptText(urand(0, 1) ? SAY_SUMMON1 : SAY_SUMMON2, m_creature);
@@ -398,7 +398,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
                 phase = 2;
 
                 //animation
-                DoCast(m_creature, SPELL_EQUIP_AXES);
+                DoCastSpellIfCan(m_creature, SPELL_EQUIP_AXES);
 
                 //text
                 DoScriptText(SAY_AXE_TOSS1, m_creature);
@@ -467,14 +467,14 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
 
             if (SunderArmorTimer < diff)
             {
-                DoCast(m_creature->getVictim(), SPELL_SUNDER_ARMOR);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_SUNDER_ARMOR);
                 SunderArmorTimer = urand(10000, 18000);
 
             }else SunderArmorTimer -= diff;
 
             if (Cleave_Timer < diff)
             {
-                DoCast(m_creature->getVictim(), SPELL_CLEAVE);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_CLEAVE);
                 Cleave_Timer = urand(6000, 12000);
 
             }else Cleave_Timer -= diff;
@@ -510,7 +510,9 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
 
             if (AmplifyDamageTimer < diff)
             {
-                DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), SPELL_AMPLIFY_DAMAGE);
+                if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                    DoCastSpellIfCan(pTarget, SPELL_AMPLIFY_DAMAGE);
+
                 AmplifyDamageTimer = urand(20000, 30000);
             }else AmplifyDamageTimer -= diff;
         }
@@ -524,7 +526,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
 
         if (ShadowNovaTimer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_SHADOWNOVA);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_SHADOWNOVA);
             ShadowNovaTimer = phase == 3 ? 31000 : -1;
         } else ShadowNovaTimer -= diff;
 
@@ -539,7 +541,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
                     target = SelectUnit(SELECT_TARGET_RANDOM, 1);
 
                 if (target)
-                    DoCast(target, SPELL_SW_PAIN);
+                    DoCastSpellIfCan(target, SPELL_SW_PAIN);
 
                 SWPainTimer = 20000;
             }else SWPainTimer -= diff;

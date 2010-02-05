@@ -65,7 +65,7 @@ struct MANGOS_DLL_DECL boss_illuciabarovAI : public ScriptedAI
         //CurseOfAgony_Timer
         if (CurseOfAgony_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_CURSEOFAGONY);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_CURSEOFAGONY);
             CurseOfAgony_Timer = 30000;
         }else CurseOfAgony_Timer -= diff;
 
@@ -74,7 +74,7 @@ struct MANGOS_DLL_DECL boss_illuciabarovAI : public ScriptedAI
         {
             Unit* target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if (target) DoCast(target,SPELL_SHADOWSHOCK);
+            if (target) DoCastSpellIfCan(target,SPELL_SHADOWSHOCK);
 
             ShadowShock_Timer = 12000;
         }else ShadowShock_Timer -= diff;
@@ -82,14 +82,14 @@ struct MANGOS_DLL_DECL boss_illuciabarovAI : public ScriptedAI
         //Silence_Timer
         if (Silence_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_SILENCE);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_SILENCE);
             Silence_Timer = 14000;
         }else Silence_Timer -= diff;
 
         //Fear_Timer
         if (Fear_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_FEAR);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_FEAR);
             Fear_Timer = 30000;
         }else Fear_Timer -= diff;
 

@@ -135,7 +135,7 @@ struct MANGOS_DLL_DECL mob_dragonflayer_forge_masterAI : public ScriptedAI
 
         if (m_uiBurningBrandTimer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), m_bIsRegularMode ? SPELL_BURNING_BRAND : SPELL_BURNING_BRAND_H);
+            DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_BURNING_BRAND : SPELL_BURNING_BRAND_H);
             m_uiBurningBrandTimer = 15000;
         }
         else m_uiBurningBrandTimer -= uiDiff;

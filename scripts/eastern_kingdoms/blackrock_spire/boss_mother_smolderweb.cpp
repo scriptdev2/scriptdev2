@@ -55,14 +55,14 @@ struct MANGOS_DLL_DECL boss_mothersmolderwebAI : public ScriptedAI
         //Crystalize_Timer
         if (Crystalize_Timer < diff)
         {
-            DoCast(m_creature,SPELL_CRYSTALIZE);
+            DoCastSpellIfCan(m_creature,SPELL_CRYSTALIZE);
             Crystalize_Timer = 15000;
         }else Crystalize_Timer -= diff;
 
         //MothersMilk_Timer
         if (MothersMilk_Timer < diff)
         {
-            DoCast(m_creature,SPELL_MOTHERSMILK);
+            DoCastSpellIfCan(m_creature,SPELL_MOTHERSMILK);
             MothersMilk_Timer = urand(5000, 12500);
         }else MothersMilk_Timer -= diff;
 

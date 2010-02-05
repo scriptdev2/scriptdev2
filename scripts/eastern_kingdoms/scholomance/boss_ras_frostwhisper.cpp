@@ -61,7 +61,7 @@ struct MANGOS_DLL_DECL boss_rasfrostAI : public ScriptedAI
         //IceArmor_Timer
         if (IceArmor_Timer < diff)
         {
-            DoCast(m_creature, SPELL_ICEARMOR);
+            DoCastSpellIfCan(m_creature, SPELL_ICEARMOR);
             IceArmor_Timer = 180000;
         }else IceArmor_Timer -= diff;
 
@@ -70,7 +70,7 @@ struct MANGOS_DLL_DECL boss_rasfrostAI : public ScriptedAI
         {
             Unit* target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if (target) DoCast(target,SPELL_FROSTBOLT);
+            if (target) DoCastSpellIfCan(target,SPELL_FROSTBOLT);
 
             Frostbolt_Timer = 8000;
         }else Frostbolt_Timer -= diff;
@@ -78,28 +78,28 @@ struct MANGOS_DLL_DECL boss_rasfrostAI : public ScriptedAI
         //Freeze_Timer
         if (Freeze_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_FREEZE);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_FREEZE);
             Freeze_Timer = 24000;
         }else Freeze_Timer -= diff;
 
         //Fear_Timer
         if (Fear_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_FEAR);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_FEAR);
             Fear_Timer = 30000;
         }else Fear_Timer -= diff;
 
         //ChillNova_Timer
         if (ChillNova_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_CHILLNOVA);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_CHILLNOVA);
             ChillNova_Timer = 14000;
         }else ChillNova_Timer -= diff;
 
         //FrostVolley_Timer
         if (FrostVolley_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_FROSTVOLLEY);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_FROSTVOLLEY);
             FrostVolley_Timer = 15000;
         }else FrostVolley_Timer -= diff;
 

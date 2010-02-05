@@ -154,7 +154,7 @@ struct MANGOS_DLL_DECL npc_daphne_stilwellAI : public npc_escortAI
             m_uiShootTimer = 1000;
 
             if (!m_creature->IsWithinDist(m_creature->getVictim(), ATTACK_DISTANCE))
-                DoCast(m_creature->getVictim(), SPELL_SHOOT);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_SHOOT);
 
         }
         else

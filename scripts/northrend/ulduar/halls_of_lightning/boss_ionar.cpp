@@ -267,7 +267,7 @@ struct MANGOS_DLL_DECL boss_ionarAI : public ScriptedAI
         if (m_uiStaticOverload_Timer < uiDiff)
         {
             if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                DoCast(pTarget, m_bIsRegularMode ? SPELL_STATIC_OVERLOAD_N : SPELL_STATIC_OVERLOAD_H);
+                DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_STATIC_OVERLOAD_N : SPELL_STATIC_OVERLOAD_H);
 
             m_uiStaticOverload_Timer = urand(5000, 6000);
         }
@@ -276,7 +276,7 @@ struct MANGOS_DLL_DECL boss_ionarAI : public ScriptedAI
 
         if (m_uiBallLightning_Timer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), m_bIsRegularMode ? SPELL_BALL_LIGHTNING_N : SPELL_BALL_LIGHTNING_H);
+            DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_BALL_LIGHTNING_N : SPELL_BALL_LIGHTNING_H);
             m_uiBallLightning_Timer = urand(10000, 11000);
         }
         else
@@ -292,7 +292,7 @@ struct MANGOS_DLL_DECL boss_ionarAI : public ScriptedAI
             if (m_creature->IsNonMeleeSpellCasted(false))
                 m_creature->InterruptNonMeleeSpells(false);
 
-            DoCast(m_creature, SPELL_DISPERSE);
+            DoCastSpellIfCan(m_creature, SPELL_DISPERSE);
         }
 
         DoMeleeAttackIfReady();

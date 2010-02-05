@@ -60,14 +60,14 @@ struct MANGOS_DLL_DECL boss_magmadarAI : public ScriptedAI
         if (Frenzy_Timer < diff)
         {
             DoScriptText(EMOTE_GENERIC_FRENZY_KILL, m_creature);
-            DoCast(m_creature,SPELL_FRENZY);
+            DoCastSpellIfCan(m_creature,SPELL_FRENZY);
             Frenzy_Timer = 15000;
         }else Frenzy_Timer -= diff;
 
         //Panic_Timer
         if (Panic_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_PANIC);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_PANIC);
             Panic_Timer = 35000;
         }else Panic_Timer -= diff;
 
@@ -75,7 +75,7 @@ struct MANGOS_DLL_DECL boss_magmadarAI : public ScriptedAI
         if (Lavabomb_Timer < diff)
         {
             if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
-                DoCast(target,SPELL_LAVABOMB_ALT);
+                DoCastSpellIfCan(target,SPELL_LAVABOMB_ALT);
 
             Lavabomb_Timer = 12000;
         }else Lavabomb_Timer -= diff;

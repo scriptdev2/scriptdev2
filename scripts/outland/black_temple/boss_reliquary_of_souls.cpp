@@ -121,7 +121,7 @@ struct MANGOS_DLL_DECL npc_enslaved_soulAI : public ScriptedAI
                     }else done_by->SetPower(POWER_MANA, done_by->GetMaxPower(POWER_MANA));
                 }
             }
-            DoCast(done_by, SPELL_SOUL_RELEASE);
+            DoCastSpellIfCan(done_by, SPELL_SOUL_RELEASE);
         }
     }
 
@@ -587,8 +587,8 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
     void Aggro(Unit* pWho)
     {
         m_creature->SetInCombatWithZone();
-        DoCast(pWho, AURA_OF_SUFFERING, true);
-        DoCast(m_creature, ESSENCE_OF_SUFFERING_PASSIVE, true);
+        DoCastSpellIfCan(pWho, AURA_OF_SUFFERING, CAST_TRIGGERED);
+        DoCastSpellIfCan(m_creature, ESSENCE_OF_SUFFERING_PASSIVE, CAST_TRIGGERED);
     }
 
     void KilledUnit(Unit *victim)
@@ -630,7 +630,7 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
 
         // Add threat equivalent to threat on victim.
         m_creature->AddThreat(target, m_creature->getThreatManager().getThreat(m_creature->getVictim()));
-        DoCast(target, SPELL_FIXATE);
+        DoCastSpellIfCan(target, SPELL_FIXATE);
     }
 
     void UpdateAI(const uint32 diff)
@@ -675,7 +675,7 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
 
         if (EnrageTimer < diff)
         {
-            DoCast(m_creature, SPELL_ENRAGE);
+            DoCastSpellIfCan(m_creature, SPELL_ENRAGE);
             DoScriptText(SUFF_EMOTE_ENRAGE, m_creature);
             EnrageTimer = 60000;
         }else EnrageTimer -= diff;
@@ -683,7 +683,7 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
         if (SoulDrainTimer < diff)
         {
             if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                DoCast(target, SPELL_SOUL_DRAIN);
+                DoCastSpellIfCan(target, SPELL_SOUL_DRAIN);
             SoulDrainTimer = 60000;
         }else SoulDrainTimer -= diff;
 
@@ -749,7 +749,7 @@ struct MANGOS_DLL_DECL boss_essence_of_desireAI : public ScriptedAI
             {
                 if (!m_creature->isInCombat())
                 {
-                    DoCast(who, AURA_OF_DESIRE);
+                    DoCastSpellIfCan(who, AURA_OF_DESIRE);
                 }
 
                 who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
@@ -773,19 +773,19 @@ struct MANGOS_DLL_DECL boss_essence_of_desireAI : public ScriptedAI
 
         if (RuneShieldTimer < diff)
         {
-            DoCast(m_creature, SPELL_RUNE_SHIELD);
+            DoCastSpellIfCan(m_creature, SPELL_RUNE_SHIELD);
             RuneShieldTimer = 60000;
         }else RuneShieldTimer -= diff;
 
         if (DeadenTimer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_DEADEN);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_DEADEN);
             DeadenTimer = urand(30000, 60000);
         }else DeadenTimer -= diff;
 
         if (SoulShockTimer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_SOUL_SHOCK);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_SOUL_SHOCK);
             SoulShockTimer = 40000;
 
             if (urand(0, 1))
@@ -825,7 +825,7 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
     void Aggro(Unit* pWho)
     {
         m_creature->SetInCombatWithZone();
-        DoCast(m_creature->getVictim(), AURA_OF_ANGER, true);
+        DoCastSpellIfCan(m_creature->getVictim(), AURA_OF_ANGER, CAST_TRIGGERED);
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -840,7 +840,7 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
             {
                 if (!m_creature->isInCombat())
                 {
-                    DoCast(who, AURA_OF_ANGER);
+                    DoCastSpellIfCan(who, AURA_OF_ANGER);
                 }
 
                 who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
@@ -884,8 +884,8 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
             if (m_creature->getVictim()->GetGUID() != AggroTargetGUID)
             {
                 DoScriptText(ANGER_SAY_BEFORE, m_creature);
-                DoCast(m_creature, SPELL_SELF_SEETHE);
-                DoCast(m_creature->getVictim(), SPELL_ENEMY_SEETHE, true);
+                DoCastSpellIfCan(m_creature, SPELL_SELF_SEETHE);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_ENEMY_SEETHE, CAST_TRIGGERED);
                 AggroTargetGUID = m_creature->getVictim()->GetGUID();
             }
             CheckTankTimer = 2000;
@@ -893,7 +893,7 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
 
         if (SoulScreamTimer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_SOUL_SCREAM);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_SOUL_SCREAM);
             SoulScreamTimer = 10000;
         }else SoulScreamTimer -= diff;
 
@@ -902,7 +902,7 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
             for(uint8 i = 0; i < 4; ++i)
             {
                 if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                    DoCast(target, SPELL_SPITE);
+                    DoCastSpellIfCan(target, SPELL_SPITE);
             }
 
             SpiteTimer = 30000;

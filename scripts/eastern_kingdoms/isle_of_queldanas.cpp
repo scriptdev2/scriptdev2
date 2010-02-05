@@ -99,7 +99,7 @@ struct MANGOS_DLL_DECL npc_converted_sentryAI : public ScriptedAI
                 else
                     DoScriptText(SAY_CONVERTED_2, m_creature);
 
-                DoCast(m_creature,SPELL_CONVERT_CREDIT);
+                DoCastSpellIfCan(m_creature,SPELL_CONVERT_CREDIT);
                 ((Pet*)m_creature)->SetDuration(7500);
                 Credit = true;
             }else Timer -= diff;

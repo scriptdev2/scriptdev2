@@ -87,7 +87,7 @@ struct MANGOS_DLL_DECL boss_doomlordkazzakAI : public ScriptedAI
         if (victim->GetTypeId() != TYPEID_PLAYER)
             return;
 
-        DoCast(m_creature,SPELL_CAPTURESOUL);
+        DoCastSpellIfCan(m_creature,SPELL_CAPTURESOUL);
 
         switch(urand(0, 2))
         {
@@ -111,28 +111,28 @@ struct MANGOS_DLL_DECL boss_doomlordkazzakAI : public ScriptedAI
         //ShadowVolley_Timer
         if (ShadowVolley_Timer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_SHADOWVOLLEY);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_SHADOWVOLLEY);
             ShadowVolley_Timer = urand(4000, 6000);
         }else ShadowVolley_Timer -= diff;
 
         //Cleave_Timer
         if (Cleave_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_CLEAVE);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_CLEAVE);
             Cleave_Timer = urand(8000, 12000);
         }else Cleave_Timer -= diff;
 
         //ThunderClap_Timer
         if (ThunderClap_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_THUNDERCLAP);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_THUNDERCLAP);
             ThunderClap_Timer = urand(10000, 14000);
         }else ThunderClap_Timer -= diff;
 
         //VoidBolt_Timer
         if (VoidBolt_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_VOIDBOLT);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_VOIDBOLT);
             VoidBolt_Timer = urand(15000, 18000);
         }else VoidBolt_Timer -= diff;
 
@@ -142,7 +142,7 @@ struct MANGOS_DLL_DECL boss_doomlordkazzakAI : public ScriptedAI
             Unit* victim = SelectUnit(SELECT_TARGET_RANDOM, 0);
             if (victim->GetPower(POWER_MANA))
             {
-                DoCast(victim, SPELL_MARKOFKAZZAK);
+                DoCastSpellIfCan(victim, SPELL_MARKOFKAZZAK);
                 MarkOfKazzak_Timer = 20000;
             }
         }else MarkOfKazzak_Timer -= diff;
@@ -151,13 +151,15 @@ struct MANGOS_DLL_DECL boss_doomlordkazzakAI : public ScriptedAI
         if (Enrage_Timer < diff)
         {
             DoScriptText(EMOTE_GENERIC_FRENZY, m_creature);
-            DoCast(m_creature,SPELL_ENRAGE);
+            DoCastSpellIfCan(m_creature,SPELL_ENRAGE);
             Enrage_Timer = 30000;
         }else Enrage_Timer -= diff;
 
         if (Twisted_Reflection_Timer < diff)
         {
-            DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), SPELL_TWISTEDREFLECTION);
+            if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                DoCastSpellIfCan(pTarget, SPELL_TWISTEDREFLECTION);
+
             Twisted_Reflection_Timer = 15000;
         }else Twisted_Reflection_Timer -= diff;
 

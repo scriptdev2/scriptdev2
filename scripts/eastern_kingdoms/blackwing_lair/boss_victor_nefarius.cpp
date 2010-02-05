@@ -229,7 +229,7 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
                 Unit* target = NULL;
                 target = SelectUnit(SELECT_TARGET_RANDOM,0);
                 if (target)
-                    DoCast(target,SPELL_SHADOWBOLT);
+                    DoCastSpellIfCan(target,SPELL_SHADOWBOLT);
 
                 ShadowBoltTimer = urand(3000, 10000);
             }else ShadowBoltTimer -= diff;
@@ -240,7 +240,7 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
                 Unit* target = NULL;
                 target = SelectUnit(SELECT_TARGET_RANDOM,0);
                 if (target)
-                    DoCast(target,SPELL_FEAR);
+                    DoCastSpellIfCan(target,SPELL_FEAR);
 
                 FearTimer = urand(10000, 20000);
             }else FearTimer -= diff;
@@ -296,10 +296,10 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
                     m_creature->InterruptNonMeleeSpells(false);
 
                     //Root self
-                    DoCast(m_creature,33356);
+                    DoCastSpellIfCan(m_creature,33356);
 
                     //Make super invis
-                    DoCast(m_creature,8149);
+                    DoCastSpellIfCan(m_creature,8149);
 
                     //Teleport self to a hiding spot (this causes errors in the mangos log but no real issues)
                     m_creature->GetMap()->CreatureRelocation(m_creature, HIDE_X, HIDE_Y, HIDE_Z, 0.0f);

@@ -121,20 +121,20 @@ struct MANGOS_DLL_DECL boss_lajAI : public ScriptedAI
         switch(urand(0, 3))
         {
             case 0:
-                DoCast(m_creature,SPELL_SUMMON_LASHER_1,true);
-                DoCast(m_creature,SPELL_SUMMON_FLAYER_1,true);
+                DoCastSpellIfCan(m_creature, SPELL_SUMMON_LASHER_1, CAST_TRIGGERED);
+                DoCastSpellIfCan(m_creature, SPELL_SUMMON_FLAYER_1, CAST_TRIGGERED);
                 break;
             case 1:
-                DoCast(m_creature,SPELL_SUMMON_LASHER_2,true);
-                DoCast(m_creature,SPELL_SUMMON_FLAYER_2,true);
+                DoCastSpellIfCan(m_creature, SPELL_SUMMON_LASHER_2, CAST_TRIGGERED);
+                DoCastSpellIfCan(m_creature, SPELL_SUMMON_FLAYER_2, CAST_TRIGGERED);
                 break;
             case 2:
-                DoCast(m_creature,SPELL_SUMMON_LASHER_3,true);
-                DoCast(m_creature,SPELL_SUMMON_FLAYER_3,true);
+                DoCastSpellIfCan(m_creature, SPELL_SUMMON_LASHER_3, CAST_TRIGGERED);
+                DoCastSpellIfCan(m_creature, SPELL_SUMMON_FLAYER_3, CAST_TRIGGERED);
                 break;
             case 3:
-                DoCast(m_creature,SPELL_SUMMON_LASHER_4,true);
-                DoCast(m_creature,SPELL_SUMMON_FLAYER_4,true);
+                DoCastSpellIfCan(m_creature, SPELL_SUMMON_LASHER_4, CAST_TRIGGERED);
+                DoCastSpellIfCan(m_creature, SPELL_SUMMON_FLAYER_4, CAST_TRIGGERED);
                 break;
         }
         CanSummon = false;
@@ -157,13 +157,13 @@ struct MANGOS_DLL_DECL boss_lajAI : public ScriptedAI
 
         if (Allergic_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_ALLERGIC_REACTION);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_ALLERGIC_REACTION);
             Allergic_Timer = urand(25000, 40000);
         }else Allergic_Timer -= diff;
 
         if (Teleport_Timer < diff)
         {
-            DoCast(m_creature,SPELL_TELEPORT_SELF);
+            DoCastSpellIfCan(m_creature,SPELL_TELEPORT_SELF);
             Teleport_Timer = urand(30000, 40000);
             CanSummon = true;
         }else Teleport_Timer -= diff;

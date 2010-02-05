@@ -128,7 +128,7 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
         if ((Berserk_Timer < diff) && (!Berserking))
         {
             DoScriptText(SAY_BERSERK, m_creature);
-            DoCast(m_creature, SPELL_BERSERK);
+            DoCastSpellIfCan(m_creature, SPELL_BERSERK);
             Berserking = true;
         }else Berserk_Timer -= diff;
 
@@ -160,14 +160,14 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
             //Brutal Swipe (some sources may say otherwise, but I've never seen this in Bear form)
             if (BrutalSwipe_Timer < diff)
             {
-                DoCast(m_creature->getVictim(), SPELL_BRUTALSWIPE);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_BRUTALSWIPE);
                 BrutalSwipe_Timer = urand(7000, 15000);
             }else BrutalSwipe_Timer -= diff;
 
             //Mangle
             if (Mangle_Timer < diff)
             {
-                DoCast(m_creature->getVictim(), SPELL_MANGLE);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_MANGLE);
                 Mangle_Timer = urand(3000, 15000);
             }else Mangle_Timer -= diff;
 
@@ -181,7 +181,7 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
                 if (!target)
                     target = m_creature->getVictim();
 
-                DoCast(target, SPELL_SURGE);
+                DoCastSpellIfCan(target, SPELL_SURGE);
                 DoScriptText(SAY_SURGE, m_creature);
 
                 Surge_Timer = urand(15000, 32500);
@@ -192,7 +192,7 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
             {
                 m_creature->InterruptSpell(CURRENT_CHANNELED_SPELL);
                 m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
-                DoCast(m_creature, SPELL_BEARFORM);
+                DoCastSpellIfCan(m_creature, SPELL_BEARFORM);
                 //And 30sec (bear form) + 45sec (troll form) before we should cast this again
                 ChangeForm_Timer = 75000;
             }else ChangeForm_Timer -= diff;
@@ -217,21 +217,21 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
             //Lacerating Slash
             if (LaceratingSlash_Timer < diff)
             {
-                DoCast(m_creature->getVictim(), SPELL_LACERATINGSLASH);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_LACERATINGSLASH);
                 LaceratingSlash_Timer = urand(6000, 20000);
             }else LaceratingSlash_Timer -= diff;
 
             //Rend Flesh
             if (RendFlesh_Timer < diff)
             {
-                DoCast(m_creature->getVictim(), SPELL_RENDFLESH);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_RENDFLESH);
                 RendFlesh_Timer = urand(6000, 20000);
             }else RendFlesh_Timer -= diff;
 
             //Deafening Roar
             if (DeafeningRoar_Timer < diff)
             {
-                DoCast(m_creature->getVictim(), SPELL_DEAFENINGROAR);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_DEAFENINGROAR);
                 DeafeningRoar_Timer = urand(15000, 25000);
             }else DeafeningRoar_Timer -= diff;
         }

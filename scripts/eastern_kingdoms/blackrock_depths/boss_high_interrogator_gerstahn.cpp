@@ -56,7 +56,7 @@ struct MANGOS_DLL_DECL boss_high_interrogator_gerstahnAI : public ScriptedAI
         {
             Unit* target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if (target)DoCast(target,SPELL_SHADOWWORDPAIN);
+            if (target)DoCastSpellIfCan(target,SPELL_SHADOWWORDPAIN);
             ShadowWordPain_Timer = 7000;
         }else ShadowWordPain_Timer -= diff;
 
@@ -65,21 +65,21 @@ struct MANGOS_DLL_DECL boss_high_interrogator_gerstahnAI : public ScriptedAI
         {
             Unit* target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if (target)DoCast(target,SPELL_MANABURN);
+            if (target)DoCastSpellIfCan(target,SPELL_MANABURN);
             ManaBurn_Timer = 10000;
         }else ManaBurn_Timer -= diff;
 
         //PsychicScream_Timer
         if (PsychicScream_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_PSYCHICSCREAM);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_PSYCHICSCREAM);
             PsychicScream_Timer = 30000;
         }else PsychicScream_Timer -= diff;
 
         //ShadowShield_Timer
         if (ShadowShield_Timer < diff)
         {
-            DoCast(m_creature,SPELL_SHADOWSHIELD);
+            DoCastSpellIfCan(m_creature,SPELL_SHADOWSHIELD);
             ShadowShield_Timer = 25000;
         }else ShadowShield_Timer -= diff;
 

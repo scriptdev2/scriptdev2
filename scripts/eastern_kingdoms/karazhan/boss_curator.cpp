@@ -119,7 +119,7 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
                 if (m_creature->IsNonMeleeSpellCasted(false))
                     m_creature->InterruptNonMeleeSpells(false);
 
-                DoCast(m_creature, SPELL_BERSERK);
+                DoCastSpellIfCan(m_creature, SPELL_BERSERK);
 
                 // don't know if he's supposed to do summon/evocate after hard enrage (probably not)
                 m_bIsBerserk = true;
@@ -179,7 +179,7 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
                 {
                     m_bIsEnraged = true;
                     DoScriptText(SAY_ENRAGE, m_creature);
-                    DoCast(m_creature, SPELL_ENRAGE);
+                    DoCastSpellIfCan(m_creature, SPELL_ENRAGE);
                 }
             }
         }

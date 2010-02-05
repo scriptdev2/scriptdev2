@@ -62,31 +62,31 @@ struct MANGOS_DLL_DECL npc_cairne_bloodhoofAI : public ScriptedAI
         {
             Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0);
             if (target)
-                DoCast(target,SPELL_BERSERKER_CHARGE);
+                DoCastSpellIfCan(target,SPELL_BERSERKER_CHARGE);
             BerserkerCharge_Timer = 25000;
         }else BerserkerCharge_Timer -= diff;
 
         if (Uppercut_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_UPPERCUT);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_UPPERCUT);
             Uppercut_Timer = 20000;
         }else Uppercut_Timer -= diff;
 
         if (Thunderclap_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_THUNDERCLAP);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_THUNDERCLAP);
             Thunderclap_Timer = 15000;
         }else Thunderclap_Timer -= diff;
 
         if (MortalStrike_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_MORTAL_STRIKE);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_MORTAL_STRIKE);
             MortalStrike_Timer = 15000;
         }else MortalStrike_Timer -= diff;
 
         if (Cleave_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_CLEAVE);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_CLEAVE);
             Cleave_Timer = 7000;
         }else Cleave_Timer -= diff;
 

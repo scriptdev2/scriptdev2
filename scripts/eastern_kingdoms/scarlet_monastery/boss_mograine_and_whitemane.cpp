@@ -95,7 +95,7 @@ struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
     void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_MO_AGGRO, m_creature);
-        DoCast(m_creature,SPELL_RETRIBUTIONAURA);
+        DoCastSpellIfCan(m_creature,SPELL_RETRIBUTIONAURA);
 
         m_creature->CallForHelp(VISIBLE_RANGE);
     }
@@ -167,7 +167,7 @@ struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
             {
                 m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                 m_creature->SetStandState(UNIT_STAND_STATE_STAND);
-                DoCast(pWhitemane, SPELL_LAYONHANDS);
+                DoCastSpellIfCan(pWhitemane, SPELL_LAYONHANDS);
 
                 m_uiCrusaderStrike_Timer = 10000;
                 m_uiHammerOfJustice_Timer = 10000;
@@ -186,7 +186,7 @@ struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
         //m_uiCrusaderStrike_Timer
         if (m_uiCrusaderStrike_Timer < uiDiff)
         {
-            DoCast(m_creature->getVictim(),SPELL_CRUSADERSTRIKE);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_CRUSADERSTRIKE);
             m_uiCrusaderStrike_Timer = 10000;
         }
         else
@@ -195,7 +195,7 @@ struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
         //m_uiHammerOfJustice_Timer
         if (m_uiHammerOfJustice_Timer < uiDiff)
         {
-            DoCast(m_creature->getVictim(),SPELL_HAMMEROFJUSTICE);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_HAMMEROFJUSTICE);
             m_uiHammerOfJustice_Timer = 60000;
         }
         else
@@ -300,7 +300,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
             {
                 if (Creature* pMograine = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_MOGRAINE)))
                 {
-                    DoCast(pMograine, SPELL_SCARLETRESURRECTION);
+                    DoCastSpellIfCan(pMograine, SPELL_SCARLETRESURRECTION);
                     DoScriptText(SAY_WH_RESSURECT, m_creature);
                     m_bCanResurrect = false;
                 }
@@ -315,7 +315,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
             if (m_creature->IsNonMeleeSpellCasted(false))
                 m_creature->InterruptNonMeleeSpells(false);
 
-            DoCast(m_creature->getVictim(), SPELL_DEEPSLEEP);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_DEEPSLEEP);
             m_bCanResurrectCheck = true;
             m_bCanResurrect = true;
             return;
@@ -343,7 +343,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
             }
 
             if (pTarget)
-                DoCast(pTarget, SPELL_HEAL);
+                DoCastSpellIfCan(pTarget, SPELL_HEAL);
 
             m_uiHeal_Timer = 13000;
         }
@@ -353,7 +353,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
         //m_uiPowerWordShield_Timer
         if (m_uiPowerWordShield_Timer < uiDiff)
         {
-            DoCast(m_creature,SPELL_POWERWORDSHIELD);
+            DoCastSpellIfCan(m_creature,SPELL_POWERWORDSHIELD);
             m_uiPowerWordShield_Timer = 15000;
         }
         else
@@ -362,7 +362,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
         //m_uiHolySmite_Timer
         if (m_uiHolySmite_Timer < uiDiff)
         {
-            DoCast(m_creature->getVictim(),SPELL_HOLYSMITE);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_HOLYSMITE);
             m_uiHolySmite_Timer = 6000;
         }
         else

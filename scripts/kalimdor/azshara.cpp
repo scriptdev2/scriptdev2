@@ -264,7 +264,7 @@ struct MANGOS_DLL_DECL mobs_spitelashesAI : public ScriptedAI
             (Spellkind->Id==118 || Spellkind->Id== 12824 || Spellkind->Id== 12825 || Spellkind->Id== 12826))
         {
             spellhit=true;
-            DoCast(m_creature,29124);                       //become a sheep
+            DoCastSpellIfCan(m_creature,29124);                       //become a sheep
         }
     }
 
@@ -283,8 +283,8 @@ struct MANGOS_DLL_DECL mobs_spitelashesAI : public ScriptedAI
             morphtimer+=diff;
             if (morphtimer>=5000)
             {
-                DoCast(m_creature,28406);                   //summon copies
-                DoCast(m_creature,6924);                    //visual explosion
+                DoCastSpellIfCan(m_creature,28406);                   //summon copies
+                DoCastSpellIfCan(m_creature,6924);                    //visual explosion
             }
         }
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())

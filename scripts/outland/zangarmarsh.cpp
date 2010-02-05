@@ -150,7 +150,7 @@ struct MANGOS_DLL_DECL npc_cooshcooshAI : public ScriptedAI
 
         if (m_uiLightningBolt_Timer < uiDiff)
         {
-            DoCast(m_creature->getVictim(),SPELL_LIGHTNING_BOLT);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_LIGHTNING_BOLT);
             m_uiLightningBolt_Timer = 5000;
         }else m_uiLightningBolt_Timer -= uiDiff;
 

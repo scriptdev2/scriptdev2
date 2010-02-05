@@ -67,7 +67,7 @@ struct MANGOS_DLL_DECL boss_maleki_the_pallidAI : public ScriptedAI
         if (Frostbolt_Timer < diff)
         {
             if (rand()%100 < 90)
-                DoCast(m_creature->getVictim(),SPELL_FROSTBOLT);
+                DoCastSpellIfCan(m_creature->getVictim(),SPELL_FROSTBOLT);
 
             Frostbolt_Timer = 3500;
         }else Frostbolt_Timer -= diff;
@@ -76,7 +76,7 @@ struct MANGOS_DLL_DECL boss_maleki_the_pallidAI : public ScriptedAI
         if (IceTomb_Timer < diff)
         {
             if (rand()%100 < 65)
-                DoCast(m_creature->getVictim(),SPELL_ICETOMB);
+                DoCastSpellIfCan(m_creature->getVictim(),SPELL_ICETOMB);
 
             IceTomb_Timer = 28000;
         }else IceTomb_Timer -= diff;
@@ -85,7 +85,7 @@ struct MANGOS_DLL_DECL boss_maleki_the_pallidAI : public ScriptedAI
         if (DrainLife_Timer < diff)
         {
             if (rand()%100 < 55)
-                DoCast(m_creature->getVictim(),SPELL_DRAIN_LIFE);
+                DoCastSpellIfCan(m_creature->getVictim(),SPELL_DRAIN_LIFE);
 
             DrainLife_Timer = 31000;
         }else DrainLife_Timer -= diff;

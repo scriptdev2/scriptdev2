@@ -66,7 +66,7 @@ struct MANGOS_DLL_DECL boss_moamAI : public ScriptedAI
         //If we are 100%MANA cast Arcane Erruption
         //if (j==1 && m_creature->GetMana()*100 / m_creature->GetMaxMana() == 100 && !m_creature->IsNonMeleeSpellCasted(false))
         {
-            DoCast(m_creature->getVictim(),SPELL_ARCANEERUPTION);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_ARCANEERUPTION);
             DoScriptText(EMOTE_MANA_FULL, m_creature);
         }
 
@@ -74,21 +74,21 @@ struct MANGOS_DLL_DECL boss_moamAI : public ScriptedAI
         //if (i==0 && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 50 && !m_creature->IsNonMeleeSpellCasted(false))
         {
             i=1;
-            DoCast(m_creature->getVictim(),SPELL_SUMMONMANA);
-            DoCast(m_creature->getVictim(),SPELL_GRDRSLEEP);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_SUMMONMANA);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_GRDRSLEEP);
         }
 
         //SUMMONMANA_Timer
         if (i==1 && SUMMONMANA_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_SUMMONMANA);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_SUMMONMANA);
             SUMMONMANA_Timer = 90000;
         }else SUMMONMANA_Timer -= diff;
 
         //TRAMPLE_Timer
         if (TRAMPLE_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_TRAMPLE);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_TRAMPLE);
             j=1;
 
             TRAMPLE_Timer = 30000;
@@ -97,7 +97,7 @@ struct MANGOS_DLL_DECL boss_moamAI : public ScriptedAI
         //DRAINMANA_Timer
         if (DRAINMANA_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_DRAINMANA);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_DRAINMANA);
             DRAINMANA_Timer = 30000;
         }else DRAINMANA_Timer -= diff;
 

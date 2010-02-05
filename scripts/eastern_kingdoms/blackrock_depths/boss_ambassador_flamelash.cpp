@@ -71,7 +71,7 @@ struct MANGOS_DLL_DECL boss_ambassador_flamelashAI : public ScriptedAI
         //FireBlast_Timer
         if (FireBlast_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_FIREBLAST);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_FIREBLAST);
             FireBlast_Timer = 7000;
         }else FireBlast_Timer -= diff;
 

@@ -103,7 +103,7 @@ struct MANGOS_DLL_DECL boss_nefarianAI : public ScriptedAI
             case 2: DoScriptText(SAY_SHADOWFLAME, m_creature); break;
         }
 
-        DoCast(pWho,SPELL_SHADOWFLAME_INITIAL);
+        DoCastSpellIfCan(pWho,SPELL_SHADOWFLAME_INITIAL);
 
         m_creature->SetInCombatWithZone();
     }
@@ -116,28 +116,28 @@ struct MANGOS_DLL_DECL boss_nefarianAI : public ScriptedAI
         //ShadowFlame_Timer
         if (ShadowFlame_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_SHADOWFLAME);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_SHADOWFLAME);
             ShadowFlame_Timer = 12000;
         }else ShadowFlame_Timer -= diff;
 
         //BellowingRoar_Timer
         if (BellowingRoar_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_BELLOWINGROAR);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_BELLOWINGROAR);
             BellowingRoar_Timer = 30000;
         }else BellowingRoar_Timer -= diff;
 
         //VeilOfShadow_Timer
         if (VeilOfShadow_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_VEILOFSHADOW);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_VEILOFSHADOW);
             VeilOfShadow_Timer = 15000;
         }else VeilOfShadow_Timer -= diff;
 
         //Cleave_Timer
         if (Cleave_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_CLEAVE);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_CLEAVE);
             Cleave_Timer = 7000;
         }else Cleave_Timer -= diff;
 
@@ -145,7 +145,7 @@ struct MANGOS_DLL_DECL boss_nefarianAI : public ScriptedAI
         if (TailLash_Timer < diff)
         {
             //Cast NYI since we need a better check for behind target
-            //DoCast(m_creature->getVictim(),SPELL_TAILLASH);
+            //DoCastSpellIfCan(m_creature->getVictim(),SPELL_TAILLASH);
 
             TailLash_Timer = 10000;
         }else TailLash_Timer -= diff;
@@ -161,39 +161,39 @@ struct MANGOS_DLL_DECL boss_nefarianAI : public ScriptedAI
             {
                 case 0:
                     DoScriptText(SAY_MAGE, m_creature);
-                    DoCast(m_creature,SPELL_MAGE);
+                    DoCastSpellIfCan(m_creature,SPELL_MAGE);
                     break;
                 case 1:
                     DoScriptText(SAY_WARRIOR, m_creature);
-                    DoCast(m_creature,SPELL_WARRIOR);
+                    DoCastSpellIfCan(m_creature,SPELL_WARRIOR);
                     break;
                 case 2:
                     DoScriptText(SAY_DRUID, m_creature);
-                    DoCast(m_creature,SPELL_DRUID);
+                    DoCastSpellIfCan(m_creature,SPELL_DRUID);
                     break;
                 case 3:
                     DoScriptText(SAY_PRIEST, m_creature);
-                    DoCast(m_creature,SPELL_PRIEST);
+                    DoCastSpellIfCan(m_creature,SPELL_PRIEST);
                     break;
                 case 4:
                     DoScriptText(SAY_PALADIN, m_creature);
-                    DoCast(m_creature,SPELL_PALADIN);
+                    DoCastSpellIfCan(m_creature,SPELL_PALADIN);
                     break;
                 case 5:
                     DoScriptText(SAY_SHAMAN, m_creature);
-                    DoCast(m_creature,SPELL_SHAMAN);
+                    DoCastSpellIfCan(m_creature,SPELL_SHAMAN);
                     break;
                 case 6:
                     DoScriptText(SAY_WARLOCK, m_creature);
-                    DoCast(m_creature,SPELL_WARLOCK);
+                    DoCastSpellIfCan(m_creature,SPELL_WARLOCK);
                     break;
                 case 7:
                     DoScriptText(SAY_HUNTER, m_creature);
-                    DoCast(m_creature,SPELL_HUNTER);
+                    DoCastSpellIfCan(m_creature,SPELL_HUNTER);
                     break;
                 case 8:
                     DoScriptText(SAY_ROGUE, m_creature);
-                    DoCast(m_creature,SPELL_ROGUE);
+                    DoCastSpellIfCan(m_creature,SPELL_ROGUE);
                     break;
             }
 

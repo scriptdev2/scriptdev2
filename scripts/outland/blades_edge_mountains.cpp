@@ -198,7 +198,7 @@ struct MANGOS_DLL_DECL mobs_nether_drakeAI : public ScriptedAI
 
         if (IntangiblePresence_Timer <= diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_INTANGIBLE_PRESENCE);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_INTANGIBLE_PRESENCE);
             IntangiblePresence_Timer = urand(15000, 30000);
         }else IntangiblePresence_Timer -= diff;
 
@@ -206,13 +206,13 @@ struct MANGOS_DLL_DECL mobs_nether_drakeAI : public ScriptedAI
         {
             Unit* target = m_creature->getVictim();
             if (target && target->getPowerType() == POWER_MANA)
-                DoCast(target,SPELL_MANA_BURN);
+                DoCastSpellIfCan(target,SPELL_MANA_BURN);
             ManaBurn_Timer = urand(8000, 16000);
         }else ManaBurn_Timer -= diff;
 
         if (ArcaneBlast_Timer <= diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_ARCANE_BLAST);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_ARCANE_BLAST);
             ArcaneBlast_Timer = urand(2500, 7500);
         }else ArcaneBlast_Timer -= diff;
 

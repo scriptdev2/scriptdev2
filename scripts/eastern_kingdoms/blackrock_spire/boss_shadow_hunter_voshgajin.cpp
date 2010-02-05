@@ -53,7 +53,7 @@ struct MANGOS_DLL_DECL boss_shadowvoshAI : public ScriptedAI
         //CurseOfBlood_Timer
         if (CurseOfBlood_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_CURSEOFBLOOD);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_CURSEOFBLOOD);
             CurseOfBlood_Timer = 45000;
         }else CurseOfBlood_Timer -= diff;
 
@@ -62,14 +62,14 @@ struct MANGOS_DLL_DECL boss_shadowvoshAI : public ScriptedAI
         {
             Unit* target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if (target) DoCast(target,SPELL_HEX);
+            if (target) DoCastSpellIfCan(target,SPELL_HEX);
             Hex_Timer = 15000;
         }else Hex_Timer -= diff;
 
         //Cleave_Timer
         if (Cleave_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_CLEAVE);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_CLEAVE);
             Cleave_Timer = 7000;
         }else Cleave_Timer -= diff;
 

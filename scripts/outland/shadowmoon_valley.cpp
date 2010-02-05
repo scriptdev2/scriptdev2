@@ -129,7 +129,7 @@ struct MANGOS_DLL_DECL mob_mature_netherwing_drakeAI : public ScriptedAI
                 }
                 else if (bIsEating)
                 {
-                    DoCast(m_creature, SPELL_JUST_EATEN);
+                    DoCastSpellIfCan(m_creature, SPELL_JUST_EATEN);
                     DoScriptText(SAY_JUST_EATEN, m_creature);
 
                     if (Player* pPlr = (Player*)Unit::GetUnit((*m_creature), uiPlayerGUID))
@@ -150,7 +150,7 @@ struct MANGOS_DLL_DECL mob_mature_netherwing_drakeAI : public ScriptedAI
 
         if (CastTimer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_NETHER_BREATH);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_NETHER_BREATH);
             CastTimer = 5000;
         }else CastTimer -= diff;
 
@@ -241,7 +241,7 @@ struct MANGOS_DLL_DECL mob_enslaved_netherwing_drakeAI : public ScriptedAI
                     {
                         if (pPlayer->GetQuestStatus(QUEST_FORCE_OF_NELT) == QUEST_STATUS_INCOMPLETE)
                         {
-                            DoCast(pPlayer, SPELL_FORCE_OF_NELTHARAKU, true);
+                            DoCastSpellIfCan(pPlayer, SPELL_FORCE_OF_NELTHARAKU, CAST_TRIGGERED);
                             PlayerGUID = 0;
 
                             float dx, dy, dz;
@@ -742,7 +742,7 @@ struct MANGOS_DLL_DECL npc_wildaAI : public npc_escortAI
         {
             if (m_uiHealingTimer < uiDiff)
             {
-                DoCast(m_creature, SPELL_HEALING_WAVE);
+                DoCastSpellIfCan(m_creature, SPELL_HEALING_WAVE);
                 m_uiHealingTimer = 15000;
             }
             else
@@ -1005,7 +1005,7 @@ struct MANGOS_DLL_DECL mob_torlothAI : public ScriptedAI
 
             if (m_uiCleaveTimer < uiDiff)
             {
-                DoCast(m_creature->getVictim(), SPELL_CLEAVE);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_CLEAVE);
                 m_uiCleaveTimer = 15000;
             }
             else
@@ -1013,7 +1013,7 @@ struct MANGOS_DLL_DECL mob_torlothAI : public ScriptedAI
 
             if (m_uiShadowfuryTimer < uiDiff)
             {
-                DoCast(m_creature->getVictim(), SPELL_SHADOWFURY);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_SHADOWFURY);
                 m_uiShadowfuryTimer = 20000;
             }
             else
@@ -1021,7 +1021,7 @@ struct MANGOS_DLL_DECL mob_torlothAI : public ScriptedAI
 
             if (m_uiSpellReflectionTimer < uiDiff)
             {
-                DoCast(m_creature, SPELL_SPELL_REFLECTION);
+                DoCastSpellIfCan(m_creature, SPELL_SPELL_REFLECTION);
                 m_uiSpellReflectionTimer = 30000;
             }
             else

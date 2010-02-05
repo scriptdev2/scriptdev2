@@ -89,7 +89,7 @@ struct MANGOS_DLL_DECL boss_emperor_dagran_thaurissanAI : public ScriptedAI
         if (m_uiHandOfThaurissan_Timer < uiDiff)
         {
             if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
-                DoCast(pTarget,SPELL_HANDOFTHAURISSAN);
+                DoCastSpellIfCan(pTarget,SPELL_HANDOFTHAURISSAN);
 
             //3 Hands of Thaurissan will be casted
             //if (m_uiCounter < 3)
@@ -109,7 +109,7 @@ struct MANGOS_DLL_DECL boss_emperor_dagran_thaurissanAI : public ScriptedAI
         //AvatarOfFlame_Timer
         if (m_uiAvatarOfFlame_Timer < uiDiff)
         {
-            DoCast(m_creature->getVictim(),SPELL_AVATAROFFLAME);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_AVATAROFFLAME);
             m_uiAvatarOfFlame_Timer = 18000;
         }
         else
@@ -197,7 +197,7 @@ struct MANGOS_DLL_DECL boss_moira_bronzebeardAI : public ScriptedAI
         //MindBlast_Timer
         if (m_uiMindBlast_Timer < uiDiff)
         {
-            DoCast(m_creature->getVictim(),SPELL_MINDBLAST);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_MINDBLAST);
             m_uiMindBlast_Timer = 14000;
         }
         else
@@ -206,7 +206,7 @@ struct MANGOS_DLL_DECL boss_moira_bronzebeardAI : public ScriptedAI
         //ShadowWordPain_Timer
         if (m_uiShadowWordPain_Timer < uiDiff)
         {
-            DoCast(m_creature->getVictim(),SPELL_SHADOWWORDPAIN);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_SHADOWWORDPAIN);
             m_uiShadowWordPain_Timer = 18000;
         }
         else
@@ -215,7 +215,7 @@ struct MANGOS_DLL_DECL boss_moira_bronzebeardAI : public ScriptedAI
         //Smite_Timer
         if (m_uiSmite_Timer < uiDiff)
         {
-            DoCast(m_creature->getVictim(),SPELL_SMITE);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_SMITE);
             m_uiSmite_Timer = 10000;
         }
         else
@@ -227,7 +227,7 @@ struct MANGOS_DLL_DECL boss_moira_bronzebeardAI : public ScriptedAI
             if (Creature* pEmperor = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_EMPEROR)))
             {
                 if (pEmperor->isAlive() && pEmperor->GetHealth() < pEmperor->GetMaxHealth())
-                    DoCast(pEmperor, SPELL_HEAL);
+                    DoCastSpellIfCan(pEmperor, SPELL_HEAL);
             }
 
             m_uiHeal_Timer = 10000;

@@ -114,7 +114,7 @@ struct MANGOS_DLL_DECL boss_sarturaAI : public ScriptedAI
         {
             if (WhirlWind_Timer < diff)
             {
-                DoCast(m_creature, SPELL_WHIRLWIND);
+                DoCastSpellIfCan(m_creature, SPELL_WHIRLWIND);
                 WhirlWind = true;
                 WhirlWindEnd_Timer = 15000;
             }else WhirlWind_Timer -= diff;
@@ -148,7 +148,7 @@ struct MANGOS_DLL_DECL boss_sarturaAI : public ScriptedAI
             {
                 if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 20 && !m_creature->IsNonMeleeSpellCasted(false))
                 {
-                    DoCast(m_creature, SPELL_ENRAGE);
+                    DoCastSpellIfCan(m_creature, SPELL_ENRAGE);
                     Enraged = true;
                 }
             }
@@ -158,7 +158,7 @@ struct MANGOS_DLL_DECL boss_sarturaAI : public ScriptedAI
             {
                 if (EnrageHard_Timer < diff)
                 {
-                    DoCast(m_creature, SPELL_ENRAGEHARD);
+                    DoCastSpellIfCan(m_creature, SPELL_ENRAGEHARD);
                     EnragedHard = true;
                 } else EnrageHard_Timer -= diff;
             }
@@ -203,7 +203,7 @@ struct MANGOS_DLL_DECL mob_sartura_royal_guardAI : public ScriptedAI
 
         if (!WhirlWind && WhirlWind_Timer < diff)
         {
-            DoCast(m_creature, SPELL_WHIRLWINDADD);
+            DoCastSpellIfCan(m_creature, SPELL_WHIRLWINDADD);
             WhirlWind = true;
             WhirlWind_Timer = urand(25000, 40000);
             WhirlWindEnd_Timer = 15000;
@@ -248,7 +248,7 @@ struct MANGOS_DLL_DECL mob_sartura_royal_guardAI : public ScriptedAI
 
             if (KnockBack_Timer < diff)
             {
-                DoCast(m_creature, SPELL_WHIRLWINDADD);
+                DoCastSpellIfCan(m_creature, SPELL_WHIRLWINDADD);
                 KnockBack_Timer = urand(10000, 20000);
             }else KnockBack_Timer -= diff;
         }

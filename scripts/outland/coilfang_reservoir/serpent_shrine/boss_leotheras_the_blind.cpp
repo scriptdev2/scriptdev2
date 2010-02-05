@@ -158,7 +158,7 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
             //Whirlwind_Timer
             if (m_uiWhirlwind_Timer < uiDiff)
             {
-                DoCast(m_creature, SPELL_WHIRLWIND);
+                DoCastSpellIfCan(m_creature, SPELL_WHIRLWIND);
                 m_uiWhirlwind_Timer = 30000;
             }else m_uiWhirlwind_Timer -= uiDiff;
 
@@ -199,7 +199,7 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
                 if (m_creature->IsNonMeleeSpellCasted(false))
                     m_creature->InterruptNonMeleeSpells(false);
 
-                DoCast(m_creature, SPELL_INSIDIOUS_WHISPER);
+                DoCastSpellIfCan(m_creature, SPELL_INSIDIOUS_WHISPER);
 
                 m_uiInnerDemon_Timer = 60000;
             }else m_uiInnerDemon_Timer -= uiDiff;
@@ -265,7 +265,7 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
             if (m_creature->IsNonMeleeSpellCasted(false))
                 m_creature->InterruptNonMeleeSpells(false);
 
-            DoCast(m_creature, SPELL_ENRAGE);
+            DoCastSpellIfCan(m_creature, SPELL_ENRAGE);
             m_uiEnrage_Timer = MINUTE*5*IN_MILISECONDS;
         }else m_uiEnrage_Timer -= uiDiff;
 

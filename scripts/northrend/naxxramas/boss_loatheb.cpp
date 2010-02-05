@@ -99,7 +99,7 @@ struct MANGOS_DLL_DECL boss_loathebAI : public ScriptedAI
         // Corrupted Mind
         if (m_uiCorruptedMindTimer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), SPELL_CORRUPTED_MIND);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_CORRUPTED_MIND);
             m_uiCorruptedMindTimer = 62000;
         }
         else
@@ -108,7 +108,7 @@ struct MANGOS_DLL_DECL boss_loathebAI : public ScriptedAI
         // Poison Aura
         if (m_uiPoisonAuraTimer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), SPELL_POISON_AURA);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_POISON_AURA);
             m_uiPoisonAuraTimer = 60000;
         }
         else
@@ -117,7 +117,7 @@ struct MANGOS_DLL_DECL boss_loathebAI : public ScriptedAI
         // Inevitable Doom
         if (m_uiInevitableDoomTimer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), SPELL_INEVITABLE_DOOM);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_INEVITABLE_DOOM);
             m_uiInevitableDoomTimer = 120000;
         }
         else
@@ -126,7 +126,7 @@ struct MANGOS_DLL_DECL boss_loathebAI : public ScriptedAI
         // Inevitable Doom 5mins
         if (m_uiInevitableDoom5minsTimer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), SPELL_INEVITABLE_DOOM);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_INEVITABLE_DOOM);
             m_uiInevitableDoom5minsTimer = 15000;
         }
         else
@@ -135,7 +135,7 @@ struct MANGOS_DLL_DECL boss_loathebAI : public ScriptedAI
         // Remove Curse
         if (m_uiRemoveCurseTimer < uiDiff)
         {
-            DoCast(m_creature, SPELL_REMOVE_CURSE);
+            DoCastSpellIfCan(m_creature, SPELL_REMOVE_CURSE);
             m_uiRemoveCurseTimer = 30000;
         }
         else

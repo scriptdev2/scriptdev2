@@ -216,7 +216,7 @@ struct MANGOS_DLL_DECL boss_skarvaldAI : public boss_s_and_d_dummyAI
         if (m_uiChargeTimer < uiDiff)
         {
             if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
-                DoCast(pTarget, SPELL_CHARGE);
+                DoCastSpellIfCan(pTarget, SPELL_CHARGE);
 
             m_uiChargeTimer = urand(8000, 16000);
         }
@@ -225,7 +225,7 @@ struct MANGOS_DLL_DECL boss_skarvaldAI : public boss_s_and_d_dummyAI
 
         if (m_uiEnrageTimer < uiDiff)
         {
-            DoCast(m_creature, SPELL_ENRAGE);
+            DoCastSpellIfCan(m_creature, SPELL_ENRAGE);
             m_uiEnrageTimer = 20000;
         }
         else
@@ -233,7 +233,7 @@ struct MANGOS_DLL_DECL boss_skarvaldAI : public boss_s_and_d_dummyAI
 
         if (m_uiStoneStrikeTimer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), SPELL_STONE_STRIKE);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_STONE_STRIKE);
             m_uiStoneStrikeTimer = urand(5000, 15000);
         }
         else
@@ -280,7 +280,7 @@ struct MANGOS_DLL_DECL boss_dalronnAI : public boss_s_and_d_dummyAI
         if (m_uiDebilitateTimer < uiDiff)
         {
             if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                DoCast(pTarget, m_bIsRegularMode ? SPELL_DEBILITATE : SPELL_DEBILITATE_H);
+                DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_DEBILITATE : SPELL_DEBILITATE_H);
 
             m_uiDebilitateTimer = urand(12000, 20000);
         }
@@ -290,7 +290,7 @@ struct MANGOS_DLL_DECL boss_dalronnAI : public boss_s_and_d_dummyAI
         if (m_uiShadowBoltTimer < uiDiff)
         {
             if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                DoCast(pTarget, m_bIsRegularMode ? SPELL_SHADOW_BOLT : SPELL_SHADOW_BOLT_H);
+                DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_SHADOW_BOLT : SPELL_SHADOW_BOLT_H);
 
             m_uiShadowBoltTimer = urand(3000, 6000);
         }
@@ -302,7 +302,7 @@ struct MANGOS_DLL_DECL boss_dalronnAI : public boss_s_and_d_dummyAI
             if (m_uiSkeletonTimer < uiDiff)
             {
                 if (!m_creature->FindGuardianWithEntry(NPC_SKELETAL))
-                    DoCast(m_creature, SPELL_SUMMON_SKELETONS);
+                    DoCastSpellIfCan(m_creature, SPELL_SUMMON_SKELETONS);
 
                 m_uiSkeletonTimer = 30000;
             }

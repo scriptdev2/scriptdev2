@@ -193,7 +193,7 @@ struct MANGOS_DLL_DECL boss_nadoxAI : public ScriptedAI
         if (m_uiBroodPlagueTimer < uiDiff)
         {
             if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                DoCast(pTarget, m_bIsRegularMode ? SPELL_BROOD_PLAGUE : SPELL_BROOD_PLAGUE_H);
+                DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_BROOD_PLAGUE : SPELL_BROOD_PLAGUE_H);
 
             m_uiBroodPlagueTimer = 20000;
         }
@@ -205,7 +205,7 @@ struct MANGOS_DLL_DECL boss_nadoxAI : public ScriptedAI
             if (m_uiBroodRageTimer < uiDiff)
             {
                 if (Creature* pRageTarget = SelectRandomCreatureOfEntryInRange(NPC_AHNKAHAR_SWARMER, 50.0))
-                    DoCast(pRageTarget, SPELL_BROOD_RAGE);
+                    DoCastSpellIfCan(pRageTarget, SPELL_BROOD_RAGE);
 
                 m_uiBroodRageTimer = 20000;
             }
@@ -216,7 +216,7 @@ struct MANGOS_DLL_DECL boss_nadoxAI : public ScriptedAI
         if (!m_bBerserk && (m_creature->GetPositionZ() < 24.0))
         {
             m_bBerserk = true;
-            DoCast(m_creature, SPELL_BERSERK);
+            DoCastSpellIfCan(m_creature, SPELL_BERSERK);
         }
 
         DoMeleeAttackIfReady();

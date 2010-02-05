@@ -493,14 +493,14 @@ struct MANGOS_DLL_DECL boss_gathios_the_shattererAI : public boss_illidari_counc
         if (BlessingTimer < diff)
         {
             if (Unit* pUnit = SelectCouncilMember())
-                DoCast(pUnit, urand(0, 1) ? SPELL_BLESS_SPELLWARD : SPELL_BLESS_PROTECTION);
+                DoCastSpellIfCan(pUnit, urand(0, 1) ? SPELL_BLESS_SPELLWARD : SPELL_BLESS_PROTECTION);
 
             BlessingTimer = 60000;
         }else BlessingTimer -= diff;
 
         if (ConsecrationTimer < diff)
         {
-            DoCast(m_creature, SPELL_CONSECRATION);
+            DoCastSpellIfCan(m_creature, SPELL_CONSECRATION);
             ConsecrationTimer = 40000;
         }else ConsecrationTimer -= diff;
 
@@ -511,7 +511,7 @@ struct MANGOS_DLL_DECL boss_gathios_the_shattererAI : public boss_illidari_counc
                 // is in ~10-40 yd range
                 if (m_creature->IsInRange(target, 10.0f, 40.0f, false))
                 {
-                    DoCast(target, SPELL_HAMMER_OF_JUSTICE);
+                    DoCastSpellIfCan(target, SPELL_HAMMER_OF_JUSTICE);
                     HammerOfJusticeTimer = 20000;
                 }
             }
@@ -519,7 +519,7 @@ struct MANGOS_DLL_DECL boss_gathios_the_shattererAI : public boss_illidari_counc
 
         if (SealTimer < diff)
         {
-            DoCast(m_creature, urand(0, 1) ? SPELL_SEAL_OF_COMMAND : SPELL_SEAL_OF_BLOOD);
+            DoCastSpellIfCan(m_creature, urand(0, 1) ? SPELL_SEAL_OF_COMMAND : SPELL_SEAL_OF_BLOOD);
             SealTimer = 40000;
         }else SealTimer -= diff;
 
@@ -582,7 +582,7 @@ struct MANGOS_DLL_DECL boss_high_nethermancer_zerevorAI : public boss_illidari_c
 
         if (DampenMagicTimer < diff)
         {
-            DoCast(m_creature, SPELL_DAMPEN_MAGIC);
+            DoCastSpellIfCan(m_creature, SPELL_DAMPEN_MAGIC);
             Cooldown = 1000;
             DampenMagicTimer = 110000;                      // almost 2 minutes
             ArcaneBoltTimer += 1000;                        // Give the Mage some time to spellsteal Dampen.
@@ -590,14 +590,14 @@ struct MANGOS_DLL_DECL boss_high_nethermancer_zerevorAI : public boss_illidari_c
 
         if (ArcaneExplosionTimer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_ARCANE_EXPLOSION);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_ARCANE_EXPLOSION);
             Cooldown = 1000;
             ArcaneExplosionTimer = 14000;
         }else ArcaneExplosionTimer -= diff;
 
         if (ArcaneBoltTimer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_ARCANE_BOLT);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_ARCANE_BOLT);
             ArcaneBoltTimer = 3000;
             Cooldown = 2000;
         }else ArcaneBoltTimer -= diff;
@@ -606,7 +606,7 @@ struct MANGOS_DLL_DECL boss_high_nethermancer_zerevorAI : public boss_illidari_c
         {
             if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
             {
-                DoCast(target, SPELL_BLIZZARD);
+                DoCastSpellIfCan(target, SPELL_BLIZZARD);
                 BlizzardTimer = urand(45000, 90000);
                 FlamestrikeTimer += 10000;
                 Cooldown = 1000;
@@ -617,7 +617,7 @@ struct MANGOS_DLL_DECL boss_high_nethermancer_zerevorAI : public boss_illidari_c
         {
             if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
             {
-                DoCast(target, SPELL_FLAMESTRIKE);
+                DoCastSpellIfCan(target, SPELL_FLAMESTRIKE);
                 FlamestrikeTimer = urand(55000, 100000);
                 BlizzardTimer += 10000;
                 Cooldown = 2000;
@@ -662,7 +662,7 @@ struct MANGOS_DLL_DECL boss_lady_malandeAI : public boss_illidari_councilAI
         {
             if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
             {
-                DoCast(target, SPELL_EMPOWERED_SMITE);
+                DoCastSpellIfCan(target, SPELL_EMPOWERED_SMITE);
                 EmpoweredSmiteTimer = 38000;
             }
         }else EmpoweredSmiteTimer -= diff;
@@ -670,7 +670,7 @@ struct MANGOS_DLL_DECL boss_lady_malandeAI : public boss_illidari_councilAI
         if (CircleOfHealingTimer < diff)
         {
             //Currently bugged and puts Malande on the threatlist of the other council members. It also heals players.
-            //DoCast(m_creature, SPELL_CIRCLE_OF_HEALING);
+            //DoCastSpellIfCan(m_creature, SPELL_CIRCLE_OF_HEALING);
             CircleOfHealingTimer = 60000;
         }else CircleOfHealingTimer -= diff;
 
@@ -678,14 +678,14 @@ struct MANGOS_DLL_DECL boss_lady_malandeAI : public boss_illidari_councilAI
         {
             if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
             {
-                DoCast(target, SPELL_DIVINE_WRATH);
+                DoCastSpellIfCan(target, SPELL_DIVINE_WRATH);
                 DivineWrathTimer = urand(40000, 80000);
             }
         }else DivineWrathTimer -= diff;
 
         if (ReflectiveShieldTimer < diff)
         {
-            DoCast(m_creature, SPELL_REFLECTIVE_SHIELD);
+            DoCastSpellIfCan(m_creature, SPELL_REFLECTIVE_SHIELD);
             ReflectiveShieldTimer = 65000;
         }else ReflectiveShieldTimer -= diff;
 
@@ -737,13 +737,13 @@ struct MANGOS_DLL_DECL boss_veras_darkshadowAI : public boss_illidari_councilAI
         {
             if (DeadlyPoisonTimer < diff)
             {
-                DoCast(m_creature->getVictim(), SPELL_DEADLY_POISON);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_DEADLY_POISON);
                 DeadlyPoisonTimer = urand(15000, 45000);
             }else DeadlyPoisonTimer -= diff;
 
             if (AppearEnvenomTimer < diff)                  // Cast Envenom. This is cast 4 seconds after Vanish is over
             {
-                DoCast(m_creature->getVictim(), SPELL_ENVENOM);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_ENVENOM);
                 AppearEnvenomTimer = 90000;
             }else AppearEnvenomTimer -= diff;
 
@@ -770,7 +770,7 @@ struct MANGOS_DLL_DECL boss_veras_darkshadowAI : public boss_illidari_councilAI
             if (VanishTimer < diff)                         // Become attackable and poison current target
             {
                 Unit* target = m_creature->getVictim();
-                DoCast(target, SPELL_DEADLY_POISON);
+                DoCastSpellIfCan(target, SPELL_DEADLY_POISON);
                 m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 DoResetThreat();
                 m_creature->AddThreat(target, 3000.0f);     // Make Veras attack his target for a while, he will cast Envenom 4 seconds after.

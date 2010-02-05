@@ -58,21 +58,21 @@ struct MANGOS_DLL_DECL boss_ebonrocAI : public ScriptedAI
         //Shadowflame Timer
         if (ShadowFlame_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_SHADOWFLAME);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_SHADOWFLAME);
             ShadowFlame_Timer = urand(12000, 15000);
         }else ShadowFlame_Timer -= diff;
 
         //Wing Buffet Timer
         if (WingBuffet_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_WINGBUFFET);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_WINGBUFFET);
             WingBuffet_Timer = 25000;
         }else WingBuffet_Timer -= diff;
 
         //Shadow of Ebonroc Timer
         if (ShadowOfEbonroc_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_SHADOWOFEBONROC);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_SHADOWOFEBONROC);
             ShadowOfEbonroc_Timer = urand(25000, 35000);
         }else ShadowOfEbonroc_Timer -= diff;
 
@@ -80,7 +80,7 @@ struct MANGOS_DLL_DECL boss_ebonrocAI : public ScriptedAI
         {
             if (Heal_Timer < diff)
             {
-                DoCast(m_creature, SPELL_HEAL);
+                DoCastSpellIfCan(m_creature, SPELL_HEAL);
                 Heal_Timer = urand(1000, 3000);
             }else Heal_Timer -= diff;
         }

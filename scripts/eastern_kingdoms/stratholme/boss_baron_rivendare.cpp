@@ -128,28 +128,28 @@ struct MANGOS_DLL_DECL boss_baron_rivendareAI : public ScriptedAI
         if (ShadowBolt_Timer < diff)
         {
             if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                DoCast(m_creature->getVictim(),SPELL_SHADOWBOLT);
+                DoCastSpellIfCan(m_creature->getVictim(),SPELL_SHADOWBOLT);
             ShadowBolt_Timer = 10000;
         }else ShadowBolt_Timer -= diff;
 
         //Cleave
         if (Cleave_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_CLEAVE);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_CLEAVE);
             Cleave_Timer = urand(7000, 17000);
         }else Cleave_Timer -= diff;
 
         //MortalStrike
         if (MortalStrike_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_MORTALSTRIKE);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_MORTALSTRIKE);
             MortalStrike_Timer = urand(10000, 25000);
         }else MortalStrike_Timer -= diff;
 
         //RaiseDead
         //if (RaiseDead_Timer < diff)
         //{
-        //    DoCast(m_creature,SPELL_RAISEDEAD);
+        //    DoCastSpellIfCan(m_creature,SPELL_RAISEDEAD);
         //    RaiseDead_Timer = 45000;
         //}else RaiseDead_Timer -= diff;
 

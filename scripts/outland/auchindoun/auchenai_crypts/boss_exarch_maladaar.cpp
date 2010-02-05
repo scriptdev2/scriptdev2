@@ -66,39 +66,39 @@ struct MANGOS_DLL_DECL mob_stolen_soulAI : public ScriptedAI
             switch (myClass)
             {
                 case CLASS_WARRIOR:
-                    DoCast(m_creature->getVictim(), SPELL_MORTAL_STRIKE);
+                    DoCastSpellIfCan(m_creature->getVictim(), SPELL_MORTAL_STRIKE);
                     Class_Timer = 6000;
                     break;
                 case CLASS_PALADIN:
-                    DoCast(m_creature->getVictim(), SPELL_HAMMER_OF_JUSTICE);
+                    DoCastSpellIfCan(m_creature->getVictim(), SPELL_HAMMER_OF_JUSTICE);
                     Class_Timer = 6000;
                     break;
                 case CLASS_HUNTER:
-                    DoCast(m_creature->getVictim(), SPELL_FREEZING_TRAP);
+                    DoCastSpellIfCan(m_creature->getVictim(), SPELL_FREEZING_TRAP);
                     Class_Timer = 20000;
                     break;
                 case CLASS_ROGUE:
-                    DoCast(m_creature->getVictim(), SPELL_HEMORRHAGE);
+                    DoCastSpellIfCan(m_creature->getVictim(), SPELL_HEMORRHAGE);
                     Class_Timer = 10000;
                     break;
                 case CLASS_PRIEST:
-                    DoCast(m_creature->getVictim(), SPELL_MIND_FLAY);
+                    DoCastSpellIfCan(m_creature->getVictim(), SPELL_MIND_FLAY);
                     Class_Timer = 5000;
                     break;
                 case CLASS_SHAMAN:
-                    DoCast(m_creature->getVictim(), SPELL_FROSTSHOCK);
+                    DoCastSpellIfCan(m_creature->getVictim(), SPELL_FROSTSHOCK);
                     Class_Timer = 8000;
                     break;
                 case CLASS_MAGE:
-                    DoCast(m_creature->getVictim(), SPELL_FIREBALL);
+                    DoCastSpellIfCan(m_creature->getVictim(), SPELL_FIREBALL);
                     Class_Timer = 5000;
                     break;
                 case CLASS_WARLOCK:
-                    DoCast(m_creature->getVictim(), SPELL_CURSE_OF_AGONY);
+                    DoCastSpellIfCan(m_creature->getVictim(), SPELL_CURSE_OF_AGONY);
                     Class_Timer = 20000;
                     break;
                 case CLASS_DRUID:
-                    DoCast(m_creature->getVictim(), SPELL_MOONFIRE);
+                    DoCastSpellIfCan(m_creature->getVictim(), SPELL_MOONFIRE);
                     Class_Timer = 10000;
                     break;
             }
@@ -236,7 +236,7 @@ struct MANGOS_DLL_DECL boss_exarch_maladaarAI : public ScriptedAI
 
             DoScriptText(SAY_SUMMON, m_creature);
 
-            DoCast(m_creature, SPELL_SUMMON_AVATAR);
+            DoCastSpellIfCan(m_creature, SPELL_SUMMON_AVATAR);
             Avatar_summoned = true;
             StolenSoul_Timer = urand(15000, 30000);
         }
@@ -260,7 +260,7 @@ struct MANGOS_DLL_DECL boss_exarch_maladaarAI : public ScriptedAI
                     soulholder = target->GetGUID();
                     soulclass = target->getClass();
 
-                    DoCast(target,SPELL_STOLEN_SOUL);
+                    DoCastSpellIfCan(target,SPELL_STOLEN_SOUL);
                     m_creature->SummonCreature(ENTRY_STOLEN_SOUL, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10000);
 
                     StolenSoul_Timer = urand(20000, 30000);
@@ -271,14 +271,14 @@ struct MANGOS_DLL_DECL boss_exarch_maladaarAI : public ScriptedAI
         if (Ribbon_of_Souls_timer < diff)
         {
             if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0))
-                DoCast(target,SPELL_RIBBON_OF_SOULS);
+                DoCastSpellIfCan(target,SPELL_RIBBON_OF_SOULS);
 
             Ribbon_of_Souls_timer = urand(5000, 25000);
         }else Ribbon_of_Souls_timer -= diff;
 
         if (Fear_timer < diff)
         {
-            DoCast(m_creature,SPELL_SOUL_SCREAM);
+            DoCastSpellIfCan(m_creature,SPELL_SOUL_SCREAM);
             Fear_timer = urand(15000, 30000);
         }else Fear_timer -= diff;
 
@@ -312,7 +312,7 @@ struct MANGOS_DLL_DECL mob_avatar_of_martyredAI : public ScriptedAI
 
         if (Mortal_Strike_timer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_AV_MORTAL_STRIKE);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_AV_MORTAL_STRIKE);
             Mortal_Strike_timer = urand(10000, 30000);
         } else Mortal_Strike_timer -= diff;
 

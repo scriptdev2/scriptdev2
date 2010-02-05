@@ -114,7 +114,7 @@ struct MANGOS_DLL_DECL mob_unkor_the_ruthlessAI : public ScriptedAI
         {
             if (!UnkorUnfriendly_Timer)
             {
-                //DoCast(m_creature,SPELL_QUID9889);        //not using spell for now
+                //DoCastSpellIfCan(m_creature,SPELL_QUID9889);        //not using spell for now
                 DoNice();
             }
             else
@@ -131,7 +131,7 @@ struct MANGOS_DLL_DECL mob_unkor_the_ruthlessAI : public ScriptedAI
 
         if (Pulverize_Timer < diff)
         {
-            DoCast(m_creature,SPELL_PULVERIZE);
+            DoCastSpellIfCan(m_creature,SPELL_PULVERIZE);
             Pulverize_Timer = 9000;
         }else Pulverize_Timer -= diff;
 
@@ -314,7 +314,7 @@ struct MANGOS_DLL_DECL npc_akunoAI : public npc_escortAI
 
         if (m_uiChainLightningTimer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), SPELL_CHAIN_LIGHTNING);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_CHAIN_LIGHTNING);
             m_uiChainLightningTimer = urand(7000, 14000);
         }
         else
@@ -394,19 +394,19 @@ struct MANGOS_DLL_DECL npc_floonAI : public ScriptedAI
 
         if (m_uiSilence_Timer < uiDiff)
         {
-            DoCast(m_creature->getVictim(),SPELL_SILENCE);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_SILENCE);
             m_uiSilence_Timer = 30000;
         }else m_uiSilence_Timer -= uiDiff;
 
         if (m_uiFrostNova_Timer < uiDiff)
         {
-            DoCast(m_creature,SPELL_FROST_NOVA);
+            DoCastSpellIfCan(m_creature,SPELL_FROST_NOVA);
             m_uiFrostNova_Timer = 20000;
         }else m_uiFrostNova_Timer -= uiDiff;
 
         if (m_uiFrostbolt_Timer < uiDiff)
         {
-            DoCast(m_creature->getVictim(),SPELL_FROSTBOLT);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_FROSTBOLT);
             m_uiFrostbolt_Timer = 5000;
         }else m_uiFrostbolt_Timer -= uiDiff;
 

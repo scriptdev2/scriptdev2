@@ -380,7 +380,7 @@ struct MANGOS_DLL_DECL npc_torekAI : public npc_escortAI
 
         if (m_uiRend_Timer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), SPELL_REND);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_REND);
             m_uiRend_Timer = 20000;
         }
         else
@@ -388,7 +388,7 @@ struct MANGOS_DLL_DECL npc_torekAI : public npc_escortAI
 
         if (m_uiThunderclap_Timer < uiDiff)
         {
-            DoCast(m_creature, SPELL_THUNDERCLAP);
+            DoCastSpellIfCan(m_creature, SPELL_THUNDERCLAP);
             m_uiThunderclap_Timer = 30000;
         }
         else

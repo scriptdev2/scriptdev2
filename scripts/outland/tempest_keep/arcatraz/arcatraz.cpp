@@ -143,17 +143,17 @@ struct MANGOS_DLL_DECL npc_millhouse_manastormAI : public ScriptedAI
                             break;
                         case 3:
                             DoScriptText(SAY_WATER, m_creature);
-                            DoCast(m_creature,SPELL_CONJURE_WATER);
+                            DoCastSpellIfCan(m_creature,SPELL_CONJURE_WATER);
                             EventProgress_Timer = 7000;
                             break;
                         case 4:
                             DoScriptText(SAY_BUFFS, m_creature);
-                            DoCast(m_creature,SPELL_ICE_ARMOR);
+                            DoCastSpellIfCan(m_creature,SPELL_ICE_ARMOR);
                             EventProgress_Timer = 7000;
                             break;
                         case 5:
                             DoScriptText(SAY_DRINK, m_creature);
-                            DoCast(m_creature,SPELL_ARCANE_INTELLECT);
+                            DoCastSpellIfCan(m_creature,SPELL_ARCANE_INTELLECT);
                             EventProgress_Timer = 7000;
                             break;
                         case 6:
@@ -187,13 +187,13 @@ struct MANGOS_DLL_DECL npc_millhouse_manastormAI : public ScriptedAI
 
             DoScriptText(SAY_PYRO, m_creature);
 
-            DoCast(m_creature->getVictim(),SPELL_PYROBLAST);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_PYROBLAST);
             Pyroblast_Timer = 40000;
         }else Pyroblast_Timer -=diff;
 
         if (Fireball_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_FIREBALL);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_FIREBALL);
             Fireball_Timer = 4000;
         }else Fireball_Timer -=diff;
 
@@ -266,7 +266,7 @@ struct MANGOS_DLL_DECL npc_warden_mellicharAI : public ScriptedAI
         Phase = 1;
 
         m_creature->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE);
-        DoCast(m_creature,SPELL_TARGET_OMEGA);
+        DoCastSpellIfCan(m_creature,SPELL_TARGET_OMEGA);
 
         if (m_pInstance)
             m_pInstance->SetData(TYPE_HARBINGERSKYRISS,NOT_STARTED);
@@ -296,7 +296,7 @@ struct MANGOS_DLL_DECL npc_warden_mellicharAI : public ScriptedAI
     void Aggro(Unit *who)
     {
         DoScriptText(YELL_INTRO1, m_creature);
-        DoCast(m_creature,SPELL_BUBBLE_VISUAL);
+        DoCastSpellIfCan(m_creature,SPELL_BUBBLE_VISUAL);
 
         if (m_pInstance)
         {
@@ -343,19 +343,19 @@ struct MANGOS_DLL_DECL npc_warden_mellicharAI : public ScriptedAI
             switch(Phase)
             {
                 case 2:
-                    DoCast(m_creature,SPELL_TARGET_ALPHA);
+                    DoCastSpellIfCan(m_creature,SPELL_TARGET_ALPHA);
                     m_pInstance->SetData(TYPE_WARDEN_1,IN_PROGRESS);
                     break;
                 case 3:
-                    DoCast(m_creature,SPELL_TARGET_BETA);
+                    DoCastSpellIfCan(m_creature,SPELL_TARGET_BETA);
                     m_pInstance->SetData(TYPE_WARDEN_2,IN_PROGRESS);
                     break;
                 case 5:
-                    DoCast(m_creature,SPELL_TARGET_DELTA);
+                    DoCastSpellIfCan(m_creature,SPELL_TARGET_DELTA);
                     m_pInstance->SetData(TYPE_WARDEN_3,IN_PROGRESS);
                     break;
                 case 6:
-                    DoCast(m_creature,SPELL_TARGET_GAMMA);
+                    DoCastSpellIfCan(m_creature,SPELL_TARGET_GAMMA);
                     m_pInstance->SetData(TYPE_WARDEN_4,IN_PROGRESS);
                     break;
                 case 7:
@@ -383,7 +383,7 @@ struct MANGOS_DLL_DECL npc_warden_mellicharAI : public ScriptedAI
             {
                 //continue beam omega pod, unless we are about to summon skyriss
                 if (Phase != 7)
-                    DoCast(m_creature,SPELL_TARGET_OMEGA);
+                    DoCastSpellIfCan(m_creature,SPELL_TARGET_OMEGA);
 
                 switch(Phase)
                 {
@@ -486,7 +486,7 @@ struct MANGOS_DLL_DECL mob_zerekethvoidzoneAI : public ScriptedAI
         m_creature->setFaction(16);
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 
-        DoCast(m_creature,SPELL_VOID_ZONE_DAMAGE);
+        DoCastSpellIfCan(m_creature,SPELL_VOID_ZONE_DAMAGE);
     }
 };
 CreatureAI* GetAI_mob_zerekethvoidzoneAI(Creature* pCreature)

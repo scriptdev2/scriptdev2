@@ -179,7 +179,7 @@ struct MANGOS_DLL_DECL mob_abyssalAI : public ScriptedAI
 
         if (m_uiFireBlast_Timer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), SPELL_FIRE_BLAST);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_FIRE_BLAST);
             m_uiFireBlast_Timer = urand(5000, 15000);
         }
         else
@@ -392,7 +392,7 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
         //Cleave_Timer
         if (m_uiCleave_Timer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), SPELL_CLEAVE);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_CLEAVE);
             m_uiCleave_Timer = 10000;
         }
         else
@@ -417,7 +417,7 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
             if (!m_creature->hasUnitState(UNIT_STAT_STUNNED))
             {
                 DoScriptText(EMOTE_BLASTNOVA, m_creature);
-                DoCast(m_creature, SPELL_BLASTNOVA);
+                DoCastSpellIfCan(m_creature, SPELL_BLASTNOVA);
                 m_uiBlastNova_Timer = 60000;
             }
         }
@@ -572,7 +572,7 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
         {
             if (!m_creature->IsNonMeleeSpellCasted(false) && !m_creature->IsInEvadeMode())
-                DoCast(m_creature, SPELL_SHADOW_GRASP_DUMMY);
+                DoCastSpellIfCan(m_creature, SPELL_SHADOW_GRASP_DUMMY);
 
             return;
         }
@@ -580,7 +580,7 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
         //Shadow bolt volley
         if (m_uiShadowBoltVolley_Timer < uiDiff)
         {
-            DoCast(m_creature, SPELL_SHADOW_BOLT_VOLLEY);
+            DoCastSpellIfCan(m_creature, SPELL_SHADOW_BOLT_VOLLEY);
             m_uiShadowBoltVolley_Timer = urand(10000, 20000);
         }
         else
@@ -593,9 +593,9 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
             {
                 //Cast on ourselves if we are lower then lowest hp friendly unit
                 /*if (pLowestHPTarget && LowestHP < m_creature->GetHealth())
-                    DoCast(pLowestHPTarget, SPELL_DARK_MENDING);
+                    DoCastSpellIfCan(pLowestHPTarget, SPELL_DARK_MENDING);
                 else*/
-                DoCast(m_creature, SPELL_DARK_MENDING);
+                DoCastSpellIfCan(m_creature, SPELL_DARK_MENDING);
             }
 
             m_uiDarkMending_Timer = urand(10000, 20000);
@@ -607,7 +607,7 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
         if (m_uiFear_Timer < uiDiff)
         {
             if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
-                DoCast(pTarget, SPELL_FEAR);
+                DoCastSpellIfCan(pTarget, SPELL_FEAR);
 
             m_uiFear_Timer = urand(25000, 40000);
         }

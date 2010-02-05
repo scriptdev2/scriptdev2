@@ -316,7 +316,7 @@ struct MANGOS_DLL_DECL npc_deathstalker_faerleiaAI : public ScriptedAI
 
         if (!m_uiSummonCount)
         {
-            DoCast(m_creature, SPELL_DRINK_POTION);
+            DoCastSpellIfCan(m_creature, SPELL_DRINK_POTION);
 
             // final wave
             if (m_uiWaveCount == 4)

@@ -116,7 +116,7 @@ struct MANGOS_DLL_DECL boss_razuviousAI : public ScriptedAI
         // Unbalancing Strike
         if (m_uiUnbalancingStrikeTimer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), SPELL_UNBALANCING_STRIKE);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_UNBALANCING_STRIKE);
             m_uiUnbalancingStrikeTimer = 30000;
         }
         else
@@ -125,7 +125,7 @@ struct MANGOS_DLL_DECL boss_razuviousAI : public ScriptedAI
         // Disrupting Shout
         if (m_uiDisruptingShoutTimer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), m_bIsRegularMode ? SPELL_DISRUPTING_SHOUT : SPELL_DISRUPTING_SHOUT_H);
+            DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_DISRUPTING_SHOUT : SPELL_DISRUPTING_SHOUT_H);
             m_uiDisruptingShoutTimer = 25000;
         }
         else
@@ -135,7 +135,7 @@ struct MANGOS_DLL_DECL boss_razuviousAI : public ScriptedAI
         if (m_uiJaggedKnifeTimer < uiDiff)
         {
             if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                DoCast(pTarget, SPELL_JAGGED_KNIFE);
+                DoCastSpellIfCan(pTarget, SPELL_JAGGED_KNIFE);
             m_uiJaggedKnifeTimer = 10000;
         }
         else

@@ -55,7 +55,7 @@ struct MANGOS_DLL_DECL mob_jadespine_basiliskAI : public ScriptedAI
         if (Cslumber_Timer < diff)
         {
             //Cast
-            // DoCast(m_creature->getVictim(),SPELL_CSLUMBER);
+            // DoCastSpellIfCan(m_creature->getVictim(),SPELL_CSLUMBER);
             m_creature->CastSpell(m_creature->getVictim(),SPELL_CSLUMBER, true);
 
             //Stop attacking target thast asleep and pick new target

@@ -75,7 +75,7 @@ struct MANGOS_DLL_DECL boss_nethermancer_sepethreaAI : public ScriptedAI
         uint8 am = (m_bIsRegularMode ? 2 : 1);
         for(int i = 0; i < am; ++i)
         {
-            DoCast(who,SPELL_SUMMON_RAGIN_FLAMES);
+            DoCastSpellIfCan(who,SPELL_SUMMON_RAGIN_FLAMES);
         }
 
         DoScriptText(SAY_SUMMON, m_creature);
@@ -103,21 +103,21 @@ struct MANGOS_DLL_DECL boss_nethermancer_sepethreaAI : public ScriptedAI
         //Frost Attack
         if (frost_attack_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_FROST_ATTACK);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_FROST_ATTACK);
             frost_attack_Timer = urand(7000, 10000);
         }else frost_attack_Timer -= diff;
 
         //Arcane Blast
         if (arcane_blast_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_ARCANE_BLAST);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_ARCANE_BLAST);
             arcane_blast_Timer = 15000;
         }else arcane_blast_Timer -= diff;
 
         //Dragons Breath
         if (dragons_breath_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_DRAGONS_BREATH);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_DRAGONS_BREATH);
 
             if (urand(0, 1))
                 DoScriptText(urand(0, 1) ? SAY_DRAGONS_BREATH_1 : SAY_DRAGONS_BREATH_2, m_creature);
@@ -128,14 +128,14 @@ struct MANGOS_DLL_DECL boss_nethermancer_sepethreaAI : public ScriptedAI
         //Check for Knockback
         if (knockback_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_KNOCKBACK);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_KNOCKBACK);
             knockback_Timer = urand(15000, 25000);
         }else knockback_Timer -= diff;
 
         //Check for Solarburn
         if (solarburn_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_SOLARBURN);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_SOLARBURN);
             solarburn_Timer = 30000;
         }else solarburn_Timer -= diff;
 
@@ -194,7 +194,7 @@ struct MANGOS_DLL_DECL mob_ragin_flamesAI : public ScriptedAI
 
         if (inferno_Timer < diff)
         {
-            DoCast(m_creature->getVictim(), m_bIsRegularMode ? SPELL_INFERNO : H_SPELL_INFERNO);
+            DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_INFERNO : H_SPELL_INFERNO);
 
             m_creature->TauntApply(m_creature->getVictim());
 
@@ -203,7 +203,7 @@ struct MANGOS_DLL_DECL mob_ragin_flamesAI : public ScriptedAI
 
         if (flame_timer < diff)
         {
-            DoCast(m_creature,SPELL_FIRE_TAIL);
+            DoCastSpellIfCan(m_creature,SPELL_FIRE_TAIL);
             flame_timer = 500;
         }else flame_timer -=diff;
 

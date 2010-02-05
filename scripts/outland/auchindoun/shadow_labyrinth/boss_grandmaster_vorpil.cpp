@@ -108,7 +108,7 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
             case 2: DoScriptText(SAY_AGGRO3, m_creature); break;
         }
 
-        DoCast(m_creature, SPELL_VOID_PORTAL_A,true);
+        DoCastSpellIfCan(m_creature, SPELL_VOID_PORTAL_A,true);
         m_creature->SummonCreature(ENTRY_VOID_PORTAL,-262.40,-229.57,17.08,0,TEMPSUMMON_CORPSE_DESPAWN,0);
         m_creature->SummonCreature(ENTRY_VOID_PORTAL,-260.35,-297.56,17.08,0,TEMPSUMMON_CORPSE_DESPAWN,0);
         m_creature->SummonCreature(ENTRY_VOID_PORTAL,-292.05,-270.37,12.68,0,TEMPSUMMON_CORPSE_DESPAWN,0);
@@ -169,7 +169,7 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
                 }
                 Teleport = false;
 
-                DoCast(m_creature->getVictim(), m_bIsRegularMode ? SPELL_RAIN_OF_FIRE : H_SPELL_RAIN_OF_FIRE);
+                DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_RAIN_OF_FIRE : H_SPELL_RAIN_OF_FIRE);
 
                 Teleport_Timer = 1000;
             }else Teleport_Timer -= diff;
@@ -177,13 +177,13 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
 
         if (ShadowBoltVolley_Timer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_SHADOW_BOLT_VOLLEY);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_SHADOW_BOLT_VOLLEY);
             ShadowBoltVolley_Timer = urand(15000, 30000);
         }else ShadowBoltVolley_Timer -= diff;
 
         if (DrawShadows_Timer < diff)
         {
-            DoCast(m_creature,SPELL_DRAW_SHADOWS);
+            DoCastSpellIfCan(m_creature,SPELL_DRAW_SHADOWS);
             DrawShadows_Timer = 30000;
             Teleport = true;
         }else DrawShadows_Timer -= diff;
@@ -194,11 +194,11 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
 
             switch(urand(0, 4))
             {
-                case 0: DoCast(m_creature,SPELL_SUMMON_VOIDWALKER_A,true); break;
-                case 1: DoCast(m_creature,SPELL_SUMMON_VOIDWALKER_B,true); break;
-                case 2: DoCast(m_creature,SPELL_SUMMON_VOIDWALKER_C,true); break;
-                case 3: DoCast(m_creature,SPELL_SUMMON_VOIDWALKER_D,true); break;
-                case 4: DoCast(m_creature,SPELL_SUMMON_VOIDWALKER_E,true); break;
+                case 0: DoCastSpellIfCan(m_creature, SPELL_SUMMON_VOIDWALKER_A, CAST_TRIGGERED); break;
+                case 1: DoCastSpellIfCan(m_creature, SPELL_SUMMON_VOIDWALKER_B, CAST_TRIGGERED); break;
+                case 2: DoCastSpellIfCan(m_creature, SPELL_SUMMON_VOIDWALKER_C, CAST_TRIGGERED); break;
+                case 3: DoCastSpellIfCan(m_creature, SPELL_SUMMON_VOIDWALKER_D, CAST_TRIGGERED); break;
+                case 4: DoCastSpellIfCan(m_creature, SPELL_SUMMON_VOIDWALKER_E, CAST_TRIGGERED); break;
             }
             //faster rate when below (X) health?
             VoidTraveler_Timer = 35000;
@@ -209,7 +209,7 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
             if (Banish_Timer < diff)
             {
                 if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1))
-                    DoCast(target,H_SPELL_BANISH);
+                    DoCastSpellIfCan(target,H_SPELL_BANISH);
                 Banish_Timer = 35000;
             }else Banish_Timer -= diff;
         }

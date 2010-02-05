@@ -211,7 +211,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
         {
             if (m_uiFlameBreathTimer < uiDiff)
             {
-                DoCast(m_creature->getVictim(), SPELL_FLAMEBREATH);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_FLAMEBREATH);
                 m_uiFlameBreathTimer = urand(10000, 20000);
             }
             else
@@ -219,7 +219,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
 
             if (m_uiTailSweepTimer < uiDiff)
             {
-                DoCast(m_creature, SPELL_TAILSWEEP);
+                DoCastSpellIfCan(m_creature, SPELL_TAILSWEEP);
                 m_uiTailSweepTimer = urand(15000, 20000);
             }
             else
@@ -227,7 +227,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
 
             if (m_uiCleaveTimer < uiDiff)
             {
-                DoCast(m_creature->getVictim(), SPELL_CLEAVE);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_CLEAVE);
                 m_uiCleaveTimer = urand(2000, 5000);
             }
             else
@@ -235,7 +235,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
 
             if (m_uiWingBuffetTimer < uiDiff)
             {
-                DoCast(m_creature->getVictim(), SPELL_WINGBUFFET);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_WINGBUFFET);
                 m_uiWingBuffetTimer = urand(15000, 30000);
             }
             else
@@ -245,7 +245,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
             {
                 if (m_uiBellowingRoarTimer < uiDiff)
                 {
-                    DoCast(m_creature->getVictim(), SPELL_BELLOWINGROAR);
+                    DoCastSpellIfCan(m_creature->getVictim(), SPELL_BELLOWINGROAR);
                     m_uiBellowingRoarTimer = 30000;
                 }
                 else
@@ -304,7 +304,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
                         m_creature->InterruptNonMeleeSpells(false);
 
                     DoScriptText(EMOTE_BREATH, m_creature);
-                    DoCast(m_creature, m_pPointData->uiSpellId);
+                    DoCastSpellIfCan(m_creature, m_pPointData->uiSpellId);
                 }
                 else
                 {
@@ -319,7 +319,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
                 if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() != POINT_MOTION_TYPE)
                 {
                     if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                        DoCast(pTarget, SPELL_FIREBALL);
+                        DoCastSpellIfCan(pTarget, SPELL_FIREBALL);
 
                     m_uiEngulfingFlamesTimer = 8000;
                 }

@@ -133,23 +133,23 @@ struct MANGOS_DLL_DECL boss_mekgineer_steamriggerAI : public ScriptedAI
 
         if (Shrink_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_SUPER_SHRINK_RAY);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_SUPER_SHRINK_RAY);
             Shrink_Timer = 20000;
         }else Shrink_Timer -= diff;
 
         if (Saw_Blade_Timer < diff)
         {
             if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,1))
-                DoCast(target,SPELL_SAW_BLADE);
+                DoCastSpellIfCan(target,SPELL_SAW_BLADE);
             else
-                DoCast(m_creature->getVictim(),SPELL_SAW_BLADE);
+                DoCastSpellIfCan(m_creature->getVictim(),SPELL_SAW_BLADE);
 
             Saw_Blade_Timer = 15000;
         } else Saw_Blade_Timer -= diff;
 
         if (Electrified_Net_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_ELECTRIFIED_NET);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_ELECTRIFIED_NET);
             Electrified_Net_Timer = 10000;
         }
         else Electrified_Net_Timer -= diff;
@@ -238,7 +238,7 @@ struct MANGOS_DLL_DECL mob_steamrigger_mechanicAI : public ScriptedAI
                             //m_creature->GetMotionMaster()->MovementExpired();
                             //m_creature->GetMotionMaster()->MoveIdle();
 
-                            DoCast(m_creature, m_bIsRegularMode ? SPELL_REPAIR : H_SPELL_REPAIR, true);
+                            DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_REPAIR : H_SPELL_REPAIR, CAST_TRIGGERED);
                         }
                         Repair_Timer = 5000;
                     }

@@ -118,13 +118,13 @@ struct MANGOS_DLL_DECL boss_pathaleon_the_calculatorAI : public ScriptedAI
 
         if (ManaTap_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_MANA_TAP);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_MANA_TAP);
             ManaTap_Timer = urand(14000, 22000);
         }else ManaTap_Timer -= diff;
 
         if (ArcaneTorrent_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_ARCANE_TORRENT);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_ARCANE_TORRENT);
             ArcaneTorrent_Timer = urand(12000, 18000);
         }else ArcaneTorrent_Timer -= diff;
 
@@ -133,7 +133,7 @@ struct MANGOS_DLL_DECL boss_pathaleon_the_calculatorAI : public ScriptedAI
             if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,1))
             {
                 DoScriptText(urand(0, 1) ? SAY_DOMINATION_1 : SAY_DOMINATION_2, m_creature);
-                DoCast(target,SPELL_DOMINATION);
+                DoCastSpellIfCan(target,SPELL_DOMINATION);
             }
 
             Domination_Timer = urand(25000, 30000);
@@ -144,14 +144,14 @@ struct MANGOS_DLL_DECL boss_pathaleon_the_calculatorAI : public ScriptedAI
         {
             if (ArcaneExplosion_Timer < diff)
             {
-                DoCast(m_creature->getVictim(),H_SPELL_ARCANE_EXPLOSION);
+                DoCastSpellIfCan(m_creature->getVictim(),H_SPELL_ARCANE_EXPLOSION);
                 ArcaneExplosion_Timer = urand(10000, 14000);
             }else ArcaneExplosion_Timer -= diff;
         }
 
         if (!Enraged && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 21)
         {
-            DoCast(m_creature, SPELL_FRENZY);
+            DoCastSpellIfCan(m_creature, SPELL_FRENZY);
             DoScriptText(SAY_ENRAGE, m_creature);
             Enraged = true;
         }
@@ -191,9 +191,9 @@ struct MANGOS_DLL_DECL mob_nether_wraithAI : public ScriptedAI
         if (ArcaneMissiles_Timer < diff)
         {
             if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,1))
-                DoCast(target,SPELL_ARCANE_MISSILES);
+                DoCastSpellIfCan(target,SPELL_ARCANE_MISSILES);
             else
-                DoCast(m_creature->getVictim(),SPELL_ARCANE_MISSILES);
+                DoCastSpellIfCan(m_creature->getVictim(),SPELL_ARCANE_MISSILES);
 
             ArcaneMissiles_Timer = urand(5000, 10000);
         }else ArcaneMissiles_Timer -=diff;
@@ -202,7 +202,7 @@ struct MANGOS_DLL_DECL mob_nether_wraithAI : public ScriptedAI
         {
             if (Detonation_Timer < diff)
             {
-                DoCast(m_creature,SPELL_DETONATION);
+                DoCastSpellIfCan(m_creature,SPELL_DETONATION);
                 Detonation = true;
             }else Detonation_Timer -= diff;
         }

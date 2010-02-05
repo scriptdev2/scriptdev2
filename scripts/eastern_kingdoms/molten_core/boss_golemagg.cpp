@@ -77,7 +77,7 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
         if (m_uiPyroblastTimer < uiDiff)
         {
             if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                DoCast(pTarget, SPELL_PYROBLAST);
+                DoCastSpellIfCan(pTarget, SPELL_PYROBLAST);
 
             m_uiPyroblastTimer = 7*IN_MILISECONDS;
         }
@@ -87,7 +87,7 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
         // Enrage
         if (!m_bEnraged && m_creature->GetHealth()*100 < m_creature->GetMaxHealth()*10)
         {
-            DoCast(m_creature, SPELL_ENRAGE);
+            DoCastSpellIfCan(m_creature, SPELL_ENRAGE);
             m_bEnraged = true;
         }
 
@@ -96,7 +96,7 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
         {
             if (m_uiEarthquakeTimer < uiDiff)
             {
-                DoCast(m_creature->getVictim(), SPELL_EARTHQUAKE);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_EARTHQUAKE);
                 m_uiEarthquakeTimer = 3*IN_MILISECONDS;
             }
             else
@@ -107,7 +107,7 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
         // Golemagg's Trust
         if (m_uiBuffTimer < uiDiff)
         {
-            DoCast(m_creature, SPELL_GOLEMAGG_TRUST);
+            DoCastSpellIfCan(m_creature, SPELL_GOLEMAGG_TRUST);
             m_uiBuffTimer = 2.5*IN_MILISECONDS;
         }
         else
@@ -162,7 +162,7 @@ struct MANGOS_DLL_DECL mob_core_ragerAI : public ScriptedAI
         // Mangle
         if (m_uiMangleTimer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), SPELL_MANGLE);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_MANGLE);
             m_uiMangleTimer = 10*IN_MILISECONDS;
         }
         else

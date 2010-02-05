@@ -89,7 +89,7 @@ struct MANGOS_DLL_DECL boss_moorabiAI : public ScriptedAI
     void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
-        DoCast(m_creature, SPELL_MOJO_FRENZY);
+        DoCastSpellIfCan(m_creature, SPELL_MOJO_FRENZY);
 
         if (m_pInstance)
             m_pInstance->SetData(TYPE_MOORABI, IN_PROGRESS);
@@ -126,7 +126,7 @@ struct MANGOS_DLL_DECL boss_moorabiAI : public ScriptedAI
 
         if (m_uiRoarTimer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), m_bMammothPhase ? SPELL_NUMBING_ROAR : SPELL_NUMBING_SHOUT);
+            DoCastSpellIfCan(m_creature->getVictim(), m_bMammothPhase ? SPELL_NUMBING_ROAR : SPELL_NUMBING_SHOUT);
             m_uiRoarTimer = 20000;
         }
         else
@@ -135,7 +135,7 @@ struct MANGOS_DLL_DECL boss_moorabiAI : public ScriptedAI
         if (m_uiQuakeTimer < uiDiff)
         {
             DoScriptText(SAY_QUAKE, m_creature);
-            DoCast(m_creature->getVictim(), m_bMammothPhase ? SPELL_QUAKE : SPELL_GROUND_TREMOR);
+            DoCastSpellIfCan(m_creature->getVictim(), m_bMammothPhase ? SPELL_QUAKE : SPELL_GROUND_TREMOR);
             m_uiQuakeTimer = m_bMammothPhase ? 13000 : 18000;
         }
         else
@@ -144,9 +144,9 @@ struct MANGOS_DLL_DECL boss_moorabiAI : public ScriptedAI
         if (m_uiStabTimer < uiDiff)
         {
             if (m_bMammothPhase)
-                DoCast(m_creature->getVictim(), m_bIsRegularMode ? SPELL_DETERMINED_GORE : SPELL_DETERMINED_GORE_H);
+                DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_DETERMINED_GORE : SPELL_DETERMINED_GORE_H);
             else
-                DoCast(m_creature->getVictim(), SPELL_DETERMINED_STAB);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_DETERMINED_STAB);
 
             m_uiStabTimer = 7000;
         }
@@ -160,7 +160,7 @@ struct MANGOS_DLL_DECL boss_moorabiAI : public ScriptedAI
             {
                 DoScriptText(SAY_TRANSFORM, m_creature);
                 DoScriptText(EMOTE_TRANSFORM, m_creature);
-                DoCast(m_creature, SPELL_TRANSFORMATION);
+                DoCastSpellIfCan(m_creature, SPELL_TRANSFORMATION);
                 m_uiPreviousTimer *= 0.8;
                 m_uiTransformationTimer = m_uiPreviousTimer;
             }

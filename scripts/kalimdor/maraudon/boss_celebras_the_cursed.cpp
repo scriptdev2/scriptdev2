@@ -58,14 +58,14 @@ struct MANGOS_DLL_DECL celebras_the_cursedAI : public ScriptedAI
             Unit* target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
             if (target)
-                DoCast(target,SPELL_WRATH);
+                DoCastSpellIfCan(target,SPELL_WRATH);
             Wrath_Timer = 8000;
         }else Wrath_Timer -= diff;
 
         //EntanglingRoots
         if (EntanglingRoots_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_ENTANGLINGROOTS);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_ENTANGLINGROOTS);
             EntanglingRoots_Timer = 20000;
         }else EntanglingRoots_Timer -= diff;
 
@@ -73,7 +73,7 @@ struct MANGOS_DLL_DECL celebras_the_cursedAI : public ScriptedAI
         if (CorruptForces_Timer < diff)
         {
             m_creature->InterruptNonMeleeSpells(false);
-            DoCast(m_creature,SPELL_CORRUPT_FORCES);
+            DoCastSpellIfCan(m_creature,SPELL_CORRUPT_FORCES);
             CorruptForces_Timer = 20000;
         }else CorruptForces_Timer -= diff;
 

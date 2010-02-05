@@ -97,7 +97,7 @@ struct MANGOS_DLL_DECL boss_interrogator_vishasAI : public ScriptedAI
         //ShadowWordPain_Timer
         if (ShadowWordPain_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_SHADOWWORDPAIN);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_SHADOWWORDPAIN);
             ShadowWordPain_Timer = urand(5000, 15000);
         }else ShadowWordPain_Timer -= diff;
 

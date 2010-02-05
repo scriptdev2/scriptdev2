@@ -159,13 +159,13 @@ struct MANGOS_DLL_DECL mob_vrykul_skeletonAI : public ScriptedAI
         if (m_uiCastTimer < uiDiff)
         {
             if (m_bIsRegularMode)
-                DoCast(m_creature->getVictim(), SPELL_DECREPIFY);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_DECREPIFY);
             else
             {
                 if (urand(0, 3))
-                    DoCast(m_creature->getVictim(), SPELL_DECREPIFY_H);
+                    DoCastSpellIfCan(m_creature->getVictim(), SPELL_DECREPIFY_H);
                 else if (m_pKeleseth && m_pKeleseth->isAlive())
-                    DoCast(m_pKeleseth, SPELL_BONE_ARMOR);
+                    DoCastSpellIfCan(m_pKeleseth, SPELL_BONE_ARMOR);
             }
 
             m_uiCastTimer = urand(5000, 15000);
@@ -282,7 +282,7 @@ struct MANGOS_DLL_DECL boss_kelesethAI : public ScriptedAI
 
         if (m_uiShadowboltTimer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), m_bIsRegularMode ? SPELL_SHADOWBOLT : SPELL_SHADOWBOLT_H);
+            DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_SHADOWBOLT : SPELL_SHADOWBOLT_H);
             m_uiShadowboltTimer = 3000;
         }
         else
@@ -292,7 +292,7 @@ struct MANGOS_DLL_DECL boss_kelesethAI : public ScriptedAI
         {
             if (Unit* pTombTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
             {
-                //DoCast(pTombTarget, SPELL_SUMMON_FROST_TOMB);
+                //DoCastSpellIfCan(pTombTarget, SPELL_SUMMON_FROST_TOMB);
                 float fPosX, fPosY, fPosZ;
                 pTombTarget->GetPosition(fPosX, fPosY, fPosZ);
 

@@ -67,7 +67,7 @@ struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
         //DemoralizingShout_Timer
         if (DemoralizingShout_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_DEMORALIZINGSHOUT);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_DEMORALIZINGSHOUT);
             DemoralizingShout_Timer = urand(15000, 20000);
         }else DemoralizingShout_Timer -= diff;
 
@@ -84,9 +84,9 @@ struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
             }
 
             if (target)
-                DoCast(target,SPELL_INSPIRE);
+                DoCastSpellIfCan(target,SPELL_INSPIRE);
 
-            DoCast(m_creature,SPELL_INSPIRE);
+            DoCastSpellIfCan(m_creature,SPELL_INSPIRE);
 
             Inspire_Timer = urand(20000, 26000);
         }else Inspire_Timer -= diff;
@@ -94,7 +94,7 @@ struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
         //Knockdown_Timer
         if (Knockdown_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_KNOCKDOWN);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_KNOCKDOWN);
             Knockdown_Timer = urand(12000, 15000);
         }else Knockdown_Timer -= diff;
 
@@ -103,7 +103,7 @@ struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
         {
             Unit* target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if (target) DoCast(target,SPELL_FLAMESPEAR);
+            if (target) DoCastSpellIfCan(target,SPELL_FLAMESPEAR);
 
             Flamespear_Timer = urand(12000, 16000);
         }else Flamespear_Timer -= diff;
@@ -111,7 +111,7 @@ struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
         //DarkStrike_Timer
         if (Darkstrike_Timer < diff)
         {
-            DoCast(m_creature, SPELL_DARKSTRIKE);
+            DoCastSpellIfCan(m_creature, SPELL_DARKSTRIKE);
             Darkstrike_Timer = urand(15000, 18000);
         }else Darkstrike_Timer -= diff;
 
@@ -152,7 +152,7 @@ struct MANGOS_DLL_DECL mob_flamewaker_priestAI : public ScriptedAI
             if (!pUnit)
                 return;
 
-            DoCast(pUnit, SPELL_HEAL);
+            DoCastSpellIfCan(pUnit, SPELL_HEAL);
 
             Heal_Timer = urand(15000, 20000);
         }else Heal_Timer -= diff;
@@ -162,7 +162,7 @@ struct MANGOS_DLL_DECL mob_flamewaker_priestAI : public ScriptedAI
         {
             Unit* target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if (target) DoCast(target,SPELL_SHADOWWORDPAIN);
+            if (target) DoCastSpellIfCan(target,SPELL_SHADOWWORDPAIN);
 
             ShadowWordPain_Timer = urand(18000, 26000);
         }else ShadowWordPain_Timer -= diff;
@@ -172,7 +172,7 @@ struct MANGOS_DLL_DECL mob_flamewaker_priestAI : public ScriptedAI
         {
             Unit* target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if (target) DoCast(target,SPELL_IMMOLATE);
+            if (target) DoCastSpellIfCan(target,SPELL_IMMOLATE);
 
             Immolate_Timer = urand(15000, 25000);
         }else Immolate_Timer -= diff;

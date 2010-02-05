@@ -130,20 +130,20 @@ struct MANGOS_DLL_DECL boss_nexusprince_shaffarAI : public ScriptedAI
             if (m_creature->IsNonMeleeSpellCasted(false))
                 m_creature->InterruptNonMeleeSpells(true);
 
-            DoCast(m_creature,SPELL_FROSTNOVA);
+            DoCastSpellIfCan(m_creature,SPELL_FROSTNOVA);
             m_uiFrostNova_Timer = urand(17500, 25000);
             m_bCanBlink = true;
         }else m_uiFrostNova_Timer -= uiDiff;
 
         if (m_uiFrostbolt_Timer < uiDiff)
         {
-            DoCast(m_creature->getVictim(),SPELL_FROSTBOLT);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_FROSTBOLT);
             m_uiFrostbolt_Timer = urand(4500, 6000);
         }else m_uiFrostbolt_Timer -= uiDiff;
 
         if (m_uiFireBall_Timer < uiDiff)
         {
-            DoCast(m_creature->getVictim(),SPELL_FIREBALL);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_FIREBALL);
             m_uiFireBall_Timer = urand(4500, 6000);
         }else m_uiFireBall_Timer -= uiDiff;
 
@@ -159,7 +159,7 @@ struct MANGOS_DLL_DECL boss_nexusprince_shaffarAI : public ScriptedAI
                 if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() == CHASE_MOTION_TYPE)
                     m_creature->GetMotionMaster()->MovementExpired();
 
-                DoCast(m_creature,SPELL_BLINK);
+                DoCastSpellIfCan(m_creature,SPELL_BLINK);
 
                 m_uiBlink_Timer = urand(1000, 2500);
                 m_bCanBlink = false;
@@ -171,7 +171,7 @@ struct MANGOS_DLL_DECL boss_nexusprince_shaffarAI : public ScriptedAI
             if (!urand(0,3))
                 DoScriptText(SAY_SUMMON, m_creature);
 
-            DoCast(m_creature,SPELL_ETHEREAL_BEACON,true);
+            DoCastSpellIfCan(m_creature, SPELL_ETHEREAL_BEACON, CAST_TRIGGERED);
 
             m_uiBeacon_Timer = 10000;
         }else m_uiBeacon_Timer -= uiDiff;
@@ -223,7 +223,7 @@ struct MANGOS_DLL_DECL mob_ethereal_beaconAI : public ScriptedAI
 
         if (m_uiArcaneBolt_Timer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), SPELL_ARCANE_BOLT);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_ARCANE_BOLT);
             m_uiArcaneBolt_Timer = urand(2000, 4500);
         }else m_uiArcaneBolt_Timer -= uiDiff;
 

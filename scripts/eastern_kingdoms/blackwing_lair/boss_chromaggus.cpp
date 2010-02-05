@@ -209,7 +209,7 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
                 case 4: spell = SPELL_ARCANE_VURNALBILTY; break;
             }
 
-            DoCast(m_creature,spell);
+            DoCastSpellIfCan(m_creature,spell);
             CurrentVurln_Spell = spell;
 
             DoScriptText(EMOTE_SHIMMER, m_creature);
@@ -219,14 +219,14 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
         //Breath1_Timer
         if (Breath1_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),Breath1_Spell);
+            DoCastSpellIfCan(m_creature->getVictim(),Breath1_Spell);
             Breath1_Timer = 60000;
         }else Breath1_Timer -= diff;
 
         //Breath2_Timer
         if (Breath2_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),Breath2_Spell);
+            DoCastSpellIfCan(m_creature->getVictim(),Breath2_Spell);
             Breath2_Timer = 60000;
         }else Breath2_Timer -= diff;
 
@@ -253,7 +253,7 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
                 if (pUnit)
                 {
                     //Cast affliction
-                    DoCast(pUnit, SpellAfflict, true);
+                    DoCastSpellIfCan(pUnit, SpellAfflict, CAST_TRIGGERED);
 
                     //Chromatic mutation if target is effected by all afflictions
                     if (pUnit->HasAura(SPELL_BROODAF_BLUE,0)
@@ -263,7 +263,7 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
                         && pUnit->HasAura(SPELL_BROODAF_GREEN,0))
                     {
                         //target->RemoveAllAuras();
-                        //DoCast(target,SPELL_CHROMATIC_MUT_1);
+                        //DoCastSpellIfCan(target,SPELL_CHROMATIC_MUT_1);
 
                         //Chromatic mutation is causing issues
                         //Assuming it is caused by a lack of core support for Charm
@@ -282,7 +282,7 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
         //Frenzy_Timer
         if (Frenzy_Timer < diff)
         {
-            DoCast(m_creature,SPELL_FRENZY);
+            DoCastSpellIfCan(m_creature,SPELL_FRENZY);
             DoScriptText(EMOTE_GENERIC_FRENZY_KILL, m_creature);
             Frenzy_Timer = urand(10000, 15000);
         }else Frenzy_Timer -= diff;
@@ -290,7 +290,7 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
         //Enrage if not already enraged and below 20%
         if (!Enraged && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 20)
         {
-            DoCast(m_creature,SPELL_ENRAGE);
+            DoCastSpellIfCan(m_creature,SPELL_ENRAGE);
             Enraged = true;
         }
 

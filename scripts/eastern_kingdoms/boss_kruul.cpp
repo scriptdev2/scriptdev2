@@ -61,7 +61,7 @@ struct MANGOS_DLL_DECL boss_kruulAI : public ScriptedAI
     void KilledUnit()
     {
         // When a player, pet or totem gets killed, Lord Kazzak casts this spell to instantly regenerate 70,000 health.
-        DoCast(m_creature,SPELL_CAPTURESOUL);
+        DoCastSpellIfCan(m_creature,SPELL_CAPTURESOUL);
 
     }
 
@@ -97,7 +97,7 @@ struct MANGOS_DLL_DECL boss_kruulAI : public ScriptedAI
         {
             if (rand()%100 < 46)
             {
-                DoCast(m_creature->getVictim(),SPELL_SHADOWVOLLEY);
+                DoCastSpellIfCan(m_creature->getVictim(),SPELL_SHADOWVOLLEY);
             }
 
             ShadowVolley_Timer = 5000;
@@ -108,7 +108,7 @@ struct MANGOS_DLL_DECL boss_kruulAI : public ScriptedAI
         {
             if (rand()%100 < 50)
             {
-                DoCast(m_creature->getVictim(),SPELL_CLEAVE);
+                DoCastSpellIfCan(m_creature->getVictim(),SPELL_CLEAVE);
             }
 
             Cleave_Timer = 10000;
@@ -119,7 +119,7 @@ struct MANGOS_DLL_DECL boss_kruulAI : public ScriptedAI
         {
             if (rand()%100 < 20)
             {
-                DoCast(m_creature->getVictim(),SPELL_THUNDERCLAP);
+                DoCastSpellIfCan(m_creature->getVictim(),SPELL_THUNDERCLAP);
             }
 
             ThunderClap_Timer = 12000;
@@ -128,7 +128,7 @@ struct MANGOS_DLL_DECL boss_kruulAI : public ScriptedAI
         //TwistedReflection_Timer
         if (TwistedReflection_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_TWISTEDREFLECTION);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_TWISTEDREFLECTION);
             TwistedReflection_Timer = 30000;
         }else TwistedReflection_Timer -= diff;
 
@@ -137,7 +137,7 @@ struct MANGOS_DLL_DECL boss_kruulAI : public ScriptedAI
         {
             if (rand()%100 < 40)
             {
-                DoCast(m_creature->getVictim(),SPELL_VOIDBOLT);
+                DoCastSpellIfCan(m_creature->getVictim(),SPELL_VOIDBOLT);
             }
 
             VoidBolt_Timer = 18000;
@@ -146,7 +146,7 @@ struct MANGOS_DLL_DECL boss_kruulAI : public ScriptedAI
         //Rage_Timer
         if (Rage_Timer < diff)
         {
-            DoCast(m_creature,SPELL_RAGE);
+            DoCastSpellIfCan(m_creature,SPELL_RAGE);
             Rage_Timer = 70000;
         }else Rage_Timer -= diff;
 

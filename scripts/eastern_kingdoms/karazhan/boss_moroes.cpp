@@ -267,7 +267,7 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
 
         if (!Enrage && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 30)
         {
-            DoCast(m_creature, SPELL_FRENZY);
+            DoCastSpellIfCan(m_creature, SPELL_FRENZY);
             Enrage = true;
         }
 
@@ -295,7 +295,7 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
                 m_creature->setFaction(35);
                 m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                DoCast(m_creature, SPELL_VANISH);
+                DoCastSpellIfCan(m_creature, SPELL_VANISH);
                 InVanish = true;
                 Vanish_Timer = 30000;
                 Wait_Timer = 5000;
@@ -321,7 +321,7 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
             //Gouge highest aggro, and attack second highest
             if (Gouge_Timer < diff)
             {
-                DoCast(m_creature->getVictim(), SPELL_GOUGE);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_GOUGE);
                 Gouge_Timer = 40000;
             }else Gouge_Timer -= diff;
 
@@ -345,7 +345,7 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
                     target = *(target_list.begin()+rand()%target_list.size());
 
                 if (target)
-                    DoCast(target, SPELL_BLIND);
+                    DoCastSpellIfCan(target, SPELL_BLIND);
 
                 Blind_Timer = 40000;
             }else Blind_Timer -= diff;
@@ -437,7 +437,7 @@ struct MANGOS_DLL_DECL boss_baroness_dorothea_millstipeAI : public boss_moroes_g
         MindFlay_Timer = 1000;
         ShadowWordPain_Timer = 6000;
 
-        DoCast(m_creature,SPELL_SHADOWFORM, true);
+        DoCastSpellIfCan(m_creature,SPELL_SHADOWFORM, CAST_TRIGGERED);
 
         boss_moroes_guestAI::Reset();
     }
@@ -451,7 +451,7 @@ struct MANGOS_DLL_DECL boss_baroness_dorothea_millstipeAI : public boss_moroes_g
 
         if (MindFlay_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_MINDFLY);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_MINDFLY);
             MindFlay_Timer = 12000;                         //3sec channeled
         }else MindFlay_Timer -= diff;
 
@@ -459,7 +459,7 @@ struct MANGOS_DLL_DECL boss_baroness_dorothea_millstipeAI : public boss_moroes_g
         {
             Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0);
             if (target && (target->getPowerType() == POWER_MANA))
-                DoCast(target,SPELL_MANABURN);
+                DoCastSpellIfCan(target,SPELL_MANABURN);
             ManaBurn_Timer = 5000;                          //3 sec cast
         }else ManaBurn_Timer -= diff;
 
@@ -468,7 +468,7 @@ struct MANGOS_DLL_DECL boss_baroness_dorothea_millstipeAI : public boss_moroes_g
             Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0);
             if (target)
             {
-                DoCast(target,SPELL_SWPAIN);
+                DoCastSpellIfCan(target,SPELL_SWPAIN);
                 ShadowWordPain_Timer = 7000;
             }
         }else ShadowWordPain_Timer -= diff;
@@ -506,20 +506,20 @@ struct MANGOS_DLL_DECL boss_baron_rafe_dreugerAI : public boss_moroes_guestAI
 
         if (SealOfCommand_Timer < diff)
         {
-            DoCast(m_creature,SPELL_SEALOFCOMMAND);
+            DoCastSpellIfCan(m_creature,SPELL_SEALOFCOMMAND);
             SealOfCommand_Timer = 32000;
             JudgementOfCommand_Timer = 29000;
         }else SealOfCommand_Timer -= diff;
 
         if (JudgementOfCommand_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_JUDGEMENTOFCOMMAND);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_JUDGEMENTOFCOMMAND);
             JudgementOfCommand_Timer = SealOfCommand_Timer + 29000;
         }else JudgementOfCommand_Timer -= diff;
 
         if (HammerOfJustice_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_HAMMEROFJUSTICE);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_HAMMEROFJUSTICE);
             HammerOfJustice_Timer = 12000;
         }else HammerOfJustice_Timer -= diff;
     }
@@ -561,7 +561,7 @@ struct MANGOS_DLL_DECL boss_lady_catriona_von_indiAI : public boss_moroes_guestA
 
         if (PowerWordShield_Timer < diff)
         {
-            DoCast(m_creature,SPELL_PWSHIELD);
+            DoCastSpellIfCan(m_creature,SPELL_PWSHIELD);
             PowerWordShield_Timer = 15000;
         }else PowerWordShield_Timer -= diff;
 
@@ -569,13 +569,13 @@ struct MANGOS_DLL_DECL boss_lady_catriona_von_indiAI : public boss_moroes_guestA
         {
             Unit* target = SelectTarget();
 
-            DoCast(target, SPELL_GREATERHEAL);
+            DoCastSpellIfCan(target, SPELL_GREATERHEAL);
             GreaterHeal_Timer = 17000;
         }else GreaterHeal_Timer -= diff;
 
         if (HolyFire_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_HOLYFIRE);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_HOLYFIRE);
             HolyFire_Timer = 22000;
         }else HolyFire_Timer -= diff;
 
@@ -584,10 +584,13 @@ struct MANGOS_DLL_DECL boss_lady_catriona_von_indiAI : public boss_moroes_guestA
             if (urand(0, 1))
             {
                 Unit* target = SelectTarget();
-                DoCast(target, SPELL_DISPELMAGIC);
+                DoCastSpellIfCan(target, SPELL_DISPELMAGIC);
             }
             else
-                DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), SPELL_DISPELMAGIC);
+            {
+                if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                    DoCastSpellIfCan(pTarget, SPELL_DISPELMAGIC);
+            }
 
             DispelMagic_Timer = 25000;
         }else DispelMagic_Timer -= diff;
@@ -630,7 +633,7 @@ struct MANGOS_DLL_DECL boss_lady_keira_berrybuckAI : public boss_moroes_guestAI
 
         if (DivineShield_Timer < diff)
         {
-            DoCast(m_creature,SPELL_DIVINESHIELD);
+            DoCastSpellIfCan(m_creature,SPELL_DIVINESHIELD);
             DivineShield_Timer = 31000;
         }else DivineShield_Timer -= diff;
 
@@ -638,7 +641,7 @@ struct MANGOS_DLL_DECL boss_lady_keira_berrybuckAI : public boss_moroes_guestAI
         {
             Unit* target = SelectTarget();
 
-            DoCast(target, SPELL_HOLYLIGHT);
+            DoCastSpellIfCan(target, SPELL_HOLYLIGHT);
             HolyLight_Timer = 10000;
         }else HolyLight_Timer -= diff;
 
@@ -646,7 +649,7 @@ struct MANGOS_DLL_DECL boss_lady_keira_berrybuckAI : public boss_moroes_guestAI
         {
             Unit* target = SelectTarget();
 
-            DoCast(target, SPELL_GREATERBLESSOFMIGHT);
+            DoCastSpellIfCan(target, SPELL_GREATERBLESSOFMIGHT);
 
             GreaterBless_Timer = 50000;
         }else GreaterBless_Timer -= diff;
@@ -654,7 +657,7 @@ struct MANGOS_DLL_DECL boss_lady_keira_berrybuckAI : public boss_moroes_guestAI
         if (Cleanse_Timer < diff)
         {
             Unit* target = SelectTarget();
-            DoCast(target, SPELL_CLEANSE);
+            DoCastSpellIfCan(target, SPELL_CLEANSE);
 
             Cleanse_Timer = 10000;
         }else Cleanse_Timer -= diff;
@@ -692,19 +695,19 @@ struct MANGOS_DLL_DECL boss_lord_robin_darisAI : public boss_moroes_guestAI
 
         if (Hamstring_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_HAMSTRING);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_HAMSTRING);
             Hamstring_Timer = 12000;
         }else Hamstring_Timer -= diff;
 
         if (MortalStrike_Timer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_MORTALSTRIKE);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_MORTALSTRIKE);
             MortalStrike_Timer = 18000;
         }else MortalStrike_Timer -= diff;
 
         if (WhirlWind_Timer < diff)
         {
-            DoCast(m_creature,SPELL_WHIRLWIND);
+            DoCastSpellIfCan(m_creature,SPELL_WHIRLWIND);
             WhirlWind_Timer = 21000;
         }else WhirlWind_Timer -= diff;
     }
@@ -744,25 +747,25 @@ struct MANGOS_DLL_DECL boss_lord_crispin_ferenceAI : public boss_moroes_guestAI
 
         if (Disarm_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_DISARM);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_DISARM);
             Disarm_Timer = 12000;
         }else Disarm_Timer -= diff;
 
         if (HeroicStrike_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_HEROICSTRIKE);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_HEROICSTRIKE);
             HeroicStrike_Timer = 10000;
         }else HeroicStrike_Timer -= diff;
 
         if (ShieldBash_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_SHIELDBASH);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_SHIELDBASH);
             ShieldBash_Timer = 13000;
         }else ShieldBash_Timer -= diff;
 
         if (ShieldWall_Timer < diff)
         {
-            DoCast(m_creature,SPELL_SHIELDWALL);
+            DoCastSpellIfCan(m_creature,SPELL_SHIELDWALL);
             ShieldWall_Timer = 21000;
         }else ShieldWall_Timer -= diff;
     }

@@ -63,7 +63,7 @@ struct MANGOS_DLL_DECL boss_lordalexeibarovAI : public ScriptedAI
         {
             Unit* target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if (target) DoCast(target,SPELL_IMMOLATE);
+            if (target) DoCastSpellIfCan(target,SPELL_IMMOLATE);
 
             Immolate_Timer = 12000;
         }else Immolate_Timer -= diff;
@@ -71,7 +71,7 @@ struct MANGOS_DLL_DECL boss_lordalexeibarovAI : public ScriptedAI
         //VeilofShadow_Timer
         if (VeilofShadow_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_VEILOFSHADOW);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_VEILOFSHADOW);
             VeilofShadow_Timer = 20000;
         }else VeilofShadow_Timer -= diff;
 

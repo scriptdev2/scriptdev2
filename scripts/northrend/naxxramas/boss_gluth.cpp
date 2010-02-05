@@ -128,7 +128,7 @@ struct MANGOS_DLL_DECL boss_gluthAI : public ScriptedAI
         // Mortal Wound
         if (m_uiMortalWoundTimer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), SPELL_MORTALWOUND);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_MORTALWOUND);
             m_uiMortalWoundTimer = 10000;
         }
         else
@@ -137,7 +137,7 @@ struct MANGOS_DLL_DECL boss_gluthAI : public ScriptedAI
         // Decimate
         if (m_uiDecimateTimer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), SPELL_DECIMATE);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_DECIMATE);
             m_uiDecimateTimer = 100000;
         }
         else
@@ -146,7 +146,7 @@ struct MANGOS_DLL_DECL boss_gluthAI : public ScriptedAI
         // Enrage
         if (m_uiEnrageTimer < uiDiff)
         {
-            DoCast(m_creature, m_bIsRegularMode ? SPELL_ENRAGE : SPELL_ENRAGE_H);
+            DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_ENRAGE : SPELL_ENRAGE_H);
             m_uiEnrageTimer = 60000;
         }
         else
@@ -178,7 +178,7 @@ struct MANGOS_DLL_DECL boss_gluthAI : public ScriptedAI
         // Berserk
         if (m_uiBerserkTimer < uiDiff)
         {
-            DoCast(m_creature, SPELL_BERSERK, true);
+            DoCastSpellIfCan(m_creature, SPELL_BERSERK, CAST_TRIGGERED);
             m_uiBerserkTimer = MINUTE*5*IN_MILISECONDS;
         }
         else

@@ -51,14 +51,14 @@ struct MANGOS_DLL_DECL boss_hazzarahAI : public ScriptedAI
         //ManaBurn_Timer
         if (ManaBurn_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_MANABURN);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_MANABURN);
             ManaBurn_Timer = urand(8000, 16000);
         }else ManaBurn_Timer -= diff;
 
         //Sleep_Timer
         if (Sleep_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_SLEEP);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_SLEEP);
             Sleep_Timer = urand(12000, 20000);
         }else Sleep_Timer -= diff;
 

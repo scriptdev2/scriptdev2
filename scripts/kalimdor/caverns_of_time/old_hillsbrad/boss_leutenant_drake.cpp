@@ -143,7 +143,7 @@ struct MANGOS_DLL_DECL boss_lieutenant_drakeAI : public ScriptedAI
         //Whirlwind
         if (Whirlwind_Timer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_WHIRLWIND);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_WHIRLWIND);
             Whirlwind_Timer = urand(20000, 25000);
         }else Whirlwind_Timer -= diff;
 
@@ -151,7 +151,7 @@ struct MANGOS_DLL_DECL boss_lieutenant_drakeAI : public ScriptedAI
         if (Fear_Timer < diff)
         {
             DoScriptText(SAY_SHOUT, m_creature);
-            DoCast(m_creature->getVictim(), SPELL_FRIGHTENING_SHOUT);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_FRIGHTENING_SHOUT);
             Fear_Timer = urand(25000, 35000);
         }else Fear_Timer -= diff;
 
@@ -159,7 +159,7 @@ struct MANGOS_DLL_DECL boss_lieutenant_drakeAI : public ScriptedAI
         if (MortalStrike_Timer < diff)
         {
             DoScriptText(SAY_MORTAL, m_creature);
-            DoCast(m_creature->getVictim(), SPELL_MORTAL_STRIKE);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_MORTAL_STRIKE);
             MortalStrike_Timer = urand(20000, 30000);
         }else MortalStrike_Timer -= diff;
 

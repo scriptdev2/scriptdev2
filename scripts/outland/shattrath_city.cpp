@@ -667,7 +667,7 @@ struct MANGOS_DLL_DECL npc_raliq_the_drunkAI : public ScriptedAI
 
         if (m_uiUppercut_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_UPPERCUT);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_UPPERCUT);
             m_uiUppercut_Timer = 15000;
         }else m_uiUppercut_Timer -= diff;
 
@@ -740,7 +740,7 @@ struct MANGOS_DLL_DECL npc_salsalabimAI : public ScriptedAI
 
         if (MagneticPull_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_MAGNETIC_PULL);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_MAGNETIC_PULL);
             MagneticPull_Timer = 15000;
         }else MagneticPull_Timer -= diff;
 

@@ -47,7 +47,7 @@ struct MANGOS_DLL_DECL boss_timmy_the_cruelAI : public ScriptedAI
         //RavenousClaw
         if (RavenousClaw_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_RAVENOUSCLAW);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_RAVENOUSCLAW);
             RavenousClaw_Timer = 15000;
         }else RavenousClaw_Timer -= diff;
 

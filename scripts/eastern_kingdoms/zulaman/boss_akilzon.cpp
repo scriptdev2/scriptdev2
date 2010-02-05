@@ -279,7 +279,7 @@ struct MANGOS_DLL_DECL mob_soaring_eagleAI : public ScriptedAI
         {
             if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
             {
-                DoCast(pTarget,SPELL_EAGLE_SWOOP);
+                DoCastSpellIfCan(pTarget,SPELL_EAGLE_SWOOP);
 
                 m_bCanMoveToRandom = true;
                 m_bCanCast = false;

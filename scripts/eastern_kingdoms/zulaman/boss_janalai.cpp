@@ -405,7 +405,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
                     m_creature->GetMotionMaster()->MovementExpired();
 
                 //then teleport self
-                DoCast(m_creature,SPELL_TELETOCENTER,true);
+                DoCastSpellIfCan(m_creature, SPELL_TELETOCENTER, CAST_TRIGGERED);
 
                 //then players and create the firewall
                 TeleportPlayersOutOfRange();
@@ -429,7 +429,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
             if (fire_breath_timer < diff)
             {
                 if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
-                    DoCast(target,SPELL_FLAME_BREATH);
+                    DoCastSpellIfCan(target,SPELL_FLAME_BREATH);
                 fire_breath_timer = 8000;
             }else fire_breath_timer -=diff;
 
@@ -446,7 +446,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
                 DoScriptText(SAY_BERSERK, m_creature);
 
                 m_creature->InterruptNonMeleeSpells(false);
-                DoCast(m_creature,SPELL_ENRAGE);
+                DoCastSpellIfCan(m_creature,SPELL_ENRAGE);
                 enraged = true;
             }
 
@@ -458,7 +458,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
                 if (m_creature->IsNonMeleeSpellCasted(false))
                     m_creature->InterruptNonMeleeSpells(false);
 
-                DoCast(m_creature, SPELL_HATCH_ALL_EGGS);
+                DoCastSpellIfCan(m_creature, SPELL_HATCH_ALL_EGGS);
 
                 DoHatchRemainingEggs();
             }
@@ -543,7 +543,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
         if (wipetimer < diff)
         {
             DoScriptText(SAY_BERSERK, m_creature);
-            DoCast(m_creature,SPELL_ENRAGE);
+            DoCastSpellIfCan(m_creature,SPELL_ENRAGE);
             wipetimer = 30000;
         }else wipetimer -=diff;
 
@@ -684,7 +684,7 @@ struct MANGOS_DLL_DECL mob_amanishi_hatcherAI : public ScriptedAI
                 else if (m_uiHatchlingCount == uiEggsRemaining/2)
                     m_uiHatchlingCount = uiEggsRemaining;
 
-                DoCast(m_creature,SPELL_HATCH_EGG);
+                DoCastSpellIfCan(m_creature,SPELL_HATCH_EGG);
 
                 DoHatchEggs(m_uiHatchlingCount);
 
@@ -742,7 +742,7 @@ struct MANGOS_DLL_DECL mob_hatchlingAI : public ScriptedAI
         if (buffer_timer < diff)
         {
             if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
-                DoCast(target,SPELL_FLAMEBUFFED);
+                DoCastSpellIfCan(target,SPELL_FLAMEBUFFED);
 
             buffer_timer = 7000;
         }else buffer_timer -=diff;

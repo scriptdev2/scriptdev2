@@ -104,14 +104,14 @@ struct MANGOS_DLL_DECL boss_the_makerAI : public ScriptedAI
 
         if (AcidSpray_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_ACID_SPRAY);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_ACID_SPRAY);
             AcidSpray_Timer = urand(15000, 23000);
         }else AcidSpray_Timer -=diff;
 
         if (ExplodingBreaker_Timer < diff)
         {
             if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
-                DoCast(target, m_bIsRegularMode ? H_SPELL_EXPLODING_BREAKER : SPELL_EXPLODING_BREAKER);
+                DoCastSpellIfCan(target, m_bIsRegularMode ? H_SPELL_EXPLODING_BREAKER : SPELL_EXPLODING_BREAKER);
             ExplodingBreaker_Timer = urand(4000, 12000);
         }else ExplodingBreaker_Timer -=diff;
 
@@ -120,14 +120,14 @@ struct MANGOS_DLL_DECL boss_the_makerAI : public ScriptedAI
             Unit* target;
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
 
-            DoCast(target,SPELL_DOMINATION);
+            DoCastSpellIfCan(target,SPELL_DOMINATION);
 
             Domination_Timer = 15000+rand()%10000;
         }else Domination_Timer -=diff;
 
         if (Knockdown_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_KNOCKDOWN);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_KNOCKDOWN);
             Knockdown_Timer = urand(4000, 12000);
         }else Knockdown_Timer -=diff;
 

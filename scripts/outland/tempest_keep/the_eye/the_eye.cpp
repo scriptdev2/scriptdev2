@@ -71,7 +71,7 @@ struct MANGOS_DLL_DECL mob_crystalcore_devastatorAI : public ScriptedAI
         //Countercharge_Timer
         if (Countercharge_Timer < diff)
         {
-            DoCast(this->m_creature,SPELL_COUNTERCHARGE);
+            DoCastSpellIfCan(this->m_creature,SPELL_COUNTERCHARGE);
             Countercharge_Timer = 45000;
         }else Countercharge_Timer -= diff;
 

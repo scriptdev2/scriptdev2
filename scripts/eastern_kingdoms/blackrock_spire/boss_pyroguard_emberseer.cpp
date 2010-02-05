@@ -51,14 +51,14 @@ struct MANGOS_DLL_DECL boss_pyroguard_emberseerAI : public ScriptedAI
         //FireNova_Timer
         if (FireNova_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_FIRENOVA);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_FIRENOVA);
             FireNova_Timer = 6000;
         }else FireNova_Timer -= diff;
 
         //FlameBuffet_Timer
         if (FlameBuffet_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_FLAMEBUFFET);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_FLAMEBUFFET);
             FlameBuffet_Timer = 14000;
         }else FlameBuffet_Timer -= diff;
 
@@ -67,7 +67,7 @@ struct MANGOS_DLL_DECL boss_pyroguard_emberseerAI : public ScriptedAI
         {
             Unit* target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if (target) DoCast(target,SPELL_PYROBLAST);
+            if (target) DoCastSpellIfCan(target,SPELL_PYROBLAST);
             PyroBlast_Timer = 15000;
         }else PyroBlast_Timer -= diff;
 

@@ -303,21 +303,21 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
         //Check for Frost Bolt
         if (FrostBolt_Timer < uiDiff)
         {
-            DoCast(m_creature->getVictim(),SPELL_FROST_BOLT);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_FROST_BOLT);
             FrostBolt_Timer = urand(1000, 60000);
         }else FrostBolt_Timer -= uiDiff;
 
         //Check for Frost Bolt Nova
         if (FrostBoltNova_Timer < uiDiff)
         {
-            DoCast(m_creature->getVictim(),SPELL_FROST_BOLT_NOVA);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_FROST_BOLT_NOVA);
             FrostBoltNova_Timer = 15000;
         }else FrostBoltNova_Timer -= uiDiff;
 
         //Check for Chains Of Kelthuzad
         if (ChainsOfKelthuzad_Timer < uiDiff)
         {
-            //DoCast(m_creature->getVictim(),SPELL_CHAINS_OF_KELTHUZAD);
+            //DoCastSpellIfCan(m_creature->getVictim(),SPELL_CHAINS_OF_KELTHUZAD);
 
             //if (urand(0, 1))
                 //DoScriptText(SAY_CHAIN1, m_creature);
@@ -330,7 +330,7 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
         //Check for Mana Detonation
         if (ManaDetonation_Timer < uiDiff)
         {
-            DoCast(m_creature->getVictim(),SPELL_MANA_DETONATION);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_MANA_DETONATION);
 
             if (urand(0, 1))
                 DoScriptText(SAY_SPECIAL1_MANA_DET, m_creature);
@@ -341,7 +341,7 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
         //Check for Shadow Fissure
         if (ShadowFisure_Timer < uiDiff)
         {
-            DoCast(m_creature->getVictim(),SPELL_SHADOW_FISURE);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_SHADOW_FISURE);
 
             if (urand(0, 1))
                 DoScriptText(SAY_SPECIAL3_MANA_DET, m_creature);
@@ -352,7 +352,7 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
         //Check for Frost Blast
         if (FrostBlast_Timer < uiDiff)
         {
-            DoCast(m_creature->getVictim(),SPELL_FROST_BLAST);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_FROST_BLAST);
 
             if (urand(0, 1))
                 DoScriptText(SAY_FROST_BLAST, m_creature);

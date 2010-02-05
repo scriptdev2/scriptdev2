@@ -113,7 +113,7 @@ struct MANGOS_DLL_DECL boss_watchkeeper_gargolmarAI : public ScriptedAI
 
         if (MortalWound_Timer < diff)
         {
-            DoCast(m_creature->getVictim(), m_bIsRegularMode ? SPELL_MORTAL_WOUND : H_SPELL_MORTAL_WOUND);
+            DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_MORTAL_WOUND : H_SPELL_MORTAL_WOUND);
             MortalWound_Timer = urand(5000, 13000);
         }else MortalWound_Timer -= diff;
 
@@ -122,7 +122,7 @@ struct MANGOS_DLL_DECL boss_watchkeeper_gargolmarAI : public ScriptedAI
             DoScriptText(SAY_SURGE, m_creature);
 
             if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
-                DoCast(target,SPELL_SURGE);
+                DoCastSpellIfCan(target,SPELL_SURGE);
 
             Surge_Timer = urand(5000, 12000);
         }else Surge_Timer -= diff;
@@ -131,7 +131,7 @@ struct MANGOS_DLL_DECL boss_watchkeeper_gargolmarAI : public ScriptedAI
         {
             if (Retaliation_Timer < diff)
             {
-                DoCast(m_creature,SPELL_RETALIATION);
+                DoCastSpellIfCan(m_creature,SPELL_RETALIATION);
                 Retaliation_Timer = 30000;
             }else Retaliation_Timer -= diff;
         }

@@ -86,7 +86,7 @@ struct MANGOS_DLL_DECL boss_fankrissAI : public ScriptedAI
         //MortalWound_Timer
         if (MortalWound_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_MORTAL_WOUND);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_MORTAL_WOUND);
             MortalWound_Timer = urand(10000, 20000);
         }else MortalWound_Timer -= diff;
 
@@ -121,7 +121,7 @@ struct MANGOS_DLL_DECL boss_fankrissAI : public ScriptedAI
                 target = SelectUnit(SELECT_TARGET_RANDOM,0);
                 if (target && target->GetTypeId() == TYPEID_PLAYER)
                 {
-                    DoCast(target, SPELL_ROOT);
+                    DoCastSpellIfCan(target, SPELL_ROOT);
 
                     if (m_creature->getThreatManager().getThreat(target))
                         m_creature->getThreatManager().modifyThreatPercent(target, -100);

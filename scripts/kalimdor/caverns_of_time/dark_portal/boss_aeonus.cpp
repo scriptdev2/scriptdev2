@@ -106,14 +106,14 @@ struct MANGOS_DLL_DECL boss_aeonusAI : public ScriptedAI
         //Sand Breath
         if (SandBreath_Timer < diff)
         {
-            DoCast(m_creature->getVictim(), m_bIsRegularMode ? SPELL_SAND_BREATH : H_SPELL_SAND_BREATH);
+            DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_SAND_BREATH : H_SPELL_SAND_BREATH);
             SandBreath_Timer = urand(15000, 25000);
         }else SandBreath_Timer -= diff;
 
         //Time Stop
         if (TimeStop_Timer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_TIME_STOP);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_TIME_STOP);
             TimeStop_Timer = urand(20000, 35000);
         }else TimeStop_Timer -= diff;
 
@@ -121,7 +121,7 @@ struct MANGOS_DLL_DECL boss_aeonusAI : public ScriptedAI
         if (Frenzy_Timer < diff)
         {
             DoScriptText(EMOTE_GENERIC_FRENZY, m_creature);
-            DoCast(m_creature, SPELL_ENRAGE);
+            DoCastSpellIfCan(m_creature, SPELL_ENRAGE);
             Frenzy_Timer = urand(20000, 35000);
         }else Frenzy_Timer -= diff;
 

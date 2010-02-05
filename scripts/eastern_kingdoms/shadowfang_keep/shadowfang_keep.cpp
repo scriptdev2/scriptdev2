@@ -79,7 +79,7 @@ struct MANGOS_DLL_DECL npc_shadowfang_prisonerAI : public npc_escortAI
                 break;
             case 11:
                 if (m_uiNpcEntry == NPC_ASH)
-                    DoCast(m_creature, SPELL_UNLOCK);
+                    DoCastSpellIfCan(m_creature, SPELL_UNLOCK);
                 break;
             case 12:
                 if (m_uiNpcEntry == NPC_ASH)

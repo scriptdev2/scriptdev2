@@ -79,10 +79,10 @@ struct MANGOS_DLL_DECL boss_high_botanist_freywinnAI : public ScriptedAI
     {
         switch(urand(0, 3))
         {
-            case 0: DoCast(m_creature,SPELL_PLANT_WHITE); break;
-            case 1: DoCast(m_creature,SPELL_PLANT_GREEN); break;
-            case 2: DoCast(m_creature,SPELL_PLANT_BLUE); break;
-            case 3: DoCast(m_creature,SPELL_PLANT_RED); break;
+            case 0: DoCastSpellIfCan(m_creature,SPELL_PLANT_WHITE); break;
+            case 1: DoCastSpellIfCan(m_creature,SPELL_PLANT_GREEN); break;
+            case 2: DoCastSpellIfCan(m_creature,SPELL_PLANT_BLUE); break;
+            case 3: DoCastSpellIfCan(m_creature,SPELL_PLANT_RED); break;
         }
     }
 
@@ -110,9 +110,9 @@ struct MANGOS_DLL_DECL boss_high_botanist_freywinnAI : public ScriptedAI
 
             m_creature->RemoveAllAuras();
 
-            DoCast(m_creature,SPELL_SUMMON_FRAYER,true);
-            DoCast(m_creature,SPELL_TRANQUILITY,true);
-            DoCast(m_creature,SPELL_TREE_FORM,true);
+            DoCastSpellIfCan(m_creature, SPELL_SUMMON_FRAYER, CAST_TRIGGERED);
+            DoCastSpellIfCan(m_creature, SPELL_TRANQUILITY,   CAST_TRIGGERED);
+            DoCastSpellIfCan(m_creature, SPELL_TREE_FORM,     CAST_TRIGGERED);
 
             m_creature->GetMotionMaster()->MoveIdle();
             MoveFree = false;

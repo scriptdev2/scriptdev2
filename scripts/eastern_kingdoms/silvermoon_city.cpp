@@ -71,7 +71,7 @@ struct MANGOS_DLL_DECL npc_blood_knight_stillbladeAI : public ScriptedAI
             (Hitter->GetTypeId() == TYPEID_PLAYER) && (((Player*)Hitter)->IsActiveQuest(QUEST_REDEEMING_THE_DEAD)))
         {
             ((Player*)Hitter)->AreaExploredOrEventHappens(QUEST_REDEEMING_THE_DEAD);
-            DoCast(m_creature,SPELL_REVIVE_SELF);
+            DoCastSpellIfCan(m_creature,SPELL_REVIVE_SELF);
             m_creature->SetStandState(UNIT_STAND_STATE_STAND);
             m_creature->SetUInt32Value(UNIT_DYNAMIC_FLAGS, 0);
             //m_creature->RemoveAllAuras();

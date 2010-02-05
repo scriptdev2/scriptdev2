@@ -254,7 +254,7 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
 
         if (m_uiCleaveTimer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), SPELL_SHADOWCLEAVE);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_SHADOWCLEAVE);
             m_uiCleaveTimer = urand(10000, 16000);
         }
         else
@@ -262,7 +262,7 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
 
         if (m_uiCurseTimer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), SPELL_INTANGIBLE_PRESENCE);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_INTANGIBLE_PRESENCE);
             m_uiCurseTimer = 30000;
         }
         else
@@ -294,7 +294,7 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
                 if (target_list.size())
                     target = *(target_list.begin()+rand()%target_list.size());
 
-                DoCast(target, SPELL_BERSERKER_CHARGE);
+                DoCastSpellIfCan(target, SPELL_BERSERKER_CHARGE);
                 m_uiChargeTimer = 20000;
             }
             else

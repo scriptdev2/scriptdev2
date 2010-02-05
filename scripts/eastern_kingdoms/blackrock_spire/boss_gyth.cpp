@@ -98,7 +98,7 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
         if (!RootSelf)
         {
             //m_creature->m_canMove = true;
-            DoCast(m_creature, 33356);
+            DoCastSpellIfCan(m_creature, 33356);
             RootSelf = true;
         }
 
@@ -150,21 +150,21 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
             // CorrosiveAcid_Timer
             if (CorrosiveAcid_Timer < diff)
             {
-                DoCast(m_creature->getVictim(), SPELL_CORROSIVEACID);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_CORROSIVEACID);
                 CorrosiveAcid_Timer = 7000;
             } else CorrosiveAcid_Timer -= diff;
 
             // Freeze_Timer
             if (Freeze_Timer < diff)
             {
-                DoCast(m_creature->getVictim(), SPELL_FREEZE);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_FREEZE);
                 Freeze_Timer = 16000;
             } else Freeze_Timer -= diff;
 
             // Flamebreath_Timer
             if (Flamebreath_Timer < diff)
             {
-                DoCast(m_creature->getVictim(),SPELL_FLAMEBREATH);
+                DoCastSpellIfCan(m_creature->getVictim(),SPELL_FLAMEBREATH);
                 Flamebreath_Timer = 10500;
             } else Flamebreath_Timer -= diff;
 

@@ -51,7 +51,7 @@ struct MANGOS_DLL_DECL boss_gehennasAI : public ScriptedAI
         if (ShadowBolt_Timer < diff)
         {
             if (Unit* bTarget = SelectUnit(SELECT_TARGET_RANDOM,1))
-                DoCast(bTarget,SPELL_SHADOWBOLT);
+                DoCastSpellIfCan(bTarget,SPELL_SHADOWBOLT);
             ShadowBolt_Timer = 7000;
         }else ShadowBolt_Timer -= diff;
 
@@ -59,7 +59,7 @@ struct MANGOS_DLL_DECL boss_gehennasAI : public ScriptedAI
         if (RainOfFire_Timer < diff)
         {
             if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
-                DoCast(target,SPELL_RAINOFFIRE);
+                DoCastSpellIfCan(target,SPELL_RAINOFFIRE);
 
             RainOfFire_Timer = urand(4000, 12000);
         }else RainOfFire_Timer -= diff;
@@ -67,7 +67,7 @@ struct MANGOS_DLL_DECL boss_gehennasAI : public ScriptedAI
         //GehennasCurse_Timer
         if (GehennasCurse_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_GEHENNASCURSE);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_GEHENNASCURSE);
             GehennasCurse_Timer = urand(22000, 30000);
         }else GehennasCurse_Timer -= diff;
 

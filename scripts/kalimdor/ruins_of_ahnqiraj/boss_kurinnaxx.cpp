@@ -58,20 +58,20 @@ struct MANGOS_DLL_DECL boss_kurinnaxxAI : public ScriptedAI
         if (i==0 && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 30 && !m_creature->IsNonMeleeSpellCasted(false))
         {
             i=1;
-            DoCast(m_creature->getVictim(),SPELL_ENRAGE);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_ENRAGE);
         }
 
         //MORTALWOUND_Timer
         if (MORTALWOUND_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_MORTALWOUND);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_MORTALWOUND);
             MORTALWOUND_Timer = 30000;
         }else MORTALWOUND_Timer -= diff;
 
         //SANDTRAP_Timer
         if (SANDTRAP_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_SANDTRAP);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_SANDTRAP);
             SANDTRAP_Timer = 30000;
         }else SANDTRAP_Timer -= diff;
 

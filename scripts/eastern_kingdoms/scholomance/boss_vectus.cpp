@@ -56,7 +56,7 @@ struct MANGOS_DLL_DECL boss_vectusAI : public ScriptedAI
         //m_uiFlameStrike_Timer
         if (m_uiFlameStrike_Timer < uiDiff)
         {
-            DoCast(m_creature, SPELL_FLAMESTRIKE);
+            DoCastSpellIfCan(m_creature, SPELL_FLAMESTRIKE);
             m_uiFlameStrike_Timer = 30000;
         }
         else
@@ -65,7 +65,7 @@ struct MANGOS_DLL_DECL boss_vectusAI : public ScriptedAI
         //BlastWave_Timer
         if (m_uiBlastWave_Timer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), SPELL_BLAST_WAVE);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_BLAST_WAVE);
             m_uiBlastWave_Timer = 12000;
         }
         else
@@ -76,7 +76,7 @@ struct MANGOS_DLL_DECL boss_vectusAI : public ScriptedAI
         {
             if (m_uiFrenzy_Timer < uiDiff)
             {
-                DoCast(m_creature, SPELL_FRENZY);
+                DoCastSpellIfCan(m_creature, SPELL_FRENZY);
                 DoScriptText(EMOTE_GENERIC_FRENZY_KILL, m_creature);
                 m_uiFrenzy_Timer = 24000;
             }

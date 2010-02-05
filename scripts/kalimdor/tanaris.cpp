@@ -109,13 +109,13 @@ struct MANGOS_DLL_DECL mob_aquementasAI : public ScriptedAI
 
         if (FrostShock_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_FROST_SHOCK);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_FROST_SHOCK);
             FrostShock_Timer = 15000;
         }else FrostShock_Timer -= diff;
 
         if (AquaJet_Timer < diff)
         {
-            DoCast(m_creature,SPELL_AQUA_JET);
+            DoCastSpellIfCan(m_creature,SPELL_AQUA_JET);
             AquaJet_Timer = 15000;
         }else AquaJet_Timer -= diff;
 
@@ -178,7 +178,7 @@ struct MANGOS_DLL_DECL npc_custodian_of_timeAI : public npc_escortAI
             case 23: DoScriptText(WHISPER_CUSTODIAN_4, m_creature, pPlayer); break;
             case 24:
                 DoScriptText(WHISPER_CUSTODIAN_14, m_creature, pPlayer);
-                DoCast(pPlayer, 34883);
+                DoCastSpellIfCan(pPlayer, 34883);
                 //below here is temporary workaround, to be removed when spell works properly
                 pPlayer->AreaExploredOrEventHappens(10277);
                 break;

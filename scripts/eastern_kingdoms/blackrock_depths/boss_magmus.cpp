@@ -76,7 +76,7 @@ struct MANGOS_DLL_DECL boss_magmusAI : public ScriptedAI
         //FieryBurst_Timer
         if (m_uiFieryBurst_Timer < uiDiff)
         {
-            DoCast(m_creature->getVictim(),SPELL_FIERYBURST);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_FIERYBURST);
             m_uiFieryBurst_Timer = 6000;
         }
         else
@@ -87,7 +87,7 @@ struct MANGOS_DLL_DECL boss_magmusAI : public ScriptedAI
         {
             if (m_uiWarStomp_Timer < uiDiff)
             {
-                DoCast(m_creature->getVictim(),SPELL_WARSTOMP);
+                DoCastSpellIfCan(m_creature->getVictim(),SPELL_WARSTOMP);
                 m_uiWarStomp_Timer = 8000;
             }
             else

@@ -97,7 +97,7 @@ struct MANGOS_DLL_DECL mobs_risen_husk_spiritAI : public ScriptedAI
         if (m_uiConsumeFlesh_Timer < uiDiff)
         {
             if (m_creature->GetEntry() == NPC_RISEN_HUSK)
-                DoCast(m_creature->getVictim(),SPELL_CONSUME_FLESH);
+                DoCastSpellIfCan(m_creature->getVictim(),SPELL_CONSUME_FLESH);
 
             m_uiConsumeFlesh_Timer = 15000;
         }
@@ -107,7 +107,7 @@ struct MANGOS_DLL_DECL mobs_risen_husk_spiritAI : public ScriptedAI
         if (m_uiIntangiblePresence_Timer < uiDiff)
         {
             if (m_creature->GetEntry() == NPC_RISEN_SPIRIT)
-                DoCast(m_creature->getVictim(),SPELL_INTANGIBLE_PRESENCE);
+                DoCastSpellIfCan(m_creature->getVictim(),SPELL_INTANGIBLE_PRESENCE);
 
             m_uiIntangiblePresence_Timer = 20000;
         }

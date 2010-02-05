@@ -89,7 +89,7 @@ struct MANGOS_DLL_DECL boss_pandemoniusAI : public ScriptedAI
         {
             if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
             {
-                DoCast(target, m_bIsRegularMode ? SPELL_VOID_BLAST : H_SPELL_VOID_BLAST);
+                DoCastSpellIfCan(target, m_bIsRegularMode ? SPELL_VOID_BLAST : H_SPELL_VOID_BLAST);
                 VoidBlast_Timer = 500;
                 ++VoidBlast_Counter;
             }
@@ -110,7 +110,7 @@ struct MANGOS_DLL_DECL boss_pandemoniusAI : public ScriptedAI
 
                 DoScriptText(EMOTE_DARK_SHELL, m_creature);
 
-                DoCast(m_creature, m_bIsRegularMode ? SPELL_DARK_SHELL : H_SPELL_DARK_SHELL);
+                DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_DARK_SHELL : H_SPELL_DARK_SHELL);
                 DarkShell_Timer = 20000;
             }else DarkShell_Timer -= diff;
         }

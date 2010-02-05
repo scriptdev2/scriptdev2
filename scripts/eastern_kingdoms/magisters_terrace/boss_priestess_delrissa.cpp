@@ -244,7 +244,7 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
                 }
             }
 
-            DoCast(target, SPELL_FLASH_HEAL);
+            DoCastSpellIfCan(target, SPELL_FLASH_HEAL);
             HealTimer = 15000;
         }else HealTimer -= diff;
 
@@ -261,7 +261,7 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
                 }
             }
 
-            DoCast(target, m_bIsRegularMode ? SPELL_RENEW_NORMAL : SPELL_RENEW_HEROIC);
+            DoCastSpellIfCan(target, m_bIsRegularMode ? SPELL_RENEW_NORMAL : SPELL_RENEW_HEROIC);
             RenewTimer = 5000;
         }else RenewTimer -= diff;
 
@@ -278,7 +278,7 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
                 }
             }
 
-            DoCast(target, SPELL_SHIELD);
+            DoCastSpellIfCan(target, SPELL_SHIELD);
             ShieldTimer = 7500;
         }else ShieldTimer -= diff;
 
@@ -306,7 +306,7 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
             }
 
             if (target)
-                DoCast(target, SPELL_DISPEL_MAGIC);
+                DoCastSpellIfCan(target, SPELL_DISPEL_MAGIC);
 
             DispelTimer = 12000;
         }else DispelTimer -= diff;
@@ -314,7 +314,7 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
         if (SWPainTimer < diff)
         {
             if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                DoCast(pTarget, m_bIsRegularMode ? SPELL_SW_PAIN_NORMAL : SPELL_SW_PAIN_HEROIC);
+                DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_SW_PAIN_NORMAL : SPELL_SW_PAIN_HEROIC);
 
             SWPainTimer = 10000;
         }else SWPainTimer -= diff;
@@ -457,7 +457,7 @@ struct MANGOS_DLL_DECL boss_priestess_lackey_commonAI : public ScriptedAI
     {
         if (!m_bUsedPotion && ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 25))
         {
-            DoCast(m_creature, SPELL_HEALING_POTION);
+            DoCastSpellIfCan(m_creature, SPELL_HEALING_POTION);
             m_bUsedPotion = true;
         }
 
@@ -513,7 +513,7 @@ struct MANGOS_DLL_DECL boss_kagani_nightstrikeAI : public boss_priestess_lackey_
 
         if (Vanish_Timer < diff)
         {
-            DoCast(m_creature, SPELL_VANISH);
+            DoCastSpellIfCan(m_creature, SPELL_VANISH);
 
             Unit* pUnit = SelectUnit(SELECT_TARGET_RANDOM, 0);
 
@@ -531,8 +531,8 @@ struct MANGOS_DLL_DECL boss_kagani_nightstrikeAI : public boss_priestess_lackey_
         {
             if (Wait_Timer < diff)
             {
-                DoCast(m_creature->getVictim(), SPELL_BACKSTAB, true);
-                DoCast(m_creature->getVictim(), SPELL_KIDNEY_SHOT, true);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_BACKSTAB, CAST_TRIGGERED);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_KIDNEY_SHOT, CAST_TRIGGERED);
                 m_creature->SetVisibility(VISIBILITY_ON);       // ...? Hacklike
                 InVanish = false;
             }else Wait_Timer -= diff;
@@ -540,19 +540,19 @@ struct MANGOS_DLL_DECL boss_kagani_nightstrikeAI : public boss_priestess_lackey_
 
         if (Gouge_Timer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_GOUGE);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_GOUGE);
             Gouge_Timer = 5500;
         }else Gouge_Timer -= diff;
 
         if (Kick_Timer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_KICK);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_KICK);
             Kick_Timer = 7000;
         }else Kick_Timer -= diff;
 
         if (Eviscerate_Timer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_EVISCERATE);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_EVISCERATE);
             Eviscerate_Timer = 4000;
         }else Eviscerate_Timer -= diff;
 
@@ -601,7 +601,7 @@ struct MANGOS_DLL_DECL boss_ellris_duskhallowAI : public boss_priestess_lackey_c
 
     void Aggro(Unit* pWho)
     {
-        DoCast(m_creature,SPELL_SUMMON_IMP);
+        DoCastSpellIfCan(m_creature,SPELL_SUMMON_IMP);
     }
 
     void UpdateAI(const uint32 diff)
@@ -613,20 +613,20 @@ struct MANGOS_DLL_DECL boss_ellris_duskhallowAI : public boss_priestess_lackey_c
 
         if (Immolate_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_IMMOLATE);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_IMMOLATE);
             Immolate_Timer = 6000;
         }else Immolate_Timer -= diff;
 
         if (Shadow_Bolt_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_SHADOW_BOLT);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_SHADOW_BOLT);
             Shadow_Bolt_Timer = 5000;
         }else Shadow_Bolt_Timer -= diff;
 
         if (Seed_of_Corruption_Timer < diff)
         {
             if (Unit* pUnit = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                DoCast(pUnit, SPELL_SEED_OF_CORRUPTION);
+                DoCastSpellIfCan(pUnit, SPELL_SEED_OF_CORRUPTION);
 
             Seed_of_Corruption_Timer = 10000;
         }else Seed_of_Corruption_Timer -= diff;
@@ -634,7 +634,7 @@ struct MANGOS_DLL_DECL boss_ellris_duskhallowAI : public boss_priestess_lackey_c
         if (Curse_of_Agony_Timer < diff)
         {
             if (Unit* pUnit = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                DoCast(pUnit, SPELL_CURSE_OF_AGONY);
+                DoCastSpellIfCan(pUnit, SPELL_CURSE_OF_AGONY);
 
             Curse_of_Agony_Timer = 13000;
         }else Curse_of_Agony_Timer -= diff;
@@ -642,7 +642,7 @@ struct MANGOS_DLL_DECL boss_ellris_duskhallowAI : public boss_priestess_lackey_c
         if (Fear_Timer < diff)
         {
             if (Unit* pUnit = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                DoCast(pUnit, SPELL_FEAR);
+                DoCastSpellIfCan(pUnit, SPELL_FEAR);
 
             Fear_Timer = 10000;
         }else Fear_Timer -= diff;
@@ -687,13 +687,13 @@ struct MANGOS_DLL_DECL boss_eramas_brightblazeAI : public boss_priestess_lackey_
 
         if (Knockdown_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_KNOCKDOWN);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_KNOCKDOWN);
             Knockdown_Timer = 6000;
         }else Knockdown_Timer -= diff;
 
         if (Snap_Kick_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_SNAP_KICK);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_SNAP_KICK);
             Snap_Kick_Timer  = 4500;
         }else Snap_Kick_Timer -= diff;
 
@@ -760,40 +760,40 @@ struct MANGOS_DLL_DECL boss_yazzaiAI : public boss_priestess_lackey_commonAI
         {
             if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
             {
-                DoCast(target, SPELL_POLYMORPH);
+                DoCastSpellIfCan(target, SPELL_POLYMORPH);
                 Polymorph_Timer = 20000;
             }
         }else Polymorph_Timer -= diff;
 
         if (((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 35) && !HasIceBlocked)
         {
-            DoCast(m_creature, SPELL_ICE_BLOCK);
+            DoCastSpellIfCan(m_creature, SPELL_ICE_BLOCK);
             HasIceBlocked = true;
         }
 
         if (Blizzard_Timer < diff)
         {
             if (Unit* pUnit = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                DoCast(pUnit, SPELL_BLIZZARD);
+                DoCastSpellIfCan(pUnit, SPELL_BLIZZARD);
 
             Blizzard_Timer = 8000;
         }else Blizzard_Timer -= diff;
 
         if (Ice_Lance_Timer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_ICE_LANCE);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_ICE_LANCE);
             Ice_Lance_Timer = 12000;
         }else Ice_Lance_Timer -= diff;
 
         if (Cone_of_Cold_Timer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_CONE_OF_COLD);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_CONE_OF_COLD);
             Cone_of_Cold_Timer = 10000;
         }else Cone_of_Cold_Timer -= diff;
 
         if (Frostbolt_Timer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_FROSTBOLT);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_FROSTBOLT);
             Frostbolt_Timer = 8000;
         }else Frostbolt_Timer -= diff;
 
@@ -816,7 +816,7 @@ struct MANGOS_DLL_DECL boss_yazzaiAI : public boss_priestess_lackey_commonAI
 
             //if anybody is in melee range than escape by blink
             if (InMeleeRange)
-                DoCast(m_creature, SPELL_BLINK);
+                DoCastSpellIfCan(m_creature, SPELL_BLINK);
 
             Blink_Timer = 8000;
         }else Blink_Timer -= diff;
@@ -867,7 +867,7 @@ struct MANGOS_DLL_DECL boss_warlord_salarisAI : public boss_priestess_lackey_com
 
     void Aggro(Unit* who)
     {
-        DoCast(m_creature, SPELL_BATTLE_SHOUT);
+        DoCastSpellIfCan(m_creature, SPELL_BATTLE_SHOUT);
     }
 
     void UpdateAI(const uint32 diff)
@@ -898,7 +898,7 @@ struct MANGOS_DLL_DECL boss_warlord_salarisAI : public boss_priestess_lackey_com
             if (!InMeleeRange)
             {
                 if (Unit* pUnit = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                    DoCast(pUnit, SPELL_INTERCEPT_STUN);
+                    DoCastSpellIfCan(pUnit, SPELL_INTERCEPT_STUN);
             }
 
             Intercept_Stun_Timer = 10000;
@@ -906,31 +906,31 @@ struct MANGOS_DLL_DECL boss_warlord_salarisAI : public boss_priestess_lackey_com
 
         if (Disarm_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_DISARM);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_DISARM);
             Disarm_Timer = 6000;
         }else Disarm_Timer -= diff;
 
         if (Hamstring_Timer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_HAMSTRING);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_HAMSTRING);
             Hamstring_Timer = 4500;
         }else Hamstring_Timer -= diff;
 
         if (Mortal_Strike_Timer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_MORTAL_STRIKE);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_MORTAL_STRIKE);
             Mortal_Strike_Timer = 4500;
         }else Mortal_Strike_Timer -= diff;
 
         if (Piercing_Howl_Timer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_PIERCING_HOWL);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_PIERCING_HOWL);
             Piercing_Howl_Timer = 10000;
         }else Piercing_Howl_Timer -= diff;
 
         if (Frightening_Shout_Timer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_FRIGHTENING_SHOUT);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_FRIGHTENING_SHOUT);
             Frightening_Shout_Timer = 18000;
         }else Frightening_Shout_Timer -= diff;
 
@@ -1006,7 +1006,7 @@ struct MANGOS_DLL_DECL boss_garaxxasAI : public boss_priestess_lackey_commonAI
         {
             if (Wing_Clip_Timer < diff)
             {
-                DoCast(m_creature->getVictim(), SPELL_WING_CLIP);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_WING_CLIP);
                 Wing_Clip_Timer = 4000;
             }else Wing_Clip_Timer -= diff;
 
@@ -1021,7 +1021,7 @@ struct MANGOS_DLL_DECL boss_garaxxasAI : public boss_priestess_lackey_commonAI
                 else
                 {
                     //if pGo does not exist, then we can cast
-                    DoCast(m_creature->getVictim(), SPELL_FREEZING_TRAP);
+                    DoCastSpellIfCan(m_creature->getVictim(), SPELL_FREEZING_TRAP);
                     Freezing_Trap_Timer = 15000;
                 }
             }else Freezing_Trap_Timer -= diff;
@@ -1032,25 +1032,25 @@ struct MANGOS_DLL_DECL boss_garaxxasAI : public boss_priestess_lackey_commonAI
         {
             if (Concussive_Shot_Timer < diff)
             {
-                DoCast(m_creature->getVictim(), SPELL_CONCUSSIVE_SHOT);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_CONCUSSIVE_SHOT);
                 Concussive_Shot_Timer = 8000;
             }else Concussive_Shot_Timer -= diff;
 
             if (Multi_Shot_Timer < diff)
             {
-                DoCast(m_creature->getVictim(), SPELL_MULTI_SHOT);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_MULTI_SHOT);
                 Multi_Shot_Timer = 10000;
             }else Multi_Shot_Timer -= diff;
 
             if (Aimed_Shot_Timer < diff)
             {
-                DoCast(m_creature->getVictim(), SPELL_AIMED_SHOT);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_AIMED_SHOT);
                 Aimed_Shot_Timer = 6000;
             }else Aimed_Shot_Timer -= diff;
 
             if (Shoot_Timer < diff)
             {
-                DoCast(m_creature->getVictim(), SPELL_SHOOT);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_SHOOT);
                 Shoot_Timer = 2500;
             }else Shoot_Timer -= diff;
         }
@@ -1108,9 +1108,9 @@ struct MANGOS_DLL_DECL boss_apokoAI : public boss_priestess_lackey_commonAI
         {
             switch(urand(0, 2))
             {
-                case 0: DoCast(m_creature, SPELL_WINDFURY_TOTEM); break;
-                case 1: DoCast(m_creature, SPELL_FIRE_NOVA_TOTEM); break;
-                case 2: DoCast(m_creature, SPELL_EARTHBIND_TOTEM); break;
+                case 0: DoCastSpellIfCan(m_creature, SPELL_WINDFURY_TOTEM); break;
+                case 1: DoCastSpellIfCan(m_creature, SPELL_FIRE_NOVA_TOTEM); break;
+                case 2: DoCastSpellIfCan(m_creature, SPELL_EARTHBIND_TOTEM); break;
             }
             ++Totem_Amount;
             Totem_Timer = Totem_Amount*2000;
@@ -1118,21 +1118,21 @@ struct MANGOS_DLL_DECL boss_apokoAI : public boss_priestess_lackey_commonAI
 
         if (War_Stomp_Timer < diff)
         {
-            DoCast(m_creature, SPELL_WAR_STOMP);
+            DoCastSpellIfCan(m_creature, SPELL_WAR_STOMP);
             War_Stomp_Timer = 10000;
         }else War_Stomp_Timer -= diff;
 
         if (Purge_Timer < diff)
         {
             if (Unit* pUnit = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                DoCast(pUnit, SPELL_PURGE);
+                DoCastSpellIfCan(pUnit, SPELL_PURGE);
 
             Purge_Timer = 15000;
         }else Purge_Timer -= diff;
 
         if (Frost_Shock_Timer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_FROST_SHOCK);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_FROST_SHOCK);
             Frost_Shock_Timer = 7000;
         }else Frost_Shock_Timer -= diff;
 
@@ -1145,7 +1145,7 @@ struct MANGOS_DLL_DECL boss_apokoAI : public boss_priestess_lackey_commonAI
             //   Unit* pAdd = Unit::GetUnit(*m_creature, (*itr)->guid);
             //   if (pAdd && pAdd->isAlive())
             //   {
-            DoCast(m_creature, SPELL_LESSER_HEALING_WAVE);
+            DoCastSpellIfCan(m_creature, SPELL_LESSER_HEALING_WAVE);
             Healing_Wave_Timer = 5000;
             //    }
             // }
@@ -1201,19 +1201,19 @@ struct MANGOS_DLL_DECL boss_zelfanAI : public boss_priestess_lackey_commonAI
 
         if (Goblin_Dragon_Gun_Timer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_GOBLIN_DRAGON_GUN);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_GOBLIN_DRAGON_GUN);
             Goblin_Dragon_Gun_Timer = 10000;
         }else Goblin_Dragon_Gun_Timer -= diff;
 
         if (Rocket_Launch_Timer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_ROCKET_LAUNCH);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_ROCKET_LAUNCH);
             Rocket_Launch_Timer = 9000;
         }else Rocket_Launch_Timer -= diff;
 
         if (Fel_Iron_Bomb_Timer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_FEL_IRON_BOMB);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_FEL_IRON_BOMB);
             Fel_Iron_Bomb_Timer = 15000;
         }else Fel_Iron_Bomb_Timer -= diff;
 
@@ -1225,7 +1225,7 @@ struct MANGOS_DLL_DECL boss_zelfanAI : public boss_priestess_lackey_commonAI
                 {
                     if (pAdd->IsPolymorphed())
                     {
-                        DoCast(pAdd, SPELL_RECOMBOBULATE);
+                        DoCastSpellIfCan(pAdd, SPELL_RECOMBOBULATE);
                         break;
                     }
                 }
@@ -1235,7 +1235,7 @@ struct MANGOS_DLL_DECL boss_zelfanAI : public boss_priestess_lackey_commonAI
 
         if (High_Explosive_Sheep_Timer < diff)
         {
-            DoCast(m_creature, SPELL_HIGH_EXPLOSIVE_SHEEP);
+            DoCastSpellIfCan(m_creature, SPELL_HIGH_EXPLOSIVE_SHEEP);
             High_Explosive_Sheep_Timer = 65000;
         }else High_Explosive_Sheep_Timer -= diff;
 
@@ -1265,7 +1265,7 @@ CreatureAI* GetAI_zelfan(Creature* pCreature)
 //    {
 //        if (Explosion_Timer < diff)
 //        {
-//            DoCast(m_creature->getVictim(), SPELL_SHEEP_EXPLOSION);
+//            DoCastSpellIfCan(m_creature->getVictim(), SPELL_SHEEP_EXPLOSION);
 //        }else
 //            Explosion_Timer -= diff;
 //    }

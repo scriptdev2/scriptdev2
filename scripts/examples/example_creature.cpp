@@ -149,7 +149,7 @@ struct MANGOS_DLL_DECL example_creatureAI : public ScriptedAI
             //Rebuff timer
             if (m_uiRebuff_Timer < uiDiff)
             {
-                DoCast(m_creature, SPELL_BUFF);
+                DoCastSpellIfCan(m_creature, SPELL_BUFF);
                 m_uiRebuff_Timer = 900000;                  //Rebuff agian in 15 minutes
             }
             else
@@ -165,9 +165,9 @@ struct MANGOS_DLL_DECL example_creatureAI : public ScriptedAI
         {
             //Cast spell one on our current target.
             if (rand()%50 > 10)
-                DoCast(m_creature->getVictim(), SPELL_ONE_ALT);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_ONE_ALT);
             else if (m_creature->IsWithinDist(m_creature->getVictim(), 25.0f))
-                DoCast(m_creature->getVictim(), SPELL_ONE);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_ONE);
 
             m_uiSpell_1_Timer = 5000;
         }
@@ -178,7 +178,7 @@ struct MANGOS_DLL_DECL example_creatureAI : public ScriptedAI
         if (m_uiSpell_2_Timer < uiDiff)
         {
             //Cast spell one on our current target.
-            DoCast(m_creature->getVictim(), SPELL_TWO);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_TWO);
             m_uiSpell_2_Timer = 37000;
         }
         else
@@ -191,7 +191,7 @@ struct MANGOS_DLL_DECL example_creatureAI : public ScriptedAI
             if (m_uiSpell_3_Timer < uiDiff)
             {
                 //Cast spell one on our current target.
-                DoCast(m_creature->getVictim(), SPELL_THREE);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_THREE);
 
                 m_uiSpell_3_Timer = 19000;
             }
@@ -202,7 +202,7 @@ struct MANGOS_DLL_DECL example_creatureAI : public ScriptedAI
             {
                 //Say our line then cast uber death spell
                 DoScriptText(SAY_BESERK, m_creature, m_creature->getVictim());
-                DoCast(m_creature->getVictim(), SPELL_BESERK);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_BESERK);
 
                 //Cast our beserk spell agian in 12 seconds if we didn't kill everyone
                 m_uiBeserk_Timer = 12000;
@@ -217,7 +217,7 @@ struct MANGOS_DLL_DECL example_creatureAI : public ScriptedAI
                 //Go to next phase
                 ++m_uiPhase;
                 DoScriptText(SAY_PHASE, m_creature);
-                DoCast(m_creature, SPELL_ENRAGE);
+                DoCastSpellIfCan(m_creature, SPELL_ENRAGE);
             }
             else
                 m_uiPhase_Timer -= uiDiff;

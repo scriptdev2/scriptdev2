@@ -169,7 +169,7 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
         if (m_uiGrowth_Timer < uiDiff)
         {
             DoScriptText(EMOTE_GROW, m_creature);
-            DoCast(m_creature,SPELL_GROWTH);
+            DoCastSpellIfCan(m_creature,SPELL_GROWTH);
             m_uiGrowth_Timer = 30000;
         }
         else
@@ -186,7 +186,7 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
                 if (m_uiReverberation_Timer < 10000)
                     m_uiReverberation_Timer += 10000;
 
-                DoCast(m_creature, SPELL_SHATTER);
+                DoCastSpellIfCan(m_creature, SPELL_SHATTER);
             }
             else
                 m_uiGroundSlamTimer -= uiDiff;
@@ -215,9 +215,9 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
                 }
 
                 if (pTarget)
-                    DoCast(pTarget,SPELL_HURTFUL_STRIKE);
+                    DoCastSpellIfCan(pTarget,SPELL_HURTFUL_STRIKE);
                 else
-                    DoCast(m_creature->getVictim(),SPELL_HURTFUL_STRIKE);
+                    DoCastSpellIfCan(m_creature->getVictim(),SPELL_HURTFUL_STRIKE);
 
                 m_uiHurtfulStrike_Timer = 8000;
             }
@@ -227,7 +227,7 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
             // Reverberation
             if (m_uiReverberation_Timer < uiDiff)
             {
-                DoCast(m_creature->getVictim(), SPELL_REVERBERATION, true);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_REVERBERATION, CAST_TRIGGERED);
                 m_uiReverberation_Timer = urand(15000, 25000);
             }
             else
@@ -237,7 +237,7 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
             if (m_uiCaveIn_Timer < uiDiff)
             {
                 if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
-                    DoCast(pTarget,SPELL_CAVE_IN);
+                    DoCastSpellIfCan(pTarget,SPELL_CAVE_IN);
 
                 if (m_uiCaveIn_StaticTimer >= 4000)
                     m_uiCaveIn_StaticTimer -= 2000;
@@ -257,7 +257,7 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
                 m_bPerformingGroundSlam = true;
                 m_uiGroundSlamTimer     = 10000;
 
-                DoCast(m_creature, SPELL_GROUND_SLAM);
+                DoCastSpellIfCan(m_creature, SPELL_GROUND_SLAM);
             }
             else
                 m_uiGroundSlamTimer -= uiDiff;

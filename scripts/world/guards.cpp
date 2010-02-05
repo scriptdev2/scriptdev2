@@ -2517,7 +2517,7 @@ struct MANGOS_DLL_DECL guard_shattrath_aldorAI : public guardAI
             Unit* temp = m_creature->getVictim();
             if (temp && temp->GetTypeId() == TYPEID_PLAYER)
             {
-                DoCast(temp,SPELL_BANISHED_SHATTRATH_A);
+                DoCastSpellIfCan(temp,SPELL_BANISHED_SHATTRATH_A);
                 Banish_Timer = 9000;
                 playerGUID = temp->GetGUID();
                 if (playerGUID)
@@ -2711,7 +2711,7 @@ struct MANGOS_DLL_DECL guard_shattrath_scryerAI : public guardAI
             Unit* temp = m_creature->getVictim();
             if (temp && temp->GetTypeId() == TYPEID_PLAYER)
             {
-                DoCast(temp,SPELL_BANISHED_SHATTRATH_S);
+                DoCastSpellIfCan(temp,SPELL_BANISHED_SHATTRATH_S);
                 Banish_Timer = 9000;
                 playerGUID = temp->GetGUID();
                 if (playerGUID)

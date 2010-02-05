@@ -135,7 +135,7 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
 
         DoScriptText(SAY_IMAGE, m_creature);
 
-        DoCast(m_creature, IsImage33 ? SPELL_33_ILLUSION : SPELL_66_ILLUSION);
+        DoCastSpellIfCan(m_creature, IsImage33 ? SPELL_33_ILLUSION : SPELL_66_ILLUSION);
     }
 
     void UpdateAI(const uint32 diff)
@@ -192,9 +192,9 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
         if (MindRend_Timer < diff)
         {
             if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,1))
-                DoCast(target, m_bIsRegularMode ? SPELL_MIND_REND : H_SPELL_MIND_REND);
+                DoCastSpellIfCan(target, m_bIsRegularMode ? SPELL_MIND_REND : H_SPELL_MIND_REND);
             else
-                DoCast(m_creature->getVictim(), m_bIsRegularMode ? SPELL_MIND_REND : H_SPELL_MIND_REND);
+                DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_MIND_REND : H_SPELL_MIND_REND);
 
             MindRend_Timer = 8000;
         }else MindRend_Timer -=diff;
@@ -207,9 +207,9 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
             DoScriptText(urand(0, 1) ? SAY_FEAR_1 : SAY_FEAR_2, m_creature);
 
             if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,1))
-                DoCast(target,SPELL_FEAR);
+                DoCastSpellIfCan(target,SPELL_FEAR);
             else
-                DoCast(m_creature->getVictim(),SPELL_FEAR);
+                DoCastSpellIfCan(m_creature->getVictim(),SPELL_FEAR);
 
             Fear_Timer = 25000;
         }else Fear_Timer -=diff;
@@ -222,9 +222,9 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
             DoScriptText(urand(0, 1) ? SAY_MIND_1 : SAY_MIND_2, m_creature);
 
             if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,1))
-                DoCast(target, m_bIsRegularMode ? SPELL_DOMINATION : H_SPELL_DOMINATION);
+                DoCastSpellIfCan(target, m_bIsRegularMode ? SPELL_DOMINATION : H_SPELL_DOMINATION);
             else
-                DoCast(m_creature->getVictim(), m_bIsRegularMode ? SPELL_DOMINATION : H_SPELL_DOMINATION);
+                DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_DOMINATION : H_SPELL_DOMINATION);
 
             Domination_Timer = urand(16000, 32000);
         }else Domination_Timer -=diff;
@@ -237,7 +237,7 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
                     return;
 
                 if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,1))
-                    DoCast(target,H_SPELL_MANA_BURN);
+                    DoCastSpellIfCan(target,H_SPELL_MANA_BURN);
 
                 ManaBurn_Timer = urand(16000, 32000);
             }else ManaBurn_Timer -=diff;

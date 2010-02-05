@@ -72,7 +72,7 @@ struct MANGOS_DLL_DECL boss_instructormaliciaAI : public ScriptedAI
         //CallOfGraves_Timer
         if (CallOfGraves_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_CALLOFGRAVES);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_CALLOFGRAVES);
             CallOfGraves_Timer = 65000;
         }else CallOfGraves_Timer -= diff;
 
@@ -81,7 +81,7 @@ struct MANGOS_DLL_DECL boss_instructormaliciaAI : public ScriptedAI
         {
             Unit* target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if (target) DoCast(target,SPELL_CORRUPTION);
+            if (target) DoCastSpellIfCan(target,SPELL_CORRUPTION);
 
             Corruption_Timer = 24000;
         }else Corruption_Timer -= diff;
@@ -89,14 +89,14 @@ struct MANGOS_DLL_DECL boss_instructormaliciaAI : public ScriptedAI
         //Renew_Timer
         if (Renew_Timer < diff)
         {
-            DoCast(m_creature, SPELL_RENEW);
+            DoCastSpellIfCan(m_creature, SPELL_RENEW);
             Renew_Timer = 10000;
         }else Renew_Timer -= diff;
 
         //FlashHeal_Timer
         if (FlashHeal_Timer < diff)
         {
-            DoCast(m_creature,SPELL_FLASHHEAL);
+            DoCastSpellIfCan(m_creature,SPELL_FLASHHEAL);
 
             //5 Flashheals will be casted
             if (FlashCounter < 2)
@@ -114,7 +114,7 @@ struct MANGOS_DLL_DECL boss_instructormaliciaAI : public ScriptedAI
         //HealingTouch_Timer
         if (HealingTouch_Timer < diff)
         {
-            DoCast(m_creature,SPELL_HEALINGTOUCH);
+            DoCastSpellIfCan(m_creature,SPELL_HEALINGTOUCH);
 
             //3 Healingtouchs will be casted
             if (HealingTouch_Timer < 2)

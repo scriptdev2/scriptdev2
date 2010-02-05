@@ -117,13 +117,13 @@ struct MANGOS_DLL_DECL boss_ormorokAI : public ScriptedAI
             {
                 m_bIsEnraged = true;
                 DoScriptText(EMOTE_BOSS_GENERIC_FRENZY, m_creature);
-                DoCast(m_creature, m_bIsRegularMode ? SPELL_FRENZY : SPELL_FRENZY_H);
+                DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_FRENZY : SPELL_FRENZY_H);
             }
         }
 
         if (m_uiTrampleTimer < uiDiff)
         {
-            DoCast(m_creature, m_bIsRegularMode ? SPELL_TRAMPLE : SPELL_TRAMPLE_H);
+            DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_TRAMPLE : SPELL_TRAMPLE_H);
             m_uiTrampleTimer = urand(10000, 35000);
         }
         else
@@ -131,7 +131,7 @@ struct MANGOS_DLL_DECL boss_ormorokAI : public ScriptedAI
 
         if (m_uiSpellReflectTimer < uiDiff)
         {
-            DoCast(m_creature, SPELL_REFLECTION);
+            DoCastSpellIfCan(m_creature, SPELL_REFLECTION);
             m_uiSpellReflectTimer = urand(25000, 40000);
         }
         else
@@ -140,7 +140,7 @@ struct MANGOS_DLL_DECL boss_ormorokAI : public ScriptedAI
         if (m_uiCrystalSpikeTimer < uiDiff)
         {
             DoScriptText(SAY_ICESPIKE, m_creature);
-            DoCast(m_creature, SPELL_CRYSTAL_SPIKES);
+            DoCastSpellIfCan(m_creature, SPELL_CRYSTAL_SPIKES);
             m_uiCrystalSpikeTimer = urand(15000, 30000);
         }
         else
@@ -150,7 +150,7 @@ struct MANGOS_DLL_DECL boss_ormorokAI : public ScriptedAI
         {
             if (m_uiTanglerTimer < uiDiff)
             {
-                DoCast(m_creature, SPELL_SUMMON_TANGLER_H);
+                DoCastSpellIfCan(m_creature, SPELL_SUMMON_TANGLER_H);
                 m_uiTanglerTimer = urand(15000, 25000);
             }
             else

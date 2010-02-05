@@ -337,7 +337,7 @@ struct MANGOS_DLL_DECL boss_warbringer_omroggAI : public ScriptedAI
 
         if (m_uiBlastCount && m_uiBlastWave_Timer <= uiDiff)
         {
-            DoCast(m_creature,SPELL_BLAST_WAVE);
+            DoCastSpellIfCan(m_creature,SPELL_BLAST_WAVE);
             m_uiBlastWave_Timer = 5000;
             ++m_uiBlastCount;
 
@@ -348,7 +348,7 @@ struct MANGOS_DLL_DECL boss_warbringer_omroggAI : public ScriptedAI
         if (m_uiBurningMaul_Timer < uiDiff)
         {
             DoScriptText(EMOTE_ENRAGE, m_creature);
-            DoCast(m_creature, m_bIsRegularMode ? SPELL_BURNING_MAUL : H_SPELL_BURNING_MAUL);
+            DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_BURNING_MAUL : H_SPELL_BURNING_MAUL);
             m_uiBurningMaul_Timer = 40000;
             m_uiBlastWave_Timer = 16000;
             m_uiBlastCount = 1;
@@ -367,13 +367,13 @@ struct MANGOS_DLL_DECL boss_warbringer_omroggAI : public ScriptedAI
 
         if (m_uiFear_Timer < uiDiff)
         {
-            DoCast(m_creature,SPELL_FEAR);
+            DoCastSpellIfCan(m_creature,SPELL_FEAR);
             m_uiFear_Timer = urand(15000, 35000);
         }else m_uiFear_Timer -= uiDiff;
 
         if (m_uiThunderClap_Timer < uiDiff)
         {
-            DoCast(m_creature,SPELL_THUNDERCLAP);
+            DoCastSpellIfCan(m_creature,SPELL_THUNDERCLAP);
             m_uiThunderClap_Timer = urand(15000, 30000);
         }else m_uiThunderClap_Timer -= uiDiff;
 

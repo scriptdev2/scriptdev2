@@ -150,7 +150,7 @@ struct MANGOS_DLL_DECL boss_anomalusAI : public ScriptedAI
             m_uiChaoticRiftGUID = CreateRiftAtRandomPoint();
 
             DoScriptText(SAY_SHIELD, m_creature);
-            DoCast(m_creature, SPELL_RIFT_SHIELD);
+            DoCastSpellIfCan(m_creature, SPELL_RIFT_SHIELD);
             --m_uiShieldCount;
             return;
         }
@@ -166,7 +166,7 @@ struct MANGOS_DLL_DECL boss_anomalusAI : public ScriptedAI
         if (m_uiSparkTimer < uiDiff)
         {
             if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                DoCast(pTarget, m_bIsRegularMode ? SPELL_SPARK : SPELL_SPARK_H);
+                DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_SPARK : SPELL_SPARK_H);
 
             m_uiSparkTimer = 5000;
         }
@@ -196,8 +196,8 @@ struct MANGOS_DLL_DECL mob_chaotic_riftAI : public Scripted_NoMovementAI
     void Reset()
     {
         m_uiSummonTimer = 16000;
-        DoCast(m_creature, SPELL_RIFT_AURA);
-        //DoCast(m_creature, SPELL_RIFT_SUMMON_AURA);
+        DoCastSpellIfCan(m_creature, SPELL_RIFT_AURA);
+        //DoCastSpellIfCan(m_creature, SPELL_RIFT_SUMMON_AURA);
     }
 
     void JustSummoned(Creature* pSummoned)
@@ -215,11 +215,11 @@ struct MANGOS_DLL_DECL mob_chaotic_riftAI : public Scripted_NoMovementAI
             return;
 
         if (!m_creature->HasAura(SPELL_ARCANE_FORM))
-            DoCast(m_creature, SPELL_ARCANE_FORM);
+            DoCastSpellIfCan(m_creature, SPELL_ARCANE_FORM);
 
         if (m_uiSummonTimer < uiDiff)
         {
-            DoCast(m_creature, SPELL_SUMMON_CRAZED_MANA_WRAITH);
+            DoCastSpellIfCan(m_creature, SPELL_SUMMON_CRAZED_MANA_WRAITH);
             m_uiSummonTimer = 16000;
         }
         else

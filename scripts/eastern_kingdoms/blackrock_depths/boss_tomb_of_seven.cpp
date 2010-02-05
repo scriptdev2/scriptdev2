@@ -227,7 +227,7 @@ struct MANGOS_DLL_DECL boss_doomrelAI : public ScriptedAI
         //ShadowVolley_Timer
         if (m_uiShadowVolley_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_SHADOWBOLTVOLLEY);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_SHADOWBOLTVOLLEY);
             m_uiShadowVolley_Timer = 12000;
         }
         else
@@ -237,7 +237,7 @@ struct MANGOS_DLL_DECL boss_doomrelAI : public ScriptedAI
         if (m_uiImmolate_Timer < diff)
         {
             if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
-                DoCast(target,SPELL_IMMOLATE);
+                DoCastSpellIfCan(target,SPELL_IMMOLATE);
 
             m_uiImmolate_Timer = 25000;
         }
@@ -247,7 +247,7 @@ struct MANGOS_DLL_DECL boss_doomrelAI : public ScriptedAI
         //CurseOfWeakness_Timer
         if (m_uiCurseOfWeakness_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_CURSEOFWEAKNESS);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_CURSEOFWEAKNESS);
             m_uiCurseOfWeakness_Timer = 45000;
         }
         else
@@ -256,7 +256,7 @@ struct MANGOS_DLL_DECL boss_doomrelAI : public ScriptedAI
         //DemonArmor_Timer
         if (m_uiDemonArmor_Timer < diff)
         {
-            DoCast(m_creature,SPELL_DEMONARMOR);
+            DoCastSpellIfCan(m_creature,SPELL_DEMONARMOR);
             m_uiDemonArmor_Timer = 300000;
         }
         else

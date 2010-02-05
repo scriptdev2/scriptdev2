@@ -106,7 +106,7 @@ struct MANGOS_DLL_DECL boss_murmurAI : public ScriptedAI
         {
             if (CanSonicBoom)
             {
-                DoCast(m_creature, SPELL_SONIC_BOOM_CAST,true);
+                DoCastSpellIfCan(m_creature, SPELL_SONIC_BOOM_CAST, CAST_TRIGGERED);
                 SonicBoomEffect();
 
                 CanSonicBoom = false;
@@ -115,7 +115,7 @@ struct MANGOS_DLL_DECL boss_murmurAI : public ScriptedAI
             else
             {
                 DoScriptText(EMOTE_SONIC_BOOM, m_creature);
-                DoCast(m_creature,SPELL_SONIC_BOOM_PRE);
+                DoCastSpellIfCan(m_creature,SPELL_SONIC_BOOM_PRE);
                 CanSonicBoom = true;
                 SonicBoom_Timer = 5000;
             }
@@ -127,8 +127,8 @@ struct MANGOS_DLL_DECL boss_murmurAI : public ScriptedAI
             /*Unit* target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
             if (target)
-                DoCast(target, SPELL_MURMURS_TOUCH);*/
-            DoCast(m_creature, SPELL_MURMURS_TOUCH);
+                DoCastSpellIfCan(target, SPELL_MURMURS_TOUCH);*/
+            DoCastSpellIfCan(m_creature, SPELL_MURMURS_TOUCH);
             MurmursTouch_Timer = urand(25000, 35000);
         }else MurmursTouch_Timer -= diff;
 
@@ -137,7 +137,7 @@ struct MANGOS_DLL_DECL boss_murmurAI : public ScriptedAI
         {
             if (Resonance_Timer < diff)
             {
-                DoCast(m_creature->getVictim(), SPELL_RESONANCE);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_RESONANCE);
                 Resonance_Timer = m_bIsRegularMode ? 5000 : 3000;
             }else Resonance_Timer -= diff;
         }
@@ -147,13 +147,13 @@ struct MANGOS_DLL_DECL boss_murmurAI : public ScriptedAI
             if (SonicShock_Timer < diff)
             {
                 if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                    DoCast(target, SPELL_SONIC_SHOCK);
+                    DoCastSpellIfCan(target, SPELL_SONIC_SHOCK);
                 SonicShock_Timer = urand(8000, 12000);
             }else SonicShock_Timer -= diff;
 
             if (ThunderingStorm_Timer < diff)
             {
-                DoCast(m_creature->getVictim(), SPELL_THUNDERING_STORM);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_THUNDERING_STORM);
                 ThunderingStorm_Timer = 12000;
             }else ThunderingStorm_Timer -= diff;
         }
@@ -167,7 +167,7 @@ struct MANGOS_DLL_DECL boss_murmurAI : public ScriptedAI
                 {
                     if (temp->GetTypeId() == TYPEID_PLAYER)
                     {
-                        DoCast(temp, SPELL_MAGNETIC_PULL);
+                        DoCastSpellIfCan(temp, SPELL_MAGNETIC_PULL);
                         pTarget = temp->GetGUID();
                         CanShockWave = true;
                     }

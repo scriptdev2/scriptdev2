@@ -269,13 +269,13 @@ struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
         {
             if (!SpinOnce)
             {
-                DoCast(m_creature->getVictim(),SPELL_DARK_SPIN);
+                DoCastSpellIfCan(m_creature->getVictim(),SPELL_DARK_SPIN);
                 SpinOnce = true;
             }
 
             if (Cleave_Timer < diff)
             {
-                DoCast(m_creature->getVictim(), m_bIsRegularMode ? SPELL_SHADOW_CLEAVE : H_SPELL_SHADOW_SLAM);
+                DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_SHADOW_CLEAVE : H_SPELL_SHADOW_SLAM);
                 Cleave_Timer = urand(6000, 8500);
             }else Cleave_Timer -= diff;
         }
@@ -284,14 +284,14 @@ struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
             if (ShadowFissure_Timer < diff)
             {
                 if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0))
-                    DoCast(target,SPELL_SHADOW_FISSURE);
+                    DoCastSpellIfCan(target,SPELL_SHADOW_FISSURE);
                 ShadowFissure_Timer = urand(7500, 15000);
             }else ShadowFissure_Timer -= diff;
 
             if (DeathCoil_Timer < diff)
             {
                 if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0))
-                    DoCast(target,SPELL_DEATH_COIL);
+                    DoCastSpellIfCan(target,SPELL_DEATH_COIL);
                 DeathCoil_Timer = urand(15000, 20000);
             }else DeathCoil_Timer -= diff;
 
@@ -367,7 +367,7 @@ struct MANGOS_DLL_DECL mob_fel_orc_convertAI : public ScriptedAI
 
         if (Hemorrhage_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_HEMORRHAGE);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_HEMORRHAGE);
             Hemorrhage_Timer = 15000;
         }else Hemorrhage_Timer -= diff;
 

@@ -492,7 +492,7 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
             case 1:
                 if (Unit* pShade = Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_SHADEOFAKAMA)))
                 {
-                    DoCast(pShade, SPELL_AKAMA_SOUL_RETRIEVE);
+                    DoCastSpellIfCan(pShade, SPELL_AKAMA_SOUL_RETRIEVE);
                     m_uiEndingTalkCount = 0;
                     m_uiSoulRetrieveTimer = 16000;
                 }
@@ -526,7 +526,7 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
                     {
                         if (m_uiCastSoulRetrieveTimer < uiDiff)
                         {
-                            DoCast(pShade, SPELL_AKAMA_SOUL_CHANNEL);
+                            DoCastSpellIfCan(pShade, SPELL_AKAMA_SOUL_CHANNEL);
                             m_uiCastSoulRetrieveTimer = 500;
                         }
                         else
@@ -680,7 +680,7 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
             if (Unit* pShade = Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_SHADEOFAKAMA)))
             {
                 if (pShade->isAlive())
-                    DoCast(pShade, SPELL_DESTRUCTIVE_POISON);
+                    DoCastSpellIfCan(pShade, SPELL_DESTRUCTIVE_POISON);
             }
 
             m_uiDestructivePoisonTimer = 15000;
@@ -690,7 +690,7 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
 
         if (m_uiLightningBoltTimer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), SPELL_LIGHTNING_BOLT);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_LIGHTNING_BOLT);
             m_uiLightningBoltTimer = 10000;
         }
         else
@@ -836,7 +836,7 @@ struct MANGOS_DLL_DECL mob_ashtongue_sorcererAI : public ScriptedAI
                     m_creature->GetMotionMaster()->Clear(false);
                     m_creature->GetMotionMaster()->MoveIdle();
 
-                    DoCast(pShade, SPELL_SHADE_SOUL_CHANNEL, true);
+                    DoCastSpellIfCan(pShade, SPELL_SHADE_SOUL_CHANNEL, CAST_TRIGGERED);
 
                     m_bStartBanishing = true;
                 }

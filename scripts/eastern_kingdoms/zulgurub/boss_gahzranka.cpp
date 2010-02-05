@@ -50,14 +50,14 @@ struct MANGOS_DLL_DECL boss_gahzrankaAI : public ScriptedAI
         //Frostbreath_Timer
         if (Frostbreath_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_FROSTBREATH);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_FROSTBREATH);
             Frostbreath_Timer = urand(7000, 11000);
         }else Frostbreath_Timer -= diff;
 
         //MassiveGeyser_Timer
         if (MassiveGeyser_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_MASSIVEGEYSER);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_MASSIVEGEYSER);
             DoResetThreat();
 
             MassiveGeyser_Timer = urand(22000, 32000);
@@ -66,7 +66,7 @@ struct MANGOS_DLL_DECL boss_gahzrankaAI : public ScriptedAI
         //Slam_Timer
         if (Slam_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_SLAM);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_SLAM);
             Slam_Timer = urand(12000, 20000);
         }else Slam_Timer -= diff;
 

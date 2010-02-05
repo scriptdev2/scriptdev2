@@ -147,7 +147,7 @@ void SimpleAI::KilledUnit(Unit *victim)
 
     //Target is ok, cast a spell on it
     if (target)
-        DoCast(target, Kill_Spell);
+        DoCastSpellIfCan(target, Kill_Spell);
 }
 
 void SimpleAI::DamageTaken(Unit *killer, uint32 &damage)
@@ -195,7 +195,7 @@ void SimpleAI::DamageTaken(Unit *killer, uint32 &damage)
 
     //Target is ok, cast a spell on it
     if (target)
-        DoCast(target, Death_Spell);
+        DoCastSpellIfCan(target, Death_Spell);
 }
 
 void SimpleAI::UpdateAI(const uint32 diff)
@@ -247,7 +247,7 @@ void SimpleAI::UpdateAI(const uint32 diff)
                     if (m_creature->IsNonMeleeSpellCasted(false))
                         m_creature->InterruptNonMeleeSpells(false);
 
-                    DoCast(target, Spell[i].Spell_Id);
+                    DoCastSpellIfCan(target, Spell[i].Spell_Id);
 
                     //Yell and sound use the same number so that you can make
                     //the creature yell with the correct sound effect attached

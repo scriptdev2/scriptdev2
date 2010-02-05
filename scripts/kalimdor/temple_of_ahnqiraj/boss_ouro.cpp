@@ -60,7 +60,7 @@ struct MANGOS_DLL_DECL boss_ouroAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-        DoCast(m_creature->getVictim(), SPELL_BIRTH);
+        DoCastSpellIfCan(m_creature->getVictim(), SPELL_BIRTH);
     }
 
     void UpdateAI(const uint32 diff)
@@ -72,14 +72,14 @@ struct MANGOS_DLL_DECL boss_ouroAI : public ScriptedAI
         //Sweep_Timer
         if (!Submerged && Sweep_Timer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_SWEEP);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_SWEEP);
             Sweep_Timer = urand(15000, 30000);
         }else Sweep_Timer -= diff;
 
         //SandBlast_Timer
         if (!Submerged && SandBlast_Timer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_SANDBLAST);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_SANDBLAST);
             SandBlast_Timer = urand(20000, 35000);
         }else SandBlast_Timer -= diff;
 
@@ -90,7 +90,7 @@ struct MANGOS_DLL_DECL boss_ouroAI : public ScriptedAI
             m_creature->HandleEmoteCommand(EMOTE_ONESHOT_SUBMERGE);
             m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             m_creature->setFaction(35);
-            DoCast(m_creature, SPELL_DIRTMOUND_PASSIVE);
+            DoCastSpellIfCan(m_creature, SPELL_DIRTMOUND_PASSIVE);
 
             Submerged = true;
             Back_Timer = urand(30000, 45000);
@@ -114,7 +114,7 @@ struct MANGOS_DLL_DECL boss_ouroAI : public ScriptedAI
             m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             m_creature->setFaction(14);
 
-            DoCast(m_creature->getVictim(), SPELL_GROUND_RUPTURE);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_GROUND_RUPTURE);
 
             Submerged = false;
             Submerge_Timer = urand(60000, 120000);

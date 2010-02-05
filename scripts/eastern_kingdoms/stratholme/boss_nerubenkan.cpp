@@ -92,7 +92,7 @@ struct MANGOS_DLL_DECL boss_nerubenkanAI : public ScriptedAI
         //EncasingWebs
         if (EncasingWebs_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_ENCASINGWEBS);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_ENCASINGWEBS);
             EncasingWebs_Timer = 30000;
         }else EncasingWebs_Timer -= diff;
 
@@ -100,7 +100,7 @@ struct MANGOS_DLL_DECL boss_nerubenkanAI : public ScriptedAI
         if (PierceArmor_Timer < diff)
         {
             if (rand()%100 < 75)
-                DoCast(m_creature->getVictim(),SPELL_PIERCEARMOR);
+                DoCastSpellIfCan(m_creature->getVictim(),SPELL_PIERCEARMOR);
 
             PierceArmor_Timer = 35000;
         }else PierceArmor_Timer -= diff;
@@ -108,7 +108,7 @@ struct MANGOS_DLL_DECL boss_nerubenkanAI : public ScriptedAI
         //CryptScarabs
         if (CryptScarabs_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_CRYPT_SCARABS);
+            DoCastSpellIfCan(m_creature->getVictim(),SPELL_CRYPT_SCARABS);
             CryptScarabs_Timer = 16000;
         }else CryptScarabs_Timer -= diff;
 

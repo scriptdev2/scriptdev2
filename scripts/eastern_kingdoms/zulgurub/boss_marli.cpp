@@ -116,7 +116,7 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
         if (!m_bFirstSpidersAreSpawned)
         {
             DoScriptText(SAY_SPIDER_SPAWN, m_creature);
-            DoCast(m_creature, SPELL_HATCH);
+            DoCastSpellIfCan(m_creature, SPELL_HATCH);
 
             for(uint8 i = 0; i < 4 ; ++i)
             {
@@ -175,7 +175,7 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
         {
             if (m_uiPoisonVolley_Timer < uiDiff)
             {
-                DoCast(m_creature->getVictim(),SPELL_POISONVOLLEY);
+                DoCastSpellIfCan(m_creature->getVictim(),SPELL_POISONVOLLEY);
                 m_uiPoisonVolley_Timer = urand(10000, 20000);
             }
             else
@@ -183,7 +183,7 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
 
             if (m_uiDrainLife_Timer < uiDiff)
             {
-                DoCast(m_creature->getVictim(), SPELL_DRAIN_LIFE);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_DRAIN_LIFE);
                 m_uiDrainLife_Timer = urand(20000, 50000);
             }
             else
@@ -205,7 +205,7 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
         {
             if (!m_bHasWebbed && m_uiWebs_Timer < uiDiff)
             {
-                DoCast(m_creature->getVictim(),SPELL_ENVELOPINGWEBS);
+                DoCastSpellIfCan(m_creature->getVictim(),SPELL_ENVELOPINGWEBS);
                 m_uiWebs_Timer = urand(10000, 15000);
                 m_uiCharge_Timer = 1000;
                 m_bHasWebbed = true;
@@ -218,7 +218,7 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
                 //Shouldn't be random target but highestaggro not Webbed player
                 if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
                 {
-                    DoCast(pTarget, SPELL_CHARGE);
+                    DoCastSpellIfCan(pTarget, SPELL_CHARGE);
                     DoResetThreat();
                     AttackStart(pTarget);
                     m_bHasWebbed = false;
@@ -242,7 +242,7 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
 
             if (m_uiCorrosivePoison_Timer < uiDiff)
             {
-                DoCast(m_creature->getVictim(), SPELL_CORROSIVE_POISON);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_CORROSIVE_POISON);
                 m_uiCorrosivePoison_Timer = urand(25000, 35000);
             }
             else
@@ -257,7 +257,7 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
                     m_creature->InterruptNonMeleeSpells(false);
 
                 DoScriptText(SAY_TRANSFORM, m_creature);
-                DoCast(m_creature,SPELL_SPIDER_FORM);
+                DoCastSpellIfCan(m_creature,SPELL_SPIDER_FORM);
 
                 const CreatureInfo *cinfo = m_creature->GetCreatureInfo();
                 m_creature->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, (cinfo->mindmg +((cinfo->mindmg/100) * 35)));
@@ -274,7 +274,7 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
                     m_creature->InterruptNonMeleeSpells(false);
 
                 DoScriptText(SAY_TRANSFORMBACK, m_creature);
-                DoCast(m_creature,SPELL_TRANSFORM_BACK);
+                DoCastSpellIfCan(m_creature,SPELL_TRANSFORM_BACK);
 
                 m_creature->SetDisplayId(m_uiDefaultModel);
 
@@ -293,7 +293,7 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
 
         if (m_uiTrash_Timer < uiDiff)
         {
-            DoCast(m_creature->getVictim(), SPELL_TRASH);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_TRASH);
             m_uiTrash_Timer = urand(10000, 20000);
         }
         else
@@ -329,7 +329,7 @@ struct MANGOS_DLL_DECL mob_spawn_of_marliAI : public ScriptedAI
         {
             if (m_pInstance && m_pInstance->GetData(TYPE_MARLI) != DONE)
             {
-                DoCast(m_creature,SPELL_LEVELUP);
+                DoCastSpellIfCan(m_creature,SPELL_LEVELUP);
                 m_creature->SetLevel(m_creature->getLevel() + 1);
             }
             m_uiLevelUp_Timer = 3000;
