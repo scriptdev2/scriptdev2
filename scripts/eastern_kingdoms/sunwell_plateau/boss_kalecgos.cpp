@@ -214,7 +214,7 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
             pSathrovarr->DealDamage(pSathrovarr, pSathrovarr->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
 
             pSathrovarr->GetMap()->CreatureRelocation(pSathrovarr, KALECGOS_ARENA[0], KALECGOS_ARENA[1], KALECGOS_ARENA[2], 0.0f);
-            pSathrovarr->SendMonsterMove(KALECGOS_ARENA[0], KALECGOS_ARENA[1], KALECGOS_ARENA[2], 0, MONSTER_MOVE_NONE, 0);
+            pSathrovarr->SendMonsterMove(KALECGOS_ARENA[0], KALECGOS_ARENA[1], KALECGOS_ARENA[2], 0, SPLINEFLAG_NONE, 0);
         }
 
         if (Creature* pKalec = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_KALECGOS_HUMAN)))

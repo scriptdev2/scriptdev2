@@ -107,8 +107,8 @@ struct MANGOS_DLL_DECL boss_vazrudenAI : public ScriptedAI
     {
         if (Creature* pHerald = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_HERALD)))
         {
-            if (pHerald->HasMonsterMoveFlag(MONSTER_MOVE_WALK))
-                pHerald->RemoveMonsterMoveFlag(MONSTER_MOVE_WALK);
+            if (pHerald->HasSplineFlag(SPLINEFLAG_WALKMODE))
+                pHerald->RemoveSplineFlag(SPLINEFLAG_WALKMODE);
 
             pHerald->GetMotionMaster()->MovePoint(POINT_ID_COMBAT, afCombatPos[0], afCombatPos[1], afCombatPos[2]);
 

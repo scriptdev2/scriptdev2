@@ -564,7 +564,7 @@ struct MANGOS_DLL_DECL npc_maghar_captiveAI : public npc_escortAI
         if (pSummoned->isTotem())
             return;
 
-        pSummoned->RemoveMonsterMoveFlag(MONSTER_MOVE_WALK);
+        pSummoned->RemoveSplineFlag(SPLINEFLAG_WALKMODE);
         pSummoned->GetMotionMaster()->MovePoint(0, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ());
     }
 

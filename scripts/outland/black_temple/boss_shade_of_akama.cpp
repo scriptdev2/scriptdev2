@@ -210,7 +210,7 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
                 m_afSpawnLoc[uiRand].m_fX, m_afSpawnLoc[uiRand].m_fY, m_afSpawnLoc[uiRand].m_fZ, m_afSpawnLoc[uiRand].m_fO,
                 TEMPSUMMON_DEAD_DESPAWN, 0))
             {
-                pSorcerer->RemoveMonsterMoveFlag(MONSTER_MOVE_WALK);
+                pSorcerer->RemoveSplineFlag(SPLINEFLAG_WALKMODE);
                 pSorcerer->GetMotionMaster()->MovePoint(0, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ());
                 pSorcerer->SetUInt64Value(UNIT_FIELD_TARGET, m_creature->GetGUID());
 
@@ -230,7 +230,7 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
                     m_afSpawnLoc[uiRand].m_fX, m_afSpawnLoc[uiRand].m_fY, m_afSpawnLoc[uiRand].m_fZ, m_afSpawnLoc[uiRand].m_fO,
                     TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 25000))
                 {
-                    pSpawn->RemoveMonsterMoveFlag(MONSTER_MOVE_WALK);
+                    pSpawn->RemoveSplineFlag(SPLINEFLAG_WALKMODE);
                     pSpawn->GetMotionMaster()->MovePoint(0, LOC_RAND_TO_CENTER_X, LOC_RAND_TO_CENTER_Y, LOC_RAND_TO_CENTER_Z);
                 }
             }
@@ -557,7 +557,7 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
                     {
                         m_bIsShadeDead = true;
                         m_uiWayPointId = 0;
-                        m_creature->AddMonsterMoveFlag(MONSTER_MOVE_WALK);
+                        m_creature->AddSplineFlag(SPLINEFLAG_WALKMODE);
                         m_creature->GetMotionMaster()->MovePoint(m_uiWayPointId, m_afAkamaWP[0].m_fX, m_afAkamaWP[0].m_fY, m_afAkamaWP[0].m_fZ);
                     }
                 }

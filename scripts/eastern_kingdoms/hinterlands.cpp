@@ -239,7 +239,7 @@ struct MANGOS_DLL_DECL npc_rinjiAI : public npc_escortAI
 
     void JustSummoned(Creature* pSummoned)
     {
-        pSummoned->RemoveMonsterMoveFlag(MONSTER_MOVE_WALK);
+        pSummoned->RemoveSplineFlag(SPLINEFLAG_WALKMODE);
         pSummoned->GetMotionMaster()->MovePoint(0, m_afAmbushMoveTo[m_iSpawnId].m_fX, m_afAmbushMoveTo[m_iSpawnId].m_fY, m_afAmbushMoveTo[m_iSpawnId].m_fZ);
     }
 

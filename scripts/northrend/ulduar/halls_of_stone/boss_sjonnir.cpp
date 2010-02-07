@@ -103,7 +103,7 @@ struct MANGOS_DLL_DECL boss_sjonnirAI : public ScriptedAI
             float fX, fY, fZ;
             pSummoned->GetRandomPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 10.0f, fX, fY, fZ);
 
-            pSummoned->RemoveMonsterMoveFlag(MONSTER_MOVE_WALK);
+            pSummoned->RemoveSplineFlag(SPLINEFLAG_WALKMODE);
             pSummoned->GetMotionMaster()->MovePoint(0, fX, fY, fZ);
         }
     }

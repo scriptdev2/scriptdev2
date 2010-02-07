@@ -334,10 +334,10 @@ void npc_escortAI::MovementInform(uint32 uiMoveType, uint32 uiPointId)
     {
         debug_log("SD2: EscortAI has returned to original position before combat");
 
-        if (m_bIsRunning && m_creature->HasMonsterMoveFlag(MONSTER_MOVE_WALK))
-            m_creature->RemoveMonsterMoveFlag(MONSTER_MOVE_WALK);
-        else if (!m_bIsRunning && !m_creature->HasMonsterMoveFlag(MONSTER_MOVE_WALK))
-            m_creature->AddMonsterMoveFlag(MONSTER_MOVE_WALK);
+        if (m_bIsRunning && m_creature->HasSplineFlag(SPLINEFLAG_WALKMODE))
+            m_creature->RemoveSplineFlag(SPLINEFLAG_WALKMODE);
+        else if (!m_bIsRunning && !m_creature->HasSplineFlag(SPLINEFLAG_WALKMODE))
+            m_creature->AddSplineFlag(SPLINEFLAG_WALKMODE);
 
         RemoveEscortState(STATE_ESCORT_RETURNING);
 
@@ -399,14 +399,14 @@ void npc_escortAI::SetRun(bool bRun)
     if (bRun)
     {
         if (!m_bIsRunning)
-            m_creature->RemoveMonsterMoveFlag(MONSTER_MOVE_WALK);
+            m_creature->RemoveSplineFlag(SPLINEFLAG_WALKMODE);
         else
             debug_log("SD2: EscortAI attempt to set run mode, but is already running.");
     }
     else
     {
         if (m_bIsRunning)
-            m_creature->AddMonsterMoveFlag(MONSTER_MOVE_WALK);
+            m_creature->AddSplineFlag(SPLINEFLAG_WALKMODE);
         else
             debug_log("SD2: EscortAI attempt to set walk mode, but is already walking.");
     }
@@ -468,7 +468,7 @@ void npc_escortAI::Start(bool bIsActiveAttacker, bool bRun, uint64 uiPlayerGUID,
 
     //Set initial speed
     if (m_bIsRunning)
-        m_creature->RemoveMonsterMoveFlag(MONSTER_MOVE_WALK);
+        m_creature->RemoveSplineFlag(SPLINEFLAG_WALKMODE);
 
     AddEscortState(STATE_ESCORT_ESCORTING);
 

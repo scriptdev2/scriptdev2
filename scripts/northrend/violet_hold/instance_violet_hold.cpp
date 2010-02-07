@@ -336,7 +336,7 @@ void instance_violet_hold::CallGuards(bool bRespawn)
 
 void instance_violet_hold::ProcessActivationCrystal(Unit* pUser, bool bIsIntro)
 {
-    if (Creature* pSummon = pUser->SummonCreature(NPC_DEFENSE_SYSTEM, fDefenseSystemLoc[0], fDefenseSystemLoc[1], fDefenseSystemLoc[2], 0.0f, TEMPSUMMON_TIMED_DESPAWN, 10000))
+    if (Creature* pSummon = pUser->SummonCreature(NPC_DEFENSE_SYSTEM, fDefenseSystemLoc[0], fDefenseSystemLoc[1], fDefenseSystemLoc[2], fDefenseSystemLoc[3], TEMPSUMMON_TIMED_DESPAWN, 10000))
     {
         pSummon->CastSpell(pSummon, SPELL_DEFENSE_SYSTEM_VISUAL, true);
 

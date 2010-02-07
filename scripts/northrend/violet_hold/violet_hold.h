@@ -105,7 +105,7 @@ enum
     MAX_NORMAL_PORTAL           = 8
 };
 
-static float fDefenseSystemLoc[3] = {1890.746460, 803.311096, 61.745369};
+static float fDefenseSystemLoc[4] = {1888.146, 803.382, 58.604, 3.072};
 
 enum ePortalType
 {
