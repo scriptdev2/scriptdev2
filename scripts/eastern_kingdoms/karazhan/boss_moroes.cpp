@@ -567,9 +567,9 @@ struct MANGOS_DLL_DECL boss_lady_catriona_von_indiAI : public boss_moroes_guestA
 
         if (GreaterHeal_Timer < diff)
         {
-            Unit* target = SelectTarget();
+            if (Unit* target = SelectTarget())
+                DoCastSpellIfCan(target, SPELL_GREATERHEAL);
 
-            DoCastSpellIfCan(target, SPELL_GREATERHEAL);
             GreaterHeal_Timer = 17000;
         }else GreaterHeal_Timer -= diff;
 
@@ -583,8 +583,8 @@ struct MANGOS_DLL_DECL boss_lady_catriona_von_indiAI : public boss_moroes_guestA
         {
             if (urand(0, 1))
             {
-                Unit* target = SelectTarget();
-                DoCastSpellIfCan(target, SPELL_DISPELMAGIC);
+                if (Unit* target = SelectTarget())
+                    DoCastSpellIfCan(target, SPELL_DISPELMAGIC);
             }
             else
             {

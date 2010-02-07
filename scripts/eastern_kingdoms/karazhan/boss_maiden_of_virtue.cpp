@@ -113,10 +113,12 @@ struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
                     target_list.push_back(pTarget);
                 pTarget = NULL;
             }
-            if (target_list.size())
-                pTarget = *(target_list.begin()+rand()%target_list.size());
 
-            DoCastSpellIfCan(pTarget,SPELL_HOLYFIRE);
+            if (target_list.size())
+            {
+                if (pTarget = *(target_list.begin()+rand()%target_list.size()))
+                    DoCastSpellIfCan(pTarget,SPELL_HOLYFIRE);
+            }
 
             m_uiHolyfire_Timer = urand(8000, 23000);        //Anywhere from 8 to 23 seconds, good luck having several of those in a row!
         }
