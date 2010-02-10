@@ -298,12 +298,12 @@ CreatureAI* GetAI_npc_taskmaster_fizzule(Creature* pCreature)
 
 float AffrayChallengerLoc[6][4]=
 {
-    {-1683, -4326, 2.79, 0},
-    {-1682, -4329, 2.79, 0},
-    {-1683, -4330, 2.79, 0},
-    {-1680, -4334, 2.79, 1.49},
-    {-1674, -4326, 2.79, 3.49},
-    {-1677, -4334, 2.79, 1.66}
+    {-1683.0f, -4326.0f, 2.79f, 0.00f},
+    {-1682.0f, -4329.0f, 2.79f, 0.00f},
+    {-1683.0f, -4330.0f, 2.79f, 0.00f},
+    {-1680.0f, -4334.0f, 2.79f, 1.49f},
+    {-1674.0f, -4326.0f, 2.79f, 3.49f},
+    {-1677.0f, -4334.0f, 2.79f, 1.66f}
 };
 
 struct MANGOS_DLL_DECL npc_twiggy_flatheadAI : public ScriptedAI
@@ -427,11 +427,11 @@ struct MANGOS_DLL_DECL npc_twiggy_flatheadAI : public ScriptedAI
                         ++Step;
                     break;
                 case 2:
-                    if (Unit *temp = m_creature->SummonCreature(NPC_BIG_WILL,-1713.79,-4342.09,6.05,6.15,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,300000))
+                    if (Unit *temp = m_creature->SummonCreature(NPC_BIG_WILL, -1713.79f, -4342.09f, 6.05f, 6.15f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,300000))
                     {
                         BigWillGUID = temp->GetGUID();
                         temp->setFaction(35);
-                        temp->GetMotionMaster()->MovePoint(0,-1682.31,-4329.68,2.78);
+                        temp->GetMotionMaster()->MovePoint(0, -1682.31f, -4329.68f, 2.78f);
                     }
                     Event_Timer = 15000;
                     ++Step;

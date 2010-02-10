@@ -202,9 +202,9 @@ static Yells MaievTaunts[]=
 #define SPELL_SHADOWFIEND_PASSIVE       41913               // Passive aura for shadowfiends
 
 // Other defines
-#define CENTER_X            676.740
-#define CENTER_Y            305.297
-#define CENTER_Z            353.192
+#define CENTER_X            676.740f
+#define CENTER_Y            305.297f
+#define CENTER_Z            353.192f
 
 #define EQUIP_ID_MAIN_HAND  32837
 #define EQUIP_ID_OFF_HAND   32838
@@ -228,41 +228,41 @@ struct Locations
 
 static Locations GlaivePosition[]=
 {
-    {695.105, 305.303, 354.256},
-    {659.338, 305.303, 354.256},
-    {700.105, 305.303, 354.256},
-    {664.338, 305.303, 354.256}
+    {695.105f, 305.303f, 354.256f},
+    {659.338f, 305.303f, 354.256f},
+    {700.105f, 305.303f, 354.256f},
+    {664.338f, 305.303f, 354.256f}
 };
 
 static Locations EyeBlast[]=
 {
-    {650.697, 320.128, 353.730},
-    {652.799, 275.091, 353.367},
-    {701.527, 273.815, 353.230},
-    {709.865, 325.654, 353.322}
+    {650.697f, 320.128f, 353.730f},
+    {652.799f, 275.091f, 353.367f},
+    {701.527f, 273.815f, 353.230f},
+    {709.865f, 325.654f, 353.322f}
 };
 
 static Locations AkamaWP[]=
 {
-    { 770.01, 304.50, 312.29 },                             // Bottom of the first stairs, at the doors
-    { 780.66, 304.50, 319.74 },                             // Top of the first stairs
-    { 790.13, 319.68, 319.76 },                             // Bottom of the second stairs (left from the entrance)
-    { 787.17, 347.38, 341.42 },                             // Top of the second stairs
-    { 781.34, 350.31, 341.44 },                             // Bottom of the third stairs
-    { 762.60, 361.06, 353.60 },                             // Top of the third stairs
-    { 756.35, 360.52, 353.27 },                             // Before the door-thingy
-    { 743.82, 342.21, 353.00 },                             // Somewhere further
-    { 732.69, 305.13, 353.00 },                             // In front of Illidan
-    { 738.11, 365.44, 353.00 },                             // in front of the door-thingy (the other one!)
-    { 792.18, 366.62, 341.42 },                             // Down the first flight of stairs
-    { 796.84, 304.89, 319.76 },                             // Down the second flight of stairs
-    { 782.01, 304.55, 319.76 }                              // Final location - back at the initial gates. This is where he will fight the minions!
+    {770.01f, 304.50f, 312.29f},                            // Bottom of the first stairs, at the doors
+    {780.66f, 304.50f, 319.74f},                            // Top of the first stairs
+    {790.13f, 319.68f, 319.76f},                            // Bottom of the second stairs (left from the entrance)
+    {787.17f, 347.38f, 341.42f},                            // Top of the second stairs
+    {781.34f, 350.31f, 341.44f},                            // Bottom of the third stairs
+    {762.60f, 361.06f, 353.60f},                            // Top of the third stairs
+    {756.35f, 360.52f, 353.27f},                            // Before the door-thingy
+    {743.82f, 342.21f, 353.00f},                            // Somewhere further
+    {732.69f, 305.13f, 353.00f},                            // In front of Illidan
+    {738.11f, 365.44f, 353.00f},                            // in front of the door-thingy (the other one!)
+    {792.18f, 366.62f, 341.42f},                            // Down the first flight of stairs
+    {796.84f, 304.89f, 319.76f},                            // Down the second flight of stairs
+    {782.01f, 304.55f, 319.76f}                             // Final location - back at the initial gates. This is where he will fight the minions!
 };
 // 755.762, 304.0747, 312.1769 -- This is where Akama should be spawned
 static Locations SpiritSpawns[]=
 {
-    {755.5426, 309.9156, 312.2129, SPIRIT_OF_UDALO},
-    {755.5426, 298.7923, 312.0834, SPIRIT_OF_OLUM}
+    {755.5426f, 309.9156f, 312.2129f, SPIRIT_OF_UDALO},
+    {755.5426f, 298.7923f, 312.0834f, SPIRIT_OF_OLUM}
 };
 
 struct WayPoints

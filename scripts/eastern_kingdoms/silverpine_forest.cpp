@@ -253,12 +253,12 @@ struct SpawnPoint
 
 SpawnPoint SpawnPoints[] =
 {
-    {-397.45, 1509.56, 18.87, 4.73},
-    {-398.35, 1510.75, 18.87, 4.76},
-    {-396.41, 1511.06, 18.87, 4.74}
+    {-397.45f, 1509.56f, 18.87f, 4.73f},
+    {-398.35f, 1510.75f, 18.87f, 4.76f},
+    {-396.41f, 1511.06f, 18.87f, 4.74f}
 };
 
-static float m_afMoveCoords[] = {-410.69, 1498.04, 19.77};
+static float m_afMoveCoords[] = {-410.69f, 1498.04f, 19.77f};
 
 struct MANGOS_DLL_DECL npc_deathstalker_faerleiaAI : public ScriptedAI
 {

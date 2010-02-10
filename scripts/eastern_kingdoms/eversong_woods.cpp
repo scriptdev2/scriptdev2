@@ -61,10 +61,10 @@ const int32 uiSayId[4] =
 
 float fChallengerLoc[4][4]=
 {
-    {10110.667, -6628.059, 4.100, 2.708},
-    {10093.919, -6634.340, 4.098, 1.106},
-    {10087.565, -6617.282, 4.098, 5.887},
-    {10104.807, -6611.145, 4.101, 4.265}
+    {10110.667f, -6628.059f, 4.100f, 2.708f},
+    {10093.919f, -6634.340f, 4.098f, 1.106f},
+    {10087.565f, -6617.282f, 4.098f, 5.887f},
+    {10104.807f, -6611.145f, 4.101f, 4.265f}
 };
 
 struct MANGOS_DLL_DECL npc_kelerun_bloodmournAI : public ScriptedAI
@@ -391,9 +391,9 @@ struct MANGOS_DLL_DECL npc_apprentice_mirvedaAI : public ScriptedAI
         m_creature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER);
         m_uiPlayerGUID = uiPlayerGUID;
 
-        m_creature->SummonCreature(NPC_GHARSUL,    8745, -7134.32, 35.22, 0, TEMPSUMMON_CORPSE_DESPAWN, 4000);
-        m_creature->SummonCreature(NPC_ANGERSHADE, 8745, -7134.32, 35.22, 0, TEMPSUMMON_CORPSE_DESPAWN, 4000);
-        m_creature->SummonCreature(NPC_ANGERSHADE, 8745, -7134.32, 35.22, 0, TEMPSUMMON_CORPSE_DESPAWN, 4000);
+        m_creature->SummonCreature(NPC_GHARSUL,    8745.0f, -7134.32f, 35.22f, 0.0f, TEMPSUMMON_CORPSE_DESPAWN, 4000);
+        m_creature->SummonCreature(NPC_ANGERSHADE, 8745.0f, -7134.32f, 35.22f, 0.0f, TEMPSUMMON_CORPSE_DESPAWN, 4000);
+        m_creature->SummonCreature(NPC_ANGERSHADE, 8745.0f, -7134.32f, 35.22f, 0.0f, TEMPSUMMON_CORPSE_DESPAWN, 4000);
     }
 
     void UpdateAI (const uint32 uiDiff)

@@ -26,10 +26,10 @@ EndScriptData */
 #define SPELL_CROWDPUMMEL       10887
 #define SPELL_MIGHTYBLOW        14099
 
-#define ADD_1X                  -169.839203
-#define ADD_1Y                  -324.961395
-#define ADD_1Z                  64.401443
-#define ADD_1O                  3.124724
+#define ADD_1X                  -169.839203f
+#define ADD_1Y                  -324.961395f
+#define ADD_1Z                  64.401443f
+#define ADD_1O                  3.124724f
 
 struct MANGOS_DLL_DECL boss_halyconAI : public ScriptedAI
 {

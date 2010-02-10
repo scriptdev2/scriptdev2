@@ -67,9 +67,9 @@ EndScriptData */
 #define CREATURE_ANCIENT_WISP           17946
 #define CREATURE_CHANNEL_TARGET         22418
 
-#define NORDRASSIL_X        5503.713
-#define NORDRASSIL_Y       -3523.436
-#define NORDRASSIL_Z        1608.781
+#define NORDRASSIL_X        5503.713f
+#define NORDRASSIL_Y       -3523.436f
+#define NORDRASSIL_Z        1608.781f
 
 struct mob_ancient_wispAI : public ScriptedAI
 {
@@ -430,7 +430,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
             {
                 if (!IsChanneling)
                 {
-                    Creature *temp = m_creature->SummonCreature(CREATURE_CHANNEL_TARGET, NORDRASSIL_X, NORDRASSIL_Y, NORDRASSIL_Z, 0, TEMPSUMMON_TIMED_DESPAWN, 1200000);
+                    Creature *temp = m_creature->SummonCreature(CREATURE_CHANNEL_TARGET, NORDRASSIL_X, NORDRASSIL_Y, NORDRASSIL_Z, 0.0f, TEMPSUMMON_TIMED_DESPAWN, 1200000);
 
                     if (temp)
                         WorldTreeGUID = temp->GetGUID();

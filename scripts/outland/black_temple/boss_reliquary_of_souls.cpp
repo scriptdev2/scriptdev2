@@ -86,12 +86,12 @@ struct ReliquaryPosition
 
 static ReliquaryPosition Coords[]=
 {
-    {450.4, 212.3},
-    {542.1, 212.3},
-    {542.1, 168.3},
-    {542.1, 137.4},
-    {450.4, 137.4},
-    {450.4, 168.3}
+    {450.4f, 212.3f},
+    {542.1f, 212.3f},
+    {542.1f, 168.3f},
+    {542.1f, 137.4f},
+    {450.4f, 137.4f},
+    {450.4f, 168.3f}
 };
 
 struct MANGOS_DLL_DECL npc_enslaved_soulAI : public ScriptedAI
@@ -292,7 +292,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                 // Ribs: open
                 m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,373);
                 Creature* EssenceSuffering = NULL;
-                EssenceSuffering = m_creature->SummonCreature(23418, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 1.57, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 10000);
+                EssenceSuffering = m_creature->SummonCreature(23418, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 1.57f, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 10000);
 
                 if (EssenceSuffering)
                 {
@@ -396,7 +396,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                     // Ribs: open
                     m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,373);
                     Creature* EssenceDesire = NULL;
-                    EssenceDesire = m_creature->SummonCreature(23419, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 1.57, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 10000);
+                    EssenceDesire = m_creature->SummonCreature(23419, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 1.57f, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 10000);
 
                     if (EssenceDesire)
                     {
@@ -504,7 +504,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                     // Ribs: open
                     m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,373);
                     Creature* EssenceAnger = NULL;
-                    EssenceAnger = m_creature->SummonCreature(23420, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 1.57, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 45000);
+                    EssenceAnger = m_creature->SummonCreature(23420, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 1.57f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 45000);
 
                     if (EssenceAnger)
                     {

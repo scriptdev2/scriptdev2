@@ -217,7 +217,7 @@ bool GOHello_go_gilded_brazier(Player* pPlayer, GameObject* pGO)
 {
     if (pGO->GetGoType() == GAMEOBJECT_TYPE_GOOBER)
     {
-        if (Creature* pCreature = pPlayer->SummonCreature(NPC_STILLBLADE, 8087.632, -7542.740, 151.568, 0.122, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000))
+        if (Creature* pCreature = pPlayer->SummonCreature(NPC_STILLBLADE, 8087.632f, -7542.740f, 151.568f, 0.122f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000))
             pCreature->AI()->AttackStart(pPlayer);
     }
 
@@ -283,7 +283,7 @@ enum
 bool GOHello_go_sacred_fire_of_life(Player* pPlayer, GameObject* pGO)
 {
     if (pGO->GetGoType() == GAMEOBJECT_TYPE_GOOBER)
-        pPlayer->SummonCreature(NPC_ARIKARA, -5008.338, -2118.894, 83.657, 0.874, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+        pPlayer->SummonCreature(NPC_ARIKARA, -5008.338f, -2118.894f, 83.657f, 0.874f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
 
     return true;
 }

@@ -259,8 +259,8 @@ enum
     NPC_CABAL_SKIRMISHER    = 21661
 };
 
-static float m_afAmbushB1[]= {-2895.525879, 5336.431641, -11.800};
-static float m_afAmbushB2[]= {-2890.604980, 5331.938965, -11.282};
+static float m_afAmbushB1[]= {-2895.525879f, 5336.431641f, -11.800f};
+static float m_afAmbushB2[]= {-2890.604980f, 5331.938965f, -11.282f};
 
 struct MANGOS_DLL_DECL npc_akunoAI : public npc_escortAI
 {

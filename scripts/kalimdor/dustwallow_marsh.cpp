@@ -449,8 +449,8 @@ enum
     PHASE_COMPLETE                      = 3
 };
 
-static float m_afSpawn[]= {-3383.501953, -3203.383301, 36.149};
-static float m_afMoveTo[]= {-3371.414795, -3212.179932, 34.210};
+static float m_afSpawn[] = {-3383.501953f, -3203.383301f, 36.149f};
+static float m_afMoveTo[] = {-3371.414795f, -3212.179932f, 34.210f};
 
 struct MANGOS_DLL_DECL npc_ogronAI : public npc_escortAI
 {

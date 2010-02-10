@@ -58,8 +58,8 @@ enum
     NPC_VAZRUDEN            = 17537
 };
 
-const float afCenterPos[3] = {-1399.401, 1736.365, 86.008}; //moves here to drop off nazan
-const float afCombatPos[3] = {-1413.848, 1754.019, 83.146}; //moves here when decending
+const float afCenterPos[3] = {-1399.401f, 1736.365f, 86.008f}; //moves here to drop off nazan
+const float afCombatPos[3] = {-1413.848f, 1754.019f, 83.146f}; //moves here when decending
 
 struct MANGOS_DLL_DECL boss_vazrudenAI : public ScriptedAI
 {

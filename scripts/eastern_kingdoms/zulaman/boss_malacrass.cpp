@@ -103,11 +103,11 @@ enum
 };
 
 //Adds X positions
-static float m_afAddPosX[4] = {128.279, 123.261, 112.084, 106.473};
+static float m_afAddPosX[4] = {128.279f, 123.261f, 112.084f, 106.473f};
 
-const float ADD_POS_Y       = 921.279;
-const float ADD_POS_Z       = 33.889;
-const float ADD_ORIENT      = 1.527;
+const float ADD_POS_Y       = 921.279f;
+const float ADD_POS_Z       = 33.889f;
+const float ADD_ORIENT      = 1.527f;
 
 struct SpawnGroup
 {

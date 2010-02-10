@@ -89,8 +89,8 @@ static sOnyxMove aMoveData[]=
 
 static float afSpawnLocations[2][3]=
 {
-    {-30.127, -254.463, -89.440},
-    {-30.817, -177.106, -89.258}
+    {-30.127f, -254.463f, -89.440f},
+    {-30.817f, -177.106f, -89.258f}
 };
 
 struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI

@@ -51,7 +51,7 @@ enum
 
 const float RUN_DISTANCE = 20.0;
 
-static float fAddPosition[4] = {163.5727, 252.1900, 42.8684, 5.57052};
+static float fAddPosition[4] = {163.5727f, 252.1900f, 42.8684f, 5.57052f};
 
 /*######
 ## mob_vrykul_skeleton

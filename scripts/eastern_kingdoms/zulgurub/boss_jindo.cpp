@@ -122,7 +122,7 @@ struct MANGOS_DLL_DECL boss_jindoAI : public ScriptedAI
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
             if (target && target->GetTypeId() == TYPEID_PLAYER)
             {
-                DoTeleportPlayer(target, -11583.7783,-1249.4278,77.5471,4.745);
+                DoTeleportPlayer(target, -11583.7783f, -1249.4278f, 77.5471f, 4.745f);
 
                 if (m_creature->getThreatManager().getThreat(m_creature->getVictim()))
                     m_creature->getThreatManager().modifyThreatPercent(target,-100);

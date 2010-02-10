@@ -46,7 +46,7 @@ bool AreaTrigger_at_shade_of_eranikus(Player* pPlayer, AreaTriggerEntry *pAt)
         {
             if (pInstance->GetData(TYPE_MALFURION) != DONE)
             {
-                pPlayer->SummonCreature(NPC_MALFURION, -639.378723, -4.238533, -90.835098, 2.724664, TEMPSUMMON_DEAD_DESPAWN, 0);
+                pPlayer->SummonCreature(NPC_MALFURION, -639.378723f, -4.238533f, -90.835098f, 2.724664f, TEMPSUMMON_DEAD_DESPAWN, 0);
                 pInstance->SetData(TYPE_MALFURION, DONE);
             }
         }

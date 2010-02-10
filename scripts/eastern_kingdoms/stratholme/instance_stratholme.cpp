@@ -244,7 +244,7 @@ struct MANGOS_DLL_DECL instance_stratholme : public ScriptedInstance
                         //UpdateGoState(ziggurat4GUID,0,true);
 
                         if (Creature* pBaron = instance->GetCreature(m_uiBaronGUID))
-                            pBaron->SummonCreature(NPC_RAMSTEIN,4032.84,-3390.24,119.73,4.71,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,1800000);
+                            pBaron->SummonCreature(NPC_RAMSTEIN, 4032.84f, -3390.24f, 119.73f, 4.71f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,1800000);
 
                         debug_log("SD2: Instance Stratholme: Ramstein spawned.");
                     }
@@ -363,7 +363,7 @@ struct MANGOS_DLL_DECL instance_stratholme : public ScriptedInstance
                 if (Creature* pBaron = instance->GetCreature(m_uiBaronGUID))
                 {
                     for(uint8 i = 0; i < 4; ++i)
-                        pBaron->SummonCreature(NPC_BLACK_GUARD,4032.84,-3390.24,119.73,4.71,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,1800000);
+                        pBaron->SummonCreature(NPC_BLACK_GUARD, 4032.84f, -3390.24f, 119.73f, 4.71f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,1800000);
 
                     UpdateGoState(m_uiZiggurat4GUID,GO_STATE_ACTIVE,false);
                     UpdateGoState(m_uiZiggurat5GUID,GO_STATE_ACTIVE,false);

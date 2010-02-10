@@ -734,7 +734,7 @@ struct MANGOS_DLL_DECL npc_koltira_deathweaverAI : public npc_escortAI
     void SummonAcolyte(uint32 uiAmount)
     {
         for(uint32 i = 0; i < uiAmount; ++i)
-            m_creature->SummonCreature(NPC_CRIMSON_ACOLYTE, 1642.329, -6045.818, 127.583, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
+            m_creature->SummonCreature(NPC_CRIMSON_ACOLYTE, 1642.329f, -6045.818f, 127.583f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
     }
 
     void UpdateEscortAI(const uint32 uiDiff)
@@ -762,7 +762,7 @@ struct MANGOS_DLL_DECL npc_koltira_deathweaverAI : public npc_escortAI
                         break;
                     case 3:
                         DoScriptText(SAY_BREAKOUT6, m_creature);
-                        m_creature->SummonCreature(NPC_HIGH_INQUISITOR_VALROTH, 1642.329, -6045.818, 127.583, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 1000);
+                        m_creature->SummonCreature(NPC_HIGH_INQUISITOR_VALROTH, 1642.329f, -6045.818f, 127.583f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 1000);
                         m_uiWave_Timer = 1000;
                         break;
                     case 4:

@@ -161,15 +161,15 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
             switch(urand(0, 2))
             {
                 case 0:
-                    m_creature->GetMap()->CreatureRelocation(m_creature, -8340.782227, 2083.814453, 125.648788, 0.0f);
+                    m_creature->GetMap()->CreatureRelocation(m_creature, -8340.782227f, 2083.814453f, 125.648788f, 0.0f);
                     DoResetThreat();
                     break;
                 case 1:
-                    m_creature->GetMap()->CreatureRelocation(m_creature, -8341.546875, 2118.504639, 133.058151, 0.0f);
+                    m_creature->GetMap()->CreatureRelocation(m_creature, -8341.546875f, 2118.504639f, 133.058151f, 0.0f);
                     DoResetThreat();
                     break;
                 case 2:
-                    m_creature->GetMap()->CreatureRelocation(m_creature, -8318.822266, 2058.231201, 133.058151, 0.0f);
+                    m_creature->GetMap()->CreatureRelocation(m_creature, -8318.822266f, 2058.231201f, 133.058151f, 0.0f);
                     DoResetThreat();
                     break;
             }
@@ -213,9 +213,9 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
     {
         DoScriptText(SAY_SPLIT, m_creature);
 
-        ov_mycoordinates *place1 = new ov_mycoordinates(-8340.782227,2083.814453,125.648788,0);
-        ov_mycoordinates *place2 = new ov_mycoordinates(-8341.546875,2118.504639,133.058151,0);
-        ov_mycoordinates *place3 = new ov_mycoordinates(-8318.822266,2058.231201,133.058151,0);
+        ov_mycoordinates *place1 = new ov_mycoordinates(-8340.782227f, 2083.814453f, 125.648788f, 0.0f);
+        ov_mycoordinates *place2 = new ov_mycoordinates(-8341.546875f, 2118.504639f, 133.058151f, 0.0f);
+        ov_mycoordinates *place3 = new ov_mycoordinates(-8318.822266f, 2058.231201f, 133.058151f, 0.0f);
 
         ov_mycoordinates *bossc=place1, *i1=place2, *i2=place3;
 

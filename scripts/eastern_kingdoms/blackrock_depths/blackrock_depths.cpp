@@ -91,7 +91,7 @@ bool AreaTrigger_at_ring_of_law(Player* pPlayer, AreaTriggerEntry *at)
             return false;
 
         pInstance->SetData(TYPE_RING_OF_LAW,IN_PROGRESS);
-        pPlayer->SummonCreature(NPC_GRIMSTONE,625.559,-205.618,-52.735,2.609,TEMPSUMMON_DEAD_DESPAWN,0);
+        pPlayer->SummonCreature(NPC_GRIMSTONE,625.559f, -205.618f, -52.735f, 2.609f, TEMPSUMMON_DEAD_DESPAWN, 0);
 
         return false;
     }
@@ -155,7 +155,7 @@ struct MANGOS_DLL_DECL npc_grimstoneAI : public npc_escortAI
     //TODO: move them to center
     void SummonRingMob()
     {
-        if (Creature* tmp = m_creature->SummonCreature(RingMob[MobSpawnId],608.960,-235.322,-53.907,1.857,TEMPSUMMON_DEAD_DESPAWN,0))
+        if (Creature* tmp = m_creature->SummonCreature(RingMob[MobSpawnId], 608.960f, -235.322f, -53.907f, 1.857f, TEMPSUMMON_DEAD_DESPAWN,0))
             RingMobGUID[MobCount] = tmp->GetGUID();
 
         ++MobCount;
@@ -167,7 +167,7 @@ struct MANGOS_DLL_DECL npc_grimstoneAI : public npc_escortAI
     //TODO: move them to center
     void SummonRingBoss()
     {
-        if (Creature* tmp = m_creature->SummonCreature(RingBoss[rand()%6],644.300,-175.989,-53.739,3.418,TEMPSUMMON_DEAD_DESPAWN,0))
+        if (Creature* tmp = m_creature->SummonCreature(RingBoss[rand()%6], 644.300f, -175.989f, -53.739f, 3.418f, TEMPSUMMON_DEAD_DESPAWN,0))
             RingBossGUID = tmp->GetGUID();
 
         MobDeath_Timer = 2500;

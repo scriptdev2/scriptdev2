@@ -129,7 +129,7 @@ struct MANGOS_DLL_DECL instance_old_hillsbrad : public ScriptedInstance
                     if (m_uiBarrelCount == 5)
                     {
                         UpdateQuestCredit();
-                        pPlayer->SummonCreature(NPC_DRAKE,2128.43,71.01,64.42,1.74,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,1800000);
+                        pPlayer->SummonCreature(NPC_DRAKE, 2128.43f, 71.01f, 64.42f, 1.74f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,1800000);
                         m_auiEncounter[0] = DONE;
                     }
                 }

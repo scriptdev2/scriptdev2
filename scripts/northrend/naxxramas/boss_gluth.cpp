@@ -37,41 +37,41 @@ enum
     NPC_ZOMBIE_CHOW   = 16360
 };
 
-#define ADD_1X 3269.590
-#define ADD_1Y -3161.287
-#define ADD_1Z 297.423
+#define ADD_1X 3269.590f
+#define ADD_1Y -3161.287f
+#define ADD_1Z 297.423f
 
-#define ADD_2X 3277.797
-#define ADD_2Y -3170.352
-#define ADD_2Z 297.423
+#define ADD_2X 3277.797f
+#define ADD_2Y -3170.352f
+#define ADD_2Z 297.423f
 
-#define ADD_3X 3267.049
-#define ADD_3Y -3172.820
-#define ADD_3Z 297.423
+#define ADD_3X 3267.049f
+#define ADD_3Y -3172.820f
+#define ADD_3Z 297.423f
 
-#define ADD_4X 3252.157
-#define ADD_4Y -3132.135
-#define ADD_4Z 297.423
+#define ADD_4X 3252.157f
+#define ADD_4Y -3132.135f
+#define ADD_4Z 297.423f
 
-#define ADD_5X 3259.990
-#define ADD_5Y -3126.590
-#define ADD_5Z 297.423
+#define ADD_5X 3259.990f
+#define ADD_5Y -3126.590f
+#define ADD_5Z 297.423f
 
-#define ADD_6X 3259.815
-#define ADD_6Y -3137.576
-#define ADD_6Z 297.423
+#define ADD_6X 3259.815f
+#define ADD_6Y -3137.576f
+#define ADD_6Z 297.423f
 
-#define ADD_7X 3308.030
-#define ADD_7Y -3132.135
-#define ADD_7Z 297.423
+#define ADD_7X 3308.030f
+#define ADD_7Y -3132.135f
+#define ADD_7Z 297.423f
 
-#define ADD_8X 3303.046
-#define ADD_8Y -3180.682
-#define ADD_8Z 297.423
+#define ADD_8X 3303.046f
+#define ADD_8Y -3180.682f
+#define ADD_8Z 297.423f
 
-#define ADD_9X 3313.283
-#define ADD_9Y -3180.766
-#define ADD_9Z 297.423
+#define ADD_9X 3313.283f
+#define ADD_9Y -3180.766f
+#define ADD_9Z 297.423f
 
 struct MANGOS_DLL_DECL boss_gluthAI : public ScriptedAI
 {
@@ -155,7 +155,7 @@ struct MANGOS_DLL_DECL boss_gluthAI : public ScriptedAI
         // Summon
         if (m_uiSummonTimer < uiDiff)
         {
-            if (Creature* pZombie = m_creature->SummonCreature(NPC_ZOMBIE_CHOW, ADD_1X, ADD_1Y, ADD_1Z, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 80000))
+            if (Creature* pZombie = m_creature->SummonCreature(NPC_ZOMBIE_CHOW, ADD_1X, ADD_1Y, ADD_1Z, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 80000))
             {
                 if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                     pZombie->AddThreat(pTarget);
@@ -163,7 +163,7 @@ struct MANGOS_DLL_DECL boss_gluthAI : public ScriptedAI
 
             if (!m_bIsRegularMode)
             {
-                if (Creature* pZombie = m_creature->SummonCreature(NPC_ZOMBIE_CHOW, ADD_1X, ADD_1Y, ADD_1Z, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 80000))
+                if (Creature* pZombie = m_creature->SummonCreature(NPC_ZOMBIE_CHOW, ADD_1X, ADD_1Y, ADD_1Z, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 80000))
                 {
                     if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                         pZombie->AddThreat(pTarget);

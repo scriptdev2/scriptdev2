@@ -105,7 +105,7 @@ enum
     MAX_NORMAL_PORTAL           = 8
 };
 
-static float fDefenseSystemLoc[4] = {1888.146, 803.382, 58.604, 3.072};
+static float fDefenseSystemLoc[4] = {1888.146f, 803.382f, 58.604f, 3.072f};
 
 enum ePortalType
 {
@@ -122,15 +122,15 @@ struct sPortalData
 
 static sPortalData afPortalLocation[]=
 {
-    {PORTAL_TYPE_NORM, 1936.07, 803.198, 53.3749, 3.1241},  //balcony
-    {PORTAL_TYPE_NORM, 1877.51, 850.104, 44.6599, 4.7822},  //erekem
-    {PORTAL_TYPE_NORM, 1890.64, 753.471, 48.7224, 1.7104},  //moragg
-    {PORTAL_TYPE_SQUAD, 1911.06, 802.103, 38.6465, 2.8908}, //below balcony
-    {PORTAL_TYPE_SQUAD, 1928.06, 763.256, 51.3167, 2.3905}, //bridge
-    {PORTAL_TYPE_SQUAD, 1924.26, 847.661, 47.1591, 4.0202}, //zuramat
-    {PORTAL_TYPE_NORM, 1914.16, 832.527, 38.6441, 3.5160},  //xevozz
-    {PORTAL_TYPE_NORM, 1857.30, 764.145, 38.6543, 0.8339},  //lavanthor
-    {PORTAL_TYPE_BOSS, 1890.73, 803.309, 38.4001, 2.4139},  //center
+    {PORTAL_TYPE_NORM, 1936.07f, 803.198f, 53.3749f, 3.1241f},  //balcony
+    {PORTAL_TYPE_NORM, 1877.51f, 850.104f, 44.6599f, 4.7822f},  //erekem
+    {PORTAL_TYPE_NORM, 1890.64f, 753.471f, 48.7224f, 1.7104f},  //moragg
+    {PORTAL_TYPE_SQUAD, 1911.06f, 802.103f, 38.6465f, 2.8908f}, //below balcony
+    {PORTAL_TYPE_SQUAD, 1928.06f, 763.256f, 51.3167f, 2.3905f}, //bridge
+    {PORTAL_TYPE_SQUAD, 1924.26f, 847.661f, 47.1591f, 4.0202f}, //zuramat
+    {PORTAL_TYPE_NORM, 1914.16f, 832.527f, 38.6441f, 3.5160f},  //xevozz
+    {PORTAL_TYPE_NORM, 1857.30f, 764.145f, 38.6543f, 0.8339f},  //lavanthor
+    {PORTAL_TYPE_BOSS, 1890.73f, 803.309f, 38.4001f, 2.4139f},  //center
 };
 
 class MANGOS_DLL_DECL instance_violet_hold : public ScriptedInstance

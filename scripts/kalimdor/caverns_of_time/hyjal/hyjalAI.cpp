@@ -33,21 +33,21 @@ struct sHyjalLocation
 // Locations for summoning waves
 sHyjalLocation m_aHyjalSpawnLoc[]=
 {
-    {BASE_ALLY,  4979.010, -1709.134, 1339.674},
-    {BASE_ALLY,  4969.123, -1705.904, 1341.363},
-    {BASE_ALLY,  4970.260, -1698.546, 1341.200},
-    {BASE_ALLY,  4975.262, -1698.239, 1341.427},
-    {BASE_HORDE, 5557.582, -2587.159, 1481.644},
-    {BASE_HORDE, 5545.901, -2582.246, 1479.256},
-    {BASE_HORDE, 5565.642, -2565.666, 1481.635},
-    {BASE_HORDE, 5547.218, -2574.589, 1479.194}
+    {BASE_ALLY,  4979.010f, -1709.134f, 1339.674f},
+    {BASE_ALLY,  4969.123f, -1705.904f, 1341.363f},
+    {BASE_ALLY,  4970.260f, -1698.546f, 1341.200f},
+    {BASE_ALLY,  4975.262f, -1698.239f, 1341.427f},
+    {BASE_HORDE, 5557.582f, -2587.159f, 1481.644f},
+    {BASE_HORDE, 5545.901f, -2582.246f, 1479.256f},
+    {BASE_HORDE, 5565.642f, -2565.666f, 1481.635f},
+    {BASE_HORDE, 5547.218f, -2574.589f, 1479.194f}
 };
 
 // used to inform the wave where to move
 sHyjalLocation m_aHyjalWaveMoveTo[]=
 {
-    {BASE_ALLY,  5018.654, -1752.074, 1322.203},
-    {BASE_HORDE, 5504.569, -2688.489, 1479.991}
+    {BASE_ALLY,  5018.654f, -1752.074f, 1322.203f},
+    {BASE_HORDE, 5504.569f, -2688.489f, 1479.991f}
 };
 
 struct sHyjalYells

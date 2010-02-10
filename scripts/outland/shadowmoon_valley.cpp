@@ -837,22 +837,22 @@ struct Location
 
 static Location SpawnLocation[]=
 {
-    {-4615.8556, 1342.2532, 139.9, 1.612},                  // Illidari Soldier
-    {-4598.9365, 1377.3182, 139.9, 3.917},                  // Illidari Soldier
-    {-4598.4697, 1360.8999, 139.9, 2.427},                  // Illidari Soldier
-    {-4589.3599, 1369.1061, 139.9, 3.165},                  // Illidari Soldier
-    {-4608.3477, 1386.0076, 139.9, 4.108},                  // Illidari Soldier
-    {-4633.1889, 1359.8033, 139.9, 0.949},                  // Illidari Soldier
-    {-4623.5791, 1351.4574, 139.9, 0.971},                  // Illidari Soldier
-    {-4607.2988, 1351.6099, 139.9, 2.416},                  // Illidari Soldier
-    {-4633.7764, 1376.0417, 139.9, 5.608},                  // Illidari Soldier
-    {-4600.2461, 1369.1240, 139.9, 3.056},                  // Illidari Mind Breaker
-    {-4631.7808, 1367.9459, 139.9, 0.020},                  // Illidari Mind Breaker
-    {-4600.2461, 1369.1240, 139.9, 3.056},                  // Illidari Highlord
-    {-4631.7808, 1367.9459, 139.9, 0.020},                  // Illidari Highlord
-    {-4615.5586, 1353.0031, 139.9, 1.540},                  // Illidari Highlord
-    {-4616.4736, 1384.2170, 139.9, 4.971},                  // Illidari Highlord
-    {-4627.1240, 1378.8752, 139.9, 2.544}                   // Torloth The Magnificent
+    {-4615.8556f, 1342.2532f, 139.9f, 1.612f},              // Illidari Soldier
+    {-4598.9365f, 1377.3182f, 139.9f, 3.917f},              // Illidari Soldier
+    {-4598.4697f, 1360.8999f, 139.9f, 2.427f},              // Illidari Soldier
+    {-4589.3599f, 1369.1061f, 139.9f, 3.165f},              // Illidari Soldier
+    {-4608.3477f, 1386.0076f, 139.9f, 4.108f},              // Illidari Soldier
+    {-4633.1889f, 1359.8033f, 139.9f, 0.949f},              // Illidari Soldier
+    {-4623.5791f, 1351.4574f, 139.9f, 0.971f},              // Illidari Soldier
+    {-4607.2988f, 1351.6099f, 139.9f, 2.416f},              // Illidari Soldier
+    {-4633.7764f, 1376.0417f, 139.9f, 5.608f},              // Illidari Soldier
+    {-4600.2461f, 1369.1240f, 139.9f, 3.056f},              // Illidari Mind Breaker
+    {-4631.7808f, 1367.9459f, 139.9f, 0.020f},              // Illidari Mind Breaker
+    {-4600.2461f, 1369.1240f, 139.9f, 3.056f},              // Illidari Highlord
+    {-4631.7808f, 1367.9459f, 139.9f, 0.020f},              // Illidari Highlord
+    {-4615.5586f, 1353.0031f, 139.9f, 1.540f},              // Illidari Highlord
+    {-4616.4736f, 1384.2170f, 139.9f, 4.971f},              // Illidari Highlord
+    {-4627.1240f, 1378.8752f, 139.9f, 2.544f}               // Torloth The Magnificent
 };
 
 struct WaveData

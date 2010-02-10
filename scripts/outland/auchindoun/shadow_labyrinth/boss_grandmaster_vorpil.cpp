@@ -51,7 +51,7 @@ EndScriptData */
 
 #define LOCX                            -253.06f
 #define LOCY                            -264.02f
-#define LOCZ                            17.08
+#define LOCZ                            17.08f
 
 struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
 {
@@ -109,10 +109,10 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
         }
 
         DoCastSpellIfCan(m_creature, SPELL_VOID_PORTAL_A,true);
-        m_creature->SummonCreature(ENTRY_VOID_PORTAL,-262.40,-229.57,17.08,0,TEMPSUMMON_CORPSE_DESPAWN,0);
-        m_creature->SummonCreature(ENTRY_VOID_PORTAL,-260.35,-297.56,17.08,0,TEMPSUMMON_CORPSE_DESPAWN,0);
-        m_creature->SummonCreature(ENTRY_VOID_PORTAL,-292.05,-270.37,12.68,0,TEMPSUMMON_CORPSE_DESPAWN,0);
-        m_creature->SummonCreature(ENTRY_VOID_PORTAL,-301.64,-255.97,12.68,0,TEMPSUMMON_CORPSE_DESPAWN,0);
+        m_creature->SummonCreature(ENTRY_VOID_PORTAL, -262.40f, -229.57f, 17.08f, 0.0f, TEMPSUMMON_CORPSE_DESPAWN,0);
+        m_creature->SummonCreature(ENTRY_VOID_PORTAL, -260.35f, -297.56f, 17.08f, 0.0f, TEMPSUMMON_CORPSE_DESPAWN,0);
+        m_creature->SummonCreature(ENTRY_VOID_PORTAL, -292.05f, -270.37f, 12.68f, 0.0f, TEMPSUMMON_CORPSE_DESPAWN,0);
+        m_creature->SummonCreature(ENTRY_VOID_PORTAL, -301.64f, -255.97f, 12.68f, 0.0f, TEMPSUMMON_CORPSE_DESPAWN,0);
 
         if (m_pInstance)
             m_pInstance->SetData(TYPE_VORPIL, IN_PROGRESS);
@@ -163,7 +163,7 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
                     Unit* target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
                     if (target && target->GetTypeId() == TYPEID_PLAYER)
                     {
-                        target->GetRandomPoint(LOCX,LOCY,LOCZ,3.0,ranX,ranY,ranZ);
+                        target->GetRandomPoint(LOCX,LOCY,LOCZ,3.0f,ranX,ranY,ranZ);
                         DoTeleportPlayer(target,ranX,ranY,ranZ,m_creature->GetAngle(m_creature->GetPositionX(),m_creature->GetPositionY()));
                     }
                 }

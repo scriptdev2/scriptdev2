@@ -32,17 +32,17 @@ enum
     SPELL_REMOVE_CURSE    = 30281
 };
 
-#define ADD_1X 2957.040
-#define ADD_1Y -3997.590
-#define ADD_1Z 274.280
+#define ADD_1X 2957.040f
+#define ADD_1Y -3997.590f
+#define ADD_1Z 274.280f
 
-#define ADD_2X 2909.130
-#define ADD_2Y -4042.970
-#define ADD_2Z 274.280
+#define ADD_2X 2909.130f
+#define ADD_2Y -4042.970f
+#define ADD_2Z 274.280f
 
-#define ADD_3X 2861.102
-#define ADD_3Y -3997.901
-#define ADD_3Z 274.280
+#define ADD_3X 2861.102f
+#define ADD_3Y -3997.901f
+#define ADD_3Z 274.280f
 
 struct MANGOS_DLL_DECL boss_loathebAI : public ScriptedAI
 {
@@ -146,9 +146,9 @@ struct MANGOS_DLL_DECL boss_loathebAI : public ScriptedAI
         {
             Unit* pSummonedSpores = NULL;
 
-            pSummonedSpores = m_creature->SummonCreature(16286,ADD_1X,ADD_1Y,ADD_1Z,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,80000);
-            pSummonedSpores = m_creature->SummonCreature(16286,ADD_2X,ADD_2Y,ADD_2Z,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,80000);
-            pSummonedSpores = m_creature->SummonCreature(16286,ADD_3X,ADD_3Y,ADD_3Z,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,80000);
+            pSummonedSpores = m_creature->SummonCreature(16286, ADD_1X, ADD_1Y, ADD_1Z, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,80000);
+            pSummonedSpores = m_creature->SummonCreature(16286, ADD_2X, ADD_2Y, ADD_2Z, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,80000);
+            pSummonedSpores = m_creature->SummonCreature(16286, ADD_3X, ADD_3Y, ADD_3Z, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,80000);
             if (pSummonedSpores)
             {
                 if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))

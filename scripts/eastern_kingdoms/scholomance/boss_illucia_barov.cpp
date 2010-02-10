@@ -53,7 +53,7 @@ struct MANGOS_DLL_DECL boss_illuciabarovAI : public ScriptedAI
             pInstance->SetData(TYPE_ILLUCIABAROV, DONE);
 
             if (pInstance->GetData(TYPE_GANDLING) == SPECIAL)
-                m_creature->SummonCreature(1853, 180.73, -9.43856, 75.507, 1.61399, TEMPSUMMON_DEAD_DESPAWN, 0);
+                m_creature->SummonCreature(1853, 180.73f, -9.43856f, 75.507f, 1.61399f, TEMPSUMMON_DEAD_DESPAWN, 0);
         }
     }
 

@@ -175,7 +175,7 @@ struct MANGOS_DLL_DECL instance_ruins_of_ahnqiraj : public ScriptedInstance
         //spawn andorov on load
         if (m_auiEncounter[0] == DONE)
             if (Creature* pRajaxx = instance->GetCreature(m_uiRajaxxGUID))
-                pRajaxx->SummonCreature(NPC_GENERAL_ANDOROV, -8873.42, 1647.67, 21.386, 5.69141, TEMPSUMMON_CORPSE_DESPAWN, 0);
+                pRajaxx->SummonCreature(NPC_GENERAL_ANDOROV, -8873.42f, 1647.67f, 21.386f, 5.69141f, TEMPSUMMON_CORPSE_DESPAWN, 0);
     }
 
     uint32 GetData(uint32 uiType)

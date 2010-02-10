@@ -112,10 +112,10 @@ struct MANGOS_DLL_DECL instance_deadmines : public ScriptedInstance
                             ++m_uiDoor_Step;
                             break;
                         case 1:
-                            if (Creature* pi1 = pMrSmite->SummonCreature(NPC_PIRATE, 93.68,-678.63,7.71,2.09, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 1800000))
-                                pi1->GetMotionMaster()->MovePoint(0,100.11,-670.65,7.42);
-                            if (Creature* pi2 = pMrSmite->SummonCreature(NPC_PIRATE,102.63,-685.07,7.42,1.28, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 1800000))
-                                pi2->GetMotionMaster()->MovePoint(0,100.11,-670.65,7.42);
+                            if (Creature* pi1 = pMrSmite->SummonCreature(NPC_PIRATE, 93.68f, -678.63f, 7.71f, 2.09f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 1800000))
+                                pi1->GetMotionMaster()->MovePoint(0, 100.11f, -670.65f, 7.42f);
+                            if (Creature* pi2 = pMrSmite->SummonCreature(NPC_PIRATE, 102.63f, -685.07f, 7.42f, 1.28f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 1800000))
+                                pi2->GetMotionMaster()->MovePoint(0, 100.11f, -670.65f, 7.42f);
                             ++m_uiDoor_Step;
                             m_uiIronDoor_Timer = 10000;
                             break;

@@ -91,65 +91,65 @@ enum
 };
 
 //Positional defines
-#define ADDX_LEFT_FAR               3783.272705
-#define ADDY_LEFT_FAR               -5062.697266
-#define ADDZ_LEFT_FAR               143.711203
-#define ADDO_LEFT_FAR               3.617599
+#define ADDX_LEFT_FAR               3783.272705f
+#define ADDY_LEFT_FAR               -5062.697266f
+#define ADDZ_LEFT_FAR               143.711203f
+#define ADDO_LEFT_FAR               3.617599f
 
-#define ADDX_LEFT_MIDDLE            3730.291260
-#define ADDY_LEFT_MIDDLE            -5027.239258
-#define ADDZ_LEFT_MIDDLE            143.956909
-#define ADDO_LEFT_MIDDLE            4.461900
+#define ADDX_LEFT_MIDDLE            3730.291260f
+#define ADDY_LEFT_MIDDLE            -5027.239258f
+#define ADDZ_LEFT_MIDDLE            143.956909f
+#define ADDO_LEFT_MIDDLE            4.461900f
 
-#define ADDX_LEFT_NEAR              3683.868652
-#define ADDY_LEFT_NEAR              -5057.281250
-#define ADDZ_LEFT_NEAR              143.183884
-#define ADDO_LEFT_NEAR              5.237086
+#define ADDX_LEFT_NEAR              3683.868652f
+#define ADDY_LEFT_NEAR              -5057.281250f
+#define ADDZ_LEFT_NEAR              143.183884f
+#define ADDO_LEFT_NEAR              5.237086f
 
-#define ADDX_RIGHT_FAR              3759.355225
-#define ADDY_RIGHT_FAR              -5174.128418
-#define ADDZ_RIGHT_FAR              143.802383
-#define ADDO_RIGHT_FAR              2.170104
+#define ADDX_RIGHT_FAR              3759.355225f
+#define ADDY_RIGHT_FAR              -5174.128418f
+#define ADDZ_RIGHT_FAR              143.802383f
+#define ADDO_RIGHT_FAR              2.170104f
 
-#define ADDX_RIGHT_MIDDLE           370.724365
-#define ADDY_RIGHT_MIDDLE           -5185.123047
-#define ADDZ_RIGHT_MIDDLE           143.928024
-#define ADDO_RIGHT_MIDDLE           1.309310
+#define ADDX_RIGHT_MIDDLE           370.724365f
+#define ADDY_RIGHT_MIDDLE           -5185.123047f
+#define ADDZ_RIGHT_MIDDLE           143.928024f
+#define ADDO_RIGHT_MIDDLE           1.309310f
 
-#define ADDX_RIGHT_NEAR             3665.121094
-#define ADDY_RIGHT_NEAR             -5138.679199
-#define ADDZ_RIGHT_NEAR             143.183212
-#define ADDO_RIGHT_NEAR             0.604023
+#define ADDX_RIGHT_NEAR             3665.121094f
+#define ADDY_RIGHT_NEAR             -5138.679199f
+#define ADDZ_RIGHT_NEAR             143.183212f
+#define ADDO_RIGHT_NEAR             0.604023f
 
-#define WALKX_LEFT_FAR              3754.431396
-#define WALKY_LEFT_FAR              -5080.727734
-#define WALKZ_LEFT_FAR              142.036316
-#define WALKO_LEFT_FAR              3.736189
+#define WALKX_LEFT_FAR              3754.431396f
+#define WALKY_LEFT_FAR              -5080.727734f
+#define WALKZ_LEFT_FAR              142.036316f
+#define WALKO_LEFT_FAR              3.736189f
 
-#define WALKX_LEFT_MIDDLE           3724.396484
-#define WALKY_LEFT_MIDDLE           -5061.330566
-#define WALKZ_LEFT_MIDDLE           142.032700
-#define WALKO_LEFT_MIDDLE           4.564785
+#define WALKX_LEFT_MIDDLE           3724.396484f
+#define WALKY_LEFT_MIDDLE           -5061.330566f
+#define WALKZ_LEFT_MIDDLE           142.032700f
+#define WALKO_LEFT_MIDDLE           4.564785f
 
-#define WALKX_LEFT_NEAR             3687.158424
-#define WALKY_LEFT_NEAR             -5076.834473
-#define WALKZ_LEFT_NEAR             142.017319
-#define WALKO_LEFT_NEAR             5.237086
+#define WALKX_LEFT_NEAR             3687.158424f
+#define WALKY_LEFT_NEAR             -5076.834473f
+#define WALKZ_LEFT_NEAR             142.017319f
+#define WALKO_LEFT_NEAR             5.237086f
 
-#define WALKX_RIGHT_FAR             3687.571777
-#define WALKY_RIGHT_FAR             -5126.831055
-#define WALKZ_RIGHT_FAR             142.017807
-#define WALKO_RIGHT_FAR             0.604023
+#define WALKX_RIGHT_FAR             3687.571777f
+#define WALKY_RIGHT_FAR             -5126.831055f
+#define WALKZ_RIGHT_FAR             142.017807f
+#define WALKO_RIGHT_FAR             0.604023f
 
-#define WALKX_RIGHT_MIDDLE          3707.990733
-#define WALKY_RIGHT_MIDDLE          -5151.450195
-#define WALKZ_RIGHT_MIDDLE          142.032562
-#define WALKO_RIGHT_MIDDLE          1.376855
+#define WALKX_RIGHT_MIDDLE          3707.990733f
+#define WALKY_RIGHT_MIDDLE          -5151.450195f
+#define WALKZ_RIGHT_MIDDLE          142.032562f
+#define WALKO_RIGHT_MIDDLE          1.376855f
 
-#define WALKX_RIGHT_NEAR            3739.500000
-#define WALKY_RIGHT_NEAR            -5141.883989
-#define WALKZ_RIGHT_NEAR            142.0141130
-#define WALKO_RIGHT_NEAR            2.121412
+#define WALKX_RIGHT_NEAR            3739.500000f
+#define WALKY_RIGHT_NEAR            -5141.883989f
+#define WALKZ_RIGHT_NEAR            142.0141130f
+#define WALKO_RIGHT_NEAR            2.121412f
 
 struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
 {

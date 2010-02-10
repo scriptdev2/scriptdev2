@@ -125,7 +125,7 @@ CreatureAI* GetAI_npc_aeranas(Creature* pCreature)
 
 bool GOHello_go_haaleshi_altar(Player* pPlayer, GameObject* pGo)
 {
-    pGo->SummonCreature(C_AERANAS,-1321.79, 4043.80, 116.24, 1.25, TEMPSUMMON_TIMED_DESPAWN, 180000);
+    pGo->SummonCreature(C_AERANAS, -1321.79f, 4043.80f, 116.24f, 1.25f, TEMPSUMMON_TIMED_DESPAWN, 180000);
     return false;
 }
 
@@ -255,9 +255,9 @@ struct MANGOS_DLL_DECL npc_demoniac_scryerAI : public ScriptedAI
         switch(m_uiButtressCount)
         {
             case 1: fAngle = 0.0f; break;
-            case 2: fAngle = M_PI+M_PI/2; break;
-            case 3: fAngle = M_PI/2; break;
-            case 4: fAngle = M_PI; break;
+            case 2: fAngle = M_PI_F+M_PI_F/2; break;
+            case 3: fAngle = M_PI_F/2; break;
+            case 4: fAngle = M_PI_F; break;
         }
 
         float fX, fY;
