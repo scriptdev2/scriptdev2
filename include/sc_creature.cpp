@@ -337,7 +337,7 @@ void FillSpellSummary()
 
     SpellEntry const* pTempSpell;
 
-    for (int i=0; i < GetSpellStore()->GetNumRows(); ++i)
+    for (uint32 i=0; i < GetSpellStore()->GetNumRows(); ++i)
     {
         SpellSummary[i].Effects = 0;
         SpellSummary[i].Targets = 0;
