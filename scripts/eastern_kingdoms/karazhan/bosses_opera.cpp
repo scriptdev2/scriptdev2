@@ -183,7 +183,7 @@ struct MANGOS_DLL_DECL boss_dorotheeAI : public ScriptedAI
 
         if (WaterBoltTimer < diff)
         {
-            if(Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                 DoCastSpellIfCan(pTarget, SPELL_WATERBOLT);
 
             WaterBoltTimer = TitoDied ? 1500 : 5000;

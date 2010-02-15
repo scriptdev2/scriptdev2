@@ -231,7 +231,7 @@ struct MANGOS_DLL_DECL mob_syth_fireAI : public ScriptedAI
         if (flameshock_timer < diff)
         {
             if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0))
-                DoCastSpellIfCan(target, SPELL_FLAME_SHOCK);	
+                DoCastSpellIfCan(target, SPELL_FLAME_SHOCK);
 
             flameshock_timer = 5000;
         }else flameshock_timer -= diff;

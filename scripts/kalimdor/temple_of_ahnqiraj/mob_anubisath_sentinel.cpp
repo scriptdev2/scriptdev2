@@ -252,7 +252,7 @@ struct MANGOS_DLL_DECL aqsentinelAI : public ScriptedAI
                 continue;
             if (sent->isDead())
                 continue;
-            int h = sent->GetHealth() + (sent->GetMaxHealth() / 2);
+            uint32 h = sent->GetHealth() + (sent->GetMaxHealth() / 2);
             if (h > sent->GetMaxHealth())
                 h = sent->GetMaxHealth();
             sent->SetHealth(h);
