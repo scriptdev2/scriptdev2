@@ -189,11 +189,17 @@ struct MANGOS_DLL_DECL mob_healing_wardAI : public ScriptedAI
         {
             if (m_pInstance)
             {
-                Unit *pJindo = Unit::GetUnit((*m_creature), m_pInstance->GetData64(DATA_JINDO));
-                DoCastSpellIfCan(pJindo, SPELL_HEAL);
+                if (Unit *pJindo = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_JINDO)))
+                {
+                    if (pJindo->isAlive())
+                        DoCastSpellIfCan(pJindo, SPELL_HEAL);
+                }
             }
             Heal_Timer = 3000;
         }else Heal_Timer -= diff;
+
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
 
         DoMeleeAttackIfReady();
     }
@@ -220,6 +226,8 @@ struct MANGOS_DLL_DECL mob_shade_of_jindoAI : public ScriptedAI
 
     void UpdateAI (const uint32 diff)
     {
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
 
         //ShadowShock_Timer
         if (ShadowShock_Timer < diff)
