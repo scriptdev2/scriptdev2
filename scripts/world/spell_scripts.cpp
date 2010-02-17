@@ -29,6 +29,12 @@ npc_woodlands_walker
 EndContentData */
 
 #include "precompiled.h"
+#include "../system/system.h"
+
+/* When you make a spell effect:
+- always check spell id and effect index
+- always return true when the spell is handled by script
+*/
 
 /*######
 ## npc_nestlewood_owlkin
@@ -43,8 +49,7 @@ enum
 
 bool EffectDummyCreature_npc_nestlewood_owlkin(Unit* pCaster, uint32 uiSpellId, uint32 uiEffIndex, Creature* pCreatureTarget)
 {
-    //always check spellid and effectindex
-    if (uiSpellId == SPELL_INOCULATE_OWLKIN && uiEffIndex == 0)
+    if (uiSpellId == SPELL_INOCULATE_OWLKIN && uiEffIndex == SPELL_EFFECT_0)
     {
         if (pCreatureTarget->GetEntry() != ENTRY_OWLKIN)
             return true;
@@ -54,7 +59,6 @@ bool EffectDummyCreature_npc_nestlewood_owlkin(Unit* pCaster, uint32 uiSpellId, 
         //set despawn timer, since we want to remove creature after a short time
         pCreatureTarget->ForcedDespawn(15000);
 
-        //always return true when we are handling this spell and effect
         return true;
     }
     return false;
@@ -77,8 +81,7 @@ enum
 
 bool EffectDummyCreature_npc_liquid_fire_of_elune(Unit* pCaster, uint32 uiSpellId, uint32 uiEffIndex, Creature* pCreatureTarget)
 {
-    //always check spellid and effectindex
-    if (uiSpellId == SPELL_LIQUID_FIRE && uiEffIndex == 0)
+    if (uiSpellId == SPELL_LIQUID_FIRE && uiEffIndex == SPELL_EFFECT_0)
     {
         if (pCaster->GetTypeId() == TYPEID_PLAYER)
         {
@@ -97,7 +100,6 @@ bool EffectDummyCreature_npc_liquid_fire_of_elune(Unit* pCaster, uint32 uiSpellI
             }
         }
 
-        //always return true when we are handling this spell and effect
         return true;
     }
     return false;
@@ -130,8 +132,7 @@ enum
 
 bool EffectDummyCreature_npc_robot_reprogrammed(Unit* pCaster, uint32 uiSpellId, uint32 uiEffIndex, Creature* pCreatureTarget)
 {
-    //always check spellid and effectindex
-    if (uiSpellId == SPELL_ULTRASONIC_SCREWDRIVER && uiEffIndex == 0)
+    if (uiSpellId == SPELL_ULTRASONIC_SCREWDRIVER && uiEffIndex == SPELL_EFFECT_0)
     {
         if (pCreatureTarget->isDead())
         {
@@ -157,7 +158,6 @@ bool EffectDummyCreature_npc_robot_reprogrammed(Unit* pCaster, uint32 uiSpellId,
             }
         }
 
-        //always return true when we are handling this spell and effect
         return true;
     }
     return false;
@@ -179,8 +179,7 @@ enum
 
 bool EffectDummyCreature_npc_woodlands_walker(Unit* pCaster, uint32 uiSpellId, uint32 uiEffIndex, Creature* pCreatureTarget)
 {
-    //always check spellid and effectindex
-    if (uiSpellId == SPELL_STRENGTH_ANCIENTS && uiEffIndex == 0)
+    if (uiSpellId == SPELL_STRENGTH_ANCIENTS && uiEffIndex == SPELL_EFFECT_0)
     {
         if (pCaster->GetTypeId() == TYPEID_PLAYER)
         {
@@ -198,7 +197,6 @@ bool EffectDummyCreature_npc_woodlands_walker(Unit* pCaster, uint32 uiSpellId, u
             }
         }
 
-        //always return true when we are handling this spell and effect
         return true;
     }
     return false;
