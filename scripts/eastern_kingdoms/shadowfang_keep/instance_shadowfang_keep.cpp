@@ -26,17 +26,22 @@ EndScriptData */
 
 enum
 {
-    MAX_ENCOUNTER           = 4,
+    MAX_ENCOUNTER           = 6,
 
     SAY_BOSS_DIE_AD         = -1033007,
     SAY_BOSS_DIE_AS         = -1033008,
 
     NPC_ASH                 = 3850,
     NPC_ADA                 = 3849,
+//  NPC_ARUGAL              = 10000,                        //"Arugal" says intro text, not used
+    NPC_ARCHMAGE_ARUGAL     = 4275,                         //"Archmage Arugal" does Fenrus event
+    NPC_FENRUS              = 4274,                         //used to summon Arugal in Fenrus event
+    NPC_VINCENT             = 4444,                         //Vincent should be "dead" is Arugal is done the intro already
 
     GO_COURTYARD_DOOR       = 18895,                        //door to open when talking to NPC's
     GO_SORCERER_DOOR        = 18972,                        //door to open when Fenrus the Devourer
-    GO_ARUGAL_DOOR          = 18971                         //door to open when Wolf Master Nandos
+    GO_ARUGAL_DOOR          = 18971,                        //door to open when Wolf Master Nandos
+    GO_ARUGAL_FOCUS         = 18973                         //this generates the lightning visual in the Fenrus event
 };
 
 struct MANGOS_DLL_DECL instance_shadowfang_keep : public ScriptedInstance
@@ -53,6 +58,11 @@ struct MANGOS_DLL_DECL instance_shadowfang_keep : public ScriptedInstance
     uint64 m_uiDoorSorcererGUID;
     uint64 m_uiDoorArugalGUID;
 
+    uint64 m_uiFenrusGUID;
+    uint64 m_uiVincentGUID;
+
+    uint64 m_uiArugalFocusGUID;
+
     void Initialize()
     {
         memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
@@ -63,6 +73,11 @@ struct MANGOS_DLL_DECL instance_shadowfang_keep : public ScriptedInstance
         m_uiDoorCourtyardGUID = 0;
         m_uiDoorSorcererGUID = 0;
         m_uiDoorArugalGUID = 0;
+
+        m_uiFenrusGUID = 0;
+        m_uiVincentGUID = 0;
+
+        m_uiArugalFocusGUID = 0;
     }
 
     void OnCreatureCreate(Creature* pCreature)
@@ -71,6 +86,13 @@ struct MANGOS_DLL_DECL instance_shadowfang_keep : public ScriptedInstance
         {
             case NPC_ASH: m_uiAshGUID = pCreature->GetGUID(); break;
             case NPC_ADA: m_uiAdaGUID = pCreature->GetGUID(); break;
+            case NPC_FENRUS: m_uiFenrusGUID = pCreature->GetGUID(); break;
+            case NPC_VINCENT: 
+                m_uiVincentGUID = pCreature->GetGUID(); 
+                //if Arugal has done the intro, make Vincent dead!
+                if (m_auiEncounter[4] == DONE)
+                    pCreature->SetStandState(UNIT_STAND_STATE_DEAD);
+                break;
         }
     }
 
@@ -83,6 +105,8 @@ struct MANGOS_DLL_DECL instance_shadowfang_keep : public ScriptedInstance
                 if (m_auiEncounter[0] == DONE)
                     pGo->SetGoState(GO_STATE_ACTIVE);
                 break;
+            //for this we ignore voidwalkers, because if the server restarts
+            //they won't be there, but Fenrus is dead so the door can't be opened!
             case GO_SORCERER_DOOR:
                 m_uiDoorSorcererGUID = pGo->GetGUID();
                 if (m_auiEncounter[2] == DONE)
@@ -92,6 +116,9 @@ struct MANGOS_DLL_DECL instance_shadowfang_keep : public ScriptedInstance
                 m_uiDoorArugalGUID = pGo->GetGUID();
                 if (m_auiEncounter[3] == DONE)
                     pGo->SetGoState(GO_STATE_ACTIVE);
+                break;
+            case GO_ARUGAL_FOCUS:
+                m_uiArugalFocusGUID = pGo->GetGUID();
                 break;
         }
     }
@@ -124,13 +151,25 @@ struct MANGOS_DLL_DECL instance_shadowfang_keep : public ScriptedInstance
                 break;
             case TYPE_FENRUS:
                 if (uiData == DONE)
-                    DoUseDoorOrButton(m_uiDoorSorcererGUID);
+                    if (Creature* pFenrus = instance->GetCreature(m_uiFenrusGUID))
+                        pFenrus->SummonCreature(NPC_ARCHMAGE_ARUGAL,-136.89f,2169.17f,136.58f,2.794f,TEMPSUMMON_TIMED_DESPAWN,30000);
                 m_auiEncounter[2] = uiData;
                 break;
             case TYPE_NANDOS:
                 if (uiData == DONE)
                     DoUseDoorOrButton(m_uiDoorArugalGUID);
                 m_auiEncounter[3] = uiData;
+                break;
+            case TYPE_INTRO:
+                m_auiEncounter[4] = uiData;
+                break;
+            case TYPE_VOIDWALKER:
+                if (uiData == DONE)
+                {
+                    m_auiEncounter[5]++;
+                    if (m_auiEncounter[5] > 3)
+                        DoUseDoorOrButton(m_uiDoorSorcererGUID);
+                }
                 break;
         }
 
@@ -139,7 +178,8 @@ struct MANGOS_DLL_DECL instance_shadowfang_keep : public ScriptedInstance
             OUT_SAVE_INST_DATA;
 
             std::ostringstream saveStream;
-            saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " " << m_auiEncounter[3];
+            saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " " << m_auiEncounter[3]
+                 << " " << m_auiEncounter[4] << " " << m_auiEncounter[5];
 
             strInstData = saveStream.str();
 
@@ -160,6 +200,18 @@ struct MANGOS_DLL_DECL instance_shadowfang_keep : public ScriptedInstance
                 return m_auiEncounter[2];
             case TYPE_NANDOS:
                 return m_auiEncounter[3];
+            case TYPE_INTRO:
+                return m_auiEncounter[4];
+        }
+        return 0;
+    }
+
+    uint64 GetData64(uint32 uiType)
+    {
+        switch(uiType)
+        {
+            case DATA_LIGHTNING:
+                return m_uiArugalFocusGUID;
         }
         return 0;
     }
@@ -180,7 +232,8 @@ struct MANGOS_DLL_DECL instance_shadowfang_keep : public ScriptedInstance
         OUT_LOAD_INST_DATA(chrIn);
 
         std::istringstream loadStream(chrIn);
-        loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3];
+        loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3] 
+            >> m_auiEncounter[4] >> m_auiEncounter[5];
 
         for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
         {
