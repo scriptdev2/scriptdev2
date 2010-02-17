@@ -170,26 +170,26 @@ bool GossipSelect_npc_shadowfang_prisoner(Player* pPlayer, Creature* pCreature, 
 
 struct Waypoint
 {
-    float x, y, z;
+    float fX, fY, fZ;
 };
 
 //Cordinates for voidwalker spawns
-const static Waypoint VWWaypoints[]=
+static const Waypoint VWWaypoints[]=
 {
-    //x          y            z
-    { -146.06f,  2172.84f,    127.953f}, //this is the initial location, in the middle of the room
-    { -159.547f, 2178.11f,    128.944f}, //when they come back up, they hit this point then walk back down
-    { -171.113f, 2182.69f,    129.255f},
-    { -177.613f, 2175.59f,    128.161f},
-    { -185.396f, 2178.35f,    126.413f},
-    { -184.004f, 2188.31f,    124.122f},
-    { -172.781f, 2188.71f,    121.611f},
-    { -173.245f, 2176.93f,    119.085f},
-    { -183.145f, 2176.04f,    116.995f},
-    { -185.551f, 2185.77f,    114.784f},
-    { -177.502f, 2190.75f,    112.681f},
-    { -171.218f, 2182.61f,    110.314f},
-    { -173.857f, 2175.1f,     109.255f}
+    //fX        fY        fZ
+    {-146.06f,  2172.84f, 127.953f},                        //this is the initial location, in the middle of the room
+    {-159.547f, 2178.11f, 128.944f},                        //when they come back up, they hit this point then walk back down
+    {-171.113f, 2182.69f, 129.255f},
+    {-177.613f, 2175.59f, 128.161f},
+    {-185.396f, 2178.35f, 126.413f},
+    {-184.004f, 2188.31f, 124.122f},
+    {-172.781f, 2188.71f, 121.611f},
+    {-173.245f, 2176.93f, 119.085f},
+    {-183.145f, 2176.04f, 116.995f},
+    {-185.551f, 2185.77f, 114.784f},
+    {-177.502f, 2190.75f, 112.681f},
+    {-171.218f, 2182.61f, 110.314f},
+    {-173.857f, 2175.1f,  109.255f}
 };
 
 enum
@@ -201,179 +201,186 @@ enum
     SPELL_DARK_OFFERING = 7154
 };
 
-mob_arugal_voidwalkerAI::mob_arugal_voidwalkerAI(Creature* pCreature) : ScriptedAI(pCreature) 
+struct MANGOS_DLL_DECL mob_arugal_voidwalkerAI : public ScriptedAI
 {
-    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-    m_bIsLeader = false;
-    m_uiLeaderGUID = 0;
-    m_uiCurrentPoint = 0;
-    m_bReverse = false;
-}
-
-void mob_arugal_voidwalkerAI::Reset()
-{
-    m_creature->AddSplineFlag(SPLINEFLAG_WALKMODE);
-    m_uiDarkOffering = urand(4400,12500);
-    m_bWPDone = true;
-
-    Creature* pLeader = m_pInstance->instance->GetCreature(m_uiLeaderGUID);
-    if (pLeader && pLeader->isAlive())
+    mob_arugal_voidwalkerAI(Creature* pCreature) : ScriptedAI(pCreature) 
     {
-        m_creature->GetMotionMaster()->MoveFollow(pLeader,1.0f,M_PI/2*m_uiPosition);
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_bIsLeader = false;
+        m_uiLeaderGUID = 0;
+        m_uiCurrentPoint = 0;
+        m_bReverse = false;
     }
-    else
+
+    uint32 m_uiResetTimer, m_uiDarkOffering;
+    uint8 m_uiCurrentPoint, m_uiPosition;                   //0 - leader, 1 - behind-right, 2 - behind, 3 - behind-left
+    uint64 m_uiLeaderGUID;
+    ScriptedInstance* m_pInstance;
+    bool m_bIsLeader, m_bReverse, m_bWPDone;
+
+    void Reset()
+    {
+        m_creature->AddSplineFlag(SPLINEFLAG_WALKMODE);
+        m_uiDarkOffering = urand(4400,12500);
+        m_bWPDone = true;
+
+        Creature* pLeader = m_pInstance->instance->GetCreature(m_uiLeaderGUID);
+        if (pLeader && pLeader->isAlive())
+        {
+            m_creature->GetMotionMaster()->MoveFollow(pLeader, 1.0f, M_PI/2*m_uiPosition);
+        }
+        else
+        {
+            std::list<Creature*> lVoidwalkerList;
+            Creature* pNewLeader = NULL;
+            uint8 uiHighestPosition = 0;
+            GetCreatureListWithEntryInGrid(lVoidwalkerList, m_creature, NPC_VOIDWALKER, 50.0f);
+            for(std::list<Creature*>::iterator itr = lVoidwalkerList.begin(); itr != lVoidwalkerList.end(); ++itr)
+            {
+                if ((*itr)->isAlive())
+                {
+                    if (mob_arugal_voidwalkerAI* pVoidwalkerAI = dynamic_cast<mob_arugal_voidwalkerAI*>((*itr)->AI()))
+                    {
+                        uint8 uiPosition = pVoidwalkerAI->GetPosition();
+                        if (uiPosition > uiHighestPosition)
+                        {
+                            pNewLeader = (*itr);
+                            uiHighestPosition = uiPosition;
+                        }
+                    }
+                }
+            }
+
+            if (pNewLeader)
+            {
+                m_uiLeaderGUID = pNewLeader->GetGUID();
+                if (pNewLeader == m_creature)
+                {
+                    m_bIsLeader = true;
+                    m_bWPDone = true;
+                }
+                else
+                    m_creature->GetMotionMaster()->MoveFollow(pNewLeader, 1.0f, M_PI/2*m_uiPosition);
+            }
+            else
+            {
+                pNewLeader = m_creature;
+                m_bIsLeader = true;
+                m_bWPDone = true;
+            }
+        }
+    }
+
+    //this is the ACID script converted into C++
+    //unfortunately, we can't have both AIs at the same time :(
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (m_bIsLeader && m_bWPDone)
+        {
+            m_creature->GetMotionMaster()->MovePoint(m_uiCurrentPoint, VWWaypoints[m_uiCurrentPoint].fX,
+                VWWaypoints[m_uiCurrentPoint].fY, VWWaypoints[m_uiCurrentPoint].fZ);
+            m_bWPDone = false;
+        }
+
+        if (!m_creature->isInCombat())
+            return;
+
+        if (m_uiDarkOffering < uiDiff)
+        {
+            m_uiDarkOffering = urand(4400,12500);
+
+            if (Unit* pUnit = DoSelectLowestHpFriendly(10.0f, 290))
+                DoCastSpellIfCan(pUnit, SPELL_DARK_OFFERING);
+        }
+        else
+            m_uiDarkOffering -= uiDiff;
+
+        //Check if we have a current target
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        DoMeleeAttackIfReady();
+    }
+
+    void MovementInform(uint32 uiMoveType, uint32 uiPointId)
+    {
+        if (uiMoveType != POINT_MOTION_TYPE || !m_bIsLeader)
+            return;
+
+        switch(uiPointId)
+        {
+            case 1:
+                if (m_bReverse)
+                    m_bReverse = false;
+                break;
+            case LAST_WAYPOINT:
+                if (!m_bReverse)
+                    m_bReverse = true;
+                break;
+        }
+
+        if (m_bReverse)
+            --m_uiCurrentPoint;
+        else
+            ++m_uiCurrentPoint;
+
+        m_bWPDone = true;
+
+        SendWaypoint();
+    }
+
+    void JustDied(Unit* /*pKiller*/)
+    {
+        m_pInstance->SetData(TYPE_VOIDWALKER,DONE);
+    }
+
+    void SetPosition(uint8 uiPosition, Creature* pLeader)
+    {
+        m_uiPosition = uiPosition;
+
+        if (!uiPosition)
+            m_bIsLeader = true;
+        else
+            pLeader ? m_uiLeaderGUID = pLeader->GetGUID() : m_uiLeaderGUID = 0;
+        
+        Reset();
+    }
+
+    uint8 GetPosition()
+    {
+        return m_uiPosition;
+    }
+
+    void SendWaypoint()
     {
         std::list<Creature*> lVoidwalkerList;
-        Creature* pNewLeader = NULL;
-        uint8 uiHighestPosition = 0;
         GetCreatureListWithEntryInGrid(lVoidwalkerList, m_creature, NPC_VOIDWALKER, 50.0f);
         for(std::list<Creature*>::iterator itr = lVoidwalkerList.begin(); itr != lVoidwalkerList.end(); ++itr)
         {
             if ((*itr)->isAlive())
-            {
                 if (mob_arugal_voidwalkerAI* pVoidwalkerAI = dynamic_cast<mob_arugal_voidwalkerAI*>((*itr)->AI()))
-                {
-                    uint8 uiPosition = pVoidwalkerAI->GetPosition();
-                    if (uiPosition > uiHighestPosition)
-                    {
-                        pNewLeader = (*itr);
-                        uiHighestPosition = uiPosition;
-                    }
-                }
-            }
-        }
-
-        if (pNewLeader)
-        {
-            m_uiLeaderGUID = pNewLeader->GetGUID();
-            if (pNewLeader == m_creature)
-            {
-                m_bIsLeader = true;
-                m_bWPDone = true;
-            }
-            else
-                m_creature->GetMotionMaster()->MoveFollow(pNewLeader,1.0f,M_PI/2*m_uiPosition);
-        }
-        else
-        {
-            pNewLeader = m_creature;
-            m_bIsLeader = true;
-            m_bWPDone = true;
+                    pVoidwalkerAI->ReceiveWaypoint(m_uiCurrentPoint, m_bReverse);
         }
     }
-}
 
-//this is the ACID script converted into C++
-//unfortunately, we can't have both AIs at the same time :(
-void mob_arugal_voidwalkerAI::UpdateAI(const uint32 uiDiff)
-{
-    if (m_bIsLeader && m_bWPDone)
+    void ReceiveWaypoint(uint32 uiNewPoint, bool bReverse)
     {
-        m_creature->GetMotionMaster()->MovePoint(m_uiCurrentPoint,VWWaypoints[m_uiCurrentPoint].x,
-            VWWaypoints[m_uiCurrentPoint].y,VWWaypoints[m_uiCurrentPoint].z);
-        m_bWPDone = false;
+        m_uiCurrentPoint = uiNewPoint;
+        m_bReverse = bReverse;
     }
 
-    if (!m_creature->isInCombat())
-        return;
-
-    if (m_uiDarkOffering < uiDiff)
+    void EnterEvadeMode()
     {
-        m_uiDarkOffering = urand(4400,12500);
-    
-        Unit* pUnit = DoSelectLowestHpFriendly(10.0f, 290);
-        if (!pUnit)
-            return;
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop(true);
+        m_creature->LoadCreaturesAddon();
 
-        DoCastSpellIfCan(pUnit,SPELL_DARK_OFFERING);
+        m_creature->SetLootRecipient(NULL);
+
+        Reset();
     }
-    else
-        m_uiDarkOffering -= uiDiff;
-
-    //Check if we have a current target
-    if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-        return;
-
-    DoMeleeAttackIfReady();
-}
-
-void mob_arugal_voidwalkerAI::MovementInform(uint32 uiMoveType, uint32 uiPointId)
-{
-    if (uiMoveType != POINT_MOTION_TYPE || !m_bIsLeader)
-        return;
-
-    switch(uiPointId)
-    {
-    case 1:
-        if (m_bReverse)
-            m_bReverse = false;
-        break;
-    case LAST_WAYPOINT:
-        if (!m_bReverse)
-            m_bReverse = true;
-        break;
-    }
-    
-    if (m_bReverse)
-        m_uiCurrentPoint--;
-    else
-        m_uiCurrentPoint++;
-
-    m_bWPDone = true;
-
-    SendWaypoint();
-}
-
-void mob_arugal_voidwalkerAI::JustDied(Unit* /*pKiller*/)
-{
-    m_pInstance->SetData(TYPE_VOIDWALKER,DONE);
-}
-
-void mob_arugal_voidwalkerAI::SetPosition(uint8 uiPosition, Creature* pLeader)
-{
-    m_uiPosition = uiPosition;
-    if (!uiPosition)
-        m_bIsLeader = true;
-    else
-        pLeader ? m_uiLeaderGUID = pLeader->GetGUID() : m_uiLeaderGUID = 0;
-    
-    Reset();
-}
-
-uint8 mob_arugal_voidwalkerAI::GetPosition()
-{
-    return m_uiPosition;
-}
-
-void mob_arugal_voidwalkerAI::SendWaypoint()
-{
-    std::list<Creature*> lVoidwalkerList;
-    GetCreatureListWithEntryInGrid(lVoidwalkerList, m_creature, NPC_VOIDWALKER, 50.0f);
-    for(std::list<Creature*>::iterator itr = lVoidwalkerList.begin(); itr != lVoidwalkerList.end(); ++itr)
-    {
-        if ((*itr)->isAlive())
-            if (mob_arugal_voidwalkerAI* pVoidwalkerAI = dynamic_cast<mob_arugal_voidwalkerAI*>((*itr)->AI()))
-                pVoidwalkerAI->ReceiveWaypoint(m_uiCurrentPoint, m_bReverse);
-    }
-}
-
-void mob_arugal_voidwalkerAI::ReceiveWaypoint(uint32 uiNewPoint, bool bReverse)
-{
-    m_uiCurrentPoint = uiNewPoint;
-    m_bReverse = bReverse;
-}
-
-void mob_arugal_voidwalkerAI::EnterEvadeMode()
-{
-    m_creature->RemoveAllAuras();
-    m_creature->DeleteThreatList();
-    m_creature->CombatStop(true);
-    m_creature->LoadCreaturesAddon();
-
-    m_creature->SetLootRecipient(NULL);
-
-    Reset();
-}
+};
 
 CreatureAI* GetAI_mob_arugal_voidwalker(Creature* pCreature)
 {
@@ -396,7 +403,6 @@ enum
     YELL_AGGRO                      = -1033017,
     YELL_KILLED_PLAYER              = -1033018,
     YELL_COMBAT                     = -1033019,
-
     YELL_FENRUS                     = -1033013
 };
 
@@ -409,22 +415,22 @@ enum ArugalPosition
 
 struct SpawnPoint
 {
-    float x, y, z, o;
+    float fX, fY, fZ, fO;
 };
 
 //Cordinates for voidwalker spawns
-const static SpawnPoint VWSpawns[]=
+static const SpawnPoint VWSpawns[]=
 {
-    //x          y            z         o
-    { -155.352f, 2172.780f,   128.448f, 4.679f },
-    { -147.059f, 2163.193f,   128.696f, 0.128f },
-    { -148.869f, 2180.859f,   128.448f, 1.814f },
-    { -140.203f, 2175.263f,   128.448f, 0.373f },
+    //fX        fY         fZ        fO
+    {-155.352f, 2172.780f, 128.448f, 4.679f},
+    {-147.059f, 2163.193f, 128.696f, 0.128f},
+    {-148.869f, 2180.859f, 128.448f, 1.814f},
+    {-140.203f, 2175.263f, 128.448f, 0.373f},
 };
 
 //roughly the height of Fenrus' room, 
 //used to tell how he should behave
-#define HEIGHT_FENRUS_ROOM 140.0f
+const float HEIGHT_FENRUS_ROOM      = 140.0f;
 
 struct MANGOS_DLL_DECL boss_arugalAI : public ScriptedAI
 {
@@ -484,48 +490,51 @@ struct MANGOS_DLL_DECL boss_arugalAI : public ScriptedAI
             {
                 switch(m_uiSpeechStep)
                 {
-                case 1:
-                    DoScriptText(YELL_FENRUS, m_creature);
-                    m_creature->SetVisibility(VISIBILITY_ON);
-                    m_uiSpeechTimer = 2000;
-                    break;
-                case 2:
-                    DoCastSpellIfCan(m_creature, SPELL_FIRE);
-                    m_uiSpeechTimer = 5000;
-                    break;
-                case 3:
-                    if (GameObject* pLightning = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_LIGHTNING)))
-                        pLightning->Use(m_creature);
-                    m_uiSpeechTimer = 5000;
-                    break;
-                case 4:
-                    m_creature->SetVisibility(VISIBILITY_OFF);
-                    m_uiSpeechTimer = 500;
-                    break;
-                case 5:
-                    Creature *pVoidwalker, *pLeader;
-                    pVoidwalker = pLeader = NULL;
-                    for(uint8 i = 0; i < 4; i++)
-                    {
-                        pVoidwalker = m_creature->SummonCreature(NPC_VOIDWALKER,VWSpawns[i].x,
-                            VWSpawns[i].y,VWSpawns[i].z,VWSpawns[i].o,TEMPSUMMON_DEAD_DESPAWN,1);
+                    case 1:
+                        DoScriptText(YELL_FENRUS, m_creature);
+                        m_creature->SetVisibility(VISIBILITY_ON);
+                        m_uiSpeechTimer = 2000;
+                        break;
+                    case 2:
+                        DoCastSpellIfCan(m_creature, SPELL_FIRE);
+                        m_uiSpeechTimer = 5000;
+                        break;
+                    case 3:
+                        if (GameObject* pLightning = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_LIGHTNING)))
+                         pLightning->Use(m_creature);
 
-                        if (!pVoidwalker)
-                            continue;
+                        m_uiSpeechTimer = 5000;
+                        break;
+                    case 4:
+                        m_creature->SetVisibility(VISIBILITY_OFF);
+                        m_uiSpeechTimer = 500;
+                        break;
+                    case 5:
+                        Creature *pVoidwalker, *pLeader;
+                        pVoidwalker = pLeader = NULL;
 
-                        if (!i)
-                            pLeader = pVoidwalker;
+                        for(uint8 i = 0; i < 4; i++)
+                        {
+                            pVoidwalker = m_creature->SummonCreature(NPC_VOIDWALKER,VWSpawns[i].fX,
+                                VWSpawns[i].fY, VWSpawns[i].fZ, VWSpawns[i].fO, TEMPSUMMON_DEAD_DESPAWN, 1);
+
+                            if (!pVoidwalker)
+                                continue;
+
+                            if (!i)
+                                pLeader = pVoidwalker;
 
 
-                        if (mob_arugal_voidwalkerAI* pVoidwalkerAI = dynamic_cast<mob_arugal_voidwalkerAI*>(pVoidwalker->AI()))
-                            pVoidwalkerAI->SetPosition(i,pLeader);
-                        pVoidwalker = NULL;
-                    }
-                    m_uiSpeechStep = 0;
-                    return;
-                default:
-                    m_uiSpeechStep = 0;
-                    return;
+                            if (mob_arugal_voidwalkerAI* pVoidwalkerAI = dynamic_cast<mob_arugal_voidwalkerAI*>(pVoidwalker->AI()))
+                                pVoidwalkerAI->SetPosition(i,pLeader);
+
+                            pVoidwalker = NULL;
+                        }
+                        m_uiSpeechStep = 0;
+                        return;
+                    default:
+                        m_uiSpeechStep = 0;
+                        return;
                 }
                 ++m_uiSpeechStep;
             }
@@ -746,64 +755,68 @@ struct MANGOS_DLL_DECL npc_arugalAI : public ScriptedAI
         {
             switch(m_uiSpeechStep)
             {
-            case 1:
-                m_creature->SetVisibility(VISIBILITY_ON);
-                m_uiSpeechTimer = 500;
-                break;
-            case 2:
-                DoCastSpellIfCan(m_creature, SPELL_SPAWN);
-                m_uiSpeechTimer = 2000;
-                break;
-            case 3:
-                if (Creature* pVincent = GetClosestCreatureWithEntry(m_creature,NPC_VINCENT,20.0f))
-                    pVincent->SetStandState(UNIT_STAND_STATE_DEAD); //make him die
-                m_uiSpeechTimer = 10000;
-                break;
-            case 4:
-                DoScriptText(SAY_INTRO_1, m_creature);
-                //m_creature->HandleEmoteCommand(EMOTE_ONESHOT_TALK);
-                m_uiSpeechTimer = 1750;
-                break;
-            case 5:
-                m_creature->HandleEmoteCommand(EMOTE_ONESHOT_POINT);
-                m_uiSpeechTimer = 1750;
-                break;
-            case 6:
-                DoScriptText(SAY_INTRO_2, m_creature);
-                m_uiSpeechTimer = 1750;
-                break;
-            case 7:
-                m_creature->HandleEmoteCommand(EMOTE_ONESHOT_EXCLAMATION);
-                m_uiSpeechTimer = 1750;
-                break;
-            case 8:
-                //m_creature->HandleEmoteCommand(EMOTE_ONESHOT_TALK);
-                DoScriptText(SAY_INTRO_3, m_creature);
-                m_uiSpeechTimer = 1750;
-                break;
-            case 9:
-                m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LAUGH);
-                m_uiSpeechTimer = 1750;
-                break;
-            case 10:
-                DoScriptText(SAY_INTRO_4, m_creature);
-                m_uiSpeechTimer = 2000;
-                break;
-            case 11:
-                DoCastSpellIfCan(m_creature, SPELL_SPAWN);
-                m_uiSpeechTimer = 500;
-                break;
-            case 12:
-                m_creature->SetVisibility(VISIBILITY_OFF);
-                m_pInstance->SetData(TYPE_INTRO,DONE);
-                m_uiSpeechStep = 0;
-                return;
-            default:
-                m_uiSpeechStep = 0;
-                return;
+                case 1:
+                    m_creature->SetVisibility(VISIBILITY_ON);
+                    m_uiSpeechTimer = 500;
+                    break;
+                case 2:
+                    DoCastSpellIfCan(m_creature, SPELL_SPAWN);
+                    m_uiSpeechTimer = 2000;
+                    break;
+                case 3:
+                    //make him die
+                    if (Creature* pVincent = GetClosestCreatureWithEntry(m_creature,NPC_VINCENT,20.0f))
+                        pVincent->SetStandState(UNIT_STAND_STATE_DEAD);
+
+                    m_uiSpeechTimer = 10000;
+                    break;
+                case 4:
+                    DoScriptText(SAY_INTRO_1, m_creature);
+                    //m_creature->HandleEmoteCommand(EMOTE_ONESHOT_TALK);
+                    m_uiSpeechTimer = 1750;
+                    break;
+                case 5:
+                    m_creature->HandleEmoteCommand(EMOTE_ONESHOT_POINT);
+                    m_uiSpeechTimer = 1750;
+                    break;
+                case 6:
+                    DoScriptText(SAY_INTRO_2, m_creature);
+                    m_uiSpeechTimer = 1750;
+                    break;
+                case 7:
+                    m_creature->HandleEmoteCommand(EMOTE_ONESHOT_EXCLAMATION);
+                    m_uiSpeechTimer = 1750;
+                    break;
+                case 8:
+                    //m_creature->HandleEmoteCommand(EMOTE_ONESHOT_TALK);
+                    DoScriptText(SAY_INTRO_3, m_creature);
+                    m_uiSpeechTimer = 1750;
+                    break;
+                case 9:
+                    m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LAUGH);
+                    m_uiSpeechTimer = 1750;
+                    break;
+                case 10:
+                    DoScriptText(SAY_INTRO_4, m_creature);
+                    m_uiSpeechTimer = 2000;
+                    break;
+                case 11:
+                    DoCastSpellIfCan(m_creature, SPELL_SPAWN);
+                    m_uiSpeechTimer = 500;
+                    break;
+                case 12:
+                    m_creature->SetVisibility(VISIBILITY_OFF);
+                    m_pInstance->SetData(TYPE_INTRO,DONE);
+                    m_uiSpeechStep = 0;
+                    return;
+                default:
+                    m_uiSpeechStep = 0;
+                    return;
             }
-            m_uiSpeechStep++;
-        }else m_uiSpeechTimer -= uiDiff;
+            ++m_uiSpeechStep;
+        }
+        else
+            m_uiSpeechTimer -= uiDiff;
     }
 
     void AttackStart(Unit* /*who*/) { }
@@ -857,7 +870,7 @@ struct MANGOS_DLL_DECL npc_deathstalker_vincentAI : public ScriptedAI
             m_creature->GetHealth() > 1 ? uiDamage = m_creature->GetHealth() - 1 : uiDamage = 0;
             m_creature->setFaction(FACTION_FRIENDLY);
             EnterEvadeMode();
-            DoScriptText(SAY_VINCENT_DIE,m_creature);
+            DoScriptText(SAY_VINCENT_DIE, m_creature);
         }
     }
 
