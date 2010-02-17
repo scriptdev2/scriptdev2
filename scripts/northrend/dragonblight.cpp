@@ -108,49 +108,6 @@ bool GossipSelect_npc_alexstrasza_wr_gate(Player* pPlayer, Creature* pCreature, 
 }
 
 /*######
-## npc_liquid_fire_of_elune (quest 12166)
-######*/
-
-enum
-{
-    NPC_ELK                 = 26616,
-    NPC_ELK_BUNNY           = 27111,
-    NPC_GRIZZLY             = 26643,
-    NPC_GRIZZLY_BUNNY       = 27112,
-
-    SPELL_LIQUID_FIRE       = 46770,
-    SPELL_LIQUID_FIRE_AURA  = 47972
-};
-
-bool EffectDummyCreature_npc_liquid_fire_of_elune(Unit* pCaster, uint32 uiSpellId, uint32 uiEffIndex, Creature* pCreatureTarget)
-{
-    //always check spellid and effectindex
-    if (uiSpellId == SPELL_LIQUID_FIRE && uiEffIndex == 0)
-    {
-        if (pCaster->GetTypeId() == TYPEID_PLAYER)
-        {
-            if (pCreatureTarget->HasAura(SPELL_LIQUID_FIRE_AURA))
-                return true;
-
-            if (pCreatureTarget->GetEntry() == NPC_ELK)
-            {
-                pCreatureTarget->CastSpell(pCreatureTarget, SPELL_LIQUID_FIRE_AURA, true);
-                ((Player*)pCaster)->KilledMonsterCredit(NPC_ELK_BUNNY, 0);
-            }
-            else if (pCreatureTarget->GetEntry() == NPC_GRIZZLY)
-            {
-                pCreatureTarget->CastSpell(pCreatureTarget, SPELL_LIQUID_FIRE_AURA, true);
-                ((Player*)pCaster)->KilledMonsterCredit(NPC_GRIZZLY_BUNNY, 0);
-            }
-        }
-
-        //always return true when we are handling this spell and effect
-        return true;
-    }
-    return false;
-}
-
-/*######
 ## npc_tariolstrasz
 ######*/
 
@@ -232,46 +189,6 @@ bool GossipSelect_npc_torastrasza(Player* pPlayer, Creature* pCreature, uint32 u
     return true;
 }
 
-/*######
-## npc_woodlands_walker
-######*/
-
-enum
-{
-    SPELL_STRENGTH_ANCIENTS     = 47575,
-    SPELL_CREATE_BARK_WALKERS   = 47550,
-    FACTION_HOSTILE             = 16,
-
-    EMOTE_AGGRO                 = -1000551,
-    EMOTE_CREATE                = -1000552
-};
-
-bool EffectDummyCreature_npc_woodlands_walker(Unit* pCaster, uint32 uiSpellId, uint32 uiEffIndex, Creature* pCreatureTarget)
-{
-    //always check spellid and effectindex
-    if (uiSpellId == SPELL_STRENGTH_ANCIENTS && uiEffIndex == 0)
-    {
-        if (pCaster->GetTypeId() == TYPEID_PLAYER)
-        {
-            if (urand(0, 1))
-            {
-                DoScriptText(EMOTE_AGGRO, pCreatureTarget);
-                pCreatureTarget->setFaction(FACTION_HOSTILE);
-                pCreatureTarget->AI()->AttackStart(pCaster);
-            }
-            else
-            {
-                DoScriptText(EMOTE_CREATE, pCreatureTarget);
-                pCaster->CastSpell(pCaster, SPELL_CREATE_BARK_WALKERS, true);
-                pCreatureTarget->ForcedDespawn();
-            }
-        }
-
-        //always return true when we are handling this spell and effect
-        return true;
-    }
-    return false;
-}
 void AddSC_dragonblight()
 {
     Script *newscript;
@@ -289,11 +206,6 @@ void AddSC_dragonblight()
     newscript->RegisterSelf();
 
     newscript = new Script;
-    newscript->Name = "npc_liquid_fire_of_elune";
-    newscript->pEffectDummyCreature = &EffectDummyCreature_npc_liquid_fire_of_elune;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
     newscript->Name = "npc_tariolstrasz";
     newscript->pGossipHello = &GossipHello_npc_tariolstrasz;
     newscript->pGossipSelect = &GossipSelect_npc_tariolstrasz;
@@ -303,10 +215,5 @@ void AddSC_dragonblight()
     newscript->Name = "npc_torastrasza";
     newscript->pGossipHello = &GossipHello_npc_torastrasza;
     newscript->pGossipSelect = &GossipSelect_npc_torastrasza;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_woodlands_walker";
-    newscript->pEffectDummyCreature = &EffectDummyCreature_npc_woodlands_walker;
     newscript->RegisterSelf();
 }
