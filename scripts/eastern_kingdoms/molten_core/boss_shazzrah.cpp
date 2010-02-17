@@ -23,10 +23,14 @@ EndScriptData */
 
 #include "precompiled.h"
 
-#define SPELL_ARCANEEXPLOSION           19712
-#define SPELL_SHAZZRAHCURSE             19713
-#define SPELL_DEADENMAGIC               19714
-#define SPELL_COUNTERSPELL              19715
+enum
+{
+    SPELL_ARCANEEXPLOSION           = 19712,
+    SPELL_SHAZZRAHCURSE             = 19713,
+    SPELL_DEADENMAGIC               = 19714,
+    SPELL_COUNTERSPELL              = 19715,
+    SPELL_GATE_DUMMY                = 23138                 // effect spell: 23139
+};
 
 struct MANGOS_DLL_DECL boss_shazzrahAI : public ScriptedAI
 {
@@ -87,14 +91,14 @@ struct MANGOS_DLL_DECL boss_shazzrahAI : public ScriptedAI
         if (Blink_Timer < diff)
         {
             // Teleporting him to a random gamer and casting Arcane Explosion after that.
-            // Blink is not working cause of LoS System we need to do this hardcoded.
-            Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            DoCastSpellIfCan(m_creature, SPELL_GATE_DUMMY, CAST_TRIGGERED);
 
-            m_creature->GetMap()->CreatureRelocation(m_creature, target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0.0f);
-            m_creature->SendMonsterMove(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, SPLINEFLAG_WALKMODE, 1);
+            // manual, until added effect of dummy properly
+            if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,1))
+                m_creature->NearTeleportTo(pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(), m_creature->GetOrientation());
 
-            DoCastSpellIfCan(target,SPELL_ARCANEEXPLOSION);
+            DoCastSpellIfCan(m_creature, SPELL_ARCANEEXPLOSION);
+
             DoResetThreat();
 
             Blink_Timer = 45000;

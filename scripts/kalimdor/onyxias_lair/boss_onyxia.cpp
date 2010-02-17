@@ -172,7 +172,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
             if (m_pPointData)
             {
                 m_creature->GetMap()->CreatureRelocation(m_creature, m_pPointData->fX, m_pPointData->fY, m_pPointData->fZ, 0.0f);
-                m_creature->SendMonsterMove(m_pPointData->fX, m_pPointData->fY, m_pPointData->fZ, 0, m_creature->GetSplineFlags(), 1);
+                m_creature->SendMonsterMove(m_pPointData->fX, m_pPointData->fY, m_pPointData->fZ, SPLINETYPE_NORMAL, m_creature->GetSplineFlags(), 1);
             }
         }
     }
