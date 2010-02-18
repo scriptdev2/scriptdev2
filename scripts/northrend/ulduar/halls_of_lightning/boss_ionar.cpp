@@ -307,7 +307,7 @@ CreatureAI* GetAI_boss_ionar(Creature* pCreature)
 bool EffectDummyCreature_boss_ionar(Unit* pCaster, uint32 uiSpellId, uint32 uiEffIndex, Creature* pCreatureTarget)
 {
     //always check spellid and effectindex
-    if (uiSpellId == SPELL_DISPERSE && uiEffIndex == 0)
+    if (uiSpellId == SPELL_DISPERSE && uiEffIndex == EFFECT_INDEX_0)
     {
         if (pCreatureTarget->GetEntry() != NPC_IONAR)
             return true;

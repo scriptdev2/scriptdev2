@@ -205,7 +205,7 @@ CreatureAI* GetAI_npc_clintar_dw_spirit(Creature* pCreature)
 bool EffectDummyCreature_npc_clintar_dw_spirit(Unit *pCaster, uint32 spellId, uint32 effIndex, Creature *pCreatureTarget)
 {
     //always check spellid and effectindex
-    if (spellId == SPELL_EMERALD_DREAM && effIndex == 0)
+    if (spellId == SPELL_EMERALD_DREAM && effIndex == EFFECT_INDEX_0)
     {
         if (pCaster->GetTypeId() != TYPEID_PLAYER || pCaster->HasAura(SPELL_EMERALD_DREAM))
             return true;

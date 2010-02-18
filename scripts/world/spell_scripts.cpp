@@ -29,7 +29,6 @@ npc_woodlands_walker
 EndContentData */
 
 #include "precompiled.h"
-#include "../system/system.h"
 
 /* When you make a spell effect:
 - always check spell id and effect index
@@ -49,7 +48,7 @@ enum
 
 bool EffectDummyCreature_npc_nestlewood_owlkin(Unit* pCaster, uint32 uiSpellId, uint32 uiEffIndex, Creature* pCreatureTarget)
 {
-    if (uiSpellId == SPELL_INOCULATE_OWLKIN && uiEffIndex == SPELL_EFFECT_0)
+    if (uiSpellId == SPELL_INOCULATE_OWLKIN && uiEffIndex == EFFECT_INDEX_0)
     {
         if (pCreatureTarget->GetEntry() != ENTRY_OWLKIN)
             return true;
@@ -81,7 +80,7 @@ enum
 
 bool EffectDummyCreature_npc_liquid_fire_of_elune(Unit* pCaster, uint32 uiSpellId, uint32 uiEffIndex, Creature* pCreatureTarget)
 {
-    if (uiSpellId == SPELL_LIQUID_FIRE && uiEffIndex == SPELL_EFFECT_0)
+    if (uiSpellId == SPELL_LIQUID_FIRE && uiEffIndex == EFFECT_INDEX_0)
     {
         if (pCaster->GetTypeId() == TYPEID_PLAYER)
         {
@@ -132,7 +131,7 @@ enum
 
 bool EffectDummyCreature_npc_robot_reprogrammed(Unit* pCaster, uint32 uiSpellId, uint32 uiEffIndex, Creature* pCreatureTarget)
 {
-    if (uiSpellId == SPELL_ULTRASONIC_SCREWDRIVER && uiEffIndex == SPELL_EFFECT_0)
+    if (uiSpellId == SPELL_ULTRASONIC_SCREWDRIVER && uiEffIndex == EFFECT_INDEX_0)
     {
         if (pCreatureTarget->isDead())
         {
@@ -179,7 +178,7 @@ enum
 
 bool EffectDummyCreature_npc_woodlands_walker(Unit* pCaster, uint32 uiSpellId, uint32 uiEffIndex, Creature* pCreatureTarget)
 {
-    if (uiSpellId == SPELL_STRENGTH_ANCIENTS && uiEffIndex == SPELL_EFFECT_0)
+    if (uiSpellId == SPELL_STRENGTH_ANCIENTS && uiEffIndex == EFFECT_INDEX_0)
     {
         if (pCaster->GetTypeId() == TYPEID_PLAYER)
         {

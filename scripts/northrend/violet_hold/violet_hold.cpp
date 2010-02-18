@@ -51,7 +51,7 @@ bool GOHello_go_activation_crystal(Player* pPlayer, GameObject* pGo)
 bool EffectDummyCreature_npc_door_seal(Unit* pCaster, uint32 uiSpellId, uint32 uiEffIndex, Creature* pCreatureTarget)
 {
     //always check spellid and effectindex
-    if (uiSpellId == SPELL_DESTROY_DOOR_SEAL && uiEffIndex == 0)
+    if (uiSpellId == SPELL_DESTROY_DOOR_SEAL && uiEffIndex == EFFECT_INDEX_0)
     {
         if (instance_violet_hold* pInstance = (instance_violet_hold*)pCreatureTarget->GetInstanceData())
             pInstance->SetData(TYPE_SEAL, SPECIAL);
@@ -347,7 +347,7 @@ CreatureAI* GetAI_npc_teleportation_portal(Creature* pCreature)
 bool EffectDummyCreature_npc_teleportation_portal(Unit* pCaster, uint32 uiSpellId, uint32 uiEffIndex, Creature* pCreatureTarget)
 {
     //always check spellid and effectindex
-    if (uiSpellId == SPELL_PORTAL_PERIODIC && uiEffIndex == 0)
+    if (uiSpellId == SPELL_PORTAL_PERIODIC && uiEffIndex == EFFECT_INDEX_0)
     {
         if (instance_violet_hold* pInstance = (instance_violet_hold*)pCreatureTarget->GetInstanceData())
             pCreatureTarget->SummonCreature(pInstance->GetRandomMobForNormalPortal(), 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600*IN_MILISECONDS);

@@ -119,7 +119,7 @@ CreatureAI* GetAI_npc_aged_dying_ancient_kodo(Creature* pCreature)
 bool EffectDummyCreature_npc_aged_dying_ancient_kodo(Unit *pCaster, uint32 spellId, uint32 effIndex, Creature *pCreatureTarget)
 {
     //always check spellid and effectindex
-    if (spellId == SPELL_KODO_KOMBO_ITEM && effIndex == 0)
+    if (spellId == SPELL_KODO_KOMBO_ITEM && effIndex == EFFECT_INDEX_0)
     {
         //no effect if player/creature already have aura from spells
         if (pCaster->HasAura(SPELL_KODO_KOMBO_PLAYER_BUFF) || pCreatureTarget->HasAura(SPELL_KODO_KOMBO_DESPAWN_BUFF))

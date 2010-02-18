@@ -10,13 +10,6 @@ extern std::string  strSD2Version;                          //version info from 
 
 #define TEXT_SOURCE_RANGE -1000000                          //the amount of entries each text source has available
 
-enum eSpellEffectIndex
-{
-    SPELL_EFFECT_0  = 0,
-    SPELL_EFFECT_1,
-    SPELL_EFFECT_2
-};
-
 //TODO: find better namings and definitions.
 //N=Neutral, A=Alliance, H=Horde.
 //NEUTRAL or FRIEND = Hostility to player surroundings (not a good definition)
