@@ -76,7 +76,7 @@ struct MANGOS_DLL_DECL boss_ebonrocAI : public ScriptedAI
             ShadowOfEbonroc_Timer = urand(25000, 35000);
         }else ShadowOfEbonroc_Timer -= diff;
 
-        if (m_creature->getVictim()->HasAura(SPELL_SHADOWOFEBONROC,0))
+        if (m_creature->getVictim()->HasAura(SPELL_SHADOWOFEBONROC, EFFECT_INDEX_0))
         {
             if (Heal_Timer < diff)
             {

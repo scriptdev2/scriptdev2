@@ -256,7 +256,7 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (!m_creature->HasAura(SPELL_BERSERK, 0))
+        if (!m_creature->HasAura(SPELL_BERSERK, EFFECT_INDEX_0))
         {
             if (BerserkTimer < diff)
                 DoCastSpellIfCan(m_creature, SPELL_BERSERK);

@@ -149,7 +149,7 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
 
             for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
             {
-                if (i->getSource()->isAlive() && i->getSource()->HasAura(SPELL_GARROTE,0))
+                if (i->getSource()->isAlive() && i->getSource()->HasAura(SPELL_GARROTE, EFFECT_INDEX_0))
                     i->getSource()->RemoveAurasDueToSpell(SPELL_GARROTE);
             }
         }

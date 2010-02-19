@@ -148,7 +148,7 @@ struct MANGOS_DLL_DECL example_escortAI : public npc_escortAI
             {
                 if (m_uiChatTimer < uiDiff)
                 {
-                    if (m_creature->HasAura(SPELL_ELIXIR_OF_FORTITUDE, 0))
+                    if (m_creature->HasAura(SPELL_ELIXIR_OF_FORTITUDE, EFFECT_INDEX_0))
                     {
                         DoScriptText(SAY_RAND_1, m_creature);
                         m_creature->CastSpell(m_creature, SPELL_BLUE_FIREWORK, false);

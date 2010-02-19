@@ -282,7 +282,7 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
         for(CubeMap::iterator i = Cube.begin(); i != Cube.end(); ++i)
         {
             Unit *clicker = Unit::GetUnit(*m_creature, (*i).second);
-            if (!clicker || !clicker->HasAura(SPELL_SHADOW_GRASP, 1))
+            if (!clicker || !clicker->HasAura(SPELL_SHADOW_GRASP, EFFECT_INDEX_1))
             {
                 DebuffClicker(clicker);
                 (*i).second = 0;
@@ -292,14 +292,14 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
         }
 
         // if 5 clickers from other cubes apply shadow cage
-        if (ClickerNum >= MAX_CLICK && !m_creature->HasAura(SPELL_SHADOW_CAGE, 0) && m_creature->HasAura(SPELL_BLASTNOVA, 0))
+        if (ClickerNum >= MAX_CLICK && !m_creature->HasAura(SPELL_SHADOW_CAGE, EFFECT_INDEX_0) && m_creature->HasAura(SPELL_BLASTNOVA, EFFECT_INDEX_0))
         {
             DoScriptText(SAY_BANISH, m_creature);
             m_creature->CastSpell(m_creature, SPELL_SHADOW_CAGE, true);
         }
         else
         {
-            if (ClickerNum < MAX_CLICK && m_creature->HasAura(SPELL_SHADOW_CAGE, 0))
+            if (ClickerNum < MAX_CLICK && m_creature->HasAura(SPELL_SHADOW_CAGE, EFFECT_INDEX_0))
                 m_creature->RemoveAurasDueToSpell(SPELL_SHADOW_CAGE);
         }
 
@@ -643,7 +643,7 @@ bool GOHello_go_manticron_cube(Player* pPlayer, GameObject* pGo)
                 return true;
 
             // if exhausted or already channeling return
-            if (pPlayer->HasAura(SPELL_MIND_EXHAUSTION, 0) || pPlayer->HasAura(SPELL_SHADOW_GRASP, 1))
+            if (pPlayer->HasAura(SPELL_MIND_EXHAUSTION, EFFECT_INDEX_0) || pPlayer->HasAura(SPELL_SHADOW_GRASP, EFFECT_INDEX_1))
                 return true;
 
             pPlayer->InterruptNonMeleeSpells(false);

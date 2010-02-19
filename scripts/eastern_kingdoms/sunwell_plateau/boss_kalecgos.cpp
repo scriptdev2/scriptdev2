@@ -189,7 +189,7 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
             if (pTarget->GetTypeId() != TYPEID_PLAYER)
                 return;
 
-            if (pTarget->HasAura(SPELL_SPECTRAL_EXHAUSTION,0) || pTarget->HasAura(SPELL_SPECTRAL_REALM))
+            if (pTarget->HasAura(SPELL_SPECTRAL_EXHAUSTION, EFFECT_INDEX_0) || pTarget->HasAura(SPELL_SPECTRAL_REALM))
                 return;
 
             if (pTarget == m_creature->getVictim())
@@ -541,7 +541,7 @@ bool GOHello_go_spectral_rift(Player* pPlayer, GameObject* pGo)
 
     if (ScriptedInstance* pInstance = (ScriptedInstance*)pPlayer->GetInstanceData())
     {
-        if (pPlayer->HasAura(SPELL_SPECTRAL_EXHAUSTION, 0))
+        if (pPlayer->HasAura(SPELL_SPECTRAL_EXHAUSTION, EFFECT_INDEX_0))
             return true;
 
         // Make them able to see Sathrovarr (he's invisible for some reason). Also, when this buff wears off, they get teleported back to Normal Realm (this is handled by Instance Script)

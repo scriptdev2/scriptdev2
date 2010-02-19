@@ -148,7 +148,7 @@ struct MANGOS_DLL_DECL boss_brutallusAI : public ScriptedAI
             {
                 DoCastSpellIfCan(pTarget,SPELL_STOMP);
 
-                if (pTarget->HasAura(SPELL_BURN_AURA_EFFECT,0))
+                if (pTarget->HasAura(SPELL_BURN_AURA_EFFECT, EFFECT_INDEX_0))
                     pTarget->RemoveAurasDueToSpell(SPELL_BURN_AURA_EFFECT);
             }
 

@@ -996,7 +996,7 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
 
     void AttackStart(Unit *who)
     {
-        if (!who || IsTalking || Phase == 2 || Phase == 4 || Phase == 6 || m_creature->HasAura(SPELL_KNEEL, 0))
+        if (!who || IsTalking || Phase == 2 || Phase == 4 || Phase == 6 || m_creature->HasAura(SPELL_KNEEL, EFFECT_INDEX_0))
             return;
 
         if (who == m_creature)
@@ -1254,7 +1254,7 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
         else if (count == 4)
         {
             DoResetThreat();
-            if (!m_creature->HasAura(SPELL_DEMON_FORM, 0))
+            if (!m_creature->HasAura(SPELL_DEMON_FORM, EFFECT_INDEX_0))
                 DoCastSpellIfCan(m_creature, SPELL_DEMON_FORM, CAST_TRIGGERED);
         }
     }
@@ -1530,7 +1530,7 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
             return;
 
         // If we are 'caged', then we shouldn't do anything such as cast spells or transform into Demon Form.
-        if (m_creature->HasAura(SPELL_CAGED, 0))
+        if (m_creature->HasAura(SPELL_CAGED, EFFECT_INDEX_0))
         {
             // Just so that he doesn't immediately enrage after he stops being caged.
             EnrageTimer = 40000;
@@ -1539,7 +1539,7 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
         }
 
         // Berserk Timer - flat 25 minutes
-        if (!m_creature->HasAura(SPELL_BERSERK, 0) && Phase != PHASE_DEMON_SEQUENCE)
+        if (!m_creature->HasAura(SPELL_BERSERK, EFFECT_INDEX_0) && Phase != PHASE_DEMON_SEQUENCE)
         {
             if (BerserkTimer < diff)
             {
@@ -1607,7 +1607,7 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
                 {
                     Unit* target = NULL;
                     target = SelectUnit(SELECT_TARGET_RANDOM,1);
-                    if (target && target->isAlive() && !target->HasAura(SPELL_PARASITIC_SHADOWFIEND, 0))
+                    if (target && target->isAlive() && !target->HasAura(SPELL_PARASITIC_SHADOWFIEND, EFFECT_INDEX_0))
                     {
                         Cast(target, SPELL_PARASITIC_SHADOWFIEND);
                         ParasiticShadowFiendTimer = 40000;
@@ -1843,7 +1843,7 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
                         ShadowBlastTimer = 4000;
                         GlobalTimer += 1500;
                     }
-                    if (!m_creature->HasAura(SPELL_DEMON_FORM, 0))
+                    if (!m_creature->HasAura(SPELL_DEMON_FORM, EFFECT_INDEX_0))
                         DoCastSpellIfCan(m_creature, SPELL_DEMON_FORM, CAST_TRIGGERED);
                 }else ShadowBlastTimer -= diff;
 
@@ -2062,14 +2062,14 @@ struct MANGOS_DLL_DECL cage_trap_triggerAI : public ScriptedAI
         {
             if (who->GetEntry() == ILLIDAN_STORMRAGE)       // Check if who is Illidan
             {
-                if (!IllidanGUID && m_creature->IsWithinDistInMap(who, 3) && !who->HasAura(SPELL_CAGED, 0))
+                if (!IllidanGUID && m_creature->IsWithinDistInMap(who, 3) && !who->HasAura(SPELL_CAGED, EFFECT_INDEX_0))
                 {
                     IllidanGUID = who->GetGUID();
                     who->CastSpell(who, SPELL_CAGED, true);
                     DespawnTimer = 5000;
 
                     // Dispel his enrage
-                    if (who->HasAura(SPELL_ENRAGE, 0))
+                    if (who->HasAura(SPELL_ENRAGE, EFFECT_INDEX_0))
                         who->RemoveAurasDueToSpell(SPELL_ENRAGE);
 
                     if (GameObject* pCageTrap = m_creature->GetMap()->GetGameObject(CageTrapGUID))
@@ -2217,7 +2217,7 @@ struct MANGOS_DLL_DECL shadow_demonAI : public ScriptedAI
         // Only cast the below on players.
         if (m_creature->getVictim()->GetTypeId() != TYPEID_PLAYER) return;
 
-        if (!m_creature->getVictim()->HasAura(SPELL_PARALYZE, 0))
+        if (!m_creature->getVictim()->HasAura(SPELL_PARALYZE, EFFECT_INDEX_0))
         {
             TargetGUID = m_creature->getVictim()->GetGUID();
             m_creature->AddThreat(m_creature->getVictim(), 10000000.0f);
@@ -2283,7 +2283,7 @@ struct MANGOS_DLL_DECL mob_parasitic_shadowfiendAI : public ScriptedAI
             //Make sure our attack is ready and we aren't currently casting
             if (m_creature->isAttackReady() && !m_creature->IsNonMeleeSpellCasted(false))
             {
-                if (!m_creature->getVictim()->HasAura(SPELL_PARASITIC_SHADOWFIEND, 0))
+                if (!m_creature->getVictim()->HasAura(SPELL_PARASITIC_SHADOWFIEND, EFFECT_INDEX_0))
                     DoCastSpellIfCan(m_creature->getVictim(), SPELL_PARASITIC_SHADOWFIEND, CAST_TRIGGERED);
 
                 m_creature->AttackerStateUpdate(m_creature->getVictim());

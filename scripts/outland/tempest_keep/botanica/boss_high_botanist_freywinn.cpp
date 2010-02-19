@@ -160,7 +160,7 @@ struct MANGOS_DLL_DECL boss_high_botanist_freywinnAI : public ScriptedAI
             return;
         }
 
-        /*if (m_creature->HasAura(SPELL_TREE_FORM,0) || m_creature->HasAura(SPELL_TRANQUILITY,0))
+        /*if (m_creature->HasAura(SPELL_TREE_FORM, EFFECT_INDEX_0) || m_creature->HasAura(SPELL_TRANQUILITY, EFFECT_INDEX_0))
             return;*/
 
         //one random seedling every 5 secs, but not in tree form

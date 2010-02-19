@@ -102,7 +102,7 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
         {
             if (spell->Id == SPELL_HURL_SPINE)
             {
-                if (m_creature->HasAura(SPELL_TIDAL_SHIELD, 0))
+                if (m_creature->HasAura(SPELL_TIDAL_SHIELD, EFFECT_INDEX_0))
                     m_creature->RemoveAurasDueToSpell(SPELL_TIDAL_SHIELD);
 
                 DoCastSpellIfCan(m_creature->getVictim(), SPELL_TIDAL_BURST);

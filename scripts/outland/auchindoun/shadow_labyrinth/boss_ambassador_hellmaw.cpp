@@ -92,7 +92,7 @@ struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public npc_escortAI
 
     void DoIntro()
     {
-        if (m_creature->HasAura(SPELL_BANISH,0))
+        if (m_creature->HasAura(SPELL_BANISH, EFFECT_INDEX_0))
             m_creature->RemoveAurasDueToSpell(SPELL_BANISH);
 
         IsBanished = false;
@@ -112,7 +112,7 @@ struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public npc_escortAI
 
     void MoveInLineOfSight(Unit *who)
     {
-        if (m_creature->HasAura(SPELL_BANISH,0))
+        if (m_creature->HasAura(SPELL_BANISH, EFFECT_INDEX_0))
             return;
 
         npc_escortAI::MoveInLineOfSight(who);

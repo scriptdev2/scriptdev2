@@ -246,7 +246,7 @@ struct MANGOS_DLL_DECL npc_daranelleAI : public ScriptedAI
     {
         if (pWho->GetTypeId() == TYPEID_PLAYER)
         {
-            if (pWho->HasAura(SPELL_LASHHAN_CHANNEL,0) && m_creature->IsWithinDistInMap(pWho, 10.0f))
+            if (pWho->HasAura(SPELL_LASHHAN_CHANNEL, EFFECT_INDEX_0) && m_creature->IsWithinDistInMap(pWho, 10.0f))
             {
                 DoScriptText(SAY_SPELL_INFLUENCE, m_creature, pWho);
 

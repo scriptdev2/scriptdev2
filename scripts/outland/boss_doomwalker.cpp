@@ -96,9 +96,9 @@ struct MANGOS_DLL_DECL boss_doomwalkerAI : public ScriptedAI
     {
         if (who && who->GetTypeId() == TYPEID_PLAYER && m_creature->IsHostileTo(who))
         {
-            if (who->HasAura(SPELL_MARK_DEATH,0))
+            if (who->HasAura(SPELL_MARK_DEATH, EFFECT_INDEX_0))
             {
-            who->CastSpell(who,SPELL_AURA_DEATH,1);
+                who->CastSpell(who,SPELL_AURA_DEATH,true);
             }
         }
     }
@@ -137,7 +137,7 @@ struct MANGOS_DLL_DECL boss_doomwalkerAI : public ScriptedAI
 
             //remove enrage before casting earthquake because enrage + earthquake = 16000dmg over 8sec and all dead
             if (InEnrage)
-                m_creature->RemoveAura(SPELL_ENRAGE, 0);
+                m_creature->RemoveAurasDueToSpell(SPELL_ENRAGE);
 
             DoCastSpellIfCan(m_creature,SPELL_EARTHQUAKE);
             Quake_Timer = urand(30000, 55000);

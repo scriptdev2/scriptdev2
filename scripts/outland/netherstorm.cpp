@@ -600,7 +600,7 @@ CreatureAI* GetAI_npc_commander_dawnforge(Creature* pCreature)
 bool AreaTrigger_at_commander_dawnforge(Player* pPlayer, AreaTriggerEntry *at)
 {
     // if player lost aura or not have at all, we should not try start event.
-    if (!pPlayer->HasAura(SPELL_SUNFURY_DISGUISE, 0))
+    if (!pPlayer->HasAura(SPELL_SUNFURY_DISGUISE, EFFECT_INDEX_0))
         return false;
 
     if (pPlayer->isAlive() && pPlayer->GetQuestStatus(QUEST_INFO_GATHERING) == QUEST_STATUS_INCOMPLETE)

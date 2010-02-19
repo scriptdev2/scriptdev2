@@ -258,11 +258,11 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
                     DoCastSpellIfCan(pUnit, SpellAfflict, CAST_TRIGGERED);
 
                     //Chromatic mutation if target is effected by all afflictions
-                    if (pUnit->HasAura(SPELL_BROODAF_BLUE,0)
-                        && pUnit->HasAura(SPELL_BROODAF_BLACK,0)
-                        && pUnit->HasAura(SPELL_BROODAF_RED,0)
-                        && pUnit->HasAura(SPELL_BROODAF_BRONZE,0)
-                        && pUnit->HasAura(SPELL_BROODAF_GREEN,0))
+                    if (pUnit->HasAura(SPELL_BROODAF_BLUE, EFFECT_INDEX_0)
+                        && pUnit->HasAura(SPELL_BROODAF_BLACK, EFFECT_INDEX_0)
+                        && pUnit->HasAura(SPELL_BROODAF_RED, EFFECT_INDEX_0)
+                        && pUnit->HasAura(SPELL_BROODAF_BRONZE, EFFECT_INDEX_0)
+                        && pUnit->HasAura(SPELL_BROODAF_GREEN, EFFECT_INDEX_0))
                     {
                         //target->RemoveAllAuras();
                         //DoCastSpellIfCan(target,SPELL_CHROMATIC_MUT_1);

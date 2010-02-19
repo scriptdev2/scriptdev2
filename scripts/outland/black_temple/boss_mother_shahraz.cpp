@@ -268,7 +268,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
         }else ShriekTimer -= diff;
 
         //Enrage
-        if (!m_creature->HasAura(SPELL_BERSERK, 0))
+        if (!m_creature->HasAura(SPELL_BERSERK, EFFECT_INDEX_0))
         {
             if (EnrageTimer < diff)
             {

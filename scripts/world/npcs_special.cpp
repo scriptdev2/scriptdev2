@@ -1046,7 +1046,7 @@ bool GossipHello_npc_innkeeper(Player* pPlayer, Creature* pCreature)
 {
     pPlayer->PrepareGossipMenu(pCreature);
 
-    if (IsHolidayActive(HOLIDAY_HALLOWS_END) && !pPlayer->HasAura(SPELL_TRICK_OR_TREATED,0))
+    if (IsHolidayActive(HOLIDAY_HALLOWS_END) && !pPlayer->HasAura(SPELL_TRICK_OR_TREATED, EFFECT_INDEX_0))
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TRICK_OR_TREAT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
 
     // Should only apply to innkeeper close to start areas.

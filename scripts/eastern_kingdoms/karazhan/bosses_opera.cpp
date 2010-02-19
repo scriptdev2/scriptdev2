@@ -661,7 +661,7 @@ struct MANGOS_DLL_DECL mob_cycloneAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->HasAura(SPELL_KNOCKBACK, 0))
+        if (!m_creature->HasAura(SPELL_KNOCKBACK, EFFECT_INDEX_0))
             DoCastSpellIfCan(m_creature, SPELL_KNOCKBACK, CAST_TRIGGERED);
 
         if (MoveTimer < diff)

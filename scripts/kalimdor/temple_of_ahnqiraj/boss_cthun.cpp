@@ -973,7 +973,7 @@ struct MANGOS_DLL_DECL eye_tentacleAI : public ScriptedAI
         {
             Unit* target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if (target && !target->HasAura(SPELL_DIGESTIVE_ACID, 0))
+            if (target && !target->HasAura(SPELL_DIGESTIVE_ACID, EFFECT_INDEX_0))
                 DoCastSpellIfCan(target,SPELL_MIND_FLAY);
 
             //Mindflay every 10 seconds
@@ -1040,7 +1040,7 @@ struct MANGOS_DLL_DECL claw_tentacleAI : public ScriptedAI
                 return;
             }
 
-            if (!target->HasAura(SPELL_DIGESTIVE_ACID, 0))
+            if (!target->HasAura(SPELL_DIGESTIVE_ACID, EFFECT_INDEX_0))
             {
                 m_creature->GetMap()->CreatureRelocation(m_creature, target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0);
 
@@ -1136,7 +1136,7 @@ struct MANGOS_DLL_DECL giant_claw_tentacleAI : public ScriptedAI
                 return;
             }
 
-            if (!target->HasAura(SPELL_DIGESTIVE_ACID, 0))
+            if (!target->HasAura(SPELL_DIGESTIVE_ACID, EFFECT_INDEX_0))
             {
                 m_creature->GetMap()->CreatureRelocation(m_creature, target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0);
 
@@ -1220,7 +1220,7 @@ struct MANGOS_DLL_DECL giant_eye_tentacleAI : public ScriptedAI
         if (BeamTimer < diff)
         {
             Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if (target && !target->HasAura(SPELL_DIGESTIVE_ACID, 0))
+            if (target && !target->HasAura(SPELL_DIGESTIVE_ACID, EFFECT_INDEX_0))
                 DoCastSpellIfCan(target,SPELL_GREEN_BEAM);
 
             //Beam every 2 seconds

@@ -313,7 +313,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
         Unit* Ghost = NULL;
         if (GhostGUID)
             Ghost = Unit::GetUnit((*m_creature), GhostGUID);
-        if (Ghost && Ghost->isAlive() && Ghost->HasAura(SPELL_SHADOW_OF_DEATH, 0))
+        if (Ghost && Ghost->isAlive() && Ghost->HasAura(SPELL_SHADOW_OF_DEATH, EFFECT_INDEX_0))
         {
             /*float x,y,z;
             Ghost->GetPosition(x,y,z);
@@ -466,7 +466,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
             RandomYellTimer = urand(50000, 100000);
         }else RandomYellTimer -= diff;
 
-        if (!m_creature->HasAura(SPELL_BERSERK, 0))
+        if (!m_creature->HasAura(SPELL_BERSERK, EFFECT_INDEX_0))
         {
             if (EnrageTimer < diff)
             {

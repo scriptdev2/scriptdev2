@@ -138,7 +138,7 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
         if (ShapeShiftCheck_Timer < diff)
         {
             //This will return true if we have bearform aura
-            inBearForm = m_creature->HasAura(SPELL_BEARFORM, 0);
+            inBearForm = m_creature->HasAura(SPELL_BEARFORM, EFFECT_INDEX_0);
             ShapeShiftCheck_Timer = 1000;
         }else ShapeShiftCheck_Timer -= diff;
 

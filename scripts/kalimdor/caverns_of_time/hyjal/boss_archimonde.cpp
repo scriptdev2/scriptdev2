@@ -395,7 +395,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
                 break;
         }
 
-        if (m_creature->HasAura(chargeSpell, 0))
+        if (m_creature->HasAura(chargeSpell, EFFECT_INDEX_0))
         {
             m_creature->RemoveSingleAuraFromStack(chargeSpell, 0);
             DoCastSpellIfCan(m_creature->getVictim(), unleashSpell);
