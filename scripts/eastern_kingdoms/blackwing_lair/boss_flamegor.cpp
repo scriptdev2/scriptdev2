@@ -77,9 +77,11 @@ struct MANGOS_DLL_DECL boss_flamegorAI : public ScriptedAI
         //Frenzy_Timer
         if (Frenzy_Timer < diff)
         {
-            DoScriptText(EMOTE_GENERIC_FRENZY, m_creature);
-            DoCastSpellIfCan(m_creature,SPELL_FRENZY);
-            Frenzy_Timer = urand(8000, 1000);
+            if (DoCastSpellIfCan(m_creature, SPELL_FRENZY) == CAST_OK)
+            {
+                DoScriptText(EMOTE_GENERIC_FRENZY, m_creature);
+                Frenzy_Timer = urand(8000, 10000);
+            }
         }else Frenzy_Timer -= diff;
 
         DoMeleeAttackIfReady();

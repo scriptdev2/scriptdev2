@@ -78,10 +78,12 @@ struct MANGOS_DLL_DECL boss_herodAI : public ScriptedAI
         //If we are <30% hp goes Enraged
         if (!Enrage && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 30 && !m_creature->IsNonMeleeSpellCasted(false))
         {
-            DoScriptText(EMOTE_ENRAGE, m_creature);
-            DoScriptText(SAY_ENRAGE, m_creature);
-            DoCastSpellIfCan(m_creature,SPELL_FRENZY);
-            Enrage = true;
+            if (DoCastSpellIfCan(m_creature,SPELL_FRENZY) == CAST_OK)
+            {
+                DoScriptText(EMOTE_ENRAGE, m_creature);
+                DoScriptText(SAY_ENRAGE, m_creature);
+                Enrage = true;
+            }
         }
 
         //Cleave_Timer
@@ -93,9 +95,11 @@ struct MANGOS_DLL_DECL boss_herodAI : public ScriptedAI
 
         if (Whirlwind_Timer < diff)
         {
-            DoScriptText(SAY_WHIRLWIND, m_creature);
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_WHIRLWIND);
-            Whirlwind_Timer = 30000;
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_WHIRLWIND) == CAST_OK)
+            {
+                DoScriptText(SAY_WHIRLWIND, m_creature);
+                Whirlwind_Timer = 30000;
+            }
         }else Whirlwind_Timer -= diff;
 
         DoMeleeAttackIfReady();

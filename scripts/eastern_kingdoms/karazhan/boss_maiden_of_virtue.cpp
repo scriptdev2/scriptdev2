@@ -91,10 +91,13 @@ struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
 
         if (m_uiRepentance_Timer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_REPENTANCE);
-            DoScriptText(urand(0, 1) ? SAY_REPENTANCE1 : SAY_REPENTANCE2, m_creature);
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_REPENTANCE) == CAST_OK)
+            {
+                DoScriptText(urand(0, 1) ? SAY_REPENTANCE1 : SAY_REPENTANCE2, m_creature);
 
-            m_uiRepentance_Timer = urand(25000, 35000);     //A little randomness on that spell
+                //A little randomness on that spell
+                m_uiRepentance_Timer = urand(25000, 35000);
+            }
         }
         else
             m_uiRepentance_Timer -= uiDiff;

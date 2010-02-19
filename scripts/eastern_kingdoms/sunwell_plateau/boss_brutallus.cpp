@@ -174,9 +174,11 @@ struct MANGOS_DLL_DECL boss_brutallusAI : public ScriptedAI
 
         if (m_uiBerserkTimer < uiDiff)
         {
-            DoScriptText(YELL_BERSERK, m_creature);
-            DoCastSpellIfCan(m_creature,SPELL_BERSERK);
-            m_uiBerserkTimer = 20000;
+            if (DoCastSpellIfCan(m_creature,SPELL_BERSERK) == CAST_OK)
+            {
+                DoScriptText(YELL_BERSERK, m_creature);
+                m_uiBerserkTimer = 20000;
+            }
         }
         else
             m_uiBerserkTimer -= uiDiff;

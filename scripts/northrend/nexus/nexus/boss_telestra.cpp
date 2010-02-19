@@ -207,7 +207,7 @@ struct MANGOS_DLL_DECL boss_telestraAI : public ScriptedAI
 
                     if (m_uiPhase == PHASE_1 && m_creature->GetHealth()*100 < m_creature->GetMaxHealth()*50)
                     {
-                        if (DoCastSpellIfCan(m_creature, SPELL_SUMMON_CLONES, CAST_INTURRUPT_PREVIOUS) == CAST_OK)
+                        if (DoCastSpellIfCan(m_creature, SPELL_SUMMON_CLONES, CAST_INTERRUPT_PREVIOUS) == CAST_OK)
                         {
                             DoScriptText(urand(0, 1) ? SAY_SPLIT_1 : SAY_SPLIT_2, m_creature);
                             m_uiPhase = PHASE_2;
@@ -216,7 +216,7 @@ struct MANGOS_DLL_DECL boss_telestraAI : public ScriptedAI
 
                     if (m_uiPhase == PHASE_3 && !m_bIsRegularMode && m_creature->GetHealth()*100 < m_creature->GetMaxHealth()*15)
                     {
-                        if (DoCastSpellIfCan(m_creature, SPELL_SUMMON_CLONES, CAST_INTURRUPT_PREVIOUS) == CAST_OK)
+                        if (DoCastSpellIfCan(m_creature, SPELL_SUMMON_CLONES, CAST_INTERRUPT_PREVIOUS) == CAST_OK)
                         {
                             DoScriptText(urand(0, 1) ? SAY_SPLIT_1 : SAY_SPLIT_2, m_creature);
                             m_uiPhase = PHASE_2;

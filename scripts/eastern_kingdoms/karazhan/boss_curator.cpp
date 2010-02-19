@@ -113,16 +113,14 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
                 if (m_creature->HasAura(SPELL_EVOCATION))
                     m_creature->RemoveAurasDueToSpell(SPELL_EVOCATION);
 
-                // ScriptText needs confirmation
-                DoScriptText(SAY_ENRAGE, m_creature);
+                if (DoCastSpellIfCan(m_creature, SPELL_BERSERK, CAST_INTERRUPT_PREVIOUS) == CAST_OK)
+                {
+                    // ScriptText needs confirmation
+                    DoScriptText(SAY_ENRAGE, m_creature);
 
-                if (m_creature->IsNonMeleeSpellCasted(false))
-                    m_creature->InterruptNonMeleeSpells(false);
-
-                DoCastSpellIfCan(m_creature, SPELL_BERSERK);
-
-                // don't know if he's supposed to do summon/evocate after hard enrage (probably not)
-                m_bIsBerserk = true;
+                    // don't know if he's supposed to do summon/evocate after hard enrage (probably not)
+                    m_bIsBerserk = true;
+                }
             }
             else
                 m_uiBerserkTimer -= uiDiff;

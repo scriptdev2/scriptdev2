@@ -127,9 +127,11 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
         //Berserking
         if ((Berserk_Timer < diff) && (!Berserking))
         {
-            DoScriptText(SAY_BERSERK, m_creature);
-            DoCastSpellIfCan(m_creature, SPELL_BERSERK);
-            Berserking = true;
+            if (DoCastSpellIfCan(m_creature, SPELL_BERSERK) == CAST_OK)
+            {
+                DoScriptText(SAY_BERSERK, m_creature);
+                Berserking = true;
+            }
         }else Berserk_Timer -= diff;
 
         //Don't check if we're shapeshifted every UpdateAI
@@ -181,8 +183,8 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
                 if (!target)
                     target = m_creature->getVictim();
 
-                DoCastSpellIfCan(target, SPELL_SURGE);
-                DoScriptText(SAY_SURGE, m_creature);
+                if (DoCastSpellIfCan(target, SPELL_SURGE) == CAST_OK)
+                    DoScriptText(SAY_SURGE, m_creature);
 
                 Surge_Timer = urand(15000, 32500);
             }else Surge_Timer -= diff;

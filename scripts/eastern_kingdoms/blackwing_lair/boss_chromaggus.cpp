@@ -209,11 +209,13 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
                 case 4: spell = SPELL_ARCANE_VURNALBILTY; break;
             }
 
-            DoCastSpellIfCan(m_creature,spell);
-            CurrentVurln_Spell = spell;
+            if (DoCastSpellIfCan(m_creature, spell) == CAST_OK)
+            {
+                CurrentVurln_Spell = spell;
 
-            DoScriptText(EMOTE_SHIMMER, m_creature);
-            Shimmer_Timer = 45000;
+                DoScriptText(EMOTE_SHIMMER, m_creature);
+                Shimmer_Timer = 45000;
+            }
         }else Shimmer_Timer -= diff;
 
         //Breath1_Timer
@@ -282,9 +284,11 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
         //Frenzy_Timer
         if (Frenzy_Timer < diff)
         {
-            DoCastSpellIfCan(m_creature,SPELL_FRENZY);
-            DoScriptText(EMOTE_GENERIC_FRENZY_KILL, m_creature);
-            Frenzy_Timer = urand(10000, 15000);
+            if (DoCastSpellIfCan(m_creature,SPELL_FRENZY) == CAST_OK)
+            {
+                DoScriptText(EMOTE_GENERIC_FRENZY_KILL, m_creature);
+                Frenzy_Timer = urand(10000, 15000);
+            }
         }else Frenzy_Timer -= diff;
 
         //Enrage if not already enraged and below 20%

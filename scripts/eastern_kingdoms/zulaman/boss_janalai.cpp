@@ -542,9 +542,11 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
         //WIPE after 10 minutes
         if (wipetimer < diff)
         {
-            DoScriptText(SAY_BERSERK, m_creature);
-            DoCastSpellIfCan(m_creature,SPELL_ENRAGE);
-            wipetimer = 30000;
+            if (DoCastSpellIfCan(m_creature,SPELL_ENRAGE) == CAST_OK)
+            {
+                DoScriptText(SAY_BERSERK, m_creature);
+                wipetimer = 30000;
+            }
         }else wipetimer -=diff;
 
         //check for reset ... exploit preventing ... pulled from his podest
