@@ -77,7 +77,7 @@ CreatureAI* GetAI_mob_webbed_creature(Creature* pCreature)
 
 bool GossipHello_npc_captured_sunhawk_agent(Player* pPlayer, Creature* pCreature)
 {
-    if (pPlayer->HasAura(31609,1) && pPlayer->GetQuestStatus(9756) == QUEST_STATUS_INCOMPLETE)
+    if (pPlayer->HasAura(31609, EFFECT_INDEX_1) && pPlayer->GetQuestStatus(9756) == QUEST_STATUS_INCOMPLETE)
     {
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "[PH] ", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
         pPlayer->SEND_GOSSIP_MENU(9136, pCreature->GetGUID());
