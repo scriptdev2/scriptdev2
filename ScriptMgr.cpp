@@ -403,7 +403,7 @@ bool ItemUse(Player* pPlayer, Item* _Item, SpellCastTargets const& targets)
 }
 
 MANGOS_DLL_EXPORT
-bool EffectDummyCreature(Unit *pCaster, uint32 spellId, uint32 effIndex, Creature *pCreatureTarget)
+bool EffectDummyCreature(Unit *pCaster, uint32 spellId, SpellEffectIndex effIndex, Creature *pCreatureTarget)
 {
     Script *tmpscript = m_scripts[pCreatureTarget->GetScriptId()];
 
@@ -413,7 +413,7 @@ bool EffectDummyCreature(Unit *pCaster, uint32 spellId, uint32 effIndex, Creatur
 }
 
 MANGOS_DLL_EXPORT
-bool EffectDummyGameObj(Unit *pCaster, uint32 spellId, uint32 effIndex, GameObject *pGameObjTarget)
+bool EffectDummyGameObj(Unit *pCaster, uint32 spellId, SpellEffectIndex effIndex, GameObject *pGameObjTarget)
 {
     Script *tmpscript = m_scripts[pGameObjTarget->GetGOInfo()->ScriptId];
 
@@ -423,7 +423,7 @@ bool EffectDummyGameObj(Unit *pCaster, uint32 spellId, uint32 effIndex, GameObje
 }
 
 MANGOS_DLL_EXPORT
-bool EffectDummyItem(Unit *pCaster, uint32 spellId, uint32 effIndex, Item *pItemTarget)
+bool EffectDummyItem(Unit *pCaster, uint32 spellId, SpellEffectIndex effIndex, Item *pItemTarget)
 {
     Script *tmpscript = m_scripts[pItemTarget->GetProto()->ScriptId];
 

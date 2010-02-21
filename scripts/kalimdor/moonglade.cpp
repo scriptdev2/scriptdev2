@@ -202,7 +202,7 @@ CreatureAI* GetAI_npc_clintar_dw_spirit(Creature* pCreature)
 }
 
 //we expect this spell to be triggered from spell casted at questAccept
-bool EffectDummyCreature_npc_clintar_dw_spirit(Unit *pCaster, uint32 spellId, uint32 effIndex, Creature *pCreatureTarget)
+bool EffectDummyCreature_npc_clintar_dw_spirit(Unit *pCaster, uint32 spellId, SpellEffectIndex effIndex, Creature *pCreatureTarget)
 {
     //always check spellid and effectindex
     if (spellId == SPELL_EMERALD_DREAM && effIndex == EFFECT_INDEX_0)

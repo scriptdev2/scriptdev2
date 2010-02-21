@@ -54,9 +54,9 @@ struct Script
     bool (*pGOQuestAccept       )(Player*, GameObject*, const Quest*);
     bool (*pGOChooseReward      )(Player*, GameObject*, const Quest*, uint32);
     bool (*pItemUse             )(Player*, Item*, SpellCastTargets const&);
-    bool (*pEffectDummyCreature )(Unit*, uint32, uint32, Creature*);
-    bool (*pEffectDummyGameObj  )(Unit*, uint32, uint32, GameObject*);
-    bool (*pEffectDummyItem     )(Unit*, uint32, uint32, Item*);
+    bool (*pEffectDummyCreature )(Unit*, uint32, SpellEffectIndex, Creature*);
+    bool (*pEffectDummyGameObj  )(Unit*, uint32, SpellEffectIndex, GameObject*);
+    bool (*pEffectDummyItem     )(Unit*, uint32, SpellEffectIndex, Item*);
 
     CreatureAI* (*GetAI)(Creature*);
     InstanceData* (*GetInstanceData)(Map*);

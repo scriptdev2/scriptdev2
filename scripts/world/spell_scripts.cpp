@@ -46,7 +46,7 @@ enum
     ENTRY_OWLKIN_INOC       = 16534,
 };
 
-bool EffectDummyCreature_npc_nestlewood_owlkin(Unit* pCaster, uint32 uiSpellId, uint32 uiEffIndex, Creature* pCreatureTarget)
+bool EffectDummyCreature_npc_nestlewood_owlkin(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
 {
     if (uiSpellId == SPELL_INOCULATE_OWLKIN && uiEffIndex == EFFECT_INDEX_0)
     {
@@ -78,7 +78,7 @@ enum
     SPELL_LIQUID_FIRE_AURA  = 47972
 };
 
-bool EffectDummyCreature_npc_liquid_fire_of_elune(Unit* pCaster, uint32 uiSpellId, uint32 uiEffIndex, Creature* pCreatureTarget)
+bool EffectDummyCreature_npc_liquid_fire_of_elune(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
 {
     if (uiSpellId == SPELL_LIQUID_FIRE && uiEffIndex == EFFECT_INDEX_0)
     {
@@ -129,7 +129,7 @@ enum
     SPELL_SUMMON_SENTRY_BOT         = 46068
 };
 
-bool EffectDummyCreature_npc_robot_reprogrammed(Unit* pCaster, uint32 uiSpellId, uint32 uiEffIndex, Creature* pCreatureTarget)
+bool EffectDummyCreature_npc_robot_reprogrammed(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
 {
     if (uiSpellId == SPELL_ULTRASONIC_SCREWDRIVER && uiEffIndex == EFFECT_INDEX_0)
     {
@@ -176,7 +176,7 @@ enum
     EMOTE_CREATE                = -1000552
 };
 
-bool EffectDummyCreature_npc_woodlands_walker(Unit* pCaster, uint32 uiSpellId, uint32 uiEffIndex, Creature* pCreatureTarget)
+bool EffectDummyCreature_npc_woodlands_walker(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
 {
     if (uiSpellId == SPELL_STRENGTH_ANCIENTS && uiEffIndex == EFFECT_INDEX_0)
     {

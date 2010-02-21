@@ -289,7 +289,7 @@ CreatureAI* GetAI_boss_volkhan(Creature* pCreature)
     return new boss_volkhanAI(pCreature);
 }
 
-bool EffectDummyCreature_boss_volkhan(Unit* pCaster, uint32 uiSpellId, uint32 uiEffIndex, Creature* pCreatureTarget)
+bool EffectDummyCreature_boss_volkhan(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
 {
     //always check spellid and effectindex
     if (uiSpellId == SPELL_TEMPER_DUMMY && uiEffIndex == EFFECT_INDEX_0)
@@ -318,7 +318,7 @@ bool EffectDummyCreature_boss_volkhan(Unit* pCaster, uint32 uiSpellId, uint32 ui
 ## npc_volkhan_anvil
 ######*/
 
-bool EffectDummyCreature_npc_volkhan_anvil(Unit* pCaster, uint32 uiSpellId, uint32 uiEffIndex, Creature* pCreatureTarget)
+bool EffectDummyCreature_npc_volkhan_anvil(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
 {
     //always check spellid and effectindex
     if (uiSpellId == SPELL_TEMPER && uiEffIndex == EFFECT_INDEX_0)
