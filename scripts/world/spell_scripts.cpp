@@ -22,6 +22,7 @@ SDCategory: Spell
 EndScriptData */
 
 /* ContentData
+npc_hulking_helboar
 npc_nestlewood_owlkin
 npc_liquid_fire_of_elune
 npc_robot_reprogrammed
@@ -36,24 +37,50 @@ EndContentData */
 */
 
 /*######
+## npc_hulking_helboar
+######*/
+
+enum
+{
+    SPELL_ADMINISTER_ANTIDOTE   = 34665,
+    NPC_HELBOAR                 = 16880,
+    NPC_DREADTUSK               = 16992
+};
+
+bool EffectDummyCreature_npc_hulking_helboar(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+{
+    if (uiSpellId == SPELL_ADMINISTER_ANTIDOTE && uiEffIndex == EFFECT_INDEX_0)
+    {
+        if (pCreatureTarget->GetEntry() != NPC_HELBOAR)
+            return true;
+
+        // possible needs check for quest state, to not have any effect when quest really complete
+
+        pCreatureTarget->UpdateEntry(NPC_DREADTUSK);
+        return true;
+    }
+    return false;
+}
+
+/*######
 ## npc_nestlewood_owlkin
 ######*/
 
 enum
 {
     SPELL_INOCULATE_OWLKIN  = 29528,
-    ENTRY_OWLKIN            = 16518,
-    ENTRY_OWLKIN_INOC       = 16534,
+    NPC_OWLKIN              = 16518,
+    NPC_OWLKIN_INOC         = 16534,
 };
 
 bool EffectDummyCreature_npc_nestlewood_owlkin(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
 {
     if (uiSpellId == SPELL_INOCULATE_OWLKIN && uiEffIndex == EFFECT_INDEX_0)
     {
-        if (pCreatureTarget->GetEntry() != ENTRY_OWLKIN)
+        if (pCreatureTarget->GetEntry() != NPC_OWLKIN)
             return true;
 
-        pCreatureTarget->UpdateEntry(ENTRY_OWLKIN_INOC);
+        pCreatureTarget->UpdateEntry(NPC_OWLKIN_INOC);
 
         //set despawn timer, since we want to remove creature after a short time
         pCreatureTarget->ForcedDespawn(15000);
@@ -204,6 +231,11 @@ bool EffectDummyCreature_npc_woodlands_walker(Unit* pCaster, uint32 uiSpellId, S
 void AddSC_spell_scripts()
 {
     Script *newscript;
+
+    newscript = new Script;
+    newscript->Name = "npc_hulking_helboar";
+    newscript->pEffectDummyCreature = &EffectDummyCreature_npc_hulking_helboar;
+    newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "npc_nestlewood_owlkin";
