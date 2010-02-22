@@ -104,6 +104,7 @@ UPDATE creature_template SET ScriptName='npc_locksmith' WHERE entry IN (29665,29
 
 /* SPELL */
 UPDATE creature_template SET ScriptName='npc_hulking_helboar' WHERE entry=16880;
+UPDATE creature_template SET ScriptName='npc_morbent_fel' WHERE entry=1200;
 UPDATE creature_template SET ScriptName='npc_liquid_fire_of_elune' WHERE entry IN (26616,26643);
 UPDATE creature_template SET ScriptName='npc_nestlewood_owlkin' WHERE entry=16518;
 UPDATE creature_template SET ScriptName='npc_robot_reprogrammed' WHERE entry IN (25793,25758,25752,25792,25753);

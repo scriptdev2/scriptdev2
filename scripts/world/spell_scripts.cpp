@@ -23,6 +23,7 @@ EndScriptData */
 
 /* ContentData
 npc_hulking_helboar
+npc_morbent_fel
 npc_nestlewood_owlkin
 npc_liquid_fire_of_elune
 npc_robot_reprogrammed
@@ -57,6 +58,30 @@ bool EffectDummyCreature_npc_hulking_helboar(Unit* pCaster, uint32 uiSpellId, Sp
         // possible needs check for quest state, to not have any effect when quest really complete
 
         pCreatureTarget->UpdateEntry(NPC_DREADTUSK);
+        return true;
+    }
+    return false;
+}
+
+/*######
+## npc_morbent_fel
+######*/
+
+enum
+{
+    SPELL_SACRED_CLEANSING  = 8913,
+    NPC_MORBENT             = 1200,
+    NPC_WEAKENED_MORBENT    = 24782
+};
+
+bool EffectDummyCreature_npc_morbent_fel(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+{
+    if (uiSpellId == SPELL_SACRED_CLEANSING && uiEffIndex == EFFECT_INDEX_1)
+    {
+        if (pCreatureTarget->GetEntry() != NPC_MORBENT)
+            return true;
+
+        pCreatureTarget->UpdateEntry(NPC_WEAKENED_MORBENT);
         return true;
     }
     return false;
@@ -235,6 +260,11 @@ void AddSC_spell_scripts()
     newscript = new Script;
     newscript->Name = "npc_hulking_helboar";
     newscript->pEffectDummyCreature = &EffectDummyCreature_npc_hulking_helboar;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "npc_morbent_fel";
+    newscript->pEffectDummyCreature = &EffectDummyCreature_npc_morbent_fel;
     newscript->RegisterSelf();
 
     newscript = new Script;
