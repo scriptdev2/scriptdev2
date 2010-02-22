@@ -50,4 +50,5 @@ pkgdata_DATA = \
 	r1591_mangos.sql \
 	r1592_mangos.sql \
 	r1593_mangos.sql \
-	r1594_mangos.sql
+	r1594_mangos.sql \
+	r1595_mangos.sql

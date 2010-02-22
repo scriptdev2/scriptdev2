@@ -60,6 +60,11 @@ enum
     NPC_MORBENT                         = 1200,
     NPC_WEAKENED_MORBENT                = 24782,
 
+    // quest 11515
+    SPELL_FEL_SIPHON_DUMMY              = 44936,
+    NPC_FELBLOOD_INITIATE               = 24918,
+    NPC_EMACIATED_FELBLOOD              = 24955,
+
     // target nestlewood owlkin
     SPELL_INOCULATE_OWLKIN              = 29528,
     NPC_OWLKIN                          = 16518,
@@ -208,6 +213,18 @@ bool EffectDummyCreature_spell_dummy_npc(Unit* pCaster, uint32 uiSpellId, SpellE
                 // "NOOOOOOOOOOOOooooooo...............!"
 
                 pCreatureTarget->UpdateEntry(NPC_WEAK_PROPHET_OF_SSERATUS);
+                return true;
+            }
+            return true;
+        }
+        case SPELL_FEL_SIPHON_DUMMY:
+        {
+            if (uiEffIndex == EFFECT_INDEX_0)
+            {
+                if (pCreatureTarget->GetEntry() != NPC_FELBLOOD_INITIATE)
+                    return true;
+
+                pCreatureTarget->UpdateEntry(NPC_EMACIATED_FELBLOOD);
                 return true;
             }
             return true;
