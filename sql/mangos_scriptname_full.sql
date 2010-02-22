@@ -403,6 +403,7 @@ UPDATE creature_template SET ScriptName='mob_shield_generator_channel' WHERE ent
 
 
 /* DALARAN */
+UPDATE creature_template SET ScriptName='npc_dalaran_guardian_mage' WHERE entry IN (29255, 29254);
 UPDATE creature_template SET ScriptName='npc_zidormi' WHERE entry=31848;
 
 /* DARKSHORE */

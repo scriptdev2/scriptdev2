@@ -22,10 +22,58 @@ SDCategory: Dalaran
 EndScriptData */
 
 /* ContentData
+npc_dalaran_guardian_mage
 npc_zirdomi
 EndContentData */
 
 #include "precompiled.h"
+
+enum
+{
+    SPELL_TRESPASSER_H      = 54028,
+    SPELL_TRESPASSER_A      = 54029,
+
+    AREA_ID_SUNREAVER       = 4616,
+    AREA_ID_SILVER_ENCLAVE  = 4740
+};
+
+struct MANGOS_DLL_DECL npc_dalaran_guardian_mageAI : public ScriptedAI
+{
+    npc_dalaran_guardian_mageAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
+
+    void MoveInLineOfSight(Unit* pWho)
+    {
+        if (m_creature->GetDistanceZ(pWho) > CREATURE_Z_ATTACK_RANGE)
+            return;
+
+        if (pWho->isTargetableForAttack() && m_creature->IsHostileTo(pWho))
+        {
+            if (m_creature->IsWithinDistInMap(pWho, m_creature->GetAttackDistance(pWho)) && m_creature->IsWithinLOSInMap(pWho))
+            {
+                if (Player* pPlayer = pWho->GetCharmerOrOwnerPlayerOrPlayerItself())
+                {
+                    // it's mentioned that pet may also be teleported, if so, we need to tune script to apply to those in addition.
+
+                    if (pPlayer->GetAreaId() == AREA_ID_SILVER_ENCLAVE)
+                        DoCastSpellIfCan(pPlayer, SPELL_TRESPASSER_A);
+                    else if (pPlayer->GetAreaId() == AREA_ID_SUNREAVER)
+                        DoCastSpellIfCan(pPlayer, SPELL_TRESPASSER_H);
+                }
+            }
+        }
+    }
+
+    void AttackedBy(Unit* /*pAttacker*/) {}
+
+    void Reset() {}
+
+    void UpdateAI(const uint32 /*uiDiff*/) {}
+};
+
+CreatureAI* GetAI_npc_dalaran_guardian_mage(Creature* pCreature)
+{
+    return new npc_dalaran_guardian_mageAI(pCreature);
+}
 
 /*######
 ## npc_zidormi
@@ -63,6 +111,11 @@ bool GossipSelect_npc_zidormi(Player* pPlayer, Creature* pCreature, uint32 uiSen
 void AddSC_dalaran()
 {
     Script *newscript;
+
+    newscript = new Script;
+    newscript->Name = "npc_dalaran_guardian_mage";
+    newscript->GetAI = &GetAI_npc_dalaran_guardian_mage;
+    newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "npc_zidormi";
