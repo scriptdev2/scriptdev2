@@ -64,6 +64,17 @@ enum
     NPC_ELK_BUNNY                       = 27111,
     NPC_GRIZZLY_BUNNY                   = 27112,
 
+    // for quest 12459
+    SPELL_SEEDS_OF_NATURES_WRATH        = 49587,
+
+    NPC_REANIMATED_FROSTWYRM            = 26841,
+    NPC_TURGID                          = 27808,
+    NPC_DEATHGAZE                       = 27122,
+
+    NPC_WEAK_REANIMATED_FROSTWYRM       = 27821,
+    NPC_WEAK_TURGID                     = 27809,
+    NPC_WEAK_DEATHGAZE                  = 27807,
+
     // for quest 11730
     SPELL_ULTRASONIC_SCREWDRIVER        = 46023,
     SPELL_REPROGRAM_KILL_CREDIT         = 46027,
@@ -162,24 +173,44 @@ bool EffectDummyCreature_spell_dummy_npc(Unit* pCaster, uint32 uiSpellId, SpellE
             }
             return true;
         }
+        case SPELL_SEEDS_OF_NATURES_WRATH:
+        {
+            if (uiEffIndex == EFFECT_INDEX_0)
+            {
+                uint32 uiNewEntry = 0;
+
+                switch(pCreatureTarget->GetEntry())
+                {
+                    case NPC_REANIMATED_FROSTWYRM:  uiNewEntry = NPC_WEAK_REANIMATED_FROSTWYRM; break;
+                    case NPC_TURGID:                uiNewEntry = NPC_WEAK_TURGID; break;
+                    case NPC_DEATHGAZE:             uiNewEntry = NPC_WEAK_DEATHGAZE; break;
+                }
+
+                if (uiNewEntry)
+                    pCreatureTarget->UpdateEntry(uiNewEntry);
+
+                return true;
+            }
+            return true;
+        }
         case SPELL_ULTRASONIC_SCREWDRIVER:
         {
             if (uiEffIndex == EFFECT_INDEX_0)
             {
                 if (pCreatureTarget->isDead())
                 {
-                    uiSpellId = 0;
+                    uint32 newSpellId = 0;
 
                     switch(pCreatureTarget->GetEntry())
                     {
-                        case NPC_COLLECT_A_TRON:    uiSpellId = SPELL_SUMMON_COLLECT_A_TRON; break;
-                        case NPC_DEFENDO_TANK:      uiSpellId = SPELL_SUMMON_DEFENDO_TANK; break;
-                        case NPC_SCAVENGE_A8:       uiSpellId = SPELL_SUMMON_SCAVENGE_A8; break;
-                        case NPC_SCAVENGE_B6:       uiSpellId = SPELL_SUMMON_SCAVENGE_B6; break;
-                        case NPC_SENTRY_BOT:        uiSpellId = SPELL_SUMMON_SENTRY_BOT; break;
+                        case NPC_COLLECT_A_TRON:    newSpellId = SPELL_SUMMON_COLLECT_A_TRON; break;
+                        case NPC_DEFENDO_TANK:      newSpellId = SPELL_SUMMON_DEFENDO_TANK; break;
+                        case NPC_SCAVENGE_A8:       newSpellId = SPELL_SUMMON_SCAVENGE_A8; break;
+                        case NPC_SCAVENGE_B6:       newSpellId = SPELL_SUMMON_SCAVENGE_B6; break;
+                        case NPC_SENTRY_BOT:        newSpellId = SPELL_SUMMON_SENTRY_BOT; break;
                     }
 
-                    if (const SpellEntry* pSpell = GetSpellStore()->LookupEntry(uiSpellId))
+                    if (const SpellEntry* pSpell = GetSpellStore()->LookupEntry(newSpellId))
                     {
                         pCaster->CastSpell(pCreatureTarget, pSpell->Id, true);
 
