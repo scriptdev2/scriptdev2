@@ -23,11 +23,13 @@ EndScriptData */
 
 /* ContentData
 spell 34665
+spell 19512
 spell 8913
 spell 29528
 spell 46770
 spell 46023
 spell 47575
+spell 50706
 EndContentData */
 
 #include "precompiled.h"
@@ -43,6 +45,15 @@ enum
     SPELL_ADMINISTER_ANTIDOTE           = 34665,
     NPC_HELBOAR                         = 16880,
     NPC_DREADTUSK                       = 16992,
+
+    // quest 6124/6129
+    SPELL_APPLY_SALVE                   = 19512,
+
+    NPC_SICKLY_DEER                     = 12298,
+    NPC_SICKLY_GAZELLE                  = 12296,
+
+    NPC_CURED_DEER                      = 12299,
+    NPC_CURED_GAZELLE                   = 12297,
 
     // target morbent fel
     SPELL_SACRED_CLEANSING              = 8913,
@@ -123,6 +134,23 @@ bool EffectDummyCreature_spell_dummy_npc(Unit* pCaster, uint32 uiSpellId, SpellE
                 // possible needs check for quest state, to not have any effect when quest really complete
 
                 pCreatureTarget->UpdateEntry(NPC_DREADTUSK);
+                return true;
+            }
+            return true;
+        }
+        case SPELL_APPLY_SALVE:
+        {
+            if (uiEffIndex == EFFECT_INDEX_0)
+            {
+                if (pCaster->GetTypeId() != TYPEID_PLAYER)
+                    return true;
+
+                if (pCreatureTarget->GetEntry() == NPC_SICKLY_DEER && ((Player*)pCaster)->GetTeam() == ALLIANCE)
+                    pCreatureTarget->UpdateEntry(NPC_CURED_DEER);
+
+                if (pCreatureTarget->GetEntry() == NPC_SICKLY_GAZELLE && ((Player*)pCaster)->GetTeam() == HORDE)
+                    pCreatureTarget->UpdateEntry(NPC_CURED_GAZELLE);
+
                 return true;
             }
             return true;
