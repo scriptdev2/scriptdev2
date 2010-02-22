@@ -1625,7 +1625,6 @@ enum
     QUEST_HOTTER_THAN_HELL_A              = 10758,
     QUEST_HOTTER_THAN_HELL_H              = 10764,
     QUEST_RETURN_TO_KHAGDAR               = 9837,
-    QUEST_SCEPTER_OF_CELEBRAS             = 7046,
     QUEST_CONTAINMENT                     = 13159,
 
     ITEM_ARCATRAZ_KEY                     = 31084,
@@ -1633,7 +1632,6 @@ enum
     ITEM_SKELETON_KEY                     = 13704,
     ITEM_SHATTERED_HALLS_KEY              = 28395,
     ITEM_THE_MASTERS_KEY                  = 24490,
-    ITEM_SCEPTER_OF_CELEBRAS              = 17191,
     ITEM_VIOLET_HOLD_KEY                  = 42482,
 
     SPELL_ARCATRAZ_KEY                    = 54881,
@@ -1641,7 +1639,6 @@ enum
     SPELL_SKELETON_KEY                    = 54883,
     SPELL_SHATTERED_HALLS_KEY             = 54884,
     SPELL_THE_MASTERS_KEY                 = 54885,
-    SPELL_SCEPTER_OF_CELEBRAS             = 56211,
     SPELL_VIOLET_HOLD_KEY                 = 67253
 };
 
@@ -1650,7 +1647,6 @@ enum
 #define GOSSIP_LOST_SKELETON_KEY         "I've lost my key to the Scholomance."
 #define GOSSIP_LOST_SHATTERED_HALLS_KEY  "I've lost my key to the Shattered Halls."
 #define GOSSIP_LOST_THE_MASTERS_KEY      "I've lost my key to the Karazhan."
-#define GOSSIP_LOST_SCEPTER              "I've lost my Scepter of Celebras"
 #define GOSSIP_LOST_VIOLET_HOLD_KEY      "I've lost my key to the Violet Hold."
 
 
@@ -1679,13 +1675,9 @@ bool GossipHello_npc_locksmith(Player* pPlayer, Creature* pCreature)
     if (pPlayer->GetQuestRewardStatus(QUEST_RETURN_TO_KHAGDAR) && !pPlayer->HasItemCount(ITEM_THE_MASTERS_KEY, 1, true))
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_LOST_THE_MASTERS_KEY, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF +5);
 
-    // Scepter of Celebras
-    if (pPlayer->GetQuestRewardStatus(QUEST_SCEPTER_OF_CELEBRAS) && !pPlayer->HasItemCount(ITEM_SCEPTER_OF_CELEBRAS, 1, true))
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_LOST_SCEPTER, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF +6);
-
     // Violet Hold Key
     if (pPlayer->GetQuestRewardStatus(QUEST_CONTAINMENT) && !pPlayer->HasItemCount(ITEM_VIOLET_HOLD_KEY, 1, true))
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_LOST_VIOLET_HOLD_KEY, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF +7);
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_LOST_VIOLET_HOLD_KEY, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF +6);
 
     pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
 
@@ -1717,10 +1709,6 @@ bool GossipSelect_npc_locksmith(Player* pPlayer, Creature* pCreature, uint32 uiS
             pPlayer->CastSpell(pPlayer, SPELL_THE_MASTERS_KEY, false);
             break;
         case GOSSIP_ACTION_INFO_DEF+6:
-            pPlayer->CLOSE_GOSSIP_MENU();
-            pPlayer->CastSpell(pPlayer, SPELL_SCEPTER_OF_CELEBRAS, false);
-            break;
-        case GOSSIP_ACTION_INFO_DEF+7:
             pPlayer->CLOSE_GOSSIP_MENU();
             pPlayer->CastSpell(pPlayer, SPELL_VIOLET_HOLD_KEY, false);
             break;
