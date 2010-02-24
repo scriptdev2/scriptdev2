@@ -433,6 +433,16 @@ bool EffectDummyItem(Unit *pCaster, uint32 spellId, SpellEffectIndex effIndex, I
 }
 
 MANGOS_DLL_EXPORT
+bool EffectAuraDummy(const Aura* pAura, bool apply)
+{
+    Script *tmpscript = m_scripts[((Creature*)pAura->GetTarget())->GetScriptId()];
+    if (!tmpscript || !tmpscript->pEffectAuraDummy)
+        return false;
+
+    return tmpscript->pEffectAuraDummy(pAura, apply);
+}
+
+MANGOS_DLL_EXPORT
 InstanceData* CreateInstanceData(Map *map)
 {
     if (!map->IsDungeon()) return NULL;
