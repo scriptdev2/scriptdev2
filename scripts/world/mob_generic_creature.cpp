@@ -90,7 +90,7 @@ struct MANGOS_DLL_DECL generic_creatureAI : public ScriptedAI
                 SpellEntry const *info = NULL;
 
                 //Select a healing spell if less than 30% hp
-                if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 30)
+                if (m_creature->GetHealthPercent() < 30.0f)
                     info = SelectSpell(m_creature, -1, -1, SELECT_TARGET_ANY_FRIEND, 0, 0, 0, 0, SELECT_EFFECT_HEALING);
 
                 //No healing spell available, select a hostile spell
@@ -121,7 +121,7 @@ struct MANGOS_DLL_DECL generic_creatureAI : public ScriptedAI
                 SpellEntry const *info = NULL;
 
                 //Select a healing spell if less than 30% hp ONLY 33% of the time
-                if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 30 && !urand(0, 2))
+                if (m_creature->GetHealthPercent() < 30.0f && !urand(0, 2))
                     info = SelectSpell(m_creature, -1, -1, SELECT_TARGET_ANY_FRIEND, 0, 0, 0, 0, SELECT_EFFECT_HEALING);
 
                 //No healing spell available, See if we can cast a ranged spell (Range must be greater than ATTACK_DISTANCE)

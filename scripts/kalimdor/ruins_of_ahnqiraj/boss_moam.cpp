@@ -71,7 +71,7 @@ struct MANGOS_DLL_DECL boss_moamAI : public ScriptedAI
         }
 
         //If we are <50%HP cast MANA FIEND (Summon Mana) and Sleep
-        //if (i==0 && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 50 && !m_creature->IsNonMeleeSpellCasted(false))
+        //if (i==0 && m_creature->GetHealthPercent() <= 50.0f && !m_creature->IsNonMeleeSpellCasted(false))
         {
             i=1;
             DoCastSpellIfCan(m_creature->getVictim(),SPELL_SUMMONMANA);

@@ -128,7 +128,7 @@ struct MANGOS_DLL_DECL boss_azuregosAI : public ScriptedAI
         }else Cleave_Timer -= diff;
 
         //Enrage_Timer
-        if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 26 && !Enraged)
+        if (m_creature->GetHealthPercent() < 26.0f && !Enraged)
         {
             DoCastSpellIfCan(m_creature, SPELL_ENRAGE);
             Enraged = true;

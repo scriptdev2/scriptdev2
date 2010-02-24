@@ -635,7 +635,7 @@ struct MANGOS_DLL_DECL npc_akama_illidanAI : public ScriptedAI
                 if (Illidan->IsInEvadeMode() && !m_creature->IsInEvadeMode())
                     EnterEvadeMode();
 
-                if (((Illidan->GetHealth()*100 / Illidan->GetMaxHealth()) < 85) && m_creature->isInCombat() && !FightMinions)
+                if (Illidan->GetHealthPercent() < 85.0f && m_creature->isInCombat() && !FightMinions)
                 {
                     if (TalkTimer < diff)
                     {
@@ -671,7 +671,7 @@ struct MANGOS_DLL_DECL npc_akama_illidanAI : public ScriptedAI
                     }else TalkTimer -= diff;
                 }
 
-                if (((Illidan->GetHealth()*100 / Illidan->GetMaxHealth()) < 4) && !IsReturningToIllidan)
+                if (Illidan->GetHealthPercent() < 4.0f && !IsReturningToIllidan)
                     ReturnToIllidan();
             }
         }else
@@ -1559,17 +1559,15 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
         }
 
         /** Signal to change to phase 2 **/
-        if (((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 65) && (Phase == PHASE_NORMAL))
+        if (m_creature->GetHealthPercent() < 65.0f && Phase == PHASE_NORMAL)
             EnterPhase2();
 
         /** Signal to summon Maiev **/
-        if (((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 30) && !MaievGUID &&
-            (Phase != PHASE_DEMON || Phase != PHASE_DEMON_SEQUENCE))
+        if (m_creature->GetHealthPercent() < 30.0f && !MaievGUID && (Phase != PHASE_DEMON || Phase != PHASE_DEMON_SEQUENCE))
             SummonMaiev();
 
         /** Time for the death speech **/
-        if ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 1) && (!IsTalking) &&
-            (Phase != PHASE_DEMON || Phase != PHASE_DEMON_SEQUENCE))
+        if (m_creature->GetHealthPercent() < 1.0f && !IsTalking && (Phase != PHASE_DEMON || Phase != PHASE_DEMON_SEQUENCE))
             InitializeDeath();
 
         /***** Spells for Phase 1, 3 and 5 (Normal Form) ******/
@@ -1774,9 +1772,9 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
 
             if (TransformTimer < diff)
             {
-                uint32 CurHealth = m_creature->GetHealth()*100 / m_creature->GetMaxHealth();
+                float CurHealth = m_creature->GetHealthPercent();
                 // Prevent Illidan from morphing if less than 32% or 5%, as this may cause issues with the phase transition or death speech
-                if ((CurHealth < 32 && !MaievGUID) || (CurHealth < 5))
+                if ((CurHealth < 32.0f && !MaievGUID) || CurHealth < 5.0f)
                     return;
 
                 Phase = PHASE_DEMON_SEQUENCE;               // Transform sequence
@@ -2006,7 +2004,7 @@ struct MANGOS_DLL_DECL boss_maievAI : public ScriptedAI
                 m_creature->SetVisibility(VISIBILITY_OFF);
                 m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
             }
-            else if (Illidan && ((Illidan->GetHealth()*100 / Illidan->GetMaxHealth()) < 2))
+            else if (Illidan && Illidan->GetHealthPercent() < 2.0f)
                 return;
         }
 

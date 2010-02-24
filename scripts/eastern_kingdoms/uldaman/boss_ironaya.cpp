@@ -56,7 +56,7 @@ struct MANGOS_DLL_DECL boss_ironayaAI : public ScriptedAI
             return;
 
         //If we are <50% hp do knockaway ONCE
-        if (!hasCastedKnockaway && m_creature->GetHealth()*2 < m_creature->GetMaxHealth())
+        if (!hasCastedKnockaway && m_creature->GetHealthPercent() < 50.0f)
         {
             m_creature->CastSpell(m_creature->getVictim(),SPELL_KNOCKAWAY, true);
 
@@ -80,7 +80,7 @@ struct MANGOS_DLL_DECL boss_ironayaAI : public ScriptedAI
             Arcing_Timer = 13000;
         }else Arcing_Timer -= diff;
 
-        if (!hasCastedWstomp && m_creature->GetHealth()*4 < m_creature->GetMaxHealth())
+        if (!hasCastedWstomp && m_creature->GetHealthPercent() < 25.0f)
         {
             DoCastSpellIfCan(m_creature,SPELL_WSTOMP);
             hasCastedWstomp = true;

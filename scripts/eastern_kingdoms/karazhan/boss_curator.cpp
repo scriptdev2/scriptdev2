@@ -171,7 +171,7 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
             else
                 m_uiFlareTimer -= uiDiff;
 
-            if (m_creature->GetHealth()*100 < m_creature->GetMaxHealth()*15)
+            if (m_creature->GetHealthPercent() < 15.0f)
             {
                 if (!m_creature->IsNonMeleeSpellCasted(false))
                 {

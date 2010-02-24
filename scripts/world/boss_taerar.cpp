@@ -167,7 +167,7 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
             m_uiBellowingRoar_Timer -= uiDiff;
 
         //Summon 3 Shades at 75%, 50% and 25% (if bShades is true we already left in line 117, no need to check here again)
-        if (!m_bShades && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) <= (100-(25*m_uiShadesSummoned)))
+        if (!m_bShades && m_creature->GetHealthPercent() < float(100 - 25*m_uiShadesSummoned))
         {
             if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
             {

@@ -295,7 +295,7 @@ struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
                 DeathCoil_Timer = urand(15000, 20000);
             }else DeathCoil_Timer -= diff;
 
-            if ((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() <= 20)
+            if (m_creature->GetHealthPercent() <= 20.0f)
                 Phase = true;
 
             DoMeleeAttackIfReady();

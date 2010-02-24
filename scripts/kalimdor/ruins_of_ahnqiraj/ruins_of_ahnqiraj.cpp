@@ -103,7 +103,7 @@ struct MANGOS_DLL_DECL mob_anubisath_guardianAI : public ScriptedAI
     void DamageTaken(Unit* pDoneBy, uint32 &uiDamage)
     {
         // when we reach 10% of HP explode or enrage
-        if (!m_bIsEnraged && m_creature->GetHealth()*10 < m_creature->GetMaxHealth())
+        if (!m_bIsEnraged && m_creature->GetHealthPercent() < 10.0f)
         {
             if (m_uiSpell4 == SPELL_ENRAGE)
             {

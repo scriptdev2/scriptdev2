@@ -72,7 +72,7 @@ struct MANGOS_DLL_DECL boss_vectusAI : public ScriptedAI
             m_uiBlastWave_Timer -= uiDiff;
 
         //Frenzy_Timer
-        /*if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 25)
+        /*if (m_creature->GetHealthPercent() < 25.0f)
         {
             if (m_uiFrenzy_Timer < uiDiff)
             {

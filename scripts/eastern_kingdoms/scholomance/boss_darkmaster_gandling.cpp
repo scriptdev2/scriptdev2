@@ -107,7 +107,7 @@ struct MANGOS_DLL_DECL boss_darkmaster_gandlingAI : public ScriptedAI
 
         //Teleporting Random Target to one of the six pre boss rooms and spawn 3-4 skeletons near the gamer.
         //We will only telport if gandling has more than 3% of hp so teleported gamers can always loot.
-        if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() > 3)
+        if (m_creature->GetHealthPercent() > 3.0f)
         {
             if (Teleport_Timer < diff)
             {

@@ -331,7 +331,7 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
                 }else FlameStrikeTimer -= diff;
 
                 // Below 50%
-                if (m_creature->GetMaxHealth() * 0.5 > m_creature->GetHealth())
+                if (m_creature->GetHealthPercent() < 50.0f)
                 {
                     m_creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);
                     m_creature->StopMoving();

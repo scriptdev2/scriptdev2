@@ -90,7 +90,7 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
             return;
 
         //Cast Ageis if less than 50% hp
-        if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 50)
+        if (m_creature->GetHealthPercent() < 50.0f)
         {
             DoCastSpellIfCan(m_creature,SPELL_AEGIS);
         }

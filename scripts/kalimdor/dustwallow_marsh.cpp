@@ -315,7 +315,7 @@ struct MANGOS_DLL_DECL npc_morokkAI : public npc_escortAI
     {
         if (HasEscortState(STATE_ESCORT_ESCORTING))
         {
-            if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 30)
+            if (m_creature->GetHealthPercent() < 30.0f)
             {
                 if (Player* pPlayer = GetPlayerForEscort())
                     pPlayer->GroupEventHappens(QUEST_CHALLENGE_MOROKK, m_creature);
@@ -752,7 +752,7 @@ struct MANGOS_DLL_DECL npc_private_hendelAI : public ScriptedAI
 
     void DamageTaken(Unit* pDoneBy, uint32 &uiDamage)
     {
-        if (uiDamage > m_creature->GetHealth() || ((m_creature->GetHealth() - uiDamage)*100 / m_creature->GetMaxHealth() < 20))
+        if (uiDamage > m_creature->GetHealth() || m_creature->GetHealthPercent() < 20.0f)
         {
             uiDamage = 0;
 

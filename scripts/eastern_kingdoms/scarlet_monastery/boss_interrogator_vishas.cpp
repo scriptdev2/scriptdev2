@@ -82,13 +82,13 @@ struct MANGOS_DLL_DECL boss_interrogator_vishasAI : public ScriptedAI
             return;
 
         //If we are low on hp Do sayings
-        if (!Yell60 && ((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() <= 60))
+        if (!Yell60 && m_creature->GetHealthPercent() <= 60.0f)
         {
             DoScriptText(SAY_HEALTH1, m_creature);
             Yell60 = true;
         }
 
-        if (!Yell30 && ((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() <= 30))
+        if (!Yell30 && m_creature->GetHealthPercent() <= 30.0f)
         {
             DoScriptText(SAY_HEALTH2, m_creature);
             Yell30 = true;

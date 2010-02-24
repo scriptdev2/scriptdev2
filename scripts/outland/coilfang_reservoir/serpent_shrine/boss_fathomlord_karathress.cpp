@@ -231,7 +231,7 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
         }else m_uiCataclysmicBolt_Timer -= uiDiff;
 
         //hp under 75%
-        if (!m_bBlessingOfTides_MobsChecked && ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth())  <= 75))
+        if (!m_bBlessingOfTides_MobsChecked && m_creature->GetHealthPercent() < 75.0f)
         {
             for(uint8 i = 0; i < MAX_ADVISORS; ++i)
             {

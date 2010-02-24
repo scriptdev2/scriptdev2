@@ -738,7 +738,7 @@ struct MANGOS_DLL_DECL npc_wildaAI : public npc_escortAI
             return;
 
         //TODO: add more abilities
-        if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 30)
+        if (m_creature->GetHealthPercent() <= 30.0f)
         {
             if (m_uiHealingTimer < uiDiff)
             {

@@ -149,7 +149,7 @@ struct MANGOS_DLL_DECL boss_pathaleon_the_calculatorAI : public ScriptedAI
             }else ArcaneExplosion_Timer -= diff;
         }
 
-        if (!Enraged && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 21)
+        if (!Enraged && m_creature->GetHealthPercent() < 21.0f)
         {
             DoCastSpellIfCan(m_creature, SPELL_FRENZY);
             DoScriptText(SAY_ENRAGE, m_creature);

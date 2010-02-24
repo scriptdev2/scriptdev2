@@ -361,7 +361,7 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
         }else FrostBlast_Timer -= uiDiff;
 
         //start phase 3 when we are 40% health
-        if (!Phase3 && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 40)
+        if (!Phase3 && m_creature->GetHealthPercent() < 40.0f)
         {
             Phase3 = true;
             DoScriptText(SAY_REQUEST_AID, m_creature);
@@ -370,7 +370,7 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
             DoScriptText(SAY_ANSWER_REQUEST, m_creature);
         }
 
-        if (Phase3 && (GuardiansOfIcecrown_Count < 5))
+        if (Phase3 && GuardiansOfIcecrown_Count < 5)
         {
             if (GuardiansOfIcecrown_Timer < uiDiff)
             {

@@ -263,7 +263,7 @@ struct MANGOS_DLL_DECL boss_doomrelAI : public ScriptedAI
             m_uiDemonArmor_Timer -= diff;
 
         //Summon Voidwalkers
-        if (!m_bHasSummoned && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 50)
+        if (!m_bHasSummoned && m_creature->GetHealthPercent() <= 50.0f)
         {
             m_creature->CastSpell(m_creature, SPELL_SUMMON_VOIDWALKERS, true);
             m_bHasSummoned = true;

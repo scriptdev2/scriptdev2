@@ -842,7 +842,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                 //Phase 4 specific spells
                 if (m_uiPhase == PHASE_4_SOLO)
                 {
-                    if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 50)
+                    if (m_creature->GetHealthPercent() < 50.0f)
                     {
                         m_pInstance->SetData(TYPE_KAELTHAS_PHASE, PHASE_5_GRAVITY);
                         m_uiPhase = PHASE_5_GRAVITY;

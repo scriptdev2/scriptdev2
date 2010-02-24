@@ -117,7 +117,7 @@ struct MANGOS_DLL_DECL boss_silver_hand_bossesAI : public ScriptedAI
 
         if (HolyLight_Timer < diff)
         {
-            if (m_creature->GetHealth()*5 < m_creature->GetMaxHealth())
+            if (m_creature->GetHealthPercent() < 20.0f)
             {
                 DoCastSpellIfCan(m_creature, SPELL_HOLY_LIGHT);
                 HolyLight_Timer = 20000;
@@ -126,7 +126,7 @@ struct MANGOS_DLL_DECL boss_silver_hand_bossesAI : public ScriptedAI
 
         if (DivineShield_Timer < diff)
         {
-            if (m_creature->GetHealth()*20 < m_creature->GetMaxHealth())
+            if (m_creature->GetHealthPercent() < 5.0f)
             {
                 DoCastSpellIfCan(m_creature, SPELL_DIVINE_SHIELD);
                 DivineShield_Timer = 40000;

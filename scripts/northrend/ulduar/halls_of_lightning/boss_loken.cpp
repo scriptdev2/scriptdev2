@@ -196,7 +196,7 @@ struct MANGOS_DLL_DECL boss_lokenAI : public ScriptedAI
             m_uiLightningNova_Timer -= uiDiff;
 
         // Health check
-        if ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < (100-(25*m_uiHealthAmountModifier)))
+        if (m_creature->GetHealthPercent() < float(100 - 25*m_uiHealthAmountModifier))
         {
             switch(m_uiHealthAmountModifier)
             {

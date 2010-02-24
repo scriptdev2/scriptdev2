@@ -455,7 +455,7 @@ struct MANGOS_DLL_DECL boss_priestess_lackey_commonAI : public ScriptedAI
 
     void UpdateAI(const uint32 uiDiff)
     {
-        if (!m_bUsedPotion && ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 25))
+        if (!m_bUsedPotion && m_creature->GetHealthPercent() < 25.0f)
         {
             DoCastSpellIfCan(m_creature, SPELL_HEALING_POTION);
             m_bUsedPotion = true;
@@ -765,7 +765,7 @@ struct MANGOS_DLL_DECL boss_yazzaiAI : public boss_priestess_lackey_commonAI
             }
         }else Polymorph_Timer -= diff;
 
-        if (((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 35) && !HasIceBlocked)
+        if (m_creature->GetHealthPercent() < 35.0f && !HasIceBlocked)
         {
             DoCastSpellIfCan(m_creature, SPELL_ICE_BLOCK);
             HasIceBlocked = true;

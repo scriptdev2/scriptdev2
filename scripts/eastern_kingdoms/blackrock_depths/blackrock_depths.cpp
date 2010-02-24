@@ -365,7 +365,7 @@ struct MANGOS_DLL_DECL mob_phalanxAI : public ScriptedAI
         }else ThunderClap_Timer -= diff;
 
         //FireballVolley_Timer
-        if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 51)
+        if (m_creature->GetHealthPercent() < 51.0f)
         {
             if (FireballVolley_Timer < diff)
             {

@@ -444,7 +444,7 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
         else
             m_uiBlaze_Timer -= uiDiff;
 
-        if (!m_bIsPhase3 && m_creature->GetHealth()*10 < m_creature->GetMaxHealth()*3
+        if (!m_bIsPhase3 && m_creature->GetHealthPercent() < 30.0f
             && !m_creature->IsNonMeleeSpellCasted(false)    // blast nova
             && !m_creature->hasUnitState(UNIT_STAT_STUNNED))// shadow cage and earthquake
         {
@@ -589,7 +589,7 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
         //Dark Mending
         if (m_uiDarkMending_Timer < uiDiff)
         {
-            if ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 50)
+            if (m_creature->GetHealthPercent() < 50.0f)
             {
                 //Cast on ourselves if we are lower then lowest hp friendly unit
                 /*if (pLowestHPTarget && LowestHP < m_creature->GetHealth())

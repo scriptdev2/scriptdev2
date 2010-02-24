@@ -177,13 +177,13 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (!IsImage66 && ((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() <= 66))
+        if (!IsImage66 && m_creature->GetHealthPercent() <= 66.0f)
         {
             IsImage66 = true;
             DoSplit();
         }
 
-        if (!IsImage33 && ((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() <= 33))
+        if (!IsImage33 && m_creature->GetHealthPercent() <= 33.0f)
         {
             IsImage33 = true;
             DoSplit();

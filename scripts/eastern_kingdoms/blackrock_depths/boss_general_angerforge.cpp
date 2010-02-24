@@ -124,7 +124,7 @@ struct MANGOS_DLL_DECL boss_general_angerforgeAI : public ScriptedAI
         }else Cleave_Timer -= diff;
 
         //Adds_Timer
-        if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 21)
+        if (m_creature->GetHealthPercent() < 21.0f)
         {
             if (Adds_Timer < diff)
             {
@@ -138,7 +138,7 @@ struct MANGOS_DLL_DECL boss_general_angerforgeAI : public ScriptedAI
         }
 
         //Summon Medics
-        if (!Medics && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 21)
+        if (!Medics && m_creature->GetHealthPercent() < 21.0f)
         {
             SummonMedics(m_creature->getVictim());
             SummonMedics(m_creature->getVictim());

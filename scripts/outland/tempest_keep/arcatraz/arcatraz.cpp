@@ -174,7 +174,7 @@ struct MANGOS_DLL_DECL npc_millhouse_manastormAI : public ScriptedAI
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (!LowHp && ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 20))
+        if (!LowHp && m_creature->GetHealthPercent() < 20.0f)
         {
             DoScriptText(SAY_LOWHP, m_creature);
             LowHp = true;

@@ -331,7 +331,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
             if (m_uiPhase == PHASE_1)
             {
                 //m_uiPhase 2 begins when Vashj hits 70%. She will run to the middle of her platform and surround herself in a shield making her invulerable.
-                if ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) <= 70)
+                if (m_creature->GetHealthPercent() <= 70.0f)
                 {
                     DoScriptText(SAY_PHASE2, m_creature);
 

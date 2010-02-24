@@ -156,7 +156,7 @@ struct MANGOS_DLL_DECL boss_mekgineer_steamriggerAI : public ScriptedAI
 
         if (!Summon75)
         {
-            if ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 75)
+            if (m_creature->GetHealthPercent() < 75.0f)
             {
                 SummonMechanichs();
                 Summon75 = true;
@@ -165,7 +165,7 @@ struct MANGOS_DLL_DECL boss_mekgineer_steamriggerAI : public ScriptedAI
 
         if (!Summon50)
         {
-            if ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 50)
+            if (m_creature->GetHealthPercent() < 50.0f)
             {
                 SummonMechanichs();
                 Summon50 = true;
@@ -174,7 +174,7 @@ struct MANGOS_DLL_DECL boss_mekgineer_steamriggerAI : public ScriptedAI
 
         if (!Summon25)
         {
-            if ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 25)
+            if (m_creature->GetHealthPercent() < 25.0f)
             {
                 SummonMechanichs();
                 Summon25 = true;

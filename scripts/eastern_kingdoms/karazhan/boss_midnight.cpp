@@ -113,7 +113,7 @@ struct MANGOS_DLL_DECL boss_midnightAI : public ScriptedAI
         switch(m_uiPhase)
         {
             case 1:
-                if ((m_creature->GetHealth()*100)/m_creature->GetMaxHealth() < 95)
+                if (m_creature->GetHealthPercent() < 95.0f)
                 {
                     m_uiPhase = 2;
 
@@ -133,7 +133,7 @@ struct MANGOS_DLL_DECL boss_midnightAI : public ScriptedAI
                 }
                 break;
             case 2:
-                if ((m_creature->GetHealth()*100)/m_creature->GetMaxHealth() < 25)
+                if (m_creature->GetHealthPercent() < 25.0f)
                 {
                     if (Unit *pAttumen = Unit::GetUnit(*m_creature, m_uiAttumenGUID))
                         Mount(pAttumen);
@@ -305,7 +305,7 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
         }
         else
         {
-            if ((m_creature->GetHealth()*100)/m_creature->GetMaxHealth() < 25)
+            if (m_creature->GetHealthPercent() < 25.0f)
             {
                 Creature *pMidnight = (Creature*)Unit::GetUnit(*m_creature, m_uiMidnightGUID);
 

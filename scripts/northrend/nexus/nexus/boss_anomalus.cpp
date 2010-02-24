@@ -144,7 +144,7 @@ struct MANGOS_DLL_DECL boss_anomalusAI : public ScriptedAI
              return;
 
         // Create additional Chaotic Rift at 50% HP
-        if (!m_bChaoticRift && m_creature->GetHealth()*2 < m_creature->GetMaxHealth())
+        if (!m_bChaoticRift && m_creature->GetHealthPercent() < 50.0f)
         {
             DoScriptText(EMOTE_SHIELD, m_creature);
             m_uiChaoticRiftGUID = CreateRiftAtRandomPoint();

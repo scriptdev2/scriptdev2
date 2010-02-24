@@ -178,18 +178,18 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
             Blink_Timer = urand(20000, 40000);
         }else Blink_Timer -= diff;
 
-        int procent = (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5);
+        float procent = m_creature->GetHealthPercent();
 
         //Summoning 2 Images and teleporting to a random position on 75% health
-        if ((!Images75 && !IsImage) && (procent <= 75 && procent > 70))
+        if (!Images75 && !IsImage && procent <= 75.0f && procent > 70.0f)
             DoSplit(75);
 
         //Summoning 2 Images and teleporting to a random position on 50% health
-        if ((!Images50 && !IsImage) && (procent <= 50 && procent > 45))
+        if (!Images50 && !IsImage && procent <= 50.0f && procent > 45.0f)
             DoSplit(50);
 
         //Summoning 2 Images and teleporting to a random position on 25% health
-        if ((!Images25 && !IsImage) && (procent <= 25 && procent > 20))
+        if (!Images25 && !IsImage && procent <= 25.0f && procent > 20.0f)
             DoSplit(25);
 
         //Invisible_Timer

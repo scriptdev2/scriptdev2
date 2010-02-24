@@ -223,7 +223,7 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
             m_uiMightyBlow_Timer -= uiDiff;
 
         //Entering Phase 2
-        if (!m_bPhase2 && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 50)
+        if (!m_bPhase2 && m_creature->GetHealthPercent() < 50.0f)
         {
             m_bPhase2 = true;
             DoScriptText(SAY_ENRAGE, m_creature);

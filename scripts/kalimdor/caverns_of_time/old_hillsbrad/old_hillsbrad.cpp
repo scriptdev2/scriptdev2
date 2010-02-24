@@ -482,7 +482,7 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
 
         //TODO: add his abilities'n-crap here
 
-        if (!LowHp && ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 20))
+        if (!LowHp && m_creature->GetHealthPercent() < 20.0f)
         {
             DoScriptText(urand(0, 1) ? SAY_TH_RANDOM_LOW_HP1 : SAY_TH_RANDOM_LOW_HP2, m_creature);
             LowHp = true;

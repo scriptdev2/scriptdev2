@@ -101,7 +101,7 @@ struct MANGOS_DLL_DECL npc_tapoke_slim_jahnAI : public npc_escortAI
 
     void DamageTaken(Unit* pDoneBy, uint32& uiDamage)
     {
-        if (m_creature->GetHealth()*100 < m_creature->GetMaxHealth()*20)
+        if (m_creature->GetHealthPercent() < 20.0f)
         {
             if (Player* pPlayer = GetPlayerForEscort())
             {

@@ -162,7 +162,7 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
             }
         }else OrbitalStrike_Timer -= diff;
 
-        if ((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 20)
+        if (m_creature->GetHealthPercent() < 20.0f)
         {
             if (DemonicShield_Timer < diff)
             {

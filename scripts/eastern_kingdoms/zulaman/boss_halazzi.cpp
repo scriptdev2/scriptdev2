@@ -176,7 +176,7 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
     {
         if (m_uiPhase == PHASE_SINGLE)
         {
-            if ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) <= 25*m_uiPhaseCounter)
+            if (m_creature->GetHealthPercent() <= float(25*m_uiPhaseCounter))
             {
                 if (!m_uiPhaseCounter)
                 {
@@ -200,8 +200,8 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
         {
             Creature* pSpiritLynx = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_SPIRIT_LYNX));
 
-            if (m_creature->GetHealth()*10 < m_creature->GetMaxHealth() ||
-                (pSpiritLynx && pSpiritLynx->GetHealth()*10 < pSpiritLynx->GetMaxHealth()))
+            if (m_creature->GetHealthPercent() < 10.0f ||
+                (pSpiritLynx && pSpiritLynx->GetHealthPercent() < 10.0f))
             {
                 m_uiPhase = PHASE_SINGLE;
 

@@ -134,19 +134,19 @@ struct MANGOS_DLL_DECL boss_darkweaver_sythAI : public ScriptedAI
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 90) && !summon90)
+        if (m_creature->GetHealthPercent() < 90.0f && !summon90)
         {
             SythSummoning();
             summon90 = true;
         }
 
-        if (((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 50) && !summon50)
+        if (m_creature->GetHealthPercent() < 50.0f && !summon50)
         {
             SythSummoning();
             summon50 = true;
         }
 
-        if (((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 10) && !summon10)
+        if (m_creature->GetHealthPercent() < 10.0f && !summon10)
         {
             SythSummoning();
             summon10 = true;

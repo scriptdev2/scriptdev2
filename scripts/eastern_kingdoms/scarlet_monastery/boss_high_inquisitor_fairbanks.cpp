@@ -62,7 +62,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_fairbanksAI : public ScriptedAI
             return;
 
         //If we are <25% hp cast Heal
-        if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 25 && !m_creature->IsNonMeleeSpellCasted(false) && Heal_Timer < diff)
+        if (m_creature->GetHealthPercent() <= 25.0f && !m_creature->IsNonMeleeSpellCasted(false) && Heal_Timer < diff)
         {
             DoCastSpellIfCan(m_creature,SPELL_HEAL);
             Heal_Timer = 30000;
@@ -87,7 +87,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_fairbanksAI : public ScriptedAI
         }else Sleep_Timer -= diff;
 
         //PowerWordShield_Timer
-        if (!PowerWordShield && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 25)
+        if (!PowerWordShield && m_creature->GetHealthPercent() <= 25.0f)
         {
             DoCastSpellIfCan(m_creature,SPELL_POWERWORDSHIELD);
             PowerWordShield = true;

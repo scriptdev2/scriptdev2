@@ -358,7 +358,7 @@ struct MANGOS_DLL_DECL boss_sartharionAI : public ScriptedAI
             return;
 
         //spell will target dragons, if they are still alive at 35%
-        if (!m_bIsBerserk && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) <= 35)
+        if (!m_bIsBerserk && m_creature->GetHealthPercent() < 35.0f)
         {
             DoScriptText(SAY_SARTHARION_BERSERK, m_creature);
             DoCastSpellIfCan(m_creature, SPELL_BERSERK);
@@ -366,7 +366,7 @@ struct MANGOS_DLL_DECL boss_sartharionAI : public ScriptedAI
         }
 
         //soft enrage
-        if (!m_bIsSoftEnraged && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) <= 10)
+        if (!m_bIsSoftEnraged && m_creature->GetHealthPercent() <= 10.0f)
         {
             // TODO
             m_bIsSoftEnraged = true;

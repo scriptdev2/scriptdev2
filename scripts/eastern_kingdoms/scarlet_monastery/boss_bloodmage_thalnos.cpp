@@ -70,7 +70,7 @@ struct MANGOS_DLL_DECL boss_bloodmage_thalnosAI : public ScriptedAI
             return;
 
         //If we are <35% hp
-        if (!HpYell && ((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() <= 35))
+        if (!HpYell && m_creature->GetHealthPercent() <= 35.0f)
         {
             DoScriptText(SAY_HEALTH, m_creature);
             HpYell = true;

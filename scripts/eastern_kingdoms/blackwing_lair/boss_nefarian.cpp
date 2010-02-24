@@ -201,7 +201,7 @@ struct MANGOS_DLL_DECL boss_nefarianAI : public ScriptedAI
         }else ClassCall_Timer -= diff;
 
         //Phase3 begins when we are below X health
-        if (!Phase3 && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 20)
+        if (!Phase3 && m_creature->GetHealthPercent() < 20.0f)
         {
             Phase3 = true;
             DoScriptText(SAY_RAISE_SKELETONS, m_creature);

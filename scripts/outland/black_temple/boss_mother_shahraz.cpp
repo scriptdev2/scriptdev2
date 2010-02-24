@@ -172,7 +172,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 10) && !Enraged)
+        if (m_creature->GetHealthPercent() < 10.0f && !Enraged)
         {
             Enraged = true;
             DoCastSpellIfCan(m_creature, SPELL_ENRAGE, CAST_TRIGGERED);

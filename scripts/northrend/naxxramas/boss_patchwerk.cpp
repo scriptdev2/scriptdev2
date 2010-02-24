@@ -146,7 +146,7 @@ struct MANGOS_DLL_DECL boss_patchwerkAI : public ScriptedAI
         // Soft Enrage at 5%
         if (!m_bEnraged)
         {
-            if (m_creature->GetHealth()*20 < m_creature->GetMaxHealth())
+            if (m_creature->GetHealthPercent() < 5.0f)
             {
                 DoCastSpellIfCan(m_creature, SPELL_ENRAGE);
                 DoScriptText(EMOTE_ENRAGE, m_creature);

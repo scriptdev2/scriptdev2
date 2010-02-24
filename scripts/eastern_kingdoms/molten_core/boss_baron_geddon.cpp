@@ -51,7 +51,7 @@ struct MANGOS_DLL_DECL boss_baron_geddonAI : public ScriptedAI
             return;
 
         //If we are <2% hp cast Armageddom
-        if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 2)
+        if (m_creature->GetHealthPercent() <= 2.0f)
         {
             m_creature->InterruptNonMeleeSpells(true);
 

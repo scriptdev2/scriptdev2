@@ -142,7 +142,7 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
             return;
 
         // Yell if hp lower than 15%
-        if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 15 && !HasYelled)
+        if (m_creature->GetHealthPercent() < 15.0f && !HasYelled)
         {
             DoScriptText(SAY_HALFLIFE, m_creature);
             HasYelled = true;

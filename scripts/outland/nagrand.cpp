@@ -592,7 +592,7 @@ struct MANGOS_DLL_DECL npc_maghar_captiveAI : public npc_escortAI
         else
             m_uiChainLightningTimer -= uiDiff;
 
-        if (m_creature->GetHealth()*100 < m_creature->GetMaxHealth()*30)
+        if (m_creature->GetHealthPercent() < 30.0f)
         {
             if (m_uiHealTimer < uiDiff)
             {

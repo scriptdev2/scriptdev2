@@ -231,7 +231,7 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
             }else m_uiSwitch_Timer -= uiDiff;
         }
 
-        if (!m_bIsFinalForm && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 15)
+        if (!m_bIsFinalForm && m_creature->GetHealthPercent() < 15.0f)
         {
             DoScriptText(SAY_FINAL_FORM, m_creature);
 

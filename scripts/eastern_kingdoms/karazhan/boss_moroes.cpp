@@ -265,7 +265,7 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
         if (m_pInstance && !m_pInstance->GetData(TYPE_MOROES))
             EnterEvadeMode();
 
-        if (!Enrage && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 30)
+        if (!Enrage && m_creature->GetHealthPercent() < 30.0f)
         {
             DoCastSpellIfCan(m_creature, SPELL_FRENZY);
             Enrage = true;

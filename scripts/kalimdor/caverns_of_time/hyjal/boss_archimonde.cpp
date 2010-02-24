@@ -102,7 +102,7 @@ struct mob_ancient_wispAI : public ScriptedAI
         {
             if (Unit* Archimonde = Unit::GetUnit((*m_creature), ArchimondeGUID))
             {
-                if ((((Archimonde->GetHealth()*100) / Archimonde->GetMaxHealth()) < 2) || !Archimonde->isAlive())
+                if (Archimonde->GetHealthPercent() < 2.0f || !Archimonde->isAlive())
                     DoCastSpellIfCan(m_creature, SPELL_DENOUEMENT_WISP);
                 else
                     DoCastSpellIfCan(Archimonde, SPELL_ANCIENT_SPARK);
@@ -455,14 +455,14 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 10) && !BelowTenPercent && !Enraged)
+        if (m_creature->GetHealthPercent() < 10.0f && !BelowTenPercent && !Enraged)
             BelowTenPercent = true;
 
         if (!Enraged)
         {
             if (EnrageTimer < diff)
             {
-                if ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) > 10)
+                if (m_creature->GetHealthPercent() > 10.0f)
                 {
                     m_creature->GetMotionMaster()->Clear(false);
                     m_creature->GetMotionMaster()->MoveIdle();

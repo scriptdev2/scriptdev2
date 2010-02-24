@@ -116,7 +116,7 @@ struct MANGOS_DLL_DECL boss_huhuranAI : public ScriptedAI
             FrenzyBack_Timer = 15000;
         }else FrenzyBack_Timer -= diff;
 
-        if (!Berserk && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 31)
+        if (!Berserk && m_creature->GetHealthPercent() < 31.0f)
         {
             m_creature->InterruptNonMeleeSpells(false);
             DoScriptText(EMOTE_GENERIC_BERSERK, m_creature);

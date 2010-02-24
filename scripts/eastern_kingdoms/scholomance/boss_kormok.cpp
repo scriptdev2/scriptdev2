@@ -125,7 +125,7 @@ struct MANGOS_DLL_DECL boss_kormokAI : public ScriptedAI
         }else Minion_Timer -= diff;
 
         //Summon 2 Bone Mages
-        if (!Mages && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 26)
+        if (!Mages && m_creature->GetHealthPercent() < 26.0f)
         {
             //Cast
             SummonMages(m_creature->getVictim());

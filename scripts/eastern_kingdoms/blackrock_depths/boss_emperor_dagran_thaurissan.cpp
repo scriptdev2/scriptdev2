@@ -226,7 +226,7 @@ struct MANGOS_DLL_DECL boss_moira_bronzebeardAI : public ScriptedAI
         {
             if (Creature* pEmperor = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_EMPEROR)))
             {
-                if (pEmperor->isAlive() && pEmperor->GetHealth() < pEmperor->GetMaxHealth())
+                if (pEmperor->isAlive() && pEmperor->GetHealthPercent() != 100.0f)
                     DoCastSpellIfCan(pEmperor, SPELL_HEAL);
             }
 

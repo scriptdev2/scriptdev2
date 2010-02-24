@@ -98,7 +98,7 @@ struct MANGOS_DLL_DECL mob_fireswornAI : public ScriptedAI
         }else Immolate_Timer -= diff;
 
         //Cast Erruption and let them die
-        if (m_creature->GetHealth() <= m_creature->GetMaxHealth() * 0.10)
+        if (m_creature->GetHealthPercent() <= 10.0f)
         {
             DoCastSpellIfCan(m_creature->getVictim(),SPELL_ERUPTION);
             m_creature->setDeathState(JUST_DIED);

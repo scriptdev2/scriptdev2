@@ -90,20 +90,20 @@ struct MANGOS_DLL_DECL boss_amnennar_the_coldbringerAI : public ScriptedAI
             FrostNova_Timer = 15000;
         } else FrostNova_Timer -= diff;
 
-        if (!Spectrals60 && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 60)
+        if (!Spectrals60 && m_creature->GetHealthPercent() < 60.0f)
         {
             DoScriptText(SAY_SUMMON60, m_creature);
             DoCastSpellIfCan(m_creature->getVictim(),SPELL_FROST_SPECTRES);
             Spectrals60 = true;
         }
 
-        if (!Hp && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 50)
+        if (!Hp && m_creature->GetHealthPercent() < 50.0f)
         {
             DoScriptText(SAY_HP, m_creature);
             Hp = true;
         }
 
-        if (!Spectrals30 && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 30)
+        if (!Spectrals30 && m_creature->GetHealthPercent() < 30.0f)
         {
             DoScriptText(SAY_SUMMON30, m_creature);
             DoCastSpellIfCan(m_creature->getVictim(),SPELL_FROST_SPECTRES);

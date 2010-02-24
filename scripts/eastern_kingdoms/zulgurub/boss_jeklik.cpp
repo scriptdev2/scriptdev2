@@ -96,7 +96,7 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth() > 50))
+        if (m_creature->GetHealthPercent() > 50.0f)
         {
             if (Charge_Timer < diff)
             {

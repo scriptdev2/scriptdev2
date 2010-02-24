@@ -116,7 +116,7 @@ struct MANGOS_DLL_DECL boss_emerissAI : public ScriptedAI
             m_uiVolatileInfection_Timer -= uiDiff;
 
         //CorruptionofEarth at 75%, 50% and 25%
-        if ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) <= (100-(25*m_uiCorruptionsCasted)))
+        if (m_creature->GetHealthPercent() < float(100 - 25*m_uiCorruptionsCasted))
         {
             ++m_uiCorruptionsCasted;                        // prevent casting twice on same hp
             DoScriptText(SAY_CASTCORRUPTION, m_creature);

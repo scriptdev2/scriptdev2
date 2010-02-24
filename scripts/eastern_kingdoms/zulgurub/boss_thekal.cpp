@@ -163,7 +163,7 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
             Silence_Timer = urand(20000, 25000);
         }else Silence_Timer -= diff;
 
-        if (!PhaseTwo && !WasDead && m_creature->GetHealth() <= m_creature->GetMaxHealth() * 0.05)
+        if (!PhaseTwo && !WasDead && m_creature->GetHealthPercent() < 5.0f)
         {
             m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             m_creature->SetStandState(UNIT_STAND_STATE_SLEEP);
@@ -194,7 +194,7 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
             }else Resurrect_Timer -= diff;
         }
 
-        if ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth() == 100) && WasDead)
+        if (m_creature->GetHealthPercent() == 100.0f && WasDead)
         {
             WasDead = false;
         }
@@ -230,7 +230,7 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
                 SummonTigers_Timer = urand(10000, 14000);
             }else SummonTigers_Timer -= diff;
 
-            if ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 11) && !Enraged)
+            if (m_creature->GetHealthPercent() < 11.0f && !Enraged)
             {
                 DoCastSpellIfCan(m_creature, SPELL_ENRAGE);
                 Enraged = true;
@@ -360,7 +360,7 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public ScriptedAI
             Check_Timer = 5000;
         }else Check_Timer -= diff;
 
-        if (m_creature->GetHealth() <= m_creature->GetMaxHealth() * 0.05)
+        if (m_creature->GetHealthPercent() < 5.0f)
         {
             m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             m_creature->SetStandState(UNIT_STAND_STATE_SLEEP);
@@ -492,7 +492,7 @@ struct MANGOS_DLL_DECL mob_zealot_zathAI : public ScriptedAI
             Check_Timer = 5000;
         }else Check_Timer -= diff;
 
-        if (m_creature->GetHealth() <= m_creature->GetMaxHealth() * 0.05)
+        if (m_creature->GetHealthPercent() <= 5.0f)
         {
             m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             m_creature->SetStandState(UNIT_STAND_STATE_SLEEP);

@@ -292,7 +292,7 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
         }else Frenzy_Timer -= diff;
 
         //Enrage if not already enraged and below 20%
-        if (!Enraged && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 20)
+        if (!Enraged && m_creature->GetHealthPercent() < 20.0f)
         {
             DoCastSpellIfCan(m_creature,SPELL_ENRAGE);
             Enraged = true;

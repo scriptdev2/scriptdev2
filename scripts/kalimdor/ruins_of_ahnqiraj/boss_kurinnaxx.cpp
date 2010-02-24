@@ -55,7 +55,7 @@ struct MANGOS_DLL_DECL boss_kurinnaxxAI : public ScriptedAI
             return;
 
         //If we are <30% cast enrage
-        if (i==0 && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 30 && !m_creature->IsNonMeleeSpellCasted(false))
+        if (i == 0 && m_creature->GetHealthPercent() <= 30.0f && !m_creature->IsNonMeleeSpellCasted(false))
         {
             i=1;
             DoCastSpellIfCan(m_creature->getVictim(),SPELL_ENRAGE);

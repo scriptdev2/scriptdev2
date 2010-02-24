@@ -127,7 +127,7 @@ struct MANGOS_DLL_DECL boss_watchkeeper_gargolmarAI : public ScriptedAI
             Surge_Timer = urand(5000, 12000);
         }else Surge_Timer -= diff;
 
-        if ((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 20)
+        if (m_creature->GetHealthPercent() < 20.0f)
         {
             if (Retaliation_Timer < diff)
             {
@@ -138,7 +138,7 @@ struct MANGOS_DLL_DECL boss_watchkeeper_gargolmarAI : public ScriptedAI
 
         if (!YelledForHeal)
         {
-            if ((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 40)
+            if (m_creature->GetHealthPercent() < 40.0f)
             {
                 DoScriptText(SAY_HEAL, m_creature);
                 YelledForHeal = true;

@@ -85,7 +85,7 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
             m_uiPyroblastTimer -= uiDiff;
 
         // Enrage
-        if (!m_bEnraged && m_creature->GetHealth()*100 < m_creature->GetMaxHealth()*10)
+        if (!m_bEnraged && m_creature->GetHealthPercent() < 10.0f)
         {
             DoCastSpellIfCan(m_creature, SPELL_ENRAGE);
             m_bEnraged = true;
@@ -136,7 +136,7 @@ struct MANGOS_DLL_DECL mob_core_ragerAI : public ScriptedAI
 
     void DamageTaken(Unit* pDoneBy, uint32& uiDamage)
     {
-        if (m_creature->GetHealth()*100 < m_creature->GetMaxHealth()*50)
+        if (m_creature->GetHealthPercent() < 50.0f)
         {
             if (m_pInstance)
             {

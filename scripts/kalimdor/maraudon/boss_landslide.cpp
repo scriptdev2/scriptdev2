@@ -62,7 +62,7 @@ struct MANGOS_DLL_DECL boss_landslideAI : public ScriptedAI
         }else Trample_Timer -= diff;
 
         //Landslide
-        if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 50)
+        if (m_creature->GetHealthPercent() < 50.0f)
         {
             if (Landslide_Timer < diff)
             {

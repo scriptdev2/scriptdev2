@@ -219,7 +219,7 @@ struct MANGOS_DLL_DECL boss_morogrim_tidewalkerAI : public ScriptedAI
             }else m_uiWateryGrave_Timer -= uiDiff;
 
             //Start Phase2
-            if ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 25)
+            if (m_creature->GetHealthPercent() < 25.0f)
                 m_bPhase2 = true;
         }
         else

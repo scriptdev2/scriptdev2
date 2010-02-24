@@ -87,7 +87,7 @@ struct MANGOS_DLL_DECL npc_aeranasAI : public ScriptedAI
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if ((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 30)
+        if (m_creature->GetHealthPercent() < 30.0f)
         {
             m_creature->setFaction(FACTION_FRIENDLY);
             m_creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER);

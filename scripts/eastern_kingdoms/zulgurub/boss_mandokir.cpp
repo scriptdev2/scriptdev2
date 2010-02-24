@@ -298,7 +298,7 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
                 m_uiFear_Timer -= uiDiff;
 
             //Mortal Strike if target below 50% hp
-            if (m_creature->getVictim()->GetHealth() < m_creature->getVictim()->GetMaxHealth()*0.5)
+            if (m_creature->getVictim()->GetHealthPercent() < 50.0f)
             {
                 if (m_uiMortalStrike_Timer < uiDiff)
                 {

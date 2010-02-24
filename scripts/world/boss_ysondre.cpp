@@ -130,7 +130,7 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
             m_uiLightningWave_Timer -= uiDiff;
 
         //Summon Druids
-        if ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) <= (100-(25*m_uiSummonDruidModifier)))
+        if (m_creature->GetHealthPercent() <= float(100 - 25*m_uiSummonDruidModifier))
         {
             DoScriptText(SAY_SUMMONDRUIDS, m_creature);
 

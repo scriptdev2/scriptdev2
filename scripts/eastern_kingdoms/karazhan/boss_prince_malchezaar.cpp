@@ -391,7 +391,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
 
         if (phase == 1)
         {
-            if ((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 60)
+            if (m_creature->GetHealthPercent() < 60.0f)
             {
                 m_creature->InterruptNonMeleeSpells(false);
 
@@ -426,7 +426,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
         }
         else if (phase == 2)
         {
-            if ((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 30)
+            if (m_creature->GetHealthPercent() < 30.0f)
             {
                 InfernalTimer = 15000;
 

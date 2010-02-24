@@ -153,7 +153,7 @@ struct MANGOS_DLL_DECL boss_talon_king_ikissAI : public ScriptedAI
         }else Sheep_Timer -= diff;
 
         //may not be correct time to cast
-        if (!ManaShield && ((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 20))
+        if (!ManaShield && m_creature->GetHealthPercent() < 20.0f)
         {
             DoCastSpellIfCan(m_creature,SPELL_MANA_SHIELD);
             ManaShield = true;

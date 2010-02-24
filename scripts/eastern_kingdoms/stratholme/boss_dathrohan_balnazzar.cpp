@@ -141,7 +141,7 @@ struct MANGOS_DLL_DECL boss_dathrohan_balnazzarAI : public ScriptedAI
             }else m_uiHolyStrike_Timer -= uiDiff;
 
             //BalnazzarTransform
-            if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 40)
+            if (m_creature->GetHealthPercent() < 40.0f)
             {
                 if (m_creature->IsNonMeleeSpellCasted(false))
                     m_creature->InterruptNonMeleeSpells(false);

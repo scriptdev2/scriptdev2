@@ -669,7 +669,7 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
         if (!m_creature->getVictim() || !m_creature->SelectHostileTarget())
             return;
 
-        if (!m_bHasYelledOnce && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 15)
+        if (!m_bHasYelledOnce && m_creature->GetHealthPercent() < 15.0f)
         {
             DoScriptText(SAY_LOW_HEALTH, m_creature);
             m_bHasYelledOnce = true;

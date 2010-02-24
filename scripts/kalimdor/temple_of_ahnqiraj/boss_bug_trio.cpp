@@ -93,7 +93,7 @@ struct MANGOS_DLL_DECL boss_kriAI : public ScriptedAI
             ToxicVolley_Timer = urand(10000, 15000);
         }else ToxicVolley_Timer -= diff;
 
-        if (m_creature->GetHealth() <= m_creature->GetMaxHealth() * 0.05 && !Death)
+        if (m_creature->GetHealthPercent() < 5.0f && !Death)
         {
             DoCastSpellIfCan(m_creature->getVictim(),SPELL_POISON_CLOUD);
             Death = true;

@@ -74,7 +74,7 @@ struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
             return;
 
         //If we are <50% hp cast Arcane Bubble
-        if (!bShielded && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 50)
+        if (!bShielded && m_creature->GetHealthPercent() <= 50.0f)
         {
             //wait if we already casting
             if (m_creature->IsNonMeleeSpellCasted(false))

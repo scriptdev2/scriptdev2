@@ -114,7 +114,7 @@ struct MANGOS_DLL_DECL boss_keristraszaAI : public ScriptedAI
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (!m_bIsEnraged && m_creature->GetHealth()*100 < m_creature->GetMaxHealth()*25)
+        if (!m_bIsEnraged && m_creature->GetHealthPercent() < 25.0f)
         {
             if (!m_creature->IsNonMeleeSpellCasted(false))
             {

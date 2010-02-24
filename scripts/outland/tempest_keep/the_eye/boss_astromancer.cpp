@@ -365,7 +365,7 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
         }
 
         //When Solarian reaches 20% she will transform into a huge void walker.
-        if (Phase != 4 && ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth())<20))
+        if (Phase != 4 && m_creature->GetHealthPercent() < 20.0f)
         {
             Phase = 4;
 

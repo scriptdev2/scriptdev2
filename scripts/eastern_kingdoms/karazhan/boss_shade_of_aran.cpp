@@ -421,7 +421,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
         else
             m_uiSuperCast_Timer -= uiDiff;
 
-        if (!m_bElementalsSpawned && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 40)
+        if (!m_bElementalsSpawned && m_creature->GetHealthPercent() < 40.0f)
         {
             m_bElementalsSpawned = true;
 

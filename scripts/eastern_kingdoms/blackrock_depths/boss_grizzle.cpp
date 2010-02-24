@@ -55,7 +55,7 @@ struct MANGOS_DLL_DECL boss_grizzleAI : public ScriptedAI
         }else GroundTremor_Timer -= diff;
 
         //Frenzy_Timer
-        if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 51)
+        if (m_creature->GetHealthPercent() < 51.0f)
         {
             if (Frenzy_Timer < diff)
             {

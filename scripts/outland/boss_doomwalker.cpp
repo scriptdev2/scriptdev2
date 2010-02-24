@@ -109,7 +109,7 @@ struct MANGOS_DLL_DECL boss_doomwalkerAI : public ScriptedAI
             return;
 
         //Spell Enrage, when hp <= 20% gain enrage
-        if (((m_creature->GetHealth()*100)/ m_creature->GetMaxHealth()) <= 20)
+        if (m_creature->GetHealthPercent() <= 20.0f)
         {
             if (Enrage_Timer < diff)
             {

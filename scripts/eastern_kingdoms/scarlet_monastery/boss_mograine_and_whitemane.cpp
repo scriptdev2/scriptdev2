@@ -310,7 +310,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
         }
 
         //Cast Deep sleep when health is less than 50%
-        if (!m_bCanResurrectCheck && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 50)
+        if (!m_bCanResurrectCheck && m_creature->GetHealthPercent() <= 50.0f)
         {
             if (m_creature->IsNonMeleeSpellCasted(false))
                 m_creature->InterruptNonMeleeSpells(false);
@@ -330,14 +330,14 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
         {
             Creature* pTarget = NULL;
 
-            if (m_creature->GetHealth() <= m_creature->GetMaxHealth()*0.75f)
+            if (m_creature->GetHealthPercent() <= 75.0f)
                 pTarget = m_creature;
 
             if (m_pInstance)
             {
                 if (Creature* pMograine = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_MOGRAINE)))
                 {
-                    if (pMograine->isAlive() && pMograine->GetHealth() <= pMograine->GetMaxHealth()*0.75f)
+                    if (pMograine->isAlive() && pMograine->GetHealthPercent() <= 75.0f)
                         pTarget = pMograine;
                 }
             }
