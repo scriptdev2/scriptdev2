@@ -17,12 +17,13 @@
 /* ScriptData
 SDName: Icecrown
 SD%Complete: 100
-SDComment: Quest support: 12807
+SDComment: Quest support: 12807, Vendor support: 34885
 SDCategory: Icecrown
 EndScriptData */
 
 /* ContentData
 npc_arete
+npc_dame_evniki_kapsalis
 EndContentData */
 
 #include "precompiled.h"
@@ -105,13 +106,44 @@ bool GossipSelect_npc_arete(Player* pPlayer, Creature* pCreature, uint32 uiSende
     return true;
 }
 
+/*######
+## npc_dame_evniki_kapsalis
+######*/
+
+enum
+{
+    TITLE_CRUSADER    = 123
+};
+
+bool GossipHello_npc_dame_evniki_kapsalis(Player* pPlayer, Creature* pCreature)
+{
+    if (pPlayer->HasTitle(TITLE_CRUSADER))
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
+
+    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+    return true;
+}
+
+bool GossipSelect_npc_dame_evniki_kapsalis(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+{
+    if (uiAction == GOSSIP_ACTION_TRADE)
+        pPlayer->SEND_VENDORLIST(pCreature->GetGUID());
+    return true;
+}
+
 void AddSC_icecrown()
 {
-    Script *newscript;
+    Script* newscript;
 
     newscript = new Script;
     newscript->Name = "npc_arete";
     newscript->pGossipHello = &GossipHello_npc_arete;
     newscript->pGossipSelect = &GossipSelect_npc_arete;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "npc_dame_evniki_kapsalis";
+    newscript->pGossipHello = &GossipHello_npc_dame_evniki_kapsalis;
+    newscript->pGossipSelect = &GossipSelect_npc_dame_evniki_kapsalis;
     newscript->RegisterSelf();
 }
