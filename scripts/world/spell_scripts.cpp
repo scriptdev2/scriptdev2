@@ -41,6 +41,12 @@ EndContentData */
 
 enum
 {
+    // quest 9629
+    SPELL_TAG_MURLOC                    = 30877,
+    SPELL_TAG_MURLOC_PROC               = 30875,
+    NPC_BLACKSILT_MURLOC                = 17326,
+    NPC_TAGGED_MURLOC                   = 17654,
+
     // target hulking helboar
     SPELL_ADMINISTER_ANTIDOTE           = 34665,
     NPC_HELBOAR                         = 16880,
@@ -124,6 +130,38 @@ enum
     EMOTE_AGGRO                         = -1000551,
     EMOTE_CREATE                        = -1000552
 };
+
+bool EffectAuraDummy_spell_aura_dummy_npc(const Aura* pAura, bool bApply)
+{
+    switch(pAura->GetId())
+    {
+        case SPELL_TAG_MURLOC:
+        {
+            Creature* pCreature = (Creature*)pAura->GetTarget();
+
+            if (pAura->GetEffIndex() != EFFECT_INDEX_0)
+                return true;
+
+            if (bApply)
+            {
+                if (pCreature->GetEntry() == NPC_BLACKSILT_MURLOC)
+                {
+                    if (Unit* pCaster = pAura->GetCaster())
+                        pCaster->CastSpell(pCreature, SPELL_TAG_MURLOC_PROC, true);
+                }
+            }
+            else
+            {
+                if (pCreature->GetEntry() == NPC_TAGGED_MURLOC)
+                    pCreature->ForcedDespawn();
+            }
+
+            return true;
+        }
+    }
+
+    return false;
+}
 
 bool EffectDummyCreature_spell_dummy_npc(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
 {
@@ -284,6 +322,15 @@ bool EffectDummyCreature_spell_dummy_npc(Unit* pCaster, uint32 uiSpellId, SpellE
             }
             return true;
         }
+        case SPELL_TAG_MURLOC_PROC:
+        {
+            if (uiEffIndex == EFFECT_INDEX_0)
+            {
+                if (pCreatureTarget->GetEntry() == NPC_BLACKSILT_MURLOC)
+                    pCreatureTarget->UpdateEntry(NPC_TAGGED_MURLOC);
+            }
+            return true;
+        }
         case SPELL_ULTRASONIC_SCREWDRIVER:
         {
             if (uiEffIndex == EFFECT_INDEX_0)
@@ -327,5 +374,6 @@ void AddSC_spell_scripts()
     newscript = new Script;
     newscript->Name = "spell_dummy_npc";
     newscript->pEffectDummyCreature = &EffectDummyCreature_spell_dummy_npc;
+    newscript->pEffectAuraDummy = &EffectAuraDummy_spell_aura_dummy_npc;
     newscript->RegisterSelf();
 }
