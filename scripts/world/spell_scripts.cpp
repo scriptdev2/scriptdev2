@@ -47,6 +47,11 @@ enum
     NPC_BLACKSILT_MURLOC                = 17326,
     NPC_TAGGED_MURLOC                   = 17654,
 
+    // quest 9447
+    SPELL_HEALING_SALVE                 = 29314,
+    SPELL_HEALING_SALVE_DUMMY           = 29319,
+    NPC_MAGHAR_GRUNT                    = 16846,
+
     // target hulking helboar
     SPELL_ADMINISTER_ANTIDOTE           = 34665,
     NPC_HELBOAR                         = 16880,
@@ -135,6 +140,38 @@ bool EffectAuraDummy_spell_aura_dummy_npc(const Aura* pAura, bool bApply)
 {
     switch(pAura->GetId())
     {
+        case SPELL_HEALING_SALVE:
+        {
+            if (pAura->GetEffIndex() != EFFECT_INDEX_0)
+                return true;
+
+            if (bApply)
+            {
+                if (Unit* pCaster = pAura->GetCaster())
+                    pCaster->CastSpell(pAura->GetTarget(), SPELL_HEALING_SALVE_DUMMY, true);
+            }
+
+            return true;
+        }
+        case SPELL_HEALING_SALVE_DUMMY:
+        {
+            if (pAura->GetEffIndex() != EFFECT_INDEX_0)
+                return true;
+
+            if (!bApply)
+            {
+                Creature* pCreature = (Creature*)pAura->GetTarget();
+
+                pCreature->UpdateEntry(NPC_MAGHAR_GRUNT);
+
+                if (pCreature->getStandState() == UNIT_STAND_STATE_KNEEL)
+                    pCreature->SetStandState(UNIT_STAND_STATE_STAND);
+
+                pCreature->ForcedDespawn(60*IN_MILISECONDS);
+            }
+
+            return true;
+        }
         case SPELL_TAG_MURLOC:
         {
             Creature* pCreature = (Creature*)pAura->GetTarget();
