@@ -217,7 +217,7 @@ bool GossipSelect_npc_elder_kuruti(Player* pPlayer, Creature* pCreature, uint32 
         {
             if (!pPlayer->HasItemCount(24573,1))
             {
-                if (Item* pItem = pPlayer->StoreNewItemInInventorySlot(30659, 1))
+                if (Item* pItem = pPlayer->StoreNewItemInInventorySlot(24573, 1))
                     pPlayer->SendNewItem(pItem, 1, true, false);
             }
 
