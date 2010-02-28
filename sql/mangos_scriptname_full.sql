@@ -12,6 +12,12 @@ INSERT INTO areatrigger_scripts VALUES
 (4871,'at_warsong_grainery'),
 (4872,'at_torp_farm'),
 (4873,'at_warsong_slaughterhouse');
+DELETE FROM areatrigger_scripts WHERE entry BETWEEN 5284 AND 5287;
+INSERT INTO areatrigger_scripts VALUES
+(5284,'at_aldurthar_gate'),
+(5285,'at_aldurthar_gate'),
+(5286,'at_aldurthar_gate'),
+(5287,'at_aldurthar_gate');
 
 /* BATTLEGROUNDS */
 UPDATE creature_template SET ScriptName='npc_spirit_guide' WHERE entry IN (13116, 13117);

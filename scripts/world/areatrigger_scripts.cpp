@@ -17,11 +17,12 @@
 /* ScriptData
 SDName: Areatrigger_Scripts
 SD%Complete: 100
-SDComment: Quest support: 6681, 11686, 10589/10604.
+SDComment: Quest support: 6681, 11686, 10589/10604, 13315/13351
 SDCategory: Areatrigger
 EndScriptData */
 
 /* ContentData
+at_aldurthar_gate               5284,5285,5286,5287
 at_coilfang_waterfall           4591
 at_legion_teleporter            4560 Teleporter TO Invasion Point: Cataclysm
 at_ravenholdt
@@ -31,6 +32,36 @@ at_torp_farm
 EndContentData */
 
 #include "precompiled.h"
+
+/*######
+## Quest 13315/13351
+######*/
+
+enum
+{
+    TRIGGER_SOUTH               = 5284,
+    TRIGGER_CENTRAL             = 5285,
+    TRIGGER_NORTH               = 5286,
+    TRIGGER_NORTHWEST           = 5287,
+
+    NPC_SOUTH_GATE              = 32195,
+    NPC_CENTRAL_GATE            = 32196,
+    NPC_NORTH_GATE              = 32197,
+    NPC_NORTHWEST_GATE          = 32199
+};
+
+bool AreaTrigger_at_aldurthar_gate(Player* pPlayer, AreaTriggerEntry *pAt)
+{
+    switch(pAt->id)
+    {
+        case TRIGGER_SOUTH: pPlayer->KilledMonsterCredit(NPC_SOUTH_GATE, 0); break;
+        case TRIGGER_CENTRAL: pPlayer->KilledMonsterCredit(NPC_CENTRAL_GATE, 0); break;
+        case TRIGGER_NORTH: pPlayer->KilledMonsterCredit(NPC_NORTH_GATE, 0); break;
+        case TRIGGER_NORTHWEST: pPlayer->KilledMonsterCredit(NPC_NORTHWEST_GATE, 0); break;
+    }
+
+    return true;
+}
 
 /*######
 ## at_coilfang_waterfall
@@ -143,6 +174,11 @@ bool AreaTrigger_at_torp_farm(Player* pPlayer, AreaTriggerEntry *pAt)
 void AddSC_areatrigger_scripts()
 {
     Script *newscript;
+
+    newscript = new Script;
+    newscript->Name = "at_aldurthar_gate";
+    newscript->pAreaTrigger = &AreaTrigger_at_aldurthar_gate;
+    newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "at_coilfang_waterfall";
