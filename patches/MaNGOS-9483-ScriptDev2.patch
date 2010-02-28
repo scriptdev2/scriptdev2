@@ -1,19 +1,8 @@
-From 35b3e28341fa4a8984563696ba851d9983065237 Mon Sep 17 00:00:00 2001
-From: Derex <derex101@gmail.com>
-Date: Tue, 23 Feb 2010 16:02:36 +0200
-Subject: [PATCH] [PATCH] ScriptDev2 patch.
-
----
- configure.ac             |    6 +++++-
- src/bindings/Makefile.am |    2 +-
- src/mangosd/Makefile.am  |    4 ++--
- 3 files changed, 8 insertions(+), 4 deletions(-)
-
 diff --git a/configure.ac b/configure.ac
-index 276827e..d8e6111 100644
+index 90b332a..c31ff26 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -297,7 +297,11 @@ AC_CONFIG_FILES([
+@@ -308,7 +308,11 @@ AC_CONFIG_FILES([
     src/mangosd/Makefile
     src/mangosd/mangosd.conf.dist
     src/bindings/Makefile
@@ -37,10 +26,10 @@ index d7dc654..79ea910 100644
 -SUBDIRS = universal
 +SUBDIRS = ScriptDev2
 diff --git a/src/mangosd/Makefile.am b/src/mangosd/Makefile.am
-index 25d5d79..f4963aa 100644
+index 4d2b641..7787e6c 100644
 --- a/src/mangosd/Makefile.am
 +++ b/src/mangosd/Makefile.am
-@@ -34,7 +34,7 @@ mangos_worldd_SOURCES = \
+@@ -40,7 +40,7 @@ mangos_worldd_SOURCES = \
  
  ## Link world daemon against the shared library
  mangos_worldd_LDADD = \
@@ -49,15 +38,12 @@ index 25d5d79..f4963aa 100644
  	../game/libmangosgame.a \
  	../shared/Database/libmangosdatabase.a \
  	../shared/Config/libmangosconfig.a \
-@@ -45,7 +45,7 @@ mangos_worldd_LDADD = \
- 	../../dep/src/sockets/libmangossockets.a \
- 	../../dep/src/g3dlite/libg3dlite.a
+@@ -52,7 +52,7 @@ mangos_worldd_LDADD = \
+ 	../../dep/src/g3dlite/libg3dlite.a \
+ 	../../dep/src/gsoap/libgsoap.a
  
--mangos_worldd_LDFLAGS = -L../../dep/src/sockets -L../../dep/src/g3dlite -L../bindings/universal/ -L$(libdir) $(MANGOS_LIBS) -export-dynamic
-+mangos_worldd_LDFLAGS = -L../../dep/src/sockets -L../../dep/src/g3dlite -L../bindings/ScriptDev2/ -L$(libdir) $(MANGOS_LIBS) -export-dynamic
+-mangos_worldd_LDFLAGS = -L../../dep/src/sockets -L../../dep/src/g3dlite -L../../dep/src/gsoap -L../bindings/universal/ -L$(libdir) $(MANGOS_LIBS) -export-dynamic
++mangos_worldd_LDFLAGS = -L../../dep/src/sockets -L../../dep/src/g3dlite -L../../dep/src/gsoap -L../bindings/ScriptDev2/ -L$(libdir) $(MANGOS_LIBS) -export-dynamic
  
  ## Additional files to include when running 'make dist'
  #  Include world daemon configuration
--- 
-1.6.2.5
-
