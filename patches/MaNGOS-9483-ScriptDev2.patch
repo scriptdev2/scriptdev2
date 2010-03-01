@@ -1,3 +1,14 @@
+From 336b41dcdf565971bb27542889bf7e3b0395916f Mon Sep 17 00:00:00 2001
+From: arrai <array.of.intellect@gmail.com>
+Date: Mon, 1 Mar 2010 13:19:52 +0100
+Subject: [PATCH] Scriptdev2 patch
+
+---
+ configure.ac             |    6 +++++-
+ src/bindings/Makefile.am |    2 +-
+ src/mangosd/Makefile.am  |    4 ++--
+ 3 files changed, 8 insertions(+), 4 deletions(-)
+
 diff --git a/configure.ac b/configure.ac
 index 90b332a..c31ff26 100644
 --- a/configure.ac
@@ -47,3 +58,6 @@ index 4d2b641..7787e6c 100644
  
  ## Additional files to include when running 'make dist'
  #  Include world daemon configuration
+-- 
+1.6.3.3
+
