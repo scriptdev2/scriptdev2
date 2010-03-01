@@ -111,7 +111,7 @@ struct MANGOS_DLL_DECL boss_patchwerkAI : public ScriptedAI
         for (ThreatList::const_iterator iter = tList.begin();iter != tList.end(); ++iter)
         {
             if (!uiTargets)
-                return;
+                break;
 
             if (Unit* pTempTarget = Unit::GetUnit((*m_creature), (*iter)->getUnitGuid()))
             {
