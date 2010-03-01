@@ -194,7 +194,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
     {
         uint32 uiMaxCount = sizeof(aMoveData)/sizeof(sOnyxMove);
 
-        int iTemp = rand()%(uiMaxCount-1);
+        uint32 iTemp = urand(0, uiMaxCount-1);
 
         if (iTemp >= m_uiMovePoint)
             ++iTemp;
