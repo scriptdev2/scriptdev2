@@ -70,6 +70,15 @@ enum
     NPC_CURED_DEER                      = 12299,
     NPC_CURED_GAZELLE                   = 12297,
 
+    // quest 12906/13422
+    SPELL_DISCIPLINING_ROD              = 56033,
+    SAY_RAND_WORK1                      = -1000555,
+    SAY_RAND_WORK2                      = -1000556,
+    SAY_RAND_WORK3                      = -1000557,
+    SAY_RAND_ATTACK1                    = -1000558,
+    SAY_RAND_ATTACK2                    = -1000559,
+    SAY_RAND_ATTACK3                    = -1000560,
+
     // target morbent fel
     SPELL_SACRED_CLEANSING              = 8913,
     NPC_MORBENT                         = 1200,
@@ -255,6 +264,47 @@ bool EffectDummyCreature_spell_dummy_npc(Unit* pCaster, uint32 uiSpellId, SpellE
 
                 if (pCreatureTarget->GetEntry() == NPC_SICKLY_GAZELLE && ((Player*)pCaster)->GetTeam() == HORDE)
                     pCreatureTarget->UpdateEntry(NPC_CURED_GAZELLE);
+
+                return true;
+            }
+            return true;
+        }
+        case SPELL_DISCIPLINING_ROD:
+        {
+            if (uiEffIndex == EFFECT_INDEX_0)
+            {
+                if (pCreatureTarget->getStandState() == UNIT_STAND_STATE_STAND)
+                    return true;
+
+                switch(urand(1,2))
+                {
+                    case 1:
+                    {
+                        switch(urand(1,3))
+                        {
+                            case 1: DoScriptText(SAY_RAND_ATTACK1, pCreatureTarget); break;
+                            case 2: DoScriptText(SAY_RAND_ATTACK2, pCreatureTarget); break;
+                            case 3: DoScriptText(SAY_RAND_ATTACK3, pCreatureTarget); break;
+                        }
+
+                        pCreatureTarget->SetStandState(UNIT_STAND_STATE_STAND);
+                        pCreatureTarget->AI()->AttackStart(pCaster);
+                        break;
+                    }
+                    case 2:
+                    {
+                        switch(urand(1,3))
+                        {
+                            case 1: DoScriptText(SAY_RAND_WORK1, pCreatureTarget); break;
+                            case 2: DoScriptText(SAY_RAND_WORK2, pCreatureTarget); break;
+                            case 3: DoScriptText(SAY_RAND_WORK3, pCreatureTarget); break;
+                        }
+
+                        pCreatureTarget->SetStandState(UNIT_STAND_STATE_STAND);
+                        pCreatureTarget->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_WORK);
+                        break;
+                    }
+                }
 
                 return true;
             }
