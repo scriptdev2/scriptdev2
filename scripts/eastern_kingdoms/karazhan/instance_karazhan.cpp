@@ -101,9 +101,9 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
     {
         switch (pCreature->GetEntry())
         {
-            case 17229: m_uiKilrekGUID = pCreature->GetGUID(); break;
+            case 17229: m_uiKilrekGUID    = pCreature->GetGUID(); break;
             case 15688: m_uiTerestianGUID = pCreature->GetGUID(); break;
-            case 15687: m_uiMoroesGUID = pCreature->GetGUID(); break;
+            case 15687: m_uiMoroesGUID    = pCreature->GetGUID(); break;
         }
     }
 

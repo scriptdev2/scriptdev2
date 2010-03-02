@@ -57,12 +57,10 @@ enum
     NPC_PORTAL                  = 17265
 };
 
-const float PORTAL_Z = 179.434f;
-
-float afPortalLocations[2][2]=
+const float afPortalLocations[2][3]=
 {
-    {-11249.6933f, -1704.61023f},
-    {-11242.1160f, -1713.33325f}
+    {-11249.6933f, -1704.61023f, 179.434f},
+    {-11242.1160f, -1713.33325f, 179.434f}
 };
 
 struct MANGOS_DLL_DECL mob_kilrekAI : public ScriptedAI
@@ -121,9 +119,7 @@ struct MANGOS_DLL_DECL mob_kilrekAI : public ScriptedAI
 
         if (m_uiAmplify_Timer < uiDiff)
         {
-            m_creature->InterruptNonMeleeSpells(false);
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_AMPLIFY_FLAMES);
-
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_AMPLIFY_FLAMES, CAST_INTERRUPT_PREVIOUS);
             m_uiAmplify_Timer = urand(10000, 20000);
         }
         else
@@ -328,21 +324,24 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
             {
                 for(uint8 i = 0; i < 2; ++i)
                 {
-                    if (Creature* pPortal = m_creature->SummonCreature(NPC_PORTAL, afPortalLocations[i][0], afPortalLocations[i][1], PORTAL_Z, 0, TEMPSUMMON_CORPSE_DESPAWN, 0))
+                    if (Creature* pPortal = m_creature->SummonCreature(NPC_PORTAL, afPortalLocations[i][0], afPortalLocations[i][1], afPortalLocations[i][2], 0.0f, TEMPSUMMON_CORPSE_DESPAWN, 0))
                         m_uiPortalGUID[i] = pPortal->GetGUID();
                 }
+
                 m_bSummonedPortals = true;
 
                 DoScriptText(urand(0, 1) ? SAY_SUMMON1 : SAY_SUMMON2, m_creature);
             }
+
             uint32 uiRnd = urand(0, 1);
-            Creature* pImp = m_creature->SummonCreature(NPC_FIENDISHIMP, afPortalLocations[uiRnd][0], afPortalLocations[uiRnd][1], PORTAL_Z, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 15000);
-            if (pImp)
+
+            if (Creature* pImp = m_creature->SummonCreature(NPC_FIENDISHIMP, afPortalLocations[uiRnd][0], afPortalLocations[uiRnd][1], afPortalLocations[uiRnd][2], 0.0f, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 15000))
             {
                 pImp->AddThreat(m_creature->getVictim());
                 if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
                     pImp->AI()->AttackStart(pTarget);
             }
+
             m_uiSummon_Timer = 5000;
         }
         else
