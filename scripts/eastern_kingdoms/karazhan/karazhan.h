@@ -48,4 +48,18 @@ enum OperaEvents
 };
 
 #define ERROR_INST_DATA(a)          error_log("SD2: Instance Data for Karazhan not set properly. Encounter for Creature Entry %u may not work properly.", a->GetEntry());
+
+class MANGOS_DLL_DECL npc_fiendish_portalAI : public ScriptedAI
+{
+    public:
+        npc_fiendish_portalAI(Creature* pCreature);
+        ~npc_fiendish_portalAI() {}
+
+        void Reset();
+        void JustSummoned(Creature* pSummoned);
+        void UpdateAI(const uint32 uiDiff);
+
+        uint32 m_uiSummonTimer;
+};
+
 #endif

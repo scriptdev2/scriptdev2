@@ -638,7 +638,7 @@ UPDATE creature_template SET ScriptName='mob_shadow_of_aran' WHERE entry=18254;
 UPDATE creature_template SET ScriptName='mob_aran_elemental' WHERE entry=17167;
 UPDATE creature_template SET ScriptName='mob_kilrek' WHERE entry=17229;
 UPDATE creature_template SET ScriptName='mob_demon_chain' WHERE entry=17248;
-UPDATE creature_template SET ScriptName='mob_karazhan_imp' WHERE entry=17267;
+UPDATE creature_template SET ScriptName='npc_fiendish_portal' WHERE entry=17265;
 UPDATE creature_template SET ScriptName='mob_cyclone' WHERE entry=18412;
 UPDATE creature_template SET ScriptName='netherspite_infernal' WHERE entry=17646;
 UPDATE creature_template SET ScriptName='npc_berthold' WHERE entry=16153;
