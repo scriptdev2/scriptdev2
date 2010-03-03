@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Boss_Noth
 SD%Complete: 60
-SDComment: Summons need tuning, emotes missing, timers need tuning, need to add berserk "phase" after last skeleton phase
+SDComment: Summons need tuning, timers need tuning, need to add berserk "phase" after last skeleton phase
 SDCategory: Naxxramas
 EndScriptData */
 
@@ -33,6 +33,11 @@ enum
     SAY_SLAY1                           = -1533079,
     SAY_SLAY2                           = -1533080,
     SAY_DEATH                           = -1533081,
+
+    EMOTE_WARRIOR                       = -1533130,
+    EMOTE_SKELETON                      = -1533131,
+    EMOTE_TELEPORT                      = -1533132,
+    EMOTE_TELEPORT_RETURN               = -1533133,
 
     SPELL_TELEPORT                      = 29216,
     SPELL_TELEPORT_RETURN               = 29231,
@@ -166,6 +171,7 @@ struct MANGOS_DLL_DECL boss_nothAI : public ScriptedAI
 
                 if (DoCastSpellIfCan(m_creature, SPELL_TELEPORT) == CAST_OK)
                 {
+                    DoScriptText(EMOTE_TELEPORT, m_creature);
                     m_creature->GetMotionMaster()->MoveIdle();
                     m_uiPhaseTimer = 70000;
                     m_uiPhase = PHASE_BALCONY;
@@ -206,6 +212,7 @@ struct MANGOS_DLL_DECL boss_nothAI : public ScriptedAI
             if (m_uiSummonTimer < uiDiff)
             {
                 DoScriptText(SAY_SUMMON, m_creature);
+                DoScriptText(EMOTE_WARRIOR, m_creature);
 
                 if (m_bIsRegularMode)
                 {
@@ -235,6 +242,7 @@ struct MANGOS_DLL_DECL boss_nothAI : public ScriptedAI
             {
                 if (DoCastSpellIfCan(m_creature, SPELL_TELEPORT_RETURN) == CAST_OK)
                 {
+                    DoScriptText(EMOTE_TELEPORT_RETURN, m_creature);
                     m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
                     m_uiPhaseTimer = 90000;
                     m_uiPhase = PHASE_GROUND;
@@ -246,7 +254,7 @@ struct MANGOS_DLL_DECL boss_nothAI : public ScriptedAI
 
             if (m_uiSummonTimer < uiDiff)
             {
-                DoScriptText(SAY_SUMMON, m_creature);
+                DoScriptText(EMOTE_SKELETON, m_creature);
 
                 static uint32 const auiSpellSummonPlaguedChampion[10] =
                 {
