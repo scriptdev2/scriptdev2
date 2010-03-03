@@ -55,73 +55,8 @@ enum
 
     NPC_DEMONCHAINS             = 17248,
     NPC_FIENDISHIMP             = 17267,
-    NPC_PORTAL                  = 17265
-};
-
-struct MANGOS_DLL_DECL mob_kilrekAI : public ScriptedAI
-{
-    mob_kilrekAI(Creature* pCreature) : ScriptedAI(pCreature)
-    {
-        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        Reset();
-    }
-
-    ScriptedInstance* m_pInstance;
-
-    uint64 m_uiTerestianGUID;
-    uint32 m_uiAmplify_Timer;
-
-    void Reset()
-    {
-        m_uiTerestianGUID = 0;
-        m_uiAmplify_Timer = 2000;
-    }
-
-    void Aggro(Unit* pWho)
-    {
-        if (!m_pInstance)
-        {
-            ERROR_INST_DATA(m_creature);
-            return;
-        }
-
-        Creature* pTerestian = ((Creature*)Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_TERESTIAN)));
-        if (pTerestian && (!pTerestian->SelectHostileTarget() && !pTerestian->getVictim()))
-            pTerestian->AddThreat(pWho);
-    }
-
-    void JustDied(Unit* pKiller)
-    {
-        if (m_pInstance)
-        {
-            uint64 m_uiTerestianGUID = m_pInstance->GetData64(DATA_TERESTIAN);
-            if (m_uiTerestianGUID)
-            {
-                Unit* pTerestian = Unit::GetUnit((*m_creature), m_uiTerestianGUID);
-                if (pTerestian && pTerestian->isAlive())
-                    DoCastSpellIfCan(pTerestian, SPELL_BROKEN_PACT, CAST_TRIGGERED);
-            }
-        }
-        else
-            ERROR_INST_DATA(m_creature);
-    }
-
-    void UpdateAI(const uint32 uiDiff)
-    {
-        //Return since we have no target
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-            return;
-
-        if (m_uiAmplify_Timer < uiDiff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_AMPLIFY_FLAMES, CAST_INTERRUPT_PREVIOUS);
-            m_uiAmplify_Timer = urand(10000, 20000);
-        }
-        else
-            m_uiAmplify_Timer -= uiDiff;
-
-        DoMeleeAttackIfReady();
-    }
+    NPC_PORTAL                  = 17265,
+    NPC_KILREK                  = 17229
 };
 
 struct MANGOS_DLL_DECL mob_demon_chainAI : public ScriptedAI
@@ -155,28 +90,27 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
     {
         memset(&m_uiPortalGUID, 0, sizeof(m_uiPortalGUID));
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_bSummonKilrek = true;
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
 
-    uint64 m_uiKilrekGUID;
     uint64 m_uiPortalGUID[2];
 
-    uint32 m_uiCheckKilrek_Timer;
+    uint32 m_uiSummonKilrekTimer;
     uint32 m_uiSacrifice_Timer;
     uint32 m_uiShadowbolt_Timer;
     uint32 m_uiSummon_Timer;
     uint32 m_uiBerserk_Timer;
 
-    bool m_bReSummon;
     bool m_bSummonKilrek;
     bool m_bSummonedPortals;
     bool m_bBerserk;
 
     void Reset()
     {
-        m_uiCheckKilrek_Timer   = 5000;
+        m_uiSummonKilrekTimer   = 5000;
         m_uiSacrifice_Timer     = 30000;
         m_uiShadowbolt_Timer    = 5000;
         m_uiSummon_Timer        = 10000;
@@ -184,12 +118,9 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
 
         m_bSummonedPortals      = false;
         m_bBerserk              = false;
-        m_bReSummon             = false;
 
         if (!m_pInstance)
             return;
-
-        m_pInstance->SetData(TYPE_TERESTIAN, NOT_STARTED);
 
         for(uint8 i = 0; i < 2; ++i)
         {
@@ -201,26 +132,27 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
                 m_uiPortalGUID[i] = 0;
             }
         }
+
+        if (!m_creature->isAlive())
+            return;
+
+        m_pInstance->SetData(TYPE_TERESTIAN, NOT_STARTED);
+
+        if (!m_creature->GetPet())
+            m_bSummonKilrek = true;
     }
 
     void Aggro(Unit* pWho)
     {
+        m_creature->SetInCombatWithZone();
+
+        if (Pet* pKilrek = m_creature->GetPet())
+            pKilrek->SetInCombatWithZone();
+
         DoScriptText(SAY_AGGRO, m_creature);
 
         if (m_pInstance)
-        {
-            if (Creature* pKilrek = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_KILREK)))
-            {
-                // Respawn Kil'rek on aggro if Kil'rek is dead.
-                if (!pKilrek->isAlive())
-                    pKilrek->Respawn();
-
-                // Put Kil'rek in combat against our target so players don't skip him
-                pKilrek->AI()->AttackStart(pWho);
-            }
-
             m_pInstance->SetData(TYPE_TERESTIAN, IN_PROGRESS);
-        }
         else
             ERROR_INST_DATA(m_creature);
     }
@@ -251,6 +183,18 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
 
                 break;
             }
+            case NPC_KILREK:
+                m_creature->RemoveAurasDueToSpell(SPELL_BROKEN_PACT);
+                break;
+        }
+    }
+
+    void SummonedCreatureJustDied(Creature* pSummoned)
+    {
+        if (pSummoned->GetEntry() == NPC_KILREK)
+        {
+            DoCastSpellIfCan(m_creature, SPELL_BROKEN_PACT, CAST_TRIGGERED);
+            m_bSummonKilrek = true;
         }
     }
 
@@ -277,36 +221,22 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
 
     void UpdateAI(const uint32 uiDiff)
     {
+        if (m_bSummonKilrek)
+        {
+            if (m_uiSummonKilrekTimer < uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_SUMMON_IMP) == CAST_OK)
+                {
+                    m_uiSummonKilrekTimer = 45000;
+                    m_bSummonKilrek = false;
+                }
+            }
+            else
+                m_uiSummonKilrekTimer -= uiDiff;
+        }
+
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
-
-        if (m_uiCheckKilrek_Timer < uiDiff)
-        {
-            m_uiCheckKilrek_Timer = 5000;
-
-            if (m_pInstance)
-                uint64 m_uiKilrekGUID = m_pInstance->GetData64(DATA_KILREK);
-            else
-                ERROR_INST_DATA(m_creature);
-
-            Creature* pKilrek = ((Creature*)Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_KILREK)));
-            if (m_bSummonKilrek && pKilrek)
-            {
-                pKilrek->Respawn();
-                pKilrek->AI()->AttackStart(m_creature->getVictim());
-                m_creature->RemoveAurasDueToSpell(SPELL_BROKEN_PACT);
-
-                m_bSummonKilrek = false;
-            }
-
-            if (!pKilrek || !pKilrek->isAlive())
-            {
-                m_bSummonKilrek = true;
-                m_uiCheckKilrek_Timer = 45000;
-            }
-        }
-        else
-            m_uiCheckKilrek_Timer -= uiDiff;
 
         if (m_uiSacrifice_Timer < uiDiff)
         {
@@ -394,11 +324,6 @@ void npc_fiendish_portalAI::UpdateAI(const uint32 uiDiff)
         m_uiSummonTimer -= uiDiff;
 }
 
-CreatureAI* GetAI_mob_kilrek(Creature* pCreature)
-{
-    return new mob_kilrekAI(pCreature);
-}
-
 CreatureAI* GetAI_npc_fiendish_portal(Creature* pCreature)
 {
     return new npc_fiendish_portalAI(pCreature);
@@ -426,11 +351,6 @@ void AddSC_boss_terestian_illhoof()
     newscript = new Script;
     newscript->Name = "npc_fiendish_portal";
     newscript->GetAI = &GetAI_npc_fiendish_portal;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "mob_kilrek";
-    newscript->GetAI = &GetAI_mob_kilrek;
     newscript->RegisterSelf();
 
     newscript = new Script;

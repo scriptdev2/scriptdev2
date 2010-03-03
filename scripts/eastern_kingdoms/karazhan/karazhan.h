@@ -25,7 +25,6 @@ enum
     DATA_OPERA_PERFORMANCE          = 13,
     DATA_OPERA_OZ_DEATHCOUNT        = 14,
 
-    DATA_KILREK                     = 15,
     DATA_TERESTIAN                  = 16,
     DATA_MOROES                     = 17,
 

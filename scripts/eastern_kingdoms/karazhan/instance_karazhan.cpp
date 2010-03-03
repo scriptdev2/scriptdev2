@@ -52,7 +52,6 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
     uint64 m_uiCurtainGUID;
     uint64 m_uiStageDoorLeftGUID;
     uint64 m_uiStageDoorRightGUID;
-    uint64 m_uiKilrekGUID;
     uint64 m_uiTerestianGUID;
     uint64 m_uiMoroesGUID;
     uint64 m_uiLibraryDoor;                                 // Door at Shade of Aran
@@ -75,7 +74,6 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
         m_uiStageDoorLeftGUID   = 0;
         m_uiStageDoorRightGUID  = 0;
 
-        m_uiKilrekGUID          = 0;
         m_uiTerestianGUID       = 0;
         m_uiMoroesGUID          = 0;
 
@@ -101,7 +99,6 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
     {
         switch (pCreature->GetEntry())
         {
-            case 17229: m_uiKilrekGUID    = pCreature->GetGUID(); break;
             case 15688: m_uiTerestianGUID = pCreature->GetGUID(); break;
             case 15687: m_uiMoroesGUID    = pCreature->GetGUID(); break;
         }
@@ -229,7 +226,6 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
     {
         switch (uiData)
         {
-            case DATA_KILREK:                   return m_uiKilrekGUID;
             case DATA_TERESTIAN:                return m_uiTerestianGUID;
             case DATA_MOROES:                   return m_uiMoroesGUID;
             case DATA_GO_STAGEDOORLEFT:         return m_uiStageDoorLeftGUID;
