@@ -164,7 +164,7 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
         memset(&m_auiGuardiansGUID, 0, sizeof(m_auiGuardiansGUID));
         m_uiGuardiansCount = 0;
 
-        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_pInstance = (instance_naxxramas*)pCreature->GetInstanceData();
         m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Reset();
     }
