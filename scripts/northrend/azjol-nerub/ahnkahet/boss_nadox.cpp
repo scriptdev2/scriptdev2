@@ -168,10 +168,8 @@ struct MANGOS_DLL_DECL boss_nadoxAI : public ScriptedAI
         {
             // guardian is summoned at 50% of boss HP
             if (Creature* pGuardianEgg = SelectRandomCreatureOfEntryInRange(NPC_AHNKAHAR_GUARDIAN_EGG, 75.0f))
-            {
-                // pGuardianEgg->CastSpell(pGuardianEgg, SPELL_SUMMON_SWARM_GUARDIAN, false);
-                pGuardianEgg->SummonCreature(NPC_AHNKAHAR_GUARDIAN, pGuardianEgg->GetPositionX(), pGuardianEgg->GetPositionY(), pGuardianEgg->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 3*MINUTE*IN_MILISECONDS);
-            }
+                pGuardianEgg->CastSpell(pGuardianEgg, SPELL_SUMMON_SWARM_GUARDIAN, false);
+
             m_bGuardianSummoned = true;
         }
 
@@ -180,11 +178,7 @@ struct MANGOS_DLL_DECL boss_nadoxAI : public ScriptedAI
             DoScriptText(rand()%2?SAY_SUMMON_EGG_1:SAY_SUMMON_EGG_2, m_creature);
 
             if (Creature* pSwarmerEgg = SelectRandomCreatureOfEntryInRange(NPC_AHNKAHAR_SWARM_EGG, 75.0))
-            {
-                // pSwarmerEgg->CastSpell(pSwarmerEgg, SPELL_SUMMON_SWARMERS, false);
-                pSwarmerEgg->SummonCreature(NPC_AHNKAHAR_SWARMER, pSwarmerEgg->GetPositionX(), pSwarmerEgg->GetPositionY(), pSwarmerEgg->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 3*MINUTE*IN_MILISECONDS);
-                pSwarmerEgg->SummonCreature(NPC_AHNKAHAR_SWARMER, pSwarmerEgg->GetPositionX(), pSwarmerEgg->GetPositionY(), pSwarmerEgg->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 3*MINUTE*IN_MILISECONDS);
-            }
+                pSwarmerEgg->CastSpell(pSwarmerEgg, SPELL_SUMMON_SWARMERS, false);
 
             m_uiSummonTimer = 10000;
         }
