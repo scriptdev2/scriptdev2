@@ -345,7 +345,38 @@ void instance_naxxramas::SetData(uint32 uiType, uint32 uiData)
                 DoUseDoorOrButton(m_uiKelthuzadDoorGUID);
             break;
         case TYPE_KELTHUZAD:
-            m_auiEncounter[14] = uiData;
+            switch(uiData)
+            {
+                case SPECIAL:
+                {
+                    Map::PlayerList const& lPlayers = instance->GetPlayers();
+
+                    if (lPlayers.isEmpty())
+                        return;
+
+                    bool bCanBegin = true;
+
+                    for(Map::PlayerList::const_iterator itr = lPlayers.begin(); itr != lPlayers.end(); ++itr)
+                    {
+                        if (Player* pPlayer = itr->getSource())
+                        {
+                            if (!pPlayer->IsWithinDist2d(m_fChamberCenterX, m_fChamberCenterY, 15.0f))
+                                bCanBegin = false;
+                        }
+                    }
+
+                    if (bCanBegin)
+                        m_auiEncounter[14] = IN_PROGRESS;
+
+                    break;
+                }
+                case FAIL:
+                    m_auiEncounter[14] = NOT_STARTED;
+                    break;
+                default:
+                    m_auiEncounter[14] = uiData;
+                    break;
+            }
             break;
     }
 
@@ -474,10 +505,14 @@ bool AreaTrigger_at_naxxramas(Player* pPlayer, AreaTriggerEntry* pAt)
 {
     if (pAt->id == AREATRIGGER_KELTHUZAD)
     {
+        if (pPlayer->isDead())
+            return false;
+
         if (instance_naxxramas* pInstance = (instance_naxxramas*)pPlayer->GetInstanceData())
         {
             if (pInstance->GetData(TYPE_KELTHUZAD) == NOT_STARTED)
             {
+                pInstance->SetData(TYPE_KELTHUZAD, SPECIAL);
                 pInstance->SetChamberCenterCoords(pAt->x, pAt->y, pAt->z);
             }
         }
