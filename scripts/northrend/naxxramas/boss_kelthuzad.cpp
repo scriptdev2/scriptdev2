@@ -16,27 +16,13 @@
 
 /* ScriptData
 SDName: Boss_KelThuzud
-SD%Complete: 0
-SDComment: VERIFY SCRIPT
+SD%Complete: 50
+SDComment: In progress, phase 1 not implemented, timers will need adjustments
 SDCategory: Naxxramas
 EndScriptData */
 
 #include "precompiled.h"
 #include "naxxramas.h"
-
-//***THIS SCRIPTS IS UNDER DEVELOPMENT***
-/*
-DATA.
-This script has been made with info taken from wowwikki... so there are things wrong...
-like spell timers and Says. Also there's another major problem as there is no aggroed list
-I cannot make Kel'thuzad to target specific party members, that is needed for spells like
-Mana Detonation... so what I'm doing untill now is just to cast everything on my main aggroed
-target. Sorry for him.
-Another bug is that there are spells that are actually NOT working... I have to implement
-them first.
-Need DISPELL efect
-I also don't know the emotes
-*/
 
 enum
 {
@@ -58,7 +44,8 @@ enum
 
     SAY_SUMMON_MINIONS                  = -1533105,         //start of phase 1
 
-    SAY_AGGRO1                          = -1533094,         //start of phase 2
+    EMOTE_PHASE2                        = -1533135,         //start of phase 2
+    SAY_AGGRO1                          = -1533094,
     SAY_AGGRO2                          = -1533095,
     SAY_AGGRO3                          = -1533096,
 
@@ -78,8 +65,7 @@ enum
     SAY_SPECIAL3_MANA_DET               = -1533107,
     SAY_SPECIAL2_DISPELL                = -1533108,
 
-    EMOTE_GUARDIAN                      = -1533134,
-    EMOTE_PHASE2                        = -1533135,
+    EMOTE_GUARDIAN                      = -1533134,         // at each guardian summon
 
     //spells to be casted
     SPELL_FROST_BOLT                    = 28478,
@@ -95,46 +81,19 @@ enum
     SPELL_FROST_BLAST                   = 27808
 };
 
-//Positional defines
-#define ADDX_LEFT_FAR               3783.272705f
-#define ADDY_LEFT_FAR               -5062.697266f
-#define ADDZ_LEFT_FAR               143.711203f
-#define ADDO_LEFT_FAR               3.617599f
-
-#define ADDX_LEFT_MIDDLE            3730.291260f
-#define ADDY_LEFT_MIDDLE            -5027.239258f
-#define ADDZ_LEFT_MIDDLE            143.956909f
-#define ADDO_LEFT_MIDDLE            4.461900f
-
-#define ADDX_LEFT_NEAR              3683.868652f
-#define ADDY_LEFT_NEAR              -5057.281250f
-#define ADDZ_LEFT_NEAR              143.183884f
-#define ADDO_LEFT_NEAR              5.237086f
-
-#define ADDX_RIGHT_FAR              3759.355225f
-#define ADDY_RIGHT_FAR              -5174.128418f
-#define ADDZ_RIGHT_FAR              143.802383f
-#define ADDO_RIGHT_FAR              2.170104f
-
-#define ADDX_RIGHT_MIDDLE           370.724365f
-#define ADDY_RIGHT_MIDDLE           -5185.123047f
-#define ADDZ_RIGHT_MIDDLE           143.928024f
-#define ADDO_RIGHT_MIDDLE           1.309310f
-
-#define ADDX_RIGHT_NEAR             3665.121094f
-#define ADDY_RIGHT_NEAR             -5138.679199f
-#define ADDZ_RIGHT_NEAR             143.183212f
-#define ADDO_RIGHT_NEAR             0.604023f
+static float M_F_ANGLE = 0.2f;                              // to adjust for map rotation
+static float M_F_RANGE = 55.0f;                             // ~ range from center of chamber to center of alcove
 
 struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
 {
     boss_kelthuzadAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        memset(&m_auiGuardiansGUID, 0, sizeof(m_auiGuardiansGUID));
-        m_uiGuardiansCount = 0;
-
         m_pInstance = (instance_naxxramas*)pCreature->GetInstanceData();
         m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
+
+        memset(&m_auiGuardiansGUID, 0, sizeof(m_auiGuardiansGUID));
+        m_uiGuardiansCount = 0;
+        m_uiGuardiansCountMax = m_bIsRegularMode ? 2 : 4;
         Reset();
     }
 
@@ -158,8 +117,6 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
 
     void Reset()
     {
-        m_uiGuardiansCountMax = m_bIsRegularMode ? 2 : 4;
-
         m_uiFrostBoltTimer = urand(1000, 600000);           //It won't be more than a minute without cast it
         m_uiFrostBoltNovaTimer = 15000;                     //Cast every 15 seconds
         m_uiChainsTimer = urand(30000, 60000);              //Cast no sooner than once every 30 seconds
@@ -233,6 +190,42 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
             m_pInstance->SetData(TYPE_KELTHUZAD, FAIL);
     }
 
+    float GetLocationAngle(uint32 uiId)
+    {
+        switch(uiId)
+        {
+            case 1: return M_PI_F - M_F_ANGLE;              // south
+            case 2: return (M_PI_F / 2) * 3 - M_F_ANGLE;    // east
+            case 3: return M_PI_F / 2 - M_F_ANGLE;          // west
+            case 4: return M_PI_F / 4 - M_F_ANGLE;          // north-west
+            case 5: return (M_PI_F / 4) * 7 - M_F_ANGLE;    // north-east
+            case 6: return (M_PI_F / 4) * 5 - M_F_ANGLE;    // south-east
+            case 7: return 3*M_PI_F / 4 - M_F_ANGLE;        // south-west
+        }
+
+        return M_F_ANGLE;
+    }
+
+    void SummonGuardian()
+    {
+        if (!m_pInstance)
+            return;
+
+        float fAngle = GetLocationAngle(urand(1,7));
+
+        // may fail and give invalid coordinates, so later need to make sure areatrigger really visited.
+        float fx, fy, fz;
+        m_pInstance->GetChamberCenterCoords(fx, fy, fz);
+
+        fx += M_F_RANGE * cos(fAngle);
+        fy += M_F_RANGE * sin(fAngle);
+
+        MaNGOS::NormalizeMapCoord(fx);
+        MaNGOS::NormalizeMapCoord(fy);
+
+        m_creature->SummonCreature(NPC_GUARDIAN, fx, fy, m_creature->GetPositionZ(), 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
+    }
+
     void JustSummoned(Creature* pSummoned)
     {
         if (pSummoned->GetEntry() == NPC_GUARDIAN)
@@ -252,6 +245,12 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
             //Update guardian count
             ++m_uiGuardiansCount;
         }
+    }
+
+    void SummonedMovementInform(Creature* pSummoned, uint32 uiMotionType, uint32 uiPointId)
+    {
+        if (uiMotionType == POINT_MOTION_TYPE && uiPointId == 0)
+            pSummoned->SetInCombatWithZone();
     }
 
     void UpdateAI(const uint32 uiDiff)
@@ -338,28 +337,7 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
             if (m_uiGuardiansTimer < uiDiff)
             {
                 //Summon a Guardian of Icecrown in a random alcove
-
-                switch(urand(0, 5))
-                {
-                    case 0:
-                        m_creature->SummonCreature(NPC_GUARDIAN, ADDX_LEFT_FAR,ADDY_LEFT_FAR,ADDZ_LEFT_FAR,ADDO_LEFT_FAR,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,60000);
-                        break;
-                    case 1:
-                        m_creature->SummonCreature(NPC_GUARDIAN, ADDX_LEFT_MIDDLE,ADDY_LEFT_MIDDLE,ADDZ_LEFT_MIDDLE,ADDO_LEFT_MIDDLE,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,60000);
-                        break;
-                    case 2:
-                        m_creature->SummonCreature(NPC_GUARDIAN, ADDX_LEFT_NEAR,ADDY_LEFT_NEAR,ADDZ_LEFT_NEAR,ADDO_LEFT_NEAR,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,60000);
-                        break;
-                    case 3:
-                        m_creature->SummonCreature(NPC_GUARDIAN, ADDX_RIGHT_FAR,ADDY_RIGHT_FAR,ADDZ_RIGHT_FAR,ADDO_RIGHT_FAR,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,60000);
-                        break;
-                    case 4:
-                        m_creature->SummonCreature(NPC_GUARDIAN, ADDX_RIGHT_MIDDLE,ADDY_RIGHT_MIDDLE,ADDZ_RIGHT_MIDDLE,ADDO_RIGHT_MIDDLE,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,60000);
-                        break;
-                    case 5:
-                        m_creature->SummonCreature(NPC_GUARDIAN, ADDX_RIGHT_NEAR,ADDY_RIGHT_NEAR,ADDZ_RIGHT_NEAR,ADDO_RIGHT_NEAR,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,60000);
-                        break;
-                }
+                SummonGuardian();
 
                 //5 seconds until summoning next guardian
                 m_uiGuardiansTimer = 5000;
