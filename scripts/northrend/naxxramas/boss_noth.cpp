@@ -91,7 +91,7 @@ struct MANGOS_DLL_DECL boss_nothAI : public ScriptedAI
         Reset();
     }
 
-    ScriptedInstance* m_pInstance;
+    instance_naxxramas* m_pInstance;
     bool m_bIsRegularMode;
 
     uint8 m_uiPhase;

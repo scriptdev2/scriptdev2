@@ -68,7 +68,12 @@ instance_naxxramas::instance_naxxramas(Map* pMap) : ScriptedInstance(pMap),
     m_uiNothExitDoorGUID(0),
     m_uiHeigEntryDoorGUID(0),
     m_uiHeigExitDoorGUID(0),
-    m_uiLoathebDoorGUID(0)
+    m_uiLoathebDoorGUID(0),
+
+    m_uiKelthuzadDoorGUID(0),
+    m_fChamberCenterX(0.0f),
+    m_fChamberCenterY(0.0f),
+    m_fChamberCenterZ(0.0f)
 {
     Initialize();
 }
@@ -453,16 +458,45 @@ uint64 instance_naxxramas::GetData64(uint32 uiData)
     return 0;
 }
 
+void instance_naxxramas::SetChamberCenterCoords(float fX, float fY, float fZ)
+{
+    m_fChamberCenterX = fX;
+    m_fChamberCenterY = fY;
+    m_fChamberCenterZ = fZ;
+}
+
 InstanceData* GetInstanceData_instance_naxxramas(Map* pMap)
 {
     return new instance_naxxramas(pMap);
 }
 
+bool AreaTrigger_at_naxxramas(Player* pPlayer, AreaTriggerEntry* pAt)
+{
+    if (pAt->id == AREATRIGGER_KELTHUZAD)
+    {
+        if (instance_naxxramas* pInstance = (instance_naxxramas*)pPlayer->GetInstanceData())
+        {
+            if (pInstance->GetData(TYPE_KELTHUZAD) == NOT_STARTED)
+            {
+                pInstance->SetChamberCenterCoords(pAt->x, pAt->y, pAt->z);
+            }
+        }
+    }
+
+    return false;
+}
+
 void AddSC_instance_naxxramas()
 {
     Script* pNewScript;
+
     pNewScript = new Script;
     pNewScript->Name = "instance_naxxramas";
     pNewScript->GetInstanceData = &GetInstanceData_instance_naxxramas;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "at_naxxramas";
+    pNewScript->pAreaTrigger = &AreaTrigger_at_naxxramas;
     pNewScript->RegisterSelf();
 }

@@ -18,6 +18,8 @@ INSERT INTO areatrigger_scripts VALUES
 (5285,'at_aldurthar_gate'),
 (5286,'at_aldurthar_gate'),
 (5287,'at_aldurthar_gate');
+DELETE FROM areatrigger_scripts WHERE entry=4112;
+INSERT INTO areatrigger_scripts VALUES (4112,'at_naxxramas');
 
 /* BATTLEGROUNDS */
 UPDATE creature_template SET ScriptName='npc_spirit_guide' WHERE entry IN (13116, 13117);

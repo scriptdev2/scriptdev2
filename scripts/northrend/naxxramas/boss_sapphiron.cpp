@@ -46,7 +46,7 @@ struct MANGOS_DLL_DECL boss_sapphironAI : public ScriptedAI
         Reset();
     }
 
-    ScriptedInstance* m_pInstance;
+    instance_naxxramas* m_pInstance;
     bool m_bIsRegularMode;
 
     uint32 Icebolt_Count;

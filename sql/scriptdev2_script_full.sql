@@ -1201,7 +1201,8 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1533132,'%s raises more skeletons!',0,3,0,0,'noth EMOTE_TELEPORT'),
 (-1533133,'%s teleports back into the battle!',0,3,0,0,'noth EMOTE_TELEPORT_RETURN'),
 
-(-1533134,'A guardian of Icecrown enters the fight!',0,3,0,0,'kelthuzad EMOTE_GUARDIAN');
+(-1533134,'A Guardian of Icecrown enters the fight!',0,3,0,0,'kelthuzad EMOTE_GUARDIAN'),
+(-1533135,'%s strikes!',0,3,0,0,'kelthuzad EMOTE_PHASE2');
 
 -- -1 534 000 THE BATTLE OF MT. HYJAL
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES

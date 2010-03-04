@@ -82,7 +82,7 @@ struct MANGOS_DLL_DECL boss_gluthAI : public ScriptedAI
         Reset();
     }
 
-    ScriptedInstance* m_pInstance;
+    instance_naxxramas* m_pInstance;
     bool m_bIsRegularMode;
 
     uint32 m_uiMortalWoundTimer;

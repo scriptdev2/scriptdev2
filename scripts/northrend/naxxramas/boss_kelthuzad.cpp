@@ -78,7 +78,8 @@ enum
     SAY_SPECIAL3_MANA_DET               = -1533107,
     SAY_SPECIAL2_DISPELL                = -1533108,
 
-    EMOTE_GUARDIANS                     = -1533134,
+    EMOTE_GUARDIAN                      = -1533134,
+    EMOTE_PHASE2                        = -1533135,
 
     //spells to be casted
     SPELL_FROST_BOLT                    = 28478,
@@ -91,9 +92,7 @@ enum
 
     SPELL_MANA_DETONATION               = 27819,
     SPELL_SHADOW_FISSURE                = 27810,
-    SPELL_FROST_BLAST                   = 27808,
-
-    NPC_GUARDIAN                        = 16441,
+    SPELL_FROST_BLAST                   = 27808
 };
 
 //Positional defines
@@ -127,36 +126,6 @@ enum
 #define ADDZ_RIGHT_NEAR             143.183212f
 #define ADDO_RIGHT_NEAR             0.604023f
 
-#define WALKX_LEFT_FAR              3754.431396f
-#define WALKY_LEFT_FAR              -5080.727734f
-#define WALKZ_LEFT_FAR              142.036316f
-#define WALKO_LEFT_FAR              3.736189f
-
-#define WALKX_LEFT_MIDDLE           3724.396484f
-#define WALKY_LEFT_MIDDLE           -5061.330566f
-#define WALKZ_LEFT_MIDDLE           142.032700f
-#define WALKO_LEFT_MIDDLE           4.564785f
-
-#define WALKX_LEFT_NEAR             3687.158424f
-#define WALKY_LEFT_NEAR             -5076.834473f
-#define WALKZ_LEFT_NEAR             142.017319f
-#define WALKO_LEFT_NEAR             5.237086f
-
-#define WALKX_RIGHT_FAR             3687.571777f
-#define WALKY_RIGHT_FAR             -5126.831055f
-#define WALKZ_RIGHT_FAR             142.017807f
-#define WALKO_RIGHT_FAR             0.604023f
-
-#define WALKX_RIGHT_MIDDLE          3707.990733f
-#define WALKY_RIGHT_MIDDLE          -5151.450195f
-#define WALKZ_RIGHT_MIDDLE          142.032562f
-#define WALKO_RIGHT_MIDDLE          1.376855f
-
-#define WALKX_RIGHT_NEAR            3739.500000f
-#define WALKY_RIGHT_NEAR            -5141.883989f
-#define WALKZ_RIGHT_NEAR            142.0141130f
-#define WALKO_RIGHT_NEAR            2.121412f
-
 struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
 {
     boss_kelthuzadAI(Creature* pCreature) : ScriptedAI(pCreature)
@@ -169,11 +138,12 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
         Reset();
     }
 
-    ScriptedInstance* m_pInstance;
+    instance_naxxramas* m_pInstance;
     bool m_bIsRegularMode;
 
     uint64 m_auiGuardiansGUID[5];
     uint32 m_uiGuardiansCount;
+    uint32 m_uiGuardiansCountMax;
     uint32 m_uiGuardiansTimer;
     uint32 m_uiFrostBoltTimer;
     uint32 m_uiFrostBoltNovaTimer;
@@ -186,12 +156,10 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
     bool m_bIsPhase2;
     bool m_bIsPhase3;
 
-    float m_fWalk_Pos_X;
-    float m_fWalk_Pos_Y;
-    float m_fWalk_Pos_Z;
-
     void Reset()
     {
+        m_uiGuardiansCountMax = m_bIsRegularMode ? 2 : 4;
+
         m_uiFrostBoltTimer = urand(1000, 600000);           //It won't be more than a minute without cast it
         m_uiFrostBoltNovaTimer = 15000;                     //Cast every 15 seconds
         m_uiChainsTimer = urand(30000, 60000);              //Cast no sooner than once every 30 seconds
@@ -218,10 +186,6 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
         m_uiPhase1Timer = 310000;                           //Phase 1 lasts 5 minutes and 10 seconds
         m_bIsPhase2 = false;
         m_bIsPhase3 = false;
-
-        m_fWalk_Pos_X = 0.0f;
-        m_fWalk_Pos_Y = 0.0f;
-        m_fWalk_Pos_Z = 0.0f;
     }
 
     void KilledUnit(Unit* pVictim)
@@ -273,7 +237,14 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
     {
         if (pSummoned->GetEntry() == NPC_GUARDIAN)
         {
-            pSummoned->GetMotionMaster()->MovePoint(0, m_fWalk_Pos_X, m_fWalk_Pos_Y, m_fWalk_Pos_Z);
+            DoScriptText(EMOTE_GUARDIAN, m_creature);
+
+            if (m_pInstance)
+            {
+                float fx, fy, fz;
+                m_pInstance->GetChamberCenterCoords(fx, fy, fz);
+                pSummoned->GetMotionMaster()->MovePoint(0, fx, fy, fz);
+            }
 
             //Safe storing of creatures
             m_auiGuardiansGUID[m_uiGuardiansCount] = pSummoned->GetGUID();
@@ -362,7 +333,7 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
             DoScriptText(SAY_ANSWER_REQUEST, m_creature);
         }
 
-        if (m_bIsPhase3 && m_uiGuardiansCount < 5)
+        if (m_bIsPhase3 && m_uiGuardiansCount < m_uiGuardiansCountMax)
         {
             if (m_uiGuardiansTimer < uiDiff)
             {
@@ -371,46 +342,22 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
                 switch(urand(0, 5))
                 {
                     case 0:
-                        //Setting walk position
-                        m_fWalk_Pos_X = WALKX_LEFT_FAR;
-                        m_fWalk_Pos_Y = WALKY_LEFT_FAR;
-                        m_fWalk_Pos_Z = WALKZ_LEFT_FAR;
-                        m_creature->SummonCreature(NPC_GUARDIAN, ADDX_LEFT_FAR,ADDY_LEFT_FAR,ADDZ_LEFT_FAR,ADDO_LEFT_FAR,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,1000);
+                        m_creature->SummonCreature(NPC_GUARDIAN, ADDX_LEFT_FAR,ADDY_LEFT_FAR,ADDZ_LEFT_FAR,ADDO_LEFT_FAR,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,60000);
                         break;
                     case 1:
-                        //Start moving guardian towards the center of the room
-                        m_fWalk_Pos_X = WALKX_LEFT_MIDDLE;
-                        m_fWalk_Pos_Y = WALKY_LEFT_MIDDLE;
-                        m_fWalk_Pos_Z = WALKZ_LEFT_MIDDLE;
-                        m_creature->SummonCreature(NPC_GUARDIAN, ADDX_LEFT_MIDDLE,ADDY_LEFT_MIDDLE,ADDZ_LEFT_MIDDLE,ADDO_LEFT_MIDDLE,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,1000);
+                        m_creature->SummonCreature(NPC_GUARDIAN, ADDX_LEFT_MIDDLE,ADDY_LEFT_MIDDLE,ADDZ_LEFT_MIDDLE,ADDO_LEFT_MIDDLE,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,60000);
                         break;
                     case 2:
-                        //Start moving guardian towards the center of the room
-                        m_fWalk_Pos_X = WALKX_LEFT_NEAR;
-                        m_fWalk_Pos_Y = WALKY_LEFT_NEAR;
-                        m_fWalk_Pos_Z = WALKZ_LEFT_NEAR;
-                        m_creature->SummonCreature(NPC_GUARDIAN, ADDX_LEFT_NEAR,ADDY_LEFT_NEAR,ADDZ_LEFT_NEAR,ADDO_LEFT_NEAR,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,1000);
+                        m_creature->SummonCreature(NPC_GUARDIAN, ADDX_LEFT_NEAR,ADDY_LEFT_NEAR,ADDZ_LEFT_NEAR,ADDO_LEFT_NEAR,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,60000);
                         break;
                     case 3:
-                        //Start moving guardian towards the center of the room
-                        m_fWalk_Pos_X = WALKX_RIGHT_FAR;
-                        m_fWalk_Pos_Y = WALKY_RIGHT_FAR;
-                        m_fWalk_Pos_Z = WALKZ_RIGHT_FAR;
-                        m_creature->SummonCreature(NPC_GUARDIAN, ADDX_RIGHT_FAR,ADDY_RIGHT_FAR,ADDZ_RIGHT_FAR,ADDO_RIGHT_FAR,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,1000);
+                        m_creature->SummonCreature(NPC_GUARDIAN, ADDX_RIGHT_FAR,ADDY_RIGHT_FAR,ADDZ_RIGHT_FAR,ADDO_RIGHT_FAR,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,60000);
                         break;
                     case 4:
-                        //Start moving guardian towards the center of the room
-                        m_fWalk_Pos_X = WALKX_RIGHT_MIDDLE;
-                        m_fWalk_Pos_Y = WALKY_RIGHT_MIDDLE;
-                        m_fWalk_Pos_Z = WALKZ_RIGHT_MIDDLE;
-                        m_creature->SummonCreature(NPC_GUARDIAN, ADDX_RIGHT_MIDDLE,ADDY_RIGHT_MIDDLE,ADDZ_RIGHT_MIDDLE,ADDO_RIGHT_MIDDLE,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,1000);
+                        m_creature->SummonCreature(NPC_GUARDIAN, ADDX_RIGHT_MIDDLE,ADDY_RIGHT_MIDDLE,ADDZ_RIGHT_MIDDLE,ADDO_RIGHT_MIDDLE,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,60000);
                         break;
                     case 5:
-                        //Start moving guardian towards the center of the room
-                        m_fWalk_Pos_X = WALKX_RIGHT_NEAR;
-                        m_fWalk_Pos_Y = WALKY_RIGHT_NEAR;
-                        m_fWalk_Pos_Z = WALKZ_RIGHT_NEAR;
-                        m_creature->SummonCreature(NPC_GUARDIAN, ADDX_RIGHT_NEAR,ADDY_RIGHT_NEAR,ADDZ_RIGHT_NEAR,ADDO_RIGHT_NEAR,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,1000);
+                        m_creature->SummonCreature(NPC_GUARDIAN, ADDX_RIGHT_NEAR,ADDY_RIGHT_NEAR,ADDZ_RIGHT_NEAR,ADDO_RIGHT_NEAR,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,60000);
                         break;
                 }
 

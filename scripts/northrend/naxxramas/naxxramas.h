@@ -43,6 +43,12 @@ enum
     NPC_BLAUMEUX                = 16065,
     NPC_RIVENDARE               = 30549,
 
+    // End boss adds
+    NPC_SOLDIER_FROZEN          = 16427,
+    NPC_UNSTOPPABLE_ABOM        = 16428,
+    NPC_SOUL_WEAVER             = 16429,
+    NPC_GUARDIAN                = 16441,
+
     // Arachnid Quarter
     GO_ARAC_ANUB_DOOR           = 181126,                   //encounter door
     GO_ARAC_ANUB_GATE           = 181195,                   //open after boss is dead
@@ -89,7 +95,8 @@ enum
     GO_MILI_PORTAL              = 181578,
     GO_CONS_PORTAL              = 181576,
 
-    AREATRIGGER_FROSTWYRM       = 4120                     //not needed here, but AT to be scripted
+    AREATRIGGER_FROSTWYRM       = 4120,                    //not needed here, but AT to be scripted
+    AREATRIGGER_KELTHUZAD       = 4112
 };
 
 class MANGOS_DLL_DECL instance_naxxramas : public ScriptedInstance
@@ -111,6 +118,9 @@ class MANGOS_DLL_DECL instance_naxxramas : public ScriptedInstance
 
         const char* Save() { return strInstData.c_str(); }
         void Load(const char* chrIn);
+
+        void SetChamberCenterCoords(float fX, float fY, float fZ);
+        void GetChamberCenterCoords(float &fX, float &fY, float &fZ) { fX = m_fChamberCenterX; fY = m_fChamberCenterY; fZ = m_fChamberCenterZ; }
 
     protected:
         uint32 m_auiEncounter[MAX_ENCOUNTER];
@@ -162,6 +172,9 @@ class MANGOS_DLL_DECL instance_naxxramas : public ScriptedInstance
         uint64 m_uiLoathebDoorGUID;
 
         uint64 m_uiKelthuzadDoorGUID;
+        float m_fChamberCenterX;
+        float m_fChamberCenterY;
+        float m_fChamberCenterZ;
 };
 
 #endif
