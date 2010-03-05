@@ -1,7 +1,7 @@
-From 336b41dcdf565971bb27542889bf7e3b0395916f Mon Sep 17 00:00:00 2001
-From: arrai <array.of.intellect@gmail.com>
-Date: Mon, 1 Mar 2010 13:19:52 +0100
-Subject: [PATCH] Scriptdev2 patch
+From 3a3dda6636d81c33c3c9b143f64b5a518bfadb56 Mon Sep 17 00:00:00 2001
+From: Reve <Reve@scriptdev2.com>
+Date: Fri, 5 Mar 2010 21:41:55 +0100
+Subject: [PATCH] ScriptDev2 patch.
 
 ---
  configure.ac             |    6 +++++-
@@ -37,7 +37,7 @@ index d7dc654..79ea910 100644
 -SUBDIRS = universal
 +SUBDIRS = ScriptDev2
 diff --git a/src/mangosd/Makefile.am b/src/mangosd/Makefile.am
-index 4d2b641..7787e6c 100644
+index fe1ace1..40b6fdd 100644
 --- a/src/mangosd/Makefile.am
 +++ b/src/mangosd/Makefile.am
 @@ -40,7 +40,7 @@ mangos_worldd_SOURCES = \
@@ -49,15 +49,15 @@ index 4d2b641..7787e6c 100644
  	../game/libmangosgame.a \
  	../shared/Database/libmangosdatabase.a \
  	../shared/Config/libmangosconfig.a \
-@@ -52,7 +52,7 @@ mangos_worldd_LDADD = \
+@@ -51,7 +51,7 @@ mangos_worldd_LDADD = \
  	../../dep/src/g3dlite/libg3dlite.a \
  	../../dep/src/gsoap/libgsoap.a
  
--mangos_worldd_LDFLAGS = -L../../dep/src/sockets -L../../dep/src/g3dlite -L../../dep/src/gsoap -L../bindings/universal/ -L$(libdir) $(MANGOS_LIBS) -export-dynamic
-+mangos_worldd_LDFLAGS = -L../../dep/src/sockets -L../../dep/src/g3dlite -L../../dep/src/gsoap -L../bindings/ScriptDev2/ -L$(libdir) $(MANGOS_LIBS) -export-dynamic
+-mangos_worldd_LDFLAGS = -L../../dep/src/g3dlite -L../../dep/src/gsoap -L../bindings/universal/ -L$(libdir) $(MANGOS_LIBS) -export-dynamic
++mangos_worldd_LDFLAGS = -L../../dep/src/g3dlite -L../../dep/src/gsoap -L../bindings/ScriptDev2/ -L$(libdir) $(MANGOS_LIBS) -export-dynamic
  
  ## Additional files to include when running 'make dist'
  #  Include world daemon configuration
 -- 
-1.6.3.3
+1.6.5.1.1367.gcd48
 
