@@ -84,6 +84,9 @@ struct MANGOS_DLL_DECL boss_gothikAI : public ScriptedAI
     instance_naxxramas* m_pInstance;
     bool m_bIsRegularMode;
 
+    std::list<uint64> m_lLeftSideTrigger;
+    std::list<uint64> m_lRightSideTrigger;
+
     void Reset()
     {
     }
@@ -94,8 +97,39 @@ struct MANGOS_DLL_DECL boss_gothikAI : public ScriptedAI
 
         DoScriptText(SAY_SPEECH, m_creature);
 
-        if (m_pInstance)
-            m_pInstance->SetData(TYPE_GOTHIK, IN_PROGRESS);
+        if (!m_pInstance)
+            return;
+
+        m_pInstance->SetData(TYPE_GOTHIK, IN_PROGRESS);
+
+        SetTriggerLists();
+    }
+
+    void SetTriggerLists()
+    {
+        m_lLeftSideTrigger.clear();
+        m_lRightSideTrigger.clear();
+
+        std::list<uint64> lList;
+        m_pInstance->GetGothTriggerList(lList);
+
+        if (lList.empty())
+            return;
+
+        for(std::list<uint64>::iterator itr = lList.begin(); itr != lList.end(); ++itr)
+        {
+            if (Creature* pTrigger = m_pInstance->instance->GetCreature(*itr))
+            {
+                // not valid
+                if (pTrigger->GetPositionZ() >= (m_creature->GetPositionZ() - 5.0f))
+                    continue;
+
+                if (m_creature->GetAngle(pTrigger) >= M_PI_F)
+                    m_lRightSideTrigger.push_back(*itr);
+                else
+                    m_lLeftSideTrigger.push_back(*itr);
+            }
+        }
     }
 
     void KilledUnit(Unit* pVictim)

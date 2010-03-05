@@ -129,6 +129,10 @@ class MANGOS_DLL_DECL instance_naxxramas : public ScriptedInstance
         const char* Save() { return strInstData.c_str(); }
         void Load(const char* chrIn);
 
+        // goth
+        void GetGothTriggerList(std::list<uint64>& lList) { lList = m_lGothTriggerList; }
+
+        // kel
         void SetChamberCenterCoords(float fX, float fY, float fZ);
         void GetChamberCenterCoords(float &fX, float &fY, float &fZ) { fX = m_fChamberCenterX; fY = m_fChamberCenterY; fZ = m_fChamberCenterZ; }
 
@@ -172,6 +176,8 @@ class MANGOS_DLL_DECL instance_naxxramas : public ScriptedInstance
         uint64 m_uiGothCombatGateGUID;
         uint64 m_uiGothikEntryDoorGUID;
         uint64 m_uiGothikExitDoorGUID;
+        std::list<uint64> m_lGothTriggerList;
+
         uint64 m_uiHorsemenDoorGUID;
         uint64 m_uiHorsemenChestGUID;
 

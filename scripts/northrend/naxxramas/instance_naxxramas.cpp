@@ -87,15 +87,16 @@ void instance_naxxramas::OnCreatureCreate(Creature* pCreature)
 {
     switch(pCreature->GetEntry())
     {
-        case NPC_ANUB_REKHAN: m_uiAnubRekhanGUID = pCreature->GetGUID(); break;
-        case NPC_FAERLINA:    m_uiFaerlinanGUID = pCreature->GetGUID();  break;
-        case NPC_THADDIUS:    m_uiThaddiusGUID = pCreature->GetGUID();   break;
-        case NPC_STALAGG:     m_uiStalaggGUID = pCreature->GetGUID();    break;
-        case NPC_FEUGEN:      m_uiFeugenGUID = pCreature->GetGUID();     break;
-        case NPC_ZELIEK:      m_uiZeliekGUID = pCreature->GetGUID();     break;
-        case NPC_THANE:       m_uiThaneGUID = pCreature->GetGUID();      break;
-        case NPC_BLAUMEUX:    m_uiBlaumeuxGUID = pCreature->GetGUID();   break;
-        case NPC_RIVENDARE:   m_uiRivendareGUID = pCreature->GetGUID();  break;
+        case NPC_ANUB_REKHAN:       m_uiAnubRekhanGUID = pCreature->GetGUID();  break;
+        case NPC_FAERLINA:          m_uiFaerlinanGUID = pCreature->GetGUID();   break;
+        case NPC_THADDIUS:          m_uiThaddiusGUID = pCreature->GetGUID();    break;
+        case NPC_STALAGG:           m_uiStalaggGUID = pCreature->GetGUID();     break;
+        case NPC_FEUGEN:            m_uiFeugenGUID = pCreature->GetGUID();      break;
+        case NPC_ZELIEK:            m_uiZeliekGUID = pCreature->GetGUID();      break;
+        case NPC_THANE:             m_uiThaneGUID = pCreature->GetGUID();       break;
+        case NPC_BLAUMEUX:          m_uiBlaumeuxGUID = pCreature->GetGUID();    break;
+        case NPC_RIVENDARE:         m_uiRivendareGUID = pCreature->GetGUID();   break;
+        case NPC_SUB_BOSS_TRIGGER:  m_lGothTriggerList.push_back(pCreature->GetGUID()); break;
     }
 }
 
