@@ -43,6 +43,15 @@ enum
     NPC_BLAUMEUX                = 16065,
     NPC_RIVENDARE               = 30549,
 
+    // Gothik
+    NPC_SUB_BOSS_TRIGGER        = 16137,                    //summon locations
+    NPC_UNREL_TRAINEE           = 16124,
+    NPC_UNREL_DEATH_KNIGTH      = 16125,
+    NPC_UNREL_RIDER             = 16126,
+    NPC_SPECT_TRAINEE           = 16127,
+    NPC_SPECT_DEATH_KNIGTH      = 16148,
+    NPC_SPECT_RIDER             = 16150,
+
     // End boss adds
     NPC_SOLDIER_FROZEN          = 16427,
     NPC_UNSTOPPABLE_ABOM        = 16428,
@@ -96,7 +105,8 @@ enum
     GO_CONS_PORTAL              = 181576,
 
     AREATRIGGER_FROSTWYRM       = 4120,                    //not needed here, but AT to be scripted
-    AREATRIGGER_KELTHUZAD       = 4112
+    AREATRIGGER_KELTHUZAD       = 4112,
+    AREATRIGGER_GOTHIK          = 4116
 };
 
 class MANGOS_DLL_DECL instance_naxxramas : public ScriptedInstance

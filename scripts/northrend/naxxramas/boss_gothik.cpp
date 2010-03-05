@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Gothik
-SD%Complete: 0
-SDComment: Placeholder
+SD%Complete: 10
+SDComment:
 SDCategory: Naxxramas
 EndScriptData */
 
@@ -26,15 +26,20 @@ EndScriptData */
 
 enum
 {
-    SAY_SPEECH                = -1533040,
-    SAY_KILL                  = -1533041,
-    SAY_DEATH                 = -1533042,
-    SAY_TELEPORT              = -1533043,
+    SAY_SPEECH                  = -1533040,                 // todo: split my text in 4 parts
+    SAY_KILL                    = -1533041,
+    SAY_DEATH                   = -1533042,
+    SAY_TELEPORT                = -1533043,
 
-    //Gothik
-    SPELL_HARVESTSOUL         = 28679,
-    SPELL_SHADOWBOLT          = 29317,
-    H_SPELL_SHADOWBOLT        = 56405,
+    EMOTE_TO_FRAY               = -1533138,
+    EMOTE_GATE                  = -1533139,
+
+    SPELL_TELEPORT_LEFT         = 28025,                    // guesswork
+    SPELL_TELEPORT_RIGHT        = 28026,                    // could be defined as dead or live side, left or right facing north
+
+    SPELL_HARVESTSOUL           = 28679,
+    SPELL_SHADOWBOLT            = 29317,
+    SPELL_SHADOWBOLT_H          = 56405,
 
     //Unrelenting Trainee
     SPELL_EAGLECLAW           = 30285,
@@ -66,3 +71,73 @@ enum
     //Spectral Horse
     SPELL_STOMP               = 27993
 };
+
+struct MANGOS_DLL_DECL boss_gothikAI : public ScriptedAI
+{
+    boss_gothikAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (instance_naxxramas*)pCreature->GetInstanceData();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
+        Reset();
+    }
+
+    instance_naxxramas* m_pInstance;
+    bool m_bIsRegularMode;
+
+    void Reset()
+    {
+    }
+
+    void Aggro(Unit* pWho)
+    {
+        m_creature->SetInCombatWithZone();
+
+        DoScriptText(SAY_SPEECH, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_GOTHIK, IN_PROGRESS);
+    }
+
+    void KilledUnit(Unit* pVictim)
+    {
+        if (pVictim->GetTypeId() == TYPEID_PLAYER)
+            DoScriptText(SAY_KILL, m_creature);
+    }
+
+    void JustDied(Unit* pKiller)
+    {
+        DoScriptText(SAY_DEATH, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_GOTHIK, DONE);
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_GOTHIK, FAIL);
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_boss_gothik(Creature* pCreature)
+{
+    return new boss_gothikAI(pCreature);
+}
+
+void AddSC_boss_gothik()
+{
+    Script* NewScript;
+
+    NewScript = new Script;
+    NewScript->Name = "boss_gothik";
+    NewScript->GetAI = &GetAI_boss_gothik;
+    NewScript->RegisterSelf();
+}

@@ -1205,7 +1205,10 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1533135,'%s strikes!',0,3,0,0,'kelthuzad EMOTE_PHASE2'),
 
 (-1533136,'%s teleports and begins to channel a spell!',0,3,0,0,'heigan EMOTE_TELEPORT'),
-(-1533137,'%s rushes to attack once more!',0,3,0,0,'heigan EMOTE_RETURN');
+(-1533137,'%s rushes to attack once more!',0,3,0,0,'heigan EMOTE_RETURN'),
+
+(-1533138,'%s teleports into the fray!',0,3,0,0,'gothik EMOTE_TO_FRAY'),
+(-1533139,'The central gate opens!',0,3,0,0,'gothik EMOTE_GATE');
 
 -- -1 534 000 THE BATTLE OF MT. HYJAL
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
