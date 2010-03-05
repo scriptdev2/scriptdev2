@@ -24,7 +24,6 @@ EndScriptData */
 #include "precompiled.h"
 
 #define SPELL_WARSTOMP          24375
-#define SPELL_CLEAVE            15579
 #define SPELL_STRIKE            18368
 #define SPELL_REND              18106
 #define SPELL_SUNDERARMOR       24317
@@ -36,7 +35,6 @@ struct MANGOS_DLL_DECL boss_highlordomokkAI : public ScriptedAI
     boss_highlordomokkAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 WarStomp_Timer;
-    uint32 Cleave_Timer;
     uint32 Strike_Timer;
     uint32 Rend_Timer;
     uint32 SunderArmor_Timer;
@@ -46,7 +44,6 @@ struct MANGOS_DLL_DECL boss_highlordomokkAI : public ScriptedAI
     void Reset()
     {
         WarStomp_Timer = 15000;
-        Cleave_Timer = 6000;
         Strike_Timer = 10000;
         Rend_Timer = 14000;
         SunderArmor_Timer = 2000;
@@ -66,13 +63,6 @@ struct MANGOS_DLL_DECL boss_highlordomokkAI : public ScriptedAI
             DoCastSpellIfCan(m_creature->getVictim(),SPELL_WARSTOMP);
             WarStomp_Timer = 14000;
         }else WarStomp_Timer -= diff;
-
-        //Cleave_Timer
-        if (Cleave_Timer < diff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_CLEAVE);
-            Cleave_Timer = 8000;
-        }else Cleave_Timer -= diff;
 
         //Strike_Timer
         if (Strike_Timer < diff)
@@ -112,6 +102,7 @@ struct MANGOS_DLL_DECL boss_highlordomokkAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
+
 CreatureAI* GetAI_boss_highlordomokk(Creature* pCreature)
 {
     return new boss_highlordomokkAI(pCreature);

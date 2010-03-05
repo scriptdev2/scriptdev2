@@ -24,9 +24,9 @@ EndScriptData */
 #include "precompiled.h"
 
 #define SPELL_SNAPKICK          15618
-#define SPELL_CLEAVE            15579
+#define SPELL_CLEAVE            15284
 #define SPELL_UPPERCUT          10966
-#define SPELL_MORTALSTRIKE      16856
+#define SPELL_MORTALSTRIKE      15708
 #define SPELL_PUMMEL            15615
 #define SPELL_THROWAXE          16075
 
@@ -102,6 +102,7 @@ struct MANGOS_DLL_DECL boss_warmastervooneAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
+
 CreatureAI* GetAI_boss_warmastervoone(Creature* pCreature)
 {
     return new boss_warmastervooneAI(pCreature);
