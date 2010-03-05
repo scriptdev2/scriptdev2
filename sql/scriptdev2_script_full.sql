@@ -1179,8 +1179,8 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1533113,'The races of the world will perish. It is only a matter of time.',8830,1,0,0,'heigan SAY_TAUNT1'),
 (-1533114,'I see endless suffering, I see torment, I see rage. I see... everything!',8831,1,0,0,'heigan SAY_TAUNT2'),
 (-1533115,'Soon... the world will tremble!',8832,1,0,0,'heigan SAY_TAUNT3'),
-(-1533116,'The end is upon you.',8833,1,0,0,'heigan SAY_TAUNT4'),
-(-1533117,'Hungry worms will feast on your rotten flesh!',8834,1,0,0,'heigan SAY_TAUNT5'),
+(-1533116,'The end is upon you.',8833,1,0,0,'heigan SAY_CHANNELING'),
+(-1533117,'Hungry worms will feast on your rotten flesh!',8834,1,0,0,'heigan SAY_TAUNT4'),
 (-1533118,'Noo... o...',8828,1,0,0,'heigan SAY_DEATH'),
 
 (-1533119,'%s spots a nearby Zombie to devour!',0,3,0,0,'gluth EMOTE_ZOMBIE'),
@@ -1202,7 +1202,10 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1533133,'%s teleports back into the battle!',0,3,0,0,'noth EMOTE_TELEPORT_RETURN'),
 
 (-1533134,'A Guardian of Icecrown enters the fight!',0,3,0,0,'kelthuzad EMOTE_GUARDIAN'),
-(-1533135,'%s strikes!',0,3,0,0,'kelthuzad EMOTE_PHASE2');
+(-1533135,'%s strikes!',0,3,0,0,'kelthuzad EMOTE_PHASE2'),
+
+(-1533136,'%s teleports and begins to channel a spell!',0,3,0,0,'heigan EMOTE_TELEPORT'),
+(-1533137,'%s rushes to attack once more!',0,3,0,0,'heigan EMOTE_RETURN');
 
 -- -1 534 000 THE BATTLE OF MT. HYJAL
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES

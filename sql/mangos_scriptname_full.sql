@@ -720,7 +720,7 @@ UPDATE creature_template SET ScriptName='boss_anubrekhan' WHERE entry=15956;
 UPDATE creature_template SET ScriptName='boss_faerlina' WHERE entry=15953;
 UPDATE creature_template SET ScriptName='boss_maexxna' WHERE entry=15952;
 UPDATE creature_template SET ScriptName='boss_noth' WHERE entry=15954;
--- UPDATE creature_template SET ScriptName='boss_heigan' WHERE entry=15936;
+UPDATE creature_template SET ScriptName='boss_heigan' WHERE entry=15936;
 UPDATE creature_template SET ScriptName='boss_loatheb' WHERE entry=16011;
 UPDATE creature_template SET ScriptName='boss_razuvious' WHERE entry=16061;
 -- UPDATE creature_template SET ScriptName='boss_gothik' WHERE entry=16060;
