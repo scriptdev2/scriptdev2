@@ -58,6 +58,7 @@ instance_naxxramas::instance_naxxramas(Map* pMap) : ScriptedInstance(pMap),
     m_uiMaexOuterGUID(0),
     m_uiMaexInnerGUID(0),
 
+    m_uiGothikGUID(0),
     m_uiGothCombatGateGUID(0),
     m_uiGothikEntryDoorGUID(0),
     m_uiGothikExitDoorGUID(0),
@@ -96,6 +97,7 @@ void instance_naxxramas::OnCreatureCreate(Creature* pCreature)
         case NPC_THANE:             m_uiThaneGUID = pCreature->GetGUID();       break;
         case NPC_BLAUMEUX:          m_uiBlaumeuxGUID = pCreature->GetGUID();    break;
         case NPC_RIVENDARE:         m_uiRivendareGUID = pCreature->GetGUID();   break;
+        case NPC_GOTHIK:            m_uiGothikGUID = pCreature->GetGUID();      break;
         case NPC_SUB_BOSS_TRIGGER:  m_lGothTriggerList.push_back(pCreature->GetGUID()); break;
     }
 }
@@ -486,8 +488,19 @@ uint64 instance_naxxramas::GetData64(uint32 uiData)
             return m_uiStalaggGUID;
         case NPC_FEUGEN:
             return m_uiFeugenGUID;
+        case NPC_GOTHIK:
+            return m_uiGothikGUID;
     }
     return 0;
+}
+
+bool instance_naxxramas::IsInRightSideGothArea(Unit* pUnit)
+{
+    if (GameObject* pCombatGate = instance->GetGameObject(m_uiGothCombatGateGUID))
+        return (pCombatGate->GetPositionY() >= pUnit->GetPositionY());
+
+    error_log("SD2: left/right side check, Gothik combat area failed.");
+    return true;
 }
 
 void instance_naxxramas::SetChamberCenterCoords(float fX, float fY, float fZ)

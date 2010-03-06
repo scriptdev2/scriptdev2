@@ -78,6 +78,7 @@ struct MANGOS_DLL_DECL boss_gothikAI : public ScriptedAI
     {
         m_pInstance = (instance_naxxramas*)pCreature->GetInstanceData();
         m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
+        //SetCombatMovement(false);                         // uncomment when more parts implemented.
         Reset();
     }
 
@@ -120,11 +121,11 @@ struct MANGOS_DLL_DECL boss_gothikAI : public ScriptedAI
         {
             if (Creature* pTrigger = m_pInstance->instance->GetCreature(*itr))
             {
-                // not valid
+                // not valid for summon point
                 if (pTrigger->GetPositionZ() >= (m_creature->GetPositionZ() - 5.0f))
                     continue;
 
-                if (m_creature->GetAngle(pTrigger) >= M_PI_F)
+                if (m_pInstance->IsInRightSideGothArea(pTrigger))
                     m_lRightSideTrigger.push_back(*itr);
                 else
                     m_lLeftSideTrigger.push_back(*itr);

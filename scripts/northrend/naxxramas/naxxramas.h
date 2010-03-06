@@ -44,6 +44,7 @@ enum
     NPC_RIVENDARE               = 30549,
 
     // Gothik
+    NPC_GOTHIK                  = 16060,
     NPC_SUB_BOSS_TRIGGER        = 16137,                    //summon locations
     NPC_UNREL_TRAINEE           = 16124,
     NPC_UNREL_DEATH_KNIGTH      = 16125,
@@ -131,6 +132,7 @@ class MANGOS_DLL_DECL instance_naxxramas : public ScriptedInstance
 
         // goth
         void GetGothTriggerList(std::list<uint64>& lList) { lList = m_lGothTriggerList; }
+        bool IsInRightSideGothArea(Unit* pUnit);
 
         // kel
         void SetChamberCenterCoords(float fX, float fY, float fZ);
@@ -173,6 +175,7 @@ class MANGOS_DLL_DECL instance_naxxramas : public ScriptedInstance
         uint64 m_uiMaexOuterGUID;
         uint64 m_uiMaexInnerGUID;
 
+        uint64 m_uiGothikGUID;
         uint64 m_uiGothCombatGateGUID;
         uint64 m_uiGothikEntryDoorGUID;
         uint64 m_uiGothikExitDoorGUID;
