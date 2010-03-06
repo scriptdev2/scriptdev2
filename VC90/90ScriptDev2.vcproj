@@ -1650,7 +1650,7 @@
 						Name="trial_of_the_crusader"
 						>
 						<File
-							RelativePath="..\scripts\northrend\crusaders_coliseum\trial_of_the_crusader\boss_anubarak.cpp"
+							RelativePath="..\scripts\northrend\crusaders_coliseum\trial_of_the_crusader\boss_anubarak_trial.cpp"
 							>
 						</File>
 						<File
@@ -1671,6 +1671,10 @@
 						</File>
 						<File
 							RelativePath="..\scripts\northrend\crusaders_coliseum\trial_of_the_crusader\instance_trial_of_the_crusader.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\northrend\crusaders_coliseum\trial_of_the_crusader\trial_of_the_crusader.cpp"
 							>
 						</File>
 						<File

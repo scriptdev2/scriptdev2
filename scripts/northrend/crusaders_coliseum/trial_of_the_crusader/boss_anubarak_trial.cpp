@@ -73,6 +73,6 @@ void AddSC_boss_anubarak_trial()
 
     newscript = new Script;
     newscript->Name = "boss_anubarak_trial";
-    newscript->GetAI = &GetAI_boss_anubarak;
+    newscript->GetAI = &GetAI_boss_anubarak_trial;
     newscript->RegisterSelf();
 }
