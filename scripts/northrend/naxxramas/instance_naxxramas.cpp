@@ -299,13 +299,28 @@ void instance_naxxramas::SetData(uint32 uiType, uint32 uiData)
                 DoUseDoorOrButton(m_uiGothikEntryDoorGUID);
             break;
         case TYPE_GOTHIK:
-            m_auiEncounter[7] = uiData;
-            DoUseDoorOrButton(m_uiGothikEntryDoorGUID);
-            if (uiData == DONE)
+            switch(uiData)
             {
-                DoUseDoorOrButton(m_uiGothikExitDoorGUID);
-                DoUseDoorOrButton(m_uiHorsemenDoorGUID);
+                case IN_PROGRESS:
+                    DoUseDoorOrButton(m_uiGothikEntryDoorGUID);
+                    DoUseDoorOrButton(m_uiGothCombatGateGUID);
+                    break;
+                case SPECIAL:
+                    DoUseDoorOrButton(m_uiGothCombatGateGUID);
+                    break;
+                case FAIL:
+                    if (m_auiEncounter[7] == IN_PROGRESS)
+                        DoUseDoorOrButton(m_uiGothCombatGateGUID);
+
+                    DoUseDoorOrButton(m_uiGothikEntryDoorGUID);
+                    break;
+                case DONE:
+                    DoUseDoorOrButton(m_uiGothikEntryDoorGUID);
+                    DoUseDoorOrButton(m_uiGothikExitDoorGUID);
+                    DoUseDoorOrButton(m_uiHorsemenDoorGUID);
+                    break;
             }
+            m_auiEncounter[7] = uiData;
             break;
         case TYPE_FOUR_HORSEMEN:
             m_auiEncounter[8] = uiData;
@@ -492,6 +507,66 @@ uint64 instance_naxxramas::GetData64(uint32 uiData)
             return m_uiGothikGUID;
     }
     return 0;
+}
+
+void instance_naxxramas::SetGothTriggers()
+{
+    Creature* pGoth = instance->GetCreature(m_uiGothikGUID);
+
+    if (!pGoth)
+        return;
+
+    for(std::list<uint64>::iterator itr = m_lGothTriggerList.begin(); itr != m_lGothTriggerList.end(); ++itr)
+    {
+        if (Creature* pTrigger = instance->GetCreature(*itr))
+        {
+            GothTrigger pGt;
+            pGt.bIsAnchorHigh = (pTrigger->GetPositionZ() >= (pGoth->GetPositionZ() - 5.0f));
+            pGt.bIsRightSide = IsInRightSideGothArea(pTrigger);
+
+            m_mGothTriggerMap[pTrigger->GetGUID()] = pGt;
+        }
+    }
+}
+
+Creature* instance_naxxramas::GetClosestAnchorForGoth(Creature* pSource, bool bRightSide)
+{
+    std::list<Creature* > lList;
+
+    for (UNORDERED_MAP<uint64, GothTrigger>::iterator itr = m_mGothTriggerMap.begin(); itr != m_mGothTriggerMap.end(); ++itr)
+    {
+        if (!itr->second.bIsAnchorHigh)
+            continue;
+
+        if (itr->second.bIsRightSide != bRightSide)
+            continue;
+
+        if (Creature* pCreature = instance->GetCreature(itr->first))
+            lList.push_back(pCreature);
+    }
+
+    if (!lList.empty())
+    {
+        lList.sort(ObjectDistanceOrder(pSource));
+        return lList.front();
+    }
+
+    return NULL;
+}
+
+void instance_naxxramas::GetGothSummonPointCreatures(std::list<Creature*> &lList, bool bRightSide)
+{
+    for (UNORDERED_MAP<uint64, GothTrigger>::iterator itr = m_mGothTriggerMap.begin(); itr != m_mGothTriggerMap.end(); ++itr)
+    {
+        if (itr->second.bIsAnchorHigh)
+            continue;
+
+        if (itr->second.bIsRightSide != bRightSide)
+            continue;
+
+        if (Creature* pCreature = instance->GetCreature(itr->first))
+            lList.push_back(pCreature);
+    }
 }
 
 bool instance_naxxramas::IsInRightSideGothArea(Unit* pUnit)
