@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Gothik
-SD%Complete: 10
-SDComment:
+SD%Complete: 60
+SDComment: Only base implemented. Todo: control adds at summon. Handle case of raid not splitted in two sides
 SDCategory: Naxxramas
 EndScriptData */
 
@@ -26,7 +26,11 @@ EndScriptData */
 
 enum
 {
-    SAY_SPEECH                  = -1533040,                 // todo: split my text in 4 parts
+    SAY_SPEECH_1                = -1533040,
+    SAY_SPEECH_2                = -1533140,
+    SAY_SPEECH_3                = -1533141,
+    SAY_SPEECH_4                = -1533142,
+
     SAY_KILL                    = -1533041,
     SAY_DEATH                   = -1533042,
     SAY_TELEPORT                = -1533043,
@@ -34,8 +38,12 @@ enum
     EMOTE_TO_FRAY               = -1533138,
     EMOTE_GATE                  = -1533139,
 
-    PHASE_BALCONY               = 0,
-    PHASE_GROUND                = 1,
+    PHASE_SPEECH                = 0,
+    PHASE_BALCONY               = 1,
+    PHASE_GROUND                = 2,
+    PHASE_END                   = 3,
+
+    MAX_WAVES                   = 19,
 
     SPELL_TELEPORT_LEFT         = 28025,                    // guesswork
     SPELL_TELEPORT_RIGHT        = 28026,                    // could be defined as dead or live side, left or right facing north
@@ -43,36 +51,6 @@ enum
     SPELL_HARVESTSOUL           = 28679,
     SPELL_SHADOWBOLT            = 29317,
     SPELL_SHADOWBOLT_H          = 56405,
-
-    //Unrelenting Trainee
-    SPELL_EAGLECLAW           = 30285,
-    SPELL_KNOCKDOWN_PASSIVE   = 6961,
-
-    //Unrelenting Deathknight
-    SPELL_CHARGE              = 22120,
-    SPELL_SHADOW_MARK         = 27825,
-
-    //Unrelenting Rider
-    SPELL_UNHOLY_AURA         = 55606,
-    H_SPELL_UNHOLY_AURA       = 55608,
-    SPELL_SHADOWBOLT_VOLLEY   = 27831,                      //Search thru targets and find those who have the SHADOW_MARK to cast this on
-    H_SPELL_SHADOWBOLT_VOLLEY = 55638,
-
-    //Spectral Trainee
-    SPELL_ARCANE_EXPLOSION    = 27989,
-
-    //Spectral Deathknight
-    SPELL_WHIRLWIND           = 28334,
-    SPELL_SUNDER_ARMOR        = 25051,                      //cannot find sunder that reduces armor by 2950
-    SPELL_CLEAVE              = 20677,
-    SPELL_MANA_BURN           = 17631,
-
-    //Spectral Rider
-    SPELL_LIFEDRAIN           = 24300,
-    //USES SAME UNHOLY AURA AS UNRELENTING RIDER
-
-    //Spectral Horse
-    SPELL_STOMP               = 27993
 };
 
 enum eSpellDummy
@@ -96,7 +74,7 @@ struct MANGOS_DLL_DECL boss_gothikAI : public ScriptedAI
     {
         m_pInstance = (instance_naxxramas*)pCreature->GetInstanceData();
         m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
-        //SetCombatMovement(false);                         // uncomment when more parts implemented.
+        SetCombatMovement(false);
         Reset();
     }
 
@@ -104,23 +82,35 @@ struct MANGOS_DLL_DECL boss_gothikAI : public ScriptedAI
     bool m_bIsRegularMode;
 
     uint8 m_uiPhase;
-    uint32 m_uiSummonTraineeTimer;
-    uint32 m_uiSummonDKTimer;
-    uint32 m_uiSummonRiderTimer;
+
+    uint8 m_uiSpeechCount;
+    uint32 m_uiSpeechTimer;
+
+    uint8 m_uiSummonCount;
+    uint32 m_uiSummonTimer;
+
+    uint32 m_uiTeleportTimer;
+    uint32 m_uiShadowboltTimer;
 
     void Reset()
     {
-        m_uiPhase = PHASE_BALCONY;
-        m_uiSummonTraineeTimer = 20000;
-        m_uiSummonDKTimer = 45000;
-        m_uiSummonRiderTimer = 55000;
+        m_uiPhase = PHASE_SPEECH;
+
+        m_uiSpeechCount = 0;
+        m_uiSpeechTimer = 5000;
+
+        m_uiSummonCount = 0;
+        m_uiSummonTimer = 5000;
+
+        m_uiTeleportTimer = 15000;
+        m_uiShadowboltTimer = 2500;
     }
 
     void Aggro(Unit* pWho)
     {
         m_creature->SetInCombatWithZone();
 
-        DoScriptText(SAY_SPEECH, m_creature);
+        DoScriptText(SAY_SPEECH_1, m_creature);
 
         if (!m_pInstance)
             return;
@@ -225,7 +215,127 @@ struct MANGOS_DLL_DECL boss_gothikAI : public ScriptedAI
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        DoMeleeAttackIfReady();
+        switch(m_uiPhase)
+        {
+            case PHASE_SPEECH:
+            {
+                if (m_uiSpeechTimer < uiDiff)
+                {
+                    m_uiSpeechTimer = 5000;
+                    ++m_uiSpeechCount;
+
+                    switch(m_uiSpeechCount)
+                    {
+                        case 1: DoScriptText(SAY_SPEECH_2, m_creature); break;
+                        case 2: DoScriptText(SAY_SPEECH_3, m_creature); break;
+                        case 3: DoScriptText(SAY_SPEECH_4, m_creature); break;
+                        case 4: m_uiPhase = PHASE_BALCONY; break;
+                    }
+                }
+                else
+                    m_uiSpeechTimer -= uiDiff;
+
+                break;
+            }
+            case PHASE_BALCONY:
+            {
+                if (m_uiSummonTimer < uiDiff)
+                {
+                    if (m_uiSummonCount >= MAX_WAVES)
+                    {
+                        DoScriptText(SAY_TELEPORT, m_creature);
+                        DoScriptText(EMOTE_TO_FRAY, m_creature);
+                        DoCastSpellIfCan(m_creature, SPELL_TELEPORT_RIGHT);
+                        m_uiPhase = PHASE_GROUND;
+                        return;
+                    }
+
+                    // npc, npc, npc, timer
+                    static uint32 const auiSummonData[MAX_WAVES][4] =
+                    {
+                        {NPC_UNREL_TRAINEE, 0, 0, 20000},
+                        {NPC_UNREL_TRAINEE, 0, 0, 20000},
+                        {NPC_UNREL_TRAINEE, 0, 0, 10000},
+                        {NPC_UNREL_DEATH_KNIGHT, 0, 0, 10000},
+                        {NPC_UNREL_TRAINEE, 0, 0, 15000},
+                        {NPC_UNREL_DEATH_KNIGHT, 0, 0, 10000},
+                        {NPC_UNREL_TRAINEE, 0, 0, 15000},
+                        {NPC_UNREL_DEATH_KNIGHT, NPC_UNREL_TRAINEE, 0, 10000},
+                        {NPC_UNREL_RIDER, 0, 0, 10000},
+                        {NPC_UNREL_TRAINEE, 0, 0, 5000},
+                        {NPC_UNREL_DEATH_KNIGHT, 0, 0, 15000},
+                        {NPC_UNREL_TRAINEE, NPC_UNREL_RIDER, 0, 10000},
+                        {NPC_UNREL_DEATH_KNIGHT, NPC_UNREL_DEATH_KNIGHT, 0, 10000},
+                        {NPC_UNREL_TRAINEE, 0, 0, 10000},
+                        {NPC_UNREL_RIDER, 0, 0, 5000},
+                        {NPC_UNREL_DEATH_KNIGHT, 0, 0, 5000},
+                        {NPC_UNREL_TRAINEE, 0, 0, 20000},
+                        {NPC_UNREL_RIDER, NPC_UNREL_DEATH_KNIGHT, NPC_UNREL_TRAINEE, 15000},
+                        {NPC_UNREL_TRAINEE, 0, 0, 30000},
+                    };
+
+                    SummonAdds(true, auiSummonData[m_uiSummonCount][0]);
+
+                    if (auiSummonData[m_uiSummonCount][1])
+                        SummonAdds(true, auiSummonData[m_uiSummonCount][1]);
+
+                    if (auiSummonData[m_uiSummonCount][2])
+                        SummonAdds(true, auiSummonData[m_uiSummonCount][2]);
+
+                    m_uiSummonTimer = auiSummonData[m_uiSummonCount][3];
+
+                    ++m_uiSummonCount;
+                }
+                else
+                    m_uiSummonTimer -= uiDiff;
+
+                break;
+            }
+            case PHASE_GROUND:
+            case PHASE_END:
+            {
+                if (m_uiPhase == PHASE_GROUND)
+                {
+                    if (m_creature->GetHealthPercent() < 30.0f)
+                    {
+                        if (m_pInstance->IsInRightSideGothArea(m_creature))
+                        {
+                            DoScriptText(EMOTE_GATE, m_creature);
+                            m_pInstance->SetData(TYPE_GOTHIK, SPECIAL);
+                            m_uiPhase = PHASE_END;
+                            m_uiShadowboltTimer = 2000;
+                            return;
+                        }
+                    }
+
+                    if (m_uiTeleportTimer < uiDiff)
+                    {
+                        uint32 uiTeleportSpell = m_pInstance->IsInRightSideGothArea(m_creature) ? SPELL_TELEPORT_LEFT : SPELL_TELEPORT_RIGHT;
+
+                        if (DoCastSpellIfCan(m_creature, uiTeleportSpell) == CAST_OK)
+                        {
+                            DoResetThreat();
+                            m_uiTeleportTimer = 15000;
+                            m_uiShadowboltTimer = 2000;
+                            return;
+                        }
+                    }
+                    else
+                        m_uiTeleportTimer -= uiDiff;
+                }
+
+                if (m_uiShadowboltTimer < uiDiff)
+                {
+                    if (DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ?  SPELL_SHADOWBOLT: SPELL_SHADOWBOLT_H) == CAST_OK)
+                        m_uiShadowboltTimer = 1500;
+                }
+                else
+                    m_uiShadowboltTimer -= uiDiff;
+
+                DoMeleeAttackIfReady();                     // possibly no melee at all
+                break;
+            }
+        }
     }
 };
 
@@ -292,19 +402,23 @@ bool EffectDummyCreature_spell_anchor(Unit* pCaster, uint32 uiSpellId, SpellEffe
             return true;
         }
         case SPELL_A_TO_SKULL:                              // final destination trigger mob
-        {
-            pCreatureTarget->SummonCreature(NPC_SPECT_TRAINEE, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 20000);
-            return true;
-        }
         case SPELL_B_TO_SKULL:
-        {
-            pCreatureTarget->SummonCreature(NPC_SPECT_DEATH_KNIGTH, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 20000);
-            return true;
-        }
         case SPELL_C_TO_SKULL:
         {
-            pCreatureTarget->SummonCreature(NPC_SPECT_RIDER, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 20000);
-            pCreatureTarget->SummonCreature(NPC_SPECT_HORSE, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 20000);
+            if (Creature* pGoth = pInstance->instance->GetCreature(pInstance->GetData64(NPC_GOTHIK)))
+            {
+                uint32 uiNpcEntry = NPC_SPECT_TRAINEE;
+
+                if (uiSpellId == SPELL_B_TO_SKULL)
+                    uiNpcEntry = NPC_SPECT_DEATH_KNIGTH;
+                else if (uiSpellId == SPELL_C_TO_SKULL)
+                    uiNpcEntry = NPC_SPECT_RIDER;
+
+                pGoth->SummonCreature(uiNpcEntry, pCreatureTarget->GetPositionX(), pCreatureTarget->GetPositionY(), pCreatureTarget->GetPositionZ(), pCreatureTarget->GetOrientation(), TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 20000);
+
+                if (uiNpcEntry == NPC_SPECT_RIDER)
+                    pGoth->SummonCreature(NPC_SPECT_HORSE, pCreatureTarget->GetPositionX(), pCreatureTarget->GetPositionY(), pCreatureTarget->GetPositionZ(), pCreatureTarget->GetOrientation(), TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 20000);
+            }
             return true;
         }
     }

@@ -1095,7 +1095,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1533038,'Help me! Save me!',8875,1,0,0,'thaddius SAY_SCREAM3'),
 (-1533039,'Please, nooo!',8876,1,0,0,'thaddius SAY_SCREAM4'),
 
-(-1533040,'Foolishly you have sought your own demise. Brazenly you have disregarded powers beyond your understanding. You have fought hard to invade the realm of the harvester. Now there is only one way out - to walk the lonely path of the damned.',8807,1,0,0,'gothik SAY_SPEECH'),
+(-1533040,'Foolishly you have sought your own demise.',8807,1,0,0,'gothik SAY_SPEECH_1'),
 (-1533041,'Death is the only escape.',8806,1,0,0,'gothik SAY_KILL'),
 (-1533042,'I... am... undone!',8805,1,0,0,'gothik SAY_DEATH'),
 (-1533043,'I have waited long enough! Now, you face the harvester of souls!',8808,1,0,0,'gothik SAY_TELEPORT'),
@@ -1208,7 +1208,10 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1533137,'%s rushes to attack once more!',0,3,0,0,'heigan EMOTE_RETURN'),
 
 (-1533138,'%s teleports into the fray!',0,3,0,0,'gothik EMOTE_TO_FRAY'),
-(-1533139,'The central gate opens!',0,3,0,0,'gothik EMOTE_GATE');
+(-1533139,'The central gate opens!',0,3,0,0,'gothik EMOTE_GATE'),
+(-1533140,'Brazenly you have disregarded powers beyond your understanding.',0,1,0,0,'gothik SAY_SPEECH_2'),
+(-1533141,'You have fought hard to invade the realm of the harvester.',0,1,0,0,'gothik SAY_SPEECH_3'),
+(-1533142,'Now there is only one way out - to walk the lonely path of the damned.',0,1,0,0,'gothik SAY_SPEECH_4');
 
 -- -1 534 000 THE BATTLE OF MT. HYJAL
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
