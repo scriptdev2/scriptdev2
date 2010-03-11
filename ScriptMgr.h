@@ -28,10 +28,11 @@ class Aura;
 struct Script
 {
     Script() :
-        pGossipHello(NULL), pQuestAccept(NULL), pGossipSelect(NULL), pGossipSelectWithCode(NULL),
+        pGossipHello(NULL), pGOGossipHello(NULL), pGossipSelect(NULL), pGOGossipSelect(NULL),
+        pGossipSelectWithCode(NULL), pGOGossipSelectWithCode(NULL),
         pQuestSelect(NULL), pQuestComplete(NULL), pNPCDialogStatus(NULL), pGODialogStatus(NULL),
         pChooseReward(NULL), pItemHello(NULL), pGOHello(NULL), pAreaTrigger(NULL), pItemQuestAccept(NULL),
-        pGOQuestAccept(NULL), pGOChooseReward(NULL), pItemUse(NULL),
+        pQuestAccept(NULL), pGOQuestAccept(NULL), pGOChooseReward(NULL), pItemUse(NULL),
         pEffectDummyCreature(NULL), pEffectDummyGameObj(NULL), pEffectDummyItem(NULL), pEffectAuraDummy(NULL),
         GetAI(NULL), GetInstanceData(NULL)
     {}
@@ -39,26 +40,29 @@ struct Script
     std::string Name;
 
     //Methods to be scripted
-    bool (*pGossipHello         )(Player*, Creature*);
-    bool (*pQuestAccept         )(Player*, Creature*, const Quest*);
-    bool (*pGossipSelect        )(Player*, Creature*, uint32, uint32);
-    bool (*pGossipSelectWithCode)(Player*, Creature*, uint32, uint32, const char*);
-    bool (*pQuestSelect         )(Player*, Creature*, const Quest*);
-    bool (*pQuestComplete       )(Player*, Creature*, const Quest*);
-    uint32 (*pNPCDialogStatus   )(Player*, Creature*);
-    uint32 (*pGODialogStatus    )(Player*, GameObject*);
-    bool (*pChooseReward        )(Player*, Creature*, const Quest*, uint32);
-    bool (*pItemHello           )(Player*, Item*, const Quest*);
-    bool (*pGOHello             )(Player*, GameObject*);
-    bool (*pAreaTrigger         )(Player*, AreaTriggerEntry*);
-    bool (*pItemQuestAccept     )(Player*, Item*, const Quest*);
-    bool (*pGOQuestAccept       )(Player*, GameObject*, const Quest*);
-    bool (*pGOChooseReward      )(Player*, GameObject*, const Quest*, uint32);
-    bool (*pItemUse             )(Player*, Item*, SpellCastTargets const&);
-    bool (*pEffectDummyCreature )(Unit*, uint32, SpellEffectIndex, Creature*);
-    bool (*pEffectDummyGameObj  )(Unit*, uint32, SpellEffectIndex, GameObject*);
-    bool (*pEffectDummyItem     )(Unit*, uint32, SpellEffectIndex, Item*);
-    bool (*pEffectAuraDummy     )(const Aura*, bool);
+    bool (*pGossipHello             )(Player*, Creature*);
+    bool (*pGOGossipHello           )(Player*, GameObject*);
+    bool (*pQuestAccept             )(Player*, Creature*, const Quest*);
+    bool (*pGossipSelect            )(Player*, Creature*, uint32, uint32);
+    bool (*pGOGossipSelect          )(Player*, GameObject*, uint32, uint32);
+    bool (*pGossipSelectWithCode    )(Player*, Creature*, uint32, uint32, const char*);
+    bool (*pGOGossipSelectWithCode  )(Player*, GameObject*, uint32, uint32, const char*);
+    bool (*pQuestSelect             )(Player*, Creature*, const Quest*);
+    bool (*pQuestComplete           )(Player*, Creature*, const Quest*);
+    uint32 (*pNPCDialogStatus       )(Player*, Creature*);
+    uint32 (*pGODialogStatus        )(Player*, GameObject*);
+    bool (*pChooseReward            )(Player*, Creature*, const Quest*, uint32);
+    bool (*pItemHello               )(Player*, Item*, const Quest*);
+    bool (*pGOHello                 )(Player*, GameObject*);
+    bool (*pAreaTrigger             )(Player*, AreaTriggerEntry*);
+    bool (*pItemQuestAccept         )(Player*, Item*, const Quest*);
+    bool (*pGOQuestAccept           )(Player*, GameObject*, const Quest*);
+    bool (*pGOChooseReward          )(Player*, GameObject*, const Quest*, uint32);
+    bool (*pItemUse                 )(Player*, Item*, SpellCastTargets const&);
+    bool (*pEffectDummyCreature     )(Unit*, uint32, SpellEffectIndex, Creature*);
+    bool (*pEffectDummyGameObj      )(Unit*, uint32, SpellEffectIndex, GameObject*);
+    bool (*pEffectDummyItem         )(Unit*, uint32, SpellEffectIndex, Item*);
+    bool (*pEffectAuraDummy         )(const Aura*, bool);
 
     CreatureAI* (*GetAI)(Creature*);
     InstanceData* (*GetInstanceData)(Map*);
