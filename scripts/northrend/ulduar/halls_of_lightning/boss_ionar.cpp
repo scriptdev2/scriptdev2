@@ -188,7 +188,6 @@ struct MANGOS_DLL_DECL boss_ionarAI : public ScriptedAI
                     if (pSpark->GetMotionMaster()->GetCurrentMovementGeneratorType() == CHASE_MOTION_TYPE)
                         pSpark->GetMotionMaster()->MovementExpired();
 
-                    pSpark->SetSpeedRate(MOVE_RUN, pSpark->GetCreatureInfo()->speed * 2);
                     pSpark->GetMotionMaster()->MovePoint(POINT_CALLBACK, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ());
                 }
             }
