@@ -180,7 +180,7 @@ void instance_violet_hold::OnPlayerEnter(Player* pPlayer)
 
 void instance_violet_hold::SetData(uint32 uiType, uint32 uiData)
 {
-    error_log("SD2: instance_violet_hold: SetData got type % u, data %u.", uiType, uiData);
+    debug_log("SD2: instance_violet_hold: SetData got type % u, data %u.", uiType, uiData);
 
     switch(uiType)
     {
@@ -277,13 +277,13 @@ void instance_violet_hold::SetPortalId()
         if (iTemp >= m_uiPortalId)
             ++iTemp;
 
-        error_log("SD2: instance_violet_hold: SetPortalId %i, old was id %u.", iTemp, m_uiPortalId);
+        debug_log("SD2: instance_violet_hold: SetPortalId %i, old was id %u.", iTemp, m_uiPortalId);
 
         m_uiPortalId = iTemp;
     }
     else
     {
-        error_log("SD2: instance_violet_hold: SetPortalId %u (is boss), old was id %u.", m_uiMaxCountPortalLoc, m_uiPortalId);
+        debug_log("SD2: instance_violet_hold: SetPortalId %u (is boss), old was id %u.", m_uiMaxCountPortalLoc, m_uiPortalId);
         m_uiPortalId = m_uiMaxCountPortalLoc;
     }
 }
@@ -308,7 +308,7 @@ void instance_violet_hold::SetRandomBosses()
     }
 
     for(std::list<uint32>::iterator itr = m_lRandomBossList.begin(); itr != m_lRandomBossList.end(); ++itr)
-        error_log("SD2: instance_violet_hold random boss is entry %u", *itr);
+        debug_log("SD2: instance_violet_hold random boss is entry %u", *itr);
 }
 
 void instance_violet_hold::CallGuards(bool bRespawn)
