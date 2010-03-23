@@ -50,8 +50,8 @@ void guardAI::Aggro(Unit *who)
         switch(urand(0, 2))
         {
             case 0: DoScriptText(SAY_GUARD_SIL_AGGRO1, m_creature, who); break;
-            case 1: DoScriptText(SAY_GUARD_SIL_AGGRO1, m_creature, who); break;
-            case 2: DoScriptText(SAY_GUARD_SIL_AGGRO1, m_creature, who); break;
+            case 1: DoScriptText(SAY_GUARD_SIL_AGGRO2, m_creature, who); break;
+            case 2: DoScriptText(SAY_GUARD_SIL_AGGRO3, m_creature, who); break;
         }
     }
 
