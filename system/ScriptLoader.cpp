@@ -280,6 +280,7 @@ extern void AddSC_boss_kelthuzad();
 extern void AddSC_boss_loatheb();
 extern void AddSC_boss_maexxna();
 extern void AddSC_boss_noth();
+extern void AddSC_boss_heigan();
 extern void AddSC_boss_patchwerk();
 extern void AddSC_boss_razuvious();
 extern void AddSC_boss_sapphiron();
@@ -680,6 +681,7 @@ void AddScripts()
     AddSC_boss_loatheb();
     AddSC_boss_maexxna();
     AddSC_boss_noth();
+    AddSC_boss_heigan();
     AddSC_boss_patchwerk();
     AddSC_boss_razuvious();
     AddSC_boss_sapphiron();
