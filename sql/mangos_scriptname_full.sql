@@ -808,7 +808,7 @@ UPDATE creature_template SET ScriptName='boss_amnennar_the_coldbringer' WHERE en
 UPDATE creature_template SET ScriptName='npc_henry_stern' WHERE entry=8696;
 
 /* REDRIDGE MOUNTAINS */
-
+UPDATE creature_template SET ScriptName='npc_corporal_keeshan' WHERE entry=349;
 
 /* RUINS OF AHN'QIRAJ */
 UPDATE instance_template SET script='instance_ruins_of_ahnqiraj' WHERE map=509;

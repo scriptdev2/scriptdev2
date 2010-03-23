@@ -62,6 +62,7 @@ scripts/eastern_kingdoms/hinterlands.cpp \
 scripts/eastern_kingdoms/ironforge.cpp \
 scripts/eastern_kingdoms/isle_of_queldanas.cpp \
 scripts/eastern_kingdoms/loch_modan.cpp \
+scripts/eastern_kingdoms/redridge_mountains.cpp \
 scripts/eastern_kingdoms/searing_gorge.cpp \
 scripts/eastern_kingdoms/silvermoon_city.cpp \
 scripts/eastern_kingdoms/silverpine_forest.cpp \
