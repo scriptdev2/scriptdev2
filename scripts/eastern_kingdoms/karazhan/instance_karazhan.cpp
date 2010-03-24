@@ -168,7 +168,11 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
                 }
                 break;
             case TYPE_CURATOR:              m_auiEncounter[5] = uiData; break;
-            case TYPE_ARAN:                 m_auiEncounter[6] = uiData; break;
+            case TYPE_ARAN:
+                m_auiEncounter[6] = uiData;
+                if (uiData != IN_PROGRESS)
+                    DoUseDoorOrButton(m_uiLibraryDoor);
+                break;
             case TYPE_TERESTIAN:            m_auiEncounter[7] = uiData; break;
             case TYPE_NETHERSPITE:          m_auiEncounter[8] = uiData; break;
             case TYPE_CHESS:
