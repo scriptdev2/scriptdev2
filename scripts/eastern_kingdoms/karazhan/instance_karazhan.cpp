@@ -174,7 +174,10 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
                     DoUseDoorOrButton(m_uiLibraryDoor);
                 break;
             case TYPE_TERESTIAN:            m_auiEncounter[7] = uiData; break;
-            case TYPE_NETHERSPITE:          m_auiEncounter[8] = uiData; break;
+            case TYPE_NETHERSPITE:
+                m_auiEncounter[8] = uiData;
+                DoUseDoorOrButton(m_uiMassiveDoor);
+                break;
             case TYPE_CHESS:
                 if (uiData == DONE)
                     DoRespawnGameObject(m_uiDustCoveredChest,DAY);
