@@ -1067,6 +1067,14 @@
 						RelativePath="..\scripts\eastern_kingdoms\uldaman\uldaman.cpp"
 						>
 					</File>
+					<File
+						RelativePath="..\scripts\eastern_kingdoms\uldaman\uldaman.h"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\eastern_kingdoms\uldaman\instance_uldaman.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="zulaman"

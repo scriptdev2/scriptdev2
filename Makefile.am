@@ -196,6 +196,8 @@ scripts/eastern_kingdoms/sunwell_plateau/instance_sunwell_plateau.cpp \
 scripts/eastern_kingdoms/sunwell_plateau/sunwell_plateau.h \
 scripts/eastern_kingdoms/uldaman/boss_ironaya.cpp \
 scripts/eastern_kingdoms/uldaman/uldaman.cpp \
+scripts/eastern_kingdoms/uldaman/uldaman.h \
+scripts/eastern_kingdoms/uldaman/instance_uldaman.cpp \
 scripts/eastern_kingdoms/zulaman/boss_akilzon.cpp \
 scripts/eastern_kingdoms/zulaman/boss_halazzi.cpp \
 scripts/eastern_kingdoms/zulaman/boss_janalai.cpp \
