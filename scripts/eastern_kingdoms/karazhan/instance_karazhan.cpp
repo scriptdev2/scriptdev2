@@ -157,7 +157,16 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
                 break;
             case TYPE_MAIDEN:               m_auiEncounter[2] = uiData; break;
             case TYPE_OPTIONAL_BOSS:        m_auiEncounter[3] = uiData; break;
-            case TYPE_OPERA:                m_auiEncounter[4] = uiData; break;
+            case TYPE_OPERA:
+                m_auiEncounter[4] = uiData;
+                if (uiData == DONE)
+                {
+                    DoUseDoorOrButton(m_uiStageDoorLeftGUID);
+                    DoUseDoorOrButton(m_uiStageDoorRightGUID);
+                    if (GameObject* pSideEntrance = instance->GetGameObject(m_uiSideEntranceDoor))
+                        pSideEntrance->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_LOCKED);
+                }
+                break;
             case TYPE_CURATOR:              m_auiEncounter[5] = uiData; break;
             case TYPE_ARAN:                 m_auiEncounter[6] = uiData; break;
             case TYPE_TERESTIAN:            m_auiEncounter[7] = uiData; break;

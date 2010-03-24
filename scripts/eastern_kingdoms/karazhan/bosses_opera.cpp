@@ -605,16 +605,7 @@ struct MANGOS_DLL_DECL boss_croneAI : public ScriptedAI
         DoScriptText(SAY_CRONE_DEATH, m_creature);
 
         if (m_pInstance)
-        {
             m_pInstance->SetData(TYPE_OPERA, DONE);
-
-            if (GameObject* pLDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GO_STAGEDOORLEFT)))
-                pLDoor->SetGoState(GO_STATE_ACTIVE);
-            if (GameObject* pRDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GO_STAGEDOORRIGHT)))
-                pRDoor->SetGoState(GO_STATE_ACTIVE);
-            if (GameObject* pSideEntrance = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GO_SIDE_ENTRANCE_DOOR)))
-                pSideEntrance->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_LOCKED);
-        }
     }
 
     void UpdateAI(const uint32 diff)
@@ -798,16 +789,7 @@ struct MANGOS_DLL_DECL boss_bigbadwolfAI : public ScriptedAI
         DoPlaySoundToSet(m_creature, SOUND_WOLF_DEATH);
 
         if (m_pInstance)
-        {
             m_pInstance->SetData(TYPE_OPERA, DONE);
-
-            if (GameObject* pLDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GO_STAGEDOORLEFT)))
-                pLDoor->SetGoState(GO_STATE_ACTIVE);
-            if (GameObject* pRDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GO_STAGEDOORRIGHT)))
-                pRDoor->SetGoState(GO_STATE_ACTIVE);
-            if (GameObject* pSideEntrance = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GO_SIDE_ENTRANCE_DOOR)))
-                pSideEntrance->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_LOCKED);
-        }
     }
 
     void UpdateAI(const uint32 diff)
@@ -1043,16 +1025,7 @@ struct MANGOS_DLL_DECL boss_julianneAI : public ScriptedAI
         DoScriptText(SAY_JULIANNE_DEATH02, m_creature);
 
         if (m_pInstance)
-        {
             m_pInstance->SetData(TYPE_OPERA, DONE);
-
-            if (GameObject* pLDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GO_STAGEDOORLEFT)))
-                pLDoor->SetGoState(GO_STATE_ACTIVE);
-            if (GameObject* pRDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GO_STAGEDOORRIGHT)))
-                pRDoor->SetGoState(GO_STATE_ACTIVE);
-            if (GameObject* pSideEntrance = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GO_SIDE_ENTRANCE_DOOR)))
-                pSideEntrance->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_LOCKED);
-        }
     }
 
     void KilledUnit(Unit* victim)
@@ -1138,16 +1111,7 @@ struct MANGOS_DLL_DECL boss_romuloAI : public ScriptedAI
         DoScriptText(SAY_ROMULO_DEATH, m_creature);
 
         if (m_pInstance)
-        {
             m_pInstance->SetData(TYPE_OPERA, DONE);
-
-            if (GameObject* pLDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GO_STAGEDOORLEFT)))
-                pLDoor->SetGoState(GO_STATE_ACTIVE);
-            if (GameObject* pRDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GO_STAGEDOORRIGHT)))
-                pRDoor->SetGoState(GO_STATE_ACTIVE);
-            if (GameObject* pSideEntrance = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GO_SIDE_ENTRANCE_DOOR)))
-                pSideEntrance->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_LOCKED);
-        }
     }
 
     void KilledUnit(Unit* victim)
