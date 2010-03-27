@@ -41,8 +41,6 @@ enum
     SPELL_SLIMEBOLT       = 32309
 };
 
-const float MELEE_DISTANCE = 5.0;
-
 struct MANGOS_DLL_DECL boss_patchwerkAI : public ScriptedAI
 {
     boss_patchwerkAI(Creature* pCreature) : ScriptedAI(pCreature)
@@ -115,7 +113,7 @@ struct MANGOS_DLL_DECL boss_patchwerkAI : public ScriptedAI
 
             if (Unit* pTempTarget = Unit::GetUnit((*m_creature), (*iter)->getUnitGuid()))
             {
-                if (pTempTarget->GetHealth() > uiHighestHP && m_creature->IsWithinDistInMap(pTempTarget, MELEE_DISTANCE))
+                if (pTempTarget->GetHealth() > uiHighestHP && m_creature->IsWithinDistInMap(pTempTarget, DISTANCE))
                 {
                     uiHighestHP = pTempTarget->GetHealth();
                     pTarget = pTempTarget;
