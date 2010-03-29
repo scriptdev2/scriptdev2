@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Netherspite
-SD%Complete: 20%
-SDComment: basic script
+SD%Complete: 30%
+SDComment: find spell ID for tail swipe added in patch 3.0.2
 SDCategory: Karazhan
 EndScriptData */
 
@@ -65,7 +65,27 @@ enum
     EMOTE_PHASE_BANISH          = -1532090,
 
     //npcs
-    NPC_PORTAL_CREATURE         = 17369
+    NPC_PORTAL_CREATURE         = 17369,
+    NPC_VOID_ZONE               = 16697
+};
+
+struct SpawnLocation
+{
+    float x, y, z;
+};
+
+// at first spawn portals got fixed coords, should be shuffled in subsequent beam phases
+static SpawnLocation PortalCoordinates[] =
+{
+    {-11105.508789f, -1600.851685f, 279.950256f},
+    {-11195.353516f, -1613.237183f, 278.237258f},
+    {-11137.846680f, -1685.607422f, 278.239258f}
+};
+
+enum Phases
+{
+    BEAM_PHASE   = 0,
+    BANISH_PHASE = 1,
 };
 
 struct MANGOS_DLL_DECL boss_netherspiteAI : public ScriptedAI
@@ -78,13 +98,31 @@ struct MANGOS_DLL_DECL boss_netherspiteAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    void Reset() {}
+    bool m_bIsEnraged;
+    uint8 m_uiActivePhase;
+
+    uint32 m_uiEnrageTimer;
+    uint32 m_uiVoidZoneTimer;
+    uint32 m_uiPhaseSwitchTimer;
+    uint32 m_uiNetherbreathTimer;
+
+
+    void Reset()
+    {
+        m_bIsEnraged    = false;
+        m_uiActivePhase = BEAM_PHASE;
+        
+        m_uiEnrageTimer       = MINUTE*9*IN_MILISECONDS;
+        m_uiVoidZoneTimer     = 15000;
+        m_uiPhaseSwitchTimer  = MINUTE*IN_MILISECONDS;
+    }
 
     void Aggro(Unit* pWho)
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_NETHERSPITE, IN_PROGRESS);
 
+        DoCastSpellIfCan(m_creature, SPELL_NETHERBURN);
         m_creature->SetInCombatWithZone();
     }
 
@@ -100,11 +138,76 @@ struct MANGOS_DLL_DECL boss_netherspiteAI : public ScriptedAI
             m_pInstance->SetData(TYPE_NETHERSPITE, NOT_STARTED);
     }
 
+    void SwitchPhases()
+    {
+        if (m_uiActivePhase == BEAM_PHASE)
+        {
+            m_uiActivePhase = BANISH_PHASE;
+            DoScriptText(EMOTE_PHASE_BANISH, m_creature);
+
+            m_uiNetherbreathTimer = 500;
+            m_uiPhaseSwitchTimer  = (MINUTE/2)*IN_MILISECONDS;
+        }
+        else
+        {
+            m_uiActivePhase = BEAM_PHASE;
+            DoScriptText(EMOTE_PHASE_BEAM, m_creature);
+            DoCastSpellIfCan(m_creature, SPELL_NETHERSPITE_ROAR);
+            
+            m_uiPhaseSwitchTimer = MINUTE*IN_MILISECONDS;
+        }
+        
+        //reset threat every phase switch
+        DoResetThreat();
+    }
+
     void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
+        if (m_uiPhaseSwitchTimer <= uiDiff)
+            SwitchPhases();
+        else
+            m_uiPhaseSwitchTimer -= uiDiff;
+        
+        if (!m_bIsEnraged)
+        {
+            if (m_uiEnrageTimer < uiDiff)
+            {
+                DoCastSpellIfCan(m_creature, SPELL_NETHER_INFUSION, CAST_FORCE_CAST);
+                m_bIsEnraged = true;
+            }
+            else
+                m_uiEnrageTimer -= uiDiff;
+        }
+
+        if (m_uiActivePhase == BEAM_PHASE)
+        {
+            if (m_uiVoidZoneTimer < uiDiff)
+            {
+                if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                    DoCastSpellIfCan(pTarget, SPELL_VOID_ZONE, true);
+                
+                m_uiVoidZoneTimer = 15000;
+            }
+            else
+                m_uiVoidZoneTimer -= uiDiff;
+
+        }
+        else
+        {
+            if (m_uiNetherbreathTimer < uiDiff)
+            {
+                if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                    DoCastSpellIfCan(pTarget, SPELL_NETHERBREATH);
+           
+                m_uiNetherbreathTimer = urand(4000, 5000);
+            }
+            else
+                m_uiNetherbreathTimer -= uiDiff;
+        }
+        
         DoMeleeAttackIfReady();
     }
 };
