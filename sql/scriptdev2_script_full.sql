@@ -872,6 +872,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
 (-1509000,'%s senses your fear.',0,2,0,0,'moam EMOTE_AGGRO'),
 (-1509001,'%s bristles with energy!',0,2,0,0,'moan EMOTE_MANA_FULL'),
+(-1509028,'%s drains your mana and turns to stone.',0,2,0,0,'moam EMOTE_ENERGIZING'),
 
 (-1509002,'%s sets eyes on $N!',0,2,0,0,'buru EMOTE_TARGET'),
 
