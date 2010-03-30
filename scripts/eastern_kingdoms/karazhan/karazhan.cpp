@@ -233,13 +233,13 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
         {
             case EVENT_OZ:
                 for(int i=0; i < 4; ++i)
-                    m_creature->SummonCreature(aSpawns_OZ[i].uiEntry, aSpawns_OZ[i].fPosX, SPAWN_Y, SPAWN_Z, SPAWN_O, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, HOUR*2*IN_MILISECONDS);
+                    m_creature->SummonCreature(aSpawns_OZ[i].uiEntry, aSpawns_OZ[i].fPosX, SPAWN_Y, SPAWN_Z, SPAWN_O, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, HOUR*2*IN_MILLISECONDS);
                 break;
             case EVENT_HOOD:
-                m_creature->SummonCreature(Spawn_HOOD.uiEntry, Spawn_HOOD.fPosX, SPAWN_Y, SPAWN_Z, SPAWN_O, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, HOUR*2*IN_MILISECONDS);
+                m_creature->SummonCreature(Spawn_HOOD.uiEntry, Spawn_HOOD.fPosX, SPAWN_Y, SPAWN_Z, SPAWN_O, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, HOUR*2*IN_MILLISECONDS);
                 break;
             case EVENT_RAJ:
-                m_creature->SummonCreature(Spawn_RAJ.uiEntry, Spawn_RAJ.fPosX, SPAWN_Y, SPAWN_Z, SPAWN_O, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, HOUR*2*IN_MILISECONDS);
+                m_creature->SummonCreature(Spawn_RAJ.uiEntry, Spawn_RAJ.fPosX, SPAWN_Y, SPAWN_Z, SPAWN_O, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, HOUR*2*IN_MILLISECONDS);
                 break;
             default:
                 error_log("SD2: Barnes Opera Event - Wrong EventId set: %d", m_uiEventId);

@@ -232,7 +232,7 @@ struct MANGOS_DLL_DECL boss_kelesethAI : public ScriptedAI
     void SummonAdds()
     {
         for (uint8 i=0; i<4; ++i)
-            m_creature->SummonCreature(NPC_VRYKUL_SKELETON, fAddPosition[0]+rand()%7, fAddPosition[1]+rand()%7, fAddPosition[2], fAddPosition[3], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, MINUTE*IN_MILISECONDS);
+            m_creature->SummonCreature(NPC_VRYKUL_SKELETON, fAddPosition[0]+rand()%7, fAddPosition[1]+rand()%7, fAddPosition[2], fAddPosition[3], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, MINUTE*IN_MILLISECONDS);
     }
 
     void DespawnAdds()

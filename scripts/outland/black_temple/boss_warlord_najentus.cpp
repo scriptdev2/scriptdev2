@@ -71,7 +71,7 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
         m_bIsShielded = false;
 
         m_uiNeedleSpineTimer = 10000;
-        m_uiEnrageTimer = MINUTE*8*IN_MILISECONDS;
+        m_uiEnrageTimer = MINUTE*8*IN_MILLISECONDS;
         m_uiSpecialYellTimer = urand(45000, 120000);
         m_uiTidalShieldTimer = 60000;
         m_uiImpalingSpineTimer = 20000;
@@ -133,7 +133,7 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
 
             DoScriptText(SAY_ENRAGE2, m_creature);
             DoCastSpellIfCan(m_creature, SPELL_BERSERK);
-            m_uiEnrageTimer = MINUTE*8*IN_MILISECONDS;
+            m_uiEnrageTimer = MINUTE*8*IN_MILLISECONDS;
         }else m_uiEnrageTimer -= diff;
 
         if (m_bIsShielded)

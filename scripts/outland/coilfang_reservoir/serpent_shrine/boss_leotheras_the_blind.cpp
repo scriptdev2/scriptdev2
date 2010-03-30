@@ -90,7 +90,7 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
         m_uiWhirlwind_Timer  = 18500;
         m_uiInnerDemon_Timer = 15000;
         m_uiSwitch_Timer     = 45000;
-        m_uiEnrage_Timer     = MINUTE*10*IN_MILISECONDS;
+        m_uiEnrage_Timer     = MINUTE*10*IN_MILLISECONDS;
 
         m_bDemonForm   = false;
         m_bIsFinalForm = false;
@@ -266,7 +266,7 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
                 m_creature->InterruptNonMeleeSpells(false);
 
             DoCastSpellIfCan(m_creature, SPELL_ENRAGE);
-            m_uiEnrage_Timer = MINUTE*5*IN_MILISECONDS;
+            m_uiEnrage_Timer = MINUTE*5*IN_MILLISECONDS;
         }else m_uiEnrage_Timer -= uiDiff;
 
         if (!m_bDemonForm)

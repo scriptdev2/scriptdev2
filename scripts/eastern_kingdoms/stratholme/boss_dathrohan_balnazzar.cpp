@@ -101,7 +101,7 @@ struct MANGOS_DLL_DECL boss_dathrohan_balnazzarAI : public ScriptedAI
         for (uint8 i=0; i<uiCount; ++i)
             m_creature->SummonCreature(NPC_ZOMBIE,
             m_aSummonPoint[i].m_fX, m_aSummonPoint[i].m_fY, m_aSummonPoint[i].m_fZ, m_aSummonPoint[i].m_fOrient,
-            TEMPSUMMON_TIMED_DESPAWN, HOUR*IN_MILISECONDS);
+            TEMPSUMMON_TIMED_DESPAWN, HOUR*IN_MILLISECONDS);
     }
 
     void UpdateAI(const uint32 uiDiff)

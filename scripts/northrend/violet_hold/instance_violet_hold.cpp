@@ -263,7 +263,7 @@ void instance_violet_hold::SpawnPortal()
                 case PORTAL_TYPE_BOSS: uiPortalEntry = NPC_PORTAL_ELITE; break;
             }
 
-            pController->SummonCreature(uiPortalEntry, pData->fX, pData->fY, pData->fZ, pData->fOrient, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 1800*IN_MILISECONDS);
+            pController->SummonCreature(uiPortalEntry, pData->fX, pData->fY, pData->fZ, pData->fOrient, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 1800*IN_MILLISECONDS);
         }
     }
 }

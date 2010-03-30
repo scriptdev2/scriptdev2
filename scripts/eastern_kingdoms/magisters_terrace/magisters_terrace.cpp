@@ -70,7 +70,7 @@ struct MANGOS_DLL_DECL npc_kalecgosAI : public ScriptedAI
             return;
 
         if (uiPointId == POINT_ID_LAND)
-            m_uiTransformTimer = MINUTE*IN_MILISECONDS;
+            m_uiTransformTimer = MINUTE*IN_MILLISECONDS;
     }
 
     // some targeting issues with the spell, so use this workaround as temporary solution

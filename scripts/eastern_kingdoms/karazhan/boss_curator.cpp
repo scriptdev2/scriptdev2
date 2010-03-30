@@ -60,7 +60,7 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
     {
         m_uiFlareTimer = 10000;
         m_uiHatefulBoltTimer = 15000;                       // This time may be wrong
-        m_uiBerserkTimer = 12*MINUTE*IN_MILISECONDS;
+        m_uiBerserkTimer = 12*MINUTE*IN_MILLISECONDS;
         m_bIsBerserk = false;
         m_bIsEnraged = false;
 

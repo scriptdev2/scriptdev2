@@ -213,7 +213,7 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
                             DoUseDoorOrButton(m_uiGoTombEnterGUID);
                         break;
                     case DONE:
-                        DoRespawnGameObject(m_uiSevensChestGUID, HOUR*IN_MILISECONDS);
+                        DoRespawnGameObject(m_uiSevensChestGUID, HOUR*IN_MILLISECONDS);
                         DoUseDoorOrButton(m_uiGoTombExitGUID);
                         DoUseDoorOrButton(m_uiGoTombEnterGUID);
                         break;

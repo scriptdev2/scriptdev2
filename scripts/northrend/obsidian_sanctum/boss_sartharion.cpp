@@ -197,7 +197,7 @@ struct MANGOS_DLL_DECL boss_sartharionAI : public ScriptedAI
         m_bIsBerserk = false;
         m_bIsSoftEnraged = false;
 
-        m_uiEnrageTimer = MINUTE*15*IN_MILISECONDS;
+        m_uiEnrageTimer = MINUTE*15*IN_MILLISECONDS;
         m_bIsHardEnraged = false;
 
         m_uiTenebronTimer = 30000;

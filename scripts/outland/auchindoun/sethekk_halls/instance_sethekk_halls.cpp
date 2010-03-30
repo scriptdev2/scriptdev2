@@ -49,7 +49,7 @@ struct MANGOS_DLL_DECL instance_sethekk_halls : public ScriptedInstance
         {
             case DATA_IKISSDOOREVENT:
                 if (uiData == DONE)
-                    DoUseDoorOrButton(m_uiIkissDoorGUID,DAY*IN_MILISECONDS);
+                    DoUseDoorOrButton(m_uiIkissDoorGUID,DAY*IN_MILLISECONDS);
                 break;
         }
     }

@@ -212,7 +212,7 @@ enum
     NPC_SPAWNER                     = 22260,                //just a dummy, not used
 
     MAX_BUTTRESS                    = 4,
-    TIME_TOTAL                      = MINUTE*10*IN_MILISECONDS,
+    TIME_TOTAL                      = MINUTE*10*IN_MILLISECONDS,
 
     SPELL_SUMMONED_DEMON            = 7741,                 //visual spawn-in for demon
     SPELL_DEMONIAC_VISITATION       = 38708,                //create item

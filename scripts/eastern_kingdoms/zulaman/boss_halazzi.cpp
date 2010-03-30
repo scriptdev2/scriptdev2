@@ -95,12 +95,12 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
         m_uiPhase = PHASE_SINGLE;                           // reset phase
         m_uiPhaseCounter = 3;
 
-        m_uiCheckTimer = IN_MILISECONDS;
-        m_uiFrenzyTimer = 16*IN_MILISECONDS;
-        m_uiSaberLashTimer = 20*IN_MILISECONDS;
-        m_uiShockTimer = 10*IN_MILISECONDS;
-        m_uiTotemTimer = 12*IN_MILISECONDS;
-        m_uiBerserkTimer = 10*MINUTE*IN_MILISECONDS;
+        m_uiCheckTimer = IN_MILLISECONDS;
+        m_uiFrenzyTimer = 16*IN_MILLISECONDS;
+        m_uiSaberLashTimer = 20*IN_MILLISECONDS;
+        m_uiShockTimer = 10*IN_MILLISECONDS;
+        m_uiTotemTimer = 12*IN_MILLISECONDS;
+        m_uiBerserkTimer = 10*MINUTE*IN_MILLISECONDS;
         m_bIsBerserk = false;
 
         m_creature->SetMaxHealth(m_creature->GetCreatureInfo()->maxhealth);
@@ -182,14 +182,14 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
                 {
                     // final phase
                     m_uiPhase = PHASE_FINAL;
-                    m_uiFrenzyTimer = 16*IN_MILISECONDS;
-                    m_uiSaberLashTimer = 20*IN_MILISECONDS;
+                    m_uiFrenzyTimer = 16*IN_MILLISECONDS;
+                    m_uiSaberLashTimer = 20*IN_MILLISECONDS;
                 }
                 else
                 {
                     m_uiPhase = PHASE_TOTEM;
-                    m_uiShockTimer = 10*IN_MILISECONDS;
-                    m_uiTotemTimer = 12*IN_MILISECONDS;
+                    m_uiShockTimer = 10*IN_MILLISECONDS;
+                    m_uiTotemTimer = 12*IN_MILLISECONDS;
 
                     DoScriptText(SAY_SPLIT, m_creature);
                     m_creature->CastSpell(m_creature, SPELL_TRANSFIGURE_TO_TROLL, false);
@@ -221,8 +221,8 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
                 if (pSpiritLynx)
                     pSpiritLynx->ForcedDespawn();
 
-                m_uiFrenzyTimer = 16*IN_MILISECONDS;
-                m_uiSaberLashTimer = 20*IN_MILISECONDS;
+                m_uiFrenzyTimer = 16*IN_MILLISECONDS;
+                m_uiSaberLashTimer = 20*IN_MILLISECONDS;
             }
         }
     }
@@ -253,7 +253,7 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
                 else
                     m_uiPhase = PHASE_FINAL;
 
-                m_uiCheckTimer = IN_MILISECONDS;
+                m_uiCheckTimer = IN_MILLISECONDS;
             }
             else
                 m_uiCheckTimer -= uiDiff;
@@ -264,7 +264,7 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
             if (m_uiFrenzyTimer < uiDiff)
             {
                 DoCastSpellIfCan(m_creature, SPELL_FRENZY);
-                m_uiFrenzyTimer = 16*IN_MILISECONDS;
+                m_uiFrenzyTimer = 16*IN_MILLISECONDS;
             }
             else
                 m_uiFrenzyTimer -= uiDiff;
@@ -274,7 +274,7 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
                 DoScriptText(urand(0, 1) ? SAY_SABERLASH1 : SAY_SABERLASH2, m_creature);
 
                 DoCastSpellIfCan(m_creature->getVictim(), SPELL_SABER_LASH);
-                m_uiSaberLashTimer = 20*IN_MILISECONDS;
+                m_uiSaberLashTimer = 20*IN_MILLISECONDS;
             }
             else
                 m_uiSaberLashTimer -= uiDiff;
@@ -285,7 +285,7 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
             if (m_uiTotemTimer < uiDiff)
             {
                 DoCastSpellIfCan(m_creature, SPELL_SUMMON_TOTEM);
-                m_uiTotemTimer = 20*IN_MILISECONDS;
+                m_uiTotemTimer = 20*IN_MILLISECONDS;
             }
             else
                 m_uiTotemTimer -= uiDiff;

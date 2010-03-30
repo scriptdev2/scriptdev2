@@ -59,7 +59,7 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
         memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
         memset(&m_auiRandVendor, 0, sizeof(m_auiRandVendor));
 
-        m_uiEventTimer = MINUTE*IN_MILISECONDS;
+        m_uiEventTimer = MINUTE*IN_MILLISECONDS;
         m_uiEventMinuteStep = MINUTE/3;
 
         m_uiGongCount = 0;
@@ -341,7 +341,7 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
                 DoUpdateWorldState(WORLD_STATE_COUNTER, m_uiEventMinuteStep);
                 debug_log("SD2: Instance Zulaman: minute decrease to %u.",m_uiEventMinuteStep);
 
-                m_uiEventTimer = MINUTE*IN_MILISECONDS;
+                m_uiEventTimer = MINUTE*IN_MILLISECONDS;
             }
             else
                 m_uiEventTimer -= uiDiff;

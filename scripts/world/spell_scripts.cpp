@@ -188,7 +188,7 @@ bool EffectAuraDummy_spell_aura_dummy_npc(const Aura* pAura, bool bApply)
                 if (pCreature->getStandState() == UNIT_STAND_STATE_KNEEL)
                     pCreature->SetStandState(UNIT_STAND_STATE_STAND);
 
-                pCreature->ForcedDespawn(60*IN_MILISECONDS);
+                pCreature->ForcedDespawn(60*IN_MILLISECONDS);
             }
 
             return true;

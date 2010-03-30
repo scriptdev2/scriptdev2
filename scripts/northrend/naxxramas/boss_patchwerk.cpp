@@ -62,7 +62,7 @@ struct MANGOS_DLL_DECL boss_patchwerkAI : public ScriptedAI
     void Reset()
     {
         m_uiHatefulStrikeTimer = 1000;                      //1 second
-        m_uiBerserkTimer = MINUTE*6*IN_MILISECONDS;         //6 minutes
+        m_uiBerserkTimer = MINUTE*6*IN_MILLISECONDS;         //6 minutes
         m_uiSlimeboltTimer = 10000;
         m_bEnraged = false;
         m_bBerserk = false;

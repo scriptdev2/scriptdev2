@@ -67,7 +67,7 @@ struct MANGOS_DLL_DECL instance_ramparts : public ScriptedInstance
         {
             case TYPE_VAZRUDEN:
                 if (uiData == DONE && m_auiEncounter[1] == DONE)
-                    DoRespawnGameObject(instance->IsRegularDifficulty() ? m_uiChestNGUID : m_uiChestHGUID, HOUR*IN_MILISECONDS);
+                    DoRespawnGameObject(instance->IsRegularDifficulty() ? m_uiChestNGUID : m_uiChestHGUID, HOUR*IN_MILLISECONDS);
                 m_auiEncounter[0] = uiData;
                 break;
             case TYPE_NAZAN:
@@ -80,7 +80,7 @@ struct MANGOS_DLL_DECL instance_ramparts : public ScriptedInstance
                 }
                 if (uiData == DONE && m_auiEncounter[0] == DONE)
                 {
-                    DoRespawnGameObject(instance->IsRegularDifficulty() ? m_uiChestNGUID : m_uiChestHGUID, HOUR*IN_MILISECONDS);
+                    DoRespawnGameObject(instance->IsRegularDifficulty() ? m_uiChestNGUID : m_uiChestHGUID, HOUR*IN_MILLISECONDS);
                     m_auiEncounter[1] = uiData;
                 }
                 if (uiData == IN_PROGRESS)

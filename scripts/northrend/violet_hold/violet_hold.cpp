@@ -212,7 +212,7 @@ struct MANGOS_DLL_DECL npc_teleportation_portalAI : public ScriptedAI
         }
         else if (m_creature->GetEntry() == NPC_PORTAL)
         {
-            m_creature->SummonCreature(m_pInstance->GetRandomPortalEliteEntry(), 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600*IN_MILISECONDS);
+            m_creature->SummonCreature(m_pInstance->GetRandomPortalEliteEntry(), 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600*IN_MILLISECONDS);
             m_creature->CastSpell(m_creature, SPELL_PORTAL_PERIODIC, true);
         }
         else if (m_pInstance->IsCurrentPortalForTrash())
@@ -229,14 +229,14 @@ struct MANGOS_DLL_DECL npc_teleportation_portalAI : public ScriptedAI
                     case 3: uiSummonId = NPC_AZURE_STALKER; break;
                 }
 
-                m_creature->SummonCreature(uiSummonId, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600*IN_MILISECONDS);
+                m_creature->SummonCreature(uiSummonId, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600*IN_MILLISECONDS);
             }
 
             m_bNeedInvisible = true;
         }
         else
         {
-            m_creature->SummonCreature(NPC_AZURE_SABOTEUR, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600*IN_MILISECONDS);
+            m_creature->SummonCreature(NPC_AZURE_SABOTEUR, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600*IN_MILLISECONDS);
             m_bNeedInvisible = true;
         }
     }
@@ -350,7 +350,7 @@ bool EffectDummyCreature_npc_teleportation_portal(Unit* pCaster, uint32 uiSpellI
     if (uiSpellId == SPELL_PORTAL_PERIODIC && uiEffIndex == EFFECT_INDEX_0)
     {
         if (instance_violet_hold* pInstance = (instance_violet_hold*)pCreatureTarget->GetInstanceData())
-            pCreatureTarget->SummonCreature(pInstance->GetRandomMobForNormalPortal(), 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600*IN_MILISECONDS);
+            pCreatureTarget->SummonCreature(pInstance->GetRandomMobForNormalPortal(), 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600*IN_MILLISECONDS);
 
         //always return true when we are handling this spell and effect
         return true;

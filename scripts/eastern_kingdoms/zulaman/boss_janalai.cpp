@@ -200,9 +200,9 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
         m_bCanBlowUpBombs = false;
         m_bIsEggRemaining = true;
 
-        enrage_timer = MINUTE*5*IN_MILISECONDS;
+        enrage_timer = MINUTE*5*IN_MILLISECONDS;
         hatchertime = 10000;
-        wipetimer = MINUTE*10*IN_MILISECONDS;
+        wipetimer = MINUTE*10*IN_MILLISECONDS;
         enraged = false;
         enragetime = false;
     }
@@ -308,7 +308,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
 
             //workaround part
             //m_creature->GetRandomPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), fRadius+(fRadius*i), fX, fY, fZ);
-            //m_creature->SummonCreature(NPC_FIRE_BOMB, fX, fY, fZ, 0.0f, TEMPSUMMON_TIMED_DESPAWN, MINUTE*IN_MILISECONDS);
+            //m_creature->SummonCreature(NPC_FIRE_BOMB, fX, fY, fZ, 0.0f, TEMPSUMMON_TIMED_DESPAWN, MINUTE*IN_MILLISECONDS);
         }
 
         ++m_uiBombCounter;

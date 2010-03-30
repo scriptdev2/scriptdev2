@@ -112,9 +112,9 @@ struct MANGOS_DLL_DECL boss_netherspiteAI : public ScriptedAI
         m_bIsEnraged    = false;
         m_uiActivePhase = BEAM_PHASE;
         
-        m_uiEnrageTimer       = MINUTE*9*IN_MILISECONDS;
+        m_uiEnrageTimer       = MINUTE*9*IN_MILLISECONDS;
         m_uiVoidZoneTimer     = 15000;
-        m_uiPhaseSwitchTimer  = MINUTE*IN_MILISECONDS;
+        m_uiPhaseSwitchTimer  = MINUTE*IN_MILLISECONDS;
     }
 
     void Aggro(Unit* pWho)
@@ -146,7 +146,7 @@ struct MANGOS_DLL_DECL boss_netherspiteAI : public ScriptedAI
             DoScriptText(EMOTE_PHASE_BANISH, m_creature);
 
             m_uiNetherbreathTimer = 500;
-            m_uiPhaseSwitchTimer  = (MINUTE/2)*IN_MILISECONDS;
+            m_uiPhaseSwitchTimer  = (MINUTE/2)*IN_MILLISECONDS;
         }
         else
         {
@@ -154,7 +154,7 @@ struct MANGOS_DLL_DECL boss_netherspiteAI : public ScriptedAI
             DoScriptText(EMOTE_PHASE_BEAM, m_creature);
             DoCastSpellIfCan(m_creature, SPELL_NETHERSPITE_ROAR);
             
-            m_uiPhaseSwitchTimer = MINUTE*IN_MILISECONDS;
+            m_uiPhaseSwitchTimer = MINUTE*IN_MILLISECONDS;
         }
         
         //reset threat every phase switch
