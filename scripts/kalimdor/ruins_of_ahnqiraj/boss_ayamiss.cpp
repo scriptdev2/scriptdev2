@@ -28,68 +28,80 @@ To do:
 make him fly from 70-100%
 */
 
-#define SPELL_STINGERSPRAY 25749
-#define SPELL_POISONSTINGER 25748                           //only used in phase1
-#define SPELL_SUMMONSWARMER 25844                           //might be 25708
-// #define SPELL_PARALYZE 23414 doesnt work correct (core)
+enum
+{
+    SPELL_STINGERSPRAY  = 25749,
+    SPELL_POISONSTINGER = 25748,                            //only used in phase1
+    SPELL_SUMMONSWARMER = 25844,                            //might be 25708
+    //SPELL_PARALYZE 23414 doesnt work correct (core)
+
+    PHASE_AIR           = 0,
+    PHASE_GROUND        = 1
+};
 
 struct MANGOS_DLL_DECL boss_ayamissAI : public ScriptedAI
 {
     boss_ayamissAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
-    Unit *pTarget;
-    uint32 STINGERSPRAY_Timer;
-    uint32 POISONSTINGER_Timer;
-    uint32 SUMMONSWARMER_Timer;
-    uint32 phase;
+    uint32 m_uiStingerSprayTimer;
+    uint32 m_uiPoisonStingerTimer;
+    uint32 m_uiSummonSwarmerTimer;
+    uint8 m_uiPhase;
 
     void Reset()
     {
-        pTarget = NULL;
-        STINGERSPRAY_Timer = 30000;
-        POISONSTINGER_Timer = 30000;
-        SUMMONSWARMER_Timer = 60000;
-        phase=1;
+        m_uiStingerSprayTimer  = 30000;
+        m_uiPoisonStingerTimer = 30000;
+        m_uiSummonSwarmerTimer = 60000;
+        
+        m_uiPhase = PHASE_AIR;
     }
 
-    void Aggro(Unit *who)
-    {
-        pTarget = who;
-    }
-
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //If he is 70% start phase 2
-        if (phase == 1 && m_creature->GetHealthPercent() <= 70.0f && !m_creature->IsNonMeleeSpellCasted(false))
+        // Stinger Spray
+        if (m_uiStingerSprayTimer < uiDiff)
         {
-            phase=2;
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_STINGERSPRAY);
+            m_uiStingerSprayTimer = 30000;
         }
-
-        //STINGERSPRAY_Timer (only in phase2)
-        if (phase==2 && STINGERSPRAY_Timer < diff)
+        else
+            m_uiStingerSprayTimer -= uiDiff;
+        
+        if (m_uiPhase == PHASE_AIR)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_STINGERSPRAY);
-            STINGERSPRAY_Timer = 30000;
-        }else STINGERSPRAY_Timer -= diff;
+            // Start ground phase at 70% of HP
+            if (m_creature->GetHealthPercent() <= 70.0f)
+            {
+                m_uiPhase = PHASE_GROUND;
+                DoResetThreat();
+            }
 
-        //POISONSTINGER_Timer (only in phase1)
-        if (phase==1 && POISONSTINGER_Timer < diff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_POISONSTINGER);
-            POISONSTINGER_Timer = 30000;
-        }else POISONSTINGER_Timer -= diff;
+            // Poison Stinger
+            if (m_uiPoisonStingerTimer < uiDiff)
+            {
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_POISONSTINGER);
+                m_uiPoisonStingerTimer = 30000;
+            }
+            else
+                m_uiPoisonStingerTimer -= uiDiff;
+        }
+        else
+        {     
+            //m_uiSummonSwarmerTimer
+            if (m_uiSummonSwarmerTimer < uiDiff)
+            {
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_SUMMONSWARMER);
+                m_uiSummonSwarmerTimer = 60000;
+            }
+            else
+                m_uiSummonSwarmerTimer -= uiDiff;
 
-        //SUMMONSWARMER_Timer (only in phase1)
-        if (SUMMONSWARMER_Timer < diff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_SUMMONSWARMER);
-            SUMMONSWARMER_Timer = 60000;
-        }else SUMMONSWARMER_Timer -= diff;
-
-        DoMeleeAttackIfReady();
+            DoMeleeAttackIfReady();
+        }
     }
 };
 CreatureAI* GetAI_boss_ayamiss(Creature* pCreature)
@@ -99,7 +111,7 @@ CreatureAI* GetAI_boss_ayamiss(Creature* pCreature)
 
 void AddSC_boss_ayamiss()
 {
-    Script *newscript;
+    Script* newscript;
     newscript = new Script;
     newscript->Name = "boss_ayamiss";
     newscript->GetAI = &GetAI_boss_ayamiss;

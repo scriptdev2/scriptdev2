@@ -23,61 +23,65 @@ EndScriptData */
 
 #include "precompiled.h"
 
-#define SPELL_MORTALWOUND 25646
-#define SPELL_SANDTRAP 25656
-#define SPELL_ENRAGE 28798
+enum
+{
+    SPELL_TRASH        = 3391,
+    SPELL_WIDE_SLASH   = 25814,
+    SPELL_MORTAL_WOUND = 25646,
+    SPELL_SANDTRAP     = 25656,
+    SPELL_ENRAGE       = 28798
+};
 
 struct MANGOS_DLL_DECL boss_kurinnaxxAI : public ScriptedAI
 {
     boss_kurinnaxxAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
-    Unit *pTarget;
-    uint32 MORTALWOUND_Timer;
-    uint32 SANDTRAP_Timer;
-    uint32 i;
+    uint32 m_uiMortalWoundTimer;
+    uint32 m_uiSandTrapTimer;
+    bool m_bEnraged;
 
     void Reset()
     {
-        i=0;
-        pTarget = NULL;
-        MORTALWOUND_Timer = 30000;
-        SANDTRAP_Timer = 30000;
+        m_bEnraged = false;
+
+        m_uiMortalWoundTimer = 30000;
+        m_uiSandTrapTimer    = 30000;
     }
 
-    void Aggro(Unit *who)
-    {
-        pTarget = who;
-    }
-
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //If we are <30% cast enrage
-        if (i == 0 && m_creature->GetHealthPercent() <= 30.0f && !m_creature->IsNonMeleeSpellCasted(false))
+        // If we are belowe 30% HP cast enrage
+        if (!m_bEnraged && m_creature->GetHealthPercent() <= 30.0f)
         {
-            i=1;
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_ENRAGE);
+            m_bEnraged = true;
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_ENRAGE);
         }
 
-        //MORTALWOUND_Timer
-        if (MORTALWOUND_Timer < diff)
+        // Mortal Wound
+        if (m_uiMortalWoundTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_MORTALWOUND);
-            MORTALWOUND_Timer = 30000;
-        }else MORTALWOUND_Timer -= diff;
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_MORTAL_WOUND);
+            m_uiMortalWoundTimer = 30000;
+        }
+        else
+            m_uiMortalWoundTimer -= uiDiff;
 
-        //SANDTRAP_Timer
-        if (SANDTRAP_Timer < diff)
+        // Sand Trap
+        if (m_uiSandTrapTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_SANDTRAP);
-            SANDTRAP_Timer = 30000;
-        }else SANDTRAP_Timer -= diff;
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_SANDTRAP);
+            m_uiSandTrapTimer = 30000;
+        }
+        else
+            m_uiSandTrapTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
 };
+
 CreatureAI* GetAI_boss_kurinnaxx(Creature* pCreature)
 {
     return new boss_kurinnaxxAI(pCreature);
@@ -85,7 +89,7 @@ CreatureAI* GetAI_boss_kurinnaxx(Creature* pCreature)
 
 void AddSC_boss_kurinnaxx()
 {
-    Script *newscript;
+    Script* newscript;
     newscript = new Script;
     newscript->Name = "boss_kurinnaxx";
     newscript->GetAI = &GetAI_boss_kurinnaxx;
