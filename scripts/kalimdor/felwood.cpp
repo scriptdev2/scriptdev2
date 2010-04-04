@@ -17,13 +17,14 @@
 /* ScriptData
 SDName: Felwood
 SD%Complete: 95
-SDComment: Quest support: related to 4101/4102 (To obtain Cenarion Beacon), 4506
+SDComment: Quest support: related to 4101/4102 (To obtain Cenarion Beacon), 4506, 7603 (Summon Pollo Grande)
 SDCategory: Felwood
 EndScriptData */
 
 /* ContentData
 npc_kitten
 npcs_riverbreeze_and_silversky
+npc_niby_the_almighty
 EndContentData */
 
 #include "precompiled.h"
@@ -71,7 +72,7 @@ struct MANGOS_DLL_DECL npc_kittenAI : public FollowerAI
 
     void Reset() { }
 
-    void MoveInLineOfSight(Unit *pWho)
+    void MoveInLineOfSight(Unit* pWho)
     {
         //should not have npcflag by default, so set when expected
         if (!m_creature->getVictim() && !m_creature->HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP) && HasFollowState(STATE_FOLLOW_INPROGRESS) && pWho->GetEntry() == NPC_WINNA)
@@ -162,55 +163,178 @@ bool GossipSelect_npc_corrupt_saber(Player* pPlayer, Creature* pCreature, uint32
 ## npcs_riverbreeze_and_silversky
 ######*/
 
+enum
+{
+    QUEST_CLEANSING_FELWOOD_A = 4101,
+    QUEST_CLEANSING_FELWOOD_H = 4102,
+
+    NPC_ARATHANDIS_SILVERSKY  = 9528,
+    NPC_MAYBESS_RIVERBREEZE   = 9529,
+
+    SPELL_CENARION_BEACON     = 15120
+};
+
 #define GOSSIP_ITEM_BEACON  "Please make me a Cenarion Beacon"
 
 bool GossipHello_npcs_riverbreeze_and_silversky(Player* pPlayer, Creature* pCreature)
 {
-    uint32 eCreature = pCreature->GetEntry();
-
     if (pCreature->isQuestGiver())
         pPlayer->PrepareQuestMenu(pCreature->GetGUID());
 
-    if (eCreature==9528)
+    switch (pCreature->GetEntry())
     {
-        if (pPlayer->GetQuestRewardStatus(4101))
-        {
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_BEACON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-            pPlayer->SEND_GOSSIP_MENU(2848, pCreature->GetGUID());
-        }else if (pPlayer->GetTeam()==HORDE)
-        pPlayer->SEND_GOSSIP_MENU(2845, pCreature->GetGUID());
-        else
-            pPlayer->SEND_GOSSIP_MENU(2844, pCreature->GetGUID());
+        case NPC_ARATHANDIS_SILVERSKY:
+            if (pPlayer->GetQuestRewardStatus(QUEST_CLEANSING_FELWOOD_A))
+            {
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_BEACON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+                pPlayer->SEND_GOSSIP_MENU(2848, pCreature->GetGUID());
+            }else if (pPlayer->GetTeam() == HORDE)
+                pPlayer->SEND_GOSSIP_MENU(2845, pCreature->GetGUID());
+            else
+                pPlayer->SEND_GOSSIP_MENU(2844, pCreature->GetGUID());
+            break;
+        case NPC_MAYBESS_RIVERBREEZE:
+            if (pPlayer->GetQuestRewardStatus(QUEST_CLEANSING_FELWOOD_H))
+            {
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_BEACON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+                pPlayer->SEND_GOSSIP_MENU(2849, pCreature->GetGUID());
+            }else if (pPlayer->GetTeam() == ALLIANCE)
+                pPlayer->SEND_GOSSIP_MENU(2843, pCreature->GetGUID());
+            else
+                pPlayer->SEND_GOSSIP_MENU(2842, pCreature->GetGUID());
+            break;
     }
-
-    if (eCreature==9529)
-    {
-        if (pPlayer->GetQuestRewardStatus(4102))
-        {
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_BEACON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-            pPlayer->SEND_GOSSIP_MENU(2849, pCreature->GetGUID());
-        }else if (pPlayer->GetTeam()==ALLIANCE)
-        pPlayer->SEND_GOSSIP_MENU(2843, pCreature->GetGUID());
-        else
-            pPlayer->SEND_GOSSIP_MENU(2842, pCreature->GetGUID());
-    }
-
+   
     return true;
 }
 
 bool GossipSelect_npcs_riverbreeze_and_silversky(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    if (uiAction==GOSSIP_ACTION_INFO_DEF+1)
+    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
     {
         pPlayer->CLOSE_GOSSIP_MENU();
-        pCreature->CastSpell(pPlayer, 15120, false);
+        pCreature->CastSpell(pPlayer, SPELL_CENARION_BEACON, false);
+    }
+    return true;
+}
+
+/*######
+## npc_niby_the_almighty (summons el pollo grande)
+######*/
+enum
+{
+    QUEST_KROSHIUS     = 7603,
+
+    NPC_IMPSY          = 14470,
+
+    SPELL_SUMMON_POLLO = 23056,
+
+    SAY_NIBY_1         = -1000566,
+    SAY_NIBY_2         = -1000567,
+    EMOTE_IMPSY_1      = -1000568,
+    SAY_IMPSY_1        = -1000569,
+    SAY_NIBY_3         = -1000570
+};
+
+struct MANGOS_DLL_DECL npc_niby_the_almightyAI : public ScriptedAI
+{
+    npc_niby_the_almightyAI(Creature* pCreature) : ScriptedAI(pCreature){ Reset(); }
+
+    uint32 m_uiSummonTimer;
+    uint8  m_uiSpeech;
+
+    bool m_bEventStarted;
+
+    void Reset()
+    {
+        m_uiSummonTimer = 500;
+        m_uiSpeech = 0;
+
+        m_bEventStarted = false;
+    }
+
+    void StartEvent()
+    {
+        Reset();
+        m_bEventStarted = true;
+        m_creature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER);
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (m_bEventStarted)
+        {
+            if (m_uiSummonTimer <= uiDiff)
+            {
+                switch (m_uiSpeech)
+                {
+                    case 1:
+                        m_creature->GetMotionMaster()->Clear();
+                        m_creature->GetMotionMaster()->MovePoint(0, 5407.19f, -753.00f, 350.82f);
+                        m_uiSummonTimer = 6200;
+                        break;
+                    case 2:
+                        m_creature->SetFacingTo(1.2f);
+                        DoScriptText(SAY_NIBY_1, m_creature);
+                        m_uiSummonTimer = 3000;
+                        break;
+                    case 3:
+                        DoScriptText(SAY_NIBY_2, m_creature);
+                        DoCastSpellIfCan(m_creature, SPELL_SUMMON_POLLO);
+                        m_uiSummonTimer = 2000;
+                        break;
+                    case 4:
+                        if (Creature* pImpsy = GetClosestCreatureWithEntry(m_creature, NPC_IMPSY, 20.0))
+                        {
+                            DoScriptText(EMOTE_IMPSY_1, pImpsy);
+                            DoScriptText(SAY_IMPSY_1, pImpsy);
+                            m_uiSummonTimer = 2500;
+                        }
+                        else
+                        {
+                            //Skip Speech 5
+                            m_uiSummonTimer = 40000;
+                            ++m_uiSpeech;
+                        }
+                        break;
+                    case 5:
+                        DoScriptText(SAY_NIBY_3, m_creature);
+                        m_uiSummonTimer = 40000;
+                        ++m_uiSpeech;
+                        break;
+                    case 6:
+                        m_creature->GetMotionMaster()->MoveTargetedHome();
+                        m_creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER);
+                        m_bEventStarted = false;
+                }
+                ++m_uiSpeech;
+            }
+            else
+                m_uiSummonTimer -= uiDiff;
+        }
+    }
+};
+
+CreatureAI* GetAI_npc_niby_the_almighty(Creature* pCreature)
+{
+    return new npc_niby_the_almightyAI(pCreature);
+}
+
+bool ChooseReward_npc_niby_the_almighty(Player* pPlayer, Creature* pCreature, const Quest* pQuest, uint32 slot)
+{
+    if (pQuest->GetQuestId() == QUEST_KROSHIUS)
+    {
+        if (npc_niby_the_almightyAI* pNibyAI = dynamic_cast<npc_niby_the_almightyAI*>(pCreature->AI()))
+        {
+            pNibyAI->StartEvent();
+        }
     }
     return true;
 }
 
 void AddSC_felwood()
 {
-    Script *newscript;
+    Script* newscript;
 
     newscript = new Script;
     newscript->Name = "npc_kitten";
@@ -228,5 +352,11 @@ void AddSC_felwood()
     newscript->Name = "npcs_riverbreeze_and_silversky";
     newscript->pGossipHello = &GossipHello_npcs_riverbreeze_and_silversky;
     newscript->pGossipSelect = &GossipSelect_npcs_riverbreeze_and_silversky;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "npc_niby_the_almighty";
+    newscript->GetAI = &GetAI_npc_niby_the_almighty;
+    newscript->pChooseReward = &ChooseReward_npc_niby_the_almighty;
     newscript->RegisterSelf();
 }

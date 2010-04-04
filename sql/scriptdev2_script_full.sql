@@ -587,7 +587,13 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000562,'Ah, fresh air, at last! I need a moment to rest.',0,0,0,0,'SAY_CORPORAL_KEESHAN_2'),
 (-1000563,'The Blackrock infestation is thick in these parts. I will do my best to keep the pace. Let''s go!',0,0,0,0,'SAY_CORPORAL_KEESHAN_3'),
 (-1000564,'Marshal Marris, sir. Corporal Keeshan of the 12th Sabre Regiment returned from battle and reporting for duty!',0,0,0,0,'SAY_CORPORAL_KEESHAN_4'),
-(-1000565,'Brave adventurer, thank you for rescuing me! I am sure Marshal Marris will reward your kind deed.',0,0,0,0,'SAY_CORPORAL_KEESHAN_5');
+(-1000565,'Brave adventurer, thank you for rescuing me! I am sure Marshal Marris will reward your kind deed.',0,0,0,0,'SAY_CORPORAL_KEESHAN_5'),
+
+(-1000566, 'Stand back! Stand clear! The infernal will need to be given a wide berth!', 0, 'SAY_NIBY_1'),
+(-1000567, 'BOW DOWN TO THE ALMIGHTY! BOW DOWN BEFORE MY INFERNAL DESTRO... chicken?', 0, 'SAY_NIBY_2'),
+(-1000568, 'Impsy rolls on the floor laughing.', 2, 'EMOTE_IMPSY_1'),
+(-1000569, 'Niby, you\' re an idiot.', 0, 'SAY_IMPSY_1'),
+(-1000570, 'Silence, servant! Vengeance will be mine! Death to Stormwind! Death by chicken!', 0, 'SAY_NIBY_3');
 
 -- -1 033 000 SHADOWFANG KEEP
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES

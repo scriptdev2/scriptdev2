@@ -513,6 +513,7 @@ UPDATE creature_template SET ScriptName='npc_apprentice_mirveda' WHERE entry=154
 UPDATE creature_template SET ScriptName='npc_kitten' WHERE entry=9937;
 UPDATE creature_template SET ScriptName='npc_corrupt_saber' WHERE entry=10042;
 UPDATE creature_template SET ScriptName='npcs_riverbreeze_and_silversky' WHERE entry IN (9528,9529);
+UPDATE creature_template SET ScriptName='npc_niby_the_almighty' WHERE entry=14469;
 
 /* FERALAS */
 UPDATE creature_template SET ScriptName='npc_gregan_brewspewer' WHERE entry=7775;
