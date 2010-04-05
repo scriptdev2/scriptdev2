@@ -16,111 +16,150 @@
 
 /* ScriptData
 SDName: Boss_Ouro
-SD%Complete: 85
-SDComment: No model for submerging. Currently just invisible.
+SD%Complete: 50
+SDComment: script needs to be reworked
 SDCategory: Temple of Ahn'Qiraj
 EndScriptData */
 
 #include "precompiled.h"
 #include "temple_of_ahnqiraj.h"
 
-#define SPELL_SWEEP             26103
-#define SPELL_SANDBLAST         26102
-#define SPELL_GROUND_RUPTURE    26100
-#define SPELL_BIRTH             26262                       //The Birth Animation
+enum
+{
+    SPELL_SWEEP             = 26103,
+    SPELL_SANDBLAST         = 26102,
+    SPELL_GROUND_RUPTURE    = 26100,
+    SPELL_BIRTH             = 26262,                        //The Birth Animation
+    SPELL_BOULDER           = 26616,
+    SPELL_BERSERK           = 26615,
 
-#define SPELL_DIRTMOUND_PASSIVE 26092
+    SPELL_SUMMON_SCARABS    = 26060,
+    SPELL_SUMMON_OURO_MOUND = 26058,
+    SPELL_SUMMON_OURO       = 26642,
+    
+    SPELL_DIRTMOUND_PASSIVE = 26092,
+    SPELL_SUBMERGE_VISUAL   = 26063,
+    
+    NPC_OURO_SCARAB         = 15718,
+    NPC_OURO_SPAWNER        = 15957,
+    NPC_OURO_TRIGGER        = 15717
+};
 
 struct MANGOS_DLL_DECL boss_ouroAI : public ScriptedAI
 {
     boss_ouroAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
-    uint32 Sweep_Timer;
-    uint32 SandBlast_Timer;
-    uint32 Submerge_Timer;
-    uint32 Back_Timer;
-    uint32 ChangeTarget_Timer;
-    uint32 Spawn_Timer;
+    uint32 m_uiSweepTimer;
+    uint32 m_uiSandBlastTimer;
+    uint32 m_uiSubmergeTimer;
+    uint32 m_uiBackTimer;
+    uint32 m_uiChangeTargetTimer;
+    uint32 m_uiSpawnTimer;
 
-    bool Enrage;
-    bool Submerged;
+    bool m_bEnraged;
+    bool m_bSubmerged;
 
     void Reset()
     {
-        Sweep_Timer = urand(5000, 10000);
-        SandBlast_Timer = urand(20000, 35000);
-        Submerge_Timer = urand(90000, 150000);
-        Back_Timer = urand(30000, 45000);
-        ChangeTarget_Timer = urand(5000, 8000);
-        Spawn_Timer = urand(10000, 20000);
+        m_uiSweepTimer = urand(5000, 10000);
+        m_uiSandBlastTimer = urand(20000, 35000);
+        m_uiSubmergeTimer = urand(90000, 150000);
+        m_uiBackTimer = urand(30000, 45000);
+        m_uiChangeTargetTimer = urand(5000, 8000);
+        m_uiSpawnTimer = urand(10000, 20000);
 
-        Enrage = false;
-        Submerged = false;
+        m_bEnraged = false;
+        m_bSubmerged = false;
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
-        DoCastSpellIfCan(m_creature->getVictim(), SPELL_BIRTH);
+        DoCastSpellIfCan(m_creature, SPELL_BIRTH);
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
-        //Return since we have no target
+        // Return since we have no pTarget
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //Sweep_Timer
-        if (!Submerged && Sweep_Timer < diff)
+        if (!m_bSubmerged)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_SWEEP);
-            Sweep_Timer = urand(15000, 30000);
-        }else Sweep_Timer -= diff;
-
-        //SandBlast_Timer
-        if (!Submerged && SandBlast_Timer < diff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_SANDBLAST);
-            SandBlast_Timer = urand(20000, 35000);
-        }else SandBlast_Timer -= diff;
-
-        //Submerge_Timer
-        if (!Submerged && Submerge_Timer < diff)
-        {
-            //Cast
-            m_creature->HandleEmoteCommand(EMOTE_ONESHOT_SUBMERGE);
-            m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-            m_creature->setFaction(35);
-            DoCastSpellIfCan(m_creature, SPELL_DIRTMOUND_PASSIVE);
-
-            Submerged = true;
-            Back_Timer = urand(30000, 45000);
-        }else Submerge_Timer -= diff;
-
-        //ChangeTarget_Timer
-        if (Submerged && ChangeTarget_Timer < diff)
-        {
-            if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
+            // Sweep
+            if (m_uiSweepTimer < uiDiff)
             {
-                m_creature->GetMap()->CreatureRelocation(m_creature, target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0.0f);
-                m_creature->SendMonsterMove(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), SPLINETYPE_NORMAL, SPLINEFLAG_WALKMODE, 1);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_SWEEP);
+                m_uiSweepTimer = urand(15000, 30000);
+            }
+            else
+                m_uiSweepTimer -= uiDiff;
+
+            // Sand Blast
+            if (m_uiSandBlastTimer < uiDiff)
+            {
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_SANDBLAST);
+                m_uiSandBlastTimer = urand(20000, 35000);
+            }
+            else
+                m_uiSandBlastTimer -= uiDiff;
+
+            if (!m_bEnraged)
+            {
+                if (m_creature->GetHealthPercent() < 20.0f)
+                {
+                    DoCastSpellIfCan(m_creature, SPELL_BERSERK);
+                    m_bEnraged = true;
+                    return;
+                }
+
+                // Submerge
+                if (m_uiSubmergeTimer < uiDiff)
+                {
+                    //Cast
+                    m_creature->HandleEmoteCommand(EMOTE_ONESHOT_SUBMERGE);
+                    m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                    m_creature->setFaction(35);
+                    DoCastSpellIfCan(m_creature, SPELL_DIRTMOUND_PASSIVE);
+
+                    m_bSubmerged = true;
+                    m_uiBackTimer = urand(30000, 45000);
+                }
+                else
+                    m_uiSubmergeTimer -= uiDiff;
             }
 
-            ChangeTarget_Timer = urand(10000, 20000);
-        }else ChangeTarget_Timer -= diff;
-
-        //Back_Timer
-        if (Submerged && Back_Timer < diff)
+            DoMeleeAttackIfReady();
+        }
+        else
         {
-            m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-            m_creature->setFaction(14);
+            // Change Target
+            if (m_uiChangeTargetTimer < uiDiff)
+            {
+                if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                {
+                    m_creature->GetMap()->CreatureRelocation(m_creature, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(), 0.0f);
+                    m_creature->SendMonsterMove(pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(), SPLINETYPE_NORMAL, SPLINEFLAG_WALKMODE, 1);
+                }
 
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_GROUND_RUPTURE);
+                m_uiChangeTargetTimer = urand(10000, 20000);
+            }
+            else
+                m_uiChangeTargetTimer -= uiDiff;
 
-            Submerged = false;
-            Submerge_Timer = urand(60000, 120000);
-        }else Back_Timer -= diff;
+            // Back
+            if (m_uiBackTimer < uiDiff)
+            {
+                m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                m_creature->setFaction(14);
 
-        DoMeleeAttackIfReady();
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_GROUND_RUPTURE);
+
+                m_bSubmerged = false;
+                m_uiSubmergeTimer = urand(60000, 120000);
+            }
+            else
+                m_uiBackTimer -= uiDiff;
+        }
     }
 };
 
@@ -131,7 +170,7 @@ CreatureAI* GetAI_boss_ouro(Creature* pCreature)
 
 void AddSC_boss_ouro()
 {
-    Script *newscript;
+    Script* newscript;
     newscript = new Script;
     newscript->Name = "boss_ouro";
     newscript->GetAI = &GetAI_boss_ouro;
