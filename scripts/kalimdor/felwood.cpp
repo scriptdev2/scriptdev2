@@ -300,7 +300,6 @@ struct MANGOS_DLL_DECL npc_niby_the_almightyAI : public ScriptedAI
                     case 5:
                         DoScriptText(SAY_NIBY_3, m_creature);
                         m_uiSummonTimer = 40000;
-                        ++m_uiSpeech;
                         break;
                     case 6:
                         m_creature->GetMotionMaster()->MoveTargetedHome();
