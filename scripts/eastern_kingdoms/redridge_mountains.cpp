@@ -88,12 +88,6 @@ struct MANGOS_DLL_DECL npc_corporal_keeshan_escortAI : public npc_escortAI
         }
     }
 
-    void JustDied(Unit* pKiller)
-    {
-        if (Player* pPlayer = GetPlayerForEscort())
-            pPlayer->FailQuest(QUEST_MISSING_IN_ACTION);
-    }
-
     void UpdateEscortAI(const uint32 uiDiff)
     {
         //Combat check

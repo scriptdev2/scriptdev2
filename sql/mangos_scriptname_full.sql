@@ -423,7 +423,7 @@ UPDATE creature_template SET ScriptName='boss_gormok' WHERE entry=34796;
 UPDATE creature_template SET ScriptName='boss_acidmaw' WHERE entry=35144;
 UPDATE creature_template SET ScriptName='boss_dreadscale' WHERE entry=34799;
 UPDATE creature_template SET ScriptName='boss_icehowl' WHERE entry=34797;
-UPDATE creature_template SET ScriptName='boss_jaraxxis' WHERE entry=34780;
+UPDATE creature_template SET ScriptName='boss_jaraxxus' WHERE entry=34780;
 UPDATE creature_template SET ScriptName='boss_anubarak_trial' WHERE entry=34564;
 UPDATE creature_template SET ScriptName='boss_fjola' WHERE entry=34497;
 UPDATE creature_template SET ScriptName='boss_eydis' WHERE entry=34496;
@@ -667,6 +667,7 @@ UPDATE creature_template SET ScriptName='npc_grandmother' WHERE entry=17603;
 
 /* LOCH MODAN */
 UPDATE creature_template SET ScriptName='npc_mountaineer_pebblebitty' WHERE entry=3836;
+UPDATE creature_template SET ScriptName='npc_miran' WHERE entry=1379;
 
 /* MAGISTER'S TERRACE */
 UPDATE instance_template SET script='instance_magisters_terrace' WHERE map=585;
