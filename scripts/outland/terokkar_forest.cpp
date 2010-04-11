@@ -33,6 +33,7 @@ npc_mana_bomb_exp_trigger
 go_mana_bomb
 npc_skyguard_handler_deesak
 npc_slim
+ho_skullpile
 EndContentData */
 
 #include "precompiled.h"
@@ -873,6 +874,52 @@ bool GossipSelect_npc_slim(Player* pPlayer, Creature* pCreature, uint32 uiSender
     return true;
 }
 
+/*######
+## go_skull_pile
+######*/
+
+#define GOSSIP_SKULL_PILE1 "Call forth Gezzarak the Huntress"
+#define GOSSIP_SKULL_PILE2 "Call forth Darkscreecher Akkarai"
+#define GOSSIP_SKULL_PILE3 "Call forth Karrog"
+#define GOSSIP_SKULL_PILE4 "Call forth Vakkiz the Windrager"
+
+bool GOGossipHello_go_skull_pile(Player* pPlayer, GameObject* pGo)
+{
+   pPlayer->PlayerTalkClass->GetGossipMenu().ClearMenu();
+   pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SKULL_PILE1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+0);
+   pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SKULL_PILE2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+   pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SKULL_PILE3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+   pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SKULL_PILE4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
+
+   pPlayer->SEND_GOSSIP_MENU(16777214, pGo->GetGUID());
+   return true;
+}
+
+
+bool GOGossipSelect_go_skull_pile(Player* pPlayer, GameObject* pGo, uint32 uiSender, uint32 uiAction)
+{
+    switch(uiAction)
+    {
+        case GOSSIP_ACTION_INFO_DEF + 0:
+            pPlayer->CastSpell(pPlayer, 40632, false);
+            break;
+        case GOSSIP_ACTION_INFO_DEF + 1:
+            pPlayer->CastSpell(pPlayer, 40642, false);
+            break;
+        case GOSSIP_ACTION_INFO_DEF + 2:
+            pPlayer->CastSpell(pPlayer, 40640, false);
+            break;
+        case GOSSIP_ACTION_INFO_DEF + 3:
+            pPlayer->CastSpell(pPlayer, 40644, false);
+            break;
+     }
+
+     pPlayer->CLOSE_GOSSIP_MENU();
+     return true;
+}
+
+
+
 void AddSC_terokkar_forest()
 {
     Script *newscript;
@@ -937,4 +984,12 @@ void AddSC_terokkar_forest()
     newscript->pGossipHello =  &GossipHello_npc_slim;
     newscript->pGossipSelect = &GossipSelect_npc_slim;
     newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "go_skull_pile";
+    newscript->pGOHello  = &GOGossipHello_go_skull_pile;
+    newscript->pGOGossipHello  = &GOGossipHello_go_skull_pile;
+    newscript->pGOGossipSelect = &GOGossipSelect_go_skull_pile;
+    newscript->RegisterSelf();
+
 }
