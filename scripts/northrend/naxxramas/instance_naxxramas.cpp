@@ -171,6 +171,7 @@ void instance_naxxramas::OnObjectCreate(GameObject* pGo)
             break;
 
         case GO_CHEST_HORSEMEN_NORM:
+        case GO_CHEST_HORSEMEN_HERO:
             m_uiHorsemenChestGUID = pGo->GetGUID();
             break;
 
