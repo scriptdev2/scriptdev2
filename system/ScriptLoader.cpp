@@ -321,7 +321,6 @@ extern void AddSC_violet_hold();
 extern void AddSC_borean_tundra();
 extern void AddSC_dalaran();
 extern void AddSC_dragonblight();
-extern void AddSC_grizzly_hills();
 extern void AddSC_howling_fjord();
 extern void AddSC_icecrown();
 extern void AddSC_sholazar_basin();
@@ -725,7 +724,6 @@ void AddScripts()
     AddSC_borean_tundra();
     AddSC_dalaran();
     AddSC_dragonblight();
-    AddSC_grizzly_hills();
     AddSC_howling_fjord();
     AddSC_icecrown();
     AddSC_sholazar_basin();
