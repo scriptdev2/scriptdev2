@@ -530,7 +530,7 @@ UPDATE creature_template SET ScriptName='npc_rathis_tomber' WHERE entry=16224;
 
 
 /* GRIZZLY HILLS */
-UPDATE creature_template SET ScriptName='npc_orsonn_and_kodian' WHERE entry IN (27274, 27275);
+
 
 /* GRUUL'S LAIR */
 UPDATE instance_template SET script='instance_gruuls_lair' WHERE map =565;
@@ -624,9 +624,7 @@ UPDATE creature_template SET ScriptName='npc_dame_evniki_kapsalis' WHERE entry=3
 UPDATE creature_template SET ScriptName='npc_royal_historian_archesonus' WHERE entry=8879;
 
 /* ISLE OF QUEL'DANAS */
-UPDATE creature_template SET ScriptName='npc_ayren_cloudbreaker' WHERE entry=25059;
 UPDATE creature_template SET ScriptName='npc_converted_sentry' WHERE entry=24981;
-UPDATE creature_template SET ScriptName='npc_unrestrained_dragonhawk' WHERE entry=25236;
 
 /* KARAZHAN */
 UPDATE instance_template SET script='instance_karazhan' WHERE map=532;
