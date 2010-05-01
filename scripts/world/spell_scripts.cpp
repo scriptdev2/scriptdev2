@@ -25,6 +25,7 @@ EndScriptData */
 spell 34665
 spell 19512
 spell 8913
+spell 21014
 spell 29528
 spell 46770
 spell 46023
@@ -38,6 +39,46 @@ EndContentData */
 - always check spell id and effect index
 - always return true when the spell is handled by script
 */
+
+enum
+{
+    // quest 11472
+    SPELL_ANUNIAQS_NET          = 21014,
+    GO_TASTY_REEF_FISH          = 186949,
+    NPC_REEF_SHARK              = 24637,
+    ITEM_TASTY_REEF_FISH        = 34127,
+};
+
+bool EffectDummyGameObj_spell_dummy_go(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, GameObject* pGOTarget)
+{
+    switch(uiSpellId)
+    {
+        case SPELL_ANUNIAQS_NET:
+        {
+            if (uiEffIndex == EFFECT_INDEX_0)
+            {
+                if (pGOTarget->GetEntry() != GO_TASTY_REEF_FISH || pCaster->GetTypeId() != TYPEID_PLAYER)
+                    return true;
+
+                if (urand(0, 3))
+                {
+                    if (Item* pItem = ((Player*)pCaster)->StoreNewItemInInventorySlot(ITEM_TASTY_REEF_FISH, 1))
+                        ((Player*)pCaster)->SendNewItem(pItem, 1, true, false);
+                }
+                else
+                {
+                    if (Creature* pShark = pCaster->SummonCreature(NPC_REEF_SHARK, pGOTarget->GetPositionX(), pGOTarget->GetPositionY(), pGOTarget->GetPositionZ(), 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000))
+                        pShark->AI()->AttackStart(pCaster);
+                }
+
+                return true;
+            }
+            return true;
+        }
+    }
+
+    return false;
+}
 
 enum
 {
@@ -499,6 +540,11 @@ bool EffectDummyCreature_spell_dummy_npc(Unit* pCaster, uint32 uiSpellId, SpellE
 void AddSC_spell_scripts()
 {
     Script *newscript;
+
+    newscript = new Script;
+    newscript->Name = "spell_dummy_go";
+    newscript->pEffectDummyGameObj = &EffectDummyGameObj_spell_dummy_go;
+    newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "spell_dummy_npc";
