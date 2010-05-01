@@ -27,6 +27,7 @@ spell 19512
 spell 8913
 spell 21014
 spell 29528
+spell 29866
 spell 46770
 spell 46023
 spell 47575
@@ -42,6 +43,13 @@ EndContentData */
 
 enum
 {
+    // quest 9452
+    SPELL_CAST_FISHING_NET      = 29866,
+    GO_RED_SNAPPER              = 181616,
+    NPC_ANGRY_MURLOC            = 17102,
+    ITEM_RED_SNAPPER            = 23614,
+    //SPELL_SUMMON_TEST           = 49214                   // ! Just wrong spell name? It summon correct creature (17102)but does not appear to be used.
+
     // quest 11472
     SPELL_ANUNIAQS_NET          = 21014,
     GO_TASTY_REEF_FISH          = 186949,
@@ -71,6 +79,30 @@ bool EffectDummyGameObj_spell_dummy_go(Unit* pCaster, uint32 uiSpellId, SpellEff
                         pShark->AI()->AttackStart(pCaster);
                 }
 
+                pGOTarget->Delete();                        // sends despawn anim + destroy
+                return true;
+            }
+            return true;
+        }
+        case SPELL_CAST_FISHING_NET:
+        {
+            if (uiEffIndex == EFFECT_INDEX_0)
+            {
+                if (pGOTarget->GetEntry() != GO_RED_SNAPPER || pCaster->GetTypeId() != TYPEID_PLAYER)
+                    return true;
+
+                if (urand(0, 2))
+                {
+                    if (Creature* pMurloc = pCaster->SummonCreature(NPC_ANGRY_MURLOC, pCaster->GetPositionX(), pCaster->GetPositionY()+20.0f, pCaster->GetPositionZ(), 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10000))
+                        pMurloc->AI()->AttackStart(pCaster);
+                }
+                else
+                {
+                    if (Item* pItem = ((Player*)pCaster)->StoreNewItemInInventorySlot(ITEM_RED_SNAPPER, 1))
+                        ((Player*)pCaster)->SendNewItem(pItem, 1, true, false);
+                }
+
+                pGOTarget->Delete();                        // sends despawn anim + destroy
                 return true;
             }
             return true;
