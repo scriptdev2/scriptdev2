@@ -93,7 +93,7 @@ struct MANGOS_DLL_DECL boss_baroness_anastariAI : public ScriptedAI
         if (rand()%100 < 65)
         {
         Unit* target = NULL;
-        target = SelectUnit(SELECT_TARGET_RANDOM,0);
+        target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
         if (target)DoCastSpellIfCan(target,SPELL_POSSESS);
         }
         Possess_Timer = 50000;

@@ -160,7 +160,7 @@ struct MANGOS_DLL_DECL boss_brutallusAI : public ScriptedAI
         if (m_uiBurnTimer < uiDiff)
         {
             //returns any unit
-            if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
             {
                 //so we get owner, in case unit was pet/totem/etc
                 if (Player* pPlayer = pTarget->GetCharmerOrOwnerPlayerOrPlayerItself())

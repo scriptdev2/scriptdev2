@@ -145,7 +145,7 @@ struct MANGOS_DLL_DECL boss_doomrelAI : public ScriptedAI
 
     void JustSummoned(Creature* pSummoned)
     {
-        if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+        if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
             pSummoned->AI()->AttackStart(pTarget);
     }
 
@@ -236,7 +236,7 @@ struct MANGOS_DLL_DECL boss_doomrelAI : public ScriptedAI
         //Immolate_Timer
         if (m_uiImmolate_Timer < diff)
         {
-            if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
                 DoCastSpellIfCan(target,SPELL_IMMOLATE);
 
             m_uiImmolate_Timer = 25000;

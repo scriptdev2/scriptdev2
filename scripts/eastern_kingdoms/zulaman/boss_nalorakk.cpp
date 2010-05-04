@@ -177,7 +177,7 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
             if (Surge_Timer < diff)
             {
                 //select a random unit other than the main tank
-                Unit *target = SelectUnit(SELECT_TARGET_RANDOM, 1);
+                Unit *target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1);
 
                 //if there aren't other units, cast on the tank
                 if (!target)

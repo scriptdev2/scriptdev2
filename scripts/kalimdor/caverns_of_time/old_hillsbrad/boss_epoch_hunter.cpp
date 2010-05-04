@@ -108,7 +108,7 @@ struct MANGOS_DLL_DECL boss_epoch_hunterAI : public ScriptedAI
 
         if (WingBuffet_Timer < diff)
         {
-            if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit *target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
                 DoCastSpellIfCan(target,SPELL_WING_BUFFET);
             WingBuffet_Timer = urand(25000, 35000);
         }else WingBuffet_Timer -= diff;

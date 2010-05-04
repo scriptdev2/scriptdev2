@@ -102,7 +102,7 @@ struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
         if (Flamespear_Timer < diff)
         {
             Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
             if (target) DoCastSpellIfCan(target,SPELL_FLAMESPEAR);
 
             Flamespear_Timer = urand(12000, 16000);
@@ -161,7 +161,7 @@ struct MANGOS_DLL_DECL mob_flamewaker_priestAI : public ScriptedAI
         if (ShadowWordPain_Timer < diff)
         {
             Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
             if (target) DoCastSpellIfCan(target,SPELL_SHADOWWORDPAIN);
 
             ShadowWordPain_Timer = urand(18000, 26000);
@@ -171,7 +171,7 @@ struct MANGOS_DLL_DECL mob_flamewaker_priestAI : public ScriptedAI
         if (Immolate_Timer < diff)
         {
             Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
             if (target) DoCastSpellIfCan(target,SPELL_IMMOLATE);
 
             Immolate_Timer = urand(15000, 25000);

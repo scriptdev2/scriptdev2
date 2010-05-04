@@ -105,7 +105,7 @@ struct MANGOS_DLL_DECL boss_pathaleon_the_calculatorAI : public ScriptedAI
             for(int i = 0; i < 3; ++i)
             {
                 Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
                 Creature* Wraith = m_creature->SummonCreature(21062,m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(),0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
                 if (target && Wraith)
                     Wraith->AI()->AttackStart(target);
@@ -130,7 +130,7 @@ struct MANGOS_DLL_DECL boss_pathaleon_the_calculatorAI : public ScriptedAI
 
         if (Domination_Timer < diff)
         {
-            if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,1))
+            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,1))
             {
                 DoScriptText(urand(0, 1) ? SAY_DOMINATION_1 : SAY_DOMINATION_2, m_creature);
                 DoCastSpellIfCan(target,SPELL_DOMINATION);
@@ -190,7 +190,7 @@ struct MANGOS_DLL_DECL mob_nether_wraithAI : public ScriptedAI
 
         if (ArcaneMissiles_Timer < diff)
         {
-            if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,1))
+            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,1))
                 DoCastSpellIfCan(target,SPELL_ARCANE_MISSILES);
             else
                 DoCastSpellIfCan(m_creature->getVictim(),SPELL_ARCANE_MISSILES);

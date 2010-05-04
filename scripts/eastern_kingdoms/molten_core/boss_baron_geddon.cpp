@@ -70,7 +70,7 @@ struct MANGOS_DLL_DECL boss_baron_geddonAI : public ScriptedAI
         //IgniteMana_Timer
         if (IgniteMana_Timer < diff)
         {
-            if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
                 DoCastSpellIfCan(target,SPELL_IGNITEMANA);
 
             IgniteMana_Timer = 30000;
@@ -79,7 +79,7 @@ struct MANGOS_DLL_DECL boss_baron_geddonAI : public ScriptedAI
         //LivingBomb_Timer
         if (LivingBomb_Timer < diff)
         {
-            if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
                 DoCastSpellIfCan(target,SPELL_LIVINGBOMB);
 
             LivingBomb_Timer = 35000;

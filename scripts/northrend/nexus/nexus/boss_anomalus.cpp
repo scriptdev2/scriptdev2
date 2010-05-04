@@ -110,7 +110,7 @@ struct MANGOS_DLL_DECL boss_anomalusAI : public ScriptedAI
         {
             DoScriptText(SAY_RIFT, m_creature);
 
-            if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                 pSummoned->AI()->AttackStart(pTarget);
         }
     }
@@ -165,7 +165,7 @@ struct MANGOS_DLL_DECL boss_anomalusAI : public ScriptedAI
 
         if (m_uiSparkTimer < uiDiff)
         {
-            if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                 DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_SPARK : SPELL_SPARK_H);
 
             m_uiSparkTimer = 5000;
@@ -204,7 +204,7 @@ struct MANGOS_DLL_DECL mob_chaotic_riftAI : public Scripted_NoMovementAI
     {
         if (pSummoned->GetEntry() == NPC_CRAZED_MANA_WRAITH)
         {
-            if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                 pSummoned->AI()->AttackStart(pTarget);
         }
     }

@@ -91,7 +91,7 @@ struct MANGOS_DLL_DECL mob_fireswornAI : public ScriptedAI
         //Immolate_Timer
         if (Immolate_Timer < diff)
         {
-            if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
                 DoCastSpellIfCan(target,SPELL_IMMOLATE);
 
             Immolate_Timer = urand(5000, 10000);

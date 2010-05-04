@@ -114,7 +114,7 @@ struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
         // Aura Check. If the gamer is affected by confliguration we attack a random gamer.
         if (m_creature->getVictim()->HasAura(SPELL_CONFLAGRATION, EFFECT_INDEX_0))
         {
-            if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1))
                 m_creature->TauntApply(pTarget);
         }
 

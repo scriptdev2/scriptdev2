@@ -153,7 +153,7 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
     {
         if (pSummoned->GetEntry() == NPC_SPAWN_OF_MARLI)
         {
-            if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
                 pSummoned->AI()->AttackStart(pTarget);
         }
     }
@@ -216,7 +216,7 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
             if (m_bHasWebbed && m_uiCharge_Timer < uiDiff)
             {   
                 //Shouldn't be random target but highestaggro not Webbed player
-                if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
                 {
                     DoCastSpellIfCan(pTarget, SPELL_CHARGE);
                     DoResetThreat();
@@ -229,7 +229,7 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
                         while (i < 5)                               // max 3 tries to get a random target with power_mana
                         {
                             ++i;                                    //not aggro leader
-                            pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
+                            pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
                             if (pTarget && pTarget->getPowerType() == POWER_MANA)
                                 i=5;
                         }

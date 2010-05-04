@@ -99,7 +99,7 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
     {
         DoScriptText(SAY_SUMMON, m_creature);
 
-        if (Unit* random = SelectUnit(SELECT_TARGET_RANDOM,0))
+        if (Unit* random = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
             summoned->AI()->AttackStart(random);
 
         ++SummonedCount;
@@ -149,7 +149,7 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
             Unit* temp = NULL;
             if (m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
                 temp = m_creature->getVictim();
-            else temp = SelectUnit(SELECT_TARGET_RANDOM,0);
+            else temp = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
 
             if (temp && temp->GetTypeId() == TYPEID_PLAYER)
             {
@@ -175,7 +175,7 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
         {
             DoScriptText(SAY_CURSE, m_creature);
 
-            if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
             {
                 DoCastSpellIfCan(target, m_bIsRegularMode ? SPELL_TREACHEROUS_AURA : H_SPELL_BANE_OF_TREACHERY);
                 Aura_Timer = urand(8000, 16000);
@@ -184,7 +184,7 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
 
         if (Shadowbolt_Timer < diff)
         {
-            if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
             {
                 if (target)
                     target = m_creature->getVictim();

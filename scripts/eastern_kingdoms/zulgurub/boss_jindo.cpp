@@ -103,7 +103,7 @@ struct MANGOS_DLL_DECL boss_jindoAI : public ScriptedAI
         //Casting the delusion curse with a shade. So shade will attack the same target with the curse.
         if (Delusions_Timer < diff)
         {
-            if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
             {
                 DoCastSpellIfCan(target, SPELL_DELUSIONSOFJINDO);
 
@@ -119,7 +119,7 @@ struct MANGOS_DLL_DECL boss_jindoAI : public ScriptedAI
         if (Teleport_Timer < diff)
         {
             Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
             if (target && target->GetTypeId() == TYPEID_PLAYER)
             {
                 DoTeleportPlayer(target, -11583.7783f, -1249.4278f, 77.5471f, 4.745f);

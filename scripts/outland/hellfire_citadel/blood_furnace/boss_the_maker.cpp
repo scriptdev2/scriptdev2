@@ -110,7 +110,7 @@ struct MANGOS_DLL_DECL boss_the_makerAI : public ScriptedAI
 
         if (ExplodingBreaker_Timer < diff)
         {
-            if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
                 DoCastSpellIfCan(target, m_bIsRegularMode ? H_SPELL_EXPLODING_BREAKER : SPELL_EXPLODING_BREAKER);
             ExplodingBreaker_Timer = urand(4000, 12000);
         }else ExplodingBreaker_Timer -=diff;
@@ -118,7 +118,7 @@ struct MANGOS_DLL_DECL boss_the_makerAI : public ScriptedAI
         if (Domination_Timer < diff)
         {
             Unit* target;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
 
             DoCastSpellIfCan(target,SPELL_DOMINATION);
 

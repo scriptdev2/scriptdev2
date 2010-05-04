@@ -66,7 +66,7 @@ struct MANGOS_DLL_DECL boss_ptheradrasAI : public ScriptedAI
         if (Boulder_Timer < diff)
         {
             Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
             if (target)
                 DoCastSpellIfCan(target,SPELL_BOULDER);
             Boulder_Timer = 10000;

@@ -125,7 +125,7 @@ struct MANGOS_DLL_DECL boss_murmurAI : public ScriptedAI
         if (MurmursTouch_Timer < diff)
         {
             /*Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
             if (target)
                 DoCastSpellIfCan(target, SPELL_MURMURS_TOUCH);*/
             DoCastSpellIfCan(m_creature, SPELL_MURMURS_TOUCH);
@@ -146,7 +146,7 @@ struct MANGOS_DLL_DECL boss_murmurAI : public ScriptedAI
         {
             if (SonicShock_Timer < diff)
             {
-                if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                if (Unit *target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                     DoCastSpellIfCan(target, SPELL_SONIC_SHOCK);
                 SonicShock_Timer = urand(8000, 12000);
             }else SonicShock_Timer -= diff;
@@ -163,7 +163,7 @@ struct MANGOS_DLL_DECL boss_murmurAI : public ScriptedAI
         {
             if (!CanShockWave)
             {
-                if (Unit* temp = SelectUnit(SELECT_TARGET_RANDOM,0))
+                if (Unit* temp = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
                 {
                     if (temp->GetTypeId() == TYPEID_PLAYER)
                     {

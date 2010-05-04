@@ -56,7 +56,7 @@ struct MANGOS_DLL_DECL boss_fankrissAI : public ScriptedAI
         SpawnSpawns_Timer = urand(15000, 45000);
     }
 
-    void SummonSpawn(Unit* victim)
+    void SummonSpawn(Unit* pVictim)
     {
         Rand = 10 + (rand()%10);
         switch(urand(0, 1))
@@ -73,8 +73,8 @@ struct MANGOS_DLL_DECL boss_fankrissAI : public ScriptedAI
         }
         Rand = 0;
         Spawn = DoSpawnCreature(15630, RandX, RandY, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
-        if (Spawn)
-            ((CreatureAI*)Spawn->AI())->AttackStart(victim);
+        if (Spawn && pVictim)
+            ((CreatureAI*)Spawn->AI())->AttackStart(pVictim);
     }
 
     void UpdateAI(const uint32 diff)
@@ -96,16 +96,16 @@ struct MANGOS_DLL_DECL boss_fankrissAI : public ScriptedAI
             switch(urand(0, 2))
             {
                 case 0:
-                    SummonSpawn(SelectUnit(SELECT_TARGET_RANDOM,0));
+                    SummonSpawn(m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0));
                     break;
                 case 1:
-                    SummonSpawn(SelectUnit(SELECT_TARGET_RANDOM,0));
-                    SummonSpawn(SelectUnit(SELECT_TARGET_RANDOM,0));
+                    SummonSpawn(m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0));
+                    SummonSpawn(m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0));
                     break;
                 case 2:
-                    SummonSpawn(SelectUnit(SELECT_TARGET_RANDOM,0));
-                    SummonSpawn(SelectUnit(SELECT_TARGET_RANDOM,0));
-                    SummonSpawn(SelectUnit(SELECT_TARGET_RANDOM,0));
+                    SummonSpawn(m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0));
+                    SummonSpawn(m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0));
+                    SummonSpawn(m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0));
                     break;
             }
             SpawnSpawns_Timer = urand(30000, 60000);
@@ -118,7 +118,7 @@ struct MANGOS_DLL_DECL boss_fankrissAI : public ScriptedAI
             if (SpawnHatchlings_Timer< diff)
             {
                 Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
                 if (target && target->GetTypeId() == TYPEID_PLAYER)
                 {
                     DoCastSpellIfCan(target, SPELL_ROOT);

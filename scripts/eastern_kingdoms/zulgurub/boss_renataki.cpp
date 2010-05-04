@@ -77,7 +77,7 @@ struct MANGOS_DLL_DECL boss_renatakiAI : public ScriptedAI
         {
             if (Ambush_Timer < diff)
             {
-                if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
                 {
                     m_creature->NearTeleportTo(pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(), 0.0f);
                     DoCastSpellIfCan(pTarget, SPELL_AMBUSH);
@@ -109,7 +109,7 @@ struct MANGOS_DLL_DECL boss_renatakiAI : public ScriptedAI
             if (Aggro_Timer < diff)
         {
             Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,1);
+            target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,1);
 
             if (m_creature->getThreatManager().getThreat(m_creature->getVictim()))
                 m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-50);

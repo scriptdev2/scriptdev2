@@ -439,7 +439,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
 
                 DoScriptText(SAY_AXE_TOSS2, m_creature);
 
-                Unit *target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                Unit *target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0);
                 for(uint32 i=0; i<2; ++i)
                 {
                     Creature *axe = m_creature->SummonCreature(MALCHEZARS_AXE, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 1000);
@@ -485,7 +485,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
             {
                 AxesTargetSwitchTimer = urand(7500, 20000);
 
-                Unit *target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                Unit *target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0);
                 if (target)
                 {
                     for(int i = 0; i < 2; ++i)
@@ -510,7 +510,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
 
             if (AmplifyDamageTimer < diff)
             {
-                if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                     DoCastSpellIfCan(pTarget, SPELL_AMPLIFY_DAMAGE);
 
                 AmplifyDamageTimer = urand(20000, 30000);
@@ -538,7 +538,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
                 if (phase == 1)
                     target = m_creature->getVictim();       // the tank
                 else                                        //anyone but the tank
-                    target = SelectUnit(SELECT_TARGET_RANDOM, 1);
+                    target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1);
 
                 if (target)
                     DoCastSpellIfCan(target, SPELL_SW_PAIN);

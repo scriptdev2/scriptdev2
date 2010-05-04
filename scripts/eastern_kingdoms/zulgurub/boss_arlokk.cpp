@@ -163,7 +163,7 @@ struct MANGOS_DLL_DECL boss_arlokkAI : public ScriptedAI
 
             if (m_uiMark_Timer < uiDiff)
             {
-                if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                 {
                     if (Player* pMark = pTarget->GetCharmerOrOwnerPlayerOrPlayerItself())
                     {
@@ -250,7 +250,7 @@ struct MANGOS_DLL_DECL boss_arlokkAI : public ScriptedAI
                 m_creature->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, (cinfo->maxdmg +((cinfo->maxdmg/100) * 35)));
                 m_creature->UpdateDamagePhysical(BASE_ATTACK);
 
-                if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
                     AttackStart(pTarget);
 
                 m_bIsPhaseTwo = true;

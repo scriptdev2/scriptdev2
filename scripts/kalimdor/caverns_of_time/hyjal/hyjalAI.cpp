@@ -477,7 +477,7 @@ void hyjalAI::UpdateAI(const uint32 uiDiff)
                 switch(m_aSpells[i].m_pType)
                 {
                     case TARGETTYPE_SELF:   pTarget = m_creature; break;
-                    case TARGETTYPE_RANDOM: pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0); break;
+                    case TARGETTYPE_RANDOM: pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0); break;
                     case TARGETTYPE_VICTIM: pTarget = m_creature->getVictim(); break;
                 }
 

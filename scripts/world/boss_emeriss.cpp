@@ -71,7 +71,7 @@ struct MANGOS_DLL_DECL boss_emerissAI : public ScriptedAI
         //Sleep_Timer
         if (m_uiSleep_Timer < uiDiff)
         {
-            if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                 DoCastSpellIfCan(pTarget, SPELL_SLEEP);
 
             m_uiSleep_Timer = urand(8000, 16000);

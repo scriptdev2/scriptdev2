@@ -213,7 +213,7 @@ struct MANGOS_DLL_DECL boss_sladranAI : public ScriptedAI
 
         if (m_uiVenomBoltTimer < uiDiff)
         {
-            if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                 DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_VENOM_BOLT : SPELL_VENOM_BOLT_H);
 
             m_uiVenomBoltTimer = 15000;

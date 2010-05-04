@@ -61,7 +61,7 @@ struct MANGOS_DLL_DECL boss_shadowvoshAI : public ScriptedAI
         if (Hex_Timer < diff)
         {
             Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
             if (target) DoCastSpellIfCan(target,SPELL_HEX);
             Hex_Timer = 15000;
         }else Hex_Timer -= diff;

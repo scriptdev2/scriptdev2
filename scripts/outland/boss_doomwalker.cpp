@@ -147,7 +147,7 @@ struct MANGOS_DLL_DECL boss_doomwalkerAI : public ScriptedAI
         if (Chain_Timer < diff)
         {
             Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,1);
+            target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,1);
 
             if (!target)
                 target = m_creature->getVictim();

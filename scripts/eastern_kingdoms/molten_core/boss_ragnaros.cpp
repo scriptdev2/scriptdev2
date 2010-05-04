@@ -215,7 +215,7 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public ScriptedAI
                 // summon 10 elementals
                 for(int i = 0; i < 9; ++i)
                 {
-                    if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+                    if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
                     {
                         if (Creature* pSummoned = m_creature->SummonCreature(12143,pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(),0.0f,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000))
                             pSummoned->AI()->AttackStart(pTarget);
@@ -233,7 +233,7 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public ScriptedAI
 
                 for(int i = 0; i < 9; ++i)
                 {
-                    if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+                    if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
                     {
                         if (Creature* pSummoned = m_creature->SummonCreature(12143,pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(),0.0f,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000))
                             pSummoned->AI()->AttackStart(pTarget);

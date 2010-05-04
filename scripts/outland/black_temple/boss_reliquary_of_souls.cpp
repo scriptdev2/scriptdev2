@@ -234,7 +234,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
         float y = Coords[random].y;
 
         Creature* Soul = m_creature->SummonCreature(CREATURE_ENSLAVED_SOUL, x, y, m_creature->GetPositionZ(), m_creature->GetOrientation(), TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 45000);
-        Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+        Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0);
         if (target && Soul)
         {
             ((npc_enslaved_soulAI*)Soul->AI())->ReliquaryGUID = m_creature->GetGUID();
@@ -298,7 +298,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                 {
                     DoScriptText(SUFF_SAY_FREED, EssenceSuffering);
 
-                    if (Unit* target = SelectUnit(SELECT_TARGET_TOPAGGRO, 0))
+                    if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO, 0))
                     {
                         EssenceSuffering->AddThreat(target);
                         EssenceSuffering->AI()->AttackStart(target);
@@ -402,7 +402,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                     {
                         DoScriptText(DESI_SAY_FREED, EssenceDesire);
 
-                        if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                        if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                         {
                             EssenceDesire->AddThreat(target);
                             EssenceDesire->AI()->AttackStart(target);
@@ -508,7 +508,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
 
                     if (EssenceAnger)
                     {
-                        if (Unit* target = SelectUnit(SELECT_TARGET_TOPAGGRO, 0))
+                        if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO, 0))
                         {
                             EssenceAnger->AddThreat(target);
                             EssenceAnger->AI()->AttackStart(target);
@@ -682,7 +682,7 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
 
         if (SoulDrainTimer < diff)
         {
-            if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                 DoCastSpellIfCan(target, SPELL_SOUL_DRAIN);
             SoulDrainTimer = 60000;
         }else SoulDrainTimer -= diff;
@@ -901,7 +901,7 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
         {
             for(uint8 i = 0; i < 4; ++i)
             {
-                if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                     DoCastSpellIfCan(target, SPELL_SPITE);
             }
 

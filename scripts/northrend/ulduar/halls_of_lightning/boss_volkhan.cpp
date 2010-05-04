@@ -198,7 +198,7 @@ struct MANGOS_DLL_DECL boss_volkhanAI : public ScriptedAI
         {
             m_lGolemGUIDList.push_back(pSummoned->GetGUID());
 
-            if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                 pSummoned->AI()->AttackStart(pTarget);
 
             //why healing when just summoned?

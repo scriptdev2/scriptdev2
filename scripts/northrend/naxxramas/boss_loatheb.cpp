@@ -93,7 +93,7 @@ struct MANGOS_DLL_DECL boss_loathebAI : public ScriptedAI
         if (pSummoned->GetEntry() != NPC_SPORE)
             return;
 
-        if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+        if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
             pSummoned->AddThreat(pTarget);
     }
 
@@ -160,7 +160,7 @@ struct MANGOS_DLL_DECL boss_loathebAI : public ScriptedAI
         // Deathbloom
         if (m_uiDeathbloomTimer < uiDiff)
         {
-            if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                 DoCastSpellIfCan(pTarget, SPELL_DEATHBLOOM);
 
             m_uiDeathbloomTimer = 30000;

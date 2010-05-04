@@ -53,7 +53,7 @@ struct MANGOS_DLL_DECL boss_grilekAI : public ScriptedAI
             DoCastSpellIfCan(m_creature, SPELL_AVARTAR);
             Unit* target = NULL;
 
-            target = SelectUnit(SELECT_TARGET_RANDOM,1);
+            target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,1);
 
             if (m_creature->getThreatManager().getThreat(m_creature->getVictim()))
                 m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-50);

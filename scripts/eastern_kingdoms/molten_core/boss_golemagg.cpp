@@ -76,7 +76,7 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
         // Pyroblast
         if (m_uiPyroblastTimer < uiDiff)
         {
-            if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                 DoCastSpellIfCan(pTarget, SPELL_PYROBLAST);
 
             m_uiPyroblastTimer = 7*IN_MILLISECONDS;

@@ -130,7 +130,7 @@ struct MANGOS_DLL_DECL boss_keristraszaAI : public ScriptedAI
             {
                 if (m_bIsRegularMode)
                 {
-                    if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
+                    if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1))
                     {
                         if (Player* pPlayer = pTarget->GetCharmerOrOwnerPlayerOrPlayerItself())
                             DoCastSpellIfCan(pPlayer, SPELL_CRYSTAL_CHAINS);

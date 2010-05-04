@@ -132,13 +132,13 @@ void SimpleAI::KilledUnit(Unit *victim)
         target = m_creature->getVictim();
         break;
     case CAST_HOSTILE_SECOND_AGGRO:
-        target = SelectUnit(SELECT_TARGET_TOPAGGRO,1);
+        target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO,1);
         break;
     case CAST_HOSTILE_LAST_AGGRO:
-        target = SelectUnit(SELECT_TARGET_BOTTOMAGGRO,0);
+        target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_BOTTOMAGGRO,0);
         break;
     case CAST_HOSTILE_RANDOM:
-        target = SelectUnit(SELECT_TARGET_RANDOM,0);
+        target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
         break;
     case CAST_KILLEDUNIT_VICTIM:
         target = victim;
@@ -180,13 +180,13 @@ void SimpleAI::DamageTaken(Unit *killer, uint32 &damage)
         target = m_creature->getVictim();
         break;
     case CAST_HOSTILE_SECOND_AGGRO:
-        target = SelectUnit(SELECT_TARGET_TOPAGGRO,1);
+        target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO,1);
         break;
     case CAST_HOSTILE_LAST_AGGRO:
-        target = SelectUnit(SELECT_TARGET_BOTTOMAGGRO,0);
+        target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_BOTTOMAGGRO,0);
         break;
     case CAST_HOSTILE_RANDOM:
-        target = SelectUnit(SELECT_TARGET_RANDOM,0);
+        target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
         break;
     case CAST_JUSTDIED_KILLER:
         target = killer;
@@ -231,13 +231,13 @@ void SimpleAI::UpdateAI(const uint32 diff)
                     target = m_creature->getVictim();
                     break;
                 case CAST_HOSTILE_SECOND_AGGRO:
-                    target = SelectUnit(SELECT_TARGET_TOPAGGRO,1);
+                    target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO,1);
                     break;
                 case CAST_HOSTILE_LAST_AGGRO:
-                    target = SelectUnit(SELECT_TARGET_BOTTOMAGGRO,0);
+                    target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_BOTTOMAGGRO,0);
                     break;
                 case CAST_HOSTILE_RANDOM:
-                    target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                    target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
                     break;
                 }
 

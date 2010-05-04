@@ -108,7 +108,7 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
 
     void JustSummoned(Creature *summoned)
     {
-        if (Unit *temp = SelectUnit(SELECT_TARGET_RANDOM, 0))
+        if (Unit *temp = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
             summoned->GetMotionMaster()->MoveFollow(temp,0,0);
 
         //spells are SUMMON_TYPE_GUARDIAN, so using setOwner should be ok
@@ -155,7 +155,7 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
 
             if (ChainLightningTimer < diff)
             {
-                if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                     DoCastSpellIfCan(target, m_bIsRegularMode ? SPELL_CHAIN_LIGHTNING : SPELL_H_CHAIN_LIGHTNING);
 
                 ChainLightningTimer = 8000;
@@ -163,7 +163,7 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
 
             if (ArcaneShockTimer < diff)
             {
-                if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                     DoCastSpellIfCan(target, m_bIsRegularMode ? SPELL_ARCANE_SHOCK : SPELL_H_ARCANE_SHOCK);
 
                 ArcaneShockTimer = 8000;

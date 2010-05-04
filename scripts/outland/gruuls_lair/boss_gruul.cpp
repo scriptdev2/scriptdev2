@@ -236,7 +236,7 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
             // Cave In
             if (m_uiCaveIn_Timer < uiDiff)
             {
-                if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
                     DoCastSpellIfCan(pTarget,SPELL_CAVE_IN);
 
                 if (m_uiCaveIn_StaticTimer >= 4000)

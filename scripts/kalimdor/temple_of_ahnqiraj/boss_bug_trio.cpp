@@ -165,7 +165,7 @@ struct MANGOS_DLL_DECL boss_vemAI : public ScriptedAI
         //Charge_Timer
         if (Charge_Timer < diff)
         {
-            if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
                 DoCastSpellIfCan(target, SPELL_CHARGE);
 
             Charge_Timer = urand(8000, 16000);
@@ -228,7 +228,7 @@ struct MANGOS_DLL_DECL boss_yaujAI : public ScriptedAI
 
         for(int i = 0; i < 10; ++i)
         {
-            Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
             Creature* Summoned = m_creature->SummonCreature(15621,m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(),0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,90000);
             if (Summoned && target)
                 ((CreatureAI*)Summoned->AI())->AttackStart(target);

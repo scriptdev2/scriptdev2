@@ -70,7 +70,7 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
 
     void JustSummoned(Creature* pSummoned)
     {
-        if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+        if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
             pSummoned->AI()->AttackStart(pTarget);
     }
 
@@ -82,7 +82,7 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
         //Sleep_Timer
         if (m_uiSleep_Timer < uiDiff)
         {
-            if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                 DoCastSpellIfCan(pTarget, SPELL_SLEEP);
 
             m_uiSleep_Timer = urand(8000, 15000);
@@ -121,7 +121,7 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
         if (m_uiLightningWave_Timer < uiDiff)
         {
             //Cast LIGHTNINGWAVE on a Random target
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            if (Unit *pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                 DoCastSpellIfCan(pTarget, SPELL_LIGHTNINGWAVE);
 
             m_uiLightningWave_Timer = urand(7000, 12000);

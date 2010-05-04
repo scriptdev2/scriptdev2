@@ -67,7 +67,7 @@ struct MANGOS_DLL_DECL boss_shazzrahAI : public ScriptedAI
         if (ShazzrahCurse_Timer < diff)
         {
             Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
             if (target) DoCastSpellIfCan(target,SPELL_SHAZZRAHCURSE);
 
             ShazzrahCurse_Timer = urand(25000, 30000);
@@ -94,7 +94,7 @@ struct MANGOS_DLL_DECL boss_shazzrahAI : public ScriptedAI
             DoCastSpellIfCan(m_creature, SPELL_GATE_DUMMY, CAST_TRIGGERED);
 
             // manual, until added effect of dummy properly
-            if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,1))
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,1))
                 m_creature->NearTeleportTo(pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(), m_creature->GetOrientation());
 
             DoCastSpellIfCan(m_creature, SPELL_ARCANEEXPLOSION);

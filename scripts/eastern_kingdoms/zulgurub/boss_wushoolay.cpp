@@ -56,7 +56,7 @@ struct MANGOS_DLL_DECL boss_wushoolayAI : public ScriptedAI
         if (LightningWave_Timer < diff)
         {
             Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
             if (target) DoCastSpellIfCan(target,SPELL_LIGHTNINGWAVE);
 
             LightningWave_Timer = urand(12000, 16000);

@@ -100,7 +100,7 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
         {
             if (Charge_Timer < diff)
             {
-                if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
+                if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
                     DoCastSpellIfCan(target,SPELL_CHARGE);
 
                 Charge_Timer = urand(15000, 30000);
@@ -120,7 +120,7 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
 
             if (SpawnBats_Timer < diff)
             {
-                Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
 
                 Creature* Bat = NULL;
                 Bat = m_creature->SummonCreature(11368, -12291.6220f, -1380.2640f, 144.8304f, 5.483f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
@@ -150,7 +150,7 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
             {
                 if (PhaseTwo && ShadowWordPain_Timer < diff)
                 {
-                    if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
+                    if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
                     {
                         DoCastSpellIfCan(target, SPELL_SHADOW_WORD_PAIN);
                         ShadowWordPain_Timer = urand(12000, 18000);
@@ -179,7 +179,7 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
 
                 if (SpawnFlyingBats_Timer < diff)
                 {
-                    Unit *target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                    Unit *target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0);
 
                     Creature* FlyingBat = m_creature->SummonCreature(14965, target->GetPositionX(), target->GetPositionY(), target->GetPositionZ()+15, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
                     if (FlyingBat)
@@ -233,7 +233,7 @@ struct MANGOS_DLL_DECL mob_batriderAI : public ScriptedAI
         //Bomb_Timer
         if (Bomb_Timer < diff)
         {
-            if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            if (Unit *target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
             {
                 DoCastSpellIfCan(target, SPELL_BOMB);
                 Bomb_Timer = 5000;

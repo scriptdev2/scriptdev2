@@ -130,7 +130,7 @@ struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
 
         if (m_uiHolywrath_Timer < uiDiff)
         {
-            if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
                 DoCastSpellIfCan(pTarget, SPELL_HOLYWRATH);
 
             m_uiHolywrath_Timer = urand(20000, 25000);      //20-25 secs sounds nice

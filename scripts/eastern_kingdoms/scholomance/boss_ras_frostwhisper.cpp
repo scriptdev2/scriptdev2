@@ -69,7 +69,7 @@ struct MANGOS_DLL_DECL boss_rasfrostAI : public ScriptedAI
         if (Frostbolt_Timer < diff)
         {
             Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
             if (target) DoCastSpellIfCan(target,SPELL_FROSTBOLT);
 
             Frostbolt_Timer = 8000;

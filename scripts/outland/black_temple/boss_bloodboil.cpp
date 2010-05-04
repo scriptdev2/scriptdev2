@@ -225,7 +225,7 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
                 DoCastSpellIfCan(m_creature->getVictim(), SPELL_BEWILDERING_STRIKE);
                 float mt_threat = m_creature->getThreatManager().getThreat(m_creature->getVictim());
 
-                if (Unit* target = SelectUnit(SELECT_TARGET_TOPAGGRO, 1))
+                if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO, 1))
                     m_creature->AddThreat(target, mt_threat);
 
                 BewilderingStrikeTimer = 20000;
@@ -275,7 +275,7 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
         {
             if (Phase1)
             {
-                Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0);
                 if (target && target->isAlive())
                 {
                     Phase1 = false;

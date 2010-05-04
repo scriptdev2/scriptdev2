@@ -122,7 +122,7 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
         //CauseInsanity_Timer
         /*if (CauseInsanity_Timer < diff)
         {
-            if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
                 DoCastSpellIfCan(target,SPELL_CAUSEINSANITY);
 
             CauseInsanity_Timer = urand(35000, 43000);
@@ -132,7 +132,7 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
         if (WillOfHakkar_Timer < diff)
         {
 
-            if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
                 DoCastSpellIfCan(target,SPELL_WILLOFHAKKAR);
 
             WillOfHakkar_Timer = urand(25000, 35000);

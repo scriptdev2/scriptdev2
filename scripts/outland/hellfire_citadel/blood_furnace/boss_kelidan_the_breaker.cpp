@@ -202,7 +202,7 @@ struct MANGOS_DLL_DECL mob_shadowmoon_channelerAI : public ScriptedAI
 
         if (MarkOfShadow_Timer < diff)
         {
-            if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            if (Unit *target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                 DoCastSpellIfCan(target,SPELL_MARK_OF_SHADOW);
             MarkOfShadow_Timer = urand(15000, 20000);
         }else MarkOfShadow_Timer -=diff;

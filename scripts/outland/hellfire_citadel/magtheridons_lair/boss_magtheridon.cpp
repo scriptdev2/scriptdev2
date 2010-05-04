@@ -426,7 +426,7 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
 
         if (m_uiBlaze_Timer < uiDiff)
         {
-            if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
             {
                 float x, y, z;
                 pTarget->GetPosition(x, y, z);
@@ -475,7 +475,7 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
                         m_uiPhase3_Timer = 15000;
                         break;
                     case 3:
-                        if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                        if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                         {
                             float x, y, z;
                             pTarget->GetPosition(x, y, z);
@@ -606,7 +606,7 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
         //Fear
         if (m_uiFear_Timer < uiDiff)
         {
-            if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1))
                 DoCastSpellIfCan(pTarget, SPELL_FEAR);
 
             m_uiFear_Timer = urand(25000, 40000);
@@ -617,7 +617,7 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
         //Infernal spawning
         if (!m_bIsInfernalSpawned && m_uiInfernal_Timer < uiDiff)
         {
-            if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                 m_creature->CastSpell(pTarget, SPELL_BURNING_ABYSSAL, true);
 
             m_bIsInfernalSpawned = true;

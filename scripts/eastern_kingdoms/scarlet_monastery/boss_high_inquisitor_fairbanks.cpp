@@ -71,7 +71,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_fairbanksAI : public ScriptedAI
         //Fear_Timer
         if (Fear_Timer < diff)
         {
-            if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,1))
+            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,1))
                 DoCastSpellIfCan(target,SPELL_FEAR);
 
             Fear_Timer = 40000;
@@ -80,7 +80,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_fairbanksAI : public ScriptedAI
         //Sleep_Timer
         if (Sleep_Timer < diff)
         {
-            if (Unit* target = SelectUnit(SELECT_TARGET_TOPAGGRO,0))
+            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO,0))
                 DoCastSpellIfCan(target,SPELL_SLEEP);
 
             Sleep_Timer = 30000;
@@ -96,7 +96,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_fairbanksAI : public ScriptedAI
         //Dispel_Timer
         if (Dispel_Timer < diff)
         {
-            if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
                 DoCastSpellIfCan(target, SPELL_DISPELMAGIC);
 
             DispelMagic_Timer = 30000;

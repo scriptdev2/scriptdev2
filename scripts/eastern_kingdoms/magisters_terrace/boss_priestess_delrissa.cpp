@@ -288,7 +288,7 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
             bool friendly = false;
 
             if (urand(0, 1))
-                target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0);
             else
             {
                 friendly = true;
@@ -313,7 +313,7 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
 
         if (SWPainTimer < diff)
         {
-            if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                 DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_SW_PAIN_NORMAL : SPELL_SW_PAIN_HEROIC);
 
             SWPainTimer = 10000;
@@ -515,7 +515,7 @@ struct MANGOS_DLL_DECL boss_kagani_nightstrikeAI : public boss_priestess_lackey_
         {
             DoCastSpellIfCan(m_creature, SPELL_VANISH);
 
-            Unit* pUnit = SelectUnit(SELECT_TARGET_RANDOM, 0);
+            Unit* pUnit = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0);
 
             DoResetThreat();
 
@@ -625,7 +625,7 @@ struct MANGOS_DLL_DECL boss_ellris_duskhallowAI : public boss_priestess_lackey_c
 
         if (Seed_of_Corruption_Timer < diff)
         {
-            if (Unit* pUnit = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            if (Unit* pUnit = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                 DoCastSpellIfCan(pUnit, SPELL_SEED_OF_CORRUPTION);
 
             Seed_of_Corruption_Timer = 10000;
@@ -633,7 +633,7 @@ struct MANGOS_DLL_DECL boss_ellris_duskhallowAI : public boss_priestess_lackey_c
 
         if (Curse_of_Agony_Timer < diff)
         {
-            if (Unit* pUnit = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            if (Unit* pUnit = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                 DoCastSpellIfCan(pUnit, SPELL_CURSE_OF_AGONY);
 
             Curse_of_Agony_Timer = 13000;
@@ -641,7 +641,7 @@ struct MANGOS_DLL_DECL boss_ellris_duskhallowAI : public boss_priestess_lackey_c
 
         if (Fear_Timer < diff)
         {
-            if (Unit* pUnit = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            if (Unit* pUnit = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                 DoCastSpellIfCan(pUnit, SPELL_FEAR);
 
             Fear_Timer = 10000;
@@ -758,7 +758,7 @@ struct MANGOS_DLL_DECL boss_yazzaiAI : public boss_priestess_lackey_commonAI
 
         if (Polymorph_Timer < diff)
         {
-            if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
             {
                 DoCastSpellIfCan(target, SPELL_POLYMORPH);
                 Polymorph_Timer = 20000;
@@ -773,7 +773,7 @@ struct MANGOS_DLL_DECL boss_yazzaiAI : public boss_priestess_lackey_commonAI
 
         if (Blizzard_Timer < diff)
         {
-            if (Unit* pUnit = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            if (Unit* pUnit = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                 DoCastSpellIfCan(pUnit, SPELL_BLIZZARD);
 
             Blizzard_Timer = 8000;
@@ -897,7 +897,7 @@ struct MANGOS_DLL_DECL boss_warlord_salarisAI : public boss_priestess_lackey_com
             //if nobody is in melee range than try to use Intercept
             if (!InMeleeRange)
             {
-                if (Unit* pUnit = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                if (Unit* pUnit = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                     DoCastSpellIfCan(pUnit, SPELL_INTERCEPT_STUN);
             }
 
@@ -1124,7 +1124,7 @@ struct MANGOS_DLL_DECL boss_apokoAI : public boss_priestess_lackey_commonAI
 
         if (Purge_Timer < diff)
         {
-            if (Unit* pUnit = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            if (Unit* pUnit = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                 DoCastSpellIfCan(pUnit, SPELL_PURGE);
 
             Purge_Timer = 15000;

@@ -157,7 +157,7 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
         Creature* Summoned = m_creature->SummonCreature(entry, x, y, z, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
         if (Summoned)
         {
-            if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                 Summoned->AI()->AttackStart(target);
         }
     }
@@ -212,7 +212,7 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
             if (ArcaneMissiles_Timer < diff)
             {
                 //Solarian casts Arcane Missiles on on random targets in the raid.
-                if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                 {
                     if (!m_creature->HasInArc(2.5f, target))
                         target = m_creature->getVictim();
@@ -230,7 +230,7 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
                 m_creature->InterruptNonMeleeSpells(false);
 
                 //Target the tank ?
-                if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1))
                 {
                     if (pTarget->GetTypeId() == TYPEID_PLAYER)
                     {

@@ -56,7 +56,7 @@ struct MANGOS_DLL_DECL celebras_the_cursedAI : public ScriptedAI
         if (Wrath_Timer < diff)
         {
             Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
             if (target)
                 DoCastSpellIfCan(target,SPELL_WRATH);
             Wrath_Timer = 8000;

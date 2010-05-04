@@ -109,7 +109,7 @@ struct MANGOS_DLL_DECL boss_baron_rivendareAI : public ScriptedAI
 
     void JustSummoned(Creature* summoned)
     {
-        if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
+        if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
             summoned->AI()->AttackStart(target);
     }
 
@@ -127,7 +127,7 @@ struct MANGOS_DLL_DECL boss_baron_rivendareAI : public ScriptedAI
         //ShadowBolt
         if (ShadowBolt_Timer < diff)
         {
-            if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                 DoCastSpellIfCan(m_creature->getVictim(),SPELL_SHADOWBOLT);
             ShadowBolt_Timer = 10000;
         }else ShadowBolt_Timer -= diff;

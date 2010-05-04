@@ -139,7 +139,7 @@ struct MANGOS_DLL_DECL boss_mekgineer_steamriggerAI : public ScriptedAI
 
         if (Saw_Blade_Timer < diff)
         {
-            if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,1))
+            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,1))
                 DoCastSpellIfCan(target,SPELL_SAW_BLADE);
             else
                 DoCastSpellIfCan(m_creature->getVictim(),SPELL_SAW_BLADE);

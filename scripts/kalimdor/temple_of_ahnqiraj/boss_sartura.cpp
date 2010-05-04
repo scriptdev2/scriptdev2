@@ -94,7 +94,7 @@ struct MANGOS_DLL_DECL boss_sarturaAI : public ScriptedAI
             {
                 //Attack random Gamers
                 Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM,1);
+                target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,1);
                 if (target)
                 m_creature->AddThreat(target);
                 m_creature->TauntApply(target);
@@ -123,7 +123,7 @@ struct MANGOS_DLL_DECL boss_sarturaAI : public ScriptedAI
             {
                 //Attack random Gamers
                 Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM,1);
+                target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,1);
                 if (target)
                 m_creature->AddThreat(target);
                 m_creature->TauntApply(target);
@@ -215,7 +215,7 @@ struct MANGOS_DLL_DECL mob_sartura_royal_guardAI : public ScriptedAI
             {
                 //Attack random Gamers
                 Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM,1);
+                target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,1);
                 if (target)
                 m_creature->AddThreat(target);
                 m_creature->TauntApply(target);
@@ -236,7 +236,7 @@ struct MANGOS_DLL_DECL mob_sartura_royal_guardAI : public ScriptedAI
             {
                 //Attack random Gamers
                 Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM,1);
+                target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,1);
                 if (target)
                 m_creature->AddThreat(target);
                 m_creature->TauntApply(target);

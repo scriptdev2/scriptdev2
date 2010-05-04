@@ -186,7 +186,7 @@ struct MANGOS_DLL_DECL boss_netherspiteAI : public ScriptedAI
         {
             if (m_uiVoidZoneTimer < uiDiff)
             {
-                if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                     DoCastSpellIfCan(pTarget, SPELL_VOID_ZONE, true);
                 
                 m_uiVoidZoneTimer = 15000;
@@ -199,7 +199,7 @@ struct MANGOS_DLL_DECL boss_netherspiteAI : public ScriptedAI
         {
             if (m_uiNetherbreathTimer < uiDiff)
             {
-                if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                     DoCastSpellIfCan(pTarget, SPELL_NETHERBREATH);
            
                 m_uiNetherbreathTimer = urand(4000, 5000);

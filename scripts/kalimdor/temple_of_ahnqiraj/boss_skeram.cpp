@@ -255,7 +255,7 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
             case 25: Images25 = true; break;
         }
 
-        Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0);
+        Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
 
         Image1 = m_creature->SummonCreature(15263, i1->x, i1->y, i1->z, i1->r, TEMPSUMMON_CORPSE_DESPAWN, 30000);
         if (Image1)

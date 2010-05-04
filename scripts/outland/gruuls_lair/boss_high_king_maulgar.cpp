@@ -235,7 +235,7 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
             //m_uiCharge_Timer
             if (m_uiCharge_Timer < uiDiff)
             {
-                if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1))
                     DoCastSpellIfCan(pTarget, SPELL_CHARGE);
 
                 m_uiCharge_Timer = urand(14000, 20000);
@@ -417,7 +417,7 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public Council_Base_AI
 
         if (m_uiGreatherPolymorph_Timer < uiDiff)
         {
-            if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                 DoCastSpellIfCan(pTarget, SPELL_GREATER_POLYMORPH);
             m_uiGreatherPolymorph_Timer = urand(15000, 20000);
         }

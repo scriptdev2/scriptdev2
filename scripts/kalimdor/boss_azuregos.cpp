@@ -108,7 +108,7 @@ struct MANGOS_DLL_DECL boss_azuregosAI : public ScriptedAI
         //ManaStorm_Timer
         if (ManaStorm_Timer < diff)
         {
-            if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
                 DoCastSpellIfCan(target,SPELL_MANASTORM);
             ManaStorm_Timer = urand(7500, 12500);
         }else ManaStorm_Timer -= diff;

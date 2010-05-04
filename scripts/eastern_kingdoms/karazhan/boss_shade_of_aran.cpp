@@ -306,7 +306,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
         {
             if (!m_creature->IsNonMeleeSpellCasted(false))
             {
-                Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0);
                 if (!pTarget)
                     return;
 
@@ -341,7 +341,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
                     DoCastSpellIfCan(m_creature, SPELL_AOE_CS);
                     break;
                 case 1:
-                    if (Unit* pUnit = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                    if (Unit* pUnit = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                         DoCastSpellIfCan(pUnit, SPELL_CHAINSOFICE);
                     break;
             }

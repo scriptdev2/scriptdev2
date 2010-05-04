@@ -93,7 +93,7 @@ struct MANGOS_DLL_DECL mob_doom_blossomAI : public ScriptedAI
 
         if (ShadowBoltTimer < diff)
         {
-            if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                 DoCastSpellIfCan(pTarget, SPELL_SHADOWBOLT);
 
             ShadowBoltTimer = 10000;
@@ -338,7 +338,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
                     SetThreatList(Construct);               // Use same function as Doom Blossom to set Threat List.
                     ((mob_shadowy_constructAI*)Construct->AI())->GhostGUID = GhostGUID;
 
-                    Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1);
+                    Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1);
                     if (!target)                            // someone's trying to solo.
                         target = m_creature->getVictim();
 
@@ -388,7 +388,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
                 Shadow = m_creature->SummonCreature(CREATURE_SHADOWY_CONSTRUCT, X, m_creature->GetPositionY(), m_creature->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 0);
                 if (Shadow)
                 {
-                    Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1);
+                    Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1);
                     if (!target)
                         target = m_creature->getVictim();
 
@@ -401,7 +401,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
 
         if (SummonDoomBlossomTimer < diff)
         {
-            if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
             {
                 float X = CalculateRandomLocation(target->GetPositionX(), 20);
                 float Y = CalculateRandomLocation(target->GetPositionY(), 20);
@@ -422,7 +422,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
 
         if (IncinerateTimer < diff)
         {
-            Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1);
+            Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1);
             if (!target)
                 target = m_creature->getVictim();
 
@@ -436,7 +436,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
 
         if (CrushingShadowsTimer < diff)
         {
-            Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+            Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0);
             if (target && target->isAlive())
                 DoCastSpellIfCan(target, SPELL_CRUSHING_SHADOWS);
 
@@ -446,7 +446,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
         /*** NOTE FOR FUTURE DEV: UNCOMMENT BELOW ONLY IF MIND CONTROL IS FULLY IMPLEMENTED **/
         /*if (ShadowOfDeathTimer < diff)
         {
-            Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1);
+            Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1);
 
             if (!target)
                target = m_creature->getVictim();

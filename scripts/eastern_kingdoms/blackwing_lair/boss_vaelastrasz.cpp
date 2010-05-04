@@ -171,7 +171,7 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
             while (i < 3)                                   // max 3 tries to get a random target with power_mana
             {
                 ++i;
-                target = SelectUnit(SELECT_TARGET_RANDOM,1);//not aggro leader
+                target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,1);//not aggro leader
                 if (target)
                     if (target->getPowerType() == POWER_MANA)
                         i=3;

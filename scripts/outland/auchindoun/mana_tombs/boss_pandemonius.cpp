@@ -87,7 +87,7 @@ struct MANGOS_DLL_DECL boss_pandemoniusAI : public ScriptedAI
 
         if (VoidBlast_Timer < diff)
         {
-            if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
             {
                 DoCastSpellIfCan(target, m_bIsRegularMode ? SPELL_VOID_BLAST : H_SPELL_VOID_BLAST);
                 VoidBlast_Timer = 500;

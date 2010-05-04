@@ -56,10 +56,10 @@ struct MANGOS_DLL_DECL mob_crystalcore_devastatorAI : public ScriptedAI
             m_creature->CastSpell(m_creature->getVictim(),SPELL_KNOCKAWAY, true);
 
             // current aggro target is knocked away pick new target
-            Unit* Target = SelectUnit(SELECT_TARGET_TOPAGGRO, 0);
+            Unit* Target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO, 0);
 
             if (!Target || Target == m_creature->getVictim())
-                Target = SelectUnit(SELECT_TARGET_TOPAGGRO, 1);
+                Target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO, 1);
 
             if (Target)
                 m_creature->TauntApply(Target);

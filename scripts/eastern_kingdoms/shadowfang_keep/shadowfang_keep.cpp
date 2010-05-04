@@ -573,7 +573,7 @@ struct MANGOS_DLL_DECL boss_arugalAI : public ScriptedAI
 
         if (m_uiCurseTimer < uiDiff)
         {
-            if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1))
                 DoCastSpellIfCan(pTarget, SPELL_ARUGALS_CURSE);
 
             m_uiCurseTimer = urand(20000, 35000);

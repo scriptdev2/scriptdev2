@@ -157,7 +157,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
 
         for(uint8 i = 0; i < 3; ++i)
         {
-            Unit* pUnit = SelectUnit(SELECT_TARGET_RANDOM, 1);
+            Unit* pUnit = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1);
             if (pUnit && pUnit->isAlive() && (pUnit->GetTypeId() == TYPEID_PLAYER))
             {
                 TargetGUID[i] = pUnit->GetGUID();
@@ -182,7 +182,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
         //Randomly cast one beam.
         if (BeamTimer < diff)
         {
-            Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+            Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0);
             if (!target || !target->isAlive())
                 return;
 

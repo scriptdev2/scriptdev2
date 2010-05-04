@@ -169,7 +169,7 @@ struct MANGOS_DLL_DECL boss_lokenAI : public ScriptedAI
 
         if (m_uiArcLightning_Timer < uiDiff)
         {
-            if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                 DoCastSpellIfCan(pTarget, SPELL_ARC_LIGHTNING);
 
             m_uiArcLightning_Timer = urand(15000, 16000);

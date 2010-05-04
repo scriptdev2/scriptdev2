@@ -112,7 +112,7 @@ struct MANGOS_DLL_DECL boss_darkweaver_sythAI : public ScriptedAI
 
     void JustSummoned(Creature *summoned)
     {
-        if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0))
+        if (Unit *target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
             summoned->AI()->AttackStart(target);
     }
 
@@ -154,7 +154,7 @@ struct MANGOS_DLL_DECL boss_darkweaver_sythAI : public ScriptedAI
 
         if (flameshock_timer < diff)
         {
-            if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit *target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
                 DoCastSpellIfCan(target, SPELL_FLAME_SHOCK);
 
             flameshock_timer = urand(10000, 15000);
@@ -162,7 +162,7 @@ struct MANGOS_DLL_DECL boss_darkweaver_sythAI : public ScriptedAI
 
         if (arcaneshock_timer < diff)
         {
-            if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit *target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
                 DoCastSpellIfCan(target,SPELL_ARCANE_SHOCK);
 
             arcaneshock_timer = urand(10000, 15000);
@@ -170,7 +170,7 @@ struct MANGOS_DLL_DECL boss_darkweaver_sythAI : public ScriptedAI
 
         if (frostshock_timer < diff)
         {
-            if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit *target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
                 DoCastSpellIfCan(target,SPELL_FROST_SHOCK);
 
             frostshock_timer = urand(10000, 15000);
@@ -178,7 +178,7 @@ struct MANGOS_DLL_DECL boss_darkweaver_sythAI : public ScriptedAI
 
         if (shadowshock_timer < diff)
         {
-            if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit *target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
                 DoCastSpellIfCan(target,SPELL_SHADOW_SHOCK);
 
             shadowshock_timer = urand(10000, 15000);
@@ -186,7 +186,7 @@ struct MANGOS_DLL_DECL boss_darkweaver_sythAI : public ScriptedAI
 
         if (chainlightning_timer < diff)
         {
-            if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit *target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
                 DoCastSpellIfCan(target,SPELL_CHAIN_LIGHTNING);
 
             chainlightning_timer = 25000;
@@ -230,7 +230,7 @@ struct MANGOS_DLL_DECL mob_syth_fireAI : public ScriptedAI
 
         if (flameshock_timer < diff)
         {
-            if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit *target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
                 DoCastSpellIfCan(target, SPELL_FLAME_SHOCK);
 
             flameshock_timer = 5000;
@@ -238,7 +238,7 @@ struct MANGOS_DLL_DECL mob_syth_fireAI : public ScriptedAI
 
         if (flamebuffet_timer < diff)
         {
-            if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit *target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
              DoCastSpellIfCan(target, m_bIsRegularMode ? H_SPELL_FLAME_BUFFET : SPELL_FLAME_BUFFET);
 
             flamebuffet_timer = 5000;
@@ -280,7 +280,7 @@ struct MANGOS_DLL_DECL mob_syth_arcaneAI : public ScriptedAI
 
         if (arcaneshock_timer < diff)
         {
-            if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit *target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
                 DoCastSpellIfCan(target, SPELL_ARCANE_SHOCK);
 
             arcaneshock_timer = 5000;
@@ -288,7 +288,7 @@ struct MANGOS_DLL_DECL mob_syth_arcaneAI : public ScriptedAI
 
         if (arcanebuffet_timer < diff)
         {
-            if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit *target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
                 DoCastSpellIfCan(target, m_bIsRegularMode ? H_SPELL_ARCANE_BUFFET : SPELL_ARCANE_BUFFET);
 
             arcanebuffet_timer = 5000;
@@ -329,7 +329,7 @@ struct MANGOS_DLL_DECL mob_syth_frostAI : public ScriptedAI
 
         if (frostshock_timer < diff)
         {
-            if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit *target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
                 DoCastSpellIfCan(target, SPELL_FROST_SHOCK);
 
             frostshock_timer = 5000;
@@ -337,7 +337,7 @@ struct MANGOS_DLL_DECL mob_syth_frostAI : public ScriptedAI
 
         if (frostbuffet_timer < diff)
         {
-            if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit *target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
                 DoCastSpellIfCan(target, m_bIsRegularMode ? H_SPELL_FROST_BUFFET : SPELL_FROST_BUFFET);
 
             frostbuffet_timer = 5000;
@@ -378,7 +378,7 @@ struct MANGOS_DLL_DECL mob_syth_shadowAI : public ScriptedAI
 
         if (shadowshock_timer < diff)
         {
-            if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit *target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
                 DoCastSpellIfCan(target, SPELL_SHADOW_SHOCK);
 
             shadowshock_timer = 5000;
@@ -386,7 +386,7 @@ struct MANGOS_DLL_DECL mob_syth_shadowAI : public ScriptedAI
 
         if (shadowbuffet_timer < diff)
         {
-            if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit *target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
                 DoCastSpellIfCan(target, m_bIsRegularMode ? H_SPELL_SHADOW_BUFFET : SPELL_SHADOW_BUFFET);
 
             shadowbuffet_timer = 5000;

@@ -74,7 +74,7 @@ struct MANGOS_DLL_DECL boss_magmadarAI : public ScriptedAI
         //Lavabomb_Timer
         if (Lavabomb_Timer < diff)
         {
-            if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
                 DoCastSpellIfCan(target,SPELL_LAVABOMB_ALT);
 
             Lavabomb_Timer = 12000;

@@ -428,7 +428,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
             //FIRE BREATH  several videos says every 8Secounds
             if (fire_breath_timer < diff)
             {
-                if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
+                if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
                     DoCastSpellIfCan(target,SPELL_FLAME_BREATH);
                 fire_breath_timer = 8000;
             }else fire_breath_timer -=diff;
@@ -743,7 +743,7 @@ struct MANGOS_DLL_DECL mob_hatchlingAI : public ScriptedAI
 
         if (buffer_timer < diff)
         {
-            if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
                 DoCastSpellIfCan(target,SPELL_FLAMEBUFFED);
 
             buffer_timer = 7000;

@@ -224,7 +224,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
 
         if (uiEntry == NPC_COILFANG_STRIDER || uiEntry == NPC_COILFANG_ELITE || uiEntry == NPC_TOXIC_SPOREBAT)
         {
-            if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                 pSummoned->AI()->AttackStart(pTarget);
         }
 
@@ -300,7 +300,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
             if (m_uiStaticCharge_Timer < uiDiff)
             {
                 //Used on random people (only 1 person at any given time) in m_uiPhases 1 and 3, it's a debuff doing 2775 to 3225 Nature damage to the target and everybody in about 5 yards around it, every 1 seconds for 30 seconds. It can be removed by Cloak of Shadows, Iceblock, Divine Shield, etc, but not by Cleanse or Dispel Magic.
-                Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                Unit *pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0);
 
                 //cast Static Charge every 2 seconds for 20 seconds
                 if (pTarget && !pTarget->HasAura(SPELL_STATIC_CHARGE_TRIGGER))
@@ -400,7 +400,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
             if (m_uiForkedLightning_Timer < uiDiff)
             {
                 //Used constantly in m_uiPhase 2, it shoots out completely randomly targeted bolts of lightning which hit everybody in a roughtly 60 degree cone in front of Vashj for 2313-2687 nature damage.
-                Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0);
 
                 if (!pTarget)
                     pTarget = m_creature->getVictim();
@@ -554,7 +554,7 @@ struct MANGOS_DLL_DECL mob_tainted_elementalAI : public ScriptedAI
         //m_uiPoisonBolt_Timer
         if (m_uiPoisonBolt_Timer < uiDiff)
         {
-            Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+            Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0);
 
             if (pTarget && pTarget->IsWithinDistInMap(m_creature, 30.0f))
                 DoCastSpellIfCan(pTarget, SPELL_POISON_BOLT);
@@ -596,7 +596,7 @@ struct MANGOS_DLL_DECL mob_toxic_sporebatAI : public ScriptedAI
         if (m_uiToxicSpore_Timer < uiDiff)
         {
             //The Spores will hit you anywhere in the instance: underwater, at the elevator, at the entrance, wherever.
-            if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                 DoCastSpellIfCan(pTarget, SPELL_TOXIC_SPORES);
 
             m_uiToxicSpore_Timer = urand(20000, 25000);

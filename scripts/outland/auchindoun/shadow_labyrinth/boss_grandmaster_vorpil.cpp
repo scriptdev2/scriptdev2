@@ -207,7 +207,7 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
         {
             if (Banish_Timer < diff)
             {
-                if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1))
+                if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1))
                     DoCastSpellIfCan(target,H_SPELL_BANISH);
                 Banish_Timer = 35000;
             }else Banish_Timer -= diff;

@@ -286,29 +286,27 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
                 if (PhoenixTimer < diff)
                 {
 
-                    Unit* target = NULL;
-                    target = SelectUnit(SELECT_TARGET_RANDOM,1);
-
-                    uint32 random = urand(1, 2);
-                    float x = KaelLocations[random][0];
-                    float y = KaelLocations[random][1];
-
-                    Creature* Phoenix = m_creature->SummonCreature(CREATURE_PHOENIX, x, y, LOCATION_Z, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 60000);
-                    if (Phoenix)
+                    if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,1))
                     {
-                        Phoenix->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE + UNIT_FLAG_NON_ATTACKABLE);
-                        SetThreatList(Phoenix);
-                        Phoenix->AI()->AttackStart(target);
-                    }
+                        uint32 random = urand(1, 2);
+                        float x = KaelLocations[random][0];
+                        float y = KaelLocations[random][1];
 
-                    DoScriptText(SAY_PHOENIX, m_creature);
+                        if (Creature* Phoenix = m_creature->SummonCreature(CREATURE_PHOENIX, x, y, LOCATION_Z, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 60000))
+                        {
+                            Phoenix->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE + UNIT_FLAG_NON_ATTACKABLE);
+                            SetThreatList(Phoenix);
+                            Phoenix->AI()->AttackStart(pTarget);
+                            DoScriptText(SAY_PHOENIX, m_creature);
+                        }
+                    }
 
                     PhoenixTimer = 60000;
                 }else PhoenixTimer -= diff;
 
                 if (FlameStrikeTimer < diff)
                 {
-                    if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                    if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                     {
                         if (m_creature->IsNonMeleeSpellCasted(false))
                             m_creature->InterruptNonMeleeSpells(false);
@@ -386,17 +384,11 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
 
                             for(uint8 i = 0; i < 3; ++i)
                             {
-                                Unit* target = NULL;
-                                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-
-                                Creature* Orb = DoSpawnCreature(CREATURE_ARCANE_SPHERE, 5, 5, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 30000);
-                                if (Orb && target)
+                                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
                                 {
-                                    //SetThreatList(Orb);
-                                    Orb->AddThreat(target);
-                                    Orb->AI()->AttackStart(target);
+                                    if (Creature* Orb = DoSpawnCreature(CREATURE_ARCANE_SPHERE, 5, 5, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 30000))
+                                        Orb->AI()->AttackStart(pTarget);
                                 }
-
                             }
 
                             DoCastSpellIfCan(m_creature, SPELL_GRAVITY_LAPSE_CHANNEL);
@@ -580,13 +572,11 @@ struct MANGOS_DLL_DECL mob_arcane_sphereAI : public ScriptedAI
 
         if (ChangeTargetTimer < diff)
         {
-
-            Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if (target)
-                m_creature->AddThreat(target);
-                m_creature->TauntApply(target);
-                AttackStart(target);
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
+            {
+                m_creature->TauntApply(pTarget);
+                AttackStart(pTarget);
+            }
 
             ChangeTargetTimer = urand(5000, 15000);
         }else ChangeTargetTimer -= diff;

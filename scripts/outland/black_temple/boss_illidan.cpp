@@ -1604,7 +1604,7 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
                 if (ParasiticShadowFiendTimer < diff)
                 {
                     Unit* target = NULL;
-                    target = SelectUnit(SELECT_TARGET_RANDOM,1);
+                    target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,1);
                     if (target && target->isAlive() && !target->HasAura(SPELL_PARASITIC_SHADOWFIEND, EFFECT_INDEX_0))
                     {
                         Cast(target, SPELL_PARASITIC_SHADOWFIEND);
@@ -1735,7 +1735,7 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
             {
                 if (FireballTimer < diff)
                 {
-                    Cast(SelectUnit(SELECT_TARGET_RANDOM, 0), SPELL_FIREBALL);
+                    Cast(m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0), SPELL_FIREBALL);
                     FireballTimer = 5000;
                 }else FireballTimer -= diff;
 
@@ -1743,7 +1743,7 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
                 {
                     m_creature->InterruptNonMeleeSpells(false);
 
-                    if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                    if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                         DoCastSpellIfCan(pTarget, SPELL_DARK_BARRAGE);
 
                     DarkBarrageTimer = 35000;
@@ -1812,7 +1812,7 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
                 for(uint8 i = 0; i < 4; ++i)
                 {
                     Unit* target = NULL;
-                    target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                    target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
 
                     // only on players.
                     if (target && target->GetTypeId() == TYPEID_PLAYER)
@@ -1833,7 +1833,7 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
             {
                 if (ShadowBlastTimer < diff)
                 {
-                    Unit* target = SelectUnit(SELECT_TARGET_TOPAGGRO, 0);
+                    Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO, 0);
                     if (target && target->isAlive())
                     {
                         m_creature->SetUInt64Value(UNIT_FIELD_TARGET, target->GetGUID());
@@ -1870,7 +1870,7 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
                 if (MaievGUID)
                 {
                     Unit* Maiev = Unit::GetUnit((*m_creature), MaievGUID);
-                    Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                    Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0);
 
                     if (!Maiev || !target || (target->GetTypeId() != TYPEID_PLAYER))
                         return;
