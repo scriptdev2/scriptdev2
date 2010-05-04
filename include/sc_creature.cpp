@@ -449,61 +449,36 @@ void ScriptedAI::DoTeleportPlayer(Unit* pUnit, float fX, float fY, float fZ, flo
 
 Unit* ScriptedAI::DoSelectLowestHpFriendly(float fRange, uint32 uiMinHPDiff)
 {
-    CellPair p(MaNGOS::ComputeCellPair(m_creature->GetPositionX(), m_creature->GetPositionY()));
-    Cell cell(p);
-    cell.data.Part.reserved = ALL_DISTRICT;
-    cell.SetNoCreate();
-
     Unit* pUnit = NULL;
 
     MaNGOS::MostHPMissingInRange u_check(m_creature, fRange, uiMinHPDiff);
     MaNGOS::UnitLastSearcher<MaNGOS::MostHPMissingInRange> searcher(m_creature, pUnit, u_check);
 
-    /*
-    typedef TYPELIST_4(GameObject, Creature*except pets*, DynamicObject, Corpse*Bones*) AllGridObjectTypes;
-    This means that if we only search grid then we cannot possibly return pets or players so this is safe
-    */
-    TypeContainerVisitor<MaNGOS::UnitLastSearcher<MaNGOS::MostHPMissingInRange>, GridTypeMapContainer >  grid_unit_searcher(searcher);
-
-    cell.Visit(p, grid_unit_searcher, *(m_creature->GetMap()), *m_creature, fRange);
+    Cell::VisitGridObjects(m_creature, searcher, fRange);
 
     return pUnit;
 }
 
 std::list<Creature*> ScriptedAI::DoFindFriendlyCC(float fRange)
 {
-    CellPair p(MaNGOS::ComputeCellPair(m_creature->GetPositionX(), m_creature->GetPositionY()));
-    Cell cell(p);
-    cell.data.Part.reserved = ALL_DISTRICT;
-    cell.SetNoCreate();
-
     std::list<Creature*> pList;
 
     MaNGOS::FriendlyCCedInRange u_check(m_creature, fRange);
     MaNGOS::CreatureListSearcher<MaNGOS::FriendlyCCedInRange> searcher(m_creature, pList, u_check);
 
-    TypeContainerVisitor<MaNGOS::CreatureListSearcher<MaNGOS::FriendlyCCedInRange>, GridTypeMapContainer >  grid_creature_searcher(searcher);
-
-    cell.Visit(p, grid_creature_searcher, *(m_creature->GetMap()), *m_creature, fRange);
+    Cell::VisitGridObjects(m_creature, searcher, fRange);
 
     return pList;
 }
 
 std::list<Creature*> ScriptedAI::DoFindFriendlyMissingBuff(float fRange, uint32 uiSpellId)
 {
-    CellPair p(MaNGOS::ComputeCellPair(m_creature->GetPositionX(), m_creature->GetPositionY()));
-    Cell cell(p);
-    cell.data.Part.reserved = ALL_DISTRICT;
-    cell.SetNoCreate();
-
     std::list<Creature*> pList;
 
     MaNGOS::FriendlyMissingBuffInRange u_check(m_creature, fRange, uiSpellId);
     MaNGOS::CreatureListSearcher<MaNGOS::FriendlyMissingBuffInRange> searcher(m_creature, pList, u_check);
 
-    TypeContainerVisitor<MaNGOS::CreatureListSearcher<MaNGOS::FriendlyMissingBuffInRange>, GridTypeMapContainer >  grid_creature_searcher(searcher);
-
-    cell.Visit(p, grid_creature_searcher, *(m_creature->GetMap()), *m_creature, fRange);
+    Cell::VisitGridObjects(m_creature, searcher, fRange);
 
     return pList;
 }
@@ -512,19 +487,10 @@ Player* ScriptedAI::GetPlayerAtMinimumRange(float fMinimumRange)
 {
     Player* pPlayer = NULL;
 
-    CellPair pair(MaNGOS::ComputeCellPair(m_creature->GetPositionX(), m_creature->GetPositionY()));
-    Cell cell(pair);
-    cell.data.Part.reserved = ALL_DISTRICT;
-    cell.SetNoCreate();
+    MaNGOS::AnyPlayerInObjectRangeCheck check(m_creature, fMinimumRange);
+    MaNGOS::PlayerSearcher<MaNGOS::AnyPlayerInObjectRangeCheck> searcher(m_creature, pPlayer, check);
 
-    PlayerAtMinimumRangeAway check(m_creature, fMinimumRange);
-    MaNGOS::PlayerSearcher<PlayerAtMinimumRangeAway> searcher(m_creature, pPlayer, check);
-    TypeContainerVisitor<MaNGOS::PlayerSearcher<PlayerAtMinimumRangeAway>, GridTypeMapContainer> visitor(searcher);
-
-    Map * map = m_creature->GetMap();
-    //lets limit the maximum player search distance to speed up calculations...
-    const float fMaxSearchDst = map->GetVisibilityDistance() > MAX_PLAYER_STEALTH_DETECT_RANGE ? MAX_PLAYER_STEALTH_DETECT_RANGE : map->GetVisibilityDistance();
-    cell.Visit(pair, visitor, *map, *m_creature, fMaxSearchDst);
+    Cell::VisitGridObjects(m_creature, searcher, fMinimumRange);
 
     return pPlayer;
 }
