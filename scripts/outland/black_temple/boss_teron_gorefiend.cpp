@@ -24,30 +24,33 @@ EndScriptData */
 #include "precompiled.h"
 #include "black_temple.h"
 
-//Speech'n'sound
-#define SAY_INTRO                       -1564037
-#define SAY_AGGRO                       -1564038
-#define SAY_SLAY1                       -1564039
-#define SAY_SLAY2                       -1564040
-#define SAY_SPELL1                      -1564041
-#define SAY_SPELL2                      -1564042
-#define SAY_SPECIAL1                    -1564043
-#define SAY_SPECIAL2                    -1564044
-#define SAY_ENRAGE                      -1564045
-#define SAY_DEATH                       -1564046
+enum
+{
+    //Speech'n'sound
+    SAY_INTRO                = -1564037,
+    SAY_AGGRO                = -1564038,
+    SAY_SLAY1                = -1564039,
+    SAY_SLAY2                = -1564040,
+    SAY_SPELL1               = -1564041,
+    SAY_SPELL2               = -1564042,
+    SAY_SPECIAL1             = -1564043,
+    SAY_SPECIAL2             = -1564044,
+    SAY_ENRAGE               = -1564045,
+    SAY_DEATH                = -1564046,
 
-//Spells
-#define SPELL_INCINERATE                40239
-#define SPELL_CRUSHING_SHADOWS          40243
-#define SPELL_SHADOWBOLT                40185
-#define SPELL_PASSIVE_SHADOWFORM        40326
-#define SPELL_SHADOW_OF_DEATH           40251
-#define SPELL_BERSERK                   45078
+    //Spells
+    SPELL_INCINERATE         = 40239,
+    SPELL_CRUSHING_SHADOWS   = 40243,
+    SPELL_SHADOWBOLT         = 40185,
+    SPELL_PASSIVE_SHADOWFORM = 40326,
+    SPELL_SHADOW_OF_DEATH    = 40251,
+    SPELL_BERSERK            = 45078,
 
-#define SPELL_ATROPHY                   40327               // Shadowy Constructs use this when they get within melee range of a player
+    SPELL_ATROPHY            = 40327,                       // Shadowy Constructs use this when they get within melee range of a player
 
-#define CREATURE_DOOM_BLOSSOM           23123
-#define CREATURE_SHADOWY_CONSTRUCT      23111
+    NPC_DOOM_BLOSSOM         = 23123,
+    NPC_SHADOWY_CONSTRUCT    = 23111
+};
 
 struct MANGOS_DLL_DECL mob_doom_blossomAI : public ScriptedAI
 {
@@ -56,51 +59,55 @@ struct MANGOS_DLL_DECL mob_doom_blossomAI : public ScriptedAI
         Reset();
     }
 
-    uint32 CheckTeronTimer;
-    uint32 ShadowBoltTimer;
-    uint64 TeronGUID;
+    uint32 m_uiCheckTeronTimer;
+    uint32 m_uiShadowBoltTimer;
+    uint64 m_uiTeronGUID;
 
     void Reset()
     {
-        CheckTeronTimer = 5000;
-        ShadowBoltTimer = 12000;
-        TeronGUID = 0;
+        m_uiCheckTeronTimer = 5000;
+        m_uiShadowBoltTimer = 12000;
+        m_uiTeronGUID = 0;
     }
 
-    void AttackStart(Unit* who) { }
-    void MoveInLineOfSight(Unit* who) { }
+    void AttackStart(Unit* pWho) { }
+    void MoveInLineOfSight(Unit* pWho) { }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
-        if (CheckTeronTimer < diff)
+        if (m_uiCheckTeronTimer < uiDiff)
         {
-            if (TeronGUID)
+            if (m_uiTeronGUID)
             {
                 m_creature->SetInCombatWithZone();
 
-                Creature* Teron = ((Creature*)Unit::GetUnit((*m_creature), TeronGUID));
-                if ((Teron) && (!Teron->isAlive() || Teron->IsInEvadeMode()))
+                Creature* pTeron = (Creature*)Unit::GetUnit((*m_creature), m_uiTeronGUID);
+                if (pTeron && (!pTeron->isAlive() || pTeron->IsInEvadeMode()))
                     m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
             }
             else
                 m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
 
-            CheckTeronTimer = 5000;
-        }else CheckTeronTimer -= diff;
+            m_uiCheckTeronTimer = 5000;
+        }
+        else
+            m_uiCheckTeronTimer -= uiDiff;
 
         if (!m_creature->getVictim() || !m_creature->SelectHostileTarget())
             return;
 
-        if (ShadowBoltTimer < diff)
+        if (m_uiShadowBoltTimer < uiDiff)
         {
             if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                 DoCastSpellIfCan(pTarget, SPELL_SHADOWBOLT);
 
-            ShadowBoltTimer = 10000;
-        }else ShadowBoltTimer -= diff;
+            m_uiShadowBoltTimer = 10000;
+        }
+        else
+            m_uiShadowBoltTimer -= uiDiff;
     }
 
-    void SetTeronGUID(uint64 guid){ TeronGUID = guid; }
+    void SetTeronGUID(uint64 uiGUID){ m_uiTeronGUID = uiGUID; }
 };
 
 struct MANGOS_DLL_DECL mob_shadowy_constructAI : public ScriptedAI
@@ -110,33 +117,33 @@ struct MANGOS_DLL_DECL mob_shadowy_constructAI : public ScriptedAI
         Reset();
     }
 
-    uint64 GhostGUID;
-    uint64 TeronGUID;
+    uint64 m_uiGhostGUID;
+    uint64 m_uiTeronGUID;
 
-    uint32 CheckPlayerTimer;
-    uint32 CheckTeronTimer;
+    uint32 m_uiCheckPlayerTimer;
+    uint32 m_uiCheckTeronTimer;
 
     void Reset()
     {
-        GhostGUID = 0;
-        TeronGUID = 0;
+        m_uiGhostGUID = 0;
+        m_uiTeronGUID = 0;
 
-        CheckPlayerTimer = 2000;
-        CheckTeronTimer = 5000;
+        m_uiCheckPlayerTimer = 2000;
+        m_uiCheckTeronTimer = 5000;
     }
 
-    void MoveInLineOfSight(Unit *who)
+    void MoveInLineOfSight(Unit* pWho)
     {
-        if (!who || (!who->isAlive()) || (who->GetGUID() == GhostGUID))
+        if (!pWho || !pWho->isAlive() || pWho->GetGUID() == m_uiGhostGUID)
             return;
 
-        ScriptedAI::MoveInLineOfSight(who);
+        ScriptedAI::MoveInLineOfSight(pWho);
     }
 
 /* Comment it out for now. NOTE TO FUTURE DEV: UNCOMMENT THIS OUT ONLY AFTER MIND CONTROL IS IMPLEMENTED
     void DamageTaken(Unit* done_by, uint32 &damage)
     {
-        if (done_by->GetGUID() != GhostGUID)
+        if (done_by->GetGUID() != m_uiGhostGUID)
         damage = 0;                                         // Only the ghost can deal damage.
     }
  */
@@ -147,40 +154,44 @@ struct MANGOS_DLL_DECL mob_shadowy_constructAI : public ScriptedAI
         if (tList.empty())
             return;                                         // No threat list. Don't continue.
 
-        std::list<Unit*> targets;
+        std::list<Unit*> lTargets;
 
-        for (ThreatList::const_iterator itr = tList.begin();itr != tList.end(); ++itr)
+        for (ThreatList::const_iterator itr = tList.begin(); itr != tList.end(); ++itr)
         {
             Unit* pUnit = Unit::GetUnit((*m_creature), (*itr)->getUnitGuid());
             if (pUnit && pUnit->isAlive())
-                targets.push_back(pUnit);
+                lTargets.push_back(pUnit);
         }
 
-        targets.sort(ObjectDistanceOrder(m_creature));
-        Unit* target = targets.front();
-        if (target && m_creature->IsWithinDistInMap(target, m_creature->GetAttackDistance(target)))
+        lTargets.sort(ObjectDistanceOrder(m_creature));
+        Unit* pTarget = lTargets.front();
+        if (pTarget && m_creature->IsWithinDistInMap(pTarget, m_creature->GetAttackDistance(pTarget)))
         {
-            DoCastSpellIfCan(target, SPELL_ATROPHY);
-            m_creature->AI()->AttackStart(target);
+            DoCastSpellIfCan(pTarget, SPELL_ATROPHY);
+            m_creature->AI()->AttackStart(pTarget);
         }
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
-        if (CheckPlayerTimer < diff)
+        if (m_uiCheckPlayerTimer < uiDiff)
         {
             CheckPlayers();
-            CheckPlayerTimer = 3000;
-        }else CheckPlayerTimer -= diff;
+            m_uiCheckPlayerTimer = 3000;
+        }
+        else
+            m_uiCheckPlayerTimer -= uiDiff;
 
-        if (CheckTeronTimer < diff)
+        if (m_uiCheckTeronTimer < uiDiff)
         {
-            Creature* Teron = ((Creature*)Unit::GetUnit((*m_creature), TeronGUID));
-            if (!Teron || !Teron->isAlive() || Teron->IsInEvadeMode())
+            Creature* pTeron = (Creature*)Unit::GetUnit((*m_creature), m_uiTeronGUID);
+            if (!pTeron || !pTeron->isAlive() || pTeron->IsInEvadeMode())
                 m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
 
-            CheckTeronTimer = 5000;
-        }else CheckTeronTimer -= diff;
+            m_uiCheckTeronTimer = 5000;
+        }
+        else
+            m_uiCheckTeronTimer -= uiDiff;
     }
 };
 
@@ -194,36 +205,36 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    uint32 IncinerateTimer;
-    uint32 SummonDoomBlossomTimer;
-    uint32 EnrageTimer;
-    uint32 CrushingShadowsTimer;
-    uint32 ShadowOfDeathTimer;
-    uint32 SummonShadowsTimer;
-    uint32 RandomYellTimer;
-    uint32 AggroTimer;
+    uint32 m_uiIncinerateTimer;
+    uint32 m_uiSummonDoomBlossomTimer;
+    uint32 m_uiEnrageTimer;
+    uint32 m_uiCrushingShadowsTimer;
+    uint32 m_uiShadowOfDeathTimer;
+    uint32 m_uiSummonShadowsTimer;
+    uint32 m_uiRandomYellTimer;
+    uint32 m_uiAggroTimer;
 
-    uint64 AggroTargetGUID;
-    uint64 GhostGUID;                                       // Player that gets killed by Shadow of Death and gets turned into a ghost
+    uint64 m_uiAggroTargetGUID;
+    uint64 m_uiGhostGUID;                                   // Player that gets killed by Shadow of Death and gets turned into a ghost
 
-    bool Intro;
+    bool m_bIntro;
 
     void Reset()
     {
-        IncinerateTimer = urand(20000, 30000);
-        SummonDoomBlossomTimer = 12000;
-        EnrageTimer = 600000;
-        CrushingShadowsTimer = 22000;
-        SummonShadowsTimer = 60000;
-        RandomYellTimer = 50000;
+        m_uiIncinerateTimer = urand(20000, 30000);
+        m_uiSummonDoomBlossomTimer = 12000;
+        m_uiEnrageTimer = MINUTE*10*IN_MILLISECONDS;
+        m_uiCrushingShadowsTimer = 22000;
+        m_uiSummonShadowsTimer = 60000;
+        m_uiRandomYellTimer = 50000;
 
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         // Start off unattackable so that the intro is done properly
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
 
-        AggroTimer = 20000;
-        AggroTargetGUID = 0;
-        Intro = false;
+        m_uiAggroTimer = 20000;
+        m_uiAggroTargetGUID = 0;
+        m_bIntro = false;
     }
 
     void JustReachedHome()
@@ -234,13 +245,12 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
 
     void MoveInLineOfSight(Unit* pWho)
     {
-        if (!Intro && pWho->GetTypeId() == TYPEID_PLAYER && pWho->isTargetableForAttack() &&
+        if (m_pInstance && m_pInstance->GetData(TYPE_GOREFIEND)!= IN_PROGRESS && !m_bIntro && pWho->GetTypeId() == TYPEID_PLAYER && pWho->isTargetableForAttack() &&
             m_creature->IsHostileTo(pWho) && pWho->isInAccessablePlaceFor(m_creature))
         {
             if (m_creature->IsWithinDistInMap(pWho, VISIBLE_RANGE) && m_creature->IsWithinLOSInMap(pWho))
             {
-                if (m_pInstance)
-                    m_pInstance->SetData(TYPE_GOREFIEND, IN_PROGRESS);
+                m_pInstance->SetData(TYPE_GOREFIEND, IN_PROGRESS);
 
                 m_creature->GetMotionMaster()->Clear(false);
                 m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -248,45 +258,35 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
                 DoScriptText(SAY_INTRO, m_creature);
 
                 m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_TALK);
-                AggroTargetGUID = pWho->GetGUID();
-                Intro = true;
+                m_uiAggroTargetGUID = pWho->GetGUID();
+                m_bIntro = true;
             }
         }
 
         ScriptedAI::MoveInLineOfSight(pWho);
     }
 
-    void KilledUnit(Unit *victim)
+    void KilledUnit(Unit* pVictim)
     {
         DoScriptText(urand(0, 1) ? SAY_SLAY1 : SAY_SLAY2, m_creature);
     }
 
-    void JustDied(Unit *victim)
+    void JustDied(Unit* pKiller)
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_GOREFIEND, DONE);
 
         DoScriptText(SAY_DEATH, m_creature);
     }
-
-    float CalculateRandomLocation(float Loc, uint32 radius)
+    
+    float CalculateRandomLocation(float fLoc, uint32 uiRadius)
     {
-        float coord = Loc;
-        switch(urand(0, 1))
-        {
-            case 0:
-                coord += rand()%radius;
-                break;
-            case 1:
-                coord -= rand()%radius;
-                break;
-        }
-        return coord;
+        return fLoc + urand(0, 1) ? -rand()%uiRadius : rand()%uiRadius;
     }
 
-    void SetThreatList(Creature* Blossom)
+    void SetThreatList(Creature* pCreature)
     {
-        if (!Blossom)
+        if (!pCreature)
             return;
 
         ThreatList const& tList = m_creature->getThreatManager().getThreatList();
@@ -296,7 +296,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
             if (pUnit && pUnit->isAlive())
             {
                 float threat = m_creature->getThreatManager().getThreat(pUnit);
-                Blossom->AddThreat(pUnit, threat);
+                pCreature->AddThreat(pUnit, threat);
             }
         }
     }
@@ -310,50 +310,46 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
         /**    WHAT IS FULLY NECESSARY FOR GOREFIEND TO BE 100% COMPLETE    *****/
         /************************************************************************/
 
-        Unit* Ghost = NULL;
-        if (GhostGUID)
-            Ghost = Unit::GetUnit((*m_creature), GhostGUID);
-        if (Ghost && Ghost->isAlive() && Ghost->HasAura(SPELL_SHADOW_OF_DEATH, EFFECT_INDEX_0))
+        Unit* pGhost = NULL;
+        if (m_uiGhostGUID)
+            pGhost = Unit::GetUnit((*m_creature), m_uiGhostGUID);
+        
+        if (pGhost && pGhost->isAlive() && pGhost->HasAura(SPELL_SHADOW_OF_DEATH, EFFECT_INDEX_0))
         {
             /*float x,y,z;
-            Ghost->GetPosition(x,y,z);
+            pGhost->GetPosition(x,y,z);
             Creature* control = m_creature->SummonCreature(CREATURE_GHOST, x, y, z, 0, TEMPSUMMON_TIMED_DESAWN, 30000);
             if (control)
             {
-                ((Player*)Ghost)->Possess(control);
-                Ghost->DealDamage(Ghost, Ghost->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL,
+                ((Player*)pGhost)->Possess(control);
+                pGhost->DealDamage(pGhost, pGhost->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL,
             false);
             }*/
             for(uint8 i = 0; i < 4; ++i)
             {
-                Creature* Construct = NULL;
-                float X = CalculateRandomLocation(Ghost->GetPositionX(), 10);
-                float Y = CalculateRandomLocation(Ghost->GetPositionY(), 10);
+                float fX = CalculateRandomLocation(pGhost->GetPositionX(), 10);
+                float fY = CalculateRandomLocation(pGhost->GetPositionY(), 10);
 
-                Construct = m_creature->SummonCreature(CREATURE_SHADOWY_CONSTRUCT, X, Y, Ghost->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 45000);
-                if (Construct)
+                if (Creature* pConstruct = m_creature->SummonCreature(NPC_SHADOWY_CONSTRUCT, fX, fY, pGhost->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 45000))
                 {
-                    Construct->CastSpell(Construct, SPELL_PASSIVE_SHADOWFORM, true);
+                    pConstruct->CastSpell(pConstruct, SPELL_PASSIVE_SHADOWFORM, true);
 
-                    SetThreatList(Construct);               // Use same function as Doom Blossom to set Threat List.
-                    ((mob_shadowy_constructAI*)Construct->AI())->GhostGUID = GhostGUID;
+                    SetThreatList(pConstruct);               // Use same function as Doom Blossom to set Threat List.
+                    if (mob_shadowy_constructAI* pConstructAI = dynamic_cast<mob_shadowy_constructAI*>(pConstruct->AI()))
+                        pConstructAI->m_uiGhostGUID = m_uiGhostGUID;
 
-                    Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1);
-                    if (!target)                            // someone's trying to solo.
-                        target = m_creature->getVictim();
-
-                    if (target)
-                        Construct->GetMotionMaster()->MoveChase(target);
+                    Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1);
+                    pConstruct->GetMotionMaster()->MoveChase(pTarget ? pTarget : m_creature->getVictim());
                 }
             }
         }
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
-        if (Intro)
+        if (m_bIntro)
         {
-            if (AggroTimer < diff)
+            if (m_uiAggroTimer < uiDiff)
             {
                 m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
@@ -361,118 +357,123 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
                 DoScriptText(SAY_AGGRO, m_creature);
 
                 m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_NONE);
-                Intro = false;
-                if (AggroTargetGUID)
+                m_bIntro = false;
+                if (m_uiAggroTargetGUID)
                 {
-                    Unit* pUnit = Unit::GetUnit((*m_creature), AggroTargetGUID);
-                    if (pUnit)
+                    if (Unit* pUnit = Unit::GetUnit((*m_creature), m_uiAggroTargetGUID))
                         AttackStart(pUnit);
 
                     m_creature->SetInCombatWithZone();
-                }else EnterEvadeMode();
-            }else AggroTimer -= diff;
+                }
+                else
+                    EnterEvadeMode();
+            }
+            else
+                m_uiAggroTimer -= uiDiff;
         }
 
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim() || Intro)
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim() || m_bIntro)
             return;
 
-        if (SummonShadowsTimer < diff)
+        if (m_uiSummonShadowsTimer < uiDiff)
         {
             //MindControlGhost();
-
             for(uint8 i = 0; i < 2; ++i)
             {
-                Creature* Shadow = NULL;
-                float X = CalculateRandomLocation(m_creature->GetPositionX(), 10);
+                float fX = CalculateRandomLocation(m_creature->GetPositionX(), 10);
 
-                Shadow = m_creature->SummonCreature(CREATURE_SHADOWY_CONSTRUCT, X, m_creature->GetPositionY(), m_creature->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 0);
-                if (Shadow)
+                if (Creature* pShadow = m_creature->SummonCreature(NPC_SHADOWY_CONSTRUCT, fX, m_creature->GetPositionY(), m_creature->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 0))
                 {
-                    Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1);
-                    if (!target)
-                        target = m_creature->getVictim();
-
-                    if (target)
-                        Shadow->AI()->AttackStart(target);
+                    Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1);
+                    pShadow->AI()->AttackStart(pTarget ? pTarget : m_creature->getVictim());
                 }
             }
-            SummonShadowsTimer = 60000;
-        }else SummonShadowsTimer -= diff;
+            m_uiSummonShadowsTimer = 60000;
+        }
+        else
+            m_uiSummonShadowsTimer -= uiDiff;
 
-        if (SummonDoomBlossomTimer < diff)
+        if (m_uiSummonDoomBlossomTimer < uiDiff)
         {
-            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
             {
-                float X = CalculateRandomLocation(target->GetPositionX(), 20);
-                float Y = CalculateRandomLocation(target->GetPositionY(), 20);
+                float fX = CalculateRandomLocation(pTarget->GetPositionX(), 20);
+                float fY = CalculateRandomLocation(pTarget->GetPositionY(), 20);
 
-                Creature* DoomBlossom = m_creature->SummonCreature(CREATURE_DOOM_BLOSSOM, X, Y, target->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 20000);
-                if (DoomBlossom)
+                if (Creature* pDoomBlossom = m_creature->SummonCreature(NPC_DOOM_BLOSSOM, fX, fY, pTarget->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 20000))
                 {
-                    DoomBlossom->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                    DoomBlossom->setFaction(m_creature->getFaction());
-                    DoomBlossom->AddThreat(target);
-                    ((mob_doom_blossomAI*)DoomBlossom->AI())->SetTeronGUID(m_creature->GetGUID());
+                    pDoomBlossom->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                    pDoomBlossom->setFaction(m_creature->getFaction());
+                    pDoomBlossom->AddThreat(pTarget);
 
-                    SetThreatList(DoomBlossom);
-                    SummonDoomBlossomTimer = 35000;
+                    if (mob_doom_blossomAI* pDoomBlossomAI = dynamic_cast<mob_doom_blossomAI*>(pDoomBlossom->AI()))
+                        pDoomBlossomAI->SetTeronGUID(m_creature->GetGUID());
+
+                    SetThreatList(pDoomBlossom);
                 }
+
+                m_uiSummonDoomBlossomTimer = 35000;
             }
-        }else SummonDoomBlossomTimer -= diff;
+        }
+        else
+            m_uiSummonDoomBlossomTimer -= uiDiff;
 
-        if (IncinerateTimer < diff)
+        if (m_uiIncinerateTimer < uiDiff)
         {
-            Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1);
-            if (!target)
-                target = m_creature->getVictim();
+            DoScriptText(urand(0, 1) ? SAY_SPECIAL1 : SAY_SPECIAL2, m_creature);
 
-            if (target)
-            {
-                DoScriptText(urand(0, 1) ? SAY_SPECIAL1 : SAY_SPECIAL2, m_creature);
-                DoCastSpellIfCan(target, SPELL_INCINERATE);
-                IncinerateTimer = urand(20000, 50000);
-            }
-        }else IncinerateTimer -= diff;
+            Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1);
+            DoCastSpellIfCan(pTarget ? pTarget : m_creature->getVictim(), SPELL_INCINERATE);
+            m_uiIncinerateTimer = urand(20000, 50000);
+        }
+        else
+            m_uiIncinerateTimer -= uiDiff;
 
-        if (CrushingShadowsTimer < diff)
+        if (m_uiCrushingShadowsTimer < uiDiff)
         {
-            Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0);
-            if (target && target->isAlive())
-                DoCastSpellIfCan(target, SPELL_CRUSHING_SHADOWS);
+            Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0);
+            if (pTarget && pTarget->isAlive())
+                DoCastSpellIfCan(pTarget, SPELL_CRUSHING_SHADOWS);
 
-            CrushingShadowsTimer = urand(10000, 26000);
-        }else CrushingShadowsTimer -= diff;
+            m_uiCrushingShadowsTimer = urand(10000, 26000);
+        }
+        else
+            m_uiCrushingShadowsTimer -= uiDiff;
 
         /*** NOTE FOR FUTURE DEV: UNCOMMENT BELOW ONLY IF MIND CONTROL IS FULLY IMPLEMENTED **/
-        /*if (ShadowOfDeathTimer < diff)
+        /*if (m_uiShadowOfDeathTimer < uiDiff)
         {
-            Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1);
+            Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1);
 
-            if (!target)
-               target = m_creature->getVictim();
+            if (!pTarget)
+               pTarget = m_creature->getVictim();
 
-            if (target && target->isAlive() && target->GetTypeId() == TYPEID_PLAYER)
+            if (pTarget && pTarget->isAlive() && pTarget->GetTypeId() == TYPEID_PLAYER)
             {
-                DoCastSpellIfCan(target, SPELL_SHADOW_OF_DEATH);
-                GhostGUID = target->GetGUID();
-                ShadowOfDeathTimer = 30000;
-                SummonShadowsTimer = 53000; // Make it VERY close but slightly less so that we can check if the aura is still on the pPlayer
+                DoCastSpellIfCan(pTarget, SPELL_SHADOW_OF_DEATH);
+                m_uiGhostGUID = pTarget->GetGUID();
+                m_uiShadowOfDeathTimer = 30000;
+                m_uiSummonShadowsTimer = 53000; // Make it VERY close but slightly less so that we can check if the aura is still on the pPlayer
             }
-        }else ShadowOfDeathTimer -= diff;*/
+        }else m_uiShadowOfDeathTimer -= uiDiff;*/
 
-        if (RandomYellTimer < diff)
+        if (m_uiRandomYellTimer < uiDiff)
         {
             DoScriptText(urand(0, 1) ? SAY_SPELL1 : SAY_SPELL2, m_creature);
-            RandomYellTimer = urand(50000, 100000);
-        }else RandomYellTimer -= diff;
+            m_uiRandomYellTimer = urand(50000, 100000);
+        }
+        else
+            m_uiRandomYellTimer -= uiDiff;
 
         if (!m_creature->HasAura(SPELL_BERSERK, EFFECT_INDEX_0))
         {
-            if (EnrageTimer < diff)
+            if (m_uiEnrageTimer < uiDiff)
             {
                 DoCastSpellIfCan(m_creature, SPELL_BERSERK);
                 DoScriptText(SAY_ENRAGE, m_creature);
-            }else EnrageTimer -= diff;
+            }
+            else
+                m_uiEnrageTimer -= uiDiff;
         }
 
         DoMeleeAttackIfReady();
