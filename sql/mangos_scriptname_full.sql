@@ -325,6 +325,7 @@ UPDATE creature_template SET ScriptName='npc_iruk' WHERE entry=26219;
 UPDATE creature_template SET ScriptName='npc_kara_thricestar' WHERE entry=26602;
 UPDATE creature_template SET ScriptName='npc_surristrasz' WHERE entry=24795;
 UPDATE creature_template SET ScriptName='npc_tiare' WHERE entry=30051;
+UPDATE creature_template SET ScriptName='npc_lurgglbr' WHERE entry=25208;
 
 /* BURNING STEPPES */
 UPDATE creature_template SET ScriptName='npc_ragged_john' WHERE entry=9563;

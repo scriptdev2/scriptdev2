@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Borean_Tundra
 SD%Complete: 100
-SDComment: Quest support: 11708, 11692, 11961. Taxi vendors.
+SDComment: Quest support: 11708, 11692, 11961. Taxi vendors. 11570
 SDCategory: Borean Tundra
 EndScriptData */
 
@@ -27,9 +27,11 @@ npc_iruk
 npc_kara_thricestar
 npc_surristrasz
 npc_tiare
+npc_lurgglbr
 EndContentData */
 
 #include "precompiled.h"
+#include "escort_ai.h"
 
 /*######
 ## npc_fizzcrank_fullthrottle
@@ -253,6 +255,177 @@ bool GossipSelect_npc_tiare(Player* pPlayer, Creature* pCreature, uint32 uiSende
     return true;
 }
 
+/*######
+## npc_lurgglbr
+######*/
+
+enum
+{
+    QUEST_ESCAPE_FROM_WINTERFIN_CAVERNS = 11570,
+    GO_CAGE                             = 187369,
+    
+    SAY_START_1                         = -1000575,
+    SAY_START_2                         = -1000576,
+    SAY_END_1                           = -1000577,
+    SAY_END_2                           = -1000578
+};
+
+struct MANGOS_DLL_DECL npc_lurgglbrAI : public npc_escortAI
+{
+    npc_lurgglbrAI(Creature* pCreature) : npc_escortAI(pCreature)
+    {
+        m_uiCageGUID = 0;
+        Reset();
+    }
+    
+    uint64 m_uiCageGUID;
+    uint32 m_uiSayTimer;
+    uint32 m_uiHoldTimer;
+    uint8 m_uiSpeech;
+    bool m_bCageOpened;
+
+    void Reset()
+    {
+        if (!HasEscortState(STATE_ESCORT_ESCORTING))
+        {
+            m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE);
+            m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
+
+            m_uiSayTimer  = 0;
+            m_uiHoldTimer = 0;
+            m_uiSpeech    = 0;
+            m_bCageOpened = false;
+        }
+    }
+
+    void Aggro(Unit* pWho)
+    {
+        SetCombatMovement(m_bCageOpened);
+        if (m_bCageOpened)
+        {
+            SetEscortPaused(true);
+            m_uiHoldTimer = 9000;
+        }
+    }
+    
+    void WaypointStart(uint32 uiPointId)
+    {
+        switch (uiPointId)
+        {
+            case 0:
+            {
+                GameObject* pCage = NULL;
+                if (m_uiCageGUID)
+                    pCage = m_creature->GetMap()->GetGameObject(m_uiCageGUID);
+                else
+                    pCage = GetClosestGameObjectWithEntry(m_creature, GO_CAGE, INTERACTION_DISTANCE);
+                if (pCage)
+                {
+                    pCage->UseDoorOrButton();
+                    m_uiCageGUID = pCage->GetGUID();
+                }
+                m_bCageOpened = true;
+                break;
+                }
+            case 1:
+                if (GameObject* pCage = m_creature->GetMap()->GetGameObject(m_uiCageGUID))
+                    pCage->ResetDoorOrButton();
+                break;
+        }
+    }
+
+    void WaypointReached(uint32 uiPointId)
+    {
+        switch (uiPointId)
+        {
+            case 0:
+                if (Player* pPlayer = GetPlayerForEscort())
+                {
+                    m_creature->SetFacingToObject(pPlayer);
+                    DoScriptText(SAY_START_1, m_creature, pPlayer);
+                    m_uiSayTimer = 10000;
+                    m_uiSpeech = 1;
+                }
+                break;
+            case 25:
+                m_uiSayTimer = 1000;
+                m_uiSpeech = 2;
+                break;
+        }
+    }
+
+    void UpdateEscortAI(const uint32 uiDiff)
+    {
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+        {
+            if (m_uiSayTimer)
+                if (m_uiSayTimer <= uiDiff)
+                {
+                    Player* pPlayer = GetPlayerForEscort();
+                    if (!pPlayer)
+                    {
+                        m_uiSayTimer = 0;
+                        return;
+                    }
+                    m_creature->SetFacingToObject(pPlayer);
+                    switch (m_uiSpeech)
+                    {
+                        case 1:
+                            DoScriptText(SAY_START_2, m_creature, pPlayer);
+                            m_uiSayTimer = 0;
+                            break;
+                        case 2: DoScriptText(SAY_END_1, m_creature, pPlayer);
+                            m_uiSayTimer = 8000;
+                            m_uiSpeech++;
+                            break;
+                        case 3:
+                            DoScriptText(SAY_END_2, m_creature, pPlayer);
+                            m_uiSayTimer = 6000;
+                            m_uiSpeech++;
+                            break;
+                        case 4:
+                            pPlayer->GroupEventHappens(QUEST_ESCAPE_FROM_WINTERFIN_CAVERNS, m_creature);
+                            m_uiSayTimer = 0;
+                            break;
+                    }
+                }
+                else
+                    m_uiSayTimer -= uiDiff;
+
+            if (m_uiHoldTimer)
+                if (m_uiHoldTimer <= uiDiff)
+                {
+                    SetEscortPaused(false);
+                    m_uiHoldTimer = 0;
+                }
+                else
+                    m_uiHoldTimer -= uiDiff;
+        }
+        else
+            DoMeleeAttackIfReady();
+    }
+};
+
+bool QuestAccept_npc_lurgglbr(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
+{
+    if (pQuest->GetQuestId() == QUEST_ESCAPE_FROM_WINTERFIN_CAVERNS)
+    {
+        if (npc_lurgglbrAI* pEscortAI = dynamic_cast<npc_lurgglbrAI*>(pCreature->AI()))
+        {
+            pCreature->setFaction(FACTION_ESCORT_N_FRIEND_ACTIVE);
+            pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE);
+            pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
+            pEscortAI->Start(true, false, pPlayer->GetGUID(), pQuest);
+        }
+    }
+    return true;
+}
+
+CreatureAI* GetAI_npc_lurgglbr(Creature* pCreature)
+{
+    return new npc_lurgglbrAI(pCreature);
+}
+
 void AddSC_borean_tundra()
 {
     Script *newscript;
@@ -285,5 +458,11 @@ void AddSC_borean_tundra()
     newscript->Name = "npc_tiare";
     newscript->pGossipHello = &GossipHello_npc_tiare;
     newscript->pGossipSelect = &GossipSelect_npc_tiare;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "npc_lurgglbr";
+    newscript->GetAI = &GetAI_npc_lurgglbr;
+    newscript->pQuestAccept = &QuestAccept_npc_lurgglbr;
     newscript->RegisterSelf();
 }
