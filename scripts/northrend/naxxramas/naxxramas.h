@@ -78,7 +78,7 @@ enum
     GO_PLAG_LOAT_DOOR           = 181241,                   //encounter door
 
     // Military Quarter
-    GO_MILI_GOTH_ENTRY_GATE     = 181124,                   //open after razuvious died
+    GO_MILI_GOTH_ENTRY_GATE     = 181124,                   //used while encounter is in progress
     GO_MILI_GOTH_EXIT_GATE      = 181125,                   //exit, open at boss dead
     GO_MILI_GOTH_COMBAT_GATE    = 181170,                   //used while encounter is in progress
     GO_MILI_HORSEMEN_DOOR       = 181119,                   //encounter door
