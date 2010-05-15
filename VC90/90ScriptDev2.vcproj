@@ -1459,11 +1459,11 @@
 					Name="razorfen_kraul"
 					>
 					<File
-						RelativePath="..\scripts\kalimdor\razorfen_downs\boss_amnennar_the_coldbringer.cpp"
+						RelativePath="..\scripts\kalimdor\razorfen_kraul\instance_razorfen_kraul.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\kalimdor\razorfen_downs\razorfen_downs.cpp"
+						RelativePath="..\scripts\kalimdor\razorfen_kraul\razorfen_kraul.h"
 						>
 					</File>
 				</Filter>

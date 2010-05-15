@@ -124,7 +124,7 @@ InstanceData* GetInstanceData_instance_razorfen_kraul(Map* pMap)
     return new instance_razorfen_kraul(pMap);
 }
 
-void AddSC_instance_sunken_temple()
+void AddSC_instance_razorfen_kraul()
 {
     Script* newscript;
     newscript = new Script;
