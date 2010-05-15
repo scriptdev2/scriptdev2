@@ -1458,6 +1458,14 @@
 				<Filter
 					Name="razorfen_kraul"
 					>
+					<File
+						RelativePath="..\scripts\kalimdor\razorfen_downs\boss_amnennar_the_coldbringer.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\kalimdor\razorfen_downs\razorfen_downs.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="ruins_of_ahnqiraj"

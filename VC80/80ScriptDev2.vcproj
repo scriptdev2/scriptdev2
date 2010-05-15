@@ -1459,6 +1459,14 @@
 				<Filter
 					Name="razorfen_kraul"
 					>
+					<File
+						RelativePath="..\scripts\kalimdor\razorfen_kraul\instance_razorfen_kraul.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\kalimdor\razorfen_kraul\razorfen_kraul.h"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="ruins_of_ahnqiraj"

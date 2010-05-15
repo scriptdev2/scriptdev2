@@ -22,6 +22,20 @@ DELETE FROM areatrigger_scripts WHERE entry=4112;
 INSERT INTO areatrigger_scripts VALUES (4112,'at_naxxramas');
 DELETE FROM areatrigger_scripts WHERE entry=5108;
 INSERT INTO areatrigger_scripts VALUES (5108,'at_stormwright_shelf');
+DELETE FROM areatrigger_scripts WHERE entry IN (3546, 3547, 3548, 3549, 3550, 3552);
+INSERT INTO areatrigger_scripts VALUES
+-- Darnassian bank
+(3546, 'at_childrens_week_spot'),
+-- Undercity - thone room
+(3547, 'at_childrens_week_spot'),
+-- Stonewrought Dam
+(3548, 'at_childrens_week_spot'),
+-- The Mor'shan Rampart
+(3549, 'at_childrens_week_spot'),
+-- Ratchet Docks
+(3550, 'at_childrens_week_spot'),
+-- Westfall Lighthouse
+(3552, 'at_childrens_week_spot');
 
 /* BATTLEGROUNDS */
 UPDATE creature_template SET ScriptName='npc_spirit_guide' WHERE entry IN (13116, 13117);
@@ -812,6 +826,9 @@ UPDATE creature_template SET ScriptName='npc_thrall_warchief' WHERE entry=4949;
 /* RAZORFEN DOWNS */
 UPDATE creature_template SET ScriptName='boss_amnennar_the_coldbringer' WHERE entry=7358;
 UPDATE creature_template SET ScriptName='npc_henry_stern' WHERE entry=8696;
+
+/* RAZORFEN KRAUL */
+UPDATE instance_template SET script='instance_razorfen_kraul' WHERE map=47;
 
 /* REDRIDGE MOUNTAINS */
 UPDATE creature_template SET ScriptName='npc_corporal_keeshan' WHERE entry=349;
