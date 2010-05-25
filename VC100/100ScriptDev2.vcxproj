@@ -675,6 +675,7 @@
     <ClInclude Include="..\scripts\kalimdor\razorfen_kraul\razorfen_kraul.h" />
     <ClInclude Include="..\scripts\kalimdor\ruins_of_ahnqiraj\ruins_of_ahnqiraj.h" />
     <ClInclude Include="..\scripts\kalimdor\temple_of_ahnqiraj\temple_of_ahnqiraj.h" />
+    <ClInclude Include="..\scripts\kalimdor\wailing_caverns\wailing_caverns.h" />
     <ClInclude Include="..\scripts\northrend\azjol-nerub\ahnkahet\ahnkahet.h" />
     <ClInclude Include="..\scripts\northrend\azjol-nerub\azjol-nerub\azjol-nerub.h" />
     <ClInclude Include="..\scripts\northrend\crusaders_coliseum\trial_of_the_crusader\trial_of_the_crusader.h" />
