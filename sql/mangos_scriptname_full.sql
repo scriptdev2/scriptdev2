@@ -1165,7 +1165,7 @@ UPDATE creature_template SET ScriptName='npc_sinclari' WHERE entry=30658;
 UPDATE creature_template SET ScriptName='npc_teleportation_portal' WHERE entry IN (31011,30679,32174);
 
 /* WAILING CAVERNS */
-
+UPDATE instance_template SET script='instance_wailing_caverns' WHERE map=43;
 
 /* WESTERN PLAGUELANDS */
 UPDATE creature_template SET ScriptName='npcs_dithers_and_arbington' WHERE entry IN (11056,11057);

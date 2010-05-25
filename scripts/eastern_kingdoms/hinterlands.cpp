@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Hinterlands
 SD%Complete: 100
-SDComment: Quest support: 863, 2742
+SDComment: Quest support: 836, 2742
 SDCategory: The Hinterlands
 EndScriptData */
 
