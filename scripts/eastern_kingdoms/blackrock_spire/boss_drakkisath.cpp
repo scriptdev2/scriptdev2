@@ -23,65 +23,77 @@ EndScriptData */
 
 #include "precompiled.h"
 
-#define SPELL_FIRENOVA                  23462
-#define SPELL_CLEAVE                    20691
-#define SPELL_CONFLIGURATION            16805
-#define SPELL_THUNDERCLAP               15548               //Not sure if right ID. 23931 would be a harder possibility.
+enum
+{
+    SPELL_FIRENOVA       = 23462,
+    SPELL_CLEAVE         = 20691,
+    SPELL_CONFLIGURATION = 16805,
+    SPELL_THUNDERCLAP    = 15548                            //Not sure if right ID. 23931 would be a harder possibility.
+};
 
 struct MANGOS_DLL_DECL boss_drakkisathAI : public ScriptedAI
 {
     boss_drakkisathAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
-    uint32 FireNova_Timer;
-    uint32 Cleave_Timer;
-    uint32 Confliguration_Timer;
-    uint32 Thunderclap_Timer;
+    uint32 m_uiFireNovaTimer;
+    uint32 m_uiCleaveTimer;
+    uint32 m_uiConfligurationTimer;
+    uint32 m_uiThunderclapTimer;
 
     void Reset()
     {
-        FireNova_Timer = 6000;
-        Cleave_Timer = 8000;
-        Confliguration_Timer = 15000;
-        Thunderclap_Timer = 17000;
+        m_uiFireNovaTimer       = 6000;
+        m_uiCleaveTimer         = 8000;
+        m_uiConfligurationTimer = 15000;
+        m_uiThunderclapTimer    = 17000;
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
-        //Return since we have no target
+        // Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //FireNova_Timer
-        if (FireNova_Timer < diff)
+        // FireNova
+        if (m_uiFireNovaTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_FIRENOVA);
-            FireNova_Timer = 10000;
-        }else FireNova_Timer -= diff;
+            DoCastSpellIfCan(m_creature, SPELL_FIRENOVA);
+            m_uiFireNovaTimer = 10000;
+        }
+        else
+            m_uiFireNovaTimer -= uiDiff;
 
-        //Cleave_Timer
-        if (Cleave_Timer < diff)
+        // Cleave
+        if (m_uiCleaveTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_CLEAVE);
-            Cleave_Timer = 8000;
-        }else Cleave_Timer -= diff;
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_CLEAVE);
+            m_uiCleaveTimer = 8000;
+        }
+        else
+            m_uiCleaveTimer -= uiDiff;
 
-        //Confliguration_Timer
-        if (Confliguration_Timer < diff)
+        // Confliguration
+        if (m_uiConfligurationTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_CONFLIGURATION);
-            Confliguration_Timer = 18000;
-        }else Confliguration_Timer -= diff;
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_CONFLIGURATION, 0, m_creature->getVictim()->GetGUID());
+            m_uiConfligurationTimer = 18000;
+        }
+        else
+            m_uiConfligurationTimer -= uiDiff;
 
-        //Thunderclap_Timer
-        if (Thunderclap_Timer < diff)
+        // Thunderclap
+        if (m_uiThunderclapTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_THUNDERCLAP);
-            Thunderclap_Timer = 20000;
-        }else Thunderclap_Timer -= diff;
+            DoCastSpellIfCan(m_creature, SPELL_THUNDERCLAP);
+            m_uiThunderclapTimer = 20000;
+        }
+        else
+            m_uiThunderclapTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
 };
+
 CreatureAI* GetAI_boss_drakkisath(Creature* pCreature)
 {
     return new boss_drakkisathAI(pCreature);
@@ -89,7 +101,7 @@ CreatureAI* GetAI_boss_drakkisath(Creature* pCreature)
 
 void AddSC_boss_drakkisath()
 {
-    Script *newscript;
+    Script* newscript;
     newscript = new Script;
     newscript->Name = "boss_drakkisath";
     newscript->GetAI = &GetAI_boss_drakkisath;

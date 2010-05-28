@@ -23,81 +23,96 @@ EndScriptData */
 
 #include "precompiled.h"
 
-#define SPELL_WARSTOMP          24375
-#define SPELL_STRIKE            18368
-#define SPELL_REND              18106
-#define SPELL_SUNDERARMOR       24317
-#define SPELL_KNOCKAWAY         20686
-#define SPELL_SLOW              22356
+enum
+{
+    SPELL_WARSTOMP    = 24375,
+    SPELL_STRIKE      = 18368,
+    SPELL_REND        = 18106,
+    SPELL_SUNDERARMOR = 24317,
+    SPELL_KNOCKAWAY   = 20686,
+    SPELL_SLOW        = 22356
+};
 
 struct MANGOS_DLL_DECL boss_highlordomokkAI : public ScriptedAI
 {
     boss_highlordomokkAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
-    uint32 WarStomp_Timer;
-    uint32 Strike_Timer;
-    uint32 Rend_Timer;
-    uint32 SunderArmor_Timer;
-    uint32 KnockAway_Timer;
-    uint32 Slow_Timer;
+    uint32 m_uiWarStompTimer;
+    uint32 m_uiStrikeTimer;
+    uint32 m_uiRendTimer;
+    uint32 m_uiSunderArmorTimer;
+    uint32 m_uiKnockAwayTimer;
+    uint32 m_uiSlowTimer;
 
     void Reset()
     {
-        WarStomp_Timer = 15000;
-        Strike_Timer = 10000;
-        Rend_Timer = 14000;
-        SunderArmor_Timer = 2000;
-        KnockAway_Timer = 18000;
-        Slow_Timer = 24000;
+        m_uiWarStompTimer    = 15000;
+        m_uiStrikeTimer      = 10000;
+        m_uiRendTimer        = 14000;
+        m_uiSunderArmorTimer = 2000;
+        m_uiKnockAwayTimer   = 18000;
+        m_uiSlowTimer        = 24000;
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         //Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //WarStomp_Timer
-        if (WarStomp_Timer < diff)
+        // WarStomp
+        if (m_uiWarStompTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_WARSTOMP);
-            WarStomp_Timer = 14000;
-        }else WarStomp_Timer -= diff;
+            DoCastSpellIfCan(m_creature, SPELL_WARSTOMP);
+            m_uiWarStompTimer = 14000;
+        }
+        else
+            m_uiWarStompTimer -= uiDiff;
 
-        //Strike_Timer
-        if (Strike_Timer < diff)
+        // Strike
+        if (m_uiStrikeTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_STRIKE);
-            Strike_Timer = 10000;
-        }else Strike_Timer -= diff;
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_STRIKE);
+            m_uiStrikeTimer = 10000;
+        }
+        else
+            m_uiStrikeTimer -= uiDiff;
 
-        //Rend_Timer
-        if (Rend_Timer < diff)
+        // Rend
+        if (m_uiRendTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_REND);
-            Rend_Timer = 18000;
-        }else Rend_Timer -= diff;
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_REND);
+            m_uiRendTimer = 18000;
+        }
+        else
+            m_uiRendTimer -= uiDiff;
 
-        //SunderArmor_Timer
-        if (SunderArmor_Timer < diff)
+        // Sunder Armor
+        if (m_uiSunderArmorTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_SUNDERARMOR);
-            SunderArmor_Timer = 25000;
-        }else SunderArmor_Timer -= diff;
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_SUNDERARMOR);
+            m_uiSunderArmorTimer = 25000;
+        }
+        else
+            m_uiSunderArmorTimer -= uiDiff;
 
-        //KnockAway_Timer
-        if (KnockAway_Timer < diff)
+        // KnockAway
+        if (m_uiKnockAwayTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_KNOCKAWAY);
-            KnockAway_Timer = 12000;
-        }else KnockAway_Timer -= diff;
+            DoCastSpellIfCan(m_creature, SPELL_KNOCKAWAY);
+            m_uiKnockAwayTimer = 12000;
+        }
+        else
+            m_uiKnockAwayTimer -= uiDiff;
 
-        //Slow_Timer
-        if (Slow_Timer < diff)
+        // Slow
+        if (m_uiSlowTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_SLOW);
-            Slow_Timer = 18000;
-        }else Slow_Timer -= diff;
+            DoCastSpellIfCan(m_creature, SPELL_SLOW);
+            m_uiSlowTimer = 18000;
+        }
+        else
+            m_uiSlowTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
@@ -110,7 +125,7 @@ CreatureAI* GetAI_boss_highlordomokk(Creature* pCreature)
 
 void AddSC_boss_highlordomokk()
 {
-    Script *newscript;
+    Script* newscript;
     newscript = new Script;
     newscript->Name = "boss_highlord_omokk";
     newscript->GetAI = &GetAI_boss_highlordomokk;

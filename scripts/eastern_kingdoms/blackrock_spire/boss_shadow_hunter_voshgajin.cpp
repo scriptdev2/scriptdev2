@@ -23,59 +23,68 @@ EndScriptData */
 
 #include "precompiled.h"
 
-#define SPELL_CURSEOFBLOOD      24673
-#define SPELL_HEX               16708
-#define SPELL_CLEAVE            20691
+enum
+{
+    SPELL_CURSEOFBLOOD = 24673,
+    SPELL_HEX          = 16708,
+    SPELL_CLEAVE       = 20691
+};
 
 struct MANGOS_DLL_DECL boss_shadowvoshAI : public ScriptedAI
 {
     boss_shadowvoshAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
-    uint32 CurseOfBlood_Timer;
-    uint32 Hex_Timer;
-    uint32 Cleave_Timer;
+    uint32 m_uiCurseOfBloodTimer;
+    uint32 m_uiHexTimer;
+    uint32 m_uiCleaveTimer;
 
     void Reset()
     {
-        CurseOfBlood_Timer = 2000;
-        Hex_Timer = 8000;
-        Cleave_Timer = 14000;
+        m_uiCurseOfBloodTimer = 2000;
+        m_uiHexTimer          = 8000;
+        m_uiCleaveTimer       = 14000;
 
         //m_creature->CastSpell(m_creature,SPELL_ICEARMOR,true);
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
-        //Return since we have no target
+        // Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //CurseOfBlood_Timer
-        if (CurseOfBlood_Timer < diff)
+        // Curse Of Blood
+        if (m_uiCurseOfBloodTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_CURSEOFBLOOD);
-            CurseOfBlood_Timer = 45000;
-        }else CurseOfBlood_Timer -= diff;
+            DoCastSpellIfCan(m_creature, SPELL_CURSEOFBLOOD);
+            m_uiCurseOfBloodTimer = 45000;
+        }
+        else
+            m_uiCurseOfBloodTimer -= uiDiff;
 
-        //Hex_Timer
-        if (Hex_Timer < diff)
+        // Hex
+        if (m_uiHexTimer < uiDiff)
         {
-            Unit* target = NULL;
-            target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
-            if (target) DoCastSpellIfCan(target,SPELL_HEX);
-            Hex_Timer = 15000;
-        }else Hex_Timer -= diff;
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                DoCastSpellIfCan(pTarget, SPELL_HEX);
+            m_uiHexTimer = 15000;
+        }
+        else
+            m_uiHexTimer -= uiDiff;
 
-        //Cleave_Timer
-        if (Cleave_Timer < diff)
+        // Cleave
+        if (m_uiCleaveTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_CLEAVE);
-            Cleave_Timer = 7000;
-        }else Cleave_Timer -= diff;
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_CLEAVE);
+            m_uiCleaveTimer = 7000;
+        }
+        else
+            m_uiCleaveTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
 };
+
 CreatureAI* GetAI_boss_shadowvosh(Creature* pCreature)
 {
     return new boss_shadowvoshAI(pCreature);
@@ -83,7 +92,7 @@ CreatureAI* GetAI_boss_shadowvosh(Creature* pCreature)
 
 void AddSC_boss_shadowvosh()
 {
-    Script *newscript;
+    Script* newscript;
     newscript = new Script;
     newscript->Name = "boss_shadow_hunter_voshgajin";
     newscript->GetAI = &GetAI_boss_shadowvosh;
