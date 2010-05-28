@@ -79,8 +79,8 @@ void instance_razorfen_kraul::SetData(uint32 uiType, uint32 uiData)
 
         std::ostringstream saveStream;
 
-        strInstData = saveStream.str();
         saveStream << m_auiEncounter[0];
+        strInstData = saveStream.str();
 
         SaveToDB();
         OUT_SAVE_INST_DATA_COMPLETE;

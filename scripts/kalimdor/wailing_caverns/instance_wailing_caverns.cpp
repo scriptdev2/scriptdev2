@@ -76,10 +76,10 @@ void instance_wailing_caverns::SetData(uint32 uiType, uint32 uiData)
 
         std::ostringstream saveStream;
 
-        strInstData = saveStream.str();
         saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " "
                 << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5];
 
+        strInstData = saveStream.str();
         SaveToDB();
         OUT_SAVE_INST_DATA_COMPLETE;
     }
