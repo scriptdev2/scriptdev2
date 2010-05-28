@@ -18,7 +18,7 @@
 SDName: Boss_Anubarak
 SD%Complete: 20%
 SDComment:
-SDCategory: Azjol'Nerub
+SDCategory: Azjol'NerubstrInstData
 EndScriptData */
 
 #include "precompiled.h"
@@ -62,6 +62,9 @@ struct MANGOS_DLL_DECL boss_anubarakAI : public ScriptedAI
     void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_ANUBARAK, IN_PROGRESS);
     }
 
     void KilledUnit(Unit* pVictim)
@@ -77,6 +80,15 @@ struct MANGOS_DLL_DECL boss_anubarakAI : public ScriptedAI
     void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DEATH, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_ANUBARAK, DONE);
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_ANUBARAK, NOT_STARTED);
     }
 
     void UpdateAI(const uint32 uiDiff)

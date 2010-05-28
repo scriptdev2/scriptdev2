@@ -80,6 +80,9 @@ struct MANGOS_DLL_DECL boss_krikthirAI : public ScriptedAI
     void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DEATH, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_KRIKTHIR, DONE);
     }
 
     void UpdateAI(const uint32 uiDiff)
