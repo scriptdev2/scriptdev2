@@ -17,63 +17,96 @@
 /* ScriptData
 SDName: Boss_Pyroguard_Emberseer
 SD%Complete: 100
-SDComment: Event to activate Emberseer NYI
+SDComment: Event to activate Emberseer NYI - 'aggro'-text missing
 SDCategory: Blackrock Spire
 EndScriptData */
 
 #include "precompiled.h"
+#include "blackrock_spire.h"
 
-#define SPELL_FIRENOVA          23462
-#define SPELL_FLAMEBUFFET       23341
-#define SPELL_PYROBLAST         17274
+enum
+{
+    SPELL_FIRENOVA          = 23462,
+    SPELL_FLAMEBUFFET       = 23341,
+    SPELL_PYROBLAST         = 20228                         // guesswork, but best fitting in spells-area, was 17274 (has mana cost)
+};
 
 struct MANGOS_DLL_DECL boss_pyroguard_emberseerAI : public ScriptedAI
 {
-    boss_pyroguard_emberseerAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+    boss_pyroguard_emberseerAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (instance_blackrock_spire*) pCreature->GetInstanceData();
+        Reset();
+    }
 
-    uint32 FireNova_Timer;
-    uint32 FlameBuffet_Timer;
-    uint32 PyroBlast_Timer;
+    instance_blackrock_spire* m_pInstance;
+    uint32 m_uiFireNovaTimer;
+    uint32 m_uiFlameBuffetTimer;
+    uint32 m_uiPyroBlastTimer;
 
     void Reset()
     {
-        FireNova_Timer = 6000;
-        FlameBuffet_Timer = 3000;
-        PyroBlast_Timer = 14000;
+        m_uiFireNovaTimer = 6000;
+        m_uiFlameBuffetTimer = 3000;
+        m_uiPyroBlastTimer = 14000;
     }
 
-    void UpdateAI(const uint32 diff)
+    void Aggro(Unit* pWho)
     {
-        //Return since we have no target
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_EMBERSEER, IN_PROGRESS);
+    }
+
+    void JustDied(Unit* pKiller)
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_EMBERSEER, DONE);
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_EMBERSEER, FAIL);
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        // Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //FireNova_Timer
-        if (FireNova_Timer < diff)
+        // FireNova Timer
+        if (m_uiFireNovaTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_FIRENOVA);
-            FireNova_Timer = 6000;
-        }else FireNova_Timer -= diff;
+            DoCastSpellIfCan(m_creature, SPELL_FIRENOVA);
+            m_uiFireNovaTimer = 6000;
+        }
+        else
+            m_uiFireNovaTimer -= uiDiff;
 
-        //FlameBuffet_Timer
-        if (FlameBuffet_Timer < diff)
+        // FlameBuffet Timer
+        if (m_uiFlameBuffetTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_FLAMEBUFFET);
-            FlameBuffet_Timer = 14000;
-        }else FlameBuffet_Timer -= diff;
+            DoCastSpellIfCan(m_creature, SPELL_FLAMEBUFFET);
+            m_uiFlameBuffetTimer = 14000;
+        }
+        else
+            m_uiFlameBuffetTimer -= uiDiff;
 
-        //PyroBlast_Timer
-        if (PyroBlast_Timer < diff)
+        // PyroBlast Timer
+        if (m_uiPyroBlastTimer < uiDiff)
         {
-            Unit* target = NULL;
-            target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
-            if (target) DoCastSpellIfCan(target,SPELL_PYROBLAST);
-            PyroBlast_Timer = 15000;
-        }else PyroBlast_Timer -= diff;
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                DoCastSpellIfCan(pTarget, SPELL_PYROBLAST);
+            m_uiPyroBlastTimer = 15000;
+        }
+        else
+            m_uiPyroBlastTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
 };
+
 CreatureAI* GetAI_boss_pyroguard_emberseer(Creature* pCreature)
 {
     return new boss_pyroguard_emberseerAI(pCreature);
@@ -81,9 +114,9 @@ CreatureAI* GetAI_boss_pyroguard_emberseer(Creature* pCreature)
 
 void AddSC_boss_pyroguard_emberseer()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_pyroguard_emberseer";
-    newscript->GetAI = &GetAI_boss_pyroguard_emberseer;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+    pNewScript = new Script;
+    pNewScript->Name = "boss_pyroguard_emberseer";
+    pNewScript->GetAI = &GetAI_boss_pyroguard_emberseer;
+    pNewScript->RegisterSelf();
 }

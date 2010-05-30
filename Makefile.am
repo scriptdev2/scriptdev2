@@ -85,6 +85,7 @@ scripts/eastern_kingdoms/blackrock_depths/boss_high_interrogator_gerstahn.cpp \
 scripts/eastern_kingdoms/blackrock_depths/boss_magmus.cpp \
 scripts/eastern_kingdoms/blackrock_depths/boss_tomb_of_seven.cpp \
 scripts/eastern_kingdoms/blackrock_depths/instance_blackrock_depths.cpp \
+scripts/eastern_kingdoms/blackrock_spire/blackrock_spire.h \
 scripts/eastern_kingdoms/blackrock_spire/boss_drakkisath.cpp \
 scripts/eastern_kingdoms/blackrock_spire/boss_gyth.cpp \
 scripts/eastern_kingdoms/blackrock_spire/boss_halycon.cpp \
@@ -97,6 +98,7 @@ scripts/eastern_kingdoms/blackrock_spire/boss_rend_blackhand.cpp \
 scripts/eastern_kingdoms/blackrock_spire/boss_shadow_hunter_voshgajin.cpp \
 scripts/eastern_kingdoms/blackrock_spire/boss_the_beast.cpp \
 scripts/eastern_kingdoms/blackrock_spire/boss_warmaster_voone.cpp \
+scripts/eastern_kingdoms/blackrock_spire/instance_blackrock_spire.cpp \
 scripts/eastern_kingdoms/blackwing_lair/boss_broodlord_lashlayer.cpp \
 scripts/eastern_kingdoms/blackwing_lair/boss_chromaggus.cpp \
 scripts/eastern_kingdoms/blackwing_lair/boss_ebonroc.cpp \

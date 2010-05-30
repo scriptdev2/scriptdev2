@@ -456,6 +456,9 @@
     <ClCompile Include="..\scripts\eastern_kingdoms\blackrock_spire\boss_warmaster_voone.cpp">
       <Filter>scripts\eastern_kingdoms\blackrock_spire</Filter>
     </ClCompile>
+    <ClCompile Include="..\scripts\eastern_kingdoms\blackrock_spire\instance_blackrock_spire.cpp">
+      <Filter>scripts\eastern_kingdoms\blackrock_spire</Filter>
+    </ClCompile>
     <ClCompile Include="..\scripts\eastern_kingdoms\blackwing_lair\boss_broodlord_lashlayer.cpp">
       <Filter>scripts\eastern_kingdoms\blackwing_lair</Filter>
     </ClCompile>
@@ -1606,6 +1609,9 @@
       <Filter>base</Filter>
     </ClInclude>
     <ClInclude Include="..\scripts\eastern_kingdoms\blackrock_depths\blackrock_depths.h">
+      <Filter>scripts\eastern_kingdoms\blackrock_depths</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scripts\eastern_kingdoms\blackrock_spire\blackrock_spire.h">
       <Filter>scripts\eastern_kingdoms\blackrock_depths</Filter>
     </ClInclude>
     <ClInclude Include="..\scripts\eastern_kingdoms\deadmines\deadmines.h">

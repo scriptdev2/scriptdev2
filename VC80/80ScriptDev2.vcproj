@@ -611,6 +611,14 @@
 						RelativePath="..\scripts\eastern_kingdoms\blackrock_spire\boss_warmaster_voone.cpp"
 						>
 					</File>
+					<File
+						RelativePath="..\scripts\eastern_kingdoms\blackrock_spire\instance_blackrock_spire.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\eastern_kingdoms\blackrock_spire\blackrock_spire.h"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="blackwing_lair"

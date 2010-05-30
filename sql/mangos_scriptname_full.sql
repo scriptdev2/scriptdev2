@@ -36,6 +36,10 @@ INSERT INTO areatrigger_scripts VALUES
 (3550, 'at_childrens_week_spot'),
 -- Westfall Lighthouse
 (3552, 'at_childrens_week_spot');
+DELETE FROM areatrigger_scripts WHERE entry IN (2026, 2046);
+INSERT INTO areatrigger_scripts VALUES
+(2026, 'at_blackrock_spire'),
+(2046, 'at_blackrock_spire');
 
 /* BATTLEGROUNDS */
 UPDATE creature_template SET ScriptName='npc_spirit_guide' WHERE entry IN (13116, 13117);
@@ -290,6 +294,7 @@ UPDATE creature_template SET ScriptName='npc_rocknot' WHERE entry=9503;
 UPDATE gameobject_template SET ScriptName='go_shadowforge_brazier' WHERE entry IN (174744, 174745);
 
 /* BLACKROCK SPIRE */
+UPDATE instance_template SET script='instance_blackrock_spire' WHERE map=229;
 /* BLACKROCK SPIRE Lower bosses */
 UPDATE creature_template SET ScriptName='boss_highlord_omokk' WHERE entry=9196;
 UPDATE creature_template SET ScriptName='boss_shadow_hunter_voshgajin' WHERE entry=9236;
