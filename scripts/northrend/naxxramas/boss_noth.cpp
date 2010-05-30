@@ -279,7 +279,7 @@ struct MANGOS_DLL_DECL boss_nothAI : public ScriptedAI
                     case PHASE_SKELETON_2:
                     {
                         DoCastSpellIfCan(m_creature, auiSpellSummonPlaguedChampion[urand(0,9)], CAST_TRIGGERED);
-                        DoCastSpellIfCan(m_creature, auiSpellSummonPlaguedGuardian[urand(0,9)], CAST_TRIGGERED);
+                        DoCastSpellIfCan(m_creature, auiSpellSummonPlaguedGuardian[urand(0,3)], CAST_TRIGGERED);
                         break;
                     }
                     case PHASE_SKELETON_3:

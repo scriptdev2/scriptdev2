@@ -74,6 +74,7 @@ UPDATE gameobject_template SET ScriptName='go_tablet_of_madness' WHERE entry=180
 UPDATE gameobject_template SET ScriptName='go_tablet_of_the_seven' WHERE entry=169294;
 UPDATE gameobject_template SET ScriptName='go_tele_to_dalaran_crystal' WHERE entry=191230;
 UPDATE gameobject_template SET ScriptName='go_tele_to_violet_stand' WHERE entry=191229;
+UPDATE gameobject_template SET ScriptName='go_blood_filled_orb' WHERE entry=182024;
 
 /* GUARD */
 UPDATE creature_template SET ScriptName='guard_azuremyst' WHERE entry=18038;

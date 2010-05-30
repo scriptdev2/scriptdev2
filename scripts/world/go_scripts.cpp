@@ -388,6 +388,24 @@ bool GOHello_go_tele_to_violet_stand(Player* pPlayer, GameObject* pGo)
     return true;
 }
 
+enum
+{
+    NPC_ZELEMAR_THE_WRATHFULL = 17830,
+    SAY_AGGRO                 = -1000579
+};
+
+float Position[4] = {-327.99f, 221.74f, -20.31f, 3.87f}; 
+
+bool GOHello_go_blood_filled_orb(Player* pPlayer, GameObject* pGo)
+{
+    if (Creature* pZelemar = pGo->SummonCreature(NPC_ZELEMAR_THE_WRATHFULL, Position[0], Position[1], Position[2], Position[3], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000))
+    {
+        DoScriptText(SAY_AGGRO, pZelemar);
+        pZelemar->AI()->AttackStart(pPlayer);     
+    }
+    return false;
+}
+
 void AddSC_go_scripts()
 {
     Script *newscript;
@@ -480,5 +498,10 @@ void AddSC_go_scripts()
     newscript = new Script;
     newscript->Name = "go_tele_to_violet_stand";
     newscript->pGOHello =           &GOHello_go_tele_to_violet_stand;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "go_blood_filled_orb";
+    newscript->pGOHello =           &GOHello_go_blood_filled_orb;
     newscript->RegisterSelf();
 }
