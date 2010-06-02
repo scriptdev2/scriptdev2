@@ -233,7 +233,7 @@ void instance_naxxramas::OnObjectCreate(GameObject* pGo)
     }
 }
 
-bool instance_naxxramas::IsEncounterInProgress()
+bool instance_naxxramas::IsEncounterInProgress() const
 {
     for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
         if (m_auiEncounter[i] == IN_PROGRESS)
