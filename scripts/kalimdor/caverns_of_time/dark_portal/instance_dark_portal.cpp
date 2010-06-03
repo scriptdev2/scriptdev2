@@ -42,11 +42,11 @@ struct Wave
 
 static Wave RiftWaves[]=
 {
-    {RIFT_BOSS, 0},
-    {NPC_DEJA, 0},
-    {RIFT_BOSS, 120000},
-    {NPC_TEMPO, 140000},
-    {RIFT_BOSS, 120000},
+    {RIFT_BOSS,  0},
+    {NPC_DEJA,   0},
+    {RIFT_BOSS,  120000},
+    {NPC_TEMPO,  140000},
+    {RIFT_BOSS,  120000},
     {NPC_AEONUS, 0}
 };
 
@@ -76,12 +76,12 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
     {
         memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
 
-        m_uiRiftPortalCount = 0;
-        m_uiShieldPercent = 100;
-        m_uiRiftWaveCount = 0;
-        m_uiRiftWaveId = 0;
+        m_uiRiftPortalCount  = 0;
+        m_uiShieldPercent    = 100;
+        m_uiRiftWaveCount    = 0;
+        m_uiRiftWaveId       = 0;
 
-        m_uiCurrentRiftId = 0;
+        m_uiCurrentRiftId    = 0;
 
         m_uiNextPortal_Timer = 0;
     }
@@ -89,13 +89,13 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
     void InitWorldState(bool Enable = true)
     {
         DoUpdateWorldState(WORLD_STATE_BM,Enable ? 1 : 0);
-        DoUpdateWorldState(WORLD_STATE_BM_SHIELD,100);
-        DoUpdateWorldState(WORLD_STATE_BM_RIFT,0);
+        DoUpdateWorldState(WORLD_STATE_BM_SHIELD, 100);
+        DoUpdateWorldState(WORLD_STATE_BM_RIFT, 0);
     }
 
     bool IsEncounterInProgress() const
     {
-        if (GetData(TYPE_MEDIVH) == IN_PROGRESS)
+        if (m_auiEncounter[0] == IN_PROGRESS)
             return true;
 
         return false;
@@ -103,10 +103,10 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
 
     void OnPlayerEnter(Player* pPlayer)
     {
-        if (GetData(TYPE_MEDIVH) == IN_PROGRESS)
+        if (m_auiEncounter[0] == IN_PROGRESS)
             return;
 
-        pPlayer->SendUpdateWorldState(WORLD_STATE_BM,0);
+        pPlayer->SendUpdateWorldState(WORLD_STATE_BM, 0);
     }
 
     void OnCreatureCreate(Creature* pCreature)
@@ -141,12 +141,12 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
         }
     }
 
-    void SetData(uint32 type, uint32 data)
+    void SetData(uint32 uiType, uint32 uiData)
     {
-        switch(type)
+        switch(uiType)
         {
             case TYPE_MEDIVH:
-                if (data == SPECIAL && m_auiEncounter[0] == IN_PROGRESS)
+                if (uiData == SPECIAL && m_auiEncounter[0] == IN_PROGRESS)
                 {
                     --m_uiShieldPercent;
 
@@ -167,7 +167,7 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
                 }
                 else
                 {
-                    if (data == IN_PROGRESS)
+                    if (uiData == IN_PROGRESS)
                     {
                         debug_log("SD2: Instance Dark Portal: Starting event.");
                         InitWorldState();
@@ -175,7 +175,7 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
                         m_uiNextPortal_Timer = 15000;
                     }
 
-                    if (data == DONE)
+                    if (uiData == DONE)
                     {
                         //this may be completed further out in the post-event
                         debug_log("SD2: Instance Dark Portal: Event completed.");
@@ -198,24 +198,24 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
                         }
                     }
 
-                    m_auiEncounter[0] = data;
+                    m_auiEncounter[0] = uiData;
                 }
                 break;
             case TYPE_RIFT:
-                if (data == SPECIAL)
+                if (uiData == SPECIAL)
                 {
                     if (m_uiRiftPortalCount < 7)
                         m_uiNextPortal_Timer = 5000;
                 }
                 else
-                    m_auiEncounter[1] = data;
+                    m_auiEncounter[1] = uiData;
                 break;
         }
     }
 
-    uint32 GetData(uint32 type)
+    uint32 GetData(uint32 uiType)
     {
-        switch(type)
+        switch(uiType)
         {
             case TYPE_MEDIVH:
                 return m_auiEncounter[0];
@@ -229,9 +229,9 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
         return 0;
     }
 
-    uint64 GetData64(uint32 data)
+    uint64 GetData64(uint32 uiData)
     {
-        if (data == DATA_MEDIVH)
+        if (uiData == DATA_MEDIVH)
             return m_uiMedivhGUID;
 
         return 0;
@@ -239,22 +239,19 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
 
     Creature* SummonedPortalBoss(Creature* pSource)
     {
-        uint32 entry = RiftWaves[GetRiftWaveId()].PortalBoss;
+        uint32 uiEntry = RiftWaves[GetRiftWaveId()].PortalBoss;
 
-        if (entry == RIFT_BOSS)
-            entry = RandRiftBoss();
+        if (uiEntry == RIFT_BOSS)
+            uiEntry = RandRiftBoss();
 
         float x,y,z;
         pSource->GetRandomPoint(pSource->GetPositionX(),pSource->GetPositionY(),pSource->GetPositionZ(),10.0f,x,y,z);
         //normalize Z-level if we can, if rift is not at ground level.
         z = std::max(instance->GetHeight(x, y, MAX_HEIGHT), instance->GetWaterLevel(x, y));
 
-        debug_log("SD2: Instance Dark Portal: Summoning rift boss entry %u.",entry);
+        debug_log("SD2: Instance Dark Portal: Summoning rift boss uiEntry %u.",uiEntry);
 
-        Creature* pSummoned = pSource->SummonCreature(entry,x,y,z,pSource->GetOrientation(),
-            TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,600000);
-
-        if (pSummoned)
+        if (Creature* pSummoned = pSource->SummonCreature(uiEntry,x,y,z,pSource->GetOrientation(), TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,600000))
             return pSummoned;
 
         debug_log("SD2: Instance Dark Portal: what just happened there? No boss, no loot, no fun...");
@@ -265,20 +262,16 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
     {
         if (Creature* pMedivh = instance->GetCreature(m_uiMedivhGUID))
         {
-            int tmp = rand()%(4-1);
+            uint8 uiTmp = urand(0, 2);
 
-            if (tmp >= m_uiCurrentRiftId)
-                ++tmp;
+            if (uiTmp >= m_uiCurrentRiftId)
+                ++uiTmp;
 
-            debug_log("SD2: Instance Dark Portal: Creating Time Rift at locationId %i (old locationId was %u).", tmp, m_uiCurrentRiftId);
+            debug_log("SD2: Instance Dark Portal: Creating Time Rift at locationId %i (old locationId was %u).", uiTmp, m_uiCurrentRiftId);
 
-            m_uiCurrentRiftId = tmp;
+            m_uiCurrentRiftId = uiTmp;
 
-            Creature* pTemp = pMedivh->SummonCreature(NPC_TIME_RIFT,
-                PortalLocation[tmp][0],PortalLocation[tmp][1],PortalLocation[tmp][2],PortalLocation[tmp][3],
-                TEMPSUMMON_CORPSE_DESPAWN,0);
-
-            if (pTemp)
+            if (Creature* pTemp = pMedivh->SummonCreature(NPC_TIME_RIFT, PortalLocation[uiTmp][0], PortalLocation[uiTmp][1], PortalLocation[uiTmp][2], PortalLocation[uiTmp][3], TEMPSUMMON_CORPSE_DESPAWN, 0))
             {
                 pTemp->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                 pTemp->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -286,13 +279,11 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
                 if (Creature* pBoss = SummonedPortalBoss(pTemp))
                 {
                     if (pBoss->GetEntry() == NPC_AEONUS)
-                    {
                         pBoss->AddThreat(pMedivh);
-                    }
                     else
                     {
                         pBoss->AddThreat(pTemp);
-                        pTemp->CastSpell(pBoss,SPELL_RIFT_CHANNEL,false);
+                        pTemp->CastSpell(pBoss, SPELL_RIFT_CHANNEL, false);
                     }
                 }
             }
@@ -335,7 +326,7 @@ InstanceData* GetInstanceData_instance_dark_portal(Map* pMap)
 
 void AddSC_instance_dark_portal()
 {
-    Script *newscript;
+    Script* newscript;
     newscript = new Script;
     newscript->Name = "instance_dark_portal";
     newscript->GetInstanceData = &GetInstanceData_instance_dark_portal;
