@@ -75,6 +75,7 @@ instance_naxxramas::instance_naxxramas(Map* pMap) : ScriptedInstance(pMap),
 
     m_uiKelthuzadDoorGUID(0),
     m_uiKelthuzadExitDoorGUID(0),
+
     m_fChamberCenterX(0.0f),
     m_fChamberCenterY(0.0f),
     m_fChamberCenterZ(0.0f)
@@ -276,6 +277,7 @@ void instance_naxxramas::SetData(uint32 uiType, uint32 uiData)
             {
                 DoUseDoorOrButton(m_uiAracEyeRampGUID);
                 DoRespawnGameObject(m_uiAracPortalGUID, 30*MINUTE);
+                DoTaunt();
             }
             break;
         case TYPE_NOTH:
@@ -300,6 +302,7 @@ void instance_naxxramas::SetData(uint32 uiType, uint32 uiData)
             {
                 DoUseDoorOrButton(m_uiPlagEyeRampGUID);
                 DoRespawnGameObject(m_uiPlagPortalGUID, 30*MINUTE);
+                DoTaunt();
             }
             break;
         case TYPE_RAZUVIOUS:
@@ -337,6 +340,7 @@ void instance_naxxramas::SetData(uint32 uiType, uint32 uiData)
                 DoUseDoorOrButton(m_uiMiliEyeRampGUID);
                 DoRespawnGameObject(m_uiMiliPortalGUID, 30*MINUTE);
                 DoRespawnGameObject(m_uiHorsemenChestGUID, 30*MINUTE);
+                DoTaunt();
             }
             break;
         case TYPE_PATCHWERK:
@@ -362,6 +366,7 @@ void instance_naxxramas::SetData(uint32 uiType, uint32 uiData)
             {
                 DoUseDoorOrButton(m_uiConsEyeRampGUID);
                 DoRespawnGameObject(m_uiConsPortalGUID, 30*MINUTE);
+                DoTaunt();
             }
             break;
         case TYPE_SAPPHIRON:
@@ -562,6 +567,36 @@ void instance_naxxramas::SetChamberCenterCoords(float fX, float fY, float fZ)
     m_fChamberCenterX = fX;
     m_fChamberCenterY = fY;
     m_fChamberCenterZ = fZ;
+}
+
+void instance_naxxramas::DoTaunt()
+{
+    Creature* pKelThuzad = instance->GetCreature(m_uiKelthuzadGUID);
+
+    if (pKelThuzad && pKelThuzad->isAlive())
+    {
+        uint8 uiWingsCleared = 0;
+
+        if (m_auiEncounter[2] == DONE)
+            ++uiWingsCleared;
+
+        if (m_auiEncounter[5] == DONE)
+            ++uiWingsCleared;
+
+        if (m_auiEncounter[8] == DONE)
+            ++uiWingsCleared;
+
+        if (m_auiEncounter[12] == DONE)
+            ++uiWingsCleared;
+
+        switch(uiWingsCleared)
+        {
+            case 1: DoScriptText(SAY_KELTHUZAD_TAUNT1, pKelThuzad); break;
+            case 2: DoScriptText(SAY_KELTHUZAD_TAUNT2, pKelThuzad); break;
+            case 3: DoScriptText(SAY_KELTHUZAD_TAUNT3, pKelThuzad); break;
+            case 4: DoScriptText(SAY_KELTHUZAD_TAUNT4, pKelThuzad); break;
+        }
+    }
 }
 
 InstanceData* GetInstanceData_instance_naxxramas(Map* pMap)

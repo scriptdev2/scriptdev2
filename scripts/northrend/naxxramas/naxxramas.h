@@ -9,6 +9,12 @@ enum
 {
     MAX_ENCOUNTER               = 15,
 
+    // Kel'Thuzad's taunts after killing Wing Bosses
+    SAY_KELTHUZAD_TAUNT1        = -1533090,
+    SAY_KELTHUZAD_TAUNT2        = -1533091,
+    SAY_KELTHUZAD_TAUNT3        = -1533092,
+    SAY_KELTHUZAD_TAUNT4        = -1533093,
+
     TYPE_ANUB_REKHAN            = 1,
     TYPE_FAERLINA               = 2,
     TYPE_MAEXXNA                = 3,
@@ -149,7 +155,8 @@ class MANGOS_DLL_DECL instance_naxxramas : public ScriptedInstance
         // kel
         void SetChamberCenterCoords(float fX, float fY, float fZ);
         void GetChamberCenterCoords(float &fX, float &fY, float &fZ) { fX = m_fChamberCenterX; fY = m_fChamberCenterY; fZ = m_fChamberCenterZ; }
-
+        void DoTaunt();
+        
     protected:
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string strInstData;
@@ -207,7 +214,7 @@ class MANGOS_DLL_DECL instance_naxxramas : public ScriptedInstance
 
         uint64 m_uiKelthuzadDoorGUID;
         uint64 m_uiKelthuzadExitDoorGUID;
-        
+
         float m_fChamberCenterX;
         float m_fChamberCenterY;
         float m_fChamberCenterZ;
