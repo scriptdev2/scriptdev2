@@ -43,6 +43,8 @@ enum
     NPC_BLAUMEUX                = 16065,
     NPC_RIVENDARE               = 30549,
 
+    NPC_KELTHUZAD               = 15990,
+
     // Gothik
     NPC_GOTHIK                  = 16060,
     NPC_SUB_BOSS_TRIGGER        = 16137,                    //summon locations
@@ -93,6 +95,7 @@ enum
 
     // Frostwyrm Lair
     GO_KELTHUZAD_WATERFALL_DOOR = 181225,                   // exit, open after sapphiron is dead
+    GO_KELTHUZAD_EXIT_DOOR      = 181228,
 
     // Eyes
     GO_ARAC_EYE_RAMP            = 181212,
@@ -173,6 +176,8 @@ class MANGOS_DLL_DECL instance_naxxramas : public ScriptedInstance
         uint64 m_uiStalaggGUID;
         uint64 m_uiFeugenGUID;
 
+        uint64 m_uiKelthuzadGUID;
+
         uint64 m_uiPathExitDoorGUID;
         uint64 m_uiGlutExitDoorGUID;
         uint64 m_uiThadDoorGUID;
@@ -201,6 +206,8 @@ class MANGOS_DLL_DECL instance_naxxramas : public ScriptedInstance
         uint64 m_uiLoathebDoorGUID;
 
         uint64 m_uiKelthuzadDoorGUID;
+        uint64 m_uiKelthuzadExitDoorGUID;
+        
         float m_fChamberCenterX;
         float m_fChamberCenterY;
         float m_fChamberCenterZ;
