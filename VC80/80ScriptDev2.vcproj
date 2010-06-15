@@ -489,6 +489,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\scripts\eastern_kingdoms\swamp_of_sorrows.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\scripts\eastern_kingdoms\tirisfal_glades.cpp"
 					>
 				</File>

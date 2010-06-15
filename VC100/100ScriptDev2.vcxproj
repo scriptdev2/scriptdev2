@@ -235,6 +235,7 @@
     <ClCompile Include="..\scripts\eastern_kingdoms\silverpine_forest.cpp" />
     <ClCompile Include="..\scripts\eastern_kingdoms\stormwind_city.cpp" />
     <ClCompile Include="..\scripts\eastern_kingdoms\stranglethorn_vale.cpp" />
+    <ClCompile Include="..\scripts\eastern_kingdoms\swamp_of_sorrows.cpp" />
     <ClCompile Include="..\scripts\eastern_kingdoms\tirisfal_glades.cpp" />
     <ClCompile Include="..\scripts\eastern_kingdoms\undercity.cpp" />
     <ClCompile Include="..\scripts\eastern_kingdoms\western_plaguelands.cpp" />

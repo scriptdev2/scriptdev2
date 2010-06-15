@@ -372,6 +372,9 @@
     <ClCompile Include="..\scripts\eastern_kingdoms\stranglethorn_vale.cpp">
       <Filter>scripts\eastern_kingdoms</Filter>
     </ClCompile>
+    <ClCompile Include="..\scripts\eastern_kingdoms\swamp_of_sorrows.cpp">
+      <Filter>scripts\eastern_kingdoms</Filter>
+    </ClCompile>
     <ClCompile Include="..\scripts\eastern_kingdoms\tirisfal_glades.cpp">
       <Filter>scripts\eastern_kingdoms</Filter>
     </ClCompile>

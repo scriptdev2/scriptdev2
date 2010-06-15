@@ -986,7 +986,7 @@ DELETE FROM areatrigger_scripts WHERE entry=4853;
 INSERT INTO areatrigger_scripts VALUES (4853,'at_madrigosa');
 
 /* SWAMP OF SORROWS */
-
+UPDATE creature_template SET ScriptName='npc_galen_goodward' WHERE entry=5391;
 
 /* TANARIS */
 UPDATE creature_template SET ScriptName='mob_aquementas' WHERE entry=9453;

@@ -68,6 +68,7 @@ scripts/eastern_kingdoms/silvermoon_city.cpp \
 scripts/eastern_kingdoms/silverpine_forest.cpp \
 scripts/eastern_kingdoms/stormwind_city.cpp \
 scripts/eastern_kingdoms/stranglethorn_vale.cpp \
+scripts/eastern_kingdoms/swamp_of_sorrows.cpp \
 scripts/eastern_kingdoms/tirisfal_glades.cpp \
 scripts/eastern_kingdoms/undercity.cpp \
 scripts/eastern_kingdoms/western_plaguelands.cpp \
