@@ -110,7 +110,6 @@ struct MANGOS_DLL_DECL boss_nadoxAI : public ScriptedAI
 
     bool   m_bBerserk;
     bool   m_bGuardianSummoned;
-    uint8  m_uiGuardianCount;
     uint32 m_uiBroodPlagueTimer;
     uint32 m_uiBroodRageTimer;
     uint32 m_uiSummonTimer;
@@ -119,7 +118,6 @@ struct MANGOS_DLL_DECL boss_nadoxAI : public ScriptedAI
     {
         m_bBerserk = false;
         m_bGuardianSummoned = false;
-        m_uiGuardianCount = 3;
         m_uiSummonTimer = 5000;
         m_uiBroodPlagueTimer = 15000;
         m_uiBroodRageTimer = 20000;
@@ -175,7 +173,7 @@ struct MANGOS_DLL_DECL boss_nadoxAI : public ScriptedAI
 
         if (m_uiSummonTimer < uiDiff)
         {
-            DoScriptText(rand()%2?SAY_SUMMON_EGG_1:SAY_SUMMON_EGG_2, m_creature);
+            DoScriptText(urand(0, 1) ? SAY_SUMMON_EGG_1 : SAY_SUMMON_EGG_2, m_creature);
 
             if (Creature* pSwarmerEgg = SelectRandomCreatureOfEntryInRange(NPC_AHNKAHAR_SWARM_EGG, 75.0))
                 pSwarmerEgg->CastSpell(pSwarmerEgg, SPELL_SUMMON_SWARMERS, false);
@@ -208,7 +206,7 @@ struct MANGOS_DLL_DECL boss_nadoxAI : public ScriptedAI
                 m_uiBroodRageTimer -= uiDiff;
         }
 
-        if (!m_bBerserk && (m_creature->GetPositionZ() < 24.0))
+        if (!m_bBerserk && m_creature->GetPositionZ() < 24.0)
         {
             m_bBerserk = true;
             DoCastSpellIfCan(m_creature, SPELL_BERSERK);
@@ -225,7 +223,7 @@ CreatureAI* GetAI_boss_nadox(Creature* pCreature)
 
 void AddSC_boss_nadox()
 {
-    Script *newscript;
+    Script* newscript;
 
     newscript = new Script;
     newscript->Name = "boss_nadox";
