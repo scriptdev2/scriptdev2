@@ -1011,9 +1011,6 @@
     <ClCompile Include="..\scripts\kalimdor\wailing_caverns\instance_wailing_caverns.cpp">
       <Filter>scripts\kalimdor\wailing_caverns</Filter>
     </ClCompile>
-    <ClCompile Include="..\scripts\kalimdor\wailing_caverns\wailing_caverns.h">
-      <Filter>scripts\kalimdor\wailing_caverns</Filter>
-    </ClCompile>
     <ClCompile Include="..\scripts\kalimdor\zulfarrak\zulfarrak.cpp">
       <Filter>scripts\kalimdor\zulfarrak</Filter>
     </ClCompile>
@@ -1682,6 +1679,9 @@
     </ClInclude>
     <ClInclude Include="..\scripts\kalimdor\temple_of_ahnqiraj\temple_of_ahnqiraj.h">
       <Filter>scripts\kalimdor\temple_of_ahnqiraj</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scripts\kalimdor\wailing_caverns\wailing_caverns.h">
+      <Filter>scripts\kalimdor\wailing_caverns</Filter>
     </ClInclude>
     <ClInclude Include="..\scripts\northrend\azjol-nerub\ahnkahet\ahnkahet.h">
       <Filter>scripts\northrend\azjol-nerub\ahnkahet</Filter>
