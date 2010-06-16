@@ -1,5 +1,5 @@
 DELETE FROM script_texts WHERE entry BETWEEN -1000588 AND -1000582;
-INSERT INTO script_texts (entry,content_default,type,comment) VALUES
+INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
 (-1000582,'Help! Please, You must help me!',0,0,0,0,'Galen - periodic say'),
 (-1000583,'Let us leave this place.',0,0,0,0,'Galen - quest accepted'),
 (-1000584,'Look out! The $c attacks!',0,0,0,0,'Galen - aggro 1'),
