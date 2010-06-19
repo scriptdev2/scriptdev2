@@ -1,6 +1,8 @@
 # ScriptDev2 Configuration file
 # This file must be placed within the directory which holds mangosd.conf and realmd.conf
-ConfVersion=2009040501
+
+[ScriptDev2Conf]
+ConfVersion=2010062001
 
 # Database connection settings for the world server.
 # Default: hostname;port;username;password;database
