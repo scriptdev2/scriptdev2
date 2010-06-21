@@ -815,57 +815,57 @@ bool GossipSelect_npc_cassa_crimsonwing(Player* pPlayer, Creature* pCreature, ui
 
 void AddSC_dustwallow_marsh()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "mobs_risen_husk_spirit";
-    newscript->GetAI = &GetAI_mobs_risen_husk_spirit;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mobs_risen_husk_spirit";
+    pNewScript->GetAI = &GetAI_mobs_risen_husk_spirit;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_restless_apparition";
-    newscript->GetAI = &GetAI_npc_restless_apparition;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_restless_apparition";
+    pNewScript->GetAI = &GetAI_npc_restless_apparition;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_deserter_agitator";
-    newscript->GetAI = &GetAI_npc_deserter_agitator;
-    newscript->pGossipHello = &GossipHello_npc_deserter_agitator;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_deserter_agitator";
+    pNewScript->GetAI = &GetAI_npc_deserter_agitator;
+    pNewScript->pGossipHello = &GossipHello_npc_deserter_agitator;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_lady_jaina_proudmoore";
-    newscript->pGossipHello = &GossipHello_npc_lady_jaina_proudmoore;
-    newscript->pGossipSelect = &GossipSelect_npc_lady_jaina_proudmoore;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_lady_jaina_proudmoore";
+    pNewScript->pGossipHello = &GossipHello_npc_lady_jaina_proudmoore;
+    pNewScript->pGossipSelect = &GossipSelect_npc_lady_jaina_proudmoore;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_morokk";
-    newscript->GetAI = &GetAI_npc_morokk;
-    newscript->pQuestAccept = &QuestAccept_npc_morokk;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_morokk";
+    pNewScript->GetAI = &GetAI_npc_morokk;
+    pNewScript->pQuestAccept = &QuestAccept_npc_morokk;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_nat_pagle";
-    newscript->pGossipHello = &GossipHello_npc_nat_pagle;
-    newscript->pGossipSelect = &GossipSelect_npc_nat_pagle;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_nat_pagle";
+    pNewScript->pGossipHello = &GossipHello_npc_nat_pagle;
+    pNewScript->pGossipSelect = &GossipSelect_npc_nat_pagle;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_ogron";
-    newscript->GetAI = &GetAI_npc_ogron;
-    newscript->pQuestAccept = &QuestAccept_npc_ogron;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_ogron";
+    pNewScript->GetAI = &GetAI_npc_ogron;
+    pNewScript->pQuestAccept = &QuestAccept_npc_ogron;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_private_hendel";
-    newscript->GetAI = &GetAI_npc_private_hendel;
-    newscript->pQuestAccept = &QuestAccept_npc_private_hendel;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_private_hendel";
+    pNewScript->GetAI = &GetAI_npc_private_hendel;
+    pNewScript->pQuestAccept = &QuestAccept_npc_private_hendel;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_cassa_crimsonwing";
-    newscript->pGossipHello = &GossipHello_npc_cassa_crimsonwing;
-    newscript->pGossipSelect = &GossipSelect_npc_cassa_crimsonwing;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_cassa_crimsonwing";
+    pNewScript->pGossipHello = &GossipHello_npc_cassa_crimsonwing;
+    pNewScript->pGossipSelect = &GossipSelect_npc_cassa_crimsonwing;
+    pNewScript->RegisterSelf();
 }

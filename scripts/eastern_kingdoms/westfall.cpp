@@ -75,11 +75,11 @@ struct MANGOS_DLL_DECL npc_daphne_stilwellAI : public npc_escortAI
         m_uiShootTimer = 0;
     }
 
-    void WaypointReached(uint32 uiPoint)
+    void WaypointReached(uint32 uiPointId)
     {
-        m_uiWPHolder = uiPoint;
+        m_uiWPHolder = uiPointId;
 
-        switch(uiPoint)
+        switch(uiPointId)
         {
             case 4:
                 SetEquipmentSlots(false, EQUIP_NO_CHANGE, EQUIP_NO_CHANGE, EQUIP_ID_RIFLE);
@@ -186,21 +186,24 @@ CreatureAI* GetAI_npc_daphne_stilwell(Creature* pCreature)
 ## npc_defias_traitor
 ######*/
 
-#define SAY_START                   -1000101
-#define SAY_PROGRESS                -1000102
-#define SAY_END                     -1000103
-#define SAY_AGGRO_1                 -1000104
-#define SAY_AGGRO_2                 -1000105
+enum
+{
+    SAY_START                = -1000101,
+    SAY_PROGRESS             = -1000102,
+    SAY_END                  = -1000103,
+    SAY_AGGRO_1              = -1000104,
+    SAY_AGGRO_2              = -1000105,
 
-#define QUEST_DEFIAS_BROTHERHOOD    155
+    QUEST_DEFIAS_BROTHERHOOD = 155
+};
 
 struct MANGOS_DLL_DECL npc_defias_traitorAI : public npc_escortAI
 {
     npc_defias_traitorAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
 
-    void WaypointReached(uint32 i)
+    void WaypointReached(uint32 uiPointId)
     {
-        switch (i)
+        switch (uiPointId)
         {
             case 35:
                 SetRun(false);
@@ -219,7 +222,7 @@ struct MANGOS_DLL_DECL npc_defias_traitorAI : public npc_escortAI
         }
     }
 
-    void Aggro(Unit* who)
+    void Aggro(Unit* pWho)
     {
         DoScriptText(urand(0, 1) ? SAY_AGGRO_1 : SAY_AGGRO_2, m_creature);
     }
@@ -247,17 +250,17 @@ CreatureAI* GetAI_npc_defias_traitor(Creature* pCreature)
 
 void AddSC_westfall()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "npc_daphne_stilwell";
-    newscript->GetAI = &GetAI_npc_daphne_stilwell;
-    newscript->pQuestAccept = &QuestAccept_npc_daphne_stilwell;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_daphne_stilwell";
+    pNewScript->GetAI = &GetAI_npc_daphne_stilwell;
+    pNewScript->pQuestAccept = &QuestAccept_npc_daphne_stilwell;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_defias_traitor";
-    newscript->GetAI = &GetAI_npc_defias_traitor;
-    newscript->pQuestAccept = &QuestAccept_npc_defias_traitor;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_defias_traitor";
+    pNewScript->GetAI = &GetAI_npc_defias_traitor;
+    pNewScript->pQuestAccept = &QuestAccept_npc_defias_traitor;
+    pNewScript->RegisterSelf();
 }

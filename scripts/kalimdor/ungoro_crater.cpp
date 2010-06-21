@@ -49,7 +49,7 @@ struct MANGOS_DLL_DECL npc_ame01AI : public npc_escortAI
 {
     npc_ame01AI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
 
-    void Reset() { }
+    void Reset() {}
 
     void WaypointReached(uint32 uiPointId)
     {
@@ -329,17 +329,17 @@ bool QuestAccept_npc_ringo(Player* pPlayer, Creature* pCreature, const Quest* pQ
 
 void AddSC_ungoro_crater()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "npc_ame01";
-    newscript->GetAI = &GetAI_npc_ame01;
-    newscript->pQuestAccept = &QuestAccept_npc_ame01;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_ame01";
+    pNewScript->GetAI = &GetAI_npc_ame01;
+    pNewScript->pQuestAccept = &QuestAccept_npc_ame01;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_ringo";
-    newscript->GetAI = &GetAI_npc_ringo;
-    newscript->pQuestAccept = &QuestAccept_npc_ringo;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_ringo";
+    pNewScript->GetAI = &GetAI_npc_ringo;
+    pNewScript->pQuestAccept = &QuestAccept_npc_ringo;
+    pNewScript->RegisterSelf();
 }

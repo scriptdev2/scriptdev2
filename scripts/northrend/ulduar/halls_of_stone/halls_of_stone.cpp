@@ -173,12 +173,12 @@ CreatureAI* GetAI_npc_brann_hos(Creature* pCreature)
 
 void AddSC_halls_of_stone()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "npc_brann_hos";
-    newscript->GetAI = &GetAI_npc_brann_hos;
-    newscript->pGossipHello = &GossipHello_npc_brann_hos;
-    newscript->pGossipSelect = &GossipSelect_npc_brann_hos;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_brann_hos";
+    pNewScript->GetAI = &GetAI_npc_brann_hos;
+    pNewScript->pGossipHello = &GossipHello_npc_brann_hos;
+    pNewScript->pGossipSelect = &GossipSelect_npc_brann_hos;
+    pNewScript->RegisterSelf();
 }
