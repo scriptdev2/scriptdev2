@@ -208,14 +208,14 @@ struct MANGOS_DLL_DECL npc_prospector_remtravelAI : public npc_escortAI
 {
     npc_prospector_remtravelAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
 
-    void WaypointReached(uint32 i)
+    void WaypointReached(uint32 uiPointId)
     {
         Player* pPlayer = GetPlayerForEscort();
 
         if (!pPlayer)
             return;
 
-        switch(i)
+        switch(uiPointId)
         {
             case 0:
                 DoScriptText(SAY_REM_START, m_creature, pPlayer);
@@ -273,10 +273,10 @@ struct MANGOS_DLL_DECL npc_prospector_remtravelAI : public npc_escortAI
 
     void Reset() { }
 
-    void Aggro(Unit* who)
+    void Aggro(Unit* pWho)
     {
         if (urand(0, 1))
-            DoScriptText(SAY_REM_AGGRO, m_creature, who);
+            DoScriptText(SAY_REM_AGGRO, m_creature, pWho);
     }
 
     void JustSummoned(Creature* pSummoned)
@@ -382,24 +382,24 @@ bool GossipSelect_npc_threshwackonator(Player* pPlayer, Creature* pCreature, uin
 
 void AddSC_darkshore()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "npc_kerlonian";
-    newscript->GetAI = &GetAI_npc_kerlonian;
-    newscript->pQuestAccept = &QuestAccept_npc_kerlonian;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_kerlonian";
+    pNewScript->GetAI = &GetAI_npc_kerlonian;
+    pNewScript->pQuestAccept = &QuestAccept_npc_kerlonian;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_prospector_remtravel";
-    newscript->GetAI = &GetAI_npc_prospector_remtravel;
-    newscript->pQuestAccept = &QuestAccept_npc_prospector_remtravel;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_prospector_remtravel";
+    pNewScript->GetAI = &GetAI_npc_prospector_remtravel;
+    pNewScript->pQuestAccept = &QuestAccept_npc_prospector_remtravel;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_threshwackonator";
-    newscript->GetAI = &GetAI_npc_threshwackonator;
-    newscript->pGossipHello = &GossipHello_npc_threshwackonator;
-    newscript->pGossipSelect = &GossipSelect_npc_threshwackonator;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_threshwackonator";
+    pNewScript->GetAI = &GetAI_npc_threshwackonator;
+    pNewScript->pGossipHello = &GossipHello_npc_threshwackonator;
+    pNewScript->pGossipSelect = &GossipSelect_npc_threshwackonator;
+    pNewScript->RegisterSelf();
 }
