@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Netherstorm
 SD%Complete: 80
-SDComment: Quest support: 10438, 10652 (special flight paths), 10299, 10321, 10322, 10323, 10329, 10330, 10338, 10365(Shutting Down Manaforge), 10198
+SDComment: Quest support: 10438, 10652 (special flight paths), 10299, 10321, 10322, 10323, 10329, 10330, 10337, 10338, 10365(Shutting Down Manaforge), 10198
 SDCategory: Netherstorm
 EndScriptData */
 
@@ -27,9 +27,11 @@ go_manaforge_control_console
 npc_commander_dawnforge
 npc_protectorate_nether_drake
 npc_veronia
+npc_bessy
 EndContentData */
 
 #include "precompiled.h"
+#include "escort_ai.h"
 
 /*######
 ## npc_manaforge_control_console
@@ -690,39 +692,110 @@ bool GossipSelect_npc_veronia(Player* pPlayer, Creature* pCreature, uint32 uiSen
     return true;
 }
 
+/*######
+## npc_bessy
+######*/
+
+enum
+{
+    QUEST_COWS_COME_HOME = 10337,
+
+    NPC_THADELL          = 20464,
+    NPC_TORMENTED_SOUL   = 20512,
+    NPC_SEVERED_SPIRIT   = 19881
+};
+
+struct MANGOS_DLL_DECL npc_bessyAI : public npc_escortAI
+{
+
+    npc_bessyAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
+
+    void WaypointReached(uint32 uiPointId)
+    {
+
+        switch(uiPointId)
+        {
+            case 3:
+                m_creature->SummonCreature(NPC_TORMENTED_SOUL, 2449.67, 2183.11, 96.85, 6.20, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
+                m_creature->SummonCreature(NPC_TORMENTED_SOUL, 2449.53, 2184.43, 96.36, 6.27, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
+                m_creature->SummonCreature(NPC_TORMENTED_SOUL, 2449.85, 2186.34, 97.57, 6.08, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
+                break;
+            case 7:
+                m_creature->SummonCreature(NPC_SEVERED_SPIRIT, 2309.64, 2186.24, 92.25, 6.06, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
+                m_creature->SummonCreature(NPC_SEVERED_SPIRIT, 2309.25, 2183.46, 91.75, 6.22, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
+                break;
+            case 12:
+                if (Player* pPlayer = GetPlayerForEscort())
+                    pPlayer->GroupEventHappens(QUEST_COWS_COME_HOME, m_creature);
+                break;
+        }
+    }
+
+    void JustSummoned(Creature* pSummoned)
+    {
+        pSummoned->AI()->AttackStart(m_creature);
+    }
+
+    void Reset() {}
+};
+
+bool QuestAccept_npc_bessy(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
+{
+    if (pQuest->GetQuestId() == QUEST_COWS_COME_HOME)
+    {
+        pCreature->setFaction(FACTION_ESCORT_N_NEUTRAL_PASSIVE);
+        pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+
+        if (npc_bessyAI* pBessyAI = dynamic_cast<npc_bessyAI*>(pCreature->AI()))
+            pBessyAI->Start(true, true, pPlayer->GetGUID(), pQuest);
+    }
+    return true;
+}
+
+CreatureAI* GetAI_npc_bessy(Creature* pCreature)
+{
+     return new npc_bessyAI(pCreature);
+}
+
 void AddSC_netherstorm()
 {
-    Script* NewScript;
+    Script* pNewScript;
 
-    NewScript = new Script;
-    NewScript->Name = "go_manaforge_control_console";
-    NewScript->pGOHello = &GOHello_go_manaforge_control_console;
-    NewScript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "go_manaforge_control_console";
+    pNewScript->pGOHello = &GOHello_go_manaforge_control_console;
+    pNewScript->RegisterSelf();
 
-    NewScript = new Script;
-    NewScript->Name = "npc_manaforge_control_console";
-    NewScript->GetAI = &GetAI_npc_manaforge_control_console;
-    NewScript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_manaforge_control_console";
+    pNewScript->GetAI = &GetAI_npc_manaforge_control_console;
+    pNewScript->RegisterSelf();
 
-    NewScript = new Script;
-    NewScript->Name = "npc_commander_dawnforge";
-    NewScript->GetAI = GetAI_npc_commander_dawnforge;
-    NewScript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_commander_dawnforge";
+    pNewScript->GetAI = GetAI_npc_commander_dawnforge;
+    pNewScript->RegisterSelf();
 
-    NewScript = new Script;
-    NewScript->Name = "at_commander_dawnforge";
-    NewScript->pAreaTrigger = &AreaTrigger_at_commander_dawnforge;
-    NewScript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "at_commander_dawnforge";
+    pNewScript->pAreaTrigger = &AreaTrigger_at_commander_dawnforge;
+    pNewScript->RegisterSelf();
 
-    NewScript = new Script;
-    NewScript->Name = "npc_protectorate_nether_drake";
-    NewScript->pGossipHello = &GossipHello_npc_protectorate_nether_drake;
-    NewScript->pGossipSelect = &GossipSelect_npc_protectorate_nether_drake;
-    NewScript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_protectorate_nether_drake";
+    pNewScript->pGossipHello = &GossipHello_npc_protectorate_nether_drake;
+    pNewScript->pGossipSelect = &GossipSelect_npc_protectorate_nether_drake;
+    pNewScript->RegisterSelf();
 
-    NewScript = new Script;
-    NewScript->Name = "npc_veronia";
-    NewScript->pGossipHello = &GossipHello_npc_veronia;
-    NewScript->pGossipSelect = &GossipSelect_npc_veronia;
-    NewScript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_veronia";
+    pNewScript->pGossipHello = &GossipHello_npc_veronia;
+    pNewScript->pGossipSelect = &GossipSelect_npc_veronia;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_bessy";
+    pNewScript->GetAI = &GetAI_npc_bessy;
+    pNewScript->pQuestAccept = &QuestAccept_npc_bessy;
+    pNewScript->RegisterSelf();
 }

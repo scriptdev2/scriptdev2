@@ -131,7 +131,7 @@ struct MANGOS_DLL_DECL boss_jedogaAI : public ScriptedAI
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (m_creature->GetHealth() < 50.0f && !m_bSacrifice)
+        if (m_creature->GetHealthPercent() < 50.0f && !m_bSacrifice)
         {
             // start sacrifice here
             m_bSacrifice = true;
