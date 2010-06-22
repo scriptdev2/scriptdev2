@@ -39,6 +39,8 @@ enum
 
     //spellId invalid
     SPELL_SUMMON_SPIDERLING = 29434,
+
+    NPC_WEB_WRAP            = 16486
 };
 
 #define LOC_X1    3546.796f
@@ -53,9 +55,9 @@ enum
 #define LOC_Y3    -3843.384f
 #define LOC_Z3    302.384f
 
-struct MANGOS_DLL_DECL mob_webwrapAI : public ScriptedAI
+struct MANGOS_DLL_DECL npc_web_wrapAI : public ScriptedAI
 {
-    mob_webwrapAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+    npc_web_wrapAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint64 m_uiVictimGUID;
 
@@ -63,6 +65,9 @@ struct MANGOS_DLL_DECL mob_webwrapAI : public ScriptedAI
     {
         m_uiVictimGUID = 0;
     }
+
+    void MoveInLineOfSight(Unit* pWho) { }
+    void AttackStart(Unit* pWho) { }
 
     void SetVictim(Unit* pVictim)
     {
@@ -73,20 +78,17 @@ struct MANGOS_DLL_DECL mob_webwrapAI : public ScriptedAI
         }
     }
 
-    void DamageTaken(Unit* pDoneBy, uint32 &uiDamage)
+    void JustDied(Unit* pKiller)
     {
-        if (uiDamage > m_creature->GetHealth())
+        if (m_uiVictimGUID)
         {
-            if (m_uiVictimGUID)
+            if (Unit* pVictim = Unit::GetUnit(*m_creature, m_uiVictimGUID))
             {
-                if (Unit* pVictim = Unit::GetUnit((*m_creature), m_uiVictimGUID))
+                if (pVictim->isAlive())
                     pVictim->RemoveAurasDueToSpell(SPELL_WEBWRAP);
             }
         }
     }
-
-    void MoveInLineOfSight(Unit* pWho) { }
-    void UpdateAI(const uint32 uiDiff) { }
 };
 
 struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
@@ -172,18 +174,27 @@ struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
             {
                 case 0:
                     DoTeleportPlayer((*iter), LOC_X1, LOC_Y1, LOC_Z1, (*iter)->GetOrientation());
-                    if (Creature* pWrap = m_creature->SummonCreature(16486, LOC_X1, LOC_Y1, LOC_Z1, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 120000))
-                        ((mob_webwrapAI*)pWrap->AI())->SetVictim((*iter));
+                    if (Creature* pWrap = m_creature->SummonCreature(NPC_WEB_WRAP, LOC_X1, LOC_Y1, LOC_Z1, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 60000))
+                    {
+                        if (npc_web_wrapAI* pWebAI = dynamic_cast<npc_web_wrapAI*>(pWrap->AI()))
+                            pWebAI->SetVictim(*iter);
+                    }
                     break;
                 case 1:
                     DoTeleportPlayer((*iter), LOC_X2, LOC_Y2, LOC_Z2, (*iter)->GetOrientation());
-                    if (Creature* pWrap = m_creature->SummonCreature(16486, LOC_X2, LOC_Y2, LOC_Z2, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 120000))
-                        ((mob_webwrapAI*)pWrap->AI())->SetVictim((*iter));
+                    if (Creature* pWrap = m_creature->SummonCreature(NPC_WEB_WRAP, LOC_X2, LOC_Y2, LOC_Z2, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 60000))
+                    {
+                        if (npc_web_wrapAI* pWebAI = dynamic_cast<npc_web_wrapAI*>(pWrap->AI()))
+                            pWebAI->SetVictim(*iter);
+                    }
                     break;
                 case 2:
                     DoTeleportPlayer((*iter), LOC_X3, LOC_Y3, LOC_Z3, (*iter)->GetOrientation());
-                    if (Creature* pWrap = m_creature->SummonCreature(16486, LOC_X3, LOC_Y3, LOC_Z3, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 120000))
-                        ((mob_webwrapAI*)pWrap->AI())->SetVictim((*iter));
+                    if (Creature* pWrap = m_creature->SummonCreature(NPC_WEB_WRAP, LOC_X3, LOC_Y3, LOC_Z3, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 60000))
+                    {
+                        if (npc_web_wrapAI* pWebAI = dynamic_cast<npc_web_wrapAI*>(pWrap->AI()))
+                            pWebAI->SetVictim(*iter);
+                    }
                     break;
             }
         }
@@ -250,9 +261,9 @@ struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_webwrap(Creature* pCreature)
+CreatureAI* GetAI_npc_web_wrap(Creature* pCreature)
 {
-    return new mob_webwrapAI(pCreature);
+    return new npc_web_wrapAI(pCreature);
 }
 
 CreatureAI* GetAI_boss_maexxna(Creature* pCreature)
@@ -270,7 +281,7 @@ void AddSC_boss_maexxna()
     NewScript->RegisterSelf();
 
     NewScript = new Script;
-    NewScript->Name = "mob_webwrap";
-    NewScript->GetAI = &GetAI_mob_webwrap;
+    NewScript->Name = "npc_web_wrap";
+    NewScript->GetAI = &GetAI_npc_web_wrap;
     NewScript->RegisterSelf();
 }
