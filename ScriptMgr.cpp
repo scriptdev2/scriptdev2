@@ -201,7 +201,7 @@ void DoScriptText(int32 iTextEntry, WorldObject* pSource, Unit* pTarget)
 //*********************************
 //*** Functions used internally ***
 
-void Script::RegisterSelf()
+void Script::RegisterSelf(bool bReportError)
 {
     int id = GetScriptId(Name.c_str());
     if (id != 0)
@@ -211,7 +211,9 @@ void Script::RegisterSelf()
     }
     else
     {
-        debug_log("SD2: RegisterSelf, but script named %s does not have ScriptName assigned in database.",(this)->Name.c_str());
+        if (bReportError)
+            error_log("SD2: Script registering but ScriptName %s is not assigned in database. Script will not be used.", (this)->Name.c_str());
+
         delete this;
     }
 }

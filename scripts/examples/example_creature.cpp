@@ -268,5 +268,5 @@ void AddSC_example_creature()
     newscript->GetAI = &GetAI_example_creature;
     newscript->pGossipHello = &GossipHello_example_creature;
     newscript->pGossipSelect = &GossipSelect_example_creature;
-    newscript->RegisterSelf();
+    newscript->RegisterSelf(false);
 }

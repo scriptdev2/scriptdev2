@@ -226,5 +226,5 @@ void AddSC_example_escort()
     newscript->GetAI = &GetAI_example_escort;
     newscript->pGossipHello = &GossipHello_example_escort;
     newscript->pGossipSelect = &GossipSelect_example_escort;
-    newscript->RegisterSelf();
+    newscript->RegisterSelf(false);
 }

@@ -95,5 +95,5 @@ void AddSC_example_gossip_codebox()
     newscript->pGossipHello = &GossipHello_example_gossip_codebox;
     newscript->pGossipSelect = &GossipSelect_example_gossip_codebox;
     newscript->pGossipSelectWithCode = &GossipSelectWithCode_example_gossip_codebox;
-    newscript->RegisterSelf();
+    newscript->RegisterSelf(false);
 }

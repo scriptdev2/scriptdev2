@@ -67,7 +67,7 @@ struct Script
     CreatureAI* (*GetAI)(Creature*);
     InstanceData* (*GetInstanceData)(Map*);
 
-    void RegisterSelf();
+    void RegisterSelf(bool bReportError = true);
 };
 
 //Generic scripting text function

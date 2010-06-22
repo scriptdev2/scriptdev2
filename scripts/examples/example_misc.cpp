@@ -54,15 +54,15 @@ void AddSC_example_misc()
     newscript = new Script;
     newscript->Name = "example_areatrigger";
     newscript->pAreaTrigger = &AT_example_areatrigger;
-    newscript->RegisterSelf();
+    newscript->RegisterSelf(false);
 
     newscript = new Script;
     newscript->Name = "example_item";
     newscript->pItemUse = &ItemUse_example_item;
-    newscript->RegisterSelf();
+    newscript->RegisterSelf(false);
 
     newscript = new Script;
     newscript->Name = "example_go_teleporter";
     newscript->pGOHello = &GOHello_example_go_teleporter;
-    newscript->RegisterSelf();
+    newscript->RegisterSelf(false);
 }
