@@ -263,7 +263,7 @@ enum
 {
     QUEST_ESCAPE_FROM_WINTERFIN_CAVERNS = 11570,
     GO_CAGE                             = 187369,
-    
+
     SAY_START_1                         = -1000575,
     SAY_START_2                         = -1000576,
     SAY_END_1                           = -1000577,
@@ -274,82 +274,63 @@ struct MANGOS_DLL_DECL npc_lurgglbrAI : public npc_escortAI
 {
     npc_lurgglbrAI(Creature* pCreature) : npc_escortAI(pCreature)
     {
-        m_uiCageGUID = 0;
+        m_uiSayTimer = 0;
+        m_uiSpeech = 0;
         Reset();
     }
-    
-    uint64 m_uiCageGUID;
+
     uint32 m_uiSayTimer;
-    uint32 m_uiHoldTimer;
     uint8 m_uiSpeech;
-    bool m_bCageOpened;
 
     void Reset()
     {
         if (!HasEscortState(STATE_ESCORT_ESCORTING))
         {
-            m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE);
-            m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
-
-            m_uiSayTimer  = 0;
-            m_uiHoldTimer = 0;
-            m_uiSpeech    = 0;
-            m_bCageOpened = false;
+            m_uiSayTimer = 0;
+            m_uiSpeech = 0;
         }
     }
 
-    void Aggro(Unit* pWho)
+    void JustStartedEscort()
     {
-        SetCombatMovement(m_bCageOpened);
-        if (m_bCageOpened)
+        if (GameObject* pCage = GetClosestGameObjectWithEntry(m_creature, GO_CAGE, INTERACTION_DISTANCE))
         {
-            SetEscortPaused(true);
-            m_uiHoldTimer = 9000;
+            if (pCage->GetGoState() == GO_STATE_READY)
+                pCage->Use(m_creature);
         }
     }
-    
+
     void WaypointStart(uint32 uiPointId)
     {
-        switch (uiPointId)
+        switch(uiPointId)
         {
-            case 0:
-            {
-                GameObject* pCage = NULL;
-                if (m_uiCageGUID)
-                    pCage = m_creature->GetMap()->GetGameObject(m_uiCageGUID);
-                else
-                    pCage = GetClosestGameObjectWithEntry(m_creature, GO_CAGE, INTERACTION_DISTANCE);
-                if (pCage)
-                {
-                    pCage->UseDoorOrButton();
-                    m_uiCageGUID = pCage->GetGUID();
-                }
-                m_bCageOpened = true;
-                break;
-                }
             case 1:
-                if (GameObject* pCage = m_creature->GetMap()->GetGameObject(m_uiCageGUID))
-                    pCage->ResetDoorOrButton();
+                if (Player* pPlayer = GetPlayerForEscort())
+                    DoScriptText(SAY_START_2, m_creature, pPlayer);
+
+                // Cage actually closes here, however it's normally determined by GO template and auto close time
+
                 break;
         }
     }
 
     void WaypointReached(uint32 uiPointId)
     {
-        switch (uiPointId)
+        switch(uiPointId)
         {
             case 0:
                 if (Player* pPlayer = GetPlayerForEscort())
                 {
                     m_creature->SetFacingToObject(pPlayer);
                     DoScriptText(SAY_START_1, m_creature, pPlayer);
-                    m_uiSayTimer = 10000;
-                    m_uiSpeech = 1;
                 }
                 break;
             case 25:
-                m_uiSayTimer = 1000;
-                m_uiSpeech = 2;
+                if (Player* pPlayer = GetPlayerForEscort())
+                {
+                    DoScriptText(SAY_END_1, m_creature, pPlayer);
+                    m_uiSayTimer = 3000;
+                }
                 break;
         }
     }
@@ -359,50 +340,41 @@ struct MANGOS_DLL_DECL npc_lurgglbrAI : public npc_escortAI
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
         {
             if (m_uiSayTimer)
+            {
                 if (m_uiSayTimer <= uiDiff)
                 {
                     Player* pPlayer = GetPlayerForEscort();
+
                     if (!pPlayer)
                     {
                         m_uiSayTimer = 0;
                         return;
                     }
+
                     m_creature->SetFacingToObject(pPlayer);
-                    switch (m_uiSpeech)
+
+                    switch(m_uiSpeech)
                     {
-                        case 1:
-                            DoScriptText(SAY_START_2, m_creature, pPlayer);
-                            m_uiSayTimer = 0;
-                            break;
-                        case 2: DoScriptText(SAY_END_1, m_creature, pPlayer);
-                            m_uiSayTimer = 8000;
-                            m_uiSpeech++;
-                            break;
-                        case 3:
+                        case 0:
                             DoScriptText(SAY_END_2, m_creature, pPlayer);
-                            m_uiSayTimer = 6000;
-                            m_uiSpeech++;
+                            m_uiSayTimer = 3000;
                             break;
-                        case 4:
+                        case 1:
                             pPlayer->GroupEventHappens(QUEST_ESCAPE_FROM_WINTERFIN_CAVERNS, m_creature);
                             m_uiSayTimer = 0;
                             break;
                     }
+
+                    ++m_uiSpeech;
                 }
                 else
                     m_uiSayTimer -= uiDiff;
+            }
 
-            if (m_uiHoldTimer)
-                if (m_uiHoldTimer <= uiDiff)
-                {
-                    SetEscortPaused(false);
-                    m_uiHoldTimer = 0;
-                }
-                else
-                    m_uiHoldTimer -= uiDiff;
+            return;
         }
-        else
-            DoMeleeAttackIfReady();
+
+        DoMeleeAttackIfReady();
     }
 };
 
@@ -412,9 +384,7 @@ bool QuestAccept_npc_lurgglbr(Player* pPlayer, Creature* pCreature, const Quest*
     {
         if (npc_lurgglbrAI* pEscortAI = dynamic_cast<npc_lurgglbrAI*>(pCreature->AI()))
         {
-            pCreature->setFaction(FACTION_ESCORT_N_FRIEND_ACTIVE);
-            pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE);
-            pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
+            pCreature->setFaction(FACTION_ESCORT_N_NEUTRAL_PASSIVE);
             pEscortAI->Start(true, false, pPlayer->GetGUID(), pQuest);
         }
     }

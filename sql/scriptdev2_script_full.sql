@@ -603,7 +603,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000575,'Together we will fight our way out of here. Are you ready?',0,0,0,0,'Lurgglbr - SAY_START_1'),
 (-1000576,'Then we leave.',0,0,0,0,'Lurgglbr - SAY_START_2'),
 (-1000577,'This is far enough. I can make it on my own from here.',0,0,0,0,'Lurgglbr - SAY_END_1'),
-(-1000578,'Thank You for helping me $c. Please tell the king I am back.',0,0,0,0,'Lurgglbr - SAY_END_2'),
+(-1000578,'Thank you for helping me $r. Please tell the king I am back.',0,0,0,0,'Lurgglbr - SAY_END_2'),
 
 (-1000579,'Insolent fool! You thought to steal Zelemar\'s blood? You shall pay with your own!',0,1,0,0,'Zelemar the Wrathful - Aggro'),
 
@@ -4484,7 +4484,6 @@ INSERT INTO script_waypoint VALUES
 (25208,22,4256.81,6230.74,-0.090,0,''),
 (25208,23,4241.09,6217.87,-0.140,0,''),
 (25208,24,4254.66,6205.16,-0.170,0,''),
-(25208,25,4261.82,6186.47,-0.140,30000,'Lurgglbr - final point'),
-(25208,26,4300.55,6140.35,-2.70,0,'');
+(25208,25,4270.07,6188.42,0.059,15000,'Lurgglbr - final point');
 -- EOF
 
