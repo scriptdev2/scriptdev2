@@ -1227,6 +1227,7 @@ UPDATE creature_template SET ScriptName='mob_hatchling' WHERE entry=23598;
 UPDATE creature_template SET ScriptName='npc_forest_frog' WHERE entry=24396;
 
 /* ZUL'DRAK */
+UPDATE creature_template SET ScriptName='npc_gurgthock' WHERE entry=30007;
 
 
 /* ZUL'FARRAK */

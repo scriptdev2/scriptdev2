@@ -26,6 +26,33 @@ EndContentData */
 
 #include "precompiled.h"
 
+enum
+{
+    QUEST_FROM_BEYOND = 12934,
+
+    NPC_AZBARIN       = 30026,
+    NPC_DUKE_SINGEN   = 30019,
+    NPC_ERATHIUS      = 30025,
+    NPC_GARGORAL      = 30024
+};
+
+static float m_afSpawnLocation[] = {5768.71, -2969.29, 273.816};
+static uint32 m_auiBosses[] = {NPC_AZBARIN, NPC_DUKE_SINGEN, NPC_ERATHIUS, NPC_GARGORAL};
+
+bool QuestAccept_npc_gurgthock(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
+{
+    if (pQuest->GetQuestId() == QUEST_FROM_BEYOND)
+        pCreature->SummonCreature(m_auiBosses[urand(0, 3)], m_afSpawnLocation[0], m_afSpawnLocation[1], m_afSpawnLocation[2], 0.0f, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 600000);
+
+    return true;
+}
+
 void AddSC_zuldrak()
 {
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_gurgthock";
+    pNewScript->pQuestAccept = &QuestAccept_npc_gurgthock;
+    pNewScript->RegisterSelf();
 }
