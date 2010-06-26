@@ -117,8 +117,7 @@ struct MANGOS_DLL_DECL boss_loathebAI : public ScriptedAI
         // Inevitable Doom
         if (m_uiInevitableDoomTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_INEVITABLE_DOOM);
-            
+            DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_INEVITABLE_DOOM : SPELL_INEVITABLE_DOOM_H);
             m_uiInevitableDoomTimer = (m_uiNecroticAuraCount <= 40) ? 30000 : 15000;
         }
         else
@@ -160,9 +159,7 @@ struct MANGOS_DLL_DECL boss_loathebAI : public ScriptedAI
         // Deathbloom
         if (m_uiDeathbloomTimer < uiDiff)
         {
-            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-                DoCastSpellIfCan(pTarget, SPELL_DEATHBLOOM);
-
+            DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_DEATHBLOOM : SPELL_DEATHBLOOM_H);
             m_uiDeathbloomTimer = 30000;
         }
         else
