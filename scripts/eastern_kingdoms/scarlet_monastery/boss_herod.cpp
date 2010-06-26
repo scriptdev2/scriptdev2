@@ -24,83 +24,106 @@ EndScriptData */
 #include "precompiled.h"
 #include "escort_ai.h"
 
-#define SAY_AGGRO                   -1189000
-#define SAY_WHIRLWIND               -1189001
-#define SAY_ENRAGE                  -1189002
-#define SAY_KILL                    -1189003
-#define EMOTE_ENRAGE                -1189004
+enum
+{
+    SAY_AGGRO              = -1189000,
+    SAY_WHIRLWIND          = -1189001,
+    SAY_ENRAGE             = -1189002,
+    SAY_KILL               = -1189003,
+    EMOTE_ENRAGE           = -1189004,
 
-#define SPELL_RUSHINGCHARGE         8260
-#define SPELL_CLEAVE                15496
-#define SPELL_WHIRLWIND             8989
-#define SPELL_FRENZY                8269
+    SAY_TRAINEE_SPAWN      = -1189036,
 
-#define ENTRY_SCARLET_TRAINEE       6575
-#define ENTRY_SCARLET_MYRMIDON      4295
+    SPELL_RUSHINGCHARGE    = 8260,
+    SPELL_CLEAVE           = 15496,
+    SPELL_WHIRLWIND        = 8989,
+    SPELL_FRENZY           = 8269,
+
+    NPC_SCARLET_TRAINEE    = 6575
+};
 
 struct MANGOS_DLL_DECL boss_herodAI : public ScriptedAI
 {
     boss_herodAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
-    bool Enrage;
-    uint32 Cleave_Timer;
-    uint32 Whirlwind_Timer;
+    bool m_bEnrage;
+    bool m_bTraineeSay;
+    
+    uint32 m_uiCleaveTimer;
+    uint32 m_uiWhirlwindTimer;
 
     void Reset()
     {
-        Enrage = false;
-        Cleave_Timer = 12000;
-        Whirlwind_Timer = 45000;
+        m_bTraineeSay = false;
+        m_bEnrage     = false;
+        
+        m_uiCleaveTimer    = 12000;
+        m_uiWhirlwindTimer = 45000;
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
-        DoCastSpellIfCan(m_creature,SPELL_RUSHINGCHARGE);
+        DoCastSpellIfCan(m_creature, SPELL_RUSHINGCHARGE);
     }
 
-    void KilledUnit(Unit *victim)
+    void SummonedCreature(Creature* pSummoned)
+    {
+        // make first Scarlet Trainee say text
+        if (pSummoned->GetEntry() == NPC_SCARLET_TRAINEE && !m_bTraineeSay)
+        {
+            DoScriptText(SAY_TRAINEE_SPAWN, pSummoned);
+            m_bTraineeSay = true;
+        }
+
+    }
+
+    void KilledUnit(Unit* pVictim)
     {
         DoScriptText(SAY_KILL, m_creature);
     }
 
-    void JustDied(Unit* killer)
+    void JustDied(Unit* pKiller)
     {
         for(uint8 i = 0; i < 20; ++i)
-            m_creature->SummonCreature(ENTRY_SCARLET_TRAINEE, 1939.18f, -431.58f, 17.09f, 6.22f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
+            m_creature->SummonCreature(NPC_SCARLET_TRAINEE, 1939.18f, -431.58f, 17.09f, 6.22f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //If we are <30% hp goes Enraged
-        if (!Enrage && m_creature->GetHealthPercent() <= 30.0f && !m_creature->IsNonMeleeSpellCasted(false))
+        // If we are < 30% hp enrage
+        if (!m_bEnrage && m_creature->GetHealthPercent() <= 30.0f && !m_creature->IsNonMeleeSpellCasted(false))
         {
-            if (DoCastSpellIfCan(m_creature,SPELL_FRENZY) == CAST_OK)
+            if (DoCastSpellIfCan(m_creature, SPELL_FRENZY) == CAST_OK)
             {
                 DoScriptText(EMOTE_ENRAGE, m_creature);
                 DoScriptText(SAY_ENRAGE, m_creature);
-                Enrage = true;
+                m_bEnrage = true;
             }
         }
 
-        //Cleave_Timer
-        if (Cleave_Timer < diff)
+        // Cleave
+        if (m_uiCleaveTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_CLEAVE);
-            Cleave_Timer = 12000;
-        }else Cleave_Timer -= diff;
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_CLEAVE);
+            m_uiCleaveTimer = 12000;
+        }
+        else
+            m_uiCleaveTimer -= uiDiff;
 
-        if (Whirlwind_Timer < diff)
+        if (m_uiWhirlwindTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_WHIRLWIND) == CAST_OK)
             {
                 DoScriptText(SAY_WHIRLWIND, m_creature);
-                Whirlwind_Timer = 30000;
+                m_uiWhirlwindTimer = 30000;
             }
-        }else Whirlwind_Timer -= diff;
+        }
+        else
+            m_uiWhirlwindTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
@@ -115,24 +138,26 @@ struct MANGOS_DLL_DECL mob_scarlet_traineeAI : public npc_escortAI
 {
     mob_scarlet_traineeAI(Creature* pCreature) : npc_escortAI(pCreature)
     {
-        Start_Timer = urand(1000,6000);
+        m_uiStartTimer = urand(1000, 6000);
         Reset();
     }
 
-    uint32 Start_Timer;
+    uint32 m_uiStartTimer;
 
     void Reset() { }
-    void WaypointReached(uint32 uiPoint) { }
+    void WaypointReached(uint32 /*uiPointId*/) {}
 
-    void UpdateEscortAI(const uint32 diff)
+    void UpdateEscortAI(const uint32 uiDiff)
     {
-        if (Start_Timer)
+        if (m_uiStartTimer)
         {
-            if (Start_Timer <= diff)
+            if (m_uiStartTimer <= uiDiff)
             {
-                Start(true,true);
-                Start_Timer = 0;
-            }else Start_Timer -= diff;
+                Start(true, true);
+                m_uiStartTimer = 0;
+            }
+            else
+                m_uiStartTimer -= uiDiff;
         }
 
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
@@ -149,14 +174,14 @@ CreatureAI* GetAI_mob_scarlet_trainee(Creature* pCreature)
 
 void AddSC_boss_herod()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_herod";
-    newscript->GetAI = &GetAI_boss_herod;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+    pNewScript = new Script;
+    pNewScript->Name = "boss_herod";
+    pNewScript->GetAI = &GetAI_boss_herod;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_scarlet_trainee";
-    newscript->GetAI = &GetAI_mob_scarlet_trainee;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_scarlet_trainee";
+    pNewScript->GetAI = &GetAI_mob_scarlet_trainee;
+    pNewScript->RegisterSelf();
 }
