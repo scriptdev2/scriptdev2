@@ -37,19 +37,18 @@ EndContentData */
 
 enum
 {
-    NPC_KELERUN                 = 17807,
-    GO_SECOND_TRIAL             = 182052,
-    QUEST_SECOND_TRIAL          = 9686,
-    MAX_CHALLENGER              = 4
+    NPC_KELERUN        = 17807,
+    NPC_BLOODWRATH     = 17809,
+    NPC_LIGHTREND      = 17810,
+    NPC_SWIFTBLADE     = 17811,
+    NPC_SUNSTRIKER     = 17812,
+
+    GO_SECOND_TRIAL    = 182052,
+    QUEST_SECOND_TRIAL = 9686,
+    MAX_CHALLENGER     = 4
 };
 
-const uint32 uiChallengerId[4] =
-{
-    17809,                                                  //Bloodwrath
-    17810,                                                  //Lightrend
-    17811,                                                  //Swiftblade
-    17812                                                   //Sunstriker
-};
+const uint32 uiChallengerId[4] = {NPC_BLOODWRATH, NPC_LIGHTREND, NPC_SWIFTBLADE, NPC_SUNSTRIKER};
 
 const int32 uiSayId[4] =
 {
@@ -93,8 +92,7 @@ struct MANGOS_DLL_DECL npc_kelerun_bloodmournAI : public ScriptedAI
 
         m_uiPlayerGUID = 0;
 
-        for(uint8 i = 0; i < MAX_CHALLENGER; ++i)
-            uiChallengerGUID[i] = 0;
+        memset(&uiChallengerGUID, 0, sizeof(uiChallengerGUID));
 
         m_uiChallengerCount = 0;
 
@@ -140,11 +138,11 @@ struct MANGOS_DLL_DECL npc_kelerun_bloodmournAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (m_bIsEventInProgress)
         {
-            if (m_uiTimeOutTimer && m_uiTimeOutTimer < diff)
+            if (m_uiTimeOutTimer && m_uiTimeOutTimer < uiDiff)
             {
                 if (!m_uiPlayerGUID)
                 {
@@ -156,15 +154,15 @@ struct MANGOS_DLL_DECL npc_kelerun_bloodmournAI : public ScriptedAI
                 m_uiTimeOutTimer = 0;
             }
             else
-                m_uiTimeOutTimer -= diff;
+                m_uiTimeOutTimer -= uiDiff;
 
-            if (m_uiCheckAliveStateTimer < diff)
+            if (m_uiCheckAliveStateTimer < uiDiff)
             {
-                if (Unit* pChallenger = Unit::GetUnit(*m_creature,uiChallengerGUID[m_uiChallengerCount]))
+                if (Unit* pChallenger = Unit::GetUnit(*m_creature, uiChallengerGUID[m_uiChallengerCount]))
                 {
                     if (!pChallenger->isAlive())
                     {
-                        Player* pPlayer = (Player*)Unit::GetUnit(*m_creature,m_uiPlayerGUID);
+                        Player* pPlayer = (Player*)Unit::GetUnit(*m_creature, m_uiPlayerGUID);
 
                         if (pPlayer && !pPlayer->isAlive())
                         {
@@ -178,7 +176,7 @@ struct MANGOS_DLL_DECL npc_kelerun_bloodmournAI : public ScriptedAI
                         if (m_uiChallengerCount == MAX_CHALLENGER)
                         {
                             if (pPlayer && pPlayer->isAlive())
-                                pPlayer->GroupEventHappens(QUEST_SECOND_TRIAL,m_creature);
+                                pPlayer->GroupEventHappens(QUEST_SECOND_TRIAL, m_creature);
 
                             Reset();
                             return;
@@ -190,15 +188,15 @@ struct MANGOS_DLL_DECL npc_kelerun_bloodmournAI : public ScriptedAI
                 m_uiCheckAliveStateTimer = 2500;
             }
             else
-                m_uiCheckAliveStateTimer -= diff;
+                m_uiCheckAliveStateTimer -= uiDiff;
 
-            if (m_uiEngageTimer && m_uiEngageTimer < diff)
+            if (m_uiEngageTimer && m_uiEngageTimer < uiDiff)
             {
-                Unit* pPlayer = Unit::GetUnit(*m_creature,m_uiPlayerGUID);
+                Unit* pPlayer = Unit::GetUnit(*m_creature, m_uiPlayerGUID);
 
                 if (pPlayer && pPlayer->isAlive())
                 {
-                    if (Creature* pCreature = (Creature*)Unit::GetUnit(*m_creature,uiChallengerGUID[m_uiChallengerCount]))
+                    if (Creature* pCreature = (Creature*)Unit::GetUnit(*m_creature, uiChallengerGUID[m_uiChallengerCount]))
                     {
                         DoScriptText(uiSayId[m_uiChallengerCount], m_creature, pPlayer);
                         pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
@@ -209,7 +207,7 @@ struct MANGOS_DLL_DECL npc_kelerun_bloodmournAI : public ScriptedAI
                 m_uiEngageTimer = 0;
             }
             else
-                m_uiEngageTimer -= diff;
+                m_uiEngageTimer -= uiDiff;
         }
     }
 };
@@ -223,7 +221,10 @@ CreatureAI* GetAI_npc_kelerun_bloodmourn(Creature* pCreature)
 bool QuestAccept_npc_kelerun_bloodmourn(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_SECOND_TRIAL)
-        ((npc_kelerun_bloodmournAI*)(pCreature->AI()))->StartEvent();
+    {
+        if (npc_kelerun_bloodmournAI* pKelrunAI = dynamic_cast<npc_kelerun_bloodmournAI*>(pCreature->AI()))
+            pKelrunAI->StartEvent();
+    }
 
     return true;
 }
@@ -234,7 +235,8 @@ bool GOHello_go_harbinger_second_trial(Player* pPlayer, GameObject* pGO)
     {
         if (Creature* pCreature = GetClosestCreatureWithEntry(pGO, NPC_KELERUN, 30.0f))
         {
-            if (((npc_kelerun_bloodmournAI*)(pCreature->AI()))->CanProgressEvent(pPlayer->GetGUID()))
+            npc_kelerun_bloodmournAI* pKelrunAI = dynamic_cast<npc_kelerun_bloodmournAI*>(pCreature->AI());
+            if (pKelrunAI && pKelrunAI->CanProgressEvent(pPlayer->GetGUID()))
                 return false;
         }
     }
@@ -262,14 +264,14 @@ struct MANGOS_DLL_DECL npc_prospector_anvilwardAI : public npc_escortAI
     npc_prospector_anvilwardAI(Creature* pCreature) : npc_escortAI(pCreature) {Reset();}
 
     // Pure Virtual Functions
-    void WaypointReached(uint32 i)
+    void WaypointReached(uint32 uiPointId)
     {
         Player* pPlayer = GetPlayerForEscort();
 
         if (!pPlayer)
             return;
 
-        switch (i)
+        switch (uiPointId)
         {
             case 0:
                 DoScriptText(SAY_ANVIL1, m_creature, pPlayer);
@@ -301,10 +303,13 @@ CreatureAI* GetAI_npc_prospector_anvilward(Creature* pCreature)
     return new npc_prospector_anvilwardAI(pCreature);
 }
 
+#define GOSSIP_ITEM_MOMENT "I need a moment of your time, sir."
+#define GOSSIP_ITEM_SHOW   "Why... yes, of course. I've something to show you right inside this building, Mr. Anvilward."
+
 bool GossipHello_npc_prospector_anvilward(Player* pPlayer, Creature* pCreature)
 {
     if (pPlayer->GetQuestStatus(QUEST_THE_DWARVEN_SPY) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "I need a moment of your time, sir.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_MOMENT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
     pPlayer->SEND_GOSSIP_MENU(8239, pCreature->GetGUID());
     return true;
@@ -315,7 +320,7 @@ bool GossipSelect_npc_prospector_anvilward(Player* pPlayer, Creature* pCreature,
     switch(uiAction)
     {
         case GOSSIP_ACTION_INFO_DEF+1:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Why... yes, of course. I've something to show you right inside this building, Mr. Anvilward.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_SHOW, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
             pPlayer->SEND_GOSSIP_MENU(8240, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+2:
@@ -417,8 +422,8 @@ struct MANGOS_DLL_DECL npc_apprentice_mirvedaAI : public ScriptedAI
 bool QuestAccept_unexpected_results(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_UNEXPECTED_RESULT)
-        if (npc_apprentice_mirvedaAI* mirvedaAI = dynamic_cast<npc_apprentice_mirvedaAI*>(pCreature->AI()))
-            mirvedaAI->StartEvent(pPlayer->GetGUID());
+        if (npc_apprentice_mirvedaAI* pMirvedaAI = dynamic_cast<npc_apprentice_mirvedaAI*>(pCreature->AI()))
+            pMirvedaAI->StartEvent(pPlayer->GetGUID());
     return true;
 }
 
@@ -429,29 +434,29 @@ CreatureAI* GetAI_npc_apprentice_mirvedaAI(Creature* pCreature)
 
 void AddSC_eversong_woods()
 {
-    Script* newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "npc_kelerun_bloodmourn";
-    newscript->GetAI = &GetAI_npc_kelerun_bloodmourn;
-    newscript->pQuestAccept = &QuestAccept_npc_kelerun_bloodmourn;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_kelerun_bloodmourn";
+    pNewScript->GetAI = &GetAI_npc_kelerun_bloodmourn;
+    pNewScript->pQuestAccept = &QuestAccept_npc_kelerun_bloodmourn;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "go_harbinger_second_trial";
-    newscript->pGOHello = &GOHello_go_harbinger_second_trial;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "go_harbinger_second_trial";
+    pNewScript->pGOHello = &GOHello_go_harbinger_second_trial;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_prospector_anvilward";
-    newscript->GetAI = &GetAI_npc_prospector_anvilward;
-    newscript->pGossipHello =  &GossipHello_npc_prospector_anvilward;
-    newscript->pGossipSelect = &GossipSelect_npc_prospector_anvilward;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_prospector_anvilward";
+    pNewScript->GetAI = &GetAI_npc_prospector_anvilward;
+    pNewScript->pGossipHello =  &GossipHello_npc_prospector_anvilward;
+    pNewScript->pGossipSelect = &GossipSelect_npc_prospector_anvilward;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_apprentice_mirveda";
-    newscript->GetAI = GetAI_npc_apprentice_mirvedaAI;
-    newscript->pQuestAccept = &QuestAccept_unexpected_results;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_apprentice_mirveda";
+    pNewScript->GetAI = GetAI_npc_apprentice_mirvedaAI;
+    pNewScript->pQuestAccept = &QuestAccept_unexpected_results;
+    pNewScript->RegisterSelf();
 }
