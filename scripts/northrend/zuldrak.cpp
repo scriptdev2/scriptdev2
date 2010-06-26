@@ -36,7 +36,7 @@ enum
     NPC_GARGORAL      = 30024
 };
 
-static float m_afSpawnLocation[] = {5768.71, -2969.29, 273.816};
+static float m_afSpawnLocation[] = {5768.71f, -2969.29f, 273.816f};
 static uint32 m_auiBosses[] = {NPC_AZBARIN, NPC_DUKE_SINGEN, NPC_ERATHIUS, NPC_GARGORAL};
 
 bool QuestAccept_npc_gurgthock(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
