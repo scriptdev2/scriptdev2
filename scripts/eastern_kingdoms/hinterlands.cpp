@@ -101,10 +101,7 @@ struct MANGOS_DLL_DECL npc_00x09hlAI : public npc_escortAI
         if (pWho->GetEntry() == NPC_MARAUDING_OWL || pWho->GetEntry() == NPC_VILE_AMBUSHER)
             return;
 
-        if (urand(0, 1))
-            DoScriptText(SAY_OOX_AGGRO1, m_creature);
-        else
-            DoScriptText(SAY_OOX_AGGRO2, m_creature);
+        DoScriptText(urand(0, 1) ? SAY_OOX_AGGRO1 : SAY_OOX_AGGRO2, m_creature);
     }
 
     void JustSummoned(Creature* pSummoned)
@@ -118,11 +115,7 @@ bool QuestAccept_npc_00x09hl(Player* pPlayer, Creature* pCreature, const Quest* 
     if (pQuest->GetQuestId() == QUEST_RESQUE_OOX_09)
     {
         pCreature->SetStandState(UNIT_STAND_STATE_STAND);
-
-        if (pPlayer->GetTeam() == ALLIANCE)
-            pCreature->setFaction(FACTION_ESCORT_A_PASSIVE);
-        else if (pPlayer->GetTeam() == HORDE)
-            pCreature->setFaction(FACTION_ESCORT_H_PASSIVE);
+        pCreature->setFaction((pPlayer->GetTeam() == ALLIANCE) ? FACTION_ESCORT_A_PASSIVE : FACTION_ESCORT_H_PASSIVE);
 
         DoScriptText(SAY_OOX_START, pCreature, pPlayer);
 
@@ -171,7 +164,7 @@ Location m_afAmbushSpawn[] =
 Location m_afAmbushMoveTo[] =
 {
     {166.63038f, -2824.780273f, 108.153f},
-    {70.886589f,  -2874.335449f, 116.675f}
+    {70.886589f, -2874.335449f, 116.675f}
 };
 
 struct MANGOS_DLL_DECL npc_rinjiAI : public npc_escortAI
@@ -332,17 +325,17 @@ CreatureAI* GetAI_npc_rinji(Creature* pCreature)
 
 void AddSC_hinterlands()
 {
-    Script* newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "npc_00x09hl";
-    newscript->GetAI = &GetAI_npc_00x09hl;
-    newscript->pQuestAccept = &QuestAccept_npc_00x09hl;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_00x09hl";
+    pNewScript->GetAI = &GetAI_npc_00x09hl;
+    pNewScript->pQuestAccept = &QuestAccept_npc_00x09hl;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_rinji";
-    newscript->GetAI = &GetAI_npc_rinji;
-    newscript->pQuestAccept = &QuestAccept_npc_rinji;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_rinji";
+    pNewScript->GetAI = &GetAI_npc_rinji;
+    pNewScript->pQuestAccept = &QuestAccept_npc_rinji;
+    pNewScript->RegisterSelf();
 }
