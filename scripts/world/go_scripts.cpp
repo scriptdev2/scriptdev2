@@ -307,7 +307,7 @@ bool GOHello_go_shrine_of_the_birds(Player* pPlayer, GameObject* pGo)
     uint32 uiBirdEntry = 0;
 
     float fX,fY,fZ;
-    pGo->GetClosePoint(fX,fY,fZ,pGo->GetObjectSize(),INTERACTION_DISTANCE);
+    pGo->GetClosePoint(fX, fY, fZ, pGo->GetObjectBoundingRadius(), INTERACTION_DISTANCE);
 
     switch(pGo->GetEntry())
     {

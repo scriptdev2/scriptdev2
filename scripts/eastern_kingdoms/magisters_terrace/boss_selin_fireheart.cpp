@@ -158,7 +158,7 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
             CrystalChosen->CastSpell(CrystalChosen, SPELL_FEL_CRYSTAL_COSMETIC, true);
 
             float x, y, z;                                  // coords that we move to, close to the crystal.
-            CrystalChosen->GetClosePoint(x, y, z, m_creature->GetObjectSize(), CONTACT_DISTANCE);
+            CrystalChosen->GetClosePoint(x, y, z, m_creature->GetObjectBoundingRadius(), CONTACT_DISTANCE);
 
             m_creature->RemoveSplineFlag(SPLINEFLAG_WALKMODE);
             m_creature->GetMotionMaster()->MovePoint(1, x, y, z);
