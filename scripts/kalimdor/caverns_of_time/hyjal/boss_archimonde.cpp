@@ -196,8 +196,6 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
     uint32 AirBurstTimer;
     uint32 GripOfTheLegionTimer;
     uint32 DoomfireTimer;
-    uint32 SoulChargeTimer;
-    uint32 SoulChargeCount;
     uint32 MeleeRangeCheckTimer;
     uint32 HandOfDeathTimer;
     uint32 SummonWispTimer;
@@ -223,8 +221,6 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         AirBurstTimer = 30000;
         GripOfTheLegionTimer = urand(5000, 25000);
         DoomfireTimer = 20000;
-        SoulChargeTimer = urand(2000, 29000);
-        SoulChargeCount = 0;
         MeleeRangeCheckTimer = 15000;
         HandOfDeathTimer = 2000;
         WispCount = 0;                                      // When ~30 wisps are summoned, Archimonde dies
@@ -248,7 +244,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
             m_pInstance->SetData(TYPE_ARCHIMONDE, IN_PROGRESS);
     }
 
-    void KilledUnit(Unit *victim)
+    void KilledUnit(Unit* pVictim)
     {
         switch(urand(0, 2))
         {
@@ -257,33 +253,27 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
             case 2: DoScriptText(SAY_SLAY3, m_creature); break;
         }
 
-        if (victim && (victim->GetTypeId() == TYPEID_PLAYER))
-            GainSoulCharge(((Player*)victim));
-    }
+        if (pVictim->GetTypeId() != TYPEID_PLAYER)
+            return;
 
-    void GainSoulCharge(Player* victim)
-    {
-        switch(victim->getClass())
+        switch(pVictim->getClass())
         {
             case CLASS_PRIEST:
             case CLASS_PALADIN:
             case CLASS_WARLOCK:
-                victim->CastSpell(m_creature, SPELL_SOUL_CHARGE_RED, true);
+                pVictim->CastSpell(m_creature, SPELL_SOUL_CHARGE_RED, true);
                 break;
             case CLASS_MAGE:
             case CLASS_ROGUE:
             case CLASS_WARRIOR:
-                victim->CastSpell(m_creature, SPELL_SOUL_CHARGE_YELLOW, true);
+                pVictim->CastSpell(m_creature, SPELL_SOUL_CHARGE_YELLOW, true);
                 break;
             case CLASS_DRUID:
             case CLASS_SHAMAN:
             case CLASS_HUNTER:
-                victim->CastSpell(m_creature, SPELL_SOUL_CHARGE_GREEN, true);
+                pVictim->CastSpell(m_creature, SPELL_SOUL_CHARGE_GREEN, true);
                 break;
         }
-
-        SoulChargeTimer = urand(2000, 30000);
-        ++SoulChargeCount;
     }
 
     void JustDied(Unit *victim)
@@ -369,42 +359,6 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         m_creature->SummonCreature(CREATURE_DOOMFIRE,
             target->GetPositionX()-15.0,target->GetPositionY()-15.0,target->GetPositionZ(),0,
             TEMPSUMMON_TIMED_DESPAWN, 27000);
-    }
-
-    void UnleashSoulCharge()
-    {
-        m_creature->InterruptNonMeleeSpells(false);
-
-        bool HasCast = false;
-        uint32 chargeSpell = 0;
-        uint32 unleashSpell = 0;
-
-        switch(urand(0, 2))
-        {
-            case 0:
-                chargeSpell = SPELL_SOUL_CHARGE_RED;
-                unleashSpell = SPELL_UNLEASH_SOUL_RED;
-                break;
-            case 1:
-                chargeSpell = SPELL_SOUL_CHARGE_YELLOW;
-                unleashSpell = SPELL_UNLEASH_SOUL_YELLOW;
-                break;
-            case 2:
-                chargeSpell = SPELL_SOUL_CHARGE_GREEN;
-                unleashSpell = SPELL_UNLEASH_SOUL_GREEN;
-                break;
-        }
-
-        if (m_creature->HasAura(chargeSpell, EFFECT_INDEX_0))
-        {
-            m_creature->RemoveSingleAuraFromStack(chargeSpell, EFFECT_INDEX_0);
-            DoCastSpellIfCan(m_creature->getVictim(), unleashSpell);
-            HasCast = true;
-            --SoulChargeCount;
-        }
-
-        if (HasCast)
-            SoulChargeTimer = urand(2000, 30000);
     }
 
     void UpdateAI(const uint32 diff)
@@ -523,13 +477,6 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
                 HandOfDeathTimer = 2000;
             }else HandOfDeathTimer -= diff;
             return;                                         // Don't do anything after this point.
-        }
-
-        if (SoulChargeCount)
-        {
-            if (SoulChargeTimer < diff)
-                UnleashSoulCharge();
-            else SoulChargeTimer -= diff;
         }
 
         if (GripOfTheLegionTimer < diff)
