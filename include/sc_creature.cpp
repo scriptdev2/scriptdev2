@@ -459,7 +459,7 @@ Player* ScriptedAI::GetPlayerAtMinimumRange(float fMinimumRange)
     MaNGOS::AnyPlayerInObjectRangeCheck check(m_creature, fMinimumRange);
     MaNGOS::PlayerSearcher<MaNGOS::AnyPlayerInObjectRangeCheck> searcher(m_creature, pPlayer, check);
 
-    Cell::VisitGridObjects(m_creature, searcher, fMinimumRange);
+    Cell::VisitWorldObjects(m_creature, searcher, fMinimumRange);
 
     return pPlayer;
 }
