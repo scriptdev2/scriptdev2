@@ -23,7 +23,6 @@ EndScriptData */
 
 /* ContentData
 item_arcane_charges                 Prevent use if player is not flying (cannot cast while on ground)
-item_nether_wraith_beacon(i31742)   Summons creatures for quest Becoming a Spellfire Tailor (q10832)
 item_flying_machine(i34060,i34061)  Engineering crafted flying machines
 item_gor_dreks_ointment(i30175)     Protecting Our Own(q10488)
 EndContentData */
@@ -51,20 +50,6 @@ bool ItemUse_item_arcane_charges(Player* pPlayer, Item* pItem, const SpellCastTa
         Spell::SendCastResult(pPlayer, pSpellInfo, 1, SPELL_FAILED_NOT_ON_GROUND);
 
     return true;
-}
-
-/*#####
-# item_nether_wraith_beacon
-#####*/
-
-bool ItemUse_item_nether_wraith_beacon(Player* pPlayer, Item* pItem, const SpellCastTargets &pTargets)
-{
-    if (pPlayer->GetQuestStatus(10832) == QUEST_STATUS_INCOMPLETE)
-    {
-        pPlayer->SummonCreature(22408,pPlayer->GetPositionX() ,pPlayer->GetPositionY()+20, pPlayer->GetPositionZ(), 0,TEMPSUMMON_TIMED_DESPAWN,180000);
-        pPlayer->SummonCreature(22408,pPlayer->GetPositionX() ,pPlayer->GetPositionY()-20, pPlayer->GetPositionZ(), 0,TEMPSUMMON_TIMED_DESPAWN,180000);
-    }
-    return false;
 }
 
 /*#####
@@ -149,11 +134,6 @@ void AddSC_item_scripts()
     newscript = new Script;
     newscript->Name = "item_arcane_charges";
     newscript->pItemUse = &ItemUse_item_arcane_charges;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "item_nether_wraith_beacon";
-    newscript->pItemUse = &ItemUse_item_nether_wraith_beacon;
     newscript->RegisterSelf();
 
     newscript = new Script;

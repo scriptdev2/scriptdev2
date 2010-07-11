@@ -103,7 +103,6 @@ UPDATE creature_template SET ScriptName='guard_shattrath_scryer' WHERE entry=185
 UPDATE item_template SET ScriptName='item_arcane_charges' WHERE entry=34475;
 UPDATE item_template SET ScriptName='item_flying_machine' WHERE entry IN (34060,34061);
 UPDATE item_template SET ScriptName='item_gor_dreks_ointment' WHERE entry=30175;
-UPDATE item_template SET ScriptName='item_nether_wraith_beacon' WHERE entry=31742;
 UPDATE item_template SET ScriptName='item_tainted_core' WHERE entry=31088;
 UPDATE item_template SET ScriptName='item_petrov_cluster_bombs' WHERE entry=33098;
 
