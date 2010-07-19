@@ -210,7 +210,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
             {
                 who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
-                if (!m_creature->getVictim())
+                if (m_creature->getThreatManager().getThreatList().empty())
                 {
                     if (m_pInstance)
                         m_pInstance->SetData(TYPE_RELIQUIARY, IN_PROGRESS);
@@ -222,6 +222,10 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                     SummonEssenceTimer = 8000;
                     AnimationTimer = 5100;
                     m_creature->AddThreat(who);
+                    //m_creature->SetInCombatWith(who);     // Don't know what is like retail
+                    //who->SetInCombatWith(m_creature);
+                    m_creature->SetInCombatWithZone();      // Same goes here, but setting to zone will prevent bug if the only player of threatList dies
+
                 }
             }
         }
