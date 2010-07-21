@@ -455,6 +455,10 @@
     <ClCompile Include="..\scripts\northrend\grizzly_hills.cpp" />
     <ClCompile Include="..\scripts\northrend\howling_fjord.cpp" />
     <ClCompile Include="..\scripts\northrend\icecrown.cpp" />
+    <ClCompile Include="..\scripts\northrend\ruby_sanctum\boss_baltharus.cpp" />
+    <ClCompile Include="..\scripts\northrend\ruby_sanctum\boss_halion.cpp" />
+    <ClCompile Include="..\scripts\northrend\ruby_sanctum\boss_saviana.cpp" />
+    <ClCompile Include="..\scripts\northrend\ruby_sanctum\boss_zarithian.cpp" />
     <ClCompile Include="..\scripts\northrend\sholazar_basin.cpp" />
     <ClCompile Include="..\scripts\northrend\storm_peaks.cpp" />
     <ClCompile Include="..\scripts\northrend\zuldrak.cpp" />

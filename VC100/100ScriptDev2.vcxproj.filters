@@ -295,6 +295,9 @@
     <Filter Include="system">
       <UniqueIdentifier>{90f3df6a-a1d0-4a6e-b8d7-d1d993fc795b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="scripts\northrend\ruby_sanctum">
+      <UniqueIdentifier>{e35abead-2389-4eb9-88bd-70e6fe5636b5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\base\escort_ai.cpp">
@@ -1594,6 +1597,18 @@
       <Filter>system</Filter>
     </ClCompile>
     <ClCompile Include="..\ScriptMgr.cpp" />
+    <ClCompile Include="..\scripts\northrend\ruby_sanctum\boss_baltharus.cpp">
+      <Filter>scripts\northrend\ruby_sanctum</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scripts\northrend\ruby_sanctum\boss_halion.cpp">
+      <Filter>scripts\northrend\ruby_sanctum</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scripts\northrend\ruby_sanctum\boss_saviana.cpp">
+      <Filter>scripts\northrend\ruby_sanctum</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scripts\northrend\ruby_sanctum\boss_zarithian.cpp">
+      <Filter>scripts\northrend\ruby_sanctum</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\base\escort_ai.h">
