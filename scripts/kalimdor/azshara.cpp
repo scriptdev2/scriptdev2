@@ -93,7 +93,7 @@ struct MANGOS_DLL_DECL npc_rizzle_sprysprocketAI : public npc_escortAI
             if (!HasEscortState(STATE_ESCORT_PAUSED) && m_creature->IsWithinDistInMap(pUnit, INTERACTION_DISTANCE) && m_creature->IsWithinLOSInMap(pUnit))
             {
                 if (((Player*)pUnit)->GetQuestStatus(QUEST_MOONSTONE) == QUEST_STATUS_INCOMPLETE)
-                    m_creature->CastSpell(m_creature,SPELL_SURRENDER,true);
+                    m_creature->CastSpell(m_creature, SPELL_SURRENDER, true);
             }
         }
 
@@ -155,12 +155,12 @@ struct MANGOS_DLL_DECL npc_rizzle_sprysprocketAI : public npc_escortAI
                     break;
                 case 1:
                     //teleports to water _before_ we Start()
-                    m_creature->CastSpell(m_creature,SPELL_ESCAPE,false);
+                    m_creature->CastSpell(m_creature, SPELL_ESCAPE, false);
                     break;
                 case 2:
-                    m_creature->CastSpell(m_creature,SPELL_SWIM_SPEED,false);
+                    m_creature->CastSpell(m_creature, SPELL_SWIM_SPEED, false);
                     m_bIsIntro = false;
-                    Start(false,true);
+                    Start(true);
                     break;
             }
 
@@ -171,10 +171,12 @@ struct MANGOS_DLL_DECL npc_rizzle_sprysprocketAI : public npc_escortAI
         if (m_uiDepthChargeTimer < uiDiff)
         {
             if (!HasEscortState(STATE_ESCORT_PAUSED))
-                m_creature->CastSpell(m_creature,SPELL_SUMMON_DEPTH_CHARGE,false);
+                m_creature->CastSpell(m_creature, SPELL_SUMMON_DEPTH_CHARGE, false);
 
             m_uiDepthChargeTimer = urand(10000, 15000);
-        }else m_uiDepthChargeTimer -= uiDiff;
+        }
+        else
+            m_uiDepthChargeTimer -= uiDiff;
     }
 };
 
@@ -197,7 +199,7 @@ bool GossipSelect_npc_rizzle_sprysprocket(Player* pPlayer, Creature* pCreature, 
     if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
     {
         pPlayer->CLOSE_GOSSIP_MENU();
-        pPlayer->CastSpell(pPlayer,SPELL_GIVE_MOONSTONE,false);
+        pPlayer->CastSpell(pPlayer, SPELL_GIVE_MOONSTONE, false);
     }
 
     return true;
@@ -213,7 +215,7 @@ struct MANGOS_DLL_DECL npc_depth_chargeAI : public ScriptedAI
             return;
 
         if (m_creature->IsWithinDistInMap(pUnit, INTERACTION_DISTANCE) && m_creature->IsWithinLOSInMap(pUnit))
-            m_creature->CastSpell(pUnit,SPELL_TRAP,false);
+            m_creature->CastSpell(pUnit, SPELL_TRAP, false);
     }
 
     void Reset() { }
@@ -234,7 +236,7 @@ bool GOHello_go_southfury_moonstone(Player* pPlayer, GameObject* pGo)
     //pPlayer->CastSpell(pPlayer,SPELL_SUMMON_RIZZLE,false);
 
     if (Creature* pCreature = pPlayer->SummonCreature(NPC_RIZZLE, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_DEAD_DESPAWN, 0))
-        pCreature->CastSpell(pPlayer,SPELL_BLACKJACK,false);
+        pCreature->CastSpell(pPlayer, SPELL_BLACKJACK, false);
 
     return false;
 }

@@ -153,7 +153,7 @@ struct MANGOS_DLL_DECL mob_scarlet_traineeAI : public npc_escortAI
         {
             if (m_uiStartTimer <= uiDiff)
             {
-                Start(true, true);
+                Start(true);
                 m_uiStartTimer = 0;
             }
             else

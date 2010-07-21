@@ -958,7 +958,7 @@ struct MANGOS_DLL_DECL npc_garments_of_questsAI : public npc_escortAI
                         case ENTRY_DG_KEL: DoScriptText(SAY_DG_KEL_GOODBYE,m_creature,pUnit); break;
                     }
 
-                    Start(false,true);
+                    Start(true);
                 }
                 else
                     EnterEvadeMode();                       //something went wrong

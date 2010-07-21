@@ -161,7 +161,7 @@ bool GossipSelect_npc_sinclari(Player* pPlayer, Creature* pCreature, uint32 uiSe
                 pInstance->SetData(TYPE_MAIN, SPECIAL);
 
                 if (npc_sinclariAI* pEscortAI = dynamic_cast<npc_sinclariAI*>(pCreature->AI()))
-                    pEscortAI->Start(false);
+                    pEscortAI->Start();
             }
         }
         else

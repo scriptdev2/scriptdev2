@@ -104,7 +104,7 @@ bool QuestAccept_npc_professor_phizzlethorpe(Player* pPlayer, Creature* pCreatur
         DoScriptText(SAY_PROGRESS_1, pCreature, pPlayer);
 
         if (npc_professor_phizzlethorpeAI* pEscortAI = dynamic_cast<npc_professor_phizzlethorpeAI*>(pCreature->AI()))
-            pEscortAI->Start(false, false, pPlayer->GetGUID(), pQuest, true);
+            pEscortAI->Start(false, pPlayer->GetGUID(), pQuest, true);
     }
     return true;
 }

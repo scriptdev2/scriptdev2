@@ -378,7 +378,7 @@ bool QuestAccept_npc_magwin(Player* pPlayer, Creature* pCreature, const Quest* p
         pCreature->setFaction(10);
 
         if (npc_magwinAI* pEscortAI = dynamic_cast<npc_magwinAI*>(pCreature->AI()))
-            pEscortAI->Start(true, false, pPlayer->GetGUID(), pQuest);
+            pEscortAI->Start(false, pPlayer->GetGUID(), pQuest);
     }
     return true;
 }

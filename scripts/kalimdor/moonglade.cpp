@@ -187,7 +187,7 @@ struct MANGOS_DLL_DECL npc_clintar_dw_spiritAI : public npc_escortAI
 
         m_creature->SetVisibility(VISIBILITY_ON);
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-        Start(true, false, uiPlayerGuid);
+        Start(false, uiPlayerGuid);
     }
 
     void JustSummoned(Creature* summoned)

@@ -766,7 +766,7 @@ bool QuestAccept_npc_wilda(Player* pPlayer, Creature* pCreature, const Quest* pQ
         pCreature->setFaction(FACTION_EARTHEN);
 
         if (npc_wildaAI* pEscortAI = dynamic_cast<npc_wildaAI*>(pCreature->AI()))
-            pEscortAI->Start(false, false, pPlayer->GetGUID(), pQuest);
+            pEscortAI->Start(false, pPlayer->GetGUID(), pQuest);
     }
     return true;
 }

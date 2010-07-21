@@ -155,7 +155,7 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
         if (m_uiEventId == EVENT_OZ)
             m_pInstance->SetData(DATA_OPERA_OZ_DEATHCOUNT, IN_PROGRESS);
 
-        Start(false, false, 0, NULL, true);
+        Start(false, 0, NULL, true);
     }
 
     void WaypointReached(uint32 uiPointId)

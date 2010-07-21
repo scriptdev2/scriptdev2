@@ -149,7 +149,7 @@ struct MANGOS_DLL_DECL npc_ancestral_wolfAI : public npc_escortAI
     npc_ancestral_wolfAI(Creature* pCreature) : npc_escortAI(pCreature)
     {
         if (pCreature->GetOwner() && pCreature->GetOwner()->GetTypeId() == TYPEID_PLAYER)
-            Start(false, false, pCreature->GetOwner()->GetGUID());
+            Start(false, pCreature->GetOwner()->GetGUID());
         else
             error_log("SD2: npc_ancestral_wolf can not obtain owner or owner is not a player.");
 
@@ -739,7 +739,7 @@ bool QuestAccept_npc_wounded_blood_elf(Player* pPlayer, Creature* pCreature, con
         pCreature->setFaction(FACTION_ESCORT_H_PASSIVE);
 
         if (npc_wounded_blood_elfAI* pEscortAI = dynamic_cast<npc_wounded_blood_elfAI*>(pCreature->AI()))
-            pEscortAI->Start(true, false, pPlayer->GetGUID(), pQuest);
+            pEscortAI->Start(false, pPlayer->GetGUID(), pQuest);
     }
 
     return true;

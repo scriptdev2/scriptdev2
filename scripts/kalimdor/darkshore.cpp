@@ -298,7 +298,7 @@ bool QuestAccept_npc_prospector_remtravel(Player* pPlayer, Creature* pCreature, 
         pCreature->setFaction(FACTION_ESCORT_A_NEUTRAL_PASSIVE);
 
         if (npc_prospector_remtravelAI* pEscortAI = dynamic_cast<npc_prospector_remtravelAI*>(pCreature->AI()))
-            pEscortAI->Start(false, false, pPlayer->GetGUID(), pQuest, true);
+            pEscortAI->Start(false, pPlayer->GetGUID(), pQuest, true);
     }
 
     return true;

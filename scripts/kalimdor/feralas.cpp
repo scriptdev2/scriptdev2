@@ -155,7 +155,7 @@ bool QuestAccept_npc_oox22fe(Player* pPlayer, Creature* pCreature, const Quest* 
             pCreature->setFaction(FACTION_ESCORT_H_PASSIVE);
 
         if (npc_oox22feAI* pEscortAI = dynamic_cast<npc_oox22feAI*>(pCreature->AI()))
-            pEscortAI->Start(true, false, pPlayer->GetGUID(), pQuest);
+            pEscortAI->Start(false, pPlayer->GetGUID(), pQuest);
     }
     return true;
 }

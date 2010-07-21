@@ -197,7 +197,7 @@ struct MANGOS_DLL_DECL npc_custodian_of_timeAI : public npc_escortAI
                 float Radius = 10.0;
 
                 if (m_creature->IsWithinDistInMap(who, Radius))
-                    Start(false, false, who->GetGUID());
+                    Start(false, who->GetGUID());
             }
         }
     }
@@ -332,7 +332,7 @@ bool QuestAccept_npc_oox17tn(Player* pPlayer, Creature* pCreature, const Quest* 
             pCreature->setFaction(FACTION_ESCORT_H_PASSIVE);
 
         if (npc_oox17tnAI* pEscortAI = dynamic_cast<npc_oox17tnAI*>(pCreature->AI()))
-            pEscortAI->Start(true, false, pPlayer->GetGUID(), pQuest);
+            pEscortAI->Start(false, pPlayer->GetGUID(), pQuest);
     }
     return true;
 }

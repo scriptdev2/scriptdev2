@@ -197,19 +197,19 @@ bool GossipSelect_example_escort(Player* pPlayer, Creature* pCreature, uint32 ui
             pPlayer->CLOSE_GOSSIP_MENU();
 
             if (pEscortAI)
-                pEscortAI->Start(true, true, pPlayer->GetGUID());
+                pEscortAI->Start(true, pPlayer->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+2:
             pPlayer->CLOSE_GOSSIP_MENU();
 
             if (pEscortAI)
-                pEscortAI->Start(false, false, pPlayer->GetGUID());
+                pEscortAI->Start(false, pPlayer->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+3:
             pPlayer->CLOSE_GOSSIP_MENU();
 
             if (pEscortAI)
-                pEscortAI->Start(false, true, pPlayer->GetGUID());
+                pEscortAI->Start(true, pPlayer->GetGUID());
             break;
         default:
             return false;                                   // nothing defined      -> mangos core handling

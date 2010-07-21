@@ -290,7 +290,7 @@ bool QuestAccept_npc_kayra_longmane(Player* pPlayer, Creature* pCreature, const 
         DoScriptText(SAY_START, pCreature, pPlayer);
 
         if (npc_kayra_longmaneAI* pEscortAI = dynamic_cast<npc_kayra_longmaneAI*>(pCreature->AI()))
-            pEscortAI->Start(false, false, pPlayer->GetGUID(), pQuest);
+            pEscortAI->Start(false, pPlayer->GetGUID(), pQuest);
     }
     return true;
 }

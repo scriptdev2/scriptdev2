@@ -167,7 +167,7 @@ bool QuestAccept_npc_miran(Player* pPlayer, Creature* pCreature, const Quest* pQ
     if (pQuest->GetQuestId() == QUEST_PROTECTING_THE_SHIPMENT)
     {
          if (npc_miranAI* pEscortAI = dynamic_cast<npc_miranAI*>(pCreature->AI()))
-            pEscortAI->Start(true, false, pPlayer->GetGUID(), pQuest);
+            pEscortAI->Start(false, pPlayer->GetGUID(), pQuest);
     }
     return true;
 }

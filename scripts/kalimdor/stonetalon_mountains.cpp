@@ -133,7 +133,7 @@ bool QuestAccept_npc_kaya(Player* pPlayer, Creature* pCreature, Quest const* pQu
         DoScriptText(SAY_START,pCreature);
 
         if (npc_kayaAI* pEscortAI = dynamic_cast<npc_kayaAI*>(pCreature->AI()))
-            pEscortAI->Start(true, false, pPlayer->GetGUID(), pQuest);
+            pEscortAI->Start(false, pPlayer->GetGUID(), pQuest);
     }
     return true;
 }

@@ -745,7 +745,7 @@ bool QuestAccept_npc_bessy(Player* pPlayer, Creature* pCreature, const Quest* pQ
         pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
 
         if (npc_bessyAI* pBessyAI = dynamic_cast<npc_bessyAI*>(pCreature->AI()))
-            pBessyAI->Start(true, true, pPlayer->GetGUID(), pQuest);
+            pBessyAI->Start(true, pPlayer->GetGUID(), pQuest);
     }
     return true;
 }

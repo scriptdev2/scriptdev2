@@ -25,7 +25,6 @@ npc_escortAI::npc_escortAI(Creature* pCreature) : ScriptedAI(pCreature),
     m_uiPlayerCheckTimer(1000),
     m_uiWPWaitTimer(2500),
     m_uiEscortState(STATE_ESCORT_NONE),
-    m_bIsActiveAttacker(true),
     m_bIsRunning(false),
     m_pQuestForEscort(NULL),
     m_bCanInstantRespawn(false),
@@ -422,7 +421,7 @@ void npc_escortAI::SetRun(bool bRun)
 }
 
 //TODO: get rid of this many variables passed in function.
-void npc_escortAI::Start(bool bIsActiveAttacker, bool bRun, uint64 uiPlayerGUID, const Quest* pQuest, bool bInstantRespawn, bool bCanLoopPath)
+void npc_escortAI::Start(bool bRun, uint64 uiPlayerGUID, const Quest* pQuest, bool bInstantRespawn, bool bCanLoopPath)
 {
     if (m_creature->getVictim())
     {
@@ -448,7 +447,6 @@ void npc_escortAI::Start(bool bIsActiveAttacker, bool bRun, uint64 uiPlayerGUID,
     }
 
     //set variables
-    m_bIsActiveAttacker = bIsActiveAttacker;
     m_bIsRunning = bRun;
 
     m_uiPlayerGUID = uiPlayerGUID;
@@ -470,7 +468,7 @@ void npc_escortAI::Start(bool bIsActiveAttacker, bool bRun, uint64 uiPlayerGUID,
     //disable npcflags
     m_creature->SetUInt32Value(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_NONE);
 
-    debug_log("SD2: EscortAI started with " SIZEFMTD " waypoints. ActiveAttacker = %d, Run = %d, PlayerGUID = " UI64FMTD, WaypointList.size(), m_bIsActiveAttacker, m_bIsRunning, m_uiPlayerGUID);
+    debug_log("SD2: EscortAI started with " SIZEFMTD " waypoints. Run = %d, PlayerGUID = " UI64FMTD, WaypointList.size(), m_bIsRunning, m_uiPlayerGUID);
 
     CurrentWP = WaypointList.begin();
 

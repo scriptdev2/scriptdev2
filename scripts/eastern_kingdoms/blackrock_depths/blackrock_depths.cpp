@@ -268,7 +268,7 @@ struct MANGOS_DLL_DECL npc_grimstoneAI : public npc_escortAI
                     case 0:
                         DoScriptText(-1000000, m_creature);
                         DoGate(DATA_ARENA4, GO_STATE_READY);
-                        Start(false, false);
+                        Start(false);
                         m_bCanWalk = true;
                         m_uiEventTimer = 0;
                         break;
@@ -689,7 +689,7 @@ bool ChooseReward_npc_rocknot(Player* pPlayer, Creature* pCreature, const Quest*
             pCreature->CastSpell(pCreature, SPELL_DRUNKEN_RAGE, false);
 
             if (npc_rocknotAI* pEscortAI = dynamic_cast<npc_rocknotAI*>(pCreature->AI()))
-                pEscortAI->Start(false, false, 0, NULL, true);
+                pEscortAI->Start(false, 0, NULL, true);
         }
     }
 

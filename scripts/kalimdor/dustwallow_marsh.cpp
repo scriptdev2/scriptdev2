@@ -364,7 +364,7 @@ bool QuestAccept_npc_morokk(Player* pPlayer, Creature* pCreature, const Quest* p
     if (pQuest->GetQuestId() == QUEST_CHALLENGE_MOROKK)
     {
         if (npc_morokkAI* pEscortAI = dynamic_cast<npc_morokkAI*>(pCreature->AI()))
-            pEscortAI->Start(true, true, pPlayer->GetGUID(), pQuest);
+            pEscortAI->Start(true, pPlayer->GetGUID(), pQuest);
 
         return true;
     }
@@ -694,7 +694,7 @@ bool QuestAccept_npc_ogron(Player* pPlayer, Creature* pCreature, const Quest* pQ
     {
         if (npc_ogronAI* pEscortAI = dynamic_cast<npc_ogronAI*>(pCreature->AI()))
         {
-            pEscortAI->Start(false, false, pPlayer->GetGUID(), pQuest, true);
+            pEscortAI->Start(false, pPlayer->GetGUID(), pQuest, true);
             pCreature->setFaction(FACTION_ESCORT_N_FRIEND_PASSIVE);
             DoScriptText(SAY_OGR_START, pCreature, pPlayer);
         }

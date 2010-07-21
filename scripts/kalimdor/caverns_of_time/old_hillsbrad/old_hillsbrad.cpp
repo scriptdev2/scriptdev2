@@ -354,7 +354,10 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
                 if (Creature* pTaretha = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_TARETHA)))
                 {
                     if (Player* pPlayer = GetPlayerForEscort())
-                        ((npc_escortAI*)(pTaretha->AI()))->Start(false, true, pPlayer->GetGUID());
+                    {
+                        if (npc_tarethaAI* pTarethaAI = dynamic_cast<npc_tarethaAI*>(pTaretha->AI()))
+                            pTarethaAI->Start(true, pPlayer->GetGUID());
+                    }
                 }
 
                 //kill credit creature for quest
@@ -543,8 +546,8 @@ bool GossipSelect_npc_thrall_old_hillsbrad(Player* pPlayer, Creature* pCreature,
 
             DoScriptText(SAY_TH_START_EVENT_PART1, pCreature);
 
-            if (npc_thrall_old_hillsbradAI* pEscortAI = dynamic_cast<npc_thrall_old_hillsbradAI*>(pCreature->AI()))
-                pEscortAI->Start(true, true, pPlayer->GetGUID());
+            if (npc_thrall_old_hillsbradAI* pThrallAI = dynamic_cast<npc_thrall_old_hillsbradAI*>(pCreature->AI()))
+                pThrallAI->Start(true, pPlayer->GetGUID());
 
             break;
 
@@ -560,13 +563,15 @@ bool GossipSelect_npc_thrall_old_hillsbrad(Player* pPlayer, Creature* pCreature,
 
             DoScriptText(SAY_TH_START_EVENT_PART2, pCreature);
 
-            ((npc_thrall_old_hillsbradAI*)pCreature->AI())->StartWP();
+            if (npc_thrall_old_hillsbradAI* pThrallAI = dynamic_cast<npc_thrall_old_hillsbradAI*>(pCreature->AI()))
+                pThrallAI->StartWP();
             break;
 
         case GOSSIP_ACTION_INFO_DEF+3:
             pPlayer->CLOSE_GOSSIP_MENU();
             pInstance->SetData(TYPE_THRALL_PART3,IN_PROGRESS);
-            ((npc_thrall_old_hillsbradAI*)pCreature->AI())->StartWP();
+            if (npc_thrall_old_hillsbradAI* pThrallAI = dynamic_cast<npc_thrall_old_hillsbradAI*>(pCreature->AI()))
+                pThrallAI->StartWP();
             break;
     }
     return true;

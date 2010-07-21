@@ -126,7 +126,7 @@ bool QuestAccept_npc_corporal_keeshan(Player* pPlayer, Creature* pCreature, cons
         if (npc_corporal_keeshan_escortAI* pEscortAI = dynamic_cast<npc_corporal_keeshan_escortAI*>(pCreature->AI()))
         {
             DoScriptText(SAY_CORPORAL_KEESHAN_1, pCreature);
-            pEscortAI->Start(true, false, pPlayer->GetGUID(), pQuest);
+            pEscortAI->Start(false, pPlayer->GetGUID(), pQuest);
         }
     }
     return true;  

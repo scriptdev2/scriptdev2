@@ -212,7 +212,7 @@ bool QuestAccept_npc_ranger_lilatha(Player* pPlayer, Creature* pCreature, const 
         pCreature->setFaction(FACTION_SMOON_E);
 
         if (npc_ranger_lilathaAI* pEscortAI = dynamic_cast<npc_ranger_lilathaAI*>(pCreature->AI()))
-            pEscortAI->Start(true, false, pPlayer->GetGUID(), pQuest);
+            pEscortAI->Start(false, pPlayer->GetGUID(), pQuest);
     }
     return true;
 }

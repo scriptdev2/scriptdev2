@@ -33,9 +33,12 @@ EndContentData */
 ## npc_forest_frog
 ######*/
 
-#define SPELL_REMOVE_AMANI_CURSE    43732
-#define SPELL_PUSH_MOJO             43923
-#define ENTRY_FOREST_FROG           24396
+enum
+{
+    SPELL_REMOVE_AMANI_CURSE = 43732,
+    SPELL_PUSH_MOJO          = 43923,
+    ENTRY_FOREST_FROG        = 24396
+};
 
 struct MANGOS_DLL_DECL npc_forest_frogAI : public ScriptedAI
 {
@@ -77,10 +80,14 @@ struct MANGOS_DLL_DECL npc_forest_frogAI : public ScriptedAI
                 if (!urand(0, 9))
                     cEntry = 24409;                         //Kyren
 
-            if (cEntry) m_creature->UpdateEntry(cEntry);
+            if (cEntry)
+                m_creature->UpdateEntry(cEntry);
 
-            if (cEntry == 24408) m_pInstance->SetData(TYPE_RAND_VENDOR_1,DONE);
-            if (cEntry == 24409) m_pInstance->SetData(TYPE_RAND_VENDOR_2,DONE);
+            if (cEntry == 24408)
+                m_pInstance->SetData(TYPE_RAND_VENDOR_1,DONE);
+            
+            if (cEntry == 24409)
+                m_pInstance->SetData(TYPE_RAND_VENDOR_2,DONE);
         }
     }
 
@@ -126,12 +133,12 @@ struct MANGOS_DLL_DECL npc_harrison_jones_zaAI : public npc_escortAI
 
     ScriptedInstance* m_pInstance;
 
-    void WaypointReached(uint32 i)
+    void WaypointReached(uint32 uiPointId)
     {
         if (!m_pInstance)
             return;
 
-        switch(i)
+        switch(uiPointId)
         {
             case 1:
                 DoScriptText(SAY_AT_GONG, m_creature);
@@ -158,7 +165,7 @@ struct MANGOS_DLL_DECL npc_harrison_jones_zaAI : public npc_escortAI
     void StartEvent()
     {
         DoScriptText(SAY_START, m_creature);
-        Start(false,false);
+        Start();
     }
 
     void SetHoldState(bool bOnHold)
@@ -189,7 +196,9 @@ bool GossipSelect_npc_harrison_jones_za(Player* pPlayer, Creature* pCreature, ui
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
     {
-        ((npc_harrison_jones_zaAI*)pCreature->AI())->StartEvent();
+        if (npc_harrison_jones_zaAI* pHarrisonAI = dynamic_cast<npc_harrison_jones_zaAI*>(pCreature->AI()))
+            pHarrisonAI->StartEvent();
+        
         pPlayer->CLOSE_GOSSIP_MENU();
     }
     return true;
@@ -214,8 +223,11 @@ bool GOHello_go_strange_gong(Player* pPlayer, GameObject* pGo)
 
     if (pInstance->GetData(TYPE_EVENT_RUN) == SPECIAL)
     {
-        if (Creature* pCreature = (Creature*)Unit::GetUnit(*pPlayer,pInstance->GetData64(DATA_HARRISON)))
-            ((npc_harrison_jones_zaAI*)pCreature->AI())->SetHoldState(false);
+        if (Creature* pCreature = (Creature*)Unit::GetUnit(*pPlayer, pInstance->GetData64(DATA_HARRISON)))
+        {
+            if (npc_harrison_jones_zaAI* pHarrisonAI = dynamic_cast<npc_harrison_jones_zaAI*>(pCreature->AI()))
+                pHarrisonAI->SetHoldState(false);
+        }
         else
             error_log("SD2: Instance Zulaman: go_strange_gong failed");
 

@@ -158,7 +158,7 @@ bool QuestAccept_npc_gilthares(Player* pPlayer, Creature* pCreature, const Quest
         DoScriptText(SAY_GIL_START, pCreature, pPlayer);
 
         if (npc_giltharesAI* pEscortAI = dynamic_cast<npc_giltharesAI*>(pCreature->AI()))
-            pEscortAI->Start(false, false, pPlayer->GetGUID(), pQuest);
+            pEscortAI->Start(false, pPlayer->GetGUID(), pQuest);
     }
     return true;
 }
@@ -636,7 +636,7 @@ bool QuestAccept_npc_wizzlecranks_shredder(Player* pPlayer, Creature* pCreature,
         pCreature->setFaction(FACTION_RATCHET);
 
         if (npc_wizzlecranks_shredderAI* pEscortAI = dynamic_cast<npc_wizzlecranks_shredderAI*>(pCreature->AI()))
-            pEscortAI->Start(false, true, pPlayer->GetGUID(), pQuest);
+            pEscortAI->Start(true, pPlayer->GetGUID(), pQuest);
     }
     return true;
 }
