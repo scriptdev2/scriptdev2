@@ -224,7 +224,7 @@ struct MANGOS_DLL_DECL mob_arugal_voidwalkerAI : public ScriptedAI
         m_uiDarkOffering = urand(4400,12500);
         m_bWPDone = true;
 
-        Creature* pLeader = m_pInstance->instance->GetCreature(m_uiLeaderGUID);
+        Creature* pLeader = m_creature->GetMap()->GetCreature(m_uiLeaderGUID);
         if (pLeader && pLeader->isAlive())
         {
             m_creature->GetMotionMaster()->MoveFollow(pLeader, 1.0f, M_PI/2*m_uiPosition);
@@ -331,7 +331,8 @@ struct MANGOS_DLL_DECL mob_arugal_voidwalkerAI : public ScriptedAI
 
     void JustDied(Unit* /*pKiller*/)
     {
-        m_pInstance->SetData(TYPE_VOIDWALKER,DONE);
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_VOIDWALKER,DONE);
     }
 
     void SetPosition(uint8 uiPosition, Creature* pLeader)
@@ -500,8 +501,9 @@ struct MANGOS_DLL_DECL boss_arugalAI : public ScriptedAI
                         m_uiSpeechTimer = 5000;
                         break;
                     case 3:
-                        if (GameObject* pLightning = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_LIGHTNING)))
-                         pLightning->Use(m_creature);
+                        if (m_pInstance)
+                            if (GameObject* pLightning = m_creature->GetMap()->GetGameObject(m_pInstance->GetData64(DATA_LIGHTNING)))
+                                pLightning->Use(m_creature);
 
                         m_uiSpeechTimer = 5000;
                         break;
@@ -742,7 +744,7 @@ struct MANGOS_DLL_DECL npc_arugalAI : public ScriptedAI
 
         m_creature->SetVisibility(VISIBILITY_OFF);
         
-        if (m_pInstance->GetData(TYPE_INTRO) == NOT_STARTED)
+        if (m_pInstance && m_pInstance->GetData(TYPE_INTRO) == NOT_STARTED)
             m_uiSpeechStep = 1;
     }
 
@@ -805,8 +807,10 @@ struct MANGOS_DLL_DECL npc_arugalAI : public ScriptedAI
                     m_uiSpeechTimer = 500;
                     break;
                 case 12:
+                    if (m_pInstance)
+                        m_pInstance->SetData(TYPE_INTRO,DONE);
+
                     m_creature->SetVisibility(VISIBILITY_OFF);
-                    m_pInstance->SetData(TYPE_INTRO,DONE);
                     m_uiSpeechStep = 0;
                     return;
                 default:
@@ -850,7 +854,7 @@ struct MANGOS_DLL_DECL npc_deathstalker_vincentAI : public ScriptedAI
 
     void Reset()
     {
-        if (m_pInstance->GetData(TYPE_INTRO) == DONE && !m_creature->GetByteValue(UNIT_FIELD_BYTES_1, 0))
+        if (m_pInstance && m_pInstance->GetData(TYPE_INTRO) == DONE && !m_creature->GetByteValue(UNIT_FIELD_BYTES_1, 0))
             m_creature->SetStandState(UNIT_STAND_STATE_DEAD);
     }
 
