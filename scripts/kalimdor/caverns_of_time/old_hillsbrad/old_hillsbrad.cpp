@@ -43,6 +43,17 @@ enum
     TAXI_PATH_ID            = 534
 };
 
+struct MANGOS_DLL_DECL npc_tarethaAI : public npc_escortAI
+{
+    npc_tarethaAI(Creature* pCreature);
+
+    ScriptedInstance* m_pInstance;
+
+    void WaypointReached(uint32 i);
+
+    void Reset() {}
+};
+
 /*######
 ## npc_brazen
 ######*/
@@ -586,31 +597,24 @@ bool GossipSelect_npc_thrall_old_hillsbrad(Player* pPlayer, Creature* pCreature,
 #define GOSSIP_ID_EPOCH2        9613                        //Yes, friends. This man was no wizard of
 #define GOSSIP_ITEM_EPOCH2      "We'll get you out. Taretha. Don't worry. I doubt the wizard would wander too far away."
 
-struct MANGOS_DLL_DECL npc_tarethaAI : public npc_escortAI
+npc_tarethaAI::npc_tarethaAI(Creature* pCreature) : npc_escortAI(pCreature)
 {
-    npc_tarethaAI(Creature* pCreature) : npc_escortAI(pCreature)
+    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+    Reset();
+}
+
+void npc_tarethaAI::WaypointReached(uint32 i)
+{
+    switch(i)
     {
-        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        Reset();
+        case 6:
+            DoScriptText(SAY_TA_FREE, m_creature);
+            break;
+        case 7:
+            m_creature->HandleEmoteCommand(EMOTE_ONESHOT_CHEER);
+            break;
     }
-
-    ScriptedInstance* m_pInstance;
-
-    void WaypointReached(uint32 i)
-    {
-        switch(i)
-        {
-            case 6:
-                DoScriptText(SAY_TA_FREE, m_creature);
-                break;
-            case 7:
-                m_creature->HandleEmoteCommand(EMOTE_ONESHOT_CHEER);
-                break;
-        }
-    }
-
-    void Reset() {}
-};
+}
 
 CreatureAI* GetAI_npc_taretha(Creature* pCreature)
 {
