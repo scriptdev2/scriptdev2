@@ -198,7 +198,7 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
         //m_uiArcingSmash_Timer
         if (m_uiArcingSmash_Timer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_ARCING_SMASH);
+            DoCastSpellIfCan(m_creature, SPELL_ARCING_SMASH);
             m_uiArcingSmash_Timer = urand(8000, 12000);
         }
         else
@@ -207,7 +207,7 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
         //m_uiWhirlwind_Timer
         if (m_uiWhirlwind_Timer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_WHIRLWIND);
+            DoCastSpellIfCan(m_creature, SPELL_WHIRLWIND);
             m_uiWhirlwind_Timer = urand(30000, 40000);
         }
         else
@@ -346,7 +346,7 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public Council_Base_AI
         //m_uiSummon_Timer
         if (m_uiSummon_Timer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_SUMMON_WILD_FELHUNTER);
+            DoCastSpellIfCan(m_creature, SPELL_SUMMON_WILD_FELHUNTER);
             m_uiSummon_Timer = urand(25000, 35000);
         }
         else
@@ -445,7 +445,7 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public Council_Base_AI
         //ArcaneExplosion_Timer
         if (m_uiArcaneExplosion_Timer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_ARCANE_EXPLOSION);
+            DoCastSpellIfCan(m_creature, SPELL_ARCANE_EXPLOSION);
             m_uiArcaneExplosion_Timer = 30000;
         }
         else
@@ -571,8 +571,7 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public Council_Base_AI
         //SpellShield_Timer
         if (m_uiSpellShield_Timer < uiDiff)
         {
-            m_creature->InterruptNonMeleeSpells(false);
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_SPELLSHIELD);
+            DoCastSpellIfCan(m_creature, SPELL_SPELLSHIELD, CAST_INTERRUPT_PREVIOUS);
             m_uiSpellShield_Timer = 30000;
         }
         else
@@ -581,28 +580,18 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public Council_Base_AI
         //BlastWave_Timer
         if (m_uiBlastWave_Timer < uiDiff)
         {
-            bool bInRange = false;
-            Unit* pTarget = NULL;
-
             ThreatList const& tList = m_creature->getThreatManager().getThreatList();
-            for (ThreatList::const_iterator i = tList.begin();i != tList.end(); ++i)
+            for (ThreatList::const_iterator i = tList.begin(); i != tList.end(); ++i)
             {
                 Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
                 if (pUnit && pUnit->IsWithinDistInMap(m_creature, 15.0f))
                 {
-                    bInRange = true;
-                    pTarget = pUnit;
+                    DoCastSpellIfCan(m_creature, SPELL_BLAST_WAVE, CAST_INTERRUPT_PREVIOUS);
                     break;
                 }
             }
 
             m_uiBlastWave_Timer = 6000;
-
-            if (bInRange)
-            {
-                m_creature->InterruptNonMeleeSpells(false);
-                DoCastSpellIfCan(pTarget, SPELL_BLAST_WAVE);
-            }
         }
         else
             m_uiBlastWave_Timer -= uiDiff;

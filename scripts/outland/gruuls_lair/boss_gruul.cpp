@@ -227,7 +227,7 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
             // Reverberation
             if (m_uiReverberation_Timer < uiDiff)
             {
-                DoCastSpellIfCan(m_creature->getVictim(), SPELL_REVERBERATION, CAST_TRIGGERED);
+                DoCastSpellIfCan(m_creature, SPELL_REVERBERATION, CAST_TRIGGERED);
                 m_uiReverberation_Timer = urand(15000, 25000);
             }
             else
