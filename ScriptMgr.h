@@ -20,6 +20,7 @@ class Map;
 class Unit;
 class WorldObject;
 class Aura;
+class Object;
 
 #define MAX_SCRIPTS         5000                            //72 bytes each (approx 351kb)
 #define VISIBLE_RANGE       (166.0f)                        //MAX visible range (size of grid)
@@ -31,7 +32,7 @@ struct Script
         pGossipHello(NULL), pGOGossipHello(NULL), pGossipSelect(NULL), pGOGossipSelect(NULL),
         pGossipSelectWithCode(NULL), pGOGossipSelectWithCode(NULL),
         pQuestSelect(NULL), pQuestComplete(NULL), pNPCDialogStatus(NULL), pGODialogStatus(NULL),
-        pChooseReward(NULL), pItemHello(NULL), pGOHello(NULL), pAreaTrigger(NULL), pItemQuestAccept(NULL),
+        pChooseReward(NULL), pItemHello(NULL), pGOHello(NULL), pAreaTrigger(NULL), pProcessEventId(NULL), pItemQuestAccept(NULL),
         pQuestAccept(NULL), pGOQuestAccept(NULL), pGOChooseReward(NULL), pItemUse(NULL),
         pEffectDummyCreature(NULL), pEffectDummyGameObj(NULL), pEffectDummyItem(NULL), pEffectAuraDummy(NULL),
         GetAI(NULL), GetInstanceData(NULL)
@@ -55,6 +56,7 @@ struct Script
     bool (*pItemHello               )(Player*, Item*, const Quest*);
     bool (*pGOHello                 )(Player*, GameObject*);
     bool (*pAreaTrigger             )(Player*, AreaTriggerEntry*);
+    bool (*pProcessEventId          )(uint32, Object*, Object*, bool);
     bool (*pItemQuestAccept         )(Player*, Item*, const Quest*);
     bool (*pGOQuestAccept           )(Player*, GameObject*, const Quest*);
     bool (*pGOChooseReward          )(Player*, GameObject*, const Quest*, uint32);

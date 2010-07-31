@@ -472,6 +472,17 @@ bool AreaTrigger(Player* pPlayer, AreaTriggerEntry * atEntry)
 }
 
 MANGOS_DLL_EXPORT
+bool ProcessEventId(uint32 uiEventId, Object* pSource, Object* pTarget, bool bData)
+{
+    Script *tmpscript = m_scripts[GetEventIdScriptId(uiEventId)];
+    if (!tmpscript || !tmpscript->pProcessEventId)
+        return false;
+
+    // bData may be true, when event is from taxi node events (arrival=false, departure=true)
+    return tmpscript->pProcessEventId(uiEventId, pSource, pTarget, bData);
+}
+
+MANGOS_DLL_EXPORT
 CreatureAI* GetAI(Creature* pCreature)
 {
     Script *tmpscript = m_scripts[pCreature->GetScriptId()];

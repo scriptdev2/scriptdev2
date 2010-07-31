@@ -121,4 +121,5 @@ pkgdata_DATA = \
 	r1736_scriptdev2.sql \
 	r1737_scriptdev2.sql \
 	r1741_mangos.sql \
-	r1750_scriptdev2.sql
+	r1750_scriptdev2.sql \
+	r1751_scriptdev2.sql
