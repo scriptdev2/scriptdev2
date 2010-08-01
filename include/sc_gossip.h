@@ -129,17 +129,19 @@ extern uint32 GetSkillLevel(Player* pPlayer,uint32 skill);
 // Defined fuctions to use with player.
 
 // This fuction add's a menu item,
-// a - Icon Id
-// b - Text
-// c - Sender(this is to identify the current Menu with this item)
-// d - Action (identifys this Menu Item)
-// e - Text to be displayed in pop up box
-// f - Money value in pop up box
-#define ADD_GOSSIP_ITEM(a, b, c, d)   PlayerTalkClass->GetGossipMenu().AddMenuItem(a, b, c, d, "", 0)
-#define ADD_GOSSIP_ITEM_EXTENDED(a, b, c, d, e, f, g)   PlayerTalkClass->GetGossipMenu().AddMenuItem(a, b, c, d, e, f, g)
+// Icon Id
+// Text
+// Sender(this is to identify the current Menu with this item)
+// Option id (identifies this Menu Item)
+// Text to be displayed in pop up box
+// Money value in pop up box
+// Coded
+#define ADD_GOSSIP_ITEM(uiIcon, chrText, uiSender, uiOptionId)   PlayerTalkClass->GetGossipMenu().AddMenuItem(uiIcon, chrText, uiSender, uiOptionId, "", 0)
+#define ADD_GOSSIP_ITEM_ID(uiIcon, iTextId, uiSender, uiOptionId)   PlayerTalkClass->GetGossipMenu().AddMenuItem(uiIcon, iTextId, uiSender, uiOptionId, 0, 0)
+#define ADD_GOSSIP_ITEM_EXTENDED(uiIcon, chrText, uiSender, uiOptionId, chrBoxMessage, uiBoxMoney, bCode)   PlayerTalkClass->GetGossipMenu().AddMenuItem(uiIcon, chrText, uiSender, uiOptionId, chrBoxMessage, uiBoxMoney, bCode)
 
-// This fuction Sends the current menu to show to client, a - NPCTEXTID(uint32) , b - npc guid(uint64)
-#define SEND_GOSSIP_MENU(a, b)      PlayerTalkClass->SendGossipMenu(a, b)
+// This fuction Sends the current menu to show to client, uiTextId - NPCTEXTID(uint32) , uiGuid - npc guid(uint64)
+#define SEND_GOSSIP_MENU(uiTextId, uiGuid)      PlayerTalkClass->SendGossipMenu(uiTextId, uiGuid)
 
 // This fuction shows POI(point of interest) to client.
 // a - position X

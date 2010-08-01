@@ -10,6 +10,15 @@ extern std::string  strSD2Version;                          //version info from 
 
 #define TEXT_SOURCE_RANGE -1000000                          //the amount of entries each text source has available
 
+#define TEXT_SOURCE_TEXT_START      TEXT_SOURCE_RANGE
+#define TEXT_SOURCE_TEXT_END        TEXT_SOURCE_RANGE*2 + 1
+
+#define TEXT_SOURCE_CUSTOM_START    TEXT_SOURCE_RANGE*2
+#define TEXT_SOURCE_CUSTOM_END      TEXT_SOURCE_RANGE*3 + 1
+
+#define TEXT_SOURCE_GOSSIP_START    TEXT_SOURCE_RANGE*3
+#define TEXT_SOURCE_GOSSIP_END      TEXT_SOURCE_RANGE*4 + 1
+
 //TODO: find better namings and definitions.
 //N=Neutral, A=Alliance, H=Horde.
 //NEUTRAL or FRIEND = Hostility to player surroundings (not a good definition)
@@ -70,6 +79,7 @@ class SystemMgr
         void LoadVersion();
         void LoadScriptTexts();
         void LoadScriptTextsCustom();
+        void LoadScriptGossipTexts();
         void LoadScriptWaypoints();
 
         //Retrive from storage

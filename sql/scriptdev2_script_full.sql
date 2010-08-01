@@ -3,7 +3,7 @@
 --
 
 DELETE FROM sd2_db_version;
-INSERT INTO sd2_db_version (version) VALUES ('ScriptDev2 (for MaNGOS 10299+) ');
+INSERT INTO sd2_db_version (version) VALUES ('ScriptDev2 (for MaNGOS 10305+) ');
 
 --
 -- Below contains data for table `script_texts` mainly used in C++ parts.
@@ -2731,11 +2731,26 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1999925,'Hi!',0,0,0,0,'example_areatrigger SAY_HI');
 
 --
+-- GOSSIP TEXTS
+--
+
+--
+-- Below contains data for table `gossip_texts`
+-- valid entries for table are between -3000000 and -3999999
+--
+
+TRUNCATE gossip_texts;
+
+INSERT INTO gossip_texts (entry,content_default,comment) VALUES
+(-3608000,'Activate the crystals when we get in trouble, right?','sinclari GOSSIP_ITEM_INTRO'),
+(-3608001,'Get your people to safety, we\'ll keep the Blue Dragonflight\'s forces at bay.','sinclari GOSSIP_ITEM_START');
+
+--
 -- Below just for beautiful view in table, run at own desire
 --
 
--- ALTER TABLE `script_texts` ORDER BY `entry` desc;
-
+-- ALTER TABLE script_texts ORDER BY entry desc;
+-- ALTER TABLE gossip_texts ORDER BY entry desc;
 
 --
 -- Below contains all waypoints used by escortAI scripts

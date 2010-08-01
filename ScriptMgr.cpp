@@ -38,6 +38,7 @@ void LoadDatabase()
         pSystemMgr.LoadVersion();
         pSystemMgr.LoadScriptTexts();
         pSystemMgr.LoadScriptTextsCustom();
+        pSystemMgr.LoadScriptGossipTexts();
         pSystemMgr.LoadScriptWaypoints();
     }
     else

@@ -72,12 +72,12 @@ enum
     SAY_BEGIN                   = -1608000,
     SAY_LOCK_DOOR               = -1608001,
 
+    GOSSIP_ITEM_INTRO           = -3608000,
+    GOSSIP_ITEM_START           = -3608001,
+
     GOSSIP_TEXT_ID_INTRO        = 13853,
     GOSSIP_TEXT_ID_START        = 13854,
 };
-
-#define GOSSIP_ITEM_INTRO       "Activate the crystals when we get in trouble, right?"
-#define GOSSIP_ITEM_START       "Get your people to safety, we'll keep the Blue Dragonflight's forces at bay."
 
 struct MANGOS_DLL_DECL npc_sinclariAI : public npc_escortAI
 {
@@ -129,7 +129,7 @@ CreatureAI* GetAI_npc_sinclari(Creature* pCreature)
 
 bool GossipHello_npc_sinclari(Player* pPlayer, Creature* pCreature)
 {
-    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_INTRO, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+    pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_INTRO, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
     pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_ID_INTRO, pCreature->GetGUID());
     return true;
 }
@@ -142,7 +142,7 @@ bool GossipSelect_npc_sinclari(Player* pPlayer, Creature* pCreature, uint32 uiSe
         {
             if (pInstance->GetData(TYPE_MAIN) == NOT_STARTED)
             {
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_START, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+                pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_START, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
                 pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_ID_START, pCreature->GetGUID());
             }
         }
