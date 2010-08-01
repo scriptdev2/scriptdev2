@@ -1193,6 +1193,8 @@ UPDATE creature_template SET ScriptName='npc_rivern_frostwind' WHERE entry=10618
 UPDATE creature_template SET ScriptName='npc_witch_doctor_mauari' WHERE entry=10307;
 
 /* ZANGARMARSH */
+DELETE FROM event_id_scripts WHERE id=11225;
+INSERT INTO event_id_scripts VALUES (11225,'event_taxi_stormcrow');
 UPDATE creature_template SET ScriptName='npcs_ashyen_and_keleth' WHERE entry IN (17900,17901);
 UPDATE creature_template SET ScriptName='npc_cooshcoosh' WHERE entry=18586;
 UPDATE creature_template SET ScriptName='npc_elder_kuruti' WHERE entry=18197;
