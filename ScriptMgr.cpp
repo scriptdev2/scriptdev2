@@ -462,7 +462,7 @@ bool GOChooseReward(Player* pPlayer, GameObject* pGo, const Quest* pQuest, uint3
 }
 
 MANGOS_DLL_EXPORT
-bool AreaTrigger(Player* pPlayer, AreaTriggerEntry * atEntry)
+bool AreaTrigger(Player* pPlayer, AreaTriggerEntry const* atEntry)
 {
     Script *tmpscript = m_scripts[GetAreaTriggerScriptId(atEntry->id)];
 

@@ -28,7 +28,7 @@ enum
     SAY_HI  = -1999925
 };
 
-bool AT_example_areatrigger(Player* pPlayer, AreaTriggerEntry *pAt)
+bool AT_example_areatrigger(Player* pPlayer, AreaTriggerEntry const* pAt)
 {
     DoScriptText(SAY_HI, pPlayer);
     return true;

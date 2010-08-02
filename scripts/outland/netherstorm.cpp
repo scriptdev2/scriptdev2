@@ -599,7 +599,7 @@ CreatureAI* GetAI_npc_commander_dawnforge(Creature* pCreature)
     return new npc_commander_dawnforgeAI(pCreature);
 }
 
-bool AreaTrigger_at_commander_dawnforge(Player* pPlayer, AreaTriggerEntry *at)
+bool AreaTrigger_at_commander_dawnforge(Player* pPlayer, AreaTriggerEntry const* pAt)
 {
     // if player lost aura or not have at all, we should not try start event.
     if (!pPlayer->HasAura(SPELL_SUNFURY_DISGUISE, EFFECT_INDEX_0))

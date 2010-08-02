@@ -248,7 +248,7 @@ CreatureAI* GetAI_boss_svala(Creature* pCreature)
     return new boss_svalaAI(pCreature);
 }
 
-bool AreaTrigger_at_svala_intro(Player* pPlayer, AreaTriggerEntry* pAt)
+bool AreaTrigger_at_svala_intro(Player* pPlayer, AreaTriggerEntry const* pAt)
 {
     if (ScriptedInstance* pInstance = (ScriptedInstance*)pPlayer->GetInstanceData())
     {

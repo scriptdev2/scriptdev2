@@ -192,7 +192,7 @@ CreatureAI* GetAI_boss_brutallus(Creature* pCreature)
     return new boss_brutallusAI(pCreature);
 }
 
-bool AreaTrigger_at_madrigosa(Player* pPlayer, AreaTriggerEntry* pAt)
+bool AreaTrigger_at_madrigosa(Player* pPlayer, AreaTriggerEntry const* pAt)
 {
     if (ScriptedInstance* pInstance = (ScriptedInstance*)pPlayer->GetInstanceData())
     {

@@ -604,7 +604,7 @@ InstanceData* GetInstanceData_instance_naxxramas(Map* pMap)
     return new instance_naxxramas(pMap);
 }
 
-bool AreaTrigger_at_naxxramas(Player* pPlayer, AreaTriggerEntry* pAt)
+bool AreaTrigger_at_naxxramas(Player* pPlayer, AreaTriggerEntry const* pAt)
 {
     if (pAt->id == AREATRIGGER_KELTHUZAD)
     {

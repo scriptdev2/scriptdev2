@@ -35,7 +35,7 @@ enum
     QUEST_ERANIKUS_TYRANT_OF_DREAMS   = 8733
 };
 
-bool AreaTrigger_at_shade_of_eranikus(Player* pPlayer, AreaTriggerEntry *pAt)
+bool AreaTrigger_at_shade_of_eranikus(Player* pPlayer, AreaTriggerEntry const* pAt)
 {
     if (ScriptedInstance* pInstance = (ScriptedInstance*)pPlayer->GetInstanceData())
     {

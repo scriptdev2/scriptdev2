@@ -43,7 +43,7 @@ uint32 TriggerOrphanSpell[6][3] =
     {3552, 14305, 65054}    // Spooky Lighthouse
 };
 
-bool AreaTrigger_at_childrens_week_spot(Player* pPlayer, AreaTriggerEntry* pAt)
+bool AreaTrigger_at_childrens_week_spot(Player* pPlayer, AreaTriggerEntry const* pAt)
 {
     for (uint8 i = 0; i < 6; ++i)
     {
@@ -74,7 +74,7 @@ enum
     NPC_NORTHWEST_GATE          = 32199
 };
 
-bool AreaTrigger_at_aldurthar_gate(Player* pPlayer, AreaTriggerEntry* pAt)
+bool AreaTrigger_at_aldurthar_gate(Player* pPlayer, AreaTriggerEntry const* pAt)
 {
     switch(pAt->id)
     {
@@ -95,7 +95,7 @@ enum
     GO_COILFANG_WATERFALL   = 184212
 };
 
-bool AreaTrigger_at_coilfang_waterfall(Player* pPlayer, AreaTriggerEntry* pAt)
+bool AreaTrigger_at_coilfang_waterfall(Player* pPlayer, AreaTriggerEntry const* pAt)
 {
     if (GameObject* pGo = GetClosestGameObjectWithEntry(pPlayer, GO_COILFANG_WATERFALL, 35.0f))
     {
@@ -118,7 +118,7 @@ enum
     QUEST_GAINING_ACCESS_H  = 10604
 };
 
-bool AreaTrigger_at_legion_teleporter(Player* pPlayer, AreaTriggerEntry* pAt)
+bool AreaTrigger_at_legion_teleporter(Player* pPlayer, AreaTriggerEntry const* pAt)
 {
     if (pPlayer->isAlive() && !pPlayer->isInCombat())
     {
@@ -148,7 +148,7 @@ enum
     NPC_RAVENHOLDT          = 13936
 };
 
-bool AreaTrigger_at_ravenholdt(Player* pPlayer, AreaTriggerEntry* pAt)
+bool AreaTrigger_at_ravenholdt(Player* pPlayer, AreaTriggerEntry const* pAt)
 {
     if (pPlayer->GetQuestStatus(QUEST_MANOR_RAVENHOLDT) == QUEST_STATUS_INCOMPLETE)
         pPlayer->KilledMonsterCredit(NPC_RAVENHOLDT, 0);
@@ -172,7 +172,7 @@ enum
     AT_TORP_FARM                = 4872
 };
 
-bool AreaTrigger_at_warsong_farms(Player* pPlayer, AreaTriggerEntry* pAt)
+bool AreaTrigger_at_warsong_farms(Player* pPlayer, AreaTriggerEntry const* pAt)
 {
     if (!pPlayer->isDead() && pPlayer->GetQuestStatus(QUEST_THE_WARSONG_FARMS) == QUEST_STATUS_INCOMPLETE)
     {
@@ -196,7 +196,7 @@ enum
     SPELL_CREATE_TRUE_POWER_OF_THE_TEMPEST   = 53067
 };
 
-bool AreaTrigger_at_stormwright_shelf(Player* pPlayer, AreaTriggerEntry* pAt)
+bool AreaTrigger_at_stormwright_shelf(Player* pPlayer, AreaTriggerEntry const* pAt)
 {
     if (!pPlayer->isDead() && pPlayer->GetQuestStatus(QUEST_STRENGTH_OF_THE_TEMPEST) == QUEST_STATUS_INCOMPLETE)
         pPlayer->CastSpell(pPlayer, SPELL_CREATE_TRUE_POWER_OF_THE_TEMPEST, false);

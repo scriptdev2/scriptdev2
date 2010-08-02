@@ -121,7 +121,7 @@ CreatureAI* GetAI_boss_skadi(Creature* pCreature)
     return new boss_skadiAI(pCreature);
 }
 
-bool AreaTrigger_at_skadi(Player* pPlayer, AreaTriggerEntry* pAt)
+bool AreaTrigger_at_skadi(Player* pPlayer, AreaTriggerEntry const* pAt)
 {
     if (ScriptedInstance* pInstance = (ScriptedInstance*)pPlayer->GetInstanceData())
     {

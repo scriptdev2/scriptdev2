@@ -265,7 +265,7 @@ InstanceData* GetInstanceData_instance_blackrock_spire(Map* pMap)
     return new instance_blackrock_spire(pMap);
 }
 
-bool AreaTrigger_at_blackrock_spire(Player* pPlayer, AreaTriggerEntry* pAt)
+bool AreaTrigger_at_blackrock_spire(Player* pPlayer, AreaTriggerEntry const* pAt)
 {
     if (pPlayer->isDead())
         return false;
