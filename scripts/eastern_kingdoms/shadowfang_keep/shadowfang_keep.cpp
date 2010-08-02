@@ -93,7 +93,7 @@ struct MANGOS_DLL_DECL npc_shadowfang_prisonerAI : public npc_escortAI
                 break;
             case 12:
                 if (m_uiNpcEntry != NPC_ASH)
-                    m_creature->HandleEmoteCommand(EMOTE_ONESHOT_USESTANDING);
+                    m_creature->HandleEmote(EMOTE_ONESHOT_USESTANDING);
                 break;
             case 13:
                 if (m_uiNpcEntry == NPC_ASH)
@@ -774,11 +774,11 @@ struct MANGOS_DLL_DECL npc_arugalAI : public ScriptedAI
                     break;
                 case 4:
                     DoScriptText(SAY_INTRO_1, m_creature);
-                    //m_creature->HandleEmoteCommand(EMOTE_ONESHOT_TALK);
+                    //m_creature->HandleEmote(EMOTE_ONESHOT_TALK);
                     m_uiSpeechTimer = 1750;
                     break;
                 case 5:
-                    m_creature->HandleEmoteCommand(EMOTE_ONESHOT_POINT);
+                    m_creature->HandleEmote(EMOTE_ONESHOT_POINT);
                     m_uiSpeechTimer = 1750;
                     break;
                 case 6:
@@ -786,16 +786,16 @@ struct MANGOS_DLL_DECL npc_arugalAI : public ScriptedAI
                     m_uiSpeechTimer = 1750;
                     break;
                 case 7:
-                    m_creature->HandleEmoteCommand(EMOTE_ONESHOT_EXCLAMATION);
+                    m_creature->HandleEmote(EMOTE_ONESHOT_EXCLAMATION);
                     m_uiSpeechTimer = 1750;
                     break;
                 case 8:
-                    //m_creature->HandleEmoteCommand(EMOTE_ONESHOT_TALK);
+                    //m_creature->HandleEmote(EMOTE_ONESHOT_TALK);
                     DoScriptText(SAY_INTRO_3, m_creature);
                     m_uiSpeechTimer = 1750;
                     break;
                 case 9:
-                    m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LAUGH);
+                    m_creature->HandleEmote(EMOTE_ONESHOT_LAUGH);
                     m_uiSpeechTimer = 1750;
                     break;
                 case 10:

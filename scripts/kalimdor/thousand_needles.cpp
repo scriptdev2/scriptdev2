@@ -313,7 +313,7 @@ struct MANGOS_DLL_DECL npc_plucky_johnsonAI : public ScriptedAI
                 m_creature->setFaction(FACTION_FRIENDLY);
                 m_creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
                 m_creature->CastSpell(m_creature, SPELL_PLUCKY_HUMAN, false);
-                m_creature->HandleEmoteCommand(EMOTE_ONESHOT_WAVE);
+                m_creature->HandleEmote(EMOTE_ONESHOT_WAVE);
             }
         }
     }

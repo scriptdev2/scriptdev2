@@ -84,7 +84,7 @@ struct MANGOS_DLL_DECL npc_daphne_stilwellAI : public npc_escortAI
             case 4:
                 SetEquipmentSlots(false, EQUIP_NO_CHANGE, EQUIP_NO_CHANGE, EQUIP_ID_RIFLE);
                 m_creature->SetSheath(SHEATH_STATE_RANGED);
-                m_creature->HandleEmoteCommand(EMOTE_STATE_USESTANDING_NOSHEATHE);
+                m_creature->HandleEmote(EMOTE_STATE_USESTANDING_NOSHEATHE);
                 break;
             case 7:
                 m_creature->SummonCreature(NPC_DEFIAS_RAIDER, -11450.836f, 1569.755f, 54.267f, 4.230f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
@@ -115,7 +115,7 @@ struct MANGOS_DLL_DECL npc_daphne_stilwellAI : public npc_escortAI
             case 13:
                 SetEquipmentSlots(true);
                 m_creature->SetSheath(SHEATH_STATE_UNARMED);
-                m_creature->HandleEmoteCommand(EMOTE_STATE_USESTANDING_NOSHEATHE);
+                m_creature->HandleEmote(EMOTE_STATE_USESTANDING_NOSHEATHE);
                 break;
             case 17:
                 if (Player* pPlayer = GetPlayerForEscort())

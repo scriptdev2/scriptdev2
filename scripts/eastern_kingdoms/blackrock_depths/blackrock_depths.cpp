@@ -602,19 +602,19 @@ struct MANGOS_DLL_DECL npc_rocknotAI : public npc_escortAI
         switch(uiPointId)
         {
             case 1:
-                m_creature->HandleEmoteCommand(EMOTE_ONESHOT_KICK);
+                m_creature->HandleEmote(EMOTE_ONESHOT_KICK);
                 break;
             case 2:
-                m_creature->HandleEmoteCommand(EMOTE_ONESHOT_ATTACKUNARMED);
+                m_creature->HandleEmote(EMOTE_ONESHOT_ATTACKUNARMED);
                 break;
             case 3:
-                m_creature->HandleEmoteCommand(EMOTE_ONESHOT_ATTACKUNARMED);
+                m_creature->HandleEmote(EMOTE_ONESHOT_ATTACKUNARMED);
                 break;
             case 4:
-                m_creature->HandleEmoteCommand(EMOTE_ONESHOT_KICK);
+                m_creature->HandleEmote(EMOTE_ONESHOT_KICK);
                 break;
             case 5:
-                m_creature->HandleEmoteCommand(EMOTE_ONESHOT_KICK);
+                m_creature->HandleEmote(EMOTE_ONESHOT_KICK);
                 m_uiBreakKegTimer = 2000;
                 break;
         }

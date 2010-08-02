@@ -231,7 +231,7 @@ struct MANGOS_DLL_DECL npc_taskmaster_fizzuleAI : public ScriptedAI
         m_creature->GetMotionMaster()->MoveIdle();
 
         m_creature->setFaction(FACTION_FRIENDLY_F);
-        m_creature->HandleEmoteCommand(EMOTE_ONESHOT_SALUTE);
+        m_creature->HandleEmote(EMOTE_ONESHOT_SALUTE);
     }
 
     void SpellHit(Unit *caster, const SpellEntry *spell)
@@ -364,7 +364,7 @@ struct MANGOS_DLL_DECL npc_twiggy_flatheadAI : public ScriptedAI
 
             pCreature->setFaction(35);
             pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-            pCreature->HandleEmoteCommand(EMOTE_ONESHOT_ROAR);
+            pCreature->HandleEmote(EMOTE_ONESHOT_ROAR);
             AffrayChallenger[i] = pCreature->GetGUID();
         }
     }
@@ -373,7 +373,7 @@ struct MANGOS_DLL_DECL npc_twiggy_flatheadAI : public ScriptedAI
     {
         pUnit->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         pUnit->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-        pUnit->HandleEmoteCommand(EMOTE_ONESHOT_ROAR);
+        pUnit->HandleEmote(EMOTE_ONESHOT_ROAR);
         pUnit->setFaction(14);
     }
 

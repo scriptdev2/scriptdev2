@@ -122,7 +122,7 @@ struct MANGOS_DLL_DECL npc_shenthulAI : public ScriptedAI
         {
             if (Salute_Timer < diff)
             {
-                m_creature->HandleEmoteCommand(EMOTE_ONESHOT_SALUTE);
+                m_creature->HandleEmote(EMOTE_ONESHOT_SALUTE);
                 CanEmote = true;
                 Reset_Timer = 60000;
             } else Salute_Timer -= diff;

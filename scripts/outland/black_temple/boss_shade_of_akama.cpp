@@ -605,7 +605,7 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
                 switch(m_uiEndingTalkCount)
                 {
                     case 0:
-                        m_creature->HandleEmoteCommand(EMOTE_ONESHOT_ROAR);
+                        m_creature->HandleEmote(EMOTE_ONESHOT_ROAR);
                         ++m_uiEndingTalkCount;
                         m_uiSoulRetrieveTimer = 2000;
                         m_uiSummonBrokenTimer = 1;
@@ -629,7 +629,7 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
                                         DoScriptText(SAY_BROKEN_FREE_01, pUnit);
                                         bYelled = true;
                                     }
-                                    pUnit->HandleEmoteCommand(EMOTE_ONESHOT_KNEEL);
+                                    pUnit->HandleEmote(EMOTE_ONESHOT_KNEEL);
                                 }
                             }
                         }

@@ -206,7 +206,7 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public ScriptedAI
             DoCastSpellIfCan(m_creature,23973);
             m_creature->setFaction(35);
             m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-            m_creature->HandleEmoteCommand(EMOTE_ONESHOT_SUBMERGE);
+            m_creature->HandleEmote(EMOTE_ONESHOT_SUBMERGE);
 
             if (!HasSubmergedOnce)
             {

@@ -116,7 +116,7 @@ struct MANGOS_DLL_DECL boss_ouroAI : public ScriptedAI
                 if (m_uiSubmergeTimer < uiDiff)
                 {
                     //Cast
-                    m_creature->HandleEmoteCommand(EMOTE_ONESHOT_SUBMERGE);
+                    m_creature->HandleEmote(EMOTE_ONESHOT_SUBMERGE);
                     m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                     m_creature->setFaction(35);
                     DoCastSpellIfCan(m_creature, SPELL_DIRTMOUND_PASSIVE);

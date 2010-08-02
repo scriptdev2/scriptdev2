@@ -387,11 +387,11 @@ struct MANGOS_DLL_DECL npc_dancing_flamesAI : public ScriptedAI
 
         switch(uiEmote)
         {
-            case TEXTEMOTE_DANCE: DoCastSpellIfCan(pPlayer, SPELL_FIERY_SEDUCTION);   break;// dance -> cast SPELL_FIERY_SEDUCTION
-            case TEXTEMOTE_WAVE:  m_creature->HandleEmoteCommand(EMOTE_ONESHOT_WAVE); break;// wave -> wave
-            case TEXTEMOTE_JOKE:  m_creature->HandleEmoteCommand(EMOTE_STATE_LAUGH);  break;// silly -> laugh(with sound)
-            case TEXTEMOTE_BOW:   m_creature->HandleEmoteCommand(EMOTE_ONESHOT_BOW);  break;// bow -> bow
-            case TEXTEMOTE_KISS:  m_creature->HandleEmoteCommand(TEXTEMOTE_CURTSEY);  break;// kiss -> curtsey
+            case TEXTEMOTE_DANCE: DoCastSpellIfCan(pPlayer, SPELL_FIERY_SEDUCTION); break;// dance -> cast SPELL_FIERY_SEDUCTION
+            case TEXTEMOTE_WAVE:  m_creature->HandleEmote(EMOTE_ONESHOT_WAVE);      break;// wave -> wave
+            case TEXTEMOTE_JOKE:  m_creature->HandleEmote(EMOTE_STATE_LAUGH);       break;// silly -> laugh(with sound)
+            case TEXTEMOTE_BOW:   m_creature->HandleEmote(EMOTE_ONESHOT_BOW);       break;// bow -> bow
+            case TEXTEMOTE_KISS:  m_creature->HandleEmote(TEXTEMOTE_CURTSEY);       break;// kiss -> curtsey
         }
     }
 };

@@ -100,7 +100,7 @@ struct MANGOS_DLL_DECL mob_mature_netherwing_drakeAI : public ScriptedAI
         {
             bIsEating = true;
             EatTimer = 7000;
-            m_creature->HandleEmoteCommand(EMOTE_ONESHOT_ATTACKUNARMED);
+            m_creature->HandleEmote(EMOTE_ONESHOT_ATTACKUNARMED);
         }
     }
 
@@ -955,7 +955,7 @@ struct MANGOS_DLL_DECL mob_torlothAI : public ScriptedAI
                 {
                     m_creature->AddThreat(pTarget);
                     m_creature->SetFacingToObject(pTarget);
-                    m_creature->HandleEmoteCommand(EMOTE_ONESHOT_POINT);
+                    m_creature->HandleEmote(EMOTE_ONESHOT_POINT);
                 }
                  break;
             case 6:

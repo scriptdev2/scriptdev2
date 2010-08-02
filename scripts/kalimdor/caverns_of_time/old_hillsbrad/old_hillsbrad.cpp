@@ -296,7 +296,7 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
                 SetRun(false);
                 break;
             case 60:
-                m_creature->HandleEmoteCommand(EMOTE_ONESHOT_EXCLAMATION);
+                m_creature->HandleEmote(EMOTE_ONESHOT_EXCLAMATION);
                 //make horsie run off
                 SetEscortPaused(true);
                 m_creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
@@ -611,7 +611,7 @@ void npc_tarethaAI::WaypointReached(uint32 i)
             DoScriptText(SAY_TA_FREE, m_creature);
             break;
         case 7:
-            m_creature->HandleEmoteCommand(EMOTE_ONESHOT_CHEER);
+            m_creature->HandleEmote(EMOTE_ONESHOT_CHEER);
             break;
     }
 }

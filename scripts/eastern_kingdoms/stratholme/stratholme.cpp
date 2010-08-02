@@ -237,16 +237,16 @@ struct MANGOS_DLL_DECL mobs_spectral_ghostly_citizenAI : public ScriptedAI
                 if (m_creature->IsWithinDistInMap(pPlayer, ATTACK_DISTANCE))
                     m_creature->CastSpell(pPlayer,SPELL_SLAP,false);
                 else
-                    m_creature->HandleEmoteCommand(EMOTE_ONESHOT_RUDE);
+                    m_creature->HandleEmote(EMOTE_ONESHOT_RUDE);
                 break;
             case TEXTEMOTE_WAVE:
-                m_creature->HandleEmoteCommand(EMOTE_ONESHOT_WAVE);
+                m_creature->HandleEmote(EMOTE_ONESHOT_WAVE);
                 break;
             case TEXTEMOTE_BOW:
-                m_creature->HandleEmoteCommand(EMOTE_ONESHOT_BOW);
+                m_creature->HandleEmote(EMOTE_ONESHOT_BOW);
                 break;
             case TEXTEMOTE_KISS:
-                m_creature->HandleEmoteCommand(EMOTE_ONESHOT_FLEX);
+                m_creature->HandleEmote(EMOTE_ONESHOT_FLEX);
                 break;
         }
     }

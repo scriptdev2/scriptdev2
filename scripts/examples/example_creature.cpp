@@ -108,7 +108,7 @@ struct MANGOS_DLL_DECL example_creatureAI : public ScriptedAI
     //Our Recive emote function
     void ReceiveEmote(Player* pPlayer, uint32 uiTextEmote)
     {
-        m_creature->HandleEmoteCommand(uiTextEmote);
+        m_creature->HandleEmote(uiTextEmote);
 
         switch(uiTextEmote)
         {

@@ -721,7 +721,7 @@ struct MANGOS_DLL_DECL npc_akama_illidanAI : public ScriptedAI
                         }
                         break;
                     case 4:
-                        m_creature->HandleEmoteCommand(EMOTE_ONESHOT_SALUTE);
+                        m_creature->HandleEmote(EMOTE_ONESHOT_SALUTE);
                         ChannelTimer = 2000;
                         ++ChannelCount;
                         break;
@@ -1184,9 +1184,9 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
         if (pCreature)
         {
             if (emote)
-                pCreature->HandleEmoteCommand(emote);        // Make the creature do some animation!
+                pCreature->HandleEmote(emote);              // Make the creature do some animation
             if (text)
-                DoScriptText(text, pCreature);               // Have the creature yell out some text
+                DoScriptText(text, pCreature);              // Have the creature yell out some text
         }
     }
 
@@ -1716,7 +1716,7 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
                         DoResetThreat();
 
                         // anndddd touchdown!
-                        m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LAND);
+                        m_creature->HandleEmote(EMOTE_ONESHOT_LAND);
                         m_creature->RemoveSplineFlag(SPLINEFLAG_NO_SPLINE);
                         Phase = PHASE_NORMAL_2;
 
