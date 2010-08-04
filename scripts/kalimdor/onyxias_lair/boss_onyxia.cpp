@@ -167,6 +167,13 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
         m_creature->SetInCombatWithZone();
     }
 
+    void JustReachedHome()
+    {
+        // in case evade in phase 2, see comments for hack where phase 2 is set
+        m_creature->RemoveSplineFlag(SPLINEFLAG_FLYING);
+        m_creature->SetByteFlag(UNIT_FIELD_BYTES_1, 3, 0);
+    }
+
     void JustSummoned(Creature* pSummoned)
     {
         pSummoned->GetMotionMaster()->MovePoint(0, afSpawnLocations[3][0], afSpawnLocations[3][1], afSpawnLocations[3][2]);
@@ -194,7 +201,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
         {
             if (m_pPointData = GetMoveData())
             {
-                m_creature->GetMap()->CreatureRelocation(m_creature, m_pPointData->fX, m_pPointData->fY, m_pPointData->fZ, 0.0f);
+                m_creature->GetMap()->CreatureRelocation(m_creature, m_pPointData->fX, m_pPointData->fY, m_pPointData->fZ, m_creature->GetAngle(afSpawnLocations[3][0], afSpawnLocations[3][1]));
                 m_creature->SendMonsterMove(m_pPointData->fX, m_pPointData->fY, m_pPointData->fZ, SPLINETYPE_NORMAL, m_creature->GetSplineFlags(), 1);
             }
         }
@@ -279,6 +286,10 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
 
                     DoScriptText(SAY_PHASE_2_TRANS, m_creature);
 
+                    // sort of a hack, it is unclear how this really work but the values appear to be valid
+                    m_creature->SetByteValue(UNIT_FIELD_BYTES_1, 3, UNIT_BYTE1_FLAG_ALWAYS_STAND | UNIT_BYTE1_FLAG_UNK_2);
+                    m_creature->AddSplineFlag(SPLINEFLAG_FLYING);
+
                     if (m_pPointData)
                         m_creature->GetMotionMaster()->MovePoint(m_pPointData->uiLocId, m_pPointData->fX, m_pPointData->fY, m_pPointData->fZ);
 
@@ -294,6 +305,10 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
                 {
                     m_uiPhase = PHASE_END;
                     DoScriptText(SAY_PHASE_3_TRANS, m_creature);
+
+                    // undo flying
+                    m_creature->SetByteValue(UNIT_FIELD_BYTES_1, 3, 0);
+                    m_creature->RemoveSplineFlag(SPLINEFLAG_FLYING);
 
                     SetCombatMovement(true);
                     m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
