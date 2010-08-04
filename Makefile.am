@@ -279,6 +279,8 @@ scripts/kalimdor/maraudon/boss_landslide.cpp \
 scripts/kalimdor/maraudon/boss_noxxion.cpp \
 scripts/kalimdor/maraudon/boss_princess_theradras.cpp \
 scripts/kalimdor/onyxias_lair/boss_onyxia.cpp \
+scripts/kalimdor/onyxias_lair/instance_onyxias_lair.cpp \
+scripts/kalimdor/onyxias_lair/onyxias_lair.h \
 scripts/kalimdor/razorfen_downs/boss_amnennar_the_coldbringer.cpp \
 scripts/kalimdor/razorfen_downs/razorfen_downs.cpp \
 scripts/kalimdor/razorfen_kraul/instance_razorfen_kraul.cpp \

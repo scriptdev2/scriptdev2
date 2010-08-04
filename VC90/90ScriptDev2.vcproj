@@ -1450,6 +1450,14 @@
 						RelativePath="..\scripts\kalimdor\onyxias_lair\boss_onyxia.cpp"
 						>
 					</File>
+					<File
+						RelativePath="..\scripts\kalimdor\onyxias_lair\instance_onyxias_lair.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\kalimdor\onyxias_lair\onyxias_lair.h"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="ragefire_chasm"
