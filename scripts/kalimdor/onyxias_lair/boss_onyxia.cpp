@@ -22,6 +22,7 @@ SDCategory: Onyxia's Lair
 EndScriptData */
 
 #include "precompiled.h"
+#include "onyxias_lair.h"
 
 enum
 {
@@ -98,20 +99,22 @@ static float afSpawnLocations[4][3]=
 {
     {-30.127f, -254.463f, -89.440f},                        // whelps
     {-30.817f, -177.106f, -89.258f},                        // whelps
-    {-126.57f, -214.609f, -71.446f},                        // guardians
-    {-22.347f, -214.571f, -89.104f}                         // Onyxia
+    {-126.57f, -214.609f, -71.446f}                         // guardians
 };
 
 struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
 {
     boss_onyxiaAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
+        m_pInstance = (instance_onyxias_lair*)pCreature->GetInstanceData();
         m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         m_uiMaxBreathPositions = sizeof(aMoveData)/sizeof(sOnyxMove);
         Reset();
     }
 
     bool m_bIsRegularMode;
+    instance_onyxias_lair* m_pInstance;
+
     uint8 m_uiPhase;
     uint8 m_uiMaxBreathPositions;
 
@@ -201,8 +204,14 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
         {
             if (m_pPointData = GetMoveData())
             {
-                m_creature->GetMap()->CreatureRelocation(m_creature, m_pPointData->fX, m_pPointData->fY, m_pPointData->fZ, m_creature->GetAngle(afSpawnLocations[3][0], afSpawnLocations[3][1]));
-                m_creature->SendMonsterMove(m_pPointData->fX, m_pPointData->fY, m_pPointData->fZ, SPLINETYPE_NORMAL, m_creature->GetSplineFlags(), 1);
+                if (!m_pInstance)
+                    return;
+
+                if (Creature* pTrigger = m_pInstance->instance->GetCreature(m_pInstance->GetOnyxiaTriggerGUID()))
+                {
+                    m_creature->GetMap()->CreatureRelocation(m_creature, m_pPointData->fX, m_pPointData->fY, m_pPointData->fZ, m_creature->GetAngle(pTrigger));
+                    m_creature->SendMonsterMove(m_pPointData->fX, m_pPointData->fY, m_pPointData->fZ, SPLINETYPE_FACINGTARGET, m_creature->GetSplineFlags(), 1, NULL, pTrigger->GetGUID());
+                }
             }
         }
     }
@@ -220,11 +229,14 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
 
     void MovementInform(uint32 uiMoveType, uint32 uiPointId)
     {
-        if (uiMoveType != POINT_MOTION_TYPE)
+        if (uiMoveType != POINT_MOTION_TYPE || !m_pInstance)
             return;
 
         if (m_uiPhase == PHASE_BREATH)
-            m_creature->SetFacingTo(m_creature->GetAngle(afSpawnLocations[3][0], afSpawnLocations[3][1]));
+        {
+            if (Creature* pTrigger = m_pInstance->instance->GetCreature(m_pInstance->GetOnyxiaTriggerGUID()))
+                m_creature->SetFacingToObject(pTrigger);
+        }
     }
 
     void UpdateAI(const uint32 uiDiff)
