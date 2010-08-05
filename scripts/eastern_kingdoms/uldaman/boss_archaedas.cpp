@@ -33,10 +33,10 @@ enum
     SPELL_AWAKEN_EARTHEN_DWARF      = 10259,
     SPELL_ARCHAEDAS_AWAKEN_VISUAL   = 10347,
 
-    SAY_AGGRO                       = -1999821,
-    SAY_AWAKE_GUARDIANS             = -1999822,
-    SAY_AWAKE_WARDERS               = -1999823,
-    SAY_UNIT_SLAIN                  = -1999824
+    SAY_AGGRO                       = -1000000,
+    SAY_AWAKE_GUARDIANS             = -1000000,
+    SAY_AWAKE_WARDERS               = -1000000,
+    SAY_UNIT_SLAIN                  = -1000000
 };
 
 struct MANGOS_DLL_DECL boss_archaedasAI : public ScriptedAI
