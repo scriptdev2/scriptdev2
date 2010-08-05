@@ -16,7 +16,7 @@
 
 /* ScriptData
 SDName: Instance_Uldaman
-SD%Complete:
+SD%Complete: 60
 SDComment:
 SDCategory: Uldaman
 EndScriptData
@@ -59,7 +59,8 @@ void instance_uldaman::OnObjectCreate(GameObject* pGo)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             m_uiAncientVaultGUID = pGo->GetGUID();
             break;
-        default: break;
+        default:
+            break;
     }
 }
 
@@ -73,8 +74,8 @@ void instance_uldaman::OnCreatureCreate(Creature* pCreature)
         case MOB_VAULT_WARDER:
             lWardens.push_back(pCreature->GetGUID());
             break;
-
-        default: break;
+        default:
+            break;
     }
 }
 
@@ -224,9 +225,10 @@ InstanceData* GetInstanceData_instance_uldaman(Map* pMap)
 
 void AddSC_instance_uldaman()
 {
-    Script* newscript;
-    newscript = new Script;
-    newscript->Name = "instance_uldaman";
-    newscript->GetInstanceData = &GetInstanceData_instance_uldaman;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "instance_uldaman";
+    pNewScript->GetInstanceData = &GetInstanceData_instance_uldaman;
+    pNewScript->RegisterSelf();
 }

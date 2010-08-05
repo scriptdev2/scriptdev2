@@ -199,21 +199,21 @@ bool GOHello_go_altar_of_keepers(Player* pPlayer, GameObject* pGo)
 
 void AddSC_uldaman()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "mob_jadespine_basilisk";
-    newscript->GetAI = &GetAI_mob_jadespine_basilisk;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_jadespine_basilisk";
+    pNewScript->GetAI = &GetAI_mob_jadespine_basilisk;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_lore_keeper_of_norgannon";
-    newscript->pGossipHello = &GossipHello_npc_lore_keeper_of_norgannon;
-    newscript->pGossipSelect = &GossipSelect_npc_lore_keeper_of_norgannon;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_lore_keeper_of_norgannon";
+    pNewScript->pGossipHello = &GossipHello_npc_lore_keeper_of_norgannon;
+    pNewScript->pGossipSelect = &GossipSelect_npc_lore_keeper_of_norgannon;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "go_altar_of_keepers";
-    newscript->pGOHello = &GOHello_go_altar_of_keepers;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "go_altar_of_keepers";
+    pNewScript->pGOHello = &GOHello_go_altar_of_keepers;
+    pNewScript->RegisterSelf();
 }
