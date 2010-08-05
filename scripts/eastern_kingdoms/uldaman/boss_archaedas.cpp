@@ -70,8 +70,6 @@ struct MANGOS_DLL_DECL boss_archaedasAI : public ScriptedAI
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_ARCHAEDAS, IN_PROGRESS);
-
-        ScriptedAI::Aggro(pWho);
     }
 
     void KilledUnit(Unit* pVictim)
@@ -211,9 +209,6 @@ struct MANGOS_DLL_DECL mob_archaeras_addAI : public ScriptedAI
 
     void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
     {
-        if (!pSpell)
-            return;
-
         switch(m_creature->GetEntry())
         {
             case MOB_CUSTODIAN:
