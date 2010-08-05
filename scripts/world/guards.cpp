@@ -116,59 +116,61 @@ CreatureAI* GetAI_guard_shattrath(Creature* pCreature)
  * guard_shattrath_aldor
  *******************************************************/
 
-#define SPELL_BANISHED_SHATTRATH_A  36642
-#define SPELL_BANISHED_SHATTRATH_S  36671
-#define SPELL_BANISH_TELEPORT       36643
-#define SPELL_EXILE                 39533
-
 struct MANGOS_DLL_DECL guard_shattrath_aldorAI : public guardAI
 {
     guard_shattrath_aldorAI(Creature* pCreature) : guardAI(pCreature) { Reset(); }
 
-    uint32 Exile_Timer;
-    uint32 Banish_Timer;
-    uint64 playerGUID;
-    bool CanTeleport;
+    uint32 m_uiExile_Timer;
+    uint32 m_uiBanish_Timer;
+    uint64 m_uiPlayerGUID;
+    bool m_bCanTeleport;
 
     void Reset()
     {
-        Banish_Timer = 5000;
-        Exile_Timer = 8500;
-        playerGUID = 0;
-        CanTeleport = false;
+        m_uiBanish_Timer = 5000;
+        m_uiExile_Timer = 8500;
+        m_uiPlayerGUID = 0;
+        m_bCanTeleport = false;
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (CanTeleport)
+        if (m_bCanTeleport)
         {
-            if (Exile_Timer < diff)
+            if (m_uiExile_Timer < uiDiff)
             {
-                if (Unit* temp = Unit::GetUnit(*m_creature,playerGUID))
+                if (Unit* pTarget = Unit::GetUnit(*m_creature, m_uiPlayerGUID))
                 {
-                    temp->CastSpell(temp,SPELL_EXILE,true);
-                    temp->CastSpell(temp,SPELL_BANISH_TELEPORT,true);
+                    pTarget->CastSpell(pTarget, SPELL_EXILE, true);
+                    pTarget->CastSpell(pTarget, SPELL_BANISH_TELEPORT, true);
                 }
-                playerGUID = 0;
-                Exile_Timer = 8500;
-                CanTeleport = false;
-            }else Exile_Timer -= diff;
-        }
-        else if (Banish_Timer < diff)
-        {
-            Unit* temp = m_creature->getVictim();
-            if (temp && temp->GetTypeId() == TYPEID_PLAYER)
-            {
-                DoCastSpellIfCan(temp,SPELL_BANISHED_SHATTRATH_A);
-                Banish_Timer = 9000;
-                playerGUID = temp->GetGUID();
-                if (playerGUID)
-                    CanTeleport = true;
+
+                m_uiPlayerGUID = 0;
+                m_uiExile_Timer = 8500;
+                m_bCanTeleport = false;
             }
-        }else Banish_Timer -= diff;
+            else
+                m_uiExile_Timer -= uiDiff;
+        }
+        else if (m_uiBanish_Timer < uiDiff)
+        {
+            Unit* pVictim = m_creature->getVictim();
+
+            if (pVictim && pVictim->GetTypeId() == TYPEID_PLAYER)
+            {
+                DoCastSpellIfCan(pVictim, SPELL_BANISHED_SHATTRATH_A);
+                m_uiBanish_Timer = 9000;
+                m_uiPlayerGUID = pVictim->GetGUID();
+
+                if (m_uiPlayerGUID)
+                    m_bCanTeleport = true;
+            }
+        }
+        else
+            m_uiBanish_Timer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
@@ -187,50 +189,57 @@ struct MANGOS_DLL_DECL guard_shattrath_scryerAI : public guardAI
 {
     guard_shattrath_scryerAI(Creature* pCreature) : guardAI(pCreature) { Reset(); }
 
-    uint32 Exile_Timer;
-    uint32 Banish_Timer;
-    uint64 playerGUID;
-    bool CanTeleport;
+    uint32 m_uiExile_Timer;
+    uint32 m_uiBanish_Timer;
+    uint64 m_uiPlayerGUID;
+    bool m_bCanTeleport;
 
     void Reset()
     {
-        Banish_Timer = 5000;
-        Exile_Timer = 8500;
-        playerGUID = 0;
-        CanTeleport = false;
+        m_uiBanish_Timer = 5000;
+        m_uiExile_Timer = 8500;
+        m_uiPlayerGUID = 0;
+        m_bCanTeleport = false;
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (CanTeleport)
+        if (m_bCanTeleport)
         {
-            if (Exile_Timer < diff)
+            if (m_uiExile_Timer < uiDiff)
             {
-                if (Unit* temp = Unit::GetUnit(*m_creature,playerGUID))
+                if (Unit* pTarget = Unit::GetUnit(*m_creature, m_uiPlayerGUID))
                 {
-                    temp->CastSpell(temp,SPELL_EXILE,true);
-                    temp->CastSpell(temp,SPELL_BANISH_TELEPORT,true);
+                    pTarget->CastSpell(pTarget, SPELL_EXILE, true);
+                    pTarget->CastSpell(pTarget, SPELL_BANISH_TELEPORT, true);
                 }
-                playerGUID = 0;
-                Exile_Timer = 8500;
-                CanTeleport = false;
-            }else Exile_Timer -= diff;
-        }
-        else if (Banish_Timer < diff)
-        {
-            Unit* temp = m_creature->getVictim();
-            if (temp && temp->GetTypeId() == TYPEID_PLAYER)
-            {
-                DoCastSpellIfCan(temp,SPELL_BANISHED_SHATTRATH_S);
-                Banish_Timer = 9000;
-                playerGUID = temp->GetGUID();
-                if (playerGUID)
-                    CanTeleport = true;
+
+                m_uiPlayerGUID = 0;
+                m_uiExile_Timer = 8500;
+                m_bCanTeleport = false;
             }
-        }else Banish_Timer -= diff;
+            else
+                m_uiExile_Timer -= uiDiff;
+        }
+        else if (m_uiBanish_Timer < uiDiff)
+        {
+            Unit* pVictim = m_creature->getVictim();
+
+            if (pVictim && pVictim->GetTypeId() == TYPEID_PLAYER)
+            {
+                DoCastSpellIfCan(pVictim, SPELL_BANISHED_SHATTRATH_S);
+                m_uiBanish_Timer = 9000;
+                m_uiPlayerGUID = pVictim->GetGUID();
+
+                if (m_uiPlayerGUID)
+                    m_bCanTeleport = true;
+            }
+        }
+        else
+            m_uiBanish_Timer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
