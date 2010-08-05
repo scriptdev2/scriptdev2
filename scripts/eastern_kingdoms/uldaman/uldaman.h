@@ -7,14 +7,60 @@
 
 enum
 {
-    MAX_ENCOUNTER        = 2,
+    MAX_ENCOUNTER           = 2,
 
-    TYPE_ALTAR_EVENT     = 1,
-    TYPE_ARCHAEDAS_EVENT = 2,
-    DATA_EVENT_STARTER   = 3,
+    TYPE_ALTAR_EVENT        = 1,
+    TYPE_ARCHAEDAS          = 2,
+    DATA_EVENT_STARTER      = 3,
 
-    GO_TEMPLE_DOOR1      = 124367,
-    GO_TEMPLE_DOOR2      = 141869,
-    GO_ANCIENT_VAULT     = 124369
+    GO_TEMPLE_DOOR_UPPER    = 124367,
+    GO_TEMPLE_DOOR_LOWER    = 141869,
+    GO_ANCIENT_VAULT        = 124369,
+
+    MOB_CUSTODIAN           = 7309,
+    MOB_GUARDIAN            = 7076,
+    MOB_HALLSHAPER          = 7077,
+    MOB_VAULT_WARDER        = 10120,
+
+    SPELL_STONED            = 10255,
+    SPELL_USE_ALTAR_VISUAL  = 11206,
+
+    FACTION_TITAN_HOSTILE   = 415,
+    FACTION_TITAN_NEUTRAL   = 416
+};
+
+class MANGOS_DLL_DECL instance_uldaman : public ScriptedInstance
+{
+    public:
+        instance_uldaman(Map* pMap);
+        ~instance_uldaman() {}
+
+        void Initialize();
+
+        void OnObjectCreate(GameObject* pGo);
+        void OnCreatureCreate(Creature* pCreature);
+
+        void SetData(uint32 uiType, uint32 uiData);
+        void SetData64(uint32 uiData, uint64 uiGuid);
+        uint32 GetData(uint32 uiType);
+        uint64 GetData64(uint32 uiData);
+
+        Creature* GetDwarf();
+        // hack to remove
+        void SimulateSpellHit(uint32 uiCreatureEntry, uint32 uiSpellEntry, Unit* pCaster);
+
+        const char* Save() { return strInstData.c_str(); }
+        void Load(const char* chrIn);
+
+    protected:
+        uint32 m_auiEncounter[MAX_ENCOUNTER];
+        std::string strInstData;
+
+        uint64 m_uiTempleDoorUpperGUID;
+        uint64 m_uiTempleDoorLowerGUID;
+        uint64 m_uiAncientVaultGUID;
+        uint64 m_uiPlayerGUID;
+        uint8 m_uiStoneKeepersFallen;
+        std::list<uint64> lWardens;
 };
 #endif

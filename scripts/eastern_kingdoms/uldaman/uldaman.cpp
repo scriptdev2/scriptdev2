@@ -27,6 +27,7 @@ npc_lore_keeper_of_norgannon
 EndContentData */
 
 #include "precompiled.h"
+#include "uldaman.h"
 
 /*######
 ## mob_jadespine_basilisk
@@ -169,17 +170,11 @@ bool GossipSelect_npc_lore_keeper_of_norgannon(Player* pPlayer, Creature* pCreat
 enum
 {
     NPC_STONE_KEEPER            = 4857,
-    FACTION_TITAN_UNFRIENDLY    = 415,
-    HALL_RADIUS                 = 35,
-    SPELL_STONED                = 10255,
-    SPELL_USE_ALTAR_VISUAL      = 11206
+    HALL_RADIUS                 = 35
 };
 
 bool GOHello_go_altar_of_keepers(Player* pPlayer, GameObject* pGo)
 {
-    if (!pPlayer || !pGo)
-        return false;
-
     pPlayer->CastSpell(pPlayer, SPELL_USE_ALTAR_VISUAL, true);
 
     std::list<Creature*> lStoneKeepers;
@@ -191,14 +186,11 @@ bool GOHello_go_altar_of_keepers(Player* pPlayer, GameObject* pGo)
         {
             if (*itr && (*itr)->isAlive())
             {
-                (*itr)->setFaction(FACTION_TITAN_UNFRIENDLY);
+                (*itr)->setFaction(FACTION_TITAN_HOSTILE);
                 (*itr)->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                (*itr)->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                (*itr)->RemoveAurasDueToSpell(SPELL_STONED);
                 if ((*itr)->AI())
-                {
-                    (*itr)->RemoveAurasDueToSpell(SPELL_STONED);
                     (*itr)->AI()->AttackStart(pPlayer);
-                }
             }
         }
     }

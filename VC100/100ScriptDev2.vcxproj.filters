@@ -726,6 +726,9 @@
     <ClCompile Include="..\scripts\eastern_kingdoms\sunwell_plateau\instance_sunwell_plateau.cpp">
       <Filter>scripts\eastern_kingdoms\sunwell_plateau</Filter>
     </ClCompile>
+    <ClCompile Include="..\scripts\eastern_kingdoms\uldaman\boss_archaedas.cpp">
+      <Filter>scripts\eastern_kingdoms\uldaman</Filter>
+    </ClCompile>
     <ClCompile Include="..\scripts\eastern_kingdoms\uldaman\boss_ironaya.cpp">
       <Filter>scripts\eastern_kingdoms\uldaman</Filter>
     </ClCompile>
