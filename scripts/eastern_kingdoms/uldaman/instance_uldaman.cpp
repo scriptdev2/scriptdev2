@@ -38,6 +38,8 @@ instance_uldaman::instance_uldaman(Map* pMap) : ScriptedInstance(pMap),
 void instance_uldaman::Initialize()
 {
     memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
+    m_lWardens.clear();
+    m_lKeeperList.clear();
 }
 
 void instance_uldaman::OnObjectCreate(GameObject* pGo)
@@ -72,7 +74,10 @@ void instance_uldaman::OnCreatureCreate(Creature* pCreature)
         case MOB_CUSTODIAN:
         case MOB_GUARDIAN:
         case MOB_VAULT_WARDER:
-            lWardens.push_back(pCreature->GetGUID());
+            m_lWardens.push_back(pCreature->GetGUID());
+            break;
+        case NPC_STONE_KEEPER:
+            m_lKeeperList.push_back(pCreature->GetGUID());
             break;
         default:
             break;
@@ -85,20 +90,24 @@ void instance_uldaman::SetData(uint32 uiType, uint32 uiData)
     {
         case TYPE_ALTAR_EVENT:
             if (uiData == SPECIAL)
-                ++m_uiStoneKeepersFallen;
-            if (m_uiStoneKeepersFallen > 3)
             {
-                uiData = DONE;
-                DoUseDoorOrButton(m_uiTempleDoorUpperGUID);
-                DoUseDoorOrButton(m_uiTempleDoorLowerGUID);
+                ++m_uiStoneKeepersFallen;
+
+                if (m_uiStoneKeepersFallen > 3)
+                {
+                    uiData = DONE;
+                    DoUseDoorOrButton(m_uiTempleDoorUpperGUID);
+                    DoUseDoorOrButton(m_uiTempleDoorLowerGUID);
+                }
+
+                m_auiEncounter[0] = uiData;
             }
-            m_auiEncounter[0] = uiData;
             break;
 
         case TYPE_ARCHAEDAS:
             if (uiData == FAIL)
             {
-                for (std::list<uint64>::iterator itr = lWardens.begin(); itr != lWardens.end(); ++itr)
+                for (std::list<uint64>::iterator itr = m_lWardens.begin(); itr != m_lWardens.end(); ++itr)
                 {
                     Creature* pWarden = instance->GetCreature(*itr);
                     if (pWarden && !pWarden->isAlive())
@@ -107,7 +116,7 @@ void instance_uldaman::SetData(uint32 uiType, uint32 uiData)
             }
             else if (uiData == DONE)
             {
-                for (std::list<uint64>::iterator itr = lWardens.begin(); itr != lWardens.end(); ++itr)
+                for (std::list<uint64>::iterator itr = m_lWardens.begin(); itr != m_lWardens.end(); ++itr)
                 {
                     Creature* pWarden = instance->GetCreature(*itr);
                     if (pWarden && pWarden->isAlive())
@@ -185,11 +194,24 @@ uint64 instance_uldaman::GetData64(uint32 uiData)
     return 0;
 }
 
+void instance_uldaman::StartEvent(uint32 uiEventId, Player* pPlayer)
+{
+    m_uiPlayerGUID = pPlayer->GetGUID();
+
+    if (uiEventId == EVENT_ID_ALTAR_KEEPER)
+    {
+        if (m_auiEncounter[0] == NOT_STARTED)
+            m_auiEncounter[0] = IN_PROGRESS;
+    }
+    else if (m_auiEncounter[1] == NOT_STARTED || m_auiEncounter[1] == FAIL)
+        m_auiEncounter[1] = SPECIAL;
+}
+
 Creature* instance_uldaman::GetDwarf()
 {
     std::list<Creature*> lTemp;
 
-    for (std::list<uint64>::iterator itr = lWardens.begin(); itr != lWardens.end(); ++itr)
+    for (std::list<uint64>::iterator itr = m_lWardens.begin(); itr != m_lWardens.end(); ++itr)
     {
        Creature* pTemp = instance->GetCreature(*itr);
        if (pTemp && pTemp->isAlive() && pTemp->HasAura(SPELL_STONED) && 
@@ -208,7 +230,7 @@ Creature* instance_uldaman::GetDwarf()
 // hack
 void instance_uldaman::SimulateSpellHit(uint32 uiCreatureEntry, uint32 uiSpellEntry, Unit* pCaster)
 {
-    for (std::list<uint64>::iterator itr = lWardens.begin(); itr != lWardens.end(); ++itr)
+    for (std::list<uint64>::iterator itr = m_lWardens.begin(); itr != m_lWardens.end(); ++itr)
     {
        Creature* pTemp = instance->GetCreature(*itr);
        const SpellEntry* pSpell = GetSpellStore()->LookupEntry(uiSpellEntry);
@@ -218,9 +240,50 @@ void instance_uldaman::SimulateSpellHit(uint32 uiCreatureEntry, uint32 uiSpellEn
     }
 }
 
+void instance_uldaman::Update(uint32 uiDiff)
+{
+    if (m_auiEncounter[0] == IN_PROGRESS)
+    {
+        if (!m_lKeeperList.empty())
+        {
+            for(std::list<uint64>::iterator itr = m_lKeeperList.begin(); itr != m_lKeeperList.end(); ++itr)
+            {
+                Creature* pKeeper = instance->GetCreature(*itr);
+
+                if (pKeeper && pKeeper->isAlive())
+                {
+                    Unit* pTarget = Unit::GetUnit(*pKeeper, m_uiPlayerGUID);
+
+                    pKeeper->setFaction(FACTION_TITAN_HOSTILE);
+                    pKeeper->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                    pKeeper->RemoveAurasDueToSpell(SPELL_STONED);
+
+                    if (pTarget && pTarget->isAlive() && pKeeper->AI())
+                        pKeeper->AI()->AttackStart(pTarget);
+                }
+            }
+
+            m_auiEncounter[0] = SPECIAL;
+        }
+    }
+}
+
 InstanceData* GetInstanceData_instance_uldaman(Map* pMap)
 {
     return new instance_uldaman(pMap);
+}
+
+bool ProcessEventId_event_spell_altar_boss_aggro(uint32 uiEventId, Object* pSource, Object* pTarget, bool bIsStart)
+{
+    if (bIsStart && pSource->GetTypeId() == TYPEID_PLAYER)
+    {
+        if (instance_uldaman* pInstance = (instance_uldaman*)((Player*)pSource)->GetInstanceData())
+        {
+            pInstance->StartEvent(uiEventId, (Player*)pSource);
+            return true;
+        }
+    }
+    return false;
 }
 
 void AddSC_instance_uldaman()
@@ -230,5 +293,10 @@ void AddSC_instance_uldaman()
     pNewScript = new Script;
     pNewScript->Name = "instance_uldaman";
     pNewScript->GetInstanceData = &GetInstanceData_instance_uldaman;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "event_spell_altar_boss_aggro";
+    pNewScript->pProcessEventId = &ProcessEventId_event_spell_altar_boss_aggro;
     pNewScript->RegisterSelf();
 }

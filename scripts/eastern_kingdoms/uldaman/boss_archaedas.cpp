@@ -270,21 +270,6 @@ struct MANGOS_DLL_DECL mob_archaeras_addAI : public ScriptedAI
     }
 };
 
-bool GOHello_go_altar_of_archaedas(Player* pPlayer, GameObject* pGo)
-{
-    instance_uldaman* pInstance = (instance_uldaman*)pGo->GetInstanceData();
-
-    if (!pInstance)
-        return false;
-
-    pPlayer->CastSpell(pPlayer, SPELL_USE_ALTAR_VISUAL, true);
-
-    // begin OOC "intro" and store target for Archaedas to attack
-    pInstance->SetData(TYPE_ARCHAEDAS, SPECIAL);
-    pInstance->SetData64(DATA_EVENT_STARTER, pPlayer->GetGUID());
-    return true;
-}
-
 CreatureAI* GetAI_boss_archaedas(Creature* pCreature)
 {
     return new boss_archaedasAI(pCreature);
@@ -307,10 +292,5 @@ void AddSC_boss_archaedas()
     pNewScript = new Script;
     pNewScript->Name = "mob_archaeras_add";
     pNewScript->GetAI = &GetAI_mob_archaeras_add;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "go_altar_of_archaedas";
-    pNewScript->pGOHello = &GOHello_go_altar_of_archaedas;
     pNewScript->RegisterSelf();
 }
