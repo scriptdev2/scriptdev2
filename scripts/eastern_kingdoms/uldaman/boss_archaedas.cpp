@@ -26,11 +26,12 @@ EndScriptData */
 
 enum
 {
-    SPELL_GROUND_TREMMOR            = 6524,
+    SPELL_GROUND_TREMOR             = 6524,
+
     SPELL_AWAKEN_EARTHEN_GUARDIAN   = 10252,
-    SPELL_STONE_DWARF_AWAKEN_VISUAL = 10254,
     SPELL_AWAKEN_VAULT_WARDER       = 10258,
     SPELL_AWAKEN_EARTHEN_DWARF      = 10259,
+
     SPELL_ARCHAEDAS_AWAKEN_VISUAL   = 10347,
 
     SAY_AGGRO                       = -1000000,
@@ -52,6 +53,7 @@ struct MANGOS_DLL_DECL boss_archaedasAI : public ScriptedAI
     uint32 m_uiAwakeningTimer;
     uint32 m_uiAwakeDwarfTimer;
     uint8 m_uiSubevent;
+    bool m_bDwarvesAwaken;
     bool m_bGuardiansAwaken;
     bool m_bWardersAwaken;
 
@@ -62,8 +64,9 @@ struct MANGOS_DLL_DECL boss_archaedasAI : public ScriptedAI
         m_uiAwakeDwarfTimer = 10000;
         m_bGuardiansAwaken  = false;
         m_bWardersAwaken    = false;
+        m_bDwarvesAwaken    = false;
+
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-        m_creature->setFaction(FACTION_TITAN_NEUTRAL);
     }
 
     void Aggro(Unit* pWho)
@@ -92,6 +95,23 @@ struct MANGOS_DLL_DECL boss_archaedasAI : public ScriptedAI
             m_pInstance->SetData(TYPE_ARCHAEDAS, FAIL);
     }
 
+    void SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell)
+    {
+        if (pTarget->GetTypeId() != TYPEID_PLAYER)
+        {
+            if (pTarget->HasAura(SPELL_STONED, EFFECT_INDEX_0))
+            {
+                pTarget->RemoveAurasDueToSpell(SPELL_STONED);
+
+                if (Unit* pUnit = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                {
+                    pTarget->SetInCombatWith(pUnit);
+                    pTarget->AddThreat(pUnit);
+                }
+            }
+        }
+    }
+
     void UpdateAI(const uint32 uiDiff)
     {
         // so many things are based in this script on instance data
@@ -107,15 +127,13 @@ struct MANGOS_DLL_DECL boss_archaedasAI : public ScriptedAI
                 switch(m_uiSubevent)
                 {
                     case 0:
-                        m_creature->RemoveAurasDueToSpell(SPELL_STONED);
                         DoCastSpellIfCan(m_creature, SPELL_ARCHAEDAS_AWAKEN_VISUAL);
                         break;
                     case 1:
                         DoScriptText(SAY_AGGRO,m_creature,NULL);
+                        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                         break;
                     case 2:
-                        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                        m_creature->setFaction(FACTION_TITAN_HOSTILE);
                         if (Unit* pUnit = Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_EVENT_STARTER)))
                             AttackStart(pUnit);
                         else
@@ -136,18 +154,17 @@ struct MANGOS_DLL_DECL boss_archaedasAI : public ScriptedAI
             return;
 
         // Awake random Dwarf
-        if (m_creature->GetHealthPercent() >= 33.0f)
+        if (!m_bDwarvesAwaken && m_creature->GetHealthPercent() >= 33.0f)
         {
             if (m_uiAwakeDwarfTimer <= uiDiff)
             {
-                if (Creature* pDwarf = m_pInstance->GetDwarf())
+                if (Creature* pEarthen = m_pInstance->GetClosestDwarfNotInCombat(m_creature, PHASE_ARCHA_1))
                 {
-                    DoCastSpellIfCan(pDwarf, SPELL_AWAKEN_EARTHEN_DWARF, CAST_TRIGGERED);
-                    // hack to remove
-                    pDwarf->AI()->SpellHit(m_creature, GetSpellStore()->LookupEntry(SPELL_AWAKEN_EARTHEN_DWARF));
+                    if (DoCastSpellIfCan(pEarthen, SPELL_AWAKEN_EARTHEN_DWARF) == CAST_OK)
+                        m_uiAwakeDwarfTimer = urand(9000, 12000);
                 }
-
-                m_uiAwakeDwarfTimer = urand(9000, 12000);
+                else
+                    m_bDwarvesAwaken = true;
             }
             else
                 m_uiAwakeDwarfTimer -= uiDiff;
@@ -156,113 +173,46 @@ struct MANGOS_DLL_DECL boss_archaedasAI : public ScriptedAI
         //Awake Earthen Guardians
         if (!m_bGuardiansAwaken && m_creature->GetHealthPercent() <= 66.0f)
         {
-            if (Unit* pUnit = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-                m_pInstance->SetData64(DATA_EVENT_STARTER, pUnit->GetGUID());
-
-            DoScriptText(SAY_AWAKE_GUARDIANS, m_creature);
-            DoCastSpellIfCan(m_creature, SPELL_AWAKEN_EARTHEN_GUARDIAN, (CAST_TRIGGERED | CAST_INTERRUPT_PREVIOUS));
-
-            // hack to remove
-            m_pInstance->SimulateSpellHit(MOB_GUARDIAN, SPELL_AWAKEN_EARTHEN_GUARDIAN, m_creature);
-            m_bGuardiansAwaken = true;
+            if (Creature* pGuard = m_pInstance->GetClosestDwarfNotInCombat(m_creature, PHASE_ARCHA_2))
+            {
+                if (DoCastSpellIfCan(pGuard, SPELL_AWAKEN_EARTHEN_GUARDIAN) == CAST_OK)
+                {
+                    DoScriptText(SAY_AWAKE_GUARDIANS, m_creature);
+                    m_bGuardiansAwaken = true;
+                }
+            }
         }
 
         // Awake Warders
         if (!m_bWardersAwaken && m_creature->GetHealthPercent() <= 33.0f)
         {
-            if (Unit* pUnit = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-                m_pInstance->SetData64(DATA_EVENT_STARTER, pUnit->GetGUID());
-
-            DoScriptText(SAY_AWAKE_WARDERS, m_creature, NULL);
-            DoCastSpellIfCan(m_creature, SPELL_AWAKEN_VAULT_WARDER, (CAST_TRIGGERED | CAST_INTERRUPT_PREVIOUS));
-
-            // hack to remove
-            m_pInstance->SimulateSpellHit(MOB_VAULT_WARDER, SPELL_AWAKEN_VAULT_WARDER, m_creature);
-            m_bWardersAwaken = true;
+            if (Creature* pWarder = m_pInstance->GetClosestDwarfNotInCombat(m_creature, PHASE_ARCHA_3))
+            {
+                if (DoCastSpellIfCan(pWarder, SPELL_AWAKEN_VAULT_WARDER) == CAST_OK)
+                {
+                    DoScriptText(SAY_AWAKE_WARDERS, m_creature);
+                    m_bWardersAwaken = true;
+                }
+            }
         }
 
         DoMeleeAttackIfReady();
     }
 };
 
-struct MANGOS_DLL_DECL mob_archaeras_addAI : public ScriptedAI
+struct MANGOS_DLL_DECL npc_archaeras_addAI : public ScriptedAI
 {
-    mob_archaeras_addAI(Creature* pCreature) : ScriptedAI(pCreature)
+    npc_archaeras_addAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        m_pInstance = (instance_uldaman*)pCreature->GetInstanceData();
         Reset();
     }
 
-    instance_uldaman* m_pInstance;
-    uint32 m_uiAwakeningTimer;
-    uint8 m_uiSubevent;
-    bool m_bAwakening;
-
     void Reset()
     {
-        m_uiAwakeningTimer = 0;
-        m_uiSubevent = 0;
-        m_bAwakening = false;
-        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-        m_creature->setFaction(FACTION_TITAN_NEUTRAL);
-    }
-
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
-    {
-        switch(m_creature->GetEntry())
-        {
-            case MOB_CUSTODIAN:
-            case MOB_HALLSHAPER:
-                if (pSpell->Id == SPELL_AWAKEN_EARTHEN_DWARF)
-                    m_bAwakening = true;
-                break;
-            case MOB_VAULT_WARDER:
-                if (pSpell->Id == SPELL_AWAKEN_VAULT_WARDER)
-                    m_bAwakening = true;
-                break;
-            case MOB_GUARDIAN:
-                if (pSpell->Id == SPELL_AWAKEN_EARTHEN_GUARDIAN)
-                    m_bAwakening = true;
-                break;
-            default:
-                break;
-        }
     }
 
     void UpdateAI(const uint32 uiDiff)
     {
-        // OOC part triggered by awakening spell hit
-        if (m_bAwakening)
-        {
-            if (m_uiAwakeningTimer <= uiDiff)
-            {
-                switch(m_uiSubevent)
-                {
-                    case 0:
-                        m_creature->RemoveAurasDueToSpell(SPELL_STONED);
-                        DoCastSpellIfCan(m_creature, SPELL_STONE_DWARF_AWAKEN_VISUAL);
-                        break;
-                    case 1:
-                        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                        m_creature->setFaction(FACTION_TITAN_HOSTILE);
-                        if (Unit* pUnit = Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_EVENT_STARTER)))
-                        {
-                            m_bAwakening = false;
-                            AttackStart(pUnit);
-                        }
-                        else 
-                            EnterEvadeMode();
-                        break;
-                    default:
-                        break;
-                }
-                ++m_uiSubevent;
-                m_uiAwakeningTimer = 2000;
-            }
-            else
-                m_uiAwakeningTimer -= uiDiff;
-        }
-
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
@@ -275,9 +225,9 @@ CreatureAI* GetAI_boss_archaedas(Creature* pCreature)
     return new boss_archaedasAI(pCreature);
 }
 
-CreatureAI* GetAI_mob_archaeras_add(Creature* pCreature)
+CreatureAI* GetAI_npc_archaeras_add(Creature* pCreature)
 {
-    return new mob_archaeras_addAI(pCreature);
+    return new npc_archaeras_addAI(pCreature);
 }
 
 void AddSC_boss_archaedas()
@@ -291,6 +241,6 @@ void AddSC_boss_archaedas()
 
     pNewScript = new Script;
     pNewScript->Name = "mob_archaeras_add";
-    pNewScript->GetAI = &GetAI_mob_archaeras_add;
+    pNewScript->GetAI = &GetAI_npc_archaeras_add;
     pNewScript->RegisterSelf();
 }

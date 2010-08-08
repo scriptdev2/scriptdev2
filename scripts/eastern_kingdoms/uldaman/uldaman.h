@@ -18,10 +18,14 @@ enum
     GO_ANCIENT_VAULT            = 124369,
 
     MOB_CUSTODIAN               = 7309,
-    MOB_GUARDIAN                = 7076,
     MOB_HALLSHAPER              = 7077,
+    MOB_GUARDIAN                = 7076,
     MOB_VAULT_WARDER            = 10120,
     NPC_STONE_KEEPER            = 4857,
+
+    PHASE_ARCHA_1               = 1,
+    PHASE_ARCHA_2               = 2,
+    PHASE_ARCHA_3               = 3,
 
     SPELL_STONED                = 10255,
     SPELL_USE_ALTAR_VISUAL      = 11206,
@@ -53,7 +57,7 @@ class MANGOS_DLL_DECL instance_uldaman : public ScriptedInstance
 
         void StartEvent(uint32 uiEventId, Player* pPlayer);
 
-        Creature* GetDwarf();
+        Creature* GetClosestDwarfNotInCombat(Creature* pSearcher, uint32 uiPhase);
         // hack to remove
         void SimulateSpellHit(uint32 uiCreatureEntry, uint32 uiSpellEntry, Unit* pCaster);
 

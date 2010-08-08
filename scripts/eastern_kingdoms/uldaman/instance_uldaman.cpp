@@ -75,9 +75,12 @@ void instance_uldaman::OnCreatureCreate(Creature* pCreature)
         case MOB_GUARDIAN:
         case MOB_VAULT_WARDER:
             m_lWardens.push_back(pCreature->GetGUID());
+            pCreature->CastSpell(pCreature, SPELL_STONED, true);
+            pCreature->SetNoCallAssistance(true);           // no assistance
             break;
         case NPC_STONE_KEEPER:
             m_lKeeperList.push_back(pCreature->GetGUID());
+            pCreature->CastSpell(pCreature, SPELL_STONED, true);
             break;
         default:
             break;
@@ -109,9 +112,12 @@ void instance_uldaman::SetData(uint32 uiType, uint32 uiData)
             {
                 for (std::list<uint64>::iterator itr = m_lWardens.begin(); itr != m_lWardens.end(); ++itr)
                 {
-                    Creature* pWarden = instance->GetCreature(*itr);
-                    if (pWarden && !pWarden->isAlive())
+                    if (Creature* pWarden = instance->GetCreature(*itr))
+                    {
+                        pWarden->setDeathState(JUST_DIED);
                         pWarden->Respawn();
+                        pWarden->SetNoCallAssistance(true);
+                    }
                 }
             }
             else if (uiData == DONE)
@@ -207,37 +213,41 @@ void instance_uldaman::StartEvent(uint32 uiEventId, Player* pPlayer)
         m_auiEncounter[1] = SPECIAL;
 }
 
-Creature* instance_uldaman::GetDwarf()
+Creature* instance_uldaman::GetClosestDwarfNotInCombat(Creature* pSearcher, uint32 uiPhase)
 {
     std::list<Creature*> lTemp;
 
     for (std::list<uint64>::iterator itr = m_lWardens.begin(); itr != m_lWardens.end(); ++itr)
     {
-       Creature* pTemp = instance->GetCreature(*itr);
-       if (pTemp && pTemp->isAlive() && pTemp->HasAura(SPELL_STONED) && 
-           (pTemp->GetEntry() == MOB_CUSTODIAN || pTemp->GetEntry() == MOB_HALLSHAPER) )
-           lTemp.push_back(pTemp);
+        Creature* pTemp = instance->GetCreature(*itr);
+
+        if (pTemp && pTemp->isAlive() && !pTemp->getVictim())
+        {
+            switch(uiPhase)
+            {
+                case PHASE_ARCHA_1:
+                    if (pTemp->GetEntry() != MOB_CUSTODIAN && pTemp->GetEntry() != MOB_HALLSHAPER)
+                        continue;
+                    break;
+                case PHASE_ARCHA_2:
+                    if (pTemp->GetEntry() != MOB_GUARDIAN)
+                        continue;
+                    break;
+                case PHASE_ARCHA_3:
+                    if (pTemp->GetEntry() != MOB_VAULT_WARDER)
+                        continue;
+                    break;
+            }
+
+            lTemp.push_back(pTemp);
+        }
     }
 
     if (lTemp.empty())
         return NULL;
 
-    std::list<Creature*>::iterator i = lTemp.begin();
-    advance(i, (rand()%lTemp.size()));
-    return (*i);
-}
-
-// hack
-void instance_uldaman::SimulateSpellHit(uint32 uiCreatureEntry, uint32 uiSpellEntry, Unit* pCaster)
-{
-    for (std::list<uint64>::iterator itr = m_lWardens.begin(); itr != m_lWardens.end(); ++itr)
-    {
-       Creature* pTemp = instance->GetCreature(*itr);
-       const SpellEntry* pSpell = GetSpellStore()->LookupEntry(uiSpellEntry);
-       if (pSpell && pTemp && pTemp->isAlive() && pTemp->GetEntry() == uiCreatureEntry &&
-           pTemp->HasAura(SPELL_STONED))
-           pTemp->AI()->SpellHit(pCaster, pSpell);
-    }
+    lTemp.sort(ObjectDistanceOrder(pSearcher));
+    return lTemp.front();
 }
 
 void instance_uldaman::Update(uint32 uiDiff)
@@ -254,12 +264,13 @@ void instance_uldaman::Update(uint32 uiDiff)
                 {
                     Unit* pTarget = Unit::GetUnit(*pKeeper, m_uiPlayerGUID);
 
-                    pKeeper->setFaction(FACTION_TITAN_HOSTILE);
-                    pKeeper->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                     pKeeper->RemoveAurasDueToSpell(SPELL_STONED);
 
-                    if (pTarget && pTarget->isAlive() && pKeeper->AI())
-                        pKeeper->AI()->AttackStart(pTarget);
+                    if (pTarget && pTarget->isAlive())
+                    {
+                        pKeeper->SetInCombatWith(pTarget);
+                        pKeeper->AddThreat(pTarget);
+                    }
                 }
             }
 
