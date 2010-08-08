@@ -77,7 +77,7 @@ struct MANGOS_DLL_DECL boss_archaedasAI : public ScriptedAI
 
     void KilledUnit(Unit* pVictim)
     {
-        DoScriptText(SAY_UNIT_SLAIN, m_creature, NULL);
+        DoScriptText(SAY_UNIT_SLAIN, m_creature);
     }
 
     void JustDied(Unit* pKiller)
