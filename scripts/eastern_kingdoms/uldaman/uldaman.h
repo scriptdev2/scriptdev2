@@ -57,9 +57,9 @@ class MANGOS_DLL_DECL instance_uldaman : public ScriptedInstance
 
         void StartEvent(uint32 uiEventId, Player* pPlayer);
 
+        void DoResetKeeperEvent();
+
         Creature* GetClosestDwarfNotInCombat(Creature* pSearcher, uint32 uiPhase);
-        // hack to remove
-        void SimulateSpellHit(uint32 uiCreatureEntry, uint32 uiSpellEntry, Unit* pCaster);
 
         const char* Save() { return strInstData.c_str(); }
         void Load(const char* chrIn);
@@ -72,9 +72,11 @@ class MANGOS_DLL_DECL instance_uldaman : public ScriptedInstance
         uint64 m_uiTempleDoorLowerGUID;
         uint64 m_uiAncientVaultGUID;
         uint64 m_uiPlayerGUID;
-        uint8 m_uiStoneKeepersFallen;
+
+        uint32 m_uiKeeperCooldown;
+        uint32 m_uiStoneKeepersFallen;
 
         std::list<uint64> m_lWardens;
-        std::list<uint64> m_lKeeperList;
+        std::map<uint64, bool> m_mKeeperMap;
 };
 #endif
