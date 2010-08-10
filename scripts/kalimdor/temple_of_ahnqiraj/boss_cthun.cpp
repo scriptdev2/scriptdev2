@@ -935,9 +935,8 @@ struct MANGOS_DLL_DECL eye_tentacleAI : public ScriptedAI
 
     void JustDied(Unit*)
     {
-        Unit* p = Unit::GetUnit(*m_creature, Portal);
-        if (p)
-            p->DealDamage(p, p->GetMaxHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NONE, NULL, false);
+        if (Creature* pCreature = m_creature->GetMap()->GetCreature(Portal))
+            pCreature->DealDamage(pCreature, pCreature->GetMaxHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NONE, NULL, false);
     }
 
     void Reset()
@@ -1000,8 +999,8 @@ struct MANGOS_DLL_DECL claw_tentacleAI : public ScriptedAI
 
     void JustDied(Unit*)
     {
-        if (Unit* p = Unit::GetUnit(*m_creature, Portal))
-            p->DealDamage(p, p->GetMaxHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NONE, NULL, false);
+        if (Creature* pCreature = m_creature->GetMap()->GetCreature(Portal))
+            pCreature->DealDamage(pCreature, pCreature->GetMaxHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NONE, NULL, false);
     }
 
     void Reset()
@@ -1027,8 +1026,8 @@ struct MANGOS_DLL_DECL claw_tentacleAI : public ScriptedAI
         if (!m_creature->IsWithinDist(m_creature->getVictim(), ATTACK_DISTANCE))
             if (EvadeTimer < diff)
         {
-            if (Unit* p = Unit::GetUnit(*m_creature, Portal))
-                p->DealDamage(p, m_creature->GetMaxHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NONE, NULL, false);
+            if (Creature* pCreature = m_creature->GetMap()->GetCreature(Portal))
+                pCreature->DealDamage(pCreature, m_creature->GetMaxHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NONE, NULL, false);
 
             //Dissapear and reappear at new position
             m_creature->SetVisibility(VISIBILITY_OFF);
@@ -1094,8 +1093,8 @@ struct MANGOS_DLL_DECL giant_claw_tentacleAI : public ScriptedAI
 
     void JustDied(Unit*)
     {
-        if (Unit* p = Unit::GetUnit(*m_creature, Portal))
-            p->DealDamage(p, p->GetMaxHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NONE, NULL, false);
+        if (Creature* pCreature = m_creature->GetMap()->GetCreature(Portal))
+            pCreature->DealDamage(pCreature, pCreature->GetMaxHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NONE, NULL, false);
     }
 
     void Reset()
@@ -1122,8 +1121,8 @@ struct MANGOS_DLL_DECL giant_claw_tentacleAI : public ScriptedAI
         if (m_creature->IsWithinDist(m_creature->getVictim(), ATTACK_DISTANCE))
             if (EvadeTimer < diff)
         {
-            if (Unit* p = Unit::GetUnit(*m_creature, Portal))
-                p->DealDamage(p, m_creature->GetMaxHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NONE, NULL, false);
+            if (Creature* pCreature = m_creature->GetMap()->GetCreature(Portal))
+                pCreature->DealDamage(pCreature, m_creature->GetMaxHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NONE, NULL, false);
 
             //Dissapear and reappear at new position
             m_creature->SetVisibility(VISIBILITY_OFF);
@@ -1195,8 +1194,8 @@ struct MANGOS_DLL_DECL giant_eye_tentacleAI : public ScriptedAI
 
     void JustDied(Unit*)
     {
-        if (Unit* p = Unit::GetUnit(*m_creature, Portal))
-            p->DealDamage(p, p->GetMaxHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NONE, NULL, false);
+        if (Creature* pCreature = m_creature->GetMap()->GetCreature(Portal))
+            pCreature->DealDamage(pCreature, pCreature->GetMaxHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NONE, NULL, false);
     }
 
     void Reset()
@@ -1239,9 +1238,9 @@ void flesh_tentacleAI::UpdateAI(const uint32 diff)
     if (Parent)
         if (CheckTimer < diff)
     {
-        Unit* pUnit = Unit::GetUnit(*m_creature, Parent);
+        Creature* pParent = m_creature->GetMap()->GetCreature(Parent);
 
-        if (!pUnit || !pUnit->isAlive() || !pUnit->isInCombat())
+        if (!pParent || !pParent->isAlive() || !pParent->isInCombat())
         {
             Parent = 0;
             m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NONE, NULL, false);
@@ -1262,7 +1261,7 @@ void flesh_tentacleAI::JustDied(Unit* killer)
         return;
     }
 
-    Creature* Cthun = (Creature*)Unit::GetUnit(*m_creature, Parent);
+    Creature* Cthun = m_creature->GetMap()->GetCreature(Parent);
 
     if (Cthun)
         ((cthunAI*)(Cthun->AI()))->FleshTentcleKilled();

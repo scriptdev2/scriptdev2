@@ -81,7 +81,7 @@ struct MANGOS_DLL_DECL npc_lady_sylvanas_windrunnerAI : public ScriptedAI
     {
         if (summoned->GetEntry() == ENTRY_HIGHBORNE_BUNNY)
         {
-            if (Creature* pBunny = (Creature*)Unit::GetUnit(*summoned,targetGUID))
+            if (Creature* pBunny = m_creature->GetMap()->GetCreature(targetGUID))
             {
                 pBunny->NearTeleportTo(pBunny->GetPositionX(), pBunny->GetPositionY(), myZ+15.0f, 0.0f);
                 summoned->CastSpell(pBunny,SPELL_RIBBON_OF_SOULS,false);

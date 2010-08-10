@@ -128,7 +128,7 @@ struct MANGOS_DLL_DECL boss_high_botanist_freywinnAI : public ScriptedAI
                 {
                     for(std::list<uint64>::iterator itr = Adds_List.begin(); itr != Adds_List.end(); ++itr)
                     {
-                        if (Unit *temp = Unit::GetUnit(*m_creature,*itr))
+                        if (Creature *temp = m_creature->GetMap()->GetCreature(*itr))
                         {
                             if (!temp->isAlive())
                             {

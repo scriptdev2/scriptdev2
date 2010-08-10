@@ -136,7 +136,7 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
 
         for(uint8 i = 0; i < MAX_ACTIVE_LACKEY; ++i)
         {
-            if (Unit* pAdd = Unit::GetUnit(*m_creature, m_auiLackeyGUID[i]))
+            if (Creature* pAdd = m_creature->GetMap()->GetCreature(m_auiLackeyGUID[i]))
             {
                 if (!pAdd->getVictim())
                 {
@@ -185,7 +185,7 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
         {
             for(std::vector<uint32>::iterator itr = LackeyEntryList.begin(); itr != LackeyEntryList.end(); ++itr)
             {
-                Unit* pAdd = Unit::GetUnit(*m_creature, m_auiLackeyGUID[j]);
+                Creature* pAdd = m_creature->GetMap()->GetCreature(m_auiLackeyGUID[j]);
 
                 //object already removed, not exist
                 if (!pAdd)
@@ -233,11 +233,11 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
         if (HealTimer < diff)
         {
             uint32 health = m_creature->GetHealth();
-            Unit* target = m_creature;
+            Creature* target = m_creature;
 
             for(uint8 i = 0; i < MAX_ACTIVE_LACKEY; ++i)
             {
-                if (Unit* pAdd = Unit::GetUnit(*m_creature, m_auiLackeyGUID[i]))
+                if (Creature* pAdd = m_creature->GetMap()->GetCreature(m_auiLackeyGUID[i]))
                 {
                     if (pAdd->isAlive() && pAdd->GetHealth() < health)
                         target = pAdd;
@@ -250,11 +250,11 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
 
         if (RenewTimer < diff)
         {
-            Unit* target = m_creature;
+            Creature* target = m_creature;
 
             if (urand(0, 1))
             {
-                if (Unit* pAdd = Unit::GetUnit(*m_creature, m_auiLackeyGUID[rand()%MAX_ACTIVE_LACKEY]))
+                if (Creature* pAdd = m_creature->GetMap()->GetCreature(m_auiLackeyGUID[rand()%MAX_ACTIVE_LACKEY]))
                 {
                     if (pAdd->isAlive())
                         target = pAdd;
@@ -267,11 +267,11 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
 
         if (ShieldTimer < diff)
         {
-            Unit* target = m_creature;
+            Creature* target = m_creature;
 
             if (urand(0, 1))
             {
-                if (Unit* pAdd = Unit::GetUnit(*m_creature, m_auiLackeyGUID[rand()%MAX_ACTIVE_LACKEY]))
+                if (Creature* pAdd = m_creature->GetMap()->GetCreature(m_auiLackeyGUID[rand()%MAX_ACTIVE_LACKEY]))
                 {
                     if (pAdd->isAlive() && !pAdd->HasAura(SPELL_SHIELD))
                         target = pAdd;
@@ -297,7 +297,7 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
                     target = m_creature;
                 else
                 {
-                    if (Unit* pAdd = Unit::GetUnit(*m_creature, m_auiLackeyGUID[rand()%MAX_ACTIVE_LACKEY]))
+                    if (Creature* pAdd = m_creature->GetMap()->GetCreature(m_auiLackeyGUID[rand()%MAX_ACTIVE_LACKEY]))
                     {
                         if (pAdd->isAlive())
                             target = pAdd;
@@ -361,7 +361,7 @@ struct MANGOS_DLL_DECL boss_priestess_lackey_commonAI : public ScriptedAI
         m_uiResetThreatTimer = urand(5000, 15000);
 
         // in case she is not alive and Reset was for some reason called, respawn her (most likely party wipe after killing her)
-        if (Creature* pDelrissa = (Creature*)Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_DELRISSA)))
+        if (Creature* pDelrissa = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_DELRISSA)))
         {
             if (!pDelrissa->isAlive())
                 pDelrissa->Respawn();
@@ -377,7 +377,7 @@ struct MANGOS_DLL_DECL boss_priestess_lackey_commonAI : public ScriptedAI
         {
             for(uint8 i = 0; i < MAX_ACTIVE_LACKEY; ++i)
             {
-                if (Unit* pAdd = Unit::GetUnit(*m_creature, m_auiLackeyGUIDs[i]))
+                if (Creature* pAdd = m_creature->GetMap()->GetCreature(m_auiLackeyGUIDs[i]))
                 {
                     if (!pAdd->getVictim() && pAdd != m_creature)
                     {
@@ -387,7 +387,7 @@ struct MANGOS_DLL_DECL boss_priestess_lackey_commonAI : public ScriptedAI
                 }
             }
 
-            if (Creature* pDelrissa = (Creature*)Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_DELRISSA)))
+            if (Creature* pDelrissa = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_DELRISSA)))
             {
                 if (pDelrissa->isAlive() && !pDelrissa->getVictim())
                 {
@@ -405,7 +405,7 @@ struct MANGOS_DLL_DECL boss_priestess_lackey_commonAI : public ScriptedAI
         if (!m_pInstance)
             return;
 
-        Creature* pDelrissa = (Creature*)Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_DELRISSA));
+        Creature* pDelrissa = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_DELRISSA));
         uint32 uiLackeyDeathCount = m_pInstance->GetData(DATA_DELRISSA_DEATH_COUNT);
 
         if (!pDelrissa)
@@ -437,7 +437,7 @@ struct MANGOS_DLL_DECL boss_priestess_lackey_commonAI : public ScriptedAI
         if (!m_pInstance)
             return;
 
-        if (Creature* pDelrissa = (Creature*)Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_DELRISSA)))
+        if (Creature* pDelrissa = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_DELRISSA)))
             pDelrissa->AI()->KilledUnit(pVictim);
     }
 
@@ -446,7 +446,7 @@ struct MANGOS_DLL_DECL boss_priestess_lackey_commonAI : public ScriptedAI
         if (!m_pInstance)
             return;
 
-        if (Creature* pDelrissa = (Creature*)Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_DELRISSA)))
+        if (Creature* pDelrissa = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_DELRISSA)))
         {
             for(uint8 i = 0; i < MAX_ACTIVE_LACKEY; ++i)
                 m_auiLackeyGUIDs[i] = ((boss_priestess_delrissaAI*)pDelrissa->AI())->m_auiLackeyGUID[i];
@@ -983,7 +983,7 @@ struct MANGOS_DLL_DECL boss_garaxxasAI : public boss_priestess_lackey_commonAI
         Wing_Clip_Timer = 4000;
         Freezing_Trap_Timer = 15000;
 
-        Unit* pPet = Unit::GetUnit(*m_creature,m_uiPetGUID);
+        Creature* pPet = m_creature->GetMap()->GetCreature(m_uiPetGUID);
         if (!pPet)
             m_creature->SummonCreature(NPC_SLIVER, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_CORPSE_DESPAWN, 0);
 
@@ -1221,7 +1221,7 @@ struct MANGOS_DLL_DECL boss_zelfanAI : public boss_priestess_lackey_commonAI
         {
             for(uint8 i = 0; i < MAX_ACTIVE_LACKEY; ++i)
             {
-                if (Unit* pAdd = Unit::GetUnit(*m_creature, m_auiLackeyGUIDs[i]))
+                if (Creature* pAdd = m_creature->GetMap()->GetCreature(m_auiLackeyGUIDs[i]))
                 {
                     if (pAdd->IsPolymorphed())
                     {

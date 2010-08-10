@@ -179,7 +179,7 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
         {
             for(uint8 i = 0; i < 4; ++i)
             {
-                if (Creature* pCreature = (Creature*)Unit::GetUnit((*m_creature), m_auiAddGUID[i]))
+                if (Creature* pCreature = m_creature->GetMap()->GetCreature(m_auiAddGUID[i]))
                 {
                     if (!pCreature->isAlive())              // Exists but is dead
                     {
@@ -206,9 +206,9 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
         {
             if (m_auiAddGUID[i])
             {
-                Unit* pTemp = Unit::GetUnit((*m_creature), m_auiAddGUID[i]);
+                Creature* pTemp = m_creature->GetMap()->GetCreature(m_auiAddGUID[i]);
                 if (pTemp && pTemp->isAlive())
-                    ((Creature*)pTemp)->AI()->AttackStart(m_creature->getVictim());
+                    pTemp->AI()->AttackStart(m_creature->getVictim());
                 else
                     EnterEvadeMode();
             }
@@ -235,9 +235,9 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
             {
                 if (m_auiAddGUID[i])
                 {
-                    Unit* pTemp = Unit::GetUnit((*m_creature), m_auiAddGUID[i]);
+                    Creature* pTemp = m_creature->GetMap()->GetCreature(m_auiAddGUID[i]);
                     if (pTemp && pTemp->isAlive() && (!pTemp->SelectHostileTarget() || !pTemp->getVictim()))
-                        ((Creature*)pTemp)->AI()->AttackStart(m_creature->getVictim());
+                        pTemp->AI()->AttackStart(m_creature->getVictim());
                 }
             }
             m_uiCheckAdds_Timer = 5000;
@@ -351,7 +351,7 @@ struct MANGOS_DLL_DECL boss_moroes_guestAI : public ScriptedAI
 
         m_auiGuestGUID[0] = m_pInstance->GetData64(DATA_MOROES);
 
-        if (Creature* pMoroes = (Creature*)Unit::GetUnit((*m_creature), m_auiGuestGUID[0]))
+        if (Creature* pMoroes = m_creature->GetMap()->GetCreature(m_auiGuestGUID[0]))
         {
             for(uint8 i = 0; i < 3; ++i)
             {
@@ -366,9 +366,9 @@ struct MANGOS_DLL_DECL boss_moroes_guestAI : public ScriptedAI
     {
         if (uint64 uiTempGUID = m_auiGuestGUID[rand()%4])
         {
-            Unit* pUnit = Unit::GetUnit((*m_creature), uiTempGUID);
-            if (pUnit && pUnit->isAlive())
-                return pUnit;
+            Creature* pTemp = m_creature->GetMap()->GetCreature(uiTempGUID);
+            if (pTemp && pTemp->isAlive())
+                return pTemp;
         }
 
         return m_creature;

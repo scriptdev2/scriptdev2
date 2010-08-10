@@ -223,7 +223,7 @@ bool GOHello_go_strange_gong(Player* pPlayer, GameObject* pGo)
 
     if (pInstance->GetData(TYPE_EVENT_RUN) == SPECIAL)
     {
-        if (Creature* pCreature = (Creature*)Unit::GetUnit(*pPlayer, pInstance->GetData64(DATA_HARRISON)))
+        if (Creature* pCreature = pGo->GetMap()->GetCreature(pInstance->GetData64(DATA_HARRISON)))
         {
             if (npc_harrison_jones_zaAI* pHarrisonAI = dynamic_cast<npc_harrison_jones_zaAI*>(pCreature->AI()))
                 pHarrisonAI->SetHoldState(false);

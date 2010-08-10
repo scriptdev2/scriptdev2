@@ -138,7 +138,7 @@ struct MANGOS_DLL_DECL boss_bjarngrimAI : public ScriptedAI
 
         for(uint8 i = 0; i < 2; ++i)
         {
-            if (Creature* pStormforgedLieutenant = ((Creature*)Unit::GetUnit((*m_creature), m_auiStormforgedLieutenantGUID[i])))
+            if (Creature* pStormforgedLieutenant = m_creature->GetMap()->GetCreature(m_auiStormforgedLieutenantGUID[i]))
             {
                 if (!pStormforgedLieutenant->isAlive())
                     pStormforgedLieutenant->Respawn();

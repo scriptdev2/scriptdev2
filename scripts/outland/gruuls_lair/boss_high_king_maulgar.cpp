@@ -110,7 +110,7 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
     {
         for (uint8 i = 0; i < MAX_COUNCIL; ++i)
         {
-            if (Creature* pCreature = (Creature*)Unit::GetUnit((*m_creature), m_auiCouncil[i]))
+            if (Creature* pCreature = m_creature->GetMap()->GetCreature(m_auiCouncil[i]))
             {
                 if (!pCreature->isAlive())
                     pCreature->Respawn();
@@ -286,7 +286,7 @@ struct MANGOS_DLL_DECL Council_Base_AI : public ScriptedAI
         if (!m_pInstance)
             return;
 
-        Creature* pMaulgar = (Creature*)Unit::GetUnit((*m_creature), m_pInstance->GetData64(DATA_MAULGAR));
+        Creature* pMaulgar = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_MAULGAR));
 
         if (pMaulgar->isAlive())
         {

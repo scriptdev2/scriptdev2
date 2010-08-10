@@ -158,7 +158,7 @@ struct MANGOS_DLL_DECL npc_kelerun_bloodmournAI : public ScriptedAI
 
             if (m_uiCheckAliveStateTimer < uiDiff)
             {
-                if (Unit* pChallenger = Unit::GetUnit(*m_creature, uiChallengerGUID[m_uiChallengerCount]))
+                if (Creature* pChallenger = m_creature->GetMap()->GetCreature(uiChallengerGUID[m_uiChallengerCount]))
                 {
                     if (!pChallenger->isAlive())
                     {
@@ -196,7 +196,7 @@ struct MANGOS_DLL_DECL npc_kelerun_bloodmournAI : public ScriptedAI
 
                 if (pPlayer && pPlayer->isAlive())
                 {
-                    if (Creature* pCreature = (Creature*)Unit::GetUnit(*m_creature, uiChallengerGUID[m_uiChallengerCount]))
+                    if (Creature* pCreature = m_creature->GetMap()->GetCreature(uiChallengerGUID[m_uiChallengerCount]))
                     {
                         DoScriptText(uiSayId[m_uiChallengerCount], m_creature, pPlayer);
                         pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);

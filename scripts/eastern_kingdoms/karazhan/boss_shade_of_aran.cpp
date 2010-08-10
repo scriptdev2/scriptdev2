@@ -416,10 +416,10 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
 
             for (uint32 i = 0; i < 4; ++i)
             {
-                if (Creature* pUnit = m_creature->SummonCreature(NPC_WATER_ELEMENTAL, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN, 90000))
+                if (Creature* pElemental = m_creature->SummonCreature(NPC_WATER_ELEMENTAL, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN, 90000))
                 {
-                    pUnit->Attack(m_creature->getVictim(), true);
-                    pUnit->setFaction(m_creature->getFaction());
+                    pElemental->Attack(m_creature->getVictim(), true);
+                    pElemental->setFaction(m_creature->getFaction());
                 }
             }
 
@@ -430,10 +430,10 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
         {
             for (uint32 i = 0; i < 5; ++i)
             {
-                if (Creature* pUnit = m_creature->SummonCreature(NPC_SHADOW_OF_ARAN, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000))
+                if (Creature* pShadow = m_creature->SummonCreature(NPC_SHADOW_OF_ARAN, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000))
                 {
-                    pUnit->Attack(m_creature->getVictim(), true);
-                    pUnit->setFaction(m_creature->getFaction());
+                    pShadow->Attack(m_creature->getVictim(), true);
+                    pShadow->setFaction(m_creature->getFaction());
                 }
             }
 

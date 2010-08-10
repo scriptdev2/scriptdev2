@@ -139,7 +139,7 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
         //despawn copy
         if (m_uiShadowLeo)
         {
-            if (Creature* pShadowLeo = (Creature*)Unit::GetUnit((*m_creature), m_uiShadowLeo))
+            if (Creature* pShadowLeo = m_creature->GetMap()->GetCreature(m_uiShadowLeo))
                 pShadowLeo->ForcedDespawn();
         }
 

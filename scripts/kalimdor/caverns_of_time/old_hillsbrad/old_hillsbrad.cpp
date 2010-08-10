@@ -340,7 +340,7 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
             case 94:
                 if (uint64 TarethaGUID = m_pInstance->GetData64(DATA_TARETHA))
                 {
-                    if (Unit* Taretha = Unit::GetUnit((*m_creature), TarethaGUID))
+                    if (Creature* Taretha = m_creature->GetMap()->GetCreature(TarethaGUID))
                         DoScriptText(SAY_TA_ESCAPED, Taretha, m_creature);
                 }
                 break;
@@ -635,7 +635,7 @@ bool GossipHello_npc_taretha(Player* pPlayer, Creature* pCreature)
 
 bool GossipSelect_npc_taretha(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    ScriptedInstance* pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+    ScriptedInstance* pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
 
     if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
     {
@@ -653,8 +653,7 @@ bool GossipSelect_npc_taretha(Player* pPlayer, Creature* pCreature, uint32 uiSen
 
             if (uint64 ThrallGUID = pInstance->GetData64(DATA_THRALL))
             {
-                Creature* Thrall = ((Creature*)Unit::GetUnit((*pCreature), ThrallGUID));
-                if (Thrall)
+                if (Creature* Thrall = pCreature->GetMap()->GetCreature(ThrallGUID))
                     ((npc_thrall_old_hillsbradAI*)Thrall->AI())->StartWP();
             }
         }

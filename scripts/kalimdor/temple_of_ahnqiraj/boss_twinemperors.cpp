@@ -96,17 +96,17 @@ struct MANGOS_DLL_DECL boss_twinemperorsAI : public ScriptedAI
     {
         if (m_pInstance)
         {
-            return (Creature *)Unit::GetUnit((*m_creature), m_pInstance->GetData64(IAmVeklor() ? DATA_VEKNILASH : DATA_VEKLOR));
+            return m_creature->GetMap()->GetCreature(m_pInstance->GetData64(IAmVeklor() ? DATA_VEKNILASH : DATA_VEKLOR));
         }
         else
         {
-            return (Creature *)0;
+            return NULL;
         }
     }
 
     void DamageTaken(Unit *done_by, uint32 &damage)
     {
-        Unit *pOtherBoss = GetOtherBoss();
+        Creature *pOtherBoss = GetOtherBoss();
         if (pOtherBoss)
         {
             float dPercent = ((float)damage) / ((float)m_creature->GetMaxHealth());

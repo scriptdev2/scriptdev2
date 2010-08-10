@@ -158,7 +158,7 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
                         break;
                     case 2:
                         DoScriptText(SAY_AGGRO, m_creature);
-                        if (Unit *mellic = Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_MELLICHAR)))
+                        if (Creature *mellic = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_MELLICHAR)))
                         {
                             //should have a better way to do this. possibly spell exist.
                             mellic->setDeathState(JUST_DIED);

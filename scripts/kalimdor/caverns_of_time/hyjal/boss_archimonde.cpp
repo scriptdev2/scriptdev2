@@ -100,7 +100,7 @@ struct mob_ancient_wispAI : public ScriptedAI
     {
         if (CheckTimer < diff)
         {
-            if (Unit* Archimonde = Unit::GetUnit((*m_creature), ArchimondeGUID))
+            if (Creature* Archimonde = m_creature->GetMap()->GetCreature(ArchimondeGUID))
             {
                 if (Archimonde->GetHealthPercent() < 2.0f || !Archimonde->isAlive())
                     DoCastSpellIfCan(m_creature, SPELL_DENOUEMENT_WISP);
@@ -341,7 +341,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
             pSummoned->CastSpell(pSummoned,SPELL_DOOMFIRE_SPAWN,false);
             pSummoned->CastSpell(pSummoned,SPELL_DOOMFIRE,true,0,0,m_creature->GetGUID());
 
-            if (Unit* pDoomfireSpirit = Unit::GetUnit(*m_creature, DoomfireSpiritGUID))
+            if (Creature* pDoomfireSpirit = m_creature->GetMap()->GetCreature(DoomfireSpiritGUID))
             {
                 pSummoned->GetMotionMaster()->MoveFollow(pDoomfireSpirit,0.0f,0.0f);
                 DoomfireSpiritGUID = 0;
@@ -389,7 +389,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
                     if (temp)
                         WorldTreeGUID = temp->GetGUID();
 
-                    if (Unit *Nordrassil = Unit::GetUnit(*m_creature, WorldTreeGUID))
+                    if (Creature *Nordrassil = m_creature->GetMap()->GetCreature(WorldTreeGUID))
                     {
                         Nordrassil->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                         Nordrassil->SetDisplayId(11686);
@@ -398,7 +398,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
                     }
                 }
 
-                if (Unit *Nordrassil = Unit::GetUnit(*m_creature, WorldTreeGUID))
+                if (Creature *Nordrassil = m_creature->GetMap()->GetCreature(WorldTreeGUID))
                 {
                     Nordrassil->CastSpell(m_creature, SPELL_DRAIN_WORLD_TREE_2, true);
                     DrainNordrassilTimer = 1000;

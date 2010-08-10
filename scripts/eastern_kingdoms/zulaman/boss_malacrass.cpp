@@ -155,7 +155,7 @@ struct MANGOS_DLL_DECL boss_malacrassAI : public ScriptedAI
 
         for(uint8 i = 0; i < MAX_ACTIVE_ADDS; ++i)
         {
-            if (Creature* pAdd = (Creature*)Unit::GetUnit(*m_creature, m_auiAddGUIDs[i]))
+            if (Creature* pAdd = m_creature->GetMap()->GetCreature(m_auiAddGUIDs[i]))
                 pAdd->AI()->EnterEvadeMode();
         }
     }
@@ -218,7 +218,7 @@ struct MANGOS_DLL_DECL boss_malacrassAI : public ScriptedAI
     {
         for(uint8 i = 0; i < MAX_ACTIVE_ADDS; ++i)
         {
-            if (Creature* pAdd = (Creature*)Unit::GetUnit(*m_creature, m_auiAddGUIDs[i]))
+            if (Creature* pAdd = m_creature->GetMap()->GetCreature(m_auiAddGUIDs[i]))
             {
                 if (!pAdd->getVictim())
                     pAdd->AI()->AttackStart(pWho);
@@ -249,7 +249,7 @@ struct MANGOS_DLL_DECL boss_malacrassAI : public ScriptedAI
     {
         for(uint8 i = 0; i < MAX_ACTIVE_ADDS; ++i)
         {
-            if (Creature* pAdd = (Creature*)Unit::GetUnit(*m_creature, m_auiAddGUIDs[i]))
+            if (Creature* pAdd = m_creature->GetMap()->GetCreature(m_auiAddGUIDs[i]))
             {
                 pAdd->AI()->EnterEvadeMode();
                 pAdd->setDeathState(JUST_DIED);
@@ -301,7 +301,7 @@ struct MANGOS_DLL_DECL boss_malacrass_addAI : public ScriptedAI
         if (!m_pInstance)
             return;
 
-        if (Creature* pMalacrass = (Creature*)Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_MALACRASS)))
+        if (Creature* pMalacrass = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_MALACRASS)))
             ((boss_malacrassAI*)pMalacrass->AI())->KilledUnit(pVictim);
     }
 
@@ -310,7 +310,7 @@ struct MANGOS_DLL_DECL boss_malacrass_addAI : public ScriptedAI
         if (!m_pInstance)
             return;
 
-        if (Unit* pMalacrass = Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_MALACRASS)))
+        if (Creature* pMalacrass = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_MALACRASS)))
         {
             switch(urand(0, 2))
             {

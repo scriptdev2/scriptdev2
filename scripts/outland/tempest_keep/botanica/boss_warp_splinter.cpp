@@ -161,7 +161,7 @@ struct MANGOS_DLL_DECL boss_warp_splinterAI : public ScriptedAI
     {
         for(int i=0; i<6; ++i)
         {
-            Unit *pTreant = Unit::GetUnit(*m_creature, Treant_GUIDs[i]);
+            Creature* pTreant = m_creature->GetMap()->GetCreature(Treant_GUIDs[i]);
 
             if (pTreant)
             {

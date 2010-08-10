@@ -158,7 +158,7 @@ struct MANGOS_DLL_DECL npc_air_force_botsAI : public ScriptedAI
 
     Creature* GetSummonedGuard()
     {
-        Creature* pCreature = (Creature*)Unit::GetUnit(*m_creature, m_uiSpawnedGUID);
+        Creature* pCreature = m_creature->GetMap()->GetCreature(m_uiSpawnedGUID);
 
         if (pCreature && pCreature->isAlive())
             return pCreature;
@@ -563,7 +563,7 @@ struct MANGOS_DLL_DECL npc_injured_patientAI : public ScriptedAI
             {
                 if (Doctorguid)
                 {
-                    if (Creature* Doctor = ((Creature*)Unit::GetUnit((*m_creature), Doctorguid)))
+                    if (Creature* Doctor = m_creature->GetMap()->GetCreature(Doctorguid))
                         ((npc_doctorAI*)Doctor->AI())->PatientSaved(m_creature, ((Player*)caster), Coord);
                 }
             }
@@ -618,7 +618,7 @@ struct MANGOS_DLL_DECL npc_injured_patientAI : public ScriptedAI
 
             if (Doctorguid)
             {
-                if (Creature* Doctor = ((Creature*)Unit::GetUnit((*m_creature), Doctorguid)))
+                if (Creature* Doctor = m_creature->GetMap()->GetCreature(Doctorguid))
                     ((npc_doctorAI*)Doctor->AI())->PatientDied(Coord);
             }
         }
@@ -661,7 +661,7 @@ void npc_doctorAI::BeginEvent(Player* pPlayer)
 
 void npc_doctorAI::PatientDied(Location* Point)
 {
-    Player* pPlayer = ((Player*)Unit::GetUnit((*m_creature), Playerguid));
+    Player* pPlayer = (Player*)Unit::GetUnit((*m_creature), Playerguid);
 
     if (pPlayer && ((pPlayer->GetQuestStatus(6624) == QUEST_STATUS_INCOMPLETE) || (pPlayer->GetQuestStatus(6622) == QUEST_STATUS_INCOMPLETE)))
     {
@@ -700,7 +700,7 @@ void npc_doctorAI::PatientSaved(Creature* soldier, Player* pPlayer, Location* Po
                     std::list<uint64>::iterator itr;
                     for(itr = Patients.begin(); itr != Patients.end(); ++itr)
                     {
-                        if (Creature* Patient = ((Creature*)Unit::GetUnit((*m_creature), *itr)))
+                        if (Creature* Patient = m_creature->GetMap()->GetCreature(*itr))
                             Patient->setDeathState(JUST_DIED);
                     }
                 }

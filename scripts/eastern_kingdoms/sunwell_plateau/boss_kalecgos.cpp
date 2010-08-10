@@ -252,7 +252,7 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
 
         if (!m_bEnraged && m_creature->GetHealthPercent() < 10.0f)
         {
-            if (Unit* pSathrovarr = Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_SATHROVARR)))
+            if (Creature* pSathrovarr = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_SATHROVARR)))
             {
                 if (pSathrovarr->isAlive())
                     pSathrovarr->CastSpell(pSathrovarr, SPELL_CRAZED_RAGE, true);
@@ -378,7 +378,7 @@ struct MANGOS_DLL_DECL boss_sathrovarrAI : public ScriptedAI
         if (!m_pInstance)
             return;
 
-        if (Unit* pKalec = Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_KALECGOS_HUMAN)))
+        if (Creature* pKalec = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_KALECGOS_HUMAN)))
         {
             m_creature->AddThreat(pKalec, 10000000.0f);
             pKalec->AddThreat(m_creature, 10000000.0f);
@@ -420,7 +420,7 @@ struct MANGOS_DLL_DECL boss_sathrovarrAI : public ScriptedAI
 
         if (!m_bEnraged && m_creature->GetHealthPercent() < 10.0f)
         {
-            if (Unit* pKalecgos = Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_KALECGOS_DRAGON)))
+            if (Creature* pKalecgos = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_KALECGOS_DRAGON)))
             {
                 if (pKalecgos->isAlive())
                     pKalecgos->CastSpell(pKalecgos, SPELL_CRAZED_RAGE, true);

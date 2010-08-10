@@ -94,15 +94,14 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
             //for(uint8 i = 0; i < CRYSTALS_NUMBER; ++i)
             for(std::list<uint64>::iterator itr = Crystals.begin(); itr != Crystals.end(); ++itr)
             {
-                //Unit* pUnit = Unit::GetUnit(*m_creature, FelCrystals[i]);
-                Unit* pUnit = Unit::GetUnit(*m_creature, *itr);
-                if (pUnit)
+                //Creature* pUnit = m_creature->GetMap()->GetCreature(FelCrystals[i]);
+                if (Creature* pCrystal = m_creature->GetMap()->GetCreature(*itr))
                 {
-                    if (!pUnit->isAlive())
-                        ((Creature*)pUnit)->Respawn();      // Let MaNGOS handle setting death state, etc.
+                    if (!pCrystal->isAlive())
+                        pCrystal->Respawn();                // Let MaNGOS handle setting death state, etc.
 
                     // Only need to set unselectable flag. You can't attack unselectable units so non_attackable flag is not necessary here.
-                    pUnit->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                    pCrystal->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 }
             }
 
@@ -132,14 +131,14 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
 
         float ShortestDistance = 0;
         CrystalGUID = 0;
-        Unit* pCrystal = NULL;
-        Unit* CrystalChosen = NULL;
+        Creature* pCrystal = NULL;
+        Creature* CrystalChosen = NULL;
         //for(uint8 i =  0; i < CRYSTALS_NUMBER; ++i)
         for(std::list<uint64>::iterator itr = Crystals.begin(); itr != Crystals.end(); ++itr)
         {
             pCrystal = NULL;
             //pCrystal = Unit::GetUnit(*m_creature, FelCrystals[i]);
-            pCrystal = Unit::GetUnit(*m_creature, *itr);
+            pCrystal = m_creature->GetMap()->GetCreature(*itr);
             if (pCrystal && pCrystal->isAlive())
             {
                 // select nearest
@@ -174,8 +173,9 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
         //for(uint8 i = 0; i < CRYSTALS_NUMBER; ++i)
         for(std::list<uint64>::iterator itr = Crystals.begin(); itr != Crystals.end(); ++itr)
         {
-            //Creature* pCrystal = ((Creature*)Unit::GetUnit(*m_creature, FelCrystals[i]));
-            Creature* pCrystal = ((Creature*)Unit::GetUnit(*m_creature, *itr));
+            //Creature* pCrystal = m_creature->GetMap()->GetCreature(FelCrystals[i]);
+            Creature* pCrystal = m_creature->GetMap()->GetCreature(*itr);
+
             if (pCrystal && pCrystal->isAlive())
                 pCrystal->DealDamage(pCrystal, pCrystal->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
         }
@@ -202,7 +202,7 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
     {
         if (type == POINT_MOTION_TYPE && id == 1)
         {
-            Unit* CrystalChosen = Unit::GetUnit(*m_creature, CrystalGUID);
+            Creature* CrystalChosen = m_creature->GetMap()->GetCreature(CrystalGUID);
             if (CrystalChosen && CrystalChosen->isAlive())
             {
                 // Make the crystal attackable
@@ -308,7 +308,7 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
 
                     DoScriptText(SAY_EMPOWERED, m_creature);
 
-                    Unit* CrystalChosen = Unit::GetUnit(*m_creature, CrystalGUID);
+                    Creature* CrystalChosen = m_creature->GetMap()->GetCreature(CrystalGUID);
                     if (CrystalChosen && CrystalChosen->isAlive())
                         // Use Deal Damage to kill it, not setDeathState.
                         CrystalChosen->DealDamage(CrystalChosen, CrystalChosen->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
@@ -343,7 +343,8 @@ struct MANGOS_DLL_DECL mob_fel_crystalAI : public ScriptedAI
     {
         if (ScriptedInstance* pInstance = ((ScriptedInstance*)m_creature->GetInstanceData()))
         {
-            Creature* Selin = ((Creature*)Unit::GetUnit(*m_creature, pInstance->GetData64(DATA_SELIN)));
+            Creature* Selin = m_creature->GetMap()->GetCreature(pInstance->GetData64(DATA_SELIN));
+
             if (Selin && Selin->isAlive())
             {
                 if (((boss_selin_fireheartAI*)Selin->AI())->CrystalGUID == m_creature->GetGUID())

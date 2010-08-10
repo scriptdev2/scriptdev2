@@ -72,7 +72,7 @@ struct MANGOS_DLL_DECL boss_interrogator_vishasAI : public ScriptedAI
             return;
 
         //Any other actions to do with vorrel? setStandState?
-        if (Unit *vorrel = Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_VORREL)))
+        if (Creature *vorrel = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_VORREL)))
             DoScriptText(SAY_TRIGGER_VORREL, vorrel);
     }
 

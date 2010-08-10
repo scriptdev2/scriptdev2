@@ -177,7 +177,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
     {
         for(uint8 i = 0; i < MAX_SHIELD_GEN; ++i)
         {
-            if (Unit* pTemp = Unit::GetUnit(*m_creature,m_auiShieldGeneratorChannel[i]))
+            if (Creature* pTemp = m_creature->GetMap()->GetCreature(m_auiShieldGeneratorChannel[i]))
             {
                 if (pTemp->isAlive())
                     pTemp->setDeathState(JUST_DIED);
@@ -508,7 +508,7 @@ struct MANGOS_DLL_DECL mob_enchanted_elementalAI : public ScriptedAI
     {
         if (m_pInstance)
         {
-            if (Unit* pVashj = Unit::GetUnit((*m_creature), m_pInstance->GetData64(DATA_LADYVASHJ)))
+            if (Creature* pVashj = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_LADYVASHJ)))
             {
                 if (pVashj->IsWithinDistInMap(m_creature, ATTACK_DISTANCE))
                 {
@@ -608,7 +608,7 @@ struct MANGOS_DLL_DECL mob_toxic_sporebatAI : public ScriptedAI
             if (m_pInstance)
             {
                 //check if vashj is death
-                Unit* pVashj = Unit::GetUnit((*m_creature), m_pInstance->GetData64(DATA_LADYVASHJ));
+                Creature* pVashj = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_LADYVASHJ));
                 if (!pVashj || !pVashj->isAlive())
                 {
                     //remove
@@ -690,7 +690,8 @@ bool ItemUse_item_tainted_core(Player* pPlayer, Item* pItem, SpellCastTargets co
         return true;
     }
 
-    Creature* pVashj = (Creature*)(Unit::GetUnit((*pPlayer), pInstance->GetData64(DATA_LADYVASHJ)));
+    Creature* pVashj = pPlayer->GetMap()->GetCreature(pInstance->GetData64(DATA_LADYVASHJ));
+
     if (pVashj && ((boss_lady_vashjAI*)pVashj->AI())->m_uiPhase == 2)
     {
         if (sctTargets.getGOTarget() && sctTargets.getGOTarget()->GetTypeId()==TYPEID_GAMEOBJECT)

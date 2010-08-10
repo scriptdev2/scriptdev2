@@ -422,8 +422,8 @@ struct MANGOS_DLL_DECL npc_commander_dawnforgeAI : public ScriptedAI
 
     void TurnToPathaleonsImage()
     {
-        Unit* pArdonis = Unit::GetUnit(*m_creature, m_uiArdonisGUID);
-        Unit* pPathaleon = Unit::GetUnit(*m_creature, m_uiPathaleonGUID);
+        Creature* pArdonis = m_creature->GetMap()->GetCreature(m_uiArdonisGUID);
+        Creature* pPathaleon = m_creature->GetMap()->GetCreature(m_uiPathaleonGUID);
         Player* pPlayer = (Player*)Unit::GetUnit(*m_creature, m_uiPlayerGUID);
 
         if (!pArdonis || !pPathaleon || !pPlayer)
@@ -439,7 +439,7 @@ struct MANGOS_DLL_DECL npc_commander_dawnforgeAI : public ScriptedAI
 
     void TurnToEachOther()
     {
-        if (Unit* pArdonis = Unit::GetUnit(*m_creature, m_uiArdonisGUID))
+        if (Creature* pArdonis = m_creature->GetMap()->GetCreature(m_uiArdonisGUID))
         {
             Player* pPlayer = (Player*)Unit::GetUnit(*m_creature, m_uiPlayerGUID);
 
@@ -490,8 +490,8 @@ struct MANGOS_DLL_DECL npc_commander_dawnforgeAI : public ScriptedAI
             return;
         }
 
-        Unit* pArdonis = Unit::GetUnit(*m_creature, m_uiArdonisGUID);
-        Unit* pPathaleon = Unit::GetUnit(*m_creature, m_uiPathaleonGUID);
+        Creature* pArdonis = m_creature->GetMap()->GetCreature(m_uiArdonisGUID);
+        Creature* pPathaleon = m_creature->GetMap()->GetCreature(m_uiPathaleonGUID);
         Player* pPlayer = (Player*)Unit::GetUnit(*m_creature, m_uiPlayerGUID);
 
         if (!pArdonis || !pPlayer)

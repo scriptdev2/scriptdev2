@@ -324,7 +324,7 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
         {
             if (NefCheckTime < diff)
             {
-                Creature* pNefarian = (Creature*)Unit::GetUnit((*m_creature),NefarianGUID);
+                Creature* pNefarian = m_creature->GetMap()->GetCreature(NefarianGUID);
 
                 //If nef is dead then we die to so the players get out of combat
                 //and cannot repeat the event

@@ -928,7 +928,7 @@ struct MANGOS_DLL_DECL mob_torlothAI : public ScriptedAI
 
         if (TorlothAnim[m_uiAnimationCount].uiCreature == LORD_ILLIDAN)
         {
-            pCreature = ((Creature*)Unit::GetUnit(*m_creature, m_uiLordIllidanGUID));
+            pCreature = m_creature->GetMap()->GetCreature(m_uiLordIllidanGUID);
 
             if (!pCreature)
             {
@@ -981,7 +981,7 @@ struct MANGOS_DLL_DECL mob_torlothAI : public ScriptedAI
         {
             pPlayer->GroupEventHappens(QUEST_BATTLE_OF_THE_CRIMSON_WATCH, m_creature);
         
-            if (Creature* pLordIllidan = ((Creature*)Unit::GetUnit(*m_creature, m_uiLordIllidanGUID)))
+            if (Creature* pLordIllidan = m_creature->GetMap()->GetCreature(m_uiLordIllidanGUID))
             {
                 DoScriptText(SAY_EVENT_COMPLETED, pLordIllidan, pPlayer);
                 pLordIllidan->AI()->EnterEvadeMode();

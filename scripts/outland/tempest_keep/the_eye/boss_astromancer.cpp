@@ -413,13 +413,13 @@ struct MANGOS_DLL_DECL mob_solarium_priestAI : public ScriptedAI
 
         if (healTimer < diff)
         {
-            Unit* target = NULL;
+            Creature* target = NULL;
 
             switch(urand(0, 1))
             {
                 case 0:
                     if (m_pInstance)
-                        target = Unit::GetUnit((*m_creature), m_pInstance->GetData64(DATA_ASTROMANCER));
+                        target = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_ASTROMANCER));
                     break;
                 case 1:
                     target = m_creature;

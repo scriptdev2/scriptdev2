@@ -123,7 +123,7 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
                 if (m_pInstance->GetData(TYPE_LORKHAN) == SPECIAL)
                 {
                     //Resurrect LorKhan
-                    if (Unit *pLorKhan = Unit::GetUnit((*m_creature), m_pInstance->GetData64(DATA_LORKHAN)))
+                    if (Creature *pLorKhan = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_LORKHAN)))
                     {
                         pLorKhan->SetStandState(UNIT_STAND_STATE_STAND);
                         pLorKhan->setFaction(14);
@@ -137,7 +137,7 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
                 if (m_pInstance->GetData(TYPE_ZATH) == SPECIAL)
                 {
                     //Resurrect Zath
-                    if (Unit *pZath = Unit::GetUnit((*m_creature), m_pInstance->GetData64(DATA_ZATH)))
+                    if (Creature *pZath = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_ZATH)))
                     {
                         pZath->SetStandState(UNIT_STAND_STATE_STAND);
                         pZath->setFaction(14);
@@ -301,8 +301,8 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public ScriptedAI
         {
             if (m_pInstance)
             {
-                Unit *pThekal = Unit::GetUnit((*m_creature), m_pInstance->GetData64(DATA_THEKAL));
-                Unit *pZath = Unit::GetUnit((*m_creature), m_pInstance->GetData64(DATA_ZATH));
+                Creature* pThekal = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_THEKAL));
+                Creature* pZath = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_ZATH));
 
                 switch(urand(0, 1))
                 {
@@ -335,7 +335,7 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public ScriptedAI
                 if (m_pInstance->GetData(TYPE_THEKAL) == SPECIAL)
                 {
                     //Resurrect Thekal
-                    if (Unit *pThekal = Unit::GetUnit((*m_creature), m_pInstance->GetData64(DATA_THEKAL)))
+                    if (Creature* pThekal = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_THEKAL)))
                     {
                         pThekal->SetStandState(UNIT_STAND_STATE_STAND);
                         pThekal->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -347,7 +347,7 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public ScriptedAI
                 if (m_pInstance->GetData(TYPE_ZATH) == SPECIAL)
                 {
                     //Resurrect Zath
-                    if (Unit *pZath = Unit::GetUnit((*m_creature), m_pInstance->GetData64(DATA_ZATH)))
+                    if (Creature* pZath = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_ZATH)))
                     {
                         pZath->SetStandState(UNIT_STAND_STATE_STAND);
                         pZath->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -467,7 +467,7 @@ struct MANGOS_DLL_DECL mob_zealot_zathAI : public ScriptedAI
                 if (m_pInstance->GetData(TYPE_LORKHAN) == SPECIAL)
                 {
                     //Resurrect LorKhan
-                    if (Unit *pLorKhan = Unit::GetUnit((*m_creature), m_pInstance->GetData64(DATA_LORKHAN)))
+                    if (Creature* pLorKhan = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_LORKHAN)))
                     {
                         pLorKhan->SetStandState(UNIT_STAND_STATE_STAND);
                         pLorKhan->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -479,7 +479,7 @@ struct MANGOS_DLL_DECL mob_zealot_zathAI : public ScriptedAI
                 if (m_pInstance->GetData(TYPE_THEKAL) == SPECIAL)
                 {
                     //Resurrect Thekal
-                    if (Unit *pThekal = Unit::GetUnit((*m_creature), m_pInstance->GetData64(DATA_THEKAL)))
+                    if (Creature* pThekal = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_THEKAL)))
                     {
                         pThekal->SetStandState(UNIT_STAND_STATE_STAND);
                         pThekal->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);

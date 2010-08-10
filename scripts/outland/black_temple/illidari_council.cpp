@@ -159,7 +159,7 @@ struct MANGOS_DLL_DECL mob_blood_elf_council_voice_triggerAI : public ScriptedAI
         {
             if (AggroYellTimer <= diff)
             {
-                if (Unit* pMember = Unit::GetUnit(*m_creature, Council[YellCounter]))
+                if (Creature* pMember = m_creature->GetMap()->GetCreature(Council[YellCounter]))
                 {
                     DoScriptText(CouncilAggro[YellCounter].entry, pMember);
                     AggroYellTimer = CouncilAggro[YellCounter].timer;
@@ -175,7 +175,7 @@ struct MANGOS_DLL_DECL mob_blood_elf_council_voice_triggerAI : public ScriptedAI
         {
             if (EnrageTimer <= diff)
             {
-                if (Unit* pMember = Unit::GetUnit(*m_creature, Council[YellCounter]))
+                if (Creature* pMember = m_creature->GetMap()->GetCreature(Council[YellCounter]))
                 {
                     pMember->CastSpell(pMember, SPELL_BERSERK, true);
                     DoScriptText(CouncilEnrage[YellCounter].entry, pMember);
@@ -217,10 +217,9 @@ struct MANGOS_DLL_DECL mob_illidari_councilAI : public ScriptedAI
 
         DeathCount = 0;
 
-        Creature* pMember = NULL;
         for(uint8 i = 0; i < 4; ++i)
         {
-            if (pMember = ((Creature*)Unit::GetUnit((*m_creature), Council[i])))
+            if (Creature* pMember = m_creature->GetMap()->GetCreature(Council[i]))
             {
                 if (!pMember->isAlive())
                 {
@@ -243,7 +242,7 @@ struct MANGOS_DLL_DECL mob_illidari_councilAI : public ScriptedAI
             if (m_pInstance->GetData(TYPE_COUNCIL) == DONE)
                 return;
 
-            if (Creature* VoiceTrigger = ((Creature*)Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_BLOOD_ELF_COUNCIL_VOICE))))
+            if (Creature* VoiceTrigger = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_BLOOD_ELF_COUNCIL_VOICE)))
                 VoiceTrigger->AI()->EnterEvadeMode();
 
             m_pInstance->SetData(TYPE_COUNCIL, NOT_STARTED);
@@ -266,7 +265,7 @@ struct MANGOS_DLL_DECL mob_illidari_councilAI : public ScriptedAI
             Council[3] = m_pInstance->GetData64(DATA_VERASDARKSHADOW);
 
             // Start the event for the Voice Trigger
-            if (Creature* VoiceTrigger = ((Creature*)Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_BLOOD_ELF_COUNCIL_VOICE))))
+            if (Creature* VoiceTrigger = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_BLOOD_ELF_COUNCIL_VOICE)))
             {
                 ((mob_blood_elf_council_voice_triggerAI*)VoiceTrigger->AI())->LoadCouncilGUIDs();
                 ((mob_blood_elf_council_voice_triggerAI*)VoiceTrigger->AI())->EventStarted = true;
@@ -274,12 +273,11 @@ struct MANGOS_DLL_DECL mob_illidari_councilAI : public ScriptedAI
 
             for(uint8 i = 0; i < 4; ++i)
             {
-                Unit* Member = NULL;
                 if (Council[i])
                 {
-                    Member = Unit::GetUnit((*m_creature), Council[i]);
-                    if (Member && Member->isAlive())
-                        ((Creature*)Member)->AI()->AttackStart(target);
+                    Creature* pMember = m_creature->GetMap()->GetCreature(Council[i]);
+                    if (pMember && pMember->isAlive())
+                        pMember->AI()->AttackStart(target);
                 }
             }
 
@@ -302,7 +300,7 @@ struct MANGOS_DLL_DECL mob_illidari_councilAI : public ScriptedAI
                 {
                     if (m_pInstance)
                     {
-                        if (Creature* VoiceTrigger = ((Creature*)Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_BLOOD_ELF_COUNCIL_VOICE))))
+                        if (Creature* VoiceTrigger = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_BLOOD_ELF_COUNCIL_VOICE)))
                             VoiceTrigger->DealDamage(VoiceTrigger, VoiceTrigger->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
 
                         m_pInstance->SetData(TYPE_COUNCIL, DONE);
@@ -311,7 +309,7 @@ struct MANGOS_DLL_DECL mob_illidari_councilAI : public ScriptedAI
                     return;
                 }
 
-                Creature* pMember = ((Creature*)Unit::GetUnit(*m_creature, Council[DeathCount]));
+                Creature* pMember = m_creature->GetMap()->GetCreature(Council[DeathCount]);
                 if (pMember && pMember->isAlive())
                     pMember->DealDamage(pMember, pMember->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
 
@@ -329,7 +327,7 @@ struct MANGOS_DLL_DECL mob_illidari_councilAI : public ScriptedAI
                 {
                     if (Council[i])
                     {
-                        if (Creature* Member = ((Creature*)Unit::GetUnit((*m_creature), Council[i])))
+                        if (Creature* Member = m_creature->GetMap()->GetCreature(Council[i]))
                         {
                             // This is the evade/death check.
                             if (Member->isAlive() && !Member->SelectHostileTarget())
@@ -375,7 +373,7 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
     {
         if (m_pInstance)
         {
-            Creature* Controller = ((Creature*)Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_ILLIDARICOUNCIL)));
+            Creature* Controller = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_ILLIDARICOUNCIL));
             if (Controller)
                 ((mob_illidari_councilAI*)Controller->AI())->StartEvent(pWho);
         }
@@ -403,9 +401,11 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
         damage /= 4;
         for(uint8 i = 0; i < 4; ++i)
         {
-            if (Unit* pUnit = Unit::GetUnit(*m_creature, Council[i]))
-                if (pUnit != m_creature && damage < pUnit->GetHealth())
-                    pUnit->SetHealth(pUnit->GetHealth() - damage);
+            if (Creature* pCouncil = m_creature->GetMap()->GetCreature(Council[i]))
+            {
+                if (pCouncil != m_creature && damage < pCouncil->GetHealth())
+                    pCouncil->SetHealth(pCouncil->GetHealth() - damage);
+            }
         }
     }
 
@@ -464,7 +464,7 @@ struct MANGOS_DLL_DECL boss_gathios_the_shattererAI : public boss_illidari_counc
             member = urand(1, 3);
 
         if (member != 2)                                    // No need to create another pointer to us using Unit::GetUnit
-            pUnit = Unit::GetUnit((*m_creature), Council[member]);
+            pUnit = m_creature->GetMap()->GetCreature(Council[member]);
 
         return pUnit;
     }
@@ -479,9 +479,8 @@ struct MANGOS_DLL_DECL boss_gathios_the_shattererAI : public boss_illidari_counc
         }
         for(uint8 i = 0; i < 4; ++i)
         {
-            Unit* pUnit = Unit::GetUnit((*m_creature), Council[i]);
-            if (pUnit)
-                pUnit->CastSpell(pUnit, spellid, true, 0, 0, m_creature->GetGUID());
+            if (Creature* pCouncil = m_creature->GetMap()->GetCreature(Council[i]))
+                pCouncil->CastSpell(pCouncil, spellid, true, NULL, NULL, m_creature->GetGUID());
         }
     }
 

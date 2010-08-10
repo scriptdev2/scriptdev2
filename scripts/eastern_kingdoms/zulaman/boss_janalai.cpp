@@ -176,17 +176,17 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
         m_lBombsGUIDList.clear();
         m_lEggsRemainingList.clear();
 
-        if (Creature* pUnit = (Creature*)Unit::GetUnit(*m_creature, m_uiHatcher1GUID))
+        if (Creature* pHatcher = m_creature->GetMap()->GetCreature(m_uiHatcher1GUID))
         {
-            pUnit->AI()->EnterEvadeMode();
-            pUnit->setDeathState(JUST_DIED);
+            pHatcher->AI()->EnterEvadeMode();
+            pHatcher->setDeathState(JUST_DIED);
             m_uiHatcher1GUID = 0;
         }
 
-        if (Creature* pUnit = (Creature*)Unit::GetUnit(*m_creature, m_uiHatcher2GUID))
+        if (Creature* pHatcher = m_creature->GetMap()->GetCreature(m_uiHatcher2GUID))
         {
-            pUnit->AI()->EnterEvadeMode();
-            pUnit->setDeathState(JUST_DIED);
+            pHatcher->AI()->EnterEvadeMode();
+            pHatcher->setDeathState(JUST_DIED);
             m_uiHatcher2GUID = 0;
         }
 
@@ -334,11 +334,11 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
 
         for(std::list<uint64>::iterator itr = m_lBombsGUIDList.begin(); itr != m_lBombsGUIDList.end(); ++itr)
         {
-            if (Unit* pUnit = Unit::GetUnit(*m_creature,*itr))
+            if (Creature* pBomb = m_creature->GetMap()->GetCreature(*itr))
             {
                 //do damage and then remove aura (making them "disappear")
-                pUnit->CastSpell(pUnit,SPELL_FIRE_BOMB_DAMAGE,false,NULL,NULL,m_creature->GetGUID());
-                pUnit->RemoveAurasDueToSpell(SPELL_FIRE_BOMB_DUMMY);
+                pBomb->CastSpell(pBomb, SPELL_FIRE_BOMB_DAMAGE, false, NULL, NULL, m_creature->GetGUID());
+                pBomb->RemoveAurasDueToSpell(SPELL_FIRE_BOMB_DUMMY);
             }
         }
 
@@ -518,8 +518,8 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
                 {
                     DoScriptText(SAY_SUMMON_HATCHER, m_creature);
 
-                    Unit* pHatcer1 = Unit::GetUnit(*m_creature, m_uiHatcher1GUID);
-                    Unit* pHatcer2 = Unit::GetUnit(*m_creature, m_uiHatcher2GUID);
+                    Creature* pHatcer1 = m_creature->GetMap()->GetCreature(m_uiHatcher1GUID);
+                    Creature* pHatcer2 = m_creature->GetMap()->GetCreature(m_uiHatcher2GUID);
 
                     if (!pHatcer1 || (pHatcer1 && !pHatcer1->isAlive()))
                     {

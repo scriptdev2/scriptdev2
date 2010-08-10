@@ -167,7 +167,7 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
 
                 if (m_pInstance)
                 {
-                    if (Unit* jTemp = Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_JINDO)))
+                    if (Creature* jTemp = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_JINDO)))
                     {
                         if (jTemp->isAlive())
                             DoScriptText(SAY_GRATS_JINDO, jTemp);

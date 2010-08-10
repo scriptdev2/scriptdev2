@@ -93,7 +93,7 @@ struct MANGOS_DLL_DECL npc_dirty_larryAI : public ScriptedAI
 
     void SetRuffies(uint64 guid, bool bAttack, bool bReset)
     {
-        Creature* pCreature = (Creature*)Unit::GetUnit(*m_creature, guid);
+        Creature* pCreature = m_creature->GetMap()->GetCreature(guid);
 
         if (!pCreature)
             return;

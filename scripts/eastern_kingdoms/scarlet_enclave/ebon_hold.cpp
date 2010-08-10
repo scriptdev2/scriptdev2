@@ -767,7 +767,7 @@ struct MANGOS_DLL_DECL npc_koltira_deathweaverAI : public npc_escortAI
                         break;
                     case 4:
                     {
-                        Unit* pTemp = Unit::GetUnit(*m_creature, m_uiValrothGUID);
+                        Creature* pTemp = m_creature->GetMap()->GetCreature(m_uiValrothGUID);
 
                         if (!pTemp || !pTemp->isAlive())
                         {
@@ -898,7 +898,7 @@ struct MANGOS_DLL_DECL npc_unworthy_initiate_anchorAI : public ScriptedAI
 
     void NotifyMe(Unit* pSource)
     {
-        Creature* pInitiate = (Creature*)Unit::GetUnit(*m_creature, m_uiMyInitiate);
+        Creature* pInitiate = m_creature->GetMap()->GetCreature(m_uiMyInitiate);
 
         if (pInitiate && pSource)
         {

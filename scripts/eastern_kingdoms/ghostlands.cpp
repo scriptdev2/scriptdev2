@@ -184,7 +184,7 @@ struct MANGOS_DLL_DECL npc_ranger_lilathaAI : public npc_escortAI
                 break;
             case 33:
                 DoScriptText(SAY_END2, m_creature, pPlayer);
-                if (Unit* pHelios = Unit::GetUnit(*m_creature, m_uiHeliosGUID))
+                if (Creature* pHelios = m_creature->GetMap()->GetCreature(m_uiHeliosGUID))
                     DoScriptText(CAPTAIN_ANSWER, pHelios, m_creature);
                 break;
         }

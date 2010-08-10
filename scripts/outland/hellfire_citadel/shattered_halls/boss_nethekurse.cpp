@@ -331,7 +331,7 @@ struct MANGOS_DLL_DECL mob_fel_orc_convertAI : public ScriptedAI
         {
             if (m_pInstance->GetData64(DATA_NETHEKURSE))
             {
-                Creature *pKurse = (Creature*)Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_NETHEKURSE));
+                Creature *pKurse = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_NETHEKURSE));
                 if (pKurse && m_creature->IsWithinDist(pKurse, 45.0f))
                 {
                     ((boss_grand_warlock_nethekurseAI*)pKurse->AI())->DoYellForPeonAggro();
@@ -353,7 +353,7 @@ struct MANGOS_DLL_DECL mob_fel_orc_convertAI : public ScriptedAI
 
             if (m_pInstance->GetData64(DATA_NETHEKURSE))
             {
-                Creature *pKurse = (Creature*)Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_NETHEKURSE));
+                Creature *pKurse = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_NETHEKURSE));
                 if (pKurse)
                     ((boss_grand_warlock_nethekurseAI*)pKurse->AI())->DoYellForPeonDeath();
             }

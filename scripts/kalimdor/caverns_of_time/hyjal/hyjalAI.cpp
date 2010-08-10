@@ -427,9 +427,9 @@ void hyjalAI::UpdateAI(const uint32 uiDiff)
         {
             if (m_uiBossGUID[i])
             {
-                Unit* pUnit = Unit::GetUnit(*m_creature, m_uiBossGUID[i]);
+                Creature* pBoss = m_creature->GetMap()->GetCreature(m_uiBossGUID[i]);
 
-                if (pUnit && !pUnit->isAlive())
+                if (pBoss && !pBoss->isAlive())
                 {
                     if (m_uiBossGUID[i] == m_uiBossGUID[0])
                     {

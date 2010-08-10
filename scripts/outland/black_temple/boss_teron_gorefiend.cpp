@@ -81,7 +81,7 @@ struct MANGOS_DLL_DECL mob_doom_blossomAI : public ScriptedAI
             {
                 m_creature->SetInCombatWithZone();
 
-                Creature* pTeron = (Creature*)Unit::GetUnit((*m_creature), m_uiTeronGUID);
+                Creature* pTeron = m_creature->GetMap()->GetCreature(m_uiTeronGUID);
                 if (pTeron && (!pTeron->isAlive() || pTeron->IsInEvadeMode()))
                     m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
             }
@@ -184,7 +184,7 @@ struct MANGOS_DLL_DECL mob_shadowy_constructAI : public ScriptedAI
 
         if (m_uiCheckTeronTimer < uiDiff)
         {
-            Creature* pTeron = (Creature*)Unit::GetUnit((*m_creature), m_uiTeronGUID);
+            Creature* pTeron = m_creature->GetMap()->GetCreature(m_uiTeronGUID);
             if (!pTeron || !pTeron->isAlive() || pTeron->IsInEvadeMode())
                 m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
 

@@ -228,7 +228,7 @@ struct MANGOS_DLL_DECL mob_steamrigger_mechanicAI : public ScriptedAI
         {
             if (m_pInstance && m_pInstance->GetData64(DATA_MEKGINEERSTEAMRIGGER) && m_pInstance->GetData(TYPE_MEKGINEER_STEAMRIGGER) == IN_PROGRESS)
             {
-                if (Unit* pMekgineer = Unit::GetUnit((*m_creature), m_pInstance->GetData64(DATA_MEKGINEERSTEAMRIGGER)))
+                if (Creature* pMekgineer = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_MEKGINEERSTEAMRIGGER)))
                 {
                     if (m_creature->IsWithinDistInMap(pMekgineer, MAX_REPAIR_RANGE))
                     {
