@@ -17,10 +17,10 @@ enum
     GO_TEMPLE_DOOR_LOWER        = 141869,
     GO_ANCIENT_VAULT            = 124369,
 
-    MOB_CUSTODIAN               = 7309,
-    MOB_HALLSHAPER              = 7077,
-    MOB_GUARDIAN                = 7076,
-    MOB_VAULT_WARDER            = 10120,
+    NPC_CUSTODIAN               = 7309,
+    NPC_HALLSHAPER              = 7077,
+    NPC_GUARDIAN                = 7076,
+    NPC_VAULT_WARDER            = 10120,
     NPC_STONE_KEEPER            = 4857,
 
     PHASE_ARCHA_1               = 1,
@@ -28,10 +28,6 @@ enum
     PHASE_ARCHA_3               = 3,
 
     SPELL_STONED                = 10255,
-    SPELL_USE_ALTAR_VISUAL      = 11206,
-
-    FACTION_TITAN_HOSTILE       = 415,
-    FACTION_TITAN_NEUTRAL       = 416,
 
     EVENT_ID_ALTAR_KEEPER       = 2228,                     // spell 11568
     EVENT_ID_ALTAR_ARCHAEDAS    = 2268                      // spell 10340
@@ -79,4 +75,5 @@ class MANGOS_DLL_DECL instance_uldaman : public ScriptedInstance
         std::list<uint64> m_lWardens;
         std::map<uint64, bool> m_mKeeperMap;
 };
+
 #endif

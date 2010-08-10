@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Boss_Archaedas
 SD%Complete: 60
-SDComment: 
+SDComment: Need correct way to deal with awaken vault and guardian spells, waiting for additions in mangos for them (target combination 22/7)
 SDCategory: Uldaman
 EndScriptData */
 
@@ -82,11 +82,9 @@ struct MANGOS_DLL_DECL boss_archaedasAI : public ScriptedAI
 
     void JustDied(Unit* pKiller)
     {
-        if (!m_pInstance)
-            return;
-
         // open door to vault (handled by instance script)
-        m_pInstance->SetData(TYPE_ARCHAEDAS, DONE);
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_ARCHAEDAS, DONE);
     }
 
     void JustReachedHome()

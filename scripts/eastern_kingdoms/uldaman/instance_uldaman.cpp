@@ -71,10 +71,10 @@ void instance_uldaman::OnCreatureCreate(Creature* pCreature)
 {
     switch(pCreature->GetEntry())
     {
-        case MOB_HALLSHAPER:
-        case MOB_CUSTODIAN:
-        case MOB_GUARDIAN:
-        case MOB_VAULT_WARDER:
+        case NPC_HALLSHAPER:
+        case NPC_CUSTODIAN:
+        case NPC_GUARDIAN:
+        case NPC_VAULT_WARDER:
             m_lWardens.push_back(pCreature->GetGUID());
             pCreature->CastSpell(pCreature, SPELL_STONED, true);
             pCreature->SetNoCallAssistance(true);           // no assistance
@@ -240,15 +240,15 @@ Creature* instance_uldaman::GetClosestDwarfNotInCombat(Creature* pSearcher, uint
             switch(uiPhase)
             {
                 case PHASE_ARCHA_1:
-                    if (pTemp->GetEntry() != MOB_CUSTODIAN && pTemp->GetEntry() != MOB_HALLSHAPER)
+                    if (pTemp->GetEntry() != NPC_CUSTODIAN && pTemp->GetEntry() != NPC_HALLSHAPER)
                         continue;
                     break;
                 case PHASE_ARCHA_2:
-                    if (pTemp->GetEntry() != MOB_GUARDIAN)
+                    if (pTemp->GetEntry() != NPC_GUARDIAN)
                         continue;
                     break;
                 case PHASE_ARCHA_3:
-                    if (pTemp->GetEntry() != MOB_VAULT_WARDER)
+                    if (pTemp->GetEntry() != NPC_VAULT_WARDER)
                         continue;
                     break;
             }
