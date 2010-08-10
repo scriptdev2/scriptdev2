@@ -331,14 +331,17 @@ struct MANGOS_DLL_DECL mob_fel_orc_convertAI : public ScriptedAI
         {
             if (m_pInstance->GetData64(DATA_NETHEKURSE))
             {
-                Creature *pKurse = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_NETHEKURSE));
+                Creature* pKurse = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_NETHEKURSE));
+
                 if (pKurse && m_creature->IsWithinDist(pKurse, 45.0f))
                 {
-                    ((boss_grand_warlock_nethekurseAI*)pKurse->AI())->DoYellForPeonAggro();
+                    if (boss_grand_warlock_nethekurseAI* pKurseAI = dynamic_cast<boss_grand_warlock_nethekurseAI*>(pKurse->AI()))
+                        pKurseAI->DoYellForPeonAggro();
 
                     if (m_pInstance->GetData(TYPE_NETHEKURSE) == IN_PROGRESS)
                         return;
-                    else m_pInstance->SetData(TYPE_NETHEKURSE,IN_PROGRESS);
+                    else
+                        m_pInstance->SetData(TYPE_NETHEKURSE,IN_PROGRESS);
                 }
             }
         }
@@ -353,9 +356,11 @@ struct MANGOS_DLL_DECL mob_fel_orc_convertAI : public ScriptedAI
 
             if (m_pInstance->GetData64(DATA_NETHEKURSE))
             {
-                Creature *pKurse = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_NETHEKURSE));
-                if (pKurse)
-                    ((boss_grand_warlock_nethekurseAI*)pKurse->AI())->DoYellForPeonDeath();
+                if (Creature* pKurse = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_NETHEKURSE)))
+                {
+                    if (boss_grand_warlock_nethekurseAI* pKurseAI = dynamic_cast<boss_grand_warlock_nethekurseAI*>(pKurse->AI()))
+                        pKurseAI->DoYellForPeonAggro();
+                }
             }
         }
     }

@@ -229,7 +229,9 @@ struct MANGOS_DLL_DECL mob_titoAI : public ScriptedAI
             Creature* Dorothee = m_creature->GetMap()->GetCreature(DorotheeGUID);
             if (Dorothee && Dorothee->isAlive())
             {
-                ((boss_dorotheeAI*)Dorothee->AI())->TitoDied = true;
+                if (boss_dorotheeAI* pDoroAI = dynamic_cast<boss_dorotheeAI*>(Dorothee->AI()))
+                    pDoroAI->TitoDied = true;
+
                 DoScriptText(SAY_DOROTHEE_TITO_DEATH, Dorothee);
             }
         }
@@ -256,7 +258,9 @@ void boss_dorotheeAI::SummonTito()
     {
         DoScriptText(SAY_DOROTHEE_SUMMON, m_creature);
 
-        ((mob_titoAI*)pTito->AI())->DorotheeGUID = m_creature->GetGUID();
+        if (mob_titoAI* pTitoAI = dynamic_cast<mob_titoAI*>(pTito->AI()))
+            pTitoAI->DorotheeGUID = m_creature->GetGUID();
+
         pTito->AI()->AttackStart(m_creature->getVictim());
 
         SummonedTito = true;
@@ -1172,8 +1176,13 @@ void boss_julianneAI::DamageTaken(Unit* done_by, uint32 &damage)
         {
             PretendToDie(m_creature);
             IsFakingDeath = true;
-            ((boss_romuloAI*)Romulo->AI())->ResurrectTimer = 10000;
-            ((boss_romuloAI*)Romulo->AI())->JulianneDead = true;
+
+            if (boss_romuloAI* pRomAI = dynamic_cast<boss_romuloAI*>(Romulo->AI()))
+            {
+                pRomAI->ResurrectTimer = 10000;
+                pRomAI->JulianneDead = true;
+            }
+
             damage = 0;
             return;
         }
@@ -1198,8 +1207,11 @@ void boss_romuloAI::DamageTaken(Unit* done_by, uint32 &damage)
 
         if (Creature* Julianne = m_creature->GetMap()->GetCreature(JulianneGUID))
         {
-            ((boss_julianneAI*)Julianne->AI())->RomuloDead = true;
-            ((boss_julianneAI*)Julianne->AI())->ResurrectSelfTimer = 10000;
+            if (boss_julianneAI* pJulAI = dynamic_cast<boss_julianneAI*>(Julianne->AI()))
+            {
+                pJulAI->ResurrectSelfTimer = 10000;
+                pJulAI->RomuloDead = true;
+            }
         }
 
         damage = 0;
@@ -1226,8 +1238,13 @@ void boss_romuloAI::DamageTaken(Unit* done_by, uint32 &damage)
         {
             PretendToDie(m_creature);
             IsFakingDeath = true;
-            ((boss_julianneAI*)Julianne->AI())->ResurrectTimer = 10000;
-            ((boss_julianneAI*)Julianne->AI())->RomuloDead = true;
+
+            if (boss_julianneAI* pJulAI = dynamic_cast<boss_julianneAI*>(Julianne->AI()))
+            {
+                pJulAI->ResurrectTimer = 10000;
+                pJulAI->RomuloDead = true;
+            }
+
             damage = 0;
             return;
         }
@@ -1277,8 +1294,13 @@ void boss_julianneAI::UpdateAI(const uint32 diff)
             if (Creature* pRomulo = m_creature->SummonCreature(CREATURE_ROMULO, ROMULO_X, ROMULO_Y, m_creature->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, HOUR*2*IN_MILLISECONDS))
             {
                 RomuloGUID = pRomulo->GetGUID();
-                ((boss_romuloAI*)pRomulo->AI())->JulianneGUID = m_creature->GetGUID();
-                ((boss_romuloAI*)pRomulo->AI())->Phase = PHASE_ROMULO;
+
+                if (boss_romuloAI* pRomAI = dynamic_cast<boss_romuloAI*>(pRomulo->AI()))
+                {
+                    pRomAI->JulianneGUID = m_creature->GetGUID();
+                    pRomAI->Phase = PHASE_ROMULO;
+                }
+
                 pRomulo->SetInCombatWithZone();
 
                 //why?
@@ -1311,12 +1333,16 @@ void boss_julianneAI::UpdateAI(const uint32 diff)
     {
         if (ResurrectTimer < diff)
         {
-            Creature* Romulo = m_creature->GetMap()->GetCreature(RomuloGUID);
-            if (Romulo && ((boss_romuloAI*)Romulo->AI())->IsFakingDeath)
+            Creature* pRomulo = m_creature->GetMap()->GetCreature(RomuloGUID);
+            boss_romuloAI* pRomAI = dynamic_cast<boss_romuloAI*>(pRomulo->AI());
+
+            if (pRomulo && pRomAI && pRomAI->IsFakingDeath)
             {
                 DoScriptText(SAY_JULIANNE_RESURRECT, m_creature);
-                Resurrect(Romulo);
-                ((boss_romuloAI*)Romulo->AI())->IsFakingDeath = false;
+                Resurrect(pRomulo);
+
+                pRomAI->IsFakingDeath = false;
+
                 RomuloDead = false;
                 ResurrectTimer = 10000;
             }
@@ -1369,12 +1395,16 @@ void boss_romuloAI::UpdateAI(const uint32 diff)
     {
         if (ResurrectTimer < diff)
         {
-            Creature* Julianne = m_creature->GetMap()->GetCreature(JulianneGUID);
-            if (Julianne && ((boss_julianneAI*)Julianne->AI())->IsFakingDeath)
+            Creature* pJulianne = m_creature->GetMap()->GetCreature(JulianneGUID);
+            boss_julianneAI* pJulAI = dynamic_cast<boss_julianneAI*>(pJulianne->AI());
+
+            if (pJulianne && pJulAI && pJulAI->IsFakingDeath)
             {
                 DoScriptText(SAY_ROMULO_RESURRECT, m_creature);
-                Resurrect(Julianne);
-                ((boss_julianneAI*)Julianne->AI())->IsFakingDeath = false;
+                Resurrect(pJulianne);
+
+                pJulAI->IsFakingDeath = false;
+
                 JulianneDead = false;
                 ResurrectTimer = 10000;
             }

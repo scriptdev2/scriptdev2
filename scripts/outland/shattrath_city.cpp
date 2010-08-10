@@ -233,8 +233,12 @@ bool GossipSelect_npc_dirty_larry(Player* pPlayer, Creature* pCreature, uint32 u
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
     {
-        ((npc_dirty_larryAI*)pCreature->AI())->m_uiPlayerGUID = pPlayer->GetGUID();
-        ((npc_dirty_larryAI*)pCreature->AI())->StartEvent();
+        if (npc_dirty_larryAI* pLarryAI = dynamic_cast<npc_dirty_larryAI*>(pCreature->AI()))
+        {
+            pLarryAI->m_uiPlayerGUID = pPlayer->GetGUID();
+            pLarryAI->StartEvent();
+        }
+
         pPlayer->CLOSE_GOSSIP_MENU();
     }
 
@@ -695,7 +699,7 @@ bool GossipSelect_npc_raliq_the_drunk(Player* pPlayer, Creature* pCreature, uint
     {
         pPlayer->CLOSE_GOSSIP_MENU();
         pCreature->setFaction(FACTION_HOSTILE_RD);
-        ((npc_raliq_the_drunkAI*)pCreature->AI())->AttackStart(pPlayer);
+        pCreature->AI()->AttackStart(pPlayer);
     }
     return true;
 }
@@ -757,7 +761,7 @@ bool GossipHello_npc_salsalabim(Player* pPlayer, Creature* pCreature)
     if (pPlayer->GetQuestStatus(QUEST_10004) == QUEST_STATUS_INCOMPLETE)
     {
         pCreature->setFaction(FACTION_HOSTILE_SA);
-        ((npc_salsalabimAI*)pCreature->AI())->AttackStart(pPlayer);
+        pCreature->AI()->AttackStart(pPlayer);
     }
     else
     {

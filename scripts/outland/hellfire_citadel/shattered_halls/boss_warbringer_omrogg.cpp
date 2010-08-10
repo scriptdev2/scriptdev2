@@ -282,7 +282,8 @@ struct MANGOS_DLL_DECL boss_warbringer_omroggAI : public ScriptedAI
         DoScriptText(YELL_DIE_L, pLeftHead);
         pLeftHead->setDeathState(JUST_DIED);
 
-        ((mob_omrogg_headsAI*)pRightHead->AI())->DoDeathYell();
+        if (mob_omrogg_headsAI* pHeadAI = dynamic_cast<mob_omrogg_headsAI*>(pRightHead->AI()))
+            pHeadAI->DoDeathYell();
 
         if (m_pInstance)
             m_pInstance->SetData(TYPE_OMROGG, DONE);

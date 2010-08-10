@@ -430,12 +430,14 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
             {
                 float x, y, z;
                 pTarget->GetPosition(x, y, z);
-                Creature *summon = m_creature->SummonCreature(NPC_BURNING_ABYSS, x, y, z, 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
-                if (summon)
+
+                if (Creature* pSummon = m_creature->SummonCreature(NPC_BURNING_ABYSS, x, y, z, 0.0f, TEMPSUMMON_CORPSE_DESPAWN, 0))
                 {
-                    ((mob_abyssalAI*)summon->AI())->SetTrigger(2);
-                    m_creature->CastSpell(summon, SPELL_BLAZE_TARGET, true);
-                    summon->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                    if (mob_abyssalAI* pAbyssAI = dynamic_cast<mob_abyssalAI*>(pSummon->AI()))
+                        pAbyssAI->SetTrigger(2);
+
+                    m_creature->CastSpell(pSummon, SPELL_BLAZE_TARGET, true);
+                    pSummon->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 }
             }
 
@@ -479,9 +481,13 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
                         {
                             float x, y, z;
                             pTarget->GetPosition(x, y, z);
-                            Creature *summon = m_creature->SummonCreature(NPC_BURNING_ABYSS, x, y, z, 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
-                            if (summon)
-                                ((mob_abyssalAI*)summon->AI())->SetTrigger(1);
+
+                            if (Creature* pSummon = m_creature->SummonCreature(NPC_BURNING_ABYSS, x, y, z, 0.0f, TEMPSUMMON_CORPSE_DESPAWN, 0))
+                            {
+                                if (mob_abyssalAI* pAbyssAI = dynamic_cast<mob_abyssalAI*>(pSummon->AI()))
+                                    pAbyssAI->SetTrigger(1);
+                            }
+
                             m_uiPhase3_Timer = 15000;
                         }
                         break;

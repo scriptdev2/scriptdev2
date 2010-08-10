@@ -302,7 +302,7 @@ struct MANGOS_DLL_DECL boss_malacrass_addAI : public ScriptedAI
             return;
 
         if (Creature* pMalacrass = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_MALACRASS)))
-            ((boss_malacrassAI*)pMalacrass->AI())->KilledUnit(pVictim);
+            pMalacrass->AI()->KilledUnit(pVictim);
     }
 
     void JustDied(Unit* pKiller)

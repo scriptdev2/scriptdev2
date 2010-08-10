@@ -448,8 +448,13 @@ struct MANGOS_DLL_DECL boss_priestess_lackey_commonAI : public ScriptedAI
 
         if (Creature* pDelrissa = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_DELRISSA)))
         {
+            boss_priestess_delrissaAI* pDelrissaAI = dynamic_cast<boss_priestess_delrissaAI*>(pDelrissa->AI());
+
+            if (!pDelrissaAI)
+                return;
+
             for(uint8 i = 0; i < MAX_ACTIVE_LACKEY; ++i)
-                m_auiLackeyGUIDs[i] = ((boss_priestess_delrissaAI*)pDelrissa->AI())->m_auiLackeyGUID[i];
+                m_auiLackeyGUIDs[i] = pDelrissaAI->m_auiLackeyGUID[i];
         }
     }
 

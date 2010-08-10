@@ -157,7 +157,9 @@ struct MANGOS_DLL_DECL boss_warlord_kalithreshAI : public ScriptedAI
             {
                 DoScriptText(SAY_REGEN, m_creature);
                 DoCastSpellIfCan(m_creature,SPELL_WARLORDS_RAGE);
-                ((mob_naga_distillerAI*)pDistiller->AI())->StartRageGen(m_creature);
+
+                if (mob_naga_distillerAI* pDistillerAI = dynamic_cast<mob_naga_distillerAI*>(pDistiller->AI()))
+                    pDistillerAI->StartRageGen(m_creature);
             }
             Rage_Timer = urand(3000, 18000);
         }else Rage_Timer -= diff;

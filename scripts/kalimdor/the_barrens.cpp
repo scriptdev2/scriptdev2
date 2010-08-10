@@ -481,10 +481,13 @@ bool AreaTrigger_at_twiggy_flathead(Player* pPlayer, AreaTriggerEntry const* pAt
         if (!pCreature)
             return true;
 
-        if (((npc_twiggy_flatheadAI*)pCreature->AI())->CanStartEvent(pPlayer))
-            return false;                                   //ok to let mangos process further
-        else
-            return true;
+        if (npc_twiggy_flatheadAI* pTwiggyAI = dynamic_cast<npc_twiggy_flatheadAI*>(pCreature->AI()))
+        {
+            if (pTwiggyAI->CanStartEvent(pPlayer))
+                return false;                               //ok to let mangos process further
+        }
+
+        return true;
     }
     return true;
 }

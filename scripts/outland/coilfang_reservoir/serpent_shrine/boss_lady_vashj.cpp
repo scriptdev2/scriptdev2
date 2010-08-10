@@ -692,7 +692,12 @@ bool ItemUse_item_tainted_core(Player* pPlayer, Item* pItem, SpellCastTargets co
 
     Creature* pVashj = pPlayer->GetMap()->GetCreature(pInstance->GetData64(DATA_LADYVASHJ));
 
-    if (pVashj && ((boss_lady_vashjAI*)pVashj->AI())->m_uiPhase == 2)
+    if (!pVashj)
+        return true;
+
+    boss_lady_vashjAI* pVashjAI = dynamic_cast<boss_lady_vashjAI*>(pVashj->AI());
+
+    if (pVashjAI && pVashjAI->m_uiPhase == 2)
     {
         if (sctTargets.getGOTarget() && sctTargets.getGOTarget()->GetTypeId()==TYPEID_GAMEOBJECT)
         {
@@ -725,7 +730,7 @@ bool ItemUse_item_tainted_core(Player* pPlayer, Item* pItem, SpellCastTargets co
                 return true;
 
             //get and remove channel
-            if (Unit* pChannel = Unit::GetUnit((*pVashj), ((boss_lady_vashjAI*)pVashj->AI())->m_auiShieldGeneratorChannel[uiChannelIdentifier]))
+            if (Unit* pChannel = Unit::GetUnit(*pVashj, pVashjAI->m_auiShieldGeneratorChannel[uiChannelIdentifier]))
                 pChannel->setDeathState(JUST_DIED);         //calls Unsummon()
 
             pInstance->SetData(uiIdentifier, DONE);

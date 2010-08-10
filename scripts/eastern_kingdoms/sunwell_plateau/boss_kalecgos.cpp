@@ -402,8 +402,11 @@ struct MANGOS_DLL_DECL boss_sathrovarrAI : public ScriptedAI
 
             if (Creature* pKalecgos = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_KALECGOS_DRAGON)))
             {
-                ((boss_kalecgosAI*)pKalecgos->AI())->m_bChecked = false;
-                ((boss_kalecgosAI*)pKalecgos->AI())->m_bUncorrupted = true;
+                if (boss_kalecgosAI* pKalecgosAI = dynamic_cast<boss_kalecgosAI*>(pKalecgos->AI()))
+                {
+                    pKalecgosAI->m_bChecked = false;
+                    pKalecgosAI->m_bUncorrupted = true;
+                }
             }
         }
     }

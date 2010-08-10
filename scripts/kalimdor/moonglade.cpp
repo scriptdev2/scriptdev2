@@ -219,7 +219,8 @@ bool EffectDummyCreature_npc_clintar_dw_spirit(Unit *pCaster, uint32 spellId, Sp
             return true;
 
         //done here, escort can start
-        ((npc_clintar_dw_spiritAI*)pCreatureTarget->AI())->DoStart(pCaster->GetGUID());
+        if (npc_clintar_dw_spiritAI* pSpiritAI = dynamic_cast<npc_clintar_dw_spiritAI*>(pCreatureTarget->AI()))
+            pSpiritAI->DoStart(pCaster->GetGUID());
 
         //always return true when we are handling this spell and effect
         return true;

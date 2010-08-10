@@ -124,79 +124,79 @@ struct MANGOS_DLL_DECL boss_darkmaster_gandlingAI : public ScriptedAI
                             DoTeleportPlayer(target, 250.0696f, 0.3921f, 84.8408f, 3.149f);
                             Summoned = m_creature->SummonCreature(16119, 254.2325f, 0.3417f, 84.8407f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,10000);
                             if (Summoned)
-                                ((CreatureAI*)Summoned->AI())->AttackStart(target);
+                                Summoned->AI()->AttackStart(target);
                             Summoned = m_creature->SummonCreature(16119, 257.7133f, 4.0226f, 84.8407f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,10000);
                             if (Summoned)
-                                ((CreatureAI*)Summoned->AI())->AttackStart(target);
+                                Summoned->AI()->AttackStart(target);
                             Summoned = m_creature->SummonCreature(16119, 258.6702f, -2.60656f, 84.8407f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,10000);
                             if (Summoned)
-                                ((CreatureAI*)Summoned->AI())->AttackStart(target);
+                                Summoned->AI()->AttackStart(target);
                             break;
                         case 1:
                             DoTeleportPlayer(target, 181.4220f, -91.9481f, 84.8410f, 1.608f);
                             Summoned = m_creature->SummonCreature(16119, 184.0519f, -73.5649f, 84.8407f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,10000);
                             if (Summoned)
-                                ((CreatureAI*)Summoned->AI())->AttackStart(target);
+                                Summoned->AI()->AttackStart(target);
                             Summoned = m_creature->SummonCreature(16119, 179.5951f, -73.7045f, 84.8407f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,10000);
                             if (Summoned)
-                                ((CreatureAI*)Summoned->AI())->AttackStart(target);
+                                Summoned->AI()->AttackStart(target);
                             Summoned = m_creature->SummonCreature(16119, 180.6452f, -78.2143f, 84.8407f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,10000);
                             if (Summoned)
-                                ((CreatureAI*)Summoned->AI())->AttackStart(target);
+                                Summoned->AI()->AttackStart(target);
                             Summoned = m_creature->SummonCreature(16119, 283.2274f, -78.1518f, 84.8407f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,10000);
                             if (Summoned)
-                                ((CreatureAI*)Summoned->AI())->AttackStart(target);
+                                Summoned->AI()->AttackStart(target);
                             break;
                         case 2:
                             DoTeleportPlayer(target, 95.1547f, -1.8173f, 85.2289f, 0.043f);
                             Summoned = m_creature->SummonCreature(16119, 100.9404f, -1.8016f, 85.2289f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,10000);
                             if (Summoned)
-                                ((CreatureAI*)Summoned->AI())->AttackStart(target);
+                                Summoned->AI()->AttackStart(target);
                             Summoned = m_creature->SummonCreature(16119, 101.3729f, 0.4882f, 85.2289f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,10000);
                             if (Summoned)
-                                ((CreatureAI*)Summoned->AI())->AttackStart(target);
+                                Summoned->AI()->AttackStart(target);
                             Summoned = m_creature->SummonCreature(16119, 101.4596f, -4.4740f, 85.2289f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,10000);
                             if (Summoned)
-                                ((CreatureAI*)Summoned->AI())->AttackStart(target);
+                                Summoned->AI()->AttackStart(target);
                             break;
                         case 3:
                             DoTeleportPlayer(target, 250.0696f, 0.3921f, 72.6722f, 3.149f);
                             Summoned = m_creature->SummonCreature(16119, 240.34481f, 0.7368f, 72.6722f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,10000);
                             if (Summoned)
-                                ((CreatureAI*)Summoned->AI())->AttackStart(target);
+                                Summoned->AI()->AttackStart(target);
                             Summoned = m_creature->SummonCreature(16119, 240.3633f, -2.9520f, 72.6722f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,10000);
                             if (Summoned)
-                                ((CreatureAI*)Summoned->AI())->AttackStart(target);
+                                Summoned->AI()->AttackStart(target);
                             Summoned = m_creature->SummonCreature(16119, 240.6702f, 3.34949f, 72.6722f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,10000);
                             if (Summoned)
-                                ((CreatureAI*)Summoned->AI())->AttackStart(target);
+                                Summoned->AI()->AttackStart(target);
                             break;
                         case 4:
                             DoTeleportPlayer(target, 181.4220f, -91.9481f, 70.7734f, 1.608f);
                             Summoned = m_creature->SummonCreature(16119, 184.0519f, -73.5649f, 70.7734f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,10000);
                             if (Summoned)
-                                ((CreatureAI*)Summoned->AI())->AttackStart(target);
+                                Summoned->AI()->AttackStart(target);
                             Summoned = m_creature->SummonCreature(16119, 179.5951f, -73.7045f, 70.7734f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,10000);
                             if (Summoned)
-                                ((CreatureAI*)Summoned->AI())->AttackStart(target);
+                                Summoned->AI()->AttackStart(target);
                             Summoned = m_creature->SummonCreature(16119, 180.6452f, -78.2143f, 70.7734f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,10000);
                             if (Summoned)
-                                ((CreatureAI*)Summoned->AI())->AttackStart(target);
+                                Summoned->AI()->AttackStart(target);
                             Summoned = m_creature->SummonCreature(16119, 283.2274f, -78.1518f, 70.7734f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,10000);
                             if (Summoned)
-                                ((CreatureAI*)Summoned->AI())->AttackStart(target);
+                                Summoned->AI()->AttackStart(target);
                             break;
                         case 5:
                             DoTeleportPlayer(target, 106.1541f, -1.8994f, 75.3663f, 0.043f);
                             Summoned = m_creature->SummonCreature(16119, 115.3945f, -1.5555f, 75.3663f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,10000);
                             if (Summoned)
-                                ((CreatureAI*)Summoned->AI())->AttackStart(target);
+                                Summoned->AI()->AttackStart(target);
                             Summoned = m_creature->SummonCreature(16119, 257.7133f, 1.8066f, 75.3663f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,10000);
                             if (Summoned)
-                                ((CreatureAI*)Summoned->AI())->AttackStart(target);
+                                Summoned->AI()->AttackStart(target);
                             Summoned = m_creature->SummonCreature(16119, 258.6702f, -5.1001f, 75.3663f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,10000);
                             if (Summoned)
-                                ((CreatureAI*)Summoned->AI())->AttackStart(target);
+                                Summoned->AI()->AttackStart(target);
                             break;
                     }
                 }

@@ -265,10 +265,13 @@ struct MANGOS_DLL_DECL mob_illidari_councilAI : public ScriptedAI
             Council[3] = m_pInstance->GetData64(DATA_VERASDARKSHADOW);
 
             // Start the event for the Voice Trigger
-            if (Creature* VoiceTrigger = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_BLOOD_ELF_COUNCIL_VOICE)))
+            if (Creature* pVoiceTrigger = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_BLOOD_ELF_COUNCIL_VOICE)))
             {
-                ((mob_blood_elf_council_voice_triggerAI*)VoiceTrigger->AI())->LoadCouncilGUIDs();
-                ((mob_blood_elf_council_voice_triggerAI*)VoiceTrigger->AI())->EventStarted = true;
+                if (mob_blood_elf_council_voice_triggerAI* pVoiceAI = dynamic_cast<mob_blood_elf_council_voice_triggerAI*>(pVoiceTrigger->AI()))
+                {
+                    pVoiceAI->LoadCouncilGUIDs();
+                    pVoiceAI->EventStarted = true;
+                }
             }
 
             for(uint8 i = 0; i < 4; ++i)
@@ -373,9 +376,11 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
     {
         if (m_pInstance)
         {
-            Creature* Controller = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_ILLIDARICOUNCIL));
-            if (Controller)
-                ((mob_illidari_councilAI*)Controller->AI())->StartEvent(pWho);
+            if (Creature* pController = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_ILLIDARICOUNCIL)))
+            {
+                if (mob_illidari_councilAI* pControlAI = dynamic_cast<mob_illidari_councilAI*>(pController->AI()))
+                    pControlAI->StartEvent(pWho);
+            }
         }
         else
         {

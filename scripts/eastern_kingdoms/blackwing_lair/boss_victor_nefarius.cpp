@@ -367,7 +367,8 @@ bool GossipSelect_boss_victor_nefarius(Player* pPlayer, Creature* pCreature, uin
         case GOSSIP_ACTION_INFO_DEF+3:
             pPlayer->CLOSE_GOSSIP_MENU();
             DoScriptText(SAY_GAMESBEGIN_1, pCreature);
-            ((boss_victor_nefariusAI*)pCreature->AI())->BeginEvent(pPlayer);
+            if (boss_victor_nefariusAI* pNefAI = dynamic_cast<boss_victor_nefariusAI*>(pCreature->AI()))
+                pNefAI->BeginEvent(pPlayer);
             break;
     }
     return true;

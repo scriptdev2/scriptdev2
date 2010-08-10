@@ -653,8 +653,11 @@ bool GossipSelect_npc_taretha(Player* pPlayer, Creature* pCreature, uint32 uiSen
 
             if (uint64 ThrallGUID = pInstance->GetData64(DATA_THRALL))
             {
-                if (Creature* Thrall = pCreature->GetMap()->GetCreature(ThrallGUID))
-                    ((npc_thrall_old_hillsbradAI*)Thrall->AI())->StartWP();
+                if (Creature* pThrall = pCreature->GetMap()->GetCreature(ThrallGUID))
+                {
+                    if (npc_thrall_old_hillsbradAI* pThrallAI = dynamic_cast<npc_thrall_old_hillsbradAI*>(pThrall->AI()))
+                        pThrallAI->StartWP();
+                }
             }
         }
     }

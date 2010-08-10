@@ -110,7 +110,9 @@ struct MANGOS_DLL_DECL boss_warchief_kargath_bladefistAI : public ScriptedAI
             case MOB_HEARTHEN_GUARD:
             case MOB_SHARPSHOOTER_GUARD:
             case MOB_REAVER_GUARD:
-                summoned->AI()->AttackStart(m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0));
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
+                    summoned->AI()->AttackStart(pTarget);
+
                 adds.push_back(summoned->GetGUID());
                 break;
             case MOB_SHATTERED_ASSASSIN:

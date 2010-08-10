@@ -143,13 +143,14 @@ struct MANGOS_DLL_DECL boss_warp_splinterAI : public ScriptedAI
             //float Z = m_creature->GetPositionZ();
             float O = - m_creature->GetAngle(X,Y);
 
-            Creature* pTreant = m_creature->SummonCreature(CREATURE_TREANT,treant_pos[i][0],treant_pos[i][1],treant_pos[i][2],O,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,40000);
-            if (pTreant)
+            if (Creature* pTreant = m_creature->SummonCreature(CREATURE_TREANT,treant_pos[i][0],treant_pos[i][1],treant_pos[i][2],O,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,40000))
             {
                 //pTreant->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*m_creature));
                 pTreant->AddThreat(m_creature);
                 Treant_GUIDs[i] = pTreant->GetGUID();
-                ((mob_treantAI*)pTreant->AI())->WarpGuid = m_creature->GetGUID();
+
+                if (mob_treantAI* pTreantAI = dynamic_cast<mob_treantAI*>(pTreant->AI()))
+                    pTreantAI->WarpGuid = m_creature->GetGUID();
             }
         }
 

@@ -715,15 +715,17 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                     //Respawn advisors
                     Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0);
 
-                    Creature* pAdvisor;
                     for (uint32 i = 0; i < MAX_ADVISORS; ++i)
                     {
-                        pAdvisor = m_creature->GetMap()->GetCreature(m_auiAdvisorGuid[i]);
+                        Creature* pAdvisor = m_creature->GetMap()->GetCreature(m_auiAdvisorGuid[i]);
 
                         if (!pAdvisor)
                             error_log("SD2: Kael'Thas Advisor %u does not exist. Possibly despawned? Incorrectly Killed?", i);
                         else
-                            ((advisorbase_ai*)pAdvisor->AI())->Revive(pTarget);
+                        {
+                            if (advisorbase_ai* pAdvisorAI = dynamic_cast<advisorbase_ai*>(pAdvisor->AI()))
+                                pAdvisorAI->Revive(pTarget);
+                        }
                     }
 
                     m_uiPhaseSubphase = 1;

@@ -921,14 +921,12 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
             }
         }
 
-        if (Creature* Akama = m_creature->GetMap()->GetCreature(AkamaGUID))
+        if (Creature* pAkama = m_creature->GetMap()->GetCreature(AkamaGUID))
         {
-            if (!Akama->isAlive())
-                Akama->Respawn();
+            if (!pAkama->isAlive())
+                pAkama->Respawn();
 
-            ((npc_akama_illidanAI*)Akama->AI())->Reset();
-            ((npc_akama_illidanAI*)Akama->AI())->EnterEvadeMode();
-            Akama->GetMotionMaster()->MoveTargetedHome();
+            pAkama->AI()->EnterEvadeMode();
         }
 
         InformAkama = false;
@@ -1105,20 +1103,20 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
 
         for(uint8 i = 0; i < 2; ++i)
         {
-            Creature* Trigger = NULL;
-            Trigger = m_creature->SummonCreature(DEMON_FIRE, initial_X, initial_Y, initial_Z, 0, TEMPSUMMON_TIMED_DESPAWN, 20000);
-            if (Trigger)
+            if (Creature* pTrigger = m_creature->SummonCreature(DEMON_FIRE, initial_X, initial_Y, initial_Z, 0, TEMPSUMMON_TIMED_DESPAWN, 20000))
             {
-                ((demonfireAI*)Trigger->AI())->IsTrigger = true;
-                Trigger->GetMotionMaster()->MovePoint(0, final_X, final_Y, final_Z);
+                if (demonfireAI* pTriggerAI = dynamic_cast<demonfireAI*>(pTrigger->AI()))
+                    pTriggerAI->IsTrigger = true;
+
+                pTrigger->GetMotionMaster()->MovePoint(0, final_X, final_Y, final_Z);
 
                 if (!i)
-                    Trigger->CastSpell(Trigger, SPELL_EYE_BLAST_TRIGGER, true);
+                    pTrigger->CastSpell(pTrigger, SPELL_EYE_BLAST_TRIGGER, true);
                 else
                 {
-                    Trigger->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                    m_creature->SetUInt64Value(UNIT_FIELD_TARGET, Trigger->GetGUID());
-                    DoCastSpellIfCan(Trigger, SPELL_EYE_BLAST);
+                    pTrigger->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                    m_creature->SetUInt64Value(UNIT_FIELD_TARGET, pTrigger->GetGUID());
+                    DoCastSpellIfCan(pTrigger, SPELL_EYE_BLAST);
                 }
             }
         }
@@ -1443,18 +1441,20 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
                     case 9:
                         if (AkamaGUID)
                         {
-                            Creature* Akama = m_creature->GetMap()->GetCreature(AkamaGUID);
-                            if (Akama)
+                            if (Creature* pAkama = m_creature->GetMap()->GetCreature(AkamaGUID))
                             {
                                 // Start attacking Akama
-                                AttackStart(Akama);
+                                AttackStart(pAkama);
 
                                 // Akama stop talk and start attack illidan
-                                ((npc_akama_illidanAI*)Akama->AI())->IsTalking = false;
-                                ((npc_akama_illidanAI*)Akama->AI())->AttackStart(m_creature);
-                                Akama->AddThreat(m_creature, 1000000.0f);
+                                if (npc_akama_illidanAI* pAkamaAI = dynamic_cast<npc_akama_illidanAI*>(pAkama->AI()))
+                                    pAkamaAI->IsTalking = false;
+
+                                pAkama->AI()->AttackStart(m_creature);
+                                pAkama->AddThreat(m_creature, 1000000.0f);
                             }
                         }
+
                         // We are now attackable!
                         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                         debug_log("SD2: Black Temple: Illidan intro complete, players can attack Illidan.");
@@ -1919,31 +1919,44 @@ void npc_akama_illidanAI::BeginEvent(uint64 PlayerGUID)
     if (IllidanGUID)
     {
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-        Creature* Illidan = m_creature->GetMap()->GetCreature(IllidanGUID);
-        if (Illidan)
+
+        if (Creature* pIllidan = m_creature->GetMap()->GetCreature(IllidanGUID))
         {
-            Illidan->RemoveAurasDueToSpell(SPELL_KNEEL);    // Time for Illidan to stand up.
-                                                            // First line of Akama-Illidan convo
-            ((boss_illidan_stormrageAI*)Illidan->AI())->TalkCount = 0;
-                                                            // Begin Talking
-            ((boss_illidan_stormrageAI*)Illidan->AI())->IsTalking = true;
-            ((boss_illidan_stormrageAI*)Illidan->AI())->AkamaGUID = m_creature->GetGUID();
-            m_creature->SetUInt64Value(UNIT_FIELD_TARGET, Illidan->GetGUID());
-            Illidan->SetUInt64Value(UNIT_FIELD_TARGET, m_creature->GetGUID());
+            boss_illidan_stormrageAI* pIllidanAI = dynamic_cast<boss_illidan_stormrageAI*>(pIllidan->AI());
+
+            if (!pIllidanAI)
+                return;
+
+            // Time for Illidan to stand up.
+            pIllidan->RemoveAurasDueToSpell(SPELL_KNEEL);
+
+            // First line of Akama-Illidan convo
+
+            pIllidanAI->TalkCount = 0;
+
+            // Begin Talking
+            pIllidanAI->IsTalking = true;
+            pIllidanAI->AkamaGUID = m_creature->GetGUID();
+
+            m_creature->SetUInt64Value(UNIT_FIELD_TARGET, pIllidan->GetGUID());
+            pIllidan->SetUInt64Value(UNIT_FIELD_TARGET, m_creature->GetGUID());
+
             IsTalking = true;                               // Prevent Akama from starting to attack him
                                                             // Prevent players from talking again
+
             m_creature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
             m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-            Illidan->GetMotionMaster()->Clear(false);
-            Illidan->GetMotionMaster()->MoveIdle();
+
+            pIllidan->GetMotionMaster()->Clear(false);
+            pIllidan->GetMotionMaster()->MoveIdle();
+
             m_creature->GetMotionMaster()->Clear(false);
             m_creature->GetMotionMaster()->MoveIdle();
 
             if (PlayerGUID)
             {
-                Unit* pPlayer = Unit::GetUnit((*m_creature), PlayerGUID);
-                if (pPlayer)
-                    Illidan->AddThreat(pPlayer, 100.0f);
+                if (Unit* pPlayer = Unit::GetUnit(*m_creature, PlayerGUID))
+                    pIllidan->AddThreat(pPlayer, 100.0f);
             }
         }
     }
@@ -1962,7 +1975,9 @@ bool GossipSelect_npc_akama_at_illidan(Player* pPlayer, Creature* pCreature, uin
     if (uiAction == GOSSIP_ACTION_INFO_DEF)                    // Time to begin the event
     {
         pPlayer->CLOSE_GOSSIP_MENU();
-        ((npc_akama_illidanAI*)pCreature->AI())->BeginDoorEvent(pPlayer);
+
+        if (npc_akama_illidanAI* pAkamaAI = dynamic_cast<npc_akama_illidanAI*>(pCreature->AI()))
+            pAkamaAI->BeginDoorEvent(pPlayer);
     }
     return true;
 }
@@ -2107,7 +2122,9 @@ bool GOHello_cage_trap(Player* pPlayer, GameObject* pGo)
         return false;
     }
 
-    ((cage_trap_triggerAI*)pTrigger->AI())->Active = true;
+    if (cage_trap_triggerAI* pTriggerAI = dynamic_cast<cage_trap_triggerAI*>(pTrigger->AI()))
+        pTriggerAI->Active = true;
+
     pGo->SetGoState(GO_STATE_ACTIVE);
     return true;
 }

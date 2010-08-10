@@ -300,7 +300,10 @@ struct MANGOS_DLL_DECL Advisor_Base_AI : public ScriptedAI
             return;
 
         if (Creature* pKarathress = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_KARATHRESS)))
-            ((boss_fathomlord_karathressAI*)pKarathress->AI())->EventAdvisorDeath(m_uiAdvisor);
+        {
+            if (boss_fathomlord_karathressAI* pKaraAI = dynamic_cast<boss_fathomlord_karathressAI*>(pKarathress->AI()))
+                pKaraAI->EventAdvisorDeath(m_uiAdvisor);
+        }
     }
 };
 

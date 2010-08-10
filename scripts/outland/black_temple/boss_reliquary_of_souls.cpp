@@ -241,7 +241,9 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
         Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0);
         if (target && Soul)
         {
-            ((npc_enslaved_soulAI*)Soul->AI())->ReliquaryGUID = m_creature->GetGUID();
+            if (npc_enslaved_soulAI* pSoulAI = dynamic_cast<npc_enslaved_soulAI*>(Soul->AI()))
+                pSoulAI->ReliquaryGUID = m_creature->GetGUID();
+
             Soul->CastSpell(Soul, ENSLAVED_SOUL_PASSIVE, true);
             Soul->AddThreat(target);
             ++SoulCount;
@@ -918,9 +920,11 @@ void npc_enslaved_soulAI::JustDied(Unit *killer)
 {
     if (ReliquaryGUID)
     {
-        Creature* Reliquary = m_creature->GetMap()->GetCreature(ReliquaryGUID);
-        if (Reliquary)
-            ((boss_reliquary_of_soulsAI*)Reliquary->AI())->SoulDeathCount++;
+        if (Creature* pReliquary = m_creature->GetMap()->GetCreature(ReliquaryGUID))
+        {
+            if (boss_reliquary_of_soulsAI* pReliqAI = dynamic_cast<boss_reliquary_of_soulsAI*>(pReliquary->AI()))
+                pReliqAI->SoulDeathCount++;
+        }
     }
 }
 

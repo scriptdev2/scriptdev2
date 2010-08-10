@@ -357,9 +357,16 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
         {
             Infernal->SetDisplayId(INFERNAL_MODEL_INVISIBLE);
             Infernal->setFaction(m_creature->getFaction());
-            if (point)
-                ((netherspite_infernalAI*)Infernal->AI())->point=point;
-            ((netherspite_infernalAI*)Infernal->AI())->malchezaar=m_creature->GetGUID();
+
+            netherspite_infernalAI* pInfernalAI = dynamic_cast<netherspite_infernalAI*>(Infernal->AI());
+
+            if (pInfernalAI)
+            {
+                if (point)
+                    pInfernalAI->point = point;
+
+                pInfernalAI->malchezaar = m_creature->GetGUID();
+            }
 
             infernals.push_back(Infernal->GetGUID());
             DoCastSpellIfCan(Infernal, SPELL_INFERNAL_RELAY);
@@ -597,10 +604,13 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
 
 void netherspite_infernalAI::Cleanup()
 {
-    Creature *pMalchezaar = m_creature->GetMap()->GetCreature(malchezaar);
+    Creature* pMalchezaar = m_creature->GetMap()->GetCreature(malchezaar);
 
     if (pMalchezaar && pMalchezaar->isAlive())
-        ((boss_malchezaarAI*)pMalchezaar->AI())->Cleanup(m_creature, point);
+    {
+        if (boss_malchezaarAI* pMalAI = dynamic_cast<boss_malchezaarAI*>(pMalchezaar->AI()))
+            pMalAI->Cleanup(m_creature, point);
+    }
 }
 
 CreatureAI* GetAI_netherspite_infernal(Creature* pCreature)

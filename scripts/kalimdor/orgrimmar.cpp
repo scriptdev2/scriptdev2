@@ -144,8 +144,11 @@ bool QuestAccept_npc_shenthul(Player* pPlayer, Creature* pCreature, const Quest*
 {
     if (pQuest->GetQuestId() == QUEST_SHATTERED_SALUTE)
     {
-        ((npc_shenthulAI*)pCreature->AI())->CanTalk = true;
-        ((npc_shenthulAI*)pCreature->AI())->playerGUID = pPlayer->GetGUID();
+        if (npc_shenthulAI* pShenAI = dynamic_cast<npc_shenthulAI*>(pCreature->AI()))
+        {
+            pShenAI->CanTalk = true;
+            pShenAI->playerGUID = pPlayer->GetGUID();
+        }
     }
     return true;
 }

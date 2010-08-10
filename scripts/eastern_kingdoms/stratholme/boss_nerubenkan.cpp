@@ -75,7 +75,7 @@ struct MANGOS_DLL_DECL boss_nerubenkanAI : public ScriptedAI
         Rand = 0;
         Summoned = DoSpawnCreature(10876, RandX, RandY, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 180000);
         if (Summoned)
-            ((CreatureAI*)Summoned->AI())->AttackStart(victim);
+            Summoned->AI()->AttackStart(victim);
     }
 
     void JustDied(Unit* Killer)

@@ -271,13 +271,17 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
 
             if (target)
             {
-                Creature* MoltenFlame = SummonCreature(CREATURE_STALKER, target);
-                if (MoltenFlame)
+                if (Creature* pMoltenFlame = SummonCreature(CREATURE_STALKER, target))
                 {
                     // Invisible model
-                    MoltenFlame->SetDisplayId(11686);
-                    ((molten_flameAI*)MoltenFlame->AI())->SetSupremusGUID(m_creature->GetGUID());
-                    ((molten_flameAI*)MoltenFlame->AI())->StalkTarget(target);
+                    pMoltenFlame->SetDisplayId(11686);
+
+                    if (molten_flameAI* pMoltenAI = dynamic_cast<molten_flameAI*>(pMoltenFlame->AI()))
+                    {
+                        pMoltenAI->SetSupremusGUID(m_creature->GetGUID());
+                        pMoltenAI->StalkTarget(target);
+                    }
+
                     SummonFlameTimer = 20000;
                 }
             }
@@ -318,12 +322,12 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
 
                 if (target)
                 {
-                    Creature* Volcano = SummonCreature(CREATURE_VOLCANO, target);
-
-                    if (Volcano)
+                    if (Creature* pVolcano = SummonCreature(CREATURE_VOLCANO, target))
                     {
                         DoCastSpellIfCan(target, SPELL_VOLCANIC_ERUPTION);
-                        ((npc_volcanoAI*)Volcano->AI())->SetSupremusGUID(m_creature->GetGUID());
+
+                        if (npc_volcanoAI* pVolcanoAI = dynamic_cast<npc_volcanoAI*>(pVolcano->AI()))
+                            pVolcanoAI->SetSupremusGUID(m_creature->GetGUID());
                     }
 
                     DoScriptText(EMOTE_GROUND_CRACK, m_creature);

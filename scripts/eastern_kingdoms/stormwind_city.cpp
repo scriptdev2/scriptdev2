@@ -116,7 +116,7 @@ bool QuestAccept_npc_bartleby(Player* pPlayer, Creature* pCreature, const Quest*
     if (pQuest->GetQuestId() == QUEST_BEAT)
     {
         pCreature->setFaction(FACTION_ENEMY);
-        ((npc_bartlebyAI*)pCreature->AI())->AttackStart(pPlayer);
+        pCreature->AI()->AttackStart(pPlayer);
     }
     return true;
 }
@@ -182,7 +182,7 @@ bool QuestAccept_npc_dashel_stonefist(Player* pPlayer, Creature* pCreature, cons
     if (pQuest->GetQuestId() == QUEST_MISSING_DIPLO_PT8)
     {
         pCreature->setFaction(FACTION_HOSTILE);
-        ((npc_dashel_stonefistAI*)pCreature->AI())->AttackStart(pPlayer);
+        pCreature->AI()->AttackStart(pPlayer);
     }
     return true;
 }

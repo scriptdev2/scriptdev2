@@ -75,8 +75,7 @@ bool GossipSelect_npc_astor_hadren(Player* pPlayer, Creature* pCreature, uint32 
         case GOSSIP_ACTION_INFO_DEF + 2:
             pPlayer->CLOSE_GOSSIP_MENU();
             pCreature->setFaction(21);
-            if (pPlayer)
-                ((npc_astor_hadrenAI*)pCreature->AI())->AttackStart(pPlayer);
+            pCreature->AI()->AttackStart(pPlayer);
             break;
     }
     return true;

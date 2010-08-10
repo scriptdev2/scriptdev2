@@ -632,23 +632,27 @@ struct MANGOS_DLL_DECL cthunAI : public ScriptedAI
                     //Spawn 2 flesh tentacles
                     FleshTentaclesKilled = 0;
 
-                    Creature* Spawned;
-
                     //Spawn flesh tentacle
-                    Spawned = (Creature*)m_creature->SummonCreature(MOB_FLESH_TENTACLE, TENTACLE_POS1_X, TENTACLE_POS1_Y, TENTACLE_POS1_Z, TENTACLE_POS1_O, TEMPSUMMON_CORPSE_DESPAWN, 0);
+                    Creature* pSpawned = m_creature->SummonCreature(MOB_FLESH_TENTACLE, TENTACLE_POS1_X, TENTACLE_POS1_Y, TENTACLE_POS1_Z, TENTACLE_POS1_O, TEMPSUMMON_CORPSE_DESPAWN, 0);
 
-                    if (!Spawned)
+                    if (!pSpawned)
                         ++FleshTentaclesKilled;
                     else
-                        ((flesh_tentacleAI*)(Spawned->AI()))->SpawnedByCthun(m_creature->GetGUID());
+                    {
+                        if (flesh_tentacleAI* pTentacleAI = dynamic_cast<flesh_tentacleAI*>(pSpawned->AI()))
+                            pTentacleAI->SpawnedByCthun(m_creature->GetGUID());
+                    }
 
                     //Spawn flesh tentacle
-                    Spawned = (Creature*)m_creature->SummonCreature(MOB_FLESH_TENTACLE, TENTACLE_POS2_X, TENTACLE_POS2_Y, TENTACLE_POS2_Z, TENTACLE_POS2_O, TEMPSUMMON_CORPSE_DESPAWN, 0);
+                    pSpawned = m_creature->SummonCreature(MOB_FLESH_TENTACLE, TENTACLE_POS2_X, TENTACLE_POS2_Y, TENTACLE_POS2_Z, TENTACLE_POS2_O, TEMPSUMMON_CORPSE_DESPAWN, 0);
 
-                    if (!Spawned)
+                    if (!pSpawned)
                         ++FleshTentaclesKilled;
                     else
-                        ((flesh_tentacleAI*)(Spawned->AI()))->SpawnedByCthun(m_creature->GetGUID());
+                    {
+                        if (flesh_tentacleAI* pTentacleAI = dynamic_cast<flesh_tentacleAI*>(pSpawned->AI()))
+                            pTentacleAI->SpawnedByCthun(m_creature->GetGUID());
+                    }
 
                     PhaseTimer = 0;
                 }else PhaseTimer -= diff;
@@ -847,23 +851,27 @@ struct MANGOS_DLL_DECL cthunAI : public ScriptedAI
                     //Spawn 2 flesh tentacles
                     FleshTentaclesKilled = 0;
 
-                    Creature* Spawned;
-
                     //Spawn flesh tentacle
-                    Spawned = (Creature*)m_creature->SummonCreature(MOB_FLESH_TENTACLE, TENTACLE_POS1_X, TENTACLE_POS1_Y, TENTACLE_POS1_Z, TENTACLE_POS1_O, TEMPSUMMON_CORPSE_DESPAWN, 0);
+                    Creature* pSpawned = m_creature->SummonCreature(MOB_FLESH_TENTACLE, TENTACLE_POS1_X, TENTACLE_POS1_Y, TENTACLE_POS1_Z, TENTACLE_POS1_O, TEMPSUMMON_CORPSE_DESPAWN, 0);
 
-                    if (!Spawned)
+                    if (!pSpawned)
                         ++FleshTentaclesKilled;
                     else
-                        ((flesh_tentacleAI*)(Spawned->AI()))->SpawnedByCthun(m_creature->GetGUID());
+                    {
+                        if (flesh_tentacleAI* pTentacleAI = dynamic_cast<flesh_tentacleAI*>(pSpawned->AI()))
+                            pTentacleAI->SpawnedByCthun(m_creature->GetGUID());
+                    }
 
                     //Spawn flesh tentacle
-                    Spawned = (Creature*)m_creature->SummonCreature(MOB_FLESH_TENTACLE, TENTACLE_POS2_X, TENTACLE_POS2_Y, TENTACLE_POS2_Z, TENTACLE_POS2_O, TEMPSUMMON_CORPSE_DESPAWN, 0);
+                    pSpawned = m_creature->SummonCreature(MOB_FLESH_TENTACLE, TENTACLE_POS2_X, TENTACLE_POS2_Y, TENTACLE_POS2_Z, TENTACLE_POS2_O, TEMPSUMMON_CORPSE_DESPAWN, 0);
 
-                    if (!Spawned)
+                    if (!pSpawned)
                         ++FleshTentaclesKilled;
                     else
-                        ((flesh_tentacleAI*)(Spawned->AI()))->SpawnedByCthun(m_creature->GetGUID());
+                    {
+                        if (flesh_tentacleAI* pTentacleAI = dynamic_cast<flesh_tentacleAI*>(pSpawned->AI()))
+                            pTentacleAI->SpawnedByCthun(m_creature->GetGUID());
+                    }
 
                     PhaseTimer = 0;
                 }else PhaseTimer -= diff;
@@ -1261,11 +1269,13 @@ void flesh_tentacleAI::JustDied(Unit* killer)
         return;
     }
 
-    Creature* Cthun = m_creature->GetMap()->GetCreature(Parent);
-
-    if (Cthun)
-        ((cthunAI*)(Cthun->AI()))->FleshTentcleKilled();
-    else error_log("SD2: flesh_tentacle: No Cthun");
+    if (Creature* pCthun = m_creature->GetMap()->GetCreature(Parent))
+    {
+        if (cthunAI* pCthunAI = dynamic_cast<cthunAI*>(pCthun->AI()))
+            pCthunAI->FleshTentcleKilled();
+    }
+    else
+        error_log("SD2: flesh_tentacle: No Cthun");
 }
 
 //GetAIs
