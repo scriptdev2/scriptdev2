@@ -61,7 +61,7 @@ struct MANGOS_DLL_DECL mob_vrykul_skeletonAI : public ScriptedAI
 {
     mob_vrykul_skeletonAI(Creature* pCreature) : ScriptedAI(pCreature) 
     {
-        m_pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         m_bIsRegularMode = m_creature->GetMap()->IsRegularDifficulty();
         Reset();
     }

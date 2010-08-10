@@ -341,7 +341,7 @@ struct MANGOS_DLL_DECL mob_fel_crystalAI : public ScriptedAI
 
     void JustDied(Unit* killer)
     {
-        if (ScriptedInstance* pInstance = ((ScriptedInstance*)m_creature->GetInstanceData()))
+        if (ScriptedInstance* pInstance = (ScriptedInstance*)m_creature->GetInstanceData())
         {
             Creature* Selin = m_creature->GetMap()->GetCreature(pInstance->GetData64(DATA_SELIN));
 
