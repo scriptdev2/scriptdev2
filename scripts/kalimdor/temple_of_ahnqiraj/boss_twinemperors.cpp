@@ -214,7 +214,8 @@ struct MANGOS_DLL_DECL boss_twinemperorsAI : public ScriptedAI
         ThreatList const& tList = m_creature->getThreatManager().getThreatList();
         for (ThreatList::const_iterator i = tList.begin();i != tList.end(); ++i)
         {
-            Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
+            Unit* pUnit = m_creature->GetMap()->GetUnit((*i)->getUnitGuid());
+
             if (m_creature->IsWithinDistInMap(pUnit, dist))
             {
                 if (!totallyRandom)
@@ -228,7 +229,7 @@ struct MANGOS_DLL_DECL boss_twinemperorsAI : public ScriptedAI
         for (int randomi = rand() % cnt; randomi > 0; randomi --)
             candidates.pop_front();
 
-        Unit *ret = Unit::GetUnit((*m_creature), candidates.front()->getUnitGuid());
+        Unit *ret = m_creature->GetMap()->GetUnit(candidates.front()->getUnitGuid());
         candidates.clear();
         return ret;
     }
@@ -240,10 +241,11 @@ struct MANGOS_DLL_DECL boss_twinemperorsAI : public ScriptedAI
         ThreatList const& tList = m_creature->getThreatManager().getThreatList();
         for (ThreatList::const_iterator i = tList.begin();i != tList.end(); ++i)
         {
-            Unit* pUnit = NULL;
-            pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
+            Unit* pUnit = m_creature->GetMap()->GetUnit((*i)->getUnitGuid());
+
             if (!pUnit)
                 continue;
+
             float pudist = pUnit->GetDistance((const Creature *)m_creature);
             if (!nearp || (neardist > pudist))
             {

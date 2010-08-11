@@ -162,7 +162,7 @@ struct MANGOS_DLL_DECL npc_kelerun_bloodmournAI : public ScriptedAI
                 {
                     if (!pChallenger->isAlive())
                     {
-                        Player* pPlayer = (Player*)Unit::GetUnit(*m_creature, m_uiPlayerGUID);
+                        Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID);
 
                         if (pPlayer && !pPlayer->isAlive())
                         {
@@ -192,7 +192,7 @@ struct MANGOS_DLL_DECL npc_kelerun_bloodmournAI : public ScriptedAI
 
             if (m_uiEngageTimer && m_uiEngageTimer < uiDiff)
             {
-                Unit* pPlayer = Unit::GetUnit(*m_creature, m_uiPlayerGUID);
+                Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID);
 
                 if (pPlayer && pPlayer->isAlive())
                 {
@@ -365,7 +365,8 @@ struct MANGOS_DLL_DECL npc_apprentice_mirvedaAI : public ScriptedAI
 
     void JustDied(Unit* pKiller)
     {
-        Player* pPlayer = ((Player*)Unit::GetUnit((*m_creature), m_uiPlayerGUID));
+        Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID);
+
         if (pPlayer && pPlayer->GetQuestStatus(QUEST_UNEXPECTED_RESULT) == QUEST_STATUS_INCOMPLETE)
             pPlayer->SendQuestFailed(QUEST_UNEXPECTED_RESULT);
     }
@@ -383,7 +384,8 @@ struct MANGOS_DLL_DECL npc_apprentice_mirvedaAI : public ScriptedAI
         if (m_uiMobCount)
             return;
 
-        Player* pPlayer = ((Player*)Unit::GetUnit((*m_creature), m_uiPlayerGUID));
+        Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID);
+
         if (pPlayer && pPlayer->GetQuestStatus(QUEST_UNEXPECTED_RESULT) == QUEST_STATUS_INCOMPLETE)
             pPlayer->GroupEventHappens(QUEST_UNEXPECTED_RESULT, m_creature);
 

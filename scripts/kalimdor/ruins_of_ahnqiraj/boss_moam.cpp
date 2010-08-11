@@ -112,7 +112,8 @@ struct MANGOS_DLL_DECL boss_moamAI : public ScriptedAI
 
                     for (ThreatList::const_iterator itr = threatlist.begin(); itr != threatlist.end(); ++itr)
                     {
-                        Unit* pUnit = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
+                        Unit* pUnit = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid());
+
                         if (pUnit && pUnit->isAlive() && pUnit->GetPower(POWER_MANA))
                             lTargets.push_back(pUnit);
                     }

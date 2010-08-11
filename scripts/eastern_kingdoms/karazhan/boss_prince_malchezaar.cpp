@@ -294,7 +294,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
         std::advance(itr, 1);
         for(; itr!= tList.end(); ++itr)                    //store the threat list in a different container
         {
-            Unit *target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
+            Unit *target = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid());
                                                             //only on alive players
             if (target && target->isAlive() && target->GetTypeId() == TYPEID_PLAYER)
                 targets.push_back(target);
@@ -324,9 +324,11 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
     {
         for(int i = 0; i < 5; ++i)
         {
-            Unit *target = Unit::GetUnit(*m_creature, enfeeble_targets[i]);
-            if (target && target->isAlive())
-                target->SetHealth(enfeeble_health[i]);
+            Player* pTarget = m_creature->GetMap()->GetPlayer(enfeeble_targets[i]);
+
+            if (pTarget && pTarget->isAlive())
+                pTarget->SetHealth(enfeeble_health[i]);
+
             enfeeble_targets[i] = 0;
             enfeeble_health[i] = 0;
         }

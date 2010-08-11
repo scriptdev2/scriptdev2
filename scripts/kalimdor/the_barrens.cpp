@@ -403,7 +403,7 @@ struct MANGOS_DLL_DECL npc_twiggy_flatheadAI : public ScriptedAI
 
         if (Event_Timer < diff)
         {
-            Player* pPlayer = (Player*)Unit::GetUnit(*m_creature,PlayerGUID);
+            Player* pPlayer = m_creature->GetMap()->GetPlayer(PlayerGUID);
 
             if (!pPlayer || pPlayer->isDead())
                 Reset();

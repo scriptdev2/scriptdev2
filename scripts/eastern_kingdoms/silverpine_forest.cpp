@@ -293,7 +293,7 @@ struct MANGOS_DLL_DECL npc_deathstalker_faerleiaAI : public ScriptedAI
 
     void JustDied(Unit* pKiller)
     {
-        if (Player* pPlayer = ((Player*)Unit::GetUnit((*m_creature), m_uiPlayerGUID)))
+        if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID))
             pPlayer->SendQuestFailed(QUEST_PYREWOOD_AMBUSH);
 
         FinishEvent();
@@ -322,7 +322,7 @@ struct MANGOS_DLL_DECL npc_deathstalker_faerleiaAI : public ScriptedAI
             {
                 DoScriptText(SAY_COMPLETED, m_creature);
 
-                if (Player* pPlayer = ((Player*)Unit::GetUnit((*m_creature), m_uiPlayerGUID)))
+                if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID))
                     pPlayer->GroupEventHappens(QUEST_PYREWOOD_AMBUSH, m_creature);
 
                 FinishEvent();

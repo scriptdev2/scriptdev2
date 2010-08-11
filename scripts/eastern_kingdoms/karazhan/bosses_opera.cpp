@@ -827,9 +827,10 @@ struct MANGOS_DLL_DECL boss_bigbadwolfAI : public ScriptedAI
             {
                 IsChasing = false;
 
-                if (Unit* target = Unit::GetUnit((*m_creature), HoodGUID))
+                if (Player* target = m_creature->GetMap()->GetPlayer(HoodGUID))
                 {
                     HoodGUID = 0;
+
                     if (m_creature->getThreatManager().getThreat(target))
                         m_creature->getThreatManager().modifyThreatPercent(target, -100);
 

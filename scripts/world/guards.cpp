@@ -142,7 +142,7 @@ struct MANGOS_DLL_DECL guard_shattrath_aldorAI : public guardAI
         {
             if (m_uiExile_Timer < uiDiff)
             {
-                if (Unit* pTarget = Unit::GetUnit(*m_creature, m_uiPlayerGUID))
+                if (Player* pTarget = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID))
                 {
                     pTarget->CastSpell(pTarget, SPELL_EXILE, true);
                     pTarget->CastSpell(pTarget, SPELL_BANISH_TELEPORT, true);
@@ -211,7 +211,7 @@ struct MANGOS_DLL_DECL guard_shattrath_scryerAI : public guardAI
         {
             if (m_uiExile_Timer < uiDiff)
             {
-                if (Unit* pTarget = Unit::GetUnit(*m_creature, m_uiPlayerGUID))
+                if (Player* pTarget = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID))
                 {
                     pTarget->CastSpell(pTarget, SPELL_EXILE, true);
                     pTarget->CastSpell(pTarget, SPELL_BANISH_TELEPORT, true);

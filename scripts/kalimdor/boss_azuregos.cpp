@@ -73,11 +73,10 @@ struct MANGOS_DLL_DECL boss_azuregosAI : public ScriptedAI
             ThreatList const& tList = m_creature->getThreatManager().getThreatList();
             for (ThreatList::const_iterator i = tList.begin();i != tList.end(); ++i)
             {
-                Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
-                if (pUnit && (pUnit->GetTypeId() == TYPEID_PLAYER))
-                {
+                Unit* pUnit = m_creature->GetMap()->GetUnit((*i)->getUnitGuid());
+
+                if (pUnit && pUnit->GetTypeId() == TYPEID_PLAYER)
                     DoTeleportPlayer(pUnit, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ()+3, pUnit->GetOrientation());
-                }
             }
 
             DoResetThreat();

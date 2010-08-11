@@ -153,9 +153,9 @@ struct MANGOS_DLL_DECL mob_doomfire_targettingAI : public ScriptedAI
     {
         if (ChangeTargetTimer < diff)
         {
-            if (Unit *temp = Unit::GetUnit(*m_creature,TargetGUID))
+            if (Player* pPlayer = m_creature->GetMap()->GetPlayer(TargetGUID))
             {
-                m_creature->GetMotionMaster()->MoveFollow(temp,0.0f,0.0f);
+                m_creature->GetMotionMaster()->MoveFollow(pPlayer, 0.0f, 0.0f);
                 TargetGUID = 0;
             }
             else
@@ -299,7 +299,8 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
 
         for (ThreatList::const_iterator itr = tList.begin();itr != tList.end(); ++itr)
         {
-            Unit* pUnit = Unit::GetUnit((*m_creature), (*itr)->getUnitGuid());
+            Unit* pUnit = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid());
+
             if (pUnit && pUnit->isAlive())
                 targets.push_back(pUnit);
         }

@@ -203,7 +203,8 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
                 std::advance(itr, 1);
                 for (;itr != tList.end(); ++itr)
                 {
-                    pTarget = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
+                    pTarget = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid());
+
                     // exclude pets, totems & player out of melee range
                     if (pTarget->GetTypeId() != TYPEID_PLAYER || !pTarget->IsWithinDist(m_creature, ATTACK_DISTANCE, false))
                     {

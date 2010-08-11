@@ -248,14 +248,14 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
     {
         // to avoid multiclicks from 1 cube
         if (uint64 guid = Cube[uiCubeGUID])
-            DebuffClicker(Unit::GetUnit(*m_creature, guid));
+            DebuffClicker(m_creature->GetMap()->GetPlayer(guid));
 
         Cube[uiCubeGUID] = uiClickerGUID;
         m_bNeedCheckCube = true;
     }
 
     //function to interrupt channeling and debuff clicker with mind exhaused if second person clicks with same cube or after dispeling/ending shadow grasp DoT)
-    void DebuffClicker(Unit* pClicker)
+    void DebuffClicker(Player* pClicker)
     {
         if (!pClicker || !pClicker->isAlive())
             return;
@@ -281,11 +281,12 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
         // if not - apply mind exhaustion and delete from clicker's list
         for(CubeMap::iterator i = Cube.begin(); i != Cube.end(); ++i)
         {
-            Unit *clicker = Unit::GetUnit(*m_creature, (*i).second);
-            if (!clicker || !clicker->HasAura(SPELL_SHADOW_GRASP, EFFECT_INDEX_1))
+            Player* pClicker = m_creature->GetMap()->GetPlayer(i->second);
+
+            if (!pClicker || !pClicker->HasAura(SPELL_SHADOW_GRASP, EFFECT_INDEX_1))
             {
-                DebuffClicker(clicker);
-                (*i).second = 0;
+                DebuffClicker(pClicker);
+                i->second = 0;
             }
             else
                 ++ClickerNum;

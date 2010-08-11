@@ -111,7 +111,7 @@ struct MANGOS_DLL_DECL boss_patchwerkAI : public ScriptedAI
             if (!uiTargets)
                 break;
 
-            if (Unit* pTempTarget = Unit::GetUnit((*m_creature), (*iter)->getUnitGuid()))
+            if (Unit* pTempTarget = m_creature->GetMap()->GetUnit((*iter)->getUnitGuid()))
             {
                 if (pTempTarget->GetHealth() > uiHighestHP && m_creature->IsWithinDistInMap(pTempTarget, ATTACK_DISTANCE))
                 {

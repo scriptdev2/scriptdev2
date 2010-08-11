@@ -132,8 +132,8 @@ struct MANGOS_DLL_DECL boss_archaedasAI : public ScriptedAI
                         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                         break;
                     case 2:
-                        if (Unit* pUnit = Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_EVENT_STARTER)))
-                            AttackStart(pUnit);
+                        if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_pInstance->GetData64(DATA_EVENT_STARTER)))
+                            AttackStart(pPlayer);
                         else
                             EnterEvadeMode();
                         break;

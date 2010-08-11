@@ -57,7 +57,7 @@ struct MANGOS_DLL_DECL boss_murmurAI : public ScriptedAI
     uint32 ThunderingStorm_Timer;
     bool CanSonicBoom;
     bool CanShockWave;
-    uint64 pTarget;
+    uint64 m_uiPlayerTargetGUID;
 
     void Reset()
     {
@@ -69,7 +69,7 @@ struct MANGOS_DLL_DECL boss_murmurAI : public ScriptedAI
         ThunderingStorm_Timer = 12000;                //Casting directly after Sonic Boom.
         CanSonicBoom = false;
         CanShockWave = false;
-        pTarget = 0;
+        m_uiPlayerTargetGUID = 0;
 
         //database should have `RegenHealth`=0 to prevent regen
         uint32 hp = (m_creature->GetMaxHealth()*40)/100;
@@ -82,7 +82,8 @@ struct MANGOS_DLL_DECL boss_murmurAI : public ScriptedAI
         ThreatList const& tList = m_creature->getThreatManager().getThreatList();
         for (ThreatList::const_iterator itr = tList.begin();itr != tList.end(); ++itr)
         {
-           Unit* target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
+           Unit* target = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid());
+
            if (target && target->GetTypeId() == TYPEID_PLAYER)
            {
                //Not do anything without aura, spell can be resisted!
@@ -168,7 +169,7 @@ struct MANGOS_DLL_DECL boss_murmurAI : public ScriptedAI
                     if (temp->GetTypeId() == TYPEID_PLAYER)
                     {
                         DoCastSpellIfCan(temp, SPELL_MAGNETIC_PULL);
-                        pTarget = temp->GetGUID();
+                        m_uiPlayerTargetGUID = temp->GetGUID();
                         CanShockWave = true;
                     }
                     MagneticPull_Timer = 2500;
@@ -176,12 +177,12 @@ struct MANGOS_DLL_DECL boss_murmurAI : public ScriptedAI
             }
             else
             {
-                if (Unit* target = Unit::GetUnit(*m_creature,pTarget))
-                    target->CastSpell(target,SPELL_SHOCKWAVE,true);
+                if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerTargetGUID))
+                    pPlayer->CastSpell(pPlayer, SPELL_SHOCKWAVE, true);
 
                 MagneticPull_Timer = urand(15000, 30000);
                 CanShockWave = false;
-                pTarget = 0;
+                m_uiPlayerTargetGUID = 0;
             }
         }else MagneticPull_Timer -= diff;
 

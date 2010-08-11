@@ -205,7 +205,7 @@ struct MANGOS_DLL_DECL boss_exarch_maladaarAI : public ScriptedAI
             pSummoned->CastSpell(pSummoned, SPELL_STOLEN_SOUL_VISUAL, false);
             pSummoned->setFaction(m_creature->getFaction());
 
-            if (Unit* pTarget = Unit::GetUnit(*m_creature, m_uiTargetGUID))
+            if (Player* pTarget = m_creature->GetMap()->GetPlayer(m_uiTargetGUID))
             {
                 if (mob_stolen_soulAI* pSoulAI = dynamic_cast<mob_stolen_soulAI*>(pSummoned->AI()))
                 {

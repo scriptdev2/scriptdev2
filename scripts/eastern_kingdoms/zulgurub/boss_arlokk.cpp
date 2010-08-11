@@ -129,9 +129,11 @@ struct MANGOS_DLL_DECL boss_arlokkAI : public ScriptedAI
 
     void DoSummonPhanters()
     {
-        if (Unit* pUnit = Unit::GetUnit(*m_creature, m_uiMarkedGUID))
-            if (pUnit->isAlive())
-                DoScriptText(SAY_FEAST_PANTHER, m_creature, pUnit);
+        if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiMarkedGUID))
+        {
+            if (pPlayer->isAlive())
+                DoScriptText(SAY_FEAST_PANTHER, m_creature, pPlayer);
+        }
 
         m_creature->SummonCreature(NPC_ZULIAN_PROWLER, -11532.7998f, -1649.6734f, 41.4800f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
         m_creature->SummonCreature(NPC_ZULIAN_PROWLER, -11532.9970f, -1606.4840f, 41.2979f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
@@ -139,9 +141,11 @@ struct MANGOS_DLL_DECL boss_arlokkAI : public ScriptedAI
 
     void JustSummoned(Creature* pSummoned)
     {
-        if (Unit* pUnit = Unit::GetUnit(*m_creature, m_uiMarkedGUID))
-            if (pUnit->isAlive())
-                pSummoned->AI()->AttackStart(pUnit);
+        if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiMarkedGUID))
+        {
+            if (pPlayer->isAlive())
+                pSummoned->AI()->AttackStart(pPlayer);
+        }
 
         ++m_uiSummonCount;
     }

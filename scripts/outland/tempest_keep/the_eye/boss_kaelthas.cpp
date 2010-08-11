@@ -274,7 +274,8 @@ struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
                 m_uiDelayRes_Timer = 0;
                 m_bFakeDeath = false;
 
-                Unit* pTarget = Unit::GetUnit((*m_creature), m_uiDelayRes_Target);
+                Unit* pTarget = m_creature->GetMap()->GetUnit(m_uiDelayRes_Target);
+
                 if (!pTarget)
                     pTarget = m_creature->getVictim();
 
@@ -930,8 +931,9 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                                 ThreatList const& tList = m_creature->getThreatManager().getThreatList();
                                 for (ThreatList::const_iterator i = tList.begin();i != tList.end(); ++i)
                                 {
-                                    Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
-                                    if (pUnit && (pUnit->GetTypeId() == TYPEID_PLAYER))
+                                    Unit* pUnit = m_creature->GetMap()->GetUnit((*i)->getUnitGuid());
+
+                                    if (pUnit && pUnit->GetTypeId() == TYPEID_PLAYER)
                                     {
                                         //Use work around packet to prevent player from being dropped from combat
                                         DoTeleportPlayer(pUnit, afGravityPos[0], afGravityPos[1], afGravityPos[2], pUnit->GetOrientation());
@@ -953,7 +955,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                                 ThreatList const& tList = m_creature->getThreatManager().getThreatList();
                                 for (ThreatList::const_iterator i = tList.begin();i != tList.end(); ++i)
                                 {
-                                    if (Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid()))
+                                    if (Unit* pUnit = m_creature->GetMap()->GetUnit((*i)->getUnitGuid()))
                                     {
                                         m_creature->CastSpell(pUnit, SPELL_KNOCKBACK, true);
                                         //Gravity lapse - needs an exception in Spell system to work
@@ -1259,7 +1261,7 @@ struct MANGOS_DLL_DECL boss_grand_astromancer_capernianAI : public advisorbase_a
             ThreatList const& tList = m_creature->getThreatManager().getThreatList();
             for (ThreatList::const_iterator i = tList.begin();i != tList.end(); ++i)
             {
-                Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
+                Unit* pUnit = m_creature->GetMap()->GetUnit((*i)->getUnitGuid());
 
                 //if in melee range
                 if (pUnit && pUnit->IsWithinDistInMap(m_creature, ATTACK_DISTANCE))

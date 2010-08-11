@@ -116,7 +116,7 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
             ThreatList const& tList = m_creature->getThreatManager().getThreatList();
             for (ThreatList::const_iterator itr = tList.begin();itr != tList.end(); ++itr)
             {
-                target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
+                target = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid());
 
                 // exclude pets & totems
                 if (!target || target->GetTypeId() != TYPEID_PLAYER)

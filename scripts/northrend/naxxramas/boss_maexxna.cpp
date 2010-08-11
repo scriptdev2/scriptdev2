@@ -88,7 +88,7 @@ struct MANGOS_DLL_DECL npc_web_wrapAI : public ScriptedAI
     {
         if (m_uiVictimGUID)
         {
-            if (Unit* pVictim = Unit::GetUnit(*m_creature, m_uiVictimGUID))
+            if (Player* pVictim = m_creature->GetMap()->GetPlayer(m_uiVictimGUID))
             {
                 if (pVictim->isAlive())
                     pVictim->RemoveAurasDueToSpell(SPELL_WEBWRAP);
@@ -160,7 +160,7 @@ struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
         // store the threat list in a different container
         for (;itr != tList.end(); ++itr)
         {
-            Unit* target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
+            Unit* target = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid());
 
             // only on alive players
             if (target && target->isAlive() && target->GetTypeId() == TYPEID_PLAYER)

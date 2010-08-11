@@ -175,7 +175,7 @@ struct MANGOS_DLL_DECL npc_a_special_surpriseAI : public ScriptedAI
         {
             if (m_uiExecuteSpeech_Timer < uiDiff)
             {
-                Player* pPlayer = (Player*)Unit::GetUnit(*m_creature, m_uiPlayerGUID);
+                Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID);
 
                 if (!pPlayer)
                 {
@@ -552,7 +552,7 @@ struct MANGOS_DLL_DECL npc_death_knight_initiateAI : public ScriptedAI
 
     void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
     {
-        if (!m_bIsDuelInProgress && pSpell->Id == SPELL_DUEL_TRIGGERED)
+        if (!m_bIsDuelInProgress && pSpell->Id == SPELL_DUEL_TRIGGERED && pCaster->GetTypeId() == TYPEID_PLAYER)
         {
             m_uiDuelerGUID = pCaster->GetGUID();
             m_bIsDuelInProgress = true;
@@ -565,8 +565,8 @@ struct MANGOS_DLL_DECL npc_death_knight_initiateAI : public ScriptedAI
         {
             uiDamage = 0;
 
-            if (Unit* pUnit = Unit::GetUnit(*m_creature, m_uiDuelerGUID))
-                m_creature->CastSpell(pUnit, SPELL_DUEL_VICTORY, true);
+            if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiDuelerGUID))
+                m_creature->CastSpell(pPlayer, SPELL_DUEL_VICTORY, true);
 
             //possibly not evade, but instead have end sequenze
             EnterEvadeMode();
@@ -583,8 +583,8 @@ struct MANGOS_DLL_DECL npc_death_knight_initiateAI : public ScriptedAI
                 {
                     m_creature->setFaction(FACTION_HOSTILE);
 
-                    if (Unit* pUnit = Unit::GetUnit(*m_creature, m_uiDuelerGUID))
-                        AttackStart(pUnit);
+                    if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiDuelerGUID))
+                        AttackStart(pPlayer);
                 }
                 else
                     m_uiDuelTimer -= uiDiff;

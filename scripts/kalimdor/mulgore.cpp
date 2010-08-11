@@ -110,9 +110,9 @@ struct MANGOS_DLL_DECL npc_kyle_the_frenziedAI : public ScriptedAI
                 switch(m_uiEventPhase)
                 {
                     case 1:
-                        if (Unit* pUnit = Unit::GetUnit(*m_creature,m_uiPlayerGUID))
+                        if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID))
                         {
-                            if (GameObject* pGo = pUnit->GetGameObject(SPELL_LUNCH))
+                            if (GameObject* pGo = pPlayer->GetGameObject(SPELL_LUNCH))
                             {
                                 m_bIsMovingToLunch = true;
                                 m_creature->GetMotionMaster()->MovePoint(POINT_ID, pGo->GetPositionX(), pGo->GetPositionY(), pGo->GetPositionZ());
@@ -124,8 +124,8 @@ struct MANGOS_DLL_DECL npc_kyle_the_frenziedAI : public ScriptedAI
                         m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_USESTANDING);
                         break;
                     case 3:
-                        if (Unit* pUnit = Unit::GetUnit(*m_creature,m_uiPlayerGUID))
-                            ((Player*)pUnit)->TalkedToCreature(m_creature->GetEntry(), m_creature->GetGUID());
+                        if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID))
+                            pPlayer->TalkedToCreature(m_creature->GetEntry(), m_creature->GetGUID());
 
                         m_creature->UpdateEntry(NPC_KYLE_FRIENDLY);
                         break;

@@ -537,7 +537,7 @@ struct MANGOS_DLL_DECL cthunAI : public ScriptedAI
         while (i != Stomach_Map.end())
         {
             //Check for valid player
-            Unit* pUnit = Unit::GetUnit(*m_creature, i->first);
+            Unit* pUnit = m_creature->GetMap()->GetUnit(i->first);
 
             //Only units out of stomach
             if (pUnit && i->second == false)
@@ -616,7 +616,6 @@ struct MANGOS_DLL_DECL cthunAI : public ScriptedAI
                     m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
 
                     //Emerging phase
-                    //AttackStart(Unit::GetUnit(*m_creature, HoldPlayer));
                     m_creature->SetInCombatWithZone();
 
                     //Place all units in threat list on outside of stomach
@@ -681,7 +680,7 @@ struct MANGOS_DLL_DECL cthunAI : public ScriptedAI
                     while (i != Stomach_Map.end())
                     {
                         //Check for valid player
-                        Unit* pUnit = Unit::GetUnit(*m_creature, i->first);
+                        Unit* pUnit = m_creature->GetMap()->GetUnit(i->first);
 
                         //Only move units in stomach
                         if (pUnit && i->second == true)
@@ -712,7 +711,7 @@ struct MANGOS_DLL_DECL cthunAI : public ScriptedAI
                     while (i != Stomach_Map.end())
                     {
                         //Check for valid player
-                        Unit* pUnit = Unit::GetUnit(*m_creature, i->first);
+                        Unit* pUnit = m_creature->GetMap()->GetUnit(i->first);
 
                         //Only apply to units in stomach
                         if (pUnit && i->second == true)
@@ -764,7 +763,7 @@ struct MANGOS_DLL_DECL cthunAI : public ScriptedAI
                     if (StomachEnterVisTimer <= diff)
                 {
                     //Check for valid player
-                    Unit* pUnit = Unit::GetUnit(*m_creature, StomachEnterTarget);
+                    Unit* pUnit = m_creature->GetMap()->GetUnit(StomachEnterTarget);
 
                     if (pUnit)
                     {

@@ -286,18 +286,18 @@ void instance_uldaman::Update(uint32 uiDiff)
                     {
                         if (pKeeper->isAlive() && !pKeeper->getVictim())
                         {
-                            if (Unit* pTarget = Unit::GetUnit(*pKeeper, m_uiPlayerGUID))
+                            if (Player* pPlayer = pKeeper->GetMap()->GetPlayer(m_uiPlayerGUID))
                             {
                                 // we should use group instead, event starter can be dead while group is still fighting
-                                if (pTarget->isAlive() && !pTarget->isInCombat())
+                                if (pPlayer->isAlive() && !pPlayer->isInCombat())
                                 {
                                     pKeeper->RemoveAurasDueToSpell(SPELL_STONED);
-                                    pKeeper->SetInCombatWith(pTarget);
-                                    pKeeper->AddThreat(pTarget);
+                                    pKeeper->SetInCombatWith(pPlayer);
+                                    pKeeper->AddThreat(pPlayer);
                                 }
                                 else
                                 {
-                                    if (!pTarget->isAlive())
+                                    if (!pPlayer->isAlive())
                                         DoResetKeeperEvent();
                                 }
                             }

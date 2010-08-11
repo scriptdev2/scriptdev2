@@ -188,12 +188,12 @@ struct MANGOS_DLL_DECL boss_malacrassAI : public ScriptedAI
         {
             for(std::list<uint32>::iterator itr = m_lAddsEntryList.begin(); itr != m_lAddsEntryList.end(); ++itr)
             {
-                Unit* pAdd = Unit::GetUnit(*m_creature, m_auiAddGUIDs[j]);
+                Creature* pAdd = m_creature->GetMap()->GetCreature(m_auiAddGUIDs[j]);
 
                 //object already removed, not exist
                 if (!pAdd)
                 {
-                    if (Creature* pAdd = m_creature->SummonCreature((*itr), m_afAddPosX[j], ADD_POS_Y, ADD_POS_Z, ADD_ORIENT, TEMPSUMMON_CORPSE_DESPAWN, 0))
+                    if (pAdd = m_creature->SummonCreature((*itr), m_afAddPosX[j], ADD_POS_Y, ADD_POS_Z, ADD_ORIENT, TEMPSUMMON_CORPSE_DESPAWN, 0))
                         m_auiAddGUIDs[j] = pAdd->GetGUID();
                 }
                 ++j;
@@ -339,7 +339,7 @@ struct MANGOS_DLL_DECL boss_malacrass_addAI : public ScriptedAI
         ThreatList const& tList = m_creature->getThreatManager().getThreatList();
         for (ThreatList::const_iterator iter = tList.begin();iter != tList.end(); ++iter)
         {
-            Unit* pTarget = Unit::GetUnit((*m_creature), (*iter)->getUnitGuid());
+            Unit* pTarget = m_creature->GetMap()->GetUnit((*iter)->getUnitGuid());
 
             if (pTarget && pTarget->GetTypeId() == TYPEID_PLAYER)
             {

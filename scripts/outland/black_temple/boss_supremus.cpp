@@ -235,7 +235,8 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
         ThreatList const& tList = m_creature->getThreatManager().getThreatList();
         for (ThreatList::const_iterator i = tList.begin();i != tList.end(); ++i)
         {
-            Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
+            Unit* pUnit = m_creature->GetMap()->GetUnit((*i)->getUnitGuid());
+
             if (pUnit && m_creature->IsWithinDistInMap(pUnit, ATTACK_DISTANCE))
             {
                 if (pUnit->GetHealth() > health)

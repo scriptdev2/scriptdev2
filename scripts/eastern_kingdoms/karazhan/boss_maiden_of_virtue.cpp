@@ -111,9 +111,11 @@ struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
             ThreatList const& tList = m_creature->getThreatManager().getThreatList();
             for (ThreatList::const_iterator itr = tList.begin();itr != tList.end(); ++itr)
             {
-                pTarget = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
+                pTarget = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid());
+
                 if (pTarget && !pTarget->IsWithinDist(m_creature, 12.0f, false))
                     target_list.push_back(pTarget);
+
                 pTarget = NULL;
             }
 

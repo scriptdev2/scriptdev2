@@ -150,8 +150,8 @@ struct MANGOS_DLL_DECL npc_calvin_montagueAI : public ScriptedAI
                     ++m_uiPhase;
                     break;
                 case 2:
-                    if (Unit* pUnit = Unit::GetUnit(*m_creature, m_uiPlayerGUID))
-                        ((Player*)pUnit)->AreaExploredOrEventHappens(QUEST_590);
+                    if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID))
+                        pPlayer->AreaExploredOrEventHappens(QUEST_590);
 
                     m_creature->CastSpell(m_creature,SPELL_DRINK,true);
                     ++m_uiPhase;

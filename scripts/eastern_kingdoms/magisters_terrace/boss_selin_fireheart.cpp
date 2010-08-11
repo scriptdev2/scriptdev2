@@ -136,9 +136,8 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
         //for(uint8 i =  0; i < CRYSTALS_NUMBER; ++i)
         for(std::list<uint64>::iterator itr = Crystals.begin(); itr != Crystals.end(); ++itr)
         {
-            pCrystal = NULL;
-            //pCrystal = Unit::GetUnit(*m_creature, FelCrystals[i]);
             pCrystal = m_creature->GetMap()->GetCreature(*itr);
+
             if (pCrystal && pCrystal->isAlive())
             {
                 // select nearest

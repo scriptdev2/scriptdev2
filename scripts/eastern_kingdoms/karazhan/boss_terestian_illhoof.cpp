@@ -79,8 +79,10 @@ struct MANGOS_DLL_DECL mob_demon_chainAI : public ScriptedAI
     void JustDied(Unit* pKiller)
     {
         if (m_uiSacrificeGUID)
-            if (Unit* pSacrifice = Unit::GetUnit((*m_creature), m_uiSacrificeGUID))
+        {
+            if (Player* pSacrifice = m_creature->GetMap()->GetPlayer(m_uiSacrificeGUID))
                 pSacrifice->RemoveAurasDueToSpell(SPELL_SACRIFICE);
+        }
     }
 };
 

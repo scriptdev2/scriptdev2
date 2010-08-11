@@ -280,15 +280,17 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
         {
             if (m_uiChargeTimer < uiDiff)
             {
-                Unit *target;
+                Unit *target = NULL;
                 std::vector<Unit *> target_list;
 
                 ThreatList const& tList = m_creature->getThreatManager().getThreatList();
                 for (ThreatList::const_iterator itr = tList.begin();itr != tList.end(); ++itr)
                 {
-                    target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
+                    target = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid());
+
                     if (target && !target->IsWithinDist(m_creature, ATTACK_DISTANCE, false))
                         target_list.push_back(target);
+
                     target = NULL;
                 }
 

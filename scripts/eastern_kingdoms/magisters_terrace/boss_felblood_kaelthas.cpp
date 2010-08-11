@@ -189,7 +189,7 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
         ThreatList const& tList = m_creature->getThreatManager().getThreatList();
         for (ThreatList::const_iterator i = tList.begin();i != tList.end(); ++i)
         {
-            Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
+            Unit* pUnit = m_creature->GetMap()->GetUnit((*i)->getUnitGuid());
             if (pUnit && pUnit->isAlive())
             {
                 float threat = m_creature->getThreatManager().getThreat(pUnit);
@@ -208,8 +208,9 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
         ThreatList const& tList = m_creature->getThreatManager().getThreatList();
         for (ThreatList::const_iterator i = tList.begin();i != tList.end(); ++i)
         {
-            Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
-            if (pUnit && (pUnit->GetTypeId() == TYPEID_PLAYER))
+            Unit* pUnit = m_creature->GetMap()->GetUnit((*i)->getUnitGuid());
+
+            if (pUnit && pUnit->GetTypeId() == TYPEID_PLAYER)
                 pUnit->CastSpell(pUnit, SPELL_TELEPORT_CENTER, true);
         }
     }
@@ -219,9 +220,10 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
         ThreatList const& tList = m_creature->getThreatManager().getThreatList();
         for (ThreatList::const_iterator i = tList.begin();i != tList.end(); ++i)
         {
-            Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
-            if (pUnit && (pUnit->GetTypeId() == TYPEID_PLAYER))
-                // Knockback into the air
+            Unit* pUnit = m_creature->GetMap()->GetUnit((*i)->getUnitGuid());
+
+            // Knockback into the air
+            if (pUnit && pUnit->GetTypeId() == TYPEID_PLAYER)
                 pUnit->CastSpell(pUnit, SPELL_GRAVITY_LAPSE_DOT, true, 0, 0, m_creature->GetGUID());
         }
     }
@@ -232,12 +234,11 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
         ThreatList const& tList = m_creature->getThreatManager().getThreatList();
         for (ThreatList::const_iterator i = tList.begin();i != tList.end(); ++i)
         {
-            Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
-            if (pUnit && (pUnit->GetTypeId() == TYPEID_PLAYER))
-            {
-                // Also needs an exception in spell system.
+            Unit* pUnit = m_creature->GetMap()->GetUnit((*i)->getUnitGuid());
+
+            // Also needs an exception in spell system.
+            if (pUnit && pUnit->GetTypeId() == TYPEID_PLAYER)
                 pUnit->CastSpell(pUnit, SPELL_GRAVITY_LAPSE_FLY, true, 0, 0, m_creature->GetGUID());
-            }
         }
     }
 
@@ -246,8 +247,9 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
         ThreatList const& tList = m_creature->getThreatManager().getThreatList();
         for (ThreatList::const_iterator i = tList.begin();i != tList.end(); ++i)
         {
-            Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
-            if (pUnit && (pUnit->GetTypeId() == TYPEID_PLAYER))
+            Unit* pUnit = m_creature->GetMap()->GetUnit((*i)->getUnitGuid());
+
+            if (pUnit && pUnit->GetTypeId() == TYPEID_PLAYER)
             {
                 pUnit->RemoveAurasDueToSpell(SPELL_GRAVITY_LAPSE_FLY);
                 pUnit->RemoveAurasDueToSpell(SPELL_GRAVITY_LAPSE_DOT);

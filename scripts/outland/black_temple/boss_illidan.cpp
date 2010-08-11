@@ -467,8 +467,9 @@ struct MANGOS_DLL_DECL npc_akama_illidanAI : public ScriptedAI
         ThreatList const& tList = m_creature->getThreatManager().getThreatList();
         for (ThreatList::const_iterator itr = tList.begin();itr != tList.end(); ++itr)
         {
-            Unit* pUnit = Unit::GetUnit((*m_creature), (*itr)->getUnitGuid());
-            if (pUnit && (pUnit->GetTypeId() == TYPEID_UNIT) && (pUnit->GetEntry() == ILLIDARI_ELITE))
+            Unit* pUnit = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid());
+
+            if (pUnit && pUnit->GetTypeId() == TYPEID_UNIT && pUnit->GetEntry() == ILLIDARI_ELITE)
                 pUnit->setDeathState(JUST_DIED);
         }
     }
@@ -1955,7 +1956,7 @@ void npc_akama_illidanAI::BeginEvent(uint64 PlayerGUID)
 
             if (PlayerGUID)
             {
-                if (Unit* pPlayer = Unit::GetUnit(*m_creature, PlayerGUID))
+                if (Player* pPlayer = m_creature->GetMap()->GetPlayer(PlayerGUID))
                     pIllidan->AddThreat(pPlayer, 100.0f);
             }
         }
@@ -2100,7 +2101,7 @@ struct MANGOS_DLL_DECL cage_trap_triggerAI : public ScriptedAI
 
         //if (IllidanGUID && !SummonedBeams)
         //{
-        //    if (Unit* Illidan = Unit::GetUnit(*m_creature, IllidanGUID)
+        //    if (Creature* pIllidan = m_creature->GetMap()->GetCreature(IllidanGUID)
         //    {
         //        //TODO: Find proper spells and properly apply 'caged' Illidan effect
         //    }
@@ -2158,7 +2159,8 @@ struct MANGOS_DLL_DECL flame_of_azzinothAI : public ScriptedAI
         //store the threat list in a different container
         for (ThreatList::const_iterator itr = tList.begin();itr != tList.end(); ++itr)
         {
-            Unit *target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
+            Unit *target = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid());
+
             //only on alive players
             if (target && target->isAlive() && target->GetTypeId() == TYPEID_PLAYER)
                 targets.push_back(target);
@@ -2216,9 +2218,8 @@ struct MANGOS_DLL_DECL shadow_demonAI : public ScriptedAI
     {
         if (TargetGUID)
         {
-            Unit* target = Unit::GetUnit((*m_creature), TargetGUID);
-            if (target)
-                target->RemoveAurasDueToSpell(SPELL_PARALYZE);
+            if (Player* pPlayer = m_creature->GetMap()->GetPlayer(TargetGUID))
+                pPlayer->RemoveAurasDueToSpell(SPELL_PARALYZE);
         }
     }
 

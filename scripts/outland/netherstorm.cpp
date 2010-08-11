@@ -111,26 +111,27 @@ struct MANGOS_DLL_DECL npc_manaforge_control_consoleAI : public ScriptedAI
 
         if (m_uiPlayerGUID)
         {
-            Unit* pPlayer = Unit::GetUnit((*m_creature), m_uiPlayerGUID);
-            if (pPlayer && pPlayer->GetTypeId() == TYPEID_PLAYER)
+            Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID);
+
+            if (pPlayer)
             {
                 switch(m_creature->GetEntry())
                 {
                     case NPC_BNAAR_C_CONSOLE:
-                        ((Player*)pPlayer)->FailQuest(QUEST_SHUTDOWN_BNAAR_ALDOR);
-                        ((Player*)pPlayer)->FailQuest(QUEST_SHUTDOWN_BNAAR_SCRYERS);
+                        pPlayer->FailQuest(QUEST_SHUTDOWN_BNAAR_ALDOR);
+                        pPlayer->FailQuest(QUEST_SHUTDOWN_BNAAR_SCRYERS);
                         break;
                     case NPC_CORUU_C_CONSOLE:
-                        ((Player*)pPlayer)->FailQuest(QUEST_SHUTDOWN_CORUU_ALDOR);
-                        ((Player*)pPlayer)->FailQuest(QUEST_SHUTDOWN_CORUU_SCRYERS);
+                        pPlayer->FailQuest(QUEST_SHUTDOWN_CORUU_ALDOR);
+                        pPlayer->FailQuest(QUEST_SHUTDOWN_CORUU_SCRYERS);
                         break;
                     case NPC_DURO_C_CONSOLE:
-                        ((Player*)pPlayer)->FailQuest(QUEST_SHUTDOWN_DURO_ALDOR);
-                        ((Player*)pPlayer)->FailQuest(QUEST_SHUTDOWN_DURO_SCRYERS);
+                        pPlayer->FailQuest(QUEST_SHUTDOWN_DURO_ALDOR);
+                        pPlayer->FailQuest(QUEST_SHUTDOWN_DURO_SCRYERS);
                         break;
                     case NPC_ARA_C_CONSOLE:
-                        ((Player*)pPlayer)->FailQuest(QUEST_SHUTDOWN_ARA_ALDOR);
-                        ((Player*)pPlayer)->FailQuest(QUEST_SHUTDOWN_ARA_SCRYERS);
+                        pPlayer->FailQuest(QUEST_SHUTDOWN_ARA_ALDOR);
+                        pPlayer->FailQuest(QUEST_SHUTDOWN_ARA_SCRYERS);
                         break;
                 }
             }
@@ -242,11 +243,9 @@ struct MANGOS_DLL_DECL npc_manaforge_control_consoleAI : public ScriptedAI
             if (!m_uiPlayerGUID)
                 return;
 
-            Unit* pPlayer = Unit::GetUnit((*m_creature), m_uiPlayerGUID);
-            if (!pPlayer)
-                return;
+            Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID);
 
-            if (pPlayer->GetTypeId() != TYPEID_PLAYER)
+            if (!pPlayer)
                 return;
 
             switch(m_uiPhase)
@@ -276,7 +275,7 @@ struct MANGOS_DLL_DECL npc_manaforge_control_consoleAI : public ScriptedAI
                     break;
                 case 5:
                     DoScriptText(EMOTE_COMPLETE, m_creature, pPlayer);
-                    ((Player*)pPlayer)->KilledMonsterCredit(m_creature->GetEntry(), m_creature->GetGUID());
+                    pPlayer->KilledMonsterCredit(m_creature->GetEntry(), m_creature->GetGUID());
                     DoCastSpellIfCan(m_creature, SPELL_DISABLE_VISUAL);
                     if (m_uiConsoleGUID)
                     {
@@ -424,7 +423,7 @@ struct MANGOS_DLL_DECL npc_commander_dawnforgeAI : public ScriptedAI
     {
         Creature* pArdonis = m_creature->GetMap()->GetCreature(m_uiArdonisGUID);
         Creature* pPathaleon = m_creature->GetMap()->GetCreature(m_uiPathaleonGUID);
-        Player* pPlayer = (Player*)Unit::GetUnit(*m_creature, m_uiPlayerGUID);
+        Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID);
 
         if (!pArdonis || !pPathaleon || !pPlayer)
             return;
@@ -441,7 +440,7 @@ struct MANGOS_DLL_DECL npc_commander_dawnforgeAI : public ScriptedAI
     {
         if (Creature* pArdonis = m_creature->GetMap()->GetCreature(m_uiArdonisGUID))
         {
-            Player* pPlayer = (Player*)Unit::GetUnit(*m_creature, m_uiPlayerGUID);
+            Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID);
 
             if (!pPlayer)
                 return;
@@ -492,7 +491,7 @@ struct MANGOS_DLL_DECL npc_commander_dawnforgeAI : public ScriptedAI
 
         Creature* pArdonis = m_creature->GetMap()->GetCreature(m_uiArdonisGUID);
         Creature* pPathaleon = m_creature->GetMap()->GetCreature(m_uiPathaleonGUID);
-        Player* pPlayer = (Player*)Unit::GetUnit(*m_creature, m_uiPlayerGUID);
+        Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID);
 
         if (!pArdonis || !pPlayer)
         {

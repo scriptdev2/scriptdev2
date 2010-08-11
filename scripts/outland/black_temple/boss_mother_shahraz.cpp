@@ -241,12 +241,11 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
             {
                 for(uint8 i = 0; i < 3; ++i)
                 {
-                    Unit* pUnit = NULL;
                     if (TargetGUID[i])
                     {
-                        pUnit = Unit::GetUnit((*m_creature), TargetGUID[i]);
-                        if (pUnit)
-                            pUnit->CastSpell(pUnit, SPELL_ATTRACTION, true);
+                        if (Player* pPlayer = m_creature->GetMap()->GetPlayer(TargetGUID[i]))
+                            pPlayer->CastSpell(pPlayer, SPELL_ATTRACTION, true);
+
                         TargetGUID[i] = 0;
                     }
                 }

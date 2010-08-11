@@ -468,7 +468,7 @@ struct MANGOS_DLL_DECL boss_gathios_the_shattererAI : public boss_illidari_counc
         if (!urand(0, 9))                                   // But there is a chance he picks someone else.
             member = urand(1, 3);
 
-        if (member != 2)                                    // No need to create another pointer to us using Unit::GetUnit
+        if (member != 2)                                    // No need to create another pointer
             pUnit = m_creature->GetMap()->GetCreature(Council[member]);
 
         return pUnit;

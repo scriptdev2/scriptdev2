@@ -158,7 +158,8 @@ struct MANGOS_DLL_DECL mob_shadowy_constructAI : public ScriptedAI
 
         for (ThreatList::const_iterator itr = tList.begin(); itr != tList.end(); ++itr)
         {
-            Unit* pUnit = Unit::GetUnit((*m_creature), (*itr)->getUnitGuid());
+            Unit* pUnit = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid());
+
             if (pUnit && pUnit->isAlive())
                 lTargets.push_back(pUnit);
         }
@@ -292,7 +293,8 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
         ThreatList const& tList = m_creature->getThreatManager().getThreatList();
         for (ThreatList::const_iterator i = tList.begin();i != tList.end(); ++i)
         {
-            Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
+            Unit* pUnit = m_creature->GetMap()->GetUnit((*i)->getUnitGuid());
+
             if (pUnit && pUnit->isAlive())
             {
                 float threat = m_creature->getThreatManager().getThreat(pUnit);
@@ -310,9 +312,9 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
         /**    WHAT IS FULLY NECESSARY FOR GOREFIEND TO BE 100% COMPLETE    *****/
         /************************************************************************/
 
-        Unit* pGhost = NULL;
+        Player* pGhost = NULL;
         if (m_uiGhostGUID)
-            pGhost = Unit::GetUnit((*m_creature), m_uiGhostGUID);
+            pGhost = m_creature->GetMap()->GetPlayer(m_uiGhostGUID);
         
         if (pGhost && pGhost->isAlive() && pGhost->HasAura(SPELL_SHADOW_OF_DEATH, EFFECT_INDEX_0))
         {
@@ -360,8 +362,8 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
                 m_bIntro = false;
                 if (m_uiAggroTargetGUID)
                 {
-                    if (Unit* pUnit = Unit::GetUnit((*m_creature), m_uiAggroTargetGUID))
-                        AttackStart(pUnit);
+                    if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiAggroTargetGUID))
+                        AttackStart(pPlayer);
 
                     m_creature->SetInCombatWithZone();
                 }

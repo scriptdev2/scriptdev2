@@ -124,7 +124,7 @@ struct MANGOS_DLL_DECL npc_draenei_survivorAI : public ScriptedAI
             {
                 m_creature->RemoveAurasDueToSpell(SPELL_IRRIDATION);
 
-                if (Player* pPlayer = (Player*)Unit::GetUnit(*m_creature,m_uiCaster))
+                if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiCaster))
                 {
                     if (pPlayer->GetTypeId() != TYPEID_PLAYER)
                         return;

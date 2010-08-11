@@ -376,7 +376,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
                 ThreatList const& tList = m_creature->getThreatManager().getThreatList();
                 for (ThreatList::const_iterator itr = tList.begin();itr != tList.end(); ++itr)
                 {
-                    Unit* pTarget = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
+                    Unit* pTarget = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid());
 
                     //if in melee range
                     if (pTarget && pTarget->IsWithinDistInMap(m_creature, ATTACK_DISTANCE))
@@ -730,7 +730,7 @@ bool ItemUse_item_tainted_core(Player* pPlayer, Item* pItem, SpellCastTargets co
                 return true;
 
             //get and remove channel
-            if (Unit* pChannel = Unit::GetUnit(*pVashj, pVashjAI->m_auiShieldGeneratorChannel[uiChannelIdentifier]))
+            if (Creature* pChannel = pVashj->GetMap()->GetCreature(pVashjAI->m_auiShieldGeneratorChannel[uiChannelIdentifier]))
                 pChannel->setDeathState(JUST_DIED);         //calls Unsummon()
 
             pInstance->SetData(uiIdentifier, DONE);

@@ -145,7 +145,8 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
         //store the threat list in a different container
         for (ThreatList::const_iterator itr = tList.begin();itr != tList.end(); ++itr)
         {
-            Unit *target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
+            Unit *target = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid());
+
             //only on alive players
             if (target && target->isAlive() && target->GetTypeId() == TYPEID_PLAYER)
                 targets.push_back(target);
@@ -179,16 +180,13 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
 
     void RevertThreatOnTarget(uint64 guid)
     {
-        Unit* pUnit = NULL;
-        pUnit = Unit::GetUnit((*m_creature), guid);
-
-        if (pUnit)
+        if (Player* pPlayer = m_creature->GetMap()->GetPlayer(guid))
         {
-            if (m_creature->getThreatManager().getThreat(pUnit))
-                m_creature->getThreatManager().modifyThreatPercent(pUnit, -100);
+            if (m_creature->getThreatManager().getThreat(pPlayer))
+                m_creature->getThreatManager().modifyThreatPercent(pPlayer, -100);
 
             if (TargetThreat)
-                m_creature->AddThreat(pUnit, TargetThreat);
+                m_creature->AddThreat(pPlayer, TargetThreat);
         }
     }
 

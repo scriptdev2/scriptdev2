@@ -808,7 +808,7 @@ struct MANGOS_DLL_DECL boss_yazzaiAI : public boss_priestess_lackey_commonAI
             ThreatList const& tList = m_creature->getThreatManager().getThreatList();
             for (ThreatList::const_iterator itr = tList.begin();itr != tList.end(); ++itr)
             {
-                if (Unit* target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid()))
+                if (Unit* target = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid()))
                 {
                     //if in melee range
                     if (target->IsWithinDistInMap(m_creature, 5))
@@ -888,7 +888,7 @@ struct MANGOS_DLL_DECL boss_warlord_salarisAI : public boss_priestess_lackey_com
             ThreatList const& tList = m_creature->getThreatManager().getThreatList();
             for (ThreatList::const_iterator itr = tList.begin();itr != tList.end(); ++itr)
             {
-                if (Unit* target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid()))
+                if (Unit* target = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid()))
                 {
                     //if in melee range
                     if (target->IsWithinDistInMap(m_creature, ATTACK_DISTANCE))
@@ -1147,7 +1147,7 @@ struct MANGOS_DLL_DECL boss_apokoAI : public boss_priestess_lackey_commonAI
             // uint64 guid = (*itr)->guid;
             // if (guid)
             // {
-            //   Unit* pAdd = Unit::GetUnit(*m_creature, (*itr)->guid);
+            //   Unit* pAdd = m_creature->GetMap()->GetUnit((*itr)->guid);
             //   if (pAdd && pAdd->isAlive())
             //   {
             DoCastSpellIfCan(m_creature, SPELL_LESSER_HEALING_WAVE);

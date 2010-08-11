@@ -130,7 +130,7 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
         {
             if (ShadowWhip_Timer < diff)
             {
-                if (Player* pPlayer = (Player*)Unit::GetUnit(*m_creature,playerGUID))
+                if (Player* pPlayer = m_creature->GetMap()->GetPlayer(playerGUID))
                 {
                     //if unit dosen't have this flag, then no pulling back (script will attempt cast, even if orbital strike was resisted)
                     if (pPlayer->HasMovementFlag(MOVEFLAG_FALLING))

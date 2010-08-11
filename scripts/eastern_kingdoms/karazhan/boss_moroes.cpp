@@ -301,7 +301,8 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
 
                 for (ThreatList::const_iterator itr = vThreatList.begin();itr != vThreatList.end(); ++itr)
                 {
-                    pTarget = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
+                    pTarget = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid());
+
                     if (pTarget && pTarget->IsWithinDist(m_creature, ATTACK_DISTANCE, false))
                         vTargetList.push_back(pTarget);
                 }

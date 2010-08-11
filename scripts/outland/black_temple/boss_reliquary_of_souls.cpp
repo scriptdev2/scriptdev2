@@ -258,8 +258,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
         ThreatList const& tList = m_creature->getThreatManager().getThreatList();
         for (ThreatList::const_iterator itr = tList.begin();itr != tList.end(); ++itr)
         {
-            Unit* pUnit = Unit::GetUnit((*m_creature), (*itr)->getUnitGuid());
-            if (pUnit)
+            if (Unit* pUnit = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid()))
             {
                 m_creature->AddThreat(pUnit);                // This is so that we make sure the unit is in Reliquary's threat list before we reset the unit's threat.
                 m_creature->getThreatManager().modifyThreatPercent(pUnit, -100);
@@ -580,9 +579,8 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
             m_creature->SetHealth(m_creature->GetMaxHealth()/10);
             if (StatAuraGUID)
             {
-                Unit* pUnit = Unit::GetUnit((*m_creature), StatAuraGUID);
-                if (pUnit)
-                    pUnit->RemoveAurasDueToSpell(AURA_OF_SUFFERING_ARMOR);
+                if (Player* pPlayer = m_creature->GetMap()->GetPlayer(StatAuraGUID))
+                    pPlayer->RemoveAurasDueToSpell(AURA_OF_SUFFERING_ARMOR);
             }
         }
     }
@@ -618,9 +616,10 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
 
         for (ThreatList::const_iterator itr = tList.begin();itr != tList.end(); ++itr)
         {
-            Unit* pUnit = Unit::GetUnit((*m_creature), (*itr)->getUnitGuid());
-                                                            // Only alive players
-            if (pUnit && pUnit->isAlive() && (pUnit->GetTypeId() == TYPEID_PLAYER))
+            Unit* pUnit = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid());
+
+            // Only alive players
+            if (pUnit && pUnit->isAlive() && pUnit->GetTypeId() == TYPEID_PLAYER)
                 targets.push_back(pUnit);
         }
 
@@ -645,10 +644,8 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
         {
             if (StatAuraGUID)
             {
-                Unit* pUnit = NULL;
-                pUnit = Unit::GetUnit((*m_creature), StatAuraGUID);
-                if (pUnit)
-                    pUnit->RemoveAurasDueToSpell(AURA_OF_SUFFERING_ARMOR);
+                if (Player* pPlayer = m_creature->GetMap()->GetPlayer(StatAuraGUID))
+                    pPlayer->RemoveAurasDueToSpell(AURA_OF_SUFFERING_ARMOR);
             }
         }
 

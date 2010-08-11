@@ -320,7 +320,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
         ThreatList const& tList = m_creature->getThreatManager().getThreatList();
         for (ThreatList::const_iterator i = tList.begin();i != tList.end(); ++i)
         {
-            Unit* pTemp = Unit::GetUnit((*m_creature),(*i)->getUnitGuid());
+            Unit* pTemp = m_creature->GetMap()->GetUnit((*i)->getUnitGuid());
 
             if (pTemp && pTemp->GetTypeId() == TYPEID_PLAYER && !m_creature->IsWithinDist(pTemp, 20.0f))
                 m_creature->CastSpell(pTemp, SPELL_SUMMONALL, true);
