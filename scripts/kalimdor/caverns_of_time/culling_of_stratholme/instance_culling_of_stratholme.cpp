@@ -175,7 +175,7 @@ void instance_culling_of_stratholme::UpdateQuestCredit()
         for(Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
         {
             if (Player* pPlayer = itr->getSource())
-                pPlayer->KilledMonsterCredit(NPC_CRATES_BUNNY, 0);
+                pPlayer->KilledMonsterCredit(NPC_CRATES_BUNNY);
         }
     }
 }

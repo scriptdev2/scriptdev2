@@ -436,12 +436,12 @@ bool EffectDummyCreature_spell_dummy_npc(Unit* pCaster, uint32 uiSpellId, SpellE
                     if (pCreatureTarget->GetEntry() == NPC_ELK)
                     {
                         pCreatureTarget->CastSpell(pCreatureTarget, SPELL_LIQUID_FIRE_AURA, true);
-                        ((Player*)pCaster)->KilledMonsterCredit(NPC_ELK_BUNNY, 0);
+                        ((Player*)pCaster)->KilledMonsterCredit(NPC_ELK_BUNNY);
                     }
                     else if (pCreatureTarget->GetEntry() == NPC_GRIZZLY)
                     {
                         pCreatureTarget->CastSpell(pCreatureTarget, SPELL_LIQUID_FIRE_AURA, true);
-                        ((Player*)pCaster)->KilledMonsterCredit(NPC_GRIZZLY_BUNNY, 0);
+                        ((Player*)pCaster)->KilledMonsterCredit(NPC_GRIZZLY_BUNNY);
                     }
                 }
                 return true;

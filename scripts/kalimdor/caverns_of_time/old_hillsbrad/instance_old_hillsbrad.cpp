@@ -82,7 +82,7 @@ struct MANGOS_DLL_DECL instance_old_hillsbrad : public ScriptedInstance
             for(Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
             {
                 if (Player* pPlayer = itr->getSource())
-                    pPlayer->KilledMonsterCredit(NPC_LODGE_QUEST_TRIGGER, 0);
+                    pPlayer->KilledMonsterCredit(NPC_LODGE_QUEST_TRIGGER);
             }
         }
     }

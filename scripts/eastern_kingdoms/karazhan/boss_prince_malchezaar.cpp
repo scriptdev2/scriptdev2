@@ -100,7 +100,7 @@ struct MANGOS_DLL_DECL netherspite_infernalAI : public ScriptedAI
 
     uint32 HellfireTimer;
     uint32 CleanupTimer;
-    uint32 malchezaar;
+    uint64 malchezaar;
     InfernalPoint *point;
 
     void Reset() {}
