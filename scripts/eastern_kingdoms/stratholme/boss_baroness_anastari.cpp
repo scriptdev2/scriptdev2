@@ -55,7 +55,7 @@ struct MANGOS_DLL_DECL boss_baroness_anastariAI : public ScriptedAI
     void JustDied(Unit* Killer)
     {
         if (m_pInstance)
-            m_pInstance->SetData(TYPE_BARONESS,IN_PROGRESS);
+            m_pInstance->SetData(TYPE_BARONESS, DONE);
     }
 
     void UpdateAI(const uint32 diff)

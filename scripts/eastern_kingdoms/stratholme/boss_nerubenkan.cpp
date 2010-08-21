@@ -81,7 +81,7 @@ struct MANGOS_DLL_DECL boss_nerubenkanAI : public ScriptedAI
     void JustDied(Unit* Killer)
     {
         if (m_pInstance)
-            m_pInstance->SetData(TYPE_NERUB,IN_PROGRESS);
+            m_pInstance->SetData(TYPE_NERUB, DONE);
     }
 
     void UpdateAI(const uint32 diff)

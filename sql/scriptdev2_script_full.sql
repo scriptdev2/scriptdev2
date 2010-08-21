@@ -829,7 +829,12 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1329000,'Thanks to Egan',0,0,0,0,'freed_soul SAY_ZAPPED0'),
 (-1329001,'Rivendare must die',0,0,0,0,'freed_soul SAY_ZAPPED1'),
 (-1329002,'Who you gonna call?',0,0,0,0,'freed_soul SAY_ZAPPED2'),
-(-1329003,'Don\'t cross those beams!',0,0,0,0,'freed_soul SAY_ZAPPED3');
+(-1329003,'Don\'t cross those beams!',0,0,0,0,'freed_soul SAY_ZAPPED3'),
+
+(-1329004,'An Ash\'ari Crystal has fallen! Stay true to the Lich King, my brethren, and attempt to resummon it.',0,6,0,0,'thuzadin acolyte SAY_ANNOUNCE_ZIGGURAT_1'),
+(-1329005,'One of the Ash\'ari Crystals has been destroyed! Slay the intruders!',0,6,0,0,'thuzadin acolyte SAY_ANNOUNCE_ZIGGURAT_2'),
+(-1329006,'An Ash\'ari Crystal has been toppled! Restore the ziggurat before the Necropolis is vulnerable!',0,6,0,0,'thuzadin acolyte SAY_ANNOUNCE_ZIGGURAT_3'),
+(-1329007,'The Ash\'ari Crystals have been destroyed! The Slaughterhouse is vulnerable!',0,6,0,0,'baron rivendare SAY_ANNOUNCE_RIVENDARE');
 
 -- -1 349 000 MARAUDON
 

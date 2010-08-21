@@ -55,7 +55,7 @@ struct MANGOS_DLL_DECL boss_maleki_the_pallidAI : public ScriptedAI
     void JustDied(Unit* Killer)
     {
         if (m_pInstance)
-            m_pInstance->SetData(TYPE_PALLID,IN_PROGRESS);
+            m_pInstance->SetData(TYPE_PALLID, DONE);
     }
 
     void UpdateAI(const uint32 diff)
