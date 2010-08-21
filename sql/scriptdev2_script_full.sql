@@ -2484,7 +2484,9 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1604027,'I told ya so!',14438,1,0,0,'galdarah SAY_SLAY_3'),
 (-1604028,'Even the mighty... can fall.',14439,1,0,0,'galdarah SAY_DEATH'),
 
-(-1604029,'%s transforms into a Mammoth!',14724,2,0,0,'moorabi EMOTE_TRANSFORMED');
+(-1604029,'%s transforms into a Mammoth!',14724,2,0,0,'moorabi EMOTE_TRANSFORMED'),
+(-1604030,'%N is impaled!',0,3,0,0,'EMOTE_IMPALED');
+
 
 -- -1 608 000 VIOLET HOLD
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
