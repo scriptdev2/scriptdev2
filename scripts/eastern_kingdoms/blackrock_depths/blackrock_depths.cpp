@@ -56,6 +56,13 @@ bool GOHello_go_shadowforge_brazier(Player* pPlayer, GameObject* pGo)
 
 enum
 {
+    SAY_START_1         = -1230004,
+    SAY_START_2         = -1230005,
+    SAY_OPEN_EAST_GATE  = -1230006,
+    SAY_SUMMON_BOSS_1   = -1230007,
+    SAY_SUMMON_BOSS_2   = -1230008,
+    SAY_OPEN_NORTH_GATE = -1230009,
+
     NPC_GRIMSTONE       = 10096,
     NPC_THELDREN        = 16059,
 
@@ -183,24 +190,24 @@ struct MANGOS_DLL_DECL npc_grimstoneAI : public npc_escortAI
     {
         switch(uiPointId)
         {
-            case 0:
-                DoScriptText(-1000000, m_creature);//2
+            case 0:                                         // Middle reached first time
+                DoScriptText(urand(0, 1) ? SAY_START_1 : SAY_START_2, m_creature);
                 m_bCanWalk = false;
                 m_uiEventTimer = 5000;
                 break;
-            case 1:
-                DoScriptText(-1000000, m_creature);//4
+            case 1:                                         // Reached wall again
+                DoScriptText(SAY_OPEN_EAST_GATE, m_creature);
                 m_bCanWalk = false;
                 m_uiEventTimer = 5000;
                 break;
-            case 2:
+            case 2:                                         // walking along the wall, while door opened
                 m_bCanWalk = false;
                 break;
-            case 3:
-                DoScriptText(-1000000, m_creature);//5
+            case 3:                                         // Middle reached second time
+                DoScriptText(urand(0, 1) ? SAY_SUMMON_BOSS_1 : SAY_SUMMON_BOSS_2, m_creature);
                 break;
-            case 4:
-                DoScriptText(-1000000, m_creature);//6
+            case 4:                                         // Reached North Gate
+                DoScriptText(SAY_OPEN_NORTH_GATE, m_creature);//6
                 m_bCanWalk = false;
                 m_uiEventTimer = 5000;
                 break;
@@ -266,13 +273,15 @@ struct MANGOS_DLL_DECL npc_grimstoneAI : public npc_escortAI
                 switch(m_uiEventPhase)
                 {
                     case 0:
-                        DoScriptText(-1000000, m_creature);
+                        // Shortly after spawn, start walking
+                        //DoScriptText(-1000000, m_creature); // no more text on spawn
                         DoGate(DATA_ARENA4, GO_STATE_READY);
                         Start(false);
                         m_bCanWalk = true;
                         m_uiEventTimer = 0;
                         break;
                     case 1:
+                        // Start walking towards wall
                         m_bCanWalk = true;
                         m_uiEventTimer = 0;
                         break;
@@ -280,6 +289,7 @@ struct MANGOS_DLL_DECL npc_grimstoneAI : public npc_escortAI
                         m_uiEventTimer = 2000;
                         break;
                     case 3:
+                        // Open East Gate
                         DoGate(DATA_ARENA1, GO_STATE_ACTIVE);
                         m_uiEventTimer = 3000;
                         break;
@@ -299,22 +309,26 @@ struct MANGOS_DLL_DECL npc_grimstoneAI : public npc_escortAI
                         m_uiEventTimer = 0;
                         break;
                     case 7:
+                        // Summoned Mobs are dead, continue event
                         m_creature->SetVisibility(VISIBILITY_ON);
                         DoGate(DATA_ARENA1, GO_STATE_READY);
-                        DoScriptText(-1000000, m_creature);
+                        //DoScriptText(-1000000, m_creature); // after killed the mobs, no say here
                         m_bCanWalk = true;
                         m_uiEventTimer = 0;
                         break;
                     case 8:
+                        // Open North Gate
                         DoGate(DATA_ARENA2, GO_STATE_ACTIVE);
                         m_uiEventTimer = 5000;
                         break;
                     case 9:
+                        // Summon Boss
                         m_creature->SetVisibility(VISIBILITY_OFF);
                         SummonRingBoss();
                         m_uiEventTimer = 0;
                         break;
                     case 10:
+                        // Boss dead
                         //if quest, complete
                         DoGate(DATA_ARENA2, GO_STATE_READY);
                         DoGate(DATA_ARENA3, GO_STATE_ACTIVE);

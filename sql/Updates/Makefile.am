@@ -134,4 +134,5 @@ pkgdata_DATA = \
 	r1780_scriptdev2.sql \
 	r1782_scriptdev2.sql \
 	r1783_scriptdev2.sql \
-	r1784_scriptdev2.sql
+	r1784_scriptdev2.sql \
+	r1785_scriptdev2.sql
