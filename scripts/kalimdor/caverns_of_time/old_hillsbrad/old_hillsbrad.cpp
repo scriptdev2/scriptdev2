@@ -549,6 +549,8 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
         // handled in instance script
         if (m_pInstance)
             m_pInstance->SetData(TYPE_THRALL_EVENT, FAIL);
+
+        npc_escortAI::JustRespawned();
     }
 
     void UpdateEscortAI(const uint32 uiDiff)
