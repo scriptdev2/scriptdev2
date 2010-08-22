@@ -5,14 +5,28 @@
 #ifndef DEF_OLD_HILLSBRAD_H
 #define DEF_OLD_HILLSBRAD_H
 
-#define TYPE_BARREL_DIVERSION   1
-#define TYPE_THRALL_EVENT       2
-#define TYPE_THRALL_PART1       3
-#define TYPE_THRALL_PART2       4
-#define TYPE_THRALL_PART3       5
-#define TYPE_THRALL_PART4       6
-#define DATA_THRALL             7
-#define DATA_TARETHA            8
+enum
+{
+    MAX_ENCOUNTER                   = 6,
 
-#define WORLD_STATE_OH          2436
+    TYPE_BARREL_DIVERSION           = 1,
+    TYPE_THRALL_EVENT               = 2,
+    TYPE_THRALL_PART1               = 3,
+    TYPE_THRALL_PART2               = 4,
+    TYPE_THRALL_PART3               = 5,
+    TYPE_THRALL_PART4               = 6,
+
+    NPC_THRALL                      = 17876,
+    NPC_TARETHA                     = 18887,
+    NPC_DRAKE                       = 17848,
+    NPC_LODGE_QUEST_TRIGGER         = 20155,
+
+    QUEST_ENTRY_HILLSBRAD           = 10282,
+    QUEST_ENTRY_DIVERSION           = 10283,
+    QUEST_ENTRY_ESCAPE              = 10284,
+    QUEST_ENTRY_RETURN              = 10285,
+
+    WORLD_STATE_OH                  = 2436,
+};
+
 #endif

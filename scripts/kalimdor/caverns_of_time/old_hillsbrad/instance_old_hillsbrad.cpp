@@ -24,17 +24,6 @@ EndScriptData */
 #include "precompiled.h"
 #include "old_hillsbrad.h"
 
-enum
-{
-    MAX_ENCOUNTER               = 6,
-
-    NPC_THRALL                  = 17876,
-    NPC_TARETHA                 = 18887,
-    NPC_DRAKE                   = 17848,
-    NPC_LODGE_QUEST_TRIGGER     = 20155,
-    QUEST_ENTRY_DIVERSION       = 10283
-};
-
 struct MANGOS_DLL_DECL instance_old_hillsbrad : public ScriptedInstance
 {
     instance_old_hillsbrad(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
@@ -210,9 +199,9 @@ struct MANGOS_DLL_DECL instance_old_hillsbrad : public ScriptedInstance
     {
         switch(uiData)
         {
-            case DATA_THRALL:
+            case NPC_THRALL:
                 return m_uiThrallGUID;
-            case DATA_TARETHA:
+            case NPC_TARETHA:
                 return m_uiTarethaGUID;
         }
         return 0;
