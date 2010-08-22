@@ -117,6 +117,10 @@ void instance_old_hillsbrad::SetData(uint32 uiType, uint32 uiData)
         }
         case TYPE_THRALL_EVENT:
         {
+            // nothing to do if already done and thrall respawn
+            if (m_auiEncounter[1] == DONE)
+                return;
+
             if (uiData == FAIL)
             {
                 if (m_uiThrallEventCount <= 20)
