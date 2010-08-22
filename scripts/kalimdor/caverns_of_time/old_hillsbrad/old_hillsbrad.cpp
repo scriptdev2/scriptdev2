@@ -38,9 +38,10 @@ struct MANGOS_DLL_DECL npc_tarethaAI : public npc_escortAI
 
     instance_old_hillsbrad* m_pInstance;
 
-    void WaypointReached(uint32 uiPoint);
-
     void Reset() {}
+
+    void JustSummoned(Creature* pSummoned);
+    void WaypointReached(uint32 uiPoint);
 };
 
 /*######
@@ -141,8 +142,14 @@ enum
     SAY_TH_MOUNTS_UP                = -1560028,
     SAY_TH_CHURCH_END               = -1560029,
     SAY_TH_MEET_TARETHA             = -1560030,
+
+    SAY_EPOCH_ENTER1                = -1560013,
+    SAY_EPOCH_ENTER2                = -1560014,
+    SAY_EPOCH_ENTER3                = -1560015,
+
     SAY_TH_EPOCH_WONDER             = -1560031,
     SAY_TH_EPOCH_KILL_TARETHA       = -1560032,
+
     SAY_TH_EVENT_COMPLETE           = -1560033,
 
     SAY_TH_RANDOM_LOW_HP1           = -1560034,
@@ -160,6 +167,8 @@ enum
     SAY_TH_RANDOM_KILL2             = -1560043,
     SAY_TH_RANDOM_KILL3             = -1560044,
 
+    SAY_TH_KILL_ARMORER             = -1560050,
+
     SAY_TH_LEAVE_COMBAT1            = -1560045,
     SAY_TH_LEAVE_COMBAT2            = -1560046,
     SAY_TH_LEAVE_COMBAT3            = -1560047,
@@ -167,6 +176,7 @@ enum
     // Taretha texts
     SAY_TA_FREE                     = -1560048,
     SAY_TA_ESCAPED                  = -1560049,
+    SAY_TA_FAREWELL                 = -1560053,
 
     // Misc for Thrall
     SPELL_STRIKE                    = 14516,
@@ -238,6 +248,34 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
 
     bool m_bIsLowHp;
     bool m_bHadMount;
+
+    void Reset()
+    {
+        m_uiScarlocMountGUID = 0;
+
+        m_bIsLowHp = false;
+
+        if (m_bHadMount)
+            DoMount();
+
+        if (!HasEscortState(STATE_ESCORT_ESCORTING))
+        {
+            DoUnmount();
+            m_bHadMount = false;
+            SetEquipmentSlots(true);
+            m_creature->SetDisplayId(MODEL_THRALL_UNEQUIPPED);
+        }
+
+        if (HasEscortState(STATE_ESCORT_ESCORTING))
+        {
+            switch(urand(0, 2))
+            {
+                case 0: DoScriptText(SAY_TH_LEAVE_COMBAT1, m_creature); break;
+                case 1: DoScriptText(SAY_TH_LEAVE_COMBAT2, m_creature); break;
+                case 2: DoScriptText(SAY_TH_LEAVE_COMBAT3, m_creature); break;
+            }
+        }
+    }
 
     void WaypointReached(uint32 uiPoint)
     {
@@ -363,11 +401,19 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
                 DoScriptText(SAY_TH_EPOCH_KILL_TARETHA, m_creature);
                 SetRun();
                 break;
-            case 98:
-                // trigger epoch Yell("Thrall! Come outside and face your fate! ....")
-                // from here, thrall should not never be allowed to move to point 106 which he currently does.
+            case 104:
+                if (Creature* pEpoch = m_pInstance->GetEpoch())
+                    DoScriptText(SAY_EPOCH_ENTER3, pEpoch);
+
                 break;
-            case 106:
+            case 105:                                       // outside inn, meeting the dragon
+                SetEscortPaused(true);
+
+                if (Creature* pEpoch = m_pInstance->GetEpoch())
+                    m_creature->SetFacingToObject(pEpoch);
+
+                break;
+            case 106:                                       // epoch is dead, proceeding with cheering
                 // trigger taretha to run down outside
                 if (Creature* pTaretha = m_pInstance->GetTaretha())
                 {
@@ -396,31 +442,12 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
         }
     }
 
-    void Reset()
+    void WaypointStart(uint32 uiPointId)
     {
-        m_uiScarlocMountGUID = 0;
-
-        m_bIsLowHp = false;
-
-        if (m_bHadMount)
-            DoMount();
-
-        if (!HasEscortState(STATE_ESCORT_ESCORTING))
+        if (uiPointId == 97 && m_pInstance)
         {
-            DoUnmount();
-            m_bHadMount = false;
-            SetEquipmentSlots(true);
-            m_creature->SetDisplayId(MODEL_THRALL_UNEQUIPPED);
-        }
-
-        if (HasEscortState(STATE_ESCORT_ESCORTING))
-        {
-            switch(urand(0, 2))
-            {
-                case 0: DoScriptText(SAY_TH_LEAVE_COMBAT1, m_creature); break;
-                case 1: DoScriptText(SAY_TH_LEAVE_COMBAT2, m_creature); break;
-                case 2: DoScriptText(SAY_TH_LEAVE_COMBAT3, m_creature); break;
-            }
+            if (Creature* pEpoch = m_pInstance->GetEpoch())
+                DoScriptText(SAY_EPOCH_ENTER2, pEpoch);
         }
     }
 
@@ -486,6 +513,11 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
             case 1: DoScriptText(SAY_TH_RANDOM_KILL2, m_creature); break;
             case 2: DoScriptText(SAY_TH_RANDOM_KILL3, m_creature); break;
         }
+
+        // Death called from instance script (or if he has the killing blow of course)
+        // Thrall should normally always be the one killing, but no support for this yet.
+        if (pVictim->GetEntry() == NPC_EPOCH)
+            SetEscortPaused(false);
     }
 
     void JustDied(Unit* pKiller)
@@ -622,6 +654,11 @@ npc_tarethaAI::npc_tarethaAI(Creature* pCreature) : npc_escortAI(pCreature)
     Reset();
 }
 
+void npc_tarethaAI::JustSummoned(Creature* pSummoned)
+{
+    DoScriptText(SAY_EPOCH_ENTER1, pSummoned);
+}
+
 void npc_tarethaAI::WaypointReached(uint32 uiPoint)
 {
     switch(uiPoint)
@@ -672,7 +709,7 @@ bool GossipSelect_npc_taretha(Player* pPlayer, Creature* pCreature, uint32 uiSen
             pInstance->SetData(TYPE_THRALL_PART4, IN_PROGRESS);
             pCreature->SummonCreature(NPC_EPOCH, 2639.13f, 698.55f, 65.43f, 4.59f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 120000);
 
-            if (Creature* pThrall = pInstance->instance->GetCreature(pInstance->GetData64(NPC_THRALL)))
+            if (Creature* pThrall = pInstance->GetThrall())
             {
                 if (npc_thrall_old_hillsbradAI* pThrallAI = dynamic_cast<npc_thrall_old_hillsbradAI*>(pThrall->AI()))
                     pThrallAI->StartWP();

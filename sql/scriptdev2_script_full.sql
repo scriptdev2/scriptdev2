@@ -3,7 +3,7 @@
 --
 
 DELETE FROM sd2_db_version;
-INSERT INTO sd2_db_version (version) VALUES ('ScriptDev2 (for MaNGOS 10373+) ');
+INSERT INTO sd2_db_version (version) VALUES ('ScriptDev2 (for MaNGOS 10390+) ');
 
 --
 -- Below contains data for table `script_texts` mainly used in C++ parts.
@@ -1794,7 +1794,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1560021,'Struggle as much as you like!',10424,1,0,0,'epoch SAY_BREATH2'),
 (-1560022,'No!...The master... will not... be pleased.',10427,1,0,0,'epoch SAY_DEATH'),
 
-(-1560023,'Very well then. Let\'s go!',10465,1,0,0,'thrall hillsbrad SAY_TH_START_EVENT_PART1'),
+(-1560023,'Very well then. Let\'s go!',10465,0,0,0,'thrall hillsbrad SAY_TH_START_EVENT_PART1'),
 (-1560024,'As long as we\'re going with a new plan, I may aswell pick up a weapon and some armor.',0,0,0,0,'thrall hillsbrad SAY_TH_ARMORY'),
 (-1560025,'A rider approaches!',10466,0,0,0,'thrall hillsbrad SAY_TH_SKARLOC_MEET'),
 (-1560026,'I\'ll never be chained again!',10467,1,0,0,'thrall hillsbrad SAY_TH_SKARLOC_TAUNT'),
@@ -1802,26 +1802,31 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1560028,'Let\'s ride!',10469,0,0,1,'thrall hillsbrad SAY_TH_MOUNTS_UP'),
 (-1560029,'Taretha must be in the inn. Let\'s go.',0,0,0,0,'thrall hillsbrad SAY_TH_CHURCH_END'),
 (-1560030,'Taretha! What foul magic is this?',0,0,0,0,'thrall hillsbrad SAY_TH_MEET_TARETHA'),
-(-1560031,'Who or what was that?',10470,1,0,1,'thrall hillsbrad SAY_TH_EPOCH_WONDER'),
-(-1560032,'No!',10471,1,0,5,'thrall hillsbrad SAY_TH_EPOCH_KILL_TARETHA'),
-(-1560033,'Goodbye, Taretha. I will never forget your kindness.',10472,1,0,0,'thrall hillsbrad SAY_TH_EVENT_COMPLETE'),
+(-1560031,'Who or what was that?',10470,0,0,1,'thrall hillsbrad SAY_TH_EPOCH_WONDER'),
+(-1560032,'No!',10471,0,0,5,'thrall hillsbrad SAY_TH_EPOCH_KILL_TARETHA'),
+(-1560033,'Goodbye, Taretha. I will never forget your kindness.',10472,0,0,0,'thrall hillsbrad SAY_TH_EVENT_COMPLETE'),
 (-1560034,'Things are looking grim...',10458,1,0,0,'thrall hillsbrad SAY_TH_RANDOM_LOW_HP1'),
 (-1560035,'I will fight to the last!',10459,1,0,0,'thrall hillsbrad SAY_TH_RANDOM_LOW_HP2'),
 (-1560036,'Taretha...',10460,1,0,0,'thrall hillsbrad SAY_TH_RANDOM_DIE1'),
 (-1560037,'A good day...to die...',10461,1,0,0,'thrall hillsbrad SAY_TH_RANDOM_DIE2'),
-(-1560038,'I have earned my freedom!',10448,1,0,0,'thrall hillsbrad SAY_TH_RANDOM_AGGRO1'),
-(-1560039,'This day is long overdue. Out of my way!',10449,1,0,0,'thrall hillsbrad SAY_TH_RANDOM_AGGRO2'),
-(-1560040,'I am a slave no longer!',10450,1,0,0,'thrall hillsbrad SAY_TH_RANDOM_AGGRO3'),
-(-1560041,'Blackmoore has much to answer for!',10451,1,0,0,'thrall hillsbrad SAY_TH_RANDOM_AGGRO4'),
-(-1560042,'You have forced my hand!',10452,1,0,0,'thrall hillsbrad SAY_TH_RANDOM_KILL1'),
-(-1560043,'It should not have come to this!',10453,1,0,0,'thrall hillsbrad SAY_TH_RANDOM_KILL2'),
-(-1560044,'I did not ask for this!',10454,1,0,0,'thrall hillsbrad SAY_TH_RANDOM_KILL3'),
-(-1560045,'I am truly in your debt, strangers.',10455,1,0,0,'thrall hillsbrad SAY_TH_LEAVE_COMBAT1'),
-(-1560046,'Thank you, strangers. You have given me hope.',10456,1,0,0,'thrall hillsbrad SAY_TH_LEAVE_COMBAT2'),
-(-1560047,'I will not waste this chance. I will seek out my destiny.',10457,1,0,0,'thrall hillsbrad SAY_TH_LEAVE_COMBAT3'),
+(-1560038,'I have earned my freedom!',10448,0,0,0,'thrall hillsbrad SAY_TH_RANDOM_AGGRO1'),
+(-1560039,'This day is long overdue. Out of my way!',10449,0,0,0,'thrall hillsbrad SAY_TH_RANDOM_AGGRO2'),
+(-1560040,'I am a slave no longer!',10450,0,0,0,'thrall hillsbrad SAY_TH_RANDOM_AGGRO3'),
+(-1560041,'Blackmoore has much to answer for!',10451,0,0,0,'thrall hillsbrad SAY_TH_RANDOM_AGGRO4'),
+(-1560042,'You have forced my hand!',10452,0,0,0,'thrall hillsbrad SAY_TH_RANDOM_KILL1'),
+(-1560043,'It should not have come to this!',10453,0,0,0,'thrall hillsbrad SAY_TH_RANDOM_KILL2'),
+(-1560044,'I did not ask for this!',10454,0,0,0,'thrall hillsbrad SAY_TH_RANDOM_KILL3'),
+(-1560045,'I am truly in your debt, strangers.',10455,0,0,0,'thrall hillsbrad SAY_TH_LEAVE_COMBAT1'),
+(-1560046,'Thank you, strangers. You have given me hope.',10456,0,0,0,'thrall hillsbrad SAY_TH_LEAVE_COMBAT2'),
+(-1560047,'I will not waste this chance. I will seek out my destiny.',10457,0,0,0,'thrall hillsbrad SAY_TH_LEAVE_COMBAT3'),
 
 (-1560048,'I\'m free! Thank you all!',0,0,0,0,'taretha SAY_TA_FREE'),
-(-1560049,'Thrall, you escaped!',0,0,0,0,'taretha SAY_TA_ESCAPED');
+(-1560049,'Thrall, you escaped!',0,0,0,0,'taretha SAY_TA_ESCAPED'),
+
+(-1560050,'That\'s enough out of him.',0,0,0,0,'thrall hillsbrad SAY_TH_KILL_ARMORER'),
+(-1560051,'That spell should wipe their memories of us and what just happened. All they should remember now is what reality would be like without the attempted temporal interference. Well done. Thrall will journey on to find his destiny, and Taretha...',0,0,0,0,'erozion SAY_WIPE_MEMORY'),
+(-1560052,'Her fate is regrettably unavoidable.',0,0,0,0,'erozion SAY_ABOUT_TARETHA'),
+(-1560053,'They call you a monster. But they\'re the monsters, not you. Farewell Thrall.',0,0,0,0,'taretha SAY_TA_FAREWELL');
 
 -- -1 564 000 BLACK TEMPLE
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
@@ -3920,8 +3925,8 @@ INSERT INTO script_waypoint VALUES
 (17876, 93, 2650.79, 664.290, 61.9302, 0, 'summon inn'),
 (17876, 94, 2658.19, 660.454, 61.9320, 5000, ''),
 (17876, 95, 2660.57, 659.173, 61.9370, 0, 'speak with Taretha'),
-(17876, 96, 2658.19, 660.454, 61.9320, 5000, 'epoch calls'),
-(17876, 97, 2659.84, 659.482, 61.9361, 5000, 'taretha "dies"'),
+(17876, 96, 2658.19, 660.454, 61.9320, 15000, 'epoch calls'),
+(17876, 97, 2659.84, 659.482, 61.9361, 10000, 'taretha "dies"'),
 (17876, 98, 2654.28, 662.722, 61.9313, 0, ''),
 (17876, 99, 2652.37, 670.561, 61.9368, 0, ''),
 (17876, 100, 2656.05, 676.761, 57.1727, 0, ''),
