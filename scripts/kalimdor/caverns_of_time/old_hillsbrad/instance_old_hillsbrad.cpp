@@ -24,189 +24,177 @@ EndScriptData */
 #include "precompiled.h"
 #include "old_hillsbrad.h"
 
-struct MANGOS_DLL_DECL instance_old_hillsbrad : public ScriptedInstance
+instance_old_hillsbrad::instance_old_hillsbrad(Map* pMap) : ScriptedInstance(pMap),
+    m_uiBarrelCount(0),
+    m_uiThrallEventCount(0),
+    m_uiThrallGUID(0),
+    m_uiTarethaGUID(0),
+    m_uiScarlocGUID(0),
+    m_uiEpochGUID(0)
 {
-    instance_old_hillsbrad(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
+    Initialize();
+}
 
-    uint32 m_auiEncounter[MAX_ENCOUNTER];
-    uint32 m_uiBarrelCount;
-    uint32 m_uiThrallEventCount;
+void instance_old_hillsbrad::Initialize()
+{
+    memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
+}
 
-    uint64 m_uiThrallGUID;
-    uint64 m_uiTarethaGUID;
+Player* instance_old_hillsbrad::GetPlayerInMap()
+{
+    Map::PlayerList const& players = instance->GetPlayers();
 
-    void Initialize()
+    if (!players.isEmpty())
     {
-        memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
-
-        m_uiBarrelCount        = 0;
-        m_uiThrallEventCount   = 0;
-        m_uiThrallGUID         = 0;
-        m_uiTarethaGUID        = 0;
+        for(Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
+        {
+            if (Player* plr = itr->getSource())
+                return plr;
+        }
     }
 
-    Player* GetPlayerInMap()
-    {
-        Map::PlayerList const& players = instance->GetPlayers();
+    debug_log("SD2: Instance Old Hillsbrad: GetPlayerInMap, but PlayerList is empty!");
+    return NULL;
+}
 
-        if (!players.isEmpty())
+void instance_old_hillsbrad::OnCreatureCreate(Creature* pCreature)
+{
+    switch(pCreature->GetEntry())
+    {
+        case NPC_THRALL:
+            m_uiThrallGUID = pCreature->GetGUID();
+            break;
+        case NPC_TARETHA:
+            m_uiTarethaGUID = pCreature->GetGUID();
+            break;
+        case NPC_EPOCH:
+            m_uiEpochGUID = pCreature->GetGUID();
+            break;
+    }
+}
+
+void instance_old_hillsbrad::SetData(uint32 uiType, uint32 uiData)
+{
+    switch(uiType)
+    {
+        case TYPE_BARREL_DIVERSION:
         {
-            for(Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
+            if (uiData == IN_PROGRESS)
             {
-                if (Player* plr = itr->getSource())
-                    return plr;
-            }
-        }
+                if (m_uiBarrelCount >= 5)
+                    return;
 
-        debug_log("SD2: Instance Old Hillsbrad: GetPlayerInMap, but PlayerList is empty!");
-        return NULL;
-    }
+                ++m_uiBarrelCount;
+                DoUpdateWorldState(WORLD_STATE_OH, m_uiBarrelCount);
 
-    void UpdateQuestCredit()
-    {
-        Map::PlayerList const& players = instance->GetPlayers();
+                debug_log("SD2: Instance Old Hillsbrad: go_barrel_old_hillsbrad count %u", m_uiBarrelCount);
 
-        if (!players.isEmpty())
-        {
-            for(Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
-            {
-                if (Player* pPlayer = itr->getSource())
-                    pPlayer->KilledMonsterCredit(NPC_LODGE_QUEST_TRIGGER);
-            }
-        }
-    }
+                m_auiEncounter[0] = IN_PROGRESS;
 
-    void OnCreatureCreate(Creature* pCreature)
-    {
-        switch(pCreature->GetEntry())
-        {
-            case NPC_THRALL:
-                m_uiThrallGUID = pCreature->GetGUID();
-                break;
-            case NPC_TARETHA:
-                m_uiTarethaGUID = pCreature->GetGUID();
-                break;
-        }
-    }
-
-    void SetData(uint32 uiType, uint32 uiData)
-    {
-        Player* pPlayer = GetPlayerInMap();
-
-        if (!pPlayer)
-        {
-            debug_log("SD2: Instance Old Hillsbrad: SetData (Type: %u Data %u) cannot find any pPlayer.", uiType, uiData);
-            return;
-        }
-
-        switch(uiType)
-        {
-            case TYPE_BARREL_DIVERSION:
-            {
-                if (uiData == IN_PROGRESS)
+                if (m_uiBarrelCount == 5)
                 {
-                    if (m_uiBarrelCount >= 5)
-                        return;
+                    UpdateLodgeQuestCredit();
 
-                    ++m_uiBarrelCount;
-                    DoUpdateWorldState(WORLD_STATE_OH, m_uiBarrelCount);
+                    if (Player* pPlayer = GetPlayerInMap())
+                        pPlayer->SummonCreature(NPC_DRAKE, 2128.43f, 71.01f, 64.42f, 1.74f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 1800000);
+                    else
+                        debug_log("SD2: Instance Old Hillsbrad: SetData (Type: %u Data %u) cannot find any pPlayer.", uiType, uiData);
 
-                    debug_log("SD2: Instance Old Hillsbrad: go_barrel_old_hillsbrad count %u", m_uiBarrelCount);
-
-                    m_auiEncounter[0] = IN_PROGRESS;
-
-                    if (m_uiBarrelCount == 5)
-                    {
-                        UpdateQuestCredit();
-                        pPlayer->SummonCreature(NPC_DRAKE, 2128.43f, 71.01f, 64.42f, 1.74f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,1800000);
-                        m_auiEncounter[0] = DONE;
-                    }
+                    m_auiEncounter[0] = DONE;
                 }
-                break;
             }
-            case TYPE_THRALL_EVENT:
+            break;
+        }
+        case TYPE_THRALL_EVENT:
+        {
+            if (uiData == FAIL)
             {
-                if (uiData == FAIL)
+                if (m_uiThrallEventCount <= 20)
                 {
-                    if (m_uiThrallEventCount <= 20)
-                    {
-                        ++m_uiThrallEventCount;
-                        m_auiEncounter[1] = NOT_STARTED;
+                    ++m_uiThrallEventCount;
+                    m_auiEncounter[1] = NOT_STARTED;
 
-                        debug_log("SD2: Instance Old Hillsbrad: Thrall event failed %u times. Resetting all sub-events.", m_uiThrallEventCount);
+                    debug_log("SD2: Instance Old Hillsbrad: Thrall event failed %u times. Resetting all sub-events.", m_uiThrallEventCount);
 
-                        m_auiEncounter[2] = NOT_STARTED;
-                        m_auiEncounter[3] = NOT_STARTED;
-                        m_auiEncounter[4] = NOT_STARTED;
-                        m_auiEncounter[5] = NOT_STARTED;
-                    }
-                    else if (m_uiThrallEventCount > 20)
-                    {
-                        m_auiEncounter[1] = uiData;
-                        m_auiEncounter[2] = uiData;
-                        m_auiEncounter[3] = uiData;
-                        m_auiEncounter[4] = uiData;
-                        m_auiEncounter[5] = uiData;
-                        debug_log("SD2: Instance Old Hillsbrad: Thrall event failed %u times. Reset instance required.", m_uiThrallEventCount);
-                    }
+                    m_auiEncounter[2] = NOT_STARTED;
+                    m_auiEncounter[3] = NOT_STARTED;
+                    m_auiEncounter[4] = NOT_STARTED;
+                    m_auiEncounter[5] = NOT_STARTED;
                 }
-                else
+                else if (m_uiThrallEventCount > 20)
+                {
                     m_auiEncounter[1] = uiData;
-
-                debug_log("SD2: Instance Old Hillsbrad: Thrall escort event adjusted to data %u.",uiData);
-                break;
+                    m_auiEncounter[2] = uiData;
+                    m_auiEncounter[3] = uiData;
+                    m_auiEncounter[4] = uiData;
+                    m_auiEncounter[5] = uiData;
+                    debug_log("SD2: Instance Old Hillsbrad: Thrall event failed %u times. Reset instance required.", m_uiThrallEventCount);
+                }
             }
-            case TYPE_THRALL_PART1:
-                m_auiEncounter[2] = uiData;
-                debug_log("SD2: Instance Old Hillsbrad: Thrall event part I adjusted to data %u.",uiData);
-                break;
-            case TYPE_THRALL_PART2:
-                m_auiEncounter[3] = uiData;
-                debug_log("SD2: Instance Old Hillsbrad: Thrall event part II adjusted to data %u.",uiData);
-                break;
-            case TYPE_THRALL_PART3:
-                m_auiEncounter[4] = uiData;
-                debug_log("SD2: Instance Old Hillsbrad: Thrall event part III adjusted to data %u.",uiData);
-                break;
-            case TYPE_THRALL_PART4:
-                m_auiEncounter[5] = uiData;
-                debug_log("SD2: Instance Old Hillsbrad: Thrall event part IV adjusted to data %u.",uiData);
-                break;
-        }
-    }
+            else
+                m_auiEncounter[1] = uiData;
 
-    uint32 GetData(uint32 uiData)
-    {
-        switch(uiData)
-        {
-            case TYPE_BARREL_DIVERSION:
-                return m_auiEncounter[0];
-            case TYPE_THRALL_EVENT:
-                return m_auiEncounter[1];
-            case TYPE_THRALL_PART1:
-                return m_auiEncounter[2];
-            case TYPE_THRALL_PART2:
-                return m_auiEncounter[3];
-            case TYPE_THRALL_PART3:
-                return m_auiEncounter[4];
-            case TYPE_THRALL_PART4:
-                return m_auiEncounter[5];
+            debug_log("SD2: Instance Old Hillsbrad: Thrall escort event adjusted to data %u.",uiData);
+            break;
         }
-        return 0;
+        case TYPE_THRALL_PART1:
+            m_auiEncounter[2] = uiData;
+            debug_log("SD2: Instance Old Hillsbrad: Thrall event part I adjusted to data %u.",uiData);
+            break;
+        case TYPE_THRALL_PART2:
+            m_auiEncounter[3] = uiData;
+            debug_log("SD2: Instance Old Hillsbrad: Thrall event part II adjusted to data %u.",uiData);
+            break;
+        case TYPE_THRALL_PART3:
+            m_auiEncounter[4] = uiData;
+            debug_log("SD2: Instance Old Hillsbrad: Thrall event part III adjusted to data %u.",uiData);
+            break;
+        case TYPE_THRALL_PART4:
+            m_auiEncounter[5] = uiData;
+            debug_log("SD2: Instance Old Hillsbrad: Thrall event part IV adjusted to data %u.",uiData);
+            break;
     }
+}
 
-    uint64 GetData64(uint32 uiData)
+uint32 instance_old_hillsbrad::GetData(uint32 uiData)
+{
+    switch(uiData)
     {
-        switch(uiData)
-        {
-            case NPC_THRALL:
-                return m_uiThrallGUID;
-            case NPC_TARETHA:
-                return m_uiTarethaGUID;
-        }
-        return 0;
+        case TYPE_BARREL_DIVERSION:
+            return m_auiEncounter[0];
+        case TYPE_THRALL_EVENT:
+            return m_auiEncounter[1];
+        case TYPE_THRALL_PART1:
+            return m_auiEncounter[2];
+        case TYPE_THRALL_PART2:
+            return m_auiEncounter[3];
+        case TYPE_THRALL_PART3:
+            return m_auiEncounter[4];
+        case TYPE_THRALL_PART4:
+            return m_auiEncounter[5];
+        default:
+            return 0;
     }
-};
+}
+
+uint64 instance_old_hillsbrad::GetData64(uint32 uiData)
+{
+    return 0;
+}
+
+void instance_old_hillsbrad::UpdateLodgeQuestCredit()
+{
+    Map::PlayerList const& players = instance->GetPlayers();
+
+    if (!players.isEmpty())
+    {
+        for(Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
+        {
+            if (Player* pPlayer = itr->getSource())
+                pPlayer->KilledMonsterCredit(NPC_LODGE_QUEST_TRIGGER);
+        }
+    }
+}
 
 InstanceData* GetInstanceData_instance_old_hillsbrad(Map* pMap)
 {
@@ -215,9 +203,10 @@ InstanceData* GetInstanceData_instance_old_hillsbrad(Map* pMap)
 
 void AddSC_instance_old_hillsbrad()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "instance_old_hillsbrad";
-    newscript->GetInstanceData = &GetInstanceData_instance_old_hillsbrad;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "instance_old_hillsbrad";
+    pNewScript->GetInstanceData = &GetInstanceData_instance_old_hillsbrad;
+    pNewScript->RegisterSelf();
 }
