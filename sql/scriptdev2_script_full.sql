@@ -1826,7 +1826,13 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1560050,'That\'s enough out of him.',0,0,0,0,'thrall hillsbrad SAY_TH_KILL_ARMORER'),
 (-1560051,'That spell should wipe their memories of us and what just happened. All they should remember now is what reality would be like without the attempted temporal interference. Well done. Thrall will journey on to find his destiny, and Taretha...',0,0,0,0,'erozion SAY_WIPE_MEMORY'),
 (-1560052,'Her fate is regrettably unavoidable.',0,0,0,0,'erozion SAY_ABOUT_TARETHA'),
-(-1560053,'They call you a monster. But they\'re the monsters, not you. Farewell Thrall.',0,0,0,0,'taretha SAY_TA_FAREWELL');
+(-1560053,'They call you a monster. But they\'re the monsters, not you. Farewell Thrall.',0,0,0,0,'taretha SAY_TA_FAREWELL'),
+
+(-1560054,'I\'m glad you\’re safe, Taretha. None of this would have been possible without your friends. They made all of this happen.',0,0,0,0,'thrall hillsbrad SAY_TR_GLAD_SAFE'),
+(-1560055,'Thrall, I\'ve never met these people before in my life.',0,0,0,0,'taretha SAY_TA_NEVER_MET'),
+(-1560056,'Then who are these people?',0,0,0,0,'thrall hillsbrad SAY_TR_THEN_WHO'),
+(-1560057,'I believe I can explain everything to you two if you give me a moment of your time.',0,0,0,0,'erozion SAY_PRE_WIPE'),
+(-1560058,'You have done a great thing. Alas, the young warchief\'s memory of these events must be as they originally were ... Andormu awaits you in the master\'s lair.',0,0,0,0,'erozion SAY_AFTER_WIPE');
 
 -- -1 564 000 BLACK TEMPLE
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
@@ -3935,9 +3941,9 @@ INSERT INTO script_waypoint VALUES
 (17876, 103, 2649.71, 665.387, 57.1727, 0, ''),
 (17876, 104, 2634.79, 672.964, 54.4577, 0, 'outside inn'),
 (17876, 105, 2635.06, 673.892, 54.4713, 30000, 'getting ready'),
-(17876, 106, 2634.79, 672.964, 54.4577, 60000, 'when all dead and meet Taretha'),
-(17876, 107, 2631.72, 665.629, 54.2923, 0, 'run off'),
-(17876, 108, 2647.40, 640.530, 55.7634, 0, '');
+(17876, 106, 2630.45, 674.420, 54.4943, 5000, 'when all dead and meet Taretha'),
+(17876, 107, 2634.30, 661.698, 54.4147, 0, 'run off'),
+(17876, 108, 2652.21, 644.396, 56.1906, 0, '');
 
 DELETE FROM script_waypoint WHERE entry=17969;
 INSERT INTO script_waypoint VALUES
@@ -4012,7 +4018,11 @@ INSERT INTO script_waypoint VALUES
 (18887, 4, 2651.75, 664.482, 57.1725, 0, ''),
 (18887, 5, 2647.49, 666.595, 57.0824, 0, ''),
 (18887, 6, 2644.37, 668.167, 55.4182, 0, ''),
-(18887, 7, 2640.96, 669.890, 54.7567, 60000, '');
+(18887, 7, 2638.57, 671.231, 54.5200, 60000, ''),
+(18887, 8, 2636.56, 679.894, 54.6595, 0, ''),
+(18887, 9, 2640.79, 689.647, 55.3215, 0, ''),
+(18887, 10, 2639.35, 706.777, 56.0667, 0, ''),
+(18887, 11, 2617.70, 731.884, 55.5571, 0, '');
 
 DELETE FROM script_waypoint WHERE entry=19685;
 INSERT INTO script_waypoint VALUES

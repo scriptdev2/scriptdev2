@@ -37,11 +37,14 @@ struct MANGOS_DLL_DECL npc_tarethaAI : public npc_escortAI
     npc_tarethaAI(Creature* pCreature);
 
     instance_old_hillsbrad* m_pInstance;
+    uint64 m_uiErozionGUID;
+    uint32 m_uiErozionEventTimer;
+    uint32 m_uiErozionPhase;
 
     void Reset() {}
-
     void JustSummoned(Creature* pSummoned);
     void WaypointReached(uint32 uiPoint);
+    void UpdateEscortAI(const uint32 uiDiff);
 };
 
 /*######
@@ -150,8 +153,6 @@ enum
     SAY_TH_EPOCH_WONDER             = -1560031,
     SAY_TH_EPOCH_KILL_TARETHA       = -1560032,
 
-    SAY_TH_EVENT_COMPLETE           = -1560033,
-
     SAY_TH_RANDOM_LOW_HP1           = -1560034,
     SAY_TH_RANDOM_LOW_HP2           = -1560035,
 
@@ -174,8 +175,18 @@ enum
     SAY_TH_LEAVE_COMBAT3            = -1560047,
 
     // Taretha texts
-    SAY_TA_FREE                     = -1560048,
     SAY_TA_ESCAPED                  = -1560049,
+
+    // end event texts
+    SAY_TA_FREE                     = -1560048,
+    SAY_TR_GLAD_SAFE                = -1560054,
+    SAY_TA_NEVER_MET                = -1560055,
+    SAY_TR_THEN_WHO                 = -1560056,
+    SAY_PRE_WIPE                    = -1560057,
+    SAY_WIPE_MEMORY                 = -1560051,
+    SAY_AFTER_WIPE                  = -1560058,
+    SAY_ABOUT_TARETHA               = -1560052,
+    SAY_TH_EVENT_COMPLETE           = -1560033,
     SAY_TA_FAREWELL                 = -1560053,
 
     // Misc for Thrall
@@ -414,6 +425,7 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
 
                 break;
             case 106:                                       // epoch is dead, proceeding with cheering
+            {
                 // trigger taretha to run down outside
                 if (Creature* pTaretha = m_pInstance->GetTaretha())
                 {
@@ -437,14 +449,19 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
                 }
 
                 // a lot will happen here, thrall and taretha talk, erozion appear at spot to explain
-                m_creature->SummonCreature(NPC_EROZION, 2646.47f, 680.416f, 55.38f, 4.16f, TEMPSUMMON_TIMED_DESPAWN, 120000);
+                // handled by taretha script
+                SetEscortPaused(true);
                 break;
+            }
         }
     }
 
     void WaypointStart(uint32 uiPointId)
     {
-        if (uiPointId == 97 && m_pInstance)
+        if (!m_pInstance)
+            return;
+
+        if (uiPointId == 97)
         {
             if (Creature* pEpoch = m_pInstance->GetEpoch())
                 DoScriptText(SAY_EPOCH_ENTER2, pEpoch);
@@ -494,7 +511,6 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
             case NPC_BARN_GUARDSMAN:
             case NPC_BARN_PROTECTOR:
             case NPC_BARN_LOOKOUT:
-            case NPC_EROZION:
                 break;
             case NPC_SKARLOC_MOUNT:
                 m_uiScarlocMountGUID = pSummoned->GetGUID();
@@ -651,12 +667,18 @@ enum
 npc_tarethaAI::npc_tarethaAI(Creature* pCreature) : npc_escortAI(pCreature)
 {
     m_pInstance = (instance_old_hillsbrad*)pCreature->GetInstanceData();
+    m_uiErozionGUID = 0;
+    m_uiErozionEventTimer = 5000;
+    m_uiErozionPhase = 0;
     Reset();
 }
 
 void npc_tarethaAI::JustSummoned(Creature* pSummoned)
 {
-    DoScriptText(SAY_EPOCH_ENTER1, pSummoned);
+    if (pSummoned->GetEntry() == NPC_EROZION)
+        m_uiErozionGUID = pSummoned->GetGUID();
+    else
+        DoScriptText(SAY_EPOCH_ENTER1, pSummoned);
 }
 
 void npc_tarethaAI::WaypointReached(uint32 uiPoint)
@@ -668,8 +690,78 @@ void npc_tarethaAI::WaypointReached(uint32 uiPoint)
             break;
         case 7:
             m_creature->HandleEmote(EMOTE_ONESHOT_CHEER);
+            m_creature->SummonCreature(NPC_EROZION, 2646.47f, 680.416f, 55.38f, 4.16f, TEMPSUMMON_TIMED_DESPAWN, 120000);
+            SetEscortPaused(true);
+            SetRun(false);
             break;
     }
+}
+
+void npc_tarethaAI::UpdateEscortAI(const uint32 uiDiff)
+{
+    if (!HasEscortState(STATE_ESCORT_PAUSED))
+        return;
+
+    if (m_uiErozionEventTimer < uiDiff)
+    {
+        ++m_uiErozionPhase;
+        m_uiErozionEventTimer = 5000;
+
+        switch(m_uiErozionPhase)
+        {
+            case 1:
+                if (Creature* pThrall = m_pInstance->GetThrall())
+                {
+                    pThrall->SetFacingToObject(m_creature);
+                    DoScriptText(SAY_TR_GLAD_SAFE, pThrall);
+                }
+                break;
+            case 2:
+                DoScriptText(SAY_TA_NEVER_MET, m_creature);
+                break;
+            case 3:
+                if (Creature* pThrall = m_pInstance->GetThrall())
+                    DoScriptText(SAY_TR_THEN_WHO, pThrall);
+                break;
+            case 4:
+                if (Creature* pErozion = m_creature->GetMap()->GetCreature(m_uiErozionGUID))
+                    DoScriptText(SAY_PRE_WIPE, pErozion);
+                break;
+            case 5:
+                //if (Creature* pErozion = m_creature->GetMap()->GetCreature(m_uiErozionGUID))
+                    //pErozion->AI()->DoCastSpellIfCan();
+                break;
+            case 6:
+                if (Creature* pErozion = m_creature->GetMap()->GetCreature(m_uiErozionGUID))
+                    DoScriptText(SAY_WIPE_MEMORY, pErozion);
+                break;
+            case 7:
+                if (Creature* pErozion = m_creature->GetMap()->GetCreature(m_uiErozionGUID))
+                    DoScriptText(SAY_ABOUT_TARETHA, pErozion);
+                break;
+            case 8:
+                if (Creature* pErozion = m_creature->GetMap()->GetCreature(m_uiErozionGUID))
+                    DoScriptText(SAY_AFTER_WIPE, pErozion);
+                break;
+            case 9:
+                if (Creature* pThrall = m_pInstance->GetThrall())
+                    DoScriptText(SAY_TH_EVENT_COMPLETE, pThrall);
+                break;
+            case 10:
+                DoScriptText(SAY_TA_FAREWELL, m_creature);
+                SetEscortPaused(false);
+
+                if (Creature* pThrall = m_pInstance->GetThrall())
+                {
+                    if (npc_thrall_old_hillsbradAI* pThrallAI = dynamic_cast<npc_thrall_old_hillsbradAI*>(pThrall->AI()))
+                        pThrallAI->SetEscortPaused(false);
+                }
+
+                break;
+        }
+    }
+    else
+        m_uiErozionEventTimer -= uiDiff;
 }
 
 CreatureAI* GetAI_npc_taretha(Creature* pCreature)
