@@ -22,12 +22,25 @@ SDCategory: Gundrak
 EndScriptData */
 
 #include "precompiled.h"
+#include "gundrak.h"
 
 enum
 {
     EMOTE_SURGE                 = -1604008,
     EMOTE_SEEP                  = -1604009,
-    EMOTE_GLOW                  = -1604010
+    EMOTE_GLOW                  = -1604010,
+
+    // collosus' abilities
+    SPELL_EMERGE                = 54850,
+    SPELL_MIGHTY_BLOW           = 54719,
+    SPELL_MORTAL_STRIKES        = 54715,
+    SPELL_MORTAL_STRIKES_H      = 59454,
+
+    // elemental's abilities
+    SPELL_MERGE                 = 54878,
+    SPELL_SURGE                 = 54801,
+
+    NPC_LIVING_MOJO             = 29830
 };
 
 /*######
@@ -46,15 +59,40 @@ struct MANGOS_DLL_DECL boss_colossusAI : public ScriptedAI
     ScriptedInstance* m_pInstance;
     bool m_bIsRegularMode;
 
+    uint32 m_uiMightyBlowTimer;
+    
     void Reset()
     {
+        m_uiMightyBlowTimer = 10000;
     }
 
+    void Agrro()
+    {
+        DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_MORTAL_STRIKES : SPELL_MORTAL_STRIKES_H);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_COLOSSUS, IN_PROGRESS);
+    }
+
+    void JustDied(Unit* pKiller)
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_COLOSSUS, DONE);
+    }
+    
     void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
+        if (m_uiMightyBlowTimer < uiDiff)
+        {
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_MIGHTY_BLOW);
+            m_uiMightyBlowTimer = 10000;
+        }
+        else
+            m_uiMightyBlowTimer -= uiDiff;
+        
         DoMeleeAttackIfReady();
     }
 };
@@ -66,10 +104,10 @@ CreatureAI* GetAI_boss_colossus(Creature* pCreature)
 
 void AddSC_boss_colossus()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_colossus";
-    newscript->GetAI = &GetAI_boss_colossus;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_colossus";
+    pNewScript->GetAI = &GetAI_boss_colossus;
+    pNewScript->RegisterSelf();
 }
