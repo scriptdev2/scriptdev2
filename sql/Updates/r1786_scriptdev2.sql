@@ -1,4 +1,4 @@
-DELETE FROM gossip_texts WHERE entry=;
+DELETE FROM gossip_texts WHERE entry=-3000000;
 INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 (-3000000,'[PH] SD2 unknown text','GOSSIP_ID_UNKNOWN_TEXT');
 
