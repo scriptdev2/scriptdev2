@@ -498,7 +498,7 @@ bool GOHello_go_scourge_enclosure(Player* pPlayer, GameObject* pGo)
             (*itr)->CastSpell((*itr),SPELL_GYMER_LOCK_EXPLOSION,true);
         }
     }
-    pPlayer->KilledMonsterCredit(NPC_GYMER_LOCK_DUMMY, 0);
+    pPlayer->KilledMonsterCredit(NPC_GYMER_LOCK_DUMMY);
     return true;
 }
 
