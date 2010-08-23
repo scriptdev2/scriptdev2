@@ -30,8 +30,8 @@ EndContentData */
 
 enum
 {
-    SPELL_TRESPASSER_H      = 54028,
-    SPELL_TRESPASSER_A      = 54029,
+    SPELL_TRESPASSER_H      = 54029,
+    SPELL_TRESPASSER_A      = 54028,
 
     AREA_ID_SUNREAVER       = 4616,
     AREA_ID_SILVER_ENCLAVE  = 4740
