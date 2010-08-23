@@ -63,11 +63,11 @@ struct MANGOS_DLL_DECL mob_sladran_summon_targetAI : public ScriptedAI
 {
     mob_sladran_summon_targetAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_pInstance = (instance_gundrak*)pCreature->GetInstanceData();
         Reset();
     }
 
-    ScriptedInstance* m_pInstance;
+    instance_gundrak* m_pInstance;
 
     void Reset() {}
     void MoveInLineOfSight(Unit* pWho) {}

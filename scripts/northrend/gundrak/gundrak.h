@@ -40,8 +40,48 @@ enum
     GO_SNAKE_KEY           = 192564,
     GO_TROLL_KEY           = 192567,
     GO_MAMMOTH_KEY         = 192565,
+    GO_RHINO_KEY           = 192566,
 
-    GO_BRIDGE              = 193188
+    GO_BRIDGE              = 193188,
+    GO_COLLISION           = 192633
+};
+
+class MANGOS_DLL_DECL instance_gundrak : public ScriptedInstance
+{
+    public:
+        instance_gundrak(Map* pMap);
+        ~instance_gundrak() {}
+
+        void Initialize();
+
+        void OnCreatureCreate(Creature* pCreature);
+        void OnObjectCreate(GameObject* pGo);
+
+        void SetData(uint32 uiType, uint32 uiData);
+        uint32 GetData(uint32 uiType);
+        uint64 GetData64(uint32 uiData);
+
+        const char* Save() { return strInstData.c_str(); }
+        void Load(const char* chrIn);
+
+    protected:
+        uint32 m_auiEncounter[MAX_ENCOUNTER];
+        std::string strInstData;
+
+        uint64 m_uiEckDoorGUID;
+        uint64 m_uiEckUnderwaterDoorGUID;
+        uint64 m_uiGaldarahDoorGUID;
+        uint64 m_uiExitDoorLeftGUID;
+        uint64 m_uiExitDoorRightGUID;
+        uint64 m_uiSnakeKeyGUID;
+        uint64 m_uiMammothKeyGUID;
+        uint64 m_uiTrollKeyGUID;
+        uint64 m_uiAltarOfSladranGUID;
+        uint64 m_uiAltarOfMoorabiGUID;
+        uint64 m_uiAltarOfColossusGUID;
+        uint64 m_uiBridgeGUID;
+
+        uint64 m_uiSladranGUID;
 };
 
 #endif
