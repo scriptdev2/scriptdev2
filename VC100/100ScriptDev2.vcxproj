@@ -591,7 +591,6 @@
     <ClCompile Include="..\scripts\outland\coilfang_reservoir\serpent_shrine\boss_leotheras_the_blind.cpp" />
     <ClCompile Include="..\scripts\outland\coilfang_reservoir\serpent_shrine\boss_morogrim_tidewalker.cpp" />
     <ClCompile Include="..\scripts\outland\coilfang_reservoir\serpent_shrine\instance_serpent_shrine.cpp" />
-    <ClCompile Include="..\scripts\outland\coilfang_reservoir\slave_pens\boss_rokmar.cpp" />
     <ClCompile Include="..\scripts\outland\coilfang_reservoir\steam_vault\boss_hydromancer_thespia.cpp" />
     <ClCompile Include="..\scripts\outland\coilfang_reservoir\steam_vault\boss_mekgineer_steamrigger.cpp" />
     <ClCompile Include="..\scripts\outland\coilfang_reservoir\steam_vault\boss_warlord_kalithresh.cpp" />

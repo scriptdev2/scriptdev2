@@ -2393,10 +2393,6 @@
 					<Filter
 						Name="slave_pens"
 						>
-						<File
-							RelativePath="..\scripts\outland\coilfang_reservoir\slave_pens\boss_rokmar.cpp"
-							>
-						</File>
 					</Filter>
 					<Filter
 						Name="steam_vault"
