@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: GO_Scripts
 SD%Complete: 100
-SDComment: Quest support: 4285,4287,4288(crystal pylons), 4296, 5088, 6481, 10990, 10991, 10992. Field_Repair_Bot->Teaches spell 22704. Barov_journal->Teaches spell 26089
+SDComment: Quest support: 4285,4287,4288(crystal pylons), 4296, 5088, 5097, 5098, 6481, 10990, 10991, 10992. Field_Repair_Bot->Teaches spell 22704. Barov_journal->Teaches spell 26089
 SDCategory: Game Objects
 EndScriptData */
 
@@ -38,6 +38,7 @@ go_tablet_of_madness
 go_tablet_of_the_seven
 go_tele_to_dalaran_crystal
 go_tele_to_violet_stand
+go_beacon_torch
 EndContentData */
 
 #include "precompiled.h"
@@ -53,13 +54,20 @@ enum
 
 bool GOHello_go_cat_figurine(Player* pPlayer, GameObject* pGo)
 {
-    pPlayer->CastSpell(pPlayer,SPELL_SUMMON_GHOST_SABER,true);
+    pPlayer->CastSpell(pPlayer, SPELL_SUMMON_GHOST_SABER, true);
     return false;
 }
 
 /*######
 ## go_crystal_pylons (3x)
 ######*/
+
+enum
+{
+    QUEST_THE_NORTHERN_PYLON = 4285,
+    QUEST_THE_EASTERN_PYLON  = 4287,
+    QUEST_THE_WESTERN_PYLON  = 4288
+};
 
 bool GOHello_go_northern_crystal_pylon(Player* pPlayer, GameObject* pGo)
 {
@@ -69,8 +77,8 @@ bool GOHello_go_northern_crystal_pylon(Player* pPlayer, GameObject* pGo)
         pPlayer->SendPreparedQuest(pGo->GetGUID());
     }
 
-    if (pPlayer->GetQuestStatus(4285) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->AreaExploredOrEventHappens(4285);
+    if (pPlayer->GetQuestStatus(QUEST_THE_NORTHERN_PYLON) == QUEST_STATUS_INCOMPLETE)
+        pPlayer->AreaExploredOrEventHappens(QUEST_THE_NORTHERN_PYLON);
 
     return true;
 }
@@ -83,8 +91,8 @@ bool GOHello_go_eastern_crystal_pylon(Player* pPlayer, GameObject* pGo)
         pPlayer->SendPreparedQuest(pGo->GetGUID());
     }
 
-    if (pPlayer->GetQuestStatus(4287) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->AreaExploredOrEventHappens(4287);
+    if (pPlayer->GetQuestStatus(QUEST_THE_EASTERN_PYLON) == QUEST_STATUS_INCOMPLETE)
+        pPlayer->AreaExploredOrEventHappens(QUEST_THE_EASTERN_PYLON);
 
     return true;
 }
@@ -97,8 +105,8 @@ bool GOHello_go_western_crystal_pylon(Player* pPlayer, GameObject* pGo)
         pPlayer->SendPreparedQuest(pGo->GetGUID());
     }
 
-    if (pPlayer->GetQuestStatus(4288) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->AreaExploredOrEventHappens(4288);
+    if (pPlayer->GetQuestStatus(QUEST_THE_WESTERN_PYLON) == QUEST_STATUS_INCOMPLETE)
+        pPlayer->AreaExploredOrEventHappens(QUEST_THE_WESTERN_PYLON);
 
     return true;
 }
@@ -107,11 +115,17 @@ bool GOHello_go_western_crystal_pylon(Player* pPlayer, GameObject* pGo)
 ## go_barov_journal
 ######*/
 
+enum
+{
+    SPELL_TAILOR_FELCLOTH_BAG = 26086,
+    SPELL_LEARN_FELCLOTH_BAG  = 26095
+};
+
 bool GOHello_go_barov_journal(Player* pPlayer, GameObject* pGo)
 {
-    if (pPlayer->HasSkill(SKILL_TAILORING) && pPlayer->GetBaseSkillValue(SKILL_TAILORING) >= 280 && !pPlayer->HasSpell(26086))
+    if (pPlayer->HasSkill(SKILL_TAILORING) && pPlayer->GetBaseSkillValue(SKILL_TAILORING) >= 280 && !pPlayer->HasSpell(SPELL_TAILOR_FELCLOTH_BAG))
     {
-        pPlayer->CastSpell(pPlayer,26095,false);
+        pPlayer->CastSpell(pPlayer, SPELL_LEARN_FELCLOTH_BAG, false);
     }
     return true;
 }
@@ -122,12 +136,19 @@ bool GOHello_go_barov_journal(Player* pPlayer, GameObject* pGo)
 
 enum
 {
-    SPELL_REP_LC        = 39456,
-    SPELL_REP_SHAT      = 39457,
-    SPELL_REP_CE        = 39460,
-    SPELL_REP_CON       = 39474,
-    SPELL_REP_KT        = 39475,
-    SPELL_REP_SPOR      = 39476
+    FACTION_LC     = 1011,
+    FACTION_SHAT   = 935,
+    FACTION_CE     = 942,
+    FACTION_CON    = 933,
+    FACTION_KT     = 989,
+    FACTION_SPOR   = 970,
+
+    SPELL_REP_LC   = 39456,
+    SPELL_REP_SHAT = 39457,
+    SPELL_REP_CE   = 39460,
+    SPELL_REP_CON  = 39474,
+    SPELL_REP_KT   = 39475,
+    SPELL_REP_SPOR = 39476
 };
 
 const uint32 uiNpcPrisonEntry[] =
@@ -138,9 +159,9 @@ const uint32 uiNpcPrisonEntry[] =
 
 bool GOHello_go_ethereum_prison(Player* pPlayer, GameObject* pGo)
 {
-    int iRandom = rand() % (sizeof(uiNpcPrisonEntry) / sizeof(uint32));
+    uint8 uiRandom = urand(0, (sizeof(uiNpcPrisonEntry) / sizeof(uint32)) -1);
 
-    if (Creature* pCreature = pPlayer->SummonCreature(uiNpcPrisonEntry[iRandom],
+    if (Creature* pCreature = pPlayer->SummonCreature(uiNpcPrisonEntry[uiRandom],
         pGo->GetPositionX(), pGo->GetPositionY(), pGo->GetPositionZ(), pGo->GetAngle(pPlayer),
         TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000))
     {
@@ -152,12 +173,12 @@ bool GOHello_go_ethereum_prison(Player* pPlayer, GameObject* pGo)
             {
                 switch(pFaction->faction)
                 {
-                    case 1011: uiSpell = SPELL_REP_LC; break;
-                    case 935: uiSpell = SPELL_REP_SHAT; break;
-                    case 942: uiSpell = SPELL_REP_CE; break;
-                    case 933: uiSpell = SPELL_REP_CON; break;
-                    case 989: uiSpell = SPELL_REP_KT; break;
-                    case 970: uiSpell = SPELL_REP_SPOR; break;
+                    case FACTION_LC:   uiSpell = SPELL_REP_LC;   break;
+                    case FACTION_SHAT: uiSpell = SPELL_REP_SHAT; break;
+                    case FACTION_CE:   uiSpell = SPELL_REP_CE;   break;
+                    case FACTION_CON:  uiSpell = SPELL_REP_CON;  break;
+                    case FACTION_KT:   uiSpell = SPELL_REP_KT;   break;
+                    case FACTION_SPOR: uiSpell = SPELL_REP_SPOR; break;
                 }
 
                 if (uiSpell)
@@ -182,9 +203,9 @@ const uint32 uiNpcStasisEntry[] =
 
 bool GOHello_go_ethereum_stasis(Player* pPlayer, GameObject* pGo)
 {
-    int iRandom = rand() % (sizeof(uiNpcStasisEntry) / sizeof(uint32));
+    uint8 uiRandom = urand(0, (sizeof(uiNpcStasisEntry) / sizeof(uint32)) -1);
 
-    pPlayer->SummonCreature(uiNpcStasisEntry[iRandom],
+    pPlayer->SummonCreature(uiNpcStasisEntry[uiRandom],
         pGo->GetPositionX(), pGo->GetPositionY(), pGo->GetPositionZ(), pGo->GetAngle(pPlayer),
         TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
 
@@ -195,12 +216,17 @@ bool GOHello_go_ethereum_stasis(Player* pPlayer, GameObject* pGo)
 ## go_field_repair_bot_74A
 ######*/
 
+enum
+{
+    SPELL_ENGINEER_FIELD_REPAIR_BOT_74A = 22704,
+    SPELL_LEARN_FIELD_REPAIR_BOT_74A    = 22864
+};
+
 bool GOHello_go_field_repair_bot_74A(Player* pPlayer, GameObject* pGo)
 {
-    if (pPlayer->HasSkill(SKILL_ENGINERING) && pPlayer->GetBaseSkillValue(SKILL_ENGINERING) >= 300 && !pPlayer->HasSpell(22704))
-    {
-        pPlayer->CastSpell(pPlayer,22864,false);
-    }
+    if (pPlayer->HasSkill(SKILL_ENGINERING) && pPlayer->GetBaseSkillValue(SKILL_ENGINERING) >= 300 && !pPlayer->HasSpell(SPELL_ENGINEER_FIELD_REPAIR_BOT_74A))
+        pPlayer->CastSpell(pPlayer, SPELL_LEARN_FIELD_REPAIR_BOT_74A, false);
+
     return true;
 }
 
@@ -210,7 +236,7 @@ bool GOHello_go_field_repair_bot_74A(Player* pPlayer, GameObject* pGo)
 
 enum
 {
-    NPC_STILLBLADE  = 17716,
+    NPC_STILLBLADE = 17716,
 };
 
 bool GOHello_go_gilded_brazier(Player* pPlayer, GameObject* pGO)
@@ -230,8 +256,8 @@ bool GOHello_go_gilded_brazier(Player* pPlayer, GameObject* pGO)
 
 enum
 {
-    SPELL_JUMP_A_TRON   = 33382,
-    NPC_JUMP_A_TRON     = 19041
+    SPELL_JUMP_A_TRON = 33382,
+    NPC_JUMP_A_TRON   = 19041
 };
 
 bool GOHello_go_jump_a_tron(Player* pPlayer, GameObject* pGo)
@@ -246,10 +272,16 @@ bool GOHello_go_jump_a_tron(Player* pPlayer, GameObject* pGo)
 ## go_orb_of_command
 ######*/
 
+enum
+{
+    QUEST_BLACKHANDS_COMMAND = 7761,
+    SPELL_TELEPORT_TO_BWL    = 23460
+};
+
 bool GOHello_go_orb_of_command(Player* pPlayer, GameObject* pGo)
 {
-    if (pPlayer->GetQuestRewardStatus(7761))
-        pPlayer->CastSpell(pPlayer,23460,true);
+    if (pPlayer->GetQuestRewardStatus(QUEST_BLACKHANDS_COMMAND))
+        pPlayer->CastSpell(pPlayer, SPELL_TELEPORT_TO_BWL, true);
 
     return true;
 }
@@ -260,7 +292,7 @@ bool GOHello_go_orb_of_command(Player* pPlayer, GameObject* pGo)
 
 enum
 {
-    NPC_GOGGEROC    = 11920
+    NPC_GOGGEROC = 11920
 };
 
 bool GOHello_go_resonite_cask(Player* pPlayer, GameObject* pGO)
@@ -277,7 +309,7 @@ bool GOHello_go_resonite_cask(Player* pPlayer, GameObject* pGO)
 
 enum
 {
-    NPC_ARIKARA     = 10882,
+    NPC_ARIKARA = 10882,
 };
 
 bool GOHello_go_sacred_fire_of_life(Player* pPlayer, GameObject* pGO)
@@ -294,12 +326,12 @@ bool GOHello_go_sacred_fire_of_life(Player* pPlayer, GameObject* pGO)
 
 enum
 {
-    NPC_HAWK_GUARD      = 22992,
-    NPC_EAGLE_GUARD     = 22993,
-    NPC_FALCON_GUARD    = 22994,
-    GO_SHRINE_HAWK      = 185551,
-    GO_SHRINE_EAGLE     = 185547,
-    GO_SHRINE_FALCON    = 185553
+    NPC_HAWK_GUARD   = 22992,
+    NPC_EAGLE_GUARD  = 22993,
+    NPC_FALCON_GUARD = 22994,
+    GO_SHRINE_HAWK   = 185551,
+    GO_SHRINE_EAGLE  = 185547,
+    GO_SHRINE_FALCON = 185553
 };
 
 bool GOHello_go_shrine_of_the_birds(Player* pPlayer, GameObject* pGo)
@@ -332,17 +364,22 @@ bool GOHello_go_shrine_of_the_birds(Player* pPlayer, GameObject* pGo)
 ## go_tablet_of_madness
 ######*/
 
+enum
+{
+    SPELL_ALCHEMY_GURUBASHI_MOJO_MADNESS = 24266,
+    SPELL_LEARN_GURUBASHI_MOJO_MADNESS   = 24267
+};
+
 bool GOHello_go_tablet_of_madness(Player* pPlayer, GameObject* pGo)
 {
-    if (pPlayer->HasSkill(SKILL_ALCHEMY) && pPlayer->GetSkillValue(SKILL_ALCHEMY) >= 300 && !pPlayer->HasSpell(24266))
-    {
-        pPlayer->CastSpell(pPlayer,24267,false);
-    }
+    if (pPlayer->HasSkill(SKILL_ALCHEMY) && pPlayer->GetSkillValue(SKILL_ALCHEMY) >= 300 && !pPlayer->HasSpell(SPELL_ALCHEMY_GURUBASHI_MOJO_MADNESS))
+        pPlayer->CastSpell(pPlayer, SPELL_LEARN_GURUBASHI_MOJO_MADNESS, false);
+
     return true;
 }
 
 /*######
-## go_tablet_of_the_seven
+## go_tablet_of_the_seven - OBSOLETE
 ######*/
 
 //TODO: use gossip option ("Transcript the Tablet") instead, if Mangos adds support.
@@ -352,7 +389,7 @@ bool GOHello_go_tablet_of_the_seven(Player* pPlayer, GameObject* pGo)
         return true;
 
     if (pPlayer->GetQuestStatus(4296) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->CastSpell(pPlayer,15065,false);
+        pPlayer->CastSpell(pPlayer, 15065, false);
 
     return true;
 }
@@ -363,8 +400,8 @@ bool GOHello_go_tablet_of_the_seven(Player* pPlayer, GameObject* pGo)
 
 enum
 {
-    QUEST_LEARN_LEAVE_RETURN    = 12790,
-    QUEST_TELE_CRYSTAL_FLAG     = 12845
+    QUEST_LEARN_LEAVE_RETURN = 12790,
+    QUEST_TELE_CRYSTAL_FLAG  = 12845
 };
 
 bool GOHello_go_tele_to_dalaran_crystal(Player* pPlayer, GameObject* pGo)
@@ -406,102 +443,139 @@ bool GOHello_go_blood_filled_orb(Player* pPlayer, GameObject* pGo)
     return false;
 }
 
+/*######
+## go_beacon_torch
+######*/
+
+enum
+{
+    QUEST_ALL_ALONG_THE_WATCHTOWERS_ALLIANCE = 5097,
+    QUEST_ALL_ALONG_THE_WATCHTOWERS_HORDE    = 5098,
+    NPC_ANDORHAL_TOWER_1                     = 10902,
+    NPC_ANDORHAL_TOWER_2                     = 10903,
+    NPC_ANDORHAL_TOWER_3                     = 10904,
+    NPC_ANDORHAL_TOWER_4                     = 10905
+};
+
+static const uint32 m_aTowerDummies[] = {NPC_ANDORHAL_TOWER_1, NPC_ANDORHAL_TOWER_2, NPC_ANDORHAL_TOWER_3, NPC_ANDORHAL_TOWER_4};
+
+bool GOHello_go_beacon_torch(Player* pPlayer, GameObject* pGo)
+{
+    if (pPlayer->GetQuestStatus(QUEST_ALL_ALONG_THE_WATCHTOWERS_ALLIANCE) == QUEST_STATUS_INCOMPLETE || pPlayer->GetQuestStatus(QUEST_ALL_ALONG_THE_WATCHTOWERS_HORDE) == QUEST_STATUS_INCOMPLETE)
+    {
+        for (uint8 i = 0; i < 4; ++i)
+        {
+            if (GetClosestCreatureWithEntry(pPlayer, m_aTowerDummies[i], 2*INTERACTION_DISTANCE))
+            {
+                pPlayer->KilledMonsterCredit(m_aTowerDummies[i]);
+                break;
+            }
+        }
+    }
+    return true;
+}
+
 void AddSC_go_scripts()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "go_cat_figurine";
-    newscript->pGOHello =           &GOHello_go_cat_figurine;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "go_cat_figurine";
+    pNewScript->pGOHello =          &GOHello_go_cat_figurine;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "go_northern_crystal_pylon";
-    newscript->pGOHello =           &GOHello_go_northern_crystal_pylon;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "go_northern_crystal_pylon";
+    pNewScript->pGOHello =          &GOHello_go_northern_crystal_pylon;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "go_eastern_crystal_pylon";
-    newscript->pGOHello =           &GOHello_go_eastern_crystal_pylon;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "go_eastern_crystal_pylon";
+    pNewScript->pGOHello =          &GOHello_go_eastern_crystal_pylon;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "go_western_crystal_pylon";
-    newscript->pGOHello =           &GOHello_go_western_crystal_pylon;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "go_western_crystal_pylon";
+    pNewScript->pGOHello =          &GOHello_go_western_crystal_pylon;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "go_barov_journal";
-    newscript->pGOHello =           &GOHello_go_barov_journal;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "go_barov_journal";
+    pNewScript->pGOHello =          &GOHello_go_barov_journal;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "go_ethereum_prison";
-    newscript->pGOHello =           &GOHello_go_ethereum_prison;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "go_ethereum_prison";
+    pNewScript->pGOHello =          &GOHello_go_ethereum_prison;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "go_ethereum_stasis";
-    newscript->pGOHello =           &GOHello_go_ethereum_stasis;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "go_ethereum_stasis";
+    pNewScript->pGOHello =          &GOHello_go_ethereum_stasis;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "go_field_repair_bot_74A";
-    newscript->pGOHello =           &GOHello_go_field_repair_bot_74A;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "go_field_repair_bot_74A";
+    pNewScript->pGOHello =          &GOHello_go_field_repair_bot_74A;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "go_gilded_brazier";
-    newscript->pGOHello =           &GOHello_go_gilded_brazier;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "go_gilded_brazier";
+    pNewScript->pGOHello =          &GOHello_go_gilded_brazier;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "go_jump_a_tron";
-    newscript->pGOHello =           &GOHello_go_jump_a_tron;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "go_jump_a_tron";
+    pNewScript->pGOHello =          &GOHello_go_jump_a_tron;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "go_orb_of_command";
-    newscript->pGOHello =           &GOHello_go_orb_of_command;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "go_orb_of_command";
+    pNewScript->pGOHello =          &GOHello_go_orb_of_command;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "go_resonite_cask";
-    newscript->pGOHello =           &GOHello_go_resonite_cask;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "go_resonite_cask";
+    pNewScript->pGOHello =          &GOHello_go_resonite_cask;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "go_sacred_fire_of_life";
-    newscript->pGOHello =           &GOHello_go_sacred_fire_of_life;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "go_sacred_fire_of_life";
+    pNewScript->pGOHello =          &GOHello_go_sacred_fire_of_life;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "go_shrine_of_the_birds";
-    newscript->pGOHello =           &GOHello_go_shrine_of_the_birds;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "go_shrine_of_the_birds";
+    pNewScript->pGOHello =          &GOHello_go_shrine_of_the_birds;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "go_tablet_of_madness";
-    newscript->pGOHello =           &GOHello_go_tablet_of_madness;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "go_tablet_of_madness";
+    pNewScript->pGOHello =          &GOHello_go_tablet_of_madness;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "go_tablet_of_the_seven";
-    newscript->pGOHello =           &GOHello_go_tablet_of_the_seven;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "go_tablet_of_the_seven";
+    pNewScript->pGOHello =          &GOHello_go_tablet_of_the_seven;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "go_tele_to_dalaran_crystal";
-    newscript->pGOHello =           &GOHello_go_tele_to_dalaran_crystal;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "go_tele_to_dalaran_crystal";
+    pNewScript->pGOHello =          &GOHello_go_tele_to_dalaran_crystal;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "go_tele_to_violet_stand";
-    newscript->pGOHello =           &GOHello_go_tele_to_violet_stand;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "go_tele_to_violet_stand";
+    pNewScript->pGOHello =          &GOHello_go_tele_to_violet_stand;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "go_blood_filled_orb";
-    newscript->pGOHello =           &GOHello_go_blood_filled_orb;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "go_blood_filled_orb";
+    pNewScript->pGOHello =          &GOHello_go_blood_filled_orb;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "go_beacon_torch";
+    pNewScript->pGOHello =          &GOHello_go_beacon_torch;
+    pNewScript->RegisterSelf();
 }
