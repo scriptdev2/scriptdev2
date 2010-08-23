@@ -124,7 +124,7 @@ enum
     GOSSIP_SENDER_SEC_STABLEMASTER = 10
 };
 
-extern uint32 GetSkillLevel(Player* pPlayer,uint32 skill);
+extern uint32 GetSkillLevel(Player* pPlayer, uint32 uiSkill);
 
 // Defined fuctions to use with player.
 
@@ -180,9 +180,6 @@ extern uint32 GetSkillLevel(Player* pPlayer,uint32 skill);
 
 // Ressurect's the player if is dead.
 #define SEND_SPRESURRECT()         GetSession()->SendSpiritResurrect()
-
-// Get the player's honor rank.
-#define GET_HONORRANK()            GetHonorRank()
 // -----------------------------------
 
 // defined fuctions to use with Creature

@@ -54,10 +54,7 @@ void ScriptedAI::MoveInLineOfSight(Unit* pWho)
 
 void ScriptedAI::AttackStart(Unit* pWho)
 {
-    if (!pWho)
-        return;
-
-    if (m_creature->Attack(pWho, true))
+    if (pWho && m_creature->Attack(pWho, true))
     {
         m_creature->AddThreat(pWho);
         m_creature->SetInCombatWith(pWho);
@@ -70,10 +67,8 @@ void ScriptedAI::AttackStart(Unit* pWho)
 
 void ScriptedAI::EnterCombat(Unit* pEnemy)
 {
-    if (!pEnemy)
-        return;
-
-    Aggro(pEnemy);
+    if (pEnemy)
+        Aggro(pEnemy);
 }
 
 void ScriptedAI::Aggro(Unit* pEnemy)
@@ -199,7 +194,7 @@ SpellEntry const* ScriptedAI::SelectSpell(Unit* pTarget, int32 uiSchool, int32 u
 
     //Using the extended script system we first create a list of viable spells
     SpellEntry const* apSpell[4];
-    memset(apSpell, 0, sizeof(SpellEntry*)*4);
+    memset(apSpell, 0, sizeof(SpellEntry)*4);
 
     uint32 uiSpellCount = 0;
 
@@ -207,7 +202,7 @@ SpellEntry const* ScriptedAI::SelectSpell(Unit* pTarget, int32 uiSchool, int32 u
     SpellRangeEntry const* pTempRange;
 
     //Check if each spell is viable(set it to null if not)
-    for (uint32 i = 0; i < 4; ++i)
+    for (uint8 i = 0; i < 4; ++i)
     {
         pTempSpell = GetSpellStore()->LookupEntry(m_creature->m_spells[i]);
 
@@ -270,7 +265,7 @@ SpellEntry const* ScriptedAI::SelectSpell(Unit* pTarget, int32 uiSchool, int32 u
     if (!uiSpellCount)
         return NULL;
 
-    return apSpell[rand()%uiSpellCount];
+    return apSpell[urand(0, uiSpellCount -1)];
 }
 
 bool ScriptedAI::CanCast(Unit* pTarget, SpellEntry const* pSpellEntry, bool bTriggered)
@@ -306,7 +301,7 @@ void FillSpellSummary()
 
     SpellEntry const* pTempSpell;
 
-    for (uint32 i=0; i < GetSpellStore()->GetNumRows(); ++i)
+    for (uint32 i = 0; i < GetSpellStore()->GetNumRows(); ++i)
     {
         SpellSummary[i].Effects = 0;
         SpellSummary[i].Targets = 0;
@@ -316,7 +311,7 @@ void FillSpellSummary()
         if (!pTempSpell)
             continue;
 
-        for (int j=0; j<3; ++j)
+        for (uint8 j = 0; j < 3; ++j)
         {
             //Spell targets self
             if (pTempSpell->EffectImplicitTargetA[j] == TARGET_SELF)
@@ -405,11 +400,12 @@ void ScriptedAI::DoResetThreat()
 
 void ScriptedAI::DoTeleportPlayer(Unit* pUnit, float fX, float fY, float fZ, float fO)
 {
-    if (!pUnit || pUnit->GetTypeId() != TYPEID_PLAYER)
-    {
-        if (pUnit)
-            error_log("SD2: Creature " UI64FMTD " (Entry: %u) Tried to teleport non-player unit (Type: %u GUID: " UI64FMTD ") to x: %f y:%f z: %f o: %f. Aborted.", m_creature->GetGUID(), m_creature->GetEntry(), pUnit->GetTypeId(), pUnit->GetGUID(), fX, fY, fZ, fO);
+    if (!pUnit)
+        return;
 
+    if (pUnit->GetTypeId() != TYPEID_PLAYER)
+    {
+        error_log("SD2: Creature " UI64FMTD " (Entry: %u) Tried to teleport non-player unit (Type: %u GUID: " UI64FMTD ") to x: %f y:%f z: %f o: %f. Aborted.", m_creature->GetGUID(), m_creature->GetEntry(), pUnit->GetTypeId(), pUnit->GetGUID(), fX, fY, fZ, fO);
         return;
     }
 
@@ -543,10 +539,7 @@ bool ScriptedAI::EnterEvadeIfOutOfCombatArea(const uint32 uiDiff)
 
 void Scripted_NoMovementAI::AttackStart(Unit* pWho)
 {
-    if (!pWho)
-        return;
-
-    if (m_creature->Attack(pWho, true))
+    if (pWho && m_creature->Attack(pWho, true))
     {
         m_creature->AddThreat(pWho);
         m_creature->SetInCombatWith(pWho);

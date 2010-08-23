@@ -21,50 +21,49 @@ enum CastTarget
 
 struct MANGOS_DLL_DECL SimpleAI : public ScriptedAI
 {
-    SimpleAI(Creature* pCreature);// : ScriptedAI(pCreature);
+    SimpleAI(Creature* pCreature);
 
     void Reset();
 
-    void Aggro(Unit *who);
+    void Aggro(Unit* pWho);
 
-    void KilledUnit(Unit *victim);
+    void KilledUnit(Unit* pVictim);
 
-    void DamageTaken(Unit *killer, uint32 &damage);
+    void DamageTaken(Unit* pDoneBy, uint32& uiDamage);
 
-    void UpdateAI(const uint32 diff);
+    void UpdateAI(const uint32 uiDiff);
 
-public:
+    public:
+        int32      m_aiAggroTextId[3];
+        uint32     m_auiAggroSound[3];
 
-    int32 Aggro_TextId[3];
-    uint32 Aggro_Sound[3];
+        int32      m_aiDeathTextId[3];
+        uint32     m_auiDeathSound[3];
+        uint32     m_uiDeathSpell;
+        CastTarget m_DeathTargetType;
 
-    int32 Death_TextId[3];
-    uint32 Death_Sound[3];
-    uint32 Death_Spell;
-    uint32 Death_Target_Type;
+        int32      m_aiKillTextId[3];
+        uint32     m_auiKillSound[3];
+        uint32     m_uiKillSpell;
+        CastTarget m_KillTargetType;
 
-    int32 Kill_TextId[3];
-    uint32 Kill_Sound[3];
-    uint32 Kill_Spell;
-    uint32 Kill_Target_Type;
+        struct SimpleAI_Spell
+        {
+            uint32     uiSpellId;                               // Spell ID to cast
+            int32      iFirstCast;                              // Delay for first cast
+            uint32     uiCooldown;                              // Cooldown between casts
+            uint32     uiCooldownRandomAddition;                // Random addition to cooldown (in range from 0 - CooldownRandomAddition)
+            CastTarget CastTargetType;                          // Target type (note that certain spells may ignore this)
+            bool       bInterruptPreviousCast;                  // Interrupt a previous cast if this spell needs to be cast
+            bool       bEnabled;                                // Spell enabled or disabled (default: false)
 
-    struct SimpleAI_Spell
-    {
-        uint32 Spell_Id;                //Spell ID to cast
-        int32 First_Cast;               //Delay for first cast
-        uint32 Cooldown;                //Cooldown between casts
-        uint32 CooldownRandomAddition;  //Random addition to cooldown (in range from 0 - CooldownRandomAddition)
-        uint32 Cast_Target_Type;        //Target type (note that certain spells may ignore this)
-        bool InterruptPreviousCast;     //Interrupt a previous cast if this spell needs to be cast
-        bool Enabled;                   //Spell enabled or disabled (default: false)
+            //3 texts to many?
+            int32  aiTextId[3];
+            uint32 auiTextSound[3];
+        } m_Spell[10];
 
-        //3 texts to many?
-        int32 TextId[3];
-        uint32 Text_Sound[3];
-    }Spell[10];
-
-protected:
-    uint32 Spell_Timer[10];
+    protected:
+        uint32 m_auiSpellTimer[10];
 };
 
 #endif

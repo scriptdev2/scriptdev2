@@ -27,32 +27,20 @@ EndScriptData */
 SimpleAI::SimpleAI(Creature* pCreature) : ScriptedAI(pCreature)
 {
     //Clear all data
-    Aggro_TextId[0] = 0;
-    Aggro_TextId[1] = 0;
-    Aggro_TextId[2] = 0;
-    Aggro_Sound[0] = 0;
-    Aggro_Sound[1] = 0;
-    Aggro_Sound[2] = 0;
+    memset(&m_aiAggroTextId, 0, sizeof(m_aiAggroTextId));
+    memset(&m_auiAggroSound, 0, sizeof(m_auiAggroSound));
 
-    Death_TextId[0] = 0;
-    Death_TextId[1] = 0;
-    Death_TextId[2] = 0;
-    Death_Sound[0] = 0;
-    Death_Sound[1] = 0;
-    Death_Sound[2] = 0;
-    Death_Spell = 0;
-    Death_Target_Type = 0;
+    memset(&m_aiDeathTextId, 0, sizeof(m_aiDeathTextId));
+    memset(&m_auiDeathSound, 0, sizeof(m_auiDeathSound));
+    m_uiDeathSpell = 0;
+    m_DeathTargetType = CAST_SELF;
 
-    Kill_TextId[0] = 0;
-    Kill_TextId[1] = 0;
-    Kill_TextId[2] = 0;
-    Kill_Sound[0] = 0;
-    Kill_Sound[1] = 0;
-    Kill_Sound[2] = 0;
-    Kill_Spell = 0;
-    Kill_Target_Type = 0;
+    memset(&m_aiKillTextId, 0, sizeof(m_aiKillTextId));
+    memset(&m_auiKillSound, 0, sizeof(m_auiKillSound));
+    m_uiKillSpell = 0;
+    m_KillTargetType = CAST_SELF;
 
-    memset(Spell,0,sizeof(Spell));
+    memset(&m_Spell, 0, sizeof(m_Spell));
 
     EnterEvadeMode();
 }
@@ -61,215 +49,190 @@ void SimpleAI::Reset()
 {
 }
 
-void SimpleAI::Aggro(Unit *who)
+void SimpleAI::Aggro(Unit* pWho)
 {
-            //Reset cast timers
-            if (Spell[0].First_Cast >= 0)
-                Spell_Timer[0] = Spell[0].First_Cast;
-            else Spell_Timer[0] = 1000;
-            if (Spell[1].First_Cast >= 0)
-                Spell_Timer[1] = Spell[1].First_Cast;
-            else Spell_Timer[1] = 1000;
-            if (Spell[2].First_Cast >= 0)
-                Spell_Timer[2] = Spell[2].First_Cast;
-            else Spell_Timer[2] = 1000;
-            if (Spell[3].First_Cast >= 0)
-                Spell_Timer[3] = Spell[3].First_Cast;
-            else Spell_Timer[3] = 1000;
-            if (Spell[4].First_Cast >= 0)
-                Spell_Timer[4] = Spell[4].First_Cast;
-            else Spell_Timer[4] = 1000;
-            if (Spell[5].First_Cast >= 0)
-                Spell_Timer[5] = Spell[5].First_Cast;
-            else Spell_Timer[5] = 1000;
-            if (Spell[6].First_Cast >= 0)
-                Spell_Timer[6] = Spell[6].First_Cast;
-            else Spell_Timer[6] = 1000;
-            if (Spell[7].First_Cast >= 0)
-                Spell_Timer[7] = Spell[7].First_Cast;
-            else Spell_Timer[7] = 1000;
-            if (Spell[8].First_Cast >= 0)
-                Spell_Timer[8] = Spell[8].First_Cast;
-            else Spell_Timer[8] = 1000;
-            if (Spell[9].First_Cast >= 0)
-                Spell_Timer[9] = Spell[9].First_Cast;
-            else Spell_Timer[9] = 1000;
+    //Reset cast timers
+    for(uint8 i = 0; i < 10; ++i)
+        m_auiSpellTimer[i] = (m_Spell[i].iFirstCast >= 0) ? m_Spell[i].iFirstCast : 1000;
 
-            uint32 random_text = urand(0, 2);
+    uint8 uiRandomText = urand(0, 2);
 
-            //Random text
-            if (Aggro_TextId[random_text])
-                DoScriptText(Aggro_TextId[random_text], m_creature, who);
-
-            //Random sound
-            if (Aggro_Sound[random_text])
-                DoPlaySoundToSet(m_creature, Aggro_Sound[random_text]);
-}
-
-void SimpleAI::KilledUnit(Unit *victim)
-{
-    uint32 random_text = urand(0, 2);
-
-    //Random yell
-    if (Kill_TextId[random_text])
-        DoScriptText(Kill_TextId[random_text], m_creature, victim);
+    //Random text
+    if (m_aiAggroTextId[uiRandomText])
+        DoScriptText(m_aiAggroTextId[uiRandomText], m_creature, pWho);
 
     //Random sound
-    if (Kill_Sound[random_text])
-        DoPlaySoundToSet(m_creature, Kill_Sound[random_text]);
+    if (m_auiAggroSound[uiRandomText])
+        DoPlaySoundToSet(m_creature, m_auiAggroSound[uiRandomText]);
+}
 
-    if (!Kill_Spell)
+void SimpleAI::KilledUnit(Unit* pVictim)
+{
+    uint32 uiRandomText = urand(0, 2);
+
+    //Random yell
+    if (m_aiKillTextId[uiRandomText])
+        DoScriptText(m_aiKillTextId[uiRandomText], m_creature, pVictim);
+
+    //Random sound
+    if (m_auiKillSound[uiRandomText])
+        DoPlaySoundToSet(m_creature, m_auiKillSound[uiRandomText]);
+
+    if (!m_uiKillSpell)
         return;
 
-    Unit* target = NULL;
+    Unit* pTarget = NULL;
 
-    switch (Kill_Target_Type)
+    switch (m_KillTargetType)
     {
-    case CAST_SELF:
-        target = m_creature;
-        break;
-    case CAST_HOSTILE_TARGET:
-        target = m_creature->getVictim();
-        break;
-    case CAST_HOSTILE_SECOND_AGGRO:
-        target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO,1);
-        break;
-    case CAST_HOSTILE_LAST_AGGRO:
-        target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_BOTTOMAGGRO,0);
-        break;
-    case CAST_HOSTILE_RANDOM:
-        target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
-        break;
-    case CAST_KILLEDUNIT_VICTIM:
-        target = victim;
-        break;
+        case CAST_SELF:
+            pTarget = m_creature;
+            break;
+        case CAST_HOSTILE_TARGET:
+            pTarget = m_creature->getVictim();
+            break;
+        case CAST_HOSTILE_SECOND_AGGRO:
+            pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO, 1);
+            break;
+        case CAST_HOSTILE_LAST_AGGRO:
+            pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_BOTTOMAGGRO, 0);
+            break;
+        case CAST_HOSTILE_RANDOM:
+            pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0);
+            break;
+        case CAST_KILLEDUNIT_VICTIM:
+            pTarget = pVictim;
+            break;
     }
 
     //Target is ok, cast a spell on it
-    if (target)
-        DoCastSpellIfCan(target, Kill_Spell);
+    if (pTarget)
+        DoCastSpellIfCan(pTarget, m_uiKillSpell);
 }
 
-void SimpleAI::DamageTaken(Unit *killer, uint32 &damage)
+void SimpleAI::DamageTaken(Unit* pDoneBy, uint32& uiDamage)
 {
     //Return if damage taken won't kill us
-    if (m_creature->GetHealth() > damage)
+    if (m_creature->GetHealth() > uiDamage)
         return;
 
-    uint32 random_text = urand(0, 2);
+    uint8 uiRandomText = urand(0, 2);
 
-    //Random yell
-    if (Death_TextId[random_text])
-        DoScriptText(Death_TextId[random_text], m_creature, killer);
+    // Random yell
+    if (m_aiDeathTextId[uiRandomText])
+        DoScriptText(m_aiDeathTextId[uiRandomText], m_creature, pDoneBy);
 
-    //Random sound
-    if (Death_Sound[random_text])
-        DoPlaySoundToSet(m_creature, Death_Sound[random_text]);
+    // Random sound
+    if (m_auiDeathSound[uiRandomText])
+        DoPlaySoundToSet(m_creature, m_auiDeathSound[uiRandomText]);
 
-    if (!Death_Spell)
+    if (!m_uiDeathSpell)
         return;
 
-    Unit* target = NULL;
+    Unit* pTarget = NULL;
 
-    switch (Death_Target_Type)
+    switch (m_DeathTargetType)
     {
-    case CAST_SELF:
-        target = m_creature;
-        break;
-    case CAST_HOSTILE_TARGET:
-        target = m_creature->getVictim();
-        break;
-    case CAST_HOSTILE_SECOND_AGGRO:
-        target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO,1);
-        break;
-    case CAST_HOSTILE_LAST_AGGRO:
-        target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_BOTTOMAGGRO,0);
-        break;
-    case CAST_HOSTILE_RANDOM:
-        target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
-        break;
-    case CAST_JUSTDIED_KILLER:
-        target = killer;
-        break;
+        case CAST_SELF:
+            pTarget = m_creature;
+            break;
+        case CAST_HOSTILE_TARGET:
+            pTarget = m_creature->getVictim();
+            break;
+        case CAST_HOSTILE_SECOND_AGGRO:
+            pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO, 1);
+            break;
+        case CAST_HOSTILE_LAST_AGGRO:
+            pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_BOTTOMAGGRO, 0);
+            break;
+        case CAST_HOSTILE_RANDOM:
+            pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0);
+            break;
+        case CAST_JUSTDIED_KILLER:
+            pTarget = pDoneBy;
+            break;
     }
 
-    //Target is ok, cast a spell on it
-    if (target)
-        DoCastSpellIfCan(target, Death_Spell);
+    // Target is ok, cast a spell on it
+    if (pTarget)
+        DoCastSpellIfCan(pTarget, m_uiDeathSpell);
 }
 
-void SimpleAI::UpdateAI(const uint32 diff)
+void SimpleAI::UpdateAI(const uint32 uiDiff)
 {
     //Return since we have no target
     if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
         return;
 
     //Spells
-    for (uint32 i = 0; i < 10; ++i)
+    for (uint8 i = 0; i < 10; ++i)
     {
         //Spell not valid
-        if (!Spell[i].Enabled || !Spell[i].Spell_Id)
+        if (!m_Spell[i].bEnabled || !m_Spell[i].uiSpellId)
             continue;
 
-        if (Spell_Timer[i] < diff)
+        if (m_auiSpellTimer[i] < uiDiff)
         {
             //Check if this is a percentage based
-            if (Spell[i].First_Cast < 0 && Spell[i].First_Cast > -100 && m_creature->GetHealthPercent() > -Spell[i].First_Cast)
+            if (m_Spell[i].iFirstCast < 0 && m_Spell[i].iFirstCast > -100 && m_creature->GetHealthPercent() > -m_Spell[i].iFirstCast)
                 continue;
 
             //Check Current spell
-            if (!(Spell[i].InterruptPreviousCast && m_creature->IsNonMeleeSpellCasted(false)))
+            if (!(m_Spell[i].bInterruptPreviousCast && m_creature->IsNonMeleeSpellCasted(false)))
             {
-                Unit* target = NULL;
+                Unit* pTarget = NULL;
 
-                switch (Spell[i].Cast_Target_Type)
+                switch (m_Spell[i].CastTargetType)
                 {
                 case CAST_SELF:
-                    target = m_creature;
+                    pTarget = m_creature;
                     break;
                 case CAST_HOSTILE_TARGET:
-                    target = m_creature->getVictim();
+                    pTarget = m_creature->getVictim();
                     break;
                 case CAST_HOSTILE_SECOND_AGGRO:
-                    target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO,1);
+                    pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO, 1);
                     break;
                 case CAST_HOSTILE_LAST_AGGRO:
-                    target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_BOTTOMAGGRO,0);
+                    pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_BOTTOMAGGRO, 0);
                     break;
                 case CAST_HOSTILE_RANDOM:
-                    target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
+                    pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0);
                     break;
                 }
 
                 //Target is ok, cast a spell on it and then do our random yell
-                if (target)
+                if (pTarget)
                 {
                     if (m_creature->IsNonMeleeSpellCasted(false))
                         m_creature->InterruptNonMeleeSpells(false);
 
-                    DoCastSpellIfCan(target, Spell[i].Spell_Id);
+                    DoCastSpellIfCan(pTarget, m_Spell[i].uiSpellId);
 
                     //Yell and sound use the same number so that you can make
                     //the creature yell with the correct sound effect attached
-                    uint32 random_text = urand(0, 2);
+                    uint32 uiRandomText = urand(0, 2);
 
                     //Random yell
-                    if (Spell[i].TextId[random_text])
-                        DoScriptText(Spell[i].TextId[random_text], m_creature, target);
+                    if (m_Spell[i].aiTextId[uiRandomText])
+                        DoScriptText(m_Spell[i].aiTextId[uiRandomText], m_creature, pTarget);
 
                     //Random sound
-                    if (Spell[i].Text_Sound[random_text])
-                        DoPlaySoundToSet(m_creature, Spell[i].Text_Sound[random_text]);
+                    if (m_Spell[i].auiTextSound[uiRandomText])
+                        DoPlaySoundToSet(m_creature, m_Spell[i].auiTextSound[uiRandomText]);
                 }
 
             }
 
             //Spell will cast agian when the cooldown is up
-            if (Spell[i].CooldownRandomAddition)
-                Spell_Timer[i] = Spell[i].Cooldown + (rand() % Spell[i].CooldownRandomAddition);
-            else Spell_Timer[i] = Spell[i].Cooldown;
+            if (m_Spell[i].uiCooldownRandomAddition)
+                m_auiSpellTimer[i] = m_Spell[i].uiCooldown + (rand() % m_Spell[i].uiCooldownRandomAddition);
+            else
+                m_auiSpellTimer[i] = m_Spell[i].uiCooldown;
 
-        }else Spell_Timer[i] -= diff;
+        }
+        else
+            m_auiSpellTimer[i] -= uiDiff;
 
     }
 

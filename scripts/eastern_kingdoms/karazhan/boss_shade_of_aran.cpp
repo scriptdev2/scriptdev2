@@ -550,11 +550,11 @@ CreatureAI* GetAI_shadow_of_aran(Creature* pCreature)
     outstring_log("SD2: Convert simpleAI script for Creature Entry %u to ACID", pCreature->GetEntry());
     SimpleAI* pAI = new SimpleAI(pCreature);
 
-    pAI->Spell[0].Enabled = true;
-    pAI->Spell[0].Spell_Id = SPELL_SHADOW_PYRO;
-    pAI->Spell[0].Cooldown = 5000;
-    pAI->Spell[0].First_Cast = 1000;
-    pAI->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET;
+    pAI->m_Spell[0].bEnabled       = true;
+    pAI->m_Spell[0].uiSpellId      = SPELL_SHADOW_PYRO;
+    pAI->m_Spell[0].uiCooldown     = 5000;
+    pAI->m_Spell[0].iFirstCast     = 1000;
+    pAI->m_Spell[0].CastTargetType = CAST_HOSTILE_TARGET;
 
     pAI->EnterEvadeMode();
 

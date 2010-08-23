@@ -28,26 +28,29 @@ EndContentData */
 #include "precompiled.h"
 #include "simple_ai.h"
 
-#define SPELL_CONE_OF_FIRE          19630
-#define SPELL_BITE                  19771
+enum
+{
+    SPELL_CONE_OF_FIRE          = 19630,
+    SPELL_BITE                  = 19771,
 
-//Random Debuff (each hound has only one of these)
-#define SPELL_GROUND_STOMP          19364
-#define SPELL_ANCIENT_DREAD         19365
-#define SPELL_CAUTERIZING_FLAMES    19366
-#define SPELL_WITHERING_HEAT        19367
-#define SPELL_ANCIENT_DESPAIR       19369
-#define SPELL_ANCIENT_HYSTERIA      19372
+    //Random Debuff (each hound has only one of these)
+    SPELL_GROUND_STOMP          = 19364,
+    SPELL_ANCIENT_DREAD         = 19365,
+    SPELL_CAUTERIZING_FLAMES    = 19366,
+    SPELL_WITHERING_HEAT        = 19367,
+    SPELL_ANCIENT_DESPAIR       = 19369,
+    SPELL_ANCIENT_HYSTERIA      = 19372
+};
 
 CreatureAI* GetAI_mob_ancient_core_hound(Creature* pCreature)
 {
-    SimpleAI *ai = new SimpleAI(pCreature);
+    SimpleAI* pAI = new SimpleAI(pCreature);
 
-    ai->Spell[0].Enabled          = true;
-    ai->Spell[0].Spell_Id         = SPELL_CONE_OF_FIRE;
-    ai->Spell[0].Cooldown         = 7000;
-    ai->Spell[0].First_Cast       = 10000;
-    ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET;
+    pAI->m_Spell[0].bEnabled       = true;
+    pAI->m_Spell[0].uiSpellId      = SPELL_CONE_OF_FIRE;
+    pAI->m_Spell[0].uiCooldown     = 7000;
+    pAI->m_Spell[0].iFirstCast     = 10000;
+    pAI->m_Spell[0].CastTargetType = CAST_HOSTILE_TARGET;
 
     uint32 RandDebuff = 0;
     switch(urand(0, 5))
@@ -59,30 +62,29 @@ CreatureAI* GetAI_mob_ancient_core_hound(Creature* pCreature)
         case 4 : RandDebuff = SPELL_ANCIENT_DESPAIR;    break;
         case 5 : RandDebuff = SPELL_ANCIENT_HYSTERIA;   break;
     }
+    pAI->m_Spell[1].bEnabled       = true;
+    pAI->m_Spell[1].uiSpellId      = RandDebuff;
+    pAI->m_Spell[1].uiCooldown     = 24000;
+    pAI->m_Spell[1].iFirstCast     = 15000;
+    pAI->m_Spell[1].CastTargetType = CAST_HOSTILE_TARGET;
 
-    ai->Spell[1].Enabled          = true;
-    ai->Spell[1].Spell_Id         = RandDebuff;
-    ai->Spell[1].Cooldown         = 24000;
-    ai->Spell[1].First_Cast       = 15000;
-    ai->Spell[1].Cast_Target_Type = CAST_HOSTILE_TARGET;
+    pAI->m_Spell[2].bEnabled       = true;
+    pAI->m_Spell[2].uiSpellId      = SPELL_BITE;
+    pAI->m_Spell[2].uiCooldown     = 6000;
+    pAI->m_Spell[2].iFirstCast     = 4000;
+    pAI->m_Spell[2].CastTargetType = CAST_HOSTILE_TARGET;
 
-    ai->Spell[2].Enabled          = true;
-    ai->Spell[2].Spell_Id         = SPELL_BITE;
-    ai->Spell[2].Cooldown         = 6000;
-    ai->Spell[2].First_Cast       = 4000;
-    ai->Spell[2].Cast_Target_Type = CAST_HOSTILE_TARGET;
+    pAI->EnterEvadeMode();
 
-    ai->EnterEvadeMode();
-
-    return ai;
+    return pAI;
 }
 
 void AddSC_molten_core()
 {
-    Script *newscript;
+    Script* pNewscript;
 
-    newscript = new Script;
-    newscript->Name = "mob_ancient_core_hound";
-    newscript->GetAI = &GetAI_mob_ancient_core_hound;
-    newscript->RegisterSelf();
+    pNewscript = new Script;
+    pNewscript->Name = "mob_ancient_core_hound";
+    pNewscript->GetAI = &GetAI_mob_ancient_core_hound;
+    pNewscript->RegisterSelf();
 }
