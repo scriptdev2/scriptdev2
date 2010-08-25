@@ -76,7 +76,7 @@ UPDATE gameobject_template SET ScriptName='go_tele_to_dalaran_crystal' WHERE ent
 UPDATE gameobject_template SET ScriptName='go_tele_to_violet_stand' WHERE entry=191229;
 UPDATE gameobject_template SET ScriptName='go_blood_filled_orb' WHERE entry=182024;
 UPDATE gameobject_template SET ScriptName='go_beacon_torch' WHERE entry=176093;
-UPDATE gameobject_template SET ScriptName='go_scourge_enclosure' WHERE entry=191548
+UPDATE gameobject_template SET ScriptName='go_scourge_enclosure' WHERE entry=191548;
 
 /* GUARD */
 UPDATE creature_template SET ScriptName='guard_azuremyst' WHERE entry=18038;
