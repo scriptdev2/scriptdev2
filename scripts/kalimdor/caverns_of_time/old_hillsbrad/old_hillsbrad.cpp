@@ -250,6 +250,7 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
     {
         m_pInstance = (instance_old_hillsbrad*)pCreature->GetInstanceData();
         m_bHadMount = false;
+        pCreature->SetActiveObjectState(true);              // required for proper relocation
         Reset();
     }
 
@@ -276,7 +277,10 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
             SetEquipmentSlots(true);
             m_creature->SetDisplayId(MODEL_THRALL_UNEQUIPPED);
         }
+    }
 
+    void EnterEvadeMode()
+    {
         if (HasEscortState(STATE_ESCORT_ESCORTING))
         {
             switch(urand(0, 2))
@@ -286,6 +290,8 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
                 case 2: DoScriptText(SAY_TH_LEAVE_COMBAT3, m_creature); break;
             }
         }
+
+        npc_escortAI::EnterEvadeMode();
     }
 
     void WaypointReached(uint32 uiPoint)
@@ -453,6 +459,9 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
                 SetEscortPaused(true);
                 break;
             }
+            case 107:
+                m_creature->SetActiveObjectState(false);
+                break;
         }
     }
 
@@ -538,19 +547,55 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
 
     void JustDied(Unit* pKiller)
     {
-        if (m_pInstance)
-            m_pInstance->SetData(TYPE_THRALL_EVENT, FAIL);
-
         DoScriptText(urand(0, 1) ? SAY_TH_RANDOM_DIE1 : SAY_TH_RANDOM_DIE2, m_creature);
+    }
+
+    void CorpseRemoved(uint32 &uiRespawnDelay)
+    {
+        uiRespawnDelay = 0;
+
+        // if we're done, just set some high so he never really respawn
+        if (m_pInstance && m_pInstance->GetData(TYPE_THRALL_EVENT) == DONE)
+            uiRespawnDelay = 4 * HOUR;
     }
 
     void JustRespawned()
     {
-        // handled in instance script
-        if (m_pInstance)
-            m_pInstance->SetData(TYPE_THRALL_EVENT, FAIL);
+        if (!m_pInstance)
+            return;
 
-        npc_escortAI::JustRespawned();
+        Reset();
+
+        if (m_pInstance->GetData(TYPE_THRALL_EVENT) == IN_PROGRESS)
+        {
+            SetEscortPaused(true);
+
+            m_bHadMount = false;
+            DoUnmount();
+
+            m_creature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER);
+
+            // check current states before fail and set spesific for the part
+            if (m_pInstance->GetData(TYPE_THRALL_PART1) == IN_PROGRESS)
+            {
+                SetCurrentWaypoint(1);                      // basement
+
+                SetEquipmentSlots(true);
+                m_creature->SetDisplayId(MODEL_THRALL_UNEQUIPPED);
+
+                m_creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+            }
+            else if (m_pInstance->GetData(TYPE_THRALL_PART2) == IN_PROGRESS)
+            {
+                SetCurrentWaypoint(61);                     // barn
+                m_creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+            }
+            else if (m_pInstance->GetData(TYPE_THRALL_PART3) == IN_PROGRESS || m_pInstance->GetData(TYPE_THRALL_PART4) == IN_PROGRESS)
+                SetCurrentWaypoint(96);                     // inn
+
+            // fail, and relocation handled in instance script
+            m_pInstance->SetData(TYPE_THRALL_EVENT, FAIL);
+        }
     }
 
     void UpdateEscortAI(const uint32 uiDiff)

@@ -83,6 +83,38 @@ void instance_old_hillsbrad::OnCreatureDeath(Creature* pCreature)
     }
 }
 
+void instance_old_hillsbrad::HandleThrallRelocation()
+{
+    if (Creature* pThrall = instance->GetCreature(m_uiThrallGUID))
+    {
+        debug_log("SD2: Instance Old Hillsbrad: Thrall relocation");
+
+        if (m_auiEncounter[TYPE_THRALL_PART4] == IN_PROGRESS)
+        {
+            // boss failed, reloc to inn
+            pThrall->GetMap()->CreatureRelocation(pThrall, 2660.57f, 659.173f, 61.9370f, 0.0f);
+            m_auiEncounter[TYPE_THRALL_PART4] = NOT_STARTED;
+        }
+        else if (m_auiEncounter[TYPE_THRALL_PART3] == IN_PROGRESS)
+        {
+            // barn to inn failed, reloc to inn
+            pThrall->GetMap()->CreatureRelocation(pThrall, 2660.57f, 659.173f, 61.9370f, 0.0f);
+            m_auiEncounter[TYPE_THRALL_PART3] = DONE;
+        }
+        else if (m_auiEncounter[TYPE_THRALL_PART2] == IN_PROGRESS)
+        {
+            // keep to barn failed, reloc to barn
+            pThrall->GetMap()->CreatureRelocation(pThrall, 2486.91f, 626.356f, 58.0761f, 0.0f);
+            m_auiEncounter[TYPE_THRALL_PART2] = DONE;
+        }
+        else if (m_auiEncounter[TYPE_THRALL_PART1] == IN_PROGRESS)
+        {
+            // didn't reach very far, back to the basement using default
+            m_auiEncounter[TYPE_THRALL_PART1] = NOT_STARTED;
+        }
+    }
+}
+
 void instance_old_hillsbrad::SetData(uint32 uiType, uint32 uiData)
 {
     switch(uiType)
@@ -99,7 +131,7 @@ void instance_old_hillsbrad::SetData(uint32 uiType, uint32 uiData)
 
                 debug_log("SD2: Instance Old Hillsbrad: go_barrel_old_hillsbrad count %u", m_uiBarrelCount);
 
-                m_auiEncounter[0] = IN_PROGRESS;
+                m_auiEncounter[TYPE_BARREL_DIVERSION] = IN_PROGRESS;
 
                 if (m_uiBarrelCount == 5)
                 {
@@ -110,7 +142,7 @@ void instance_old_hillsbrad::SetData(uint32 uiType, uint32 uiData)
                     else
                         debug_log("SD2: Instance Old Hillsbrad: SetData (Type: %u Data %u) cannot find any pPlayer.", uiType, uiData);
 
-                    m_auiEncounter[0] = DONE;
+                    m_auiEncounter[TYPE_BARREL_DIVERSION] = DONE;
                 }
             }
             break;
@@ -118,7 +150,7 @@ void instance_old_hillsbrad::SetData(uint32 uiType, uint32 uiData)
         case TYPE_THRALL_EVENT:
         {
             // nothing to do if already done and thrall respawn
-            if (m_auiEncounter[1] == DONE)
+            if (m_auiEncounter[TYPE_THRALL_EVENT] == DONE)
                 return;
 
             if (uiData == FAIL)
@@ -126,45 +158,40 @@ void instance_old_hillsbrad::SetData(uint32 uiType, uint32 uiData)
                 if (m_uiThrallEventCount <= 20)
                 {
                     ++m_uiThrallEventCount;
-                    m_auiEncounter[1] = NOT_STARTED;
+                    debug_log("SD2: Instance Old Hillsbrad: Thrall event failed %u times.", m_uiThrallEventCount);
 
-                    debug_log("SD2: Instance Old Hillsbrad: Thrall event failed %u times. Resetting all sub-events.", m_uiThrallEventCount);
-
-                    m_auiEncounter[2] = NOT_STARTED;
-                    m_auiEncounter[3] = NOT_STARTED;
-                    m_auiEncounter[4] = NOT_STARTED;
-                    m_auiEncounter[5] = NOT_STARTED;
+                    HandleThrallRelocation();
                 }
                 else if (m_uiThrallEventCount > 20)
                 {
-                    m_auiEncounter[1] = uiData;
-                    m_auiEncounter[2] = uiData;
-                    m_auiEncounter[3] = uiData;
-                    m_auiEncounter[4] = uiData;
-                    m_auiEncounter[5] = uiData;
+                    m_auiEncounter[TYPE_THRALL_EVENT] = uiData;
+                    m_auiEncounter[TYPE_THRALL_PART1] = uiData;
+                    m_auiEncounter[TYPE_THRALL_PART2] = uiData;
+                    m_auiEncounter[TYPE_THRALL_PART3] = uiData;
+                    m_auiEncounter[TYPE_THRALL_PART4] = uiData;
                     debug_log("SD2: Instance Old Hillsbrad: Thrall event failed %u times. Reset instance required.", m_uiThrallEventCount);
                 }
             }
             else
-                m_auiEncounter[1] = uiData;
+                m_auiEncounter[TYPE_THRALL_EVENT] = uiData;
 
             debug_log("SD2: Instance Old Hillsbrad: Thrall escort event adjusted to data %u.",uiData);
             break;
         }
         case TYPE_THRALL_PART1:
-            m_auiEncounter[2] = uiData;
+            m_auiEncounter[TYPE_THRALL_PART1] = uiData;
             debug_log("SD2: Instance Old Hillsbrad: Thrall event part I adjusted to data %u.",uiData);
             break;
         case TYPE_THRALL_PART2:
-            m_auiEncounter[3] = uiData;
+            m_auiEncounter[TYPE_THRALL_PART2] = uiData;
             debug_log("SD2: Instance Old Hillsbrad: Thrall event part II adjusted to data %u.",uiData);
             break;
         case TYPE_THRALL_PART3:
-            m_auiEncounter[4] = uiData;
+            m_auiEncounter[TYPE_THRALL_PART3] = uiData;
             debug_log("SD2: Instance Old Hillsbrad: Thrall event part III adjusted to data %u.",uiData);
             break;
         case TYPE_THRALL_PART4:
-            m_auiEncounter[5] = uiData;
+            m_auiEncounter[TYPE_THRALL_PART4] = uiData;
             debug_log("SD2: Instance Old Hillsbrad: Thrall event part IV adjusted to data %u.",uiData);
             break;
     }
@@ -175,17 +202,17 @@ uint32 instance_old_hillsbrad::GetData(uint32 uiData)
     switch(uiData)
     {
         case TYPE_BARREL_DIVERSION:
-            return m_auiEncounter[0];
+            return m_auiEncounter[TYPE_BARREL_DIVERSION];
         case TYPE_THRALL_EVENT:
-            return m_auiEncounter[1];
+            return m_auiEncounter[TYPE_THRALL_EVENT];
         case TYPE_THRALL_PART1:
-            return m_auiEncounter[2];
+            return m_auiEncounter[TYPE_THRALL_PART1];
         case TYPE_THRALL_PART2:
-            return m_auiEncounter[3];
+            return m_auiEncounter[TYPE_THRALL_PART2];
         case TYPE_THRALL_PART3:
-            return m_auiEncounter[4];
+            return m_auiEncounter[TYPE_THRALL_PART3];
         case TYPE_THRALL_PART4:
-            return m_auiEncounter[5];
+            return m_auiEncounter[TYPE_THRALL_PART4];
         default:
             return 0;
     }

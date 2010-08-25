@@ -9,12 +9,12 @@ enum
 {
     MAX_ENCOUNTER                   = 6,
 
-    TYPE_BARREL_DIVERSION           = 1,
-    TYPE_THRALL_EVENT               = 2,
-    TYPE_THRALL_PART1               = 3,
-    TYPE_THRALL_PART2               = 4,
-    TYPE_THRALL_PART3               = 5,
-    TYPE_THRALL_PART4               = 6,
+    TYPE_BARREL_DIVERSION           = 0,
+    TYPE_THRALL_EVENT               = 1,
+    TYPE_THRALL_PART1               = 2,                    // prison to keep
+    TYPE_THRALL_PART2               = 3,                    // keep to barn
+    TYPE_THRALL_PART3               = 4,                    // barn to inn
+    TYPE_THRALL_PART4               = 5,                    // inn to boss
 
     NPC_THRALL                      = 17876,
     NPC_TARETHA                     = 18887,
@@ -46,6 +46,8 @@ class MANGOS_DLL_DECL instance_old_hillsbrad : public ScriptedInstance
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
         uint64 GetData64(uint32 uiData);
+
+        void HandleThrallRelocation();
 
         void UpdateLodgeQuestCredit();
 
