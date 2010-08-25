@@ -75,6 +75,9 @@ struct MANGOS_DLL_DECL npc_escortAI : public ScriptedAI
 
         bool HasEscortState(uint32 uiEscortState) { return (m_uiEscortState & uiEscortState); }
 
+        // update current point
+        void SetCurrentWaypoint(uint32 uiPointId);
+
     protected:
         Player* GetPlayerForEscort() { return m_creature->GetMap()->GetPlayer(m_uiPlayerGUID); }
         virtual void JustStartedEscort() {}
