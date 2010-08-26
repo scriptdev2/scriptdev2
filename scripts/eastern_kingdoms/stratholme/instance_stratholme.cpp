@@ -311,8 +311,10 @@ void instance_stratholme::Load(const char* chrIn)
         >> m_auiEncounter[4] >> m_auiEncounter[5];
 
     for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+    {
         if (m_auiEncounter[i] == IN_PROGRESS)
             m_auiEncounter[i] = NOT_STARTED;
+    }
 
     // Special Treatment for the Ziggurat-Bosses, as otherwise the event couldn't reload
     if (m_auiEncounter[1] == DONE)
@@ -345,8 +347,9 @@ uint32 instance_stratholme::GetData(uint32 uiType)
             return m_auiEncounter[4];
         case TYPE_BARON:
             return m_auiEncounter[5];
+        default:
+            return 0;
     }
-    return 0;
 }
 
 uint64 instance_stratholme::GetData64(uint32 uiData)
@@ -357,8 +360,9 @@ uint64 instance_stratholme::GetData64(uint32 uiData)
             return m_uiBaronGUID;
         case NPC_YSIDA_TRIGGER:
             return m_uiYsidaTriggerGUID;
+        default:
+            return 0;
     }
-    return 0;
 }
 
 static bool sortByHight(Creature* pFirst, Creature* pSecond)
@@ -501,6 +505,7 @@ InstanceData* GetInstanceData_instance_stratholme(Map* pMap)
 void AddSC_instance_stratholme()
 {
     Script* pNewScript;
+
     pNewScript = new Script;
     pNewScript->Name = "instance_stratholme";
     pNewScript->GetInstanceData = &GetInstanceData_instance_stratholme;

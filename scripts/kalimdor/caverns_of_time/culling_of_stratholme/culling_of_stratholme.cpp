@@ -79,7 +79,7 @@ bool GossipHello_npc_chromie(Player *pPlayer, Creature *pCreature)
                 break;
         }
     }
-       return true;
+    return true;
 }
 
 bool GossipSelect_npc_chromie(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 uiAction)
@@ -104,9 +104,11 @@ bool GossipSelect_npc_chromie(Player* pPlayer, Creature* pCreature, uint32 sende
                         if (Item* pItem = pPlayer->StoreNewItemInInventorySlot(ITEM_ARCANE_DISRUPTOR, 1))
                         {
                             pPlayer->SendNewItem(pItem, 1, true, false);
-                            if (instance_culling_of_stratholme* m_pInstance = (instance_culling_of_stratholme*)pCreature->GetInstanceData())
-                                if (m_pInstance->GetData(TYPE_GRAIN_EVENT) == NOT_STARTED)
-                                    m_pInstance->SetData(TYPE_GRAIN_EVENT, SPECIAL);
+                            if (instance_culling_of_stratholme* pInstance = (instance_culling_of_stratholme*)pCreature->GetInstanceData())
+                            {
+                                if (pInstance->GetData(TYPE_GRAIN_EVENT) == NOT_STARTED)
+                                    pInstance->SetData(TYPE_GRAIN_EVENT, SPECIAL);
+                            }
                         }
                     }
                     break;
@@ -125,14 +127,16 @@ bool GossipSelect_npc_chromie(Player* pPlayer, Creature* pCreature, uint32 sende
                     break;
                 case GOSSIP_ACTION_INFO_DEF+3:
                     pPlayer->SEND_GOSSIP_MENU(GOSSIP_MENU_ENTRANCE_4, pCreature->GetGUID());
-                    if (instance_culling_of_stratholme* m_pInstance = (instance_culling_of_stratholme*)pCreature->GetInstanceData())
-                        if (m_pInstance->GetData(TYPE_ARTHAS_INTRO_EVENT) == NOT_STARTED)
-                            m_pInstance->DoSpawnArthasIfNeeded();
+                    if (instance_culling_of_stratholme* pInstance = (instance_culling_of_stratholme*)pCreature->GetInstanceData())
+                    {
+                        if (pInstance->GetData(TYPE_ARTHAS_INTRO_EVENT) == NOT_STARTED)
+                            pInstance->DoSpawnArthasIfNeeded();
+                    }
                     break;
             }
             break;
     }
-       return true;
+    return true;
 }
 
 bool QuestAccept_npc_chromie(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
@@ -140,14 +144,18 @@ bool QuestAccept_npc_chromie(Player* pPlayer, Creature* pCreature, const Quest* 
     switch (pQuest->GetQuestId())
     {
         case QUEST_DISPELLING_ILLUSIONS:
-            if (instance_culling_of_stratholme* m_pInstance = (instance_culling_of_stratholme*)pCreature->GetInstanceData())
-                if (m_pInstance->GetData(TYPE_GRAIN_EVENT) == NOT_STARTED)
-                    m_pInstance->SetData(TYPE_GRAIN_EVENT, SPECIAL);
+            if (instance_culling_of_stratholme* pInstance = (instance_culling_of_stratholme*)pCreature->GetInstanceData())
+            {
+                if (pInstance->GetData(TYPE_GRAIN_EVENT) == NOT_STARTED)
+                    pInstance->SetData(TYPE_GRAIN_EVENT, SPECIAL);
+            }
             break;
         case QUEST_A_ROYAL_ESCORT:
-            if (instance_culling_of_stratholme* m_pInstance = (instance_culling_of_stratholme*)pCreature->GetInstanceData())
-                if (m_pInstance->GetData(TYPE_ARTHAS_INTRO_EVENT) == NOT_STARTED)
-                    m_pInstance->DoSpawnArthasIfNeeded();
+            if (instance_culling_of_stratholme* pInstance = (instance_culling_of_stratholme*)pCreature->GetInstanceData())
+            {
+                if (pInstance->GetData(TYPE_ARTHAS_INTRO_EVENT) == NOT_STARTED)
+                    pInstance->DoSpawnArthasIfNeeded();
+            }
             break;
     }
     return true;
@@ -212,17 +220,17 @@ bool EffectAuraDummy_spell_aura_dummy_npc_crates_dummy(const Aura* pAura, bool b
 
 void AddSC_culling_of_stratholme()
 {
-    Script* newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "npc_chromie";
-    newscript->pGossipHello = &GossipHello_npc_chromie;
-    newscript->pGossipSelect = &GossipSelect_npc_chromie;
-    newscript->pQuestAccept = &QuestAccept_npc_chromie;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_chromie";
+    pNewScript->pGossipHello = &GossipHello_npc_chromie;
+    pNewScript->pGossipSelect = &GossipSelect_npc_chromie;
+    pNewScript->pQuestAccept = &QuestAccept_npc_chromie;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "spell_dummy_npc_crates_bunny";
-    newscript->pEffectAuraDummy = &EffectAuraDummy_spell_aura_dummy_npc_crates_dummy;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "spell_dummy_npc_crates_bunny";
+    pNewScript->pEffectAuraDummy = &EffectAuraDummy_spell_aura_dummy_npc_crates_dummy;
+    pNewScript->RegisterSelf();
 }

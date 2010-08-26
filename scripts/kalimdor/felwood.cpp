@@ -222,6 +222,7 @@ bool GossipSelect_npcs_riverbreeze_and_silversky(Player* pPlayer, Creature* pCre
 /*######
 ## npc_niby_the_almighty (summons el pollo grande)
 ######*/
+
 enum
 {
     QUEST_KROSHIUS     = 7603,
@@ -306,6 +307,7 @@ struct MANGOS_DLL_DECL npc_niby_the_almightyAI : public ScriptedAI
                         m_creature->GetMotionMaster()->MoveTargetedHome();
                         m_creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER);
                         m_bEventStarted = false;
+                        break;
                 }
                 ++m_uiSpeech;
             }
@@ -416,8 +418,10 @@ struct MANGOS_DLL_DECL npc_kroshiusAI : public ScriptedAI
                         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
                         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE);
                         if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID))
+                        {
                             if (m_creature->IsWithinDistInMap(pPlayer, 30.0f))
                                 AttackStart(pPlayer);
+                        }
                         break;
                 }
                 m_uiPhase++;
@@ -453,9 +457,13 @@ bool ProcessEventId_npc_kroshius(uint32 uiEventId, Object* pSource, Object* pTar
     if (uiEventId == EVENT_KROSHIUS_REVIVE)
     {
         if (pSource->GetTypeId() == TYPEID_PLAYER)
+        {
             if (Creature* pKroshius = GetClosestCreatureWithEntry((Player*)pSource, NPC_KROSHIUS, 20.0f))
+            {
                 if (npc_kroshiusAI* pKroshiusAI = dynamic_cast<npc_kroshiusAI*>(pKroshius->AI()))
                     pKroshiusAI->DoRevive((Player*)pSource);
+            }
+        }
 
         return true;
     }
@@ -464,35 +472,35 @@ bool ProcessEventId_npc_kroshius(uint32 uiEventId, Object* pSource, Object* pTar
 
 void AddSC_felwood()
 {
-    Script* newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "npc_kitten";
-    newscript->GetAI = &GetAI_npc_kitten;
-    newscript->pEffectDummyCreature = &EffectDummyCreature_npc_kitten;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_kitten";
+    pNewScript->GetAI = &GetAI_npc_kitten;
+    pNewScript->pEffectDummyCreature = &EffectDummyCreature_npc_kitten;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_corrupt_saber";
-    newscript->pGossipHello = &GossipHello_npc_corrupt_saber;
-    newscript->pGossipSelect = &GossipSelect_npc_corrupt_saber;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_corrupt_saber";
+    pNewScript->pGossipHello = &GossipHello_npc_corrupt_saber;
+    pNewScript->pGossipSelect = &GossipSelect_npc_corrupt_saber;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npcs_riverbreeze_and_silversky";
-    newscript->pGossipHello = &GossipHello_npcs_riverbreeze_and_silversky;
-    newscript->pGossipSelect = &GossipSelect_npcs_riverbreeze_and_silversky;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npcs_riverbreeze_and_silversky";
+    pNewScript->pGossipHello = &GossipHello_npcs_riverbreeze_and_silversky;
+    pNewScript->pGossipSelect = &GossipSelect_npcs_riverbreeze_and_silversky;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_niby_the_almighty";
-    newscript->GetAI = &GetAI_npc_niby_the_almighty;
-    newscript->pChooseReward = &ChooseReward_npc_niby_the_almighty;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_niby_the_almighty";
+    pNewScript->GetAI = &GetAI_npc_niby_the_almighty;
+    pNewScript->pChooseReward = &ChooseReward_npc_niby_the_almighty;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_kroshius";
-    newscript->GetAI = &GetAI_npc_kroshius;
-    newscript->pProcessEventId = &ProcessEventId_npc_kroshius;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_kroshius";
+    pNewScript->GetAI = &GetAI_npc_kroshius;
+    pNewScript->pProcessEventId = &ProcessEventId_npc_kroshius;
+    pNewScript->RegisterSelf();
 }

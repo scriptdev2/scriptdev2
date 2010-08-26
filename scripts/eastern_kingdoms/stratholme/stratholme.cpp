@@ -58,10 +58,14 @@ bool GOHello_go_gauntlet_gate(Player* pPlayer, GameObject* pGo)
                 pGroupie->GetMap() == pGo->GetMap())
                 pGroupie->CastSpell(pGroupie,SPELL_BARON_ULTIMATUM,true);
         }
-    } else if (pPlayer->GetQuestStatus(QUEST_DEAD_MAN_PLEA) == QUEST_STATUS_INCOMPLETE &&
-                !pPlayer->HasAura(SPELL_BARON_ULTIMATUM, EFFECT_INDEX_0) &&
-                pPlayer->GetMap() == pGo->GetMap())
-                pPlayer->CastSpell(pPlayer,SPELL_BARON_ULTIMATUM,true);
+    }
+    else
+    {
+        if (pPlayer->GetQuestStatus(QUEST_DEAD_MAN_PLEA) == QUEST_STATUS_INCOMPLETE &&
+            !pPlayer->HasAura(SPELL_BARON_ULTIMATUM, EFFECT_INDEX_0) &&
+            pPlayer->GetMap() == pGo->GetMap())
+            pPlayer->CastSpell(pPlayer, SPELL_BARON_ULTIMATUM, true);
+    }
 
     pInstance->SetData(TYPE_BARON_RUN,IN_PROGRESS);
     return false;
@@ -154,7 +158,9 @@ struct MANGOS_DLL_DECL mob_restless_soulAI : public ScriptedAI
             {
                 if (Player* pPlayer = m_creature->GetMap()->GetPlayer(Tagger))
                     pPlayer->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-            }else Die_Timer -= diff;
+            }
+            else
+                Die_Timer -= diff;
         }
     }
 };
@@ -217,7 +223,9 @@ struct MANGOS_DLL_DECL mobs_spectral_ghostly_citizenAI : public ScriptedAI
             if (Die_Timer < diff)
             {
                 m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-            }else Die_Timer -= diff;
+            }
+            else
+                Die_Timer -= diff;
         }
 
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
@@ -259,25 +267,25 @@ CreatureAI* GetAI_mobs_spectral_ghostly_citizen(Creature* pCreature)
 
 void AddSC_stratholme()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "go_gauntlet_gate";
-    newscript->pGOHello = &GOHello_go_gauntlet_gate;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "go_gauntlet_gate";
+    pNewScript->pGOHello = &GOHello_go_gauntlet_gate;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_freed_soul";
-    newscript->GetAI = &GetAI_mob_freed_soul;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_freed_soul";
+    pNewScript->GetAI = &GetAI_mob_freed_soul;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_restless_soul";
-    newscript->GetAI = &GetAI_mob_restless_soul;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_restless_soul";
+    pNewScript->GetAI = &GetAI_mob_restless_soul;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mobs_spectral_ghostly_citizen";
-    newscript->GetAI = &GetAI_mobs_spectral_ghostly_citizen;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mobs_spectral_ghostly_citizen";
+    pNewScript->GetAI = &GetAI_mobs_spectral_ghostly_citizen;
+    pNewScript->RegisterSelf();
 }

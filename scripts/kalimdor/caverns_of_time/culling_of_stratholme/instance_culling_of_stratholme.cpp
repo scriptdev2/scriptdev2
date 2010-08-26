@@ -149,6 +149,7 @@ void instance_culling_of_stratholme::OnObjectCreate(GameObject* pGo)
         case GO_DARK_RUNED_CHEST:
         case GO_DARK_RUNED_CHEST_H:
             m_uiDarkRunedChestGUID = pGo->GetGUID();
+            break;
     }
 }
 
@@ -313,9 +314,13 @@ void instance_culling_of_stratholme::Load(const char* chrIn)
         >> m_auiEncounter[4] >> m_auiEncounter[5] >> m_auiEncounter[6] >> m_auiEncounter[7] >> m_auiEncounter[8];
 
     for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+    {
         if (i != TYPE_INFINITE_CORRUPTER_TIME)
+        {
             if (m_auiEncounter[i] == IN_PROGRESS)
                 m_auiEncounter[i] = NOT_STARTED;
+        }
+    }
 
     // If already started counting down time, the event is "in progress"
     if (m_auiEncounter[TYPE_INFINITE_CORRUPTER_TIME])
@@ -364,8 +369,8 @@ uint32 instance_culling_of_stratholme::GetData(uint32 uiType)
         case TYPE_MALGANIS_EVENT:          return m_auiEncounter[6];
         case TYPE_INFINITE_CORRUPTER_TIME: return m_auiEncounter[7];
         case TYPE_INFINITE_CORRUPTER:      return m_auiEncounter[8];
+        default: return 0;
     }
-    return 0;
 }
 
 uint64 instance_culling_of_stratholme::GetData64(uint32 uiData)
@@ -395,8 +400,8 @@ uint64 instance_culling_of_stratholme::GetData64(uint32 uiData)
         case NPC_BARTLEBY_BATTSON:         return m_uiBattsonGUID;
         case NPC_PATRICIA_O_REILLY:        return m_uiOReillyGUID;
         case GO_DOOR_BOOKCASE:             return m_uiDoorBookcaseGUID;
+        default: return 0;
     }
-    return 0;
 }
 
 uint8 instance_culling_of_stratholme::GetInstancePosition()
@@ -463,8 +468,10 @@ void instance_culling_of_stratholme::DoSpawnArthasIfNeeded()
 
     uint8 uiPosition = GetInstancePosition();
     if (uiPosition && uiPosition <= MAX_ARTHAS_SPAWN_POS)
+    {
         if (Player* pPlayer = GetPlayerInMap())
             pPlayer->SummonCreature(NPC_ARTHAS, m_aArthasSpawnLocs[uiPosition-1].m_fX, m_aArthasSpawnLocs[uiPosition-1].m_fY, m_aArthasSpawnLocs[uiPosition-1].m_fZ, m_aArthasSpawnLocs[uiPosition-1].m_fO, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
+    }
 }
 
 // Atm here only new Chromies are spawned - despawning depends on Mangos featuring such a thing
@@ -511,6 +518,7 @@ void instance_culling_of_stratholme::Update(uint32 uiDiff)
 
     // Small Timer, to remove Grain-Crate WorldState and Spawn Second Chromie
     if (m_uiRemoveCrateStateTimer)
+    {
         if (m_uiRemoveCrateStateTimer <= uiDiff)
         {
             DoUpdateWorldState(WORLD_STATE_CRATES, 0);
@@ -519,9 +527,11 @@ void instance_culling_of_stratholme::Update(uint32 uiDiff)
         }
         else
             m_uiRemoveCrateStateTimer -= uiDiff;
+    }
 
     // Respawn Arthas after some time
     if (m_uiArthasRespawnTimer)
+    {
         if (m_uiArthasRespawnTimer <= uiDiff)
         {
             DoSpawnArthasIfNeeded();
@@ -529,6 +539,7 @@ void instance_culling_of_stratholme::Update(uint32 uiDiff)
         }
         else
             m_uiArthasRespawnTimer -= uiDiff;
+    }
 }
 
 InstanceData* GetInstanceData_instance_culling_of_stratholme(Map* pMap)
