@@ -236,11 +236,13 @@ struct MANGOS_DLL_DECL boss_volkhanAI : public ScriptedAI
         if (m_creature->GetHealthPercent() <= 20.0f && !m_bHasShattered)
         {
             // should he stomp even if he has no brittle golem to shatter? <-yes!
-            DoScriptText(urand(0, 1) ? SAY_STOMP_1 : SAY_STOMP_2, m_creature);
-            DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_SHATTERING_STOMP_N : SPELL_SHATTERING_STOMP_H);
-            DoScriptText(EMOTE_SHATTER, m_creature);
-            m_bCanShatterGolem = true;
-            m_bHasShattered = true;
+            if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_SHATTERING_STOMP_N : SPELL_SHATTERING_STOMP_H) == CAST_OK)
+            {
+                DoScriptText(urand(0, 1) ? SAY_STOMP_1 : SAY_STOMP_2, m_creature);
+                DoScriptText(EMOTE_SHATTER, m_creature);
+                m_bCanShatterGolem = true;
+                m_bHasShattered = true;
+            }
         }
 
         // Shatter Golems 3 seconds after Shattering Stomp
