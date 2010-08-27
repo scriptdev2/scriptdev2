@@ -1431,9 +1431,6 @@
     <ClCompile Include="..\scripts\outland\coilfang_reservoir\serpent_shrine\instance_serpent_shrine.cpp">
       <Filter>scripts\outland\coilfang_reservoir\serpent_shrine</Filter>
     </ClCompile>
-    <ClCompile Include="..\scripts\outland\coilfang_reservoir\slave_pens\boss_rokmar.cpp">
-      <Filter>scripts\outland\coilfang_reservoir\slave_pens</Filter>
-    </ClCompile>
     <ClCompile Include="..\scripts\outland\coilfang_reservoir\steam_vault\boss_hydromancer_thespia.cpp">
       <Filter>scripts\outland\coilfang_reservoir\steam_vault</Filter>
     </ClCompile>
@@ -1808,5 +1805,8 @@
     </ClInclude>
     <ClInclude Include="..\config.h" />
     <ClInclude Include="..\ScriptMgr.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\revision.h" />
   </ItemGroup>
 </Project>
