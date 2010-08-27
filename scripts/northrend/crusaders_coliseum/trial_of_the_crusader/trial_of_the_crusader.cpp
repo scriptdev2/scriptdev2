@@ -24,21 +24,21 @@ EndScriptData */
 #include "precompiled.h"
 #include "trial_of_the_crusader.h"
 
-#define GOSSIP_START_EVENT1 "Yes! We are ready to face the challenges ahead."
-
 enum
 {
-    NPC_GORMOK   = 34796,
-    NPC_JARAXXUS = 34780
+    NPC_GORMOK                  = 34796,
+    NPC_JARAXXUS                = 34780,
+
+    GOSSIP_ITEM_START_EVENT1    = -3649000
 };
 
 /*######
-## npc_crusader_anouncer
+## npc_barrett_ramsey
 ######*/
 
-struct MANGOS_DLL_DECL npc_crusader_anouncerAI : public ScriptedAI
+struct MANGOS_DLL_DECL npc_barrett_ramseyAI : public ScriptedAI
 {
-    npc_crusader_anouncerAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+    npc_barrett_ramseyAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     ScriptedInstance* m_pInstance;
 
@@ -50,38 +50,38 @@ struct MANGOS_DLL_DECL npc_crusader_anouncerAI : public ScriptedAI
     }
 };
 
-bool GossipHello_npc_crusader_anouncer(Player* pPlayer, Creature* pCreature)
+bool GossipHello_npc_barrett_ramsey(Player* pPlayer, Creature* pCreature)
 {
-    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_START_EVENT1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+    pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_START_EVENT1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
     pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_crusader_anouncer(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+bool GossipSelect_npc_barrett_ramsey(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
     {
         pPlayer->CLOSE_GOSSIP_MENU();
-        if (npc_crusader_anouncerAI* pCrusaderAnnouncerAI = dynamic_cast<npc_crusader_anouncerAI*>(pCreature->AI()))
-            pCrusaderAnnouncerAI->StartEvent(pPlayer);
+        if (npc_barrett_ramseyAI* pBarrettAI = dynamic_cast<npc_barrett_ramseyAI*>(pCreature->AI()))
+            pBarrettAI->StartEvent(pPlayer);
     }
 
     return true;
 }
 
-CreatureAI* GetAI_npc_crusader_anouncer(Creature* pCreature)
+CreatureAI* GetAI_npc_barrett_ramsey(Creature* pCreature)
 {
-    return new npc_crusader_anouncerAI(pCreature);
+    return new npc_barrett_ramseyAI(pCreature);
 }
 
 void AddSC_trial_of_the_crusader()
 {
-    Script* newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "npc_crusader_anouncer";
-    newscript->GetAI = &GetAI_npc_crusader_anouncer;
-    newscript->pGossipHello = &GossipHello_npc_crusader_anouncer;
-    newscript->pGossipSelect = &GossipSelect_npc_crusader_anouncer;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_barrett_ramsey";
+    pNewScript->GetAI = &GetAI_npc_barrett_ramsey;
+    pNewScript->pGossipHello = &GossipHello_npc_barrett_ramsey;
+    pNewScript->pGossipSelect = &GossipSelect_npc_barrett_ramsey;
+    pNewScript->RegisterSelf();
 }

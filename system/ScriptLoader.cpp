@@ -269,11 +269,12 @@ extern void AddSC_boss_anubarak();                          //azjol-nerub
 extern void AddSC_boss_hadronox();
 extern void AddSC_boss_krikthir();
 extern void AddSC_instance_azjol_nerub();
-extern void AddSC_northrend_beasts();                       //Crusaders' Coliseum, trial_of_the_crusader
+extern void AddSC_boss_anubarak_trial();                    //trial_of_the_crusader
 extern void AddSC_boss_jaraxxus();
-extern void AddSC_boss_anubarak_trial();
-extern void AddSC_twin_valkyr();
 extern void AddSC_instance_trial_of_the_crusader();
+extern void AddSC_northrend_beasts();
+extern void AddSC_trial_of_the_crusader();
+extern void AddSC_twin_valkyr();
 extern void AddSC_boss_novos();                             //draktharon_keep
 extern void AddSC_boss_tharonja();
 extern void AddSC_boss_trollgore();
@@ -680,11 +681,12 @@ void AddScripts()
     AddSC_boss_hadronox();
     AddSC_boss_krikthir();
     AddSC_instance_azjol_nerub();
-    AddSC_northrend_beasts();                               //Crusaders' Coliseum, trial_of_the_crusader
+    AddSC_boss_anubarak_trial();                            //trial_of_the_crusader
     AddSC_boss_jaraxxus();
-    AddSC_boss_anubarak_trial();
-    AddSC_twin_valkyr();
     AddSC_instance_trial_of_the_crusader();
+    AddSC_northrend_beasts();
+    AddSC_trial_of_the_crusader();
+    AddSC_twin_valkyr();
     AddSC_boss_novos();                                     //draktharon_keep
     AddSC_boss_tharonja();
     AddSC_boss_trollgore();

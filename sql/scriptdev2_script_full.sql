@@ -2800,6 +2800,10 @@ INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 (-3608000,'Activate the crystals when we get in trouble, right?','sinclari GOSSIP_ITEM_INTRO'),
 (-3608001,'Get your people to safety, we\'ll keep the Blue Dragonflight\'s forces at bay.','sinclari GOSSIP_ITEM_START');
 
+-- -3 649 000 TRIAL OF CRUSADER
+INSERT INTO gossip_texts (entry,content_default,comment) VALUES
+(-3649000,'Yes. We are prepared for the challenges ahead of us.','barrett GOSSIP_ITEM_START_EVENT1');
+
 --
 -- Below just for beautiful view in table, run at own desire
 --
