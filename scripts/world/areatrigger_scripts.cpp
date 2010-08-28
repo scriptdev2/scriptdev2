@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Areatrigger_Scripts
 SD%Complete: 100
-SDComment: Quest support: 6681, 11686, 10589/10604, 12741, 13315/13351
+SDComment: Quest support: 6681, 11686, 10589/10604, 12741, 12548, 13315/13351
 SDCategory: Areatrigger
 EndScriptData */
 
@@ -184,7 +184,35 @@ bool AreaTrigger_at_warsong_farms(Player* pPlayer, AreaTriggerEntry const* pAt)
         }
     }
     return true;
- }
+}
+
+/*######
+## Quest 12548
+######*/
+
+enum
+{
+    SPELL_SHOLOZAR_TO_UNGORO_TELEPORT = 52056,
+    SPELL_UNGORO_TO_SHOLOZAR_TELEPORT = 52057,
+    AT_WAYGATE_SHOLOZAR               = 5046,
+    AT_WAYGATE_UNGORO                 = 5047,
+    QUEST_THE_MARKERS_OVERLOOK        = 12613,
+    QUEST_THE_MARKERS_PERCH           = 12559
+};
+
+bool AreaTrigger_at_waygate(Player* pPlayer, AreaTriggerEntry const* pAt)
+{
+    if (!pPlayer->isDead() && pPlayer->GetQuestStatus(QUEST_THE_MARKERS_OVERLOOK) == QUEST_STATUS_COMPLETE && pPlayer->GetQuestStatus(QUEST_THE_MARKERS_PERCH) == QUEST_STATUS_COMPLETE)
+    {
+        switch(pAt->id)
+        {
+            case AT_WAYGATE_SHOLOZAR : pPlayer->CastSpell(pPlayer, SPELL_SHOLOZAR_TO_UNGORO_TELEPORT, false); break;
+            case AT_WAYGATE_UNGORO: pPlayer->CastSpell(pPlayer, SPELL_UNGORO_TO_SHOLOZAR_TELEPORT, false); break;
+        }
+    }
+
+    return false;
+}
 
 /*######
 ## Quest 12741
@@ -206,40 +234,45 @@ bool AreaTrigger_at_stormwright_shelf(Player* pPlayer, AreaTriggerEntry const* p
 
 void AddSC_areatrigger_scripts()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "at_childrens_week_spot";
-    newscript->pAreaTrigger = &AreaTrigger_at_childrens_week_spot;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "at_childrens_week_spot";
+    pNewScript->pAreaTrigger = &AreaTrigger_at_childrens_week_spot;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "at_aldurthar_gate";
-    newscript->pAreaTrigger = &AreaTrigger_at_aldurthar_gate;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "at_aldurthar_gate";
+    pNewScript->pAreaTrigger = &AreaTrigger_at_aldurthar_gate;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "at_coilfang_waterfall";
-    newscript->pAreaTrigger = &AreaTrigger_at_coilfang_waterfall;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "at_coilfang_waterfall";
+    pNewScript->pAreaTrigger = &AreaTrigger_at_coilfang_waterfall;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "at_legion_teleporter";
-    newscript->pAreaTrigger = &AreaTrigger_at_legion_teleporter;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "at_legion_teleporter";
+    pNewScript->pAreaTrigger = &AreaTrigger_at_legion_teleporter;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "at_ravenholdt";
-    newscript->pAreaTrigger = &AreaTrigger_at_ravenholdt;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "at_ravenholdt";
+    pNewScript->pAreaTrigger = &AreaTrigger_at_ravenholdt;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "at_warsong_farms";
-    newscript->pAreaTrigger = &AreaTrigger_at_warsong_farms;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "at_warsong_farms";
+    pNewScript->pAreaTrigger = &AreaTrigger_at_warsong_farms;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "at_stormwright_shelf";
-    newscript->pAreaTrigger = &AreaTrigger_at_stormwright_shelf;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "at_waygate";
+    pNewScript->pAreaTrigger = &AreaTrigger_at_waygate;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "at_stormwright_shelf";
+    pNewScript->pAreaTrigger = &AreaTrigger_at_stormwright_shelf;
+    pNewScript->RegisterSelf();
 }

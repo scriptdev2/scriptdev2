@@ -12,6 +12,10 @@ INSERT INTO scripted_areatrigger VALUES
 (4871,'at_warsong_farms'),
 (4872,'at_warsong_farms'),
 (4873,'at_warsong_farms');
+DELETE FROM scripted_areatrigger WHERE entry IN (5046, 5047);
+INSERT INTO scripted_areatrigger VALUES
+(5046, 'at_waygate'),
+(5047, 'at_waygate');
 DELETE FROM scripted_areatrigger WHERE entry BETWEEN 5284 AND 5287;
 INSERT INTO scripted_areatrigger VALUES
 (5284,'at_aldurthar_gate'),
@@ -24,18 +28,12 @@ DELETE FROM scripted_areatrigger WHERE entry=5108;
 INSERT INTO scripted_areatrigger VALUES (5108,'at_stormwright_shelf');
 DELETE FROM scripted_areatrigger WHERE entry IN (3546, 3547, 3548, 3549, 3550, 3552);
 INSERT INTO scripted_areatrigger VALUES
--- Darnassian bank
-(3546, 'at_childrens_week_spot'),
--- Undercity - thone room
-(3547, 'at_childrens_week_spot'),
--- Stonewrought Dam
-(3548, 'at_childrens_week_spot'),
--- The Mor'shan Rampart
-(3549, 'at_childrens_week_spot'),
--- Ratchet Docks
-(3550, 'at_childrens_week_spot'),
--- Westfall Lighthouse
-(3552, 'at_childrens_week_spot');
+(3546, 'at_childrens_week_spot'), -- Darnassian bank
+(3547, 'at_childrens_week_spot'), -- Undercity - thone room
+(3548, 'at_childrens_week_spot'), -- Stonewrought Dam
+(3549, 'at_childrens_week_spot'), -- The Mor'shan Rampart
+(3550, 'at_childrens_week_spot'), -- Ratchet Docks
+(3552, 'at_childrens_week_spot'); -- Westfall Lighthouse
 DELETE FROM scripted_areatrigger WHERE entry IN (2026, 2046);
 INSERT INTO scripted_areatrigger VALUES
 (2026, 'at_blackrock_spire'),
