@@ -214,7 +214,7 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
                 m_uiWebs_Timer -= uiDiff;
 
             if (m_bHasWebbed && m_uiCharge_Timer < uiDiff)
-            {   
+            {
                 //Shouldn't be random target but highestaggro not Webbed player
                 if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
                 {

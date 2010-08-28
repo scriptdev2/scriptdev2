@@ -67,7 +67,7 @@ instance_culling_of_stratholme::instance_culling_of_stratholme(Map* pMap) : Scri
     m_uiEpochGUID(0),
     m_uiCorrupterGUID(0),
     m_uiLordaeronCrierGUID(0),
-        
+
     m_uiBelfastGUID(0),
     m_uiForrestenGUID(0),
     m_uiSiabiGUID(0),
@@ -80,7 +80,7 @@ instance_culling_of_stratholme::instance_culling_of_stratholme(Map* pMap) : Scri
     m_uiAndersonGUID(0),
     m_uiMooreGUID(0),
     m_uiBattsonGUID(0),
-        
+
     m_uiOReillyGUID(0),
 
     m_uiDoorBookcaseGUID(0),
@@ -259,7 +259,7 @@ void instance_culling_of_stratholme::SetData(uint32 uiType, uint32 uiData)
                 DoUpdateWorldState(WORLD_STATE_TIME_COUNTER, uiData/(MINUTE*IN_MILLISECONDS));
             break;
         case TYPE_INFINITE_CORRUPTER:
-            m_auiEncounter[TYPE_INFINITE_CORRUPTER] = uiData;              
+            m_auiEncounter[TYPE_INFINITE_CORRUPTER] = uiData;
             switch(uiData)
             {
                 case IN_PROGRESS:
@@ -335,13 +335,13 @@ void instance_culling_of_stratholme::OnPlayerEnter(Player* pPlayer)
     {
         DoSpawnArthasIfNeeded();
         DoSpawnChromieIfNeeded();
-        
+
         // Show World States if needed, TODO verify if needed and if this is the right way
         if (m_auiEncounter[TYPE_GRAIN_EVENT] == IN_PROGRESS || m_auiEncounter[TYPE_GRAIN_EVENT] == SPECIAL)
             DoUpdateWorldState(WORLD_STATE_CRATES, 1);      // Show Crates Counter
         else
             DoUpdateWorldState(WORLD_STATE_CRATES, 0);      // Remove Crates Counter
-        
+
         if (m_auiEncounter[TYPE_MEATHOOK_EVENT] == IN_PROGRESS)
             DoUpdateWorldState(WORLD_STATE_WAVE, 1);        // Add WaveCounter
         else if (m_auiEncounter[TYPE_SALRAMM_EVENT] == IN_PROGRESS)

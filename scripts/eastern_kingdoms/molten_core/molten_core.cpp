@@ -55,12 +55,12 @@ CreatureAI* GetAI_mob_ancient_core_hound(Creature* pCreature)
     uint32 RandDebuff = 0;
     switch(urand(0, 5))
     {
-        case 0 : RandDebuff = SPELL_GROUND_STOMP;       break;
-        case 1 : RandDebuff = SPELL_ANCIENT_DREAD;      break;
-        case 2 : RandDebuff = SPELL_CAUTERIZING_FLAMES; break;
-        case 3 : RandDebuff = SPELL_WITHERING_HEAT;     break;
-        case 4 : RandDebuff = SPELL_ANCIENT_DESPAIR;    break;
-        case 5 : RandDebuff = SPELL_ANCIENT_HYSTERIA;   break;
+        case 0: RandDebuff = SPELL_GROUND_STOMP;       break;
+        case 1: RandDebuff = SPELL_ANCIENT_DREAD;      break;
+        case 2: RandDebuff = SPELL_CAUTERIZING_FLAMES; break;
+        case 3: RandDebuff = SPELL_WITHERING_HEAT;     break;
+        case 4: RandDebuff = SPELL_ANCIENT_DESPAIR;    break;
+        case 5: RandDebuff = SPELL_ANCIENT_HYSTERIA;   break;
     }
     pAI->m_Spell[1].bEnabled       = true;
     pAI->m_Spell[1].uiSpellId      = RandDebuff;

@@ -32,15 +32,15 @@ at_childrens_week_spot          3546,3547,3548,3552,3549,3550
 EndContentData */
 
 #include "precompiled.h"
-                                                                    
-uint32 TriggerOrphanSpell[6][3] =
+
+static uint32 TriggerOrphanSpell[6][3] =
 {
-    {3546, 14305, 65056},   // The Bough of the Eternals
-    {3547, 14444, 65059},   // Lordaeron Throne Room
-    {3548, 14305, 65055},   // The Stonewrought Dam
-    {3549, 14444, 65058},   // Gateway to the Frontier
-    {3550, 14444, 65057},   // Down at the Docks
-    {3552, 14305, 65054}    // Spooky Lighthouse
+    {3546, 14305, 65056},                                   // The Bough of the Eternals
+    {3547, 14444, 65059},                                   // Lordaeron Throne Room
+    {3548, 14305, 65055},                                   // The Stonewrought Dam
+    {3549, 14444, 65058},                                   // Gateway to the Frontier
+    {3550, 14444, 65057},                                   // Down at the Docks
+    {3552, 14305, 65054}                                    // Spooky Lighthouse
 };
 
 bool AreaTrigger_at_childrens_week_spot(Player* pPlayer, AreaTriggerEntry const* pAt)
@@ -206,7 +206,7 @@ bool AreaTrigger_at_waygate(Player* pPlayer, AreaTriggerEntry const* pAt)
     {
         switch(pAt->id)
         {
-            case AT_WAYGATE_SHOLOZAR : pPlayer->CastSpell(pPlayer, SPELL_SHOLOZAR_TO_UNGORO_TELEPORT, false); break;
+            case AT_WAYGATE_SHOLOZAR: pPlayer->CastSpell(pPlayer, SPELL_SHOLOZAR_TO_UNGORO_TELEPORT, false); break;
             case AT_WAYGATE_UNGORO: pPlayer->CastSpell(pPlayer, SPELL_UNGORO_TO_SHOLOZAR_TELEPORT, false); break;
         }
     }

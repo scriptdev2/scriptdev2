@@ -90,7 +90,7 @@ struct MANGOS_DLL_DECL boss_ayamissAI : public ScriptedAI
                 m_uiPoisonStingerTimer -= uiDiff;
         }
         else
-        {     
+        {
             //m_uiSummonSwarmerTimer
             if (m_uiSummonSwarmerTimer < uiDiff)
             {

@@ -432,14 +432,14 @@ enum
     SAY_AGGRO                 = -1000579
 };
 
-float Position[4] = {-327.99f, 221.74f, -20.31f, 3.87f}; 
+float Position[4] = {-327.99f, 221.74f, -20.31f, 3.87f};
 
 bool GOHello_go_blood_filled_orb(Player* pPlayer, GameObject* pGo)
 {
     if (Creature* pZelemar = pGo->SummonCreature(NPC_ZELEMAR_THE_WRATHFULL, Position[0], Position[1], Position[2], Position[3], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000))
     {
         DoScriptText(SAY_AGGRO, pZelemar);
-        pZelemar->AI()->AttackStart(pPlayer);     
+        pZelemar->AI()->AttackStart(pPlayer);
     }
     return false;
 }
