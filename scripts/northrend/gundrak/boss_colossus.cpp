@@ -39,8 +39,8 @@ enum
     // elemental's abilities
     SPELL_MERGE                 = 54878,
     SPELL_SURGE                 = 54801,
-
-    NPC_LIVING_MOJO             = 29830
+    SPELL_MOJO_VOLLEY           = 59453,
+    SPELL_MOJO_VOLLEY_H         = 54849
 };
 
 /*######
@@ -58,11 +58,13 @@ struct MANGOS_DLL_DECL boss_colossusAI : public ScriptedAI
 
     instance_gundrak* m_pInstance;
     bool m_bIsRegularMode;
+    bool m_bFirstEmerge;
 
     uint32 m_uiMightyBlowTimer;
     
     void Reset()
     {
+        m_bFirstEmerge = false;
         m_uiMightyBlowTimer = 10000;
     }
 
@@ -80,6 +82,42 @@ struct MANGOS_DLL_DECL boss_colossusAI : public ScriptedAI
             m_pInstance->SetData(TYPE_COLOSSUS, DONE);
     }
     
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
+    {
+        if (pSpell->Id == SPELL_MERGE)
+        {
+            // re-activate colossus here
+        }
+    }
+
+    void JustSummoned(Creature* pSummoned)
+    {
+        if (pSummoned->GetEntry() == NPC_ELEMENTAL)
+        {
+            // handle elemental stuff
+        }
+    }
+
+    void DamageTaken(Unit* pDoneBy, uint32& uiDamage)
+    {
+        
+        if (!m_bFirstEmerge && m_creature->GetHealthPercent() < 50.0f)
+        {
+            m_bFirstEmerge = true;
+            DoCastSpellIfCan(m_creature, SPELL_EMERGE);
+        }
+        else if (m_creature->GetHealth() - uiDamage <= 0)
+        {
+            // prevent boss from dying if players deal the final blow
+            if (pDoneBy->GetCharmerOrOwnerPlayerOrPlayerItself())
+            {
+                uiDamage = 0;
+                DoCastSpellIfCan(m_creature, SPELL_EMERGE);
+            }
+        }
+
+    }
+			 
     void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
