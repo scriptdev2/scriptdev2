@@ -38,7 +38,7 @@ go_tablet_of_madness
 go_tablet_of_the_seven
 go_tele_to_dalaran_crystal
 go_tele_to_violet_stand
-go_beacon_torch
+go_andorhal_tower
 go_scourge_enclosure
 EndContentData */
 
@@ -445,7 +445,7 @@ bool GOHello_go_blood_filled_orb(Player* pPlayer, GameObject* pGo)
 }
 
 /*######
-## go_beacon_torch
+## go_andorhal_tower
 ######*/
 
 enum
@@ -455,23 +455,27 @@ enum
     NPC_ANDORHAL_TOWER_1                     = 10902,
     NPC_ANDORHAL_TOWER_2                     = 10903,
     NPC_ANDORHAL_TOWER_3                     = 10904,
-    NPC_ANDORHAL_TOWER_4                     = 10905
+    NPC_ANDORHAL_TOWER_4                     = 10905,
+    GO_ANDORHAL_TOWER_1                      = 176094,
+    GO_ANDORHAL_TOWER_2                      = 176095,
+    GO_ANDORHAL_TOWER_3                      = 176096,
+    GO_ANDORHAL_TOWER_4                      = 176097
 };
 
-static const uint32 m_aTowerDummies[] = {NPC_ANDORHAL_TOWER_1, NPC_ANDORHAL_TOWER_2, NPC_ANDORHAL_TOWER_3, NPC_ANDORHAL_TOWER_4};
-
-bool GOHello_go_beacon_torch(Player* pPlayer, GameObject* pGo)
+bool GOHello_go_andorhal_tower(Player* pPlayer, GameObject* pGo)
 {
     if (pPlayer->GetQuestStatus(QUEST_ALL_ALONG_THE_WATCHTOWERS_ALLIANCE) == QUEST_STATUS_INCOMPLETE || pPlayer->GetQuestStatus(QUEST_ALL_ALONG_THE_WATCHTOWERS_HORDE) == QUEST_STATUS_INCOMPLETE)
     {
-        for (uint8 i = 0; i < 4; ++i)
+        uint32 uiKillCredit = 0;
+        switch(pGo->GetEntry())
         {
-            if (GetClosestCreatureWithEntry(pPlayer, m_aTowerDummies[i], 2*INTERACTION_DISTANCE))
-            {
-                pPlayer->KilledMonsterCredit(m_aTowerDummies[i]);
-                break;
-            }
+            case GO_ANDORHAL_TOWER_1:   uiKillCredit = NPC_ANDORHAL_TOWER_1;   break;
+            case GO_ANDORHAL_TOWER_2:   uiKillCredit = NPC_ANDORHAL_TOWER_2;   break;
+            case GO_ANDORHAL_TOWER_3:   uiKillCredit = NPC_ANDORHAL_TOWER_3;   break;
+            case GO_ANDORHAL_TOWER_4:   uiKillCredit = NPC_ANDORHAL_TOWER_4;   break;
         }
+        if (uiKillCredit)
+            pPlayer->KilledMonsterCredit(uiKillCredit);
     }
     return true;
 }
@@ -602,8 +606,8 @@ void AddSC_go_scripts()
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
-    pNewScript->Name = "go_beacon_torch";
-    pNewScript->pGOHello =          &GOHello_go_beacon_torch;
+    pNewScript->Name = "go_andorhal_tower";
+    pNewScript->pGOHello =          &GOHello_go_andorhal_tower;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
