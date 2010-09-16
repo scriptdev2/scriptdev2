@@ -686,6 +686,22 @@
 				<Filter
 					Name="gnomeregan"
 					>
+					<File
+						RelativePath="..\scripts\eastern_kingdoms\gnomeregan\boss_thermaplugg.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\eastern_kingdoms\gnomeregan\gnomeregan.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\eastern_kingdoms\gnomeregan\gnomeregan.h"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\eastern_kingdoms\gnomeregan\instance_gnomeregan.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="karazhan"

@@ -64,6 +64,9 @@ extern void AddSC_boss_nefarian();
 extern void AddSC_boss_victor_nefarius();
 extern void AddSC_deadmines();                              //deadmines
 extern void AddSC_instance_deadmines();
+extern void AddSC_gnomeregan();                             //gnomeregan
+extern void AddSC_boss_thermaplugg();
+extern void AddSC_instance_gnomeregan();
 extern void AddSC_boss_attumen();                           //karazhan
 extern void AddSC_boss_curator();
 extern void AddSC_boss_maiden_of_virtue();
@@ -476,6 +479,9 @@ void AddScripts()
     AddSC_boss_victor_nefarius();
     AddSC_deadmines();                                      //deadmines
     AddSC_instance_deadmines();
+    AddSC_gnomeregan();                                     //gnomeregan
+    AddSC_boss_thermaplugg();
+    AddSC_instance_gnomeregan();
     AddSC_boss_attumen();                                   //karazhan
     AddSC_boss_curator();
     AddSC_boss_maiden_of_virtue();

@@ -113,6 +113,10 @@ scripts/eastern_kingdoms/blackwing_lair/instance_blackwing_lair.cpp \
 scripts/eastern_kingdoms/deadmines/deadmines.cpp \
 scripts/eastern_kingdoms/deadmines/deadmines.h \
 scripts/eastern_kingdoms/deadmines/instance_deadmines.cpp \
+scripts/eastern_kingdoms/gnomeregan/boss_thermaplugg.cpp \
+scripts/eastern_kingdoms/gnomeregan/gnomeregan.cpp \
+scripts/eastern_kingdoms/gnomeregan/gnomeregan.h \
+scripts/eastern_kingdoms/gnomeregan/instance_gnomeregan.cpp \
 scripts/eastern_kingdoms/karazhan/boss_curator.cpp \
 scripts/eastern_kingdoms/karazhan/boss_maiden_of_virtue.cpp \
 scripts/eastern_kingdoms/karazhan/boss_midnight.cpp \
