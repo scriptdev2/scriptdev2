@@ -27,7 +27,7 @@ EndScriptData */
 /*#####
 ## Teleporters
 #####*/
-enum teleporter_spells
+enum TeleporterSpells
 {
     SPELL_TELE_EXPEDITION_BASE_CAMP         = 64014,
     SPELL_TELE_FORMATION_GROUNDS            = 64032,
@@ -41,7 +41,7 @@ enum teleporter_spells
 };
 
 // Teleporter Gossip handled by SD2 because depending on Instance Data
-enum teleporter_gossip_items
+enum TeleporterGossipItems
 {
     GOSSIP_ITEM_TELE_BASE_CAMP              = -3603000,
     GOSSIP_ITEM_TELE_FORMATION_GROUNDS      = -3603001,

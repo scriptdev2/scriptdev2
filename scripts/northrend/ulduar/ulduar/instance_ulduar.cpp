@@ -191,7 +191,7 @@ void instance_ulduar::OnCreatureCreate(Creature* pCreature)
         case NPC_MIMIRON:
             m_uiMimironGUID = pCreature->GetGUID();
             if(m_auiEncounter[7] == DONE)
-                DoSpawnMimiron();
+                SpawnFriendlyKeeper(NPC_MIMIRON_IMAGE);
             break;
         case NPC_LEVIATHAN_MK:
             m_uiLeviathanMkGUID = pCreature->GetGUID();
@@ -199,12 +199,12 @@ void instance_ulduar::OnCreatureCreate(Creature* pCreature)
         case NPC_HODIR:
             m_uiHodirGUID = pCreature->GetGUID();
             if(m_auiEncounter[8] == DONE)
-                DoSpawnHodir();
+                SpawnFriendlyKeeper(NPC_HODIR_IMAGE);
             break;
         case NPC_THORIM:
             m_uiThorimGUID = pCreature->GetGUID();
             if(m_auiEncounter[9] == DONE)
-                DoSpawnThorim();
+                SpawnFriendlyKeeper(NPC_THORIM_IMAGE);
             break;
         case NPC_RUNIC_COLOSSUS:
             m_uiRunicColossusGUID = pCreature->GetGUID();
@@ -218,7 +218,7 @@ void instance_ulduar::OnCreatureCreate(Creature* pCreature)
         case NPC_FREYA:
             m_uiFreyaGUID = pCreature->GetGUID();
             if(m_auiEncounter[10] == DONE)
-                DoSpawnFreya();
+                SpawnFriendlyKeeper(NPC_FREYA_IMAGE);
             break;
         case NPC_ELDER_BRIGHTLEAF:
             m_uiElderBrightleafGUID = pCreature->GetGUID();
@@ -253,7 +253,7 @@ void instance_ulduar::OnCreatureCreate(Creature* pCreature)
 void instance_ulduar::OnObjectCreate(GameObject* pGo)
 {
     switch(pGo->GetEntry())
-     {
+    {
         // -----------------    Doors & Other   -----------------
         // The siege
         case GO_SHIELD_WALL:
@@ -460,7 +460,7 @@ void instance_ulduar::OnObjectCreate(GameObject* pGo)
         case GO_GIFT_OF_OBSERVER_H:
             m_uiAlagonLootGUID = pGo->GetGUID();
             break;
-     }
+    }
 }
 
 Player* instance_ulduar::GetPlayerInMap()
@@ -481,9 +481,9 @@ Player* instance_ulduar::GetPlayerInMap()
 // Used in order to unlock the door to Vezax
 void instance_ulduar::DoOpenMadnessDoorIfCan()
 {
-    if (m_auiEncounter[7] == DONE && m_auiEncounter[8] == DONE && m_auiEncounter[9] == DONE && m_auiEncounter[10] == DONE)
+    if (m_auiEncounter[TYPE_MIMIRON] == DONE && m_auiEncounter[TYPE_HODIR] == DONE && m_auiEncounter[TYPE_THORIM] == DONE && m_auiEncounter[TYPE_FREYA] == DONE)
     {
-        if(GameObject* pDoor = instance->GetGameObject(m_uiAncientGateGUID))
+        if (GameObject* pDoor = instance->GetGameObject(m_uiAncientGateGUID))
             pDoor->SetGoState(GO_STATE_ACTIVE);
     }
 }
@@ -540,8 +540,7 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
             {
                 if (m_auiHardBoss[3] != DONE)
                     DoRespawnGameObject(m_uiMimironLootGUID, 30*MINUTE);
-                DoSpawnMimiron();
-                DoOpenMadnessDoorIfCan();
+                SpawnFriendlyKeeper(NPC_MIMIRON_IMAGE);
             }
             break;
         case TYPE_HODIR:
@@ -552,8 +551,7 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
                 DoUseDoorOrButton(m_uiHodirWallGUID);
                 DoUseDoorOrButton(m_uiHodirExitDoorGUID);
                 DoRespawnGameObject(m_uiHodirLootGUID, 30*MINUTE);
-                DoSpawnHodir();
-                DoOpenMadnessDoorIfCan();
+                SpawnFriendlyKeeper(NPC_HODIR_IMAGE);
             }
             break;
         case TYPE_THORIM:
@@ -565,17 +563,13 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
             {
                 if (m_auiHardBoss[5] != DONE)
                     DoRespawnGameObject(m_uiThorimLootGUID, 30*MINUTE);
-                DoSpawnThorim();
-                DoOpenMadnessDoorIfCan();
+                SpawnFriendlyKeeper(NPC_THORIM_IMAGE);
             }
             break;
         case TYPE_FREYA:
             m_auiEncounter[10] = uiData;
             if (uiData == DONE)
-            {
-                DoSpawnFreya();
-                DoOpenMadnessDoorIfCan();
-            }
+                SpawnFriendlyKeeper(NPC_FREYA_IMAGE);
             break;
         // Prison
         case TYPE_VEZAX:
@@ -657,29 +651,31 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
         case TYPE_MIMIRON_TP:
             m_auiUlduarTeleporters[2] = uiData;
             break;
-     }
+    }
 
-     if (uiData == DONE || uiData == FAIL)
-     {
-         OUT_SAVE_INST_DATA;
+    DoOpenMadnessDoorIfCan();
 
-         // Save all encounters, hard bosses, keepers and teleporters
-         std::ostringstream saveStream;
-         saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " "
-             << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5] << " "
-             << m_auiEncounter[6] << " " << m_auiEncounter[7] << " " << m_auiEncounter[8] << " "
-             << m_auiEncounter[9] << " " << m_auiEncounter[10] << " " << m_auiEncounter[11] << " "
-             << m_auiEncounter[12] << " " << m_auiEncounter[13] << " " << m_auiHardBoss[0] << " "
-             << m_auiHardBoss[1] << " " << m_auiHardBoss[2] << " " << m_auiHardBoss[2] << " "
-             << m_auiHardBoss[4] << " " << m_auiHardBoss[5] << " " << m_auiHardBoss[6] << " "
-             << m_auiHardBoss[7] << " " << m_auiHardBoss[8] << " " << m_auiUlduarKeepers[0] << " "
-             << m_auiUlduarKeepers[1] << " " << m_auiUlduarKeepers[2] << " " << m_auiUlduarKeepers[3];
+    if (uiData == DONE || uiData == FAIL)
+    {
+        OUT_SAVE_INST_DATA;
 
-         strInstData = saveStream.str();
+        // Save all encounters, hard bosses, keepers and teleporters
+        std::ostringstream saveStream;
+        saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " "
+            << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5] << " "
+            << m_auiEncounter[6] << " " << m_auiEncounter[7] << " " << m_auiEncounter[8] << " "
+            << m_auiEncounter[9] << " " << m_auiEncounter[10] << " " << m_auiEncounter[11] << " "
+            << m_auiEncounter[12] << " " << m_auiEncounter[13] << " " << m_auiHardBoss[0] << " "
+            << m_auiHardBoss[1] << " " << m_auiHardBoss[2] << " " << m_auiHardBoss[2] << " "
+            << m_auiHardBoss[4] << " " << m_auiHardBoss[5] << " " << m_auiHardBoss[6] << " "
+            << m_auiHardBoss[7] << " " << m_auiHardBoss[8] << " " << m_auiUlduarKeepers[0] << " "
+            << m_auiUlduarKeepers[1] << " " << m_auiUlduarKeepers[2] << " " << m_auiUlduarKeepers[3];
 
-         SaveToDB();
-         OUT_SAVE_INST_DATA_COMPLETE;
-     }
+        strInstData = saveStream.str();
+
+        SaveToDB();
+        OUT_SAVE_INST_DATA_COMPLETE;
+    }
 }
 
 uint64 instance_ulduar::GetData64(uint32 uiData)
@@ -847,48 +843,19 @@ uint32 instance_ulduar::GetData(uint32 uiType)
 }
 
 // Spawn the friendly keepers in the central chamber
-void instance_ulduar::DoSpawnMimiron()
+void instance_ulduar::SpawnFriendlyKeeper(uint32 uiWho)
 {
     Player* pPlayer = GetPlayerInMap();
     if (!pPlayer)
         return;
 
-    // Mimiron
-    if(m_auiEncounter[7] == DONE)
-        pPlayer->SummonCreature(NPC_MIMIRON_IMAGE, m_aKeepersSpawnLocs[1].m_fX, m_aKeepersSpawnLocs[1].m_fY, m_aKeepersSpawnLocs[1].m_fZ, m_aKeepersSpawnLocs[1].m_fO, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
-}
-
-void instance_ulduar::DoSpawnHodir()
-{
-    Player* pPlayer = GetPlayerInMap();
-    if (!pPlayer)
-        return;
-
-    // Hodir
-    if(m_auiEncounter[8] == DONE)
-        pPlayer->SummonCreature(NPC_HODIR_IMAGE, m_aKeepersSpawnLocs[2].m_fX, m_aKeepersSpawnLocs[2].m_fY, m_aKeepersSpawnLocs[2].m_fZ, m_aKeepersSpawnLocs[2].m_fO, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
-}
-
-void instance_ulduar::DoSpawnThorim()
-{
-    Player* pPlayer = GetPlayerInMap();
-    if (!pPlayer)
-        return;
-
-    // Thorim
-    if(m_auiEncounter[9] == DONE)
-        pPlayer->SummonCreature(NPC_THORIM_IMAGE, m_aKeepersSpawnLocs[3].m_fX, m_aKeepersSpawnLocs[3].m_fY, m_aKeepersSpawnLocs[3].m_fZ, m_aKeepersSpawnLocs[3].m_fO, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
-}
-
-void instance_ulduar::DoSpawnFreya()
-{
-    Player* pPlayer = GetPlayerInMap();
-    if (!pPlayer)
-        return;
-
-    // Freya
-    if(m_auiEncounter[10] == DONE)
-        pPlayer->SummonCreature(NPC_FREYA_IMAGE, m_aKeepersSpawnLocs[0].m_fX, m_aKeepersSpawnLocs[0].m_fY, m_aKeepersSpawnLocs[0].m_fZ, m_aKeepersSpawnLocs[0].m_fO, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
+    switch(uiWho)
+    {
+        case NPC_MIMIRON_IMAGE: pPlayer->SummonCreature(NPC_MIMIRON_IMAGE, m_aKeepersSpawnLocs[1].m_fX, m_aKeepersSpawnLocs[1].m_fY, m_aKeepersSpawnLocs[1].m_fZ, m_aKeepersSpawnLocs[1].m_fO, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000); break;
+        case NPC_HODIR_IMAGE:   pPlayer->SummonCreature(NPC_HODIR_IMAGE,   m_aKeepersSpawnLocs[2].m_fX, m_aKeepersSpawnLocs[2].m_fY, m_aKeepersSpawnLocs[2].m_fZ, m_aKeepersSpawnLocs[2].m_fO, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000); break;
+        case NPC_THORIM_IMAGE:  pPlayer->SummonCreature(NPC_THORIM_IMAGE,  m_aKeepersSpawnLocs[3].m_fX, m_aKeepersSpawnLocs[3].m_fY, m_aKeepersSpawnLocs[3].m_fZ, m_aKeepersSpawnLocs[3].m_fO, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000); break;
+        case NPC_FREYA_IMAGE:   pPlayer->SummonCreature(NPC_FREYA_IMAGE,   m_aKeepersSpawnLocs[0].m_fX, m_aKeepersSpawnLocs[0].m_fY, m_aKeepersSpawnLocs[0].m_fZ, m_aKeepersSpawnLocs[0].m_fO, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000); break;
+    }
 }
 
 void instance_ulduar::Load(const char* strIn)
@@ -903,12 +870,12 @@ void instance_ulduar::Load(const char* strIn)
 
     std::istringstream loadStream(strIn);
     loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3]
-    >> m_auiEncounter[4] >> m_auiEncounter[5] >> m_auiEncounter[6] >> m_auiEncounter[7]
-    >> m_auiEncounter[8] >> m_auiEncounter[9] >> m_auiEncounter[10] >> m_auiEncounter[11]
-    >> m_auiEncounter[12] >> m_auiEncounter[13] >> m_auiHardBoss[0] >> m_auiHardBoss[1]
-    >> m_auiHardBoss[2] >> m_auiHardBoss[3] >> m_auiHardBoss[4] >> m_auiHardBoss[5]
-    >> m_auiHardBoss[6] >> m_auiHardBoss[7] >> m_auiHardBoss[8] >> m_auiUlduarKeepers[0]
-    >> m_auiUlduarKeepers[1] >> m_auiUlduarKeepers[2] >> m_auiUlduarKeepers[3];
+        >> m_auiEncounter[4] >> m_auiEncounter[5] >> m_auiEncounter[6] >> m_auiEncounter[7]
+        >> m_auiEncounter[8] >> m_auiEncounter[9] >> m_auiEncounter[10] >> m_auiEncounter[11]
+        >> m_auiEncounter[12] >> m_auiEncounter[13] >> m_auiHardBoss[0] >> m_auiHardBoss[1]
+        >> m_auiHardBoss[2] >> m_auiHardBoss[3] >> m_auiHardBoss[4] >> m_auiHardBoss[5]
+        >> m_auiHardBoss[6] >> m_auiHardBoss[7] >> m_auiHardBoss[8] >> m_auiUlduarKeepers[0]
+        >> m_auiUlduarKeepers[1] >> m_auiUlduarKeepers[2] >> m_auiUlduarKeepers[3];
 
     for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
     {

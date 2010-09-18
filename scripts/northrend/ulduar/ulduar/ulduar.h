@@ -226,10 +226,7 @@ class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance
 
         void DoOpenMadnessDoorIfCan();
         Player* GetPlayerInMap();
-        void DoSpawnMimiron();
-        void DoSpawnHodir();
-        void DoSpawnThorim();
-        void DoSpawnFreya();
+        void SpawnFriendlyKeeper(uint32 uiWho);
 
     protected:
         std::string strInstData;
