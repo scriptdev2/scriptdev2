@@ -523,6 +523,7 @@
     <ClCompile Include="..\scripts\northrend\ulduar\halls_of_stone\boss_sjonnir.cpp" />
     <ClCompile Include="..\scripts\northrend\ulduar\halls_of_stone\halls_of_stone.cpp" />
     <ClCompile Include="..\scripts\northrend\ulduar\halls_of_stone\instance_halls_of_stone.cpp" />
+    <ClCompile Include="..\scripts\northrend\ulduar\ulduar\assembly_of_iron.cpp" />
     <ClCompile Include="..\scripts\northrend\ulduar\ulduar\boss_algalon.cpp" />
     <ClCompile Include="..\scripts\northrend\ulduar\ulduar\boss_auriaya.cpp" />
     <ClCompile Include="..\scripts\northrend\ulduar\ulduar\boss_flame_leviathan.cpp" />
@@ -570,6 +571,7 @@
     <ClCompile Include="..\scripts\northrend\icecrown_citadel\frozen_halls\halls_of_reflection\boss_marwyn.cpp" />
     <ClCompile Include="..\scripts\northrend\icecrown_citadel\frozen_halls\forge_of_souls\boss_bronjahm.cpp" />
     <ClCompile Include="..\scripts\northrend\icecrown_citadel\frozen_halls\forge_of_souls\boss_devourer_of_souls.cpp" />
+    <ClCompile Include="..\scripts\northrend\icecrown_citadel\frozen_halls\forge_of_souls\instance_forge_of_souls.cpp" />
     <ClCompile Include="..\scripts\outland\blades_edge_mountains.cpp" />
     <ClCompile Include="..\scripts\outland\boss_doomlord_kazzak.cpp" />
     <ClCompile Include="..\scripts\outland\boss_doomwalker.cpp" />
@@ -707,6 +709,7 @@
     <ClInclude Include="..\scripts\northrend\azjol-nerub\azjol-nerub\azjol-nerub.h" />
     <ClInclude Include="..\scripts\northrend\crusaders_coliseum\trial_of_the_crusader\trial_of_the_crusader.h" />
     <ClInclude Include="..\scripts\northrend\gundrak\gundrak.h" />
+    <ClInclude Include="..\scripts\northrend\icecrown_citadel\frozen_halls\forge_of_souls\forge_of_souls.h" />
     <ClInclude Include="..\scripts\northrend\naxxramas\naxxramas.h" />
     <ClInclude Include="..\scripts\northrend\nexus\nexus\nexus.h" />
     <ClInclude Include="..\scripts\northrend\obsidian_sanctum\obsidian_sanctum.h" />

@@ -645,6 +645,14 @@ UPDATE creature_template SET ScriptName='npc_deathstalker_razael' WHERE entry=23
 UPDATE creature_template SET ScriptName='npc_dark_ranger_lyana' WHERE entry=23778;
 UPDATE creature_template SET ScriptName='npc_mcgoyver' WHERE entry=24040;
 
+/*  */
+/* ICECROWN CITADEL */
+/*  */
+
+/* FORGE OF SOULS */
+UPDATE creature_template SET ScriptName='boss_bronjahm' WHERE entry=36497;
+UPDATE creature_template SET ScriptName='boss_devourer_of_souls' WHERE entry=36502;
+UPDATE instance_template SET ScriptName='instance_forge_of_souls' WHERE map=632;
 
 /* ICECROWN */
 UPDATE creature_template SET ScriptName='npc_arete' WHERE entry=29344;
