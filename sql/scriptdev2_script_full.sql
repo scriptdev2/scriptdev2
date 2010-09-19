@@ -618,7 +618,12 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000587,'%s whispers to $N the secret to opening his strongbox.',0,2,0,0,'Galen - emote whisper'),
 (-1000588,'%s disappears into the swamp.',0,2,0,0,'Galen - emote disapper'),
 
-(-1000589,'Kroshius live? Kroshius crush!',0,1,0,0,'SAY_KROSHIUS_REVIVE');
+(-1000589,'Kroshius live? Kroshius crush!',0,1,0,0,'SAY_KROSHIUS_REVIVE'),
+
+(-1000590,'Woot!',0,0,0,0,'Captive Child SAY_THANKS_1'),
+(-1000591,'I think those weird bird guys were going to eat us. Gross!',0,0,0,0,'Captive Child SAY_THANKS_2'),
+(-1000592,'Yay! We\'re free!',0,0,0,0,'Captive Child SAY_THANKS_3'),
+(-1000593,'Gross!',0,0,0,0,'Captive Child SAY_THANKS_4');
 
 -- -1 033 000 SHADOWFANG KEEP
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES

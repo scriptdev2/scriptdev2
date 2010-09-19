@@ -75,6 +75,7 @@ UPDATE gameobject_template SET ScriptName='go_tele_to_violet_stand' WHERE entry=
 UPDATE gameobject_template SET ScriptName='go_blood_filled_orb' WHERE entry=182024;
 UPDATE gameobject_template SET ScriptName='go_andorhal_tower' WHERE entry IN (176094,176095,176096,176097);
 UPDATE gameobject_template SET ScriptName='go_scourge_enclosure' WHERE entry=191548;
+UPDATE gameobject_template SET ScriptName='go_veil_skith_cage' WHERE entry IN (185202,185203,185204,185205);
 
 /* GUARD */
 UPDATE creature_template SET ScriptName='guard_azuremyst' WHERE entry=18038;
@@ -1097,6 +1098,7 @@ UPDATE creature_template SET ScriptName='npc_mana_bomb_exp_trigger' WHERE entry=
 UPDATE gameobject_template SET ScriptName='go_mana_bomb' WHERE entry=184725;
 UPDATE creature_template SET ScriptName='npc_skyguard_handler_irena' WHERE entry=23413;
 UPDATE creature_template SET ScriptName='npc_slim' WHERE entry=19679;
+UPDATE creature_template SET ScriptName='npc_captive_child' WHERE entry=22314;
 
 /* THOUSAND NEEDLES */
 UPDATE creature_template SET ScriptName='npc_kanati' WHERE entry=10638;
