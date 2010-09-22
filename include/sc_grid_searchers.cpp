@@ -10,7 +10,7 @@ GameObject* GetClosestGameObjectWithEntry(WorldObject* pSource, uint32 uiEntry, 
     GameObject* pGo = NULL;
 
     MaNGOS::NearestGameObjectEntryInObjectRangeCheck go_check(*pSource, uiEntry, fMaxSearchRange);
-    MaNGOS::GameObjectLastSearcher<MaNGOS::NearestGameObjectEntryInObjectRangeCheck> searcher(pSource, pGo, go_check);
+    MaNGOS::GameObjectLastSearcher<MaNGOS::NearestGameObjectEntryInObjectRangeCheck> searcher(pGo, go_check);
 
     Cell::VisitGridObjects(pSource, searcher, fMaxSearchRange);
 
@@ -23,7 +23,7 @@ Creature* GetClosestCreatureWithEntry(WorldObject* pSource, uint32 uiEntry, floa
     Creature* pCreature = NULL;
 
     MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck creature_check(*pSource, uiEntry, true, fMaxSearchRange);
-    MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(pSource, pCreature, creature_check);
+    MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(pCreature, creature_check);
 
     Cell::VisitGridObjects(pSource, searcher, fMaxSearchRange);
 
@@ -32,16 +32,16 @@ Creature* GetClosestCreatureWithEntry(WorldObject* pSource, uint32 uiEntry, floa
 
 void GetGameObjectListWithEntryInGrid(std::list<GameObject*>& lList , WorldObject* pSource, uint32 uiEntry, float fMaxSearchRange)
 {
-    AllGameObjectsWithEntryInRange check(pSource, uiEntry, fMaxSearchRange);
-    MaNGOS::GameObjectListSearcher<AllGameObjectsWithEntryInRange> searcher(pSource, lList, check);
+    AllGameObjectsWithEntryInRangeCheck check(pSource, uiEntry, fMaxSearchRange);
+    MaNGOS::GameObjectListSearcher<AllGameObjectsWithEntryInRangeCheck> searcher(lList, check);
 
     Cell::VisitGridObjects(pSource, searcher, fMaxSearchRange);
 }
 
 void GetCreatureListWithEntryInGrid(std::list<Creature*>& lList, WorldObject* pSource, uint32 uiEntry, float fMaxSearchRange)
 {
-    AllCreaturesOfEntryInRange check(pSource, uiEntry, fMaxSearchRange);
-    MaNGOS::CreatureListSearcher<AllCreaturesOfEntryInRange> searcher(pSource, lList, check);
+    AllCreaturesOfEntryInRangeCheck check(pSource, uiEntry, fMaxSearchRange);
+    MaNGOS::CreatureListSearcher<AllCreaturesOfEntryInRangeCheck> searcher(lList, check);
 
     Cell::VisitGridObjects(pSource, searcher, fMaxSearchRange);
 }

@@ -416,8 +416,8 @@ Unit* ScriptedAI::DoSelectLowestHpFriendly(float fRange, uint32 uiMinHPDiff)
 {
     Unit* pUnit = NULL;
 
-    MaNGOS::MostHPMissingInRange u_check(m_creature, fRange, uiMinHPDiff);
-    MaNGOS::UnitLastSearcher<MaNGOS::MostHPMissingInRange> searcher(m_creature, pUnit, u_check);
+    MaNGOS::MostHPMissingInRangeCheck u_check(m_creature, fRange, uiMinHPDiff);
+    MaNGOS::UnitLastSearcher<MaNGOS::MostHPMissingInRangeCheck> searcher(pUnit, u_check);
 
     Cell::VisitGridObjects(m_creature, searcher, fRange);
 
@@ -428,8 +428,8 @@ std::list<Creature*> ScriptedAI::DoFindFriendlyCC(float fRange)
 {
     std::list<Creature*> pList;
 
-    MaNGOS::FriendlyCCedInRange u_check(m_creature, fRange);
-    MaNGOS::CreatureListSearcher<MaNGOS::FriendlyCCedInRange> searcher(m_creature, pList, u_check);
+    MaNGOS::FriendlyCCedInRangeCheck u_check(m_creature, fRange);
+    MaNGOS::CreatureListSearcher<MaNGOS::FriendlyCCedInRangeCheck> searcher(pList, u_check);
 
     Cell::VisitGridObjects(m_creature, searcher, fRange);
 
@@ -440,8 +440,8 @@ std::list<Creature*> ScriptedAI::DoFindFriendlyMissingBuff(float fRange, uint32 
 {
     std::list<Creature*> pList;
 
-    MaNGOS::FriendlyMissingBuffInRange u_check(m_creature, fRange, uiSpellId);
-    MaNGOS::CreatureListSearcher<MaNGOS::FriendlyMissingBuffInRange> searcher(m_creature, pList, u_check);
+    MaNGOS::FriendlyMissingBuffInRangeCheck u_check(m_creature, fRange, uiSpellId);
+    MaNGOS::CreatureListSearcher<MaNGOS::FriendlyMissingBuffInRangeCheck> searcher(pList, u_check);
 
     Cell::VisitGridObjects(m_creature, searcher, fRange);
 
@@ -453,7 +453,7 @@ Player* ScriptedAI::GetPlayerAtMinimumRange(float fMinimumRange)
     Player* pPlayer = NULL;
 
     MaNGOS::AnyPlayerInObjectRangeCheck check(m_creature, fMinimumRange);
-    MaNGOS::PlayerSearcher<MaNGOS::AnyPlayerInObjectRangeCheck> searcher(m_creature, pPlayer, check);
+    MaNGOS::PlayerSearcher<MaNGOS::AnyPlayerInObjectRangeCheck> searcher(pPlayer, check);
 
     Cell::VisitWorldObjects(m_creature, searcher, fMinimumRange);
 
