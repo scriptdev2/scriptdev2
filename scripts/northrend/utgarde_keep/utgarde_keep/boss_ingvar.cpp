@@ -33,6 +33,7 @@ enum
     SAY_KILL_FIRST              = -1574009,
     SAY_KILL_SECOND             = -1574010,
     EMOTE_ROAR                  = -1574022,
+    SAY_ANNHYLDE_REZ            = -1574023,
 
     NPC_ANNHYLDE                = 24068,
     NPC_THROW_TARGET            = 23996,                    //the target, casting spell and target of moving dummy
