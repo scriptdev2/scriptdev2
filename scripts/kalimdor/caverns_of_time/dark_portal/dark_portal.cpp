@@ -293,7 +293,7 @@ struct MANGOS_DLL_DECL npc_time_riftAI : public ScriptedAI
         m_creature->GetRandomPoint(m_creature->GetPositionX(),m_creature->GetPositionY(),m_creature->GetPositionZ(),10.0f,x,y,z);
 
         //normalize Z-level if we can, if rift is not at ground level.
-        z = std::max(m_creature->GetMap()->GetHeight(x, y, MAX_HEIGHT), m_creature->GetMap()->GetWaterLevel(x, y));
+        z = m_creature->GetMap()->GetWaterOrGroundLevel(x, y, MAX_HEIGHT);
 
         Unit *Summon = m_creature->SummonCreature(creature_entry,x,y,z,m_creature->GetOrientation(),
             TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,30000);
