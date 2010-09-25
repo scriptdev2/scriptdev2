@@ -380,14 +380,6 @@
 				RelativePath="..\base\guard_ai.h"
 				>
 			</File>
-			<File
-				RelativePath="..\base\simple_ai.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\base\simple_ai.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="scripts"

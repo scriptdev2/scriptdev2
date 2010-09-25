@@ -309,9 +309,6 @@
     <ClCompile Include="..\base\guard_ai.cpp">
       <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="..\base\simple_ai.cpp">
-      <Filter>base</Filter>
-    </ClCompile>
     <ClCompile Include="..\scripts\battlegrounds\battleground.cpp">
       <Filter>scripts\battlegrounds</Filter>
     </ClCompile>
@@ -1678,9 +1675,6 @@
       <Filter>base</Filter>
     </ClInclude>
     <ClInclude Include="..\base\guard_ai.h">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\base\simple_ai.h">
       <Filter>base</Filter>
     </ClInclude>
     <ClInclude Include="..\scripts\eastern_kingdoms\blackrock_depths\blackrock_depths.h">

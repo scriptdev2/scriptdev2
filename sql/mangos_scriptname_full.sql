@@ -427,8 +427,6 @@ UPDATE creature_template SET ScriptName='mob_water_globule' WHERE entry=21913;
 UPDATE creature_template SET ScriptName='boss_lady_vashj' WHERE entry=21212;
 UPDATE creature_template SET ScriptName='mob_enchanted_elemental' WHERE entry=21958;
 UPDATE creature_template SET ScriptName='mob_tainted_elemental' WHERE entry=22009;
-UPDATE creature_template SET ScriptName='mob_coilfang_elite' WHERE entry=22055;
-UPDATE creature_template SET ScriptName='mob_coilfang_strider' WHERE entry=22056;
 UPDATE creature_template SET ScriptName='mob_toxic_sporebat' WHERE entry=22140;
 UPDATE creature_template SET ScriptName='mob_shield_generator_channel' WHERE entry=19870;
 
@@ -692,7 +690,6 @@ UPDATE creature_template SET ScriptName='boss_lady_keira_berrybuck' WHERE entry=
 UPDATE creature_template SET ScriptName='boss_lord_robin_daris' WHERE entry=19876;
 UPDATE creature_template SET ScriptName='boss_lord_crispin_ference' WHERE entry=19873;
 UPDATE creature_template SET ScriptName='boss_bigbadwolf' WHERE entry=17521;
-UPDATE creature_template SET ScriptName='mob_shadow_of_aran' WHERE entry=18254;
 UPDATE creature_template SET ScriptName='mob_aran_elemental' WHERE entry=17167;
 UPDATE creature_template SET ScriptName='mob_demon_chain' WHERE entry=17248;
 UPDATE creature_template SET ScriptName='npc_fiendish_portal' WHERE entry=17265;
@@ -746,7 +743,6 @@ UPDATE creature_template SET ScriptName='boss_golemagg' WHERE entry=11988;
 UPDATE creature_template SET ScriptName='boss_sulfuron' WHERE entry=12098;
 UPDATE creature_template SET ScriptName='boss_majordomo' WHERE entry=12018;
 UPDATE creature_template SET ScriptName='boss_ragnaros' WHERE entry=11502;
-UPDATE creature_template SET ScriptName='mob_ancient_core_hound' WHERE entry=11673;
 UPDATE creature_template SET ScriptName='mob_firesworn' WHERE entry=12099;
 UPDATE creature_template SET ScriptName='mob_core_rager' WHERE entry=11672;
 UPDATE creature_template SET ScriptName='mob_flamewaker_priest' WHERE entry=11662;

@@ -36,8 +36,6 @@ base/follower_ai.cpp \
 base/follower_ai.h \
 base/guard_ai.cpp \
 base/guard_ai.h \
-base/simple_ai.cpp \
-base/simple_ai.h \
 include/precompiled.cpp \
 include/precompiled.h \
 include/sc_creature.cpp \

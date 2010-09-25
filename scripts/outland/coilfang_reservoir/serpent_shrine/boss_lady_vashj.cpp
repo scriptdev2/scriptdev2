@@ -23,7 +23,6 @@ EndScriptData */
 
 #include "precompiled.h"
 #include "serpent_shrine.h"
-#include "simple_ai.h"
 #include "Item.h"
 #include "Spell.h"
 
@@ -631,44 +630,6 @@ enum
     SPELL_MIND_BLAST    = 41374
 };
 
-//Coilfang Elite
-//It's an elite Naga mob with 170,000 HP. It does about 5000 damage on plate, and has a nasty cleave hitting for about 7500 damage
-CreatureAI* GetAI_mob_coilfang_elite(Creature* pCreature)
-{
-    SimpleAI* pAI = new SimpleAI (pCreature);
-
-    pAI->m_Spell[0].bEnabled = true;
-    pAI->m_Spell[0].uiSpellId = SPELL_CLEAVE;               // Cleave
-    pAI->m_Spell[0].uiCooldown = 15000;
-    pAI->m_Spell[0].uiCooldownRandomAddition = 5000;
-    pAI->m_Spell[0].iFirstCast = 5000;
-    pAI->m_Spell[0].CastTargetType = CAST_HOSTILE_RANDOM;
-
-    pAI->EnterEvadeMode();
-
-    return pAI;
-}
-
-//Coilfang Strider
-//It hits plate for about 8000 damage, has a Mind Blast spell doing about 3000 shadow damage, and a Psychic Scream Aura, which fears everybody in a 8 yard range of it every 2-3 seconds , for 5 seconds and increasing their movement speed by 150% during the fear.
-CreatureAI* GetAI_mob_coilfang_strider(Creature* pCreature)
-{
-    SimpleAI* pAI = new SimpleAI (pCreature);
-
-    pAI->m_Spell[0].bEnabled = true;
-    pAI->m_Spell[0].uiSpellId = SPELL_MIND_BLAST;           // Mind Blast
-    pAI->m_Spell[0].uiCooldown = 30000;
-    pAI->m_Spell[0].uiCooldownRandomAddition = 10000;
-    pAI->m_Spell[0].iFirstCast = 8000;
-    pAI->m_Spell[0].CastTargetType = CAST_HOSTILE_TARGET;
-
-    //Scream aura not implemented
-
-    pAI->EnterEvadeMode();
-
-    return pAI;
-}
-
 //can probably be removed
 struct MANGOS_DLL_DECL mob_shield_generator_channelAI : public ScriptedAI
 {
@@ -794,16 +755,6 @@ void AddSC_boss_lady_vashj()
     newscript = new Script;
     newscript->Name = "mob_toxic_sporebat";
     newscript->GetAI = &GetAI_mob_toxic_sporebat;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "mob_coilfang_elite";
-    newscript->GetAI = &GetAI_mob_coilfang_elite;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "mob_coilfang_strider";
-    newscript->GetAI = &GetAI_mob_coilfang_strider;
     newscript->RegisterSelf();
 
     newscript = new Script;

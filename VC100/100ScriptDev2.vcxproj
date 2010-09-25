@@ -213,7 +213,6 @@
     <ClCompile Include="..\base\escort_ai.cpp" />
     <ClCompile Include="..\base\follower_ai.cpp" />
     <ClCompile Include="..\base\guard_ai.cpp" />
-    <ClCompile Include="..\base\simple_ai.cpp" />
     <ClCompile Include="..\scripts\battlegrounds\battleground.cpp" />
     <ClCompile Include="..\scripts\eastern_kingdoms\alterac_mountains.cpp" />
     <ClCompile Include="..\scripts\eastern_kingdoms\arathi_highlands.cpp" />
@@ -677,7 +676,6 @@
     <ClInclude Include="..\base\escort_ai.h" />
     <ClInclude Include="..\base\follower_ai.h" />
     <ClInclude Include="..\base\guard_ai.h" />
-    <ClInclude Include="..\base\simple_ai.h" />
     <ClInclude Include="..\scripts\eastern_kingdoms\blackrock_depths\blackrock_depths.h" />
     <ClInclude Include="..\scripts\eastern_kingdoms\blackrock_spire\blackrock_spire.h" />
     <ClInclude Include="..\scripts\eastern_kingdoms\deadmines\deadmines.h" />

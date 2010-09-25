@@ -17,12 +17,11 @@
 /* ScriptData
 SDName: Boss_Shade_of_Aran
 SD%Complete: 95
-SDComment: Flame wreath missing cast animation, mods won't triggere.
+SDComment: Flame wreath missing cast animation, mods won't trigger.
 SDCategory: Karazhan
 EndScriptData */
 
 #include "precompiled.h"
-#include "simple_ai.h"
 #include "karazhan.h"
 #include "GameObject.h"
 
@@ -544,23 +543,6 @@ CreatureAI* GetAI_water_elemental(Creature* pCreature)
     return new water_elementalAI(pCreature);
 }
 
-// CONVERT TO ACID
-CreatureAI* GetAI_shadow_of_aran(Creature* pCreature)
-{
-    outstring_log("SD2: Convert simpleAI script for Creature Entry %u to ACID", pCreature->GetEntry());
-    SimpleAI* pAI = new SimpleAI(pCreature);
-
-    pAI->m_Spell[0].bEnabled       = true;
-    pAI->m_Spell[0].uiSpellId      = SPELL_SHADOW_PYRO;
-    pAI->m_Spell[0].uiCooldown     = 5000;
-    pAI->m_Spell[0].iFirstCast     = 1000;
-    pAI->m_Spell[0].CastTargetType = CAST_HOSTILE_TARGET;
-
-    pAI->EnterEvadeMode();
-
-    return pAI;
-}
-
 void AddSC_boss_shade_of_aran()
 {
     Script* newscript;
@@ -568,11 +550,6 @@ void AddSC_boss_shade_of_aran()
     newscript = new Script;
     newscript->Name = "boss_shade_of_aran";
     newscript->GetAI = &GetAI_boss_aran;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "mob_shadow_of_aran";
-    newscript->GetAI = &GetAI_shadow_of_aran;
     newscript->RegisterSelf();
 
     newscript = new Script;
