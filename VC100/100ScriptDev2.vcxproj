@@ -556,7 +556,7 @@
     <ClCompile Include="..\scripts\northrend\icecrown_citadel\icecrown_citadel\boss_festergut.cpp" />
     <ClCompile Include="..\scripts\northrend\icecrown_citadel\icecrown_citadel\boss_lady_deathwhisper.cpp" />
     <ClCompile Include="..\scripts\northrend\icecrown_citadel\icecrown_citadel\boss_lord_marrowgar.cpp" />
-    <ClCompile Include="..\scripts\northrend\icecrown_citadel\icecrown_citadel\boss_proffesor_putricide.cpp" />
+    <ClCompile Include="..\scripts\northrend\icecrown_citadel\icecrown_citadel\boss_professor_putricide.cpp" />
     <ClCompile Include="..\scripts\northrend\icecrown_citadel\icecrown_citadel\boss_rotface.cpp" />
     <ClCompile Include="..\scripts\northrend\icecrown_citadel\icecrown_citadel\boss_sindragosa.cpp" />
     <ClCompile Include="..\scripts\northrend\icecrown_citadel\icecrown_citadel\boss_the_lich_king.cpp" />

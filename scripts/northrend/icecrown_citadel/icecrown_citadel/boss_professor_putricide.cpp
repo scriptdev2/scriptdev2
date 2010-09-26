@@ -15,7 +15,7 @@
  */
 
 /* ScriptData
-SDName: boss_proffesor_putricide
+SDName: boss_professor_putricide
 SD%Complete: 0%
 SDComment:
 SDCategory: Icecrown Citadel

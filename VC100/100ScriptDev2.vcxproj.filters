@@ -1326,7 +1326,7 @@
     <ClCompile Include="..\scripts\northrend\icecrown_citadel\icecrown_citadel\boss_lord_marrowgar.cpp">
       <Filter>scripts\northrend\icecrown_citadel\icecrown_citadel</Filter>
     </ClCompile>
-    <ClCompile Include="..\scripts\northrend\icecrown_citadel\icecrown_citadel\boss_proffesor_putricide.cpp">
+    <ClCompile Include="..\scripts\northrend\icecrown_citadel\icecrown_citadel\boss_professor_putricide.cpp">
       <Filter>scripts\northrend\icecrown_citadel\icecrown_citadel</Filter>
     </ClCompile>
     <ClCompile Include="..\scripts\northrend\icecrown_citadel\icecrown_citadel\boss_rotface.cpp">
