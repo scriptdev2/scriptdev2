@@ -67,7 +67,7 @@ bool EffectDummyGameObj_spell_dummy_go(Unit* pCaster, uint32 uiSpellId, SpellEff
         {
             if (uiEffIndex == EFFECT_INDEX_0)
             {
-                if (pGOTarget->GetEntry() != GO_TASTY_REEF_FISH || pCaster->GetTypeId() != TYPEID_PLAYER)
+                if (pGOTarget->GetRespawnTime() != 0 || pGOTarget->GetEntry() != GO_TASTY_REEF_FISH || pCaster->GetTypeId() != TYPEID_PLAYER)
                     return true;
 
                 if (urand(0, 3))
@@ -81,7 +81,7 @@ bool EffectDummyGameObj_spell_dummy_go(Unit* pCaster, uint32 uiSpellId, SpellEff
                         pShark->AI()->AttackStart(pCaster);
                 }
 
-                pGOTarget->Delete();                        // sends despawn anim + destroy
+                pGOTarget->SetLootState(GO_JUST_DEACTIVATED);
                 return true;
             }
             return true;
@@ -90,7 +90,7 @@ bool EffectDummyGameObj_spell_dummy_go(Unit* pCaster, uint32 uiSpellId, SpellEff
         {
             if (uiEffIndex == EFFECT_INDEX_0)
             {
-                if (pGOTarget->GetEntry() != GO_RED_SNAPPER || pCaster->GetTypeId() != TYPEID_PLAYER)
+                if (pGOTarget->GetRespawnTime() != 0 || pGOTarget->GetEntry() != GO_RED_SNAPPER || pCaster->GetTypeId() != TYPEID_PLAYER)
                     return true;
 
                 if (urand(0, 2))
@@ -104,7 +104,7 @@ bool EffectDummyGameObj_spell_dummy_go(Unit* pCaster, uint32 uiSpellId, SpellEff
                         ((Player*)pCaster)->SendNewItem(pItem, 1, true, false);
                 }
 
-                pGOTarget->Delete();                        // sends despawn anim + destroy
+                pGOTarget->SetLootState(GO_JUST_DEACTIVATED);
                 return true;
             }
             return true;
