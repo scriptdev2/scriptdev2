@@ -189,20 +189,20 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000215,'Emergency shutdown complete.',0,2,0,0,'manaforge_control EMOTE_COMPLETE'),
 (-1000216,'Emergency shutdown aborted.',0,2,0,0,'manaforge_control EMOTE_ABORT'),
 
-(-1000217,'Greetings, $N. I will guide you through the cavern. Please try and keep up.',0,3,0,0,'WHISPER_CUSTODIAN_1'),
-(-1000218,'We do not know if the Caverns of Time have always been accessible to mortals. Truly, it is impossible to tell as the Timeless One is in perpetual motion, changing our timeways as he sees fit. What you see now may very well not exist tomorrow. You may wake up and have no memory of this place.',0,3,0,0,'WHISPER_CUSTODIAN_2'),
-(-1000219,'It is strange, I know... Most mortals cannot actually comprehend what they see here, as often, what they see is not anchored within their own perception of reality.',0,3,0,0,'WHISPER_CUSTODIAN_3'),
-(-1000220,'Follow me, please.',0,3,0,0,'WHISPER_CUSTODIAN_4'),
-(-1000221,'There are only two truths to be found here: First, that time is chaotic, always in flux, and completely malleable and second, perception does not dictate reality.',0,3,0,0,'WHISPER_CUSTODIAN_5'),
-(-1000222,'As custodians of time, we watch over and care for Nozdormu\'s realm. The master is away at the moment, which means that attempts are being made to dramatically alter time. The master never meddles in the affairs of mortals but instead corrects the alterations made to time by others. He is reactionary in this regard.',0,3,0,0,'WHISPER_CUSTODIAN_6'),
-(-1000223,'For normal maintenance of time, the Keepers of Time are sufficient caretakers. We are able to deal with most ordinary disturbances. I speak of little things, such as rogue mages changing something in the past to elevate their status or wealth in the present.',0,3,0,0,'WHISPER_CUSTODIAN_7'),
-(-1000224,'These tunnels that you see are called timeways. They are infinite in number. The ones that currently exist in your reality are what the master has deemed as \'trouble spots.\' These trouble spots may differ completely in theme but they always share a cause. That is, their existence is a result of the same temporal disturbance. Remember that should you venture inside one...',0,3,0,0,'WHISPER_CUSTODIAN_8'),
-(-1000225,'This timeway is in great disarray! We have agents inside right now attempting to restore order. What information I have indicates that Thrall\'s freedom is in jeopardy. A malevolent organization known as the Infinite Dragonflight is trying to prevent his escape. I fear without outside assistance, all will be lost.',0,3,0,0,'WHISPER_CUSTODIAN_9'),
-(-1000226,'We have very little information on this timeway. Sa\'at has been dispatched and is currently inside. The data we have gathered from his correspondence is that the Infinite Dragonflight are once again attempting to alter time. Could it be that the opening of the Dark Portal is being targeted for sabotage? Let us hope not...',0,3,0,0,'WHISPER_CUSTODIAN_10'),
-(-1000227,'This timeway is currently collapsing. What that may hold for the past, present and future is currently unknown...',0,3,0,0,'WHISPER_CUSTODIAN_11'),
-(-1000228,'The timeways are currently ranked in order from least catastrophic to most catastrophic. Note that they are all classified as catastrophic, meaning that any single one of these timeways collapsing would mean that your world would end. We only classify them in such a way so that the heroes and adventurers that are sent here know which timeway best suits their abilities.',0,3,0,0,'WHISPER_CUSTODIAN_12'),
-(-1000229,'All we know of this timeway is that it leads to Mount Hyjal. The Infinite Dragonflight have gone to great lengths to prevent our involvement. We know next to nothing, mortal. Soridormi is currently attempting to break through the timeway\'s defenses but has thus far been unsuccessful. You might be our only hope of breaking through and resolving the conflict.',0,3,0,0,'WHISPER_CUSTODIAN_13'),
-(-1000230,'Our time is at an end $N. I would wish you luck, if such a thing existed.',0,3,0,0,'WHISPER_CUSTODIAN_14'),
+(-1000217,'Greetings, $N. I will guide you through the cavern. Please try and keep up.',0,4,0,0,'WHISPER_CUSTODIAN_1'),
+(-1000218,'We do not know if the Caverns of Time have always been accessible to mortals. Truly, it is impossible to tell as the Timeless One is in perpetual motion, changing our timeways as he sees fit. What you see now may very well not exist tomorrow. You may wake up and have no memory of this place.',0,4,0,0,'WHISPER_CUSTODIAN_2'),
+(-1000219,'It is strange, I know... Most mortals cannot actually comprehend what they see here, as often, what they see is not anchored within their own perception of reality.',0,4,0,0,'WHISPER_CUSTODIAN_3'),
+(-1000220,'Follow me, please.',0,4,0,0,'WHISPER_CUSTODIAN_4'),
+(-1000221,'There are only two truths to be found here: First, that time is chaotic, always in flux, and completely malleable and second, perception does not dictate reality.',0,4,0,0,'WHISPER_CUSTODIAN_5'),
+(-1000222,'As custodians of time, we watch over and care for Nozdormu\'s realm. The master is away at the moment, which means that attempts are being made to dramatically alter time. The master never meddles in the affairs of mortals but instead corrects the alterations made to time by others. He is reactionary in this regard.',0,4,0,0,'WHISPER_CUSTODIAN_6'),
+(-1000223,'For normal maintenance of time, the Keepers of Time are sufficient caretakers. We are able to deal with most ordinary disturbances. I speak of little things, such as rogue mages changing something in the past to elevate their status or wealth in the present.',0,4,0,0,'WHISPER_CUSTODIAN_7'),
+(-1000224,'These tunnels that you see are called timeways. They are infinite in number. The ones that currently exist in your reality are what the master has deemed as \'trouble spots.\' These trouble spots may differ completely in theme but they always share a cause. That is, their existence is a result of the same temporal disturbance. Remember that should you venture inside one...',0,4,0,0,'WHISPER_CUSTODIAN_8'),
+(-1000225,'This timeway is in great disarray! We have agents inside right now attempting to restore order. What information I have indicates that Thrall\'s freedom is in jeopardy. A malevolent organization known as the Infinite Dragonflight is trying to prevent his escape. I fear without outside assistance, all will be lost.',0,4,0,0,'WHISPER_CUSTODIAN_9'),
+(-1000226,'We have very little information on this timeway. Sa\'at has been dispatched and is currently inside. The data we have gathered from his correspondence is that the Infinite Dragonflight are once again attempting to alter time. Could it be that the opening of the Dark Portal is being targeted for sabotage? Let us hope not...',0,4,0,0,'WHISPER_CUSTODIAN_10'),
+(-1000227,'This timeway is currently collapsing. What that may hold for the past, present and future is currently unknown...',0,4,0,0,'WHISPER_CUSTODIAN_11'),
+(-1000228,'The timeways are currently ranked in order from least catastrophic to most catastrophic. Note that they are all classified as catastrophic, meaning that any single one of these timeways collapsing would mean that your world would end. We only classify them in such a way so that the heroes and adventurers that are sent here know which timeway best suits their abilities.',0,4,0,0,'WHISPER_CUSTODIAN_12'),
+(-1000229,'All we know of this timeway is that it leads to Mount Hyjal. The Infinite Dragonflight have gone to great lengths to prevent our involvement. We know next to nothing, mortal. Soridormi is currently attempting to break through the timeway\'s defenses but has thus far been unsuccessful. You might be our only hope of breaking through and resolving the conflict.',0,4,0,0,'WHISPER_CUSTODIAN_13'),
+(-1000230,'Our time is at an end $N. I would wish you luck, if such a thing existed.',0,4,0,0,'WHISPER_CUSTODIAN_14'),
 
 (-1000231,'Ah, $GPriest:Priestess; you came along just in time. I appreciate it.',0,0,0,20,'garments SAY_COMMON_HEALED'),
 (-1000232,'Thank you! Thank you, $GPriest:Priestess;. Now I can take on those gnolls with your power to back me!',0,0,1,4,'garments SAY_DG_KEL_THANKS'),
@@ -618,7 +618,12 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000587,'%s whispers to $N the secret to opening his strongbox.',0,2,0,0,'Galen - emote whisper'),
 (-1000588,'%s disappears into the swamp.',0,2,0,0,'Galen - emote disapper'),
 
-(-1000589,'Kroshius live? Kroshius crush!',0,1,0,0,'SAY_KROSHIUS_REVIVE');
+(-1000589,'Kroshius live? Kroshius crush!',0,1,0,0,'SAY_KROSHIUS_REVIVE'),
+
+(-1000590,'Woot!',0,0,0,0,'Captive Child SAY_THANKS_1'),
+(-1000591,'I think those weird bird guys were going to eat us. Gross!',0,0,0,0,'Captive Child SAY_THANKS_2'),
+(-1000592,'Yay! We\'re free!',0,0,0,0,'Captive Child SAY_THANKS_3'),
+(-1000593,'Gross!',0,0,0,0,'Captive Child SAY_THANKS_4');
 
 -- -1 033 000 SHADOWFANG KEEP
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
@@ -669,6 +674,37 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1070004,'Reckless mortal.',5858,1,0,0,'archaedas SAY_UNIT_SLAIN');
 
 -- -1 090 000 GNOMEREGAN
+INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
+(-1090000,'With your help, I can evaluate these tunnels.',0,0,0,1,'emi shortfuse SAY_START'),
+(-1090001,'Let\'s see if we can find out where these Troggs are coming from.... and put a stop to the invasion!',0,0,0,1,'emi shortfuse SAY_INTRO_1'), -- '
+(-1090002,'Such devastation... what a horrible mess....',0,0,0,5,'emi shortfuse SAY_INTRO_2'),
+(-1090003,'It\'s quiet here....',0,0,0,1,'emi shortfuse SAY_INTRO_3'), -- '
+(-1090004,'...too quiet.',0,0,0,1,'emi shortfuse SAY_INTRO_4'),
+(-1090005,'Look! Over there at the tunnel wall!',0,0,0,25,'emi shortfuse SAY_LOOK_1'),
+(-1090006,'Trogg incursion! Defend me while I blast the hole closed!',0,0,0,5,'emi shortfuse SAY_HEAR_1'),
+(-1090007,'Get this, $n off of me!',0,0,0,0,'emi shortfuse SAY_AGGRO'),
+(-1090008,'I don\'t think one charge is going to cut it. Keep fending them off!',0,0,0,0,'emi shortfuse SAY_CHARGE_1'), -- '
+(-1090009,'The charges are set. Get back before they blow!',0,0,0,5,'emi shortfuse SAY_CHARGE_2'),
+(-1090010,'Incoming blast in 10 seconds!',0,1,0,5,'emi shortfuse SAY_BLOW_1_10'),
+(-1090011,'Incoming blast in 5 seconds. Clear the tunnel!',0,1,0,5,'emi shortfuse SAY_BLOW_1_5'),
+(-1090012,'FIRE IN THE HOLE!',0,1,0,25,'emi shortfuse SAY_BLOW_1'),
+(-1090013,'Well done! without your help I would have never been able to thwart that wave of troggs.',0,0,0,4,'emi shortfuse SAY_FINISH_1'),
+(-1090014,'Did you hear something?',0,0,0,6,'emi shortfuse SAY_LOOK_2'),
+(-1090015,'I heard something over there.',0,0,0,25,'emi shortfuse SAY_HEAR_2'),
+(-1090016,'More troggs! Ward them off as I prepare the explosives!',0,0,0,0,'emi shortfuse SAY_CHARGE_3'),
+(-1090017,'The final charges are set. Stand back!',0,0,0,1,'emi shortfuse SAY_CHARGE_4'),
+(-1090018,'10 seconds to blast! Stand back!',0,1,0,5,'emi shortfuse SAY_BLOW_2_10'),
+(-1090019,'5 seconds until detonation!',0,1,0,5,'emi shortfuse SAY_BLOW_2_5'),
+(-1090020,'Good work! I detonate the explosives that no more troggs can reach the surface.',0,0,0,1,'emi shortfuse SAY_BLOW_SOON'),
+(-1090021,'FIRE IN THE HOLE!',0,1,0,0,'emi shortfuse SAY_BLOW_2'),
+(-1090022,'Superb! Because of your help, my people stand a chance of re-taking our belowed city. Three cheers to you!',0,0,0,0,'emi shortfuse SAY_FINISH_2'),
+
+(-1090023,'We come from below! You can never stop us!',0,1,0,1,'grubbis SAY_GRUBBIS_SPAWN'),
+
+(-1090024,'Usurpers! Gnomeregan is mine!',5807,1,0,0,'thermaplugg SAY_AGGRO'),
+(-1090025,'My machines are the future! They\'ll destroy you all!',5808,1,0,0,'thermaplugg  SAY_PHASE'),
+(-1090026,'Explosions! MORE explosions! I\'ve got to have more explosions!',5809,1,0,0,'thermaplugg  SAY_BOMB'),
+(-1090027,'...and stay dead! He got served',5810,1,0,0,'thermaplugg  SAY_SLAY');
 
 -- -1 109 000 SUNKEN TEMPLE
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
@@ -2131,7 +2167,6 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1574021,'%s casts Frost Tomb on $N',0,3,0,0,'keleseth EMOTE_FROST_TOMB'),
 
 (-1574022,'%s roars!',0,3,0,0,'ingvar EMOTE_ROAR'),
-
 (-1574023,'Ingvar! Your pathetic failure will serve as a warning to all... you are damned! Arise and carry out the masters will!',13754,1,0,0,'annhylde REZZ');
 
 -- -1 575 000 UTGARDE PINNACLE
@@ -2731,6 +2766,36 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1619038,' ',14048,1,0,0,'volazj SAY_DEATH_1'),
 (-1619039,' ',14049,1,0,0,'volazj SAY_DEATH_2');
 
+-- -1 632 000 ICC: FORGE OF SOULS
+INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
+(-1632000,'More souls to power the engine!',0,1,0,0,'boss_bronjahm SAY_AGGRO_1'),
+(-1632001,'Finally...a captive audience!',16595,1,0,0,'boss_bronjahm SAY_AGGRO_2'),
+(-1632002,'Fodder for the engine!',16596,1,0,0,'boss_bronjahm SAY_SLAY_1'),
+(-1632003,'Another soul to strengthen the host!',16597,1,0,0,'boss_bronjahm SAY_SLAY_2'),
+(-1632004,'My soul for you, master.',16598,1,0,0,'boss_bronjahm SAY_DEATH'),
+(-1632005,'The vortex of the harvested calls to you!',16599,1,0,0,'boss_bronjahm SAY_SOULSTORM'),
+(-1632006,'I will sever the soul from your body!',16600,1,0,0,'boss_bronjahm SAY_CORRUPT_SOUL'),
+
+(-1632007,'You dare look upon the host of souls?! I SHALL DEVOUR YOU WHOLE!',16884,1,0,0,'boss_devourer SAY_MALE_1_AGGRO'),
+(-1632008,'You dare look upon the host of souls?! I SHALL DEVOUR YOU WHOLE!',16890,1,0,0,'boss_devourer SAY_FEMALE_AGGRO'),
+(-1632009,'Damnation!',16885,1,0,0,'boss_devourer SAY_MALE_1_SLAY_1'),
+(-1632010,'Damnation!',16891,1,0,0,'boss_devourer SAY_FEMALE_SLAY_1'),
+(-1632011,'Damnation!',16896,1,0,0,'boss_devourer SAY_MALE_2_SLAY_1'),
+(-1632012,'Doomed for eternity!',16886,1,0,0,'boss_devourer SAY_MALE_1_SLAY_2'),
+(-1632013,'Doomed for eternity!',16892,1,0,0,'boss_devourer SAY_FEMALE_SLAY_2'),
+(-1632014,'Doomed for eternity!',16897,1,0,0,'boss_devourer SAY_MALE_2_SLAY_2'),
+(-1632015,'The swell of souls will not be abated! You only delay the inevitable!',16887,1,0,0,'boss_devourer SAY_MALE_1_DEATH'),
+(-1632016,'The swell of souls will not be abated! You only delay the inevitable!',16893,1,0,0,'boss_devourer SAY_FEMALE_DEATH'),
+(-1632017,'The swell of souls will not be abated! You only delay the inevitable!',16898,1,0,0,'boss_devourer SAY_MALE_2_DEATH'),
+(-1632018,'SUFFERING! ANGUISH! CHAOS! RISE AND FEED!',16888,1,0,0,'boss_devourer SAY_MALE_1_SOUL_ATTACK'),
+(-1632019,'SUFFERING! ANGUISH! CHAOS! RISE AND FEED!',16894,1,0,0,'boss_devourer SAY_FEMALE_SOUL_ATTACK'),
+(-1632020,'SUFFERING! ANGUISH! CHAOS! RISE AND FEED!',16899,1,0,0,'boss_devourer SAY_MALE_2_SOUL_ATTACK'),
+(-1632021,'Stare into the abyss, and see your end!',16889,1,0,0,'boss_devourer SAY_MALE_1_DARK_GLARE'),
+(-1632022,'Stare into the abyss, and see your end!',16895,1,0,0,'boss_devourer SAY_FEMALE_DARK_GLARE'),
+(-1632023,'%s begins to cast Mirrored Soul!',0,3,0,0,'boss_devourer EMOTE_MIRRORED_SOUL'),
+(-1632024,'%s begins to Unleash Souls!',0,3,0,0,'boss_devourer EMOTE_UNLEASH_SOULS'),
+(-1632025,'%s begins to cast Wailing Souls!',0,3,0,0,'boss_devourer EMOTE_WAILING_SOULS');
+
 -- -1 999 900 EXAMPLE TEXT
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
 (-1999900,'Let the games begin.',8280,1,0,0,'example_creature SAY_AGGRO'),
@@ -2778,6 +2843,10 @@ TRUNCATE gossip_texts;
 INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 (-3000000,'[PH] SD2 unknown text','GOSSIP_ID_UNKNOWN_TEXT');
 
+-- -3 090 000 GNOMEREGAN
+INSERT INTO gossip_texts (entry,content_default,comment) VALUES
+(-3090000,'I am ready to begin.','emi shortfuse GOSSIP_ITEM_START');
+
 -- -3 560 000 ESCAPE FROM DURNHOLDE (OLD HILLSBRAD)
 INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 (-3560000,'I am ready to go to Durnholde Keep.','brazen GOSSIP_ITEM_READY'),
@@ -2788,7 +2857,7 @@ INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 (-3560005,'Strange wizard?','taretha GOSSIP_ITEM_EPOCH1'),
 (-3560006,'We\'ll get you out. Taretha. Don\'t worry. I doubt the wizard would wander too far away.','taretha GOSSIP_ITEM_EPOCH2');
 
--- -1 595 000 CULLING OF STRATHOLME
+-- -3 595 000 CULLING OF STRATHOLME
 INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 (-3595000,'What do you think they\'re up to?','chromie GOSSIP_ITEM_ENTRANCE_1'),
 (-3595001,'You want me to do what?','chromie GOSSIP_ITEM_ENTRANCE_2'),
@@ -2796,6 +2865,18 @@ INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 (-3595003,'Why have I been sent back to this particular place and time?','chromie GOSSIP_ITEM_INN_1'),
 (-3595004,'What was this decision?','chromie GOSSIP_ITEM_INN_2'),
 (-3595005,'So how does the Infinite Dragonflight plan to interfere?','chromie GOSSIP_ITEM_INN_3');
+
+-- -3 603 000 ULDUAR
+INSERT INTO gossip_texts (entry,content_default,comment) VALUES
+(-3603000,'Teleport to the Expedition Base Camp.','GOSSIP_ITEM_TELE_BASE_CAMP'),
+(-3603001,'Teleport to the Formation Grounds.','GOSSIP_ITEM_TELE_FORMATION_GROUNDS'),
+(-3603002,'Teleport to the Colossal Forge.','GOSSIP_ITEM_TELE_COLOSSAR_FORGE'),
+(-3603003,'Teleport to the Scrapyard.','GOSSIP_ITEM_TELE_SCRAPYARD'),
+(-3603004,'Teleport to the Antechamber of Ulduar.','GOSSIP_ITEM_TELE_ANTECHAMBER'),
+(-3603005,'Teleport to the Shattered Walkway.','GOSSIP_ITEM_TELE_WALKWAY'),
+(-3603006,'Teleport to the Conservatory of Life.','GOSSIP_ITEM_TELE_CONSERVATORY'),
+(-3603007,'Teleport to the Spark of Imagination.','GOSSIP_ITEM_TELE_SPARK_IMAGINATION'),
+(-3603008,'Teleport to the Prison of Yogg-Saron.','GOSSIP_ITEM_TELE_YOGG_SARON');
 
 -- -3 608 000 VIOLET HOLD
 INSERT INTO gossip_texts (entry,content_default,comment) VALUES
@@ -4567,5 +4648,28 @@ INSERT INTO script_waypoint VALUES
 (25208,23,4241.09,6217.87,-0.140,0,''),
 (25208,24,4254.66,6205.16,-0.170,0,''),
 (25208,25,4270.07,6188.42,0.059,15000,'Lurgglbr - final point');
+
+-- uncomment when it is implemented
+-- DELETE FROM script_waypoint WHERE entry=7998;
+-- INSERT INTO script_waypoint VALUES
+-- (7998, 01, -510.1305, -132.6899, -152.5,    0, ''),
+-- (7998, 02, -511.0994, -129.74,   -153.8453, 0, ''),
+-- (7998, 03, -511.7897, -127.4764, -155.5505, 0, ''),
+-- (7998, 04, -512.9688, -124.926,  -156.1146, 5000, ''),
+-- (7998, 05, -513.9719, -120.2358, -156.1161, 0, ''),
+-- (7998, 06, -514.3875, -115.1896, -156.1165, 0, ''),
+-- (7998, 07, -514.3039, -111.4777, -155.5205, 0, ''),
+-- (7998, 08, -514.8401, -107.6633, -154.8925, 0, ''),
+-- (7998, 09, -518.9943, -101.4161, -154.6482, 27000, ''),
+-- (7998, 10, -526.9984, -98.14884, -155.6253, 0, ''),
+-- (7998, 11, -534.5686, -105.4101, -155.989,  30000, ''),
+-- (7998, 12, -535.5336, -104.6947, -155.9713, 0, ''),
+-- (7998, 13, -541.6304, -98.6583,  -155.8584, 25000, ''),
+-- (7998, 14, -535.0923, -99.91748, -155.9742, 0, ''),
+-- (7998, 15, -519.0099, -101.5097, -154.6766, 3000, ''),
+-- (7998, 16, -504.4659, -97.84802, -150.9554, 30000, ''),
+-- (7998, 17, -506.9069, -89.14736, -151.083,  23000, ''),
+-- (7998, 18, -512.7576, -101.9025, -153.198, 0, ''),
+-- (7998, 19, -519.9883, -124.8479, -156.128, 86400000, 'this npc should not reset on wp end');
 -- EOF
 
