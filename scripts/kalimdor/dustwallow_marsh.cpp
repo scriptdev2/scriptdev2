@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Dustwallow_Marsh
 SD%Complete: 95
-SDComment: Quest support: 558, 1173, 1273, 1324, 11126, 11142, 11180. Vendor Nat Pagle
+SDComment: Quest support: 558, 1173, 1273, 1324, 11209, 11126, 11142, 11180. Vendor Nat Pagle
 SDCategory: Dustwallow Marsh
 EndScriptData */
 
@@ -810,8 +810,29 @@ bool GossipSelect_npc_cassa_crimsonwing(Player* pPlayer, Creature* pCreature, ui
 }
 
 /*######
-##
+## at_nats_landing
 ######*/
+enum
+{
+    QUEST_NATS_BARGAIN = 11209,
+    SPELL_FISH_PASTE   = 42644,
+    NPC_LURKING_SHARK  = 23928
+};
+
+bool AreaTrigger_at_nats_landing(Player* pPlayer, const AreaTriggerEntry* pAt)
+{
+    if (pPlayer->GetQuestStatus(QUEST_NATS_BARGAIN) == QUEST_STATUS_INCOMPLETE && pPlayer->HasAura(SPELL_FISH_PASTE))
+    {
+        Creature* pShark = GetClosestCreatureWithEntry(pPlayer, NPC_LURKING_SHARK, 20.0f);
+
+        if (!pShark)
+            pShark = pPlayer->SummonCreature(NPC_LURKING_SHARK, -4246.243f, -3922.356f, -7.488f, 5.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 100000);
+
+        pShark->AI()->AttackStart(pPlayer);
+        return false;
+    }
+    return true;
+}
 
 void AddSC_dustwallow_marsh()
 {
@@ -867,5 +888,10 @@ void AddSC_dustwallow_marsh()
     pNewScript->Name = "npc_cassa_crimsonwing";
     pNewScript->pGossipHello = &GossipHello_npc_cassa_crimsonwing;
     pNewScript->pGossipSelect = &GossipSelect_npc_cassa_crimsonwing;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "at_nats_landing";
+    pNewScript->pAreaTrigger = &AreaTrigger_at_nats_landing;
     pNewScript->RegisterSelf();
 }
