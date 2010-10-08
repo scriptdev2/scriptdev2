@@ -84,11 +84,11 @@ struct MANGOS_DLL_DECL npc_medivh_bmAI : public ScriptedAI
             return;
 
         if (m_pInstance->GetData(TYPE_MEDIVH) == IN_PROGRESS)
-            m_creature->CastSpell(m_creature,SPELL_CHANNEL,true);
+            m_creature->CastSpell(m_creature, SPELL_CHANNEL, true);
         else if (m_creature->HasAura(SPELL_CHANNEL, EFFECT_INDEX_0))
             m_creature->RemoveAurasDueToSpell(SPELL_CHANNEL);
 
-        m_creature->CastSpell(m_creature,SPELL_PORTAL_RUNE,true);
+        m_creature->CastSpell(m_creature, SPELL_PORTAL_RUNE, true);
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -102,8 +102,8 @@ struct MANGOS_DLL_DECL npc_medivh_bmAI : public ScriptedAI
                 return;
 
             DoScriptText(SAY_INTRO, m_creature);
-            m_pInstance->SetData(TYPE_MEDIVH,IN_PROGRESS);
-            m_creature->CastSpell(m_creature,SPELL_CHANNEL,false);
+            m_pInstance->SetData(TYPE_MEDIVH, IN_PROGRESS);
+            m_creature->CastSpell(m_creature, SPELL_CHANNEL, false);
             Check_Timer = 5000;
         }
         else if (who->GetTypeId() == TYPEID_UNIT && m_creature->IsWithinDistInMap(who, 15.0f))
@@ -115,12 +115,12 @@ struct MANGOS_DLL_DECL npc_medivh_bmAI : public ScriptedAI
             if (entry == NPC_ASSAS || entry == NPC_WHELP || entry == NPC_CHRON || entry == NPC_EXECU || entry == NPC_VANQU)
             {
                 who->StopMoving();
-                who->CastSpell(m_creature,SPELL_CORRUPT,false);
+                who->CastSpell(m_creature, SPELL_CORRUPT, false);
             }
             else if (entry == NPC_AEONUS)
             {
                 who->StopMoving();
-                who->CastSpell(m_creature,SPELL_CORRUPT_AEONUS,false);
+                who->CastSpell(m_creature, SPELL_CORRUPT_AEONUS, false);
             }
         }
     }
@@ -162,7 +162,7 @@ struct MANGOS_DLL_DECL npc_medivh_bmAI : public ScriptedAI
         {
             if (SpellCorrupt_Timer <= diff)
             {
-                m_pInstance->SetData(TYPE_MEDIVH,SPECIAL);
+                m_pInstance->SetData(TYPE_MEDIVH, SPECIAL);
 
                 if (m_creature->HasAura(SPELL_CORRUPT_AEONUS, EFFECT_INDEX_0))
                     SpellCorrupt_Timer = 1000;
@@ -170,7 +170,9 @@ struct MANGOS_DLL_DECL npc_medivh_bmAI : public ScriptedAI
                     SpellCorrupt_Timer = 3000;
                 else
                     SpellCorrupt_Timer = 0;
-            }else SpellCorrupt_Timer -= diff;
+            }
+            else
+                SpellCorrupt_Timer -= diff;
         }
 
         if (Check_Timer)
@@ -217,7 +219,9 @@ struct MANGOS_DLL_DECL npc_medivh_bmAI : public ScriptedAI
                     //TODO: start the post-event here
                     m_pInstance->SetData(TYPE_MEDIVH,DONE);
                 }
-            }else Check_Timer -= diff;
+            }
+            else
+                Check_Timer -= diff;
         }
 
         //if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
@@ -273,7 +277,8 @@ struct MANGOS_DLL_DECL npc_time_riftAI : public ScriptedAI
             mWaveId = 0;
         else if (mPortalCount > 12)
             mWaveId = 2;
-        else mWaveId = 1;
+        else
+            mWaveId = 1;
 
     }
 
@@ -289,16 +294,12 @@ struct MANGOS_DLL_DECL npc_time_riftAI : public ScriptedAI
             return;
         }
 
-        float x,y,z;
-        m_creature->GetRandomPoint(m_creature->GetPositionX(),m_creature->GetPositionY(),m_creature->GetPositionZ(),10.0f,x,y,z);
-
-        //normalize Z-level if we can, if rift is not at ground level.
-        z = m_creature->GetMap()->GetWaterOrGroundLevel(x, y, MAX_HEIGHT);
-
-        Unit *Summon = m_creature->SummonCreature(creature_entry,x,y,z,m_creature->GetOrientation(),
-            TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,30000);
-
-        if (Summon)
+        float x, y, z;
+        m_creature->GetRandomPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 10.0f, x, y, z);
+        // uncomment the following if something doesn't work correctly, otherwise just delete
+        // m_creature->UpdateAllowedPositionZ(x, y, z);
+        
+        if (Unit *Summon = m_creature->SummonCreature(creature_entry, x, y, z, m_creature->GetOrientation(), TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000))
         {
             if (Creature *temp = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_MEDIVH)))
                 Summon->AddThreat(temp);
@@ -313,7 +314,7 @@ struct MANGOS_DLL_DECL npc_time_riftAI : public ScriptedAI
             mRiftWaveCount = 0;
 
         entry = PortalWaves[mWaveId].PortalMob[mRiftWaveCount];
-        debug_log("SD2: npc_time_rift: summoning wave creature (Wave %u, Entry %u).",mRiftWaveCount,entry);
+        debug_log("SD2: npc_time_rift: summoning wave creature (Wave %u, Entry %u).", mRiftWaveCount, entry);
 
         ++mRiftWaveCount;
 
@@ -321,7 +322,9 @@ struct MANGOS_DLL_DECL npc_time_riftAI : public ScriptedAI
         {
             for(uint8 i = 0; i < 3; ++i)
                 DoSummonAtRift(entry);
-        }else DoSummonAtRift(entry);
+        }
+        else
+            DoSummonAtRift(entry);
     }
 
     void UpdateAI(const uint32 diff)
@@ -333,7 +336,9 @@ struct MANGOS_DLL_DECL npc_time_riftAI : public ScriptedAI
         {
             DoSelectSummon();
             TimeRiftWave_Timer = 15000;
-        }else TimeRiftWave_Timer -= diff;
+        }
+        else
+            TimeRiftWave_Timer -= diff;
 
         if (m_creature->IsNonMeleeSpellCasted(false))
             return;
@@ -342,7 +347,7 @@ struct MANGOS_DLL_DECL npc_time_riftAI : public ScriptedAI
         m_creature->setDeathState(JUST_DIED);
 
         if (m_pInstance->GetData(TYPE_RIFT) == IN_PROGRESS)
-            m_pInstance->SetData(TYPE_RIFT,SPECIAL);
+            m_pInstance->SetData(TYPE_RIFT, SPECIAL);
     }
 };
 
@@ -364,13 +369,13 @@ bool GossipHello_npc_saat(Player* pPlayer, Creature* pCreature)
 
     if (pPlayer->GetQuestStatus(QUEST_OPENING_PORTAL) == QUEST_STATUS_INCOMPLETE && !pPlayer->HasItemCount(ITEM_CHRONO_BEACON,1))
     {
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT,GOSSIP_ITEM_OBTAIN,GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF+1);
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_OBTAIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
         pPlayer->SEND_GOSSIP_MENU(10000, pCreature->GetGUID());
         return true;
     }
     else if (pPlayer->GetQuestRewardStatus(QUEST_OPENING_PORTAL) && !pPlayer->HasItemCount(ITEM_CHRONO_BEACON,1))
     {
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT,GOSSIP_ITEM_OBTAIN,GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF+1);
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_OBTAIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
         pPlayer->SEND_GOSSIP_MENU(10001, pCreature->GetGUID());
         return true;
     }

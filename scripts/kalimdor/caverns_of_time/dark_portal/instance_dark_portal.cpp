@@ -36,8 +36,8 @@ float PortalLocation[4][4]=
 
 struct Wave
 {
-    uint32 PortalBoss;                                      //protector of current portal
-    uint32 NextPortalTime;                                  //time to next portal, or 0 if portal boss need to be killed
+    uint32 PortalBoss;                                      // protector of current portal
+    uint32 NextPortalTime;                                  // time to next portal, or 0 if portal boss need to be killed
 };
 
 static Wave RiftWaves[]=
@@ -115,7 +115,7 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
             m_uiMedivhGUID = pCreature->GetGUID();
     }
 
-    //what other conditions to check?
+    // what other conditions to check?
     bool CanProgressEvent()
     {
         if (instance->GetPlayers().isEmpty())
@@ -177,7 +177,7 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
 
                     if (uiData == DONE)
                     {
-                        //this may be completed further out in the post-event
+                        // this may be completed further out in the post-event
                         debug_log("SD2: Instance Dark Portal: Event completed.");
 
                         Map::PlayerList const& players = instance->GetPlayers();
@@ -244,14 +244,14 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
         if (uiEntry == RIFT_BOSS)
             uiEntry = RandRiftBoss();
 
-        float x,y,z;
-        pSource->GetRandomPoint(pSource->GetPositionX(),pSource->GetPositionY(),pSource->GetPositionZ(),10.0f,x,y,z);
-        //normalize Z-level if we can, if rift is not at ground level.
-        z = instance->GetWaterOrGroundLevel(x, y, MAX_HEIGHT);
+        float x, y, z;
+        pSource->GetRandomPoint(pSource->GetPositionX(), pSource->GetPositionY(), pSource->GetPositionZ(), 10.0f, x, y, z);
+        // uncomment the following if something doesn't work correctly, otherwise just delete
+        // pSource->UpdateAllowedPositionZ(x, y, z);
 
-        debug_log("SD2: Instance Dark Portal: Summoning rift boss uiEntry %u.",uiEntry);
+        debug_log("SD2: Instance Dark Portal: Summoning rift boss uiEntry %u.", uiEntry);
 
-        if (Creature* pSummoned = pSource->SummonCreature(uiEntry,x,y,z,pSource->GetOrientation(), TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,600000))
+        if (Creature* pSummoned = pSource->SummonCreature(uiEntry, x, y, z, pSource->GetOrientation(), TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000))
             return pSummoned;
 
         debug_log("SD2: Instance Dark Portal: what just happened there? No boss, no loot, no fun...");
