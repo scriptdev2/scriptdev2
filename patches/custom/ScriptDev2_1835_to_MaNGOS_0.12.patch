@@ -1,0 +1,284 @@
+Index: include/precompiled.h
+===================================================================
+--- include/precompiled.h (revision 1838)
++++ include/precompiled.h (working copy)
+@@ -11,6 +11,11 @@
+ #include "sc_grid_searchers.h"
+ #include "sc_instance.h"
+ 
++enum backports
++{
++    UNIT_VIRTUAL_ITEM_SLOT_ID = UNIT_VIRTUAL_ITEM_SLOT_DISPLAY
++};
++
+ #ifdef WIN32
+ #  include <windows.h>
+     BOOL APIENTRY DllMain(HANDLE hModule, DWORD ul_reason_for_call, LPVOID lpReserved)
+Index: scripts/kalimdor/azuremyst_isle.cpp
+===================================================================
+--- scripts/kalimdor/azuremyst_isle.cpp (revision 1838)
++++ scripts/kalimdor/azuremyst_isle.cpp (working copy)
+@@ -103,7 +103,7 @@
+ 
+     void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
+     {
+-        if (pSpell->SpellFamilyFlags2 & 0x080000000)
++        if (pSpell->Id == 28880)
+         {
+             m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PVP_ATTACKABLE);
+             m_creature->SetStandState(UNIT_STAND_STATE_STAND);
+Index: scripts/kalimdor/onyxias_lair/boss_onyxia.cpp
+===================================================================
+--- scripts/kalimdor/onyxias_lair/boss_onyxia.cpp (revision 1838)
++++ scripts/kalimdor/onyxias_lair/boss_onyxia.cpp (working copy)
+@@ -299,7 +299,7 @@
+                     DoScriptText(SAY_PHASE_2_TRANS, m_creature);
+ 
+                     // sort of a hack, it is unclear how this really work but the values appear to be valid
+-                    m_creature->SetByteValue(UNIT_FIELD_BYTES_1, 3, UNIT_BYTE1_FLAG_ALWAYS_STAND | UNIT_BYTE1_FLAG_UNK_2);
++                    m_creature->SetByteValue(UNIT_FIELD_BYTES_1, 3, UNIT_BYTE1_FLAG_ALWAYS_STAND/* | UNIT_BYTE1_FLAG_UNK_2*/);
+                     m_creature->AddSplineFlag(SPLINEFLAG_FLYING);
+ 
+                     if (m_pPointData)
+Index: scripts/northrend/dragonblight.cpp
+===================================================================
+--- scripts/northrend/dragonblight.cpp (revision 1838)
++++ scripts/northrend/dragonblight.cpp (working copy)
+@@ -101,7 +101,7 @@
+     if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
+     {
+         pPlayer->CLOSE_GOSSIP_MENU();
+-        pPlayer->SendMovieStart(MOVIE_ID_GATES);
++//        pPlayer->SendMovieStart(MOVIE_ID_GATES);
+     }
+ 
+     return true;
+Index: scripts/outland/auchindoun/auchenai_crypts/boss_exarch_maladaar.cpp
+===================================================================
+--- scripts/outland/auchindoun/auchenai_crypts/boss_exarch_maladaar.cpp (revision 1838)
++++ scripts/outland/auchindoun/auchenai_crypts/boss_exarch_maladaar.cpp (working copy)
+@@ -107,10 +107,10 @@
+                     DoCastSpellIfCan(m_creature->getVictim(), SPELL_MOONFIRE);
+                     m_uiSpellTimer = 10000;
+                     break;
+-                case CLASS_DEATH_KNIGHT:
+-                    DoCastSpellIfCan(m_creature->getVictim(), SPELL_PLAGUE_STRIKE);
+-                    m_uiSpellTimer = 10000;
+-                    break;
++//                case CLASS_DEATH_KNIGHT:
++//                    DoCastSpellIfCan(m_creature->getVictim(), SPELL_PLAGUE_STRIKE);
++//                    m_uiSpellTimer = 10000;
++//                    break;
+             }
+         }
+         else
+Index: scripts/world/item_scripts.cpp
+===================================================================
+--- scripts/world/item_scripts.cpp (revision 1838)
++++ scripts/world/item_scripts.cpp (working copy)
+@@ -47,7 +47,7 @@
+     pPlayer->SendEquipError(EQUIP_ERR_NONE, pItem, NULL);
+ 
+     if (const SpellEntry* pSpellInfo = GetSpellStore()->LookupEntry(SPELL_ARCANE_CHARGES))
+-        Spell::SendCastResult(pPlayer, pSpellInfo, 1, SPELL_FAILED_NOT_ON_GROUND);
++        Spell::SendCastResult(pPlayer, pSpellInfo, 1, SPELL_FAILED_ERROR);
+ 
+     return true;
+ }
+Index: scripts/eastern_kingdoms/shadowfang_keep/shadowfang_keep.cpp
+===================================================================
+--- scripts/eastern_kingdoms/shadowfang_keep/shadowfang_keep.cpp (revision 1838)
++++ scripts/eastern_kingdoms/shadowfang_keep/shadowfang_keep.cpp (working copy)
+@@ -91,10 +91,10 @@
+                 else
+                     DoScriptText(EMOTE_UNLOCK_DOOR_AD, m_creature);
+                 break;
+-            case 12:
+-                if (m_uiNpcEntry != NPC_ASH)
+-                    m_creature->HandleEmote(EMOTE_ONESHOT_USESTANDING);
+-                break;
++//            case 12:
++//                if (m_uiNpcEntry != NPC_ASH)
++//                    m_creature->HandleEmote(EMOTE_ONESHOT_USESTANDING);
++//                break;
+             case 13:
+                 if (m_uiNpcEntry == NPC_ASH)
+                     DoScriptText(SAY_POST_DOOR_AS, m_creature);
+Index: system/ScriptLoader.cpp
+===================================================================
+--- system/ScriptLoader.cpp (revision 1838)
++++ system/ScriptLoader.cpp (working copy)
+@@ -263,85 +263,8 @@
+ extern void AddSC_winterspring();
+ 
+ //northrend
+-extern void AddSC_boss_jedoga();                            //ahnkahet
+-extern void AddSC_boss_nadox();
+-extern void AddSC_boss_taldaram();
+-extern void AddSC_boss_volazj();
+-extern void AddSC_instance_ahnkahet();
+-extern void AddSC_boss_anubarak();                          //azjol-nerub
+-extern void AddSC_boss_hadronox();
+-extern void AddSC_boss_krikthir();
+-extern void AddSC_instance_azjol_nerub();
+-extern void AddSC_boss_anubarak_trial();                    //trial_of_the_crusader
+-extern void AddSC_boss_jaraxxus();
+-extern void AddSC_instance_trial_of_the_crusader();
+-extern void AddSC_northrend_beasts();
+-extern void AddSC_trial_of_the_crusader();
+-extern void AddSC_twin_valkyr();
+-extern void AddSC_boss_novos();                             //draktharon_keep
+-extern void AddSC_boss_tharonja();
+-extern void AddSC_boss_trollgore();
+-extern void AddSC_boss_colossus();                          //gundrak
+-extern void AddSC_boss_galdarah();
+-extern void AddSC_boss_moorabi();
+-extern void AddSC_boss_sladran();
+-extern void AddSC_instance_gundrak();
+-extern void AddSC_boss_bronjahm();                          // ICC, forge_of_souls
+-extern void AddSC_boss_devourer_of_souls();
+-extern void AddSC_instance_forge_of_souls();
+-extern void AddSC_boss_anubrekhan();                        //naxxramas
+-extern void AddSC_boss_four_horsemen();
+-extern void AddSC_boss_faerlina();
+-extern void AddSC_boss_gluth();
+-extern void AddSC_boss_gothik();
+-extern void AddSC_boss_kelthuzad();
+-extern void AddSC_boss_loatheb();
+-extern void AddSC_boss_maexxna();
+-extern void AddSC_boss_noth();
+-extern void AddSC_boss_heigan();
+-extern void AddSC_boss_patchwerk();
+-extern void AddSC_boss_razuvious();
+-extern void AddSC_boss_sapphiron();
+-extern void AddSC_instance_naxxramas();
+-extern void AddSC_boss_anomalus();                          //nexus
+-extern void AddSC_boss_keristrasza();
+-extern void AddSC_boss_ormorok();
+-extern void AddSC_boss_telestra();
+-extern void AddSC_instance_nexus();
+-extern void AddSC_boss_sartharion();                        //obsidian_sanctum
+-extern void AddSC_instance_obsidian_sanctum();
+-extern void AddSC_boss_bjarngrim();                         //Ulduar, halls_of_lightning
+-extern void AddSC_boss_ionar();
+-extern void AddSC_boss_loken();
+-extern void AddSC_boss_volkhan();
+-extern void AddSC_instance_halls_of_lightning();
+-extern void AddSC_boss_maiden_of_grief();                   //Ulduar, halls_of_stone
+-extern void AddSC_boss_sjonnir();
+-extern void AddSC_halls_of_stone();
+-extern void AddSC_instance_halls_of_stone();
+-extern void AddSC_instance_ulduar();                        //ulduar
+-extern void AddSC_boss_ingvar();                            //utgarde_keep
+-extern void AddSC_boss_keleseth();
+-extern void AddSC_boss_skarvald_and_dalronn();
+-extern void AddSC_instance_utgarde_keep();
+-extern void AddSC_utgarde_keep();
+-extern void AddSC_boss_gortok();                           //utgarde_pinnacle
+-extern void AddSC_boss_skadi();
+-extern void AddSC_boss_svala();
+-extern void AddSC_boss_ymiron();
+-extern void AddSC_instance_pinnacle();
+-extern void AddSC_instance_violet_hold();                   //violet_hold
+-extern void AddSC_violet_hold();
++// removed
+ 
+-extern void AddSC_borean_tundra();
+-extern void AddSC_dalaran();
+-extern void AddSC_dragonblight();
+-extern void AddSC_howling_fjord();
+-extern void AddSC_icecrown();
+-extern void AddSC_sholazar_basin();
+-extern void AddSC_storm_peaks();
+-extern void AddSC_zuldrak();
+-
+ //outland
+ extern void AddSC_boss_exarch_maladaar();                   //auchindoun, auchenai_crypts
+ extern void AddSC_boss_nexusprince_shaffar();               //auchindoun, mana_tombs
+@@ -681,85 +604,8 @@
+     AddSC_winterspring();
+ 
+     //northrend
+-    AddSC_boss_jedoga();                                    //ahnkahet
+-    AddSC_boss_nadox();
+-    AddSC_boss_taldaram();
+-    AddSC_boss_volazj();
+-    AddSC_instance_ahnkahet();
+-    AddSC_boss_anubarak();                                  //azjol-nerub
+-    AddSC_boss_hadronox();
+-    AddSC_boss_krikthir();
+-    AddSC_instance_azjol_nerub();
+-    AddSC_boss_anubarak_trial();                            //trial_of_the_crusader
+-    AddSC_boss_jaraxxus();
+-    AddSC_instance_trial_of_the_crusader();
+-    AddSC_northrend_beasts();
+-    AddSC_trial_of_the_crusader();
+-    AddSC_twin_valkyr();
+-    AddSC_boss_novos();                                     //draktharon_keep
+-    AddSC_boss_tharonja();
+-    AddSC_boss_trollgore();
+-    AddSC_boss_colossus();                                  //gundrak
+-    AddSC_boss_galdarah();
+-    AddSC_boss_moorabi();
+-    AddSC_boss_sladran();
+-    AddSC_instance_gundrak();
+-    AddSC_boss_bronjahm();                                  // ICC, forge_of_souls
+-    AddSC_boss_devourer_of_souls();
+-    AddSC_instance_forge_of_souls();
+-    AddSC_boss_anubrekhan();                                //naxxramas
+-    AddSC_boss_four_horsemen();
+-    AddSC_boss_faerlina();
+-    AddSC_boss_gluth();
+-    AddSC_boss_gothik();
+-    AddSC_boss_kelthuzad();
+-    AddSC_boss_loatheb();
+-    AddSC_boss_maexxna();
+-    AddSC_boss_noth();
+-    AddSC_boss_heigan();
+-    AddSC_boss_patchwerk();
+-    AddSC_boss_razuvious();
+-    AddSC_boss_sapphiron();
+-    AddSC_instance_naxxramas();
+-    AddSC_boss_anomalus();                                  //nexus
+-    AddSC_boss_keristrasza();
+-    AddSC_boss_ormorok();
+-    AddSC_boss_telestra();
+-    AddSC_instance_nexus();
+-    AddSC_boss_sartharion();                                //obsidian_sanctum
+-    AddSC_instance_obsidian_sanctum();
+-    AddSC_boss_bjarngrim();                                 //Ulduar, halls_of_lightning
+-    AddSC_boss_ionar();
+-    AddSC_boss_loken();
+-    AddSC_boss_volkhan();
+-    AddSC_instance_halls_of_lightning();
+-    AddSC_boss_maiden_of_grief();                           //Ulduar, halls_of_stone
+-    AddSC_boss_sjonnir();
+-    AddSC_halls_of_stone();
+-    AddSC_instance_halls_of_stone();
+-    AddSC_instance_ulduar();                                //ulduar
+-    AddSC_boss_ingvar();                                    //utgarde_keep
+-    AddSC_boss_keleseth();
+-    AddSC_boss_skarvald_and_dalronn();
+-    AddSC_instance_utgarde_keep();
+-    AddSC_utgarde_keep();
+-    AddSC_boss_gortok();                                    //utgarde_pinnacle
+-    AddSC_boss_skadi();
+-    AddSC_boss_svala();
+-    AddSC_boss_ymiron();
+-    AddSC_instance_pinnacle();
+-    AddSC_instance_violet_hold();                           //violet_hold
+-    AddSC_violet_hold();
++    // removed
+ 
+-    AddSC_borean_tundra();
+-    AddSC_dalaran();
+-    AddSC_dragonblight();
+-    AddSC_howling_fjord();
+-    AddSC_icecrown();
+-    AddSC_sholazar_basin();
+-    AddSC_storm_peaks();
+-    AddSC_zuldrak();
+-
+     //outland
+     AddSC_boss_exarch_maladaar();                           //auchindoun, auchenai_crypts
+     AddSC_boss_nexusprince_shaffar();                       //auchindoun, mana_tombs
