@@ -37,12 +37,12 @@ struct MANGOS_DLL_DECL boss_hadronoxAI : public ScriptedAI
 {
     boss_hadronoxAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_pInstance = (instance_azjol_nerub*)pCreature->GetInstanceData();
         m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Reset();
     }
 
-    ScriptedInstance* m_pInstance;
+    instance_azjol_nerub* m_pInstance;
     bool m_bIsRegularMode;
 
     void Reset()
@@ -70,10 +70,10 @@ CreatureAI* GetAI_boss_hadronox(Creature* pCreature)
 
 void AddSC_boss_hadronox()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_hadronox";
-    newscript->GetAI = &GetAI_boss_hadronox;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_hadronox";
+    pNewScript->GetAI = &GetAI_boss_hadronox;
+    pNewScript->RegisterSelf();
 }
