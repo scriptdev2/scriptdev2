@@ -344,7 +344,7 @@ struct MANGOS_DLL_DECL npc_time_riftAI : public ScriptedAI
             return;
 
         debug_log("SD2: npc_time_rift: not casting anylonger, i need to die.");
-        m_creature->setDeathState(JUST_DIED);
+        m_creature->SetDeathState(JUST_DIED);
 
         if (m_pInstance->GetData(TYPE_RIFT) == IN_PROGRESS)
             m_pInstance->SetData(TYPE_RIFT, SPECIAL);

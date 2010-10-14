@@ -252,7 +252,7 @@ struct MANGOS_DLL_DECL boss_malacrassAI : public ScriptedAI
             if (Creature* pAdd = m_creature->GetMap()->GetCreature(m_auiAddGUIDs[i]))
             {
                 pAdd->AI()->EnterEvadeMode();
-                pAdd->setDeathState(JUST_DIED);
+                pAdd->SetDeathState(JUST_DIED);
             }
         }
 

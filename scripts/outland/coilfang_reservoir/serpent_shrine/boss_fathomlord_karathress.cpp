@@ -356,7 +356,7 @@ struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public Advisor_Base_AI
 
     void JustSummoned(Creature* pSummoned)
     {
-        if (pSummoned->isPet())
+        if (pSummoned->IsPet())
         {
             m_uiPet_Timer = 10000;
             m_bIsPetCheckNeeded = false;
@@ -365,7 +365,7 @@ struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public Advisor_Base_AI
 
     void SummonedCreatureDespawn(Creature* pDespawned)
     {
-        if (pDespawned->isPet())
+        if (pDespawned->IsPet())
             m_bIsPetCheckNeeded = true;
     }
 

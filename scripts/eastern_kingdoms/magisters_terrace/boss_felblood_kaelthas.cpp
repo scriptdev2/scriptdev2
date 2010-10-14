@@ -497,7 +497,7 @@ struct MANGOS_DLL_DECL mob_felkael_phoenixAI : public ScriptedAI
                 if (Death_Timer < diff)
                 {
                     m_creature->SummonCreature(CREATURE_PHOENIX_EGG, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 45000);
-                    m_creature->setDeathState(JUST_DIED);
+                    m_creature->SetDeathState(JUST_DIED);
                     m_creature->RemoveCorpse();
                     Rebirth = false;
                 }else Death_Timer -= diff;

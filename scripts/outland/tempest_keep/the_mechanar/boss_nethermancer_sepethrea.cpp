@@ -215,7 +215,7 @@ struct MANGOS_DLL_DECL mob_ragin_flamesAI : public ScriptedAI
                 if (m_pInstance->GetData(TYPE_SEPETHREA) == DONE)
                 {
                     //remove
-                    m_creature->setDeathState(JUST_DIED);
+                    m_creature->SetDeathState(JUST_DIED);
                     m_creature->RemoveCorpse();
                     return;
                 }

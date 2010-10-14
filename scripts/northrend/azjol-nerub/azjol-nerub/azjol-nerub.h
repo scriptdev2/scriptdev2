@@ -45,7 +45,7 @@ struct MANGOS_DLL_DECL instance_azjol_nerub : public ScriptedInstance
         void SetData(uint32 uiType, uint32 uiData);
         const char* Save() { return strInstData.c_str(); }
         void Load(const char* chrIn);
-        void Update(const uint32 uiDiff);
+        void Update(uint32 uiDiff);
         void DoSendWatcherOrKrikthir();
 
     protected:

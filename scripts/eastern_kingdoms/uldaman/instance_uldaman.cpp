@@ -110,7 +110,7 @@ void instance_uldaman::SetData(uint32 uiType, uint32 uiData)
                 {
                     if (Creature* pWarden = instance->GetCreature(*itr))
                     {
-                        pWarden->setDeathState(JUST_DIED);
+                        pWarden->SetDeathState(JUST_DIED);
                         pWarden->Respawn();
                         pWarden->SetNoCallAssistance(true);
                     }
@@ -218,7 +218,7 @@ void instance_uldaman::DoResetKeeperEvent()
     {
         if (Creature* pKeeper = instance->GetCreature(itr->first))
         {
-            pKeeper->setDeathState(JUST_DIED);
+            pKeeper->SetDeathState(JUST_DIED);
             pKeeper->Respawn();
             pKeeper->CastSpell(pKeeper, SPELL_STONED, true);
             pKeeper->SetNoCallAssistance(true);

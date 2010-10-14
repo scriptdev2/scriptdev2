@@ -293,7 +293,7 @@ struct MANGOS_DLL_DECL npc_morokkAI : public npc_escortAI
                     DoScriptText(SAY_MOR_SCARED, m_creature);
                 else
                 {
-                    m_creature->setDeathState(JUST_DIED);
+                    m_creature->SetDeathState(JUST_DIED);
                     m_creature->Respawn();
                 }
                 break;

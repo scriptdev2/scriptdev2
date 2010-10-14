@@ -211,7 +211,7 @@ struct MANGOS_DLL_DECL mob_nether_wraithAI : public ScriptedAI
         {
             if (Die_Timer < diff)
             {
-                m_creature->setDeathState(JUST_DIED);
+                m_creature->SetDeathState(JUST_DIED);
                 m_creature->RemoveCorpse();
             }else Die_Timer -= diff;
         }

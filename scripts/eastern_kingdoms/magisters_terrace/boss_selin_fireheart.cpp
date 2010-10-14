@@ -309,7 +309,7 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
 
                     Creature* CrystalChosen = m_creature->GetMap()->GetCreature(CrystalGUID);
                     if (CrystalChosen && CrystalChosen->isAlive())
-                        // Use Deal Damage to kill it, not setDeathState.
+                        // Use Deal Damage to kill it, not SetDeathState.
                         CrystalChosen->DealDamage(CrystalChosen, CrystalChosen->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
 
                     CrystalGUID = 0;

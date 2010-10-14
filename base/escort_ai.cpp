@@ -123,7 +123,7 @@ void npc_escortAI::MoveInLineOfSight(Unit* pWho)
         if (!m_creature->CanInitiateAttack())
             return;
 
-        if (!m_creature->canFly() && m_creature->GetDistanceZ(pWho) > CREATURE_Z_ATTACK_RANGE)
+        if (!m_creature->CanFly() && m_creature->GetDistanceZ(pWho) > CREATURE_Z_ATTACK_RANGE)
             return;
 
         if (m_creature->IsHostileTo(pWho))
@@ -270,7 +270,7 @@ void npc_escortAI::UpdateAI(const uint32 uiDiff)
 
                 if (m_bCanInstantRespawn)
                 {
-                    m_creature->setDeathState(JUST_DIED);
+                    m_creature->SetDeathState(JUST_DIED);
                     m_creature->Respawn();
                 }
                 else
@@ -304,7 +304,7 @@ void npc_escortAI::UpdateAI(const uint32 uiDiff)
 
                 if (m_bCanInstantRespawn)
                 {
-                    m_creature->setDeathState(JUST_DIED);
+                    m_creature->SetDeathState(JUST_DIED);
                     m_creature->Respawn();
                 }
                 else

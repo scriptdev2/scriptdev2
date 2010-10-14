@@ -115,7 +115,7 @@ struct MANGOS_DLL_DECL boss_twinemperorsAI : public ScriptedAI
             pOtherBoss->SetHealth(ohealth > 0 ? ohealth : 0);
             if (ohealth <= 0)
             {
-                pOtherBoss->setDeathState(JUST_DIED);
+                pOtherBoss->SetDeathState(JUST_DIED);
                 pOtherBoss->SetUInt32Value(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
             }
         }
@@ -126,7 +126,7 @@ struct MANGOS_DLL_DECL boss_twinemperorsAI : public ScriptedAI
         if (Creature* pOtherBoss = GetOtherBoss())
         {
             pOtherBoss->SetHealth(0);
-            pOtherBoss->setDeathState(JUST_DIED);
+            pOtherBoss->SetDeathState(JUST_DIED);
             pOtherBoss->SetUInt32Value(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
 
             if (boss_twinemperorsAI* pOtherAI = dynamic_cast<boss_twinemperorsAI*>(pOtherBoss->AI()))

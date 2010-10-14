@@ -101,7 +101,7 @@ struct MANGOS_DLL_DECL mob_fireswornAI : public ScriptedAI
         if (m_creature->GetHealthPercent() <= 10.0f)
         {
             DoCastSpellIfCan(m_creature->getVictim(),SPELL_ERUPTION);
-            m_creature->setDeathState(JUST_DIED);
+            m_creature->SetDeathState(JUST_DIED);
             m_creature->RemoveCorpse();
         }
 

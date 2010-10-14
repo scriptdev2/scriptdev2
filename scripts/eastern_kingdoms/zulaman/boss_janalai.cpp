@@ -179,14 +179,14 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
         if (Creature* pHatcher = m_creature->GetMap()->GetCreature(m_uiHatcher1GUID))
         {
             pHatcher->AI()->EnterEvadeMode();
-            pHatcher->setDeathState(JUST_DIED);
+            pHatcher->SetDeathState(JUST_DIED);
             m_uiHatcher1GUID = 0;
         }
 
         if (Creature* pHatcher = m_creature->GetMap()->GetCreature(m_uiHatcher2GUID))
         {
             pHatcher->AI()->EnterEvadeMode();
-            pHatcher->setDeathState(JUST_DIED);
+            pHatcher->SetDeathState(JUST_DIED);
             m_uiHatcher2GUID = 0;
         }
 

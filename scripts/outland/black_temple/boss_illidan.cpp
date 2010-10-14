@@ -347,7 +347,7 @@ struct MANGOS_DLL_DECL demonfireAI : public ScriptedAI
                     IllidanGUID = m_pInstance->GetData64(DATA_ILLIDANSTORMRAGE);
 
                     if (!pIllidan->HasSplineFlag(SPLINEFLAG_NO_SPLINE))
-                        m_creature->setDeathState(JUST_DIED);
+                        m_creature->SetDeathState(JUST_DIED);
                 }
             }
             CheckTimer = 2000;
@@ -360,7 +360,7 @@ struct MANGOS_DLL_DECL demonfireAI : public ScriptedAI
         }else DemonFireTimer -= diff;
 
         if (DespawnTimer < diff)
-            m_creature->setDeathState(JUST_DIED);
+            m_creature->SetDeathState(JUST_DIED);
         else DespawnTimer -= diff;
 
         DoMeleeAttackIfReady();
@@ -470,7 +470,7 @@ struct MANGOS_DLL_DECL npc_akama_illidanAI : public ScriptedAI
             Unit* pUnit = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid());
 
             if (pUnit && pUnit->GetTypeId() == TYPEID_UNIT && pUnit->GetEntry() == ILLIDARI_ELITE)
-                pUnit->setDeathState(JUST_DIED);
+                pUnit->SetDeathState(JUST_DIED);
         }
     }
 
@@ -731,7 +731,7 @@ struct MANGOS_DLL_DECL npc_akama_illidanAI : public ScriptedAI
                         {
                             Creature* ChannelTarget = m_creature->GetMap()->GetCreature(ChannelGUID);
                             if (ChannelTarget)
-                                ChannelTarget->setDeathState(JUST_DIED);
+                                ChannelTarget->SetDeathState(JUST_DIED);
                             ChannelGUID = 0;
                         }
                         for(uint8 i = 0; i < 2; ++i)
@@ -740,7 +740,7 @@ struct MANGOS_DLL_DECL npc_akama_illidanAI : public ScriptedAI
                             {
                                 Creature* Spirit = m_creature->GetMap()->GetCreature(SpiritGUID[i]);
                                 if (Spirit)
-                                    Spirit->setDeathState(JUST_DIED);
+                                    Spirit->SetDeathState(JUST_DIED);
                             }
                         }
                         ChannelTimer = 6000;
@@ -908,7 +908,7 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
             if (Creature* Flame = m_creature->GetMap()->GetCreature(FlameGUID[i]))
             {
                 if (Flame->isAlive())
-                    Flame->setDeathState(JUST_DIED);
+                    Flame->SetDeathState(JUST_DIED);
 
                 FlameGUID[i] = 0;
             }
@@ -916,7 +916,7 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
             if (Creature* Glaive = m_creature->GetMap()->GetCreature(GlaiveGUID[i]))
             {
                 if (Glaive->isAlive())
-                    Glaive->setDeathState(JUST_DIED);
+                    Glaive->SetDeathState(JUST_DIED);
 
                 GlaiveGUID[i] = 0;
             }
@@ -1017,7 +1017,7 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
 
         if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
         {
-            if (!m_creature->canFly() && m_creature->GetDistanceZ(who) > CREATURE_Z_ATTACK_RANGE)
+            if (!m_creature->CanFly() && m_creature->GetDistanceZ(who) > CREATURE_Z_ATTACK_RANGE)
                 return;
 
             float attackRadius = m_creature->GetAttackDistance(who);
@@ -1507,7 +1507,7 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
                             {
                                 // Make Maiev leave
                                 Maiev->CastSpell(Maiev, SPELL_TELEPORT_VISUAL, true);
-                                Maiev->setDeathState(JUST_DIED);
+                                Maiev->SetDeathState(JUST_DIED);
                             }
                         }
                         IsTalking = false;
@@ -1691,7 +1691,7 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
                                     // Make it look like the Glaive flies back up to us
                                     Glaive->CastSpell(m_creature, SPELL_GLAIVE_RETURNS, true);
                                     // Despawn the Glaive
-                                    Glaive->setDeathState(JUST_DIED);
+                                    Glaive->SetDeathState(JUST_DIED);
                                 }
                                 GlaiveGUID[i] = 0;
                             }

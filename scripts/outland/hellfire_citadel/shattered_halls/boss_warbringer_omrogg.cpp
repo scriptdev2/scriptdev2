@@ -125,7 +125,7 @@ struct MANGOS_DLL_DECL mob_omrogg_headsAI : public ScriptedAI
         {
             DoScriptText(YELL_DIE_R, m_creature);
             m_uiDeath_Timer = false;
-            m_creature->setDeathState(JUST_DIED);
+            m_creature->SetDeathState(JUST_DIED);
         }else m_uiDeath_Timer -= uiDiff;
     }
 };
@@ -168,13 +168,13 @@ struct MANGOS_DLL_DECL boss_warbringer_omroggAI : public ScriptedAI
     {
         if (Creature* pLeftHead = m_creature->GetMap()->GetCreature(m_uiLeftHeadGUID))
         {
-            pLeftHead->setDeathState(JUST_DIED);
+            pLeftHead->SetDeathState(JUST_DIED);
             m_uiLeftHeadGUID = 0;
         }
 
         if (Creature* pRightHead = m_creature->GetMap()->GetCreature(m_uiRightHeadGUID))
         {
-            pRightHead->setDeathState(JUST_DIED);
+            pRightHead->SetDeathState(JUST_DIED);
             m_uiRightHeadGUID = 0;
         }
 
@@ -280,7 +280,7 @@ struct MANGOS_DLL_DECL boss_warbringer_omroggAI : public ScriptedAI
             return;
 
         DoScriptText(YELL_DIE_L, pLeftHead);
-        pLeftHead->setDeathState(JUST_DIED);
+        pLeftHead->SetDeathState(JUST_DIED);
 
         if (mob_omrogg_headsAI* pHeadAI = dynamic_cast<mob_omrogg_headsAI*>(pRightHead->AI()))
             pHeadAI->DoDeathYell();

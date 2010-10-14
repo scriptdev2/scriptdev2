@@ -91,7 +91,7 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
         m_creature->SetVisibility(VISIBILITY_ON);
 
         if (IsImage)
-            m_creature->setDeathState(JUST_DIED);
+            m_creature->SetDeathState(JUST_DIED);
     }
 
     void KilledUnit(Unit* victim)

@@ -161,7 +161,7 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
                         if (Creature *mellic = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_MELLICHAR)))
                         {
                             //should have a better way to do this. possibly spell exist.
-                            mellic->setDeathState(JUST_DIED);
+                            mellic->SetDeathState(JUST_DIED);
                             mellic->SetHealth(0);
                         }
                         ++Intro_Phase;

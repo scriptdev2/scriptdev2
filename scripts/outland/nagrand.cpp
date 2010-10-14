@@ -61,7 +61,7 @@ struct MANGOS_DLL_DECL mob_shattered_rumblerAI : public ScriptedAI
             Hitter->SummonCreature(18181,x+(0.7 * (rand()%30)),y+(rand()%5),z,0,TEMPSUMMON_CORPSE_TIMED_DESPAWN,60000);
             Hitter->SummonCreature(18181,x+(rand()%5),y-(rand()%5),z,0,TEMPSUMMON_CORPSE_TIMED_DESPAWN,60000);
             Hitter->SummonCreature(18181,x-(rand()%5),y+(0.5 *(rand()%60)),z,0,TEMPSUMMON_CORPSE_TIMED_DESPAWN,60000);
-            m_creature->setDeathState(CORPSE);
+            m_creature->SetDeathState(CORPSE);
             Spawn = true;
         }
         return;
@@ -561,7 +561,7 @@ struct MANGOS_DLL_DECL npc_maghar_captiveAI : public npc_escortAI
         if (pSummoned->GetEntry() == NPC_MURK_BRUTE)
             DoScriptText(SAY_MAG_NO_ESCAPE, pSummoned);
 
-        if (pSummoned->isTotem())
+        if (pSummoned->IsTotem())
             return;
 
         pSummoned->RemoveSplineFlag(SPLINEFLAG_WALKMODE);

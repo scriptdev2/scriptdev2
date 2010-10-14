@@ -118,7 +118,7 @@ struct MANGOS_DLL_DECL mobs_nether_drakeAI : public ScriptedAI
 
         if (id == 0)
         {
-            m_creature->setDeathState(JUST_DIED);
+            m_creature->SetDeathState(JUST_DIED);
             m_creature->RemoveCorpse();
             m_creature->SetHealth(0);
         }

@@ -98,7 +98,7 @@ struct MANGOS_DLL_DECL npc_aged_dying_ancient_kodoAI : public ScriptedAI
             if (!m_creature->getVictim() && m_creature->isAlive())
             {
                 Reset();
-                m_creature->setDeathState(JUST_DIED);
+                m_creature->SetDeathState(JUST_DIED);
                 m_creature->Respawn();
                 return;
             }
