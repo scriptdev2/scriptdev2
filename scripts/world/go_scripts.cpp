@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: GO_Scripts
 SD%Complete: 100
-SDComment: Quest support: 4285,4287,4288(crystal pylons), 4296, 5088, 5097, 5098, 6481, 10990, 10991, 10992. Field_Repair_Bot->Teaches spell 22704. Barov_journal->Teaches spell 26089
+SDComment: Quest support: 4285,4287,4288(crystal pylons), 4296, 5088, 5097, 5098, 6481, 10990, 10991, 10992, 14092/14076. Field_Repair_Bot->Teaches spell 22704. Barov_journal->Teaches spell 26089
 SDCategory: Game Objects
 EndScriptData */
 
@@ -30,6 +30,7 @@ go_barov_journal
 go_ethereum_prison
 go_ethereum_stasis
 go_field_repair_bot_74A
+go_mysterious_snow_mound
 go_orb_of_command
 go_resonite_cask
 go_sacred_fire_of_life
@@ -267,6 +268,36 @@ bool GOHello_go_jump_a_tron(Player* pPlayer, GameObject* pGo)
         pCreature->CastSpell(pPlayer, SPELL_JUMP_A_TRON, false);
 
     return false;
+}
+
+/*######
+## go_mysterious_snow_mound
+######*/
+
+enum
+{
+    SPELL_SUMMON_DEEP_JORMUNGAR     = 66510,
+    SPELL_SUMMON_MOLE_MACHINE       = 66492,
+    SPELL_SUMMON_MARAUDER           = 66491,
+};
+
+bool GOHello_go_mysterious_snow_mound(Player* pPlayer, GameObject* pGo)
+{
+    if (urand(0,1))
+    {
+        pPlayer->CastSpell(pPlayer, SPELL_SUMMON_DEEP_JORMUNGAR, true);
+    }
+    else
+    {
+        // This is basically wrong, but added for support.
+        // Mole machine would summon, along with unkonwn GO (a GO trap?) and then
+        // the npc would summon with base of that location.
+        pPlayer->CastSpell(pPlayer, SPELL_SUMMON_MOLE_MACHINE, true);
+        pPlayer->CastSpell(pPlayer, SPELL_SUMMON_MARAUDER, true);
+    }
+
+    pGo->SetLootState(GO_JUST_DEACTIVATED);
+    return true;
 }
 
 /*######
@@ -558,6 +589,11 @@ void AddSC_go_scripts()
     pNewScript = new Script;
     pNewScript->Name = "go_jump_a_tron";
     pNewScript->pGOHello =          &GOHello_go_jump_a_tron;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "go_mysterious_snow_mound";
+    pNewScript->pGOHello =          &GOHello_go_mysterious_snow_mound;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
