@@ -193,6 +193,8 @@ bool GossipSelect_npc_kara_thricestar(Player* pPlayer, Creature* pCreature, uint
 enum
 {
     NPC_NESINGWARY_TRAPPER  = 25835,
+    GO_QUALITY_FUR          = 187983,
+
     SAY_PHRASE_1            = -1000599,
     SAY_PHRASE_2            = -1000600,
     SAY_PHRASE_3            = -1000601,
@@ -299,6 +301,12 @@ bool GOHello_go_caribou_trap(Player* pPlayer, GameObject* pGo)
             pTrapperAI->StartAction(pPlayer->GetGUID(), pGo->GetGUID());
 
         pGo->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_IN_USE);
+
+        if (GameObject* pGoFur = GetClosestGameObjectWithEntry(pGo, GO_QUALITY_FUR, INTERACTION_DISTANCE))
+        {
+            if (!pGoFur->isSpawned())
+                pGoFur->SetRespawnTime(10);
+        }
     }
 
     return true;
