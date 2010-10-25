@@ -305,7 +305,10 @@ bool GOHello_go_caribou_trap(Player* pPlayer, GameObject* pGo)
         if (GameObject* pGoFur = GetClosestGameObjectWithEntry(pGo, GO_QUALITY_FUR, INTERACTION_DISTANCE))
         {
             if (!pGoFur->isSpawned())
+            {
                 pGoFur->SetRespawnTime(10);
+                pGoFur->Refresh();
+            }
         }
     }
 

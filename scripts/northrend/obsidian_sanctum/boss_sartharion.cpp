@@ -628,7 +628,10 @@ struct MANGOS_DLL_DECL dummy_dragonAI : public ScriptedAI
         //By using SetRespawnTime() we will actually "spawn" the object with our defined time.
         //Once time is up, portal will disappear again.
         if (pPortal && !pPortal->isSpawned())
+        {
             pPortal->SetRespawnTime(m_iPortalRespawnTime);
+            pPortal->Refresh();
+        }
 
         //Unclear what are expected to happen if one drake has a portal open already
         //Refresh respawnTime so time again are set to 30secs?

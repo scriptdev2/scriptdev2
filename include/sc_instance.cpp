@@ -37,6 +37,7 @@ void ScriptedInstance::DoRespawnGameObject(uint64 uiGuid, uint32 uiTimeToDespawn
             return;
 
         pGo->SetRespawnTime(uiTimeToDespawn);
+        pGo->Refresh();
     }
 }
 
