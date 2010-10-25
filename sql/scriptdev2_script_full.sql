@@ -629,7 +629,12 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000595,'I\'m so tired. Just let me rest for a moment.',0,0,0,0,'hero spirit SAY_BLESS_2'),
 (-1000596,'I can\'t hear the screams anymore. Is this the end?',0,0,0,0,'hero spirit SAY_BLESS_3'),
 (-1000597,'My nightmare, is it finally over?',0,0,0,0,'hero spirit SAY_BLESS_4'),
-(-1000598,'It was awful... I dreamt I was fighting against my friends.',0,0,0,0,'hero spirit SAY_BLESS_5');
+(-1000598,'It was awful... I dreamt I was fighting against my friends.',0,0,0,0,'hero spirit SAY_BLESS_5'),
+
+(-1000599,'It\'s a miracle! The beast skinned itself!',0,0,0,5,'nesingwary trapper SAY_PHRASE_1'),
+(-1000600,'Jackpot!',0,0,0,5,'nesingwary trapper SAY_PHRASE_2'),
+(-1000601,'This is the last one i need for that set of Nesingwary steak knives!',0,0,0,5,'nesingwary trapper SAY_PHRASE_3'),
+(-1000602,'Silly beasts!',0,0,0,5,'nesingwary trapper SAY_PHRASE_4');
 
 -- -1 033 000 SHADOWFANG KEEP
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES

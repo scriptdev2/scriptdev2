@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Borean_Tundra
 SD%Complete: 100
-SDComment: Quest support: 11708, 11692, 11961. Taxi vendors. 11570
+SDComment: Quest support: 11708, 11692, 11961, 11865. Taxi vendors. 11570
 SDCategory: Borean Tundra
 EndScriptData */
 
@@ -25,6 +25,8 @@ EndScriptData */
 npc_fizzcrank_fullthrottle
 npc_iruk
 npc_kara_thricestar
+npc_nesingwary_trapper
+go_caribou_trap
 npc_surristrasz
 npc_tiare
 npc_lurgglbr
@@ -179,6 +181,124 @@ bool GossipSelect_npc_kara_thricestar(Player* pPlayer, Creature* pCreature, uint
             pPlayer->CLOSE_GOSSIP_MENU();
             pPlayer->CastSpell(pPlayer, SPELL_FIZZCRANK_AIRSTRIP, false);
             break;
+    }
+
+    return true;
+}
+
+/*######
+## npc_nesingwary_trapper
+######*/
+
+enum
+{
+    NPC_NESINGWARY_TRAPPER  = 25835,
+    SAY_PHRASE_1            = -1000599,
+    SAY_PHRASE_2            = -1000600,
+    SAY_PHRASE_3            = -1000601,
+    SAY_PHRASE_4            = -1000602
+};
+
+struct MANGOS_DLL_DECL npc_nesingwary_trapperAI : public ScriptedAI
+{
+    npc_nesingwary_trapperAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
+
+    uint8 m_uiPhase;
+    uint32 m_uiPhaseTimer;
+    uint64 m_uiPlayerGUID;
+    uint64 m_uiGobjectTrapGUID;
+
+    void Reset()
+    {
+        m_uiPhase = 0;
+        m_uiPhaseTimer = 0;
+        m_uiPlayerGUID = 0;
+        m_uiGobjectTrapGUID = 0;
+    }
+
+    void StartAction(uint64 uiPlayerGUID, uint64 uiGoTrapGUID)
+    {
+        m_uiPhase = 1;
+        m_uiPhaseTimer = 3000;
+        m_uiPlayerGUID = uiPlayerGUID;
+        m_uiGobjectTrapGUID = uiGoTrapGUID;
+
+        switch (urand(0, 3))
+        {
+            case 0: DoScriptText(SAY_PHRASE_1, m_creature); break;
+            case 1: DoScriptText(SAY_PHRASE_2, m_creature); break;
+            case 2: DoScriptText(SAY_PHRASE_3, m_creature); break;
+            case 3: DoScriptText(SAY_PHRASE_4, m_creature); break;
+        }
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (!m_creature->getVictim() && m_uiPhase)
+        {
+            if (m_uiPhaseTimer <= uiDiff)
+            {
+                switch(m_uiPhase)
+                {
+                    case 1:
+                        if (GameObject* pTrap = m_creature->GetMap()->GetGameObject(m_uiGobjectTrapGUID))
+                        {
+                            if (pTrap->isSpawned())
+                                m_creature->GetMotionMaster()->MovePoint(0, pTrap->GetPositionX(), pTrap->GetPositionY(), pTrap->GetPositionZ());
+                        }
+                        break;
+                    case 2:
+                        if (GameObject* pTrap = m_creature->GetMap()->GetGameObject(m_uiGobjectTrapGUID))
+                        {
+                            if (pTrap->isSpawned())
+                            {
+                                pTrap->Use(m_creature);
+
+                                if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID))
+                                {
+                                    if (pPlayer->isAlive())
+                                        pPlayer->KilledMonsterCredit(m_creature->GetEntry());
+                                }
+                            }
+                        }
+                        break;
+                }
+
+                m_uiPhase = 0;
+            }
+            else
+                m_uiPhaseTimer -= uiDiff;
+        }
+    }
+
+    void MovementInform(uint32 uiType, uint32 uiPointId)
+    {
+        m_creature->HandleEmote(EMOTE_ONESHOT_LOOT);
+        m_uiPhaseTimer = 2000;
+        m_uiPhase = 2;
+    }
+};
+
+CreatureAI* GetAI_npc_nesingwary_trapper(Creature* pCreature)
+{
+    return new npc_nesingwary_trapperAI(pCreature);
+}
+
+/*######
+## go_caribou_trap
+######*/
+
+bool GOHello_go_caribou_trap(Player* pPlayer, GameObject* pGo)
+{
+    float fX, fY, fZ;
+    pGo->GetClosePoint(fX, fY, fZ, pGo->GetObjectBoundingRadius(), 2*INTERACTION_DISTANCE, frand(0, M_PI_F*2));
+
+    if (Creature* pCreature = pGo->SummonCreature(NPC_NESINGWARY_TRAPPER, fX, fY, fZ, pGo->GetOrientation(), TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 10000))
+    {
+        if (npc_nesingwary_trapperAI* pTrapperAI = dynamic_cast<npc_nesingwary_trapperAI*>(pCreature->AI()))
+            pTrapperAI->StartAction(pPlayer->GetGUID(), pGo->GetGUID());
+
+        pGo->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_IN_USE);
     }
 
     return true;
@@ -416,6 +536,16 @@ void AddSC_borean_tundra()
     newscript->Name = "npc_kara_thricestar";
     newscript->pGossipHello = &GossipHello_npc_kara_thricestar;
     newscript->pGossipSelect = &GossipSelect_npc_kara_thricestar;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "npc_nesingwary_trapper";
+    newscript->GetAI = &GetAI_npc_nesingwary_trapper;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "go_caribou_trap";
+    newscript->pGOHello = &GOHello_go_caribou_trap;
     newscript->RegisterSelf();
 
     newscript = new Script;
