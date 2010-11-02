@@ -1084,10 +1084,6 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\eastern_kingdoms\uldaman\boss_ironaya.cpp"
-						>
-					</File>
-					<File
 						RelativePath="..\scripts\eastern_kingdoms\uldaman\uldaman.cpp"
 						>
 					</File>

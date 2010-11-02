@@ -1123,8 +1123,6 @@ INSERT INTO scripted_event_id VALUES
 (2268,'event_spell_altar_boss_aggro');
 UPDATE creature_template SET ScriptName='boss_archaedas' WHERE entry=2748;
 UPDATE creature_template SET ScriptName='mob_archaeras_add' WHERE entry IN (7309,7076,7077,10120);
-UPDATE creature_template SET ScriptName='boss_ironaya' WHERE entry=7228;
-UPDATE creature_template SET ScriptName='mob_jadespine_basilisk' WHERE entry=4863;
 UPDATE creature_template SET ScriptName='npc_lore_keeper_of_norgannon' WHERE entry=7172;
 UPDATE instance_template SET ScriptName='instance_uldaman' WHERE map=70;
 

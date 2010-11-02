@@ -355,7 +355,6 @@
     <ClCompile Include="..\scripts\eastern_kingdoms\sunwell_plateau\boss_kalecgos.cpp" />
     <ClCompile Include="..\scripts\eastern_kingdoms\sunwell_plateau\instance_sunwell_plateau.cpp" />
     <ClCompile Include="..\scripts\eastern_kingdoms\uldaman\boss_archaedas.cpp" />
-    <ClCompile Include="..\scripts\eastern_kingdoms\uldaman\boss_ironaya.cpp" />
     <ClCompile Include="..\scripts\eastern_kingdoms\uldaman\uldaman.cpp" />
     <ClCompile Include="..\scripts\eastern_kingdoms\uldaman\instance_uldaman.cpp" />
     <ClCompile Include="..\scripts\eastern_kingdoms\zulaman\boss_akilzon.cpp" />

@@ -678,7 +678,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 
 -- -1 070 000 ULDAMAN
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
-(-1070000,'None may steal the secrets of the makers!',5851,1,0,0,'ironaya SAY_AGGRO'),
+(-1070000,'REUSE ME',0,0,0,0,'REUSE ME'),
 (-1070001,'Who dares awaken Archaedas? Who dares the wrath of the makers!',5855,1,0,0,'archaedas SAY_AGGRO'),
 (-1070002,'Awake ye servants, defend the discs!',5856,1,0,0,'archaedas SAY_AWAKE_GUARDIANS'),
 (-1070003,'To my side, brothers. For the makers!',5857,1,0,0,'archaedas SAY_AWAKE_WARDERS'),

@@ -143,7 +143,6 @@ extern void AddSC_boss_brutallus();                         //sunwell_plateau
 extern void AddSC_boss_kalecgos();
 extern void AddSC_instance_sunwell_plateau();
 extern void AddSC_boss_archaedas();                         //uldaman
-extern void AddSC_boss_ironaya();
 extern void AddSC_instance_uldaman();
 extern void AddSC_uldaman();
 extern void AddSC_boss_akilzon();                           //zulaman
@@ -561,7 +560,6 @@ void AddScripts()
     AddSC_boss_kalecgos();
     AddSC_instance_sunwell_plateau();
     AddSC_boss_archaedas();                                 //uldaman
-    AddSC_boss_ironaya();
     AddSC_instance_uldaman();
     AddSC_uldaman();
     AddSC_boss_akilzon();                                   //zulaman

@@ -17,69 +17,16 @@
 /* ScriptData
 SDName: Uldaman
 SD%Complete: 100
-SDComment: Quest support: 2278 + 1 trash mob.
+SDComment: Quest support: 2278
 SDCategory: Uldaman
 EndScriptData */
 
 /* ContentData
-mob_jadespine_basilisk
 npc_lore_keeper_of_norgannon
 EndContentData */
 
 #include "precompiled.h"
 #include "uldaman.h"
-
-/*######
-## mob_jadespine_basilisk
-######*/
-
-#define SPELL_CSLUMBER        3636
-
-struct MANGOS_DLL_DECL mob_jadespine_basiliskAI : public ScriptedAI
-{
-    mob_jadespine_basiliskAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
-
-    uint32 Cslumber_Timer;
-
-    void Reset()
-    {
-        Cslumber_Timer = 2000;
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        //Return since we have no target
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-            return;
-
-        //Cslumber_Timer
-        if (Cslumber_Timer < diff)
-        {
-            //Cast
-            // DoCastSpellIfCan(m_creature->getVictim(),SPELL_CSLUMBER);
-            m_creature->CastSpell(m_creature->getVictim(),SPELL_CSLUMBER, true);
-
-            //Stop attacking target thast asleep and pick new target
-            Cslumber_Timer = 28000;
-
-            Unit* Target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO, 0);
-
-            if (!Target || Target == m_creature->getVictim())
-                Target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0);
-
-            if (Target)
-                m_creature->TauntApply(Target);
-
-        }else Cslumber_Timer -= diff;
-
-        DoMeleeAttackIfReady();
-    }
-};
-
-CreatureAI* GetAI_mob_jadespine_basilisk(Creature* pCreature)
-{
-    return new mob_jadespine_basiliskAI(pCreature);
-}
 
 /*######
 ## npc_lore_keeper_of_norgannon
@@ -170,11 +117,6 @@ bool GossipSelect_npc_lore_keeper_of_norgannon(Player* pPlayer, Creature* pCreat
 void AddSC_uldaman()
 {
     Script* pNewScript;
-
-    pNewScript = new Script;
-    pNewScript->Name = "mob_jadespine_basilisk";
-    pNewScript->GetAI = &GetAI_mob_jadespine_basilisk;
-    pNewScript->RegisterSelf();
 
     pNewScript = new Script;
     pNewScript->Name = "npc_lore_keeper_of_norgannon";
