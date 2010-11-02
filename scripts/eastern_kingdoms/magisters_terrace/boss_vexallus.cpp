@@ -23,6 +23,7 @@ EndScriptData */
 
 #include "precompiled.h"
 #include "magisters_terrace.h"
+#include "TemporarySummon.h"
 
 enum
 {
@@ -47,8 +48,8 @@ enum
     SPELL_H_ARCANE_SHOCK            = 46381,                //heroic spell
 
     SPELL_SUMMON_PURE_ENERGY        = 44322,                //mod scale -10
-    H_SPELL_SUMMON_PURE_ENERGY1     = 46154,                //mod scale -5
-    H_SPELL_SUMMON_PURE_ENERGY2     = 46159,                //mod scale -5
+    SPELL_H_SUMMON_PURE_ENERGY1     = 46154,                //mod scale -5
+    SPELL_H_SUMMON_PURE_ENERGY2     = 46159,                //mod scale -5
 
     //Creatures
     NPC_PURE_ENERGY                 = 24745,
@@ -106,14 +107,12 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
             m_pInstance->SetData(DATA_VEXALLUS_EVENT, IN_PROGRESS);
     }
 
-    void JustSummoned(Creature *summoned)
+    void JustSummoned(Creature* pSummoned)
     {
-        if (Unit *temp = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-            summoned->GetMotionMaster()->MoveFollow(temp,0,0);
+        if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            pSummoned->GetMotionMaster()->MoveFollow(pTarget, 0.0f, 0.0f);
 
-        //spells are SUMMON_TYPE_GUARDIAN, so using setOwner should be ok
-        summoned->SetOwnerGUID(m_creature->GetGUID());
-        summoned->CastSpell(summoned,SPELL_ENERGY_BOLT,false,0,0,m_creature->GetGUID());
+        pSummoned->CastSpell(pSummoned, SPELL_ENERGY_BOLT, false, NULL, NULL, m_creature->GetGUID());
     }
 
     void UpdateAI(const uint32 diff)
@@ -139,18 +138,12 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
                 DoScriptText(EMOTE_DISCHARGE_ENERGY, m_creature);
 
                 if (m_bIsRegularMode)
-                    m_creature->CastSpell(m_creature,SPELL_SUMMON_PURE_ENERGY,false);
+                    m_creature->CastSpell(m_creature, SPELL_SUMMON_PURE_ENERGY, true);
                 else
                 {
-                    m_creature->CastSpell(m_creature,H_SPELL_SUMMON_PURE_ENERGY1,false);
-                    m_creature->CastSpell(m_creature,H_SPELL_SUMMON_PURE_ENERGY2,false);
+                    m_creature->CastSpell(m_creature, SPELL_H_SUMMON_PURE_ENERGY1, true);
+                    m_creature->CastSpell(m_creature, SPELL_H_SUMMON_PURE_ENERGY2, true);
                 }
-
-                //below are workaround summons, remove when summoning spells w/implicitTarget 73 implemented in Mangos
-                m_creature->SummonCreature(NPC_PURE_ENERGY, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_CORPSE_DESPAWN, 0);
-
-                if (!m_bIsRegularMode)
-                    m_creature->SummonCreature(NPC_PURE_ENERGY, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_CORPSE_DESPAWN, 0);
             }
 
             if (ChainLightningTimer < diff)
@@ -194,12 +187,22 @@ struct MANGOS_DLL_DECL mob_pure_energyAI : public ScriptedAI
 
     void Reset() { }
 
-    void JustDied(Unit* slayer)
+    void JustDied(Unit* pKiller)
     {
-        if (Unit *temp = m_creature->GetOwner())
+        if (m_creature->IsTemporarySummon())
         {
-            if (temp && temp->isAlive())
-                slayer->CastSpell(slayer, SPELL_ENERGY_FEEDBACK, true, 0, 0, temp->GetGUID());
+            TemporarySummon* pTemporary = (TemporarySummon*)m_creature;
+
+            if (pTemporary->GetSummonerGuid().IsCreature())
+            {
+                Creature* pVex = m_creature->GetMap()->GetCreature(pTemporary->GetSummonerGuid());
+
+                if (!pVex || !pVex->isAlive())
+                    return;
+
+                if (Player* pPlayer = pKiller->GetCharmerOrOwnerPlayerOrPlayerItself())
+                    pPlayer->CastSpell(pPlayer, SPELL_ENERGY_FEEDBACK, true, NULL, NULL, pVex->GetGUID());
+            }
         }
     }
 
