@@ -42,14 +42,14 @@ enum
 
     //Vexallus spell info
     SPELL_CHAIN_LIGHTNING           = 44318,
-    SPELL_H_CHAIN_LIGHTNING         = 46380,                //heroic spell
+    SPELL_CHAIN_LIGHTNING_H         = 46380,                //heroic spell
     SPELL_OVERLOAD                  = 44353,
     SPELL_ARCANE_SHOCK              = 44319,
-    SPELL_H_ARCANE_SHOCK            = 46381,                //heroic spell
+    SPELL_ARCANE_SHOCK_H            = 46381,                //heroic spell
 
     SPELL_SUMMON_PURE_ENERGY        = 44322,                //mod scale -10
-    SPELL_H_SUMMON_PURE_ENERGY1     = 46154,                //mod scale -5
-    SPELL_H_SUMMON_PURE_ENERGY2     = 46159,                //mod scale -5
+    SPELL_SUMMON_PURE_ENERGY1_H     = 46154,                //mod scale -5
+    SPELL_SUMMON_PURE_ENERGY2_H     = 46159,                //mod scale -5
 
     //Creatures
     NPC_PURE_ENERGY                 = 24745,
@@ -141,15 +141,15 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
                     m_creature->CastSpell(m_creature, SPELL_SUMMON_PURE_ENERGY, true);
                 else
                 {
-                    m_creature->CastSpell(m_creature, SPELL_H_SUMMON_PURE_ENERGY1, true);
-                    m_creature->CastSpell(m_creature, SPELL_H_SUMMON_PURE_ENERGY2, true);
+                    m_creature->CastSpell(m_creature, SPELL_SUMMON_PURE_ENERGY1_H, true);
+                    m_creature->CastSpell(m_creature, SPELL_SUMMON_PURE_ENERGY2_H, true);
                 }
             }
 
             if (ChainLightningTimer < diff)
             {
                 if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-                    DoCastSpellIfCan(target, m_bIsRegularMode ? SPELL_CHAIN_LIGHTNING : SPELL_H_CHAIN_LIGHTNING);
+                    DoCastSpellIfCan(target, m_bIsRegularMode ? SPELL_CHAIN_LIGHTNING : SPELL_CHAIN_LIGHTNING_H);
 
                 ChainLightningTimer = 8000;
             }else ChainLightningTimer -= diff;
@@ -157,7 +157,7 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
             if (ArcaneShockTimer < diff)
             {
                 if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-                    DoCastSpellIfCan(target, m_bIsRegularMode ? SPELL_ARCANE_SHOCK : SPELL_H_ARCANE_SHOCK);
+                    DoCastSpellIfCan(target, m_bIsRegularMode ? SPELL_ARCANE_SHOCK : SPELL_ARCANE_SHOCK_H);
 
                 ArcaneShockTimer = 8000;
             }else ArcaneShockTimer -= diff;
