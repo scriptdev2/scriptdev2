@@ -38,3 +38,8 @@ enum
     EMOTE_SURGE                         = -1603104,
     EMOTE_ANIMUS                        = -1603105,
 };
+
+void AddSC_boss_general_vezax()
+{
+
+}

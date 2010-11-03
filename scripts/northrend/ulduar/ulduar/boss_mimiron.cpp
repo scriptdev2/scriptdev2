@@ -54,3 +54,8 @@ enum
 
     EMOTE_PLASMA_BLAST                      = -1603196,
 };
+
+void AddSC_boss_mimiron()
+{
+
+}

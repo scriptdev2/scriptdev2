@@ -34,3 +34,8 @@ enum
     EMOTE_SCREECH                       = -1603084,
     EMOTE_DEFENDER                      = -1603085,
 };
+
+void AddSC_boss_auriaya()
+{
+
+}

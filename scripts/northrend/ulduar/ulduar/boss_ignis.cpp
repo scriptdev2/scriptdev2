@@ -38,3 +38,8 @@ enum
 
     EMOTE_FLAME_JETS                    = -1603035,
 };
+
+void AddSC_boss_ignis()
+{
+
+}

@@ -37,3 +37,8 @@ enum
     EMOTE_HARPOON_READY                 = -1603043,
     EMOTE_GROUNDED                      = -1603044,
 };
+
+void AddSC_boss_razorscale()
+{
+
+}

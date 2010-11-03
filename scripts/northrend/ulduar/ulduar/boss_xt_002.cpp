@@ -39,3 +39,8 @@ enum
     EMOTE_HEART                         = -1603054,
     EMOTE_REPAIR                        = -1603055,
 };
+
+void AddSC_boss_xt_002()
+{
+
+}

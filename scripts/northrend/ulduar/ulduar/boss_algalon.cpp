@@ -51,3 +51,8 @@ enum
     SAY_OUTRO_5                         = -1603125,
 
 };
+
+void AddSC_boss_algalon()
+{
+
+}

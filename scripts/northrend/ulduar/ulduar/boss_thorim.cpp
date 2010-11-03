@@ -54,3 +54,8 @@ enum
     SAY_SIF_EVENT                           = -1603157,
     SAY_SIF_DESPAWN                         = -1603158,
 };
+
+void AddSC_boss_thorim()
+{
+
+}

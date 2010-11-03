@@ -38,3 +38,8 @@ enum
     EMOTE_FLASH_FREEZE                  = -1603094,
     EMOTE_FROZEN_BLOWS                  = -1603095,
 };
+
+void AddSC_boss_hodir()
+{
+
+}

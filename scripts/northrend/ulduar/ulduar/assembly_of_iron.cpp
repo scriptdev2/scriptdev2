@@ -52,3 +52,8 @@ enum
     SAY_STEEL_OVERWHELM                 = -1603077,
     SAY_STEEL_BERSERK                   = -1603078,
 };
+
+void AddSC_boss_assembly_of_iron()
+{
+
+}

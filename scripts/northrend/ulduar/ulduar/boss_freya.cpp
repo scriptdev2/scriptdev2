@@ -57,3 +57,8 @@ enum
     SAY_SLAY_2_STONE                    = -1603024,
     SAY_DEATH_STONE                     = -1603025,
 };
+
+void AddSC_boss_freya()
+{
+
+}

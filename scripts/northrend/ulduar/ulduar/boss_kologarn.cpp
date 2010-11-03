@@ -40,3 +40,8 @@ enum
     EMOTE_ARM_LEFT                      = -1603136,
     EMOTE_STONE_GRIP                    = -1603137,
 };
+
+void AddSC_boss_kologarn()
+{
+
+}

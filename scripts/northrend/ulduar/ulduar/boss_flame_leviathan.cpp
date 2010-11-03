@@ -48,3 +48,8 @@ enum
 
     EMOTE_PURSUE                            = -1603175,
 };
+
+void AddSC_boss_flame_leviathan()
+{
+
+}
