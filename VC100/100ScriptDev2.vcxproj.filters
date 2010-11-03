@@ -1116,6 +1116,9 @@
     <ClCompile Include="..\scripts\northrend\gundrak\boss_colossus.cpp">
       <Filter>scripts\northrend\gundrak</Filter>
     </ClCompile>
+    <ClCompile Include="..\scripts\northrend\gundrak\boss_eck.cpp">
+      <Filter>scripts\northrend\gundrak</Filter>
+    </ClCompile>
     <ClCompile Include="..\scripts\northrend\gundrak\boss_galdarah.cpp">
       <Filter>scripts\northrend\gundrak</Filter>
     </ClCompile>

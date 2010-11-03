@@ -282,6 +282,7 @@ extern void AddSC_boss_tharonja();
 extern void AddSC_boss_trollgore();
 extern void AddSC_instance_draktharon_keep();
 extern void AddSC_boss_colossus();                          //gundrak
+extern void AddSC_boss_eck();
 extern void AddSC_boss_galdarah();
 extern void AddSC_boss_moorabi();
 extern void AddSC_boss_sladran();
@@ -700,6 +701,7 @@ void AddScripts()
     AddSC_boss_trollgore();
     AddSC_instance_draktharon_keep();
     AddSC_boss_colossus();                                  //gundrak
+    AddSC_boss_eck();
     AddSC_boss_galdarah();
     AddSC_boss_moorabi();
     AddSC_boss_sladran();

@@ -486,6 +486,7 @@
     <ClCompile Include="..\scripts\northrend\draktharon_keep\boss_trollgore.cpp" />
     <ClCompile Include="..\scripts\northrend\draktharon_keep\instance_draktharon_keep.cpp" />
     <ClCompile Include="..\scripts\northrend\gundrak\boss_colossus.cpp" />
+    <ClCompile Include="..\scripts\northrend\gundrak\boss_eck.cpp" />
     <ClCompile Include="..\scripts\northrend\gundrak\boss_galdarah.cpp" />
     <ClCompile Include="..\scripts\northrend\gundrak\boss_moorabi.cpp" />
     <ClCompile Include="..\scripts\northrend\gundrak\boss_sladran.cpp" />
