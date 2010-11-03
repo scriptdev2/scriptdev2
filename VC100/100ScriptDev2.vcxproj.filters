@@ -1110,6 +1110,9 @@
     <ClCompile Include="..\scripts\northrend\draktharon_keep\boss_trollgore.cpp">
       <Filter>scripts\northrend\draktharon_keep</Filter>
     </ClCompile>
+    <ClCompile Include="..\scripts\northrend\draktharon_keep\instance_draktharon_keep.cpp">
+      <Filter>scripts\northrend\draktharon_keep</Filter>
+    </ClCompile>
     <ClCompile Include="..\scripts\northrend\gundrak\boss_colossus.cpp">
       <Filter>scripts\northrend\gundrak</Filter>
     </ClCompile>
@@ -1763,6 +1766,9 @@
     </ClInclude>
     <ClInclude Include="..\scripts\northrend\crusaders_coliseum\trial_of_the_crusader\trial_of_the_crusader.h">
       <Filter>scripts\northrend\crusaders_coliseum\trial_of_the_crusader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scripts\northrend\draktharon_keep\draktharon_keep.h">
+      <Filter>scripts\northrend\draktharon_keep</Filter>
     </ClInclude>
     <ClInclude Include="..\scripts\northrend\gundrak\gundrak.h">
       <Filter>scripts\northrend\gundrak</Filter>

@@ -484,6 +484,7 @@
     <ClCompile Include="..\scripts\northrend\draktharon_keep\boss_novos.cpp" />
     <ClCompile Include="..\scripts\northrend\draktharon_keep\boss_tharonja.cpp" />
     <ClCompile Include="..\scripts\northrend\draktharon_keep\boss_trollgore.cpp" />
+    <ClCompile Include="..\scripts\northrend\draktharon_keep\instance_draktharon_keep.cpp" />
     <ClCompile Include="..\scripts\northrend\gundrak\boss_colossus.cpp" />
     <ClCompile Include="..\scripts\northrend\gundrak\boss_galdarah.cpp" />
     <ClCompile Include="..\scripts\northrend\gundrak\boss_moorabi.cpp" />
@@ -705,6 +706,7 @@
     <ClInclude Include="..\scripts\northrend\azjol-nerub\ahnkahet\ahnkahet.h" />
     <ClInclude Include="..\scripts\northrend\azjol-nerub\azjol-nerub\azjol-nerub.h" />
     <ClInclude Include="..\scripts\northrend\crusaders_coliseum\trial_of_the_crusader\trial_of_the_crusader.h" />
+    <ClInclude Include="..\scripts\northrend\draktharon_keep\draktharon_keep.h" />
     <ClInclude Include="..\scripts\northrend\gundrak\gundrak.h" />
     <ClInclude Include="..\scripts\northrend\icecrown_citadel\frozen_halls\forge_of_souls\forge_of_souls.h" />
     <ClInclude Include="..\scripts\northrend\naxxramas\naxxramas.h" />

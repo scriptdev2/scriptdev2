@@ -22,6 +22,7 @@ SDCategory: Drak'Tharon Keep
 EndScriptData */
 
 #include "precompiled.h"
+#include "draktharon_keep.h"
 
 enum
 {
@@ -32,7 +33,12 @@ enum
     SAY_BUBBLE_1                    = -1600009,
     SAY_BUBBLE_2                    = -1600010,
 
-    EMOTE_ASSISTANCE                = -1600011
+    EMOTE_ASSISTANCE                = -1600011,
+
+    NPC_CRYSTAL_HANDLER             = 26627,
+    NPC_HULKING_CORPSE              = 27597,
+    NPC_FETID_TROLL_CORPSE          = 27598,
+    NPC_RISON_SHADOWCASTER          = 27600
 };
 
 /*######
@@ -55,9 +61,26 @@ struct MANGOS_DLL_DECL boss_novosAI : public ScriptedAI
     {
     }
 
+    void MoveInLineOfSight(Unit* pWho)
+    {
+        // An Add reached the ground, if its z-pos is near the z pos of Novos
+        if (pWho->GetEntry() == NPC_HULKING_CORPSE || pWho->GetEntry() == NPC_FETID_TROLL_CORPSE || pWho->GetEntry() == NPC_RISON_SHADOWCASTER)
+        {
+            // Add reached ground, and the failure has not yet been reported
+            if (pWho->GetPositionZ() < m_creature->GetPositionZ() + 1.5f && m_pInstance && m_pInstance->GetData(TYPE_NOVOS) == IN_PROGRESS)
+                m_pInstance->SetData(TYPE_NOVOS, SPECIAL);
+            return;
+        }
+
+        ScriptedAI::MoveInLineOfSight(pWho);
+    }
+
     void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_NOVOS, IN_PROGRESS);
     }
 
     void KilledUnit(Unit* pVictim)
@@ -68,6 +91,15 @@ struct MANGOS_DLL_DECL boss_novosAI : public ScriptedAI
     void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DEATH, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_NOVOS, DONE);
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_NOVOS, FAIL);
     }
 
     void UpdateAI(const uint32 uiDiff)
@@ -86,10 +118,10 @@ CreatureAI* GetAI_boss_novos(Creature* pCreature)
 
 void AddSC_boss_novos()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_novos";
-    newscript->GetAI = &GetAI_boss_novos;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_novos";
+    pNewScript->GetAI = &GetAI_boss_novos;
+    pNewScript->RegisterSelf();
 }

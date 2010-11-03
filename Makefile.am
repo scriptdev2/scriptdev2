@@ -342,6 +342,8 @@ scripts/northrend/crusaders_coliseum/trial_of_the_crusader/trial_of_the_crusader
 scripts/northrend/draktharon_keep/boss_novos.cpp \
 scripts/northrend/draktharon_keep/boss_tharonja.cpp \
 scripts/northrend/draktharon_keep/boss_trollgore.cpp \
+scripts/northrend/draktharon_keep/draktharon_keep.h \
+scripts/northrend/draktharon_keep/instance_draktharon_keep.cpp \
 scripts/northrend/gundrak/boss_colossus.cpp \
 scripts/northrend/gundrak/boss_galdarah.cpp \
 scripts/northrend/gundrak/boss_moorabi.cpp \
