@@ -29,3 +29,8 @@ Enrages 26527*/
 
 #include "precompiled.h"
 #include "naxxramas.h"
+
+enum
+{
+    EMOTE_SPRAY_SLIME               = -1533021,
+};

@@ -48,7 +48,7 @@ enum
     SAY_PLAYER_KILLED           = -1544010,
     SAY_DEATH                   = -1544011,
 
-    EMOTE_BERSERK               = -1544012,
+    EMOTE_GENERIC_ENRAGED       = -1000003,
     EMOTE_BLASTNOVA             = -1544013,
     EMOTE_BEGIN                 = -1544014,
     EMOTE_FREED                 = -1544015,
@@ -383,9 +383,11 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
 
         if (m_uiBerserk_Timer < uiDiff)
         {
-            DoScriptText(EMOTE_BERSERK, m_creature);
-            m_creature->CastSpell(m_creature, SPELL_BERSERK, true);
-            m_uiBerserk_Timer = 60000;
+            if (DoCastSpellIfCan(m_creature, SPELL_BERSERK) == CAST_OK)
+            {
+                DoScriptText(EMOTE_GENERIC_ENRAGED, m_creature);
+                m_uiBerserk_Timer = 60000;
+            }
         }
         else
             m_uiBerserk_Timer -= uiDiff;

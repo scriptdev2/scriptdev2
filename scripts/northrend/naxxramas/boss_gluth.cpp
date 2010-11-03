@@ -26,15 +26,17 @@ EndScriptData */
 
 enum
 {
-    EMOTE_ZOMBIE      = -1533119,
+    EMOTE_ZOMBIE                    = -1533119,
+    EMOTE_BOSS_GENERIC_ENRAGED      = -1000006,             // NYI
+    EMOTE_DECIMATE                  = -1533152,             // NYI
 
-    SPELL_MORTALWOUND = 25646,
-    SPELL_DECIMATE    = 28374,
-    SPELL_ENRAGE      = 28371,
-    SPELL_ENRAGE_H    = 54427,
-    SPELL_BERSERK     = 26662,
+    SPELL_MORTALWOUND               = 25646,
+    SPELL_DECIMATE                  = 28374,
+    SPELL_ENRAGE                    = 28371,
+    SPELL_ENRAGE_H                  = 54427,
+    SPELL_BERSERK                   = 26662,
 
-    NPC_ZOMBIE_CHOW   = 16360
+    NPC_ZOMBIE_CHOW                 = 16360
 };
 
 #define ADD_1X 3269.590f

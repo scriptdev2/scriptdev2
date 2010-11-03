@@ -27,48 +27,52 @@ EndScriptData */
 enum
 {
     // Stalagg
-    SAY_STAL_AGGRO                = -1533023,
-    SAY_STAL_SLAY                 = -1533024,
-    SAY_STAL_DEATH                = -1533025,
+    SAY_STAL_AGGRO                  = -1533023,
+    SAY_STAL_SLAY                   = -1533024,
+    SAY_STAL_DEATH                  = -1533025,
 
-    SPELL_POWERSURGE              = 28134,
+    SPELL_POWERSURGE                = 28134,
 
     //Feugen
-    SAY_FEUG_AGGRO                = -1533026,
-    SAY_FEUG_SLAY                 = -1533027,
-    SAY_FEUG_DEATH                = -1533028,
+    SAY_FEUG_AGGRO                  = -1533026,
+    SAY_FEUG_SLAY                   = -1533027,
+    SAY_FEUG_DEATH                  = -1533028,
 
-    SPELL_MANABURN                = 28135,
+    SPELL_MANABURN                  = 28135,
 
     //both
-    SPELL_WARSTOMP                = 28125,
+    SPELL_WARSTOMP                  = 28125,
 
     //Thaddus
-    SAY_GREET                     = -1533029,
-    SAY_AGGRO1                    = -1533030,
-    SAY_AGGRO2                    = -1533031,
-    SAY_AGGRO3                    = -1533032,
-    SAY_SLAY                      = -1533033,
-    SAY_ELECT                     = -1533034,
-    SAY_DEATH                     = -1533035,
-    SAY_SCREAM1                   = -1533036,
-    SAY_SCREAM2                   = -1533037,
-    SAY_SCREAM3                   = -1533038,
-    SAY_SCREAM4                   = -1533039,
+    SAY_GREET                       = -1533029,
+    SAY_AGGRO1                      = -1533030,
+    SAY_AGGRO2                      = -1533031,
+    SAY_AGGRO3                      = -1533032,
+    SAY_SLAY                        = -1533033,
+    SAY_ELECT                       = -1533034,
+    SAY_DEATH                       = -1533035,
+    SAY_SCREAM1                     = -1533036,
+    SAY_SCREAM2                     = -1533037,
+    SAY_SCREAM3                     = -1533038,
+    SAY_SCREAM4                     = -1533039,
 
-    SPELL_BALL_LIGHTNING          = 28299,
+    SPELL_BALL_LIGHTNING            = 28299,
 
-    SPELL_CHARGE_POSITIVE_DMGBUFF = 29659,
-    SPELL_CHARGE_POSITIVE_NEARDMG = 28059,
+    EMOTE_POLARITY_SHIFT            = -1533151,
 
-    SPELL_CHARGE_NEGATIVE_DMGBUFF = 29660,
-    SPELL_CHARGE_NEGATIVE_NEARDMG = 28084,
+    SPELL_CHARGE_POSITIVE_DMGBUFF   = 29659,
+    SPELL_CHARGE_POSITIVE_NEARDMG   = 28059,
 
-    SPELL_CHAIN_LIGHTNING         = 28167,
-    H_SPELL_CHAIN_LIGHTNING       = 54531,
+    SPELL_CHARGE_NEGATIVE_DMGBUFF   = 29660,
+    SPELL_CHARGE_NEGATIVE_NEARDMG   = 28084,
 
-    SPELL_BESERK                  = 26662,
+    SPELL_CHAIN_LIGHTNING           = 28167,
+    SPELL_CHAIN_LIGHTNING_H         = 54531,
+
+    SPELL_BESERK                    = 26662,
 
     //generic
-    C_TESLA_COIL                  = 16218                   //the coils (emotes "Tesla Coil overloads!")
+    NPC_TESLA_COIL                  = 16218,                //the coils (emotes "Tesla Coil overloads!")
+    EMOTE_LOSING_LINK               = -1533149,
+    EMOTE_TESLA_OVERLOAD            = -1533150,
 };

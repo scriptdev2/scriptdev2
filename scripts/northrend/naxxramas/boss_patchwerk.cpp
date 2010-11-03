@@ -31,8 +31,8 @@ enum
     SAY_SLAY              = -1533019,
     SAY_DEATH             = -1533020,
 
-    EMOTE_BERSERK         = -1533021,
-    EMOTE_ENRAGE          = -1533022,
+    EMOTE_GENERIC_BERSERK   = -1000004,
+    EMOTE_GENERIC_ENRAGED   = -1000003,
 
     SPELL_HATEFULSTRIKE   = 28308,
     SPELL_HATEFULSTRIKE_H = 59192,
@@ -146,9 +146,11 @@ struct MANGOS_DLL_DECL boss_patchwerkAI : public ScriptedAI
         {
             if (m_creature->GetHealthPercent() < 5.0f)
             {
-                DoCastSpellIfCan(m_creature, SPELL_ENRAGE);
-                DoScriptText(EMOTE_ENRAGE, m_creature);
-                m_bEnraged = true;
+                if (DoCastSpellIfCan(m_creature, SPELL_ENRAGE) == CAST_OK)
+                {
+                    DoScriptText(EMOTE_GENERIC_ENRAGED, m_creature);
+                    m_bEnraged = true;
+                }
             }
         }
 
@@ -157,9 +159,11 @@ struct MANGOS_DLL_DECL boss_patchwerkAI : public ScriptedAI
         {
             if (m_uiBerserkTimer < uiDiff)
             {
-                DoCastSpellIfCan(m_creature, SPELL_BERSERK);
-                DoScriptText(EMOTE_BERSERK, m_creature);
-                m_bBerserk = true;
+                if (DoCastSpellIfCan(m_creature, SPELL_BERSERK) == CAST_OK)
+                {
+                    DoScriptText(EMOTE_GENERIC_BERSERK, m_creature);
+                    m_bBerserk = true;
+                }
             }
             else
                 m_uiBerserkTimer -= uiDiff;

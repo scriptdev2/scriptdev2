@@ -22,7 +22,8 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000002,'%s goes into a frenzy!',0,2,0,0,'EMOTE_GENERIC_FRENZY'),
 (-1000003,'%s becomes enraged!',0,2,0,0,'EMOTE_GENERIC_ENRAGED'),
 (-1000004,'%s goes into a berserker rage!',0,2,0,0,'EMOTE_GENERIC_BERSERK'),
-(-1000005,'%s goes into a frenzy!',0,3,0,0,'EMOTE_BOSS_GENERIC_FRENZY');
+(-1000005,'%s goes into a frenzy!',0,3,0,0,'EMOTE_BOSS_GENERIC_FRENZY'),
+(-1000006,'%s becomes enraged!',0,3,0,0,'EMOTE_BOSS_GENERIC_ENRAGED');
 
 --
 -- Normal text entries below. Say/Yell/Whisper/Emote for any regular world object.
@@ -739,7 +740,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1189001,'Blades of Light!',5832,1,0,0,'herod SAY_WHIRLWIND'),
 (-1189002,'Light, give me strength!',5833,1,0,0,'herod SAY_ENRAGE'),
 (-1189003,'Hah, is that all?',5831,1,0,0,'herod SAY_KILL'),
-(-1189004,'%s becomes enraged!',0,2,0,0,'herod EMOTE_ENRAGE'),
+(-1189004,'REUSE_ME',0,0,0,0,'REUSE_ME'),
 
 (-1189005,'Infidels! They must be purified!',5835,1,0,0,'mograine SAY_MO_AGGRO'),
 (-1189006,'Unworthy!',5836,1,0,0,'mograine SAY_MO_KILL'),
@@ -1176,8 +1177,10 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1533018,'Kel\'Thuzad make Patchwerk his Avatar of War!',8910,1,0,0,'patchwerk SAY_AGGRO2'),
 (-1533019,'No more play?',8912,1,0,0,'patchwerk SAY_SLAY'),
 (-1533020,'What happened to... Patch...',8911,1,0,0,'patchwerk SAY_DEATH'),
-(-1533021,'%s goes into a berserker rage!',0,2,0,0,'patchwerk EMOTE_BERSERK'),
-(-1533022,'%s becomes enraged!',0,2,0,0,'patchwerk EMOTE_ENRAGE'),
+
+(-1533021,'%s sprays slime across the room!',0,3,0,0,'grobbulus EMOTE_SPRAY_SLIME'),
+
+(-1533022,'%s lifts off into the air!',0,3,0,0,'sapphiron EMOTE_FLY'),
 
 (-1533023,'Stalagg crush you!',8864,1,0,0,'stalagg SAY_STAL_AGGRO'),
 (-1533024,'Stalagg kill!',8866,1,0,0,'stalagg SAY_STAL_SLAY'),
@@ -1247,7 +1250,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1533081,'I will serve the master... in... death!',8848,1,0,0,'noth SAY_DEATH'),
 
 (-1533082,'%s takes in a deep breath...',0,2,0,0,'sapphiron EMOTE_BREATH'),
-(-1533083,'%s enrages!',0,2,0,0,'sapphiron EMOTE_ENRAGE'),
+(-1533083,'%s resumes his attacks!',0,2,0,0,'sapphiron EMOTE_GROUND'),
 
 (-1533084,'Our preparations continue as planned, master.',14467,1,0,0,'kelthuzad SAY_SAPP_DIALOG1'),
 (-1533085,'It is good that you serve me so faithfully. Soon, all will serve the Lich King and in the end, you shall be rewarded...so long as you do not falter.',8881,1,0,0,'kelthuzad SAY_SAPP_DIALOG2_LICH'),
@@ -1322,7 +1325,20 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 
 (-1533146,'%s spins her web into a cocoon!',0,3,0,0,'maexxna EMOTE_SPIN_WEB'),
 (-1533147,'Spiderlings appear on the web!',0,3,0,0,'maexxna EMOTE_SPIDERLING'),
-(-1533148,'%s sprays strands of web everywhere!',0,3,0,0,'maexxna EMOTE_SPRAY');
+(-1533148,'%s sprays strands of web everywhere!',0,3,0,0,'maexxna EMOTE_SPRAY'),
+
+(-1533149,'%s loses its link!',0,3,0,0,'tesla_coil EMOTE_LOSING_LINK'),
+(-1533150,'%s overloads!',0,3,0,0,'tesla_coil EMOTE_TESLA_OVERLOAD'),
+(-1533151,'The polarity has shifted!',0,3,0,0,'thaddius EMOTE_POLARITY_SHIFT'),
+
+(-1533152,'%s decimates all nearby flesh!',0,3,0,0,'gluth EMOTE_DECIMATE'),
+
+(-1533153,'A %s joins the fight!',0,3,0,0,'crypt_guard EMOTE_CRYPT_GUARD'),
+(-1533154,'%s begins to unleash an insect swarm!',0,3,0,0,'anubrekhan EMOTE_INSECT_SWARM'),
+(-1533155,'Corpse Scarabs appear from a Crypt Guard\'s corpse!',0,3,0,0,'anubrekhan EMOTE_CORPSE_SCARABS'),
+
+(-1533156,'%s casts Unyielding Pain on everyone!',0,3,0,0,'lady_blaumeux EMOTE_UNYIELDING_PAIN'),
+(-1533157,'%s casts Condemation on everyone!',0,3,0,0,'sir_zeliek EMOTE_CONDEMATION');
 
 -- -1 534 000 THE BATTLE OF MT. HYJAL
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
@@ -1478,7 +1494,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1544009,'I will not be taken so easily. Let the walls of this prison tremble...and FALL!!!',10257,1,0,0,'magtheridon SAY_CHAMBER_DESTROY'),
 (-1544010,'Did you think me weak? Soft? Who is the weak one now?!',10255,1,0,0,'magtheridon SAY_PLAYER_KILLED'),
 (-1544011,'The Legion...will consume you...all...',10258,1,0,0,'magtheridon SAY_DEATH'),
-(-1544012,'%s becomes enraged!',0,2,0,0,'magtheridon EMOTE_BERSERK'),
+(-1544012,'REUSE_ME',0,0,0,0,'REUSE_ME'),
 (-1544013,'%s begins to cast Blast Nova!',0,3,0,0,'magtheridon EMOTE_BLASTNOVA'),
 (-1544014,'%s\'s bonds begin to weaken!',0,2,0,0,'magtheridon EMOTE_BEGIN'),
 (-1544015,'%s breaks free!',0,2,0,0,'magtheridon EMOTE_FREED');
@@ -1945,7 +1961,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1564051,'The pain is only beginning!',11419,1,0,0,'essence SUFF_SAY_SLAY3'),
 (-1564052,'I don\'t want to go back!',11420,1,0,0,'essence SUFF_SAY_RECAP'),
 (-1564053,'Now what do I do?',11421,1,0,0,'essence SUFF_SAY_AFTER'),
-(-1564054,'%s becomes enraged!',0,3,0,0,'essence SUFF_EMOTE_ENRAGE'),
+(-1564054,'REUSE_ME',0,0,0,0,'REUSE_ME'),
 
 (-1564055,'You can have anything you desire... for a price.',11408,1,0,0,'essence DESI_SAY_FREED'),
 (-1564056,'Fulfilment is at hand!',11409,1,0,0,'essence DESI_SAY_SLAY1'),

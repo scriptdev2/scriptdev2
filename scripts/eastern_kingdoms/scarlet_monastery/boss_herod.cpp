@@ -30,7 +30,7 @@ enum
     SAY_WHIRLWIND          = -1189001,
     SAY_ENRAGE             = -1189002,
     SAY_KILL               = -1189003,
-    EMOTE_ENRAGE           = -1189004,
+    EMOTE_GENERIC_ENRAGED  = -1000003,
 
     SAY_TRAINEE_SPAWN      = -1189036,
 
@@ -99,7 +99,7 @@ struct MANGOS_DLL_DECL boss_herodAI : public ScriptedAI
         {
             if (DoCastSpellIfCan(m_creature, SPELL_FRENZY) == CAST_OK)
             {
-                DoScriptText(EMOTE_ENRAGE, m_creature);
+                DoScriptText(EMOTE_GENERIC_ENRAGED, m_creature);
                 DoScriptText(SAY_ENRAGE, m_creature);
                 m_bEnrage = true;
             }

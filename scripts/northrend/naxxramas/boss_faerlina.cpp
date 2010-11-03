@@ -35,6 +35,8 @@ enum
     SAY_SLAY2                 = -1533015,
     SAY_DEATH                 = -1533016,
 
+    EMOTE_BOSS_GENERIC_FRENZY = -1000005,
+
     //SOUND_RANDOM_AGGRO        = 8955,                              //soundId containing the 4 aggro sounds, we not using this
 
     SPELL_POSIONBOLT_VOLLEY   = 28796,
@@ -141,8 +143,11 @@ struct MANGOS_DLL_DECL boss_faerlinaAI : public ScriptedAI
         //Enrage_Timer
         if (m_uiEnrageTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature, SPELL_ENRAGE);
-            m_uiEnrageTimer = 61000;
+            if (DoCastSpellIfCan(m_creature, SPELL_ENRAGE) == CAST_OK)
+            {
+                DoScriptText(EMOTE_BOSS_GENERIC_FRENZY, m_creature);
+                m_uiEnrageTimer = 61000;
+            }
         }
         else 
             m_uiEnrageTimer -= uiDiff;
