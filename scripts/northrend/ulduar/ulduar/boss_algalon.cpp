@@ -22,3 +22,31 @@ SDCategory: Ulduar
 EndScriptData */
 
 #include "precompiled.h"
+
+enum
+{
+    SAY_INTRO_1                         = -1603106,
+    SAY_INTRO_2                         = -1603107,
+    SAY_INTRO_3                         = -1603108,
+
+    SAY_ENGAGE                          = -1603109,
+    SAY_AGGRO                           = -1603110,
+    SAY_SLAY_1                          = -1603111,
+    SAY_SLAY_2                          = -1603112,
+    SAY_SUMMON_STAR                     = -1603113,
+    SAY_BIG_BANG_1                      = -1603114,
+    SAY_BIG_BANG_2                      = -1603115,
+    SAY_PHASE_2                         = -1603116, 
+    SAY_BERSERK                         = -1603117,
+
+    SAY_DESPAWN_1                       = -1603118,
+    SAY_DESPAWN_2                       = -1603119,
+    SAY_DESPAWN_3                       = -1603120,
+
+    SAY_OUTRO_1                         = -1603121,
+    SAY_OUTRO_2                         = -1603122,
+    SAY_OUTRO_3                         = -1603123,
+    SAY_OUTRO_4                         = -1603124,
+    SAY_OUTRO_5                         = -1603125,
+
+};

@@ -22,3 +22,37 @@ SDCategory: Ulduar
 EndScriptData */
 
 #include "precompiled.h"
+
+enum
+{
+    SAY_AGGRO                           = -1603000,
+    SAY_AGGRO_HARD                      = -1603001,
+    SAY_ADDS_CONSERVATOR                = -1603002,
+    SAY_ADDS_TRIO                       = -1603003,
+    SAY_ADDS_LASHER                     = -1603004,
+    SAY_SLAY_1                          = -1603005,
+    SAY_SLAY_2                          = -1603006,
+    SAY_DEATH                           = -1603007,
+    SAY_BERSERK                         = -1603008,
+    SAY_HELP_YOGG                       = -1603009,
+
+    EMOTE_ALLIES_NATURE                 = -1603010,
+    EMOTE_LIFEBINDER                    = -1603011,
+    EMOTE_TREMOR                        = -1603012,
+    EMOTE_IRON_ROOTS                    = -1603013,
+
+    SAY_AGGRO_BRIGHT                    = -1603014,
+    SAY_SLAY_1_BRIGHT                   = -1603015,
+    SAY_SLAY_2_BRIGHT                   = -1603016,
+    SAY_DEATH_BRIGHT                    = -1603017,
+
+    SAY_AGGRO_IRON                      = -1603018,
+    SAY_SLAY_1_IRON                     = -1603019,
+    SAY_SLAY_2_IRON                     = -1603020,
+    SAY_DEATH_IRON                      = -1603021,
+
+    SAY_AGGRO_STONE                     = -1603022,
+    SAY_SLAY_1_STONE                    = -1603023,
+    SAY_SLAY_2_STONE                    = -1603024,
+    SAY_DEATH_STONE                     = -1603025,
+};

@@ -22,3 +22,18 @@ SDCategory: Ulduar
 EndScriptData */
 
 #include "precompiled.h"
+
+enum
+{
+    SAY_AGGRO                           = -1603096,
+    SAY_SLAY_1                          = -1603097,
+    SAY_SLAY_2                          = -1603098,
+    SAY_SURGE                           = -1603099,
+    SAY_DEATH                           = -1603100,
+    SAY_ENRAGE                          = -1603101,
+    SAY_HARD_MODE                       = -1603102,
+
+    EMOTE_VAPOR                         = -1603103,
+    EMOTE_SURGE                         = -1603104,
+    EMOTE_ANIMUS                        = -1603105,
+};

@@ -22,3 +22,28 @@ SDCategory: Ulduar
 EndScriptData */
 
 #include "precompiled.h"
+
+enum
+{
+    SAY_AGGRO                               = -1603159,
+    SAY_SLAY                                = -1603160,
+    SAY_DEATH                               = -1603161,
+
+    SAY_CHANGE_1                            = -1603162,
+    SAY_CHANGE_2                            = -1603163,
+    SAY_CHANGE_3                            = -1603164,
+    SAY_PLAYER_RIDE                         = -1603165,
+    SAY_OVERLOAD_1                          = -1603166,
+    SAY_OVERLOAD_2                          = -1603167,
+    SAY_OVERLOAD_3                          = -1603168,
+
+    SAY_HARD_MODE                           = -1603169,
+
+    SAY_TOWER_FROST                         = -1603170,
+    SAY_TOWER_FIRE                          = -1603171,
+    SAY_TOWER_ENERGY                        = -1603172,
+    SAY_TOWER_NATURE                        = -1603173,
+    SAY_TOWER_DOWN                          = -1603174,
+
+    EMOTE_PURSUE                            = -1603175,
+};

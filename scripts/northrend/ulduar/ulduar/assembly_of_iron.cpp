@@ -22,3 +22,32 @@ SDCategory: Ulduar
 EndScriptData */
 
 #include "precompiled.h"
+
+enum
+{
+    SAY_BRUNDIR_AGGRO                   = -1603056,
+    SAY_BRUNDIR_WHIRL                   = -1603057,
+    SAY_BRUNDIR_DEATH_1                 = -1603058,
+    SAY_BRUNDIR_DEATH_2                 = -1603059,
+    SAY_BRUNDIR_SLAY_1                  = -1603060,
+    SAY_BRUNDIR_SLAY_2                  = -1603061,
+    SAY_BRUNDIR_BERSERK                 = -1603062,
+    SAY_BRUNDIR_FLY                     = -1603063,
+
+    SAY_MOLGEIM_AGGRO                   = -1603064,
+    SAY_MOLGEIM_DEATH_1                 = -1603065,
+    SAY_MOLGEIM_DEATH_2                 = -1603066,
+    SAY_MOLGEIM_DEATH_RUNE              = -1603067,
+    SAY_MOLGEIM_SURGE                   = -1603068,
+    SAY_MOLGEIM_SLAY_1                  = -1603069,
+    SAY_MOLGEIM_SLAY_2                  = -1603070,
+    SAY_MOLGEIM_BERSERK                 = -1603071,
+
+    SAY_STEEL_AGGRO                     = -1603072,
+    SAY_STEEL_DEATH_1                   = -1603073,
+    SAY_STEEL_DEATH_2                   = -1603074,
+    SAY_STEEL_SLAY_1                    = -1603075,
+    SAY_STEEL_SLAY_2                    = -1603076,
+    SAY_STEEL_OVERWHELM                 = -1603077,
+    SAY_STEEL_BERSERK                   = -1603078,
+};

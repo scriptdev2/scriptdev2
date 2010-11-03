@@ -22,3 +22,34 @@ SDCategory: Ulduar
 EndScriptData */
 
 #include "precompiled.h"
+
+enum
+{
+    SAY_AGGRO                               = -1603176,
+    SAY_HARD_MODE                           = -1603177,
+    SAY_BERSERK                             = -1603178,
+
+    SAY_TANK_ACTIVE                         = -1603179,
+    SAY_TANK_SLAY_1                         = -1603180,
+    SAY_TANK_SLAY_2                         = -1603181,
+    SAY_TANK_DEATH                          = -1603182,
+
+    SAY_TORSO_ACTIVE                        = -1603183,
+    SAY_TORSO_SLAY_1                        = -1603184,
+    SAY_TORSO_SLAY_2                        = -1603185,
+    SAY_TORSO_DEATH                         = -1603186,
+
+    SAY_HEAD_ACTIVE                         = -1603187,
+    SAY_HEAD_SLAY_1                         = -1603188,
+    SAY_HEAD_SLAY_2                         = -1603189,
+    SAY_HEAD_DEATH                          = -1603190,
+
+    SAY_ROBOT_ACTIVE                        = -1603191,
+    SAY_ROBOT_SLAY_1                        = -1603192,
+    SAY_ROBOT_SLAY_2                        = -1603193,
+    SAY_ROBOT_DEATH                         = -1603194,
+
+    SAY_HELP_YOGG                           = -1603195,
+
+    EMOTE_PLASMA_BLAST                      = -1603196,
+};
