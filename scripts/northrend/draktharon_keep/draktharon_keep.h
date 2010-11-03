@@ -14,6 +14,8 @@ enum
     TYPE_KING_DRED                  = 2,
     TYPE_THARONJA                   = 3,
 
+    NPC_KING_DRED                   = 27483,
+
     // Adds of King Dred Encounter - deaths counted for achievement
     NPC_DRAKKARI_GUTRIPPER          = 26641,
     NPC_DRAKKARI_SCYTHECLAW         = 26628,
@@ -35,7 +37,10 @@ class MANGOS_DLL_DECL instance_draktharon_keep : public ScriptedInstance
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
 
+        void OnCreatureEnterCombat(Creature* pCreature);
+        void OnCreatureEvade(Creature* pCreature);
         void OnCreatureDeath(Creature* pCreature);
+
         bool CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/);
 
         const char* Save() { return strInstData.c_str(); }

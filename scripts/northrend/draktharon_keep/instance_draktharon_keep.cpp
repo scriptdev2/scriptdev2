@@ -37,10 +37,25 @@ void instance_draktharon_keep::Initialize()
     memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
 }
 
+void instance_draktharon_keep::OnCreatureEnterCombat(Creature* pCreature)
+{
+    if (pCreature->GetEntry() == NPC_KING_DRED)
+        SetData(TYPE_KING_DRED, IN_PROGRESS);
+}
+
+void instance_draktharon_keep::OnCreatureEvade(Creature* pCreature)
+{
+    if (pCreature->GetEntry() == NPC_KING_DRED)
+        SetData(TYPE_KING_DRED, FAIL);
+}
+
 void instance_draktharon_keep::OnCreatureDeath(Creature* pCreature)
 {
     if ((pCreature->GetEntry() == NPC_DRAKKARI_GUTRIPPER || pCreature->GetEntry() == NPC_DRAKKARI_SCYTHECLAW) && m_auiEncounter[TYPE_KING_DRED] == IN_PROGRESS)
         m_uiDreadAddsKilled++;
+
+    if (pCreature->GetEntry() == NPC_KING_DRED)
+        SetData(TYPE_KING_DRED, DONE);
 }
 
 bool instance_draktharon_keep::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/)
