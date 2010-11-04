@@ -37,7 +37,7 @@ enum
     SAY_SUMMON_STAR                     = -1603113,
     SAY_BIG_BANG_1                      = -1603114,
     SAY_BIG_BANG_2                      = -1603115,
-    SAY_PHASE_2                         = -1603116, 
+    SAY_PHASE_2                         = -1603116,
     SAY_BERSERK                         = -1603117,
 
     SAY_DESPAWN_1                       = -1603118,

@@ -2808,8 +2808,8 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1603228,'Gul\'dan is bringing up his warlocks by nightfall. Until then, the Blackrock clan will be trying to take the Eastern Wall.',15539,0,0,0,'yogg SAY_GARONA_2'),
 (-1603229,'A thousand deaths... ',15762,0,0,0,'yogg SAY_YOGG_V1_1'),
 (-1603230,'or one murder.',15763,0,0,0,'yogg SAY_YOGG_V1_2'),
-(-1603231,'We will hold until the reinforcements come. As long as men with stout hearts are manning the walls and throne Stormwind will hold.',15340,0,0,0,'yogg SAY_GARONA_3'),
-(-1603232,'The orc leaders agree with your assessment.',15341,0,0,0,'yogg SAY_GARONA_4'),
+(-1603231,'We will hold until the reinforcements come. As long as men with stout hearts are manning the walls and throne Stormwind will hold.',15540,0,0,0,'yogg SAY_GARONA_3'),
+(-1603232,'The orc leaders agree with your assessment.',15541,0,0,0,'yogg SAY_GARONA_4'),
 (-1603233,'Your petty quarrels only make me stronger!',15764,0,0,0,'yogg SAY_YOGG_V1_3'),
 
 (-1603234,'Portals open into Yogg-Saron\'s mind!',0,3,0,0,'yogg EMOTE_VISION_BLAST'),
