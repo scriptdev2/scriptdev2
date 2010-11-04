@@ -2584,7 +2584,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1603037,'Give us a moment to prepare to build the turrets.',0,1,0,0,'razorscale SAY_INTRO_1'),
 (-1603038,'Be on the lookout! Mole machines will be surfacing soon with those nasty Iron dwarves aboard!',0,1,0,0,'razorscale SAY_INTRO_2'),
 (-1603039,'Ready to move out, keep those dwarves off of our backs!',0,1,0,0,'razorscale SAY_INTRO_3'),
-(-1603040,'Move! Quickly! She won’t remain grounded for long.',0,1,0,0,'razorscale SAY_GROUNDED'),
+(-1603040,'Move! Quickly! She won\'t remain grounded for long.',0,1,0,0,'razorscale SAY_GROUNDED'),
 (-1603041,'Razorscale takes a deep breath...',0,3,0,0,'razorscale EMOTE_BREATH'),
 (-1603042,'Fires out! Let\'s rebuild those turrets!',0,1,0,0,'razorscale SAY_EXTINGUISH_FIRE'),
 (-1603043,'Harpoon Turret is ready for use!',0,3,0,0,'razorscale EMOTE_HARPOON_READY'),
@@ -3099,6 +3099,9 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1632023,'%s begins to cast Mirrored Soul!',0,3,0,0,'boss_devourer EMOTE_MIRRORED_SOUL'),
 (-1632024,'%s begins to Unleash Souls!',0,3,0,0,'boss_devourer EMOTE_UNLEASH_SOULS'),
 (-1632025,'%s begins to cast Wailing Souls!',0,3,0,0,'boss_devourer EMOTE_WAILING_SOULS');
+
+-- -1 658 000 ICC: PIT OF SARON
+
 
 -- -1 999 900 EXAMPLE TEXT
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
