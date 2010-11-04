@@ -9,16 +9,17 @@ enum
 {
     MAX_ENCOUNTER                   = 3,
 
-    TYPE_GAFROST                    = 0,
+    TYPE_GARFROST                   = 0,
     TYPE_KRICK                      = 1,
     TYPE_TYRANNUS                   = 2,
 
     NPC_TYRANNUS_INTRO              = 36794,
-    NPC_GAFROST                     = 36494,
+    NPC_GARFROST                    = 36494,
     NPC_KRICK                       = 36477,
     NPC_ICK                         = 36476,
     NPC_TYRANNUS                    = 36658,
     NPC_RIMEFANG                    = 36661,
+    NPC_SINDRAGOSA                  = 37755,
 
     NPC_SYLVANAS_PART1              = 36990,
     NPC_SYLVANAS_PART2              = 38189,
@@ -33,7 +34,8 @@ enum
     NPC_CHAMPION_1_ALLIANCE         = 37496,
     NPC_CHAMPION_2_ALLIANCE         = 37497,
 
-    GO_ICEWALL                      = 201885,
+    GO_ICEWALL                      = 201885,               // open after gafrost/krick
+    GO_HALLS_OF_REFLECT_PORT        = 201848,               // unlocked by jaina/sylvanas at last outro
 };
 
 class MANGOS_DLL_DECL instance_pit_of_saron : public ScriptedInstance
@@ -60,14 +62,15 @@ class MANGOS_DLL_DECL instance_pit_of_saron : public ScriptedInstance
 
         // Creature GUIDs
         uint64 m_uiTyrannusIntroGUID;
-        uint64 m_uiGafrostGUID;
+        uint64 m_uiGarfrostGUID;
         uint64 m_uiKrickGUID;
         uint64 m_uiIckGUID;
-        uint64 m_uiTirannusGUID;
+        uint64 m_uiTyrannusGUID;
         uint64 m_uiRimefangGUID;
 
         // GameObject GUIDs
         uint64 m_uiIcewallGUID;
+        uint64 m_uiHallsPortGUID;
 };
 
 #endif
