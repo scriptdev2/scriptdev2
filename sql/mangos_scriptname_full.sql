@@ -661,6 +661,11 @@ UPDATE creature_template SET ScriptName='boss_bronjahm' WHERE entry=36497;
 UPDATE creature_template SET ScriptName='boss_devourer_of_souls' WHERE entry=36502;
 UPDATE instance_template SET ScriptName='instance_forge_of_souls' WHERE map=632;
 
+/* HALLS OF REFLECTION */
+
+/* PIT OF SARON */
+UPDATE instance_template SET ScriptName='instance_pit_of_saron' WHERE map=658;
+
 /* ICECROWN */
 UPDATE creature_template SET ScriptName='npc_arete' WHERE entry=29344;
 UPDATE creature_template SET ScriptName='npc_dame_evniki_kapsalis' WHERE entry=34885;

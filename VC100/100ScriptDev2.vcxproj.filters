@@ -1356,6 +1356,12 @@
     <ClCompile Include="..\scripts\northrend\icecrown_citadel\frozen_halls\pit_of_saron\boss_scourgelord_tyrannus.cpp">
       <Filter>scripts\northrend\icecrown_citadel\frozen_halls\pit_of_saron</Filter>
     </ClCompile>
+    <ClCompile Include="..\scripts\northrend\icecrown_citadel\frozen_halls\pit_of_saron\instance_pit_of_saron.cpp">
+      <Filter>scripts\northrend\icecrown_citadel\frozen_halls\pit_of_saron</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scripts\northrend\icecrown_citadel\frozen_halls\pit_of_saron\pit_of_saron.cpp">
+      <Filter>scripts\northrend\icecrown_citadel\frozen_halls\pit_of_saron</Filter>
+    </ClCompile>
     <ClCompile Include="..\scripts\northrend\icecrown_citadel\frozen_halls\halls_of_reflection\boss_falryn.cpp">
       <Filter>scripts\northrend\icecrown_citadel\frozen_halls\halls_of_reflection</Filter>
     </ClCompile>
@@ -1778,6 +1784,9 @@
     </ClInclude>
     <ClInclude Include="..\scripts\northrend\icecrown_citadel\frozen_halls\forge_of_souls\forge_of_souls.h">
       <Filter>scripts\northrend\icecrown_citadel\frozen_halls\forge_of_souls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scripts\northrend\icecrown_citadel\frozen_halls\pit_of_saron\pit_of_saron.h">
+      <Filter>scripts\northrend\icecrown_citadel\frozen_halls\pit_of_saron</Filter>
     </ClInclude>
     <ClInclude Include="..\scripts\northrend\naxxramas\naxxramas.h">
       <Filter>scripts\northrend\naxxramas</Filter>

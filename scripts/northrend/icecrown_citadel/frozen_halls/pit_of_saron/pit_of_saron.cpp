@@ -15,16 +15,19 @@
  */
 
 /* ScriptData
-SDName: boss_forgemaster_gafrost
-SD%Complete: 0%
+SDName: pit_of_saron
+SD%Complete: 0
 SDComment:
 SDCategory: Pit of Saron
 EndScriptData */
 
+/* ContentData
+EndContentData */
+
 #include "precompiled.h"
 #include "pit_of_saron.h"
 
-void AddSC_boss_gafrost()
+void AddSC_pit_of_saron()
 {
 
 }

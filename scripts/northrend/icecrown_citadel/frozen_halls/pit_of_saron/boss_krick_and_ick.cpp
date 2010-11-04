@@ -22,3 +22,9 @@ SDCategory: Pit of Saron
 EndScriptData */
 
 #include "precompiled.h"
+#include "pit_of_saron.h"
+
+void AddSC_boss_krick_and_ick()
+{
+
+}

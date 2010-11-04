@@ -290,6 +290,11 @@ extern void AddSC_instance_gundrak();
 extern void AddSC_boss_bronjahm();                          // ICC, forge_of_souls
 extern void AddSC_boss_devourer_of_souls();
 extern void AddSC_instance_forge_of_souls();
+extern void AddSC_boss_gafrost();                           // ICC, pit_of_saron
+extern void AddSC_boss_krick_and_ick();
+extern void AddSC_boss_tyrannus();
+extern void AddSC_instance_pit_of_saron();
+extern void AddSC_pit_of_saron();
 extern void AddSC_boss_anubrekhan();                        //naxxramas
 extern void AddSC_boss_four_horsemen();
 extern void AddSC_boss_faerlina();
@@ -723,6 +728,11 @@ void AddScripts()
     AddSC_boss_bronjahm();                                  // ICC, forge_of_souls
     AddSC_boss_devourer_of_souls();
     AddSC_instance_forge_of_souls();
+    AddSC_boss_gafrost();                                   // ICC, pit_of_saron
+    AddSC_boss_krick_and_ick();
+    AddSC_boss_tyrannus();
+    AddSC_instance_pit_of_saron();
+    AddSC_pit_of_saron();
     AddSC_boss_anubrekhan();                                //naxxramas
     AddSC_boss_four_horsemen();
     AddSC_boss_faerlina();
