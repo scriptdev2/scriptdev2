@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Areatrigger_Scripts
 SD%Complete: 100
-SDComment: Quest support: 6681, 11686, 10589/10604, 12741, 12548, 13315/13351
+SDComment: Quest support: 6681, 11686, 10589/10604, 12741, 12548, 13315/13351, 12575
 SDCategory: Areatrigger
 EndScriptData */
 
@@ -26,6 +26,7 @@ at_aldurthar_gate               5284,5285,5286,5287
 at_coilfang_waterfall           4591
 at_legion_teleporter            4560 Teleporter TO Invasion Point: Cataclysm
 at_ravenholdt
+at_spearborn_encampment         5030
 at_warsong_farms
 at_stormwright_shelf            5108
 at_childrens_week_spot          3546,3547,3548,3552,3549,3550
@@ -157,6 +158,32 @@ bool AreaTrigger_at_ravenholdt(Player* pPlayer, AreaTriggerEntry const* pAt)
 }
 
 /*######
+## at_spearborn_encampment
+######*/
+
+enum
+{
+    QUEST_MISTWHISPER_TREASURE          = 12575,
+    NPC_TARTEK                          = 28105,
+};
+
+// 5030
+bool AreaTrigger_at_spearborn_encampment(Player* pPlayer, AreaTriggerEntry const* pAt)
+{
+    if (pPlayer->GetQuestStatus(QUEST_MISTWHISPER_TREASURE) == QUEST_STATUS_INCOMPLETE &&
+        pPlayer->GetReqKillOrCastCurrentCount(QUEST_MISTWHISPER_TREASURE, NPC_TARTEK) == 0)
+    {
+        // can only spawn one at a time, it's not a too good solution
+        if (GetClosestCreatureWithEntry(pPlayer, NPC_TARTEK, 50.0f))
+            return false;
+
+        pPlayer->SummonCreature(NPC_TARTEK, pAt->x, pAt->y, pAt->z, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, MINUTE*IN_MILLISECONDS);
+    }
+
+    return false;
+}
+
+/*######
 ## at_warsong_farms
 ######*/
 
@@ -259,6 +286,11 @@ void AddSC_areatrigger_scripts()
     pNewScript = new Script;
     pNewScript->Name = "at_ravenholdt";
     pNewScript->pAreaTrigger = &AreaTrigger_at_ravenholdt;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "at_spearborn_encampment";
+    pNewScript->pAreaTrigger = &AreaTrigger_at_spearborn_encampment;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;

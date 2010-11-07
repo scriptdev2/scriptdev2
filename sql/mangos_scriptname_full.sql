@@ -38,6 +38,8 @@ DELETE FROM scripted_areatrigger WHERE entry IN (2026, 2046);
 INSERT INTO scripted_areatrigger VALUES
 (2026, 'at_blackrock_spire'),
 (2046, 'at_blackrock_spire');
+DELETE FROM scripted_areatrigger WHERE entry=5030;
+INSERT INTO scripted_areatrigger VALUES (5030,'at_spearborn_encampment');
 
 /* BATTLEGROUNDS */
 UPDATE creature_template SET ScriptName='npc_spirit_guide' WHERE entry IN (13116, 13117);
