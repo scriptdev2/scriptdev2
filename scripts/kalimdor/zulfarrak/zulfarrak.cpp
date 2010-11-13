@@ -27,6 +27,7 @@ npc_weegli_blastfuse
 EndContentData */
 
 #include "precompiled.h"
+#include "zulfarrak.h"
 
 /*######
 ## npc_sergeant_bly
@@ -217,21 +218,74 @@ bool GossipSelect_npc_weegli_blastfuse(Player* pPlayer, Creature* pCreature, uin
     return true;
 }
 
+bool ProcessEventId_event_go_zulfarrak_gong(uint32 uiEventId, Object* pSource, Object* pTarget, bool bIsStart)
+{
+    if (bIsStart && pSource->GetTypeId() == TYPEID_PLAYER)
+    {
+        if (instance_zulfarrak* pInstance = (instance_zulfarrak*)((Player*)pSource)->GetInstanceData())
+        {
+            if (pInstance->GetData(TYPE_GAHZRILLA) == NOT_STARTED || pInstance->GetData(TYPE_GAHZRILLA) == FAIL)
+            {
+                pInstance->SetData(TYPE_GAHZRILLA, IN_PROGRESS);
+                return false;                               // Summon Gahz'rilla by Database Script
+            }
+            else
+                return true;                                // Prevent DB script summoning Gahz'rilla
+        }
+    }
+    return false;
+}
+
+bool AreaTrigger_at_zulfarrak(Player* pPlayer, AreaTriggerEntry const* pAt)
+{
+    if (pAt->id == AREATRIGGER_ANTUSUL)
+    {
+        if (pPlayer->isGameMaster() || pPlayer->isDead())
+            return false;
+
+        instance_zulfarrak* pInstance = (instance_zulfarrak*)pPlayer->GetInstanceData();
+
+        if (!pInstance)
+            return false;
+
+        if (pInstance->GetData(TYPE_ANTUSUL) == NOT_STARTED || pInstance->GetData(TYPE_ANTUSUL) == FAIL)
+        {
+            if (Creature* pAntuSul = pInstance->instance->GetCreature(pInstance->GetData64(NPC_ANTUSUL)))
+            {
+                if (pAntuSul->isAlive())
+                    pAntuSul->AI()->AttackStart(pPlayer);
+            }
+        }
+    }
+
+    return false;
+}
+
 void AddSC_zulfarrak()
 {
-    Script* newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "npc_sergeant_bly";
-    newscript->GetAI = &GetAI_npc_sergeant_bly;
-    newscript->pGossipHello =  &GossipHello_npc_sergeant_bly;
-    newscript->pGossipSelect = &GossipSelect_npc_sergeant_bly;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_sergeant_bly";
+    pNewScript->GetAI = &GetAI_npc_sergeant_bly;
+    pNewScript->pGossipHello =  &GossipHello_npc_sergeant_bly;
+    pNewScript->pGossipSelect = &GossipSelect_npc_sergeant_bly;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_weegli_blastfuse";
-    newscript->GetAI = &GetAI_npc_weegli_blastfuse;
-    newscript->pGossipHello =  &GossipHello_npc_weegli_blastfuse;
-    newscript->pGossipSelect = &GossipSelect_npc_weegli_blastfuse;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_weegli_blastfuse";
+    pNewScript->GetAI = &GetAI_npc_weegli_blastfuse;
+    pNewScript->pGossipHello =  &GossipHello_npc_weegli_blastfuse;
+    pNewScript->pGossipSelect = &GossipSelect_npc_weegli_blastfuse;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "event_go_zulfarrak_gong";
+    pNewScript->pProcessEventId = &ProcessEventId_event_go_zulfarrak_gong;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "at_zulfarrak";
+    pNewScript->pAreaTrigger = &AreaTrigger_at_zulfarrak;
+    pNewScript->RegisterSelf();
 }

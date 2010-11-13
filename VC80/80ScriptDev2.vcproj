@@ -1604,7 +1604,19 @@
 					Name="zulfarrak"
 					>
 					<File
+						RelativePath="..\scripts\kalimdor\zulfarrak\boss_zumrah.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\kalimdor\zulfarrak\instance_zulfarrak.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\scripts\kalimdor\zulfarrak\zulfarrak.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\kalimdor\zulfarrak\zulfarrak.h"
 						>
 					</File>
 				</Filter>
