@@ -1088,10 +1088,13 @@
     </ClCompile>
     <ClCompile Include="..\scripts\northrend\crusaders_coliseum\trial_of_the_champion\boss_grand_champions.cpp">
       <Filter>scripts\northrend\crusaders_coliseum\trial_of_the_champion</Filter>
+    </ClCompile>
     <ClCompile Include="..\scripts\northrend\crusaders_coliseum\trial_of_the_champion\instance_trial_of_the_champion.cpp">
       <Filter>scripts\northrend\crusaders_coliseum\trial_of_the_champion</Filter>
+    </ClCompile>
     <ClCompile Include="..\scripts\northrend\crusaders_coliseum\trial_of_the_champion\trial_of_the_champion.cpp">
       <Filter>scripts\northrend\crusaders_coliseum\trial_of_the_champion</Filter>
+    </ClCompile>
     <ClCompile Include="..\scripts\northrend\crusaders_coliseum\trial_of_the_crusader\boss_anubarak_trial.cpp">
       <Filter>scripts\northrend\crusaders_coliseum\trial_of_the_crusader</Filter>
     </ClCompile>
@@ -1790,6 +1793,7 @@
     </ClInclude>
     <ClInclude Include="..\scripts\northrend\crusaders_coliseum\trial_of_the_champion\trial_of_the_champion.h">
       <Filter>scripts\northrend\crusaders_coliseum\trial_of_the_champion</Filter>
+    </ClInclude>
     <ClInclude Include="..\scripts\northrend\crusaders_coliseum\trial_of_the_crusader\trial_of_the_crusader.h">
       <Filter>scripts\northrend\crusaders_coliseum\trial_of_the_crusader</Filter>
     </ClInclude>
