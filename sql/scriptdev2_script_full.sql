@@ -635,7 +635,10 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000599,'It\'s a miracle! The beast skinned itself!',0,0,0,5,'nesingwary trapper SAY_PHRASE_1'),
 (-1000600,'Jackpot!',0,0,0,5,'nesingwary trapper SAY_PHRASE_2'),
 (-1000601,'This is the last one i need for that set of Nesingwary steak knives!',0,0,0,5,'nesingwary trapper SAY_PHRASE_3'),
-(-1000602,'Silly beasts!',0,0,0,5,'nesingwary trapper SAY_PHRASE_4');
+(-1000602,'Silly beasts!',0,0,0,5,'nesingwary trapper SAY_PHRASE_4'),
+
+(-1000603,'Do not test me, scurvy dog! I\'m trained in the way of the Blood Knights!',0,0,0,0,'silvermoon harry SAY_AGGRO'),
+(-1000604,'I\'ll pay! I\'ll pay! Eeeek! Please don\'t hurt me!',0,0,0,0,'silvermoon harry SAY_BEATEN');
 
 -- -1 033 000 SHADOWFANG KEEP
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
@@ -3149,6 +3152,11 @@ TRUNCATE gossip_texts;
 -- -3 000 000 RESERVED (up to 100)
 INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 (-3000000,'[PH] SD2 unknown text','GOSSIP_ID_UNKNOWN_TEXT');
+
+-- -3 000 100 GENERAL MAPS (not instance maps)
+INSERT INTO gossip_texts (entry,content_default,comment) VALUES
+(-3000101,'Taruk send me to collect what you owe.','silvermoon harry GOSSIP_ITEM_GAMBLING_DEBT'),
+(-3000102,'Here\'s the money.','silvermoon harry GOSSIP_ITEM_PAYING');
 
 -- -3 090 000 GNOMEREGAN
 INSERT INTO gossip_texts (entry,content_default,comment) VALUES
