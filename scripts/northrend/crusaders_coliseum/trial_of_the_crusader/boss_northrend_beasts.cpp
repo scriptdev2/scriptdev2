@@ -24,6 +24,10 @@ EndScriptData */
 #include "precompiled.h"
 #include "trial_of_the_crusader.h"
 
+/*######
+## boss_gormok
+######*/
+
 struct MANGOS_DLL_DECL boss_gormokAI : public ScriptedAI
 {
     boss_gormokAI(Creature* pCreature) : ScriptedAI(pCreature)
@@ -60,6 +64,10 @@ CreatureAI* GetAI_boss_gormok(Creature* pCreature)
 {
     return new boss_gormokAI(pCreature);
 }
+
+/*######
+## boss_acidmaw
+######*/
 
 struct MANGOS_DLL_DECL boss_acidmawAI : public ScriptedAI
 {
@@ -98,6 +106,10 @@ CreatureAI* GetAI_boss_acidmaw(Creature* pCreature)
     return new boss_acidmawAI(pCreature);
 }
 
+/*######
+## boss_dreadscale
+######*/
+
 struct MANGOS_DLL_DECL boss_dreadscaleAI : public ScriptedAI
 {
     boss_dreadscaleAI(Creature* pCreature) : ScriptedAI(pCreature)
@@ -134,6 +146,15 @@ CreatureAI* GetAI_boss_dreadscale(Creature* pCreature)
 {
     return new boss_dreadscaleAI(pCreature);
 }
+
+/*######
+## boss_icehowl
+######*/
+
+enum
+{
+    EMOTE_MASSIVE_CRASH                 = -1649039,
+};
 
 struct MANGOS_DLL_DECL boss_icehowlAI : public ScriptedAI
 {

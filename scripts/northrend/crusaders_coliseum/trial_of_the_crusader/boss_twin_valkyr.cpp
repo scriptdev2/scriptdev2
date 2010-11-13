@@ -24,6 +24,18 @@ EndScriptData */
 #include "precompiled.h"
 #include "trial_of_the_crusader.h"
 
+enum
+{
+    SAY_AGGRO                           = -1649056,
+    SAY_BERSERK                         = -1649057,
+    SAY_COLORSWITCH                     = -1649058,
+    SAY_DEATH                           = -1649059,
+    SAY_SLAY_1                          = -1649060,
+    SAY_SLAY_2                          = -1649061,
+    SAY_TO_BLACK                        = -1649062,
+    SAY_TO_WHITE                        = -1649063,
+};
+
 /*######
 ## boss_fjola
 ######*/

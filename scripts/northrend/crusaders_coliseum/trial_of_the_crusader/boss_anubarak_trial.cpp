@@ -24,6 +24,17 @@ EndScriptData */
 #include "precompiled.h"
 #include "trial_of_the_crusader.h"
 
+enum
+{
+    SAY_AGGRO                           = -1649064,
+    SAY_SLAY_1                          = -1649065,
+    SAY_SLAY_2                          = -1649066,
+    SAY_DEATH                           = -1649067,
+    SAY_BERSERK                         = -1649068,
+    SAY_SUBMERGE                        = -1649069,
+    SAY_LEECHING_SWARM                  = -1649070,
+};
+
 struct MANGOS_DLL_DECL boss_anubarak_trialAI : public ScriptedAI
 {
     boss_anubarak_trialAI(Creature* pCreature) : ScriptedAI(pCreature)

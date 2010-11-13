@@ -28,6 +28,18 @@ EndScriptData */
 ## boss_jaraxxus
 ######*/
 
+enum
+{
+    SAY_AGGRO                           = -1649040,
+    SAY_SLAY_1                          = -1649041,
+    SAY_SLAY_2                          = -1649042,
+    SAY_DEATH                           = -1649043,
+    SAY_BERSERK                         = -1649044,
+    SAY_INCINERATE                      = -1649045,
+    SAY_MISTRESS                        = -1649046,
+    SAY_INFERNO                         = -1649047,
+};
+
 struct MANGOS_DLL_DECL boss_jaraxxusAI : public ScriptedAI
 {
     boss_jaraxxusAI(Creature* pCreature) : ScriptedAI(pCreature)

@@ -23,3 +23,16 @@ EndScriptData */
 
 #include "precompiled.h"
 #include "trial_of_the_crusader.h"
+
+enum
+{
+    SAY_GARROSH_PVP_A_SLAY_1            = -1649048,
+    SAY_GARROSH_PVP_A_SLAY_2            = -1649049,
+    SAY_GARROSH_PVP_A_SLAY_3            = -1649050,
+    SAY_GARROSH_PVP_A_SLAY_4            = -1649051,
+
+    SAY_VARIAN_PVP_H_SLAY_1             = -1649052,
+    SAY_VARIAN_PVP_H_SLAY_2             = -1649053,
+    SAY_VARIAN_PVP_H_SLAY_3             = -1649054,
+    SAY_VARIAN_PVP_H_SLAY_4             = -1649055,
+};
