@@ -24,6 +24,21 @@ EndScriptData */
 #include "precompiled.h"
 #include "pit_of_saron.h"
 
+enum
+{
+    SAY_AGGRO                           = -1658014,
+    SAY_SLAY_1                          = -1658015,
+    SAY_BOULDER_HIT                     = -1658016,
+    SAY_DEATH                           = -1658017,
+    SAY_FORGE_1                         = -1658018,
+    SAY_FORGE_2                         = -1658019,
+    SAY_TYRANNUS_GARFROST               = -1658020,
+    SAY_GENERAL_GARFROST                = -1658021,
+
+    EMOTE_THROW_SARONITE                = -1658022,
+    EMOTE_DEEP_FREEZE                   = -1658023,
+};
+
 void AddSC_boss_gafrost()
 {
 
