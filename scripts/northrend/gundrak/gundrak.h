@@ -22,8 +22,8 @@ enum
     TYPE_ECK               = 4,
 
     NPC_SLADRAN            = 29304,
-    NPC_MOORABI            = 29307,
-    NPC_COLOSSUS           = 29305,
+    NPC_MOORABI            = 29305,
+    NPC_COLOSSUS           = 29307,
     NPC_ELEMENTAL          = 29573,
     NPC_LIVIN_MOJO         = 29830,
     NPC_GALDARAH           = 29306,
