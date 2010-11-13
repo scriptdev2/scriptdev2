@@ -947,6 +947,7 @@ UPDATE creature_template SET ScriptName='npc_shattrathflaskvendors' WHERE entry 
 UPDATE creature_template SET ScriptName='npc_zephyr' WHERE entry=25967;
 
 /* SHOLAZAR BASIN */
+UPDATE creature_template SET ScriptName='npc_injured_rainspeaker' WHERE entry=28217;
 UPDATE creature_template SET ScriptName='npc_vekjik' WHERE entry=28315;
 
 /* SILITHUS */
