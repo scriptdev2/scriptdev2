@@ -474,6 +474,9 @@
     <ClCompile Include="..\scripts\northrend\azjol-nerub\azjol-nerub\boss_hadronox.cpp" />
     <ClCompile Include="..\scripts\northrend\azjol-nerub\azjol-nerub\boss_krikthir.cpp" />
     <ClCompile Include="..\scripts\northrend\azjol-nerub\azjol-nerub\instance_azjol-nerub.cpp" />
+    <ClCompile Include="..\scripts\northrend\crusaders_coliseum\trial_of_the_champion\boss_grand_champions.cpp" />
+    <ClCompile Include="..\scripts\northrend\crusaders_coliseum\trial_of_the_champion\instance_trial_of_the_champion.cpp" />
+    <ClCompile Include="..\scripts\northrend\crusaders_coliseum\trial_of_the_champion\trial_of_the_champion.cpp" />
     <ClCompile Include="..\scripts\northrend\crusaders_coliseum\trial_of_the_crusader\boss_anubarak_trial.cpp" />
     <ClCompile Include="..\scripts\northrend\crusaders_coliseum\trial_of_the_crusader\boss_faction_champions.cpp" />
     <ClCompile Include="..\scripts\northrend\crusaders_coliseum\trial_of_the_crusader\boss_jaraxxus.cpp" />
@@ -708,6 +711,7 @@
     <ClInclude Include="..\scripts\kalimdor\wailing_caverns\wailing_caverns.h" />
     <ClInclude Include="..\scripts\northrend\azjol-nerub\ahnkahet\ahnkahet.h" />
     <ClInclude Include="..\scripts\northrend\azjol-nerub\azjol-nerub\azjol-nerub.h" />
+    <ClInclude Include="..\scripts\northrend\crusaders_coliseum\trial_of_the_champion\trial_of_the_champion.h" />
     <ClInclude Include="..\scripts\northrend\crusaders_coliseum\trial_of_the_crusader\trial_of_the_crusader.h" />
     <ClInclude Include="..\scripts\northrend\draktharon_keep\draktharon_keep.h" />
     <ClInclude Include="..\scripts\northrend\gundrak\gundrak.h" />
