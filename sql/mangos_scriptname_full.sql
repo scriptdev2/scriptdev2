@@ -818,6 +818,7 @@ UPDATE creature_template SET ScriptName='npc_commander_dawnforge' WHERE entry=19
 UPDATE creature_template SET ScriptName='npc_protectorate_nether_drake' WHERE entry=20903;
 UPDATE creature_template SET ScriptName='npc_veronia' WHERE entry=20162;
 UPDATE creature_template SET ScriptName='npc_bessy' WHERE entry=20415;
+UPDATE creature_template SET ScriptName='npc_maxx_a_million' WHERE entry=19589;
 
 /*  */
 /* THE NEXUS */
