@@ -73,34 +73,49 @@ CreatureAI* GetAI_mob_shattered_rumbler(Creature* pCreature)
 }
 
 /*######
-## mob_lump
+## mob_lump - TODO: remove gossip, can be done in database
 ######*/
 
-#define SAY_LUMP_0          -1000190
-#define SAY_LUMP_1          -1000191
-#define SAY_LUMP_DEFEAT     -1000192
+enum
+{
+    QUEST_NOT_ON_MY_WATCH       = 9918,
+    NPC_LUMPS_QUEST_CREDIT      = 18354,
 
-#define SPELL_VISUAL_SLEEP  16093
-#define SPELL_SPEAR_THROW   32248
+    SAY_LUMP_AGGRO_1            = -1000190,
+    SAY_LUMP_AGGRO_2            = -1000191,
+    SAY_LUMP_DEFEAT             = -1000192,
+
+    TEXT_ID_LUMP_1              = 9352,
+    TEXT_ID_LUMP_2              = 9353,
+    TEXT_ID_LUMP_3              = 9354,
+    TEXT_ID_LUMP_4              = 9355,
+    TEXT_ID_LUMP_5              = 9356,
+
+    SPELL_VISUAL_SLEEP          = 16093,
+    SPELL_SPEAR_THROW           = 32248,
+
+    FACTION_FRIENDLY            = 35
+};
 
 struct MANGOS_DLL_DECL mob_lumpAI : public ScriptedAI
 {
     mob_lumpAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        bReset = false;
+        m_bReset = false;
         Reset();
     }
 
-    uint32 Reset_Timer;
-    uint32 Spear_Throw_Timer;
-    bool bReset;
+    uint32 m_uiResetTimer;
+    uint32 m_uiSpearThrowTimer;
+    bool m_bReset;
 
     void Reset()
     {
-        Reset_Timer = 60000;
-        Spear_Throw_Timer = 2000;
+        m_uiResetTimer = MINUTE*IN_MILLISECONDS;
+        m_uiSpearThrowTimer = 2000;
 
-        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+        if (m_creature->getFaction() != m_creature->GetCreatureInfo()->faction_A)
+            m_creature->setFaction(m_creature->GetCreatureInfo()->faction_A);
     }
 
     void AttackedBy(Unit* pAttacker)
@@ -114,30 +129,31 @@ struct MANGOS_DLL_DECL mob_lumpAI : public ScriptedAI
         AttackStart(pAttacker);
     }
 
-    void DamageTaken(Unit *done_by, uint32 & damage)
+    void DamageTaken(Unit* pDealer, uint32& uiDamage)
     {
-        if (done_by->GetTypeId() == TYPEID_PLAYER && (m_creature->GetHealth() - damage)*100 / m_creature->GetMaxHealth() < 30)
+        if (m_creature->GetHealth() < uiDamage || (m_creature->GetHealth() - uiDamage)*100 / m_creature->GetMaxHealth() < 30)
         {
-            if (!bReset && ((Player*)done_by)->GetQuestStatus(9918) == QUEST_STATUS_INCOMPLETE)
+            Player* pPlayer = pDealer->GetCharmerOrOwnerPlayerOrPlayerItself();
+            if (!m_bReset && pPlayer && pPlayer->GetQuestStatus(QUEST_NOT_ON_MY_WATCH) == QUEST_STATUS_INCOMPLETE)
             {
-                //Take 0 damage
-                damage = 0;
+                uiDamage = 0;                               //Take 0 damage
 
-                ((Player*)done_by)->AttackStop();
-                m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                 m_creature->RemoveAllAuras();
                 m_creature->DeleteThreatList();
                 m_creature->CombatStop(true);
-                m_creature->setFaction(1080);               //friendly
-                m_creature->SetStandState(UNIT_STAND_STATE_SIT);
-                DoScriptText(SAY_LUMP_DEFEAT, m_creature, done_by);
 
-                bReset = true;
+                // should get unit_flags UNIT_FLAG_OOC_NOT_ATTACKABLE | UNIT_FLAG_PASSIVE at faction change, but unclear why/for what reason, skipped (no flags expected as default)
+                m_creature->setFaction(FACTION_FRIENDLY);
+
+                m_creature->SetStandState(UNIT_STAND_STATE_SIT);
+                DoScriptText(SAY_LUMP_DEFEAT, m_creature, pPlayer);
+
+                m_bReset = true;
             }
         }
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
         if (m_creature->HasAura(SPELL_VISUAL_SLEEP, EFFECT_INDEX_0))
             m_creature->RemoveAurasDueToSpell(SPELL_VISUAL_SLEEP);
@@ -145,49 +161,51 @@ struct MANGOS_DLL_DECL mob_lumpAI : public ScriptedAI
         if (!m_creature->IsStandState())
             m_creature->SetStandState(UNIT_STAND_STATE_STAND);
 
-        DoScriptText(urand(0, 1) ? SAY_LUMP_0 : SAY_LUMP_1, m_creature, who);
+        DoScriptText(urand(0, 1) ? SAY_LUMP_AGGRO_1 : SAY_LUMP_AGGRO_2, m_creature, pWho);
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
-        //check if we waiting for a reset
-        if (bReset)
+        // Check if we waiting for a reset
+        if (m_bReset)
         {
-            if (Reset_Timer < diff)
+            if (m_uiResetTimer < uiDiff)
             {
                 EnterEvadeMode();
-                bReset = false;
-                m_creature->setFaction(1711);               //hostile
+                m_bReset = false;
             }
-            else Reset_Timer -= diff;
+            else
+                m_uiResetTimer -= uiDiff;
         }
 
-        //Return since we have no target
+        // Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //Spear_Throw_Timer
-        if (Spear_Throw_Timer < diff)
+        // SpearThrow Timer
+        if (m_uiSpearThrowTimer < uiDiff)
         {
             DoCastSpellIfCan(m_creature->getVictim(), SPELL_SPEAR_THROW);
-            Spear_Throw_Timer = 20000;
-        }else Spear_Throw_Timer -= diff;
+            m_uiSpearThrowTimer = 20000;
+        }
+        else
+            m_uiSpearThrowTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
 };
 
-CreatureAI* GetAI_mob_lump(Creature *_creature)
+CreatureAI* GetAI_mob_lump(Creature* pCreature)
 {
-    return new mob_lumpAI(_creature);
+    return new mob_lumpAI(pCreature);
 }
 
 bool GossipHello_mob_lump(Player* pPlayer, Creature* pCreature)
 {
-    if (pPlayer->GetQuestStatus(9918) == QUEST_STATUS_INCOMPLETE)
+    if (pPlayer->GetQuestStatus(QUEST_NOT_ON_MY_WATCH) == QUEST_STATUS_INCOMPLETE)
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "I need answers, ogre!", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
-    pPlayer->SEND_GOSSIP_MENU(9352, pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(TEXT_ID_LUMP_1, pCreature->GetGUID());
 
     return true;
 }
@@ -198,19 +216,19 @@ bool GossipSelect_mob_lump(Player* pPlayer, Creature* pCreature, uint32 uiSender
     {
         case GOSSIP_ACTION_INFO_DEF:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Why are Boulderfist out this far? You know that this is Kurenai territory.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-            pPlayer->SEND_GOSSIP_MENU(9353, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(TEXT_ID_LUMP_2, pCreature->GetGUID());
             break;
-        case GOSSIP_ACTION_INFO_DEF+1:
+        case GOSSIP_ACTION_INFO_DEF + 1:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "And you think you can just eat anything you want? You're obviously trying to eat the Broken of Telaar.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-            pPlayer->SEND_GOSSIP_MENU(9354, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(TEXT_ID_LUMP_3, pCreature->GetGUID());
             break;
-        case GOSSIP_ACTION_INFO_DEF+2:
+        case GOSSIP_ACTION_INFO_DEF + 2:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "This means war, Lump! War I say!", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-            pPlayer->SEND_GOSSIP_MENU(9355, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(TEXT_ID_LUMP_4, pCreature->GetGUID());
             break;
-        case GOSSIP_ACTION_INFO_DEF+3:
-            pPlayer->SEND_GOSSIP_MENU(9356, pCreature->GetGUID());
-            pPlayer->TalkedToCreature(18354, pCreature->GetGUID());
+        case GOSSIP_ACTION_INFO_DEF + 3:
+            pPlayer->SEND_GOSSIP_MENU(TEXT_ID_LUMP_5, pCreature->GetGUID());
+            pPlayer->TalkedToCreature(NPC_LUMPS_QUEST_CREDIT, pCreature->GetGUID());
             break;
     }
     return true;
@@ -685,52 +703,52 @@ CreatureAI* GetAI_npc_creditmarker_visit_with_ancestors(Creature* pCreature)
 
 void AddSC_nagrand()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "mob_shattered_rumbler";
-    newscript->GetAI = &GetAI_mob_shattered_rumbler;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_shattered_rumbler";
+    pNewScript->GetAI = &GetAI_mob_shattered_rumbler;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_lump";
-    newscript->GetAI = &GetAI_mob_lump;
-    newscript->pGossipHello =  &GossipHello_mob_lump;
-    newscript->pGossipSelect = &GossipSelect_mob_lump;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_lump";
+    pNewScript->GetAI = &GetAI_mob_lump;
+    pNewScript->pGossipHello =  &GossipHello_mob_lump;
+    pNewScript->pGossipSelect = &GossipSelect_mob_lump;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_sunspring_villager";
-    newscript->GetAI = &GetAI_mob_sunspring_villager;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_sunspring_villager";
+    pNewScript->GetAI = &GetAI_mob_sunspring_villager;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_altruis_the_sufferer";
-    newscript->pGossipHello =  &GossipHello_npc_altruis_the_sufferer;
-    newscript->pGossipSelect = &GossipSelect_npc_altruis_the_sufferer;
-    newscript->pQuestAccept =  &QuestAccept_npc_altruis_the_sufferer;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_altruis_the_sufferer";
+    pNewScript->pGossipHello =  &GossipHello_npc_altruis_the_sufferer;
+    pNewScript->pGossipSelect = &GossipSelect_npc_altruis_the_sufferer;
+    pNewScript->pQuestAccept =  &QuestAccept_npc_altruis_the_sufferer;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_greatmother_geyah";
-    newscript->pGossipHello =  &GossipHello_npc_greatmother_geyah;
-    newscript->pGossipSelect = &GossipSelect_npc_greatmother_geyah;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_greatmother_geyah";
+    pNewScript->pGossipHello =  &GossipHello_npc_greatmother_geyah;
+    pNewScript->pGossipSelect = &GossipSelect_npc_greatmother_geyah;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_lantresor_of_the_blade";
-    newscript->pGossipHello =  &GossipHello_npc_lantresor_of_the_blade;
-    newscript->pGossipSelect = &GossipSelect_npc_lantresor_of_the_blade;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_lantresor_of_the_blade";
+    pNewScript->pGossipHello =  &GossipHello_npc_lantresor_of_the_blade;
+    pNewScript->pGossipSelect = &GossipSelect_npc_lantresor_of_the_blade;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_maghar_captive";
-    newscript->GetAI = &GetAI_npc_maghar_captive;
-    newscript->pQuestAccept = &QuestAccept_npc_maghar_captive;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_maghar_captive";
+    pNewScript->GetAI = &GetAI_npc_maghar_captive;
+    pNewScript->pQuestAccept = &QuestAccept_npc_maghar_captive;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_creditmarker_visit_with_ancestors";
-    newscript->GetAI = &GetAI_npc_creditmarker_visit_with_ancestors;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_creditmarker_visit_with_ancestors";
+    pNewScript->GetAI = &GetAI_npc_creditmarker_visit_with_ancestors;
+    pNewScript->RegisterSelf();
 }
