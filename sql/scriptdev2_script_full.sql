@@ -644,7 +644,21 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000606,'Home time!',0,0,0,0,'rainspeaker SAY_START'),
 (-1000607,'Thanks!',0,0,0,0,'rainspeaker SAY_END_1'),
 (-1000608,'Oh no! Some puppy-men followed!',0,0,0,0,'rainspeaker SAY_END_2'),
-(-1000609,'Dumb big-tongue lover! You not friend of Frenzyheart no more. Frenzyheart will get you good.',0,1,0,0,'rainspeaker SAY_TRACKER');
+(-1000609,'Dumb big-tongue lover! You not friend of Frenzyheart no more. Frenzyheart will get you good.',0,1,0,0,'rainspeaker SAY_TRACKER'),
+
+(-1000610,'The mosswalker victim groans in pain.',0,2,0,0,'mosswalker victim EMOTE_PAIN'),
+
+(-1000611,'Maybe you make weather better too?',0,0,0,0,'mosswalker victim SAY_RESCUE_1'),
+(-1000612,'We saved. You nice, $N.',0,0,0,0,'mosswalker victim SAY_RESCUE_2'),
+(-1000613,'You save us! Yay for you!',0,0,0,0,'mosswalker victim SAY_RESCUE_3'),
+(-1000614,'Thank you! You good!',0,0,0,0,'mosswalker victim SAY_RESCUE_4'),
+
+(-1000615,'Use my shinies...make weather good again...make undead things go away.',0,0,0,0,'mosswalker victim SAY_DIE_1'),
+(-1000616,'We gave shinies to shrine... we not greedy... why this happen?',0,0,0,0,'mosswalker victim SAY_DIE_2'),
+(-1000617,'I do something bad? I sorry....',0,0,0,0,'mosswalker victim SAY_DIE_3'),
+(-1000618,'We not do anything... to them... I no understand.',0,0,0,0,'mosswalker victim SAY_DIE_4'),
+(-1000619,'Thank...you.',0,0,0,0,'mosswalker victim SAY_DIE_5'),
+(-1000620,'Please take... my shinies. All done...',0,0,0,0,'mosswalker victim SAY_DIE_6');
 
 -- -1 033 000 SHADOWFANG KEEP
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
@@ -3329,7 +3343,8 @@ INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 (-3000101,'Taruk send me to collect what you owe.','silvermoon harry GOSSIP_ITEM_GAMBLING_DEBT'),
 (-3000102,'Here\'s the money.','silvermoon harry GOSSIP_ITEM_PAYING'),
-(-3000103,'I am ready to travel to you village now.','rainspeaker GOSSIP_ITEM_READY');
+(-3000103,'I am ready to travel to you village now.','rainspeaker GOSSIP_ITEM_READY'),
+(-3000104,'<Check for pulse...>','mosswalker victim GOSSIP_ITEM_PULSE');
 
 -- -3 090 000 GNOMEREGAN
 INSERT INTO gossip_texts (entry,content_default,comment) VALUES
