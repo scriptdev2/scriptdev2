@@ -259,6 +259,11 @@ enum
     SPELL_SUMMON_HAISHULUD              = 39248,
     NPC_SAND_GNOME                      = 22483,
     NPC_MATURE_BONE_SIFTER              = 22482,
+
+    // quest 12813, by item 40587
+    SPELL_DARKMENDER_TINCTURE           = 52741,
+    SPELL_SUMMON_CORRUPTED_SCARLET      = 54415,
+    NPC_CORPSES_RISE_CREDIT_BUNNY       = 29398,
 };
 
 bool EffectAuraDummy_spell_aura_dummy_npc(const Aura* pAura, bool bApply)
@@ -441,6 +446,24 @@ bool EffectDummyCreature_spell_dummy_npc(Unit* pCaster, uint32 uiSpellId, SpellE
                 if (pCreatureTarget->GetEntry() == NPC_SICKLY_GAZELLE && ((Player*)pCaster)->GetTeam() == HORDE)
                     pCreatureTarget->UpdateEntry(NPC_CURED_GAZELLE);
 
+                return true;
+            }
+            return true;
+        }
+        case SPELL_DARKMENDER_TINCTURE:
+        {
+            if (uiEffIndex == EFFECT_INDEX_0)
+            {
+                if (pCaster->GetTypeId() != TYPEID_PLAYER)
+                    return true;
+
+                // TODO: find/fix visual for effect, no related spells found doing this
+
+                pCreatureTarget->CastSpell(pCreatureTarget, SPELL_SUMMON_CORRUPTED_SCARLET, true);
+
+                ((Player*)pCaster)->KilledMonsterCredit(NPC_CORPSES_RISE_CREDIT_BUNNY);
+
+                pCreatureTarget->ForcedDespawn();
                 return true;
             }
             return true;
