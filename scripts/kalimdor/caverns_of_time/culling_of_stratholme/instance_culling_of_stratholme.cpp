@@ -122,15 +122,15 @@ void instance_culling_of_stratholme::OnCreatureCreate(Creature* pCreature)
         case NPC_LORDAERON_CRIER:               m_uiLordaeronCrierGUID = pCreature->GetGUID();  break;
         case NPC_INFINITE_CORRUPTER:            m_uiCorrupterGUID = pCreature->GetGUID();       break;
 
-        case NPC_CRATES_BUNNY:                  m_lCratesBunnyList.push_back(pCreature);        break;
-        case NPC_LORDAERON_FOOTMAN:             m_lFootmanList.push_back(pCreature);            break;
+        case NPC_CRATES_BUNNY:                  m_luiCratesBunnyGUIDs.push_back(pCreature->GetGUID()); break;
+        case NPC_LORDAERON_FOOTMAN:             m_luiFootmanGUIDs.push_back(pCreature->GetGUID());     break;
 
         case NPC_STRATHOLME_CITIZEN:
         case NPC_STRATHOLME_RESIDENT:
             if (m_auiEncounter[TYPE_ARTHAS_INTRO_EVENT] == DONE)
                 pCreature->UpdateEntry(NPC_ZOMBIE);
             else
-                m_lResidentList.push_back(pCreature);
+                m_luiResidentGUIDs.push_back(pCreature->GetGUID());
             break;
         case NPC_AGIATED_STRATHOLME_CITIZEN:    m_lAgiatedCitizenGUIDList.push_back(pCreature->GetGUID());  break;
         case NPC_AGIATED_STRATHOLME_RESIDENT:   m_lAgiatedResidentGUIDList.push_back(pCreature->GetGUID()); break;
@@ -436,23 +436,50 @@ static bool sortFromSouthToNorth(Creature* pFirst, Creature* pSecond)
 
 void instance_culling_of_stratholme::GetCratesBunnyOrderedList(std::list<Creature*> &lList)
 {
-    m_lCratesBunnyList.sort(sortFromEastToWest);
-    lList = m_lCratesBunnyList;
+    std::list<Creature*> lCratesBunnyList;
+    for (std::list<uint64>::const_iterator itr = m_luiCratesBunnyGUIDs.begin(); itr != m_luiCratesBunnyGUIDs.end(); itr++)
+    {
+        if (Creature* pBunny = instance->GetCreature(*itr))
+            lCratesBunnyList.push_back(pBunny);
+    }
+    if (lCratesBunnyList.empty())
+        return;
+
+    lCratesBunnyList.sort(sortFromEastToWest);
+    lList = lCratesBunnyList;
 }
 
 Creature* instance_culling_of_stratholme::GetStratIntroFootman()
 {
-    m_lFootmanList.sort(sortFromSouthToNorth);
-    if (m_lFootmanList.empty())
+    std::list<Creature*> lFootmanList;
+    for (std::list<uint64>::const_iterator itr = m_luiFootmanGUIDs.begin(); itr != m_luiFootmanGUIDs.end(); itr++)
+    {
+        if (Creature* pFootman = instance->GetCreature(*itr))
+            lFootmanList.push_back(pFootman);
+    }
+
+    if (lFootmanList.empty())
         return NULL;
     else
-        return *m_lFootmanList.begin();
+    {
+        lFootmanList.sort(sortFromSouthToNorth);
+        return *lFootmanList.begin();
+    }
 }
 
 void instance_culling_of_stratholme::GetResidentOrderedList(std::list<Creature*> &lList)
 {
-    m_lResidentList.sort(sortFromSouthToNorth);
-    lList = m_lResidentList;
+    std::list<Creature*> lResidentList;
+    for (std::list<uint64>::const_iterator itr = m_luiResidentGUIDs.begin(); itr != m_luiResidentGUIDs.end(); itr++)
+    {
+        if (Creature* pResident = instance->GetCreature(*itr))
+            lResidentList.push_back(pResident);
+    }
+    if (lResidentList.empty())
+        return;
+
+    lResidentList.sort(sortFromSouthToNorth);
+    lList = lResidentList;
 }
 
 void instance_culling_of_stratholme::ArthasJustDied()

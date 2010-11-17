@@ -52,11 +52,11 @@ void instance_gnomeregan::OnObjectCreate(GameObject* pGo)
 {
     switch(pGo->GetEntry())
     {
-        case GO_RED_ROCKET:         m_lRedRocketGUIDs.push_back(pGo->GetGUID()); break;
-        case GO_CAVE_IN_NORTH:      m_uiCaveInNorthGUID = pGo->GetGUID(); break;
-        case GO_CAVE_IN_SOUTH:      m_uiCaveInSouthGUID = pGo->GetGUID(); break;
-        case GO_EXPLOSIVE_CHARGE:   m_lExplosiveCharges.push_back(pGo); break;
-        case GO_THE_FINAL_CHAMBER:  m_uiDoorFinalChamberGUID = pGo->GetGUID(); break;
+        case GO_RED_ROCKET:         m_lRedRocketGUIDs.push_back(pGo->GetGUID());         break;
+        case GO_CAVE_IN_NORTH:      m_uiCaveInNorthGUID = pGo->GetGUID();                break;
+        case GO_CAVE_IN_SOUTH:      m_uiCaveInSouthGUID = pGo->GetGUID();                break;
+        case GO_EXPLOSIVE_CHARGE:   m_luiExplosiveChargeGUIDs.push_back(pGo->GetGUID()); break;
+        case GO_THE_FINAL_CHAMBER:  m_uiDoorFinalChamberGUID = pGo->GetGUID();           break;
 
         case GO_GNOME_FACE_1: m_asBombFaces[0].m_uiGnomeFaceGUID = pGo->GetGUID(); break;
         case GO_GNOME_FACE_2: m_asBombFaces[1].m_uiGnomeFaceGUID = pGo->GetGUID(); break;
@@ -81,10 +81,18 @@ void instance_gnomeregan::SetData(uint32 uiType, uint32 uiData)
             if (uiData == IN_PROGRESS)
             {
                 // Sort the explosive charges if needed
-                if (!m_lExplosiveCharges.empty())
+                if (!m_luiExplosiveChargeGUIDs.empty())
                 {
+                    std::list<GameObject*> lExplosiveCharges;
+                    for (std::list<uint64>::const_iterator itr = m_luiExplosiveChargeGUIDs.begin(); itr != m_luiExplosiveChargeGUIDs.end(); itr++)
+                    {
+                        if (GameObject* pCharge = instance->GetGameObject(*itr))
+                            lExplosiveCharges.push_back(pCharge);
+                    }
+                    m_luiExplosiveChargeGUIDs.clear();
+
                     // Sort from east to west
-                    m_lExplosiveCharges.sort(sortFromEastToWest);
+                    lExplosiveCharges.sort(sortFromEastToWest);
 
                     // Sort to south and north
                     uint8 uiCounterSouth = 0;
@@ -93,7 +101,7 @@ void instance_gnomeregan::SetData(uint32 uiType, uint32 uiData)
                     GameObject* pCaveInNorth = instance->GetGameObject(m_uiCaveInNorthGUID);
                     if (pCaveInSouth && pCaveInNorth)
                     {
-                        for (std::list<GameObject*>::iterator itr = m_lExplosiveCharges.begin(); itr != m_lExplosiveCharges.end(); itr++)
+                        for (std::list<GameObject*>::iterator itr = lExplosiveCharges.begin(); itr != lExplosiveCharges.end(); itr++)
                         {
                             if ((*itr)->GetDistanceOrder(pCaveInSouth, pCaveInNorth) && uiCounterSouth < MAX_EXPLOSIVES_PER_SIDE)
                             {
@@ -106,7 +114,6 @@ void instance_gnomeregan::SetData(uint32 uiType, uint32 uiData)
                                 uiCounterNorth++;
                             }
                         }
-                        m_lExplosiveCharges.clear();
                     }
                 }
             }

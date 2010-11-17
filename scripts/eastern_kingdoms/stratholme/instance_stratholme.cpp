@@ -52,9 +52,9 @@ void instance_stratholme::Initialize()
     memset(&m_auiZigguratGUID, 0, sizeof(m_auiZigguratGUID));
     memset(&m_auiCrystalSortedGUID, 0, sizeof(m_auiCrystalSortedGUID));
 
-    m_lCrystals.clear();
+    m_luiCrystalGUIDs.clear();
     m_sAbomnationGUID.clear();
-    m_lAcolytes.clear();
+    m_luiAcolyteGUIDs.clear();
 }
 
 bool instance_stratholme::StartSlaugtherSquare()
@@ -77,12 +77,12 @@ void instance_stratholme::OnCreatureCreate(Creature* pCreature)
 {
     switch(pCreature->GetEntry())
     {
-        case NPC_BARON:            m_uiBaronGUID = pCreature->GetGUID();           break;
-        case NPC_YSIDA_TRIGGER:    m_uiYsidaTriggerGUID = pCreature->GetGUID();    break;
-        case NPC_CRYSTAL:          m_lCrystals.push_back(pCreature);               break;
+        case NPC_BARON:            m_uiBaronGUID = pCreature->GetGUID();                break;
+        case NPC_YSIDA_TRIGGER:    m_uiYsidaTriggerGUID = pCreature->GetGUID();         break;
+        case NPC_CRYSTAL:          m_luiCrystalGUIDs.push_back(pCreature->GetGUID());   break;
         case NPC_ABOM_BILE:
-        case NPC_ABOM_VENOM:       m_sAbomnationGUID.insert(pCreature->GetGUID()); break;
-        case NPC_THUZADIN_ACOLYTE: m_lAcolytes.push_back(pCreature);               break;
+        case NPC_ABOM_VENOM:       m_sAbomnationGUID.insert(pCreature->GetGUID());      break;
+        case NPC_THUZADIN_ACOLYTE: m_luiAcolyteGUIDs.push_back(pCreature->GetGUID());   break;
     }
 }
 
@@ -365,65 +365,87 @@ uint64 instance_stratholme::GetData64(uint32 uiData)
     }
 }
 
-static bool sortByHight(Creature* pFirst, Creature* pSecond)
+static bool sortByHeight(Creature* pFirst, Creature* pSecond)
 {
     return pFirst && pSecond && pFirst->GetPositionZ() > pSecond->GetPositionZ();
 }
 
 void instance_stratholme::DoSortZiggurats()
 {
-    if (m_lAcolytes.empty())
+    if (m_luiAcolyteGUIDs.empty())
+        return;
+
+    std::list<Creature*> lAcolytes;                         // Valid pointers, only used locally
+    for (std::list<uint64>::const_iterator itr = m_luiAcolyteGUIDs.begin(); itr != m_luiAcolyteGUIDs.end(); itr++)
+    {
+        if (Creature* pAcolyte = instance->GetCreature(*itr))
+            lAcolytes.push_back(pAcolyte);
+    }
+    m_luiAcolyteGUIDs.clear();
+
+    if (lAcolytes.empty())
         return;
 
     if (!m_uiAcolyteAnnouncerGUID)
     {
-        // Sort the acolytes by hight, and the one with the biggest hight is the announcer (a bit outside the map)
-        m_lAcolytes.sort(sortByHight);
-        m_uiAcolyteAnnouncerGUID = (*m_lAcolytes.begin())->GetGUID();
-        m_lAcolytes.erase(m_lAcolytes.begin());
+        // Sort the acolytes by height, and the one with the biggest height is the announcer (a bit outside the map)
+        lAcolytes.sort(sortByHeight);
+        m_uiAcolyteAnnouncerGUID = (*lAcolytes.begin())->GetGUID();
+        lAcolytes.erase(lAcolytes.begin());
     }
 
     // Sort Acolytes
-    for (std::list<Creature*>::iterator itr = m_lAcolytes.begin(); itr != m_lAcolytes.end(); )
+    for (std::list<Creature*>::iterator itr = lAcolytes.begin(); itr != lAcolytes.end(); )
     {
         bool bAlreadyIterated = false;
         for (uint8 i = 0; i < MAX_ZIGGURATS; ++i)
         {
             if (GameObject* pZigguratDoor = instance->GetGameObject(m_auiZigguratGUID[i]))
             {
-                if ((*itr)->isAlive() && (*itr)->IsWithinDistInMap(pZigguratDoor, 50.0f, false))
+                if ((*itr)->isAlive() && (*itr)->IsWithinDistInMap(pZigguratDoor, 30.0f, false))
                 {
                     m_alZigguratAcolyteGUID[i].push_back((*itr)->GetGUID());
-                    itr = m_lAcolytes.erase(itr);
+                    itr = lAcolytes.erase(itr);
                     bAlreadyIterated = true;
                     break;
                 }
             }
         }
 
-        if (itr != m_lAcolytes.end() && !bAlreadyIterated)
+        if (itr != lAcolytes.end() && !bAlreadyIterated)
             ++itr;
     }
 
+    // In case some mobs have not been able to be sorted, store their GUIDs again
+    for (std::list<Creature*>::const_iterator itr = lAcolytes.begin(); itr != lAcolytes.end(); itr++)
+        m_luiAcolyteGUIDs.push_back((*itr)->GetGUID());
+
     // Sort Crystal
-    for (std::list<Creature*>::iterator itr = m_lCrystals.begin(); itr != m_lCrystals.end(); )
+    for (std::list<uint64>::const_iterator itr = m_luiCrystalGUIDs.begin(); itr != m_luiCrystalGUIDs.end(); )
     {
+        Creature* pCrystal = instance->GetCreature(*itr);
+        if (!pCrystal)
+        {
+            itr = m_luiCrystalGUIDs.erase(itr);
+            continue;
+        }
+
         bool bAlreadyIterated = false;
         for (uint8 i = 0; i < MAX_ZIGGURATS; ++i)
         {
             if (GameObject* pZigguratDoor = instance->GetGameObject(m_auiZigguratGUID[i]))
             {
-                if ((*itr)->IsWithinDistInMap(pZigguratDoor, 50.0f, false))
+                if (pCrystal->IsWithinDistInMap(pZigguratDoor, 50.0f, false))
                 {
-                    m_auiCrystalSortedGUID[i] = ((*itr)->GetGUID());
-                    itr = m_lCrystals.erase(itr);
+                    m_auiCrystalSortedGUID[i] = *itr;
+                    itr = m_luiCrystalGUIDs.erase(itr);
                     bAlreadyIterated = true;
                     break;
                 }
             }
         }
 
-        if (itr != m_lCrystals.end() && !bAlreadyIterated)
+        if (itr != m_luiCrystalGUIDs.end() && !bAlreadyIterated)
             ++itr;
     }
 }
