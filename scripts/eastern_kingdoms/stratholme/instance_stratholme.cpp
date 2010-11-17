@@ -421,7 +421,7 @@ void instance_stratholme::DoSortZiggurats()
         m_luiAcolyteGUIDs.push_back((*itr)->GetGUID());
 
     // Sort Crystal
-    for (std::list<uint64>::const_iterator itr = m_luiCrystalGUIDs.begin(); itr != m_luiCrystalGUIDs.end(); )
+    for (std::list<uint64>::iterator itr = m_luiCrystalGUIDs.begin(); itr != m_luiCrystalGUIDs.end(); )
     {
         Creature* pCrystal = instance->GetCreature(*itr);
         if (!pCrystal)
