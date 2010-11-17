@@ -496,6 +496,7 @@ scripts/outland/coilfang_reservoir/serpent_shrine/boss_hydross_the_unstable.cpp 
 scripts/outland/coilfang_reservoir/serpent_shrine/boss_lady_vashj.cpp \
 scripts/outland/coilfang_reservoir/serpent_shrine/boss_leotheras_the_blind.cpp \
 scripts/outland/coilfang_reservoir/serpent_shrine/boss_morogrim_tidewalker.cpp \
+scripts/outland/coilfang_reservoir/serpent_shrine/boss_the_lurker_below.cpp \
 scripts/outland/coilfang_reservoir/serpent_shrine/instance_serpent_shrine.cpp \
 scripts/outland/coilfang_reservoir/serpent_shrine/serpent_shrine.h \
 scripts/outland/coilfang_reservoir/steam_vault/boss_hydromancer_thespia.cpp \

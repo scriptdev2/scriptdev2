@@ -434,7 +434,9 @@ UPDATE creature_template SET ScriptName='mob_enchanted_elemental' WHERE entry=21
 UPDATE creature_template SET ScriptName='mob_tainted_elemental' WHERE entry=22009;
 UPDATE creature_template SET ScriptName='mob_toxic_sporebat' WHERE entry=22140;
 UPDATE creature_template SET ScriptName='mob_shield_generator_channel' WHERE entry=19870;
-
+/* The Lurker Below event */
+UPDATE gameobject_template SET ScriptName='go_strange_pool' WHERE entry=184956;
+UPDATE creature_template SET ScriptName='boss_the_lurker_below' WHERE entry=21217;
 
 /* CRYSTALSONG FOREST */
 
