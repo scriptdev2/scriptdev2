@@ -3349,7 +3349,8 @@ INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 (-3000101,'Taruk send me to collect what you owe.','silvermoon harry GOSSIP_ITEM_GAMBLING_DEBT'),
 (-3000102,'Here\'s the money.','silvermoon harry GOSSIP_ITEM_PAYING'),
 (-3000103,'I am ready to travel to you village now.','rainspeaker GOSSIP_ITEM_READY'),
-(-3000104,'<Check for pulse...>','mosswalker victim GOSSIP_ITEM_PULSE');
+(-3000104,'<Check for pulse...>','mosswalker victim GOSSIP_ITEM_PULSE'),
+(-3000105,'Ezekiel said that you might have a certain book...','dirty larry GOSSIP_ITEM_BOOK');
 
 -- -3 090 000 GNOMEREGAN
 INSERT INTO gossip_texts (entry,content_default,comment) VALUES

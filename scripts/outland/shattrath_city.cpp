@@ -46,9 +46,8 @@ enum
     QUEST_WHAT_BOOK         = 10231,
     ENTRY_CREEPJACK         = 19726,
     ENTRY_MALONE            = 19725,
+    GOSSIP_ITEM_BOOK        = -3000105,
 };
-
-#define GOSSIP_ITEM_BOOK    "Ezekiel said that you might have a certain book..."
 
 struct MANGOS_DLL_DECL npc_dirty_larryAI : public ScriptedAI
 {
@@ -178,6 +177,17 @@ struct MANGOS_DLL_DECL npc_dirty_larryAI : public ScriptedAI
         }
     }
 
+    void AttackedBy(Unit* pAttacker)
+    {
+        if (m_creature->getVictim())
+            return;
+
+        if (!bActiveAttack)
+            return;
+
+        AttackStart(pAttacker);
+    }
+
     void DamageTaken(Unit* pDoneBy, uint32 &damage)
     {
         if (damage < m_creature->GetHealth())
@@ -223,7 +233,7 @@ bool GossipHello_npc_dirty_larry(Player* pPlayer, Creature* pCreature)
         pPlayer->PrepareQuestMenu(pCreature->GetGUID());
 
     if (pPlayer->GetQuestStatus(QUEST_WHAT_BOOK) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_BOOK, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_BOOK, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
     pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
     return true;
