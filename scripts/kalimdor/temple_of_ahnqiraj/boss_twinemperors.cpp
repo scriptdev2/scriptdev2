@@ -269,7 +269,7 @@ struct MANGOS_DLL_DECL boss_twinemperorsAI : public ScriptedAI
         Creature *pOtherBoss = GetOtherBoss();
         if (pOtherBoss)
         {
-            //m_creature->MonsterYell("Teleporting ...", LANG_UNIVERSAL, 0);
+            //m_creature->MonsterYell("Teleporting ...", LANG_UNIVERSAL);
             float other_x = pOtherBoss->GetPositionX();
             float other_y = pOtherBoss->GetPositionY();
             float other_z = pOtherBoss->GetPositionZ();

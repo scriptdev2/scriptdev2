@@ -164,21 +164,21 @@ void DoScriptText(int32 iTextEntry, WorldObject* pSource, Unit* pTarget)
     switch(pData->uiType)
     {
         case CHAT_TYPE_SAY:
-            pSource->MonsterSay(iTextEntry, pData->uiLanguage, pTarget ? pTarget->GetGUID() : 0);
+            pSource->MonsterSay(iTextEntry, pData->uiLanguage, pTarget);
             break;
         case CHAT_TYPE_YELL:
-            pSource->MonsterYell(iTextEntry, pData->uiLanguage, pTarget ? pTarget->GetGUID() : 0);
+            pSource->MonsterYell(iTextEntry, pData->uiLanguage, pTarget);
             break;
         case CHAT_TYPE_TEXT_EMOTE:
-            pSource->MonsterTextEmote(iTextEntry, pTarget ? pTarget->GetGUID() : 0);
+            pSource->MonsterTextEmote(iTextEntry, pTarget);
             break;
         case CHAT_TYPE_BOSS_EMOTE:
-            pSource->MonsterTextEmote(iTextEntry, pTarget ? pTarget->GetGUID() : 0, true);
+            pSource->MonsterTextEmote(iTextEntry, pTarget, true);
             break;
         case CHAT_TYPE_WHISPER:
         {
             if (pTarget && pTarget->GetTypeId() == TYPEID_PLAYER)
-                pSource->MonsterWhisper(iTextEntry, pTarget->GetGUID());
+                pSource->MonsterWhisper(iTextEntry, pTarget);
             else
                 error_log("SD2: DoScriptText entry %i cannot whisper without target unit (TYPEID_PLAYER).", iTextEntry);
 
@@ -187,14 +187,14 @@ void DoScriptText(int32 iTextEntry, WorldObject* pSource, Unit* pTarget)
         case CHAT_TYPE_BOSS_WHISPER:
         {
             if (pTarget && pTarget->GetTypeId() == TYPEID_PLAYER)
-                pSource->MonsterWhisper(iTextEntry, pTarget->GetGUID(), true);
+                pSource->MonsterWhisper(iTextEntry, pTarget, true);
             else
                 error_log("SD2: DoScriptText entry %i cannot whisper without target unit (TYPEID_PLAYER).", iTextEntry);
 
             break;
         }
         case CHAT_TYPE_ZONE_YELL:
-            pSource->MonsterYellToZone(iTextEntry, pData->uiLanguage, pTarget ? pTarget->GetGUID() : 0);
+            pSource->MonsterYellToZone(iTextEntry, pData->uiLanguage, pTarget);
             break;
     }
 }
