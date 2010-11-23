@@ -380,6 +380,14 @@
 				RelativePath="..\base\guard_ai.h"
 				>
 			</File>
+			<File
+				RelativePath="..\base\pet_ai.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\base\pet_ai.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="scripts"
