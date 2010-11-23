@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Netherstorm
 SD%Complete: 80
-SDComment: Quest support: 10438, 10652 (special flight paths), 10299, 10321, 10322, 10323, 10329, 10330, 10337, 10338, 10365(Shutting Down Manaforge), 10198, 10191
+SDComment: Quest support: 10438, 10652 (special flight paths), 10299, 10321, 10322, 10323, 10329, 10330, 10337, 10338, 10365(Shutting Down Manaforge), 10198, 10191, 10924
 SDCategory: Netherstorm
 EndScriptData */
 
@@ -33,6 +33,7 @@ EndContentData */
 
 #include "precompiled.h"
 #include "escort_ai.h"
+#include "pet_ai.h"
 
 /*######
 ## npc_manaforge_control_console
@@ -919,6 +920,42 @@ bool QuestAccept_npc_maxx_a_million(Player* pPlayer, Creature* pCreature, const 
     return true;
 }
 
+/*######
+## npc_zeppit
+######*/
+
+enum
+{
+    EMOTE_GATHER_BLOOD          = -1000625,
+    NPC_WARP_CHASER             = 18884,
+    SPELL_GATHER_WARP_BLOOD     = 39244,                    // for quest 10924
+};
+
+struct MANGOS_DLL_DECL npc_zeppitAI : public ScriptedPetAI
+{
+    npc_zeppitAI(Creature* pCreature) : ScriptedPetAI(pCreature) { Reset(); }
+
+    void Reset() { }
+
+    void OwnerKilledUnit(Unit* pVictim)
+    {
+        if (pVictim->GetTypeId() == TYPEID_UNIT && pVictim->GetEntry() == NPC_WARP_CHASER)
+        {
+            // Distance not known, be assumed to be ~10 yards, possibly a bit less.
+            if (m_creature->IsWithinDistInMap(pVictim, 10.0f))
+            {
+                DoScriptText(EMOTE_GATHER_BLOOD, m_creature);
+                m_creature->CastSpell(m_creature, SPELL_GATHER_WARP_BLOOD, false);
+            }
+        }
+    }
+};
+
+CreatureAI* GetAI_npc_zeppit(Creature* pCreature)
+{
+    return new npc_zeppitAI(pCreature);
+}
+
 void AddSC_netherstorm()
 {
     Script* pNewScript;
@@ -965,5 +1002,10 @@ void AddSC_netherstorm()
     pNewScript->Name = "npc_maxx_a_million";
     pNewScript->GetAI = &GetAI_npc_maxx_a_million;
     pNewScript->pQuestAccept = &QuestAccept_npc_maxx_a_million;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_zeppit";
+    pNewScript->GetAI = &GetAI_npc_zeppit;
     pNewScript->RegisterSelf();
 }
