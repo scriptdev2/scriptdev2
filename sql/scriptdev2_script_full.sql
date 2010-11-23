@@ -668,7 +668,9 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000625,'%s gathers the warp chaser\'s blood.',0,2,0,0,'zeppit EMOTE_GATHER_BLOOD'),
 
 (-1000626,'Intiating energy collection.',0,0,0,0,'depleted golem SAY_GOLEM_CHARGE'),
-(-1000627,'Energy collection complete.',0,0,0,0,'depleted golem SAY_GOLEM_COMPLETE');
+(-1000627,'Energy collection complete.',0,0,0,0,'depleted golem SAY_GOLEM_COMPLETE'),
+
+(-1000628,'%s feeds on the freshly-killed warp chaser.',0,2,0,0,'hungry ray EMOTE_FEED');
 
 -- -1 033 000 SHADOWFANG KEEP
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
