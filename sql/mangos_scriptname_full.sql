@@ -570,7 +570,7 @@ UPDATE gameobject_template SET ScriptName='go_gnomeface_button' WHERE entry BETW
 UPDATE instance_template SET ScriptName='instance_gnomeregan' WHERE map=90;
 
 /* GRIZZLY HILLS */
-
+UPDATE creature_template SET ScriptName='npc_depleted_war_golem' WHERE entry=27017;
 
 /* GRUUL'S LAIR */
 UPDATE instance_template SET ScriptName='instance_gruuls_lair' WHERE map =565;

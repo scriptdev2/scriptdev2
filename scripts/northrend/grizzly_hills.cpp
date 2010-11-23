@@ -17,8 +17,91 @@
 /* ScriptData
 SDName: Grizzly_Hills
 SD%Complete:
-SDComment:
+SDComment: Quest support: 12138, 12198
 SDCategory: Grizzly Hills
 EndScriptData */
 
+/* ContentData
+npc_depleted_war_golem
+EndContentData */
+
 #include "precompiled.h"
+#include "pet_ai.h"
+
+/*######
+## npc_depleted_war_golem
+######*/
+
+enum
+{
+    SAY_GOLEM_CHARGE            = -1000626,
+    SAY_GOLEM_COMPLETE          = -1000627,
+
+    NPC_LIGHTNING_SENTRY        = 26407,
+
+    SPELL_CHARGE_GOLEM          = 47799,
+    SPELL_GOLEM_CHARGE_CREDIT   = 47797,
+};
+
+struct MANGOS_DLL_DECL npc_depleted_war_golemAI : public ScriptedPetAI
+{
+    npc_depleted_war_golemAI(Creature* pCreature) : ScriptedPetAI(pCreature) { Reset(); }
+
+    void Reset() { }
+
+    void OwnerKilledUnit(Unit* pVictim)
+    {
+        if (pVictim->GetTypeId() == TYPEID_UNIT && pVictim->GetEntry() == NPC_LIGHTNING_SENTRY)
+        {
+            // Is distance expected?
+            if (m_creature->IsWithinDistInMap(pVictim, 10.0f))
+                m_creature->CastSpell(m_creature, SPELL_CHARGE_GOLEM, true);
+        }
+    }
+};
+
+CreatureAI* GetAI_npc_depleted_war_golem(Creature* pCreature)
+{
+    return new npc_depleted_war_golemAI(pCreature);
+}
+
+bool EffectAuraDummy_npc_depleted_war_golem(const Aura* pAura, bool bApply)
+{
+    if (pAura->GetId() != SPELL_CHARGE_GOLEM)
+        return true;
+
+    Creature* pCreature = (Creature*)pAura->GetTarget();
+
+    if (!pCreature)
+        return true;
+
+    if (pAura->GetEffIndex() == EFFECT_INDEX_0)
+    {
+        if (bApply)
+        {
+            DoScriptText(SAY_GOLEM_CHARGE, pCreature);
+            pCreature->addUnitState(UNIT_STAT_STUNNED);
+        }
+        else
+        {
+            DoScriptText(SAY_GOLEM_COMPLETE, pCreature);
+            pCreature->clearUnitState(UNIT_STAT_STUNNED);
+
+            // targets master
+            pCreature->CastSpell(pCreature, SPELL_GOLEM_CHARGE_CREDIT, true);
+        }
+    }
+
+    return true;
+}
+
+void AddSC_grizzly_hills()
+{
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_depleted_war_golem";
+    pNewScript->GetAI = &GetAI_npc_depleted_war_golem;
+    pNewScript->pEffectAuraDummy = &EffectAuraDummy_npc_depleted_war_golem;
+    pNewScript->RegisterSelf();
+}
