@@ -1147,14 +1147,13 @@ bool EffectAuraDummy_npc_totem_of_spirits(const Aura* pAura, bool bApply)
         return true;
 
     Creature* pCreature = (Creature*)pAura->GetTarget();
+    Unit* pCaster = pAura->GetCaster();
 
     // aura only affect the spirit totem, since this is the one that need to be in range.
     // It is possible though, that player is the one who should actually have the aura
     // and check for presense of spirit totem, but then we can't script the dummy.
-    if (!pCreature || !pCreature->IsPet())
+    if (!pCreature || !pCreature->IsPet() || !pCaster)
         return true;
-
-    Unit* pCaster = pAura->GetCaster();
 
     // Need to expect the enraged elementals to be caster of aura
     switch(pCaster->GetEntry())
