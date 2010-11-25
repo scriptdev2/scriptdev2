@@ -937,6 +937,13 @@ UPDATE creature_template SET ScriptName='mob_enslaved_netherwing_drake' WHERE en
 UPDATE creature_template SET ScriptName='npc_karynaku' WHERE entry=22112;
 UPDATE creature_template SET ScriptName='npc_wilda' WHERE entry=21027;
 UPDATE creature_template SET ScriptName='mob_torloth' WHERE entry=22076;
+UPDATE creature_template SET ScriptName='npc_totem_of_spirits' WHERE entry=21071;
+DELETE FROM scripted_event_id WHERE id IN (13513,13514,13515,13516);
+INSERT INTO scripted_event_id VALUES
+(13513,'event_spell_soul_captured_credit'),
+(13514,'event_spell_soul_captured_credit'),
+(13515,'event_spell_soul_captured_credit'),
+(13516,'event_spell_soul_captured_credit');
 UPDATE creature_template SET ScriptName='npc_lord_illidan_stormrage' WHERE entry=22083;
 UPDATE gameobject_template SET ScriptName='go_crystal_prison' WHERE entry=185126;
 

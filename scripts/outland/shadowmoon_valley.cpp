@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Shadowmoon_Valley
 SD%Complete: 100
-SDComment: Quest support: 10519, 10583, 10601, 10781, 10814, 10804, 10854, 11082. Vendor Drake Dealer Hurlunk.
+SDComment: Quest support: 10519, 10583, 10601, 10781, 10814, 10804, 10854, 11082, 10458, 10480, 10481. Vendor Drake Dealer Hurlunk.
 SDCategory: Shadowmoon Valley
 EndScriptData */
 
@@ -32,12 +32,15 @@ npc_karynaku
 npc_oronok_tornheart
 npc_wilda
 mob_torloth
+npc_totem_of_spirits
+event_spell_soul_captured_credit
 npc_lord_illidan_stormrage
 go_crystal_prison
 EndContentData */
 
 #include "precompiled.h"
 #include "escort_ai.h"
+#include "pet_ai.h"
 
 /*#####
 # mob_mature_netherwing_drake
@@ -1037,6 +1040,171 @@ CreatureAI* GetAI_mob_torloth(Creature* pCreature)
     return new mob_torlothAI(pCreature);
 }
 
+/*######
+## npc_totem_of_spirits
+######*/
+
+enum
+{
+    QUEST_SPIRITS_FIRE_AND_EARTH        = 10458,
+    QUEST_SPIRITS_WATER                 = 10480,
+    QUEST_SPIRITS_AIR                   = 10481,
+
+    // quest 10458, 10480, 10481
+    SPELL_ELEMENTAL_SIEVE               = 36035,
+    NPC_TOTEM_OF_SPIRITS                = 21071,
+    NPC_EARTH_SPIRIT                    = 21050,            // to be killed
+    NPC_FIERY_SPIRIT                    = 21061,
+    NPC_WATER_SPIRIT                    = 21059,
+    NPC_AIR_SPIRIT                      = 21060,
+    SPELL_EARTH_CAPTURED                = 36025,            // dummies (having visual effects)
+    SPELL_FIERY_CAPTURED                = 36115,
+    SPELL_WATER_CAPTURED                = 36170,
+    SPELL_AIR_CAPTURED                  = 36181,
+    SPELL_EARTH_CAPTURED_CREDIT         = 36108,            // event 13513
+    SPELL_FIERY_CAPTURED_CREDIT         = 36117,            // event 13514
+    SPELL_WATER_CAPTURED_CREDIT         = 36171,            // event 13515
+    SPELL_AIR_CAPTURED_CREDIT           = 36182,            // event 13516
+    EVENT_EARTH                         = 13513,
+    EVENT_FIERY                         = 13514,
+    EVENT_WATER                         = 13515,
+    EVENT_AIR                           = 13516,
+    NPC_CREDIT_MARKER_EARTH             = 21092,            // quest objective npc's
+    NPC_CREDIT_MARKER_FIERY             = 21094,
+    NPC_CREDIT_MARKER_WATER             = 21095,
+    NPC_CREDIT_MARKER_AIR               = 21096,
+};
+
+struct MANGOS_DLL_DECL npc_totem_of_spiritsAI : public ScriptedPetAI
+{
+    npc_totem_of_spiritsAI(Creature* pCreature) : ScriptedPetAI(pCreature) { Reset(); }
+
+    void Reset() {}
+
+    void MoveInLineOfSight(Unit* pWho) {}
+    void UpdateAI(const uint32 uiDiff) {}
+    void AttackedBy(Unit* pAttacker) {}
+
+    void OwnerKilledUnit(Unit* pVictim)
+    {
+        if (pVictim->GetTypeId() != TYPEID_UNIT)
+            return;
+
+        uint32 uiEntry = pVictim->GetEntry();
+
+        // make elementals cast the sieve is only way to make it work properly, due to the spell target modes 22/7
+        if (uiEntry == NPC_EARTH_SPIRIT || uiEntry == NPC_FIERY_SPIRIT || uiEntry == NPC_WATER_SPIRIT || uiEntry == NPC_AIR_SPIRIT)
+            pVictim->CastSpell(pVictim, SPELL_ELEMENTAL_SIEVE, true);
+    }
+};
+
+CreatureAI* GetAI_npc_totem_of_spirits(Creature* pCreature)
+{
+    return new npc_totem_of_spiritsAI(pCreature);
+}
+
+bool EffectDummyCreature_npc_totem_of_spirits(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+{
+    if (uiEffIndex != EFFECT_INDEX_0)
+        return false;
+
+    switch(uiSpellId)
+    {
+        case SPELL_EARTH_CAPTURED:
+        {
+            pCaster->CastSpell(pCaster, SPELL_EARTH_CAPTURED_CREDIT, true);
+            return true;
+        }
+        case SPELL_FIERY_CAPTURED:
+        {
+            pCaster->CastSpell(pCaster, SPELL_FIERY_CAPTURED_CREDIT, true);
+            return true;
+        }
+        case SPELL_WATER_CAPTURED:
+        {
+            pCaster->CastSpell(pCaster, SPELL_WATER_CAPTURED_CREDIT, true);
+            return true;
+        }
+        case SPELL_AIR_CAPTURED:
+        {
+            pCaster->CastSpell(pCaster, SPELL_AIR_CAPTURED_CREDIT, true);
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool EffectAuraDummy_npc_totem_of_spirits(const Aura* pAura, bool bApply)
+{
+    if (pAura->GetId() != SPELL_ELEMENTAL_SIEVE)
+        return true;
+
+    if (pAura->GetEffIndex() != EFFECT_INDEX_0)
+        return true;
+
+    if (bApply)                                             // possible it should be some visual effects, using "enraged soul" npc and "Cosmetic: ... soul" spell
+        return true;
+
+    Creature* pCreature = (Creature*)pAura->GetTarget();
+
+    // aura only affect the spirit totem, since this is the one that need to be in range.
+    // It is possible though, that player is the one who should actually have the aura
+    // and check for presense of spirit totem, but then we can't script the dummy.
+    if (!pCreature || !pCreature->IsPet())
+        return true;
+
+    Unit* pCaster = pAura->GetCaster();
+
+    // Need to expect the enraged elementals to be caster of aura
+    switch(pCaster->GetEntry())
+    {
+        case NPC_EARTH_SPIRIT:
+            pCreature->CastSpell(pCreature, SPELL_EARTH_CAPTURED, true);
+            break;
+        case NPC_FIERY_SPIRIT:
+            pCreature->CastSpell(pCreature, SPELL_FIERY_CAPTURED, true);
+            break;
+        case NPC_WATER_SPIRIT:
+            pCreature->CastSpell(pCreature, SPELL_WATER_CAPTURED, true);
+            break;
+        case NPC_AIR_SPIRIT:
+            pCreature->CastSpell(pCreature, SPELL_AIR_CAPTURED, true);
+            break;
+    }
+
+    return true;
+}
+
+bool ProcessEventId_event_spell_soul_captured_credit(uint32 uiEventId, Object* pSource, Object* pTarget, bool bIsStart)
+{
+    if (bIsStart && pSource->GetTypeId() == TYPEID_UNIT)
+    {
+        Player* pOwner = (Player*)((Creature*)pSource)->GetOwner();
+
+        if (!pOwner)
+            return true;
+
+        switch(uiEventId)
+        {
+            case EVENT_EARTH:
+                pOwner->KilledMonsterCredit(NPC_CREDIT_MARKER_EARTH);
+                return true;
+            case EVENT_FIERY:
+                pOwner->KilledMonsterCredit(NPC_CREDIT_MARKER_FIERY);
+                return true;
+            case EVENT_WATER:
+                pOwner->KilledMonsterCredit(NPC_CREDIT_MARKER_WATER);
+                return true;
+            case EVENT_AIR:
+                pOwner->KilledMonsterCredit(NPC_CREDIT_MARKER_AIR);
+                return true;
+        }
+    }
+
+    return false;
+}
+
 /*#####
 # npc_lord_illidan_stormrage
 #####*/
@@ -1336,6 +1504,18 @@ void AddSC_shadowmoon_valley()
     newscript = new Script;
     newscript->Name = "mob_torloth";
     newscript->GetAI = &GetAI_mob_torloth;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "npc_totem_of_spirits";
+    newscript->GetAI = &GetAI_npc_totem_of_spirits;
+    newscript->pEffectDummyCreature = &EffectDummyCreature_npc_totem_of_spirits;
+    newscript->pEffectAuraDummy = &EffectAuraDummy_npc_totem_of_spirits;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "event_spell_soul_captured_credit";
+    newscript->pProcessEventId = &ProcessEventId_event_spell_soul_captured_credit;
     newscript->RegisterSelf();
 
     newscript = new Script;
