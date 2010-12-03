@@ -198,7 +198,11 @@ scripts/eastern_kingdoms/sunken_temple/instance_sunken_temple.cpp \
 scripts/eastern_kingdoms/sunken_temple/sunken_temple.h \
 scripts/eastern_kingdoms/sunken_temple/sunken_temple.cpp \
 scripts/eastern_kingdoms/sunwell_plateau/boss_brutallus.cpp \
+scripts/eastern_kingdoms/sunwell_plateau/boss_eredar_twins.cpp \
+scripts/eastern_kingdoms/sunwell_plateau/boss_felmyst.cpp \
 scripts/eastern_kingdoms/sunwell_plateau/boss_kalecgos.cpp \
+scripts/eastern_kingdoms/sunwell_plateau/boss_kiljaeden.cpp \
+scripts/eastern_kingdoms/sunwell_plateau/boss_muru.cpp \
 scripts/eastern_kingdoms/sunwell_plateau/instance_sunwell_plateau.cpp \
 scripts/eastern_kingdoms/sunwell_plateau/sunwell_plateau.h \
 scripts/eastern_kingdoms/uldaman/boss_archaedas.cpp \

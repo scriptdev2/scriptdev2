@@ -729,7 +729,19 @@
     <ClCompile Include="..\scripts\eastern_kingdoms\sunwell_plateau\boss_brutallus.cpp">
       <Filter>scripts\eastern_kingdoms\sunwell_plateau</Filter>
     </ClCompile>
+    <ClCompile Include="..\scripts\eastern_kingdoms\sunwell_plateau\boss_eredar_twins.cpp">
+      <Filter>scripts\eastern_kingdoms\sunwell_plateau</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scripts\eastern_kingdoms\sunwell_plateau\boss_felmyst.cpp">
+      <Filter>scripts\eastern_kingdoms\sunwell_plateau</Filter>
+    </ClCompile>
     <ClCompile Include="..\scripts\eastern_kingdoms\sunwell_plateau\boss_kalecgos.cpp">
+      <Filter>scripts\eastern_kingdoms\sunwell_plateau</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scripts\eastern_kingdoms\sunwell_plateau\boss_kiljaeden.cpp">
+      <Filter>scripts\eastern_kingdoms\sunwell_plateau</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scripts\eastern_kingdoms\sunwell_plateau\boss_muru.cpp">
       <Filter>scripts\eastern_kingdoms\sunwell_plateau</Filter>
     </ClCompile>
     <ClCompile Include="..\scripts\eastern_kingdoms\sunwell_plateau\instance_sunwell_plateau.cpp">

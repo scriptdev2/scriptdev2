@@ -353,7 +353,11 @@
     <ClCompile Include="..\scripts\eastern_kingdoms\sunken_temple\instance_sunken_temple.cpp" />
     <ClCompile Include="..\scripts\eastern_kingdoms\sunken_temple\sunken_temple.cpp" />
     <ClCompile Include="..\scripts\eastern_kingdoms\sunwell_plateau\boss_brutallus.cpp" />
+    <ClCompile Include="..\scripts\eastern_kingdoms\sunwell_plateau\boss_eredar_twins.cpp" />
+    <ClCompile Include="..\scripts\eastern_kingdoms\sunwell_plateau\boss_felmyst.cpp" />
     <ClCompile Include="..\scripts\eastern_kingdoms\sunwell_plateau\boss_kalecgos.cpp" />
+    <ClCompile Include="..\scripts\eastern_kingdoms\sunwell_plateau\boss_kiljaeden.cpp" />
+    <ClCompile Include="..\scripts\eastern_kingdoms\sunwell_plateau\boss_muru.cpp" />
     <ClCompile Include="..\scripts\eastern_kingdoms\sunwell_plateau\instance_sunwell_plateau.cpp" />
     <ClCompile Include="..\scripts\eastern_kingdoms\uldaman\boss_archaedas.cpp" />
     <ClCompile Include="..\scripts\eastern_kingdoms\uldaman\uldaman.cpp" />
