@@ -197,7 +197,7 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
             if (m_uiHurtfulStrike_Timer < uiDiff)
             {
                 // Find 2nd-aggro target within melee range.
-                Unit *pTarget = NULL;
+                Unit* pTarget = NULL;
                 ThreatList const& tList = m_creature->getThreatManager().getThreatList();
                 ThreatList::const_iterator itr = tList.begin();
                 std::advance(itr, 1);
@@ -206,7 +206,7 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
                     pTarget = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid());
 
                     // exclude pets, totems & player out of melee range
-                    if (pTarget->GetTypeId() != TYPEID_PLAYER || !pTarget->IsWithinDist(m_creature, ATTACK_DISTANCE, false))
+                    if (!pTarget || pTarget->GetTypeId() != TYPEID_PLAYER || !pTarget->IsWithinDist(m_creature, ATTACK_DISTANCE, false))
                     {
                         pTarget = NULL;
                         continue;
