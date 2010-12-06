@@ -32,7 +32,7 @@ enum
     SAY_KILL               = -1189003,
     EMOTE_GENERIC_ENRAGED  = -1000003,
 
-    SAY_TRAINEE_SPAWN      = -1189036,
+    SAY_TRAINEE_SPAWN      = -1189035,
 
     SPELL_RUSHINGCHARGE    = 8260,
     SPELL_CLEAVE           = 15496,
