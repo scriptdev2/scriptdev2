@@ -1,4 +1,4 @@
-From 3a3dda6636d81c33c3c9b143f64b5a518bfadb56 Mon Sep 17 00:00:00 2001
+From df5d403e6d51a9dbc3dcea66faa20aa3d096f13d Mon Sep 17 00:00:00 2001
 From: Reve <Reve@scriptdev2.com>
 Date: Fri, 5 Mar 2010 21:41:55 +0100
 Subject: [PATCH] ScriptDev2 patch.
@@ -10,10 +10,10 @@ Subject: [PATCH] ScriptDev2 patch.
  3 files changed, 8 insertions(+), 4 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
-index 90b332a..c31ff26 100644
+index 4e7d76c..c86e539 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -308,7 +308,11 @@ AC_CONFIG_FILES([
+@@ -364,7 +364,11 @@ AC_CONFIG_FILES([
     src/mangosd/Makefile
     src/mangosd/mangosd.conf.dist
     src/bindings/Makefile
@@ -37,7 +37,7 @@ index d7dc654..79ea910 100644
 -SUBDIRS = universal
 +SUBDIRS = ScriptDev2
 diff --git a/src/mangosd/Makefile.am b/src/mangosd/Makefile.am
-index fe1ace1..40b6fdd 100644
+index dd1b2a4..b7723f5 100644
 --- a/src/mangosd/Makefile.am
 +++ b/src/mangosd/Makefile.am
 @@ -40,7 +40,7 @@ mangos_worldd_SOURCES = \
@@ -47,8 +47,8 @@ index fe1ace1..40b6fdd 100644
 -	../bindings/universal/libmangosscript.la \
 +	../bindings/ScriptDev2/libmangosscript.la \
  	../game/libmangosgame.a \
+ 	../game/vmap/libmangosvmaps.a \
  	../shared/Database/libmangosdatabase.a \
- 	../shared/Config/libmangosconfig.a \
 @@ -51,7 +51,7 @@ mangos_worldd_LDADD = \
  	../../dep/src/g3dlite/libg3dlite.a \
  	../../dep/src/gsoap/libgsoap.a
