@@ -230,6 +230,64 @@ bool GossipSelect_npc_dark_ranger_lyana(Player* pPlayer, Creature* pCreature, ui
 }
 
 /*######
+## npc_greer_orehammer
+######*/
+
+enum
+{
+    GOSSIP_ITEM_TAXI                        = -3000106,
+    GOSSIP_ITEM_GET_BOMBS                   = -3000107,
+    GOSSIP_ITEM_FLIGHT                      = -3000108,
+
+    QUEST_MISSION_PLAGUE_THIS               = 11332,
+    ITEM_PRECISION_BOMBS                    = 33634,
+    TAXI_PATH_PLAGUE_THIS                   = 745,
+};
+
+bool GossipHello_npc_greer_orehammer(Player* pPlayer, Creature* pCreature)
+{
+    if (pCreature->isQuestGiver())
+        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+
+    if (pPlayer->GetQuestStatus(QUEST_MISSION_PLAGUE_THIS) == QUEST_STATUS_INCOMPLETE)
+    {
+        if (!pPlayer->HasItemCount(ITEM_PRECISION_BOMBS, 1, true))
+            pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_GET_BOMBS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+
+        pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_FLIGHT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+    }
+
+    if (pCreature->isTaxi())
+        pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_TAXI, GOSSIP_ITEM_TAXI, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+
+    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+
+    return true;
+}
+
+bool GossipSelect_npc_greer_orehammer(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+{
+    switch(uiAction)
+    {
+        case GOSSIP_ACTION_INFO_DEF + 1:
+            if (Item* pItem = pPlayer->StoreNewItemInInventorySlot(ITEM_PRECISION_BOMBS, 10))
+                pPlayer->SendNewItem(pItem, 10, true, false);
+
+            pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF + 2:
+            pPlayer->CLOSE_GOSSIP_MENU();
+            pPlayer->ActivateTaxiPathTo(TAXI_PATH_PLAGUE_THIS);
+            break;
+        case GOSSIP_ACTION_INFO_DEF + 3:
+            pPlayer->GetSession()->SendTaxiMenu(pCreature);
+            break;
+    }
+
+    return true;
+}
+
+/*######
 ## npc_mcgoyver - TODO, can be moved to database
 ######*/
 
@@ -487,6 +545,12 @@ void AddSC_howling_fjord()
     pNewScript->Name = "npc_dark_ranger_lyana";
     pNewScript->pGossipHello = &GossipHello_npc_dark_ranger_lyana;
     pNewScript->pGossipSelect = &GossipSelect_npc_dark_ranger_lyana;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_greer_orehammer";
+    pNewScript->pGossipHello = &GossipHello_npc_greer_orehammer;
+    pNewScript->pGossipSelect = &GossipSelect_npc_greer_orehammer;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
