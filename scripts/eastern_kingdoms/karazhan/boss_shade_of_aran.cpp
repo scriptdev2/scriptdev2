@@ -220,7 +220,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
             {
                 if (m_pInstance)
                 {
-                    if (GameObject* pDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GO_LIBRARY_DOOR)))
+                    if (GameObject* pDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(GO_PRIVATE_LIBRARY_DOOR)))
                         pDoor->SetGoState(GO_STATE_READY);
 
                     m_uiCloseDoor_Timer = 0;
