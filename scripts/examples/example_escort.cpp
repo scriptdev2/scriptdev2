@@ -53,10 +53,17 @@ enum
 struct MANGOS_DLL_DECL example_escortAI : public npc_escortAI
 {
     // CreatureAI functions
-    example_escortAI(Creature* pCreature) : npc_escortAI(pCreature) {Reset();}
+    example_escortAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
 
     uint32 m_uiDeathCoilTimer;
     uint32 m_uiChatTimer;
+
+    // Is called after each combat, so usally only reset combat-stuff here
+    void Reset()
+    {
+        m_uiDeathCoilTimer = 4000;
+        m_uiChatTimer = 4000;
+    }
 
     void JustSummoned(Creature* pSummoned)
     {
@@ -98,12 +105,7 @@ struct MANGOS_DLL_DECL example_escortAI : public npc_escortAI
             DoScriptText(SAY_AGGRO2, m_creature);
     }
 
-    void Reset()
-    {
-        m_uiDeathCoilTimer = 4000;
-        m_uiChatTimer = 4000;
-    }
-
+    // Only overwrite if there is something special
     void JustDied(Unit* pKiller)
     {
         if (HasEscortState(STATE_ESCORT_ESCORTING))
@@ -122,15 +124,15 @@ struct MANGOS_DLL_DECL example_escortAI : public npc_escortAI
         }
         else
             DoScriptText(SAY_DEATH_3, m_creature);
+
+        // Fail quest for group - if you don't implement JustDied in your script, this will automatically work
+        npc_escortAI::JustDied(pKiller);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateEscortAI(const uint32 uiDiff)
     {
-        //Must update npc_escortAI
-        npc_escortAI::UpdateAI(uiDiff);
-
-        //Combat check
-        if (m_creature->getVictim())
+        // Combat check
+        if (m_creature->SelectHostileTarget() && m_creature->getVictim())
         {
             if (m_uiDeathCoilTimer < uiDiff)
             {
@@ -140,6 +142,8 @@ struct MANGOS_DLL_DECL example_escortAI : public npc_escortAI
             }
             else
                 m_uiDeathCoilTimer -= uiDiff;
+
+            DoMeleeAttackIfReady();
         }
         else
         {
@@ -220,11 +224,12 @@ bool GossipSelect_example_escort(Player* pPlayer, Creature* pCreature, uint32 ui
 
 void AddSC_example_escort()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "example_escort";
-    newscript->GetAI = &GetAI_example_escort;
-    newscript->pGossipHello = &GossipHello_example_escort;
-    newscript->pGossipSelect = &GossipSelect_example_escort;
-    newscript->RegisterSelf(false);
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "example_escort";
+    pNewScript->GetAI = &GetAI_example_escort;
+    pNewScript->pGossipHello = &GossipHello_example_escort;
+    pNewScript->pGossipSelect = &GossipSelect_example_escort;
+    pNewScript->RegisterSelf(false);
 }

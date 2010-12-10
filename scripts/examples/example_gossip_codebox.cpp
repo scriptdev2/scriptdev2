@@ -34,10 +34,11 @@ enum
     SAY_CORRECT             = -1999924
 };
 
+// Should actually be handled in SD2-database!
 #define GOSSIP_ITEM_1       "A quiz: what's your name?"
 #define GOSSIP_ITEM_2       "I'm not interested"
 
-//This function is called when the player opens the gossip menubool
+// This function is called when the player opens the gossip menubool
 bool GossipHello_example_gossip_codebox(Player* pPlayer, Creature* pCreature)
 {
     pPlayer->ADD_GOSSIP_ITEM_EXTENDED(0, GOSSIP_ITEM_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1, "", 0, true);
@@ -48,7 +49,7 @@ bool GossipHello_example_gossip_codebox(Player* pPlayer, Creature* pCreature)
     return true;
 }
 
-//This function is called when the player clicks an option on the gossip menubool
+// This function is called when the player clicks an option on the gossip menubool
 bool GossipSelect_example_gossip_codebox(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF+2)
@@ -67,7 +68,7 @@ bool GossipSelectWithCode_example_gossip_codebox(Player* pPlayer, Creature* pCre
         switch (uiAction)
         {
         case GOSSIP_ACTION_INFO_DEF+1:
-            if (std::strcmp(sCode, pPlayer->GetName())!=0)
+            if (std::strcmp(sCode, pPlayer->GetName()) != 0)
             {
                 DoScriptText(SAY_WRONG, pCreature);
                 pCreature->CastSpell(pPlayer, SPELL_POLYMORPH, true);
@@ -88,12 +89,12 @@ bool GossipSelectWithCode_example_gossip_codebox(Player* pPlayer, Creature* pCre
 
 void AddSC_example_gossip_codebox()
 {
-    Script* newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "example_gossip_codebox";
-    newscript->pGossipHello = &GossipHello_example_gossip_codebox;
-    newscript->pGossipSelect = &GossipSelect_example_gossip_codebox;
-    newscript->pGossipSelectWithCode = &GossipSelectWithCode_example_gossip_codebox;
-    newscript->RegisterSelf(false);
+    pNewScript = new Script;
+    pNewScript->Name = "example_gossip_codebox";
+    pNewScript->pGossipHello = &GossipHello_example_gossip_codebox;
+    pNewScript->pGossipSelect = &GossipSelect_example_gossip_codebox;
+    pNewScript->pGossipSelectWithCode = &GossipSelectWithCode_example_gossip_codebox;
+    pNewScript->RegisterSelf(false);
 }
