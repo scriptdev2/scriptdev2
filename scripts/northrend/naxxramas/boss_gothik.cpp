@@ -410,7 +410,7 @@ bool EffectDummyCreature_spell_anchor(Unit* pCaster, uint32 uiSpellId, SpellEffe
                 uint32 uiNpcEntry = NPC_SPECT_TRAINEE;
 
                 if (uiSpellId == SPELL_B_TO_SKULL)
-                    uiNpcEntry = NPC_SPECT_DEATH_KNIGTH;
+                    uiNpcEntry = NPC_SPECT_DEATH_KNIGHT;
                 else if (uiSpellId == SPELL_C_TO_SKULL)
                     uiNpcEntry = NPC_SPECT_RIDER;
 

@@ -104,6 +104,11 @@ void instance_naxxramas::OnCreatureCreate(Creature* pCreature)
         case NPC_GOTHIK:            m_uiGothikGUID = pCreature->GetGUID();      break;
         case NPC_KELTHUZAD:         m_uiKelthuzadGUID = pCreature->GetGUID();   break;
         case NPC_SUB_BOSS_TRIGGER:  m_lGothTriggerList.push_back(pCreature->GetGUID()); break;
+
+        case NPC_NAXXRAMAS_FOLLOWER:
+        case NPC_NAXXRAMAS_WORSHIPPER:
+            m_lFaerlinaAddGUIDs.push_back(pCreature->GetGUID());
+            break;
     }
 }
 
@@ -262,13 +267,26 @@ void instance_naxxramas::SetData(uint32 uiType, uint32 uiData)
                 DoUseDoorOrButton(m_uiAnubGateGUID);
             break;
         case TYPE_FAERLINA:
-            m_auiEncounter[1] = uiData;
+            if (uiData == SPECIAL)                          // Used to inform about failed special achievement
+            {
+                return;
+            }
             DoUseDoorOrButton(m_uiFaerWebGUID);
             if (uiData == DONE)
             {
                 DoUseDoorOrButton(m_uiFaerDoorGUID);
                 DoUseDoorOrButton(m_uiMaexOuterGUID);
             }
+            if (uiData == FAIL)
+            {
+                for (std::list<uint64>::const_iterator itr = m_lFaerlinaAddGUIDs.begin(); itr != m_lFaerlinaAddGUIDs.end(); ++itr)
+                {
+                    Creature* pAdd = instance->GetCreature(*itr);
+                    if (pAdd && !pAdd->isAlive())
+                        pAdd->Respawn();
+                }
+            }
+            m_auiEncounter[1] = uiData;
             break;
         case TYPE_MAEXXNA:
             m_auiEncounter[2] = uiData;
