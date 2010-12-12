@@ -402,6 +402,9 @@
     <ClCompile Include="..\scripts\eastern_kingdoms\blackrock_depths\boss_anubshiah.cpp">
       <Filter>scripts\eastern_kingdoms\blackrock_depths</Filter>
     </ClCompile>
+    <ClCompile Include="..\scripts\eastern_kingdoms\blackrock_depths\boss_coren_direbrew.cpp">
+      <Filter>scripts\eastern_kingdoms\blackrock_depths</Filter>
+    </ClCompile>
     <ClCompile Include="..\scripts\eastern_kingdoms\blackrock_depths\boss_emperor_dagran_thaurissan.cpp">
       <Filter>scripts\eastern_kingdoms\blackrock_depths</Filter>
     </ClCompile>
@@ -540,6 +543,9 @@
     <ClCompile Include="..\scripts\eastern_kingdoms\karazhan\bosses_opera.cpp">
       <Filter>scripts\eastern_kingdoms\karazhan</Filter>
     </ClCompile>
+    <ClCompile Include="..\scripts\eastern_kingdoms\karazhan\chess_event.cpp">
+      <Filter>scripts\eastern_kingdoms\karazhan</Filter>
+    </ClCompile>
     <ClCompile Include="..\scripts\eastern_kingdoms\karazhan\instance_karazhan.cpp">
       <Filter>scripts\eastern_kingdoms\karazhan</Filter>
     </ClCompile>
@@ -674,6 +680,9 @@
     </ClCompile>
     <ClCompile Include="..\scripts\eastern_kingdoms\scholomance\instance_scholomance.cpp">
       <Filter>scripts\eastern_kingdoms\scholomance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scripts\eastern_kingdoms\shadowfang_keep\boss_hummel.cpp">
+      <Filter>scripts\eastern_kingdoms\shadowfang_keep</Filter>
     </ClCompile>
     <ClCompile Include="..\scripts\eastern_kingdoms\shadowfang_keep\instance_shadowfang_keep.cpp">
       <Filter>scripts\eastern_kingdoms\shadowfang_keep</Filter>
@@ -951,6 +960,12 @@
     <ClCompile Include="..\scripts\kalimdor\caverns_of_time\old_hillsbrad\old_hillsbrad.cpp">
       <Filter>scripts\kalimdor\caverns_of_time\old_hillsbrad</Filter>
     </ClCompile>
+    <ClCompile Include="..\scripts\kalimdor\dire_maul\dire_maul.cpp">
+      <Filter>scripts\kalimdor\dire_maul</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scripts\kalimdor\dire_maul\instance_dire_maul.cpp">
+      <Filter>scripts\kalimdor\dire_maul</Filter>
+    </ClCompile>
     <ClCompile Include="..\scripts\kalimdor\maraudon\boss_celebras_the_cursed.cpp">
       <Filter>scripts\kalimdor\maraudon</Filter>
     </ClCompile>
@@ -1209,6 +1224,9 @@
     <ClCompile Include="..\scripts\northrend\naxxramas\instance_naxxramas.cpp">
       <Filter>scripts\northrend\naxxramas</Filter>
     </ClCompile>
+    <ClCompile Include="..\scripts\northrend\nexus\eye_of_eternity\boss_malygos.cpp">
+      <Filter>scripts\northrend\nexus\eye_of_eternity</Filter>
+    </ClCompile>
     <ClCompile Include="..\scripts\northrend\nexus\nexus\boss_anomalus.cpp">
       <Filter>scripts\northrend\nexus\nexus</Filter>
     </ClCompile>
@@ -1335,6 +1353,27 @@
     <ClCompile Include="..\scripts\northrend\utgarde_keep\utgarde_pinnacle\instance_utgarde_pinnacle.cpp">
       <Filter>scripts\northrend\utgarde_keep\utgarde_pinnacle</Filter>
     </ClCompile>
+    <ClCompile Include="..\scripts\northrend\vault_of_archavon\boss_archavon.cpp">
+      <Filter>scripts\northrend\vault_of_archavon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scripts\northrend\vault_of_archavon\boss_emalon.cpp">
+      <Filter>scripts\northrend\vault_of_archavon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scripts\northrend\vault_of_archavon\boss_koralon.cpp">
+      <Filter>scripts\northrend\vault_of_archavon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scripts\northrend\vault_of_archavon\boss_toravon.cpp">
+      <Filter>scripts\northrend\vault_of_archavon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scripts\northrend\vault_of_archavon\instance_vault_of_archavon.cpp">
+      <Filter>scripts\northrend\vault_of_archavon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scripts\northrend\violet_hold\boss_erekem.cpp">
+      <Filter>scripts\northrend\violet_hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scripts\northrend\violet_hold\boss_ichoron.cpp">
+      <Filter>scripts\northrend\violet_hold</Filter>
+    </ClCompile>
     <ClCompile Include="..\scripts\northrend\violet_hold\instance_violet_hold.cpp">
       <Filter>scripts\northrend\violet_hold</Filter>
     </ClCompile>
@@ -1377,6 +1416,9 @@
     <ClCompile Include="..\scripts\northrend\icecrown_citadel\icecrown_citadel\gunship_battle.cpp">
       <Filter>scripts\northrend\icecrown_citadel\icecrown_citadel</Filter>
     </ClCompile>
+    <ClCompile Include="..\scripts\northrend\icecrown_citadel\icecrown_citadel\instance_icecrown_citadel.cpp">
+      <Filter>scripts\northrend\icecrown_citadel\icecrown_citadel</Filter>
+    </ClCompile>
     <ClCompile Include="..\scripts\northrend\icecrown_citadel\frozen_halls\pit_of_saron\boss_forgemaster_gafrost.cpp">
       <Filter>scripts\northrend\icecrown_citadel\frozen_halls\pit_of_saron</Filter>
     </ClCompile>
@@ -1399,6 +1441,12 @@
       <Filter>scripts\northrend\icecrown_citadel\frozen_halls\halls_of_reflection</Filter>
     </ClCompile>
     <ClCompile Include="..\scripts\northrend\icecrown_citadel\frozen_halls\halls_of_reflection\boss_marwyn.cpp">
+      <Filter>scripts\northrend\icecrown_citadel\frozen_halls\halls_of_reflection</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scripts\northrend\icecrown_citadel\frozen_halls\halls_of_reflection\halls_of_reflection.cpp">
+      <Filter>scripts\northrend\icecrown_citadel\frozen_halls\halls_of_reflection</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scripts\northrend\icecrown_citadel\frozen_halls\halls_of_reflection\instance_halls_of_reflection.cpp">
       <Filter>scripts\northrend\icecrown_citadel\frozen_halls\halls_of_reflection</Filter>
     </ClCompile>
     <ClCompile Include="..\scripts\northrend\icecrown_citadel\frozen_halls\forge_of_souls\boss_bronjahm.cpp">
@@ -1443,11 +1491,17 @@
     <ClCompile Include="..\scripts\outland\auchindoun\auchenai_crypts\boss_exarch_maladaar.cpp">
       <Filter>scripts\outland\auchindoun\auchenai_crypts</Filter>
     </ClCompile>
+    <ClCompile Include="..\scripts\outland\auchindoun\auchenai_crypts\boss_shirrak.cpp">
+      <Filter>scripts\outland\auchindoun\auchenai_crypts</Filter>
+    </ClCompile>
     <ClCompile Include="..\scripts\outland\auchindoun\mana_tombs\boss_nexusprince_shaffar.cpp">
       <Filter>scripts\outland\auchindoun\mana_tombs</Filter>
     </ClCompile>
     <ClCompile Include="..\scripts\outland\auchindoun\mana_tombs\boss_pandemonius.cpp">
       <Filter>scripts\outland\auchindoun\mana_tombs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scripts\outland\auchindoun\sethekk_halls\boss_anzu.cpp">
+      <Filter>scripts\outland\auchindoun\sethekk_halls</Filter>
     </ClCompile>
     <ClCompile Include="..\scripts\outland\auchindoun\sethekk_halls\boss_darkweaver_syth.cpp">
       <Filter>scripts\outland\auchindoun\sethekk_halls</Filter>
@@ -1526,6 +1580,9 @@
     </ClCompile>
     <ClCompile Include="..\scripts\outland\coilfang_reservoir\serpent_shrine\instance_serpent_shrine.cpp">
       <Filter>scripts\outland\coilfang_reservoir\serpent_shrine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scripts\outland\coilfang_reservoir\slave_pens\boss_ahune.cpp">
+      <Filter>scripts\outland\coilfang_reservoir\slave_pens</Filter>
     </ClCompile>
     <ClCompile Include="..\scripts\outland\coilfang_reservoir\steam_vault\boss_hydromancer_thespia.cpp">
       <Filter>scripts\outland\coilfang_reservoir\steam_vault</Filter>
@@ -1708,6 +1765,9 @@
     <ClCompile Include="..\scripts\northrend\ruby_sanctum\boss_zarithian.cpp">
       <Filter>scripts\northrend\ruby_sanctum</Filter>
     </ClCompile>
+    <ClCompile Include="..\scripts\northrend\ruby_sanctum\instance_ruby_sanctum.cpp">
+      <Filter>scripts\northrend\ruby_sanctum</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\base\escort_ai.h">
@@ -1727,6 +1787,9 @@
     </ClInclude>
     <ClInclude Include="..\scripts\eastern_kingdoms\blackrock_spire\blackrock_spire.h">
       <Filter>scripts\eastern_kingdoms\blackrock_depths</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scripts\eastern_kingdoms\blackwing_lair\blackwing_lair.h">
+      <Filter>scripts\eastern_kingdoms\blackwing_lair</Filter>
     </ClInclude>
     <ClInclude Include="..\scripts\eastern_kingdoms\deadmines\deadmines.h">
       <Filter>scripts\eastern_kingdoms\deadmines</Filter>
@@ -1788,6 +1851,9 @@
     <ClInclude Include="..\scripts\kalimdor\caverns_of_time\old_hillsbrad\old_hillsbrad.h">
       <Filter>scripts\kalimdor\caverns_of_time\old_hillsbrad</Filter>
     </ClInclude>
+    <ClInclude Include="..\scripts\kalimdor\dire_maul\dire_maul.h">
+      <Filter>scripts\kalimdor\dire_maul</Filter>
+    </ClInclude>
     <ClInclude Include="..\scripts\kalimdor\onyxias_lair\onyxias_lair.h">
       <Filter>scripts\kalimdor\onyxias_lair</Filter>
     </ClInclude>
@@ -1824,8 +1890,14 @@
     <ClInclude Include="..\scripts\northrend\gundrak\gundrak.h">
       <Filter>scripts\northrend\gundrak</Filter>
     </ClInclude>
+    <ClInclude Include="..\scripts\northrend\icecrown_citadel\icecrown_citadel\icecrown_citadel.h">
+      <Filter>scripts\northrend\icecrown_citadel\icecrown_citadel</Filter>
+    </ClInclude>
     <ClInclude Include="..\scripts\northrend\icecrown_citadel\frozen_halls\forge_of_souls\forge_of_souls.h">
       <Filter>scripts\northrend\icecrown_citadel\frozen_halls\forge_of_souls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scripts\northrend\icecrown_citadel\frozen_halls\halls_of_reflection\halls_of_reflection.h">
+      <Filter>scripts\northrend\icecrown_citadel\frozen_halls\halls_of_reflection</Filter>
     </ClInclude>
     <ClInclude Include="..\scripts\northrend\icecrown_citadel\frozen_halls\pit_of_saron\pit_of_saron.h">
       <Filter>scripts\northrend\icecrown_citadel\frozen_halls\pit_of_saron</Filter>
@@ -1838,6 +1910,9 @@
     </ClInclude>
     <ClInclude Include="..\scripts\northrend\obsidian_sanctum\obsidian_sanctum.h">
       <Filter>scripts\northrend\obsidian_sanctum</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scripts\northrend\ruby_sanctum\ruby_sanctum.h">
+      <Filter>scripts\northrend\ruby_sanctum</Filter>
     </ClInclude>
     <ClInclude Include="..\scripts\northrend\ulduar\halls_of_lightning\halls_of_lightning.h">
       <Filter>scripts\northrend\ulduar\halls_of_lightning</Filter>
@@ -1853,6 +1928,9 @@
     </ClInclude>
     <ClInclude Include="..\scripts\northrend\utgarde_keep\utgarde_pinnacle\utgarde_pinnacle.h">
       <Filter>scripts\northrend\utgarde_keep\utgarde_pinnacle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scripts\northrend\vault_of_archavon\vault_of_archavon.h">
+      <Filter>scripts\northrend\vault_of_archavon</Filter>
     </ClInclude>
     <ClInclude Include="..\scripts\northrend\violet_hold\violet_hold.h">
       <Filter>scripts\northrend\violet_hold</Filter>
