@@ -3,30 +3,20 @@ A quick explanation of the layout I hope everyone will follow for scriptdev2.
 
 --- Sub Folders ---
 
-Area - Contains scripts used solely by area triggers
+battlegrounds - Contains scripts for npcs in Battlegrounds
 
-Boss - Boss scripts for bosses that are not zone specific
+custom - Intentionally empty folder from SVN. If you make a custom script please put it here.
 
-Mob - Generic Creature scripts for creatures that are not zone specific
+examples - Contains a couple of example scripts showing the most commonly used functions within SD2
 
-Custom - Intentionally empty folder from SVN. If you make a custom script please put it here.
+eastern_kingdoms, kalimdor, northrend, outland - Contain scripts for anything related to npcs or instances on the corresponding continent.
+Instances are grouped to subfolders, the normal continent-maps are divided into zones
 
-GO - Contains scripts used solely by Game Objects (GOs) that do not have a specific zone
-
-Guard - Scripts for Guard NPCs
-
-Honor - Honor npcs (currently a blank script as these npcs do nothing special)
-
-Item - Item scripts
-
-NPC - Scripts for individual NPCs who do not have a specific zone
-
-Servers - Generic NPC servers script for things such as flightmasters and guildmasters.
-
-Zone - ALL zone specific scripts should be written within these folders. This includes creature scripts, boss scripts, go scripts, area scripts, and npc scripts.
+world - Contains scripts for anything that is not related to a specified zone.
+This includes item_scripts, areatrigger_scripts, some npcs that can be found at many places, go_scripts and spell_scripts
 
 --- Naming Conventions ---
 
 Please keep file names to "type_objectname.cpp" where type is replaced by the type of object and objectname is replaced by the name of the object, creature, item, or area that this script will be used by.
 
-AddSC functions should follow "void AddSC_creaturename(void);" format. Do not append AI or anything else.
+AddSC functions should follow "void AddSC_filename(void);" format. Do not append AI or anything else.
