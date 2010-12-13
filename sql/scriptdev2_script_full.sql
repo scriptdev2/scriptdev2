@@ -1739,12 +1739,12 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 
 -- -1 554 000 THE MECHANAR
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
-(-1554000,'I predict a painful death.',11101,1,0,0,'gyro SAY_AGGRO'),
-(-1554001,'Measure twice; cut once!',11104,1,0,0,'gyro SAY_SAW_ATTACK1'),
-(-1554002,'If my division is correct, you should be quite dead.',11105,1,0,0,'gyro SAY_SAW_ATTACK2'),
-(-1554003,'Your strategy was flawed!',11102,1,0,0,'gyro SAY_SLAY1'),
-(-1554004,'Yes, the only logical outcome.',11103,1,0,0,'gyro SAY_SLAY2'),
-(-1554005,'An unforseen... contingency',11106,1,0,0,'gyro SAY_DEATH'),
+(-1554000,'REUSE_ME',0,0,0,0,'REUSE_ME'),
+(-1554001,'REUSE_ME',0,0,0,0,'REUSE_ME'),
+(-1554002,'REUSE_ME',0,0,0,0,'REUSE_ME'),
+(-1554003,'REUSE_ME',0,0,0,0,'REUSE_ME'),
+(-1554004,'REUSE_ME',0,0,0,0,'REUSE_ME'),
+(-1554005,'REUSE_ME',0,0,0,0,'REUSE_ME'),
 
 (-1554006,'You have approximately five seconds to live.',11109,1,0,0,'ironhand SAY_AGGRO_1'),
 (-1554007,'With the precise angle and velocity...',11112,1,0,0,'ironhand SAY_HAMMER_1'),
@@ -3354,7 +3354,7 @@ INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 -- -3 000 100 GENERAL MAPS (not instance maps)
 INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 (-3000101,'Taruk send me to collect what you owe.','silvermoon harry GOSSIP_ITEM_GAMBLING_DEBT'),
-(-3000102,'Here\'s the money.','silvermoon harry GOSSIP_ITEM_PAYING'),
+(-3000102,'Pay up, Harry!','silvermoon harry GOSSIP_ITEM_PAYING'),
 (-3000103,'I am ready to travel to you village now.','rainspeaker GOSSIP_ITEM_READY'),
 (-3000104,'<Check for pulse...>','mosswalker victim GOSSIP_ITEM_PULSE'),
 (-3000105,'Ezekiel said that you might have a certain book...','dirty larry GOSSIP_ITEM_BOOK'),

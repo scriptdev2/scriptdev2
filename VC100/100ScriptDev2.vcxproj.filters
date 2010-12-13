@@ -1683,9 +1683,6 @@
     <ClCompile Include="..\scripts\outland\tempest_keep\the_eye\the_eye.cpp">
       <Filter>scripts\outland\tempest_keep\the_eye</Filter>
     </ClCompile>
-    <ClCompile Include="..\scripts\outland\tempest_keep\the_mechanar\boss_gatewatcher_gyrokill.cpp">
-      <Filter>scripts\outland\tempest_keep\the_mechanar</Filter>
-    </ClCompile>
     <ClCompile Include="..\scripts\outland\tempest_keep\the_mechanar\boss_gatewatcher_ironhand.cpp">
       <Filter>scripts\outland\tempest_keep\the_mechanar</Filter>
     </ClCompile>

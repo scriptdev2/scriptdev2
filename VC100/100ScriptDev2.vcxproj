@@ -676,7 +676,6 @@
     <ClCompile Include="..\scripts\outland\tempest_keep\the_eye\boss_void_reaver.cpp" />
     <ClCompile Include="..\scripts\outland\tempest_keep\the_eye\instance_the_eye.cpp" />
     <ClCompile Include="..\scripts\outland\tempest_keep\the_eye\the_eye.cpp" />
-    <ClCompile Include="..\scripts\outland\tempest_keep\the_mechanar\boss_gatewatcher_gyrokill.cpp" />
     <ClCompile Include="..\scripts\outland\tempest_keep\the_mechanar\boss_gatewatcher_ironhand.cpp" />
     <ClCompile Include="..\scripts\outland\tempest_keep\the_mechanar\boss_nethermancer_sepethrea.cpp" />
     <ClCompile Include="..\scripts\outland\tempest_keep\the_mechanar\boss_pathaleon_the_calculator.cpp" />

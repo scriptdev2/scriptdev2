@@ -572,7 +572,6 @@ scripts/outland/tempest_keep/the_eye/boss_void_reaver.cpp \
 scripts/outland/tempest_keep/the_eye/instance_the_eye.cpp \
 scripts/outland/tempest_keep/the_eye/the_eye.cpp \
 scripts/outland/tempest_keep/the_eye/the_eye.h \
-scripts/outland/tempest_keep/the_mechanar/boss_gatewatcher_gyrokill.cpp \
 scripts/outland/tempest_keep/the_mechanar/boss_gatewatcher_ironhand.cpp \
 scripts/outland/tempest_keep/the_mechanar/boss_nethermancer_sepethrea.cpp \
 scripts/outland/tempest_keep/the_mechanar/boss_pathaleon_the_calculator.cpp \
