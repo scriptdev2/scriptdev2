@@ -15,7 +15,7 @@
  */
 
 /* ScriptData
-SDName: boss_zarithian
+SDName: boss_zarithrian
 SD%Complete:
 SDComment:placeholder
 SDCategory: Ruby Sanctum

@@ -15,7 +15,7 @@
  */
 
 /* ScriptData
-SDName: boss_falryn
+SDName: boss_falric
 SD%Complete: 0%
 SDComment:
 SDCategory: Halls of Reflection

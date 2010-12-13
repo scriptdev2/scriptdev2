@@ -371,7 +371,7 @@ scripts/northrend/gundrak/boss_moorabi.cpp \
 scripts/northrend/gundrak/boss_sladran.cpp \
 scripts/northrend/gundrak/gundrak.h \
 scripts/northrend/gundrak/instance_gundrak.cpp \
-scripts/northrend/icecrown_citadel/frozen_halls/halls_of_reflection/boss_falryn.cpp \
+scripts/northrend/icecrown_citadel/frozen_halls/halls_of_reflection/boss_falric.cpp \
 scripts/northrend/icecrown_citadel/frozen_halls/halls_of_reflection/boss_lich_king.cpp \
 scripts/northrend/icecrown_citadel/frozen_halls/halls_of_reflection/boss_marwyn.cpp \
 scripts/northrend/icecrown_citadel/frozen_halls/halls_of_reflection/halls_of_reflection.cpp \
@@ -431,7 +431,7 @@ scripts/northrend/obsidian_sanctum/obsidian_sanctum.h \
 scripts/northrend/ruby_sanctum/boss_halion.cpp \
 scripts/northrend/ruby_sanctum/boss_baltharus.cpp \
 scripts/northrend/ruby_sanctum/boss_saviana.cpp \
-scripts/northrend/ruby_sanctum/boss_zarithian.cpp \
+scripts/northrend/ruby_sanctum/boss_zarithrian.cpp \
 scripts/northrend/ruby_sanctum/instance_ruby_sanctum.cpp \
 scripts/northrend/ruby_sanctum/ruby_sanctum.h \
 scripts/northrend/ulduar/halls_of_lightning/boss_bjarngrim.cpp \

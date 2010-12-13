@@ -473,7 +473,7 @@
     <ClCompile Include="..\scripts\northrend\ruby_sanctum\boss_baltharus.cpp" />
     <ClCompile Include="..\scripts\northrend\ruby_sanctum\boss_halion.cpp" />
     <ClCompile Include="..\scripts\northrend\ruby_sanctum\boss_saviana.cpp" />
-    <ClCompile Include="..\scripts\northrend\ruby_sanctum\boss_zarithian.cpp" />
+    <ClCompile Include="..\scripts\northrend\ruby_sanctum\boss_zarithrian.cpp" />
     <ClCompile Include="..\scripts\northrend\ruby_sanctum\instance_ruby_sanctum.cpp" />
     <ClCompile Include="..\scripts\northrend\sholazar_basin.cpp" />
     <ClCompile Include="..\scripts\northrend\storm_peaks.cpp" />
@@ -593,7 +593,7 @@
     <ClCompile Include="..\scripts\northrend\icecrown_citadel\frozen_halls\pit_of_saron\boss_scourgelord_tyrannus.cpp" />
     <ClCompile Include="..\scripts\northrend\icecrown_citadel\frozen_halls\pit_of_saron\instance_pit_of_saron.cpp" />
     <ClCompile Include="..\scripts\northrend\icecrown_citadel\frozen_halls\pit_of_saron\pit_of_saron.cpp" />
-    <ClCompile Include="..\scripts\northrend\icecrown_citadel\frozen_halls\halls_of_reflection\boss_falryn.cpp" />
+    <ClCompile Include="..\scripts\northrend\icecrown_citadel\frozen_halls\halls_of_reflection\boss_falric.cpp" />
     <ClCompile Include="..\scripts\northrend\icecrown_citadel\frozen_halls\halls_of_reflection\boss_lich_king.cpp" />
     <ClCompile Include="..\scripts\northrend\icecrown_citadel\frozen_halls\halls_of_reflection\boss_marwyn.cpp" />
     <ClCompile Include="..\scripts\northrend\icecrown_citadel\frozen_halls\halls_of_reflection\halls_of_reflection.cpp" />

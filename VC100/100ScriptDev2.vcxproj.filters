@@ -1434,7 +1434,7 @@
     <ClCompile Include="..\scripts\northrend\icecrown_citadel\frozen_halls\pit_of_saron\pit_of_saron.cpp">
       <Filter>scripts\northrend\icecrown_citadel\frozen_halls\pit_of_saron</Filter>
     </ClCompile>
-    <ClCompile Include="..\scripts\northrend\icecrown_citadel\frozen_halls\halls_of_reflection\boss_falryn.cpp">
+    <ClCompile Include="..\scripts\northrend\icecrown_citadel\frozen_halls\halls_of_reflection\boss_falric.cpp">
       <Filter>scripts\northrend\icecrown_citadel\frozen_halls\halls_of_reflection</Filter>
     </ClCompile>
     <ClCompile Include="..\scripts\northrend\icecrown_citadel\frozen_halls\halls_of_reflection\boss_lich_king.cpp">
@@ -1762,7 +1762,7 @@
     <ClCompile Include="..\scripts\northrend\ruby_sanctum\boss_saviana.cpp">
       <Filter>scripts\northrend\ruby_sanctum</Filter>
     </ClCompile>
-    <ClCompile Include="..\scripts\northrend\ruby_sanctum\boss_zarithian.cpp">
+    <ClCompile Include="..\scripts\northrend\ruby_sanctum\boss_zarithrian.cpp">
       <Filter>scripts\northrend\ruby_sanctum</Filter>
     </ClCompile>
     <ClCompile Include="..\scripts\northrend\ruby_sanctum\instance_ruby_sanctum.cpp">
