@@ -22,3 +22,7 @@ SDCategory: Zul'Farrak
 EndScriptData */
 
 #include "precompiled.h"
+
+void AddSC_boss_zumrah()
+{
+}

@@ -34,3 +34,7 @@ enum
 {
     EMOTE_SPRAY_SLIME               = -1533021,
 };
+
+void AddSC_boss_grobbulus()
+{
+}

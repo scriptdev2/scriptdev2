@@ -22,3 +22,7 @@ SDCategory: Auchindoun, Sethekk Halls
 EndScriptData */
 
 #include "precompiled.h"
+
+void AddSC_boss_anzu()
+{
+}

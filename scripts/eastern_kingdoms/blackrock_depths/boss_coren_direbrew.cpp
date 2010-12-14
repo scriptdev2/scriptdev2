@@ -22,3 +22,7 @@ SDCategory: Blackrock Depths
 EndScriptData */
 
 #include "precompiled.h"
+
+void AddSC_boss_coren_direbrew()
+{
+}

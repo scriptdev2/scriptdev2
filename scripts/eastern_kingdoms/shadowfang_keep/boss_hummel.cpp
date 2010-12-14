@@ -22,3 +22,7 @@ SDCategory: Shadowfang Keep
 EndScriptData */
 
 #include "precompiled.h"
+
+void AddSC_boss_hummel()
+{
+}

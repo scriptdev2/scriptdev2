@@ -53,3 +53,7 @@ enum TeleporterGossipItems
     GOSSIP_ITEM_TELE_SPARK_IMAGINATION      = -3603007,
     GOSSIP_ITEM_TELE_YOGG_SARON             = -3603008,
 };
+
+void AddSC_ulduar()
+{
+}

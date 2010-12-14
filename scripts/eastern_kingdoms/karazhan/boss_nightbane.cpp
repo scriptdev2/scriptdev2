@@ -34,3 +34,7 @@ enum
     SPELL_SMOKING_BLAST         = 37057,
     SPELL_FIREBALL_BARRAGE      = 30282
 };
+
+void AddSC_boss_nightbane()
+{
+}

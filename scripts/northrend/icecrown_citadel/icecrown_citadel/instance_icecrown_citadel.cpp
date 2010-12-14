@@ -22,3 +22,7 @@ SDCategory: Icecrown Citadel
 EndScriptData */
 
 #include "precompiled.h"
+
+void AddSC_instance_icecrown_citadel()
+{
+}

@@ -22,3 +22,7 @@ SDCategory: Karazhan
 EndScriptData */
 
 #include "precompiled.h"
+
+void AddSC_chess_event()
+{
+}

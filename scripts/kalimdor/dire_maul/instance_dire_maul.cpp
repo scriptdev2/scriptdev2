@@ -22,3 +22,7 @@ SDCategory: Dire Maul
 EndScriptData */
 
 #include "precompiled.h"
+
+void AddSC_instance_dire_maul()
+{
+}

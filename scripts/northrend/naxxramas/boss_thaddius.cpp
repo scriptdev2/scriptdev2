@@ -76,3 +76,7 @@ enum
     EMOTE_LOSING_LINK               = -1533149,
     EMOTE_TESLA_OVERLOAD            = -1533150,
 };
+
+void AddSC_boss_thaddius()
+{
+}

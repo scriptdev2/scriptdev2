@@ -22,3 +22,7 @@ SDCategory: Violet Hold
 EndScriptData */
 
 #include "precompiled.h"
+
+void AddSC_boss_erekem()
+{
+}

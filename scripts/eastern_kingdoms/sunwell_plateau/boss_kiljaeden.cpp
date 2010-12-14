@@ -22,3 +22,7 @@ SDCategory: Sunwell Plateau
 EndScriptData */
 
 #include "precompiled.h"
+
+void AddSC_boss_kiljaeden()
+{
+}

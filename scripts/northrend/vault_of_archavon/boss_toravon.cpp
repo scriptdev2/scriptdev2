@@ -22,3 +22,7 @@ SDCategory: Vault of Archavon
 EndScriptData */
 
 #include "precompiled.h"
+
+void AddSC_boss_toravon()
+{
+}

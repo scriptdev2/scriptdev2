@@ -23,3 +23,7 @@ EndScriptData */
 
 #include "precompiled.h"
 #include "trial_of_the_champion.h"
+
+void AddSC_trial_of_the_champion()
+{
+}

@@ -22,3 +22,7 @@ SDCategory: Slave Pens
 EndScriptData */
 
 #include "precompiled.h"
+
+void AddSC_boss_ahune()
+{
+}

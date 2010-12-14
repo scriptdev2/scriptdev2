@@ -22,3 +22,7 @@ SDCategory: Eye of Eternity
 EndScriptData */
 
 #include "precompiled.h"
+
+void AddSC_boss_malygos()
+{
+}

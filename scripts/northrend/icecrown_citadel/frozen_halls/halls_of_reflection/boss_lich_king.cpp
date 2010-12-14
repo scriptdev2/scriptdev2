@@ -22,3 +22,7 @@ SDCategory: Halls of Reflection
 EndScriptData */
 
 #include "precompiled.h"
+
+void AddSC_boss_lich_king()
+{
+}
