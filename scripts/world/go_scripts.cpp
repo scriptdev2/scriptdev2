@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: GO_Scripts
 SD%Complete: 100
-SDComment: Quest support: 4285,4287,4288(crystal pylons), 4296, 5088, 5097, 5098, 6481, 10990, 10991, 10992, 14092/14076. Field_Repair_Bot->Teaches spell 22704. Barov_journal->Teaches spell 26089
+SDComment: Quest support: 4285,4287,4288(crystal pylons), 4296, 5088, 5097, 5098, 6481, 10990, 10991, 10992, 12557, 14092/14076. Field_Repair_Bot->Teaches spell 22704. Barov_journal->Teaches spell 26089
 SDCategory: Game Objects
 EndScriptData */
 
@@ -41,6 +41,7 @@ go_tele_to_dalaran_crystal
 go_tele_to_violet_stand
 go_andorhal_tower
 go_scourge_enclosure
+go_lab_work_reagents
 EndContentData */
 
 #include "precompiled.h"
@@ -537,6 +538,45 @@ bool GOHello_go_scourge_enclosure(Player* pPlayer, GameObject* pGo)
     return true;
 }
 
+/*######
+## go_lab_work_reagents
+######*/
+
+enum
+{
+    QUEST_LAB_WORK                          = 12557,
+
+    SPELL_WIRHERED_BATWING_KILL_CREDIT      = 51226,
+    SPELL_MUDDY_MIRE_MAGGOT_KILL_CREDIT     = 51227,
+    SPELL_AMBERSEED_KILL_CREDIT             = 51228,
+    SPELL_CHILLED_SERPENT_MUCUS_KILL_CREDIT = 51229,
+
+    GO_AMBERSEED                            = 190459,
+    GO_CHILLED_SERPENT_MUCUS                = 190462,
+    GO_WITHERED_BATWING                     = 190473,
+    GO_MUDDY_MIRE_MAGGOTS                   = 190478,
+};
+
+bool GOHello_go_lab_work_reagents(Player* pPlayer, GameObject* pGo)
+{
+    if (pPlayer->GetQuestStatus(QUEST_LAB_WORK) == QUEST_STATUS_INCOMPLETE)
+    {
+        uint32 uiCreditSpellId = 0;
+        switch (pGo->GetEntry())
+        {
+            case GO_AMBERSEED:              uiCreditSpellId = SPELL_AMBERSEED_KILL_CREDIT; break;
+            case GO_CHILLED_SERPENT_MUCUS:  uiCreditSpellId = SPELL_CHILLED_SERPENT_MUCUS_KILL_CREDIT; break;
+            case GO_WITHERED_BATWING:       uiCreditSpellId = SPELL_WIRHERED_BATWING_KILL_CREDIT; break;
+            case GO_MUDDY_MIRE_MAGGOTS:     uiCreditSpellId = SPELL_MUDDY_MIRE_MAGGOT_KILL_CREDIT; break;
+        }
+
+        if (uiCreditSpellId)
+            pPlayer->CastSpell(pPlayer, uiCreditSpellId, true);
+    }
+
+    return false;
+}
+
 void AddSC_go_scripts()
 {
     Script* pNewScript;
@@ -650,4 +690,10 @@ void AddSC_go_scripts()
     pNewScript->Name = "go_scourge_enclosure";
     pNewScript->pGOHello =          &GOHello_go_scourge_enclosure;
     pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "go_lab_work_reagents";
+    pNewScript->pGOHello =          &GOHello_go_lab_work_reagents;
+    pNewScript->RegisterSelf();
+
 }
