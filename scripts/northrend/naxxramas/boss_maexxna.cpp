@@ -31,7 +31,8 @@ enum
     EMOTE_SPRAY                 = -1533148,
     EMOTE_BOSS_GENERIC_FRENZY   = -1000005,
 
-    SPELL_WEBWRAP               = 28622,                    //Spell is normally used by the webtrap on the wall NOT by Maexxna
+    SPELL_WEBWRAP               = 28622,
+    SPELL_WEBWRAP_2             = 28673,                    // purpose unknown
 
     SPELL_WEBSPRAY              = 29484,
     SPELL_WEBSPRAY_H            = 54125,
@@ -79,6 +80,7 @@ struct MANGOS_DLL_DECL npc_web_wrapAI : public ScriptedAI
     {
         if (pVictim)
         {
+            DoTeleportPlayer(pVictim, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), pVictim->GetOrientation());
             m_uiVictimGUID = pVictim->GetGUID();
             pVictim->CastSpell(pVictim, SPELL_WEBWRAP, true);
         }
@@ -144,14 +146,14 @@ struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
             m_pInstance->SetData(TYPE_MAEXXNA, FAIL);
     }
 
-    void DoCastWebWrap()
+    bool DoCastWebWrap()
     {
         ThreatList const& tList = m_creature->getThreatManager().getThreatList();
-        std::vector<Unit *> targets;
+        std::vector<Unit*> vTargets;
 
         // This spell doesn't work if we only have 1 player on threat list
         if (tList.size() < 2)
-            return;
+            return false;
 
         // begin + 1 , so we don't target the one with the highest threat
         ThreatList::const_iterator itr = tList.begin();
@@ -160,26 +162,30 @@ struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
         // store the threat list in a different container
         for (;itr != tList.end(); ++itr)
         {
-            Unit* target = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid());
+            Unit* pTarget = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid());
 
             // only on alive players
-            if (target && target->isAlive() && target->GetTypeId() == TYPEID_PLAYER)
-                targets.push_back(target);
+            if (pTarget && pTarget->isAlive() && pTarget->GetTypeId() == TYPEID_PLAYER)
+                vTargets.push_back(pTarget);
         }
 
-        // cut down to size if we have more than 3 targets
-        while(targets.size() > 3)
-            targets.erase(targets.begin()+rand()%targets.size());
+        if (vTargets.empty())
+            return false;
+
+        // cut down to size if we have more than 1/2 targets (10m/25m) (was 3 in 40m)
+        uint8 uiMaxTargets = m_bIsRegularMode ? 1 : 2;
+        while(vTargets.size() > uiMaxTargets)
+            vTargets.erase(vTargets.begin() + urand(0, vTargets.size() - 1));
 
         int i = 0;
 
-        for(std::vector<Unit *>::iterator iter = targets.begin(); iter!= targets.end(); ++iter, ++i)
+        // TODO check locations for 10m/25m
+        for(std::vector<Unit*>::const_iterator iter = vTargets.begin(); iter != vTargets.end(); ++iter, ++i)
         {
-            // Teleport the 3 targets to a location on the wall and summon a Web Wrap on them
+            // Teleport the targets to a location on the wall and summon a Web Wrap on them
             switch(i)
             {
                 case 0:
-                    DoTeleportPlayer((*iter), LOC_X1, LOC_Y1, LOC_Z1, (*iter)->GetOrientation());
                     if (Creature* pWrap = m_creature->SummonCreature(NPC_WEB_WRAP, LOC_X1, LOC_Y1, LOC_Z1, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 60000))
                     {
                         if (npc_web_wrapAI* pWebAI = dynamic_cast<npc_web_wrapAI*>(pWrap->AI()))
@@ -187,7 +193,6 @@ struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
                     }
                     break;
                 case 1:
-                    DoTeleportPlayer((*iter), LOC_X2, LOC_Y2, LOC_Z2, (*iter)->GetOrientation());
                     if (Creature* pWrap = m_creature->SummonCreature(NPC_WEB_WRAP, LOC_X2, LOC_Y2, LOC_Z2, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 60000))
                     {
                         if (npc_web_wrapAI* pWebAI = dynamic_cast<npc_web_wrapAI*>(pWrap->AI()))
@@ -195,7 +200,6 @@ struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
                     }
                     break;
                 case 2:
-                    DoTeleportPlayer((*iter), LOC_X3, LOC_Y3, LOC_Z3, (*iter)->GetOrientation());
                     if (Creature* pWrap = m_creature->SummonCreature(NPC_WEB_WRAP, LOC_X3, LOC_Y3, LOC_Z3, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 60000))
                     {
                         if (npc_web_wrapAI* pWebAI = dynamic_cast<npc_web_wrapAI*>(pWrap->AI()))
@@ -204,6 +208,8 @@ struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
                     break;
             }
         }
+
+        return true;
     }
 
     void SummonSpiderlings()
@@ -220,8 +226,8 @@ struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
         // Web Wrap
         if (m_uiWebWrapTimer < uiDiff)
         {
-            DoCastWebWrap();
-            DoScriptText(EMOTE_SPIN_WEB, m_creature);
+            if (DoCastWebWrap())
+                DoScriptText(EMOTE_SPIN_WEB, m_creature);
             m_uiWebWrapTimer = 40000;
         }
         else
@@ -293,15 +299,15 @@ CreatureAI* GetAI_boss_maexxna(Creature* pCreature)
 
 void AddSC_boss_maexxna()
 {
-    Script* NewScript;
+    Script* pNewScript;
 
-    NewScript = new Script;
-    NewScript->Name = "boss_maexxna";
-    NewScript->GetAI = &GetAI_boss_maexxna;
-    NewScript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_maexxna";
+    pNewScript->GetAI = &GetAI_boss_maexxna;
+    pNewScript->RegisterSelf();
 
-    NewScript = new Script;
-    NewScript->Name = "npc_web_wrap";
-    NewScript->GetAI = &GetAI_npc_web_wrap;
-    NewScript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_web_wrap";
+    pNewScript->GetAI = &GetAI_npc_web_wrap;
+    pNewScript->RegisterSelf();
 }
