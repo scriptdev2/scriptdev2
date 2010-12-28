@@ -663,7 +663,7 @@ bool EffectDummyCreature_spell_dummy_npc(Unit* pCaster, uint32 uiSpellId, SpellE
         {
             if (uiEffIndex == EFFECT_INDEX_0)
             {
-                if (pCreatureTarget->isDead())
+                if (pCreatureTarget->IsCorpse())
                 {
                     uint32 newSpellId = 0;
 
