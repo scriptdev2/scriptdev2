@@ -299,7 +299,7 @@ struct MANGOS_DLL_DECL npc_a_special_surpriseAI : public ScriptedAI
                                 return;
                         }
                         break;
-                    case RACE_UNDEAD_PLAYER:
+                    case RACE_UNDEAD:
                         switch(m_uiExecuteSpeech_Counter)
                         {
                             case 0: DoScriptText(SAY_EXEC_START_1, m_creature, pPlayer); break;

@@ -1266,7 +1266,7 @@ bool GossipHello_npc_mount_vendor(Player* pPlayer, Creature* pCreature)
             else canBuy = true;
             break;
         case 4731:                                          //Zachariah Post
-            if (pPlayer->GetReputationRank(68) != REP_EXALTED && race != RACE_UNDEAD_PLAYER)
+            if (pPlayer->GetReputationRank(68) != REP_EXALTED && race != RACE_UNDEAD)
                 pPlayer->SEND_GOSSIP_MENU(5840, pCreature->GetGUID());
             else canBuy = true;
             break;
