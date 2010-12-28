@@ -393,18 +393,20 @@ bool EffectAuraDummy_spell_aura_dummy_npc(const Aura* pAura, bool bApply)
         }
         case SPELL_ENRAGE:
         {
-            if (pAura->GetTarget()->GetTypeId() != TYPEID_UNIT || !bApply)
+            if (!bApply || pAura->GetTarget()->GetTypeId() != TYPEID_UNIT)
                 return false;
 
-            if (Creature* pCreature = GetClosestCreatureWithEntry(pAura->GetTarget(), NPC_DARKSPINE_MYRMIDON, 25.0f))
+            Creature* pTarget = (Creature*)pAura->GetTarget();
+
+            if (Creature* pCreature = GetClosestCreatureWithEntry(pTarget, NPC_DARKSPINE_MYRMIDON, 25.0f))
             {
-                dynamic_cast<Creature*>(pAura->GetTarget())->AI()->AttackStart(pCreature);
+                pTarget->AI()->AttackStart(pCreature);
                 return true;
             }
 
-            if (Creature* pCreature = GetClosestCreatureWithEntry(pAura->GetTarget(), NPC_DARKSPINE_SIREN, 25.0f))
+            if (Creature* pCreature = GetClosestCreatureWithEntry(pTarget, NPC_DARKSPINE_SIREN, 25.0f))
             {
-                dynamic_cast<Creature*>(pAura->GetTarget())->AI()->AttackStart(pCreature);
+                pTarget->AI()->AttackStart(pCreature);
                 return true;
             }
 
@@ -694,8 +696,8 @@ bool EffectDummyCreature_spell_dummy_npc(Unit* pCaster, uint32 uiSpellId, SpellE
         {
             pCreatureTarget->CastSpell(pCaster, SPELL_GREENGILL_SLAVE_FREED, true);
 
-            if (pCreatureTarget->GetTypeId() == TYPEID_UNIT)
-                dynamic_cast<Creature*>(pCreatureTarget)->UpdateEntry(NPC_FREED_GREENGILL_SLAVE); // Freed Greengill Slave
+            // Freed Greengill Slave
+            pCreatureTarget->UpdateEntry(NPC_FREED_GREENGILL_SLAVE);
 
             pCreatureTarget->CastSpell(pCreatureTarget, SPELL_ENRAGE, true);
 
