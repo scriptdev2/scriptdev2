@@ -458,7 +458,7 @@ void AddSC_eversong_woods()
 
     pNewScript = new Script;
     pNewScript->Name = "npc_apprentice_mirveda";
-    pNewScript->GetAI = GetAI_npc_apprentice_mirvedaAI;
+    pNewScript->GetAI = &GetAI_npc_apprentice_mirvedaAI;
     pNewScript->pQuestAccept = &QuestAccept_unexpected_results;
     pNewScript->RegisterSelf();
 }
