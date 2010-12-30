@@ -748,12 +748,12 @@ void AddSC_spell_scripts()
 
     newscript = new Script;
     newscript->Name = "spell_dummy_go";
-    newscript->pEffectDummyGameObj = &EffectDummyGameObj_spell_dummy_go;
+    newscript->pEffectDummyGO = &EffectDummyGameObj_spell_dummy_go;
     newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "spell_dummy_npc";
-    newscript->pEffectDummyCreature = &EffectDummyCreature_spell_dummy_npc;
+    newscript->pEffectDummyNPC = &EffectDummyCreature_spell_dummy_npc;
     newscript->pEffectAuraDummy = &EffectAuraDummy_spell_aura_dummy_npc;
     newscript->RegisterSelf();
 }

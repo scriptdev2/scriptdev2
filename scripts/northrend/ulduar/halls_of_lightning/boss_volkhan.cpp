@@ -462,12 +462,12 @@ void AddSC_boss_volkhan()
     newscript = new Script;
     newscript->Name = "boss_volkhan";
     newscript->GetAI = &GetAI_boss_volkhan;
-    newscript->pEffectDummyCreature = &EffectDummyCreature_boss_volkhan;
+    newscript->pEffectDummyNPC = &EffectDummyCreature_boss_volkhan;
     newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "npc_volkhan_anvil";
-    newscript->pEffectDummyCreature = &EffectDummyCreature_npc_volkhan_anvil;
+    newscript->pEffectDummyNPC = &EffectDummyCreature_npc_volkhan_anvil;
     newscript->RegisterSelf();
 
     newscript = new Script;

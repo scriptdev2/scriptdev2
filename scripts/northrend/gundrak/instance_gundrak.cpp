@@ -24,7 +24,7 @@ EndScriptData */
 #include "precompiled.h"
 #include "gundrak.h"
 
-bool GOHello_go_gundrak_altar(Player* pPlayer, GameObject* pGo)
+bool GOUse_go_gundrak_altar(Player* pPlayer, GameObject* pGo)
 {
     ScriptedInstance* pInstance = (ScriptedInstance*)pGo->GetInstanceData();
 
@@ -449,7 +449,7 @@ void AddSC_instance_gundrak()
 
     pNewScript = new Script;
     pNewScript->Name = "go_gundrak_altar";
-    pNewScript->pGOHello = &GOHello_go_gundrak_altar;
+    pNewScript->pGOUse = &GOUse_go_gundrak_altar;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;

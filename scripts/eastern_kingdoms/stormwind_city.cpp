@@ -251,13 +251,13 @@ void AddSC_stormwind_city()
     newscript = new Script;
     newscript->Name = "npc_bartleby";
     newscript->GetAI = &GetAI_npc_bartleby;
-    newscript->pQuestAccept = &QuestAccept_npc_bartleby;
+    newscript->pQuestAcceptNPC = &QuestAccept_npc_bartleby;
     newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "npc_dashel_stonefist";
     newscript->GetAI = &GetAI_npc_dashel_stonefist;
-    newscript->pQuestAccept = &QuestAccept_npc_dashel_stonefist;
+    newscript->pQuestAcceptNPC = &QuestAccept_npc_dashel_stonefist;
     newscript->RegisterSelf();
 
     newscript = new Script;

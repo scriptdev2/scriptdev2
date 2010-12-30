@@ -532,7 +532,7 @@ void AddSC_howling_fjord()
     pNewScript = new Script;
     pNewScript->Name = "npc_daegarn";
     pNewScript->GetAI = &GetAI_npc_daegarn;
-    pNewScript->pQuestAccept = &QuestAccept_npc_daegarn;
+    pNewScript->pQuestAcceptNPC = &QuestAccept_npc_daegarn;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;

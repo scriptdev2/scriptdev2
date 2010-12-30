@@ -123,7 +123,7 @@ CreatureAI* GetAI_npc_aeranas(Creature* pCreature)
 ## go_haaleshi_altar
 ######*/
 
-bool GOHello_go_haaleshi_altar(Player* pPlayer, GameObject* pGo)
+bool GOUse_go_haaleshi_altar(Player* pPlayer, GameObject* pGo)
 {
     pGo->SummonCreature(C_AERANAS, -1321.79f, 4043.80f, 116.24f, 1.25f, TEMPSUMMON_TIMED_DESPAWN, 180000);
     return false;
@@ -754,7 +754,7 @@ void AddSC_hellfire_peninsula()
 
     newscript = new Script;
     newscript->Name = "go_haaleshi_altar";
-    newscript->pGOHello = &GOHello_go_haaleshi_altar;
+    newscript->pGOUse = &GOUse_go_haaleshi_altar;
     newscript->RegisterSelf();
 
     newscript = new Script;
@@ -808,6 +808,6 @@ void AddSC_hellfire_peninsula()
     newscript = new Script;
     newscript->Name = "npc_wounded_blood_elf";
     newscript->GetAI = &GetAI_npc_wounded_blood_elf;
-    newscript->pQuestAccept = &QuestAccept_npc_wounded_blood_elf;
+    newscript->pQuestAcceptNPC = &QuestAccept_npc_wounded_blood_elf;
     newscript->RegisterSelf();
 }

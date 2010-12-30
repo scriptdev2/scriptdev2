@@ -63,6 +63,6 @@ void AddSC_example_misc()
 
     pNewScript = new Script;
     pNewScript->Name = "example_go_teleporter";
-    pNewScript->pGOHello = &GOHello_example_go_teleporter;
+    pNewScript->pGOUse = &GOHello_example_go_teleporter;
     pNewScript->RegisterSelf(false);
 }

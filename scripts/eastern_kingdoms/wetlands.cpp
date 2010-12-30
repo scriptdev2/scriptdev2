@@ -162,6 +162,6 @@ void AddSC_wetlands()
 
     newscript = new Script;
     newscript->Name = "npc_mikhail";
-    newscript->pQuestAccept = &QuestAccept_npc_mikhail;
+    newscript->pQuestAcceptNPC = &QuestAccept_npc_mikhail;
     newscript->RegisterSelf();
 }

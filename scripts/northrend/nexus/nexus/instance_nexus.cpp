@@ -24,7 +24,7 @@ EndScriptData */
 #include "precompiled.h"
 #include "nexus.h"
 
-bool GOHello_go_containment_sphere(Player* pPlayer, GameObject* pGo)
+bool GOUse_go_containment_sphere(Player* pPlayer, GameObject* pGo)
 {
     ScriptedInstance* pInstance = (ScriptedInstance*)pGo->GetInstanceData();
 
@@ -250,6 +250,6 @@ void AddSC_instance_nexus()
 
     newscript = new Script;
     newscript->Name = "go_containment_sphere";
-    newscript->pGOHello = &GOHello_go_containment_sphere;
+    newscript->pGOUse = &GOUse_go_containment_sphere;
     newscript->RegisterSelf();
 }

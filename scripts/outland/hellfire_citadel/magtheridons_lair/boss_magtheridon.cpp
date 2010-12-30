@@ -639,7 +639,7 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
 };
 
 //Manticron Cube
-bool GOHello_go_manticron_cube(Player* pPlayer, GameObject* pGo)
+bool GOUse_go_manticron_cube(Player* pPlayer, GameObject* pGo)
 {
     if (ScriptedInstance* pInstance = (ScriptedInstance*)pGo->GetInstanceData())
     {
@@ -697,7 +697,7 @@ void AddSC_boss_magtheridon()
 
     newscript = new Script;
     newscript->Name = "go_manticron_cube";
-    newscript->pGOHello = &GOHello_go_manticron_cube;
+    newscript->pGOUse = &GOUse_go_manticron_cube;
     newscript->RegisterSelf();
 
     newscript = new Script;

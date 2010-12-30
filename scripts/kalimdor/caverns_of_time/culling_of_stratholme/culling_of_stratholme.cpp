@@ -225,7 +225,7 @@ void AddSC_culling_of_stratholme()
     pNewScript->Name = "npc_chromie";
     pNewScript->pGossipHello = &GossipHello_npc_chromie;
     pNewScript->pGossipSelect = &GossipSelect_npc_chromie;
-    pNewScript->pQuestAccept = &QuestAccept_npc_chromie;
+    pNewScript->pQuestAcceptNPC = &QuestAccept_npc_chromie;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;

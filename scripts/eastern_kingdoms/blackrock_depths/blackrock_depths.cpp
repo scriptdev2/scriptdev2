@@ -38,7 +38,7 @@ EndContentData */
 ## go_shadowforge_brazier
 ######*/
 
-bool GOHello_go_shadowforge_brazier(Player* pPlayer, GameObject* pGo)
+bool GOUse_go_shadowforge_brazier(Player* pPlayer, GameObject* pGo)
 {
     if (ScriptedInstance* pInstance = (ScriptedInstance*)pGo->GetInstanceData())
     {
@@ -679,7 +679,7 @@ CreatureAI* GetAI_npc_rocknot(Creature* pCreature)
     return new npc_rocknotAI(pCreature);
 }
 
-bool ChooseReward_npc_rocknot(Player* pPlayer, Creature* pCreature, const Quest* pQuest, uint32 item)
+bool QuestRewarded_npc_rocknot(Player* pPlayer, Creature* pCreature, Quest const* pQuest)
 {
     ScriptedInstance* pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
 
@@ -716,7 +716,7 @@ void AddSC_blackrock_depths()
 
     pNewScript = new Script;
     pNewScript->Name = "go_shadowforge_brazier";
-    pNewScript->pGOHello = &GOHello_go_shadowforge_brazier;
+    pNewScript->pGOUse = &GOUse_go_shadowforge_brazier;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
@@ -749,6 +749,6 @@ void AddSC_blackrock_depths()
     pNewScript = new Script;
     pNewScript->Name = "npc_rocknot";
     pNewScript->GetAI = &GetAI_npc_rocknot;
-    pNewScript->pChooseReward = &ChooseReward_npc_rocknot;
+    pNewScript->pQuestRewardedNPC = &QuestRewarded_npc_rocknot;
     pNewScript->RegisterSelf();
 }

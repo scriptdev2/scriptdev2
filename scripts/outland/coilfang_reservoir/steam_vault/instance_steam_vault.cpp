@@ -36,7 +36,7 @@ EndScriptData */
 3 - Warlord Kalithresh Event
 */
 
-bool GOHello_go_main_chambers_access_panel(Player* pPlayer, GameObject* pGo)
+bool GOUse_go_main_chambers_access_panel(Player* pPlayer, GameObject* pGo)
 {
     ScriptedInstance* pInstance = (ScriptedInstance*)pGo->GetInstanceData();
 
@@ -194,7 +194,7 @@ void AddSC_instance_steam_vault()
 
     newscript = new Script;
     newscript->Name = "go_main_chambers_access_panel";
-    newscript->pGOHello = &GOHello_go_main_chambers_access_panel;
+    newscript->pGOUse = &GOUse_go_main_chambers_access_panel;
     newscript->RegisterSelf();
 
     newscript = new Script;

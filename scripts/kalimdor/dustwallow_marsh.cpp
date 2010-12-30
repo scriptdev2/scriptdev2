@@ -863,7 +863,7 @@ void AddSC_dustwallow_marsh()
     pNewScript = new Script;
     pNewScript->Name = "npc_morokk";
     pNewScript->GetAI = &GetAI_npc_morokk;
-    pNewScript->pQuestAccept = &QuestAccept_npc_morokk;
+    pNewScript->pQuestAcceptNPC = &QuestAccept_npc_morokk;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
@@ -875,13 +875,13 @@ void AddSC_dustwallow_marsh()
     pNewScript = new Script;
     pNewScript->Name = "npc_ogron";
     pNewScript->GetAI = &GetAI_npc_ogron;
-    pNewScript->pQuestAccept = &QuestAccept_npc_ogron;
+    pNewScript->pQuestAcceptNPC = &QuestAccept_npc_ogron;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
     pNewScript->Name = "npc_private_hendel";
     pNewScript->GetAI = &GetAI_npc_private_hendel;
-    pNewScript->pQuestAccept = &QuestAccept_npc_private_hendel;
+    pNewScript->pQuestAcceptNPC = &QuestAccept_npc_private_hendel;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;

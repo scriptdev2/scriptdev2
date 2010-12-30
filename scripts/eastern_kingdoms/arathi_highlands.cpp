@@ -121,6 +121,6 @@ void AddSC_arathi_highlands()
     newscript = new Script;
     newscript->Name = "npc_professor_phizzlethorpe";
     newscript->GetAI = &GetAI_npc_professor_phizzlethorpe;
-    newscript->pQuestAccept = &QuestAccept_npc_professor_phizzlethorpe;
+    newscript->pQuestAcceptNPC = &QuestAccept_npc_professor_phizzlethorpe;
     newscript->RegisterSelf();
 }

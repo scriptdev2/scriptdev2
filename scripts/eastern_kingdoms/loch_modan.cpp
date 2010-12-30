@@ -190,6 +190,6 @@ void AddSC_loch_modan()
     newscript = new Script;
     newscript->Name = "npc_miran";
     newscript->GetAI = &GetAI_npc_miran;
-    newscript->pQuestAccept = &QuestAccept_npc_miran;
+    newscript->pQuestAcceptNPC = &QuestAccept_npc_miran;
     newscript->RegisterSelf();
 }

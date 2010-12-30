@@ -655,7 +655,7 @@ void AddSC_the_barrens()
     newscript = new Script;
     newscript->Name = "npc_gilthares";
     newscript->GetAI = &GetAI_npc_gilthares;
-    newscript->pQuestAccept = &QuestAccept_npc_gilthares;
+    newscript->pQuestAcceptNPC = &QuestAccept_npc_gilthares;
     newscript->RegisterSelf();
 
     newscript = new Script;
@@ -682,6 +682,6 @@ void AddSC_the_barrens()
     newscript = new Script;
     newscript->Name = "npc_wizzlecranks_shredder";
     newscript->GetAI = &GetAI_npc_wizzlecranks_shredder;
-    newscript->pQuestAccept = &QuestAccept_npc_wizzlecranks_shredder;
+    newscript->pQuestAcceptNPC = &QuestAccept_npc_wizzlecranks_shredder;
     newscript->RegisterSelf();
 }

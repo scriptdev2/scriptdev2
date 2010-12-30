@@ -118,7 +118,7 @@ CreatureAI* GetAI_boss_the_lurker_below(Creature* pCreature)
 }
 
 // Cast the spell that should summon the Lurker-Below
-bool GOHello_go_strange_pool(Player* pPlayer, GameObject* pGo)
+bool GOUse_go_strange_pool(Player* pPlayer, GameObject* pGo)
 {
     // There is some chance to fish The Lurker Below, sources are from 20s to 10minutes, average 5min => 20 tries, hence 5%
     if (urand(0,99) < 5)
@@ -147,6 +147,6 @@ void AddSC_boss_the_lurker_below()
 
     pNewScript = new Script;
     pNewScript->Name = "go_strange_pool";
-    pNewScript->pGOHello = &GOHello_go_strange_pool;
+    pNewScript->pGOUse = &GOUse_go_strange_pool;
     pNewScript->RegisterSelf();
 }

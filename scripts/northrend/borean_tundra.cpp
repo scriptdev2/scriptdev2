@@ -290,7 +290,7 @@ CreatureAI* GetAI_npc_nesingwary_trapper(Creature* pCreature)
 ## go_caribou_trap
 ######*/
 
-bool GOHello_go_caribou_trap(Player* pPlayer, GameObject* pGo)
+bool GOUse_go_caribou_trap(Player* pPlayer, GameObject* pGo)
 {
     float fX, fY, fZ;
     pGo->GetClosePoint(fX, fY, fZ, pGo->GetObjectBoundingRadius(), 2*INTERACTION_DISTANCE, frand(0, M_PI_F*2));
@@ -556,7 +556,7 @@ void AddSC_borean_tundra()
 
     newscript = new Script;
     newscript->Name = "go_caribou_trap";
-    newscript->pGOHello = &GOHello_go_caribou_trap;
+    newscript->pGOUse = &GOUse_go_caribou_trap;
     newscript->RegisterSelf();
 
     newscript = new Script;
@@ -574,6 +574,6 @@ void AddSC_borean_tundra()
     newscript = new Script;
     newscript->Name = "npc_lurgglbr";
     newscript->GetAI = &GetAI_npc_lurgglbr;
-    newscript->pQuestAccept = &QuestAccept_npc_lurgglbr;
+    newscript->pQuestAcceptNPC = &QuestAccept_npc_lurgglbr;
     newscript->RegisterSelf();
 }

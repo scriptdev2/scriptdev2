@@ -190,7 +190,7 @@ void AddSC_feralas()
     newscript = new Script;
     newscript->Name = "npc_oox22fe";
     newscript->GetAI = &GetAI_npc_oox22fe;
-    newscript->pQuestAccept = &QuestAccept_npc_oox22fe;
+    newscript->pQuestAcceptNPC = &QuestAccept_npc_oox22fe;
     newscript->RegisterSelf();
 
     newscript = new Script;

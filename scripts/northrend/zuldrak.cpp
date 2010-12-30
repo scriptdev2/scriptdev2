@@ -98,6 +98,6 @@ void AddSC_zuldrak()
     pNewScript = new Script;
     pNewScript->Name = "npc_gurgthock";
     pNewScript->GetAI = &GetAI_npc_gurgthock;
-    pNewScript->pQuestAccept = &QuestAccept_npc_gurgthock;
+    pNewScript->pQuestAcceptNPC = &QuestAccept_npc_gurgthock;
     pNewScript->RegisterSelf();
 }

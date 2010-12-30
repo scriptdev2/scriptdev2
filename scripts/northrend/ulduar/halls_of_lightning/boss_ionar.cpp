@@ -379,7 +379,7 @@ void AddSC_boss_ionar()
     newscript = new Script;
     newscript->Name = "boss_ionar";
     newscript->GetAI = &GetAI_boss_ionar;
-    newscript->pEffectDummyCreature = &EffectDummyCreature_boss_ionar;
+    newscript->pEffectDummyNPC = &EffectDummyCreature_boss_ionar;
     newscript->RegisterSelf();
 
     newscript = new Script;

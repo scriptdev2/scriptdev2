@@ -346,7 +346,7 @@ void AddSC_moonglade()
     newscript = new Script;
     newscript->Name = "npc_clintar_dw_spirit";
     newscript->GetAI = &GetAI_npc_clintar_dw_spirit;
-    newscript->pEffectDummyCreature = &EffectDummyCreature_npc_clintar_dw_spirit;
+    newscript->pEffectDummyNPC = &EffectDummyCreature_npc_clintar_dw_spirit;
     newscript->RegisterSelf();
 
     newscript = new Script;

@@ -304,7 +304,7 @@ void AddSC_sholazar_basin()
     pNewScript = new Script;
     pNewScript->Name = "npc_injured_rainspeaker";
     pNewScript->GetAI = &GetAI_npc_injured_rainspeaker;
-    pNewScript->pQuestAccept = &QuestAccept_npc_injured_rainspeaker;
+    pNewScript->pQuestAcceptNPC = &QuestAccept_npc_injured_rainspeaker;
     //pNewScript->pGossipHello = &GossipHello_npc_injured_rainspeaker;
     //pNewScript->pGossipSelect = &GossipSelect_npc_injured_rainspeaker;
     pNewScript->RegisterSelf();

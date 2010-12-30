@@ -2444,7 +2444,7 @@ void AddSC_boss_illidan()
 
     newscript = new Script;
     newscript->Name = "gameobject_cage_trap";
-    newscript->pGOHello = &GOHello_cage_trap;
+    newscript->pGOUse = &GOHello_cage_trap;
     newscript->RegisterSelf();
 
     newscript = new Script;

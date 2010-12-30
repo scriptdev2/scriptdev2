@@ -125,7 +125,7 @@ CreatureAI* GetAI_npc_lady_sylvanas_windrunner(Creature* pCreature)
     return new npc_lady_sylvanas_windrunnerAI(pCreature);
 }
 
-bool ChooseReward_npc_lady_sylvanas_windrunner(Player* pPlayer, Creature* pCreature, const Quest* pQuest, uint32 slot)
+bool QuestRewarded_npc_lady_sylvanas_windrunner(Player* pPlayer, Creature* pCreature, Quest const* pQuest)
 {
     if (pQuest->GetQuestId() == 9180)
     {
@@ -242,7 +242,7 @@ void AddSC_undercity()
     newscript = new Script;
     newscript->Name = "npc_lady_sylvanas_windrunner";
     newscript->GetAI = &GetAI_npc_lady_sylvanas_windrunner;
-    newscript->pChooseReward = &ChooseReward_npc_lady_sylvanas_windrunner;
+    newscript->pQuestRewardedNPC = &QuestRewarded_npc_lady_sylvanas_windrunner;
     newscript->RegisterSelf();
 
     newscript = new Script;

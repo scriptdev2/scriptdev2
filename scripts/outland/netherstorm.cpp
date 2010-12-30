@@ -312,7 +312,7 @@ CreatureAI* GetAI_npc_manaforge_control_console(Creature* pCreature)
 ######*/
 
 // TODO: clean up this workaround when mangos adds support to do it properly (with gossip selections instead of instant summon)
-bool GOHello_go_manaforge_control_console(Player* pPlayer, GameObject* pGo)
+bool GOUse_go_manaforge_control_console(Player* pPlayer, GameObject* pGo)
 {
     if (pGo->GetGoType() == GAMEOBJECT_TYPE_QUESTGIVER)
     {
@@ -962,7 +962,7 @@ void AddSC_netherstorm()
 
     pNewScript = new Script;
     pNewScript->Name = "go_manaforge_control_console";
-    pNewScript->pGOHello = &GOHello_go_manaforge_control_console;
+    pNewScript->pGOUse = &GOUse_go_manaforge_control_console;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
@@ -995,13 +995,13 @@ void AddSC_netherstorm()
     pNewScript = new Script;
     pNewScript->Name = "npc_bessy";
     pNewScript->GetAI = &GetAI_npc_bessy;
-    pNewScript->pQuestAccept = &QuestAccept_npc_bessy;
+    pNewScript->pQuestAcceptNPC = &QuestAccept_npc_bessy;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
     pNewScript->Name = "npc_maxx_a_million";
     pNewScript->GetAI = &GetAI_npc_maxx_a_million;
-    pNewScript->pQuestAccept = &QuestAccept_npc_maxx_a_million;
+    pNewScript->pQuestAcceptNPC = &QuestAccept_npc_maxx_a_million;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;

@@ -42,7 +42,7 @@ enum
     GO_DOOR         = 176594
 };
 
-bool GOHello_go_mausoleum_door(Player* pPlayer, GameObject* pGo)
+bool GOUse_go_mausoleum_door(Player* pPlayer, GameObject* pGo)
 {
     if (pPlayer->GetQuestStatus(QUEST_ULAG) != QUEST_STATUS_INCOMPLETE)
         return false;
@@ -57,7 +57,7 @@ bool GOHello_go_mausoleum_door(Player* pPlayer, GameObject* pGo)
     return false;
 }
 
-bool GOHello_go_mausoleum_trigger(Player* pPlayer, GameObject* pGo)
+bool GOUse_go_mausoleum_trigger(Player* pPlayer, GameObject* pGo)
 {
     if (pPlayer->GetQuestStatus(QUEST_ULAG) != QUEST_STATUS_INCOMPLETE)
         return false;
@@ -192,17 +192,17 @@ void AddSC_tirisfal_glades()
 
     newscript = new Script;
     newscript->Name = "go_mausoleum_door";
-    newscript->pGOHello = &GOHello_go_mausoleum_door;
+    newscript->pGOUse = &GOUse_go_mausoleum_door;
     newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "go_mausoleum_trigger";
-    newscript->pGOHello = &GOHello_go_mausoleum_trigger;
+    newscript->pGOUse = &GOUse_go_mausoleum_trigger;
     newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "npc_calvin_montague";
     newscript->GetAI = &GetAI_npc_calvin_montague;
-    newscript->pQuestAccept = &QuestAccept_npc_calvin_montague;
+    newscript->pQuestAcceptNPC = &QuestAccept_npc_calvin_montague;
     newscript->RegisterSelf();
 }

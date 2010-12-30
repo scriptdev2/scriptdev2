@@ -235,7 +235,7 @@ bool EffectDummyCreature_spell_boss_thermaplugg(Unit* pCaster, uint32 uiSpellId,
     return true;
 }
 
-bool GOHello_go_gnomeface_button(Player* pPlayer, GameObject* pGo)
+bool GOUse_go_gnomeface_button(Player* pPlayer, GameObject* pGo)
 {
     instance_gnomeregan* pInstance = (instance_gnomeregan*)pPlayer->GetInstanceData();
     if (!pInstance)
@@ -262,11 +262,11 @@ void AddSC_boss_thermaplugg()
     pNewScript = new Script;
     pNewScript->Name = "boss_thermaplugg";
     pNewScript->GetAI = &GetAI_boss_thermaplugg;
-    pNewScript->pEffectDummyCreature = &EffectDummyCreature_spell_boss_thermaplugg;
+    pNewScript->pEffectDummyNPC = &EffectDummyCreature_spell_boss_thermaplugg;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
     pNewScript->Name = "go_gnomeface_button";
-    pNewScript->pGOHello = &GOHello_go_gnomeface_button;
+    pNewScript->pGOUse = &GOUse_go_gnomeface_button;
     pNewScript->RegisterSelf();
 }

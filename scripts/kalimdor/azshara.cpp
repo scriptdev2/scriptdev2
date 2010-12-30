@@ -230,7 +230,7 @@ CreatureAI* GetAI_npc_depth_charge(Creature* pCreature)
 ## go_southfury_moonstone
 ######*/
 
-bool GOHello_go_southfury_moonstone(Player* pPlayer, GameObject* pGo)
+bool GOUse_go_southfury_moonstone(Player* pPlayer, GameObject* pGo)
 {
     //implicitTarget=48 not implemented as of writing this code, and manual summon may be just ok for our purpose
     //pPlayer->CastSpell(pPlayer,SPELL_SUMMON_RIZZLE,false);
@@ -376,7 +376,7 @@ void AddSC_azshara()
 
     newscript = new Script;
     newscript->Name = "go_southfury_moonstone";
-    newscript->pGOHello = &GOHello_go_southfury_moonstone;
+    newscript->pGOUse = &GOUse_go_southfury_moonstone;
     newscript->RegisterSelf();
 
     newscript = new Script;
