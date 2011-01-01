@@ -2109,7 +2109,7 @@ struct MANGOS_DLL_DECL cage_trap_triggerAI : public ScriptedAI
     }
 };
 
-bool GOHello_cage_trap(Player* pPlayer, GameObject* pGo)
+bool GOUse_go_cage_trap(Player* pPlayer, GameObject* pGo)
 {
     float x, y, z;
     pPlayer->GetPosition(x, y, z);
@@ -2444,7 +2444,7 @@ void AddSC_boss_illidan()
 
     newscript = new Script;
     newscript->Name = "gameobject_cage_trap";
-    newscript->pGOUse = &GOHello_cage_trap;
+    newscript->pGOUse = &GOUse_go_cage_trap;
     newscript->RegisterSelf();
 
     newscript = new Script;

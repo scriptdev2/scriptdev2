@@ -927,7 +927,7 @@ enum
     SAY_THANKS_4              = -1000593
 };
 
-bool GOHello_veil_skith_cage(Player* pPlayer, GameObject* pGo)
+bool GOUse_go_veil_skith_cage(Player* pPlayer, GameObject* pGo)
 {
     if (pPlayer->GetQuestStatus(QUEST_MISSING_FRIENDS) == QUEST_STATUS_INCOMPLETE)
     {
@@ -1041,7 +1041,7 @@ void AddSC_terokkar_forest()
 
     newscript = new Script;
     newscript->Name = "go_veil_skith_cage";
-    newscript->pGOUse =  &GOHello_veil_skith_cage;
+    newscript->pGOUse = &GOUse_go_veil_skith_cage;
     newscript->RegisterSelf();
 
     newscript = new Script;

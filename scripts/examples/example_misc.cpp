@@ -41,7 +41,7 @@ bool ItemUse_example_item(Player* pPlayer, Item* pItem, SpellCastTargets const& 
     return true;
 }
 
-bool GOHello_example_go_teleporter(Player* pPlayer, GameObject* pGo)
+bool GOUse_example_go_teleporter(Player* pPlayer, GameObject* pGo)
 {
     pPlayer->TeleportTo(0, 1807.07f, 336.105f, 70.3975f, 0.0f);
     return false;
@@ -63,6 +63,6 @@ void AddSC_example_misc()
 
     pNewScript = new Script;
     pNewScript->Name = "example_go_teleporter";
-    pNewScript->pGOUse = &GOHello_example_go_teleporter;
+    pNewScript->pGOUse = &GOUse_example_go_teleporter;
     pNewScript->RegisterSelf(false);
 }
