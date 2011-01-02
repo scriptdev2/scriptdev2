@@ -1743,6 +1743,9 @@
     <ClCompile Include="..\include\sc_instance.cpp">
       <Filter>include</Filter>
     </ClCompile>
+    <ClCompile Include="..\system\MangosdRev.cpp">
+      <Filter>system</Filter>
+    </ClCompile>
     <ClCompile Include="..\system\ScriptLoader.cpp">
       <Filter>system</Filter>
     </ClCompile>

@@ -701,6 +701,9 @@
     <ClCompile Include="..\include\sc_creature.cpp" />
     <ClCompile Include="..\include\sc_grid_searchers.cpp" />
     <ClCompile Include="..\include\sc_instance.cpp" />
+    <ClCompile Include="..\system\MangosdRev.cpp">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="..\system\ScriptLoader.cpp" />
     <ClCompile Include="..\system\system.cpp" />
     <ClCompile Include="..\ScriptMgr.cpp" />
