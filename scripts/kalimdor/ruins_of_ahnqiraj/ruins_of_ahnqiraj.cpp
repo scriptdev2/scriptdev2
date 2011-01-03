@@ -38,7 +38,7 @@ enum
     SPELL_THUNDER_CLAP           = 26554,
     SPELL_REFLECT_ARFR           = 13022,
     SPELL_REFLECT_FSSH           = 19595,
-    SPELL_ENRAGE                 = 8559,
+    SPELL_ENRAGE                 = 8599,
     SPELL_EXPLODE                = 25698,
 
     SPELL_SUMMON_ANUB_SWARMGUARD = 17430,
