@@ -805,7 +805,7 @@ UPDATE creature_template SET ScriptName='boss_sir_zeliek' WHERE entry=16063;
 UPDATE creature_template SET ScriptName='boss_lady_blaumeux' WHERE entry=16065;
 UPDATE creature_template SET ScriptName='boss_rivendare_naxx' WHERE entry=30549;
 UPDATE creature_template SET ScriptName='boss_patchwerk' WHERE entry=16028;
--- UPDATE creature_template SET ScriptName='boss_grobbulus' WHERE entry=15931;
+UPDATE creature_template SET ScriptName='boss_grobbulus' WHERE entry=15931;
 UPDATE creature_template SET ScriptName='boss_gluth' WHERE entry=15932;
 -- UPDATE creature_template SET ScriptName='boss_thaddius' WHERE entry=15928;
 -- UPDATE creature_template SET ScriptName='boss_stalagg' WHERE entry=15929;
