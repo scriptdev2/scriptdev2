@@ -180,7 +180,7 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
                         i=3;
             }
             if (target)                                     // cast on self (see below)
-                target->CastSpell(target,SPELL_BURNINGADRENALINE,1);
+                target->CastSpell(target, SPELL_BURNINGADRENALINE, true);
 
             BurningAdrenalineCaster_Timer = 15000;
         }else BurningAdrenalineCaster_Timer -= diff;
@@ -190,7 +190,7 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
         {
             // have the victim cast the spell on himself otherwise the third effect aura will be applied
             // to Vael instead of the player
-            m_creature->getVictim()->CastSpell(m_creature->getVictim(),SPELL_BURNINGADRENALINE,1);
+            m_creature->getVictim()->CastSpell(m_creature->getVictim(), SPELL_BURNINGADRENALINE, true);
 
             BurningAdrenalineTank_Timer = 45000;
         }else BurningAdrenalineTank_Timer -= diff;
