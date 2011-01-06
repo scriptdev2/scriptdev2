@@ -16,37 +16,39 @@
 
 /* ScriptData
 SDName: Boss_Talon_King_Ikiss
-SD%Complete: 80
-SDComment: Heroic supported. Some details missing, but most are spell related.
+SD%Complete: 100
+SDComment:
 SDCategory: Auchindoun, Sethekk Halls
 EndScriptData */
 
 #include "precompiled.h"
 #include "sethekk_halls.h"
 
-#define SAY_INTRO                   -1556007
-#define SAY_AGGRO_1                 -1556008
-#define SAY_AGGRO_2                 -1556009
-#define SAY_AGGRO_3                 -1556010
-#define SAY_SLAY_1                  -1556011
-#define SAY_SLAY_2                  -1556012
-#define SAY_DEATH                   -1556013
-#define EMOTE_ARCANE_EXP            -1556015
+enum
+{
+    SAY_INTRO                   = -1556007,
+    SAY_AGGRO_1                 = -1556008,
+    SAY_AGGRO_2                 = -1556009,
+    SAY_AGGRO_3                 = -1556010,
+    SAY_SLAY_1                  = -1556011,
+    SAY_SLAY_2                  = -1556012,
+    SAY_DEATH                   = -1556013,
+    EMOTE_ARCANE_EXP            = -1556015,
 
-#define SPELL_BLINK                 38194
-#define SPELL_BLINK_TELEPORT        38203
-#define SPELL_MANA_SHIELD           38151
-#define SPELL_ARCANE_BUBBLE         9438
-#define H_SPELL_SLOW                35032
+    SPELL_BLINK                 = 38194,
+    SPELL_MANA_SHIELD           = 38151,
+    SPELL_ARCANE_BUBBLE         = 9438,
+    SPELL_SLOW_H                = 35032,
 
-#define SPELL_POLYMORPH             38245
-#define H_SPELL_POLYMORPH           43309
+    SPELL_POLYMORPH             = 38245,
+    SPELL_POLYMORPH_H           = 43309,
 
-#define SPELL_ARCANE_VOLLEY         35059
-#define H_SPELL_ARCANE_VOLLEY       40424
+    SPELL_ARCANE_VOLLEY         = 35059,
+    SPELL_ARCANE_VOLLEY_H       = 40424,
 
-#define SPELL_ARCANE_EXPLOSION      38197
-#define H_SPELL_ARCANE_EXPLOSION    40425
+    SPELL_ARCANE_EXPLOSION      = 38197,
+    SPELL_ARCANE_EXPLOSION_H    = 40425,
+};
 
 struct MANGOS_DLL_DECL boss_talon_king_ikissAI : public ScriptedAI
 {
@@ -54,55 +56,48 @@ struct MANGOS_DLL_DECL boss_talon_king_ikissAI : public ScriptedAI
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
+        m_bIntro = false;
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
     bool m_bIsRegularMode;
 
-    uint32 ArcaneVolley_Timer;
-    uint32 Sheep_Timer;
-    uint32 Blink_Timer;
-    uint32 Slow_Timer;
+    uint32 m_uiArcaneVolleyTimer;
+    uint32 m_uiSheepTimer;
+    uint32 m_uiBlinkTimer;
+    uint32 m_uiSlowTimer;
 
-    bool ManaShield;
-    bool Blink;
-    bool Intro;
+    bool m_bManaShield;
+    bool m_bBlink;
+    bool m_bIntro;
 
     void Reset()
     {
-        ArcaneVolley_Timer = 5000;
-        Sheep_Timer = 8000;
-        Blink_Timer = 35000;
-        Slow_Timer = urand(15000, 30000);
-        Blink = false;
-        Intro = false;
-        ManaShield = false;
+        m_uiArcaneVolleyTimer = 5000;
+        m_uiSheepTimer = 8000;
+        m_uiBlinkTimer = 35000;
+        m_uiSlowTimer = urand(15000, 30000);
+
+        m_bBlink = false;
+        m_bManaShield = false;
     }
 
-    void MoveInLineOfSight(Unit *who)
+    void MoveInLineOfSight(Unit* pWho)
     {
-        if (!m_creature->getVictim() && who->isTargetableForAttack() && (m_creature->IsHostileTo(who)) && who->isInAccessablePlaceFor(m_creature))
+        if (!m_creature->getVictim() && pWho->isTargetableForAttack() && (m_creature->IsHostileTo(pWho)) && pWho->isInAccessablePlaceFor(m_creature))
         {
-            if (!Intro && m_creature->IsWithinDistInMap(who, 100))
+            if (!m_bIntro && m_creature->IsWithinDistInMap(pWho, 100.0f))
             {
-                Intro = true;
+                m_bIntro = true;
                 DoScriptText(SAY_INTRO, m_creature);
             }
-
-            if (!m_creature->CanFly() && m_creature->GetDistanceZ(who) > CREATURE_Z_ATTACK_RANGE)
-                return;
-
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->IsWithinLOSInMap(who))
-            {
-                who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-                AttackStart(who);
-            }
         }
+
+        ScriptedAI::MoveInLineOfSight(pWho);
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
         switch(urand(0, 2))
         {
@@ -115,7 +110,7 @@ struct MANGOS_DLL_DECL boss_talon_king_ikissAI : public ScriptedAI
             m_pInstance->SetData(TYPE_IKISS, IN_PROGRESS);
     }
 
-    void JustDied(Unit* Killer)
+    void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -129,80 +124,76 @@ struct MANGOS_DLL_DECL boss_talon_king_ikissAI : public ScriptedAI
             m_pInstance->SetData(TYPE_IKISS, FAIL);
     }
 
-    void KilledUnit(Unit* victim)
+    void KilledUnit(Unit* pVctim)
     {
         DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (Blink)
+        if (EnterEvadeIfOutOfCombatArea(uiDiff))
+            return;
+
+        if (m_bBlink)
         {
-            DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_ARCANE_EXPLOSION : H_SPELL_ARCANE_EXPLOSION);
-            m_creature->CastSpell(m_creature,SPELL_ARCANE_BUBBLE,true);
-            Blink = false;
+            DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_ARCANE_EXPLOSION : SPELL_ARCANE_EXPLOSION_H);
+            DoCastSpellIfCan(m_creature, SPELL_ARCANE_BUBBLE, CAST_TRIGGERED);
+            DoResetThreat();
+            m_bBlink = false;
         }
 
-        if (ArcaneVolley_Timer < diff)
+        if (m_uiArcaneVolleyTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_ARCANE_VOLLEY : H_SPELL_ARCANE_VOLLEY);
-            ArcaneVolley_Timer = urand(7000, 12000);
-        }else ArcaneVolley_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_ARCANE_VOLLEY : SPELL_ARCANE_VOLLEY_H) == CAST_OK)
+                m_uiArcaneVolleyTimer = urand(7000, 12000);
+        }
+        else
+            m_uiArcaneVolleyTimer -= uiDiff;
 
-        if (Sheep_Timer < diff)
+        if (m_uiSheepTimer < uiDiff)
         {
-            //second top aggro target in normal, random target in heroic correct?
-            Unit *target = NULL;
-            if (m_bIsRegularMode ? target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO, 1) : target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-                DoCastSpellIfCan(target, m_bIsRegularMode ? SPELL_POLYMORPH : H_SPELL_POLYMORPH);
-            Sheep_Timer = urand(15000, 17500);
-        }else Sheep_Timer -= diff;
+            // second top aggro target in normal, random target in heroic
+            if (Unit* pTarget = m_bIsRegularMode ? m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO, 1) : m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_POLYMORPH : SPELL_POLYMORPH_H);
+            m_uiSheepTimer = urand(15000, 17500);
+        }
+        else
+            m_uiSheepTimer -= uiDiff;
 
-        //may not be correct time to cast
-        if (!ManaShield && m_creature->GetHealthPercent() < 20.0f)
+        if (!m_bManaShield && m_creature->GetHealthPercent() < 20.0f)
         {
-            DoCastSpellIfCan(m_creature,SPELL_MANA_SHIELD);
-            ManaShield = true;
+            if (DoCastSpellIfCan(m_creature, SPELL_MANA_SHIELD) == CAST_OK)
+                m_bManaShield = true;
         }
 
         if (!m_bIsRegularMode)
         {
-            if (Slow_Timer < diff)
+            if (m_uiSlowTimer < uiDiff)
             {
-                DoCastSpellIfCan(m_creature,H_SPELL_SLOW);
-                Slow_Timer = urand(15000, 40000);
-            }else Slow_Timer -= diff;
+                if (DoCastSpellIfCan(m_creature, SPELL_SLOW_H) == CAST_OK)
+                    m_uiSlowTimer = urand(15000, 30000);
+            }
+            else
+                m_uiSlowTimer -= uiDiff;
         }
 
-        if (Blink_Timer < diff)
+        if (m_uiBlinkTimer < uiDiff)
         {
             DoScriptText(EMOTE_ARCANE_EXP, m_creature);
 
-            if (Unit *target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
+            if (DoCastSpellIfCan(m_creature, SPELL_BLINK, CAST_INTERRUPT_PREVIOUS) == CAST_OK)
             {
-                if (m_creature->IsNonMeleeSpellCasted(false))
-                    m_creature->InterruptNonMeleeSpells(false);
-
-                //Spell doesn't work, but we use for visual effect at least
-                DoCastSpellIfCan(target,SPELL_BLINK);
-
-                float X = target->GetPositionX();
-                float Y = target->GetPositionY();
-                float Z = target->GetPositionZ();
-
-                m_creature->GetMap()->CreatureRelocation(m_creature,X,Y,Z,0.0f);
-                m_creature->SendMonsterMove(X, Y, Z, SPLINETYPE_NORMAL, SPLINEFLAG_WALKMODE, 1);
-
-                DoCastSpellIfCan(target,SPELL_BLINK_TELEPORT);
-                Blink = true;
+                m_bBlink = true;
+                m_uiBlinkTimer = urand(35000, 40000);
             }
-            Blink_Timer = urand(35000, 40000);
-        }else Blink_Timer -= diff;
+        }
+        else
+            m_uiBlinkTimer -= uiDiff;
 
-        if (!Blink)
+        if (!m_bBlink)
             DoMeleeAttackIfReady();
     }
 };
@@ -214,9 +205,10 @@ CreatureAI* GetAI_boss_talon_king_ikiss(Creature* pCreature)
 
 void AddSC_boss_talon_king_ikiss()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_talon_king_ikiss";
-    newscript->GetAI = &GetAI_boss_talon_king_ikiss;
-    newscript->RegisterSelf();
+    Script* pNewscript;
+
+    pNewscript = new Script;
+    pNewscript->Name = "boss_talon_king_ikiss";
+    pNewscript->GetAI = &GetAI_boss_talon_king_ikiss;
+    pNewscript->RegisterSelf();
 }

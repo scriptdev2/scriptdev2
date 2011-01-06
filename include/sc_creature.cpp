@@ -487,10 +487,11 @@ void ScriptedAI::SetCombatMovement(bool bCombatMove)
 // It is assumed the information is found elswehere and can be handled by mangos. So far no luck finding such information/way to extract it.
 enum
 {
-    NPC_BROODLORD   = 12017,
-    NPC_VOID_REAVER = 19516,
-    NPC_JAN_ALAI    = 23578,
-    NPC_SARTHARION  = 28860
+    NPC_BROODLORD               = 12017,
+    NPC_VOID_REAVER             = 19516,
+    NPC_JAN_ALAI                = 23578,
+    NPC_SARTHARION              = 28860,
+    NPC_TALON_KING_IKISS        = 18473,
 };
 
 bool ScriptedAI::EnterEvadeIfOutOfCombatArea(const uint32 uiDiff)
@@ -526,6 +527,12 @@ bool ScriptedAI::EnterEvadeIfOutOfCombatArea(const uint32 uiDiff)
             break;
         case NPC_SARTHARION:                                // sartharion (calculate box)
             if (fX > 3218.86f && fX < 3275.69f && fY < 572.40f && fY > 484.68f)
+                return false;
+            break;
+        case NPC_TALON_KING_IKISS:
+            float fX, fY, fZ;
+            m_creature->GetRespawnCoord(fX, fY, fZ);
+            if (m_creature->GetDistance2d(fX, fY) < 70.0f)
                 return false;
             break;
         default:
