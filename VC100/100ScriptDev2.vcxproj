@@ -617,7 +617,7 @@
     <ClCompile Include="..\scripts\outland\auchindoun\mana_tombs\boss_pandemonius.cpp" />
     <ClCompile Include="..\scripts\outland\auchindoun\sethekk_halls\boss_anzu.cpp" />
     <ClCompile Include="..\scripts\outland\auchindoun\sethekk_halls\boss_darkweaver_syth.cpp" />
-    <ClCompile Include="..\scripts\outland\auchindoun\sethekk_halls\boss_tailonking_ikiss.cpp" />
+    <ClCompile Include="..\scripts\outland\auchindoun\sethekk_halls\boss_talon_king_ikiss.cpp" />
     <ClCompile Include="..\scripts\outland\auchindoun\sethekk_halls\instance_sethekk_halls.cpp" />
     <ClCompile Include="..\scripts\outland\auchindoun\shadow_labyrinth\boss_ambassador_hellmaw.cpp" />
     <ClCompile Include="..\scripts\outland\auchindoun\shadow_labyrinth\boss_blackheart_the_inciter.cpp" />

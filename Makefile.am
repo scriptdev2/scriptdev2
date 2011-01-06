@@ -501,7 +501,7 @@ scripts/outland/auchindoun/mana_tombs/boss_nexusprince_shaffar.cpp \
 scripts/outland/auchindoun/mana_tombs/boss_pandemonius.cpp \
 scripts/outland/auchindoun/sethekk_halls/boss_anzu.cpp \
 scripts/outland/auchindoun/sethekk_halls/boss_darkweaver_syth.cpp \
-scripts/outland/auchindoun/sethekk_halls/boss_tailonking_ikiss.cpp \
+scripts/outland/auchindoun/sethekk_halls/boss_talon_king_ikiss.cpp \
 scripts/outland/auchindoun/sethekk_halls/instance_sethekk_halls.cpp \
 scripts/outland/auchindoun/sethekk_halls/sethekk_halls.h \
 scripts/outland/auchindoun/shadow_labyrinth/boss_ambassador_hellmaw.cpp \
