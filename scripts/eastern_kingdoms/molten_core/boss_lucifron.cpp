@@ -22,55 +22,95 @@ SDCategory: Molten Core
 EndScriptData */
 
 #include "precompiled.h"
+#include "molten_core.h"
 
-#define SPELL_IMPENDINGDOOM 19702
-#define SPELL_LUCIFRONCURSE 19703
-#define SPELL_SHADOWSHOCK   20603
+enum
+{
+    SPELL_IMPENDINGDOOM     = 19702,
+    SPELL_LUCIFRONCURSE     = 19703,
+    SPELL_SHADOWSHOCK       = 19460
+};
 
 struct MANGOS_DLL_DECL boss_lucifronAI : public ScriptedAI
 {
-    boss_lucifronAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+    boss_lucifronAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        Reset();
+    }
 
-    uint32 ImpendingDoom_Timer;
-    uint32 LucifronCurse_Timer;
-    uint32 ShadowShock_Timer;
+    ScriptedInstance* m_pInstance;
+
+    uint32 m_uiImpendingDoomTimer;
+    uint32 m_uiLucifronCurseTimer;
+    uint32 m_uiShadowShockTimer;
 
     void Reset()
     {
-        ImpendingDoom_Timer = 10000;                        //Initial cast after 10 seconds so the debuffs alternate
-        LucifronCurse_Timer = 20000;                        //Initial cast after 20 seconds
-        ShadowShock_Timer = 6000;                           //6 seconds
+        m_uiImpendingDoomTimer = 10000;
+        m_uiLucifronCurseTimer = 20000;
+        m_uiShadowShockTimer   = 6000;
     }
 
-    void UpdateAI(const uint32 diff)
+    void Aggro(Unit* pWho)
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_LUCIFRON, IN_PROGRESS);
+
+        m_creature->CallForHelp(RANGE_CALL_FOR_HELP);
+    }
+
+    void JustDied(Unit* pKiller)
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_LUCIFRON, DONE);
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_LUCIFRON, FAIL);
+    }
+
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //Impending doom timer
-        if (ImpendingDoom_Timer < diff)
+        // Impending doom timer
+        if (m_uiImpendingDoomTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_IMPENDINGDOOM);
-            ImpendingDoom_Timer = 20000;
-        }else ImpendingDoom_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature, SPELL_IMPENDINGDOOM) == CAST_OK)
+                m_uiImpendingDoomTimer = 20000;
+        }
+        else
+            m_uiImpendingDoomTimer -= uiDiff;
 
-        //Lucifron's curse timer
-        if (LucifronCurse_Timer < diff)
+        // Lucifron's curse timer
+        if (m_uiLucifronCurseTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_LUCIFRONCURSE);
-            LucifronCurse_Timer = 15000;
-        }else LucifronCurse_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature, SPELL_LUCIFRONCURSE) == CAST_OK)
+                m_uiLucifronCurseTimer = 20000;
+        }
+        else
+            m_uiLucifronCurseTimer -= uiDiff;
 
-        //Shadowshock
-        if (ShadowShock_Timer < diff)
+        // Shadowshock
+        if (m_uiShadowShockTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_SHADOWSHOCK);
-            ShadowShock_Timer = 6000;
-        }else ShadowShock_Timer -= diff;
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_SHADOWSHOCK) == CAST_OK)
+                    m_uiShadowShockTimer = 6000;
+            }
+        }
+        else
+            m_uiShadowShockTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
 };
+
 CreatureAI* GetAI_boss_lucifron(Creature* pCreature)
 {
     return new boss_lucifronAI(pCreature);
@@ -78,9 +118,10 @@ CreatureAI* GetAI_boss_lucifron(Creature* pCreature)
 
 void AddSC_boss_lucifron()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_lucifron";
-    newscript->GetAI = &GetAI_boss_lucifron;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_lucifron";
+    pNewScript->GetAI = &GetAI_boss_lucifron;
+    pNewScript->RegisterSelf();
 }

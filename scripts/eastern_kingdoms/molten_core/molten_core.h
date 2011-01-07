@@ -37,7 +37,9 @@ enum
     DATA_GARR               = 13,
     DATA_MAJORDOMO          = 14,
 
-    DATA_BOSSES_DEAD_CHECK  = 15
+    DATA_BOSSES_DEAD_CHECK  = 15,
 };
+
+static const float RANGE_CALL_FOR_HELP     = 20.0f;
 
 #endif
