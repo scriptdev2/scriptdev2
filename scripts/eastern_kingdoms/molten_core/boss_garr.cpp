@@ -29,12 +29,13 @@ enum
     // Garr spells
     SPELL_ANTIMAGICPULSE        = 19492,
     SPELL_MAGMASHACKLES         = 19496,
-    SPELL_ENRAGE                = 19516,                   // Stacking enrage (stacks to 10 times)
+    SPELL_ENRAGE                = 19516,                    // TODO Stacking enrage (stacks to 10 times)
 
     // Add spells
     SPELL_ERUPTION              = 19497,
+    SPELL_MASSIVE_ERUPTION      = 20483,                    // TODO possible on death
     SPELL_IMMOLATE              = 20294,
-    SPELL_SEPARATION_ANXIETY    = 23492,                   // Used if separated too far from Garr
+    SPELL_SEPARATION_ANXIETY    = 23492,                    // Used if separated too far from Garr, 21095 use unknown.
 };
 
 struct MANGOS_DLL_DECL boss_garrAI : public ScriptedAI
@@ -142,7 +143,7 @@ struct MANGOS_DLL_DECL mob_fireswornAI : public ScriptedAI
         {
             // Distance guesswork, but should be ok
             Creature* pGarr = m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_GARR));
-            if (pGarr && !m_creature->IsWithinDist2d(pGarr->GetPositionX(), pGarr->GetPositionY(), 50.0f))
+            if (pGarr && pGarr->isAlive() && !m_creature->IsWithinDist2d(pGarr->GetPositionX(), pGarr->GetPositionY(), 50.0f))
                 DoCastSpellIfCan(m_creature, SPELL_SEPARATION_ANXIETY, CAST_TRIGGERED);
 
             m_uiSeparationCheckTimer = 5000;
