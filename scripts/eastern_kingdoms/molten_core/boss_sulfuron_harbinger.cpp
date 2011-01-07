@@ -17,23 +17,26 @@
 /* ScriptData
 SDName: Boss_Sulfuron_Harbringer
 SD%Complete: 80
-SDComment: Adds NYI
+SDComment: Spells Dark strike and Flamespear need confirmation
 SDCategory: Molten Core
 EndScriptData */
 
 #include "precompiled.h"
 #include "molten_core.h"
 
-#define SPELL_DARKSTRIKE            19777
-#define SPELL_DEMORALIZINGSHOUT     19778
-#define SPELL_INSPIRE               19779
-#define SPELL_KNOCKDOWN             19780
-#define SPELL_FLAMESPEAR            19781
+enum
+{
+    SPELL_DARK_STRIKE           = 19777,                    // Wowhead Linked to add - need confirmation!
+    SPELL_DEMORALIZING_SHOUT    = 19778,
+    SPELL_INSPIRE               = 19779,
+    SPELL_HAND_OF_RAGNAROS      = 19780,
+    SPELL_FLAMESPEAR            = 19781,
 
-//Adds Spells
-#define SPELL_HEAL                  19775
-#define SPELL_SHADOWWORDPAIN        19776
-#define SPELL_IMMOLATE              20294
+    // Adds Spells
+    SPELL_HEAL                  = 19775,
+    SPELL_SHADOWWORD_PAIN       = 19776,
+    SPELL_IMMOLATE              = 20294
+};
 
 struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
 {
@@ -43,77 +46,107 @@ struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
         Reset();
     }
 
-    uint32 Darkstrike_Timer;
-    uint32 DemoralizingShout_Timer;
-    uint32 Inspire_Timer;
-    uint32 Knockdown_Timer;
-    uint32 Flamespear_Timer;
     ScriptedInstance* m_pInstance;
+
+    uint32 m_uiDarkstrikeTimer;
+    uint32 m_uiDemoralizingShoutTimer;
+    uint32 m_uiInspireTimer;
+    uint32 m_uiKnockdownTimer;
+    uint32 m_uiFlamespearTimer;
 
     void Reset()
     {
-        Darkstrike_Timer=10000;                             //These times are probably wrong
-        DemoralizingShout_Timer = 15000;
-        Inspire_Timer = 13000;
-        Knockdown_Timer = 6000;
-        Flamespear_Timer = 2000;
+        m_uiDarkstrikeTimer = 10000;
+        m_uiDemoralizingShoutTimer = 15000;
+        m_uiInspireTimer = 3000;
+        m_uiKnockdownTimer = 6000;
+        m_uiFlamespearTimer = 2000;
     }
 
-    void UpdateAI(const uint32 diff)
+    void Aggro(Unit* pWho)
+    {
+        if(m_pInstance)
+            m_pInstance->SetData(TYPE_SULFURON, IN_PROGRESS);
+
+        m_creature->CallForHelp(RANGE_CALL_FOR_HELP);
+    }
+
+    void JustDied(Unit* pKiller)
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_SULFURON, DONE);
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_SULFURON, FAIL);
+    }
+
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //DemoralizingShout_Timer
-        if (DemoralizingShout_Timer < diff)
+        // Demoralizing Shout Timer
+        if (m_uiDemoralizingShoutTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_DEMORALIZINGSHOUT);
-            DemoralizingShout_Timer = urand(15000, 20000);
-        }else DemoralizingShout_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature, SPELL_DEMORALIZING_SHOUT) == CAST_OK)
+                m_uiDemoralizingShoutTimer = urand(15000, 20000);
+        }
+        else
+            m_uiDemoralizingShoutTimer -= uiDiff;
 
-        //Inspire_Timer
-        if (Inspire_Timer < diff)
+        // Inspire Timer
+        if (m_uiInspireTimer < uiDiff)
         {
-            Creature* target = NULL;
-            std::list<Creature*> pList = DoFindFriendlyMissingBuff(45.0f,SPELL_INSPIRE);
+            Creature* pTarget = NULL;
+            std::list<Creature*> pList = DoFindFriendlyMissingBuff(45.0f, SPELL_INSPIRE);
             if (!pList.empty())
             {
                 std::list<Creature*>::iterator i = pList.begin();
                 advance(i, (rand()%pList.size()));
-                target = (*i);
+                pTarget = (*i);
             }
 
-            if (target)
-                DoCastSpellIfCan(target,SPELL_INSPIRE);
+            if (!pTarget)
+                pTarget = m_creature;
 
-            DoCastSpellIfCan(m_creature,SPELL_INSPIRE);
+            if (DoCastSpellIfCan(pTarget, SPELL_INSPIRE) == CAST_OK)
+                m_uiInspireTimer = 10000;
+        }
+        else
+            m_uiInspireTimer -= uiDiff;
 
-            Inspire_Timer = urand(20000, 26000);
-        }else Inspire_Timer -= diff;
-
-        //Knockdown_Timer
-        if (Knockdown_Timer < diff)
+        // Hand of Ragnaros Timer
+        if (m_uiKnockdownTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_KNOCKDOWN);
-            Knockdown_Timer = urand(12000, 15000);
-        }else Knockdown_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature, SPELL_HAND_OF_RAGNAROS) == CAST_OK)
+                m_uiKnockdownTimer = urand(12000, 15000);
+        }
+        else
+            m_uiKnockdownTimer -= uiDiff;
 
-        //Flamespear_Timer
-        if (Flamespear_Timer < diff)
+        // Flamespear Timer
+        if (m_uiFlamespearTimer < uiDiff)
         {
-            Unit* target = NULL;
-            target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
-            if (target) DoCastSpellIfCan(target,SPELL_FLAMESPEAR);
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_FLAMESPEAR) == CAST_OK)
+                    m_uiFlamespearTimer = urand(12000, 16000);
+            }
+        }
+        else
+            m_uiFlamespearTimer -= uiDiff;
 
-            Flamespear_Timer = urand(12000, 16000);
-        }else Flamespear_Timer -= diff;
-
-        //DarkStrike_Timer
-        if (Darkstrike_Timer < diff)
+        // Dark Strike Timer
+        if (m_uiDarkstrikeTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature, SPELL_DARKSTRIKE);
-            Darkstrike_Timer = urand(15000, 18000);
-        }else Darkstrike_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_DARK_STRIKE) == CAST_OK)
+                m_uiDarkstrikeTimer = urand(15000, 18000);
+        }
+        else
+            m_uiDarkstrikeTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
@@ -127,55 +160,59 @@ struct MANGOS_DLL_DECL mob_flamewaker_priestAI : public ScriptedAI
         Reset();
     }
 
-    uint32 Heal_Timer;
-    uint32 ShadowWordPain_Timer;
-    uint32 Immolate_Timer;
+    uint32 m_uiHealTimer;
+    uint32 m_uiShadowWordPainTimer;
+    uint32 m_uiImmolateTimer;
 
     ScriptedInstance* m_pInstance;
 
     void Reset()
     {
-        Heal_Timer = urand(15000, 30000);
-        ShadowWordPain_Timer = 2000;
-        Immolate_Timer = 8000;
+        m_uiHealTimer = urand(15000, 30000);
+        m_uiShadowWordPainTimer = 2000;
+        m_uiImmolateTimer = 8000;
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //Casting Heal to Sulfuron or other Guards.
-        if (Heal_Timer < diff)
+        // Casting Heal to Sulfuron or other Guards.
+        if (m_uiHealTimer < uiDiff)
         {
-            Unit* pUnit = DoSelectLowestHpFriendly(60.0f, 1);
-            if (!pUnit)
-                return;
+            if (Unit* pUnit = DoSelectLowestHpFriendly(60.0f, 1))
+            {
+                if (DoCastSpellIfCan(pUnit, SPELL_HEAL) == CAST_OK)
+                    m_uiHealTimer = urand(15000, 20000);
+            }
+        }
+        else
+            m_uiHealTimer -= uiDiff;
 
-            DoCastSpellIfCan(pUnit, SPELL_HEAL);
-
-            Heal_Timer = urand(15000, 20000);
-        }else Heal_Timer -= diff;
-
-        //ShadowWordPain_Timer
-        if (ShadowWordPain_Timer < diff)
+        // ShadowWord Pain Timer
+        if (m_uiShadowWordPainTimer < uiDiff)
         {
-            Unit* target = NULL;
-            target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
-            if (target) DoCastSpellIfCan(target,SPELL_SHADOWWORDPAIN);
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_SHADOWWORD_PAIN) == CAST_OK)
+                    m_uiShadowWordPainTimer = urand(18000, 26000);
+            }
+        }
+        else
+            m_uiShadowWordPainTimer -= uiDiff;
 
-            ShadowWordPain_Timer = urand(18000, 26000);
-        }else ShadowWordPain_Timer -= diff;
-
-        //Immolate_Timer
-        if (Immolate_Timer < diff)
+        // Immolate Timer
+        if (m_uiImmolateTimer < uiDiff)
         {
-            Unit* target = NULL;
-            target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
-            if (target) DoCastSpellIfCan(target,SPELL_IMMOLATE);
-
-            Immolate_Timer = urand(15000, 25000);
-        }else Immolate_Timer -= diff;
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_IMMOLATE) == CAST_OK)
+                    m_uiImmolateTimer = urand(15000, 25000);
+            }
+        }
+        else
+            m_uiImmolateTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
@@ -193,15 +230,15 @@ CreatureAI* GetAI_mob_flamewaker_priest(Creature* pCreature)
 
 void AddSC_boss_sulfuron()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_sulfuron";
-    newscript->GetAI = &GetAI_boss_sulfuron;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_sulfuron";
+    pNewScript->GetAI = &GetAI_boss_sulfuron;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_flamewaker_priest";
-    newscript->GetAI = &GetAI_mob_flamewaker_priest;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_flamewaker_priest";
+    pNewScript->GetAI = &GetAI_mob_flamewaker_priest;
+    pNewScript->RegisterSelf();
 }

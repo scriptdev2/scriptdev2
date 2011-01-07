@@ -17,63 +17,105 @@
 /* ScriptData
 SDName: Boss_Gehennas
 SD%Complete: 90
-SDComment: Adds MC NYI
+SDComment:
 SDCategory: Molten Core
 EndScriptData */
 
 #include "precompiled.h"
+#include "molten_core.h"
 
-#define SPELL_SHADOWBOLT            19728
-#define SPELL_RAINOFFIRE            19717
-#define SPELL_GEHENNASCURSE         19716
+enum
+{
+    SPELL_SHADOW_BOLT           = 19728,                    // 19729 exists too, but can be reflected
+    SPELL_RAIN_OF_FIRE          = 19717,
+    SPELL_GEHENNAS_CURSE        = 19716
+};
 
 struct MANGOS_DLL_DECL boss_gehennasAI : public ScriptedAI
 {
-    boss_gehennasAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+    boss_gehennasAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        Reset();
+    }
 
-    uint32 ShadowBolt_Timer;
-    uint32 RainOfFire_Timer;
-    uint32 GehennasCurse_Timer;
+    ScriptedInstance* m_pInstance;
+
+    uint32 m_uiShadowBoltTimer;
+    uint32 m_uiRainOfFireTimer;
+    uint32 m_uiGehennasCurseTimer;
 
     void Reset()
     {
-        ShadowBolt_Timer = 6000;
-        RainOfFire_Timer = 10000;
-        GehennasCurse_Timer = 12000;
+        m_uiShadowBoltTimer = 6000;
+        m_uiRainOfFireTimer = 10000;
+        m_uiGehennasCurseTimer = 12000;
     }
 
-    void UpdateAI(const uint32 diff)
+    void Aggro(Unit* pwho)
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_GEHENNAS, IN_PROGRESS);
+
+        m_creature->CallForHelp(RANGE_CALL_FOR_HELP);
+    }
+
+    void JustDied(Unit* pKiller)
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_GEHENNAS, DONE);
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_GEHENNAS, FAIL);
+    }
+
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //ShadowBolt_Timer
-        if (ShadowBolt_Timer < diff)
+        // ShadowBolt Timer
+        if (m_uiShadowBoltTimer < uiDiff)
         {
-            if (Unit* bTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,1))
-                DoCastSpellIfCan(bTarget,SPELL_SHADOWBOLT);
-            ShadowBolt_Timer = 7000;
-        }else ShadowBolt_Timer -= diff;
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_SHADOW_BOLT) == CAST_OK)
+                    m_uiShadowBoltTimer = 7000;
+            }
+            else                                            // In case someone attempts soloing, we don't need to scan for targets every tick
+                m_uiShadowBoltTimer = 7000;
+        }
+        else
+            m_uiShadowBoltTimer -= uiDiff;
 
-        //RainOfFire_Timer
-        if (RainOfFire_Timer < diff)
+        // Rain of Fire Timer
+        if (m_uiRainOfFireTimer < uiDiff)
         {
-            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
-                DoCastSpellIfCan(target,SPELL_RAINOFFIRE);
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_RAIN_OF_FIRE) == CAST_OK)
+                    m_uiRainOfFireTimer = urand(4000, 12000);
+            }
+        }
+        else
+            m_uiRainOfFireTimer -= uiDiff;
 
-            RainOfFire_Timer = urand(4000, 12000);
-        }else RainOfFire_Timer -= diff;
-
-        //GehennasCurse_Timer
-        if (GehennasCurse_Timer < diff)
+        // GehennasCurse Timer
+        if (m_uiGehennasCurseTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_GEHENNASCURSE);
-            GehennasCurse_Timer = urand(22000, 30000);
-        }else GehennasCurse_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature, SPELL_GEHENNAS_CURSE) == CAST_OK)
+                m_uiGehennasCurseTimer = 30000;
+        }
+        else
+            m_uiGehennasCurseTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
 };
+
 CreatureAI* GetAI_boss_gehennas(Creature* pCreature)
 {
     return new boss_gehennasAI(pCreature);
@@ -81,9 +123,10 @@ CreatureAI* GetAI_boss_gehennas(Creature* pCreature)
 
 void AddSC_boss_gehennas()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_gehennas";
-    newscript->GetAI = &GetAI_boss_gehennas;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_gehennas";
+    pNewScript->GetAI = &GetAI_boss_gehennas;
+    pNewScript->RegisterSelf();
 }

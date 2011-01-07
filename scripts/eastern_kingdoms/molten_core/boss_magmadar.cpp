@@ -17,68 +17,102 @@
 /* ScriptData
 SDName: Boss_Magmadar
 SD%Complete: 75
-SDComment: Conflag on ground nyi, fear causes issues without VMAPs
+SDComment: Lavabomb needs still core support
 SDCategory: Molten Core
 EndScriptData */
 
 #include "precompiled.h"
+#include "molten_core.h"
 
 enum
 {
     EMOTE_GENERIC_FRENZY_KILL   = -1000001,
 
     SPELL_FRENZY                = 19451,
-    SPELL_MAGMASPIT             = 19449,                    //This is actually a buff he gives himself
+    SPELL_MAGMASPIT             = 19449,                    // This is actually a buff he gives himself
     SPELL_PANIC                 = 19408,
-    SPELL_LAVABOMB              = 19411,                    //This calls a dummy server side effect that isn't implemented yet
-    SPELL_LAVABOMB_ALT          = 19428                     //This is the spell that the lava bomb casts
+    SPELL_LAVABOMB              = 19411,                    // This calls a dummy server side effect that isn't implemented yet
+    SPELL_LAVABOMB_ALT          = 19428
 };
 
 struct MANGOS_DLL_DECL boss_magmadarAI : public ScriptedAI
 {
-    boss_magmadarAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+    boss_magmadarAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        Reset();
+    }
 
-    uint32 Frenzy_Timer;
-    uint32 Panic_Timer;
-    uint32 Lavabomb_Timer;
+    ScriptedInstance* m_pInstance;
+
+    uint32 m_uiFrenzyTimer;
+    uint32 m_uiPanicTimer;
+    uint32 m_uiLavabombTimer;
 
     void Reset()
     {
-        Frenzy_Timer = 30000;
-        Panic_Timer = 20000;
-        Lavabomb_Timer = 12000;
-
-        m_creature->CastSpell(m_creature,SPELL_MAGMASPIT,true);
+        m_uiFrenzyTimer = 30000;
+        m_uiPanicTimer = 7000;
+        m_uiLavabombTimer = 12000;
     }
 
-    void UpdateAI(const uint32 diff)
+    void Aggro(Unit* pWho)
+    {
+        DoCastSpellIfCan(m_creature, SPELL_MAGMASPIT, true);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_MAGMADAR, IN_PROGRESS);
+    }
+
+    void JustDied(Unit* pKiller)
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_MAGMADAR, DONE);
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_MAGMADAR, NOT_STARTED);
+    }
+
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //Frenzy_Timer
-        if (Frenzy_Timer < diff)
+        // Frenzy_Timer
+        if (m_uiFrenzyTimer < uiDiff)
         {
-            DoScriptText(EMOTE_GENERIC_FRENZY_KILL, m_creature);
-            DoCastSpellIfCan(m_creature,SPELL_FRENZY);
-            Frenzy_Timer = 15000;
-        }else Frenzy_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature, SPELL_FRENZY) == CAST_OK)
+            {
+                DoScriptText(EMOTE_GENERIC_FRENZY_KILL, m_creature);
+                m_uiFrenzyTimer = 15000;
+            }
+        }
+        else
+            m_uiFrenzyTimer -= uiDiff;
 
-        //Panic_Timer
-        if (Panic_Timer < diff)
+        // Panic_Timer
+        if (m_uiPanicTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_PANIC);
-            Panic_Timer = 35000;
-        }else Panic_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature, SPELL_PANIC) == CAST_OK)
+                m_uiPanicTimer = 30000;
+        }
+        else
+            m_uiPanicTimer -= uiDiff;
 
-        //Lavabomb_Timer
-        if (Lavabomb_Timer < diff)
+        // Lavabomb_Timer
+        if (m_uiLavabombTimer < uiDiff)
         {
-            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
-                DoCastSpellIfCan(target,SPELL_LAVABOMB_ALT);
-
-            Lavabomb_Timer = 12000;
-        }else Lavabomb_Timer -= diff;
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_LAVABOMB) == CAST_OK)
+                    m_uiLavabombTimer = 12000;
+            }
+        }
+        else
+            m_uiLavabombTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
@@ -91,9 +125,10 @@ CreatureAI* GetAI_boss_magmadar(Creature* pCreature)
 
 void AddSC_boss_magmadar()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_magmadar";
-    newscript->GetAI = &GetAI_boss_magmadar;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_magmadar";
+    pNewScript->GetAI = &GetAI_boss_magmadar;
+    pNewScript->RegisterSelf();
 }
