@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Golemagg
-SD%Complete: 75
-SDComment: Timers need to be confirmed, Golemagg's Trust need to be checked
+SD%Complete: 80
+SDComment: Rager need to be tied to boss (Despawn on boss-death)
 SDCategory: Molten Core
 EndScriptData */
 
@@ -26,14 +26,14 @@ EndScriptData */
 
 enum
 {
-    SPELL_MAGMASPLASH       = 13879,
+    SPELL_MAGMA_SPLASH      = 13879,
     SPELL_PYROBLAST         = 20228,
     SPELL_EARTHQUAKE        = 19798,
     SPELL_ENRAGE            = 19953,
     SPELL_GOLEMAGG_TRUST    = 20553,
 
     // Core Rager
-    EMOTE_LOWHP             = -1409002,
+    EMOTE_LOW_HP            = -1409002,
     SPELL_MANGLE            = 19820
 };
 
@@ -54,18 +54,32 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
 
     void Reset()
     {
-        m_uiPyroblastTimer = 7*IN_MILLISECONDS;              // These timers are probably wrong
-        m_uiEarthquakeTimer = 3*IN_MILLISECONDS;
-        m_uiBuffTimer = 2.5*IN_MILLISECONDS;
+        m_uiPyroblastTimer  = 7 * IN_MILLISECONDS;
+        m_uiEarthquakeTimer = 3 * IN_MILLISECONDS;
+        m_uiBuffTimer       = 1.5 * IN_MILLISECONDS;
         m_bEnraged = false;
 
-        m_creature->CastSpell(m_creature, SPELL_MAGMASPLASH, true);
+        m_creature->CastSpell(m_creature, SPELL_MAGMA_SPLASH, true);
+    }
+
+    void Aggro(Unit* pWho)
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_GOLEMAGG, IN_PROGRESS);
+
+        m_creature->CallForHelp(1.5 * RANGE_CALL_FOR_HELP);
     }
 
     void JustDied(Unit* pKiller)
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_GOLEMAGG, DONE);
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_GOLEMAGG, FAIL);
     }
 
     void UpdateAI(const uint32 uiDiff)
@@ -77,9 +91,10 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
         if (m_uiPyroblastTimer < uiDiff)
         {
             if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-                DoCastSpellIfCan(pTarget, SPELL_PYROBLAST);
-
-            m_uiPyroblastTimer = 7*IN_MILLISECONDS;
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_PYROBLAST) == CAST_OK)
+                    m_uiPyroblastTimer = 7*IN_MILLISECONDS;
+            }
         }
         else
             m_uiPyroblastTimer -= uiDiff;
@@ -87,8 +102,8 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
         // Enrage
         if (!m_bEnraged && m_creature->GetHealthPercent() < 10.0f)
         {
-            DoCastSpellIfCan(m_creature, SPELL_ENRAGE);
-            m_bEnraged = true;
+            if (DoCastSpellIfCan(m_creature, SPELL_ENRAGE) == CAST_OK)
+                m_bEnraged = true;
         }
 
         // Earthquake
@@ -96,23 +111,21 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
         {
             if (m_uiEarthquakeTimer < uiDiff)
             {
-                DoCastSpellIfCan(m_creature->getVictim(), SPELL_EARTHQUAKE);
-                m_uiEarthquakeTimer = 3*IN_MILLISECONDS;
+                if (DoCastSpellIfCan(m_creature, SPELL_EARTHQUAKE) == CAST_OK)
+                    m_uiEarthquakeTimer = 3*IN_MILLISECONDS;
             }
             else
                 m_uiEarthquakeTimer -= uiDiff;
         }
 
-        /*
         // Golemagg's Trust
         if (m_uiBuffTimer < uiDiff)
         {
             DoCastSpellIfCan(m_creature, SPELL_GOLEMAGG_TRUST);
-            m_uiBuffTimer = 2.5*IN_MILLISECONDS;
+            m_uiBuffTimer = 1.5*IN_MILLISECONDS;
         }
         else
             m_uiBuffTimer -= uiDiff;
-        */
 
         DoMeleeAttackIfReady();
     }
@@ -138,18 +151,11 @@ struct MANGOS_DLL_DECL mob_core_ragerAI : public ScriptedAI
     {
         if (m_creature->GetHealthPercent() < 50.0f)
         {
-            if (m_pInstance)
+            if (m_pInstance && m_pInstance->GetData(TYPE_GOLEMAGG) != DONE)
             {
-                if (Creature* pGolemagg = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_GOLEMAGG)))
-                {
-                    if (pGolemagg->isAlive())
-                    {
-                        DoScriptText(EMOTE_LOWHP, m_creature);
-                        m_creature->SetHealth(m_creature->GetMaxHealth());
-                    }
-                    else
-                        uiDamage = m_creature->GetHealth();
-                }
+                DoScriptText(EMOTE_LOW_HP, m_creature);
+                m_creature->SetHealth(m_creature->GetMaxHealth());
+                uiDamage = 0;
             }
         }
     }
@@ -162,8 +168,8 @@ struct MANGOS_DLL_DECL mob_core_ragerAI : public ScriptedAI
         // Mangle
         if (m_uiMangleTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_MANGLE);
-            m_uiMangleTimer = 10*IN_MILLISECONDS;
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_MANGLE) == CAST_OK)
+                m_uiMangleTimer = 10*IN_MILLISECONDS;
         }
         else
             m_uiMangleTimer -= uiDiff;
@@ -184,15 +190,15 @@ CreatureAI* GetAI_mob_core_rager(Creature* pCreature)
 
 void AddSC_boss_golemagg()
 {
-    Script* newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_golemagg";
-    newscript->GetAI = &GetAI_boss_golemagg;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_golemagg";
+    pNewScript->GetAI = &GetAI_boss_golemagg;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_core_rager";
-    newscript->GetAI = &GetAI_mob_core_rager;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_core_rager";
+    pNewScript->GetAI = &GetAI_mob_core_rager;
+    pNewScript->RegisterSelf();
 }
