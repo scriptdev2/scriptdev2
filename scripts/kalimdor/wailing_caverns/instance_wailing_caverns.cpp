@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Instance_Wailing_Caverns
 SD%Complete: 90
-SDComment: 
+SDComment:
 SDCategory: Wailing Caverns
 EndScriptData */
 

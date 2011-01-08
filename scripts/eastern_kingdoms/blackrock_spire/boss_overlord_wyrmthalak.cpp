@@ -29,7 +29,7 @@ enum
     SPELL_SHOUT                = 23511,
     SPELL_CLEAVE               = 20691,
     SPELL_KNOCKAWAY            = 20686,
-    
+
     NPC_SPIRESTONE_WARLORD     = 9216,
     NPC_SMOLDERTHORN_BERSERKER = 9268
 
@@ -71,7 +71,7 @@ struct MANGOS_DLL_DECL boss_overlordwyrmthalakAI : public ScriptedAI
             pSummoned->AI()->AttackStart(pTarget ? pTarget : m_creature->getVictim());
         }
     }
-    
+
     void UpdateAI(const uint32 uiDiff)
     {
         // Return since we have no target

@@ -113,7 +113,7 @@ struct MANGOS_DLL_DECL boss_loathebAI : public ScriptedAI
             else
                 m_uiBerserkTimer -= uiDiff;
         }
-        
+
         // Inevitable Doom
         if (m_uiInevitableDoomTimer < uiDiff)
         {
@@ -164,7 +164,7 @@ struct MANGOS_DLL_DECL boss_loathebAI : public ScriptedAI
         }
         else
             m_uiDeathbloomTimer -= uiDiff;
-            
+
         DoMeleeAttackIfReady();
     }
 };

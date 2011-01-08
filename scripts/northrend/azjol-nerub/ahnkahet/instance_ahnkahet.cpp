@@ -81,7 +81,7 @@ struct MANGOS_DLL_DECL instance_ahnkahet : public ScriptedInstance
                 break;
         }
     }
-    
+
     void SetData(uint32 uiType, uint32 uiData)
     {
         debug_log("SD2: Instance Ahn'Kahet: SetData received for type %u with data %u",uiType,uiData);

@@ -3,7 +3,7 @@
  * Please see the included DOCS/LICENSE.TXT for more information */
 
 #ifndef DEF_CULLING_OF_STRATHOLME_H
-#define DEF_CULLING_OF_STRATHOLME_H  
+#define DEF_CULLING_OF_STRATHOLME_H
 
 enum
 {
@@ -40,7 +40,7 @@ enum
     NPC_FOOTMAN_JAMES               = 30553,
     NPC_MAL_CORRICKS                = 31017,
     NPC_GRYAN_STOUTMANTLE           = 30561,
-    
+
     // Grain Event NPCs
     NPC_ROGER_OWENS                 = 27903,
     NPC_SERGEANT_MORIGAN            = 27877,
@@ -61,7 +61,7 @@ enum
     NPC_SOPHIE_AAREN                = 31021,
     NPC_ROBERT_PIERCE               = 31025,
     NPC_GEORGE_GOODMAN              = 31022,
-    
+
     // Others NPCs in Stratholme
     NPC_EMERY_NEILL                 = 30570,
     NPC_EDWARD_ORRICK               = 31018,
@@ -76,11 +76,11 @@ enum
     GO_DOOR_BOOKCASE                = 188686,
     GO_DARK_RUNED_CHEST             = 190663,
     GO_DARK_RUNED_CHEST_H          = 193597,
-    
+
     // World States
     WORLD_STATE_CRATES              = 3479,
     WORLD_STATE_CRATES_COUNT        = 3480,
-    WORLD_STATE_WAVE                = 3504,    
+    WORLD_STATE_WAVE                = 3504,
     WORLD_STATE_TIME                = 3932,
     WORLD_STATE_TIME_COUNTER        = 3931,
 
@@ -164,7 +164,7 @@ class MANGOS_DLL_DECL instance_culling_of_stratholme : public ScriptedInstance
         uint64 m_uiMalganisGUID;
         uint64 m_uiCorrupterGUID;
         uint64 m_uiLordaeronCrierGUID;
-        
+
         uint64 m_uiBelfastGUID;
         uint64 m_uiForrestenGUID;
         uint64 m_uiSiabiGUID;
@@ -177,7 +177,7 @@ class MANGOS_DLL_DECL instance_culling_of_stratholme : public ScriptedInstance
         uint64 m_uiAndersonGUID;
         uint64 m_uiMooreGUID;
         uint64 m_uiBattsonGUID;
-        
+
         uint64 m_uiOReillyGUID;
 
         std::list<uint64> m_luiCratesBunnyGUIDs;

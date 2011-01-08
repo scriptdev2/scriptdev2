@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Boss_Jedoga
 SD%Complete: 40
-SDComment: 
+SDComment:
 SDCategory: Ahn'kahet
 EndScriptData */
 

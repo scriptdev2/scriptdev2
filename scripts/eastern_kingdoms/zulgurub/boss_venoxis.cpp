@@ -69,7 +69,7 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
 
     bool m_bPhaseTwo;
     bool m_bInBerserk;
-    
+
     float m_fDefaultSize;
 
     void Reset()

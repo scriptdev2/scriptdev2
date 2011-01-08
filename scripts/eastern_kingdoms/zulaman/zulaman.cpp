@@ -85,7 +85,7 @@ struct MANGOS_DLL_DECL npc_forest_frogAI : public ScriptedAI
 
             if (cEntry == 24408)
                 m_pInstance->SetData(TYPE_RAND_VENDOR_1,DONE);
-            
+
             if (cEntry == 24409)
                 m_pInstance->SetData(TYPE_RAND_VENDOR_2,DONE);
         }
@@ -198,7 +198,7 @@ bool GossipSelect_npc_harrison_jones_za(Player* pPlayer, Creature* pCreature, ui
     {
         if (npc_harrison_jones_zaAI* pHarrisonAI = dynamic_cast<npc_harrison_jones_zaAI*>(pCreature->AI()))
             pHarrisonAI->StartEvent();
-        
+
         pPlayer->CLOSE_GOSSIP_MENU();
     }
     return true;

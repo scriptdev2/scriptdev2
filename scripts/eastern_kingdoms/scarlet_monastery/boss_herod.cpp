@@ -48,7 +48,7 @@ struct MANGOS_DLL_DECL boss_herodAI : public ScriptedAI
 
     bool m_bEnrage;
     bool m_bTraineeSay;
-    
+
     uint32 m_uiCleaveTimer;
     uint32 m_uiWhirlwindTimer;
 
@@ -56,7 +56,7 @@ struct MANGOS_DLL_DECL boss_herodAI : public ScriptedAI
     {
         m_bTraineeSay = false;
         m_bEnrage     = false;
-        
+
         m_uiCleaveTimer    = 12000;
         m_uiWhirlwindTimer = 45000;
     }

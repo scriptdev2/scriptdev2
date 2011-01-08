@@ -12,7 +12,7 @@ enum
     TYPE_AGATHELOS    = 1,
 
     GO_AGATHELOS_WARD = 21099,
-    
+
     NPC_WARD_KEEPER   = 4625
 };
 

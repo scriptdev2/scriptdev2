@@ -207,7 +207,7 @@ struct MANGOS_DLL_DECL mob_syth_fireAI : public ScriptedAI
 {
     mob_syth_fireAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();      
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Reset();
     }
 

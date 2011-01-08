@@ -73,7 +73,7 @@ void instance_blackrock_spire::OnObjectCreate(GameObject* pGo)
     {
         case GO_EMBERSEER_IN:
             m_uiEmberseerInDoorGUID = pGo->GetGUID();
-            if (GetData(TYPE_ROOM_EVENT) == DONE)            
+            if (GetData(TYPE_ROOM_EVENT) == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_DOORS:

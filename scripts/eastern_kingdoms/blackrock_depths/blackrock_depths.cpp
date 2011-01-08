@@ -156,7 +156,7 @@ struct MANGOS_DLL_DECL npc_grimstoneAI : public npc_escortAI
     {
 
     }
-    
+
     void DoGate(uint32 id, uint32 state)
     {
         if (GameObject* pGo = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(id)))
@@ -518,12 +518,12 @@ bool GossipSelect_npc_kharan_mighthammer(Player* pPlayer, Creature* pCreature, u
 enum
 {
     FACTION_THORIUM_BROTHERHOOD               = 59,
-    
+
     ITEM_THRORIUM_BROTHERHOOD_CONTRACT        = 18628,
     ITEM_SULFURON_INGOT                       = 17203,
-    
+
     QUEST_A_BINDING_CONTRACT                  = 7604,
-    
+
     SPELL_CREATE_THORIUM_BROTHERHOOD_CONTRACT = 23059
 };
 

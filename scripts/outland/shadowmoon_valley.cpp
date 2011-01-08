@@ -785,7 +785,7 @@ enum
     EVENT_COOLDOWN                    = 30000,
 
     SAY_TORLOTH_DIALOGUE1             = -1000532,
-    SAY_TORLOTH_DIALOGUE2             = -1000533, 
+    SAY_TORLOTH_DIALOGUE2             = -1000533,
     SAY_TORLOTH_DIALOGUE3             = -1000534,
     SAY_ILLIDAN_DIALOGUE              = -1000535,
     SAY_ILLIDAN_SUMMON1               = -1000536,
@@ -825,7 +825,7 @@ static TorlothCinematic TorlothAnim[]=
     {SAY_ILLIDAN_DIALOGUE, LORD_ILLIDAN, 7000},
     {SAY_TORLOTH_DIALOGUE2, TORLOTH, 3000},
     {0, TORLOTH, 2000},                                  // Torloth stand
-    {SAY_TORLOTH_DIALOGUE3, TORLOTH, 1000}, 
+    {SAY_TORLOTH_DIALOGUE3, TORLOTH, 1000},
     {0, TORLOTH, 3000},
     {0, TORLOTH, 0}
 };
@@ -862,7 +862,7 @@ struct WaveData
 {
     uint8  uiSpawnCount;
     uint8  uiUsedSpawnPoint;
-    uint32 uiCreatureId; 
+    uint32 uiCreatureId;
     uint32 uiSpawnTimer;
     uint32 uiYellTimer;
     int32  iTextId;
@@ -949,7 +949,7 @@ struct MANGOS_DLL_DECL mob_torlothAI : public ScriptedAI
         {
             case 0:
                 m_creature->SetStandState(UNIT_STAND_STATE_KNEEL);
-                break; 
+                break;
             case 3:
                 m_creature->SetStandState(UNIT_STAND_STATE_STAND);
                 break;
@@ -983,7 +983,7 @@ struct MANGOS_DLL_DECL mob_torlothAI : public ScriptedAI
         if (Player* pPlayer = pKiller->GetCharmerOrOwnerPlayerOrPlayerItself())
         {
             pPlayer->GroupEventHappens(QUEST_BATTLE_OF_THE_CRIMSON_WATCH, m_creature);
-        
+
             if (Creature* pLordIllidan = m_creature->GetMap()->GetCreature(m_uiLordIllidanGUID))
             {
                 DoScriptText(SAY_EVENT_COMPLETED, pLordIllidan, pPlayer);
@@ -1316,7 +1316,7 @@ struct MANGOS_DLL_DECL npc_lord_illidan_stormrageAI : public Scripted_NoMovement
         }
     }
 
-    void SummonedCreatureDespawn(Creature* pCreature) 
+    void SummonedCreatureDespawn(Creature* pCreature)
     {
         // decrement mob count
         --m_uiMobCount;

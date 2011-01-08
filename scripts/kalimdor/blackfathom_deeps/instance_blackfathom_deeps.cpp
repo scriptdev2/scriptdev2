@@ -87,7 +87,7 @@ struct MANGOS_DLL_DECL instance_blackfathom_deeps : public ScriptedInstance
 
             case 103015:    m_uiShrineOfGelihastGUID = pGo->GetGUID();  break;
             case 103016:    m_uiAltarOfTheDeepsGUID = pGo->GetGUID();   break;
-            
+
         }
     }
 

@@ -70,7 +70,7 @@ class MANGOS_DLL_DECL instance_blackrock_spire : public ScriptedInstance
     protected:
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string strInstData;
-        
+
         uint64 m_uiEmberseerGUID;
         uint64 m_uiNefariusGUID;
         uint64 m_uiGythGUID;

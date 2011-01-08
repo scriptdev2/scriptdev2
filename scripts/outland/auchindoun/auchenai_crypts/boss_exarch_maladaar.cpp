@@ -317,7 +317,7 @@ struct MANGOS_DLL_DECL mob_avatar_of_martyredAI : public ScriptedAI
     }
 
     uint32 m_uiMortalStrikeTimer;
-    
+
     void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())

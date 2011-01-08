@@ -122,7 +122,7 @@ struct MANGOS_DLL_DECL npc_shadowfang_prisonerAI : public npc_escortAI
 
     void Reset() {}
 
-    //let's prevent Adamant from charging into Ashcrombe's cell 
+    //let's prevent Adamant from charging into Ashcrombe's cell
     //and beating the crap out of him and vice versa XD
     void AttackStart(Unit* pWho)
     {
@@ -203,7 +203,7 @@ enum
 
 struct MANGOS_DLL_DECL mob_arugal_voidwalkerAI : public ScriptedAI
 {
-    mob_arugal_voidwalkerAI(Creature* pCreature) : ScriptedAI(pCreature) 
+    mob_arugal_voidwalkerAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         m_bIsLeader = false;
@@ -343,7 +343,7 @@ struct MANGOS_DLL_DECL mob_arugal_voidwalkerAI : public ScriptedAI
             m_bIsLeader = true;
         else
             pLeader ? m_uiLeaderGUID = pLeader->GetGUID() : m_uiLeaderGUID = 0;
-        
+
         Reset();
     }
 
@@ -429,13 +429,13 @@ static const SpawnPoint VWSpawns[]=
     {-140.203f, 2175.263f, 128.448f, 0.373f},
 };
 
-//roughly the height of Fenrus' room, 
+//roughly the height of Fenrus' room,
 //used to tell how he should behave
 const float HEIGHT_FENRUS_ROOM      = 140.0f;
 
 struct MANGOS_DLL_DECL boss_arugalAI : public ScriptedAI
 {
-    boss_arugalAI(Creature* pCreature) : ScriptedAI(pCreature) 
+    boss_arugalAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
 
@@ -474,7 +474,7 @@ struct MANGOS_DLL_DECL boss_arugalAI : public ScriptedAI
         DoCastSpellIfCan(pWho, SPELL_VOID_BOLT);
     }
 
-    void KilledUnit(Unit* pVictim) 
+    void KilledUnit(Unit* pVictim)
     {
         if (pVictim->GetTypeId() == TYPEID_PLAYER)
             DoScriptText(YELL_KILLED_PLAYER, m_creature);
@@ -659,14 +659,14 @@ struct MANGOS_DLL_DECL boss_arugalAI : public ScriptedAI
             DoMeleeAttackIfReady();
     }
 
-    void AttackStart(Unit* pWho) 
+    void AttackStart(Unit* pWho)
     {
         if (!m_bEventMode)
             ScriptedAI::AttackStart(pWho);
     }
 
     //make the code nice and pleasing to the eye
-    inline float GetManaPercent() 
+    inline float GetManaPercent()
     {
         return (((float)m_creature->GetPower(POWER_MANA) / (float)m_creature->GetMaxPower(POWER_MANA)) * 100);
     }
@@ -725,7 +725,7 @@ enum
 
 struct MANGOS_DLL_DECL npc_arugalAI : public ScriptedAI
 {
-    npc_arugalAI(Creature* pCreature) : ScriptedAI(pCreature) 
+    npc_arugalAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
@@ -741,7 +741,7 @@ struct MANGOS_DLL_DECL npc_arugalAI : public ScriptedAI
         m_uiSpeechStep = 0;
 
         m_creature->SetVisibility(VISIBILITY_OFF);
-        
+
         if (m_pInstance && m_pInstance->GetData(TYPE_INTRO) == NOT_STARTED)
             m_uiSpeechStep = 1;
     }
@@ -842,7 +842,7 @@ enum
 
 struct MANGOS_DLL_DECL npc_deathstalker_vincentAI : public ScriptedAI
 {
-    npc_deathstalker_vincentAI(Creature* pCreature) : ScriptedAI(pCreature) 
+    npc_deathstalker_vincentAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
@@ -856,7 +856,7 @@ struct MANGOS_DLL_DECL npc_deathstalker_vincentAI : public ScriptedAI
             m_creature->SetStandState(UNIT_STAND_STATE_DEAD);
     }
 
-    void DamageTaken(Unit* pDoneBy, uint32& uiDamage) 
+    void DamageTaken(Unit* pDoneBy, uint32& uiDamage)
     {
         if (pDoneBy)
         {
@@ -880,7 +880,7 @@ struct MANGOS_DLL_DECL npc_deathstalker_vincentAI : public ScriptedAI
     {
         if (m_creature->isInCombat() && m_creature->getFaction() == FACTION_FRIENDLY)
             EnterEvadeMode();
-        
+
         ScriptedAI::UpdateAI(uiDiff);
     }
 

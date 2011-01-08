@@ -320,7 +320,7 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
                 PhaseChangeTimer = 60000;
             }
         }else PhaseChangeTimer -= diff;
-        
+
         //Enrage
         if (m_uiEnrageTimer < diff)
         {

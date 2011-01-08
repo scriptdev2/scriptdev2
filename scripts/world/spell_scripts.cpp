@@ -374,7 +374,7 @@ bool EffectAuraDummy_spell_aura_dummy_npc(const Aura* pAura, bool bApply)
         {
             if (pAura->GetEffIndex() != EFFECT_INDEX_0)
                 return true;
-            
+
             if (Unit* pCaster = pAura->GetCaster())
                 DoScriptText(SAY_SPECIMEN, pCaster);
 

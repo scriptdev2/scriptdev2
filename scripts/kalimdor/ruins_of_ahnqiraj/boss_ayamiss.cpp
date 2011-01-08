@@ -53,7 +53,7 @@ struct MANGOS_DLL_DECL boss_ayamissAI : public ScriptedAI
         m_uiStingerSprayTimer  = 30000;
         m_uiPoisonStingerTimer = 30000;
         m_uiSummonSwarmerTimer = 60000;
-        
+
         m_uiPhase = PHASE_AIR;
     }
 
@@ -70,7 +70,7 @@ struct MANGOS_DLL_DECL boss_ayamissAI : public ScriptedAI
         }
         else
             m_uiStingerSprayTimer -= uiDiff;
-        
+
         if (m_uiPhase == PHASE_AIR)
         {
             // Start ground phase at 70% of HP

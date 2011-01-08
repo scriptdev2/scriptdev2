@@ -42,7 +42,7 @@ enum
 
 struct MANGOS_DLL_DECL boss_archaedasAI : public ScriptedAI
 {
-    boss_archaedasAI(Creature* pCreature) : ScriptedAI(pCreature) 
+    boss_archaedasAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (instance_uldaman*)pCreature->GetInstanceData();
         Reset();

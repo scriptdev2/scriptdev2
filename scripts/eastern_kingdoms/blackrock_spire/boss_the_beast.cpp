@@ -65,7 +65,7 @@ struct MANGOS_DLL_DECL boss_thebeastAI : public ScriptedAI
         {
             if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                 DoCastSpellIfCan(pTarget, SPELL_IMMOLATE);
-            
+
             m_uiImmolateTimer = 8000;
         }
         else

@@ -59,7 +59,7 @@ static float fAddPosition[4] = {163.5727f, 252.1900f, 42.8684f, 5.57052f};
 
 struct MANGOS_DLL_DECL mob_vrykul_skeletonAI : public ScriptedAI
 {
-    mob_vrykul_skeletonAI(Creature* pCreature) : ScriptedAI(pCreature) 
+    mob_vrykul_skeletonAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         m_bIsRegularMode = m_creature->GetMap()->IsRegularDifficulty();
@@ -198,11 +198,11 @@ struct MANGOS_DLL_DECL boss_kelesethAI : public ScriptedAI
     ScriptedInstance* m_pInstance;
     bool m_bIsRegularMode;
 
-    uint32 m_uiFrostTombTimer; 
+    uint32 m_uiFrostTombTimer;
     uint32 m_uiSummonTimer;
     uint32 m_uiShadowboltTimer;
 
-    void Reset() 
+    void Reset()
     {
         // timers need confirmation
         m_uiFrostTombTimer = 20000;

@@ -160,7 +160,7 @@ class MANGOS_DLL_DECL instance_naxxramas : public ScriptedInstance
         void SetChamberCenterCoords(float fX, float fY, float fZ);
         void GetChamberCenterCoords(float &fX, float &fY, float &fZ) { fX = m_fChamberCenterX; fY = m_fChamberCenterY; fZ = m_fChamberCenterZ; }
         void DoTaunt();
-        
+
     protected:
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string strInstData;

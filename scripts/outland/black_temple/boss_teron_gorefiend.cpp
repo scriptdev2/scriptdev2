@@ -279,7 +279,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
 
         DoScriptText(SAY_DEATH, m_creature);
     }
-    
+
     float CalculateRandomLocation(float fLoc, uint32 uiRadius)
     {
         return fLoc + urand(0, 1) ? -rand()%uiRadius : rand()%uiRadius;
@@ -315,7 +315,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
         Player* pGhost = NULL;
         if (m_uiGhostGUID)
             pGhost = m_creature->GetMap()->GetPlayer(m_uiGhostGUID);
-        
+
         if (pGhost && pGhost->isAlive() && pGhost->HasAura(SPELL_SHADOW_OF_DEATH, EFFECT_INDEX_0))
         {
             /*float x,y,z;

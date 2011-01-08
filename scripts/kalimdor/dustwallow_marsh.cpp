@@ -168,7 +168,7 @@ struct MANGOS_DLL_DECL npc_restless_apparitionAI : public ScriptedAI
                 case 6: DoScriptText(SAY_RAND_7, m_creature); break;
                 case 7: DoScriptText(SAY_RAND_8, m_creature); break;
             }
- 
+
             m_uiTalk_Timer = 0;
         }
         else

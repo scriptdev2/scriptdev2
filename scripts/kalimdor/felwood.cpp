@@ -205,7 +205,7 @@ bool GossipHello_npcs_riverbreeze_and_silversky(Player* pPlayer, Creature* pCrea
                 pPlayer->SEND_GOSSIP_MENU(2842, pCreature->GetGUID());
             break;
     }
-   
+
     return true;
 }
 

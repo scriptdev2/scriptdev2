@@ -46,7 +46,7 @@ struct MANGOS_DLL_DECL boss_moamAI : public ScriptedAI
     boss_moamAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint8 m_uiPhase;
-    
+
     uint32 m_uiTrample_Timer;
     uint32 m_uiManaDrain_Timer;
     uint32 m_uiCheckoutMana_Timer;
