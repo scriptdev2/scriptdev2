@@ -142,7 +142,6 @@ class MANGOS_DLL_DECL instance_culling_of_stratholme : public ScriptedInstance
 
     protected:
         void OnPlayerEnter(Player* pPlayer);
-        Player* GetPlayerInMap();
         void UpdateQuestCredit();
         void DoChromieHurrySpeech();
 

@@ -225,7 +225,7 @@ class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance
         bool CheckConditionCriteriaMeet(Player const* pSource, uint32 uiMapId, uint32 uiInstanceConditionId);
 
         void DoOpenMadnessDoorIfCan();
-        Player* GetPlayerInMap();
+
         void SpawnFriendlyKeeper(uint32 uiWho);
 
     protected:

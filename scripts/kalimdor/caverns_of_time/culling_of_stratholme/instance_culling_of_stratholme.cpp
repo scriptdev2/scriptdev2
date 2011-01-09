@@ -153,21 +153,6 @@ void instance_culling_of_stratholme::OnObjectCreate(GameObject* pGo)
     }
 }
 
-Player* instance_culling_of_stratholme::GetPlayerInMap()
-{
-    Map::PlayerList const& players = instance->GetPlayers();
-
-    if (!players.isEmpty())
-    {
-        for(Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
-        {
-            if (Player* plr = itr->getSource())
-                return plr;
-        }
-    }
-    return NULL;
-}
-
 void instance_culling_of_stratholme::UpdateQuestCredit()
 {
     Map::PlayerList const& players = instance->GetPlayers();

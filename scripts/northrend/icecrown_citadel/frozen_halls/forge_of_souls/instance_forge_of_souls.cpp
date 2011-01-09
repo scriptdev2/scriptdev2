@@ -102,21 +102,6 @@ void instance_forge_of_souls::ProcessEventNpcs(Player* pPlayer, bool bChanged)
     }
 }
 
-Player* instance_forge_of_souls::GetPlayer()
-{
-    Map::PlayerList const& players = instance->GetPlayers();
-
-    if (!players.isEmpty())
-    {
-        for(Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
-        {
-            if (Player* plr = itr->getSource())
-                return plr;
-        }
-    }
-    return NULL;
-}
-
 bool instance_forge_of_souls::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/)
 {
     switch (uiCriteriaId)
@@ -148,7 +133,7 @@ void instance_forge_of_souls::SetData(uint32 uiType, uint32 uiData)
         case TYPE_DECOURER_OF_SOULS:
             m_auiEncounter[1] = uiData;
             if (uiData == DONE)
-                ProcessEventNpcs(GetPlayer(), true);
+                ProcessEventNpcs(GetPlayerInMap(), true);
             break;
         case TYPE_ACHIEV_PHANTOM_BLAST:
             m_bCriteriaPhantomBlastFailed = (uiData == FAIL);

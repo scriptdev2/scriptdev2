@@ -463,21 +463,6 @@ void instance_ulduar::OnObjectCreate(GameObject* pGo)
     }
 }
 
-Player* instance_ulduar::GetPlayerInMap()
-{
-    Map::PlayerList const& players = instance->GetPlayers();
-
-    if (!players.isEmpty())
-    {
-        for(Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
-        {
-            if (Player* plr = itr->getSource())
-                return plr;
-        }
-    }
-    return NULL;
-}
-
 // Used in order to unlock the door to Vezax
 void instance_ulduar::DoOpenMadnessDoorIfCan()
 {

@@ -40,23 +40,6 @@ void instance_old_hillsbrad::Initialize()
     memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
 }
 
-Player* instance_old_hillsbrad::GetPlayerInMap()
-{
-    Map::PlayerList const& players = instance->GetPlayers();
-
-    if (!players.isEmpty())
-    {
-        for(Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
-        {
-            if (Player* plr = itr->getSource())
-                return plr;
-        }
-    }
-
-    debug_log("SD2: Instance Old Hillsbrad: GetPlayerInMap, but PlayerList is empty!");
-    return NULL;
-}
-
 void instance_old_hillsbrad::OnCreatureCreate(Creature* pCreature)
 {
     switch(pCreature->GetEntry())
