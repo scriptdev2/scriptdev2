@@ -147,7 +147,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    uint32 fire_breath_timer;
+    uint32 m_uiFireBreathTimer;
 
     std::list<uint64> m_lBombsGUIDList;
     std::list<Creature*> m_lEggsRemainingList;
@@ -157,16 +157,16 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
     uint32 m_uiBombPhase;
     uint32 m_uiBombCounter;
 
-    uint32 enrage_timer;
-    uint32 hatchertime;
+    uint32 m_uiEnrageTimer;
+    uint32 m_uiHatcherTimer;
     uint32 eggs;
-    uint32 wipetimer;
+    uint32 m_uiWipeTimer;
 
     bool m_bIsBombing;
     bool m_bCanBlowUpBombs;
     bool m_bIsEggRemaining;
-    bool enraged;
-    bool enragetime;
+    bool m_bIsEnraged;
+    bool m_bCanEnrage;
 
     uint64 m_uiHatcher1GUID;
     uint64 m_uiHatcher2GUID;
@@ -190,7 +190,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
             m_uiHatcher2GUID = 0;
         }
 
-        fire_breath_timer = 8000;
+        m_uiFireBreathTimer = 8000;
 
         m_uiBombTimer = 30000;
         m_bIsBombing = false;
@@ -200,11 +200,11 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
         m_bCanBlowUpBombs = false;
         m_bIsEggRemaining = true;
 
-        enrage_timer = MINUTE*5*IN_MILLISECONDS;
-        hatchertime = 10000;
-        wipetimer = MINUTE*10*IN_MILLISECONDS;
-        enraged = false;
-        enragetime = false;
+        m_uiEnrageTimer = MINUTE*5*IN_MILLISECONDS;
+        m_uiHatcherTimer = 10000;
+        m_uiWipeTimer = MINUTE*10*IN_MILLISECONDS;
+        m_bIsEnraged = false;
+        m_bCanEnrage = false;
     }
 
     void JustReachedHome()
@@ -376,7 +376,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -384,20 +384,19 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
         //blow up bombs happen after bombing is over, so handle this here
         if (m_bCanBlowUpBombs)
         {
-            if (m_uiBombSequenzeTimer < diff)
+            if (m_uiBombSequenzeTimer < uiDiff)
             {
                 BlowUpBombs();
                 m_bCanBlowUpBombs = false;
-            }else m_uiBombSequenzeTimer -= diff;
+            }
+            else
+                m_uiBombSequenzeTimer -= uiDiff;
         }
 
         if (!m_bIsBombing)                                  // every Spell if NOT Bombing
         {
-            if (m_uiBombTimer < diff)
+            if (m_uiBombTimer < uiDiff)
             {
-                if (m_creature->IsNonMeleeSpellCasted(false))
-                    m_creature->InterruptNonMeleeSpells(false);
-
                 DoScriptText(SAY_FIRE_BOMBS, m_creature);
 
                 //first clear movement
@@ -405,7 +404,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
                     m_creature->GetMotionMaster()->MovementExpired();
 
                 //then teleport self
-                DoCastSpellIfCan(m_creature, SPELL_TELETOCENTER, CAST_TRIGGERED);
+                DoCastSpellIfCan(m_creature, SPELL_TELETOCENTER, CAST_INTERRUPT_PREVIOUS | CAST_TRIGGERED);
 
                 //then players and create the firewall
                 TeleportPlayersOutOfRange();
@@ -423,31 +422,32 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
 
                 //we don't want anything else to happen this Update()
                 return;
-            }else m_uiBombTimer -=diff;
+            }
+            else
+                m_uiBombTimer -= uiDiff;
 
             //FIRE BREATH  several videos says every 8Secounds
-            if (fire_breath_timer < diff)
+            if (m_uiFireBreathTimer < uiDiff)
             {
                 if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
                     DoCastSpellIfCan(target,SPELL_FLAME_BREATH);
-                fire_breath_timer = 8000;
-            }else fire_breath_timer -=diff;
+                m_uiFireBreathTimer = 8000;
+            }else m_uiFireBreathTimer -= uiDiff;
 
             //enrage if under 25% hp before 5 min.
-            if (m_creature->GetHealthPercent() < 25.0f && !enraged)
+            if (m_creature->GetHealthPercent() < 25.0f && !m_bIsEnraged)
             {
-                enragetime = true;
-                enrage_timer = 600000;
+                m_bCanEnrage = true;
+                m_uiEnrageTimer = 600000;
             }
 
             //Enrage but only if not bombing
-            if (enragetime && !enraged)
+            if (m_bCanEnrage && !m_bIsEnraged)
             {
                 DoScriptText(SAY_BERSERK, m_creature);
 
-                m_creature->InterruptNonMeleeSpells(false);
-                DoCastSpellIfCan(m_creature,SPELL_ENRAGE);
-                enraged = true;
+                DoCastSpellIfCan(m_creature, SPELL_ENRAGE, CAST_INTERRUPT_PREVIOUS);
+                m_bIsEnraged = true;
             }
 
             //Hatch All
@@ -455,10 +455,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
             {
                 DoScriptText(SAY_ALL_EGGS, m_creature);
 
-                if (m_creature->IsNonMeleeSpellCasted(false))
-                    m_creature->InterruptNonMeleeSpells(false);
-
-                DoCastSpellIfCan(m_creature, SPELL_HATCH_ALL_EGGS);
+                DoCastSpellIfCan(m_creature, SPELL_HATCH_ALL_EGGS, CAST_INTERRUPT_PREVIOUS);
 
                 DoHatchRemainingEggs();
             }
@@ -467,12 +464,12 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
         }
         else                                                // every Spell if Bombing
         {
-            if (m_uiBombSequenzeTimer < diff)
+            if (m_uiBombSequenzeTimer < uiDiff)
             {
                 switch(m_uiBombPhase)
                 {
                     case 0:
-                        m_creature->CastSpell(m_creature,SPELL_FIRE_BOMB_CHANNEL,true);
+                        DoCastSpellIfCan(m_creature, SPELL_FIRE_BOMB_CHANNEL, CAST_TRIGGERED);
                         m_uiBombSequenzeTimer = 500;
                         ++m_uiBombPhase;
                         break;
@@ -497,20 +494,24 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
                         break;
                 }
 
-            }else m_uiBombSequenzeTimer -= diff;
+            }
+            else
+                m_uiBombSequenzeTimer -= uiDiff;
         }
 
         //Enrage after 5 minutes
-        if (enrage_timer < diff)
+        if (m_uiEnrageTimer < uiDiff)
         {
-            enragetime = true;
-            enrage_timer = 600000;
-        }else enrage_timer -=diff;
+            m_bCanEnrage = true;
+            m_uiEnrageTimer = 600000;
+        }
+        else
+            m_uiEnrageTimer -= uiDiff;
 
         //Call Hatcher
         if (m_bIsEggRemaining)
         {
-            if (hatchertime < diff)
+            if (m_uiHatcherTimer < uiDiff)
             {
                 if (!m_pInstance || (m_pInstance->GetData(DATA_J_EGGS_LEFT) == 0 && m_pInstance->GetData(DATA_J_EGGS_RIGHT) == 0))
                     m_bIsEggRemaining = false;
@@ -533,24 +534,28 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
                             pHatcher->GetMotionMaster()->MovePoint(1, m_aHatcherLeft[1].m_fX, m_aHatcherLeft[1].m_fY, m_aHatcherLeft[1].m_fZ);
                     }
 
-                    hatchertime = 90000;
+                    m_uiHatcherTimer = 90000;
                 }
 
-            }else hatchertime -=diff;
+            }
+            else
+                m_uiHatcherTimer -= uiDiff;
         }
 
         //WIPE after 10 minutes
-        if (wipetimer < diff)
+        if (m_uiWipeTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature,SPELL_ENRAGE) == CAST_OK)
             {
                 DoScriptText(SAY_BERSERK, m_creature);
-                wipetimer = 30000;
+                m_uiWipeTimer = 30000;
             }
-        }else wipetimer -=diff;
+        }
+        else
+            m_uiWipeTimer -= uiDiff;
 
         //check for reset ... exploit preventing ... pulled from his podest
-        EnterEvadeIfOutOfCombatArea(diff);
+        EnterEvadeIfOutOfCombatArea(uiDiff);
     }
 };
 
@@ -559,27 +564,27 @@ CreatureAI* GetAI_boss_janalaiAI(Creature* pCreature)
     return new boss_janalaiAI(pCreature);
 }
 
-struct MANGOS_DLL_DECL mob_jandalai_firebombAI : public ScriptedAI
+struct MANGOS_DLL_DECL npc_janalai_firebombAI : public ScriptedAI
 {
-    mob_jandalai_firebombAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+    npc_janalai_firebombAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     void Reset() {}
 
-    void AttackStart(Unit* who) {}
+    void AttackStart(Unit* pWho) {}
 
-    void MoveInLineOfSight(Unit* who) {}
+    void MoveInLineOfSight(Unit* pWho) {}
 
-    void UpdateAI(const uint32 diff) {}
+    void UpdateAI(const uint32 uiDiff) {}
 };
 
-CreatureAI* GetAI_mob_jandalai_firebombAI(Creature* pCreature)
+CreatureAI* GetAI_npc_janalai_firebombAI(Creature* pCreature)
 {
-    return new mob_jandalai_firebombAI(pCreature);
+    return new npc_janalai_firebombAI(pCreature);
 }
 
-struct MANGOS_DLL_DECL mob_amanishi_hatcherAI : public ScriptedAI
+struct MANGOS_DLL_DECL npc_amanishi_hatcherAI : public ScriptedAI
 {
-    mob_amanishi_hatcherAI(Creature* pCreature) : ScriptedAI(pCreature)
+    npc_amanishi_hatcherAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
@@ -692,19 +697,21 @@ struct MANGOS_DLL_DECL mob_amanishi_hatcherAI : public ScriptedAI
 
                 ++m_uiHatchlingCount;
 
-            }else m_uiHatchlingTimer -= uiDiff;
+            }
+            else
+                m_uiHatchlingTimer -= uiDiff;
         }
     }
 };
 
-CreatureAI* GetAI_mob_amanishi_hatcherAI(Creature* pCreature)
+CreatureAI* GetAI_npc_amanishi_hatcherAI(Creature* pCreature)
 {
-    return new mob_amanishi_hatcherAI(pCreature);
+    return new npc_amanishi_hatcherAI(pCreature);
 }
 
-struct MANGOS_DLL_DECL mob_hatchlingAI : public ScriptedAI
+struct MANGOS_DLL_DECL npc_hatchlingAI : public ScriptedAI
 {
-    mob_hatchlingAI(Creature* pCreature) : ScriptedAI(pCreature)
+    npc_hatchlingAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
@@ -712,24 +719,24 @@ struct MANGOS_DLL_DECL mob_hatchlingAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    uint32 buffer_timer;
-    bool start;
+    uint32 m_uiBufferTimer;
+    bool m_bIsStarted;
 
     void Reset()
     {
-        buffer_timer = 7000;
-        start = false;
+        m_uiBufferTimer = 7000;
+        m_bIsStarted = false;
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
-        if (!start)
+        if (!m_bIsStarted)
         {
             if (m_creature->GetPositionY() > 1150)
                 m_creature->GetMotionMaster()->MovePoint(0, hatcherway_l[3][0]+rand()%4-2,hatcherway_l[3][1]+rand()%4-2,hatcherway_l[3][2]);
             else
                 m_creature->GetMotionMaster()->MovePoint(0,hatcherway_r[3][0]+rand()%4-2,hatcherway_r[3][1]+rand()%4-2,hatcherway_r[3][2]);
-            start = true;
+            m_bIsStarted = true;
         }
 
         if (m_pInstance && m_pInstance->GetData(TYPE_JANALAI) == NOT_STARTED)
@@ -741,44 +748,46 @@ struct MANGOS_DLL_DECL mob_hatchlingAI : public ScriptedAI
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (buffer_timer < diff)
+        if (m_uiBufferTimer < uiDiff)
         {
             if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
                 DoCastSpellIfCan(target,SPELL_FLAMEBUFFED);
 
-            buffer_timer = 7000;
-        }else buffer_timer -=diff;
+            m_uiBufferTimer = 7000;
+        }
+        else
+            m_uiBufferTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
 };
 
-CreatureAI* GetAI_mob_hatchlingAI(Creature* pCreature)
+CreatureAI* GetAI_npc_hatchlingAI(Creature* pCreature)
 {
-    return new mob_hatchlingAI(pCreature);
+    return new npc_hatchlingAI(pCreature);
 }
 
 void AddSC_boss_janalai()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_janalai";
-    newscript->GetAI = &GetAI_boss_janalaiAI;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_janalai";
+    pNewScript->GetAI = &GetAI_boss_janalaiAI;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_jandalai_firebomb";
-    newscript->GetAI = &GetAI_mob_jandalai_firebombAI;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_janalai_firebomb";
+    pNewScript->GetAI = &GetAI_npc_janalai_firebombAI;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_amanishi_hatcher";
-    newscript->GetAI = &GetAI_mob_amanishi_hatcherAI;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_amanishi_hatcher";
+    pNewScript->GetAI = &GetAI_npc_amanishi_hatcherAI;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_hatchling";
-    newscript->GetAI = &GetAI_mob_hatchlingAI;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_hatchling";
+    pNewScript->GetAI = &GetAI_npc_hatchlingAI;
+    pNewScript->RegisterSelf();
 }
