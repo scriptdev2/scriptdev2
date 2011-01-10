@@ -52,7 +52,7 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
 
     void Reset()
     {
-        m_uiCleaveTimer         = 8000;                                // These times are probably wrong
+        m_uiCleaveTimer         = 8000;                     // These times are probably wrong
         m_uiBlastWaveTimer      = 12000;
         m_uiMortalStrikeTimer   = 20000;
         m_uiKnockAwayTimer      = 30000;

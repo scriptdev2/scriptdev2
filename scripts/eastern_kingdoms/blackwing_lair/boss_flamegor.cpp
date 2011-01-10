@@ -94,7 +94,7 @@ struct MANGOS_DLL_DECL boss_flamegorAI : public ScriptedAI
             if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_WING_BUFFET) == CAST_OK)
             {
                 if (m_creature->getThreatManager().getThreat(m_creature->getVictim()))
-                    m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-75);
+                    m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(), -75);
 
                 m_uiWingBuffetTimer = 25000;
             }

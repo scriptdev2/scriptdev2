@@ -49,7 +49,7 @@ struct MANGOS_DLL_DECL boss_ebonrocAI : public ScriptedAI
 
     void Reset()
     {
-        m_uiShadowFlameTimer        = 15000;                          // These times are probably wrong
+        m_uiShadowFlameTimer        = 15000;                // These times are probably wrong
         m_uiWingBuffetTimer         = 30000;
         m_uiShadowOfEbonrocTimer    = 45000;
         m_uiHealTimer               = 1000;

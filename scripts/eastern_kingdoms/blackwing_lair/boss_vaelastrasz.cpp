@@ -48,6 +48,9 @@ struct MANGOS_DLL_DECL boss_vaelastraszAI : public ScriptedAI
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
+
+        // TODO Research what actually is supposed to happen here
+        pCreature->setFaction(35);
     }
 
     ScriptedInstance* m_pInstance;
@@ -60,7 +63,7 @@ struct MANGOS_DLL_DECL boss_vaelastraszAI : public ScriptedAI
     uint32 m_uiFireNovaTimer;
     uint32 m_uiBurningAdrenalineCasterTimer;
     uint32 m_uiBurningAdrenalineTankTimer;
-    uint32 m_uiTailSwipeTimer;
+    uint32 m_uiTailSweepTimer;
     bool m_bHasYelled;
     bool mbIsDoingSpeach;
 
@@ -69,12 +72,12 @@ struct MANGOS_DLL_DECL boss_vaelastraszAI : public ScriptedAI
         m_uiPlayerGUID                   = 0;
         m_uiSpeachTimer                  = 0;
         m_uiSpeachNum                    = 0;
-        m_uiCleaveTimer                  = 8000;                                // These times are probably wrong
+        m_uiCleaveTimer                  = 8000;            // These times are probably wrong
         m_uiFlameBreathTimer             = 11000;
         m_uiBurningAdrenalineCasterTimer = 15000;
         m_uiBurningAdrenalineTankTimer   = 45000;
         m_uiFireNovaTimer                = 5000;
-        m_uiTailSwipeTimer               = 20000;
+        m_uiTailSweepTimer               = 20000;
         m_bHasYelled = false;
         mbIsDoingSpeach = false;
     }
@@ -235,13 +238,13 @@ struct MANGOS_DLL_DECL boss_vaelastraszAI : public ScriptedAI
             m_uiFireNovaTimer -= uiDiff;
 
         // Tail Sweep Timer
-        if (m_uiTailSwipeTimer < uiDiff)
+        if (m_uiTailSweepTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature, SPELL_TAIL_SWEEP) == CAST_OK)
-                m_uiTailSwipeTimer = 20000;
+                m_uiTailSweepTimer = 20000;
         }
         else
-            m_uiTailSwipeTimer -= uiDiff;
+            m_uiTailSweepTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }

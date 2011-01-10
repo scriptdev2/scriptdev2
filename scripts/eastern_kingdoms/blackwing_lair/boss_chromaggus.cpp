@@ -94,12 +94,12 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
 
     void Reset()
     {
-        m_uiCurrentVulnerabilitySpell = 0;                     // We use this to store our last vulnerability spell so we can remove it later
+        m_uiCurrentVulnerabilitySpell = 0;                  // We use this to store our last vulnerability spell so we can remove it later
 
-        m_uiShimmerTimer    = 0;                               // Time till we change vurlnerabilites
-        m_uiBreathOneTimer    = 30000;                           // First breath is 30 seconds
-        m_uiBreathTwoTimer    = 60000;                           // Second is 1 minute so that we can alternate
-        m_uiAfflictionTimer = 10000;                           // This is special - 5 seconds means that we cast this on 1 pPlayer every 5 sconds
+        m_uiShimmerTimer    = 0;                            // Time till we change vurlnerabilites
+        m_uiBreathOneTimer  = 30000;                        // First breath is 30 seconds
+        m_uiBreathTwoTimer  = 60000;                        // Second is 1 minute so that we can alternate
+        m_uiAfflictionTimer = 10000;                        // This is special - 5 seconds means that we cast this on 1 pPlayer every 5 sconds
         m_uiFrenzyTimer     = 15000;
 
         m_bEnraged          = false;
