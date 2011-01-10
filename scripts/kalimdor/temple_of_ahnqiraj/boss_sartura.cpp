@@ -16,254 +16,284 @@
 
 /* ScriptData
 SDName: Boss_Sartura
-SD%Complete: 95
-SDComment:
+SD%Complete: 85
+SDComment: Targeting currently doesn't work as expected
 SDCategory: Temple of Ahn'Qiraj
 EndScriptData */
 
 #include "precompiled.h"
 
-#define SAY_AGGRO                   -1531008
-#define SAY_SLAY                    -1531009
-#define SAY_DEATH                   -1531010
+enum
+{
+    SAY_AGGRO                   = -1531008,
+    SAY_SLAY                    = -1531009,
+    SAY_DEATH                   = -1531010,
 
-#define SPELL_WHIRLWIND             26083
-#define SPELL_ENRAGE                28747                   //Not sure if right ID.
-#define SPELL_ENRAGEHARD            28798
+    SPELL_WHIRLWIND             = 26083,
+    SPELL_ENRAGE                = 28747,                    // Not sure if right ID.
+    SPELL_ENRAGEHARD            = 28798,
 
-//Guard Spell
-#define SPELL_WHIRLWINDADD          26038
-#define SPELL_KNOCKBACK             26027
+    // Guard Spell
+    SPELL_WHIRLWIND_ADD         = 26038,
+    SPELL_KNOCKBACK             = 26027,
+};
 
 struct MANGOS_DLL_DECL boss_sarturaAI : public ScriptedAI
 {
-    boss_sarturaAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+    boss_sarturaAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
-    uint32 WhirlWind_Timer;
-    uint32 WhirlWindRandom_Timer;
-    uint32 WhirlWindEnd_Timer;
-    uint32 AggroReset_Timer;
-    uint32 AggroResetEnd_Timer;
-    uint32 EnrageHard_Timer;
+    uint32 m_uiWhirlWindTimer;
+    uint32 m_uiWhirlWindRandomTimer;
+    uint32 m_uiWhirlWindEndTimer;
+    uint32 m_uiAggroResetTimer;
+    uint32 m_uiAggroResetEndTimer;
+    uint32 m_uiEnrageHardTimer;
 
-    bool Enraged;
-    bool EnragedHard;
-    bool WhirlWind;
-    bool AggroReset;
+    bool m_bIsEnraged;
+    bool m_bIsEnragedHard;
+    bool m_bIsWhirlWind;
+    bool m_bAggroReset;
 
     void Reset()
     {
-        WhirlWind_Timer = 30000;
-        WhirlWindRandom_Timer = urand(3000, 7000);
-        WhirlWindEnd_Timer = 15000;
-        AggroReset_Timer = urand(45000, 55000);
-        AggroResetEnd_Timer = 5000;
-        EnrageHard_Timer = 10*60000;
+        m_uiWhirlWindTimer = 30000;
+        m_uiWhirlWindRandomTimer = urand(3000, 7000);
+        m_uiWhirlWindEndTimer = 15000;
+        m_uiAggroResetTimer = urand(45000, 55000);
+        m_uiAggroResetEndTimer = 5000;
+        m_uiEnrageHardTimer = 10*60000;
 
-        WhirlWind = false;
-        AggroReset = false;
-        Enraged = false;
-        EnragedHard = false;
-
+        m_bIsWhirlWind = false;
+        m_bAggroReset = false;
+        m_bIsEnraged = false;
+        m_bIsEnragedHard = false;
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
     }
 
-    void KilledUnit(Unit* victim)
+    void KilledUnit(Unit* pVictim)
     {
         DoScriptText(SAY_SLAY, m_creature);
     }
 
-    void JustDied(Unit* Killer)
+    void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DEATH, m_creature);
     }
 
-
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (WhirlWind)
+        if (m_bIsWhirlWind)
         {
-            if (WhirlWindRandom_Timer < diff)
+            // While whirlwind, switch to random targets often
+            if (m_uiWhirlWindRandomTimer < uiDiff)
             {
-                //Attack random Gamers
-                Unit* target = NULL;
-                target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,1);
-                if (target)
-                m_creature->AddThreat(target);
-                m_creature->TauntApply(target);
-                AttackStart(target);
-
-                WhirlWindRandom_Timer = urand(3000, 7000);
-            }else WhirlWindRandom_Timer -= diff;
-
-            if (WhirlWindEnd_Timer < diff)
-            {
-                WhirlWind = false;
-                WhirlWind_Timer = urand(25000, 40000);
-            }else WhirlWindEnd_Timer -= diff;
-        }
-
-        if (!WhirlWind)
-        {
-            if (WhirlWind_Timer < diff)
-            {
-                DoCastSpellIfCan(m_creature, SPELL_WHIRLWIND);
-                WhirlWind = true;
-                WhirlWindEnd_Timer = 15000;
-            }else WhirlWind_Timer -= diff;
-
-            if (AggroReset_Timer < diff)
-            {
-                //Attack random Gamers
-                Unit* target = NULL;
-                target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,1);
-                if (target)
-                m_creature->AddThreat(target);
-                m_creature->TauntApply(target);
-                AttackStart(target);
-
-                    AggroReset = true;
-                    AggroReset_Timer = urand(2000, 5000);
-            }else AggroReset_Timer -= diff;
-
-            if (AggroReset)
-            {
-                if (AggroResetEnd_Timer <diff)
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1))
                 {
-                    AggroReset = false;
-                    AggroResetEnd_Timer = 5000;
-                    AggroReset_Timer = urand(35000, 45000);
-                } else AggroResetEnd_Timer -= diff;
+                    m_creature->AddThreat(pTarget);
+                    m_creature->TauntApply(pTarget);
+                    AttackStart(pTarget);
+                }
+
+                m_uiWhirlWindRandomTimer = urand(3000, 7000);
             }
+            else
+                m_uiWhirlWindRandomTimer -= uiDiff;
 
-            //If she is 20% enrage
-            if (!Enraged)
+            // End Whirlwind Phase
+            if (m_uiWhirlWindEndTimer < uiDiff)
+                m_bIsWhirlWind = false;
+            else
+                m_uiWhirlWindEndTimer -= uiDiff;
+        }
+        else // if (!m_bIsWhirlWind)
+        {
+            // Enter Whirlwind Phase
+            if (m_uiWhirlWindTimer < uiDiff)
             {
-                if (m_creature->GetHealthPercent() <= 20.0f && !m_creature->IsNonMeleeSpellCasted(false))
+                if (DoCastSpellIfCan(m_creature, SPELL_WHIRLWIND) == CAST_OK)
                 {
-                    DoCastSpellIfCan(m_creature, SPELL_ENRAGE);
-                    Enraged = true;
+                    m_bIsWhirlWind = true;
+                    m_uiWhirlWindEndTimer = 15000;
+                    m_uiWhirlWindTimer = urand(25000, 40000);
                 }
             }
+            else
+                m_uiWhirlWindTimer -= uiDiff;
 
-            //After 10 minutes hard enrage
-            if (!EnragedHard)
+            // Aquire a new target sometimes
+            if (m_uiAggroResetTimer < uiDiff)
             {
-                if (EnrageHard_Timer < diff)
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1))
                 {
-                    DoCastSpellIfCan(m_creature, SPELL_ENRAGEHARD);
-                    EnragedHard = true;
-                } else EnrageHard_Timer -= diff;
-            }
+                    m_creature->AddThreat(pTarget);
+                    m_creature->TauntApply(pTarget);
+                    AttackStart(pTarget);
+                }
 
-            DoMeleeAttackIfReady();
+                m_bAggroReset = true;
+                m_uiAggroResetTimer = urand(2000, 5000);
+            }
+            else
+                m_uiAggroResetTimer -= uiDiff;
+
+            // Remove remaining taunts, TODO
+            if (m_bAggroReset)
+            {
+                if (m_uiAggroResetEndTimer < uiDiff)
+                {
+                    m_bAggroReset = false;
+                    m_uiAggroResetEndTimer = 5000;
+                    m_uiAggroResetTimer = urand(35000, 45000);
+                }
+                else
+                    m_uiAggroResetEndTimer -= uiDiff;
+            }
         }
+
+        // If she is 20% enrage
+        if (!m_bIsEnraged && m_creature->GetHealthPercent() <= 20.0f)
+		{
+			if (DoCastSpellIfCan(m_creature, SPELL_ENRAGE, m_bIsWhirlWind ? CAST_TRIGGERED : 0) == CAST_OK)
+                m_bIsEnraged = true;
+        }
+
+        // After 10 minutes hard enrage
+        if (!m_bIsEnragedHard)
+        {
+            if (m_uiEnrageHardTimer < uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_ENRAGEHARD, m_bIsWhirlWind ? CAST_TRIGGERED : 0) == CAST_OK)
+                    m_bIsEnragedHard = true;
+            }
+            else
+                m_uiEnrageHardTimer -= uiDiff;
+        }
+
+        // No melee damage while in whirlwind
+        if (!m_bIsWhirlWind)
+            DoMeleeAttackIfReady();
     }
 };
 
 struct MANGOS_DLL_DECL mob_sartura_royal_guardAI : public ScriptedAI
 {
-    mob_sartura_royal_guardAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+    mob_sartura_royal_guardAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
-    uint32 WhirlWind_Timer;
-    uint32 WhirlWindRandom_Timer;
-    uint32 WhirlWindEnd_Timer;
-    uint32 AggroReset_Timer;
-    uint32 AggroResetEnd_Timer;
-    uint32 KnockBack_Timer;
+    uint32 m_uiWhirlWindTimer;
+    uint32 m_uiWhirlWindRandomTimer;
+    uint32 m_uiWhirlWindEndTimer;
+    uint32 m_uiAggroResetTimer;
+    uint32 m_uiAggroResetEndTimer;
+    uint32 m_uiKnockBackTimer;
 
-    bool WhirlWind;
-    bool AggroReset;
+    bool m_IsWhirlWind;
+    bool m_bAggroReset;
 
     void Reset()
     {
-        WhirlWind_Timer = 30000;
-        WhirlWindRandom_Timer = urand(3000, 7000);
-        WhirlWindEnd_Timer = 15000;
-        AggroReset_Timer = urand(45000, 55000);
-        AggroResetEnd_Timer = 5000;
-        KnockBack_Timer = 10000;
+        m_uiWhirlWindTimer = 30000;
+        m_uiWhirlWindRandomTimer = urand(3000, 7000);
+        m_uiWhirlWindEndTimer = 15000;
+        m_uiAggroResetTimer = urand(45000, 55000);
+        m_uiAggroResetEndTimer = 5000;
+        m_uiKnockBackTimer = 10000;
 
-        WhirlWind = false;
-        AggroReset = false;
-
+        m_IsWhirlWind = false;
+        m_bAggroReset = false;
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (!WhirlWind && WhirlWind_Timer < diff)
+        if (m_IsWhirlWind)
         {
-            DoCastSpellIfCan(m_creature, SPELL_WHIRLWINDADD);
-            WhirlWind = true;
-            WhirlWind_Timer = urand(25000, 40000);
-            WhirlWindEnd_Timer = 15000;
-        }else WhirlWind_Timer -= diff;
+            // While whirlwind, switch to random targets often
+            if (m_uiWhirlWindRandomTimer < uiDiff)
+            {
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1))
+                {
+                    m_creature->AddThreat(pTarget);
+                    m_creature->TauntApply(pTarget);
+                    AttackStart(pTarget);
+                }
 
-        if (WhirlWind)
+                m_uiWhirlWindRandomTimer = urand(3000, 7000);
+            }
+            else
+                m_uiWhirlWindRandomTimer -= uiDiff;
+
+            // End Whirlwind Phase
+            if (m_uiWhirlWindEndTimer < uiDiff)
+                m_IsWhirlWind = false;
+            else
+                m_uiWhirlWindEndTimer -= uiDiff;
+        }
+        else // if (!m_IsWhirlWind)
         {
-            if (WhirlWindRandom_Timer < diff)
+            // Enter Whirlwind Phase
+            if (m_uiWhirlWindTimer < uiDiff)
             {
-                //Attack random Gamers
-                Unit* target = NULL;
-                target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,1);
-                if (target)
-                m_creature->AddThreat(target);
-                m_creature->TauntApply(target);
-                AttackStart(target);
+                if (DoCastSpellIfCan(m_creature, SPELL_WHIRLWIND_ADD) == CAST_OK)
+                {
+                    m_IsWhirlWind = true;
+                    m_uiWhirlWindEndTimer = 8000;
+                    m_uiWhirlWindTimer = urand(25000, 40000);
+                }
+            }
+            else
+                m_uiWhirlWindTimer -= uiDiff;
 
-                WhirlWindRandom_Timer = urand(3000, 7000);
-            }else WhirlWindRandom_Timer -= diff;
-
-            if (WhirlWindEnd_Timer < diff)
+            // Aquire a new target sometimes
+            if (m_uiAggroResetTimer < uiDiff)
             {
-                WhirlWind = false;
-            }else WhirlWindEnd_Timer -= diff;
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1))
+                {
+                    m_creature->AddThreat(pTarget);
+                    m_creature->TauntApply(pTarget);
+                    AttackStart(pTarget);
+                }
+
+                m_bAggroReset = true;
+                m_uiAggroResetTimer = urand(2000, 5000);
+            }
+            else
+                m_uiAggroResetTimer -= uiDiff;
+
+            // Remove remaining taunts, TODO
+            if (m_bAggroReset)
+            {
+                if (m_uiAggroResetEndTimer <uiDiff)
+                {
+                    m_bAggroReset = false;
+                    m_uiAggroResetEndTimer = 5000;
+                    m_uiAggroResetTimer = urand(30000, 40000);
+                }
+                else
+                    m_uiAggroResetEndTimer -= uiDiff;
+            }
+
+            // Knockback nearby enemies
+            if (m_uiKnockBackTimer < uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_KNOCKBACK) == CAST_OK)
+                    m_uiKnockBackTimer = urand(10000, 20000);
+            }
+            else
+                m_uiKnockBackTimer -= uiDiff;
         }
 
-        if (!WhirlWind)
-        {
-            if (AggroReset_Timer < diff)
-            {
-                //Attack random Gamers
-                Unit* target = NULL;
-                target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,1);
-                if (target)
-                m_creature->AddThreat(target);
-                m_creature->TauntApply(target);
-                AttackStart(target);
-
-                AggroReset = true;
-                AggroReset_Timer = urand(2000, 5000);
-            }else AggroReset_Timer -= diff;
-
-            if (KnockBack_Timer < diff)
-            {
-                DoCastSpellIfCan(m_creature, SPELL_WHIRLWINDADD);
-                KnockBack_Timer = urand(10000, 20000);
-            }else KnockBack_Timer -= diff;
-        }
-
-        if (AggroReset)
-        {
-            if (AggroResetEnd_Timer <diff)
-            {
-                AggroReset = false;
-                AggroResetEnd_Timer = 5000;
-                AggroReset_Timer = urand(30000, 40000);
-            } else AggroResetEnd_Timer -= diff;
-        }
-
-        DoMeleeAttackIfReady();
+        // No melee damage while in whirlwind
+        if (!m_IsWhirlWind)
+            DoMeleeAttackIfReady();
     }
 };
 
@@ -279,14 +309,15 @@ CreatureAI* GetAI_mob_sartura_royal_guard(Creature* pCreature)
 
 void AddSC_boss_sartura()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_sartura";
-    newscript->GetAI = &GetAI_boss_sartura;
-    newscript->RegisterSelf();
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "mob_sartura_royal_guard";
-    newscript->GetAI = &GetAI_mob_sartura_royal_guard;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_sartura";
+    pNewScript->GetAI = &GetAI_boss_sartura;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "mob_sartura_royal_guard";
+    pNewScript->GetAI = &GetAI_mob_sartura_royal_guard;
+    pNewScript->RegisterSelf();
 }
