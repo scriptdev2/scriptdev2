@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Boss_Razorgore
 SD%Complete: 50
-SDComment: Needs additional review. Phase 1 NYI (Grethok the Controller)
+SDComment: Needs additional review. Phase 1 NYI (Grethok the Controller), Conflagration needs core support
 SDCategory: Blackwing Lair
 EndScriptData */
 
@@ -99,7 +99,7 @@ struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
         else
             m_uiCleaveTimer -= uiDiff;
 
-        // WarStomp
+        // War Stomp
         if (m_uiWarStompTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature, SPELL_WARSTOMP) == CAST_OK)
@@ -120,22 +120,20 @@ struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
         // Conflagration
         if (m_uiConflagrationTimer < uiDiff)
         {
-            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_CONFLAGRATION) == CAST_OK)
+            if (DoCastSpellIfCan(m_creature, SPELL_CONFLAGRATION) == CAST_OK)
                 m_uiConflagrationTimer = 12000;
-
-            //We will remove this threat reduction and add an aura check.
-            //if (m_creature->getThreatManager().getThreat(m_creature->getVictim()))
-            //m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-50);
         }
         else
             m_uiConflagrationTimer -= uiDiff;
 
-        // Aura Check. If the gamer is affected by confliguration we attack a random gamer.
-        if (m_creature->getVictim()->HasAura(SPELL_CONFLAGRATION, EFFECT_INDEX_0))
-        {
-            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1))
-                m_creature->TauntApply(pTarget);
-        }
+        /* This is obsolete code, not working anymore, keep as reference, should be handled in core though
+        * // Aura Check. If the gamer is affected by confliguration we attack a random gamer.
+        * if (m_creature->getVictim()->HasAura(SPELL_CONFLAGRATION, EFFECT_INDEX_0))
+        * {
+        *     if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1))
+        *         m_creature->TauntApply(pTarget);
+        * }
+        */
 
         DoMeleeAttackIfReady();
     }

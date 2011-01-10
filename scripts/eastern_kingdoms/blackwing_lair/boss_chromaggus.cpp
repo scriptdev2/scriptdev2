@@ -160,7 +160,7 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
         // Breath One Timer
         if (m_uiBreathOneTimer < uiDiff)
         {
-            if (DoCastSpellIfCan(m_creature->getVictim(), m_uiBreathOneSpell) == CAST_OK)
+            if (DoCastSpellIfCan(m_creature, m_uiBreathOneSpell) == CAST_OK)
                 m_uiBreathOneTimer = 60000;
         }
         else
@@ -169,7 +169,7 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
         // Breath Two Timer
         if (m_uiBreathTwoTimer < uiDiff)
         {
-            if (DoCastSpellIfCan(m_creature->getVictim(), m_uiBreathTwoSpell) == CAST_OK)
+            if (DoCastSpellIfCan(m_creature, m_uiBreathTwoSpell) == CAST_OK)
                 m_uiBreathTwoTimer = 60000;
         }
         else

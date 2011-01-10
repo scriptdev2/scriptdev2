@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Firemaw
-SD%Complete: 100
-SDComment:
+SD%Complete: 80
+SDComment: Thrash missing
 SDCategory: Blackwing Lair
 EndScriptData */
 
@@ -29,6 +29,7 @@ enum
     SPELL_SHADOW_FLAME          = 22539,
     SPELL_WING_BUFFET           = 23339,
     SPELL_FLAME_BUFFET          = 23341,
+    SPELL_THRASH                = 3391,                     // TODO, missing
 };
 
 struct MANGOS_DLL_DECL boss_firemawAI : public ScriptedAI
@@ -80,7 +81,7 @@ struct MANGOS_DLL_DECL boss_firemawAI : public ScriptedAI
         // Shadow Flame Timer
         if (m_uiShadowFlameTimer < uiDiff)
         {
-            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_SHADOW_FLAME) == CAST_OK)
+            if (DoCastSpellIfCan(m_creature, SPELL_SHADOW_FLAME) == CAST_OK)
                 m_uiShadowFlameTimer = urand(15000, 18000);
         }
         else
@@ -103,7 +104,7 @@ struct MANGOS_DLL_DECL boss_firemawAI : public ScriptedAI
         // Flame Buffet Timer
         if (m_uiFlameBuffetTimer < uiDiff)
         {
-            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_FLAME_BUFFET) == CAST_OK)
+            if (DoCastSpellIfCan(m_creature, SPELL_FLAME_BUFFET) == CAST_OK)
                 m_uiFlameBuffetTimer = 5000;
         }
         else

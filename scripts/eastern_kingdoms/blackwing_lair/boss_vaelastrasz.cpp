@@ -197,19 +197,20 @@ struct MANGOS_DLL_DECL boss_vaelastraszAI : public ScriptedAI
         // Burning Adrenaline Caster Timer
         if (m_uiBurningAdrenalineCasterTimer < uiDiff)
         {
-            Unit* target = NULL;
+            Unit* pTarget = NULL;
 
+            // TODO Target Selection must be improved!
             int i = 0 ;
             while (i < 3)                                   // max 3 tries to get a random target with power_mana
             {
                 ++i;
-                target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1);
-                if (target)
-                    if (target->getPowerType() == POWER_MANA)
+                pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1);
+                if (pTarget)
+                    if (pTarget->getPowerType() == POWER_MANA)
                         i=3;
             }
-            if (target)                                     // cast on self (see below)
-                target->CastSpell(target, SPELL_BURNING_ADRENALINE, true);
+            if (pTarget)                                    // cast on self (see below)
+                pTarget->CastSpell(pTarget, SPELL_BURNING_ADRENALINE, true);
 
             m_uiBurningAdrenalineCasterTimer = 15000;
         }

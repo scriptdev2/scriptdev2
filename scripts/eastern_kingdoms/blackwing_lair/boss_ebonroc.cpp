@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Ebonroc
-SD%Complete: 50
-SDComment: Shadow of Ebonroc needs core support
+SD%Complete: 90
+SDComment: Thrash is missing
 SDCategory: Blackwing Lair
 EndScriptData */
 
@@ -29,7 +29,7 @@ enum
     SPELL_SHADOW_FLAME          = 22539,
     SPELL_WING_BUFFET           = 18500,
     SPELL_SHADOW_OF_EBONROC     = 23340,
-    SPELL_HEAL                  = 41386,                  // The Heal spell of his Shadow
+    SPELL_THRASH                = 3391,                     // TODO missing
 };
 
 struct MANGOS_DLL_DECL boss_ebonrocAI : public ScriptedAI
@@ -45,14 +45,12 @@ struct MANGOS_DLL_DECL boss_ebonrocAI : public ScriptedAI
     uint32 m_uiShadowFlameTimer;
     uint32 m_uiWingBuffetTimer;
     uint32 m_uiShadowOfEbonrocTimer;
-    uint32 m_uiHealTimer;
 
     void Reset()
     {
         m_uiShadowFlameTimer        = 15000;                // These times are probably wrong
         m_uiWingBuffetTimer         = 30000;
         m_uiShadowOfEbonrocTimer    = 45000;
-        m_uiHealTimer               = 1000;
     }
 
     void Aggro(Unit* pWho)
@@ -83,7 +81,7 @@ struct MANGOS_DLL_DECL boss_ebonrocAI : public ScriptedAI
         // Shadow Flame Timer
         if (m_uiShadowFlameTimer < uiDiff)
         {
-            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_SHADOW_FLAME) == CAST_OK)
+            if (DoCastSpellIfCan(m_creature, SPELL_SHADOW_FLAME) == CAST_OK)
                 m_uiShadowFlameTimer = urand(12000, 15000);
         }
         else
@@ -106,17 +104,6 @@ struct MANGOS_DLL_DECL boss_ebonrocAI : public ScriptedAI
         }
         else
             m_uiShadowOfEbonrocTimer -= uiDiff;
-
-        if (m_creature->getVictim()->HasAura(SPELL_SHADOW_OF_EBONROC, EFFECT_INDEX_0))
-        {
-            if (m_uiHealTimer < uiDiff)
-            {
-                if (DoCastSpellIfCan(m_creature, SPELL_HEAL) == CAST_OK)
-                    m_uiHealTimer = urand(1000, 3000);
-            }
-            else
-                m_uiHealTimer -= uiDiff;
-        }
 
         DoMeleeAttackIfReady();
     }
