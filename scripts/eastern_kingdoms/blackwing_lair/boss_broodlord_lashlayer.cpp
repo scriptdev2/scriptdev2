@@ -22,77 +22,110 @@ SDCategory: Blackwing Lair
 EndScriptData */
 
 #include "precompiled.h"
+#include "blackwing_lair.h"
 
-#define SAY_AGGRO               -1469000
-#define SAY_LEASH               -1469001
+enum
+{
+    SAY_AGGRO                   = -1469000,
+    SAY_LEASH                   = -1469001,
 
-#define SPELL_CLEAVE            26350
-#define SPELL_BLASTWAVE         23331
-#define SPELL_MORTALSTRIKE      24573
-#define SPELL_KNOCKBACK         25778
+    SPELL_CLEAVE                = 26350,
+    SPELL_BLAST_WAVE            = 23331,
+    SPELL_MORTAL_STRIKE         = 24573,
+    SPELL_KNOCK_AWAY            = 25778
+};
 
 struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
 {
-    boss_broodlordAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+    boss_broodlordAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        Reset();
+    }
 
-    uint32 Cleave_Timer;
-    uint32 BlastWave_Timer;
-    uint32 MortalStrike_Timer;
-    uint32 KnockBack_Timer;
+    ScriptedInstance* m_pInstance;
+
+    uint32 m_uiCleaveTimer;
+    uint32 m_uiBlastWaveTimer;
+    uint32 m_uiMortalStrikeTimer;
+    uint32 m_uiKnockAwayTimer;
 
     void Reset()
     {
-        Cleave_Timer = 8000;                                //These times are probably wrong
-        BlastWave_Timer = 12000;
-        MortalStrike_Timer = 20000;
-        KnockBack_Timer = 30000;
+        m_uiCleaveTimer         = 8000;                                // These times are probably wrong
+        m_uiBlastWaveTimer      = 12000;
+        m_uiMortalStrikeTimer   = 20000;
+        m_uiKnockAwayTimer      = 30000;
     }
 
     void Aggro(Unit* pWho)
     {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_LASHLAYER, IN_PROGRESS);
+
         DoScriptText(SAY_AGGRO, m_creature);
         m_creature->SetInCombatWithZone();
     }
 
-    void UpdateAI(const uint32 diff)
+    void JustDied(Unit* pKiller)
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_LASHLAYER, DONE);
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_LASHLAYER, FAIL);
+    }
+
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //Cleave_Timer
-        if (Cleave_Timer < diff)
+        // Cleave Timer
+        if (m_uiCleaveTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_CLEAVE);
-            Cleave_Timer = 7000;
-        }else Cleave_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_CLEAVE) == CAST_OK)
+                m_uiCleaveTimer = 7000;
+        }
+        else
+            m_uiCleaveTimer -= uiDiff;
 
-        // BlastWave
-        if (BlastWave_Timer < diff)
+        // Blast Wave
+        if (m_uiBlastWaveTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_BLASTWAVE);
-            BlastWave_Timer = urand(8000, 16000);
-        }else BlastWave_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature, SPELL_BLAST_WAVE) == CAST_OK)
+                m_uiBlastWaveTimer = urand(8000, 16000);
+        }
+        else
+            m_uiBlastWaveTimer -= uiDiff;
 
-        //MortalStrike_Timer
-        if (MortalStrike_Timer < diff)
+        // Mortal Strike Timer
+        if (m_uiMortalStrikeTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_MORTALSTRIKE);
-            MortalStrike_Timer = urand(25000, 35000);
-        }else MortalStrike_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_MORTAL_STRIKE) == CAST_OK)
+                m_uiMortalStrikeTimer = urand(25000, 35000);
+        }
+        else
+            m_uiMortalStrikeTimer -= uiDiff;
 
-        if (KnockBack_Timer < diff)
+        if (m_uiKnockAwayTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_KNOCKBACK);
-            //Drop 50% aggro
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_KNOCK_AWAY);
+            // Drop 50% aggro
             if (m_creature->getThreatManager().getThreat(m_creature->getVictim()))
-                m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-50);
+                m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(), -50);
 
-            KnockBack_Timer = urand(15000, 30000);
-        }else KnockBack_Timer -= diff;
+            m_uiKnockAwayTimer = urand(15000, 30000);
+        }
+        else
+            m_uiKnockAwayTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
 
-        if (EnterEvadeIfOutOfCombatArea(diff))
+        if (EnterEvadeIfOutOfCombatArea(uiDiff))
             DoScriptText(SAY_LEASH, m_creature);
     }
 };
@@ -103,9 +136,10 @@ CreatureAI* GetAI_boss_broodlord(Creature* pCreature)
 
 void AddSC_boss_broodlord()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_broodlord";
-    newscript->GetAI = &GetAI_boss_broodlord;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_broodlord";
+    pNewScript->GetAI = &GetAI_boss_broodlord;
+    pNewScript->RegisterSelf();
 }

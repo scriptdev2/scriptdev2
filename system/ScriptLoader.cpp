@@ -56,7 +56,7 @@ extern void AddSC_boss_gyth();
 extern void AddSC_boss_rend_blackhand();
 extern void AddSC_instance_blackrock_spire();
 extern void AddSC_boss_razorgore();                         // blackwing_lair
-extern void AddSC_boss_vael();
+extern void AddSC_boss_vaelastrasz();
 extern void AddSC_boss_broodlord();
 extern void AddSC_boss_firemaw();
 extern void AddSC_boss_ebonroc();
@@ -552,7 +552,7 @@ void AddScripts()
     AddSC_boss_rend_blackhand();
     AddSC_instance_blackrock_spire();
     AddSC_boss_razorgore();                                 // blackwing_lair
-    AddSC_boss_vael();
+    AddSC_boss_vaelastrasz();
     AddSC_boss_broodlord();
     AddSC_boss_firemaw();
     AddSC_boss_ebonroc();

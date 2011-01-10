@@ -22,151 +22,177 @@ SDCategory: Blackwing Lair
 EndScriptData */
 
 #include "precompiled.h"
+#include "blackwing_lair.h"
 
-#define SAY_LINE1           -1469026
-#define SAY_LINE2           -1469027
-#define SAY_LINE3           -1469028
-#define SAY_HALFLIFE        -1469029
-#define SAY_KILLTARGET      -1469030
+enum
+{
+    SAY_LINE_1                  = -1469026,
+    SAY_LINE_2                  = -1469027,
+    SAY_LINE_3                  = -1469028,
+    SAY_HALFLIFE                = -1469029,
+    SAY_KILLTARGET              = -1469030,
+
+    SPELL_ESSENCE_OF_THE_RED    = 23513,
+    SPELL_FLAME_BREATH          = 23461,
+    SPELL_FIRE_NOVA             = 23462,
+    SPELL_TAIL_SWEEP            = 15847,
+    SPELL_BURNING_ADRENALINE    = 23620,
+    SPELL_CLEAVE                = 20684                   // Chain cleave is most likely named something different and contains a dummy effect
+};
 
 #define GOSSIP_ITEM         "Start Event <Needs Gossip Text>"
 
-#define SPELL_ESSENCEOFTHERED       23513
-#define SPELL_FLAMEBREATH           23461
-#define SPELL_FIRENOVA              23462
-#define SPELL_TAILSWIPE             15847
-#define SPELL_BURNINGADRENALINE     23620
-#define SPELL_CLEAVE                20684                   //Chain cleave is most likely named something different and contains a dummy effect
-
-struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
+struct MANGOS_DLL_DECL boss_vaelastraszAI : public ScriptedAI
 {
-    boss_vaelAI(Creature* pCreature) : ScriptedAI(pCreature)
+    boss_vaelastraszAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pCreature->setFaction(35);
-        pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
-    uint64 PlayerGUID;
-    uint32 SpeachTimer;
-    uint32 SpeachNum;
-    uint32 Cleave_Timer;
-    uint32 FlameBreath_Timer;
-    uint32 FireNova_Timer;
-    uint32 BurningAdrenalineCaster_Timer;
-    uint32 BurningAdrenalineTank_Timer;
-    uint32 TailSwipe_Timer;
-    bool HasYelled;
-    bool DoingSpeach;
+    ScriptedInstance* m_pInstance;
+
+    uint64 m_uiPlayerGUID;
+    uint32 m_uiSpeachTimer;
+    uint32 m_uiSpeachNum;
+    uint32 m_uiCleaveTimer;
+    uint32 m_uiFlameBreathTimer;
+    uint32 m_uiFireNovaTimer;
+    uint32 m_uiBurningAdrenalineCasterTimer;
+    uint32 m_uiBurningAdrenalineTankTimer;
+    uint32 m_uiTailSwipeTimer;
+    bool m_bHasYelled;
+    bool mbIsDoingSpeach;
 
     void Reset()
     {
-        PlayerGUID = 0;
-        SpeachTimer = 0;
-        SpeachNum = 0;
-        Cleave_Timer = 8000;                                //These times are probably wrong
-        FlameBreath_Timer = 11000;
-        BurningAdrenalineCaster_Timer = 15000;
-        BurningAdrenalineTank_Timer = 45000;
-        FireNova_Timer = 5000;
-        TailSwipe_Timer = 20000;
-        HasYelled = false;
-        DoingSpeach = false;
+        m_uiPlayerGUID                   = 0;
+        m_uiSpeachTimer                  = 0;
+        m_uiSpeachNum                    = 0;
+        m_uiCleaveTimer                  = 8000;                                // These times are probably wrong
+        m_uiFlameBreathTimer             = 11000;
+        m_uiBurningAdrenalineCasterTimer = 15000;
+        m_uiBurningAdrenalineTankTimer   = 45000;
+        m_uiFireNovaTimer                = 5000;
+        m_uiTailSwipeTimer               = 20000;
+        m_bHasYelled = false;
+        mbIsDoingSpeach = false;
     }
 
     void BeginSpeach(Unit* target)
     {
-        //Stand up and begin speach
-        PlayerGUID = target->GetGUID();
+        // Stand up and begin speach
+        m_uiPlayerGUID = target->GetGUID();
 
-        //10 seconds
-        DoScriptText(SAY_LINE1, m_creature);
+        // 10 seconds
+        DoScriptText(SAY_LINE_1, m_creature);
 
-        SpeachTimer = 10000;
-        SpeachNum = 0;
-        DoingSpeach = true;
+        m_uiSpeachTimer = 10000;
+        m_uiSpeachNum = 0;
+        mbIsDoingSpeach = true;
     }
 
-    void KilledUnit(Unit *victim)
+    void KilledUnit(Unit* pVictim)
     {
         if (urand(0, 4))
             return;
 
-        DoScriptText(SAY_KILLTARGET, m_creature, victim);
+        DoScriptText(SAY_KILLTARGET, m_creature, pVictim);
     }
 
     void Aggro(Unit* pWho)
     {
-        DoCastSpellIfCan(m_creature,SPELL_ESSENCEOFTHERED);
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_VAELASTRASZ, IN_PROGRESS);
+
+        DoCastSpellIfCan(m_creature, SPELL_ESSENCE_OF_THE_RED);
         m_creature->SetInCombatWithZone();
     }
 
-    void UpdateAI(const uint32 diff)
+    void JustDied(Unit* pKiller)
     {
-        //Speach
-        if (DoingSpeach)
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_VAELASTRASZ, DONE);
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_VAELASTRASZ, FAIL);
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        // Speach
+        if (mbIsDoingSpeach)
         {
-            if (SpeachTimer < diff)
+            if (m_uiSpeachTimer < uiDiff)
             {
-                switch (SpeachNum)
+                switch (m_uiSpeachNum)
                 {
                     case 0:
-                        //16 seconds till next line
-                        DoScriptText(SAY_LINE2, m_creature);
-                        SpeachTimer = 16000;
-                        ++SpeachNum;
+                        // 16 seconds till next line
+                        DoScriptText(SAY_LINE_2, m_creature);
+                        m_uiSpeachTimer = 16000;
+                        ++m_uiSpeachNum;
                         break;
                     case 1:
-                        //This one is actually 16 seconds but we only go to 10 seconds because he starts attacking after he says "I must fight this!"
-                        DoScriptText(SAY_LINE3, m_creature);
-                        SpeachTimer = 10000;
-                        ++SpeachNum;
+                        // This one is actually 16 seconds but we only go to 10 seconds because he starts attacking after he says "I must fight this!"
+                        DoScriptText(SAY_LINE_3, m_creature);
+                        m_uiSpeachTimer = 10000;
+                        ++m_uiSpeachNum;
                         break;
                     case 2:
                         m_creature->setFaction(103);
                         m_creature->SetHealth(int(m_creature->GetMaxHealth()*.3));
 
-                        if (PlayerGUID)
+                        if (m_uiPlayerGUID)
                         {
-                            if (Player* pPlayer = m_creature->GetMap()->GetPlayer(PlayerGUID))
+                            if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID))
                                 AttackStart(pPlayer);
 
-                            DoCastSpellIfCan(m_creature, SPELL_ESSENCEOFTHERED);
+                            DoCastSpellIfCan(m_creature, SPELL_ESSENCE_OF_THE_RED);
                         }
-                        SpeachTimer = 0;
-                        DoingSpeach = false;
+                        m_uiSpeachTimer = 0;
+                        mbIsDoingSpeach = false;
                         break;
                 }
-            }else SpeachTimer -= diff;
+            }
+            else
+                m_uiSpeachTimer -= uiDiff;
         }
 
-        //Return since we have no target
+        // Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         // Yell if hp lower than 15%
-        if (m_creature->GetHealthPercent() < 15.0f && !HasYelled)
+        if (m_creature->GetHealthPercent() < 15.0f && !m_bHasYelled)
         {
             DoScriptText(SAY_HALFLIFE, m_creature);
-            HasYelled = true;
+            m_bHasYelled = true;
         }
 
-        //Cleave_Timer
-        if (Cleave_Timer < diff)
+        // Cleave Timer
+        if (m_uiCleaveTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_CLEAVE);
-            Cleave_Timer = 15000;
-        }else Cleave_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_CLEAVE) == CAST_OK)
+                m_uiCleaveTimer = 15000;
+        }
+        else
+            m_uiCleaveTimer -= uiDiff;
 
-        //FlameBreath_Timer
-        if (FlameBreath_Timer < diff)
+        // Flame Breath Timer
+        if (m_uiFlameBreathTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_FLAMEBREATH);
-            FlameBreath_Timer = urand(4000, 8000);
-        }else FlameBreath_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_FLAME_BREATH) == CAST_OK)
+                m_uiFlameBreathTimer = urand(4000, 8000);
+        }
+        else
+            m_uiFlameBreathTimer -= uiDiff;
 
-        //BurningAdrenalineCaster_Timer
-        if (BurningAdrenalineCaster_Timer < diff)
+        // Burning Adrenaline Caster Timer
+        if (m_uiBurningAdrenalineCasterTimer < uiDiff)
         {
             Unit* target = NULL;
 
@@ -174,64 +200,67 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
             while (i < 3)                                   // max 3 tries to get a random target with power_mana
             {
                 ++i;
-                target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,1);//not aggro leader
+                target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1);
                 if (target)
                     if (target->getPowerType() == POWER_MANA)
                         i=3;
             }
             if (target)                                     // cast on self (see below)
-                target->CastSpell(target, SPELL_BURNINGADRENALINE, true);
+                target->CastSpell(target, SPELL_BURNING_ADRENALINE, true);
 
-            BurningAdrenalineCaster_Timer = 15000;
-        }else BurningAdrenalineCaster_Timer -= diff;
+            m_uiBurningAdrenalineCasterTimer = 15000;
+        }
+        else
+            m_uiBurningAdrenalineCasterTimer -= uiDiff;
 
-        //BurningAdrenalineTank_Timer
-        if (BurningAdrenalineTank_Timer < diff)
+        // Burning Adrenaline Tank Timer
+        if (m_uiBurningAdrenalineTankTimer < uiDiff)
         {
             // have the victim cast the spell on himself otherwise the third effect aura will be applied
             // to Vael instead of the player
-            m_creature->getVictim()->CastSpell(m_creature->getVictim(), SPELL_BURNINGADRENALINE, true);
+            m_creature->getVictim()->CastSpell(m_creature->getVictim(), SPELL_BURNING_ADRENALINE, true);
 
-            BurningAdrenalineTank_Timer = 45000;
-        }else BurningAdrenalineTank_Timer -= diff;
+            m_uiBurningAdrenalineTankTimer = 45000;
+        }
+        else
+            m_uiBurningAdrenalineTankTimer -= uiDiff;
 
-        //FireNova_Timer
-        if (FireNova_Timer < diff)
+        // Fire Nova Timer
+        if (m_uiFireNovaTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_FIRENOVA);
-            FireNova_Timer = 5000;
-        }else FireNova_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature, SPELL_FIRE_NOVA) == CAST_OK)
+                m_uiFireNovaTimer = 5000;
+        }
+        else
+            m_uiFireNovaTimer -= uiDiff;
 
-        //TailSwipe_Timer
-        if (TailSwipe_Timer < diff)
+        // Tail Sweep Timer
+        if (m_uiTailSwipeTimer < uiDiff)
         {
-            //Only cast if we are behind
-            /*if (!m_creature->HasInArc(M_PI, m_creature->getVictim()))
-            {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_TAILSWIPE);
-            }*/
-
-            TailSwipe_Timer = 20000;
-        }else TailSwipe_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature, SPELL_TAIL_SWEEP) == CAST_OK)
+                m_uiTailSwipeTimer = 20000;
+        }
+        else
+            m_uiTailSwipeTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
 };
 
-bool GossipSelect_boss_vael(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+bool GossipSelect_boss_vaelastrasz(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)               //Fight time
+    if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)               // Fight time
     {
         pPlayer->CLOSE_GOSSIP_MENU();
 
-        if (boss_vaelAI* pVaelAI = dynamic_cast<boss_vaelAI*>(pCreature->AI()))
+        if (boss_vaelastraszAI* pVaelAI = dynamic_cast<boss_vaelastraszAI*>(pCreature->AI()))
             pVaelAI->BeginSpeach((Unit*)pPlayer);
     }
 
     return true;
 }
 
-bool GossipHello_boss_vael(Player* pPlayer, Creature* pCreature)
+bool GossipHello_boss_vaelastrasz(Player* pPlayer, Creature* pCreature)
 {
     if (pCreature->isQuestGiver())
         pPlayer->PrepareQuestMenu(pCreature->GetGUID());
@@ -242,18 +271,19 @@ bool GossipHello_boss_vael(Player* pPlayer, Creature* pCreature)
     return true;
 }
 
-CreatureAI* GetAI_boss_vael(Creature* pCreature)
+CreatureAI* GetAI_boss_vaelastrasz(Creature* pCreature)
 {
-    return new boss_vaelAI(pCreature);
+    return new boss_vaelastraszAI(pCreature);
 }
 
-void AddSC_boss_vael()
+void AddSC_boss_vaelastrasz()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_vaelastrasz";
-    newscript->GetAI = &GetAI_boss_vael;
-    newscript->pGossipHello = &GossipHello_boss_vael;
-    newscript->pGossipSelect = &GossipSelect_boss_vael;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_vaelastrasz";
+    pNewScript->GetAI = &GetAI_boss_vaelastrasz;
+    pNewScript->pGossipHello = &GossipHello_boss_vaelastrasz;
+    pNewScript->pGossipSelect = &GossipSelect_boss_vaelastrasz;
+    pNewScript->RegisterSelf();
 }

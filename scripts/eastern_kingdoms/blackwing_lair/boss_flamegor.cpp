@@ -22,67 +22,97 @@ SDCategory: Blackwing Lair
 EndScriptData */
 
 #include "precompiled.h"
+#include "blackwing_lair.h"
 
 enum
 {
     EMOTE_GENERIC_FRENZY        = -1000002,
 
-    SPELL_SHADOWFLAME           = 22539,
-    SPELL_WINGBUFFET            = 23339,
-    SPELL_FRENZY                = 23342                     //This spell periodically triggers fire nova
+    SPELL_SHADOW_FLAME          = 22539,
+    SPELL_WING_BUFFET           = 23339,
+    SPELL_FRENZY                = 23342                     // This spell periodically triggers fire nova
 };
 
 struct MANGOS_DLL_DECL boss_flamegorAI : public ScriptedAI
 {
-    boss_flamegorAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+    boss_flamegorAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        Reset();
+    }
 
-    uint32 ShadowFlame_Timer;
-    uint32 WingBuffet_Timer;
-    uint32 Frenzy_Timer;
+    ScriptedInstance* m_pInstance;
+
+    uint32 m_uiShadowFlameTimer;
+    uint32 m_uiWingBuffetTimer;
+    uint32 m_uiFrenzyTimer;
 
     void Reset()
     {
-        ShadowFlame_Timer = 21000;                          //These times are probably wrong
-        WingBuffet_Timer = 35000;
-        Frenzy_Timer = 10000;
+        m_uiShadowFlameTimer = 21000;                       // These times are probably wrong
+        m_uiWingBuffetTimer = 35000;
+        m_uiFrenzyTimer = 10000;
     }
 
     void Aggro(Unit* pWho)
     {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_FLAMEGOR, IN_PROGRESS);
+
         m_creature->SetInCombatWithZone();
     }
 
-    void UpdateAI(const uint32 diff)
+    void JustDied(Unit* pKiller)
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_FLAMEGOR, DONE);
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_FLAMEGOR, FAIL);
+    }
+
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //ShadowFlame_Timer
-        if (ShadowFlame_Timer < diff)
+        // ShadowFlame_Timer
+        if (m_uiShadowFlameTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_SHADOWFLAME);
-            ShadowFlame_Timer = urand(15000, 22000);
-        }else ShadowFlame_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_SHADOW_FLAME) == CAST_OK)
+                m_uiShadowFlameTimer = urand(15000, 22000);
+        }
+        else
+            m_uiShadowFlameTimer -= uiDiff;
 
-        //WingBuffet_Timer
-        if (WingBuffet_Timer < diff)
+        // WingBuffet_Timer
+        if (m_uiWingBuffetTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_WINGBUFFET);
-            if (m_creature->getThreatManager().getThreat(m_creature->getVictim()))
-                m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-75);
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_WING_BUFFET) == CAST_OK)
+            {
+                if (m_creature->getThreatManager().getThreat(m_creature->getVictim()))
+                    m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-75);
 
-            WingBuffet_Timer = 25000;
-        }else WingBuffet_Timer -= diff;
+                m_uiWingBuffetTimer = 25000;
+            }
+        }
+        else
+            m_uiWingBuffetTimer -= uiDiff;
 
-        //Frenzy_Timer
-        if (Frenzy_Timer < diff)
+        // Frenzy_Timer
+        if (m_uiFrenzyTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature, SPELL_FRENZY) == CAST_OK)
             {
                 DoScriptText(EMOTE_GENERIC_FRENZY, m_creature);
-                Frenzy_Timer = urand(8000, 10000);
+                m_uiFrenzyTimer = urand(8000, 10000);
             }
-        }else Frenzy_Timer -= diff;
+        }
+        else
+            m_uiFrenzyTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }

@@ -22,59 +22,92 @@ SDCategory: Blackwing Lair
 EndScriptData */
 
 #include "precompiled.h"
+#include "blackwing_lair.h"
 
-#define SPELL_SHADOWFLAME       22539
-#define SPELL_WINGBUFFET        23339
-#define SPELL_FLAMEBUFFET       23341
+enum
+{
+    SPELL_SHADOW_FLAME          = 22539,
+    SPELL_WING_BUFFET           = 23339,
+    SPELL_FLAME_BUFFET          = 23341,
+};
 
 struct MANGOS_DLL_DECL boss_firemawAI : public ScriptedAI
 {
-    boss_firemawAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+    boss_firemawAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        Reset();
+    }
 
-    uint32 ShadowFlame_Timer;
-    uint32 WingBuffet_Timer;
-    uint32 FlameBuffet_Timer;
+    ScriptedInstance* m_pInstance;
+
+    uint32 m_uiShadowFlameTimer;
+    uint32 m_uiWingBuffetTimer;
+    uint32 m_uiFlameBuffetTimer;
 
     void Reset()
     {
-        ShadowFlame_Timer = 30000;                          //These times are probably wrong
-        WingBuffet_Timer = 24000;
-        FlameBuffet_Timer = 5000;
+        m_uiShadowFlameTimer = 30000;                       // These times are probably wrong
+        m_uiWingBuffetTimer = 24000;
+        m_uiFlameBuffetTimer = 5000;
     }
 
     void Aggro(Unit* pWho)
     {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_FIREMAW, IN_PROGRESS);
+
         m_creature->SetInCombatWithZone();
     }
 
-    void UpdateAI(const uint32 diff)
+    void JustDied(Unit* pKiller)
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_FIREMAW, DONE);
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_FIREMAW, FAIL);
+    }
+
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //ShadowFlame_Timer
-        if (ShadowFlame_Timer < diff)
+        // Shadow Flame Timer
+        if (m_uiShadowFlameTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_SHADOWFLAME);
-            ShadowFlame_Timer = urand(15000, 18000);
-        }else ShadowFlame_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_SHADOW_FLAME) == CAST_OK)
+                m_uiShadowFlameTimer = urand(15000, 18000);
+        }
+        else
+            m_uiShadowFlameTimer -= uiDiff;
 
-        //WingBuffet_Timer
-        if (WingBuffet_Timer < diff)
+        // Wing Buffet Timer
+        if (m_uiWingBuffetTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_WINGBUFFET);
-            if (m_creature->getThreatManager().getThreat(m_creature->getVictim()))
-                m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-75);
+            if (DoCastSpellIfCan(m_creature, SPELL_WING_BUFFET) == CAST_OK)
+            {
+                if (m_creature->getThreatManager().getThreat(m_creature->getVictim()))
+                    m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-75);
 
-            WingBuffet_Timer = 25000;
-        }else WingBuffet_Timer -= diff;
+                m_uiWingBuffetTimer = 25000;
+            }
+        }
+        else
+            m_uiWingBuffetTimer -= uiDiff;
 
-        //FlameBuffet_Timer
-        if (FlameBuffet_Timer < diff)
+        // Flame Buffet Timer
+        if (m_uiFlameBuffetTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_FLAMEBUFFET);
-            FlameBuffet_Timer = 5000;
-        }else FlameBuffet_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_FLAME_BUFFET) == CAST_OK)
+                m_uiFlameBuffetTimer = 5000;
+        }
+        else
+            m_uiFlameBuffetTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
