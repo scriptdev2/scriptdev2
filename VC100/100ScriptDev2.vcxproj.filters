@@ -1786,7 +1786,7 @@
       <Filter>scripts\eastern_kingdoms\blackrock_depths</Filter>
     </ClInclude>
     <ClInclude Include="..\scripts\eastern_kingdoms\blackrock_spire\blackrock_spire.h">
-      <Filter>scripts\eastern_kingdoms\blackrock_depths</Filter>
+      <Filter>scripts\eastern_kingdoms\blackrock_spire</Filter>
     </ClInclude>
     <ClInclude Include="..\scripts\eastern_kingdoms\blackwing_lair\blackwing_lair.h">
       <Filter>scripts\eastern_kingdoms\blackwing_lair</Filter>
@@ -1890,9 +1890,6 @@
     <ClInclude Include="..\scripts\northrend\gundrak\gundrak.h">
       <Filter>scripts\northrend\gundrak</Filter>
     </ClInclude>
-    <ClInclude Include="..\scripts\northrend\icecrown_citadel\icecrown_citadel\icecrown_citadel.h">
-      <Filter>scripts\northrend\icecrown_citadel\icecrown_citadel</Filter>
-    </ClInclude>
     <ClInclude Include="..\scripts\northrend\icecrown_citadel\frozen_halls\forge_of_souls\forge_of_souls.h">
       <Filter>scripts\northrend\icecrown_citadel\frozen_halls\forge_of_souls</Filter>
     </ClInclude>
@@ -1901,6 +1898,9 @@
     </ClInclude>
     <ClInclude Include="..\scripts\northrend\icecrown_citadel\frozen_halls\pit_of_saron\pit_of_saron.h">
       <Filter>scripts\northrend\icecrown_citadel\frozen_halls\pit_of_saron</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scripts\northrend\icecrown_citadel\icecrown_citadel\icecrown_citadel.h">
+      <Filter>scripts\northrend\icecrown_citadel\icecrown_citadel</Filter>
     </ClInclude>
     <ClInclude Include="..\scripts\northrend\naxxramas\naxxramas.h">
       <Filter>scripts\northrend\naxxramas</Filter>
