@@ -66,7 +66,7 @@ struct MANGOS_DLL_DECL boss_emperor_dagran_thaurissanAI : public ScriptedAI
         if (!m_pInstance)
             return;
 
-        if (Creature* pPrincess = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_PRINCESS)))
+        if (Creature* pPrincess = m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_PRINCESS)))
         {
             if (pPrincess->isAlive())
             {
@@ -179,7 +179,7 @@ struct MANGOS_DLL_DECL boss_moira_bronzebeardAI : public ScriptedAI
     {
         if (m_pInstance)
         {
-            if (Creature* pEmperor = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_EMPEROR)))
+            if (Creature* pEmperor = m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_EMPEROR)))
             {
                 // if evade, then check if he is alive. If not, start make portal
                 if (!pEmperor->isAlive())
@@ -224,7 +224,7 @@ struct MANGOS_DLL_DECL boss_moira_bronzebeardAI : public ScriptedAI
         //Heal_Timer
         if (m_uiHeal_Timer < uiDiff)
         {
-            if (Creature* pEmperor = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_EMPEROR)))
+            if (Creature* pEmperor = m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_EMPEROR)))
             {
                 if (pEmperor->isAlive() && pEmperor->GetHealthPercent() != 100.0f)
                     DoCastSpellIfCan(pEmperor, SPELL_HEAL);

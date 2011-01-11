@@ -80,7 +80,7 @@ bool GossipSelect_boss_gloomrel(Player* pPlayer, Creature* pCreature, uint32 uiS
             if (ScriptedInstance* pInstance = (ScriptedInstance*)pCreature->GetInstanceData())
             {
                 //are 5 minutes expected? go template may have data to despawn when used at quest
-                pInstance->DoRespawnGameObject(pInstance->GetData64(DATA_GO_CHALICE),MINUTE*5);
+                pInstance->DoRespawnGameObject(pInstance->GetData64(GO_SPECTRAL_CHALICE), MINUTE*5);
             }
             break;
     }
@@ -154,17 +154,17 @@ struct MANGOS_DLL_DECL boss_doomrelAI : public ScriptedAI
         switch(uiPhase)
         {
             case 0:
-                return m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_ANGERREL));
+                return m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_ANGERREL));
             case 1:
-                return m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_SEETHREL));
+                return m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_SEETHREL));
             case 2:
-                return m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_DOPEREL));
+                return m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_DOPEREL));
             case 3:
-                return m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_GLOOMREL));
+                return m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_GLOOMREL));
             case 4:
-                return m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_VILEREL));
+                return m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_VILEREL));
             case 5:
-                return m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_HATEREL));
+                return m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_HATEREL));
             case 6:
                 return m_creature;
         }
