@@ -27,7 +27,7 @@ EndScriptData */
 instance_molten_core::instance_molten_core(Map* pMap) : ScriptedInstance(pMap),
     m_uiGarrGUID(0),
     m_uiSulfuronGUID(0),
-    m_uiMajorDomoGUID(0),
+    m_uiMajordomoGUID(0),
     m_uiRagnarosGUID(0),
     m_uiRuneKoroGUID(0),
     m_uiRuneZethGUID(0),
@@ -57,6 +57,12 @@ bool instance_molten_core::IsEncounterInProgress() const
     return false;
 }
 
+void instance_molten_core::OnPlayerEnter(Player* pPlayer)
+{
+    // Summon Majordomo if can
+    DoSpawnMajordomoIfCan(true);
+}
+
 void instance_molten_core::OnCreatureCreate(Creature* pCreature)
 {
     switch (pCreature->GetEntry())
@@ -64,7 +70,7 @@ void instance_molten_core::OnCreatureCreate(Creature* pCreature)
         // Bosses
         case NPC_GARR:      m_uiGarrGUID = pCreature->GetGUID();        break;
         case NPC_SULFURON:  m_uiSulfuronGUID = pCreature->GetGUID();    break;
-        case NPC_MAJORDOMO: m_uiMajorDomoGUID = pCreature->GetGUID();   break;
+        case NPC_MAJORDOMO: m_uiMajordomoGUID = pCreature->GetGUID();   break;
         case NPC_RAGNAROS:  m_uiRagnarosGUID = pCreature->GetGUID();    break;
 
         // Push adds to lists in order to handle respawn
@@ -72,8 +78,6 @@ void instance_molten_core::OnCreatureCreate(Creature* pCreature)
         case NPC_FLAMEWAKER:            m_luiFlamewakerGUIDs.push_back(pCreature->GetGUID());   break;
         case NPC_FIRESWORN:             m_luiFireswornGUIDs.push_back(pCreature->GetGUID());    break;
         case NPC_FLAMEWAKER_PRIEST:     m_luiPriestGUIDs.push_back(pCreature->GetGUID());       break;
-        case NPC_FLAMEWAKER_HEALER:     m_luiHealerGUIDs.push_back(pCreature->GetGUID());       break;
-        case NPC_FLAMEWAKER_ELITE:      m_luiEliteGUIDs.push_back(pCreature->GetGUID());        break;
         case NPC_CORE_RAGER:            m_luiRagerGUIDs.push_back(pCreature->GetGUID());        break;
     }
 }
@@ -164,21 +168,16 @@ void instance_molten_core::SetData(uint32 uiType, uint32 uiData)
         case TYPE_MAJORDOMO:
             m_auiEncounter[uiType] = uiData;
             if (uiData == DONE)
-            {
                 DoRespawnGameObject(m_uiFirelordCacheGUID);
-                m_luiEliteGUIDs.clear();
-                m_luiHealerGUIDs.clear();
-            }
-            if (uiData == FAIL)
-            {
-                DoHandleAdds(m_luiEliteGUIDs);
-                DoHandleAdds(m_luiHealerGUIDs);
-            }
             break;
         case TYPE_RAGNAROS:
             m_auiEncounter[uiType] = uiData;
             break;
     }
+
+    // Check if Majordomo can be summoned
+    if (uiData == DONE)
+        DoSpawnMajordomoIfCan(false);
 
     if (uiData == DONE)
     {
@@ -205,7 +204,51 @@ uint32 instance_molten_core::GetData(uint32 uiType)
     return 0;
 }
 
-void instance_molten_core::DoHandleAdds(GUIDList luiAddsGUIDs, bool bRespawn /*=true*/)
+// Handle Majordomo summon here
+void instance_molten_core::DoSpawnMajordomoIfCan(bool bByPlayerEnter)
+{
+    // If already spawned return
+    if (m_uiMajordomoGUID)
+        return;
+
+    // If both Majordomo and Ragnaros events are finished, return
+    if (m_auiEncounter[TYPE_MAJORDOMO] == DONE && m_auiEncounter[TYPE_RAGNAROS] == DONE)
+        return;
+
+    // Check if all rune bosses are done
+    for(uint8 i = TYPE_MAGMADAR; i < TYPE_MAJORDOMO; i++)
+    {
+        if (m_auiEncounter[i] != DONE)
+            return;
+    }
+
+    Player* pPlayer = GetPlayerInMap();
+    if (!pPlayer)
+        return;
+
+    // Summon Majordomo
+    // If Majordomo encounter isn't done, summon at encounter place, else near Ragnaros
+    uint8 uiSummonPos = m_auiEncounter[TYPE_MAJORDOMO] == DONE ? 1 : 0;
+    if (Creature* pMajordomo = pPlayer->SummonCreature(m_aMajordomoLocations[uiSummonPos].m_uiEntry, m_aMajordomoLocations[uiSummonPos].m_fX, m_aMajordomoLocations[uiSummonPos].m_fY, m_aMajordomoLocations[uiSummonPos].m_fZ, m_aMajordomoLocations[uiSummonPos].m_fO, TEMPSUMMON_MANUAL_DESPAWN, 2*HOUR*IN_MILLISECONDS))
+    {
+        if (uiSummonPos)                                    // Majordomo encounter already done, set faction
+        {
+            pMajordomo->setFaction(FACTION_MAJORDOMO_FRIENDLY);
+            pMajordomo->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
+            pMajordomo->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+        }
+        else                                                // Else yell and summon adds
+        {
+            if (!bByPlayerEnter)
+                DoScriptText(SAY_MAJORDOMO_SPAWN, pMajordomo);
+
+            for (uint8 i = 0; i < MAX_MAJORDOMO_ADDS; ++i)
+                pMajordomo->SummonCreature(m_aBosspawnLocs[i].m_uiEntry, m_aBosspawnLocs[i].m_fX, m_aBosspawnLocs[i].m_fY, m_aBosspawnLocs[i].m_fZ, m_aBosspawnLocs[i].m_fO, TEMPSUMMON_MANUAL_DESPAWN, DAY*IN_MILLISECONDS);
+        }
+    }
+}
+
+void instance_molten_core::DoHandleAdds(GUIDList &luiAddsGUIDs, bool bRespawn /*=true*/)
 {
     if (luiAddsGUIDs.empty())
         return;
@@ -230,7 +273,7 @@ uint64 instance_molten_core::GetData64(uint32 uiData)
     {
         case NPC_GARR:      return m_uiGarrGUID;
         case NPC_SULFURON:  return m_uiSulfuronGUID;
-        case NPC_MAJORDOMO: return m_uiMajorDomoGUID;
+        case NPC_MAJORDOMO: return m_uiMajordomoGUID;
         case NPC_RAGNAROS:  return m_uiRagnarosGUID;
 
         default:
