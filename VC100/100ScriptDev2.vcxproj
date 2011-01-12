@@ -461,6 +461,7 @@
     <ClCompile Include="..\scripts\kalimdor\temple_of_ahnqiraj\instance_temple_of_ahnqiraj.cpp" />
     <ClCompile Include="..\scripts\kalimdor\temple_of_ahnqiraj\mob_anubisath_sentinel.cpp" />
     <ClCompile Include="..\scripts\kalimdor\wailing_caverns\instance_wailing_caverns.cpp" />
+    <ClCompile Include="..\scripts\kalimdor\wailing_caverns\wailing_caverns.cpp" />
     <ClCompile Include="..\scripts\kalimdor\zulfarrak\boss_zumrah.cpp" />
     <ClCompile Include="..\scripts\kalimdor\zulfarrak\instance_zulfarrak.cpp" />
     <ClCompile Include="..\scripts\kalimdor\zulfarrak\zulfarrak.cpp" />

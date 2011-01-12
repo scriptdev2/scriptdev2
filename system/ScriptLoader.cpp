@@ -249,6 +249,7 @@ extern void AddSC_boss_viscidus();
 extern void AddSC_mob_anubisath_sentinel();
 extern void AddSC_instance_temple_of_ahnqiraj();
 extern void AddSC_instance_wailing_caverns();               // wailing_caverns
+extern void AddSC_wailing_caverns();
 extern void AddSC_boss_zumrah();                            // zulfarrak
 extern void AddSC_instance_zulfarrak();
 extern void AddSC_zulfarrak();
@@ -745,6 +746,7 @@ void AddScripts()
     AddSC_mob_anubisath_sentinel();
     AddSC_instance_temple_of_ahnqiraj();
     AddSC_instance_wailing_caverns();                       // wailing_caverns
+    AddSC_wailing_caverns();
     AddSC_boss_zumrah();                                    // zulfarrak
     AddSC_zulfarrak();
     AddSC_instance_zulfarrak();

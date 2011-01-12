@@ -1053,6 +1053,9 @@
     <ClCompile Include="..\scripts\kalimdor\wailing_caverns\instance_wailing_caverns.cpp">
       <Filter>scripts\kalimdor\wailing_caverns</Filter>
     </ClCompile>
+    <ClCompile Include="..\scripts\kalimdor\wailing_caverns\wailing_caverns.cpp">
+      <Filter>scripts\kalimdor\wailing_caverns</Filter>
+    </ClCompile>
     <ClCompile Include="..\scripts\kalimdor\zulfarrak\boss_zumrah.cpp">
       <Filter>scripts\kalimdor\zulfarrak</Filter>
     </ClCompile>
