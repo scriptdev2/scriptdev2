@@ -688,7 +688,7 @@ struct MANGOS_DLL_DECL npc_amanishi_hatcherAI : public ScriptedAI
                     m_creature->ForcedDespawn();
                     return;
                 }
-                else if (m_uiHatchlingCount == uiEggsRemaining/2)
+                else if (m_uiHatchlingCount >= uiEggsRemaining/2)
                     m_uiHatchlingCount = uiEggsRemaining;
 
                 DoCastSpellIfCan(m_creature,SPELL_HATCH_EGG);
