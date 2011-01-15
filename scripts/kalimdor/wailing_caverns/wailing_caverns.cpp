@@ -54,7 +54,7 @@ enum
     SPELL_POTION            = 8141,
     SPELL_CLEANSING         = 6270,
     SPELL_AWAKENING         = 6271,
-    SPELL_SHAPESHIFT        = 8153,+
+    SPELL_SHAPESHIFT        = 8153,
 
     NPC_DEVIATE_RAPTOR      = 3636,                         // 2 of them at the first stop
     NPC_DEVIATE_VIPER       = 5755,                         // 3 of them at the circle
