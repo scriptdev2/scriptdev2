@@ -17,6 +17,7 @@ enum
     TYPE_MUTANUS    = 5,
 
     NPC_NARALEX     = 3679,
+    SAY_INTRO       = -1043000,                             // Say when the first 4 encounter are DONE
 };
 
 class MANGOS_DLL_DECL instance_wailing_caverns : public ScriptedInstance
