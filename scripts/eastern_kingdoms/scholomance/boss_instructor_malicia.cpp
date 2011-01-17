@@ -16,122 +16,152 @@
 
 /* ScriptData
 SDName: Boss_instructormalicia
-SD%Complete: 100
-SDComment:
+SD%Complete: 80
+SDComment: Spell IDs need confirmation, Slow is missing, Verify mechanics
 SDCategory: Scholomance
 EndScriptData */
 
 #include "precompiled.h"
 #include "scholomance.h"
 
-#define SPELL_CALLOFGRAVES         17831
-#define SPELL_CORRUPTION           11672
-#define SPELL_FLASHHEAL            10917
-#define SPELL_RENEW                10929
-#define SPELL_HEALINGTOUCH         9889
+enum
+{
+    SPELL_CALLOFGRAVES          = 17831,
+    SPELL_CORRUPTION            = 18376,                    // old spell id = 11672,
+    SPELL_FLASHHEAL             = 17843,                    // old spell id = 10917,
+    SPELL_RENEW                 = 8362,                     // old spell id = 10929,
+    SPELL_HEALINGTOUCH          = 15586,                    // old spell id = 9889
+    SPELL_SLOW                  = 13747,                    // TODO Unused
+};
 
 struct MANGOS_DLL_DECL boss_instructormaliciaAI : public ScriptedAI
 {
-    boss_instructormaliciaAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+    boss_instructormaliciaAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        Reset();
+    }
 
-    uint32 CallOfGraves_Timer;
-    uint32 Corruption_Timer;
-    uint32 FlashHeal_Timer;
-    uint32 Renew_Timer;
-    uint32 HealingTouch_Timer;
-    uint32 FlashCounter;
-    uint32 TouchCounter;
+    ScriptedInstance* m_pInstance;
+
+    uint32 m_uiCallOfGravesTimer;
+    uint32 m_uiCorruptionTimer;
+    uint32 m_uiFlashHealTimer;
+    uint32 m_uiRenewTimer;
+    uint32 m_uiHealingTouchTimer;
+    uint32 m_uiFlashCounter;
+    uint32 m_uiTouchCounter;
 
     void Reset()
     {
-        CallOfGraves_Timer = 4000;
-        Corruption_Timer = 8000;
-        FlashHeal_Timer = 38000;
-        Renew_Timer = 32000;
-        HealingTouch_Timer = 45000;
-        FlashCounter = 0;
-        TouchCounter = 0;
+        m_uiCallOfGravesTimer = 4000;
+        m_uiCorruptionTimer = 8000;
+        m_uiFlashHealTimer = 38000;
+        m_uiRenewTimer = 32000;
+        m_uiHealingTouchTimer = 45000;
+        m_uiFlashCounter = 0;
+        m_uiTouchCounter = 0;
     }
 
-    void JustDied(Unit *killer)
+    void Aggro(Unit* pWho)
     {
-        if (ScriptedInstance* pInstance = (ScriptedInstance*)m_creature->GetInstanceData())
-        {
-            pInstance->SetData(TYPE_MALICIA, DONE);
-
-            if (pInstance->GetData(TYPE_GANDLING) == SPECIAL)
-                m_creature->SummonCreature(1853, 180.73f, -9.43856f, 75.507f, 1.61399f, TEMPSUMMON_DEAD_DESPAWN, 0);
-        }
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_MALICIA, IN_PROGRESS);
     }
 
-    void UpdateAI(const uint32 diff)
+    void JustDied(Unit* pKiller)
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_MALICIA, DONE);
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_MALICIA, FAIL);
+    }
+
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //CallOfGraves_Timer
-        if (CallOfGraves_Timer < diff)
+        // Call Of Graves Timer
+        if (m_uiCallOfGravesTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_CALLOFGRAVES);
-            CallOfGraves_Timer = 65000;
-        }else CallOfGraves_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature, SPELL_CALLOFGRAVES) == CAST_OK)
+                m_uiCallOfGravesTimer = 65000;
+        }
+        else
+            m_uiCallOfGravesTimer -= uiDiff;
 
-        //Corruption_Timer
-        if (Corruption_Timer < diff)
+        // Corruption Timer
+        if (m_uiCorruptionTimer < uiDiff)
         {
-            Unit* target = NULL;
-            target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
-            if (target) DoCastSpellIfCan(target,SPELL_CORRUPTION);
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_CORRUPTION) == CAST_OK)
+                    m_uiCorruptionTimer = 24000;
+            }
+        }
+        else
+            m_uiCorruptionTimer -= uiDiff;
 
-            Corruption_Timer = 24000;
-        }else Corruption_Timer -= diff;
-
-        //Renew_Timer
-        if (Renew_Timer < diff)
+        // Renew Timer
+        if (m_uiRenewTimer < uiDiff)
         {
             DoCastSpellIfCan(m_creature, SPELL_RENEW);
-            Renew_Timer = 10000;
-        }else Renew_Timer -= diff;
+            m_uiRenewTimer = 10000;
+        }
+        else
+            m_uiRenewTimer -= uiDiff;
 
-        //FlashHeal_Timer
-        if (FlashHeal_Timer < diff)
+        // Flash Heal Timer
+        if (m_uiFlashHealTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature,SPELL_FLASHHEAL);
+            DoCastSpellIfCan(m_creature, SPELL_FLASHHEAL);
 
-            //5 Flashheals will be casted
-            if (FlashCounter < 2)
+            // TODO - 5 or 2?
+            // 5 Flashheals will be casted
+            if (m_uiFlashCounter < 2)
             {
-                FlashHeal_Timer = 5000;
-                ++FlashCounter;
+                m_uiFlashHealTimer = 5000;
+                ++m_uiFlashCounter;
             }
             else
             {
-                FlashCounter=0;
-                FlashHeal_Timer = 30000;
+                m_uiFlashCounter = 0;
+                m_uiFlashHealTimer = 30000;
             }
-        }else FlashHeal_Timer -= diff;
+        }
+        else
+            m_uiFlashHealTimer -= uiDiff;
 
-        //HealingTouch_Timer
-        if (HealingTouch_Timer < diff)
+        // Healing Touch Timer
+        if (m_uiHealingTouchTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature,SPELL_HEALINGTOUCH);
+            DoCastSpellIfCan(m_creature, SPELL_HEALINGTOUCH);
 
-            //3 Healingtouchs will be casted
-            if (HealingTouch_Timer < 2)
+            // TODO - 3 or 2?
+            // 3 Healingtouchs will be casted
+            if (m_uiHealingTouchTimer < 2)
             {
-                HealingTouch_Timer = 5500;
-                ++TouchCounter;
+                m_uiHealingTouchTimer = 5500;
+                ++m_uiTouchCounter;
             }
             else
             {
-                TouchCounter=0;
-                HealingTouch_Timer = 30000;
+                m_uiTouchCounter = 0;
+                m_uiHealingTouchTimer = 30000;
             }
-        }else HealingTouch_Timer -= diff;
+        }
+        else
+            m_uiHealingTouchTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
 };
+
 CreatureAI* GetAI_boss_instructormalicia(Creature* pCreature)
 {
     return new boss_instructormaliciaAI(pCreature);
@@ -139,9 +169,10 @@ CreatureAI* GetAI_boss_instructormalicia(Creature* pCreature)
 
 void AddSC_boss_instructormalicia()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_instructor_malicia";
-    newscript->GetAI = &GetAI_boss_instructormalicia;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_instructor_malicia";
+    pNewScript->GetAI = &GetAI_boss_instructormalicia;
+    pNewScript->RegisterSelf();
 }

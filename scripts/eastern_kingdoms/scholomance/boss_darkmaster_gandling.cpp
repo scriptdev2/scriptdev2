@@ -17,36 +17,20 @@
 /* ScriptData
 SDName: Boss_Darkmaster_Gandling
 SD%Complete: 75
-SDComment: Doors missing
+SDComment: TODO: Implement teleport spells in MaNGOS and WorldDB
 SDCategory: Scholomance
 EndScriptData */
 
 #include "precompiled.h"
 #include "scholomance.h"
 
-#define SPELL_ARCANEMISSILES           22272
-#define SPELL_SHADOWSHIELD             22417                //Not right ID. But 12040 is wrong either.
-#define SPELL_CURSE                    18702
-
-#define ADD_1X 170.205
-#define ADD_1Y 99.413
-#define ADD_1Z 104.733
-#define ADD_1O 3.16
-
-#define ADD_2X 170.813
-#define ADD_2Y 97.857
-#define ADD_2Z 104.713
-#define ADD_2O 3.16
-
-#define ADD_3X 170.720
-#define ADD_3Y 100.900
-#define ADD_3Z 104.739
-#define ADD_3O 3.16
-
-#define ADD_4X 171.866
-#define ADD_4Y 99.373
-#define ADD_4Z 104.732
-#define ADD_4O 3.16
+enum
+{
+    SPELL_ARCANE_MISSILES          = 15790,                 // SpellId not sure, original was 22272
+    SPELL_SHADOW_SHIELD            = 12040,                 // SpellID not sure, original was 22417 stated as "wrong, but 12040 is wrong either."
+    SPELL_CURSE                    = 18702,
+    SPELL_SHADOW_PORTAL            = 17950                  // TODO implement this spell(and other related port spells) in DB and MaNGOS
+};
 
 struct MANGOS_DLL_DECL boss_darkmaster_gandlingAI : public ScriptedAI
 {
@@ -58,58 +42,58 @@ struct MANGOS_DLL_DECL boss_darkmaster_gandlingAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    uint32 ArcaneMissiles_Timer;
-    uint32 ShadowShield_Timer;
-    uint32 Curse_Timer;
-    uint32 Teleport_Timer;
+    uint32 m_uiArcaneMissilesTimer;
+    uint32 m_uiShadowShieldTimer;
+    uint32 m_uiCurseTimer;
+    uint32 m_uiTeleportTimer;
 
     Creature *Summoned;
 
     void Reset()
     {
-        ArcaneMissiles_Timer = 4500;
-        ShadowShield_Timer = 12000;
-        Curse_Timer = 2000;
-        Teleport_Timer = 16000;
+        m_uiArcaneMissilesTimer = 4500;
+        m_uiShadowShieldTimer = 12000;
+        m_uiCurseTimer = 2000;
+        m_uiTeleportTimer = 16000;
     }
 
-    void JustDied(Unit *killer)
-    {
-        if (m_pInstance)
-            m_pInstance->SetData(TYPE_GANDLING, DONE);
-    }
-
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //ArcaneMissiles_Timer
-        if (ArcaneMissiles_Timer < diff)
+        // Arcane Missiles Timer
+        if (m_uiArcaneMissilesTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_ARCANEMISSILES);
-            ArcaneMissiles_Timer = 8000;
-        }else ArcaneMissiles_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_ARCANE_MISSILES) == CAST_OK)
+                m_uiArcaneMissilesTimer = 8000;
+        }
+        else
+            m_uiArcaneMissilesTimer -= uiDiff;
 
-        //ShadowShield_Timer
-        if (ShadowShield_Timer < diff)
+        // Shadow Shield Timer
+        if (m_uiShadowShieldTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature,SPELL_SHADOWSHIELD);
-            ShadowShield_Timer = urand(14000, 28000);
-        }else ShadowShield_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature, SPELL_SHADOW_SHIELD) == CAST_OK)
+                m_uiShadowShieldTimer = urand(14000, 28000);
+        }
+        else
+            m_uiShadowShieldTimer -= uiDiff;
 
-        //Curse_Timer
-        if (Curse_Timer < diff)
+        // Curse Timer
+        if (m_uiCurseTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_CURSE);
-            Curse_Timer = urand(15000, 27000);
-        }else Curse_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_CURSE) == CAST_OK)
+                m_uiCurseTimer = urand(15000, 27000);
+        }
+        else
+            m_uiCurseTimer -= uiDiff;
 
-        //Teleporting Random Target to one of the six pre boss rooms and spawn 3-4 skeletons near the gamer.
-        //We will only telport if gandling has more than 3% of hp so teleported gamers can always loot.
+        // Teleporting Random Target to one of the six pre boss rooms and spawn 3-4 skeletons near the gamer.
+        // We will only telport if gandling has more than 3% of hp so teleported gamers can always loot.
         if (m_creature->GetHealthPercent() > 3.0f)
         {
-            if (Teleport_Timer < diff)
+            if (m_uiTeleportTimer < uiDiff)
             {
                 Unit* target = NULL;
                 target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
@@ -200,13 +184,16 @@ struct MANGOS_DLL_DECL boss_darkmaster_gandlingAI : public ScriptedAI
                             break;
                     }
                 }
-                Teleport_Timer = urand(20000, 35000);
-            }else Teleport_Timer -= diff;
+                m_uiTeleportTimer = urand(20000, 35000);
+            }
+            else
+                m_uiTeleportTimer -= uiDiff;
         }
 
         DoMeleeAttackIfReady();
     }
 };
+
 CreatureAI* GetAI_boss_darkmaster_gandling(Creature* pCreature)
 {
     return new boss_darkmaster_gandlingAI(pCreature);
@@ -214,9 +201,10 @@ CreatureAI* GetAI_boss_darkmaster_gandling(Creature* pCreature)
 
 void AddSC_boss_darkmaster_gandling()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_darkmaster_gandling";
-    newscript->GetAI = &GetAI_boss_darkmaster_gandling;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_darkmaster_gandling";
+    pNewScript->GetAI = &GetAI_boss_darkmaster_gandling;
+    pNewScript->RegisterSelf();
 }

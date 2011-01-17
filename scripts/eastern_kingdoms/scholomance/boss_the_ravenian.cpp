@@ -48,17 +48,6 @@ struct MANGOS_DLL_DECL boss_theravenianAI : public ScriptedAI
         HasYelled = false;
     }
 
-    void JustDied(Unit *killer)
-    {
-        if (ScriptedInstance* pInstance = (ScriptedInstance*)m_creature->GetInstanceData())
-        {
-            pInstance->SetData(TYPE_RAVENIAN, DONE);
-
-            if (pInstance->GetData(TYPE_GANDLING) == SPECIAL)
-                m_creature->SummonCreature(1853, 180.73f, -9.43856f, 75.507f, 1.61399f, TEMPSUMMON_DEAD_DESPAWN, 0);
-        }
-    }
-
     void UpdateAI(const uint32 diff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())

@@ -900,6 +900,8 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1269028,'Gul\'dan speaks the truth! We should return at once to tell our brothers of the news! Retreat back trought the portal!',0,1,0,0,'medivh SAY_ORCS_ANSWER');
 
 -- -1 289 000 SCHOLOMANCE
+INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
+(-1289000,'School is in session!',0,1,0,0,'gandling SAY_GANDLING_SPAWN');
 
 -- -1 309 000 ZUL'GURUB
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
