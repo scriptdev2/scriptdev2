@@ -83,12 +83,12 @@ struct MANGOS_DLL_DECL instance_gruuls_lair : public ScriptedInstance
     {
         switch (pGo->GetEntry())
         {
-            case 184468:
+            case GO_PORT_GRONN_1:
                 m_uiMaulgarDoorGUID = pGo->GetGUID();
                 if (m_auiEncounter[0] == DONE)
                     pGo->SetGoState(GO_STATE_ACTIVE);
                 break;
-            case 184662:
+            case GO_PORT_GRONN_2:
                 m_uiGruulEncounterDoorGUID = pGo->GetGUID();
                 break;
         }
