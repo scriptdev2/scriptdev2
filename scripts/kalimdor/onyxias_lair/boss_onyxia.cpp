@@ -167,7 +167,6 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
     void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
-        m_creature->SetInCombatWithZone();
     }
 
     void JustReachedHome()

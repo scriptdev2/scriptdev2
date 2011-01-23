@@ -57,8 +57,6 @@ struct MANGOS_DLL_DECL boss_firemawAI : public ScriptedAI
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_FIREMAW, IN_PROGRESS);
-
-        m_creature->SetInCombatWithZone();
     }
 
     void JustDied(Unit* pKiller)

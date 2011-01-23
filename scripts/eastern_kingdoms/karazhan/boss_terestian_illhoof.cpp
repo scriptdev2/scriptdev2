@@ -146,8 +146,6 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
 
     void Aggro(Unit* pWho)
     {
-        m_creature->SetInCombatWithZone();
-
         if (Pet* pKilrek = m_creature->GetPet())
             pKilrek->SetInCombatWithZone();
 

@@ -120,7 +120,6 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
     void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
-        m_creature->SetInCombatWithZone();
 
         if (m_pInstance)
             m_pInstance->SetData(TYPE_HALAZZI, IN_PROGRESS);

@@ -109,8 +109,6 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-        m_creature->SetInCombatWithZone();
-
         DoScriptText(SAY_AGGRO, m_creature);
 
         if (m_pInstance)

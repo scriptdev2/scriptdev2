@@ -587,7 +587,6 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
 
     void Aggro(Unit* pWho)
     {
-        m_creature->SetInCombatWithZone();
         DoCastSpellIfCan(pWho, AURA_OF_SUFFERING, CAST_TRIGGERED);
         DoCastSpellIfCan(m_creature, ESSENCE_OF_SUFFERING_PASSIVE, CAST_TRIGGERED);
     }
@@ -724,11 +723,6 @@ struct MANGOS_DLL_DECL boss_essence_of_desireAI : public ScriptedAI
         }
     }
 
-    void Aggro(Unit* pWho)
-    {
-        m_creature->SetInCombatWithZone();
-    }
-
     void KilledUnit(Unit *victim)
     {
         switch(urand(0, 2))
@@ -826,7 +820,6 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
 
     void Aggro(Unit* pWho)
     {
-        m_creature->SetInCombatWithZone();
         DoCastSpellIfCan(m_creature->getVictim(), AURA_OF_ANGER, CAST_TRIGGERED);
     }
 

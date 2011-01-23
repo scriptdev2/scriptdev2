@@ -104,8 +104,6 @@ struct MANGOS_DLL_DECL boss_nefarianAI : public ScriptedAI
         }
 
         DoCastSpellIfCan(pWho,SPELL_SHADOWFLAME_INITIAL);
-
-        m_creature->SetInCombatWithZone();
     }
 
     void UpdateAI(const uint32 diff)

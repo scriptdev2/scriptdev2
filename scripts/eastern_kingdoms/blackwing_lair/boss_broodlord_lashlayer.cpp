@@ -64,7 +64,6 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
             m_pInstance->SetData(TYPE_LASHLAYER, IN_PROGRESS);
 
         DoScriptText(SAY_AGGRO, m_creature);
-        m_creature->SetInCombatWithZone();
     }
 
     void JustDied(Unit* pKiller)

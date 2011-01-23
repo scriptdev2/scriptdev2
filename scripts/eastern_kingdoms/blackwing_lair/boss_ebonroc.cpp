@@ -57,8 +57,6 @@ struct MANGOS_DLL_DECL boss_ebonrocAI : public ScriptedAI
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_EBONROC, IN_PROGRESS);
-
-        m_creature->SetInCombatWithZone();
     }
 
     void JustDied(Unit* pKiller)

@@ -108,8 +108,6 @@ struct MANGOS_DLL_DECL boss_gothikAI : public ScriptedAI
 
     void Aggro(Unit* pWho)
     {
-        m_creature->SetInCombatWithZone();
-
         DoScriptText(SAY_SPEECH_1, m_creature);
 
         if (!m_pInstance)

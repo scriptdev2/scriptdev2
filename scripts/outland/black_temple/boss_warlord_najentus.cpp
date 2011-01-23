@@ -117,8 +117,6 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
             m_pInstance->SetData(TYPE_NAJENTUS, IN_PROGRESS);
 
         DoScriptText(SAY_AGGRO, m_creature);
-
-        m_creature->SetInCombatWithZone();
     }
 
     void UpdateAI(const uint32 diff)

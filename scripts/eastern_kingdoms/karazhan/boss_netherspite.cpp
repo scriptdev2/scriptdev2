@@ -123,7 +123,6 @@ struct MANGOS_DLL_DECL boss_netherspiteAI : public ScriptedAI
             m_pInstance->SetData(TYPE_NETHERSPITE, IN_PROGRESS);
 
         DoCastSpellIfCan(m_creature, SPELL_NETHERBURN);
-        m_creature->SetInCombatWithZone();
     }
 
     void JustDied(Unit* pKiller)

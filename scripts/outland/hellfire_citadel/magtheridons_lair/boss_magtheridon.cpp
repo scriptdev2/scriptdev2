@@ -331,7 +331,6 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
 
     void Aggro(Unit* pWho)
     {
-        m_creature->SetInCombatWithZone();
         DoScriptText(SAY_AGGRO, m_creature);
     }
 
@@ -548,8 +547,6 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
         }
 
         m_pInstance->SetData(TYPE_CHANNELER_EVENT, IN_PROGRESS);
-
-        m_creature->SetInCombatWithZone();
     }
 
     void JustSummoned(Creature* pSummoned)

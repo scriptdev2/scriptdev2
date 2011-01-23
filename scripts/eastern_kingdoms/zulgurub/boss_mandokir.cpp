@@ -191,8 +191,6 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
-        m_creature->SetInCombatWithZone();
-
         uint32 uiCount = sizeof(aSpirits)/sizeof(SpawnLocations);
 
         for(uint8 i = 0; i < uiCount; ++i)

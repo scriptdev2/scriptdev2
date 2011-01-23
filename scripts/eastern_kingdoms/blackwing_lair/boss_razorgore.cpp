@@ -67,8 +67,6 @@ struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
         // TODO Temporarily add this InstData setting, must be started with Phase 1 which is not yet implemented
         if (m_pInstance)
             m_pInstance->SetData(TYPE_RAZORGORE, IN_PROGRESS);
-
-        m_creature->SetInCombatWithZone();
     }
 
     void JustDied(Unit* pKiller)

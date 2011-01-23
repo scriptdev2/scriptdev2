@@ -238,8 +238,6 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         m_creature->InterruptSpell(CURRENT_CHANNELED_SPELL);
         DoScriptText(SAY_AGGRO, m_creature);
 
-        m_creature->SetInCombatWithZone();
-
         if (m_pInstance)
             m_pInstance->SetData(TYPE_ARCHIMONDE, IN_PROGRESS);
     }

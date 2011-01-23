@@ -109,7 +109,6 @@ struct MANGOS_DLL_DECL boss_vaelastraszAI : public ScriptedAI
             m_pInstance->SetData(TYPE_VAELASTRASZ, IN_PROGRESS);
 
         DoCastSpellIfCan(m_creature, SPELL_ESSENCE_OF_THE_RED);
-        m_creature->SetInCombatWithZone();
     }
 
     void JustDied(Unit* pKiller)

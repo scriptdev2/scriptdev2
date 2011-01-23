@@ -1302,10 +1302,10 @@ void boss_julianneAI::UpdateAI(const uint32 diff)
                     pRomAI->Phase = PHASE_ROMULO;
                 }
 
-                pRomulo->SetInCombatWithZone();
-
                 //why?
                 pRomulo->setFaction(16);
+
+                pRomulo->SetInCombatWithZone();
             }
             SummonedRomulo = true;
         }else SummonRomuloTimer -= diff;

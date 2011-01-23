@@ -186,11 +186,6 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
             m_pInstance->SetData(TYPE_CTHUN_PHASE, 0);
     }
 
-    void Aggro(Unit* pWho)
-    {
-        m_creature->SetInCombatWithZone();
-    }
-
     void SpawnEyeTentacle(float x, float y)
     {
         Creature* Spawned;
@@ -501,11 +496,6 @@ struct MANGOS_DLL_DECL cthunAI : public ScriptedAI
 
         if (m_pInstance)
             m_pInstance->SetData(TYPE_CTHUN_PHASE, 0);
-    }
-
-    void Aggro(Unit* pWho)
-    {
-        m_creature->SetInCombatWithZone();
     }
 
     void SpawnEyeTentacle(float x, float y)
