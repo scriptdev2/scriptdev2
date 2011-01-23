@@ -648,31 +648,10 @@
     <ClCompile Include="..\scripts\eastern_kingdoms\scholomance\boss_death_knight_darkreaver.cpp">
       <Filter>scripts\eastern_kingdoms\scholomance</Filter>
     </ClCompile>
-    <ClCompile Include="..\scripts\eastern_kingdoms\scholomance\boss_doctor_theolen_krastinov.cpp">
-      <Filter>scripts\eastern_kingdoms\scholomance</Filter>
-    </ClCompile>
-    <ClCompile Include="..\scripts\eastern_kingdoms\scholomance\boss_illucia_barov.cpp">
-      <Filter>scripts\eastern_kingdoms\scholomance</Filter>
-    </ClCompile>
-    <ClCompile Include="..\scripts\eastern_kingdoms\scholomance\boss_instructor_malicia.cpp">
-      <Filter>scripts\eastern_kingdoms\scholomance</Filter>
-    </ClCompile>
     <ClCompile Include="..\scripts\eastern_kingdoms\scholomance\boss_jandice_barov.cpp">
       <Filter>scripts\eastern_kingdoms\scholomance</Filter>
     </ClCompile>
     <ClCompile Include="..\scripts\eastern_kingdoms\scholomance\boss_kormok.cpp">
-      <Filter>scripts\eastern_kingdoms\scholomance</Filter>
-    </ClCompile>
-    <ClCompile Include="..\scripts\eastern_kingdoms\scholomance\boss_lord_alexei_barov.cpp">
-      <Filter>scripts\eastern_kingdoms\scholomance</Filter>
-    </ClCompile>
-    <ClCompile Include="..\scripts\eastern_kingdoms\scholomance\boss_lorekeeper_polkelt.cpp">
-      <Filter>scripts\eastern_kingdoms\scholomance</Filter>
-    </ClCompile>
-    <ClCompile Include="..\scripts\eastern_kingdoms\scholomance\boss_ras_frostwhisper.cpp">
-      <Filter>scripts\eastern_kingdoms\scholomance</Filter>
-    </ClCompile>
-    <ClCompile Include="..\scripts\eastern_kingdoms\scholomance\boss_the_ravenian.cpp">
       <Filter>scripts\eastern_kingdoms\scholomance</Filter>
     </ClCompile>
     <ClCompile Include="..\scripts\eastern_kingdoms\scholomance\boss_vectus.cpp">

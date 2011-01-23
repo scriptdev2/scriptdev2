@@ -223,6 +223,7 @@ void instance_scholomance::OnCreatureEnterCombat(Creature* pCreature)
         case NPC_RAVENIAN:            SetData(TYPE_RAVENIAN, IN_PROGRESS);         break;
         case NPC_ILLUCIA_BAROV:       SetData(TYPE_ILLUCIA_BAROV, IN_PROGRESS);    break;
         case NPC_ALEXEI_BAROV:        SetData(TYPE_ALEXEI_BAROV, IN_PROGRESS);     break;
+        case NPC_INSTRUCTOR_MALICIA:  SetData(TYPE_MALICIA, IN_PROGRESS);          break;
         case NPC_DARKMASTER_GANDLING: SetData(TYPE_GANDLING, IN_PROGRESS);         break;
     }
 }
@@ -239,6 +240,7 @@ void instance_scholomance::OnCreatureEvade(Creature* pCreature)
         case NPC_RAVENIAN:            SetData(TYPE_RAVENIAN, FAIL);         break;
         case NPC_ILLUCIA_BAROV:       SetData(TYPE_ILLUCIA_BAROV, FAIL);    break;
         case NPC_ALEXEI_BAROV:        SetData(TYPE_ALEXEI_BAROV, FAIL);     break;
+        case NPC_INSTRUCTOR_MALICIA:  SetData(TYPE_MALICIA, FAIL);          break;
         case NPC_DARKMASTER_GANDLING: SetData(TYPE_GANDLING, FAIL);         break;
     }
 }
@@ -255,6 +257,7 @@ void instance_scholomance::OnCreatureDeath(Creature* pCreature)
         case NPC_RAVENIAN:            SetData(TYPE_RAVENIAN, DONE);         break;
         case NPC_ILLUCIA_BAROV:       SetData(TYPE_ILLUCIA_BAROV, DONE);    break;
         case NPC_ALEXEI_BAROV:        SetData(TYPE_ALEXEI_BAROV, DONE);     break;
+        case NPC_INSTRUCTOR_MALICIA:  SetData(TYPE_MALICIA, DONE);          break;
         case NPC_DARKMASTER_GANDLING: SetData(TYPE_GANDLING, DONE);         break;
     }
 }

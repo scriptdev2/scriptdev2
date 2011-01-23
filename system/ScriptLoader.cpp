@@ -116,15 +116,8 @@ extern void AddSC_boss_headless_horseman();
 extern void AddSC_instance_scarlet_monastery();
 extern void AddSC_boss_darkmaster_gandling();               // scholomance
 extern void AddSC_boss_death_knight_darkreaver();
-extern void AddSC_boss_theolenkrastinov();
-extern void AddSC_boss_illuciabarov();
-extern void AddSC_boss_instructormalicia();
 extern void AddSC_boss_jandicebarov();
 extern void AddSC_boss_kormok();
-extern void AddSC_boss_lordalexeibarov();
-extern void AddSC_boss_lorekeeperpolkelt();
-extern void AddSC_boss_rasfrost();
-extern void AddSC_boss_theravenian();
 extern void AddSC_boss_vectus();
 extern void AddSC_instance_scholomance();
 extern void AddSC_boss_hummel();                            // shadowfang_keep
@@ -613,15 +606,8 @@ void AddScripts()
     AddSC_instance_scarlet_monastery();
     AddSC_boss_darkmaster_gandling();                       // scholomance
     AddSC_boss_death_knight_darkreaver();
-    AddSC_boss_theolenkrastinov();
-    AddSC_boss_illuciabarov();
-    AddSC_boss_instructormalicia();
     AddSC_boss_jandicebarov();
     AddSC_boss_kormok();
-    AddSC_boss_lordalexeibarov();
-    AddSC_boss_lorekeeperpolkelt();
-    AddSC_boss_rasfrost();
-    AddSC_boss_theravenian();
     AddSC_boss_vectus();
     AddSC_instance_scholomance();
     AddSC_boss_hummel();                                    // shadowfang_keep

@@ -168,15 +168,8 @@ scripts/eastern_kingdoms/scarlet_monastery/instance_scarlet_monastery.cpp \
 scripts/eastern_kingdoms/scarlet_monastery/scarlet_monastery.h \
 scripts/eastern_kingdoms/scholomance/boss_darkmaster_gandling.cpp \
 scripts/eastern_kingdoms/scholomance/boss_death_knight_darkreaver.cpp \
-scripts/eastern_kingdoms/scholomance/boss_doctor_theolen_krastinov.cpp \
-scripts/eastern_kingdoms/scholomance/boss_illucia_barov.cpp \
-scripts/eastern_kingdoms/scholomance/boss_instructor_malicia.cpp \
 scripts/eastern_kingdoms/scholomance/boss_jandice_barov.cpp \
 scripts/eastern_kingdoms/scholomance/boss_kormok.cpp \
-scripts/eastern_kingdoms/scholomance/boss_lord_alexei_barov.cpp \
-scripts/eastern_kingdoms/scholomance/boss_lorekeeper_polkelt.cpp \
-scripts/eastern_kingdoms/scholomance/boss_ras_frostwhisper.cpp \
-scripts/eastern_kingdoms/scholomance/boss_the_ravenian.cpp \
 scripts/eastern_kingdoms/scholomance/boss_vectus.cpp \
 scripts/eastern_kingdoms/scholomance/instance_scholomance.cpp \
 scripts/eastern_kingdoms/scholomance/scholomance.h \

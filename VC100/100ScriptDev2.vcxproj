@@ -326,15 +326,8 @@
     <ClCompile Include="..\scripts\eastern_kingdoms\scarlet_monastery\instance_scarlet_monastery.cpp" />
     <ClCompile Include="..\scripts\eastern_kingdoms\scholomance\boss_darkmaster_gandling.cpp" />
     <ClCompile Include="..\scripts\eastern_kingdoms\scholomance\boss_death_knight_darkreaver.cpp" />
-    <ClCompile Include="..\scripts\eastern_kingdoms\scholomance\boss_doctor_theolen_krastinov.cpp" />
-    <ClCompile Include="..\scripts\eastern_kingdoms\scholomance\boss_illucia_barov.cpp" />
-    <ClCompile Include="..\scripts\eastern_kingdoms\scholomance\boss_instructor_malicia.cpp" />
     <ClCompile Include="..\scripts\eastern_kingdoms\scholomance\boss_jandice_barov.cpp" />
     <ClCompile Include="..\scripts\eastern_kingdoms\scholomance\boss_kormok.cpp" />
-    <ClCompile Include="..\scripts\eastern_kingdoms\scholomance\boss_lord_alexei_barov.cpp" />
-    <ClCompile Include="..\scripts\eastern_kingdoms\scholomance\boss_lorekeeper_polkelt.cpp" />
-    <ClCompile Include="..\scripts\eastern_kingdoms\scholomance\boss_ras_frostwhisper.cpp" />
-    <ClCompile Include="..\scripts\eastern_kingdoms\scholomance\boss_the_ravenian.cpp" />
     <ClCompile Include="..\scripts\eastern_kingdoms\scholomance\boss_vectus.cpp" />
     <ClCompile Include="..\scripts\eastern_kingdoms\scholomance\instance_scholomance.cpp" />
     <ClCompile Include="..\scripts\eastern_kingdoms\shadowfang_keep\boss_hummel.cpp" />

@@ -902,15 +902,8 @@ UPDATE creature_template SET ScriptName='boss_headless_horseman' WHERE entry=236
 UPDATE instance_template SET ScriptName='instance_scholomance' WHERE map=289;
 UPDATE creature_template SET ScriptName='boss_darkmaster_gandling' WHERE entry=1853;
 UPDATE creature_template SET ScriptName='boss_death_knight_darkreaver' WHERE entry=14516;
-UPDATE creature_template SET ScriptName='boss_lord_alexei_barov' WHERE entry=10504;
-UPDATE creature_template SET ScriptName='boss_instructor_malicia' WHERE entry=10505;
-UPDATE creature_template SET ScriptName='boss_boss_ras_frostwhisper' WHERE entry=10508;
-UPDATE creature_template SET ScriptName='boss_the_ravenian' WHERE entry=10507;
 UPDATE creature_template SET ScriptName='boss_vectus' WHERE entry=10432;
-UPDATE creature_template SET ScriptName='boss_illucia_barov' WHERE entry=10502;
-UPDATE creature_template SET ScriptName='boss_doctor_theolen_krastinov' WHERE entry=11261;
 UPDATE creature_template SET ScriptName='boss_jandice_barov' WHERE entry=10503;
-UPDATE creature_template SET ScriptName='boss_lorekeeper_polkelt' WHERE entry=10901;
 UPDATE creature_template SET ScriptName='boss_kormok' WHERE entry=16118;
 UPDATE creature_template SET ScriptName='mob_illusionofjandicebarov' WHERE entry=11439;
 
