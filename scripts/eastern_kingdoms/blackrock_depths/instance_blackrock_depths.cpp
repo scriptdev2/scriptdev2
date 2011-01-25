@@ -57,7 +57,11 @@ instance_blackrock_depths::instance_blackrock_depths(Map* pMap) : ScriptedInstan
     m_uiSpectralChaliceGUID(0),
     m_uiSevensChestGUID(0),
 
-    m_uiBarAleCount(0)
+    m_uiBarAleCount(0),
+
+    m_fArenaCenterX(0.0f),
+    m_fArenaCenterY(0.0f),
+    m_fArenaCenterZ(0.0f)
 {
     Initialize();
 }

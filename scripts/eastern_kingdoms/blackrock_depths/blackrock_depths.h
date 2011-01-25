@@ -67,6 +67,10 @@ class MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
         const char* Save() { return m_strInstData.c_str(); }
         void Load(const char* chrIn);
 
+        // Arena Event
+        void SetArenaCenterCoords(float fX, float fY, float fZ) { m_fArenaCenterX = fX; m_fArenaCenterY = fY; m_fArenaCenterZ = fZ; }
+        void GetArenaCenterCoords(float &fX, float &fY, float &fZ) { fX = m_fArenaCenterX; fY = m_fArenaCenterY; fZ = m_fArenaCenterZ; }
+
     private:
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strInstData;
@@ -104,6 +108,8 @@ class MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
         uint64 m_uiSevensChestGUID;
 
         uint32 m_uiBarAleCount;
+
+        float m_fArenaCenterX, m_fArenaCenterY, m_fArenaCenterZ;
 };
 
 #endif

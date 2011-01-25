@@ -90,15 +90,23 @@ static uint32 RingBoss[]=
     9032,                                                   // Hedrum
 };
 
+static const float aSpawnPositions[3][4] =
+{
+    {608.960f, -235.322f, -53.907f, 1.857f},                // Ring mob spawn position
+    {644.300f, -175.989f, -53.739f, 3.418f},                // Ring boss spawn position
+    {625.559f, -205.618f, -52.735f, 2.609f}                 // Grimstone spawn position
+};
+
 bool AreaTrigger_at_ring_of_law(Player* pPlayer, AreaTriggerEntry const* pAt)
 {
-    if (ScriptedInstance* pInstance = (ScriptedInstance*)pPlayer->GetInstanceData())
+    if (instance_blackrock_depths* pInstance = (instance_blackrock_depths*)pPlayer->GetInstanceData())
     {
         if (pInstance->GetData(TYPE_RING_OF_LAW) == IN_PROGRESS || pInstance->GetData(TYPE_RING_OF_LAW) == DONE)
             return false;
 
         pInstance->SetData(TYPE_RING_OF_LAW, IN_PROGRESS);
-        pPlayer->SummonCreature(NPC_GRIMSTONE, 625.559f, -205.618f, -52.735f, 2.609f, TEMPSUMMON_DEAD_DESPAWN, 0);
+        pPlayer->SummonCreature(NPC_GRIMSTONE, aSpawnPositions[2][0], aSpawnPositions[2][1], aSpawnPositions[2][2], aSpawnPositions[2][3], TEMPSUMMON_DEAD_DESPAWN, 0);
+        pInstance->SetArenaCenterCoords(pAt->x, pAt->y, pAt->z);
 
         return false;
     }
@@ -114,47 +122,80 @@ struct MANGOS_DLL_DECL npc_grimstoneAI : public npc_escortAI
 {
     npc_grimstoneAI(Creature* pCreature) : npc_escortAI(pCreature)
     {
-        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_pInstance = (instance_blackrock_depths*)pCreature->GetInstanceData();
         m_uiMobSpawnId = urand(0, 5);
         Reset();
     }
 
-    ScriptedInstance* m_pInstance;
+    instance_blackrock_depths* m_pInstance;
 
     uint8 m_uiEventPhase;
     uint32 m_uiEventTimer;
 
     uint8 m_uiMobSpawnId;
     uint8 m_uiMobCount;
-    uint32 m_uiMobDeathTimer;
-
-    uint64 m_auiRingMobGUID[MAX_MOB_AMOUNT];
-    uint64 m_uiRingBossGUID;
+    uint8 m_uiMobDeadCount;
 
     bool m_bCanWalk;
 
     void Reset()
     {
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-        memset(&m_auiRingMobGUID, 0, sizeof(m_auiRingMobGUID));
 
         m_uiEventTimer    = 1000;
         m_uiEventPhase    = 0;
         m_uiMobCount      = 0;
-        m_uiMobDeathTimer = 0;
-        m_uiRingBossGUID  = 0;
+        m_uiMobDeadCount  = 0;
 
         m_bCanWalk = false;
     }
 
     void JustSummoned(Creature* pSummoned)
     {
+        // Ring mob or boss summoned
+        ++m_uiMobCount;
 
+        if (!m_pInstance)
+            return;
+
+        float fX, fY, fZ;
+        m_pInstance->GetArenaCenterCoords(fX, fY, fZ);
+        pSummoned->GetMotionMaster()->MovePoint(1, fX, fY, fZ);
     }
 
     void SummonedCreatureJustDied(Creature* pSummoned)
     {
+        // Ring mob killed
+        if (pSummoned->GetEntry() == RingMob[m_uiMobSpawnId])
+        {
+            ++m_uiMobDeadCount;
 
+            if (m_uiMobDeadCount == MAX_MOB_AMOUNT)
+            {
+                m_uiEventTimer = 5000;
+                m_uiMobDeadCount = 0;
+                m_uiMobCount = 0;
+            }
+        }
+        // Ring boss killed
+        else
+        {
+            for (uint8 i = 0; i < sizeof(RingBoss)/sizeof(uint32); ++i)
+            {
+                if (pSummoned->GetEntry() == RingBoss[i])
+                {
+                    ++m_uiMobDeadCount;
+
+                    if (m_uiMobDeadCount == 1)
+                    {
+                        m_uiEventTimer = 5000;
+                        m_uiMobDeadCount = 0;
+                        m_uiMobCount = 0;
+                    }
+                    return;
+                }
+            }
+        }
     }
 
     void DoGate(uint32 id, uint32 state)
@@ -163,27 +204,6 @@ struct MANGOS_DLL_DECL npc_grimstoneAI : public npc_escortAI
             pGo->SetGoState(GOState(state));
 
         debug_log("SD2: npc_grimstone, arena gate update state.");
-    }
-
-    //TODO: move them to center
-    void SummonRingMob()
-    {
-        if (Creature* pTmp = m_creature->SummonCreature(RingMob[m_uiMobSpawnId], 608.960f, -235.322f, -53.907f, 1.857f, TEMPSUMMON_DEAD_DESPAWN, 0))
-            m_auiRingMobGUID[m_uiMobCount] = pTmp->GetGUID();
-
-        ++m_uiMobCount;
-
-        if (m_uiMobCount == MAX_MOB_AMOUNT)
-            m_uiMobDeathTimer = 2500;
-    }
-
-    //TODO: move them to center
-    void SummonRingBoss()
-    {
-        if (Creature* pTmp = m_creature->SummonCreature(RingBoss[urand(0, 5)], 644.300f, -175.989f, -53.739f, 3.418f, TEMPSUMMON_DEAD_DESPAWN, 0))
-            m_uiRingBossGUID = pTmp->GetGUID();
-
-        m_uiMobDeathTimer = 2500;
     }
 
     void WaypointReached(uint32 uiPointId)
@@ -226,46 +246,6 @@ struct MANGOS_DLL_DECL npc_grimstoneAI : public npc_escortAI
         if (!m_pInstance)
             return;
 
-        if (m_uiMobDeathTimer)
-        {
-            if (m_uiMobDeathTimer <= uiDiff)
-            {
-                m_uiMobDeathTimer = 2500;
-
-                if (m_uiRingBossGUID)
-                {
-                    Creature* pBoss = m_creature->GetMap()->GetCreature(m_uiRingBossGUID);
-                    if (pBoss && !pBoss->isAlive() && pBoss->isDead())
-                    {
-                        m_uiRingBossGUID = 0;
-                        m_uiEventTimer = 5000;
-                        m_uiMobDeathTimer = 0;
-                        return;
-                    }
-                    return;
-                }
-
-                for(uint8 i = 0; i < MAX_MOB_AMOUNT; ++i)
-                {
-                    Creature* pMob = m_creature->GetMap()->GetCreature(m_auiRingMobGUID[i]);
-                    if (pMob && !pMob->isAlive() && pMob->isDead())
-                    {
-                        m_auiRingMobGUID[i] = 0;
-                        --m_uiMobCount;
-
-                        //seems all are gone, so set timer to continue and discontinue this
-                        if (!m_uiMobCount)
-                        {
-                            m_uiEventTimer = 5000;
-                            m_uiMobDeathTimer = 0;
-                        }
-                    }
-                }
-            }
-            else
-                m_uiMobDeathTimer -= uiDiff;
-        }
-
         if (m_uiEventTimer)
         {
             if (m_uiEventTimer <= uiDiff)
@@ -296,16 +276,19 @@ struct MANGOS_DLL_DECL npc_grimstoneAI : public npc_escortAI
                     case 4:
                         m_bCanWalk = true;
                         m_creature->SetVisibility(VISIBILITY_OFF);
-                        SummonRingMob();
+                        // Summon Ring Mob(s)
+                        m_creature->SummonCreature(RingMob[m_uiMobSpawnId], aSpawnPositions[0][0], aSpawnPositions[0][1], aSpawnPositions[0][2], aSpawnPositions[0][3], TEMPSUMMON_DEAD_DESPAWN, 0);
                         m_uiEventTimer = 8000;
                         break;
                     case 5:
-                        SummonRingMob();
-                        SummonRingMob();
+                        // Summon Ring Mob(s)
+                        m_creature->SummonCreature(RingMob[m_uiMobSpawnId], aSpawnPositions[0][0], aSpawnPositions[0][1], aSpawnPositions[0][2], aSpawnPositions[0][3], TEMPSUMMON_DEAD_DESPAWN, 0);
+                        m_creature->SummonCreature(RingMob[m_uiMobSpawnId], aSpawnPositions[0][0], aSpawnPositions[0][1], aSpawnPositions[0][2], aSpawnPositions[0][3], TEMPSUMMON_DEAD_DESPAWN, 0);
                         m_uiEventTimer = 8000;
                         break;
                     case 6:
-                        SummonRingMob();
+                        // Summon Ring Mob(s)
+                        m_creature->SummonCreature(RingMob[m_uiMobSpawnId], aSpawnPositions[0][0], aSpawnPositions[0][1], aSpawnPositions[0][2], aSpawnPositions[0][3], TEMPSUMMON_DEAD_DESPAWN, 0);
                         m_uiEventTimer = 0;
                         break;
                     case 7:
@@ -324,7 +307,7 @@ struct MANGOS_DLL_DECL npc_grimstoneAI : public npc_escortAI
                     case 9:
                         // Summon Boss
                         m_creature->SetVisibility(VISIBILITY_OFF);
-                        SummonRingBoss();
+                        m_creature->SummonCreature(RingBoss[urand(0, 5)], aSpawnPositions[1][0], aSpawnPositions[1][1], aSpawnPositions[1][2], aSpawnPositions[1][3], TEMPSUMMON_DEAD_DESPAWN, 0);
                         m_uiEventTimer = 0;
                         break;
                     case 10:
