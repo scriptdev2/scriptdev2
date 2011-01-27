@@ -24,169 +24,174 @@ EndScriptData */
 #include "precompiled.h"
 #include "utgarde_keep.h"
 
-struct MANGOS_DLL_DECL instance_utgarde_keep : public ScriptedInstance
+instance_utgarde_keep::instance_utgarde_keep(Map* pMap) : ScriptedInstance(pMap),
+    m_uiKelesethGUID(0),
+    m_uiSkarvaldGUID(0),
+    m_uiDalronnGUID(0),
+
+    m_uiBellow1GUID(0),
+    m_uiBellow2GUID(0),
+    m_uiBellow3GUID(0),
+    m_uiForgeFire1GUID(0),
+    m_uiForgeFire2GUID(0),
+    m_uiForgeFire3GUID(0),
+    m_bKelesethAchievFailed(false)
 {
-    instance_utgarde_keep(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
+    Initialize();
+}
 
-    uint32 m_auiEncounter[MAX_ENCOUNTER];
-    std::string strInstData;
+void instance_utgarde_keep::Initialize()
+{
+    memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
+}
 
-    uint64 m_uiKelesethGUID;
-    uint64 m_uiSkarvaldGUID;
-    uint64 m_uiDalronnGUID;
-
-    uint64 m_uiBellow1GUID;
-    uint64 m_uiBellow2GUID;
-    uint64 m_uiBellow3GUID;
-    uint64 m_uiForgeFire1GUID;
-    uint64 m_uiForgeFire2GUID;
-    uint64 m_uiForgeFire3GUID;
-
-    void Initialize()
+void instance_utgarde_keep::OnCreatureCreate(Creature* pCreature)
+{
+    switch(pCreature->GetEntry())
     {
-        memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
+        case NPC_KELESETH: m_uiKelesethGUID = pCreature->GetGUID(); break;
+        case NPC_SKARVALD: m_uiSkarvaldGUID = pCreature->GetGUID(); break;
+        case NPC_DALRONN:  m_uiDalronnGUID = pCreature->GetGUID();  break;
+    }
+}
 
-        m_uiKelesethGUID = 0;
-        m_uiSkarvaldGUID = 0;
-        m_uiDalronnGUID = 0;
+void instance_utgarde_keep::OnObjectCreate(GameObject* pGo)
+{
+    switch(pGo->GetEntry())
+    {
+        case GO_BELLOW_1:
+            m_uiBellow1GUID = pGo->GetGUID();
+            if (m_auiEncounter[TYPE_BELLOW_1] == DONE)
+                pGo->SetGoState(GO_STATE_ACTIVE);
+            break;
+        case GO_BELLOW_2:
+            m_uiBellow2GUID = pGo->GetGUID();
+            if (m_auiEncounter[TYPE_BELLOW_2] == DONE)
+                pGo->SetGoState(GO_STATE_ACTIVE);
+            break;
+        case GO_BELLOW_3:
+            m_uiBellow3GUID = pGo->GetGUID();
+            if (m_auiEncounter[TYPE_BELLOW_3] == DONE)
+                pGo->SetGoState(GO_STATE_ACTIVE);
+            break;
+        case GO_FORGEFIRE_1:
+            m_uiForgeFire1GUID = pGo->GetGUID();
+            if (m_auiEncounter[TYPE_BELLOW_1] == DONE)
+                pGo->SetGoState(GO_STATE_ACTIVE);
+            break;
+        case GO_FORGEFIRE_2:
+            m_uiForgeFire2GUID = pGo->GetGUID();
+            if (m_auiEncounter[TYPE_BELLOW_2] == DONE)
+                pGo->SetGoState(GO_STATE_ACTIVE);
+            break;
+        case GO_FORGEFIRE_3:
+            m_uiForgeFire3GUID = pGo->GetGUID();
+            if (m_auiEncounter[TYPE_BELLOW_3] == DONE)
+                pGo->SetGoState(GO_STATE_ACTIVE);
+            break;
+    }
+}
 
-        m_uiBellow1GUID = 0;
-        m_uiBellow2GUID = 0;
-        m_uiBellow3GUID = 0;
-        m_uiForgeFire1GUID = 0;
-        m_uiForgeFire2GUID = 0;
-        m_uiForgeFire3GUID = 0;
+void instance_utgarde_keep::OnCreatureDeath(Creature* pCreature)
+{
+    if (pCreature->GetEntry() == NPC_FROST_TOMB)
+        m_bKelesethAchievFailed = true;
+}
+
+void instance_utgarde_keep::SetData(uint32 uiType, uint32 uiData)
+{
+    switch(uiType)
+    {
+        case TYPE_KELESETH:
+            if (uiData == IN_PROGRESS)
+                m_bKelesethAchievFailed = false;
+            m_auiEncounter[uiType] = uiData;
+            break;
+        case TYPE_SKARVALD_DALRONN:
+        case TYPE_INGVAR:
+            m_auiEncounter[uiType] = uiData;
+            break;
+        case TYPE_BELLOW_1:
+            m_auiEncounter[uiType] = uiData;
+            break;
+        case TYPE_BELLOW_2:
+            m_auiEncounter[uiType] = uiData;
+            break;
+        case TYPE_BELLOW_3:
+            m_auiEncounter[uiType] = uiData;
+            break;
     }
 
-    void OnCreatureCreate(Creature* pCreature)
+    if (uiData == DONE)
     {
-        switch(pCreature->GetEntry())
-        {
-            case NPC_KELESETH: m_uiKelesethGUID = pCreature->GetGUID(); break;
-            case NPC_SKARVALD: m_uiSkarvaldGUID = pCreature->GetGUID(); break;
-            case NPC_DALRONN: m_uiDalronnGUID = pCreature->GetGUID(); break;
-        }
+        OUT_SAVE_INST_DATA;
+
+        std::ostringstream saveStream;
+        saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " "
+                   << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5];
+
+        m_strInstData = saveStream.str();
+
+        SaveToDB();
+        OUT_SAVE_INST_DATA_COMPLETE;
+    }
+}
+
+uint32 instance_utgarde_keep::GetData(uint32 uiType)
+{
+    if (uiType < MAX_ENCOUNTER)
+        return m_auiEncounter[uiType];
+
+    return 0;
+}
+
+uint64 instance_utgarde_keep::GetData64(uint32 uiData)
+{
+    switch(uiData)
+    {
+        case NPC_KELESETH:      return m_uiKelesethGUID;
+        case NPC_SKARVALD:      return m_uiSkarvaldGUID;
+        case NPC_DALRONN:       return m_uiDalronnGUID;
+        case GO_BELLOW_1:       return m_uiBellow1GUID;
+        case GO_BELLOW_2:       return m_uiBellow2GUID;
+        case GO_BELLOW_3:       return m_uiBellow3GUID;
+        case GO_FORGEFIRE_1:    return m_uiForgeFire1GUID;
+        case GO_FORGEFIRE_2:    return m_uiForgeFire2GUID;
+        case GO_FORGEFIRE_3:    return m_uiForgeFire3GUID;
+        default:
+            return 0;
+    }
+}
+
+void instance_utgarde_keep::Load(const char* chrIn)
+{
+    if (!chrIn)
+    {
+        OUT_LOAD_INST_DATA_FAIL;
+        return;
     }
 
-    void OnObjectCreate(GameObject* pGo)
+    OUT_LOAD_INST_DATA(chrIn);
+
+    std::istringstream loadStream(chrIn);
+    loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3] >> m_auiEncounter[4] >> m_auiEncounter[5];
+
+    for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
     {
-        switch(pGo->GetEntry())
-        {
-            case GO_BELLOW_1:
-                m_uiBellow1GUID = pGo->GetGUID();
-                if (m_auiEncounter[0] == DONE)
-                    pGo->SetGoState(GO_STATE_ACTIVE);
-                break;
-            case GO_BELLOW_2:
-                m_uiBellow2GUID = pGo->GetGUID();
-                if (m_auiEncounter[1] == DONE)
-                    pGo->SetGoState(GO_STATE_ACTIVE);
-                break;
-            case GO_BELLOW_3:
-                m_uiBellow3GUID = pGo->GetGUID();
-                if (m_auiEncounter[2] == DONE)
-                    pGo->SetGoState(GO_STATE_ACTIVE);
-                break;
-            case GO_FORGEFIRE_1:
-                m_uiForgeFire1GUID = pGo->GetGUID();
-                if (m_auiEncounter[0] == DONE)
-                    pGo->SetGoState(GO_STATE_ACTIVE);
-                break;
-            case GO_FORGEFIRE_2:
-                m_uiForgeFire2GUID = pGo->GetGUID();
-                if (m_auiEncounter[1] == DONE)
-                    pGo->SetGoState(GO_STATE_ACTIVE);
-                break;
-            case GO_FORGEFIRE_3:
-                m_uiForgeFire3GUID = pGo->GetGUID();
-                if (m_auiEncounter[2] == DONE)
-                    pGo->SetGoState(GO_STATE_ACTIVE);
-                break;
-        }
+        if (m_auiEncounter[i] == IN_PROGRESS)
+            m_auiEncounter[i] = NOT_STARTED;
     }
 
-    void SetData(uint32 uiType, uint32 uiData)
-    {
-        switch(uiType)
-        {
-            case GO_BELLOW_1:
-                m_auiEncounter[0] = uiData;
-                break;
-            case GO_BELLOW_2:
-                m_auiEncounter[1] = uiData;
-                break;
-            case GO_BELLOW_3:
-                m_auiEncounter[2] = uiData;
-                break;
-        }
+    OUT_LOAD_INST_DATA_COMPLETE;
+}
 
-        if (uiData == DONE)
-        {
-            OUT_SAVE_INST_DATA;
+bool instance_utgarde_keep::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/)
+{
+    if (uiCriteriaId == ACHIEV_CRIT_ON_THE_ROCKS)
+        return !m_bKelesethAchievFailed;
 
-            std::ostringstream saveStream;
-            saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2];
-
-            strInstData = saveStream.str();
-
-            SaveToDB();
-            OUT_SAVE_INST_DATA_COMPLETE;
-        }
-    }
-
-    const char* Save()
-    {
-        return strInstData.c_str();
-    }
-
-    uint64 GetData64(uint32 uiData)
-    {
-        switch(uiData)
-        {
-            case NPC_KELESETH:
-                return m_uiKelesethGUID;
-            case NPC_SKARVALD:
-                return m_uiSkarvaldGUID;
-            case NPC_DALRONN:
-                return m_uiDalronnGUID;
-            case GO_BELLOW_1:
-                return m_uiBellow1GUID;
-            case GO_BELLOW_2:
-                return m_uiBellow2GUID;
-            case GO_BELLOW_3:
-                return m_uiBellow3GUID;
-            case GO_FORGEFIRE_1:
-                return m_uiForgeFire1GUID;
-            case GO_FORGEFIRE_2:
-                return m_uiForgeFire2GUID;
-            case GO_FORGEFIRE_3:
-                return m_uiForgeFire3GUID;
-        }
-        return 0;
-    }
-
-    void Load(const char* in)
-    {
-        if (!in)
-        {
-            OUT_LOAD_INST_DATA_FAIL;
-            return;
-        }
-
-        OUT_LOAD_INST_DATA(in);
-
-        std::istringstream loadStream(in);
-        loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2];
-
-        for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
-        {
-            if (m_auiEncounter[i] == IN_PROGRESS)
-                m_auiEncounter[i] = NOT_STARTED;
-        }
-
-        OUT_LOAD_INST_DATA_COMPLETE;
-    }
-};
+    return false;
+}
 
 InstanceData* GetInstanceData_instance_utgarde_keep(Map* pMap)
 {
@@ -195,9 +200,10 @@ InstanceData* GetInstanceData_instance_utgarde_keep(Map* pMap)
 
 void AddSC_instance_utgarde_keep()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "instance_utgarde_keep";
-    newscript->GetInstanceData = GetInstanceData_instance_utgarde_keep;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "instance_utgarde_keep";
+    pNewScript->GetInstanceData = GetInstanceData_instance_utgarde_keep;
+    pNewScript->RegisterSelf();
 }

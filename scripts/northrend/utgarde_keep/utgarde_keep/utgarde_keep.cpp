@@ -95,9 +95,9 @@ struct MANGOS_DLL_DECL mob_dragonflayer_forge_masterAI : public ScriptedAI
 
             switch(lGOList.front()->GetEntry())
             {
-                case GO_BELLOW_1: uiGOFire = GO_FORGEFIRE_1; break;
-                case GO_BELLOW_2: uiGOFire = GO_FORGEFIRE_2; break;
-                case GO_BELLOW_3: uiGOFire = GO_FORGEFIRE_3; break;
+                case GO_BELLOW_1: uiGOFire = GO_FORGEFIRE_1; m_uiForgeEncounterId = TYPE_BELLOW_1; break;
+                case GO_BELLOW_2: uiGOFire = GO_FORGEFIRE_2; m_uiForgeEncounterId = TYPE_BELLOW_2; break;
+                case GO_BELLOW_3: uiGOFire = GO_FORGEFIRE_3; m_uiForgeEncounterId = TYPE_BELLOW_3; break;
             }
 
             if (GameObject* pGOTemp = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(uiGOFire)))
@@ -107,8 +107,6 @@ struct MANGOS_DLL_DECL mob_dragonflayer_forge_masterAI : public ScriptedAI
                 else if (pGOTemp->getLootState() == GO_ACTIVATED)
                     pGOTemp->ResetDoorOrButton();
             }
-
-            m_uiForgeEncounterId = lGOList.front()->GetEntry();
         }
     }
 

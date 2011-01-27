@@ -45,7 +45,6 @@ enum
     SPELL_DECREPIFY_H       = 59397,
     SPELL_BONE_ARMOR        = 59386,                        // casted on boss, heroic only
 
-    NPC_FROST_TOMB          = 23965,
     NPC_VRYKUL_SKELETON     = 23970
 };
 
@@ -69,7 +68,6 @@ struct MANGOS_DLL_DECL mob_vrykul_skeletonAI : public ScriptedAI
     ScriptedInstance* m_pInstance;
     bool m_bIsRegularMode;
 
-    Creature* m_pKeleseth;
     uint32 m_uiCastTimer;
     uint32 m_uiReviveTimer;
 
@@ -77,11 +75,6 @@ struct MANGOS_DLL_DECL mob_vrykul_skeletonAI : public ScriptedAI
     {
         m_uiReviveTimer = 0;
         m_uiCastTimer = urand(5000, 10000);                 // taken out of thin air
-
-        if (!m_pInstance)
-            return;
-
-        m_pKeleseth = m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_KELESETH));
     }
 
     void MoveInLineOfSight(Unit* pWho)
@@ -115,7 +108,7 @@ struct MANGOS_DLL_DECL mob_vrykul_skeletonAI : public ScriptedAI
 
     void DamageTaken(Unit* pDoneBy, uint32 &uiDamage)
     {
-        if (!m_pKeleseth || !m_pKeleseth->isAlive())
+        if (!m_pInstance || m_pInstance->GetData(TYPE_KELESETH) != IN_PROGRESS)
         {
             uiDamage = m_creature->GetHealth();
             return;
@@ -164,8 +157,9 @@ struct MANGOS_DLL_DECL mob_vrykul_skeletonAI : public ScriptedAI
             {
                 if (urand(0, 3))
                     DoCastSpellIfCan(m_creature->getVictim(), SPELL_DECREPIFY_H);
-                else if (m_pKeleseth && m_pKeleseth->isAlive())
-                    DoCastSpellIfCan(m_pKeleseth, SPELL_BONE_ARMOR);
+                else if (m_pInstance && m_pInstance->GetData(TYPE_KELESETH) == IN_PROGRESS)
+                    if (Creature* pKeleseth = m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_KELESETH)))
+                        DoCastSpellIfCan(pKeleseth, SPELL_BONE_ARMOR);
             }
 
             m_uiCastTimer = urand(5000, 15000);
@@ -227,12 +221,15 @@ struct MANGOS_DLL_DECL boss_kelesethAI : public ScriptedAI
     void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_KELESETH, IN_PROGRESS);
     }
 
     void SummonAdds()
     {
         for (uint8 i=0; i<4; ++i)
-            m_creature->SummonCreature(NPC_VRYKUL_SKELETON, fAddPosition[0]+rand()%7, fAddPosition[1]+rand()%7, fAddPosition[2], fAddPosition[3], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, MINUTE*IN_MILLISECONDS);
+            m_creature->SummonCreature(NPC_VRYKUL_SKELETON, fAddPosition[0]+rand()%7, fAddPosition[1]+rand()%7, fAddPosition[2], fAddPosition[3], TEMPSUMMON_DEAD_DESPAWN, 0);
     }
 
     void DespawnAdds()
@@ -257,6 +254,15 @@ struct MANGOS_DLL_DECL boss_kelesethAI : public ScriptedAI
     void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DEATH, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_KELESETH, DONE);
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_KELESETH, FAIL);
     }
 
     void KilledUnit(Unit* pVictim)
@@ -322,15 +328,15 @@ CreatureAI* GetAI_boss_keleseth(Creature* pCreature)
 
 void AddSC_boss_keleseth()
 {
-    Script* newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_keleseth";
-    newscript->GetAI = &GetAI_boss_keleseth;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_keleseth";
+    pNewScript->GetAI = &GetAI_boss_keleseth;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_vrykul_skeleton";
-    newscript->GetAI = &GetAI_mob_vrykul_skeleton;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_vrykul_skeleton";
+    pNewScript->GetAI = &GetAI_mob_vrykul_skeleton;
+    pNewScript->RegisterSelf();
 }
