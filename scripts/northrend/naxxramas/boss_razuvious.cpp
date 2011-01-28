@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Razuvious
-SD%Complete: 75%
-SDComment: TODO: Timers and sounds need confirmation, implement spell Hopeless
+SD%Complete: 85%
+SDComment: TODO: Timers and sounds need confirmation - orb handling for normal-mode is missing
 SDCategory: Naxxramas
 EndScriptData */
 
@@ -37,7 +37,7 @@ enum
     SAY_COMMAND4             = -1533128,
     SAY_DEATH                = -1533129,
 
-    SPELL_UNBALANCING_STRIKE = 26613,
+    SPELL_UNBALANCING_STRIKE = 55470,
     SPELL_DISRUPTING_SHOUT   = 55543,
     SPELL_DISRUPTING_SHOUT_H = 29107,
     SPELL_JAGGED_KNIFE       = 55550,
@@ -85,6 +85,8 @@ struct MANGOS_DLL_DECL boss_razuviousAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH, m_creature);
 
+        DoCastSpellIfCan(m_creature, SPELL_HOPELESS, CAST_TRIGGERED);
+
         if (m_pInstance)
             m_pInstance->SetData(TYPE_RAZUVIOUS, DONE);
     }
@@ -116,8 +118,8 @@ struct MANGOS_DLL_DECL boss_razuviousAI : public ScriptedAI
         // Unbalancing Strike
         if (m_uiUnbalancingStrikeTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_UNBALANCING_STRIKE);
-            m_uiUnbalancingStrikeTimer = 30000;
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_UNBALANCING_STRIKE) == CAST_OK)
+                m_uiUnbalancingStrikeTimer = 30000;
         }
         else
             m_uiUnbalancingStrikeTimer -= uiDiff;
@@ -125,8 +127,8 @@ struct MANGOS_DLL_DECL boss_razuviousAI : public ScriptedAI
         // Disrupting Shout
         if (m_uiDisruptingShoutTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_DISRUPTING_SHOUT : SPELL_DISRUPTING_SHOUT_H);
-            m_uiDisruptingShoutTimer = 25000;
+            if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_DISRUPTING_SHOUT : SPELL_DISRUPTING_SHOUT_H) == CAST_OK)
+                m_uiDisruptingShoutTimer = 25000;
         }
         else
             m_uiDisruptingShoutTimer -= uiDiff;
@@ -135,8 +137,10 @@ struct MANGOS_DLL_DECL boss_razuviousAI : public ScriptedAI
         if (m_uiJaggedKnifeTimer < uiDiff)
         {
             if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-                DoCastSpellIfCan(pTarget, SPELL_JAGGED_KNIFE);
-            m_uiJaggedKnifeTimer = 10000;
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_JAGGED_KNIFE) == CAST_OK)
+                    m_uiJaggedKnifeTimer = 10000;
+            }
         }
         else
             m_uiJaggedKnifeTimer -= uiDiff;
@@ -167,9 +171,10 @@ CreatureAI* GetAI_boss_razuvious(Creature* pCreature)
 
 void AddSC_boss_razuvious()
 {
-    Script* NewScript;
-    NewScript = new Script;
-    NewScript->Name = "boss_razuvious";
-    NewScript->GetAI = &GetAI_boss_razuvious;
-    NewScript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_razuvious";
+    pNewScript->GetAI = &GetAI_boss_razuvious;
+    pNewScript->RegisterSelf();
 }
