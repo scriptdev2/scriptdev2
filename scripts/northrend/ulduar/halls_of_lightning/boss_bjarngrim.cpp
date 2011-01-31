@@ -40,20 +40,17 @@ enum
     EMOTE_DEFENSIVE_STANCE                  = -1602010,
 
     SPELL_DEFENSIVE_STANCE                  = 53790,
-    //SPELL_DEFENSIVE_AURA                    = 41105,
     SPELL_SPELL_REFLECTION                  = 36096,
     SPELL_PUMMEL                            = 12555,
     SPELL_KNOCK_AWAY                        = 52029,
     SPELL_IRONFORM                          = 52022,
 
     SPELL_BERSEKER_STANCE                   = 53791,
-    //SPELL_BERSEKER_AURA                     = 41107,
     SPELL_INTERCEPT                         = 58769,
     SPELL_WHIRLWIND                         = 52027,
     SPELL_CLEAVE                            = 15284,
 
     SPELL_BATTLE_STANCE                     = 53792,
-    //SPELL_BATTLE_AURA                       = 41106,
     SPELL_MORTAL_STRIKE                     = 16856,
     SPELL_SLAM                              = 52026,
 
@@ -65,10 +62,6 @@ enum
     SPELL_ARC_WELD                          = 59085,
     SPELL_RENEW_STEEL_N                     = 52774,
     SPELL_RENEW_STEEL_H                     = 59160,
-
-    EQUIP_SWORD                             = 37871,
-    EQUIP_SHIELD                            = 35642,
-    EQUIP_MACE                              = 43623,
 
     STANCE_DEFENSIVE                        = 0,
     STANCE_BERSERKER                        = 1,
@@ -147,12 +140,9 @@ struct MANGOS_DLL_DECL boss_bjarngrimAI : public ScriptedAI
 
         if (m_uiStance != STANCE_DEFENSIVE)
         {
-            DoRemoveStanceAura(m_uiStance);
             DoCastSpellIfCan(m_creature, SPELL_DEFENSIVE_STANCE);
             m_uiStance = STANCE_DEFENSIVE;
         }
-
-        SetEquipmentSlots(false, EQUIP_SWORD, EQUIP_SHIELD, EQUIP_NO_CHANGE);
 
         if (m_pInstance)
             m_pInstance->SetData(TYPE_BJARNGRIM, NOT_STARTED);
@@ -187,23 +177,6 @@ struct MANGOS_DLL_DECL boss_bjarngrimAI : public ScriptedAI
             m_pInstance->SetData(TYPE_BJARNGRIM, DONE);
     }
 
-    //TODO: remove when removal is done by mangos
-    void DoRemoveStanceAura(uint8 uiStance)
-    {
-        switch(uiStance)
-        {
-            case STANCE_DEFENSIVE:
-                m_creature->RemoveAurasDueToSpell(SPELL_DEFENSIVE_STANCE);
-                break;
-            case STANCE_BERSERKER:
-                m_creature->RemoveAurasDueToSpell(SPELL_BERSEKER_STANCE);
-                break;
-            case STANCE_BATTLE:
-                m_creature->RemoveAurasDueToSpell(SPELL_BATTLE_STANCE);
-                break;
-        }
-    }
-
     void UpdateAI(const uint32 uiDiff)
     {
         //Return since we have no target
@@ -216,8 +189,6 @@ struct MANGOS_DLL_DECL boss_bjarngrimAI : public ScriptedAI
             //wait for current spell to finish before change stance
             if (m_creature->IsNonMeleeSpellCasted(false))
                 return;
-
-            DoRemoveStanceAura(m_uiStance);
 
             int uiTempStance = rand()%(3-1);
 
@@ -232,19 +203,16 @@ struct MANGOS_DLL_DECL boss_bjarngrimAI : public ScriptedAI
                     DoScriptText(SAY_DEFENSIVE_STANCE, m_creature);
                     DoScriptText(EMOTE_DEFENSIVE_STANCE, m_creature);
                     DoCastSpellIfCan(m_creature, SPELL_DEFENSIVE_STANCE);
-                    SetEquipmentSlots(false, EQUIP_SWORD, EQUIP_SHIELD, EQUIP_NO_CHANGE);
                     break;
                 case STANCE_BERSERKER:
                     DoScriptText(SAY_BERSEKER_STANCE, m_creature);
                     DoScriptText(EMOTE_BERSEKER_STANCE, m_creature);
                     DoCastSpellIfCan(m_creature, SPELL_BERSEKER_STANCE);
-                    SetEquipmentSlots(false, EQUIP_SWORD, EQUIP_SWORD, EQUIP_NO_CHANGE);
                     break;
                 case STANCE_BATTLE:
                     DoScriptText(SAY_BATTLE_STANCE, m_creature);
                     DoScriptText(EMOTE_BATTLE_STANCE, m_creature);
                     DoCastSpellIfCan(m_creature, SPELL_BATTLE_STANCE);
-                    SetEquipmentSlots(false, EQUIP_MACE, EQUIP_UNEQUIP, EQUIP_NO_CHANGE);
                     break;
             }
 
