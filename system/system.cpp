@@ -4,6 +4,7 @@
 
 #include "precompiled.h"
 #include "system.h"
+#include "../config.h"
 #include "ProgressBar.h"
 #include "ObjectMgr.h"
 #include "Database/DatabaseEnv.h"
@@ -32,16 +33,19 @@ void SystemMgr::LoadVersion()
 
         strSD2Version = pFields[0].GetCppString();
 
-        outstring_log("Loading %s", strSD2Version.c_str());
-        outstring_log("");
-
         delete pResult;
     }
     else
-    {
         error_log("SD2: Missing `sd2_db_version` information.");
-        outstring_log("");
-    }
+
+    // Setup version info and display it
+    if (strSD2Version.empty())
+        strSD2Version.append("ScriptDev2 ");
+
+    strSD2Version.append(_FULLVERSION);
+
+    outstring_log("Loading %s", strSD2Version.c_str());
+    outstring_log("");
 }
 
 void SystemMgr::LoadScriptTexts()

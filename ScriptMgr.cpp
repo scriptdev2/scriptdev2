@@ -226,13 +226,7 @@ void Script::RegisterSelf(bool bReportError)
 MANGOS_DLL_EXPORT
 char const* GetScriptLibraryVersion()
 {
-    if (!strSD2Version.empty())
-    {
-        strSD2Version.append(_FULLVERSION);
-        return strSD2Version.c_str();
-    }
-
-    return _FULLVERSION;
+    return strSD2Version.c_str();
 }
 
 MANGOS_DLL_EXPORT
