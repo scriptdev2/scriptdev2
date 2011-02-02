@@ -303,7 +303,7 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
                 {
                     pTarget = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid());
 
-                    if (pTarget && pTarget->IsWithinDist(m_creature, ATTACK_DISTANCE, false))
+                    if (pTarget && m_creature->CanReachWithMeleeAttack(pTarget))
                         vTargetList.push_back(pTarget);
                 }
 

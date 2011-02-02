@@ -134,7 +134,7 @@ struct MANGOS_DLL_DECL boss_murmurAI : public ScriptedAI
         }else MurmursTouch_Timer -= diff;
 
         //Resonance_Timer
-        if (!CanSonicBoom && !m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
+        if (!CanSonicBoom && !m_creature->CanReachWithMeleeAttack(m_creature->getVictim()))
         {
             if (Resonance_Timer < diff)
             {
@@ -191,6 +191,7 @@ struct MANGOS_DLL_DECL boss_murmurAI : public ScriptedAI
             DoMeleeAttackIfReady();
     }
 };
+
 CreatureAI* GetAI_boss_murmur(Creature* pCreature)
 {
     return new boss_murmurAI(pCreature);

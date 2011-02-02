@@ -326,7 +326,7 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
                 {
                     Unit* pTarget = m_creature->GetMap()->GetUnit((*i)->getUnitGuid());
 
-                    if (pTarget && pTarget->GetTypeId() == TYPEID_PLAYER && m_creature->IsWithinDistInMap(pTarget, ATTACK_DISTANCE))
+                    if (pTarget && pTarget->GetTypeId() == TYPEID_PLAYER && m_creature->CanReachWithMeleeAttack(pTarget))
                         ++uiTargetInRangeCount;
                 }
 

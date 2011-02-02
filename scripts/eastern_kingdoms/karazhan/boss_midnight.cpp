@@ -288,7 +288,7 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
                 {
                     target = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid());
 
-                    if (target && !target->IsWithinDist(m_creature, ATTACK_DISTANCE, false))
+                    if (target && !m_creature->CanReachWithMeleeAttack(target))
                         target_list.push_back(target);
 
                     target = NULL;

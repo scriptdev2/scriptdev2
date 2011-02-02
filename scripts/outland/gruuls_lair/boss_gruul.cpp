@@ -206,7 +206,7 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
                     pTarget = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid());
 
                     // exclude pets, totems & player out of melee range
-                    if (!pTarget || pTarget->GetTypeId() != TYPEID_PLAYER || !pTarget->IsWithinDist(m_creature, ATTACK_DISTANCE, false))
+                    if (!pTarget || pTarget->GetTypeId() != TYPEID_PLAYER || !m_creature->CanReachWithMeleeAttack(pTarget))
                     {
                         pTarget = NULL;
                         continue;

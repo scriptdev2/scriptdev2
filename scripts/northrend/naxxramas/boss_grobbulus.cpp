@@ -139,7 +139,7 @@ struct MANGOS_DLL_DECL boss_grobbulusAI : public ScriptedAI
         // Slime Stream
         if (!m_uiSlimeStreamTimer)
         {
-            if (!m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
+            if (!m_creature->CanReachWithMeleeAttack(m_creature->getVictim()))
             {
                 if (DoCastSpellIfCan(m_creature, SPELL_SLIME_STREAM) == CAST_OK)
                     // Give some time, to re-reach grobbulus

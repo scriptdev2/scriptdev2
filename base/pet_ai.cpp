@@ -49,7 +49,7 @@ void ScriptedPetAI::AttackedBy(Unit* pAttacker)
         return;
 
     if (m_creature->GetCharmInfo() && !m_creature->GetCharmInfo()->HasReactState(REACT_PASSIVE) &&
-        m_creature->canReachWithAttack(pAttacker))
+        m_creature->CanReachWithMeleeAttack(pAttacker))
         AttackStart(pAttacker);
 }
 
@@ -77,7 +77,7 @@ void ScriptedPetAI::DoMeleeAttackIfReady()
 {
     if (m_creature->isAttackReady())
     {
-        if (m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
+        if (m_creature->CanReachWithMeleeAttack(m_creature->getVictim()))
         {
             m_creature->AttackerStateUpdate(m_creature->getVictim());
             m_creature->resetAttackTimer();

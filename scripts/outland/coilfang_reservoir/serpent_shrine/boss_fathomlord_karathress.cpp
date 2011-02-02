@@ -407,7 +407,7 @@ struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public Advisor_Base_AI
         {
             if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
             {
-                if (!m_creature->IsWithinDist(pTarget,ATTACK_DISTANCE))
+                if (!m_creature->CanReachWithMeleeAttack(pTarget))
                     DoCastSpellIfCan(pTarget, SPELL_HURL_TRIDENT);
             }
 

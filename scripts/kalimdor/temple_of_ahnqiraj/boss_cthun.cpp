@@ -1020,7 +1020,7 @@ struct MANGOS_DLL_DECL claw_tentacleAI : public ScriptedAI
             return;
 
         //EvadeTimer
-        if (!m_creature->IsWithinDist(m_creature->getVictim(), ATTACK_DISTANCE))
+        if (!m_creature->CanReachWithMeleeAttack(m_creature->getVictim()))
             if (EvadeTimer < diff)
         {
             if (Creature* pCreature = m_creature->GetMap()->GetCreature(Portal))
@@ -1115,7 +1115,7 @@ struct MANGOS_DLL_DECL giant_claw_tentacleAI : public ScriptedAI
             return;
 
         //EvadeTimer
-        if (m_creature->IsWithinDist(m_creature->getVictim(), ATTACK_DISTANCE))
+        if (m_creature->CanReachWithMeleeAttack(m_creature->getVictim()))
             if (EvadeTimer < diff)
         {
             if (Creature* pCreature = m_creature->GetMap()->GetCreature(Portal))

@@ -216,7 +216,7 @@ struct MANGOS_DLL_DECL boss_twinemperorsAI : public ScriptedAI
         {
             Unit* pUnit = m_creature->GetMap()->GetUnit((*i)->getUnitGuid());
 
-            if (m_creature->IsWithinDistInMap(pUnit, dist))
+            if (m_creature->GetCombatDistance(pUnit) < dist)
             {
                 if (!totallyRandom)
                     return pUnit;
@@ -487,7 +487,7 @@ struct MANGOS_DLL_DECL boss_veknilashAI : public boss_twinemperorsAI
 
         if (UpperCut_Timer < diff)
         {
-            Unit* randomMelee = GetAnyoneCloseEnough(ATTACK_DISTANCE, true);
+            Unit* randomMelee = GetAnyoneCloseEnough(2*ATTACK_DISTANCE, true);
             if (randomMelee)
                 DoCastSpellIfCan(randomMelee,SPELL_UPPERCUT);
             UpperCut_Timer = urand(15000, 30000);
@@ -586,7 +586,7 @@ struct MANGOS_DLL_DECL boss_veklorAI : public boss_twinemperorsAI
         if (ArcaneBurst_Timer < diff)
         {
             Unit *mvic;
-            if ((mvic=GetAnyoneCloseEnough(ATTACK_DISTANCE, false))!=NULL)
+            if ((mvic=GetAnyoneCloseEnough(2*ATTACK_DISTANCE, false))!=NULL)
             {
                 DoCastSpellIfCan(mvic,SPELL_ARCANEBURST);
                 ArcaneBurst_Timer = 5000;

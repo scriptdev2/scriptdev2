@@ -180,7 +180,7 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
                 for(uint8 i = 0; i < 10; ++i)
                 {
                     if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO,i))
-                        if (m_creature->IsWithinDistInMap(pTarget, ATTACK_DISTANCE))
+                        if (m_creature->CanReachWithMeleeAttack(pTarget))
                             ++m_uiTargetsInRangeCount;
                 }
 

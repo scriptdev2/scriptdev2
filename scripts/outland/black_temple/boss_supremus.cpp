@@ -235,7 +235,7 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
         {
             Unit* pUnit = m_creature->GetMap()->GetUnit((*i)->getUnitGuid());
 
-            if (pUnit && m_creature->IsWithinDistInMap(pUnit, ATTACK_DISTANCE))
+            if (pUnit && m_creature->CanReachWithMeleeAttack(pUnit))
             {
                 if (pUnit->GetHealth() > health)
                 {

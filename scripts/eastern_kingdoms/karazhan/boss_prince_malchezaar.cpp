@@ -574,16 +574,16 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
 
     void DoMeleeAttacksIfReady()
     {
-        if (m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE) && !m_creature->IsNonMeleeSpellCasted(false))
+        if (!m_creature->IsNonMeleeSpellCasted(false) && m_creature->CanReachWithMeleeAttack(m_creature->getVictim()))
         {
             //Check for base attack
-            if (m_creature->isAttackReady() && m_creature->getVictim())
+            if (m_creature->isAttackReady())
             {
                 m_creature->AttackerStateUpdate(m_creature->getVictim());
                 m_creature->resetAttackTimer();
             }
             //Check for offhand attack
-            if (m_creature->isAttackReady(OFF_ATTACK) && m_creature->getVictim())
+            if (m_creature->isAttackReady(OFF_ATTACK))
             {
                 m_creature->AttackerStateUpdate(m_creature->getVictim(), OFF_ATTACK);
                 m_creature->resetAttackTimer(OFF_ATTACK);

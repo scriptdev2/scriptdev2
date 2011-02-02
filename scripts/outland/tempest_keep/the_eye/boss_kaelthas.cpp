@@ -1264,7 +1264,7 @@ struct MANGOS_DLL_DECL boss_grand_astromancer_capernianAI : public advisorbase_a
                 Unit* pUnit = m_creature->GetMap()->GetUnit((*i)->getUnitGuid());
 
                 //if in melee range
-                if (pUnit && pUnit->IsWithinDistInMap(m_creature, ATTACK_DISTANCE))
+                if (pUnit && m_creature->CanReachWithMeleeAttack(pUnit))
                 {
                     m_bInMeleeRange = true;
                     pTarget = pUnit;

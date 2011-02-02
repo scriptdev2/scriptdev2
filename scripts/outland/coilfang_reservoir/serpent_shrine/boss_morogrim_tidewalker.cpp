@@ -277,7 +277,7 @@ struct MANGOS_DLL_DECL mob_water_globuleAI : public ScriptedAI
 
         if (m_uiCheck_Timer < uiDiff)
         {
-            if (m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
+            if (m_creature->CanReachWithMeleeAttack(m_creature->getVictim()))
             {
                 m_creature->DealDamage(m_creature->getVictim(), 4000+rand()%2000, NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_FROST, NULL, false);
 

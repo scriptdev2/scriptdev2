@@ -242,7 +242,7 @@ struct MANGOS_DLL_DECL mobs_spectral_ghostly_citizenAI : public ScriptedAI
                 EnterEvadeMode();
                 break;
             case TEXTEMOTE_RUDE:
-                if (m_creature->IsWithinDistInMap(pPlayer, ATTACK_DISTANCE))
+                if (m_creature->IsWithinDistInMap(pPlayer, INTERACTION_DISTANCE))
                     m_creature->CastSpell(pPlayer,SPELL_SLAP,false);
                 else
                     m_creature->HandleEmote(EMOTE_ONESHOT_RUDE);
