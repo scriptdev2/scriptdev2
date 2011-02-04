@@ -237,7 +237,8 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
             }
         }
 
-        DoMeleeAttackIfReady();
+        if (m_creature->getVictim())                        // TODO - use correct check here, this only prevents crash
+            DoMeleeAttackIfReady();
     }
 };
 
@@ -374,7 +375,8 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public ScriptedAI
             FakeDeath = true;
         }
 
-        DoMeleeAttackIfReady();
+        if (!FakeDeath)
+            DoMeleeAttackIfReady();
     }
 };
 
@@ -506,7 +508,8 @@ struct MANGOS_DLL_DECL mob_zealot_zathAI : public ScriptedAI
             FakeDeath = true;
         }
 
-        DoMeleeAttackIfReady();
+        if (!FakeDeath)
+            DoMeleeAttackIfReady();
     }
 };
 
