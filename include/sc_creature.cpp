@@ -119,20 +119,6 @@ void ScriptedAI::DoStartNoMovement(Unit* pVictim)
     m_creature->StopMoving();
 }
 
-void ScriptedAI::DoMeleeAttackIfReady()
-{
-    //Make sure our attack is ready before checking distance
-    if (m_creature->isAttackReady())
-    {
-        //If we are within range melee the target
-        if (m_creature->CanReachWithMeleeAttack(m_creature->getVictim()))
-        {
-            m_creature->AttackerStateUpdate(m_creature->getVictim());
-            m_creature->resetAttackTimer();
-        }
-    }
-}
-
 void ScriptedAI::DoStopAttack()
 {
     if (m_creature->getVictim())

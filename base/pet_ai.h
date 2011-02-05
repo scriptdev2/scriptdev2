@@ -24,9 +24,6 @@ class MANGOS_DLL_DECL ScriptedPetAI : public CreatureAI
 
         void UpdateAI(const uint32 uiDiff);
 
-        // extras
-        void DoMeleeAttackIfReady();
-
         virtual void Reset() {}
 
         virtual void UpdatePetAI(const uint32 uiDiff);      // while in combat

@@ -73,18 +73,6 @@ void ScriptedPetAI::ResetPetCombat()
     Reset();
 }
 
-void ScriptedPetAI::DoMeleeAttackIfReady()
-{
-    if (m_creature->isAttackReady())
-    {
-        if (m_creature->CanReachWithMeleeAttack(m_creature->getVictim()))
-        {
-            m_creature->AttackerStateUpdate(m_creature->getVictim());
-            m_creature->resetAttackTimer();
-        }
-    }
-}
-
 void ScriptedPetAI::UpdatePetAI(const uint32 uiDiff)
 {
     DoMeleeAttackIfReady();

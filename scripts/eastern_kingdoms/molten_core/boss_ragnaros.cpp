@@ -231,10 +231,13 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public Scripted_NoMovementAI
         // TODO this actually should select _any_ enemy in melee range, not only the tank
         // Range check for melee target, if nobody is found in range, then cast magma blast on random
         // If we are within range melee the target
+        if (m_creature->IsNonMeleeSpellCasted(false) || !m_creature->getVictim())
+            return;
+
         if (m_creature->CanReachWithMeleeAttack(m_creature->getVictim()))
         {
-            // Make sure our attack is ready and we arn't currently casting
-            if (m_creature->isAttackReady() && !m_creature->IsNonMeleeSpellCasted(false))
+            // Make sure our attack is ready
+            if (m_creature->isAttackReady())
             {
                 m_creature->AttackerStateUpdate(m_creature->getVictim());
                 m_creature->resetAttackTimer();
