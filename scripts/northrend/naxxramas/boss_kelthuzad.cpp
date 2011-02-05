@@ -83,6 +83,8 @@ enum
     MAX_SOLDIER_COUNT                   = 71,
     MAX_ABOMINATION_COUNT               = 8,
     MAX_BANSHEE_COUNT                   = 8,
+
+    ACHIEV_REQ_KILLED_ABOMINATIONS      = 18,
 };
 
 static float M_F_ANGLE = 0.2f;                              // to adjust for map rotation
@@ -130,6 +132,7 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
     uint32 m_uiAbominationCount;
     uint32 m_uiSummonIntroTimer;
     uint32 m_uiIntroPackCount;
+    uint32 m_uiKilledAbomination;
 
     std::set<uint64> m_lIntroMobsSet;
     std::set<uint64> m_lAddsSet;
@@ -154,6 +157,7 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
         m_uiSoldierCount        = 0;
         m_uiBansheeCount        = 0;
         m_uiAbominationCount    = 0;
+        m_uiKilledAbomination   = 0;
         m_uiPhase               = PHASE_INTRO;
 
         // it may be some spell should be used instead, to control the intro phase
@@ -345,9 +349,16 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
         {
             case NPC_GUARDIAN:
             case NPC_SOLDIER_FROZEN:
-            case NPC_UNSTOPPABLE_ABOM:
             case NPC_SOUL_WEAVER:
                 m_lAddsSet.erase(pSummoned->GetGUID());
+                break;
+            case NPC_UNSTOPPABLE_ABOM:
+                m_lAddsSet.erase(pSummoned->GetGUID());
+
+                ++m_uiKilledAbomination;
+                if (m_uiKilledAbomination >= ACHIEV_REQ_KILLED_ABOMINATIONS)
+                    m_pInstance->SetSpecialAchievementCriteria(TYPE_ACHIEV_GET_ENOUGH, true);
+
                 break;
         }
     }

@@ -97,6 +97,12 @@ struct MANGOS_DLL_DECL boss_loathebAI : public ScriptedAI
             pSummoned->AddThreat(pTarget);
     }
 
+    void SummonedCreatureJustDied(Creature* pSummoned)
+    {
+        if (pSummoned->GetEntry() == NPC_SPORE && m_pInstance)
+            m_pInstance->SetSpecialAchievementCriteria(TYPE_ACHIEV_SPORE_LOSER, false);
+    }
+
     void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
