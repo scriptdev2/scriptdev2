@@ -414,8 +414,7 @@ void instance_gundrak::Update(uint32 uiDiff)
                 if (m_auiEncounter[0] == SPECIAL && m_auiEncounter[1] == SPECIAL && m_auiEncounter[2] == SPECIAL
                     && m_mAltarInProgress.empty() && m_mBeamInProgress.empty() && m_mKeyInProgress.size() == 1)
                 {
-                    DoUseDoorOrButton(m_uiBridgeGUID, 0, true);
-                    DoUseDoorOrButton(m_uiCollisionGUID, 0, true);
+                    DoUseDoorOrButton(m_uiCollisionGUID);
                     DoUseDoorOrButton(m_uiRhinoKeyGUID, 0, true);
 
                     // The already closed keys cannot be done with DoUseDoorOrButton
@@ -425,6 +424,11 @@ void instance_gundrak::Update(uint32 uiDiff)
                         pMammothKey->SetGoState(GO_STATE_ACTIVE_ALTERNATIVE);
                     if (GameObject* pSnakeKey = instance->GetGameObject(m_uiSnakeKeyGUID))
                         pSnakeKey->SetGoState(GO_STATE_ACTIVE_ALTERNATIVE);
+
+                    // GO_BRIDGE is type 35 (TRAP_DOOR) and needs to be handled directly
+                    // Real Use of this GO is unknown, but this change of state is expected
+                    if (GameObject* pBridge = instance->GetGameObject(m_uiBridgeGUID))
+                        pBridge->SetGoState(GO_STATE_READY);
                 }
                 // Remove this timer, as processed
                 m_mKeyInProgress.erase(itr++);
