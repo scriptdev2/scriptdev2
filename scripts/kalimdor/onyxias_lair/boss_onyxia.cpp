@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Boss_Onyxia
 SD%Complete: 70
-SDComment: Phase 3 need additional code. The spawning Whelps need GO-Support. Erruption needs GO-Support
+SDComment: Phase 3 need additional code. The spawning Whelps need GO-Support. Use of spells 22191 and 21131 unknown
 SDCategory: Onyxia's Lair
 EndScriptData */
 
@@ -57,6 +57,9 @@ enum
     SPELL_BREATH_SW_TO_NE       = 18596,                    // 12x in "array"
     SPELL_BREATH_NE_TO_SW       = 18617,                    // 12x in "array"
 
+    SPELL_VISUAL_BREATH_A       = 4880,                     // Only and all of the above Breath spells (and their triggered spells) have these visuals
+    SPELL_VISUAL_BREATH_B       = 4919,
+
     //SPELL_BREATH                = 21131,                  // 8x in "array", different initial cast than the other arrays
 
     SPELL_BELLOWINGROAR         = 18431,
@@ -66,7 +69,6 @@ enum
     SPELL_SUMMON_LAIR_GUARD     = 68968,
 
     MAX_WHELPS_PER_PACK         = 40,
-    NPC_WHELP                   = 11262,
 
     PHASE_START                 = 1,
     PHASE_BREATH                = 2,
@@ -167,6 +169,9 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
     void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_ONYXIA, IN_PROGRESS);
     }
 
     void JustReachedHome()
@@ -174,6 +179,15 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
         // in case evade in phase 2, see comments for hack where phase 2 is set
         m_creature->RemoveSplineFlag(SPLINEFLAG_FLYING);
         m_creature->SetByteFlag(UNIT_FIELD_BYTES_1, 3, 0);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_ONYXIA, FAIL);
+    }
+
+    void JustDied(Unit* pKiller)
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_ONYXIA, DONE);
     }
 
     void JustSummoned(Creature* pSummoned)
@@ -181,7 +195,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
         pSummoned->GetMotionMaster()->MovePoint(0, afSpawnLocations[3][0], afSpawnLocations[3][1], afSpawnLocations[3][2]);
         pSummoned->SetInCombatWithZone();
 
-        if (pSummoned->GetEntry() == NPC_WHELP)
+        if (pSummoned->GetEntry() == NPC_ONYXIA_WHELP)
             ++m_uiSummonCount;
     }
 
@@ -304,6 +318,9 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
                     if (m_pPointData)
                         m_creature->GetMotionMaster()->MovePoint(m_pPointData->uiLocId, m_pPointData->fX, m_pPointData->fY, m_pPointData->fZ);
 
+                    // TODO - this might not be the correct place to set this setting
+                    if (m_pInstance)
+                        m_pInstance->SetData(TYPE_ONYXIA, DATA_LIFTOFF);
                     return;
                 }
 
@@ -376,8 +393,8 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
                     {
                         if (m_uiWhelpTimer < uiDiff)
                         {
-                            m_creature->SummonCreature(NPC_WHELP, afSpawnLocations[0][0], afSpawnLocations[0][1], afSpawnLocations[0][2], 0.0f, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 30000);
-                            m_creature->SummonCreature(NPC_WHELP, afSpawnLocations[1][0], afSpawnLocations[1][1], afSpawnLocations[1][2], 0.0f, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 30000);
+                            m_creature->SummonCreature(NPC_ONYXIA_WHELP, afSpawnLocations[0][0], afSpawnLocations[0][1], afSpawnLocations[0][2], 0.0f, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 30000);
+                            m_creature->SummonCreature(NPC_ONYXIA_WHELP, afSpawnLocations[1][0], afSpawnLocations[1][1], afSpawnLocations[1][2], 0.0f, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 30000);
                             m_uiWhelpTimer = 500;
                         }
                         else
@@ -413,6 +430,17 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
             }
         }
     }
+
+    void SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell)
+    {
+        // Check if players are hit by Onyxia's Deep Breath
+        if (pTarget->GetTypeId() != TYPEID_PLAYER || !m_pInstance)
+            return;
+
+        // All and only the Onyxia Deep Breath Spells have these visuals
+        if (pSpell->SpellVisual[0] == SPELL_VISUAL_BREATH_A || pSpell->SpellVisual[0] == SPELL_VISUAL_BREATH_B)
+            m_pInstance->SetData(TYPE_ONYXIA, DATA_PLAYER_TOASTED);
+    }
 };
 
 CreatureAI* GetAI_boss_onyxia(Creature* pCreature)
@@ -423,6 +451,7 @@ CreatureAI* GetAI_boss_onyxia(Creature* pCreature)
 void AddSC_boss_onyxia()
 {
     Script* pNewScript;
+
     pNewScript = new Script;
     pNewScript->Name = "boss_onyxia";
     pNewScript->GetAI = &GetAI_boss_onyxia;
