@@ -35,6 +35,7 @@ spell 50706
 spell 45109
 spell 45111
 spell 39246
+spell 52090
 EndContentData */
 
 #include "precompiled.h"
@@ -264,6 +265,10 @@ enum
     SPELL_DARKMENDER_TINCTURE           = 52741,
     SPELL_SUMMON_CORRUPTED_SCARLET      = 54415,
     NPC_CORPSES_RISE_CREDIT_BUNNY       = 29398,
+
+    // quest 12659, item 38731
+    SPELL_AHUNAES_KNIFE                 = 52090,
+    NPC_SCALPS_KILL_CREDIT_BUNNY        = 28622
 };
 
 bool EffectAuraDummy_spell_aura_dummy_npc(const Aura* pAura, bool bApply)
@@ -734,6 +739,19 @@ bool EffectDummyCreature_spell_dummy_npc(Unit* pCaster, uint32 uiSpellId, SpellE
                     }
                 }
                 pCreatureTarget->ForcedDespawn();
+            }
+            return true;
+        }
+        case SPELL_AHUNAES_KNIFE:
+        {
+            if (uiEffIndex == EFFECT_INDEX_0)
+            {
+                if (pCaster->GetTypeId() != TYPEID_PLAYER)
+                    return true;
+
+                ((Player*)pCaster)->KilledMonsterCredit(NPC_SCALPS_KILL_CREDIT_BUNNY);
+                pCreatureTarget->ForcedDespawn();
+                return true;
             }
             return true;
         }
