@@ -831,13 +831,11 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                  // Summon Phoenix
                  if (m_uiPhoenix_Timer < uiDiff)
                  {
-                    if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                    if (DoCastSpellIfCan(m_creature, SPELL_PHOENIX_ANIMATION) == CAST_OK)
                     {
-                        DoCastSpellIfCan(pTarget, SPELL_PHOENIX_ANIMATION);
-                        DoScriptText(urand(0, 1) ? SAY_SUMMON_PHOENIX1 : SAY_SUMMON_PHOENIX2, pTarget);
+                        DoScriptText(urand(0, 1) ? SAY_SUMMON_PHOENIX1 : SAY_SUMMON_PHOENIX2, m_creature);
+                        m_uiPhoenix_Timer = 60000;
                     }
-
-                    m_uiPhoenix_Timer = 60000;
                 }
                 else
                     m_uiPhoenix_Timer -= uiDiff;
@@ -928,10 +926,11 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                                 m_creature->SendMonsterMove(afGravityPos[0], afGravityPos[1], afGravityPos[2], SPLINETYPE_NORMAL, SPLINEFLAG_NONE, 1);
 
                                 // 1) Kael'thas will portal the whole raid right into his body
-                                ThreatList const& tList = m_creature->getThreatManager().getThreatList();
-                                for (ThreatList::const_iterator i = tList.begin();i != tList.end(); ++i)
+                                std::vector<ObjectGuid> vGuids;
+                                m_creature->FillGuidsListFromThreatList(vGuids);
+                                for (std::vector<ObjectGuid>::const_iterator i = vGuids.begin();i != vGuids.end(); ++i)
                                 {
-                                    Unit* pUnit = m_creature->GetMap()->GetUnit((*i)->getUnitGuid());
+                                    Unit* pUnit = m_creature->GetMap()->GetUnit(*i);
 
                                     if (pUnit && pUnit->GetTypeId() == TYPEID_PLAYER)
                                     {
@@ -952,10 +951,11 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                                 DoScriptText(urand(0, 1) ? SAY_GRAVITYLAPSE1 : SAY_GRAVITYLAPSE2, m_creature);
 
                                 // 2) At that point he will put a Gravity Lapse debuff on everyone
-                                ThreatList const& tList = m_creature->getThreatManager().getThreatList();
-                                for (ThreatList::const_iterator i = tList.begin();i != tList.end(); ++i)
+                                std::vector<ObjectGuid> vGuids;
+                                m_creature->FillGuidsListFromThreatList(vGuids);
+                                for (std::vector<ObjectGuid>::const_iterator i = vGuids.begin();i != vGuids.end(); ++i)
                                 {
-                                    if (Unit* pUnit = m_creature->GetMap()->GetUnit((*i)->getUnitGuid()))
+                                    if (Unit* pUnit = m_creature->GetMap()->GetUnit(*i))
                                     {
                                         m_creature->CastSpell(pUnit, SPELL_KNOCKBACK, true);
                                         //Gravity lapse - needs an exception in Spell system to work

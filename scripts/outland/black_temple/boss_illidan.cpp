@@ -464,10 +464,11 @@ struct MANGOS_DLL_DECL npc_akama_illidanAI : public ScriptedAI
 
     void KillAllElites()
     {
-        ThreatList const& tList = m_creature->getThreatManager().getThreatList();
-        for (ThreatList::const_iterator itr = tList.begin();itr != tList.end(); ++itr)
+        std::vector<ObjectGuid> vGuids;
+        m_creature->FillGuidsListFromThreatList(vGuids);
+        for (std::vector<ObjectGuid>::const_iterator itr = vGuids.begin();itr != vGuids.end(); ++itr)
         {
-            Unit* pUnit = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid());
+            Unit* pUnit = m_creature->GetMap()->GetUnit(*itr);
 
             if (pUnit && pUnit->GetTypeId() == TYPEID_UNIT && pUnit->GetEntry() == ILLIDARI_ELITE)
                 pUnit->SetDeathState(JUST_DIED);

@@ -808,10 +808,10 @@ struct MANGOS_DLL_DECL boss_yazzaiAI : public boss_priestess_lackey_commonAI
             ThreatList const& tList = m_creature->getThreatManager().getThreatList();
             for (ThreatList::const_iterator itr = tList.begin();itr != tList.end(); ++itr)
             {
-                if (Unit* target = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid()))
+                if (Unit* pTarget = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid()))
                 {
                     //if in melee range
-                    if (target->IsWithinDistInMap(m_creature, 5))
+                    if (m_creature->CanReachWithMeleeAttack(pTarget))
                     {
                         InMeleeRange = true;
                         break;

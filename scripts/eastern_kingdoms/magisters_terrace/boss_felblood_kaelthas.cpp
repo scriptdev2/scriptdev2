@@ -205,10 +205,11 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
 
         DoCastSpellIfCan(m_creature, SPELL_TELEPORT_CENTER, CAST_TRIGGERED);
 
-        ThreatList const& tList = m_creature->getThreatManager().getThreatList();
-        for (ThreatList::const_iterator i = tList.begin();i != tList.end(); ++i)
+        std::vector<ObjectGuid> vGuids;
+        m_creature->FillGuidsListFromThreatList(vGuids);
+        for (std::vector<ObjectGuid>::const_iterator i = vGuids.begin();i != vGuids.end(); ++i)
         {
-            Unit* pUnit = m_creature->GetMap()->GetUnit((*i)->getUnitGuid());
+            Unit* pUnit = m_creature->GetMap()->GetUnit(*i);
 
             if (pUnit && pUnit->GetTypeId() == TYPEID_PLAYER)
                 pUnit->CastSpell(pUnit, SPELL_TELEPORT_CENTER, true);
@@ -231,10 +232,11 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
     // players can't cast "fly" spells unless in map 530. Has to be done a while after they get knocked into the air...
     void CastGravityLapseFly()
     {
-        ThreatList const& tList = m_creature->getThreatManager().getThreatList();
-        for (ThreatList::const_iterator i = tList.begin();i != tList.end(); ++i)
+        std::vector<ObjectGuid> vGuids;
+        m_creature->FillGuidsListFromThreatList(vGuids);
+        for (std::vector<ObjectGuid>::const_iterator i = vGuids.begin();i != vGuids.end(); ++i)
         {
-            Unit* pUnit = m_creature->GetMap()->GetUnit((*i)->getUnitGuid());
+            Unit* pUnit = m_creature->GetMap()->GetUnit(*i);
 
             // Also needs an exception in spell system.
             if (pUnit && pUnit->GetTypeId() == TYPEID_PLAYER)
@@ -244,10 +246,11 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
 
     void RemoveGravityLapse()
     {
-        ThreatList const& tList = m_creature->getThreatManager().getThreatList();
-        for (ThreatList::const_iterator i = tList.begin();i != tList.end(); ++i)
+        std::vector<ObjectGuid> vGuids;
+        m_creature->FillGuidsListFromThreatList(vGuids);
+        for (std::vector<ObjectGuid>::const_iterator i = vGuids.begin();i != vGuids.end(); ++i)
         {
-            Unit* pUnit = m_creature->GetMap()->GetUnit((*i)->getUnitGuid());
+            Unit* pUnit = m_creature->GetMap()->GetUnit(*i);
 
             if (pUnit && pUnit->GetTypeId() == TYPEID_PLAYER)
             {

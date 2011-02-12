@@ -70,10 +70,11 @@ struct MANGOS_DLL_DECL boss_azuregosAI : public ScriptedAI
         {
             DoScriptText(SAY_TELEPORT, m_creature);
 
-            ThreatList const& tList = m_creature->getThreatManager().getThreatList();
-            for (ThreatList::const_iterator i = tList.begin();i != tList.end(); ++i)
+            std::vector<ObjectGuid> vGuids;
+            m_creature->FillGuidsListFromThreatList(vGuids);
+            for (std::vector<ObjectGuid>::const_iterator i = vGuids.begin();i != vGuids.end(); ++i)
             {
-                Unit* pUnit = m_creature->GetMap()->GetUnit((*i)->getUnitGuid());
+                Unit* pUnit = m_creature->GetMap()->GetUnit(*i);
 
                 if (pUnit && pUnit->GetTypeId() == TYPEID_PLAYER)
                     DoTeleportPlayer(pUnit, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ()+3, pUnit->GetOrientation());
