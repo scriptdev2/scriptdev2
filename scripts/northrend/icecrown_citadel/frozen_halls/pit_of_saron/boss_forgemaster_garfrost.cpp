@@ -15,7 +15,7 @@
  */
 
 /* ScriptData
-SDName: boss_forgemaster_gafrost
+SDName: boss_forgemaster_garfrost
 SD%Complete: 0%
 SDComment:
 SDCategory: Pit of Saron
@@ -39,7 +39,7 @@ enum
     EMOTE_DEEP_FREEZE                   = -1658023,
 };
 
-void AddSC_boss_gafrost()
+void AddSC_boss_garfrost()
 {
 
 }

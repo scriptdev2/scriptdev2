@@ -371,7 +371,7 @@ scripts/northrend/icecrown_citadel/frozen_halls/halls_of_reflection/boss_marwyn.
 scripts/northrend/icecrown_citadel/frozen_halls/halls_of_reflection/halls_of_reflection.cpp \
 scripts/northrend/icecrown_citadel/frozen_halls/halls_of_reflection/halls_of_reflection.h \
 scripts/northrend/icecrown_citadel/frozen_halls/halls_of_reflection/instance_halls_of_reflection.cpp \
-scripts/northrend/icecrown_citadel/frozen_halls/pit_of_saron/boss_forgemaster_gafrost.cpp \
+scripts/northrend/icecrown_citadel/frozen_halls/pit_of_saron/boss_forgemaster_garfrost.cpp \
 scripts/northrend/icecrown_citadel/frozen_halls/pit_of_saron/boss_krick_and_ick.cpp \
 scripts/northrend/icecrown_citadel/frozen_halls/pit_of_saron/boss_scourgelord_tyrannus.cpp \
 scripts/northrend/icecrown_citadel/frozen_halls/pit_of_saron/instance_pit_of_saron.cpp \

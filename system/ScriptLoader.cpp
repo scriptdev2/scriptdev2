@@ -308,7 +308,7 @@ extern void AddSC_boss_lich_king();
 extern void AddSC_boss_marwyn();
 extern void AddSC_halls_of_reflection();
 extern void AddSC_instance_halls_of_reflection();
-extern void AddSC_boss_gafrost();                           // ICC, pit_of_saron
+extern void AddSC_boss_garfrost();                          // ICC, pit_of_saron
 extern void AddSC_boss_krick_and_ick();
 extern void AddSC_boss_tyrannus();
 extern void AddSC_instance_pit_of_saron();
@@ -798,7 +798,7 @@ void AddScripts()
     AddSC_boss_marwyn();
     AddSC_halls_of_reflection();
     AddSC_instance_halls_of_reflection();
-    AddSC_boss_gafrost();                                   // ICC, FH, pit_of_saron
+    AddSC_boss_garfrost();                                  // ICC, FH, pit_of_saron
     AddSC_boss_krick_and_ick();
     AddSC_boss_tyrannus();
     AddSC_instance_pit_of_saron();
