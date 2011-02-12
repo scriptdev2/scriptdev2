@@ -46,7 +46,46 @@ enum
     GO_THRONE_ROOM          = 170575,
 
     GO_SPECTRAL_CHALICE     = 164869,
-    GO_CHEST_SEVEN          = 169243
+    GO_CHEST_SEVEN          = 169243,
+    GO_ARENA_SPOILS         = 181074,
+};
+
+enum ArenaNPCs
+{
+    // Gladiators
+    NPC_LEFTY               = 16049,
+    NPC_ROTFANG             = 16050,
+    NPC_SNOKH               = 16051,
+    NPC_MALGEN              = 16052,
+    NPC_KORV                = 16053,
+    NPC_REZZNIK             = 16054,
+    NPC_VAJASHNI            = 16055,
+    NPC_VOLIDA              = 16058,
+    NPC_THELDREN            = 16059,
+    // Ring mobs
+    NPC_WORM                = 8925,
+    NPC_STINGER             = 8926,
+    NPC_SCREECHER           = 8927,
+    NPC_THUNDERSNOUT        = 8928,
+    NPC_CREEPER             = 8933,
+    NPC_BEETLE              = 8932,
+    // Ring bosses
+    NPC_GOROSH              = 9027,
+    NPC_GRIZZLE             = 9028,
+    NPC_EVISCERATOR         = 9029,
+    NPC_OKTHOR              = 9030,
+    NPC_ANUBSHIAH           = 9031,
+    NPC_HEDRUM              = 9032
+};
+
+static const uint32 aArenaNPCs[] =
+{
+    // Gladiators
+    NPC_LEFTY, NPC_ROTFANG, NPC_SNOKH, NPC_MALGEN, NPC_KORV, NPC_REZZNIK, NPC_VAJASHNI, NPC_VOLIDA, NPC_THELDREN,
+    // Ring mobs
+    NPC_WORM, NPC_STINGER, NPC_SCREECHER, NPC_THUNDERSNOUT, NPC_CREEPER, NPC_BEETLE,
+    // Ring bosses
+    NPC_GOROSH, NPC_GRIZZLE, NPC_EVISCERATOR, NPC_OKTHOR, NPC_ANUBSHIAH, NPC_HEDRUM
 };
 
 class MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
@@ -66,6 +105,7 @@ class MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
 
         const char* Save() { return m_strInstData.c_str(); }
         void Load(const char* chrIn);
+        void OnCreatureEvade(Creature* pCreature);
 
         // Arena Event
         void SetArenaCenterCoords(float fX, float fY, float fZ) { m_fArenaCenterX = fX; m_fArenaCenterY = fY; m_fArenaCenterZ = fZ; }
@@ -106,6 +146,7 @@ class MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
 
         uint64 m_uiSpectralChaliceGUID;
         uint64 m_uiSevensChestGUID;
+        uint64 m_uiArenaSpoilsGUID;
 
         uint32 m_uiBarAleCount;
 

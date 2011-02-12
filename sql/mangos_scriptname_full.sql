@@ -293,6 +293,7 @@ UPDATE creature_template SET ScriptName='boss_high_interrogator_gerstahn' WHERE 
 UPDATE creature_template SET ScriptName='boss_magmus' WHERE entry=9938;
 UPDATE creature_template SET ScriptName='mob_phalanx' WHERE entry=9502;
 UPDATE creature_template SET ScriptName='npc_grimstone' WHERE entry=10096;
+UPDATE creature_template SET ScriptName='npc_theldren_trigger' WHERE entry=16079;
 UPDATE creature_template SET ScriptName='npc_lokhtos_darkbargainer' WHERE entry=12944;
 UPDATE creature_template SET ScriptName='npc_kharan_mighthammer' WHERE entry=9021;
 UPDATE creature_template SET ScriptName='npc_rocknot' WHERE entry=9503;
