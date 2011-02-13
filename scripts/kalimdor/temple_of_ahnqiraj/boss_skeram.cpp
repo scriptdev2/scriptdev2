@@ -107,19 +107,34 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
     void JustDied(Unit* Killer)
     {
         if (!IsImage)
+        {
             DoScriptText(SAY_DEATH, m_creature);
+
+            if (m_pInstance)
+                m_pInstance->SetData(TYPE_SKERAM, DONE);
+        }
     }
 
     void Aggro(Unit *who)
     {
         if (IsImage || Images75)
             return;
+
         switch(urand(0, 2))
         {
             case 0: DoScriptText(SAY_AGGRO1, m_creature); break;
             case 1: DoScriptText(SAY_AGGRO2, m_creature); break;
             case 2: DoScriptText(SAY_AGGRO3, m_creature); break;
         }
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_SKERAM, IN_PROGRESS);
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_SKERAM, FAIL);
     }
 
     void UpdateAI(const uint32 diff)
@@ -263,11 +278,11 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
             Image1->SetMaxHealth(m_creature->GetMaxHealth() / 5);
             Image1->SetHealth(m_creature->GetHealth() / 5);
 
-            if (target)
-                Image1->AI()->AttackStart(target);
-
             if (boss_skeramAI* pImageAI = dynamic_cast<boss_skeramAI*>(Image1->AI()))
                 pImageAI->IsImage = true;
+
+            if (target)
+                Image1->AI()->AttackStart(target);
         }
 
         Image2 = m_creature->SummonCreature(15263,i2->x, i2->y, i2->z, i2->r, TEMPSUMMON_CORPSE_DESPAWN, 30000);
@@ -276,11 +291,11 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
             Image2->SetMaxHealth(m_creature->GetMaxHealth() / 5);
             Image2->SetHealth(m_creature->GetHealth() / 5);
 
-            if (target)
-                Image2->AI()->AttackStart(target);
-
             if (boss_skeramAI* pImageAI = dynamic_cast<boss_skeramAI*>(Image2->AI()))
                 pImageAI->IsImage = true;
+
+            if (target)
+                Image2->AI()->AttackStart(target);
         }
 
 

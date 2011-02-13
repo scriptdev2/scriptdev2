@@ -96,7 +96,7 @@ struct MANGOS_DLL_DECL boss_twinemperorsAI : public ScriptedAI
     {
         if (m_pInstance)
         {
-            return m_creature->GetMap()->GetCreature(m_pInstance->GetData64(IAmVeklor() ? DATA_VEKNILASH : DATA_VEKLOR));
+            return m_creature->GetMap()->GetCreature(m_pInstance->GetData64(IAmVeklor() ? NPC_VEKNILASH : NPC_VEKLOR));
         }
         else
         {
@@ -135,6 +135,9 @@ struct MANGOS_DLL_DECL boss_twinemperorsAI : public ScriptedAI
 
         if (!DontYellWhenDead)                              // I hope AI is not threaded
             DoPlaySoundToSet(m_creature, IAmVeklor() ? SOUND_VL_DEATH : SOUND_VN_DEATH);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_TWINS, DONE);
     }
 
     void KilledUnit(Unit* victim)
@@ -144,8 +147,6 @@ struct MANGOS_DLL_DECL boss_twinemperorsAI : public ScriptedAI
 
     void Aggro(Unit* pWho)
     {
-        m_creature->SetInCombatWithZone();
-
         Creature *pOtherBoss = GetOtherBoss();
         if (pOtherBoss)
         {
@@ -157,6 +158,15 @@ struct MANGOS_DLL_DECL boss_twinemperorsAI : public ScriptedAI
                 pOtherBoss->AI()->AttackStart(pWho);
             }
         }
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_TWINS, IN_PROGRESS);
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_TWINS, DONE);
     }
 
     void SpellHit(Unit *caster, const SpellEntry *entry)

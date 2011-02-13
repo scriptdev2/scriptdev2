@@ -254,8 +254,8 @@ struct MANGOS_DLL_DECL boss_yaujAI : public ScriptedAI
         {
             if (m_pInstance)
             {
-                Creature *pKri = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_KRI));
-                Creature *pVem = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_VEM));
+                Creature* pKri = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_KRI));
+                Creature* pVem = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_VEM));
 
                 switch(urand(0, 2))
                 {
