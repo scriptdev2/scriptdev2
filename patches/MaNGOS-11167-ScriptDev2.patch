@@ -1,0 +1,16 @@
+commit 0db7eaef7e2b3d2a0e08741af00812f2f7234661
+Author: VladimirMangos <vladimir@getmangos.com>
+Date:   Mon Feb 14 02:58:31 2011 +0300
+
+    [PATCH] ScriptDev2 patch
+
+diff --git a/src/bindings/CMakeLists.txt b/src/bindings/CMakeLists.txt
+index fc13e3a..592d773 100644
+--- a/src/bindings/CMakeLists.txt
++++ b/src/bindings/CMakeLists.txt
+@@ -16,4 +16,4 @@
+ # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ #
+ 
+-# add_subdirectory(universal)
++add_subdirectory(ScriptDev2)
