@@ -1,8 +1,11 @@
-commit 0db7eaef7e2b3d2a0e08741af00812f2f7234661
-Author: VladimirMangos <vladimir@getmangos.com>
-Date:   Mon Feb 14 02:58:31 2011 +0300
+From bdaa99630113b7cb9d5e564a5777497d7530b490 Mon Sep 17 00:00:00 2001
+From: VladimirMangos <vladimir@getmangos.com>
+Date: Tue, 15 Feb 2011 02:15:26 +0100
+Subject: [PATCH] ScriptDev2 patch
 
-    [PATCH] ScriptDev2 patch
+---
+ src/bindings/CMakeLists.txt |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
 diff --git a/src/bindings/CMakeLists.txt b/src/bindings/CMakeLists.txt
 index fc13e3a..592d773 100644
@@ -14,3 +17,6 @@ index fc13e3a..592d773 100644
  
 -# add_subdirectory(universal)
 +add_subdirectory(ScriptDev2)
+-- 
+1.7.3.1.msysgit.0
+
