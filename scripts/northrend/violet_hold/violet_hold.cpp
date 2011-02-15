@@ -117,8 +117,10 @@ struct MANGOS_DLL_DECL npc_sinclariAI : public npc_escortAI
 
     void JustRespawned()
     {
-        if (m_pInstance)
+        if (m_pInstance && m_pInstance->GetData(TYPE_MAIN) != DONE)
             m_pInstance->SetData(TYPE_MAIN, NOT_STARTED);
+
+        npc_escortAI::JustRespawned();                      // Needed, to reset escort state, waypoints, etc
     }
 };
 
@@ -212,8 +214,15 @@ struct MANGOS_DLL_DECL npc_teleportation_portalAI : public ScriptedAI
         }
         else if (m_creature->GetEntry() == NPC_PORTAL)
         {
-            m_creature->SummonCreature(m_pInstance->GetRandomPortalEliteEntry(), 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600*IN_MILLISECONDS);
-            m_creature->CastSpell(m_creature, SPELL_PORTAL_PERIODIC, true);
+            if (m_pInstance && m_pInstance->GetCurrentPortalNumber() == 18)
+            {
+                m_creature->SummonCreature(NPC_CYANIGOSA, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600*IN_MILLISECONDS);
+            }
+            else
+            {
+                m_creature->SummonCreature(m_pInstance->GetRandomPortalEliteEntry(), 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600*IN_MILLISECONDS);
+                m_creature->CastSpell(m_creature, SPELL_PORTAL_PERIODIC, true);
+            }
         }
         else if (m_pInstance->IsCurrentPortalForTrash())
         {
@@ -262,12 +271,48 @@ struct MANGOS_DLL_DECL npc_teleportation_portalAI : public ScriptedAI
             case NPC_AZURE_STALKER:
                 m_lMobSet.insert(pSummoned->GetGUID());
                 return;
+            case NPC_AZURE_SABOTEUR:
+            {
+                if (!m_pInstance)
+                    return;
+                const sBossInformation* pData = m_pInstance->GetBossInformation();
+                if (pData)
+                    pSummoned->GetMotionMaster()->MovePoint(pData->uiWayPointId, pData->fX, pData->fY, pData->fZ);
+                return;
+            }
             default:
                 return;
         }
 
         if (m_pInstance)
             m_pInstance->SetData(TYPE_PORTAL, SPECIAL);
+    }
+
+    void SummonedMovementInform(Creature* pSummoned, uint32 uiMotionType, uint32 uiPointId)
+    {
+        if (uiMotionType != POINT_MOTION_TYPE && pSummoned->GetEntry() != NPC_AZURE_SABOTEUR)
+            return;
+
+        if (uiPointId == 1)
+        {
+            pSummoned->CastSpell(pSummoned, SPELL_SHIELD_DISRUPTION, false);
+            if (m_pInstance)
+            {
+                if (const sBossInformation* pData = m_pInstance->GetBossInformation())
+                {
+                    if (Creature* pBoss = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(m_pInstance->GetData(pData->uiType) != DONE ? pData->uiEntry : pData->uiGhostEntry)))
+                    {
+                        m_pInstance->UpdateCellForBoss(pData->uiEntry);
+                        if (pData->iSayEntry)
+                            DoScriptText(pData->iSayEntry, pBoss);
+
+                        // TODO, adds for Erekem? Opening their Cells? Reset flags on FAIL?
+                        pBoss->GetMotionMaster()->MovePoint(1, pData->fX, pData->fY, pData->fZ);
+                        pBoss->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE);
+                    }
+                }
+            }
+        }
     }
 
     void SummonedCreatureJustDied(Creature* pSummoned)
