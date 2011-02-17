@@ -1,7 +1,7 @@
 Index: include/precompiled.h
 ===================================================================
---- include/precompiled.h	(Revision 1910)
-+++ include/precompiled.h	(Arbeitskopie)
+--- include/precompiled.h	(revision 1982)
++++ include/precompiled.h	(working copy)
 @@ -11,6 +11,11 @@
  #include "sc_grid_searchers.h"
  #include "sc_instance.h"
@@ -16,8 +16,8 @@ Index: include/precompiled.h
      BOOL APIENTRY DllMain(HANDLE hModule, DWORD ul_reason_for_call, LPVOID lpReserved)
 Index: scripts/eastern_kingdoms/shadowfang_keep/shadowfang_keep.cpp
 ===================================================================
---- scripts/eastern_kingdoms/shadowfang_keep/shadowfang_keep.cpp	(Revision 1910)
-+++ scripts/eastern_kingdoms/shadowfang_keep/shadowfang_keep.cpp	(Arbeitskopie)
+--- scripts/eastern_kingdoms/shadowfang_keep/shadowfang_keep.cpp	(revision 1982)
++++ scripts/eastern_kingdoms/shadowfang_keep/shadowfang_keep.cpp	(working copy)
 @@ -91,10 +91,10 @@
                  else
                      DoScriptText(EMOTE_UNLOCK_DOOR_AD, m_creature);
@@ -35,8 +35,8 @@ Index: scripts/eastern_kingdoms/shadowfang_keep/shadowfang_keep.cpp
                      DoScriptText(SAY_POST_DOOR_AS, m_creature);
 Index: scripts/kalimdor/azuremyst_isle.cpp
 ===================================================================
---- scripts/kalimdor/azuremyst_isle.cpp	(Revision 1910)
-+++ scripts/kalimdor/azuremyst_isle.cpp	(Arbeitskopie)
+--- scripts/kalimdor/azuremyst_isle.cpp	(revision 1982)
++++ scripts/kalimdor/azuremyst_isle.cpp	(working copy)
 @@ -103,7 +103,7 @@
  
      void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
@@ -48,9 +48,9 @@ Index: scripts/kalimdor/azuremyst_isle.cpp
              m_creature->SetStandState(UNIT_STAND_STATE_STAND);
 Index: scripts/kalimdor/onyxias_lair/boss_onyxia.cpp
 ===================================================================
---- scripts/kalimdor/onyxias_lair/boss_onyxia.cpp	(Revision 1910)
-+++ scripts/kalimdor/onyxias_lair/boss_onyxia.cpp	(Arbeitskopie)
-@@ -299,7 +299,7 @@
+--- scripts/kalimdor/onyxias_lair/boss_onyxia.cpp	(revision 1982)
++++ scripts/kalimdor/onyxias_lair/boss_onyxia.cpp	(working copy)
+@@ -312,7 +312,7 @@
                      DoScriptText(SAY_PHASE_2_TRANS, m_creature);
  
                      // sort of a hack, it is unclear how this really work but the values appear to be valid
@@ -59,10 +59,19 @@ Index: scripts/kalimdor/onyxias_lair/boss_onyxia.cpp
                      m_creature->AddSplineFlag(SPLINEFLAG_FLYING);
  
                      if (m_pPointData)
+@@ -438,7 +438,7 @@
+             return;
+ 
+         // All and only the Onyxia Deep Breath Spells have these visuals
+-        if (pSpell->SpellVisual[0] == SPELL_VISUAL_BREATH_A || pSpell->SpellVisual[0] == SPELL_VISUAL_BREATH_B)
++        if (pSpell->SpellVisual == SPELL_VISUAL_BREATH_A || pSpell->SpellVisual == SPELL_VISUAL_BREATH_B)
+             m_pInstance->SetData(TYPE_ONYXIA, DATA_PLAYER_TOASTED);
+     }
+ };
 Index: scripts/northrend/dragonblight.cpp
 ===================================================================
---- scripts/northrend/dragonblight.cpp	(Revision 1910)
-+++ scripts/northrend/dragonblight.cpp	(Arbeitskopie)
+--- scripts/northrend/dragonblight.cpp	(revision 1982)
++++ scripts/northrend/dragonblight.cpp	(working copy)
 @@ -101,7 +101,7 @@
      if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
      {
@@ -74,8 +83,8 @@ Index: scripts/northrend/dragonblight.cpp
      return true;
 Index: scripts/outland/auchindoun/auchenai_crypts/boss_exarch_maladaar.cpp
 ===================================================================
---- scripts/outland/auchindoun/auchenai_crypts/boss_exarch_maladaar.cpp	(Revision 1910)
-+++ scripts/outland/auchindoun/auchenai_crypts/boss_exarch_maladaar.cpp	(Arbeitskopie)
+--- scripts/outland/auchindoun/auchenai_crypts/boss_exarch_maladaar.cpp	(revision 1982)
++++ scripts/outland/auchindoun/auchenai_crypts/boss_exarch_maladaar.cpp	(working copy)
 @@ -107,10 +107,10 @@
                      DoCastSpellIfCan(m_creature->getVictim(), SPELL_MOONFIRE);
                      m_uiSpellTimer = 10000;
@@ -93,8 +102,8 @@ Index: scripts/outland/auchindoun/auchenai_crypts/boss_exarch_maladaar.cpp
          else
 Index: scripts/world/item_scripts.cpp
 ===================================================================
---- scripts/world/item_scripts.cpp	(Revision 1910)
-+++ scripts/world/item_scripts.cpp	(Arbeitskopie)
+--- scripts/world/item_scripts.cpp	(revision 1982)
++++ scripts/world/item_scripts.cpp	(working copy)
 @@ -47,7 +47,7 @@
      pPlayer->SendEquipError(EQUIP_ERR_NONE, pItem, NULL);
  
@@ -106,8 +115,8 @@ Index: scripts/world/item_scripts.cpp
  }
 Index: system/ScriptLoader.cpp
 ===================================================================
---- system/ScriptLoader.cpp	(Revision 1910)
-+++ system/ScriptLoader.cpp	(Arbeitskopie)
+--- system/ScriptLoader.cpp	(revision 1982)
++++ system/ScriptLoader.cpp	(working copy)
 @@ -102,7 +102,22 @@
  extern void AddSC_boss_ragnaros();
  extern void AddSC_instance_molten_core();
@@ -132,7 +141,7 @@ Index: system/ScriptLoader.cpp
  extern void AddSC_boss_arcanist_doan();                     // scarlet_monastery
  extern void AddSC_boss_azshir_the_sleepless();
  extern void AddSC_boss_bloodmage_thalnos();
-@@ -221,8 +236,6 @@
+@@ -214,8 +229,6 @@
  extern void AddSC_boss_lieutenant_drake();
  extern void AddSC_instance_old_hillsbrad();
  extern void AddSC_old_hillsbrad();
@@ -141,7 +150,7 @@ Index: system/ScriptLoader.cpp
  extern void AddSC_dire_maul();                              // dire_maul
  extern void AddSC_instance_dire_maul();
  extern void AddSC_boss_celebras_the_cursed();               // maraudon
-@@ -277,145 +290,8 @@
+@@ -271,145 +284,8 @@
  extern void AddSC_winterspring();
  
  // northrend
@@ -182,7 +191,7 @@ Index: system/ScriptLoader.cpp
 -extern void AddSC_boss_marwyn();
 -extern void AddSC_halls_of_reflection();
 -extern void AddSC_instance_halls_of_reflection();
--extern void AddSC_boss_gafrost();                           // ICC, pit_of_saron
+-extern void AddSC_boss_garfrost();                          // ICC, pit_of_saron
 -extern void AddSC_boss_krick_and_ick();
 -extern void AddSC_boss_tyrannus();
 -extern void AddSC_instance_pit_of_saron();
@@ -288,7 +297,7 @@ Index: system/ScriptLoader.cpp
  // outland
  extern void AddSC_boss_exarch_maladaar();                   // auchindoun, auchenai_crypts
  extern void AddSC_boss_shirrak();
-@@ -598,7 +474,22 @@
+@@ -592,7 +468,22 @@
      AddSC_boss_ragnaros();
      AddSC_instance_molten_core();
      AddSC_molten_core();
@@ -312,7 +321,7 @@ Index: system/ScriptLoader.cpp
      AddSC_boss_arcanist_doan();                             // scarlet_monastery
      AddSC_boss_azshir_the_sleepless();
      AddSC_boss_bloodmage_thalnos();
-@@ -717,8 +608,6 @@
+@@ -704,8 +595,6 @@
      AddSC_boss_lieutenant_drake();
      AddSC_instance_old_hillsbrad();
      AddSC_old_hillsbrad();
@@ -321,7 +330,7 @@ Index: system/ScriptLoader.cpp
      AddSC_dire_maul();                                      // dire_maul
      AddSC_instance_dire_maul();
      AddSC_boss_celebras_the_cursed();                       // maraudon
-@@ -773,145 +662,8 @@
+@@ -761,145 +650,8 @@
      AddSC_winterspring();
  
      // northrend
@@ -362,7 +371,7 @@ Index: system/ScriptLoader.cpp
 -    AddSC_boss_marwyn();
 -    AddSC_halls_of_reflection();
 -    AddSC_instance_halls_of_reflection();
--    AddSC_boss_gafrost();                                   // ICC, FH, pit_of_saron
+-    AddSC_boss_garfrost();                                  // ICC, FH, pit_of_saron
 -    AddSC_boss_krick_and_ick();
 -    AddSC_boss_tyrannus();
 -    AddSC_instance_pit_of_saron();
