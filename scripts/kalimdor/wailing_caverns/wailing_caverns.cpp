@@ -447,18 +447,13 @@ bool GossipHello_npc_disciple_of_naralex(Player* pPlayer, Creature* pCreature)
     if (pCreature->isQuestGiver())
         pPlayer->PrepareQuestMenu(pCreature->GetGUID());
 
+    // Buff the players
+    pCreature->CastSpell(pPlayer, SPELL_MARK, false);
+
     if (m_pInstance && m_pInstance->GetData(TYPE_DISCIPLE) == SPECIAL)
     {
         pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_BEGIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
         pPlayer->SEND_GOSSIP_MENU(TEXT_ID_DISCIPLE, pCreature->GetGUID());
-
-        // Buff the players
-        Map::PlayerList const &PlayerList = pCreature->GetMap()->GetPlayers();
-        for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
-        {
-            if (i->getSource()->isAlive() && (i->getSource()->IsWithinDistInMap(pCreature, 30.0f)) && !i->getSource()->HasAura(SPELL_MARK))
-                pCreature->CastSpell(i->getSource(), SPELL_MARK, false);
-        }
     }
     else
         pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
