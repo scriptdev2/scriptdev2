@@ -17,6 +17,7 @@ enum
     TYPE_MUTANUS    = 5,
 
     NPC_NARALEX     = 3679,
+    NPC_DISCIPLE    = 3678,
     SAY_INTRO       = -1043000,                             // Say when the first 4 encounter are DONE
 };
 
@@ -42,5 +43,6 @@ class MANGOS_DLL_DECL instance_wailing_caverns : public ScriptedInstance
         std::string strInstData;
 
         uint64 m_uiNaralexGUID;
+        uint64 m_uiDiscipleGUID;
 };
 #endif

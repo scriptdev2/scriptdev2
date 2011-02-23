@@ -39,7 +39,8 @@ void instance_wailing_caverns::OnCreatureCreate(Creature* pCreature)
 {
     switch (pCreature->GetEntry())
     {
-        case NPC_NARALEX: m_uiNaralexGUID = pCreature->GetGUID(); break;
+        case NPC_NARALEX:  m_uiNaralexGUID = pCreature->GetGUID();  break;
+        case NPC_DISCIPLE: m_uiDiscipleGUID = pCreature->GetGUID(); break;
     }
 }
 
@@ -68,8 +69,17 @@ void instance_wailing_caverns::SetData(uint32 uiType, uint32 uiData)
     }
 
     // Set to special in order to start the escort event; only if all four bosses are done
-    if (m_auiEncounter[0] == DONE && m_auiEncounter[1] == DONE && m_auiEncounter[2] == DONE && m_auiEncounter[3] == DONE && m_auiEncounter[4] == NOT_STARTED)
+    if (m_auiEncounter[0] == DONE && m_auiEncounter[1] == DONE && m_auiEncounter[2] == DONE && m_auiEncounter[3] == DONE && (m_auiEncounter[4] == NOT_STARTED || m_auiEncounter[4] == FAIL))
+    {
+        // Yell intro text; only the first time
+        if (m_auiEncounter[4] == NOT_STARTED)
+        {
+            if (Creature* pDisciple = instance->GetCreature(m_uiDiscipleGUID))
+                DoScriptText(SAY_INTRO, pDisciple);
+        }
+
         m_auiEncounter[4] = SPECIAL;
+    }
 
     if (uiData == DONE)
     {

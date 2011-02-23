@@ -1220,6 +1220,7 @@ UPDATE creature_template SET ScriptName='boss_erekem' WHERE entry IN (29315,3222
 
 /* WAILING CAVERNS */
 UPDATE instance_template SET ScriptName='instance_wailing_caverns' WHERE map=43;
+UPDATE creature_template SET ScriptName='npc_disciple_of_naralex' WHERE entry=3678;
 
 /* WESTERN PLAGUELANDS */
 UPDATE creature_template SET ScriptName='npcs_dithers_and_arbington' WHERE entry IN (11056,11057);
