@@ -150,8 +150,8 @@ bool GossipHello_npc_brann_hos(Player* pPlayer, Creature* pCreature)
     if (pCreature->isQuestGiver())
         pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
 
-    pPlayer->SEND_GOSSIP_MENU(TEXT_ID_START, pCreature->GetObjectGuid());
     pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_START, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+    pPlayer->SEND_GOSSIP_MENU(TEXT_ID_START, pCreature->GetObjectGuid());
 
     //pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_PROGRESS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
     //pPlayer->SEND_GOSSIP_MENU(TEXT_ID_PROGRESS, pCreature->GetObjectGuid());
@@ -160,8 +160,16 @@ bool GossipHello_npc_brann_hos(Player* pPlayer, Creature* pCreature)
 
 bool GossipSelect_npc_brann_hos(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+1 || uiAction == GOSSIP_ACTION_INFO_DEF+2)
-        pPlayer->CLOSE_GOSSIP_MENU();
+    switch (uiAction)
+    {
+        case GOSSIP_ACTION_INFO_DEF + 1:
+            if (npc_brann_hosAI* pBrannAi = dynamic_cast<npc_brann_hosAI*> (pCreature->AI()))
+                pBrannAi->Start(false, pPlayer->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF + 2:
+            break;
+    }
+    pPlayer->CLOSE_GOSSIP_MENU();
 
     return true;
 }

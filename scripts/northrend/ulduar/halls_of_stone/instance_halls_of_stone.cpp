@@ -24,173 +24,338 @@ EndScriptData */
 #include "precompiled.h"
 #include "halls_of_stone.h"
 
-struct MANGOS_DLL_DECL instance_halls_of_stone : public ScriptedInstance
+enum
 {
-    instance_halls_of_stone(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
+    // KADDRAK
+    SPELL_GLARE_OF_THE_TRIBUNAL         = 50988,
+    SPELL_GLARE_OF_THE_TRIBUNAL_H       = 59870,
 
-    uint32 m_auiEncounter[MAX_ENCOUNTER];
+    // MARNAK
+    SPELL_SUMMON_DARK_MATTER_TARGET     = 51003,
+    SPELL_DARK_MATTER                   = 51012,            // Exact mechanics unknown
+    SPELL_DARK_MATTER_H                 = 59868,
+    // NPC_DARK_MATTER_TARGET           = 28237,
 
-    uint64 m_uiBrannGUID;
-    uint64 m_uiKaddrakGUID;
-    uint64 m_uiAbedneumGUID;
-    uint64 m_uiMarnakGUID;
-
-    uint64 m_uiSjonnirDoorGUID;
-    uint64 m_uiTribunalDoorGUID;
-    uint64 m_uiTribunalChestGUID;
-    uint64 m_uiTribunalHeadRightGUID;
-    uint64 m_uiTribunalHeadCenterGUID;
-    uint64 m_uiTribunalHeadLeftGUID;
-    uint64 m_uiTribunalConsoleGUID;
-    uint64 m_uiTribunalFloorGUID;
-    uint64 m_uiSjonnirConsoleGUID;
-
-    void Initialize()
-    {
-        memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
-
-        m_uiBrannGUID               = 0;
-        m_uiKaddrakGUID             = 0;
-        m_uiAbedneumGUID            = 0;
-        m_uiMarnakGUID              = 0;
-
-        m_uiSjonnirDoorGUID         = 0;
-        m_uiTribunalDoorGUID        = 0;
-        m_uiTribunalChestGUID       = 0;
-        m_uiTribunalHeadRightGUID   = 0;
-        m_uiTribunalHeadCenterGUID  = 0;
-        m_uiTribunalHeadLeftGUID    = 0;
-        m_uiTribunalConsoleGUID     = 0;
-        m_uiTribunalFloorGUID       = 0;
-        m_uiSjonnirConsoleGUID      = 0;
-    }
-
-    void OnCreatureCreate(Creature* pCreature)
-    {
-        switch(pCreature->GetEntry())
-        {
-            case NPC_BRANN:
-                m_uiBrannGUID = pCreature->GetGUID();
-                break;
-            case NPC_KADDRAK:
-                m_uiKaddrakGUID = pCreature->GetGUID();
-                break;
-            case NPC_ABEDNEUM:
-                m_uiAbedneumGUID = pCreature->GetGUID();
-                break;
-            case NPC_MARNAK:
-                m_uiMarnakGUID = pCreature->GetGUID();
-                break;
-        }
-    }
-
-    void OnObjectCreate(GameObject* pGo)
-    {
-        switch(pGo->GetEntry())
-        {
-            case GO_DOOR_SJONNIR:
-                m_uiSjonnirDoorGUID = pGo->GetGUID();
-                break;
-            case GO_DOOR_TRIBUNAL:
-                m_uiTribunalDoorGUID = pGo->GetGUID();
-                break;
-            case GO_TRIBUNAL_CHEST:
-            case GO_TRIBUNAL_CHEST_H:
-                m_uiTribunalChestGUID = pGo->GetGUID();
-                break;
-            case GO_TRIBUNAL_HEAD_RIGHT:
-                m_uiTribunalHeadRightGUID = pGo->GetGUID();
-                break;
-            case GO_TRIBUNAL_HEAD_CENTER:
-                m_uiTribunalHeadCenterGUID = pGo->GetGUID();
-                break;
-            case GO_TRIBUNAL_HEAD_LEFT:
-                m_uiTribunalHeadLeftGUID = pGo->GetGUID();
-                break;
-            case GO_TRIBUNAL_CONSOLE:
-                m_uiTribunalConsoleGUID = pGo->GetGUID();
-                break;
-            case GO_TRIBUNAL_FLOOR:
-                m_uiTribunalFloorGUID = pGo->GetGUID();
-                break;
-            case GO_SJONNIR_CONSOLE:
-                m_uiSjonnirConsoleGUID = pGo->GetGUID();
-                break;
-        }
-    }
-
-    void SetData(uint32 uiType, uint32 uiData)
-    {
-        switch(uiType)
-        {
-            case TYPE_TRIBUNAL:
-                m_auiEncounter[0] = uiData;
-                if (uiData == DONE)
-                    DoRespawnGameObject(m_uiTribunalChestGUID);
-                break;
-            case TYPE_MAIDEN:
-                m_auiEncounter[1] = uiData;
-                break;
-            case TYPE_KRYSTALLUS:
-                m_auiEncounter[2] = uiData;
-                break;
-            case TYPE_SJONNIR:
-                m_auiEncounter[3] = uiData;
-                break;
-        }
-    }
-
-    uint32 GetData(uint32 uiType)
-    {
-        switch(uiType)
-        {
-            case TYPE_TRIBUNAL:
-                return m_auiEncounter[0];
-            case TYPE_MAIDEN:
-                return m_auiEncounter[1];
-            case TYPE_KRYSTALLUS:
-                return m_auiEncounter[2];
-            case TYPE_SJONNIR:
-                return m_auiEncounter[3];
-        }
-        return 0;
-    }
-
-    uint64 GetData64(uint32 uiData)
-    {
-        switch(uiData)
-        {
-            case NPC_BRANN:
-                return m_uiBrannGUID;
-            case NPC_KADDRAK:
-                return m_uiKaddrakGUID;
-            case NPC_ABEDNEUM:
-                return m_uiAbedneumGUID;
-            case NPC_MARNAK:
-                return m_uiMarnakGUID;
-            case GO_DOOR_SJONNIR:
-                return m_uiSjonnirDoorGUID;
-            case GO_DOOR_TRIBUNAL:
-                return m_uiTribunalDoorGUID;
-            case GO_TRIBUNAL_CHEST:
-            case GO_TRIBUNAL_CHEST_H:
-                return m_uiTribunalChestGUID;
-            case GO_TRIBUNAL_HEAD_RIGHT:
-                return m_uiTribunalHeadRightGUID;
-            case GO_TRIBUNAL_HEAD_CENTER:
-                return m_uiTribunalHeadCenterGUID;
-            case GO_TRIBUNAL_HEAD_LEFT:
-                return m_uiTribunalHeadLeftGUID;
-            case GO_TRIBUNAL_CONSOLE:
-                return m_uiTribunalConsoleGUID;
-            case GO_TRIBUNAL_FLOOR:
-                return m_uiTribunalFloorGUID;
-            case GO_SJONNIR_CONSOLE:
-                return m_uiSjonnirConsoleGUID;
-        }
-        return 0;
-    }
+    // ABEDNEUM
+    SPELL_SUMMON_SEARING_GAZE_TARGET    = 51146,
+    SPELL_SEARING_GAZE                  = 51136,
+    SPELL_SEARING_GAZE_H                = 59867,
+    // NPC_SEARING_GAZE_TARGET          = 28265,
 };
+
+instance_halls_of_stone::instance_halls_of_stone(Map* pMap) : ScriptedInstance(pMap),
+    m_uiBrannGUID(0),
+
+    m_uiSjonnirDoorGUID(0),
+    m_uiTribunalDoorGUID(0),
+    m_uiTribunalChestGUID(0),
+    m_uiTribunalConsoleGUID(0),
+    m_uiTribunalFloorGUID(0),
+    m_uiSjonnirConsoleGUID(0)
+{
+    Initialize();
+}
+
+void instance_halls_of_stone::Initialize()
+{
+    memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
+
+    for (uint8 i = 0; i < MAX_FACES; ++i)
+    {
+        m_aFaces[i].m_bIsActive = false;
+        m_aFaces[i].m_uiGoFaceGUID = 0;
+        m_aFaces[i].m_uiLeftEyeGUID = 0;
+        m_aFaces[i].m_uiRightEyeGUID = 0;
+        m_aFaces[i].m_uiSpeakerGUID = 0;
+        m_aFaces[i].m_uiTimer = 1000;
+    }
+}
+
+void instance_halls_of_stone::OnCreatureCreate(Creature* pCreature)
+{
+    switch(pCreature->GetEntry())
+    {
+        case NPC_BRANN:            m_uiBrannGUID = pCreature->GetGUID();                 break;
+        case NPC_KADDRAK:          m_lKaddrakGUIDs.push_back(pCreature->GetGUID());      break;
+        case NPC_ABEDNEUM:         m_lAbedneumGUIDs.push_back(pCreature->GetGUID());     break;
+        case NPC_MARNAK:           m_lMarnakGUIDs.push_back(pCreature->GetGUID());       break;
+        case NPC_TRIBUNAL_OF_AGES: m_lTribunalGUIDs.push_back(pCreature->GetGUID());     break;
+        case NPC_WORLDTRIGGER:     m_lWorldtriggerGUIDs.push_back(pCreature->GetGUID()); break;
+    }
+}
+
+void instance_halls_of_stone::OnObjectCreate(GameObject* pGo)
+{
+    switch(pGo->GetEntry())
+    {
+        case GO_DOOR_SJONNIR:
+            m_uiSjonnirDoorGUID = pGo->GetGUID();
+            break;
+        case GO_DOOR_TRIBUNAL:
+            m_uiTribunalDoorGUID = pGo->GetGUID();
+            break;
+        case GO_TRIBUNAL_CHEST:
+        case GO_TRIBUNAL_CHEST_H:
+            m_uiTribunalChestGUID = pGo->GetGUID();
+            break;
+        case GO_TRIBUNAL_HEAD_RIGHT:
+            m_aFaces[FACE_MARNAK].m_uiGoFaceGUID = pGo->GetGUID();
+            break;
+        case GO_TRIBUNAL_HEAD_CENTER:
+            m_aFaces[FACE_ABEDNEUM].m_uiGoFaceGUID = pGo->GetGUID();
+            break;
+        case GO_TRIBUNAL_HEAD_LEFT:
+            m_aFaces[FACE_KADDRAK].m_uiGoFaceGUID = pGo->GetGUID();
+            break;
+        case GO_TRIBUNAL_CONSOLE:
+            m_uiTribunalConsoleGUID = pGo->GetGUID();
+            break;
+        case GO_TRIBUNAL_FLOOR:
+            m_uiTribunalFloorGUID = pGo->GetGUID();
+            break;
+        case GO_SJONNIR_CONSOLE:
+            m_uiSjonnirConsoleGUID = pGo->GetGUID();
+            break;
+    }
+}
+
+void instance_halls_of_stone::SetData(uint32 uiType, uint32 uiData)
+{
+    switch(uiType)
+    {
+        case TYPE_TRIBUNAL:
+            m_auiEncounter[0] = uiData;
+            if (uiData == IN_PROGRESS)
+                SortFaces();
+            if (uiData == DONE)
+                DoRespawnGameObject(m_uiTribunalChestGUID);
+            if (uiData == SPECIAL || uiData == FAIL)
+            {
+                for (uint8 i = 0; i < MAX_FACES; ++i)
+                {
+                    // Shut down the faces
+                    DoUseDoorOrButton(m_aFaces[i].m_uiGoFaceGUID); // TODO, double check, this removes the "red"
+                    m_aFaces[i].m_bIsActive = false;
+                    m_aFaces[i].m_uiTimer = 1000;
+                }
+            }
+            break;
+        case TYPE_MAIDEN:
+            m_auiEncounter[1] = uiData;
+            break;
+        case TYPE_KRYSTALLUS:
+            m_auiEncounter[2] = uiData;
+            break;
+        case TYPE_SJONNIR:
+            m_auiEncounter[3] = uiData;
+            break;
+    }
+}
+
+uint32 instance_halls_of_stone::GetData(uint32 uiType)
+{
+    switch(uiType)
+    {
+        case TYPE_TRIBUNAL:   return m_auiEncounter[0];
+        case TYPE_MAIDEN:     return m_auiEncounter[1];
+        case TYPE_KRYSTALLUS: return m_auiEncounter[2];
+        case TYPE_SJONNIR:    return m_auiEncounter[3];
+        default:
+            return 0;
+    }
+}
+
+uint64 instance_halls_of_stone::GetData64(uint32 uiData)
+{
+    switch(uiData)
+    {
+        case NPC_BRANN:                 return m_uiBrannGUID;
+        case GO_DOOR_SJONNIR:           return m_uiSjonnirDoorGUID;
+        case GO_DOOR_TRIBUNAL:          return m_uiTribunalDoorGUID;
+        case GO_TRIBUNAL_CONSOLE:       return m_uiTribunalConsoleGUID;
+        case GO_TRIBUNAL_FLOOR:         return m_uiTribunalFloorGUID;
+        case GO_SJONNIR_CONSOLE:        return m_uiSjonnirConsoleGUID;
+        default:
+            return 0;
+    }
+}
+
+struct SortHelper
+{
+    SortHelper(WorldObject const* pRef): m_pRef(pRef) {}
+    bool operator()(WorldObject* pLeft, WorldObject* pRight)
+    {
+        return m_pRef->GetDistanceOrder(pLeft, pRight);
+    }
+    WorldObject const* m_pRef;
+};
+
+// Small Helper-function
+void GetValidNPCsOfList(Map* pMap, std::list<uint64>& lGUIDs, std::list<Creature*>& lNPCs)
+{
+    lNPCs.clear();
+    for (std::list<uint64>::const_iterator itr = lGUIDs.begin(); itr != lGUIDs.end(); ++itr)
+    {
+        if (Creature* pMob = pMap->GetCreature(*itr))
+            lNPCs.push_back(pMob);
+    }
+}
+
+void instance_halls_of_stone::SortFaces()
+{
+    std::list<Creature*> lPossibleEyes;
+    GameObject* pFace = NULL;
+
+    // FACE_MARNAK
+    if (pFace = instance->GetGameObject(m_aFaces[FACE_MARNAK].m_uiGoFaceGUID))
+    {
+        // Find Marnak NPCs
+        GetValidNPCsOfList(instance, m_lMarnakGUIDs, lPossibleEyes);
+        if (lPossibleEyes.size() > 1)
+        {
+            lPossibleEyes.sort(SortHelper(pFace));
+            std::list<Creature*>::const_iterator itr = lPossibleEyes.begin();
+            m_aFaces[FACE_MARNAK].m_uiLeftEyeGUID = (*itr)->GetGUID();
+            ++itr;
+            m_aFaces[FACE_MARNAK].m_uiSpeakerGUID = (*itr)->GetGUID();
+        }
+        // Find Worldtrigger NPC
+        GetValidNPCsOfList(instance, m_lWorldtriggerGUIDs, lPossibleEyes);
+        if (!lPossibleEyes.empty())
+        {
+            lPossibleEyes.sort(SortHelper(pFace));
+            m_aFaces[FACE_MARNAK].m_uiRightEyeGUID = (*lPossibleEyes.begin())->GetGUID();
+        }
+    }
+
+    // FACE_ABEDNEUM
+    if (pFace = instance->GetGameObject(m_aFaces[FACE_ABEDNEUM].m_uiGoFaceGUID))
+    {
+        // Find Abedneum NPCs
+        GetValidNPCsOfList(instance, m_lAbedneumGUIDs, lPossibleEyes);
+        if (lPossibleEyes.size() > 1)
+        {
+            lPossibleEyes.sort(SortHelper(pFace));
+            std::list<Creature*>::const_iterator itr = lPossibleEyes.begin();
+            m_aFaces[FACE_ABEDNEUM].m_uiLeftEyeGUID = (*itr)->GetGUID();
+            ++itr;
+            m_aFaces[FACE_ABEDNEUM].m_uiSpeakerGUID = (*itr)->GetGUID();
+        }
+        // Find Worldtrigger NPC
+        GetValidNPCsOfList(instance, m_lWorldtriggerGUIDs, lPossibleEyes);
+        if (!lPossibleEyes.empty())
+        {
+            lPossibleEyes.sort(SortHelper(pFace));
+            m_aFaces[FACE_ABEDNEUM].m_uiRightEyeGUID = (*lPossibleEyes.begin())->GetGUID();
+        }
+    }
+
+    // FACE_KADDRAK
+    if (pFace = instance->GetGameObject(m_aFaces[FACE_KADDRAK].m_uiGoFaceGUID))
+    {
+        // Find Marnak NPCs
+        GetValidNPCsOfList(instance, m_lKaddrakGUIDs, lPossibleEyes);
+        if (lPossibleEyes.size() > 1)
+        {
+            lPossibleEyes.sort(SortHelper(pFace));
+            std::list<Creature*>::const_iterator itr = lPossibleEyes.begin();
+            m_aFaces[FACE_KADDRAK].m_uiLeftEyeGUID = (*itr)->GetGUID();
+            ++itr;
+            m_aFaces[FACE_KADDRAK].m_uiSpeakerGUID = (*itr)->GetGUID();
+        }
+        // Find Tribunal NPC
+        GetValidNPCsOfList(instance, m_lTribunalGUIDs, lPossibleEyes);
+        if (!lPossibleEyes.empty())
+        {
+            lPossibleEyes.sort(SortHelper(pFace));
+            m_aFaces[FACE_KADDRAK].m_uiRightEyeGUID = (*lPossibleEyes.begin())->GetGUID();
+        }
+    }
+
+    // Clear GUIDs
+    m_lKaddrakGUIDs.clear();
+    m_lAbedneumGUIDs.clear();
+    m_lMarnakGUIDs.clear();
+    m_lTribunalGUIDs.clear();
+    m_lWorldtriggerGUIDs.clear();
+}
+
+void instance_halls_of_stone::ActivateFace(uint8 uiFace, bool bAfterEvent)
+{
+    if (uiFace >= MAX_FACES)
+        return;
+
+    if (bAfterEvent)
+        DoUseDoorOrButton(m_aFaces[uiFace].m_uiGoFaceGUID);
+    else
+    {
+        DoUseDoorOrButton(m_aFaces[uiFace].m_uiGoFaceGUID, 0, true);
+        m_aFaces[uiFace].m_bIsActive = true;
+    }
+}
+
+void instance_halls_of_stone::DoFaceSpeak(uint8 uiFace, int32 iTextId)
+{
+    if (uiFace >= MAX_FACES)
+        return;
+
+    if (Creature* pSpeaker = instance->GetCreature(m_aFaces[uiFace].m_uiSpeakerGUID))
+        DoScriptText(iTextId, pSpeaker);
+}
+
+void instance_halls_of_stone::Update(uint32 uiDiff)
+{
+    if (m_auiEncounter[TYPE_TRIBUNAL] == IN_PROGRESS)
+    {
+        for (uint8 i = 0; i < MAX_FACES; ++i)
+        {
+            if (!m_aFaces[i].m_bIsActive)
+                continue;
+
+            if (m_aFaces[i].m_uiTimer < uiDiff)
+                ProcessFace(i);
+            else
+                m_aFaces[i].m_uiTimer -= uiDiff;
+        }
+    }
+}
+
+void instance_halls_of_stone::ProcessFace(uint8 uiFace)
+{
+    // Cast dmg spell from face eyes, and reset timer for face
+    switch (uiFace)
+    {
+        case FACE_KADDRAK:
+            if (Creature* pEye = instance->GetCreature(m_aFaces[uiFace].m_uiLeftEyeGUID))
+                pEye->CastSpell(pEye, instance->IsRegularDifficulty() ? SPELL_GLARE_OF_THE_TRIBUNAL : SPELL_GLARE_OF_THE_TRIBUNAL_H, true);
+            if (Creature* pEye = instance->GetCreature(m_aFaces[uiFace].m_uiRightEyeGUID))
+                pEye->CastSpell(pEye, instance->IsRegularDifficulty() ? SPELL_GLARE_OF_THE_TRIBUNAL : SPELL_GLARE_OF_THE_TRIBUNAL_H, true);
+            m_aFaces[uiFace].m_uiTimer = 1500;              // TODO, verify
+            break;
+        case FACE_MARNAK:
+            if (Creature* pEye = instance->GetCreature(m_aFaces[uiFace].m_uiLeftEyeGUID))
+                pEye->CastSpell(pEye, SPELL_SUMMON_DARK_MATTER_TARGET, true);
+            // One should be enough..
+            //if (Creature* pEye = instance->GetCreature(m_aFaces[uiFace].m_uiRightEyeGUID))
+            //    pEye->CastSpell(pEye, SPELL_SUMMON_DARK_MATTER_TARGET, true);
+            m_aFaces[uiFace].m_uiTimer = 6000;              // TODO, verify, was 3s+0..1s
+            break;
+        case FACE_ABEDNEUM:
+            if (Creature* pEye = instance->GetCreature(m_aFaces[uiFace].m_uiLeftEyeGUID))
+                pEye->CastSpell(pEye, SPELL_SUMMON_SEARING_GAZE_TARGET, true);
+            // One should be enough..
+            //if (Creature* pEye = instance->GetCreature(m_aFaces[uiFace].m_uiRightEyeGUID))
+            //    pEye->CastSpell(pEye, SPELL_SUMMON_SEARING_GAZE_TARGET, true);
+            m_aFaces[uiFace].m_uiTimer = 6000;              // TODO, verify, was 3s+0..2s
+            break;
+        default:
+            return;
+    }
+    if (Creature* pEye = instance->GetCreature(m_aFaces[uiFace].m_uiLeftEyeGUID))
+        pEye->MonsterSay("debug: Left Eye", 0);
+    if (Creature* pEye = instance->GetCreature(m_aFaces[uiFace].m_uiRightEyeGUID))
+        pEye->MonsterSay("debug: Right Eye", 0);
+}
 
 InstanceData* GetInstanceData_instance_halls_of_stone(Map* pMap)
 {
@@ -199,9 +364,10 @@ InstanceData* GetInstanceData_instance_halls_of_stone(Map* pMap)
 
 void AddSC_instance_halls_of_stone()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "instance_halls_of_stone";
-    newscript->GetInstanceData = &GetInstanceData_instance_halls_of_stone;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "instance_halls_of_stone";
+    pNewScript->GetInstanceData = &GetInstanceData_instance_halls_of_stone;
+    pNewScript->RegisterSelf();
 }
