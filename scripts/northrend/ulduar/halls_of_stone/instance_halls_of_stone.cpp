@@ -59,23 +59,12 @@ instance_halls_of_stone::instance_halls_of_stone(Map* pMap) : ScriptedInstance(p
 void instance_halls_of_stone::Initialize()
 {
     memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
-
-    for (uint8 i = 0; i < MAX_FACES; ++i)
-    {
-        m_aFaces[i].m_bIsActive = false;
-        m_aFaces[i].m_uiGoFaceGUID = 0;
-        m_aFaces[i].m_uiLeftEyeGUID = 0;
-        m_aFaces[i].m_uiRightEyeGUID = 0;
-        m_aFaces[i].m_uiSpeakerGUID = 0;
-        m_aFaces[i].m_uiTimer = 1000;
-    }
 }
 
 void instance_halls_of_stone::OnCreatureCreate(Creature* pCreature)
 {
     switch(pCreature->GetEntry())
     {
-        case NPC_BRANN:            m_uiBrannGUID = pCreature->GetGUID();                 break;
         case NPC_KADDRAK:          m_lKaddrakGUIDs.push_back(pCreature->GetGUID());      break;
         case NPC_ABEDNEUM:         m_lAbedneumGUIDs.push_back(pCreature->GetGUID());     break;
         case NPC_MARNAK:           m_lMarnakGUIDs.push_back(pCreature->GetGUID());       break;
@@ -99,13 +88,13 @@ void instance_halls_of_stone::OnObjectCreate(GameObject* pGo)
             m_uiTribunalChestGUID = pGo->GetGUID();
             break;
         case GO_TRIBUNAL_HEAD_RIGHT:
-            m_aFaces[FACE_MARNAK].m_uiGoFaceGUID = pGo->GetGUID();
+            m_aFaces[FACE_MARNAK].m_goFaceGuid = pGo->GetObjectGuid();
             break;
         case GO_TRIBUNAL_HEAD_CENTER:
-            m_aFaces[FACE_ABEDNEUM].m_uiGoFaceGUID = pGo->GetGUID();
+            m_aFaces[FACE_ABEDNEUM].m_goFaceGuid = pGo->GetObjectGuid();
             break;
         case GO_TRIBUNAL_HEAD_LEFT:
-            m_aFaces[FACE_KADDRAK].m_uiGoFaceGUID = pGo->GetGUID();
+            m_aFaces[FACE_KADDRAK].m_goFaceGuid = pGo->GetObjectGuid();
             break;
         case GO_TRIBUNAL_CONSOLE:
             m_uiTribunalConsoleGUID = pGo->GetGUID();
@@ -125,19 +114,34 @@ void instance_halls_of_stone::SetData(uint32 uiType, uint32 uiData)
     {
         case TYPE_TRIBUNAL:
             m_auiEncounter[0] = uiData;
-            if (uiData == IN_PROGRESS)
-                SortFaces();
-            if (uiData == DONE)
-                DoRespawnGameObject(m_uiTribunalChestGUID);
-            if (uiData == SPECIAL || uiData == FAIL)
+            switch (uiData)
             {
-                for (uint8 i = 0; i < MAX_FACES; ++i)
-                {
-                    // Shut down the faces
-                    DoUseDoorOrButton(m_aFaces[i].m_uiGoFaceGUID); // TODO, double check, this removes the "red"
-                    m_aFaces[i].m_bIsActive = false;
-                    m_aFaces[i].m_uiTimer = 1000;
-                }
+                case IN_PROGRESS:
+                    SortFaces();
+                    break;
+                case DONE:
+                    // DoRespawnGameObject(m_uiTribunalChestGUID);
+                    // Actually, this one need to be changed faction or similar..
+                    break;
+                case FAIL:
+                    for (uint8 i = 0; i < MAX_FACES; ++i)
+                    {
+                        // Shut down the faces
+                        if (m_aFaces[i].m_bIsActive)
+                            DoUseDoorOrButton(m_aFaces[i].m_goFaceGuid);
+                        m_aFaces[i].m_bIsActive = false;
+                        m_aFaces[i].m_uiTimer = 1000;
+                    }
+                    break;
+                case SPECIAL:
+                    for (uint8 i = 0; i < MAX_FACES; ++i)
+                    {
+                        m_aFaces[i].m_bIsActive = false;
+                        m_aFaces[i].m_uiTimer = 1000;
+                        // TODO - Kill NPCs
+                        // TODO - Check which stay red and how long (also find out how they get red..)
+                    }
+                    break;
             }
             break;
         case TYPE_MAIDEN:
@@ -169,7 +173,6 @@ uint64 instance_halls_of_stone::GetData64(uint32 uiData)
 {
     switch(uiData)
     {
-        case NPC_BRANN:                 return m_uiBrannGUID;
         case GO_DOOR_SJONNIR:           return m_uiSjonnirDoorGUID;
         case GO_DOOR_TRIBUNAL:          return m_uiTribunalDoorGUID;
         case GO_TRIBUNAL_CONSOLE:       return m_uiTribunalConsoleGUID;
@@ -191,10 +194,10 @@ struct SortHelper
 };
 
 // Small Helper-function
-void GetValidNPCsOfList(Map* pMap, std::list<uint64>& lGUIDs, std::list<Creature*>& lNPCs)
+static void GetValidNPCsOfList(Map* pMap, GUIDList& lGUIDs, std::list<Creature*>& lNPCs)
 {
     lNPCs.clear();
-    for (std::list<uint64>::const_iterator itr = lGUIDs.begin(); itr != lGUIDs.end(); ++itr)
+    for (GUIDList::const_iterator itr = lGUIDs.begin(); itr != lGUIDs.end(); ++itr)
     {
         if (Creature* pMob = pMap->GetCreature(*itr))
             lNPCs.push_back(pMob);
@@ -207,7 +210,7 @@ void instance_halls_of_stone::SortFaces()
     GameObject* pFace = NULL;
 
     // FACE_MARNAK
-    if (pFace = instance->GetGameObject(m_aFaces[FACE_MARNAK].m_uiGoFaceGUID))
+    if (pFace = instance->GetGameObject(m_aFaces[FACE_MARNAK].m_goFaceGuid))
     {
         // Find Marnak NPCs
         GetValidNPCsOfList(instance, m_lMarnakGUIDs, lPossibleEyes);
@@ -215,21 +218,21 @@ void instance_halls_of_stone::SortFaces()
         {
             lPossibleEyes.sort(SortHelper(pFace));
             std::list<Creature*>::const_iterator itr = lPossibleEyes.begin();
-            m_aFaces[FACE_MARNAK].m_uiLeftEyeGUID = (*itr)->GetGUID();
+            m_aFaces[FACE_MARNAK].m_leftEyeGuid = (*itr)->GetObjectGuid();
             ++itr;
-            m_aFaces[FACE_MARNAK].m_uiSpeakerGUID = (*itr)->GetGUID();
+            m_aFaces[FACE_MARNAK].m_speakerGuid = (*itr)->GetObjectGuid();
         }
         // Find Worldtrigger NPC
         GetValidNPCsOfList(instance, m_lWorldtriggerGUIDs, lPossibleEyes);
         if (!lPossibleEyes.empty())
         {
             lPossibleEyes.sort(SortHelper(pFace));
-            m_aFaces[FACE_MARNAK].m_uiRightEyeGUID = (*lPossibleEyes.begin())->GetGUID();
+            m_aFaces[FACE_MARNAK].m_rightEyeGuid = (*lPossibleEyes.begin())->GetObjectGuid();
         }
     }
 
     // FACE_ABEDNEUM
-    if (pFace = instance->GetGameObject(m_aFaces[FACE_ABEDNEUM].m_uiGoFaceGUID))
+    if (pFace = instance->GetGameObject(m_aFaces[FACE_ABEDNEUM].m_goFaceGuid))
     {
         // Find Abedneum NPCs
         GetValidNPCsOfList(instance, m_lAbedneumGUIDs, lPossibleEyes);
@@ -237,21 +240,21 @@ void instance_halls_of_stone::SortFaces()
         {
             lPossibleEyes.sort(SortHelper(pFace));
             std::list<Creature*>::const_iterator itr = lPossibleEyes.begin();
-            m_aFaces[FACE_ABEDNEUM].m_uiLeftEyeGUID = (*itr)->GetGUID();
+            m_aFaces[FACE_ABEDNEUM].m_leftEyeGuid = (*itr)->GetObjectGuid();
             ++itr;
-            m_aFaces[FACE_ABEDNEUM].m_uiSpeakerGUID = (*itr)->GetGUID();
+            m_aFaces[FACE_ABEDNEUM].m_speakerGuid = (*itr)->GetObjectGuid();
         }
         // Find Worldtrigger NPC
         GetValidNPCsOfList(instance, m_lWorldtriggerGUIDs, lPossibleEyes);
         if (!lPossibleEyes.empty())
         {
             lPossibleEyes.sort(SortHelper(pFace));
-            m_aFaces[FACE_ABEDNEUM].m_uiRightEyeGUID = (*lPossibleEyes.begin())->GetGUID();
+            m_aFaces[FACE_ABEDNEUM].m_rightEyeGuid = (*lPossibleEyes.begin())->GetObjectGuid();
         }
     }
 
     // FACE_KADDRAK
-    if (pFace = instance->GetGameObject(m_aFaces[FACE_KADDRAK].m_uiGoFaceGUID))
+    if (pFace = instance->GetGameObject(m_aFaces[FACE_KADDRAK].m_goFaceGuid))
     {
         // Find Marnak NPCs
         GetValidNPCsOfList(instance, m_lKaddrakGUIDs, lPossibleEyes);
@@ -259,16 +262,16 @@ void instance_halls_of_stone::SortFaces()
         {
             lPossibleEyes.sort(SortHelper(pFace));
             std::list<Creature*>::const_iterator itr = lPossibleEyes.begin();
-            m_aFaces[FACE_KADDRAK].m_uiLeftEyeGUID = (*itr)->GetGUID();
+            m_aFaces[FACE_KADDRAK].m_leftEyeGuid = (*itr)->GetObjectGuid();
             ++itr;
-            m_aFaces[FACE_KADDRAK].m_uiSpeakerGUID = (*itr)->GetGUID();
+            m_aFaces[FACE_KADDRAK].m_speakerGuid = (*itr)->GetObjectGuid();
         }
         // Find Tribunal NPC
         GetValidNPCsOfList(instance, m_lTribunalGUIDs, lPossibleEyes);
         if (!lPossibleEyes.empty())
         {
             lPossibleEyes.sort(SortHelper(pFace));
-            m_aFaces[FACE_KADDRAK].m_uiRightEyeGUID = (*lPossibleEyes.begin())->GetGUID();
+            m_aFaces[FACE_KADDRAK].m_rightEyeGuid = (*lPossibleEyes.begin())->GetObjectGuid();
         }
     }
 
@@ -286,10 +289,10 @@ void instance_halls_of_stone::ActivateFace(uint8 uiFace, bool bAfterEvent)
         return;
 
     if (bAfterEvent)
-        DoUseDoorOrButton(m_aFaces[uiFace].m_uiGoFaceGUID);
+        DoUseDoorOrButton(m_aFaces[uiFace].m_goFaceGuid);
     else
     {
-        DoUseDoorOrButton(m_aFaces[uiFace].m_uiGoFaceGUID, 0, true);
+        DoUseDoorOrButton(m_aFaces[uiFace].m_goFaceGuid, 0, true);
         m_aFaces[uiFace].m_bIsActive = true;
     }
 }
@@ -299,7 +302,7 @@ void instance_halls_of_stone::DoFaceSpeak(uint8 uiFace, int32 iTextId)
     if (uiFace >= MAX_FACES)
         return;
 
-    if (Creature* pSpeaker = instance->GetCreature(m_aFaces[uiFace].m_uiSpeakerGUID))
+    if (Creature* pSpeaker = instance->GetCreature(m_aFaces[uiFace].m_speakerGuid))
         DoScriptText(iTextId, pSpeaker);
 }
 
@@ -326,35 +329,31 @@ void instance_halls_of_stone::ProcessFace(uint8 uiFace)
     switch (uiFace)
     {
         case FACE_KADDRAK:
-            if (Creature* pEye = instance->GetCreature(m_aFaces[uiFace].m_uiLeftEyeGUID))
+            if (Creature* pEye = instance->GetCreature(m_aFaces[uiFace].m_leftEyeGuid))
                 pEye->CastSpell(pEye, instance->IsRegularDifficulty() ? SPELL_GLARE_OF_THE_TRIBUNAL : SPELL_GLARE_OF_THE_TRIBUNAL_H, true);
-            if (Creature* pEye = instance->GetCreature(m_aFaces[uiFace].m_uiRightEyeGUID))
+            if (Creature* pEye = instance->GetCreature(m_aFaces[uiFace].m_rightEyeGuid))
                 pEye->CastSpell(pEye, instance->IsRegularDifficulty() ? SPELL_GLARE_OF_THE_TRIBUNAL : SPELL_GLARE_OF_THE_TRIBUNAL_H, true);
             m_aFaces[uiFace].m_uiTimer = 1500;              // TODO, verify
             break;
         case FACE_MARNAK:
-            if (Creature* pEye = instance->GetCreature(m_aFaces[uiFace].m_uiLeftEyeGUID))
+            if (Creature* pEye = instance->GetCreature(m_aFaces[uiFace].m_leftEyeGuid))
                 pEye->CastSpell(pEye, SPELL_SUMMON_DARK_MATTER_TARGET, true);
             // One should be enough..
-            //if (Creature* pEye = instance->GetCreature(m_aFaces[uiFace].m_uiRightEyeGUID))
+            //if (Creature* pEye = instance->GetCreature(m_aFaces[uiFace].m_rightEyeGuid))
             //    pEye->CastSpell(pEye, SPELL_SUMMON_DARK_MATTER_TARGET, true);
             m_aFaces[uiFace].m_uiTimer = 6000;              // TODO, verify, was 3s+0..1s
             break;
         case FACE_ABEDNEUM:
-            if (Creature* pEye = instance->GetCreature(m_aFaces[uiFace].m_uiLeftEyeGUID))
+            if (Creature* pEye = instance->GetCreature(m_aFaces[uiFace].m_leftEyeGuid))
                 pEye->CastSpell(pEye, SPELL_SUMMON_SEARING_GAZE_TARGET, true);
             // One should be enough..
-            //if (Creature* pEye = instance->GetCreature(m_aFaces[uiFace].m_uiRightEyeGUID))
+            //if (Creature* pEye = instance->GetCreature(m_aFaces[uiFace].m_rightEyeGuid))
             //    pEye->CastSpell(pEye, SPELL_SUMMON_SEARING_GAZE_TARGET, true);
             m_aFaces[uiFace].m_uiTimer = 6000;              // TODO, verify, was 3s+0..2s
             break;
         default:
             return;
     }
-    if (Creature* pEye = instance->GetCreature(m_aFaces[uiFace].m_uiLeftEyeGUID))
-        pEye->MonsterSay("debug: Left Eye", 0);
-    if (Creature* pEye = instance->GetCreature(m_aFaces[uiFace].m_uiRightEyeGUID))
-        pEye->MonsterSay("debug: Right Eye", 0);
 }
 
 InstanceData* GetInstanceData_instance_halls_of_stone(Map* pMap)

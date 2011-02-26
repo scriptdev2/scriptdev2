@@ -14,7 +14,7 @@ enum
     TYPE_KRYSTALLUS         = 2,
     TYPE_SJONNIR            = 3,
 
-    NPC_BRANN               = 28070,
+    // NPC_BRANN            = 28070,
 
     NPC_KADDRAK             = 30898,
     NPC_ABEDNEUM            = 30899,
@@ -45,10 +45,12 @@ enum
 
 struct Face
 {
-    uint64 m_uiLeftEyeGUID;
-    uint64 m_uiRightEyeGUID;
-    uint64 m_uiGoFaceGUID;
-    uint64 m_uiSpeakerGUID;
+    Face() : m_bIsActive(false), m_uiTimer(1000) {}
+
+    ObjectGuid m_leftEyeGuid;
+    ObjectGuid m_rightEyeGuid;
+    ObjectGuid m_goFaceGuid;
+    ObjectGuid m_speakerGuid;
     bool m_bIsActive;
     uint32 m_uiTimer;
 };
@@ -78,11 +80,11 @@ class MANGOS_DLL_DECL instance_halls_of_stone : public ScriptedInstance
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         Face m_aFaces[MAX_FACES];
 
-        std::list<uint64> m_lKaddrakGUIDs;
-        std::list<uint64> m_lAbedneumGUIDs;
-        std::list<uint64> m_lMarnakGUIDs;
-        std::list<uint64> m_lTribunalGUIDs;
-        std::list<uint64> m_lWorldtriggerGUIDs;
+        GUIDList m_lKaddrakGUIDs;
+        GUIDList m_lAbedneumGUIDs;
+        GUIDList m_lMarnakGUIDs;
+        GUIDList m_lTribunalGUIDs;
+        GUIDList m_lWorldtriggerGUIDs;
 
         uint64 m_uiBrannGUID;
         uint64 m_uiSjonnirDoorGUID;
