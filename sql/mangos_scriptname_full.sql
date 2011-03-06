@@ -122,8 +122,6 @@ UPDATE creature_template SET ScriptName='npc_lunaclaw_spirit' WHERE entry=12144;
 UPDATE creature_template SET ScriptName='npc_mount_vendor' WHERE entry IN (384,1261,1460,2357,3362,3685,4730,4731,4885,7952,7955,16264,17584);
 UPDATE creature_template SET ScriptName='npc_doctor' WHERE entry IN (12939,12920);
 UPDATE creature_template SET ScriptName='npc_injured_patient' WHERE entry IN (12936,12937,12938,12923,12924,12925);
-UPDATE creature_template SET ScriptName='' WHERE npcflag!=npcflag|65536 AND ScriptName='npc_innkeeper';
-UPDATE creature_template SET ScriptName='npc_innkeeper' WHERE npcflag=npcflag|65536;
 UPDATE creature_template SET ScriptName='npc_prof_alchemy' WHERE entry IN (17909,19052,22427);
 UPDATE creature_template SET ScriptName='npc_prof_blacksmith' WHERE entry IN (5164,11145,11146,11176,11177,11178,11191,11192,11193);
 UPDATE creature_template SET ScriptName='npc_engineering_tele_trinket' WHERE entry IN (14742,14743,21493,21494);
@@ -133,6 +131,9 @@ UPDATE creature_template SET ScriptName='npc_rogue_trainer' WHERE entry IN (918,
 UPDATE creature_template SET ScriptName='npc_sayge' WHERE entry=14822;
 UPDATE creature_template SET ScriptName='npc_tabard_vendor' WHERE entry=28776;
 UPDATE creature_template SET ScriptName='npc_locksmith' WHERE entry IN (29665,29725,29728);
+-- disabled, but can be used for custom
+-- UPDATE creature_template SET ScriptName='' WHERE npcflag!=npcflag|65536 AND ScriptName='npc_innkeeper';
+-- UPDATE creature_template SET ScriptName='npc_innkeeper' WHERE npcflag=npcflag|65536;
 
 /* SPELL */
 UPDATE creature_template SET ScriptName='spell_dummy_npc' WHERE entry IN (16880,1200,26616,26643,16518,25793,25758,25752,25792,25753,26421,26841,27808,27122,28068,12298,12296,24918,17326,17654,16847,18879,26270,26268,30146,25084,25085,32149,22105,29330,29338,29329,28465,28600);
