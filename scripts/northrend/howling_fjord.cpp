@@ -93,7 +93,7 @@ struct MANGOS_DLL_DECL npc_daegarnAI : public ScriptedAI
 
     void SummonGladiator(uint32 uiEntry)
     {
-        m_creature->SummonCreature(uiEntry, afSummon[0], afSummon[1], afSummon[2], 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30*IN_MILLISECONDS);
+        m_creature->SummonCreature(uiEntry, afSummon[0], afSummon[1], afSummon[2], 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 20*IN_MILLISECONDS);
     }
 
     void SummonedMovementInform(Creature* pSummoned, uint32 uiMotionType, uint32 uiPointId)
