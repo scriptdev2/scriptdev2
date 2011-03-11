@@ -677,7 +677,15 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000631,'Don\'t leave me in here! Cause if you do I will find you!',0,0,0,0,'isla starmane - SAY_ISLA_PERIODIC_3'),
 (-1000632,'Ok, let\'s get out of here!',0,0,0,0,'isla starmane - SAY_ISLA_START'),
 (-1000633,'You sure you\'re ready? Take a moment.',0,0,0,0,'isla starmane - SAY_ISLA_WAITING'),
-(-1000634,'Alright, let\'s do this!',0,0,0,0,'isla starmane - SAY_ISLA_LEAVE_BUILDING');
+(-1000634,'Alright, let\'s do this!',0,0,0,0,'isla starmane - SAY_ISLA_LEAVE_BUILDING'),
+
+(-1000635,'So then we too are cursed?',0,0,0,0,'ancient vrykul SAY_VRYKUL_CURSED'),
+(-1000636,'%s points to the infant.',0,2,0,0,'ancient vrykul EMOTE_VRYKUL_POINT'),
+(-1000637,'%s sobs.',0,2,0,0,'ancient vrykul EMOTE_VRYKUL_SOB'),
+(-1000638,'The gods have forsaken us! We must dispose of it before Ymiron is notified!',0,0,0,0,'ancient vrykul SAY_VRYKUL_DISPOSE'),
+(-1000639,'NO! You cannot! I beg of you! It is our child!',0,0,0,0,'ancient vrykul SAY_VRYKUL_BEG'),
+(-1000640,'Then what are we to do, wife? The others cannot find out. Should they learn of this aberration, we will all be executed.',0,0,0,0,'ancient vrykul SAY_VRYKUL_WHAT'),
+(-1000641,'I... I will hide it. I will hide it until I find it a home, far away from here...',0,0,0,0,'ancient vrykul SAY_VRYKUL_HIDE');
 
 -- -1 033 000 SHADOWFANG KEEP
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES

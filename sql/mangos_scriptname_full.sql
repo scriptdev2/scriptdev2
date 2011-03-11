@@ -655,6 +655,9 @@ UPDATE creature_template SET ScriptName='npc_00x09hl' WHERE entry=7806;
 UPDATE creature_template SET ScriptName='npc_rinji' WHERE entry=7780;
 
 /* HOWLING FJORD */
+DELETE FROM scripted_areatrigger WHERE entry=4778;
+INSERT INTO scripted_areatrigger VALUES (4778,'at_ancient_male_vrykul');
+UPDATE creature_template SET ScriptName='npc_ancient_male_vrykul' WHERE entry=24314;
 UPDATE creature_template SET ScriptName='npc_daegarn' WHERE entry=24151;
 UPDATE creature_template SET ScriptName='npc_deathstalker_razael' WHERE entry=23998;
 UPDATE creature_template SET ScriptName='npc_dark_ranger_lyana' WHERE entry=23778;

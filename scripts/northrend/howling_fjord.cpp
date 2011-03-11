@@ -17,11 +17,13 @@
 /* ScriptData
 SDName: Howling_Fjord
 SD%Complete: ?
-SDComment: Quest support: 11221, 11483, 11300, 11464
+SDComment: Quest support: 11221, 11483, 11300, 11464, 11343
 SDCategory: Howling Fjord
 EndScriptData */
 
 /* ContentData
+npc_ancient_male_vrykul
+at_ancient_male_vrykul
 npc_daegarn
 npc_deathstalker_razael - TODO, can be moved to database
 npc_dark_ranger_lyana - TODO, can be moved to database
@@ -30,6 +32,115 @@ npc_silvermoon_harry
 EndContentData */
 
 #include "precompiled.h"
+
+enum
+{
+    SPELL_ECHO_OF_YMIRON                    = 42786,
+    SPELL_SECRET_OF_NIFFELVAR               = 43458,
+    QUEST_ECHO_OF_YMIRON                    = 11343,
+    NPC_MALE_VRYKUL                         = 24314,
+    NPC_FEMALE_VRYKUL                       = 24315,
+
+    SAY_VRYKUL_CURSED                       = -1000635,
+    EMOTE_VRYKUL_POINT                      = -1000636,
+    EMOTE_VRYKUL_SOB                        = -1000637,
+    SAY_VRYKUL_DISPOSE                      = -1000638,
+    SAY_VRYKUL_BEG                          = -1000639,
+    SAY_VRYKUL_WHAT                         = -1000640,
+    SAY_VRYKUL_HIDE                         = -1000641,
+};
+
+struct MANGOS_DLL_DECL npc_ancient_male_vrykulAI : public ScriptedAI
+{
+    npc_ancient_male_vrykulAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
+
+    bool m_bEventInProgress;
+    uint32 m_uiPhase;
+    uint32 m_uiPhaseTimer;
+
+    void Reset()
+    {
+        m_bEventInProgress = false;
+        m_uiPhase = 0;
+        m_uiPhaseTimer = 0;
+    }
+
+    void StartEvent()
+    {
+        if (m_bEventInProgress)
+            return;
+
+        m_bEventInProgress = true;
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (!m_bEventInProgress)
+            return;
+
+        if (m_uiPhaseTimer < uiDiff)
+            m_uiPhaseTimer = 5000;
+        else
+        {
+            m_uiPhaseTimer -= uiDiff;
+            return;
+        }
+
+        Creature* pFemale = GetClosestCreatureWithEntry(m_creature, NPC_FEMALE_VRYKUL, 10.0f);
+
+        switch(m_uiPhase)
+        {
+            case 0:
+                DoScriptText(SAY_VRYKUL_CURSED, m_creature);
+                DoScriptText(EMOTE_VRYKUL_POINT, m_creature);
+                break;
+            case 1:
+                if (pFemale)
+                    DoScriptText(EMOTE_VRYKUL_SOB, pFemale);
+                DoScriptText(SAY_VRYKUL_DISPOSE, m_creature);
+                break;
+            case 2:
+                if (pFemale)
+                    DoScriptText(SAY_VRYKUL_BEG, pFemale);
+                break;
+            case 3:
+                DoScriptText(SAY_VRYKUL_WHAT, m_creature);
+                break;
+            case 4:
+                if (pFemale)
+                    DoScriptText(SAY_VRYKUL_HIDE, pFemale);
+                break;
+            case 5:
+                DoCastSpellIfCan(m_creature, SPELL_SECRET_OF_NIFFELVAR);
+                break;
+            case 6:
+                Reset();
+                return;
+        }
+
+        ++m_uiPhase;
+    }
+};
+
+CreatureAI* GetAI_npc_ancient_male_vrykul(Creature* pCreature)
+{
+    return new npc_ancient_male_vrykulAI(pCreature);
+}
+
+bool AreaTrigger_at_ancient_male_vrykul(Player* pPlayer, AreaTriggerEntry const* pAt)
+{
+    if (pPlayer->isAlive() && pPlayer->GetQuestStatus(QUEST_ECHO_OF_YMIRON) == QUEST_STATUS_INCOMPLETE &&
+        pPlayer->HasAura(SPELL_ECHO_OF_YMIRON))
+    {
+        if (Creature* pCreature = GetClosestCreatureWithEntry(pPlayer, NPC_MALE_VRYKUL, 20.0f))
+        {
+            if (npc_ancient_male_vrykulAI* pVrykulAI = dynamic_cast<npc_ancient_male_vrykulAI*>(pCreature->AI()))
+                pVrykulAI->StartEvent();
+        }
+    }
+
+    return true;
+}
 
 /*######
 ## npc_daegarn
@@ -528,6 +639,16 @@ bool GossipSelect_npc_silvermoon_harry(Player* pPlayer, Creature* pCreature, uin
 void AddSC_howling_fjord()
 {
     Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_ancient_male_vrykul";
+    pNewScript->GetAI = &GetAI_npc_ancient_male_vrykul;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "at_ancient_male_vrykul";
+    pNewScript->pAreaTrigger = &AreaTrigger_at_ancient_male_vrykul;
+    pNewScript->RegisterSelf();
 
     pNewScript = new Script;
     pNewScript->Name = "npc_daegarn";
