@@ -25,7 +25,8 @@ EndScriptData */
 #include "wailing_caverns.h"
 
 instance_wailing_caverns::instance_wailing_caverns(Map* pMap) : ScriptedInstance(pMap),
-    m_uiNaralexGUID(0)
+    m_uiNaralexGUID(0),
+    m_uiDiscipleGUID(0)
 {
     Initialize();
 }
