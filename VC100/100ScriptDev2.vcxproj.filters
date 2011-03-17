@@ -1978,6 +1978,8 @@
       <Filter>system</Filter>
     </ClInclude>
     <ClInclude Include="..\config.h" />
+    <ClInclude Include="..\sd2_revision_nr.h" />
+    <ClInclude Include="..\sd2_revision_sql.h" />
     <ClInclude Include="..\ScriptMgr.h" />
   </ItemGroup>
   <ItemGroup>

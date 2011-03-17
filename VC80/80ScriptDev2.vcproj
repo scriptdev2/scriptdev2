@@ -3100,6 +3100,14 @@
 			</FileConfiguration>
 		</File>
 		<File
+			RelativePath="..\sd2_revision_nr.h"
+			>
+		</File>
+		<File
+			RelativePath="..\sd2_revision_sql.h"
+			>
+		</File>
+		<File
 			RelativePath="..\ScriptMgr.cpp"
 			>
 		</File>
