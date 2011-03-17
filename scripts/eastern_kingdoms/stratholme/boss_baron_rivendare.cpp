@@ -24,56 +24,21 @@ EndScriptData */
 #include "precompiled.h"
 #include "stratholme.h"
 
-#define SAY_0    "Intruders! More pawns of the Argent Dawn, no doubt. I already count one of their number among my prisoners. Withdraw from my domain before she is executed!"
-#define SAY_1    "You're still here? Your foolishness is amusing! The Argent Dawn wench needn't suffer in vain. Leave at once and she shall be spared!"
-#define SAY_2    "I shall take great pleasure in taking this poor wretch's life! It's not too late, she needn't suffer in vain. Turn back and her death shall be merciful!"
-#define SAY_3    "May this prisoner's death serve as a warning. None shall defy the Scourge and live!"
-#define SAY_4    "So you see fit to toy with the Lich King's creations? Ramstein, be sure to give the intruders a proper greeting."
-#define SAY_5    "Time to take matters into my own hands. Come. Enter my domain and challenge the might of the Scourge!"
+enum
+{
+    SPELL_SHADOW_BOLT   = 17393,
+    SPELL_CLEAVE        = 15284,
+    SPELL_MORTAL_STRIKE = 15708,
 
-#define ADD_1X 4017.403809f
-#define ADD_1Y -3339.703369f
-#define ADD_1Z 115.057655f
-#define ADD_1O 5.487860f
+    SPELL_RAISE_DEAD    = 17473,                           //triggers death pact (17471)
 
-#define ADD_2X 4013.189209f
-#define ADD_2Y -3351.808350f
-#define ADD_2Z 115.052254f
-#define ADD_2O 0.134280f
-
-#define ADD_3X 4017.738037f
-#define ADD_3Y -3363.478016f
-#define ADD_3Z 115.057274f
-#define ADD_3O 0.723313f
-
-#define ADD_4X 4048.877197f
-#define ADD_4Y -3363.223633f
-#define ADD_4Z 115.054253f
-#define ADD_4O 3.627735f
-
-#define ADD_5X 4051.777588f
-#define ADD_5Y -3350.893311f
-#define ADD_5Z 115.055351f
-#define ADD_5O 3.066176f
-
-#define ADD_6X 4048.375977f
-#define ADD_6Y -3339.966309f
-#define ADD_6Z 115.055222f
-#define ADD_6O 2.457497f
-
-#define SPELL_SHADOWBOLT    17393
-#define SPELL_CLEAVE        15284
-#define SPELL_MORTALSTRIKE  15708
-
-#define SPELL_UNHOLY_AURA   17467
-#define SPELL_RAISEDEAD     17473                           //triggers death pact (17471)
-
-#define SPELL_RAISE_DEAD1   17475
-#define SPELL_RAISE_DEAD2   17476
-#define SPELL_RAISE_DEAD3   17477
-#define SPELL_RAISE_DEAD4   17478
-#define SPELL_RAISE_DEAD5   17479
-#define SPELL_RAISE_DEAD6   17480
+    SPELL_RAISE_DEAD_1  = 17475,
+    SPELL_RAISE_DEAD_2  = 17476,
+    SPELL_RAISE_DEAD_3  = 17477,
+    SPELL_RAISE_DEAD_4  = 17478,
+    SPELL_RAISE_DEAD_5  = 17479,
+    SPELL_RAISE_DEAD_6  = 17480
+};
 
 struct MANGOS_DLL_DECL boss_baron_rivendareAI : public ScriptedAI
 {
@@ -85,86 +50,81 @@ struct MANGOS_DLL_DECL boss_baron_rivendareAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    uint32 ShadowBolt_Timer;
-    uint32 Cleave_Timer;
-    uint32 MortalStrike_Timer;
-    //uint32 RaiseDead_Timer;
-    uint32 SummonSkeletons_Timer;
-    Creature *Summoned;
+    uint32 m_uiShadowBoltTimer;
+    uint32 m_uiCleaveTimer;
+    uint32 m_uiMortalStrikeTimer;
+    uint32 m_uiRaiseDeadTimer;
 
     void Reset()
     {
-        ShadowBolt_Timer = 5000;
-        Cleave_Timer = 8000;
-        MortalStrike_Timer = 12000;
-        //RaiseDead_Timer = 30000;
-        SummonSkeletons_Timer = 34000;
+        m_uiShadowBoltTimer     = 5000;
+        m_uiCleaveTimer         = 8000;
+        m_uiMortalStrikeTimer   = 12000;
+        m_uiRaiseDeadTimer      = 30000;
     }
 
-    void Aggro(Unit *who)
+    void JustSummoned(Creature* pSummoned)
     {
-        if (m_pInstance)
-            m_pInstance->SetData(TYPE_BARON,IN_PROGRESS);
+        if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            pSummoned->AI()->AttackStart(pTarget);
     }
 
-    void JustSummoned(Creature* summoned)
+    void SpellHit(Unit* pWho, const SpellEntry* pSpell)
     {
-        if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
-            summoned->AI()->AttackStart(target);
+        if (pSpell->Id == SPELL_RAISE_DEAD)
+        {
+            DoCastSpellIfCan(m_creature, SPELL_RAISE_DEAD_1, CAST_TRIGGERED);
+            DoCastSpellIfCan(m_creature, SPELL_RAISE_DEAD_2, CAST_TRIGGERED);
+            DoCastSpellIfCan(m_creature, SPELL_RAISE_DEAD_3, CAST_TRIGGERED);
+            DoCastSpellIfCan(m_creature, SPELL_RAISE_DEAD_4, CAST_TRIGGERED);
+            DoCastSpellIfCan(m_creature, SPELL_RAISE_DEAD_5, CAST_TRIGGERED);
+            DoCastSpellIfCan(m_creature, SPELL_RAISE_DEAD_6, CAST_TRIGGERED);
+        }
     }
 
-    void JustDied(Unit* Killer)
-    {
-        if (m_pInstance)
-            m_pInstance->SetData(TYPE_BARON,DONE);
-    }
-
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //ShadowBolt
-        if (ShadowBolt_Timer < diff)
+        // ShadowBolt
+        if (m_uiShadowBoltTimer < uiDiff)
         {
-            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-                DoCastSpellIfCan(m_creature->getVictim(),SPELL_SHADOWBOLT);
-            ShadowBolt_Timer = 10000;
-        }else ShadowBolt_Timer -= diff;
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_SHADOW_BOLT) == CAST_OK)
+                    m_uiShadowBoltTimer = 10000;
+            }
+        }
+        else
+            m_uiShadowBoltTimer -= uiDiff;
 
-        //Cleave
-        if (Cleave_Timer < diff)
+        // Cleave
+        if (m_uiCleaveTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_CLEAVE);
-            Cleave_Timer = urand(7000, 17000);
-        }else Cleave_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_CLEAVE) == CAST_OK)
+                m_uiCleaveTimer = urand(7000, 17000);
+        }
+        else
+            m_uiCleaveTimer -= uiDiff;
 
-        //MortalStrike
-        if (MortalStrike_Timer < diff)
+        // MortalStrike
+        if (m_uiMortalStrikeTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_MORTALSTRIKE);
-            MortalStrike_Timer = urand(10000, 25000);
-        }else MortalStrike_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_MORTAL_STRIKE) == CAST_OK)
+                m_uiMortalStrikeTimer = urand(10000, 25000);
+        }
+        else
+            m_uiMortalStrikeTimer -= uiDiff;
 
-        //RaiseDead
-        //if (RaiseDead_Timer < diff)
-        //{
-        //    DoCastSpellIfCan(m_creature,SPELL_RAISEDEAD);
-        //    RaiseDead_Timer = 45000;
-        //}else RaiseDead_Timer -= diff;
-
-        //SummonSkeletons
-        if (SummonSkeletons_Timer < diff)
+        // RaiseDead
+        if (m_uiRaiseDeadTimer < uiDiff)
         {
-            m_creature->SummonCreature(11197,ADD_1X,ADD_1Y,ADD_1Z,ADD_1O,TEMPSUMMON_TIMED_DESPAWN,29000);
-            m_creature->SummonCreature(11197,ADD_2X,ADD_2Y,ADD_2Z,ADD_2O,TEMPSUMMON_TIMED_DESPAWN,29000);
-            m_creature->SummonCreature(11197,ADD_3X,ADD_3Y,ADD_3Z,ADD_3O,TEMPSUMMON_TIMED_DESPAWN,29000);
-            m_creature->SummonCreature(11197,ADD_4X,ADD_4Y,ADD_4Z,ADD_4O,TEMPSUMMON_TIMED_DESPAWN,29000);
-            m_creature->SummonCreature(11197,ADD_5X,ADD_5Y,ADD_5Z,ADD_5O,TEMPSUMMON_TIMED_DESPAWN,29000);
-            m_creature->SummonCreature(11197,ADD_6X,ADD_6Y,ADD_6Z,ADD_6O,TEMPSUMMON_TIMED_DESPAWN,29000);
-
-            SummonSkeletons_Timer = 40000;
-        }else SummonSkeletons_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature, SPELL_RAISE_DEAD) == CAST_OK)
+                m_uiRaiseDeadTimer = 45000;
+        }
+        else
+            m_uiRaiseDeadTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
@@ -177,9 +137,10 @@ CreatureAI* GetAI_boss_baron_rivendare(Creature* pCreature)
 
 void AddSC_boss_baron_rivendare()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_baron_rivendare";
-    newscript->GetAI = &GetAI_boss_baron_rivendare;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_baron_rivendare";
+    pNewScript->GetAI = &GetAI_boss_baron_rivendare;
+    pNewScript->RegisterSelf();
 }

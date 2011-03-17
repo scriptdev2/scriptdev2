@@ -52,12 +52,6 @@ struct MANGOS_DLL_DECL boss_baroness_anastariAI : public ScriptedAI
         //Possess_Timer = 35000;
     }
 
-    void JustDied(Unit* Killer)
-    {
-        if (m_pInstance)
-            m_pInstance->SetData(TYPE_BARONESS, DONE);
-    }
-
     void UpdateAI(const uint32 diff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
