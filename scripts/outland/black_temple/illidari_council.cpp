@@ -137,10 +137,10 @@ struct MANGOS_DLL_DECL mob_blood_elf_council_voice_triggerAI : public ScriptedAI
     {
         if (ScriptedInstance* pInstance = (ScriptedInstance*)m_creature->GetInstanceData())
         {
-            Council[0] = pInstance->GetData64(DATA_GATHIOSTHESHATTERER);
-            Council[1] = pInstance->GetData64(DATA_VERASDARKSHADOW);
-            Council[2] = pInstance->GetData64(DATA_LADYMALANDE);
-            Council[3] = pInstance->GetData64(DATA_HIGHNETHERMANCERZEREVOR);
+            Council[0] = pInstance->GetData64(NPC_GATHIOS);
+            Council[1] = pInstance->GetData64(NPC_VERAS);
+            Council[2] = pInstance->GetData64(NPC_LADY_MALANDE);
+            Council[3] = pInstance->GetData64(NPC_ZEREVOR);
         }else error_log(ERROR_INST_DATA);
     }
 
@@ -242,7 +242,7 @@ struct MANGOS_DLL_DECL mob_illidari_councilAI : public ScriptedAI
             if (m_pInstance->GetData(TYPE_COUNCIL) == DONE)
                 return;
 
-            if (Creature* VoiceTrigger = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_BLOOD_ELF_COUNCIL_VOICE)))
+            if (Creature* VoiceTrigger = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_COUNCIL_VOICE)))
                 VoiceTrigger->AI()->EnterEvadeMode();
 
             m_pInstance->SetData(TYPE_COUNCIL, NOT_STARTED);
@@ -259,13 +259,13 @@ struct MANGOS_DLL_DECL mob_illidari_councilAI : public ScriptedAI
 
         if (target && target->isAlive() && !EventBegun)
         {
-            Council[0] = m_pInstance->GetData64(DATA_GATHIOSTHESHATTERER);
-            Council[1] = m_pInstance->GetData64(DATA_HIGHNETHERMANCERZEREVOR);
-            Council[2] = m_pInstance->GetData64(DATA_LADYMALANDE);
-            Council[3] = m_pInstance->GetData64(DATA_VERASDARKSHADOW);
+            Council[0] = m_pInstance->GetData64(NPC_GATHIOS);
+            Council[1] = m_pInstance->GetData64(NPC_ZEREVOR);
+            Council[2] = m_pInstance->GetData64(NPC_LADY_MALANDE);
+            Council[3] = m_pInstance->GetData64(NPC_VERAS);
 
             // Start the event for the Voice Trigger
-            if (Creature* pVoiceTrigger = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_BLOOD_ELF_COUNCIL_VOICE)))
+            if (Creature* pVoiceTrigger = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_COUNCIL_VOICE)))
             {
                 if (mob_blood_elf_council_voice_triggerAI* pVoiceAI = dynamic_cast<mob_blood_elf_council_voice_triggerAI*>(pVoiceTrigger->AI()))
                 {
@@ -303,7 +303,7 @@ struct MANGOS_DLL_DECL mob_illidari_councilAI : public ScriptedAI
                 {
                     if (m_pInstance)
                     {
-                        if (Creature* VoiceTrigger = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_BLOOD_ELF_COUNCIL_VOICE)))
+                        if (Creature* VoiceTrigger = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_COUNCIL_VOICE)))
                             VoiceTrigger->DealDamage(VoiceTrigger, VoiceTrigger->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
 
                         m_pInstance->SetData(TYPE_COUNCIL, DONE);
@@ -376,7 +376,7 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
     {
         if (m_pInstance)
         {
-            if (Creature* pController = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_ILLIDARICOUNCIL)))
+            if (Creature* pController = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_ILLIDARI_COUNCIL)))
             {
                 if (mob_illidari_councilAI* pControlAI = dynamic_cast<mob_illidari_councilAI*>(pController->AI()))
                     pControlAI->StartEvent(pWho);
@@ -422,10 +422,10 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
             return;
         }
 
-        Council[0] = m_pInstance->GetData64(DATA_LADYMALANDE);
-        Council[1] = m_pInstance->GetData64(DATA_HIGHNETHERMANCERZEREVOR);
-        Council[2] = m_pInstance->GetData64(DATA_GATHIOSTHESHATTERER);
-        Council[3] = m_pInstance->GetData64(DATA_VERASDARKSHADOW);
+        Council[0] = m_pInstance->GetData64(NPC_LADY_MALANDE);
+        Council[1] = m_pInstance->GetData64(NPC_ZEREVOR);
+        Council[2] = m_pInstance->GetData64(NPC_GATHIOS);
+        Council[3] = m_pInstance->GetData64(NPC_VERAS);
 
         LoadedGUIDs = true;
     }

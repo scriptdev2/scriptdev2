@@ -342,9 +342,9 @@ struct MANGOS_DLL_DECL demonfireAI : public ScriptedAI
         {
             if (!IllidanGUID && m_pInstance)
             {
-                if (Creature* pIllidan = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_ILLIDANSTORMRAGE)))
+                if (Creature* pIllidan = m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_ILLIDAN_STORMRAGE)))
                 {
-                    IllidanGUID = m_pInstance->GetData64(DATA_ILLIDANSTORMRAGE);
+                    IllidanGUID = m_pInstance->GetData64(NPC_ILLIDAN_STORMRAGE);
 
                     if (!pIllidan->HasSplineFlag(SPLINEFLAG_NO_SPLINE))
                         m_creature->SetDeathState(JUST_DIED);
@@ -411,13 +411,13 @@ struct MANGOS_DLL_DECL npc_akama_illidanAI : public ScriptedAI
         if (m_pInstance)
         {
             m_pInstance->SetData(TYPE_ILLIDAN, NOT_STARTED);
-            GameObject* pGate = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GAMEOBJECT_ILLIDAN_GATE));
+            GameObject* pGate = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(GO_ILLIDAN_GATE));
 
             // close door if already open (when raid wipes or something)
             if (pGate && !pGate->GetGoState())
                 pGate->SetGoState(GO_STATE_READY);
 
-            for(uint8 i = DATA_GAMEOBJECT_ILLIDAN_DOOR_R; i < DATA_GAMEOBJECT_ILLIDAN_DOOR_L + 1; ++i)
+            for(uint32 i = GO_ILLIDAN_DOOR_R; i < GO_ILLIDAN_DOOR_L + 1; ++i)
             {
                 if (GameObject* pDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(i)))
                     pDoor->SetGoState(GO_STATE_ACTIVE);
@@ -509,7 +509,7 @@ struct MANGOS_DLL_DECL npc_akama_illidanAI : public ScriptedAI
         debug_log("SD2: Akama - Door event initiated by player %s", pPlayer->GetName());
         PlayerGUID = pPlayer->GetGUID();
 
-        if (GameObject* pGate = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GAMEOBJECT_ILLIDAN_GATE)))
+        if (GameObject* pGate = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(GO_ILLIDAN_GATE)))
         {
             float x,y,z;
             pGate->GetPosition(x, y, z);
@@ -556,7 +556,7 @@ struct MANGOS_DLL_DECL npc_akama_illidanAI : public ScriptedAI
                 if (!IsReturningToIllidan)
                 {
                     // open the doors that close the summit
-                    for(uint32 i = DATA_GAMEOBJECT_ILLIDAN_DOOR_R; i < DATA_GAMEOBJECT_ILLIDAN_DOOR_L+1; ++i)
+                    for(uint32 i = GO_ILLIDAN_DOOR_R; i < GO_ILLIDAN_DOOR_L+1; ++i)
                     {
                         if (GameObject* pDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(i)))
                             pDoor->SetGoState(GO_STATE_ACTIVE);
@@ -678,7 +678,7 @@ struct MANGOS_DLL_DECL npc_akama_illidanAI : public ScriptedAI
         }else
         {
             if (m_pInstance)
-                IllidanGUID = m_pInstance->GetData64(DATA_ILLIDANSTORMRAGE);
+                IllidanGUID = m_pInstance->GetData64(NPC_ILLIDAN_STORMRAGE);
         }
 
         if (IsWalking && WalkTimer)
@@ -714,7 +714,7 @@ struct MANGOS_DLL_DECL npc_akama_illidanAI : public ScriptedAI
                                 }
                             }
 
-                            if (GameObject* pGate = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GAMEOBJECT_ILLIDAN_GATE)))
+                            if (GameObject* pGate = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(GO_ILLIDAN_GATE)))
                                 pGate->SetGoState(GO_STATE_ACTIVE);
 
                             ++ChannelCount;
@@ -1039,7 +1039,7 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
         // Completed
         m_pInstance->SetData(TYPE_ILLIDAN, DONE);
 
-        for(uint8 i = DATA_GAMEOBJECT_ILLIDAN_DOOR_R; i < DATA_GAMEOBJECT_ILLIDAN_DOOR_L + 1; ++i)
+        for(uint32 i = GO_ILLIDAN_DOOR_R; i < GO_ILLIDAN_DOOR_L + 1; ++i)
         {
             // Open Doors
             if (GameObject* pDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(i)))
@@ -1154,7 +1154,7 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
             {
                 if (m_pInstance)
                 {
-                    AkamaGUID = m_pInstance->GetData64(DATA_AKAMA);
+                    AkamaGUID = m_pInstance->GetData64(NPC_AKAMA);
                     if (!AkamaGUID)
                         return;
                     GUID = AkamaGUID;
@@ -1900,13 +1900,13 @@ void npc_akama_illidanAI::BeginEvent(uint64 PlayerGUID)
     debug_log("SD2: Akama - Illidan Introduction started. Illidan event properly begun.");
     if (m_pInstance)
     {
-        IllidanGUID = m_pInstance->GetData64(DATA_ILLIDANSTORMRAGE);
+        IllidanGUID = m_pInstance->GetData64(NPC_ILLIDAN_STORMRAGE);
         m_pInstance->SetData(TYPE_ILLIDAN, IN_PROGRESS);
     }
 
     if (m_pInstance)
     {
-        for(uint8 i = DATA_GAMEOBJECT_ILLIDAN_DOOR_R; i < DATA_GAMEOBJECT_ILLIDAN_DOOR_L+1; ++i)
+        for(uint32 i = GO_ILLIDAN_DOOR_R; i < GO_ILLIDAN_DOOR_L+1; ++i)
         {
             if (GameObject* pDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(i)))
                 pDoor->SetGoState(GO_STATE_READY);
@@ -2003,7 +2003,7 @@ struct MANGOS_DLL_DECL boss_maievAI : public ScriptedAI
         if (!IllidanGUID)
         {
             if (m_pInstance)
-                IllidanGUID = m_pInstance->GetData64(DATA_ILLIDANSTORMRAGE);
+                IllidanGUID = m_pInstance->GetData64(NPC_ILLIDAN_STORMRAGE);
         }else
         {
             Creature* Illidan = m_creature->GetMap()->GetCreature(IllidanGUID);
