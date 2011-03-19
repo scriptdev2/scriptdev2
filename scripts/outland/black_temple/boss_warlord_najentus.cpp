@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Boss_Warlord_Najentus
 SD%Complete: 90
-SDComment: Does the GO need script? Uncomment code to test.
+SDComment: Core spell support for Needle Spine (spells 39992, 39835) missing, no change from SD2 needed
 SDCategory: Black Temple
 EndScriptData */
 
@@ -38,10 +38,9 @@ enum
     SAY_DEATH                       = -1564009,
 
     SPELL_CRASHINGWAVE              = 40100,
-    SPELL_NEEDLE_SPINE              = 39835,
-    SPELL_NEEDLE_AOE                = 39968,
+    SPELL_NEEDLE_SPINE              = 39992,
     SPELL_TIDAL_BURST               = 39878,
-    SPELL_TIDAL_SHIELD              = 39872,                // Not going to use this since Hurl Spine doesn't dispel it.
+    SPELL_TIDAL_SHIELD              = 39872,
     SPELL_IMPALING_SPINE            = 39837,
     SPELL_CREATE_NAJENTUS_SPINE     = 39956,
     SPELL_HURL_SPINE                = 39948,
@@ -75,6 +74,8 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
         m_uiSpecialYellTimer = urand(45000, 120000);
         m_uiTidalShieldTimer = 60000;
         m_uiImpalingSpineTimer = 20000;
+
+        SetCombatMovement(true);
     }
 
     void JustReachedHome()
@@ -83,12 +84,12 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
             m_pInstance->SetData(TYPE_NAJENTUS, NOT_STARTED);
     }
 
-    void KilledUnit(Unit *victim)
+    void KilledUnit(Unit* pVictim)
     {
         DoScriptText(urand(0, 1) ? SAY_SLAY1 : SAY_SLAY2, m_creature);
     }
 
-    void JustDied(Unit *victim)
+    void JustDied(Unit* pKiller)
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_NAJENTUS, DONE);
@@ -96,18 +97,19 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
         DoScriptText(SAY_DEATH, m_creature);
     }
 
-    void SpellHit(Unit *caster, const SpellEntry *spell)
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
     {
-        if (m_bIsShielded)
+        if (m_bIsShielded && pSpell->Id == SPELL_HURL_SPINE)
         {
-            if (spell->Id == SPELL_HURL_SPINE)
-            {
-                if (m_creature->HasAura(SPELL_TIDAL_SHIELD, EFFECT_INDEX_0))
-                    m_creature->RemoveAurasDueToSpell(SPELL_TIDAL_SHIELD);
+            if (m_creature->HasAura(SPELL_TIDAL_SHIELD))
+                m_creature->RemoveAurasDueToSpell(SPELL_TIDAL_SHIELD);
 
-                DoCastSpellIfCan(m_creature->getVictim(), SPELL_TIDAL_BURST);
-                m_bIsShielded = false;
-            }
+            DoCastSpellIfCan(m_creature, SPELL_TIDAL_BURST);
+            m_bIsShielded = false;
+
+            SetCombatMovement(true);
+            if (m_creature->getVictim())
+                m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
         }
     }
 
@@ -119,79 +121,83 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
         DoScriptText(SAY_AGGRO, m_creature);
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (m_uiEnrageTimer < diff)
+        // If shield expired after 45s, attack again
+        if (m_bIsShielded && m_uiTidalShieldTimer < 16000 && !m_creature->HasAura(SPELL_TIDAL_SHIELD))
         {
-            if (m_creature->IsNonMeleeSpellCasted(false))
-                m_creature->InterruptNonMeleeSpells(false);
+                m_bIsShielded = false;
 
-            DoScriptText(SAY_ENRAGE2, m_creature);
-            DoCastSpellIfCan(m_creature, SPELL_BERSERK);
-            m_uiEnrageTimer = MINUTE*8*IN_MILLISECONDS;
-        }else m_uiEnrageTimer -= diff;
-
-        if (m_bIsShielded)
-        {
-            m_creature->GetMotionMaster()->Clear(false);
-            m_creature->GetMotionMaster()->MoveIdle();
-
-            return;                                         // Don't cast or do anything while Shielded
+                SetCombatMovement(true);
+                m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
         }
 
-        // Needle
-        if (m_uiNeedleSpineTimer < diff)
+        if (m_uiEnrageTimer < uiDiff)
         {
-            for(uint8 i = 0; i < 3; ++i)
+            if (DoCastSpellIfCan(m_creature, SPELL_BERSERK, CAST_INTERRUPT_PREVIOUS) == CAST_OK)
             {
-                Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1);
-
-                if (!target)
-                    target = m_creature->getVictim();
-
-                DoCastSpellIfCan(target, SPELL_NEEDLE_SPINE);
-                target->CastSpell(target, SPELL_NEEDLE_AOE, false);
+                m_uiEnrageTimer = MINUTE*8*IN_MILLISECONDS;
+                DoScriptText(SAY_ENRAGE2, m_creature);
             }
+        }
+        else
+            m_uiEnrageTimer -= uiDiff;
 
-            m_uiNeedleSpineTimer = 3000;
-        }else m_uiNeedleSpineTimer -= diff;
-
-        if (m_uiSpecialYellTimer < diff)
+        if (m_uiSpecialYellTimer < uiDiff)
         {
             DoScriptText(urand(0, 1) ? SAY_SPECIAL1 : SAY_SPECIAL2, m_creature);
             m_uiSpecialYellTimer = urand(25000, 100000);
-        }else m_uiSpecialYellTimer -= diff;
+        }
+        else
+            m_uiSpecialYellTimer -= uiDiff;
 
-        if (m_uiImpalingSpineTimer < diff)
+        if (m_uiImpalingSpineTimer < uiDiff)
         {
-            Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1);
+            Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1);
 
-            if (!target)
-                target = m_creature->getVictim();
+            if (!pTarget)
+                pTarget = m_creature->getVictim();
 
-            if (target && (target->GetTypeId() == TYPEID_PLAYER))
+            if (pTarget && (pTarget->GetTypeId() == TYPEID_PLAYER))
             {
-                DoCastSpellIfCan(target, SPELL_IMPALING_SPINE);
+                DoCastSpellIfCan(pTarget, SPELL_IMPALING_SPINE);
                 m_uiImpalingSpineTimer = 20000;
 
                 DoScriptText(urand(0, 1) ? SAY_NEEDLE1 : SAY_NEEDLE2, m_creature);
             }
-        }else m_uiImpalingSpineTimer -= diff;
+        }
+        else
+            m_uiImpalingSpineTimer -= uiDiff;
 
-        if (m_uiTidalShieldTimer < diff)
+        if (m_uiTidalShieldTimer < uiDiff)
         {
-            m_creature->InterruptNonMeleeSpells(false);
-            DoCastSpellIfCan(m_creature, SPELL_TIDAL_SHIELD, CAST_TRIGGERED);
+            DoCastSpellIfCan(m_creature, SPELL_TIDAL_SHIELD, CAST_INTERRUPT_PREVIOUS | CAST_TRIGGERED);
 
             m_creature->GetMotionMaster()->Clear(false);
             m_creature->GetMotionMaster()->MoveIdle();
+            SetCombatMovement(false);
 
             m_bIsShielded = true;
             m_uiTidalShieldTimer = 60000;
-        }else m_uiTidalShieldTimer -= diff;
+
+            // Skip needle splines for 10s
+            m_uiNeedleSpineTimer += 10000;
+        }
+        else
+            m_uiTidalShieldTimer -= uiDiff;
+
+        // Needle
+        if (m_uiNeedleSpineTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_NEEDLE_SPINE) == CAST_OK)
+                m_uiNeedleSpineTimer = 3000;
+        }
+        else
+            m_uiNeedleSpineTimer -= uiDiff;
+
 
         DoMeleeAttackIfReady();
     }
@@ -204,9 +210,10 @@ CreatureAI* GetAI_boss_najentus(Creature* pCreature)
 
 void AddSC_boss_najentus()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_najentus";
-    newscript->GetAI = &GetAI_boss_najentus;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_najentus";
+    pNewScript->GetAI = &GetAI_boss_najentus;
+    pNewScript->RegisterSelf();
 }
