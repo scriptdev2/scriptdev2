@@ -259,6 +259,9 @@ struct MANGOS_DLL_DECL mob_illidari_councilAI : public ScriptedAI
 
         if (target && target->isAlive() && !EventBegun)
         {
+            // Prevent further handling for next council member aggroing
+            EventBegun = true;
+
             Council[0] = m_pInstance->GetData64(NPC_GATHIOS);
             Council[1] = m_pInstance->GetData64(NPC_ZEREVOR);
             Council[2] = m_pInstance->GetData64(NPC_LADY_MALANDE);
@@ -279,14 +282,13 @@ struct MANGOS_DLL_DECL mob_illidari_councilAI : public ScriptedAI
                 if (Council[i])
                 {
                     Creature* pMember = m_creature->GetMap()->GetCreature(Council[i]);
-                    if (pMember && pMember->isAlive())
+                    if (pMember && pMember->isAlive() && !pMember->isInCombat())
                         pMember->AI()->AttackStart(target);
                 }
             }
 
+            // All are set into combat now, Set Instance Data
             m_pInstance->SetData(TYPE_COUNCIL, IN_PROGRESS);
-
-            EventBegun = true;
         }
     }
 
@@ -346,7 +348,11 @@ struct MANGOS_DLL_DECL mob_illidari_councilAI : public ScriptedAI
                 }
 
                 if (EvadeCheck > 3)
+                {
+                    if (m_pInstance)
+                        m_pInstance->SetData(TYPE_COUNCIL, FAIL);
                     Reset();
+                }
 
                 CheckTimer = 2000;
             }else CheckTimer -= diff;
@@ -387,8 +393,6 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
             error_log(ERROR_INST_DATA);
             EnterEvadeMode();
         }
-
-        m_creature->SetInCombatWithZone();
 
         // Load GUIDs on first aggro because the creature guids are only set as the creatures are created in world-
         // this means that for each creature, it will attempt to LoadGUIDs even though some of the other creatures are

@@ -38,6 +38,7 @@ enum
     GO_PRE_SHAHRAZ_DOOR             = 185479,
     GO_POST_SHAHRAZ_DOOR            = 185482,
     GO_PRE_COUNCIL_DOOR             = 185481,
+    GO_COUNCIL_DOOR                 = 186152,
     GO_ILLIDAN_GATE                 = 185905,
     GO_ILLIDAN_DOOR_R               = 186261,
     GO_ILLIDAN_DOOR_L               = 186262,
@@ -89,6 +90,7 @@ class MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
         uint64 m_uiShahrazPreDoorGUID;
         uint64 m_uiShahrazPostDoorGUID;
         uint64 m_uiPreCouncilDoorGUID;
+        uint64 m_uiCouncilDoorGUID;
 };
 
 #endif

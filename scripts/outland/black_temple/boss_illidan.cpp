@@ -503,7 +503,8 @@ struct MANGOS_DLL_DECL npc_akama_illidanAI : public ScriptedAI
 
     void BeginDoorEvent(Player* pPlayer)
     {
-        if (!m_pInstance)
+        // Requires Instance and this additional check to prevent exploits
+        if (!m_pInstance || m_pInstance->GetData(TYPE_COUNCIL) != DONE)
             return;
 
         debug_log("SD2: Akama - Door event initiated by player %s", pPlayer->GetName());
@@ -1961,6 +1962,7 @@ void npc_akama_illidanAI::BeginEvent(uint64 PlayerGUID)
 
 bool GossipHello_npc_akama_at_illidan(Player* pPlayer, Creature* pCreature)
 {
+    // TODO: Add gossip item only when Council is done?
     pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
     pPlayer->SEND_GOSSIP_MENU(10465, pCreature->GetGUID());
 

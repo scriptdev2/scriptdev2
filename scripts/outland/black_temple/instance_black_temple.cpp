@@ -56,7 +56,8 @@ instance_black_temple::instance_black_temple(Map* pMap) : ScriptedInstance(pMap)
     m_uiIllidanGateGUID(0),
     m_uiShahrazPreDoorGUID(0),
     m_uiShahrazPostDoorGUID(0),
-    m_uiPreCouncilDoorGUID(0)
+    m_uiPreCouncilDoorGUID(0),
+    m_uiCouncilDoorGUID(0)
 {
     Initialize();
 };
@@ -125,8 +126,9 @@ void instance_black_temple::OnObjectCreate(GameObject* pGo)
             break;
         case GO_PRE_COUNCIL_DOOR:                           // Door leading to the Council (grand promenade)
             m_uiPreCouncilDoorGUID = pGo->GetGUID();
-            if (m_auiEncounter[TYPE_SHAHRAZ] == DONE)       // TODO - unneeded?
-                pGo->SetGoState(GO_STATE_ACTIVE);
+            break;
+        case GO_COUNCIL_DOOR:                               // Door leading to the Council (inside)
+            m_uiCouncilDoorGUID = pGo->GetGUID();
             break;
         case GO_ILLIDAN_GATE:                               // Gate leading to Temple Summit
             m_uiIllidanGateGUID = pGo->GetGUID();
@@ -191,13 +193,13 @@ void instance_black_temple::SetData(uint32 uiType, uint32 uiData)
             break;
         case TYPE_SHAHRAZ:
             if (uiData == DONE)
-            {
-                DoUseDoorOrButton(m_uiPreCouncilDoorGUID);  // TODO Probably wrong
                 DoUseDoorOrButton(m_uiShahrazPostDoorGUID);
-            }
             m_auiEncounter[uiType] = uiData;
             break;
-        case TYPE_COUNCIL:    m_auiEncounter[uiType] = uiData; break;
+        case TYPE_COUNCIL:
+            DoUseDoorOrButton(m_uiCouncilDoorGUID);
+            m_auiEncounter[uiType] = uiData;
+            break;
         case TYPE_ILLIDAN:    m_auiEncounter[uiType] = uiData; break;
         default:
             error_log("SD2: Instance Black Temple: ERROR SetData = %u for type %u does not exist/not implemented.", uiType, uiData);
@@ -262,6 +264,7 @@ uint64 instance_black_temple::GetData64(uint32 uiData)
         case GO_PRE_SHAHRAZ_DOOR:            return m_uiShahrazPreDoorGUID;
         case GO_POST_SHAHRAZ_DOOR:           return m_uiShahrazPostDoorGUID;
         case GO_PRE_COUNCIL_DOOR:            return m_uiPreCouncilDoorGUID;
+        case GO_COUNCIL_DOOR:                return m_uiCouncilDoorGUID;
         default:
             return 0;
     }
