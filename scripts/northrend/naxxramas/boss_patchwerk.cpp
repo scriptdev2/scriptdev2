@@ -103,28 +103,37 @@ struct MANGOS_DLL_DECL boss_patchwerkAI : public ScriptedAI
         // The ability is used on highest HP target choosen of the top 2 (3 heroic) targets on threat list being in melee range
         Unit* pTarget = NULL;
         uint32 uiHighestHP = 0;
-        uint32 uiTargets = m_bIsRegularMode ? 2 : 3;
+        uint32 uiTargets = m_bIsRegularMode ? 1 : 2;
 
         ThreatList const& tList = m_creature->getThreatManager().getThreatList();
-        for (ThreatList::const_iterator iter = tList.begin();iter != tList.end(); ++iter)
+        if (tList.size() > 1)                               // Check if more than two targets, and start loop with second-most aggro
         {
-            if (!uiTargets)
-                break;
-
-            if (Unit* pTempTarget = m_creature->GetMap()->GetUnit((*iter)->getUnitGuid()))
+            ThreatList::const_iterator iter = tList.begin();
+            std::advance(iter, 1);
+            for (; iter != tList.end(); ++iter)
             {
-                if (pTempTarget->GetHealth() > uiHighestHP && m_creature->CanReachWithMeleeAttack(pTempTarget))
+                if (!uiTargets)
+                    break;
+
+                if (Unit* pTempTarget = m_creature->GetMap()->GetUnit((*iter)->getUnitGuid()))
                 {
-                    uiHighestHP = pTempTarget->GetHealth();
-                    pTarget = pTempTarget;
+                    if (m_creature->CanReachWithMeleeAttack(pTempTarget))
+                    {
+                        if (pTempTarget->GetHealth() > uiHighestHP)
+                        {
+                            uiHighestHP = pTempTarget->GetHealth();
+                            pTarget = pTempTarget;
+                        }
+                        --uiTargets;
+                    }
                 }
             }
-
-            --uiTargets;
         }
 
-        if (pTarget)
-            DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_HATEFULSTRIKE : SPELL_HATEFULSTRIKE_H);
+        if (!pTarget)
+            pTarget = m_creature->getVictim();
+
+        DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_HATEFULSTRIKE : SPELL_HATEFULSTRIKE_H);
     }
 
     void UpdateAI(const uint32 uiDiff)
