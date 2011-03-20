@@ -21,8 +21,8 @@ GIT:
 - Compile MaNGOS (ScriptDev2 will automatically be built when compiling Mangos from here on)
 
 3) Create the default ScriptDev2 database using
-"sql\scriptdev2_create_database.sql", then execute
-"sql\scriptdev2_create_structure.sql" on that database.
+   "sql\scriptdev2_create_database.sql", then execute
+   "sql\scriptdev2_create_structure.sql" on that database.
 
 4) Execute the following on your ScriptDev2 database.
 - sql\scriptdev2_script_full.sql
