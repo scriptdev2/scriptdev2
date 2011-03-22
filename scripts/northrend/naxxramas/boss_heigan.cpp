@@ -224,4 +224,3 @@ void AddSC_boss_heigan()
     NewScript->GetAI = &GetAI_boss_heigan;
     NewScript->RegisterSelf();
 }
-

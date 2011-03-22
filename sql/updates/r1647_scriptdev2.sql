@@ -7,7 +7,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000565,'Brave adventurer, thank you for rescuing me! I am sure Marshal Marris will reward your kind deed.',0,0,0,0,'SAY_CORPORAL_KEESHAN_5');
 
 DELETE FROM script_waypoint WHERE entry = 349;
-INSERT INTO script_waypoint VALUES 
+INSERT INTO script_waypoint VALUES
 (349, 01,  -8769.591797, -2185.733643, 141.974564, 0, ''),
 (349, 02,  -8776.540039, -2193.782959, 140.960159, 0, ''),
 (349, 03,  -8783.289063, -2194.818604, 140.461731, 0, ''),
@@ -26,7 +26,7 @@ INSERT INTO script_waypoint VALUES
 (349, 16,  -8741.869141, -2250.997070, 154.485718, 0, ''),
 (349, 17,  -8733.218750, -2251.010742, 154.360031, 0, ''),
 (349, 18,  -8717.474609, -2245.044678, 154.68614,  0, ''),
-(349, 19,  -8712.240234, -2246.826172, 154.709473, 0, ''), 
+(349, 19,  -8712.240234, -2246.826172, 154.709473, 0, ''),
 (349, 20,  -8693.840820, -2240.410889, 152.909714, 0, ''),
 (349, 21,  -8681.818359, -2245.332764, 155.517838, 0, ''),
 (349, 22,  -8669.86,     -2252.77,     154.854,    0, ''),

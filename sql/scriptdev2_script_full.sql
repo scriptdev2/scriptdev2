@@ -4872,7 +4872,7 @@ INSERT INTO script_waypoint VALUES
 (20129, 25, -8375.42,-4250.41, -205.14,5000, '');
 
 DELETE FROM script_waypoint WHERE entry=20415;
-INSERT INTO script_waypoint VALUES 
+INSERT INTO script_waypoint VALUES
 (20415, 0, 2488.77, 2184.89, 104.64, 0, ""),
 (20415, 1, 2478.72, 2184.77, 98.58, 0, ""),
 (20415, 2, 2473.52, 2184.71, 99.00, 0, ""),
@@ -5457,4 +5457,3 @@ INSERT INTO script_waypoint VALUES
 (3678, 41, -41.114, 204.149, -78.94, 0, '');
 
 -- EOF
-

@@ -1,5 +1,5 @@
 DELETE FROM script_waypoint WHERE entry=20415;
-INSERT INTO script_waypoint VALUES 
+INSERT INTO script_waypoint VALUES
 (20415, 0, 2488.77, 2184.89, 104.64, 0, ""),
 (20415, 1, 2478.72, 2184.77, 98.58, 0, ""),
 (20415, 2, 2473.52, 2184.71, 99.00, 0, ""),
