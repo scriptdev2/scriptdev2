@@ -17,15 +17,21 @@
 /* ScriptData
 SDName: Desolace
 SD%Complete: 100
-SDComment: Quest support: 5561
+SDComment: Quest support: 5561, 1440
 SDCategory: Desolace
 EndScriptData */
 
 /* ContentData
 npc_aged_dying_ancient_kodo
+npc_dalinda_malem
 EndContentData */
 
 #include "precompiled.h"
+#include "escort_ai.h"
+
+/*######
+## npc_aged_dying_ancient_kodo
+######*/
 
 enum
 {
@@ -161,14 +167,69 @@ bool GossipHello_npc_aged_dying_ancient_kodo(Player* pPlayer, Creature* pCreatur
     return true;
 }
 
+/*######
+## npc_dalinda_malem
+######*/
+
+enum
+{
+    QUEST_RETURN_TO_VAHLARRIEL  = 1440,
+};
+
+struct MANGOS_DLL_DECL npc_dalinda_malemAI : public npc_escortAI
+{
+    npc_dalinda_malemAI(Creature* m_creature) : npc_escortAI(m_creature) { Reset(); }
+
+    void Reset() {}
+
+    void JustStartedEscort()
+    {
+        m_creature->SetStandState(UNIT_STAND_STATE_STAND);
+    }
+
+    void WaypointReached(uint32 uiPointId)
+    {
+        if (uiPointId == 18)
+        {
+            if (Player* pPlayer = GetPlayerForEscort())
+                pPlayer->GroupEventHappens(QUEST_RETURN_TO_VAHLARRIEL, m_creature);
+        }
+    }
+};
+
+CreatureAI* GetAI_npc_dalinda_malem(Creature* pCreature)
+{
+    return new npc_dalinda_malemAI(pCreature);
+}
+
+bool QuestAccept_npc_dalinda_malem(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
+{
+    if (pQuest->GetQuestId() == QUEST_RETURN_TO_VAHLARRIEL)
+    {
+        if (npc_dalinda_malemAI* pEscortAI = dynamic_cast<npc_dalinda_malemAI*>(pCreature->AI()))
+        {
+            // TODO This faction change needs confirmation, also possible that we need to drop her PASSIVE flag
+            pCreature->setFaction(FACTION_ESCORT_A_NEUTRAL_PASSIVE);
+            pEscortAI->Start(false, pPlayer->GetGUID(), pQuest);
+        }
+    }
+    return true;
+}
+
 void AddSC_desolace()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "npc_aged_dying_ancient_kodo";
-    newscript->GetAI = &GetAI_npc_aged_dying_ancient_kodo;
-    newscript->pEffectDummyNPC = &EffectDummyCreature_npc_aged_dying_ancient_kodo;
-    newscript->pGossipHello = &GossipHello_npc_aged_dying_ancient_kodo;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_aged_dying_ancient_kodo";
+    pNewScript->GetAI = &GetAI_npc_aged_dying_ancient_kodo;
+    pNewScript->pEffectDummyNPC = &EffectDummyCreature_npc_aged_dying_ancient_kodo;
+    pNewScript->pGossipHello = &GossipHello_npc_aged_dying_ancient_kodo;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_dalinda_malem";
+    pNewScript->GetAI = &GetAI_npc_dalinda_malem;
+    pNewScript->pQuestAcceptNPC = &QuestAccept_npc_dalinda_malem;
+    pNewScript->RegisterSelf();
 }

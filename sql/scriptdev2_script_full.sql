@@ -1014,7 +1014,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 -- -1 429 000 DIRE MAUL
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
 (-1429000,'The demon is loose! Quickly we must restrain him!',0,6,0,0,'highborne summoner SAY_FREE_IMMOLTHAR'),
-(-1429001,'Who dares disrupt the sanctity of Eldre''Thalas? Face me, cowards!',0,6,0,0,'prince tortheldrin SAY_KILL_IMMOLTHAR');
+(-1429001,'Who dares disrupt the sanctity of Eldre\'Thalas? Face me, cowards!',0,6,0,0,'prince tortheldrin SAY_KILL_IMMOLTHAR');
 
 -- -1 469 000 BLACKWING LAIR
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
@@ -5455,5 +5455,27 @@ INSERT INTO script_waypoint VALUES
 (3678, 39, 75.112, 206.494, -84.80, 0, ''),
 (3678, 40, 27.174, 201.064, -72.31, 0, ''),
 (3678, 41, -41.114, 204.149, -78.94, 0, '');
+
+DELETE FROM script_waypoint WHERE entry=5644;
+INSERT INTO script_waypoint (entry, pointid, location_x, location_y, location_z, waittime, point_comment) VALUES
+(5644, 1, -339.679, 1752.04, 139.482, 0, ''),
+(5644, 2, -328.957, 1734.95, 139.327, 0, ''),
+(5644, 3, -338.29, 1731.36, 139.327, 0, ''),
+(5644, 4, -350.747, 1731.12, 139.338, 0, ''),
+(5644, 5, -365.064, 1739.04, 139.376, 0, ''),
+(5644, 6, -371.105, 1746.03, 139.374, 0, ''),
+(5644, 7, -383.141, 1738.62, 138.93, 0, ''),
+(5644, 8, -390.445, 1733.98, 136.353, 0, ''),
+(5644, 9, -401.368, 1726.77, 131.071, 0, ''),
+(5644, 10, -416.016, 1721.19, 129.807, 0, ''),
+(5644, 11, -437.139, 1709.82, 126.342, 0, ''),
+(5644, 12, -455.83, 1695.61, 119.305, 0, ''),
+(5644, 13, -459.862, 1687.92, 116.059, 0, ''),
+(5644, 14, -463.565, 1679.1, 111.653, 0, ''),
+(5644, 15, -461.485, 1670.94, 109.033, 0, ''),
+(5644, 16, -471.786, 1647.34, 102.862, 0, ''),
+(5644, 17, -477.146, 1625.69, 98.342, 0, ''),
+(5644, 18, -475.815, 1615.815, 97.07, 0, ''),
+(5644, 19, -474.329, 1590.01, 94.4982, 0, '');
 
 -- EOF
