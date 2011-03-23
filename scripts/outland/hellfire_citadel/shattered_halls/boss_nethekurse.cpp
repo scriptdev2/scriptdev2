@@ -74,7 +74,9 @@ enum
     SPELL_HEMORRHAGE       = 30478,
 
     SPELL_CONSUMPTION      = 30497,
-    SPELL_TEMPORARY_VISUAL = 39312                          // this is wrong, a temporary solution. spell consumption already has the purple visual, but doesn't display as it should
+    SPELL_TEMPORARY_VISUAL = 39312,                         // this is wrong, a temporary solution. spell consumption already has the purple visual, but doesn't display as it should
+
+    NPC_FEL_ORC_CONVERT    = 17083,
 };
 
 struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
@@ -83,6 +85,7 @@ struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
+        m_bIntroOnce = false;
         Reset();
     }
 
@@ -104,12 +107,13 @@ struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
     uint32 m_uiShadowFissureTimer;
     uint32 m_uiCleaveTimer;
 
+    uint64 m_uiLastEventInvokerGUID;
+
     void Reset()
     {
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
 
         m_bIsIntroEvent = false;
-        m_bIntroOnce = false;
         m_bIsMainEvent = false;
         //m_bHasTaunted = false;
         m_bSpinOnce = false;
@@ -122,18 +126,23 @@ struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
         m_uiDeathCoilTimer = 20000;
         m_uiShadowFissureTimer = 8000;
         m_uiCleaveTimer = 5000;
+
+        m_uiLastEventInvokerGUID = 0;
     }
 
-    void DoYellForPeonAggro()
+    void DoYellForPeonAggro(Unit* pWho)
     {
         if (m_uiPeonEngagedCount >= 4)
             return;
 
         DoScriptText(PeonAttacked[m_uiPeonEngagedCount].id, m_creature);
         ++m_uiPeonEngagedCount;
+
+        if (pWho)
+            m_uiLastEventInvokerGUID = pWho->GetGUID();
     }
 
-    void DoYellForPeonDeath()
+    void DoYellForPeonDeath(Unit* pKiller)
     {
         if (m_uiPeonKilledCount >= 4)
             return;
@@ -146,6 +155,10 @@ struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
             m_bIsIntroEvent = false;
             m_bIsMainEvent = true;
             m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+
+            if (pKiller && !m_creature->getVictim())
+                AttackStart(pKiller);
+
         }
     }
 
@@ -158,12 +171,19 @@ struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
             case 2: DoScriptText(SAY_TAUNT_3, m_creature); break;
         }
 
-        // TODO: kill the peons first
+        std::list<Creature*> lFelConverts;
+        GetCreatureListWithEntryInGrid(lFelConverts, m_creature, NPC_FEL_ORC_CONVERT, 40.0f);
+        for (std::list<Creature*>::iterator itr = lFelConverts.begin(); itr != lFelConverts.end(); ++itr)
+            (*itr)->DealDamage(*itr, (*itr)->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+
         m_bIsIntroEvent = false;
         m_uiPeonEngagedCount = 4;
         m_uiPeonKilledCount = 4;
         m_bIsMainEvent = true;
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+
+        if (Unit* pEnemy = m_creature->GetMap()->GetUnit(m_uiLastEventInvokerGUID))
+            AttackStart(pEnemy);
     }
 
     void AttackStart(Unit* pWho)
@@ -194,6 +214,8 @@ struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
             DoScriptText(SAY_INTRO, m_creature);
             m_bIntroOnce = true;
             m_bIsIntroEvent = true;
+
+            m_uiLastEventInvokerGUID = pWho->GetGUID();
 
             if (m_pInstance)
                 m_pInstance->SetData(TYPE_NETHEKURSE, IN_PROGRESS);
@@ -239,6 +261,20 @@ struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
             return;
 
         m_pInstance->SetData(TYPE_NETHEKURSE, DONE);
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_NETHEKURSE, FAIL);
+
+        std::list<Creature*> lFelConverts;
+        GetCreatureListWithEntryInGrid(lFelConverts, m_creature, NPC_FEL_ORC_CONVERT, 40.0f);
+        for (std::list<Creature*>::iterator itr = lFelConverts.begin(); itr != lFelConverts.end(); ++itr)
+        {
+            if (!(*itr)->isAlive())
+                (*itr)->Respawn();
+        }
     }
 
     void UpdateAI(const uint32 uiDiff)
@@ -337,7 +373,7 @@ struct MANGOS_DLL_DECL mob_fel_orc_convertAI : public ScriptedAI
             if (pKurse && m_creature->IsWithinDist(pKurse, 45.0f))
             {
                 if (boss_grand_warlock_nethekurseAI* pKurseAI = dynamic_cast<boss_grand_warlock_nethekurseAI*>(pKurse->AI()))
-                    pKurseAI->DoYellForPeonAggro();
+                    pKurseAI->DoYellForPeonAggro(pWho);
 
                 if (m_pInstance->GetData(TYPE_NETHEKURSE) == IN_PROGRESS)
                     return;
@@ -357,7 +393,7 @@ struct MANGOS_DLL_DECL mob_fel_orc_convertAI : public ScriptedAI
             if (Creature* pKurse = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_NETHEKURSE)))
             {
                 if (boss_grand_warlock_nethekurseAI* pKurseAI = dynamic_cast<boss_grand_warlock_nethekurseAI*>(pKurse->AI()))
-                    pKurseAI->DoYellForPeonAggro();
+                    pKurseAI->DoYellForPeonDeath(pKiller);
             }
         }
     }

@@ -13,6 +13,7 @@ enum
     TYPE_OMROGG         = 1,
 
     GO_NETHEKURSE_DOOR  = 182540,
+    GO_NETHERKURSE_ENTER_DOOR   = 182539,                   // TODO Currently unhandled
     NPC_NETHEKURSE      = 16807
 };
 #endif
