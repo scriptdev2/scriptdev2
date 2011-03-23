@@ -24,81 +24,112 @@ EndScriptData */
 #include "precompiled.h"
 #include "shattered_halls.h"
 
-struct MANGOS_DLL_DECL instance_shattered_halls : public ScriptedInstance
+instance_shattered_halls::instance_shattered_halls(Map* pMap) : ScriptedInstance(pMap),
+    m_uiNethekurseGUID(0),
+    m_uiNethekurseDoorGUID(0),
+    m_uiNethekurseEnterDoorGUID(0)
 {
-    instance_shattered_halls(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
+    Initialize();
+}
 
-    uint32 m_auiEncounter[MAX_ENCOUNTER];
-    uint64 m_uiNethekurseGUID;
-    uint64 m_uiNethekurseDoorGUID;
+void instance_shattered_halls::Initialize()
+{
+    memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
+}
 
-    void Initialize()
+void instance_shattered_halls::OnObjectCreate(GameObject* pGo)
+{
+    switch (pGo->GetEntry())
     {
-        memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
-
-        m_uiNethekurseGUID = 0;
-        m_uiNethekurseDoorGUID = 0;
-    }
-
-    bool IsEncounterInProgress() const
-    {
-        for(uint8 i = 0; i < MAX_ENCOUNTER; i++)
-            if (m_auiEncounter[i] == IN_PROGRESS)
-                return true;
-        return false;
-    }
-
-    void OnObjectCreate(GameObject* pGo)
-    {
-        if (pGo->GetEntry() == GO_NETHEKURSE_DOOR)
+        case GO_NETHEKURSE_DOOR:
             m_uiNethekurseDoorGUID = pGo->GetGUID();
+            if (m_auiEncounter[TYPE_NETHEKURSE] == DONE)
+                pGo->SetGoState(GO_STATE_ACTIVE);
+            break;
+        case GO_NETHERKURSE_ENTER_DOOR:
+            m_uiNethekurseEnterDoorGUID = pGo->GetGUID();
+            if (m_auiEncounter[TYPE_NETHEKURSE] == DONE)
+                pGo->SetGoState(GO_STATE_ACTIVE);
+            break;
+    }
+}
+
+void instance_shattered_halls::OnCreatureCreate(Creature* pCreature)
+{
+    if (pCreature->GetEntry() == NPC_NETHEKURSE)
+        m_uiNethekurseGUID = pCreature->GetGUID();
+}
+
+void instance_shattered_halls::SetData(uint32 uiType, uint32 uiData)
+{
+    switch(uiType)
+    {
+        case TYPE_NETHEKURSE:
+            m_auiEncounter[uiType] = uiData;
+            if (uiData == DONE)
+                DoUseDoorOrButton(m_uiNethekurseDoorGUID);
+            break;
+        case TYPE_OMROGG:
+            m_auiEncounter[uiType] = uiData;
+            break;
+        case TYPE_BLADEFIST:
+            m_auiEncounter[uiType] = uiData;
+            break;
     }
 
-    void OnCreatureCreate(Creature* pCreature)
+    if (uiData == DONE)
     {
-        if (pCreature->GetEntry() == NPC_NETHEKURSE)
-            m_uiNethekurseGUID = pCreature->GetGUID();
+        OUT_SAVE_INST_DATA;
+
+        std::ostringstream saveStream;
+
+        saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2];
+        m_strInstData = saveStream.str();
+
+        SaveToDB();
+        OUT_SAVE_INST_DATA_COMPLETE;
+    }
+}
+
+void instance_shattered_halls::Load(const char* chrIn)
+{
+    if (!chrIn)
+    {
+        OUT_LOAD_INST_DATA_FAIL;
+        return;
     }
 
-    void SetData(uint32 uiType, uint32 uiData)
-    {
-        switch(uiType)
-        {
-            case TYPE_NETHEKURSE:
-                m_auiEncounter[0] = uiData;
-                if (uiData == DONE)
-                    DoUseDoorOrButton(m_uiNethekurseDoorGUID);
-                break;
-            case TYPE_OMROGG:
-                m_auiEncounter[1] = uiData;
-                break;
-        }
-    }
+    OUT_LOAD_INST_DATA(chrIn);
 
-    uint32 GetData(uint32 uiType)
-    {
-        switch(uiType)
-        {
-            case TYPE_NETHEKURSE:
-                return m_auiEncounter[0];
-            case TYPE_OMROGG:
-                return m_auiEncounter[1];
-        }
-        return 0;
-    }
+    std::istringstream loadStream(chrIn);
+    loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2];
 
-    uint64 GetData64(uint32 uiData)
+    for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+        if (m_auiEncounter[i] == IN_PROGRESS)
+            m_auiEncounter[i] = NOT_STARTED;
+
+    OUT_LOAD_INST_DATA_COMPLETE;
+}
+
+uint32 instance_shattered_halls::GetData(uint32 uiType)
+{
+    if (uiType < MAX_ENCOUNTER)
+        return m_auiEncounter[uiType];
+
+    return 0;
+}
+
+uint64 instance_shattered_halls::GetData64(uint32 uiData)
+{
+    switch(uiData)
     {
-        switch(uiData)
-        {
-            case NPC_NETHEKURSE:
-                return m_uiNethekurseGUID;
-            case GO_NETHEKURSE_DOOR:
-                return m_uiNethekurseDoorGUID;
-        }
-        return 0;
+        case NPC_NETHEKURSE:             return m_uiNethekurseGUID;
+        case GO_NETHEKURSE_DOOR:         return m_uiNethekurseDoorGUID;
+        case GO_NETHERKURSE_ENTER_DOOR:  return m_uiNethekurseEnterDoorGUID;
+        default:
+            return 0;
     }
-};
+}
 
 InstanceData* GetInstanceData_instance_shattered_halls(Map* pMap)
 {

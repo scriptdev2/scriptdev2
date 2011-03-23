@@ -156,7 +156,7 @@ struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
             m_bIsMainEvent = true;
             m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
 
-            if (pKiller && !m_creature->getVictim())
+            if (pKiller)
                 AttackStart(pKiller);
 
         }
