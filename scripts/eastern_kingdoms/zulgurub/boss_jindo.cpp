@@ -189,7 +189,7 @@ struct MANGOS_DLL_DECL mob_healing_wardAI : public ScriptedAI
         {
             if (m_pInstance)
             {
-                if (Unit *pJindo = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_JINDO)))
+                if (Unit* pJindo = m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_JINDO)))
                 {
                     if (pJindo->isAlive())
                         DoCastSpellIfCan(pJindo, SPELL_HEAL);

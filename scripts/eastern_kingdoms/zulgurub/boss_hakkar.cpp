@@ -26,8 +26,6 @@ EndScriptData */
 
 #define SAY_AGGRO                   -1309020
 #define SAY_FLEEING                 -1309021
-#define SAY_MINION_DESTROY          -1309022                //where does it belong?
-#define SAY_PROTECT_ALTAR           -1309023                //where does it belong?
 
 #define SPELL_BLOODSIPHON            24322
 #define SPELL_CORRUPTEDBLOOD         24328

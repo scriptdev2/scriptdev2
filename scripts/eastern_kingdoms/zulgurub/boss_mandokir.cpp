@@ -167,10 +167,10 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
 
                 if (m_pInstance)
                 {
-                    if (Creature* jTemp = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_JINDO)))
+                    if (Creature* pJindo = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_JINDO)))
                     {
-                        if (jTemp->isAlive())
-                            DoScriptText(SAY_GRATS_JINDO, jTemp);
+                        if (pJindo->isAlive())
+                            DoScriptText(SAY_GRATS_JINDO, pJindo);
                     }
                 }
 

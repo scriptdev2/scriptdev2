@@ -24,221 +24,189 @@ EndScriptData */
 #include "precompiled.h"
 #include "zulgurub.h"
 
-struct MANGOS_DLL_DECL instance_zulgurub : public ScriptedInstance
+instance_zulgurub::instance_zulgurub(Map* pMap) : ScriptedInstance(pMap),
+    m_uiLorKhanGUID(0),
+    m_uiZathGUID(0),
+    m_uiThekalGUID(0),
+    m_uiJindoGUID(0),
+    m_uiHakkarGUID(0),
+    m_bHasIntroYelled(false),
+    m_bHasAltarYelled(false)
 {
-    instance_zulgurub(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
+    Initialize();
+}
 
-    std::string strInstData;
-    // If all High Priest bosses were killed. Lorkhan, Zath and Ohgan are added too.
-    uint32 m_auiEncounter[MAX_ENCOUNTER];
+void instance_zulgurub::Initialize()
+{
+    memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
+}
 
-    // Storing Lorkhan, Zath and Thekal because we need to cast on them later. Jindo is needed for heal function too.
-    uint64 m_uiLorKhanGUID;
-    uint64 m_uiZathGUID;
-    uint64 m_uiThekalGUID;
-    uint64 m_uiJindoGUID;
-    uint64 m_uiHakkarGUID;
-
-    void Initialize()
-    {
-        memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
-
-        m_uiLorKhanGUID = 0;
-        m_uiZathGUID    = 0;
-        m_uiThekalGUID  = 0;
-        m_uiJindoGUID   = 0;
-        m_uiHakkarGUID  = 0;
-    }
-
-    // each time High Priest dies lower Hakkar's HP
-    void LowerHakkarHitPoints()
+void instance_zulgurub::DoYellAtTriggerIfCan(uint32 uiTriggerId)
+{
+    if (uiTriggerId == AREATRIGGER_ENTER && !m_bHasIntroYelled)
     {
         if (Creature* pHakkar = instance->GetCreature(m_uiHakkarGUID))
         {
-            if (pHakkar->isAlive())
-            {
-                pHakkar->SetMaxHealth(pHakkar->GetMaxHealth() - 60000);
-                pHakkar->SetHealth(pHakkar->GetHealth() - 60000);
-            }
+            DoScriptText(SAY_HAKKAR_PROTECT, pHakkar);
+            m_bHasIntroYelled = true;
         }
     }
-
-    bool IsEncounterInProgress() const
+    else if (uiTriggerId == AREATRIGGER_ALTAR && !m_bHasAltarYelled)
     {
-        //not active in Zul'Gurub
-        return false;
+        if (Creature* pHakkar = instance->GetCreature(m_uiHakkarGUID))
+        {
+            DoScriptText(SAY_MINION_DESTROY, pHakkar);
+            m_bHasAltarYelled = true;
+        }
     }
+}
 
-    void OnCreatureCreate(Creature* pCreature)
+void instance_zulgurub::OnCreatureCreate(Creature* pCreature)
+{
+    switch(pCreature->GetEntry())
     {
-        switch(pCreature->GetEntry())
-        {
-            case NPC_LORKHAN:
-                m_uiLorKhanGUID = pCreature->GetGUID();
-                break;
-            case NPC_ZATH:
-                m_uiZathGUID = pCreature->GetGUID();
-                break;
-            case NPC_THEKAL:
-                m_uiThekalGUID = pCreature->GetGUID();
-                break;
-            case NPC_JINDO:
-                m_uiJindoGUID = pCreature->GetGUID();
-                break;
-            case NPC_HAKKAR:
-                m_uiHakkarGUID = pCreature->GetGUID();
-                for(uint8 i = 0; i < 5; ++i)
-                {
-                    if (m_auiEncounter[i] == DONE)
-                        LowerHakkarHitPoints();
-                }
-                break;
-        }
+        case NPC_LORKHAN:
+            m_uiLorKhanGUID = pCreature->GetGUID();
+            break;
+        case NPC_ZATH:
+            m_uiZathGUID = pCreature->GetGUID();
+            break;
+        case NPC_THEKAL:
+            m_uiThekalGUID = pCreature->GetGUID();
+            break;
+        case NPC_JINDO:
+            m_uiJindoGUID = pCreature->GetGUID();
+            break;
+        case NPC_HAKKAR:
+            m_uiHakkarGUID = pCreature->GetGUID();
+            break;
     }
+}
 
-    void SetData(uint32 uiType, uint32 uiData)
+void instance_zulgurub::SetData(uint32 uiType, uint32 uiData)
+{
+    switch(uiType)
     {
-        switch(uiType)
-        {
-            case TYPE_ARLOKK:
-                m_auiEncounter[0] = uiData;
-                if (uiData == DONE)
-                    LowerHakkarHitPoints();
-                break;
-            case TYPE_JEKLIK:
-                m_auiEncounter[1] = uiData;
-                if (uiData == DONE)
-                    LowerHakkarHitPoints();
-                break;
-            case TYPE_VENOXIS:
-                m_auiEncounter[2] = uiData;
-                if (uiData == DONE)
-                    LowerHakkarHitPoints();
-                break;
-            case TYPE_MARLI:
-                m_auiEncounter[3] = uiData;
-                if (uiData == DONE)
-                    LowerHakkarHitPoints();
-                break;
-            case TYPE_THEKAL:
-                m_auiEncounter[4] = uiData;
-                if (uiData == DONE)
-                    LowerHakkarHitPoints();
-                break;
-            case TYPE_LORKHAN:
-                m_auiEncounter[5] = uiData;
-                break;
-            case TYPE_ZATH:
-                m_auiEncounter[6] = uiData;
-                break;
-            case TYPE_OHGAN:
-                m_auiEncounter[7] = uiData;
-                break;
-            case TYPE_HAKKAR:
-                m_auiEncounter[8] = uiData;
-                break;
-        }
-
-        if (uiData == DONE)
-        {
-            OUT_SAVE_INST_DATA;
-
-            std::ostringstream saveStream;
-            saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " "
-                << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5] << " "
-                << m_auiEncounter[6] << " " << m_auiEncounter[7] << " " << m_auiEncounter[8];
-
-            strInstData = saveStream.str();
-
-            SaveToDB();
-            OUT_SAVE_INST_DATA_COMPLETE;
-        }
+        case TYPE_JEKLIK:
+        case TYPE_VENOXIS:
+        case TYPE_MARLI:
+        case TYPE_THEKAL:
+        case TYPE_ARLOKK:
+            m_auiEncounter[uiType] = uiData;
+            if (uiData == DONE)
+                DoLowerHakkarHitPoints();
+            break;
+        case TYPE_OHGAN:
+        case TYPE_LORKHAN:
+        case TYPE_ZATH:
+            m_auiEncounter[uiType] = uiData;
+            break;
     }
 
-    const char* Save()
+    if (uiData == DONE)
     {
-        return strInstData.c_str();
-    }
+        OUT_SAVE_INST_DATA;
 
-    void Load(const char* chrIn)
+        std::ostringstream saveStream;
+        saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " "
+            << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5] << " "
+            << m_auiEncounter[6] << " " << m_auiEncounter[7];
+
+        m_strInstData = saveStream.str();
+
+        SaveToDB();
+        OUT_SAVE_INST_DATA_COMPLETE;
+    }
+}
+
+// Each time High Priest dies lower Hakkar's HP
+void instance_zulgurub::DoLowerHakkarHitPoints()
+{
+    if (Creature* pHakkar = instance->GetCreature(m_uiHakkarGUID))
     {
-        if (!chrIn)
+        if (pHakkar->isAlive() && pHakkar->GetMaxHealth() > HP_LOSS_PER_PRIEST)
         {
-            OUT_LOAD_INST_DATA_FAIL;
-            return;
-        }
+            pHakkar->SetMaxHealth(pHakkar->GetMaxHealth() - HP_LOSS_PER_PRIEST);
+            pHakkar->SetHealth(pHakkar->GetHealth() - HP_LOSS_PER_PRIEST);
+         }
+     }
+}
 
-        OUT_LOAD_INST_DATA(chrIn);
-
-        std::istringstream loadStream(chrIn);
-        loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3]
-            >> m_auiEncounter[4] >> m_auiEncounter[5] >> m_auiEncounter[6] >> m_auiEncounter[7]
-            >> m_auiEncounter[8];
-
-        for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
-        {
-            if (m_auiEncounter[i] == IN_PROGRESS)
-                m_auiEncounter[i] = NOT_STARTED;
-        }
-
-        OUT_LOAD_INST_DATA_COMPLETE;
-    }
-
-    uint32 GetData(uint32 uiType)
+void instance_zulgurub::Load(const char* chrIn)
+{
+    if (!chrIn)
     {
-        switch(uiType)
-        {
-            case TYPE_ARLOKK:
-                return m_auiEncounter[0];
-            case TYPE_JEKLIK:
-                return m_auiEncounter[1];
-            case TYPE_VENOXIS:
-                return m_auiEncounter[2];
-            case TYPE_MARLI:
-                return m_auiEncounter[3];
-            case TYPE_THEKAL:
-                return m_auiEncounter[4];
-            case TYPE_LORKHAN:
-                return m_auiEncounter[5];
-            case TYPE_ZATH:
-                return m_auiEncounter[6];
-            case TYPE_OHGAN:
-                return m_auiEncounter[7];
-            case TYPE_HAKKAR:
-                return m_auiEncounter[8];
-        }
-        return 0;
+        OUT_LOAD_INST_DATA_FAIL;
+        return;
     }
 
-    uint64 GetData64(uint32 uiData)
+    OUT_LOAD_INST_DATA(chrIn);
+
+    std::istringstream loadStream(chrIn);
+    loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3]
+    >> m_auiEncounter[4] >> m_auiEncounter[5] >> m_auiEncounter[6] >> m_auiEncounter[7];
+
+    for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
     {
-        switch(uiData)
-        {
-            case DATA_LORKHAN:
-                return m_uiLorKhanGUID;
-            case DATA_ZATH:
-                return m_uiZathGUID;
-            case DATA_THEKAL:
-                return m_uiThekalGUID;
-            case DATA_JINDO:
-                return m_uiJindoGUID;
-            case DATA_HAKKAR:
-                return m_uiHakkarGUID;
-        }
-        return 0;
+        if (m_auiEncounter[i] == IN_PROGRESS)
+            m_auiEncounter[i] = NOT_STARTED;
     }
-};
+
+    OUT_LOAD_INST_DATA_COMPLETE;
+}
+
+uint32 instance_zulgurub::GetData(uint32 uiType)
+{
+    if (uiType < MAX_ENCOUNTER)
+        return m_auiEncounter[uiType];
+
+    return 0;
+}
+
+uint64 instance_zulgurub::GetData64(uint32 uiData)
+{
+    switch(uiData)
+    {
+        case NPC_LORKHAN:   return m_uiLorKhanGUID;
+        case NPC_ZATH:      return m_uiZathGUID;
+        case NPC_THEKAL:    return m_uiThekalGUID;
+        case NPC_JINDO:     return m_uiJindoGUID;
+        case NPC_HAKKAR:    return m_uiHakkarGUID;
+        default:
+            return 0;
+    }
+}
 
 InstanceData* GetInstanceData_instance_zulgurub(Map* pMap)
 {
     return new instance_zulgurub(pMap);
 }
 
+bool AreaTrigger_at_zulgurub(Player* pPlayer, AreaTriggerEntry const* pAt)
+{
+    if (pAt->id == AREATRIGGER_ENTER || pAt->id == AREATRIGGER_ALTAR)
+    {
+        if (pPlayer->isGameMaster() || pPlayer->isDead())
+            return false;
+
+        if (instance_zulgurub* pInstance = (instance_zulgurub*)pPlayer->GetInstanceData())
+            pInstance->DoYellAtTriggerIfCan(pAt->id);
+    }
+
+    return false;
+}
+
 void AddSC_instance_zulgurub()
 {
-    Script* newscript;
-    newscript = new Script;
-    newscript->Name = "instance_zulgurub";
-    newscript->GetInstanceData = &GetInstanceData_instance_zulgurub;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "instance_zulgurub";
+    pNewScript->GetInstanceData = &GetInstanceData_instance_zulgurub;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "at_zulgurub";
+    pNewScript->pAreaTrigger = &AreaTrigger_at_zulgurub;
+    pNewScript->RegisterSelf();
 }

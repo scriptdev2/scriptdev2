@@ -7,7 +7,17 @@
 
 enum
 {
-    MAX_ENCOUNTER           = 9,
+    MAX_ENCOUNTER           = 8,
+    MAX_PRIESTS             = 5,
+
+    TYPE_JEKLIK             = 0,
+    TYPE_VENOXIS            = 1,
+    TYPE_MARLI              = 2,
+    TYPE_THEKAL             = 3,
+    TYPE_ARLOKK             = 4,
+    TYPE_OHGAN              = 5,                            // Do not change, used by Acid
+    TYPE_LORKHAN            = 6,
+    TYPE_ZATH               = 7,
 
     NPC_LORKHAN             = 11347,
     NPC_ZATH                = 11348,
@@ -15,21 +25,49 @@ enum
     NPC_JINDO               = 11380,
     NPC_HAKKAR              = 14834,
 
-    TYPE_ARLOKK             = 1,
-    TYPE_JEKLIK             = 2,
-    TYPE_VENOXIS            = 3,
-    TYPE_MARLI              = 4,
-    TYPE_OHGAN              = 5,
-    TYPE_THEKAL             = 6,
-    TYPE_ZATH               = 7,
-    TYPE_LORKHAN            = 8,
-    TYPE_HAKKAR             = 9,
+    SAY_MINION_DESTROY      = -1309022,
+    SAY_HAKKAR_PROTECT      = -1309023,
 
-    DATA_JINDO              = 10,
-    DATA_LORKHAN            = 11,
-    DATA_THEKAL             = 12,
-    DATA_ZATH               = 13,
-    DATA_HAKKAR             = 14
+    HP_LOSS_PER_PRIEST      = 60000,
+
+    AREATRIGGER_ENTER       = 3958,
+    AREATRIGGER_ALTAR       = 3960,
+};
+
+class MANGOS_DLL_DECL instance_zulgurub : public ScriptedInstance
+{
+    public:
+        instance_zulgurub(Map* pMap);
+        ~instance_zulgurub() {}
+
+        void Initialize();
+        // IsEncounterInProgress() const { return false; }  // not active in Zul'Gurub
+
+        void OnCreatureCreate(Creature* pCreature);
+
+        void SetData(uint32 uiType, uint32 uiData);
+        uint32 GetData(uint32 uiType);
+        uint64 GetData64(uint32 uiData);
+
+        const char* Save() { return m_strInstData.c_str(); }
+        void Load(const char* chrIn);
+
+        void DoYellAtTriggerIfCan(uint32 uiTriggerId);
+
+    protected:
+        void DoLowerHakkarHitPoints();
+
+        uint32 m_auiEncounter[MAX_ENCOUNTER];
+        std::string m_strInstData;
+
+        uint64 m_uiLorKhanGUID;
+        uint64 m_uiZathGUID;
+        uint64 m_uiThekalGUID;
+        uint64 m_uiJindoGUID;
+        uint64 m_uiHakkarGUID;
+
+        bool m_bHasIntroYelled;
+        bool m_bHasAltarYelled;
 };
 
 #endif
