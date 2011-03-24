@@ -55,7 +55,6 @@ Makefile
 *~
 *.bak
 *.orig
-*.patch
 callgrind.out.*
 
 #

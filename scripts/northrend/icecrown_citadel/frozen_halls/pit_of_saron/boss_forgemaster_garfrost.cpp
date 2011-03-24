@@ -86,7 +86,7 @@ struct MANGOS_DLL_DECL boss_forgemaster_garfrostAI : public ScriptedAI
     void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature, pWho);
-		DoCastSpellIfCan(m_creature, SPELL_PERMAFROST);
+        DoCastSpellIfCan(m_creature, SPELL_PERMAFROST);
     }
 
     void JustDied(Unit* pKiller)

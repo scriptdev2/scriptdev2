@@ -1,8 +1,9 @@
-From 3cd9739ae7ae0cb276e005bf2baa57b3a459fedc Mon Sep 17 00:00:00 2001
-From: Schmoozerd <Schmoozerd@scriptdev2.com>
+From d858813d233e400278d18dff699e17600f104869 Mon Sep 17 00:00:00 2001
+From: ScriptDev2 <scriptdev2@scriptdev2.com>
 Date: Thu, 24 Mar 2011 00:16:38 +0100
 Subject: [PATCH] ScriptDev2 - One Compatibility patch
 
+Signed-off-by: Schmoozerd <Schmoozerd@scriptdev2.com>
 ---
  include/precompiled.h                              |    5 +
  .../shadowfang_keep/shadowfang_keep.cpp            |    8 +-
