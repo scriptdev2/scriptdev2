@@ -26,6 +26,7 @@ TAGS
 INSTALL
 
 !.gitignore
+!.gitattributes
 
 #
 # Build generated files

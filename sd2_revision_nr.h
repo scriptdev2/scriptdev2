@@ -1,4 +1,4 @@
 #ifndef __SD2_REVISION_NR_H__
 #define __SD2_REVISION_NR_H__
- #define SD2_REVISION_NR "2010"
+ #define SD2_REVISION_NR "2011"
 #endif // __SD2_REVISION_NR_H__
