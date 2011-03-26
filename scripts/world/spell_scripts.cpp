@@ -268,7 +268,19 @@ enum
 
     // quest 12659, item 38731
     SPELL_AHUNAES_KNIFE                 = 52090,
-    NPC_SCALPS_KILL_CREDIT_BUNNY        = 28622
+    NPC_SCALPS_KILL_CREDIT_BUNNY        = 28622,
+
+    // quest 13549
+    SPELL_TAILS_UP_GENDER_MASTER        = 62110,
+    SPELL_TAILS_UP_AURA                 = 62109,
+    SPELL_FORCE_LEOPARD_SUMMON          = 62117,
+    SPELL_FORCE_BEAR_SUMMON             = 62118,
+    NPC_FROST_LEOPARD                   = 29327,
+    NPC_ICEPAW_BEAR                     = 29319,
+    NPC_LEOPARD_KILL_CREDIT             = 33005,
+    NPC_BEAR_KILL_CREDIT                = 33006,
+    SAY_ITS_FEMALE                      = -1000642,
+    SAY_ITS_MALE                        = -1000643,
 };
 
 bool EffectAuraDummy_spell_aura_dummy_npc(const Aura* pAura, bool bApply)
@@ -751,6 +763,51 @@ bool EffectDummyCreature_spell_dummy_npc(Unit* pCaster, uint32 uiSpellId, SpellE
 
                 ((Player*)pCaster)->KilledMonsterCredit(NPC_SCALPS_KILL_CREDIT_BUNNY);
                 pCreatureTarget->ForcedDespawn();
+                return true;
+            }
+            return true;
+        }
+        case SPELL_TAILS_UP_GENDER_MASTER:
+        {
+            if (uiEffIndex == EFFECT_INDEX_0)
+            {
+                bool isMale = urand(0,1);
+                Player* pPlayer = pCreatureTarget->GetLootRecipient();
+
+                if (isMale)
+                    DoScriptText(SAY_ITS_MALE, pCreatureTarget, pPlayer);
+                else
+                    DoScriptText(SAY_ITS_FEMALE, pCreatureTarget, pPlayer);
+
+                switch(pCreatureTarget->GetEntry())
+                {
+                    case NPC_FROST_LEOPARD:
+                    {
+                        if (isMale)
+                            pCreatureTarget->CastSpell(pCreatureTarget, SPELL_TAILS_UP_AURA, true);
+                        else
+                        {
+                            pPlayer->KilledMonsterCredit(NPC_LEOPARD_KILL_CREDIT, pCreatureTarget->GetObjectGuid());
+                            pCreatureTarget->CastSpell(pPlayer, SPELL_FORCE_LEOPARD_SUMMON, true);
+                            pCreatureTarget->ForcedDespawn();
+                        }
+
+                        break;
+                    }
+                    case NPC_ICEPAW_BEAR:
+                    {
+                        if (isMale)
+                            pCreatureTarget->CastSpell(pCreatureTarget, SPELL_TAILS_UP_AURA, true);
+                        else
+                        {
+                            pPlayer->KilledMonsterCredit(NPC_BEAR_KILL_CREDIT, pCreatureTarget->GetObjectGuid());
+                            pCreatureTarget->CastSpell(pPlayer, SPELL_FORCE_BEAR_SUMMON, true);
+                            pCreatureTarget->ForcedDespawn();
+                        }
+
+                        break;
+                    }
+                }
                 return true;
             }
             return true;

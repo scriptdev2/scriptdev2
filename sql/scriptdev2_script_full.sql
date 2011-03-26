@@ -685,7 +685,10 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000638,'The gods have forsaken us! We must dispose of it before Ymiron is notified!',0,0,0,0,'ancient vrykul SAY_VRYKUL_DISPOSE'),
 (-1000639,'NO! You cannot! I beg of you! It is our child!',0,0,0,0,'ancient vrykul SAY_VRYKUL_BEG'),
 (-1000640,'Then what are we to do, wife? The others cannot find out. Should they learn of this aberration, we will all be executed.',0,0,0,0,'ancient vrykul SAY_VRYKUL_WHAT'),
-(-1000641,'I... I will hide it. I will hide it until I find it a home, far away from here...',0,0,0,0,'ancient vrykul SAY_VRYKUL_HIDE');
+(-1000641,'I... I will hide it. I will hide it until I find it a home, far away from here...',0,0,0,0,'ancient vrykul SAY_VRYKUL_HIDE'),
+
+(-1000642,'It\'s a female.',0,5,0,0,'leopard icepaw SAY_ITS_FEMALE'),
+(-1000643,'It\'s an angry male!',0,5,0,0,'leopard icepaw SAY_ITS_MALE');
 
 -- -1 033 000 SHADOWFANG KEEP
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
