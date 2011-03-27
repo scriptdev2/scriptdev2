@@ -10,20 +10,20 @@ enum
     MAX_ENCOUNTER               = 9,
     MAX_GENERATORS              = 5,
 
-    // North
-    TYPE_KING_GORDOK            = 0,
-
     // East
-    TYPE_ALZZIN                 = 1,                        // Handled with EventAI
+    TYPE_ALZZIN                 = 0,                        // Do not change - Handled with Acid
 
     // West
-    TYPE_IMMOLTHAR              = 2,
-    TYPE_PRINCE                 = 3,
-    TYPE_PYLON_1                = 4,
+    TYPE_IMMOLTHAR              = 1,
+    TYPE_PRINCE                 = 2,
+    TYPE_PYLON_1                = 3,
     TYPE_PYLON_2                = TYPE_PYLON_1 + 1,
     TYPE_PYLON_3                = TYPE_PYLON_1 + 2,
     TYPE_PYLON_4                = TYPE_PYLON_1 + 3,
     TYPE_PYLON_5                = TYPE_PYLON_1 + 4,
+
+    // North
+    TYPE_KING_GORDOK            = 8,
 
     // East
     GO_CRUMBLE_WALL             = 177220,
