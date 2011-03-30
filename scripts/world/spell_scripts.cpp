@@ -281,6 +281,10 @@ enum
     NPC_BEAR_KILL_CREDIT                = 33006,
     SAY_ITS_FEMALE                      = -1000642,
     SAY_ITS_MALE                        = -1000643,
+
+    // quest 9849, item 24501
+    SPELL_THROW_GORDAWG_BOULDER         = 32001,
+    NPC_MINION_OF_GUROK                 = 18181,
 };
 
 bool EffectAuraDummy_spell_aura_dummy_npc(const Aura* pAura, bool bApply)
@@ -808,6 +812,29 @@ bool EffectDummyCreature_spell_dummy_npc(Unit* pCaster, uint32 uiSpellId, SpellE
                         break;
                     }
                 }
+                return true;
+            }
+            return true;
+        }
+        case SPELL_THROW_GORDAWG_BOULDER:
+        {
+            if (uiEffIndex == EFFECT_INDEX_0)
+            {
+                for(int i = 0; i < 3; ++i)
+                {
+                    if (irand(i, 2))                        // 2-3 summons
+                        pCreatureTarget->SummonCreature(NPC_MINION_OF_GUROK, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_CORPSE_DESPAWN, 5000);
+                }
+
+                if (pCreatureTarget->getVictim())
+                {
+                    pCaster->DealDamage(pCreatureTarget, pCreatureTarget->GetMaxHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+                    return true;
+                }
+
+                // If not in combat, no xp or loot
+                pCreatureTarget->SetDeathState(JUST_DIED);
+                pCreatureTarget->SetHealth(0);
                 return true;
             }
             return true;

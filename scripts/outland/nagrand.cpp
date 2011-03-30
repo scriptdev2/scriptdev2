@@ -17,12 +17,11 @@
 /* ScriptData
 SDName: Nagrand
 SD%Complete: 90
-SDComment: Quest support: 9849, 9868, 9874, 9918, 9991, 10044, 10085, 10107, 10108, 10172, 10646. TextId's unknown for altruis_the_sufferer and greatmother_geyah (npc_text)
+SDComment: Quest support: 9868, 9874, 9918, 9991, 10044, 10085, 10107, 10108, 10172, 10646. TextId's unknown for altruis_the_sufferer and greatmother_geyah (npc_text)
 SDCategory: Nagrand
 EndScriptData */
 
 /* ContentData
-mob_shattered_rumbler
 mob_lump
 mob_sunspring_villager
 npc_altruis_the_sufferer
@@ -34,43 +33,6 @@ EndContentData */
 
 #include "precompiled.h"
 #include "escort_ai.h"
-
-/*######
-## mob_shattered_rumbler - this should be done with ACID
-######*/
-
-struct MANGOS_DLL_DECL mob_shattered_rumblerAI : public ScriptedAI
-{
-    bool Spawn;
-
-    mob_shattered_rumblerAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
-
-    void Reset()
-    {
-        Spawn = false;
-    }
-
-    void SpellHit(Unit *Hitter, const SpellEntry *Spellkind)
-    {
-        if (Spellkind->Id == 32001 && !Spawn)
-        {
-            float x = m_creature->GetPositionX();
-            float y = m_creature->GetPositionY();
-            float z = m_creature->GetPositionZ();
-
-            Hitter->SummonCreature(18181,x+(0.7 * (rand()%30)),y+(rand()%5),z,0,TEMPSUMMON_CORPSE_TIMED_DESPAWN,60000);
-            Hitter->SummonCreature(18181,x+(rand()%5),y-(rand()%5),z,0,TEMPSUMMON_CORPSE_TIMED_DESPAWN,60000);
-            Hitter->SummonCreature(18181,x-(rand()%5),y+(0.5 *(rand()%60)),z,0,TEMPSUMMON_CORPSE_TIMED_DESPAWN,60000);
-            m_creature->SetDeathState(CORPSE);
-            Spawn = true;
-        }
-        return;
-    }
-};
-CreatureAI* GetAI_mob_shattered_rumbler(Creature* pCreature)
-{
-    return new mob_shattered_rumblerAI(pCreature);
-}
 
 /*######
 ## mob_lump - TODO: remove gossip, can be done in database
@@ -704,11 +666,6 @@ CreatureAI* GetAI_npc_creditmarker_visit_with_ancestors(Creature* pCreature)
 void AddSC_nagrand()
 {
     Script* pNewScript;
-
-    pNewScript = new Script;
-    pNewScript->Name = "mob_shattered_rumbler";
-    pNewScript->GetAI = &GetAI_mob_shattered_rumbler;
-    pNewScript->RegisterSelf();
 
     pNewScript = new Script;
     pNewScript->Name = "mob_lump";
