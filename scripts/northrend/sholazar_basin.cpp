@@ -44,15 +44,15 @@ enum
     SAY_START                           = -1000606,
     SAY_END_1                           = -1000607,
     SAY_END_2                           = -1000608,
-    SAY_TRACKER                         = -1000609,
+    SAY_TRACKER                         = -1000609,         // not used in escort (aggro text for trackers? something for vekjik?)
 
     NPC_FRENZYHEART_TRACKER             = 28077,
 
+    SPELL_ORACLE_ESCORT_START           = 51341,            // unknown purpose
     SPELL_FEIGN_DEATH                   = 51329,
     SPELL_ORACLE_INTRO                  = 51448,
 };
 
-// TODO: add, if faction change is expected.
 struct MANGOS_DLL_DECL npc_injured_rainspeakerAI : public npc_escortAI
 {
     npc_injured_rainspeakerAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
@@ -62,7 +62,10 @@ struct MANGOS_DLL_DECL npc_injured_rainspeakerAI : public npc_escortAI
     void JustStartedEscort()
     {
         if (Player* pPlayer = GetPlayerForEscort())
+        {
             DoScriptText(SAY_START, m_creature, pPlayer);
+            DoCastSpellIfCan(m_creature, SPELL_ORACLE_ESCORT_START);
+        }
     }
 
     void WaypointReached(uint32 uiPointId)
@@ -74,8 +77,7 @@ struct MANGOS_DLL_DECL npc_injured_rainspeakerAI : public npc_escortAI
                 if (Player* pPlayer = GetPlayerForEscort())
                 {
                     DoScriptText(SAY_END_1, m_creature, pPlayer);
-                    // more likely m_creature->player, doesn't seem to work though.
-                    pPlayer->CastSpell(pPlayer, SPELL_ORACLE_INTRO, true);
+                    DoCastSpellIfCan(m_creature, SPELL_ORACLE_INTRO);
                 }
                 break;
             }
@@ -94,11 +96,6 @@ struct MANGOS_DLL_DECL npc_injured_rainspeakerAI : public npc_escortAI
                 break;
             }
         }
-    }
-
-    void JustSummoned(Creature* pSummoned)
-    {
-        DoScriptText(SAY_TRACKER, pSummoned);
     }
 
     void UpdateEscortAI(const uint32 uiDiff)
@@ -124,7 +121,10 @@ bool QuestAccept_npc_injured_rainspeaker(Player* pPlayer, Creature* pCreature, c
 
         // Workaround, GossipHello/GossipSelect doesn't work well when object already has gossip from database
         if (npc_injured_rainspeakerAI* pEscortAI = dynamic_cast<npc_injured_rainspeakerAI*>(pCreature->AI()))
+        {
             pEscortAI->Start(true, pPlayer->GetGUID(), pQuest);
+            pCreature->SetFactionTemporary(FACTION_ESCORT_N_NEUTRAL_PASSIVE, TEMPFACTION_RESTORE_RESPAWN);
+        }
     }
 
     return false;
