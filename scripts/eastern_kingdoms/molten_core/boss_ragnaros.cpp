@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Boss_Ragnaros
 SD%Complete: 60
-SDComment: Intro Dialogue and event NYI, Melee/ Range Combat behavior is not correct, Some abilities are missing
+SDComment: Melee/ Range Combat behavior is not correct(any enemy in melee range, not only getVictim), Some abilities are missing
 SDCategory: Molten Core
 EndScriptData */
 
@@ -41,6 +41,7 @@ EndScriptData */
 
 enum
 {
+    SAY_ARRIVAL5_RAG            = -1409012,
     SAY_REINFORCEMENTS_1        = -1409013,
     SAY_REINFORCEMENTS_2        = -1409014,
     SAY_HAMMER                  = -1409015,                 // TODO Hammer of Ragnaros
@@ -54,6 +55,7 @@ enum
     SPELL_MELT_WEAPON           = 21388,                    // Passive aura
     SPELL_RAGNA_SUBMERGE        = 21107,                    // Stealth aura
     SPELL_RAGNA_EMERGE          = 20568,                    // Emerge from lava
+    SPELL_ELEMENTAL_FIRE_KILL   = 19773,
 
     MAX_ADDS_IN_SUBMERGE        = 8,
     NPC_SON_OF_FLAME            = 12143
@@ -64,11 +66,14 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public Scripted_NoMovementAI
     boss_ragnarosAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
     {
         m_pInstance = (instance_molten_core*)pCreature->GetInstanceData();
+        m_uiEnterCombatTimer = 0;
+        m_bHasAggroYelled = false;
         Reset();
     }
 
     instance_molten_core* m_pInstance;
 
+    uint32 m_uiEnterCombatTimer;
     uint32 m_uiWrathOfRagnarosTimer;
     uint32 m_uiMagmaBlastTimer;
     uint32 m_uiElementalFireTimer;
@@ -76,6 +81,7 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public Scripted_NoMovementAI
     uint32 m_uiAttackTimer;
     uint32 m_uiAddCount;
 
+    bool m_bHasAggroYelled;
     bool m_bHasYelledMagmaBurst;
     bool m_bHasSubmergedOnce;
     bool m_bIsSubmerged;
@@ -96,7 +102,10 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public Scripted_NoMovementAI
 
     void KilledUnit(Unit* pVictim)
     {
-        if (urand(0, 4))
+        if (pVictim->GetTypeId() != TYPEID_PLAYER)
+            return;
+
+        if (urand(0, 3))
             return;
 
         DoScriptText(SAY_KILL, m_creature);
@@ -110,6 +119,9 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public Scripted_NoMovementAI
 
     void Aggro(Unit* pWho)
     {
+        if (pWho->GetTypeId() == TYPEID_UNIT && pWho->GetEntry() == NPC_MAJORDOMO)
+            return;
+
         if (m_pInstance)
             m_pInstance->SetData(TYPE_RAGNAROS, IN_PROGRESS);
 
@@ -117,7 +129,7 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public Scripted_NoMovementAI
         DoCastSpellIfCan(m_creature, SPELL_MELT_WEAPON, CAST_TRIGGERED);
     }
 
-    void JustReachedHome()
+    void EnterEvadeMode()
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_RAGNAROS, FAIL);
@@ -125,6 +137,8 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public Scripted_NoMovementAI
         // Reset flag if had been submerged
         if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE))
             m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+
+        ScriptedAI::EnterEvadeMode();
     }
 
     void SummonedCreatureJustDied(Creature* pSummmoned)
@@ -151,8 +165,43 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public Scripted_NoMovementAI
         }
     }
 
+    void SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell)
+    {
+        // As Majordomo is now killed, the last timer (until attacking) must be handled with ragnaros script
+        if (pSpell->Id == SPELL_ELEMENTAL_FIRE_KILL && pTarget->GetTypeId() == TYPEID_UNIT && pTarget->GetEntry() == NPC_MAJORDOMO)
+            m_uiEnterCombatTimer = 10000;
+    }
+
     void UpdateAI(const uint32 uiDiff)
     {
+        if (m_uiEnterCombatTimer)
+        {
+            if (m_uiEnterCombatTimer <=  uiDiff)
+            {
+                if (!m_bHasAggroYelled)
+                {
+                    m_uiEnterCombatTimer = 3000;
+                    m_bHasAggroYelled = true;
+                    DoScriptText(SAY_ARRIVAL5_RAG, m_creature);
+                }
+                else
+                {
+                    m_uiEnterCombatTimer = 0;
+                    // If we don't remove this passive flag, he will be unattackable after evading, this way he will enter combat
+                    m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE);
+                    if (m_pInstance)
+                    {
+                        if (Player* pPlayer = m_pInstance->GetPlayerInMap(true, false))
+                        {
+                            m_creature->AI()->AttackStart(pPlayer);
+                            return;
+                        }
+                    }
+                }
+            }
+            else
+                m_uiEnterCombatTimer -= uiDiff;
+        }
         // Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -190,7 +239,7 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public Scripted_NoMovementAI
         else
             m_uiWrathOfRagnarosTimer -= uiDiff;
 
-        // Elemental FireTimer
+        // Elemental Fire Timer
         if (m_uiElementalFireTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_ELEMENTAL_FIRE) == CAST_OK)

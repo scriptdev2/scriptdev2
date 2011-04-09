@@ -41,6 +41,8 @@ enum
     NPC_FLAMEWAKER_HEALER       = 11663,                    // Majordomo
     NPC_FLAMEWAKER_ELITE        = 11664,                    // Majordomo
 
+    GO_LAVA_STEAM               = 178107,
+    GO_LAVA_SPLASH              = 178108,
     GO_CACHE_OF_THE_FIRE_LORD   = 179703,
     GO_RUNE_KRESS               = 176956,                   // Magmadar
     GO_RUNE_MOHN                = 176957,                   // Gehennas
@@ -116,7 +118,6 @@ class MANGOS_DLL_DECL instance_molten_core : public ScriptedInstance
         uint64 m_uiGarrGUID;
         uint64 m_uiSulfuronGUID;
         uint64 m_uiMajordomoGUID;
-        uint64 m_uiRagnarosGUID;
 
         // Runes
         uint64 m_uiRuneKoroGUID;
@@ -127,6 +128,9 @@ class MANGOS_DLL_DECL instance_molten_core : public ScriptedInstance
         uint64 m_uiRuneKressGUID;
         uint64 m_uiRuneMohnGUID;
 
+        // Ragnaros related GOs
+        uint64 m_uiLavaSteamGUID;
+        uint64 m_uiLavaSplashGUID;
         // Chests
         uint64 m_uiFirelordCacheGUID;
 

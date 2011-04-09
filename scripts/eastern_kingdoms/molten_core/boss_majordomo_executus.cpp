@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Majordomo_Executus
-SD%Complete: 90
-SDComment: Ragnaros summon missing
+SD%Complete: 95
+SDComment: Minor weaknesses
 SDCategory: Molten Core
 EndScriptData */
 
@@ -35,12 +35,21 @@ enum
     SAY_DEFEAT_2            = -1409020,
     SAY_DEFEAT_3            = -1409021,
 
+    SAY_SUMMON_0            = -1409023,
+    SAY_SUMMON_1            = -1409024,
     SAY_SUMMON_MAJ          = -1409008,
     SAY_ARRIVAL1_RAG        = -1409009,
     SAY_ARRIVAL2_MAJ        = -1409010,
     SAY_ARRIVAL3_RAG        = -1409011,
     SAY_ARRIVAL4_MAJ        = -1409022,
-    SAY_ARRIVAL5_RAG        = -1409012,
+
+    GOSSIP_ITEM_SUMMON_1    = -3409000,
+    GOSSIP_ITEM_SUMMON_2    = -3409001,
+    GOSSIP_ITEM_SUMMON_3    = -3409002,
+
+    TEXT_ID_SUMMON_1        = 4995,
+    TEXT_ID_SUMMON_2        = 5011,
+    TEXT_ID_SUMMON_3        = 5012,
 
     SPELL_MAGIC_REFLECTION  = 20619,
     SPELL_DAMAGE_REFLECTION = 21075,
@@ -50,6 +59,8 @@ enum
 
     SPELL_TELEPORT_SELF     = 19484,
     SPELL_SUMMON_RAGNAROS   = 19774,
+    SPELL_ELEMENTAL_FIRE    = 19773,
+    SPELL_RAGNA_EMERGE      = 20568,
 };
 
 struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
@@ -57,6 +68,7 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
     boss_majordomoAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (instance_molten_core*)pCreature->GetInstanceData();
+        m_bHasEncounterFinished = false;
         Reset();
     }
 
@@ -69,6 +81,7 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
     uint32 m_uiAegisTimer;
     uint32 m_uiSpeechTimer;
 
+    uint64 m_uiRagnarosGUID;
     bool m_bHasEncounterFinished;
     uint8 m_uiAddsKilled;
     uint8 m_uiSpeech;
@@ -83,7 +96,7 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
         m_uiAegisTimer = 5000;
         m_uiSpeechTimer = 1000;
 
-        m_bHasEncounterFinished = false;
+        m_uiRagnarosGUID = 0;
         m_uiAddsKilled = 0;
         m_uiSpeech = 0;
     }
@@ -98,8 +111,10 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
 
     void Aggro(Unit* pWho)
     {
+        if (pWho->GetTypeId() == TYPEID_UNIT && pWho->GetEntry() == NPC_RAGNAROS)
+            return;
+
         DoScriptText(SAY_AGGRO, m_creature);
-        m_bHasEncounterFinished = false;
 
         if (m_pInstance)
             m_pInstance->SetData(TYPE_MAJORDOMO, IN_PROGRESS);
@@ -128,6 +143,9 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
             m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
             m_creature->setFaction(FACTION_MAJORDOMO_FRIENDLY);
 
+            // Reset orientation
+            m_creature->SetFacingTo(m_aMajordomoLocations[0].m_fO);
+
             // Start his speech
             m_uiSpeechTimer = 1;                        // At next tick
             m_uiSpeech = 1;
@@ -136,26 +154,83 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
         }
     }
 
+    void StartSummonEvent(Player* pPlayer)
+    {
+        m_creature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+
+        // Prevent possible exploits with double summoning
+        if (Creature* pRagnaros = m_creature->GetMap()->GetCreature(m_uiRagnarosGUID))
+            return;
+
+        DoScriptText(SAY_SUMMON_0, m_creature, pPlayer);
+
+        m_uiSpeechTimer = 5000;
+        m_uiSpeech = 10;
+    }
+
+    void JustRespawned()
+    {
+        // Encounter finished, need special treatment
+        if (m_bHasEncounterFinished)
+        {
+            // This needs to be set to be able to resummon Ragnaros
+            m_creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+
+            // Relocate here
+            debug_log("SD2: boss_majordomo_executus: Relocate to Ragnaros' Lair on respawn");
+            m_creature->GetMap()->CreatureRelocation(m_creature, m_aMajordomoLocations[1].m_fX, m_aMajordomoLocations[1].m_fY, m_aMajordomoLocations[1].m_fZ, m_aMajordomoLocations[1].m_fO);
+            m_creature->SetActiveObjectState(false);
+        }
+    }
+
     void JustSummoned(Creature* pSummoned)
     {
         if (pSummoned->GetEntry() == NPC_FLAMEWAKER_HEALER || pSummoned->GetEntry() == NPC_FLAMEWAKER_ELITE)
+        {
             m_luiMajordomoAddsGUIDs.push_back(pSummoned->GetGUID());
+            pSummoned->SetRespawnDelay(2*HOUR);
+        }
+        else if (pSummoned->GetEntry() == NPC_RAGNAROS)
+        {
+            m_uiRagnarosGUID = pSummoned->GetGUID();
+            pSummoned->CastSpell(pSummoned, SPELL_RAGNA_EMERGE, false);
+        }
+    }
+
+    void JustDied(Unit* pKiller)
+    {
+        if (pKiller->GetTypeId() == TYPEID_UNIT && pKiller->GetEntry() == NPC_RAGNAROS)
+            DoScriptText(SAY_ARRIVAL4_MAJ, m_creature);
+    }
+
+    void CorpseRemoved(uint32 &uiRespawnDelay)
+    {
+        uiRespawnDelay = urand(2 * HOUR, 3 * HOUR);
+
+        if (m_bHasEncounterFinished)
+        {
+            // Needed for proper respawn handling
+            debug_log("SD2: boss_majordomo_executus: Set active");
+            m_creature->SetActiveObjectState(true);
+        }
     }
 
     void SummonedCreatureJustDied(Creature* pSummoned)
     {
         if (pSummoned->GetEntry() == NPC_FLAMEWAKER_HEALER || pSummoned->GetEntry() == NPC_FLAMEWAKER_ELITE)
+        {
             m_uiAddsKilled += 1;
 
-        // Yell if only one Add alive
-        if (m_uiAddsKilled == m_luiMajordomoAddsGUIDs.size() - 1)
-            DoScriptText(SAY_LAST_ADD, m_creature);
+            // Yell if only one Add alive
+            if (m_uiAddsKilled == m_luiMajordomoAddsGUIDs.size() - 1)
+                DoScriptText(SAY_LAST_ADD, m_creature);
 
-        // All adds are killed, retreat
-        else if (m_uiAddsKilled == m_luiMajordomoAddsGUIDs.size())
-        {
-            m_bHasEncounterFinished = true;
-            m_creature->GetMotionMaster()->MoveTargetedHome();
+            // All adds are killed, retreat
+            else if (m_uiAddsKilled == m_luiMajordomoAddsGUIDs.size())
+            {
+                m_bHasEncounterFinished = true;
+                m_creature->GetMotionMaster()->MoveTargetedHome();
+            }
         }
     }
 
@@ -190,6 +265,7 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
             {
                 switch (m_uiSpeech)
                 {
+                    // Majordomo retreat event
                     case 1:
                         DoScriptText(SAY_DEFEAT_1, m_creature);
                         m_uiSpeechTimer = 7500;
@@ -207,15 +283,73 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
                         break;
                     case 4:
                         DoCastSpellIfCan(m_creature, SPELL_TELEPORT_SELF);
-                        m_uiSpeechTimer = 1100;
+                        // TODO - when should they be unsummoned?
+                        // TODO - also unclear how this should be handled, as of range issues
+                        m_uiSpeechTimer = 900;
                         ++m_uiSpeech;
                         break;
                     case 5:
-                        // Majordomo is away now, remove his adds (TODO: perhaps handle them in a different way, unclear)
+                        // Majordomo is away now, remove his adds
                         UnsummonMajordomoAdds();
                         m_uiSpeech = 0;
                         break;
-                        // TODO: teleport to ragnaros, implement ragnaros speech here, teleport might be to handled as part of the tele-self spell
+
+                    // Ragnaros Summon Event
+                    case 10:
+                        DoScriptText(SAY_SUMMON_1, m_creature);
+                        ++m_uiSpeech;
+                        m_uiSpeechTimer = 1000;
+                        break;
+                    case 11:
+                        DoCastSpellIfCan(m_creature, SPELL_SUMMON_RAGNAROS);
+                        // TODO - Move along, this expects to be handled with mmaps
+                        m_creature->GetMotionMaster()->MovePoint(1, 831.079590f, -816.023193f, -229.023270f);
+                        ++m_uiSpeech;
+                        m_uiSpeechTimer = 7000;
+                        break;
+                    case 12:
+                        // Reset orientation
+                        if (GameObject* pLavaSteam = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(GO_LAVA_STEAM)))
+                            m_creature->SetFacingToObject(pLavaSteam);
+                        m_uiSpeechTimer = 4500;
+                        ++m_uiSpeech;
+                        break;
+                    case 13:
+                        DoScriptText(SAY_SUMMON_MAJ, m_creature);
+                        ++m_uiSpeech;
+                        m_uiSpeechTimer = 8000;
+                        break;
+                    case 14:
+                        // Summon Ragnaros
+                        if (m_pInstance)
+                            if (GameObject* pGo = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(GO_LAVA_STEAM)))
+                                m_creature->SummonCreature(NPC_RAGNAROS, pGo->GetPositionX(), pGo->GetPositionY(), pGo->GetPositionZ(), fmod(m_creature->GetOrientation() + M_PI, 2*M_PI), TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 2*HOUR*IN_MILLISECONDS);
+                        ++m_uiSpeech;
+                        m_uiSpeechTimer = 8700;
+                        break;
+                    case 15:
+                        if (Creature* pRagnaros = m_creature->GetMap()->GetCreature(m_uiRagnarosGUID))
+                            DoScriptText(SAY_ARRIVAL1_RAG, pRagnaros);
+                        ++m_uiSpeech;
+                        m_uiSpeechTimer = 11700;
+                        break;
+                    case 16:
+                        DoScriptText(SAY_ARRIVAL2_MAJ, m_creature);
+                        ++m_uiSpeech;
+                        m_uiSpeechTimer = 8700;
+                        break;
+                    case 17:
+                        if (Creature* pRagnaros = m_creature->GetMap()->GetCreature(m_uiRagnarosGUID))
+                            DoScriptText(SAY_ARRIVAL3_RAG, pRagnaros);
+                        ++m_uiSpeech;
+                        m_uiSpeechTimer = 16500;
+                        break;
+                    case 18:
+                        if (Creature* pRagnaros = m_creature->GetMap()->GetCreature(m_uiRagnarosGUID))
+                            pRagnaros->CastSpell(m_creature, SPELL_ELEMENTAL_FIRE, false);
+                        // Rest of summoning speech is handled by Ragnaros, as Majordomo will be dead
+                        m_uiSpeech = 0;
+                        break;
                 }
             }
             else
@@ -289,12 +423,61 @@ CreatureAI* GetAI_boss_majordomo(Creature* pCreature)
     return new boss_majordomoAI(pCreature);
 }
 
+bool GossipHello_boss_majordomo(Player* pPlayer, Creature* pCreature)
+{
+    if (instance_molten_core* pInstance = (instance_molten_core*)pCreature->GetInstanceData())
+    {
+        if (pInstance->GetData(TYPE_RAGNAROS) == NOT_STARTED || pInstance->GetData(TYPE_RAGNAROS) == FAIL)
+        {
+            pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_SUMMON_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+            pPlayer->SEND_GOSSIP_MENU(TEXT_ID_SUMMON_1, pCreature->GetGUID());
+        }
+    }
+    return true;
+}
+
+bool GossipSelect_boss_majordomo(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 uiAction)
+{
+    switch (uiAction)
+    {
+        case GOSSIP_ACTION_INFO_DEF + 1:
+            pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_SUMMON_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+            pPlayer->SEND_GOSSIP_MENU(TEXT_ID_SUMMON_2, pCreature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF + 2:
+            pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_SUMMON_3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+            pPlayer->SEND_GOSSIP_MENU(TEXT_ID_SUMMON_3, pCreature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF + 3:
+            pPlayer->CLOSE_GOSSIP_MENU();
+            if (boss_majordomoAI* pMajoAI = dynamic_cast<boss_majordomoAI*>(pCreature->AI()))
+                pMajoAI->StartSummonEvent(pPlayer);
+            break;
+    }
+
+    return true;
+}
+
+bool EffectDummyCreature_spell_boss_majordomo(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+{
+    if (uiSpellId != SPELL_TELEPORT_SELF || uiEffIndex != EFFECT_INDEX_0)
+        return false;
+
+    pCreatureTarget->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+    pCreatureTarget->NearTeleportTo(m_aMajordomoLocations[1].m_fX, m_aMajordomoLocations[1].m_fY, m_aMajordomoLocations[1].m_fZ, m_aMajordomoLocations[1].m_fO, true);
+    // TODO - some visibility update?
+    return true;
+}
+
 void AddSC_boss_majordomo()
 {
     Script* pNewScript;
 
     pNewScript = new Script;
     pNewScript->Name = "boss_majordomo";
+    pNewScript->pEffectDummyNPC = &EffectDummyCreature_spell_boss_majordomo;
+    pNewScript->pGossipHello = &GossipHello_boss_majordomo;
+    pNewScript->pGossipSelect = &GossipSelect_boss_majordomo;
     pNewScript->GetAI = &GetAI_boss_majordomo;
     pNewScript->RegisterSelf();
 }
