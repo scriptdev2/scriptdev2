@@ -52,6 +52,8 @@ instance_naxxramas::instance_naxxramas(Map* pMap) : ScriptedInstance(pMap),
     m_uiPathExitDoorGUID(0),
     m_uiGlutExitDoorGUID(0),
     m_uiThadDoorGUID(0),
+    m_uiThadNoxTeslaFeugenGUID(0),
+    m_uiThadNoxTeslaStalaggGUID(0),
 
     m_uiAnubDoorGUID(0),
     m_uiAnubGateGUID(0),
@@ -107,6 +109,7 @@ void instance_naxxramas::OnCreatureCreate(Creature* pCreature)
         case NPC_GOTHIK:            m_uiGothikGUID = pCreature->GetGUID();      break;
         case NPC_KELTHUZAD:         m_uiKelthuzadGUID = pCreature->GetGUID();   break;
         case NPC_SUB_BOSS_TRIGGER:  m_lGothTriggerList.push_back(pCreature->GetGUID()); break;
+        case NPC_TESLA_COIL:        m_lThadTeslaCoilList.push_back(pCreature->GetGUID()); break;
 
         case NPC_NAXXRAMAS_FOLLOWER:
         case NPC_NAXXRAMAS_WORSHIPPER:
@@ -202,6 +205,16 @@ void instance_naxxramas::OnObjectCreate(GameObject* pGo)
             m_uiThadDoorGUID = pGo->GetGUID();
             if (m_auiEncounter[11] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
+            break;
+        case GO_CONS_NOX_TESLA_FEUGEN:
+            m_uiThadNoxTeslaFeugenGUID = pGo->GetGUID();
+            if (m_auiEncounter[12] == DONE)
+                pGo->SetGoState(GO_STATE_READY);
+            break;
+        case GO_CONS_NOX_TESLA_STALAGG:
+            m_uiThadNoxTeslaStalaggGUID = pGo->GetGUID();
+            if (m_auiEncounter[12] == DONE)
+                pGo->SetGoState(GO_STATE_READY);
             break;
 
         case GO_KELTHUZAD_WATERFALL_DOOR:
@@ -393,9 +406,14 @@ void instance_naxxramas::SetData(uint32 uiType, uint32 uiData)
             }
             break;
         case TYPE_THADDIUS:
+            // Only process real changes here
+            if (m_auiEncounter[12] == uiData)
+                return;
+
             m_auiEncounter[12] = uiData;
-            DoUseDoorOrButton(m_uiThadDoorGUID, uiData);
-            // Uncomment when Thaddius (and this achievement is implemented)
+            if (uiData != SPECIAL)
+                DoUseDoorOrButton(m_uiThadDoorGUID, uiData);
+            // Uncomment when this achievement is implemented
             //if (uiData == IN_PROGRESS)
             //    SetSpecialAchievementCriteria(TYPE_ACHIEV_SHOCKING, true);
             if (uiData == DONE)
@@ -533,6 +551,10 @@ uint64 instance_naxxramas::GetData64(uint32 uiData)
             return m_uiStalaggGUID;
         case NPC_FEUGEN:
             return m_uiFeugenGUID;
+        case GO_CONS_NOX_TESLA_FEUGEN:
+            return m_uiThadNoxTeslaFeugenGUID;
+        case GO_CONS_NOX_TESLA_STALAGG:
+            return m_uiThadNoxTeslaStalaggGUID;
         case NPC_GOTHIK:
             return m_uiGothikGUID;
         case NPC_KELTHUZAD:
@@ -728,6 +750,21 @@ bool AreaTrigger_at_naxxramas(Player* pPlayer, AreaTriggerEntry const* pAt)
                 {
                     pInstance->SetData(TYPE_KELTHUZAD, IN_PROGRESS);
                     pKelthuzad->SetInCombatWithZone();
+                }
+            }
+        }
+    }
+
+    if (pAt->id == AREATRIGGER_THADDIUS_DOOR)
+    {
+        if (instance_naxxramas* pInstance = (instance_naxxramas*)pPlayer->GetInstanceData())
+        {
+            if (pInstance->GetData(TYPE_THADDIUS) == NOT_STARTED)
+            {
+                if (Creature* pThaddius = pInstance->instance->GetCreature(pInstance->GetData64(NPC_THADDIUS)))
+                {
+                    pInstance->SetData(TYPE_THADDIUS, SPECIAL);
+                    DoScriptText(SAY_THADDIUS_GREET, pThaddius);
                 }
             }
         }

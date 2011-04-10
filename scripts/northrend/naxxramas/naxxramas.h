@@ -9,6 +9,8 @@ enum
 {
     MAX_ENCOUNTER               = 16,
 
+    // A few instance-script related texts
+    SAY_THADDIUS_GREET          = -1533029,
     // Kel'Thuzad's taunts after killing Wing Bosses
     SAY_KELTHUZAD_TAUNT1        = -1533090,
     SAY_KELTHUZAD_TAUNT2        = -1533091,
@@ -52,6 +54,7 @@ enum
     NPC_THADDIUS                = 15928,
     NPC_STALAGG                 = 15929,
     NPC_FEUGEN                  = 15930,
+    NPC_TESLA_COIL              = 16218,
 
     NPC_ZELIEK                  = 16063,
     NPC_THANE                   = 16064,
@@ -111,6 +114,8 @@ enum
     GO_CONS_PATH_EXIT_DOOR      = 181123,
     GO_CONS_GLUT_EXIT_DOOR      = 181120,
     GO_CONS_THAD_DOOR           = 181121,                   // Thaddius enc door
+    GO_CONS_NOX_TESLA_FEUGEN    = 181477,
+    GO_CONS_NOX_TESLA_STALAGG   = 181478,
 
     // Frostwyrm Lair
     GO_KELTHUZAD_WATERFALL_DOOR = 181225,                   // exit, open after sapphiron is dead
@@ -131,6 +136,7 @@ enum
     AREATRIGGER_FROSTWYRM       = 4120,                     // not needed here, but AT to be scripted
     AREATRIGGER_KELTHUZAD       = 4112,
     AREATRIGGER_GOTHIK          = 4116,
+    AREATRIGGER_THADDIUS_DOOR   = 4113,
 
     // Achievement related
     ACHIEV_CRIT_SAFETY_DANCE_N  = 7264,                     // Heigan, achievs 1996, 2139
@@ -196,6 +202,9 @@ class MANGOS_DLL_DECL instance_naxxramas : public ScriptedInstance
         void GetGothSummonPointCreatures(std::list<Creature*> &lList, bool bRightSide);
         bool IsInRightSideGothArea(Unit* pUnit);
 
+        // thaddius
+        void GetThadTeslaCreatures(std::list<uint64> &lList){ lList = m_lThadTeslaCoilList; };
+
         // kel
         void SetChamberCenterCoords(float fX, float fY, float fZ);
         void GetChamberCenterCoords(float &fX, float &fY, float &fZ) { fX = m_fChamberCenterX; fY = m_fChamberCenterY; fZ = m_fChamberCenterZ; }
@@ -232,7 +241,11 @@ class MANGOS_DLL_DECL instance_naxxramas : public ScriptedInstance
 
         uint64 m_uiPathExitDoorGUID;
         uint64 m_uiGlutExitDoorGUID;
+
         uint64 m_uiThadDoorGUID;
+        std::list<uint64> m_lThadTeslaCoilList;
+        uint64 m_uiThadNoxTeslaFeugenGUID;
+        uint64 m_uiThadNoxTeslaStalaggGUID;
 
         uint64 m_uiAnubDoorGUID;
         uint64 m_uiAnubGateGUID;

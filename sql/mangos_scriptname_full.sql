@@ -22,8 +22,10 @@ INSERT INTO scripted_areatrigger VALUES
 (5285,'at_aldurthar_gate'),
 (5286,'at_aldurthar_gate'),
 (5287,'at_aldurthar_gate');
-DELETE FROM scripted_areatrigger WHERE entry=4112;
-INSERT INTO scripted_areatrigger VALUES (4112,'at_naxxramas');
+DELETE FROM scripted_areatrigger WHERE entry IN (4112, 4113);
+INSERT INTO scripted_areatrigger VALUES
+(4112,'at_naxxramas'),
+(4113,'at_naxxramas');
 DELETE FROM scripted_areatrigger WHERE entry=5108;
 INSERT INTO scripted_areatrigger VALUES (5108,'at_stormwright_shelf');
 DELETE FROM scripted_areatrigger WHERE entry IN (3546, 3547, 3548, 3549, 3550, 3552);
@@ -819,9 +821,10 @@ UPDATE creature_template SET ScriptName='boss_rivendare_naxx' WHERE entry=30549;
 UPDATE creature_template SET ScriptName='boss_patchwerk' WHERE entry=16028;
 UPDATE creature_template SET ScriptName='boss_grobbulus' WHERE entry=15931;
 UPDATE creature_template SET ScriptName='boss_gluth' WHERE entry=15932;
--- UPDATE creature_template SET ScriptName='boss_thaddius' WHERE entry=15928;
--- UPDATE creature_template SET ScriptName='boss_stalagg' WHERE entry=15929;
--- UPDATE creature_template SET ScriptName='boss_feugen' WHERE entry=15930;
+UPDATE creature_template SET ScriptName='boss_thaddius' WHERE entry=15928;
+UPDATE creature_template SET ScriptName='boss_stalagg' WHERE entry=15929;
+UPDATE creature_template SET ScriptName='boss_feugen' WHERE entry=15930;
+UPDATE creature_template SET ScriptName='npc_tesla_coil' WHERE entry=16218;
 UPDATE creature_template SET ScriptName='boss_sapphiron' WHERE entry=15989;
 UPDATE creature_template SET ScriptName='boss_kelthuzad' WHERE entry=15990;
 
