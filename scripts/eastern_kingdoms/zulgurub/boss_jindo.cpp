@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Boss_Jin'do the Hexxer
 SD%Complete: 85
-SDComment: Mind Control not working because of core bug. Shades invisible is removed as of Attacking (core bug) - MANY HACKZ!!!
+SDComment: Mind Control not working because of core bug. Shades invisible is removed as of Attacking (core bug) - MANY HACKZ!!
 SDCategory: Zul'Gurub
 EndScriptData */
 
@@ -29,7 +29,7 @@ enum
     SAY_AGGRO                       = -1309014,
 
     SPELL_BRAINWASH_TOTEM           = 24262,
-    SPELL_POWERFULL_HEALING_WARD    = 24309,                // the healing ward will be summoned manually, not like a totem (missing passive spell in DBC)
+    SPELL_POWERFULL_HEALING_WARD    = 24309,
     SPELL_HEX                       = 24053,
     SPELL_DELUSIONS_OF_JINDO        = 24306,
     SPELL_SHADE_OF_JINDO            = 24308,                // Spell was removed  from DBC around TBC; will summon npcs manually!
@@ -83,6 +83,12 @@ struct MANGOS_DLL_DECL boss_jindoAI : public ScriptedAI
         DoScriptText(SAY_AGGRO, m_creature);
     }
 
+    void SummonedCreatureJustDied(Creature* pSummoned)
+    {
+        if (pSummoned->GetEntry() == NPC_POWERFULL_HEALING_WARD)
+            m_uiHealingWardTimer = 15000;                   // how long delay?
+    }
+
     void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
@@ -98,20 +104,16 @@ struct MANGOS_DLL_DECL boss_jindoAI : public ScriptedAI
             m_uiBrainWashTotemTimer -= uiDiff;
 
         // Healing Ward Timer
-        if (m_uiHealingWardTimer < uiDiff)
+        if (m_uiHealingWardTimer)
         {
-            // HACK ALERT - this npc should be summoned by spell and then as totem!
-            // but there is no totem-passive spell to trigger the healing, hence this direct HACK
-            // DoCastSpellIfCan(m_creature, SPELL_POWERFULL_HEALING_WARD);
-
-            float fX, fY, fZ;
-            m_creature->GetClosePoint(fX, fY, fZ, m_creature->GetObjectBoundingRadius(), 2.0f, M_PI_F);
-            m_creature->SummonCreature(NPC_POWERFULL_HEALING_WARD, fX, fY, fZ, m_creature->GetOrientation(), TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 30000);
-
-            m_uiHealingWardTimer = urand(14000, 20000);
+            if (m_uiHealingWardTimer <= uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_POWERFULL_HEALING_WARD) == CAST_OK)
+                    m_uiHealingWardTimer = 0;
+            }
+            else
+                m_uiHealingWardTimer -= uiDiff;
         }
-        else
-            m_uiHealingWardTimer -= uiDiff;
 
         // Hex Timer
         if (m_uiHexTimer < uiDiff)
@@ -169,22 +171,16 @@ struct MANGOS_DLL_DECL boss_jindoAI : public ScriptedAI
     }
 };
 
-// HACK script!
+// HACK script! Should not need to have totems in sd2
 struct MANGOS_DLL_DECL mob_healing_wardAI : public ScriptedAI
 {
-    mob_healing_wardAI(Creature* pCreature) : ScriptedAI(pCreature)
-    {
-        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        Reset();
-    }
-
-    ScriptedInstance* m_pInstance;
+    mob_healing_wardAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
     uint32 m_uiHealTimer;
 
     void Reset()
     {
-        m_uiHealTimer = 2000;
+        m_uiHealTimer = 3000;                               // Timer unknown, sources go over 1s, per tick to 3s, keep 3s as in original script
     }
 
     void AttackStart(Unit* pWho) {}
@@ -192,15 +188,11 @@ struct MANGOS_DLL_DECL mob_healing_wardAI : public ScriptedAI
 
     void UpdateAI (const uint32 uiDiff)
     {
-        if (!m_pInstance)
-            return;
-
         // Heal Timer
         if (m_uiHealTimer < uiDiff)
         {
-            Creature* pJindo = m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_JINDO));
-            if (pJindo && DoCastSpellIfCan(pJindo, SPELL_HEALING_WARD_HEAL) == CAST_OK)
-                m_uiHealTimer = 3000;
+            DoCastSpellIfCan(m_creature, SPELL_HEALING_WARD_HEAL);
+            m_uiHealTimer = 3000;
         }
         else
             m_uiHealTimer -= uiDiff;
