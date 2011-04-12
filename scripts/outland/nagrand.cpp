@@ -17,13 +17,12 @@
 /* ScriptData
 SDName: Nagrand
 SD%Complete: 90
-SDComment: Quest support: 9868, 9874, 9918, 9991, 10044, 10085, 10107, 10108, 10172, 10646. TextId's unknown for altruis_the_sufferer and greatmother_geyah (npc_text)
+SDComment: Quest support: 9868, 9918, 9991, 10044, 10085, 10107, 10108, 10172, 10646. TextId's unknown for altruis_the_sufferer and greatmother_geyah (npc_text)
 SDCategory: Nagrand
 EndScriptData */
 
 /* ContentData
 mob_lump
-mob_sunspring_villager
 npc_altruis_the_sufferer
 npc_greatmother_geyah
 npc_lantresor_of_the_blade
@@ -194,34 +193,6 @@ bool GossipSelect_mob_lump(Player* pPlayer, Creature* pCreature, uint32 uiSender
             break;
     }
     return true;
-}
-
-/*####
-# mob_sunspring_villager - should be done with ACID
-####*/
-
-struct MANGOS_DLL_DECL mob_sunspring_villagerAI : public ScriptedAI
-{
-    mob_sunspring_villagerAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
-
-    void Reset()
-    {
-        m_creature->SetUInt32Value(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_DEAD);
-        m_creature->SetStandState(UNIT_STAND_STATE_DEAD);
-    }
-
-    void SpellHit(Unit *caster, const SpellEntry *spell)
-    {
-        if (spell->Id == 32146)
-        {
-            m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-            m_creature->RemoveCorpse();
-        }
-    }
-};
-CreatureAI* GetAI_mob_sunspring_villager(Creature* pCreature)
-{
-    return new mob_sunspring_villagerAI(pCreature);
 }
 
 /*######
@@ -672,11 +643,6 @@ void AddSC_nagrand()
     pNewScript->GetAI = &GetAI_mob_lump;
     pNewScript->pGossipHello =  &GossipHello_mob_lump;
     pNewScript->pGossipSelect = &GossipSelect_mob_lump;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "mob_sunspring_villager";
-    pNewScript->GetAI = &GetAI_mob_sunspring_villager;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
