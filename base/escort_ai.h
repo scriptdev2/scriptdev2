@@ -85,6 +85,7 @@ struct MANGOS_DLL_DECL npc_escortAI : public ScriptedAI
     private:
         bool AssistPlayerInCombat(Unit* pWho);
         bool IsPlayerOrGroupInRange();
+        bool MoveToNextWaypoint();
         void FillPointMovementListForCreature();
 
         void AddEscortState(uint32 uiEscortState) { m_uiEscortState |= uiEscortState; }
