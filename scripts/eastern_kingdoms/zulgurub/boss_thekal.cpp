@@ -24,31 +24,34 @@ EndScriptData */
 #include "precompiled.h"
 #include "zulgurub.h"
 
-#define SAY_AGGRO               -1309009
-#define SAY_DEATH               -1309010
+enum
+{
+    SAY_AGGRO               = -1309009,
+    SAY_DEATH               = -1309010,
 
-#define SPELL_MORTALCLEAVE        22859
-#define SPELL_SILENCE             23207
-#define SPELL_FRENZY              23342
-#define SPELL_FORCEPUNCH          24189
-#define SPELL_CHARGE              24408
-#define SPELL_ENRAGE              23537
-#define SPELL_SUMMONTIGERS        24183
-#define SPELL_TIGER_FORM          24169
-#define SPELL_RESURRECT           24173                     //We will not use this spell.
+    SPELL_MORTALCLEAVE      = 22859,
+    SPELL_SILENCE           = 23207,
+    SPELL_FRENZY            = 23342,
+    SPELL_FORCEPUNCH        = 24189,
+    SPELL_CHARGE            = 24408,
+    SPELL_ENRAGE            = 23537,
+    SPELL_SUMMONTIGERS      = 24183,
+    SPELL_TIGER_FORM        = 24169,
+    SPELL_RESURRECT         = 24173,                     //We will not use this spell.
 
-//Zealot Lor'Khan Spells
-#define SPELL_SHIELD              25020
-#define SPELL_BLOODLUST           24185
-#define SPELL_GREATERHEAL         24208
-#define SPELL_DISARM              22691
+    // Zealot Lor'Khan Spells
+    SPELL_SHIELD            = 25020,
+    SPELL_BLOODLUST         = 24185,
+    SPELL_GREATERHEAL       = 24208,
+    SPELL_DISARM            = 22691,
 
-//Zealot Lor'Khan Spells
-#define SPELL_SWEEPINGSTRIKES     18765
-#define SPELL_SINISTERSTRIKE      15667
-#define SPELL_GOUGE               24698
-#define SPELL_KICK                15614
-#define SPELL_BLIND               21060
+    //Zealot Lor'Khan Spells
+    SPELL_SWEEPINGSTRIKES   = 18765,
+    SPELL_SINISTERSTRIKE    = 15667,
+    SPELL_GOUGE             = 24698,
+    SPELL_KICK              = 15614,
+    SPELL_BLIND             = 21060
+};
 
 struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
 {
@@ -60,43 +63,43 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    uint32 MortalCleave_Timer;
-    uint32 Silence_Timer;
-    uint32 Frenzy_Timer;
-    uint32 ForcePunch_Timer;
-    uint32 Charge_Timer;
-    uint32 Enrage_Timer;
-    uint32 SummonTigers_Timer;
-    uint32 Check_Timer;
-    uint32 Resurrect_Timer;
+    uint32 m_uiMortalCleaveTimer;
+    uint32 m_uiSilenceTimer;
+    uint32 m_uiFrenzyTimer;
+    uint32 m_uiForcePunchTimer;
+    uint32 m_uiChargeTimer;
+    uint32 m_uiEnrageTimer;
+    uint32 m_uiSummonTigersTimer;
+    uint32 m_uiCheckTimer;
+    uint32 m_uiResurrectTimer;
 
-    bool Enraged;
-    bool PhaseTwo;
-    bool WasDead;
+    bool m_bEnraged;
+    bool m_bPhaseTwo;
+    bool m_bWasDead;
 
     void Reset()
     {
-        MortalCleave_Timer = 4000;
-        Silence_Timer = 9000;
-        Frenzy_Timer = 30000;
-        ForcePunch_Timer = 4000;
-        Charge_Timer = 12000;
-        Enrage_Timer = 32000;
-        SummonTigers_Timer = 25000;
-        Check_Timer = 10000;
-        Resurrect_Timer = 10000;
+        m_uiMortalCleaveTimer   = 4000;
+        m_uiSilenceTimer        = 9000;
+        m_uiFrenzyTimer         = 30000;
+        m_uiForcePunchTimer     = 4000;
+        m_uiChargeTimer         = 12000;
+        m_uiEnrageTimer         = 32000;
+        m_uiSummonTigersTimer   = 25000;
+        m_uiCheckTimer          = 10000;
+        m_uiResurrectTimer      = 10000;
 
-        Enraged = false;
-        PhaseTwo = false;
-        WasDead = false;
+        m_bEnraged              = false;
+        m_bPhaseTwo             = false;
+        m_bWasDead              = false;
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
     }
 
-    void JustDied(Unit* Killer)
+    void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -110,13 +113,13 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
             m_pInstance->SetData(TYPE_THEKAL, NOT_STARTED);
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         //Check_Timer for the death of LorKhan and Zath.
-        if (!WasDead && Check_Timer < diff)
+        if (!m_bWasDead && m_uiCheckTimer < uiDiff)
         {
             if (m_pInstance)
             {
@@ -148,22 +151,28 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
                     }
                 }
             }
-            Check_Timer = 5000;
-        }else Check_Timer -= diff;
+            m_uiCheckTimer = 5000;
+        }
+        else
+            m_uiCheckTimer -= uiDiff;
 
-        if (!PhaseTwo && MortalCleave_Timer < diff)
+        if (!m_bPhaseTwo && m_uiMortalCleaveTimer < uiDiff)
         {
             DoCastSpellIfCan(m_creature->getVictim(),SPELL_MORTALCLEAVE);
-            MortalCleave_Timer = urand(15000, 20000);
-        }else MortalCleave_Timer -= diff;
+            m_uiMortalCleaveTimer = urand(15000, 20000);
+        }
+        else
+            m_uiMortalCleaveTimer -= uiDiff;
 
-        if (!PhaseTwo && Silence_Timer < diff)
+        if (!m_bPhaseTwo && m_uiSilenceTimer < uiDiff)
         {
             DoCastSpellIfCan(m_creature->getVictim(),SPELL_SILENCE);
-            Silence_Timer = urand(20000, 25000);
-        }else Silence_Timer -= diff;
+            m_uiSilenceTimer = urand(20000, 25000);
+        }
+        else
+            m_uiSilenceTimer -= uiDiff;
 
-        if (!PhaseTwo && !WasDead && m_creature->GetHealthPercent() < 5.0f)
+        if (!m_bPhaseTwo && !m_bWasDead && m_creature->GetHealthPercent() < 5.0f)
         {
             m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             m_creature->SetStandState(UNIT_STAND_STATE_SLEEP);
@@ -172,13 +181,13 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
             if (m_pInstance)
                 m_pInstance->SetData(TYPE_THEKAL, SPECIAL);
 
-            WasDead = true;
+            m_bWasDead = true;
         }
 
         //Thekal will transform to Tiger if he died and was not resurrected after 10 seconds.
-        if (!PhaseTwo && WasDead)
+        if (!m_bPhaseTwo && m_bWasDead)
         {
-            if (Resurrect_Timer < diff)
+            if (m_uiResurrectTimer < uiDiff)
             {
                 DoCastSpellIfCan(m_creature,SPELL_TIGER_FORM);
                 m_creature->SetFloatValue(OBJECT_FIELD_SCALE_X, 2.00f);
@@ -190,18 +199,20 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
                 m_creature->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, (cinfo->maxdmg +((cinfo->maxdmg/100) * 40)));
                 m_creature->UpdateDamagePhysical(BASE_ATTACK);
                 DoResetThreat();
-                PhaseTwo = true;
-            }else Resurrect_Timer -= diff;
+                m_bPhaseTwo = true;
+            }
+            else
+                m_uiResurrectTimer -= uiDiff;
         }
 
-        if (m_creature->GetHealthPercent() == 100.0f && WasDead)
+        if (m_creature->GetHealthPercent() == 100.0f && m_bWasDead)
         {
-            WasDead = false;
+            m_bWasDead = false;
         }
 
-        if (PhaseTwo)
+        if (m_bPhaseTwo)
         {
-            if (Charge_Timer < diff)
+            if (m_uiChargeTimer < uiDiff)
             {
                 if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
                 {
@@ -209,31 +220,39 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
                     DoResetThreat();
                     AttackStart(target);
                 }
-                Charge_Timer = urand(15000, 22000);
-            }else Charge_Timer -= diff;
+                m_uiChargeTimer = urand(15000, 22000);
+            }
+            else
+                m_uiChargeTimer -= uiDiff;
 
-            if (Frenzy_Timer < diff)
+            if (m_uiFrenzyTimer < uiDiff)
             {
                 DoCastSpellIfCan(m_creature,SPELL_FRENZY);
-                Frenzy_Timer = 30000;
-            }else Frenzy_Timer -= diff;
+                m_uiFrenzyTimer = 30000;
+            }
+            else
+                m_uiFrenzyTimer -= uiDiff;
 
-            if (ForcePunch_Timer < diff)
+            if (m_uiForcePunchTimer < uiDiff)
             {
                 DoCastSpellIfCan(m_creature->getVictim(),SPELL_SILENCE);
-                ForcePunch_Timer = urand(16000, 21000);
-            }else ForcePunch_Timer -= diff;
+                m_uiForcePunchTimer = urand(16000, 21000);
+            }
+            else
+                m_uiForcePunchTimer -= uiDiff;
 
-            if (SummonTigers_Timer < diff)
+            if (m_uiSummonTigersTimer < uiDiff)
             {
                 DoCastSpellIfCan(m_creature->getVictim(),SPELL_SUMMONTIGERS);
-                SummonTigers_Timer = urand(10000, 14000);
-            }else SummonTigers_Timer -= diff;
+                m_uiSummonTigersTimer = urand(10000, 14000);
+            }
+            else
+                m_uiSummonTigersTimer -= uiDiff;
 
-            if (m_creature->GetHealthPercent() < 11.0f && !Enraged)
+            if (m_creature->GetHealthPercent() < 11.0f && !m_bEnraged)
             {
                 DoCastSpellIfCan(m_creature, SPELL_ENRAGE);
-                Enraged = true;
+                m_bEnraged = true;
             }
         }
 
@@ -242,7 +261,10 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
     }
 };
 
-//Zealot Lor'Khan
+/*######
+## mob_zealot_lorkhan
+######*/
+
 struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public ScriptedAI
 {
     mob_zealot_lorkhanAI(Creature* pCreature) : ScriptedAI(pCreature)
@@ -251,25 +273,25 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public ScriptedAI
         Reset();
     }
 
-    uint32 Shield_Timer;
-    uint32 BloodLust_Timer;
-    uint32 GreaterHeal_Timer;
-    uint32 Disarm_Timer;
-    uint32 Check_Timer;
-
-    bool FakeDeath;
-
     ScriptedInstance* m_pInstance;
+
+    uint32 m_uiShieldTimer;
+    uint32 m_uiBloodLustTimer;
+    uint32 m_uiGreaterHealTimer;
+    uint32 m_uiDisarmTimer;
+    uint32 m_uiCheckTimer;
+
+    bool m_bFakeDeath;
 
     void Reset()
     {
-        Shield_Timer = 1000;
-        BloodLust_Timer = 16000;
-        GreaterHeal_Timer = 32000;
-        Disarm_Timer = 6000;
-        Check_Timer = 10000;
+        m_uiShieldTimer         = 1000;
+        m_uiBloodLustTimer      = 16000;
+        m_uiGreaterHealTimer    = 32000;
+        m_uiDisarmTimer         = 6000;
+        m_uiCheckTimer          = 10000;
 
-        FakeDeath = false;
+        m_bFakeDeath            = false;
 
         if (m_pInstance)
             m_pInstance->SetData(TYPE_LORKHAN, NOT_STARTED);
@@ -278,28 +300,32 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public ScriptedAI
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     }
 
-    void UpdateAI (const uint32 diff)
+    void UpdateAI (const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         //Shield_Timer
-        if (Shield_Timer < diff)
+        if (m_uiShieldTimer < uiDiff)
         {
             DoCastSpellIfCan(m_creature,SPELL_SHIELD);
-            Shield_Timer = 61000;
-        }else Shield_Timer -= diff;
+            m_uiShieldTimer = 61000;
+        }
+        else
+            m_uiShieldTimer -= uiDiff;
 
         //BloodLust_Timer
-        if (BloodLust_Timer < diff)
+        if (m_uiBloodLustTimer < uiDiff)
         {
             DoCastSpellIfCan(m_creature,SPELL_BLOODLUST);
-            BloodLust_Timer = urand(20000, 28000);
-        }else BloodLust_Timer -= diff;
+            m_uiBloodLustTimer = urand(20000, 28000);
+        }
+        else
+            m_uiBloodLustTimer -= uiDiff;
 
         //Casting Greaterheal to Thekal or Zath if they are in meele range.
         // TODO - why this range check?
-        if (GreaterHeal_Timer < diff)
+        if (m_uiGreaterHealTimer < uiDiff)
         {
             if (m_pInstance)
             {
@@ -319,18 +345,22 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public ScriptedAI
                 }
             }
 
-            GreaterHeal_Timer = urand(15000, 20000);
-        }else GreaterHeal_Timer -= diff;
+            m_uiGreaterHealTimer = urand(15000, 20000);
+        }
+        else
+            m_uiGreaterHealTimer -= uiDiff;
 
         //Disarm_Timer
-        if (Disarm_Timer < diff)
+        if (m_uiDisarmTimer < uiDiff)
         {
             DoCastSpellIfCan(m_creature->getVictim(),SPELL_DISARM);
-            Disarm_Timer = urand(15000, 25000);
-        }else Disarm_Timer -= diff;
+            m_uiDisarmTimer = urand(15000, 25000);
+        }
+        else
+            m_uiDisarmTimer -= uiDiff;
 
         //Check_Timer for the death of LorKhan and Zath.
-        if (!FakeDeath && Check_Timer < diff)
+        if (!m_bFakeDeath && m_uiCheckTimer < uiDiff)
         {
             if (m_pInstance)
             {
@@ -359,8 +389,10 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public ScriptedAI
                 }
             }
 
-            Check_Timer = 5000;
-        }else Check_Timer -= diff;
+            m_uiCheckTimer = 5000;
+        }
+        else
+            m_uiCheckTimer -= uiDiff;
 
         if (m_creature->GetHealthPercent() < 5.0f)
         {
@@ -372,15 +404,18 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public ScriptedAI
             if (m_pInstance)
                 m_pInstance->SetData(TYPE_LORKHAN, SPECIAL);
 
-            FakeDeath = true;
+            m_bFakeDeath = true;
         }
 
-        if (!FakeDeath)
+        if (!m_bFakeDeath)
             DoMeleeAttackIfReady();
     }
 };
 
-//Zealot Zath
+/*######
+## npc_zealot_zath
+######*/
+
 struct MANGOS_DLL_DECL mob_zealot_zathAI : public ScriptedAI
 {
     mob_zealot_zathAI(Creature* pCreature) : ScriptedAI(pCreature)
@@ -389,27 +424,27 @@ struct MANGOS_DLL_DECL mob_zealot_zathAI : public ScriptedAI
         Reset();
     }
 
-    uint32 SweepingStrikes_Timer;
-    uint32 SinisterStrike_Timer;
-    uint32 Gouge_Timer;
-    uint32 Kick_Timer;
-    uint32 Blind_Timer;
-    uint32 Check_Timer;
-
-    bool FakeDeath;
-
     ScriptedInstance* m_pInstance;
+
+    uint32 m_uiSweepingStrikesTimer;
+    uint32 m_uiSinisterStrikeTimer;
+    uint32 m_uiGougeTimer;
+    uint32 m_uiKickTimer;
+    uint32 m_uiBlindTimer;
+    uint32 m_uiCheckTimer;
+
+    bool m_bFakeDeath;
 
     void Reset()
     {
-        SweepingStrikes_Timer = 13000;
-        SinisterStrike_Timer = 8000;
-        Gouge_Timer = 25000;
-        Kick_Timer = 18000;
-        Blind_Timer = 5000;
-        Check_Timer = 10000;
+        m_uiSweepingStrikesTimer    = 13000;
+        m_uiSinisterStrikeTimer     = 8000;
+        m_uiGougeTimer              = 25000;
+        m_uiKickTimer               = 18000;
+        m_uiBlindTimer              = 5000;
+        m_uiCheckTimer              = 10000;
 
-        FakeDeath = false;
+        m_bFakeDeath                = false;
 
         if (m_pInstance)
             m_pInstance->SetData(TYPE_ZATH, NOT_STARTED);
@@ -418,52 +453,62 @@ struct MANGOS_DLL_DECL mob_zealot_zathAI : public ScriptedAI
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     }
 
-    void UpdateAI (const uint32 diff)
+    void UpdateAI (const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         //SweepingStrikes_Timer
-        if (SweepingStrikes_Timer < diff)
+        if (m_uiSweepingStrikesTimer < uiDiff)
         {
             DoCastSpellIfCan(m_creature->getVictim(),SPELL_SWEEPINGSTRIKES);
-            SweepingStrikes_Timer = urand(22000, 26000);
-        }else SweepingStrikes_Timer -= diff;
+            m_uiSweepingStrikesTimer = urand(22000, 26000);
+        }
+        else
+            m_uiSweepingStrikesTimer -= uiDiff;
 
         //SinisterStrike_Timer
-        if (SinisterStrike_Timer < diff)
+        if (m_uiSinisterStrikeTimer < uiDiff)
         {
             DoCastSpellIfCan(m_creature->getVictim(),SPELL_SINISTERSTRIKE);
-            SinisterStrike_Timer = urand(8000, 16000);
-        }else SinisterStrike_Timer -= diff;
+            m_uiSinisterStrikeTimer = urand(8000, 16000);
+        }
+        else
+            m_uiSinisterStrikeTimer -= uiDiff;
 
         //Gouge_Timer
-        if (Gouge_Timer < diff)
+        if (m_uiGougeTimer < uiDiff)
         {
             DoCastSpellIfCan(m_creature->getVictim(),SPELL_GOUGE);
 
             if (m_creature->getThreatManager().getThreat(m_creature->getVictim()))
                 m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-100);
 
-            Gouge_Timer = urand(17000, 27000);
-        }else Gouge_Timer -= diff;
+            m_uiGougeTimer = urand(17000, 27000);
+        }
+        else
+            m_uiGougeTimer -= uiDiff;
 
         //Kick_Timer
-        if (Kick_Timer < diff)
+        if (m_uiKickTimer < uiDiff)
         {
             DoCastSpellIfCan(m_creature->getVictim(),SPELL_KICK);
-            Kick_Timer = urand(15000, 25000);
-        }else Kick_Timer -= diff;
+            m_uiKickTimer = urand(15000, 25000);
+        }
+        else
+            m_uiKickTimer -= uiDiff;
 
         //Blind_Timer
-        if (Blind_Timer < diff)
+        if (m_uiBlindTimer < uiDiff)
         {
             DoCastSpellIfCan(m_creature->getVictim(),SPELL_BLIND);
-            Blind_Timer = urand(10000, 20000);
-        }else Blind_Timer -= diff;
+            m_uiBlindTimer = urand(10000, 20000);
+        }
+        else
+            m_uiBlindTimer -= uiDiff;
 
         //Check_Timer for the death of LorKhan and Zath.
-        if (!FakeDeath && Check_Timer < diff)
+        if (!m_bFakeDeath && m_uiCheckTimer < uiDiff)
         {
             if (m_pInstance)
             {
@@ -492,8 +537,10 @@ struct MANGOS_DLL_DECL mob_zealot_zathAI : public ScriptedAI
                 }
             }
 
-            Check_Timer = 5000;
-        }else Check_Timer -= diff;
+            m_uiCheckTimer = 5000;
+        }
+        else
+            m_uiCheckTimer -= uiDiff;
 
         if (m_creature->GetHealthPercent() <= 5.0f)
         {
@@ -505,10 +552,10 @@ struct MANGOS_DLL_DECL mob_zealot_zathAI : public ScriptedAI
             if (m_pInstance)
                 m_pInstance->SetData(TYPE_ZATH, SPECIAL);
 
-            FakeDeath = true;
+            m_bFakeDeath = true;
         }
 
-        if (!FakeDeath)
+        if (!m_bFakeDeath)
             DoMeleeAttackIfReady();
     }
 };
@@ -530,20 +577,20 @@ CreatureAI* GetAI_mob_zealot_zath(Creature* pCreature)
 
 void AddSC_boss_thekal()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_thekal";
-    newscript->GetAI = &GetAI_boss_thekal;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_thekal";
+    pNewScript->GetAI = &GetAI_boss_thekal;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_zealot_lorkhan";
-    newscript->GetAI = &GetAI_mob_zealot_lorkhan;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_zealot_lorkhan";
+    pNewScript->GetAI = &GetAI_mob_zealot_lorkhan;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_zealot_zath";
-    newscript->GetAI = &GetAI_mob_zealot_zath;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_zealot_zath";
+    pNewScript->GetAI = &GetAI_mob_zealot_zath;
+    pNewScript->RegisterSelf();
 }
