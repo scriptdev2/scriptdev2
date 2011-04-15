@@ -40,8 +40,8 @@ enum
     SPELL_REVENGE           = 40392,
 
     //nazan
-    SPELL_FIREBALL          = 30691,
-    SPELL_H_FIREBALL        = 36920,
+    SPELL_FIREBALL          = 30691,                        // TODO: IDs not verified
+    SPELL_FIREBALL_H        = 36920,
 
     SPELL_CONE_OF_FIRE      = 30926,
     SPELL_H_CONE_OF_FIRE    = 36921,
@@ -50,7 +50,7 @@ enum
 
     //misc
     POINT_ID_CENTER         = 100,
-    POINT_ID_WAITING        = 101,
+    POINT_ID_FLYING         = 101,
     POINT_ID_COMBAT         = 102,
 
     NPC_VAZRUDEN_HERALD     = 17307,
@@ -58,7 +58,7 @@ enum
     NPC_VAZRUDEN            = 17537
 };
 
-const float afCenterPos[3] = {-1399.401f, 1736.365f, 86.008f}; //moves here to drop off nazan
+const float afCenterPos[3] = {-1399.401f, 1736.365f, 87.008f}; //moves here to drop off nazan
 const float afCombatPos[3] = {-1413.848f, 1754.019f, 83.146f}; //moves here when decending
 
 struct MANGOS_DLL_DECL boss_vazrudenAI : public ScriptedAI
@@ -154,7 +154,12 @@ struct MANGOS_DLL_DECL boss_vazruden_heraldAI : public ScriptedAI
     ScriptedInstance* m_pInstance;
     bool m_bIsRegularMode;
 
+    bool m_bIsEventInProgress;
     uint32 m_uiMovementTimer;
+    uint32 m_uiFireballTimer;
+
+    uint64 m_uiLastSeenPlayerGUID;
+    uint64 m_uiVazrudenGUID;
 
     void Reset()
     {
@@ -164,10 +169,25 @@ struct MANGOS_DLL_DECL boss_vazruden_heraldAI : public ScriptedAI
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
 
         m_uiMovementTimer = 0;
+        m_bIsEventInProgress = false;
+        m_uiLastSeenPlayerGUID = 0;
+        m_uiVazrudenGUID = 0;
+        m_uiFireballTimer = 0;
+
+        // see boss_onyxia
+        // sort of a hack, it is unclear how this really work but the values appear to be valid
+        m_creature->SetByteValue(UNIT_FIELD_BYTES_1, 3, UNIT_BYTE1_FLAG_ALWAYS_STAND | UNIT_BYTE1_FLAG_UNK_2);
+        m_creature->AddSplineFlag(SPLINEFLAG_FLYING);
     }
 
     void MoveInLineOfSight(Unit* pWho)
     {
+        if (m_bIsEventInProgress && !m_uiLastSeenPlayerGUID && pWho->GetTypeId() == TYPEID_PLAYER && pWho->isAlive() && !((Player*)pWho)->isGameMaster())
+        {
+            if (m_creature->IsWithinDistInMap(pWho, 40.0f))
+                m_uiLastSeenPlayerGUID = pWho->GetGUID();
+        }
+
         if (m_pInstance && m_pInstance->GetData(TYPE_NAZAN) != IN_PROGRESS)
             return;
 
@@ -181,24 +201,43 @@ struct MANGOS_DLL_DECL boss_vazruden_heraldAI : public ScriptedAI
 
         if (uiType == WAYPOINT_MOTION_TYPE)
         {
-            if (m_uiMovementTimer)
+            if (m_uiMovementTimer || m_bIsEventInProgress)
                 return;
 
             if (m_pInstance->GetData(TYPE_NAZAN) == SPECIAL)
             {
                 m_creature->SetCombatStartPosition(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ());
                 m_uiMovementTimer = 1000;
+                m_bIsEventInProgress = true;
             }
         }
 
         if (uiType == POINT_MOTION_TYPE)
         {
-            if (uiPointId == POINT_ID_CENTER)
-                DoSplit();
-            else if (uiPointId == POINT_ID_COMBAT)
+            switch (uiPointId)
             {
-                m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                m_pInstance->SetData(TYPE_NAZAN, IN_PROGRESS);
+                case POINT_ID_CENTER:
+                    DoSplit();
+                    break;
+                case POINT_ID_COMBAT:
+                {
+                    m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                    m_pInstance->SetData(TYPE_NAZAN, IN_PROGRESS);
+
+                    // Landing
+                    // undo flying
+                    m_creature->SetByteValue(UNIT_FIELD_BYTES_1, 3, 0);
+                    m_creature->RemoveSplineFlag(SPLINEFLAG_FLYING);
+
+                    Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiLastSeenPlayerGUID);
+                    if (pPlayer && pPlayer->isAlive())
+                        AttackStart(pPlayer);
+
+                    break;
+                }
+                case POINT_ID_FLYING:
+                    m_uiFireballTimer = 3000;
+                    break;
             }
         }
     }
@@ -206,22 +245,19 @@ struct MANGOS_DLL_DECL boss_vazruden_heraldAI : public ScriptedAI
     void DoMoveToCenter()
     {
         DoScriptText(SAY_INTRO, m_creature);
-
-        if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() == WAYPOINT_MOTION_TYPE)
-        {
-            m_creature->GetMotionMaster()->MovementExpired();
-            m_creature->GetMotionMaster()->MoveIdle();
-        }
-
         m_creature->GetMotionMaster()->MovePoint(POINT_ID_CENTER, afCenterPos[0], afCenterPos[1], afCenterPos[2]);
     }
 
-    void DoMoveToHold()
+    void DoMoveToAir()
     {
         float fX, fY, fZ;
         m_creature->GetCombatStartPosition(fX, fY, fZ);
 
-        m_creature->GetMotionMaster()->MovePoint(POINT_ID_WAITING, fX, fY, fZ);
+        // Remove Idle MMGen
+        if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() == IDLE_MOTION_TYPE)
+            m_creature->GetMotionMaster()->MovementExpired(false);
+
+        m_creature->GetMotionMaster()->MovePoint(POINT_ID_FLYING, fX, fY, fZ);
     }
 
     void DoSplit()
@@ -231,10 +267,21 @@ struct MANGOS_DLL_DECL boss_vazruden_heraldAI : public ScriptedAI
         m_creature->SummonCreature(NPC_VAZRUDEN, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_DEAD_DESPAWN, 0);
 
         m_uiMovementTimer = 3000;
+
+        // Let him idle for now
+        m_creature->GetMotionMaster()->MoveIdle();
     }
 
     void JustSummoned(Creature* pSummoned)
     {
+        if (pSummoned->GetEntry() != NPC_VAZRUDEN)
+            return;
+
+        if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiLastSeenPlayerGUID))
+            pSummoned->AI()->AttackStart(pPlayer);
+
+        m_uiVazrudenGUID = pSummoned->GetGUID();
+
         if (m_pInstance)
             m_pInstance->SetData(TYPE_VAZRUDEN, IN_PROGRESS);
     }
@@ -247,23 +294,42 @@ struct MANGOS_DLL_DECL boss_vazruden_heraldAI : public ScriptedAI
 
     void UpdateAI(const uint32 uiDiff)
     {
-        if (!m_creature->getVictim() && m_uiMovementTimer)
-        {
-            if (m_uiMovementTimer <= uiDiff)
-            {
-                if (m_pInstance)
-                {
-                    if (m_pInstance->GetData(TYPE_VAZRUDEN) == IN_PROGRESS)
-                        DoMoveToHold();
-                    else
-                        DoMoveToCenter();
-                }
-                m_uiMovementTimer = 0;
-            } else m_uiMovementTimer -= uiDiff;
-        }
-
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+        {
+            if (m_uiMovementTimer)
+            {
+                if (m_uiMovementTimer <= uiDiff)
+                {
+                    if (m_pInstance)
+                    {
+                        if (m_pInstance->GetData(TYPE_VAZRUDEN) == IN_PROGRESS)
+                            DoMoveToAir();
+                        else
+                            DoMoveToCenter();
+                    }
+                    m_uiMovementTimer = 0;
+                }
+                else
+                    m_uiMovementTimer -= uiDiff;
+            }
+
+            if (m_uiVazrudenGUID && m_uiFireballTimer)
+            {
+                if (m_uiFireballTimer <= uiDiff)
+                {
+                    if (Creature* pVazruden = m_creature->GetMap()->GetCreature(m_uiVazrudenGUID))
+                    {
+                        if (Unit* pEnemy = pVazruden->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                            DoCastSpellIfCan(pEnemy, m_bIsRegularMode ? SPELL_FIREBALL : SPELL_FIREBALL_H, 0, pVazruden->GetGUID());
+                    }
+                    m_uiFireballTimer = urand(4000, 8000);
+                }
+                else
+                    m_uiFireballTimer -= uiDiff;
+            }
+
             return;
+        }
 
         DoMeleeAttackIfReady();
     }
