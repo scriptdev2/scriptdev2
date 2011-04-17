@@ -37,6 +37,7 @@ enum
     GOSSIP_TEXT_NEFARIUS_3          = 7199,
 
     MAX_DRAKES                      = 5,
+    MAX_DRAKE_SUMMONS               = 42,
     NPC_BRONZE_DRAKANOID            = 14263,
     NPC_BLUE_DRAKANOID              = 14261,
     NPC_RED_DRAKANOID               = 14264,
@@ -53,6 +54,7 @@ enum
     // shadowblink = 22664, 22681 -> teleport around the room, possibly random
 
     FACTION_BLACK_DRAGON            = 103,
+    FACTION_FRIENDLY                = 35
 };
 
 struct SpawnLocation
@@ -62,10 +64,10 @@ struct SpawnLocation
 
 static const SpawnLocation aNefarianLocs[4] =
 {
-    {-7591.151f, -1204.051f, 476.800f},     // adds 1 & 2
+    {-7591.151f, -1204.051f, 476.800f},                     // adds 1 & 2
     {-7514.598f, -1150.448f, 476.796f},
-    {-7445.0f, -1332.0f, 536.0f},           // nefarian
-    {-7592.0f, -1264.0f, 481.0f},           // hide pos
+    {-7445.0f, -1332.0f, 536.0f},                           // nefarian
+    {-7592.0f, -1264.0f, 481.0f},                           // hide pos
 };
 
 static const uint32 aPossibleDrake[MAX_DRAKES] = {NPC_BRONZE_DRAKANOID, NPC_BLUE_DRAKANOID, NPC_RED_DRAKANOID, NPC_GREEN_DRAKANOID, NPC_BLACK_DRAKANOID};
@@ -112,16 +114,48 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
 
     void Reset()
     {
-        m_uiSpawnedAdds = 0;
-        m_uiAddSpawnTimer = 10000;
+        m_uiSpawnedAdds     = 0;
+        m_uiAddSpawnTimer   = 10000;
         m_uiShadowBoltTimer = 5000;
-        m_uiFearTimer = 8000;
-        m_uiResetTimer = 900000;                                //On official it takes him 15 minutes(900 seconds) to reset. We are only doing 1 minute to make testing easier
-        m_uiNefarianGUID = 0;
-        m_uiNefCheckTime = 2000;
-        m_uiNefarianGUID = 0;
+        m_uiFearTimer       = 8000;
+        m_uiResetTimer      = 15 * MINUTE * IN_MILLISECONDS;
+        m_uiNefarianGUID    = 0;
+        m_uiNefCheckTime    = 2000;
 
+        // set gossip flag to begin the event
         m_creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+    }
+
+    void Aggro(Unit* pWho)
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_NEFARIAN, IN_PROGRESS);
+    }
+
+    void JustReachedHome()
+    {
+        m_creature->setFaction(FACTION_FRIENDLY);
+        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_NEFARIAN, FAIL);
+    }
+
+    void JustSummoned(Creature* pSummoned)
+    {
+        if (pSummoned->GetEntry() == NPC_NEFARIAN)
+        {
+            m_uiNefarianGUID = pSummoned->GetEntry();
+            pSummoned->RemoveSplineFlag(SPLINEFLAG_WALKMODE);
+            pSummoned->SetSplineFlags(SPLINEFLAG_FLYING);
+        }
+        else
+            ++m_uiSpawnedAdds;
+
+        if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            pSummoned->AI()->AttackStart(pTarget);
+
+        pSummoned->SetRespawnDelay(7*DAY);
     }
 
     void UpdateAI(const uint32 uiDiff)
@@ -129,10 +163,10 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //Only do this if we haven't spawned nef yet
-        if (m_uiSpawnedAdds < 42)
+        // Only do this if we haven't spawned nef yet
+        if (m_uiSpawnedAdds < MAX_DRAKE_SUMMONS)
         {
-            // ShadowBoltTimer
+            // Shadowbolt Timer
             if (m_uiShadowBoltTimer < uiDiff)
             {
                 if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
@@ -144,7 +178,7 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
             else
                 m_uiShadowBoltTimer -= uiDiff;
 
-            // FearTimer
+            // Fear Timer
             if (m_uiFearTimer < uiDiff)
             {
                 if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
@@ -156,49 +190,22 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
             else
                 m_uiFearTimer -= uiDiff;
 
-            //Add spawning mechanism
+            // Add spawning mechanism
             if (m_uiAddSpawnTimer < uiDiff)
             {
                 //Spawn 2 random types of creatures at the 2 locations
-                uint32 CreatureID;
-                Creature* Spawned = NULL;
-                Unit* target = NULL;
+                uint32 uiCreatureId = 0;
 
-                //1 in 3 chance it will be a chromatic
-                if (!urand(0, 2))
-                    CreatureID = NPC_CHROMATIC_DRAKANOID;
-                else CreatureID = m_uiDrakeTypeOne;
+                // 1 in 3 chance it will be a chromatic
+                uiCreatureId = urand(0, 2) ? m_uiDrakeTypeOne : NPC_CHROMATIC_DRAKANOID;
+                m_creature->SummonCreature(uiCreatureId, aNefarianLocs[0].m_fX, aNefarianLocs[0].m_fY, aNefarianLocs[0].m_fZ, 5.000f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30*MINUTE*IN_MILLISECONDS);
 
-                ++m_uiSpawnedAdds;
-
-                //Spawn creature and force it to start attacking a random target
-                Spawned = m_creature->SummonCreature(CreatureID, aNefarianLocs[0].m_fX, aNefarianLocs[0].m_fY, aNefarianLocs[0].m_fZ, 5.000f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
-                target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
-                if (target && Spawned)
-                {
-                    Spawned->AI()->AttackStart(target);
-                    Spawned->setFaction(103);
-                }
-
-                //1 in 3 chance it will be a chromatic
-                if (!urand(0, 2))
-                    CreatureID = NPC_CHROMATIC_DRAKANOID;
-                else CreatureID = m_uiDrakeTypeTwo;
-
-                ++m_uiSpawnedAdds;
-
-                target = NULL;
-                Spawned = NULL;
-                Spawned = m_creature->SummonCreature(CreatureID, aNefarianLocs[1].m_fX, aNefarianLocs[1].m_fY, aNefarianLocs[1].m_fZ, 5.000, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
-                target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
-                if (target && Spawned)
-                {
-                    Spawned->AI()->AttackStart(target);
-                    Spawned->setFaction(103);
-                }
+                // 1 in 3 chance it will be a chromatic
+                uiCreatureId = urand(0, 2) ? m_uiDrakeTypeTwo : NPC_CHROMATIC_DRAKANOID;
+                m_creature->SummonCreature(uiCreatureId, aNefarianLocs[1].m_fX, aNefarianLocs[1].m_fY, aNefarianLocs[1].m_fZ, 5.000, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30*MINUTE*IN_MILLISECONDS);
 
                 //Begin phase 2 by spawning Nefarian and what not
-                if (m_uiSpawnedAdds >= 42)
+                if (m_uiSpawnedAdds >= MAX_DRAKE_SUMMONS)
                 {
                     //Teleport Victor Nefarius way out of the map
                     //MapManager::Instance().GetMap(m_creature->GetMapId(), m_creature)->CreatureRelocation(m_creature,0,0,-5000,0);
@@ -216,16 +223,7 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
                     m_creature->NearTeleportTo(aNefarianLocs[3].m_fX, aNefarianLocs[3].m_fY, aNefarianLocs[3].m_fZ, 0.0f);
 
                     //Spawn nef and have him attack a random target
-                    Creature* Nefarian = m_creature->SummonCreature(NPC_NEFARIAN, aNefarianLocs[2].m_fX, aNefarianLocs[2].m_fY, aNefarianLocs[2].m_fZ, 0, TEMPSUMMON_DEAD_DESPAWN, 0);
-                    target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
-
-                    if (target && Nefarian)
-                    {
-                        Nefarian->AI()->AttackStart(target);
-                        Nefarian->setFaction(103);
-                        m_uiNefarianGUID = Nefarian->GetGUID();
-                    }
-                    else error_log("SD2: Blackwing Lair: Unable to spawn nefarian properly.");
+                    m_creature->SummonCreature(NPC_NEFARIAN, aNefarianLocs[2].m_fX, aNefarianLocs[2].m_fY, aNefarianLocs[2].m_fZ, 0, TEMPSUMMON_DEAD_DESPAWN, 0);
                 }
 
                 m_uiAddSpawnTimer = 4000;
@@ -285,6 +283,7 @@ bool GossipSelect_boss_victor_nefarius(Player* pPlayer, Creature* pCreature, uin
             DoScriptText(SAY_GAMESBEGIN_2, pCreature);
             // remove gossip, set hostile and attack
             pCreature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+            pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             pCreature->setFaction(FACTION_BLACK_DRAGON);
             pCreature->CastSpell(pCreature, SPELL_NEFARIUS_BARRIER, false);
             pCreature->AI()->AttackStart(pPlayer);
