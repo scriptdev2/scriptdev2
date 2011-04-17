@@ -863,10 +863,13 @@ bool EffectDummyCreature_spell_dummy_npc(Unit* pCaster, uint32 uiSpellId, SpellE
         {
             if (uiEffIndex == EFFECT_INDEX_0)
             {
+                if (pCaster->GetTypeId() == TYPEID_PLAYER)
+                    ((Player*)pCaster)->KilledMonsterCredit(pCreatureTarget->GetEntry(), pCreatureTarget->GetObjectGuid());
+
                 pCreatureTarget->CastSpell(pCreatureTarget, SPELL_APPLE_FALLS_TO_GROUND, false);
+
                 if (Creature* pLuckyWilhelm = GetClosestCreatureWithEntry(pCreatureTarget, NPC_LUCKY_WILHELM, 2*INTERACTION_DISTANCE))
                     DoScriptText(SAY_LUCKY_HIT_APPLE, pLuckyWilhelm);
-                pCreatureTarget->ForcedDespawn(100);
             }
             return true;
         }
@@ -880,6 +883,7 @@ bool EffectDummyCreature_spell_dummy_npc(Unit* pCaster, uint32 uiSpellId, SpellE
                     case 2: DoScriptText(SAY_LUCKY_HIT_2, pCreatureTarget); break;
                     case 3: DoScriptText(SAY_LUCKY_HIT_3, pCreatureTarget); break;
                 }
+
                 if (Creature* pDrostan = GetClosestCreatureWithEntry(pCreatureTarget, NPC_DROSTAN, 4*INTERACTION_DISTANCE))
                     DoScriptText(urand(0, 1) ? SAY_DROSTAN_GOT_LUCKY_1 : SAY_DROSTAN_GOT_LUCKY_2, pDrostan);
             }
@@ -889,8 +893,9 @@ bool EffectDummyCreature_spell_dummy_npc(Unit* pCaster, uint32 uiSpellId, SpellE
         {
             if (uiEffIndex == EFFECT_INDEX_0)
             {
-                if (Creature* pDrostan = GetClosestCreatureWithEntry(pCreatureTarget, NPC_DROSTAN, 4*INTERACTION_DISTANCE))
+                if (Creature* pDrostan = GetClosestCreatureWithEntry(pCreatureTarget, NPC_DROSTAN, 5*INTERACTION_DISTANCE))
                     DoScriptText(urand(0, 1) ? SAY_DROSTAN_HIT_BIRD_1 : SAY_DROSTAN_HIT_BIRD_2, pDrostan);
+
                 pCreatureTarget->DealDamage(pCreatureTarget, pCreatureTarget->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
             }
             return true;
