@@ -1040,7 +1040,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 
 (-1469004,'In this world where time is your enemy, it is my greatest ally. This grand game of life that you think you play in fact plays you. To that I say...',0,0,0,0,'victor_nefarius SAY_GAMESBEGIN_1'),
 (-1469005,'Let the games begin!',8280,1,0,0,'victor_nefarius SAY_GAMESBEGIN_2'),
-(-1469006,'Ah, the heroes. You are persistent, aren\'t you. Your allied attempted to match his power against mine, and had to pay the price. Now he shall serve me, by slaughtering you. Get up little red wyrm and destroy them!',8279,1,0,0,'victor_nefarius SAY_VAEL_INTRO'),
+(-1469006,'Ah, the heroes. You are persistent, aren\'t you. Your allied attempted to match his power against mine, and had to pay the price. Now he shall serve me, by slaughtering you. Get up little red wyrm and destroy them!',8279,1,0,0,'victor_nefarius SAY_NEFARIUS_CORRUPT'),
 
 (-1469007,'Well done, my minions. The mortals\' courage begins to wane! Now, let\'s see how they contend with the true Lord of Blackrock Spire!',8288,1,0,0,'nefarian SAY_AGGRO'),
 (-1469008,'Enough! Now you vermin shall feel the force of my birthright, the fury of the earth itself.',8289,1,0,0,'nefarian SAY_XHEALTH'),
@@ -1069,7 +1069,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1469029,'Nefarius\' hate has made me stronger than ever before. You should have fled, while you could, mortals! The fury of Blackrock courses through my veins!',8285,1,0,0,'vaelastrasz SAY_HALFLIFE'),
 (-1469030,'Forgive me $N, your death only adds to my failure.',8284,1,0,0,'vaelastrasz SAY_KILLTARGET'),
 
-(-1469031,'REUSE ME',0,0,0,0,'REUSE ME');
+(-1469031,'Death Knights, get over here!',0,1,0,0,'nefarian SAY_DEATH_KNIGHT');
 
 -- -1 509 000 RUINS OF AHN'QIRAJ
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
@@ -3467,6 +3467,12 @@ INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 (-3409000,'Tell me more.','majordomo_executus GOSSIP_ITEM_SUMMON_1'),
 (-3409001,'What else do you have to say?','majordomo_executus GOSSIP_ITEM_SUMMON_2'),
 (-3409002,'You challenged us and we have come. Where is this master you speak of?','majordomo_executus GOSSIP_ITEM_SUMMON_3');
+
+-- -3 469 000 BLACKWING LAIR
+INSERT INTO gossip_texts (entry,content_default,comment) VALUES
+(-3469000,'I\'ve made no mistakes.','victor_nefarius GOSSIP_ITEM_NEFARIUS_1'),
+(-3469001,'You have lost your mind, Nefarius. You speak in riddles.','victor_nefarius GOSSIP_ITEM_NEFARIUS_2'),
+(-3469002,'Please do.','victor_nefarius GOSSIP_ITEM_NEFARIUS_3');
 
 -- -3 560 000 ESCAPE FROM DURNHOLDE (OLD HILLSBRAD)
 INSERT INTO gossip_texts (entry,content_default,comment) VALUES

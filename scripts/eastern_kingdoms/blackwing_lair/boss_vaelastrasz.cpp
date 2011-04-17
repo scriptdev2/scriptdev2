@@ -31,6 +31,7 @@ enum
     SAY_LINE_3                  = -1469028,
     SAY_HALFLIFE                = -1469029,
     SAY_KILLTARGET              = -1469030,
+    SAY_NEFARIUS_CORRUPT        = -1469006,                   //when he corrupts Vaelastrasz; possible to start the event by arrea trigger id = 3626
 
     SPELL_ESSENCE_OF_THE_RED    = 23513,
     SPELL_FLAME_BREATH          = 23461,
