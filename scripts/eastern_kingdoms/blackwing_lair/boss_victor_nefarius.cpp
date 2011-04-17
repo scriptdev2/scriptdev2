@@ -62,12 +62,13 @@ struct SpawnLocation
     float m_fX, m_fY, m_fZ;
 };
 
-static const SpawnLocation aNefarianLocs[4] =
+static const SpawnLocation aNefarianLocs[5] =
 {
     {-7591.151f, -1204.051f, 476.800f},                     // adds 1 & 2
     {-7514.598f, -1150.448f, 476.796f},
     {-7445.0f, -1332.0f, 536.0f},                           // nefarian
     {-7592.0f, -1264.0f, 481.0f},                           // hide pos
+    {-7493.377f, -1258.85f, 478.30f},                       // nefarian fly pos
 };
 
 static const uint32 aPossibleDrake[MAX_DRAKES] = {NPC_BRONZE_DRAKANOID, NPC_BLUE_DRAKANOID, NPC_RED_DRAKANOID, NPC_GREEN_DRAKANOID, NPC_BLACK_DRAKANOID};
@@ -75,10 +76,10 @@ static const uint32 aPossibleDrake[MAX_DRAKES] = {NPC_BRONZE_DRAKANOID, NPC_BLUE
 //This script is complicated
 //Instead of morphing Victor Nefarius we will have him control phase 1
 //And then have him spawn "Nefarian" for phase 2
-//When phase 2 starts Victor Nefarius will go into hiding and stop attacking
-//If Nefarian despawns because he killed the players then this guy will EnterEvadeMode
+//When phase 2 starts Victor Nefarius will go invisible and stop attacking
+//If Nefarian reched home because nef killed the players then nef will trigger this guy to EnterEvadeMode
 //and allow players to start the event over
-//If nefarian dies then he will kill himself then he will kill himself in his hiding place
+//If nefarian dies then he will kill himself then he will be despawned in Nefarian script
 //To prevent players from doing the event twice
 
 struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
@@ -109,8 +110,6 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
     uint32 m_uiResetTimer;
     uint32 m_uiDrakeTypeOne;
     uint32 m_uiDrakeTypeTwo;
-    uint64 m_uiNefarianGUID;
-    uint32 m_uiNefCheckTime;
 
     void Reset()
     {
@@ -119,11 +118,13 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
         m_uiShadowBoltTimer = 5000;
         m_uiFearTimer       = 8000;
         m_uiResetTimer      = 15 * MINUTE * IN_MILLISECONDS;
-        m_uiNefarianGUID    = 0;
-        m_uiNefCheckTime    = 2000;
 
         // set gossip flag to begin the event
         m_creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+
+        // Make visible if needed
+        if (m_creature->GetVisibility() != VISIBILITY_ON)
+            m_creature->SetVisibility(VISIBILITY_ON);
     }
 
     void Aggro(Unit* pWho)
@@ -145,17 +146,41 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
     {
         if (pSummoned->GetEntry() == NPC_NEFARIAN)
         {
-            m_uiNefarianGUID = pSummoned->GetEntry();
             pSummoned->RemoveSplineFlag(SPLINEFLAG_WALKMODE);
-            pSummoned->SetSplineFlags(SPLINEFLAG_FLYING);
+
+            // see boss_onyxia (also note the removal of this in boss_nefarian)
+            pSummoned->SetByteValue(UNIT_FIELD_BYTES_1, 3, UNIT_BYTE1_FLAG_ALWAYS_STAND | UNIT_BYTE1_FLAG_UNK_2);
+            pSummoned->AddSplineFlag(SPLINEFLAG_FLYING);
+
+            // Let Nefarian fly towards combat area
+            pSummoned->GetMotionMaster()->MovePoint(1, aNefarianLocs[4].m_fX, aNefarianLocs[4].m_fY, aNefarianLocs[4].m_fZ);
         }
         else
+        {
             ++m_uiSpawnedAdds;
 
-        if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-            pSummoned->AI()->AttackStart(pTarget);
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                pSummoned->AI()->AttackStart(pTarget);
+        }
 
         pSummoned->SetRespawnDelay(7*DAY);
+    }
+
+    void SummonedMovementInform(Creature* pSummoned, uint32 uiMotionType, uint32 uiPointId)
+    {
+        // If Nefarian has reached combat area, let him attack
+        if (pSummoned->GetEntry() == NPC_NEFARIAN && uiMotionType == POINT_MOTION_TYPE && uiPointId == 1)
+        {
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                pSummoned->AI()->AttackStart(pTarget);
+        }
+    }
+
+    void SummonedCreatureJustDied(Creature* pSummoned)
+    {
+        // Despawn self when Nefarian is killed
+        if (pSummoned->GetEntry() == NPC_NEFARIAN)
+            m_creature->ForcedDespawn();
     }
 
     void UpdateAI(const uint32 uiDiff)
@@ -204,7 +229,7 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
                 uiCreatureId = urand(0, 2) ? m_uiDrakeTypeTwo : NPC_CHROMATIC_DRAKANOID;
                 m_creature->SummonCreature(uiCreatureId, aNefarianLocs[1].m_fX, aNefarianLocs[1].m_fY, aNefarianLocs[1].m_fZ, 5.000, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30*MINUTE*IN_MILLISECONDS);
 
-                //Begin phase 2 by spawning Nefarian and what not
+                //Begin phase 2 by spawning Nefarian
                 if (m_uiSpawnedAdds >= MAX_DRAKE_SUMMONS)
                 {
                     //Teleport Victor Nefarius way out of the map
@@ -214,41 +239,25 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
                     m_creature->InterruptNonMeleeSpells(false);
 
                     //Root self
-                    DoCastSpellIfCan(m_creature,33356);
+                    DoCastSpellIfCan(m_creature, 33356, CAST_TRIGGERED);
 
                     //Make super invis
-                    DoCastSpellIfCan(m_creature,8149);
+                    if (m_creature->GetVisibility() != VISIBILITY_OFF)
+                        m_creature->SetVisibility(VISIBILITY_OFF);
 
+                    // Do not teleport him away, this is not needed (invisible and rooted)
                     //Teleport self to a hiding spot
-                    m_creature->NearTeleportTo(aNefarianLocs[3].m_fX, aNefarianLocs[3].m_fY, aNefarianLocs[3].m_fZ, 0.0f);
+                    //m_creature->NearTeleportTo(aNefarianLocs[3].m_fX, aNefarianLocs[3].m_fY, aNefarianLocs[3].m_fZ, 0.0f);
 
-                    //Spawn nef and have him attack a random target
-                    m_creature->SummonCreature(NPC_NEFARIAN, aNefarianLocs[2].m_fX, aNefarianLocs[2].m_fY, aNefarianLocs[2].m_fZ, 0, TEMPSUMMON_DEAD_DESPAWN, 0);
+                    // Spawn Nefarian
+                    // Summon as active, to be able to work proper!
+                    m_creature->SummonCreature(NPC_NEFARIAN, aNefarianLocs[2].m_fX, aNefarianLocs[2].m_fY, aNefarianLocs[2].m_fZ, 0, TEMPSUMMON_DEAD_DESPAWN, 0, true);
                 }
 
                 m_uiAddSpawnTimer = 4000;
             }
             else
                 m_uiAddSpawnTimer -= uiDiff;
-        }
-        else if (m_uiNefarianGUID)
-        {
-            if (m_uiNefCheckTime < uiDiff)
-            {
-                Creature* pNefarian = m_creature->GetMap()->GetCreature(m_uiNefarianGUID);
-
-                //If nef is dead then we die to so the players get out of combat
-                //and cannot repeat the event
-                if (!pNefarian || !pNefarian->isAlive())
-                {
-                    m_uiNefarianGUID = 0;
-                    m_creature->ForcedDespawn();
-                }
-
-                m_uiNefCheckTime = 2000;
-            }
-            else
-                m_uiNefCheckTime -= uiDiff;
         }
     }
 };

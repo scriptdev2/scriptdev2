@@ -23,6 +23,7 @@ EndScriptData */
 
 #include "precompiled.h"
 #include "blackwing_lair.h"
+#include "TemporarySummon.h"
 
 enum
 {
@@ -113,12 +114,32 @@ struct MANGOS_DLL_DECL boss_nefarianAI : public ScriptedAI
     void JustReachedHome()
     {
         if (m_pInstance)
+        {
             m_pInstance->SetData(TYPE_NEFARIAN, FAIL);
+
+            // Cleanup encounter
+            if (m_creature->IsTemporarySummon())
+            {
+                TemporarySummon* pTemporary = (TemporarySummon*)m_creature;
+
+                if (Creature* pNefarius = m_creature->GetMap()->GetCreature(pTemporary->GetSummonerGuid()))
+                    pNefarius->AI()->EnterEvadeMode();
+            }
+
+            m_creature->ForcedDespawn();
+        }
     }
 
     void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
+
+        // Remove flying in case Nefarian aggroes before his combat point was reached
+        if (m_creature->HasSplineFlag(SPLINEFLAG_FLYING))
+        {
+            m_creature->SetByteValue(UNIT_FIELD_BYTES_1, 3, 0);
+            m_creature->RemoveSplineFlag(SPLINEFLAG_FLYING);
+        }
 
         DoCastSpellIfCan(m_creature, SPELL_SHADOWFLAME_INITIAL);
     }
