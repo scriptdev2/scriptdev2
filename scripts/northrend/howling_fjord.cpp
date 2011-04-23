@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Howling_Fjord
 SD%Complete: ?
-SDComment: Quest support: 11221, 11483, 11300, 11464, 11343
+SDComment: Quest support: 11221, 11300, 11464, 11343
 SDCategory: Howling Fjord
 EndScriptData */
 
@@ -27,7 +27,6 @@ at_ancient_male_vrykul
 npc_daegarn
 npc_deathstalker_razael - TODO, can be moved to database
 npc_dark_ranger_lyana - TODO, can be moved to database
-npc_mcgoyver - TODO, can be moved to database
 npc_silvermoon_harry
 EndContentData */
 
@@ -399,70 +398,6 @@ bool GossipSelect_npc_greer_orehammer(Player* pPlayer, Creature* pCreature, uint
 }
 
 /*######
-## npc_mcgoyver - TODO, can be moved to database
-######*/
-
-#define GOSSIP_ITEM_MCGOYVER1 "Walt sent me to pick up some dark iron ingots."
-#define GOSSIP_ITEM_MCGOYVER2 "Yarp."
-
-enum
-{
-    QUEST_WE_CAN_REBUILD_IT                = 11483,
-    GOSSIP_TEXTID_MCGOYVER                 = 12193,
-    ITEM_DARK_IRON_INGOTS                  = 34135,
-    SPELL_MCGOYVER_TAXI_EXPLORERSLEAGUE    = 44280,
-    SPELL_MCGOYVER_CREATE_DARK_IRON_INGOTS = 44512
-};
-
-bool GossipHello_npc_mcgoyver(Player* pPlayer, Creature* pCreature)
-{
-    switch(pPlayer->GetQuestStatus(QUEST_WE_CAN_REBUILD_IT))
-    {
-        case QUEST_STATUS_INCOMPLETE:
-            if (!pPlayer->HasItemCount(ITEM_DARK_IRON_INGOTS, 1, true))
-            {
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_MCGOYVER1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-                pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
-            }
-            else
-            {
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_MCGOYVER2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-                pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_MCGOYVER, pCreature->GetGUID());
-            }
-            break;
-        case QUEST_STATUS_COMPLETE:
-            if (!pPlayer->GetQuestRewardStatus(QUEST_WE_CAN_REBUILD_IT))
-            {
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_MCGOYVER2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-                pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_MCGOYVER, pCreature->GetGUID());
-                break;
-            }
-        default:
-            pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
-    }
-
-    return true;
-}
-
-bool GossipSelect_npc_mcgoyver(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    switch(uiAction)
-    {
-        case GOSSIP_ACTION_INFO_DEF+1:
-            pCreature->CastSpell(pPlayer, SPELL_MCGOYVER_CREATE_DARK_IRON_INGOTS, true);
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_MCGOYVER2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_MCGOYVER, pCreature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+2:
-            pPlayer->CLOSE_GOSSIP_MENU();
-            pCreature->CastSpell(pPlayer, SPELL_MCGOYVER_TAXI_EXPLORERSLEAGUE, true);
-            break;
-    }
-
-    return true;
-}
-
-/*######
 ## npc_silvermoon_harry
 ######*/
 
@@ -672,12 +607,6 @@ void AddSC_howling_fjord()
     pNewScript->Name = "npc_greer_orehammer";
     pNewScript->pGossipHello = &GossipHello_npc_greer_orehammer;
     pNewScript->pGossipSelect = &GossipSelect_npc_greer_orehammer;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_mcgoyver";
-    pNewScript->pGossipHello = &GossipHello_npc_mcgoyver;
-    pNewScript->pGossipSelect = &GossipSelect_npc_mcgoyver;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
