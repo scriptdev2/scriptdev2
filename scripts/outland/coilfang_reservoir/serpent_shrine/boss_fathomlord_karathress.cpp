@@ -62,7 +62,7 @@ enum
 
     //Caribdis Spells
     SPELL_WATER_BOLT_VOLLEY         = 38335,
-    SPELL_TIDAL_SURGE               = 38353,                // triggers 38357
+    SPELL_TIDAL_SURGE               = 38358,                // triggers 38353 which then triggers 38357
     SPELL_HEAL                      = 38330,
     SPELL_SUMMON_CYCLONE            = 38337,                // summons creature 22104 which uses spell 29538
 
@@ -533,8 +533,7 @@ struct MANGOS_DLL_DECL boss_fathomguard_caribdisAI : public Advisor_Base_AI
         //m_uiTidalSurge_Timer
         if (m_uiTidalSurge_Timer < uiDiff)
         {
-            // the victim has to cast it on himself because in the spell.dbc the EffectImplicitTargetA1 is 1 (TARGET_SELF)
-            m_creature->getVictim()->CastSpell(m_creature->getVictim(), SPELL_TIDAL_SURGE, true);
+            m_creature->CastSpell(m_creature->getVictim(), SPELL_TIDAL_SURGE, true);
             m_uiTidalSurge_Timer = urand(15000, 20000);
         }else m_uiTidalSurge_Timer -= uiDiff;
 
