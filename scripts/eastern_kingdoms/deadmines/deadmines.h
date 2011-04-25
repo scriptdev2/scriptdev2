@@ -21,6 +21,7 @@ enum
     GO_DOOR_LEVER           = 101833,
     GO_IRON_CLAD            = 16397,
     GO_DEFIAS_CANNON        = 16398,
+    GO_SMITE_CHEST          = 144111,                       // use to get correct location of mr.smites equipment changes
 
     NPC_RHAHKZOR            = 644,
     NPC_MR_SMITE            = 646,

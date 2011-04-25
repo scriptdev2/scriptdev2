@@ -33,6 +33,7 @@ struct MANGOS_DLL_DECL instance_deadmines : public ScriptedInstance
     uint64 m_uiFactoryDoorGUID;
     uint64 m_uiIronCladGUID;
     uint64 m_uiCannonGUID;
+    uint64 m_uiSmiteChestGUID;
     uint64 m_uiSmiteGUID;
 
     uint32 m_uiIronDoor_Timer;
@@ -45,6 +46,7 @@ struct MANGOS_DLL_DECL instance_deadmines : public ScriptedInstance
         m_uiFactoryDoorGUID = 0;
         m_uiIronCladGUID = 0;
         m_uiCannonGUID = 0;
+        m_uiSmiteChestGUID = 0;
         m_uiSmiteGUID = 0;
 
         m_uiIronDoor_Timer = 0;
@@ -71,6 +73,9 @@ struct MANGOS_DLL_DECL instance_deadmines : public ScriptedInstance
                 break;
             case GO_DEFIAS_CANNON:
                 m_uiCannonGUID = pGo->GetGUID();
+                break;
+            case GO_SMITE_CHEST:
+                m_uiSmiteChestGUID = pGo->GetGUID();
                 break;
         }
     }
