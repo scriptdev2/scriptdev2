@@ -7,17 +7,22 @@
 
 enum
 {
-    MAX_ENCOUNTER           = 1,
+    MAX_ENCOUNTER           = 2,
 
     TYPE_DEFIAS_ENDDOOR     = 1,
+    TYPE_RHAHKZOR           = 2,
+
     DATA_DEFIAS_DOOR        = 2,
 
     INST_SAY_ALARM1         = -1036000,
     INST_SAY_ALARM2         = -1036001,
 
+    GO_FACTORY_DOOR         = 13965,
     GO_DOOR_LEVER           = 101833,
     GO_IRON_CLAD            = 16397,
     GO_DEFIAS_CANNON        = 16398,
+
+    NPC_RHAHKZOR            = 644,
     NPC_MR_SMITE            = 646,
     NPC_PIRATE              = 657
 };

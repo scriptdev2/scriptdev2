@@ -30,6 +30,7 @@ struct MANGOS_DLL_DECL instance_deadmines : public ScriptedInstance
 
     uint32 m_auiEncounter[MAX_ENCOUNTER];
 
+    uint64 m_uiFactoryDoorGUID;
     uint64 m_uiIronCladGUID;
     uint64 m_uiCannonGUID;
     uint64 m_uiSmiteGUID;
@@ -41,6 +42,7 @@ struct MANGOS_DLL_DECL instance_deadmines : public ScriptedInstance
     {
         memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
 
+        m_uiFactoryDoorGUID = 0;
         m_uiIronCladGUID = 0;
         m_uiCannonGUID = 0;
         m_uiSmiteGUID = 0;
@@ -57,33 +59,65 @@ struct MANGOS_DLL_DECL instance_deadmines : public ScriptedInstance
 
     void OnObjectCreate(GameObject* pGo)
     {
-        if (pGo->GetEntry() == GO_IRON_CLAD)
-            m_uiIronCladGUID = pGo->GetGUID();
+        switch(pGo->GetEntry())
+        {
+            case GO_FACTORY_DOOR:
+                m_uiFactoryDoorGUID = pGo->GetGUID();
+                if (GetData(TYPE_RHAHKZOR) == DONE)
+                    pGo->SetGoState(GO_STATE_ACTIVE);
+                break;
+            case GO_IRON_CLAD:
+                m_uiIronCladGUID = pGo->GetGUID();
+                break;
+            case GO_DEFIAS_CANNON:
+                m_uiCannonGUID = pGo->GetGUID();
+                break;
+        }
+    }
 
-        if (pGo->GetEntry() == GO_DEFIAS_CANNON)
-            m_uiCannonGUID = pGo->GetGUID();
+    void OnCreatureDeath(Creature* pCreature)
+    {
+        if (pCreature->GetEntry() == NPC_RHAHKZOR)
+            SetData(TYPE_RHAHKZOR, DONE);
     }
 
     void SetData(uint32 uiType, uint32 uiData)
     {
-        if (uiType == TYPE_DEFIAS_ENDDOOR)
+        switch(uiType)
         {
-            if (uiData == IN_PROGRESS)
+            case TYPE_RHAHKZOR:
             {
-                if (GameObject* pGo = instance->GetGameObject(m_uiIronCladGUID))
-                {
-                    pGo->SetGoState(GO_STATE_ACTIVE_ALTERNATIVE);
-                    m_uiIronDoor_Timer = 3000;
-                }
+                if (uiData == DONE)
+                    DoUseDoorOrButton(m_uiFactoryDoorGUID);
+
+                m_auiEncounter[1] = uiData;
+                break;
             }
-            m_auiEncounter[0] = uiData;
+            case TYPE_DEFIAS_ENDDOOR:
+            {
+                if (uiData == IN_PROGRESS)
+                {
+                    if (GameObject* pGo = instance->GetGameObject(m_uiIronCladGUID))
+                    {
+                        pGo->SetGoState(GO_STATE_ACTIVE_ALTERNATIVE);
+                        m_uiIronDoor_Timer = 3000;
+                    }
+                }
+                m_auiEncounter[0] = uiData;
+                break;
+            }
         }
     }
 
     uint32 GetData(uint32 uiType)
     {
-        if (uiType == TYPE_DEFIAS_ENDDOOR)
-            return m_auiEncounter[0];
+        switch(uiType)
+        {
+            case TYPE_DEFIAS_ENDDOOR:
+                return m_auiEncounter[0];
+            case TYPE_RHAHKZOR:
+                return m_auiEncounter[1];
+        }
 
         return 0;
     }
