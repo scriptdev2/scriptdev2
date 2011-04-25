@@ -730,7 +730,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 
 -- -1 036 000 DEADMINES
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
-(-1036000,'You there, check out that noise!',5775,1,7,0,'smite INST_SAY_ALARM1'),
+(-1036000,'You there, check out that noise.',5775,1,7,0,'smite INST_SAY_ALARM1'),
 (-1036001,'We\'re under attack! A vast, ye swabs! Repel the invaders!',5777,1,7,0,'smite INST_SAY_ALARM2');
 
 -- -1 043 000 WAILING CAVERNS
