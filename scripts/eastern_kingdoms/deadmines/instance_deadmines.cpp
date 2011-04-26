@@ -129,8 +129,13 @@ struct MANGOS_DLL_DECL instance_deadmines : public ScriptedInstance
 
     uint64 GetData64(uint32 uiData)
     {
-        if (uiData == DATA_DEFIAS_DOOR)
-            return m_uiIronCladGUID;
+        switch(uiData)
+        {
+            case DATA_DEFIAS_DOOR:
+                return m_uiIronCladGUID;
+            case GO_SMITE_CHEST:
+                return m_uiSmiteChestGUID;
+        }
 
         return 0;
     }
