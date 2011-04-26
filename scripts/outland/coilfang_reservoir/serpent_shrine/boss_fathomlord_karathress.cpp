@@ -87,8 +87,8 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
     ScriptedInstance* m_pInstance;
 
     // timers
-    uint32 m_uiCataclysmicBolt_Timer;
-    uint32 m_uiEnrage_Timer;
+    uint32 m_uiCataclysmicBoltTimer;
+    uint32 m_uiEnrageTimer;
 
     bool   m_bBlessingOfTides_MobsChecked;
 
@@ -96,8 +96,8 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
 
     void Reset()
     {
-        m_uiCataclysmicBolt_Timer      = 10000;
-        m_uiEnrage_Timer               = 600000;
+        m_uiCataclysmicBoltTimer       = 10000;
+        m_uiEnrageTimer                = 600000;
         m_bBlessingOfTides_MobsChecked = false;
 
         for(uint8 i = 0; i < MAX_ADVISORS; ++i)
@@ -115,6 +115,7 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
             m_pInstance->SetData(TYPE_KARATHRESS_EVENT, NOT_STARTED);
     }
 
+    // TODO - unneeded workaround - the spell should be cast by adviser onto karathress; text can also be handled in their AI
     // select the spell and the text based on the advisor which died
     void EventAdvisorDeath(uint8 uiAdvisor)
     {
@@ -140,7 +141,7 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
                 break;
             default:
                 error_log("SD2: invalid advisor (id %u) for karathress!", uiAdvisor);
-                break;
+                return;
         }
 
         DoScriptText(iSayGainAbility, m_creature);
@@ -218,8 +219,8 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
             return;
         }
 
-        //m_uiCataclysmicBolt_Timer
-        if (m_uiCataclysmicBolt_Timer < uiDiff)
+        //m_uiCataclysmicBoltTimer
+        if (m_uiCataclysmicBoltTimer < uiDiff)
         {
             //select a random unit other than the main tank
             Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1);
@@ -228,10 +229,11 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
             if (!pTarget)
                 pTarget = m_creature->getVictim();
 
-            m_creature->CastSpell(pTarget, SPELL_CATACLYSMIC_BOLT, false);
-
-            m_uiCataclysmicBolt_Timer = 10000;
-        }else m_uiCataclysmicBolt_Timer -= uiDiff;
+            if (DoCastSpellIfCan(pTarget, SPELL_CATACLYSMIC_BOLT) == CAST_OK)
+                m_uiCataclysmicBoltTimer = 10000;
+        }
+        else
+            m_uiCataclysmicBoltTimer -= uiDiff;
 
         //hp under 75%
         if (!m_bBlessingOfTides_MobsChecked && m_creature->GetHealthPercent() < 75.0f)
@@ -256,12 +258,14 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
             m_bBlessingOfTides_MobsChecked = true;
         }
 
-        //m_uiEnrage_Timer
-        if (m_uiEnrage_Timer < uiDiff)
+        //m_uiEnrageTimer
+        if (m_uiEnrageTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature, SPELL_ENRAGE);
-            m_uiEnrage_Timer = 90000;
-        }else m_uiEnrage_Timer -= uiDiff;
+            if (DoCastSpellIfCan(m_creature, SPELL_ENRAGE) == CAST_OK)
+                m_uiEnrageTimer = 90000;
+        }
+        else
+            m_uiEnrageTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
@@ -274,11 +278,12 @@ struct MANGOS_DLL_DECL Advisor_Base_AI : public ScriptedAI
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
     }
+
     protected:
-    uint8 m_uiAdvisor;
+        uint8 m_uiAdvisor;
 
     public:
-    ScriptedInstance* m_pInstance;
+        ScriptedInstance* m_pInstance;
 
     void JustReachedHome()
     {
@@ -321,21 +326,21 @@ struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public Advisor_Base_AI
     }
 
     // timers
-    uint32 m_uiHurlTrident_Timer;
-    uint32 m_uiLeechingThrow_Timer;
-    uint32 m_uiTheBeastWithin_Timer;
-    uint32 m_uiPet_Timer;
+    uint32 m_uiHurlTridentTimer;
+    uint32 m_uiLeechingThrowTimer;
+    uint32 m_uiTheBeastWithinTimer;
+    uint32 m_uiPetTimer;
 
     bool m_bIsPetCheckNeeded;
 
     void Reset()
     {
-        m_uiHurlTrident_Timer    = 2500;
-        m_uiLeechingThrow_Timer  = 20000;
-        m_uiTheBeastWithin_Timer = 30000;
-        m_uiPet_Timer            = 10000;
+        m_uiHurlTridentTimer    = 2500;
+        m_uiLeechingThrowTimer  = 20000;
+        m_uiTheBeastWithinTimer = 30000;
+        m_uiPetTimer            = 10000;
 
-        m_bIsPetCheckNeeded      = true;
+        m_bIsPetCheckNeeded     = true;
     }
 
     void AttackStart(Unit* pWho)
@@ -358,7 +363,7 @@ struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public Advisor_Base_AI
     {
         if (pSummoned->IsPet())
         {
-            m_uiPet_Timer = 10000;
+            m_uiPetTimer = 10000;
             m_bIsPetCheckNeeded = false;
         }
     }
@@ -393,40 +398,46 @@ struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public Advisor_Base_AI
         //after 10 seconds: spawn pet if not exist
         if (m_bIsPetCheckNeeded)
         {
-            if (m_uiPet_Timer < uiDiff)
+            if (m_uiPetTimer < uiDiff)
             {
                 if (!m_creature->GetPet())
                     DoCastSpellIfCan(m_creature, urand(0,1) ? SPELL_SUMMON_FATHOM_LURKER : SPELL_SUMMON_FATHOM_SPOREBAT);
             }
             else
-                m_uiPet_Timer -= uiDiff;
+                m_uiPetTimer -= uiDiff;
         }
 
-        //m_uiHurlTrident_Timer
-        if (m_uiHurlTrident_Timer < uiDiff)
+        //m_uiHurlTridentTimer
+        if (m_uiHurlTridentTimer < uiDiff)
         {
-            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
             {
                 if (!m_creature->CanReachWithMeleeAttack(pTarget))
                     DoCastSpellIfCan(pTarget, SPELL_HURL_TRIDENT);
             }
 
-            m_uiHurlTrident_Timer = 5000;
-        }else m_uiHurlTrident_Timer -= uiDiff;
+            m_uiHurlTridentTimer = 5000;
+        }
+        else
+            m_uiHurlTridentTimer -= uiDiff;
 
-        //m_uiLeechingThrow_Timer
-        if (m_uiLeechingThrow_Timer < uiDiff)
+        //m_uiLeechingThrowTimer
+        if (m_uiLeechingThrowTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_LEECHING_THROW);
-            m_uiLeechingThrow_Timer = 20000;
-        }else m_uiLeechingThrow_Timer -= uiDiff;
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_LEECHING_THROW) == CAST_OK)
+                m_uiLeechingThrowTimer = 20000;
+        }
+        else
+            m_uiLeechingThrowTimer -= uiDiff;
 
-        //m_uiTheBeastWithin_Timer
-        if (m_uiTheBeastWithin_Timer < uiDiff)
+        //m_uiTheBeastWithinTimer
+        if (m_uiTheBeastWithinTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature, SPELL_THE_BEAST_WITHIN);
-            m_uiTheBeastWithin_Timer = 30000;
-        }else m_uiTheBeastWithin_Timer -= uiDiff;
+            if (DoCastSpellIfCan(m_creature, SPELL_THE_BEAST_WITHIN) == CAST_OK)
+                m_uiTheBeastWithinTimer = 30000;
+        }
+        else
+            m_uiTheBeastWithinTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
@@ -442,11 +453,11 @@ struct MANGOS_DLL_DECL boss_fathomguard_tidalvessAI : public Advisor_Base_AI
     }
 
     // timers
-    uint32 m_uiFrostShock_Timer;
+    uint32 m_uiFrostShockTimer;
 
     void Reset()
     {
-        m_uiFrostShock_Timer = 25000;
+        m_uiFrostShockTimer = 25000;
     }
 
     void UpdateAI(const uint32 uiDiff)
@@ -470,12 +481,14 @@ struct MANGOS_DLL_DECL boss_fathomguard_tidalvessAI : public Advisor_Base_AI
             return;
         }
 
-        //m_uiFrostShock_Timer
-        if (m_uiFrostShock_Timer < uiDiff)
+        //m_uiFrostShockTimer
+        if (m_uiFrostShockTimer < uiDiff)
         {
             DoCastSpellIfCan(m_creature->getVictim(), SPELL_FROST_SHOCK);
-            m_uiFrostShock_Timer = urand(25000, 30000);
-        }else m_uiFrostShock_Timer -= uiDiff;
+            m_uiFrostShockTimer = urand(25000, 30000);
+        }
+        else
+            m_uiFrostShockTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
@@ -491,15 +504,15 @@ struct MANGOS_DLL_DECL boss_fathomguard_caribdisAI : public Advisor_Base_AI
     }
 
     // timers
-    uint32 m_uiWaterBoltVolley_Timer;
-    uint32 m_uiTidalSurge_Timer;
-    uint32 m_uiHeal_Timer;
+    uint32 m_uiWaterBoltVolleyTimer;
+    uint32 m_uiTidalSurgeTimer;
+    uint32 m_uiHealTimer;
 
     void Reset()
     {
-        m_uiWaterBoltVolley_Timer = 35000;
-        m_uiTidalSurge_Timer      = urand(15000, 20000);
-        m_uiHeal_Timer            = 55000;
+        m_uiWaterBoltVolleyTimer = 35000;
+        m_uiTidalSurgeTimer      = urand(15000, 20000);
+        m_uiHealTimer            = 55000;
     }
 
     void UpdateAI(const uint32 uiDiff)
@@ -523,22 +536,26 @@ struct MANGOS_DLL_DECL boss_fathomguard_caribdisAI : public Advisor_Base_AI
             return;
         }
 
-        //m_uiWaterBoltVolley_Timer
-        if (m_uiWaterBoltVolley_Timer < uiDiff)
+        //m_uiWaterBoltVolleyTimer
+        if (m_uiWaterBoltVolleyTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_WATER_BOLT_VOLLEY);
-            m_uiWaterBoltVolley_Timer = 30000;
-        }else m_uiWaterBoltVolley_Timer -= uiDiff;
+            if (DoCastSpellIfCan(m_creature, SPELL_WATER_BOLT_VOLLEY) == CAST_OK)
+                m_uiWaterBoltVolleyTimer = 30000;
+        }
+        else
+            m_uiWaterBoltVolleyTimer -= uiDiff;
 
-        //m_uiTidalSurge_Timer
-        if (m_uiTidalSurge_Timer < uiDiff)
+        //m_uiTidalSurgeTimer
+        if (m_uiTidalSurgeTimer < uiDiff)
         {
-            m_creature->CastSpell(m_creature->getVictim(), SPELL_TIDAL_SURGE, true);
-            m_uiTidalSurge_Timer = urand(15000, 20000);
-        }else m_uiTidalSurge_Timer -= uiDiff;
+            if (DoCastSpellIfCan(m_creature, SPELL_TIDAL_SURGE) == CAST_OK)
+                m_uiTidalSurgeTimer = urand(15000, 20000);
+        }
+        else
+            m_uiTidalSurgeTimer -= uiDiff;
 
-        //m_uiHeal_Timer
-        if (m_uiHeal_Timer < uiDiff)
+        //m_uiHealTimer
+        if (m_uiHealTimer < uiDiff)
         {
             // It can be cast on any of the mobs
             Unit* pUnit = NULL;
@@ -553,14 +570,18 @@ struct MANGOS_DLL_DECL boss_fathomguard_caribdisAI : public Advisor_Base_AI
                     case 3: pUnit = m_creature; break;
                 }
             }
-            else
+
+            if (!pUnit)
                 pUnit = m_creature;
 
-            if (pUnit && pUnit->isAlive())
-                DoCastSpellIfCan(pUnit, SPELL_HEAL);
-
-            m_uiHeal_Timer = 60000;
-        }else m_uiHeal_Timer -= uiDiff;
+            if (pUnit->isAlive())
+            {
+                if (DoCastSpellIfCan(pUnit, SPELL_HEAL) == CAST_OK)
+                    m_uiHealTimer = 60000;
+            }
+        }
+        else
+            m_uiHealTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
@@ -588,24 +609,25 @@ CreatureAI* GetAI_boss_fathomguard_caribdis(Creature* pCreature)
 
 void AddSC_boss_fathomlord_karathress()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_fathomlord_karathress";
-    newscript->GetAI = &GetAI_boss_fathomlord_karathress;
-    newscript->RegisterSelf();
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_fathomguard_sharkkis";
-    newscript->GetAI = &GetAI_boss_fathomguard_sharkkis;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_fathomlord_karathress";
+    pNewScript->GetAI = &GetAI_boss_fathomlord_karathress;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "boss_fathomguard_tidalvess";
-    newscript->GetAI = &GetAI_boss_fathomguard_tidalvess;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_fathomguard_sharkkis";
+    pNewScript->GetAI = &GetAI_boss_fathomguard_sharkkis;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "boss_fathomguard_caribdis";
-    newscript->GetAI = &GetAI_boss_fathomguard_caribdis;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_fathomguard_tidalvess";
+    pNewScript->GetAI = &GetAI_boss_fathomguard_tidalvess;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_fathomguard_caribdis";
+    pNewScript->GetAI = &GetAI_boss_fathomguard_caribdis;
+    pNewScript->RegisterSelf();
 }
