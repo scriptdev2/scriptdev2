@@ -31,6 +31,8 @@ struct MANGOS_DLL_DECL instance_deadmines : public ScriptedInstance
     uint32 m_auiEncounter[MAX_ENCOUNTER];
 
     uint64 m_uiFactoryDoorGUID;
+    uint64 m_uiMastRoomDoorGUID;
+    uint64 m_uiFoundryDoorGUID;
     uint64 m_uiIronCladGUID;
     uint64 m_uiCannonGUID;
     uint64 m_uiSmiteChestGUID;
@@ -44,6 +46,8 @@ struct MANGOS_DLL_DECL instance_deadmines : public ScriptedInstance
         memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
 
         m_uiFactoryDoorGUID = 0;
+        m_uiMastRoomDoorGUID = 0;
+        m_uiFoundryDoorGUID = 0;
         m_uiIronCladGUID = 0;
         m_uiCannonGUID = 0;
         m_uiSmiteChestGUID = 0;
@@ -65,8 +69,24 @@ struct MANGOS_DLL_DECL instance_deadmines : public ScriptedInstance
         {
             case GO_FACTORY_DOOR:
                 m_uiFactoryDoorGUID = pGo->GetGUID();
+
                 if (GetData(TYPE_RHAHKZOR) == DONE)
                     pGo->SetGoState(GO_STATE_ACTIVE);
+
+                break;
+            case GO_MAST_ROOM_DOOR:
+                m_uiMastRoomDoorGUID = pGo->GetGUID();
+
+                if (GetData(TYPE_SNEED) == DONE)
+                    pGo->SetGoState(GO_STATE_ACTIVE);
+
+                break;
+            case GO_FOUNDRY_DOOR:
+                m_uiFoundryDoorGUID = pGo->GetGUID();
+
+                if (GetData(TYPE_GILNID) == DONE)
+                    pGo->SetGoState(GO_STATE_ACTIVE);
+
                 break;
             case GO_IRON_CLAD:
                 m_uiIronCladGUID = pGo->GetGUID();
@@ -82,8 +102,18 @@ struct MANGOS_DLL_DECL instance_deadmines : public ScriptedInstance
 
     void OnCreatureDeath(Creature* pCreature)
     {
-        if (pCreature->GetEntry() == NPC_RHAHKZOR)
-            SetData(TYPE_RHAHKZOR, DONE);
+        switch(pCreature->GetEntry())
+        {
+            case NPC_RHAHKZOR:
+                SetData(TYPE_RHAHKZOR, DONE);
+                break;
+            case NPC_SNEED:
+                SetData(TYPE_SNEED, DONE);
+                break;
+            case NPC_GILNID:
+                SetData(TYPE_GILNID, DONE);
+                break;
+        }
     }
 
     void SetData(uint32 uiType, uint32 uiData)
@@ -96,6 +126,22 @@ struct MANGOS_DLL_DECL instance_deadmines : public ScriptedInstance
                     DoUseDoorOrButton(m_uiFactoryDoorGUID);
 
                 m_auiEncounter[1] = uiData;
+                break;
+            }
+            case TYPE_SNEED:
+            {
+                if (uiData == DONE)
+                    DoUseDoorOrButton(m_uiMastRoomDoorGUID);
+
+                m_auiEncounter[2] = uiData;
+                break;
+            }
+            case TYPE_GILNID:
+            {
+                if (uiData == DONE)
+                    DoUseDoorOrButton(m_uiFoundryDoorGUID);
+
+                m_auiEncounter[3] = uiData;
                 break;
             }
             case TYPE_DEFIAS_ENDDOOR:
@@ -122,6 +168,10 @@ struct MANGOS_DLL_DECL instance_deadmines : public ScriptedInstance
                 return m_auiEncounter[0];
             case TYPE_RHAHKZOR:
                 return m_auiEncounter[1];
+            case TYPE_SNEED:
+                return m_auiEncounter[2];
+            case TYPE_GILNID:
+                return m_auiEncounter[3];
         }
 
         return 0;
