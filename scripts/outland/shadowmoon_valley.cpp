@@ -118,7 +118,19 @@ struct MANGOS_DLL_DECL mob_mature_netherwing_drakeAI : public ScriptedAI
                 {
                     if (Player* pPlayer = m_creature->GetMap()->GetPlayer(uiPlayerGUID))
                     {
-                        if (GameObject* pGo = pPlayer->GetGameObject(SPELL_PLACE_CARCASS))
+                        GameObject* pGo = pPlayer->GetGameObject(SPELL_PLACE_CARCASS);
+
+                        // Workaround for broken function GetGameObject
+                        if (!pGo)
+                        {
+                            const SpellEntry* pSpell = GetSpellStore()->LookupEntry(SPELL_PLACE_CARCASS);
+
+                            uint32 uiGameobjectEntry = pSpell->EffectMiscValue[EFFECT_INDEX_0];
+
+                            pGo = GetClosestGameObjectWithEntry(pPlayer, uiGameobjectEntry, 2*INTERACTION_DISTANCE);
+                        }
+
+                        if (pGo)
                         {
                             if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() == WAYPOINT_MOTION_TYPE)
                                 m_creature->GetMotionMaster()->MovementExpired();
@@ -126,7 +138,10 @@ struct MANGOS_DLL_DECL mob_mature_netherwing_drakeAI : public ScriptedAI
                             m_creature->GetMotionMaster()->MoveIdle();
                             m_creature->StopMoving();
 
-                            m_creature->GetMotionMaster()->MovePoint(POINT_ID, pGo->GetPositionX(), pGo->GetPositionY(), pGo->GetPositionZ());
+                            float fX, fY, fZ;
+                            pGo->GetContactPoint(m_creature, fX, fY, fZ, CONTACT_DISTANCE);
+
+                            m_creature->GetMotionMaster()->MovePoint(POINT_ID, fX, fY, fZ);
                         }
                     }
                     bCanEat = false;
@@ -356,12 +371,20 @@ struct MANGOS_DLL_DECL npc_dragonmaw_peonAI : public ScriptedAI
             {
                 if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID))
                 {
-                    const SpellEntry* pSpell = GetSpellStore()->LookupEntry(SPELL_SERVING_MUTTON);
+                    GameObject* pMutton = pPlayer->GetGameObject(SPELL_SERVING_MUTTON);
 
-                    uint32 uiGameobjectEntry = pSpell->EffectMiscValue[EFFECT_INDEX_0];
+                    // Workaround for broken function GetGameObject
+                    if (!pMutton)
+                    {
+                        const SpellEntry* pSpell = GetSpellStore()->LookupEntry(SPELL_SERVING_MUTTON);
 
-                    // this can fail, but very low chance
-                    if (GameObject* pMutton = GetClosestGameObjectWithEntry(pPlayer, uiGameobjectEntry, 2*INTERACTION_DISTANCE))
+                        uint32 uiGameobjectEntry = pSpell->EffectMiscValue[EFFECT_INDEX_0];
+
+                        // this can fail, but very low chance
+                        pMutton = GetClosestGameObjectWithEntry(pPlayer, uiGameobjectEntry, 2*INTERACTION_DISTANCE);
+                    }
+
+                    if (pMutton)
                     {
                         float fX, fY, fZ;
                         pMutton->GetContactPoint(m_creature, fX, fY, fZ, CONTACT_DISTANCE);

@@ -112,10 +112,26 @@ struct MANGOS_DLL_DECL npc_kyle_the_frenziedAI : public ScriptedAI
                     case 1:
                         if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID))
                         {
-                            if (GameObject* pGo = pPlayer->GetGameObject(SPELL_LUNCH))
+                            GameObject* pGo = pPlayer->GetGameObject(SPELL_LUNCH);
+
+                            // Workaround for broken function GetGameObject
+                            if (!pGo)
+                            {
+                                const SpellEntry* pSpell = GetSpellStore()->LookupEntry(SPELL_LUNCH);
+
+                                uint32 uiGameobjectEntry = pSpell->EffectMiscValue[EFFECT_INDEX_1];
+
+                                pGo = GetClosestGameObjectWithEntry(pPlayer, uiGameobjectEntry, 2*INTERACTION_DISTANCE);
+                            }
+
+                            if (pGo)
                             {
                                 m_bIsMovingToLunch = true;
-                                m_creature->GetMotionMaster()->MovePoint(POINT_ID, pGo->GetPositionX(), pGo->GetPositionY(), pGo->GetPositionZ());
+
+                                float fX, fY, fZ;
+                                pGo->GetContactPoint(m_creature, fX, fY, fZ, CONTACT_DISTANCE);
+
+                                m_creature->GetMotionMaster()->MovePoint(POINT_ID, fX, fY, fZ);
                             }
                         }
                         break;
