@@ -697,7 +697,13 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000648,'Stop whining. You\'ve still got your luck.',0,0,0,0,'SAY_DROSTAN_GOT_LUCKY_1'),
 (-1000649,'Bah, it\'s an improvement.',0,0,0,11,'SAY_DROSTAN_GOT_LUCKY_2'),
 (-1000650,'Calm down lad, it\'s just a birdshot!',0,0,0,0,'SAY_DROSTAN_HIT_BIRD_1'),
-(-1000651,'The only thing hurt is your pride, lad! Buck up!',0,0,0,0,'SAY_DROSTAN_HIT_BIRD_2');
+(-1000651,'The only thing hurt is your pride, lad! Buck up!',0,0,0,0,'SAY_DROSTAN_HIT_BIRD_2'),
+
+(-1000652,'Me so hungry! YUM!',0,0,0,71,'dragonmaw peon SAY_PEON_1'),
+(-1000653,'Hey... me not feel so good.',0,0,0,0,'dragonmaw peon SAY_PEON_2'),
+(-1000654,'You is bad orc... baaad... or... argh!',0,0,0,0,'dragonmaw peon SAY_PEON_3'),
+(-1000655,'Time for eating!?',0,0,0,71,'dragonmaw peon SAY_PEON_4'),
+(-1000656,'It put the mutton in the stomach!',0,0,0,71,'dragonmaw peon SAY_PEON_5');
 
 -- -1 033 000 SHADOWFANG KEEP
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES

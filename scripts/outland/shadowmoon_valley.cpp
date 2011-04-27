@@ -283,9 +283,15 @@ CreatureAI* GetAI_mob_enslaved_netherwing_drake(Creature* pCreature)
 
 enum
 {
+    SAY_PEON_1                      = -1000652,
+    SAY_PEON_2                      = -1000653,
+    SAY_PEON_3                      = -1000654,
+    SAY_PEON_4                      = -1000655,
+    SAY_PEON_5                      = -1000656,
+
     SPELL_SERVING_MUTTON            = 40468,
     NPC_DRAGONMAW_KILL_CREDIT       = 23209,
-    QUEST_SLOW_DEATH                = 11020,
+    EQUIP_ID_MUTTON                 = 2202,
     POINT_DEST                      = 1
 };
 
@@ -296,12 +302,16 @@ struct MANGOS_DLL_DECL npc_dragonmaw_peonAI : public ScriptedAI
     uint64 m_uiPlayerGUID;
     uint32 m_uiPoisonTimer;
     uint32 m_uiMoveTimer;
+    uint32 m_uiEatTimer;
 
     void Reset()
     {
         m_uiPlayerGUID = 0;
         m_uiPoisonTimer = 0;
         m_uiMoveTimer = 0;
+        m_uiEatTimer = 0;
+
+        SetEquipmentSlots(true);
     }
 
     bool SetPlayerTarget(uint64 uiPlayerGUID)
@@ -321,13 +331,25 @@ struct MANGOS_DLL_DECL npc_dragonmaw_peonAI : public ScriptedAI
 
         if (uiPointId == POINT_DEST)
         {
-            m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_ONESHOT_EAT);
-            m_uiPoisonTimer = 15000;
+            m_uiEatTimer = 2000;
+            m_uiPoisonTimer = 3000;
+
+            switch(urand(0, 4))
+            {
+                case 0: DoScriptText(SAY_PEON_1, m_creature); break;
+                case 1: DoScriptText(SAY_PEON_2, m_creature); break;
+                case 2: DoScriptText(SAY_PEON_3, m_creature); break;
+                case 3: DoScriptText(SAY_PEON_4, m_creature); break;
+                case 4: DoScriptText(SAY_PEON_5, m_creature); break;
+            }
         }
     }
 
     void UpdateAI(const uint32 uiDiff)
     {
+        if (!m_creature->isAlive())
+            return;
+
         if (m_uiMoveTimer)
         {
             if (m_uiMoveTimer <= uiDiff)
@@ -354,18 +376,29 @@ struct MANGOS_DLL_DECL npc_dragonmaw_peonAI : public ScriptedAI
             else
                 m_uiMoveTimer -= uiDiff;
         }
+        else if (m_uiEatTimer)
+        {
+            if (m_uiEatTimer <= uiDiff)
+            {
+                SetEquipmentSlots(false, EQUIP_ID_MUTTON, EQUIP_UNEQUIP);
+                m_creature->HandleEmote(EMOTE_ONESHOT_EAT_NOSHEATHE);
+                m_uiEatTimer = 0;
+            }
+            else
+                m_uiEatTimer -= uiDiff;
+        }
         else if (m_uiPoisonTimer)
         {
             if (m_uiPoisonTimer <= uiDiff)
             {
                 if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID))
-                {
-                    if (pPlayer->GetQuestStatus(QUEST_SLOW_DEATH) == QUEST_STATUS_INCOMPLETE)
-                        pPlayer->KilledMonsterCredit(NPC_DRAGONMAW_KILL_CREDIT, m_creature->GetGUID());
-                }
+                    pPlayer->KilledMonsterCredit(NPC_DRAGONMAW_KILL_CREDIT, m_creature->GetObjectGuid());
 
                 m_uiPoisonTimer = 0;
-                m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+
+                // dies
+                m_creature->SetDeathState(JUST_DIED);
+                m_creature->SetHealth(0);
             }
             else
                 m_uiPoisonTimer -= uiDiff;
