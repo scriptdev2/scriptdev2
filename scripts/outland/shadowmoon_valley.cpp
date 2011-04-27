@@ -355,6 +355,11 @@ struct MANGOS_DLL_DECL mob_dragonmaw_peonAI : public ScriptedAI
     }
 };
 
+CreatureAI* GetAI_mob_dragonmaw_peon(Creature* pCreature)
+{
+    return new mob_dragonmaw_peonAI(pCreature);
+}
+
 /*######
 ## npc_drake_dealer_hurlunk
 ######*/
@@ -1452,6 +1457,11 @@ void AddSC_shadowmoon_valley()
     newscript = new Script;
     newscript->Name = "mob_enslaved_netherwing_drake";
     newscript->GetAI = &GetAI_mob_enslaved_netherwing_drake;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "mob_dragonmaw_peon";
+    newscript->GetAI = &GetAI_mob_dragonmaw_peon;
     newscript->RegisterSelf();
 
     newscript = new Script;
