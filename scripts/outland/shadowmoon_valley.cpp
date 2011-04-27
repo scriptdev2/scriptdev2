@@ -24,6 +24,7 @@ EndScriptData */
 /* ContentData
 mob_mature_netherwing_drake
 mob_enslaved_netherwing_drake
+npc_dragonmaw_peon
 npc_drake_dealer_hurlunk
 npcs_flanis_swiftwing_and_kagrosh
 npc_murkblood_overseer
@@ -277,7 +278,7 @@ CreatureAI* GetAI_mob_enslaved_netherwing_drake(Creature* pCreature)
 }
 
 /*#####
-# mob_dragonmaw_peon
+# npc_dragonmaw_peon
 #####*/
 
 enum
@@ -288,38 +289,29 @@ enum
     POINT_DEST                      = 1
 };
 
-struct MANGOS_DLL_DECL mob_dragonmaw_peonAI : public ScriptedAI
+struct MANGOS_DLL_DECL npc_dragonmaw_peonAI : public ScriptedAI
 {
-    mob_dragonmaw_peonAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
+    npc_dragonmaw_peonAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
     uint64 m_uiPlayerGUID;
-    bool m_bIsTapped;
     uint32 m_uiPoisonTimer;
+    uint32 m_uiMoveTimer;
 
     void Reset()
     {
         m_uiPlayerGUID = 0;
-        m_bIsTapped = false;
         m_uiPoisonTimer = 0;
+        m_uiMoveTimer = 0;
     }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
+    bool SetPlayerTarget(uint64 uiPlayerGUID)
     {
-        if (!pCaster)
-            return;
+        if (m_uiPlayerGUID)
+            return false;
 
-        if (pCaster->GetTypeId() == TYPEID_PLAYER && pSpell->Id == SPELL_SERVING_MUTTON && !m_bIsTapped)
-        {
-            m_uiPlayerGUID = pCaster->GetGUID();
-
-            m_bIsTapped = true;
-
-            float fX, fY, fZ;
-            pCaster->GetClosePoint(fX, fY, fZ, m_creature->GetObjectBoundingRadius());
-
-            m_creature->RemoveSplineFlag(SPLINEFLAG_WALKMODE);
-            m_creature->GetMotionMaster()->MovePoint(POINT_DEST, fX, fY, fZ);
-        }
+        m_uiPlayerGUID = uiPlayerGUID;
+        m_uiMoveTimer = 500;
+        return true;
     }
 
     void MovementInform(uint32 uiType, uint32 uiPointId)
@@ -336,7 +328,33 @@ struct MANGOS_DLL_DECL mob_dragonmaw_peonAI : public ScriptedAI
 
     void UpdateAI(const uint32 uiDiff)
     {
-        if (m_uiPoisonTimer)
+        if (m_uiMoveTimer)
+        {
+            if (m_uiMoveTimer <= uiDiff)
+            {
+                if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID))
+                {
+                    const SpellEntry* pSpell = GetSpellStore()->LookupEntry(SPELL_SERVING_MUTTON);
+
+                    uint32 uiGameobjectEntry = pSpell->EffectMiscValue[EFFECT_INDEX_0];
+
+                    // this can fail, but very low chance
+                    if (GameObject* pMutton = GetClosestGameObjectWithEntry(pPlayer, uiGameobjectEntry, 2*INTERACTION_DISTANCE))
+                    {
+                        float fX, fY, fZ;
+                        pMutton->GetContactPoint(m_creature, fX, fY, fZ, CONTACT_DISTANCE);
+
+                        m_creature->RemoveSplineFlag(SPLINEFLAG_WALKMODE);
+                        m_creature->GetMotionMaster()->MovePoint(POINT_DEST, fX, fY, fZ);
+                    }
+                }
+
+                m_uiMoveTimer = 0;
+            }
+            else
+                m_uiMoveTimer -= uiDiff;
+        }
+        else if (m_uiPoisonTimer)
         {
             if (m_uiPoisonTimer <= uiDiff)
             {
@@ -355,9 +373,28 @@ struct MANGOS_DLL_DECL mob_dragonmaw_peonAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_dragonmaw_peon(Creature* pCreature)
+CreatureAI* GetAI_npc_dragonmaw_peon(Creature* pCreature)
 {
-    return new mob_dragonmaw_peonAI(pCreature);
+    return new npc_dragonmaw_peonAI(pCreature);
+}
+
+bool EffectDummyCreature_npc_dragonmaw_peon(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+{
+    if (uiEffIndex != EFFECT_INDEX_1 || uiSpellId != SPELL_SERVING_MUTTON || pCaster->GetTypeId() != TYPEID_PLAYER)
+        return false;
+
+    npc_dragonmaw_peonAI* pPeonAI = dynamic_cast<npc_dragonmaw_peonAI*>(pCreatureTarget->AI());
+
+    if (!pPeonAI)
+        return false;
+
+    if (pPeonAI->SetPlayerTarget(pCaster->GetGUID()))
+    {
+        pCreatureTarget->HandleEmote(EMOTE_ONESHOT_NONE);
+        return true;
+    }
+
+    return false;
 }
 
 /*######
@@ -1460,8 +1497,9 @@ void AddSC_shadowmoon_valley()
     newscript->RegisterSelf();
 
     newscript = new Script;
-    newscript->Name = "mob_dragonmaw_peon";
-    newscript->GetAI = &GetAI_mob_dragonmaw_peon;
+    newscript->Name = "npc_dragonmaw_peon";
+    newscript->GetAI = &GetAI_npc_dragonmaw_peon;
+    newscript->pEffectDummyNPC = &EffectDummyCreature_npc_dragonmaw_peon;
     newscript->RegisterSelf();
 
     newscript = new Script;

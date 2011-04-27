@@ -932,6 +932,7 @@ UPDATE creature_template SET ScriptName='boss_arugal' WHERE entry=4275;
 /* SHADOWMOON VALLEY */
 UPDATE creature_template SET ScriptName='boss_doomwalker' WHERE entry=17711;
 UPDATE creature_template SET ScriptName='npc_drake_dealer_hurlunk' WHERE entry=23489;
+UPDATE creature_template SET ScriptName='npc_dragonmaw_peon' WHERE entry=22252;
 UPDATE creature_template SET ScriptName='npcs_flanis_swiftwing_and_kagrosh' WHERE entry IN (21725,21727);
 UPDATE creature_template SET ScriptName='npc_murkblood_overseer' WHERE entry=23309;
 UPDATE creature_template SET ScriptName='npc_neltharaku' WHERE entry=21657;
