@@ -88,7 +88,7 @@ struct MANGOS_DLL_DECL instance_deadmines : public ScriptedInstance
                     pGo->SetGoState(GO_STATE_ACTIVE);
 
                 break;
-            case GO_IRON_CLAD:
+            case GO_IRON_CLAD_DOOR:
                 m_uiIronCladGUID = pGo->GetGUID();
                 break;
             case GO_DEFIAS_CANNON:
@@ -181,7 +181,7 @@ struct MANGOS_DLL_DECL instance_deadmines : public ScriptedInstance
     {
         switch(uiData)
         {
-            case DATA_DEFIAS_DOOR:
+            case GO_IRON_CLAD_DOOR:
                 return m_uiIronCladGUID;
             case GO_SMITE_CHEST:
                 return m_uiSmiteChestGUID;
@@ -206,13 +206,27 @@ struct MANGOS_DLL_DECL instance_deadmines : public ScriptedInstance
                             ++m_uiDoor_Step;
                             break;
                         case 1:
-                            if (Creature* pi1 = pMrSmite->SummonCreature(NPC_PIRATE, 93.68f, -678.63f, 7.71f, 2.09f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 1800000))
-                                pi1->GetMotionMaster()->MovePoint(0, 100.11f, -670.65f, 7.42f);
-                            if (Creature* pi2 = pMrSmite->SummonCreature(NPC_PIRATE, 102.63f, -685.07f, 7.42f, 1.28f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 1800000))
-                                pi2->GetMotionMaster()->MovePoint(0, 100.11f, -670.65f, 7.42f);
+                        {
+                            if (GameObject* pDoor = instance->GetGameObject(m_uiIronCladGUID))
+                            {
+                                // should be static spawns, fetch the closest ones at the pier
+                                if (Creature* pi1 = GetClosestCreatureWithEntry(pDoor, NPC_PIRATE, 40.0f))
+                                {
+                                    pi1->RemoveSplineFlag(SPLINEFLAG_WALKMODE);
+                                    pi1->GetMotionMaster()->MovePoint(0, pDoor->GetPositionX(), pDoor->GetPositionY(), pDoor->GetPositionZ());
+                                }
+
+                                if (Creature* pi2 = GetClosestCreatureWithEntry(pDoor, NPC_SQUALLSHAPER, 40.0f))
+                                {
+                                    pi2->RemoveSplineFlag(SPLINEFLAG_WALKMODE);
+                                    pi2->GetMotionMaster()->MovePoint(0, pDoor->GetPositionX(), pDoor->GetPositionY(), pDoor->GetPositionZ());
+                                }
+                            }
+
                             ++m_uiDoor_Step;
                             m_uiIronDoor_Timer = 10000;
                             break;
+                        }
                         case 2:
                             DoScriptText(INST_SAY_ALARM2,pMrSmite);
                             m_uiDoor_Step = 0;

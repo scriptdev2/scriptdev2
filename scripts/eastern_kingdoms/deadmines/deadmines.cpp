@@ -285,7 +285,7 @@ bool GOUse_go_door_lever_dm(Player* pPlayer, GameObject* pGo)
     if (!pInstance)
         return false;
 
-    GameObject* pGoDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_DEFIAS_DOOR));
+    GameObject* pGoDoor = pInstance->instance->GetGameObject(pInstance->GetData64(GO_IRON_CLAD_DOOR));
 
     if (pGoDoor && pGoDoor->GetGoState() == GO_STATE_READY)
         return false;
