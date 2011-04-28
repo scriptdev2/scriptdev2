@@ -25,18 +25,9 @@ EndScriptData */
 #include "molten_core.h"
 
 /* There have been quite some bugs about his spells, keep this as reference untill all finished
- * From original version, spells
- *   SPELL_HAND_OF_RAGNAROS      = 19780 // Is not linked to Ragnaros, and also not mentioned on wowwiki, timer was 25s
- *   SPELL_ERRUPTION             = 17731 // Is a spell from Onyxia-Encounter
- *   SPELL_SONSOFFLAME_DUMMY     = 21108 // Does not exist anymore, and was also unused
- * have been removed
- *
  * Missing features (based on wowwiki)
- *   Hammer of Ragnaros - Ranged Knockback and Damage
  *   Lava Splash - Localized Damage
- *
- * A few interesting spells
- *    Might of Ragnaros: Summons a trigger npc (Flame of Ragnaros), visual fits to Hammer, possible knockback spell in spell range: 21155
+ *   Melt Weapon - Proc Aura missing in DBC, or hack missing
  */
 
 enum
@@ -44,7 +35,7 @@ enum
     SAY_ARRIVAL5_RAG            = -1409012,
     SAY_REINFORCEMENTS_1        = -1409013,
     SAY_REINFORCEMENTS_2        = -1409014,
-    SAY_HAMMER                  = -1409015,                 // TODO Hammer of Ragnaros
+    SAY_HAMMER                  = -1409015,
     SAY_WRATH                   = -1409016,
     SAY_KILL                    = -1409017,
     SAY_MAGMABURST              = -1409018,
@@ -52,13 +43,16 @@ enum
     SPELL_WRATH_OF_RAGNAROS     = 20566,
     SPELL_ELEMENTAL_FIRE        = 20564,
     SPELL_MAGMA_BLAST           = 20565,                    // Ranged attack if nobody is in melee range
-    SPELL_MELT_WEAPON           = 21388,                    // Passive aura
+    SPELL_MELT_WEAPON           = 21388,                    // Passive aura was spell 21387, TODO need some hack..
     SPELL_RAGNA_SUBMERGE        = 21107,                    // Stealth aura
     SPELL_RAGNA_EMERGE          = 20568,                    // Emerge from lava
     SPELL_ELEMENTAL_FIRE_KILL   = 19773,
+    SPELL_MIGHT_OF_RAGNAROS     = 21154,
+    SPELL_INTENSE_HEAT          = 21155,
 
     MAX_ADDS_IN_SUBMERGE        = 8,
-    NPC_SON_OF_FLAME            = 12143
+    NPC_SON_OF_FLAME            = 12143,
+    NPC_FLAME_OF_RAGNAROS       = 13148,
 };
 
 struct MANGOS_DLL_DECL boss_ragnarosAI : public Scripted_NoMovementAI
@@ -75,6 +69,7 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public Scripted_NoMovementAI
 
     uint32 m_uiEnterCombatTimer;
     uint32 m_uiWrathOfRagnarosTimer;
+    uint32 m_uiHammerTimer;
     uint32 m_uiMagmaBlastTimer;
     uint32 m_uiElementalFireTimer;
     uint32 m_uiSubmergeTimer;
@@ -88,7 +83,8 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public Scripted_NoMovementAI
 
     void Reset()
     {
-        m_uiWrathOfRagnarosTimer = 30000;
+        m_uiWrathOfRagnarosTimer = 30000;                   // TODO Research more, according to wowwiki 25s, but timers up to 34s confirmed
+        m_uiHammerTimer = 11000;                            // TODO wowwiki states 20-30s timer, but ~11s confirmed
         m_uiMagmaBlastTimer = 2000;
         m_uiElementalFireTimer = 3000;
         m_uiSubmergeTimer = 3*MINUTE*IN_MILLISECONDS;
@@ -124,9 +120,6 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public Scripted_NoMovementAI
 
         if (m_pInstance)
             m_pInstance->SetData(TYPE_RAGNAROS, IN_PROGRESS);
-
-        // Passive aura
-        DoCastSpellIfCan(m_creature, SPELL_MELT_WEAPON, CAST_TRIGGERED);
     }
 
     void EnterEvadeMode()
@@ -163,6 +156,8 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public Scripted_NoMovementAI
 
             ++m_uiAddCount;
         }
+        else if (pSummoned->GetEntry() == NPC_FLAME_OF_RAGNAROS)
+            pSummoned->CastSpell(pSummoned, SPELL_INTENSE_HEAT, true, NULL, NULL, m_creature->GetObjectGuid());
     }
 
     void SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell)
@@ -230,9 +225,7 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public Scripted_NoMovementAI
         {
             if (DoCastSpellIfCan(m_creature, SPELL_WRATH_OF_RAGNAROS) == CAST_OK)
             {
-                if (urand(0, 1))
-                    DoScriptText(SAY_WRATH, m_creature);
-
+                DoScriptText(SAY_WRATH, m_creature);
                 m_uiWrathOfRagnarosTimer = 30000;
             }
         }
@@ -248,10 +241,38 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public Scripted_NoMovementAI
         else
             m_uiElementalFireTimer -= uiDiff;
 
+        // Hammer of Ragnaros
+        if (m_uiHammerTimer < uiDiff)
+        {
+            // Select a target with mana-bar
+            std::list<Unit*> lValidTargets;
+            ThreatList const& tList = m_creature->getThreatManager().getThreatList();
+            for (ThreatList::const_iterator iter = tList.begin(); iter != tList.end(); ++iter)
+            {
+                Unit* pTempTarget = m_creature->GetMap()->GetUnit((*iter)->getUnitGuid());
+                if (pTempTarget && pTempTarget->getPowerType() == POWER_MANA)
+                    lValidTargets.push_back(pTempTarget);
+            }
+
+            if (!lValidTargets.empty())
+            {
+                std::list<Unit*>::const_iterator itr = lValidTargets.begin();
+                advance(itr, urand(0, lValidTargets.size() - 1));
+                if (DoCastSpellIfCan(*itr, SPELL_MIGHT_OF_RAGNAROS) == CAST_OK)
+                {
+                    DoScriptText(SAY_HAMMER, m_creature);
+                    m_uiHammerTimer = 11000;
+                }
+            }
+            else
+                m_uiHammerTimer = 11000;
+        }
+        else
+            m_uiHammerTimer -= uiDiff;
+
         // Submerge Timer
         if (m_uiSubmergeTimer < uiDiff)
         {
-
             // Submerge and attack again after 90 secs
             DoCastSpellIfCan(m_creature, SPELL_RAGNA_SUBMERGE, CAST_INTERRUPT_PREVIOUS);
             m_creature->HandleEmote(EMOTE_ONESHOT_SUBMERGE);
