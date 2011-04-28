@@ -1068,7 +1068,7 @@ struct MANGOS_DLL_DECL npc_isla_starmaneAI : public npc_escortAI
             case 67:
                 if (Player* pPlayer = GetPlayerForEscort())
                     m_creature->SetFacingToObject(pPlayer);
-                m_creature->HandleEmoteCommand(EMOTE_ONESHOT_WAVE);
+                m_creature->HandleEmote(EMOTE_ONESHOT_WAVE);
                 break;
         }
     }
