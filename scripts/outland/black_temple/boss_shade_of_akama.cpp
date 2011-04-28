@@ -157,7 +157,7 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
 
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 
-        m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_STUN);
+        m_creature->HandleEmote(EMOTE_STATE_STUN);
     }
 
     void AttackStart(Unit* pWho)
@@ -469,7 +469,7 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
             pShade->SetInCombatWith(m_creature);
             m_creature->SetInCombatWith(pShade);
 
-            pShade->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_NONE);
+            pShade->HandleEmote(EMOTE_STATE_NONE);
             pShade->SetUInt64Value(UNIT_FIELD_TARGET, m_creature->GetGUID());
 
             pShade->SetInCombatWithZone();

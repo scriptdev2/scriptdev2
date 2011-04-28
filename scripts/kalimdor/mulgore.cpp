@@ -82,7 +82,7 @@ struct MANGOS_DLL_DECL npc_kyle_the_frenziedAI : public ScriptedAI
 
             m_bEvent = true;
             DoScriptText(EMOTE_SEE_LUNCH, m_creature);
-            m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_ONESHOT_CREATURE_SPECIAL);
+            m_creature->HandleEmote(EMOTE_ONESHOT_CREATURE_SPECIAL);
         }
     }
 
@@ -137,7 +137,7 @@ struct MANGOS_DLL_DECL npc_kyle_the_frenziedAI : public ScriptedAI
                         break;
                     case 2:
                         DoScriptText(EMOTE_EAT_LUNCH, m_creature);
-                        m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_USESTANDING);
+                        m_creature->HandleEmote(EMOTE_STATE_USESTANDING);
                         break;
                     case 3:
                         if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID))
@@ -148,10 +148,10 @@ struct MANGOS_DLL_DECL npc_kyle_the_frenziedAI : public ScriptedAI
                     case 4:
                         m_uiEventTimer = 30000;
                         DoScriptText(EMOTE_DANCE, m_creature);
-                        m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_DANCESPECIAL);
+                        m_creature->HandleEmote(EMOTE_STATE_DANCESPECIAL);
                         break;
                     case 5:
-                        m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_NONE);
+                        m_creature->HandleEmote(EMOTE_STATE_NONE);
                         Reset();
                         m_creature->GetMotionMaster()->Clear();
                         break;

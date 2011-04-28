@@ -543,7 +543,7 @@ bool EffectDummyCreature_spell_dummy_npc(Unit* pCaster, uint32 uiSpellId, SpellE
                         }
 
                         pCreatureTarget->SetStandState(UNIT_STAND_STATE_STAND);
-                        pCreatureTarget->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_WORK);
+                        pCreatureTarget->HandleEmote(EMOTE_STATE_WORK);
                         break;
                     }
                 }

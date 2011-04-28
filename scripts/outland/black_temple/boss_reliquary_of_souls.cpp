@@ -174,7 +174,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
 
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-        m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,0);
+        m_creature->HandleEmote(EMOTE_ONESHOT_NONE);
         m_creature->GetMotionMaster()->Clear(false);
     }
 
@@ -218,7 +218,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                     Phase = 1;
 
                     // I R ANNNGRRRY!
-                    m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,375);
+                    m_creature->HandleEmote(EMOTE_STATE_READY2H);
                     SummonEssenceTimer = 8000;
                     AnimationTimer = 5100;
                     m_creature->AddThreat(who);
@@ -288,14 +288,14 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
             if (AnimationTimer < diff)
             {
                 // Release the cube
-                m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,374);
+                m_creature->HandleEmote(EMOTE_ONESHOT_SUBMERGE);
                 AnimationTimer = 8300;
             }else AnimationTimer -= diff;
 
             if (SummonEssenceTimer < diff)
             {
                 // Ribs: open
-                m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,373);
+                m_creature->HandleEmote(EMOTE_STATE_SUBMERGED);
 
                 Creature* EssenceSuffering = m_creature->SummonCreature(23418, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 1.57f, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 10000);
 
@@ -350,7 +350,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                     if (AnimationTimer < diff)
                     {
                         // Return
-                        EssenceSuffering->SetUInt32Value(UNIT_NPC_EMOTESTATE,374);
+                        EssenceSuffering->HandleEmote(EMOTE_ONESHOT_SUBMERGE);
                         AnimationTimer = 10000;
                     }else AnimationTimer -= diff;
 
@@ -361,7 +361,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                         EssenceSuffering->DeleteThreatList();
                         EssenceSuffering->SetDisplayId(11686);
                         EssenceSuffering->setFaction(35);
-                        m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,0);
+                        m_creature->HandleEmote(EMOTE_ONESHOT_NONE);
                         SummonEssenceTimer = 20000;         //60000;
                         AnimationTimer = 18200;             //58100;
                         SoulDeathCount = 0;
@@ -391,14 +391,14 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                 if (AnimationTimer < diff)
                 {
                     // Release the cube
-                    m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,374);
+                    m_creature->HandleEmote(EMOTE_ONESHOT_SUBMERGE);
                     AnimationTimer = 10000;
                 }else AnimationTimer -= diff;
 
                 if (SummonEssenceTimer < diff)
                 {
                     // Ribs: open
-                    m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,373);
+                    m_creature->HandleEmote(EMOTE_STATE_SUBMERGED);
 
                     Creature* EssenceDesire = m_creature->SummonCreature(23419, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 1.57f, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 10000);
 
@@ -455,7 +455,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                         if (AnimationTimer < diff)
                         {
                             // Return
-                            EssenceDesire->SetUInt32Value(UNIT_NPC_EMOTESTATE,374);
+                            EssenceDesire->HandleEmote(EMOTE_ONESHOT_SUBMERGE);
                             AnimationTimer = 10000;
                         }else AnimationTimer -= diff;
 
@@ -467,7 +467,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                             DoScriptText(DESI_SAY_AFTER, EssenceDesire);
 
                             EssenceDesire->SetDisplayId(11686);
-                            m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,0);
+                            m_creature->HandleEmote(EMOTE_ONESHOT_NONE);
                             SummonEssenceTimer = 20000;
                             AnimationTimer = 18200;
                             SoulDeathCount = 0;
@@ -498,14 +498,14 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                 if (AnimationTimer < diff)
                 {
                     // Release the cube
-                    m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,374);
+                    m_creature->HandleEmote(EMOTE_ONESHOT_SUBMERGE);
                     AnimationTimer = 10000;
                 }else AnimationTimer -= diff;
 
                 if (SummonEssenceTimer < diff)
                 {
                     // Ribs: open
-                    m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,373);
+                    m_creature->HandleEmote(EMOTE_STATE_SUBMERGED);
 
                     Creature* EssenceAnger = m_creature->SummonCreature(23420, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 1.57f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 45000);
 

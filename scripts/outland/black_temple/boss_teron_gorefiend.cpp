@@ -258,7 +258,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
 
                 DoScriptText(SAY_INTRO, m_creature);
 
-                m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_TALK);
+                m_creature->HandleEmote(EMOTE_STATE_TALK);
                 m_uiAggroTargetGUID = pWho->GetGUID();
                 m_bIntro = true;
             }
@@ -358,7 +358,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
 
                 DoScriptText(SAY_AGGRO, m_creature);
 
-                m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_NONE);
+                m_creature->HandleEmote(EMOTE_STATE_NONE);
                 m_bIntro = false;
                 if (m_uiAggroTargetGUID)
                 {

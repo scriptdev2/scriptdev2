@@ -45,7 +45,7 @@ struct MANGOS_DLL_DECL mob_yennikuAI : public ScriptedAI
     void Reset()
     {
         Reset_Timer = 0;
-        m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_NONE);
+        m_creature->HandleEmote(EMOTE_STATE_NONE);
     }
 
     void SpellHit(Unit *caster, const SpellEntry *spell)
@@ -55,7 +55,7 @@ struct MANGOS_DLL_DECL mob_yennikuAI : public ScriptedAI
                                                             //Yenniku's Release
             if (!bReset && ((Player*)caster)->GetQuestStatus(592) == QUEST_STATUS_INCOMPLETE && spell->Id == 3607)
             {
-                m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_STUN);
+                m_creature->HandleEmote(EMOTE_STATE_STUN);
                 m_creature->CombatStop();                   //stop combat
                 m_creature->DeleteThreatList();             //unsure of this
                 m_creature->setFaction(83);                 //horde generic
