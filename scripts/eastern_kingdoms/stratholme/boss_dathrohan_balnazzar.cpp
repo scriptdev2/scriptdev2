@@ -46,25 +46,31 @@ enum
 
     NPC_DATHROHAN                   = 10812,
     NPC_BALNAZZAR                   = 10813,
-    NPC_ZOMBIE                      = 10698                 //probably incorrect
+    NPC_SKELETAL_GUARDIAN           = 10390,
+    NPC_SKELETAL_BERSERKER          = 10391
 };
 
 struct SummonDef
 {
+    uint32 m_uiEntry;
     float m_fX, m_fY, m_fZ, m_fOrient;
 };
 
 SummonDef m_aSummonPoint[]=
 {
-    {3444.156f, -3090.626f, 135.002f, 2.240f},              //G1 front, left
-    {3449.123f, -3087.009f, 135.002f, 2.240f},              //G1 front, right
-    {3446.246f, -3093.466f, 135.002f, 2.240f},              //G1 back left
-    {3451.160f, -3089.904f, 135.002f, 2.240f},              //G1 back, right
+    {NPC_SKELETAL_BERSERKER, 3460.356f, -3070.572f, 135.086f, 0.332f},
+    {NPC_SKELETAL_BERSERKER, 3465.289f, -3069.987f, 135.086f, 5.480f},
+    {NPC_SKELETAL_BERSERKER, 3463.616f, -3074.912f, 135.086f, 5.009f},
 
-    {3457.995f, -3080.916f, 135.002f, 3.784f},              //G2 front, left
-    {3454.302f, -3076.330f, 135.002f, 3.784f},              //G2 front, right
-    {3460.975f, -3078.901f, 135.002f, 3.784f},              //G2 back left
-    {3457.338f, -3073.979f, 135.002f, 3.784f}               //G2 back, right
+    {NPC_SKELETAL_GUARDIAN, 3460.012f, -3076.041f, 135.086f, 1.187f},
+    {NPC_SKELETAL_GUARDIAN, 3467.909f, -3076.401f, 135.086f, 3.770f},
+
+    {NPC_SKELETAL_BERSERKER, 3509.269f, -3066.474f, 135.080f, 4.817f},
+    {NPC_SKELETAL_BERSERKER, 3510.966f, -3069.011f, 135.080f, 3.491f},
+
+    {NPC_SKELETAL_GUARDIAN, 3516.042f, -3066.873f, 135.080f, 3.997f},
+    {NPC_SKELETAL_GUARDIAN, 3513.561f, -3063.027f, 135.080f, 2.356f},
+    {NPC_SKELETAL_GUARDIAN, 3518.825f, -3060.926f, 135.080f, 3.944f}
 };
 
 struct MANGOS_DLL_DECL boss_dathrohan_balnazzarAI : public ScriptedAI
@@ -109,8 +115,8 @@ struct MANGOS_DLL_DECL boss_dathrohan_balnazzarAI : public ScriptedAI
 
         static uint32 uiCount = sizeof(m_aSummonPoint)/sizeof(SummonDef);
 
-        for (uint8 i=0; i<uiCount; ++i)
-            m_creature->SummonCreature(NPC_ZOMBIE,
+        for (int i = 0; i < uiCount; ++i)
+            m_creature->SummonCreature(m_aSummonPoint[i].m_uiEntry,
             m_aSummonPoint[i].m_fX, m_aSummonPoint[i].m_fY, m_aSummonPoint[i].m_fZ, m_aSummonPoint[i].m_fOrient,
             TEMPSUMMON_TIMED_DESPAWN, HOUR*IN_MILLISECONDS);
     }
