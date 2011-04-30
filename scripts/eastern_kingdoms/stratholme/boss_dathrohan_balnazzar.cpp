@@ -25,6 +25,10 @@ EndScriptData */
 
 enum
 {
+    SAY_AGGRO                       = -1329016,
+    SAY_TRANSFORM                   = -1329017,
+    SAY_DEATH                       = -1329018,
+
     //Dathrohan spells
     SPELL_CRUSADERSHAMMER           = 17286,                //AOE stun
     SPELL_CRUSADERSTRIKE            = 17281,
@@ -94,8 +98,15 @@ struct MANGOS_DLL_DECL boss_dathrohan_balnazzarAI : public ScriptedAI
 
     }
 
+    void Aggro(Unit* pWho)
+    {
+        DoScriptText(SAY_AGGRO, m_creature);
+    }
+
     void JustDied(Unit* Victim)
     {
+        DoScriptText(SAY_DEATH, m_creature);
+
         static uint32 uiCount = sizeof(m_aSummonPoint)/sizeof(SummonDef);
 
         for (uint8 i=0; i<uiCount; ++i)
@@ -143,13 +154,13 @@ struct MANGOS_DLL_DECL boss_dathrohan_balnazzarAI : public ScriptedAI
             //BalnazzarTransform
             if (m_creature->GetHealthPercent() < 40.0f)
             {
-                if (m_creature->IsNonMeleeSpellCasted(false))
-                    m_creature->InterruptNonMeleeSpells(false);
-
                 //restore hp, mana and stun
-                DoCastSpellIfCan(m_creature,SPELL_BALNAZZARTRANSFORM);
-                m_creature->UpdateEntry(NPC_BALNAZZAR);
-                m_bTransformed = true;
+                if (DoCastSpellIfCan(m_creature, SPELL_BALNAZZARTRANSFORM) == CAST_OK)
+                {
+                    m_creature->UpdateEntry(NPC_BALNAZZAR);
+                    DoScriptText(SAY_TRANSFORM, m_creature);
+                    m_bTransformed = true;
+                }
             }
         }
         else
