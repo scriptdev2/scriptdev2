@@ -22,6 +22,19 @@ SDCategory: Sunwell Plateau
 EndScriptData */
 
 #include "precompiled.h"
+#include "sunwell_plateau.h"
+
+enum
+{
+    SAY_INTRO           = -1580036,
+    SAY_KILL_1          = -1580037,
+    SAY_KILL_2          = -1580038,
+    SAY_DEATH           = -1580042,
+    SAY_TAKEOFF         = -1580040,
+    SAY_BREATH          = -1580039,
+    SAY_BERSERK         = -1580041,
+    SAY_KALECGOS_OUTRO  = -1580043,
+};
 
 void AddSC_boss_felmyst()
 {

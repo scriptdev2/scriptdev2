@@ -22,6 +22,33 @@ SDCategory: Sunwell Plateau
 EndScriptData */
 
 #include "precompiled.h"
+#include "sunwell_plateau.h"
+
+enum
+{
+    SAY_INTRO_1                             = -1580044,
+    SAY_INTRO_2                             = -1580045,
+    SAY_INTRO_3                             = -1580046,
+    SAY_INTRO_4                             = -1580047,
+    SAY_INTRO_5                             = -1580048,
+    SAY_INTRO_6                             = -1580049,
+    SAY_INTRO_7                             = -1580050,
+    SAY_INTRO_8                             = -1580051,
+
+    SAY_SACROLASH_SHADOW_NOVA               = -1580052,
+    SAY_SACROLASH_EMPOWER                   = -1580053,
+    SAY_SACROLASH_KILL_1                    = -1580054,
+    SAY_SACROLASH_KILL_2                    = -1580055,
+    SAY_SACROLASH_DEAD                      = -1580056,
+    SAY_SACROLASH_BERSERK                   = -1580057,
+
+    SAY_ALYTHESS_CANFLAGRATION              = -1580058,
+    SAY_ALYTHESS_EMPOWER                    = -1580059,
+    SAY_ALYTHESS_KILL_1                     = -1580060,
+    SAY_ALYTHESS_KILL_2                     = -1580061,
+    SAY_ALYTHESS_DEAD                       = -1580062,
+    SAY_ALYTHESS_BERSERK                    = -1580063,
+};
 
 void AddSC_boss_eredar_twins()
 {
