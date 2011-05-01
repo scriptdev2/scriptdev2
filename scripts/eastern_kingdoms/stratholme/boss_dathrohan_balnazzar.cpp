@@ -115,7 +115,7 @@ struct MANGOS_DLL_DECL boss_dathrohan_balnazzarAI : public ScriptedAI
 
         static uint32 uiCount = sizeof(m_aSummonPoint)/sizeof(SummonDef);
 
-        for (int i = 0; i < uiCount; ++i)
+        for (uint32 i = 0; i < uiCount; ++i)
             m_creature->SummonCreature(m_aSummonPoint[i].m_uiEntry,
             m_aSummonPoint[i].m_fX, m_aSummonPoint[i].m_fY, m_aSummonPoint[i].m_fZ, m_aSummonPoint[i].m_fOrient,
             TEMPSUMMON_TIMED_DESPAWN, HOUR*IN_MILLISECONDS);
