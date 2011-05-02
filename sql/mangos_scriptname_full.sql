@@ -356,6 +356,7 @@ UPDATE creature_template SET ScriptName='npc_kara_thricestar' WHERE entry=26602;
 UPDATE creature_template SET ScriptName='npc_nesingwary_trapper' WHERE entry=25835;
 UPDATE creature_template SET ScriptName='npc_oil_stained_wolf' WHERE entry=25791;
 UPDATE gameobject_template SET ScriptName='go_caribou_trap' WHERE entry IN (187982,187995,187996,187997,187998,187999,188000,188001,188002,188003,188004,188005,188006,188007,188008);
+UPDATE creature_template SET ScriptName='npc_sinkhole_kill_credit' WHERE entry IN (26248,26249);
 UPDATE creature_template SET ScriptName='npc_surristrasz' WHERE entry=24795;
 UPDATE creature_template SET ScriptName='npc_tiare' WHERE entry=30051;
 UPDATE creature_template SET ScriptName='npc_lurgglbr' WHERE entry=25208;

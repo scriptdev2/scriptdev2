@@ -27,6 +27,7 @@ npc_iruk
 npc_kara_thricestar
 npc_nesingwary_trapper
 go_caribou_trap
+npc_sinkhole_kill_credit
 npc_surristrasz
 npc_tiare
 npc_lurgglbr
@@ -436,6 +437,100 @@ bool GOUse_go_caribou_trap(Player* pPlayer, GameObject* pGo)
 
     return true;
 }
+/*#####
+# npc_sinkhole_kill_credit
+#####*/
+
+enum
+{
+    SPELL_SUMMON_EXPLOSIVES_CART_FIRE   = 46799,
+    SPELL_SUMMON_SCOURGE_BURROWER       = 46800,
+    SPELL_COSMETIC_HUGE_EXPLOSION       = 46225,
+    SPELL_CANNON_FIRE                   = 42445,
+};
+
+struct MANGOS_DLL_DECL npc_sinkhole_kill_creditAI : public ScriptedAI
+{
+    npc_sinkhole_kill_creditAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
+
+    ObjectGuid m_uiCartGUID;
+    ObjectGuid m_uiWormGUID;
+    uint32 m_uiCartTimer;
+    uint32 m_uiCartPhase;
+
+    void Reset()
+    {
+        m_uiCartGUID.Clear();
+        m_uiWormGUID.Clear();
+        m_uiCartTimer = 2000;
+        m_uiCartPhase = 0;
+    }
+
+    void JustSummoned(Creature* pSummoned)
+    {
+        m_uiWormGUID = pSummoned->GetObjectGuid();
+    }
+
+    void JustSummoned(GameObject* pGo)
+    {
+        // Go is not really needed, but ok to use as a check point so only one "event" can be processed at a time
+        if (!m_uiCartGUID.IsEmpty())
+            return;
+
+        // Expecting summoned from mangos dummy effect 46797
+        m_uiCartGUID = pGo->GetObjectGuid();
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (!m_uiCartGUID.IsEmpty())
+        {
+            if (m_uiCartTimer <= uiDiff)
+            {
+                switch(m_uiCartPhase)
+                {
+                    case 0:
+                        DoCastSpellIfCan(m_creature, SPELL_SUMMON_EXPLOSIVES_CART_FIRE);
+                        m_uiCartTimer = 4000;
+                        break;
+                    case 1:
+                        // Unclear if these should be in a dummy effect or not.
+                        // The order of spells are correct though.
+                        DoCastSpellIfCan(m_creature, SPELL_COSMETIC_HUGE_EXPLOSION, CAST_TRIGGERED);
+                        DoCastSpellIfCan(m_creature, SPELL_CANNON_FIRE, CAST_TRIGGERED);
+                        break;
+                    case 2:
+                        DoCastSpellIfCan(m_creature, SPELL_SUMMON_SCOURGE_BURROWER);
+                        m_uiCartTimer = 2000;
+                        break;
+                    case 3:
+                        if (Creature* pWorm = m_creature->GetMap()->GetCreature(m_uiWormGUID))
+                        {
+                            pWorm->SetDeathState(JUST_DIED);
+                            pWorm->SetHealth(0);
+                        }
+                        m_uiCartTimer = 10000;
+                        break;
+                    case 4:
+                        if (Creature* pWorm = m_creature->GetMap()->GetCreature(m_uiWormGUID))
+                            pWorm->RemoveCorpse();
+
+                        Reset();
+                        return;
+                }
+
+                ++m_uiCartPhase;
+            }
+            else
+                m_uiCartTimer -= uiDiff;
+        }
+    }
+};
+
+CreatureAI* GetAI_npc_sinkhole_kill_credit(Creature* pCreature)
+{
+    return new npc_sinkhole_kill_creditAI(pCreature);
+}
 
 /*######
 ## npc_surristrasz
@@ -686,6 +781,11 @@ void AddSC_borean_tundra()
     pNewScript = new Script;
     pNewScript->Name = "go_caribou_trap";
     pNewScript->pGOUse = &GOUse_go_caribou_trap;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_sinkhole_kill_credit";
+    pNewScript->GetAI = &GetAI_npc_sinkhole_kill_credit;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
