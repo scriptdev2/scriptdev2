@@ -71,7 +71,7 @@ struct MANGOS_DLL_DECL mobs_risen_husk_spiritAI : public ScriptedAI
     void JustSummoned(Creature* pSummoned)
     {
         if (m_pCreditPlayer)
-            m_pCreditPlayer->KilledMonsterCredit(pSummoned->GetEntry(), pSummoned->GetGUID());
+            m_pCreditPlayer->KilledMonsterCredit(pSummoned->GetEntry(), pSummoned->GetObjectGuid());
     }
 
     void DamageTaken(Unit* pDoneBy, uint32 &uiDamage)

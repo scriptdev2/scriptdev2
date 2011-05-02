@@ -105,7 +105,7 @@ struct MANGOS_DLL_DECL boss_silver_hand_bossesAI : public ScriptedAI
                     break;
             }
             if (m_pInstance->GetData(TYPE_SH_QUEST) && Killer->GetTypeId() == TYPEID_PLAYER)
-                ((Player*)Killer)->KilledMonsterCredit(SH_QUEST_CREDIT,m_creature->GetGUID());
+                ((Player*)Killer)->KilledMonsterCredit(SH_QUEST_CREDIT, m_creature->GetObjectGuid());
         }
     }
 

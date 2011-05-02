@@ -152,7 +152,7 @@ struct MANGOS_DLL_DECL mob_mature_netherwing_drakeAI : public ScriptedAI
                     DoScriptText(SAY_JUST_EATEN, m_creature);
 
                     if (Player* pPlayer = m_creature->GetMap()->GetPlayer(uiPlayerGUID))
-                        pPlayer->KilledMonsterCredit(NPC_EVENT_PINGER, m_creature->GetGUID());
+                        pPlayer->KilledMonsterCredit(NPC_EVENT_PINGER, m_creature->GetObjectGuid());
 
                     Reset();
                     m_creature->GetMotionMaster()->Clear();

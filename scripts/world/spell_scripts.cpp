@@ -336,7 +336,7 @@ bool EffectAuraDummy_spell_aura_dummy_npc(const Aura* pAura, bool bApply)
             {
                 if (Player* pPlayer = (Player*)pAura->GetCaster())
                 {
-                    pPlayer->KilledMonsterCredit(NPC_FALLEN_HERO_SPIRIT_PROXY, pCreature->GetGUID());
+                    pPlayer->KilledMonsterCredit(NPC_FALLEN_HERO_SPIRIT_PROXY, pCreature->GetObjectGuid());
                     pCreature->ForcedDespawn();
                 }
             }

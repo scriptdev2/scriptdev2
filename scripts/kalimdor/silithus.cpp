@@ -202,7 +202,7 @@ bool GossipSelect_npcs_rutgar_and_frankal(Player* pPlayer, Creature* pCreature, 
         case GOSSIP_ACTION_INFO_DEF + 6:
             pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_RUTGAR7, pCreature->GetGUID());
             //'kill' our trigger to update quest status
-            pPlayer->KilledMonsterCredit(TRIGGER_RUTGAR, pCreature->GetGUID());
+            pPlayer->KilledMonsterCredit(TRIGGER_RUTGAR, pCreature->GetObjectGuid());
             break;
 
         case GOSSIP_ACTION_INFO_DEF + 9:
@@ -228,7 +228,7 @@ bool GossipSelect_npcs_rutgar_and_frankal(Player* pPlayer, Creature* pCreature, 
         case GOSSIP_ACTION_INFO_DEF + 14:
             pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_FRANKAL6, pCreature->GetGUID());
             //'kill' our trigger to update quest status
-            pPlayer->KilledMonsterCredit(TRIGGER_FRANKAL, pCreature->GetGUID());
+            pPlayer->KilledMonsterCredit(TRIGGER_FRANKAL, pCreature->GetObjectGuid());
             break;
     }
     return true;

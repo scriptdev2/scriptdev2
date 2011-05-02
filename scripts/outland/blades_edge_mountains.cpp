@@ -251,7 +251,7 @@ struct MANGOS_DLL_DECL npc_daranelleAI : public ScriptedAI
                 DoScriptText(SAY_SPELL_INFLUENCE, m_creature, pWho);
 
                 //TODO: Move the below to updateAI and run if this statement == true
-                ((Player*)pWho)->KilledMonsterCredit(NPC_KALIRI_AURA_DISPEL, m_creature->GetGUID());
+                ((Player*)pWho)->KilledMonsterCredit(NPC_KALIRI_AURA_DISPEL, m_creature->GetObjectGuid());
                 pWho->RemoveAurasDueToSpell(SPELL_LASHHAN_CHANNEL);
             }
         }

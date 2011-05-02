@@ -250,7 +250,7 @@ struct MANGOS_DLL_DECL mob_netherweb_victimAI : public ScriptedAI
                 if (!urand(0, 3))
                 {
                     m_creature->SummonCreature(NPC_FREED_WARRIOR, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
-                    pPlayer->KilledMonsterCredit(NPC_FREED_WARRIOR, m_creature->GetGUID());
+                    pPlayer->KilledMonsterCredit(NPC_FREED_WARRIOR, m_creature->GetObjectGuid());
                 }
                 else
                     m_creature->SummonCreature(netherwebVictims[urand(0, 5)], 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
@@ -954,7 +954,7 @@ bool GOUse_go_veil_skith_cage(Player* pPlayer, GameObject* pGo)
         GetCreatureListWithEntryInGrid(lChildrenList, pGo, NPC_CAPTIVE_CHILD, INTERACTION_DISTANCE);
         for(std::list<Creature*>::const_iterator itr = lChildrenList.begin(); itr != lChildrenList.end(); ++itr)
         {
-            pPlayer->KilledMonsterCredit(NPC_CAPTIVE_CHILD, (*itr)->GetGUID());
+            pPlayer->KilledMonsterCredit(NPC_CAPTIVE_CHILD, (*itr)->GetObjectGuid());
             switch(urand(0,3))
             {
                 case 0: DoScriptText(SAY_THANKS_1, *itr); break;
