@@ -126,7 +126,7 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
         if (m_pInstance)
         {
             // Reset Sathrovarr too
-            if (Creature* pSath = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_SATHROVARR)))
+            if (Creature* pSath = m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_SATHROVARR)))
             {
                 if (pSath->isAlive() && pSath->getVictim())
                     pSath->AI()->EnterEvadeMode();
@@ -209,7 +209,7 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
         if (!m_pInstance)
             return;
 
-        if (Creature* pSathrovarr = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_SATHROVARR)))
+        if (Creature* pSathrovarr = m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_SATHROVARR)))
         {
             if (pSathrovarr->isAlive())
             {
@@ -218,7 +218,7 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
             }
         }
 
-        if (Creature* pKalec = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_KALECGOS_HUMAN)))
+        if (Creature* pKalec = m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_KALECGOS_HUMAN)))
         {
             pKalec->DeleteThreatList();
             pKalec->SetVisibility(VISIBILITY_OFF);
@@ -252,7 +252,7 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
 
         if (!m_bEnraged && m_creature->GetHealthPercent() < 10.0f)
         {
-            if (Creature* pSathrovarr = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_SATHROVARR)))
+            if (Creature* pSathrovarr = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_SATHROVARR)))
             {
                 if (pSathrovarr->isAlive())
                     pSathrovarr->CastSpell(pSathrovarr, SPELL_CRAZED_RAGE, true);
@@ -378,7 +378,7 @@ struct MANGOS_DLL_DECL boss_sathrovarrAI : public ScriptedAI
         if (!m_pInstance)
             return;
 
-        if (Creature* pKalec = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_KALECGOS_HUMAN)))
+        if (Creature* pKalec = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_KALECGOS_HUMAN)))
         {
             m_creature->AddThreat(pKalec, 10000000.0f);
             pKalec->AddThreat(m_creature, 10000000.0f);
@@ -400,7 +400,7 @@ struct MANGOS_DLL_DECL boss_sathrovarrAI : public ScriptedAI
 
             m_pInstance->SetData(DATA_SET_SPECTRAL_CHECK, 5000);
 
-            if (Creature* pKalecgos = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_KALECGOS_DRAGON)))
+            if (Creature* pKalecgos = m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_KALECGOS_DRAGON)))
             {
                 if (boss_kalecgosAI* pKalecgosAI = dynamic_cast<boss_kalecgosAI*>(pKalecgos->AI()))
                 {
@@ -423,7 +423,7 @@ struct MANGOS_DLL_DECL boss_sathrovarrAI : public ScriptedAI
 
         if (!m_bEnraged && m_creature->GetHealthPercent() < 10.0f)
         {
-            if (Creature* pKalecgos = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_KALECGOS_DRAGON)))
+            if (Creature* pKalecgos = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_KALECGOS_DRAGON)))
             {
                 if (pKalecgos->isAlive())
                     pKalecgos->CastSpell(pKalecgos, SPELL_CRAZED_RAGE, true);
