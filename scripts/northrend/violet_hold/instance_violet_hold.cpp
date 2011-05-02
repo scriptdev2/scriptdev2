@@ -190,14 +190,12 @@ void instance_violet_hold::UpdateCellForBoss(uint32 uiBossEntry, bool bForceClos
         return;
 
     for(BossToCellMap::const_iterator itr = itrCellLower; itr != itrCellUpper; ++itr)
+    {
         if (!bForceClosing)
             DoUseDoorOrButton(itr->second);
         else
-        {
-            GameObject* pGo = instance->GetGameObject(itr->second);
-            if (pGo && (pGo->GetGoType() == GAMEOBJECT_TYPE_DOOR || pGo->GetGoType() == GAMEOBJECT_TYPE_BUTTON) && pGo->getLootState() == GO_ACTIVATED)
-                pGo->ResetDoorOrButton();
-        }
+            DoCloseDoorOrButton(itr->second);
+    }
 }
 
 void instance_violet_hold::UpdateWorldState(bool bEnable)

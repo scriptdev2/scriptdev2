@@ -120,7 +120,6 @@ struct MANGOS_DLL_DECL instance_stratholme : public ScriptedInstance
     protected:
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         bool m_bIsSilverHandDead[MAX_SILVERHAND];
-        bool m_bIsSlaughterhouseGateOpened;
         std::string strInstData;
 
         uint32 m_uiBaronRunTimer;
