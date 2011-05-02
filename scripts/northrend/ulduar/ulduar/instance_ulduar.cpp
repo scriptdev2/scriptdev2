@@ -190,7 +190,7 @@ void instance_ulduar::OnCreatureCreate(Creature* pCreature)
             break;
         case NPC_MIMIRON:
             m_uiMimironGUID = pCreature->GetGUID();
-            if(m_auiEncounter[7] == DONE)
+            if (m_auiEncounter[7] == DONE)
                 SpawnFriendlyKeeper(NPC_MIMIRON_IMAGE);
             break;
         case NPC_LEVIATHAN_MK:
@@ -198,12 +198,12 @@ void instance_ulduar::OnCreatureCreate(Creature* pCreature)
             break;
         case NPC_HODIR:
             m_uiHodirGUID = pCreature->GetGUID();
-            if(m_auiEncounter[8] == DONE)
+            if (m_auiEncounter[8] == DONE)
                 SpawnFriendlyKeeper(NPC_HODIR_IMAGE);
             break;
         case NPC_THORIM:
             m_uiThorimGUID = pCreature->GetGUID();
-            if(m_auiEncounter[9] == DONE)
+            if (m_auiEncounter[9] == DONE)
                 SpawnFriendlyKeeper(NPC_THORIM_IMAGE);
             break;
         case NPC_RUNIC_COLOSSUS:
@@ -217,7 +217,7 @@ void instance_ulduar::OnCreatureCreate(Creature* pCreature)
             break;
         case NPC_FREYA:
             m_uiFreyaGUID = pCreature->GetGUID();
-            if(m_auiEncounter[10] == DONE)
+            if (m_auiEncounter[10] == DONE)
                 SpawnFriendlyKeeper(NPC_FREYA_IMAGE);
             break;
         case NPC_ELDER_BRIGHTLEAF:
@@ -508,7 +508,7 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
             if (uiData == DONE)
             {
                 DoRespawnGameObject(m_uiKologarnLootGUID, 30*MINUTE);
-                if(GameObject* pBridge = instance->GetGameObject(m_uiKologarnBridgeGUID))
+                if (GameObject* pBridge = instance->GetGameObject(m_uiKologarnBridgeGUID))
                     pBridge->SetGoState(GO_STATE_READY);
             }
             break;

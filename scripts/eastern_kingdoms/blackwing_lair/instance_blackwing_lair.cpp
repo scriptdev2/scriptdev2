@@ -99,19 +99,19 @@ void instance_blackwing_lair::SetData(uint32 uiType, uint32 uiData)
         case TYPE_RAZORGORE:
             m_auiEncounter[uiType] = uiData;
             DoUseDoorOrButton(m_uiRazorgoreEnterDoorGUID);
-            if(uiData == DONE)
+            if (uiData == DONE)
                 DoUseDoorOrButton(m_uiRazorgoreExitDoorGUID);
             break;
         case TYPE_VAELASTRASZ:
             m_auiEncounter[uiType] = uiData;
             // Prevent the players from running back to the first room
             DoUseDoorOrButton(m_uiRazorgoreExitDoorGUID);
-            if(uiData == DONE)
+            if (uiData == DONE)
                 DoUseDoorOrButton(m_uiVaelastraszDoorGUID);
             break;
         case TYPE_LASHLAYER:
             m_auiEncounter[uiType] = uiData;
-            if(uiData == DONE)
+            if (uiData == DONE)
                 DoUseDoorOrButton(m_uiLashlayerDoorGUID);
             break;
         case TYPE_FIREMAW:

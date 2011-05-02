@@ -330,7 +330,7 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
                 {
                     m_lAddsSet.insert(pSummoned->GetGUID());
 
-                    if(m_pInstance)
+                    if (m_pInstance)
                     {
                         float fX, fY, fZ;
                         m_pInstance->GetChamberCenterCoords(fX, fY, fZ);
