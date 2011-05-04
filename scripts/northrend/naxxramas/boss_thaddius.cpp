@@ -358,7 +358,10 @@ struct MANGOS_DLL_DECL npc_tesla_coilAI : public Scripted_NoMovementAI
         {
             m_bReapply = false;
             m_creature->InterruptNonMeleeSpells(true);
-            m_pInstance->DoCloseDoorOrButton(m_pInstance->GetData64(m_bToFeugen ? GO_CONS_NOX_TESLA_FEUGEN : GO_CONS_NOX_TESLA_STALAGG));
+            GameObject* pGo = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(m_bToFeugen ? GO_CONS_NOX_TESLA_FEUGEN : GO_CONS_NOX_TESLA_STALAGG));
+
+            if (pGo && pGo->GetGoType() == GAMEOBJECT_TYPE_BUTTON && pGo->getLootState() == GO_ACTIVATED)
+                pGo->ResetDoorOrButton();
 
             // TODO Uncomment when chain spells are proper implemented
             // DoCastSpellIfCan(m_creature, m_bToFeugen ? SPELL_FEUGEN_CHAIN : SPELL_STALAGG_CHAIN);

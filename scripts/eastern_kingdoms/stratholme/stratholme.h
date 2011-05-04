@@ -7,7 +7,7 @@
 
 enum
 {
-    MAX_ENCOUNTER               = 7,
+    MAX_ENCOUNTER               = 8,
     MAX_SILVERHAND              = 5,
     MAX_ZIGGURATS               = 3,
 
@@ -19,6 +19,7 @@ enum
     TYPE_RAMSTEIN_OBSOLETE      = 5,                        // Still set in Acid, remove when removed from Acid :)
     TYPE_BARON                  = 6,                        // Adapt then
     TYPE_BARTHILAS_RUN          = 7,
+    TYPE_BLACK_GUARDS           = 8,
 
     TYPE_SH_QUEST               = 20,
     TYPE_SH_CATHELA             = 21,

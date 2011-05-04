@@ -194,7 +194,11 @@ void instance_violet_hold::UpdateCellForBoss(uint32 uiBossEntry, bool bForceClos
         if (!bForceClosing)
             DoUseDoorOrButton(itr->second);
         else
-            DoCloseDoorOrButton(itr->second);
+        {
+            GameObject* pGo = instance->GetGameObject(itr->second);
+            if (pGo && pGo->GetGoType() == GAMEOBJECT_TYPE_DOOR && pGo->getLootState() == GO_ACTIVATED)
+                pGo->ResetDoorOrButton();
+        }
     }
 }
 
