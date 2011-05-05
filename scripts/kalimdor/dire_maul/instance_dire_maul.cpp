@@ -98,7 +98,7 @@ void instance_dire_maul::OnObjectCreate(GameObject* pGo)
         // East
         case GO_CRUMBLE_WALL:
             m_uiCrumbleWallGUID = pGo->GetGUID();
-            if (m_bWallDestroyed)
+            if (m_bWallDestroyed || m_auiEncounter[TYPE_ALZZIN] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_CORRUPT_VINE:
@@ -225,7 +225,7 @@ void instance_dire_maul::SetData(uint32 uiType, uint32 uiData)
             break;
     }
 
-    if (uiData >= DONE)
+    if (uiData == DONE)
     {
         OUT_SAVE_INST_DATA;
 

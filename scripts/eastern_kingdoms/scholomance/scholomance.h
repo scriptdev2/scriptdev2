@@ -71,7 +71,7 @@ struct GandlingEventData
     GandlingEventData() : m_bIsActive(false), m_uiDoorGUID(0) {}
     bool m_bIsActive;
     uint64 m_uiDoorGUID;
-    std::set<uint64> m_sAddGuids;
+    std::set<uint32> m_sAddGuids;
 };
 
 static const uint32 aGandlingEvents[MAX_EVENTS] = {EVENT_ID_POLKELT, EVENT_ID_THEOLEN, EVENT_ID_MALICIA, EVENT_ID_ILLUCIA, EVENT_ID_BAROV, EVENT_ID_RAVENIAN};
