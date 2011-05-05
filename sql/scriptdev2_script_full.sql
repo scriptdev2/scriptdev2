@@ -1120,7 +1120,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1509019,'My powers are renewed!',8595,1,0,0,'ossirian SAY_SURPREME2'),
 (-1509020,'My powers return!',8596,1,0,0,'ossirian SAY_SURPREME3'),
 (-1509021,'Protect the city at all costs!',8597,1,0,0,'ossirian SAY_RAND_INTRO1'),
-(-1509022,'The walls have been breached!',8599,1,0,0,'ossirian SAY_RAND_INTRO2'),
+(-1509022,'The walls have been breached!',8599,6,0,0,'ossirian SAY_RAND_INTRO2'),
 (-1509023,'To your posts. Defend the city.',8600,1,0,0,'ossirian SAY_RAND_INTRO3'),
 (-1509024,'Tresspassers will be terminated.',8601,1,0,0,'ossirian SAY_RAND_INTRO4'),
 (-1509025,'Sands of the desert rise and block out the sun!',8598,1,0,0,'ossirian SAY_AGGRO'),
