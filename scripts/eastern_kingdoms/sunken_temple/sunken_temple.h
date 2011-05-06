@@ -11,12 +11,13 @@ enum
 
     TYPE_ATALARION        = 1,
     TYPE_PROTECTORS       = 2,
-    TYPE_JAMMALAIN        = 3,
+    TYPE_JAMMALAN         = 3,
     TYPE_MALFURION        = 4,
 
     NPC_ATALARION         = 8580,
     NPC_DREAMSCYTH        = 5721,
     NPC_WEAVER            = 5720,
+    NPC_JAMMALAN          = 5710,
     NPC_AVATAR_OF_HAKKAR  = 8443,
     NPC_SHADE_OF_ERANIKUS = 5709,
 
@@ -44,7 +45,9 @@ enum
     GO_ETERNAL_FLAME_3    = 148420,
     GO_ETERNAL_FLAME_4    = 148421,
 
-    GO_JAMMALAIN_BARRIER  = 149431
+    GO_JAMMALAN_BARRIER   = 149431,
+
+    SAY_JAMMALAN_INTRO    = -1109005,
 };
 
 class MANGOS_DLL_DECL instance_sunken_temple : public ScriptedInstance
@@ -68,7 +71,8 @@ class MANGOS_DLL_DECL instance_sunken_temple : public ScriptedInstance
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string strInstData;
 
-        uint64 m_uiJammalainBarrierGUID;
+        uint64 m_uiJammalanGUID;
+        uint64 m_uiJammalanBarrierGUID;
         uint8 m_uiProtectorsRemaining;
 };
 #endif

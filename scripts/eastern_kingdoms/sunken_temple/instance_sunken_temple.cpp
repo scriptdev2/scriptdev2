@@ -25,7 +25,8 @@ EndScriptData */
 #include "sunken_temple.h"
 
 instance_sunken_temple::instance_sunken_temple(Map* pMap) : ScriptedInstance(pMap),
-    m_uiJammalainBarrierGUID(0),
+    m_uiJammalanGUID(0),
+    m_uiJammalanBarrierGUID(0),
     m_uiProtectorsRemaining(0)
 {
     Initialize();
@@ -40,10 +41,10 @@ void instance_sunken_temple::OnObjectCreate(GameObject* pGo)
 {
     switch(pGo->GetEntry())
     {
-        case GO_JAMMALAIN_BARRIER:
-            m_uiJammalainBarrierGUID = pGo->GetGUID();
+        case GO_JAMMALAN_BARRIER:
+            m_uiJammalanBarrierGUID = pGo->GetGUID();
             if (m_auiEncounter[1] == DONE)
-                DoUseDoorOrButton(m_uiJammalainBarrierGUID);
+                DoUseDoorOrButton(m_uiJammalanBarrierGUID);
             break;
     }
 
@@ -61,6 +62,9 @@ void instance_sunken_temple::OnCreatureCreate(Creature* pCreature)
         case NPC_MIJAN:
             ++m_uiProtectorsRemaining;
             break;
+        case NPC_JAMMALAN:
+            m_uiJammalanGUID = pCreature->GetGUID();
+            break;
     }
 }
 
@@ -74,16 +78,18 @@ void instance_sunken_temple::SetData(uint32 uiType, uint32 uiData)
         case TYPE_PROTECTORS:
             if (uiData == DONE)
             {
-                //Jammalain should yell here about barrier being destroyed
                 --m_uiProtectorsRemaining;
                 if (!m_uiProtectorsRemaining)
                 {
                     m_auiEncounter[1] = uiData;
-                    DoUseDoorOrButton(m_uiJammalainBarrierGUID);
+                    DoUseDoorOrButton(m_uiJammalanBarrierGUID);
+                    // Intro yell
+                    if (Creature* pJammalan = instance->GetCreature(m_uiJammalanGUID))
+                        DoScriptText(SAY_JAMMALAN_INTRO, pJammalan);
                 }
             }
             break;
-        case TYPE_JAMMALAIN:
+        case TYPE_JAMMALAN:
             m_auiEncounter[2] = uiData;
             break;
         case TYPE_MALFURION:
@@ -135,7 +141,7 @@ uint32 instance_sunken_temple::GetData(uint32 uiType)
             return m_auiEncounter[0];
         case TYPE_PROTECTORS:
             return m_auiEncounter[1];
-        case TYPE_JAMMALAIN:
+        case TYPE_JAMMALAN:
             return m_auiEncounter[2];
         case TYPE_MALFURION:
             return m_auiEncounter[3];
@@ -150,9 +156,10 @@ InstanceData* GetInstanceData_instance_sunken_temple(Map* pMap)
 
 void AddSC_instance_sunken_temple()
 {
-    Script* newscript;
-    newscript = new Script;
-    newscript->Name = "instance_sunken_temple";
-    newscript->GetInstanceData = &GetInstanceData_instance_sunken_temple;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "instance_sunken_temple";
+    pNewScript->GetInstanceData = &GetInstanceData_instance_sunken_temple;
+    pNewScript->RegisterSelf();
 }
