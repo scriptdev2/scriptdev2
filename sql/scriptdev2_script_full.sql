@@ -3495,13 +3495,13 @@ INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 (-3000107,'[PH] Get Presicion Bombs','greer orehammer GOSSIP_ITEM_GET_BOMBS'),
 (-3000108,'[PH] Start bombing mission','greer orehammer GOSSIP_ITEM_FLIGHT');
 
--- -3 090 000 GNOMEREGAN
-INSERT INTO gossip_texts (entry,content_default,comment) VALUES
-(-3090000,'I am ready to begin.','emi shortfuse GOSSIP_ITEM_START');
-
 -- -3 043 000 WAILING CAVERNS
 INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 (-3043000,'Let the event begin!','Disciple of Naralex - GOSSIP_ITEM_BEGIN');
+
+-- -3 090 000 GNOMEREGAN
+INSERT INTO gossip_texts (entry,content_default,comment) VALUES
+(-3090000,'I am ready to begin.','emi shortfuse GOSSIP_ITEM_START');
 
 -- -3 409 000 MOLTEN CORE
 INSERT INTO gossip_texts (entry,content_default,comment) VALUES
