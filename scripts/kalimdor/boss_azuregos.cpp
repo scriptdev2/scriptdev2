@@ -17,126 +17,139 @@
 /* ScriptData
 SDName: Boss_Azuregos
 SD%Complete: 90
-SDComment: Teleport not included, spell reflect not effecting dots (Core problem)
+SDComment: Spell reflect not effecting dots (Core problem)
 SDCategory: Azshara
 EndScriptData */
 
 #include "precompiled.h"
 
-#define SAY_TELEPORT            -1000100
+enum
+{
+    SAY_TELEPORT                = -1000100,
 
-#define SPELL_MARKOFFROST        23182
-#define SPELL_MANASTORM          21097
-#define SPELL_CHILL              21098
-#define SPELL_FROSTBREATH        21099
-#define SPELL_REFLECT            22067
-#define SPELL_CLEAVE              8255                      //Perhaps not right ID
-#define SPELL_ENRAGE             23537
+    SPELL_ARCANE_VACUUM         = 21147,
+    SPELL_MARK_OF_FROST_PLAYER  = 23182,
+    SPELL_MARK_OF_FROST_AURA    = 23184,                    // Triggers 23186 on players that have 23182; unfortunatelly 23183 is missing from dbc
+    SPELL_MANA_STORM            = 21097,
+    SPELL_CHILL                 = 21098,
+    SPELL_FROST_BREATH          = 21099,
+    SPELL_REFLECT               = 22067,
+    SPELL_CLEAVE                = 19983,                    // Was 8255; this one is from wowhead and seems to be the correct one
+    SPELL_ENRAGE                = 23537,
+};
 
 struct MANGOS_DLL_DECL boss_azuregosAI : public ScriptedAI
 {
     boss_azuregosAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
-    uint32 MarkOfFrost_Timer;
-    uint32 ManaStorm_Timer;
-    uint32 Chill_Timer;
-    uint32 Breath_Timer;
-    uint32 Teleport_Timer;
-    uint32 Reflect_Timer;
-    uint32 Cleave_Timer;
-    uint32 Enrage_Timer;
-    bool Enraged;
+    uint32 m_uiManaStormTimer;
+    uint32 m_uiChillTimer;
+    uint32 m_uiBreathTimer;
+    uint32 m_uiTeleportTimer;
+    uint32 m_uiReflectTimer;
+    uint32 m_uiCleaveTimer;
+    bool m_bEnraged;
 
     void Reset()
     {
-        MarkOfFrost_Timer = 35000;
-        ManaStorm_Timer = urand(5000, 17000);
-        Chill_Timer = urand(10000, 30000);
-        Breath_Timer = urand(2000, 8000);
-        Teleport_Timer = 30000;
-        Reflect_Timer = urand(15000, 30000);
-        Cleave_Timer = 7000;
-        Enrage_Timer = 0;
-        Enraged = false;
+        m_uiManaStormTimer  = urand(5000, 17000);
+        m_uiChillTimer      = urand(10000, 30000);
+        m_uiBreathTimer     = urand(2000, 8000);
+        m_uiTeleportTimer   = 30000;
+        m_uiReflectTimer    = urand(15000, 30000);
+        m_uiCleaveTimer     = 7000;
+        m_bEnraged          = false;
     }
 
-    void UpdateAI(const uint32 diff)
+    void KilledUnit(Unit* pVictim)
     {
-        //Return since we have no target
+        // Mark killed players with Mark of Frost
+        if (pVictim->GetTypeId() == TYPEID_PLAYER)
+            pVictim->CastSpell(pVictim, SPELL_MARK_OF_FROST_PLAYER, true, NULL, NULL, m_creature->GetObjectGuid());
+    }
+
+    void Aggro(Unit* pWho)
+    {
+        // Boss aura which triggers the stun effect on dead players who resurrect
+        DoCastSpellIfCan(m_creature, SPELL_MARK_OF_FROST_AURA);
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        // Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (Teleport_Timer < diff)
+        if (m_uiTeleportTimer < uiDiff)
         {
-            DoScriptText(SAY_TELEPORT, m_creature);
-
-            std::vector<ObjectGuid> vGuids;
-            m_creature->FillGuidsListFromThreatList(vGuids);
-            for (std::vector<ObjectGuid>::const_iterator i = vGuids.begin();i != vGuids.end(); ++i)
+            if (DoCastSpellIfCan(m_creature, SPELL_ARCANE_VACUUM) == CAST_OK)
             {
-                Unit* pUnit = m_creature->GetMap()->GetUnit(*i);
-
-                if (pUnit && pUnit->GetTypeId() == TYPEID_PLAYER)
-                    DoTeleportPlayer(pUnit, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ()+3, pUnit->GetOrientation());
+                DoScriptText(SAY_TELEPORT, m_creature);
+                m_uiTeleportTimer = 30000;
             }
+        }
+        else
+            m_uiTeleportTimer -= uiDiff;
 
-            DoResetThreat();
-            Teleport_Timer = 30000;
-        }else Teleport_Timer -= diff;
-
-        //        //MarkOfFrost_Timer
-        //        if (MarkOfFrost_Timer < diff)
-        //        {
-        //            DoCastSpellIfCan(m_creature->getVictim(),SPELL_MARKOFFROST);
-        //            MarkOfFrost_Timer = 25000;
-        //        }else MarkOfFrost_Timer -= diff;
-
-        //Chill_Timer
-        if (Chill_Timer < diff)
+        // Chill Timer
+        if (m_uiChillTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_CHILL);
-            Chill_Timer = urand(13000, 25000);
-        }else Chill_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature, SPELL_CHILL) == CAST_OK)
+                m_uiChillTimer = urand(13000, 25000);
+        }
+        else
+            m_uiChillTimer -= uiDiff;
 
-        //Breath_Timer
-        if (Breath_Timer < diff)
+        // Breath Timer
+        if (m_uiBreathTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_FROSTBREATH);
-            Breath_Timer = urand(10000, 15000);
-        }else Breath_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature, SPELL_FROST_BREATH) == CAST_OK)
+                m_uiBreathTimer = urand(10000, 15000);
+        }
+        else
+            m_uiBreathTimer -= uiDiff;
 
-        //ManaStorm_Timer
-        if (ManaStorm_Timer < diff)
+        // Mana Storm Timer
+        if (m_uiManaStormTimer < uiDiff)
         {
-            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
-                DoCastSpellIfCan(target,SPELL_MANASTORM);
-            ManaStorm_Timer = urand(7500, 12500);
-        }else ManaStorm_Timer -= diff;
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_MANA_STORM) == CAST_OK)
+                    m_uiManaStormTimer = urand(7500, 12500);
+            }
+        }
+        else
+            m_uiManaStormTimer -= uiDiff;
 
-        //Reflect_Timer
-        if (Reflect_Timer < diff)
+        // Reflect Timer
+        if (m_uiReflectTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature,SPELL_REFLECT);
-            Reflect_Timer = urand(20000, 35000);
-        }else Reflect_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature, SPELL_REFLECT) == CAST_OK)
+                m_uiReflectTimer = urand(20000, 35000);
+        }
+        else
+            m_uiReflectTimer -= uiDiff;
 
-        //Cleave_Timer
-        if (Cleave_Timer < diff)
+        // Cleave Timer
+        if (m_uiCleaveTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_CLEAVE);
-            Cleave_Timer = 7000;
-        }else Cleave_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_CLEAVE) == CAST_OK)
+                m_uiCleaveTimer = 7000;
+        }
+        else
+            m_uiCleaveTimer -= uiDiff;
 
-        //Enrage_Timer
-        if (m_creature->GetHealthPercent() < 26.0f && !Enraged)
+        // EnrageTimer
+        if (!m_bEnraged && m_creature->GetHealthPercent() < 26.0f)
         {
-            DoCastSpellIfCan(m_creature, SPELL_ENRAGE);
-            Enraged = true;
+            if (DoCastSpellIfCan(m_creature, SPELL_ENRAGE) == CAST_OK)
+                m_bEnraged = true;
         }
 
         DoMeleeAttackIfReady();
     }
 };
+
 CreatureAI* GetAI_boss_azuregos(Creature* pCreature)
 {
     return new boss_azuregosAI(pCreature);
@@ -144,9 +157,10 @@ CreatureAI* GetAI_boss_azuregos(Creature* pCreature)
 
 void AddSC_boss_azuregos()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_azuregos";
-    newscript->GetAI = &GetAI_boss_azuregos;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_azuregos";
+    pNewScript->GetAI = &GetAI_boss_azuregos;
+    pNewScript->RegisterSelf();
 }
