@@ -972,6 +972,9 @@
     <ClCompile Include="..\scripts\kalimdor\razorfen_kraul\instance_razorfen_kraul.cpp">
       <Filter>scripts\kalimdor\razorfen_kraul</Filter>
     </ClCompile>
+    <ClCompile Include="..\scripts\kalimdor\razorfen_kraul\razorfen_kraul.cpp">
+      <Filter>scripts\kalimdor\razorfen_kraul</Filter>
+    </ClCompile>
     <ClCompile Include="..\scripts\kalimdor\ruins_of_ahnqiraj\boss_ayamiss.cpp">
       <Filter>scripts\kalimdor\ruins_of_ahnqiraj</Filter>
     </ClCompile>

@@ -1515,6 +1515,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\scripts\kalimdor\razorfen_kraul\razorfen_kraul.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\scripts\kalimdor\razorfen_kraul\razorfen_kraul.h"
 						>
 					</File>
