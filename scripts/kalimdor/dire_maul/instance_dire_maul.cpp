@@ -61,6 +61,11 @@ void instance_dire_maul::OnCreatureCreate(Creature* pCreature)
 {
     switch(pCreature->GetEntry())
     {
+        // East
+        case NPC_OLD_IRONBARK:
+            m_uiOldIronbarkGUID = pCreature->GetGUID();
+            break;
+
         // West
         case NPC_PRINCE_TORTHELDRIN:
             m_uiPrinceTortheldrinGUID = pCreature->GetGUID();
@@ -96,6 +101,11 @@ void instance_dire_maul::OnObjectCreate(GameObject* pGo)
     switch(pGo->GetEntry())
     {
         // East
+        case GO_CONSERVATORY_DOOR:
+            m_uiConservatoryDoorGUID = pGo->GetGUID();
+            if (m_auiEncounter[TYPE_IRONBARK] == DONE)
+                pGo->SetGoState(GO_STATE_ACTIVE);
+            break;
         case GO_CRUMBLE_WALL:
             m_uiCrumbleWallGUID = pGo->GetGUID();
             if (m_bWallDestroyed || m_auiEncounter[TYPE_ALZZIN] == DONE)
@@ -152,6 +162,21 @@ void instance_dire_maul::SetData(uint32 uiType, uint32 uiData)
     switch(uiType)
     {
         // East
+        case TYPE_ZEVRIM:
+            if (uiData == DONE)
+            {
+                // Update Old Ironbark so he can open the conservatory door
+                if (Creature* pIronbark = instance->GetCreature(m_uiOldIronbarkGUID))
+                {
+                    DoScriptText(SAY_IRONBARK_REDEEM, pIronbark);
+                    pIronbark->UpdateEntry(NPC_IRONBARK_REDEEMED);
+                }
+            }
+            m_auiEncounter[uiType] = uiData;
+            break;
+        case TYPE_IRONBARK:
+            m_auiEncounter[uiType] = uiData;
+            break;
         case TYPE_ALZZIN:                                   // This Encounter is expected to be handled within Acid (reason handling at 50% hp)
             if (uiData == DONE)
             {
@@ -232,7 +257,8 @@ void instance_dire_maul::SetData(uint32 uiType, uint32 uiData)
         std::ostringstream saveStream;
         saveStream    << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " "
                       << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5] << " "
-                      << m_auiEncounter[6] << " " << m_auiEncounter[7] << " " << m_auiEncounter[8];
+                      << m_auiEncounter[6] << " " << m_auiEncounter[7] << " " << m_auiEncounter[8] << " "
+                      << m_auiEncounter[9] << " " << m_auiEncounter[10];
 
         m_strInstData = saveStream.str();
 
@@ -309,6 +335,15 @@ void instance_dire_maul::OnCreatureDeath(Creature* pCreature)
 {
     switch (pCreature->GetEntry())
     {
+        // East
+        // - Handling Zevrim and Old Ironbark for the door event
+        case NPC_ZEVRIM_THORNHOOF:
+            SetData(TYPE_ZEVRIM, DONE);
+            break;
+        case NPC_IRONBARK_REDEEMED:
+            SetData(TYPE_IRONBARK, DONE);
+            break;
+
         // West
         // - Handling of guards of generators
         case NPC_ARCANE_ABERRATION:
@@ -356,7 +391,8 @@ void instance_dire_maul::Load(const char* chrIn)
     std::istringstream loadStream(chrIn);
     loadStream >>   m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >>
                     m_auiEncounter[3] >> m_auiEncounter[4] >> m_auiEncounter[5] >>
-                    m_auiEncounter[6] >> m_auiEncounter[7] >> m_auiEncounter[8];
+                    m_auiEncounter[6] >> m_auiEncounter[7] >> m_auiEncounter[8] >>
+                    m_auiEncounter[9] >> m_auiEncounter[10];
 
     if (m_auiEncounter[TYPE_ALZZIN] >= DONE)
        m_bWallDestroyed = true;
