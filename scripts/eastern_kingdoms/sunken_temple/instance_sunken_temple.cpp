@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: instance_sunken_temple
-SD%Complete: 30
-SDComment:
+SD%Complete: 50
+SDComment: Hakkar Summon Event missing
 SDCategory: Sunken Temple
 EndScriptData */
 
@@ -25,8 +25,11 @@ EndScriptData */
 #include "sunken_temple.h"
 
 instance_sunken_temple::instance_sunken_temple(Map* pMap) : ScriptedInstance(pMap),
+    m_uiAtalarionGUID(0),
     m_uiJammalanGUID(0),
     m_uiJammalanBarrierGUID(0),
+    m_uiIdolOfHakkarGUID(0),
+    m_uiStatueCounter(0),
     m_uiProtectorsRemaining(0)
 {
     Initialize();
@@ -46,8 +49,13 @@ void instance_sunken_temple::OnObjectCreate(GameObject* pGo)
             if (m_auiEncounter[1] == DONE)
                 DoUseDoorOrButton(m_uiJammalanBarrierGUID);
             break;
+        case GO_IDOL_OF_HAKKAR:
+            m_uiIdolOfHakkarGUID = pGo->GetGUID();
+            break;
+        case GO_ATALAI_LIGHT_BIG:
+            m_luiBigLightGUIDs.push_back(pGo->GetGUID());
+            break;
     }
-
 }
 
 void instance_sunken_temple::OnCreatureCreate(Creature* pCreature)
@@ -65,14 +73,38 @@ void instance_sunken_temple::OnCreatureCreate(Creature* pCreature)
         case NPC_JAMMALAN:
             m_uiJammalanGUID = pCreature->GetGUID();
             break;
+        case NPC_ATALARION:
+            m_uiAtalarionGUID = pCreature->GetGUID();
+            break;
     }
 }
+
+void instance_sunken_temple::OnCreatureDeath(Creature* pCreature)
+{
+    switch (pCreature->GetEntry())
+    {
+        case NPC_ATALARION: SetData(TYPE_ATALARION, DONE); break;
+        case NPC_JAMMALAN:  SetData(TYPE_JAMMALAN, DONE);  break;
+        // Jammalain mini-bosses
+        case NPC_ZOLO:
+        case NPC_GASHER:
+        case NPC_LORO:
+        case NPC_HUKKU:
+        case NPC_ZULLOR:
+        case NPC_MIJAN:
+            SetData(TYPE_PROTECTORS, DONE);
+            break;
+    }
+}
+
 
 void instance_sunken_temple::SetData(uint32 uiType, uint32 uiData)
 {
     switch(uiType)
     {
         case TYPE_ATALARION:
+            if (uiData == SPECIAL)
+                DoSpawnAtalarionIfCan();
             m_auiEncounter[0] = uiData;
             break;
         case TYPE_PROTECTORS:
@@ -111,6 +143,53 @@ void instance_sunken_temple::SetData(uint32 uiType, uint32 uiData)
     }
 }
 
+void instance_sunken_temple::DoSpawnAtalarionIfCan()
+{
+    // return if already summoned
+    if (m_uiAtalarionGUID)
+        return;
+
+    Player* pPlayer = GetPlayerInMap();
+    if (!pPlayer)
+        return;
+
+    pPlayer->SummonCreature(NPC_ATALARION, aSunkenTempleLocation[0].m_fX, aSunkenTempleLocation[0].m_fY, aSunkenTempleLocation[0].m_fZ, aSunkenTempleLocation[0].m_fO, TEMPSUMMON_DEAD_DESPAWN, 0);
+
+    // Spawn the idol of Hakkar
+    DoRespawnGameObject(m_uiIdolOfHakkarGUID, 30 * MINUTE);
+
+    // Spawn the big green lights
+    for (std::list<uint64>::const_iterator itr = m_luiBigLightGUIDs.begin(); itr != m_luiBigLightGUIDs.end(); ++itr)
+        DoRespawnGameObject(*itr, 30*MINUTE*IN_MILLISECONDS);
+}
+
+bool instance_sunken_temple::ProcessStatueEvent(uint32 uiEventId)
+{
+    bool bEventStatus = false;
+
+    // Check if the statues are activated correctly
+    // Increase the counter when the correct statue is activated
+    for (uint8 i = 0; i < MAX_STATUES; ++i)
+    {
+        if (uiEventId == m_aAtalaiStatueEvents[i] && m_uiStatueCounter == i)
+        {
+            // Right Statue activated
+            ++m_uiStatueCounter;
+            bEventStatus = true;
+            break;
+        }
+    }
+
+    if (!bEventStatus)
+        return false;
+
+    // Check if all statues are active
+    if (m_uiStatueCounter == MAX_STATUES)
+        SetData(TYPE_ATALARION, SPECIAL);
+
+    return true;
+}
+
 void instance_sunken_temple::Load(const char* chrIn)
 {
     if (!chrIn)
@@ -126,7 +205,8 @@ void instance_sunken_temple::Load(const char* chrIn)
 
     for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
     {
-        if (m_auiEncounter[i] == IN_PROGRESS)
+        // Here a bit custom, to have proper mechanics for the statue events
+        if (m_auiEncounter[i] != DONE)
             m_auiEncounter[i] = NOT_STARTED;
     }
 

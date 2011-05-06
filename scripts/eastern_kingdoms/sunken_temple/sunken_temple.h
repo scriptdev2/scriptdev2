@@ -8,11 +8,17 @@
 enum
 {
     MAX_ENCOUNTER         = 4,
+    MAX_STATUES           = 6,
 
-    TYPE_ATALARION        = 1,
-    TYPE_PROTECTORS       = 2,
-    TYPE_JAMMALAN         = 3,
-    TYPE_MALFURION        = 4,
+    // Don't change types 1,2 and 3 (handled in ACID)
+    TYPE_ATALARION_OBSOLET= 1,
+    TYPE_PROTECTORS_OBS   = 2,
+    TYPE_JAMMALAN_OBS     = 3,
+
+    TYPE_ATALARION        = 4,
+    TYPE_PROTECTORS       = 5,
+    TYPE_JAMMALAN         = 6,
+    TYPE_MALFURION        = 7,
 
     NPC_ATALARION         = 8580,
     NPC_DREAMSCYTH        = 5721,
@@ -21,7 +27,7 @@ enum
     NPC_AVATAR_OF_HAKKAR  = 8443,
     NPC_SHADE_OF_ERANIKUS = 5709,
 
-    // Jammalain min-bosses
+    // Jammalain mini-bosses
     NPC_ZOLO              = 5712,
     NPC_GASHER            = 5713,
     NPC_LORO              = 5714,
@@ -31,14 +37,15 @@ enum
 
     NPC_MALFURION         = 15362,
 
-    GO_ALTAR_OF_HAKKAR    = 148836,
+    GO_ALTAR_OF_HAKKAR    = 148836,                         // Used in order to show the player the order of the statue activation
+    GO_IDOL_OF_HAKKAR     = 148838,                         // Appears when atalarion is summoned; this was removed in 4.0.1
 
-    GO_ATALAI_STATUE_1    = 148830,
-    GO_ATALAI_STATUE_2    = 148831,
-    GO_ATALAI_STATUE_3    = 148832,
-    GO_ATALAI_STATUE_4    = 148833,
-    GO_ATALAI_STATUE_5    = 148834,
-    GO_ATALAI_STATUE_6    = 148835,
+    GO_ATALAI_LIGHT       = 148883,                         // Green light, activates when the correct statue is chosen
+    GO_ATALAI_LIGHT_BIG   = 148937,                         // Big light, used at the altar event
+
+    GO_ATALAI_TRAP_1      = 177484,                         // Trapps triggered if the wrong statue is activated
+    GO_ATALAI_TRAP_2      = 177485,                         // The traps are spawned in DB randomly around the statues (we don't know exactly which statue has which trap)
+    GO_ATALAI_TRAP_3      = 148837,
 
     GO_ETERNAL_FLAME_1    = 148418,
     GO_ETERNAL_FLAME_2    = 148419,
@@ -47,7 +54,30 @@ enum
 
     GO_JAMMALAN_BARRIER   = 149431,
 
+    // Event ids related to the statue activation
+    EVENT_ID_STATUE_1     = 3094,
+    EVENT_ID_STATUE_2     = 3095,
+    EVENT_ID_STATUE_3     = 3097,
+    EVENT_ID_STATUE_4     = 3098,
+    EVENT_ID_STATUE_5     = 3099,
+    EVENT_ID_STATUE_6     = 3100,
+
     SAY_JAMMALAN_INTRO    = -1109005,
+};
+
+// This is also the needed order for activation: S, N, SW, SE, NW, NE
+static const uint32 m_aAtalaiStatueEvents[MAX_STATUES] = {EVENT_ID_STATUE_1, EVENT_ID_STATUE_2, EVENT_ID_STATUE_3, EVENT_ID_STATUE_4, EVENT_ID_STATUE_5, EVENT_ID_STATUE_6};
+
+struct SummonLocations
+{
+    float m_fX, m_fY, m_fZ, m_fO;
+};
+
+static const SummonLocations aSunkenTempleLocation[] =
+{
+    {-480.3991f, 96.5668f, -189.7297f, 6.1947f},            // Atalarion summon loc
+    {-466.7165f, 273.0253f, -90.4509f, 3.1338f},            // Avatar and shade of hakkar summon
+    {-660.5277f, -16.7117f, -90.8357f, 1.6055f}             // Malfurion summon loc
 };
 
 class MANGOS_DLL_DECL instance_sunken_temple : public ScriptedInstance
@@ -61,18 +91,31 @@ class MANGOS_DLL_DECL instance_sunken_temple : public ScriptedInstance
         void OnObjectCreate(GameObject* pGo);
         void OnCreatureCreate(Creature* pCreature);
 
+        // No need currently to use OnEnterCombat or OnEvade
+        void OnCreatureDeath(Creature* pCreature);
+
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
+
+        bool ProcessStatueEvent(uint32 uiEventId);
 
         const char* Save() { return strInstData.c_str(); }
         void Load(const char* chrIn);
 
     protected:
+        void DoSpawnAtalarionIfCan();
+
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string strInstData;
 
+        uint64 m_uiAtalarionGUID;
         uint64 m_uiJammalanGUID;
         uint64 m_uiJammalanBarrierGUID;
+        uint64 m_uiIdolOfHakkarGUID;
+        uint8 m_uiStatueCounter;
         uint8 m_uiProtectorsRemaining;
+
+        std::list<uint64> m_luiBigLightGUIDs;
 };
+
 #endif
