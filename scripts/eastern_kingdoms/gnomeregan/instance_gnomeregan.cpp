@@ -84,7 +84,7 @@ void instance_gnomeregan::SetData(uint32 uiType, uint32 uiData)
                 if (!m_luiExplosiveChargeGUIDs.empty())
                 {
                     std::list<GameObject*> lExplosiveCharges;
-                    for (std::list<uint64>::const_iterator itr = m_luiExplosiveChargeGUIDs.begin(); itr != m_luiExplosiveChargeGUIDs.end(); itr++)
+                    for (std::list<uint64>::const_iterator itr = m_luiExplosiveChargeGUIDs.begin(); itr != m_luiExplosiveChargeGUIDs.end(); ++itr)
                     {
                         if (GameObject* pCharge = instance->GetGameObject(*itr))
                             lExplosiveCharges.push_back(pCharge);
@@ -101,17 +101,17 @@ void instance_gnomeregan::SetData(uint32 uiType, uint32 uiData)
                     GameObject* pCaveInNorth = instance->GetGameObject(m_uiCaveInNorthGUID);
                     if (pCaveInSouth && pCaveInNorth)
                     {
-                        for (std::list<GameObject*>::iterator itr = lExplosiveCharges.begin(); itr != lExplosiveCharges.end(); itr++)
+                        for (std::list<GameObject*>::iterator itr = lExplosiveCharges.begin(); itr != lExplosiveCharges.end(); ++itr)
                         {
                             if ((*itr)->GetDistanceOrder(pCaveInSouth, pCaveInNorth) && uiCounterSouth < MAX_EXPLOSIVES_PER_SIDE)
                             {
                                 m_auiExplosiveSortedGUIDs[0][uiCounterSouth] = (*itr)->GetGUID();
-                                uiCounterSouth++;
+                                ++uiCounterSouth;
                             }
                             else if (uiCounterNorth < MAX_EXPLOSIVES_PER_SIDE)
                             {
                                 m_auiExplosiveSortedGUIDs[1][uiCounterNorth] = (*itr)->GetGUID();
-                                uiCounterNorth++;
+                                ++uiCounterNorth;
                             }
                         }
                     }
@@ -124,7 +124,7 @@ void instance_gnomeregan::SetData(uint32 uiType, uint32 uiData)
             }
             if (uiData == DONE)
             {
-                for (std::list<uint64>::const_iterator itr = m_lRedRocketGUIDs.begin(); itr != m_lRedRocketGUIDs.end(); itr++)
+                for (std::list<uint64>::const_iterator itr = m_lRedRocketGUIDs.begin(); itr != m_lRedRocketGUIDs.end(); ++itr)
                     DoRespawnGameObject(*itr, HOUR);
             }
             break;
@@ -151,7 +151,7 @@ void instance_gnomeregan::SetData(uint32 uiType, uint32 uiData)
                     Creature* pBlastmaster = instance->GetCreature(m_uiBlastmasterShortfuseGUID);
                     if (!pBlastmaster)
                         break;
-                    for (std::list<uint64>::const_iterator itr = m_luiSpawnedExplosiveChargeGUIDs.begin(); itr != m_luiSpawnedExplosiveChargeGUIDs.end(); itr++)
+                    for (std::list<uint64>::const_iterator itr = m_luiSpawnedExplosiveChargeGUIDs.begin(); itr != m_luiSpawnedExplosiveChargeGUIDs.end(); ++itr)
                     {
                         if (GameObject* pExplosive = instance->GetGameObject(*itr))
                             pExplosive->Use(pBlastmaster);
@@ -188,7 +188,7 @@ void instance_gnomeregan::SetData(uint32 uiType, uint32 uiData)
                 }
 
                 // Deactivate all remaining BombFaces
-                for (uint8 i = 0; i < MAX_GNOME_FACES; i++)
+                for (uint8 i = 0; i < MAX_GNOME_FACES; ++i)
                     DoDeactivateBombFace(i);
             }
             break;

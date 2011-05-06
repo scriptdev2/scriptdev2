@@ -358,7 +358,7 @@ bool ProcessEventId_event_spell_gandling_shadow_portal(uint32 uiEventId, Object*
         if (instance_scholomance* pInstance = (instance_scholomance*)((Creature*)pSource)->GetInstanceData())
         {
             // Check if we are handling an event associated with the room events of gandling
-            for (uint8 i = 0; i < MAX_EVENTS; i++)
+            for (uint8 i = 0; i < MAX_EVENTS; ++i)
             {
                 if (uiEventId == aGandlingEvents[i])
                 {

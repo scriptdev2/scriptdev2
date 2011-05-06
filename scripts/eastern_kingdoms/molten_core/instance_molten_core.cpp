@@ -219,7 +219,7 @@ void instance_molten_core::DoSpawnMajordomoIfCan(bool bByPlayerEnter)
         return;
 
     // Check if all rune bosses are done
-    for(uint8 i = TYPE_MAGMADAR; i < TYPE_MAJORDOMO; i++)
+    for(uint8 i = TYPE_MAGMADAR; i < TYPE_MAJORDOMO; ++i)
     {
         if (m_auiEncounter[i] != DONE)
             return;

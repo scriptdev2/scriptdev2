@@ -148,7 +148,7 @@ struct MANGOS_DLL_DECL boss_loathebAI : public ScriptedAI
                     m_uiNecroticAuraTimer = 3000;
                     break;
             }
-            m_uiNecroticAuraCount++;
+            ++m_uiNecroticAuraCount;
         }
         else
             m_uiNecroticAuraTimer -= uiDiff;

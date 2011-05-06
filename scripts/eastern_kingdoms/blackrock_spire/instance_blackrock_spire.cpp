@@ -179,7 +179,7 @@ void instance_blackrock_spire::SetData64(uint32 uiType, uint64 uiData)
     if (uiType == TYPE_ROOM_EVENT && GetData(TYPE_ROOM_EVENT) == IN_PROGRESS)
     {
         uint8 uiNotEmptyRoomsCount = 0;
-        for (uint8 i = 0; i< MAX_ROOMS; i++)
+        for (uint8 i = 0; i< MAX_ROOMS; ++i)
         {
             if (m_auiRoomRuneGUID[i])                       // This check is used, to ensure which runes still need processing
             {
@@ -190,7 +190,7 @@ void instance_blackrock_spire::SetData64(uint32 uiType, uint64 uiData)
                     m_auiRoomRuneGUID[i] = 0;
                 }
                 else
-                    uiNotEmptyRoomsCount++;                 // found an not empty room
+                    ++uiNotEmptyRoomsCount;                 // found an not empty room
             }
         }
         if (!uiNotEmptyRoomsCount)
@@ -250,12 +250,19 @@ void instance_blackrock_spire::DoSortRoomEventMobs()
 {
     if (GetData(TYPE_ROOM_EVENT) != NOT_STARTED)
         return;
-    for (uint8 i = 0; i < MAX_ROOMS; i++)
+
+    for (uint8 i = 0; i < MAX_ROOMS; ++i)
+    {
         if (GameObject* pRune = instance->GetGameObject(m_auiRoomRuneGUID[i]))
-            for (std::list<uint64>::const_iterator itr = m_lRoomEventMobGUIDList.begin(); itr != m_lRoomEventMobGUIDList.end(); itr++)
-                if (Creature* pCreature = instance->GetCreature(*itr))
-                    if (pCreature->isAlive() && pCreature->GetDistance(pRune) < 10.0f)
-                        m_alRoomEventMobGUIDSorted[i].push_back(*itr);
+        {
+            for (std::list<uint64>::const_iterator itr = m_lRoomEventMobGUIDList.begin(); itr != m_lRoomEventMobGUIDList.end(); ++itr)
+            {
+                Creature* pCreature = instance->GetCreature(*itr);
+                if (pCreature && pCreature->isAlive() && pCreature->GetDistance(pRune) < 10.0f)
+                    m_alRoomEventMobGUIDSorted[i].push_back(*itr);
+            }
+        }
+    }
 
     SetData(TYPE_ROOM_EVENT, IN_PROGRESS);
 }

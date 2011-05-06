@@ -52,7 +52,7 @@ void instance_draktharon_keep::OnCreatureEvade(Creature* pCreature)
 void instance_draktharon_keep::OnCreatureDeath(Creature* pCreature)
 {
     if ((pCreature->GetEntry() == NPC_DRAKKARI_GUTRIPPER || pCreature->GetEntry() == NPC_DRAKKARI_SCYTHECLAW) && m_auiEncounter[TYPE_KING_DRED] == IN_PROGRESS)
-        m_uiDreadAddsKilled++;
+        ++m_uiDreadAddsKilled;
 
     if (pCreature->GetEntry() == NPC_KING_DRED)
         SetData(TYPE_KING_DRED, DONE);

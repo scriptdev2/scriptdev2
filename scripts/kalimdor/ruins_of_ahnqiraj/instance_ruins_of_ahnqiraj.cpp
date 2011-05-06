@@ -179,7 +179,7 @@ void instance_ruins_of_ahnqiraj::DoSapwnAndorovIfCan()
     if (!pPlayer)
         return;
 
-    for (uint8 i = 0; i < MAX_HELPERS; i++)
+    for (uint8 i = 0; i < MAX_HELPERS; ++i)
         pPlayer->SummonCreature(aAndorovSpawnLocs[i].m_uiEntry, aAndorovSpawnLocs[i].m_fX, aAndorovSpawnLocs[i].m_fY, aAndorovSpawnLocs[i].m_fZ, aAndorovSpawnLocs[i].m_fO, TEMPSUMMON_DEAD_DESPAWN, 0);
 }
 

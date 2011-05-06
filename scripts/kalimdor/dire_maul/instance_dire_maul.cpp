@@ -296,7 +296,7 @@ void instance_dire_maul::OnCreatureEnterCombat(Creature* pCreature)
         case NPC_MANA_REMNANT:
             if (!m_lGeneratorGuardGUIDs.empty())
             {
-                for (uint8 i = 0; i < MAX_GENERATORS; i++)
+                for (uint8 i = 0; i < MAX_GENERATORS; ++i)
                 {
                     GameObject* pGenerator = instance->GetGameObject(m_auiCrystalGeneratorGUID[i]);
                     // Skip non-existing or finished generators
@@ -348,7 +348,7 @@ void instance_dire_maul::OnCreatureDeath(Creature* pCreature)
         // - Handling of guards of generators
         case NPC_ARCANE_ABERRATION:
         case NPC_MANA_REMNANT:
-            for (uint8 i = 0; i < MAX_GENERATORS; i++)
+            for (uint8 i = 0; i < MAX_GENERATORS; ++i)
             {
                 // Skip already activated generators
                 if (GetData(TYPE_PYLON_1 + i) == DONE)

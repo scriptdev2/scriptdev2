@@ -490,7 +490,7 @@ struct MANGOS_DLL_DECL boss_thaddiusAddsAI : public ScriptedAI
         if (lTeslaGUIDList.empty())
             return;
 
-        for (std::list<uint64>::const_iterator itr = lTeslaGUIDList.begin(); itr != lTeslaGUIDList.end(); itr++)
+        for (std::list<uint64>::const_iterator itr = lTeslaGUIDList.begin(); itr != lTeslaGUIDList.end(); ++itr)
         {
             if (Creature* pTesla = m_pInstance->instance->GetCreature(*itr))
             {
@@ -566,7 +566,7 @@ struct MANGOS_DLL_DECL boss_thaddiusAddsAI : public ScriptedAI
                             // Set both Teslas to overload
                             std::list<uint64> lTeslaGUIDList;
                             m_pInstance->GetThadTeslaCreatures(lTeslaGUIDList);
-                            for (std::list<uint64>::const_iterator itr = lTeslaGUIDList.begin(); itr != lTeslaGUIDList.end(); itr++)
+                            for (std::list<uint64>::const_iterator itr = lTeslaGUIDList.begin(); itr != lTeslaGUIDList.end(); ++itr)
                             {
                                 if (Creature* pTesla = m_pInstance->instance->GetCreature(*itr))
                                 {

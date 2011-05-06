@@ -182,7 +182,7 @@ bool EffectAuraDummy_spell_aura_dummy_npc_crates_dummy(const Aura* pAura, bool b
                 uint8 i = 0;
                 for (std::list<Creature*>::const_iterator itr = lCrateBunnyList.begin(); itr != lCrateBunnyList.end(); ++itr)
                 {
-                    i++;
+                    ++i;
                     if (*itr == pTarget)
                         break;
                 }

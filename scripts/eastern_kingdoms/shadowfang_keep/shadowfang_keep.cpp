@@ -515,7 +515,7 @@ struct MANGOS_DLL_DECL boss_arugalAI : public ScriptedAI
                         Creature *pVoidwalker, *pLeader;
                         pVoidwalker = pLeader = NULL;
 
-                        for(uint8 i = 0; i < 4; i++)
+                        for(uint8 i = 0; i < 4; ++i)
                         {
                             pVoidwalker = m_creature->SummonCreature(NPC_VOIDWALKER,VWSpawns[i].fX,
                                 VWSpawns[i].fY, VWSpawns[i].fZ, VWSpawns[i].fO, TEMPSUMMON_DEAD_DESPAWN, 1);
@@ -527,7 +527,7 @@ struct MANGOS_DLL_DECL boss_arugalAI : public ScriptedAI
                                 pLeader = pVoidwalker;
 
                             if (mob_arugal_voidwalkerAI* pVoidwalkerAI = dynamic_cast<mob_arugal_voidwalkerAI*>(pVoidwalker->AI()))
-                                pVoidwalkerAI->SetPosition(i,pLeader);
+                                pVoidwalkerAI->SetPosition(i, pLeader);
 
                             pVoidwalker = NULL;
                         }

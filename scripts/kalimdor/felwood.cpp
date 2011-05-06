@@ -424,7 +424,7 @@ struct MANGOS_DLL_DECL npc_kroshiusAI : public ScriptedAI
                         }
                         break;
                 }
-                m_uiPhase++;
+                ++m_uiPhase;
             }
             else
                 m_uiPhaseTimer -= uiDiff;

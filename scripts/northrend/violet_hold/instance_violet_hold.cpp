@@ -75,7 +75,7 @@ void instance_violet_hold::ResetAll()
     CallGuards(true);
     SetIntroPortals(false);
 
-    for (std::vector<sBossSpawn*>::const_iterator itr = m_vRandomBosses.begin(); itr != m_vRandomBosses.end(); itr++)
+    for (std::vector<sBossSpawn*>::const_iterator itr = m_vRandomBosses.begin(); itr != m_vRandomBosses.end(); ++itr)
     {
         const sBossInformation* pData = GetBossInformation((*itr)->uiEntry);
         if (pData && GetData(pData->uiType) == DONE)
