@@ -30,7 +30,7 @@ void LoadDatabase()
         return;
     }
 
-    //Initialize connection to DB
+    // Initialize connection to DB
     if (SD2Database.Initialize(strSD2DBinfo.c_str()))
     {
         outstring_log("SD2: ScriptDev2 database at %s initialized.", strSD2DBinfo.c_str());
@@ -73,7 +73,7 @@ void FreeScriptLibrary()
 MANGOS_DLL_EXPORT
 void InitScriptLibrary()
 {
-    //ScriptDev2 startup
+    // ScriptDev2 startup
     outstring_log("");
     outstring_log(" MMM  MMM    MM");
     outstring_log("M  MM M  M  M  M");
@@ -84,19 +84,19 @@ void InitScriptLibrary()
     outstring_log(" MMM  MMM  http://www.scriptdev2.com");
     outstring_log("");
 
-    //Get configuration file
+    // Get configuration file
     if (!SD2Config.SetSource(_SCRIPTDEV2_CONFIG))
         error_log("SD2: Unable to open configuration file. Database will be unaccessible. Configuration values will use default.");
     else
         outstring_log("SD2: Using configuration file %s",_SCRIPTDEV2_CONFIG);
 
-    //Check config file version
+    // Check config file version
     if (SD2Config.GetIntDefault("ConfVersion", 0) != SD2_CONF_VERSION)
         error_log("SD2: Configuration file version doesn't match expected version. Some config variables may be wrong or missing.");
 
     outstring_log("");
 
-    //Load database (must be called after SD2Config.SetSource).
+    // Load database (must be called after SD2Config.SetSource).
     LoadDatabase();
 
     outstring_log("SD2: Loading C++ scripts");
@@ -104,12 +104,21 @@ void InitScriptLibrary()
     bar.step();
     outstring_log("");
 
+    // Check ammount of assigned ScriptNames (from core)
+    if (GetScriptIdsCount() >= MAX_SCRIPTS)
+        error_log("SD2: Reserved script slots in script table (%u) too low for registered ScriptNames by core (%u).", MAX_SCRIPTS, GetScriptIdsCount());
+
     for(int i=0; i<MAX_SCRIPTS; ++i)
         m_scripts[i]=NULL;
 
     FillSpellSummary();
 
     AddScripts();
+
+    // Check existance scripts for all registered by core script names
+    for (int i = 1; i < GetScriptIdsCount(); ++i)
+        if (!m_scripts[i])
+            error_log("SD2: Script not found for script name '%s'.", GetScriptName(i));
 
     outstring_log(">> Loaded %i C++ Scripts.", num_sc_scripts);
 }
@@ -205,11 +214,15 @@ void DoScriptText(int32 iTextEntry, WorldObject* pSource, Unit* pTarget)
 
 void Script::RegisterSelf(bool bReportError)
 {
-    int id = GetScriptId(Name.c_str());
-    if (id != 0)
+    if (int id = GetScriptId(Name.c_str()))
     {
-        m_scripts[id] = this;
-        ++num_sc_scripts;
+        if (id < MAX_SCRIPTS)
+        {
+            m_scripts[id] = this;
+            ++num_sc_scripts;
+        }
+        else
+            error_log("SD2: script %s have script id %u > MAX_SCRIPTS (%u), MAX_SCRIPTS need update for allow script loading.", Name.c_str(), id, MAX_SCRIPTS);
     }
     else
     {
