@@ -5,9 +5,7 @@
 #ifndef SC_FOLLOWERAI_H
 #define SC_FOLLOWERAI_H
 
-#include "../system/system.h"
-
-enum eFollowState
+enum FollowState
 {
     STATE_FOLLOW_NONE       = 0x000,
     STATE_FOLLOW_INPROGRESS = 0x001,                        //must always have this state for any follow

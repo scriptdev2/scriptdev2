@@ -5,8 +5,6 @@
 #ifndef SC_ESCORTAI_H
 #define SC_ESCORTAI_H
 
-#include "../system/system.h"
-
 struct Escort_Waypoint
 {
     Escort_Waypoint(uint32 uiId, float fX, float fY, float fZ, uint32 uiWaitTime) :
@@ -24,7 +22,7 @@ struct Escort_Waypoint
     uint32 uiWaitTime;
 };
 
-enum eEscortState
+enum EscortState
 {
     STATE_ESCORT_NONE       = 0x000,                        //nothing in progress
     STATE_ESCORT_ESCORTING  = 0x001,                        //escort are in progress
