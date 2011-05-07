@@ -13,8 +13,9 @@
 #include "../system/system.h"
 #include "../../../game/ScriptMgr.h"
 
+typedef std::vector<Script*> SDScriptVec;
 int num_sc_scripts;
-Script *m_scripts[MAX_SCRIPTS];
+SDScriptVec m_scripts;
 
 Config SD2Config;
 
@@ -64,8 +65,10 @@ void FreeScriptLibrary()
     delete []SpellSummary;
 
     // Free resources before library unload
-    for(int i=0; i<MAX_SCRIPTS; ++i)
-        delete m_scripts[i];
+    for (SDScriptVec::const_iterator itr = m_scripts.begin(); itr != m_scripts.end(); ++itr)
+        delete *itr;
+
+    m_scripts.clear();
 
     num_sc_scripts = 0;
 }
@@ -104,21 +107,19 @@ void InitScriptLibrary()
     bar.step();
     outstring_log("");
 
-    // Check ammount of assigned ScriptNames (from core)
-    if (GetScriptIdsCount() >= MAX_SCRIPTS)
-        error_log("SD2: Reserved script slots in script table (%u) too low for registered ScriptNames by core (%u).", MAX_SCRIPTS, GetScriptIdsCount());
-
-    for(int i=0; i<MAX_SCRIPTS; ++i)
-        m_scripts[i]=NULL;
+    // Resize script ids to needed ammount of assigned ScriptNames (from core)
+    m_scripts.resize(GetScriptIdsCount(), NULL);
 
     FillSpellSummary();
 
     AddScripts();
 
     // Check existance scripts for all registered by core script names
-    for (int i = 1; i < GetScriptIdsCount(); ++i)
+    for (uint32 i = 1; i < GetScriptIdsCount(); ++i)
+    {
         if (!m_scripts[i])
-            error_log("SD2: Script not found for script name '%s'.", GetScriptName(i));
+            error_log("SD2: No script found for ScriptName '%s'.", GetScriptName(i));
+    }
 
     outstring_log(">> Loaded %i C++ Scripts.", num_sc_scripts);
 }
@@ -214,20 +215,15 @@ void DoScriptText(int32 iTextEntry, WorldObject* pSource, Unit* pTarget)
 
 void Script::RegisterSelf(bool bReportError)
 {
-    if (int id = GetScriptId(Name.c_str()))
+    if (uint32 id = GetScriptId(Name.c_str()))
     {
-        if (id < MAX_SCRIPTS)
-        {
-            m_scripts[id] = this;
-            ++num_sc_scripts;
-        }
-        else
-            error_log("SD2: script %s have script id %u > MAX_SCRIPTS (%u), MAX_SCRIPTS need update for allow script loading.", Name.c_str(), id, MAX_SCRIPTS);
+        m_scripts[id] = this;
+        ++num_sc_scripts;
     }
     else
     {
         if (bReportError)
-            error_log("SD2: Script registering but ScriptName %s is not assigned in database. Script will not be used.", (this)->Name.c_str());
+            error_log("SD2: Script registering but ScriptName %s is not assigned in database. Script will not be used.", Name.c_str());
 
         delete this;
     }

@@ -22,7 +22,6 @@ class WorldObject;
 class Aura;
 class Object;
 
-#define MAX_SCRIPTS         5000                            //72 bytes each (approx 351kb)
 #define VISIBLE_RANGE       (166.0f)                        //MAX visible range (size of grid)
 #define DEFAULT_TEXT        "<ScriptDev2 Text Entry Missing!>"
 
