@@ -29,6 +29,11 @@ class Object;
 #define VISIBLE_RANGE       (166.0f)                        // MAX visible range (size of grid)
 #define DEFAULT_TEXT        "<ScriptDev2 Text Entry Missing!>"
 
+// Some typedefs for storing GUIDs
+typedef std::list<uint64> GUIDList;
+typedef std::set<uint64> GUIDSet;
+typedef std::vector<uint64> GUIDVector;
+
 /* Escort Factions
  * TODO: find better namings and definitions.
  * N=Neutral, A=Alliance, H=Horde.

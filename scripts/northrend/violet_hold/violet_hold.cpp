@@ -188,7 +188,7 @@ struct MANGOS_DLL_DECL npc_teleportation_portalAI : public ScriptedAI
 
     instance_violet_hold* m_pInstance;
 
-    std::set<uint64> m_lMobSet;
+    GUIDSet m_lMobSet;
 
     bool m_bNeedInvisible;
     bool m_bIntro;

@@ -143,7 +143,7 @@ struct MANGOS_DLL_DECL npc_blastmaster_emi_shortfuseAI : public npc_escortAI
     uint32 m_uiPhaseTimer;
     uint64 m_uiPlayerGUID;
     bool m_bDidAggroText, m_bSouthernCaveInOpened, m_bNorthernCaveInOpened;
-    std::list<uint64> m_luiSummonedMobGUIDs;
+    GUIDList m_luiSummonedMobGUIDs;
 
     void Reset()
     {
@@ -251,7 +251,7 @@ struct MANGOS_DLL_DECL npc_blastmaster_emi_shortfuseAI : public npc_escortAI
         if (m_bNorthernCaveInOpened)                        // close northern cave-in door
             m_pInstance->DoUseDoorOrButton(m_pInstance->GetData64(GO_CAVE_IN_NORTH));
 
-        for (std::list<uint64>::const_iterator itr = m_luiSummonedMobGUIDs.begin(); itr != m_luiSummonedMobGUIDs.end(); ++itr)
+        for (GUIDList::const_iterator itr = m_luiSummonedMobGUIDs.begin(); itr != m_luiSummonedMobGUIDs.end(); ++itr)
         {
             if (Creature* pSummoned = m_creature->GetMap()->GetCreature(*itr))
                 pSummoned->ForcedDespawn();

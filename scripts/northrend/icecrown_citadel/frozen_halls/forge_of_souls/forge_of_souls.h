@@ -121,8 +121,8 @@ class MANGOS_DLL_DECL instance_forge_of_souls : public ScriptedInstance
         uint64 m_uiBronjahmGUID;
         uint64 m_uiDevourerOrSoulsGUID;
 
-        std::list<uint64> m_luiSoulFragmentAliveGUIDs;
-        std::list<uint64> m_lEventMobGUIDs;
+        GUIDList m_luiSoulFragmentAliveGUIDs;
+        GUIDList m_lEventMobGUIDs;
 };
 
 #endif

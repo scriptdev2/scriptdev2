@@ -45,7 +45,7 @@ struct MANGOS_DLL_DECL boss_high_botanist_freywinnAI : public ScriptedAI
 {
     boss_high_botanist_freywinnAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
-    std::list<uint64> Adds_List;
+    GUIDList Adds_List;
 
     uint32 SummonSeedling_Timer;
     uint32 TreeForm_Timer;
@@ -124,18 +124,15 @@ struct MANGOS_DLL_DECL boss_high_botanist_freywinnAI : public ScriptedAI
         {
             if (MoveCheck_Timer < diff)
             {
-                if (!Adds_List.empty())
+                for(GUIDList::iterator itr = Adds_List.begin(); itr != Adds_List.end(); ++itr)
                 {
-                    for(std::list<uint64>::iterator itr = Adds_List.begin(); itr != Adds_List.end(); ++itr)
+                    if (Creature* pTemp = m_creature->GetMap()->GetCreature(*itr))
                     {
-                        if (Creature *temp = m_creature->GetMap()->GetCreature(*itr))
+                        if (!pTemp->isAlive())
                         {
-                            if (!temp->isAlive())
-                            {
-                                Adds_List.erase(itr);
-                                ++DeadAddsCount;
-                                break;
-                            }
+                            Adds_List.erase(itr);
+                            ++DeadAddsCount;
+                            break;
                         }
                     }
                 }

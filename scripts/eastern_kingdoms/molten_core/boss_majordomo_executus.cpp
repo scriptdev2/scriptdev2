@@ -237,7 +237,7 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
     // Unsummon Majordomo adds
     void UnsummonMajordomoAdds()
     {
-        for (std::list<uint64>::const_iterator itr = m_luiMajordomoAddsGUIDs.begin(); itr != m_luiMajordomoAddsGUIDs.end(); ++itr)
+        for (GUIDList::const_iterator itr = m_luiMajordomoAddsGUIDs.begin(); itr != m_luiMajordomoAddsGUIDs.end(); ++itr)
         {
             if (Creature* pAdd = m_creature->GetMap()->GetCreature(*itr))
                 if (pAdd->IsTemporarySummon())

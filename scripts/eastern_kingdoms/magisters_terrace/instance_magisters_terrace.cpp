@@ -41,8 +41,8 @@ struct MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
 
     uint32 m_uiDelrissaDeathCount;
 
-    std::list<uint64> FelCrystals;
-    std::list<uint64>::iterator CrystalItr;
+    GUIDList FelCrystals;
+    GUIDList::iterator CrystalItr;
 
     uint64 m_uiSelinGUID;
     uint64 m_uiDelrissaGUID;

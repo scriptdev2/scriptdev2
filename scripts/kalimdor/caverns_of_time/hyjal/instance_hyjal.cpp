@@ -39,7 +39,7 @@ struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
     uint32 m_auiEncounter[MAX_ENCOUNTER];
     std::string strSaveData;
 
-    std::list<uint64> lAncientGemGUIDList;
+    GUIDList lAncientGemGUIDList;
 
     uint64 m_uiRageWinterchill;
     uint64 m_uiAnetheron;
@@ -162,7 +162,7 @@ struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
                 {
                     if (!lAncientGemGUIDList.empty())
                     {
-                        for(std::list<uint64>::iterator itr = lAncientGemGUIDList.begin(); itr != lAncientGemGUIDList.end(); ++itr)
+                        for(GUIDList::const_iterator itr = lAncientGemGUIDList.begin(); itr != lAncientGemGUIDList.end(); ++itr)
                         {
                             //don't know how long it expected
                             DoRespawnGameObject(*itr,DAY);

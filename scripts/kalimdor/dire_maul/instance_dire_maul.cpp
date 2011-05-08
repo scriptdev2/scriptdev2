@@ -190,8 +190,8 @@ void instance_dire_maul::SetData(uint32 uiType, uint32 uiData)
 
                 if (!m_lFelvineShardGUIDs.empty())
                 {
-                    for(std::list<uint64>::iterator i = m_lFelvineShardGUIDs.begin(); i != m_lFelvineShardGUIDs.end(); ++i)
-                        DoRespawnGameObject(*i);
+                    for(GUIDList::const_iterator itr = m_lFelvineShardGUIDs.begin(); itr != m_lFelvineShardGUIDs.end(); ++itr)
+                        DoRespawnGameObject(*itr);
                 }
             }
             else if (uiData == SPECIAL && !m_bWallDestroyed)
@@ -304,7 +304,7 @@ void instance_dire_maul::OnCreatureEnterCombat(Creature* pCreature)
                         continue;
 
                     // Sort all remaining (alive) NPCs to unfinished generators
-                    for (std::list<uint64>::iterator itr = m_lGeneratorGuardGUIDs.begin(); itr != m_lGeneratorGuardGUIDs.end();)
+                    for (GUIDList::iterator itr = m_lGeneratorGuardGUIDs.begin(); itr != m_lGeneratorGuardGUIDs.end();)
                     {
                         Creature* pGuard = instance->GetCreature(*itr);
                         if (!pGuard || pGuard->isDead())    // Remove invalid guids and dead guards
@@ -425,7 +425,7 @@ void instance_dire_maul::ProcessForceFieldOpening()
         return;
 
     bool bHasYelled = false;
-    for (std::list<uint64>::const_iterator itr = m_luiHighborneSummonerGUIDs.begin(); itr != m_luiHighborneSummonerGUIDs.end(); ++itr)
+    for (GUIDList::const_iterator itr = m_luiHighborneSummonerGUIDs.begin(); itr != m_luiHighborneSummonerGUIDs.end(); ++itr)
     {
         Creature* pSummoner = instance->GetCreature(*itr);
 

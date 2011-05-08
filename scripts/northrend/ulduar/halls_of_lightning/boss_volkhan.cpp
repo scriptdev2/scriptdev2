@@ -81,7 +81,7 @@ struct MANGOS_DLL_DECL boss_volkhanAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    std::list<uint64> m_lGolemGUIDList;
+    GUIDList m_lGolemGUIDList;
 
     bool m_bIsRegularMode;
     bool m_bHasTemper;
@@ -158,7 +158,7 @@ struct MANGOS_DLL_DECL boss_volkhanAI : public ScriptedAI
         if (m_lGolemGUIDList.empty())
             return;
 
-        for(std::list<uint64>::iterator itr = m_lGolemGUIDList.begin(); itr != m_lGolemGUIDList.end(); ++itr)
+        for(GUIDList::const_iterator itr = m_lGolemGUIDList.begin(); itr != m_lGolemGUIDList.end(); ++itr)
         {
             if (Creature* pTemp = m_creature->GetMap()->GetCreature(*itr))
             {
@@ -175,7 +175,7 @@ struct MANGOS_DLL_DECL boss_volkhanAI : public ScriptedAI
         if (m_lGolemGUIDList.empty())
             return;
 
-        for(std::list<uint64>::iterator itr = m_lGolemGUIDList.begin(); itr != m_lGolemGUIDList.end(); ++itr)
+        for(GUIDList::const_iterator itr = m_lGolemGUIDList.begin(); itr != m_lGolemGUIDList.end(); ++itr)
         {
             if (Creature* pTemp = m_creature->GetMap()->GetCreature(*itr))
             {

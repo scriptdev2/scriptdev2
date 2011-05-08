@@ -422,7 +422,7 @@ static bool sortFromSouthToNorth(Creature* pFirst, Creature* pSecond)
 void instance_culling_of_stratholme::GetCratesBunnyOrderedList(std::list<Creature*> &lList)
 {
     std::list<Creature*> lCratesBunnyList;
-    for (std::list<uint64>::const_iterator itr = m_luiCratesBunnyGUIDs.begin(); itr != m_luiCratesBunnyGUIDs.end(); ++itr)
+    for (GUIDList::const_iterator itr = m_luiCratesBunnyGUIDs.begin(); itr != m_luiCratesBunnyGUIDs.end(); ++itr)
     {
         if (Creature* pBunny = instance->GetCreature(*itr))
             lCratesBunnyList.push_back(pBunny);
@@ -437,7 +437,7 @@ void instance_culling_of_stratholme::GetCratesBunnyOrderedList(std::list<Creatur
 Creature* instance_culling_of_stratholme::GetStratIntroFootman()
 {
     std::list<Creature*> lFootmanList;
-    for (std::list<uint64>::const_iterator itr = m_luiFootmanGUIDs.begin(); itr != m_luiFootmanGUIDs.end(); ++itr)
+    for (GUIDList::const_iterator itr = m_luiFootmanGUIDs.begin(); itr != m_luiFootmanGUIDs.end(); ++itr)
     {
         if (Creature* pFootman = instance->GetCreature(*itr))
             lFootmanList.push_back(pFootman);
@@ -455,7 +455,7 @@ Creature* instance_culling_of_stratholme::GetStratIntroFootman()
 void instance_culling_of_stratholme::GetResidentOrderedList(std::list<Creature*> &lList)
 {
     std::list<Creature*> lResidentList;
-    for (std::list<uint64>::const_iterator itr = m_luiResidentGUIDs.begin(); itr != m_luiResidentGUIDs.end(); ++itr)
+    for (GUIDList::const_iterator itr = m_luiResidentGUIDs.begin(); itr != m_luiResidentGUIDs.end(); ++itr)
     {
         if (Creature* pResident = instance->GetCreature(*itr))
             lResidentList.push_back(pResident);

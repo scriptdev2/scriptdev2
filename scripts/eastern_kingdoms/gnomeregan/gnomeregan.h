@@ -85,9 +85,9 @@ class MANGOS_DLL_DECL instance_gnomeregan : public ScriptedInstance
         uint64 m_uiCaveInSouthGUID;
         uint64 m_uiDoorFinalChamberGUID;
 
-        std::list<uint64> m_luiExplosiveChargeGUIDs;
-        std::list<uint64> m_luiSpawnedExplosiveChargeGUIDs;
-        std::list<uint64> m_lRedRocketGUIDs;
+        GUIDList m_luiExplosiveChargeGUIDs;
+        GUIDList m_luiSpawnedExplosiveChargeGUIDs;
+        GUIDList m_lRedRocketGUIDs;
 };
 
 #endif

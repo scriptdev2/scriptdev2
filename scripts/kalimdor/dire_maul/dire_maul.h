@@ -112,7 +112,7 @@ class MANGOS_DLL_DECL instance_dire_maul : public ScriptedInstance
         uint64 m_uiConservatoryDoorGUID;
         uint64 m_uiOldIronbarkGUID;
 
-        std::list<uint64> m_lFelvineShardGUIDs;
+        GUIDList m_lFelvineShardGUIDs;
 
         // West
         uint64 m_auiCrystalGeneratorGUID[MAX_GENERATORS];
@@ -123,8 +123,8 @@ class MANGOS_DLL_DECL instance_dire_maul : public ScriptedInstance
         uint64 m_uiPrincesChestAuraGUID;
         uint64 m_uiTendrisWarpwoodDoorGUID;
 
-        std::list<uint64> m_luiHighborneSummonerGUIDs;
-        std::list<uint64> m_lGeneratorGuardGUIDs;
+        GUIDList m_luiHighborneSummonerGUIDs;
+        GUIDList m_lGeneratorGuardGUIDs;
         std::set<uint32> m_sSortedGeneratorGuards[MAX_GENERATORS];
 
         // North

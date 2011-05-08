@@ -31,9 +31,9 @@ struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
     uint32 m_auiEncounter[MAX_ENCOUNTER];
 
     uint64 m_uiMagtheridonGUID;
-    std::set<uint64> ChannelerGUID;
+    GUIDSet ChannelerGUID;
     uint64 m_uiDoorGUID;
-    std::set<uint64> ColumnGUID;
+    GUIDSet ColumnGUID;
 
     uint32 m_uiCageTimer;
     uint32 m_uiRespawnTimer;
@@ -120,9 +120,9 @@ struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
                                 break;
                             }
 
-                            for(std::set<uint64>::iterator i = ChannelerGUID.begin(); i != ChannelerGUID.end(); ++i)
+                            for(GUIDSet::const_iterator itr = ChannelerGUID.begin(); itr != ChannelerGUID.end(); ++itr)
                             {
-                                if (Creature* pChanneler = instance->GetCreature(*i))
+                                if (Creature* pChanneler = instance->GetCreature(*itr))
                                 {
                                     if (pChanneler->isAlive())
                                         pChanneler->AI()->EnterEvadeMode();
@@ -143,9 +143,9 @@ struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
                             m_auiEncounter[1] = IN_PROGRESS;
 
                             // Let all five channelers aggro.
-                            for(std::set<uint64>::iterator i = ChannelerGUID.begin(); i != ChannelerGUID.end(); ++i)
+                            for(GUIDSet::const_iterator itr = ChannelerGUID.begin(); itr != ChannelerGUID.end(); ++itr)
                             {
-                                Creature* pChanneler = instance->GetCreature(*i);
+                                Creature* pChanneler = instance->GetCreature(*itr);
 
                                 if (pChanneler && pChanneler->isAlive())
                                     AttackNearestTarget(pChanneler);
@@ -162,9 +162,9 @@ struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
                         }
                         break;
                     case DONE:                              // Add buff and check if all channelers are dead.
-                        for(std::set<uint64>::iterator i = ChannelerGUID.begin(); i != ChannelerGUID.end(); ++i)
+                        for(GUIDSet::iterator itr = ChannelerGUID.begin(); itr != ChannelerGUID.end(); ++itr)
                         {
-                            Creature* pChanneler = instance->GetCreature(*i);
+                            Creature* pChanneler = instance->GetCreature(*itr);
 
                             if (pChanneler && pChanneler->isAlive())
                             {
@@ -180,10 +180,8 @@ struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
                 break;
             case TYPE_HALL_COLLAPSE:
                 // IN_PROGRESS - collapse / NOT_STARTED - reset
-                for(std::set<uint64>::iterator i = ColumnGUID.begin(); i != ColumnGUID.end(); ++i)
-                {
-                    DoUseDoorOrButton(*i);
-                }
+                for(GUIDSet::const_iterator itr = ColumnGUID.begin(); itr != ColumnGUID.end(); ++itr)
+                    DoUseDoorOrButton(*itr);
                 break;
         }
     }
@@ -254,9 +252,9 @@ struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
         {
             if (m_uiRespawnTimer <= uiDiff)
             {
-                for(std::set<uint64>::iterator i = ChannelerGUID.begin(); i != ChannelerGUID.end(); ++i)
+                for(GUIDSet::const_iterator itr = ChannelerGUID.begin(); itr != ChannelerGUID.end(); ++itr)
                 {
-                    if (Creature* pChanneler = instance->GetCreature(*i))
+                    if (Creature* pChanneler = instance->GetCreature(*itr))
                     {
                         if (pChanneler->isAlive())
                             pChanneler->AI()->EnterEvadeMode();

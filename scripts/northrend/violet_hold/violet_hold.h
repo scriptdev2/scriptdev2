@@ -276,8 +276,8 @@ class MANGOS_DLL_DECL instance_violet_hold : public ScriptedInstance
 
         BossToCellMap m_mBossToCellMap;
 
-        std::list<uint64> m_lIntroPortalList;
-        std::list<uint64> m_lGuardsList;
+        GUIDList m_lIntroPortalList;
+        GUIDList m_lGuardsList;
         std::list<uint32> m_lRandomBossList;
 
         std::vector<sBossSpawn*> m_vRandomBosses;

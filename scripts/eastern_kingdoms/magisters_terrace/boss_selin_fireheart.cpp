@@ -74,7 +74,7 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
     ScriptedInstance* m_pInstance;
     bool m_bIsRegularMode;
 
-    std::list<uint64> Crystals;
+    GUIDList Crystals;
 
     uint32 DrainLifeTimer;
     uint32 DrainManaTimer;
@@ -92,7 +92,7 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
         if (m_pInstance)
         {
             //for(uint8 i = 0; i < CRYSTALS_NUMBER; ++i)
-            for(std::list<uint64>::iterator itr = Crystals.begin(); itr != Crystals.end(); ++itr)
+            for(GUIDList::const_iterator itr = Crystals.begin(); itr != Crystals.end(); ++itr)
             {
                 //Creature* pUnit = m_creature->GetMap()->GetCreature(FelCrystals[i]);
                 if (Creature* pCrystal = m_creature->GetMap()->GetCreature(*itr))
@@ -134,7 +134,7 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
         Creature* pCrystal = NULL;
         Creature* CrystalChosen = NULL;
         //for(uint8 i =  0; i < CRYSTALS_NUMBER; ++i)
-        for(std::list<uint64>::iterator itr = Crystals.begin(); itr != Crystals.end(); ++itr)
+        for(GUIDList::const_iterator itr = Crystals.begin(); itr != Crystals.end(); ++itr)
         {
             pCrystal = m_creature->GetMap()->GetCreature(*itr);
 
@@ -170,7 +170,7 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
             return;
 
         //for(uint8 i = 0; i < CRYSTALS_NUMBER; ++i)
-        for(std::list<uint64>::iterator itr = Crystals.begin(); itr != Crystals.end(); ++itr)
+        for(GUIDList::const_iterator itr = Crystals.begin(); itr != Crystals.end(); ++itr)
         {
             //Creature* pCrystal = m_creature->GetMap()->GetCreature(FelCrystals[i]);
             Creature* pCrystal = m_creature->GetMap()->GetCreature(*itr);

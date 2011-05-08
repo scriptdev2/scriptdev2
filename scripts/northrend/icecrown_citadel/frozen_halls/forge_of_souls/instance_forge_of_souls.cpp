@@ -77,7 +77,7 @@ void instance_forge_of_souls::ProcessEventNpcs(Player* pPlayer, bool bChanged)
         // if bChanged, despawn Begin Mobs, spawn End Mobs at Spawn, else spawn EndMobs at End
         if (bChanged)
         {
-            for (std::list<uint64>::const_iterator itr = m_lEventMobGUIDs.begin(); itr != m_lEventMobGUIDs.end(); ++itr)
+            for (GUIDList::const_iterator itr = m_lEventMobGUIDs.begin(); itr != m_lEventMobGUIDs.end(); ++itr)
             {
                 if (Creature* pSummoned = instance->GetCreature(*itr))
                     pSummoned->ForcedDespawn();
@@ -123,7 +123,7 @@ void instance_forge_of_souls::SetData(uint32 uiType, uint32 uiData)
             m_auiEncounter[0] = uiData;
 
             // Despawn remaining adds and clear list
-            for (std::list<uint64>::const_iterator itr = m_luiSoulFragmentAliveGUIDs.begin(); itr != m_luiSoulFragmentAliveGUIDs.end(); ++itr)
+            for (GUIDList::const_iterator itr = m_luiSoulFragmentAliveGUIDs.begin(); itr != m_luiSoulFragmentAliveGUIDs.end(); ++itr)
             {
                 if (Creature* pFragment = instance->GetCreature(*itr))
                     pFragment->ForcedDespawn();

@@ -126,8 +126,8 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    std::list<uint64> m_lChannelersGUIDList;
-    std::list<uint64> m_lSorcerersGUIDList;
+    GUIDList m_lChannelersGUIDList;
+    GUIDList m_lSorcerersGUIDList;
 
     uint64 m_uiAkamaGUID;
 
@@ -240,7 +240,7 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
     {
         if (!m_lSorcerersGUIDList.empty() && m_pInstance)
         {
-            for(std::list<uint64>::iterator itr = m_lSorcerersGUIDList.begin(); itr != m_lSorcerersGUIDList.end(); ++itr)
+            for(GUIDList::const_iterator itr = m_lSorcerersGUIDList.begin(); itr != m_lSorcerersGUIDList.end(); ++itr)
             {
                 if (Creature* pSorcerer = m_pInstance->instance->GetCreature(*itr))
                 {
@@ -255,7 +255,7 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
     {
         if (!m_lChannelersGUIDList.empty() && m_pInstance)
         {
-            for(std::list<uint64>::iterator itr = m_lChannelersGUIDList.begin(); itr != m_lChannelersGUIDList.end(); ++itr)
+            for(GUIDList::const_iterator itr = m_lChannelersGUIDList.begin(); itr != m_lChannelersGUIDList.end(); ++itr)
             {
                 if (Creature* pChanneler = m_pInstance->instance->GetCreature(*itr))
                 {
@@ -421,7 +421,7 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
     uint32 m_uiWayPointId;
     uint32 m_uiBrokenSummonIndex;
 
-    std::list<uint64> m_lBrokenGUIDList;
+    GUIDList m_lBrokenGUIDList;
 
     bool m_bIsEventBegun;
     bool m_bIsShadeDead;
@@ -619,7 +619,7 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
                         {
                             bool bYelled = false;
 
-                            for(std::list<uint64>::iterator itr = m_lBrokenGUIDList.begin(); itr != m_lBrokenGUIDList.end(); ++itr)
+                            for(GUIDList::const_iterator itr = m_lBrokenGUIDList.begin(); itr != m_lBrokenGUIDList.end(); ++itr)
                             {
                                 if (Creature* pBroken = m_creature->GetMap()->GetCreature(*itr))
                                 {
@@ -637,26 +637,20 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
                         m_uiSoulRetrieveTimer = 1500;
                         break;
                     case 3:
-                        if (!m_lBrokenGUIDList.empty())
+                        for(GUIDList::const_iterator itr = m_lBrokenGUIDList.begin(); itr != m_lBrokenGUIDList.end(); ++itr)
                         {
-                            for(std::list<uint64>::iterator itr = m_lBrokenGUIDList.begin(); itr != m_lBrokenGUIDList.end(); ++itr)
-                            {
-                                // This is the incorrect spell, but can't seem to find the right one.
-                                if (Creature* pBroken = m_creature->GetMap()->GetCreature(*itr))
-                                    pBroken->CastSpell(pBroken, 39656, true);
-                            }
+                            // This is the incorrect spell, but can't seem to find the right one.
+                            if (Creature* pBroken = m_creature->GetMap()->GetCreature(*itr))
+                                pBroken->CastSpell(pBroken, 39656, true);
                         }
                         ++m_uiEndingTalkCount;
                         m_uiSoulRetrieveTimer = 5000;
                         break;
                     case 4:
-                        if (!m_lBrokenGUIDList.empty())
+                        for(GUIDList::const_iterator itr = m_lBrokenGUIDList.begin(); itr != m_lBrokenGUIDList.end(); ++itr)
                         {
-                            for(std::list<uint64>::iterator itr = m_lBrokenGUIDList.begin(); itr != m_lBrokenGUIDList.end(); ++itr)
-                            {
-                                if (Creature* pBroken = m_creature->GetMap()->GetCreature(*itr))
-                                    DoScriptText(SAY_BROKEN_FREE_02, pBroken);
-                            }
+                            if (Creature* pBroken = m_creature->GetMap()->GetCreature(*itr))
+                                DoScriptText(SAY_BROKEN_FREE_02, pBroken);
                         }
                         m_uiSoulRetrieveTimer = 0;
                         break;

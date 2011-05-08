@@ -115,7 +115,7 @@ class MANGOS_DLL_DECL instance_sunken_temple : public ScriptedInstance
         uint8 m_uiStatueCounter;
         uint8 m_uiProtectorsRemaining;
 
-        std::list<uint64> m_luiBigLightGUIDs;
+        GUIDList m_luiBigLightGUIDs;
 };
 
 #endif

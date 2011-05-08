@@ -60,8 +60,8 @@ struct MANGOS_DLL_DECL boss_warchief_kargath_bladefistAI : public ScriptedAI
     ScriptedInstance* m_pInstance;
     bool m_bIsRegularMode;
 
-    std::vector<uint64> adds;
-    std::vector<uint64> assassins;
+    GUIDVector adds;
+    GUIDVector assassins;
 
     uint32 Charge_timer;
     uint32 Blade_Dance_Timer;
@@ -157,7 +157,7 @@ struct MANGOS_DLL_DECL boss_warchief_kargath_bladefistAI : public ScriptedAI
         if (!m_pInstance)
             return;
 
-        for(std::vector<uint64>::iterator itr = adds.begin(); itr!= adds.end(); ++itr)
+        for(GUIDVector::const_iterator itr = adds.begin(); itr != adds.end(); ++itr)
         {
             if (Creature* pTemp = m_pInstance->instance->GetCreature(*itr))
                 pTemp->ForcedDespawn();
@@ -165,7 +165,7 @@ struct MANGOS_DLL_DECL boss_warchief_kargath_bladefistAI : public ScriptedAI
 
         adds.clear();
 
-        for(std::vector<uint64>::iterator itr = assassins.begin(); itr!= assassins.end(); ++itr)
+        for(GUIDVector::const_iterator itr = assassins.begin(); itr != assassins.end(); ++itr)
         {
             if (Creature* pTemp = m_pInstance->instance->GetCreature(*itr))
                 pTemp->ForcedDespawn();

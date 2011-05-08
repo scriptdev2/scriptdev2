@@ -382,9 +382,9 @@ void instance_violet_hold::Load(const char* chrIn)
 
 void instance_violet_hold::SetIntroPortals(bool bDeactivate)
 {
-    for(std::list<uint64>::iterator i = m_lIntroPortalList.begin(); i != m_lIntroPortalList.end(); ++i)
+    for(GUIDList::const_iterator itr = m_lIntroPortalList.begin(); itr != m_lIntroPortalList.end(); ++itr)
     {
-        if (Creature* pPortal = instance->GetCreature(*i))
+        if (Creature* pPortal = instance->GetCreature(*itr))
         {
             if (bDeactivate)
                 pPortal->ForcedDespawn();
@@ -499,9 +499,9 @@ void instance_violet_hold::SetRandomBosses()
 
 void instance_violet_hold::CallGuards(bool bRespawn)
 {
-    for(std::list<uint64>::iterator i = m_lGuardsList.begin(); i != m_lGuardsList.end(); ++i)
+    for(GUIDList::const_iterator itr = m_lGuardsList.begin(); itr != m_lGuardsList.end(); ++itr)
     {
-        if (Creature* pGuard = instance->GetCreature(*i))
+        if (Creature* pGuard = instance->GetCreature(*itr))
         {
             if (bRespawn)
             {

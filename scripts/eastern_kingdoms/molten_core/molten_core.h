@@ -83,8 +83,6 @@ static sSpawnLocation m_aMajordomoLocations[2] =
 
 static const float RANGE_CALL_FOR_HELP     = 20.0f;
 
-typedef std::list<uint64> GUIDList;
-
 class MANGOS_DLL_DECL instance_molten_core : public ScriptedInstance
 {
     public:

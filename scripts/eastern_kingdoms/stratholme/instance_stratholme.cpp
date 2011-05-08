@@ -205,7 +205,7 @@ void instance_stratholme::SetData(uint32 uiType, uint32 uiData)
                 }
 
                 uint32 uiCount = m_sAbomnationGUID.size();
-                for(std::set<uint64>::iterator itr = m_sAbomnationGUID.begin(); itr != m_sAbomnationGUID.end();)
+                for(GUIDSet::iterator itr = m_sAbomnationGUID.begin(); itr != m_sAbomnationGUID.end();)
                 {
                     if (Creature* pAbom = instance->GetCreature(*itr))
                     {
@@ -275,7 +275,7 @@ void instance_stratholme::SetData(uint32 uiType, uint32 uiData)
                 m_uiSlaugtherSquareTimer = 0;
 
                 // Let already moving Abomnations stop
-                for (std::set<uint64>::iterator itr = m_sAbomnationGUID.begin(); itr != m_sAbomnationGUID.end(); ++itr)
+                for (GUIDSet::const_iterator itr = m_sAbomnationGUID.begin(); itr != m_sAbomnationGUID.end(); ++itr)
                 {
                     Creature* pAbom = instance->GetCreature(*itr);
                     if (pAbom && pAbom->GetMotionMaster()->GetCurrentMovementGeneratorType() == POINT_MOTION_TYPE)
@@ -487,7 +487,7 @@ void instance_stratholme::DoSortZiggurats()
         return;
 
     std::list<Creature*> lAcolytes;                         // Valid pointers, only used locally
-    for (std::list<uint64>::const_iterator itr = m_luiAcolyteGUIDs.begin(); itr != m_luiAcolyteGUIDs.end(); ++itr)
+    for (GUIDList::const_iterator itr = m_luiAcolyteGUIDs.begin(); itr != m_luiAcolyteGUIDs.end(); ++itr)
     {
         if (Creature* pAcolyte = instance->GetCreature(*itr))
             lAcolytes.push_back(pAcolyte);
@@ -532,7 +532,7 @@ void instance_stratholme::DoSortZiggurats()
         m_luiAcolyteGUIDs.push_back((*itr)->GetGUID());
 
     // Sort Crystal
-    for (std::list<uint64>::iterator itr = m_luiCrystalGUIDs.begin(); itr != m_luiCrystalGUIDs.end(); )
+    for (GUIDList::iterator itr = m_luiCrystalGUIDs.begin(); itr != m_luiCrystalGUIDs.end(); )
     {
         Creature* pCrystal = instance->GetCreature(*itr);
         if (!pCrystal)
@@ -657,7 +657,7 @@ void instance_stratholme::OnCreatureDeath(Creature* pCreature)
             if (m_luiUndeadGUIDs.empty())
             {
                 // Let the black Guards move out of the citadel
-                for (std::list<uint64>::const_iterator itr = m_luiGuardGUIDs.begin(); itr != m_luiGuardGUIDs.end(); ++itr)
+                for (GUIDList::const_iterator itr = m_luiGuardGUIDs.begin(); itr != m_luiGuardGUIDs.end(); ++itr)
                 {
                     Creature* pGuard = instance->GetCreature(*itr);
                     if (pGuard && pGuard->isAlive() && !pGuard->isInCombat())
@@ -756,7 +756,7 @@ void instance_stratholme::Update(uint32 uiDiff)
         if (m_uiSlaugtherSquareTimer <= uiDiff)
         {
             // Call next Abomnations
-            for (std::set<uint64>::iterator itr = m_sAbomnationGUID.begin(); itr != m_sAbomnationGUID.end(); ++itr)
+            for (GUIDSet::const_iterator itr = m_sAbomnationGUID.begin(); itr != m_sAbomnationGUID.end(); ++itr)
             {
                 Creature* pAbom = instance->GetCreature(*itr);
                 // Skip killed and already walking Abomnations

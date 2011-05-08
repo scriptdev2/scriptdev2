@@ -129,8 +129,8 @@ class MANGOS_DLL_DECL instance_culling_of_stratholme : public ScriptedInstance
 
         void Update(uint32 uiDiff);
 
-        void GetStratAgiatedCitizenList(std::list<uint64> &lList){ lList = m_lAgiatedCitizenGUIDList; };
-        void GetStratAgiatedResidentList(std::list<uint64> &lList){ lList = m_lAgiatedResidentGUIDList; };
+        void GetStratAgiatedCitizenList(GUIDList &lList){ lList = m_lAgiatedCitizenGUIDList; };
+        void GetStratAgiatedResidentList(GUIDList &lList){ lList = m_lAgiatedResidentGUIDList; };
 
         void GetCratesBunnyOrderedList(std::list<Creature*> &lList);
         Creature* GetStratIntroFootman();
@@ -179,12 +179,12 @@ class MANGOS_DLL_DECL instance_culling_of_stratholme : public ScriptedInstance
 
         uint64 m_uiOReillyGUID;
 
-        std::list<uint64> m_luiCratesBunnyGUIDs;
-        std::list<uint64> m_luiFootmanGUIDs;
-        std::list<uint64> m_luiResidentGUIDs;
+        GUIDList m_luiCratesBunnyGUIDs;
+        GUIDList m_luiFootmanGUIDs;
+        GUIDList m_luiResidentGUIDs;
 
-        std::list<uint64> m_lAgiatedCitizenGUIDList;
-        std::list<uint64> m_lAgiatedResidentGUIDList;
+        GUIDList m_lAgiatedCitizenGUIDList;
+        GUIDList m_lAgiatedResidentGUIDList;
 
         uint64 m_uiDoorBookcaseGUID;
         uint64 m_uiDarkRunedChestGUID;

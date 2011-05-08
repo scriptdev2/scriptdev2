@@ -255,7 +255,7 @@ void instance_blackrock_spire::DoSortRoomEventMobs()
     {
         if (GameObject* pRune = instance->GetGameObject(m_auiRoomRuneGUID[i]))
         {
-            for (std::list<uint64>::const_iterator itr = m_lRoomEventMobGUIDList.begin(); itr != m_lRoomEventMobGUIDList.end(); ++itr)
+            for (GUIDList::const_iterator itr = m_lRoomEventMobGUIDList.begin(); itr != m_lRoomEventMobGUIDList.end(); ++itr)
             {
                 Creature* pCreature = instance->GetCreature(*itr);
                 if (pCreature && pCreature->isAlive() && pCreature->GetDistance(pRune) < 10.0f)

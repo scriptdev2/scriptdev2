@@ -148,12 +148,12 @@ struct MANGOS_DLL_DECL instance_stratholme : public ScriptedInstance
         uint64 m_uiAcolyteAnnouncerGUID;
         uint64 m_auiCrystalSortedGUID[MAX_ZIGGURATS];
 
-        std::list<uint64> m_luiCrystalGUIDs;
-        std::set<uint64> m_sAbomnationGUID;
-        std::list<uint64> m_luiAcolyteGUIDs;
-        std::list<uint64> m_alZigguratAcolyteGUID[MAX_ZIGGURATS];
-        std::list<uint64> m_luiUndeadGUIDs;
-        std::list<uint64> m_luiGuardGUIDs;
+        GUIDList m_luiCrystalGUIDs;
+        GUIDSet m_sAbomnationGUID;
+        GUIDList m_luiAcolyteGUIDs;
+        GUIDList m_alZigguratAcolyteGUID[MAX_ZIGGURATS];
+        GUIDList m_luiUndeadGUIDs;
+        GUIDList m_luiGuardGUIDs;
 };
 
 #endif

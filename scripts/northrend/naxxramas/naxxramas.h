@@ -203,7 +203,7 @@ class MANGOS_DLL_DECL instance_naxxramas : public ScriptedInstance
         bool IsInRightSideGothArea(Unit* pUnit);
 
         // thaddius
-        void GetThadTeslaCreatures(std::list<uint64> &lList){ lList = m_lThadTeslaCoilList; };
+        void GetThadTeslaCreatures(GUIDList &lList){ lList = m_lThadTeslaCoilList; };
 
         // kel
         void SetChamberCenterCoords(float fX, float fY, float fZ);
@@ -243,7 +243,7 @@ class MANGOS_DLL_DECL instance_naxxramas : public ScriptedInstance
         uint64 m_uiGlutExitDoorGUID;
 
         uint64 m_uiThadDoorGUID;
-        std::list<uint64> m_lThadTeslaCoilList;
+        GUIDList m_lThadTeslaCoilList;
         uint64 m_uiThadNoxTeslaFeugenGUID;
         uint64 m_uiThadNoxTeslaStalaggGUID;
 
@@ -253,13 +253,13 @@ class MANGOS_DLL_DECL instance_naxxramas : public ScriptedInstance
         uint64 m_uiFaerWebGUID;
         uint64 m_uiMaexOuterGUID;
         uint64 m_uiMaexInnerGUID;
-        std::list<uint64> m_lFaerlinaAddGUIDs;
+        GUIDList m_lFaerlinaAddGUIDs;
 
         uint64 m_uiGothikGUID;
         uint64 m_uiGothCombatGateGUID;
         uint64 m_uiGothikEntryDoorGUID;
         uint64 m_uiGothikExitDoorGUID;
-        std::list<uint64> m_lGothTriggerList;
+        GUIDList m_lGothTriggerList;
         UNORDERED_MAP<uint64, GothTrigger> m_mGothTriggerMap;
 
         uint64 m_uiHorsemenDoorGUID;
