@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: bosses_emerald_dragons
-SD%Complete: 70
-SDComment: Emeriss 90, Lethon 0, Taerar 80, Ysondre 90 - Player-Teleport function missing, Mark of Nature needs core support
+SD%Complete: 95
+SDComment: Missing correct behaviour of used trigger NPCs, some spell issues, summon player NYI
 SDCategory: Emerald Dragon Bosses
 EndScriptData */
 
@@ -50,13 +50,6 @@ enum
     NPC_DREAM_FOG                   = 15224,
 };
 
-enum SpecialDragonEvent
-{
-    EVENT_75_HEALTH                 = 1,
-    EVENT_50_HEALTH                 = 2,
-    EVENT_25_HEALTH                 = 3,
-};
-
 struct MANGOS_DLL_DECL boss_emerald_dragonAI : public ScriptedAI
 {
     boss_emerald_dragonAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
@@ -69,7 +62,7 @@ struct MANGOS_DLL_DECL boss_emerald_dragonAI : public ScriptedAI
 
     void Reset()
     {
-        m_uiEventCounter = EVENT_75_HEALTH;
+        m_uiEventCounter = 1;
 
         m_uiSeepingFogTimer = urand(15000, 20000);
         m_uiNoxiousBreathTimer = 8000;
@@ -78,7 +71,7 @@ struct MANGOS_DLL_DECL boss_emerald_dragonAI : public ScriptedAI
 
     void EnterCombat(Unit* pEnemy)
     {
-        DoCastSpellIfCan(m_creature, SPELL_MARK_OF_NATURE_AURA);
+        DoCastSpellIfCan(m_creature, SPELL_MARK_OF_NATURE_AURA, CAST_TRIGGERED);
 
         ScriptedAI::EnterCombat(pEnemy);
     }
@@ -87,7 +80,7 @@ struct MANGOS_DLL_DECL boss_emerald_dragonAI : public ScriptedAI
     {
         // Mark killed players with Mark of Nature
         if (pVictim->GetTypeId() == TYPEID_PLAYER)
-            pVictim->CastSpell(pVictim, SPELL_MARK_OF_NATURE_PLAYER, true);
+            pVictim->CastSpell(pVictim, SPELL_MARK_OF_NATURE_PLAYER, true, NULL, NULL, m_creature->GetObjectGuid());
     }
 
     void JustSummoned(Creature* pSummoned)
@@ -100,7 +93,7 @@ struct MANGOS_DLL_DECL boss_emerald_dragonAI : public ScriptedAI
     }
 
     // Return true, if succeeded
-    virtual bool DoSpecialDragonAbility(SpecialDragonEvent uiEvent) = 0;
+    virtual bool DoSpecialDragonAbility() = 0;
 
     // Return true to handle shared timers and MeleeAttack
     virtual bool UpdateDragonAI(const uint32 uiDiff) { return true; }
@@ -112,7 +105,7 @@ struct MANGOS_DLL_DECL boss_emerald_dragonAI : public ScriptedAI
             return;
 
         // Trigger special ability function at 75, 50 and 25% health
-        if (m_creature->GetHealthPercent() < 100.0f - m_uiEventCounter * 25.0f && DoSpecialDragonAbility((SpecialDragonEvent) m_uiEventCounter))
+        if (m_creature->GetHealthPercent() < 100.0f - m_uiEventCounter * 25.0f && DoSpecialDragonAbility())
             ++m_uiEventCounter;
 
         // Call dragon specific virtual function
@@ -158,7 +151,8 @@ enum
     SAY_CAST_CORRUPTION         = -1000402,
 
     SPELL_VOLATILE_INFECTION    = 24928,
-    SPELL_CORRUPTION_OF_EARTH   = 24910
+    SPELL_CORRUPTION_OF_EARTH   = 24910,
+    SPELL_PUTRID_MUSHROOM       = 24904,                    // Summons a mushroom on killing a player
 };
 
 struct MANGOS_DLL_DECL boss_emerissAI : public boss_emerald_dragonAI
@@ -179,8 +173,17 @@ struct MANGOS_DLL_DECL boss_emerissAI : public boss_emerald_dragonAI
         DoScriptText(SAY_EMERISS_AGGRO, m_creature);
     }
 
+    void KilledUnit(Unit* pVictim)
+    {
+        // summon a mushroom on the spot the player dies
+        if (pVictim->GetTypeId() == TYPEID_PLAYER)
+            pVictim->CastSpell(pVictim, SPELL_PUTRID_MUSHROOM, true, NULL, NULL, m_creature->GetObjectGuid());
+
+        boss_emerald_dragonAI::KilledUnit(pVictim);
+    }
+
     // Corruption of Earth at 75%, 50% and 25%
-    bool DoSpecialDragonAbility(SpecialDragonEvent uiEvent)
+    bool DoSpecialDragonAbility()
     {
         if (DoCastSpellIfCan(m_creature, SPELL_CORRUPTION_OF_EARTH) == CAST_OK)
         {
@@ -189,8 +192,8 @@ struct MANGOS_DLL_DECL boss_emerissAI : public boss_emerald_dragonAI
             // Successfull cast
             return true;
         }
-        else
-            return false;
+
+        return false;
     }
 
     bool UpdateDragonAI(const uint32 uiDiff)
@@ -244,7 +247,7 @@ struct MANGOS_DLL_DECL boss_lethonAI : public boss_emerald_dragonAI
     }
 
     // Summon a spirit which moves toward the boss and heals him for each player hit by the spell; used at 75%, 50% and 25%
-    bool DoSpecialDragonAbility(SpecialDragonEvent uiEvent)
+    bool DoSpecialDragonAbility()
     {
         if (DoCastSpellIfCan(m_creature, SPELL_DRAW_SPIRIT) == CAST_OK)
         {
@@ -276,15 +279,11 @@ enum
     SPELL_SUMMON_SHADE_1    = 24841,
     SPELL_SUMMON_SHADE_2    = 24842,
     SPELL_SUMMON_SHADE_3    = 24843,
+    SPELL_SELF_STUN         = 24883,                        // Stunns the main boss until the shades are dead or timer expires
 
-    //Spells of Shades of Taerar
+    NPC_SHADE_OF_TAERAR     = 15302,
     SPELL_POSIONCLOUD       = 24840,
     SPELL_POSIONBREATH      = 20667
-};
-
-static const uint32 auiSpellSummonShade[]=
-{
-    SPELL_SUMMON_SHADE_1, SPELL_SUMMON_SHADE_2, SPELL_SUMMON_SHADE_3
 };
 
 struct MANGOS_DLL_DECL boss_taerarAI : public boss_emerald_dragonAI
@@ -293,9 +292,8 @@ struct MANGOS_DLL_DECL boss_taerarAI : public boss_emerald_dragonAI
 
     uint32 m_uiArcaneBlastTimer;
     uint32 m_uiBellowingRoarTimer;
-    uint32 m_uiShadesTimer;
-
-    bool m_bShades;
+    uint32 m_uiShadesTimeoutTimer;
+    uint8 m_uiShadesDead;
 
     void Reset()
     {
@@ -303,9 +301,12 @@ struct MANGOS_DLL_DECL boss_taerarAI : public boss_emerald_dragonAI
 
         m_uiArcaneBlastTimer = 12000;
         m_uiBellowingRoarTimer = 30000;
-        m_uiShadesTimer = 60000;                            // The time that Taerar is banished
+        m_uiShadesTimeoutTimer = 0;                         // The time that Taerar is banished
+        m_uiShadesDead = 0;
 
-        m_bShades = false;
+        // Remove Unselectable if needed
+        if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE))
+            m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     }
 
     void Aggro(Unit* pWho)
@@ -313,53 +314,62 @@ struct MANGOS_DLL_DECL boss_taerarAI : public boss_emerald_dragonAI
         DoScriptText(SAY_TAERAR_AGGRO, m_creature);
     }
 
-    // Summon 3 Shades at 75%, 50% and 25%
-    bool DoSpecialDragonAbility(SpecialDragonEvent uiEvent)
+    // Summon 3 Shades at 75%, 50% and 25% and Banish Self
+    bool DoSpecialDragonAbility()
     {
-        if (!m_bShades)
+        if (DoCastSpellIfCan(m_creature, SPELL_SELF_STUN) == CAST_OK)
         {
-            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-            {
-                //Inturrupt any spell casting
-                m_creature->InterruptNonMeleeSpells(false);
+            // Summon the shades at boss position
+            DoCastSpellIfCan(m_creature, SPELL_SUMMON_SHADE_1, CAST_TRIGGERED);
+            DoCastSpellIfCan(m_creature, SPELL_SUMMON_SHADE_2, CAST_TRIGGERED);
+            DoCastSpellIfCan(m_creature, SPELL_SUMMON_SHADE_3, CAST_TRIGGERED);
 
-                //horrible workaround, need to fix
-                m_creature->setFaction(35);
-                m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+            // Make boss not selectable when banished
+            m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 
-                DoScriptText(SAY_SUMMONSHADE, m_creature);
+            DoScriptText(SAY_SUMMONSHADE, m_creature);
+            m_uiShadesTimeoutTimer = 60000;
 
-                int iSize = sizeof(auiSpellSummonShade) / sizeof(uint32);
-
-                for(int i = 0; i < iSize; ++i)
-                    m_creature->CastSpell(pTarget, auiSpellSummonShade[i], true);
-
-                m_bShades = true;
-                m_uiShadesTimer = 60000;
-
-                return true;
-            }
+            return true;
         }
+
         return false;
+    }
+
+    void SummonedCreatureJustDied(Creature* pSummoned)
+    {
+        if (pSummoned->GetEntry() == NPC_SHADE_OF_TAERAR)
+        {
+            ++m_uiShadesDead;
+
+            // If all shades are dead then unbanish the boss
+            if (m_uiShadesDead == 3)
+                DoUnbanishBoss();
+        }
+    }
+
+    void DoUnbanishBoss()
+    {
+        m_creature->RemoveAurasDueToSpell(SPELL_SELF_STUN);
+        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+
+        m_uiShadesTimeoutTimer = 0;
+        m_uiShadesDead = 0;
     }
 
     bool UpdateDragonAI(const uint32 uiDiff)
     {
-        // <<<<<<<<< TODO - FIXME - This code was called also OOC
-        if (m_bShades && m_uiShadesTimer < uiDiff)
+        // Timer to unbanish the boss
+        if (m_uiShadesTimeoutTimer)
         {
-            //Become unbanished again
-            m_creature->setFaction(14);
-            m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-            m_bShades = false;
-        }
-        else if (m_bShades)
-        {
-            m_uiShadesTimer -= uiDiff;
-            //Do nothing while banished
+            if (m_uiShadesTimeoutTimer <= uiDiff)
+               DoUnbanishBoss();
+            else
+                m_uiShadesTimeoutTimer -= uiDiff;
+
+            // Prevent further spells or timer handling while banished
             return false;
         }
-        // >>>>>>>>> end of FIXME
 
         // Arcane Blast Timer
         if (m_uiArcaneBlastTimer < uiDiff)
@@ -471,7 +481,7 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public boss_emerald_dragonAI
     }
 
     // Summon Druids - TODO FIXME (spell not understood)
-    bool DoSpecialDragonAbility(SpecialDragonEvent uiEvent)
+    bool DoSpecialDragonAbility()
     {
         DoScriptText(SAY_SUMMON_DRUIDS, m_creature);
 
