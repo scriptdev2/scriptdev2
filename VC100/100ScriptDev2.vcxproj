@@ -666,6 +666,7 @@
     <ClCompile Include="..\scripts\outland\tempest_keep\botanica\boss_high_botanist_freywinn.cpp" />
     <ClCompile Include="..\scripts\outland\tempest_keep\botanica\boss_laj.cpp" />
     <ClCompile Include="..\scripts\outland\tempest_keep\botanica\boss_warp_splinter.cpp" />
+    <ClCompile Include="..\scripts\outland\tempest_keep\the_eye\boss_alar.cpp" />
     <ClCompile Include="..\scripts\outland\tempest_keep\the_eye\boss_astromancer.cpp" />
     <ClCompile Include="..\scripts\outland\tempest_keep\the_eye\boss_kaelthas.cpp" />
     <ClCompile Include="..\scripts\outland\tempest_keep\the_eye\boss_void_reaver.cpp" />

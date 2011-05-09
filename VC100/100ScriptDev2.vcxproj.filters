@@ -1653,6 +1653,9 @@
     <ClCompile Include="..\scripts\outland\tempest_keep\botanica\boss_warp_splinter.cpp">
       <Filter>scripts\outland\tempest_keep\botanica</Filter>
     </ClCompile>
+    <ClCompile Include="..\scripts\outland\tempest_keep\the_eye\boss_alar.cpp">
+      <Filter>scripts\outland\tempest_keep\the_eye</Filter>
+    </ClCompile>
     <ClCompile Include="..\scripts\outland\tempest_keep\the_eye\boss_astromancer.cpp">
       <Filter>scripts\outland\tempest_keep\the_eye</Filter>
     </ClCompile>
