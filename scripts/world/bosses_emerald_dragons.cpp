@@ -38,20 +38,23 @@ EndContentData */
 
 enum
 {
-    SPELL_SEEPING_FOG_R     = 24813,                        // Summons 15224 'Dream Fog'
-    SPELL_SEEPING_FOG_L     = 24814,
-    SPELL_DREAM_FOG         = 24777,                        // Used by summoned Adds
-    SPELL_NOXIOUS_BREATH    = 24818,
-    SPELL_TAILSWEEP         = 15847,
+    SPELL_MARK_OF_NATURE_PLAYER     = 25040,
+    SPELL_MARK_OF_NATURE_AURA       = 25041,
+    SPELL_SEEPING_FOG_R             = 24813,                // Summons 15224 'Dream Fog'
+    SPELL_SEEPING_FOG_L             = 24814,
+    SPELL_DREAM_FOG                 = 24777,                // Used by summoned Adds
+    SPELL_NOXIOUS_BREATH            = 24818,
+    SPELL_TAILSWEEP                 = 15847,
+    SPELL_SUMMON_PLAYER             = 24776,                // NYI
 
-    NPC_DREAM_FOG           = 15224,
+    NPC_DREAM_FOG                   = 15224,
 };
 
 enum SpecialDragonEvent
 {
-    EVENT_75_HEALTH         = 1,
-    EVENT_50_HEALTH         = 2,
-    EVENT_25_HEALTH         = 3,
+    EVENT_75_HEALTH                 = 1,
+    EVENT_50_HEALTH                 = 2,
+    EVENT_25_HEALTH                 = 3,
 };
 
 struct MANGOS_DLL_DECL boss_emerald_dragonAI : public ScriptedAI
@@ -71,6 +74,29 @@ struct MANGOS_DLL_DECL boss_emerald_dragonAI : public ScriptedAI
         m_uiSeepingFogTimer = urand(15000, 20000);
         m_uiNoxiousBreathTimer = 8000;
         m_uiTailsweepTimer = 4000;
+    }
+
+    void EnterCombat(Unit* pEnemy)
+    {
+        DoCastSpellIfCan(m_creature, SPELL_MARK_OF_NATURE_AURA);
+
+        ScriptedAI::EnterCombat(pEnemy);
+    }
+
+    void KilledUnit(Unit* pVictim)
+    {
+        // Mark killed players with Mark of Nature
+        if (pVictim->GetTypeId() == TYPEID_PLAYER)
+            pVictim->CastSpell(pVictim, SPELL_MARK_OF_NATURE_PLAYER, true);
+    }
+
+    void JustSummoned(Creature* pSummoned)
+    {
+        if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            pSummoned->AI()->AttackStart(pTarget);
+
+        if (pSummoned->GetEntry() == NPC_DREAM_FOG)
+            pSummoned->CastSpell(pSummoned, SPELL_DREAM_FOG, true, NULL, NULL, m_creature->GetObjectGuid());
     }
 
     // Return true, if succeeded
@@ -129,10 +155,9 @@ struct MANGOS_DLL_DECL boss_emerald_dragonAI : public ScriptedAI
 enum
 {
     SAY_EMERISS_AGGRO           = -1000401,
-    SAY_CASTCORRUPTION          = -1000402,
+    SAY_CAST_CORRUPTION         = -1000402,
 
-    //SPELL_MARKOFNATURE        = 25040,                        // Not working
-    SPELL_VOLATILEINFECTION     = 24928,
+    SPELL_VOLATILE_INFECTION    = 24928,
     SPELL_CORRUPTION_OF_EARTH   = 24910
 };
 
@@ -140,15 +165,13 @@ struct MANGOS_DLL_DECL boss_emerissAI : public boss_emerald_dragonAI
 {
     boss_emerissAI(Creature* pCreature) : boss_emerald_dragonAI(pCreature) { Reset(); }
 
-    //uint32 m_uiMarkOfNature_Timer;
-    uint32 m_uiVolatileInfection_Timer;
+    uint32 m_uiVolatileInfectionTimer;
 
     void Reset()
     {
         boss_emerald_dragonAI::Reset();
 
-        //m_uiMarkOfNature_Timer = 45000;
-        m_uiVolatileInfection_Timer = 12000;
+        m_uiVolatileInfectionTimer = 12000;
     }
 
     void Aggro(Unit* pWho)
@@ -161,7 +184,7 @@ struct MANGOS_DLL_DECL boss_emerissAI : public boss_emerald_dragonAI
     {
         if (DoCastSpellIfCan(m_creature, SPELL_CORRUPTION_OF_EARTH) == CAST_OK)
         {
-            DoScriptText(SAY_CASTCORRUPTION, m_creature);
+            DoScriptText(SAY_CAST_CORRUPTION, m_creature);
 
             // Successfull cast
             return true;
@@ -172,23 +195,15 @@ struct MANGOS_DLL_DECL boss_emerissAI : public boss_emerald_dragonAI
 
     bool UpdateDragonAI(const uint32 uiDiff)
     {
-        //MarkOfNature_Timer
-        //if (m_uiMarkOfNature_Timer < uiDiff)
-        //{
-        //    DoCastSpellIfCan(m_creature->getVictim(), SPELL_MARKOFNATURE);
-        //    m_uiMarkOfNature_Timer = 45000;
-        //}
-        //else
-            //m_uiMarkOfNature_Timer -= uiDiff;
-
-        //VolatileInfection_Timer
-        if (m_uiVolatileInfection_Timer < uiDiff)
+        // Volatile Infection Timer
+        if (m_uiVolatileInfectionTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_VOLATILEINFECTION);
-            m_uiVolatileInfection_Timer = urand(7000, 12000);
+            Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0);
+            if (pTarget && DoCastSpellIfCan(pTarget, SPELL_VOLATILE_INFECTION) == CAST_OK)
+                m_uiVolatileInfectionTimer = urand(7000, 12000);
         }
         else
-            m_uiVolatileInfection_Timer -= uiDiff;
+            m_uiVolatileInfectionTimer -= uiDiff;
 
         return true;
     }
@@ -214,33 +229,30 @@ enum
     SAY_TAERAR_AGGRO        = -1000399,
     SAY_SUMMONSHADE         = -1000400,
 
-    //Spells of Taerar
-    // SPELL_MARKOFNATURE   = 25040,                        // Not working
-    SPELL_ARCANEBLAST       = 24857,
-    SPELL_BELLOWINGROAR     = 22686,
+    SPELL_ARCANE_BLAST      = 24857,
+    SPELL_BELLOWING_ROAR    = 22686,
 
-    SPELL_SUMMONSHADE_1     = 24841,
-    SPELL_SUMMONSHADE_2     = 24842,
-    SPELL_SUMMONSHADE_3     = 24843,
+    SPELL_SUMMON_SHADE_1    = 24841,
+    SPELL_SUMMON_SHADE_2    = 24842,
+    SPELL_SUMMON_SHADE_3    = 24843,
 
     //Spells of Shades of Taerar
     SPELL_POSIONCLOUD       = 24840,
     SPELL_POSIONBREATH      = 20667
 };
 
-uint32 m_auiSpellSummonShade[]=
+static const uint32 auiSpellSummonShade[]=
 {
-    SPELL_SUMMONSHADE_1, SPELL_SUMMONSHADE_2, SPELL_SUMMONSHADE_3
+    SPELL_SUMMON_SHADE_1, SPELL_SUMMON_SHADE_2, SPELL_SUMMON_SHADE_3
 };
 
 struct MANGOS_DLL_DECL boss_taerarAI : public boss_emerald_dragonAI
 {
     boss_taerarAI(Creature* pCreature) : boss_emerald_dragonAI(pCreature) { Reset(); }
 
-    //uint32 m_uiMarkOfNature_Timer;
-    uint32 m_uiArcaneBlast_Timer;
-    uint32 m_uiBellowingRoar_Timer;
-    uint32 m_uiShades_Timer;
+    uint32 m_uiArcaneBlastTimer;
+    uint32 m_uiBellowingRoarTimer;
+    uint32 m_uiShadesTimer;
 
     bool m_bShades;
 
@@ -248,10 +260,9 @@ struct MANGOS_DLL_DECL boss_taerarAI : public boss_emerald_dragonAI
     {
         boss_emerald_dragonAI::Reset();
 
-        //m_uiMarkOfNature_Timer = 45000;
-        m_uiArcaneBlast_Timer = 12000;
-        m_uiBellowingRoar_Timer = 30000;
-        m_uiShades_Timer = 60000;                               //The time that Taerar is banished
+        m_uiArcaneBlastTimer = 12000;
+        m_uiBellowingRoarTimer = 30000;
+        m_uiShadesTimer = 60000;                            // The time that Taerar is banished
 
         m_bShades = false;
     }
@@ -259,12 +270,6 @@ struct MANGOS_DLL_DECL boss_taerarAI : public boss_emerald_dragonAI
     void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_TAERAR_AGGRO, m_creature);
-    }
-
-    void JustSummoned(Creature* pSummoned)
-    {
-        if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-            pSummoned->AI()->AttackStart(pTarget);
     }
 
     // Summon 3 Shades at 75%, 50% and 25%
@@ -283,13 +288,13 @@ struct MANGOS_DLL_DECL boss_taerarAI : public boss_emerald_dragonAI
 
                 DoScriptText(SAY_SUMMONSHADE, m_creature);
 
-                int iSize = sizeof(m_auiSpellSummonShade) / sizeof(uint32);
+                int iSize = sizeof(auiSpellSummonShade) / sizeof(uint32);
 
                 for(int i = 0; i < iSize; ++i)
-                    m_creature->CastSpell(pTarget, m_auiSpellSummonShade[i], true);
+                    m_creature->CastSpell(pTarget, auiSpellSummonShade[i], true);
 
                 m_bShades = true;
-                m_uiShades_Timer = 60000;
+                m_uiShadesTimer = 60000;
 
                 return true;
             }
@@ -300,7 +305,7 @@ struct MANGOS_DLL_DECL boss_taerarAI : public boss_emerald_dragonAI
     bool UpdateDragonAI(const uint32 uiDiff)
     {
         // <<<<<<<<< TODO - FIXME - This code was called also OOC
-        if (m_bShades && m_uiShades_Timer < uiDiff)
+        if (m_bShades && m_uiShadesTimer < uiDiff)
         {
             //Become unbanished again
             m_creature->setFaction(14);
@@ -309,38 +314,30 @@ struct MANGOS_DLL_DECL boss_taerarAI : public boss_emerald_dragonAI
         }
         else if (m_bShades)
         {
-            m_uiShades_Timer -= uiDiff;
+            m_uiShadesTimer -= uiDiff;
             //Do nothing while banished
             return false;
         }
         // >>>>>>>>> end of FIXME
 
-        //MarkOfNature_Timer
-        //if (m_uiMarkOfNature_Timer < uiDiff)
-        //{
-        //    DoCastSpellIfCan(m_creature->getVictim(), SPELL_MARKOFNATURE);
-        //    m_uiMarkOfNature_Timer = 45000;
-        //}
-        //else
-            //m_uiMarkOfNature_Timer -= uiDiff;
-
-        //ArcaneBlast_Timer
-        if (m_uiArcaneBlast_Timer < uiDiff)
+        // Arcane Blast Timer
+        if (m_uiArcaneBlastTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_ARCANEBLAST);
-            m_uiArcaneBlast_Timer = urand(7000, 12000);
+            Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0);
+            if (pTarget && DoCastSpellIfCan(pTarget, SPELL_ARCANE_BLAST) == CAST_OK)
+                m_uiArcaneBlastTimer = urand(7000, 12000);
         }
         else
-            m_uiArcaneBlast_Timer -= uiDiff;
+            m_uiArcaneBlastTimer -= uiDiff;
 
-        //BellowingRoar_Timer
-        if (m_uiBellowingRoar_Timer < uiDiff)
+        // Bellowing Roar Timer
+        if (m_uiBellowingRoarTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_BELLOWINGROAR);
-            m_uiBellowingRoar_Timer = urand(20000, 30000);
+            if (DoCastSpellIfCan(m_creature, SPELL_BELLOWING_ROAR) == CAST_OK)
+                m_uiBellowingRoarTimer = urand(20000, 30000);
         }
         else
-            m_uiBellowingRoar_Timer -= uiDiff;
+            m_uiBellowingRoarTimer -= uiDiff;
 
         return true;
     }
@@ -404,13 +401,10 @@ CreatureAI* GetAI_boss_shadeoftaerar(Creature* pCreature)
 enum
 {
     SAY_YSONDRE_AGGRO       = -1000360,
-    SAY_SUMMONDRUIDS        = -1000361,
+    SAY_SUMMON_DRUIDS       = -1000361,
 
-    //SPELL_MARKOFNATURE   = 25040,                         // Not working
-    SPELL_LIGHTNINGWAVE     = 24819,
-    SPELL_SUMMONDRUIDS      = 24795,
-
-    SPELL_SUMMON_PLAYER     = 24776,
+    SPELL_LIGHTNING_WAVE    = 24819,
+    SPELL_SUMMON_DRUIDS     = 24795,
 
     //druid spells
     SPELL_MOONFIRE          = 21669
@@ -421,15 +415,13 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public boss_emerald_dragonAI
 {
     boss_ysondreAI(Creature* pCreature) : boss_emerald_dragonAI(pCreature) { Reset(); }
 
-    //uint32 m_uiMarkOfNature_Timer;
-    uint32 m_uiLightningWave_Timer;
+    uint32 m_uiLightningWaveTimer;
 
     void Reset()
     {
         boss_emerald_dragonAI::Reset();
 
-        //m_uiMarkOfNature_Timer = 45000;
-        m_uiLightningWave_Timer = 12000;
+        m_uiLightningWaveTimer = 12000;
     }
 
     void Aggro(Unit* pWho)
@@ -437,45 +429,28 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public boss_emerald_dragonAI
         DoScriptText(SAY_YSONDRE_AGGRO, m_creature);
     }
 
-    void JustSummoned(Creature* pSummoned)
-    {
-        if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-            pSummoned->AI()->AttackStart(pTarget);
-    }
-
     // Summon Druids - TODO FIXME (spell not understood)
     bool DoSpecialDragonAbility(SpecialDragonEvent uiEvent)
     {
-        DoScriptText(SAY_SUMMONDRUIDS, m_creature);
+        DoScriptText(SAY_SUMMON_DRUIDS, m_creature);
 
         for(int i = 0; i < 10; ++i)
-            DoCastSpellIfCan(m_creature, SPELL_SUMMONDRUIDS, CAST_TRIGGERED);
+            DoCastSpellIfCan(m_creature, SPELL_SUMMON_DRUIDS, CAST_TRIGGERED);
 
         return true;
     }
 
     bool UpdateDragonAI(const uint32 uiDiff)
     {
-        //MarkOfNature_Timer
-        //if (m_uiMarkOfNature_Timer < uiDiff)
-        //{
-        //    DoCastSpellIfCan(m_creature->getVictim(), SPELL_MARKOFNATURE);
-        //    m_uiMarkOfNature_Timer = 45000;
-        //}
-        //else
-            //m_uiMarkOfNature_Timer -= uiDiff;
-
-        //LightningWave_Timer
-        if (m_uiLightningWave_Timer < uiDiff)
+        // Lightning Wave Timer
+        if (m_uiLightningWaveTimer < uiDiff)
         {
-            //Cast LIGHTNINGWAVE on a Random target
-            if (Unit *pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-                DoCastSpellIfCan(pTarget, SPELL_LIGHTNINGWAVE);
-
-            m_uiLightningWave_Timer = urand(7000, 12000);
+            Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0);
+            if (pTarget && DoCastSpellIfCan(pTarget, SPELL_LIGHTNING_WAVE) == CAST_OK)
+                m_uiLightningWaveTimer = urand(7000, 12000);
         }
         else
-            m_uiLightningWave_Timer -= uiDiff;
+            m_uiLightningWaveTimer -= uiDiff;
 
         return true;
     }
@@ -523,30 +498,30 @@ CreatureAI* GetAI_mob_dementeddruids(Creature* pCreature)
 
 void AddSC_bosses_emerald_dragons()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_emeriss";
-    newscript->GetAI = &GetAI_boss_emeriss;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_emeriss";
+    pNewScript->GetAI = &GetAI_boss_emeriss;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "boss_taerar";
-    newscript->GetAI = &GetAI_boss_taerar;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_taerar";
+    pNewScript->GetAI = &GetAI_boss_taerar;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "boss_shade_of_taerar";
-    newscript->GetAI = &GetAI_boss_shadeoftaerar;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_shade_of_taerar";
+    pNewScript->GetAI = &GetAI_boss_shadeoftaerar;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "boss_ysondre";
-    newscript->GetAI = &GetAI_boss_ysondre;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_ysondre";
+    pNewScript->GetAI = &GetAI_boss_ysondre;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_dementeddruids";
-    newscript->GetAI = &GetAI_mob_dementeddruids;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_dementeddruids";
+    pNewScript->GetAI = &GetAI_mob_dementeddruids;
+    pNewScript->RegisterSelf();
 }
