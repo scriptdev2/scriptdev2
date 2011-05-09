@@ -59,6 +59,7 @@ UPDATE creature_template SET ScriptName='boss_shade_of_taerar' WHERE entry=15302
 UPDATE creature_template SET ScriptName='boss_kruul' WHERE entry=18338;
 UPDATE creature_template SET ScriptName='boss_azuregos' WHERE entry=6109;
 UPDATE creature_template SET ScriptName='mob_dementeddruids' WHERE entry=15260;
+UPDATE creature_template SET ScriptName='boss_lethon' WHERE entry=14888;
 
 /* GO */
 UPDATE gameobject_template SET ScriptName='go_cat_figurine' WHERE entry=13873;

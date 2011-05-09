@@ -218,7 +218,48 @@ CreatureAI* GetAI_boss_emeriss(Creature* pCreature)
 ## boss_lethon
 ######*/
 
-// TODO
+enum
+{
+    SAY_LETHON_AGGRO            = -1000666,
+    SAY_DRAW_SPIRIT             = -1000667,
+
+    SPELL_SHADOW_BOLT_WIRL      = 24834,                    // Periodic aura
+    SPELL_DRAW_SPIRIT           = 24811,
+    SPELL_SUMMON_SPIRIT_SHADE   = 24810,                    // Summon spell was removed, was SPELL_EFFECT_SUMMON_DEMON
+
+    NPC_SPIRIT_SHADE            = 15261,                    // Add summoned by Lethon
+    SPELL_DARK_OFFERING         = 24804,
+    SPELL_SPIRIT_SHAPE_VISUAL   = 24809,
+};
+
+struct MANGOS_DLL_DECL boss_lethonAI : public boss_emerald_dragonAI
+{
+    boss_lethonAI(Creature* pCreature) : boss_emerald_dragonAI(pCreature) {}
+
+    void Aggro(Unit* pWho)
+    {
+        DoScriptText(SAY_LETHON_AGGRO, m_creature);
+        // Shadow bolt wirl is a periodic aura which triggers a set of shadowbolts every 2 secs; may need some core tunning
+        DoCastSpellIfCan(m_creature, SPELL_SHADOW_BOLT_WIRL, CAST_TRIGGERED);
+    }
+
+    // Summon a spirit which moves toward the boss and heals him for each player hit by the spell; used at 75%, 50% and 25%
+    bool DoSpecialDragonAbility(SpecialDragonEvent uiEvent)
+    {
+        if (DoCastSpellIfCan(m_creature, SPELL_DRAW_SPIRIT) == CAST_OK)
+        {
+            DoScriptText(SAY_DRAW_SPIRIT, m_creature);
+            return true;
+        }
+
+        return false;
+    }
+};
+
+CreatureAI* GetAI_boss_lethon(Creature* pCreature)
+{
+    return new boss_lethonAI(pCreature);
+}
 
 /*######
 ## boss_taerar
@@ -503,6 +544,11 @@ void AddSC_bosses_emerald_dragons()
     pNewScript = new Script;
     pNewScript->Name = "boss_emeriss";
     pNewScript->GetAI = &GetAI_boss_emeriss;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_lethon";
+    pNewScript->GetAI = &GetAI_boss_lethon;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
