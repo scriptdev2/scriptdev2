@@ -2877,19 +2877,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\scripts\world\boss_emeriss.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\world\boss_lethon.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\world\boss_taerar.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\world\boss_ysondre.cpp"
+					RelativePath="..\scripts\world\bosses_emerald_dragons.cpp"
 					>
 				</File>
 				<File
