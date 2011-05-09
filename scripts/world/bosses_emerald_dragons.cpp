@@ -22,6 +22,7 @@ SDCategory: Emerald Dragon Bosses
 EndScriptData */
 
 /* ContentData
+boss_emerald_dragon -- Superclass for the four dragons
 boss_emeriss
 boss_taerar
 boss_shade_of_taerar -- TODO move to Acid
@@ -30,6 +31,52 @@ mob_dementeddruids; -- TODO move to Acid
 EndContentData */
 
 #include "precompiled.h"
+
+/*######
+## boss_emerald_dragon -- Superclass for the four dragons
+######*/
+
+enum SpecialDragonEvent
+{
+    EVENT_75_HEALTH         = 1,
+    EVENT_50_HEALTH         = 2,
+    EVENT_25_HEALTH         = 3,
+};
+
+struct MANGOS_DLL_DECL boss_emerald_dragonAI : public ScriptedAI
+{
+    boss_emerald_dragonAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
+
+    uint32 m_uiEventCounter;
+
+    void Reset()
+    {
+        m_uiEventCounter = EVENT_75_HEALTH;
+    }
+
+    // Return true, if succeeded
+    virtual bool DoSpecialDragonAbility(SpecialDragonEvent uiEvent) = 0;
+
+    // Return true to handle shared timers and MeleeAttack
+    virtual bool UpdateDragonAI(const uint32 uiDiff) { return true; }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        // Return since we have no target
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        // Trigger special ability function at 75, 50 and 25% health
+        if (m_creature->GetHealthPercent() < 100.0f - m_uiEventCounter * 25.0f && DoSpecialDragonAbility((SpecialDragonEvent) m_uiEventCounter))
+            ++m_uiEventCounter;
+
+        // Call dragon specific virtual function
+        if (!UpdateDragonAI(uiDiff))
+            return;
+
+        DoMeleeAttackIfReady();
+    }
+};
 
 /*######
 ## boss_emeriss
@@ -48,9 +95,9 @@ enum
     SPELL_CORRUPTIONOFEARTH = 24910
 };
 
-struct MANGOS_DLL_DECL boss_emerissAI : public ScriptedAI
+struct MANGOS_DLL_DECL boss_emerissAI : public boss_emerald_dragonAI
 {
-    boss_emerissAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+    boss_emerissAI(Creature* pCreature) : boss_emerald_dragonAI(pCreature) { Reset(); }
 
     uint32 m_uiSleep_Timer;
     uint32 m_uiNoxiousBreath_Timer;
@@ -61,6 +108,8 @@ struct MANGOS_DLL_DECL boss_emerissAI : public ScriptedAI
 
     void Reset()
     {
+        boss_emerald_dragonAI::Reset();
+
         m_uiSleep_Timer = urand(15000, 20000);
         m_uiNoxiousBreath_Timer = 8000;
         m_uiTailSweep_Timer = 4000;
@@ -74,12 +123,13 @@ struct MANGOS_DLL_DECL boss_emerissAI : public ScriptedAI
         DoScriptText(SAY_EMERISS_AGGRO, m_creature);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    bool DoSpecialDragonAbility(SpecialDragonEvent uiEvent)
     {
-        //Return since we have no target
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-            return;
+        return true;
+    }
 
+    bool UpdateDragonAI(const uint32 uiDiff)
+    {
         //Sleep_Timer
         if (m_uiSleep_Timer < uiDiff)
         {
@@ -135,7 +185,7 @@ struct MANGOS_DLL_DECL boss_emerissAI : public ScriptedAI
             DoCastSpellIfCan(m_creature->getVictim(), SPELL_CORRUPTIONOFEARTH);
         }
 
-        DoMeleeAttackIfReady();
+        return true;
     }
 };
 
@@ -181,9 +231,9 @@ uint32 m_auiSpellSummonShade[]=
     SPELL_SUMMONSHADE_1, SPELL_SUMMONSHADE_2, SPELL_SUMMONSHADE_3
 };
 
-struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
+struct MANGOS_DLL_DECL boss_taerarAI : public boss_emerald_dragonAI
 {
-    boss_taerarAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+    boss_taerarAI(Creature* pCreature) : boss_emerald_dragonAI(pCreature) { Reset(); }
 
     uint32 m_uiSleep_Timer;
     uint32 m_uiNoxiousBreath_Timer;
@@ -198,6 +248,8 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
 
     void Reset()
     {
+        boss_emerald_dragonAI::Reset();
+
         m_uiSleep_Timer = urand(15000, 20000);
         m_uiNoxiousBreath_Timer = 8000;
         m_uiTailSweep_Timer = 4000;
@@ -221,8 +273,14 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
             pSummoned->AI()->AttackStart(pTarget);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    bool DoSpecialDragonAbility(SpecialDragonEvent uiEvent)
     {
+        return true;
+    }
+
+    bool UpdateDragonAI(const uint32 uiDiff)
+    {
+        // <<<<<<<<< TODO - FIXME - This code was called also OOC
         if (m_bShades && m_uiShades_Timer < uiDiff)
         {
             //Become unbanished again
@@ -234,12 +292,9 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
         {
             m_uiShades_Timer -= uiDiff;
             //Do nothing while banished
-            return;
+            return false;
         }
-
-        //Return since we have no target
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-            return;
+        // >>>>>>>>> end of FIXME
 
         //Sleep_Timer
         if (m_uiSleep_Timer < uiDiff)
@@ -322,7 +377,7 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
             m_uiShades_Timer = 60000;
         }
 
-        DoMeleeAttackIfReady();
+        return true;
     }
 };
 
@@ -400,9 +455,9 @@ enum
 };
 
 // Ysondre script
-struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
+struct MANGOS_DLL_DECL boss_ysondreAI : public boss_emerald_dragonAI
 {
-    boss_ysondreAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+    boss_ysondreAI(Creature* pCreature) : boss_emerald_dragonAI(pCreature) { Reset(); }
 
     uint32 m_uiSleep_Timer;
     uint32 m_uiNoxiousBreath_Timer;
@@ -413,6 +468,8 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
 
     void Reset()
     {
+        boss_emerald_dragonAI::Reset();
+
         m_uiSleep_Timer = urand(15000, 20000);
         m_uiNoxiousBreath_Timer = 8000;
         m_uiTailSweep_Timer = 4000;
@@ -432,11 +489,13 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
             pSummoned->AI()->AttackStart(pTarget);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    bool DoSpecialDragonAbility(SpecialDragonEvent uiEvent)
     {
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-            return;
+        return true;
+    }
 
+    bool UpdateDragonAI(const uint32 uiDiff)
+    {
         //Sleep_Timer
         if (m_uiSleep_Timer < uiDiff)
         {
@@ -498,7 +557,7 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
             ++m_uiSummonDruidModifier;
         }
 
-        DoMeleeAttackIfReady();
+        return true;
     }
 };
 
