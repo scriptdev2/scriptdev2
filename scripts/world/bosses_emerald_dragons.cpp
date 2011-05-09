@@ -36,6 +36,17 @@ EndContentData */
 ## boss_emerald_dragon -- Superclass for the four dragons
 ######*/
 
+enum
+{
+    SPELL_SEEPING_FOG_R     = 24813,                        // Summons 15224 'Dream Fog'
+    SPELL_SEEPING_FOG_L     = 24814,
+    SPELL_DREAM_FOG         = 24777,                        // Used by summoned Adds
+    SPELL_NOXIOUS_BREATH    = 24818,
+    SPELL_TAILSWEEP         = 15847,
+
+    NPC_DREAM_FOG           = 15224,
+};
+
 enum SpecialDragonEvent
 {
     EVENT_75_HEALTH         = 1,
@@ -49,9 +60,17 @@ struct MANGOS_DLL_DECL boss_emerald_dragonAI : public ScriptedAI
 
     uint32 m_uiEventCounter;
 
+    uint32 m_uiSeepingFogTimer;
+    uint32 m_uiNoxiousBreathTimer;
+    uint32 m_uiTailsweepTimer;
+
     void Reset()
     {
         m_uiEventCounter = EVENT_75_HEALTH;
+
+        m_uiSeepingFogTimer = urand(15000, 20000);
+        m_uiNoxiousBreathTimer = 8000;
+        m_uiTailsweepTimer = 4000;
     }
 
     // Return true, if succeeded
@@ -74,6 +93,31 @@ struct MANGOS_DLL_DECL boss_emerald_dragonAI : public ScriptedAI
         if (!UpdateDragonAI(uiDiff))
             return;
 
+        if (m_uiSeepingFogTimer < uiDiff)
+        {
+            DoCastSpellIfCan(m_creature, SPELL_SEEPING_FOG_R, CAST_TRIGGERED);
+            DoCastSpellIfCan(m_creature, SPELL_SEEPING_FOG_L, CAST_TRIGGERED);
+            m_uiSeepingFogTimer = urand(8000, 16000);
+        }
+        else
+            m_uiSeepingFogTimer -= uiDiff;
+
+        if (m_uiNoxiousBreathTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_NOXIOUS_BREATH) == CAST_OK)
+                m_uiNoxiousBreathTimer = urand(14000, 20000);
+        }
+        else
+            m_uiNoxiousBreathTimer -= uiDiff;
+
+        if (m_uiTailsweepTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_TAILSWEEP) == CAST_OK)
+                m_uiTailsweepTimer = 2000;
+        }
+        else
+            m_uiTailsweepTimer -= uiDiff;
+
         DoMeleeAttackIfReady();
     }
 };
@@ -84,38 +128,27 @@ struct MANGOS_DLL_DECL boss_emerald_dragonAI : public ScriptedAI
 
 enum
 {
-    SAY_EMERISS_AGGRO       = -1000401,
-    SAY_CASTCORRUPTION      = -1000402,
+    SAY_EMERISS_AGGRO           = -1000401,
+    SAY_CASTCORRUPTION          = -1000402,
 
-    SPELL_SLEEP             = 24777,
-    SPELL_NOXIOUSBREATH     = 24818,
-    SPELL_TAILSWEEP         = 15847,
-    //SPELL_MARKOFNATURE    = 25040,                        // Not working
-    SPELL_VOLATILEINFECTION = 24928,
-    SPELL_CORRUPTIONOFEARTH = 24910
+    //SPELL_MARKOFNATURE        = 25040,                        // Not working
+    SPELL_VOLATILEINFECTION     = 24928,
+    SPELL_CORRUPTION_OF_EARTH   = 24910
 };
 
 struct MANGOS_DLL_DECL boss_emerissAI : public boss_emerald_dragonAI
 {
     boss_emerissAI(Creature* pCreature) : boss_emerald_dragonAI(pCreature) { Reset(); }
 
-    uint32 m_uiSleep_Timer;
-    uint32 m_uiNoxiousBreath_Timer;
-    uint32 m_uiTailSweep_Timer;
     //uint32 m_uiMarkOfNature_Timer;
     uint32 m_uiVolatileInfection_Timer;
-    uint32 m_uiCorruptionsCasted;
 
     void Reset()
     {
         boss_emerald_dragonAI::Reset();
 
-        m_uiSleep_Timer = urand(15000, 20000);
-        m_uiNoxiousBreath_Timer = 8000;
-        m_uiTailSweep_Timer = 4000;
         //m_uiMarkOfNature_Timer = 45000;
         m_uiVolatileInfection_Timer = 12000;
-        m_uiCorruptionsCasted = 0;
     }
 
     void Aggro(Unit* pWho)
@@ -123,42 +156,22 @@ struct MANGOS_DLL_DECL boss_emerissAI : public boss_emerald_dragonAI
         DoScriptText(SAY_EMERISS_AGGRO, m_creature);
     }
 
+    // Corruption of Earth at 75%, 50% and 25%
     bool DoSpecialDragonAbility(SpecialDragonEvent uiEvent)
     {
-        return true;
+        if (DoCastSpellIfCan(m_creature, SPELL_CORRUPTION_OF_EARTH) == CAST_OK)
+        {
+            DoScriptText(SAY_CASTCORRUPTION, m_creature);
+
+            // Successfull cast
+            return true;
+        }
+        else
+            return false;
     }
 
     bool UpdateDragonAI(const uint32 uiDiff)
     {
-        //Sleep_Timer
-        if (m_uiSleep_Timer < uiDiff)
-        {
-            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-                DoCastSpellIfCan(pTarget, SPELL_SLEEP);
-
-            m_uiSleep_Timer = urand(8000, 16000);
-        }
-        else
-            m_uiSleep_Timer -= uiDiff;
-
-        //NoxiousBreath_Timer
-        if (m_uiNoxiousBreath_Timer < uiDiff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_NOXIOUSBREATH);
-            m_uiNoxiousBreath_Timer = urand(14000, 20000);
-        }
-        else
-            m_uiNoxiousBreath_Timer -= uiDiff;
-
-        //Tailsweep every 2 seconds
-        if (m_uiTailSweep_Timer < uiDiff)
-        {
-            DoCastSpellIfCan(m_creature, SPELL_TAILSWEEP);
-            m_uiTailSweep_Timer = 2000;
-        }
-        else
-            m_uiTailSweep_Timer -= uiDiff;
-
         //MarkOfNature_Timer
         //if (m_uiMarkOfNature_Timer < uiDiff)
         //{
@@ -176,14 +189,6 @@ struct MANGOS_DLL_DECL boss_emerissAI : public boss_emerald_dragonAI
         }
         else
             m_uiVolatileInfection_Timer -= uiDiff;
-
-        //CorruptionofEarth at 75%, 50% and 25%
-        if (m_creature->GetHealthPercent() < float(100 - 25*m_uiCorruptionsCasted))
-        {
-            ++m_uiCorruptionsCasted;                        // prevent casting twice on same hp
-            DoScriptText(SAY_CASTCORRUPTION, m_creature);
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_CORRUPTIONOFEARTH);
-        }
 
         return true;
     }
@@ -210,9 +215,6 @@ enum
     SAY_SUMMONSHADE         = -1000400,
 
     //Spells of Taerar
-    SPELL_SLEEP             = 24777,
-    SPELL_NOXIOUSBREATH     = 24818,
-    SPELL_TAILSWEEP         = 15847,
     // SPELL_MARKOFNATURE   = 25040,                        // Not working
     SPELL_ARCANEBLAST       = 24857,
     SPELL_BELLOWINGROAR     = 22686,
@@ -235,14 +237,10 @@ struct MANGOS_DLL_DECL boss_taerarAI : public boss_emerald_dragonAI
 {
     boss_taerarAI(Creature* pCreature) : boss_emerald_dragonAI(pCreature) { Reset(); }
 
-    uint32 m_uiSleep_Timer;
-    uint32 m_uiNoxiousBreath_Timer;
-    uint32 m_uiTailSweep_Timer;
     //uint32 m_uiMarkOfNature_Timer;
     uint32 m_uiArcaneBlast_Timer;
     uint32 m_uiBellowingRoar_Timer;
     uint32 m_uiShades_Timer;
-    uint32 m_uiShadesSummoned;
 
     bool m_bShades;
 
@@ -250,14 +248,10 @@ struct MANGOS_DLL_DECL boss_taerarAI : public boss_emerald_dragonAI
     {
         boss_emerald_dragonAI::Reset();
 
-        m_uiSleep_Timer = urand(15000, 20000);
-        m_uiNoxiousBreath_Timer = 8000;
-        m_uiTailSweep_Timer = 4000;
         //m_uiMarkOfNature_Timer = 45000;
         m_uiArcaneBlast_Timer = 12000;
         m_uiBellowingRoar_Timer = 30000;
         m_uiShades_Timer = 60000;                               //The time that Taerar is banished
-        m_uiShadesSummoned = 0;
 
         m_bShades = false;
     }
@@ -273,9 +267,34 @@ struct MANGOS_DLL_DECL boss_taerarAI : public boss_emerald_dragonAI
             pSummoned->AI()->AttackStart(pTarget);
     }
 
+    // Summon 3 Shades at 75%, 50% and 25%
     bool DoSpecialDragonAbility(SpecialDragonEvent uiEvent)
     {
-        return true;
+        if (!m_bShades)
+        {
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                //Inturrupt any spell casting
+                m_creature->InterruptNonMeleeSpells(false);
+
+                //horrible workaround, need to fix
+                m_creature->setFaction(35);
+                m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+
+                DoScriptText(SAY_SUMMONSHADE, m_creature);
+
+                int iSize = sizeof(m_auiSpellSummonShade) / sizeof(uint32);
+
+                for(int i = 0; i < iSize; ++i)
+                    m_creature->CastSpell(pTarget, m_auiSpellSummonShade[i], true);
+
+                m_bShades = true;
+                m_uiShades_Timer = 60000;
+
+                return true;
+            }
+        }
+        return false;
     }
 
     bool UpdateDragonAI(const uint32 uiDiff)
@@ -295,35 +314,6 @@ struct MANGOS_DLL_DECL boss_taerarAI : public boss_emerald_dragonAI
             return false;
         }
         // >>>>>>>>> end of FIXME
-
-        //Sleep_Timer
-        if (m_uiSleep_Timer < uiDiff)
-        {
-            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-                DoCastSpellIfCan(pTarget, SPELL_SLEEP);
-
-            m_uiSleep_Timer = urand(8000, 15000);
-        }
-        else
-            m_uiSleep_Timer -= uiDiff;
-
-        //NoxiousBreath_Timer
-        if (m_uiNoxiousBreath_Timer < uiDiff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_NOXIOUSBREATH);
-            m_uiNoxiousBreath_Timer = urand(14000, 20000);
-        }
-        else
-            m_uiNoxiousBreath_Timer -= uiDiff;
-
-        //Tailsweep every 2 seconds
-        if (m_uiTailSweep_Timer < uiDiff)
-        {
-            DoCastSpellIfCan(m_creature, SPELL_TAILSWEEP);
-            m_uiTailSweep_Timer = 2000;
-        }
-        else
-            m_uiTailSweep_Timer -= uiDiff;
 
         //MarkOfNature_Timer
         //if (m_uiMarkOfNature_Timer < uiDiff)
@@ -351,31 +341,6 @@ struct MANGOS_DLL_DECL boss_taerarAI : public boss_emerald_dragonAI
         }
         else
             m_uiBellowingRoar_Timer -= uiDiff;
-
-        //Summon 3 Shades at 75%, 50% and 25% (if bShades is true we already left in line 117, no need to check here again)
-        if (!m_bShades && m_creature->GetHealthPercent() < float(100 - 25*m_uiShadesSummoned))
-        {
-            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-            {
-                //Inturrupt any spell casting
-                m_creature->InterruptNonMeleeSpells(false);
-
-                //horrible workaround, need to fix
-                m_creature->setFaction(35);
-                m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-
-                DoScriptText(SAY_SUMMONSHADE, m_creature);
-
-                int iSize = sizeof(m_auiSpellSummonShade) / sizeof(uint32);
-
-                for(int i = 0; i < iSize; ++i)
-                    m_creature->CastSpell(pTarget, m_auiSpellSummonShade[i], true);
-
-                ++m_uiShadesSummoned;                       // prevent casting twice at same health
-                m_bShades = true;
-            }
-            m_uiShades_Timer = 60000;
-        }
 
         return true;
     }
@@ -441,9 +406,6 @@ enum
     SAY_YSONDRE_AGGRO       = -1000360,
     SAY_SUMMONDRUIDS        = -1000361,
 
-    SPELL_SLEEP             = 24777,
-    SPELL_NOXIOUSBREATH     = 24818,
-    SPELL_TAILSWEEP         = 15847,
     //SPELL_MARKOFNATURE   = 25040,                         // Not working
     SPELL_LIGHTNINGWAVE     = 24819,
     SPELL_SUMMONDRUIDS      = 24795,
@@ -459,23 +421,15 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public boss_emerald_dragonAI
 {
     boss_ysondreAI(Creature* pCreature) : boss_emerald_dragonAI(pCreature) { Reset(); }
 
-    uint32 m_uiSleep_Timer;
-    uint32 m_uiNoxiousBreath_Timer;
-    uint32 m_uiTailSweep_Timer;
     //uint32 m_uiMarkOfNature_Timer;
     uint32 m_uiLightningWave_Timer;
-    uint32 m_uiSummonDruidModifier;
 
     void Reset()
     {
         boss_emerald_dragonAI::Reset();
 
-        m_uiSleep_Timer = urand(15000, 20000);
-        m_uiNoxiousBreath_Timer = 8000;
-        m_uiTailSweep_Timer = 4000;
         //m_uiMarkOfNature_Timer = 45000;
         m_uiLightningWave_Timer = 12000;
-        m_uiSummonDruidModifier = 0;
     }
 
     void Aggro(Unit* pWho)
@@ -489,42 +443,19 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public boss_emerald_dragonAI
             pSummoned->AI()->AttackStart(pTarget);
     }
 
+    // Summon Druids - TODO FIXME (spell not understood)
     bool DoSpecialDragonAbility(SpecialDragonEvent uiEvent)
     {
+        DoScriptText(SAY_SUMMONDRUIDS, m_creature);
+
+        for(int i = 0; i < 10; ++i)
+            DoCastSpellIfCan(m_creature, SPELL_SUMMONDRUIDS, CAST_TRIGGERED);
+
         return true;
     }
 
     bool UpdateDragonAI(const uint32 uiDiff)
     {
-        //Sleep_Timer
-        if (m_uiSleep_Timer < uiDiff)
-        {
-            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-                DoCastSpellIfCan(pTarget, SPELL_SLEEP);
-
-            m_uiSleep_Timer = urand(8000, 15000);
-        }
-        else
-            m_uiSleep_Timer -= uiDiff;
-
-        //NoxiousBreath_Timer
-        if (m_uiNoxiousBreath_Timer < uiDiff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_NOXIOUSBREATH);
-            m_uiNoxiousBreath_Timer = urand(14000, 20000);
-        }
-        else
-            m_uiNoxiousBreath_Timer -= uiDiff;
-
-        //Tailsweep every 2 seconds
-        if (m_uiTailSweep_Timer < uiDiff)
-        {
-            DoCastSpellIfCan(m_creature, SPELL_TAILSWEEP);
-            m_uiTailSweep_Timer = 2000;
-        }
-        else
-            m_uiTailSweep_Timer -= uiDiff;
-
         //MarkOfNature_Timer
         //if (m_uiMarkOfNature_Timer < uiDiff)
         //{
@@ -545,17 +476,6 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public boss_emerald_dragonAI
         }
         else
             m_uiLightningWave_Timer -= uiDiff;
-
-        //Summon Druids
-        if (m_creature->GetHealthPercent() <= float(100 - 25*m_uiSummonDruidModifier))
-        {
-            DoScriptText(SAY_SUMMONDRUIDS, m_creature);
-
-            for(int i = 0; i < 10; ++i)
-                DoCastSpellIfCan(m_creature, SPELL_SUMMONDRUIDS, CAST_TRIGGERED);
-
-            ++m_uiSummonDruidModifier;
-        }
 
         return true;
     }
