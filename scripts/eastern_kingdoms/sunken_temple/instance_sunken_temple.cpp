@@ -97,7 +97,6 @@ void instance_sunken_temple::OnCreatureDeath(Creature* pCreature)
     }
 }
 
-
 void instance_sunken_temple::SetData(uint32 uiType, uint32 uiData)
 {
     switch(uiType)

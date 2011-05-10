@@ -85,7 +85,7 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
         Enraged = false;
 
         if (m_pInstance)
-            m_pInstance->SetData(DATA_VEXALLUS_EVENT, NOT_STARTED);
+            m_pInstance->SetData(TYPE_VEXALLUS, NOT_STARTED);
     }
 
     void KilledUnit(Unit *victim)
@@ -96,7 +96,7 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
     void JustDied(Unit *victim)
     {
         if (m_pInstance)
-            m_pInstance->SetData(DATA_VEXALLUS_EVENT, DONE);
+            m_pInstance->SetData(TYPE_VEXALLUS, DONE);
     }
 
     void Aggro(Unit *who)
@@ -104,7 +104,7 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
         DoScriptText(SAY_AGGRO, m_creature);
 
         if (m_pInstance)
-            m_pInstance->SetData(DATA_VEXALLUS_EVENT, IN_PROGRESS);
+            m_pInstance->SetData(TYPE_VEXALLUS, IN_PROGRESS);
     }
 
     void JustSummoned(Creature* pSummoned)

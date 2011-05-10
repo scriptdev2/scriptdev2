@@ -60,10 +60,10 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
         //GUIDs per instance is static, so we only need to load them once.
         if (m_pInstance)
         {
-            uint32 size = m_pInstance->GetData(DATA_FEL_CRYSTAL_SIZE);
+            uint32 size = m_pInstance->GetData(TYPE_FEL_CRYSTAL_SIZE);
             for(uint8 i = 0; i < size; ++i)
             {
-                uint64 guid = m_pInstance->GetData64(DATA_FEL_CRYSTAL);
+                uint64 guid = m_pInstance->GetData64(NPC_FEL_CRYSTAL);
                 debug_log("SD2: Selin: Adding Fel Crystal " UI64FMTD " to list", guid);
                 Crystals.push_back(guid);
             }
@@ -104,13 +104,7 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
                     pCrystal->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 }
             }
-
-            if (GameObject* pDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_SELIN_ENCOUNTER_DOOR)))
-                pDoor->SetGoState(GO_STATE_ACTIVE);         // Open the big encounter door. Close it in Aggro and open it only in JustDied(and here)
-                                                            // Small door opened after event are expected to be closed by default
-            // Set Inst data for encounter
-            m_pInstance->SetData(DATA_SELIN_EVENT, NOT_STARTED);
-        }else error_log(ERROR_INST_DATA);
+        }
 
         DrainLifeTimer = urand(3000, 7000);
         DrainManaTimer = DrainLifeTimer + 5000;
@@ -185,11 +179,13 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
         DoScriptText(SAY_AGGRO, m_creature);
 
         if (m_pInstance)
-        {
-            //Close the encounter door, open it in JustDied/Reset
-            if (GameObject* pEncounterDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_SELIN_ENCOUNTER_DOOR)))
-                pEncounterDoor->SetGoState(GO_STATE_READY);
-        }
+            m_pInstance->SetData(TYPE_SELIN, IN_PROGRESS);
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_SELIN, FAIL);
     }
 
     void KilledUnit(Unit* victim)
@@ -224,18 +220,9 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
         DoScriptText(SAY_DEATH, m_creature);
 
         if (!m_pInstance)
-        {
-            error_log(ERROR_INST_DATA);
             return;
-        }
 
-        m_pInstance->SetData(DATA_SELIN_EVENT, DONE);         // Encounter complete!
-
-        if (GameObject* pEncounterDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_SELIN_ENCOUNTER_DOOR)))
-            pEncounterDoor->SetGoState(GO_STATE_ACTIVE);    // Open the encounter door
-
-        if (GameObject* pContinueDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_SELIN_DOOR)))
-            pContinueDoor->SetGoState(GO_STATE_ACTIVE);     // Open the door leading further in
+        m_pInstance->SetData(TYPE_SELIN, DONE);             // Encounter complete!
 
         ShatterRemainingCrystals();
     }
@@ -342,7 +329,7 @@ struct MANGOS_DLL_DECL mob_fel_crystalAI : public ScriptedAI
     {
         if (ScriptedInstance* pInstance = (ScriptedInstance*)m_creature->GetInstanceData())
         {
-            Creature* pSelin = m_creature->GetMap()->GetCreature(pInstance->GetData64(DATA_SELIN));
+            Creature* pSelin = m_creature->GetMap()->GetCreature(pInstance->GetData64(NPC_SELIN_FIREHEART));
 
             if (pSelin && pSelin->isAlive())
             {
@@ -362,7 +349,7 @@ struct MANGOS_DLL_DECL mob_fel_crystalAI : public ScriptedAI
                     }
                 }
             }
-        }else error_log(ERROR_INST_DATA);
+        }
     }
 };
 

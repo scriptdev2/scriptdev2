@@ -24,8 +24,6 @@ EndScriptData */
 #include "precompiled.h"
 #include "magisters_terrace.h"
 
-#define MAX_ENCOUNTER   4
-
 /*
 0  - Selin Fireheart
 1  - Vexallus
@@ -33,163 +31,183 @@ EndScriptData */
 3  - Kael'thas Sunstrider
 */
 
-struct MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
+instance_magisters_terrace::instance_magisters_terrace(Map* pMap) : ScriptedInstance(pMap),
+    m_uiDelrissaDeathCount(0),
+
+    m_uiSelinGUID(0),
+    m_uiDelrissaGUID(0),
+    m_uiVexallusDoorGUID(0),
+    m_uiSelinDoorGUID(0),
+    m_uiSelinEncounterDoorGUID(0),
+    m_uiDelrissaDoorGUID(0),
+    m_uiKaelDoorGUID(0),
+
+    m_bInitializedItr(false)
 {
-    instance_magisters_terrace(Map* pMap) : ScriptedInstance(pMap) {Initialize();}
+    Initialize();
+}
 
-    uint32 m_auiEncounter[MAX_ENCOUNTER];
+void instance_magisters_terrace::Initialize()
+{
+    memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
+    memset(&m_auiKaelStatue, 0, sizeof(m_auiKaelStatue));
+}
 
-    uint32 m_uiDelrissaDeathCount;
-
-    GUIDList FelCrystals;
-    GUIDList::iterator CrystalItr;
-
-    uint64 m_uiSelinGUID;
-    uint64 m_uiDelrissaGUID;
-    uint64 m_uiVexallusDoorGUID;
-    uint64 m_uiSelinDoorGUID;
-    uint64 m_uiSelinEncounterDoorGUID;
-    uint64 m_uiDelrissaDoorGUID;
-    uint64 m_uiKaelDoorGUID;
-    uint64 m_auiKaelStatue[2];
-
-    bool m_bInitializedItr;
-
-    void Initialize()
+void instance_magisters_terrace::OnCreatureCreate(Creature* pCreature)
+{
+    switch (pCreature->GetEntry())
     {
-        memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
-        memset(&m_auiKaelStatue, 0, sizeof(m_auiKaelStatue));
+        case NPC_SELIN_FIREHEART: m_uiSelinGUID = pCreature->GetGUID();        break;
+        case NPC_DELRISSA:        m_uiDelrissaGUID = pCreature->GetGUID();     break;
+        case NPC_FEL_CRYSTAL:     FelCrystals.push_back(pCreature->GetGUID()); break;
+    }
+}
 
-        FelCrystals.clear();
+void instance_magisters_terrace::OnObjectCreate(GameObject* pGo)
+{
+    switch (pGo->GetEntry())
+    {
+        case GO_VEXALLUS_DOOR:
+            m_uiVexallusDoorGUID = pGo->GetGUID();
+            if (m_auiEncounter[TYPE_VEXALLUS] == DONE)
+                pGo->SetGoState(GO_STATE_ACTIVE);
+            break;
+        case GO_SELIN_DOOR:
+            m_uiSelinDoorGUID = pGo->GetGUID();
+            if (m_auiEncounter[TYPE_SELIN] == DONE)
+                pGo->SetGoState(GO_STATE_ACTIVE);
+            break;
+        case GO_DELRISSA_DOOR:
+            m_uiDelrissaDoorGUID = pGo->GetGUID();
+            if (m_auiEncounter[TYPE_DELRISSA] == DONE)
+                pGo->SetGoState(GO_STATE_ACTIVE);
+            break;
 
-        m_uiDelrissaDeathCount = 0;
+        case GO_SELIN_ENCOUNTER_DOOR:   m_uiSelinEncounterDoorGUID = pGo->GetGUID(); break;
+        case GO_KAEL_DOOR:              m_uiKaelDoorGUID = pGo->GetGUID();           break;
+        case GO_KAEL_STATUE_LEFT:       m_auiKaelStatue[0] = pGo->GetGUID();         break;
+        case GO_KAEL_STATUE_RIGHT:      m_auiKaelStatue[1] = pGo->GetGUID();         break;
+    }
+}
 
-        m_uiSelinGUID = 0;
-        m_uiDelrissaGUID = 0;
-        m_uiVexallusDoorGUID = 0;
-        m_uiSelinDoorGUID = 0;
-        m_uiSelinEncounterDoorGUID = 0;
-        m_uiDelrissaDoorGUID = 0;
-        m_uiKaelDoorGUID = 0;
-
-        m_bInitializedItr = false;
+void instance_magisters_terrace::SetData(uint32 uiType, uint32 uiData)
+{
+    switch (uiType)
+    {
+        case TYPE_SELIN:
+            if (uiData == DONE)
+                DoUseDoorOrButton(m_uiSelinDoorGUID);
+            DoUseDoorOrButton(m_uiSelinEncounterDoorGUID);
+            m_auiEncounter[uiType] = uiData;
+            break;
+        case TYPE_VEXALLUS:
+            if (uiData == DONE)
+                DoUseDoorOrButton(m_uiVexallusDoorGUID);
+            m_auiEncounter[uiType] = uiData;
+            break;
+        case TYPE_DELRISSA:
+            if (uiData == DONE)
+                DoUseDoorOrButton(m_uiDelrissaDoorGUID);
+            if (uiData == IN_PROGRESS)
+                m_uiDelrissaDeathCount = 0;
+            m_auiEncounter[uiType] = uiData;
+            break;
+        case TYPE_KAELTHAS:
+            DoUseDoorOrButton(m_uiKaelDoorGUID);
+            m_auiEncounter[uiType] = uiData;
+            break;
+        case TYPE_DELRISSA_DEATH_COUNT:
+            if (uiData == SPECIAL)
+                ++m_uiDelrissaDeathCount;
+            else
+                m_uiDelrissaDeathCount = 0;
+            return;
     }
 
-    bool IsEncounterInProgress() const
+    if (uiData == DONE)
     {
-        for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
-            if (m_auiEncounter[i] == IN_PROGRESS)
-                return true;
-        return false;
+        OUT_SAVE_INST_DATA;
+
+        std::ostringstream saveStream;
+        saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " " << m_auiEncounter[3];
+
+        m_strInstData = saveStream.str();
+
+        SaveToDB();
+        OUT_SAVE_INST_DATA_COMPLETE;
+    }
+}
+
+void instance_magisters_terrace::Load(const char* chrIn)
+{
+    if (!chrIn)
+    {
+        OUT_LOAD_INST_DATA_FAIL;
+        return;
     }
 
-    uint32 GetData(uint32 identifier)
+    OUT_LOAD_INST_DATA(chrIn);
+
+    std::istringstream loadStream(chrIn);
+    loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3];
+
+    for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
     {
-        switch(identifier)
+        if (m_auiEncounter[i] == IN_PROGRESS)
+            m_auiEncounter[i] = NOT_STARTED;
+    }
+
+    OUT_LOAD_INST_DATA_COMPLETE;
+}
+
+uint32 instance_magisters_terrace::GetData(uint32 uiType)
+{
+    switch (uiType)
+    {
+        case TYPE_SELIN:                return m_auiEncounter[0];
+        case TYPE_VEXALLUS:             return m_auiEncounter[1];
+        case TYPE_DELRISSA:             return m_auiEncounter[2];
+        case TYPE_KAELTHAS:             return m_auiEncounter[3];
+        case TYPE_DELRISSA_DEATH_COUNT: return m_uiDelrissaDeathCount;
+        case TYPE_FEL_CRYSTAL_SIZE:     return FelCrystals.size();
+
+        default:
+            return 0;
+    }
+}
+
+uint64 instance_magisters_terrace::GetData64(uint32 uiData)
+{
+    switch (uiData)
+    {
+        case NPC_SELIN_FIREHEART:     return m_uiSelinGUID;
+        case NPC_DELRISSA:            return m_uiDelrissaGUID;
+        case GO_KAEL_STATUE_LEFT:     return m_auiKaelStatue[0];
+        case GO_KAEL_STATUE_RIGHT:    return m_auiKaelStatue[1];
+
+        case NPC_FEL_CRYSTAL:
         {
-            case DATA_SELIN_EVENT:          return m_auiEncounter[0];
-            case DATA_VEXALLUS_EVENT:       return m_auiEncounter[1];
-            case DATA_DELRISSA_EVENT:       return m_auiEncounter[2];
-            case DATA_KAELTHAS_EVENT:       return m_auiEncounter[3];
-            case DATA_DELRISSA_DEATH_COUNT: return m_uiDelrissaDeathCount;
-            case DATA_FEL_CRYSTAL_SIZE:     return FelCrystals.size();
-        }
-        return 0;
-    }
-
-    void SetData(uint32 identifier, uint32 data)
-    {
-        switch(identifier)
-        {
-            case DATA_SELIN_EVENT:
-                m_auiEncounter[0] = data;
-                break;
-            case DATA_VEXALLUS_EVENT:
-                if (data == DONE)
-                    DoUseDoorOrButton(m_uiVexallusDoorGUID);
-                m_auiEncounter[1] = data;
-                break;
-            case DATA_DELRISSA_EVENT:
-                if (data == DONE)
-                    DoUseDoorOrButton(m_uiDelrissaDoorGUID);
-                if (data == IN_PROGRESS)
-                    m_uiDelrissaDeathCount = 0;
-                m_auiEncounter[2] = data;
-                break;
-            case DATA_KAELTHAS_EVENT:
-                m_auiEncounter[3] = data;
-                break;
-            case DATA_DELRISSA_DEATH_COUNT:
-                if (data == SPECIAL)
-                    ++m_uiDelrissaDeathCount;
-                else
-                    m_uiDelrissaDeathCount = 0;
-                break;
-        }
-    }
-
-    void OnCreatureCreate(Creature* pCreature)
-    {
-        switch(pCreature->GetEntry())
-        {
-            case 24723: m_uiSelinGUID = pCreature->GetGUID(); break;
-            case 24560: m_uiDelrissaGUID = pCreature->GetGUID(); break;
-            case 24722: FelCrystals.push_back(pCreature->GetGUID()); break;
-        }
-    }
-
-    void OnObjectCreate(GameObject* go)
-    {
-        switch(go->GetEntry())
-        {
-            case 187896:  m_uiVexallusDoorGUID = go->GetGUID();       break;
-            //SunwellRaid Gate 02
-            case 187979:  m_uiSelinDoorGUID = go->GetGUID();          break;
-            //Assembly Chamber Door
-            case 188065:  m_uiSelinEncounterDoorGUID = go->GetGUID(); break;
-            case 187770:  m_uiDelrissaDoorGUID = go->GetGUID();       break;
-            case 188064:  m_uiKaelDoorGUID = go->GetGUID();           break;
-            case 188165:  m_auiKaelStatue[0] = go->GetGUID();         break;
-            case 188166:  m_auiKaelStatue[1] = go->GetGUID();         break;
-        }
-    }
-
-    uint64 GetData64(uint32 identifier)
-    {
-        switch(identifier)
-        {
-            case DATA_SELIN:                return m_uiSelinGUID;
-            case DATA_DELRISSA:             return m_uiDelrissaGUID;
-            case DATA_VEXALLUS_DOOR:        return m_uiVexallusDoorGUID;
-            case DATA_SELIN_DOOR:           return m_uiSelinDoorGUID;
-            case DATA_SELIN_ENCOUNTER_DOOR: return m_uiSelinEncounterDoorGUID;
-            case DATA_DELRISSA_DOOR:        return m_uiDelrissaDoorGUID;
-            case DATA_KAEL_DOOR:            return m_uiKaelDoorGUID;
-            case DATA_KAEL_STATUE_LEFT:     return m_auiKaelStatue[0];
-            case DATA_KAEL_STATUE_RIGHT:    return m_auiKaelStatue[1];
-
-            case DATA_FEL_CRYSTAL:
+            if (FelCrystals.empty())
             {
-                if (FelCrystals.empty())
-                {
-                    error_log("SD2: Magisters Terrace: No Fel Crystals loaded in Inst Data");
-                    return 0;
-                }
-
-                if (!m_bInitializedItr)
-                {
-                    CrystalItr = FelCrystals.begin();
-                    m_bInitializedItr = true;
-                }
-
-                uint64 guid = *CrystalItr;
-                ++CrystalItr;
-                return guid;
+                error_log("SD2: Magisters Terrace: No Fel Crystals loaded in Inst Data");
+                return 0;
             }
+
+            if (!m_bInitializedItr)
+            {
+                CrystalItr = FelCrystals.begin();
+                m_bInitializedItr = true;
+            }
+
+            uint64 guid = *CrystalItr;
+            ++CrystalItr;
+            return guid;
         }
-        return 0;
+
+        default:
+            return 0;
     }
-};
+}
 
 InstanceData* GetInstanceData_instance_magisters_terrace(Map* pMap)
 {
@@ -198,10 +216,10 @@ InstanceData* GetInstanceData_instance_magisters_terrace(Map* pMap)
 
 void AddSC_instance_magisters_terrace()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "instance_magisters_terrace";
-    newscript->GetInstanceData = &GetInstanceData_instance_magisters_terrace;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "instance_magisters_terrace";
+    pNewScript->GetInstanceData = &GetInstanceData_instance_magisters_terrace;
+    pNewScript->RegisterSelf();
 }

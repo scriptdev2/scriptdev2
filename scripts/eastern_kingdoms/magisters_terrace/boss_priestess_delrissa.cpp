@@ -127,7 +127,7 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
     void JustReachedHome()
     {
         if (m_pInstance)
-            m_pInstance->SetData(DATA_DELRISSA_EVENT, FAIL);
+            m_pInstance->SetData(TYPE_DELRISSA, FAIL);
     }
 
     void Aggro(Unit* pWho)
@@ -147,7 +147,7 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
         }
 
         if (m_pInstance)
-            m_pInstance->SetData(DATA_DELRISSA_EVENT, IN_PROGRESS);
+            m_pInstance->SetData(TYPE_DELRISSA, IN_PROGRESS);
     }
 
     void InitializeLackeys()
@@ -216,8 +216,8 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
         if (!m_pInstance)
             return;
 
-        if (m_pInstance->GetData(DATA_DELRISSA_DEATH_COUNT) == MAX_ACTIVE_LACKEY)
-            m_pInstance->SetData(DATA_DELRISSA_EVENT, DONE);
+        if (m_pInstance->GetData(TYPE_DELRISSA_DEATH_COUNT) == MAX_ACTIVE_LACKEY)
+            m_pInstance->SetData(TYPE_DELRISSA, DONE);
         else
         {
             if (m_creature->HasFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE))
@@ -361,7 +361,7 @@ struct MANGOS_DLL_DECL boss_priestess_lackey_commonAI : public ScriptedAI
         m_uiResetThreatTimer = urand(5000, 15000);
 
         // in case she is not alive and Reset was for some reason called, respawn her (most likely party wipe after killing her)
-        if (Creature* pDelrissa = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_DELRISSA)))
+        if (Creature* pDelrissa = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_DELRISSA)))
         {
             if (!pDelrissa->isAlive())
                 pDelrissa->Respawn();
@@ -387,7 +387,7 @@ struct MANGOS_DLL_DECL boss_priestess_lackey_commonAI : public ScriptedAI
                 }
             }
 
-            if (Creature* pDelrissa = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_DELRISSA)))
+            if (Creature* pDelrissa = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_DELRISSA)))
             {
                 if (pDelrissa->isAlive() && !pDelrissa->getVictim())
                 {
@@ -405,8 +405,8 @@ struct MANGOS_DLL_DECL boss_priestess_lackey_commonAI : public ScriptedAI
         if (!m_pInstance)
             return;
 
-        Creature* pDelrissa = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_DELRISSA));
-        uint32 uiLackeyDeathCount = m_pInstance->GetData(DATA_DELRISSA_DEATH_COUNT);
+        Creature* pDelrissa = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_DELRISSA));
+        uint32 uiLackeyDeathCount = m_pInstance->GetData(TYPE_DELRISSA_DEATH_COUNT);
 
         if (!pDelrissa)
             return;
@@ -414,7 +414,7 @@ struct MANGOS_DLL_DECL boss_priestess_lackey_commonAI : public ScriptedAI
         //should delrissa really yell if dead?
         DoScriptText(LackeyDeath[uiLackeyDeathCount].id, pDelrissa);
 
-        m_pInstance->SetData(DATA_DELRISSA_DEATH_COUNT, SPECIAL);
+        m_pInstance->SetData(TYPE_DELRISSA_DEATH_COUNT, SPECIAL);
 
         //increase local var, since we now may have four dead
         ++uiLackeyDeathCount;
@@ -427,7 +427,7 @@ struct MANGOS_DLL_DECL boss_priestess_lackey_commonAI : public ScriptedAI
                 if (!pDelrissa->HasFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE))
                     pDelrissa->SetFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
 
-                m_pInstance->SetData(DATA_DELRISSA_EVENT, DONE);
+                m_pInstance->SetData(TYPE_DELRISSA, DONE);
             }
         }
     }
@@ -437,7 +437,7 @@ struct MANGOS_DLL_DECL boss_priestess_lackey_commonAI : public ScriptedAI
         if (!m_pInstance)
             return;
 
-        if (Creature* pDelrissa = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_DELRISSA)))
+        if (Creature* pDelrissa = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_DELRISSA)))
             pDelrissa->AI()->KilledUnit(pVictim);
     }
 
@@ -446,7 +446,7 @@ struct MANGOS_DLL_DECL boss_priestess_lackey_commonAI : public ScriptedAI
         if (!m_pInstance)
             return;
 
-        if (Creature* pDelrissa = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_DELRISSA)))
+        if (Creature* pDelrissa = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_DELRISSA)))
         {
             boss_priestess_delrissaAI* pDelrissaAI = dynamic_cast<boss_priestess_delrissaAI*>(pDelrissa->AI());
 
