@@ -117,7 +117,7 @@ struct MANGOS_DLL_DECL boss_mr_smiteAI : public ScriptedAI
         if (!pInstance)
             return;
 
-        GameObject* pChest = pInstance->instance->GetGameObject(pInstance->GetData64(GO_SMITE_CHEST));
+        GameObject* pChest = pInstance->GetSingleGameObjectFromStorage(GO_SMITE_CHEST);
 
         if (!pChest)
             return;
@@ -285,7 +285,7 @@ bool GOUse_go_door_lever_dm(Player* pPlayer, GameObject* pGo)
     if (!pInstance)
         return false;
 
-    GameObject* pGoDoor = pInstance->instance->GetGameObject(pInstance->GetData64(GO_IRON_CLAD_DOOR));
+    GameObject* pGoDoor = pInstance->GetSingleGameObjectFromStorage(GO_IRON_CLAD_DOOR);
 
     if (pGoDoor && pGoDoor->GetGoState() == GO_STATE_READY)
         return false;
