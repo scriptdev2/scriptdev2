@@ -463,8 +463,9 @@ struct MANGOS_DLL_DECL cthunAI : public ScriptedAI
     uint32 StomachEnterVisTimer;
     uint64 StomachEnterTarget;
 
-    //Stomach map, bool = true then in stomach
-    UNORDERED_MAP<uint64, bool> Stomach_Map;
+    // Stomach map, bool = true then in stomach
+    typedef UNORDERED_MAP<ObjectGuid, bool> StomachMap;
+    StomachMap m_mStomachMap;
 
     void Reset()
     {
@@ -488,7 +489,7 @@ struct MANGOS_DLL_DECL cthunAI : public ScriptedAI
         StomachEnterTarget = 0;                             //Target to be teleported to stomach
 
         //Clear players in stomach and outside
-        Stomach_Map.clear();
+        m_mStomachMap.clear();
 
         //Reset flags
         m_creature->RemoveAurasDueToSpell(SPELL_TRANSFORM);
@@ -515,16 +516,16 @@ struct MANGOS_DLL_DECL cthunAI : public ScriptedAI
 
     Unit* SelectRandomNotStomach()
     {
-        if (Stomach_Map.empty())
+        if (m_mStomachMap.empty())
             return NULL;
 
-        UNORDERED_MAP<uint64, bool>::iterator i = Stomach_Map.begin();
+        StomachMap::iterator i = m_mStomachMap.begin();
 
         std::list<Unit*> temp;
         std::list<Unit*>::iterator j;
 
         //Get all players in map
-        while (i != Stomach_Map.end())
+        while (i != m_mStomachMap.end())
         {
             //Check for valid player
             Unit* pUnit = m_creature->GetMap()->GetUnit(i->first);
@@ -609,13 +610,13 @@ struct MANGOS_DLL_DECL cthunAI : public ScriptedAI
                     m_creature->SetInCombatWithZone();
 
                     //Place all units in threat list on outside of stomach
-                    Stomach_Map.clear();
+                    m_mStomachMap.clear();
 
                     ThreatList const& tList = m_creature->getThreatManager().getThreatList();
                     for (ThreatList::const_iterator i = tList.begin();i != tList.end(); ++i)
                     {
                         //Outside stomach
-                        Stomach_Map[(*i)->getUnitGuid()] = false;
+                        m_mStomachMap[(*i)->getUnitGuid()] = false;
                     }
 
                     //Spawn 2 flesh tentacles
@@ -664,10 +665,10 @@ struct MANGOS_DLL_DECL cthunAI : public ScriptedAI
 
                     DoCastSpellIfCan(m_creature, SPELL_RED_COLORATION, CAST_TRIGGERED);
 
-                    UNORDERED_MAP<uint64, bool>::iterator i = Stomach_Map.begin();
+                    StomachMap::iterator i = m_mStomachMap.begin();
 
                     //Kick all players out of stomach
-                    while (i != Stomach_Map.end())
+                    while (i != m_mStomachMap.end())
                     {
                         //Check for valid player
                         Unit* pUnit = m_creature->GetMap()->GetUnit(i->first);
@@ -696,9 +697,9 @@ struct MANGOS_DLL_DECL cthunAI : public ScriptedAI
                 if (StomachAcidTimer < diff)
                 {
                     //Apply aura to all players in stomach
-                    UNORDERED_MAP<uint64, bool>::iterator i = Stomach_Map.begin();
+                    StomachMap::iterator i = m_mStomachMap.begin();
 
-                    while (i != Stomach_Map.end())
+                    while (i != m_mStomachMap.end())
                     {
                         //Check for valid player
                         Unit* pUnit = m_creature->GetMap()->GetUnit(i->first);
@@ -739,7 +740,7 @@ struct MANGOS_DLL_DECL cthunAI : public ScriptedAI
                     if (target)
                     {
                         //Set target in stomach
-                        Stomach_Map[target->GetGUID()] = true;
+                        m_mStomachMap[target->GetObjectGuid()] = true;
                         target->InterruptNonMeleeSpells(false);
                         target->CastSpell(target, SPELL_MOUTH_TENTACLE, true, NULL, NULL, m_creature->GetGUID());
                         StomachEnterTarget = target->GetGUID();
