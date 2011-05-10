@@ -554,6 +554,7 @@ UPDATE creature_template SET ScriptName='npc_kelerun_bloodmourn' WHERE entry=178
 UPDATE gameobject_template SET ScriptName='go_harbinger_second_trial' WHERE entry=182052;
 UPDATE creature_template SET ScriptName='npc_prospector_anvilward' WHERE entry=15420;
 UPDATE creature_template SET ScriptName='npc_apprentice_mirveda' WHERE entry=15402;
+UPDATE creature_template SET ScriptName='npc_infused_crystal' WHERE entry=16364;
 
 /* FELWOOD */
 DELETE FROM scripted_event_id WHERE id=8328;
