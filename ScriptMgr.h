@@ -21,6 +21,7 @@ class Unit;
 class WorldObject;
 class Aura;
 class Object;
+class ObjectGuid;
 
 // *********************************************************
 // ************** Some defines used globally ***************
@@ -33,6 +34,7 @@ class Object;
 typedef std::list<uint64> GUIDList;
 typedef std::set<uint64> GUIDSet;
 typedef std::vector<uint64> GUIDVector;
+typedef std::map<uint32, ObjectGuid> EntryGuidMap;
 
 /* Escort Factions
  * TODO: find better namings and definitions.

@@ -26,20 +26,31 @@ enum EncounterState
 class MANGOS_DLL_DECL ScriptedInstance : public InstanceData
 {
     public:
-
         ScriptedInstance(Map* pMap) : InstanceData(pMap) {}
         ~ScriptedInstance() {}
 
+        // Default accessor functions
+        GameObject* GetSingleGameObjectFromStorage(uint32 uiEntry);
+        Creature* GetSingleCreatureFromStorage(uint32 uiEntry);
+
         // Change active state of doors or buttons
         void DoUseDoorOrButton(ObjectGuid guid, uint32 uiWithRestoreTime = 0, bool bUseAlternativeState = false);
+        void DoUseDoorOrButton(uint32 uiEntry, uint32 uiWithRestoreTime = 0, bool bUseAlternativeState = false);
 
         // Respawns a GO having negative spawntimesecs in gameobject-table
         void DoRespawnGameObject(ObjectGuid guid, uint32 uiTimeToDespawn = MINUTE);
+        void DoRespawnGameObject(uint32 uiEntry, uint32 uiTimeToDespawn = MINUTE);
 
         // Sends world state update to all players in instance
         void DoUpdateWorldState(uint32 uiStateId, uint32 uiStateData);
 
         // Get a Player from map
         Player* GetPlayerInMap(bool bOnlyAlive = false, bool bCanBeGamemaster = true);
+
+    protected:
+        // Storage for GO-Guids and NPC-Guids
+        EntryGuidMap m_mGoEntryGuidStore;                   ///< Store unique GO-Guids by entry
+        EntryGuidMap m_mNpcEntryGuidStore;                  ///< Store unique NPC-Guids by entry
 };
+
 #endif
