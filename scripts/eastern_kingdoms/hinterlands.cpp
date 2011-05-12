@@ -120,7 +120,7 @@ bool QuestAccept_npc_00x09hl(Player* pPlayer, Creature* pCreature, const Quest* 
         DoScriptText(SAY_OOX_START, pCreature, pPlayer);
 
         if (npc_00x09hlAI* pEscortAI = dynamic_cast<npc_00x09hlAI*>(pCreature->AI()))
-            pEscortAI->Start(false, pPlayer->GetGUID(), pQuest);
+            pEscortAI->Start(false, pPlayer, pQuest);
     }
     return true;
 }
@@ -313,7 +313,7 @@ bool QuestAccept_npc_rinji(Player* pPlayer, Creature* pCreature, const Quest* pQ
             pGo->UseDoorOrButton();
 
         if (npc_rinjiAI* pEscortAI = dynamic_cast<npc_rinjiAI*>(pCreature->AI()))
-            pEscortAI->Start(false, pPlayer->GetGUID(), pQuest);
+            pEscortAI->Start(false, pPlayer, pQuest);
     }
     return true;
 }

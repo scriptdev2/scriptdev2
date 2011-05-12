@@ -435,11 +435,8 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
                 // trigger taretha to run down outside
                 if (Creature* pTaretha = m_pInstance->GetTaretha())
                 {
-                    if (Player* pPlayer = GetPlayerForEscort())
-                    {
-                        if (npc_tarethaAI* pTarethaAI = dynamic_cast<npc_tarethaAI*>(pTaretha->AI()))
-                            pTarethaAI->Start(true, pPlayer->GetGUID());
-                    }
+                    if (npc_tarethaAI* pTarethaAI = dynamic_cast<npc_tarethaAI*>(pTaretha->AI()))
+                        pTarethaAI->Start(true, GetPlayerForEscort());
                 }
 
                 // kill credit creature for quest
@@ -667,7 +664,7 @@ bool GossipSelect_npc_thrall_old_hillsbrad(Player* pPlayer, Creature* pCreature,
             DoScriptText(SAY_TH_START_EVENT_PART1, pCreature);
 
             if (npc_thrall_old_hillsbradAI* pThrallAI = dynamic_cast<npc_thrall_old_hillsbradAI*>(pCreature->AI()))
-                pThrallAI->Start(true, pPlayer->GetGUID());
+                pThrallAI->Start(true, pPlayer);
 
             break;
         }

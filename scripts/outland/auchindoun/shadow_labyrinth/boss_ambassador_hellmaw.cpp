@@ -103,7 +103,7 @@ struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public npc_escortAI
             if (m_pInstance->GetData(TYPE_HELLMAW) != FAIL)
             {
                 DoScriptText(SAY_INTRO, m_creature);
-                Start(false, 0, NULL, false, true);
+                Start(false, NULL, NULL, false, true);
             }
 
             m_pInstance->SetData(TYPE_HELLMAW, IN_PROGRESS);

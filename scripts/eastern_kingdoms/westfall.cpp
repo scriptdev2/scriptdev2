@@ -171,7 +171,7 @@ bool QuestAccept_npc_daphne_stilwell(Player* pPlayer, Creature* pCreature, const
         DoScriptText(SAY_DS_START, pCreature);
 
         if (npc_daphne_stilwellAI* pEscortAI = dynamic_cast<npc_daphne_stilwellAI*>(pCreature->AI()))
-            pEscortAI->Start(true, pPlayer->GetGUID(), pQuest);
+            pEscortAI->Start(true, pPlayer, pQuest);
     }
 
     return true;
@@ -237,7 +237,7 @@ bool QuestAccept_npc_defias_traitor(Player* pPlayer, Creature* pCreature, const 
         DoScriptText(SAY_START, pCreature, pPlayer);
 
         if (npc_defias_traitorAI* pEscortAI = dynamic_cast<npc_defias_traitorAI*>(pCreature->AI()))
-            pEscortAI->Start(true, pPlayer->GetGUID(), pQuest);
+            pEscortAI->Start(true, pPlayer, pQuest);
     }
 
     return true;

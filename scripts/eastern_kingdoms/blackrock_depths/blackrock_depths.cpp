@@ -780,7 +780,7 @@ bool QuestRewarded_npc_rocknot(Player* pPlayer, Creature* pCreature, Quest const
             pCreature->CastSpell(pCreature, SPELL_DRUNKEN_RAGE, false);
 
             if (npc_rocknotAI* pEscortAI = dynamic_cast<npc_rocknotAI*>(pCreature->AI()))
-                pEscortAI->Start(false, 0, NULL, true);
+                pEscortAI->Start(false, NULL, NULL, true);
         }
     }
 

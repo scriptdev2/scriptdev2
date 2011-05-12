@@ -179,7 +179,7 @@ struct MANGOS_DLL_DECL npc_clintar_dw_spiritAI : public npc_escortAI
     }
 
     //called only from EffectDummy
-    void DoStart(uint64 uiPlayerGuid)
+    void DoStart(Unit* pStarter)
     {
         //not the best way, maybe check in DummyEffect if this creature are "free" and not in escort.
         if (HasEscortState(STATE_ESCORT_ESCORTING))
@@ -187,7 +187,7 @@ struct MANGOS_DLL_DECL npc_clintar_dw_spiritAI : public npc_escortAI
 
         m_creature->SetVisibility(VISIBILITY_ON);
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-        Start(false, uiPlayerGuid);
+        Start(false, pStarter && pStarter->GetTypeId() == TYPEID_PLAYER ? (Player*)pStarter : NULL);
     }
 
     void JustSummoned(Creature* summoned)
@@ -220,7 +220,7 @@ bool EffectDummyCreature_npc_clintar_dw_spirit(Unit *pCaster, uint32 spellId, Sp
 
         //done here, escort can start
         if (npc_clintar_dw_spiritAI* pSpiritAI = dynamic_cast<npc_clintar_dw_spiritAI*>(pCreatureTarget->AI()))
-            pSpiritAI->DoStart(pCaster->GetGUID());
+            pSpiritAI->DoStart(pCaster);
 
         //always return true when we are handling this spell and effect
         return true;

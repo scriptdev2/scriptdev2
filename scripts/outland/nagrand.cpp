@@ -575,7 +575,7 @@ bool QuestAccept_npc_maghar_captive(Player* pPlayer, Creature* pCreature, const 
             pCreature->SetStandState(UNIT_STAND_STATE_STAND);
             pCreature->setFaction(FACTION_ESCORT_H_NEUTRAL_ACTIVE);
 
-            pEscortAI->Start(false, pPlayer->GetGUID(), pQuest);
+            pEscortAI->Start(false, pPlayer, pQuest);
 
             DoScriptText(SAY_MAG_START, pCreature);
 

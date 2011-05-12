@@ -357,7 +357,7 @@ bool QuestAccept_npc_akuno(Player* pPlayer, Creature* pCreature, const Quest* pQ
             pCreature->setFaction(FACTION_ESCORT_N_NEUTRAL_ACTIVE);
 
             DoScriptText(SAY_AKU_START, pCreature);
-            pEscortAI->Start(false, pPlayer->GetGUID(), pQuest);
+            pEscortAI->Start(false, pPlayer, pQuest);
         }
     }
     return true;
@@ -776,7 +776,7 @@ bool QuestAccept_npc_letoll(Player* pPlayer, Creature* pCreature, const Quest* p
             DoScriptText(SAY_LE_START, pCreature);
             pCreature->setFaction(FACTION_ESCORT_N_NEUTRAL_PASSIVE);
 
-            pEscortAI->Start(false, pPlayer->GetGUID(), pQuest, true);
+            pEscortAI->Start(false, pPlayer, pQuest, true);
         }
     }
 
@@ -1129,7 +1129,7 @@ bool QuestAccept_npc_isla_starmane(Player* pPlayer, Creature* pCreature, const Q
         if (npc_isla_starmaneAI* pEscortAI = dynamic_cast<npc_isla_starmaneAI*>(pCreature->AI()))
         {
             pCreature->setFaction(pPlayer->GetTeam() == ALLIANCE ? FACTION_ESCORT_A_NEUTRAL_ACTIVE : FACTION_ESCORT_H_NEUTRAL_ACTIVE);
-            pEscortAI->Start(false, pPlayer->GetGUID(), pQuest);
+            pEscortAI->Start(false, pPlayer, pQuest);
         }
     }
     return true;

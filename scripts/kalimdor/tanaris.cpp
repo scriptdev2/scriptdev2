@@ -185,19 +185,19 @@ struct MANGOS_DLL_DECL npc_custodian_of_timeAI : public npc_escortAI
         }
     }
 
-    void MoveInLineOfSight(Unit *who)
+    void MoveInLineOfSight(Unit* pWho)
     {
         if (HasEscortState(STATE_ESCORT_ESCORTING))
             return;
 
-        if (who->GetTypeId() == TYPEID_PLAYER)
+        if (pWho->GetTypeId() == TYPEID_PLAYER)
         {
-            if (((Player*)who)->HasAura(34877, EFFECT_INDEX_1) && ((Player*)who)->GetQuestStatus(10277) == QUEST_STATUS_INCOMPLETE)
+            if (pWho->HasAura(34877, EFFECT_INDEX_1) && ((Player*)pWho)->GetQuestStatus(10277) == QUEST_STATUS_INCOMPLETE)
             {
                 float Radius = 10.0;
 
-                if (m_creature->IsWithinDistInMap(who, Radius))
-                    Start(false, who->GetGUID());
+                if (m_creature->IsWithinDistInMap(pWho, Radius))
+                    Start(false, (Player*)pWho);
             }
         }
     }
@@ -332,7 +332,7 @@ bool QuestAccept_npc_oox17tn(Player* pPlayer, Creature* pCreature, const Quest* 
             pCreature->setFaction(FACTION_ESCORT_H_PASSIVE);
 
         if (npc_oox17tnAI* pEscortAI = dynamic_cast<npc_oox17tnAI*>(pCreature->AI()))
-            pEscortAI->Start(false, pPlayer->GetGUID(), pQuest);
+            pEscortAI->Start(false, pPlayer, pQuest);
     }
     return true;
 }

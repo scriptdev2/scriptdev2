@@ -188,7 +188,7 @@ bool QuestAccept_npc_helice(Player* pPlayer, Creature* pCreature, const Quest* p
 
         if (npc_heliceAI* pEscortAI = dynamic_cast<npc_heliceAI*>(pCreature->AI()))
         {
-            pEscortAI->Start(false, pPlayer->GetGUID(), pQuest);
+            pEscortAI->Start(false, pPlayer, pQuest);
             pCreature->SetFactionTemporary(FACTION_ESCORT_N_NEUTRAL_PASSIVE, TEMPFACTION_RESTORE_RESPAWN);
         }
     }
@@ -288,7 +288,7 @@ bool QuestAccept_npc_injured_rainspeaker(Player* pPlayer, Creature* pCreature, c
         // Workaround, GossipHello/GossipSelect doesn't work well when object already has gossip from database
         if (npc_injured_rainspeakerAI* pEscortAI = dynamic_cast<npc_injured_rainspeakerAI*>(pCreature->AI()))
         {
-            pEscortAI->Start(true, pPlayer->GetGUID(), pQuest);
+            pEscortAI->Start(true, pPlayer, pQuest);
             pCreature->SetFactionTemporary(FACTION_ESCORT_N_NEUTRAL_PASSIVE, TEMPFACTION_RESTORE_RESPAWN);
         }
     }

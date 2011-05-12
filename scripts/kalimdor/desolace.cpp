@@ -210,7 +210,7 @@ bool QuestAccept_npc_dalinda_malem(Player* pPlayer, Creature* pCreature, const Q
         {
             // TODO This faction change needs confirmation, also possible that we need to drop her PASSIVE flag
             pCreature->setFaction(FACTION_ESCORT_A_NEUTRAL_PASSIVE);
-            pEscortAI->Start(false, pPlayer->GetGUID(), pQuest);
+            pEscortAI->Start(false, pPlayer, pQuest);
         }
     }
     return true;

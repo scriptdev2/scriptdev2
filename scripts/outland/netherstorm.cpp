@@ -746,7 +746,7 @@ bool QuestAccept_npc_bessy(Player* pPlayer, Creature* pCreature, const Quest* pQ
         pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
 
         if (npc_bessyAI* pBessyAI = dynamic_cast<npc_bessyAI*>(pCreature->AI()))
-            pBessyAI->Start(true, pPlayer->GetGUID(), pQuest);
+            pBessyAI->Start(true, pPlayer, pQuest);
     }
     return true;
 }
@@ -914,7 +914,7 @@ bool QuestAccept_npc_maxx_a_million(Player* pPlayer, Creature* pCreature, const 
             // Remove unit_flags (see comment in JustReachedHome)
             pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE + UNIT_FLAG_PASSIVE);
 
-            pEscortAI->Start(false, pPlayer->GetGUID(), pQuest, true);
+            pEscortAI->Start(false, pPlayer, pQuest, true);
         }
     }
     return true;

@@ -22,7 +22,7 @@ enum
 };
 
 npc_escortAI::npc_escortAI(Creature* pCreature) : ScriptedAI(pCreature),
-    m_uiPlayerGUID(0),
+    m_playerGuid(),
     m_uiPlayerCheckTimer(1000),
     m_uiWPWaitTimer(2500),
     m_uiEscortState(STATE_ESCORT_NONE),
@@ -149,7 +149,7 @@ void npc_escortAI::MoveInLineOfSight(Unit* pWho)
 
 void npc_escortAI::JustDied(Unit* pKiller)
 {
-    if (!HasEscortState(STATE_ESCORT_ESCORTING) || !m_uiPlayerGUID || !m_pQuestForEscort)
+    if (!HasEscortState(STATE_ESCORT_ESCORTING) || m_playerGuid.IsEmpty() || !m_pQuestForEscort)
         return;
 
     if (Player* pPlayer = GetPlayerForEscort())
@@ -295,7 +295,7 @@ void npc_escortAI::UpdateAI(const uint32 uiDiff)
     }
 
     //Check if player or any member of his group is within range
-    if (HasEscortState(STATE_ESCORT_ESCORTING) && m_uiPlayerGUID && !m_creature->getVictim() && !HasEscortState(STATE_ESCORT_RETURNING))
+    if (HasEscortState(STATE_ESCORT_ESCORTING) && !m_playerGuid.IsEmpty() && !m_creature->getVictim() && !HasEscortState(STATE_ESCORT_RETURNING))
     {
         if (m_uiPlayerCheckTimer < uiDiff)
         {
@@ -448,7 +448,7 @@ void npc_escortAI::SetRun(bool bRun)
 }
 
 //TODO: get rid of this many variables passed in function.
-void npc_escortAI::Start(bool bRun, uint64 uiPlayerGUID, const Quest* pQuest, bool bInstantRespawn, bool bCanLoopPath)
+void npc_escortAI::Start(bool bRun, const Player* pPlayer, const Quest* pQuest, bool bInstantRespawn, bool bCanLoopPath)
 {
     if (m_creature->getVictim())
     {
@@ -476,7 +476,7 @@ void npc_escortAI::Start(bool bRun, uint64 uiPlayerGUID, const Quest* pQuest, bo
     //set variables
     m_bIsRunning = bRun;
 
-    m_uiPlayerGUID = uiPlayerGUID;
+    m_playerGuid = pPlayer ? pPlayer->GetObjectGuid() : ObjectGuid();
     m_pQuestForEscort = pQuest;
 
     m_bCanInstantRespawn = bInstantRespawn;
@@ -495,7 +495,7 @@ void npc_escortAI::Start(bool bRun, uint64 uiPlayerGUID, const Quest* pQuest, bo
     //disable npcflags
     m_creature->SetUInt32Value(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_NONE);
 
-    debug_log("SD2: EscortAI started with " SIZEFMTD " waypoints. Run = %d, PlayerGUID = " UI64FMTD, WaypointList.size(), m_bIsRunning, m_uiPlayerGUID);
+    debug_log("SD2: EscortAI started with " SIZEFMTD " waypoints. Run = %d, PlayerGuid = %s", WaypointList.size(), m_bIsRunning, m_playerGuid.GetString());
 
     CurrentWP = WaypointList.begin();
 

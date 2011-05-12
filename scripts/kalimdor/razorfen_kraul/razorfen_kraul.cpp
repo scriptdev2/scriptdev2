@@ -137,7 +137,7 @@ bool QuestAccept_npc_willix_the_importer(Player* pPlayer, Creature* pCreature, c
         if (npc_willix_the_importerAI* pEscortAI = dynamic_cast<npc_willix_the_importerAI*>(pCreature->AI()))
         {
             // After 4.0.1 set run = true
-            pEscortAI->Start(false, pPlayer->GetGUID(), pQuest);
+            pEscortAI->Start(false, pPlayer, pQuest);
             DoScriptText(SAY_WILLIX_READY, pCreature, pPlayer);
             pCreature->setFaction(FACTION_ESCORT_N_NEUTRAL_PASSIVE);
         }

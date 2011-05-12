@@ -102,7 +102,7 @@ bool QuestAccept_npc_ame01(Player* pPlayer, Creature* pCreature, const Quest* pQ
             else if (pPlayer->GetTeam() == HORDE)
                 pCreature->setFaction(FACTION_ESCORT_H_PASSIVE);
 
-            pAmeAI->Start(false, pPlayer->GetGUID(), pQuest);
+            pAmeAI->Start(false, pPlayer, pQuest);
         }
     }
     return true;

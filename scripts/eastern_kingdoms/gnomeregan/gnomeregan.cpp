@@ -357,7 +357,7 @@ struct MANGOS_DLL_DECL npc_blastmaster_emi_shortfuseAI : public npc_escortAI
                         m_uiPhaseTimer = 3500;              // 6s delay, but 2500ms for escortstarting
                         break;
                     case 3:
-                        Start(false, m_uiPlayerGUID, NULL, false, false);
+                        Start(false, m_creature->GetMap()->GetPlayer(m_uiPlayerGUID), NULL, false, false);
                         m_uiPhaseTimer = 0;
                         break;
 
