@@ -800,8 +800,6 @@ CreatureAI* GetAI_npc_doctor(Creature* pCreature)
 ## npc_garments_of_quests
 ######*/
 
-//TODO: get text for each NPC
-
 enum
 {
     SPELL_LESSER_HEAL_R2    = 2052,
@@ -834,39 +832,39 @@ enum
 
 struct MANGOS_DLL_DECL npc_garments_of_questsAI : public npc_escortAI
 {
-    npc_garments_of_questsAI(Creature* pCreature) : npc_escortAI(pCreature) {Reset();}
+    npc_garments_of_questsAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
 
-    uint64 caster;
+    ObjectGuid m_playerGuid;
 
-    bool bIsHealed;
-    bool bCanRun;
+    bool m_bIsHealed;
+    bool m_bCanRun;
 
-    uint32 RunAwayTimer;
+    uint32 m_uiRunAwayTimer;
 
     void Reset()
     {
-        caster = 0;
+        m_playerGuid = ObjectGuid();
 
-        bIsHealed = false;
-        bCanRun = false;
+        m_bIsHealed = false;
+        m_bCanRun = false;
 
-        RunAwayTimer = 5000;
+        m_uiRunAwayTimer = 5000;
 
         m_creature->SetStandState(UNIT_STAND_STATE_KNEEL);
-        //expect database to have RegenHealth=0
+        // expect database to have RegenHealth=0
         m_creature->SetHealth(int(m_creature->GetMaxHealth()*0.7));
     }
 
-    void SpellHit(Unit* pCaster, const SpellEntry *Spell)
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
     {
-        if (Spell->Id == SPELL_LESSER_HEAL_R2 || Spell->Id == SPELL_FORTITUDE_R1)
+        if (pSpell->Id == SPELL_LESSER_HEAL_R2 || pSpell->Id == SPELL_FORTITUDE_R1)
         {
-            //not while in combat
+            // not while in combat
             if (m_creature->isInCombat())
                 return;
 
-            //nothing to be done now
-            if (bIsHealed && bCanRun)
+            // nothing to be done now
+            if (m_bIsHealed && m_bCanRun)
                 return;
 
             if (pCaster->GetTypeId() == TYPEID_PLAYER)
@@ -876,125 +874,125 @@ struct MANGOS_DLL_DECL npc_garments_of_questsAI : public npc_escortAI
                     case ENTRY_SHAYA:
                         if (((Player*)pCaster)->GetQuestStatus(QUEST_MOON) == QUEST_STATUS_INCOMPLETE)
                         {
-                            if (bIsHealed && !bCanRun && Spell->Id == SPELL_FORTITUDE_R1)
+                            if (m_bIsHealed && !m_bCanRun && pSpell->Id == SPELL_FORTITUDE_R1)
                             {
-                                DoScriptText(SAY_SHAYA_THANKS,m_creature,pCaster);
-                                bCanRun = true;
+                                DoScriptText(SAY_SHAYA_THANKS, m_creature, pCaster);
+                                m_bCanRun = true;
                             }
-                            else if (!bIsHealed && Spell->Id == SPELL_LESSER_HEAL_R2)
+                            else if (!m_bIsHealed && pSpell->Id == SPELL_LESSER_HEAL_R2)
                             {
-                                caster = pCaster->GetGUID();
+                                m_playerGuid = pCaster->GetObjectGuid();
                                 m_creature->SetStandState(UNIT_STAND_STATE_STAND);
-                                DoScriptText(SAY_COMMON_HEALED,m_creature,pCaster);
-                                bIsHealed = true;
+                                DoScriptText(SAY_COMMON_HEALED, m_creature, pCaster);
+                                m_bIsHealed = true;
                             }
                         }
                         break;
                     case ENTRY_ROBERTS:
                         if (((Player*)pCaster)->GetQuestStatus(QUEST_LIGHT_1) == QUEST_STATUS_INCOMPLETE)
                         {
-                            if (bIsHealed && !bCanRun && Spell->Id == SPELL_FORTITUDE_R1)
+                            if (m_bIsHealed && !m_bCanRun && pSpell->Id == SPELL_FORTITUDE_R1)
                             {
-                                DoScriptText(SAY_ROBERTS_THANKS,m_creature,pCaster);
-                                bCanRun = true;
+                                DoScriptText(SAY_ROBERTS_THANKS, m_creature, pCaster);
+                                m_bCanRun = true;
                             }
-                            else if (!bIsHealed && Spell->Id == SPELL_LESSER_HEAL_R2)
+                            else if (!m_bIsHealed && pSpell->Id == SPELL_LESSER_HEAL_R2)
                             {
-                                caster = pCaster->GetGUID();
+                                m_playerGuid = pCaster->GetObjectGuid();
                                 m_creature->SetStandState(UNIT_STAND_STATE_STAND);
-                                DoScriptText(SAY_COMMON_HEALED,m_creature,pCaster);
-                                bIsHealed = true;
+                                DoScriptText(SAY_COMMON_HEALED, m_creature, pCaster);
+                                m_bIsHealed = true;
                             }
                         }
                         break;
                     case ENTRY_DOLF:
                         if (((Player*)pCaster)->GetQuestStatus(QUEST_LIGHT_2) == QUEST_STATUS_INCOMPLETE)
                         {
-                            if (bIsHealed && !bCanRun && Spell->Id == SPELL_FORTITUDE_R1)
+                            if (m_bIsHealed && !m_bCanRun && pSpell->Id == SPELL_FORTITUDE_R1)
                             {
-                                DoScriptText(SAY_DOLF_THANKS,m_creature,pCaster);
-                                bCanRun = true;
+                                DoScriptText(SAY_DOLF_THANKS, m_creature, pCaster);
+                                m_bCanRun = true;
                             }
-                            else if (!bIsHealed && Spell->Id == SPELL_LESSER_HEAL_R2)
+                            else if (!m_bIsHealed && pSpell->Id == SPELL_LESSER_HEAL_R2)
                             {
-                                caster = pCaster->GetGUID();
+                                m_playerGuid = pCaster->GetObjectGuid();
                                 m_creature->SetStandState(UNIT_STAND_STATE_STAND);
-                                DoScriptText(SAY_COMMON_HEALED,m_creature,pCaster);
-                                bIsHealed = true;
+                                DoScriptText(SAY_COMMON_HEALED, m_creature, pCaster);
+                                m_bIsHealed = true;
                             }
                         }
                         break;
                     case ENTRY_KORJA:
                         if (((Player*)pCaster)->GetQuestStatus(QUEST_SPIRIT) == QUEST_STATUS_INCOMPLETE)
                         {
-                            if (bIsHealed && !bCanRun && Spell->Id == SPELL_FORTITUDE_R1)
+                            if (m_bIsHealed && !m_bCanRun && pSpell->Id == SPELL_FORTITUDE_R1)
                             {
-                                DoScriptText(SAY_KORJA_THANKS,m_creature,pCaster);
-                                bCanRun = true;
+                                DoScriptText(SAY_KORJA_THANKS, m_creature, pCaster);
+                                m_bCanRun = true;
                             }
-                            else if (!bIsHealed && Spell->Id == SPELL_LESSER_HEAL_R2)
+                            else if (!m_bIsHealed && pSpell->Id == SPELL_LESSER_HEAL_R2)
                             {
-                                caster = pCaster->GetGUID();
+                                m_playerGuid = pCaster->GetObjectGuid();
                                 m_creature->SetStandState(UNIT_STAND_STATE_STAND);
-                                DoScriptText(SAY_COMMON_HEALED,m_creature,pCaster);
-                                bIsHealed = true;
+                                DoScriptText(SAY_COMMON_HEALED, m_creature, pCaster);
+                                m_bIsHealed = true;
                             }
                         }
                         break;
                     case ENTRY_DG_KEL:
                         if (((Player*)pCaster)->GetQuestStatus(QUEST_DARKNESS) == QUEST_STATUS_INCOMPLETE)
                         {
-                            if (bIsHealed && !bCanRun && Spell->Id == SPELL_FORTITUDE_R1)
+                            if (m_bIsHealed && !m_bCanRun && pSpell->Id == SPELL_FORTITUDE_R1)
                             {
-                                DoScriptText(SAY_DG_KEL_THANKS,m_creature,pCaster);
-                                bCanRun = true;
+                                DoScriptText(SAY_DG_KEL_THANKS, m_creature, pCaster);
+                                m_bCanRun = true;
                             }
-                            else if (!bIsHealed && Spell->Id == SPELL_LESSER_HEAL_R2)
+                            else if (!m_bIsHealed && pSpell->Id == SPELL_LESSER_HEAL_R2)
                             {
-                                caster = pCaster->GetGUID();
+                                m_playerGuid = pCaster->GetObjectGuid();
                                 m_creature->SetStandState(UNIT_STAND_STATE_STAND);
-                                DoScriptText(SAY_COMMON_HEALED,m_creature,pCaster);
-                                bIsHealed = true;
+                                DoScriptText(SAY_COMMON_HEALED, m_creature, pCaster);
+                                m_bIsHealed = true;
                             }
                         }
                         break;
                 }
 
-                //give quest credit, not expect any special quest objectives
-                if (bCanRun)
+                // give quest credit, not expect any special quest objectives
+                if (m_bCanRun)
                     ((Player*)pCaster)->TalkedToCreature(m_creature->GetEntry(), m_creature->GetObjectGuid());
             }
         }
     }
 
-    void WaypointReached(uint32 uiPoint)
-    {
-    }
+    void WaypointReached(uint32 uiPointId) {}
 
-    void UpdateEscortAI(const uint32 diff)
+    void UpdateEscortAI(const uint32 uiDiff)
     {
-        if (bCanRun && !m_creature->isInCombat())
+        if (m_bCanRun && !m_creature->isInCombat())
         {
-            if (RunAwayTimer <= diff)
+            if (m_uiRunAwayTimer <= uiDiff)
             {
-                if (Player* pPlayer = m_creature->GetMap()->GetPlayer(caster))
+                if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid))
                 {
                     switch(m_creature->GetEntry())
                     {
-                        case ENTRY_SHAYA: DoScriptText(SAY_SHAYA_GOODBYE, m_creature, pPlayer); break;
+                        case ENTRY_SHAYA:   DoScriptText(SAY_SHAYA_GOODBYE, m_creature, pPlayer);   break;
                         case ENTRY_ROBERTS: DoScriptText(SAY_ROBERTS_GOODBYE, m_creature, pPlayer); break;
-                        case ENTRY_DOLF: DoScriptText(SAY_DOLF_GOODBYE, m_creature, pPlayer); break;
-                        case ENTRY_KORJA: DoScriptText(SAY_KORJA_GOODBYE, m_creature, pPlayer); break;
-                        case ENTRY_DG_KEL: DoScriptText(SAY_DG_KEL_GOODBYE, m_creature, pPlayer); break;
+                        case ENTRY_DOLF:    DoScriptText(SAY_DOLF_GOODBYE, m_creature, pPlayer);    break;
+                        case ENTRY_KORJA:   DoScriptText(SAY_KORJA_GOODBYE, m_creature, pPlayer);   break;
+                        case ENTRY_DG_KEL:  DoScriptText(SAY_DG_KEL_GOODBYE, m_creature, pPlayer);  break;
                     }
 
                     Start(true);
                 }
                 else
-                    EnterEvadeMode();                       //something went wrong
+                    EnterEvadeMode();                       // something went wrong
 
-                RunAwayTimer = 30000;
-            }else RunAwayTimer -= diff;
+                m_uiRunAwayTimer = 30000;
+            }
+            else
+                m_uiRunAwayTimer -= uiDiff;
         }
 
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
