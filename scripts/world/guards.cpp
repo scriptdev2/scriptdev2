@@ -122,14 +122,14 @@ struct MANGOS_DLL_DECL guard_shattrath_aldorAI : public guardAI
 
     uint32 m_uiExile_Timer;
     uint32 m_uiBanish_Timer;
-    uint64 m_uiPlayerGUID;
+    ObjectGuid m_playerGuid;
     bool m_bCanTeleport;
 
     void Reset()
     {
         m_uiBanish_Timer = 5000;
         m_uiExile_Timer = 8500;
-        m_uiPlayerGUID = 0;
+        m_playerGuid.Clear();
         m_bCanTeleport = false;
     }
 
@@ -142,13 +142,13 @@ struct MANGOS_DLL_DECL guard_shattrath_aldorAI : public guardAI
         {
             if (m_uiExile_Timer < uiDiff)
             {
-                if (Player* pTarget = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID))
+                if (Player* pTarget = m_creature->GetMap()->GetPlayer(m_playerGuid))
                 {
                     pTarget->CastSpell(pTarget, SPELL_EXILE, true);
                     pTarget->CastSpell(pTarget, SPELL_BANISH_TELEPORT, true);
                 }
 
-                m_uiPlayerGUID = 0;
+                m_playerGuid.Clear();
                 m_uiExile_Timer = 8500;
                 m_bCanTeleport = false;
             }
@@ -163,10 +163,8 @@ struct MANGOS_DLL_DECL guard_shattrath_aldorAI : public guardAI
             {
                 DoCastSpellIfCan(pVictim, SPELL_BANISHED_SHATTRATH_A);
                 m_uiBanish_Timer = 9000;
-                m_uiPlayerGUID = pVictim->GetGUID();
-
-                if (m_uiPlayerGUID)
-                    m_bCanTeleport = true;
+                m_playerGuid = pVictim->GetObjectGuid();
+                m_bCanTeleport = true;
             }
         }
         else
@@ -191,14 +189,14 @@ struct MANGOS_DLL_DECL guard_shattrath_scryerAI : public guardAI
 
     uint32 m_uiExile_Timer;
     uint32 m_uiBanish_Timer;
-    uint64 m_uiPlayerGUID;
+    ObjectGuid m_playerGuid;
     bool m_bCanTeleport;
 
     void Reset()
     {
         m_uiBanish_Timer = 5000;
         m_uiExile_Timer = 8500;
-        m_uiPlayerGUID = 0;
+        m_playerGuid.Clear();
         m_bCanTeleport = false;
     }
 
@@ -211,13 +209,13 @@ struct MANGOS_DLL_DECL guard_shattrath_scryerAI : public guardAI
         {
             if (m_uiExile_Timer < uiDiff)
             {
-                if (Player* pTarget = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID))
+                if (Player* pTarget = m_creature->GetMap()->GetPlayer(m_playerGuid))
                 {
                     pTarget->CastSpell(pTarget, SPELL_EXILE, true);
                     pTarget->CastSpell(pTarget, SPELL_BANISH_TELEPORT, true);
                 }
 
-                m_uiPlayerGUID = 0;
+                m_playerGuid.Clear();
                 m_uiExile_Timer = 8500;
                 m_bCanTeleport = false;
             }
@@ -232,10 +230,8 @@ struct MANGOS_DLL_DECL guard_shattrath_scryerAI : public guardAI
             {
                 DoCastSpellIfCan(pVictim, SPELL_BANISHED_SHATTRATH_S);
                 m_uiBanish_Timer = 9000;
-                m_uiPlayerGUID = pVictim->GetGUID();
-
-                if (m_uiPlayerGUID)
-                    m_bCanTeleport = true;
+                m_playerGuid = pVictim->GetObjectGuid();
+                m_bCanTeleport = true;
             }
         }
         else
