@@ -55,7 +55,7 @@ class MANGOS_DLL_DECL FollowerAI : public ScriptedAI
 
         bool AssistPlayerInCombat(Unit* pWho);
 
-        uint64 m_uiLeaderGUID;
+        ObjectGuid m_leaderGuid;
         uint32 m_uiUpdateFollowTimer;
         uint32 m_uiFollowState;
 

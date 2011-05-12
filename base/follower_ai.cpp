@@ -20,7 +20,7 @@ enum
 };
 
 FollowerAI::FollowerAI(Creature* pCreature) : ScriptedAI(pCreature),
-    m_uiLeaderGUID(0),
+    m_leaderGuid(),
     m_pQuestForFollow(NULL),
     m_uiUpdateFollowTimer(2500),
     m_uiFollowState(STATE_FOLLOW_NONE)
@@ -121,7 +121,7 @@ void FollowerAI::MoveInLineOfSight(Unit* pWho)
 
 void FollowerAI::JustDied(Unit* pKiller)
 {
-    if (!HasFollowState(STATE_FOLLOW_INPROGRESS) || !m_uiLeaderGUID || !m_pQuestForFollow)
+    if (!HasFollowState(STATE_FOLLOW_INPROGRESS) || m_leaderGuid.IsEmpty() || !m_pQuestForFollow)
         return;
 
     //TODO: need a better check for quests with time limit.
@@ -288,7 +288,7 @@ void FollowerAI::StartFollow(Player* pLeader, uint32 uiFactionForFollower, const
     }
 
     //set variables
-    m_uiLeaderGUID = pLeader->GetGUID();
+    m_leaderGuid = pLeader->GetObjectGuid();
 
     if (uiFactionForFollower)
         m_creature->setFaction(uiFactionForFollower);
@@ -308,12 +308,12 @@ void FollowerAI::StartFollow(Player* pLeader, uint32 uiFactionForFollower, const
 
     m_creature->GetMotionMaster()->MoveFollow(pLeader, PET_FOLLOW_DIST, PET_FOLLOW_ANGLE);
 
-    debug_log("SD2: FollowerAI start follow %s (GUID " UI64FMTD ")", pLeader->GetName(), m_uiLeaderGUID);
+    debug_log("SD2: FollowerAI start follow %s (Guid %s)", pLeader->GetName(), m_leaderGuid.GetString());
 }
 
 Player* FollowerAI::GetLeaderForFollower()
 {
-    if (Player* pLeader = m_creature->GetMap()->GetPlayer(m_uiLeaderGUID))
+    if (Player* pLeader = m_creature->GetMap()->GetPlayer(m_leaderGuid))
     {
         if (pLeader->isAlive())
             return pLeader;
@@ -328,7 +328,7 @@ Player* FollowerAI::GetLeaderForFollower()
                     if (pMember && pMember->isAlive() && m_creature->IsWithinDistInMap(pMember, MAX_PLAYER_DISTANCE))
                     {
                         debug_log("SD2: FollowerAI GetLeader changed and returned new leader.");
-                        m_uiLeaderGUID = pMember->GetGUID();
+                        m_leaderGuid = pMember->GetObjectGuid();
                         return pMember;
                         break;
                     }
