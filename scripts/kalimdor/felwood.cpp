@@ -141,7 +141,7 @@ bool GossipHello_npc_corrupt_saber(Player* pPlayer, Creature* pCreature)
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_RELEASE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
     }
 
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
     return true;
 }
 
@@ -180,7 +180,7 @@ enum
 bool GossipHello_npcs_riverbreeze_and_silversky(Player* pPlayer, Creature* pCreature)
 {
     if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
 
     switch (pCreature->GetEntry())
     {
@@ -188,21 +188,21 @@ bool GossipHello_npcs_riverbreeze_and_silversky(Player* pPlayer, Creature* pCrea
             if (pPlayer->GetQuestRewardStatus(QUEST_CLEANSING_FELWOOD_A))
             {
                 pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_BEACON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-                pPlayer->SEND_GOSSIP_MENU(2848, pCreature->GetGUID());
+                pPlayer->SEND_GOSSIP_MENU(2848, pCreature->GetObjectGuid());
             }else if (pPlayer->GetTeam() == HORDE)
-                pPlayer->SEND_GOSSIP_MENU(2845, pCreature->GetGUID());
+                pPlayer->SEND_GOSSIP_MENU(2845, pCreature->GetObjectGuid());
             else
-                pPlayer->SEND_GOSSIP_MENU(2844, pCreature->GetGUID());
+                pPlayer->SEND_GOSSIP_MENU(2844, pCreature->GetObjectGuid());
             break;
         case NPC_MAYBESS_RIVERBREEZE:
             if (pPlayer->GetQuestRewardStatus(QUEST_CLEANSING_FELWOOD_H))
             {
                 pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_BEACON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-                pPlayer->SEND_GOSSIP_MENU(2849, pCreature->GetGUID());
+                pPlayer->SEND_GOSSIP_MENU(2849, pCreature->GetObjectGuid());
             }else if (pPlayer->GetTeam() == ALLIANCE)
-                pPlayer->SEND_GOSSIP_MENU(2843, pCreature->GetGUID());
+                pPlayer->SEND_GOSSIP_MENU(2843, pCreature->GetObjectGuid());
             else
-                pPlayer->SEND_GOSSIP_MENU(2842, pCreature->GetGUID());
+                pPlayer->SEND_GOSSIP_MENU(2842, pCreature->GetObjectGuid());
             break;
     }
 

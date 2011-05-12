@@ -489,7 +489,7 @@ struct MANGOS_DLL_DECL boss_gathios_the_shattererAI : public boss_illidari_counc
         for(uint8 i = 0; i < 4; ++i)
         {
             if (Creature* pCouncil = m_creature->GetMap()->GetCreature(Council[i]))
-                pCouncil->CastSpell(pCouncil, spellid, true, NULL, NULL, m_creature->GetGUID());
+                pCouncil->CastSpell(pCouncil, spellid, true, NULL, NULL, m_creature->GetObjectGuid());
         }
     }
 

@@ -1964,7 +1964,7 @@ bool GossipHello_npc_akama_at_illidan(Player* pPlayer, Creature* pCreature)
 {
     // TODO: Add gossip item only when Council is done?
     pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
-    pPlayer->SEND_GOSSIP_MENU(10465, pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(10465, pCreature->GetObjectGuid());
 
     return true;
 }

@@ -101,12 +101,12 @@ CreatureAI* GetAI_npc_cairne_bloodhoof(Creature* pCreature)
 bool GossipHello_npc_cairne_bloodhoof(Player* pPlayer, Creature* pCreature)
 {
     if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
 
     if (pPlayer->GetQuestStatus(925) == QUEST_STATUS_INCOMPLETE)
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "I know this is rather silly but a young ward who is a bit shy would like your hoofprint.", GOSSIP_SENDER_MAIN, GOSSIP_SENDER_INFO);
 
-    pPlayer->SEND_GOSSIP_MENU(7013, pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(7013, pCreature->GetObjectGuid());
 
     return true;
 }
@@ -116,7 +116,7 @@ bool GossipSelect_npc_cairne_bloodhoof(Player* pPlayer, Creature* pCreature, uin
     if (uiAction == GOSSIP_SENDER_INFO)
     {
         pPlayer->CastSpell(pPlayer, 23123, false);
-        pPlayer->SEND_GOSSIP_MENU(7014, pCreature->GetGUID());
+        pPlayer->SEND_GOSSIP_MENU(7014, pCreature->GetObjectGuid());
     }
     return true;
 }

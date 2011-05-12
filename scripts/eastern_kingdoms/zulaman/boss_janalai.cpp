@@ -338,7 +338,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
             if (Creature* pBomb = m_creature->GetMap()->GetCreature(*itr))
             {
                 //do damage and then remove aura (making them "disappear")
-                pBomb->CastSpell(pBomb, SPELL_FIRE_BOMB_DAMAGE, false, NULL, NULL, m_creature->GetGUID());
+                pBomb->CastSpell(pBomb, SPELL_FIRE_BOMB_DAMAGE, false, NULL, NULL, m_creature->GetObjectGuid());
                 pBomb->RemoveAurasDueToSpell(SPELL_FIRE_BOMB_DUMMY);
             }
         }

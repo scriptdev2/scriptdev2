@@ -702,7 +702,7 @@ bool GossipHello_npc_akama(Player* pPlayer, Creature* pCreature)
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     }
 
-    pPlayer->SEND_GOSSIP_MENU(907, pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(907, pCreature->GetObjectGuid());
     return true;
 }
 

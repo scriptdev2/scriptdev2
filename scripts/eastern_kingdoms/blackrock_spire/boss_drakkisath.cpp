@@ -75,7 +75,7 @@ struct MANGOS_DLL_DECL boss_drakkisathAI : public ScriptedAI
         // Confliguration
         if (m_uiConfligurationTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_CONFLIGURATION, 0, m_creature->getVictim()->GetGUID());
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_CONFLIGURATION, 0, m_creature->getVictim()->GetObjectGuid());
             m_uiConfligurationTimer = 18000;
         }
         else

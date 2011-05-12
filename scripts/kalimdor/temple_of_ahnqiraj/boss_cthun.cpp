@@ -742,7 +742,7 @@ struct MANGOS_DLL_DECL cthunAI : public ScriptedAI
                         //Set target in stomach
                         m_mStomachMap[target->GetObjectGuid()] = true;
                         target->InterruptNonMeleeSpells(false);
-                        target->CastSpell(target, SPELL_MOUTH_TENTACLE, true, NULL, NULL, m_creature->GetGUID());
+                        target->CastSpell(target, SPELL_MOUTH_TENTACLE, true, NULL, NULL, m_creature->GetObjectGuid());
                         StomachEnterTarget = target->GetGUID();
                         StomachEnterVisTimer = 3800;
                     }

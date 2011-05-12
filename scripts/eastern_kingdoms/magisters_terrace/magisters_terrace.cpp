@@ -125,10 +125,10 @@ CreatureAI* GetAI_npc_kalecgos(Creature* pCreature)
 bool GossipHello_npc_kalecgos(Player* pPlayer, Creature* pCreature)
 {
     if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
 
     pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_KAEL_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
-    pPlayer->SEND_GOSSIP_MENU(12498, pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(12498, pCreature->GetObjectGuid());
 
     return true;
 }
@@ -139,22 +139,22 @@ bool GossipSelect_npc_kalecgos(Player* pPlayer, Creature* pCreature, uint32 uiSe
     {
         case GOSSIP_ACTION_INFO_DEF:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_KAEL_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-            pPlayer->SEND_GOSSIP_MENU(12500, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(12500, pCreature->GetObjectGuid());
             break;
         case GOSSIP_ACTION_INFO_DEF+1:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_KAEL_3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-            pPlayer->SEND_GOSSIP_MENU(12502, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(12502, pCreature->GetObjectGuid());
             break;
         case GOSSIP_ACTION_INFO_DEF+2:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_KAEL_4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-            pPlayer->SEND_GOSSIP_MENU(12606, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(12606, pCreature->GetObjectGuid());
             break;
         case GOSSIP_ACTION_INFO_DEF+3:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_KAEL_5, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
-            pPlayer->SEND_GOSSIP_MENU(12607, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(12607, pCreature->GetObjectGuid());
             break;
         case GOSSIP_ACTION_INFO_DEF+4:
-            pPlayer->SEND_GOSSIP_MENU(12608, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(12608, pCreature->GetObjectGuid());
             break;
     }
 

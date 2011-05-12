@@ -54,7 +54,7 @@ bool GossipHello_npcs_ashyen_and_keleth(Player* pPlayer, Creature* pCreature)
         if (pCreature->GetEntry() == 17901)
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_BLESS_KEL, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
     }
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
 
     return true;
 }
@@ -107,7 +107,7 @@ bool GossipSelect_npcs_ashyen_and_keleth(Player* pPlayer, Creature* pCreature, u
 
         DoScriptText(SAY_REWARD_BLESS, pCreature, pPlayer);
         pPlayer->CLOSE_GOSSIP_MENU();
-        pPlayer->TalkedToCreature(pCreature->GetEntry(), pCreature->GetGUID());
+        pPlayer->TalkedToCreature(pCreature->GetEntry(), pCreature->GetObjectGuid());
     }
     return true;
 }
@@ -169,7 +169,7 @@ bool GossipHello_npc_cooshcoosh(Player* pPlayer, Creature* pCreature)
     if (pPlayer->GetQuestStatus(QUEST_CRACK_SKULLS) == QUEST_STATUS_INCOMPLETE)
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_COOSH, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
-    pPlayer->SEND_GOSSIP_MENU(9441, pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(9441, pCreature->GetObjectGuid());
     return true;
 }
 
@@ -197,7 +197,7 @@ bool GossipHello_npc_elder_kuruti(Player* pPlayer, Creature* pCreature)
     if (pPlayer->GetQuestStatus(9803) == QUEST_STATUS_INCOMPLETE)
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_KUR1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
-    pPlayer->SEND_GOSSIP_MENU(9226, pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(9226, pCreature->GetObjectGuid());
 
     return true;
 }
@@ -208,11 +208,11 @@ bool GossipSelect_npc_elder_kuruti(Player* pPlayer, Creature* pCreature, uint32 
     {
         case GOSSIP_ACTION_INFO_DEF:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_KUR2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-            pPlayer->SEND_GOSSIP_MENU(9227, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(9227, pCreature->GetObjectGuid());
             break;
         case GOSSIP_ACTION_INFO_DEF + 1:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_KUR3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-            pPlayer->SEND_GOSSIP_MENU(9229, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(9229, pCreature->GetObjectGuid());
             break;
         case GOSSIP_ACTION_INFO_DEF + 2:
         {
@@ -222,7 +222,7 @@ bool GossipSelect_npc_elder_kuruti(Player* pPlayer, Creature* pCreature, uint32 
                     pPlayer->SendNewItem(pItem, 1, true, false);
             }
 
-            pPlayer->SEND_GOSSIP_MENU(9231, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(9231, pCreature->GetObjectGuid());
             break;
         }
     }
@@ -310,7 +310,7 @@ bool GossipHello_npc_mortog_steamhead(Player* pPlayer, Creature* pCreature)
     if (pCreature->isVendor() && pPlayer->GetReputationRank(942) == REP_EXALTED)
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
 
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
 
     return true;
 }
@@ -319,7 +319,7 @@ bool GossipSelect_npc_mortog_steamhead(Player* pPlayer, Creature* pCreature, uin
 {
     if (uiAction == GOSSIP_ACTION_TRADE)
     {
-        pPlayer->SEND_VENDORLIST(pCreature->GetGUID());
+        pPlayer->SEND_VENDORLIST(pCreature->GetObjectGuid());
     }
     return true;
 }
@@ -339,13 +339,13 @@ enum
 bool GossipHello_npc_timothy_daniels(Player* pPlayer, Creature* pCreature)
 {
     if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
 
     if (pCreature->isVendor())
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_POISONS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
 
     pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_TIMOTHY_DANIELS_ITEM1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
     return true;
 }
 
@@ -354,10 +354,10 @@ bool GossipSelect_npc_timothy_daniels(Player* pPlayer, Creature* pCreature, uint
     switch(uiAction)
     {
         case GOSSIP_ACTION_INFO_DEF+1:
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_TIMOTHY_DANIELS1, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_TIMOTHY_DANIELS1, pCreature->GetObjectGuid());
             break;
         case GOSSIP_ACTION_TRADE:
-            pPlayer->SEND_VENDORLIST(pCreature->GetGUID());
+            pPlayer->SEND_VENDORLIST(pCreature->GetObjectGuid());
             break;
     }
 

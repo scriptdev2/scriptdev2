@@ -83,7 +83,7 @@ bool GossipHello_npc_jaina_proudmoore(Player* pPlayer, Creature* pCreature)
         }
     }
 
-    pPlayer->SEND_GOSSIP_MENU(907, pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(907, pCreature->GetObjectGuid());
     return true;
 }
 
@@ -155,7 +155,7 @@ bool GossipHello_npc_thrall(Player* pPlayer, Creature* pCreature)
         }
     }
 
-    pPlayer->SEND_GOSSIP_MENU(907, pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(907, pCreature->GetObjectGuid());
     return true;
 }
 
@@ -196,7 +196,7 @@ bool GossipHello_npc_tyrande_whisperwind(Player* pPlayer, Creature* pCreature)
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TYRANDE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
     }
 
-    pPlayer->SEND_GOSSIP_MENU(907, pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(907, pCreature->GetObjectGuid());
     return true;
 }
 

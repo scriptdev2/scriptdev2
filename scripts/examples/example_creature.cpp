@@ -256,7 +256,7 @@ CreatureAI* GetAI_example_creature(Creature* pCreature)
 bool GossipHello_example_creature(Player* pPlayer, Creature* pCreature)
 {
     pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-    pPlayer->SEND_GOSSIP_MENU(TEXT_ID_GREET, pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(TEXT_ID_GREET, pCreature->GetObjectGuid());
 
     return true;
 }

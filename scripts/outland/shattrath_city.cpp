@@ -230,12 +230,12 @@ struct MANGOS_DLL_DECL npc_dirty_larryAI : public ScriptedAI
 bool GossipHello_npc_dirty_larry(Player* pPlayer, Creature* pCreature)
 {
     if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
 
     if (pPlayer->GetQuestStatus(QUEST_WHAT_BOOK) == QUEST_STATUS_INCOMPLETE)
         pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_BOOK, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
     return true;
 }
 
@@ -270,21 +270,21 @@ CreatureAI* GetAI_npc_dirty_larry(Creature* pCreature)
 bool GossipHello_npc_ishanah(Player* pPlayer, Creature* pCreature)
 {
     if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
 
     pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ISHANAH_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
     pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ISHANAH_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
 
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
     return true;
 }
 
 bool GossipSelect_npc_ishanah(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
-        pPlayer->SEND_GOSSIP_MENU(9458, pCreature->GetGUID());
+        pPlayer->SEND_GOSSIP_MENU(9458, pCreature->GetObjectGuid());
     else if (uiAction == GOSSIP_ACTION_INFO_DEF+2)
-        pPlayer->SEND_GOSSIP_MENU(9459, pCreature->GetGUID());
+        pPlayer->SEND_GOSSIP_MENU(9459, pCreature->GetObjectGuid());
 
     return true;
 }
@@ -308,12 +308,12 @@ enum
 bool GossipHello_npc_khadgar(Player* pPlayer, Creature* pCreature)
 {
     if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
 
     if (pPlayer->GetQuestRewardStatus(QUEST_CITY_LIGHT))
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, KHADGAR_GOSSIP_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-    pPlayer->SEND_GOSSIP_MENU(9243, pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(9243, pCreature->GetObjectGuid());
     return true;
 }
 
@@ -323,31 +323,31 @@ bool GossipSelect_npc_khadgar(Player* pPlayer, Creature* pCreature, uint32 uiSen
     {
         case GOSSIP_ACTION_INFO_DEF+1:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, KHADGAR_GOSSIP_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-            pPlayer->SEND_GOSSIP_MENU(9876, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(9876, pCreature->GetObjectGuid());
             break;
         case GOSSIP_ACTION_INFO_DEF+2:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, KHADGAR_GOSSIP_3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
-            pPlayer->SEND_GOSSIP_MENU(9877, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(9877, pCreature->GetObjectGuid());
             break;
         case GOSSIP_ACTION_INFO_DEF+3:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, KHADGAR_GOSSIP_4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
-            pPlayer->SEND_GOSSIP_MENU(9878, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(9878, pCreature->GetObjectGuid());
             break;
         case GOSSIP_ACTION_INFO_DEF+4:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, KHADGAR_GOSSIP_5, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
-            pPlayer->SEND_GOSSIP_MENU(9879, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(9879, pCreature->GetObjectGuid());
             break;
         case GOSSIP_ACTION_INFO_DEF+5:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, KHADGAR_GOSSIP_3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+6);
-            pPlayer->SEND_GOSSIP_MENU(9880, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(9880, pCreature->GetObjectGuid());
             break;
         case GOSSIP_ACTION_INFO_DEF+6:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, KHADGAR_GOSSIP_7, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+7);
-            pPlayer->SEND_GOSSIP_MENU(9881, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(9881, pCreature->GetObjectGuid());
             break;
         case GOSSIP_ACTION_INFO_DEF+7:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, KHADGAR_GOSSIP_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-            pPlayer->SEND_GOSSIP_MENU(9243, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(9243, pCreature->GetObjectGuid());
             break;
     }
     return true;
@@ -699,7 +699,7 @@ bool GossipHello_npc_raliq_the_drunk(Player* pPlayer, Creature* pCreature)
     if (pPlayer->GetQuestStatus(QUEST_CRACK_SKULLS) == QUEST_STATUS_INCOMPLETE)
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_RALIQ, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-    pPlayer->SEND_GOSSIP_MENU(9440, pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(9440, pCreature->GetObjectGuid());
     return true;
 }
 
@@ -776,8 +776,8 @@ bool GossipHello_npc_salsalabim(Player* pPlayer, Creature* pCreature)
     else
     {
         if (pCreature->isQuestGiver())
-            pPlayer->PrepareQuestMenu(pCreature->GetGUID());
-        pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+            pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
+        pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
     }
     return true;
 }
@@ -801,11 +801,11 @@ bool GossipHello_npc_shattrathflaskvendors(Player* pPlayer, Creature* pCreature)
         if (pCreature->isVendor() && (pPlayer->GetReputationRank(932) == REP_EXALTED) && (pPlayer->GetReputationRank(935) == REP_EXALTED) && (pPlayer->GetReputationRank(942) == REP_EXALTED))
         {
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
-            pPlayer->SEND_GOSSIP_MENU(11085, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(11085, pCreature->GetObjectGuid());
         }
         else
         {
-            pPlayer->SEND_GOSSIP_MENU(11083, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(11083, pCreature->GetObjectGuid());
         }
     }
 
@@ -815,11 +815,11 @@ bool GossipHello_npc_shattrathflaskvendors(Player* pPlayer, Creature* pCreature)
         if (pCreature->isVendor() && (pPlayer->GetReputationRank(934) == REP_EXALTED) && (pPlayer->GetReputationRank(935) == REP_EXALTED) && (pPlayer->GetReputationRank(942) == REP_EXALTED))
         {
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
-            pPlayer->SEND_GOSSIP_MENU(11085, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(11085, pCreature->GetObjectGuid());
         }
         else
         {
-            pPlayer->SEND_GOSSIP_MENU(11084, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(11084, pCreature->GetObjectGuid());
         }
     }
 
@@ -829,7 +829,7 @@ bool GossipHello_npc_shattrathflaskvendors(Player* pPlayer, Creature* pCreature)
 bool GossipSelect_npc_shattrathflaskvendors(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_TRADE)
-        pPlayer->SEND_VENDORLIST(pCreature->GetGUID());
+        pPlayer->SEND_VENDORLIST(pCreature->GetObjectGuid());
 
     return true;
 }
@@ -843,7 +843,7 @@ bool GossipHello_npc_zephyr(Player* pPlayer, Creature* pCreature)
     if (pPlayer->GetReputationRank(989) >= REP_REVERED)
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Take me to the Caverns of Time.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
 
     return true;
 }

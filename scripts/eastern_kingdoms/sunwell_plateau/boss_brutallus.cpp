@@ -113,7 +113,7 @@ struct MANGOS_DLL_DECL boss_brutallusAI : public ScriptedAI
     void SpellHitTarget(Unit* pCaster, const SpellEntry* pSpell)
     {
         if (pSpell->Id == SPELL_BURN)
-            pCaster->CastSpell(pCaster, SPELL_BURN_AURA_EFFECT, true, NULL, NULL, m_creature->GetGUID());
+            pCaster->CastSpell(pCaster, SPELL_BURN_AURA_EFFECT, true, NULL, NULL, m_creature->GetObjectGuid());
     }
 
     void UpdateAI(const uint32 uiDiff)

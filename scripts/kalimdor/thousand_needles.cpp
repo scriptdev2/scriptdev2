@@ -352,7 +352,7 @@ bool GossipHello_npc_plucky_johnson(Player* pPlayer, Creature* pCreature)
     if (pPlayer->GetQuestStatus(QUEST_SCOOP) == QUEST_STATUS_INCOMPLETE)
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_QUEST, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
-    pPlayer->SEND_GOSSIP_MENU(720, pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(720, pCreature->GetObjectGuid());
     return true;
 }
 
@@ -360,7 +360,7 @@ bool GossipSelect_npc_plucky_johnson(Player* pPlayer, Creature* pCreature, uint3
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF)
     {
-        pPlayer->SEND_GOSSIP_MENU(738, pCreature->GetGUID());
+        pPlayer->SEND_GOSSIP_MENU(738, pCreature->GetObjectGuid());
         pPlayer->AreaExploredOrEventHappens(QUEST_SCOOP);
     }
 

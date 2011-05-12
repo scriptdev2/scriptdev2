@@ -31,12 +31,12 @@ EndScriptData */
 bool GossipHello_npc_gregan_brewspewer(Player* pPlayer, Creature* pCreature)
 {
     if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
 
     if (pCreature->isVendor() && pPlayer->GetQuestStatus(3909) == QUEST_STATUS_INCOMPLETE)
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Buy somethin', will ya?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-    pPlayer->SEND_GOSSIP_MENU(2433, pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(2433, pCreature->GetObjectGuid());
     return true;
 }
 
@@ -45,10 +45,10 @@ bool GossipSelect_npc_gregan_brewspewer(Player* pPlayer, Creature* pCreature, ui
     if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
     {
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
-        pPlayer->SEND_GOSSIP_MENU(2434, pCreature->GetGUID());
+        pPlayer->SEND_GOSSIP_MENU(2434, pCreature->GetObjectGuid());
     }
     if (uiAction == GOSSIP_ACTION_TRADE)
-        pPlayer->SEND_VENDORLIST(pCreature->GetGUID());
+        pPlayer->SEND_VENDORLIST(pCreature->GetObjectGuid());
     return true;
 }
 
@@ -166,8 +166,8 @@ bool QuestAccept_npc_oox22fe(Player* pPlayer, Creature* pCreature, const Quest* 
 
 bool GossipHello_npc_screecher_spirit(Player* pPlayer, Creature* pCreature)
 {
-    pPlayer->SEND_GOSSIP_MENU(2039, pCreature->GetGUID());
-    pPlayer->TalkedToCreature(pCreature->GetEntry(), pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(2039, pCreature->GetObjectGuid());
+    pPlayer->TalkedToCreature(pCreature->GetEntry(), pCreature->GetObjectGuid());
     pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 
     return true;

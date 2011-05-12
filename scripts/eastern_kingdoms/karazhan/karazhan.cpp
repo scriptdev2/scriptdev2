@@ -330,16 +330,16 @@ bool GossipHello_npc_barnes(Player* pPlayer, Creature* pCreature)
             if (npc_barnesAI* pBarnesAI = dynamic_cast<npc_barnesAI*>(pCreature->AI()))
             {
                 if (!pBarnesAI->m_bRaidWiped)
-                    pPlayer->SEND_GOSSIP_MENU(8970, pCreature->GetGUID());
+                    pPlayer->SEND_GOSSIP_MENU(8970, pCreature->GetObjectGuid());
                 else
-                    pPlayer->SEND_GOSSIP_MENU(8975, pCreature->GetGUID());
+                    pPlayer->SEND_GOSSIP_MENU(8975, pCreature->GetObjectGuid());
 
                 return true;
             }
         }
     }
 
-    pPlayer->SEND_GOSSIP_MENU(8978, pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(8978, pCreature->GetObjectGuid());
     return true;
 }
 
@@ -351,7 +351,7 @@ bool GossipSelect_npc_barnes(Player* pPlayer, Creature* pCreature, uint32 uiSend
     {
         case GOSSIP_ACTION_INFO_DEF+1:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, OZ_GOSSIP2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-            pPlayer->SEND_GOSSIP_MENU(8971, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(8971, pCreature->GetObjectGuid());
             break;
         case GOSSIP_ACTION_INFO_DEF+2:
             pPlayer->CLOSE_GOSSIP_MENU();
@@ -362,19 +362,19 @@ bool GossipSelect_npc_barnes(Player* pPlayer, Creature* pCreature, uint32 uiSend
             pPlayer->CLOSE_GOSSIP_MENU();
             if (pBarnesAI && pPlayer->isGameMaster())
                 pBarnesAI->m_uiEventId = EVENT_OZ;
-            outstring_log("SD2: pPlayer (GUID " UI64FMTD ") manually set Opera event to EVENT_OZ", pPlayer->GetGUID());
+            outstring_log("SD2: %s manually set Opera event to EVENT_OZ", pPlayer->GetGuidStr().c_str());
             break;
         case GOSSIP_ACTION_INFO_DEF+4:
             pPlayer->CLOSE_GOSSIP_MENU();
             if (pBarnesAI && pPlayer->isGameMaster())
                 pBarnesAI->m_uiEventId = EVENT_HOOD;
-            outstring_log("SD2: pPlayer (GUID " UI64FMTD ") manually set Opera event to EVENT_HOOD", pPlayer->GetGUID());
+            outstring_log("SD2: %s manually set Opera event to EVENT_HOOD", pPlayer->GetGuidStr().c_str());
             break;
         case GOSSIP_ACTION_INFO_DEF+5:
             pPlayer->CLOSE_GOSSIP_MENU();
             if (pBarnesAI && pPlayer->isGameMaster())
                 pBarnesAI->m_uiEventId = EVENT_RAJ;
-            outstring_log("SD2: pPlayer (GUID " UI64FMTD ") manually set Opera event to EVENT_RAJ", pPlayer->GetGUID());
+            outstring_log("SD2: %s manually set Opera event to EVENT_RAJ", pPlayer->GetGuidStr().c_str());
             break;
     }
 
@@ -401,7 +401,7 @@ bool GossipHello_npc_berthold(Player* pPlayer, Creature* pCreature)
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TELEPORT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     }
 
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
     return true;
 }
 

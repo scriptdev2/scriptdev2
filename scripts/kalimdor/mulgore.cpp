@@ -141,7 +141,7 @@ struct MANGOS_DLL_DECL npc_kyle_the_frenziedAI : public ScriptedAI
                         break;
                     case 3:
                         if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID))
-                            pPlayer->TalkedToCreature(m_creature->GetEntry(), m_creature->GetGUID());
+                            pPlayer->TalkedToCreature(m_creature->GetEntry(), m_creature->GetObjectGuid());
 
                         m_creature->UpdateEntry(NPC_KYLE_FRIENDLY);
                         break;
@@ -175,12 +175,12 @@ CreatureAI* GetAI_npc_kyle_the_frenzied(Creature* pCreature)
 bool GossipHello_npc_skorn_whitecloud(Player* pPlayer, Creature* pCreature)
 {
     if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
 
     if (!pPlayer->GetQuestRewardStatus(770))
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Tell me a story, Skorn.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
-    pPlayer->SEND_GOSSIP_MENU(522, pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(522, pCreature->GetObjectGuid());
 
     return true;
 }
@@ -188,7 +188,7 @@ bool GossipHello_npc_skorn_whitecloud(Player* pPlayer, Creature* pCreature)
 bool GossipSelect_npc_skorn_whitecloud(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF)
-        pPlayer->SEND_GOSSIP_MENU(523, pCreature->GetGUID());
+        pPlayer->SEND_GOSSIP_MENU(523, pCreature->GetObjectGuid());
 
     return true;
 }

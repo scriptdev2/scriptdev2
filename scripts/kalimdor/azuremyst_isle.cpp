@@ -137,7 +137,7 @@ struct MANGOS_DLL_DECL npc_draenei_survivorAI : public ScriptedAI
                         case 3: DoScriptText(SAY_HEAL4, m_creature, pPlayer); break;
                     }
 
-                    pPlayer->TalkedToCreature(m_creature->GetEntry(),m_creature->GetGUID());
+                    pPlayer->TalkedToCreature(m_creature->GetEntry(), m_creature->GetObjectGuid());
                 }
 
                 m_creature->GetMotionMaster()->Clear();
@@ -270,7 +270,7 @@ bool GossipHello_npc_engineer_spark_overgrind(Player* pPlayer, Creature* pCreatu
     if (pPlayer->GetQuestStatus(QUEST_GNOMERCY) == QUEST_STATUS_INCOMPLETE)
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_FIGHT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
     return true;
 }
 
@@ -404,12 +404,12 @@ enum
 bool GossipHello_npc_susurrus(Player* pPlayer, Creature* pCreature)
 {
     if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
 
     if (pPlayer->HasItemCount(ITEM_WHORL_OF_AIR,1,true))
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_READY, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
 
     return true;
 }

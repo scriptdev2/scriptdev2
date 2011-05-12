@@ -57,7 +57,7 @@ enum
 bool GossipHello_npc_chromie(Player *pPlayer, Creature *pCreature)
 {
     if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
 
     if (instance_culling_of_stratholme* m_pInstance = (instance_culling_of_stratholme*)pCreature->GetInstanceData())
     {
@@ -69,12 +69,12 @@ bool GossipHello_npc_chromie(Player *pPlayer, Creature *pCreature)
                     if (pPlayer->GetQuestRewardStatus(QUEST_DISPELLING_ILLUSIONS) && !pPlayer->HasItemCount(ITEM_ARCANE_DISRUPTOR, 1))
                         pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_INN_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
                 }
-                pPlayer->SEND_GOSSIP_MENU(TEXT_ID_INN_1, pCreature->GetGUID());
+                pPlayer->SEND_GOSSIP_MENU(TEXT_ID_INN_1, pCreature->GetObjectGuid());
                 break;
             case NPC_CHROMIE_ENTRANCE:
                 if (m_pInstance->GetData(TYPE_GRAIN_EVENT) == DONE && m_pInstance->GetData(TYPE_ARTHAS_INTRO_EVENT) == NOT_STARTED && pPlayer->GetQuestRewardStatus(QUEST_A_ROYAL_ESCORT))
                     pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_ENTRANCE_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-                pPlayer->SEND_GOSSIP_MENU(TEXT_ID_ENTRANCE_1, pCreature->GetGUID());
+                pPlayer->SEND_GOSSIP_MENU(TEXT_ID_ENTRANCE_1, pCreature->GetObjectGuid());
                 break;
         }
     }
@@ -90,14 +90,14 @@ bool GossipSelect_npc_chromie(Player* pPlayer, Creature* pCreature, uint32 sende
             {
                 case GOSSIP_ACTION_INFO_DEF+1:
                     pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_INN_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-                    pPlayer->SEND_GOSSIP_MENU(TEXT_ID_INN_2, pCreature->GetGUID());
+                    pPlayer->SEND_GOSSIP_MENU(TEXT_ID_INN_2, pCreature->GetObjectGuid());
                     break;
                 case GOSSIP_ACTION_INFO_DEF+2:
                     pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_INN_3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-                    pPlayer->SEND_GOSSIP_MENU(TEXT_ID_INN_3, pCreature->GetGUID());
+                    pPlayer->SEND_GOSSIP_MENU(TEXT_ID_INN_3, pCreature->GetObjectGuid());
                     break;
                 case GOSSIP_ACTION_INFO_DEF+3:
-                    pPlayer->SEND_GOSSIP_MENU(TEXT_ID_INN_4, pCreature->GetGUID());
+                    pPlayer->SEND_GOSSIP_MENU(TEXT_ID_INN_4, pCreature->GetObjectGuid());
                     if (!pPlayer->HasItemCount(ITEM_ARCANE_DISRUPTOR, 1))
                     {
                         if (Item* pItem = pPlayer->StoreNewItemInInventorySlot(ITEM_ARCANE_DISRUPTOR, 1))
@@ -118,14 +118,14 @@ bool GossipSelect_npc_chromie(Player* pPlayer, Creature* pCreature, uint32 sende
             {
                 case GOSSIP_ACTION_INFO_DEF+1:
                     pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_ENTRANCE_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-                    pPlayer->SEND_GOSSIP_MENU(TEXT_ID_ENTRANCE_2, pCreature->GetGUID());
+                    pPlayer->SEND_GOSSIP_MENU(TEXT_ID_ENTRANCE_2, pCreature->GetObjectGuid());
                     break;
                 case GOSSIP_ACTION_INFO_DEF+2:
                     pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_ENTRANCE_3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-                    pPlayer->SEND_GOSSIP_MENU(TEXT_ID_ENTRANCE_3, pCreature->GetGUID());
+                    pPlayer->SEND_GOSSIP_MENU(TEXT_ID_ENTRANCE_3, pCreature->GetObjectGuid());
                     break;
                 case GOSSIP_ACTION_INFO_DEF+3:
-                    pPlayer->SEND_GOSSIP_MENU(TEXT_ID_ENTRANCE_4, pCreature->GetGUID());
+                    pPlayer->SEND_GOSSIP_MENU(TEXT_ID_ENTRANCE_4, pCreature->GetObjectGuid());
                     if (instance_culling_of_stratholme* pInstance = (instance_culling_of_stratholme*)pCreature->GetInstanceData())
                     {
                         if (pInstance->GetData(TYPE_ARTHAS_INTRO_EVENT) == NOT_STARTED)

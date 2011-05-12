@@ -112,7 +112,7 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
         if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
             pSummoned->GetMotionMaster()->MoveFollow(pTarget, 0.0f, 0.0f);
 
-        pSummoned->CastSpell(pSummoned, SPELL_ENERGY_BOLT, false, NULL, NULL, m_creature->GetGUID());
+        pSummoned->CastSpell(pSummoned, SPELL_ENERGY_BOLT, false, NULL, NULL, m_creature->GetObjectGuid());
     }
 
     void UpdateAI(const uint32 diff)

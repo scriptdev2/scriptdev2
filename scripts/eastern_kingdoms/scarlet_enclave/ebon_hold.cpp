@@ -608,7 +608,7 @@ bool GossipHello_npc_death_knight_initiate(Player* pPlayer, Creature* pCreature)
     if (pPlayer->GetQuestStatus(QUEST_DEATH_CHALLENGE) == QUEST_STATUS_INCOMPLETE)
     {
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ACCEPT_DUEL, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-        pPlayer->SEND_GOSSIP_MENU(13433, pCreature->GetGUID());
+        pPlayer->SEND_GOSSIP_MENU(13433, pCreature->GetObjectGuid());
         return true;
     }
     return false;

@@ -365,22 +365,22 @@ CreatureAI* GetAI_npc_time_rift(Creature* pCreature)
 bool GossipHello_npc_saat(Player* pPlayer, Creature* pCreature)
 {
     if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
 
     if (pPlayer->GetQuestStatus(QUEST_OPENING_PORTAL) == QUEST_STATUS_INCOMPLETE && !pPlayer->HasItemCount(ITEM_CHRONO_BEACON,1))
     {
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_OBTAIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-        pPlayer->SEND_GOSSIP_MENU(10000, pCreature->GetGUID());
+        pPlayer->SEND_GOSSIP_MENU(10000, pCreature->GetObjectGuid());
         return true;
     }
     else if (pPlayer->GetQuestRewardStatus(QUEST_OPENING_PORTAL) && !pPlayer->HasItemCount(ITEM_CHRONO_BEACON,1))
     {
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_OBTAIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-        pPlayer->SEND_GOSSIP_MENU(10001, pCreature->GetGUID());
+        pPlayer->SEND_GOSSIP_MENU(10001, pCreature->GetObjectGuid());
         return true;
     }
 
-    pPlayer->SEND_GOSSIP_MENU(10002, pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(10002, pCreature->GetObjectGuid());
     return true;
 }
 

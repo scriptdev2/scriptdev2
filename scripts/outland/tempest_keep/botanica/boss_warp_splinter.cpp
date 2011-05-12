@@ -170,7 +170,7 @@ struct MANGOS_DLL_DECL boss_warp_splinterAI : public ScriptedAI
                 {
                     // 2) Heal Warp Splinter
                     int32 CurrentHP_Treant = (int32)pTreant->GetHealth();
-                    m_creature->CastCustomSpell(m_creature,SPELL_HEAL_FATHER,&CurrentHP_Treant, 0, 0, true,0 ,0, m_creature->GetGUID());
+                    m_creature->CastCustomSpell(m_creature, SPELL_HEAL_FATHER, &CurrentHP_Treant, 0, 0, true, 0 ,0, m_creature->GetObjectGuid());
 
                     // 3) Kill Treant
                     pTreant->DealDamage(pTreant, pTreant->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);

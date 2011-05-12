@@ -430,7 +430,7 @@ bool GossipHello_boss_majordomo(Player* pPlayer, Creature* pCreature)
         if (pInstance->GetData(TYPE_RAGNAROS) == NOT_STARTED || pInstance->GetData(TYPE_RAGNAROS) == FAIL)
         {
             pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_SUMMON_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-            pPlayer->SEND_GOSSIP_MENU(TEXT_ID_SUMMON_1, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(TEXT_ID_SUMMON_1, pCreature->GetObjectGuid());
         }
     }
     return true;
@@ -442,11 +442,11 @@ bool GossipSelect_boss_majordomo(Player* pPlayer, Creature* pCreature, uint32 se
     {
         case GOSSIP_ACTION_INFO_DEF + 1:
             pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_SUMMON_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-            pPlayer->SEND_GOSSIP_MENU(TEXT_ID_SUMMON_2, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(TEXT_ID_SUMMON_2, pCreature->GetObjectGuid());
             break;
         case GOSSIP_ACTION_INFO_DEF + 2:
             pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_SUMMON_3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-            pPlayer->SEND_GOSSIP_MENU(TEXT_ID_SUMMON_3, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(TEXT_ID_SUMMON_3, pCreature->GetObjectGuid());
             break;
         case GOSSIP_ACTION_INFO_DEF + 3:
             pPlayer->CLOSE_GOSSIP_MENU();

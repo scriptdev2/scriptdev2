@@ -202,7 +202,7 @@ struct MANGOS_DLL_DECL boss_volkhanAI : public ScriptedAI
                 pSummoned->AI()->AttackStart(pTarget);
 
             //why healing when just summoned?
-            pSummoned->CastSpell(pSummoned, m_bIsRegularMode ? SPELL_HEAT_N : SPELL_HEAT_H, false, NULL, NULL, m_creature->GetGUID());
+            pSummoned->CastSpell(pSummoned, m_bIsRegularMode ? SPELL_HEAT_N : SPELL_HEAT_H, false, NULL, NULL, m_creature->GetObjectGuid());
         }
     }
 

@@ -447,7 +447,7 @@ bool GossipHello_npc_floon(Player* pPlayer, Creature* pCreature)
     if (pPlayer->GetQuestStatus(QUEST_CRACK_SKULLS) == QUEST_STATUS_INCOMPLETE)
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_FLOON1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
-    pPlayer->SEND_GOSSIP_MENU(9442, pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(9442, pCreature->GetObjectGuid());
     return true;
 }
 
@@ -456,7 +456,7 @@ bool GossipSelect_npc_floon(Player* pPlayer, Creature* pCreature, uint32 uiSende
     if (uiAction == GOSSIP_ACTION_INFO_DEF)
     {
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_FLOON2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-        pPlayer->SEND_GOSSIP_MENU(9443, pCreature->GetGUID());
+        pPlayer->SEND_GOSSIP_MENU(9443, pCreature->GetObjectGuid());
     }
     if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
     {
@@ -477,12 +477,12 @@ bool GossipSelect_npc_floon(Player* pPlayer, Creature* pCreature, uint32 uiSende
 bool GossipHello_npc_skyguard_handler_deesak(Player* pPlayer, Creature* pCreature)
 {
     if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
 
     if (pPlayer->GetReputationRank(1031) >= REP_HONORED)
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SKYGUARD, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
 
     return true;
 }
@@ -916,10 +916,10 @@ bool GossipHello_npc_slim(Player* pPlayer, Creature* pCreature)
     if (pCreature->isVendor() && pPlayer->GetReputationRank(FACTION_CONSORTIUM) >= REP_FRIENDLY)
     {
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
-        pPlayer->SEND_GOSSIP_MENU(9896, pCreature->GetGUID());
+        pPlayer->SEND_GOSSIP_MENU(9896, pCreature->GetObjectGuid());
     }
     else
-        pPlayer->SEND_GOSSIP_MENU(9895, pCreature->GetGUID());
+        pPlayer->SEND_GOSSIP_MENU(9895, pCreature->GetObjectGuid());
 
     return true;
 }
@@ -927,7 +927,7 @@ bool GossipHello_npc_slim(Player* pPlayer, Creature* pCreature)
 bool GossipSelect_npc_slim(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_TRADE)
-        pPlayer->SEND_VENDORLIST(pCreature->GetGUID());
+        pPlayer->SEND_VENDORLIST(pCreature->GetObjectGuid());
 
     return true;
 }

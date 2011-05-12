@@ -338,7 +338,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         if (pSummoned->GetEntry() == CREATURE_DOOMFIRE)
         {
             pSummoned->CastSpell(pSummoned,SPELL_DOOMFIRE_SPAWN,false);
-            pSummoned->CastSpell(pSummoned,SPELL_DOOMFIRE,true,0,0,m_creature->GetGUID());
+            pSummoned->CastSpell(pSummoned, SPELL_DOOMFIRE, true, NULL, NULL, m_creature->GetObjectGuid());
 
             if (Creature* pDoomfireSpirit = m_creature->GetMap()->GetCreature(DoomfireSpiritGUID))
             {

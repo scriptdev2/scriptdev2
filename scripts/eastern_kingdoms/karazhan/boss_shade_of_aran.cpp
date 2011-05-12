@@ -463,7 +463,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
 
                     if (pPlayer && !pPlayer->IsWithinDist2d(m_fFWTargPosX[i], m_fFWTargPosY[i], 3.0f))
                     {
-                        pPlayer->CastSpell(pPlayer, SPELL_EXPLOSION, true, 0, 0, m_creature->GetGUID());
+                        pPlayer->CastSpell(pPlayer, SPELL_EXPLOSION, true, 0, 0, m_creature->GetObjectGuid());
                         pPlayer->CastSpell(pPlayer, SPELL_KNOCKBACK_500, true);
                         m_uiFlameWreathTarget[i] = 0;
                     }

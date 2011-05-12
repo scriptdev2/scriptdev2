@@ -79,7 +79,7 @@ struct MANGOS_DLL_DECL boss_broggokAI : public ScriptedAI
         summoned->setFaction(16);
         summoned->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
         summoned->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-        summoned->CastSpell(summoned,SPELL_POISON,false,0,0,m_creature->GetGUID());
+        summoned->CastSpell(summoned, SPELL_POISON, false, NULL, NULL, m_creature->GetObjectGuid());
     }
 
     void JustDied(Unit *who)

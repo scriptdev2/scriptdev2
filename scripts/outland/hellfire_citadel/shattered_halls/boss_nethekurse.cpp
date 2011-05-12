@@ -245,7 +245,7 @@ struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
 
         // triggered spell of consumption does not properly show it's SpellVisual, wrong spellid?
         pSummoned->CastSpell(pSummoned, SPELL_TEMPORARY_VISUAL, true);
-        pSummoned->CastSpell(pSummoned, SPELL_CONSUMPTION, false, 0, 0, m_creature->GetGUID());
+        pSummoned->CastSpell(pSummoned, SPELL_CONSUMPTION, false, NULL, NULL, m_creature->GetObjectGuid());
     }
 
     void KilledUnit(Unit* pVictim)

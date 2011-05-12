@@ -513,7 +513,7 @@ struct MANGOS_DLL_DECL mob_enchanted_elementalAI : public ScriptedAI
                 {
                     //increase lady vashj damage
                     if (pVashj->isAlive() && pVashj->isInCombat())
-                        m_creature->CastSpell(pVashj, SPELL_SURGE, false, 0, 0, pVashj->GetGUID());
+                        m_creature->CastSpell(pVashj, SPELL_SURGE, false, NULL, NULL, pVashj->GetObjectGuid());
                     else
                         m_creature->SetDeathState(JUST_DIED);
                 }

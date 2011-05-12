@@ -31,7 +31,7 @@ EndScriptData */
 bool GossipHello_npc_braug_dimspirit(Player* pPlayer, Creature* pCreature)
 {
     if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
 
     if (pPlayer->GetQuestStatus(6627) == QUEST_STATUS_INCOMPLETE)
     {
@@ -41,10 +41,10 @@ bool GossipHello_npc_braug_dimspirit(Player* pPlayer, Creature* pCreature)
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Alexstrasza", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Malygos", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-        pPlayer->SEND_GOSSIP_MENU(5820, pCreature->GetGUID());
+        pPlayer->SEND_GOSSIP_MENU(5820, pCreature->GetObjectGuid());
     }
     else
-        pPlayer->SEND_GOSSIP_MENU(5819, pCreature->GetGUID());
+        pPlayer->SEND_GOSSIP_MENU(5819, pCreature->GetObjectGuid());
 
     return true;
 }
