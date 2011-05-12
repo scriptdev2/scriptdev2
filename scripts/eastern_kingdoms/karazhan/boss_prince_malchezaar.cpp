@@ -394,8 +394,8 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
         if (m_creature->hasUnitState(UNIT_STAT_STUNNED))    //While shifting to phase 2 malchezaar stuns himself
             return;
 
-        if (m_creature->GetUInt64Value(UNIT_FIELD_TARGET)!=m_creature->getVictim()->GetGUID())
-            m_creature->SetUInt64Value(UNIT_FIELD_TARGET, m_creature->getVictim()->GetGUID());
+        if (m_creature->GetTargetGuid() != m_creature->getVictim()->GetObjectGuid())
+            m_creature->SetTargetGuid(m_creature->getVictim()->GetObjectGuid());
 
         if (phase == 1)
         {

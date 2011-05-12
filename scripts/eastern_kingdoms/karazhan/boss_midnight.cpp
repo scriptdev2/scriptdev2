@@ -156,7 +156,7 @@ struct MANGOS_DLL_DECL boss_midnightAI : public ScriptedAI
                             if (pAttumen->getVictim())
                             {
                                 pAttumen->GetMotionMaster()->MoveChase(pAttumen->getVictim());
-                                pAttumen->SetUInt64Value(UNIT_FIELD_TARGET, pAttumen->getVictim()->GetGUID());
+                                pAttumen->SetTargetGuid(pAttumen->getVictim()->GetObjectGuid());
                             }
                             pAttumen->SetFloatValue(OBJECT_FIELD_SCALE_X,1);
                         }

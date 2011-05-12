@@ -576,7 +576,7 @@ struct MANGOS_DLL_DECL npc_akama_illidanAI : public ScriptedAI
                             float dx = Illidan->GetPositionX() + rand()%15;
                             float dy = Illidan->GetPositionY() + rand()%15;
                             m_creature->GetMotionMaster()->MovePoint(13, dx, dy, Illidan->GetPositionZ());
-                            m_creature->SetUInt64Value(UNIT_FIELD_TARGET, IllidanGUID);
+                            m_creature->SetTargetGuid(Illidan->GetObjectGuid());
                         }
                     }
                 }
@@ -1072,7 +1072,7 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
             return;
 
         RefaceVictim = true;
-        m_creature->SetUInt64Value(UNIT_FIELD_TARGET, victim->GetGUID());
+        m_creature->SetTargetGuid(victim->GetObjectGuid());
         m_creature->CastSpell(victim, Spell, triggered);
     }
 
@@ -1113,7 +1113,7 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
                 else
                 {
                     pTrigger->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                    m_creature->SetUInt64Value(UNIT_FIELD_TARGET, pTrigger->GetGUID());
+                    m_creature->SetTargetGuid(pTrigger->GetObjectGuid());
                     DoCastSpellIfCan(pTrigger, SPELL_EYE_BLAST);
                 }
             }
@@ -1265,7 +1265,7 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
         LandTimer = 0;
         Phase = PHASE_FLIGHT;
         m_creature->RemoveAllAuras();
-        m_creature->SetUInt64Value(UNIT_FIELD_TARGET, 0);
+        m_creature->SetTargetGuid(ObjectGuid());
 
         // So players don't shoot us down
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
@@ -1410,7 +1410,7 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
                 Maiev->NearTeleportTo(dx, dy, Maiev->GetPositionZ(), 0.0f);
 
                 Maiev->CastSpell(Maiev, SPELL_TELEPORT_VISUAL, true);
-                Maiev->SetUInt64Value(UNIT_FIELD_TARGET, m_creature->GetGUID());
+                Maiev->SetTargetGuid(m_creature->GetObjectGuid());
             }
         }
         IsTalking = true;
@@ -1468,9 +1468,9 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
                                 // onoz she looks like she teleported!
                                 Maiev->CastSpell(Maiev, SPELL_TELEPORT_VISUAL, true);
                                 // Have her face us
-                                Maiev->SetUInt64Value(UNIT_FIELD_TARGET, m_creature->GetGUID());
+                                Maiev->SetTargetGuid(m_creature->GetObjectGuid());
                                 // Face her, so it's not rude =P
-                                m_creature->SetUInt64Value(UNIT_FIELD_TARGET, Maiev->GetGUID());
+                                m_creature->SetTargetGuid(Maiev->GetObjectGuid());
                             }
                         }
                         break;
@@ -1549,7 +1549,7 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
         {
             if (FaceVictimTimer < diff)
             {
-                m_creature->SetUInt64Value(UNIT_FIELD_TARGET, m_creature->getVictim()->GetGUID());
+                m_creature->SetTargetGuid(m_creature->getVictim()->GetObjectGuid());
                 FaceVictimTimer = 1000;
                 RefaceVictim = false;
             }else FaceVictimTimer -= diff;
@@ -1717,7 +1717,7 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
 
                         // We should let the raid fight us =)
                         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                        m_creature->SetUInt64Value(UNIT_FIELD_TARGET, m_creature->getVictim()->GetGUID());
+                        m_creature->SetTargetGuid(m_creature->getVictim()->GetObjectGuid());
 
                         // Chase our victim!
                         m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
@@ -1831,7 +1831,7 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
                     Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO, 0);
                     if (target && target->isAlive())
                     {
-                        m_creature->SetUInt64Value(UNIT_FIELD_TARGET, target->GetGUID());
+                        m_creature->SetTargetGuid(target->GetObjectGuid());
                         DoCastSpellIfCan(target, SPELL_SHADOW_BLAST);
                         ShadowBlastTimer = 4000;
                         GlobalTimer += 1500;
@@ -1936,8 +1936,8 @@ void npc_akama_illidanAI::BeginEvent(uint64 PlayerGUID)
             pIllidanAI->IsTalking = true;
             pIllidanAI->AkamaGUID = m_creature->GetGUID();
 
-            m_creature->SetUInt64Value(UNIT_FIELD_TARGET, pIllidan->GetGUID());
-            pIllidan->SetUInt64Value(UNIT_FIELD_TARGET, m_creature->GetGUID());
+            m_creature->SetTargetGuid(pIllidan->GetObjectGuid());
+            pIllidan->SetTargetGuid(m_creature->GetObjectGuid());
 
             IsTalking = true;                               // Prevent Akama from starting to attack him
                                                             // Prevent players from talking again
