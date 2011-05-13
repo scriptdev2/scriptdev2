@@ -168,12 +168,12 @@ struct MANGOS_DLL_DECL npc_daegarnAI : public ScriptedAI
     npc_daegarnAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
     bool m_bEventInProgress;
-    uint64 m_uiPlayerGUID;
+    ObjectGuid m_playerGuid;
 
     void Reset()
     {
         m_bEventInProgress = false;
-        m_uiPlayerGUID = 0;
+        m_playerGuid.Clear();
     }
 
     void StartEvent(Player* pPlayer)
@@ -181,14 +181,14 @@ struct MANGOS_DLL_DECL npc_daegarnAI : public ScriptedAI
         if (m_bEventInProgress)
             return;
 
-        m_uiPlayerGUID = pPlayer->GetGUID();
+        m_playerGuid = pPlayer->GetObjectGuid();
 
         SummonGladiator(NPC_FIRJUS);
     }
 
     void JustSummoned(Creature* pSummon)
     {
-        if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID))
+        if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid))
         {
             if (pPlayer->isAlive())
             {
@@ -208,7 +208,7 @@ struct MANGOS_DLL_DECL npc_daegarnAI : public ScriptedAI
 
     void SummonedMovementInform(Creature* pSummoned, uint32 uiMotionType, uint32 uiPointId)
     {
-        Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID);
+        Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid);
 
         // could be group, so need additional here.
         if (!pPlayer || !pPlayer->isAlive())

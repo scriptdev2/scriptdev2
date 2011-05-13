@@ -48,13 +48,16 @@ struct MANGOS_DLL_DECL npc_gurgthockAI : public ScriptedAI
 {
     npc_gurgthockAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
-    uint64 m_uiPlayerGUID;
+    ObjectGuid m_playerGuid;
 
-    void SetPlayerGUID(uint64 uiPlayerGUID) { m_uiPlayerGUID = uiPlayerGUID; }
+    void SetPlayer(Player* pPlayer)
+    {
+        m_playerGuid = pPlayer->GetObjectGuid();
+    }
 
     void Reset()
     {
-        m_uiPlayerGUID = 0;
+        m_playerGuid.Clear();
     }
 
     void SummonedCreatureJustDied(Creature* pSummoned)
@@ -64,10 +67,10 @@ struct MANGOS_DLL_DECL npc_gurgthockAI : public ScriptedAI
         {
             if (uiEntry == m_auiBosses[i])
             {
-                if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID))
+                if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid))
                     pPlayer->GroupEventHappens(QUEST_FROM_BEYOND, m_creature);
 
-                m_uiPlayerGUID = 0;
+                m_playerGuid.Clear();
                 return;
             }
         }
@@ -81,7 +84,7 @@ bool QuestAccept_npc_gurgthock(Player* pPlayer, Creature* pCreature, const Quest
         pCreature->SummonCreature(m_auiBosses[urand(0, 3)], m_afSpawnLocation[0], m_afSpawnLocation[1], m_afSpawnLocation[2], 0.0f, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 600000);
 
         if (npc_gurgthockAI* pGurthockAI = dynamic_cast<npc_gurgthockAI*>(pCreature->AI()))
-            pGurthockAI->SetPlayerGUID(pPlayer->GetGUID());
+            pGurthockAI->SetPlayer(pPlayer);
     }
     return true;
 }
