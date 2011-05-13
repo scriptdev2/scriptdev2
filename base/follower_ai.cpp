@@ -308,7 +308,7 @@ void FollowerAI::StartFollow(Player* pLeader, uint32 uiFactionForFollower, const
 
     m_creature->GetMotionMaster()->MoveFollow(pLeader, PET_FOLLOW_DIST, PET_FOLLOW_ANGLE);
 
-    debug_log("SD2: FollowerAI start follow %s (Guid %s)", pLeader->GetName(), m_leaderGuid.GetString());
+    debug_log("SD2: FollowerAI start follow %s (Guid %s)", pLeader->GetName(), m_leaderGuid.GetString().c_str());
 }
 
 Player* FollowerAI::GetLeaderForFollower()
