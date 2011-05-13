@@ -156,20 +156,9 @@ struct MANGOS_DLL_DECL npc_ancestral_wolfAI : public npc_escortAI
         Reset();
     }
 
-    Unit* pRyga;
-
     void Reset()
     {
-        pRyga = NULL;
         m_creature->CastSpell(m_creature, SPELL_ANCESTRAL_WOLF_BUFF, true);
-    }
-
-    void MoveInLineOfSight(Unit* pWho)
-    {
-        if (!pRyga && pWho->GetTypeId() == TYPEID_UNIT && pWho->GetEntry() == NPC_RYGA && m_creature->IsWithinDistInMap(pWho, 15.0f))
-            pRyga = pWho;
-
-        npc_escortAI::MoveInLineOfSight(pWho);
     }
 
     void WaypointReached(uint32 uiPointId)
@@ -183,6 +172,7 @@ struct MANGOS_DLL_DECL npc_ancestral_wolfAI : public npc_escortAI
                 DoScriptText(EMOTE_WOLF_HOWL, m_creature);
                 break;
             case 50:
+                Creature* pRyga = GetClosestCreatureWithEntry(m_creature, NPC_RYGA, 30.0f);
                 if (pRyga && pRyga->isAlive() && !pRyga->isInCombat())
                     DoScriptText(SAY_WOLF_WELCOME, pRyga);
                 break;

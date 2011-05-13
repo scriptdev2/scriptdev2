@@ -82,8 +82,8 @@ struct MANGOS_DLL_DECL npc_manaforge_control_consoleAI : public ScriptedAI
 {
     npc_manaforge_control_consoleAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
-    uint64 m_uiPlayerGUID;
-    uint64 m_uiConsoleGUID;
+    ObjectGuid m_playerGuid;
+    ObjectGuid m_consoleGuid;
     uint32 m_uiEventTimer;
     uint32 m_uiWaveTimer;
     uint32 m_uiPhase;
@@ -91,8 +91,8 @@ struct MANGOS_DLL_DECL npc_manaforge_control_consoleAI : public ScriptedAI
 
     void Reset()
     {
-        m_uiPlayerGUID = 0;
-        m_uiConsoleGUID = 0;
+        m_playerGuid.Clear();
+        m_consoleGuid.Clear();
         m_uiEventTimer = 3000;
         m_uiWaveTimer = 0;
         m_uiPhase = 1;
@@ -111,39 +111,33 @@ struct MANGOS_DLL_DECL npc_manaforge_control_consoleAI : public ScriptedAI
     {
         DoScriptText(EMOTE_ABORT, m_creature);
 
-        if (m_uiPlayerGUID)
-        {
-            Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID);
+        Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid);
 
-            if (pPlayer)
+        if (pPlayer)
+        {
+            switch(m_creature->GetEntry())
             {
-                switch(m_creature->GetEntry())
-                {
-                    case NPC_BNAAR_C_CONSOLE:
-                        pPlayer->FailQuest(QUEST_SHUTDOWN_BNAAR_ALDOR);
-                        pPlayer->FailQuest(QUEST_SHUTDOWN_BNAAR_SCRYERS);
-                        break;
-                    case NPC_CORUU_C_CONSOLE:
-                        pPlayer->FailQuest(QUEST_SHUTDOWN_CORUU_ALDOR);
-                        pPlayer->FailQuest(QUEST_SHUTDOWN_CORUU_SCRYERS);
-                        break;
-                    case NPC_DURO_C_CONSOLE:
-                        pPlayer->FailQuest(QUEST_SHUTDOWN_DURO_ALDOR);
-                        pPlayer->FailQuest(QUEST_SHUTDOWN_DURO_SCRYERS);
-                        break;
-                    case NPC_ARA_C_CONSOLE:
-                        pPlayer->FailQuest(QUEST_SHUTDOWN_ARA_ALDOR);
-                        pPlayer->FailQuest(QUEST_SHUTDOWN_ARA_SCRYERS);
-                        break;
-                }
+                case NPC_BNAAR_C_CONSOLE:
+                    pPlayer->FailQuest(QUEST_SHUTDOWN_BNAAR_ALDOR);
+                    pPlayer->FailQuest(QUEST_SHUTDOWN_BNAAR_SCRYERS);
+                    break;
+                case NPC_CORUU_C_CONSOLE:
+                    pPlayer->FailQuest(QUEST_SHUTDOWN_CORUU_ALDOR);
+                    pPlayer->FailQuest(QUEST_SHUTDOWN_CORUU_SCRYERS);
+                    break;
+                case NPC_DURO_C_CONSOLE:
+                    pPlayer->FailQuest(QUEST_SHUTDOWN_DURO_ALDOR);
+                    pPlayer->FailQuest(QUEST_SHUTDOWN_DURO_SCRYERS);
+                    break;
+                case NPC_ARA_C_CONSOLE:
+                    pPlayer->FailQuest(QUEST_SHUTDOWN_ARA_ALDOR);
+                    pPlayer->FailQuest(QUEST_SHUTDOWN_ARA_SCRYERS);
+                    break;
             }
         }
 
-        if (m_uiConsoleGUID)
-        {
-            if (GameObject* pGo = m_creature->GetMap()->GetGameObject(m_uiConsoleGUID))
-                pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_IN_USE);
-        }
+        if (GameObject* pGo = m_creature->GetMap()->GetGameObject(m_consoleGuid))
+            pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_IN_USE);
     }
 
     void DoWaveSpawnForCreature(Creature* pCreature)
@@ -242,13 +236,17 @@ struct MANGOS_DLL_DECL npc_manaforge_control_consoleAI : public ScriptedAI
     {
         if (m_uiEventTimer < uiDiff)
         {
-            if (!m_uiPlayerGUID)
-                return;
-
-            Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID);
+            Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid);
 
             if (!pPlayer)
+            {
+                // Reset Event
+                if (GameObject* pGo = m_creature->GetMap()->GetGameObject(m_consoleGuid))
+                    pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_IN_USE);
+
+                m_creature->ForcedDespawn();
                 return;
+            }
 
             switch(m_uiPhase)
             {
@@ -279,11 +277,10 @@ struct MANGOS_DLL_DECL npc_manaforge_control_consoleAI : public ScriptedAI
                     DoScriptText(EMOTE_COMPLETE, m_creature, pPlayer);
                     pPlayer->KilledMonsterCredit(m_creature->GetEntry(), m_creature->GetObjectGuid());
                     DoCastSpellIfCan(m_creature, SPELL_DISABLE_VISUAL);
-                    if (m_uiConsoleGUID)
-                    {
-                        if (GameObject* pGo = m_creature->GetMap()->GetGameObject(m_uiConsoleGUID))
-                            pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_IN_USE);
-                    }
+
+                    if (GameObject* pGo = m_creature->GetMap()->GetGameObject(m_consoleGuid))
+                        pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_IN_USE);
+
                     ++m_uiPhase;
                     break;
             }
@@ -354,8 +351,8 @@ bool GOUse_go_manaforge_control_console(Player* pPlayer, GameObject* pGo)
     {
         if (npc_manaforge_control_consoleAI* pManaforgeAI = dynamic_cast<npc_manaforge_control_consoleAI*>(pManaforge->AI()))
         {
-            pManaforgeAI->m_uiPlayerGUID = pPlayer->GetGUID();
-            pManaforgeAI->m_uiConsoleGUID = pGo->GetGUID();
+            pManaforgeAI->m_playerGuid = pPlayer->GetObjectGuid();
+            pManaforgeAI->m_consoleGuid = pGo->GetGUID();
         }
 
         pGo->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_IN_USE);
@@ -394,9 +391,9 @@ struct MANGOS_DLL_DECL npc_commander_dawnforgeAI : public ScriptedAI
 {
     npc_commander_dawnforgeAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset (); }
 
-    uint64 m_uiPlayerGUID;
-    uint64 m_uiArdonisGUID;
-    uint64 m_uiPathaleonGUID;
+    ObjectGuid m_playerGuid;
+    ObjectGuid m_ardonisGuid;
+    ObjectGuid m_pathaleonGuid;
 
     uint32 m_uiPhase;
     uint32 m_uiPhaseSubphase;
@@ -405,9 +402,9 @@ struct MANGOS_DLL_DECL npc_commander_dawnforgeAI : public ScriptedAI
 
     void Reset()
     {
-        m_uiPlayerGUID = 0;
-        m_uiArdonisGUID = 0;
-        m_uiPathaleonGUID = 0;
+        m_playerGuid.Clear();
+        m_ardonisGuid.Clear();
+        m_pathaleonGuid.Clear();
 
         m_uiPhase = 1;
         m_uiPhaseSubphase = 0;
@@ -418,14 +415,14 @@ struct MANGOS_DLL_DECL npc_commander_dawnforgeAI : public ScriptedAI
     void JustSummoned(Creature* pSummoned)
     {
         if (pSummoned->GetEntry() == NPC_PATHALEON_THE_CALCULATOR_IMAGE)
-            m_uiPathaleonGUID = pSummoned->GetGUID();
+            m_pathaleonGuid = pSummoned->GetObjectGuid();
     }
 
     void TurnToPathaleonsImage()
     {
-        Creature* pArdonis = m_creature->GetMap()->GetCreature(m_uiArdonisGUID);
-        Creature* pPathaleon = m_creature->GetMap()->GetCreature(m_uiPathaleonGUID);
-        Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID);
+        Creature* pArdonis = m_creature->GetMap()->GetCreature(m_ardonisGuid);
+        Creature* pPathaleon = m_creature->GetMap()->GetCreature(m_pathaleonGuid);
+        Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid);
 
         if (!pArdonis || !pPathaleon || !pPlayer)
             return;
@@ -440,9 +437,9 @@ struct MANGOS_DLL_DECL npc_commander_dawnforgeAI : public ScriptedAI
 
     void TurnToEachOther()
     {
-        if (Creature* pArdonis = m_creature->GetMap()->GetCreature(m_uiArdonisGUID))
+        if (Creature* pArdonis = m_creature->GetMap()->GetCreature(m_ardonisGuid))
         {
-            Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID);
+            Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid);
 
             if (!pPlayer)
                 return;
@@ -465,8 +462,8 @@ struct MANGOS_DLL_DECL npc_commander_dawnforgeAI : public ScriptedAI
             if (!pArdonis)
                 return false;
 
-            m_uiArdonisGUID = pArdonis->GetGUID();
-            m_uiPlayerGUID = pPlayer->GetGUID();
+            m_ardonisGuid = pArdonis->GetObjectGuid();
+            m_playerGuid = pPlayer->GetObjectGuid();
 
             m_bIsEvent = true;
 
@@ -491,9 +488,9 @@ struct MANGOS_DLL_DECL npc_commander_dawnforgeAI : public ScriptedAI
             return;
         }
 
-        Creature* pArdonis = m_creature->GetMap()->GetCreature(m_uiArdonisGUID);
-        Creature* pPathaleon = m_creature->GetMap()->GetCreature(m_uiPathaleonGUID);
-        Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID);
+        Creature* pArdonis = m_creature->GetMap()->GetCreature(m_ardonisGuid);
+        Creature* pPathaleon = m_creature->GetMap()->GetCreature(m_pathaleonGuid);
+        Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid);
 
         if (!pArdonis || !pPlayer)
         {
@@ -778,8 +775,8 @@ struct MANGOS_DLL_DECL npc_maxx_a_million_escortAI : public npc_escortAI
 
     uint8 m_uiSubEvent;
     uint32 m_uiSubEventTimer;
-    uint64 m_uiAlleyGUID;
-    uint64 m_uiLastDraeneiMachineGUID;
+    ObjectGuid m_alleyGuid;
+    ObjectGuid m_lastDraeneiMachineGuid;
 
     void Reset()
     {
@@ -787,8 +784,8 @@ struct MANGOS_DLL_DECL npc_maxx_a_million_escortAI : public npc_escortAI
         {
             m_uiSubEvent = 0;
             m_uiSubEventTimer = 0;
-            m_uiAlleyGUID = 0;
-            m_uiLastDraeneiMachineGUID = 0;
+            m_alleyGuid.Clear();
+            m_lastDraeneiMachineGuid.Clear();
 
             // Reset fields, that were changed on escort-start
             m_creature->HandleEmote(EMOTE_STATE_STUN);
@@ -819,19 +816,19 @@ struct MANGOS_DLL_DECL npc_maxx_a_million_escortAI : public npc_escortAI
                 if (GameObject* pMachine = GetClosestGameObjectWithEntry(m_creature, GO_DRAENEI_MACHINE, INTERACTION_DISTANCE))
                 {
                     m_creature->SetFacingToObject(pMachine);
-                    m_uiLastDraeneiMachineGUID = pMachine->GetGUID();
+                    m_lastDraeneiMachineGuid = pMachine->GetObjectGuid();
                     m_uiSubEvent = 2;
                     m_uiSubEventTimer = 1000;
                 }
                 else
-                    m_uiLastDraeneiMachineGUID = 0;
+                    m_lastDraeneiMachineGuid.Clear();
 
                 break;
             case 36:
                 if (Player* pPlayer = GetPlayerForEscort())
                     pPlayer->GroupEventHappens(QUEST_MARK_V_IS_ALIVE, m_creature);
 
-                if (Creature* pAlley = m_creature->GetMap()->GetCreature(m_uiAlleyGUID))
+                if (Creature* pAlley = m_creature->GetMap()->GetCreature(m_alleyGuid))
                     DoScriptText(SAY_ALLEY_FINISH, pAlley);
 
                 break;
@@ -863,7 +860,7 @@ struct MANGOS_DLL_DECL npc_maxx_a_million_escortAI : public npc_escortAI
                         case 1:                             // Wait time before Say
                             if (Creature* pAlley = GetClosestCreatureWithEntry(m_creature, NPC_BOT_SPECIALIST_ALLEY, INTERACTION_DISTANCE*2))
                             {
-                                m_uiAlleyGUID = pAlley->GetGUID();
+                                m_alleyGuid = pAlley->GetObjectGuid();
                                 DoScriptText(SAY_ALLEY_FAREWELL, pAlley);
                             }
                             m_uiSubEventTimer = 0;
@@ -875,10 +872,10 @@ struct MANGOS_DLL_DECL npc_maxx_a_million_escortAI : public npc_escortAI
                             m_uiSubEvent = 3;
                             break;
                         case 3:                             // Despawn machine after 2s
-                            if (GameObject* pMachine = m_creature->GetMap()->GetGameObject(m_uiLastDraeneiMachineGUID))
+                            if (GameObject* pMachine = m_creature->GetMap()->GetGameObject(m_lastDraeneiMachineGuid))
                                 pMachine->Use(m_creature);
 
-                            m_uiLastDraeneiMachineGUID = 0;
+                            m_lastDraeneiMachineGuid.Clear();
                             m_uiSubEventTimer = 0;
                             m_uiSubEvent = 0;
                             break;

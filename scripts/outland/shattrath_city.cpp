@@ -54,16 +54,14 @@ struct MANGOS_DLL_DECL npc_dirty_larryAI : public ScriptedAI
     npc_dirty_larryAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_uiNpcFlags = pCreature->GetUInt32Value(UNIT_NPC_FLAGS);
-        m_uiCreepjackGUID = 0;
-        m_uiMaloneGUID = 0;
         Reset();
     }
 
     uint32 m_uiNpcFlags;
 
-    uint64 m_uiCreepjackGUID;
-    uint64 m_uiMaloneGUID;
-    uint64 m_uiPlayerGUID;
+    ObjectGuid m_creepjackGuid;
+    ObjectGuid m_maloneGuid;
+    ObjectGuid m_playerGuid;
 
     bool bEvent;
     bool bActiveAttack;
@@ -75,9 +73,9 @@ struct MANGOS_DLL_DECL npc_dirty_larryAI : public ScriptedAI
     {
         m_creature->SetUInt32Value(UNIT_NPC_FLAGS, m_uiNpcFlags);
 
-        m_uiPlayerGUID = 0;
-        m_uiCreepjackGUID = 0;
-        m_uiMaloneGUID = 0;
+        m_playerGuid.Clear();
+        m_creepjackGuid.Clear();
+        m_maloneGuid.Clear();
 
         bEvent = false;
         bActiveAttack = false;
@@ -90,7 +88,7 @@ struct MANGOS_DLL_DECL npc_dirty_larryAI : public ScriptedAI
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE);
     }
 
-    void SetRuffies(uint64 guid, bool bAttack, bool bReset)
+    void SetRuffies(ObjectGuid guid, bool bAttack, bool bReset)
     {
         Creature* pCreature = m_creature->GetMap()->GetCreature(guid);
 
@@ -117,7 +115,7 @@ struct MANGOS_DLL_DECL npc_dirty_larryAI : public ScriptedAI
 
             if (bAttack)
             {
-                if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID))
+                if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid))
                 {
                     if (pPlayer->isAlive())
                         pCreature->AI()->AttackStart(pPlayer);
@@ -126,30 +124,32 @@ struct MANGOS_DLL_DECL npc_dirty_larryAI : public ScriptedAI
         }
     }
 
-    void StartEvent()
+    void StartEvent(Player* pPlayer)
     {
+        m_playerGuid = pPlayer->GetObjectGuid();
+
         m_creature->SetUInt32Value(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_NONE);
 
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE);
 
         if (Creature* pCreepjack = GetClosestCreatureWithEntry(m_creature, ENTRY_CREEPJACK, 20.0f))
-            m_uiCreepjackGUID = pCreepjack->GetGUID();
+            m_creepjackGuid = pCreepjack->GetObjectGuid();
 
         if (Creature* pMalone = GetClosestCreatureWithEntry(m_creature, ENTRY_MALONE, 20.0f))
-            m_uiMaloneGUID = pMalone->GetGUID();
+            m_maloneGuid = pMalone->GetObjectGuid();
 
         bEvent = true;
     }
 
     uint32 NextStep(uint32 uiStep)
     {
-        Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID);
+        Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid);
 
         if (!pPlayer)
         {
-            SetRuffies(m_uiCreepjackGUID,false,true);
-            SetRuffies(m_uiMaloneGUID,false,true);
+            SetRuffies(m_creepjackGuid, false, true);
+            SetRuffies(m_maloneGuid, false, true);
             EnterEvadeMode();
             return 0;
         }
@@ -158,22 +158,23 @@ struct MANGOS_DLL_DECL npc_dirty_larryAI : public ScriptedAI
         {
             case 1:
                 DoScriptText(SAY_START, m_creature, pPlayer);
-                SetRuffies(m_uiCreepjackGUID,false,false);
-                SetRuffies(m_uiMaloneGUID,false,false);
+                SetRuffies(m_creepjackGuid, false, false);
+                SetRuffies(m_maloneGuid, false, false);
                 return 3000;
-            case 2: DoScriptText(SAY_COUNT, m_creature, pPlayer); return 5000;
+            case 2: DoScriptText(SAY_COUNT, m_creature, pPlayer);   return 5000;
             case 3: DoScriptText(SAY_COUNT_1, m_creature, pPlayer); return 3000;
             case 4: DoScriptText(SAY_COUNT_2, m_creature, pPlayer); return 3000;
-            case 5: DoScriptText(SAY_ATTACK, m_creature, pPlayer); return 3000;
+            case 5: DoScriptText(SAY_ATTACK, m_creature, pPlayer);  return 3000;
             case 6:
                 if (!m_creature->isInCombat() && pPlayer->isAlive())
                     AttackStart(pPlayer);
 
-                SetRuffies(m_uiCreepjackGUID,true,false);
-                SetRuffies(m_uiMaloneGUID,true,false);
+                SetRuffies(m_creepjackGuid, true, false);
+                SetRuffies(m_maloneGuid, true, false);
                 bActiveAttack = true;
                 return 2000;
-            default: return 0;
+            default:
+                return 0;
         }
     }
 
@@ -188,24 +189,24 @@ struct MANGOS_DLL_DECL npc_dirty_larryAI : public ScriptedAI
         AttackStart(pAttacker);
     }
 
-    void DamageTaken(Unit* pDoneBy, uint32 &damage)
+    void DamageTaken(Unit* pDoneBy, uint32& uiDamage)
     {
-        if (damage < m_creature->GetHealth())
+        if (uiDamage < m_creature->GetHealth())
             return;
 
         //damage will kill, this is pretty much the same as 1%HP left
         if (bEvent)
         {
-            damage = 0;
+            uiDamage = 0;
 
-            if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID))
+            if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid))
             {
                 DoScriptText(SAY_GIVEUP, m_creature, pPlayer);
                 pPlayer->GroupEventHappens(QUEST_WHAT_BOOK, m_creature);
             }
 
-            SetRuffies(m_uiCreepjackGUID,false,true);
-            SetRuffies(m_uiMaloneGUID,false,true);
+            SetRuffies(m_creepjackGuid, false, true);
+            SetRuffies(m_maloneGuid, false, true);
             EnterEvadeMode();
         }
     }
@@ -244,10 +245,7 @@ bool GossipSelect_npc_dirty_larry(Player* pPlayer, Creature* pCreature, uint32 u
     if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
     {
         if (npc_dirty_larryAI* pLarryAI = dynamic_cast<npc_dirty_larryAI*>(pCreature->AI()))
-        {
-            pLarryAI->m_uiPlayerGUID = pPlayer->GetGUID();
-            pLarryAI->StartEvent();
-        }
+            pLarryAI->StartEvent(pPlayer);
 
         pPlayer->CLOSE_GOSSIP_MENU();
     }
