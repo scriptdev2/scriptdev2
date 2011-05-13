@@ -56,7 +56,7 @@ struct MANGOS_DLL_DECL npc_draenei_survivorAI : public ScriptedAI
 {
     npc_draenei_survivorAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
-    uint64 m_uiCaster;
+    ObjectGuid m_casterGuid;
 
     uint32 m_uiSayThanksTimer;
     uint32 m_uiRunAwayTimer;
@@ -66,7 +66,7 @@ struct MANGOS_DLL_DECL npc_draenei_survivorAI : public ScriptedAI
 
     void Reset()
     {
-        m_uiCaster = 0;
+        m_casterGuid.Clear();
 
         m_uiSayThanksTimer = 0;
         m_uiRunAwayTimer = 0;
@@ -110,7 +110,7 @@ struct MANGOS_DLL_DECL npc_draenei_survivorAI : public ScriptedAI
 
             m_creature->CastSpell(m_creature, SPELL_STUNNED, true);
 
-            m_uiCaster = pCaster->GetGUID();
+            m_casterGuid = pCaster->GetObjectGuid();
 
             m_uiSayThanksTimer = 5000;
         }
@@ -124,7 +124,7 @@ struct MANGOS_DLL_DECL npc_draenei_survivorAI : public ScriptedAI
             {
                 m_creature->RemoveAurasDueToSpell(SPELL_IRRIDATION);
 
-                if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiCaster))
+                if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_casterGuid))
                 {
                     if (pPlayer->GetTypeId() != TYPEID_PLAYER)
                         return;

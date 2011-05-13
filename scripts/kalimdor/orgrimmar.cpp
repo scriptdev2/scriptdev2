@@ -80,7 +80,7 @@ struct MANGOS_DLL_DECL npc_shenthulAI : public ScriptedAI
     bool CanEmote;
     uint32 Salute_Timer;
     uint32 Reset_Timer;
-    uint64 playerGUID;
+    ObjectGuid m_playerGuid;
 
     void Reset()
     {
@@ -88,7 +88,7 @@ struct MANGOS_DLL_DECL npc_shenthulAI : public ScriptedAI
         CanEmote = false;
         Salute_Timer = 6000;
         Reset_Timer = 0;
-        playerGUID = 0;
+        m_playerGuid.Clear();
     }
 
     void ReceiveEmote(Player* pPlayer, uint32 emote)
@@ -109,7 +109,7 @@ struct MANGOS_DLL_DECL npc_shenthulAI : public ScriptedAI
         {
             if (Reset_Timer < diff)
             {
-                if (Player* pPlayer = m_creature->GetMap()->GetPlayer(playerGUID))
+                if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid))
                 {
                     if (pPlayer->GetTypeId() == TYPEID_PLAYER && pPlayer->GetQuestStatus(QUEST_SHATTERED_SALUTE) == QUEST_STATUS_INCOMPLETE)
                         pPlayer->FailQuest(QUEST_SHATTERED_SALUTE);
@@ -147,7 +147,7 @@ bool QuestAccept_npc_shenthul(Player* pPlayer, Creature* pCreature, const Quest*
         if (npc_shenthulAI* pShenAI = dynamic_cast<npc_shenthulAI*>(pCreature->AI()))
         {
             pShenAI->CanTalk = true;
-            pShenAI->playerGUID = pPlayer->GetGUID();
+            pShenAI->m_playerGuid = pPlayer->GetObjectGuid();
         }
     }
     return true;

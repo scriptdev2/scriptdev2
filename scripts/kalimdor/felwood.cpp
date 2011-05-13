@@ -355,7 +355,7 @@ struct MANGOS_DLL_DECL npc_kroshiusAI : public ScriptedAI
         Reset();
     }
 
-    uint64 m_uiPlayerGUID;
+    ObjectGuid m_playerGuid;
     uint32 m_uiKnockBackTimer;
     uint32 m_uiPhaseTimer;
 
@@ -364,7 +364,7 @@ struct MANGOS_DLL_DECL npc_kroshiusAI : public ScriptedAI
     void Reset()
     {
         m_uiKnockBackTimer = urand(5000, 8000);
-        m_uiPlayerGUID = 0;
+        m_playerGuid.Clear();
 
         if (!m_uiPhase)
         {
@@ -383,7 +383,7 @@ struct MANGOS_DLL_DECL npc_kroshiusAI : public ScriptedAI
 
         m_uiPhase = 1;
         m_uiPhaseTimer = 2500;
-        m_uiPlayerGUID = pSource->GetGUID();
+        m_playerGuid = pSource->GetObjectGuid();
 
         // TODO: A visual Flame Circle around the mob still missing
     }
@@ -417,7 +417,7 @@ struct MANGOS_DLL_DECL npc_kroshiusAI : public ScriptedAI
                         // TODO workaround will better idea
                         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
                         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE);
-                        if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID))
+                        if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid))
                         {
                             if (m_creature->IsWithinDistInMap(pPlayer, 30.0f))
                                 AttackStart(pPlayer);
