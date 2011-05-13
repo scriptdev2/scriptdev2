@@ -63,7 +63,7 @@ struct SpawnLocation
 
 static const SpawnLocation aGandlingSpawnLocs[1] =
 {
-    {180.73f, -9.43856f, 75.507f, 1.61399f}
+    {180.771f, -5.4286f, 75.5702f, 1.29154f}
 };
 
 struct GandlingEventData
