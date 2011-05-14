@@ -111,22 +111,22 @@ struct MANGOS_DLL_DECL npc_ranger_lilathaAI : public npc_escortAI
 {
     npc_ranger_lilathaAI(Creature* pCreature) : npc_escortAI(pCreature)
     {
-        m_uiGoCageGUID = 0;
-        m_uiHeliosGUID = 0;
+        m_goCageGuid = ObjectGuid();
+        m_heliosGuid = ObjectGuid();
         Reset();
     }
 
-    uint64 m_uiGoCageGUID;
-    uint64 m_uiHeliosGUID;
+    ObjectGuid m_goCageGuid;
+    ObjectGuid m_heliosGuid;
 
     void MoveInLineOfSight(Unit* pUnit)
     {
         if (HasEscortState(STATE_ESCORT_ESCORTING))
         {
-            if (!m_uiHeliosGUID && pUnit->GetEntry() == NPC_CAPTAIN_HELIOS)
+            if (m_heliosGuid.IsEmpty() && pUnit->GetEntry() == NPC_CAPTAIN_HELIOS)
             {
                 if (m_creature->IsWithinDistInMap(pUnit, 30.0f))
-                    m_uiHeliosGUID = pUnit->GetGUID();
+                    m_heliosGuid = pUnit->GetObjectGuid();
             }
         }
 
@@ -145,7 +145,7 @@ struct MANGOS_DLL_DECL npc_ranger_lilathaAI : public npc_escortAI
             case 0:
                 if (GameObject* pGoTemp = GetClosestGameObjectWithEntry(m_creature, GO_CAGE, 10.0f))
                 {
-                    m_uiGoCageGUID = pGoTemp->GetGUID();
+                    m_goCageGuid = pGoTemp->GetObjectGuid();
                     pGoTemp->SetGoState(GO_STATE_ACTIVE);
                 }
 
@@ -154,7 +154,7 @@ struct MANGOS_DLL_DECL npc_ranger_lilathaAI : public npc_escortAI
                 DoScriptText(SAY_START, m_creature, pPlayer);
                 break;
             case 1:
-                if (GameObject* pGo = m_creature->GetMap()->GetGameObject(m_uiGoCageGUID))
+                if (GameObject* pGo = m_creature->GetMap()->GetGameObject(m_goCageGuid))
                     pGo->SetGoState(GO_STATE_READY);
                 break;
             case 5:
@@ -184,7 +184,7 @@ struct MANGOS_DLL_DECL npc_ranger_lilathaAI : public npc_escortAI
                 break;
             case 33:
                 DoScriptText(SAY_END2, m_creature, pPlayer);
-                if (Creature* pHelios = m_creature->GetMap()->GetCreature(m_uiHeliosGUID))
+                if (Creature* pHelios = m_creature->GetMap()->GetCreature(m_heliosGuid))
                     DoScriptText(CAPTAIN_ANSWER, pHelios, m_creature);
                 break;
         }
@@ -194,8 +194,8 @@ struct MANGOS_DLL_DECL npc_ranger_lilathaAI : public npc_escortAI
     {
         if (!HasEscortState(STATE_ESCORT_ESCORTING))
         {
-            m_uiGoCageGUID = 0;
-            m_uiHeliosGUID = 0;
+            m_goCageGuid.Clear();
+            m_heliosGuid.Clear();
         }
     }
 };

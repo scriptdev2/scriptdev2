@@ -95,13 +95,13 @@ struct MANGOS_DLL_DECL npc_calvin_montagueAI : public ScriptedAI
     uint32 m_uiNormFaction;
     uint32 m_uiPhase;
     uint32 m_uiPhaseTimer;
-    uint64 m_uiPlayerGUID;
+    ObjectGuid m_playerGuid;
 
     void Reset()
     {
         m_uiPhase = 0;
         m_uiPhaseTimer = 5000;
-        m_uiPlayerGUID = 0;
+        m_playerGuid.Clear();
 
         if (m_creature->getFaction() != m_uiNormFaction)
             m_creature->setFaction(m_uiNormFaction);
@@ -127,7 +127,7 @@ struct MANGOS_DLL_DECL npc_calvin_montagueAI : public ScriptedAI
             m_uiPhase = 1;
 
             if (pDoneBy->GetTypeId() == TYPEID_PLAYER)
-                m_uiPlayerGUID = pDoneBy->GetGUID();
+                m_playerGuid = pDoneBy->GetObjectGuid();
         }
     }
 
@@ -150,7 +150,7 @@ struct MANGOS_DLL_DECL npc_calvin_montagueAI : public ScriptedAI
                     ++m_uiPhase;
                     break;
                 case 2:
-                    if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID))
+                    if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid))
                         pPlayer->AreaExploredOrEventHappens(QUEST_590);
 
                     m_creature->CastSpell(m_creature,SPELL_DRINK,true);

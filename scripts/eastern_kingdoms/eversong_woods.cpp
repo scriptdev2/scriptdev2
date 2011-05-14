@@ -77,8 +77,8 @@ struct MANGOS_DLL_DECL npc_kelerun_bloodmournAI : public ScriptedAI
     }
 
     uint32 m_uiNpcFlags;
-    uint64 m_uiPlayerGUID;
-    uint64 uiChallengerGUID[MAX_CHALLENGER];
+    ObjectGuid m_playerGuid;
+    ObjectGuid m_aChallengerGuids[MAX_CHALLENGER];
 
     uint8 m_uiChallengerCount;
 
@@ -92,9 +92,10 @@ struct MANGOS_DLL_DECL npc_kelerun_bloodmournAI : public ScriptedAI
     {
         m_creature->SetUInt32Value(UNIT_NPC_FLAGS, m_uiNpcFlags);
 
-        m_uiPlayerGUID = 0;
+        m_playerGuid.Clear();
 
-        memset(&uiChallengerGUID, 0, sizeof(uiChallengerGUID));
+        for (uint8 i = 0; i < MAX_CHALLENGER; ++i)
+            m_aChallengerGuids[i].Clear();
 
         m_uiChallengerCount = 0;
 
@@ -111,11 +112,11 @@ struct MANGOS_DLL_DECL npc_kelerun_bloodmournAI : public ScriptedAI
         m_bIsEventInProgress = true;
     }
 
-    bool CanProgressEvent(uint64 uiPlayer)
+    bool CanProgressEvent(Player* pPlayer)
     {
         if (m_bIsEventInProgress)
         {
-            m_uiPlayerGUID = uiPlayer;
+            m_playerGuid = pPlayer->GetObjectGuid();
             DoSpawnChallengers();
             m_uiEngageTimer = 15000;
 
@@ -134,7 +135,7 @@ struct MANGOS_DLL_DECL npc_kelerun_bloodmournAI : public ScriptedAI
                 fChallengerLoc[i][2], fChallengerLoc[i][3],
                 TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000))
             {
-                uiChallengerGUID[i] = pCreature->GetGUID();
+                m_aChallengerGuids[i] = pCreature->GetObjectGuid();
                 pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
             }
         }
@@ -146,7 +147,7 @@ struct MANGOS_DLL_DECL npc_kelerun_bloodmournAI : public ScriptedAI
         {
             if (m_uiTimeOutTimer && m_uiTimeOutTimer < uiDiff)
             {
-                if (!m_uiPlayerGUID)
+                if (m_playerGuid.IsEmpty())
                 {
                     //player are expected to use GO within a minute, if not, event will fail.
                     Reset();
@@ -160,11 +161,11 @@ struct MANGOS_DLL_DECL npc_kelerun_bloodmournAI : public ScriptedAI
 
             if (m_uiCheckAliveStateTimer < uiDiff)
             {
-                if (Creature* pChallenger = m_creature->GetMap()->GetCreature(uiChallengerGUID[m_uiChallengerCount]))
+                if (Creature* pChallenger = m_creature->GetMap()->GetCreature(m_aChallengerGuids[m_uiChallengerCount]))
                 {
                     if (!pChallenger->isAlive())
                     {
-                        Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID);
+                        Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid);
 
                         if (pPlayer && !pPlayer->isAlive())
                         {
@@ -194,11 +195,11 @@ struct MANGOS_DLL_DECL npc_kelerun_bloodmournAI : public ScriptedAI
 
             if (m_uiEngageTimer && m_uiEngageTimer < uiDiff)
             {
-                Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID);
+                Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid);
 
                 if (pPlayer && pPlayer->isAlive())
                 {
-                    if (Creature* pCreature = m_creature->GetMap()->GetCreature(uiChallengerGUID[m_uiChallengerCount]))
+                    if (Creature* pCreature = m_creature->GetMap()->GetCreature(m_aChallengerGuids[m_uiChallengerCount]))
                     {
                         DoScriptText(uiSayId[m_uiChallengerCount], m_creature, pPlayer);
                         pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
@@ -237,9 +238,8 @@ bool GOUse_go_harbinger_second_trial(Player* pPlayer, GameObject* pGO)
     {
         if (Creature* pCreature = GetClosestCreatureWithEntry(pGO, NPC_KELERUN, 30.0f))
         {
-            npc_kelerun_bloodmournAI* pKelrunAI = dynamic_cast<npc_kelerun_bloodmournAI*>(pCreature->AI());
-            if (pKelrunAI && pKelrunAI->CanProgressEvent(pPlayer->GetGUID()))
-                return false;
+            if (npc_kelerun_bloodmournAI* pKelrunAI = dynamic_cast<npc_kelerun_bloodmournAI*>(pCreature->AI()))
+                pKelrunAI->CanProgressEvent(pPlayer);
         }
     }
 

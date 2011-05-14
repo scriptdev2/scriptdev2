@@ -51,11 +51,11 @@ struct MANGOS_DLL_DECL npc_galen_goodwardAI : public npc_escortAI
 {
     npc_galen_goodwardAI(Creature* pCreature) : npc_escortAI(pCreature)
     {
-        m_uiGalensCageGUID = 0;
+        m_galensCageGuid = ObjectGuid();
         Reset();
     }
 
-    uint64 m_uiGalensCageGUID;
+    ObjectGuid m_galensCageGuid;
     uint32 m_uiPeriodicSay;
 
     void Reset()
@@ -76,14 +76,15 @@ struct MANGOS_DLL_DECL npc_galen_goodwardAI : public npc_escortAI
             case 0:
                 {
                     GameObject* pCage = NULL;
-                    if (m_uiGalensCageGUID)
-                        pCage = m_creature->GetMap()->GetGameObject(m_uiGalensCageGUID);
+                    if (!m_galensCageGuid.IsEmpty())
+                        pCage = m_creature->GetMap()->GetGameObject(m_galensCageGuid);
                     else
                         pCage = GetClosestGameObjectWithEntry(m_creature, GO_GALENS_CAGE, INTERACTION_DISTANCE);
+
                     if (pCage)
                     {
                         pCage->UseDoorOrButton();
-                        m_uiGalensCageGUID = pCage->GetGUID();
+                        m_galensCageGuid = pCage->GetObjectGuid();
                     }
                     break;
                 }
@@ -98,7 +99,7 @@ struct MANGOS_DLL_DECL npc_galen_goodwardAI : public npc_escortAI
         switch (uiPointId)
         {
             case 0:
-                if (GameObject* pCage = m_creature->GetMap()->GetGameObject(m_uiGalensCageGUID))
+                if (GameObject* pCage = m_creature->GetMap()->GetGameObject(m_galensCageGuid))
                     pCage->ResetDoorOrButton();
                 break;
             case 20:
