@@ -208,23 +208,23 @@ struct MANGOS_DLL_DECL npc_nesingwary_trapperAI : public ScriptedAI
 
     uint8 m_uiPhase;
     uint32 m_uiPhaseTimer;
-    uint64 m_uiPlayerGUID;
-    uint64 m_uiGobjectTrapGUID;
+    ObjectGuid m_playerGuid;
+    ObjectGuid m_trapGuid;
 
     void Reset()
     {
         m_uiPhase = 0;
         m_uiPhaseTimer = 0;
-        m_uiPlayerGUID = 0;
-        m_uiGobjectTrapGUID = 0;
+        m_playerGuid.Clear();
+        m_trapGuid.Clear();
     }
 
-    void StartAction(uint64 uiPlayerGUID, uint64 uiGoTrapGUID)
+    void StartAction(Player* pPlayer, GameObject* pTrap)
     {
         m_uiPhase = 1;
         m_uiPhaseTimer = 3000;
-        m_uiPlayerGUID = uiPlayerGUID;
-        m_uiGobjectTrapGUID = uiGoTrapGUID;
+        m_playerGuid = pPlayer->GetObjectGuid();
+        m_trapGuid = pTrap->GetObjectGuid();
 
         switch (urand(0, 3))
         {
@@ -244,20 +244,20 @@ struct MANGOS_DLL_DECL npc_nesingwary_trapperAI : public ScriptedAI
                 switch(m_uiPhase)
                 {
                     case 1:
-                        if (GameObject* pTrap = m_creature->GetMap()->GetGameObject(m_uiGobjectTrapGUID))
+                        if (GameObject* pTrap = m_creature->GetMap()->GetGameObject(m_trapGuid))
                         {
                             if (pTrap->isSpawned())
                                 m_creature->GetMotionMaster()->MovePoint(0, pTrap->GetPositionX(), pTrap->GetPositionY(), pTrap->GetPositionZ());
                         }
                         break;
                     case 2:
-                        if (GameObject* pTrap = m_creature->GetMap()->GetGameObject(m_uiGobjectTrapGUID))
+                        if (GameObject* pTrap = m_creature->GetMap()->GetGameObject(m_trapGuid))
                         {
                             if (pTrap->isSpawned())
                             {
                                 pTrap->Use(m_creature);
 
-                                if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID))
+                                if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid))
                                 {
                                     if (pPlayer->isAlive())
                                         pPlayer->KilledMonsterCredit(m_creature->GetEntry());
@@ -421,7 +421,7 @@ bool GOUse_go_caribou_trap(Player* pPlayer, GameObject* pGo)
     if (Creature* pCreature = pGo->SummonCreature(NPC_NESINGWARY_TRAPPER, fX, fY, fZ, pGo->GetOrientation(), TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 10000))
     {
         if (npc_nesingwary_trapperAI* pTrapperAI = dynamic_cast<npc_nesingwary_trapperAI*>(pCreature->AI()))
-            pTrapperAI->StartAction(pPlayer->GetGUID(), pGo->GetGUID());
+            pTrapperAI->StartAction(pPlayer, pGo);
 
         pGo->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_IN_USE);
 

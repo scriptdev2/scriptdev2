@@ -1158,7 +1158,7 @@ bool GossipSelect_npc_prof_tailor(Player* pPlayer, Creature* pCreature, uint32 u
 {
     pPlayer->PlayerTalkClass->GetGossipMenu()->AddMenuItem(0,GOSSIP_LEARN_DRAGON, GOSSIP_SENDER_INFO, GOSSIP_ACTION_INFO_DEF, "", 0);
 
-    pPlayer->SEND_GOSSIP_MENU(5584, pGo->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(5584, pGo->GetObjectGuid());
 
     return true;
 }*/

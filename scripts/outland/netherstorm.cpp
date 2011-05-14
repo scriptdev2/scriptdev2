@@ -352,7 +352,7 @@ bool GOUse_go_manaforge_control_console(Player* pPlayer, GameObject* pGo)
         if (npc_manaforge_control_consoleAI* pManaforgeAI = dynamic_cast<npc_manaforge_control_consoleAI*>(pManaforge->AI()))
         {
             pManaforgeAI->m_playerGuid = pPlayer->GetObjectGuid();
-            pManaforgeAI->m_consoleGuid = pGo->GetGUID();
+            pManaforgeAI->m_consoleGuid = pGo->GetObjectGuid();
         }
 
         pGo->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_IN_USE);

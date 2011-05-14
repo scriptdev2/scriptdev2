@@ -316,7 +316,7 @@ bool GossipSelect_npc_injured_rainspeaker(Player* pPlayer, Creature* pCreature, 
         pPlayer->CLOSE_GOSSIP_MENU();
 
         if (npc_injured_rainspeakerAI* pEscortAI = dynamic_cast<npc_injured_rainspeakerAI*>(pCreature->AI()))
-            pEscortAI->Start(true, pPlayer->GetGUID());
+            pEscortAI->Start(true, pPlayer);
     }
 
     return false;
