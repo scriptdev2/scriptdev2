@@ -16,7 +16,7 @@
 
 /* ScriptData
 SDName: Boss_Pyroguard_Emberseer
-SD%Complete: 100
+SD%Complete: 50
 SDComment: Event to activate Emberseer NYI - 'aggro'-text missing
 SDCategory: Blackrock Spire
 EndScriptData */
@@ -26,6 +26,17 @@ EndScriptData */
 
 enum
 {
+    // Intro emote/say
+    EMOTE_BEGIN             = -1229000,
+    EMOTE_NEAR              = -1229001,
+    EMOTE_FULL              = -1229002,
+    SAY_FREE                = -1229003,
+
+    // Intro spells
+    SPELL_FREEZE_ANIM       = 16245,
+    SPELL_EMBERSEER_GROWING = 16048,
+    SPELL_FULL_STRENGHT     = 16047,
+
     SPELL_FIRENOVA          = 23462,
     SPELL_FLAMEBUFFET       = 23341,
     SPELL_PYROBLAST         = 20228                         // guesswork, but best fitting in spells-area, was 17274 (has mana cost)
