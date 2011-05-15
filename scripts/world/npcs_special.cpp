@@ -107,7 +107,6 @@ struct MANGOS_DLL_DECL npc_air_force_botsAI : public ScriptedAI
     npc_air_force_botsAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pSpawnAssoc = NULL;
-        m_spawnedGuid = ObjectGuid();
 
         // find the correct spawnhandling
         static uint32 uiEntryCount = sizeof(m_aSpawnAssociations)/sizeof(SpawnAssociation);
@@ -843,7 +842,7 @@ struct MANGOS_DLL_DECL npc_garments_of_questsAI : public npc_escortAI
 
     void Reset()
     {
-        m_playerGuid = ObjectGuid();
+        m_playerGuid.Clear();
 
         m_bIsHealed = false;
         m_bCanRun = false;

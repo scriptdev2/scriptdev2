@@ -883,16 +883,12 @@ DisplayToSpell m_aDisplayToSpell[] =
 
 struct MANGOS_DLL_DECL npc_unworthy_initiate_anchorAI : public ScriptedAI
 {
-    npc_unworthy_initiate_anchorAI(Creature* pCreature) : ScriptedAI(pCreature)
-    {
-        m_myInitiateGuid = ObjectGuid();
-        Reset();
-    }
+    npc_unworthy_initiate_anchorAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
     ObjectGuid m_myInitiateGuid;
     ObjectGuid m_myPrisonGuid;
 
-    void Reset() { }
+    void Reset() {}
 
     void NotifyMe(Unit* pSource, GameObject* pGo)
     {

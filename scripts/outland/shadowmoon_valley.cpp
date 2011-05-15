@@ -203,7 +203,6 @@ struct MANGOS_DLL_DECL mob_enslaved_netherwing_drakeAI : public ScriptedAI
 {
     mob_enslaved_netherwing_drakeAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        m_playerGuid = ObjectGuid();
         Tapped = false;
         Reset();
     }

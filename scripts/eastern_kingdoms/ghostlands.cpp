@@ -109,12 +109,7 @@ enum
 
 struct MANGOS_DLL_DECL npc_ranger_lilathaAI : public npc_escortAI
 {
-    npc_ranger_lilathaAI(Creature* pCreature) : npc_escortAI(pCreature)
-    {
-        m_goCageGuid = ObjectGuid();
-        m_heliosGuid = ObjectGuid();
-        Reset();
-    }
+    npc_ranger_lilathaAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
 
     ObjectGuid m_goCageGuid;
     ObjectGuid m_heliosGuid;
