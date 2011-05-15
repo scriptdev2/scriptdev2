@@ -617,7 +617,7 @@ struct MANGOS_DLL_DECL npc_akama_illidanAI : public ScriptedAI
         for (ThreatList::const_iterator itr = tList.begin();itr != tList.end(); ++itr)
         {
             // Loop through threatlist till our GUID is found in it.
-            if ((*itr)->getUnitGuid() == m_creature->GetGUID())
+            if ((*itr)->getUnitGuid() == m_creature->GetObjectGuid())
             {
                 (*itr)->removeReference();                  // Delete ourself from his threatlist.
                 return;                                     // No need to continue anymore.
