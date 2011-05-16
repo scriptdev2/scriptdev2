@@ -147,7 +147,7 @@ struct MANGOS_DLL_DECL npc_kelerun_bloodmournAI : public ScriptedAI
         {
             if (m_uiTimeOutTimer && m_uiTimeOutTimer < uiDiff)
             {
-                if (m_playerGuid.IsEmpty())
+                if (!m_playerGuid)
                 {
                     //player are expected to use GO within a minute, if not, event will fail.
                     Reset();

@@ -331,7 +331,7 @@ struct MANGOS_DLL_DECL npc_dragonmaw_peonAI : public ScriptedAI
     bool SetPlayerTarget(ObjectGuid playerGuid)
     {
         // Check if event already started
-        if (!m_playerGuid.IsEmpty())
+        if (m_playerGuid)
             return false;
 
         m_playerGuid = playerGuid;
@@ -1225,7 +1225,7 @@ struct MANGOS_DLL_DECL npc_lord_illidan_stormrageAI : public Scripted_NoMovement
         // increment mob count
         ++m_uiMobCount;
 
-        if (m_playerGuid.IsEmpty())
+        if (!m_playerGuid)
             return;
 
         if (pSummoned->GetEntry() == NPC_TORLOTH_THE_MAGNIFICENT)
@@ -1320,7 +1320,7 @@ struct MANGOS_DLL_DECL npc_lord_illidan_stormrageAI : public Scripted_NoMovement
 
     void UpdateAI(const uint32 uiDiff)
     {
-        if (m_playerGuid.IsEmpty() || !m_bEventStarted)
+        if (!m_playerGuid || !m_bEventStarted)
             return;
 
         if (!m_uiMobCount && m_uiWaveCount < 4)

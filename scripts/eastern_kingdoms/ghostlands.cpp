@@ -118,7 +118,7 @@ struct MANGOS_DLL_DECL npc_ranger_lilathaAI : public npc_escortAI
     {
         if (HasEscortState(STATE_ESCORT_ESCORTING))
         {
-            if (m_heliosGuid.IsEmpty() && pUnit->GetEntry() == NPC_CAPTAIN_HELIOS)
+            if (!m_heliosGuid && pUnit->GetEntry() == NPC_CAPTAIN_HELIOS)
             {
                 if (m_creature->IsWithinDistInMap(pUnit, 30.0f))
                     m_heliosGuid = pUnit->GetObjectGuid();

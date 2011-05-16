@@ -178,7 +178,7 @@ struct MANGOS_DLL_DECL npc_air_force_botsAI : public ScriptedAI
             if (!pPlayerTarget)
                 return;
 
-            Creature* pLastSpawnedGuard = m_spawnedGuid.IsEmpty() ? NULL : GetSummonedGuard();
+            Creature* pLastSpawnedGuard = m_spawnedGuid ? GetSummonedGuard() : NULL;
 
             // prevent calling GetCreature at next MoveInLineOfSight call - speedup
             if (!pLastSpawnedGuard)
@@ -560,7 +560,7 @@ struct MANGOS_DLL_DECL npc_injured_patientAI : public ScriptedAI
         {
             if ((((Player*)caster)->GetQuestStatus(6624) == QUEST_STATUS_INCOMPLETE) || (((Player*)caster)->GetQuestStatus(6622) == QUEST_STATUS_INCOMPLETE))
             {
-                if (!m_doctorGuid.IsEmpty())
+                if (m_doctorGuid)
                 {
                     if (Creature* pDoctor = m_creature->GetMap()->GetCreature(m_doctorGuid))
                     {
@@ -618,7 +618,7 @@ struct MANGOS_DLL_DECL npc_injured_patientAI : public ScriptedAI
             m_creature->SetDeathState(JUST_DIED);
             m_creature->SetFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_DEAD);
 
-            if (!m_doctorGuid.IsEmpty())
+            if (m_doctorGuid)
             {
                 if (Creature* pDoctor = m_creature->GetMap()->GetCreature(m_doctorGuid))
                 {

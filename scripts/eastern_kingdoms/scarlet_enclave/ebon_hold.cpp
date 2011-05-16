@@ -162,7 +162,7 @@ struct MANGOS_DLL_DECL npc_a_special_surpriseAI : public ScriptedAI
 
     void MoveInLineOfSight(Unit* pWho)
     {
-        if (!m_playerGuid.IsEmpty() || pWho->GetTypeId() != TYPEID_PLAYER || !pWho->IsWithinDist(m_creature, INTERACTION_DISTANCE))
+        if (m_playerGuid || pWho->GetTypeId() != TYPEID_PLAYER || !pWho->IsWithinDist(m_creature, INTERACTION_DISTANCE))
             return;
 
         if (MeetQuestCondition((Player*)pWho))
@@ -171,7 +171,7 @@ struct MANGOS_DLL_DECL npc_a_special_surpriseAI : public ScriptedAI
 
     void UpdateAI(const uint32 uiDiff)
     {
-        if (!m_playerGuid.IsEmpty() && !m_creature->getVictim() && m_creature->isAlive())
+        if (m_playerGuid && !m_creature->getVictim() && m_creature->isAlive())
         {
             if (m_uiExecuteSpeech_Timer < uiDiff)
             {
@@ -995,7 +995,7 @@ struct MANGOS_DLL_DECL npc_unworthy_initiateAI : public ScriptedAI
 
     Creature* GetAnchor()
     {
-        if (!m_myAnchorGuid.IsEmpty())
+        if (m_myAnchorGuid)
             return m_creature->GetMap()->GetCreature(m_myAnchorGuid);
         else
             return GetClosestCreatureWithEntry(m_creature, NPC_ANCHOR, INTERACTION_DISTANCE*2);

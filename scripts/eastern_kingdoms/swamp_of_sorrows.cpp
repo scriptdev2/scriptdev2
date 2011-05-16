@@ -72,7 +72,7 @@ struct MANGOS_DLL_DECL npc_galen_goodwardAI : public npc_escortAI
             case 0:
                 {
                     GameObject* pCage = NULL;
-                    if (!m_galensCageGuid.IsEmpty())
+                    if (m_galensCageGuid)
                         pCage = m_creature->GetMap()->GetGameObject(m_galensCageGuid);
                     else
                         pCage = GetClosestGameObjectWithEntry(m_creature, GO_GALENS_CAGE, INTERACTION_DISTANCE);

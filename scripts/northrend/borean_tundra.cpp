@@ -453,37 +453,37 @@ struct MANGOS_DLL_DECL npc_sinkhole_kill_creditAI : public ScriptedAI
 {
     npc_sinkhole_kill_creditAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
-    ObjectGuid m_uiCartGUID;
-    ObjectGuid m_uiWormGUID;
+    ObjectGuid m_cartGuid;
+    ObjectGuid m_wormGuid;
     uint32 m_uiCartTimer;
     uint32 m_uiCartPhase;
 
     void Reset()
     {
-        m_uiCartGUID.Clear();
-        m_uiWormGUID.Clear();
+        m_cartGuid.Clear();
+        m_wormGuid.Clear();
         m_uiCartTimer = 2000;
         m_uiCartPhase = 0;
     }
 
     void JustSummoned(Creature* pSummoned)
     {
-        m_uiWormGUID = pSummoned->GetObjectGuid();
+        m_wormGuid = pSummoned->GetObjectGuid();
     }
 
     void JustSummoned(GameObject* pGo)
     {
         // Go is not really needed, but ok to use as a check point so only one "event" can be processed at a time
-        if (!m_uiCartGUID.IsEmpty())
+        if (m_cartGuid)
             return;
 
         // Expecting summoned from mangos dummy effect 46797
-        m_uiCartGUID = pGo->GetObjectGuid();
+        m_cartGuid = pGo->GetObjectGuid();
     }
 
     void UpdateAI(const uint32 uiDiff)
     {
-        if (!m_uiCartGUID.IsEmpty())
+        if (m_cartGuid)
         {
             if (m_uiCartTimer <= uiDiff)
             {
@@ -504,7 +504,7 @@ struct MANGOS_DLL_DECL npc_sinkhole_kill_creditAI : public ScriptedAI
                         m_uiCartTimer = 2000;
                         break;
                     case 3:
-                        if (Creature* pWorm = m_creature->GetMap()->GetCreature(m_uiWormGUID))
+                        if (Creature* pWorm = m_creature->GetMap()->GetCreature(m_wormGuid))
                         {
                             pWorm->SetDeathState(JUST_DIED);
                             pWorm->SetHealth(0);
@@ -512,7 +512,7 @@ struct MANGOS_DLL_DECL npc_sinkhole_kill_creditAI : public ScriptedAI
                         m_uiCartTimer = 10000;
                         break;
                     case 4:
-                        if (Creature* pWorm = m_creature->GetMap()->GetCreature(m_uiWormGUID))
+                        if (Creature* pWorm = m_creature->GetMap()->GetCreature(m_wormGuid))
                             pWorm->RemoveCorpse();
 
                         Reset();

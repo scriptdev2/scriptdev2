@@ -121,7 +121,7 @@ void FollowerAI::MoveInLineOfSight(Unit* pWho)
 
 void FollowerAI::JustDied(Unit* pKiller)
 {
-    if (!HasFollowState(STATE_FOLLOW_INPROGRESS) || m_leaderGuid.IsEmpty() || !m_pQuestForFollow)
+    if (!HasFollowState(STATE_FOLLOW_INPROGRESS) || !m_leaderGuid || !m_pQuestForFollow)
         return;
 
     //TODO: need a better check for quests with time limit.
