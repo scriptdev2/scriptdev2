@@ -138,8 +138,8 @@ struct MANGOS_DLL_DECL boss_thaddiusAI : public Scripted_NoMovementAI
             m_pInstance->SetData(TYPE_THADDIUS, FAIL);
 
             // Respawn Adds:
-            Creature* pFeugen  = m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_FEUGEN));
-            Creature* pStalagg = m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_STALAGG));
+            Creature* pFeugen  = m_pInstance->GetSingleCreatureFromStorage(NPC_FEUGEN);
+            Creature* pStalagg = m_pInstance->GetSingleCreatureFromStorage(NPC_STALAGG);
             if (pFeugen)
             {
                 pFeugen->ForcedDespawn();
@@ -192,8 +192,8 @@ struct MANGOS_DLL_DECL boss_thaddiusAI : public Scripted_NoMovementAI
             m_pInstance->SetData(TYPE_THADDIUS, DONE);
 
             // Force Despawn of Adds
-            Creature* pFeugen  = m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_FEUGEN));
-            Creature* pStalagg = m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_STALAGG));
+            Creature* pFeugen  = m_pInstance->GetSingleCreatureFromStorage(NPC_FEUGEN);
+            Creature* pStalagg = m_pInstance->GetSingleCreatureFromStorage(NPC_STALAGG);
 
             if (pFeugen)
                 pFeugen->ForcedDespawn();
@@ -325,8 +325,8 @@ struct MANGOS_DLL_DECL npc_tesla_coilAI : public Scripted_NoMovementAI
         if (!m_pInstance || m_pInstance->GetData(TYPE_THADDIUS) == DONE)
             return true;
 
-        GameObject* pNoxTeslaFeugen  = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(GO_CONS_NOX_TESLA_FEUGEN));
-        GameObject* pNoxTeslaStalagg = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(GO_CONS_NOX_TESLA_STALAGG));
+        GameObject* pNoxTeslaFeugen  = m_pInstance->GetSingleGameObjectFromStorage(GO_CONS_NOX_TESLA_FEUGEN);
+        GameObject* pNoxTeslaStalagg = m_pInstance->GetSingleGameObjectFromStorage(GO_CONS_NOX_TESLA_STALAGG);
 
         // Try again, till Tesla GOs are spawned
         if (!pNoxTeslaFeugen || !pNoxTeslaStalagg)
@@ -358,7 +358,7 @@ struct MANGOS_DLL_DECL npc_tesla_coilAI : public Scripted_NoMovementAI
         {
             m_bReapply = false;
             m_creature->InterruptNonMeleeSpells(true);
-            GameObject* pGo = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(m_bToFeugen ? GO_CONS_NOX_TESLA_FEUGEN : GO_CONS_NOX_TESLA_STALAGG));
+            GameObject* pGo = m_pInstance->GetSingleGameObjectFromStorage(m_bToFeugen ? GO_CONS_NOX_TESLA_FEUGEN : GO_CONS_NOX_TESLA_STALAGG);
 
             if (pGo && pGo->GetGoType() == GAMEOBJECT_TYPE_BUTTON && pGo->getLootState() == GO_ACTIVATED)
                 pGo->ResetDoorOrButton();
@@ -398,7 +398,7 @@ struct MANGOS_DLL_DECL npc_tesla_coilAI : public Scripted_NoMovementAI
                 m_uiOverloadTimer = 0;
                 DoCastSpellIfCan(m_creature,  SPELL_SHOCK_OVERLOAD, CAST_INTERRUPT_PREVIOUS);
                 DoScriptText(EMOTE_TESLA_OVERLOAD, m_creature);
-                m_pInstance->DoUseDoorOrButton(m_pInstance->GetData64(m_bToFeugen ? GO_CONS_NOX_TESLA_FEUGEN : GO_CONS_NOX_TESLA_STALAGG));
+                m_pInstance->DoUseDoorOrButton(m_bToFeugen ? GO_CONS_NOX_TESLA_FEUGEN : GO_CONS_NOX_TESLA_STALAGG);
             }
             else
                 m_uiOverloadTimer -= uiDiff;
@@ -457,8 +457,8 @@ struct MANGOS_DLL_DECL boss_thaddiusAddsAI : public ScriptedAI
     {
         switch (m_creature->GetEntry())
         {
-            case NPC_FEUGEN:  return m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_STALAGG));
-            case NPC_STALAGG: return m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_FEUGEN));
+            case NPC_FEUGEN:  return m_pInstance->GetSingleCreatureFromStorage(NPC_STALAGG);
+            case NPC_STALAGG: return m_pInstance->GetSingleCreatureFromStorage(NPC_FEUGEN);
             default:
                 return NULL;
         }

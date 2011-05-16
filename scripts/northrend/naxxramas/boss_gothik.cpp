@@ -403,7 +403,7 @@ bool EffectDummyCreature_spell_anchor(Unit* pCaster, uint32 uiSpellId, SpellEffe
         case SPELL_B_TO_SKULL:
         case SPELL_C_TO_SKULL:
         {
-            if (Creature* pGoth = pInstance->instance->GetCreature(pInstance->GetData64(NPC_GOTHIK)))
+            if (Creature* pGoth = pInstance->GetSingleCreatureFromStorage(NPC_GOTHIK))
             {
                 uint32 uiNpcEntry = NPC_SPECT_TRAINEE;
 
