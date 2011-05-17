@@ -64,11 +64,11 @@ struct SpawnLocation
 
 static const SpawnLocation aNefarianLocs[5] =
 {
-    {-7591.151f, -1204.051f, 476.800f},                     // adds 1 & 2
-    {-7514.598f, -1150.448f, 476.796f},
-    {-7445.0f, -1332.0f, 536.0f},                           // nefarian
-    {-7592.0f, -1264.0f, 481.0f},                           // hide pos
-    {-7493.377f, -1258.85f, 478.30f},                       // nefarian fly pos
+    {-7599.32f, -1191.72f, 475.545f},                       // opening where red/blue/black darknid spawner appear (ori 3.05433)
+    {-7526.27f, -1135.04f, 473.445f},                       // same as above, closest to door (ori 5.75959)
+    {-7498.177f, -1273.277f, 481.649f},                     // nefarian spawn location (ori 1.798)
+    {-7592.0f, -1264.0f, 481.0f},                           // hide pos (useless; remove this)
+    {-7502.002f, -1256.503f, 476.758f},                     // nefarian fly to this position
 };
 
 static const uint32 aPossibleDrake[MAX_DRAKES] = {NPC_BRONZE_DRAKANOID, NPC_BLUE_DRAKANOID, NPC_RED_DRAKANOID, NPC_GREEN_DRAKANOID, NPC_BLACK_DRAKANOID};
@@ -81,6 +81,8 @@ static const uint32 aPossibleDrake[MAX_DRAKES] = {NPC_BRONZE_DRAKANOID, NPC_BLUE
 //and allow players to start the event over
 //If nefarian dies then he will kill himself then he will be despawned in Nefarian script
 //To prevent players from doing the event twice
+
+// Dev note: Lord Victor Nefarius should despawn completely, then ~5 seconds later Nefarian should appear.
 
 struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
 {
