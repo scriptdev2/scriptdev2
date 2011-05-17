@@ -49,15 +49,15 @@ struct MANGOS_DLL_DECL instance_scarlet_monastery : public ScriptedInstance
     {
         switch(pCreature->GetEntry())
         {
-            case 3976: m_uiMograineGUID = pCreature->GetGUID(); break;
-            case 3977: m_uiWhitemaneGUID = pCreature->GetGUID(); break;
-            case 3981: m_uiVorrelGUID = pCreature->GetGUID(); break;
+            case NPC_MOGRAINE:  m_uiMograineGUID = pCreature->GetGUID();  break;
+            case NPC_WHITEMANE: m_uiWhitemaneGUID = pCreature->GetGUID(); break;
+            case NPC_VORREL:    m_uiVorrelGUID = pCreature->GetGUID();    break;
         }
     }
 
     void OnObjectCreate(GameObject* pGo)
     {
-        if (pGo->GetEntry() == 104600)
+        if (pGo->GetEntry() == GO_WHITEMANE_DOOR)
             m_uiDoorHighInquisitorGUID = pGo->GetGUID();
     }
 
@@ -65,17 +65,14 @@ struct MANGOS_DLL_DECL instance_scarlet_monastery : public ScriptedInstance
     {
         switch(data)
         {
-            case DATA_MOGRAINE:
-                return m_uiMograineGUID;
-            case DATA_WHITEMANE:
-                return m_uiWhitemaneGUID;
-            case DATA_VORREL:
-                return m_uiVorrelGUID;
-            case DATA_DOOR_WHITEMANE:
-                return m_uiDoorHighInquisitorGUID;
-        }
+            case NPC_MOGRAINE:      return m_uiMograineGUID;
+            case NPC_WHITEMANE:     return m_uiWhitemaneGUID;
+            case NPC_VORREL:        return m_uiVorrelGUID;
+            case GO_WHITEMANE_DOOR: return m_uiDoorHighInquisitorGUID;
 
-        return 0;
+            default:
+                return 0;
+        }
     }
 
     void SetData(uint32 uiType, uint32 uiData)

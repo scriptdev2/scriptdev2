@@ -11,10 +11,11 @@ enum
 
     TYPE_MOGRAINE_AND_WHITE_EVENT   = 1,
 
-    DATA_MOGRAINE                   = 2,
-    DATA_WHITEMANE                  = 3,
-    DATA_DOOR_WHITEMANE             = 4,
-    DATA_VORREL                     = 5
+    NPC_MOGRAINE                    = 3976,
+    NPC_WHITEMANE                   = 3977,
+    NPC_VORREL                      = 3981,
+
+    GO_WHITEMANE_DOOR               = 104600,
 };
 
 #endif
