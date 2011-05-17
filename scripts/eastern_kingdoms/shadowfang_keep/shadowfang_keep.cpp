@@ -51,8 +51,6 @@ enum
 
     SPELL_UNLOCK            = 6421,
     SPELL_FIRE              = 6422,
-    NPC_ASH                 = 3850,
-    NPC_ADA                 = 3849
 };
 
 #define GOSSIP_ITEM_DOOR        "Please unlock the courtyard door."
@@ -502,7 +500,7 @@ struct MANGOS_DLL_DECL boss_arugalAI : public ScriptedAI
                         break;
                     case 3:
                         if (m_pInstance)
-                            if (GameObject* pLightning = m_creature->GetMap()->GetGameObject(m_pInstance->GetData64(DATA_LIGHTNING)))
+                            if (GameObject* pLightning = m_creature->GetMap()->GetGameObject(m_pInstance->GetData64(GO_ARUGAL_FOCUS)))
                                 pLightning->Use(m_creature);
 
                         m_uiSpeechTimer = 5000;
@@ -719,8 +717,6 @@ enum
     SAY_INTRO_4             = -1033012,
 
     SPELL_SPAWN             = 7741,
-
-    NPC_VINCENT             = 4444
 };
 
 struct MANGOS_DLL_DECL npc_arugalAI : public ScriptedAI
