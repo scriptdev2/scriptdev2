@@ -105,7 +105,7 @@ struct MANGOS_DLL_DECL boss_vazrudenAI : public ScriptedAI
 
     void PrepareAndDescendMount()
     {
-        if (Creature* pHerald = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_HERALD)))
+        if (Creature* pHerald = m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_HERALD)))
         {
             if (pHerald->HasSplineFlag(SPLINEFLAG_WALKMODE))
                 pHerald->RemoveSplineFlag(SPLINEFLAG_WALKMODE);
