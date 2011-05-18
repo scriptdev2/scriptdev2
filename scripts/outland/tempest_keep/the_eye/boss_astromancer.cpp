@@ -121,7 +121,7 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
         m_Phase = PHASE_NORMAL;
 
         if (m_pInstance)
-            m_pInstance->SetData(TYPE_ASTROMANCER, NOT_STARTED);
+            m_pInstance->SetData(TYPE_SOLARIAN, NOT_STARTED);
 
         m_creature->SetArmor(m_uiDefaultArmor);
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -150,7 +150,7 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
         DoScriptText(SAY_DEATH, m_creature);
 
         if (m_pInstance)
-            m_pInstance->SetData(TYPE_ASTROMANCER, DONE);
+            m_pInstance->SetData(TYPE_SOLARIAN, DONE);
     }
 
     void Aggro(Unit* pWho)
@@ -158,7 +158,7 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
         DoScriptText(SAY_AGGRO, m_creature);
 
         if (m_pInstance)
-            m_pInstance->SetData(TYPE_ASTROMANCER, IN_PROGRESS);
+            m_pInstance->SetData(TYPE_SOLARIAN, IN_PROGRESS);
     }
 
     void JustSummoned(Creature* pSummoned)
@@ -461,7 +461,7 @@ struct MANGOS_DLL_DECL mob_solarium_priestAI : public ScriptedAI
             {
                 case 0:
                     if (m_pInstance)
-                        pTarget = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_ASTROMANCER));
+                        pTarget = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_ASTROMANCER));
                     break;
                 case 1:
                     pTarget = m_creature;

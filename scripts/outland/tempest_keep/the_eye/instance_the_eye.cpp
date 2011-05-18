@@ -24,127 +24,98 @@ EndScriptData */
 #include "precompiled.h"
 #include "the_eye.h"
 
-/* The Eye encounters:
-0 - Kael'thas event
-1 - Al' ar event
-2 - Solarian Event
-3 - Void Reaver event
-*/
+instance_the_eye::instance_the_eye(Map* pMap) : ScriptedInstance(pMap),
+    m_uiThaladredGUID(0),
+    m_uiSanguinarGUID(0),
+    m_uiCapernianGUID(0),
+    m_uiTelonicusGUID(0),
+    m_uiKaelthasGUID(0),
+    m_uiAstromancerGUID(0),
 
-struct MANGOS_DLL_DECL instance_the_eye : public ScriptedInstance
+    m_uiKaelthasEventPhase(0)
 {
-    instance_the_eye(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
+    Initialize();
+}
 
-    uint32 m_auiEncounter[MAX_ENCOUNTER];
+void instance_the_eye::Initialize()
+{
+    memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
+}
 
-    uint64 m_uiThaladredGUID;
-    uint64 m_uiSanguinarGUID;
-    uint64 m_uiCapernianGUID;
-    uint64 m_uiTelonicusGUID;
-    uint64 m_uiKaelthasGUID;
-    uint64 m_uiAstromancerGUID;
-
-    uint32 m_uiKaelthasEventPhase;
-
-    void Initialize()
+bool instance_the_eye::IsEncounterInProgress() const
+{
+    for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
     {
-        memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
-
-        m_uiThaladredGUID = 0;
-        m_uiSanguinarGUID = 0;
-        m_uiCapernianGUID = 0;
-        m_uiTelonicusGUID = 0;
-        m_uiKaelthasGUID = 0;
-        m_uiAstromancerGUID = 0;
-
-        m_uiKaelthasEventPhase = 0;
+        if (m_auiEncounter[i] == IN_PROGRESS)
+            return true;
     }
 
-    bool IsEncounterInProgress() const
+    if (PHASE_1_ADVISOR <= m_uiKaelthasEventPhase  && m_uiKaelthasEventPhase <= PHASE_5_GRAVITY)
+        return true;
+
+    return false;
+}
+
+void instance_the_eye::OnCreatureCreate(Creature* pCreature)
+{
+    switch (pCreature->GetEntry())
     {
-        for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
-            if (m_auiEncounter[i] == IN_PROGRESS) return true;
-
-        return false;
+        case NPC_THALADRED:   m_uiThaladredGUID = pCreature->GetGUID();   break;
+        case NPC_TELONICUS:   m_uiTelonicusGUID = pCreature->GetGUID();   break;
+        case NPC_CAPERNIAN:   m_uiCapernianGUID = pCreature->GetGUID();   break;
+        case NPC_SANGUINAR:   m_uiSanguinarGUID = pCreature->GetGUID();   break;
+        case NPC_KAELTHAS:    m_uiKaelthasGUID = pCreature->GetGUID();    break;
+        case NPC_ASTROMANCER: m_uiAstromancerGUID = pCreature->GetGUID(); break;
     }
+}
 
-    void OnCreatureCreate(Creature* pCreature)
+void instance_the_eye::SetData(uint32 uiType, uint32 uiData)
+{
+    switch (uiType)
     {
-        switch(pCreature->GetEntry())
-        {
-            case 20064: m_uiThaladredGUID = pCreature->GetGUID(); break;
-            case 20063: m_uiTelonicusGUID = pCreature->GetGUID(); break;
-            case 20062: m_uiCapernianGUID = pCreature->GetGUID(); break;
-            case 20060: m_uiSanguinarGUID = pCreature->GetGUID(); break;
-            case 19622: m_uiKaelthasGUID = pCreature->GetGUID(); break;
-            case 18805: m_uiAstromancerGUID = pCreature->GetGUID(); break;
-        }
-    }
+        case TYPE_ALAR:
+        case TYPE_SOLARIAN:
+        case TYPE_VOIDREAVER:
+            m_auiEncounter[uiType] = uiData;
+            break;
 
-    void SetData(uint32 uiType, uint32 uiData)
+        case TYPE_KAELTHAS_PHASE:
+            m_uiKaelthasEventPhase = uiData;
+            break;
+    }
+}
+
+uint32 instance_the_eye::GetData(uint32 uiType)
+{
+    switch(uiType)
     {
-        switch(uiType)
-        {
-            case TYPE_ALAR:
-                m_auiEncounter[0] = uiData;
-                break;
-            case TYPE_SOLARIAN:
-                m_auiEncounter[1] = uiData;
-                break;
-            case TYPE_VOIDREAVER:
-                m_auiEncounter[2] = uiData;
-                break;
-            case TYPE_ASTROMANCER:
-                m_auiEncounter[3] = uiData;
-                break;
+        case TYPE_ALAR:
+        case TYPE_SOLARIAN:
+        case TYPE_VOIDREAVER:
+            return m_auiEncounter[uiType];
+        case TYPE_KAELTHAS_PHASE:
+            return m_uiKaelthasEventPhase;
 
-            case TYPE_KAELTHAS_PHASE:
-                m_uiKaelthasEventPhase = uiData;
-                break;
-        }
+        default:
+            return 0;
     }
+}
 
-    uint32 GetData(uint32 uiType)
+uint64 instance_the_eye::GetData64(uint32 uiData)
+{
+    switch(uiData)
     {
-        switch(uiType)
-        {
-            case TYPE_ALAR:
-                return m_auiEncounter[0];
-            case TYPE_SOLARIAN:
-                return m_auiEncounter[1];
-            case TYPE_VOIDREAVER:
-                return m_auiEncounter[2];
-            case TYPE_ASTROMANCER:
-                return m_auiEncounter[3];
+        case NPC_THALADRED:   return m_uiThaladredGUID;
+        case NPC_SANGUINAR:   return m_uiSanguinarGUID;
+        case NPC_CAPERNIAN:   return m_uiCapernianGUID;
+        case NPC_TELONICUS:   return m_uiTelonicusGUID;
+        case NPC_KAELTHAS:    return m_uiKaelthasGUID;
+        case NPC_ASTROMANCER: return m_uiAstromancerGUID;
 
-            case TYPE_KAELTHAS_PHASE:
-                return m_uiKaelthasEventPhase;
-        }
-
-        return 0;
+        default:
+            return 0;
     }
-
-    uint64 GetData64(uint32 uiData)
-    {
-        switch(uiData)
-        {
-            case DATA_THALADRED:
-                return m_uiThaladredGUID;
-            case DATA_SANGUINAR:
-                return m_uiSanguinarGUID;
-            case DATA_CAPERNIAN:
-                return m_uiCapernianGUID;
-            case DATA_TELONICUS:
-                return m_uiTelonicusGUID;
-            case DATA_KAELTHAS:
-                return m_uiKaelthasGUID;
-            case DATA_ASTROMANCER:
-                return m_uiAstromancerGUID;
-        }
-
-        return 0;
-    }
-};
+}
 
 InstanceData* GetInstanceData_instance_the_eye(Map* pMap)
 {
@@ -153,9 +124,10 @@ InstanceData* GetInstanceData_instance_the_eye(Map* pMap)
 
 void AddSC_instance_the_eye()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "instance_the_eye";
-    newscript->GetInstanceData = &GetInstanceData_instance_the_eye;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "instance_the_eye";
+    pNewScript->GetInstanceData = &GetInstanceData_instance_the_eye;
+    pNewScript->RegisterSelf();
 }
