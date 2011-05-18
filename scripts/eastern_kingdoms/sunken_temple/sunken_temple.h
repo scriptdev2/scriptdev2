@@ -75,8 +75,8 @@ struct SummonLocations
 
 static const SummonLocations aSunkenTempleLocation[] =
 {
-    {-480.3991f, 96.5668f, -189.7297f, 6.1947f},            // Atalarion summon loc
-    {-466.7165f, 273.0253f, -90.4509f, 3.1338f},            // Avatar and shade of hakkar summon
+    {-466.5130f, 95.19820f, -189.646f, 0.0349f},            // Atalarion summon loc
+    {-466.8673f,272.31204f, -90.7441f, 3.5255f},            // Shade of hakkar summon loc
     {-660.5277f, -16.7117f, -90.8357f, 1.6055f}             // Malfurion summon loc
 };
 
