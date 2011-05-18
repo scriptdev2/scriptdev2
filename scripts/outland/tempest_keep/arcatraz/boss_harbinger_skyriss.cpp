@@ -17,41 +17,40 @@
 /* ScriptData
 SDName: Boss_Harbinger_Skyriss
 SD%Complete: 45
-SDComment: CombatAI not fully implemented. Timers will need adjustments. Need more docs on how event fully work. Reset all event and force start over if fail at one point?
+SDComment: CombatAI not fully implemented. Timers will need adjustments. On wipe despawn all, and let warden_mellichar respawn after ~1min
 SDCategory: Tempest Keep, The Arcatraz
 EndScriptData */
 
 /* ContentData
 boss_harbinger_skyriss
-boss_harbinger_skyriss_illusion
+boss_harbinger_skyriss_illusion -- TODO implement or move to ACID
 EndContentData */
 
 #include "precompiled.h"
 #include "arcatraz.h"
 
-#define SAY_INTRO               -1552000
-#define SAY_AGGRO               -1552001
-#define SAY_KILL_1              -1552002
-#define SAY_KILL_2              -1552003
-#define SAY_MIND_1              -1552004
-#define SAY_MIND_2              -1552005
-#define SAY_FEAR_1              -1552006
-#define SAY_FEAR_2              -1552007
-#define SAY_IMAGE               -1552008
-#define SAY_DEATH               -1552009
+enum
+{
+    SAY_INTRO                   = -1552000,
+    SAY_AGGRO                   = -1552001,
+    SAY_KILL_1                  = -1552002,
+    SAY_KILL_2                  = -1552003,
+    SAY_MIND_1                  = -1552004,
+    SAY_MIND_2                  = -1552005,
+    SAY_FEAR_1                  = -1552006,
+    SAY_FEAR_2                  = -1552007,
+    SAY_IMAGE                   = -1552008,
+    SAY_DEATH                   = -1552009,
 
-#define SPELL_FEAR              39415
-
-#define SPELL_MIND_REND         36924
-#define H_SPELL_MIND_REND       39017
-
-#define SPELL_DOMINATION        37162
-#define H_SPELL_DOMINATION      39019
-
-#define H_SPELL_MANA_BURN       39020
-
-#define SPELL_66_ILLUSION       36931                       //entry 21466
-#define SPELL_33_ILLUSION       36932                       //entry 21467
+    SPELL_FEAR                  = 39415,
+    SPELL_MIND_REND             = 36924,
+    SPELL_MIND_REND_H           = 39017,
+    SPELL_DOMINATION            = 37162,
+    SPELL_DOMINATION_H          = 39019,
+    SPELL_MANA_BURN_H           = 39020,
+    SPELL_66_ILLUSION           = 36931,                    // Summons 21466
+    SPELL_33_ILLUSION           = 36932,                    // Summons 21467
+};
 
 struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
 {
@@ -59,188 +58,191 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
-        Intro = false;
+        m_bIntroFinished = false;
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
     bool m_bIsRegularMode;
 
-    bool Intro;
-    bool IsImage33;
-    bool IsImage66;
+    bool m_bIntroFinished;
+    bool m_bDidSplitImage33;
+    bool m_bDidSplitImage66;
 
-    uint32 Intro_Phase;
-    uint32 Intro_Timer;
-    uint32 MindRend_Timer;
-    uint32 Fear_Timer;
-    uint32 Domination_Timer;
-    uint32 ManaBurn_Timer;
+    uint32 m_uiIntroPhase;
+    uint32 m_uiIntroTimer;
+    uint32 m_uiMindRendTimer;
+    uint32 m_uiFearTimer;
+    uint32 m_uiDominationTimer;
+    uint32 m_uiManaBurnTimer;
 
     void Reset()
     {
-        IsImage33 = false;
-        IsImage66 = false;
+        m_bDidSplitImage33 = false;
+        m_bDidSplitImage66 = false;
 
-        Intro_Phase = 1;
-        Intro_Timer = 5000;
-        MindRend_Timer = 3000;
-        Fear_Timer = 15000;
-        Domination_Timer = 30000;
-        ManaBurn_Timer = 25000;
+        m_uiIntroPhase = 1;
+        m_uiIntroTimer = 5000;
+        m_uiMindRendTimer = 3000;
+        m_uiFearTimer = 15000;
+        m_uiDominationTimer = 30000;
+        m_uiManaBurnTimer = 25000;
     }
 
-    void MoveInLineOfSight(Unit *who)
+    void MoveInLineOfSight(Unit* pWho)
     {
-        if (!Intro)
+        if (!m_bIntroFinished)
             return;
 
-        ScriptedAI::MoveInLineOfSight(who);
+        ScriptedAI::MoveInLineOfSight(pWho);
     }
 
-    void AttackStart(Unit* who)
+    void AttackStart(Unit* pWho)
     {
-        if (!Intro)
+        if (!m_bIntroFinished)
             return;
 
-        ScriptedAI::AttackStart(who);
+        ScriptedAI::AttackStart(pWho);
     }
 
-    void JustDied(Unit* Killer)
+    void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DEATH, m_creature);
 
         if (m_pInstance)
-            m_pInstance->SetData(TYPE_HARBINGERSKYRISS,DONE);
+            m_pInstance->SetData(TYPE_HARBINGERSKYRISS, DONE);
     }
 
-    void KilledUnit(Unit* victim)
+    void KilledUnit(Unit* pVictim)
     {
         //won't yell killing pet/other unit
-        if (victim->GetTypeId() != TYPEID_PLAYER)
+        if (pVictim->GetTypeId() != TYPEID_PLAYER)
             return;
 
         DoScriptText(urand(0, 1) ? SAY_KILL_1 : SAY_KILL_2, m_creature);
     }
 
-    void JustSummoned(Creature *summoned)
+    void JustSummoned(Creature* pSummoned)
     {
-        summoned->AI()->AttackStart(m_creature->getVictim());
+        pSummoned->AI()->AttackStart(m_creature->getVictim());
     }
 
     void DoSplit()
     {
-        if (m_creature->IsNonMeleeSpellCasted(false))
-            m_creature->InterruptNonMeleeSpells(false);
-
         DoScriptText(SAY_IMAGE, m_creature);
 
-        DoCastSpellIfCan(m_creature, IsImage33 ? SPELL_33_ILLUSION : SPELL_66_ILLUSION);
+        DoCastSpellIfCan(m_creature, m_bDidSplitImage33 ? SPELL_33_ILLUSION : SPELL_66_ILLUSION, CAST_INTERRUPT_PREVIOUS);
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
-        if (!Intro && !m_creature->isInCombat())
+        if (!m_bIntroFinished && !m_creature->isInCombat())
         {
             if (!m_pInstance)
                 return;
 
-            if (Intro_Timer < diff)
+            if (m_uiIntroTimer < uiDiff)
             {
-                switch(Intro_Phase)
+                switch(m_uiIntroPhase)
                 {
                     case 1:
                         DoScriptText(SAY_INTRO, m_creature);
-                        if (GameObject* pSphere = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_SPHERE_SHIELD)))
+                        if (GameObject* pSphere = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(GO_SEAL_SPHERE)))
                             pSphere->SetGoState(GO_STATE_ACTIVE);
-                        ++Intro_Phase;
-                        Intro_Timer = 25000;
+                        ++m_uiIntroPhase;
+                        m_uiIntroTimer = 25000;
                         break;
                     case 2:
                         DoScriptText(SAY_AGGRO, m_creature);
-                        if (Creature *mellic = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_MELLICHAR)))
+                        if (Creature* pMellic = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_MELLICHAR)))
                         {
-                            //should have a better way to do this. possibly spell exist.
-                            mellic->SetDeathState(JUST_DIED);
-                            mellic->SetHealth(0);
+                            // should have a better way to do this. possibly spell exist.
+                            pMellic->SetDeathState(JUST_DIED);
+                            pMellic->SetHealth(0);
                         }
-                        ++Intro_Phase;
-                        Intro_Timer = 3000;
+                        ++m_uiIntroPhase;
+                        m_uiIntroTimer = 3000;
                         break;
                     case 3:
-                        Intro = true;
+                        m_bIntroFinished = true;
+                        // TODO - Let Attack here, or change Unit_flag
                         break;
                 }
-            }else Intro_Timer -=diff;
+            }
+            else
+                m_uiIntroTimer -=uiDiff;
         }
 
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (!IsImage66 && m_creature->GetHealthPercent() <= 66.0f)
+        if (!m_bDidSplitImage66 && m_creature->GetHealthPercent() <= 66.0f)
         {
-            IsImage66 = true;
+            m_bDidSplitImage66 = true;
             DoSplit();
         }
 
-        if (!IsImage33 && m_creature->GetHealthPercent() <= 33.0f)
+        if (!m_bDidSplitImage33 && m_creature->GetHealthPercent() <= 33.0f)
         {
-            IsImage33 = true;
+            m_bDidSplitImage33 = true;
             DoSplit();
         }
 
-        if (MindRend_Timer < diff)
+        if (m_uiMindRendTimer < uiDiff)
         {
-            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,1))
-                DoCastSpellIfCan(target, m_bIsRegularMode ? SPELL_MIND_REND : H_SPELL_MIND_REND);
-            else
-                DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_MIND_REND : H_SPELL_MIND_REND);
+            Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1);
+            if (!pTarget)
+                pTarget = m_creature->getVictim();
 
-            MindRend_Timer = 8000;
-        }else MindRend_Timer -=diff;
+            if (DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_MIND_REND : SPELL_MIND_REND_H) == CAST_OK)
+                m_uiMindRendTimer = 8000;
+        }
+        else
+            m_uiMindRendTimer -=uiDiff;
 
-        if (Fear_Timer < diff)
+        if (m_uiFearTimer < uiDiff)
         {
-            if (m_creature->IsNonMeleeSpellCasted(false))
-                return;
+            Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1);
+            if (!pTarget)
+                pTarget = m_creature->getVictim();
 
-            DoScriptText(urand(0, 1) ? SAY_FEAR_1 : SAY_FEAR_2, m_creature);
+            if (DoCastSpellIfCan(pTarget, SPELL_FEAR) == CAST_OK)
+            {
+                DoScriptText(urand(0, 1) ? SAY_FEAR_1 : SAY_FEAR_2, m_creature);
+                m_uiFearTimer = 25000;
+            }
+        }
+        else
+            m_uiFearTimer -=uiDiff;
 
-            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,1))
-                DoCastSpellIfCan(target,SPELL_FEAR);
-            else
-                DoCastSpellIfCan(m_creature->getVictim(),SPELL_FEAR);
-
-            Fear_Timer = 25000;
-        }else Fear_Timer -=diff;
-
-        if (Domination_Timer < diff)
+        if (m_uiDominationTimer < uiDiff)
         {
-            if (m_creature->IsNonMeleeSpellCasted(false))
-                return;
+            Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1);
+            if (!pTarget)
+                pTarget = m_creature->getVictim();
 
-            DoScriptText(urand(0, 1) ? SAY_MIND_1 : SAY_MIND_2, m_creature);
-
-            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,1))
-                DoCastSpellIfCan(target, m_bIsRegularMode ? SPELL_DOMINATION : H_SPELL_DOMINATION);
-            else
-                DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_DOMINATION : H_SPELL_DOMINATION);
-
-            Domination_Timer = urand(16000, 32000);
-        }else Domination_Timer -=diff;
+            if (DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_DOMINATION : SPELL_DOMINATION_H) == CAST_OK)
+            {
+                DoScriptText(urand(0, 1) ? SAY_MIND_1 : SAY_MIND_2, m_creature);
+                m_uiDominationTimer = urand(16000, 32000);
+            }
+        }
+        else
+            m_uiDominationTimer -=uiDiff;
 
         if (!m_bIsRegularMode)
         {
-            if (ManaBurn_Timer < diff)
+            if (m_uiManaBurnTimer < uiDiff)
             {
-                if (m_creature->IsNonMeleeSpellCasted(false))
-                    return;
+                Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1);
+                if (!pTarget)
+                    pTarget = m_creature->getVictim();
 
-                if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,1))
-                    DoCastSpellIfCan(target,H_SPELL_MANA_BURN);
-
-                ManaBurn_Timer = urand(16000, 32000);
-            }else ManaBurn_Timer -=diff;
+                if (DoCastSpellIfCan(pTarget, SPELL_MANA_BURN_H) == CAST_OK)
+                    m_uiManaBurnTimer = urand(16000, 32000);
+            }
+            else
+                m_uiManaBurnTimer -=uiDiff;
         }
 
         DoMeleeAttackIfReady();
@@ -252,8 +254,11 @@ CreatureAI* GetAI_boss_harbinger_skyriss(Creature* pCreature)
     return new boss_harbinger_skyrissAI(pCreature);
 }
 
-#define SPELL_MIND_REND_IMAGE   36929
-#define H_SPELL_MIND_REND_IMAGE 39021
+enum
+{
+    SPELL_MIND_REND_IMAGE       = 36929,
+    SPELL_MIND_REND_IMAGE_H     = 39021,
+};
 
 struct MANGOS_DLL_DECL boss_harbinger_skyriss_illusionAI : public ScriptedAI
 {
@@ -277,15 +282,15 @@ CreatureAI* GetAI_boss_harbinger_skyriss_illusion(Creature* pCreature)
 
 void AddSC_boss_harbinger_skyriss()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_harbinger_skyriss";
-    newscript->GetAI = &GetAI_boss_harbinger_skyriss;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_harbinger_skyriss";
+    pNewScript->GetAI = &GetAI_boss_harbinger_skyriss;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "boss_harbinger_skyriss_illusion";
-    newscript->GetAI = &GetAI_boss_harbinger_skyriss_illusion;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_harbinger_skyriss_illusion";
+    pNewScript->GetAI = &GetAI_boss_harbinger_skyriss_illusion;
+    pNewScript->RegisterSelf();
 }

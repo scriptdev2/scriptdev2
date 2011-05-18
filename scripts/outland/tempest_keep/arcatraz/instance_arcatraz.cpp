@@ -181,9 +181,9 @@ struct MANGOS_DLL_DECL instance_arcatraz : public ScriptedInstance
     {
         switch(uiData)
         {
-            case DATA_MELLICHAR:
+            case NPC_MELLICHAR:
                 return m_uiMellicharGUID;
-            case DATA_SPHERE_SHIELD:
+            case GO_SEAL_SPHERE:
                 return m_uiGoSphereGUID;
         }
         return 0;
