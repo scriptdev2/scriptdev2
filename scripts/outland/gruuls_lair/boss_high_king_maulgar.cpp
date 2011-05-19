@@ -165,10 +165,10 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
             return;
 
         //get council member's guid to respawn them if needed
-        m_auiCouncil[0] = m_pInstance->GetData64(DATA_KIGGLER);
-        m_auiCouncil[1] = m_pInstance->GetData64(DATA_BLINDEYE);
-        m_auiCouncil[2] = m_pInstance->GetData64(DATA_OLM);
-        m_auiCouncil[3] = m_pInstance->GetData64(DATA_KROSH);
+        m_auiCouncil[0] = m_pInstance->GetData64(NPC_KIGGLER);
+        m_auiCouncil[1] = m_pInstance->GetData64(NPC_BLINDEYE);
+        m_auiCouncil[2] = m_pInstance->GetData64(NPC_OLM);
+        m_auiCouncil[3] = m_pInstance->GetData64(NPC_KROSH);
     }
 
     void EventCouncilDeath()
@@ -286,7 +286,7 @@ struct MANGOS_DLL_DECL Council_Base_AI : public ScriptedAI
         if (!m_pInstance)
             return;
 
-        Creature* pMaulgar = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_MAULGAR));
+        Creature* pMaulgar = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_MAULGAR));
 
         if (pMaulgar->isAlive())
         {

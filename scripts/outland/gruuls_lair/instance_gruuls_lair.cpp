@@ -29,149 +29,136 @@ EndScriptData */
 2 - Gruul event
 */
 
-struct MANGOS_DLL_DECL instance_gruuls_lair : public ScriptedInstance
+instance_gruuls_lair::instance_gruuls_lair(Map *pMap) : ScriptedInstance(pMap),
+    m_uiMaulgarGUID(0),
+    m_uiKigglerGUID(0),
+    m_uiBlindeyeGUID(0),
+    m_uiOlmGUID(0),
+    m_uiKroshGUID(0),
+
+    m_uiMaulgarDoorGUID(0),
+    m_uiGruulEncounterDoorGUID(0)
 {
-    instance_gruuls_lair(Map *pMap) : ScriptedInstance(pMap) {Initialize();}
+    Initialize();
+}
 
-    uint32 m_auiEncounter[MAX_ENCOUNTER];
-    std::string strSaveData;
+void instance_gruuls_lair::Initialize()
+{
+    memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
+}
 
-    uint64 m_uiMaulgarGUID;
-    uint64 m_uiKigglerGUID;
-    uint64 m_uiBlindeyeGUID;
-    uint64 m_uiOlmGUID;
-    uint64 m_uiKroshGUID;
-    uint64 m_uiMaulgarDoorGUID;
-    uint64 m_uiGruulEncounterDoorGUID;
+bool instance_gruuls_lair::IsEncounterInProgress() const
+{
+    for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+        if (m_auiEncounter[i] == IN_PROGRESS)
+            return true;
 
-    void Initialize()
+    return false;
+}
+
+void instance_gruuls_lair::OnCreatureCreate(Creature* pCreature)
+{
+    switch (pCreature->GetEntry())
     {
-        memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
+        case NPC_MAULGAR:  m_uiMaulgarGUID  = pCreature->GetGUID(); break;
+        case NPC_KROSH:    m_uiKroshGUID    = pCreature->GetGUID(); break;
+        case NPC_OLM:      m_uiOlmGUID      = pCreature->GetGUID(); break;
+        case NPC_KIGGLER:  m_uiKigglerGUID  = pCreature->GetGUID(); break;
+        case NPC_BLINDEYE: m_uiBlindeyeGUID = pCreature->GetGUID(); break;
+    }
+}
 
-        m_uiMaulgarGUID             = 0;
-        m_uiKigglerGUID             = 0;
-        m_uiBlindeyeGUID            = 0;
-        m_uiOlmGUID                 = 0;
-        m_uiKroshGUID               = 0;
+void instance_gruuls_lair::OnObjectCreate(GameObject* pGo)
+{
+    switch (pGo->GetEntry())
+    {
+        case GO_PORT_GRONN_1:
+            m_uiMaulgarDoorGUID = pGo->GetGUID();
+            if (m_auiEncounter[0] == DONE)
+                pGo->SetGoState(GO_STATE_ACTIVE);
+            break;
+        case GO_PORT_GRONN_2:
+            m_uiGruulEncounterDoorGUID = pGo->GetGUID();
+            break;
+    }
+}
 
-        m_uiMaulgarDoorGUID         = 0;
-        m_uiGruulEncounterDoorGUID  = 0;
+void instance_gruuls_lair::SetData(uint32 uiType, uint32 uiData)
+{
+    switch (uiType)
+    {
+        case TYPE_MAULGAR_EVENT:
+            if (uiData == DONE)
+                DoUseDoorOrButton(m_uiMaulgarDoorGUID);
+            m_auiEncounter[0] = uiData;
+            break;
+        case TYPE_GRUUL_EVENT:
+            DoUseDoorOrButton(m_uiGruulEncounterDoorGUID);
+            m_auiEncounter[1] = uiData;
+            break;
     }
 
-    bool IsEncounterInProgress() const
+    if (uiData == DONE)
     {
-        for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
-            if (m_auiEncounter[i] == IN_PROGRESS)
-                return true;
+        OUT_SAVE_INST_DATA;
 
-        return false;
+        std::ostringstream saveStream;
+        saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1];
+
+        m_strSaveData = saveStream.str();
+
+        SaveToDB();
+        OUT_SAVE_INST_DATA_COMPLETE;
     }
+}
 
-    void OnCreatureCreate(Creature* pCreature)
+uint32 instance_gruuls_lair::GetData(uint32 uiType)
+{
+    switch (uiType)
     {
-        switch (pCreature->GetEntry())
-        {
-            case 18831: m_uiMaulgarGUID     = pCreature->GetGUID(); break;
-            case 18832: m_uiKroshGUID       = pCreature->GetGUID(); break;
-            case 18834: m_uiOlmGUID         = pCreature->GetGUID(); break;
-            case 18835: m_uiKigglerGUID     = pCreature->GetGUID(); break;
-            case 18836: m_uiBlindeyeGUID    = pCreature->GetGUID(); break;
-        }
-    }
+    case TYPE_MAULGAR_EVENT: return m_auiEncounter[0];
+    case TYPE_GRUUL_EVENT:   return m_auiEncounter[1];
 
-    void OnObjectCreate(GameObject* pGo)
-    {
-        switch (pGo->GetEntry())
-        {
-            case GO_PORT_GRONN_1:
-                m_uiMaulgarDoorGUID = pGo->GetGUID();
-                if (m_auiEncounter[0] == DONE)
-                    pGo->SetGoState(GO_STATE_ACTIVE);
-                break;
-            case GO_PORT_GRONN_2:
-                m_uiGruulEncounterDoorGUID = pGo->GetGUID();
-                break;
-        }
-    }
-
-    void SetData(uint32 uiType, uint32 uiData)
-    {
-        switch (uiType)
-        {
-            case TYPE_MAULGAR_EVENT:
-                if (uiData == DONE)
-                    DoUseDoorOrButton(m_uiMaulgarDoorGUID);
-                m_auiEncounter[0] = uiData;
-                break;
-            case TYPE_GRUUL_EVENT:
-                DoUseDoorOrButton(m_uiGruulEncounterDoorGUID);
-                m_auiEncounter[1] = uiData;
-                break;
-        }
-
-        if (uiData == DONE)
-        {
-            OUT_SAVE_INST_DATA;
-
-            std::ostringstream saveStream;
-            saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1];
-
-            strSaveData = saveStream.str();
-
-            SaveToDB();
-            OUT_SAVE_INST_DATA_COMPLETE;
-        }
-    }
-
-    const char* Save()
-    {
-        return strSaveData.c_str();
-    }
-
-    uint32 GetData(uint32 uiType)
-    {
-        switch (uiType)
-        {
-            case TYPE_MAULGAR_EVENT:    return m_auiEncounter[0];
-            case TYPE_GRUUL_EVENT:      return m_auiEncounter[1];
-        }
+    default:
         return 0;
     }
+}
 
-    uint64 GetData64(uint32 uiData)
+uint64 instance_gruuls_lair::GetData64(uint32 uiData)
+{
+    switch (uiData)
     {
-        switch (uiData)
-        {
-            case DATA_MAULGAR:              return m_uiMaulgarGUID;
-            case DATA_BLINDEYE:             return m_uiBlindeyeGUID;
-            case DATA_KIGGLER:              return m_uiKigglerGUID;
-            case DATA_KROSH:                return m_uiKroshGUID;
-            case DATA_OLM:                  return m_uiOlmGUID;
-        }
-        return 0;
+        case NPC_MAULGAR:  return m_uiMaulgarGUID;
+        case NPC_BLINDEYE: return m_uiBlindeyeGUID;
+        case NPC_KIGGLER:  return m_uiKigglerGUID;
+        case NPC_KROSH:    return m_uiKroshGUID;
+        case NPC_OLM:      return m_uiOlmGUID;
+
+        default:
+            return 0;
+    }
+}
+
+void instance_gruuls_lair::Load(const char* chrIn)
+{
+    if (!chrIn)
+    {
+        OUT_LOAD_INST_DATA_FAIL;
+        return;
     }
 
-    void Load(const char* chrIn)
-    {
-        if (!chrIn)
-        {
-            OUT_LOAD_INST_DATA_FAIL;
-            return;
-        }
+    OUT_LOAD_INST_DATA(chrIn);
 
-        OUT_LOAD_INST_DATA(chrIn);
+    std::istringstream loadStream(chrIn);
 
-        std::istringstream loadStream(chrIn);
+    loadStream >> m_auiEncounter[0] >> m_auiEncounter[1];
 
-        loadStream >> m_auiEncounter[0] >> m_auiEncounter[1];
+    for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+        if (m_auiEncounter[i] == IN_PROGRESS)
+            m_auiEncounter[i] = NOT_STARTED;
 
-        for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
-            if (m_auiEncounter[i] == IN_PROGRESS)
-                m_auiEncounter[i] = NOT_STARTED;
-
-        OUT_LOAD_INST_DATA_COMPLETE;
-    }
-};
+    OUT_LOAD_INST_DATA_COMPLETE;
+}
 
 InstanceData* GetInstanceData_instance_gruuls_lair(Map* pMap)
 {
@@ -180,9 +167,10 @@ InstanceData* GetInstanceData_instance_gruuls_lair(Map* pMap)
 
 void AddSC_instance_gruuls_lair()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "instance_gruuls_lair";
-    newscript->GetInstanceData = &GetInstanceData_instance_gruuls_lair;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "instance_gruuls_lair";
+    pNewScript->GetInstanceData = &GetInstanceData_instance_gruuls_lair;
+    pNewScript->RegisterSelf();
 }
