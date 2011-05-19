@@ -5,12 +5,48 @@
 #ifndef DEF_STEAM_VAULT_H
 #define DEF_STEAM_VAULT_H
 
-#define TYPE_HYDROMANCER_THESPIA        1
-#define TYPE_MEKGINEER_STEAMRIGGER      2
-#define TYPE_WARLORD_KALITHRESH         3
-#define TYPE_DISTILLER                  4
+enum
+{
+    MAX_ENCOUNTER                   = 4,
 
-#define DATA_MEKGINEERSTEAMRIGGER       5
-#define DATA_KALITRESH                  6
-#define DATA_THESPIA                    7
+    TYPE_HYDROMANCER_THESPIA        = 1,
+    TYPE_MEKGINEER_STEAMRIGGER      = 2,
+    TYPE_WARLORD_KALITHRESH         = 3,
+    TYPE_DISTILLER                  = 4,
+
+    NPC_STEAMRIGGER                 = 17796,
+    NPC_KALITRESH                   = 17798,
+    NPC_THESPIA                     = 17797,
+
+    GO_MAIN_CHAMBERS_DOOR           = 183049,
+    GO_ACCESS_PANEL_HYDRO           = 184125,
+    GO_ACCESS_PANEL_MEK             = 184126,
+};
+
+class MANGOS_DLL_DECL instance_steam_vault : public ScriptedInstance
+{
+    public:
+        instance_steam_vault(Map* pMap);
+
+        void Initialize();
+
+        void OnCreatureCreate(Creature* pCreature);
+        void OnObjectCreate(GameObject* pGo);
+
+        void SetData(uint32 uiType, uint32 uiData);
+        uint32 GetData(uint32 uiType);
+        uint64 GetData64(uint32 uiType);
+
+    private:
+        uint32 m_auiEncounter[MAX_ENCOUNTER];
+
+        uint64 m_uiThespiaGUID;
+        uint64 m_uiMekgineerGUID;
+        uint64 m_uiKalithreshGUID;
+
+        uint64 m_uiMainChambersDoor;
+        uint64 m_uiAccessPanelHydro;
+        uint64 m_uiAccessPanelMek;
+};
+
 #endif
