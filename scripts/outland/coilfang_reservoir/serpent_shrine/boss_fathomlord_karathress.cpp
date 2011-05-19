@@ -117,7 +117,7 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
 
     // TODO - unneeded workaround - the spell should be cast by adviser onto karathress; text can also be handled in their AI
     // select the spell and the text based on the advisor which died
-    void EventAdvisorDeath(uint8 uiAdvisor)
+    void EventAdvisorDeath(uint32 uiAdvisor)
     {
         if (!m_creature->isAlive())
             return;
@@ -127,15 +127,15 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
 
         switch(uiAdvisor)
         {
-            case DATA_SHARKKIS:
+            case NPC_SHARKKIS:
                 iSayGainAbility = SAY_GAIN_ABILITY1;
                 uiSpell = SPELL_POWER_OF_SHARKKIS;
                 break;
-            case DATA_TIDALVESS:
+            case NPC_TIDALVESS:
                 iSayGainAbility = SAY_GAIN_ABILITY2;
                 uiSpell = SPELL_POWER_OF_TIDALVESS;
                 break;
-            case DATA_CARIBDIS:
+            case NPC_CARIBDIS:
                 iSayGainAbility = SAY_GAIN_ABILITY3;
                 uiSpell = SPELL_POWER_OF_CARIBDIS;
                 break;
@@ -153,9 +153,9 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
         if (!m_pInstance)
             return;
 
-        m_auiAdvisorsGUID[0] = m_pInstance->GetData64(DATA_SHARKKIS);
-        m_auiAdvisorsGUID[1] = m_pInstance->GetData64(DATA_TIDALVESS);
-        m_auiAdvisorsGUID[2] = m_pInstance->GetData64(DATA_CARIBDIS);
+        m_auiAdvisorsGUID[0] = m_pInstance->GetData64(NPC_SHARKKIS);
+        m_auiAdvisorsGUID[1] = m_pInstance->GetData64(NPC_TIDALVESS);
+        m_auiAdvisorsGUID[2] = m_pInstance->GetData64(NPC_CARIBDIS);
     }
 
     void Aggro(Unit* pWho)
@@ -279,11 +279,7 @@ struct MANGOS_DLL_DECL Advisor_Base_AI : public ScriptedAI
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
     }
 
-    protected:
-        uint8 m_uiAdvisor;
-
-    public:
-        ScriptedInstance* m_pInstance;
+    ScriptedInstance* m_pInstance;
 
     void JustReachedHome()
     {
@@ -308,10 +304,10 @@ struct MANGOS_DLL_DECL Advisor_Base_AI : public ScriptedAI
         if (!m_pInstance)
             return;
 
-        if (Creature* pKarathress = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_KARATHRESS)))
+        if (Creature* pKarathress = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_KARATHRESS)))
         {
             if (boss_fathomlord_karathressAI* pKaraAI = dynamic_cast<boss_fathomlord_karathressAI*>(pKarathress->AI()))
-                pKaraAI->EventAdvisorDeath(m_uiAdvisor);
+                pKaraAI->EventAdvisorDeath(m_creature->GetEntry());
         }
     }
 };
@@ -319,11 +315,7 @@ struct MANGOS_DLL_DECL Advisor_Base_AI : public ScriptedAI
 //Fathom-Guard Sharkkis AI
 struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public Advisor_Base_AI
 {
-    boss_fathomguard_sharkkisAI(Creature* pCreature) : Advisor_Base_AI(pCreature)
-    {
-        Reset();
-        m_uiAdvisor = DATA_SHARKKIS;
-    }
+    boss_fathomguard_sharkkisAI(Creature* pCreature) : Advisor_Base_AI(pCreature) { Reset(); }
 
     // timers
     uint32 m_uiHurlTridentTimer;
@@ -446,11 +438,7 @@ struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public Advisor_Base_AI
 //Fathom-Guard Tidalvess AI
 struct MANGOS_DLL_DECL boss_fathomguard_tidalvessAI : public Advisor_Base_AI
 {
-    boss_fathomguard_tidalvessAI(Creature* pCreature) : Advisor_Base_AI(pCreature)
-    {
-        Reset();
-        m_uiAdvisor = DATA_TIDALVESS;
-    }
+    boss_fathomguard_tidalvessAI(Creature* pCreature) : Advisor_Base_AI(pCreature) { Reset(); }
 
     // timers
     uint32 m_uiFrostShockTimer;
@@ -497,11 +485,7 @@ struct MANGOS_DLL_DECL boss_fathomguard_tidalvessAI : public Advisor_Base_AI
 //Fathom-Guard Caribdis AI
 struct MANGOS_DLL_DECL boss_fathomguard_caribdisAI : public Advisor_Base_AI
 {
-    boss_fathomguard_caribdisAI(Creature* pCreature) : Advisor_Base_AI(pCreature)
-    {
-        Reset();
-        m_uiAdvisor = DATA_CARIBDIS;
-    }
+    boss_fathomguard_caribdisAI(Creature* pCreature) : Advisor_Base_AI(pCreature) { Reset(); }
 
     // timers
     uint32 m_uiWaterBoltVolleyTimer;
@@ -564,9 +548,9 @@ struct MANGOS_DLL_DECL boss_fathomguard_caribdisAI : public Advisor_Base_AI
             {
                 switch(urand(0, 3))
                 {
-                    case 0: pUnit = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_KARATHRESS)); break;
-                    case 1: pUnit = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_SHARKKIS)); break;
-                    case 2: pUnit = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_TIDALVESS)); break;
+                    case 0: pUnit = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_KARATHRESS)); break;
+                    case 1: pUnit = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_SHARKKIS)); break;
+                    case 2: pUnit = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_TIDALVESS)); break;
                     case 3: pUnit = m_creature; break;
                 }
             }

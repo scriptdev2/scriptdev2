@@ -507,7 +507,7 @@ struct MANGOS_DLL_DECL mob_enchanted_elementalAI : public ScriptedAI
     {
         if (m_pInstance)
         {
-            if (Creature* pVashj = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_LADYVASHJ)))
+            if (Creature* pVashj = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_LADYVASHJ)))
             {
                 if (pVashj->IsWithinDistInMap(m_creature, INTERACTION_DISTANCE))
                 {
@@ -607,7 +607,7 @@ struct MANGOS_DLL_DECL mob_toxic_sporebatAI : public ScriptedAI
             if (m_pInstance)
             {
                 //check if vashj is death
-                Creature* pVashj = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_LADYVASHJ));
+                Creature* pVashj = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_LADYVASHJ));
                 if (!pVashj || !pVashj->isAlive())
                 {
                     //remove
@@ -657,7 +657,7 @@ bool ItemUse_item_tainted_core(Player* pPlayer, Item* pItem, SpellCastTargets co
         return true;
     }
 
-    Creature* pVashj = pPlayer->GetMap()->GetCreature(pInstance->GetData64(DATA_LADYVASHJ));
+    Creature* pVashj = pPlayer->GetMap()->GetCreature(pInstance->GetData64(NPC_LADYVASHJ));
 
     if (!pVashj)
         return true;
