@@ -301,7 +301,7 @@ struct MANGOS_DLL_DECL npc_time_riftAI : public ScriptedAI
 
         if (Unit *Summon = m_creature->SummonCreature(creature_entry, x, y, z, m_creature->GetOrientation(), TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000))
         {
-            if (Creature *temp = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(DATA_MEDIVH)))
+            if (Creature *temp = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_MEDIVH)))
                 Summon->AddThreat(temp);
         }
     }
