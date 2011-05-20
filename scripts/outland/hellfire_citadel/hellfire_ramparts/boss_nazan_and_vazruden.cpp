@@ -36,6 +36,8 @@ enum
     SAY_DEATH               = -1543024,
     EMOTE_DESCEND           = -1543025,
 
+    SPELL_SUMMON_VAZRUDEN   = 30717,
+
     //vazruden
     SPELL_REVENGE           = 40392,
 
@@ -264,7 +266,7 @@ struct MANGOS_DLL_DECL boss_vazruden_heraldAI : public ScriptedAI
     {
         m_creature->UpdateEntry(NPC_NAZAN);
 
-        m_creature->SummonCreature(NPC_VAZRUDEN, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_DEAD_DESPAWN, 0);
+        DoCastSpellIfCan(m_creature, SPELL_SUMMON_VAZRUDEN);
 
         m_uiMovementTimer = 3000;
 
