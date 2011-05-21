@@ -73,6 +73,17 @@ struct MANGOS_DLL_DECL boss_thermapluggAI : public ScriptedAI
         m_lLandedBombGUIDs.clear();
     }
 
+    void GetAIInformation(ChatHandler& reader)
+    {
+        reader.PSendSysMessage("Thermaplugg, currently phase %s", m_bIsPhaseTwo ? "two" : "one");
+
+        if (m_asBombFaces)
+        {
+            for (uint8 i = 0; i < MAX_GNOME_FACES; ++i)
+                reader.PSendSysMessage("Bomb face %u is %s ", (uint32)i, m_asBombFaces[i].m_bActivated ? "activated" : "not activated");
+        }
+    }
+
     void KilledUnit(Unit* pVictim)
     {
         DoScriptText(SAY_SLAY, m_creature);

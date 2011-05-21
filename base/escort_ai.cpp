@@ -32,6 +32,27 @@ npc_escortAI::npc_escortAI(Creature* pCreature) : ScriptedAI(pCreature),
     m_bCanReturnToStart(false)
 {}
 
+void npc_escortAI::GetAIInformation(ChatHandler& reader)
+{
+    std::ostringstream oss;
+
+    oss << "EscortAI ";
+    if (m_playerGuid)
+        oss << "started for " << m_playerGuid.GetString() << " ";
+    if (m_pQuestForEscort)
+        oss << "started with quest " << m_pQuestForEscort->GetQuestId();
+
+    if (HasEscortState(STATE_ESCORT_ESCORTING))
+    {
+        oss << "\nEscortFlags: Escorting" << (HasEscortState(STATE_ESCORT_RETURNING) ? ", Returning" : "") << (HasEscortState(STATE_ESCORT_PAUSED) ? ", Paused" : "");
+
+        if (CurrentWP != WaypointList.end())
+            oss << "\nNext Waypoint Id = " << CurrentWP->uiId << " Position: " << CurrentWP->fX << " " << CurrentWP->fY << " " << CurrentWP->fZ;
+    }
+
+    reader.PSendSysMessage(oss.str().c_str());
+}
+
 bool npc_escortAI::IsVisible(Unit* pWho) const
 {
     if (!pWho)

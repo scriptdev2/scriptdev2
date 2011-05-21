@@ -30,20 +30,19 @@ struct MANGOS_DLL_DECL guardAI : public ScriptedAI
         explicit guardAI(Creature* pCreature);
         ~guardAI() {}
 
-    uint32 m_uiGlobalCooldown;                              //This variable acts like the global cooldown that players have (1.5 seconds)
-    uint32 m_uiBuffTimer;                                   //This variable keeps track of buffs
+        uint32 m_uiGlobalCooldown;                          // This variable acts like the global cooldown that players have (1.5 seconds)
+        uint32 m_uiBuffTimer;                               // This variable keeps track of buffs
 
-    void Reset();
+        void Reset();
 
-    void Aggro(Unit *pWho);
+        void Aggro(Unit *pWho);
 
-    void JustDied(Unit *pKiller);
+        void JustDied(Unit *pKiller);
 
-    void UpdateAI(const uint32 uiDiff);
+        void UpdateAI(const uint32 uiDiff);
 
-    //common used for guards in main cities
-    void DoReplyToTextEmote(uint32 uiTextEmote);
-
+        // Commonly used for guards in main cities
+        void DoReplyToTextEmote(uint32 uiTextEmote);
 };
 
 struct MANGOS_DLL_DECL guardAI_orgrimmar : public guardAI

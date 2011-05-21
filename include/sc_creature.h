@@ -7,6 +7,7 @@
 
 #include "CreatureAI.h"
 #include "Creature.h"
+#include "Chat.h"
 
 //Spell targets used by SelectSpell
 enum SelectTarget
@@ -47,6 +48,8 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     //*************
     //CreatureAI Functions
     //*************
+
+    void GetAIInformation(ChatHandler& reader);
 
     //Called if IsVisible(Unit *who) is true at each *who move
     void MoveInLineOfSight(Unit*);
@@ -175,6 +178,8 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
 struct MANGOS_DLL_DECL Scripted_NoMovementAI : public ScriptedAI
 {
     Scripted_NoMovementAI(Creature* pCreature) : ScriptedAI(pCreature) {}
+
+    void GetAIInformation(ChatHandler& reader);
 
     //Called at each attack of m_creature by any victim
     void AttackStart(Unit*);
