@@ -529,7 +529,7 @@ bool ScriptedAI::EnterEvadeIfOutOfCombatArea(const uint32 uiDiff)
 
 void Scripted_NoMovementAI::GetAIInformation(ChatHandler& reader)
 {
-    reader.PSendSysMessage("ScriptedAI (no movement)");
+    reader.PSendSysMessage("Subclass of Scripted_NoMovementAI");
 }
 
 void Scripted_NoMovementAI::AttackStart(Unit* pWho)
