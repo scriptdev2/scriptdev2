@@ -363,16 +363,16 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
             if (!m_pInstance)
                 return;
 
-            if (uint32 uiEggsRemaining_Right = m_pInstance->GetData(DATA_J_EGGS_RIGHT))
+            if (uint32 uiEggsRemaining_Right = m_pInstance->GetData(TYPE_J_EGGS_RIGHT))
             {
                 for(uint32 i = 0; i < uiEggsRemaining_Right; ++i)
-                    m_pInstance->SetData(DATA_J_EGGS_RIGHT, SPECIAL);
+                    m_pInstance->SetData(TYPE_J_EGGS_RIGHT, SPECIAL);
             }
 
-            if (uint32 uiEggsRemaining_Left = m_pInstance->GetData(DATA_J_EGGS_LEFT))
+            if (uint32 uiEggsRemaining_Left = m_pInstance->GetData(TYPE_J_EGGS_LEFT))
             {
                 for(uint32 i = 0; i < uiEggsRemaining_Left; ++i)
-                    m_pInstance->SetData(DATA_J_EGGS_LEFT, SPECIAL);
+                    m_pInstance->SetData(TYPE_J_EGGS_LEFT, SPECIAL);
             }
         }
     }
@@ -514,7 +514,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
         {
             if (m_uiHatcherTimer < uiDiff)
             {
-                if (!m_pInstance || (m_pInstance->GetData(DATA_J_EGGS_LEFT) == 0 && m_pInstance->GetData(DATA_J_EGGS_RIGHT) == 0))
+                if (!m_pInstance || (m_pInstance->GetData(TYPE_J_EGGS_LEFT) == 0 && m_pInstance->GetData(TYPE_J_EGGS_RIGHT) == 0))
                     m_bIsEggRemaining = false;
                 else
                 {
@@ -644,7 +644,7 @@ struct MANGOS_DLL_DECL npc_amanishi_hatcherAI : public ScriptedAI
 
     void DoHatchEggs(uint32 uiCount)
     {
-        uint32 uiSaveRightOrLeft = m_creature->GetEntry() == NPC_AMANI_HATCHER_1 ? DATA_J_EGGS_RIGHT : DATA_J_EGGS_LEFT;
+        uint32 uiSaveRightOrLeft = m_creature->GetEntry() == NPC_AMANI_HATCHER_1 ? TYPE_J_EGGS_RIGHT : TYPE_J_EGGS_LEFT;
 
         for(uint32 i = 0; i < uiCount; ++i)
         {
@@ -681,7 +681,7 @@ struct MANGOS_DLL_DECL npc_amanishi_hatcherAI : public ScriptedAI
                 if (!m_pInstance)
                     return;
 
-                uint32 uiEggsRemaining = m_creature->GetEntry() == NPC_AMANI_HATCHER_1 ? m_pInstance->GetData(DATA_J_EGGS_RIGHT) : m_pInstance->GetData(DATA_J_EGGS_LEFT);
+                uint32 uiEggsRemaining = m_creature->GetEntry() == NPC_AMANI_HATCHER_1 ? m_pInstance->GetData(TYPE_J_EGGS_RIGHT) : m_pInstance->GetData(TYPE_J_EGGS_LEFT);
 
                 if (!uiEggsRemaining)
                 {

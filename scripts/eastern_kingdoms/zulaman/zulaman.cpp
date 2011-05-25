@@ -59,7 +59,7 @@ struct MANGOS_DLL_DECL npc_forest_frogAI : public ScriptedAI
             uint32 cEntry = 0;
             switch(urand(0, 10))
             {
-                case 0: cEntry = 24024; break;              //Kraz
+                case 0: cEntry = 24024; break;              //Kraz      // wrong here?
                 case 1: cEntry = 24397; break;              //Mannuth
                 case 2: cEntry = 24403; break;              //Deez
                 case 3: cEntry = 24404; break;              //Galathryn
@@ -143,7 +143,7 @@ struct MANGOS_DLL_DECL npc_harrison_jones_zaAI : public npc_escortAI
             case 1:
                 DoScriptText(SAY_AT_GONG, m_creature);
 
-                if (GameObject* pEntranceDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(DATA_GO_GONG)))
+                if (GameObject* pEntranceDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(GO_STRANGE_GONG)))
                     pEntranceDoor->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
 
                 //Start bang gong for 2min
@@ -223,7 +223,7 @@ bool GOUse_go_strange_gong(Player* pPlayer, GameObject* pGo)
 
     if (pInstance->GetData(TYPE_EVENT_RUN) == SPECIAL)
     {
-        if (Creature* pCreature = pGo->GetMap()->GetCreature(pInstance->GetData64(DATA_HARRISON)))
+        if (Creature* pCreature = pGo->GetMap()->GetCreature(pInstance->GetData64(NPC_HARRISON)))
         {
             if (npc_harrison_jones_zaAI* pHarrisonAI = dynamic_cast<npc_harrison_jones_zaAI*>(pCreature->AI()))
                 pHarrisonAI->SetHoldState(false);
