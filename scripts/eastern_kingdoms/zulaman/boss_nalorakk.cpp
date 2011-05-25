@@ -101,6 +101,9 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
     void Aggro(Unit *who)
     {
         DoScriptText(SAY_AGGRO, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_NALORAKK, IN_PROGRESS);
     }
 
     void KilledUnit(Unit* victim)
@@ -116,6 +119,12 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
             return;
 
         m_pInstance->SetData(TYPE_NALORAKK, DONE);
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_NALORAKK, FAIL);
     }
 
     void UpdateAI(const uint32 diff)

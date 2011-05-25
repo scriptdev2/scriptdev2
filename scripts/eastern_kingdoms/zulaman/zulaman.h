@@ -11,7 +11,7 @@ enum InstanceZA
     MAX_VENDOR              = 2,
     MAX_CHESTS              = 4,
 
-    SAY_INST_RELEASE        = -1568067,
+    SAY_INST_RELEASE        = -1568067,                     // TODO Event NYI
     SAY_INST_BEGIN          = -1568068,
     SAY_INST_PROGRESS_1     = -1568069,
     SAY_INST_PROGRESS_2     = -1568070,
@@ -67,7 +67,12 @@ enum InstanceZA
 
     GO_STRANGE_GONG         = 187359,
     GO_MASSIVE_GATE         = 186728,
+    GO_WIND_DOOR            = 186858,
+    GO_LYNX_TEMPLE_ENTRANCE = 186304,
+    GO_LYNX_TEMPLE_EXIT     = 186303,
     GO_HEXLORD_ENTRANCE     = 186305,
+    GO_WOODEN_DOOR          = 186306,
+    GO_FIRE_DOOR            = 186859,
 
     // unused, expected to be possible to handle within Database!
     GO_TANZARS_TRUNK        = 186648,
@@ -99,6 +104,62 @@ struct TimeEventNpcInfo
 
     uint8 uiSavePosition;                                   // stores in what order this npc was saved (0 means unsaved)
     ObjectGuid npGuid;
+};
+
+class MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
+{
+    public:
+        instance_zulaman(Map* pMap);
+
+        void Initialize();
+        bool IsEncounterInProgress() const;
+
+        void OnCreatureCreate(Creature* pCreature);
+        void OnObjectCreate(GameObject* pGo);
+
+        void SetData(uint32 uiType, uint32 uiData);
+        uint32 GetData(uint32 uiType);
+        uint64 GetData64(uint32 uiData);
+
+        const char* Save() { return m_strInstData.c_str(); }
+        void Load(const char* chrIn);
+
+        void Update(uint32 uiDiff);
+
+    private:
+        uint8 GetKilledPreBosses();
+        void DoTimeRunSay(RunEventSteps uiData);
+        void DoChestEvent(BossToChestIndex uiIndex);
+
+        std::string m_strInstData;
+        uint32 m_auiEncounter[MAX_ENCOUNTER];
+        uint32 m_auiRandVendor[MAX_VENDOR];
+        TimeEventNpcInfo m_aEventNpcInfo[MAX_CHESTS];
+
+        uint32 m_uiEventTimer;
+        uint32 m_uiGongCount;
+
+        uint64 m_uiAkilzonGUID;
+        uint64 m_uiNalorakkGUID;
+        uint64 m_uiJanalaiGUID;
+        uint64 m_uiHalazziGUID;
+        uint64 m_uiSpiritLynxGUID;
+        uint64 m_uiZuljinGUID;
+        uint64 m_uiMalacrassGUID;
+        uint64 m_uiHarrisonGUID;
+
+        uint64 m_uiStrangeGongGUID;
+        uint64 m_uiMassiveGateGUID;
+        uint64 m_uiWindDoorGUID;
+        uint64 m_uiLynxTempleEntranceGUID;
+        uint64 m_uiLynxTempleExitGUID;
+        uint64 m_uiMalacrassEntranceGUID;
+        uint64 m_uiWoodenDoorGUID;
+        uint64 m_uiFireDoorGUID;
+
+        GUIDList m_lEggsGUIDList;
+        uint32 m_uiEggsRemainingCount_Left;
+        uint32 m_uiEggsRemainingCount_Right;
 };
 
 #endif

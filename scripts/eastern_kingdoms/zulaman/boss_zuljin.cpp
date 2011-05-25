@@ -112,6 +112,15 @@ struct MANGOS_DLL_DECL boss_zuljinAI : public ScriptedAI
     void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_ZULJIN, IN_PROGRESS);
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_ZULJIN, FAIL);
     }
 
     void KilledUnit(Unit* pVictim)

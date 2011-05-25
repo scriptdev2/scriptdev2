@@ -89,6 +89,9 @@ struct MANGOS_DLL_DECL boss_akilzonAI : public ScriptedAI
     void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_AKILZON, IN_PROGRESS);
     }
 
     void KilledUnit(Unit* pVictim)
@@ -104,6 +107,12 @@ struct MANGOS_DLL_DECL boss_akilzonAI : public ScriptedAI
             return;
 
         m_pInstance->SetData(TYPE_AKILZON, DONE);
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_AKILZON, FAIL);
     }
 
     void JustSummoned(Creature* pSummoned)
