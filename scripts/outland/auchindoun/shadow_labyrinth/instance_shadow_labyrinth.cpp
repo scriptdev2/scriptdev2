@@ -31,172 +31,148 @@ EndScriptData */
 4 - Murmur event
 */
 
-struct MANGOS_DLL_DECL instance_shadow_labyrinth : public ScriptedInstance
+instance_shadow_labyrinth::instance_shadow_labyrinth(Map* pMap) : ScriptedInstance(pMap),
+    m_uiRefectoryDoorGUID(0),
+    m_uiScreamingHallDoorGUID(0),
+
+    m_uiGrandmasterVorpil(0),
+    m_uiFelOverseerCount(0)
 {
-    instance_shadow_labyrinth(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
+    Initialize();
+}
 
-    uint32 m_auiEncounter[MAX_ENCOUNTER];
-    std::string strInstData;
+void instance_shadow_labyrinth::Initialize()
+{
+    memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
+}
 
-    uint64 m_uiRefectoryDoorGUID;
-    uint64 m_uiScreamingHallDoorGUID;
-
-    uint64 m_uiGrandmasterVorpil;
-    uint32 m_uiFelOverseerCount;
-
-    void Initialize()
+void instance_shadow_labyrinth::OnObjectCreate(GameObject* pGo)
+{
+    switch(pGo->GetEntry())
     {
-        memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
-
-        m_uiRefectoryDoorGUID = 0;
-        m_uiScreamingHallDoorGUID = 0;
-
-        m_uiGrandmasterVorpil = 0;
-        m_uiFelOverseerCount = 0;
+        case GO_REFECTORY_DOOR:
+            m_uiRefectoryDoorGUID = pGo->GetGUID();
+            if (m_auiEncounter[2] == DONE)
+                pGo->SetGoState(GO_STATE_ACTIVE);
+            break;
+        case GO_SCREAMING_HALL_DOOR:
+            m_uiScreamingHallDoorGUID = pGo->GetGUID();
+            if (m_auiEncounter[3] == DONE)
+                pGo->SetGoState(GO_STATE_ACTIVE);
+            break;
     }
+}
 
-    bool IsEncounterInProgress() const
+void instance_shadow_labyrinth::OnCreatureCreate(Creature* pCreature)
+{
+    switch(pCreature->GetEntry())
     {
-        for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
-            if (m_auiEncounter[i] == IN_PROGRESS) return true;
-
-        return false;
+        case NPC_VORPIL:
+            m_uiGrandmasterVorpil = pCreature->GetGUID();
+            break;
+        case NPC_FEL_OVERSEER:
+            ++m_uiFelOverseerCount;                         // TODO should actually only count alive ones
+            debug_log("SD2: Shadow Labyrinth: counting %u Fel Overseers.", m_uiFelOverseerCount);
+            break;
     }
+}
 
-    void OnObjectCreate(GameObject* pGo)
+void instance_shadow_labyrinth::SetData(uint32 uiType, uint32 uiData)
+{
+    switch(uiType)
     {
-        switch(pGo->GetEntry())
-        {
-            case GO_REFECTORY_DOOR:
-                m_uiRefectoryDoorGUID = pGo->GetGUID();
-                if (m_auiEncounter[2] == DONE)
-                    pGo->SetGoState(GO_STATE_ACTIVE);
-                break;
-            case GO_SCREAMING_HALL_DOOR:
-                m_uiScreamingHallDoorGUID = pGo->GetGUID();
-                if (m_auiEncounter[3] == DONE)
-                    pGo->SetGoState(GO_STATE_ACTIVE);
-                break;
-        }
-    }
+        case TYPE_HELLMAW:
+            m_auiEncounter[0] = uiData;
+            break;
 
-    void OnCreatureCreate(Creature* pCreature)
-    {
-        switch(pCreature->GetEntry())
-        {
-            case 18732:
-                m_uiGrandmasterVorpil = pCreature->GetGUID();
-                break;
-            case 18796:
-                if (pCreature->isAlive())
-                {
-                    ++m_uiFelOverseerCount;
-                    debug_log("SD2: Shadow Labyrinth: counting %u Fel Overseers.", m_uiFelOverseerCount);
-                }
-                break;
-        }
-    }
+        case TYPE_OVERSEER:
+            if (uiData != DONE)
+            {
+                error_log("SD2: Shadow Labyrinth: TYPE_OVERSEER did not expect other data than DONE");
+                return;
+            }
+            if (m_uiFelOverseerCount)
+            {
+                --m_uiFelOverseerCount;
 
-    void SetData(uint32 uiType, uint32 uiData)
-    {
-        switch(uiType)
-        {
-            case TYPE_HELLMAW:
-                m_auiEncounter[0] = uiData;
-                break;
-
-            case TYPE_OVERSEER:
-                if (uiData != DONE)
-                {
-                    error_log("SD2: Shadow Labyrinth: TYPE_OVERSEER did not expect other data than DONE");
-                    return;
-                }
                 if (m_uiFelOverseerCount)
                 {
-                    --m_uiFelOverseerCount;
+                    debug_log("SD2: Shadow Labyrinth: %u Fel Overseers left to kill.", m_uiFelOverseerCount);
 
-                    if (m_uiFelOverseerCount)
-                        debug_log("SD2: Shadow Labyrinth: %u Fel Overseers left to kill.", m_uiFelOverseerCount);
-                    else
-                    {
-                        m_auiEncounter[1] = DONE;
-                        debug_log("SD2: Shadow Labyrinth: TYPE_OVERSEER == DONE");
-                    }
+                    // Skip save call
+                    return;
                 }
-                break;
+                else
+                {
+                    m_auiEncounter[1] = DONE;
+                    debug_log("SD2: Shadow Labyrinth: TYPE_OVERSEER == DONE");
+                }
+            }
+            break;
 
-            case TYPE_INCITER:
-                if (uiData == DONE)
-                    DoUseDoorOrButton(m_uiRefectoryDoorGUID);
-                m_auiEncounter[2] = uiData;
-                break;
+        case TYPE_INCITER:
+            if (uiData == DONE)
+                DoUseDoorOrButton(m_uiRefectoryDoorGUID);
+            m_auiEncounter[2] = uiData;
+            break;
 
-            case TYPE_VORPIL:
-                if (uiData == DONE)
-                    DoUseDoorOrButton(m_uiScreamingHallDoorGUID);
-                m_auiEncounter[3] = uiData;
-                break;
+        case TYPE_VORPIL:
+            if (uiData == DONE)
+                DoUseDoorOrButton(m_uiScreamingHallDoorGUID);
+            m_auiEncounter[3] = uiData;
+            break;
 
-            case TYPE_MURMUR:
-                m_auiEncounter[4] = uiData;
-                break;
-        }
-
-        if (uiData == DONE)
-        {
-            if (uiType == TYPE_OVERSEER && m_uiFelOverseerCount != 0)
-                return;
-
-            OUT_SAVE_INST_DATA;
-
-            std::ostringstream saveStream;
-            saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " "
-                << m_auiEncounter[2] << " " << m_auiEncounter[3] << " " << m_auiEncounter[4];
-
-            strInstData = saveStream.str();
-
-            SaveToDB();
-            OUT_SAVE_INST_DATA_COMPLETE;
-        }
+        case TYPE_MURMUR:
+            m_auiEncounter[4] = uiData;
+            break;
     }
 
-    uint32 GetData(uint32 uiType)
+    if (uiData == DONE)
     {
-        switch(uiType)
-        {
-            case TYPE_HELLMAW:
-                return m_auiEncounter[0];
-            case TYPE_OVERSEER:
-                return m_auiEncounter[1];
-        }
-        return false;
-    }
+        OUT_SAVE_INST_DATA;
 
-    const char* Save()
+        std::ostringstream saveStream;
+        saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " "
+            << m_auiEncounter[2] << " " << m_auiEncounter[3] << " " << m_auiEncounter[4];
+
+        m_strInstData = saveStream.str();
+
+        SaveToDB();
+        OUT_SAVE_INST_DATA_COMPLETE;
+    }
+}
+
+uint32 instance_shadow_labyrinth::GetData(uint32 uiType)
+{
+    switch(uiType)
     {
-        return strInstData.c_str();
-    }
+        case TYPE_HELLMAW:  return m_auiEncounter[0];
+        case TYPE_OVERSEER: return m_auiEncounter[1];
 
-    void Load(const char* in)
+        default:
+            return 0;
+    }
+}
+
+void instance_shadow_labyrinth::Load(const char* chrIn)
+{
+    if (!chrIn)
     {
-        if (!in)
-        {
-            OUT_LOAD_INST_DATA_FAIL;
-            return;
-        }
-
-        OUT_LOAD_INST_DATA(in);
-
-        std::istringstream loadStream(in);
-        loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3] >> m_auiEncounter[4];
-
-        for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
-            if (m_auiEncounter[i] == IN_PROGRESS)
-                m_auiEncounter[i] = NOT_STARTED;
-
-        OUT_LOAD_INST_DATA_COMPLETE;
+        OUT_LOAD_INST_DATA_FAIL;
+        return;
     }
-};
+
+    OUT_LOAD_INST_DATA(chrIn);
+
+    std::istringstream loadStream(chrIn);
+    loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3] >> m_auiEncounter[4];
+
+    for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+        if (m_auiEncounter[i] == IN_PROGRESS)
+            m_auiEncounter[i] = NOT_STARTED;
+
+    OUT_LOAD_INST_DATA_COMPLETE;
+}
 
 InstanceData* GetInstanceData_instance_shadow_labyrinth(Map* pMap)
 {
@@ -205,9 +181,10 @@ InstanceData* GetInstanceData_instance_shadow_labyrinth(Map* pMap)
 
 void AddSC_instance_shadow_labyrinth()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "instance_shadow_labyrinth";
-    newscript->GetInstanceData = &GetInstanceData_instance_shadow_labyrinth;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "instance_shadow_labyrinth";
+    pNewScript->GetInstanceData = &GetInstanceData_instance_shadow_labyrinth;
+    pNewScript->RegisterSelf();
 }
