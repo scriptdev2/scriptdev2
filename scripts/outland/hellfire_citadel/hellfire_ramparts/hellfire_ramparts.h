@@ -12,7 +12,9 @@ enum
     TYPE_VAZRUDEN               = 1,
     TYPE_NAZAN                  = 2,                        // Do not change, used in ACID (SetData(SPECIAL) on death of 17517
 
-    NPC_HERALD                  = 17307,
+    NPC_HELLFIRE_SENTRY         = 17517,
+    NPC_VAZRUDEN_HERALD         = 17307,
+    NPC_VAZRUDEN                = 17537,
 
     GO_FEL_IRON_CHEST           = 185168,
     GO_FEL_IRON_CHEST_H         = 185169,
@@ -35,11 +37,15 @@ class MANGOS_DLL_DECL instance_ramparts : public ScriptedInstance
         // No need to save and load this instance (only one encounter needs special handling, no doors used)
 
     private:
+        void DoFailVazruden();
+
         uint32 m_auiEncounter[MAX_ENCOUNTER];
 
         uint32 m_uiSentryCounter;
         uint64 m_uiChestGUID;
         uint64 m_uiHeraldGUID;
+        uint64 m_uiVazrudenGUID;
+        GUIDList m_lSentryGUIDs;
 };
 
 #endif

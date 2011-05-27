@@ -27,6 +27,7 @@ EndScriptData */
 instance_ramparts::instance_ramparts(Map* pMap) : ScriptedInstance(pMap),
     m_uiSentryCounter(0),
     m_uiChestGUID(0),
+    m_uiVazrudenGUID(0),
     m_uiHeraldGUID(0)
 {
     Initialize();
@@ -39,13 +40,23 @@ void instance_ramparts::Initialize()
 
 void instance_ramparts::OnCreatureCreate(Creature* pCreature)
 {
-    if (pCreature->GetEntry() == NPC_HERALD)
-        m_uiHeraldGUID = pCreature->GetGUID();
+    switch (pCreature->GetEntry())
+    {
+        case NPC_VAZRUDEN_HERALD:
+            m_uiHeraldGUID = pCreature->GetGUID();
+            break;
+        case NPC_VAZRUDEN:
+            m_uiVazrudenGUID = pCreature->GetGUID();
+            break;
+        case NPC_HELLFIRE_SENTRY:
+            m_lSentryGUIDs.push_back(pCreature->GetGUID());
+            break;
+    }
 }
 
 void instance_ramparts::OnObjectCreate(GameObject* pGo)
 {
-    switch(pGo->GetEntry())
+    switch (pGo->GetEntry())
     {
         case GO_FEL_IRON_CHEST:
         case GO_FEL_IRON_CHEST_H:
@@ -58,11 +69,13 @@ void instance_ramparts::SetData(uint32 uiType, uint32 uiData)
 {
     debug_log("SD2: Instance Ramparts: SetData received for type %u with data %u",uiType,uiData);
 
-    switch(uiType)
+    switch (uiType)
     {
         case TYPE_VAZRUDEN:
             if (uiData == DONE && m_auiEncounter[1] == DONE)
                 DoRespawnGameObject(m_uiChestGUID, HOUR*IN_MILLISECONDS);
+            if (uiData == FAIL && m_auiEncounter[0] != FAIL)
+                DoFailVazruden();
             m_auiEncounter[0] = uiData;
             break;
         case TYPE_NAZAN:
@@ -72,14 +85,15 @@ void instance_ramparts::SetData(uint32 uiType, uint32 uiData)
 
                 if (m_uiSentryCounter == 2)
                     m_auiEncounter[1] = uiData;
+
+                return;
             }
             if (uiData == DONE && m_auiEncounter[0] == DONE)
-            {
                 DoRespawnGameObject(m_uiChestGUID, HOUR*IN_MILLISECONDS);
-                m_auiEncounter[1] = uiData;
-            }
-            if (uiData == IN_PROGRESS)
-                m_auiEncounter[1] = uiData;
+            if (uiData == FAIL && m_auiEncounter[1] != FAIL)
+                DoFailVazruden();
+
+            m_auiEncounter[1] = uiData;
             break;
     }
 }
@@ -97,10 +111,43 @@ uint32 instance_ramparts::GetData(uint32 uiType)
 
 uint64 instance_ramparts::GetData64(uint32 uiData)
 {
-    if (uiData == NPC_HERALD)
+    if (uiData == NPC_VAZRUDEN_HERALD)
         return m_uiHeraldGUID;
+    if (uiData == NPC_VAZRUDEN)
+        return m_uiVazrudenGUID;
 
     return 0;
+}
+
+void instance_ramparts::DoFailVazruden()
+{
+    // Store FAIL for both types
+    m_auiEncounter[0] = FAIL;
+    m_auiEncounter[1] = FAIL;
+
+    // Restore Sentries (counter and respawn them)
+    m_uiSentryCounter = 0;
+    for (GUIDList::const_iterator itr = m_lSentryGUIDs.begin(); itr != m_lSentryGUIDs.end(); ++itr)
+    {
+        if (Creature* pSentry = instance->GetCreature(*itr))
+            pSentry->Respawn();
+    }
+
+    // Respawn or Reset Vazruden the herald
+    if (Creature* pVazruden = instance->GetCreature(m_uiHeraldGUID))
+    {
+        if (!pVazruden->isAlive())
+            pVazruden->Respawn();
+        else
+        {
+            if (ScriptedAI* pVazrudenAI = dynamic_cast<ScriptedAI*> (pVazruden->AI()))
+                pVazrudenAI->Reset();
+        }
+    }
+
+    // Despawn Vazruden
+    if (Creature* pVazruden = instance->GetCreature(m_uiVazrudenGUID))
+        pVazruden->ForcedDespawn();
 }
 
 InstanceData* GetInstanceData_instance_ramparts(Map* pMap)
