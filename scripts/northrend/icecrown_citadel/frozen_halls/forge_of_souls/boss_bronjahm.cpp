@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: boss_bronjahm
-SD%Complete: 0%
-SDComment: Placeholder
+SD%Complete: 80%
+SDComment: Small unknown behaviour for his Shadow Bold use in phase 1; Soulstorm currently bugged in core, hence second phase disabled
 SDCategory: The Forge of Souls
 EndScriptData */
 
@@ -26,13 +26,25 @@ EndScriptData */
 
 enum
 {
-    SAY_AGGRO_1                 = -1632000,                 // without sound, really correct?
+    SAY_AGGRO_1                 = -1632000,                 // Without sound, really correct?
     SAY_AGGRO_2                 = -1632001,
     SAY_SLAY_1                  = -1632002,
     SAY_SLAY_2                  = -1632003,
     SAY_DEATH                   = -1632004,
     SAY_SOULSTORM               = -1632005,
     SAY_CORRUPT_SOUL            = -1632006,
+
+    // Heroic spells are selected by spell difficulty dbc
+    SPELL_SOULSTORM_VISUAL_OOC  = 69008,
+    SPELL_MAGICS_BANE           = 68793,
+    SPELL_SHADOW_BOLT           = 70043,
+    SPELL_CORRUPT_SOUL          = 68839,
+    SPELL_BANISH_VISUAL         = 68862,
+    SPELL_CONSUME_SOUL_TRIGGER  = 68861,
+    SPELL_TELEPORT              = 68988,
+    SPELL_SOULSTORM_VISUAL      = 68870,                    // Cast before Soulstorm, should trigger some visual spells
+    SPELL_SOULSTORM             = 68872,
+    SPELL_FEAR                  = 68950,
 };
 
 struct MANGOS_DLL_DECL boss_bronjahmAI : public ScriptedAI
@@ -47,15 +59,32 @@ struct MANGOS_DLL_DECL boss_bronjahmAI : public ScriptedAI
     instance_forge_of_souls* m_pInstance;
     bool m_bIsRegularMode;
 
+    uint8 m_uiPhase;
+
+    uint32 m_uiMagicsBaneTimer;
+    uint32 m_uiCorruptSoulTimer;
+    uint32 m_uiFearTimer;
+    uint32 m_uiShadowboltTimer;
+
     void Reset()
     {
+        m_uiPhase = 0;
+        m_uiMagicsBaneTimer = urand(8000, 12000);
+        m_uiCorruptSoulTimer = urand(20000, 30000);
+        m_uiFearTimer = 1000;
+        m_uiShadowboltTimer = 5000;
+        SetCombatMovement(true);
     }
 
     void Aggro(Unit* pWho)
     {
         DoScriptText(urand(0, 1) ? SAY_AGGRO_1 : SAY_AGGRO_2, m_creature);
+
         if (m_pInstance)
             m_pInstance->SetData(TYPE_BRONJAHM, IN_PROGRESS);
+
+        // Remove OOC visual soulstorm effect (added in creature_template_addon
+        m_creature->RemoveAurasDueToSpell(SPELL_SOULSTORM_VISUAL_OOC);
     }
 
     void KilledUnit(Unit* pVictim)
@@ -78,13 +107,158 @@ struct MANGOS_DLL_DECL boss_bronjahmAI : public ScriptedAI
     void JustReachedHome()
     {
         if (m_pInstance)
-            m_pInstance->SetData(TYPE_BRONJAHM, NOT_STARTED);
+            m_pInstance->SetData(TYPE_BRONJAHM, FAIL);
+    }
+
+    void SpellHitTarget(Unit* pTarget, SpellEntry const* pSpellEntry)
+    {
+        if (pTarget == m_creature && pSpellEntry->Id == SPELL_TELEPORT)
+        {
+            // Say Text and cast Soulstorm
+            DoScriptText(SAY_SOULSTORM, m_creature);
+            DoCastSpellIfCan(m_creature, SPELL_SOULSTORM_VISUAL, CAST_TRIGGERED | CAST_INTERRUPT_PREVIOUS);
+            DoCastSpellIfCan(m_creature, SPELL_SOULSTORM, CAST_INTERRUPT_PREVIOUS);
+        }
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        if (m_uiPhase == 0)                                 // Phase 1
+        {
+            // Switching Phase, Soulstorm is cast in SpellHitTarget
+            /* TODO - Uncomment when Soulstorm properly implemented in core
+             * if (m_creature->GetHealthPercent() < 30.0f)
+             * {
+             *     if (DoCastSpellIfCan(m_creature, SPELL_TELEPORT) == CAST_OK)
+             *         m_uiPhase = 1;
+             * }
+             */
+
+            // Corrupt Soul
+            if (m_uiCorruptSoulTimer < uiDiff)
+            {
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                {
+                    if (DoCastSpellIfCan(pTarget, SPELL_CORRUPT_SOUL) == CAST_OK)
+                    {
+                        DoScriptText(SAY_CORRUPT_SOUL, m_creature);
+                        m_uiCorruptSoulTimer = urand(20000, 30000);
+                    }
+                }
+            }
+            else
+                m_uiCorruptSoulTimer -= uiDiff;
+
+            // Magic's Bane
+            if (m_uiMagicsBaneTimer < uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_MAGICS_BANE) == CAST_OK)
+                    m_uiMagicsBaneTimer = urand(7000, 15000);
+            }
+            else
+                m_uiMagicsBaneTimer -= uiDiff;
+
+            // Used to prevent Shadowbolt-Casting on Aggro for a few seconds
+            if (m_uiShadowboltTimer <= uiDiff)
+                m_uiShadowboltTimer = 0;
+            else
+                m_uiShadowboltTimer -= uiDiff;
+
+            // Use ShadowBolt as default attack if victim is not in range
+            // TODO - not entirely clear how this works in case the tank is out of shadow-bolt range
+            if (!m_uiShadowboltTimer && !m_creature->CanReachWithMeleeAttack(m_creature->getVictim()) && m_creature->GetCombatDistance(m_creature->getVictim()) < 20.0f)
+            {
+                if (IsCombatMovement())
+                {
+                    SetCombatMovement(false);
+                    m_creature->GetMotionMaster()->MoveIdle();
+                    m_creature->StopMoving();
+                }
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_SHADOW_BOLT);
+            }
+            else
+            {
+                if (!IsCombatMovement())
+                {
+                    SetCombatMovement(true);
+                    m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
+                    m_uiShadowboltTimer = 2000;             // Give some time to chase
+                }
+
+                DoMeleeAttackIfReady();
+            }
+        }
+        else                                                // Soulstorm Phase
+        {
+            if (m_uiFearTimer < uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_FEAR) == CAST_OK)
+                    m_uiFearTimer = urand(10000, 15000);
+            }
+            else
+                m_uiFearTimer -= uiDiff;
+
+            // Default attack
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                DoCastSpellIfCan(pTarget, SPELL_SHADOW_BOLT);
+        }
     }
 };
 
 CreatureAI* GetAI_boss_bronjahm(Creature* pCreature)
 {
     return new boss_bronjahmAI(pCreature);
+}
+
+struct MANGOS_DLL_DECL npc_corrupted_soul_fragmentAI : public ScriptedAI
+{
+    npc_corrupted_soul_fragmentAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        Reset();
+        DoCastSpellIfCan(m_creature, SPELL_BANISH_VISUAL);
+    }
+
+    void Reset()
+    {
+        SetCombatMovement(true);
+    }
+
+    void JustDied(Unit* pKiller)
+    {
+        if (instance_forge_of_souls* pInstance = (instance_forge_of_souls*)m_creature->GetInstanceData())
+            pInstance->SetGuid(DATA_SOULFRAGMENT_REMOVE, m_creature->GetObjectGuid());
+    }
+
+    void MoveInLineOfSight(Unit* pWho)
+    {
+        if (pWho->GetEntry() == NPC_BRONJAHM)
+        {
+            if (m_creature->IsWithinDistInMap(pWho, INTERACTION_DISTANCE))
+            {
+                DoCastSpellIfCan(pWho, SPELL_CONSUME_SOUL_TRIGGER, CAST_TRIGGERED);
+
+                // Inform the instance about a used soul fragment
+                if (instance_forge_of_souls* pInstance = (instance_forge_of_souls*)m_creature->GetInstanceData())
+                    pInstance->SetGuid(DATA_SOULFRAGMENT_REMOVE, m_creature->GetObjectGuid());
+
+                m_creature->ForcedDespawn();
+                return;
+            }
+            if (IsCombatMovement())
+            {
+                SetCombatMovement(false);
+                m_creature->GetMotionMaster()->MoveFollow(pWho, 0.0f, 0.0f);
+            }
+        }
+    }
+};
+
+CreatureAI* GetAI_npc_corrupted_soul_fragment(Creature* pCreature)
+{
+    return new npc_corrupted_soul_fragmentAI(pCreature);
 }
 
 void AddSC_boss_bronjahm()
@@ -94,5 +268,10 @@ void AddSC_boss_bronjahm()
     pNewScript = new Script;
     pNewScript->Name = "boss_bronjahm";
     pNewScript->GetAI = &GetAI_boss_bronjahm;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_corrupted_soul_fragment";
+    pNewScript->GetAI = &GetAI_npc_corrupted_soul_fragment;
     pNewScript->RegisterSelf();
 }
