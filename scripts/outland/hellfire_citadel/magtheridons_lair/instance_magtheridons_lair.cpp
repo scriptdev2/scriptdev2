@@ -75,7 +75,7 @@ struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
         switch(pGo->GetEntry())
         {
             case 181713:
-                pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+                pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
                 break;
             case 183847:                                    //event door
                 m_uiDoorGUID = pGo->GetGUID();

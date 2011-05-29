@@ -126,17 +126,17 @@ void instance_gundrak::OnObjectCreate(GameObject* pGo)
         case GO_ALTAR_OF_SLADRAN:
             m_uiAltarOfSladranGUID = pGo->GetGUID();
             if (m_auiEncounter[TYPE_SLADRAN] == DONE)
-                pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+                pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
             break;
         case GO_ALTAR_OF_MOORABI:
             m_uiAltarOfMoorabiGUID = pGo->GetGUID();
             if (m_auiEncounter[TYPE_MOORABI] == DONE)
-                pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+                pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
             break;
         case GO_ALTAR_OF_COLOSSUS:
             m_uiAltarOfColossusGUID = pGo->GetGUID();
             if (m_auiEncounter[TYPE_COLOSSUS] == DONE)
-                pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+                pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
                 break;
         case GO_SNAKE_KEY:
             m_uiSnakeKeyGUID = pGo->GetGUID();
@@ -194,7 +194,7 @@ void instance_gundrak::SetData(uint32 uiType, uint32 uiData)
             m_auiEncounter[TYPE_SLADRAN] = uiData;
             if (uiData == DONE)
                 if (GameObject* pGo = instance->GetGameObject(m_uiAltarOfSladranGUID))
-                    pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+                    pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
             if (uiData == SPECIAL)
                 m_mAltarInProgress.insert(TypeTimerPair(TYPE_SLADRAN, TIMER_VISUAL_ALTAR));
             break;
@@ -205,7 +205,7 @@ void instance_gundrak::SetData(uint32 uiType, uint32 uiData)
                 if (!instance->IsRegularDifficulty())
                     DoUseDoorOrButton(m_uiEckDoorGUID);
                 if (GameObject* pGo = instance->GetGameObject(m_uiAltarOfMoorabiGUID))
-                    pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+                    pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
             }
             if (uiData == SPECIAL)
                 m_mAltarInProgress.insert(TypeTimerPair(TYPE_MOORABI, TIMER_VISUAL_ALTAR));
@@ -214,7 +214,7 @@ void instance_gundrak::SetData(uint32 uiType, uint32 uiData)
             m_auiEncounter[TYPE_COLOSSUS] = uiData;
             if (uiData == DONE)
                 if (GameObject* pGo = instance->GetGameObject(m_uiAltarOfColossusGUID))
-                    pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+                    pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
             if (uiData == SPECIAL)
                 m_mAltarInProgress.insert(TypeTimerPair(TYPE_COLOSSUS, TIMER_VISUAL_ALTAR));
             break;

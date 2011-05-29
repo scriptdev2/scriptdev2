@@ -38,7 +38,7 @@ bool GOUse_go_containment_sphere(Player* pPlayer, GameObject* pGo)
         case GO_CONTAINMENT_SPHERE_ORMOROK:  pInstance->SetData(TYPE_ORMOROK, SPECIAL);  break;
     }
 
-    pGo->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+    pGo->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
     return false;
 }
 
@@ -86,17 +86,17 @@ struct MANGOS_DLL_DECL instance_nexus : public ScriptedInstance
             case GO_CONTAINMENT_SPHERE_TELESTRA:
                 m_uiTelestrasContainmentSphereGUID = pGo->GetGUID();
                 if (m_auiEncounter[0] == DONE)
-                    pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+                    pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
                 break;
             case GO_CONTAINMENT_SPHERE_ANOMALUS:
                 m_uiAnomalusContainmentSphereGUID = pGo->GetGUID();
                 if (m_auiEncounter[1] == DONE)
-                    pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+                    pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
                 break;
             case GO_CONTAINMENT_SPHERE_ORMOROK:
                 m_uiOrmoroksContainmentSphereGUID = pGo->GetGUID();
                 if (m_auiEncounter[2] == DONE)
-                    pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+                    pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
                 break;
         }
     }
@@ -153,7 +153,7 @@ struct MANGOS_DLL_DECL instance_nexus : public ScriptedInstance
                 if (uiData == DONE)
                 {
                     if (GameObject* pGo = instance->GetGameObject(m_uiTelestrasContainmentSphereGUID))
-                        pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+                        pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
                 }
                 break;
             case TYPE_ANOMALUS:
@@ -161,7 +161,7 @@ struct MANGOS_DLL_DECL instance_nexus : public ScriptedInstance
                 if (uiData == DONE)
                 {
                     if (GameObject* pGo = instance->GetGameObject(m_uiAnomalusContainmentSphereGUID))
-                        pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+                        pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
                 }
                 break;
             case TYPE_ORMOROK:
@@ -169,7 +169,7 @@ struct MANGOS_DLL_DECL instance_nexus : public ScriptedInstance
                 if (uiData == DONE)
                 {
                     if (GameObject* pGo = instance->GetGameObject(m_uiOrmoroksContainmentSphereGUID))
-                        pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+                        pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
                 }
                 break;
             case TYPE_KERISTRASZA:

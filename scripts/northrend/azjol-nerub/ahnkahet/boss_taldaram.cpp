@@ -106,7 +106,7 @@ bool GOUse_go_nerubian_device(Player* pPlayer, GameObject* pGo)
         return false;
 
     pInstance->SetData(TYPE_TALDARAM, SPECIAL);
-    pGo->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+    pGo->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
     return false;
 }
 
