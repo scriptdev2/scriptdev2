@@ -129,14 +129,15 @@ GameObject* ScriptedInstance::GetSingleGameObjectFromStorage(uint32 uiEntry)
 }
 
 /// Returns a pointer to a loaded Creature that was stored in m_mGoEntryGuidStore. Can return NULL
-Creature* ScriptedInstance::GetSingleCreatureFromStorage(uint32 uiEntry)
+Creature* ScriptedInstance::GetSingleCreatureFromStorage(uint32 uiEntry, bool bSkipDebugLog /*=false*/)
 {
     EntryGuidMap::iterator find = m_mNpcEntryGuidStore.find(uiEntry);
     if (find != m_mNpcEntryGuidStore.end())
         return instance->GetCreature(find->second);
 
     // Output log, possible reason is not added GO to map, or not yet loaded;
-    debug_log("SD2: Script requested creature with entry %u, but no npc of this entry was created yet, or it was not stored by script for map %u.", uiEntry, instance->GetId());
+    if (!bSkipDebugLog)
+        debug_log("SD2: Script requested creature with entry %u, but no npc of this entry was created yet, or it was not stored by script for map %u.", uiEntry, instance->GetId());
 
     return NULL;
 }

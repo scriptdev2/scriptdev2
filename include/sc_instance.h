@@ -31,7 +31,7 @@ class MANGOS_DLL_DECL ScriptedInstance : public InstanceData
 
         // Default accessor functions
         GameObject* GetSingleGameObjectFromStorage(uint32 uiEntry);
-        Creature* GetSingleCreatureFromStorage(uint32 uiEntry);
+        Creature* GetSingleCreatureFromStorage(uint32 uiEntry, bool bSkipDebugLog = false);
 
         // Change active state of doors or buttons
         void DoUseDoorOrButton(ObjectGuid guid, uint32 uiWithRestoreTime = 0, bool bUseAlternativeState = false);
@@ -46,6 +46,13 @@ class MANGOS_DLL_DECL ScriptedInstance : public InstanceData
 
         // Get a Player from map
         Player* GetPlayerInMap(bool bOnlyAlive = false, bool bCanBeGamemaster = true);
+
+        /// Wrapper for simulating map-wide text in this instance. It is expected that the Creature is stored in m_mNpcEntryGuidStore if loaded.
+        void DoOrSimulateScriptTextForThisInstance(int32 iTextEntry, uint32 uiCreatureEntry)
+        {
+            // Prevent debug output in GetSingleCreatureFromStorage
+            DoOrSimulateScriptTextForMap(iTextEntry, uiCreatureEntry, instance, GetSingleCreatureFromStorage(uiCreatureEntry, true));
+        }
 
     protected:
         // Storage for GO-Guids and NPC-Guids
