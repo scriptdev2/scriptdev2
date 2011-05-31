@@ -58,7 +58,6 @@ class MANGOS_DLL_DECL instance_blackrock_spire : public ScriptedInstance
         void SetData(uint32 uiType, uint32 uiData);
         void SetData64(uint32 uiType, uint64 uiData);
         uint32 GetData(uint32 uiType);
-        uint64 GetData64(uint32 uiType);
 
         const char* Save() { return strInstData.c_str(); }
         void Load(const char* chrIn);
@@ -71,19 +70,7 @@ class MANGOS_DLL_DECL instance_blackrock_spire : public ScriptedInstance
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string strInstData;
 
-        uint64 m_uiEmberseerGUID;
-        uint64 m_uiNefariusGUID;
-        uint64 m_uiGythGUID;
-        uint64 m_uiInfiltratorGUID;
-
-        uint64 m_uiEmberseerInDoorGUID;
-        uint64 m_uiEmberseerCombatDoorGUID;
-        uint64 m_uiEmberseerOutDoorGUID;
-        uint64 m_uiGythEntryDoorGUID;
-        uint64 m_uiGythCombatDoorGUID;
-        uint64 m_uiGythExitDoorGUID;
-
-        uint64 m_auiRoomRuneGUID[MAX_ROOMS];
+        ObjectGuid m_aRoomRuneGuid[MAX_ROOMS];
         GUIDList m_alRoomEventMobGUIDSorted[MAX_ROOMS];
         GUIDList m_lRoomEventMobGUIDList;
         GUIDList m_lIncanceratorGUIDList;

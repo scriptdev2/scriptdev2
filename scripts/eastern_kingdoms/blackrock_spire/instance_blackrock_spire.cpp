@@ -44,19 +44,7 @@ enum
 3726 UBRS, entrance to BWL
 */
 
-instance_blackrock_spire::instance_blackrock_spire(Map* pMap) : ScriptedInstance(pMap),
-    m_uiEmberseerGUID(0),
-    m_uiNefariusGUID(0),
-    m_uiGythGUID(0),
-    m_uiInfiltratorGUID(0),
-
-    m_uiEmberseerInDoorGUID(0),
-    m_uiEmberseerCombatDoorGUID(0),
-    m_uiEmberseerOutDoorGUID(0),
-
-    m_uiGythEntryDoorGUID(0),
-    m_uiGythCombatDoorGUID(0),
-    m_uiGythExitDoorGUID(0)
+instance_blackrock_spire::instance_blackrock_spire(Map* pMap) : ScriptedInstance(pMap)
 {
     Initialize();
 }
@@ -64,7 +52,7 @@ instance_blackrock_spire::instance_blackrock_spire(Map* pMap) : ScriptedInstance
 void instance_blackrock_spire::Initialize()
 {
     memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
-    memset(&m_auiRoomRuneGUID, 0, sizeof(m_auiRoomRuneGUID));
+    memset(&m_aRoomRuneGuid, 0, sizeof(m_aRoomRuneGuid));
 }
 
 void instance_blackrock_spire::OnObjectCreate(GameObject* pGo)
@@ -72,50 +60,49 @@ void instance_blackrock_spire::OnObjectCreate(GameObject* pGo)
     switch(pGo->GetEntry())
     {
         case GO_EMBERSEER_IN:
-            m_uiEmberseerInDoorGUID = pGo->GetGUID();
             if (GetData(TYPE_ROOM_EVENT) == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_DOORS:
-            m_uiEmberseerCombatDoorGUID = pGo->GetGUID();
             break;
         case GO_EMBERSEER_OUT:
-            m_uiEmberseerOutDoorGUID = pGo->GetGUID();
             if (GetData(TYPE_EMBERSEER) == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_GYTH_ENTRY_DOOR:
-            m_uiGythEntryDoorGUID = pGo->GetGUID();
-            break;
         case GO_GYTH_COMBAT_DOOR:
-            m_uiGythCombatDoorGUID = pGo->GetGUID();
             break;
         case GO_GYTH_EXIT_DOOR:
-            m_uiGythExitDoorGUID = pGo->GetGUID();
             if (GetData(TYPE_GYTH) == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
 
-        case GO_ROOM_1_RUNE: m_auiRoomRuneGUID[0] = pGo->GetGUID(); break;
-        case GO_ROOM_2_RUNE: m_auiRoomRuneGUID[1] = pGo->GetGUID(); break;
-        case GO_ROOM_3_RUNE: m_auiRoomRuneGUID[2] = pGo->GetGUID(); break;
-        case GO_ROOM_4_RUNE: m_auiRoomRuneGUID[3] = pGo->GetGUID(); break;
-        case GO_ROOM_5_RUNE: m_auiRoomRuneGUID[4] = pGo->GetGUID(); break;
-        case GO_ROOM_6_RUNE: m_auiRoomRuneGUID[5] = pGo->GetGUID(); break;
-        case GO_ROOM_7_RUNE: m_auiRoomRuneGUID[6] = pGo->GetGUID(); break;
+        case GO_ROOM_1_RUNE: m_aRoomRuneGuid[0] = pGo->GetObjectGuid(); return;
+        case GO_ROOM_2_RUNE: m_aRoomRuneGuid[1] = pGo->GetObjectGuid(); return;
+        case GO_ROOM_3_RUNE: m_aRoomRuneGuid[2] = pGo->GetObjectGuid(); return;
+        case GO_ROOM_4_RUNE: m_aRoomRuneGuid[3] = pGo->GetObjectGuid(); return;
+        case GO_ROOM_5_RUNE: m_aRoomRuneGuid[4] = pGo->GetObjectGuid(); return;
+        case GO_ROOM_6_RUNE: m_aRoomRuneGuid[5] = pGo->GetObjectGuid(); return;
+        case GO_ROOM_7_RUNE: m_aRoomRuneGuid[6] = pGo->GetObjectGuid(); return;
 
-        case GO_ROOKERY_EGG: m_lRookeryEggGUIDList.push_back(pGo->GetGUID());   break;
+        case GO_ROOKERY_EGG: m_lRookeryEggGUIDList.push_back(pGo->GetGUID());   return;
+
+        default:
+            return;
     }
+    m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
 }
 
 void instance_blackrock_spire::OnCreatureCreate(Creature* pCreature)
 {
     switch(pCreature->GetEntry())
     {
-        case NPC_PYROGUARD_EMBERSEER:    m_uiEmberseerGUID = pCreature->GetEntry();  break;
-        case NPC_LORD_VICTOR_NEFARIUS:   m_uiNefariusGUID = pCreature->GetGUID();    break;
-        case NPC_GYTH:                   m_uiGythGUID = pCreature->GetGUID();        break;
-        case NPC_SCARSHIELD_INFILTRATOR: m_uiInfiltratorGUID = pCreature->GetGUID(); break;
+        case NPC_PYROGUARD_EMBERSEER:
+        case NPC_LORD_VICTOR_NEFARIUS:
+        case NPC_GYTH:
+        case NPC_SCARSHIELD_INFILTRATOR:
+            m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
+
 
         case NPC_BLACKHAND_SUMMONER:
         case NPC_BLACKHAND_VETERAN:      m_lRoomEventMobGUIDList.push_back(pCreature->GetGUID()); break;
@@ -129,16 +116,16 @@ void instance_blackrock_spire::SetData(uint32 uiType, uint32 uiData)
     {
         case TYPE_ROOM_EVENT:
             if (uiData == DONE)
-                DoUseDoorOrButton(m_uiEmberseerInDoorGUID);
+                DoUseDoorOrButton(GO_EMBERSEER_IN);
             m_auiEncounter[0] = uiData;
             break;
         case TYPE_EMBERSEER:
             if (uiData == IN_PROGRESS || uiData == FAIL)
-                DoUseDoorOrButton(m_uiEmberseerCombatDoorGUID);
+                DoUseDoorOrButton(GO_DOORS);
             else if (uiData == DONE)
             {
-                DoUseDoorOrButton(m_uiEmberseerCombatDoorGUID);
-                DoUseDoorOrButton(m_uiEmberseerOutDoorGUID);
+                DoUseDoorOrButton(GO_DOORS);
+                DoUseDoorOrButton(GO_EMBERSEER_OUT);
             }
             m_auiEncounter[1] = uiData;
             break;
@@ -147,11 +134,11 @@ void instance_blackrock_spire::SetData(uint32 uiType, uint32 uiData)
             break;
         case TYPE_GYTH:
             if (uiData == IN_PROGRESS || uiData == FAIL)
-                DoUseDoorOrButton(m_uiGythEntryDoorGUID);
+                DoUseDoorOrButton(GO_GYTH_ENTRY_DOOR);
             else if (uiData == DONE)
             {
-                DoUseDoorOrButton(m_uiGythEntryDoorGUID);
-                DoUseDoorOrButton(m_uiGythExitDoorGUID);
+                DoUseDoorOrButton(GO_GYTH_ENTRY_DOOR);
+                DoUseDoorOrButton(GO_GYTH_EXIT_DOOR);
             }
             m_auiEncounter[3] = uiData;
             break;
@@ -179,15 +166,15 @@ void instance_blackrock_spire::SetData64(uint32 uiType, uint64 uiData)
     if (uiType == TYPE_ROOM_EVENT && GetData(TYPE_ROOM_EVENT) == IN_PROGRESS)
     {
         uint8 uiNotEmptyRoomsCount = 0;
-        for (uint8 i = 0; i< MAX_ROOMS; ++i)
+        for (uint8 i = 0; i < MAX_ROOMS; ++i)
         {
-            if (m_auiRoomRuneGUID[i])                       // This check is used, to ensure which runes still need processing
+            if (m_aRoomRuneGuid[i])                       // This check is used, to ensure which runes still need processing
             {
                 m_alRoomEventMobGUIDSorted[i].remove(uiData);
                 if (m_alRoomEventMobGUIDSorted[i].empty())
                 {
-                    DoUseDoorOrButton(m_auiRoomRuneGUID[i]);
-                    m_auiRoomRuneGUID[i] = 0;
+                    DoUseDoorOrButton(m_aRoomRuneGuid[i]);
+                    m_aRoomRuneGuid[i].Clear();
                 }
                 else
                     ++uiNotEmptyRoomsCount;                 // found an not empty room
@@ -233,19 +220,6 @@ uint32 instance_blackrock_spire::GetData(uint32 uiType)
     return 0;
 }
 
-uint64 instance_blackrock_spire::GetData64(uint32 uiType)
-{
-    switch (uiType)
-    {
-        case NPC_PYROGUARD_EMBERSEER:    return m_uiEmberseerGUID;
-        case NPC_LORD_VICTOR_NEFARIUS:   return m_uiNefariusGUID;
-        case NPC_GYTH:                   return m_uiGythGUID;
-        case NPC_SCARSHIELD_INFILTRATOR: return m_uiInfiltratorGUID;
-        case GO_GYTH_COMBAT_DOOR:        return m_uiGythCombatDoorGUID;
-    }
-    return 0;
-}
-
 void instance_blackrock_spire::DoSortRoomEventMobs()
 {
     if (GetData(TYPE_ROOM_EVENT) != NOT_STARTED)
@@ -253,7 +227,7 @@ void instance_blackrock_spire::DoSortRoomEventMobs()
 
     for (uint8 i = 0; i < MAX_ROOMS; ++i)
     {
-        if (GameObject* pRune = instance->GetGameObject(m_auiRoomRuneGUID[i]))
+        if (GameObject* pRune = instance->GetGameObject(m_aRoomRuneGuid[i]))
         {
             for (GUIDList::const_iterator itr = m_lRoomEventMobGUIDList.begin(); itr != m_lRoomEventMobGUIDList.end(); ++itr)
             {
@@ -285,7 +259,7 @@ bool AreaTrigger_at_blackrock_spire(Player* pPlayer, AreaTriggerEntry const* pAt
             break;
         case AREATRIGGER_STADIUM:
             if (instance_blackrock_spire* pInstance = (instance_blackrock_spire*) pPlayer->GetInstanceData())
-                if (Creature* pGyth = pInstance->instance->GetCreature(pInstance->GetData64(NPC_GYTH)))
+                if (Creature* pGyth = pInstance->GetSingleCreatureFromStorage(NPC_GYTH))
                     if (pGyth->isAlive() && !pGyth->isInCombat())
                         pGyth->AI()->AttackStart(pPlayer);
             break;

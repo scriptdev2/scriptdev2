@@ -51,7 +51,6 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
     }
 
     instance_blackrock_spire* m_pInstance;
-    uint64 m_uiCombatDoorGUID;
     uint32 uiAggroTimer;
     uint32 uiDragonsTimer;
     uint32 uiOrcTimer;
@@ -90,10 +89,7 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
     void Aggro(Unit* pWho)
     {
         if (m_pInstance)
-        {
             m_pInstance->SetData(TYPE_GYTH, IN_PROGRESS);
-            m_uiCombatDoorGUID = m_pInstance->GetData64(GO_GYTH_COMBAT_DOOR);
-        }
     }
 
     void JustDied(Unit* pKiller)
@@ -141,7 +137,7 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
                 m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 m_creature->RemoveAurasDueToSpell(SPELL_ROOT_SELF);
                 if (m_pInstance)
-                    m_pInstance->DoUseDoorOrButton(m_uiCombatDoorGUID);
+                    m_pInstance->DoUseDoorOrButton(GO_GYTH_COMBAT_DOOR);
 
             }
             else
@@ -160,7 +156,7 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
                 SummonCreatureWithRandomTarget(NPC_CHROMATIC_WHELP);
                 --uiLine1Count;
                 if (m_pInstance)
-                    m_pInstance->DoUseDoorOrButton(m_uiCombatDoorGUID);
+                    m_pInstance->DoUseDoorOrButton(GO_GYTH_COMBAT_DOOR);
                 uiDragonsTimer = 60000;
             }
             else
@@ -178,7 +174,7 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
                 SummonCreatureWithRandomTarget(NPC_CHROMATIC_WHELP);
                 SummonCreatureWithRandomTarget(NPC_CHROMATIC_WHELP);
                 if (m_pInstance)
-                    m_pInstance->DoUseDoorOrButton(m_uiCombatDoorGUID);
+                    m_pInstance->DoUseDoorOrButton(GO_GYTH_COMBAT_DOOR);
                 --uiLine2Count;
                 uiOrcTimer = 60000;
             }
