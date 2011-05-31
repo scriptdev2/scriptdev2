@@ -296,13 +296,13 @@ struct MANGOS_DLL_DECL npc_grimstoneAI : public npc_escortAI
             // Reset Doors
             if (m_uiEventPhase >= 9)                        // North Gate is opened
             {
-                m_pInstance->DoUseDoorOrButton(m_pInstance->GetData64(GO_ARENA_2));
-                m_pInstance->DoUseDoorOrButton(m_pInstance->GetData64(GO_ARENA_4));
+                m_pInstance->DoUseDoorOrButton(GO_ARENA_2);
+                m_pInstance->DoUseDoorOrButton(GO_ARENA_4);
             }
             else if (m_uiEventPhase >= 4)                   // East Gate is opened
             {
-                m_pInstance->DoUseDoorOrButton(m_pInstance->GetData64(GO_ARENA_1));
-                m_pInstance->DoUseDoorOrButton(m_pInstance->GetData64(GO_ARENA_4));
+                m_pInstance->DoUseDoorOrButton(GO_ARENA_1);
+                m_pInstance->DoUseDoorOrButton(GO_ARENA_4);
             }
 
             // Despawn Summoned Mobs
@@ -327,7 +327,7 @@ struct MANGOS_DLL_DECL npc_grimstoneAI : public npc_escortAI
                     case 0:
                         // Shortly after spawn, start walking
                         //DoScriptText(-1000000, m_creature); // no more text on spawn
-                        m_pInstance->DoUseDoorOrButton(m_pInstance->GetData64(GO_ARENA_4));
+                        m_pInstance->DoUseDoorOrButton(GO_ARENA_4);
                         Start(false);
                         SetEscortPaused(false);
                         m_uiEventTimer = 0;
@@ -342,7 +342,7 @@ struct MANGOS_DLL_DECL npc_grimstoneAI : public npc_escortAI
                         break;
                     case 3:
                         // Open East Gate
-                        m_pInstance->DoUseDoorOrButton(m_pInstance->GetData64(GO_ARENA_1));
+                        m_pInstance->DoUseDoorOrButton(GO_ARENA_1);
                         m_uiEventTimer = 3000;
                         break;
                     case 4:
@@ -366,14 +366,14 @@ struct MANGOS_DLL_DECL npc_grimstoneAI : public npc_escortAI
                     case 7:
                         // Summoned Mobs are dead, continue event
                         m_creature->SetVisibility(VISIBILITY_ON);
-                        m_pInstance->DoUseDoorOrButton(m_pInstance->GetData64(GO_ARENA_1));
+                        m_pInstance->DoUseDoorOrButton(GO_ARENA_1);
                         //DoScriptText(-1000000, m_creature); // after killed the mobs, no say here
                         SetEscortPaused(false);
                         m_uiEventTimer = 0;
                         break;
                     case 8:
                         // Open North Gate
-                        m_pInstance->DoUseDoorOrButton(m_pInstance->GetData64(GO_ARENA_2));
+                        m_pInstance->DoUseDoorOrButton(GO_ARENA_2);
                         m_uiEventTimer = 5000;
                         break;
                     case 9:
@@ -397,9 +397,9 @@ struct MANGOS_DLL_DECL npc_grimstoneAI : public npc_escortAI
                     case 10:
                         // Boss dead
                         m_lSummonedGUIDList.clear();
-                        m_pInstance->DoUseDoorOrButton(m_pInstance->GetData64(GO_ARENA_2));
-                        m_pInstance->DoUseDoorOrButton(m_pInstance->GetData64(GO_ARENA_3));
-                        m_pInstance->DoUseDoorOrButton(m_pInstance->GetData64(GO_ARENA_4));
+                        m_pInstance->DoUseDoorOrButton(GO_ARENA_2);
+                        m_pInstance->DoUseDoorOrButton(GO_ARENA_3);
+                        m_pInstance->DoUseDoorOrButton(GO_ARENA_4);
                         SetEscortPaused(false);
                         m_uiEventTimer = 0;
                         break;
@@ -681,7 +681,7 @@ struct MANGOS_DLL_DECL npc_rocknotAI : public npc_escortAI
 
     void DoGo(uint32 id, uint32 state)
     {
-        if (GameObject* pGo = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(id)))
+        if (GameObject* pGo = m_pInstance->GetSingleGameObjectFromStorage(id))
             pGo->SetGoState(GOState(state));
     }
 
@@ -736,7 +736,7 @@ struct MANGOS_DLL_DECL npc_rocknotAI : public npc_escortAI
                 DoGo(GO_BAR_KEG_TRAP, 0);                   //doesn't work very well, leaving code here for future
                                                             //spell by trap has effect61, this indicate the bar go hostile
 
-                if (Creature* pTmp = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_PHALANX)))
+                if (Creature* pTmp = m_pInstance->GetSingleCreatureFromStorage(NPC_PHALANX))
                     pTmp->setFaction(14);
 
                 // for later, this event(s) has alot more to it.
