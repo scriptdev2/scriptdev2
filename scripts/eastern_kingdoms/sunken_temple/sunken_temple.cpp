@@ -25,6 +25,9 @@ EndScriptData */
 at_shade_of_eranikus
 npc_malfurion_stormrage
 event_antalarion_statue_activation
+event_avatar_of_hakkar
+go_eternal_flame
+effectDummy_summon_hakkar
 EndContentData */
 
 #include "precompiled.h"
@@ -175,6 +178,70 @@ bool ProcessEventId_event_antalarion_statue_activation(uint32 uiEventId, Object*
     return false;
 }
 
+/*######
+## event_avatar_of_hakkar
+######*/
+bool ProcessEventId_event_avatar_of_hakkar(uint32 uiEventId, Object* pSource, Object* pTarget, bool bIsStart)
+{
+    if (pSource->GetTypeId() == TYPEID_PLAYER)
+    {
+        if (instance_sunken_temple* pInstance = (instance_sunken_temple*)((Player*)pSource)->GetInstanceData())
+        {
+            // return if not NOT_STARTED
+            if (pInstance->GetData(TYPE_AVATAR) != NOT_STARTED)
+                return true;
+
+            pInstance->SetData(TYPE_AVATAR, IN_PROGRESS);
+
+            return true;
+        }
+    }
+    return false;
+}
+
+/*######
+## go_eternal_flame
+######*/
+bool GOUse_go_eternal_flame(Player* pPlayer, GameObject* pGo)
+{
+    instance_sunken_temple* pInstance = (instance_sunken_temple*)pGo->GetInstanceData();
+
+    if (!pInstance)
+        return false;
+
+    if (pInstance->GetData(TYPE_AVATAR) != IN_PROGRESS)
+        return false;
+
+    // Set data to special when flame is used
+    pInstance->SetData(TYPE_AVATAR, SPECIAL);
+    pGo->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
+
+    return true;
+}
+
+/*######
+## effectDummy_summon_hakkar
+######*/
+bool EffectDummyCreature_summon_hakkar(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+{
+    // Always check spellid and effectindex
+    if (uiSpellId == SPELL_SUMMON_AVATAR && uiEffIndex == EFFECT_INDEX_0)
+    {
+        if (!pCaster || pCaster->GetTypeId() != TYPEID_UNIT)
+            return true;
+
+        // Update entry to avatar of Hakkar and cast some visuals
+        ((Creature*)pCaster)->UpdateEntry(NPC_AVATAR_OF_HAKKAR);
+        pCaster->CastSpell(pCaster, SPELL_AVATAR_SUMMONED, true);
+        DoScriptText(SAY_AVATAR_SPAWN, pCaster);
+
+        // Always return true when we are handling this spell and effect
+        return true;
+    }
+
+    return false;
+}
+
 void AddSC_sunken_temple()
 {
     Script* pNewScript;
@@ -192,5 +259,20 @@ void AddSC_sunken_temple()
     pNewScript = new Script;
     pNewScript->Name = "event_antalarion_statue_activation";
     pNewScript->pProcessEventId = &ProcessEventId_event_antalarion_statue_activation;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "event_avatar_of_hakkar";
+    pNewScript->pProcessEventId = &ProcessEventId_event_avatar_of_hakkar;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "go_eternal_flame";
+    pNewScript->pGOUse = &GOUse_go_eternal_flame;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_shade_of_hakkar";
+    pNewScript->pEffectDummyNPC = &EffectDummyCreature_summon_hakkar;
     pNewScript->RegisterSelf();
 }

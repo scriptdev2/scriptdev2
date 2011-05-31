@@ -7,8 +7,9 @@
 
 enum
 {
-    MAX_ENCOUNTER         = 4,
+    MAX_ENCOUNTER         = 5,
     MAX_STATUES           = 6,
+    MAX_FLAMES            = 4,
 
     // Don't change types 1,2 and 3 (handled in ACID)
     TYPE_ATALARION_OBSOLET= 1,
@@ -19,6 +20,7 @@ enum
     TYPE_PROTECTORS       = 5,
     TYPE_JAMMALAN         = 6,
     TYPE_MALFURION        = 7,
+    TYPE_AVATAR           = 8,
 
     NPC_ATALARION         = 8580,
     NPC_DREAMSCYTH        = 5721,
@@ -34,6 +36,12 @@ enum
     NPC_HUKKU             = 5715,
     NPC_ZULLOR            = 5716,
     NPC_MIJAN             = 5717,
+
+    // Avatar of hakkar mobs
+    NPC_SHADE_OF_HAKKAR   = 8440,                           // Shade of Hakkar appears when the event starts; will despawn when avatar of hakkar is summoned
+    NPC_BLOODKEEPER       = 8438,                           // Spawned rarely and contains the hakkari blood -> used to extinguish the flames
+    NPC_HAKKARI_MINION    = 8437,                           // Npc randomly spawned during the event = trash
+    NPC_SUPPRESSOR        = 8497,                           // Npc summoned at one of the two doors and moves to the boss;
 
     NPC_MALFURION         = 15362,
 
@@ -52,6 +60,10 @@ enum
     GO_ETERNAL_FLAME_3    = 148420,
     GO_ETERNAL_FLAME_4    = 148421,
 
+    GO_EVIL_CIRCLE        = 148998,                         // Objects used at the avatar event. they are spawned when the event starts, and the mobs are summon atop of them
+    GO_HAKKAR_DOOR_1      = 149432,                         // Combat doors
+    GO_HAKKAR_DOOR_2      = 149433,
+
     GO_JAMMALAN_BARRIER   = 149431,
 
     // Event ids related to the statue activation
@@ -62,7 +74,15 @@ enum
     EVENT_ID_STATUE_5     = 3099,
     EVENT_ID_STATUE_6     = 3100,
 
+    SPELL_SUMMON_AVATAR   = 12639,                          // Cast by the shade of hakkar, updates entry to avatar
+    SPELL_AVATAR_SUMMONED = 12948,
+
     SAY_JAMMALAN_INTRO    = -1109005,
+    SAY_AVATAR_BRAZIER_1  = -1109006,
+    SAY_AVATAR_BRAZIER_2  = -1109007,
+    SAY_AVATAR_BRAZIER_3  = -1109008,
+    SAY_AVATAR_BRAZIER_4  = -1109009,
+    SAY_AVATAR_SPAWN      = -1109010,
 };
 
 // This is also the needed order for activation: S, N, SW, SE, NW, NE
@@ -80,6 +100,13 @@ static const SummonLocations aSunkenTempleLocation[] =
     {-660.5277f, -16.7117f, -90.8357f, 1.6055f}             // Malfurion summon loc
 };
 
+// Summon location for the suppressors
+static const SummonLocations aHakkariDoorLocations[2] =
+{
+    {-420.629f, 276.682f, -90.827f},
+    {-512.015f, 276.134f, -90.827f}
+};
+
 class MANGOS_DLL_DECL instance_sunken_temple : public ScriptedInstance
 {
     public:
@@ -91,11 +118,13 @@ class MANGOS_DLL_DECL instance_sunken_temple : public ScriptedInstance
         void OnObjectCreate(GameObject* pGo);
         void OnCreatureCreate(Creature* pCreature);
 
-        // No need currently to use OnEnterCombat or OnEvade
+        void OnCreatureEvade(Creature* pCreature);
         void OnCreatureDeath(Creature* pCreature);
 
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
+
+        void Update(uint32 uiDiff);
 
         bool ProcessStatueEvent(uint32 uiEventId);
 
@@ -104,18 +133,30 @@ class MANGOS_DLL_DECL instance_sunken_temple : public ScriptedInstance
 
     protected:
         void DoSpawnAtalarionIfCan();
+        void DoUpdateFlamesFlags(bool bRestore);
 
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string strInstData;
 
+        uint8 m_uiProtectorsRemaining;                      // Jammalan door handling
+        uint8 m_uiStatueCounter;                            // Atalarion Statue Event
+        uint8 m_uiFlameCounter;                             // Avatar of Hakkar Event
+        uint32 m_uiAvatarSummonTimer;
+        uint32 m_uiSupressorTimer;
+        bool m_bIsFirstHakkarWave;
+        bool m_bCanSummonBloodkeeper;
+
         uint64 m_uiAtalarionGUID;
         uint64 m_uiJammalanGUID;
+        uint64 m_uiShadeGUID;
         uint64 m_uiJammalanBarrierGUID;
         uint64 m_uiIdolOfHakkarGUID;
-        uint8 m_uiStatueCounter;
-        uint8 m_uiProtectorsRemaining;
+        uint64 m_uiAvatarDoor1GUID;
+        uint64 m_uiAvatarDoor2GUID;
 
+        GUIDList m_luiFlameGUIDs;
         GUIDList m_luiBigLightGUIDs;
+        GUIDVector m_vuiCircleGUIDs;
 };
 
 #endif
