@@ -549,30 +549,28 @@ void instance_naxxramas::SetChamberCenterCoords(float fX, float fY, float fZ)
 
 void instance_naxxramas::DoTaunt()
 {
-    Creature* pKelThuzad = GetSingleCreatureFromStorage(NPC_KELTHUZAD);
-
-    if (pKelThuzad && pKelThuzad->isAlive())
+    if (m_auiEncounter[TYPE_KELTHUZAD] != DONE)
     {
         uint8 uiWingsCleared = 0;
 
-        if (m_auiEncounter[2] == DONE)
+        if (m_auiEncounter[TYPE_MAEXXNA] == DONE)
             ++uiWingsCleared;
 
-        if (m_auiEncounter[5] == DONE)
+        if (m_auiEncounter[TYPE_LOATHEB] == DONE)
             ++uiWingsCleared;
 
-        if (m_auiEncounter[8] == DONE)
+        if (m_auiEncounter[TYPE_FOUR_HORSEMEN] == DONE)
             ++uiWingsCleared;
 
-        if (m_auiEncounter[12] == DONE)
+        if (m_auiEncounter[TYPE_THADDIUS] == DONE)
             ++uiWingsCleared;
 
         switch(uiWingsCleared)
         {
-            case 1: DoScriptText(SAY_KELTHUZAD_TAUNT1, pKelThuzad); break;
-            case 2: DoScriptText(SAY_KELTHUZAD_TAUNT2, pKelThuzad); break;
-            case 3: DoScriptText(SAY_KELTHUZAD_TAUNT3, pKelThuzad); break;
-            case 4: DoScriptText(SAY_KELTHUZAD_TAUNT4, pKelThuzad); break;
+            case 1: DoOrSimulateScriptTextForThisInstance(SAY_KELTHUZAD_TAUNT1, NPC_KELTHUZAD); break;
+            case 2: DoOrSimulateScriptTextForThisInstance(SAY_KELTHUZAD_TAUNT2, NPC_KELTHUZAD); break;
+            case 3: DoOrSimulateScriptTextForThisInstance(SAY_KELTHUZAD_TAUNT3, NPC_KELTHUZAD); break;
+            case 4: DoOrSimulateScriptTextForThisInstance(SAY_KELTHUZAD_TAUNT4, NPC_KELTHUZAD); break;
         }
     }
 }
