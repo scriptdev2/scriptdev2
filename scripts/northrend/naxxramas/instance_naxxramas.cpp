@@ -197,6 +197,12 @@ void instance_naxxramas::OnPlayerDeath(Player* pPlayer)
         SetSpecialAchievementCriteria(TYPE_ACHIEV_SAFETY_DANCE, false);
 }
 
+void instance_naxxramas::OnCreatureDeath(Creature* pCreature)
+{
+    if (pCreature->GetEntry() == NPC_MR_BIGGLESWORTH && m_auiEncounter[TYPE_KELTHUZAD] != DONE)
+        DoOrSimulateScriptTextForThisInstance(SAY_KELTHUZAD_CAT_DIED, NPC_KELTHUZAD);
+}
+
 bool instance_naxxramas::IsEncounterInProgress() const
 {
     for (uint8 i = 0; i < TYPE_KELTHUZAD; ++i)
