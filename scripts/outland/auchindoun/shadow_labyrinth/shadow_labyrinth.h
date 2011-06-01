@@ -42,10 +42,6 @@ class MANGOS_DLL_DECL instance_shadow_labyrinth : public ScriptedInstance
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strInstData;
 
-        uint64 m_uiRefectoryDoorGUID;
-        uint64 m_uiScreamingHallDoorGUID;
-
-        uint64 m_uiGrandmasterVorpil;
         uint32 m_uiFelOverseerCount;
 };
 

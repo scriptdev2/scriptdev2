@@ -32,10 +32,6 @@ EndScriptData */
 */
 
 instance_shadow_labyrinth::instance_shadow_labyrinth(Map* pMap) : ScriptedInstance(pMap),
-    m_uiRefectoryDoorGUID(0),
-    m_uiScreamingHallDoorGUID(0),
-
-    m_uiGrandmasterVorpil(0),
     m_uiFelOverseerCount(0)
 {
     Initialize();
@@ -51,16 +47,19 @@ void instance_shadow_labyrinth::OnObjectCreate(GameObject* pGo)
     switch(pGo->GetEntry())
     {
         case GO_REFECTORY_DOOR:
-            m_uiRefectoryDoorGUID = pGo->GetGUID();
             if (m_auiEncounter[2] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_SCREAMING_HALL_DOOR:
-            m_uiScreamingHallDoorGUID = pGo->GetGUID();
             if (m_auiEncounter[3] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
+
+        default:
+            return;
     }
+
+    m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
 }
 
 void instance_shadow_labyrinth::OnCreatureCreate(Creature* pCreature)
@@ -68,7 +67,7 @@ void instance_shadow_labyrinth::OnCreatureCreate(Creature* pCreature)
     switch(pCreature->GetEntry())
     {
         case NPC_VORPIL:
-            m_uiGrandmasterVorpil = pCreature->GetGUID();
+            m_mNpcEntryGuidStore[NPC_VORPIL] = pCreature->GetObjectGuid();
             break;
         case NPC_FEL_OVERSEER:
             ++m_uiFelOverseerCount;                         // TODO should actually only count alive ones
@@ -112,13 +111,13 @@ void instance_shadow_labyrinth::SetData(uint32 uiType, uint32 uiData)
 
         case TYPE_INCITER:
             if (uiData == DONE)
-                DoUseDoorOrButton(m_uiRefectoryDoorGUID);
+                DoUseDoorOrButton(GO_REFECTORY_DOOR);
             m_auiEncounter[2] = uiData;
             break;
 
         case TYPE_VORPIL:
             if (uiData == DONE)
-                DoUseDoorOrButton(m_uiScreamingHallDoorGUID);
+                DoUseDoorOrButton(GO_SCREAMING_HALL_DOOR);
             m_auiEncounter[3] = uiData;
             break;
 
