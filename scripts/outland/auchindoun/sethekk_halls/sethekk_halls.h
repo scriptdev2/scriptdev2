@@ -42,8 +42,6 @@ class MANGOS_DLL_DECL instance_sethekk_halls : public ScriptedInstance
     private:
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strInstData;
-
-        uint64 m_uiIkissDoorGUID;
 };
 
 #endif

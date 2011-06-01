@@ -24,8 +24,7 @@ EndScriptData */
 #include "precompiled.h"
 #include "sethekk_halls.h"
 
-instance_sethekk_halls::instance_sethekk_halls(Map* pMap) : ScriptedInstance(pMap),
-    m_uiIkissDoorGUID(0)
+instance_sethekk_halls::instance_sethekk_halls(Map* pMap) : ScriptedInstance(pMap)
 {
     Initialize();
 }
@@ -38,9 +37,10 @@ void instance_sethekk_halls::OnObjectCreate(GameObject* pGo)
 {
     if (pGo->GetEntry() == GO_IKISS_DOOR)
     {
-        m_uiIkissDoorGUID = pGo->GetGUID();
         if (m_auiEncounter[TYPE_IKISS] == DONE)
             pGo->SetGoState(GO_STATE_ACTIVE);
+
+        m_mGoEntryGuidStore[GO_IKISS_DOOR] = pGo->GetObjectGuid();
     }
 }
 
@@ -54,7 +54,7 @@ void instance_sethekk_halls::SetData(uint32 uiType, uint32 uiData)
             break;
         case TYPE_IKISS:
             if (uiData == DONE)
-                DoUseDoorOrButton(m_uiIkissDoorGUID, DAY*IN_MILLISECONDS);
+                DoUseDoorOrButton(GO_IKISS_DOOR, DAY);
             m_auiEncounter[uiType] = uiData;
             break;
         default:
