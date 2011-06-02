@@ -58,16 +58,6 @@ class MANGOS_DLL_DECL instance_blackwing_lair : public ScriptedInstance
     protected:
         std::string m_strInstData;
         uint32 m_auiEncounter[MAX_ENCOUNTER];
-
-        // Doors
-        uint64 m_uiRazorgoreEnterDoorGUID;
-        uint64 m_uiRazorgoreExitDoorGUID;
-        uint64 m_uiVaelastraszDoorGUID;
-        uint64 m_uiLashlayerDoorGUID;
-        uint64 m_uiChromaggusEnterDoorGUID;
-        uint64 m_uiChromaggusExitDoorGUID;
-        uint64 m_uiChromaggusSideDoorGUID;
-        uint64 m_uiNefarianDoorGUID;
 };
 
 #endif

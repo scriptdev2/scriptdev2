@@ -25,15 +25,7 @@ EndScriptData */
 #include "blackwing_lair.h"
 
 
-instance_blackwing_lair::instance_blackwing_lair(Map* pMap) : ScriptedInstance(pMap),
-    m_uiRazorgoreEnterDoorGUID(0),
-    m_uiRazorgoreExitDoorGUID(0),
-    m_uiVaelastraszDoorGUID(0),
-    m_uiLashlayerDoorGUID(0),
-    m_uiChromaggusEnterDoorGUID(0),
-    m_uiChromaggusExitDoorGUID(0),
-    m_uiChromaggusSideDoorGUID(0),
-    m_uiNefarianDoorGUID(0)
+instance_blackwing_lair::instance_blackwing_lair(Map* pMap) : ScriptedInstance(pMap)
 {
     Initialize();
 }
@@ -58,38 +50,32 @@ void instance_blackwing_lair::OnObjectCreate(GameObject* pGo)
     switch(pGo->GetEntry())
     {
         case GO_DOOR_RAZORGORE_ENTER:
-            m_uiRazorgoreEnterDoorGUID = pGo->GetGUID();
             break;
         case GO_DOOR_RAZORGORE_EXIT:
-            m_uiRazorgoreExitDoorGUID = pGo->GetGUID();
             if (m_auiEncounter[TYPE_RAZORGORE] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_DOOR_NEFARIAN:
-            m_uiNefarianDoorGUID = pGo->GetGUID();
-            break;
         case GO_DOOR_CHROMAGGUS_ENTER:
-            m_uiChromaggusEnterDoorGUID = pGo->GetGUID();
-            break;
         case GO_DOOR_CHROMAGGUS_SIDE:
-            m_uiChromaggusSideDoorGUID = pGo->GetGUID();
             break;
         case GO_DOOR_CHROMAGGUS_EXIT:
-            m_uiChromaggusExitDoorGUID = pGo->GetGUID();
             if (m_auiEncounter[TYPE_CHROMAGGUS] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_DOOR_VAELASTRASZ:
-            m_uiVaelastraszDoorGUID = pGo->GetGUID();
             if (m_auiEncounter[TYPE_VAELASTRASZ] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_DOOR_LASHLAYER:
-            m_uiLashlayerDoorGUID = pGo->GetGUID();
             if (m_auiEncounter[TYPE_LASHLAYER] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
+
+        default:
+            return;
     }
+    m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
 }
 
 void instance_blackwing_lair::SetData(uint32 uiType, uint32 uiData)
@@ -98,21 +84,21 @@ void instance_blackwing_lair::SetData(uint32 uiType, uint32 uiData)
     {
         case TYPE_RAZORGORE:
             m_auiEncounter[uiType] = uiData;
-            DoUseDoorOrButton(m_uiRazorgoreEnterDoorGUID);
+            DoUseDoorOrButton(GO_DOOR_RAZORGORE_ENTER);
             if (uiData == DONE)
-                DoUseDoorOrButton(m_uiRazorgoreExitDoorGUID);
+                DoUseDoorOrButton(GO_DOOR_RAZORGORE_EXIT);
             break;
         case TYPE_VAELASTRASZ:
             m_auiEncounter[uiType] = uiData;
             // Prevent the players from running back to the first room
-            DoUseDoorOrButton(m_uiRazorgoreExitDoorGUID);
+            DoUseDoorOrButton(GO_DOOR_RAZORGORE_EXIT);
             if (uiData == DONE)
-                DoUseDoorOrButton(m_uiVaelastraszDoorGUID);
+                DoUseDoorOrButton(GO_DOOR_VAELASTRASZ);
             break;
         case TYPE_LASHLAYER:
             m_auiEncounter[uiType] = uiData;
             if (uiData == DONE)
-                DoUseDoorOrButton(m_uiLashlayerDoorGUID);
+                DoUseDoorOrButton(GO_DOOR_LASHLAYER);
             break;
         case TYPE_FIREMAW:
         case TYPE_EBONROC:
@@ -121,13 +107,13 @@ void instance_blackwing_lair::SetData(uint32 uiType, uint32 uiData)
             break;
         case TYPE_CHROMAGGUS:
             m_auiEncounter[uiType] = uiData;
-            DoUseDoorOrButton(m_uiChromaggusEnterDoorGUID);
+            DoUseDoorOrButton(GO_DOOR_CHROMAGGUS_ENTER);
             if (uiData == DONE)
-                DoUseDoorOrButton(m_uiChromaggusExitDoorGUID);
+                DoUseDoorOrButton(GO_DOOR_CHROMAGGUS_EXIT);
             break;
         case TYPE_NEFARIAN:
             m_auiEncounter[uiType] = uiData;
-            DoUseDoorOrButton(m_uiNefarianDoorGUID);
+            DoUseDoorOrButton(GO_DOOR_NEFARIAN);
             break;
     }
 

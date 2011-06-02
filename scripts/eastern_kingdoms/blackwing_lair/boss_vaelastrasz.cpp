@@ -56,7 +56,7 @@ struct MANGOS_DLL_DECL boss_vaelastraszAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    uint64 m_uiPlayerGUID;
+    ObjectGuid m_playerGuid;
     uint32 m_uiSpeachTimer;
     uint32 m_uiSpeachNum;
     uint32 m_uiCleaveTimer;
@@ -70,7 +70,8 @@ struct MANGOS_DLL_DECL boss_vaelastraszAI : public ScriptedAI
 
     void Reset()
     {
-        m_uiPlayerGUID                   = 0;
+        m_playerGuid.Clear();
+
         m_uiSpeachTimer                  = 0;
         m_uiSpeachNum                    = 0;
         m_uiCleaveTimer                  = 8000;            // These times are probably wrong
@@ -86,7 +87,7 @@ struct MANGOS_DLL_DECL boss_vaelastraszAI : public ScriptedAI
     void BeginSpeach(Unit* target)
     {
         // Stand up and begin speach
-        m_uiPlayerGUID = target->GetGUID();
+        m_playerGuid = target->GetObjectGuid();
 
         // 10 seconds
         DoScriptText(SAY_LINE_1, m_creature);
@@ -149,9 +150,9 @@ struct MANGOS_DLL_DECL boss_vaelastraszAI : public ScriptedAI
                         m_creature->setFaction(103);
                         m_creature->SetHealth(int(m_creature->GetMaxHealth()*.3));
 
-                        if (m_uiPlayerGUID)
+                        if (m_playerGuid)
                         {
-                            if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID))
+                            if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid))
                                 AttackStart(pPlayer);
 
                             DoCastSpellIfCan(m_creature, SPELL_ESSENCE_OF_THE_RED);
