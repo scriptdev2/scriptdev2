@@ -25,10 +25,6 @@ EndScriptData */
 #include "scholomance.h"
 
 instance_scholomance::instance_scholomance(Map* pMap) : ScriptedInstance(pMap),
-    m_uiDarkmasterGandlingGUID(0),
-    m_uiGateKirtonosGUID(0),
-    m_uiGateRasGUID(0),
-    m_uiGateGandlingGUID(0),
     m_uiGandlingEvent(0)
 {
     Initialize();
@@ -53,7 +49,7 @@ void instance_scholomance::OnCreatureCreate(Creature* pCreature)
     switch (pCreature->GetEntry())
     {
         case NPC_DARKMASTER_GANDLING:
-            m_uiDarkmasterGandlingGUID = pCreature->GetGUID();
+            m_mNpcEntryGuidStore[NPC_DARKMASTER_GANDLING] = pCreature->GetObjectGuid();
             break;
         case NPC_BONE_MINION:
             GandlingEventMap::iterator find = m_mGandlingData.find(m_uiGandlingEvent);
@@ -67,16 +63,18 @@ void instance_scholomance::OnObjectCreate(GameObject* pGo)
 {
     switch(pGo->GetEntry())
     {
-        case GO_GATE_KIRTONOS: m_uiGateKirtonosGUID = pGo->GetGUID(); break;
-        case GO_GATE_RAS:      m_uiGateRasGUID      = pGo->GetGUID(); break;
-        case GO_GATE_GANDLING: m_uiGateGandlingGUID = pGo->GetGUID(); break;
+        case GO_GATE_KIRTONOS:
+        case GO_GATE_RAS:
+        case GO_GATE_GANDLING:
+            m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
+            break;
 
-        case GO_GATE_MALICIA:  m_mGandlingData[EVENT_ID_MALICIA].m_uiDoorGUID  = pGo->GetGUID(); break;
-        case GO_GATE_THEOLEN:  m_mGandlingData[EVENT_ID_THEOLEN].m_uiDoorGUID  = pGo->GetGUID(); break;
-        case GO_GATE_POLKELT:  m_mGandlingData[EVENT_ID_POLKELT].m_uiDoorGUID  = pGo->GetGUID(); break;
-        case GO_GATE_RAVENIAN: m_mGandlingData[EVENT_ID_RAVENIAN].m_uiDoorGUID = pGo->GetGUID(); break;
-        case GO_GATE_BAROV:    m_mGandlingData[EVENT_ID_BAROV].m_uiDoorGUID    = pGo->GetGUID(); break;
-        case GO_GATE_ILLUCIA:  m_mGandlingData[EVENT_ID_ILLUCIA].m_uiDoorGUID  = pGo->GetGUID(); break;
+        case GO_GATE_MALICIA:  m_mGandlingData[EVENT_ID_MALICIA].m_doorGuid  = pGo->GetObjectGuid(); break;
+        case GO_GATE_THEOLEN:  m_mGandlingData[EVENT_ID_THEOLEN].m_doorGuid  = pGo->GetObjectGuid(); break;
+        case GO_GATE_POLKELT:  m_mGandlingData[EVENT_ID_POLKELT].m_doorGuid  = pGo->GetObjectGuid(); break;
+        case GO_GATE_RAVENIAN: m_mGandlingData[EVENT_ID_RAVENIAN].m_doorGuid = pGo->GetObjectGuid(); break;
+        case GO_GATE_BAROV:    m_mGandlingData[EVENT_ID_BAROV].m_doorGuid    = pGo->GetObjectGuid(); break;
+        case GO_GATE_ILLUCIA:  m_mGandlingData[EVENT_ID_ILLUCIA].m_doorGuid  = pGo->GetObjectGuid(); break;
 
         case GO_VIEWING_ROOM_DOOR:
             // In normal flow of the instance, this door is opened by a dropped key
@@ -95,43 +93,43 @@ void instance_scholomance::SetData(uint32 uiType, uint32 uiData)
             if (m_auiEncounter[uiType] != FAIL && uiData == IN_PROGRESS)
                 return;
             m_auiEncounter[uiType] = uiData;
-            DoUseDoorOrButton(m_uiGateKirtonosGUID);
+            DoUseDoorOrButton(GO_GATE_KIRTONOS);
             break;
         case TYPE_RATTLEGORE:
             m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_RAS_FROSTWHISPER:
             m_auiEncounter[uiType] = uiData;
-            DoUseDoorOrButton(m_uiGateRasGUID);
+            DoUseDoorOrButton(GO_GATE_RAS);
             break;
         case TYPE_MALICIA:                                  // TODO this code can be simplified, when it is known which event-ids correspond to which room
             m_auiEncounter[uiType] = uiData;
-            DoUseDoorOrButton(m_mGandlingData[EVENT_ID_MALICIA].m_uiDoorGUID);
+            DoUseDoorOrButton(m_mGandlingData[EVENT_ID_MALICIA].m_doorGuid);
             break;
         case TYPE_THEOLEN:
             m_auiEncounter[uiType] = uiData;
-            DoUseDoorOrButton(m_mGandlingData[EVENT_ID_THEOLEN].m_uiDoorGUID);
+            DoUseDoorOrButton(m_mGandlingData[EVENT_ID_THEOLEN].m_doorGuid);
             break;
         case TYPE_POLKELT:
             m_auiEncounter[uiType] = uiData;
-            DoUseDoorOrButton(m_mGandlingData[EVENT_ID_POLKELT].m_uiDoorGUID);
+            DoUseDoorOrButton(m_mGandlingData[EVENT_ID_POLKELT].m_doorGuid);
             break;
         case TYPE_RAVENIAN:
             m_auiEncounter[uiType] = uiData;
-            DoUseDoorOrButton(m_mGandlingData[EVENT_ID_RAVENIAN].m_uiDoorGUID);
+            DoUseDoorOrButton(m_mGandlingData[EVENT_ID_RAVENIAN].m_doorGuid);
             break;
         case TYPE_ALEXEI_BAROV:
             m_auiEncounter[uiType] = uiData;
-            DoUseDoorOrButton(m_mGandlingData[EVENT_ID_BAROV].m_uiDoorGUID);
+            DoUseDoorOrButton(m_mGandlingData[EVENT_ID_BAROV].m_doorGuid);
             break;
         case TYPE_ILLUCIA_BAROV:
             m_auiEncounter[uiType] = uiData;
-            DoUseDoorOrButton(m_mGandlingData[EVENT_ID_ILLUCIA].m_uiDoorGUID);
+            DoUseDoorOrButton(m_mGandlingData[EVENT_ID_ILLUCIA].m_doorGuid);
             break;
         case TYPE_GANDLING:
             m_auiEncounter[uiType] = uiData;
             // Close the door to main room, because the encounter will take place only in the main hall and random around all the 6 rooms
-            DoUseDoorOrButton(m_uiGateGandlingGUID);
+            DoUseDoorOrButton(GO_GATE_GANDLING);
             break;
     }
 
@@ -157,12 +155,12 @@ void instance_scholomance::SetData(uint32 uiType, uint32 uiData)
 
 void instance_scholomance::DoSpawnGandlingIfCan(bool bByPlayerEnter)
 {
-    // Summon only once
-    if (m_uiDarkmasterGandlingGUID)
-        return;
-
     // Do not summon, if event finished
     if (m_auiEncounter[TYPE_GANDLING] == DONE)
+        return;
+
+    // Summon only once
+    if (GetSingleCreatureFromStorage(NPC_DARKMASTER_GANDLING))
         return;
 
     Player* pPlayer = GetPlayerInMap();
@@ -196,7 +194,7 @@ void instance_scholomance::HandlePortalEvent(uint32 uiEventId, uint32 uiData)
         if (!find->second.m_bIsActive)
         {
             find->second.m_bIsActive = true;
-            DoUseDoorOrButton(find->second.m_uiDoorGUID);
+            DoUseDoorOrButton(find->second.m_doorGuid);
         }
     }
     // Toggle door and event state in case of state-switch
@@ -207,7 +205,7 @@ void instance_scholomance::HandlePortalEvent(uint32 uiEventId, uint32 uiData)
             uiData == DONE && find->second.m_bIsActive)
         {
             find->second.m_bIsActive = !find->second.m_bIsActive;
-            DoUseDoorOrButton(find->second.m_uiDoorGUID);
+            DoUseDoorOrButton(find->second.m_doorGuid);
         }
     }
 }

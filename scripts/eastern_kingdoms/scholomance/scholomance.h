@@ -68,9 +68,9 @@ static const SpawnLocation aGandlingSpawnLocs[1] =
 
 struct GandlingEventData
 {
-    GandlingEventData() : m_bIsActive(false), m_uiDoorGUID(0) {}
+    GandlingEventData() : m_bIsActive(false) {}
     bool m_bIsActive;
-    uint64 m_uiDoorGUID;
+    ObjectGuid m_doorGuid;
     std::set<uint32> m_sAddGuids;
 };
 
@@ -107,12 +107,6 @@ class MANGOS_DLL_DECL instance_scholomance : public ScriptedInstance
 
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strInstData;
-
-        uint64 m_uiDarkmasterGandlingGUID;
-
-        uint64 m_uiGateKirtonosGUID;
-        uint64 m_uiGateRasGUID;
-        uint64 m_uiGateGandlingGUID;
 
         uint32 m_uiGandlingEvent;
         GandlingEventMap m_mGandlingData;
