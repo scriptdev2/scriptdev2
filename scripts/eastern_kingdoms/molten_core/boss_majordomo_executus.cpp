@@ -81,7 +81,7 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
     uint32 m_uiAegisTimer;
     uint32 m_uiSpeechTimer;
 
-    uint64 m_uiRagnarosGUID;
+    ObjectGuid m_ragnarosGuid;
     bool m_bHasEncounterFinished;
     uint8 m_uiAddsKilled;
     uint8 m_uiSpeech;
@@ -96,7 +96,6 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
         m_uiAegisTimer = 5000;
         m_uiSpeechTimer = 1000;
 
-        m_uiRagnarosGUID = 0;
         m_uiAddsKilled = 0;
         m_uiSpeech = 0;
     }
@@ -159,7 +158,7 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
         m_creature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
 
         // Prevent possible exploits with double summoning
-        if (Creature* pRagnaros = m_creature->GetMap()->GetCreature(m_uiRagnarosGUID))
+        if (Creature* pRagnaros = m_creature->GetMap()->GetCreature(m_ragnarosGuid))
             return;
 
         DoScriptText(SAY_SUMMON_0, m_creature, pPlayer);
@@ -192,7 +191,7 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
         }
         else if (pSummoned->GetEntry() == NPC_RAGNAROS)
         {
-            m_uiRagnarosGUID = pSummoned->GetGUID();
+            m_ragnarosGuid = pSummoned->GetObjectGuid();
             pSummoned->CastSpell(pSummoned, SPELL_RAGNA_EMERGE, false);
         }
     }
@@ -309,7 +308,7 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
                         break;
                     case 12:
                         // Reset orientation
-                        if (GameObject* pLavaSteam = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(GO_LAVA_STEAM)))
+                        if (GameObject* pLavaSteam = m_pInstance->GetSingleGameObjectFromStorage(GO_LAVA_STEAM))
                             m_creature->SetFacingToObject(pLavaSteam);
                         m_uiSpeechTimer = 4500;
                         ++m_uiSpeech;
@@ -322,13 +321,13 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
                     case 14:
                         // Summon Ragnaros
                         if (m_pInstance)
-                            if (GameObject* pGo = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(GO_LAVA_STEAM)))
+                            if (GameObject* pGo = m_pInstance->GetSingleGameObjectFromStorage(GO_LAVA_STEAM))
                                 m_creature->SummonCreature(NPC_RAGNAROS, pGo->GetPositionX(), pGo->GetPositionY(), pGo->GetPositionZ(), fmod(m_creature->GetOrientation() + M_PI, 2*M_PI), TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 2*HOUR*IN_MILLISECONDS);
                         ++m_uiSpeech;
                         m_uiSpeechTimer = 8700;
                         break;
                     case 15:
-                        if (Creature* pRagnaros = m_creature->GetMap()->GetCreature(m_uiRagnarosGUID))
+                        if (Creature* pRagnaros = m_creature->GetMap()->GetCreature(m_ragnarosGuid))
                             DoScriptText(SAY_ARRIVAL1_RAG, pRagnaros);
                         ++m_uiSpeech;
                         m_uiSpeechTimer = 11700;
@@ -339,13 +338,13 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
                         m_uiSpeechTimer = 8700;
                         break;
                     case 17:
-                        if (Creature* pRagnaros = m_creature->GetMap()->GetCreature(m_uiRagnarosGUID))
+                        if (Creature* pRagnaros = m_creature->GetMap()->GetCreature(m_ragnarosGuid))
                             DoScriptText(SAY_ARRIVAL3_RAG, pRagnaros);
                         ++m_uiSpeech;
                         m_uiSpeechTimer = 16500;
                         break;
                     case 18:
-                        if (Creature* pRagnaros = m_creature->GetMap()->GetCreature(m_uiRagnarosGUID))
+                        if (Creature* pRagnaros = m_creature->GetMap()->GetCreature(m_ragnarosGuid))
                             pRagnaros->CastSpell(m_creature, SPELL_ELEMENTAL_FIRE, false);
                         // Rest of summoning speech is handled by Ragnaros, as Majordomo will be dead
                         m_uiSpeech = 0;

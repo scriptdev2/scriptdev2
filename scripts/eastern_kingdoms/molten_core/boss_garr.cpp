@@ -142,7 +142,7 @@ struct MANGOS_DLL_DECL mob_fireswornAI : public ScriptedAI
         if (m_uiSeparationCheckTimer < uiDiff)
         {
             // Distance guesswork, but should be ok
-            Creature* pGarr = m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_GARR));
+            Creature* pGarr = m_pInstance->GetSingleCreatureFromStorage(NPC_GARR);
             if (pGarr && pGarr->isAlive() && !m_creature->IsWithinDist2d(pGarr->GetPositionX(), pGarr->GetPositionY(), 50.0f))
                 DoCastSpellIfCan(m_creature, SPELL_SEPARATION_ANXIETY, CAST_TRIGGERED);
 

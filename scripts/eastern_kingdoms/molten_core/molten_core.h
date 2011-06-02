@@ -98,7 +98,6 @@ class MANGOS_DLL_DECL instance_molten_core : public ScriptedInstance
 
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
-        uint64 GetData64(uint32 uiData);
 
         const char* Save() { return m_strInstData.c_str(); }
         void Load(const char* chrIn);
@@ -111,26 +110,6 @@ class MANGOS_DLL_DECL instance_molten_core : public ScriptedInstance
 
         std::string m_strInstData;
         uint32 m_auiEncounter[MAX_ENCOUNTER];
-
-        // Creatures
-        uint64 m_uiGarrGUID;
-        uint64 m_uiSulfuronGUID;
-        uint64 m_uiMajordomoGUID;
-
-        // Runes
-        uint64 m_uiRuneKoroGUID;
-        uint64 m_uiRuneZethGUID;
-        uint64 m_uiRuneMazjGUID;
-        uint64 m_uiRuneTheriGUID;
-        uint64 m_uiRuneBlazGUID;
-        uint64 m_uiRuneKressGUID;
-        uint64 m_uiRuneMohnGUID;
-
-        // Ragnaros related GOs
-        uint64 m_uiLavaSteamGUID;
-        uint64 m_uiLavaSplashGUID;
-        // Chests
-        uint64 m_uiFirelordCacheGUID;
 
         // Adds lists
         GUIDList m_luiProtectorGUIDs;
