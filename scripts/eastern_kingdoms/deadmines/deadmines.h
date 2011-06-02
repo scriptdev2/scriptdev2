@@ -35,4 +35,28 @@ enum
     NPC_SQUALLSHAPER        = 1732,
 };
 
+class MANGOS_DLL_DECL instance_deadmines : public ScriptedInstance
+{
+    public:
+        instance_deadmines(Map* pMap);
+
+        void Initialize();
+
+        void OnCreatureCreate(Creature* pCreature);
+        void OnObjectCreate(GameObject* pGo);
+
+        void OnCreatureDeath(Creature* pCreature);
+
+        void SetData(uint32 uiType, uint32 uiData);
+        uint32 GetData(uint32 uiType);
+
+        void Update(uint32 uiDiff);
+
+    private:
+        uint32 m_auiEncounter[MAX_ENCOUNTER];
+
+        uint32 m_uiIronDoorTimer;
+        uint32 m_uiDoorStep;
+};
+
 #endif
