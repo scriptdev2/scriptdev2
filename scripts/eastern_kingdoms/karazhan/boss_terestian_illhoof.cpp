@@ -61,26 +61,20 @@ enum
 
 struct MANGOS_DLL_DECL mob_demon_chainAI : public ScriptedAI
 {
-    mob_demon_chainAI(Creature* pCreature) : ScriptedAI(pCreature)
-    {
-        Reset();
-    }
+    mob_demon_chainAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
-    uint64 m_uiSacrificeGUID;
+    ObjectGuid m_sacrificeGuid;
 
-    void Reset()
-    {
-        m_uiSacrificeGUID = 0;
-    }
+    void Reset(){}
 
     void AttackStart(Unit* pWho) {}
     void MoveInLineOfSight(Unit* pWho) {}
 
     void JustDied(Unit* pKiller)
     {
-        if (m_uiSacrificeGUID)
+        if (m_sacrificeGuid)
         {
-            if (Player* pSacrifice = m_creature->GetMap()->GetPlayer(m_uiSacrificeGUID))
+            if (Player* pSacrifice = m_creature->GetMap()->GetPlayer(m_sacrificeGuid))
                 pSacrifice->RemoveAurasDueToSpell(SPELL_SACRIFICE);
         }
     }
@@ -90,7 +84,6 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
 {
     boss_terestianAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        memset(&m_uiPortalGUID, 0, sizeof(m_uiPortalGUID));
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         m_bSummonKilrek = true;
         Reset();
@@ -98,7 +91,7 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    uint64 m_uiPortalGUID[2];
+    ObjectGuid m_aPortalGuid[2];
 
     uint32 m_uiSummonKilrekTimer;
     uint32 m_uiSacrifice_Timer;
@@ -126,12 +119,12 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
 
         for(uint8 i = 0; i < 2; ++i)
         {
-            if (m_uiPortalGUID[i])
+            if (m_aPortalGuid[i])
             {
-                if (Creature* pPortal = m_pInstance->instance->GetCreature(m_uiPortalGUID[i]))
+                if (Creature* pPortal = m_pInstance->instance->GetCreature(m_aPortalGuid[i]))
                     pPortal->ForcedDespawn();
 
-                m_uiPortalGUID[i] = 0;
+                m_aPortalGuid[i].Clear();
             }
         }
 
@@ -168,16 +161,16 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
         {
             case NPC_PORTAL:
             {
-                if (m_uiPortalGUID[0])
+                if (m_aPortalGuid[0])
                 {
-                    m_uiPortalGUID[1] = pSummoned->GetGUID();
+                    m_aPortalGuid[1] = pSummoned->GetObjectGuid();
 
                     if (npc_fiendish_portalAI* pPortalAI = dynamic_cast<npc_fiendish_portalAI*>(pSummoned->AI()))
                         pPortalAI->m_uiSummonTimer = 10000;
                 }
                 else
                 {
-                    m_uiPortalGUID[0] = pSummoned->GetGUID();
+                    m_aPortalGuid[0] = pSummoned->GetObjectGuid();
                     DoCastSpellIfCan(m_creature, SPELL_FIENDISH_PORTAL_1, CAST_TRIGGERED);
                 }
 
@@ -207,12 +200,12 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
 
         for(uint8 i = 0; i < 2; ++i)
         {
-            if (m_uiPortalGUID[i])
+            if (m_aPortalGuid[i])
             {
-                if (Creature* pPortal = m_pInstance->instance->GetCreature(m_uiPortalGUID[i]))
+                if (Creature* pPortal = m_pInstance->instance->GetCreature(m_aPortalGuid[i]))
                     pPortal->ForcedDespawn();
 
-                m_uiPortalGUID[i] = 0;
+                m_aPortalGuid[i].Clear();
             }
         }
 
@@ -248,7 +241,7 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
                 if (Creature* pChains = m_creature->SummonCreature(NPC_DEMONCHAINS, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 21000))
                 {
                     if (mob_demon_chainAI* pDemonAI = dynamic_cast<mob_demon_chainAI*>(pChains->AI()))
-                        pDemonAI->m_uiSacrificeGUID = pTarget->GetGUID();
+                        pDemonAI->m_sacrificeGuid = pTarget->GetObjectGuid();
 
                     pChains->CastSpell(pChains, SPELL_DEMON_CHAINS, true);
 

@@ -120,7 +120,7 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
 
     ScriptedInstance* m_pInstance;
 
-    uint64 m_uiSpotlightGUID;
+    ObjectGuid m_spotlightGuid;
 
     uint32 m_uiTalkCount;
     uint32 m_uiTalkTimer;
@@ -132,7 +132,7 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
 
     void Reset()
     {
-        m_uiSpotlightGUID = 0;
+        m_spotlightGuid.Clear();
 
         m_uiTalkCount = 0;
         m_uiTalkTimer = 2000;
@@ -167,7 +167,7 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
         {
             case 0:
                 m_creature->CastSpell(m_creature, SPELL_TUXEDO, false);
-                m_pInstance->DoUseDoorOrButton(m_pInstance->GetData64(GO_STAGE_DOOR_LEFT));
+                m_pInstance->DoUseDoorOrButton(GO_STAGE_DOOR_LEFT);
                 break;
             case 4:
                 m_uiTalkCount = 0;
@@ -179,16 +179,16 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
                 {
                     pSpotlight->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                     pSpotlight->CastSpell(pSpotlight, SPELL_SPOTLIGHT, false);
-                    m_uiSpotlightGUID = pSpotlight->GetGUID();
+                    m_spotlightGuid = pSpotlight->GetObjectGuid();
                 }
                 break;
             case 8:
-                m_pInstance->DoUseDoorOrButton(m_pInstance->GetData64(GO_STAGE_DOOR_LEFT));
+                m_pInstance->DoUseDoorOrButton(GO_STAGE_DOOR_LEFT);
                 m_bPerformanceReady = true;
                 break;
             case 9:
                 PrepareEncounter();
-                m_pInstance->DoUseDoorOrButton(m_pInstance->GetData64(GO_STAGE_CURTAIN));
+                m_pInstance->DoUseDoorOrButton(GO_STAGE_CURTAIN);
                 break;
         }
     }
@@ -257,7 +257,7 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
             {
                 if (m_uiTalkCount > 3)
                 {
-                    if (Creature* pSpotlight = m_creature->GetMap()->GetCreature(m_uiSpotlightGUID))
+                    if (Creature* pSpotlight = m_creature->GetMap()->GetCreature(m_spotlightGuid))
                         pSpotlight->ForcedDespawn();
 
                     SetEscortPaused(false);

@@ -25,7 +25,7 @@ enum
     DATA_OPERA_OZ_DEATHCOUNT        = 12,
 
     NPC_MOROES                      = 15687,
-    NPC_TERESTIAN                   = 15688,
+    // NPC_TERESTIAN                = 15688,
     NPC_NIGHTBANE                   = 17225,
 
     GO_STAGE_CURTAIN                = 183932,
@@ -73,7 +73,6 @@ class MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
 
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
-        uint64 GetData64(uint32 uiData);
 
         void Load(const char* chrIn);
         const char* Save() { return m_strInstData.c_str(); }
@@ -84,21 +83,6 @@ class MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
 
         uint32 m_uiOperaEvent;
         uint32 m_uiOzDeathCount;
-
-        uint64 m_uiMoroesGUID;
-        uint64 m_uiTerestianGUID;
-        uint64 m_uiNightbaneGUID;
-
-        uint64 m_uiCurtainGUID;
-        uint64 m_uiStageDoorLeftGUID;
-        uint64 m_uiStageDoorRightGUID;
-        uint64 m_uiLibraryDoor;                             // Door at Shade of Aran
-        uint64 m_uiMassiveDoor;                             // Door at Netherspite
-        uint64 m_uiSideEntranceDoor;                        // Side Entrance
-        uint64 m_uiGamesmansDoor;                           // Door before Chess
-        uint64 m_uiGamesmansExitDoor;                       // Door after Chess
-        uint64 m_uiNetherspaceDoor;                         // Door at Malchezaar
-        uint64 m_uiDustCoveredChest;                        // Chest respawn at event complete
 };
 
 class MANGOS_DLL_DECL npc_fiendish_portalAI : public ScriptedAI

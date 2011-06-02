@@ -213,20 +213,19 @@ struct MANGOS_DLL_DECL mob_titoAI : public ScriptedAI
         Reset();
     }
 
-    uint64 DorotheeGUID;
+    ObjectGuid m_dorotheeGuid;
     uint32 YipTimer;
 
     void Reset()
     {
-        DorotheeGUID = 0;
         YipTimer = 10000;
     }
 
     void JustDied(Unit* killer)
     {
-        if (DorotheeGUID)
+        if (m_dorotheeGuid)
         {
-            Creature* Dorothee = m_creature->GetMap()->GetCreature(DorotheeGUID);
+            Creature* Dorothee = m_creature->GetMap()->GetCreature(m_dorotheeGuid);
             if (Dorothee && Dorothee->isAlive())
             {
                 if (boss_dorotheeAI* pDoroAI = dynamic_cast<boss_dorotheeAI*>(Dorothee->AI()))
@@ -259,7 +258,7 @@ void boss_dorotheeAI::SummonTito()
         DoScriptText(SAY_DOROTHEE_SUMMON, m_creature);
 
         if (mob_titoAI* pTitoAI = dynamic_cast<mob_titoAI*>(pTito->AI()))
-            pTitoAI->DorotheeGUID = m_creature->GetGUID();
+            pTitoAI->m_dorotheeGuid = m_creature->GetObjectGuid();
 
         pTito->AI()->AttackStart(m_creature->getVictim());
 
@@ -761,7 +760,7 @@ struct MANGOS_DLL_DECL boss_bigbadwolfAI : public ScriptedAI
     uint32 FearTimer;
     uint32 SwipeTimer;
 
-    uint64 HoodGUID;
+    ObjectGuid m_hoodGuid;
     float TempThreat;
 
     bool IsChasing;
@@ -772,7 +771,7 @@ struct MANGOS_DLL_DECL boss_bigbadwolfAI : public ScriptedAI
         FearTimer = urand(25000, 35000);
         SwipeTimer = 5000;
 
-        HoodGUID = 0;
+        m_hoodGuid.Clear();
         TempThreat = 0;
 
         IsChasing = false;
@@ -817,7 +816,7 @@ struct MANGOS_DLL_DECL boss_bigbadwolfAI : public ScriptedAI
                     if (TempThreat)
                         m_creature->getThreatManager().modifyThreatPercent(target, -100);
 
-                    HoodGUID = target->GetGUID();
+                    m_hoodGuid = target->GetObjectGuid();
                     m_creature->AddThreat(target, 1000000.0f);
                     ChaseTimer = 20000;
                     IsChasing = true;
@@ -827,9 +826,9 @@ struct MANGOS_DLL_DECL boss_bigbadwolfAI : public ScriptedAI
             {
                 IsChasing = false;
 
-                if (Player* target = m_creature->GetMap()->GetPlayer(HoodGUID))
+                if (Player* target = m_creature->GetMap()->GetPlayer(m_hoodGuid))
                 {
-                    HoodGUID = 0;
+                    m_hoodGuid.Clear();
 
                     if (m_creature->getThreatManager().getThreat(target))
                         m_creature->getThreatManager().modifyThreatPercent(target, -100);
@@ -953,7 +952,7 @@ struct MANGOS_DLL_DECL boss_julianneAI : public ScriptedAI
     uint32 EntryYellTimer;
     uint32 AggroYellTimer;
 
-    uint64 RomuloGUID;
+    ObjectGuid m_romuloGuid;
     uint32 Phase;
 
     uint32 BlindingPassionTimer;
@@ -971,7 +970,7 @@ struct MANGOS_DLL_DECL boss_julianneAI : public ScriptedAI
 
     void Reset()
     {
-        RomuloGUID = 0;
+        m_romuloGuid.Clear();
         Phase = PHASE_JULIANNE;
 
         BlindingPassionTimer = 30000;
@@ -1053,7 +1052,7 @@ struct MANGOS_DLL_DECL boss_romuloAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    uint64 JulianneGUID;
+    ObjectGuid m_julianneGuid;
     uint32 Phase;
 
     uint32 EntryYellTimer;
@@ -1069,7 +1068,7 @@ struct MANGOS_DLL_DECL boss_romuloAI : public ScriptedAI
 
     void Reset()
     {
-        JulianneGUID = 0;
+        m_julianneGuid.Clear();
         Phase = PHASE_ROMULO;
 
         BackwardLungeTimer = 15000;
@@ -1093,9 +1092,9 @@ struct MANGOS_DLL_DECL boss_romuloAI : public ScriptedAI
     {
         DoScriptText(SAY_ROMULO_AGGRO, m_creature);
 
-        if (JulianneGUID)
+        if (m_julianneGuid)
         {
-            Creature* Julianne = m_creature->GetMap()->GetCreature(JulianneGUID);
+            Creature* Julianne = m_creature->GetMap()->GetCreature(m_julianneGuid);
 
             if (Julianne && Julianne->getVictim())
                 m_creature->AddThreat(Julianne->getVictim());
@@ -1160,7 +1159,7 @@ void boss_julianneAI::DamageTaken(Unit* done_by, uint32 &damage)
         //if this is true then we have to kill romulo too
         if (RomuloDead)
         {
-            if (Creature* Romulo = m_creature->GetMap()->GetCreature(RomuloGUID))
+            if (Creature* Romulo = m_creature->GetMap()->GetCreature(m_romuloGuid))
             {
                 Romulo->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 Romulo->GetMotionMaster()->Clear();
@@ -1173,7 +1172,7 @@ void boss_julianneAI::DamageTaken(Unit* done_by, uint32 &damage)
         }
 
         //if not already returned, then romulo is alive and we can pretend die
-        if (Creature* Romulo = m_creature->GetMap()->GetCreature(RomuloGUID))
+        if (Creature* Romulo = m_creature->GetMap()->GetCreature(m_romuloGuid))
         {
             PretendToDie(m_creature);
             IsFakingDeath = true;
@@ -1206,7 +1205,7 @@ void boss_romuloAI::DamageTaken(Unit* done_by, uint32 &damage)
         IsFakingDeath = true;
         Phase = PHASE_BOTH;
 
-        if (Creature* Julianne = m_creature->GetMap()->GetCreature(JulianneGUID))
+        if (Creature* Julianne = m_creature->GetMap()->GetCreature(m_julianneGuid))
         {
             if (boss_julianneAI* pJulAI = dynamic_cast<boss_julianneAI*>(Julianne->AI()))
             {
@@ -1223,7 +1222,7 @@ void boss_romuloAI::DamageTaken(Unit* done_by, uint32 &damage)
     {
         if (JulianneDead)
         {
-            if (Creature* Julianne = m_creature->GetMap()->GetCreature(JulianneGUID))
+            if (Creature* Julianne = m_creature->GetMap()->GetCreature(m_julianneGuid))
             {
                 Julianne->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 Julianne->GetMotionMaster()->Clear();
@@ -1235,7 +1234,7 @@ void boss_romuloAI::DamageTaken(Unit* done_by, uint32 &damage)
             return;
         }
 
-        if (Creature* Julianne = m_creature->GetMap()->GetCreature(JulianneGUID))
+        if (Creature* Julianne = m_creature->GetMap()->GetCreature(m_julianneGuid))
         {
             PretendToDie(m_creature);
             IsFakingDeath = true;
@@ -1294,11 +1293,11 @@ void boss_julianneAI::UpdateAI(const uint32 diff)
         {
             if (Creature* pRomulo = m_creature->SummonCreature(CREATURE_ROMULO, ROMULO_X, ROMULO_Y, m_creature->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, HOUR*2*IN_MILLISECONDS))
             {
-                RomuloGUID = pRomulo->GetGUID();
+                m_romuloGuid = pRomulo->GetObjectGuid();
 
                 if (boss_romuloAI* pRomAI = dynamic_cast<boss_romuloAI*>(pRomulo->AI()))
                 {
-                    pRomAI->JulianneGUID = m_creature->GetGUID();
+                    pRomAI->m_julianneGuid = m_creature->GetObjectGuid();
                     pRomAI->Phase = PHASE_ROMULO;
                 }
 
@@ -1334,7 +1333,7 @@ void boss_julianneAI::UpdateAI(const uint32 diff)
     {
         if (ResurrectTimer < diff)
         {
-            Creature* pRomulo = m_creature->GetMap()->GetCreature(RomuloGUID);
+            Creature* pRomulo = m_creature->GetMap()->GetCreature(m_romuloGuid);
             boss_romuloAI* pRomAI = dynamic_cast<boss_romuloAI*>(pRomulo->AI());
 
             if (pRomulo && pRomAI && pRomAI->IsFakingDeath)
@@ -1376,7 +1375,7 @@ void boss_julianneAI::UpdateAI(const uint32 diff)
     {
         if (urand(0, 1) && SummonedRomulo)
         {
-            Creature* Romulo = m_creature->GetMap()->GetCreature(RomuloGUID);
+            Creature* Romulo = m_creature->GetMap()->GetCreature(m_romuloGuid);
             if (Romulo && Romulo->isAlive() && !RomuloDead)
                 DoCastSpellIfCan(Romulo, SPELL_ETERNAL_AFFECTION);
         } else DoCastSpellIfCan(m_creature, SPELL_ETERNAL_AFFECTION);
@@ -1396,7 +1395,7 @@ void boss_romuloAI::UpdateAI(const uint32 diff)
     {
         if (ResurrectTimer < diff)
         {
-            Creature* pJulianne = m_creature->GetMap()->GetCreature(JulianneGUID);
+            Creature* pJulianne = m_creature->GetMap()->GetCreature(m_julianneGuid);
             boss_julianneAI* pJulAI = dynamic_cast<boss_julianneAI*>(pJulianne->AI());
 
             if (pJulianne && pJulAI && pJulAI->IsFakingDeath)

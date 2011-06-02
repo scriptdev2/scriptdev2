@@ -104,7 +104,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
 
     uint32 m_uiFlameWreath_Timer;
     uint32 m_uiFlameWreathCheck_Timer;
-    uint64 m_uiFlameWreathTarget[3];
+    ObjectGuid m_aFlameWreathTargetGuid[3];
     float m_fFWTargPosX[3];
     float m_fFWTargPosY[3];
 
@@ -200,7 +200,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
         {
             if (*itr)
             {
-                m_uiFlameWreathTarget[i] = (*itr)->GetGUID();
+                m_aFlameWreathTargetGuid[i] = (*itr)->GetObjectGuid();
                 m_fFWTargPosX[i] = (*itr)->GetPositionX();
                 m_fFWTargPosY[i] = (*itr)->GetPositionY();
                 m_creature->CastSpell((*itr), SPELL_FLAME_WREATH, true);
@@ -220,7 +220,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
             {
                 if (m_pInstance)
                 {
-                    if (GameObject* pDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(GO_PRIVATE_LIBRARY_DOOR)))
+                    if (GameObject* pDoor = m_pInstance->GetSingleGameObjectFromStorage(GO_PRIVATE_LIBRARY_DOOR))
                         pDoor->SetGoState(GO_STATE_READY);
 
                     m_uiCloseDoor_Timer = 0;
@@ -389,7 +389,8 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
                     m_uiFlameWreath_Timer = 20000;
                     m_uiFlameWreathCheck_Timer = 500;
 
-                    memset(&m_uiFlameWreathTarget, 0, sizeof(m_uiFlameWreathTarget));
+                    for (uint8 i = 0; i < 3; ++i)
+                        m_aFlameWreathTargetGuid[i].Clear();
 
                     FlameWreathEffect();
                     break;
@@ -456,16 +457,16 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
             {
                 for (uint32 i = 0; i < 3; ++i)
                 {
-                    if (!m_uiFlameWreathTarget[i])
+                    if (!m_aFlameWreathTargetGuid[i])
                         continue;
 
-                    Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiFlameWreathTarget[i]);
+                    Player* pPlayer = m_creature->GetMap()->GetPlayer(m_aFlameWreathTargetGuid[i]);
 
                     if (pPlayer && !pPlayer->IsWithinDist2d(m_fFWTargPosX[i], m_fFWTargPosY[i], 3.0f))
                     {
                         pPlayer->CastSpell(pPlayer, SPELL_EXPLOSION, true, 0, 0, m_creature->GetObjectGuid());
                         pPlayer->CastSpell(pPlayer, SPELL_KNOCKBACK_500, true);
-                        m_uiFlameWreathTarget[i] = 0;
+                        m_aFlameWreathTargetGuid[i].Clear();
                     }
                 }
                 m_uiFlameWreathCheck_Timer = 500;

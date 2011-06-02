@@ -53,14 +53,13 @@ struct MANGOS_DLL_DECL boss_midnightAI : public ScriptedAI
 {
     boss_midnightAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
-    uint64 m_uiAttumenGUID;
+    ObjectGuid m_attumenGuid;
     uint8  m_uiPhase;
     uint32 m_uiMount_Timer;
 
     void Reset()
     {
         m_uiPhase = 1;
-        m_uiAttumenGUID = 0;
         m_uiMount_Timer = 0;
 
         m_creature->SetVisibility(VISIBILITY_ON);
@@ -70,7 +69,7 @@ struct MANGOS_DLL_DECL boss_midnightAI : public ScriptedAI
     {
         if (m_uiPhase == 2)
         {
-            if (Creature* pAttumen = m_creature->GetMap()->GetCreature(m_uiAttumenGUID))
+            if (Creature* pAttumen = m_creature->GetMap()->GetCreature(m_attumenGuid))
                 DoScriptText(SAY_MIDNIGHT_KILL, pAttumen);
         }
     }
@@ -103,7 +102,7 @@ struct MANGOS_DLL_DECL boss_midnightAI : public ScriptedAI
         m_uiMount_Timer = 1000;
     }
 
-    void SetMidnight(Creature *, uint64);                   //Below ..
+    void SetMidnight(Creature*, ObjectGuid);                // Below ..
 
     void UpdateAI(const uint32 uiDiff)
     {
@@ -119,9 +118,9 @@ struct MANGOS_DLL_DECL boss_midnightAI : public ScriptedAI
 
                     if (Creature* pAttumen = m_creature->SummonCreature(SUMMON_ATTUMEN, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 30000))
                     {
-                        m_uiAttumenGUID = pAttumen->GetGUID();
+                        m_attumenGuid = pAttumen->GetObjectGuid();
                         pAttumen->AI()->AttackStart(m_creature->getVictim());
-                        SetMidnight(pAttumen, m_creature->GetGUID());
+                        SetMidnight(pAttumen, m_creature->GetObjectGuid());
 
                         switch(urand(0, 2))
                         {
@@ -135,7 +134,7 @@ struct MANGOS_DLL_DECL boss_midnightAI : public ScriptedAI
             case 2:
                 if (m_creature->GetHealthPercent() < 25.0f)
                 {
-                    if (Creature* pAttumen = m_creature->GetMap()->GetCreature(m_uiAttumenGUID))
+                    if (Creature* pAttumen = m_creature->GetMap()->GetCreature(m_attumenGuid))
                         Mount(pAttumen);
                 }
                 break;
@@ -148,7 +147,7 @@ struct MANGOS_DLL_DECL boss_midnightAI : public ScriptedAI
                         m_creature->SetVisibility(VISIBILITY_OFF);
                         m_creature->GetMotionMaster()->MoveIdle();
 
-                        if (Creature *pAttumen = m_creature->GetMap()->GetCreature(m_uiAttumenGUID))
+                        if (Creature *pAttumen = m_creature->GetMap()->GetCreature(m_attumenGuid))
                         {
                             pAttumen->SetDisplayId(MOUNTED_DISPLAYID);
                             pAttumen->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
@@ -191,7 +190,7 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
         m_uiResetTimer = 0;
     }
 
-    uint64 m_uiMidnightGUID;
+    ObjectGuid m_midnightGuid;
     uint8  m_uiPhase;
     uint32 m_uiCleaveTimer;
     uint32 m_uiCurseTimer;
@@ -219,7 +218,7 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH, m_creature);
 
-        if (Creature* pMidnight = m_creature->GetMap()->GetCreature(m_uiMidnightGUID))
+        if (Creature* pMidnight = m_creature->GetMap()->GetCreature(m_midnightGuid))
             pMidnight->DealDamage(pMidnight, pMidnight->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
     }
 
@@ -231,12 +230,12 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
             {
                 m_uiResetTimer = 0;
 
-                if (Creature *pMidnight = m_creature->GetMap()->GetCreature(m_uiMidnightGUID))
+                if (Creature *pMidnight = m_creature->GetMap()->GetCreature(m_midnightGuid))
                 {
                     pMidnight->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     pMidnight->SetVisibility(VISIBILITY_ON);
                 }
-                m_uiMidnightGUID = 0;
+                m_midnightGuid.Clear();
 
                 m_creature->SetVisibility(VISIBILITY_OFF);
                 m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
@@ -309,7 +308,7 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
         {
             if (m_creature->GetHealthPercent() < 25.0f)
             {
-                if (Creature *pMidnight = m_creature->GetMap()->GetCreature(m_uiMidnightGUID))
+                if (Creature *pMidnight = m_creature->GetMap()->GetCreature(m_midnightGuid))
                 {
                     if (boss_midnightAI* pMidnightAI = dynamic_cast<boss_midnightAI*>(pMidnight->AI()))
                         pMidnightAI->Mount(m_creature);
@@ -324,10 +323,10 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
     }
 };
 
-void boss_midnightAI::SetMidnight(Creature* pAttumen, uint64 uiValue)
+void boss_midnightAI::SetMidnight(Creature* pAttumen, ObjectGuid midnightGuid)
 {
     if (boss_attumenAI* pAttumenAI = dynamic_cast<boss_attumenAI*>(pAttumen->AI()))
-        pAttumenAI->m_uiMidnightGUID = uiValue;
+        pAttumenAI->m_midnightGuid = midnightGuid;
 }
 
 CreatureAI* GetAI_boss_attumen(Creature* pCreature)

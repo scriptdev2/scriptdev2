@@ -39,22 +39,7 @@ EndScriptData */
 */
 
 instance_karazhan::instance_karazhan(Map* pMap) : ScriptedInstance(pMap),
-    m_uiOzDeathCount(0),
-
-    m_uiMoroesGUID(0),
-    m_uiTerestianGUID(0),
-    m_uiNightbaneGUID(0),
-
-    m_uiCurtainGUID(0),
-    m_uiStageDoorLeftGUID(0),
-    m_uiStageDoorRightGUID(0),
-    m_uiLibraryDoor(0),
-    m_uiMassiveDoor(0),
-    m_uiSideEntranceDoor(0),
-    m_uiGamesmansDoor(0),
-    m_uiGamesmansExitDoor(0),
-    m_uiNetherspaceDoor(0),
-    m_uiDustCoveredChest(0)
+    m_uiOzDeathCount(0)
 {
     Initialize();
 }
@@ -80,9 +65,10 @@ void instance_karazhan::OnCreatureCreate(Creature* pCreature)
 {
     switch (pCreature->GetEntry())
     {
-        case NPC_TERESTIAN: m_uiTerestianGUID = pCreature->GetGUID(); break;
-        case NPC_MOROES:    m_uiMoroesGUID    = pCreature->GetGUID(); break;
-        case NPC_NIGHTBANE: m_uiNightbaneGUID = pCreature->GetGUID(); break;
+        case NPC_MOROES:
+        case NPC_NIGHTBANE:
+            m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
+            break;
     }
 }
 
@@ -91,59 +77,53 @@ void instance_karazhan::OnObjectCreate(GameObject* pGo)
     switch(pGo->GetEntry())
     {
         case GO_STAGE_CURTAIN:
-            m_uiCurtainGUID = pGo->GetGUID();
             break;
         case GO_STAGE_DOOR_LEFT:
-            m_uiStageDoorLeftGUID = pGo->GetGUID();
             if (m_auiEncounter[4] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_STAGE_DOOR_RIGHT:
-            m_uiStageDoorRightGUID = pGo->GetGUID();
             if (m_auiEncounter[4] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_PRIVATE_LIBRARY_DOOR:
-            m_uiLibraryDoor = pGo->GetGUID();
             break;
         case GO_MASSIVE_DOOR:
-            m_uiMassiveDoor = pGo->GetGUID();
             break;
         case GO_GAMESMANS_HALL_DOOR:
-            m_uiGamesmansDoor = pGo->GetGUID();
             break;
         case GO_GAMESMANS_HALL_EXIT_DOOR:
-            m_uiGamesmansExitDoor = pGo->GetGUID();
             break;
         case GO_NETHERSPACE_DOOR:
-            m_uiNetherspaceDoor = pGo->GetGUID();
             break;
         case GO_SIDE_ENTRANCE_DOOR:
-            m_uiSideEntranceDoor = pGo->GetGUID();
             if (m_auiEncounter[4] != DONE)
                 pGo->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_LOCKED);
             else
                 pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_LOCKED);
             break;
         case GO_DUST_COVERED_CHEST:
-            m_uiDustCoveredChest = pGo->GetGUID();
             break;
 
         case GO_OZ_BACKDROP:
         case GO_OZ_HAY:
             // if (m_uiOperaEvent == EVENT_OZ)              // TODO - respawn, store for later respawn?
-            break;
+            return;
         case GO_HOOD_BACKDROP:
         case GO_HOOD_TREE:
         case GO_HOOD_HOUSE:
             // if (m_uiOperaEvent == EVENT_HOOD)            // TODO - respawn, store for later respawn?
-            break;
+            return;
         case GO_RAJ_BACKDROP:
         case GO_RAJ_MOON:
         case GO_RAJ_BALCONY:
             // if (m_uiOperaEvent == EVENT_RAJ)             // TODO - respawn, store for later respawn?
-            break;
+            return;
+
+        default:
+            return;
     }
+    m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
 }
 
 void instance_karazhan::SetData(uint32 uiType, uint32 uiData)
@@ -164,9 +144,9 @@ void instance_karazhan::SetData(uint32 uiType, uint32 uiData)
             m_auiEncounter[3] = uiData;
             if (uiData == DONE)
             {
-                DoUseDoorOrButton(m_uiStageDoorLeftGUID);
-                DoUseDoorOrButton(m_uiStageDoorRightGUID);
-                if (GameObject* pSideEntrance = instance->GetGameObject(m_uiSideEntranceDoor))
+                DoUseDoorOrButton(GO_STAGE_DOOR_LEFT);
+                DoUseDoorOrButton(GO_STAGE_DOOR_RIGHT);
+                if (GameObject* pSideEntrance = GetSingleGameObjectFromStorage(GO_SIDE_ENTRANCE_DOOR))
                     pSideEntrance->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_LOCKED);
             }
             break;
@@ -179,15 +159,15 @@ void instance_karazhan::SetData(uint32 uiType, uint32 uiData)
         case TYPE_ARAN:
             m_auiEncounter[6] = uiData;
             if (uiData != IN_PROGRESS)
-                DoUseDoorOrButton(m_uiLibraryDoor);
+                DoUseDoorOrButton(GO_PRIVATE_LIBRARY_DOOR);
             break;
         case TYPE_NETHERSPITE:
             m_auiEncounter[7] = uiData;
-            DoUseDoorOrButton(m_uiMassiveDoor);
+            DoUseDoorOrButton(GO_MASSIVE_DOOR);
             break;
         case TYPE_CHESS:
             if (uiData == DONE)
-                DoRespawnGameObject(m_uiDustCoveredChest, DAY);
+                DoRespawnGameObject(GO_DUST_COVERED_CHEST, DAY);
             m_auiEncounter[8] = uiData;
             break;
         case TYPE_MALCHEZZAR:
@@ -240,29 +220,6 @@ uint32 instance_karazhan::GetData(uint32 uiType)
 
         case DATA_OPERA_PERFORMANCE:    return m_uiOperaEvent;
         case DATA_OPERA_OZ_DEATHCOUNT:  return m_uiOzDeathCount;
-
-        default:
-            return 0;
-    }
-}
-
-uint64 instance_karazhan::GetData64(uint32 uiData)
-{
-    switch (uiData)
-    {
-        case NPC_MOROES:                    return m_uiMoroesGUID;
-        case NPC_TERESTIAN:                 return m_uiTerestianGUID;
-        case NPC_NIGHTBANE:                 return m_uiNightbaneGUID;
-
-        case GO_STAGE_DOOR_LEFT:            return m_uiStageDoorLeftGUID;
-        case GO_STAGE_DOOR_RIGHT:           return m_uiStageDoorRightGUID;
-        case GO_STAGE_CURTAIN:              return m_uiCurtainGUID;
-        case GO_PRIVATE_LIBRARY_DOOR:       return m_uiLibraryDoor;
-        case GO_MASSIVE_DOOR:               return m_uiMassiveDoor;
-        case GO_SIDE_ENTRANCE_DOOR:         return m_uiSideEntranceDoor;
-        case GO_GAMESMANS_HALL_DOOR:        return m_uiGamesmansDoor;
-        case GO_GAMESMANS_HALL_EXIT_DOOR:   return m_uiGamesmansExitDoor;
-        case GO_NETHERSPACE_DOOR:           return m_uiNetherspaceDoor;
 
         default:
             return 0;

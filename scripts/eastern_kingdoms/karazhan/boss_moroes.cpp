@@ -26,6 +26,8 @@ EndScriptData */
 
 enum
 {
+    MAX_GUESTS          = 4,
+
     SAY_AGGRO           = -1532011,
     SAY_SPECIAL_1       = -1532012,
     SAY_SPECIAL_2       = -1532013,
@@ -41,7 +43,7 @@ enum
     SPELL_FRENZY        = 37023
 };
 
-const float afLocations[4][4]=
+static const float afLocations[4][MAX_GUESTS]=
 {
     {-10991.0f, -1884.33f, 81.73f, 0.614315f},
     {-10989.4f, -1885.88f, 81.73f, 0.904913f},
@@ -49,7 +51,7 @@ const float afLocations[4][4]=
     {-10975.9f, -1885.81f, 81.73f, 2.253890f}
 };
 
-const uint32 auiAdds[6]=
+static const uint32 auiAdds[6]=
 {
     17007,
     19872,
@@ -70,8 +72,8 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    uint64 m_auiAddGUID[4];
-    uint32 m_auiAddId[4];
+    ObjectGuid m_aAddGuid[MAX_GUESTS];
+    uint32 m_auiAddId[MAX_GUESTS];
 
     uint32 m_uiVanish_Timer;
     uint32 m_uiBlind_Timer;
@@ -157,18 +159,18 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
         {
             std::vector<uint32> vAddList;
 
-            for(uint8 i = 0; i < 6; ++i)
+            for (uint8 i = 0; i < 6; ++i)
                 vAddList.push_back(auiAdds[i]);
 
-            while(vAddList.size() > 4)
+            while (vAddList.size() > MAX_GUESTS)
                 vAddList.erase((vAddList.begin())+(rand()%vAddList.size()));
 
             uint8 i = 0;
-            for(std::vector<uint32>::iterator itr = vAddList.begin(); itr != vAddList.end(); ++itr, ++i)
+            for (std::vector<uint32>::iterator itr = vAddList.begin(); itr != vAddList.end(); ++itr, ++i)
             {
                 if (Creature* pCreature = m_creature->SummonCreature(*itr, afLocations[i][0], afLocations[i][1], afLocations[i][2], afLocations[i][3], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000))
                 {
-                    m_auiAddGUID[i] = pCreature->GetGUID();
+                    m_aAddGuid[i] = pCreature->GetObjectGuid();
                     m_auiAddId[i]   = *itr;
                 }
             }
@@ -177,9 +179,9 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
         }
         else
         {
-            for(uint8 i = 0; i < 4; ++i)
+            for (uint8 i = 0; i < MAX_GUESTS; ++i)
             {
-                if (Creature* pCreature = m_creature->GetMap()->GetCreature(m_auiAddGUID[i]))
+                if (Creature* pCreature = m_creature->GetMap()->GetCreature(m_aAddGuid[i]))
                 {
                     if (!pCreature->isAlive())              // Exists but is dead
                     {
@@ -194,7 +196,7 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
                 else
                 {                                           // Does not exist
                     if (Creature* pCreature = m_creature->SummonCreature(m_auiAddId[i], afLocations[i][0], afLocations[i][1], afLocations[i][2], afLocations[i][3], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000))
-                        m_auiAddGUID[i] = pCreature->GetGUID();
+                        m_aAddGuid[i] = pCreature->GetObjectGuid();
                 }
             }
         }
@@ -202,11 +204,11 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
 
     void AddsAttack()
     {
-        for(uint8 i = 0; i < 4; ++i)
+        for(uint8 i = 0; i < MAX_GUESTS; ++i)
         {
-            if (m_auiAddGUID[i])
+            if (m_aAddGuid[i])
             {
-                Creature* pTemp = m_creature->GetMap()->GetCreature(m_auiAddGUID[i]);
+                Creature* pTemp = m_creature->GetMap()->GetCreature(m_aAddGuid[i]);
                 if (pTemp && pTemp->isAlive())
                     pTemp->AI()->AttackStart(m_creature->getVictim());
                 else
@@ -231,11 +233,11 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
 
         if (m_uiCheckAdds_Timer < uiDiff)
         {
-            for (uint8 i = 0; i < 4; ++i)
+            for (uint8 i = 0; i < MAX_GUESTS; ++i)
             {
-                if (m_auiAddGUID[i])
+                if (m_aAddGuid[i])
                 {
-                    Creature* pTemp = m_creature->GetMap()->GetCreature(m_auiAddGUID[i]);
+                    Creature* pTemp = m_creature->GetMap()->GetCreature(m_aAddGuid[i]);
                     if (pTemp && pTemp->isAlive() && (!pTemp->SelectHostileTarget() || !pTemp->getVictim()))
                         pTemp->AI()->AttackStart(m_creature->getVictim());
                 }
@@ -328,12 +330,10 @@ struct MANGOS_DLL_DECL boss_moroes_guestAI : public ScriptedAI
 {
     ScriptedInstance* m_pInstance;
 
-    uint64 m_auiGuestGUID[4];
+    ObjectGuid m_aGuestGuid[MAX_GUESTS];
 
     boss_moroes_guestAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        memset(&m_auiGuestGUID, 0, sizeof(m_auiGuestGUID));
-
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         AcquireGUID();
         Reset();
@@ -350,28 +350,28 @@ struct MANGOS_DLL_DECL boss_moroes_guestAI : public ScriptedAI
         if (!m_pInstance)
             return;
 
-        m_auiGuestGUID[0] = m_pInstance->GetData64(NPC_MOROES);
-
-        if (Creature* pMoroes = m_creature->GetMap()->GetCreature(m_auiGuestGUID[0]))
+        if (Creature* pMoroes = m_pInstance->GetSingleCreatureFromStorage(NPC_MOROES))
         {
+            m_aGuestGuid[0] = pMoroes->GetObjectGuid();
+
             for(uint8 i = 0; i < 3; ++i)
             {
-                uint64 uiGUID = 0;
+                ObjectGuid addGuid;
 
                 if (boss_moroesAI* pMoroesAI = dynamic_cast<boss_moroesAI*>(pMoroes->AI()))
-                    uiGUID = pMoroesAI->m_auiAddGUID[i];
+                    addGuid = pMoroesAI->m_aAddGuid[i];
 
-                if (uiGUID && uiGUID != m_creature->GetGUID())
-                    m_auiGuestGUID[i+1] = uiGUID;
+                if (addGuid && addGuid != m_creature->GetObjectGuid())
+                    m_aGuestGuid[i+1] = addGuid;
             }
         }
     }
 
     Unit* SelectTarget()
     {
-        if (uint64 uiTempGUID = m_auiGuestGUID[rand()%4])
+        if (ObjectGuid tempGuid = m_aGuestGuid[urand(0, MAX_GUESTS-1)])
         {
-            Creature* pTemp = m_creature->GetMap()->GetCreature(uiTempGUID);
+            Creature* pTemp = m_creature->GetMap()->GetCreature(tempGuid);
             if (pTemp && pTemp->isAlive())
                 return pTemp;
         }
