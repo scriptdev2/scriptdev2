@@ -24,78 +24,54 @@ EndScriptData */
 #include "precompiled.h"
 #include "scarlet_monastery.h"
 
-struct MANGOS_DLL_DECL instance_scarlet_monastery : public ScriptedInstance
+instance_scarlet_monastery::instance_scarlet_monastery(Map* pMap) : ScriptedInstance(pMap)
 {
-    instance_scarlet_monastery(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
+    Initialize();
+}
 
-    uint32 m_auiEncounter[MAX_ENCOUNTER];
+void instance_scarlet_monastery::Initialize()
+{
+    memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
+}
 
-    uint64 m_uiMograineGUID;
-    uint64 m_uiWhitemaneGUID;
-    uint64 m_uiVorrelGUID;
-    uint64 m_uiDoorHighInquisitorGUID;
-
-    void Initialize()
+void instance_scarlet_monastery::OnCreatureCreate(Creature* pCreature)
+{
+    switch(pCreature->GetEntry())
     {
-        memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
-
-        m_uiMograineGUID = 0;
-        m_uiWhitemaneGUID = 0;
-        m_uiVorrelGUID = 0;
-        m_uiDoorHighInquisitorGUID = 0;
+        case NPC_MOGRAINE:
+        case NPC_WHITEMANE:
+        case NPC_VORREL:
+            m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
+            break;
     }
+}
 
-    void OnCreatureCreate(Creature* pCreature)
+void instance_scarlet_monastery::OnObjectCreate(GameObject* pGo)
+{
+    if (pGo->GetEntry() == GO_WHITEMANE_DOOR)
+        m_mGoEntryGuidStore[GO_WHITEMANE_DOOR] = pGo->GetObjectGuid();
+}
+
+void instance_scarlet_monastery::SetData(uint32 uiType, uint32 uiData)
+{
+    if (uiType == TYPE_MOGRAINE_AND_WHITE_EVENT)
     {
-        switch(pCreature->GetEntry())
-        {
-            case NPC_MOGRAINE:  m_uiMograineGUID = pCreature->GetGUID();  break;
-            case NPC_WHITEMANE: m_uiWhitemaneGUID = pCreature->GetGUID(); break;
-            case NPC_VORREL:    m_uiVorrelGUID = pCreature->GetGUID();    break;
-        }
+        if (uiData == IN_PROGRESS)
+            DoUseDoorOrButton(GO_WHITEMANE_DOOR);
+        if (uiData == FAIL)
+            DoUseDoorOrButton(GO_WHITEMANE_DOOR);
+
+        m_auiEncounter[0] = uiData;
     }
+}
 
-    void OnObjectCreate(GameObject* pGo)
-    {
-        if (pGo->GetEntry() == GO_WHITEMANE_DOOR)
-            m_uiDoorHighInquisitorGUID = pGo->GetGUID();
-    }
+uint32 instance_scarlet_monastery::GetData(uint32 uiData)
+{
+    if (uiData == TYPE_MOGRAINE_AND_WHITE_EVENT)
+        return m_auiEncounter[0];
 
-    uint64 GetData64(uint32 data)
-    {
-        switch(data)
-        {
-            case NPC_MOGRAINE:      return m_uiMograineGUID;
-            case NPC_WHITEMANE:     return m_uiWhitemaneGUID;
-            case NPC_VORREL:        return m_uiVorrelGUID;
-            case GO_WHITEMANE_DOOR: return m_uiDoorHighInquisitorGUID;
-
-            default:
-                return 0;
-        }
-    }
-
-    void SetData(uint32 uiType, uint32 uiData)
-    {
-        if (uiType == TYPE_MOGRAINE_AND_WHITE_EVENT)
-        {
-            if (uiData == IN_PROGRESS)
-                DoUseDoorOrButton(m_uiDoorHighInquisitorGUID);
-            if (uiData == FAIL)
-                DoUseDoorOrButton(m_uiDoorHighInquisitorGUID);
-
-            m_auiEncounter[0] = uiData;
-        }
-    }
-
-    uint32 GetData(uint32 uiData)
-    {
-        if (uiData == TYPE_MOGRAINE_AND_WHITE_EVENT)
-            return m_auiEncounter[0];
-
-        return 0;
-    }
-};
+    return 0;
+}
 
 InstanceData* GetInstanceData_instance_scarlet_monastery(Map* pMap)
 {
@@ -104,9 +80,10 @@ InstanceData* GetInstanceData_instance_scarlet_monastery(Map* pMap)
 
 void AddSC_instance_scarlet_monastery()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "instance_scarlet_monastery";
-    newscript->GetInstanceData = &GetInstanceData_instance_scarlet_monastery;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "instance_scarlet_monastery";
+    pNewScript->GetInstanceData = &GetInstanceData_instance_scarlet_monastery;
+    pNewScript->RegisterSelf();
 }
