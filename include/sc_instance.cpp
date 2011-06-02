@@ -7,7 +7,7 @@
 /**
    Function that uses a door or a button
 
-   @param   guid The ObjectGuid of the Door/ Button that shall be used
+   @param   guid The ObjectGuid of the Door/ Button that will be used
    @param   uiWithRestoreTime (in seconds) if == 0 autoCloseTime will be used (if not 0 by default in *_template)
    @param   bUseAlternativeState Use to alternative state
  */
@@ -51,7 +51,7 @@ void ScriptedInstance::DoUseDoorOrButton(uint64 uiEntry, uint32 uiWithRestoreTim
 /**
    Function that respawns a despawned GameObject with given time
 
-   @param   guid The ObjectGuid of the GO that shall be respawned
+   @param   guid The ObjectGuid of the GO that will be respawned
    @param   uiTimeToDespawn (in seconds) Despawn the GO after this time, default is a minute
  */
 void ScriptedInstance::DoRespawnGameObject(ObjectGuid guid, uint32 uiTimeToDespawn)

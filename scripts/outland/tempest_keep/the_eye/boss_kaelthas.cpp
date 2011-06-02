@@ -126,6 +126,8 @@ enum
     MAX_ADVISORS                        = 4
 };
 
+static const uint32 aAdvisors[MAX_ADVISORS] = {NPC_THALADRED, NPC_SANGUINAR, NPC_CAPERNIAN, NPC_TELONICUS};
+
 uint32 m_auiSpellSummonWeapon[]=
 {
     SPELL_SUMMON_WEAPONA, SPELL_SUMMON_WEAPONB, SPELL_SUMMON_WEAPONC, SPELL_SUMMON_WEAPOND,
@@ -157,7 +159,7 @@ struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
     bool m_bFakeDeath;
     bool m_bDoubled_Health;
     uint32 m_uiDelayRes_Timer;
-    uint64 m_uiDelayRes_Target;
+    ObjectGuid m_delayResTargetGuid;
 
     void Reset()
     {
@@ -169,7 +171,7 @@ struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
 
         m_bFakeDeath = false;
         m_uiDelayRes_Timer = 0;
-        m_uiDelayRes_Target = 0;
+        m_delayResTargetGuid.Clear();
 
         m_creature->SetStandState(UNIT_STAND_STATE_STAND);
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
@@ -178,7 +180,7 @@ struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
         //reset encounter
         if (m_pInstance && (m_pInstance->GetData(TYPE_KAELTHAS_PHASE) == PHASE_1_ADVISOR || m_pInstance->GetData(TYPE_KAELTHAS_PHASE) == PHASE_3_ADVISOR_ALL))
         {
-            if (Creature* pKaelthas = m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_KAELTHAS)))
+            if (Creature* pKaelthas = m_pInstance->GetSingleCreatureFromStorage(NPC_KAELTHAS))
                 pKaelthas->AI()->EnterEvadeMode();
         }
     }
@@ -251,6 +253,9 @@ struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
             m_creature->GetMotionMaster()->MoveIdle();
             m_creature->SetStandState(UNIT_STAND_STATE_DEAD);
             JustDied(pKiller);
+
+            if (m_creature->getVictim())
+                m_delayResTargetGuid = m_creature->getVictim()->GetObjectGuid();
         }
     }
 
@@ -263,16 +268,21 @@ struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
                 m_uiDelayRes_Timer = 0;
                 m_bFakeDeath = false;
 
-                Unit* pTarget = m_creature->GetMap()->GetUnit(m_uiDelayRes_Target);
+                Unit* pTarget = m_creature->GetMap()->GetUnit(m_delayResTargetGuid);
+
+                if (!pTarget || !pTarget->isAlive())
+                    pTarget = m_creature->getVictim();
 
                 if (!pTarget)
-                    pTarget = m_creature->getVictim();
+                    return;
 
                 DoResetThreat();
                 AttackStart(pTarget);
+                // In case of same target as before, AttackStart and Attack won't set the target guid.
+                m_creature->SetTargetGuid(pTarget->GetObjectGuid());
+
                 m_creature->GetMotionMaster()->Clear();
                 m_creature->GetMotionMaster()->MoveChase(pTarget);
-                m_creature->AddThreat(pTarget);
             }
             else
                 m_uiDelayRes_Timer -= uiDiff;
@@ -287,7 +297,6 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
     boss_kaelthasAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        memset(&m_auiAdvisorGuid, 0, sizeof(m_auiAdvisorGuid));
         Reset();
     }
 
@@ -311,8 +320,6 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
     bool m_bInGravityLapse;
     bool m_bIsCastingFireball;
     bool m_bChainPyros;
-
-    uint64 m_auiAdvisorGuid[MAX_ADVISORS];
 
     void Reset()
     {
@@ -344,9 +351,12 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
     void PrepareAdvisors()
     {
+        if (!m_pInstance)
+            return;
+
         for(uint8 i = 0; i < MAX_ADVISORS; ++i)
         {
-            if (Creature* pCreature = m_creature->GetMap()->GetCreature(m_auiAdvisorGuid[i]))
+            if (Creature* pCreature = m_pInstance->GetSingleCreatureFromStorage(aAdvisors[i]))
             {
                 pCreature->Respawn();
                 pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
@@ -361,12 +371,14 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
         if (!m_pInstance)
             return;
 
-        m_auiAdvisorGuid[0] = m_pInstance->GetData64(NPC_THALADRED);
-        m_auiAdvisorGuid[1] = m_pInstance->GetData64(NPC_SANGUINAR);
-        m_auiAdvisorGuid[2] = m_pInstance->GetData64(NPC_CAPERNIAN);
-        m_auiAdvisorGuid[3] = m_pInstance->GetData64(NPC_TELONICUS);
+        bool bAdivsorsFound = true;
+        for (uint8 i = 0; i < MAX_ADVISORS; ++i)
+        {
+            if (!m_pInstance->GetSingleCreatureFromStorage(aAdvisors[i]))
+                bAdivsorsFound = false;
+        }
 
-        if (!m_auiAdvisorGuid[0] || !m_auiAdvisorGuid[1] || !m_auiAdvisorGuid[2] || !m_auiAdvisorGuid[3])
+        if (!bAdivsorsFound)
         {
             error_log("SD2: Kael'Thas One or more advisors missing, Skipping Phases 1-3");
 
@@ -468,12 +480,14 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
         DoScriptText(SAY_DEATH, m_creature);
 
         if (m_pInstance)
+        {
             m_pInstance->SetData(TYPE_KAELTHAS_PHASE, PHASE_6_COMPLETE);
 
-        for(uint8 i = 0; i < MAX_ADVISORS; ++i)
-        {
-            if (Creature* pAdvisor = m_creature->GetMap()->GetCreature(m_auiAdvisorGuid[i]))
-                pAdvisor->DealDamage(pAdvisor, pAdvisor->GetMaxHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+            for (uint8 i = 0; i < MAX_ADVISORS; ++i)
+            {
+                if (Creature* pAdvisor = m_pInstance->GetSingleCreatureFromStorage(aAdvisors[i]))
+                    pAdvisor->DealDamage(pAdvisor, pAdvisor->GetMaxHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+            }
         }
     }
 
@@ -509,7 +523,8 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                     case 1:
                         if (m_uiPhase_Timer < uiDiff)
                         {
-                            pAdvisor = m_creature->GetMap()->GetCreature(m_auiAdvisorGuid[0]);
+                            if (m_pInstance)
+                                pAdvisor = m_pInstance->GetSingleCreatureFromStorage(aAdvisors[0]);
 
                             if (pAdvisor)
                             {
@@ -530,7 +545,8 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
                     //Subphase 2 - Start
                     case 2:
-                        pAdvisor = m_creature->GetMap()->GetCreature(m_auiAdvisorGuid[0]);
+                        if (m_pInstance)
+                            pAdvisor = m_pInstance->GetSingleCreatureFromStorage(aAdvisors[0]);
 
                         if (pAdvisor && (pAdvisor->getStandState() == UNIT_STAND_STATE_DEAD))
                         {
@@ -546,7 +562,8 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                     case 3:
                         if (m_uiPhase_Timer < uiDiff)
                         {
-                            pAdvisor = m_creature->GetMap()->GetCreature(m_auiAdvisorGuid[1]);
+                            if (m_pInstance)
+                                pAdvisor = m_pInstance->GetSingleCreatureFromStorage(aAdvisors[1]);
 
                             if (pAdvisor)
                             {
@@ -567,7 +584,8 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
                     //Subphase 3 - Start
                     case 4:
-                        pAdvisor = m_creature->GetMap()->GetCreature(m_auiAdvisorGuid[1]);
+                        if (m_pInstance)
+                            pAdvisor = m_pInstance->GetSingleCreatureFromStorage(aAdvisors[1]);
 
                         if (pAdvisor && (pAdvisor->getStandState() == UNIT_STAND_STATE_DEAD))
                         {
@@ -583,7 +601,8 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                     case 5:
                         if (m_uiPhase_Timer < uiDiff)
                         {
-                            pAdvisor = m_creature->GetMap()->GetCreature(m_auiAdvisorGuid[2]);
+                            if (m_pInstance)
+                                pAdvisor = m_pInstance->GetSingleCreatureFromStorage(aAdvisors[2]);
 
                             if (pAdvisor)
                             {
@@ -604,7 +623,8 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
                     //Subphase 4 - Start
                     case 6:
-                        pAdvisor = m_creature->GetMap()->GetCreature(m_auiAdvisorGuid[2]);
+                        if (m_pInstance)
+                            pAdvisor = m_pInstance->GetSingleCreatureFromStorage(aAdvisors[2]);
 
                         if (pAdvisor && (pAdvisor->getStandState() == UNIT_STAND_STATE_DEAD))
                         {
@@ -620,7 +640,8 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                     case 7:
                         if (m_uiPhase_Timer < uiDiff)
                         {
-                            pAdvisor = m_creature->GetMap()->GetCreature(m_auiAdvisorGuid[3]);
+                            if (m_pInstance)
+                                pAdvisor = m_pInstance->GetSingleCreatureFromStorage(aAdvisors[3]);
 
                             if (pAdvisor)
                             {
@@ -639,7 +660,8 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
                     //End of phase 1
                     case 8:
-                        pAdvisor = m_creature->GetMap()->GetCreature(m_auiAdvisorGuid[3]);
+                        if (m_pInstance)
+                            pAdvisor = m_pInstance->GetSingleCreatureFromStorage(aAdvisors[3]);
 
                         if (pAdvisor && (pAdvisor->getStandState() == UNIT_STAND_STATE_DEAD))
                         {
@@ -707,14 +729,13 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
                     for (uint32 i = 0; i < MAX_ADVISORS; ++i)
                     {
-                        Creature* pAdvisor = m_creature->GetMap()->GetCreature(m_auiAdvisorGuid[i]);
-
-                        if (!pAdvisor)
-                            error_log("SD2: Kael'Thas Advisor %u does not exist. Possibly despawned? Incorrectly Killed?", i);
-                        else
+                        if (m_pInstance)
                         {
-                            if (advisorbase_ai* pAdvisorAI = dynamic_cast<advisorbase_ai*>(pAdvisor->AI()))
-                                pAdvisorAI->Revive(pTarget);
+                            if (Creature* pAdvisor = m_pInstance->GetSingleCreatureFromStorage(aAdvisors[i]))
+                            {
+                                if (advisorbase_ai* pAdvisorAI = dynamic_cast<advisorbase_ai*>(pAdvisor->AI()))
+                                    pAdvisorAI->Revive(pTarget);
+                            }
                         }
                     }
 

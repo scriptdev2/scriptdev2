@@ -25,13 +25,6 @@ EndScriptData */
 #include "the_eye.h"
 
 instance_the_eye::instance_the_eye(Map* pMap) : ScriptedInstance(pMap),
-    m_uiThaladredGUID(0),
-    m_uiSanguinarGUID(0),
-    m_uiCapernianGUID(0),
-    m_uiTelonicusGUID(0),
-    m_uiKaelthasGUID(0),
-    m_uiAstromancerGUID(0),
-
     m_uiKaelthasEventPhase(0)
 {
     Initialize();
@@ -60,12 +53,14 @@ void instance_the_eye::OnCreatureCreate(Creature* pCreature)
 {
     switch (pCreature->GetEntry())
     {
-        case NPC_THALADRED:   m_uiThaladredGUID = pCreature->GetGUID();   break;
-        case NPC_TELONICUS:   m_uiTelonicusGUID = pCreature->GetGUID();   break;
-        case NPC_CAPERNIAN:   m_uiCapernianGUID = pCreature->GetGUID();   break;
-        case NPC_SANGUINAR:   m_uiSanguinarGUID = pCreature->GetGUID();   break;
-        case NPC_KAELTHAS:    m_uiKaelthasGUID = pCreature->GetGUID();    break;
-        case NPC_ASTROMANCER: m_uiAstromancerGUID = pCreature->GetGUID(); break;
+        case NPC_THALADRED:
+        case NPC_TELONICUS:
+        case NPC_CAPERNIAN:
+        case NPC_SANGUINAR:
+        case NPC_KAELTHAS:
+        case NPC_ASTROMANCER:
+            m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
+            break;
     }
 }
 
@@ -95,22 +90,6 @@ uint32 instance_the_eye::GetData(uint32 uiType)
             return m_auiEncounter[uiType];
         case TYPE_KAELTHAS_PHASE:
             return m_uiKaelthasEventPhase;
-
-        default:
-            return 0;
-    }
-}
-
-uint64 instance_the_eye::GetData64(uint32 uiData)
-{
-    switch(uiData)
-    {
-        case NPC_THALADRED:   return m_uiThaladredGUID;
-        case NPC_SANGUINAR:   return m_uiSanguinarGUID;
-        case NPC_CAPERNIAN:   return m_uiCapernianGUID;
-        case NPC_TELONICUS:   return m_uiTelonicusGUID;
-        case NPC_KAELTHAS:    return m_uiKaelthasGUID;
-        case NPC_ASTROMANCER: return m_uiAstromancerGUID;
 
         default:
             return 0;

@@ -47,7 +47,6 @@ class MANGOS_DLL_DECL instance_the_eye : public ScriptedInstance
 
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
-        uint64 GetData64(uint32 uiData);
 
         // No Save or Load needed to current knowledge
 
@@ -55,13 +54,6 @@ class MANGOS_DLL_DECL instance_the_eye : public ScriptedInstance
         uint32 m_auiEncounter[MAX_ENCOUNTER];
 
         uint32 m_uiKaelthasEventPhase;
-
-        uint64 m_uiThaladredGUID;
-        uint64 m_uiSanguinarGUID;
-        uint64 m_uiCapernianGUID;
-        uint64 m_uiTelonicusGUID;
-        uint64 m_uiKaelthasGUID;
-        uint64 m_uiAstromancerGUID;
 };
 
 #endif

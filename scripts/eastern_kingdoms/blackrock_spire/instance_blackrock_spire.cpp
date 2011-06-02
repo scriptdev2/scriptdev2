@@ -102,7 +102,7 @@ void instance_blackrock_spire::OnCreatureCreate(Creature* pCreature)
         case NPC_GYTH:
         case NPC_SCARSHIELD_INFILTRATOR:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
-
+            break;
 
         case NPC_BLACKHAND_SUMMONER:
         case NPC_BLACKHAND_VETERAN:      m_lRoomEventMobGUIDList.push_back(pCreature->GetGUID()); break;

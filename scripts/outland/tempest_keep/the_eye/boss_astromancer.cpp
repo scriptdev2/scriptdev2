@@ -461,7 +461,7 @@ struct MANGOS_DLL_DECL mob_solarium_priestAI : public ScriptedAI
             {
                 case 0:
                     if (m_pInstance)
-                        pTarget = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_ASTROMANCER));
+                        pTarget = m_pInstance->GetSingleCreatureFromStorage(NPC_ASTROMANCER);
                     break;
                 case 1:
                     pTarget = m_creature;
