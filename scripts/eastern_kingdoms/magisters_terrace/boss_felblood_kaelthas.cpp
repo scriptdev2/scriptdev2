@@ -350,10 +350,10 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
 
                                 if (m_pInstance)
                                 {
-                                    if (GameObject* pKaelLeft = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(GO_KAEL_STATUE_LEFT)))
+                                    if (GameObject* pKaelLeft = m_pInstance->GetSingleGameObjectFromStorage(GO_KAEL_STATUE_LEFT))
                                         pKaelLeft->SetGoState(GO_STATE_ACTIVE);
 
-                                    if (GameObject* pKaelRight = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(GO_KAEL_STATUE_RIGHT)))
+                                    if (GameObject* pKaelRight =  m_pInstance->GetSingleGameObjectFromStorage(GO_KAEL_STATUE_RIGHT))
                                         pKaelRight->SetGoState(GO_STATE_ACTIVE);
                                 }
                             }

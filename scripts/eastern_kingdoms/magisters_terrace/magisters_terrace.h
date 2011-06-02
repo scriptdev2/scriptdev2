@@ -14,8 +14,7 @@ enum
     TYPE_DELRISSA               = 2,
     TYPE_KAELTHAS               = 3,
 
-    TYPE_FEL_CRYSTAL_SIZE       = 4,
-    TYPE_DELRISSA_DEATH_COUNT   = 5,
+    TYPE_DELRISSA_DEATH_COUNT   = 4,
 
     NPC_SELIN_FIREHEART         = 24723,
     NPC_DELRISSA                = 24560,
@@ -46,7 +45,8 @@ class MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
 
         uint32 GetData(uint32 uiType);
         void SetData(uint32 uiType, uint32 uiData);
-        uint64 GetData64(uint32 uiData);
+
+        void GetFelCrystalList(GUIDList& lList);
 
         const char* Save() { return m_strInstData.c_str(); }
         void Load(const char* chrIn);
@@ -57,19 +57,7 @@ class MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
 
         uint32 m_uiDelrissaDeathCount;
 
-        GUIDList FelCrystals;
-        GUIDList::iterator CrystalItr;
-
-        uint64 m_uiSelinGUID;
-        uint64 m_uiDelrissaGUID;
-        uint64 m_uiVexallusDoorGUID;
-        uint64 m_uiSelinDoorGUID;
-        uint64 m_uiSelinEncounterDoorGUID;
-        uint64 m_uiDelrissaDoorGUID;
-        uint64 m_uiKaelDoorGUID;
-        uint64 m_auiKaelStatue[2];
-
-        bool m_bInitializedItr;
+        GUIDList m_lFelCrystalGuid;
 };
 
 #endif
