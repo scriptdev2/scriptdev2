@@ -24,11 +24,7 @@ EndScriptData */
 #include "precompiled.h"
 #include "gnomeregan.h"
 
-instance_gnomeregan::instance_gnomeregan(Map* pMap) : ScriptedInstance(pMap),
-    m_uiBlastmasterShortfuseGUID(0),
-    m_uiCaveInNorthGUID(0),
-    m_uiCaveInSouthGUID(0),
-    m_uiDoorFinalChamberGUID(0)
+instance_gnomeregan::instance_gnomeregan(Map* pMap) : ScriptedInstance(pMap)
 {
     Initialize();
 }
@@ -36,34 +32,39 @@ instance_gnomeregan::instance_gnomeregan(Map* pMap) : ScriptedInstance(pMap),
 void instance_gnomeregan::Initialize()
 {
     memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
-    memset(&m_asBombFaces, 0, sizeof(m_asBombFaces));
-    memset(&m_auiExplosiveSortedGUIDs, 0, sizeof(m_auiExplosiveSortedGUIDs));
+
+    for (uint8 i = 0; i < MAX_GNOME_FACES; ++i)
+    {
+        m_asBombFaces[i].m_bActivated = false;
+        m_asBombFaces[i].m_uiBombTimer = 0;
+    }
 }
 
 void instance_gnomeregan::OnCreatureCreate(Creature* pCreature)
 {
-    switch (pCreature->GetEntry())
-    {
-        case NPC_BLASTMASTER_SHORTFUSE: m_uiBlastmasterShortfuseGUID = pCreature->GetGUID(); break;
-    }
+    if (pCreature->GetEntry() == NPC_BLASTMASTER_SHORTFUSE)
+        m_mNpcEntryGuidStore[NPC_BLASTMASTER_SHORTFUSE] = pCreature->GetObjectGuid();
 }
 
 void instance_gnomeregan::OnObjectCreate(GameObject* pGo)
 {
     switch(pGo->GetEntry())
     {
-        case GO_RED_ROCKET:         m_lRedRocketGUIDs.push_back(pGo->GetGUID());         break;
-        case GO_CAVE_IN_NORTH:      m_uiCaveInNorthGUID = pGo->GetGUID();                break;
-        case GO_CAVE_IN_SOUTH:      m_uiCaveInSouthGUID = pGo->GetGUID();                break;
-        case GO_EXPLOSIVE_CHARGE:   m_luiExplosiveChargeGUIDs.push_back(pGo->GetGUID()); break;
-        case GO_THE_FINAL_CHAMBER:  m_uiDoorFinalChamberGUID = pGo->GetGUID();           break;
+        case GO_CAVE_IN_NORTH:
+        case GO_CAVE_IN_SOUTH:
+        case GO_THE_FINAL_CHAMBER:
+            m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
+            break;
 
-        case GO_GNOME_FACE_1: m_asBombFaces[0].m_uiGnomeFaceGUID = pGo->GetGUID(); break;
-        case GO_GNOME_FACE_2: m_asBombFaces[1].m_uiGnomeFaceGUID = pGo->GetGUID(); break;
-        case GO_GNOME_FACE_3: m_asBombFaces[2].m_uiGnomeFaceGUID = pGo->GetGUID(); break;
-        case GO_GNOME_FACE_4: m_asBombFaces[3].m_uiGnomeFaceGUID = pGo->GetGUID(); break;
-        case GO_GNOME_FACE_5: m_asBombFaces[4].m_uiGnomeFaceGUID = pGo->GetGUID(); break;
-        case GO_GNOME_FACE_6: m_asBombFaces[5].m_uiGnomeFaceGUID = pGo->GetGUID(); break;
+        case GO_RED_ROCKET:         m_lRedRocketGUIDs.push_back(pGo->GetGUID());         return;
+        case GO_EXPLOSIVE_CHARGE:   m_luiExplosiveChargeGUIDs.push_back(pGo->GetGUID()); return;
+
+        case GO_GNOME_FACE_1: m_asBombFaces[0].m_gnomeFaceGuid = pGo->GetObjectGuid(); return;
+        case GO_GNOME_FACE_2: m_asBombFaces[1].m_gnomeFaceGuid = pGo->GetObjectGuid(); return;
+        case GO_GNOME_FACE_3: m_asBombFaces[2].m_gnomeFaceGuid = pGo->GetObjectGuid(); return;
+        case GO_GNOME_FACE_4: m_asBombFaces[3].m_gnomeFaceGuid = pGo->GetObjectGuid(); return;
+        case GO_GNOME_FACE_5: m_asBombFaces[4].m_gnomeFaceGuid = pGo->GetObjectGuid(); return;
+        case GO_GNOME_FACE_6: m_asBombFaces[5].m_gnomeFaceGuid = pGo->GetObjectGuid(); return;
     }
 }
 
@@ -97,20 +98,20 @@ void instance_gnomeregan::SetData(uint32 uiType, uint32 uiData)
                     // Sort to south and north
                     uint8 uiCounterSouth = 0;
                     uint8 uiCounterNorth = 0;
-                    GameObject* pCaveInSouth = instance->GetGameObject(m_uiCaveInSouthGUID);
-                    GameObject* pCaveInNorth = instance->GetGameObject(m_uiCaveInNorthGUID);
+                    GameObject* pCaveInSouth = GetSingleGameObjectFromStorage(GO_CAVE_IN_SOUTH);
+                    GameObject* pCaveInNorth = GetSingleGameObjectFromStorage(GO_CAVE_IN_NORTH);
                     if (pCaveInSouth && pCaveInNorth)
                     {
                         for (std::list<GameObject*>::iterator itr = lExplosiveCharges.begin(); itr != lExplosiveCharges.end(); ++itr)
                         {
                             if ((*itr)->GetDistanceOrder(pCaveInSouth, pCaveInNorth) && uiCounterSouth < MAX_EXPLOSIVES_PER_SIDE)
                             {
-                                m_auiExplosiveSortedGUIDs[0][uiCounterSouth] = (*itr)->GetGUID();
+                                m_aExplosiveSortedGuids[0][uiCounterSouth] = (*itr)->GetObjectGuid();
                                 ++uiCounterSouth;
                             }
                             else if (uiCounterNorth < MAX_EXPLOSIVES_PER_SIDE)
                             {
-                                m_auiExplosiveSortedGUIDs[1][uiCounterNorth] = (*itr)->GetGUID();
+                                m_aExplosiveSortedGuids[1][uiCounterNorth] = (*itr)->GetObjectGuid();
                                 ++uiCounterNorth;
                             }
                         }
@@ -132,23 +133,23 @@ void instance_gnomeregan::SetData(uint32 uiType, uint32 uiData)
             switch (uiData)
             {
                 case DATA_EXPLOSIVE_CHARGE_1:
-                    DoRespawnGameObject(m_auiExplosiveSortedGUIDs[0][0], HOUR);
-                    m_luiSpawnedExplosiveChargeGUIDs.push_back(m_auiExplosiveSortedGUIDs[0][0]);
+                    DoRespawnGameObject(m_aExplosiveSortedGuids[0][0], HOUR);
+                    m_luiSpawnedExplosiveChargeGUIDs.push_back(m_aExplosiveSortedGuids[0][0].GetRawValue());
                     break;
                 case DATA_EXPLOSIVE_CHARGE_2:
-                    DoRespawnGameObject(m_auiExplosiveSortedGUIDs[0][1], HOUR);
-                    m_luiSpawnedExplosiveChargeGUIDs.push_back(m_auiExplosiveSortedGUIDs[0][1]);
+                    DoRespawnGameObject(m_aExplosiveSortedGuids[0][1], HOUR);
+                    m_luiSpawnedExplosiveChargeGUIDs.push_back(m_aExplosiveSortedGuids[0][1].GetRawValue());
                     break;
                 case DATA_EXPLOSIVE_CHARGE_3:
-                    DoRespawnGameObject(m_auiExplosiveSortedGUIDs[1][0], HOUR);
-                    m_luiSpawnedExplosiveChargeGUIDs.push_back(m_auiExplosiveSortedGUIDs[1][0]);
+                    DoRespawnGameObject(m_aExplosiveSortedGuids[1][0], HOUR);
+                    m_luiSpawnedExplosiveChargeGUIDs.push_back(m_aExplosiveSortedGuids[1][0].GetRawValue());
                     break;
                 case DATA_EXPLOSIVE_CHARGE_4:
-                    DoRespawnGameObject(m_auiExplosiveSortedGUIDs[1][1], HOUR);
-                    m_luiSpawnedExplosiveChargeGUIDs.push_back(m_auiExplosiveSortedGUIDs[1][1]);
+                    DoRespawnGameObject(m_aExplosiveSortedGuids[1][1], HOUR);
+                    m_luiSpawnedExplosiveChargeGUIDs.push_back(m_aExplosiveSortedGuids[1][1]);
                     break;
                 case DATA_EXPLOSIVE_CHARGE_USE:
-                    Creature* pBlastmaster = instance->GetCreature(m_uiBlastmasterShortfuseGUID);
+                    Creature* pBlastmaster = GetSingleCreatureFromStorage(NPC_BLASTMASTER_SHORTFUSE);
                     if (!pBlastmaster)
                         break;
                     for (GUIDList::const_iterator itr = m_luiSpawnedExplosiveChargeGUIDs.begin(); itr != m_luiSpawnedExplosiveChargeGUIDs.end(); ++itr)
@@ -165,13 +166,11 @@ void instance_gnomeregan::SetData(uint32 uiType, uint32 uiData)
             if (uiData == IN_PROGRESS)
             {
                 // Make Door locked
-                if (GameObject* pDoor = instance->GetGameObject(m_uiDoorFinalChamberGUID))
+                if (GameObject* pDoor = GetSingleGameObjectFromStorage(GO_THE_FINAL_CHAMBER))
                 {
+                    pDoor->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_LOCKED);
                     if (pDoor->getLootState() == GO_ACTIVATED)
                         pDoor->ResetDoorOrButton();
-
-                    // Doesn't work here, because the flags are to be reseted on next tick in GO::Update
-                    pDoor->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_LOCKED);
                 }
 
                 // Always directly activates this bomb-face
@@ -180,11 +179,11 @@ void instance_gnomeregan::SetData(uint32 uiType, uint32 uiData)
             else if (uiData == DONE || uiData == FAIL)
             {
                 // Make Door unlocked again
-                if (GameObject* pDoor = instance->GetGameObject(m_uiDoorFinalChamberGUID))
+                if (GameObject* pDoor = GetSingleGameObjectFromStorage(GO_THE_FINAL_CHAMBER))
                 {
+                    pDoor->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_LOCKED);
                     if (pDoor->getLootState() == GO_READY)
                         pDoor->UseDoorOrButton();
-                    pDoor->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_LOCKED);
                 }
 
                 // Deactivate all remaining BombFaces
@@ -201,7 +200,7 @@ void instance_gnomeregan::SetData(uint32 uiType, uint32 uiData)
         std::ostringstream saveStream;
         saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1];
 
-        strInstData = saveStream.str();
+        m_strInstData = saveStream.str();
 
         SaveToDB();
         OUT_SAVE_INST_DATA_COMPLETE;
@@ -241,17 +240,6 @@ uint32 instance_gnomeregan::GetData(uint32 uiType)
     }
 }
 
-uint64 instance_gnomeregan::GetData64(uint32 uiData)
-{
-    switch(uiData)
-    {
-        case GO_CAVE_IN_NORTH: return m_uiCaveInNorthGUID;
-        case GO_CAVE_IN_SOUTH: return m_uiCaveInSouthGUID;
-        default:
-            return 0;
-    }
-}
-
 sBombFace* instance_gnomeregan::GetBombFaces()
 {
     return m_asBombFaces;
@@ -264,7 +252,7 @@ void instance_gnomeregan::DoActivateBombFace(uint8 uiIndex)
 
     if (!m_asBombFaces[uiIndex].m_bActivated)
     {
-        DoUseDoorOrButton(m_asBombFaces[uiIndex].m_uiGnomeFaceGUID);
+        DoUseDoorOrButton(m_asBombFaces[uiIndex].m_gnomeFaceGuid);
         m_asBombFaces[uiIndex].m_bActivated = true;
         m_asBombFaces[uiIndex].m_uiBombTimer = 3000;
     }
@@ -277,7 +265,7 @@ void instance_gnomeregan::DoDeactivateBombFace(uint8 uiIndex)
 
     if (m_asBombFaces[uiIndex].m_bActivated)
     {
-        DoUseDoorOrButton(m_asBombFaces[uiIndex].m_uiGnomeFaceGUID);
+        DoUseDoorOrButton(m_asBombFaces[uiIndex].m_gnomeFaceGuid);
         m_asBombFaces[uiIndex].m_bActivated = false;
         m_asBombFaces[uiIndex].m_uiBombTimer = 0;
     }

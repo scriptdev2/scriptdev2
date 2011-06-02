@@ -211,7 +211,7 @@ struct MANGOS_DLL_DECL boss_thermapluggAI : public ScriptedAI
                     {
                         // Calculate the spawning position as 90% between face and thermaplugg spawn-pos, and hight hardcoded
                         float fX = 0.0f, fY = 0.0f;
-                        if (GameObject* pFace = m_creature->GetMap()->GetGameObject(m_asBombFaces[i].m_uiGnomeFaceGUID))
+                        if (GameObject* pFace = m_creature->GetMap()->GetGameObject(m_asBombFaces[i].m_gnomeFaceGuid))
                         {
                             fX = 0.35*m_afSpawnPos[0] + 0.65*pFace->GetPositionX();
                             fY = 0.35*m_afSpawnPos[1] + 0.65*pFace->GetPositionY();

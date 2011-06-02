@@ -141,7 +141,7 @@ struct MANGOS_DLL_DECL npc_blastmaster_emi_shortfuseAI : public npc_escortAI
 
     uint8 m_uiPhase;
     uint32 m_uiPhaseTimer;
-    uint64 m_uiPlayerGUID;
+    ObjectGuid m_playerGuid;
     bool m_bDidAggroText, m_bSouthernCaveInOpened, m_bNorthernCaveInOpened;
     GUIDList m_luiSummonedMobGUIDs;
 
@@ -177,7 +177,7 @@ struct MANGOS_DLL_DECL npc_blastmaster_emi_shortfuseAI : public npc_escortAI
             case NPC_CAVERNDEEP_BURROWER:
             case NPC_CAVERNDEEP_AMBUSHER:
             {
-                if (GameObject* pDoor = m_creature->GetMap()->GetGameObject(m_pInstance->GetData64(m_uiPhase > 20 ? GO_CAVE_IN_NORTH : GO_CAVE_IN_SOUTH)))
+                if (GameObject* pDoor = m_pInstance->GetSingleGameObjectFromStorage(m_uiPhase > 20 ? GO_CAVE_IN_NORTH : GO_CAVE_IN_SOUTH))
                 {
                     float fX, fY, fZ;
                     pDoor->GetNearPoint(pDoor, fX, fY, fZ, 0.0f, 2.0f, frand(0.0f, 2*M_PI_F));
@@ -247,9 +247,9 @@ struct MANGOS_DLL_DECL npc_blastmaster_emi_shortfuseAI : public npc_escortAI
         m_pInstance->SetData(TYPE_GRUBBIS, FAIL);
 
         if (m_bSouthernCaveInOpened)                        // close southern cave-in door
-            m_pInstance->DoUseDoorOrButton(m_pInstance->GetData64(GO_CAVE_IN_SOUTH));
+            m_pInstance->DoUseDoorOrButton(GO_CAVE_IN_SOUTH);
         if (m_bNorthernCaveInOpened)                        // close northern cave-in door
-            m_pInstance->DoUseDoorOrButton(m_pInstance->GetData64(GO_CAVE_IN_NORTH));
+            m_pInstance->DoUseDoorOrButton(GO_CAVE_IN_NORTH);
 
         for (GUIDList::const_iterator itr = m_luiSummonedMobGUIDs.begin(); itr != m_luiSummonedMobGUIDs.end(); ++itr)
         {
@@ -258,7 +258,7 @@ struct MANGOS_DLL_DECL npc_blastmaster_emi_shortfuseAI : public npc_escortAI
         }
     }
 
-    void StartEvent(uint64 uiPlayerGUID)
+    void StartEvent(Player* pPlayer)
     {
         if (!m_pInstance)
             return;
@@ -267,7 +267,7 @@ struct MANGOS_DLL_DECL npc_blastmaster_emi_shortfuseAI : public npc_escortAI
 
         m_uiPhase = 1;
         m_uiPhaseTimer = 1000;
-        m_uiPlayerGUID = uiPlayerGUID;
+        m_playerGuid = pPlayer->GetObjectGuid();
     }
 
     void WaypointStart(uint32 uiPointId)
@@ -277,7 +277,7 @@ struct MANGOS_DLL_DECL npc_blastmaster_emi_shortfuseAI : public npc_escortAI
             case 10:
                 // Open Southern Cave-In
                 if (m_pInstance && !m_bSouthernCaveInOpened)
-                    m_pInstance->DoUseDoorOrButton(m_pInstance->GetData64(GO_CAVE_IN_SOUTH));
+                    m_pInstance->DoUseDoorOrButton(GO_CAVE_IN_SOUTH);
                 m_bSouthernCaveInOpened = true;
                 break;
             case 12:
@@ -287,7 +287,7 @@ struct MANGOS_DLL_DECL npc_blastmaster_emi_shortfuseAI : public npc_escortAI
                 DoScriptText(SAY_CHARGE_3, m_creature);
                 // Open Northern Cave-In
                 if (m_pInstance && !m_bNorthernCaveInOpened)
-                    m_pInstance->DoUseDoorOrButton(m_pInstance->GetData64(GO_CAVE_IN_NORTH));
+                    m_pInstance->DoUseDoorOrButton(GO_CAVE_IN_NORTH);
                 m_bNorthernCaveInOpened = true;
                 break;
         }
@@ -315,7 +315,7 @@ struct MANGOS_DLL_DECL npc_blastmaster_emi_shortfuseAI : public npc_escortAI
                 SetEscortPaused(true);
                 if (m_pInstance)
                 {
-                    if (GameObject* pDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(GO_CAVE_IN_SOUTH)))
+                    if (GameObject* pDoor = m_pInstance->GetSingleGameObjectFromStorage(GO_CAVE_IN_SOUTH))
                         m_creature->SetFacingToObject(pDoor);
                 }
                 DoScriptText(SAY_BLOW_1_10, m_creature);
@@ -357,7 +357,7 @@ struct MANGOS_DLL_DECL npc_blastmaster_emi_shortfuseAI : public npc_escortAI
                         m_uiPhaseTimer = 3500;              // 6s delay, but 2500ms for escortstarting
                         break;
                     case 3:
-                        Start(false, m_creature->GetMap()->GetPlayer(m_uiPlayerGUID), NULL, false, false);
+                        Start(false, m_creature->GetMap()->GetPlayer(m_playerGuid), NULL, false, false);
                         m_uiPhaseTimer = 0;
                         break;
 
@@ -377,7 +377,7 @@ struct MANGOS_DLL_DECL npc_blastmaster_emi_shortfuseAI : public npc_escortAI
                     case 7:
                         if (m_pInstance)
                         {
-                            if (GameObject* pDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(GO_CAVE_IN_SOUTH)))
+                            if (GameObject* pDoor = m_pInstance->GetSingleGameObjectFromStorage(GO_CAVE_IN_SOUTH))
                                 m_creature->SetFacingToObject(pDoor);
                         }
                         m_uiPhaseTimer = 2000;
@@ -425,7 +425,7 @@ struct MANGOS_DLL_DECL npc_blastmaster_emi_shortfuseAI : public npc_escortAI
                         m_uiPhaseTimer = 1;
                         break;
                     case 15:                                // shortly before starting WP 14
-                        if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID))
+                        if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid))
                             m_creature->SetFacingToObject(pPlayer);
                         DoScriptText(SAY_CHARGE_2, m_creature);
                         m_uiPhaseTimer = 0;
@@ -447,7 +447,7 @@ struct MANGOS_DLL_DECL npc_blastmaster_emi_shortfuseAI : public npc_escortAI
                         // Close southern cave-in and let charges explode
                         if (m_pInstance)
                         {
-                            m_pInstance->DoUseDoorOrButton(m_pInstance->GetData64(GO_CAVE_IN_SOUTH));
+                            m_pInstance->DoUseDoorOrButton(GO_CAVE_IN_SOUTH);
                             m_bSouthernCaveInOpened = false;
                             m_pInstance->SetData(TYPE_EXPLOSIVE_CHARGE, DATA_EXPLOSIVE_CHARGE_USE);
                         }
@@ -468,7 +468,7 @@ struct MANGOS_DLL_DECL npc_blastmaster_emi_shortfuseAI : public npc_escortAI
                     case 23:
                         if (m_pInstance)
                         {
-                            if (GameObject* pDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(GO_CAVE_IN_NORTH)))
+                            if (GameObject* pDoor = m_pInstance->GetSingleGameObjectFromStorage(GO_CAVE_IN_NORTH))
                                 m_creature->SetFacingToObject(pDoor);
                         }
                         m_uiPhaseTimer = 3000;
@@ -520,7 +520,7 @@ struct MANGOS_DLL_DECL npc_blastmaster_emi_shortfuseAI : public npc_escortAI
                     case 31:                                // shortly after reaching WP 19
                         if (m_pInstance)
                         {
-                            if (GameObject* pDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(GO_CAVE_IN_NORTH)))
+                            if (GameObject* pDoor = m_pInstance->GetSingleGameObjectFromStorage(GO_CAVE_IN_NORTH))
                                 m_creature->SetFacingToObject(pDoor);
                         }
                         DoScriptText(SAY_BLOW_2_10, m_creature);
@@ -538,7 +538,7 @@ struct MANGOS_DLL_DECL npc_blastmaster_emi_shortfuseAI : public npc_escortAI
                     case 34:                                // 1 sek after Death of Grubbis
                         if (m_pInstance)
                         {
-                            if (GameObject* pDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(GO_CAVE_IN_NORTH)))
+                            if (GameObject* pDoor = m_pInstance->GetSingleGameObjectFromStorage(GO_CAVE_IN_NORTH))
                                 m_creature->SetFacingToObject(pDoor);
                         }
                         m_creature->HandleEmote(EMOTE_ONESHOT_CHEER);
@@ -564,7 +564,7 @@ struct MANGOS_DLL_DECL npc_blastmaster_emi_shortfuseAI : public npc_escortAI
                         // Close northern cave-in and let charges explode
                         if (m_pInstance)
                         {
-                            m_pInstance->DoUseDoorOrButton(m_pInstance->GetData64(GO_CAVE_IN_NORTH));
+                            m_pInstance->DoUseDoorOrButton(GO_CAVE_IN_NORTH);
                             m_bNorthernCaveInOpened = false;
                             m_pInstance->SetData(TYPE_EXPLOSIVE_CHARGE, DATA_EXPLOSIVE_CHARGE_USE);
                         }
@@ -616,7 +616,7 @@ bool GossipSelect_npc_blastmaster_emi_shortfuse(Player* pPlayer, Creature* pCrea
             if (pInstance->GetData(TYPE_GRUBBIS) == NOT_STARTED || pInstance->GetData(TYPE_GRUBBIS) == FAIL)
             {
                 if (npc_blastmaster_emi_shortfuseAI* pEmiAI = dynamic_cast<npc_blastmaster_emi_shortfuseAI*>(pCreature->AI()))
-                    pEmiAI->StartEvent(pPlayer->GetGUID());
+                    pEmiAI->StartEvent(pPlayer);
             }
         }
     }

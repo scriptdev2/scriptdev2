@@ -46,7 +46,7 @@ enum
 
 struct sBombFace
 {
-    uint64 m_uiGnomeFaceGUID;
+    ObjectGuid m_gnomeFaceGuid;
     bool m_bActivated;
     uint32 m_uiBombTimer;
 };
@@ -64,26 +64,20 @@ class MANGOS_DLL_DECL instance_gnomeregan : public ScriptedInstance
 
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
-        uint64 GetData64(uint32 uiData);
 
         sBombFace* GetBombFaces();
         void DoActivateBombFace(uint8 uiIndex);
         void DoDeactivateBombFace(uint8 uiIndex);
 
-        const char* Save() { return strInstData.c_str(); }
+        const char* Save() { return m_strInstData.c_str(); }
         void Load(const char* chrIn);
 
     protected:
         uint32 m_auiEncounter[MAX_ENCOUNTER];
-        std::string strInstData;
+        std::string m_strInstData;
 
         sBombFace m_asBombFaces[MAX_GNOME_FACES];
-        uint64 m_auiExplosiveSortedGUIDs[2][MAX_EXPLOSIVES_PER_SIDE];
-
-        uint64 m_uiBlastmasterShortfuseGUID;
-        uint64 m_uiCaveInNorthGUID;
-        uint64 m_uiCaveInSouthGUID;
-        uint64 m_uiDoorFinalChamberGUID;
+        ObjectGuid m_aExplosiveSortedGuids[2][MAX_EXPLOSIVES_PER_SIDE];
 
         GUIDList m_luiExplosiveChargeGUIDs;
         GUIDList m_luiSpawnedExplosiveChargeGUIDs;
