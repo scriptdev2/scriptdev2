@@ -103,7 +103,7 @@ void InitScriptLibrary()
     LoadDatabase();
 
     outstring_log("SD2: Loading C++ scripts");
-    barGoLink bar(1);
+    BarGoLink bar(1);
     bar.step();
     outstring_log("");
 
