@@ -15,8 +15,8 @@ enum
     TYPE_DISTILLER                  = 4,
 
     NPC_STEAMRIGGER                 = 17796,
-    NPC_KALITRESH                   = 17798,
-    NPC_THESPIA                     = 17797,
+    //NPC_KALITRESH                 = 17798,
+    //NPC_THESPIA                   = 17797,
 
     GO_MAIN_CHAMBERS_DOOR           = 183049,
     GO_ACCESS_PANEL_HYDRO           = 184125,
@@ -35,18 +35,9 @@ class MANGOS_DLL_DECL instance_steam_vault : public ScriptedInstance
 
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
-        uint64 GetData64(uint32 uiType);
 
     private:
         uint32 m_auiEncounter[MAX_ENCOUNTER];
-
-        uint64 m_uiThespiaGUID;
-        uint64 m_uiMekgineerGUID;
-        uint64 m_uiKalithreshGUID;
-
-        uint64 m_uiMainChambersDoor;
-        uint64 m_uiAccessPanelHydro;
-        uint64 m_uiAccessPanelMek;
 };
 
 #endif

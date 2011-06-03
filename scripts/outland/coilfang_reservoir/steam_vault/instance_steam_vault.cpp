@@ -47,13 +47,7 @@ bool GOUse_go_main_chambers_access_panel(Player* pPlayer, GameObject* pGo)
     return true;
 }
 
-instance_steam_vault::instance_steam_vault(Map* pMap) : ScriptedInstance(pMap),
-    m_uiThespiaGUID(0),
-    m_uiMekgineerGUID(0),
-    m_uiKalithreshGUID(0),
-    m_uiMainChambersDoor(0),
-    m_uiAccessPanelHydro(0),
-    m_uiAccessPanelMek(0)
+instance_steam_vault::instance_steam_vault(Map* pMap) : ScriptedInstance(pMap)
 {
     Initialize();
 }
@@ -67,9 +61,9 @@ void instance_steam_vault::OnCreatureCreate(Creature* pCreature)
 {
     switch(pCreature->GetEntry())
     {
-        case NPC_THESPIA:     m_uiThespiaGUID = pCreature->GetGUID();    break;
-        case NPC_STEAMRIGGER: m_uiMekgineerGUID = pCreature->GetGUID();  break;
-        case NPC_KALITRESH:   m_uiKalithreshGUID = pCreature->GetGUID(); break;
+        case NPC_STEAMRIGGER:
+            m_mNpcEntryGuidStore[NPC_STEAMRIGGER] = pCreature->GetObjectGuid();
+            break;
     }
 }
 
@@ -77,9 +71,11 @@ void instance_steam_vault::OnObjectCreate(GameObject* pGo)
 {
     switch(pGo->GetEntry())
     {
-        case GO_MAIN_CHAMBERS_DOOR: m_uiMainChambersDoor = pGo->GetGUID(); break;
-        case GO_ACCESS_PANEL_HYDRO: m_uiAccessPanelHydro = pGo->GetGUID(); break;
-        case GO_ACCESS_PANEL_MEK:   m_uiAccessPanelMek = pGo->GetGUID();   break;
+        case GO_MAIN_CHAMBERS_DOOR:
+        case GO_ACCESS_PANEL_HYDRO:
+        case GO_ACCESS_PANEL_MEK:
+            m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
+            break;
     }
 }
 
@@ -90,10 +86,10 @@ void instance_steam_vault::SetData(uint32 uiType, uint32 uiData)
         case TYPE_HYDROMANCER_THESPIA:
             if (uiData == SPECIAL)
             {
-                DoUseDoorOrButton(m_uiAccessPanelHydro);
+                DoUseDoorOrButton(GO_ACCESS_PANEL_HYDRO);
 
                 if (GetData(TYPE_MEKGINEER_STEAMRIGGER) == SPECIAL)
-                    DoUseDoorOrButton(m_uiMainChambersDoor);
+                    DoUseDoorOrButton(GO_MAIN_CHAMBERS_DOOR);
 
                 debug_log("SD2: Instance Steamvault: Access panel used.");
             }
@@ -102,10 +98,10 @@ void instance_steam_vault::SetData(uint32 uiType, uint32 uiData)
         case TYPE_MEKGINEER_STEAMRIGGER:
             if (uiData == SPECIAL)
             {
-                DoUseDoorOrButton(m_uiAccessPanelMek);
+                DoUseDoorOrButton(GO_ACCESS_PANEL_MEK);
 
                 if (GetData(TYPE_HYDROMANCER_THESPIA) == SPECIAL)
-                    DoUseDoorOrButton(m_uiMainChambersDoor);
+                    DoUseDoorOrButton(GO_MAIN_CHAMBERS_DOOR);
 
                     debug_log("SD2: Instance Steamvault: Access panel used.");
             }
@@ -128,19 +124,6 @@ uint32 instance_steam_vault::GetData(uint32 uiType)
         case TYPE_MEKGINEER_STEAMRIGGER: return m_auiEncounter[1];
         case TYPE_WARLORD_KALITHRESH:    return m_auiEncounter[2];
         case TYPE_DISTILLER:             return m_auiEncounter[3];
-
-        default:
-            return 0;
-    }
-}
-
-uint64 instance_steam_vault::GetData64(uint32 uiType)
-{
-    switch (uiType)
-    {
-        case NPC_THESPIA:     return m_uiThespiaGUID;
-        case NPC_STEAMRIGGER: return m_uiMekgineerGUID;
-        case NPC_KALITRESH:   return m_uiKalithreshGUID;
 
         default:
             return 0;
