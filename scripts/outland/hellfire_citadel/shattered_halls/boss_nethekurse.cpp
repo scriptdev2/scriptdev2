@@ -369,7 +369,7 @@ struct MANGOS_DLL_DECL mob_fel_orc_convertAI : public ScriptedAI
     {
         if (m_pInstance)
         {
-            Creature* pKurse = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_NETHEKURSE));
+            Creature* pKurse = m_pInstance->GetSingleCreatureFromStorage(NPC_NETHEKURSE);
             if (pKurse && m_creature->IsWithinDist(pKurse, 45.0f))
             {
                 if (boss_grand_warlock_nethekurseAI* pKurseAI = dynamic_cast<boss_grand_warlock_nethekurseAI*>(pKurse->AI()))
@@ -390,7 +390,7 @@ struct MANGOS_DLL_DECL mob_fel_orc_convertAI : public ScriptedAI
             if (m_pInstance->GetData(TYPE_NETHEKURSE) != IN_PROGRESS)
                 return;
 
-            if (Creature* pKurse = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_NETHEKURSE)))
+            if (Creature* pKurse = m_pInstance->GetSingleCreatureFromStorage(NPC_NETHEKURSE))
             {
                 if (boss_grand_warlock_nethekurseAI* pKurseAI = dynamic_cast<boss_grand_warlock_nethekurseAI*>(pKurse->AI()))
                     pKurseAI->DoYellForPeonDeath(pKiller);

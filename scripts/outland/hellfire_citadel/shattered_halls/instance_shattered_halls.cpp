@@ -24,10 +24,7 @@ EndScriptData */
 #include "precompiled.h"
 #include "shattered_halls.h"
 
-instance_shattered_halls::instance_shattered_halls(Map* pMap) : ScriptedInstance(pMap),
-    m_uiNethekurseGUID(0),
-    m_uiNethekurseDoorGUID(0),
-    m_uiNethekurseEnterDoorGUID(0)
+instance_shattered_halls::instance_shattered_halls(Map* pMap) : ScriptedInstance(pMap)
 {
     Initialize();
 }
@@ -42,22 +39,25 @@ void instance_shattered_halls::OnObjectCreate(GameObject* pGo)
     switch (pGo->GetEntry())
     {
         case GO_NETHEKURSE_DOOR:
-            m_uiNethekurseDoorGUID = pGo->GetGUID();
             if (m_auiEncounter[TYPE_NETHEKURSE] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_NETHERKURSE_ENTER_DOOR:
-            m_uiNethekurseEnterDoorGUID = pGo->GetGUID();
             if (m_auiEncounter[TYPE_NETHEKURSE] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
+
+        default:
+            return;
     }
+
+    m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
 }
 
 void instance_shattered_halls::OnCreatureCreate(Creature* pCreature)
 {
     if (pCreature->GetEntry() == NPC_NETHEKURSE)
-        m_uiNethekurseGUID = pCreature->GetGUID();
+        m_mNpcEntryGuidStore[NPC_NETHEKURSE] = pCreature->GetObjectGuid();
 }
 
 void instance_shattered_halls::SetData(uint32 uiType, uint32 uiData)
@@ -67,7 +67,7 @@ void instance_shattered_halls::SetData(uint32 uiType, uint32 uiData)
         case TYPE_NETHEKURSE:
             m_auiEncounter[uiType] = uiData;
             if (uiData == DONE)
-                DoUseDoorOrButton(m_uiNethekurseDoorGUID);
+                DoUseDoorOrButton(GO_NETHEKURSE_DOOR);
             break;
         case TYPE_OMROGG:
             m_auiEncounter[uiType] = uiData;
@@ -117,18 +117,6 @@ uint32 instance_shattered_halls::GetData(uint32 uiType)
         return m_auiEncounter[uiType];
 
     return 0;
-}
-
-uint64 instance_shattered_halls::GetData64(uint32 uiData)
-{
-    switch(uiData)
-    {
-        case NPC_NETHEKURSE:             return m_uiNethekurseGUID;
-        case GO_NETHEKURSE_DOOR:         return m_uiNethekurseDoorGUID;
-        case GO_NETHERKURSE_ENTER_DOOR:  return m_uiNethekurseEnterDoorGUID;
-        default:
-            return 0;
-    }
 }
 
 InstanceData* GetInstanceData_instance_shattered_halls(Map* pMap)

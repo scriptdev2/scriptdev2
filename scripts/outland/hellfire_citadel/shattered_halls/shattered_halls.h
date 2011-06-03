@@ -31,7 +31,6 @@ class MANGOS_DLL_DECL instance_shattered_halls : public ScriptedInstance
 
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
-        uint64 GetData64(uint32 uiData);
 
         const char* Save() { return m_strInstData.c_str(); }
         void Load(const char* chrIn);
@@ -39,11 +38,6 @@ class MANGOS_DLL_DECL instance_shattered_halls : public ScriptedInstance
     private:
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strInstData;
-
-        uint64 m_uiNethekurseGUID;
-
-        uint64 m_uiNethekurseDoorGUID;
-        uint64 m_uiNethekurseEnterDoorGUID;
 };
 
 #endif
