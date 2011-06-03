@@ -22,15 +22,15 @@ enum
     NPC_KALECGOS_DRAGON         = 24850,            // kalecgos blue dragon hostile
     NPC_KALECGOS_HUMAN          = 24891,            // kalecgos human form in spectral realm
     NPC_SATHROVARR              = 24892,
-    NPC_BRUTALLUS               = 24882,
-    NPC_FELMYST                 = 25038,
+    // NPC_BRUTALLUS            = 24882,
+    // NPC_FELMYST              = 25038,
     NPC_ALYTHESS                = 25166,
     NPC_SACROLASH               = 25165,
-    NPC_MURU                    = 25741,
-    NPC_KILJAEDEN               = 25315,
-    NPC_KILJAEDEN_CONTROLLER    = 25608,            // kiljaeden event controller
-    NPC_ANVEENA                 = 26046,            // related to kiljaeden event
-    NPC_KALECGOS                = 25319,            // related to kiljaeden event
+    // NPC_MURU                 = 25741,
+    // NPC_KILJAEDEN            = 25315,
+    // NPC_KILJAEDEN_CONTROLLER = 25608,            // kiljaeden event controller
+    // NPC_ANVEENA              = 26046,            // related to kiljaeden event
+    // NPC_KALECGOS             = 25319,            // related to kiljaeden event
 
     GO_FORCEFIELD               = 188421,           // kalecgos door + collisions
     GO_BOSS_COLLISION_1         = 188523,
@@ -66,11 +66,10 @@ class MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
         void SetData(uint32 uiType, uint32 uiData);
         void SetData64(uint32 uiType, uint64 uiData);
         uint32 GetData(uint32 uiType);
-        uint64 GetData64(uint32 uiType);
 
         void Update(uint32 uiDiff);
 
-        const char* Save() { return strInstData.c_str(); }
+        const char* Save() { return m_strInstData.c_str(); }
         void Load(const char* chrIn);
 
     protected:
@@ -78,33 +77,7 @@ class MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
         void EjectPlayers();
 
         uint32 m_auiEncounter[MAX_ENCOUNTER];
-        std::string strInstData;
-
-        // Creatures
-        uint64 m_uiKalecgos_DragonGUID;
-        uint64 m_uiKalecgos_HumanGUID;
-        uint64 m_uiSathrovarrGUID;
-        uint64 m_uiBrutallusGUID;
-        uint64 m_uiFelmystGUID;
-        uint64 m_uiAlythessGUID;
-        uint64 m_uiSacrolashGUID;
-        uint64 m_uiMuruGUID;
-        uint64 m_uiKilJaedenGUID;
-        uint64 m_uiKilJaedenControllerGUID;
-        uint64 m_uiAnveenaGUID;
-        uint64 m_uiKalecgosGUID;
-
-        // GameObjects
-        uint64 m_uiForceFieldGUID;
-        uint64 m_uiBossCollision1GUID;
-        uint64 m_uiBossCollision2GUID;
-        uint64 m_uiIceBarrierGUID;
-        uint64 m_uiDoorFireBarrierGUID;
-        uint64 m_uiDoorTheFirstGateGUID;
-        uint64 m_uiDoorTheSecondGateGUID;
-        uint64 m_uiDoorMuruEnterGateGUID;
-        uint64 m_uiDoorMuruExitGateGUID;
-        uint64 m_uiDoorTheThirdGateGUID;
+        std::string m_strInstData;
 
         // Misc
         uint32 m_uiSpectralRealmTimer;
