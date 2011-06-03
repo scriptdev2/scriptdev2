@@ -32,7 +32,6 @@ class MANGOS_DLL_DECL instance_ramparts : public ScriptedInstance
 
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
-        uint64 GetData64(uint32 uiData);
 
         // No need to save and load this instance (only one encounter needs special handling, no doors used)
 
@@ -42,9 +41,6 @@ class MANGOS_DLL_DECL instance_ramparts : public ScriptedInstance
         uint32 m_auiEncounter[MAX_ENCOUNTER];
 
         uint32 m_uiSentryCounter;
-        uint64 m_uiChestGUID;
-        uint64 m_uiHeraldGUID;
-        uint64 m_uiVazrudenGUID;
         GUIDList m_lSentryGUIDs;
 };
 

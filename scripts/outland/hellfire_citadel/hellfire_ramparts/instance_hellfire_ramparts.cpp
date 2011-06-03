@@ -25,10 +25,7 @@ EndScriptData */
 #include "hellfire_ramparts.h"
 
 instance_ramparts::instance_ramparts(Map* pMap) : ScriptedInstance(pMap),
-    m_uiSentryCounter(0),
-    m_uiChestGUID(0),
-    m_uiVazrudenGUID(0),
-    m_uiHeraldGUID(0)
+    m_uiSentryCounter(0)
 {
     Initialize();
 }
@@ -43,10 +40,8 @@ void instance_ramparts::OnCreatureCreate(Creature* pCreature)
     switch (pCreature->GetEntry())
     {
         case NPC_VAZRUDEN_HERALD:
-            m_uiHeraldGUID = pCreature->GetGUID();
-            break;
         case NPC_VAZRUDEN:
-            m_uiVazrudenGUID = pCreature->GetGUID();
+            m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
         case NPC_HELLFIRE_SENTRY:
             m_lSentryGUIDs.push_back(pCreature->GetGUID());
@@ -60,7 +55,7 @@ void instance_ramparts::OnObjectCreate(GameObject* pGo)
     {
         case GO_FEL_IRON_CHEST:
         case GO_FEL_IRON_CHEST_H:
-            m_uiChestGUID = pGo->GetGUID();
+            m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
             break;
     }
 }
@@ -73,7 +68,7 @@ void instance_ramparts::SetData(uint32 uiType, uint32 uiData)
     {
         case TYPE_VAZRUDEN:
             if (uiData == DONE && m_auiEncounter[1] == DONE)
-                DoRespawnGameObject(m_uiChestGUID, HOUR*IN_MILLISECONDS);
+                DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_FEL_IRON_CHEST : GO_FEL_IRON_CHEST_H, HOUR);
             if (uiData == FAIL && m_auiEncounter[0] != FAIL)
                 DoFailVazruden();
             m_auiEncounter[0] = uiData;
@@ -89,7 +84,7 @@ void instance_ramparts::SetData(uint32 uiType, uint32 uiData)
                 return;
             }
             if (uiData == DONE && m_auiEncounter[0] == DONE)
-                DoRespawnGameObject(m_uiChestGUID, HOUR*IN_MILLISECONDS);
+                DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_FEL_IRON_CHEST : GO_FEL_IRON_CHEST_H, HOUR);
             if (uiData == FAIL && m_auiEncounter[1] != FAIL)
                 DoFailVazruden();
 
@@ -109,16 +104,6 @@ uint32 instance_ramparts::GetData(uint32 uiType)
     return 0;
 }
 
-uint64 instance_ramparts::GetData64(uint32 uiData)
-{
-    if (uiData == NPC_VAZRUDEN_HERALD)
-        return m_uiHeraldGUID;
-    if (uiData == NPC_VAZRUDEN)
-        return m_uiVazrudenGUID;
-
-    return 0;
-}
-
 void instance_ramparts::DoFailVazruden()
 {
     // Store FAIL for both types
@@ -134,7 +119,7 @@ void instance_ramparts::DoFailVazruden()
     }
 
     // Respawn or Reset Vazruden the herald
-    if (Creature* pVazruden = instance->GetCreature(m_uiHeraldGUID))
+    if (Creature* pVazruden = GetSingleCreatureFromStorage(NPC_VAZRUDEN_HERALD))
     {
         if (!pVazruden->isAlive())
             pVazruden->Respawn();
@@ -146,7 +131,7 @@ void instance_ramparts::DoFailVazruden()
     }
 
     // Despawn Vazruden
-    if (Creature* pVazruden = instance->GetCreature(m_uiVazrudenGUID))
+    if (Creature* pVazruden = GetSingleCreatureFromStorage(NPC_VAZRUDEN))
         pVazruden->ForcedDespawn();
 }
 
