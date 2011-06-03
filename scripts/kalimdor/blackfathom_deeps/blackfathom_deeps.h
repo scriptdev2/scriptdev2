@@ -112,8 +112,6 @@ class MANGOS_DLL_DECL instance_blackfathom_deeps : public ScriptedInstance
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strInstData;
 
-        uint64 m_uiKelrisGUID;
-        uint64 m_uiPortalGUID;
         uint32 m_uiSpawnMobsTimer[MAX_FIRES];
         uint8 m_uiWaveCounter;
 
