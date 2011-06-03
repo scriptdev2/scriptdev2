@@ -57,23 +57,20 @@ class MANGOS_DLL_DECL instance_uldaman : public ScriptedInstance
 
         Creature* GetClosestDwarfNotInCombat(Creature* pSearcher, uint32 uiPhase);
 
-        const char* Save() { return strInstData.c_str(); }
+        const char* Save() { return m_strInstData.c_str(); }
         void Load(const char* chrIn);
 
     protected:
         uint32 m_auiEncounter[MAX_ENCOUNTER];
-        std::string strInstData;
+        std::string m_strInstData;
 
-        uint64 m_uiTempleDoorUpperGUID;
-        uint64 m_uiTempleDoorLowerGUID;
-        uint64 m_uiAncientVaultGUID;
-        uint64 m_uiPlayerGUID;
+        ObjectGuid m_playerGuid;
 
         uint32 m_uiKeeperCooldown;
         uint32 m_uiStoneKeepersFallen;
 
         GUIDList m_lWardens;
-        std::map<uint64, bool> m_mKeeperMap;
+        std::map<ObjectGuid, bool> m_mKeeperMap;
 };
 
 #endif

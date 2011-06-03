@@ -26,10 +26,6 @@ EndScriptData
 #include "uldaman.h"
 
 instance_uldaman::instance_uldaman(Map* pMap) : ScriptedInstance(pMap),
-    m_uiTempleDoorUpperGUID(0),
-    m_uiTempleDoorLowerGUID(0),
-    m_uiAncientVaultGUID(0),
-    m_uiPlayerGUID(0),
     m_uiStoneKeepersFallen(0),
     m_uiKeeperCooldown(5000)
 {
@@ -39,8 +35,6 @@ instance_uldaman::instance_uldaman(Map* pMap) : ScriptedInstance(pMap),
 void instance_uldaman::Initialize()
 {
     memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
-    m_lWardens.clear();
-    m_mKeeperMap.clear();
 }
 
 void instance_uldaman::OnObjectCreate(GameObject* pGo)
@@ -50,21 +44,19 @@ void instance_uldaman::OnObjectCreate(GameObject* pGo)
         case GO_TEMPLE_DOOR_UPPER:
             if (m_auiEncounter[0] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
-            m_uiTempleDoorUpperGUID = pGo->GetGUID();
             break;
         case GO_TEMPLE_DOOR_LOWER:
             if (m_auiEncounter[0] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
-            m_uiTempleDoorLowerGUID = pGo->GetGUID();
             break;
         case GO_ANCIENT_VAULT:
             if (m_auiEncounter[1] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
-            m_uiAncientVaultGUID = pGo->GetGUID();
             break;
         default:
-            break;
+            return;
     }
+    m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
 }
 
 void instance_uldaman::OnCreatureCreate(Creature* pCreature)
@@ -80,7 +72,8 @@ void instance_uldaman::OnCreatureCreate(Creature* pCreature)
             pCreature->SetNoCallAssistance(true);           // no assistance
             break;
         case NPC_STONE_KEEPER:
-            m_mKeeperMap[pCreature->GetGUID()] = pCreature->isAlive();
+            // FIXME - This isAlive check is currently useless
+            m_mKeeperMap[pCreature->GetObjectGuid()] = pCreature->isAlive();
             pCreature->CastSpell(pCreature, SPELL_STONED, true);
             pCreature->SetNoCallAssistance(true);           // no assistance
             break;
@@ -96,8 +89,8 @@ void instance_uldaman::SetData(uint32 uiType, uint32 uiData)
         case TYPE_ALTAR_EVENT:
             if (uiData == DONE)
             {
-                DoUseDoorOrButton(m_uiTempleDoorUpperGUID);
-                DoUseDoorOrButton(m_uiTempleDoorLowerGUID);
+                DoUseDoorOrButton(GO_TEMPLE_DOOR_UPPER);
+                DoUseDoorOrButton(GO_TEMPLE_DOOR_LOWER);
 
                 m_auiEncounter[0] = uiData;
             }
@@ -124,7 +117,7 @@ void instance_uldaman::SetData(uint32 uiType, uint32 uiData)
                     if (pWarden && pWarden->isAlive())
                         pWarden->ForcedDespawn();
                 }
-                DoUseDoorOrButton(m_uiAncientVaultGUID);
+                DoUseDoorOrButton(GO_ANCIENT_VAULT);
             }
             m_auiEncounter[1] = uiData;
             break;
@@ -138,7 +131,7 @@ void instance_uldaman::SetData(uint32 uiType, uint32 uiData)
 
         saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1];
 
-        strInstData = saveStream.str();
+        m_strInstData = saveStream.str();
         SaveToDB();
         OUT_SAVE_INST_DATA_COMPLETE;
     }
@@ -171,7 +164,7 @@ void instance_uldaman::SetData64(uint32 uiData, uint64 uiGuid)
     switch(uiData)
     {
         case DATA_EVENT_STARTER:
-            m_uiPlayerGUID = uiGuid;
+            m_playerGuid = ObjectGuid(uiGuid);
         break;
     }
 }
@@ -191,14 +184,14 @@ uint64 instance_uldaman::GetData64(uint32 uiData)
     switch(uiData)
     {
         case DATA_EVENT_STARTER:
-            return m_uiPlayerGUID;
+            return m_playerGuid.GetRawValue();
     }
     return 0;
 }
 
 void instance_uldaman::StartEvent(uint32 uiEventId, Player* pPlayer)
 {
-    m_uiPlayerGUID = pPlayer->GetGUID();
+    m_playerGuid = pPlayer->GetObjectGuid();
 
     if (uiEventId == EVENT_ID_ALTAR_KEEPER)
     {
@@ -214,7 +207,7 @@ void instance_uldaman::DoResetKeeperEvent()
     m_auiEncounter[0] = NOT_STARTED;
     m_uiStoneKeepersFallen = 0;
 
-    for (std::map<uint64, bool>::iterator itr = m_mKeeperMap.begin(); itr != m_mKeeperMap.end(); ++itr)
+    for (std::map<ObjectGuid, bool>::iterator itr = m_mKeeperMap.begin(); itr != m_mKeeperMap.end(); ++itr)
     {
         if (Creature* pKeeper = instance->GetCreature(itr->first))
         {
@@ -276,7 +269,7 @@ void instance_uldaman::Update(uint32 uiDiff)
 
             if (!m_mKeeperMap.empty())
             {
-                for(std::map<uint64, bool>::iterator itr = m_mKeeperMap.begin(); itr != m_mKeeperMap.end(); ++itr)
+                for(std::map<ObjectGuid, bool>::iterator itr = m_mKeeperMap.begin(); itr != m_mKeeperMap.end(); ++itr)
                 {
                     // died earlier
                     if (!itr->second)
@@ -286,7 +279,7 @@ void instance_uldaman::Update(uint32 uiDiff)
                     {
                         if (pKeeper->isAlive() && !pKeeper->getVictim())
                         {
-                            if (Player* pPlayer = pKeeper->GetMap()->GetPlayer(m_uiPlayerGUID))
+                            if (Player* pPlayer = pKeeper->GetMap()->GetPlayer(m_playerGuid))
                             {
                                 // we should use group instead, event starter can be dead while group is still fighting
                                 if (pPlayer->isAlive() && !pPlayer->isInCombat())
