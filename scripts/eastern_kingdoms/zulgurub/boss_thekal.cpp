@@ -191,9 +191,9 @@ struct MANGOS_DLL_DECL boss_thekalAI : public boss_thekalBaseAI
         m_pInstance->SetData(TYPE_THEKAL, DONE);
 
         // remove the two adds
-        if (Creature* pZath = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_ZATH)))
+        if (Creature* pZath = m_pInstance->GetSingleCreatureFromStorage(NPC_ZATH))
             pZath->ForcedDespawn();
-        if (Creature* pLorkhan = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_LORKHAN)))
+        if (Creature* pLorkhan = m_pInstance->GetSingleCreatureFromStorage(NPC_LORKHAN))
             pLorkhan->ForcedDespawn();
     }
 
@@ -211,12 +211,12 @@ struct MANGOS_DLL_DECL boss_thekalAI : public boss_thekalBaseAI
             return false;
 
         // Else Prevent them Resurrecting
-        if (Creature* pLorkhan = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_LORKHAN)))
+        if (Creature* pLorkhan = m_pInstance->GetSingleCreatureFromStorage(NPC_LORKHAN))
         {
             if (boss_thekalBaseAI* pFakerAI = dynamic_cast<boss_thekalBaseAI*>(pLorkhan->AI()))
                 pFakerAI->PreventRevive();
         }
-        Creature* pZath = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_ZATH));
+        if (Creature* pZath = m_pInstance->GetSingleCreatureFromStorage(NPC_ZATH))
         {
             if (boss_thekalBaseAI* pFakerAI = dynamic_cast<boss_thekalBaseAI*>(pZath->AI()))
                 pFakerAI->PreventRevive();
@@ -455,8 +455,8 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public boss_thekalBaseAI
                 {
                     if (m_pInstance)
                     {
-                        Creature* pThekal = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_THEKAL));
-                        Creature* pZath = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_ZATH));
+                        Creature* pThekal = m_pInstance->GetSingleCreatureFromStorage(NPC_THEKAL);
+                        Creature* pZath = m_pInstance->GetSingleCreatureFromStorage(NPC_ZATH);
 
                         switch(urand(0, 1))
                         {

@@ -47,7 +47,6 @@ class MANGOS_DLL_DECL instance_zulgurub : public ScriptedInstance
 
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
-        uint64 GetData64(uint32 uiData);
 
         const char* Save() { return m_strInstData.c_str(); }
         void Load(const char* chrIn);
@@ -59,12 +58,6 @@ class MANGOS_DLL_DECL instance_zulgurub : public ScriptedInstance
 
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strInstData;
-
-        uint64 m_uiLorKhanGUID;
-        uint64 m_uiZathGUID;
-        uint64 m_uiThekalGUID;
-        uint64 m_uiJindoGUID;
-        uint64 m_uiHakkarGUID;
 
         bool m_bHasIntroYelled;
         bool m_bHasAltarYelled;
