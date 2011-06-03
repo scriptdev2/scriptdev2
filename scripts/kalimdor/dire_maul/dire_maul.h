@@ -89,7 +89,6 @@ class MANGOS_DLL_DECL instance_dire_maul : public ScriptedInstance
 
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
-        uint64 GetData64(uint32 uiData);
 
         void OnCreatureEnterCombat(Creature* pCreature);
         void OnCreatureDeath(Creature* pCreature);
@@ -100,37 +99,22 @@ class MANGOS_DLL_DECL instance_dire_maul : public ScriptedInstance
     protected:
         bool CheckAllGeneratorsDestroyed();
         void ProcessForceFieldOpening();
+        void SortPylonGuards();
+        void PylonGuardJustDied(Creature* pCreature);
 
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strInstData;
 
         // East
         bool m_bWallDestroyed;
-
-        uint64 m_uiCrumbleWallGUID;
-        uint64 m_uiCorruptVineGUID;
-        uint64 m_uiConservatoryDoorGUID;
-        uint64 m_uiOldIronbarkGUID;
-
         GUIDList m_lFelvineShardGUIDs;
 
         // West
-        uint64 m_auiCrystalGeneratorGUID[MAX_GENERATORS];
-
-        uint64 m_uiPrinceTortheldrinGUID;
-        uint64 m_uiImmolTharGUID;
-        uint64 m_uiForcefieldGUID;
-        uint64 m_uiPrincesChestAuraGUID;
-        uint64 m_uiTendrisWarpwoodDoorGUID;
+        ObjectGuid m_aCrystalGeneratorGuid[MAX_GENERATORS];
 
         GUIDList m_luiHighborneSummonerGUIDs;
         GUIDList m_lGeneratorGuardGUIDs;
         std::set<uint32> m_sSortedGeneratorGuards[MAX_GENERATORS];
-
-        // North
-        uint64 m_uiGordokGUID;
-        uint64 m_uiChoRushGUID;
-        uint64 m_uiMizzleGUID;
 };
 
 #endif

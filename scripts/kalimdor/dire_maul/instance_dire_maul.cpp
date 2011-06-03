@@ -25,24 +25,7 @@ EndScriptData */
 #include "dire_maul.h"
 
 instance_dire_maul::instance_dire_maul(Map* pMap) : ScriptedInstance(pMap),
-    // East
-    m_bWallDestroyed(false),
-    m_uiCrumbleWallGUID(0),
-    m_uiCorruptVineGUID(0),
-    m_uiConservatoryDoorGUID(0),
-    m_uiOldIronbarkGUID(0),
-
-    // West
-    m_uiPrinceTortheldrinGUID(0),
-    m_uiImmolTharGUID(0),
-    m_uiForcefieldGUID(0),
-    m_uiPrincesChestAuraGUID(0),
-    m_uiTendrisWarpwoodDoorGUID(0),
-
-    // North
-    m_uiGordokGUID(0),
-    m_uiChoRushGUID(0),
-    m_uiMizzleGUID(0)
+    m_bWallDestroyed(false)
 {
     Initialize();
 }
@@ -50,11 +33,6 @@ instance_dire_maul::instance_dire_maul(Map* pMap) : ScriptedInstance(pMap),
 void instance_dire_maul::Initialize()
 {
     memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
-    memset(&m_auiCrystalGeneratorGUID, 0, sizeof(m_auiCrystalGeneratorGUID));
-
-    m_lFelvineShardGUIDs.clear();
-    m_luiHighborneSummonerGUIDs.clear();
-    m_lGeneratorGuardGUIDs.clear();
 }
 
 void instance_dire_maul::OnCreatureCreate(Creature* pCreature)
@@ -63,37 +41,33 @@ void instance_dire_maul::OnCreatureCreate(Creature* pCreature)
     {
         // East
         case NPC_OLD_IRONBARK:
-            m_uiOldIronbarkGUID = pCreature->GetGUID();
             break;
 
         // West
         case NPC_PRINCE_TORTHELDRIN:
-            m_uiPrinceTortheldrinGUID = pCreature->GetGUID();
             if (m_auiEncounter[TYPE_IMMOLTHAR] == DONE)
                 pCreature->setFaction(FACTION_HOSTILE);
             break;
         case NPC_ARCANE_ABERRATION:
         case NPC_MANA_REMNANT:
             m_lGeneratorGuardGUIDs.push_back(pCreature->GetGUID());
-            break;
+            return;
         case NPC_IMMOLTHAR:
-            m_uiImmolTharGUID = pCreature->GetGUID();
             break;
         case NPC_HIGHBORNE_SUMMONER:
             m_luiHighborneSummonerGUIDs.push_back(pCreature->GetGUID());
-            break;
+            return;
 
         // North
         case NPC_CHORUSH:
-            m_uiChoRushGUID = pCreature->GetGUID();
-            break;
         case NPC_KING_GORDOK:
-            m_uiGordokGUID = pCreature->GetGUID();
-            break;
         case NPC_MIZZLE_THE_CRAFTY:
-            m_uiMizzleGUID = pCreature->GetGUID();
             break;
+
+        default:
+            return;
     }
+    m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
 }
 
 void instance_dire_maul::OnObjectCreate(GameObject* pGo)
@@ -102,17 +76,14 @@ void instance_dire_maul::OnObjectCreate(GameObject* pGo)
     {
         // East
         case GO_CONSERVATORY_DOOR:
-            m_uiConservatoryDoorGUID = pGo->GetGUID();
             if (m_auiEncounter[TYPE_IRONBARK] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_CRUMBLE_WALL:
-            m_uiCrumbleWallGUID = pGo->GetGUID();
             if (m_bWallDestroyed || m_auiEncounter[TYPE_ALZZIN] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_CORRUPT_VINE:
-            m_uiCorruptVineGUID = pGo->GetGUID();
             if (m_auiEncounter[TYPE_ALZZIN] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
@@ -122,39 +93,41 @@ void instance_dire_maul::OnObjectCreate(GameObject* pGo)
 
         // West
         case GO_CRYSTAL_GENERATOR_1:
-            m_auiCrystalGeneratorGUID[0] = pGo->GetGUID();
+            m_aCrystalGeneratorGuid[0] = pGo->GetObjectGuid();
             if (m_auiEncounter[TYPE_PYLON_1] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
-            break;
+            return;
         case GO_CRYSTAL_GENERATOR_2:
-            m_auiCrystalGeneratorGUID[1] = pGo->GetGUID();
+            m_aCrystalGeneratorGuid[1] = pGo->GetObjectGuid();
             if (m_auiEncounter[TYPE_PYLON_2] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
-            break;
+            return;
         case GO_CRYSTAL_GENERATOR_3:
-            m_auiCrystalGeneratorGUID[2] = pGo->GetGUID();
+            m_aCrystalGeneratorGuid[2] = pGo->GetObjectGuid();
             if (m_auiEncounter[TYPE_PYLON_3] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
-            break;
+            return;
         case GO_CRYSTAL_GENERATOR_4:
-            m_auiCrystalGeneratorGUID[3] = pGo->GetGUID();
+            m_aCrystalGeneratorGuid[3] = pGo->GetObjectGuid();
             if (m_auiEncounter[TYPE_PYLON_4] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
-            break;
+            return;
         case GO_CRYSTAL_GENERATOR_5:
-            m_auiCrystalGeneratorGUID[4] = pGo->GetGUID();
+            m_aCrystalGeneratorGuid[4] = pGo->GetObjectGuid();
             if (m_auiEncounter[TYPE_PYLON_5] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
-            break;
+            return;
         case GO_FORCEFIELD:
-            m_uiForcefieldGUID = pGo->GetGUID();
             if (CheckAllGeneratorsDestroyed())
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_PRINCES_CHEST_AURA:
-            m_uiPrincesChestAuraGUID = pGo->GetGUID();
             break;
+
+        default:
+            return;
     }
+    m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
 }
 
 void instance_dire_maul::SetData(uint32 uiType, uint32 uiData)
@@ -166,7 +139,7 @@ void instance_dire_maul::SetData(uint32 uiType, uint32 uiData)
             if (uiData == DONE)
             {
                 // Update Old Ironbark so he can open the conservatory door
-                if (Creature* pIronbark = instance->GetCreature(m_uiOldIronbarkGUID))
+                if (Creature* pIronbark = GetSingleCreatureFromStorage(NPC_OLD_IRONBARK))
                 {
                     DoScriptText(SAY_IRONBARK_REDEEM, pIronbark);
                     pIronbark->UpdateEntry(NPC_IRONBARK_REDEEMED);
@@ -182,11 +155,11 @@ void instance_dire_maul::SetData(uint32 uiType, uint32 uiData)
             {
                 if (!m_bWallDestroyed)
                 {
-                    DoUseDoorOrButton(m_uiCrumbleWallGUID);
+                    DoUseDoorOrButton(GO_CRUMBLE_WALL);
                     m_bWallDestroyed = true;
                 }
 
-                DoUseDoorOrButton(m_uiCorruptVineGUID);
+                DoUseDoorOrButton(GO_CORRUPT_VINE);
 
                 if (!m_lFelvineShardGUIDs.empty())
                 {
@@ -196,7 +169,7 @@ void instance_dire_maul::SetData(uint32 uiType, uint32 uiData)
             }
             else if (uiData == SPECIAL && !m_bWallDestroyed)
             {
-                DoUseDoorOrButton(m_uiCrumbleWallGUID);
+                DoUseDoorOrButton(GO_CRUMBLE_WALL);
                 m_bWallDestroyed = true;
             }
             m_auiEncounter[uiType] = uiData;
@@ -206,12 +179,12 @@ void instance_dire_maul::SetData(uint32 uiType, uint32 uiData)
         case TYPE_IMMOLTHAR:
             if (uiData == DONE)
             {
-                if (Creature* pPrince = instance->GetCreature(m_uiPrinceTortheldrinGUID))
+                if (Creature* pPrince = GetSingleCreatureFromStorage(NPC_PRINCE_TORTHELDRIN))
                 {
                     DoScriptText(SAY_FREE_IMMOLTHAR, pPrince);
                     pPrince->setFaction(FACTION_HOSTILE);
                     // Despawn Chest-Aura
-                    if (GameObject* pChestAura = instance->GetGameObject(m_uiPrincesChestAuraGUID))
+                    if (GameObject* pChestAura = GetSingleGameObjectFromStorage(GO_PRINCES_CHEST_AURA))
                         pChestAura->Use(pPrince);
                 }
             }
@@ -228,7 +201,7 @@ void instance_dire_maul::SetData(uint32 uiType, uint32 uiData)
             m_auiEncounter[uiType] = uiData;
             if (uiData == DONE)
             {
-                DoUseDoorOrButton(m_auiCrystalGeneratorGUID[uiType - TYPE_PYLON_1]);
+                DoUseDoorOrButton(m_aCrystalGeneratorGuid[uiType - TYPE_PYLON_1]);
                 if (CheckAllGeneratorsDestroyed())
                     ProcessForceFieldOpening();
             }
@@ -275,17 +248,6 @@ uint32 instance_dire_maul::GetData(uint32 uiType)
     return 0;
 }
 
-uint64 instance_dire_maul::GetData64(uint32 uiData)
-{
-    switch(uiData)
-    {
-        case NPC_CHORUSH:       return m_uiChoRushGUID;
-        case NPC_KING_GORDOK:   return m_uiGordokGUID;
-        default:
-            return 0;
-    }
-}
-
 void instance_dire_maul::OnCreatureEnterCombat(Creature* pCreature)
 {
     switch (pCreature->GetEntry())
@@ -294,35 +256,7 @@ void instance_dire_maul::OnCreatureEnterCombat(Creature* pCreature)
         // - Handling of guards of generators
         case NPC_ARCANE_ABERRATION:
         case NPC_MANA_REMNANT:
-            if (!m_lGeneratorGuardGUIDs.empty())
-            {
-                for (uint8 i = 0; i < MAX_GENERATORS; ++i)
-                {
-                    GameObject* pGenerator = instance->GetGameObject(m_auiCrystalGeneratorGUID[i]);
-                    // Skip non-existing or finished generators
-                    if (!pGenerator || GetData(TYPE_PYLON_1 + i) == DONE)
-                        continue;
-
-                    // Sort all remaining (alive) NPCs to unfinished generators
-                    for (GUIDList::iterator itr = m_lGeneratorGuardGUIDs.begin(); itr != m_lGeneratorGuardGUIDs.end();)
-                    {
-                        Creature* pGuard = instance->GetCreature(*itr);
-                        if (!pGuard || pGuard->isDead())    // Remove invalid guids and dead guards
-                        {
-                            m_lGeneratorGuardGUIDs.erase(itr++);
-                            continue;
-                        }
-
-                        if (pGuard->IsWithinDistInMap(pGenerator, 20.0f))
-                        {
-                            m_sSortedGeneratorGuards[i].insert(pGuard->GetGUIDLow());
-                            m_lGeneratorGuardGUIDs.erase(itr++);
-                        }
-                        else
-                            ++itr;
-                    }
-                }
-            }
+            SortPylonGuards();
             break;
         // - Set InstData for ImmolThar
         case NPC_IMMOLTHAR:
@@ -348,22 +282,8 @@ void instance_dire_maul::OnCreatureDeath(Creature* pCreature)
         // - Handling of guards of generators
         case NPC_ARCANE_ABERRATION:
         case NPC_MANA_REMNANT:
-            for (uint8 i = 0; i < MAX_GENERATORS; ++i)
-            {
-                // Skip already activated generators
-                if (GetData(TYPE_PYLON_1 + i) == DONE)
-                    continue;
+            PylonGuardJustDied(pCreature);
 
-                // Only process generator where the npc is sorted in
-                if (m_sSortedGeneratorGuards[i].find(pCreature->GetGUIDLow()) != m_sSortedGeneratorGuards[i].end())
-                {
-                    m_sSortedGeneratorGuards[i].erase(pCreature->GetGUIDLow());
-                    if (m_sSortedGeneratorGuards[i].empty())
-                        SetData(TYPE_PYLON_1 + i, DONE);
-
-                    break;
-                }
-            }
             break;
         // - Set InstData for ImmolThar
         case NPC_IMMOLTHAR:
@@ -417,10 +337,10 @@ bool instance_dire_maul::CheckAllGeneratorsDestroyed()
 void instance_dire_maul::ProcessForceFieldOpening()
 {
     // 'Open' the force field
-    DoUseDoorOrButton(m_uiForcefieldGUID);
+    DoUseDoorOrButton(GO_FORCEFIELD);
 
     // Let the summoners attack Immol'Thar
-    Creature* pImmolThar = instance->GetCreature(m_uiImmolTharGUID);
+    Creature* pImmolThar = GetSingleCreatureFromStorage(NPC_IMMOLTHAR);
     if (!pImmolThar || pImmolThar->isDead())
         return;
 
@@ -441,6 +361,59 @@ void instance_dire_maul::ProcessForceFieldOpening()
         pSummoner->AI()->AttackStart(pImmolThar);
     }
     m_luiHighborneSummonerGUIDs.clear();
+}
+
+void instance_dire_maul::SortPylonGuards()
+{
+    if (!m_lGeneratorGuardGUIDs.empty())
+    {
+        for (uint8 i = 0; i < MAX_GENERATORS; ++i)
+        {
+            GameObject* pGenerator = instance->GetGameObject(m_aCrystalGeneratorGuid[i]);
+            // Skip non-existing or finished generators
+            if (!pGenerator || GetData(TYPE_PYLON_1 + i) == DONE)
+                continue;
+
+            // Sort all remaining (alive) NPCs to unfinished generators
+            for (GUIDList::iterator itr = m_lGeneratorGuardGUIDs.begin(); itr != m_lGeneratorGuardGUIDs.end();)
+            {
+                Creature* pGuard = instance->GetCreature(*itr);
+                if (!pGuard || pGuard->isDead())    // Remove invalid guids and dead guards
+                {
+                    m_lGeneratorGuardGUIDs.erase(itr++);
+                    continue;
+                }
+
+                if (pGuard->IsWithinDistInMap(pGenerator, 20.0f))
+                {
+                    m_sSortedGeneratorGuards[i].insert(pGuard->GetGUIDLow());
+                    m_lGeneratorGuardGUIDs.erase(itr++);
+                }
+                else
+                    ++itr;
+            }
+        }
+    }
+}
+
+void instance_dire_maul::PylonGuardJustDied(Creature* pCreature)
+{
+    for (uint8 i = 0; i < MAX_GENERATORS; ++i)
+    {
+        // Skip already activated generators
+        if (GetData(TYPE_PYLON_1 + i) == DONE)
+            continue;
+
+        // Only process generator where the npc is sorted in
+        if (m_sSortedGeneratorGuards[i].find(pCreature->GetGUIDLow()) != m_sSortedGeneratorGuards[i].end())
+        {
+            m_sSortedGeneratorGuards[i].erase(pCreature->GetGUIDLow());
+            if (m_sSortedGeneratorGuards[i].empty())
+                SetData(TYPE_PYLON_1 + i, DONE);
+
+            break;
+        }
+    }
 }
 
 InstanceData* GetInstanceData_instance_dire_maul(Map* pMap)
