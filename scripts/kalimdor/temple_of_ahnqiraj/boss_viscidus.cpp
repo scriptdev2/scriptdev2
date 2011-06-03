@@ -23,10 +23,26 @@ EndScriptData */
 
 #include "precompiled.h"
 
-#define SPELL_POISON_SHOCK          25993
-#define SPELL_POISONBOLT_VOLLEY     25991
+enum
+{
+    // Timer spells
+    SPELL_POISON_SHOCK          = 25993,
+    SPELL_POISONBOLT_VOLLEY     = 25991,
+    SPELL_TOXIN                 = 26575,                    // Triggers toxin cloud
+    SPELL_TOXIN_CLOUD           = 25989,
 
-#define SPELL_TOXIN_CLOUD           25989
+    // Debuffs gained by the boss on frost damage
+    SPELL_VISCIDUS_SLOWED       = 26034,
+    SPELL_VISCIDUS_SLOWED_MORE  = 26036,
+    SPELL_VISCIDUS_FREEZE       = 25937,
+
+    // When frost damage exceeds a certain limit, then boss explodes
+    SPELL_REJOIN_VISCIDUS       = 25896,
+    SPELL_VISCIDUS_EXPLODE      = 25938,                    // Casts a lot of spells in the same time: 25865 to 25884; All spells have target coords
+    SPELL_VISCIDUS_SUICIDE      = 26003,
+
+    NPC_GLOB_OF_VISCIDUS        = 15667
+};
 
 void AddSC_boss_viscidus()
 {

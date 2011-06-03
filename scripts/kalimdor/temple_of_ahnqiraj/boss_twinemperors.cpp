@@ -92,11 +92,11 @@ struct MANGOS_DLL_DECL boss_twinemperorsAI : public ScriptedAI
         EnrageTimer = 15*60000;
     }
 
-    Creature *GetOtherBoss()
+    Creature* GetOtherBoss()
     {
         if (m_pInstance)
         {
-            return m_creature->GetMap()->GetCreature(m_pInstance->GetData64(IAmVeklor() ? NPC_VEKNILASH : NPC_VEKLOR));
+            return m_pInstance->GetSingleCreatureFromStorage(IAmVeklor() ? NPC_VEKNILASH : NPC_VEKLOR);
         }
         else
         {

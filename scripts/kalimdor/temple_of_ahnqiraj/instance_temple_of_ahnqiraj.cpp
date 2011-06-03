@@ -25,16 +25,8 @@ EndScriptData */
 #include "temple_of_ahnqiraj.h"
 
 instance_temple_of_ahnqiraj::instance_temple_of_ahnqiraj(Map* pMap) : ScriptedInstance(pMap),
-    m_uiSkeramGUID(0),
-    m_uiVemGUID(0),
-    m_uiKriGUID(0),
-    m_uiVeklorGUID(0),
-    m_uiVeknilashGUID(0),
     m_uiBugTrioDeathCount(0),
-    m_uiCthunPhase(0),
-    m_uiSkeramGateGUID(0),
-    m_uiTwinsEnterDoorGUID(0),
-    m_uiTwinsExitDoorGUID(0)
+    m_uiCthunPhase(0)
 {
     Initialize();
 };
@@ -48,11 +40,12 @@ void instance_temple_of_ahnqiraj::OnCreatureCreate (Creature* pCreature)
 {
     switch (pCreature->GetEntry())
     {
-        case NPC_SKERAM:    m_uiSkeramGUID = pCreature->GetGUID(); break;
-        case NPC_VEM:       m_uiVemGUID = pCreature->GetGUID(); break;
-        case NPC_KRI:       m_uiKriGUID = pCreature->GetGUID(); break;
-        case NPC_VEKLOR:    m_uiVeklorGUID = pCreature->GetGUID(); break;
-        case NPC_VEKNILASH: m_uiVeknilashGUID = pCreature->GetGUID(); break;
+        case NPC_VEM:
+        case NPC_KRI:
+        case NPC_VEKLOR:
+        case NPC_VEKNILASH:
+            m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
+            break;
     }
 }
 
@@ -61,19 +54,21 @@ void instance_temple_of_ahnqiraj::OnObjectCreate(GameObject* pGo)
     switch (pGo->GetEntry())
     {
         case GO_SKERAM_GATE:
-            m_uiSkeramGateGUID = pGo->GetGUID();
             if (m_auiEncounter[TYPE_SKERAM] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_TWINS_ENTER_DOOR:
-            m_uiTwinsEnterDoorGUID = pGo->GetGUID();
             break;
         case GO_TWINS_EXIT_DOOR:
-            m_uiTwinsExitDoorGUID = pGo->GetGUID();
             if (m_auiEncounter[TYPE_TWINS] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
+
+        default:
+            return;
     }
+
+    m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
 }
 
 bool instance_temple_of_ahnqiraj::IsEncounterInProgress() const
@@ -89,7 +84,7 @@ void instance_temple_of_ahnqiraj::SetData(uint32 uiType, uint32 uiData)
         case TYPE_SKERAM:
             m_auiEncounter[uiType] = uiData;
             if (uiData == DONE)
-                DoUseDoorOrButton(m_uiSkeramGateGUID);
+                DoUseDoorOrButton(GO_SKERAM_GATE);
             break;
         case TYPE_VEM:
             m_auiEncounter[uiType] = uiData;
@@ -100,9 +95,9 @@ void instance_temple_of_ahnqiraj::SetData(uint32 uiType, uint32 uiData)
                 return;
 
             m_auiEncounter[uiType] = uiData;
-            DoUseDoorOrButton(m_uiTwinsEnterDoorGUID);
+            DoUseDoorOrButton(GO_TWINS_ENTER_DOOR);
             if (uiData == DONE)
-                DoUseDoorOrButton(m_uiTwinsExitDoorGUID);
+                DoUseDoorOrButton(GO_TWINS_EXIT_DOOR);
             break;
 
         // The following temporarily datas are not to be saved
@@ -161,20 +156,6 @@ uint32 instance_temple_of_ahnqiraj::GetData(uint32 uiType)
             return m_uiBugTrioDeathCount;
         case TYPE_CTHUN_PHASE:
             return m_uiCthunPhase;
-        default:
-            return 0;
-    }
-}
-
-uint64 instance_temple_of_ahnqiraj::GetData64(uint32 uiData)
-{
-    switch(uiData)
-    {
-        case NPC_SKERAM:    return m_uiSkeramGUID;
-        case NPC_VEM:       return m_uiVemGUID;
-        case NPC_KRI:       return m_uiKriGUID;
-        case NPC_VEKLOR:    return m_uiVeklorGUID;
-        case NPC_VEKNILASH: return m_uiVeknilashGUID;
         default:
             return 0;
     }
