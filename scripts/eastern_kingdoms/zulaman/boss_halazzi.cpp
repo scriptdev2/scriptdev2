@@ -107,7 +107,7 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
 
         if (m_pInstance)
         {
-            if (Creature* pSpiritLynx = m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_SPIRIT_LYNX)))
+            if (Creature* pSpiritLynx = m_pInstance->GetSingleCreatureFromStorage(NPC_SPIRIT_LYNX))
                 pSpiritLynx->ForcedDespawn();
         }
     }
@@ -197,7 +197,7 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
         }
         else
         {
-            Creature* pSpiritLynx = m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_SPIRIT_LYNX));
+            Creature* pSpiritLynx = m_pInstance->GetSingleCreatureFromStorage(NPC_SPIRIT_LYNX);
 
             if (m_creature->GetHealthPercent() < 10.0f ||
                 (pSpiritLynx && pSpiritLynx->GetHealthPercent() < 10.0f))
@@ -349,7 +349,7 @@ struct MANGOS_DLL_DECL boss_spirit_lynxAI : public ScriptedAI
         if (!m_pInstance)
             return;
 
-        if (Creature* pHalazzi = m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_HALAZZI)))
+        if (Creature* pHalazzi = m_pInstance->GetSingleCreatureFromStorage(NPC_HALAZZI))
             pHalazzi->AI()->KilledUnit(pVictim);
     }
 

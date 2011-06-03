@@ -28,24 +28,6 @@ instance_zulaman::instance_zulaman(Map* pMap) : ScriptedInstance(pMap),
     m_uiEventTimer(MINUTE*IN_MILLISECONDS),
     m_uiGongCount(0),
 
-    m_uiAkilzonGUID(0),
-    m_uiNalorakkGUID(0),
-    m_uiJanalaiGUID(0),
-    m_uiHalazziGUID(0),
-    m_uiSpiritLynxGUID(0),
-    m_uiZuljinGUID(0),
-    m_uiMalacrassGUID(0),
-    m_uiHarrisonGUID(0),
-
-    m_uiStrangeGongGUID(0),
-    m_uiMassiveGateGUID(0),
-    m_uiWindDoorGUID(0),
-    m_uiLynxTempleEntranceGUID(0),
-    m_uiLynxTempleExitGUID(0),
-    m_uiMalacrassEntranceGUID(0),
-    m_uiWoodenDoorGUID(0),
-    m_uiFireDoorGUID(0),
-
     m_uiEggsRemainingCount_Left(20),
     m_uiEggsRemainingCount_Right(20)
 {
@@ -74,14 +56,13 @@ void instance_zulaman::OnCreatureCreate(Creature* pCreature)
 {
     switch(pCreature->GetEntry())
     {
-        case NPC_AKILZON:     m_uiAkilzonGUID     = pCreature->GetGUID(); break;
-        case NPC_NALORAKK:    m_uiNalorakkGUID    = pCreature->GetGUID(); break;
-        case NPC_JANALAI:     m_uiJanalaiGUID     = pCreature->GetGUID(); break;
-        case NPC_HALAZZI:     m_uiHalazziGUID     = pCreature->GetGUID(); break;
-        case NPC_MALACRASS:   m_uiMalacrassGUID   = pCreature->GetGUID(); break;
-        case NPC_ZULJIN:      m_uiZuljinGUID      = pCreature->GetGUID(); break;
-        case NPC_HARRISON:    m_uiHarrisonGUID    = pCreature->GetGUID(); break;
-        case NPC_SPIRIT_LYNX: m_uiSpiritLynxGUID  = pCreature->GetGUID(); break;
+        case NPC_AKILZON:
+        case NPC_HALAZZI:
+        case NPC_MALACRASS:
+        case NPC_HARRISON:
+        case NPC_SPIRIT_LYNX:
+            m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
+            break;
 
         case NPC_TANZAR:      m_aEventNpcInfo[INDEX_NALORAKK].npGuid = pCreature->GetObjectGuid(); break;
         case NPC_KRAZ:        m_aEventNpcInfo[INDEX_JANALAI].npGuid =  pCreature->GetObjectGuid(); break;
@@ -100,38 +81,34 @@ void instance_zulaman::OnObjectCreate(GameObject* pGo)
     switch(pGo->GetEntry())
     {
         case GO_STRANGE_GONG:
-            m_uiStrangeGongGUID = pGo->GetGUID();
             break;
         case GO_MASSIVE_GATE:
-            m_uiMassiveGateGUID = pGo->GetGUID();
             if (m_auiEncounter[0] == DONE || m_auiEncounter[0] == FAIL)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_WIND_DOOR:
-            m_uiWindDoorGUID = pGo->GetGUID();
             break;
         case GO_LYNX_TEMPLE_ENTRANCE:
-            m_uiLynxTempleEntranceGUID = pGo->GetGUID();
             break;
         case GO_LYNX_TEMPLE_EXIT:
-            m_uiLynxTempleExitGUID = pGo->GetGUID();
             if (m_auiEncounter[4] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_HEXLORD_ENTRANCE:
-            m_uiMalacrassEntranceGUID = pGo->GetGUID();
             if (GetKilledPreBosses() == 4)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_WOODEN_DOOR:
-            m_uiWoodenDoorGUID = pGo->GetGUID();
             if (m_auiEncounter[5] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_FIRE_DOOR:
-            m_uiFireDoorGUID = pGo->GetGUID();
             break;
+
+        default:
+            return;
     }
+    m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
 }
 
 void instance_zulaman::SetData(uint32 uiType, uint32 uiData)
@@ -151,7 +128,7 @@ void instance_zulaman::SetData(uint32 uiType, uint32 uiData)
             if (uiData == IN_PROGRESS)
             {
                 DoTimeRunSay(RUN_START);
-                DoUseDoorOrButton(m_uiMassiveGateGUID);
+                DoUseDoorOrButton(GO_MASSIVE_GATE);
                 if (m_auiEncounter[7])
                     SetData(TYPE_RUN_EVENT_TIME, m_auiEncounter[7]);
                 else
@@ -181,7 +158,7 @@ void instance_zulaman::SetData(uint32 uiType, uint32 uiData)
             m_auiEncounter[0] = uiData;
             break;
         case TYPE_AKILZON:
-            DoUseDoorOrButton(m_uiWindDoorGUID);
+            DoUseDoorOrButton(GO_WIND_DOOR);
             if (uiData == DONE)
             {
                 if (m_auiEncounter[0] == IN_PROGRESS)
@@ -233,23 +210,23 @@ void instance_zulaman::SetData(uint32 uiType, uint32 uiData)
             m_auiEncounter[3] = uiData;
             break;
         case TYPE_HALAZZI:
-            DoUseDoorOrButton(m_uiLynxTempleEntranceGUID);
+            DoUseDoorOrButton(GO_LYNX_TEMPLE_ENTRANCE);
             if (uiData == DONE)
             {
-                DoUseDoorOrButton(m_uiLynxTempleExitGUID);
+                DoUseDoorOrButton(GO_LYNX_TEMPLE_EXIT);
                 if (m_auiEncounter[0] == IN_PROGRESS)
                     DoChestEvent(INDEX_HALAZZI);
             }
             m_auiEncounter[4] = uiData;
             break;
         case TYPE_MALACRASS:
-            DoUseDoorOrButton(m_uiMalacrassEntranceGUID);
+            DoUseDoorOrButton(GO_HEXLORD_ENTRANCE);
             if (uiData == DONE)
-                DoUseDoorOrButton(m_uiWoodenDoorGUID);
+                DoUseDoorOrButton(GO_WOODEN_DOOR);
             m_auiEncounter[5] = uiData;
             break;
         case TYPE_ZULJIN:
-            DoUseDoorOrButton(m_uiFireDoorGUID);
+            DoUseDoorOrButton(GO_FIRE_DOOR);
             m_auiEncounter[6] = uiData;
             break;
         case TYPE_J_EGGS_RIGHT:
@@ -277,7 +254,7 @@ void instance_zulaman::SetData(uint32 uiType, uint32 uiData)
 
     if (uiData == DONE && GetKilledPreBosses() == 4 && (uiType == TYPE_AKILZON || uiType == TYPE_NALORAKK || uiType == TYPE_JANALAI || uiType == TYPE_HALAZZI))
     {
-        DoUseDoorOrButton(m_uiMalacrassEntranceGUID);
+        DoUseDoorOrButton(GO_HEXLORD_ENTRANCE);
         if (m_auiEncounter[0] == IN_PROGRESS)
             SetData(TYPE_EVENT_RUN, DONE);
     }
@@ -347,28 +324,6 @@ uint32 instance_zulaman::GetData(uint32 uiType)
     }
 }
 
-uint64 instance_zulaman::GetData64(uint32 uiData)
-{
-    switch(uiData)
-    {
-        case NPC_AKILZON:         return m_uiAkilzonGUID;
-        case NPC_NALORAKK:        return m_uiNalorakkGUID;
-        case NPC_JANALAI:         return m_uiJanalaiGUID;
-        case NPC_HALAZZI:         return m_uiHalazziGUID;
-        case NPC_SPIRIT_LYNX:     return m_uiSpiritLynxGUID;
-        case NPC_ZULJIN:          return m_uiZuljinGUID;
-        case NPC_MALACRASS:       return m_uiMalacrassGUID;
-        case NPC_HARRISON:        return m_uiHarrisonGUID;
-
-        case GO_STRANGE_GONG:     return m_uiStrangeGongGUID;
-        case GO_MASSIVE_GATE:     return m_uiMassiveGateGUID;
-        case GO_HEXLORD_ENTRANCE: return m_uiMalacrassEntranceGUID;
-
-        default:
-            return 0;
-    }
-}
-
 uint8 instance_zulaman::GetKilledPreBosses()
 {
     return (GetData(TYPE_AKILZON) == DONE ? 1 : 0) + (GetData(TYPE_NALORAKK) == DONE ? 1 : 0) + (GetData(TYPE_JANALAI) == DONE ? 1 : 0) + (GetData(TYPE_HALAZZI) == DONE ? 1 : 0);
@@ -376,32 +331,27 @@ uint8 instance_zulaman::GetKilledPreBosses()
 
 void instance_zulaman::DoTimeRunSay(RunEventSteps uiData)
 {
-    // TODO - This yell must be made independend of load state of Malacrass
-    Creature* pHexlord = instance->GetCreature(m_uiMalacrassGUID);
-    if (!pHexlord)
-        return;
-
     switch (uiData)
     {
-        case RUN_START:     DoScriptText(SAY_INST_BEGIN, pHexlord); break;
-        case RUN_FAIL:      DoScriptText(urand(0, 1) ? SAY_INST_SACRIF1 : SAY_INST_SACRIF2, pHexlord); break;
-        case RUN_DONE:      DoScriptText(SAY_INST_COMPLETE, pHexlord); break;
+        case RUN_START:     DoOrSimulateScriptTextForThisInstance(SAY_INST_BEGIN, NPC_MALACRASS); break;
+        case RUN_FAIL:      DoOrSimulateScriptTextForThisInstance(urand(0, 1) ? SAY_INST_SACRIF1 : SAY_INST_SACRIF2, NPC_MALACRASS); break;
+        case RUN_DONE:      DoOrSimulateScriptTextForThisInstance(SAY_INST_COMPLETE, NPC_MALACRASS); break;
         case RUN_PROGRESS:
             // This function is on progress called before the data is set to the array
             switch (GetKilledPreBosses() + 1)
             {
-                case 1:     DoScriptText(SAY_INST_PROGRESS_1, pHexlord); break;
-                case 2:     DoScriptText(SAY_INST_PROGRESS_2, pHexlord); break;
-                case 3:     DoScriptText(SAY_INST_PROGRESS_3, pHexlord); break;
+                case 1:     DoOrSimulateScriptTextForThisInstance(SAY_INST_PROGRESS_1, NPC_MALACRASS); break;
+                case 2:     DoOrSimulateScriptTextForThisInstance(SAY_INST_PROGRESS_2, NPC_MALACRASS); break;
+                case 3:     DoOrSimulateScriptTextForThisInstance(SAY_INST_PROGRESS_3, NPC_MALACRASS); break;
             }
             break;
         case RUN_FAIL_SOON:
             switch (GetKilledPreBosses())
             {
-                case 0:     DoScriptText(SAY_INST_WARN_1, pHexlord); break;
-                case 1:     DoScriptText(SAY_INST_WARN_2, pHexlord); break;
-                case 2:     DoScriptText(SAY_INST_WARN_3, pHexlord); break;
-                case 3:     DoScriptText(SAY_INST_WARN_4, pHexlord); break;
+                case 0:     DoOrSimulateScriptTextForThisInstance(SAY_INST_WARN_1, NPC_MALACRASS); break;
+                case 1:     DoOrSimulateScriptTextForThisInstance(SAY_INST_WARN_2, NPC_MALACRASS); break;
+                case 2:     DoOrSimulateScriptTextForThisInstance(SAY_INST_WARN_3, NPC_MALACRASS); break;
+                case 3:     DoOrSimulateScriptTextForThisInstance(SAY_INST_WARN_4, NPC_MALACRASS); break;
             }
             break;
     }

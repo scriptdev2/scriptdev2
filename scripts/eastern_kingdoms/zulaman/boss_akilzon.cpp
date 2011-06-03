@@ -252,7 +252,7 @@ struct MANGOS_DLL_DECL mob_soaring_eagleAI : public ScriptedAI
         if (!m_pInstance)
             return;
 
-        if (Creature* pAzkil = m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_AKILZON)))
+        if (Creature* pAzkil = m_pInstance->GetSingleCreatureFromStorage(NPC_AKILZON))
         {
             float fX, fY, fZ;
             pAzkil->GetRandomPoint(pAzkil->GetPositionX(), pAzkil->GetPositionY(), pAzkil->GetPositionZ()+15.0f, 30.0f, fX, fY, fZ);

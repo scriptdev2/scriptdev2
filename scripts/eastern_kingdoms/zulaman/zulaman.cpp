@@ -143,7 +143,7 @@ struct MANGOS_DLL_DECL npc_harrison_jones_zaAI : public npc_escortAI
             case 1:
                 DoScriptText(SAY_AT_GONG, m_creature);
 
-                if (GameObject* pEntranceDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(GO_STRANGE_GONG)))
+                if (GameObject* pEntranceDoor = m_pInstance->GetSingleGameObjectFromStorage(GO_STRANGE_GONG))
                     pEntranceDoor->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
 
                 //Start bang gong for 2min
@@ -223,7 +223,7 @@ bool GOUse_go_strange_gong(Player* pPlayer, GameObject* pGo)
 
     if (pInstance->GetData(TYPE_EVENT_RUN) == SPECIAL)
     {
-        if (Creature* pCreature = pGo->GetMap()->GetCreature(pInstance->GetData64(NPC_HARRISON)))
+        if (Creature* pCreature = pInstance->GetSingleCreatureFromStorage(NPC_HARRISON))
         {
             if (npc_harrison_jones_zaAI* pHarrisonAI = dynamic_cast<npc_harrison_jones_zaAI*>(pCreature->AI()))
                 pHarrisonAI->SetHoldState(false);
