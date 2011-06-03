@@ -37,7 +37,6 @@ class MANGOS_DLL_DECL instance_razorfen_kraul : public ScriptedInstance
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string strInstData;
 
-        uint64 m_uiAgathelosWardGUID;
         uint8 m_uiWardKeepersRemaining;
 };
 #endif
