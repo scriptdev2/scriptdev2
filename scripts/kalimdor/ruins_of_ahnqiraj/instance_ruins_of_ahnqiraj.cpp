@@ -24,19 +24,7 @@ EndScriptData */
 #include "precompiled.h"
 #include "ruins_of_ahnqiraj.h"
 
-instance_ruins_of_ahnqiraj::instance_ruins_of_ahnqiraj(Map* pMap) : ScriptedInstance(pMap),
-    m_uiOssirianGUID(0),
-    m_uiBuruGUID(0),
-    m_uiKurinnaxxGUID(0),
-    m_uiAndorovGUID(0),
-    m_uiQeezGUID(0),
-    m_uiTuubidGUID(0),
-    m_uiDrennGUID(0),
-    m_uiXurremGUID(0),
-    m_uiYeggethGUID(0),
-    m_uiPakkonGUID(0),
-    m_uiZerranGUID(0),
-    m_uiRajaxxGUID(0)
+instance_ruins_of_ahnqiraj::instance_ruins_of_ahnqiraj(Map* pMap) : ScriptedInstance(pMap)
 {
     Initialize();
 }
@@ -56,18 +44,10 @@ void instance_ruins_of_ahnqiraj::OnCreatureCreate(Creature* pCreature)
 {
     switch(pCreature->GetEntry())
     {
-        case NPC_OSSIRIAN:        m_uiOssirianGUID  = pCreature->GetGUID(); break;
-        case NPC_BURU:            m_uiBuruGUID      = pCreature->GetGUID(); break;
-        case NPC_KURINNAXX:       m_uiKurinnaxxGUID = pCreature->GetGUID(); break;
-        case NPC_GENERAL_ANDOROV: m_uiAndorovGUID   = pCreature->GetGUID(); break;
-        case NPC_CAPTAIN_QEEZ:    m_uiQeezGUID      = pCreature->GetGUID(); break;
-        case NPC_CAPTAIN_TUUBID:  m_uiTuubidGUID    = pCreature->GetGUID(); break;
-        case NPC_CAPTAIN_DRENN:   m_uiDrennGUID     = pCreature->GetGUID(); break;
-        case NPC_CAPTAIN_XURREM:  m_uiXurremGUID    = pCreature->GetGUID(); break;
-        case NPC_MAJOR_YEGGETH:   m_uiYeggethGUID   = pCreature->GetGUID(); break;
-        case NPC_MAJOR_PAKKON:    m_uiPakkonGUID    = pCreature->GetGUID(); break;
-        case NPC_COLONEL_ZERRAN:  m_uiZerranGUID    = pCreature->GetGUID(); break;
-        case NPC_RAJAXX:          m_uiRajaxxGUID    = pCreature->GetGUID(); break;
+        case NPC_OSSIRIAN:
+        case NPC_GENERAL_ANDOROV:
+            m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
+            break;
     }
 }
 
@@ -75,8 +55,10 @@ void instance_ruins_of_ahnqiraj::OnObjectCreate(GameObject* pGo)
 {
     switch(pGo->GetEntry())
     {
-        // Make them unusable temporarily
-        case GO_OSSIRIAN_CRYSTAL: pGo->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_INTERACT_COND); break;
+        case GO_OSSIRIAN_CRYSTAL:
+            // Make them unusable temporarily
+            pGo->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_INTERACT_COND);
+            break;
     }
 }
 
@@ -129,8 +111,7 @@ void instance_ruins_of_ahnqiraj::SetData(uint32 uiType, uint32 uiData)
                 DoSapwnAndorovIfCan();
 
                 // Yell after kurinnaxx
-                if (Creature* pOssirian = instance->GetCreature(m_uiOssirianGUID))
-                    DoScriptText(SAY_OSSIRIAN_INTRO, pOssirian);
+                DoOrSimulateScriptTextForThisInstance(SAY_OSSIRIAN_INTRO, NPC_OSSIRIAN);
             }
             m_auiEncounter[uiType] = uiData;
             break;
@@ -172,7 +153,7 @@ void instance_ruins_of_ahnqiraj::DoSapwnAndorovIfCan()
     if (m_auiEncounter[TYPE_KURINNAXX] != DONE)
         return;
 
-    if (m_uiAndorovGUID)
+    if (GetSingleCreatureFromStorage(NPC_GENERAL_ANDOROV))
         return;
 
     Player* pPlayer = GetPlayerInMap();
@@ -181,28 +162,6 @@ void instance_ruins_of_ahnqiraj::DoSapwnAndorovIfCan()
 
     for (uint8 i = 0; i < MAX_HELPERS; ++i)
         pPlayer->SummonCreature(aAndorovSpawnLocs[i].m_uiEntry, aAndorovSpawnLocs[i].m_fX, aAndorovSpawnLocs[i].m_fY, aAndorovSpawnLocs[i].m_fZ, aAndorovSpawnLocs[i].m_fO, TEMPSUMMON_DEAD_DESPAWN, 0);
-}
-
-uint64 instance_ruins_of_ahnqiraj::GetData64(uint32 uiData)
-{
-    switch(uiData)
-    {
-        case NPC_OSSIRIAN:          return m_uiOssirianGUID;
-        case NPC_BURU:              return m_uiBuruGUID;
-        case NPC_GENERAL_ANDOROV:   return m_uiAndorovGUID;
-        case NPC_KURINNAXX:         return m_uiKurinnaxxGUID;
-        case NPC_CAPTAIN_QEEZ:      return m_uiQeezGUID;
-        case NPC_CAPTAIN_TUUBID:    return m_uiTuubidGUID;
-        case NPC_CAPTAIN_DRENN:     return m_uiDrennGUID;
-        case NPC_CAPTAIN_XURREM:    return m_uiXurremGUID;
-        case NPC_MAJOR_YEGGETH:     return m_uiYeggethGUID;
-        case NPC_MAJOR_PAKKON:      return m_uiPakkonGUID;
-        case NPC_COLONEL_ZERRAN:    return m_uiZerranGUID;
-        case NPC_RAJAXX:            return m_uiRajaxxGUID;
-
-        default:
-            return 0;
-    }
 }
 
 void instance_ruins_of_ahnqiraj::Load(const char* chrIn)
