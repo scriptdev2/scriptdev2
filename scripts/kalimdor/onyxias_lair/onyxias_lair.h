@@ -42,15 +42,11 @@ class MANGOS_DLL_DECL instance_onyxias_lair : public ScriptedInstance
 
         bool CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/);
 
-        uint64 GetOnyxiaTriggerGUID() { return m_uiOnyxTriggerGUID; }
-
     protected:
         uint32 m_uiEncounter;
         uint32 m_uiAchievWhelpsCount;
 
         time_t m_tPhaseTwoStart;
-
-        uint64 m_uiOnyxTriggerGUID;
 };
 
 #endif

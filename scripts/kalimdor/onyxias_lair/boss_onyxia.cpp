@@ -220,10 +220,10 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
                 if (!m_pInstance)
                     return;
 
-                if (Creature* pTrigger = m_pInstance->instance->GetCreature(m_pInstance->GetOnyxiaTriggerGUID()))
+                if (Creature* pTrigger = m_pInstance->GetSingleCreatureFromStorage(NPC_ONYXIA_TRIGGER))
                 {
                     m_creature->GetMap()->CreatureRelocation(m_creature, m_pPointData->fX, m_pPointData->fY, m_pPointData->fZ, m_creature->GetAngle(pTrigger));
-                    m_creature->SendMonsterMove(m_pPointData->fX, m_pPointData->fY, m_pPointData->fZ, SPLINETYPE_FACINGTARGET, m_creature->GetSplineFlags(), 1, NULL, pTrigger->GetGUID());
+                    m_creature->SendMonsterMove(m_pPointData->fX, m_pPointData->fY, m_pPointData->fZ, SPLINETYPE_FACINGTARGET, m_creature->GetSplineFlags(), 1, NULL, pTrigger->GetObjectGuid().GetRawValue());
                 }
             }
         }
@@ -247,7 +247,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
 
         if (m_uiPhase == PHASE_BREATH)
         {
-            if (Creature* pTrigger = m_pInstance->instance->GetCreature(m_pInstance->GetOnyxiaTriggerGUID()))
+            if (Creature* pTrigger = m_pInstance->GetSingleCreatureFromStorage(NPC_ONYXIA_TRIGGER))
                 m_creature->SetFacingToObject(pTrigger);
         }
     }
