@@ -3524,6 +3524,10 @@ INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 (-3000107,'[PH] Get Presicion Bombs','greer orehammer GOSSIP_ITEM_GET_BOMBS'),
 (-3000108,'[PH] Start bombing mission','greer orehammer GOSSIP_ITEM_FLIGHT');
 
+-- -3 033 000 SHADOWFANG KEEP
+INSERT INTO gossip_texts (entry,content_default,comment) VALUES
+(-3033000,'Please unlock the courtyard door.','deathstalker adamant/ sorcerer ashcrombe - GOSSIP_ITEM_DOOR');
+
 -- -3 043 000 WAILING CAVERNS
 INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 (-3043000,'Let the event begin!','Disciple of Naralex - GOSSIP_ITEM_BEGIN');
