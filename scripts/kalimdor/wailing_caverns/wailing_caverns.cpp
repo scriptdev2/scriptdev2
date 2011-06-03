@@ -187,7 +187,7 @@ struct MANGOS_DLL_DECL npc_disciple_of_naralexAI : public npc_escortAI
                 DoScriptText(SAY_NARALEX_CHAMBER, m_creature);
                 break;
             case 32:
-                if (Creature* pNaralex = m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_NARALEX)))
+                if (Creature* pNaralex = m_pInstance->GetSingleCreatureFromStorage(NPC_NARALEX))
                     m_creature->SetFacingToObject(pNaralex);
 
                 m_creature->SetStandState(UNIT_STAND_STATE_KNEEL);
@@ -306,7 +306,7 @@ struct MANGOS_DLL_DECL npc_disciple_of_naralexAI : public npc_escortAI
                                 ++m_uiSubeventPhase;
                                 break;
                             case 2:
-                                if (Creature* pNaralex = m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_NARALEX)))
+                                if (Creature* pNaralex = m_pInstance->GetSingleCreatureFromStorage(NPC_NARALEX))
                                     DoScriptText(EMOTE_NARALEX_AWAKE, pNaralex);
                                 m_uiEventTimer = 5000;
                                 ++m_uiSubeventPhase;
@@ -327,14 +327,14 @@ struct MANGOS_DLL_DECL npc_disciple_of_naralexAI : public npc_escortAI
                                 break;
                             case 5:
                                 // Advance only when all mobs are dead
-                                if (Creature* pNaralex = m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_NARALEX)))
+                                if (Creature* pNaralex = m_pInstance->GetSingleCreatureFromStorage(NPC_NARALEX))
                                    DoScriptText(EMOTE_BREAK_THROUGH, pNaralex);
                                 ++m_uiSubeventPhase;
                                 m_uiEventTimer = 10000;
                                 break;
                             case 6:
                                 // Mutanus
-                                if (Creature* pNaralex = m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_NARALEX)))
+                                if (Creature* pNaralex = m_pInstance->GetSingleCreatureFromStorage(NPC_NARALEX))
                                     DoScriptText(EMOTE_VISION, pNaralex);
                                 DoSpawnMob(NPC_MUTANUS, aSummonPositions[4][0], aSummonPositions[4][1]);
                                 m_uiEventTimer = 0;
@@ -342,7 +342,7 @@ struct MANGOS_DLL_DECL npc_disciple_of_naralexAI : public npc_escortAI
                                 break;
                             case 7:
                                 // Awaken Naralex after mutanus is defeated
-                                if (Creature* pNaralex = m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_NARALEX)))
+                                if (Creature* pNaralex = m_pInstance->GetSingleCreatureFromStorage(NPC_NARALEX))
                                 {
                                     pNaralex->SetStandState(UNIT_STAND_STATE_SIT);
                                     DoScriptText(SAY_NARALEX_AWAKE, pNaralex);
@@ -359,7 +359,7 @@ struct MANGOS_DLL_DECL npc_disciple_of_naralexAI : public npc_escortAI
                                 ++m_uiSubeventPhase;
                                 break;
                             case 9:
-                                if (Creature* pNaralex = m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_NARALEX)))
+                                if (Creature* pNaralex = m_pInstance->GetSingleCreatureFromStorage(NPC_NARALEX))
                                 {
                                     DoScriptText(SAY_NARALEX_THANKYOU, pNaralex);
                                     pNaralex->SetStandState(UNIT_STAND_STATE_STAND);
@@ -369,7 +369,7 @@ struct MANGOS_DLL_DECL npc_disciple_of_naralexAI : public npc_escortAI
                                 break;
                             case 10:
                                 // Shapeshift into a bird
-                                if (Creature* pNaralex = m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_NARALEX)))
+                                if (Creature* pNaralex = m_pInstance->GetSingleCreatureFromStorage(NPC_NARALEX))
                                 {
                                     DoScriptText(SAY_FAREWELL, pNaralex);
                                     pNaralex->CastSpell(pNaralex, SPELL_SHAPESHIFT, false);
@@ -383,7 +383,7 @@ struct MANGOS_DLL_DECL npc_disciple_of_naralexAI : public npc_escortAI
                                 m_creature->AddSplineFlag(SPLINEFLAG_FLYING);
                                 SetRun();
                                 // Send them flying somewhere outside of the room
-                                if (Creature* pNaralex = m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_NARALEX)))
+                                if (Creature* pNaralex = m_pInstance->GetSingleCreatureFromStorage(NPC_NARALEX))
                                 {
                                     // ToDo: Make Naralex fly
                                     // sort of a hack, compare to boss_onyxia

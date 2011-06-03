@@ -24,9 +24,7 @@ EndScriptData */
 #include "precompiled.h"
 #include "wailing_caverns.h"
 
-instance_wailing_caverns::instance_wailing_caverns(Map* pMap) : ScriptedInstance(pMap),
-    m_uiNaralexGUID(0),
-    m_uiDiscipleGUID(0)
+instance_wailing_caverns::instance_wailing_caverns(Map* pMap) : ScriptedInstance(pMap)
 {
     Initialize();
 }
@@ -40,8 +38,10 @@ void instance_wailing_caverns::OnCreatureCreate(Creature* pCreature)
 {
     switch (pCreature->GetEntry())
     {
-        case NPC_NARALEX:  m_uiNaralexGUID = pCreature->GetGUID();  break;
-        case NPC_DISCIPLE: m_uiDiscipleGUID = pCreature->GetGUID(); break;
+        case NPC_NARALEX:
+        case NPC_DISCIPLE:
+            m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
+            break;
     }
 }
 
@@ -75,7 +75,7 @@ void instance_wailing_caverns::SetData(uint32 uiType, uint32 uiData)
         // Yell intro text; only the first time
         if (m_auiEncounter[4] == NOT_STARTED)
         {
-            if (Creature* pDisciple = instance->GetCreature(m_uiDiscipleGUID))
+            if (Creature* pDisciple = GetSingleCreatureFromStorage(NPC_DISCIPLE))
                 DoScriptText(SAY_INTRO, pDisciple);
         }
 
@@ -134,15 +134,6 @@ uint32 instance_wailing_caverns::GetData(uint32 uiType)
     return 0;
 }
 
-uint64 instance_wailing_caverns::GetData64(uint32 uiData)
-{
-    switch (uiData)
-    {
-        case NPC_NARALEX: return m_uiNaralexGUID;
-    }
-    return 0;
-}
-
 InstanceData* GetInstanceData_instance_wailing_caverns(Map* pMap)
 {
     return new instance_wailing_caverns(pMap);
@@ -150,9 +141,10 @@ InstanceData* GetInstanceData_instance_wailing_caverns(Map* pMap)
 
 void AddSC_instance_wailing_caverns()
 {
-    Script* newscript;
-    newscript = new Script;
-    newscript->Name = "instance_wailing_caverns";
-    newscript->GetInstanceData = &GetInstanceData_instance_wailing_caverns;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "instance_wailing_caverns";
+    pNewScript->GetInstanceData = &GetInstanceData_instance_wailing_caverns;
+    pNewScript->RegisterSelf();
 }
