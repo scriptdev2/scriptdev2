@@ -76,21 +76,15 @@ struct mob_ancient_wispAI : public ScriptedAI
     mob_ancient_wispAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        ArchimondeGUID = 0;
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
-    uint64 ArchimondeGUID;
     uint32 CheckTimer;
 
     void Reset()
     {
         CheckTimer = 1000;
-
-        if (m_pInstance)
-            ArchimondeGUID = m_pInstance->GetData64(DATA_ARCHIMONDE);
-
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
     }
 
@@ -98,9 +92,12 @@ struct mob_ancient_wispAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
+        if (!m_pInstance)
+            return;
+
         if (CheckTimer < diff)
         {
-            if (Creature* Archimonde = m_creature->GetMap()->GetCreature(ArchimondeGUID))
+            if (Creature* Archimonde = m_pInstance->GetSingleCreatureFromStorage(NPC_ARCHIMONDE))
             {
                 if (Archimonde->GetHealthPercent() < 2.0f || !Archimonde->isAlive())
                     DoCastSpellIfCan(m_creature, SPELL_DENOUEMENT_WISP);
@@ -130,33 +127,33 @@ struct MANGOS_DLL_DECL mob_doomfire_targettingAI : public ScriptedAI
 {
     mob_doomfire_targettingAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
-    uint64 TargetGUID;
-    uint32 ChangeTargetTimer;
+    ObjectGuid m_targetGuid;
+    uint32 m_uiChangeTargetTimer;
 
     void Reset()
     {
-        TargetGUID = 0;
-        ChangeTargetTimer = 5000;
+        m_targetGuid.Clear();
+        m_uiChangeTargetTimer = 5000;
     }
 
-    void MoveInLineOfSight(Unit* who)
+    void MoveInLineOfSight(Unit* pWwho)
     {
-        //will update once TargetGUID is 0. In case noone actually moves(not likely) and this is 0
+        //will update once m_targetGuid is 0. In case noone actually moves(not likely) and this is 0
         //when UpdateAI needs it, it will be forced to select randomPoint
-        if (!TargetGUID && who->GetTypeId() == TYPEID_PLAYER)
-            TargetGUID = who->GetGUID();
+        if (!m_targetGuid && pWwho->GetTypeId() == TYPEID_PLAYER)
+            m_targetGuid = pWwho->GetObjectGuid();
     }
 
-    void DamageTaken(Unit *done_by, uint32 &damage) { damage = 0; }
+    void DamageTaken(Unit* pDealer, uint32& uiDamage) { uiDamage = 0; }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
-        if (ChangeTargetTimer < diff)
+        if (m_uiChangeTargetTimer < uiDiff)
         {
-            if (Player* pPlayer = m_creature->GetMap()->GetPlayer(TargetGUID))
+            if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_targetGuid))
             {
                 m_creature->GetMotionMaster()->MoveFollow(pPlayer, 0.0f, 0.0f);
-                TargetGUID = 0;
+                m_targetGuid.Clear();
             }
             else
             {
@@ -165,8 +162,8 @@ struct MANGOS_DLL_DECL mob_doomfire_targettingAI : public ScriptedAI
                 m_creature->GetMotionMaster()->MovePoint(0, x, y, z);
             }
 
-            ChangeTargetTimer = 5000;
-        }else ChangeTargetTimer -= diff;
+            m_uiChangeTargetTimer = 5000;
+        }else m_uiChangeTargetTimer -= uiDiff;
     }
 };
 
@@ -188,8 +185,8 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    uint64 DoomfireSpiritGUID;
-    uint64 WorldTreeGUID;
+    ObjectGuid m_doomfireSpiritGuid;
+    ObjectGuid m_worldTreeGuid;
 
     uint32 DrainNordrassilTimer;
     uint32 FearTimer;
@@ -210,11 +207,8 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
 
     void Reset()
     {
-        if (m_pInstance)
-            m_pInstance->SetData(TYPE_ARCHIMONDE, NOT_STARTED);
-
-        DoomfireSpiritGUID = 0;
-        WorldTreeGUID = 0;
+        m_doomfireSpiritGuid.Clear();
+        m_worldTreeGuid.Clear();
 
         DrainNordrassilTimer = 0;
         FearTimer = 42000;
@@ -237,9 +231,6 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
     {
         m_creature->InterruptSpell(CURRENT_CHANNELED_SPELL);
         DoScriptText(SAY_AGGRO, m_creature);
-
-        if (m_pInstance)
-            m_pInstance->SetData(TYPE_ARCHIMONDE, IN_PROGRESS);
     }
 
     void KilledUnit(Unit* pVictim)
@@ -277,9 +268,6 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
     void JustDied(Unit *victim)
     {
         DoScriptText(SAY_DEATH, m_creature);
-
-        if (m_pInstance)
-            m_pInstance->SetData(TYPE_ARCHIMONDE, DONE);
     }
 
     bool CanUseFingerOfDeath()
@@ -332,7 +320,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
 
         if (pSummoned->GetEntry() == CREATURE_DOOMFIRE_SPIRIT)
         {
-            DoomfireSpiritGUID = pSummoned->GetGUID();
+            m_doomfireSpiritGuid = pSummoned->GetObjectGuid();
         }
 
         if (pSummoned->GetEntry() == CREATURE_DOOMFIRE)
@@ -340,10 +328,10 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
             pSummoned->CastSpell(pSummoned,SPELL_DOOMFIRE_SPAWN,false);
             pSummoned->CastSpell(pSummoned, SPELL_DOOMFIRE, true, NULL, NULL, m_creature->GetObjectGuid());
 
-            if (Creature* pDoomfireSpirit = m_creature->GetMap()->GetCreature(DoomfireSpiritGUID))
+            if (Creature* pDoomfireSpirit = m_creature->GetMap()->GetCreature(m_doomfireSpiritGuid))
             {
                 pSummoned->GetMotionMaster()->MoveFollow(pDoomfireSpirit,0.0f,0.0f);
-                DoomfireSpiritGUID = 0;
+                m_doomfireSpiritGuid.Clear();
             }
         }
     }
@@ -386,9 +374,9 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
                     Creature *temp = m_creature->SummonCreature(CREATURE_CHANNEL_TARGET, NORDRASSIL_X, NORDRASSIL_Y, NORDRASSIL_Z, 0.0f, TEMPSUMMON_TIMED_DESPAWN, 1200000);
 
                     if (temp)
-                        WorldTreeGUID = temp->GetGUID();
+                        m_worldTreeGuid = temp->GetObjectGuid();
 
-                    if (Creature *Nordrassil = m_creature->GetMap()->GetCreature(WorldTreeGUID))
+                    if (Creature *Nordrassil = m_creature->GetMap()->GetCreature(m_worldTreeGuid))
                     {
                         Nordrassil->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                         Nordrassil->SetDisplayId(11686);
@@ -397,7 +385,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
                     }
                 }
 
-                if (Creature *Nordrassil = m_creature->GetMap()->GetCreature(WorldTreeGUID))
+                if (Creature *Nordrassil = m_creature->GetMap()->GetCreature(m_worldTreeGuid))
                 {
                     Nordrassil->CastSpell(m_creature, SPELL_DRAIN_WORLD_TREE_2, true);
                     DrainNordrassilTimer = 1000;

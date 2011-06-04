@@ -167,7 +167,7 @@ struct MANGOS_DLL_DECL hyjalAI : public ScriptedAI
 
         ScriptedInstance* m_pInstance;
 
-        uint64 m_uiBossGUID[2];
+        ObjectGuid m_aBossGuid[2];
 
         uint32 m_uiNextWaveTimer;
         uint32 m_uiWaveCount;

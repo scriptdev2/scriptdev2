@@ -82,9 +82,9 @@ sHyjalYells m_aHyjalYell[]=
 
 void hyjalAI::Reset()
 {
-    // GUIDs
-    m_uiBossGUID[0] = 0;
-    m_uiBossGUID[1] = 0;
+    // BossGuids
+    m_aBossGuid[0].Clear();
+    m_aBossGuid[1].Clear();
 
     // Timers
     m_uiNextWaveTimer = 10000;
@@ -126,11 +126,11 @@ void hyjalAI::Reset()
     if (!m_pInstance)
         return;
 
-    m_bIsFirstBossDead = m_uiBase ? m_pInstance->GetData(TYPE_KAZROGAL) : m_pInstance->GetData(TYPE_WINTERCHILL);
-    m_bIsSecondBossDead = m_uiBase ? m_pInstance->GetData(TYPE_AZGALOR) : m_pInstance->GetData(TYPE_ANETHERON);
+    m_bIsFirstBossDead = m_uiBase ? m_pInstance->GetData(TYPE_KAZROGAL) == DONE : m_pInstance->GetData(TYPE_WINTERCHILL) == DONE;
+    m_bIsSecondBossDead = m_uiBase ? m_pInstance->GetData(TYPE_AZGALOR) == DONE : m_pInstance->GetData(TYPE_ANETHERON) == DONE;
 
     // Reset Instance Data for trash count
-    m_pInstance->SetData(DATA_RESET_TRASH_COUNT, 0);
+    m_pInstance->SetData(TYPE_TRASH_COUNT, 0);
 }
 
 void hyjalAI::EnterEvadeMode()
@@ -151,8 +151,8 @@ void hyjalAI::JustReachedHome()
     if (m_uiBase == BASE_ALLY)
         DoCastSpellIfCan(m_creature, SPELL_BRILLIANCE_AURA, CAST_TRIGGERED);
 
-    m_bIsFirstBossDead = m_uiBase ? m_pInstance->GetData(TYPE_KAZROGAL) : m_pInstance->GetData(TYPE_WINTERCHILL);
-    m_bIsSecondBossDead = m_uiBase ? m_pInstance->GetData(TYPE_AZGALOR) : m_pInstance->GetData(TYPE_ANETHERON);
+    m_bIsFirstBossDead = m_uiBase ? m_pInstance->GetData(TYPE_KAZROGAL) == DONE : m_pInstance->GetData(TYPE_WINTERCHILL) == DONE;
+    m_bIsSecondBossDead = m_uiBase ? m_pInstance->GetData(TYPE_AZGALOR) == DONE : m_pInstance->GetData(TYPE_ANETHERON) == DONE;
 }
 
 void hyjalAI::Aggro(Unit *who)
@@ -226,9 +226,9 @@ void hyjalAI::JustSummoned(Creature* pSummoned)
     if (pSummoned->IsWorldBoss())
     {
         if (!m_bIsFirstBossDead)
-            m_uiBossGUID[0] = pSummoned->GetGUID();
+            m_aBossGuid[0] = pSummoned->GetObjectGuid();
         else
-            m_uiBossGUID[1] = pSummoned->GetGUID();
+            m_aBossGuid[1] = pSummoned->GetObjectGuid();
 
         m_uiCheckTimer = 5000;
     }
@@ -256,7 +256,7 @@ void hyjalAI::SummonNextWave()
         return;
     }
 
-    m_uiEnemyCount = m_pInstance->GetData(DATA_TRASH);
+    m_uiEnemyCount = m_pInstance->GetData(TYPE_TRASH_COUNT);
 
     for(uint8 i = 0; i < MAX_WAVE_MOB; ++i)
     {
@@ -276,7 +276,7 @@ void hyjalAI::SummonNextWave()
         // Enable world state
         m_pInstance->DoUpdateWorldState(WORLD_STATE_ENEMY, 1);
 
-        m_pInstance->SetData(DATA_TRASH, m_uiEnemyCount);   // Send data for instance script to update count
+        m_pInstance->SetData(TYPE_TRASH_COUNT, m_uiEnemyCount);   // Send data for instance script to update count
 
         if (!m_bDebugMode)
             m_uiNextWaveTimer = pWaveData->m_uiWaveTimer;
@@ -390,7 +390,7 @@ void hyjalAI::UpdateAI(const uint32 uiDiff)
         if (m_uiWaveMoveTimer < uiDiff)
         {
             // Skip the master timer, and start next wave in 5. Clear the list, it should not be any here now.
-            if (!m_pInstance->GetData(DATA_TRASH))
+            if (!m_pInstance->GetData(TYPE_TRASH_COUNT))
             {
                 lWaveMobGUIDList.clear();
                 m_uiNextWaveTimer = 5000;
@@ -425,18 +425,18 @@ void hyjalAI::UpdateAI(const uint32 uiDiff)
     {
         for(uint8 i = 0; i < 2; ++i)
         {
-            if (m_uiBossGUID[i])
+            if (m_aBossGuid[i])
             {
-                Creature* pBoss = m_creature->GetMap()->GetCreature(m_uiBossGUID[i]);
+                Creature* pBoss = m_creature->GetMap()->GetCreature(m_aBossGuid[i]);
 
                 if (pBoss && !pBoss->isAlive())
                 {
-                    if (m_uiBossGUID[i] == m_uiBossGUID[0])
+                    if (m_aBossGuid[i] == m_aBossGuid[0])
                     {
                         DoTalk(INCOMING);
                         m_bIsFirstBossDead = true;
                     }
-                    else if (m_uiBossGUID[i] == m_uiBossGUID[1])
+                    else if (m_aBossGuid[i] == m_aBossGuid[1])
                     {
                         DoTalk(SUCCESS);
                         m_bIsSecondBossDead = true;
@@ -447,7 +447,7 @@ void hyjalAI::UpdateAI(const uint32 uiDiff)
 
                     m_creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
 
-                    m_uiBossGUID[i] = 0;
+                    m_aBossGuid[i].Clear();
 
                     // Reset world state for enemies to disable it
                     m_pInstance->DoUpdateWorldState(WORLD_STATE_ENEMY, 0);

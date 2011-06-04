@@ -32,202 +32,192 @@ EndScriptData */
 4 - Archimonde event
 */
 
-struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
+instance_mount_hyjal::instance_mount_hyjal(Map* pMap) : ScriptedInstance(pMap),
+    m_uiTrashCount(0)
 {
-    instance_mount_hyjal(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
+    Initialize();
+}
 
-    uint32 m_auiEncounter[MAX_ENCOUNTER];
-    std::string strSaveData;
+void instance_mount_hyjal::Initialize()
+{
+    memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
+}
 
-    GUIDList lAncientGemGUIDList;
+bool instance_mount_hyjal::IsEncounterInProgress() const
+{
+    for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+        if (m_auiEncounter[i] == IN_PROGRESS) return true;
 
-    uint64 m_uiRageWinterchill;
-    uint64 m_uiAnetheron;
-    uint64 m_uiKazrogal;
-    uint64 m_uiAzgalor;
-    uint64 m_uiArchimonde;
-    uint64 m_uiJainaProudmoore;
-    uint64 m_uiThrall;
-    uint64 m_uiTyrandeWhisperwind;
+    return false;
+}
 
-    uint32 m_uiTrashCount;
+void instance_mount_hyjal::OnCreatureCreate(Creature* pCreature)
+{
+    if (pCreature->GetEntry() == NPC_ARCHIMONDE)
+        m_mNpcEntryGuidStore[NPC_ARCHIMONDE] == pCreature->GetObjectGuid();
+}
 
-    void Initialize()
+void instance_mount_hyjal::OnObjectCreate(GameObject* pGo)
+{
+    if (pGo->GetEntry() == GO_ANCIENT_GEM)
+        lAncientGemGUIDList.push_back(pGo->GetGUID());
+}
+
+void instance_mount_hyjal::OnCreatureEnterCombat(Creature* pCreature)
+{
+    switch (pCreature->GetEntry())
     {
-        memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
-
-        lAncientGemGUIDList.clear();
-
-        m_uiRageWinterchill = 0;
-        m_uiAnetheron = 0;
-        m_uiKazrogal = 0;
-        m_uiAzgalor = 0;
-        m_uiArchimonde = 0;
-        m_uiJainaProudmoore = 0;
-        m_uiThrall = 0;
-        m_uiTyrandeWhisperwind = 0;
-
-        m_uiTrashCount = 0;
+        case NPC_WINTERCHILL: SetData(TYPE_WINTERCHILL, IN_PROGRESS); break;
+        case NPC_ANETHERON:   SetData(TYPE_ANETHERON, IN_PROGRESS);   break;
+        case NPC_KAZROGAL:    SetData(TYPE_KAZROGAL, IN_PROGRESS);    break;
+        case NPC_AZGALOR:     SetData(TYPE_AZGALOR, IN_PROGRESS);     break;
+        case NPC_ARCHIMONDE:  SetData(TYPE_ARCHIMONDE, IN_PROGRESS);  break;
     }
+}
 
-    bool IsEncounterInProgress() const
+void instance_mount_hyjal::OnCreatureEvade(Creature* pCreature)
+{
+    switch (pCreature->GetEntry())
     {
-        for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
-            if (m_auiEncounter[i] == IN_PROGRESS) return true;
-
-        return false;
+        case NPC_WINTERCHILL: SetData(TYPE_WINTERCHILL, FAIL); break;
+        case NPC_ANETHERON:   SetData(TYPE_ANETHERON, FAIL);   break;
+        case NPC_KAZROGAL:    SetData(TYPE_KAZROGAL, FAIL);    break;
+        case NPC_AZGALOR:     SetData(TYPE_AZGALOR, FAIL);     break;
+        case NPC_ARCHIMONDE:  SetData(TYPE_ARCHIMONDE, FAIL);  break;
     }
+}
 
-    void OnCreatureCreate(Creature* pCreature)
+void instance_mount_hyjal::OnCreatureDeath(Creature* pCreature)
+{
+    switch (pCreature->GetEntry())
     {
-        switch(pCreature->GetEntry())
-        {
-            case NPC_WINTERCHILL: m_uiRageWinterchill = pCreature->GetGUID(); break;
-            case NPC_ANETHERON: m_uiAnetheron = pCreature->GetGUID(); break;
-            case NPC_KAZROGAL: m_uiKazrogal = pCreature->GetGUID();  break;
-            case NPC_AZGALOR: m_uiAzgalor = pCreature->GetGUID(); break;
-            case NPC_ARCHIMONDE: m_uiArchimonde = pCreature->GetGUID(); break;
-            case NPC_JAINA: m_uiJainaProudmoore = pCreature->GetGUID(); break;
-            case NPC_THRALL: m_uiThrall = pCreature->GetGUID(); break;
-            case NPC_TYRANDE: m_uiTyrandeWhisperwind = pCreature->GetGUID(); break;
-        }
-    }
+        case NPC_WINTERCHILL: SetData(TYPE_WINTERCHILL, DONE); break;
+        case NPC_ANETHERON:   SetData(TYPE_ANETHERON, DONE);   break;
+        case NPC_KAZROGAL:    SetData(TYPE_KAZROGAL, DONE);    break;
+        case NPC_AZGALOR:     SetData(TYPE_AZGALOR, DONE);     break;
+        case NPC_ARCHIMONDE:  SetData(TYPE_ARCHIMONDE, DONE);  break;
 
-    void OnObjectCreate(GameObject* pGo)
-    {
-        if (pGo->GetEntry() == GO_ANCIENT_GEM)
-            lAncientGemGUIDList.push_back(pGo->GetGUID());
-    }
-
-    uint64 GetData64(uint32 uiData)
-    {
-        switch(uiData)
-        {
-            case DATA_RAGEWINTERCHILL: return m_uiRageWinterchill;
-            case DATA_ANETHERON: return m_uiAnetheron;
-            case DATA_KAZROGAL: return m_uiKazrogal;
-            case DATA_AZGALOR: return m_uiAzgalor;
-            case DATA_ARCHIMONDE: return m_uiArchimonde;
-            case DATA_JAINAPROUDMOORE: return m_uiJainaProudmoore;
-            case DATA_THRALL: return m_uiThrall;
-            case DATA_TYRANDEWHISPERWIND: return m_uiTyrandeWhisperwind;
-        }
-
-        return 0;
-    }
-
-    void SetData(uint32 uiType, uint32 uiData)
-    {
-        switch(uiType)
-        {
-            case TYPE_WINTERCHILL:
-                if (m_auiEncounter[0] == DONE)
-                    return;
-                m_auiEncounter[0] = uiData;
-                break;
-            case TYPE_ANETHERON:
-                if (m_auiEncounter[1] == DONE)
-                    return;
-                m_auiEncounter[1] = uiData;
-                break;
-            case TYPE_KAZROGAL:
-                if (m_auiEncounter[2] == DONE)
-                    return;
-                m_auiEncounter[2] = uiData;
-                break;
-            case TYPE_AZGALOR:
-                if (m_auiEncounter[3] == DONE)
-                    return;
-                m_auiEncounter[3] = uiData;
-                break;
-            case TYPE_ARCHIMONDE:
-                m_auiEncounter[4] = uiData;
-                break;
-
-            case DATA_RESET_TRASH_COUNT:
-                m_uiTrashCount = 0;
-                break;
-
-            case DATA_TRASH:
-                if (uiData)
-                    m_uiTrashCount = uiData;
-                else
-                    --m_uiTrashCount;
-
+        // Trash Mobs summoned in waves
+        case NPC_NECRO:
+        case NPC_ABOMI:
+        case NPC_GHOUL:
+        case NPC_BANSH:
+        case NPC_CRYPT:
+        case NPC_GARGO:
+        case NPC_FROST:
+        case NPC_GIANT:
+        case NPC_STALK:
+            // Decrease counter, and update world-state
+            if (m_uiTrashCount)
+            {
+                --m_uiTrashCount;
                 DoUpdateWorldState(WORLD_STATE_ENEMYCOUNT, m_uiTrashCount);
-                break;
+            }
+            break;
+    }
+}
 
-            case TYPE_RETREAT:
-                if (uiData == SPECIAL)
+void instance_mount_hyjal::SetData(uint32 uiType, uint32 uiData)
+{
+    switch(uiType)
+    {
+        case TYPE_WINTERCHILL:
+            if (m_auiEncounter[0] == DONE)
+                return;
+            m_auiEncounter[0] = uiData;
+            break;
+        case TYPE_ANETHERON:
+            if (m_auiEncounter[1] == DONE)
+                return;
+            m_auiEncounter[1] = uiData;
+            break;
+        case TYPE_KAZROGAL:
+            if (m_auiEncounter[2] == DONE)
+                return;
+            m_auiEncounter[2] = uiData;
+            break;
+        case TYPE_AZGALOR:
+            if (m_auiEncounter[3] == DONE)
+                return;
+            m_auiEncounter[3] = uiData;
+            break;
+        case TYPE_ARCHIMONDE:
+            m_auiEncounter[4] = uiData;
+            break;
+
+        case TYPE_TRASH_COUNT:
+            m_uiTrashCount = uiData;
+            DoUpdateWorldState(WORLD_STATE_ENEMYCOUNT, m_uiTrashCount);
+            break;
+
+        case TYPE_RETREAT:
+            if (uiData == SPECIAL)
+            {
+                if (!lAncientGemGUIDList.empty())
                 {
-                    if (!lAncientGemGUIDList.empty())
+                    for(GUIDList::const_iterator itr = lAncientGemGUIDList.begin(); itr != lAncientGemGUIDList.end(); ++itr)
                     {
-                        for(GUIDList::const_iterator itr = lAncientGemGUIDList.begin(); itr != lAncientGemGUIDList.end(); ++itr)
-                        {
-                            //don't know how long it expected
-                            DoRespawnGameObject(*itr,DAY);
-                        }
+                        //don't know how long it expected
+                        DoRespawnGameObject(*itr, DAY);
                     }
                 }
-                break;
-        }
-
-        debug_log("SD2: Instance Hyjal: Instance data updated for event %u (Data=%u)", uiType, uiData);
-
-        if (uiData == DONE)
-        {
-            OUT_SAVE_INST_DATA;
-
-            std::ostringstream saveStream;
-            saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " "
-                << m_auiEncounter[3] << " " << m_auiEncounter[4];
-
-            strSaveData = saveStream.str();
-
-            SaveToDB();
-            OUT_SAVE_INST_DATA_COMPLETE;
-        }
+            }
+            break;
     }
 
-    uint32 GetData(uint32 uiType)
+    debug_log("SD2: Instance Hyjal: Instance data updated for event %u (Data=%u)", uiType, uiData);
+
+    if (uiData == DONE)
     {
-        switch(uiType)
-        {
-            case TYPE_WINTERCHILL:  return m_auiEncounter[0];
-            case TYPE_ANETHERON:    return m_auiEncounter[1];
-            case TYPE_KAZROGAL:     return m_auiEncounter[2];
-            case TYPE_AZGALOR:      return m_auiEncounter[3];
-            case TYPE_ARCHIMONDE:   return m_auiEncounter[4];
-            case DATA_TRASH:        return m_uiTrashCount;
-        }
-        return 0;
-    }
+        OUT_SAVE_INST_DATA;
 
-    const char* Save()
+        std::ostringstream saveStream;
+        saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " "
+            << m_auiEncounter[3] << " " << m_auiEncounter[4];
+
+        m_strSaveData = saveStream.str();
+
+        SaveToDB();
+        OUT_SAVE_INST_DATA_COMPLETE;
+    }
+}
+
+uint32 instance_mount_hyjal::GetData(uint32 uiType)
+{
+    switch(uiType)
     {
-        return strSaveData.c_str();
-    }
+        case TYPE_WINTERCHILL:  return m_auiEncounter[0];
+        case TYPE_ANETHERON:    return m_auiEncounter[1];
+        case TYPE_KAZROGAL:     return m_auiEncounter[2];
+        case TYPE_AZGALOR:      return m_auiEncounter[3];
+        case TYPE_ARCHIMONDE:   return m_auiEncounter[4];
 
-    void Load(const char* in)
+        case TYPE_TRASH_COUNT:        return m_uiTrashCount;
+
+        default:
+            return 0;
+    }
+}
+
+void instance_mount_hyjal::Load(const char* chrIn)
+{
+    if (!chrIn)
     {
-        if (!in)
-        {
-            OUT_LOAD_INST_DATA_FAIL;
-            return;
-        }
-
-        OUT_LOAD_INST_DATA(in);
-
-        std::istringstream loadStream(in);
-        loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3] >> m_auiEncounter[4];
-
-        for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
-            if (m_auiEncounter[i] == IN_PROGRESS)                // Do not load an encounter as IN_PROGRESS - reset it instead.
-                m_auiEncounter[i] = NOT_STARTED;
-
-        OUT_LOAD_INST_DATA_COMPLETE;
+        OUT_LOAD_INST_DATA_FAIL;
+        return;
     }
-};
+
+    OUT_LOAD_INST_DATA(chrIn);
+
+    std::istringstream loadStream(chrIn);
+    loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3] >> m_auiEncounter[4];
+
+    for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+        if (m_auiEncounter[i] == IN_PROGRESS)                // Do not load an encounter as IN_PROGRESS - reset it instead.
+            m_auiEncounter[i] = NOT_STARTED;
+
+    OUT_LOAD_INST_DATA_COMPLETE;
+}
 
 InstanceData* GetInstanceData_instance_mount_hyjal(Map* pMap)
 {
@@ -236,9 +226,10 @@ InstanceData* GetInstanceData_instance_mount_hyjal(Map* pMap)
 
 void AddSC_instance_mount_hyjal()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "instance_hyjal";
-    newscript->GetInstanceData = &GetInstanceData_instance_mount_hyjal;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "instance_hyjal";
+    pNewScript->GetInstanceData = &GetInstanceData_instance_mount_hyjal;
+    pNewScript->RegisterSelf();
 }
