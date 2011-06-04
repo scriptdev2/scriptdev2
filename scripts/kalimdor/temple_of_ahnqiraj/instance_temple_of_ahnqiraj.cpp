@@ -25,8 +25,7 @@ EndScriptData */
 #include "temple_of_ahnqiraj.h"
 
 instance_temple_of_ahnqiraj::instance_temple_of_ahnqiraj(Map* pMap) : ScriptedInstance(pMap),
-    m_uiBugTrioDeathCount(0),
-    m_uiCthunPhase(0)
+    m_uiBugTrioDeathCount(0)
 {
     Initialize();
 };
@@ -44,6 +43,7 @@ void instance_temple_of_ahnqiraj::OnCreatureCreate (Creature* pCreature)
         case NPC_KRI:
         case NPC_VEKLOR:
         case NPC_VEKNILASH:
+        case NPC_CTHUN:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
     }
@@ -99,14 +99,13 @@ void instance_temple_of_ahnqiraj::SetData(uint32 uiType, uint32 uiData)
             if (uiData == DONE)
                 DoUseDoorOrButton(GO_TWINS_EXIT_DOOR);
             break;
+        case TYPE_CTHUN_PHASE:
+            m_auiEncounter[uiType] = uiData;
+            break;
 
         // The following temporarily datas are not to be saved
         case DATA_BUG_TRIO_DEATH:
             ++m_uiBugTrioDeathCount;
-            return;
-
-        case TYPE_CTHUN_PHASE:
-            m_uiCthunPhase = uiData;
             return;
     }
 
@@ -115,7 +114,7 @@ void instance_temple_of_ahnqiraj::SetData(uint32 uiType, uint32 uiData)
         OUT_SAVE_INST_DATA;
 
         std::ostringstream saveStream;
-        saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2];
+        saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " " << m_auiEncounter[3];
 
         m_strInstData = saveStream.str();
 
@@ -135,7 +134,7 @@ void instance_temple_of_ahnqiraj::Load(const char* chrIn)
     OUT_LOAD_INST_DATA(chrIn);
 
     std::istringstream loadStream(chrIn);
-    loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2];
+    loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3];
 
     for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
     {
@@ -151,11 +150,12 @@ uint32 instance_temple_of_ahnqiraj::GetData(uint32 uiType)
     switch(uiType)
     {
         case TYPE_VEM:
-            return m_auiEncounter[0];
+            return m_auiEncounter[1];
+        case TYPE_CTHUN_PHASE:
+            return m_auiEncounter[3];;
+
         case DATA_BUG_TRIO_DEATH:
             return m_uiBugTrioDeathCount;
-        case TYPE_CTHUN_PHASE:
-            return m_uiCthunPhase;
         default:
             return 0;
     }
