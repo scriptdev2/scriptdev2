@@ -76,7 +76,7 @@ struct MANGOS_DLL_DECL boss_arlokkAI : public ScriptedAI
     uint32 m_uiSummon_Timer;
     uint32 m_uiSummonCount;
 
-    uint64 m_uiMarkedGUID;
+    ObjectGuid m_markedGuid;
 
     bool m_bIsPhaseTwo;
     bool m_bIsVanished;
@@ -96,7 +96,7 @@ struct MANGOS_DLL_DECL boss_arlokkAI : public ScriptedAI
         m_bIsPhaseTwo = false;
         m_bIsVanished = false;
 
-        m_uiMarkedGUID = 0;
+        m_markedGuid.Clear();
 
         m_creature->SetDisplayId(MODEL_ID_NORMAL);
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -129,7 +129,7 @@ struct MANGOS_DLL_DECL boss_arlokkAI : public ScriptedAI
 
     void DoSummonPhanters()
     {
-        if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiMarkedGUID))
+        if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_markedGuid))
         {
             if (pPlayer->isAlive())
                 DoScriptText(SAY_FEAST_PANTHER, m_creature, pPlayer);
@@ -141,7 +141,7 @@ struct MANGOS_DLL_DECL boss_arlokkAI : public ScriptedAI
 
     void JustSummoned(Creature* pSummoned)
     {
-        if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiMarkedGUID))
+        if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_markedGuid))
         {
             if (pPlayer->isAlive())
                 pSummoned->AI()->AttackStart(pPlayer);
@@ -172,13 +172,11 @@ struct MANGOS_DLL_DECL boss_arlokkAI : public ScriptedAI
                     if (Player* pMark = pTarget->GetCharmerOrOwnerPlayerOrPlayerItself())
                     {
                         DoCastSpellIfCan(pMark, SPELL_MARK);
-                        m_uiMarkedGUID = pMark->GetGUID();
+                        m_markedGuid = pMark->GetObjectGuid();
                     }
                     else
                     {
-                        if (m_uiMarkedGUID)
-                            m_uiMarkedGUID = 0;
-
+                        m_markedGuid.Clear();
                         error_log("SD2: boss_arlokk could not accuire a new target to mark.");
                     }
                 }

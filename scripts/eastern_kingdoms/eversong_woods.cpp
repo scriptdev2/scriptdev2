@@ -352,22 +352,22 @@ enum
 
 struct MANGOS_DLL_DECL npc_apprentice_mirvedaAI : public ScriptedAI
 {
-    npc_apprentice_mirvedaAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+    npc_apprentice_mirvedaAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
     uint8 m_uiMobCount;
     uint32 m_uiFireballTimer;
-    uint64 m_uiPlayerGUID;
+    ObjectGuid m_playerGuid;
 
     void Reset()
     {
         m_uiMobCount      = 0;
-        m_uiPlayerGUID    = 0;
+        m_playerGuid.Clear();
         m_uiFireballTimer = 0;
     }
 
     void JustDied(Unit* pKiller)
     {
-        Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID);
+        Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid);
 
         if (pPlayer && pPlayer->GetQuestStatus(QUEST_UNEXPECTED_RESULT) == QUEST_STATUS_INCOMPLETE)
             pPlayer->SendQuestFailed(QUEST_UNEXPECTED_RESULT);
@@ -386,19 +386,19 @@ struct MANGOS_DLL_DECL npc_apprentice_mirvedaAI : public ScriptedAI
         if (m_uiMobCount)
             return;
 
-        Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerGUID);
+        Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid);
 
         if (pPlayer && pPlayer->GetQuestStatus(QUEST_UNEXPECTED_RESULT) == QUEST_STATUS_INCOMPLETE)
             pPlayer->GroupEventHappens(QUEST_UNEXPECTED_RESULT, m_creature);
 
-        m_uiPlayerGUID = 0;
+        m_playerGuid.Clear();
         m_creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER);
     }
 
-    void StartEvent(uint64 uiPlayerGUID)
+    void StartEvent(Player* pPlayer)
     {
         m_creature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER);
-        m_uiPlayerGUID = uiPlayerGUID;
+        m_playerGuid = pPlayer->GetObjectGuid();
 
         m_creature->SummonCreature(NPC_GHARSUL,    8745.0f, -7134.32f, 35.22f, 0.0f, TEMPSUMMON_CORPSE_DESPAWN, 4000);
         m_creature->SummonCreature(NPC_ANGERSHADE, 8745.0f, -7134.32f, 35.22f, 0.0f, TEMPSUMMON_CORPSE_DESPAWN, 4000);
@@ -427,7 +427,7 @@ bool QuestAccept_unexpected_results(Player* pPlayer, Creature* pCreature, const 
 {
     if (pQuest->GetQuestId() == QUEST_UNEXPECTED_RESULT)
         if (npc_apprentice_mirvedaAI* pMirvedaAI = dynamic_cast<npc_apprentice_mirvedaAI*>(pCreature->AI()))
-            pMirvedaAI->StartEvent(pPlayer->GetGUID());
+            pMirvedaAI->StartEvent(pPlayer);
     return true;
 }
 

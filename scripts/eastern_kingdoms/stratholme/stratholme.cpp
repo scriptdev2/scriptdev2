@@ -135,17 +135,18 @@ enum
     NPC_FREED_SOUL         = 11136,
 };
 
+// TODO - likely entirely not needed workaround
 struct MANGOS_DLL_DECL mob_restless_soulAI : public ScriptedAI
 {
     mob_restless_soulAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
-    uint64 m_uiTaggerGUID;
+    ObjectGuid m_taggerGuid;
     uint32 m_uiDieTimer;
     bool m_bIsTagged;
 
     void Reset()
     {
-        m_uiTaggerGUID = 0;
+        m_taggerGuid.Clear();
         m_uiDieTimer = 5000;
         m_bIsTagged = false;
     }
@@ -157,7 +158,7 @@ struct MANGOS_DLL_DECL mob_restless_soulAI : public ScriptedAI
             if (!m_bIsTagged && pSpell->Id == SPELL_EGAN_BLASTER && ((Player*)pCaster)->GetQuestStatus(QUEST_RESTLESS_SOUL) == QUEST_STATUS_INCOMPLETE)
             {
                 m_bIsTagged = true;
-                m_uiTaggerGUID = pCaster->GetGUID();
+                m_taggerGuid = pCaster->GetObjectGuid();
             }
         }
     }
@@ -179,7 +180,7 @@ struct MANGOS_DLL_DECL mob_restless_soulAI : public ScriptedAI
         {
             if (m_uiDieTimer < uiDiff)
             {
-                if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiTaggerGUID))
+                if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_taggerGuid))
                     pPlayer->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
             }
             else

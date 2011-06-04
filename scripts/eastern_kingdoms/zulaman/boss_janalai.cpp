@@ -139,8 +139,6 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
 {
     boss_janalaiAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        m_uiHatcher1GUID = 0;
-        m_uiHatcher2GUID = 0;
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
@@ -159,7 +157,6 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
 
     uint32 m_uiEnrageTimer;
     uint32 m_uiHatcherTimer;
-    uint32 eggs;
     uint32 m_uiWipeTimer;
 
     bool m_bIsBombing;
@@ -168,26 +165,26 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
     bool m_bIsEnraged;
     bool m_bCanEnrage;
 
-    uint64 m_uiHatcher1GUID;
-    uint64 m_uiHatcher2GUID;
+    ObjectGuid m_hatcherOneGuid;
+    ObjectGuid m_hatcherTwoGuid;
 
     void Reset()
     {
         m_lBombsGUIDList.clear();
         m_lEggsRemainingList.clear();
 
-        if (Creature* pHatcher = m_creature->GetMap()->GetCreature(m_uiHatcher1GUID))
+        if (Creature* pHatcher = m_creature->GetMap()->GetCreature(m_hatcherOneGuid))
         {
             pHatcher->AI()->EnterEvadeMode();
             pHatcher->SetDeathState(JUST_DIED);
-            m_uiHatcher1GUID = 0;
+            m_hatcherOneGuid.Clear();
         }
 
-        if (Creature* pHatcher = m_creature->GetMap()->GetCreature(m_uiHatcher2GUID))
+        if (Creature* pHatcher = m_creature->GetMap()->GetCreature(m_hatcherTwoGuid))
         {
             pHatcher->AI()->EnterEvadeMode();
             pHatcher->SetDeathState(JUST_DIED);
-            m_uiHatcher2GUID = 0;
+            m_hatcherTwoGuid.Clear();
         }
 
         m_uiFireBreathTimer = 8000;
@@ -239,10 +236,10 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
         switch(pSummoned->GetEntry())
         {
             case NPC_AMANI_HATCHER_1:
-                m_uiHatcher1GUID = pSummoned->GetGUID();
+                m_hatcherOneGuid = pSummoned->GetObjectGuid();
                 break;
             case NPC_AMANI_HATCHER_2:
-                m_uiHatcher2GUID = pSummoned->GetGUID();
+                m_hatcherTwoGuid = pSummoned->GetObjectGuid();
                 break;
             case NPC_FIRE_BOMB:
                 if (m_bIsBombing)
@@ -520,8 +517,8 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
                 {
                     DoScriptText(SAY_SUMMON_HATCHER, m_creature);
 
-                    Creature* pHatcer1 = m_creature->GetMap()->GetCreature(m_uiHatcher1GUID);
-                    Creature* pHatcer2 = m_creature->GetMap()->GetCreature(m_uiHatcher2GUID);
+                    Creature* pHatcer1 = m_creature->GetMap()->GetCreature(m_hatcherOneGuid);
+                    Creature* pHatcer2 = m_creature->GetMap()->GetCreature(m_hatcherTwoGuid);
 
                     if (!pHatcer1 || (pHatcer1 && !pHatcer1->isAlive()))
                     {
