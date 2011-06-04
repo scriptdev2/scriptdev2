@@ -45,7 +45,6 @@ class MANGOS_DLL_DECL instance_shadowfang_keep : public ScriptedInstance
 
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
-        uint64 GetData64(uint32 uiType);
 
         const char* Save() { return m_strInstData.c_str(); }
         void Load(const char* chrIn);
@@ -53,18 +52,6 @@ class MANGOS_DLL_DECL instance_shadowfang_keep : public ScriptedInstance
     private:
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strInstData;
-
-        uint64 m_uiAshGUID;
-        uint64 m_uiAdaGUID;
-
-        uint64 m_uiDoorCourtyardGUID;
-        uint64 m_uiDoorSorcererGUID;
-        uint64 m_uiDoorArugalGUID;
-
-        uint64 m_uiFenrusGUID;
-        uint64 m_uiVincentGUID;
-
-        uint64 m_uiArugalFocusGUID;
 };
 
 #endif

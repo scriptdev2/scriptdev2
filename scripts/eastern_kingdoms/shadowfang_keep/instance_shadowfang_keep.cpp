@@ -32,34 +32,26 @@ instance_shadowfang_keep::instance_shadowfang_keep(Map* pMap) : ScriptedInstance
 void instance_shadowfang_keep::Initialize()
 {
     memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
-
-    m_uiAshGUID = 0;
-    m_uiAdaGUID = 0;
-
-    m_uiDoorCourtyardGUID = 0;
-    m_uiDoorSorcererGUID = 0;
-    m_uiDoorArugalGUID = 0;
-
-    m_uiFenrusGUID = 0;
-    m_uiVincentGUID = 0;
-
-    m_uiArugalFocusGUID = 0;
 }
 
 void instance_shadowfang_keep::OnCreatureCreate(Creature* pCreature)
 {
     switch(pCreature->GetEntry())
     {
-        case NPC_ASH: m_uiAshGUID = pCreature->GetGUID(); break;
-        case NPC_ADA: m_uiAdaGUID = pCreature->GetGUID(); break;
-        case NPC_FENRUS: m_uiFenrusGUID = pCreature->GetGUID(); break;
+        case NPC_ASH:
+        case NPC_ADA:
+        case NPC_FENRUS:
+            break;
         case NPC_VINCENT:
-            m_uiVincentGUID = pCreature->GetGUID();
             // If Arugal has done the intro, make Vincent dead!
             if (m_auiEncounter[4] == DONE)
                 pCreature->SetStandState(UNIT_STAND_STATE_DEAD);
             break;
+
+        default:
+            return;
     }
+    m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
 }
 
 void instance_shadowfang_keep::OnObjectCreate(GameObject* pGo)
@@ -67,32 +59,32 @@ void instance_shadowfang_keep::OnObjectCreate(GameObject* pGo)
     switch(pGo->GetEntry())
     {
         case GO_COURTYARD_DOOR:
-            m_uiDoorCourtyardGUID = pGo->GetGUID();
             if (m_auiEncounter[0] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         // For this we ignore voidwalkers, because if the server restarts
         // They won't be there, but Fenrus is dead so the door can't be opened!
         case GO_SORCERER_DOOR:
-            m_uiDoorSorcererGUID = pGo->GetGUID();
             if (m_auiEncounter[2] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_ARUGAL_DOOR:
-            m_uiDoorArugalGUID = pGo->GetGUID();
             if (m_auiEncounter[3] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_ARUGAL_FOCUS:
-            m_uiArugalFocusGUID = pGo->GetGUID();
             break;
+
+        default:
+            return;
     }
+    m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
 }
 
 void instance_shadowfang_keep::DoSpeech()
 {
-    Creature* pAda = instance->GetCreature(m_uiAdaGUID);
-    Creature* pAsh = instance->GetCreature(m_uiAshGUID);
+    Creature* pAda = GetSingleCreatureFromStorage(NPC_ADA);
+    Creature* pAsh = GetSingleCreatureFromStorage(NPC_ASH);
 
     if (pAda && pAda->isAlive() && pAsh && pAsh->isAlive())
     {
@@ -107,7 +99,7 @@ void instance_shadowfang_keep::SetData(uint32 uiType, uint32 uiData)
     {
         case TYPE_FREE_NPC:
             if (uiData == DONE)
-                DoUseDoorOrButton(m_uiDoorCourtyardGUID);
+                DoUseDoorOrButton(GO_COURTYARD_DOOR);
             m_auiEncounter[0] = uiData;
             break;
         case TYPE_RETHILGORE:
@@ -118,14 +110,14 @@ void instance_shadowfang_keep::SetData(uint32 uiType, uint32 uiData)
         case TYPE_FENRUS:
             if (uiData == DONE)
             {
-                if (Creature* pFenrus = instance->GetCreature(m_uiFenrusGUID))
+                if (Creature* pFenrus = GetSingleCreatureFromStorage(NPC_FENRUS))
                     pFenrus->SummonCreature(NPC_ARCHMAGE_ARUGAL, -136.89f, 2169.17f, 136.58f, 2.794f, TEMPSUMMON_TIMED_DESPAWN, 30000);
             }
             m_auiEncounter[2] = uiData;
             break;
         case TYPE_NANDOS:
             if (uiData == DONE)
-                DoUseDoorOrButton(m_uiDoorArugalGUID);
+                DoUseDoorOrButton(GO_ARUGAL_DOOR);
             m_auiEncounter[3] = uiData;
             break;
         case TYPE_INTRO:
@@ -136,7 +128,7 @@ void instance_shadowfang_keep::SetData(uint32 uiType, uint32 uiData)
             {
                 m_auiEncounter[5]++;
                 if (m_auiEncounter[5] > 3)
-                    DoUseDoorOrButton(m_uiDoorSorcererGUID);
+                    DoUseDoorOrButton(GO_SORCERER_DOOR);
             }
             break;
     }
@@ -169,16 +161,6 @@ uint32 instance_shadowfang_keep::GetData(uint32 uiType)
         default:
             return 0;
     }
-}
-
-uint64 instance_shadowfang_keep::GetData64(uint32 uiType)
-{
-    switch(uiType)
-    {
-        case GO_ARUGAL_FOCUS:
-            return m_uiArugalFocusGUID;
-    }
-    return 0;
 }
 
 void instance_shadowfang_keep::Load(const char* chrIn)

@@ -204,14 +204,13 @@ struct MANGOS_DLL_DECL mob_arugal_voidwalkerAI : public ScriptedAI
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         m_bIsLeader = false;
-        m_uiLeaderGUID = 0;
         m_uiCurrentPoint = 0;
         m_bReverse = false;
     }
 
     uint32 m_uiResetTimer, m_uiDarkOffering;
     uint8 m_uiCurrentPoint, m_uiPosition;                   // 0 - leader, 1 - behind-right, 2 - behind, 3 - behind-left
-    uint64 m_uiLeaderGUID;
+    ObjectGuid m_leaderGuid;
     ScriptedInstance* m_pInstance;
     bool m_bIsLeader, m_bReverse, m_bWPDone;
 
@@ -221,7 +220,7 @@ struct MANGOS_DLL_DECL mob_arugal_voidwalkerAI : public ScriptedAI
         m_uiDarkOffering = urand(4400, 12500);
         m_bWPDone = true;
 
-        Creature* pLeader = m_creature->GetMap()->GetCreature(m_uiLeaderGUID);
+        Creature* pLeader = m_creature->GetMap()->GetCreature(m_leaderGuid);
         if (pLeader && pLeader->isAlive())
         {
             m_creature->GetMotionMaster()->MoveFollow(pLeader, 1.0f, M_PI/2*m_uiPosition);
@@ -250,7 +249,7 @@ struct MANGOS_DLL_DECL mob_arugal_voidwalkerAI : public ScriptedAI
 
             if (pNewLeader)
             {
-                m_uiLeaderGUID = pNewLeader->GetGUID();
+                m_leaderGuid = pNewLeader->GetObjectGuid();
                 if (pNewLeader == m_creature)
                 {
                     m_bIsLeader = true;
@@ -337,7 +336,12 @@ struct MANGOS_DLL_DECL mob_arugal_voidwalkerAI : public ScriptedAI
         if (!uiPosition)
             m_bIsLeader = true;
         else
-            pLeader ? m_uiLeaderGUID = pLeader->GetGUID() : m_uiLeaderGUID = 0;
+        {
+            if (pLeader)
+                m_leaderGuid = pLeader->GetObjectGuid();
+            else
+                m_leaderGuid.Clear();
+        }
 
         Reset();
     }
@@ -497,7 +501,7 @@ struct MANGOS_DLL_DECL boss_arugalAI : public ScriptedAI
                         break;
                     case 3:
                         if (m_pInstance)
-                            if (GameObject* pLightning = m_creature->GetMap()->GetGameObject(m_pInstance->GetData64(GO_ARUGAL_FOCUS)))
+                            if (GameObject* pLightning = m_pInstance->GetSingleGameObjectFromStorage(GO_ARUGAL_FOCUS))
                                 pLightning->Use(m_creature);
 
                         m_uiSpeechTimer = 5000;
