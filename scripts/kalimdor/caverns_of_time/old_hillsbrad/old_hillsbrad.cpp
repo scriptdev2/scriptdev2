@@ -37,7 +37,7 @@ struct MANGOS_DLL_DECL npc_tarethaAI : public npc_escortAI
     npc_tarethaAI(Creature* pCreature);
 
     instance_old_hillsbrad* m_pInstance;
-    uint64 m_uiErozionGUID;
+    ObjectGuid m_erozionGuid;
     uint32 m_uiErozionEventTimer;
     uint32 m_uiErozionPhase;
 
@@ -256,15 +256,11 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
 
     instance_old_hillsbrad* m_pInstance;
 
-    uint64 m_uiScarlocMountGUID;
-
     bool m_bIsLowHp;
     bool m_bHadMount;
 
     void Reset()
     {
-        m_uiScarlocMountGUID = 0;
-
         m_bIsLowHp = false;
 
         if (m_bHadMount)
@@ -517,9 +513,7 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
             case NPC_BARN_GUARDSMAN:
             case NPC_BARN_PROTECTOR:
             case NPC_BARN_LOOKOUT:
-                break;
             case NPC_SKARLOC_MOUNT:
-                m_uiScarlocMountGUID = pSummoned->GetGUID();
                 break;
             default:
                 pSummoned->AI()->AttackStart(m_creature);
@@ -718,7 +712,6 @@ enum
 npc_tarethaAI::npc_tarethaAI(Creature* pCreature) : npc_escortAI(pCreature)
 {
     m_pInstance = (instance_old_hillsbrad*)pCreature->GetInstanceData();
-    m_uiErozionGUID = 0;
     m_uiErozionEventTimer = 5000;
     m_uiErozionPhase = 0;
     Reset();
@@ -727,7 +720,7 @@ npc_tarethaAI::npc_tarethaAI(Creature* pCreature) : npc_escortAI(pCreature)
 void npc_tarethaAI::JustSummoned(Creature* pSummoned)
 {
     if (pSummoned->GetEntry() == NPC_EROZION)
-        m_uiErozionGUID = pSummoned->GetGUID();
+        m_erozionGuid = pSummoned->GetObjectGuid();
     else
         DoScriptText(SAY_EPOCH_ENTER1, pSummoned);
 }
@@ -775,23 +768,23 @@ void npc_tarethaAI::UpdateEscortAI(const uint32 uiDiff)
                     DoScriptText(SAY_TR_THEN_WHO, pThrall);
                 break;
             case 4:
-                if (Creature* pErozion = m_creature->GetMap()->GetCreature(m_uiErozionGUID))
+                if (Creature* pErozion = m_creature->GetMap()->GetCreature(m_erozionGuid))
                     DoScriptText(SAY_PRE_WIPE, pErozion);
                 break;
             case 5:
-                //if (Creature* pErozion = m_creature->GetMap()->GetCreature(m_uiErozionGUID))
+                //if (Creature* pErozion = m_creature->GetMap()->GetCreature(m_erozionGuid))
                     //pErozion->AI()->DoCastSpellIfCan();
                 break;
             case 6:
-                if (Creature* pErozion = m_creature->GetMap()->GetCreature(m_uiErozionGUID))
+                if (Creature* pErozion = m_creature->GetMap()->GetCreature(m_erozionGuid))
                     DoScriptText(SAY_WIPE_MEMORY, pErozion);
                 break;
             case 7:
-                if (Creature* pErozion = m_creature->GetMap()->GetCreature(m_uiErozionGUID))
+                if (Creature* pErozion = m_creature->GetMap()->GetCreature(m_erozionGuid))
                     DoScriptText(SAY_ABOUT_TARETHA, pErozion);
                 break;
             case 8:
-                if (Creature* pErozion = m_creature->GetMap()->GetCreature(m_uiErozionGUID))
+                if (Creature* pErozion = m_creature->GetMap()->GetCreature(m_erozionGuid))
                     DoScriptText(SAY_AFTER_WIPE, pErozion);
                 break;
             case 9:

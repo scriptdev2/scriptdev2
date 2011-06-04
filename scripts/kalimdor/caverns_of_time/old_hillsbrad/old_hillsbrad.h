@@ -43,26 +43,20 @@ class MANGOS_DLL_DECL instance_old_hillsbrad : public ScriptedInstance
 
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
-        uint64 GetData64(uint32 uiData);
 
         void HandleThrallRelocation();
 
         void UpdateLodgeQuestCredit();
 
-        Creature* GetThrall() { return instance->GetCreature(m_uiThrallGUID); }
-        Creature* GetTaretha() { return instance->GetCreature(m_uiTarethaGUID); }
-        Creature* GetScarloc() { return instance->GetCreature(m_uiScarlocGUID); }
-        Creature* GetEpoch() { return instance->GetCreature(m_uiEpochGUID); }
+        Creature* GetThrall() { return GetSingleCreatureFromStorage(NPC_THRALL); }
+        Creature* GetTaretha() { return GetSingleCreatureFromStorage(NPC_TARETHA); }
+        Creature* GetEpoch() { return GetSingleCreatureFromStorage(NPC_EPOCH); }
 
     protected:
         uint32 m_auiEncounter[MAX_ENCOUNTER];
 
         uint32 m_uiBarrelCount;
         uint32 m_uiThrallEventCount;
-        uint64 m_uiThrallGUID;
-        uint64 m_uiTarethaGUID;
-        uint64 m_uiScarlocGUID;
-        uint64 m_uiEpochGUID;
 };
 
 #endif

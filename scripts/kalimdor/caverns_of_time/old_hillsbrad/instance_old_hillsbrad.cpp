@@ -26,11 +26,7 @@ EndScriptData */
 
 instance_old_hillsbrad::instance_old_hillsbrad(Map* pMap) : ScriptedInstance(pMap),
     m_uiBarrelCount(0),
-    m_uiThrallEventCount(0),
-    m_uiThrallGUID(0),
-    m_uiTarethaGUID(0),
-    m_uiScarlocGUID(0),
-    m_uiEpochGUID(0)
+    m_uiThrallEventCount(0)
 {
     Initialize();
 }
@@ -45,13 +41,9 @@ void instance_old_hillsbrad::OnCreatureCreate(Creature* pCreature)
     switch(pCreature->GetEntry())
     {
         case NPC_THRALL:
-            m_uiThrallGUID = pCreature->GetGUID();
-            break;
         case NPC_TARETHA:
-            m_uiTarethaGUID = pCreature->GetGUID();
-            break;
         case NPC_EPOCH:
-            m_uiEpochGUID = pCreature->GetGUID();
+            m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
     }
 }
@@ -61,14 +53,14 @@ void instance_old_hillsbrad::OnCreatureDeath(Creature* pCreature)
     if (pCreature->GetEntry() == NPC_EPOCH)
     {
         // notify thrall so he can continue
-        if (Creature* pThrall = instance->GetCreature(m_uiThrallGUID))
+        if (Creature* pThrall = GetSingleCreatureFromStorage(NPC_THRALL))
             pThrall->AI()->KilledUnit(pCreature);
     }
 }
 
 void instance_old_hillsbrad::HandleThrallRelocation()
 {
-    if (Creature* pThrall = instance->GetCreature(m_uiThrallGUID))
+    if (Creature* pThrall = GetSingleCreatureFromStorage(NPC_THRALL))
     {
         debug_log("SD2: Instance Old Hillsbrad: Thrall relocation");
 
@@ -199,11 +191,6 @@ uint32 instance_old_hillsbrad::GetData(uint32 uiData)
         default:
             return 0;
     }
-}
-
-uint64 instance_old_hillsbrad::GetData64(uint32 uiData)
-{
-    return 0;
 }
 
 void instance_old_hillsbrad::UpdateLodgeQuestCredit()
