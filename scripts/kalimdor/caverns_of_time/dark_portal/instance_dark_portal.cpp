@@ -50,8 +50,7 @@ static Wave RiftWaves[]=
     {NPC_AEONUS, 0}
 };
 
-instance_dark_portal::instance_dark_portal(Map* pMap) : ScriptedInstance(pMap),
-    m_uiMedivhGUID(0)
+instance_dark_portal::instance_dark_portal(Map* pMap) : ScriptedInstance(pMap)
 {
     Initialize();
 }
@@ -93,7 +92,7 @@ void instance_dark_portal::OnPlayerEnter(Player* pPlayer)
 void instance_dark_portal::OnCreatureCreate(Creature* pCreature)
 {
     if (pCreature->GetEntry() == NPC_MEDIVH)
-        m_uiMedivhGUID = pCreature->GetGUID();
+        m_mNpcEntryGuidStore[NPC_MEDIVH] = pCreature->GetObjectGuid();
 }
 
 // what other conditions to check?
@@ -135,7 +134,7 @@ void instance_dark_portal::SetData(uint32 uiType, uint32 uiData)
 
                 if (!m_uiShieldPercent)
                 {
-                    if (Creature* pMedivh = instance->GetCreature(m_uiMedivhGUID))
+                    if (Creature* pMedivh = GetSingleCreatureFromStorage(NPC_MEDIVH))
                     {
                         if (pMedivh->isAlive())
                         {
@@ -208,14 +207,6 @@ uint32 instance_dark_portal::GetData(uint32 uiType)
     }
 }
 
-uint64 instance_dark_portal::GetData64(uint32 uiData)
-{
-    if (uiData == NPC_MEDIVH)
-        return m_uiMedivhGUID;
-
-    return 0;
-}
-
 Creature* instance_dark_portal::SummonedPortalBoss(Creature* pSource)
 {
     uint32 uiEntry = RiftWaves[GetRiftWaveId()].PortalBoss;
@@ -239,7 +230,7 @@ Creature* instance_dark_portal::SummonedPortalBoss(Creature* pSource)
 
 void instance_dark_portal::DoSpawnPortal()
 {
-    if (Creature* pMedivh = instance->GetCreature(m_uiMedivhGUID))
+    if (Creature* pMedivh = GetSingleCreatureFromStorage(NPC_MEDIVH))
     {
         uint8 uiTmp = urand(0, 2);
 

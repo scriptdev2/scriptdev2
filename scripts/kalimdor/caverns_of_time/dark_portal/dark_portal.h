@@ -52,7 +52,6 @@ class MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
 
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
-        uint64 GetData64(uint32 uiData);
 
         void Update(uint32 uiDiff);
 
@@ -72,8 +71,6 @@ class MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
         uint8 m_uiRiftWaveId;
 
         uint32 m_uiNextPortalTimer;
-
-        uint64 m_uiMedivhGUID;
         uint8 m_uiCurrentRiftId;
 };
 
