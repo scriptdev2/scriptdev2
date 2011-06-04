@@ -55,36 +55,7 @@ static sSpawnLocation m_aChromieSpawnLocs[] =               // need tuning, escp
 instance_culling_of_stratholme::instance_culling_of_stratholme(Map* pMap) : ScriptedInstance(pMap),
     m_uiGrainCrateCount(0),
     m_uiRemoveCrateStateTimer(0),
-    m_uiArthasRespawnTimer(0),
-
-    m_uiChromieInnGUID(0),
-    m_uiChromieEntranceGUID(0),
-    m_uiChromieEndGUID(0),
-    m_uiHourglassGUID(0),
-    m_uiArthasGUID(0),
-    m_uiMeathookGUID(0),
-    m_uiSalrammGUID(0),
-    m_uiEpochGUID(0),
-    m_uiCorrupterGUID(0),
-    m_uiLordaeronCrierGUID(0),
-
-    m_uiBelfastGUID(0),
-    m_uiForrestenGUID(0),
-    m_uiSiabiGUID(0),
-    m_uiJamesGUID(0),
-    m_uiCorricksGUID(0),
-    m_uiStoutmantleGUID(0),
-
-    m_uiOwensGUID(0),
-    m_uiMoriganGUID(0),
-    m_uiAndersonGUID(0),
-    m_uiMooreGUID(0),
-    m_uiBattsonGUID(0),
-
-    m_uiOReillyGUID(0),
-
-    m_uiDoorBookcaseGUID(0),
-    m_uiDarkRunedChestGUID(0)
+    m_uiArthasRespawnTimer(0)
 {
     Initialize();
 }
@@ -98,29 +69,25 @@ void instance_culling_of_stratholme::OnCreatureCreate(Creature* pCreature)
 {
     switch(pCreature->GetEntry())
     {
-        case NPC_CHROMIE_INN:                   m_uiChromieInnGUID = pCreature->GetGUID();      break;
-        case NPC_CHROMIE_ENTRANCE:              m_uiChromieEntranceGUID = pCreature->GetGUID(); break;
-        case NPC_CHROMIE_END:                   m_uiChromieEndGUID = pCreature->GetGUID();      break;
-        case NPC_HOURGLASS:                     m_uiHourglassGUID = pCreature->GetGUID();       break;
-        case NPC_ARTHAS:                        m_uiArthasGUID = pCreature->GetGUID();          break;
-        case NPC_MEATHOOK:                      m_uiMeathookGUID = pCreature->GetGUID();        break;
-        case NPC_SALRAMM_THE_FLESHCRAFTER:      m_uiSalrammGUID = pCreature->GetGUID();         break;
-        case NPC_CHRONO_LORD_EPOCH:             m_uiEpochGUID = pCreature->GetGUID();           break;
-        case NPC_MALGANIS:                      m_uiMalganisGUID = pCreature->GetGUID();        break;
-        case NPC_MICHAEL_BELFAST:               m_uiBelfastGUID = pCreature->GetGUID();         break;
-        case NPC_HEARTHSINGER_FORRESTEN:        m_uiForrestenGUID = pCreature->GetGUID();       break;
-        case NPC_FRAS_SIABI:                    m_uiSiabiGUID = pCreature->GetGUID();           break;
-        case NPC_FOOTMAN_JAMES:                 m_uiJamesGUID = pCreature->GetGUID();           break;
-        case NPC_MAL_CORRICKS:                  m_uiCorricksGUID = pCreature->GetGUID();        break;
-        case NPC_GRYAN_STOUTMANTLE:             m_uiStoutmantleGUID = pCreature->GetGUID();     break;
-        case NPC_ROGER_OWENS:                   m_uiOwensGUID = pCreature->GetGUID();           break;
-        case NPC_SERGEANT_MORIGAN:              m_uiMoriganGUID = pCreature->GetGUID();         break;
-        case NPC_JENA_ANDERSON:                 m_uiAndersonGUID = pCreature->GetGUID();        break;
-        case NPC_MALCOM_MOORE:                  m_uiMooreGUID = pCreature->GetGUID();           break;
-        case NPC_BARTLEBY_BATTSON:              m_uiBattsonGUID = pCreature->GetGUID();         break;
-        case NPC_PATRICIA_O_REILLY:             m_uiOReillyGUID = pCreature->GetGUID();         break;
-        case NPC_LORDAERON_CRIER:               m_uiLordaeronCrierGUID = pCreature->GetGUID();  break;
-        case NPC_INFINITE_CORRUPTER:            m_uiCorrupterGUID = pCreature->GetGUID();       break;
+        case NPC_CHROMIE_ENTRANCE:
+        case NPC_CHROMIE_END:
+        case NPC_ARTHAS:
+        case NPC_MICHAEL_BELFAST:
+        case NPC_HEARTHSINGER_FORRESTEN:
+        case NPC_FRAS_SIABI:
+        case NPC_FOOTMAN_JAMES:
+        case NPC_MAL_CORRICKS:
+        case NPC_GRYAN_STOUTMANTLE:
+        case NPC_ROGER_OWENS:
+        case NPC_SERGEANT_MORIGAN:
+        case NPC_JENA_ANDERSON:
+        case NPC_MALCOM_MOORE:
+        case NPC_BARTLEBY_BATTSON:
+        case NPC_PATRICIA_O_REILLY:
+        case NPC_LORDAERON_CRIER:
+        case NPC_INFINITE_CORRUPTER:
+            m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
+            break;
 
         case NPC_CRATES_BUNNY:                  m_luiCratesBunnyGUIDs.push_back(pCreature->GetGUID()); break;
         case NPC_LORDAERON_FOOTMAN:             m_luiFootmanGUIDs.push_back(pCreature->GetGUID());     break;
@@ -142,33 +109,22 @@ void instance_culling_of_stratholme::OnObjectCreate(GameObject* pGo)
     switch(pGo->GetEntry())
     {
         case GO_DOOR_BOOKCASE:
-            m_uiDoorBookcaseGUID = pGo->GetGUID();
             if (m_auiEncounter[TYPE_EPOCH_EVENT] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_DARK_RUNED_CHEST:
         case GO_DARK_RUNED_CHEST_H:
-            m_uiDarkRunedChestGUID = pGo->GetGUID();
             break;
-    }
-}
 
-void instance_culling_of_stratholme::UpdateQuestCredit()
-{
-    Map::PlayerList const& players = instance->GetPlayers();
-    if (!players.isEmpty())
-    {
-        for(Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
-        {
-            if (Player* pPlayer = itr->getSource())
-                pPlayer->KilledMonsterCredit(NPC_CRATES_BUNNY);
-        }
+        default:
+            return;
     }
+    m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
 }
 
 void instance_culling_of_stratholme::DoChromieHurrySpeech()
 {
-    if (Creature* pChromie = instance->GetCreature(m_uiChromieEntranceGUID))
+    if (Creature* pChromie = GetSingleCreatureFromStorage(NPC_CHROMIE_ENTRANCE))
     {
         Map::PlayerList const& players = instance->GetPlayers();
         if (!players.isEmpty())
@@ -187,7 +143,7 @@ void instance_culling_of_stratholme::SetData(uint32 uiType, uint32 uiData)
     switch(uiType)
     {
         case TYPE_GRAIN_EVENT:
-            m_auiEncounter[TYPE_GRAIN_EVENT] = uiData;
+            m_auiEncounter[uiType] = uiData;
             if (uiData == SPECIAL)
                 DoUpdateWorldState(WORLD_STATE_CRATES, 1);
             else if (uiData == IN_PROGRESS)
@@ -200,41 +156,40 @@ void instance_culling_of_stratholme::SetData(uint32 uiType, uint32 uiData)
 
                 if (m_uiGrainCrateCount == 5)
                 {
-                    UpdateQuestCredit();
                     m_uiRemoveCrateStateTimer = 20000;
                     SetData(TYPE_GRAIN_EVENT, DONE);
                 }
             }
             break;
         case TYPE_ARTHAS_INTRO_EVENT:
-            m_auiEncounter[TYPE_ARTHAS_INTRO_EVENT] = uiData;
+            m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_ARTHAS_ESCORT_EVENT:
-            m_auiEncounter[TYPE_ARTHAS_ESCORT_EVENT] = uiData;
+            m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_MEATHOOK_EVENT:
-            m_auiEncounter[TYPE_MEATHOOK_EVENT] = uiData;
+            m_auiEncounter[uiType] = uiData;
             if (uiData == DONE)
                 SetData(TYPE_SALRAMM_EVENT, IN_PROGRESS);
             break;
         case TYPE_SALRAMM_EVENT:
-            m_auiEncounter[TYPE_SALRAMM_EVENT] = uiData;
+            m_auiEncounter[uiType] = uiData;
             if (uiData == DONE)
                 DoUpdateWorldState(WORLD_STATE_WAVE, 0);    // Remove WaveCounter
             break;
         case TYPE_EPOCH_EVENT:
-            m_auiEncounter[TYPE_EPOCH_EVENT] = uiData;
+            m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_MALGANIS_EVENT:
-            m_auiEncounter[TYPE_MALGANIS_EVENT] = uiData;
+            m_auiEncounter[uiType] = uiData;
             if (uiData == DONE)
             {
-                DoRespawnGameObject(m_uiDarkRunedChestGUID, 30*MINUTE);
+                DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_DARK_RUNED_CHEST : GO_DARK_RUNED_CHEST_H, 30*MINUTE);
                 DoSpawnChromieIfNeeded();
             }
             break;
         case TYPE_INFINITE_CORRUPTER_TIME:
-            m_auiEncounter[TYPE_INFINITE_CORRUPTER_TIME] = uiData;
+            m_auiEncounter[uiType] = uiData;
             if (!uiData)
             {
                 DoUpdateWorldState(WORLD_STATE_TIME, 0);    // Remove Timer
@@ -244,7 +199,7 @@ void instance_culling_of_stratholme::SetData(uint32 uiType, uint32 uiData)
                 DoUpdateWorldState(WORLD_STATE_TIME_COUNTER, uiData/(MINUTE*IN_MILLISECONDS));
             break;
         case TYPE_INFINITE_CORRUPTER:
-            m_auiEncounter[TYPE_INFINITE_CORRUPTER] = uiData;
+            m_auiEncounter[uiType] = uiData;
             switch(uiData)
             {
                 case IN_PROGRESS:
@@ -260,7 +215,7 @@ void instance_culling_of_stratholme::SetData(uint32 uiType, uint32 uiData)
                     break;
                 case FAIL:
                     SetData(TYPE_INFINITE_CORRUPTER_TIME, 0);
-                    if (Creature* pCorrupter = instance->GetCreature(m_uiCorrupterGUID))
+                    if (Creature* pCorrupter = GetSingleCreatureFromStorage(NPC_INFINITE_CORRUPTER))
                         if (pCorrupter->isAlive())
                             pCorrupter->ForcedDespawn();
                     break;
@@ -343,50 +298,10 @@ void instance_culling_of_stratholme::OnPlayerEnter(Player* pPlayer)
 
 uint32 instance_culling_of_stratholme::GetData(uint32 uiType)
 {
-    switch(uiType)
-    {
-        case TYPE_GRAIN_EVENT:             return m_auiEncounter[0];
-        case TYPE_ARTHAS_INTRO_EVENT:      return m_auiEncounter[1];
-        case TYPE_MEATHOOK_EVENT:          return m_auiEncounter[2];
-        case TYPE_SALRAMM_EVENT:           return m_auiEncounter[3];
-        case TYPE_EPOCH_EVENT:             return m_auiEncounter[4];
-        case TYPE_ARTHAS_ESCORT_EVENT:     return m_auiEncounter[5];
-        case TYPE_MALGANIS_EVENT:          return m_auiEncounter[6];
-        case TYPE_INFINITE_CORRUPTER_TIME: return m_auiEncounter[7];
-        case TYPE_INFINITE_CORRUPTER:      return m_auiEncounter[8];
-        default: return 0;
-    }
-}
+    if (uiType < MAX_ENCOUNTER)
+        return m_auiEncounter[uiType];
 
-uint64 instance_culling_of_stratholme::GetData64(uint32 uiData)
-{
-    switch(uiData)
-    {
-        case NPC_CHROMIE_INN:              return m_uiChromieInnGUID;
-        case NPC_CHROMIE_ENTRANCE:         return m_uiChromieEntranceGUID;
-        case NPC_CHROMIE_END:              return m_uiChromieEndGUID;
-        case NPC_HOURGLASS:                return m_uiHourglassGUID;
-        case NPC_ARTHAS:                   return m_uiArthasGUID;
-        case NPC_MEATHOOK:                 return m_uiMeathookGUID;
-        case NPC_SALRAMM_THE_FLESHCRAFTER: return m_uiSalrammGUID;
-        case NPC_CHRONO_LORD_EPOCH:        return m_uiEpochGUID;
-        case NPC_MALGANIS:                 return m_uiMalganisGUID;
-        case NPC_INFINITE_CORRUPTER:       return m_uiCorrupterGUID;
-        case NPC_MICHAEL_BELFAST:          return m_uiBelfastGUID;
-        case NPC_HEARTHSINGER_FORRESTEN:   return m_uiForrestenGUID;
-        case NPC_FRAS_SIABI:               return m_uiSiabiGUID;
-        case NPC_FOOTMAN_JAMES:            return m_uiJamesGUID;
-        case NPC_MAL_CORRICKS:             return m_uiCorricksGUID;
-        case NPC_GRYAN_STOUTMANTLE:        return m_uiStoutmantleGUID;
-        case NPC_ROGER_OWENS:              return m_uiOwensGUID;
-        case NPC_SERGEANT_MORIGAN:         return m_uiMoriganGUID;
-        case NPC_JENA_ANDERSON:            return m_uiAndersonGUID;
-        case NPC_MALCOM_MOORE:             return m_uiMooreGUID;
-        case NPC_BARTLEBY_BATTSON:         return m_uiBattsonGUID;
-        case NPC_PATRICIA_O_REILLY:        return m_uiOReillyGUID;
-        case GO_DOOR_BOOKCASE:             return m_uiDoorBookcaseGUID;
-        default: return 0;
-    }
+    return 0;
 }
 
 uint8 instance_culling_of_stratholme::GetInstancePosition()
@@ -474,7 +389,7 @@ void instance_culling_of_stratholme::ArthasJustDied()
 
 void instance_culling_of_stratholme::DoSpawnArthasIfNeeded()
 {
-    Creature* pArthas = instance->GetCreature(m_uiArthasGUID);
+    Creature* pArthas = GetSingleCreatureFromStorage(NPC_ARTHAS, true);
     if (pArthas && pArthas->isAlive())
         return;
 
@@ -496,13 +411,13 @@ void instance_culling_of_stratholme::DoSpawnChromieIfNeeded()
 
     if (GetInstancePosition() == POS_INSTANCE_FINISHED)
     {
-        Creature* pChromie = instance->GetCreature(m_uiChromieEndGUID);
+        Creature* pChromie = GetSingleCreatureFromStorage(NPC_CHROMIE_END, true);
         if (!pChromie)
             pPlayer->SummonCreature(NPC_CHROMIE_END, m_aChromieSpawnLocs[1].m_fX, m_aChromieSpawnLocs[1].m_fY, m_aChromieSpawnLocs[1].m_fZ, m_aChromieSpawnLocs[1].m_fO, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
     }
     else if (GetInstancePosition() >= POS_ARTHAS_INTRO)
     {
-        Creature* pChromie = instance->GetCreature(m_uiChromieEntranceGUID);
+        Creature* pChromie = GetSingleCreatureFromStorage(NPC_CHROMIE_ENTRANCE, true);
         if (!pChromie)
             pPlayer->SummonCreature(NPC_CHROMIE_ENTRANCE, m_aChromieSpawnLocs[0].m_fX, m_aChromieSpawnLocs[0].m_fY, m_aChromieSpawnLocs[0].m_fZ, m_aChromieSpawnLocs[0].m_fO, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
     }

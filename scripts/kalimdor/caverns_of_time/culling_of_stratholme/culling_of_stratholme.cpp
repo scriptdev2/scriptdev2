@@ -166,7 +166,8 @@ bool QuestAccept_npc_chromie(Player* pPlayer, Creature* pCreature, const Quest* 
 
 enum
 {
-    SPELL_ARCANE_DISRUPTION = 49590
+    SPELL_ARCANE_DISRUPTION     = 49590,
+    SPELL_CRATES_KILL_CREDIT    = 58109,
 };
 
 bool EffectAuraDummy_spell_aura_dummy_npc_crates_dummy(const Aura* pAura, bool bApply)
@@ -207,7 +208,14 @@ bool EffectAuraDummy_spell_aura_dummy_npc_crates_dummy(const Aura* pAura, bool b
                 }
 
                 if (pInstance->GetData(TYPE_GRAIN_EVENT) != DONE)
+                {
                     pInstance->SetData(TYPE_GRAIN_EVENT, IN_PROGRESS);
+
+                    // Finished event, give killcredit
+                    if (pInstance->GetData(TYPE_GRAIN_EVENT) == DONE)
+                        pTarget->CastSpell(pTarget, SPELL_CRATES_KILL_CREDIT, true);
+                }
+
                 // pTarget->ForcedDespawn();    // direct despawn has influence on visual effects,
                                                 // but despawning makes it impossible to multi-use the spell at the same place
                 // perhaps some add. GO-Visual

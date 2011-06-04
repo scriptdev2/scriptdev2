@@ -23,12 +23,12 @@ enum
     NPC_CHROMIE_INN                 = 26527,
     NPC_CHROMIE_ENTRANCE            = 27915,
     NPC_CHROMIE_END                 = 30997,
-    NPC_HOURGLASS                   = 28656,
+    // NPC_HOURGLASS                = 28656,
     NPC_ARTHAS                      = 26499,
-    NPC_MEATHOOK                    = 26529,
-    NPC_SALRAMM_THE_FLESHCRAFTER    = 26530,
-    NPC_CHRONO_LORD_EPOCH           = 26532,
-    NPC_MALGANIS                    = 26533,
+    // NPC_MEATHOOK                 = 26529,
+    // NPC_SALRAMM_THE_FLESHCRAFTER = 26530,
+    // NPC_CHRONO_LORD_EPOCH        = 26532,
+    // NPC_MALGANIS                 = 26533,
     NPC_INFINITE_CORRUPTER          = 32273,
     NPC_LORDAERON_CRIER             = 27913,
     NPC_ZOMBIE                      = 27737,
@@ -122,7 +122,6 @@ class MANGOS_DLL_DECL instance_culling_of_stratholme : public ScriptedInstance
 
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
-        uint64 GetData64(uint32 uiData);
 
         const char* Save() { return strInstData.c_str(); }
         void Load(const char* chrIn);
@@ -142,7 +141,6 @@ class MANGOS_DLL_DECL instance_culling_of_stratholme : public ScriptedInstance
 
     protected:
         void OnPlayerEnter(Player* pPlayer);
-        void UpdateQuestCredit();
         void DoChromieHurrySpeech();
 
         uint32 m_auiEncounter[MAX_ENCOUNTER];
@@ -152,42 +150,12 @@ class MANGOS_DLL_DECL instance_culling_of_stratholme : public ScriptedInstance
         uint32 m_uiRemoveCrateStateTimer;
         uint32 m_uiArthasRespawnTimer;
 
-        uint64 m_uiChromieInnGUID;
-        uint64 m_uiChromieEntranceGUID;
-        uint64 m_uiChromieEndGUID;
-        uint64 m_uiHourglassGUID;
-        uint64 m_uiArthasGUID;
-        uint64 m_uiMeathookGUID;
-        uint64 m_uiSalrammGUID;
-        uint64 m_uiEpochGUID;
-        uint64 m_uiMalganisGUID;
-        uint64 m_uiCorrupterGUID;
-        uint64 m_uiLordaeronCrierGUID;
-
-        uint64 m_uiBelfastGUID;
-        uint64 m_uiForrestenGUID;
-        uint64 m_uiSiabiGUID;
-        uint64 m_uiJamesGUID;
-        uint64 m_uiCorricksGUID;
-        uint64 m_uiStoutmantleGUID;
-
-        uint64 m_uiOwensGUID;
-        uint64 m_uiMoriganGUID;
-        uint64 m_uiAndersonGUID;
-        uint64 m_uiMooreGUID;
-        uint64 m_uiBattsonGUID;
-
-        uint64 m_uiOReillyGUID;
-
         GUIDList m_luiCratesBunnyGUIDs;
         GUIDList m_luiFootmanGUIDs;
         GUIDList m_luiResidentGUIDs;
 
         GUIDList m_lAgiatedCitizenGUIDList;
         GUIDList m_lAgiatedResidentGUIDList;
-
-        uint64 m_uiDoorBookcaseGUID;
-        uint64 m_uiDarkRunedChestGUID;
 };
 
 #endif
