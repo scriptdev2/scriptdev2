@@ -76,9 +76,6 @@ enum
     SAY_LKING_ANUB_INTRO_3              = -1649037,
     SAY_ANUB_ANUB_INTRO_1               = -1649038,
 
-    NPC_GORMOK                          = 34796,
-    NPC_JARAXXUS                        = 34780,
-
     GOSSIP_ITEM_START_EVENT1            = -3649000
 };
 

@@ -7,23 +7,41 @@
 
 enum
 {
-    MAX_ENCOUNTER          = 5,
+    MAX_ENCOUNTER               = 5,
 
-    TYPE_NORTHREND_BEASTS  = 1,
-    TYPE_JARAXXUS          = 2,
-    TYPE_FACTION_CHAMPIONS = 3,
-    TYPE_TWIN_VALKYR       = 4,
-    TYPE_ANUBARAK          = 5,
+    TYPE_NORTHREND_BEASTS       = 0,
+    TYPE_JARAXXUS               = 1,
+    TYPE_FACTION_CHAMPIONS      = 2,
+    TYPE_TWIN_VALKYR            = 3,
+    TYPE_ANUBARAK               = 4,
 
-    DATA_GORMOK            = 6,
-    DATA_ACIDMAW           = 7,
-    DATA_DREADSCALE        = 8,
-    DATA_ICEHOWL           = 9,
-    DATA_JARAXXUS          = 10,
-    DATA_FACTION_CHAMPIONS = 11,
-    DATA_FJOLA             = 12,
-    DATA_EYDIS             = 13,
-    DATA_ANUBARAK          = 14,
+    NPC_GORMOK                  = 34796,
+    NPC_ACIDMAW                 = 35144,
+    NPC_DREADSCALE              = 34799,
+    NPC_ICEHOWL                 = 34797,
+    NPCJARAXXUS                 = 34780,
+    NPC_FJOLA                   = 34497,
+    NPC_EYDIS                   = 34496,
+    NPC_ANUBARAK                = 34564,
+};
+
+class MANGOS_DLL_DECL instance_trial_of_the_crusader : public ScriptedInstance
+{
+    public:
+        instance_trial_of_the_crusader(Map* pMap);
+
+        void Initialize();
+        bool IsEncounterInProgress() const;
+
+        void SetData(uint32 uiType, uint32 uiData);
+        uint32 GetData(uint32 uiType);
+
+        const char* Save() { return m_strInstData.c_str(); }
+        void Load(const char* chrIn);
+
+    private:
+        uint32 m_auiEncounter[MAX_ENCOUNTER];
+        std::string m_strInstData;
 };
 
 #endif
