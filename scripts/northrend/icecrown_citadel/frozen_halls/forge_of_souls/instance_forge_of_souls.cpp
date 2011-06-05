@@ -26,9 +26,7 @@ EndScriptData */
 
 instance_forge_of_souls::instance_forge_of_souls(Map* pMap) : ScriptedInstance(pMap),
     m_bCriteriaPhantomBlastFailed(false),
-    m_uiTeam(0),
-    m_uiBronjahmGUID(0),
-    m_uiDevourerOrSoulsGUID(0)
+    m_uiTeam(0)
 {
     Initialize();
 }
@@ -40,11 +38,15 @@ void instance_forge_of_souls::Initialize()
 
 void instance_forge_of_souls::OnCreatureCreate(Creature* pCreature)
 {
-    switch(pCreature->GetEntry())
+    switch (pCreature->GetEntry())
     {
-        case NPC_BRONJAHM:                  m_uiBronjahmGUID = pCreature->GetGUID(); break;
-        case NPC_DEVOURER_OF_SOULS:         m_uiDevourerOrSoulsGUID = pCreature->GetGUID(); break;
-        case NPC_CORRUPTED_SOUL_FRAGMENT:   m_luiSoulFragmentAliveGUIDs.push_back(pCreature->GetGUID()); break;
+        case NPC_BRONJAHM:
+            m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
+            break;
+
+        case NPC_CORRUPTED_SOUL_FRAGMENT:
+            m_luiSoulFragmentAliveGUIDs.push_back(pCreature->GetGUID());
+            break;
     }
 }
 
@@ -184,19 +186,6 @@ uint32 instance_forge_of_souls::GetData(uint32 uiType)
             return m_auiEncounter[0];
         case TYPE_DECOURER_OF_SOULS:
             return m_auiEncounter[1];
-        default:
-            return 0;
-    }
-}
-
-uint64 instance_forge_of_souls::GetData64(uint32 uiData)
-{
-    switch(uiData)
-    {
-        case NPC_BRONJAHM:
-            return m_uiBronjahmGUID;
-        case NPC_DEVOURER_OF_SOULS:
-            return m_uiDevourerOrSoulsGUID;
         default:
             return 0;
     }
