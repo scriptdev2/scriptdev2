@@ -66,31 +66,28 @@ struct MANGOS_DLL_DECL npc_web_wrapAI : public ScriptedAI
 {
     npc_web_wrapAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
-    uint64 m_uiVictimGUID;
+    ObjectGuid m_victimGuid;
 
-    void Reset()
-    {
-        m_uiVictimGUID = 0;
-    }
+    void Reset() {}
 
-    void MoveInLineOfSight(Unit* pWho) { }
-    void AttackStart(Unit* pWho) { }
+    void MoveInLineOfSight(Unit* pWho) {}
+    void AttackStart(Unit* pWho) {}
 
     void SetVictim(Unit* pVictim)
     {
         if (pVictim)
         {
             DoTeleportPlayer(pVictim, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), pVictim->GetOrientation());
-            m_uiVictimGUID = pVictim->GetGUID();
+            m_victimGuid = pVictim->GetObjectGuid();
             pVictim->CastSpell(pVictim, SPELL_WEBWRAP, true);
         }
     }
 
     void JustDied(Unit* pKiller)
     {
-        if (m_uiVictimGUID)
+        if (m_victimGuid)
         {
-            if (Player* pVictim = m_creature->GetMap()->GetPlayer(m_uiVictimGUID))
+            if (Player* pVictim = m_creature->GetMap()->GetPlayer(m_victimGuid))
             {
                 if (pVictim->isAlive())
                     pVictim->RemoveAurasDueToSpell(SPELL_WEBWRAP);

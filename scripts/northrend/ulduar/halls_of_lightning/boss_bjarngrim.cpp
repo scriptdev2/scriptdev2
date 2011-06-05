@@ -79,7 +79,6 @@ struct MANGOS_DLL_DECL boss_bjarngrimAI : public ScriptedAI
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         m_uiStance = STANCE_DEFENSIVE;
-        memset(&m_auiStormforgedLieutenantGUID, 0, sizeof(m_auiStormforgedLieutenantGUID));
         Reset();
     }
 
@@ -106,7 +105,7 @@ struct MANGOS_DLL_DECL boss_bjarngrimAI : public ScriptedAI
     uint32 m_uiMortalStrike_Timer;
     uint32 m_uiSlam_Timer;
 
-    uint64 m_auiStormforgedLieutenantGUID[2];
+    ObjectGuid m_aStormforgedLieutenantGuid[2];             // TODO - not filled yet.
 
     void Reset()
     {
@@ -131,7 +130,7 @@ struct MANGOS_DLL_DECL boss_bjarngrimAI : public ScriptedAI
 
         for(uint8 i = 0; i < 2; ++i)
         {
-            if (Creature* pStormforgedLieutenant = m_creature->GetMap()->GetCreature(m_auiStormforgedLieutenantGUID[i]))
+            if (Creature* pStormforgedLieutenant = m_creature->GetMap()->GetCreature(m_aStormforgedLieutenantGuid[i]))
             {
                 if (!pStormforgedLieutenant->isAlive())
                     pStormforgedLieutenant->Respawn();
