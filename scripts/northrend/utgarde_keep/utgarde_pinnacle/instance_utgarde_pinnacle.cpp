@@ -24,121 +24,96 @@ EndScriptData */
 #include "precompiled.h"
 #include "utgarde_pinnacle.h"
 
-struct MANGOS_DLL_DECL instance_pinnacle : public ScriptedInstance
+instance_pinnacle::instance_pinnacle(Map* pMap) : ScriptedInstance(pMap)
 {
-    instance_pinnacle(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
+    Initialize();
+}
 
-    uint32 m_auiEncounter[MAX_ENCOUNTER];
-    std::string strInstData;
+void instance_pinnacle::Initialize()
+{
+    memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
+}
 
-    uint64 m_uiSkadiDoorGUID;
-
-    void Initialize()
+void instance_pinnacle::OnObjectCreate(GameObject* pGo)
+{
+    switch(pGo->GetEntry())
     {
-        memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
-
-        m_uiSkadiDoorGUID = 0;
+        case GO_DOOR_SKADI:
+            if (m_auiEncounter[TYPE_SKADI] == DONE)
+                pGo->SetGoState(GO_STATE_ACTIVE);
+            m_mGoEntryGuidStore[GO_DOOR_SKADI] = pGo->GetObjectGuid();
+            break;
     }
+}
 
-    void OnObjectCreate(GameObject* pGo)
+void instance_pinnacle::SetData(uint32 uiType, uint32 uiData)
+{
+    switch (uiType)
     {
-        switch(pGo->GetEntry())
-        {
-            case GO_DOOR_SKADI:
-                m_uiSkadiDoorGUID = pGo->GetGUID();
+        case TYPE_SVALA:
+            m_auiEncounter[uiType] = uiData;
+            break;
+        case TYPE_GORTOK:
+            m_auiEncounter[uiType] = uiData;
+            break;
+        case TYPE_SKADI:
+            if (uiData == DONE)
+                DoUseDoorOrButton(GO_DOOR_SKADI);
 
-                if (m_auiEncounter[2] == DONE)
-                    pGo->SetGoState(GO_STATE_ACTIVE);
-
-                break;
-        }
-    }
-
-    void SetData(uint32 uiType, uint32 uiData)
-    {
-        debug_log("SD2: Instance Pinnacle: SetData received for type %u with data %u", uiType, uiData);
-
-        switch(uiType)
-        {
-            case TYPE_SVALA:
-                m_auiEncounter[0] = uiData;
-                break;
-            case TYPE_GORTOK:
-                m_auiEncounter[1] = uiData;
-                break;
-            case TYPE_SKADI:
-                if (uiData == DONE)
-                    DoUseDoorOrButton(m_uiSkadiDoorGUID);
-
-                m_auiEncounter[2] = uiData;
-                break;
-            case TYPE_YMIRON:
-                m_auiEncounter[3] = uiData;
-                break;
-            default:
-                error_log("SD2: Instance Pinnacle: SetData = %u for type %u does not exist/not implemented.", uiType, uiData);
-                break;
-        }
-
-        //saving also SPECIAL for this instance
-        if (uiData == DONE || uiData == SPECIAL)
-        {
-            OUT_SAVE_INST_DATA;
-
-            std::ostringstream saveStream;
-            saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " " << m_auiEncounter[3];
-
-            strInstData = saveStream.str();
-
-            SaveToDB();
-            OUT_SAVE_INST_DATA_COMPLETE;
-        }
-    }
-
-    uint32 GetData(uint32 uiType)
-    {
-        switch(uiType)
-        {
-            case TYPE_SVALA:
-                return m_auiEncounter[0];
-            case TYPE_GORTOK:
-                return m_auiEncounter[1];
-            case TYPE_SKADI:
-                return m_auiEncounter[2];
-            case TYPE_YMIRON:
-                return m_auiEncounter[3];
-        }
-
-        return 0;
-    }
-
-    const char* Save()
-    {
-        return strInstData.c_str();
-    }
-
-    void Load(const char* chrIn)
-    {
-        if (!chrIn)
-        {
-            OUT_LOAD_INST_DATA_FAIL;
+            m_auiEncounter[uiType] = uiData;
+            break;
+        case TYPE_YMIRON:
+            m_auiEncounter[uiType] = uiData;
+            break;
+        default:
+            error_log("SD2: Instance Pinnacle: SetData = %u for type %u does not exist/not implemented.", uiType, uiData);
             return;
-        }
-
-        OUT_LOAD_INST_DATA(chrIn);
-
-        std::istringstream loadStream(chrIn);
-        loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3];
-
-        for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
-        {
-            if (m_auiEncounter[i] == IN_PROGRESS)
-                m_auiEncounter[i] = NOT_STARTED;
-        }
-
-        OUT_LOAD_INST_DATA_COMPLETE;
     }
-};
+
+    // Saving also SPECIAL for this instance
+    if (uiData == DONE || uiData == SPECIAL)
+    {
+        OUT_SAVE_INST_DATA;
+
+        std::ostringstream saveStream;
+        saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " " << m_auiEncounter[3];
+
+        m_strInstData = saveStream.str();
+
+        SaveToDB();
+        OUT_SAVE_INST_DATA_COMPLETE;
+    }
+}
+
+uint32 instance_pinnacle::GetData(uint32 uiType)
+{
+    if (uiType < MAX_ENCOUNTER)
+        return m_auiEncounter[uiType];
+
+    return 0;
+}
+
+void instance_pinnacle::Load(const char* chrIn)
+{
+    if (!chrIn)
+    {
+        OUT_LOAD_INST_DATA_FAIL;
+        return;
+    }
+
+    OUT_LOAD_INST_DATA(chrIn);
+
+    std::istringstream loadStream(chrIn);
+    loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3];
+
+    for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+    {
+        if (m_auiEncounter[i] == IN_PROGRESS)
+            m_auiEncounter[i] = NOT_STARTED;
+    }
+
+    OUT_LOAD_INST_DATA_COMPLETE;
+}
 
 InstanceData* GetInstanceData_instance_pinnacle(Map* pMap)
 {
@@ -147,10 +122,10 @@ InstanceData* GetInstanceData_instance_pinnacle(Map* pMap)
 
 void AddSC_instance_pinnacle()
 {
-    Script* newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "instance_pinnacle";
-    newscript->GetInstanceData = &GetInstanceData_instance_pinnacle;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "instance_pinnacle";
+    pNewScript->GetInstanceData = &GetInstanceData_instance_pinnacle;
+    pNewScript->RegisterSelf();
 }
