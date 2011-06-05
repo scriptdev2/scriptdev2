@@ -19,8 +19,8 @@ enum
     TYPE_COUNCIL                    = 7,
     TYPE_ILLIDAN                    = 8,
 
-    NPC_WARLORD_NAJENTUS            = 22887,
-    NPC_SUPREMUS                    = 22898,
+    // NPC_WARLORD_NAJENTUS         = 22887,
+    // NPC_SUPREMUS                 = 22898,
     NPC_SHADE_OF_AKAMA              = 22841,
     NPC_AKAMA_SHADE                 = 22990,
     NPC_ILLIDARI_COUNCIL            = 23426,
@@ -69,28 +69,8 @@ class MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strInstData;
 
-        uint64 m_uiNajentusGUID;
-        uint64 m_uiAkamaGUID;                               // This is the Akama that starts the Illidan encounter.
-        uint64 m_uiAkama_ShadeGUID;                         // This is the Akama that starts the Shade of Akama encounter.
-        uint64 m_uiShadeOfAkamaGUID;
-        uint64 m_uiSupremusGUID;
-        uint64 m_uiLadyMalandeGUID;
-        uint64 m_uiGathiosTheShattererGUID;
-        uint64 m_uiHighNethermancerZerevorGUID;
-        uint64 m_uiVerasDarkshadowGUID;
-        uint64 m_uiIllidariCouncilGUID;
-        uint64 m_uiBloodElfCouncilVoiceGUID;
-        uint64 m_uiIllidanStormrageGUID;
-
-        uint64 m_uiNajentusGateGUID;
-        uint64 m_uiMainTempleDoorsGUID;
-        uint64 m_uiShadeAkamaDoorGUID;
-        uint64 m_uiIllidanGateGUID;
-        uint64 m_uiIllidanDoorGUID[2];
-        uint64 m_uiShahrazPreDoorGUID;
-        uint64 m_uiShahrazPostDoorGUID;
-        uint64 m_uiPreCouncilDoorGUID;
-        uint64 m_uiCouncilDoorGUID;
+        ObjectGuid m_akamaGuid;                             // This is the Akama that starts the Illidan encounter.
+        ObjectGuid m_illidanStormrageGuid;
 };
 
 #endif

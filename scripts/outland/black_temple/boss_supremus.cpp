@@ -99,7 +99,7 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
     uint32 m_uiBerserkTimer;
     uint32 m_uiMoltenPunchTimer;
 
-    uint64 m_uiLastGazeTargetGUID;
+    ObjectGuid m_lastGazeTargetGuid;
 
     bool m_bTankPhase;
 
@@ -113,7 +113,7 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
         m_uiMoltenPunchTimer   = 8000;
         m_uiBerserkTimer       = 15*MINUTE*IN_MILLISECONDS;
 
-        m_uiLastGazeTargetGUID = 0;
+        m_lastGazeTargetGuid.Clear();
 
         m_bTankPhase = true;
     }
@@ -187,7 +187,7 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
 
     void KilledUnit(Unit* pKilled)
     {
-        if (!m_bTankPhase && pKilled->GetGUID() == m_uiLastGazeTargetGUID)
+        if (!m_bTankPhase && pKilled->GetObjectGuid() == m_lastGazeTargetGuid)
             m_uiSwitchTargetTimer = 0;
     }
 
@@ -262,7 +262,7 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
                     m_creature->AddThreat(pTarget, 5000000.0f);
                     DoScriptText(EMOTE_NEW_TARGET, m_creature);
                     m_uiSwitchTargetTimer = 10000;
-                    m_uiLastGazeTargetGUID = pTarget->GetGUID();
+                    m_lastGazeTargetGuid = pTarget->GetObjectGuid();
                 }
             }
             else

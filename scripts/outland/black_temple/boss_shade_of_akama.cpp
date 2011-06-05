@@ -119,8 +119,6 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
     boss_shade_of_akamaAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_lChannelersGUIDList.clear();
-        m_lSorcerersGUIDList.clear();
         Reset();
     }
 
@@ -128,8 +126,6 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
 
     GUIDList m_lChannelersGUIDList;
     GUIDList m_lSorcerersGUIDList;
-
-    uint64 m_uiAkamaGUID;
 
     uint32 m_uiSorcererCount;
     uint32 m_uiDeathCount;
@@ -184,7 +180,8 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
         RespawnChannelersIfDeadOrEvade();
     }
 
-    void IncrementDeathCount(uint64 uiGuid = 0)               // If guid is set, will remove it from list of sorcerer
+    // If guid is set, will remove it from list of sorcerer
+    void IncrementDeathCount(ObjectGuid uiGuid = ObjectGuid())
     {
         debug_log("SD2: Increasing Death Count for Shade of Akama encounter");
         ++m_uiDeathCount;
@@ -192,9 +189,9 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
         if (uiGuid)
         {
             if (m_lSorcerersGUIDList.empty())
-                error_log("SD2: boss_shade_of_akamaAI attempt to remove guid " UI64FMTD " from Sorcerers list but list is already empty", uiGuid);
+                error_log("SD2: boss_shade_of_akamaAI attempt to remove guid %s from Sorcerers list but list is already empty", uiGuid.GetString().c_str());
             else
-                m_lSorcerersGUIDList.remove(uiGuid);
+                m_lSorcerersGUIDList.remove(uiGuid.GetRawValue());
         }
     }
 
@@ -283,7 +280,7 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
             for(std::list<Creature*>::iterator itr = lChannelerList.begin(); itr != lChannelerList.end(); ++itr)
             {
                 m_lChannelersGUIDList.push_back((*itr)->GetGUID());
-                debug_log("SD2: boss_shade_of_akamaAI found channeler " UI64FMTD ". Adding to list", (*itr)->GetGUID());
+                debug_log("SD2: boss_shade_of_akamaAI found channeler %s. Adding to list", (*itr)->GetObjectGuid().GetString().c_str());
 
                 (*itr)->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             }
@@ -323,7 +320,7 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
                     m_afSpawnLoc[uiRand].m_fX, m_afSpawnLoc[uiRand].m_fY, m_afSpawnLoc[uiRand].m_fZ, m_afSpawnLoc[uiRand].m_fO,
                     TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 25000))
                 {
-                    if (Creature* pAkama = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_AKAMA_SHADE)))
+                    if (Creature* pAkama = m_pInstance->GetSingleCreatureFromStorage(NPC_AKAMA_SHADE))
                         pDefender->AI()->AttackStart(pAkama);
                 }
 
@@ -342,7 +339,7 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
 
             if (m_uiDeathCount >= 6)
             {
-                if (Creature* pAkama = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_AKAMA_SHADE)))
+                if (Creature* pAkama = m_pInstance->GetSingleCreatureFromStorage(NPC_AKAMA_SHADE))
                 {
                     if (pAkama && pAkama->isAlive())
                     {
@@ -364,7 +361,7 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
         {
             if (m_uiReduceHealthTimer < uiDiff)
             {
-                if (Creature* pAkama = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_AKAMA_SHADE)))
+                if (Creature* pAkama = m_pInstance->GetSingleCreatureFromStorage(NPC_AKAMA_SHADE))
                 {
                     if (pAkama->isAlive())
                     {
@@ -455,7 +452,7 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
         if (!m_pInstance)
             return;
 
-        if (Creature* pShade = m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_SHADE_OF_AKAMA)))
+        if (Creature* pShade = m_pInstance->GetSingleCreatureFromStorage(NPC_SHADE_OF_AKAMA))
         {
             if (boss_shade_of_akamaAI* pShadeAI = dynamic_cast<boss_shade_of_akamaAI*>(pShade->AI()))
                 pShadeAI->PrepareChannelers();
@@ -489,7 +486,7 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
                 ++m_uiWayPointId;
                 break;
             case 1:
-                if (Creature* pShade = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_SHADE_OF_AKAMA)))
+                if (Creature* pShade = m_pInstance->GetSingleCreatureFromStorage(NPC_SHADE_OF_AKAMA))
                 {
                     DoCastSpellIfCan(pShade, SPELL_AKAMA_SOUL_RETRIEVE);
                     m_uiEndingTalkCount = 0;
@@ -511,7 +508,7 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
 
         if (!m_bCanStartCombat)
         {
-            if (Creature* pShade = m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_SHADE_OF_AKAMA)))
+            if (Creature* pShade = m_pInstance->GetSingleCreatureFromStorage(NPC_SHADE_OF_AKAMA))
             {
                 if (!pShade->isAlive())
                 {
@@ -550,7 +547,7 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
         {
             if (m_uiCheckTimer < uiDiff)
             {
-                if (Creature* pShade = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_SHADE_OF_AKAMA)))
+                if (Creature* pShade = m_pInstance->GetSingleCreatureFromStorage(NPC_SHADE_OF_AKAMA))
                 {
                     if (!pShade->isAlive())
                     {
@@ -671,7 +668,7 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
 
         if (m_uiDestructivePoisonTimer < uiDiff)
         {
-            if (Creature* pShade = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_SHADE_OF_AKAMA)))
+            if (Creature* pShade = m_pInstance->GetSingleCreatureFromStorage(NPC_SHADE_OF_AKAMA))
             {
                 if (pShade->isAlive())
                     DoCastSpellIfCan(pShade, SPELL_DESTRUCTIVE_POISON);
@@ -749,7 +746,7 @@ struct MANGOS_DLL_DECL mob_ashtongue_channelerAI : public ScriptedAI
         if (!m_pInstance)
             return;
 
-        if (Creature* pShade = m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_SHADE_OF_AKAMA)))
+        if (Creature* pShade = m_pInstance->GetSingleCreatureFromStorage(NPC_SHADE_OF_AKAMA))
         {
             if (pShade->isAlive())
             {
@@ -769,7 +766,7 @@ struct MANGOS_DLL_DECL mob_ashtongue_channelerAI : public ScriptedAI
         //start channel (not nice way to start channeling)
         if (!m_creature->IsNonMeleeSpellCasted(false) && !m_creature->getVictim() && m_pInstance)
         {
-            if (Creature* pShade = m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_SHADE_OF_AKAMA)))
+            if (Creature* pShade = m_pInstance->GetSingleCreatureFromStorage(NPC_SHADE_OF_AKAMA))
                 m_creature->CastSpell(pShade, SPELL_SHADE_SOUL_CHANNEL, false);
         }
     }
@@ -802,12 +799,12 @@ struct MANGOS_DLL_DECL mob_ashtongue_sorcererAI : public ScriptedAI
         if (!m_pInstance)
             return;
 
-        if (Creature* pShade = m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_SHADE_OF_AKAMA)))
+        if (Creature* pShade = m_pInstance->GetSingleCreatureFromStorage(NPC_SHADE_OF_AKAMA))
         {
             if (pShade->isAlive())
             {
                 if (boss_shade_of_akamaAI* pShadeAI = dynamic_cast<boss_shade_of_akamaAI*>(pShade->AI()))
-                    pShadeAI->IncrementDeathCount(m_creature->GetGUID());
+                    pShadeAI->IncrementDeathCount(m_creature->GetObjectGuid());
                 else
                     error_log("SD2: mob_ashtongue_sorcererAI dead but unable to increment DeathCount for Shade of Akama.");
             }
@@ -821,7 +818,7 @@ struct MANGOS_DLL_DECL mob_ashtongue_sorcererAI : public ScriptedAI
 
         if (m_uiCheckTimer < uiDiff)
         {
-            Creature* pShade = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_SHADE_OF_AKAMA));
+            Creature* pShade = m_pInstance->GetSingleCreatureFromStorage(NPC_SHADE_OF_AKAMA);
 
             if (pShade && pShade->isAlive() && m_creature->isAlive())
             {

@@ -61,13 +61,12 @@ struct MANGOS_DLL_DECL mob_doom_blossomAI : public ScriptedAI
 
     uint32 m_uiCheckTeronTimer;
     uint32 m_uiShadowBoltTimer;
-    uint64 m_uiTeronGUID;
+    ObjectGuid m_teronGuid;
 
     void Reset()
     {
         m_uiCheckTeronTimer = 5000;
         m_uiShadowBoltTimer = 12000;
-        m_uiTeronGUID = 0;
     }
 
     void AttackStart(Unit* pWho) { }
@@ -77,11 +76,11 @@ struct MANGOS_DLL_DECL mob_doom_blossomAI : public ScriptedAI
     {
         if (m_uiCheckTeronTimer < uiDiff)
         {
-            if (m_uiTeronGUID)
+            if (m_teronGuid)
             {
                 m_creature->SetInCombatWithZone();
 
-                Creature* pTeron = m_creature->GetMap()->GetCreature(m_uiTeronGUID);
+                Creature* pTeron = m_creature->GetMap()->GetCreature(m_teronGuid);
                 if (pTeron && (!pTeron->isAlive() || pTeron->IsInEvadeMode()))
                     m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
             }
@@ -107,7 +106,7 @@ struct MANGOS_DLL_DECL mob_doom_blossomAI : public ScriptedAI
             m_uiShadowBoltTimer -= uiDiff;
     }
 
-    void SetTeronGUID(uint64 uiGUID){ m_uiTeronGUID = uiGUID; }
+    void SetTeronGUID(ObjectGuid guid){ m_teronGuid = guid; }
 };
 
 struct MANGOS_DLL_DECL mob_shadowy_constructAI : public ScriptedAI
@@ -117,16 +116,15 @@ struct MANGOS_DLL_DECL mob_shadowy_constructAI : public ScriptedAI
         Reset();
     }
 
-    uint64 m_uiGhostGUID;
-    uint64 m_uiTeronGUID;
+    ObjectGuid m_ghostGuid;
+    ObjectGuid m_teronGuid;                                 // TODO unused, possible bug?
 
     uint32 m_uiCheckPlayerTimer;
     uint32 m_uiCheckTeronTimer;
 
     void Reset()
     {
-        m_uiGhostGUID = 0;
-        m_uiTeronGUID = 0;
+        m_ghostGuid.Clear();
 
         m_uiCheckPlayerTimer = 2000;
         m_uiCheckTeronTimer = 5000;
@@ -134,7 +132,7 @@ struct MANGOS_DLL_DECL mob_shadowy_constructAI : public ScriptedAI
 
     void MoveInLineOfSight(Unit* pWho)
     {
-        if (!pWho || !pWho->isAlive() || pWho->GetGUID() == m_uiGhostGUID)
+        if (!pWho || !pWho->isAlive() || pWho->GetObjectGuid() == m_ghostGuid)
             return;
 
         ScriptedAI::MoveInLineOfSight(pWho);
@@ -143,7 +141,7 @@ struct MANGOS_DLL_DECL mob_shadowy_constructAI : public ScriptedAI
 /* Comment it out for now. NOTE TO FUTURE DEV: UNCOMMENT THIS OUT ONLY AFTER MIND CONTROL IS IMPLEMENTED
     void DamageTaken(Unit* done_by, uint32 &damage)
     {
-        if (done_by->GetGUID() != m_uiGhostGUID)
+        if (done_by->GetGUID() != m_ghostGuid)
         damage = 0;                                         // Only the ghost can deal damage.
     }
  */
@@ -185,7 +183,7 @@ struct MANGOS_DLL_DECL mob_shadowy_constructAI : public ScriptedAI
 
         if (m_uiCheckTeronTimer < uiDiff)
         {
-            Creature* pTeron = m_creature->GetMap()->GetCreature(m_uiTeronGUID);
+            Creature* pTeron = m_creature->GetMap()->GetCreature(m_teronGuid);
             if (!pTeron || !pTeron->isAlive() || pTeron->IsInEvadeMode())
                 m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
 
@@ -215,8 +213,8 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
     uint32 m_uiRandomYellTimer;
     uint32 m_uiAggroTimer;
 
-    uint64 m_uiAggroTargetGUID;
-    uint64 m_uiGhostGUID;                                   // Player that gets killed by Shadow of Death and gets turned into a ghost
+    ObjectGuid m_aggroTargetGuid;
+    ObjectGuid m_ghostGuid;                                 // Player that gets killed by Shadow of Death and gets turned into a ghost
 
     bool m_bIntro;
 
@@ -234,7 +232,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
 
         m_uiAggroTimer = 20000;
-        m_uiAggroTargetGUID = 0;
+        m_aggroTargetGuid.Clear();
         m_bIntro = false;
     }
 
@@ -259,7 +257,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
                 DoScriptText(SAY_INTRO, m_creature);
 
                 m_creature->HandleEmote(EMOTE_STATE_TALK);
-                m_uiAggroTargetGUID = pWho->GetGUID();
+                m_aggroTargetGuid = pWho->GetObjectGuid();
                 m_bIntro = true;
             }
         }
@@ -313,8 +311,8 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
         /************************************************************************/
 
         Player* pGhost = NULL;
-        if (m_uiGhostGUID)
-            pGhost = m_creature->GetMap()->GetPlayer(m_uiGhostGUID);
+        if (m_ghostGuid)
+            pGhost = m_creature->GetMap()->GetPlayer(m_ghostGuid);
 
         if (pGhost && pGhost->isAlive() && pGhost->HasAura(SPELL_SHADOW_OF_DEATH, EFFECT_INDEX_0))
         {
@@ -338,7 +336,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
 
                     SetThreatList(pConstruct);               // Use same function as Doom Blossom to set Threat List.
                     if (mob_shadowy_constructAI* pConstructAI = dynamic_cast<mob_shadowy_constructAI*>(pConstruct->AI()))
-                        pConstructAI->m_uiGhostGUID = m_uiGhostGUID;
+                        pConstructAI->m_ghostGuid = m_ghostGuid;
 
                     Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1);
                     pConstruct->GetMotionMaster()->MoveChase(pTarget ? pTarget : m_creature->getVictim());
@@ -360,9 +358,9 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
 
                 m_creature->HandleEmote(EMOTE_STATE_NONE);
                 m_bIntro = false;
-                if (m_uiAggroTargetGUID)
+                if (m_aggroTargetGuid)
                 {
-                    if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiAggroTargetGUID))
+                    if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_aggroTargetGuid))
                         AttackStart(pPlayer);
 
                     m_creature->SetInCombatWithZone();
@@ -409,7 +407,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
                     pDoomBlossom->AddThreat(pTarget);
 
                     if (mob_doom_blossomAI* pDoomBlossomAI = dynamic_cast<mob_doom_blossomAI*>(pDoomBlossom->AI()))
-                        pDoomBlossomAI->SetTeronGUID(m_creature->GetGUID());
+                        pDoomBlossomAI->SetTeronGUID(m_creature->GetObjectGuid());
 
                     SetThreatList(pDoomBlossom);
                 }
@@ -453,7 +451,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
             if (pTarget && pTarget->isAlive() && pTarget->GetTypeId() == TYPEID_PLAYER)
             {
                 DoCastSpellIfCan(pTarget, SPELL_SHADOW_OF_DEATH);
-                m_uiGhostGUID = pTarget->GetGUID();
+                m_ghostGuid = pTarget->GetObjectGuid();
                 m_uiShadowOfDeathTimer = 30000;
                 m_uiSummonShadowsTimer = 53000; // Make it VERY close but slightly less so that we can check if the aura is still on the pPlayer
             }

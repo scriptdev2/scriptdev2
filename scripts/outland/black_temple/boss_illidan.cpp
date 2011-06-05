@@ -350,7 +350,7 @@ struct MANGOS_DLL_DECL demonfireAI : public ScriptedAI
         {
             if (!m_illidanGuid && m_pInstance)
             {
-                if (Creature* pIllidan = m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_ILLIDAN_STORMRAGE)))
+                if (Creature* pIllidan = m_pInstance->instance->GetCreature(m_pInstance->GetGuid(NPC_ILLIDAN_STORMRAGE)))
                 {
                     m_illidanGuid = m_pInstance->GetGuid(NPC_ILLIDAN_STORMRAGE);
 
@@ -422,7 +422,7 @@ struct MANGOS_DLL_DECL npc_akama_illidanAI : public ScriptedAI
         if (m_pInstance)
         {
             m_pInstance->SetData(TYPE_ILLIDAN, NOT_STARTED);
-            GameObject* pGate = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(GO_ILLIDAN_GATE));
+            GameObject* pGate = m_pInstance->GetSingleGameObjectFromStorage(GO_ILLIDAN_GATE);
 
             // close door if already open (when raid wipes or something)
             if (pGate && !pGate->GetGoState())
@@ -430,7 +430,7 @@ struct MANGOS_DLL_DECL npc_akama_illidanAI : public ScriptedAI
 
             for(uint32 i = GO_ILLIDAN_DOOR_R; i < GO_ILLIDAN_DOOR_L + 1; ++i)
             {
-                if (GameObject* pDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(i)))
+                if (GameObject* pDoor = m_pInstance->GetSingleGameObjectFromStorage(i))
                     pDoor->SetGoState(GO_STATE_ACTIVE);
             }
         }
@@ -522,7 +522,7 @@ struct MANGOS_DLL_DECL npc_akama_illidanAI : public ScriptedAI
         debug_log("SD2: Akama - Door event initiated by player %s", pPlayer->GetObjectGuid().GetString().c_str());
         m_playerGuid = pPlayer->GetObjectGuid();
 
-        if (GameObject* pGate = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(GO_ILLIDAN_GATE)))
+        if (GameObject* pGate = m_pInstance->GetSingleGameObjectFromStorage(GO_ILLIDAN_GATE))
         {
             float x,y,z;
             pGate->GetPosition(x, y, z);
@@ -571,7 +571,7 @@ struct MANGOS_DLL_DECL npc_akama_illidanAI : public ScriptedAI
                     // open the doors that close the summit
                     for(uint32 i = GO_ILLIDAN_DOOR_R; i < GO_ILLIDAN_DOOR_L+1; ++i)
                     {
-                        if (GameObject* pDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(i)))
+                        if (GameObject* pDoor = m_pInstance->GetSingleGameObjectFromStorage(i))
                             pDoor->SetGoState(GO_STATE_ACTIVE);
                     }
                 }
@@ -625,19 +625,21 @@ struct MANGOS_DLL_DECL npc_akama_illidanAI : public ScriptedAI
         if (!Illidan)
             return;
 
-        ThreatList const& tList = m_creature->getThreatManager().getThreatList();
+        ThreatList const& tList = Illidan->getThreatManager().getThreatList();
         for (ThreatList::const_iterator itr = tList.begin();itr != tList.end(); ++itr)
         {
-            // Loop through threatlist till our GUID is found in it.
+            // Loop through threatlist till our Guid is found in it.
             if ((*itr)->getUnitGuid() == m_creature->GetObjectGuid())
             {
                 (*itr)->removeReference();                  // Delete ourself from his threatlist.
-                return;                                     // No need to continue anymore.
+                break;                                      // No need to continue anymore.
             }
         }
 
         // Now we delete our threatlist to prevent attacking anyone for now
         m_creature->DeleteThreatList();
+        // Also we remove all auras, to prevent delayed damage
+        m_creature->RemoveAllAuras();
     }
 
     void UpdateAI(const uint32 diff)
@@ -693,7 +695,7 @@ struct MANGOS_DLL_DECL npc_akama_illidanAI : public ScriptedAI
         }else
         {
             if (m_pInstance)
-                m_illidanGuid = m_pInstance->GetData64(NPC_ILLIDAN_STORMRAGE);
+                m_illidanGuid = m_pInstance->GetGuid(NPC_ILLIDAN_STORMRAGE);
         }
 
         if (m_bIsWalking && m_uiWalkTimer)
@@ -729,7 +731,7 @@ struct MANGOS_DLL_DECL npc_akama_illidanAI : public ScriptedAI
                                 }
                             }
 
-                            if (GameObject* pGate = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(GO_ILLIDAN_GATE)))
+                            if (GameObject* pGate = m_pInstance->GetSingleGameObjectFromStorage(GO_ILLIDAN_GATE))
                                 pGate->SetGoState(GO_STATE_ACTIVE);
 
                             ++m_uiChannelCount;
@@ -1056,7 +1058,7 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
         for(uint32 i = GO_ILLIDAN_DOOR_R; i < GO_ILLIDAN_DOOR_L + 1; ++i)
         {
             // Open Doors
-            if (GameObject* pDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(i)))
+            if (GameObject* pDoor = m_pInstance->GetSingleGameObjectFromStorage(i))
                 pDoor->SetGoState(GO_STATE_ACTIVE);
         }
 
@@ -1961,7 +1963,7 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
                 ++m_uiDemonFormSequence;
             }
             else
- m_uiAnimationTimer -= uiDiff;
+                m_uiAnimationTimer -= uiDiff;
         }
     }
 };
@@ -1973,17 +1975,14 @@ void npc_akama_illidanAI::BeginEvent(ObjectGuid playerGuid)
     debug_log("SD2: Akama - Illidan Introduction started. Illidan event properly begun.");
     if (m_pInstance)
     {
-        m_illidanGuid = m_pInstance->GetData64(NPC_ILLIDAN_STORMRAGE);
+        m_illidanGuid = m_pInstance->GetGuid(NPC_ILLIDAN_STORMRAGE);
         m_pInstance->SetData(TYPE_ILLIDAN, IN_PROGRESS);
     }
 
     if (m_pInstance)
     {
-        for(uint32 i = GO_ILLIDAN_DOOR_R; i < GO_ILLIDAN_DOOR_L+1; ++i)
-        {
-            if (GameObject* pDoor = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(i)))
-                pDoor->SetGoState(GO_STATE_READY);
-        }
+        m_pInstance->DoUseDoorOrButton(GO_ILLIDAN_DOOR_R);
+        m_pInstance->DoUseDoorOrButton(GO_ILLIDAN_DOOR_L);
     }
 
     if (m_illidanGuid)

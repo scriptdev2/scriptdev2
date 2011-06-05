@@ -62,7 +62,7 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    uint64 TargetGUID;
+    ObjectGuid m_targetGuid;
 
     float TargetThreat;
 
@@ -82,7 +82,7 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
 
     void Reset()
     {
-        TargetGUID = 0;
+        m_targetGuid.Clear();
 
         TargetThreat = 0;
 
@@ -176,7 +176,7 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
         }*/
     }
 
-    void RevertThreatOnTarget(uint64 guid)
+    void RevertThreatOnTarget(ObjectGuid guid)
     {
         if (Player* pPlayer = m_creature->GetMap()->GetPlayer(guid))
         {
@@ -277,7 +277,7 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
                     Phase1 = false;
 
                     TargetThreat = m_creature->getThreatManager().getThreat(target);
-                    TargetGUID = target->GetGUID();
+                    m_targetGuid = target->GetObjectGuid();
                     target->CastSpell(m_creature, SPELL_TAUNT_GURTOGG, true);
 
                     if (m_creature->getThreatManager().getThreat(target))
@@ -304,10 +304,10 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
                 }
             }else                                           // Encounter is a loop pretty much. Phase 1 -> Phase 2 -> Phase 1 -> Phase 2 till death or enrage
             {
-                if (TargetGUID)
-                    RevertThreatOnTarget(TargetGUID);
+                if (m_targetGuid)
+                    RevertThreatOnTarget(m_targetGuid);
 
-                TargetGUID = 0;
+                m_targetGuid.Clear();
                 Phase1 = true;
                 BloodboilTimer = 10000;
                 BloodboilCount = 0;

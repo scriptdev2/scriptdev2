@@ -86,7 +86,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    uint64 TargetGUID[3];
+    ObjectGuid m_targetGuid[3];
     uint32 BeamTimer;
     uint32 BeamCount;
     uint32 CurrentBeam;
@@ -102,8 +102,8 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
 
     void Reset()
     {
-        for(uint8 i = 0; i<3; ++i)
-            TargetGUID[i] = 0;
+        for (uint8 i = 0; i < 3; ++i)
+            m_targetGuid[i].Clear();
 
         BeamTimer = 60000;                                  // Timers may be incorrect
         BeamCount = 0;
@@ -158,7 +158,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
             Unit* pUnit = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1);
             if (pUnit && pUnit->isAlive() && (pUnit->GetTypeId() == TYPEID_PLAYER))
             {
-                TargetGUID[i] = pUnit->GetGUID();
+                m_targetGuid[i] = pUnit->GetObjectGuid();
                 pUnit->CastSpell(pUnit, SPELL_TELEPORT_VISUAL, true);
                 DoTeleportPlayer(pUnit, X, Y, Z, pUnit->GetOrientation());
             }
@@ -239,12 +239,12 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
             {
                 for(uint8 i = 0; i < 3; ++i)
                 {
-                    if (TargetGUID[i])
+                    if (m_targetGuid[i])
                     {
-                        if (Player* pPlayer = m_creature->GetMap()->GetPlayer(TargetGUID[i]))
+                        if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_targetGuid[i]))
                             pPlayer->CastSpell(pPlayer, SPELL_ATTRACTION, true);
 
-                        TargetGUID[i] = 0;
+                        m_targetGuid[i].Clear();
                     }
                 }
 
