@@ -66,7 +66,6 @@ class MANGOS_DLL_DECL instance_halls_of_stone : public ScriptedInstance
 
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
-        uint64 GetData64(uint32 uiData);
 
         void Update(uint32 uiDiff);
 
@@ -85,14 +84,6 @@ class MANGOS_DLL_DECL instance_halls_of_stone : public ScriptedInstance
         GUIDList m_lMarnakGUIDs;
         GUIDList m_lTribunalGUIDs;
         GUIDList m_lWorldtriggerGUIDs;
-
-        uint64 m_uiBrannGUID;
-        uint64 m_uiSjonnirDoorGUID;
-        uint64 m_uiTribunalDoorGUID;
-        uint64 m_uiTribunalChestGUID;
-        uint64 m_uiTribunalConsoleGUID;
-        uint64 m_uiTribunalFloorGUID;
-        uint64 m_uiSjonnirConsoleGUID;
 };
 
 #endif

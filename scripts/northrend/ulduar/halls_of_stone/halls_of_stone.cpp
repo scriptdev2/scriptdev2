@@ -236,9 +236,9 @@ struct MANGOS_DLL_DECL npc_brann_hosAI : public npc_escortAI
                 SetEscortPaused(true);
                 if (m_pInstance)
                 {
-                    if (GameObject* pKonsole = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(GO_TRIBUNAL_CONSOLE)))
+                    if (GameObject* pKonsole = m_pInstance->GetSingleGameObjectFromStorage(GO_TRIBUNAL_CONSOLE))
                         m_creature->SetFacingToObject(pKonsole);
-                    m_pInstance->DoUseDoorOrButton(m_pInstance->GetData64(GO_TRIBUNAL_FLOOR));
+                    m_pInstance->DoUseDoorOrButton(GO_TRIBUNAL_FLOOR);
                 }
                 m_uiPhaseTimer = 1000;
                 break;
@@ -292,7 +292,7 @@ struct MANGOS_DLL_DECL npc_brann_hosAI : public npc_escortAI
                     break;
                 case 2:
                     if (m_pInstance)
-                        m_pInstance->DoUseDoorOrButton(m_pInstance->GetData64(GO_TRIBUNAL_CONSOLE));
+                        m_pInstance->DoUseDoorOrButton(GO_TRIBUNAL_CONSOLE);
                     m_uiPhaseTimer = 6500;
                     break;
                 case 3:
@@ -531,7 +531,7 @@ struct MANGOS_DLL_DECL npc_brann_hosAI : public npc_escortAI
                 {
                     if (m_pInstance)
                     {
-                        m_pInstance->DoUseDoorOrButton(m_pInstance->GetData64(GO_TRIBUNAL_FLOOR));
+                        m_pInstance->DoUseDoorOrButton(GO_TRIBUNAL_FLOOR);
                         m_pInstance->SetData(TYPE_TRIBUNAL, DONE);
                     }
 

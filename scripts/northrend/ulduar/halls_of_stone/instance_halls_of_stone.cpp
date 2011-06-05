@@ -43,15 +43,7 @@ enum
     // NPC_SEARING_GAZE_TARGET          = 28265,
 };
 
-instance_halls_of_stone::instance_halls_of_stone(Map* pMap) : ScriptedInstance(pMap),
-    m_uiBrannGUID(0),
-
-    m_uiSjonnirDoorGUID(0),
-    m_uiTribunalDoorGUID(0),
-    m_uiTribunalChestGUID(0),
-    m_uiTribunalConsoleGUID(0),
-    m_uiTribunalFloorGUID(0),
-    m_uiSjonnirConsoleGUID(0)
+instance_halls_of_stone::instance_halls_of_stone(Map* pMap) : ScriptedInstance(pMap)
 {
     Initialize();
 }
@@ -78,34 +70,29 @@ void instance_halls_of_stone::OnObjectCreate(GameObject* pGo)
     switch(pGo->GetEntry())
     {
         case GO_DOOR_SJONNIR:
-            m_uiSjonnirDoorGUID = pGo->GetGUID();
             break;
         case GO_DOOR_TRIBUNAL:
-            m_uiTribunalDoorGUID = pGo->GetGUID();
-            break;
         case GO_TRIBUNAL_CHEST:
         case GO_TRIBUNAL_CHEST_H:
-            m_uiTribunalChestGUID = pGo->GetGUID();
             break;
         case GO_TRIBUNAL_HEAD_RIGHT:
             m_aFaces[FACE_MARNAK].m_goFaceGuid = pGo->GetObjectGuid();
-            break;
+            return;
         case GO_TRIBUNAL_HEAD_CENTER:
             m_aFaces[FACE_ABEDNEUM].m_goFaceGuid = pGo->GetObjectGuid();
-            break;
+            return;
         case GO_TRIBUNAL_HEAD_LEFT:
             m_aFaces[FACE_KADDRAK].m_goFaceGuid = pGo->GetObjectGuid();
-            break;
+            return;
         case GO_TRIBUNAL_CONSOLE:
-            m_uiTribunalConsoleGUID = pGo->GetGUID();
-            break;
         case GO_TRIBUNAL_FLOOR:
-            m_uiTribunalFloorGUID = pGo->GetGUID();
-            break;
         case GO_SJONNIR_CONSOLE:
-            m_uiSjonnirConsoleGUID = pGo->GetGUID();
             break;
+
+        default:
+            return;
     }
+    m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
 }
 
 void instance_halls_of_stone::SetData(uint32 uiType, uint32 uiData)
@@ -120,7 +107,7 @@ void instance_halls_of_stone::SetData(uint32 uiType, uint32 uiData)
                     SortFaces();
                     break;
                 case DONE:
-                    // DoRespawnGameObject(m_uiTribunalChestGUID);
+                    // DoRespawnGameObject(instance->isRegularDifficulty ? GO_TRIBUNAL_CHEST : GO_TRIBUNAL_CHEST_H);
                     // Actually, this one need to be changed faction or similar..
                     break;
                 case FAIL:
@@ -164,20 +151,6 @@ uint32 instance_halls_of_stone::GetData(uint32 uiType)
         case TYPE_MAIDEN:     return m_auiEncounter[1];
         case TYPE_KRYSTALLUS: return m_auiEncounter[2];
         case TYPE_SJONNIR:    return m_auiEncounter[3];
-        default:
-            return 0;
-    }
-}
-
-uint64 instance_halls_of_stone::GetData64(uint32 uiData)
-{
-    switch(uiData)
-    {
-        case GO_DOOR_SJONNIR:           return m_uiSjonnirDoorGUID;
-        case GO_DOOR_TRIBUNAL:          return m_uiTribunalDoorGUID;
-        case GO_TRIBUNAL_CONSOLE:       return m_uiTribunalConsoleGUID;
-        case GO_TRIBUNAL_FLOOR:         return m_uiTribunalFloorGUID;
-        case GO_SJONNIR_CONSOLE:        return m_uiSjonnirConsoleGUID;
         default:
             return 0;
     }
