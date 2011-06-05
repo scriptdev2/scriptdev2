@@ -25,18 +25,6 @@ EndScriptData */
 #include "azjol-nerub.h"
 
 instance_azjol_nerub::instance_azjol_nerub(Map* pMap) : ScriptedInstance(pMap),
-    m_uiDoorKrikthirGUID(0),
-    m_uiDoorAnubarak1GUID(0),
-    m_uiDoorAnubarak2GUID(0),
-    m_uiDoorAnubarak3GUID(0),
-
-    m_uiKrikthirGUID(0),
-    m_uiGashraGUID(0),
-    m_uiNarjilGUID(0),
-    m_uiSilthikGUID(0),
-
-    m_uiPlayerGUID(0),
-
     m_uiWatcherTimer(0)
 {
     Initialize();
@@ -45,7 +33,6 @@ instance_azjol_nerub::instance_azjol_nerub(Map* pMap) : ScriptedInstance(pMap),
 void instance_azjol_nerub::Initialize()
 {
     memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
-    memset(&m_auiWatcherGUIDS, 0, sizeof(m_auiWatcherGUIDS));
 }
 
 void instance_azjol_nerub::OnObjectCreate(GameObject* pGo)
@@ -53,36 +40,39 @@ void instance_azjol_nerub::OnObjectCreate(GameObject* pGo)
     switch(pGo->GetEntry())
     {
         case GO_DOOR_KRIKTHIR:
-            m_uiDoorKrikthirGUID = pGo->GetGUID();
-            if (m_auiEncounter[0] == DONE)
+            if (m_auiEncounter[TYPE_KRIKTHIR] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
+        // TODO - check if these (encounter) doors are really closed by default in the database
         case GO_DOOR_ANUBARAK_1:
-            m_uiDoorAnubarak1GUID = pGo->GetGUID();
-            if (m_auiEncounter[2] == DONE || m_auiEncounter[2] == NOT_STARTED)
+            if (m_auiEncounter[TYPE_ANUBARAK] == DONE || m_auiEncounter[TYPE_ANUBARAK] == NOT_STARTED)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_DOOR_ANUBARAK_2:
-            m_uiDoorAnubarak2GUID = pGo->GetGUID();
-            if (m_auiEncounter[2] == DONE || m_auiEncounter[2] == NOT_STARTED)
+            if (m_auiEncounter[TYPE_ANUBARAK] == DONE || m_auiEncounter[TYPE_ANUBARAK] == NOT_STARTED)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_DOOR_ANUBARAK_3:
-            m_uiDoorAnubarak3GUID = pGo->GetGUID();
-            if (m_auiEncounter[2] == DONE || m_auiEncounter[2] == NOT_STARTED)
+            if (m_auiEncounter[TYPE_ANUBARAK] == DONE || m_auiEncounter[TYPE_ANUBARAK] == NOT_STARTED)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
+
+        default:
+            return;
     }
+    m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
 }
 
 void instance_azjol_nerub::OnCreatureCreate(Creature* pCreature)
 {
     switch(pCreature->GetEntry())
     {
-        case NPC_KRIKTHIR: m_uiKrikthirGUID = pCreature->GetGUID();     break;
-        case NPC_GASHRA:   m_auiWatcherGUIDS[0] = pCreature->GetGUID(); break;
-        case NPC_NARJIL:   m_auiWatcherGUIDS[1] = pCreature->GetGUID(); break;
-        case NPC_SILTHIK:  m_auiWatcherGUIDS[2] = pCreature->GetGUID(); break;
+        case NPC_KRIKTHIR:
+        case NPC_GASHRA:
+        case NPC_NARJIL:
+        case NPC_SILTHIK:
+            m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
+            break;
     }
 }
 
@@ -91,7 +81,7 @@ void instance_azjol_nerub::OnCreatureDeath(Creature* pCreature)
     uint32 uiEntry = pCreature->GetEntry();
     if (uiEntry == NPC_GASHRA || uiEntry == NPC_NARJIL || uiEntry == NPC_SILTHIK)
     {
-        if (m_auiEncounter[0] == NOT_STARTED)
+        if (m_auiEncounter[TYPE_KRIKTHIR] == NOT_STARTED)
             m_uiWatcherTimer = 5000;
     }
 }
@@ -103,8 +93,8 @@ void instance_azjol_nerub::OnCreatureEnterCombat(Creature* pCreature)
     if (uiEntry == NPC_GASHRA || uiEntry == NPC_NARJIL || uiEntry == NPC_SILTHIK)
     {
         // Creature enter combat is not equal to having a victim yet.
-        if (!m_uiPlayerGUID && pCreature->getVictim())
-            m_uiPlayerGUID = pCreature->getVictim()->GetCharmerOrOwnerPlayerOrPlayerItself()->GetGUID();
+        if (!m_playerGuid && pCreature->getVictim())
+            m_playerGuid = pCreature->getVictim()->GetCharmerOrOwnerPlayerOrPlayerItself()->GetObjectGuid();
     }
 }
 
@@ -112,7 +102,7 @@ void instance_azjol_nerub::OnCreatureEvade(Creature* pCreature)
 {
     uint32 uiEntry = pCreature->GetEntry();
     if (uiEntry == NPC_GASHRA || uiEntry == NPC_NARJIL || uiEntry == NPC_SILTHIK)
-        m_uiPlayerGUID = 0;
+        m_playerGuid.Clear();
 }
 
 void instance_azjol_nerub::Update(uint32 uiDiff)
@@ -132,14 +122,14 @@ void instance_azjol_nerub::Update(uint32 uiDiff)
 void instance_azjol_nerub::DoSendWatcherOrKrikthir()
 {
     Creature* pAttacker = NULL;
-    Creature* pKrikthir = instance->GetCreature(m_uiKrikthirGUID);
+    Creature* pKrikthir = GetSingleCreatureFromStorage(NPC_KRIKTHIR);
 
     if (!pKrikthir)
         return;
 
-    for (uint8 i = 0; i < MAX_WATCHERS; ++i)
+    for (uint8 i = 0; i < countof(aWatchers); ++i)
     {
-        if (Creature* pTemp = instance->GetCreature(m_auiWatcherGUIDS[i]))
+        if (Creature* pTemp = GetSingleCreatureFromStorage(aWatchers[i]))
         {
             if (pTemp->isAlive())
             {
@@ -163,7 +153,7 @@ void instance_azjol_nerub::DoSendWatcherOrKrikthir()
     else
         pAttacker = pKrikthir;
 
-    if (Unit* pTarget = instance->GetUnit(m_uiPlayerGUID))
+    if (Player* pTarget = instance->GetPlayer(m_playerGuid))
     {
         if (pTarget->isAlive())
             pAttacker->AI()->AttackStart(pTarget);
@@ -175,18 +165,18 @@ void instance_azjol_nerub::SetData(uint32 uiType, uint32 uiData)
     switch(uiType)
     {
         case TYPE_KRIKTHIR:
-            m_auiEncounter[0] = uiData;
+            m_auiEncounter[uiType] = uiData;
             if (uiData == DONE)
-                DoUseDoorOrButton(m_uiDoorKrikthirGUID);
+                DoUseDoorOrButton(GO_DOOR_KRIKTHIR);
             break;
         case TYPE_HADRONOX:
-            m_auiEncounter[1] = uiData;
+            m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_ANUBARAK:
-            m_auiEncounter[2] = uiData;
-            DoUseDoorOrButton(m_uiDoorAnubarak1GUID);
-            DoUseDoorOrButton(m_uiDoorAnubarak2GUID);
-            DoUseDoorOrButton(m_uiDoorAnubarak3GUID);
+            m_auiEncounter[uiType] = uiData;
+            DoUseDoorOrButton(GO_DOOR_ANUBARAK_1);
+            DoUseDoorOrButton(GO_DOOR_ANUBARAK_2);
+            DoUseDoorOrButton(GO_DOOR_ANUBARAK_3);
             break;
     }
 
@@ -197,7 +187,7 @@ void instance_azjol_nerub::SetData(uint32 uiType, uint32 uiData)
         std::ostringstream saveStream;
         saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2];
 
-        strInstData = saveStream.str();
+        m_strInstData = saveStream.str();
 
         SaveToDB();
         OUT_SAVE_INST_DATA_COMPLETE;
@@ -234,6 +224,7 @@ InstanceData* GetInstanceData_instance_azjol_nerub(Map* pMap)
 void AddSC_instance_azjol_nerub()
 {
     Script* pNewScript;
+
     pNewScript = new Script;
     pNewScript->Name = "instance_azjol-nerub";
     pNewScript->GetInstanceData = &GetInstanceData_instance_azjol_nerub;
