@@ -73,9 +73,8 @@ class MANGOS_DLL_DECL instance_gundrak : public ScriptedInstance
 
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
-        uint64 GetData64(uint32 uiData);
 
-        const char* Save() { return strInstData.c_str(); }
+        const char* Save() { return m_strInstData.c_str(); }
         void Load(const char* chrIn);
 
         void Update(uint32 uiDiff);
@@ -83,34 +82,15 @@ class MANGOS_DLL_DECL instance_gundrak : public ScriptedInstance
     protected:
         void DoAltarVisualEffect(uint8 uiType);
         uint32 m_auiEncounter[MAX_ENCOUNTER];
-        std::string strInstData;
-
-        uint64 m_uiEckDoorGUID;
-        uint64 m_uiEckUnderwaterDoorGUID;
-        uint64 m_uiGaldarahDoorGUID;
-        uint64 m_uiExitDoorLeftGUID;
-        uint64 m_uiExitDoorRightGUID;
-        uint64 m_uiSnakeKeyGUID;
-        uint64 m_uiMammothKeyGUID;
-        uint64 m_uiTrollKeyGUID;
-        uint64 m_uiRhinoKeyGUID;
-        uint64 m_uiAltarOfSladranGUID;
-        uint64 m_uiAltarOfMoorabiGUID;
-        uint64 m_uiAltarOfColossusGUID;
-        uint64 m_uiBridgeGUID;
-        uint64 m_uiCollisionGUID;
-
-        uint64 m_uiSladranGUID;
-        uint64 m_uiElementalGUID;
-        uint64 m_uiColossusGUID;
+        std::string m_strInstData;
 
         TypeTimerMap m_mAltarInProgress;
         TypeTimerMap m_mBeamInProgress;
         TypeTimerMap m_mKeyInProgress;
 
         GUIDList m_luiStalkerGUIDs;
-        GUIDList m_luiStalkerCasterGUIDs;
-        GUIDList m_luiStalkerTargetGUIDs;
+        GUIDVector m_vStalkerCasterGuids;
+        GUIDVector m_vStalkerTargetGuids;
 };
 
 #endif
