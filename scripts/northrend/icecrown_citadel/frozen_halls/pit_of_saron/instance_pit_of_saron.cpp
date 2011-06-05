@@ -24,15 +24,7 @@ EndScriptData */
 #include "precompiled.h"
 #include "pit_of_saron.h"
 
-instance_pit_of_saron::instance_pit_of_saron(Map* pMap) : ScriptedInstance(pMap),
-    m_uiTyrannusIntroGUID(0),
-    m_uiGarfrostGUID(0),
-    m_uiKrickGUID(0),
-    m_uiIckGUID(0),
-    m_uiTyrannusGUID(0),
-    m_uiRimefangGUID(0),
-    m_uiIcewallGUID(0),
-    m_uiHallsPortGUID(0)
+instance_pit_of_saron::instance_pit_of_saron(Map* pMap) : ScriptedInstance(pMap)
 {
     Initialize();
 }
@@ -46,12 +38,14 @@ void instance_pit_of_saron::OnCreatureCreate(Creature* pCreature)
 {
     switch(pCreature->GetEntry())
     {
-        case NPC_TYRANNUS_INTRO: m_uiTyrannusIntroGUID = pCreature->GetGUID(); break;
-        case NPC_GARFROST:       m_uiGarfrostGUID      = pCreature->GetGUID(); break;
-        case NPC_KRICK:          m_uiKrickGUID         = pCreature->GetGUID(); break;
-        case NPC_ICK:            m_uiIckGUID           = pCreature->GetGUID(); break;
-        case NPC_TYRANNUS:       m_uiTyrannusGUID      = pCreature->GetGUID(); break;
-        case NPC_RIMEFANG:       m_uiRimefangGUID      = pCreature->GetGUID(); break;
+        case NPC_TYRANNUS_INTRO:
+        case NPC_GARFROST:
+        case NPC_KRICK:
+        case NPC_ICK:
+        case NPC_TYRANNUS:
+        case NPC_RIMEFANG:
+            m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
+            break;
     }
 }
 
@@ -60,14 +54,16 @@ void instance_pit_of_saron::OnObjectCreate(GameObject* pGo)
     switch(pGo->GetEntry())
     {
         case GO_ICEWALL:
-            m_uiIcewallGUID = pGo->GetGUID();
             if (m_auiEncounter[TYPE_GARFROST] == DONE && m_auiEncounter[TYPE_KRICK] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_HALLS_OF_REFLECT_PORT:
-            m_uiHallsPortGUID = pGo->GetGUID();
             break;
+
+        default:
+            return;
     }
+    m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
 }
 
 void instance_pit_of_saron::SetData(uint32 uiType, uint32 uiData)
@@ -76,12 +72,12 @@ void instance_pit_of_saron::SetData(uint32 uiType, uint32 uiData)
     {
         case TYPE_GARFROST:
             if (uiData == DONE && m_auiEncounter[TYPE_KRICK] == DONE)
-                DoUseDoorOrButton(m_uiIcewallGUID);
+                DoUseDoorOrButton(GO_ICEWALL);
             m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_KRICK:
             if (uiData == DONE && m_auiEncounter[TYPE_GARFROST] == DONE)
-                DoUseDoorOrButton(m_uiIcewallGUID);
+                DoUseDoorOrButton(GO_ICEWALL);
             m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_TYRANNUS:
@@ -98,7 +94,7 @@ void instance_pit_of_saron::SetData(uint32 uiType, uint32 uiData)
         std::ostringstream saveStream;
         saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2];
 
-        strInstData = saveStream.str();
+        m_strInstData = saveStream.str();
 
         SaveToDB();
         OUT_SAVE_INST_DATA_COMPLETE;
@@ -129,29 +125,10 @@ void instance_pit_of_saron::Load(const char* chrIn)
 
 uint32 instance_pit_of_saron::GetData(uint32 uiType)
 {
-    switch(uiType)
-    {
-        case TYPE_GARFROST:  return m_auiEncounter[uiType];
-        case TYPE_KRICK:     return m_auiEncounter[uiType];
-        case TYPE_TYRANNUS:  return m_auiEncounter[uiType];
-        default:
-            return 0;
-    }
-}
+    if (uiType < MAX_ENCOUNTER)
+        return m_auiEncounter[uiType];
 
-uint64 instance_pit_of_saron::GetData64(uint32 uiData)
-{
-    switch(uiData)
-    {
-        case NPC_TYRANNUS_INTRO: return m_uiTyrannusIntroGUID;
-        case NPC_GARFROST:       return m_uiGarfrostGUID;
-        case NPC_KRICK:          return m_uiKrickGUID;
-        case NPC_ICK:            return m_uiIckGUID;
-        case NPC_TYRANNUS:       return m_uiTyrannusGUID;
-        case NPC_RIMEFANG:       return m_uiRimefangGUID;
-        default:
-            return 0;
-    }
+    return 0;
 }
 
 InstanceData* GetInstanceData_instance_pit_of_saron(Map* pMap)
