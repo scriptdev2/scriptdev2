@@ -68,7 +68,7 @@ struct MANGOS_DLL_DECL mob_dragonflayer_forge_masterAI : public ScriptedAI
         uint32 uiGOBellow = 0;
         uint32 uiGOFire = 0;
 
-        for(uint8 i = 0; i < MAX_FORGE; ++i)
+        for (uint8 i = 0; i < MAX_FORGE; ++i)
         {
             switch(i)
             {
@@ -77,7 +77,7 @@ struct MANGOS_DLL_DECL mob_dragonflayer_forge_masterAI : public ScriptedAI
                 case 2: uiGOBellow = GO_BELLOW_3; break;
             }
 
-            if (GameObject* pGOTemp = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(uiGOBellow)))
+            if (GameObject* pGOTemp = m_pInstance->GetSingleGameObjectFromStorage(uiGOBellow))
                 lGOList.push_back(pGOTemp);
         }
 
@@ -100,7 +100,7 @@ struct MANGOS_DLL_DECL mob_dragonflayer_forge_masterAI : public ScriptedAI
                 case GO_BELLOW_3: uiGOFire = GO_FORGEFIRE_3; m_uiForgeEncounterId = TYPE_BELLOW_3; break;
             }
 
-            if (GameObject* pGOTemp = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(uiGOFire)))
+            if (GameObject* pGOTemp = m_pInstance->GetSingleGameObjectFromStorage(uiGOFire))
             {
                 if (pGOTemp->getLootState() == GO_READY)
                     pGOTemp->UseDoorOrButton(DAY);

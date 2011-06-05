@@ -47,7 +47,6 @@ class MANGOS_DLL_DECL instance_utgarde_keep : public ScriptedInstance
 
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
-        uint64 GetData64(uint32 uiData);
 
         const char* Save() { return m_strInstData.c_str(); }
         void Load(const char* chrIn);
@@ -57,17 +56,6 @@ class MANGOS_DLL_DECL instance_utgarde_keep : public ScriptedInstance
     protected:
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strInstData;
-
-        uint64 m_uiKelesethGUID;
-        uint64 m_uiSkarvaldGUID;
-        uint64 m_uiDalronnGUID;
-
-        uint64 m_uiBellow1GUID;
-        uint64 m_uiBellow2GUID;
-        uint64 m_uiBellow3GUID;
-        uint64 m_uiForgeFire1GUID;
-        uint64 m_uiForgeFire2GUID;
-        uint64 m_uiForgeFire3GUID;
 
         bool m_bKelesethAchievFailed;
 };

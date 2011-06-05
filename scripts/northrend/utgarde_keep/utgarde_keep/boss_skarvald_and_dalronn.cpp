@@ -80,20 +80,19 @@ struct MANGOS_DLL_DECL boss_s_and_d_dummyAI : public ScriptedAI
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
-        m_uiGhostGUID = 0;
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
     bool m_bIsRegularMode;
-    uint64 m_uiGhostGUID;
+    ObjectGuid m_ghostGuid;
 
     Creature* GetBuddy()
     {
         if (!m_pInstance)
             return NULL;
 
-        return m_pInstance->instance->GetCreature(m_pInstance->GetData64(m_creature->GetEntry() == NPC_DALRONN ? NPC_SKARVALD : NPC_DALRONN));
+        return m_pInstance->GetSingleCreatureFromStorage(m_creature->GetEntry() == NPC_DALRONN ? NPC_SKARVALD : NPC_DALRONN);
     }
 
     void Reset() { }
@@ -106,7 +105,7 @@ struct MANGOS_DLL_DECL boss_s_and_d_dummyAI : public ScriptedAI
                 pBuddy->Respawn();
         }
 
-        if (Creature* pGhost = m_creature->GetMap()->GetCreature(m_uiGhostGUID))
+        if (Creature* pGhost = m_creature->GetMap()->GetCreature(m_ghostGuid))
         {
             if (pGhost->isAlive())
                 pGhost->ForcedDespawn();
@@ -131,7 +130,7 @@ struct MANGOS_DLL_DECL boss_s_and_d_dummyAI : public ScriptedAI
     {
         // EventAI can probably handle ghosts
         if (pSummoned->GetEntry() == NPC_DAL_GHOST || pSummoned->GetEntry() == NPC_SKA_GHOST)
-            m_uiGhostGUID = pSummoned->GetGUID();
+            m_ghostGuid = pSummoned->GetObjectGuid();
 
         Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO,1);
 
@@ -154,7 +153,7 @@ struct MANGOS_DLL_DECL boss_s_and_d_dummyAI : public ScriptedAI
             }
             else
             {
-                if (Creature* pGhost = m_creature->GetMap()->GetCreature(m_uiGhostGUID))
+                if (Creature* pGhost = m_creature->GetMap()->GetCreature(m_ghostGuid))
                     pGhost->ForcedDespawn();
 
                 pBuddy->SetFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);

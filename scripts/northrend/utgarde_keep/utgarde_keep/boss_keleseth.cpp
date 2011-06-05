@@ -158,7 +158,7 @@ struct MANGOS_DLL_DECL mob_vrykul_skeletonAI : public ScriptedAI
                 if (urand(0, 3))
                     DoCastSpellIfCan(m_creature->getVictim(), SPELL_DECREPIFY_H);
                 else if (m_pInstance && m_pInstance->GetData(TYPE_KELESETH) == IN_PROGRESS)
-                    if (Creature* pKeleseth = m_pInstance->instance->GetCreature(m_pInstance->GetData64(NPC_KELESETH)))
+                    if (Creature* pKeleseth = m_pInstance->GetSingleCreatureFromStorage(NPC_KELESETH))
                         DoCastSpellIfCan(pKeleseth, SPELL_BONE_ARMOR);
             }
 
