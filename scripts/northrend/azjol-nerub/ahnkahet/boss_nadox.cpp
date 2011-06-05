@@ -77,7 +77,7 @@ struct MANGOS_DLL_DECL mob_ahnkahar_eggAI : public ScriptedAI
 
         if (m_pInstance)
         {
-            if (Creature* pElderNadox = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_ELDER_NADOX)))
+            if (Creature* pElderNadox = m_pInstance->GetSingleCreatureFromStorage(NPC_ELDER_NADOX))
             {
                 float fPosX, fPosY, fPosZ;
                 pElderNadox->GetPosition(fPosX, fPosY, fPosZ);

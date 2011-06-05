@@ -13,21 +13,44 @@
 */
 enum
 {
-    MAX_ENCOUNTER           = 5,
+    MAX_ENCOUNTER               = 5,
 
-    TYPE_NADOX              = 0,
-    TYPE_TALDARAM           = 1,
-    TYPE_JEDOGA             = 2,
-    TYPE_VOLAZJ             = 3,
-    TYPE_AMANITAR           = 4,
+    TYPE_NADOX                  = 0,
+    TYPE_TALDARAM               = 1,
+    TYPE_JEDOGA                 = 2,
+    TYPE_VOLAZJ                 = 3,
+    TYPE_AMANITAR               = 4,
 
-    GO_DOOR_TALDARAM        = 192236,
-    GO_ANCIENT_DEVICE_L     = 193093,
-    GO_ANCIENT_DEVICE_R     = 193094,
-    GO_VORTEX               = 193564,
+    GO_DOOR_TALDARAM            = 192236,
+    GO_ANCIENT_DEVICE_L         = 193093,
+    GO_ANCIENT_DEVICE_R         = 193094,
+    GO_VORTEX                   = 193564,
 
-    NPC_ELDER_NADOX         = 29309,
-    NPC_JEDOGA_SHADOWSEEKER = 29310
+    NPC_ELDER_NADOX             = 29309,
+    //NPC_JEDOGA_SHADOWSEEKER   = 29310,
+};
+
+class MANGOS_DLL_DECL instance_ahnkahet : public ScriptedInstance
+{
+    public:
+        instance_ahnkahet(Map* pMap);
+
+        void Initialize();
+
+        void OnCreatureCreate(Creature* pCreature);
+        void OnObjectCreate(GameObject* pGo);
+
+        void SetData(uint32 uiType, uint32 uiData);
+        uint32 GetData(uint32 uiType);
+
+        const char* Save() { return m_strInstData.c_str(); }
+        void Load(const char* chrIn);
+
+    private:
+        uint32 m_auiEncounter[MAX_ENCOUNTER];
+        std::string m_strInstData;
+
+        uint8 m_uiDevicesActivated;
 };
 
 #endif
