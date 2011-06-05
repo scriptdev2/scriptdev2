@@ -350,7 +350,7 @@ struct MANGOS_DLL_DECL mob_spark_of_ionarAI : public ScriptedAI
 
         if (uiPointId == POINT_CALLBACK)
         {
-            if (Creature* pIonar = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_IONAR)))
+            if (Creature* pIonar = m_pInstance->GetSingleCreatureFromStorage(NPC_IONAR))
             {
                 if (!pIonar->isAlive())
                 {

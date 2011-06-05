@@ -344,7 +344,7 @@ struct MANGOS_DLL_DECL mob_stormforged_lieutenantAI : public ScriptedAI
     {
         if (m_pInstance)
         {
-            if (Creature* pBjarngrim = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_BJARNGRIM)))
+            if (Creature* pBjarngrim = m_pInstance->GetSingleCreatureFromStorage(NPC_BJARNGRIM))
             {
                 if (pBjarngrim->isAlive() && !pBjarngrim->getVictim())
                     pBjarngrim->AI()->AttackStart(pWho);
@@ -370,7 +370,7 @@ struct MANGOS_DLL_DECL mob_stormforged_lieutenantAI : public ScriptedAI
         {
             if (m_pInstance)
             {
-                if (Creature* pBjarngrim = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_BJARNGRIM)))
+                if (Creature* pBjarngrim = m_pInstance->GetSingleCreatureFromStorage(NPC_BJARNGRIM))
                 {
                     if (pBjarngrim->isAlive())
                         DoCastSpellIfCan(pBjarngrim, m_bIsRegularMode ? SPELL_RENEW_STEEL_N : SPELL_RENEW_STEEL_H);
