@@ -29,11 +29,7 @@ EndScriptData */
 */
 
 instance_obsidian_sanctum::instance_obsidian_sanctum(Map* pMap) : ScriptedInstance(pMap),
-    m_uiAliveDragons(0),
-    m_uiSartharionGUID(0),
-    m_uiTenebronGUID(0),
-    m_uiShadronGUID(0),
-    m_uiVesperonGUID(0)
+    m_uiAliveDragons(0)
     {
         Initialize();
     }
@@ -47,22 +43,14 @@ void instance_obsidian_sanctum::OnCreatureCreate(Creature* pCreature)
 {
     switch(pCreature->GetEntry())
     {
-        case NPC_SARTHARION:
-            m_uiSartharionGUID = pCreature->GetGUID();
-            break;
         // The three dragons below set to active state once created.
         // We must expect bigger raid to encounter main boss, and then three dragons must be active due to grid differences
         case NPC_TENEBRON:
-            m_uiTenebronGUID = pCreature->GetGUID();
-            pCreature->SetActiveObjectState(true);
-            break;
         case NPC_SHADRON:
-            m_uiShadronGUID = pCreature->GetGUID();
-            pCreature->SetActiveObjectState(true);
-            break;
         case NPC_VESPERON:
-            m_uiVesperonGUID = pCreature->GetGUID();
             pCreature->SetActiveObjectState(true);
+        case NPC_SARTHARION:
+            m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
     }
 }
@@ -83,19 +71,6 @@ uint32 instance_obsidian_sanctum::GetData(uint32 uiType)
         return m_auiEncounter[0];
 
     return 0;
-}
-
-uint64 instance_obsidian_sanctum::GetData64(uint32 uiData)
-{
-    switch(uiData)
-    {
-        case NPC_SARTHARION: return m_uiSartharionGUID;
-        case NPC_TENEBRON:   return m_uiTenebronGUID;
-        case NPC_SHADRON:    return m_uiShadronGUID;
-        case NPC_VESPERON:   return m_uiVesperonGUID;
-        default:
-            return 0;
-    }
 }
 
 bool instance_obsidian_sanctum::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/)

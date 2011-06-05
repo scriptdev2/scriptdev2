@@ -42,16 +42,11 @@ class MANGOS_DLL_DECL instance_obsidian_sanctum : public ScriptedInstance
 
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
-        uint64 GetData64(uint32 uiData);
 
         bool CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/);
 
     private:
         uint32 m_auiEncounter[MAX_ENCOUNTER];
-        uint64 m_uiSartharionGUID;
-        uint64 m_uiTenebronGUID;
-        uint64 m_uiShadronGUID;
-        uint64 m_uiVesperonGUID;
 
         uint8 m_uiAliveDragons;
 };
