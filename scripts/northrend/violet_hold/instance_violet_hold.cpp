@@ -25,26 +25,6 @@ EndScriptData */
 #include "violet_hold.h"
 
 instance_violet_hold::instance_violet_hold(Map* pMap) : ScriptedInstance(pMap),
-    m_uiSinclariGUID(0),
-    m_uiSinclariAltGUID(0),
-    m_uiErekemGUID(0),
-    m_uiMoraggGUID(0),
-    m_uiIchoronGUID(0),
-    m_uiXevozzGUID(0),
-    m_uiLavanthorGUID(0),
-    m_uiZuramatGUID(0),
-
-    m_uiArokkoaGUID(0),
-    m_uiVoidLordGUID(0),
-    m_uiEtheralGUID(0),
-    m_uiSwirlingGUID(0),
-    m_uiWatcherGUID(0),
-    m_uiLavaHoundGUID(0),
-
-    m_uiCellErekemGuard_LGUID(0),
-    m_uiCellErekemGuard_RGUID(0),
-    m_uiIntroCrystalGUID(0),
-
     m_uiWorldState(0),
     m_uiWorldStateSealCount(100),
     m_uiWorldStatePortalCount(0),
@@ -59,7 +39,7 @@ instance_violet_hold::instance_violet_hold(Map* pMap) : ScriptedInstance(pMap),
 void instance_violet_hold::Initialize()
 {
     memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
-    m_uiMaxCountPortalLoc = (sizeof(afPortalLocation)/sizeof(sPortalData)) - 1;
+    m_uiMaxCountPortalLoc = (sizeof(afPortalLocation)/sizeof(PortalData)) - 1;
 }
 
 void instance_violet_hold::ResetVariables()
@@ -75,17 +55,17 @@ void instance_violet_hold::ResetAll()
     CallGuards(true);
     SetIntroPortals(false);
 
-    for (std::vector<sBossSpawn*>::const_iterator itr = m_vRandomBosses.begin(); itr != m_vRandomBosses.end(); ++itr)
+    for (std::vector<BossSpawn*>::const_iterator itr = m_vRandomBosses.begin(); itr != m_vRandomBosses.end(); ++itr)
     {
-        const sBossInformation* pData = GetBossInformation((*itr)->uiEntry);
+        const BossInformation* pData = GetBossInformation((*itr)->uiEntry);
         if (pData && GetData(pData->uiType) == DONE)
         {
-            if (Creature* pGhostBoss = instance->GetCreature(GetData64(pData->uiGhostEntry)))
+            if (Creature* pGhostBoss = GetSingleCreatureFromStorage(pData->uiGhostEntry))
             {
                 if (!pGhostBoss->isAlive())
                     pGhostBoss->Respawn();
             }
-            else if (Creature* pSummoner = instance->GetCreature(m_uiSinclariAltGUID))
+            else if (Creature* pSummoner = GetSingleCreatureFromStorage(NPC_SINCLARI_ALT))
                 pSummoner->SummonCreature(pData->uiGhostEntry, (*itr)->fX, (*itr)->fY, (*itr)->fZ, (*itr)->fO, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600*IN_MILLISECONDS);
 
             // Close Door if still open
@@ -98,49 +78,39 @@ void instance_violet_hold::OnCreatureCreate(Creature* pCreature)
 {
     switch(pCreature->GetEntry())
     {
-        case NPC_SINCLARI: m_uiSinclariGUID = pCreature->GetGUID(); break;
-        case NPC_SINCLARI_ALT: m_uiSinclariAltGUID = pCreature->GetGUID(); break;
-        case NPC_DOOR_SEAL: m_uiDoorSealGUID = pCreature->GetGUID(); break;
+        case NPC_SINCLARI:
+        case NPC_SINCLARI_ALT:
+        case NPC_DOOR_SEAL:
+            break;
 
         case NPC_EREKEM:
-            m_lRandomBossList.push_back(pCreature->GetEntry());
-            m_uiErekemGUID = pCreature->GetGUID();
-            break;
         case NPC_MORAGG:
-            m_lRandomBossList.push_back(pCreature->GetEntry());
-            m_uiMoraggGUID = pCreature->GetGUID();
-            break;
         case NPC_ICHORON:
-            m_lRandomBossList.push_back(pCreature->GetEntry());
-            m_uiIchoronGUID = pCreature->GetGUID();
-            break;
         case NPC_XEVOZZ:
-            m_lRandomBossList.push_back(pCreature->GetEntry());
-            m_uiXevozzGUID = pCreature->GetGUID();
-            break;
         case NPC_LAVANTHOR:
-            m_lRandomBossList.push_back(pCreature->GetEntry());
-            m_uiLavanthorGUID = pCreature->GetGUID();
-            break;
         case NPC_ZURAMAT:
             m_lRandomBossList.push_back(pCreature->GetEntry());
-            m_uiZuramatGUID = pCreature->GetGUID();
             break;
 
         case NPC_PORTAL_INTRO:
             m_lIntroPortalList.push_back(pCreature->GetGUID());
-            break;
+            return;
         case NPC_HOLD_GUARD:
             m_lGuardsList.push_back(pCreature->GetGUID());
+            return;
+
+        case NPC_ARAKKOA:
+        case NPC_VOID_LORD:
+        case NPC_ETHERAL:
+        case NPC_SWIRLING:
+        case NPC_WATCHER:
+        case NPC_LAVA_HOUND:
             break;
 
-        case NPC_ARAKKOA:    m_uiArokkoaGUID    = pCreature->GetGUID(); break;
-        case NPC_VOID_LORD:  m_uiVoidLordGUID   = pCreature->GetGUID(); break;
-        case NPC_ETHERAL:    m_uiEtheralGUID    = pCreature->GetGUID(); break;
-        case NPC_SWIRLING:   m_uiSwirlingGUID   = pCreature->GetGUID(); break;
-        case NPC_WATCHER:    m_uiWatcherGUID    = pCreature->GetGUID(); break;
-        case NPC_LAVA_HOUND: m_uiLavaHoundGUID  = pCreature->GetGUID(); break;
+        default:
+            return;
     }
+    m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
 }
 
 void instance_violet_hold::OnObjectCreate(GameObject* pGo)
@@ -148,37 +118,35 @@ void instance_violet_hold::OnObjectCreate(GameObject* pGo)
     switch(pGo->GetEntry())
     {
         case GO_CELL_LAVANTHOR:
-            m_mBossToCellMap.insert(BossToCellMap::value_type(NPC_LAVANTHOR, pGo->GetGUID()));
-            break;
+            m_mBossToCellMap.insert(BossToCellMap::value_type(NPC_LAVANTHOR, pGo->GetObjectGuid()));
+            return;
         case GO_CELL_MORAGG:
-            m_mBossToCellMap.insert(BossToCellMap::value_type(NPC_MORAGG, pGo->GetGUID()));
-            break;
+            m_mBossToCellMap.insert(BossToCellMap::value_type(NPC_MORAGG, pGo->GetObjectGuid()));
+            return;
         case GO_CELL_ZURAMAT:
-            m_mBossToCellMap.insert(BossToCellMap::value_type(NPC_ZURAMAT, pGo->GetGUID()));
-            break;
+            m_mBossToCellMap.insert(BossToCellMap::value_type(NPC_ZURAMAT, pGo->GetObjectGuid()));
+            return;
         case GO_CELL_XEVOZZ:
-            m_mBossToCellMap.insert(BossToCellMap::value_type(NPC_XEVOZZ, pGo->GetGUID()));
-            break;
+            m_mBossToCellMap.insert(BossToCellMap::value_type(NPC_XEVOZZ, pGo->GetObjectGuid()));
+            return;
         case GO_CELL_ICHORON:
-            m_mBossToCellMap.insert(BossToCellMap::value_type(NPC_ICHORON, pGo->GetGUID()));
-            break;
+            m_mBossToCellMap.insert(BossToCellMap::value_type(NPC_ICHORON, pGo->GetObjectGuid()));
+            return;
         case GO_CELL_EREKEM:
-            m_mBossToCellMap.insert(BossToCellMap::value_type(NPC_EREKEM, pGo->GetGUID()));
-            break;
+            m_mBossToCellMap.insert(BossToCellMap::value_type(NPC_EREKEM, pGo->GetObjectGuid()));
+            return;
         case GO_CELL_EREKEM_GUARD_L:
-            m_mBossToCellMap.insert(BossToCellMap::value_type(NPC_EREKEM, pGo->GetGUID()));
-            break;
+            m_mBossToCellMap.insert(BossToCellMap::value_type(NPC_EREKEM, pGo->GetObjectGuid()));
+            return;
         case GO_CELL_EREKEM_GUARD_R:
-            m_mBossToCellMap.insert(BossToCellMap::value_type(NPC_EREKEM, pGo->GetGUID()));
-            break;
+            m_mBossToCellMap.insert(BossToCellMap::value_type(NPC_EREKEM, pGo->GetObjectGuid()));
+            return;
 
         case GO_INTRO_CRYSTAL:
-            m_uiIntroCrystalGUID = pGo->GetGUID();
-            break;
         case GO_PRISON_SEAL_DOOR:
-            m_uiDoorSealGUID = pGo->GetGUID();
             break;
     }
+    m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
 }
 
 void instance_violet_hold::UpdateCellForBoss(uint32 uiBossEntry, bool bForceClosing /*= false*/)
@@ -241,13 +209,13 @@ void instance_violet_hold::SetData(uint32 uiType, uint32 uiData)
                     ResetAll();
                     break;
                 case IN_PROGRESS:
-                    DoUseDoorOrButton(m_uiDoorSealGUID);
+                    DoUseDoorOrButton(GO_PRISON_SEAL_DOOR);
                     UpdateWorldState();
                     m_uiPortalId = urand(0, 2);
                     m_uiPortalTimer = 15000;
                     break;
                 case FAIL:
-                    if (Creature* pSinclari = instance->GetCreature(m_uiSinclariGUID))
+                    if (Creature* pSinclari = GetSingleCreatureFromStorage(NPC_SINCLARI))
                         pSinclari->Respawn();
                     break;
                 case DONE:
@@ -332,7 +300,7 @@ void instance_violet_hold::SetData(uint32 uiType, uint32 uiData)
             << m_auiEncounter[6] << " " << m_auiEncounter[7] << " " << m_auiEncounter[8] << " "
             << m_auiEncounter[9];
 
-        strInstData = saveStream.str();
+        m_strInstData = saveStream.str();
 
         SaveToDB();
         OUT_SAVE_INST_DATA_COMPLETE;
@@ -396,9 +364,9 @@ void instance_violet_hold::SetIntroPortals(bool bDeactivate)
 
 void instance_violet_hold::SpawnPortal()
 {
-    if (const sPortalData* pData = GetPortalData())
+    if (const PortalData* pData = GetPortalData())
     {
-        if (Creature* pController = instance->GetCreature(m_uiSinclariAltGUID))
+        if (Creature* pController = GetSingleCreatureFromStorage(NPC_SINCLARI_ALT))
         {
             uint32 uiPortalEntry;
 
@@ -439,12 +407,12 @@ void instance_violet_hold::SetPortalId()
     }
 }
 
-sBossSpawn* instance_violet_hold::CreateBossSpawnByEntry(uint32 uiEntry)
+BossSpawn* instance_violet_hold::CreateBossSpawnByEntry(uint32 uiEntry)
 {
-    sBossSpawn* pBossSpawn = new sBossSpawn;
+    BossSpawn* pBossSpawn = new BossSpawn;
     pBossSpawn->uiEntry = uiEntry;
 
-    if (Creature* pBoss = instance->GetCreature(GetData64(uiEntry)))
+    if (Creature* pBoss = GetSingleCreatureFromStorage(uiEntry))
         pBoss->GetRespawnCoord(pBossSpawn->fX, pBossSpawn->fY, pBossSpawn->fZ, &(pBossSpawn->fO));
 
     return pBossSpawn;
@@ -493,7 +461,7 @@ void instance_violet_hold::SetRandomBosses()
             m_vRandomBosses.push_back(CreateBossSpawnByEntry(*itr));
     }
 
-    for (std::vector<sBossSpawn*>::const_iterator itr = m_vRandomBosses.begin(); itr != m_vRandomBosses.end(); ++itr)
+    for (std::vector<BossSpawn*>::const_iterator itr = m_vRandomBosses.begin(); itr != m_vRandomBosses.end(); ++itr)
         debug_log("SD2: instance_violet_hold first random boss is entry %u", (*itr)->uiEntry);
 }
 
@@ -511,7 +479,7 @@ void instance_violet_hold::CallGuards(bool bRespawn)
             {
                 pGuard->AI()->EnterEvadeMode();
 
-                if (Creature* pSinclari = instance->GetCreature(m_uiSinclariGUID))
+                if (Creature* pSinclari = GetSingleCreatureFromStorage(NPC_SINCLARI))
                     pGuard->GetMotionMaster()->MoveFollow(pSinclari, 0.0f, 0.0f);
 
                 pGuard->ForcedDespawn(20000);
@@ -531,7 +499,7 @@ void instance_violet_hold::ProcessActivationCrystal(Unit* pUser, bool bIsIntro)
     }
 
     if (bIsIntro)
-        DoUseDoorOrButton(m_uiIntroCrystalGUID);
+        DoUseDoorOrButton(GO_INTRO_CRYSTAL);
 
     // else, kill (and despawn?) certain trash mobs. Also boss affected, but not killed.
 }
@@ -549,28 +517,6 @@ uint32 instance_violet_hold::GetRandomMobForNormalPortal()
         case 2: return NPC_MAGE_HUNTER;
         case 3: return NPC_AZURE_SPELLBREAKER;
         case 4: return NPC_AZURE_BINDER;
-        default:
-            return 0;
-    }
-}
-
-uint64 instance_violet_hold::GetData64(uint32 uiData)
-{
-    switch (uiData)
-    {
-        case NPC_EREKEM:     return m_uiErekemGUID;
-        case NPC_MORAGG:     return m_uiMoraggGUID;
-        case NPC_ICHORON:    return m_uiIchoronGUID;
-        case NPC_XEVOZZ:     return m_uiXevozzGUID;
-        case NPC_LAVANTHOR:  return m_uiLavanthorGUID;
-        case NPC_ZURAMAT:    return m_uiZuramatGUID;
-
-        case NPC_ARAKKOA:    return m_uiArokkoaGUID;
-        case NPC_VOID_LORD:  return m_uiVoidLordGUID;
-        case NPC_ETHERAL:    return m_uiEtheralGUID;
-        case NPC_SWIRLING:   return m_uiSwirlingGUID;
-        case NPC_WATCHER:    return m_uiWatcherGUID;
-        case NPC_LAVA_HOUND: return m_uiLavaHoundGUID;
         default:
             return 0;
     }
@@ -699,7 +645,7 @@ void instance_violet_hold::Update(uint32 uiDiff)
     }
 }
 
-sBossInformation const* instance_violet_hold::GetBossInformation(uint32 uiEntry/* = 0*/)
+BossInformation const* instance_violet_hold::GetBossInformation(uint32 uiEntry/* = 0*/)
 {
     uint32 mEntry = uiEntry;
     if (!mEntry)
@@ -725,7 +671,7 @@ sBossInformation const* instance_violet_hold::GetBossInformation(uint32 uiEntry/
 instance_violet_hold::~instance_violet_hold()
 {
     // Need to free std::vector<sBossSpawn*> m_vRandomBosses;
-    for (std::vector<sBossSpawn*>::const_iterator itr = m_vRandomBosses.begin(); itr != m_vRandomBosses.end(); ++itr)
+    for (std::vector<BossSpawn*>::const_iterator itr = m_vRandomBosses.begin(); itr != m_vRandomBosses.end(); ++itr)
     {
         if (*itr)
             delete (*itr);

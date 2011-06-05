@@ -130,13 +130,13 @@ enum ePortalType
     PORTAL_TYPE_BOSS,
 };
 
-struct sPortalData
+struct PortalData
 {
     ePortalType pPortalType;
     float fX, fY, fZ, fOrient;
 };
 
-static const sPortalData afPortalLocation[]=
+static const PortalData afPortalLocation[]=
 {
     {PORTAL_TYPE_NORM, 1936.07f, 803.198f, 53.3749f, 3.1241f},  //balcony
     {PORTAL_TYPE_NORM, 1877.51f, 850.104f, 44.6599f, 4.7822f},  //erekem
@@ -149,20 +149,20 @@ static const sPortalData afPortalLocation[]=
     {PORTAL_TYPE_BOSS, 1890.73f, 803.309f, 38.4001f, 2.4139f},  //center
 };
 
-struct sBossInformation
+struct BossInformation
 {
     uint32 uiType, uiEntry, uiGhostEntry, uiWayPointId;
     float fX, fY, fZ;                                       // Waypoint for Saboteur
     int32 iSayEntry;
 };
 
-struct sBossSpawn
+struct BossSpawn
 {
     uint32 uiEntry;
     float fX, fY, fZ, fO;
 };
 
-static const sBossInformation aBossInformation[] =
+static const BossInformation aBossInformation[] =
 {
     {TYPE_EREKEM,    NPC_EREKEM,    NPC_ARAKKOA,    1, 1877.03f, 853.84f, 43.33f, SAY_RELEASE_EREKEM},
     {TYPE_ZURAMAT,   NPC_ZURAMAT,   NPC_VOID_LORD,  1, 1922.41f, 847.95f, 47.15f, SAY_RELEASE_ZURAMAT},
@@ -200,12 +200,12 @@ class MANGOS_DLL_DECL instance_violet_hold : public ScriptedInstance
 
         uint32 GetCurrentPortalNumber() { return m_uiWorldStatePortalCount; }
 
-        sPortalData const* GetPortalData() { return &afPortalLocation[m_uiPortalId]; }
-        sBossInformation const* GetBossInformation(uint32 uiEntry = 0);
+        PortalData const* GetPortalData() { return &afPortalLocation[m_uiPortalId]; }
+        BossInformation const* GetBossInformation(uint32 uiEntry = 0);
 
         bool IsCurrentPortalForTrash()
         {
-            if (m_uiWorldStatePortalCount % 6)
+            if (m_uiWorldStatePortalCount % MAX_MINIBOSSES)
                 return true;
 
             return false;
@@ -213,7 +213,7 @@ class MANGOS_DLL_DECL instance_violet_hold : public ScriptedInstance
 
         bool IsNextPortalForTrash()
         {
-            if ((m_uiWorldStatePortalCount+1) % 6)
+            if ((m_uiWorldStatePortalCount+1) % MAX_MINIBOSSES)
                 return true;
 
             return false;
@@ -231,40 +231,18 @@ class MANGOS_DLL_DECL instance_violet_hold : public ScriptedInstance
 
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
-        uint64 GetData64(uint32 uiData);
 
-        const char* Save() { return strInstData.c_str(); }
+        const char* Save() { return m_strInstData.c_str(); }
         void Load(const char* chrIn);
 
         void Update(uint32 uiDiff);
 
-        typedef std::multimap<uint32, uint64> BossToCellMap;
+        typedef std::multimap<uint32, ObjectGuid> BossToCellMap;
 
     protected:
-        sBossSpawn* CreateBossSpawnByEntry(uint32 uiEntry);
+        BossSpawn* CreateBossSpawnByEntry(uint32 uiEntry);
         uint32 m_auiEncounter[MAX_ENCOUNTER];
-        std::string strInstData;
-
-        uint64 m_uiSinclariGUID;
-        uint64 m_uiSinclariAltGUID;
-        uint64 m_uiErekemGUID;
-        uint64 m_uiMoraggGUID;
-        uint64 m_uiIchoronGUID;
-        uint64 m_uiXevozzGUID;
-        uint64 m_uiLavanthorGUID;
-        uint64 m_uiZuramatGUID;
-        // Ghost Forms
-        uint64 m_uiArokkoaGUID;
-        uint64 m_uiVoidLordGUID;
-        uint64 m_uiEtheralGUID;
-        uint64 m_uiSwirlingGUID;
-        uint64 m_uiWatcherGUID;
-        uint64 m_uiLavaHoundGUID;
-
-        uint64 m_uiCellErekemGuard_LGUID;
-        uint64 m_uiCellErekemGuard_RGUID;
-        uint64 m_uiIntroCrystalGUID;
-        uint64 m_uiDoorSealGUID;
+        std::string m_strInstData;
 
         uint32 m_uiWorldState;
         uint32 m_uiWorldStateSealCount;
@@ -280,7 +258,7 @@ class MANGOS_DLL_DECL instance_violet_hold : public ScriptedInstance
         GUIDList m_lGuardsList;
         std::list<uint32> m_lRandomBossList;
 
-        std::vector<sBossSpawn*> m_vRandomBosses;
+        std::vector<BossSpawn*> m_vRandomBosses;
 };
 
 #endif
