@@ -25,26 +25,6 @@ EndScriptData */
 #include "blood_furnace.h"
 
 instance_blood_furnace::instance_blood_furnace(Map* pMap) : ScriptedInstance(pMap),
-    m_uiMakerGUID(0),
-    m_uiBroggokGUID(0),
-    m_uiKelidanGUID(0),
-
-    m_uiDoorFinalExitGUID(0),
-    m_uiDoorMakerFrontGUID(0),
-    m_uiDoorMakerRearGUID(0),
-    m_uiDoorBroggokFrontGUID(0),
-    m_uiDoorBrokkokRearGUID(0),
-    m_uiDoorKelidanExitGUID(0),
-
-    m_uiPrisonCell1GUID(0),
-    m_uiPrisonCell2GUID(0),
-    m_uiPrisonCell3GUID(0),
-    m_uiPrisonCell4GUID(0),
-    m_uiPrisonCell5GUID(0),
-    m_uiPrisonCell6GUID(0),
-    m_uiPrisonCell7GUID(0),
-    m_uiPrisonCell8GUID(0),
-
     m_uiBroggokEventTimer(30000),
     m_uiBroggokEventPhase(0)
 {
@@ -60,9 +40,10 @@ void instance_blood_furnace::OnCreatureCreate(Creature* pCreature)
 {
     switch (pCreature->GetEntry())
     {
-        case NPC_THE_MAKER:         m_uiMakerGUID = pCreature->GetGUID();   break;
-        case NPC_BROGGOK:           m_uiBroggokGUID = pCreature->GetGUID(); break;
-        case NPC_KELIDAN_THE_MAKER: m_uiKelidanGUID = pCreature->GetGUID(); break;
+        case NPC_BROGGOK:
+            m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
+            break;
+
         case NPC_NASCENT_FEL_ORC:
             m_luiNascentOrcGUIDs.push_back(pCreature->GetGUID());
             break;
@@ -74,56 +55,35 @@ void instance_blood_furnace::OnObjectCreate(GameObject* pGo)
     switch (pGo->GetEntry())
     {
         case GO_DOOR_MAKER_FRONT:                           // the maker front door
-            m_uiDoorMakerFrontGUID = pGo->GetGUID();
             break;
         case GO_DOOR_MAKER_REAR:                            // the maker rear door
-            m_uiDoorMakerRearGUID = pGo->GetGUID();
-            if (m_auiEncounter[TYPE_THE_MAKER_EVENT] == DONE && pGo->GetGoState() == GO_STATE_READY)
-                DoUseDoorOrButton(m_uiDoorMakerRearGUID);
+            if (m_auiEncounter[TYPE_THE_MAKER_EVENT] == DONE)
+                pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_DOOR_BROGGOK_FRONT:                         // broggok front door
-            m_uiDoorBroggokFrontGUID = pGo->GetGUID();
             break;
         case GO_DOOR_BROGGOK_REAR:                          // broggok rear door
-            m_uiDoorBrokkokRearGUID = pGo->GetGUID();
-            if (m_auiEncounter[TYPE_BROGGOK_EVENT] == DONE && pGo->GetGoState() == GO_STATE_READY)
-                DoUseDoorOrButton(m_uiDoorBrokkokRearGUID);
+            if (m_auiEncounter[TYPE_BROGGOK_EVENT] == DONE)
+                pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_DOOR_KELIDAN_EXIT:                          // kelidan exit door
-            m_uiDoorKelidanExitGUID = pGo->GetGUID();
-            if (m_auiEncounter[TYPE_KELIDAN_EVENT] == DONE && pGo->GetGoState() == GO_STATE_READY)
-                DoUseDoorOrButton(m_uiDoorKelidanExitGUID);
+            if (m_auiEncounter[TYPE_KELIDAN_EVENT] == DONE)
+                pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_DOOR_FINAL_EXIT:                            // final exit door
-            m_uiDoorFinalExitGUID = pGo->GetGUID();
-            if (m_auiEncounter[TYPE_KELIDAN_EVENT] == DONE && pGo->GetGoState() == GO_STATE_READY)
-                DoUseDoorOrButton(m_uiDoorFinalExitGUID);
+            if (m_auiEncounter[TYPE_KELIDAN_EVENT] == DONE)
+                pGo->SetGoState(GO_STATE_ACTIVE);
             break;
-        case GO_PRISON_CELL_MAKER1:    m_uiPrisonCell1GUID = pGo->GetGUID(); break;
-        case GO_PRISON_CELL_MAKER2:    m_uiPrisonCell2GUID = pGo->GetGUID(); break;
-        case GO_PRISON_CELL_MAKER3:    m_uiPrisonCell3GUID = pGo->GetGUID(); break;
-        case GO_PRISON_CELL_MAKER4:    m_uiPrisonCell4GUID = pGo->GetGUID(); break;
+
         case GO_PRISON_CELL_BROGGOK_1: m_aBroggokEvent[0].m_cellGuid = pGo->GetObjectGuid(); return;
         case GO_PRISON_CELL_BROGGOK_2: m_aBroggokEvent[1].m_cellGuid = pGo->GetObjectGuid(); return;
         case GO_PRISON_CELL_BROGGOK_3: m_aBroggokEvent[2].m_cellGuid = pGo->GetObjectGuid(); return;
         case GO_PRISON_CELL_BROGGOK_4: m_aBroggokEvent[3].m_cellGuid = pGo->GetObjectGuid(); return;
-    }
-}
-
-uint64 instance_blood_furnace::GetData64(uint32 uiData)
-{
-    switch (uiData)
-    {
-        case NPC_THE_MAKER:           return m_uiMakerGUID;
-        case NPC_BROGGOK:             return m_uiBroggokGUID;
-        case GO_PRISON_CELL_MAKER1:   return m_uiPrisonCell1GUID;
-        case GO_PRISON_CELL_MAKER2:   return m_uiPrisonCell2GUID;
-        case GO_PRISON_CELL_MAKER3:   return m_uiPrisonCell3GUID;
-        case GO_PRISON_CELL_MAKER4:   return m_uiPrisonCell4GUID;
 
         default:
-            return 0;
+            return;
     }
+    m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
 }
 
 void instance_blood_furnace::SetData(uint32 uiType, uint32 uiData)
@@ -132,13 +92,13 @@ void instance_blood_furnace::SetData(uint32 uiType, uint32 uiData)
     {
         case TYPE_THE_MAKER_EVENT:
             if (uiData == IN_PROGRESS)
-                DoUseDoorOrButton(m_uiDoorMakerFrontGUID);
+                DoUseDoorOrButton(GO_DOOR_MAKER_FRONT);
             if (uiData == FAIL)
-                DoUseDoorOrButton(m_uiDoorMakerFrontGUID);
+                DoUseDoorOrButton(GO_DOOR_MAKER_FRONT);
             if (uiData == DONE)
             {
-                DoUseDoorOrButton(m_uiDoorMakerFrontGUID);
-                DoUseDoorOrButton(m_uiDoorMakerRearGUID);
+                DoUseDoorOrButton(GO_DOOR_MAKER_FRONT);
+                DoUseDoorOrButton(GO_DOOR_MAKER_REAR);
             }
             m_auiEncounter[uiType] = uiData;
             break;
@@ -147,7 +107,7 @@ void instance_blood_furnace::SetData(uint32 uiType, uint32 uiData)
                 return;
 
             // Combat door; the exit door is opened in event
-            DoUseDoorOrButton(m_uiDoorBroggokFrontGUID);
+            DoUseDoorOrButton(GO_DOOR_BROGGOK_FRONT);
             if (uiData == IN_PROGRESS)
             {
                 if (m_uiBroggokEventPhase <= MAX_ORC_WAVES)
@@ -190,8 +150,8 @@ void instance_blood_furnace::SetData(uint32 uiType, uint32 uiData)
         case TYPE_KELIDAN_EVENT:
             if (uiData == DONE)
             {
-                DoUseDoorOrButton(m_uiDoorKelidanExitGUID);
-                DoUseDoorOrButton(m_uiDoorFinalExitGUID);
+                DoUseDoorOrButton(GO_DOOR_KELIDAN_EXIT);
+                DoUseDoorOrButton(GO_DOOR_FINAL_EXIT);
             }
             m_auiEncounter[uiType] = uiData;
             break;
@@ -223,9 +183,9 @@ void instance_blood_furnace::DoNextBroggokEventPhase()
     // Open door to the final boss now and move boss to the center of the room
     if (m_uiBroggokEventPhase >= MAX_ORC_WAVES)
     {
-        DoUseDoorOrButton(m_uiDoorBrokkokRearGUID);
+        DoUseDoorOrButton(GO_DOOR_BROGGOK_REAR);
 
-        if (Creature* pBroggok = instance->GetCreature(m_uiBroggokGUID))
+        if (Creature* pBroggok = GetSingleCreatureFromStorage(NPC_BROGGOK))
         {
             pBroggok->RemoveSplineFlag(SPLINEFLAG_WALKMODE);
             pBroggok->GetMotionMaster()->MovePoint(0, dx, dy, pBroggok->GetPositionZ());
@@ -423,7 +383,7 @@ bool GOUse_go_prison_cell_lever(Player* pPlayer, GameObject* pGo)
         pInstance->SetData(TYPE_BROGGOK_EVENT, IN_PROGRESS);
 
         // Yell intro
-        if (Creature* pBroggok = pInstance->instance->GetCreature(pInstance->GetData64(NPC_BROGGOK)))
+        if (Creature* pBroggok = pInstance->GetSingleCreatureFromStorage(NPC_BROGGOK))
             DoScriptText(SAY_BROGGOK_INTRO, pBroggok);
     }
 
