@@ -33,13 +33,7 @@ EndScriptData */
 5 - Lady Vashj Event
 */
 
-instance_serpentshrine_cavern::instance_serpentshrine_cavern(Map* pMap) : ScriptedInstance(pMap),
-    m_uiSharkkis(0),
-    m_uiTidalvess(0),
-    m_uiCaribdis(0),
-    m_uiLadyVashj(0),
-    m_uiKarathress(0),
-    m_uiKarathressEvent_Starter(0)
+instance_serpentshrine_cavern::instance_serpentshrine_cavern(Map* pMap) : ScriptedInstance(pMap)
 {
     Initialize();
 }
@@ -65,34 +59,28 @@ void instance_serpentshrine_cavern::OnCreatureCreate(Creature* pCreature)
 {
     switch (pCreature->GetEntry())
     {
-        case NPC_LADYVASHJ:  m_uiLadyVashj  = pCreature->GetGUID(); break;
-        case NPC_KARATHRESS: m_uiKarathress = pCreature->GetGUID(); break;
-        case NPC_SHARKKIS:   m_uiSharkkis   = pCreature->GetGUID(); break;
-        case NPC_TIDALVESS:  m_uiTidalvess  = pCreature->GetGUID(); break;
-        case NPC_CARIBDIS:   m_uiCaribdis   = pCreature->GetGUID(); break;
+        case NPC_LADYVASHJ:
+        case NPC_KARATHRESS:
+        case NPC_SHARKKIS:
+        case NPC_TIDALVESS:
+        case NPC_CARIBDIS:
+            m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
+            break;
     }
 }
 
 void instance_serpentshrine_cavern::SetData64(uint32 uiType, uint64 uiData)
 {
     if (uiType == DATA_KARATHRESS_STARTER)
-        m_uiKarathressEvent_Starter = uiData;
+        m_karathressEventStarterGuid = ObjectGuid(uiData);
 }
 
 uint64 instance_serpentshrine_cavern::GetData64(uint32 uiData)
 {
-    switch (uiData)
-    {
-        case NPC_SHARKKIS:            return m_uiSharkkis;
-        case NPC_TIDALVESS:           return m_uiTidalvess;
-        case NPC_CARIBDIS:            return m_uiCaribdis;
-        case NPC_LADYVASHJ:           return m_uiLadyVashj;
-        case NPC_KARATHRESS:          return m_uiKarathress;
-        case DATA_KARATHRESS_STARTER: return m_uiKarathressEvent_Starter;
+    if (uiData == DATA_KARATHRESS_STARTER)
+        return m_karathressEventStarterGuid.GetRawValue();
 
-        default:
-            return 0;
-    }
+    return 0;
 }
 
 void instance_serpentshrine_cavern::SetData(uint32 uiType, uint32 uiData)

@@ -55,12 +55,7 @@ class MANGOS_DLL_DECL instance_serpentshrine_cavern : public ScriptedInstance
         uint32 m_auiShieldGenerator[MAX_GENERATOR];
         std::string m_strInstData;
 
-        uint64 m_uiSharkkis;
-        uint64 m_uiTidalvess;
-        uint64 m_uiCaribdis;
-        uint64 m_uiLadyVashj;
-        uint64 m_uiKarathress;
-        uint64 m_uiKarathressEvent_Starter;
+        ObjectGuid m_karathressEventStarterGuid;
 };
 
 #endif

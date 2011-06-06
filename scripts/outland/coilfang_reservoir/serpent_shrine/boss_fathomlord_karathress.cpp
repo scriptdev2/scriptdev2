@@ -74,13 +74,14 @@ enum
 // position for Seer Olum
 const float afCoords_Olum[] = {446.78f, -542.76f, -7.54773f, 0.401581f};
 
+static const uint32 aAdvisors[] = {NPC_SHARKKIS, NPC_TIDALVESS, NPC_CARIBDIS};
+
 //Fathom-Lord Karathress AI
 struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
 {
     boss_fathomlord_karathressAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        memset(&m_auiAdvisorsGUID, 0, sizeof(m_auiAdvisorsGUID));
         Reset();
     }
 
@@ -92,27 +93,11 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
 
     bool   m_bBlessingOfTides_MobsChecked;
 
-    uint64 m_auiAdvisorsGUID[MAX_ADVISORS];                     // the GUIDs from the advisors
-
     void Reset()
     {
         m_uiCataclysmicBoltTimer       = 10000;
         m_uiEnrageTimer                = 600000;
         m_bBlessingOfTides_MobsChecked = false;
-
-        for(uint8 i = 0; i < MAX_ADVISORS; ++i)
-        {
-            if (Creature* pAdvisor = m_creature->GetMap()->GetCreature(m_auiAdvisorsGUID[i]))
-            {
-                if (pAdvisor->getVictim())
-                    pAdvisor->AI()->EnterEvadeMode();
-                else if (!pAdvisor->isAlive())
-                    pAdvisor->Respawn();
-            }
-        }
-
-        if (m_pInstance)
-            m_pInstance->SetData(TYPE_KARATHRESS_EVENT, NOT_STARTED);
     }
 
     // TODO - unneeded workaround - the spell should be cast by adviser onto karathress; text can also be handled in their AI
@@ -148,28 +133,16 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
         DoCastSpellIfCan(m_creature, uiSpell);
     }
 
-    void GetAdvisors()
-    {
-        if (!m_pInstance)
-            return;
-
-        m_auiAdvisorsGUID[0] = m_pInstance->GetData64(NPC_SHARKKIS);
-        m_auiAdvisorsGUID[1] = m_pInstance->GetData64(NPC_TIDALVESS);
-        m_auiAdvisorsGUID[2] = m_pInstance->GetData64(NPC_CARIBDIS);
-    }
-
     void Aggro(Unit* pWho)
     {
         if (!m_pInstance)
             return;
 
-        GetAdvisors();
-
         DoScriptText(SAY_AGGRO, m_creature);
 
         if (Player* pPlayer = pWho->GetCharmerOrOwnerPlayerOrPlayerItself())
         {
-            m_pInstance->SetData64(DATA_KARATHRESS_STARTER, pPlayer->GetGUID());
+            m_pInstance->SetGuid(DATA_KARATHRESS_STARTER, pPlayer->GetObjectGuid());
             m_pInstance->SetData(TYPE_KARATHRESS_EVENT, IN_PROGRESS);
         }
     }
@@ -195,25 +168,45 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
         m_creature->SummonCreature(NPC_SEER_OLUM, afCoords_Olum[0], afCoords_Olum[1], afCoords_Olum[2], afCoords_Olum[3], TEMPSUMMON_TIMED_DESPAWN, 3600000);
     }
 
+    void JustReachedHome()
+    {
+        if (!m_pInstance)
+            return;
+
+        for (uint8 i = 0; i < MAX_ADVISORS; ++i)
+        {
+            if (Creature* pAdvisor = m_pInstance->GetSingleCreatureFromStorage(aAdvisors[i]))
+            {
+                if (pAdvisor->getVictim())
+                    pAdvisor->AI()->EnterEvadeMode();
+                else if (!pAdvisor->isAlive())
+                    pAdvisor->Respawn();
+            }
+        }
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_KARATHRESS_EVENT, FAIL);
+    }
+
     void UpdateAI(const uint32 uiDiff)
     {
+        if (!m_pInstance)
+            return;
+
         //Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
         {
             //check if the event is started
-            if (m_pInstance && m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == IN_PROGRESS)
+            if (m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == IN_PROGRESS)
             {
                 if (Player* pTarget = m_creature->GetMap()->GetPlayer(m_pInstance->GetData64(DATA_KARATHRESS_STARTER)))
-                {
                     AttackStart(pTarget);
-                    GetAdvisors();
-                }
             }
             return;
         }
 
         //someone evaded!
-        if (m_pInstance && m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == NOT_STARTED)
+        if (m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == FAIL)
         {
             EnterEvadeMode();
             return;
@@ -240,7 +233,7 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
         {
             for(uint8 i = 0; i < MAX_ADVISORS; ++i)
             {
-                if (Creature* pAdvisor = m_creature->GetMap()->GetCreature(m_auiAdvisorsGUID[i]))
+                if (Creature* pAdvisor = m_pInstance->GetSingleCreatureFromStorage(aAdvisors[i]))
                 {
                     //stack max three times (one for each alive)
                     if (pAdvisor->isAlive())
@@ -284,7 +277,7 @@ struct MANGOS_DLL_DECL Advisor_Base_AI : public ScriptedAI
     void JustReachedHome()
     {
         if (m_pInstance && m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == IN_PROGRESS)
-            m_pInstance->SetData(TYPE_KARATHRESS_EVENT, NOT_STARTED);
+            m_pInstance->SetData(TYPE_KARATHRESS_EVENT, FAIL);
     }
 
     void Aggro(Unit *pWho)
@@ -292,11 +285,11 @@ struct MANGOS_DLL_DECL Advisor_Base_AI : public ScriptedAI
         if (!m_pInstance)
             return;
 
-        if (m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == NOT_STARTED)
+        if (m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == NOT_STARTED || m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == FAIL)
             m_pInstance->SetData(TYPE_KARATHRESS_EVENT, IN_PROGRESS);
 
         if (Player* pPlayer = pWho->GetCharmerOrOwnerPlayerOrPlayerItself())
-            m_pInstance->SetData64(DATA_KARATHRESS_STARTER, pPlayer->GetGUID());
+            m_pInstance->SetGuid(DATA_KARATHRESS_STARTER, pPlayer->GetObjectGuid());
     }
 
     void JustDied(Unit* pVictim)
@@ -304,7 +297,7 @@ struct MANGOS_DLL_DECL Advisor_Base_AI : public ScriptedAI
         if (!m_pInstance)
             return;
 
-        if (Creature* pKarathress = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_KARATHRESS)))
+        if (Creature* pKarathress = m_pInstance->GetSingleCreatureFromStorage(NPC_KARATHRESS))
         {
             if (boss_fathomlord_karathressAI* pKaraAI = dynamic_cast<boss_fathomlord_karathressAI*>(pKarathress->AI()))
                 pKaraAI->EventAdvisorDeath(m_creature->GetEntry());
@@ -368,20 +361,23 @@ struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public Advisor_Base_AI
 
     void UpdateAI(const uint32 uiDiff)
     {
+        if (!m_pInstance)
+            return;
+
         //Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
         {
             //check if the event is started
-            if (m_pInstance && m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == IN_PROGRESS)
+            if (m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == IN_PROGRESS)
             {
-                if (Player* pTarget = m_creature->GetMap()->GetPlayer(m_pInstance->GetData64(DATA_KARATHRESS_STARTER)))
+                if (Player* pTarget = m_creature->GetMap()->GetPlayer(m_pInstance->GetGuid(DATA_KARATHRESS_STARTER)))
                     AttackStart(pTarget);
             }
             return;
         }
 
         //someone evaded!
-        if (m_pInstance && m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == NOT_STARTED)
+        if (m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == FAIL)
         {
             EnterEvadeMode();
             return;
@@ -450,20 +446,23 @@ struct MANGOS_DLL_DECL boss_fathomguard_tidalvessAI : public Advisor_Base_AI
 
     void UpdateAI(const uint32 uiDiff)
     {
+        if (!m_pInstance)
+            return;
+
         //Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
         {
             //check if the event is started
-            if (m_pInstance && m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == IN_PROGRESS)
+            if (m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == IN_PROGRESS)
             {
-                if (Player* pTarget = m_creature->GetMap()->GetPlayer(m_pInstance->GetData64(DATA_KARATHRESS_STARTER)))
+                if (Player* pTarget = m_creature->GetMap()->GetPlayer(m_pInstance->GetGuid(DATA_KARATHRESS_STARTER)))
                     AttackStart(pTarget);
             }
             return;
         }
 
         //someone evaded!
-        if (m_pInstance && m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == NOT_STARTED)
+        if (m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == FAIL)
         {
             EnterEvadeMode();
             return;
@@ -501,20 +500,23 @@ struct MANGOS_DLL_DECL boss_fathomguard_caribdisAI : public Advisor_Base_AI
 
     void UpdateAI(const uint32 uiDiff)
     {
+        if (!m_pInstance)
+            return;
+
         //Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
         {
             //check if the event is started
-            if (m_pInstance && m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == IN_PROGRESS)
+            if (m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == IN_PROGRESS)
             {
-                if (Player* pTarget = m_creature->GetMap()->GetPlayer(m_pInstance->GetData64(DATA_KARATHRESS_STARTER)))
+                if (Player* pTarget = m_creature->GetMap()->GetPlayer(m_pInstance->GetGuid(DATA_KARATHRESS_STARTER)))
                     AttackStart(pTarget);
             }
             return;
         }
 
         //someone evaded!
-        if (m_pInstance && m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == NOT_STARTED)
+        if (m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == FAIL)
         {
             EnterEvadeMode();
             return;
@@ -544,15 +546,12 @@ struct MANGOS_DLL_DECL boss_fathomguard_caribdisAI : public Advisor_Base_AI
             // It can be cast on any of the mobs
             Unit* pUnit = NULL;
 
-            if (m_pInstance)
+            switch (urand(0, 3))
             {
-                switch(urand(0, 3))
-                {
-                    case 0: pUnit = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_KARATHRESS)); break;
-                    case 1: pUnit = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_SHARKKIS)); break;
-                    case 2: pUnit = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_TIDALVESS)); break;
-                    case 3: pUnit = m_creature; break;
-                }
+                case 0: pUnit = m_pInstance->GetSingleCreatureFromStorage(NPC_KARATHRESS); break;
+                case 1: pUnit = m_pInstance->GetSingleCreatureFromStorage(NPC_SHARKKIS);   break;
+                case 2: pUnit = m_pInstance->GetSingleCreatureFromStorage(NPC_TIDALVESS);  break;
+                case 3: pUnit = m_creature; break;
             }
 
             if (!pUnit)

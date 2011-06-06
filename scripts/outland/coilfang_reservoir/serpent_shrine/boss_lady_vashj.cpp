@@ -119,13 +119,12 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
     boss_lady_vashjAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        memset(&m_auiShieldGeneratorChannel, 0, sizeof(m_auiShieldGeneratorChannel));
         Reset();
     }
 
     ScriptedInstance *m_pInstance;                          // the instance
 
-    uint64 m_auiShieldGeneratorChannel[MAX_SHIELD_GEN];
+    ObjectGuid m_auiShieldGeneratorChannel[MAX_SHIELD_GEN];
 
     // timers
     uint32 m_uiShockBlast_Timer;
@@ -181,7 +180,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
                 if (pTemp->isAlive())
                     pTemp->SetDeathState(JUST_DIED);
 
-                m_auiShieldGeneratorChannel[i] = 0;
+                m_auiShieldGeneratorChannel[i].Clear();
             }
         }
     }
@@ -212,7 +211,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
             for(uint8 i = 0; i < MAX_SHIELD_GEN; ++i)
             {
                 if (Creature* pCreature = m_creature->SummonCreature(NPC_SHIELD_GENERATOR, afShieldGeneratorChannelPos[i][0],  afShieldGeneratorChannelPos[i][1],  afShieldGeneratorChannelPos[i][2],  afShieldGeneratorChannelPos[i][3], TEMPSUMMON_CORPSE_DESPAWN, 0))
-                    m_auiShieldGeneratorChannel[i] = pCreature->GetGUID();
+                    m_auiShieldGeneratorChannel[i] = pCreature->GetObjectGuid();
             }
         }
     }
@@ -507,7 +506,7 @@ struct MANGOS_DLL_DECL mob_enchanted_elementalAI : public ScriptedAI
     {
         if (m_pInstance)
         {
-            if (Creature* pVashj = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_LADYVASHJ)))
+            if (Creature* pVashj = m_pInstance->GetSingleCreatureFromStorage(NPC_LADYVASHJ))
             {
                 if (pVashj->IsWithinDistInMap(m_creature, INTERACTION_DISTANCE))
                 {
@@ -607,7 +606,7 @@ struct MANGOS_DLL_DECL mob_toxic_sporebatAI : public ScriptedAI
             if (m_pInstance)
             {
                 //check if vashj is death
-                Creature* pVashj = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_LADYVASHJ));
+                Creature* pVashj = m_pInstance->GetSingleCreatureFromStorage(NPC_LADYVASHJ);
                 if (!pVashj || !pVashj->isAlive())
                 {
                     //remove
@@ -657,7 +656,7 @@ bool ItemUse_item_tainted_core(Player* pPlayer, Item* pItem, SpellCastTargets co
         return true;
     }
 
-    Creature* pVashj = pPlayer->GetMap()->GetCreature(pInstance->GetData64(NPC_LADYVASHJ));
+    Creature* pVashj = pInstance->GetSingleCreatureFromStorage(NPC_LADYVASHJ);
 
     if (!pVashj)
         return true;

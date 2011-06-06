@@ -68,7 +68,6 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
     boss_leotheras_the_blindAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_uiShadowLeo = 0;
         Reset();
     }
 
@@ -83,7 +82,7 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
     bool m_bDemonForm;
     bool m_bIsFinalForm;
 
-    uint64 m_uiShadowLeo;
+    ObjectGuid m_shadowLeoGuid;
 
     void Reset()
     {
@@ -127,7 +126,7 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
     {
         if (m_creature->getVictim() && pSummoned->GetEntry() == NPC_SHADOW_LEO)
         {
-            m_uiShadowLeo = pSummoned->GetGUID();
+            m_shadowLeoGuid = pSummoned->GetObjectGuid();
             pSummoned->AI()->AttackStart(m_creature->getVictim());
         }
     }
@@ -137,9 +136,9 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
         DoScriptText(SAY_DEATH, m_creature);
 
         //despawn copy
-        if (m_uiShadowLeo)
+        if (m_shadowLeoGuid)
         {
-            if (Creature* pShadowLeo = m_creature->GetMap()->GetCreature(m_uiShadowLeo))
+            if (Creature* pShadowLeo = m_creature->GetMap()->GetCreature(m_shadowLeoGuid))
                 pShadowLeo->ForcedDespawn();
         }
 
