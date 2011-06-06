@@ -229,7 +229,7 @@ void instance_blood_furnace::OnCreatureEvade(Creature* pCreature)
 
     else if (pCreature->GetEntry() == NPC_NASCENT_FEL_ORC)
     {
-        for (uint8 i = 0; i < m_uiBroggokEventPhase; ++i)
+        for (uint8 i = 0; i < std::min<uint32>(m_uiBroggokEventPhase, MAX_ORC_WAVES); ++i)
         {
             if (m_aBroggokEvent[i].m_sSortedOrcGuids.find(pCreature->GetObjectGuid()) != m_aBroggokEvent[i].m_sSortedOrcGuids.end())
                 SetData(TYPE_BROGGOK_EVENT, FAIL);
@@ -245,7 +245,7 @@ void instance_blood_furnace::OnCreatureDeath(Creature* pCreature)
     if (pCreature->GetEntry() == NPC_NASCENT_FEL_ORC)
     {
         uint8 uiClearedCells = 0;
-        for (uint8 i = 0; i < m_uiBroggokEventPhase; ++i)
+        for (uint8 i = 0; i < std::min<uint32>(m_uiBroggokEventPhase, MAX_ORC_WAVES); ++i)
         {
             if (m_aBroggokEvent[i].m_sSortedOrcGuids.size() == m_aBroggokEvent[i].m_uiKilledOrcCount)
             {
