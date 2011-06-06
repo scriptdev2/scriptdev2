@@ -57,7 +57,7 @@ struct MANGOS_DLL_DECL boss_murmurAI : public ScriptedAI
     uint32 ThunderingStorm_Timer;
     bool CanSonicBoom;
     bool CanShockWave;
-    uint64 m_uiPlayerTargetGUID;
+    ObjectGuid m_playerTargetGuid;
 
     void Reset()
     {
@@ -69,7 +69,7 @@ struct MANGOS_DLL_DECL boss_murmurAI : public ScriptedAI
         ThunderingStorm_Timer = 12000;                //Casting directly after Sonic Boom.
         CanSonicBoom = false;
         CanShockWave = false;
-        m_uiPlayerTargetGUID = 0;
+        m_playerTargetGuid.Clear();
 
         //database should have `RegenHealth`=0 to prevent regen
         uint32 hp = (m_creature->GetMaxHealth()*40)/100;
@@ -170,7 +170,7 @@ struct MANGOS_DLL_DECL boss_murmurAI : public ScriptedAI
                     if (temp->GetTypeId() == TYPEID_PLAYER)
                     {
                         DoCastSpellIfCan(temp, SPELL_MAGNETIC_PULL);
-                        m_uiPlayerTargetGUID = temp->GetGUID();
+                        m_playerTargetGuid = temp->GetObjectGuid();
                         CanShockWave = true;
                     }
                     MagneticPull_Timer = 2500;
@@ -178,12 +178,12 @@ struct MANGOS_DLL_DECL boss_murmurAI : public ScriptedAI
             }
             else
             {
-                if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_uiPlayerTargetGUID))
+                if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerTargetGuid))
                     pPlayer->CastSpell(pPlayer, SPELL_SHOCKWAVE, true);
 
                 MagneticPull_Timer = urand(15000, 30000);
                 CanShockWave = false;
-                m_uiPlayerTargetGUID = 0;
+                m_playerTargetGuid.Clear();
             }
         }else MagneticPull_Timer -= diff;
 

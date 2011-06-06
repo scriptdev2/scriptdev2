@@ -178,7 +178,7 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
             pTarget->CastSpell(pTarget, SPELL_SPECTRAL_REALM_FORCE_FACTION, true);
             pTarget->CastSpell(pTarget, SPELL_SPECTRAL_REALM, true);
 
-            m_pInstance->SetData64(DATA_PLAYER_SPECTRAL_REALM, pTarget->GetGUID());
+            m_pInstance->SetGuid(DATA_PLAYER_SPECTRAL_REALM, pTarget->GetObjectGuid());
         }
     }
 
@@ -510,7 +510,7 @@ struct MANGOS_DLL_DECL boss_kalecgos_humanoidAI : public ScriptedAI
         {
             if (m_pInstance)
             {
-                /*Player* pPlayer = m_creature->GetMap()->GetPlayer(m_pInstance->GetData64(DATA_RANDOM_SPECTRAL_PLAYER));
+                /*Player* pPlayer = m_creature->GetMap()->GetPlayer(m_pInstance->GetGuid(DATA_RANDOM_SPECTRAL_PLAYER));
                 if (pPlayer)
                     DoCastSpellIfCan(pPlayer, SPELL_REVITALIZE);*/
                 RevitalizeTimer = 30000;
@@ -553,7 +553,7 @@ bool GOUse_go_spectral_rift(Player* pPlayer, GameObject* pGo)
         pPlayer->CastSpell(pPlayer, SPELL_SPECTRAL_REALM, true);
 
         // Add player to pSath's threat list
-        /*if (Creature* pSath = pInstance->instance->GetCreature(pInstance->GetData64(DATA_KALECGOS_DRAGON)))
+        /*if (Creature* pSath = pInstance->GetSingleCreatureFromStorage(NPC_KALECGOS_DRAGON)) ++ TODO might contain typos
         {
             if (pSath->isAlive())
             {
@@ -563,7 +563,7 @@ bool GOUse_go_spectral_rift(Player* pPlayer, GameObject* pGo)
         }
 
         // Remove player from Sathrovarr's threat list
-        if (Creature* pKalecgos = pInstance->instance->GetCreature(pInstance->GetData64(DATA_SATHROVARR)))
+        if (Creature* pKalecgos = pInstance->GetSingleCreatureFromStorage(NPC_SATHROVARR)) ++ TODO might contain typos
         {
             if (pKalecgos->isAlive())
             {
@@ -575,7 +575,7 @@ bool GOUse_go_spectral_rift(Player* pPlayer, GameObject* pGo)
             }
         }*/
 
-        pInstance->SetData64(DATA_PLAYER_SPECTRAL_REALM, pPlayer->GetGUID());
+        pInstance->SetGuid(DATA_PLAYER_SPECTRAL_REALM, pPlayer->GetObjectGuid());
     }
 
     return true;

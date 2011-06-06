@@ -199,7 +199,7 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
             //check if the event is started
             if (m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == IN_PROGRESS)
             {
-                if (Player* pTarget = m_creature->GetMap()->GetPlayer(m_pInstance->GetData64(DATA_KARATHRESS_STARTER)))
+                if (Player* pTarget = m_creature->GetMap()->GetPlayer(m_pInstance->GetGuid(DATA_KARATHRESS_STARTER)))
                     AttackStart(pTarget);
             }
             return;

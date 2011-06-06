@@ -156,7 +156,7 @@ struct MANGOS_DLL_DECL boss_exarch_maladaarAI : public ScriptedAI
         Reset();
     }
 
-    uint64 m_uiTargetGUID;
+    ObjectGuid m_targetGuid;
 
     uint32 m_uiFearTimer;
     uint32 m_uiRibbonOfSoulsTimer;
@@ -167,7 +167,7 @@ struct MANGOS_DLL_DECL boss_exarch_maladaarAI : public ScriptedAI
 
     void Reset()
     {
-        m_uiTargetGUID = 0;
+        m_targetGuid.Clear();
 
         m_uiFearTimer          = urand(15000, 20000);
         m_uiRibbonOfSoulsTimer = 5000;
@@ -205,7 +205,7 @@ struct MANGOS_DLL_DECL boss_exarch_maladaarAI : public ScriptedAI
             pSummoned->CastSpell(pSummoned, SPELL_STOLEN_SOUL_VISUAL, false);
             pSummoned->setFaction(m_creature->getFaction());
 
-            if (Player* pTarget = m_creature->GetMap()->GetPlayer(m_uiTargetGUID))
+            if (Player* pTarget = m_creature->GetMap()->GetPlayer(m_targetGuid))
             {
                 if (mob_stolen_soulAI* pSoulAI = dynamic_cast<mob_stolen_soulAI*>(pSummoned->AI()))
                 {
@@ -260,7 +260,7 @@ struct MANGOS_DLL_DECL boss_exarch_maladaarAI : public ScriptedAI
 
                     DoScriptText(urand(0, 1) ? SAY_ROAR : SAY_SOUL_CLEAVE, m_creature);
 
-                    m_uiTargetGUID = pTarget->GetGUID();
+                    m_targetGuid = pTarget->GetObjectGuid();
 
                     DoCastSpellIfCan(pTarget, SPELL_STOLEN_SOUL);
                     DoSpawnCreature(NPC_STOLEN_SOUL, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10000);

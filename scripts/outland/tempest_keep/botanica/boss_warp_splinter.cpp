@@ -31,11 +31,10 @@ struct MANGOS_DLL_DECL mob_treantAI  : public ScriptedAI
 {
     mob_treantAI (Creature* pCreature) : ScriptedAI(pCreature)
     {
-        WarpGuid = 0;
         Reset();
     }
 
-    uint64 WarpGuid;
+    ObjectGuid m_warpGuid;
 
     void Reset()
     {
@@ -49,7 +48,7 @@ struct MANGOS_DLL_DECL mob_treantAI  : public ScriptedAI
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (m_creature->getVictim()->GetGUID() != WarpGuid)
+        if (m_creature->getVictim()->GetObjectGuid() != m_warpGuid)
             DoMeleeAttackIfReady();
     }
 };
@@ -97,7 +96,7 @@ struct MANGOS_DLL_DECL boss_warp_splinterAI : public ScriptedAI
     uint32 Arcane_Volley_Timer;
     uint32 CheckTreantLOS_Timer;
     uint32 TreantLife_Timer;
-    uint64 Treant_GUIDs[6];
+    ObjectGuid m_aTreantGuid[6];
 
     float Treant_Spawn_Pos_X;
     float Treant_Spawn_Pos_Y;
@@ -111,7 +110,7 @@ struct MANGOS_DLL_DECL boss_warp_splinterAI : public ScriptedAI
         TreantLife_Timer = 999999;
 
         for(int i = 0; i < 6; ++i)
-            Treant_GUIDs[i] = 0;
+            m_aTreantGuid[i].Clear();
 
         m_creature->SetSpeedRate(MOVE_RUN, 0.7f);
     }
@@ -147,10 +146,10 @@ struct MANGOS_DLL_DECL boss_warp_splinterAI : public ScriptedAI
             {
                 //pTreant->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*m_creature));
                 pTreant->AddThreat(m_creature);
-                Treant_GUIDs[i] = pTreant->GetGUID();
+                m_aTreantGuid[i] = pTreant->GetObjectGuid();
 
                 if (mob_treantAI* pTreantAI = dynamic_cast<mob_treantAI*>(pTreant->AI()))
-                    pTreantAI->WarpGuid = m_creature->GetGUID();
+                    pTreantAI->m_warpGuid = m_creature->GetObjectGuid();
             }
         }
 
@@ -162,7 +161,7 @@ struct MANGOS_DLL_DECL boss_warp_splinterAI : public ScriptedAI
     {
         for(int i=0; i<6; ++i)
         {
-            Creature* pTreant = m_creature->GetMap()->GetCreature(Treant_GUIDs[i]);
+            Creature* pTreant = m_creature->GetMap()->GetCreature(m_aTreantGuid[i]);
 
             if (pTreant)
             {

@@ -134,8 +134,6 @@ struct MANGOS_DLL_DECL boss_warbringer_omroggAI : public ScriptedAI
 {
     boss_warbringer_omroggAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        m_uiLeftHeadGUID  = 0;
-        m_uiRightHeadGUID = 0;
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Reset();
@@ -144,8 +142,8 @@ struct MANGOS_DLL_DECL boss_warbringer_omroggAI : public ScriptedAI
     ScriptedInstance* m_pInstance;
     bool m_bIsRegularMode;
 
-    uint64 m_uiLeftHeadGUID;
-    uint64 m_uiRightHeadGUID;
+    ObjectGuid m_leftHeadGuid;
+    ObjectGuid m_rightHeadGuid;
 
     int m_iAggro;
     int m_iThreat;
@@ -166,16 +164,16 @@ struct MANGOS_DLL_DECL boss_warbringer_omroggAI : public ScriptedAI
 
     void Reset()
     {
-        if (Creature* pLeftHead = m_creature->GetMap()->GetCreature(m_uiLeftHeadGUID))
+        if (Creature* pLeftHead = m_creature->GetMap()->GetCreature(m_leftHeadGuid))
         {
             pLeftHead->SetDeathState(JUST_DIED);
-            m_uiLeftHeadGUID = 0;
+            m_leftHeadGuid.Clear();
         }
 
-        if (Creature* pRightHead = m_creature->GetMap()->GetCreature(m_uiRightHeadGUID))
+        if (Creature* pRightHead = m_creature->GetMap()->GetCreature(m_rightHeadGuid))
         {
             pRightHead->SetDeathState(JUST_DIED);
-            m_uiRightHeadGUID = 0;
+            m_rightHeadGuid.Clear();
         }
 
         m_bAggroYell = false;
@@ -197,8 +195,8 @@ struct MANGOS_DLL_DECL boss_warbringer_omroggAI : public ScriptedAI
 
     void DoYellForThreat()
     {
-        Creature* pLeftHead  = m_creature->GetMap()->GetCreature(m_uiLeftHeadGUID);
-        Creature* pRightHead = m_creature->GetMap()->GetCreature(m_uiRightHeadGUID);
+        Creature* pLeftHead  = m_creature->GetMap()->GetCreature(m_leftHeadGuid);
+        Creature* pRightHead = m_creature->GetMap()->GetCreature(m_rightHeadGuid);
 
         if (!pLeftHead || !pRightHead)
             return;
@@ -218,7 +216,7 @@ struct MANGOS_DLL_DECL boss_warbringer_omroggAI : public ScriptedAI
         m_creature->SummonCreature(NPC_LEFT_HEAD, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_DEAD_DESPAWN, 0);
         m_creature->SummonCreature(NPC_RIGHT_HEAD, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_DEAD_DESPAWN, 0);
 
-        if (Creature* pLeftHead = m_creature->GetMap()->GetCreature(m_uiLeftHeadGUID))
+        if (Creature* pLeftHead = m_creature->GetMap()->GetCreature(m_leftHeadGuid))
         {
             m_iAggro = irand(0, 2);
 
@@ -235,10 +233,10 @@ struct MANGOS_DLL_DECL boss_warbringer_omroggAI : public ScriptedAI
     void JustSummoned(Creature* pSummoned)
     {
         if (pSummoned->GetEntry() == NPC_LEFT_HEAD)
-            m_uiLeftHeadGUID = pSummoned->GetGUID();
+            m_leftHeadGuid = pSummoned->GetObjectGuid();
 
         if (pSummoned->GetEntry() == NPC_RIGHT_HEAD)
-            m_uiRightHeadGUID = pSummoned->GetGUID();
+            m_rightHeadGuid = pSummoned->GetObjectGuid();
 
         //summoned->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
         //summoned->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -247,8 +245,8 @@ struct MANGOS_DLL_DECL boss_warbringer_omroggAI : public ScriptedAI
 
     void KilledUnit(Unit* pVictim)
     {
-        Creature* pLeftHead  = m_creature->GetMap()->GetCreature(m_uiLeftHeadGUID);
-        Creature* pRightHead = m_creature->GetMap()->GetCreature(m_uiRightHeadGUID);
+        Creature* pLeftHead  = m_creature->GetMap()->GetCreature(m_leftHeadGuid);
+        Creature* pRightHead = m_creature->GetMap()->GetCreature(m_rightHeadGuid);
 
         if (!pLeftHead || !pRightHead)
             return;
@@ -273,8 +271,8 @@ struct MANGOS_DLL_DECL boss_warbringer_omroggAI : public ScriptedAI
 
     void JustDied(Unit* pKiller)
     {
-        Creature* pLeftHead  = m_creature->GetMap()->GetCreature(m_uiLeftHeadGUID);
-        Creature* pRightHead = m_creature->GetMap()->GetCreature(m_uiRightHeadGUID);
+        Creature* pLeftHead  = m_creature->GetMap()->GetCreature(m_leftHeadGuid);
+        Creature* pRightHead = m_creature->GetMap()->GetCreature(m_rightHeadGuid);
 
         if (!pLeftHead || !pRightHead)
             return;
@@ -295,8 +293,8 @@ struct MANGOS_DLL_DECL boss_warbringer_omroggAI : public ScriptedAI
         {
             m_uiDelay_Timer = 3500;
 
-            Creature* pLeftHead  = m_creature->GetMap()->GetCreature(m_uiLeftHeadGUID);
-            Creature* pRightHead = m_creature->GetMap()->GetCreature(m_uiRightHeadGUID);
+            Creature* pLeftHead  = m_creature->GetMap()->GetCreature(m_leftHeadGuid);
+            Creature* pRightHead = m_creature->GetMap()->GetCreature(m_rightHeadGuid);
 
             if (!pLeftHead || !pRightHead)
                 return;

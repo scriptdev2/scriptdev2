@@ -107,7 +107,7 @@ struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
     uint32 m_uiShadowFissureTimer;
     uint32 m_uiCleaveTimer;
 
-    uint64 m_uiLastEventInvokerGUID;
+    ObjectGuid m_lastEventInvokerGuid;
 
     void Reset()
     {
@@ -127,7 +127,7 @@ struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
         m_uiShadowFissureTimer = 8000;
         m_uiCleaveTimer = 5000;
 
-        m_uiLastEventInvokerGUID = 0;
+        m_lastEventInvokerGuid.Clear();
     }
 
     void DoYellForPeonAggro(Unit* pWho)
@@ -139,7 +139,7 @@ struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
         ++m_uiPeonEngagedCount;
 
         if (pWho)
-            m_uiLastEventInvokerGUID = pWho->GetGUID();
+            m_lastEventInvokerGuid = pWho->GetObjectGuid();
     }
 
     void DoYellForPeonDeath(Unit* pKiller)
@@ -182,7 +182,7 @@ struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
         m_bIsMainEvent = true;
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
 
-        if (Unit* pEnemy = m_creature->GetMap()->GetUnit(m_uiLastEventInvokerGUID))
+        if (Unit* pEnemy = m_creature->GetMap()->GetUnit(m_lastEventInvokerGuid))
             AttackStart(pEnemy);
     }
 
@@ -215,7 +215,7 @@ struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
             m_bIntroOnce = true;
             m_bIsIntroEvent = true;
 
-            m_uiLastEventInvokerGUID = pWho->GetGUID();
+            m_lastEventInvokerGuid = pWho->GetObjectGuid();
 
             if (m_pInstance)
                 m_pInstance->SetData(TYPE_NETHEKURSE, IN_PROGRESS);

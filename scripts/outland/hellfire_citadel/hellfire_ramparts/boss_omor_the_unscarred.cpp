@@ -59,7 +59,7 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
     uint32 Shadowbolt_Timer;
     uint32 Summon_Timer;
     uint32 SummonedCount;
-    uint64 playerGUID;
+    ObjectGuid m_playerGuid;
     bool CanPullBack;
 
     void Reset()
@@ -73,7 +73,7 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
         Shadowbolt_Timer = 2000;
         Summon_Timer = 10000;
         SummonedCount = 0;
-        playerGUID = 0;
+        m_playerGuid.Clear();
         CanPullBack = false;
     }
 
@@ -130,7 +130,7 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
         {
             if (ShadowWhip_Timer < diff)
             {
-                if (Player* pPlayer = m_creature->GetMap()->GetPlayer(playerGUID))
+                if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid))
                 {
                     //if unit dosen't have this flag, then no pulling back (script will attempt cast, even if orbital strike was resisted)
                     if (pPlayer->HasMovementFlag(MOVEFLAG_FALLING))
@@ -139,7 +139,7 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
                         DoCastSpellIfCan(pPlayer,SPELL_SHADOW_WHIP);
                     }
                 }
-                playerGUID = 0;
+                m_playerGuid.Clear();
                 ShadowWhip_Timer = 2000;
                 CanPullBack = false;
             }else ShadowWhip_Timer -= diff;
@@ -155,10 +155,9 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
             {
                 DoCastSpellIfCan(temp,SPELL_ORBITAL_STRIKE);
                 OrbitalStrike_Timer = urand(14000, 16000);
-                playerGUID = temp->GetGUID();
+                m_playerGuid = temp->GetObjectGuid();
 
-                if (playerGUID)
-                    CanPullBack = true;
+                CanPullBack = true;
             }
         }else OrbitalStrike_Timer -= diff;
 
