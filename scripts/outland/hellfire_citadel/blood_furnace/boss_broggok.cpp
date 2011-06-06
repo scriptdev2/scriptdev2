@@ -29,87 +29,126 @@ enum
     SAY_AGGRO               = -1542008,
 
     SPELL_SLIME_SPRAY       = 30913,
-    H_SPELL_SLIME_SPRAY     = 38458,
+    SPELL_SLIME_SPRAY_H     = 38458,
     SPELL_POISON_CLOUD      = 30916,
     SPELL_POISON_BOLT       = 30917,
-    H_SPELL_POISON_BOLT     = 38459,
+    SPELL_POISON_BOLT_H     = 38459,
 
-    SPELL_POISON            = 30914
+    SPELL_POISON            = 30914,
+
+    POINT_EVENT_COMBAT      = 1,
 };
 
 struct MANGOS_DLL_DECL boss_broggokAI : public ScriptedAI
 {
     boss_broggokAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_pInstance = (instance_blood_furnace*)pCreature->GetInstanceData();
         m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Reset();
     }
 
-    ScriptedInstance* m_pInstance;
+    instance_blood_furnace* m_pInstance;
     bool m_bIsRegularMode;
 
-    uint32 AcidSpray_Timer;
-    uint32 PoisonSpawn_Timer;
-    uint32 PoisonBolt_Timer;
+    uint32 m_uiAcidSprayTimer;
+    uint32 m_uiPoisonSpawnTimer;
+    uint32 m_uiPoisonBoltTimer;
 
     void Reset()
     {
-        AcidSpray_Timer = 10000;
-        PoisonSpawn_Timer = 5000;
-        PoisonBolt_Timer = 7000;
+        m_uiAcidSprayTimer = 10000;
+        m_uiPoisonSpawnTimer = 5000;
+        m_uiPoisonBoltTimer = 7000;
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
         if (m_pInstance)
-            m_pInstance->SetData(TYPE_BROGGOK_EVENT,IN_PROGRESS);
+            m_pInstance->SetData(TYPE_BROGGOK_EVENT, IN_PROGRESS);
     }
 
-    void JustReachedHome()
+    void JustSummoned(Creature* pSummoned)
+    {
+        // ToDo: set correct flags and data in DB!!!
+        pSummoned->setFaction(16);
+        pSummoned->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+        pSummoned->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+        pSummoned->CastSpell(pSummoned, SPELL_POISON, false, NULL, NULL, m_creature->GetObjectGuid());
+    }
+
+    void JustDied(Unit* pWho)
     {
         if (m_pInstance)
-            m_pInstance->SetData(TYPE_BROGGOK_EVENT,FAIL);
+            m_pInstance->SetData(TYPE_BROGGOK_EVENT, DONE);
     }
 
-    void JustSummoned(Creature *summoned)
+    void EnterEvadeMode()
     {
-        summoned->setFaction(16);
-        summoned->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-        summoned->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-        summoned->CastSpell(summoned, SPELL_POISON, false, NULL, NULL, m_creature->GetObjectGuid());
-    }
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop(true);
+        m_creature->LoadCreatureAddon();
 
-    void JustDied(Unit *who)
-    {
+        m_creature->SetLootRecipient(NULL);
+
+        Reset();
+
+        if (!m_creature->isAlive())
+            return;
+
         if (m_pInstance)
-            m_pInstance->SetData(TYPE_BROGGOK_EVENT,DONE);
+        {
+            float dx, dy;
+            float fRespX, fRespY, fRespZ;
+            m_creature->GetRespawnCoord(fRespX, fRespY, fRespZ);
+            m_pInstance->GetMovementDistanceForIndex(4, dx, dy);
+            m_creature->GetMotionMaster()->MovePoint(POINT_EVENT_COMBAT, dx, dy, fRespZ);
+        }
+        else
+            m_creature->GetMotionMaster()->MoveTargetedHome();
     }
 
-    void UpdateAI(const uint32 diff)
+    // Reset Orientation
+    void MovementInform(uint32 uiMotionType, uint32 uiPointId)
+    {
+        if (uiMotionType != POINT_MOTION_TYPE || uiPointId != POINT_EVENT_COMBAT)
+            return;
+
+        if (GameObject* pFrontDoor = m_pInstance->GetSingleGameObjectFromStorage(GO_DOOR_BROGGOK_FRONT))
+            m_creature->SetFacingToObject(pFrontDoor);
+    }
+
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (AcidSpray_Timer < diff)
+        if (m_uiAcidSprayTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? H_SPELL_SLIME_SPRAY : SPELL_SLIME_SPRAY);
-            AcidSpray_Timer = urand(4000, 12000);
-        }else AcidSpray_Timer -=diff;
+            if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_SLIME_SPRAY : SPELL_SLIME_SPRAY_H) == CAST_OK)
+                m_uiAcidSprayTimer = urand(4000, 12000);
+        }
+        else
+            m_uiAcidSprayTimer -= uiDiff;
 
-        if (PoisonBolt_Timer < diff)
+        if (m_uiPoisonBoltTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? H_SPELL_POISON_BOLT : SPELL_POISON_BOLT);
-            PoisonBolt_Timer = urand(4000, 12000);
-        }else PoisonBolt_Timer -=diff;
+            if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_POISON_BOLT : SPELL_POISON_BOLT_H) == CAST_OK)
+                m_uiPoisonBoltTimer = urand(4000, 12000);
+        }
+        else
+            m_uiPoisonBoltTimer -= uiDiff;
 
-        if (PoisonSpawn_Timer < diff)
+        if (m_uiPoisonSpawnTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature,SPELL_POISON_CLOUD);
-            PoisonSpawn_Timer = 20000;
-        }else PoisonSpawn_Timer -=diff;
+            if (DoCastSpellIfCan(m_creature, SPELL_POISON_CLOUD) == CAST_OK)
+                m_uiPoisonSpawnTimer = 20000;
+        }
+        else
+            m_uiPoisonSpawnTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
@@ -136,14 +175,15 @@ CreatureAI* GetAI_mob_broggok_poisoncloud(Creature* pCreature)
 
 void AddSC_boss_broggok()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_broggok";
-    newscript->GetAI = &GetAI_boss_broggok;
-    newscript->RegisterSelf();
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "mob_broggok_poisoncloud";
-    newscript->GetAI = &GetAI_mob_broggok_poisoncloud;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_broggok";
+    pNewScript->GetAI = &GetAI_boss_broggok;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "mob_broggok_poisoncloud";
+    pNewScript->GetAI = &GetAI_mob_broggok_poisoncloud;
+    pNewScript->RegisterSelf();
 }

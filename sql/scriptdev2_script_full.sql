@@ -1625,7 +1625,9 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1542011,'Anger... Hate... These are tools I can use.',10288,1,0,0,'the_maker SAY_AGGRO_3'),
 (-1542012,'Let\'s see what I can make of you.',10289,1,0,0,'the_maker SAY_KILL_1'),
 (-1542013,'It is pointless to resist.',10290,1,0,0,'the_maker SAY_KILL_2'),
-(-1542014,'Stay away from... me.',10291,1,0,0,'the_maker SAY_DIE');
+(-1542014,'Stay away from... me.',10291,1,0,0,'the_maker SAY_DIE'),
+
+(-1542015,'Kill them!',0,1,0,0,'broggok SAY_BROGGOK_INTRO');
 
 -- -1 543 000 HELLFIRE RAMPARTS
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES

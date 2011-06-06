@@ -41,6 +41,7 @@ enum
     SAY_DIE                     = -1542007,
 
     SPELL_CORRUPTION            = 30938,
+    SPELL_EVOCATION             = 30935,        // Aura channeled by the boss
 
     SPELL_FIRE_NOVA             = 33132,
     H_SPELL_FIRE_NOVA           = 37371,
@@ -77,6 +78,8 @@ struct MANGOS_DLL_DECL boss_kelidan_the_breakerAI : public ScriptedAI
         BurningNova_Timer = 15000;
         Corruption_Timer = 5000;
         Firenova = false;
+
+        DoCastSpellIfCan(m_creature, SPELL_EVOCATION);
     }
 
     void Aggro(Unit *who)
