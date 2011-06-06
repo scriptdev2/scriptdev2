@@ -85,7 +85,7 @@ enum
     MAX_CLICK                   = 5
 };
 
-typedef std::map<uint64, uint64> CubeMap;
+typedef std::map<ObjectGuid, ObjectGuid> CubeMap;
 
 struct MANGOS_DLL_DECL mob_abyssalAI : public ScriptedAI
 {
@@ -197,7 +197,7 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
         Reset();
     }
 
-    CubeMap Cube;
+    CubeMap m_mCube;
 
     ScriptedInstance* m_pInstance;
 
@@ -244,13 +244,13 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
         }
     }
 
-    void SetClicker(uint64 uiCubeGUID, uint64 uiClickerGUID)
+    void SetClicker(GameObject* pGo, Player* pPlayer)
     {
         // to avoid multiclicks from 1 cube
-        if (uint64 guid = Cube[uiCubeGUID])
+        if (ObjectGuid guid = m_mCube[pGo->GetObjectGuid()])
             DebuffClicker(m_creature->GetMap()->GetPlayer(guid));
 
-        Cube[uiCubeGUID] = uiClickerGUID;
+        m_mCube[pGo->GetObjectGuid()] = pPlayer->GetObjectGuid();
         m_bNeedCheckCube = true;
     }
 
@@ -279,14 +279,14 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
 
         // now checking if every clicker has debuff from manticron
         // if not - apply mind exhaustion and delete from clicker's list
-        for(CubeMap::iterator i = Cube.begin(); i != Cube.end(); ++i)
+        for(CubeMap::iterator i = m_mCube.begin(); i != m_mCube.end(); ++i)
         {
             Player* pClicker = m_creature->GetMap()->GetPlayer(i->second);
 
             if (!pClicker || !pClicker->HasAura(SPELL_SHADOW_GRASP, EFFECT_INDEX_1))
             {
                 DebuffClicker(pClicker);
-                i->second = 0;
+                i->second.Clear();
             }
             else
                 ++ClickerNum;
@@ -537,7 +537,7 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
 
         m_creature->InterruptNonMeleeSpells(false);
 
-        if (Creature* pMagtheridon = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_MAGTHERIDON)))
+        if (Creature* pMagtheridon = m_pInstance->GetSingleCreatureFromStorage(NPC_MAGTHERIDON))
         {
             if (!pMagtheridon->isAlive())
                 return;
@@ -643,7 +643,7 @@ bool GOUse_go_manticron_cube(Player* pPlayer, GameObject* pGo)
         if (pInstance->GetData(TYPE_MAGTHERIDON_EVENT) != IN_PROGRESS)
             return true;
 
-        if (Creature* pMagtheridon = pInstance->instance->GetCreature(pInstance->GetData64(DATA_MAGTHERIDON)))
+        if (Creature* pMagtheridon = pInstance->GetSingleCreatureFromStorage(NPC_MAGTHERIDON))
         {
             if (!pMagtheridon->isAlive())
                 return true;
@@ -657,7 +657,7 @@ bool GOUse_go_manticron_cube(Player* pPlayer, GameObject* pGo)
             pPlayer->CastSpell(pPlayer, SPELL_SHADOW_GRASP_VISUAL, false);
 
             if (boss_magtheridonAI* pMagAI = dynamic_cast<boss_magtheridonAI*>(pMagtheridon->AI()))
-                pMagAI->SetClicker(pGo->GetGUID(), pPlayer->GetGUID());
+                pMagAI->SetClicker(pGo, pPlayer);
         }
     }
 
