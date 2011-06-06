@@ -12,4 +12,18 @@ enum
     TYPE_SEPETHREA      = 1
 };
 
+class MANGOS_DLL_DECL instance_mechanar : public ScriptedInstance
+{
+    public:
+        instance_mechanar(Map* pMap);
+
+        void Initialize();
+
+        void SetData(uint32 uiType, uint32 uiData);
+        uint32 GetData(uint32 uiType);
+
+    private:
+        uint32 m_auiEncounter[MAX_ENCOUNTER];
+};
+
 #endif

@@ -24,35 +24,30 @@ EndScriptData */
 #include "precompiled.h"
 #include "mechanar.h"
 
-struct MANGOS_DLL_DECL instance_mechanar : public ScriptedInstance
+instance_mechanar::instance_mechanar(Map* pMap) : ScriptedInstance(pMap) { Initialize(); }
+
+void instance_mechanar::Initialize()
 {
-    instance_mechanar(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
+    memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
+}
 
-    uint32 m_auiEncounter[MAX_ENCOUNTER];
-
-    void Initialize()
+void instance_mechanar::SetData(uint32 uiType, uint32 uiData)
+{
+    switch(uiType)
     {
-        memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
+        case TYPE_SEPETHREA:
+            m_auiEncounter[0] = uiData;
+            break;
     }
+}
 
-    void SetData(uint32 uiType, uint32 uiData)
-    {
-        switch(uiType)
-        {
-            case TYPE_SEPETHREA:
-                m_auiEncounter[0] = uiData;
-                break;
-        }
-    }
+uint32 instance_mechanar::GetData(uint32 uiType)
+{
+    if (uiType == TYPE_SEPETHREA)
+        return m_auiEncounter[0];
 
-    uint32 GetData(uint32 uiType)
-    {
-        if (uiType == TYPE_SEPETHREA)
-            return m_auiEncounter[0];
-
-        return 0;
-    }
-};
+    return 0;
+}
 
 InstanceData* GetInstanceData_instance_mechanar(Map* pMap)
 {
@@ -61,9 +56,10 @@ InstanceData* GetInstanceData_instance_mechanar(Map* pMap)
 
 void AddSC_instance_mechanar()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "instance_mechanar";
-    newscript->GetInstanceData = &GetInstanceData_instance_mechanar;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "instance_mechanar";
+    pNewScript->GetInstanceData = &GetInstanceData_instance_mechanar;
+    pNewScript->RegisterSelf();
 }
