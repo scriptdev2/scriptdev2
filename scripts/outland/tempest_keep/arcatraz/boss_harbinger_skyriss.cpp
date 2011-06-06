@@ -147,14 +147,14 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
                 {
                     case 1:
                         DoScriptText(SAY_INTRO, m_creature);
-                        if (GameObject* pSphere = m_pInstance->instance->GetGameObject(m_pInstance->GetData64(GO_SEAL_SPHERE)))
+                        if (GameObject* pSphere = m_pInstance->GetSingleGameObjectFromStorage(GO_SEAL_SPHERE))
                             pSphere->SetGoState(GO_STATE_ACTIVE);
                         ++m_uiIntroPhase;
                         m_uiIntroTimer = 25000;
                         break;
                     case 2:
                         DoScriptText(SAY_AGGRO, m_creature);
-                        if (Creature* pMellic = m_creature->GetMap()->GetCreature(m_pInstance->GetData64(NPC_MELLICHAR)))
+                        if (Creature* pMellic = m_pInstance->GetSingleCreatureFromStorage(NPC_MELLICHAR))
                         {
                             // should have a better way to do this. possibly spell exist.
                             pMellic->SetDeathState(JUST_DIED);
