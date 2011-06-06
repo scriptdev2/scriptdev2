@@ -71,7 +71,7 @@ void instance_zulaman::OnCreatureCreate(Creature* pCreature)
 
         case NPC_EGG:
             if (m_auiEncounter[3] != DONE)
-                m_lEggsGUIDList.push_back(pCreature->GetGUID());
+                m_lEggsGUIDList.push_back(pCreature->GetObjectGuid());
             break;
     }
 }

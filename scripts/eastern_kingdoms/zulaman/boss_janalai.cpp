@@ -245,7 +245,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
                 if (m_bIsBombing)
                 {
                     //store bombs in list to be used in BlowUpBombs()
-                    m_lBombsGUIDList.push_back(pSummoned->GetGUID());
+                    m_lBombsGUIDList.push_back(pSummoned->GetObjectGuid());
 
                     if (pSummoned->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE))
                         pSummoned->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);

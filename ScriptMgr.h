@@ -30,10 +30,10 @@ class ObjectGuid;
 #define VISIBLE_RANGE       (166.0f)                        // MAX visible range (size of grid)
 #define DEFAULT_TEXT        "<ScriptDev2 Text Entry Missing!>"
 
-// Some typedefs for storing GUIDs
-typedef std::list<uint64> GUIDList;
-typedef std::set<uint64> GUIDSet;
-typedef std::vector<uint64> GUIDVector;
+// Some typedefs for storing Guids
+typedef std::list<ObjectGuid> GUIDList;
+typedef std::set<ObjectGuid> GUIDSet;
+typedef std::vector<ObjectGuid> GUIDVector;
 typedef std::map<uint32, ObjectGuid> EntryGuidMap;
 
 /* Escort Factions

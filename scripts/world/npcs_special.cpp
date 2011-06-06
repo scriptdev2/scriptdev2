@@ -759,7 +759,7 @@ void npc_doctorAI::UpdateAI(const uint32 diff)
                 //303, this flag appear to be required for client side item->spell to work (TARGET_SINGLE_FRIEND)
                 Patient->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PVP_ATTACKABLE);
 
-                Patients.push_back(Patient->GetGUID());
+                Patients.push_back(Patient->GetObjectGuid());
 
                 npc_injured_patientAI* pPatientAI = dynamic_cast<npc_injured_patientAI*>(Patient->AI());
 

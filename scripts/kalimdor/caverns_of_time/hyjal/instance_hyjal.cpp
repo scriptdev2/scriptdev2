@@ -60,7 +60,7 @@ void instance_mount_hyjal::OnCreatureCreate(Creature* pCreature)
 void instance_mount_hyjal::OnObjectCreate(GameObject* pGo)
 {
     if (pGo->GetEntry() == GO_ANCIENT_GEM)
-        lAncientGemGUIDList.push_back(pGo->GetGUID());
+        lAncientGemGUIDList.push_back(pGo->GetObjectGuid());
 }
 
 void instance_mount_hyjal::OnCreatureEnterCombat(Creature* pCreature)

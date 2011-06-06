@@ -51,7 +51,7 @@ void instance_magisters_terrace::OnCreatureCreate(Creature* pCreature)
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
         case NPC_FEL_CRYSTAL:
-            m_lFelCrystalGuid.push_back(pCreature->GetGUID());
+            m_lFelCrystalGuid.push_back(pCreature->GetObjectGuid());
             break;
     }
 }

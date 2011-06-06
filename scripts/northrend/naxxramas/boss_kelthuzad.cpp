@@ -314,7 +314,7 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
             {
                 DoScriptText(EMOTE_GUARDIAN, m_creature);
 
-                m_lAddsSet.insert(pSummoned->GetGUID());
+                m_lAddsSet.insert(pSummoned->GetObjectGuid());
                 ++m_uiGuardiansCount;
 
                 pSummoned->SetInCombatWithZone();
@@ -325,10 +325,10 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
             case NPC_SOUL_WEAVER:
             {
                 if (m_uiIntroPackCount < 7)
-                    m_lIntroMobsSet.insert(pSummoned->GetGUID());
+                    m_lIntroMobsSet.insert(pSummoned->GetObjectGuid());
                 else
                 {
-                    m_lAddsSet.insert(pSummoned->GetGUID());
+                    m_lAddsSet.insert(pSummoned->GetObjectGuid());
 
                     if (m_pInstance)
                     {
@@ -350,10 +350,10 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
             case NPC_GUARDIAN:
             case NPC_SOLDIER_FROZEN:
             case NPC_SOUL_WEAVER:
-                m_lAddsSet.erase(pSummoned->GetGUID());
+                m_lAddsSet.erase(pSummoned->GetObjectGuid());
                 break;
             case NPC_UNSTOPPABLE_ABOM:
-                m_lAddsSet.erase(pSummoned->GetGUID());
+                m_lAddsSet.erase(pSummoned->GetObjectGuid());
 
                 ++m_uiKilledAbomination;
                 if (m_uiKilledAbomination >= ACHIEV_REQ_KILLED_ABOMINATIONS)

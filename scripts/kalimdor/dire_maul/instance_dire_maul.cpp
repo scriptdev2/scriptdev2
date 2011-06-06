@@ -50,12 +50,12 @@ void instance_dire_maul::OnCreatureCreate(Creature* pCreature)
             break;
         case NPC_ARCANE_ABERRATION:
         case NPC_MANA_REMNANT:
-            m_lGeneratorGuardGUIDs.push_back(pCreature->GetGUID());
+            m_lGeneratorGuardGUIDs.push_back(pCreature->GetObjectGuid());
             return;
         case NPC_IMMOLTHAR:
             break;
         case NPC_HIGHBORNE_SUMMONER:
-            m_luiHighborneSummonerGUIDs.push_back(pCreature->GetGUID());
+            m_luiHighborneSummonerGUIDs.push_back(pCreature->GetObjectGuid());
             return;
 
         // North
@@ -88,7 +88,7 @@ void instance_dire_maul::OnObjectCreate(GameObject* pGo)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_FELVINE_SHARD:
-            m_lFelvineShardGUIDs.push_back(pGo->GetGUID());
+            m_lFelvineShardGUIDs.push_back(pGo->GetObjectGuid());
             break;
 
         // West

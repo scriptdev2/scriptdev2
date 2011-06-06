@@ -158,7 +158,7 @@ bool ProcessEventId_event_antalarion_statue_activation(uint32 uiEventId, Object*
             {
                 // Activate the green light if the correct statue is activated
                 if (GameObject* pLight = GetClosestGameObjectWithEntry((GameObject*)pTarget, GO_ATALAI_LIGHT, INTERACTION_DISTANCE))
-                    pInstance->DoRespawnGameObject(pLight->GetGUID(), 30 * MINUTE);
+                    pInstance->DoRespawnGameObject(pLight->GetObjectGuid(), 30 * MINUTE);
             }
             else
             {

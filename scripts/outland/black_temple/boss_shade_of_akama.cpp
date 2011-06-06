@@ -191,7 +191,7 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
             if (m_lSorcerersGUIDList.empty())
                 error_log("SD2: boss_shade_of_akamaAI attempt to remove guid %s from Sorcerers list but list is already empty", uiGuid.GetString().c_str());
             else
-                m_lSorcerersGUIDList.remove(uiGuid.GetRawValue());
+                m_lSorcerersGUIDList.remove(uiGuid);
         }
     }
 
@@ -210,7 +210,7 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
                 pSorcerer->GetMotionMaster()->MovePoint(0, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ());
                 pSorcerer->SetTargetGuid(m_creature->GetObjectGuid());
 
-                m_lSorcerersGUIDList.push_back(pSorcerer->GetGUID());
+                m_lSorcerersGUIDList.push_back(pSorcerer->GetObjectGuid());
 
                 --m_uiDeathCount;
                 ++m_uiSorcererCount;
@@ -279,7 +279,7 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
 
             for(std::list<Creature*>::iterator itr = lChannelerList.begin(); itr != lChannelerList.end(); ++itr)
             {
-                m_lChannelersGUIDList.push_back((*itr)->GetGUID());
+                m_lChannelersGUIDList.push_back((*itr)->GetObjectGuid());
                 debug_log("SD2: boss_shade_of_akamaAI found channeler %s. Adding to list", (*itr)->GetObjectGuid().GetString().c_str());
 
                 (*itr)->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -583,7 +583,7 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
                         pBroken->GetMotionMaster()->MovePoint(0, wx, wy, wz);
                         pBroken->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
 
-                        m_lBrokenGUIDList.push_back(pBroken->GetGUID());
+                        m_lBrokenGUIDList.push_back(pBroken->GetObjectGuid());
                     }
                 }
 

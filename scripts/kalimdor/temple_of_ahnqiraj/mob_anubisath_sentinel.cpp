@@ -65,7 +65,7 @@ struct MANGOS_DLL_DECL npc_anubisath_sentinelAI : public ScriptedAI
     {
         for(GUIDList::const_iterator itr = m_lAssistList.begin(); itr != m_lAssistList.end(); ++itr)
         {
-            if (*itr == m_creature->GetGUID())
+            if (*itr == m_creature->GetObjectGuid())
                 continue;
 
             if (Creature* pBuddy = m_creature->GetMap()->GetCreature(*itr))
@@ -112,7 +112,7 @@ struct MANGOS_DLL_DECL npc_anubisath_sentinelAI : public ScriptedAI
         {
             if (Creature* pBuddy = m_creature->GetMap()->GetCreature(*itr))
             {
-                if (*itr == m_creature->GetGUID())
+                if (*itr == m_creature->GetObjectGuid())
                     continue;
 
                 if (!pBuddy->isAlive())
@@ -130,7 +130,7 @@ struct MANGOS_DLL_DECL npc_anubisath_sentinelAI : public ScriptedAI
         {
             for(GUIDList::const_iterator itr = m_lAssistList.begin(); itr != m_lAssistList.end(); ++itr)
             {
-                if (*itr == m_creature->GetGUID())
+                if (*itr == m_creature->GetObjectGuid())
                     continue;
 
                 if (Creature* pBuddy = m_creature->GetMap()->GetCreature(*itr))
@@ -151,9 +151,9 @@ struct MANGOS_DLL_DECL npc_anubisath_sentinelAI : public ScriptedAI
 
         for(std::list<Creature*>::iterator iter = lAssistList.begin(); iter != lAssistList.end(); ++iter)
         {
-            m_lAssistList.push_back((*iter)->GetGUID());
+            m_lAssistList.push_back((*iter)->GetObjectGuid());
 
-            if ((*iter)->GetGUID() == m_creature->GetGUID())
+            if ((*iter)->GetObjectGuid() == m_creature->GetObjectGuid())
                 continue;
 
             (*iter)->AI()->AttackStart(pTarget);

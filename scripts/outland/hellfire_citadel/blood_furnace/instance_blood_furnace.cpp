@@ -45,7 +45,7 @@ void instance_blood_furnace::OnCreatureCreate(Creature* pCreature)
             break;
 
         case NPC_NASCENT_FEL_ORC:
-            m_luiNascentOrcGUIDs.push_back(pCreature->GetGUID());
+            m_luiNascentOrcGUIDs.push_back(pCreature->GetObjectGuid());
             break;
     }
 }
@@ -231,7 +231,7 @@ void instance_blood_furnace::OnCreatureEvade(Creature* pCreature)
     {
         for (uint8 i = 0; i < m_uiBroggokEventPhase; ++i)
         {
-            if (m_aBroggokEvent[i].m_sSortedOrcGuids.find(pCreature->GetGUID()) != m_aBroggokEvent[i].m_sSortedOrcGuids.end())
+            if (m_aBroggokEvent[i].m_sSortedOrcGuids.find(pCreature->GetObjectGuid()) != m_aBroggokEvent[i].m_sSortedOrcGuids.end())
                 SetData(TYPE_BROGGOK_EVENT, FAIL);
         }
     }
@@ -254,7 +254,7 @@ void instance_blood_furnace::OnCreatureDeath(Creature* pCreature)
             }
 
             // Increase kill counter, if we found a mob of this cell
-            if (m_aBroggokEvent[i].m_sSortedOrcGuids.find(pCreature->GetGUID()) != m_aBroggokEvent[i].m_sSortedOrcGuids.end())
+            if (m_aBroggokEvent[i].m_sSortedOrcGuids.find(pCreature->GetObjectGuid()) != m_aBroggokEvent[i].m_sSortedOrcGuids.end())
                 m_aBroggokEvent[i].m_uiKilledOrcCount++;
 
             if (m_aBroggokEvent[i].m_sSortedOrcGuids.size() == m_aBroggokEvent[i].m_uiKilledOrcCount)
@@ -320,7 +320,7 @@ void instance_blood_furnace::DoSortBroggokOrcs()
                 {
                     if (pOrc->IsWithinDistInMap(pDoor, 15.0f))
                     {
-                        m_aBroggokEvent[i].m_sSortedOrcGuids.insert(pOrc->GetGUID());
+                        m_aBroggokEvent[i].m_sSortedOrcGuids.insert(pOrc->GetObjectGuid());
                         if (!pOrc->isAlive())
                             pOrc->Respawn();
                         break;

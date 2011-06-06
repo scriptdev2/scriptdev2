@@ -63,11 +63,11 @@ void instance_molten_core::OnCreatureCreate(Creature* pCreature)
             break;
 
         // Push adds to lists in order to handle respawn
-        case NPC_FLAMEWAKER_PROTECTOR:  m_luiProtectorGUIDs.push_back(pCreature->GetGUID());    break;
-        case NPC_FLAMEWAKER:            m_luiFlamewakerGUIDs.push_back(pCreature->GetGUID());   break;
-        case NPC_FIRESWORN:             m_luiFireswornGUIDs.push_back(pCreature->GetGUID());    break;
-        case NPC_FLAMEWAKER_PRIEST:     m_luiPriestGUIDs.push_back(pCreature->GetGUID());       break;
-        case NPC_CORE_RAGER:            m_luiRagerGUIDs.push_back(pCreature->GetGUID());        break;
+        case NPC_FLAMEWAKER_PROTECTOR:  m_luiProtectorGUIDs.push_back(pCreature->GetObjectGuid());    break;
+        case NPC_FLAMEWAKER:            m_luiFlamewakerGUIDs.push_back(pCreature->GetObjectGuid());   break;
+        case NPC_FIRESWORN:             m_luiFireswornGUIDs.push_back(pCreature->GetObjectGuid());    break;
+        case NPC_FLAMEWAKER_PRIEST:     m_luiPriestGUIDs.push_back(pCreature->GetObjectGuid());       break;
+        case NPC_CORE_RAGER:            m_luiRagerGUIDs.push_back(pCreature->GetObjectGuid());        break;
     }
 }
 

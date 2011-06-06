@@ -382,7 +382,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
                 pInfernalAI->m_malchezaarGuid = m_creature->GetObjectGuid();
             }
 
-            m_vInfernalGuids.push_back(Infernal->GetGUID());
+            m_vInfernalGuids.push_back(Infernal->GetObjectGuid());
             DoCastSpellIfCan(Infernal, SPELL_INFERNAL_RELAY);
         }
 
@@ -628,7 +628,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
     void Cleanup(Creature *infernal, InfernalPoint *point)
     {
         for(GUIDVector::iterator itr = m_vInfernalGuids.begin(); itr!= m_vInfernalGuids.end(); ++itr)
-            if (*itr == infernal->GetGUID())
+            if (*itr == infernal->GetObjectGuid())
         {
             m_vInfernalGuids.erase(itr);
             break;

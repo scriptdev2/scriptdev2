@@ -67,7 +67,7 @@ void instance_uldaman::OnCreatureCreate(Creature* pCreature)
         case NPC_CUSTODIAN:
         case NPC_GUARDIAN:
         case NPC_VAULT_WARDER:
-            m_lWardens.push_back(pCreature->GetGUID());
+            m_lWardens.push_back(pCreature->GetObjectGuid());
             pCreature->CastSpell(pCreature, SPELL_STONED, true);
             pCreature->SetNoCallAssistance(true);           // no assistance
             break;

@@ -89,18 +89,18 @@ void instance_culling_of_stratholme::OnCreatureCreate(Creature* pCreature)
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
 
-        case NPC_CRATES_BUNNY:                  m_luiCratesBunnyGUIDs.push_back(pCreature->GetGUID()); break;
-        case NPC_LORDAERON_FOOTMAN:             m_luiFootmanGUIDs.push_back(pCreature->GetGUID());     break;
+        case NPC_CRATES_BUNNY:                  m_luiCratesBunnyGUIDs.push_back(pCreature->GetObjectGuid()); break;
+        case NPC_LORDAERON_FOOTMAN:             m_luiFootmanGUIDs.push_back(pCreature->GetObjectGuid());     break;
 
         case NPC_STRATHOLME_CITIZEN:
         case NPC_STRATHOLME_RESIDENT:
             if (m_auiEncounter[TYPE_ARTHAS_INTRO_EVENT] == DONE)
                 pCreature->UpdateEntry(NPC_ZOMBIE);
             else
-                m_luiResidentGUIDs.push_back(pCreature->GetGUID());
+                m_luiResidentGUIDs.push_back(pCreature->GetObjectGuid());
             break;
-        case NPC_AGIATED_STRATHOLME_CITIZEN:    m_lAgiatedCitizenGUIDList.push_back(pCreature->GetGUID());  break;
-        case NPC_AGIATED_STRATHOLME_RESIDENT:   m_lAgiatedResidentGUIDList.push_back(pCreature->GetGUID()); break;
+        case NPC_AGIATED_STRATHOLME_CITIZEN:    m_lAgiatedCitizenGUIDList.push_back(pCreature->GetObjectGuid());  break;
+        case NPC_AGIATED_STRATHOLME_RESIDENT:   m_lAgiatedResidentGUIDList.push_back(pCreature->GetObjectGuid()); break;
     }
 }
 

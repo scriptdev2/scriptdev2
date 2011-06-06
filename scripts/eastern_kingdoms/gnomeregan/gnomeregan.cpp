@@ -190,7 +190,7 @@ struct MANGOS_DLL_DECL npc_blastmaster_emi_shortfuseAI : public npc_escortAI
                 DoScriptText(SAY_GRUBBIS_SPAWN, pSummoned);
                 break;
         }
-        m_luiSummonedMobGUIDs.push_back(pSummoned->GetGUID());
+        m_luiSummonedMobGUIDs.push_back(pSummoned->GetObjectGuid());
     }
 
     void SummonedCreatureJustDied(Creature* pSummoned)
@@ -201,7 +201,7 @@ struct MANGOS_DLL_DECL npc_blastmaster_emi_shortfuseAI : public npc_escortAI
                 m_pInstance->SetData(TYPE_GRUBBIS, DONE);
             m_uiPhaseTimer = 1000;
         }
-        m_luiSummonedMobGUIDs.remove(pSummoned->GetGUID());
+        m_luiSummonedMobGUIDs.remove(pSummoned->GetObjectGuid());
     }
 
     bool IsPreparingExplosiveCharge()

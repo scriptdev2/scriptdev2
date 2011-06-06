@@ -229,7 +229,7 @@ void instance_sunwell_plateau::EjectPlayers()
 
         if (plr && !plr->HasAura(SPELL_SPECTRAL_REALM))
         {
-            SpectralRealmList.remove(plr->GetGUID());
+            SpectralRealmList.remove(plr->GetObjectGuid());
             EjectPlayer(plr);
         }
     }

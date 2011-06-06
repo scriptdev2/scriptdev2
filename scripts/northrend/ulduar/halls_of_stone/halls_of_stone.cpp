@@ -269,7 +269,7 @@ struct MANGOS_DLL_DECL npc_brann_hosAI : public npc_escortAI
 
     void JustSummoned(Creature* pSummoned)
     {
-        m_luiDwarfGUIDs.push_back(pSummoned->GetGUID());
+        m_luiDwarfGUIDs.push_back(pSummoned->GetObjectGuid());
 
         pSummoned->AI()->AttackStart(m_creature);
     }

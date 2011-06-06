@@ -333,7 +333,7 @@ struct MANGOS_DLL_DECL boss_vazruden_heraldAI : public ScriptedAI
                     if (Creature* pVazruden = m_creature->GetMap()->GetCreature(m_vazrudenGuid))
                     {
                         if (Unit* pEnemy = pVazruden->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-                            DoCastSpellIfCan(pEnemy, m_bIsRegularMode ? SPELL_FIREBALL : SPELL_FIREBALL_H, 0, pVazruden->GetGUID());
+                            DoCastSpellIfCan(pEnemy, m_bIsRegularMode ? SPELL_FIREBALL : SPELL_FIREBALL_H, 0, pVazruden->GetObjectGuid());
                     }
                     m_uiFireballTimer = urand(4000, 8000);
                 }

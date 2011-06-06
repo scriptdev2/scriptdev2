@@ -85,7 +85,7 @@ void instance_blackrock_spire::OnObjectCreate(GameObject* pGo)
         case GO_ROOM_6_RUNE: m_aRoomRuneGuid[5] = pGo->GetObjectGuid(); return;
         case GO_ROOM_7_RUNE: m_aRoomRuneGuid[6] = pGo->GetObjectGuid(); return;
 
-        case GO_ROOKERY_EGG: m_lRookeryEggGUIDList.push_back(pGo->GetGUID());   return;
+        case GO_ROOKERY_EGG: m_lRookeryEggGUIDList.push_back(pGo->GetObjectGuid());   return;
 
         default:
             return;
@@ -105,8 +105,8 @@ void instance_blackrock_spire::OnCreatureCreate(Creature* pCreature)
             break;
 
         case NPC_BLACKHAND_SUMMONER:
-        case NPC_BLACKHAND_VETERAN:      m_lRoomEventMobGUIDList.push_back(pCreature->GetGUID()); break;
-        case NPC_BLACKHAND_INCANCERATOR: m_lIncanceratorGUIDList.push_back(pCreature->GetGUID()); break;
+        case NPC_BLACKHAND_VETERAN:      m_lRoomEventMobGUIDList.push_back(pCreature->GetObjectGuid()); break;
+        case NPC_BLACKHAND_INCANCERATOR: m_lIncanceratorGUIDList.push_back(pCreature->GetObjectGuid()); break;
     }
 }
 

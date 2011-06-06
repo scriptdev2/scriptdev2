@@ -56,8 +56,8 @@ void instance_gnomeregan::OnObjectCreate(GameObject* pGo)
             m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
             break;
 
-        case GO_RED_ROCKET:         m_lRedRocketGUIDs.push_back(pGo->GetGUID());         return;
-        case GO_EXPLOSIVE_CHARGE:   m_luiExplosiveChargeGUIDs.push_back(pGo->GetGUID()); return;
+        case GO_RED_ROCKET:         m_lRedRocketGUIDs.push_back(pGo->GetObjectGuid());         return;
+        case GO_EXPLOSIVE_CHARGE:   m_luiExplosiveChargeGUIDs.push_back(pGo->GetObjectGuid()); return;
 
         case GO_GNOME_FACE_1: m_asBombFaces[0].m_gnomeFaceGuid = pGo->GetObjectGuid(); return;
         case GO_GNOME_FACE_2: m_asBombFaces[1].m_gnomeFaceGuid = pGo->GetObjectGuid(); return;
@@ -134,15 +134,15 @@ void instance_gnomeregan::SetData(uint32 uiType, uint32 uiData)
             {
                 case DATA_EXPLOSIVE_CHARGE_1:
                     DoRespawnGameObject(m_aExplosiveSortedGuids[0][0], HOUR);
-                    m_luiSpawnedExplosiveChargeGUIDs.push_back(m_aExplosiveSortedGuids[0][0].GetRawValue());
+                    m_luiSpawnedExplosiveChargeGUIDs.push_back(m_aExplosiveSortedGuids[0][0]);
                     break;
                 case DATA_EXPLOSIVE_CHARGE_2:
                     DoRespawnGameObject(m_aExplosiveSortedGuids[0][1], HOUR);
-                    m_luiSpawnedExplosiveChargeGUIDs.push_back(m_aExplosiveSortedGuids[0][1].GetRawValue());
+                    m_luiSpawnedExplosiveChargeGUIDs.push_back(m_aExplosiveSortedGuids[0][1]);
                     break;
                 case DATA_EXPLOSIVE_CHARGE_3:
                     DoRespawnGameObject(m_aExplosiveSortedGuids[1][0], HOUR);
-                    m_luiSpawnedExplosiveChargeGUIDs.push_back(m_aExplosiveSortedGuids[1][0].GetRawValue());
+                    m_luiSpawnedExplosiveChargeGUIDs.push_back(m_aExplosiveSortedGuids[1][0]);
                     break;
                 case DATA_EXPLOSIVE_CHARGE_4:
                     DoRespawnGameObject(m_aExplosiveSortedGuids[1][1], HOUR);

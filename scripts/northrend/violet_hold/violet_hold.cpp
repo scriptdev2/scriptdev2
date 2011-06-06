@@ -264,12 +264,12 @@ struct MANGOS_DLL_DECL npc_teleportation_portalAI : public ScriptedAI
                 break;
             case NPC_AZURE_CAPTAIN:
                 DoScriptText(EMOTE_DRAGONFLIGHT_PORTAL, pSummoned);
-                m_lMobSet.insert(pSummoned->GetGUID());
+                m_lMobSet.insert(pSummoned->GetObjectGuid());
                 break;
             case NPC_AZURE_RAIDER:
             case NPC_AZURE_SORCEROR:
             case NPC_AZURE_STALKER:
-                m_lMobSet.insert(pSummoned->GetGUID());
+                m_lMobSet.insert(pSummoned->GetObjectGuid());
                 return;
             case NPC_AZURE_SABOTEUR:
             {
@@ -327,7 +327,7 @@ struct MANGOS_DLL_DECL npc_teleportation_portalAI : public ScriptedAI
             case NPC_AZURE_SORCEROR:
             case NPC_AZURE_STALKER:
             {
-                m_lMobSet.erase(pSummoned->GetGUID());
+                m_lMobSet.erase(pSummoned->GetObjectGuid());
 
                 if (!m_lMobSet.empty())
                     return;

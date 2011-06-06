@@ -543,7 +543,7 @@ struct MANGOS_DLL_DECL npc_akama_illidanAI : public ScriptedAI
                     if (Spirit)
                     {
                         Spirit->SetVisibility(VISIBILITY_OFF);
-                        m_aSpiritGuids[i] = Spirit->GetGUID();
+                        m_aSpiritGuids[i] = Spirit->GetObjectGuid();
                     }
                 }
 

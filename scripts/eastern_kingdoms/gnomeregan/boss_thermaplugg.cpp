@@ -130,7 +130,7 @@ struct MANGOS_DLL_DECL boss_thermapluggAI : public ScriptedAI
     {
         if (pSummoned->GetEntry() == NPC_WALKING_BOMB)
         {
-            m_lSummonedBombGUIDs.push_back(pSummoned->GetGUID());
+            m_lSummonedBombGUIDs.push_back(pSummoned->GetObjectGuid());
             // calculate point for falling down
             float fX, fY;
             fX = 0.2*m_afSpawnPos[0] + 0.8*pSummoned->GetPositionX();
@@ -142,12 +142,12 @@ struct MANGOS_DLL_DECL boss_thermapluggAI : public ScriptedAI
     void SummonedMovementInform(Creature* pSummoned, uint32 uiMotionType, uint32 uiPointId)
     {
         if (pSummoned->GetEntry() == NPC_WALKING_BOMB && uiMotionType == POINT_MOTION_TYPE && uiPointId == 1)
-            m_lLandedBombGUIDs.push_back(pSummoned->GetGUID());
+            m_lLandedBombGUIDs.push_back(pSummoned->GetObjectGuid());
     }
 
     void SummonedCreatureDespawn(Creature* pSummoned)
     {
-        m_lSummonedBombGUIDs.remove(pSummoned->GetGUID());
+        m_lSummonedBombGUIDs.remove(pSummoned->GetObjectGuid());
     }
 
     void UpdateAI(const uint32 uiDiff)

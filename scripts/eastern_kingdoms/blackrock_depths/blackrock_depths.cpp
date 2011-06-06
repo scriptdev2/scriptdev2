@@ -196,7 +196,7 @@ struct MANGOS_DLL_DECL npc_grimstoneAI : public npc_escortAI
         m_creature->GetRandomPoint(fX, fY, fZ, 10.0f, fcX, fcY, fcZ);
         pSummoned->GetMotionMaster()->MovePoint(1, fcX, fcY, fcZ);
 
-        m_lSummonedGUIDList.push_back(pSummoned->GetGUID());
+        m_lSummonedGUIDList.push_back(pSummoned->GetObjectGuid());
     }
 
     void DoChallengeQuestCredit()

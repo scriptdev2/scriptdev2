@@ -141,7 +141,7 @@ struct MANGOS_DLL_DECL mob_shadowy_constructAI : public ScriptedAI
 /* Comment it out for now. NOTE TO FUTURE DEV: UNCOMMENT THIS OUT ONLY AFTER MIND CONTROL IS IMPLEMENTED
     void DamageTaken(Unit* done_by, uint32 &damage)
     {
-        if (done_by->GetGUID() != m_ghostGuid)
+        if (done_by->GetObjectGuid() != m_ghostGuid)
         damage = 0;                                         // Only the ghost can deal damage.
     }
  */

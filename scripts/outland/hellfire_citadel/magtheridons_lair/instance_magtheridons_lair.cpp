@@ -51,7 +51,7 @@ void instance_magtheridons_lair::OnCreatureCreate(Creature* pCreature)
             m_mNpcEntryGuidStore[NPC_MAGTHERIDON] = pCreature->GetObjectGuid();
             break;
         case NPC_CHANNELER:
-            m_sChannelerGuid.insert(pCreature->GetGUID());
+            m_sChannelerGuid.insert(pCreature->GetObjectGuid());
             break;
     }
 }
@@ -73,7 +73,7 @@ void instance_magtheridons_lair::OnObjectCreate(GameObject* pGo)
         case GO_MAGTHERIDON_COLUMN_005:
         case GO_MAGTHERIDON_COLUMN_000:
         case GO_MAGTHERIDON_COLUMN_001:
-            m_sColumnGuid.insert(pGo->GetGUID());
+            m_sColumnGuid.insert(pGo->GetObjectGuid());
             break;
     }
 }

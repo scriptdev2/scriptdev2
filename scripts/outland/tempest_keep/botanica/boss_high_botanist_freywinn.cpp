@@ -72,7 +72,7 @@ struct MANGOS_DLL_DECL boss_high_botanist_freywinnAI : public ScriptedAI
     void JustSummoned(Creature *summoned)
     {
         if (summoned->GetEntry() == ENTRY_FRAYER)
-            Adds_List.push_back(summoned->GetGUID());
+            Adds_List.push_back(summoned->GetObjectGuid());
     }
 
     void DoSummonSeedling()

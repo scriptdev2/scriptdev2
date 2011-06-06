@@ -44,7 +44,7 @@ void instance_ramparts::OnCreatureCreate(Creature* pCreature)
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
         case NPC_HELLFIRE_SENTRY:
-            m_lSentryGUIDs.push_back(pCreature->GetGUID());
+            m_lSentryGUIDs.push_back(pCreature->GetObjectGuid());
             break;
     }
 }

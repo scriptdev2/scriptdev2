@@ -69,14 +69,14 @@ void instance_stratholme::OnCreatureCreate(Creature* pCreature)
             break;
 
         case NPC_CRYSTAL:
-            m_luiCrystalGUIDs.push_back(pCreature->GetGUID());
+            m_luiCrystalGUIDs.push_back(pCreature->GetObjectGuid());
             break;
         case NPC_ABOM_BILE:
         case NPC_ABOM_VENOM:
-            m_sAbomnationGUID.insert(pCreature->GetGUID());
+            m_sAbomnationGUID.insert(pCreature->GetObjectGuid());
             break;
         case NPC_THUZADIN_ACOLYTE:
-            m_luiAcolyteGUIDs.push_back(pCreature->GetGUID());
+            m_luiAcolyteGUIDs.push_back(pCreature->GetObjectGuid());
             break;
     }
 }
@@ -244,7 +244,7 @@ void instance_stratholme::SetData(uint32 uiType, uint32 uiData)
                         float fX, fY, fZ;
                         pBaron->GetRandomPoint(sStratholmeLocation[6].m_fX, sStratholmeLocation[6].m_fY, sStratholmeLocation[6].m_fZ, 5.0f, fX, fY, fZ);
                         if (Creature* pTemp = pBaron->SummonCreature(NPC_BLACK_GUARD, sStratholmeLocation[6].m_fX, sStratholmeLocation[6].m_fY, sStratholmeLocation[6].m_fZ, sStratholmeLocation[6].m_fO, TEMPSUMMON_DEAD_DESPAWN, 0))
-                            m_luiGuardGUIDs.push_back(pTemp->GetGUID());
+                            m_luiGuardGUIDs.push_back(pTemp->GetObjectGuid());
                     }
 
                     debug_log("SD2: Instance Stratholme - Slaugther event: Summoned 5 guards.");
@@ -482,7 +482,7 @@ void instance_stratholme::DoSortZiggurats()
             {
                 if ((*itr)->isAlive() && (*itr)->IsWithinDistInMap(pZigguratDoor, 35.0f, false))
                 {
-                    m_zigguratStorage[i].m_lZigguratAcolyteGuid.push_back((*itr)->GetGUID());
+                    m_zigguratStorage[i].m_lZigguratAcolyteGuid.push_back((*itr)->GetObjectGuid());
                     itr = lAcolytes.erase(itr);
                     bAlreadyIterated = true;
                     break;
@@ -496,7 +496,7 @@ void instance_stratholme::DoSortZiggurats()
 
     // In case some mobs have not been able to be sorted, store their GUIDs again
     for (std::list<Creature*>::const_iterator itr = lAcolytes.begin(); itr != lAcolytes.end(); ++itr)
-        m_luiAcolyteGUIDs.push_back((*itr)->GetGUID());
+        m_luiAcolyteGUIDs.push_back((*itr)->GetObjectGuid());
 
     // Sort Crystal
     for (GUIDList::iterator itr = m_luiCrystalGUIDs.begin(); itr != m_luiCrystalGUIDs.end(); )
@@ -596,7 +596,7 @@ void instance_stratholme::OnCreatureDeath(Creature* pCreature)
             break;
 
         case NPC_MINDLESS_UNDEAD:
-            m_luiUndeadGUIDs.remove(pCreature->GetGUID());
+            m_luiUndeadGUIDs.remove(pCreature->GetObjectGuid());
             if (m_luiUndeadGUIDs.empty())
             {
                 // Let the black Guards move out of the citadel
@@ -613,7 +613,7 @@ void instance_stratholme::OnCreatureDeath(Creature* pCreature)
             }
             break;
         case NPC_BLACK_GUARD:
-            m_luiGuardGUIDs.remove(pCreature->GetGUID());
+            m_luiGuardGUIDs.remove(pCreature->GetObjectGuid());
             if (m_luiGuardGUIDs.empty())
                 SetData(TYPE_BLACK_GUARDS, DONE);
 
@@ -628,7 +628,7 @@ void instance_stratholme::ThazudinAcolyteJustDied(Creature* pCreature)
         if (m_zigguratStorage[i].m_lZigguratAcolyteGuid.empty())
             continue;                               // nothing to do anymore for this ziggurat
 
-        m_zigguratStorage[i].m_lZigguratAcolyteGuid.remove(pCreature->GetGUID());
+        m_zigguratStorage[i].m_lZigguratAcolyteGuid.remove(pCreature->GetObjectGuid());
         if (m_zigguratStorage[i].m_lZigguratAcolyteGuid.empty())
         {
             // A random zone yell after one is cleared
@@ -706,7 +706,7 @@ void instance_stratholme::Update(uint32 uiDiff)
                         float fX, fY, fZ;
                         pBaron->GetRandomPoint(sStratholmeLocation[5].m_fX, sStratholmeLocation[5].m_fY, sStratholmeLocation[5].m_fZ, 20.0f, fX, fY, fZ);
                         pTemp->GetMotionMaster()->MovePoint(0, fX, fY, fZ);
-                        m_luiUndeadGUIDs.push_back(pTemp->GetGUID());
+                        m_luiUndeadGUIDs.push_back(pTemp->GetObjectGuid());
                         ++m_uiMindlessCount;
                     }
                 }

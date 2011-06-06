@@ -45,7 +45,7 @@ void instance_forge_of_souls::OnCreatureCreate(Creature* pCreature)
             break;
 
         case NPC_CORRUPTED_SOUL_FRAGMENT:
-            m_luiSoulFragmentAliveGUIDs.push_back(pCreature->GetGUID());
+            m_luiSoulFragmentAliveGUIDs.push_back(pCreature->GetObjectGuid());
             break;
     }
 }
@@ -71,7 +71,7 @@ void instance_forge_of_souls::ProcessEventNpcs(Player* pPlayer, bool bChanged)
         {
             if (Creature* pSummon = pPlayer->SummonCreature(m_uiTeam == HORDE ? aEventBeginLocations[i].uiEntryHorde : aEventBeginLocations[i].uiEntryAlliance,
                                                             aEventBeginLocations[i].fSpawnX, aEventBeginLocations[i].fSpawnY, aEventBeginLocations[i].fSpawnZ, aEventBeginLocations[i].fSpawnO, TEMPSUMMON_DEAD_DESPAWN, 24*HOUR*IN_MILLISECONDS))
-                m_lEventMobGUIDs.push_back(pSummon->GetGUID());
+                m_lEventMobGUIDs.push_back(pSummon->GetObjectGuid());
         }
     }
     else

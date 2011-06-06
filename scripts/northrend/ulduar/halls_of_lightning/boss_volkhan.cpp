@@ -196,7 +196,7 @@ struct MANGOS_DLL_DECL boss_volkhanAI : public ScriptedAI
     {
         if (pSummoned->GetEntry() == NPC_MOLTEN_GOLEM)
         {
-            m_lGolemGUIDList.push_back(pSummoned->GetGUID());
+            m_lGolemGUIDList.push_back(pSummoned->GetObjectGuid());
 
             if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                 pSummoned->AI()->AttackStart(pTarget);

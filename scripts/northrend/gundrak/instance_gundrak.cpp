@@ -66,7 +66,7 @@ void instance_gundrak::OnCreatureCreate(Creature* pCreature)
             break;
 
         case NPC_INVISIBLE_STALKER:
-            m_luiStalkerGUIDs.push_back(pCreature->GetGUID());
+            m_luiStalkerGUIDs.push_back(pCreature->GetObjectGuid());
             break;
     }
 }
@@ -266,9 +266,9 @@ void instance_gundrak::DoAltarVisualEffect(uint8 uiType)
         lStalkerCasters.sort(sortFromEastToWest);
 
         for (std::list<Creature*>::const_iterator itr = lStalkerTargets.begin(); itr != lStalkerTargets.end(); ++itr)
-            m_vStalkerTargetGuids.push_back((*itr)->GetGUID());
+            m_vStalkerTargetGuids.push_back((*itr)->GetObjectGuid());
         for (std::list<Creature*>::const_iterator itr = lStalkerCasters.begin(); itr != lStalkerCasters.end(); ++itr)
-            m_vStalkerCasterGuids.push_back((*itr)->GetGUID());
+            m_vStalkerCasterGuids.push_back((*itr)->GetObjectGuid());
     }
 
     // Verify that the DB has enough trigger spawned

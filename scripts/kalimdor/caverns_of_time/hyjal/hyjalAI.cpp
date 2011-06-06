@@ -233,7 +233,7 @@ void hyjalAI::JustSummoned(Creature* pSummoned)
         m_uiCheckTimer = 5000;
     }
     else
-        lWaveMobGUIDList.push_back(pSummoned->GetGUID());
+        lWaveMobGUIDList.push_back(pSummoned->GetObjectGuid());
 }
 
 void hyjalAI::SummonNextWave()

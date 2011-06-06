@@ -140,8 +140,8 @@ extern uint32 GetSkillLevel(Player* pPlayer, uint32 uiSkill);
 #define ADD_GOSSIP_ITEM_ID(uiIcon, iTextId, uiSender, uiOptionId)   PlayerTalkClass->GetGossipMenu().AddMenuItem(uiIcon, iTextId, uiSender, uiOptionId, 0, 0)
 #define ADD_GOSSIP_ITEM_EXTENDED(uiIcon, chrText, uiSender, uiOptionId, chrBoxMessage, uiBoxMoney, bCode)   PlayerTalkClass->GetGossipMenu().AddMenuItem(uiIcon, chrText, uiSender, uiOptionId, chrBoxMessage, uiBoxMoney, bCode)
 
-// This fuction Sends the current menu to show to client, uiTextId - NPCTEXTID(uint32) , uiGuid - npc guid(uint64)
-#define SEND_GOSSIP_MENU(uiTextId, uiGuid)      PlayerTalkClass->SendGossipMenu(uiTextId, uiGuid)
+// This fuction Sends the current menu to show to client, uiTextId - NPCTEXTID(uint32) , uiGuid - npc guid(ObjectGuid)
+#define SEND_GOSSIP_MENU(uiTextId, guid)      PlayerTalkClass->SendGossipMenu(uiTextId, guid)
 
 // This fuction shows POI(point of interest) to client.
 // a - position X

@@ -186,7 +186,7 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
     {
         if (pSummoned->GetEntry() == NPC_FLAMEWAKER_HEALER || pSummoned->GetEntry() == NPC_FLAMEWAKER_ELITE)
         {
-            m_luiMajordomoAddsGUIDs.push_back(pSummoned->GetGUID());
+            m_luiMajordomoAddsGUIDs.push_back(pSummoned->GetObjectGuid());
             pSummoned->SetRespawnDelay(2*HOUR);
         }
         else if (pSummoned->GetEntry() == NPC_RAGNAROS)

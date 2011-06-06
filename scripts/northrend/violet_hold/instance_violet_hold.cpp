@@ -93,10 +93,10 @@ void instance_violet_hold::OnCreatureCreate(Creature* pCreature)
             break;
 
         case NPC_PORTAL_INTRO:
-            m_lIntroPortalList.push_back(pCreature->GetGUID());
+            m_lIntroPortalList.push_back(pCreature->GetObjectGuid());
             return;
         case NPC_HOLD_GUARD:
-            m_lGuardsList.push_back(pCreature->GetGUID());
+            m_lGuardsList.push_back(pCreature->GetObjectGuid());
             return;
 
         case NPC_ARAKKOA:
