@@ -31,15 +31,8 @@ void ScriptedInstance::DoUseDoorOrButton(ObjectGuid guid, uint32 uiWithRestoreTi
 }
 
 /// Function that uses a door or button that is stored in m_mGoEntryGuidStore
-void ScriptedInstance::DoUseDoorOrButton(uint64 uiEntry, uint32 uiWithRestoreTime /*= 0*/, bool bUseAlternativeState /*= false*/)
+void ScriptedInstance::DoUseDoorOrButton(uint32 uiEntry, uint32 uiWithRestoreTime /*= 0*/, bool bUseAlternativeState /*= false*/)
 {
-    // FIXME REMOVE when no more GO-Guids are stored as uint64
-    if (uiEntry > (uint64(HIGHGUID_GAMEOBJECT) << 48))
-    {
-        DoUseDoorOrButton(ObjectGuid(uiEntry), uiWithRestoreTime, bUseAlternativeState);
-        return;
-    }
-
     EntryGuidMap::iterator find = m_mGoEntryGuidStore.find(uiEntry);
     if (find != m_mGoEntryGuidStore.end())
         DoUseDoorOrButton(find->second, uiWithRestoreTime, bUseAlternativeState);
@@ -75,15 +68,8 @@ void ScriptedInstance::DoRespawnGameObject(ObjectGuid guid, uint32 uiTimeToDespa
 }
 
 /// Function that respawns a despawned GO that is stored in m_mGoEntryGuidStore
-void ScriptedInstance::DoRespawnGameObject(uint64 uiEntry, uint32 uiTimeToDespawn)
+void ScriptedInstance::DoRespawnGameObject(uint32 uiEntry, uint32 uiTimeToDespawn)
 {
-    // FIXME REMOVE when no more GO-Guids are stored as uint64
-    if (uiEntry > (uint64(HIGHGUID_GAMEOBJECT) << 48))
-    {
-        DoRespawnGameObject(ObjectGuid(uiEntry), uiTimeToDespawn);
-        return;
-    }
-
     EntryGuidMap::iterator find = m_mGoEntryGuidStore.find(uiEntry);
     if (find != m_mGoEntryGuidStore.end())
         DoRespawnGameObject(find->second, uiTimeToDespawn);
