@@ -37,7 +37,6 @@ struct MANGOS_DLL_DECL instance_gruuls_lair : public ScriptedInstance
 
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
-        uint64 GetData64(uint32 uiData);
 
         const char* Save() { return m_strSaveData.c_str(); }
         void Load(const char* chrIn);
@@ -45,14 +44,6 @@ struct MANGOS_DLL_DECL instance_gruuls_lair : public ScriptedInstance
     private:
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strSaveData;
-
-        uint64 m_uiMaulgarGUID;
-        uint64 m_uiKigglerGUID;
-        uint64 m_uiBlindeyeGUID;
-        uint64 m_uiOlmGUID;
-        uint64 m_uiKroshGUID;
-        uint64 m_uiMaulgarDoorGUID;
-        uint64 m_uiGruulEncounterDoorGUID;
 };
 
 #endif

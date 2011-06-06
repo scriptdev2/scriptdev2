@@ -29,15 +29,7 @@ EndScriptData */
 2 - Gruul event
 */
 
-instance_gruuls_lair::instance_gruuls_lair(Map *pMap) : ScriptedInstance(pMap),
-    m_uiMaulgarGUID(0),
-    m_uiKigglerGUID(0),
-    m_uiBlindeyeGUID(0),
-    m_uiOlmGUID(0),
-    m_uiKroshGUID(0),
-
-    m_uiMaulgarDoorGUID(0),
-    m_uiGruulEncounterDoorGUID(0)
+instance_gruuls_lair::instance_gruuls_lair(Map *pMap) : ScriptedInstance(pMap)
 {
     Initialize();
 }
@@ -60,11 +52,13 @@ void instance_gruuls_lair::OnCreatureCreate(Creature* pCreature)
 {
     switch (pCreature->GetEntry())
     {
-        case NPC_MAULGAR:  m_uiMaulgarGUID  = pCreature->GetGUID(); break;
-        case NPC_KROSH:    m_uiKroshGUID    = pCreature->GetGUID(); break;
-        case NPC_OLM:      m_uiOlmGUID      = pCreature->GetGUID(); break;
-        case NPC_KIGGLER:  m_uiKigglerGUID  = pCreature->GetGUID(); break;
-        case NPC_BLINDEYE: m_uiBlindeyeGUID = pCreature->GetGUID(); break;
+        case NPC_MAULGAR:
+        case NPC_KROSH:
+        case NPC_OLM:
+        case NPC_KIGGLER:
+        case NPC_BLINDEYE:
+            m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
+            break;
     }
 }
 
@@ -73,14 +67,16 @@ void instance_gruuls_lair::OnObjectCreate(GameObject* pGo)
     switch (pGo->GetEntry())
     {
         case GO_PORT_GRONN_1:
-            m_uiMaulgarDoorGUID = pGo->GetGUID();
             if (m_auiEncounter[0] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_PORT_GRONN_2:
-            m_uiGruulEncounterDoorGUID = pGo->GetGUID();
             break;
+
+        default:
+            return;
     }
+    m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
 }
 
 void instance_gruuls_lair::SetData(uint32 uiType, uint32 uiData)
@@ -89,11 +85,11 @@ void instance_gruuls_lair::SetData(uint32 uiType, uint32 uiData)
     {
         case TYPE_MAULGAR_EVENT:
             if (uiData == DONE)
-                DoUseDoorOrButton(m_uiMaulgarDoorGUID);
+                DoUseDoorOrButton(GO_PORT_GRONN_1);
             m_auiEncounter[0] = uiData;
             break;
         case TYPE_GRUUL_EVENT:
-            DoUseDoorOrButton(m_uiGruulEncounterDoorGUID);
+            DoUseDoorOrButton(GO_PORT_GRONN_2);
             m_auiEncounter[1] = uiData;
             break;
     }
@@ -121,21 +117,6 @@ uint32 instance_gruuls_lair::GetData(uint32 uiType)
 
     default:
         return 0;
-    }
-}
-
-uint64 instance_gruuls_lair::GetData64(uint32 uiData)
-{
-    switch (uiData)
-    {
-        case NPC_MAULGAR:  return m_uiMaulgarGUID;
-        case NPC_BLINDEYE: return m_uiBlindeyeGUID;
-        case NPC_KIGGLER:  return m_uiKigglerGUID;
-        case NPC_KROSH:    return m_uiKroshGUID;
-        case NPC_OLM:      return m_uiOlmGUID;
-
-        default:
-            return 0;
     }
 }
 
