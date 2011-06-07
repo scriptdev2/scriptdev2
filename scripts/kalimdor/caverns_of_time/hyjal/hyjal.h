@@ -5,8 +5,6 @@
 #ifndef DEF_HYJAL_H
 #define DEF_HYJAL_H
 
-#define ERROR_INST_DATA     "SD2: Instance data not set properly for Mount Hyjal. Encounters will be buggy"
-
 enum
 {
     MAX_ENCOUNTER               = 5,

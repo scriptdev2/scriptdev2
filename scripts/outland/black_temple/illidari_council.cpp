@@ -52,8 +52,6 @@ enum
     SAY_ZERE_SPECIAL2           = -1564084,
 };
 
-#define ERROR_INST_DATA           "SD2 ERROR: Instance Data for Black Temple not set properly; Illidari Council event will not function properly."
-
 struct CouncilYells
 {
     int32 entry;
@@ -367,10 +365,7 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
             }
         }
         else
-        {
-            error_log(ERROR_INST_DATA);
             EnterEvadeMode();
-        }
     }
 
     void DamageTaken(Unit* done_by, uint32 &damage)

@@ -42,7 +42,7 @@ void instance_razorfen_kraul::OnObjectCreate(GameObject* pGo)
         case GO_AGATHELOS_WARD:
             m_mGoEntryGuidStore[GO_AGATHELOS_WARD] = pGo->GetObjectGuid();
             if (m_auiEncounter[0] == DONE)
-                DoUseDoorOrButton(GO_AGATHELOS_WARD);
+                pGo->SetGoState(GO_STATE_ACTIVE);
             break;
     }
 
@@ -79,7 +79,7 @@ void instance_razorfen_kraul::SetData(uint32 uiType, uint32 uiData)
         std::ostringstream saveStream;
 
         saveStream << m_auiEncounter[0];
-        strInstData = saveStream.str();
+        m_strInstData = saveStream.str();
 
         SaveToDB();
         OUT_SAVE_INST_DATA_COMPLETE;

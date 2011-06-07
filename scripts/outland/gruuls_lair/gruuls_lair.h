@@ -24,7 +24,7 @@ enum
     NPC_OLM                        = 18834,
 };
 
-struct MANGOS_DLL_DECL instance_gruuls_lair : public ScriptedInstance
+class MANGOS_DLL_DECL instance_gruuls_lair : public ScriptedInstance
 {
     public:
         instance_gruuls_lair(Map *pMap);

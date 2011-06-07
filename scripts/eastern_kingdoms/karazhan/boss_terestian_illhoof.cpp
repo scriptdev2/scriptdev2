@@ -146,8 +146,6 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
 
         if (m_pInstance)
             m_pInstance->SetData(TYPE_TERESTIAN, IN_PROGRESS);
-        else
-            ERROR_INST_DATA(m_creature);
     }
 
     void KilledUnit(Unit* pVictim)

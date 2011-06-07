@@ -34,7 +34,7 @@ enum
     GO_MAGTHERIDON_COLUMN_001   = 184639,
 };
 
-struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
+class MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
 {
     public:
         instance_magtheridons_lair(Map* pMap);

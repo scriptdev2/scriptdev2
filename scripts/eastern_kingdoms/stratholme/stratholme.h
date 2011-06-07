@@ -98,7 +98,7 @@ struct ZigguratStore
     GUIDList m_lZigguratAcolyteGuid;
 };
 
-struct MANGOS_DLL_DECL instance_stratholme : public ScriptedInstance
+class MANGOS_DLL_DECL instance_stratholme : public ScriptedInstance
 {
     public:
         instance_stratholme(Map* pMap);
@@ -112,7 +112,7 @@ struct MANGOS_DLL_DECL instance_stratholme : public ScriptedInstance
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
 
-        const char* Save() { return strInstData.c_str(); }
+        const char* Save() { return m_strInstData.c_str(); }
         void Load(const char* chrIn);
 
         void OnCreatureEnterCombat(Creature* pCreature);
@@ -128,7 +128,7 @@ struct MANGOS_DLL_DECL instance_stratholme : public ScriptedInstance
 
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         bool m_bIsSilverHandDead[MAX_SILVERHAND];
-        std::string strInstData;
+        std::string m_strInstData;
 
         uint32 m_uiBaronRunTimer;
         uint32 m_uiBarthilasRunTimer;

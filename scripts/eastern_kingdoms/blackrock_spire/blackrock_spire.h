@@ -59,7 +59,7 @@ class MANGOS_DLL_DECL instance_blackrock_spire : public ScriptedInstance
         void SetData64(uint32 uiType, uint64 uiData);
         uint32 GetData(uint32 uiType);
 
-        const char* Save() { return strInstData.c_str(); }
+        const char* Save() { return m_strInstData.c_str(); }
         void Load(const char* chrIn);
 
         void DoSortRoomEventMobs();
@@ -68,7 +68,7 @@ class MANGOS_DLL_DECL instance_blackrock_spire : public ScriptedInstance
 
     protected:
         uint32 m_auiEncounter[MAX_ENCOUNTER];
-        std::string strInstData;
+        std::string m_strInstData;
 
         ObjectGuid m_aRoomRuneGuid[MAX_ROOMS];
         GUIDList m_alRoomEventMobGUIDSorted[MAX_ROOMS];

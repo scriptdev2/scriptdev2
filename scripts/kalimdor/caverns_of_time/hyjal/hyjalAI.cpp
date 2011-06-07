@@ -243,10 +243,7 @@ void hyjalAI::SummonNextWave()
         DoTalk(RALLY);
 
     if (!m_pInstance)
-    {
-        error_log(ERROR_INST_DATA);
         return;
-    }
 
     sHyjalWave* pWaveData = m_uiBase ? &m_aHyjalWavesHorde[m_uiWaveCount] : &m_aHyjalWavesAlliance[m_uiWaveCount];
 
