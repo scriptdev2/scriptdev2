@@ -16,12 +16,21 @@
 
 /* ScriptData
 SDName: boss_saviana
-SD%Complete:
-SDComment: placeholder
+SD%Complete: 20
+SDComment: only yells
 SDCategory: Ruby Sanctum
 EndScriptData */
 
 #include "precompiled.h"
+
+enum
+{
+    SAY_AGGRO                   = -1724015,
+    SAY_SLAY_1                  = -1724016,
+    SAY_SLAY_2                  = -1724017,
+    SAY_SPECIAL                 = -1724018,
+    SOUND_DEATH                 = 17531,                    // On death it has only a screaming sound
+}
 
 void AddSC_boss_saviana()
 {

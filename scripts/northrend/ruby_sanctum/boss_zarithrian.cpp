@@ -16,12 +16,21 @@
 
 /* ScriptData
 SDName: boss_zarithrian
-SD%Complete:
-SDComment:placeholder
+SD%Complete: 20
+SDComment: only texts
 SDCategory: Ruby Sanctum
 EndScriptData */
 
 #include "precompiled.h"
+
+enum
+{
+    SAY_AGGRO           = -1724019,
+    SAY_SLAY_1          = -1724020,
+    SAY_SLAY_2          = -1724021,
+    SAY_DEATH           = -1724022,
+    SAY_SUMMON          = -1724023,
+}
 
 void AddSC_boss_zarithrian()
 {

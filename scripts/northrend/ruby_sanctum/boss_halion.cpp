@@ -16,12 +16,32 @@
 
 /* ScriptData
 SDName: boss_halion
-SD%Complete:
-SDComment: placeholder
+SD%Complete: 20
+SDComment: only yells
 SDCategory: Ruby Sanctum
 EndScriptData */
 
 #include "precompiled.h"
+
+enum
+{
+    SAY_SPAWN                   = -1724024,
+    SAY_AGGRO                   = -1724025,
+    SAY_SLAY                    = -1724026,                 // There is an additonal sound entry related to SLAY: 17502
+    SAY_DEATH                   = -1724027,
+    SAY_BERSERK                 = -1724028,
+    SAY_FIREBALL                = -1724029,
+    SAY_SPHERES                 = -1724030,
+    SAY_PHASE_2                 = -1724031,
+    SAY_PHASE_3                 = -1724032,
+
+    EMOTE_SPHERES               = -1724033,
+    EMOTE_OUT_OF_TWILLIGHT      = -1724034,
+    EMOTE_OUT_OF_PHYSICAL       = -1724035,
+    EMOTE_INTO_TWILLIGHT        = -1724036,
+    EMOTE_INTO_PHYSICAL         = -1724037,
+    EMOTE_REGENERATE            = -1724038,
+}
 
 void AddSC_boss_halion()
 {
