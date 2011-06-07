@@ -46,7 +46,7 @@ struct SpawnLocation
 
 static  const SpawnLocation aAndorovSpawnLocs[MAX_HELPERS] =
 {
-    {NPC_GENERAL_ANDOROV, -8876.97f, 1651.96f, 21.57f, 5.52f},          // fix these coords
+    {NPC_GENERAL_ANDOROV, -8660.4f,  1510.29f, 32.449f,  2.2184f},
     {NPC_KALDOREI_ELITE,  -8655.84f, 1509.78f, 32.462f,  2.33341f},
     {NPC_KALDOREI_ELITE,  -8657.39f, 1506.28f, 32.418f,  2.33346f},
     {NPC_KALDOREI_ELITE,  -8660.96f, 1504.9f,  32.1567f, 2.33306f},

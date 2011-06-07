@@ -30,7 +30,7 @@ enum
     SAY_SLAY_2                  = -1724017,
     SAY_SPECIAL                 = -1724018,
     SOUND_DEATH                 = 17531,                    // On death it has only a screaming sound
-}
+};
 
 void AddSC_boss_saviana()
 {

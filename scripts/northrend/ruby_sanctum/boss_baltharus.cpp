@@ -43,7 +43,7 @@ enum
     SAY_SLAY_2                  = -1724012,
     SAY_DEATH                   = -1724013,
     SAY_SPLIT                   = -1724014,
-}
+};
 
 void AddSC_boss_baltharus()
 {

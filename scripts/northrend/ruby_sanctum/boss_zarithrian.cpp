@@ -30,7 +30,7 @@ enum
     SAY_SLAY_2          = -1724021,
     SAY_DEATH           = -1724022,
     SAY_SUMMON          = -1724023,
-}
+};
 
 void AddSC_boss_zarithrian()
 {

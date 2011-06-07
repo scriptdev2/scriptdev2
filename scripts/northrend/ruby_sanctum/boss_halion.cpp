@@ -41,7 +41,7 @@ enum
     EMOTE_INTO_TWILLIGHT        = -1724036,
     EMOTE_INTO_PHYSICAL         = -1724037,
     EMOTE_REGENERATE            = -1724038,
-}
+};
 
 void AddSC_boss_halion()
 {
