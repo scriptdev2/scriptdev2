@@ -12,7 +12,6 @@
 #   define MANGOS_DLL_EXPORT extern "C" export
 #endif
 
-
 MANGOS_DLL_EXPORT
 char const* GetMangosRevStr()
 {

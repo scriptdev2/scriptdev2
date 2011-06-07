@@ -66,7 +66,6 @@ struct MANGOS_DLL_DECL boss_moorabiAI : public ScriptedAI
     instance_gundrak* m_pInstance;
     bool m_bIsRegularMode;
 
-
     uint32 m_uiStabTimer;                                   // used for stab and gore
     uint32 m_uiQuakeTimer;                                  // used for quake and ground tremor
     uint32 m_uiRoarTimer;                                   // both roars on it

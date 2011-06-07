@@ -384,7 +384,6 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
                             m_uiGravityLapseTimer = 30000;
                             m_uiGravityLapsePhase = 4;
 
-
                             for(uint8 i = 0; i < 3; ++i)
                             {
                                 if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
@@ -517,7 +516,6 @@ struct MANGOS_DLL_DECL mob_felkael_phoenixAI : public ScriptedAI
         }
         else
             m_uiBurnTimer -= uiDiff;
-
 
         DoMeleeAttackIfReady();
     }

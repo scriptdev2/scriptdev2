@@ -215,7 +215,6 @@ struct MANGOS_DLL_DECL mob_syth_fireAI : public ScriptedAI
     uint32 flameshock_timer;
     uint32 flamebuffet_timer;
 
-
     void Reset()
     {
         m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_FIRE, true);

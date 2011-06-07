@@ -538,7 +538,6 @@ CreatureAI* GetAI_npc_infused_crystalAI(Creature* pCreature)
     return new npc_infused_crystalAI (pCreature);
 }
 
-
 void AddSC_eversong_woods()
 {
     Script* pNewScript;

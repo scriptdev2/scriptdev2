@@ -50,7 +50,6 @@ enum
     NPC_RISEN_SPIRIT                 = 23554
 };
 
-
 struct MANGOS_DLL_DECL mobs_risen_husk_spiritAI : public ScriptedAI
 {
     mobs_risen_husk_spiritAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}

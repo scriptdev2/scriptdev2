@@ -198,7 +198,6 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
         else
             m_uiNeedleSpineTimer -= uiDiff;
 
-
         DoMeleeAttackIfReady();
     }
 };

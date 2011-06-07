@@ -91,7 +91,6 @@ struct MANGOS_DLL_DECL boss_doomwalkerAI : public ScriptedAI
         DoScriptText(SAY_AGGRO, m_creature);
     }
 
-
     void MoveInLineOfSight(Unit *who)
     {
         if (who && who->GetTypeId() == TYPEID_PLAYER && m_creature->IsHostileTo(who))

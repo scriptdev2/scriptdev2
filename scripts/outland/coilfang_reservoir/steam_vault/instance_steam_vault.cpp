@@ -24,7 +24,6 @@ EndScriptData */
 #include "precompiled.h"
 #include "steam_vault.h"
 
-
 /* Steam Vaults encounters:
 1 - Hydromancer Thespia Event
 2 - Mekgineer Steamrigger Event

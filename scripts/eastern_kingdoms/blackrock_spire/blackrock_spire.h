@@ -32,7 +32,6 @@ enum
     GO_GYTH_COMBAT_DOOR         = 175185,                   // control in boss_script, because will auto-close after each wave
     GO_GYTH_EXIT_DOOR           = 175186,
 
-
     GO_ROOM_7_RUNE              = 175194,
     GO_ROOM_3_RUNE              = 175195,
     GO_ROOM_6_RUNE              = 175196,

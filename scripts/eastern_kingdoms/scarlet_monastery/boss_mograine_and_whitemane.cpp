@@ -243,7 +243,6 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
         }
     }
 
-
     void JustReachedHome()
     {
         if (m_pInstance)

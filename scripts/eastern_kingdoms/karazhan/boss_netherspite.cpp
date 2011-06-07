@@ -106,7 +106,6 @@ struct MANGOS_DLL_DECL boss_netherspiteAI : public ScriptedAI
     uint32 m_uiPhaseSwitchTimer;
     uint32 m_uiNetherbreathTimer;
 
-
     void Reset()
     {
         m_bIsEnraged    = false;

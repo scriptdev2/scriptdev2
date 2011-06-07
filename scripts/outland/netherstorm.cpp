@@ -615,8 +615,6 @@ bool AreaTrigger_at_commander_dawnforge(Player* pPlayer, AreaTriggerEntry const*
             pDawnforgeAI->CanStartEvent(pPlayer);
             return true;
         }
-
-
     }
     return false;
 }

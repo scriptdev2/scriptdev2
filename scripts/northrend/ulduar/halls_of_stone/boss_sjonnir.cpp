@@ -95,7 +95,6 @@ struct MANGOS_DLL_DECL boss_sjonnirAI : public ScriptedAI
         m_creature->CastSpell(m_creature, m_bIsRegularMode ? SPELL_SUMMON_IRON_TROGG : SPELL_SUMMON_IRON_TROGG_H, true);
     }
 
-
     void JustSummoned(Creature* pSummoned)
     {
         if (pSummoned->GetEntry() == NPC_IRON_TROGG || pSummoned->GetEntry() == NPC_IRON_DWARF || pSummoned->GetEntry() == NPC_MALFORMED_OOZE)
