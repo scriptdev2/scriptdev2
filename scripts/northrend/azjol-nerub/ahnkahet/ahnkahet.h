@@ -28,6 +28,8 @@ enum
 
     NPC_ELDER_NADOX             = 29309,
     //NPC_JEDOGA_SHADOWSEEKER   = 29310,
+
+    ACHIEV_START_VOLAZJ_ID      = 20382,
 };
 
 class MANGOS_DLL_DECL instance_ahnkahet : public ScriptedInstance

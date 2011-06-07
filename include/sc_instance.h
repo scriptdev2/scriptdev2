@@ -54,6 +54,9 @@ class MANGOS_DLL_DECL ScriptedInstance : public InstanceData
             DoOrSimulateScriptTextForMap(iTextEntry, uiCreatureEntry, instance, GetSingleCreatureFromStorage(uiCreatureEntry, true));
         }
 
+        // Starts a timed achievement criteria for all players in instance
+        void DoStartTimedAchievement(AchievementCriteriaTypes criteriaType, uint32 uiTimedCriteriaMiscId);
+
     protected:
         // Storage for GO-Guids and NPC-Guids
         EntryGuidMap m_mGoEntryGuidStore;                   ///< Store unique GO-Guids by entry

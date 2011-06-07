@@ -141,3 +141,25 @@ Creature* ScriptedInstance::GetSingleCreatureFromStorage(uint32 uiEntry, bool bS
 
     return NULL;
 }
+
+/**
+   Helper function to start a timed achievement criteria for players in the map
+
+   @param   criteriaType The Type that is required to complete the criteria, see enum AchievementCriteriaTypes in MaNGOS
+   @param   uiTimedCriteriaMiscId The ID that identifies how the criteria is started
+ */
+void ScriptedInstance::DoStartTimedAchievement(AchievementCriteriaTypes criteriaType, uint32 uiTimedCriteriaMiscId)
+{
+    Map::PlayerList const& lPlayers = instance->GetPlayers();
+
+    if (!lPlayers.isEmpty())
+    {
+        for(Map::PlayerList::const_iterator itr = lPlayers.begin(); itr != lPlayers.end(); ++itr)
+        {
+            if (Player* pPlayer = itr->getSource())
+                pPlayer->StartTimedAchievementCriteria(criteriaType, uiTimedCriteriaMiscId);
+        }
+    }
+    else
+        debug_log("SD2: DoStartTimedAchievement attempt start achievements but no players in map.");
+}

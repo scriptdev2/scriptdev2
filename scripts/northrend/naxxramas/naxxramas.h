@@ -165,6 +165,10 @@ enum
     ACHIEV_CRIT_UNDYING_MAEX    = 13238,
     ACHIEV_CRIT_UNDYING_LOA     = 13239,
     ACHIEV_CRIT_UNDYING_THAD    = 13240,
+
+    // Timed achievement criterias
+    ACHIEV_START_PATCHWERK_ID   = 10286,
+    ACHIEV_START_MAEXXNA_ID     = 9891,
 };
 
 struct GothTrigger

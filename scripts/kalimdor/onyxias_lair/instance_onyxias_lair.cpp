@@ -62,7 +62,10 @@ void instance_onyxias_lair::SetData(uint32 uiType, uint32 uiData)
 
     m_uiEncounter = uiData;
     if (uiData == IN_PROGRESS)
+    {
+        DoStartTimedAchievement(ACHIEVEMENT_CRITERIA_TYPE_KILL_CREATURE, ACHIEV_START_ONYXIA_ID);
         m_uiAchievWhelpsCount = 0;
+    }
     if (uiData == DATA_LIFTOFF)
         m_tPhaseTwoStart = time(NULL);
 

@@ -24,6 +24,8 @@ enum
     ACHIEV_CRIT_MANY_WHELPS_H   = 12568,
     ACHIEV_CRIT_NO_BREATH_N     = 12566,                    // Acheivements 4404, 4407
     ACHIEV_CRIT_NO_BREATH_H     = 12569,
+
+    ACHIEV_START_ONYXIA_ID      = 6601,
 };
 
 class MANGOS_DLL_DECL instance_onyxias_lair : public ScriptedInstance

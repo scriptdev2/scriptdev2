@@ -41,6 +41,8 @@ enum
     FACE_MARNAK             = 0,
     FACE_ABEDNEUM           = 1,
     FACE_KADDRAK            = 2,
+
+    ACHIEV_START_MAIDEN_ID  = 20383,
 };
 
 struct Face

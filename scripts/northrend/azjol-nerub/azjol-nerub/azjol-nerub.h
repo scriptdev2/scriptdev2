@@ -7,26 +7,28 @@
 
 enum
 {
-    MAX_ENCOUNTER      = 3,
+    MAX_ENCOUNTER               = 3,
 
-    TYPE_KRIKTHIR      = 0,
-    TYPE_HADRONOX      = 1,
-    TYPE_ANUBARAK      = 2,
+    TYPE_KRIKTHIR               = 0,
+    TYPE_HADRONOX               = 1,
+    TYPE_ANUBARAK               = 2,
 
-    NPC_KRIKTHIR       = 28684,
+    NPC_KRIKTHIR                = 28684,
 
-    SAY_SEND_GROUP_1   = -1601004,
-    SAY_SEND_GROUP_2   = -1601005,
-    SAY_SEND_GROUP_3   = -1601006,
+    SAY_SEND_GROUP_1            = -1601004,
+    SAY_SEND_GROUP_2            = -1601005,
+    SAY_SEND_GROUP_3            = -1601006,
 
-    NPC_GASHRA         = 28730,
-    NPC_NARJIL         = 28729,
-    NPC_SILTHIK        = 28731,
+    NPC_GASHRA                  = 28730,
+    NPC_NARJIL                  = 28729,
+    NPC_SILTHIK                 = 28731,
 
-    GO_DOOR_KRIKTHIR   = 192395,
-    GO_DOOR_ANUBARAK_1 = 192396,
-    GO_DOOR_ANUBARAK_2 = 192397,
-    GO_DOOR_ANUBARAK_3 = 192398
+    GO_DOOR_KRIKTHIR            = 192395,
+    GO_DOOR_ANUBARAK_1          = 192396,
+    GO_DOOR_ANUBARAK_2          = 192397,
+    GO_DOOR_ANUBARAK_3          = 192398,
+
+    ACHIEV_START_ANUB_ID        = 20381,
 };
 
 static const uint32 aWatchers[] = {NPC_GASHRA, NPC_NARJIL, NPC_SILTHIK};

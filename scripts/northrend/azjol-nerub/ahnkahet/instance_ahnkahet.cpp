@@ -101,9 +101,13 @@ void instance_ahnkahet::SetData(uint32 uiType, uint32 uiData)
             }
             break;
         case TYPE_JEDOGA:
-        case TYPE_VOLAZJ:
         case TYPE_AMANITAR:
             m_auiEncounter[uiType] = uiData;
+            break;
+        case TYPE_VOLAZJ:
+            m_auiEncounter[uiType] = uiData;
+            if (uiData == IN_PROGRESS)
+                DoStartTimedAchievement(ACHIEVEMENT_CRITERIA_TYPE_KILL_CREATURE, ACHIEV_START_VOLAZJ_ID);
             break;
 
         default:
