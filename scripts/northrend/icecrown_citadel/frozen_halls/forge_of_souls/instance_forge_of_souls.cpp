@@ -194,7 +194,7 @@ uint32 instance_forge_of_souls::GetData(uint32 uiType)
 void instance_forge_of_souls::SetData64(uint32 uiType, uint64 uiData)
 {
     if (uiType == DATA_SOULFRAGMENT_REMOVE)
-        m_luiSoulFragmentAliveGUIDs.remove(uiData);
+        m_luiSoulFragmentAliveGUIDs.remove(ObjectGuid(uiData));
 }
 
 InstanceData* GetInstanceData_instance_forge_of_souls(Map* pMap)

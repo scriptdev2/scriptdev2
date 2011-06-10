@@ -170,7 +170,7 @@ void instance_blackrock_spire::SetData64(uint32 uiType, uint64 uiData)
         {
             if (m_aRoomRuneGuid[i])                       // This check is used, to ensure which runes still need processing
             {
-                m_alRoomEventMobGUIDSorted[i].remove(uiData);
+                m_alRoomEventMobGUIDSorted[i].remove(ObjectGuid(uiData));
                 if (m_alRoomEventMobGUIDSorted[i].empty())
                 {
                     DoUseDoorOrButton(m_aRoomRuneGuid[i]);
