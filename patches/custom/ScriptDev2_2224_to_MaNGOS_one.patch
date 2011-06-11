@@ -58,7 +58,7 @@ index 94879c4..8aef16e 100644
  
      void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
      {
--        if (pSpell->SpellFamilyFlags2 & 0x080000000)
+-        if (pSpell->IsFitToFamilyMask(UI64LIT(0x0000000000000000), 0x080000000))
 +        if (pSpell->Id == 28880)
          {
              m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PVP_ATTACKABLE);
