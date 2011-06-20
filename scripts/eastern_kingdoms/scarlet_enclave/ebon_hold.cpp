@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Ebon_Hold
 SD%Complete: 80
-SDComment: Quest support: 12848, 12733, 12739(and 12742 to 12750), 12727
+SDComment: Quest support: 12848, 12733, 12739(and 12742 to 12750), 12727, 12641
 SDCategory: Ebon Hold
 EndScriptData */
 
@@ -27,6 +27,7 @@ npc_death_knight_initiate
 npc_unworthy_initiate_anchor
 npc_unworthy_initiate
 go_acherus_soul_prison
+npc_eye_of_acherus
 EndContentData */
 
 #include "precompiled.h"
@@ -1090,6 +1091,88 @@ bool GOUse_go_acherus_soul_prison(Player* pPlayer, GameObject* pGo)
     return false;
 }
 
+/*######
+## npc_eye_of_acherus
+######*/
+
+enum
+{
+    SPELL_EYE_CONTROL       = 51852,                        // player control aura
+    SPELL_EYE_VISUAL        = 51892,
+    SPELL_EYE_FLIGHT        = 51890,                        // player flight control
+    SPELL_EYE_FLIGHT_BOOST  = 51923,                        // flight boost to reach new avalon
+
+    EMOTE_DESTIANTION       = -1609089,
+    EMOTE_CONTROL           = -1609090,
+
+    POINT_EYE_DESTINATION   = 0
+};
+
+// movement destination coords
+static const float aEyeDestination[3] = {1750.8276f, -5873.788f, 147.2266f};
+
+struct MANGOS_DLL_DECL npc_eye_of_acherusAI : public ScriptedAI
+{
+    npc_eye_of_acherusAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_bIsInitialized = false;
+        m_creature->SetPhaseMask(3, true);                  // HACK as mangos cannot handle auras proberly, also HACK below
+        Reset();
+    }
+
+    bool m_bIsInitialized;
+
+    void Reset() override {}
+
+    void JustDied(Unit* pKiller) override
+    {
+        m_creature->CastSpell(m_creature, 52694, true);     // HACK - Remove this when mangos supports proper spell casting
+    }
+
+    void MovementInform(uint32 uiType, uint32 uiPointId) override
+    {
+        if (uiType != POINT_MOTION_TYPE || uiPointId != POINT_EYE_DESTINATION)
+            return;
+
+        if (Player* pPlayer = m_creature->GetCharmerOrOwnerPlayerOrPlayerItself())
+            DoScriptText(EMOTE_CONTROL, m_creature, pPlayer);
+
+        DoCastSpellIfCan(m_creature, SPELL_EYE_FLIGHT, CAST_TRIGGERED);
+    }
+
+    void AttackStart(Unit* pWho) override {}
+
+    void UpdateAI(const uint32 uiDiff) override
+    {
+        if (m_bIsInitialized)
+            return;
+
+        if (Player* pPlayer = m_creature->GetCharmerOrOwnerPlayerOrPlayerItself())
+        {
+            m_creature->SetPhaseMask(2, true);              // HACK remove when summon spells and auras are implemented properly in mangos
+
+            DoScriptText(EMOTE_DESTIANTION, m_creature, pPlayer);
+
+            DoCastSpellIfCan(m_creature, SPELL_EYE_VISUAL, CAST_TRIGGERED);
+            DoCastSpellIfCan(m_creature, SPELL_EYE_FLIGHT_BOOST, CAST_TRIGGERED);
+            // Update Speed for Eye
+            m_creature->UpdateSpeed(MOVE_FLIGHT, true, pPlayer->GetSpeed(MOVE_FLIGHT));
+
+            //m_creature->RemoveSplineFlag(SPLINEFLAG_WALKMODE);
+            m_creature->GetMotionMaster()->MovePoint(POINT_EYE_DESTINATION, aEyeDestination[0], aEyeDestination[1], aEyeDestination[2]);
+
+            m_bIsInitialized = true;
+        }
+        else
+            m_creature->ForcedDespawn();
+    }
+};
+
+CreatureAI* GetAI_npc_eye_of_acherus(Creature* pCreature)
+{
+    return new npc_eye_of_acherusAI(pCreature);
+}
+
 void AddSC_ebon_hold()
 {
     Script* pNewScript;
@@ -1125,5 +1208,10 @@ void AddSC_ebon_hold()
     pNewScript = new Script;
     pNewScript->Name = "go_acherus_soul_prison";
     pNewScript->pGOUse = &GOUse_go_acherus_soul_prison;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_eye_of_acherus";
+    pNewScript->GetAI = &GetAI_npc_eye_of_acherus;
     pNewScript->RegisterSelf();
 }

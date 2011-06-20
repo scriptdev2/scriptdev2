@@ -3713,7 +3713,10 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1609085,'Stay in the anti-magic field! Make them come to you!',0,0,0,0,'koltira SAY_BREAKOUT7'),
 (-1609086,'The death of the High Inquisitor of New Avalon will not go unnoticed. You need to get out of here at once! Go, before more of them show up. I\'ll be fine on my own.',0,0,0,0,'koltira SAY_BREAKOUT8'),
 (-1609087,'I\'ll draw their fire, you make your escape behind me.',0,0,0,0,'koltira SAY_BREAKOUT9'),
-(-1609088,'Your High Inquisitor is nothing more than a pile of meat, Crusaders! There are none beyond the grasp of the Scourge!',0,1,0,0,'koltira SAY_BREAKOUT10');
+(-1609088,'Your High Inquisitor is nothing more than a pile of meat, Crusaders! There are none beyond the grasp of the Scourge!',0,1,0,0,'koltira SAY_BREAKOUT10'),
+
+(-1609089,'The Eye of Acherus launches towards its destination',0,3,0,0,'eye of acherus EMOTE_DESTIANTION'),
+(-1609090,'The Eye of Acherus is in your control',0,3,0,0,'eye of acherus EMOTE_CONTROL');
 
 -- -1 615 000 OBSIDIAN SANCTUM
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
