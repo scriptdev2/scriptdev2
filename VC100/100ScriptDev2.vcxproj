@@ -299,6 +299,7 @@
     <ClCompile Include="..\scripts\eastern_kingdoms\molten_core\instance_molten_core.cpp" />
     <ClCompile Include="..\scripts\eastern_kingdoms\molten_core\molten_core.cpp" />
     <ClCompile Include="..\scripts\eastern_kingdoms\scarlet_enclave\ebon_hold.cpp" />
+    <ClCompile Include="..\scripts\eastern_kingdoms\scarlet_enclave\world_map_ebon_hold.cpp" />
     <ClCompile Include="..\scripts\eastern_kingdoms\scarlet_monastery\boss_arcanist_doan.cpp" />
     <ClCompile Include="..\scripts\eastern_kingdoms\scarlet_monastery\boss_headless_horseman.cpp" />
     <ClCompile Include="..\scripts\eastern_kingdoms\scarlet_monastery\boss_herod.cpp" />
@@ -682,6 +683,7 @@
     <ClInclude Include="..\scripts\eastern_kingdoms\karazhan\karazhan.h" />
     <ClInclude Include="..\scripts\eastern_kingdoms\magisters_terrace\magisters_terrace.h" />
     <ClInclude Include="..\scripts\eastern_kingdoms\molten_core\molten_core.h" />
+    <ClInclude Include="..\scripts\eastern_kingdoms\scarlet_enclave\world_map_ebon_hold.h" />
     <ClInclude Include="..\scripts\eastern_kingdoms\scarlet_monastery\scarlet_monastery.h" />
     <ClInclude Include="..\scripts\eastern_kingdoms\scholomance\scholomance.h" />
     <ClInclude Include="..\scripts\eastern_kingdoms\shadowfang_keep\shadowfang_keep.h" />

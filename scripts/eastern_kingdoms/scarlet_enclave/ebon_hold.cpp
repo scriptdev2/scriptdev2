@@ -32,6 +32,7 @@ EndContentData */
 
 #include "precompiled.h"
 #include "escort_ai.h"
+#include "world_map_ebon_hold.h"
 
 /*######
 ## npc_a_special_surprise
