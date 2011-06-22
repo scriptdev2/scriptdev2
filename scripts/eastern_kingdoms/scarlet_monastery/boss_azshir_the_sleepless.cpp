@@ -54,7 +54,7 @@ struct MANGOS_DLL_DECL boss_azshir_the_sleeplessAI : public ScriptedAI
             if (SoulSiphon_Timer < diff)
             {
                 DoCastSpellIfCan(m_creature->getVictim(),SPELL_SOULSIPHON);
-                return;
+                // return;                                  // Why was this return here?
 
                 SoulSiphon_Timer = 20000;
             }else SoulSiphon_Timer -= diff;
