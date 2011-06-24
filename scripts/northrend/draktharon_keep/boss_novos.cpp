@@ -130,7 +130,7 @@ struct MANGOS_DLL_DECL boss_novosAI : public Scripted_NoMovementAI
         if (m_uiLostCrystals == MAX_CRYSTALS)
         {
             // Enter Phase 2
-            if (m_bIsRegularMode)
+            if (!m_bIsRegularMode)
                 DoCastSpellIfCan(m_creature, SPELL_SUMMON_MINIONS_H);
 
             m_uiPhase = PHASE_WAITING;

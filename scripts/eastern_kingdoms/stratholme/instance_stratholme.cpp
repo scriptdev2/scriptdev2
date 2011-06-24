@@ -78,6 +78,14 @@ void instance_stratholme::OnCreatureCreate(Creature* pCreature)
         case NPC_THUZADIN_ACOLYTE:
             m_luiAcolyteGUIDs.push_back(pCreature->GetObjectGuid());
             break;
+        case NPC_CRIMSON_INITIATE:
+        case NPC_CRIMSON_GALLANT:
+        case NPC_CRIMSON_GUARDSMAN:
+        case NPC_CRIMSON_CONJURER:
+            // Only store those in the yard
+            if (pCreature->IsWithinDist2d(aTimmyLocation[1].m_fX, aTimmyLocation[1].m_fY, 40.0f))
+                m_suiCrimsonLowGuids.insert(pCreature->GetGUIDLow());
+            break;
     }
 }
 
@@ -215,8 +223,8 @@ void instance_stratholme::SetData(uint32 uiType, uint32 uiData)
                     if (Creature* pBaron = GetSingleCreatureFromStorage(NPC_BARON))
                     {
                         DoScriptText(SAY_ANNOUNCE_RAMSTEIN, pBaron);
-                        if (Creature* pRamstein = pBaron->SummonCreature(NPC_RAMSTEIN, sStratholmeLocation[2].m_fX, sStratholmeLocation[2].m_fY, sStratholmeLocation[2].m_fZ, sStratholmeLocation[2].m_fO, TEMPSUMMON_DEAD_DESPAWN, 0))
-                            pRamstein->GetMotionMaster()->MovePoint(0, sStratholmeLocation[3].m_fX, sStratholmeLocation[3].m_fY, sStratholmeLocation[3].m_fZ);
+                        if (Creature* pRamstein = pBaron->SummonCreature(NPC_RAMSTEIN, aStratholmeLocation[2].m_fX, aStratholmeLocation[2].m_fY, aStratholmeLocation[2].m_fZ, aStratholmeLocation[2].m_fO, TEMPSUMMON_DEAD_DESPAWN, 0))
+                            pRamstein->GetMotionMaster()->MovePoint(0, aStratholmeLocation[3].m_fX, aStratholmeLocation[3].m_fY, aStratholmeLocation[3].m_fZ);
 
                         debug_log("SD2: Instance Stratholme - Slaugther event: Ramstein spawned.");
                     }
@@ -242,8 +250,8 @@ void instance_stratholme::SetData(uint32 uiType, uint32 uiData)
                     for(uint8 i = 0; i < 5; ++i)
                     {
                         float fX, fY, fZ;
-                        pBaron->GetRandomPoint(sStratholmeLocation[6].m_fX, sStratholmeLocation[6].m_fY, sStratholmeLocation[6].m_fZ, 5.0f, fX, fY, fZ);
-                        if (Creature* pTemp = pBaron->SummonCreature(NPC_BLACK_GUARD, sStratholmeLocation[6].m_fX, sStratholmeLocation[6].m_fY, sStratholmeLocation[6].m_fZ, sStratholmeLocation[6].m_fO, TEMPSUMMON_DEAD_DESPAWN, 0))
+                        pBaron->GetRandomPoint(aStratholmeLocation[6].m_fX, aStratholmeLocation[6].m_fY, aStratholmeLocation[6].m_fZ, 5.0f, fX, fY, fZ);
+                        if (Creature* pTemp = pBaron->SummonCreature(NPC_BLACK_GUARD, aStratholmeLocation[6].m_fX, aStratholmeLocation[6].m_fY, aStratholmeLocation[6].m_fZ, aStratholmeLocation[6].m_fO, TEMPSUMMON_DEAD_DESPAWN, 0))
                             m_luiGuardGUIDs.push_back(pTemp->GetObjectGuid());
                     }
 
@@ -302,7 +310,7 @@ void instance_stratholme::SetData(uint32 uiType, uint32 uiData)
                         if (Creature* pYsida = pYsidaT->SummonCreature(NPC_YSIDA, pYsidaT->GetPositionX(), pYsidaT->GetPositionY(), pYsidaT->GetPositionZ(), pYsidaT->GetOrientation(), TEMPSUMMON_TIMED_DESPAWN, 1800000))
                         {
                             DoScriptText(SAY_EPILOGUE, pYsida);
-                            pYsida->GetMotionMaster()->MovePoint(0, sStratholmeLocation[7].m_fX, sStratholmeLocation[7].m_fY, sStratholmeLocation[7].m_fZ);
+                            pYsida->GetMotionMaster()->MovePoint(0, aStratholmeLocation[7].m_fX, aStratholmeLocation[7].m_fY, aStratholmeLocation[7].m_fZ);
                         }
                         DoUseDoorOrButton(GO_YSIDA_CAGE);
                     }
@@ -324,7 +332,7 @@ void instance_stratholme::SetData(uint32 uiType, uint32 uiData)
                 {
                     DoScriptText(SAY_WARN_BARON, pBarthilas);
                     pBarthilas->RemoveSplineFlag(SPLINEFLAG_WALKMODE);
-                    pBarthilas->GetMotionMaster()->MovePoint(0, sStratholmeLocation[0].m_fX, sStratholmeLocation[0].m_fY, sStratholmeLocation[0].m_fZ);
+                    pBarthilas->GetMotionMaster()->MovePoint(0, aStratholmeLocation[0].m_fX, aStratholmeLocation[0].m_fY, aStratholmeLocation[0].m_fZ);
 
                     m_uiBarthilasRunTimer = 8000;
                 }
@@ -606,7 +614,7 @@ void instance_stratholme::OnCreatureDeath(Creature* pCreature)
                     if (pGuard && pGuard->isAlive() && !pGuard->isInCombat())
                     {
                         float fX, fY, fZ;
-                        pGuard->GetRandomPoint(sStratholmeLocation[5].m_fX, sStratholmeLocation[5].m_fY, sStratholmeLocation[5].m_fZ, 10.0f, fX, fY, fZ);
+                        pGuard->GetRandomPoint(aStratholmeLocation[5].m_fX, aStratholmeLocation[5].m_fY, aStratholmeLocation[5].m_fZ, 10.0f, fX, fY, fZ);
                         pGuard->GetMotionMaster()->MovePoint(0, fX, fY, fZ);
                     }
                 }
@@ -617,6 +625,21 @@ void instance_stratholme::OnCreatureDeath(Creature* pCreature)
             if (m_luiGuardGUIDs.empty())
                 SetData(TYPE_BLACK_GUARDS, DONE);
 
+            break;
+
+        // Timmy spawn support
+        case NPC_CRIMSON_INITIATE:
+        case NPC_CRIMSON_GALLANT:
+        case NPC_CRIMSON_GUARDSMAN:
+        case NPC_CRIMSON_CONJURER:
+            if (m_suiCrimsonLowGuids.find(pCreature->GetGUIDLow()) != m_suiCrimsonLowGuids.end())
+            {
+                m_suiCrimsonLowGuids.erase(pCreature->GetGUIDLow());
+
+                // If all courtyard mobs are dead then summon Timmy
+                if (m_suiCrimsonLowGuids.empty())
+                    pCreature->SummonCreature(NPC_TIMMY_THE_CRUEL, aTimmyLocation[0].m_fX, aTimmyLocation[0].m_fY, aTimmyLocation[0].m_fZ, aTimmyLocation[0].m_fO, TEMPSUMMON_DEAD_DESPAWN, 0);
+            }
             break;
     }
 }
@@ -657,7 +680,7 @@ void instance_stratholme::Update(uint32 uiDiff)
         {
             Creature* pBarthilas = GetSingleCreatureFromStorage(NPC_BARTHILAS);
             if (pBarthilas && pBarthilas->isAlive() && !pBarthilas->isInCombat())
-                pBarthilas->NearTeleportTo(sStratholmeLocation[1].m_fX, sStratholmeLocation[1].m_fY, sStratholmeLocation[1].m_fZ, sStratholmeLocation[1].m_fO);
+                pBarthilas->NearTeleportTo(aStratholmeLocation[1].m_fX, aStratholmeLocation[1].m_fY, aStratholmeLocation[1].m_fZ, aStratholmeLocation[1].m_fO);
 
             SetData(TYPE_BARTHILAS_RUN, DONE);
             m_uiBarthilasRunTimer = 0;
@@ -701,10 +724,10 @@ void instance_stratholme::Update(uint32 uiDiff)
                 if (Creature* pBaron = GetSingleCreatureFromStorage(NPC_BARON))
                 {
                     // Summon mindless skeletons and move them to random point in the center of the square
-                    if (Creature* pTemp = pBaron->SummonCreature(NPC_MINDLESS_UNDEAD, sStratholmeLocation[4].m_fX, sStratholmeLocation[4].m_fY, sStratholmeLocation[4].m_fZ, sStratholmeLocation[4].m_fO, TEMPSUMMON_DEAD_DESPAWN, 0))
+                    if (Creature* pTemp = pBaron->SummonCreature(NPC_MINDLESS_UNDEAD, aStratholmeLocation[4].m_fX, aStratholmeLocation[4].m_fY, aStratholmeLocation[4].m_fZ, aStratholmeLocation[4].m_fO, TEMPSUMMON_DEAD_DESPAWN, 0))
                     {
                         float fX, fY, fZ;
-                        pBaron->GetRandomPoint(sStratholmeLocation[5].m_fX, sStratholmeLocation[5].m_fY, sStratholmeLocation[5].m_fZ, 20.0f, fX, fY, fZ);
+                        pBaron->GetRandomPoint(aStratholmeLocation[5].m_fX, aStratholmeLocation[5].m_fY, aStratholmeLocation[5].m_fZ, 20.0f, fX, fY, fZ);
                         pTemp->GetMotionMaster()->MovePoint(0, fX, fY, fZ);
                         m_luiUndeadGUIDs.push_back(pTemp->GetObjectGuid());
                         ++m_uiMindlessCount;
