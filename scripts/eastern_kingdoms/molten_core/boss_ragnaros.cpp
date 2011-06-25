@@ -245,20 +245,19 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public Scripted_NoMovementAI
         if (m_uiHammerTimer < uiDiff)
         {
             // Select a target with mana-bar
-            std::list<Unit*> lValidTargets;
+            std::vector<Unit*> vValidTargets;
             ThreatList const& tList = m_creature->getThreatManager().getThreatList();
+            vValidTargets.reserve(tList.size());
             for (ThreatList::const_iterator iter = tList.begin(); iter != tList.end(); ++iter)
             {
                 Unit* pTempTarget = m_creature->GetMap()->GetUnit((*iter)->getUnitGuid());
                 if (pTempTarget && pTempTarget->getPowerType() == POWER_MANA)
-                    lValidTargets.push_back(pTempTarget);
+                    vValidTargets.push_back(pTempTarget);
             }
 
-            if (!lValidTargets.empty())
+            if (!vValidTargets.empty())
             {
-                std::list<Unit*>::const_iterator itr = lValidTargets.begin();
-                advance(itr, urand(0, lValidTargets.size() - 1));
-                if (DoCastSpellIfCan(*itr, SPELL_MIGHT_OF_RAGNAROS) == CAST_OK)
+                if (DoCastSpellIfCan(vValidTargets[urand(0, vValidTargets.size() -1)], SPELL_MIGHT_OF_RAGNAROS) == CAST_OK)
                 {
                     DoScriptText(SAY_HAMMER, m_creature);
                     m_uiHammerTimer = 11000;

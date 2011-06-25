@@ -156,7 +156,7 @@ void instance_blackrock_depths::SetData(uint32 uiType, uint32 uiData)
                     DoUseDoorOrButton(GO_TOMB_ENTER);
                     break;
                 case FAIL:
-                    if (m_auiEncounter[3] == IN_PROGRESS)//prevent use more than one time
+                    if (m_auiEncounter[3] == IN_PROGRESS)   // Prevent use more than one time
                         DoUseDoorOrButton(GO_TOMB_ENTER);
                     break;
                 case DONE:

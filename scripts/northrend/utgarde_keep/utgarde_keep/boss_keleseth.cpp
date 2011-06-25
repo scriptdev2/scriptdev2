@@ -106,14 +106,8 @@ struct MANGOS_DLL_DECL mob_vrykul_skeletonAI : public ScriptedAI
         m_uiReviveTimer = 0;
     }
 
-    void DamageTaken(Unit* pDoneBy, uint32 &uiDamage)
+    void DamageTaken(Unit* pDoneBy, uint32& uiDamage)
     {
-        if (!m_pInstance || m_pInstance->GetData(TYPE_KELESETH) != IN_PROGRESS)
-        {
-            uiDamage = m_creature->GetHealth();
-            return;
-        }
-
         if (m_uiReviveTimer)
         {
             uiDamage = 0;
@@ -158,8 +152,10 @@ struct MANGOS_DLL_DECL mob_vrykul_skeletonAI : public ScriptedAI
                 if (urand(0, 3))
                     DoCastSpellIfCan(m_creature->getVictim(), SPELL_DECREPIFY_H);
                 else if (m_pInstance && m_pInstance->GetData(TYPE_KELESETH) == IN_PROGRESS)
+                {
                     if (Creature* pKeleseth = m_pInstance->GetSingleCreatureFromStorage(NPC_KELESETH))
                         DoCastSpellIfCan(pKeleseth, SPELL_BONE_ARMOR);
+                }
             }
 
             m_uiCastTimer = urand(5000, 15000);
@@ -196,6 +192,8 @@ struct MANGOS_DLL_DECL boss_kelesethAI : public ScriptedAI
     uint32 m_uiSummonTimer;
     uint32 m_uiShadowboltTimer;
 
+    GUIDList m_lSummonedAddGuids;
+
     void Reset()
     {
         // timers need confirmation
@@ -203,7 +201,7 @@ struct MANGOS_DLL_DECL boss_kelesethAI : public ScriptedAI
         m_uiSummonTimer = 5000 ;
         m_uiShadowboltTimer = 0;
 
-        DespawnAdds();
+        DespawnOrKillAdds(true);
     }
 
     void AttackStart(Unit* pWho)
@@ -232,20 +230,29 @@ struct MANGOS_DLL_DECL boss_kelesethAI : public ScriptedAI
             m_creature->SummonCreature(NPC_VRYKUL_SKELETON, fAddPosition[0]+rand()%7, fAddPosition[1]+rand()%7, fAddPosition[2], fAddPosition[3], TEMPSUMMON_DEAD_DESPAWN, 0);
     }
 
-    void DespawnAdds()
+    void DespawnOrKillAdds(bool bDespawn)
     {
-        std::list<Creature*> lAddsList;
-        GetCreatureListWithEntryInGrid(lAddsList, m_creature, NPC_VRYKUL_SKELETON, 100.0f);
+        for (GUIDList::const_iterator itr = m_lSummonedAddGuids.begin(); itr != m_lSummonedAddGuids.end(); ++itr)
+        {
+            if (Creature* pAdd = m_creature->GetMap()->GetCreature(*itr))
+            {
+                if (bDespawn)
+                    pAdd->ForcedDespawn();
+                else
+                    pAdd->DealDamage(pAdd, pAdd->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+            }
+        }
 
-        if (!lAddsList.empty())
-            for(std::list<Creature*>::iterator itr = lAddsList.begin(); itr != lAddsList.end(); ++itr)
-                (*itr)->ForcedDespawn();
+        m_lSummonedAddGuids.clear();
     }
 
     void JustSummoned(Creature* pSummoned)
     {
         if (pSummoned->GetEntry() == NPC_VRYKUL_SKELETON)
+        {
             pSummoned->AI()->AttackStart(m_creature->getVictim());
+            m_lSummonedAddGuids.push_back(pSummoned->GetObjectGuid());
+        }
 
         if (pSummoned->GetEntry() == NPC_FROST_TOMB)
             pSummoned->ApplySpellImmune(0, IMMUNITY_DAMAGE, SPELL_SCHOOL_MASK_FROST, true);
@@ -257,6 +264,8 @@ struct MANGOS_DLL_DECL boss_kelesethAI : public ScriptedAI
 
         if (m_pInstance)
             m_pInstance->SetData(TYPE_KELESETH, DONE);
+
+        DespawnOrKillAdds(false);
     }
 
     void JustReachedHome()

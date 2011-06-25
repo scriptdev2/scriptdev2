@@ -95,7 +95,7 @@ static const uint32 aArenaNPCs[] =
     NPC_GOROSH, NPC_GRIZZLE, NPC_EVISCERATOR, NPC_OKTHOR, NPC_ANUBSHIAH, NPC_HEDRUM
 };
 
-// Used to summon Watcher Doomgrip (guesswork)
+// Used to summon Watcher Doomgrip
 static const float aVaultPositions[4] = {821.905f, -338.382f, -50.134f, 3.78736f};
 
 class MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
