@@ -26,6 +26,7 @@ EndScriptData */
 
 instance_blackrock_depths::instance_blackrock_depths(Map* pMap) : ScriptedInstance(pMap),
     m_uiBarAleCount(0),
+    m_uiCofferDoorsOpened(0),
 
     m_fArenaCenterX(0.0f),
     m_fArenaCenterY(0.0f),
@@ -54,6 +55,17 @@ void instance_blackrock_depths::OnCreatureCreate(Creature* pCreature)
         case NPC_DOPEREL:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
+
+        case NPC_WARBRINGER_CONST:
+            // Golems not in the Relict Vault?
+            if (std::abs(pCreature->GetPositionZ() - aVaultPositions[2]) > 1.0f || !pCreature->IsWithinDist2d(aVaultPositions[0], aVaultPositions[1], 20.0f))
+                break;
+            // Golems in Relict Vault need to have a stoned aura, set manually to prevent reapply when reached home
+            pCreature->CastSpell(pCreature, SPELL_STONED, true);
+            // Store the Relict Vault Golems into m_sVaultNpcGuids
+        case NPC_WATCHER_DOOMGRIP:
+            m_sVaultNpcGuids.insert(pCreature->GetObjectGuid());
+            break;
     }
 }
 
@@ -81,6 +93,7 @@ void instance_blackrock_depths::OnObjectCreate(GameObject* pGo)
         case GO_SPECTRAL_CHALICE:
         case GO_CHEST_SEVEN:
         case GO_ARENA_SPOILS:
+        case GO_SECRET_DOOR:
             break;
 
         default:
@@ -100,6 +113,34 @@ void instance_blackrock_depths::SetData(uint32 uiType, uint32 uiData)
             m_auiEncounter[0] = uiData;
             break;
         case TYPE_VAULT:
+            if (uiData == SPECIAL)
+            {
+                ++m_uiCofferDoorsOpened;
+
+                if (m_uiCofferDoorsOpened == MAX_RELIC_DOORS)
+                {
+                    SetData(TYPE_VAULT, IN_PROGRESS);
+
+                    Creature* pConstruct = NULL;
+
+                    // Activate vault constructs
+                    for (GUIDSet::const_iterator itr = m_sVaultNpcGuids.begin(); itr != m_sVaultNpcGuids.end(); ++itr)
+                    {
+                        if (pConstruct = instance->GetCreature(*itr))
+                            pConstruct->RemoveAurasDueToSpell(SPELL_STONED);
+                    }
+
+                    if (!pConstruct)
+                        return;
+
+                    // Summon doomgrip
+                    pConstruct->SummonCreature(NPC_WATCHER_DOOMGRIP, aVaultPositions[0], aVaultPositions[1], aVaultPositions[2], aVaultPositions[3], TEMPSUMMON_DEAD_DESPAWN, 0);
+                }
+                // No need to store in this case
+                return;
+            }
+            if (uiData == DONE)
+                DoUseDoorOrButton(GO_SECRET_DOOR);
             m_auiEncounter[1] = uiData;
             break;
         case TYPE_BAR:
@@ -227,6 +268,24 @@ void instance_blackrock_depths::OnCreatureEvade(Creature* pCreature)
                  return;
              }
         }
+    }
+}
+
+void instance_blackrock_depths::OnCreatureDeath(Creature* pCreature)
+{
+    switch(pCreature->GetEntry())
+    {
+        case NPC_WARBRINGER_CONST:
+        case NPC_WATCHER_DOOMGRIP:
+            if (GetData(TYPE_VAULT) == IN_PROGRESS)
+            {
+                m_sVaultNpcGuids.erase(pCreature->GetObjectGuid());
+
+                // If all event npcs dead then set event to done
+                if (m_sVaultNpcGuids.empty())
+                    SetData(TYPE_VAULT, DONE);
+            }
+            break;
     }
 }
 

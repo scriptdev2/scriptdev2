@@ -23,6 +23,7 @@ EndScriptData */
 
 /* ContentData
 go_shadowforge_brazier
+go_relic_coffer_door
 at_ring_of_law
 npc_grimstone
 mob_phalanx
@@ -47,6 +48,22 @@ bool GOUse_go_shadowforge_brazier(Player* pPlayer, GameObject* pGo)
         else
             pInstance->SetData(TYPE_LYCEUM, IN_PROGRESS);
     }
+    return false;
+}
+
+/*######
+## go_relic_coffer_door
+######*/
+
+bool GOUse_go_relic_coffer_door(Player* pPlayer, GameObject* pGo)
+{
+    if (ScriptedInstance* pInstance = (ScriptedInstance*)pGo->GetInstanceData())
+    {
+        // check if the event is already done
+        if (pInstance->GetData(TYPE_VAULT) != DONE && pInstance->GetData(TYPE_VAULT) != IN_PROGRESS)
+            pInstance->SetData(TYPE_VAULT, SPECIAL);
+    }
+
     return false;
 }
 
@@ -794,6 +811,11 @@ void AddSC_blackrock_depths()
     pNewScript = new Script;
     pNewScript->Name = "go_shadowforge_brazier";
     pNewScript->pGOUse = &GOUse_go_shadowforge_brazier;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "go_relic_coffer_door";
+    pNewScript->pGOUse = &GOUse_go_relic_coffer_door;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;

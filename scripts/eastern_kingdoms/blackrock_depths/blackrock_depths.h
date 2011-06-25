@@ -8,6 +8,8 @@
 enum
 {
     MAX_ENCOUNTER           = 6,
+    MAX_RELIC_DOORS         = 12,
+
     TYPE_RING_OF_LAW        = 1,
     TYPE_VAULT              = 2,
     TYPE_BAR                = 3,
@@ -25,6 +27,8 @@ enum
     NPC_SEETHREL            = 9038,
     // NPC_DOOMREL          = 9039,
     NPC_DOPEREL             = 9040,
+    NPC_WATCHER_DOOMGRIP    = 9476,
+    NPC_WARBRINGER_CONST    = 8905,                         // Four of them in Relict Vault are related to Doomgrip summon event
 
     GO_ARENA_1              = 161525,
     GO_ARENA_2              = 161522,
@@ -48,6 +52,9 @@ enum
     GO_SPECTRAL_CHALICE     = 164869,
     GO_CHEST_SEVEN          = 169243,
     GO_ARENA_SPOILS         = 181074,
+    GO_SECRET_DOOR          = 174553,
+
+    SPELL_STONED            = 10255,                        // Aura of Warbringer Constructs in Relict Vault
 };
 
 enum ArenaNPCs
@@ -88,6 +95,9 @@ static const uint32 aArenaNPCs[] =
     NPC_GOROSH, NPC_GRIZZLE, NPC_EVISCERATOR, NPC_OKTHOR, NPC_ANUBSHIAH, NPC_HEDRUM
 };
 
+// Used to summon Watcher Doomgrip (guesswork)
+static const float aVaultPositions[4] = {821.905f, -338.382f, -50.134f, 3.78736f};
+
 class MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
 {
     public:
@@ -97,6 +107,7 @@ class MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
         void Initialize();
 
         void OnCreatureCreate(Creature* pCreature);
+        void OnCreatureDeath(Creature* pCreature);
         void OnObjectCreate(GameObject* pGo);
 
         void SetData(uint32 uiType, uint32 uiData);
@@ -115,8 +126,11 @@ class MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
         std::string m_strInstData;
 
         uint32 m_uiBarAleCount;
+        uint8 m_uiCofferDoorsOpened;
 
         float m_fArenaCenterX, m_fArenaCenterY, m_fArenaCenterZ;
+
+        GUIDSet m_sVaultNpcGuids;
 };
 
 #endif
