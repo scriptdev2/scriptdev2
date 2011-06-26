@@ -42,8 +42,6 @@ enum
     SPELL_KNOCK_AWAY            = 19633,
     SPELL_FIREBALL              = 18392,
     SPELL_FIREBALL_H            = 68926,
-    SPELL_ERRUPTION             = 17731,                    // does not work
-    SPELL_ERRUPTION_H           = 69294,                    // does not work
 
     //Not much choise about these. We have to make own defintion on the direction/start-end point
     SPELL_BREATH_NORTH_TO_SOUTH = 17086,                    // 20x in "array"
@@ -77,7 +75,7 @@ enum
     PHASE_BREATH_POST           = 5
 };
 
-struct sOnyxMove
+struct OnyxiaMove
 {
     uint32 uiLocId;
     uint32 uiLocIdEnd;
@@ -85,7 +83,7 @@ struct sOnyxMove
     float fX, fY, fZ;
 };
 
-static sOnyxMove aMoveData[]=
+static OnyxiaMove aMoveData[]=
 {
     {0, 4, SPELL_BREATH_NORTH_TO_SOUTH,  22.8763f, -217.152f, -60.0548f},   //north
     {1, 5, SPELL_BREATH_NE_TO_SW,        10.2191f, -247.912f, -60.896f},    //north-east
@@ -97,7 +95,7 @@ static sOnyxMove aMoveData[]=
     {7, 3, SPELL_BREATH_NW_TO_SE,         6.8951f, -180.246f, -60.896f},    //north-west
 };
 
-static float afSpawnLocations[4][3]=
+static const float afSpawnLocations[3][3]=
 {
     {-30.127f, -254.463f, -89.440f},                        // whelps
     {-30.817f, -177.106f, -89.258f},                        // whelps
@@ -110,7 +108,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
     {
         m_pInstance = (instance_onyxias_lair*)pCreature->GetInstanceData();
         m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
-        m_uiMaxBreathPositions = sizeof(aMoveData)/sizeof(sOnyxMove);
+        m_uiMaxBreathPositions = sizeof(aMoveData)/sizeof(OnyxiaMove);
         Reset();
     }
 
@@ -127,7 +125,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
 
     uint32 m_uiMovePoint;
     uint32 m_uiMovementTimer;
-    sOnyxMove* m_pPointData;
+    OnyxiaMove* m_pPointData;
 
     uint32 m_uiFireballTimer;
     uint32 m_uiSummonWhelpsTimer;
@@ -192,11 +190,26 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
 
     void JustSummoned(Creature* pSummoned)
     {
-        pSummoned->GetMotionMaster()->MovePoint(0, afSpawnLocations[3][0], afSpawnLocations[3][1], afSpawnLocations[3][2]);
-        pSummoned->SetInCombatWithZone();
+        if (Creature* pTrigger = m_pInstance->GetSingleCreatureFromStorage(NPC_ONYXIA_TRIGGER))
+        {
+            // Get some random point near the center
+            float fX, fY, fZ;
+            pSummoned->GetRandomPoint(pTrigger->GetPositionX(), pTrigger->GetPositionY(), pTrigger->GetPositionZ(), 20.0f, fX, fY, fZ);
+            pSummoned->GetMotionMaster()->MovePoint(1, fX, fY, fZ);
+        }
+        else
+            pSummoned->SetInCombatWithZone();
 
         if (pSummoned->GetEntry() == NPC_ONYXIA_WHELP)
             ++m_uiSummonCount;
+    }
+
+    void SummonedMovementInform(Creature* pSummoned, uint32 uiMoveType, uint32 uiPointId)
+    {
+        if (uiMoveType != POINT_MOTION_TYPE || uiPointId != 1 || !m_creature->getVictim())
+            return;
+
+        pSummoned->SetInCombatWithZone();
     }
 
     void KilledUnit(Unit* pVictim)
@@ -229,7 +242,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
         }
     }
 
-    sOnyxMove* GetMoveData()
+    OnyxiaMove* GetMoveData()
     {
         for (uint32 i = 0; i < m_uiMaxBreathPositions; ++i)
         {
@@ -393,8 +406,8 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
                     {
                         if (m_uiWhelpTimer < uiDiff)
                         {
-                            m_creature->SummonCreature(NPC_ONYXIA_WHELP, afSpawnLocations[0][0], afSpawnLocations[0][1], afSpawnLocations[0][2], 0.0f, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 30000);
-                            m_creature->SummonCreature(NPC_ONYXIA_WHELP, afSpawnLocations[1][0], afSpawnLocations[1][1], afSpawnLocations[1][2], 0.0f, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 30000);
+                            m_creature->SummonCreature(NPC_ONYXIA_WHELP, afSpawnLocations[0][0], afSpawnLocations[0][1], afSpawnLocations[0][2], 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, MINUTE*IN_MILLISECONDS);
+                            m_creature->SummonCreature(NPC_ONYXIA_WHELP, afSpawnLocations[1][0], afSpawnLocations[1][1], afSpawnLocations[1][2], 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, MINUTE*IN_MILLISECONDS);
                             m_uiWhelpTimer = 500;
                         }
                         else
@@ -404,7 +417,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
                     {
                         m_bIsSummoningWhelps = false;
                         m_uiSummonCount = 0;
-                        m_uiSummonWhelpsTimer = 80000;      // 90s -10s for summoning
+                        m_uiSummonWhelpsTimer = 80000;      // 90s - 10s for summoning
                     }
                 }
                 else

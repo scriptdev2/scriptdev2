@@ -116,7 +116,7 @@ struct MANGOS_DLL_DECL boss_emerald_dragonAI : public ScriptedAI
         {
             DoCastSpellIfCan(m_creature, SPELL_SEEPING_FOG_R, CAST_TRIGGERED);
             DoCastSpellIfCan(m_creature, SPELL_SEEPING_FOG_L, CAST_TRIGGERED);
-            m_uiSeepingFogTimer = urand(8000, 16000);
+            m_uiSeepingFogTimer = urand(120000, 150000);    // Rather Guesswork, but one Fog has 2min duration, hence a bit longer
         }
         else
             m_uiSeepingFogTimer -= uiDiff;

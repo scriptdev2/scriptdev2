@@ -22,7 +22,7 @@ SDCategory: Naxxramas
 EndScriptData */
 
 /* Additional comments:
- * Bugged spells:   28560 (needs maxTarget = 1, Summon of 16474 implementation, TODO, how long?)
+ * Bugged spells:   28560 (needs maxTarget = 1, Summon of 16474 implementation, TODO, 30s duration)
  *                  28526 (needs ScriptEffect to cast 28522 onto random target)
  *
  * Blizzard might need handling for their movement
@@ -138,6 +138,15 @@ struct MANGOS_DLL_DECL boss_sapphironAI : public ScriptedAI
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_SAPPHIRON, FAIL);
+    }
+
+    void JustSummoned(Creature* pSummoned)
+    {
+        if (pSummoned->GetEntry() == NPC_YOU_KNOW_WHO)
+        {
+            if (Unit* pEnemy = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                pSummoned->AI()->AttackStart(pEnemy);
+        }
     }
 
     void MovementInform(uint32 uiType, uint32 uiPointId)
