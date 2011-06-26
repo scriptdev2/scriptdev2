@@ -140,7 +140,9 @@ extern uint32 GetSkillLevel(Player* pPlayer, uint32 uiSkill);
 #define ADD_GOSSIP_ITEM_ID(uiIcon, iTextId, uiSender, uiOptionId)   PlayerTalkClass->GetGossipMenu().AddMenuItem(uiIcon, iTextId, uiSender, uiOptionId, 0, 0)
 #define ADD_GOSSIP_ITEM_EXTENDED(uiIcon, chrText, uiSender, uiOptionId, chrBoxMessage, uiBoxMoney, bCode)   PlayerTalkClass->GetGossipMenu().AddMenuItem(uiIcon, chrText, uiSender, uiOptionId, chrBoxMessage, uiBoxMoney, bCode)
 
-// This fuction Sends the current menu to show to client, uiTextId - NPCTEXTID(uint32) , uiGuid - npc guid(ObjectGuid)
+// This fuction Sends the current menu to show to client
+// uiTextId - NPCTEXTID (uint32)
+// guid - npc guid (ObjectGuid)
 #define SEND_GOSSIP_MENU(uiTextId, guid)      PlayerTalkClass->SendGossipMenu(uiTextId, guid)
 
 // This fuction shows POI(point of interest) to client.
@@ -155,34 +157,25 @@ extern uint32 GetSkillLevel(Player* pPlayer, uint32 uiSkill);
 // Closes the Menu
 #define CLOSE_GOSSIP_MENU()        PlayerTalkClass->CloseGossip()
 
-// Fuction to tell to client the details
-// a - quest object
-// b - npc guid(uint64)
-// c - Activate accept(bool)
-#define SEND_QUEST_DETAILS(a, b, c)  PlayerTalkClass->SendQuestDetails(a, b, c)
-
-// Fuction to tell to client the requested items to complete quest
-// a - quest object
-// b - npc guid(uint64)
-// c - Iscompletable(bool)
-// d - close at cancel(bool) - in case single incomplite ques
-#define SEND_REQUESTEDITEMS(a, b, c, d) PlayerTalkClass->SendRequestedItems(a, b, c, d)
-
-// Fuctions to send NPC lists, a - is always the npc guid(uint64)
+// Fuctions to send NPC lists
+// a - is always the npc guid (ObjectGuid)
 #define SEND_VENDORLIST(a)         GetSession()->SendListInventory(a)
 #define SEND_TRAINERLIST(a)        GetSession()->SendTrainerList(a)
 #define SEND_BANKERLIST(a)         GetSession()->SendShowBank(a)
 #define SEND_TABARDLIST(a)         GetSession()->SendTabardVendorActivate(a)
 #define SEND_TAXILIST(a)           GetSession()->SendTaxiStatus(a)
 
-// Function to send the Auction List, a - npc guid(uint64), b - pointer to npc(Creature*)
-#define SEND_AUCTIONLIST(a, b)     GetSession()->SendAuctionHello(a, b)
+// Function to send the Auction List
+// a - pointer to unit (Unit*)
+#define SEND_AUCTIONLIST(a)     GetSession()->SendAuctionHello(a)
 
 // Ressurect's the player if is dead.
 #define SEND_SPRESURRECT()         GetSession()->SendSpiritResurrect()
-// -----------------------------------
 
-// defined fuctions to use with Creature
-
+// Function to send the Quest Dialogue Status
+// a - pointer to player (Player*)
+// b - pointer to questgiver (Object*)
+// c - defstatus (uint32)
 #define QUEST_DIALOG_STATUS(a, b, c)   GetSession()->getDialogStatus(a, b, c)
+
 #endif
