@@ -21,6 +21,7 @@ enum
     NPC_MARNAK              = 30897,
     NPC_TRIBUNAL_OF_AGES    = 28234,
     NPC_WORLDTRIGGER        = 22515,
+    NPC_SJONNIR             = 27978,
 
     GO_DOOR_SJONNIR         = 191296,
     GO_DOOR_TRIBUNAL        = 191294,                       // possibly closed during event?
@@ -69,6 +70,9 @@ class MANGOS_DLL_DECL instance_halls_of_stone : public ScriptedInstance
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
 
+        const char* Save() { return m_strInstData.c_str(); }
+        void Load(const char* chrIn);
+
         void Update(uint32 uiDiff);
 
         void ActivateFace(uint8 uiFace, bool bAfterEvent);
@@ -80,6 +84,7 @@ class MANGOS_DLL_DECL instance_halls_of_stone : public ScriptedInstance
 
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         Face m_aFaces[MAX_FACES];
+        std::string m_strInstData;
 
         GUIDList m_lKaddrakGUIDs;
         GUIDList m_lAbedneumGUIDs;

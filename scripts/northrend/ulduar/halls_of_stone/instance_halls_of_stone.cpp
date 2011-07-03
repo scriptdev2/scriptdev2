@@ -62,6 +62,9 @@ void instance_halls_of_stone::OnCreatureCreate(Creature* pCreature)
         case NPC_MARNAK:           m_lMarnakGUIDs.push_back(pCreature->GetObjectGuid());       break;
         case NPC_TRIBUNAL_OF_AGES: m_lTribunalGUIDs.push_back(pCreature->GetObjectGuid());     break;
         case NPC_WORLDTRIGGER:     m_lWorldtriggerGUIDs.push_back(pCreature->GetObjectGuid()); break;
+        case NPC_SJONNIR:
+            m_mNpcEntryGuidStore[NPC_SJONNIR] = pCreature->GetObjectGuid();
+            break;
     }
 }
 
@@ -107,8 +110,10 @@ void instance_halls_of_stone::SetData(uint32 uiType, uint32 uiData)
                     SortFaces();
                     break;
                 case DONE:
-                    // DoRespawnGameObject(instance->isRegularDifficulty ? GO_TRIBUNAL_CHEST : GO_TRIBUNAL_CHEST_H);
                     // Actually, this one need to be changed faction or similar..
+                    DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_TRIBUNAL_CHEST : GO_TRIBUNAL_CHEST_H);
+                    // Door workaround because of the missing Bran event
+                    DoUseDoorOrButton(GO_DOOR_SJONNIR);
                     break;
                 case FAIL:
                     for (uint8 i = 0; i < MAX_FACES; ++i)
@@ -141,7 +146,21 @@ void instance_halls_of_stone::SetData(uint32 uiType, uint32 uiData)
             break;
         case TYPE_SJONNIR:
             m_auiEncounter[3] = uiData;
+            DoUseDoorOrButton(GO_DOOR_SJONNIR);
             break;
+    }
+
+    if (uiData == DONE)
+    {
+        OUT_SAVE_INST_DATA;
+
+        std::ostringstream saveStream;
+        saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " " << m_auiEncounter[3];
+
+        m_strInstData = saveStream.str();
+
+        SaveToDB();
+        OUT_SAVE_INST_DATA_COMPLETE;
     }
 }
 
@@ -296,6 +315,28 @@ void instance_halls_of_stone::Update(uint32 uiDiff)
                 m_aFaces[i].m_uiTimer -= uiDiff;
         }
     }
+}
+
+void instance_halls_of_stone::Load(const char* chrIn)
+{
+    if (!chrIn)
+    {
+        OUT_LOAD_INST_DATA_FAIL;
+        return;
+    }
+
+    OUT_LOAD_INST_DATA(chrIn);
+
+    std::istringstream loadStream(chrIn);
+    loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3];
+
+    for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+    {
+        if (m_auiEncounter[i] == IN_PROGRESS)
+            m_auiEncounter[i] = NOT_STARTED;
+    }
+
+    OUT_LOAD_INST_DATA_COMPLETE;
 }
 
 void instance_halls_of_stone::ProcessFace(uint8 uiFace)

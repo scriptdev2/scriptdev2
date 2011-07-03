@@ -100,6 +100,8 @@ enum
 
     SPELL_STEALTH                      = 58506,
 
+    SPELL_ACHIEVEMENT_CHECK            = 59046,             // Doesn't exist in client dbc
+
     NPC_DARK_RUNE_PROTECTOR            = 27983,
     NPC_DARK_RUNE_STORMCALLER          = 27984,
     NPC_IRON_GOLEM_CUSTODIAN           = 27985,
@@ -534,6 +536,8 @@ struct MANGOS_DLL_DECL npc_brann_hosAI : public npc_escortAI
                         m_pInstance->DoUseDoorOrButton(GO_TRIBUNAL_FLOOR);
                         m_pInstance->SetData(TYPE_TRIBUNAL, DONE);
                     }
+
+                    // Should cast spell 59046 (doesn't exist in client dbc), criterias are ACHIEVEMENT_CRITERIA_TYPE_BE_SPELL_TARGET
 
                     Player* pPlayer = GetPlayerForEscort();
                     if (pPlayer)
