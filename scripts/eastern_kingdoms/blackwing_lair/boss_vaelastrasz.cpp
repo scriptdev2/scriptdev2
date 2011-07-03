@@ -31,17 +31,30 @@ enum
     SAY_LINE_3                  = -1469028,
     SAY_HALFLIFE                = -1469029,
     SAY_KILLTARGET              = -1469030,
-    SAY_NEFARIUS_CORRUPT        = -1469006,                   //when he corrupts Vaelastrasz; possible to start the event by arrea trigger id = 3626
+    SAY_NEFARIUS_CORRUPT_1      = -1469006,                 // When he corrupts Vaelastrasz
+    SAY_NEFARIUS_CORRUPT_2      = -1469032,
+    SAY_TECHNICIAN_RUN          = -1469034,
 
     SPELL_ESSENCE_OF_THE_RED    = 23513,
     SPELL_FLAME_BREATH          = 23461,
     SPELL_FIRE_NOVA             = 23462,
     SPELL_TAIL_SWEEP            = 15847,
     SPELL_BURNING_ADRENALINE    = 23620,
-    SPELL_CLEAVE                = 20684                   // Chain cleave is most likely named something different and contains a dummy effect
-};
+    SPELL_CLEAVE                = 20684,                    // Chain cleave is most likely named something different and contains a dummy effect
 
-#define GOSSIP_ITEM         "Start Event <Needs Gossip Text>"
+    SPELL_NEFARIUS_CORRUPTION   = 23642,
+
+    GOSSIP_ITEM_VAEL_1          = -3469003,
+    GOSSIP_ITEM_VAEL_2          = -3469004,
+    // Vael Gossip texts might be 7156 and 7256; At the moment are missing from DB
+    // For the moment add the default values
+    GOSSIP_TEXT_VAEL_1          = 384,
+    GOSSIP_TEXT_VAEL_2          = 384,
+
+    FACTION_HOSTILE             = 14,
+
+    AREATRIGGER_VAEL_INTRO      = 3626,
+};
 
 struct MANGOS_DLL_DECL boss_vaelastraszAI : public ScriptedAI
 {
@@ -50,15 +63,20 @@ struct MANGOS_DLL_DECL boss_vaelastraszAI : public ScriptedAI
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
 
-        // TODO Research what actually is supposed to happen here
-        pCreature->setFaction(35);
+        // Set stand state to dead before the intro event
+        m_creature->SetStandState(UNIT_STAND_STATE_DEAD);
     }
 
     ScriptedInstance* m_pInstance;
 
+    ObjectGuid m_nefariusGuid;
+    uint32 m_uiIntroTimer;
+    uint8 m_uiIntroPhase;
+
     ObjectGuid m_playerGuid;
-    uint32 m_uiSpeachTimer;
-    uint32 m_uiSpeachNum;
+    uint32 m_uiSpeechTimer;
+    uint8 m_uiSpeechNum;
+
     uint32 m_uiCleaveTimer;
     uint32 m_uiFlameBreathTimer;
     uint32 m_uiFireNovaTimer;
@@ -66,14 +84,15 @@ struct MANGOS_DLL_DECL boss_vaelastraszAI : public ScriptedAI
     uint32 m_uiBurningAdrenalineTankTimer;
     uint32 m_uiTailSweepTimer;
     bool m_bHasYelled;
-    bool mbIsDoingSpeach;
 
     void Reset()
     {
         m_playerGuid.Clear();
 
-        m_uiSpeachTimer                  = 0;
-        m_uiSpeachNum                    = 0;
+        m_uiIntroTimer                   = 0;
+        m_uiIntroPhase                   = 0;
+        m_uiSpeechTimer                  = 0;
+        m_uiSpeechNum                    = 0;
         m_uiCleaveTimer                  = 8000;            // These times are probably wrong
         m_uiFlameBreathTimer             = 11000;
         m_uiBurningAdrenalineCasterTimer = 15000;
@@ -81,20 +100,33 @@ struct MANGOS_DLL_DECL boss_vaelastraszAI : public ScriptedAI
         m_uiFireNovaTimer                = 5000;
         m_uiTailSweepTimer               = 20000;
         m_bHasYelled = false;
-        mbIsDoingSpeach = false;
+
+        // Creature should have only 1/3 of hp
+        m_creature->SetHealth(uint32(m_creature->GetMaxHealth()*.3));
     }
 
-    void BeginSpeach(Unit* target)
+    void BeginIntro()
+    {
+        // Start Intro delayed
+        m_uiIntroTimer = 1000;
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_VAELASTRASZ, SPECIAL);
+    }
+
+    void BeginSpeech(Player* pTarget)
     {
         // Stand up and begin speach
-        m_playerGuid = target->GetObjectGuid();
+        m_playerGuid = pTarget->GetObjectGuid();
 
         // 10 seconds
         DoScriptText(SAY_LINE_1, m_creature);
 
-        m_uiSpeachTimer = 10000;
-        m_uiSpeachNum = 0;
-        mbIsDoingSpeach = true;
+        // Make boss stand
+        m_creature->SetStandState(UNIT_STAND_STATE_STAND);
+
+        m_uiSpeechTimer = 10000;
+        m_uiSpeechNum = 0;
     }
 
     void KilledUnit(Unit* pVictim)
@@ -110,6 +142,7 @@ struct MANGOS_DLL_DECL boss_vaelastraszAI : public ScriptedAI
         if (m_pInstance)
             m_pInstance->SetData(TYPE_VAELASTRASZ, IN_PROGRESS);
 
+        // Buff players on aggro
         DoCastSpellIfCan(m_creature, SPELL_ESSENCE_OF_THE_RED);
     }
 
@@ -125,45 +158,85 @@ struct MANGOS_DLL_DECL boss_vaelastraszAI : public ScriptedAI
             m_pInstance->SetData(TYPE_VAELASTRASZ, FAIL);
     }
 
+    void JustSummoned(Creature* pSummoned)
+    {
+        if (pSummoned->GetEntry() == NPC_LORD_NEFARIAN)
+        {
+            // Set not selectable, so players won't interact with it
+            pSummoned->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+            m_nefariusGuid = pSummoned->GetObjectGuid();
+        }
+    }
+
     void UpdateAI(const uint32 uiDiff)
     {
-        // Speach
-        if (mbIsDoingSpeach)
+        if (m_uiIntroTimer)
         {
-            if (m_uiSpeachTimer < uiDiff)
+            if (m_uiIntroTimer <= uiDiff)
             {
-                switch (m_uiSpeachNum)
+                switch (m_uiIntroPhase)
+                {
+                    case 0:
+                        m_creature->SummonCreature(NPC_LORD_NEFARIAN, aNefariusSpawnLoc[0], aNefariusSpawnLoc[1], aNefariusSpawnLoc[2], aNefariusSpawnLoc[3], TEMPSUMMON_TIMED_DESPAWN, 25000);
+                        m_uiIntroTimer = 1000;
+                        break;
+                    case 1:
+                        if (Creature* pNefarius = m_creature->GetMap()->GetCreature(m_nefariusGuid))
+                        {
+                            pNefarius->CastSpell(m_creature, SPELL_NEFARIUS_CORRUPTION, true);
+                            DoScriptText(SAY_NEFARIUS_CORRUPT_1, pNefarius);
+                        }
+                        m_uiIntroTimer = 16000;
+                        break;
+                    case 2:
+                        if (Creature* pNefarius = m_creature->GetMap()->GetCreature(m_nefariusGuid))
+                            DoScriptText(SAY_NEFARIUS_CORRUPT_2, pNefarius);
+
+                        // Set npc flags now
+                        m_creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+                        m_creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER);
+                        m_uiIntroTimer = 0;
+                        break;
+                }
+                ++m_uiIntroPhase;
+            }
+            else
+                m_uiIntroTimer -= uiDiff;
+        }
+
+        // Speech
+        if (m_uiSpeechTimer)
+        {
+            if (m_uiSpeechTimer <= uiDiff)
+            {
+                switch (m_uiSpeechNum)
                 {
                     case 0:
                         // 16 seconds till next line
                         DoScriptText(SAY_LINE_2, m_creature);
-                        m_uiSpeachTimer = 16000;
-                        ++m_uiSpeachNum;
+                        m_uiSpeechTimer = 16000;
+                        ++m_uiSpeechNum;
                         break;
                     case 1:
                         // This one is actually 16 seconds but we only go to 10 seconds because he starts attacking after he says "I must fight this!"
                         DoScriptText(SAY_LINE_3, m_creature);
-                        m_uiSpeachTimer = 10000;
-                        ++m_uiSpeachNum;
+                        m_uiSpeechTimer = 10000;
+                        ++m_uiSpeechNum;
                         break;
                     case 2:
-                        m_creature->setFaction(103);
-                        m_creature->SetHealth(int(m_creature->GetMaxHealth()*.3));
+                        m_creature->setFaction(FACTION_HOSTILE);
 
                         if (m_playerGuid)
                         {
                             if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid))
                                 AttackStart(pPlayer);
-
-                            DoCastSpellIfCan(m_creature, SPELL_ESSENCE_OF_THE_RED);
                         }
-                        m_uiSpeachTimer = 0;
-                        mbIsDoingSpeach = false;
+                        m_uiSpeechTimer = 0;
                         break;
                 }
             }
             else
-                m_uiSpeachTimer -= uiDiff;
+                m_uiSpeechTimer -= uiDiff;
         }
 
         // Return since we have no target
@@ -198,20 +271,24 @@ struct MANGOS_DLL_DECL boss_vaelastraszAI : public ScriptedAI
         // Burning Adrenaline Caster Timer
         if (m_uiBurningAdrenalineCasterTimer < uiDiff)
         {
-            Unit* pTarget = NULL;
+            std::vector<Unit*> vManaPlayers;
 
-            // TODO Target Selection must be improved!
-            int i = 0 ;
-            while (i < 3)                                   // max 3 tries to get a random target with power_mana
+            // Scan for mana targets in threat list
+            ThreatList const& tList = m_creature->getThreatManager().getThreatList();
+            vManaPlayers.reserve(tList.size());
+            for (ThreatList::const_iterator iter = tList.begin();iter != tList.end(); ++iter)
             {
-                ++i;
-                pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1);
-                if (pTarget)
-                    if (pTarget->getPowerType() == POWER_MANA)
-                        i=3;
+                Unit* pTempTarget = m_creature->GetMap()->GetUnit((*iter)->getUnitGuid());
+
+                if (pTempTarget && pTempTarget->getPowerType() == POWER_MANA && pTempTarget->GetTypeId() == TYPEID_PLAYER)
+                    vManaPlayers.push_back(pTempTarget);
             }
-            if (pTarget)                                    // cast on self (see below)
-                pTarget->CastSpell(pTarget, SPELL_BURNING_ADRENALINE, true);
+
+            if (vManaPlayers.empty())
+                return;
+
+            Unit* pTarget = vManaPlayers[urand(0, vManaPlayers.size() - 1)];
+            pTarget->CastSpell(pTarget, SPELL_BURNING_ADRENALINE, true, NULL, NULL, m_creature->GetObjectGuid());
 
             m_uiBurningAdrenalineCasterTimer = 15000;
         }
@@ -223,7 +300,7 @@ struct MANGOS_DLL_DECL boss_vaelastraszAI : public ScriptedAI
         {
             // have the victim cast the spell on himself otherwise the third effect aura will be applied
             // to Vael instead of the player
-            m_creature->getVictim()->CastSpell(m_creature->getVictim(), SPELL_BURNING_ADRENALINE, true);
+            m_creature->getVictim()->CastSpell(m_creature->getVictim(), SPELL_BURNING_ADRENALINE, true, NULL, NULL, m_creature->GetObjectGuid());
 
             m_uiBurningAdrenalineTankTimer = 45000;
         }
@@ -254,12 +331,17 @@ struct MANGOS_DLL_DECL boss_vaelastraszAI : public ScriptedAI
 
 bool GossipSelect_boss_vaelastrasz(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)               // Fight time
+    switch (uiAction)
     {
-        pPlayer->CLOSE_GOSSIP_MENU();
-
-        if (boss_vaelastraszAI* pVaelAI = dynamic_cast<boss_vaelastraszAI*>(pCreature->AI()))
-            pVaelAI->BeginSpeach((Unit*)pPlayer);
+        case GOSSIP_ACTION_INFO_DEF + 1:
+            pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_VAEL_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_VAEL_2, pCreature->GetObjectGuid());
+            break;
+        case GOSSIP_ACTION_INFO_DEF + 2:
+            pPlayer->CLOSE_GOSSIP_MENU();
+            if (boss_vaelastraszAI* pVaelAI = dynamic_cast<boss_vaelastraszAI*>(pCreature->AI()))
+                pVaelAI->BeginSpeech(pPlayer);
+            break;
     }
 
     return true;
@@ -270,8 +352,8 @@ bool GossipHello_boss_vaelastrasz(Player* pPlayer, Creature* pCreature)
     if (pCreature->isQuestGiver())
         pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
 
-    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-    pPlayer->SEND_GOSSIP_MENU(907, pCreature->GetObjectGuid());
+    pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_VAEL_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+    pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_VAEL_1, pCreature->GetObjectGuid());
 
     return true;
 }
@@ -279,6 +361,30 @@ bool GossipHello_boss_vaelastrasz(Player* pPlayer, Creature* pCreature)
 CreatureAI* GetAI_boss_vaelastrasz(Creature* pCreature)
 {
     return new boss_vaelastraszAI(pCreature);
+}
+
+bool AreaTrigger_at_vaelastrasz(Player* pPlayer, AreaTriggerEntry const* pAt)
+{
+    if (pAt->id == AREATRIGGER_VAEL_INTRO)
+    {
+        if (pPlayer->isGameMaster() || pPlayer->isDead())
+            return false;
+
+        if (instance_blackwing_lair* pInstance = (instance_blackwing_lair*)pPlayer->GetInstanceData())
+        {
+            // Handle intro event
+            if (pInstance->GetData(TYPE_VAELASTRASZ) == NOT_STARTED)
+            {
+                if (Creature* pVaelastrasz = pInstance->GetSingleCreatureFromStorage(NPC_VAELASTRASZ))
+                    if (boss_vaelastraszAI* pVaelAI = dynamic_cast<boss_vaelastraszAI*>(pVaelastrasz->AI()))
+                        pVaelAI->BeginIntro();
+            }
+
+            // ToDo: make goblins flee
+        }
+    }
+
+    return false;
 }
 
 void AddSC_boss_vaelastrasz()
@@ -290,5 +396,10 @@ void AddSC_boss_vaelastrasz()
     pNewScript->GetAI = &GetAI_boss_vaelastrasz;
     pNewScript->pGossipHello = &GossipHello_boss_vaelastrasz;
     pNewScript->pGossipSelect = &GossipSelect_boss_vaelastrasz;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "at_vaelastrasz";
+    pNewScript->pAreaTrigger = &AreaTrigger_at_vaelastrasz;
     pNewScript->RegisterSelf();
 }
