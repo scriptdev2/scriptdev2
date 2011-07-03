@@ -190,6 +190,9 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
 
     void JustSummoned(Creature* pSummoned)
     {
+        if (!m_pInstance)
+            return;
+
         if (Creature* pTrigger = m_pInstance->GetSingleCreatureFromStorage(NPC_ONYXIA_TRIGGER))
         {
             // Get some random point near the center
