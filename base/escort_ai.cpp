@@ -425,23 +425,27 @@ void npc_escortAI::FillPointMovementListForCreature()
 
 void npc_escortAI::SetCurrentWaypoint(uint32 uiPointId)
 {
-    if (!(HasEscortState(STATE_ESCORT_PAUSED)))             // only when paused
+    if (!(HasEscortState(STATE_ESCORT_PAUSED)))             // Only when paused
         return;
 
-    if (uiPointId >= WaypointList.size())                   // too high number
+    if (uiPointId == CurrentWP->uiId)                       // Already here
         return;
 
-    if (uiPointId == CurrentWP->uiId)                       // already here
-        return;
-
-    CurrentWP = WaypointList.begin();                       // set to begin (can't -- backwards in itr list)
-
-    while(uiPointId != CurrentWP->uiId)
+    bool bFoundWaypoint = false;
+    for (std::list<Escort_Waypoint>::iterator itr = WaypointList.begin(); itr != WaypointList.end(); ++itr)
     {
-        ++CurrentWP;
-
-        if (CurrentWP == WaypointList.end())
+        if (itr->uiId == uiPointId)
+        {
+            CurrentWP = itr;                                // Set to found itr
+            bFoundWaypoint = true;
             break;
+        }
+    }
+
+    if (!bFoundWaypoint)
+    {
+        debug_log("SD2: EscortAI current waypoint tried to set to id %u, but doesn't exist in WaypointList", uiPointId);
+        return;
     }
 
     m_uiWPWaitTimer = 1;
