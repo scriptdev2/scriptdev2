@@ -218,7 +218,7 @@ void hyjalAI::JustSummoned(Creature* pSummoned)
         float fX, fY, fZ;
         pSummoned->GetRandomPoint(pMove->m_fX, pMove->m_fY, pMove->m_fZ, 10.0f, fX, fY, fZ);
 
-        pSummoned->RemoveSplineFlag(SPLINEFLAG_WALKMODE);
+        pSummoned->SetWalk(false);
         pSummoned->GetMotionMaster()->MovePoint(0, fX, fY, fZ);
     }
 
@@ -402,7 +402,7 @@ void hyjalAI::UpdateAI(const uint32 uiDiff)
                         if (!pTemp->isAlive() || pTemp->getVictim())
                             continue;
 
-                        pTemp->RemoveSplineFlag(SPLINEFLAG_WALKMODE);
+                        pTemp->SetWalk(false);
                         pTemp->GetMotionMaster()->MovePoint(1, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ());
                     }
                 }

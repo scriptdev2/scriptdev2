@@ -172,13 +172,13 @@ void instance_deadmines::Update(uint32 uiDiff)
                             // should be static spawns, fetch the closest ones at the pier
                             if (Creature* pi1 = GetClosestCreatureWithEntry(pDoor, NPC_PIRATE, 40.0f))
                             {
-                                pi1->RemoveSplineFlag(SPLINEFLAG_WALKMODE);
+                                pi1->SetWalk(false);
                                 pi1->GetMotionMaster()->MovePoint(0, pDoor->GetPositionX(), pDoor->GetPositionY(), pDoor->GetPositionZ());
                             }
 
                             if (Creature* pi2 = GetClosestCreatureWithEntry(pDoor, NPC_SQUALLSHAPER, 40.0f))
                             {
-                                pi2->RemoveSplineFlag(SPLINEFLAG_WALKMODE);
+                                pi2->SetWalk(false);
                                 pi2->GetMotionMaster()->MovePoint(0, pDoor->GetPositionX(), pDoor->GetPositionY(), pDoor->GetPositionZ());
                             }
                         }

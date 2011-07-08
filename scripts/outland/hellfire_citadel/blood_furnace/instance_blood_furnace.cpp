@@ -187,7 +187,7 @@ void instance_blood_furnace::DoNextBroggokEventPhase()
 
         if (Creature* pBroggok = GetSingleCreatureFromStorage(NPC_BROGGOK))
         {
-            pBroggok->RemoveSplineFlag(SPLINEFLAG_WALKMODE);
+            pBroggok->SetWalk(false);
             pBroggok->GetMotionMaster()->MovePoint(0, dx, dy, pBroggok->GetPositionZ());
         }
     }
@@ -208,7 +208,7 @@ void instance_blood_furnace::DoNextBroggokEventPhase()
                 pOrc->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 
                 // Move them out of the cages
-                pOrc->RemoveSplineFlag(SPLINEFLAG_WALKMODE);
+                pOrc->SetWalk(false);
                 pOrc->GetMotionMaster()->MovePoint(0, pOrc->GetPositionX() + dx, pOrc->GetPositionY() + dy, pOrc->GetPositionZ());
             }
         }

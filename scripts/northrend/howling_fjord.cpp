@@ -192,7 +192,7 @@ struct MANGOS_DLL_DECL npc_daegarnAI : public ScriptedAI
         {
             if (pPlayer->isAlive())
             {
-                pSummon->RemoveSplineFlag(SPLINEFLAG_WALKMODE);
+                pSummon->SetWalk(false);
                 pSummon->GetMotionMaster()->MovePoint(0, afCenter[0], afCenter[1], afCenter[2]);
                 return;
             }

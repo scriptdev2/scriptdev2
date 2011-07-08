@@ -256,7 +256,7 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
         if (!m_bMandokirDownstairs && m_pInstance && (m_pInstance->GetData(TYPE_OHGAN) == SPECIAL || m_pInstance->GetData(TYPE_OHGAN) == FAIL))
         {
             m_bMandokirDownstairs = true;
-            m_creature->RemoveSplineFlag(SPLINEFLAG_WALKMODE);
+            m_creature->SetWalk(false);
             m_creature->GetMotionMaster()->MovePoint(POINT_DOWNSTAIRS, aMandokirDownstairsPos.fX, aMandokirDownstairsPos.fY, aMandokirDownstairsPos.fZ);
         }
 

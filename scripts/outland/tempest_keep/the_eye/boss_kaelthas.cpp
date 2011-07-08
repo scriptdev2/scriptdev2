@@ -931,9 +931,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                                 m_creature->StopMoving();
                                 m_creature->GetMotionMaster()->Clear();
                                 m_creature->GetMotionMaster()->MoveIdle();
-
-                                m_creature->GetMap()->CreatureRelocation(m_creature, afGravityPos[0], afGravityPos[1], afGravityPos[2], 0.0f);
-                                m_creature->SendMonsterMove(afGravityPos[0], afGravityPos[1], afGravityPos[2], SPLINETYPE_NORMAL, SPLINEFLAG_NONE, 1);
+                                m_creature->MonsterMoveWithSpeed(afGravityPos[0], afGravityPos[1], afGravityPos[2], 28.f);
 
                                 // 1) Kael'thas will portal the whole raid right into his body
                                 std::vector<ObjectGuid> vGuids;

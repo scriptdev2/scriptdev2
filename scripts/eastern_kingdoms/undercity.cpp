@@ -171,9 +171,8 @@ struct MANGOS_DLL_DECL npc_highborne_lamenterAI : public ScriptedAI
         {
             if (EventMove_Timer < diff)
             {
-                m_creature->AddSplineFlag(SPLINEFLAG_NO_SPLINE);
-                m_creature->SendMonsterMoveWithSpeed(m_creature->GetPositionX(),m_creature->GetPositionY(),HIGHBORNE_LOC_Y_NEW,5000);
-                m_creature->GetMap()->CreatureRelocation(m_creature,m_creature->GetPositionX(),m_creature->GetPositionY(),HIGHBORNE_LOC_Y_NEW,m_creature->GetOrientation());
+                m_creature->SetLevitate(true);
+                m_creature->MonsterMoveWithSpeed(m_creature->GetPositionX(),m_creature->GetPositionY(),HIGHBORNE_LOC_Y_NEW,3.f);
                 EventMove = false;
             }else EventMove_Timer -= diff;
         }

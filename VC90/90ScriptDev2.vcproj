@@ -571,6 +571,10 @@
 					Name="blackrock_spire"
 					>
 					<File
+						RelativePath="..\scripts\eastern_kingdoms\blackrock_spire\blackrock_spire.h"
+						>
+					</File>
+					<File
 						RelativePath="..\scripts\eastern_kingdoms\blackrock_spire\boss_drakkisath.cpp"
 						>
 					</File>
@@ -620,10 +624,6 @@
 					</File>
 					<File
 						RelativePath="..\scripts\eastern_kingdoms\blackrock_spire\instance_blackrock_spire.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\eastern_kingdoms\blackrock_spire\blackrock_spire.h"
 						>
 					</File>
 				</Filter>
@@ -1095,15 +1095,15 @@
 						>
 					</File>
 					<File
+						RelativePath="..\scripts\eastern_kingdoms\uldaman\instance_uldaman.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\scripts\eastern_kingdoms\uldaman\uldaman.cpp"
 						>
 					</File>
 					<File
 						RelativePath="..\scripts\eastern_kingdoms\uldaman\uldaman.h"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\eastern_kingdoms\uldaman\instance_uldaman.cpp"
 						>
 					</File>
 				</Filter>
@@ -1999,15 +1999,15 @@
 					Name="ruby_sanctum"
 					>
 					<File
+						RelativePath="..\scripts\northrend\ruby_sanctum\boss_baltharus.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\scripts\northrend\ruby_sanctum\boss_halion.cpp"
 						>
 					</File>
 					<File
 						RelativePath="..\scripts\northrend\ruby_sanctum\boss_saviana.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\northrend\ruby_sanctum\boss_baltharus.cpp"
 						>
 					</File>
 					<File
@@ -2373,10 +2373,6 @@
 								>
 							</File>
 							<File
-								RelativePath="..\scripts\northrend\icecrown_citadel\frozen_halls\halls_of_reflection\instance_halls_of_reflection.cpp"
-								>
-							</File>
-							<File
 								RelativePath="..\scripts\northrend\icecrown_citadel\frozen_halls\halls_of_reflection\halls_of_reflection.cpp"
 								>
 							</File>
@@ -2384,7 +2380,10 @@
 								RelativePath="..\scripts\northrend\icecrown_citadel\frozen_halls\halls_of_reflection\halls_of_reflection.h"
 								>
 							</File>
-
+							<File
+								RelativePath="..\scripts\northrend\icecrown_citadel\frozen_halls\halls_of_reflection\instance_halls_of_reflection.cpp"
+								>
+							</File>
 						</Filter>
 						<Filter
 							Name="forge_of_souls"
@@ -3095,19 +3094,19 @@
 			</FileConfiguration>
 		</File>
 		<File
-			RelativePath="..\sd2_revision_nr.h"
-			>
-		</File>
-		<File
-			RelativePath="..\sd2_revision_sql.h"
-			>
-		</File>
-		<File
 			RelativePath="..\ScriptMgr.cpp"
 			>
 		</File>
 		<File
 			RelativePath="..\ScriptMgr.h"
+			>
+		</File>
+		<File
+			RelativePath="..\sd2_revision_nr.h"
+			>
+		</File>
+		<File
+			RelativePath="..\sd2_revision_sql.h"
 			>
 		</File>
 	</Files>

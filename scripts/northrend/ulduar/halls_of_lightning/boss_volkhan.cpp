@@ -329,9 +329,7 @@ bool EffectDummyCreature_npc_volkhan_anvil(Unit* pCaster, uint32 uiSpellId, Spel
         if (pCaster->GetMotionMaster()->GetCurrentMovementGeneratorType() == CHASE_MOTION_TYPE)
             pCaster->GetMotionMaster()->MovementExpired();
 
-        ((Creature*)pCaster)->GetMap()->CreatureRelocation((Creature*)pCaster, fX, fY, fZ, pCreatureTarget->GetOrientation());
-        ((Creature*)pCaster)->SendMonsterMove(fX, fY, fZ, SPLINETYPE_NORMAL, ((Creature*)pCaster)->GetSplineFlags(), 1);
-
+        pCaster->MonsterMoveWithSpeed(fX, fY, fZ, 28.f);
         pCreatureTarget->CastSpell(pCaster, SPELL_TEMPER_DUMMY, false);
 
         //always return true when we are handling this spell and effect

@@ -372,7 +372,7 @@ bool EffectDummyCreature_npc_oil_stained_wolf(Unit* pCaster, uint32 uiSpellId, S
         if (uiEffIndex == EFFECT_INDEX_0 && pCreatureTarget->getFaction() != FACTION_MONSTER && !pCreatureTarget->HasAura(SPELL_HAS_EATEN))
         {
             pCreatureTarget->SetFactionTemporary(FACTION_MONSTER);
-            pCreatureTarget->RemoveSplineFlag(SPLINEFLAG_WALKMODE);
+            pCreatureTarget->SetWalk(false);
 
             pCreatureTarget->GetMotionMaster()->MoveIdle();
 

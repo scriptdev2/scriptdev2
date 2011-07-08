@@ -386,7 +386,7 @@ struct MANGOS_DLL_DECL npc_dragonmaw_peonAI : public ScriptedAI
                         float fX, fY, fZ;
                         pMutton->GetContactPoint(m_creature, fX, fY, fZ, CONTACT_DISTANCE);
 
-                        m_creature->RemoveSplineFlag(SPLINEFLAG_WALKMODE);
+                        m_creature->SetWalk(false);
                         m_creature->GetMotionMaster()->MovePoint(POINT_DEST, fX, fY, fZ);
                     }
                 }

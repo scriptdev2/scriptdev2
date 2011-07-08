@@ -152,7 +152,7 @@ struct MANGOS_DLL_DECL npc_disciple_of_naralexAI : public npc_escortAI
             Reset();
 
             // Remove running
-            m_creature->AddSplineFlag(SPLINEFLAG_WALKMODE);
+            m_creature->SetWalk(true);
         }
         else
             npc_escortAI::EnterEvadeMode();
@@ -380,7 +380,7 @@ struct MANGOS_DLL_DECL npc_disciple_of_naralexAI : public npc_escortAI
                                 break;
                             case 11:
                                 SetEscortPaused(false);
-                                m_creature->AddSplineFlag(SPLINEFLAG_FLYING);
+                                m_creature->SetLevitate(true);
                                 SetRun();
                                 // Send them flying somewhere outside of the room
                                 if (Creature* pNaralex = m_pInstance->GetSingleCreatureFromStorage(NPC_NARALEX))
@@ -390,8 +390,8 @@ struct MANGOS_DLL_DECL npc_disciple_of_naralexAI : public npc_escortAI
                                     pNaralex->SetByteValue(UNIT_FIELD_BYTES_1, 3, UNIT_BYTE1_FLAG_ALWAYS_STAND | UNIT_BYTE1_FLAG_UNK_2);
 
                                     // Set to flying
-                                    pNaralex->AddSplineFlag(SPLINEFLAG_FLYING);
-                                    pNaralex->RemoveSplineFlag(SPLINEFLAG_WALKMODE);
+                                    pNaralex->SetLevitate(true);
+                                    pNaralex->SetWalk(false);
 
                                     // Set following
                                     pNaralex->GetMotionMaster()->MoveFollow(m_creature, 5.0f, 0);
