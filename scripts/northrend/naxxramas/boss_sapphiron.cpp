@@ -26,7 +26,6 @@ EndScriptData */
  *                  28526 (needs ScriptEffect to cast 28522 onto random target)
  *
  * Blizzard might need handling for their movement
- * SetHover hackz must be replaced by proper opcodes 04D3(Liftoff) 04D4(Landing)
  * Achievement-criteria check needs implementation
  *
  * Frost-Breath ability: the dummy spell 30101 is self cast, so it won't take the needed delay of ~7s until it reaches its target
@@ -117,6 +116,7 @@ struct MANGOS_DLL_DECL boss_sapphironAI : public ScriptedAI
         m_uiIceboltCount = 0;
 
         SetCombatMovement(true);
+        m_creature->SetLevitate(false);
         //m_creature->ApplySpellMod(SPELL_FROST_AURA, SPELLMOD_DURATION, -1);
     }
 
@@ -155,7 +155,7 @@ struct MANGOS_DLL_DECL boss_sapphironAI : public ScriptedAI
         {
             DoScriptText(EMOTE_FLY, m_creature);
             m_creature->HandleEmote(EMOTE_ONESHOT_LIFTOFF);
-            m_creature->SetHover(true);
+            m_creature->SetLevitate(true);
             m_Phase = PHASE_AIR_BOLTS;
 
             m_uiFrostBreathTimer = 5000;
@@ -276,7 +276,7 @@ struct MANGOS_DLL_DECL boss_sapphironAI : public ScriptedAI
                         // Begin Landing
                         DoScriptText(EMOTE_GROUND, m_creature);
                         m_creature->HandleEmote(EMOTE_ONESHOT_LAND);
-                        m_creature->SetHover(false);
+                        m_creature->SetLevitate(false);
 
                         m_Phase = PHASE_LANDING;
                         m_uiLandTimer = 2000;
