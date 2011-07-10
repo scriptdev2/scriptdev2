@@ -63,4 +63,57 @@ class MANGOS_DLL_DECL ScriptedInstance : public InstanceData
         EntryGuidMap m_mNpcEntryGuidStore;                  ///< Store unique NPC-Guids by entry
 };
 
+/// A static const array of this structure must be handled to DialogueHelper
+struct DialogueEntry
+{
+    int32 iTextEntry;                                       ///< To be said text entry
+    uint32 uiSayerEntry;                                    ///< Entry of the mob who should say
+    uint32 uiTimer;                                         ///< Time delay until next text of array is said (0 stops)
+};
+
+/// A static const array of this structure must be handled to DialogueHelper
+struct DialogueEntryTwoSide
+{
+    int32 iTextEntry;                                       ///< To be said text entry (first side)
+    uint32 uiSayerEntry;                                    ///< Entry of the mob who should say (first side)
+    int32 iTextEntryAlt;                                    ///< To be said text entry (second side)
+    uint32 uiSayerEntryAlt;                                 ///< Entry of the mob who should say (second side)
+    uint32 uiTimer;                                         ///< Time delay until next text of array is said (0 stops)
+};
+
+/// Helper class handling a dialogue given as static const array of DialogueEntry or DialogueEntryTwoSide
+class DialogueHelper
+{
+    public:
+        // The array MUST be terminated by {0,0,0}
+        DialogueHelper(DialogueEntry const* pDialogueArray);
+        // The array MUST be terminated by {0,0,0,0,0}
+        DialogueHelper(DialogueEntryTwoSide const* aDialogueTwoSide);
+
+        /// Function that MUST be called
+        void InitializeDialogueHelper(ScriptedInstance* pInstance) { m_pInstance = pInstance; }
+        /// Set if take first entries or second entries
+        void SetDialogueSide(bool bIsFirstSide) { m_bIsFirstSide = bIsFirstSide; }
+
+        void StartNextDialogueText(int32 iTextEntry);
+
+        void DialogueUpdate(uint32 uiDiff);
+
+    protected:
+        virtual void JustDidDialogueStep(int32 iEntry) {}
+
+    private:
+        void DoNextDialogueStep();
+
+        ScriptedInstance* m_pInstance;
+
+        DialogueEntry const* m_pDialogueArray;
+        DialogueEntry const* m_pCurrentEntry;
+        DialogueEntryTwoSide const* m_pDialogueTwoSideArray;
+        DialogueEntryTwoSide const* m_pCurrentEntryTwoSide;
+
+        uint32 m_uiTimer;
+        bool m_bIsFirstSide;
+};
+
 #endif
