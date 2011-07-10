@@ -16,8 +16,10 @@ enum
 
     // NPC_THE_MAKER                = 17381,
     NPC_BROGGOK                     = 17380,
-    // NPC_KELIDAN_THE_BREAKER      = 17377,
+    NPC_KELIDAN_THE_BREAKER         = 17377,
     NPC_NASCENT_FEL_ORC             = 17398,                // Used in the Broggok event
+    NPC_MAGTHERIDON                 = 21174,
+    NPC_SHADOWMOON_CHANNELER        = 17653,
 
     GO_DOOR_FINAL_EXIT              = 181766,
     GO_DOOR_MAKER_FRONT             = 181811,
@@ -72,6 +74,8 @@ class MANGOS_DLL_DECL instance_blood_furnace : public ScriptedInstance
 
         void GetMovementDistanceForIndex(uint32 uiIndex, float& dx, float& dy);
 
+        void GetKelidanAddList(GUIDList& lList) { lList = m_lChannelersGuids; m_lChannelersGuids.clear(); }
+
     private:
         void DoSortBroggokOrcs();
         void DoNextBroggokEventPhase();
@@ -84,7 +88,8 @@ class MANGOS_DLL_DECL instance_blood_furnace : public ScriptedInstance
         uint32 m_uiBroggokEventTimer;                       // Timer for opening the event cages; only on heroic mode = 30 secs
         uint32 m_uiBroggokEventPhase;
 
-        GUIDList m_luiNascentOrcGUIDs;
+        GUIDList m_luiNascentOrcGuids;
+        GUIDList m_lChannelersGuids;
 };
 
 #endif

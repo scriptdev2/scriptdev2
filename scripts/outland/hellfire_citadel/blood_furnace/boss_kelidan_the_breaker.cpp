@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Kelidan_The_Breaker
-SD%Complete: 60
-SDComment: Event with channeleres vs. boss not implemented yet
+SD%Complete: 100
+SDComment:
 SDCategory: Hellfire Citadel, Blood Furnace
 EndScriptData */
 
@@ -31,6 +31,9 @@ EndContentData */
 
 enum
 {
+    MAX_ADDS                    = 5,
+
+    SAY_MAGTHERIDON_INTRO       = -1542016,                 // Yell by Magtheridon
     SAY_WAKE                    = -1542000,
     SAY_ADD_AGGRO_1             = -1542001,
     SAY_ADD_AGGRO_2             = -1542002,
@@ -41,53 +44,84 @@ enum
     SAY_DIE                     = -1542007,
 
     SPELL_CORRUPTION            = 30938,
-    SPELL_EVOCATION             = 30935,        // Aura channeled by the boss
+    SPELL_EVOCATION             = 30935,
 
     SPELL_FIRE_NOVA             = 33132,
-    H_SPELL_FIRE_NOVA           = 37371,
+    SPELL_FIRE_NOVA_H           = 37371,
 
     SPELL_SHADOW_BOLT_VOLLEY    = 28599,
-    H_SPELL_SHADOW_BOLT_VOLLEY  = 40070,
+    SPELL_SHADOW_BOLT_VOLLEY_H  = 40070,
 
     SPELL_BURNING_NOVA          = 30940,
-    SPELL_VORTEX                = 37370
+    SPELL_VORTEX                = 37370,
+
+    SPELL_CHANNELING            = 39123,
+};
+
+struct SortByAngle
+{
+    SortByAngle(WorldObject const* pRef): m_pRef(pRef) {}
+    bool operator()(WorldObject* pLeft, WorldObject* pRight)
+    {
+        return m_pRef->GetAngle(pLeft) < m_pRef->GetAngle(pRight);
+    }
+    WorldObject const* m_pRef;
 };
 
 struct MANGOS_DLL_DECL boss_kelidan_the_breakerAI : public ScriptedAI
 {
     boss_kelidan_the_breakerAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_pInstance = (instance_blood_furnace*)pCreature->GetInstanceData();
         m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
+        m_uiSetupAddsTimer = 100;
+        m_bDidMagtheridonYell = false;
+        DoCastSpellIfCan(m_creature, SPELL_EVOCATION);
         Reset();
     }
 
-    ScriptedInstance* m_pInstance;
+    instance_blood_furnace* m_pInstance;
 
     bool m_bIsRegularMode;
 
-    uint32 ShadowVolley_Timer;
-    uint32 BurningNova_Timer;
-    uint32 Firenova_Timer;
-    uint32 Corruption_Timer;
-    bool Firenova;
+    uint32 m_uiShadowVolleyTimer;
+    uint32 m_uiBurningNovaTimer;
+    uint32 m_uiFirenovaTimer;
+    uint32 m_uiCorruptionTimer;
+    uint32 m_uiSetupAddsTimer;
+    uint8 m_uiKilledAdds;
+    bool m_bDidMagtheridonYell;
+
+    GUIDVector m_vAddGuids;
 
     void Reset()
     {
-        ShadowVolley_Timer = 1000;
-        BurningNova_Timer = 15000;
-        Corruption_Timer = 5000;
-        Firenova = false;
-
-        DoCastSpellIfCan(m_creature, SPELL_EVOCATION);
+        m_uiShadowVolleyTimer   = 1000;
+        m_uiBurningNovaTimer    = 15000;
+        m_uiCorruptionTimer     = 5000;
+        m_uiFirenovaTimer       = 0;
+        m_uiKilledAdds          = 0;
     }
 
-    void Aggro(Unit *who)
+    void MoveInLineOfSight(Unit* pWho)
+    {
+        if (!m_bDidMagtheridonYell && pWho->GetTypeId() == TYPEID_PLAYER && !((Player*)pWho)->isGameMaster() && m_creature->_IsWithinDist(pWho, 73.0f, false))
+        {
+            if (m_pInstance)
+                m_pInstance->DoOrSimulateScriptTextForThisInstance(SAY_MAGTHERIDON_INTRO, NPC_MAGTHERIDON);
+
+            m_bDidMagtheridonYell = true;
+        }
+
+        ScriptedAI::MoveInLineOfSight(pWho);
+    }
+
+    void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_WAKE, m_creature);
     }
 
-    void KilledUnit(Unit* victim)
+    void KilledUnit(Unit* pVictim)
     {
         if (urand(0, 1))
             return;
@@ -95,59 +129,153 @@ struct MANGOS_DLL_DECL boss_kelidan_the_breakerAI : public ScriptedAI
         DoScriptText(urand(0, 1) ? SAY_KILL_1 : SAY_KILL_2, m_creature);
     }
 
-    void JustDied(Unit* Killer)
+    void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DIE, m_creature);
 
         if (m_pInstance)
-            m_pInstance->SetData(TYPE_KELIDAN_EVENT,DONE);
+            m_pInstance->SetData(TYPE_KELIDAN_EVENT, DONE);
     }
 
-    void UpdateAI(const uint32 diff)
+    void JustReachedHome()
     {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_KELIDAN_EVENT, FAIL);
+
+        DoCastSpellIfCan(m_creature, SPELL_EVOCATION);
+        m_uiSetupAddsTimer = 2000;
+    }
+
+    void DoSetupAdds()
+    {
+        m_uiSetupAddsTimer = 0;
+
+        if (!m_pInstance)
+            return;
+
+        GUIDList lAddGuids;
+        m_pInstance->GetKelidanAddList(lAddGuids);
+
+        // Sort Adds to vector if not already done
+        if (!lAddGuids.empty())
+        {
+            m_vAddGuids.reserve(lAddGuids.size());
+            std::list<Creature*> lAdds;
+            for (GUIDList::const_iterator itr = lAddGuids.begin(); itr != lAddGuids.end(); ++itr)
+            {
+                if (Creature* pAdd = m_pInstance->instance->GetCreature(*itr))
+                    lAdds.push_back(pAdd);
+            }
+            // Sort them by angle
+            lAdds.sort(SortByAngle(m_creature));
+            for (std::list<Creature*>::const_iterator itr = lAdds.begin(); itr != lAdds.end(); ++itr)
+                m_vAddGuids.push_back((*itr)->GetObjectGuid());
+        }
+
+        // Respawn killed adds and reset counter
+        m_uiKilledAdds = 0;
+        for (GUIDVector::const_iterator itr = m_vAddGuids.begin(); itr != m_vAddGuids.end(); ++itr)
+        {
+            Creature* pAdd = m_pInstance->instance->GetCreature(*itr);
+            if (pAdd && !pAdd->isAlive())
+                pAdd->Respawn();
+        }
+
+        // Cast pentagram
+        uint8 s = m_vAddGuids.size();
+        for (uint8 i = 0; i < s; ++i)
+        {
+            Creature* pCaster = m_pInstance->instance->GetCreature(m_vAddGuids[i]);
+            Creature* pTarget = m_pInstance->instance->GetCreature(m_vAddGuids[(i + 2) % s]);
+            if (pCaster && pTarget)
+                pCaster->CastSpell(pTarget, SPELL_CHANNELING, false);
+        }
+    }
+
+    void AddJustAggroed(Unit* pWho)
+    {
+        // Let all adds attack
+        for (GUIDVector::const_iterator itr = m_vAddGuids.begin(); itr != m_vAddGuids.end(); ++itr)
+        {
+            Creature* pAdd = m_creature->GetMap()->GetCreature(*itr);
+            if (pAdd && !pAdd->getVictim())
+                pAdd->AI()->AttackStart(pWho);
+        }
+    }
+
+    void AddJustReachedHome()
+    {
+        m_uiSetupAddsTimer = 2000;
+    }
+
+    void AddJustDied(Unit* pKiller)
+    {
+        ++m_uiKilledAdds;
+        if (m_uiKilledAdds == MAX_ADDS)
+        {
+            m_creature->InterruptNonMeleeSpells(true);
+            AttackStart(pKiller);
+        }
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (m_uiSetupAddsTimer)
+        {
+            if (m_uiSetupAddsTimer <= uiDiff)
+                DoSetupAdds();
+            else
+                m_uiSetupAddsTimer -= uiDiff;
+        }
+
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (Firenova)
+        if (m_uiFirenovaTimer)
         {
-            if (Firenova_Timer < diff)
+            if (m_uiFirenovaTimer <= uiDiff)
             {
-                DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_FIRE_NOVA : H_SPELL_FIRE_NOVA);
-                Firenova = false;
-                ShadowVolley_Timer = 2000;
-            }else Firenova_Timer -=diff;
-
-            return;
+                if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_FIRE_NOVA : SPELL_FIRE_NOVA_H) == CAST_OK)
+                {
+                    m_uiFirenovaTimer = 0;
+                    m_uiShadowVolleyTimer = 2000;
+                }
+            }
+            else
+                m_uiFirenovaTimer -=uiDiff;
         }
 
-        if (ShadowVolley_Timer < diff)
+        if (m_uiShadowVolleyTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_SHADOW_BOLT_VOLLEY : H_SPELL_SHADOW_BOLT_VOLLEY);
-            ShadowVolley_Timer = urand(5000, 13000);
-        }else ShadowVolley_Timer -=diff;
+            if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_SHADOW_BOLT_VOLLEY : SPELL_SHADOW_BOLT_VOLLEY_H) == CAST_OK)
+                m_uiShadowVolleyTimer = urand(5000, 13000);
+        }
+        else
+            m_uiShadowVolleyTimer -=uiDiff;
 
-        if (Corruption_Timer < diff)
+        if (m_uiCorruptionTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature,SPELL_CORRUPTION);
-            Corruption_Timer = urand(30000, 50000);
-        }else Corruption_Timer -=diff;
+            if (DoCastSpellIfCan(m_creature, SPELL_CORRUPTION) == CAST_OK)
+                m_uiCorruptionTimer = urand(30000, 50000);
+        }
+        else
+            m_uiCorruptionTimer -=uiDiff;
 
-        if (BurningNova_Timer < diff)
+        if (m_uiBurningNovaTimer < uiDiff)
         {
-            if (m_creature->IsNonMeleeSpellCasted(false))
-                m_creature->InterruptNonMeleeSpells(true);
+            if (DoCastSpellIfCan(m_creature, SPELL_BURNING_NOVA, CAST_TRIGGERED) == CAST_OK)
+            {
+                DoScriptText(SAY_NOVA, m_creature);
 
-            DoScriptText(SAY_NOVA, m_creature);
+                if (!m_bIsRegularMode)
+                    DoCastSpellIfCan(m_creature, SPELL_VORTEX, CAST_TRIGGERED);
 
-            if (!m_bIsRegularMode)
-                DoCastSpellIfCan(m_creature, SPELL_VORTEX);
-
-            DoCastSpellIfCan(m_creature,SPELL_BURNING_NOVA);
-
-            BurningNova_Timer = urand(20000, 28000);
-            Firenova_Timer= 5000;
-            Firenova = true;
-        }else BurningNova_Timer -=diff;
+                m_uiBurningNovaTimer = urand(20000, 28000);
+                m_uiFirenovaTimer = 5000;
+            }
+        }
+        else
+            m_uiBurningNovaTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
@@ -165,12 +293,10 @@ CreatureAI* GetAI_boss_kelidan_the_breaker(Creature* pCreature)
 enum
 {
     SPELL_SHADOW_BOLT       = 12739,
-    H_SPELL_SHADOW_BOLT     = 15472,
+    SPELL_SHADOW_BOLT_H     = 15472,
 
     SPELL_MARK_OF_SHADOW    = 30937,
-
-    SPELL_CHANNELING        = 0                             //initial spell channeling boss/each other not known
-};                                                          //when engaged all channelers must stop, trigger yell (SAY_ADD_AGGRO_*), and engage.
+};
 
 struct MANGOS_DLL_DECL mob_shadowmoon_channelerAI : public ScriptedAI
 {
@@ -184,37 +310,86 @@ struct MANGOS_DLL_DECL mob_shadowmoon_channelerAI : public ScriptedAI
     ScriptedInstance* m_pInstance;
     bool m_bIsRegularMode;
 
-    uint32 ShadowBolt_Timer;
-    uint32 MarkOfShadow_Timer;
+    uint32 m_uiShadowBoltTimer;
+    uint32 m_uiMarkOfShadowTimer;
 
     void Reset()
     {
-        ShadowBolt_Timer = urand(1000, 2000);
-        MarkOfShadow_Timer = urand(5000, 7000);
+        m_uiShadowBoltTimer = urand(1000, 2000);
+        m_uiMarkOfShadowTimer = urand(5000, 7000);
     }
 
-    void Aggro(Unit* who)
+    void Aggro(Unit* pWho)
     {
-        //trigger boss to yell
+        m_creature->InterruptNonMeleeSpells(false);
+
+        switch(urand(0, 2))
+        {
+            case 0:
+                DoScriptText(SAY_ADD_AGGRO_1, m_creature);
+                break;
+            case 1:
+                DoScriptText(SAY_ADD_AGGRO_2, m_creature);
+                break;
+            case 2:
+                DoScriptText(SAY_ADD_AGGRO_3, m_creature);
+                break;
+        }
+
+        if (!m_pInstance)
+            return;
+
+        if (Creature* pKelidan = m_pInstance->GetSingleCreatureFromStorage(NPC_KELIDAN_THE_BREAKER))
+            if (boss_kelidan_the_breakerAI* pKelidanAI = dynamic_cast<boss_kelidan_the_breakerAI*> (pKelidan->AI()))
+                pKelidanAI->AddJustAggroed(pWho);
     }
 
-    void UpdateAI(const uint32 diff)
+    void JustDied(Unit* pKiller)
+    {
+        if (!m_pInstance)
+            return;
+
+        if (Creature* pKelidan = m_pInstance->GetSingleCreatureFromStorage(NPC_KELIDAN_THE_BREAKER))
+            if (boss_kelidan_the_breakerAI* pKelidanAI = dynamic_cast<boss_kelidan_the_breakerAI*> (pKelidan->AI()))
+                pKelidanAI->AddJustDied(pKiller);
+    }
+
+    void JustReachedHome()
+    {
+        if (!m_pInstance)
+            return;
+
+        if (Creature* pKelidan = m_pInstance->GetSingleCreatureFromStorage(NPC_KELIDAN_THE_BREAKER))
+            if (boss_kelidan_the_breakerAI* pKelidanAI = dynamic_cast<boss_kelidan_the_breakerAI*> (pKelidan->AI()))
+                pKelidanAI->AddJustReachedHome();
+    }
+
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (MarkOfShadow_Timer < diff)
+        if (m_uiMarkOfShadowTimer < uiDiff)
         {
-            if (Unit *target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-                DoCastSpellIfCan(target,SPELL_MARK_OF_SHADOW);
-            MarkOfShadow_Timer = urand(15000, 20000);
-        }else MarkOfShadow_Timer -=diff;
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_MARK_OF_SHADOW) == CAST_OK)
+                    m_uiMarkOfShadowTimer = urand(15000, 20000);
+            }
+        }
+        else
+            m_uiMarkOfShadowTimer -=uiDiff;
 
-        if (ShadowBolt_Timer < diff)
+        if (m_uiShadowBoltTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_SHADOW_BOLT : H_SPELL_SHADOW_BOLT);
-            ShadowBolt_Timer = urand(5000, 6000);
-        }else ShadowBolt_Timer -=diff;
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_SHADOW_BOLT : SPELL_SHADOW_BOLT_H) == CAST_OK)
+                    m_uiShadowBoltTimer = urand(5000, 6000);
+            }
+        }
+        else
+            m_uiShadowBoltTimer -=uiDiff;
 
         DoMeleeAttackIfReady();
     }
@@ -227,15 +402,15 @@ CreatureAI* GetAI_mob_shadowmoon_channeler(Creature* pCreature)
 
 void AddSC_boss_kelidan_the_breaker()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_kelidan_the_breaker";
-    newscript->GetAI = &GetAI_boss_kelidan_the_breaker;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_kelidan_the_breaker";
+    pNewScript->GetAI = &GetAI_boss_kelidan_the_breaker;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_shadowmoon_channeler";
-    newscript->GetAI = &GetAI_mob_shadowmoon_channeler;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_shadowmoon_channeler";
+    pNewScript->GetAI = &GetAI_mob_shadowmoon_channeler;
+    pNewScript->RegisterSelf();
 }

@@ -1629,7 +1629,9 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1542013,'It is pointless to resist.',10290,1,0,0,'the_maker SAY_KILL_2'),
 (-1542014,'Stay away from... me.',10291,1,0,0,'the_maker SAY_DIE'),
 
-(-1542015,'Kill them!',0,1,0,0,'broggok SAY_BROGGOK_INTRO');
+(-1542015,'Kill them!',0,1,0,0,'broggok SAY_BROGGOK_INTRO'),
+
+(-1542016,'How long do you beleive your pathetic sorcery can hold me?',0,6,0,0,'magtheridon SAY_MAGTHERIDON_WARN');
 
 -- -1 543 000 HELLFIRE RAMPARTS
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
