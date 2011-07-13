@@ -23,6 +23,20 @@ EndScriptData */
 
 #include "precompiled.h"
 
+enum
+{
+    SAY_AGGRO                   = 1631148,
+    SAY_UNCHAINED_MAGIC         = 1631149,
+    SAY_BLISTERING_COLD         = 1631150,
+    SAY_RESPIRE                 = 1631151,
+    SAY_TAKEOFF                 = 1631152,
+    SAY_PHASE_3                 = 1631153,
+    SAY_SLAY_1                  = 1631154,
+    SAY_SLAY_2                  = 1631155,
+    SAY_BERSERK                 = 1631156,
+    SAY_DEATH                   = 1631157,
+};
+
 void AddSC_boss_sindragosa()
 {
 }
