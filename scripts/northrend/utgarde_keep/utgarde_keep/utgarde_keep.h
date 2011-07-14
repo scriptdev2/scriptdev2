@@ -19,6 +19,7 @@ enum
     NPC_KELESETH                = 23953,
     NPC_SKARVALD                = 24200,
     NPC_DALRONN                 = 24201,
+    NPC_INGVAR                  = 23954,
 
     NPC_FROST_TOMB              = 23965,
 

@@ -42,6 +42,7 @@ void instance_utgarde_keep::OnCreatureCreate(Creature* pCreature)
         case NPC_KELESETH:
         case NPC_SKARVALD:
         case NPC_DALRONN:
+        case NPC_INGVAR:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
     }
