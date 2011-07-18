@@ -30,16 +30,6 @@ EndScriptData */
 
 enum
 {
-    //when shappiron dies. dialog between kel and lich king (in this order)
-    SAY_SAPP_DIALOG1                    = -1533084,
-    SAY_SAPP_DIALOG2_LICH               = -1533085,
-    SAY_SAPP_DIALOG3                    = -1533086,
-    SAY_SAPP_DIALOG4_LICH               = -1533087,
-    SAY_SAPP_DIALOG5                    = -1533088,
-
-    //when cat dies
-    SAY_CAT_DIED                        = -1533089,
-
     SAY_SUMMON_MINIONS                  = -1533105,         //start of phase 1
 
     EMOTE_PHASE2                        = -1533135,         //start of phase 2
@@ -115,6 +105,7 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
     uint32 m_uiGuardiansCount;
     uint32 m_uiGuardiansCountMax;
     uint32 m_uiGuardiansTimer;
+    uint32 m_uiLichKingAnswerTimer;
     uint32 m_uiFrostBoltTimer;
     uint32 m_uiFrostBoltNovaTimer;
     uint32 m_uiChainsTimer;
@@ -146,6 +137,7 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
         m_uiShadowFissureTimer  = 25000;                    //25 seconds
         m_uiFrostBlastTimer     = urand(30000, 60000);      //Random time between 30-60 seconds
         m_uiGuardiansTimer      = 5000;                     //5 seconds for summoning each Guardian of Icecrown in phase 3
+        m_uiLichKingAnswerTimer = 4000;
         m_uiGuardiansCount      = 0;
         m_uiSummonIntroTimer    = 0;
         m_uiIntroPackCount      = 0;
@@ -539,10 +531,6 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
                 {
                     m_uiPhase = PHASE_GUARDIANS;
                     DoScriptText(SAY_REQUEST_AID, m_creature);
-
-                    // here Lich King should respond to Kel'Thuzad but I don't know which creature to make talk
-                    // so for now just make Kel'Thuzad says it.
-                    DoScriptText(SAY_ANSWER_REQUEST, m_creature);
                 }
             }
             else if (m_uiPhase == PHASE_GUARDIANS && m_uiGuardiansCount < m_uiGuardiansCountMax)
@@ -555,6 +543,18 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
                 }
                 else
                     m_uiGuardiansTimer -= uiDiff;
+
+                if (m_uiLichKingAnswerTimer && m_pInstance)
+                {
+                    if (m_uiLichKingAnswerTimer <= uiDiff)
+                    {
+                        if (Creature* pLichKing = m_pInstance->GetSingleCreatureFromStorage(NPC_THE_LICHKING))
+                            DoScriptText(SAY_ANSWER_REQUEST, pLichKing);
+                        m_uiLichKingAnswerTimer = 0;
+                    }
+                    else
+                        m_uiLichKingAnswerTimer -= uiDiff;
+                }
             }
 
             DoMeleeAttackIfReady();

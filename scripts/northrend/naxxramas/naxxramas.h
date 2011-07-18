@@ -11,12 +11,20 @@ enum
 
     // A few instance-script related texts
     SAY_THADDIUS_GREET          = -1533029,
-    // Kel'Thuzad's taunts after killing Wing Bosses
+
+    // Kel'Thuzad
     SAY_KELTHUZAD_CAT_DIED      = -1533089,
+    // Kel'Thuzad's taunts after killing Wing Bosses
     SAY_KELTHUZAD_TAUNT1        = -1533090,
     SAY_KELTHUZAD_TAUNT2        = -1533091,
     SAY_KELTHUZAD_TAUNT3        = -1533092,
     SAY_KELTHUZAD_TAUNT4        = -1533093,
+    // Dialogues with Lich King
+    SAY_SAPP_DIALOG1            = -1533084,
+    SAY_SAPP_DIALOG2_LICH       = -1533085,
+    SAY_SAPP_DIALOG3            = -1533086,
+    SAY_SAPP_DIALOG4_LICH       = -1533087,
+    SAY_SAPP_DIALOG5            = -1533088,
 
     TYPE_ANUB_REKHAN            = 0,
     TYPE_FAERLINA               = 1,
@@ -63,6 +71,7 @@ enum
     NPC_RIVENDARE               = 30549,
 
     NPC_KELTHUZAD               = 15990,
+    NPC_THE_LICHKING            = 16980,
     NPC_MR_BIGGLESWORTH         = 16998,
 
     // Faerlina
@@ -202,6 +211,8 @@ class MANGOS_DLL_DECL instance_naxxramas : public ScriptedInstance
         const char* Save() { return m_strInstData.c_str(); }
         void Load(const char* chrIn);
 
+        void Update(uint32 uiDiff);
+
         // goth
         void SetGothTriggers();
         Creature* GetClosestAnchorForGoth(Creature* pSource, bool bRightSide);
@@ -231,6 +242,10 @@ class MANGOS_DLL_DECL instance_naxxramas : public ScriptedInstance
         float m_fChamberCenterX;
         float m_fChamberCenterY;
         float m_fChamberCenterZ;
+
+        uint32 m_uiTauntTimer;
+
+        DialogueHelper m_dialogueHelper;
 };
 
 #endif

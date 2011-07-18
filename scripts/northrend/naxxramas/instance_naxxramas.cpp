@@ -24,7 +24,19 @@ EndScriptData */
 #include "precompiled.h"
 #include "naxxramas.h"
 
+static const DialogueEntry aNaxxDialogue[] =
+{
+    {SAY_SAPP_DIALOG1,      NPC_KELTHUZAD,      6000},
+    {SAY_SAPP_DIALOG2_LICH, NPC_THE_LICHKING,   6000},
+    {SAY_SAPP_DIALOG3,      NPC_KELTHUZAD,      10000},
+    {SAY_SAPP_DIALOG4_LICH, NPC_THE_LICHKING,   12000},
+    {SAY_SAPP_DIALOG5,      NPC_KELTHUZAD,      0},
+    {0,0,0}
+};
+
 instance_naxxramas::instance_naxxramas(Map* pMap) : ScriptedInstance(pMap),
+    m_uiTauntTimer(0),
+    m_dialogueHelper(aNaxxDialogue),
     m_fChamberCenterX(0.0f),
     m_fChamberCenterY(0.0f),
     m_fChamberCenterZ(0.0f)
@@ -38,6 +50,8 @@ void instance_naxxramas::Initialize()
 
     for (uint8 i = 0; i < MAX_SPECIAL_ACHIEV_CRITS; ++i)
         m_abAchievCriteria[i] = false;
+
+    m_dialogueHelper.InitializeDialogueHelper(this, true);
 }
 
 void instance_naxxramas::OnCreatureCreate(Creature* pCreature)
@@ -55,6 +69,7 @@ void instance_naxxramas::OnCreatureCreate(Creature* pCreature)
         case NPC_RIVENDARE:
         case NPC_GOTHIK:
         case NPC_KELTHUZAD:
+        case NPC_THE_LICHKING:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
 
@@ -252,7 +267,7 @@ void instance_naxxramas::SetData(uint32 uiType, uint32 uiData)
             {
                 DoUseDoorOrButton(GO_ARAC_EYE_RAMP);
                 DoRespawnGameObject(GO_ARAC_PORTAL, 30*MINUTE);
-                DoTaunt();
+                m_uiTauntTimer = 5000;
             }
             break;
         case TYPE_NOTH:
@@ -282,7 +297,7 @@ void instance_naxxramas::SetData(uint32 uiType, uint32 uiData)
             {
                 DoUseDoorOrButton(GO_PLAG_EYE_RAMP);
                 DoRespawnGameObject(GO_PLAG_PORTAL, 30*MINUTE);
-                DoTaunt();
+                m_uiTauntTimer = 5000;
             }
             break;
         case TYPE_RAZUVIOUS:
@@ -320,7 +335,7 @@ void instance_naxxramas::SetData(uint32 uiType, uint32 uiData)
                 DoUseDoorOrButton(GO_MILI_EYE_RAMP);
                 DoRespawnGameObject(GO_MILI_PORTAL, 30*MINUTE);
                 DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CHEST_HORSEMEN_NORM : GO_CHEST_HORSEMEN_HERO, 30*MINUTE);
-                DoTaunt();
+                m_uiTauntTimer = 5000;
             }
             break;
         case TYPE_PATCHWERK:
@@ -356,7 +371,7 @@ void instance_naxxramas::SetData(uint32 uiType, uint32 uiData)
             {
                 DoUseDoorOrButton(GO_CONS_EYE_RAMP);
                 DoRespawnGameObject(GO_CONS_PORTAL, 30*MINUTE);
-                DoTaunt();
+                m_uiTauntTimer = 5000;
             }
             break;
         case TYPE_SAPPHIRON:
@@ -365,7 +380,10 @@ void instance_naxxramas::SetData(uint32 uiType, uint32 uiData)
             //if (uiData == IN_PROGRESS)
             //    SetSpecialAchievementCriteria(TYPE_ACHIEV_HUNDRED_CLUB, true);
             if (uiData == DONE)
+            {
                 DoUseDoorOrButton(GO_KELTHUZAD_WATERFALL_DOOR);
+                m_dialogueHelper.StartNextDialogueText(SAY_SAPP_DIALOG1);
+            }
             break;
         case TYPE_KELTHUZAD:
             m_auiEncounter[uiType] = uiData;
@@ -480,6 +498,22 @@ bool instance_naxxramas::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Playe
         default:
             return false;
     }
+}
+
+void instance_naxxramas::Update(uint32 uiDiff)
+{
+    if (m_uiTauntTimer)
+    {
+        if (m_uiTauntTimer <= uiDiff)
+        {
+            DoTaunt();
+            m_uiTauntTimer = 0;
+        }
+        else
+            m_uiTauntTimer -= uiDiff;
+    }
+
+    m_dialogueHelper.DialogueUpdate(uiDiff);
 }
 
 void instance_naxxramas::SetGothTriggers()

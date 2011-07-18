@@ -91,7 +91,7 @@ class DialogueHelper
         DialogueHelper(DialogueEntryTwoSide const* aDialogueTwoSide);
 
         /// Function that MUST be called
-        void InitializeDialogueHelper(ScriptedInstance* pInstance) { m_pInstance = pInstance; }
+        void InitializeDialogueHelper(ScriptedInstance* pInstance, bool bCanSimulateText = false) { m_pInstance = pInstance; m_bCanSimulate = bCanSimulateText; }
         /// Set if take first entries or second entries
         void SetDialogueSide(bool bIsFirstSide) { m_bIsFirstSide = bIsFirstSide; }
 
@@ -114,6 +114,7 @@ class DialogueHelper
 
         uint32 m_uiTimer;
         bool m_bIsFirstSide;
+        bool m_bCanSimulate;
 };
 
 #endif
