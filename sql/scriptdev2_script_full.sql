@@ -1087,7 +1087,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1409021,'I go now to summon the lord whos house this is. Should you seek an audiance with him your paltry lives will surly be forfit. Nevertheless seek out his lair if you dare!',0,1,0,0,'majordomo SAY_DEFEAT_3'),
 (-1409022,'My flame! Please don\'t take away my flame... ',8042,1,0,0,'ragnaros SAY_ARRIVAL4_MAJ'),
 (-1409023,'Very well, $N.',0,0,0,0,'majordomo SAY_SUMMON_0'),
-(-1409024,'Impudent whelps! You''ve rushed headlong to your own deaths! See now, the master stirs!',0,1,0,0,'majordomo SAY_SUMMON_1');
+(-1409024,'Impudent whelps! You\'ve rushed headlong to your own deaths! See now, the master stirs!',0,1,0,0,'majordomo SAY_SUMMON_1');
 
 -- -1 429 000 DIRE MAUL
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
@@ -3294,7 +3294,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,LANGUAGE,emote,commen
 (-1616001,'None but the blue dragonflight are welcome here! Perhaps this is the work of Alexstrasza? Well then, she has sent you to your deaths.',14513,1,0,0,'malygos SAY_INTRO_2'),
 (-1616002,'What could you hope to accomplish, to storm brazenly into my domain? To employ MAGIC? Against ME? <Laughs>',14514,1,0,0,'malygos SAY_INTRO_3'),
 (-1616003,'I am without limits here... the rules of your cherished reality do not apply... In this realm, I am in control...',14515,1,0,0,'malygos SAY_INTRO_4'),
-(-1616004,'I give you one chance. Pledge fealty to me, and perhaps I won''t slaughter you for your insolence!',14516,1,0,0,'malygos SAY_INTRO_5'),
+(-1616004,'I give you one chance. Pledge fealty to me, and perhaps I won\'t slaughter you for your insolence!',14516,1,0,0,'malygos SAY_INTRO_5'),
 (-1616005,'My patience has reached its limit, I WILL BE RID OF YOU!',14517,1,0,0,'malygos SAY_AGGRO'),
 (-1616006,'Watch helplessly as your hopes are swept away...',14525,1,0,0,'malygos SAY_VORTEX'),
 (-1616007,'I AM UNSTOPPABLE!',14533,1,0,0,'malygos SAY_SPARK_BUFF'),
