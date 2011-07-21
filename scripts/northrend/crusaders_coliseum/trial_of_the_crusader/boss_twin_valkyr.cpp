@@ -98,15 +98,15 @@ CreatureAI* GetAI_boss_eydis(Creature* pCreature)
 
 void AddSC_twin_valkyr()
 {
-    Script* newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_fjola";
-    newscript->GetAI = &GetAI_boss_fjola;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_fjola";
+    pNewScript->GetAI = &GetAI_boss_fjola;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "boss_eydis";
-    newscript->GetAI = &GetAI_boss_fjola;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_eydis";
+    pNewScript->GetAI = &GetAI_boss_fjola;
+    pNewScript->RegisterSelf();
 }

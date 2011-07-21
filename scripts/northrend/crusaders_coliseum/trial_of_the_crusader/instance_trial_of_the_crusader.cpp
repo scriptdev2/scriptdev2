@@ -42,8 +42,6 @@ enum
     SAY_TIRION_BEAST_1                  = -1649002,
     SAY_VARIAN_BEAST_1                  = -1649003,
     SAY_GARROSH_BEAST_1                 = -1649004,
-    SAY_TIRION_BEAST_2                  = -1649005,
-    SAY_TIRION_BEAST_3                  = -1649006,
     SAY_TIRION_BEAST_SLAY               = -1649007,
     SAY_TIRION_BEAST_WIPE               = -1649008,
 
@@ -350,7 +348,10 @@ void instance_trial_of_the_crusader::JustDidDialogueStep(int32 iEntry)
             break;
         case SAY_VARIAN_BEAST_1:
             if (Player* pPlayer = GetPlayerInMap())
-                pPlayer->SummonCreature(NPC_BEAST_COMBAT_STALKER, aSpawnPositions[0][0], aSpawnPositions[0][1], aSpawnPositions[0][2], aSpawnPositions[0][3], TEMPSUMMON_DEAD_DESPAWN, 0);
+            {
+                if (Creature* pBeasts = pPlayer->SummonCreature(NPC_BEAST_COMBAT_STALKER, aSpawnPositions[0][0], aSpawnPositions[0][1], aSpawnPositions[0][2], aSpawnPositions[0][3], TEMPSUMMON_DEAD_DESPAWN, 0))
+                    pBeasts->SummonCreature(NPC_GORMOK, aSpawnPositions[1][0], aSpawnPositions[1][1], aSpawnPositions[1][2], aSpawnPositions[1][3], TEMPSUMMON_DEAD_DESPAWN, 0);
+            }
             break;
         case NPC_FIZZLEBANG:
             if (Player* pPlayer = GetPlayerInMap())

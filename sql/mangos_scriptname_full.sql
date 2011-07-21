@@ -471,6 +471,7 @@ UPDATE creature_template SET ScriptName='boss_the_lurker_below' WHERE entry=2121
 /* TRIAL OF THE CRUSADER */
 UPDATE instance_template SET ScriptName='instance_trial_of_the_crusader' WHERE map=649;
 UPDATE creature_template SET ScriptName='npc_barrett_ramsey' WHERE entry IN (34816, 35035, 35766, 35770, 35771);
+UPDATE creature_template SET ScriptName='npc_beast_combat_stalker' WHERE entry=36549;
 UPDATE creature_template SET ScriptName='boss_gormok' WHERE entry=34796;
 UPDATE creature_template SET ScriptName='boss_acidmaw' WHERE entry=35144;
 UPDATE creature_template SET ScriptName='boss_dreadscale' WHERE entry=34799;

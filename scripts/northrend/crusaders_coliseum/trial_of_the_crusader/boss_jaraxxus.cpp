@@ -54,7 +54,7 @@ struct MANGOS_DLL_DECL boss_jaraxxusAI : public ScriptedAI
     void JustReachedHome()
     {
         if (m_pInstance)
-            m_pInstance->SetData(TYPE_JARAXXUS, NOT_STARTED);
+            m_pInstance->SetData(TYPE_JARAXXUS, FAIL);
     }
 
     void JustDied(Unit* pKiller)
@@ -65,6 +65,9 @@ struct MANGOS_DLL_DECL boss_jaraxxusAI : public ScriptedAI
 
     void Aggro(Unit* pWho)
     {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_JARAXXUS, IN_PROGRESS);
+
         m_creature->SetInCombatWithZone();
     }
 
@@ -84,10 +87,10 @@ CreatureAI* GetAI_boss_jaraxxus(Creature* pCreature)
 
 void AddSC_boss_jaraxxus()
 {
-    Script* newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_jaraxxus";
-    newscript->GetAI = &GetAI_boss_jaraxxus;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_jaraxxus";
+    pNewScript->GetAI = &GetAI_boss_jaraxxus;
+    pNewScript->RegisterSelf();
 }
