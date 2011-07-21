@@ -67,7 +67,8 @@ void instance_shadow_labyrinth::OnCreatureCreate(Creature* pCreature)
     switch(pCreature->GetEntry())
     {
         case NPC_VORPIL:
-            m_mNpcEntryGuidStore[NPC_VORPIL] = pCreature->GetObjectGuid();
+        case NPC_HELLMAW:
+            m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
         case NPC_FEL_OVERSEER:
             ++m_uiFelOverseerCount;                         // TODO should actually only count alive ones
@@ -103,6 +104,14 @@ void instance_shadow_labyrinth::SetData(uint32 uiType, uint32 uiData)
                 }
                 else
                 {
+                    if (Creature* pHellmaw = GetSingleCreatureFromStorage(NPC_HELLMAW))
+                    {
+                        // yell intro and remove banish aura
+                        DoScriptText(SAY_HELLMAW_INTRO, pHellmaw);
+                        if (pHellmaw->HasAura(SPELL_BANISH))
+                            pHellmaw->RemoveAurasDueToSpell(SPELL_BANISH);
+                    }
+
                     m_auiEncounter[1] = DONE;
                     debug_log("SD2: Shadow Labyrinth: TYPE_OVERSEER == DONE");
                 }
@@ -166,9 +175,11 @@ void instance_shadow_labyrinth::Load(const char* chrIn)
     std::istringstream loadStream(chrIn);
     loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3] >> m_auiEncounter[4];
 
-    for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+    for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+    {
         if (m_auiEncounter[i] == IN_PROGRESS)
             m_auiEncounter[i] = NOT_STARTED;
+    }
 
     OUT_LOAD_INST_DATA_COMPLETE;
 }

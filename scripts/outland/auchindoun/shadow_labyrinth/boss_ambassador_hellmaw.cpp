@@ -23,61 +23,51 @@ EndScriptData */
 
 #include "precompiled.h"
 #include "shadow_labyrinth.h"
-#include "escort_ai.h"
 
-#define SAY_INTRO       -1555000
-
-#define SAY_AGGRO1      -1555001
-#define SAY_AGGRO2      -1555002
-#define SAY_AGGRO3      -1555003
-
-#define SAY_HELP        -1555004
-
-#define SAY_SLAY1       -1555005
-#define SAY_SLAY2       -1555006
-
-#define SAY_DEATH       -1555007
-
-#define SPELL_BANISH            30231
-#define SPELL_CORROSIVE_ACID    33551
-#define SPELL_FEAR              33547
-#define SPELL_ENRAGE            34970
-
-struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public npc_escortAI
+enum
 {
-    boss_ambassador_hellmawAI(Creature* pCreature) : npc_escortAI(pCreature)
+    SAY_AGGRO_1             = -1555001,
+    SAY_AGGRO_2             = -1555002,
+    SAY_AGGRO_3             = -1555003,
+    SAY_HELP                = -1555004,
+    SAY_SLAY_1              = -1555005,
+    SAY_SLAY_2              = -1555006,
+    SAY_DEATH               = -1555007,
+
+    SPELL_CORROSIVE_ACID    = 33551,
+    SPELL_FEAR              = 33547,
+    SPELL_ENRAGE            = 34970
+};
+
+struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public ScriptedAI
+{
+    boss_ambassador_hellmawAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Reset();
+
+        if (m_pInstance && m_creature->isAlive())
+        {
+            if (m_pInstance->GetData(TYPE_OVERSEER) != DONE)
+                DoCastSpellIfCan(m_creature, SPELL_BANISH, CAST_TRIGGERED);
+        }
     }
 
     ScriptedInstance* m_pInstance;
     bool m_bIsRegularMode;
 
-    uint32 EventCheck_Timer;
-    uint32 CorrosiveAcid_Timer;
-    uint32 Fear_Timer;
-    uint32 Enrage_Timer;
-    bool Intro;
-    bool IsBanished;
-    bool Enraged;
+    uint32 m_uiCorrosiveAcidTimer;
+    uint32 m_uiFearTimer;
+    uint32 m_uiEnrageTimer;
+    bool m_bIsEnraged;
 
     void Reset()
     {
-        EventCheck_Timer = 5000;
-        CorrosiveAcid_Timer = urand(5000, 10000);
-        Fear_Timer = urand(25000, 30000);
-        Enrage_Timer = 180000;
-        Intro = false;
-        IsBanished = true;
-        Enraged = false;
-
-        if (m_pInstance && m_creature->isAlive())
-        {
-            if (m_pInstance->GetData(TYPE_OVERSEER) != DONE)
-                m_creature->CastSpell(m_creature, SPELL_BANISH, true);
-        }
+        m_uiCorrosiveAcidTimer  = urand(5000, 10000);
+        m_uiFearTimer           = urand(25000, 30000);
+        m_uiEnrageTimer         = 3*MINUTE*IN_MILLISECONDS;
+        m_bIsEnraged            = false;
     }
 
     void JustReachedHome()
@@ -86,54 +76,25 @@ struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public npc_escortAI
             m_pInstance->SetData(TYPE_HELLMAW, FAIL);
     }
 
-    void WaypointReached(uint32 i)
-    {
-    }
-
-    void DoIntro()
-    {
-        if (m_creature->HasAura(SPELL_BANISH, EFFECT_INDEX_0))
-            m_creature->RemoveAurasDueToSpell(SPELL_BANISH);
-
-        IsBanished = false;
-        Intro = true;
-
-        if (m_pInstance)
-        {
-            if (m_pInstance->GetData(TYPE_HELLMAW) != FAIL)
-            {
-                DoScriptText(SAY_INTRO, m_creature);
-                Start(false, NULL, NULL, false, true);
-            }
-
-            m_pInstance->SetData(TYPE_HELLMAW, IN_PROGRESS);
-        }
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (m_creature->HasAura(SPELL_BANISH, EFFECT_INDEX_0))
-            return;
-
-        npc_escortAI::MoveInLineOfSight(who);
-    }
-
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
         switch(urand(0, 2))
         {
-            case 0: DoScriptText(SAY_AGGRO1, m_creature); break;
-            case 1: DoScriptText(SAY_AGGRO2, m_creature); break;
-            case 2: DoScriptText(SAY_AGGRO3, m_creature); break;
+            case 0: DoScriptText(SAY_AGGRO_1, m_creature); break;
+            case 1: DoScriptText(SAY_AGGRO_2, m_creature); break;
+            case 2: DoScriptText(SAY_AGGRO_3, m_creature); break;
         }
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_HELLMAW, IN_PROGRESS);
     }
 
-    void KilledUnit(Unit *victim)
+    void KilledUnit(Unit* pVictim)
     {
-        DoScriptText(urand(0, 1) ? SAY_SLAY1 : SAY_SLAY2, m_creature);
+        DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
     }
 
-    void JustDied(Unit *victim)
+    void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -141,52 +102,36 @@ struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public npc_escortAI
             m_pInstance->SetData(TYPE_HELLMAW, DONE);
     }
 
-    void UpdateEscortAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
-        if (!Intro && !HasEscortState(STATE_ESCORT_ESCORTING))
-        {
-            if (EventCheck_Timer < diff)
-            {
-                if (m_pInstance)
-                {
-                    if (m_pInstance->GetData(TYPE_OVERSEER) == DONE)
-                    {
-                        DoIntro();
-                        return;
-                    }
-                }
-                EventCheck_Timer = 5000;
-                return;
-            }
-            else
-            {
-                EventCheck_Timer -= diff;
-                return;
-            }
-        }
-
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (CorrosiveAcid_Timer < diff)
+        if (m_uiCorrosiveAcidTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_CORROSIVE_ACID);
-            CorrosiveAcid_Timer = urand(15000, 25000);
-        }else CorrosiveAcid_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature, SPELL_CORROSIVE_ACID) == CAST_OK)
+                m_uiCorrosiveAcidTimer = urand(15000, 25000);
+        }
+        else
+            m_uiCorrosiveAcidTimer -= uiDiff;
 
-        if (Fear_Timer < diff)
+        if (m_uiFearTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature,SPELL_FEAR);
-            Fear_Timer = urand(20000, 35000);
-        }else Fear_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature, SPELL_FEAR) == CAST_OK)
+                m_uiFearTimer = urand(20000, 35000);
+        }
+        else
+            m_uiFearTimer -= uiDiff;
 
-        if (!m_bIsRegularMode)
+        if (!m_bIsRegularMode && !m_bIsEnraged)
         {
-            if (!Enraged && Enrage_Timer < diff)
+            if (m_uiEnrageTimer < uiDiff)
             {
-                DoCastSpellIfCan(m_creature,SPELL_ENRAGE);
-                Enraged = true;
-            }else Enrage_Timer -= diff;
+                if (DoCastSpellIfCan(m_creature, SPELL_ENRAGE) == CAST_OK)
+                    m_bIsEnraged = true;
+            }
+            else
+                m_uiEnrageTimer -= uiDiff;
         }
 
         DoMeleeAttackIfReady();
@@ -200,9 +145,10 @@ CreatureAI* GetAI_boss_ambassador_hellmaw(Creature* pCreature)
 
 void AddSC_boss_ambassador_hellmaw()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_ambassador_hellmaw";
-    newscript->GetAI = &GetAI_boss_ambassador_hellmaw;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_ambassador_hellmaw";
+    pNewScript->GetAI = &GetAI_boss_ambassador_hellmaw;
+    pNewScript->RegisterSelf();
 }

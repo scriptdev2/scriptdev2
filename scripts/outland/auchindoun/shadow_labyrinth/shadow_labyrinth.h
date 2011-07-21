@@ -15,11 +15,16 @@ enum
     TYPE_VORPIL             = 4,
     TYPE_MURMUR             = 5,
 
+    NPC_HELLMAW             = 18731,
     NPC_VORPIL              = 18732,
     NPC_FEL_OVERSEER        = 18796,
 
     GO_REFECTORY_DOOR       = 183296,                       //door opened when blackheart the inciter dies
-    GO_SCREAMING_HALL_DOOR  = 183295                        //door opened when grandmaster vorpil dies
+    GO_SCREAMING_HALL_DOOR  = 183295,                       //door opened when grandmaster vorpil dies
+
+    SAY_HELLMAW_INTRO       = -1555000,
+
+    SPELL_BANISH            = 30231,
 };
 
 class MANGOS_DLL_DECL instance_shadow_labyrinth : public ScriptedInstance
