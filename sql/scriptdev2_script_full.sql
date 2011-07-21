@@ -3640,9 +3640,9 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1649021,'The Horde demands justice! We challenge the Alliance. Allow us to battle in place of your knights, paladin. We will show these dogs what it means to insult the Horde!',16023,1,0,0,'garrosh SAY_GARROSH_PVP_A_INTRO_1'),
 (-1649022,'Our honor has been besmirched! They make wild claims and false accusations against us. I demand justice! Allow my champions to fight in place of your knights, Tirion. We challenge the Horde!',16066,1,0,0,'varian SAY_VARIAN_PVP_H_INTRO_1'),
 (-1649023,'Very well, I will allow it. Fight with honor!',16048,1,0,0,'tirion SAY_TIRION_PVP_INTRO_2'),
-(-1649024,'Fight for the glory of the Alliance, heroes! Honor your king and your people!',16065,1,0,0,'varian SAY_VARIAN_PVP_A_INTRO_2'),
-(-1649025,'Show them no mercy, Horde champions! LOK\'TAR OGAR!',16022,1,0,0,'garrosh SAY_GARROSH_PVP_H_INTRO_2'),
-(-1649026,'Glory to the alliance.',16067,1,0,0,'varian SAY_VARIAN_PVP_A_WIN'),
+(-1649024,'Fight for the glory of the Alliance, heroes! Honor your king and your people!',16065,1,0,0,'varian SAY_VARIAN_PVP_H_INTRO_2'),
+(-1649025,'Show them no mercy, Horde champions! LOK\'TAR OGAR!',16022,1,0,0,'garrosh SAY_GARROSH_PVP_A_INTRO_2'),
+(-1649026,'GLORY TO THE ALLIANCE!',16067,1,0,0,'varian SAY_VARIAN_PVP_A_WIN'),
 (-1649027,'That was just a taste of what the future brings. FOR THE HORDE!',16024,1,0,0,'garrosh SAY_GARROSH_PVP_H_WIN'),
 (-1649028,'A shallow and tragic victory. We are weaker as a whole from the losses suffered today. Who but the Lich King could benefit from such foolishness? Great warriors have lost their lives. And for what? The true threat looms ahead - the Lich King awaits us all in death.',16049,1,0,0,'tirion SAY_TIRION_PVP_WIN'),
 
@@ -3656,7 +3656,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1649035,'Arthas! You are hopelessly outnumbered! Lay down Frostmourne and I will grant you a just death.',16052,1,0,0,'tirion SAY_TIRION_ABUN_INTRO_1'),
 (-1649036,'The Nerubians built an empire beneath the frozen wastes of Northrend. An empire that you so foolishly built your structures upon. MY EMPIRE.',16322,1,0,0,'lich_king SAY_LKING_ANUB_INTRO_2'),
 (-1649037,'The souls of your fallen champions will be mine, Fordring.',16323,1,0,0,'lich_king SAY_LKING_ANUB_INTRO_3'),
-(-1649038,'Ahhh... Our guests arrived, just as the master promised.',16235,1,0,0,'anubarak SAY_ANUB_ANUB_INTRO_1'),
+(-1649038,'Ahhh, our guests have arrived, just as the master promised.',16235,1,0,0,'anubarak SAY_ANUB_ANUB_INTRO_1'),
 
 (-1649039,'%s glares at $N and lets out a bellowing roar!',0,3,0,0,'icehowl EMOTE_MASSIVE_CRASH'),
 
@@ -3944,7 +3944,18 @@ INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 
 -- -3 649 000 TRIAL OF CRUSADER
 INSERT INTO gossip_texts (entry,content_default,comment) VALUES
-(-3649000,'Yes. We are prepared for the challenges ahead of us.','barrett GOSSIP_ITEM_START_EVENT1');
+(-3649000,'Yes. We are prepared for the challenges ahead of us.','barrett GOSSIP_ITEM_BEAST_INIT'),
+(-3649001,'Bring forth the first challenge!','barrett GOSSIP_ITEM_BEAST_START'),
+(-3649002,'We want another shot at those beasts!','barrett GOSSIP_ITEM_BEAST_WIPE_INIT'),
+(-3649003,'What new challenge awaits us?','barrett GOSSIP_ITEM_JARAXXUS_INIT'),
+(-3649004,'We\'re ready to fight the sorceror again.','barrett GOSSIP_ITEM_JARAXXUS_WIPE_INIT'),
+(-3649005,'Of course!','barrett GOSSIP_ITEM_PVP_INIT'),
+(-3649006,'Give the signal! We\'re ready to go!','barrett GOSSIP_ITEM_PVP_START'),
+(-3649007,'That tough, huh?','barrett GOSSIP_ITEM_TWINS_INIT'),
+(-3649008,'Val\'kyr? We\'re ready for them','barrett GOSSIP_ITEM_TWINS_START'),
+(-3649009,'Your words of praise are appreciated, Coliseum Master.','barrett GOSSIP_ITEM_ANUB_INIT'),
+(-3649010,'That is strange...','barrett GOSSIP_ITEM_ANUB_START');
+
 
 --
 -- Below just for beautiful view in table, run at own desire

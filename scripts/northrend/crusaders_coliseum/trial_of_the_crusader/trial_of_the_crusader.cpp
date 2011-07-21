@@ -26,62 +26,84 @@ EndScriptData */
 
 enum
 {
-    SAY_TIRION_RAID_INTRO_LONG          = -1649000,
-    SAY_RAID_TRIALS_INTRO               = -1649001,
+    GOSSIP_TEXT_BEAST_INIT              = 14664,
+    GOSSIP_TEXT_BEAST_START             = 14665,
+    GOSSIP_TEXT_BEAST_WIPE_INIT         = 14667,
+    GOSSIP_TEXT_BEAST_WIPE_START        = 14668,
 
-    // Northrend Beasts
-    SAY_TIRION_BEAST_1                  = -1649002,
-    SAY_VARIAN_BEAST_1                  = -1649003,
-    SAY_GARROSH_BEAST_1                 = -1649004,
-    SAY_TIRION_BEAST_2                  = -1649005,
-    SAY_TIRION_BEAST_3                  = -1649006,
-    SAY_TIRION_BEAST_SLAY               = -1649007,
-    SAY_TIRION_BEAST_WIPE               = -1649008,
+    GOSSIP_TEXT_JARAXXUS_INIT           = 14678,
+    GOSSIP_TEXT_JARAXXUS_START          = 14680,
+    GOSSIP_TEXT_JARAXXUS_WIPE_INIT      = 14679,
+    GOSSIP_TEXT_JARAXXUS_WIPE_START     = 14682,
 
-    // Jaraxxus Encounter
-    SAY_TIRION_JARAXXUS_INTRO_1         = -1649009,
-    SAY_WILFRED_JARAXXUS_INTRO_1        = -1649010,
-    SAY_WILFRED_JARAXXUS_INTRO_2        = -1649011,
-    SAY_WILFRED_JARAXXUS_INTRO_3        = -1649012,
-    SAY_JARAXXUS_JARAXXAS_INTRO_1       = -1649013,
-    SAY_WILFRED_DEATH                   = -1649014,
-    SAY_TIRION_JARAXXUS_INTRO_2         = -1649015,
-    SAY_TIRION_JARAXXUS_EXIT_1          = -1649016,
-    SAY_GARROSH_JARAXXUS_EXIT_1         = -1649017,
-    SAY_VARIAN_JARAXXUS_SLAY            = -1649018,
-    SAY_TIRION_JARAXXUS_EXIT_2          = -1649019,
+    GOSSIP_TEXT_PVP_INIT                = 14813,
+    GOSSIP_TEXT_PVP_START               = 14814,
+    GOSSIP_TEXT_PVP_WIPE_INIT           = 14815,
+    GOSSIP_TEXT_PVP_WIPE_START          = 14816,
 
-    // Faction-Champions
-    SAY_TIRION_PVP_INTRO_1              = -1649020,
-    SAY_GARROSH_PVP_A_INTRO_1           = -1649021,
-    SAY_VARIAN_PVP_H_INTRO_1            = -1649022,
-    SAY_TIRION_PVP_INTRO_2              = -1649023,
-    SAY_VARIAN_PVP_A_INTRO_2            = -1649024,
-    SAY_GARROSH_PVP_H_INTRO_2           = -1649025,
-    SAY_VARIAN_PVP_A_WIN                = -1649026,
-    SAY_GARROSH_PVP_H_WIN               = -1649027,
-    SAY_TIRION_PVP_WIN                  = -1649028,
+    GOSSIP_TEXT_TWINS_INIT              = 14819,
+    GOSSIP_TEXT_TWINS_START             = 14821,
+    GOSSIP_TEXT_TWINS_WIPE_INIT         = 14820,
+    GOSSIP_TEXT_TWINS_WIPE_START        = 14822,
 
-    // Twin Valkyrs
-    SAY_TIRION_TWINS_INTRO              = -1649029,
-    SAY_RAID_INTRO_SHORT                = -1649030,
-    SAY_VARIAN_TWINS_A_WIN              = -1649031,
-    SAY_GARROSH_TWINS_H_WIN             = -1649032,
-    SAY_TIRION_TWINS_WIN                = -1649033,
+    GOSSIP_TEXT_ANUB_INIT               = 14828,
+    GOSSIP_TEXT_ANUB_START              = 14829,
 
-    // Anub'Arak Encounter
-    SAY_LKING_ANUB_INTRO_1              = -1649034,
-    SAY_TIRION_ABUN_INTRO_1             = -1649035,
-    SAY_LKING_ANUB_INTRO_2              = -1649036,
-    SAY_LKING_ANUB_INTRO_3              = -1649037,
-    SAY_ANUB_ANUB_INTRO_1               = -1649038,
+    GOSSIP_ITEM_BEAST_INIT              = -3649000,
+    GOSSIP_ITEM_BEAST_START             = -3649001,
+    GOSSIP_ITEM_BEAST_WIPE_INIT         = -3649002,
+    GOSSIP_ITEM_BEAST_WIPE_START        = -3000000,
 
-    GOSSIP_ITEM_START_EVENT1            = -3649000
+    GOSSIP_ITEM_JARAXXUS_INIT           = -3649003,
+    GOSSIP_ITEM_JARAXXUS_START          = -3000000,
+    GOSSIP_ITEM_JARAXXUS_WIPE_INIT      = -3649004,
+    GOSSIP_ITEM_JARAXXUS_WIPE_START     = -3000000,
+
+    GOSSIP_ITEM_PVP_INIT                = -3649005,
+    GOSSIP_ITEM_PVP_START               = -3649006,
+    GOSSIP_ITEM_PVP_WIPE_INIT           = -3000000,
+    GOSSIP_ITEM_PVP_WIPE_START          = -3000000,
+
+    GOSSIP_ITEM_TWINS_INIT              = -3649007,
+    GOSSIP_ITEM_TWINS_START             = -3649008,
+    GOSSIP_ITEM_TWINS_WIPE_INIT         = -3000000,
+    GOSSIP_ITEM_TWINS_WIPE_START        = -3000000,
+
+    GOSSIP_ITEM_ANUB_INIT               = -3649009,
+    GOSSIP_ITEM_ANUB_START              = -3649010,
 };
 
 /*######
 ## npc_barrett_ramsey
 ######*/
+
+struct RamseyInfo
+{
+    uint32 uiEntry;
+    uint32 uiTextEntry;
+    int32  iGossipItem;
+    uint32 uiWipeTextEntry;
+    int32  iWipeGossipItem;
+    uint32 uiOptionId;                                      // If . > 0 SetInstData(. , SPECIAL), else open new DiagMenu
+};
+
+static const RamseyInfo aRamseyInfo[] =
+{
+    {NPC_RAMSEY_1, GOSSIP_TEXT_BEAST_INIT,  GOSSIP_ITEM_BEAST_INIT,  GOSSIP_TEXT_BEAST_WIPE_INIT,  GOSSIP_ITEM_BEAST_WIPE_INIT,  0},
+    {NPC_RAMSEY_1, GOSSIP_TEXT_BEAST_START, GOSSIP_ITEM_BEAST_START, GOSSIP_TEXT_BEAST_WIPE_START, GOSSIP_ITEM_BEAST_WIPE_START, TYPE_NORTHREND_BEASTS},
+
+    {NPC_RAMSEY_2, GOSSIP_TEXT_JARAXXUS_INIT,  GOSSIP_ITEM_JARAXXUS_INIT,  GOSSIP_TEXT_JARAXXUS_WIPE_INIT,  GOSSIP_ITEM_JARAXXUS_WIPE_INIT,  0},
+    {NPC_RAMSEY_2, GOSSIP_TEXT_JARAXXUS_START, GOSSIP_ITEM_JARAXXUS_START, GOSSIP_TEXT_JARAXXUS_WIPE_START, GOSSIP_ITEM_JARAXXUS_WIPE_START, TYPE_JARAXXUS},
+
+    {NPC_RAMSEY_3, GOSSIP_TEXT_PVP_INIT,  GOSSIP_ITEM_PVP_INIT,  GOSSIP_TEXT_PVP_WIPE_INIT,  GOSSIP_ITEM_PVP_WIPE_INIT,  0},
+    {NPC_RAMSEY_3, GOSSIP_TEXT_PVP_START, GOSSIP_ITEM_PVP_START, GOSSIP_TEXT_PVP_WIPE_START, GOSSIP_ITEM_PVP_WIPE_START, TYPE_FACTION_CHAMPIONS},
+
+    {NPC_RAMSEY_4, GOSSIP_TEXT_TWINS_INIT,  GOSSIP_ITEM_TWINS_INIT,  GOSSIP_TEXT_TWINS_WIPE_INIT,  GOSSIP_ITEM_TWINS_WIPE_INIT,  0},
+    {NPC_RAMSEY_4, GOSSIP_TEXT_TWINS_START, GOSSIP_ITEM_TWINS_START, GOSSIP_TEXT_TWINS_WIPE_START, GOSSIP_ITEM_TWINS_WIPE_START, TYPE_TWIN_VALKYR},
+
+    {NPC_RAMSEY_5, GOSSIP_TEXT_ANUB_INIT,  GOSSIP_ITEM_ANUB_INIT,  0,  0,  0},
+    {NPC_RAMSEY_5, GOSSIP_TEXT_ANUB_START, GOSSIP_ITEM_ANUB_START, 0, 0, TYPE_ANUBARAK},
+};
 
 struct MANGOS_DLL_DECL npc_barrett_ramseyAI : public ScriptedAI
 {
@@ -91,26 +113,88 @@ struct MANGOS_DLL_DECL npc_barrett_ramseyAI : public ScriptedAI
 
     void Reset() {}
 
-    void StartEvent(Player* pPlayer)
+    void MovementInform(uint32 uiType, uint32 uiPointId)
     {
-        // code starting the event here
+        if (uiType == POINT_MOTION_TYPE && uiPointId == 1)
+            m_creature->ForcedDespawn();
     }
 };
 
 bool GossipHello_npc_barrett_ramsey(Player* pPlayer, Creature* pCreature)
 {
-    pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_START_EVENT1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
+    ScriptedInstance* pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+    uint8 uiPos = 0;
+    uint32 uiType = 0;
+
+    for (uint8 i = 0; i < countof(aRamseyInfo); ++i)
+    {
+        if (pCreature->GetEntry() == aRamseyInfo[i].uiEntry)
+        {
+            if (!aRamseyInfo[i].uiOptionId)
+                uiPos = i;
+            else
+            {
+                uiType = aRamseyInfo[i].uiOptionId;
+                break;
+            }
+        }
+    }
+
+    if (!uiType || !pInstance)
+        return true;
+
+    if (pInstance->GetData(uiType) == FAIL)
+    {
+        pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, aRamseyInfo[uiPos].iWipeGossipItem, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+        pPlayer->SEND_GOSSIP_MENU(aRamseyInfo[uiPos].uiWipeTextEntry, pCreature->GetObjectGuid());
+    }
+    else
+    {
+        pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, aRamseyInfo[uiPos].iGossipItem, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+        pPlayer->SEND_GOSSIP_MENU(aRamseyInfo[uiPos].uiTextEntry, pCreature->GetObjectGuid());
+    }
+
     return true;
 }
 
 bool GossipSelect_npc_barrett_ramsey(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
+    ScriptedInstance* pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+    if (!pInstance)
+        return true;
+
+    if (uiAction > GOSSIP_ACTION_INFO_DEF)
     {
+        // Begin Event
+        uint32 uiType = uiAction - GOSSIP_ACTION_INFO_DEF;
+        if (pInstance->GetData(uiType) == FAIL || pInstance->GetData(uiType) == NOT_STARTED)
+            pInstance->SetData(uiAction - GOSSIP_ACTION_INFO_DEF, SPECIAL);
+
         pPlayer->CLOSE_GOSSIP_MENU();
-        if (npc_barrett_ramseyAI* pBarrettAI = dynamic_cast<npc_barrett_ramseyAI*>(pCreature->AI()))
-            pBarrettAI->StartEvent(pPlayer);
+        pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+        pCreature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+        pCreature->GetMotionMaster()->MovePoint(1, aRamsayPositions[1][0], aRamsayPositions[1][1], aRamsayPositions[1][2]);
+
+        return true;
+    }
+
+    for (uint8 i = 0; i < countof(aRamseyInfo); ++i)
+    {
+        if (pCreature->GetEntry() == aRamseyInfo[i].uiEntry && aRamseyInfo[i].uiOptionId)
+        {
+            if (pInstance->GetData(aRamseyInfo[i].uiOptionId) == FAIL)
+            {
+                pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, aRamseyInfo[i].iWipeGossipItem, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + aRamseyInfo[i].uiOptionId);
+                pPlayer->SEND_GOSSIP_MENU(aRamseyInfo[i].uiWipeTextEntry, pCreature->GetObjectGuid());
+            }
+            else
+            {
+                pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, aRamseyInfo[i].iGossipItem, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + aRamseyInfo[i].uiOptionId);
+                pPlayer->SEND_GOSSIP_MENU(aRamseyInfo[i].uiTextEntry, pCreature->GetObjectGuid());
+            }
+
+            return true;
+        }
     }
 
     return true;

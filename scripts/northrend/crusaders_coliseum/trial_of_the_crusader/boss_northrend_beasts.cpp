@@ -24,6 +24,8 @@ EndScriptData */
 #include "precompiled.h"
 #include "trial_of_the_crusader.h"
 
+// TODO need to script npc 36549 - Beast Combat Stalker, set into combat in begin, destroy on end
+
 /*######
 ## boss_gormok
 ######*/
