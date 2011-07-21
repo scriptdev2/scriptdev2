@@ -280,6 +280,22 @@ InstanceData* GetInstanceData_instance_sunwell_plateau(Map* pMap)
     return new instance_sunwell_plateau(pMap);
 }
 
+bool AreaTrigger_at_sunwell_plateau(Player* pPlayer, AreaTriggerEntry const* pAt)
+{
+    if (pAt->id == AREATRIGGER_TWINS)
+    {
+        if (pPlayer->isGameMaster() || pPlayer->isDead())
+            return false;
+
+        instance_sunwell_plateau* pInstance = (instance_sunwell_plateau*)pPlayer->GetInstanceData();
+
+        if (pInstance && pInstance->GetData(TYPE_EREDAR_TWINS) == NOT_STARTED)
+            pInstance->SetData(TYPE_EREDAR_TWINS, SPECIAL);
+    }
+
+    return false;
+}
+
 void AddSC_instance_sunwell_plateau()
 {
     Script* pNewScript;
@@ -287,5 +303,10 @@ void AddSC_instance_sunwell_plateau()
     pNewScript = new Script;
     pNewScript->Name = "instance_sunwell_plateau";
     pNewScript->GetInstanceData = &GetInstanceData_instance_sunwell_plateau;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "at_sunwell_plateau";
+    pNewScript->pAreaTrigger = &AreaTrigger_at_sunwell_plateau;
     pNewScript->RegisterSelf();
 }

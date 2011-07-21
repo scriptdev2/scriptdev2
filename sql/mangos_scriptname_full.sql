@@ -48,6 +48,8 @@ INSERT INTO scripted_areatrigger VALUES
 (3960, 'at_zulgurub');
 DELETE FROM scripted_areatrigger WHERE entry=3626;
 INSERT INTO scripted_areatrigger VALUES (3626, 'at_vaelastrasz');
+DELETE FROM scripted_areatrigger WHERE entry=4937;
+INSERT INTO scripted_areatrigger VALUES (4937, 'at_sunwell_plateau');
 
 
 /* BATTLEGROUNDS */
@@ -1079,6 +1081,9 @@ UPDATE creature_template SET ScriptName='boss_sathrovarr' WHERE entry=24892;
 UPDATE gameobject_template SET ScriptName='go_spectral_rift' WHERE entry=187055;
 DELETE FROM scripted_areatrigger WHERE entry=4853;
 INSERT INTO scripted_areatrigger VALUES (4853,'at_madrigosa');
+UPDATE creature_template SET ScriptName='boss_alythess' WHERE entry=25166;
+UPDATE creature_template SET ScriptName='boss_sacrolash' WHERE entry=25165;
+UPDATE creature_template SET ScriptName='npc_shadow_image' WHERE entry=25214;
 
 /* SWAMP OF SORROWS */
 UPDATE creature_template SET ScriptName='npc_galen_goodward' WHERE entry=5391;

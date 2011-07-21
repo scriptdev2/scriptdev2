@@ -43,6 +43,10 @@ enum
     GO_MURU_EXIT_GATE           = 188118,
     GO_THIRD_GATE               = 187765,           // door after muru; why another?
 
+    SAY_TWINS_INTRO             = -1580044,
+
+    AREATRIGGER_TWINS           = 4937,
+
     // spells related to kalecgos event
     SPELL_SPECTRAL_REALM                = 46021,
     SPELL_TELEPORT_NORMAL_REALM         = 46020,
