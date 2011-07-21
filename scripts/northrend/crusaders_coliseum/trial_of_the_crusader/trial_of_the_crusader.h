@@ -48,6 +48,19 @@ static const float aRamsayPositions[2][4] =
     {563.556f,  78.72571f, 395.2125f, 0.0f}                 // Movement Position
 };
 
+static const float aSpawnPositions[][4] =
+{
+    {563.8941f, 137.3333f, 405.8467f, 0.0f},                // Beast combat stalker (Summoned when SAY_VARIAN_BEAST_1)
+    {563.9358f, 229.8299f, 394.8061f, 4.694936f},           // Gormok (vehicle) (Summoned when SAY_VARIAN_BEAST_1)
+    {564.3301f, 232.1549f, 394.8188f, 1.621917f},           // Dreadscale (Summoned when Tirion says SAY_TIRION_BEAST_2)
+    {549.5139f, 170.1389f, 394.7965f, 5.009095f},           // Acidmaw (Summoned(?) 14s after Dreadscale)
+    {563.6081f, 228.1491f, 394.7057f, 4.664022f},           // Icehowl (Summoned when SAY_TIRION_BEAST_3)
+    {563.6007f, 208.5278f, 395.2696f, 4.729842f},           // Fizzlebang
+    {563.8264f, 140.6563f, 393.9861f, 4.694936f},           // Jaraxxus
+    {571.684f,  204.9028f, 399.263f,  4.590216f},           // Fjola
+    {555.4514f, 205.8889f, 399.2634f, 4.886922f},           // Eydis
+};
+
 class MANGOS_DLL_DECL instance_trial_of_the_crusader : public ScriptedInstance, private DialogueHelper
 {
     public:

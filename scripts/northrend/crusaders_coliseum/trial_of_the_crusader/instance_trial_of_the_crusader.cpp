@@ -348,6 +348,25 @@ void instance_trial_of_the_crusader::JustDidDialogueStep(int32 iEntry)
         case NPC_RAMSEY_5:
             DoSummonRamsey(iEntry);
             break;
+        case SAY_VARIAN_BEAST_1:
+            if (Player* pPlayer = GetPlayerInMap())
+                pPlayer->SummonCreature(NPC_BEAST_COMBAT_STALKER, aSpawnPositions[0][0], aSpawnPositions[0][1], aSpawnPositions[0][2], aSpawnPositions[0][3], TEMPSUMMON_DEAD_DESPAWN, 0);
+            break;
+        case NPC_FIZZLEBANG:
+            if (Player* pPlayer = GetPlayerInMap())
+                pPlayer->SummonCreature(NPC_FIZZLEBANG, aSpawnPositions[5][0], aSpawnPositions[5][1], aSpawnPositions[5][2], aSpawnPositions[5][3], TEMPSUMMON_DEAD_DESPAWN, 0);
+            break;
+        case SAY_WILFRED_JARAXXUS_INTRO_3:
+            if (Player* pPlayer = GetPlayerInMap())
+                pPlayer->SummonCreature(NPC_JARAXXUS, aSpawnPositions[6][0], aSpawnPositions[6][1], aSpawnPositions[6][2], aSpawnPositions[6][3], TEMPSUMMON_DEAD_DESPAWN, 0);
+            break;
+        case NPC_FJOLA:
+            if (Player* pPlayer = GetPlayerInMap())
+            {
+                pPlayer->SummonCreature(NPC_FJOLA, aSpawnPositions[7][0], aSpawnPositions[7][1], aSpawnPositions[7][2], aSpawnPositions[7][3], TEMPSUMMON_DEAD_DESPAWN, 0);
+                pPlayer->SummonCreature(NPC_EYDIS, aSpawnPositions[8][0], aSpawnPositions[8][1], aSpawnPositions[8][2], aSpawnPositions[8][3], TEMPSUMMON_DEAD_DESPAWN, 0);
+            }
+            break;
     }
 }
 
