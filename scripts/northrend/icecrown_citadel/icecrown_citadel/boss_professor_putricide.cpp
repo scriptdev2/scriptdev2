@@ -25,15 +25,15 @@ EndScriptData */
 
 enum
 {
-    SAY_AGGRO                   = 1631092,
-    SAY_AIRLOCK                 = 1631093,
-    SAY_PHASE_CHANGE            = 1631094,
-    SAY_TRANSFORM_1             = 1631095,
-    SAY_TRANSFORM_2             = 1631096,
-    SAY_SLAY_1                  = 1631097,
-    SAY_SLAY_2                  = 1631098,
-    SAY_BERSERK                 = 1631099,
-    SAY_DEATH                   = 1631100,
+    SAY_AGGRO                   = -1631092,
+    SAY_AIRLOCK                 = -1631093,
+    SAY_PHASE_CHANGE            = -1631094,
+    SAY_TRANSFORM_1             = -1631095,
+    SAY_TRANSFORM_2             = -1631096,
+    SAY_SLAY_1                  = -1631097,
+    SAY_SLAY_2                  = -1631098,
+    SAY_BERSERK                 = -1631099,
+    SAY_DEATH                   = -1631100,
 };
 
 void AddSC_boss_professor_putricide()

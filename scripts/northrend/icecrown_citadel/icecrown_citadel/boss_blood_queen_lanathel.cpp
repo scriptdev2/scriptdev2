@@ -25,15 +25,15 @@ EndScriptData */
 
 enum
 {
-    SAY_AGGRO                   = 1631121,
-    SAY_BITE_1                  = 1631122,
-    SAY_BITE_2                  = 1631123,
-    SAY_SHADOWS                 = 1631124,
-    SAY_PACT                    = 1631125,
-    SAY_MC                      = 1631126,
-    SAY_AIR_PHASE               = 1631127,
-    SAY_BERSERK                 = 1631128,
-    SAY_DEATH                   = 1631129,
+    SAY_AGGRO                   = -1631121,
+    SAY_BITE_1                  = -1631122,
+    SAY_BITE_2                  = -1631123,
+    SAY_SHADOWS                 = -1631124,
+    SAY_PACT                    = -1631125,
+    SAY_MC                      = -1631126,
+    SAY_AIR_PHASE               = -1631127,
+    SAY_BERSERK                 = -1631128,
+    SAY_DEATH                   = -1631129,
 };
 
 void AddSC_boss_blood_queen_lanathel()

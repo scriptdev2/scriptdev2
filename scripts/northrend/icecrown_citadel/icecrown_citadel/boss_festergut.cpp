@@ -25,17 +25,17 @@ EndScriptData */
 
 enum
 {
-    SAY_STINKY_DIES             = 1631081,
-    SAY_AGGRO                   = 1631082,
-    SAY_BLIGHT                  = 1631083,
-    SAY_SPORE                   = 1631084,
-    SAY_PUNGUENT_BLIGHT         = 1631085,
-    SAY_PUNGUENT_BLIGHT_EMOTE   = 1631086,
-    SAY_SLAY_1                  = 1631087,
-    SAY_SLAY_2                  = 1631088,
-    SAY_BERSERK                 = 1631089,
-    SAY_DEATH                   = 1631090,
-    SAY_FESTERGUT_DEATH         = 1631091,
+    SAY_STINKY_DIES             = -1631081,
+    SAY_AGGRO                   = -1631082,
+    SAY_BLIGHT                  = -1631083,
+    SAY_SPORE                   = -1631084,
+    SAY_PUNGUENT_BLIGHT         = -1631085,
+    SAY_PUNGUENT_BLIGHT_EMOTE   = -1631086,
+    SAY_SLAY_1                  = -1631087,
+    SAY_SLAY_2                  = -1631088,
+    SAY_BERSERK                 = -1631089,
+    SAY_DEATH                   = -1631090,
+    SAY_FESTERGUT_DEATH         = -1631091,
 };
 
 void AddSC_boss_festergut()
