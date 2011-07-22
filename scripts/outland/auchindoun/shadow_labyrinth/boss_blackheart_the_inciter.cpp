@@ -24,32 +24,35 @@ EndScriptData */
 #include "precompiled.h"
 #include "shadow_labyrinth.h"
 
-#define SPELL_INCITE_CHAOS    33676
-#define SPELL_INCITE_CHAOS_B  33684                         //debuff applied to each member of party
-#define SPELL_CHARGE          33709
-#define SPELL_WAR_STOMP       33707
+enum
+{
+    SPELL_INCITE_CHAOS      = 33676,
+    SPELL_INCITE_CHAOS_B    = 33684,                        // Debuff applied to each member of party
+    SPELL_CHARGE            = 33709,
+    SPELL_WAR_STOMP         = 33707,
 
-#define SAY_INTRO1          -1555008
-#define SAY_INTRO2          -1555009
-#define SAY_INTRO3          -1555010
-#define SAY_AGGRO1          -1555011
-#define SAY_AGGRO2          -1555012
-#define SAY_AGGRO3          -1555013
-#define SAY_SLAY1           -1555014
-#define SAY_SLAY2           -1555015
-#define SAY_HELP            -1555016
-#define SAY_DEATH           -1555017
+    SAY_INTRO1              = -1555008,
+    SAY_INTRO2              = -1555009,
+    SAY_INTRO3              = -1555010,
+    SAY_AGGRO1              = -1555011,
+    SAY_AGGRO2              = -1555012,
+    SAY_AGGRO3              = -1555013,
+    SAY_SLAY1               = -1555014,
+    SAY_SLAY2               = -1555015,
+    SAY_HELP                = -1555016,
+    SAY_DEATH               = -1555017,
 
-#define SAY2_INTRO1         -1555018
-#define SAY2_INTRO2         -1555019
-#define SAY2_INTRO3         -1555020
-#define SAY2_AGGRO1         -1555021
-#define SAY2_AGGRO2         -1555022
-#define SAY2_AGGRO3         -1555023
-#define SAY2_SLAY1          -1555024
-#define SAY2_SLAY2          -1555025
-#define SAY2_HELP           -1555026
-#define SAY2_DEATH          -1555027
+    SAY2_INTRO1             = -1555018,
+    SAY2_INTRO2             = -1555019,
+    SAY2_INTRO3             = -1555020,
+    SAY2_AGGRO1             = -1555021,
+    SAY2_AGGRO2             = -1555022,
+    SAY2_AGGRO3             = -1555023,
+    SAY2_SLAY1              = -1555024,
+    SAY2_SLAY2              = -1555025,
+    SAY2_HELP               = -1555026,
+    SAY2_DEATH              = -1555027,
+};
 
 struct MANGOS_DLL_DECL boss_blackheart_the_inciterAI : public ScriptedAI
 {
@@ -61,30 +64,28 @@ struct MANGOS_DLL_DECL boss_blackheart_the_inciterAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    bool InciteChaos;
-    uint32 InciteChaos_Timer;
-    uint32 InciteChaosWait_Timer;
-    uint32 Charge_Timer;
-    uint32 Knockback_Timer;
+    bool   m_bInciteChaos;
+    uint32 m_uiInciteChaosTimer;
+    uint32 m_uiInciteChaosWaitTimer;
+    uint32 m_uiChargeTimer;
+    uint32 m_uiKnockbackTimer;
 
     void Reset()
     {
-        InciteChaos = false;
-        InciteChaos_Timer = 20000;
-        InciteChaosWait_Timer = 15000;
-        Charge_Timer = 5000;
-        Knockback_Timer = 15000;
-
-        if (m_pInstance)
-            m_pInstance->SetData(TYPE_INCITER, NOT_STARTED);
+        m_bInciteChaos = false;
+        m_uiInciteChaosTimer = 20000;
+        m_uiInciteChaosWaitTimer = 15000;
+        m_uiChargeTimer = 5000;
+        m_uiKnockbackTimer = 15000;
+        SetCombatMovement(true);
     }
 
-    void KilledUnit(Unit *victim)
+    void KilledUnit(Unit* pVictim)
     {
         DoScriptText(urand(0, 1) ? SAY_SLAY1 : SAY_SLAY2, m_creature);
     }
 
-    void JustDied(Unit *victim)
+    void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -92,7 +93,7 @@ struct MANGOS_DLL_DECL boss_blackheart_the_inciterAI : public ScriptedAI
             m_pInstance->SetData(TYPE_INCITER, DONE);
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
         switch(urand(0, 2))
         {
@@ -105,57 +106,77 @@ struct MANGOS_DLL_DECL boss_blackheart_the_inciterAI : public ScriptedAI
             m_pInstance->SetData(TYPE_INCITER, IN_PROGRESS);
     }
 
-    void UpdateAI(const uint32 diff)
+    void JustReachedHome()
     {
-        //Return since we have no target
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_INCITER, FAIL);
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        // Return since we have no pTarget
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (InciteChaos)
+        if (m_bInciteChaos)
         {
-            if (InciteChaosWait_Timer < diff)
+            if (m_uiInciteChaosWaitTimer < uiDiff)
             {
-                InciteChaos = false;
-                InciteChaosWait_Timer = 15000;
-            }else InciteChaosWait_Timer -= diff;
+                m_bInciteChaos = false;
+                m_uiInciteChaosWaitTimer = 15000;
+                SetCombatMovement(true);
+                m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
+            }
+            else
+                m_uiInciteChaosWaitTimer -= uiDiff;
 
             return;
         }
 
-        if (InciteChaos_Timer < diff)
+        if (m_uiInciteChaosTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature, SPELL_INCITE_CHAOS);
-
-            std::vector<ObjectGuid> vGuids;
-            m_creature->FillGuidsListFromThreatList(vGuids);
-            for (std::vector<ObjectGuid>::const_iterator itr = vGuids.begin();itr != vGuids.end(); ++itr)
+            if (DoCastSpellIfCan(m_creature, SPELL_INCITE_CHAOS) == CAST_OK)
             {
-                Unit* target = m_creature->GetMap()->GetUnit(*itr);
+                std::vector<ObjectGuid> vGuids;
+                m_creature->FillGuidsListFromThreatList(vGuids);
+                for (std::vector<ObjectGuid>::const_iterator itr = vGuids.begin();itr != vGuids.end(); ++itr)
+                {
+                    Unit* pTarget = m_creature->GetMap()->GetUnit(*itr);
 
-                if (target && target->GetTypeId() == TYPEID_PLAYER)
-                    target->CastSpell(target,SPELL_INCITE_CHAOS_B,true);
+                    if (pTarget && pTarget->GetTypeId() == TYPEID_PLAYER)
+                        pTarget->CastSpell(pTarget, SPELL_INCITE_CHAOS_B, true, NULL, NULL, m_creature->GetObjectGuid());
+                }
+
+                DoResetThreat();
+                m_bInciteChaos = true;
+                m_uiInciteChaosTimer = 40000;
+                SetCombatMovement(false);
+                m_creature->StopMoving();
+                return;
             }
+        }
+        else
+            m_uiInciteChaosTimer -= uiDiff;
 
-            DoResetThreat();
-            InciteChaos = true;
-            InciteChaos_Timer = 40000;
-            return;
-        }else InciteChaos_Timer -= diff;
-
-        //Charge_Timer
-        if (Charge_Timer < diff)
+        // Charge Timer
+        if (m_uiChargeTimer < uiDiff)
         {
-            if (Unit *target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-                DoCastSpellIfCan(target, SPELL_CHARGE);
-            Charge_Timer = urand(15000, 25000);
-        }else Charge_Timer -= diff;
+            Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0);
+            if (pTarget && DoCastSpellIfCan(pTarget, SPELL_CHARGE) == CAST_OK)
+                m_uiChargeTimer = urand(15000, 25000);
+        }
+        else
+            m_uiChargeTimer -= uiDiff;
 
-        //Knockback_Timer
-        if (Knockback_Timer < diff)
+        // Knockback Timer
+        if (m_uiKnockbackTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature, SPELL_WAR_STOMP);
-            Knockback_Timer = urand(18000, 24000);
-        }else Knockback_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature, SPELL_WAR_STOMP) == CAST_OK)
+                m_uiKnockbackTimer = urand(18000, 24000);
+        }
+        else
+            m_uiKnockbackTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
