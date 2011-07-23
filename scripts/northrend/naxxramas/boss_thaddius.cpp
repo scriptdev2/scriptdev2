@@ -83,6 +83,8 @@ enum
     // Tesla Spells
     SPELL_FEUGEN_CHAIN              = 28111,
     SPELL_STALAGG_CHAIN             = 28096,
+    SPELL_FEUGEN_TESLA_PASSIVE      = 28109,
+    SPELL_STALAGG_TESLA_PASSIVE     = 28097,
     SPELL_SHOCK_OVERLOAD            = 28159,
     SPELL_SHOCK                     = 28099,
  };
@@ -168,11 +170,6 @@ struct MANGOS_DLL_DECL boss_thaddiusAI : public Scripted_NoMovementAI
         m_creature->SetLootRecipient(NULL);
 
         Reset();
-    }
-
-    void JustReachedHome()
-    {
-        m_creature->LoadCreatureAddon();
     }
 
     void KilledUnit(Unit* pVictim)
@@ -316,8 +313,21 @@ struct MANGOS_DLL_DECL npc_tesla_coilAI : public Scripted_NoMovementAI
     uint32 m_uiOverloadTimer;
 
     void Reset() {}
-    void AttackStart(Unit* pWho) {}
     void MoveInLineOfSight(Unit* pWho) {}
+
+    void Aggro(Unit* pWho)
+    {
+        DoScriptText(EMOTE_LOSING_LINK, m_creature);
+    }
+
+    // Overwrite this function here to
+    // * Keep Chain spells casted when evading after useless EnterCombat caused by 'buffing' the add
+    // * To not remove the Passive spells when evading after ie killed a player
+    void EnterEvadeMode()
+    {
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop();
+    }
 
     bool SetupChain()
     {
@@ -334,14 +344,10 @@ struct MANGOS_DLL_DECL npc_tesla_coilAI : public Scripted_NoMovementAI
 
         m_bToFeugen = m_creature->GetDistanceOrder(pNoxTeslaFeugen, pNoxTeslaStalagg);
 
-        return true;
+        if (DoCastSpellIfCan(m_creature, m_bToFeugen ? SPELL_FEUGEN_CHAIN : SPELL_STALAGG_CHAIN) == CAST_OK)
+            return true;
 
-        /* TODO Uncomment when Chain spells are proper implemented
-         * if (DoCastSpellIfCan(m_creature, m_bToFeugen ? SPELL_FEUGEN_CHAIN : SPELL_STALAGG_CHAIN) == CAST_OK)
-         *    return true;
-         *
-         * return false;
-         */
+        return false;
     }
 
     void ReApplyChain(uint32 uiEntry)
@@ -363,8 +369,7 @@ struct MANGOS_DLL_DECL npc_tesla_coilAI : public Scripted_NoMovementAI
             if (pGo && pGo->GetGoType() == GAMEOBJECT_TYPE_BUTTON && pGo->getLootState() == GO_ACTIVATED)
                 pGo->ResetDoorOrButton();
 
-            // TODO Uncomment when chain spells are proper implemented
-            // DoCastSpellIfCan(m_creature, m_bToFeugen ? SPELL_FEUGEN_CHAIN : SPELL_STALAGG_CHAIN);
+            DoCastSpellIfCan(m_creature, m_bToFeugen ? SPELL_FEUGEN_CHAIN : SPELL_STALAGG_CHAIN);
         }
     }
 
@@ -375,6 +380,8 @@ struct MANGOS_DLL_DECL npc_tesla_coilAI : public Scripted_NoMovementAI
 
     void UpdateAI(const uint32 uiDiff)
     {
+        m_creature->SelectHostileTarget();
+
         if (!m_uiOverloadTimer && !m_uiSetupTimer && !m_bReapply)
             return;                                         // Nothing to do this tick
 
@@ -396,6 +403,7 @@ struct MANGOS_DLL_DECL npc_tesla_coilAI : public Scripted_NoMovementAI
             if (m_uiOverloadTimer <=  uiDiff)
             {
                 m_uiOverloadTimer = 0;
+                m_creature->RemoveAurasDueToSpell(m_bToFeugen ? SPELL_FEUGEN_TESLA_PASSIVE : SPELL_STALAGG_TESLA_PASSIVE);
                 DoCastSpellIfCan(m_creature,  SPELL_SHOCK_OVERLOAD, CAST_INTERRUPT_PREVIOUS);
                 DoScriptText(EMOTE_TESLA_OVERLOAD, m_creature);
                 m_pInstance->DoUseDoorOrButton(m_bToFeugen ? GO_CONS_NOX_TESLA_FEUGEN : GO_CONS_NOX_TESLA_STALAGG);
