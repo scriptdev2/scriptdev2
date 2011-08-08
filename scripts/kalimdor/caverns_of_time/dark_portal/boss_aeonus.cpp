@@ -38,7 +38,7 @@ enum
     SPELL_TIME_STOP         = 31422,
     SPELL_ENRAGE            = 37605,
     SPELL_SAND_BREATH       = 31473,
-    H_SPELL_SAND_BREATH     = 39049
+    SPELL_SAND_BREATH_H     = 39049
 };
 
 struct MANGOS_DLL_DECL boss_aeonusAI : public ScriptedAI
@@ -106,7 +106,7 @@ struct MANGOS_DLL_DECL boss_aeonusAI : public ScriptedAI
         //Sand Breath
         if (SandBreath_Timer < diff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_SAND_BREATH : H_SPELL_SAND_BREATH);
+            DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_SAND_BREATH : SPELL_SAND_BREATH_H);
             SandBreath_Timer = urand(15000, 25000);
         }else SandBreath_Timer -= diff;
 

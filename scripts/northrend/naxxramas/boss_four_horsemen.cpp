@@ -44,9 +44,9 @@ enum
     SPELL_MARK_OF_BLAUMEUX  = 28833,
     SPELL_UNYILDING_PAIN    = 57381,
     SPELL_VOIDZONE          = 28863,
-    H_SPELL_VOIDZONE        = 57463,
+    SPELL_VOIDZONE_H        = 57463,
     SPELL_SHADOW_BOLT       = 57374,
-    H_SPELL_SHADOW_BOLT     = 57464,
+    SPELL_SHADOW_BOLT_H     = 57464,
 
     //baron rivendare
     SAY_RIVE_AGGRO1         = -1533065,
@@ -62,7 +62,7 @@ enum
 
     SPELL_MARK_OF_RIVENDARE = 28834,
     SPELL_UNHOLY_SHADOW     = 28882,
-    H_SPELL_UNHOLY_SHADOW   = 57369,
+    SPELL_UNHOLY_SHADOW_H   = 57369,
 
     //thane korthazz
     SAY_KORT_AGGRO          = -1533051,
@@ -89,9 +89,9 @@ enum
 
     SPELL_MARK_OF_ZELIEK    = 28835,
     SPELL_HOLY_WRATH        = 28883,
-    H_SPELL_HOLY_WRATH      = 57466,
+    SPELL_HOLY_WRATH_H      = 57466,
     SPELL_HOLY_BOLT         = 57376,
-    H_SPELL_HOLY_BOLT       = 57465,
+    SPELL_HOLY_BOLT_H       = 57465,
 
     // horseman spirits
     NPC_SPIRIT_OF_BLAUMEUX    = 16776,

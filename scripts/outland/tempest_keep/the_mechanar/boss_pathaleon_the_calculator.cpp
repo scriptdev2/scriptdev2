@@ -36,7 +36,7 @@ EndScriptData */
 #define SPELL_MANA_TAP                  36021
 #define SPELL_ARCANE_TORRENT            36022
 #define SPELL_DOMINATION                35280
-#define H_SPELL_ARCANE_EXPLOSION        15453
+#define SPELL_ARCANE_EXPLOSION_H        15453
 #define SPELL_FRENZY                    36992
 
 #define SPELL_SUMMON_NETHER_WRAITH_1    35285               //Spells work, but not implemented
@@ -144,7 +144,7 @@ struct MANGOS_DLL_DECL boss_pathaleon_the_calculatorAI : public ScriptedAI
         {
             if (ArcaneExplosion_Timer < diff)
             {
-                DoCastSpellIfCan(m_creature->getVictim(),H_SPELL_ARCANE_EXPLOSION);
+                DoCastSpellIfCan(m_creature->getVictim(),SPELL_ARCANE_EXPLOSION_H);
                 ArcaneExplosion_Timer = urand(10000, 14000);
             }else ArcaneExplosion_Timer -= diff;
         }

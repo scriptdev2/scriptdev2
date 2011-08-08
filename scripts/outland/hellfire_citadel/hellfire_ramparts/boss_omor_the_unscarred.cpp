@@ -35,10 +35,10 @@ EndScriptData */
 #define SPELL_ORBITAL_STRIKE        30637
 #define SPELL_SHADOW_WHIP           30638
 #define SPELL_TREACHEROUS_AURA      30695
-#define H_SPELL_BANE_OF_TREACHERY   37566
+#define SPELL_BANE_OF_TREACHERY_H   37566
 #define SPELL_DEMONIC_SHIELD        31901
 #define SPELL_SHADOW_BOLT           30686
-#define H_SPELL_SHADOW_BOLT         39297
+#define SPELL_SHADOW_BOLT_H         39297
 #define SPELL_SUMMON_FIENDISH_HOUND 30707
 
 struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
@@ -176,7 +176,7 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
 
             if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
             {
-                DoCastSpellIfCan(target, m_bIsRegularMode ? SPELL_TREACHEROUS_AURA : H_SPELL_BANE_OF_TREACHERY);
+                DoCastSpellIfCan(target, m_bIsRegularMode ? SPELL_TREACHEROUS_AURA : SPELL_BANE_OF_TREACHERY_H);
                 Aura_Timer = urand(8000, 16000);
             }
         }else Aura_Timer -= diff;
@@ -188,7 +188,7 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
                 if (target)
                     target = m_creature->getVictim();
 
-                DoCastSpellIfCan(target, m_bIsRegularMode ? SPELL_SHADOW_BOLT : H_SPELL_SHADOW_BOLT);
+                DoCastSpellIfCan(target, m_bIsRegularMode ? SPELL_SHADOW_BOLT : SPELL_SHADOW_BOLT_H);
                 Shadowbolt_Timer = urand(4000, 6500);
             }
         }else Shadowbolt_Timer -= diff;

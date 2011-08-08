@@ -69,7 +69,7 @@ enum
     SPELL_SHADOW_FISSURE   = 30496,                         // Summon the ShadowFissure NPC
 
     SPELL_SHADOW_CLEAVE    = 30495,
-    H_SPELL_SHADOW_SLAM    = 35953,
+    SPELL_SHADOW_SLAM_H    = 35953,
 
     SPELL_HEMORRHAGE       = 30478,
 
@@ -309,7 +309,7 @@ struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
 
             if (m_uiCleaveTimer < uiDiff)
             {
-                DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_SHADOW_CLEAVE : H_SPELL_SHADOW_SLAM);
+                DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_SHADOW_CLEAVE : SPELL_SHADOW_SLAM_H);
                 m_uiCleaveTimer = urand(6000, 8500);
             }
             else

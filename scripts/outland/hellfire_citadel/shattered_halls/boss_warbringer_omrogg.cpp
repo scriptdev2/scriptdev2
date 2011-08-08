@@ -40,7 +40,7 @@ enum
     SPELL_THUNDERCLAP           = 30633,
 
     SPELL_BURNING_MAUL          = 30598,
-    H_SPELL_BURNING_MAUL        = 36056,
+    SPELL_BURNING_MAUL_H        = 36056,
 
     NPC_LEFT_HEAD               = 19523,
     NPC_RIGHT_HEAD              = 19524
@@ -347,7 +347,7 @@ struct MANGOS_DLL_DECL boss_warbringer_omroggAI : public ScriptedAI
         if (m_uiBurningMaul_Timer < uiDiff)
         {
             DoScriptText(EMOTE_ENRAGE, m_creature);
-            DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_BURNING_MAUL : H_SPELL_BURNING_MAUL);
+            DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_BURNING_MAUL : SPELL_BURNING_MAUL_H);
             m_uiBurningMaul_Timer = 40000;
             m_uiBlastWave_Timer = 16000;
             m_uiBlastCount = 1;

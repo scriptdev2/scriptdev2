@@ -32,9 +32,9 @@ EndScriptData */
 #define SAY_DEATH                   -1269011
 
 #define SPELL_ARCANE_BLAST          31457
-#define H_SPELL_ARCANE_BLAST        38538
+#define SPELL_ARCANE_BLAST_H        38538
 #define SPELL_ARCANE_DISCHARGE      31472
-#define H_SPELL_ARCANE_DISCHARGE    38539
+#define SPELL_ARCANE_DISCHARGE_H    38539
 #define SPELL_TIME_LAPSE            31467
 #define SPELL_ATTRACTION            38540                       //Not Implemented (Heroic mode)
 
@@ -105,7 +105,7 @@ struct MANGOS_DLL_DECL boss_chrono_lord_dejaAI : public ScriptedAI
         //Arcane Blast
         if (ArcaneBlast_Timer < diff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_ARCANE_BLAST : H_SPELL_ARCANE_BLAST);
+            DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_ARCANE_BLAST : SPELL_ARCANE_BLAST_H);
             ArcaneBlast_Timer = urand(15000, 25000);
         }else ArcaneBlast_Timer -= diff;
 
@@ -113,7 +113,7 @@ struct MANGOS_DLL_DECL boss_chrono_lord_dejaAI : public ScriptedAI
         if (ArcaneDischarge_Timer < diff)
         {
             if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-                DoCastSpellIfCan(target, m_bIsRegularMode ? SPELL_ARCANE_DISCHARGE : H_SPELL_ARCANE_DISCHARGE);
+                DoCastSpellIfCan(target, m_bIsRegularMode ? SPELL_ARCANE_DISCHARGE : SPELL_ARCANE_DISCHARGE_H);
 
             ArcaneDischarge_Timer = urand(20000, 30000);
         }else ArcaneDischarge_Timer -= diff;

@@ -135,7 +135,7 @@ struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
 };
 
 #define SPELL_WATER_BOLT_VOLLEY     34449
-#define H_SPELL_WATER_BOLT_VOLLEY   37924
+#define SPELL_WATER_BOLT_VOLLEY_H   37924
 
 struct MANGOS_DLL_DECL mob_coilfang_waterelementalAI : public ScriptedAI
 {
@@ -160,7 +160,7 @@ struct MANGOS_DLL_DECL mob_coilfang_waterelementalAI : public ScriptedAI
 
         if (WaterBoltVolley_Timer < diff)
         {
-            DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_WATER_BOLT_VOLLEY : H_SPELL_WATER_BOLT_VOLLEY);
+            DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_WATER_BOLT_VOLLEY : SPELL_WATER_BOLT_VOLLEY_H);
             WaterBoltVolley_Timer = urand(7000, 12000);
         }else WaterBoltVolley_Timer -= diff;
 

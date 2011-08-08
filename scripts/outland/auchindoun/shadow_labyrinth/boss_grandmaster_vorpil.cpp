@@ -43,8 +43,8 @@ EndScriptData */
 #define SPELL_SUMMON_VOIDWALKER_D       33585
 #define SPELL_SUMMON_VOIDWALKER_E       33586
 #define SPELL_RAIN_OF_FIRE              33617
-#define H_SPELL_RAIN_OF_FIRE            39363
-#define H_SPELL_BANISH                  38791
+#define SPELL_RAIN_OF_FIRE_H            39363
+#define SPELL_BANISH_H                  38791
 
 #define ENTRY_VOID_PORTAL               19224
 #define ENTRY_VOID_TRAVELER             19226
@@ -170,7 +170,7 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
                 }
                 Teleport = false;
 
-                DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_RAIN_OF_FIRE : H_SPELL_RAIN_OF_FIRE);
+                DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_RAIN_OF_FIRE : SPELL_RAIN_OF_FIRE_H);
 
                 Teleport_Timer = 1000;
             }else Teleport_Timer -= diff;
@@ -210,7 +210,7 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
             if (Banish_Timer < diff)
             {
                 if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1))
-                    DoCastSpellIfCan(target,H_SPELL_BANISH);
+                    DoCastSpellIfCan(target,SPELL_BANISH_H);
                 Banish_Timer = 35000;
             }else Banish_Timer -= diff;
         }

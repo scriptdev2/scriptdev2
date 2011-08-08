@@ -34,7 +34,7 @@ EndScriptData */
 #define SPELL_HASTE             31458
 #define SPELL_MORTAL_WOUND      31464
 #define SPELL_WING_BUFFET       31475
-#define H_SPELL_WING_BUFFET     38593
+#define SPELL_WING_BUFFET_H     38593
 #define SPELL_REFLECT           38592                       //Not Implemented (Heroic mod)
 
 struct MANGOS_DLL_DECL boss_temporusAI : public ScriptedAI
@@ -118,7 +118,7 @@ struct MANGOS_DLL_DECL boss_temporusAI : public ScriptedAI
         //Wing ruffet
         if (WingBuffet_Timer < diff)
         {
-            DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_WING_BUFFET : H_SPELL_WING_BUFFET);
+            DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_WING_BUFFET : SPELL_WING_BUFFET_H);
             WingBuffet_Timer = urand(20000, 30000);
         }else WingBuffet_Timer -= diff;
 

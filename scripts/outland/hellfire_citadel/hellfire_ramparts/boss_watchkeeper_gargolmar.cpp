@@ -34,7 +34,7 @@ EndScriptData */
 #define SAY_DIE                 -1543008
 
 #define SPELL_MORTAL_WOUND      30641
-#define H_SPELL_MORTAL_WOUND    36814
+#define SPELL_MORTAL_WOUND_H    36814
 #define SPELL_SURGE             34645
 #define SPELL_RETALIATION       22857
 
@@ -113,7 +113,7 @@ struct MANGOS_DLL_DECL boss_watchkeeper_gargolmarAI : public ScriptedAI
 
         if (MortalWound_Timer < diff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_MORTAL_WOUND : H_SPELL_MORTAL_WOUND);
+            DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_MORTAL_WOUND : SPELL_MORTAL_WOUND_H);
             MortalWound_Timer = urand(5000, 13000);
         }else MortalWound_Timer -= diff;
 

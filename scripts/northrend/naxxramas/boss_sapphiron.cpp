@@ -182,7 +182,7 @@ struct MANGOS_DLL_DECL boss_sapphironAI : public ScriptedAI
 
                 if (m_uiTailSweepTimer < uiDiff)
                 {
-                    if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_TAIL_SWEEP : SPELL_TAIL_SWEEP) == CAST_OK)
+                    if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_TAIL_SWEEP : SPELL_TAIL_SWEEP_H) == CAST_OK)
                         m_uiTailSweepTimer = urand(7000, 10000);
                 }
                 else

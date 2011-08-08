@@ -23,37 +23,38 @@ EndScriptData */
 
 #include "precompiled.h"
 
-#define SAY_SUMMON                  -1556000
+enum
+{
+    SAY_SUMMON                  = -1556000,
+    SAY_AGGRO_1                 = -1556001,
+    SAY_AGGRO_2                 = -1556002,
+    SAY_AGGRO_3                 = -1556003,
+    SAY_SLAY_1                  = -1556004,
+    SAY_SLAY_2                  = -1556005,
+    SAY_DEATH                   = -1556006,
 
-#define SAY_AGGRO_1                 -1556001
-#define SAY_AGGRO_2                 -1556002
-#define SAY_AGGRO_3                 -1556003
+    // TODO Heroic spells (shock, chain lightning) missing, unknown if IDs are correct
+    SPELL_FROST_SHOCK           = 37865,
+    SPELL_FLAME_SHOCK           = 34354,
+    SPELL_SHADOW_SHOCK          = 30138,
+    SPELL_ARCANE_SHOCK          = 37132,
 
-#define SAY_SLAY_1                  -1556004
-#define SAY_SLAY_2                  -1556005
+    SPELL_CHAIN_LIGHTNING       = 39945,
 
-#define SAY_DEATH                   -1556006
+    SPELL_SUMMON_SYTH_FIRE      = 33537,                    // Spawns 19203
+    SPELL_SUMMON_SYTH_ARCANE    = 33538,                    // Spawns 19205
+    SPELL_SUMMON_SYTH_FROST     = 33539,                    // Spawns 19204
+    SPELL_SUMMON_SYTH_SHADOW    = 33540,                    // Spawns 19206
 
-#define SPELL_FROST_SHOCK           37865
-#define SPELL_FLAME_SHOCK           34354
-#define SPELL_SHADOW_SHOCK          30138
-#define SPELL_ARCANE_SHOCK          37132
-
-#define SPELL_CHAIN_LIGHTNING       39945
-
-#define SPELL_SUMMON_SYTH_FIRE      33537                   // Spawns 19203
-#define SPELL_SUMMON_SYTH_ARCANE    33538                   // Spawns 19205
-#define SPELL_SUMMON_SYTH_FROST     33539                   // Spawns 19204
-#define SPELL_SUMMON_SYTH_SHADOW    33540                   // Spawns 19206
-
-#define SPELL_FLAME_BUFFET          33526
-#define H_SPELL_FLAME_BUFFET        38141
-#define SPELL_ARCANE_BUFFET         33527
-#define H_SPELL_ARCANE_BUFFET       38138
-#define SPELL_FROST_BUFFET          33528
-#define H_SPELL_FROST_BUFFET        38142
-#define SPELL_SHADOW_BUFFET         33529
-#define H_SPELL_SHADOW_BUFFET       38143
+    SPELL_FLAME_BUFFET          = 33526,
+    SPELL_FLAME_BUFFET_H        = 38141,
+    SPELL_ARCANE_BUFFET         = 33527,
+    SPELL_ARCANE_BUFFET_H       = 38138,
+    SPELL_FROST_BUFFET          = 33528,
+    SPELL_FROST_BUFFET_H        = 38142,
+    SPELL_SHADOW_BUFFET         = 33529,
+    SPELL_SHADOW_BUFFET_H       = 38143,
+};
 
 struct MANGOS_DLL_DECL boss_darkweaver_sythAI : public ScriptedAI
 {
@@ -238,7 +239,7 @@ struct MANGOS_DLL_DECL mob_syth_fireAI : public ScriptedAI
         if (flamebuffet_timer < diff)
         {
             if (Unit *target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
-             DoCastSpellIfCan(target, m_bIsRegularMode ? H_SPELL_FLAME_BUFFET : SPELL_FLAME_BUFFET);
+             DoCastSpellIfCan(target, m_bIsRegularMode ? SPELL_FLAME_BUFFET : SPELL_FLAME_BUFFET_H);
 
             flamebuffet_timer = 5000;
 
@@ -288,7 +289,7 @@ struct MANGOS_DLL_DECL mob_syth_arcaneAI : public ScriptedAI
         if (arcanebuffet_timer < diff)
         {
             if (Unit *target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
-                DoCastSpellIfCan(target, m_bIsRegularMode ? H_SPELL_ARCANE_BUFFET : SPELL_ARCANE_BUFFET);
+                DoCastSpellIfCan(target, m_bIsRegularMode ? SPELL_ARCANE_BUFFET : SPELL_ARCANE_BUFFET_H);
 
             arcanebuffet_timer = 5000;
         }else arcanebuffet_timer -= diff;
@@ -337,7 +338,7 @@ struct MANGOS_DLL_DECL mob_syth_frostAI : public ScriptedAI
         if (frostbuffet_timer < diff)
         {
             if (Unit *target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
-                DoCastSpellIfCan(target, m_bIsRegularMode ? H_SPELL_FROST_BUFFET : SPELL_FROST_BUFFET);
+                DoCastSpellIfCan(target, m_bIsRegularMode ? SPELL_FROST_BUFFET : SPELL_FROST_BUFFET_H);
 
             frostbuffet_timer = 5000;
         }else frostbuffet_timer -= diff;
@@ -386,7 +387,7 @@ struct MANGOS_DLL_DECL mob_syth_shadowAI : public ScriptedAI
         if (shadowbuffet_timer < diff)
         {
             if (Unit *target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
-                DoCastSpellIfCan(target, m_bIsRegularMode ? H_SPELL_SHADOW_BUFFET : SPELL_SHADOW_BUFFET);
+                DoCastSpellIfCan(target, m_bIsRegularMode ? SPELL_SHADOW_BUFFET : SPELL_SHADOW_BUFFET_H);
 
             shadowbuffet_timer = 5000;
         }else shadowbuffet_timer -= diff;

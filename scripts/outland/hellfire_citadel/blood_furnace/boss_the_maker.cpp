@@ -35,7 +35,7 @@ enum
 
     SPELL_ACID_SPRAY            = 38153,                    // heroic 38973 ??? 38153
     SPELL_EXPLODING_BREAKER     = 30925,
-    H_SPELL_EXPLODING_BREAKER   = 40059,
+    SPELL_EXPLODING_BREAKER_H   = 40059,
     SPELL_KNOCKDOWN             = 20276,
     SPELL_DOMINATION            = 25772                     // ???
 };
@@ -111,7 +111,7 @@ struct MANGOS_DLL_DECL boss_the_makerAI : public ScriptedAI
         if (ExplodingBreaker_Timer < diff)
         {
             if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
-                DoCastSpellIfCan(target, m_bIsRegularMode ? H_SPELL_EXPLODING_BREAKER : SPELL_EXPLODING_BREAKER);
+                DoCastSpellIfCan(target, m_bIsRegularMode ? SPELL_EXPLODING_BREAKER : SPELL_EXPLODING_BREAKER_H);
             ExplodingBreaker_Timer = urand(4000, 12000);
         }else ExplodingBreaker_Timer -=diff;
 

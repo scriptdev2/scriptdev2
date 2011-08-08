@@ -149,7 +149,7 @@ CreatureAI* GetAI_boss_nethermancer_sepethrea(Creature* pCreature)
 }
 
 #define SPELL_INFERNO                   35268
-#define H_SPELL_INFERNO                 39346
+#define SPELL_INFERNO_H                 39346
 #define SPELL_FIRE_TAIL                 35278
 
 struct MANGOS_DLL_DECL mob_ragin_flamesAI : public ScriptedAI
@@ -194,7 +194,7 @@ struct MANGOS_DLL_DECL mob_ragin_flamesAI : public ScriptedAI
 
         if (inferno_Timer < diff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_INFERNO : H_SPELL_INFERNO);
+            DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_INFERNO : SPELL_INFERNO_H);
 
             m_creature->TauntApply(m_creature->getVictim());
 

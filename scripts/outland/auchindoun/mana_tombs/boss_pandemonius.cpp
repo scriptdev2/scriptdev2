@@ -35,9 +35,9 @@ EndScriptData */
 #define EMOTE_DARK_SHELL                -1557014
 
 #define SPELL_VOID_BLAST                32325
-#define H_SPELL_VOID_BLAST              38760
+#define SPELL_VOID_BLAST_H              38760
 #define SPELL_DARK_SHELL                32358
-#define H_SPELL_DARK_SHELL              38759
+#define SPELL_DARK_SHELL_H              38759
 
 struct MANGOS_DLL_DECL boss_pandemoniusAI : public ScriptedAI
 {
@@ -89,7 +89,7 @@ struct MANGOS_DLL_DECL boss_pandemoniusAI : public ScriptedAI
         {
             if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
             {
-                DoCastSpellIfCan(target, m_bIsRegularMode ? SPELL_VOID_BLAST : H_SPELL_VOID_BLAST);
+                DoCastSpellIfCan(target, m_bIsRegularMode ? SPELL_VOID_BLAST : SPELL_VOID_BLAST_H);
                 VoidBlast_Timer = 500;
                 ++VoidBlast_Counter;
             }
@@ -110,7 +110,7 @@ struct MANGOS_DLL_DECL boss_pandemoniusAI : public ScriptedAI
 
                 DoScriptText(EMOTE_DARK_SHELL, m_creature);
 
-                DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_DARK_SHELL : H_SPELL_DARK_SHELL);
+                DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_DARK_SHELL : SPELL_DARK_SHELL_H);
                 DarkShell_Timer = 20000;
             }else DarkShell_Timer -= diff;
         }

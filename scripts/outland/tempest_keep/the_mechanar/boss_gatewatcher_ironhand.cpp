@@ -32,10 +32,10 @@ EndScriptData */
 #define EMOTE_HAMMER                    -1554012
 
 #define SPELL_SHADOW_POWER              35322
-#define H_SPELL_SHADOW_POWER            39193
+#define SPELL_SHADOW_POWER_H            39193
 #define SPELL_HAMMER_PUNCH              35326
 #define SPELL_JACKHAMMER                35327
-#define H_SPELL_JACKHAMMER              39194
+#define SPELL_JACKHAMMER_H              39194
 #define SPELL_STREAM_OF_MACHINE_FLUID   35311
 
 struct MANGOS_DLL_DECL boss_gatewatcher_iron_handAI : public ScriptedAI
@@ -93,7 +93,7 @@ struct MANGOS_DLL_DECL boss_gatewatcher_iron_handAI : public ScriptedAI
         //Shadow Power
         if (Shadow_Power_Timer < diff)
         {
-            DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_SHADOW_POWER : H_SPELL_SHADOW_POWER);
+            DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_SHADOW_POWER : SPELL_SHADOW_POWER_H);
             Shadow_Power_Timer = urand(20000, 28000);
         }else Shadow_Power_Timer -= diff;
 
@@ -102,7 +102,7 @@ struct MANGOS_DLL_DECL boss_gatewatcher_iron_handAI : public ScriptedAI
         {
             //TODO: expect cast this about 5 times in a row (?), announce it by emote only once
             DoScriptText(EMOTE_HAMMER, m_creature);
-            DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_JACKHAMMER : H_SPELL_JACKHAMMER);
+            DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_JACKHAMMER : SPELL_JACKHAMMER_H);
 
             //chance to yell, but not same time as emote (after spell in fact casted)
             if (urand(0, 4))

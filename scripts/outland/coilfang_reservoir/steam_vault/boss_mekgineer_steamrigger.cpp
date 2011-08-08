@@ -42,7 +42,7 @@ EndContentData */
 #define SPELL_SUPER_SHRINK_RAY      31485
 #define SPELL_SAW_BLADE             31486
 #define SPELL_ELECTRIFIED_NET       35107
-#define H_SPELL_ENRAGE              1                       //corrent enrage spell not known
+#define SPELL_ENRAGE_H              1                       //corrent enrage spell not known
 
 #define ENTRY_STREAMRIGGER_MECHANIC 17951
 
@@ -192,7 +192,7 @@ CreatureAI* GetAI_boss_mekgineer_steamrigger(Creature* pCreature)
 
 #define SPELL_DISPEL_MAGIC          17201
 #define SPELL_REPAIR                31532
-#define H_SPELL_REPAIR              37936
+#define SPELL_REPAIR_H              37936
 
 #define MAX_REPAIR_RANGE            (13.0f)                 //we should be at least at this range for repair
 #define MIN_REPAIR_RANGE            (7.0f)                  //we can stop movement at this range to repair but not required
@@ -238,7 +238,7 @@ struct MANGOS_DLL_DECL mob_steamrigger_mechanicAI : public ScriptedAI
                             //m_creature->GetMotionMaster()->MovementExpired();
                             //m_creature->GetMotionMaster()->MoveIdle();
 
-                            DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_REPAIR : H_SPELL_REPAIR, CAST_TRIGGERED);
+                            DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_REPAIR : SPELL_REPAIR_H, CAST_TRIGGERED);
                         }
                         Repair_Timer = 5000;
                     }
