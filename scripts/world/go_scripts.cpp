@@ -39,6 +39,7 @@ go_tele_to_violet_stand
 go_andorhal_tower
 go_scourge_enclosure
 go_lab_work_reagents
+go_hand_of_iruxos_crystal
 EndContentData */
 
 #include "precompiled.h"

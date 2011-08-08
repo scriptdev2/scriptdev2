@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Boss_Sapphiron
 SD%Complete: 80
-SDComment: Havy-Snow-Storms need proper handling, Some spells need core implementation, Hover is currently hacked
+SDComment: Some spells need core implementation
 SDCategory: Naxxramas
 EndScriptData */
 
@@ -25,7 +25,6 @@ EndScriptData */
  * Bugged spells:   28560 (needs maxTarget = 1, Summon of 16474 implementation, TODO, 30s duration)
  *                  28526 (needs ScriptEffect to cast 28522 onto random target)
  *
- * Blizzard might need handling for their movement
  * Achievement-criteria check needs implementation
  *
  * Frost-Breath ability: the dummy spell 30101 is self cast, so it won't take the needed delay of ~7s until it reaches its target
@@ -291,7 +290,7 @@ struct MANGOS_DLL_DECL boss_sapphironAI : public ScriptedAI
                 {
                     m_Phase = PHASE_GROUND;
 
-                    SetCombatMovement(false);
+                    SetCombatMovement(true);
                     m_creature->GetMotionMaster()->Clear(false);
                     m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
 
