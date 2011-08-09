@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Nazan_And_Vazruden
-SD%Complete: 30
-SDComment: Encounter is not complete. TODO: re-check script when MovementInform call from core work as expected.
+SD%Complete: 95
+SDComment: Bellowing Roar Timer (heroic) needs some love
 SDCategory: Hellfire Citadel, Hellfire Ramparts
 EndScriptData */
 
@@ -39,16 +39,21 @@ enum
     SPELL_SUMMON_VAZRUDEN   = 30717,
 
     //vazruden
-    SPELL_REVENGE           = 40392,
+    SPELL_REVENGE           = 19130,
+    SPELL_REVENGE_H         = 40392,
 
     //nazan
-    SPELL_FIREBALL          = 30691,                        // TODO: IDs not verified
-    SPELL_FIREBALL_H        = 36920,
+    SPELL_FIREBALL          = 30691,                        // This and the next while flying (dmg values will change in cata)
+    SPELL_FIREBALL_B        = 33793,
+    SPELL_FIREBALL_H        = 32491,
+    SPELL_FIREBALL_B_H      = 33794,
+    SPELL_FIREBALL_LAND     = 34653,                        // While landed
+    SPELL_FIREBALL_LAND_H   = 36920,
 
     SPELL_CONE_OF_FIRE      = 30926,
-    SPELL_H_CONE_OF_FIRE    = 36921,
+    SPELL_CONE_OF_FIRE_H    = 36921,
 
-    SPELL_H_BELLOW_ROAR     = 39427,
+    SPELL_BELLOW_ROAR_H     = 39427,
 
     //misc
     POINT_ID_CENTER         = 100,
@@ -73,11 +78,13 @@ struct MANGOS_DLL_DECL boss_vazrudenAI : public ScriptedAI
     ScriptedInstance* m_pInstance;
     bool m_bIsRegularMode;
 
+    uint32 m_uiRevengeTimer;
     bool m_bHealthBelow;
 
     void Reset()
     {
         m_bHealthBelow = false;
+        m_uiRevengeTimer = urand(5500, 8400);
     }
 
     void Aggro(Unit* pWho)
@@ -132,6 +139,14 @@ struct MANGOS_DLL_DECL boss_vazrudenAI : public ScriptedAI
             m_bHealthBelow = true;
         }
 
+        if (m_uiRevengeTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_REVENGE : SPELL_REVENGE_H) == CAST_OK)
+                m_uiRevengeTimer = urand(11400, 14300);
+        }
+        else
+            m_uiRevengeTimer -= uiDiff;
+
         DoMeleeAttackIfReady();
     }
 };
@@ -160,6 +175,9 @@ struct MANGOS_DLL_DECL boss_vazruden_heraldAI : public ScriptedAI
     bool m_bIsEventInProgress;
     uint32 m_uiMovementTimer;
     uint32 m_uiFireballTimer;
+    uint32 m_uiFireballBTimer;
+    uint32 m_uiConeOfFireTimer;
+    uint32 m_uiBellowingRoarTimer;
 
     ObjectGuid m_lastSeenPlayerGuid;
     ObjectGuid m_vazrudenGuid;
@@ -176,6 +194,9 @@ struct MANGOS_DLL_DECL boss_vazruden_heraldAI : public ScriptedAI
         m_lastSeenPlayerGuid.Clear();
         m_vazrudenGuid.Clear();
         m_uiFireballTimer = 0;
+        m_uiFireballBTimer = 2100;
+        m_uiConeOfFireTimer = urand(8100, 19700);
+        m_uiBellowingRoarTimer = 100;                       // TODO Guesswork, though such an AoE fear soon after landing seems fitting
 
         // see boss_onyxia
         // sort of a hack, it is unclear how this really work but the values appear to be valid
@@ -236,11 +257,14 @@ struct MANGOS_DLL_DECL boss_vazruden_heraldAI : public ScriptedAI
                     if (pPlayer && pPlayer->isAlive())
                         AttackStart(pPlayer);
 
+                    // Initialize for combat
+                    m_uiFireballTimer = urand(5200, 16500);
+
                     break;
                 }
                 case POINT_ID_FLYING:
                     if (m_bIsEventInProgress)               // Additional check for wipe case, while nazan is flying to this point
-                        m_uiFireballTimer = 3000;
+                        m_uiFireballTimer = 1;
                     break;
             }
         }
@@ -330,15 +354,62 @@ struct MANGOS_DLL_DECL boss_vazruden_heraldAI : public ScriptedAI
                     if (Creature* pVazruden = m_creature->GetMap()->GetCreature(m_vazrudenGuid))
                     {
                         if (Unit* pEnemy = pVazruden->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-                            DoCastSpellIfCan(pEnemy, m_bIsRegularMode ? SPELL_FIREBALL : SPELL_FIREBALL_H, 0, pVazruden->GetObjectGuid());
+                        {
+                            if (DoCastSpellIfCan(pEnemy, m_bIsRegularMode ? SPELL_FIREBALL : SPELL_FIREBALL_H, 0, pVazruden->GetObjectGuid()) == CAST_OK)
+                                m_uiFireballTimer = urand(2100, 7300);
+                        }
                     }
-                    m_uiFireballTimer = urand(4000, 8000);
                 }
                 else
                     m_uiFireballTimer -= uiDiff;
+
+                if (m_uiFireballBTimer < uiDiff)
+                {
+                    if (Creature* pVazruden = m_creature->GetMap()->GetCreature(m_vazrudenGuid))
+                    {
+                        if (Unit* pEnemy = pVazruden->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                        {
+                            if (DoCastSpellIfCan(pEnemy, m_bIsRegularMode ? SPELL_FIREBALL_B : SPELL_FIREBALL_B_H, 0, pVazruden->GetObjectGuid()) == CAST_OK)
+                                m_uiFireballBTimer = 15700;
+                        }
+                    }
+                }
+                else
+                    m_uiFireballBTimer -= uiDiff;
             }
 
             return;
+        }
+
+        // In Combat
+        if (m_uiFireballTimer < uiDiff)
+        {
+            if (Unit* pEnemy = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pEnemy, m_bIsRegularMode ? SPELL_FIREBALL_LAND : SPELL_FIREBALL_LAND_H) == CAST_OK)
+                    m_uiFireballTimer = urand(7300, 13200);
+            }
+        }
+        else
+            m_uiFireballTimer -= uiDiff;
+
+        if (m_uiConeOfFireTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_CONE_OF_FIRE : SPELL_CONE_OF_FIRE_H) == CAST_OK)
+                m_uiConeOfFireTimer = urand(7300, 13200);
+        }
+        else
+            m_uiConeOfFireTimer -= uiDiff;
+
+        if (!m_bIsRegularMode)
+        {
+            if (m_uiBellowingRoarTimer < uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_BELLOW_ROAR_H) == CAST_OK)
+                    m_uiBellowingRoarTimer = urand(8000, 12000); // TODO Guesswork, 8s cooldown
+            }
+            else
+                m_uiBellowingRoarTimer -= uiDiff;
         }
 
         DoMeleeAttackIfReady();

@@ -17,26 +17,30 @@
 /* ScriptData
 SDName: Boss_Watchkeeper_Gargolmar
 SD%Complete: 80
-SDComment: Missing adds to heal him. Surge should be used on target furthest away, not random.
+SDComment: Missing adds to heal him. Surge should be used on pTarget furthest away, not random.
 SDCategory: Hellfire Citadel, Hellfire Ramparts
 EndScriptData */
 
 #include "precompiled.h"
 
-#define SAY_TAUNT               -1543000
-#define SAY_HEAL                -1543001
-#define SAY_SURGE               -1543002
-#define SAY_AGGRO_1             -1543003
-#define SAY_AGGRO_2             -1543004
-#define SAY_AGGRO_3             -1543005
-#define SAY_KILL_1              -1543006
-#define SAY_KILL_2              -1543007
-#define SAY_DIE                 -1543008
+enum
+{
+    SAY_TAUNT                   = -1543000,
+    SAY_HEAL                    = -1543001,
+    SAY_SURGE                   = -1543002,
+    SAY_AGGRO_1                 = -1543003,
+    SAY_AGGRO_2                 = -1543004,
+    SAY_AGGRO_3                 = -1543005,
+    SAY_KILL_1                  = -1543006,
+    SAY_KILL_2                  = -1543007,
+    SAY_DIE                     = -1543008,
 
-#define SPELL_MORTAL_WOUND      30641
-#define SPELL_MORTAL_WOUND_H    36814
-#define SPELL_SURGE             34645
-#define SPELL_RETALIATION       22857
+    SPELL_MORTAL_WOUND          = 30641,
+    SPELL_MORTAL_WOUND_H        = 36814,
+    SPELL_SURGE                 = 34645,
+    SPELL_RETALIATION           = 22857,
+    SPELL_OVERPOWER             = 32154,
+};
 
 struct MANGOS_DLL_DECL boss_watchkeeper_gargolmarAI : public ScriptedAI
 {
@@ -48,24 +52,26 @@ struct MANGOS_DLL_DECL boss_watchkeeper_gargolmarAI : public ScriptedAI
 
     bool m_bIsRegularMode;
 
-    uint32 Surge_Timer;
-    uint32 MortalWound_Timer;
-    uint32 Retaliation_Timer;
+    uint32 m_uiSurgeTimer;
+    uint32 m_uiMortalWoundTimer;
+    uint32 m_uiRetaliationTimer;
+    uint32 m_uiOverpowerTimer;
 
-    bool HasTaunted;
-    bool YelledForHeal;
+    bool m_bHasTaunted;
+    bool m_bYelledForHeal;
 
     void Reset()
     {
-        Surge_Timer = 5000;
-        MortalWound_Timer = 4000;
-        Retaliation_Timer = 0;
+        m_uiSurgeTimer = urand(2400, 6100);
+        m_uiMortalWoundTimer = urand(3500, 14400);
+        m_uiRetaliationTimer = 0;
+        m_uiOverpowerTimer = urand(3600, 14800);
 
-        HasTaunted = false;
-        YelledForHeal = false;
+        m_bHasTaunted = false;
+        m_bYelledForHeal = false;
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
         switch(urand(0, 2))
         {
@@ -75,73 +81,79 @@ struct MANGOS_DLL_DECL boss_watchkeeper_gargolmarAI : public ScriptedAI
         }
     }
 
-    void MoveInLineOfSight(Unit* who)
+    void MoveInLineOfSight(Unit* pWho)
     {
-        if (!m_creature->getVictim() && who->isTargetableForAttack() && (m_creature->IsHostileTo(who)) && who->isInAccessablePlaceFor(m_creature))
+        if (!m_bHasTaunted && m_creature->IsWithinDistInMap(pWho, 60.0f))
         {
-            if (!m_creature->CanFly() && m_creature->GetDistanceZ(who) > CREATURE_Z_ATTACK_RANGE)
-                return;
-
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->IsWithinLOSInMap(who))
-            {
-                who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-                AttackStart(who);
-            }
-            else if (!HasTaunted && m_creature->IsWithinDistInMap(who, 60.0f))
-            {
-                DoScriptText(SAY_TAUNT, m_creature);
-                HasTaunted = true;
-            }
+            DoScriptText(SAY_TAUNT, m_creature);
+            m_bHasTaunted = true;
         }
+
+        ScriptedAI::MoveInLineOfSight(pWho);
     }
 
-    void KilledUnit(Unit* victim)
+    void KilledUnit(Unit* pVictim)
     {
         DoScriptText(urand(0, 1) ? SAY_KILL_1 : SAY_KILL_2, m_creature);
     }
 
-    void JustDied(Unit* Killer)
+    void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DIE, m_creature);
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (MortalWound_Timer < diff)
+        if (m_uiMortalWoundTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_MORTAL_WOUND : SPELL_MORTAL_WOUND_H);
-            MortalWound_Timer = urand(5000, 13000);
-        }else MortalWound_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_MORTAL_WOUND : SPELL_MORTAL_WOUND_H) == CAST_OK)
+                m_uiMortalWoundTimer = urand(6100, 12200);
+        }
+        else
+            m_uiMortalWoundTimer -= uiDiff;
 
-        if (Surge_Timer < diff)
+        if (m_uiSurgeTimer < uiDiff)
         {
-            DoScriptText(SAY_SURGE, m_creature);
-
-            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
-                DoCastSpellIfCan(target,SPELL_SURGE);
-
-            Surge_Timer = urand(5000, 12000);
-        }else Surge_Timer -= diff;
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_SURGE) == CAST_OK)
+                {
+                    DoScriptText(SAY_SURGE, m_creature);
+                    m_uiSurgeTimer = urand(12100, 21700);
+                }
+            }
+        }
+        else
+            m_uiSurgeTimer -= uiDiff;
 
         if (m_creature->GetHealthPercent() < 20.0f)
         {
-            if (Retaliation_Timer < diff)
+            if (m_uiRetaliationTimer < uiDiff)
             {
-                DoCastSpellIfCan(m_creature,SPELL_RETALIATION);
-                Retaliation_Timer = 30000;
-            }else Retaliation_Timer -= diff;
+                if (DoCastSpellIfCan(m_creature,SPELL_RETALIATION) == CAST_OK)
+                    m_uiRetaliationTimer = 30000;
+            }
+            else
+                m_uiRetaliationTimer -= uiDiff;
         }
 
-        if (!YelledForHeal)
+        if (m_uiOverpowerTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_OVERPOWER) == CAST_OK)
+                m_uiOverpowerTimer = urand(18100, 33700);
+        }
+        else
+            m_uiOverpowerTimer -= uiDiff;
+
+        if (!m_bYelledForHeal)
         {
             if (m_creature->GetHealthPercent() < 40.0f)
             {
                 DoScriptText(SAY_HEAL, m_creature);
-                YelledForHeal = true;
+                m_bYelledForHeal = true;
             }
         }
 
@@ -156,9 +168,10 @@ CreatureAI* GetAI_boss_watchkeeper_gargolmarAI(Creature* pCreature)
 
 void AddSC_boss_watchkeeper_gargolmar()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_watchkeeper_gargolmar";
-    newscript->GetAI = &GetAI_boss_watchkeeper_gargolmarAI;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_watchkeeper_gargolmar";
+    pNewScript->GetAI = &GetAI_boss_watchkeeper_gargolmarAI;
+    pNewScript->RegisterSelf();
 }

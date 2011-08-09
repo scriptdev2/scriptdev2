@@ -23,23 +23,26 @@ EndScriptData */
 
 #include "precompiled.h"
 
-#define SAY_AGGRO_1                 -1543009
-#define SAY_AGGRO_2                 -1543010
-#define SAY_AGGRO_3                 -1543011
-#define SAY_SUMMON                  -1543012
-#define SAY_CURSE                   -1543013
-#define SAY_KILL_1                  -1543014
-#define SAY_DIE                     -1543015
-#define SAY_WIPE                    -1543016
+enum
+{
+    SAY_AGGRO_1                 = -1543009,
+    SAY_AGGRO_2                 = -1543010,
+    SAY_AGGRO_3                 = -1543011,
+    SAY_SUMMON                  = -1543012,
+    SAY_CURSE                   = -1543013,
+    SAY_KILL_1                  = -1543014,
+    SAY_DIE                     = -1543015,
+    SAY_WIPE                    = -1543016,
 
-#define SPELL_ORBITAL_STRIKE        30637
-#define SPELL_SHADOW_WHIP           30638
-#define SPELL_TREACHEROUS_AURA      30695
-#define SPELL_BANE_OF_TREACHERY_H   37566
-#define SPELL_DEMONIC_SHIELD        31901
-#define SPELL_SHADOW_BOLT           30686
-#define SPELL_SHADOW_BOLT_H         39297
-#define SPELL_SUMMON_FIENDISH_HOUND 30707
+    SPELL_ORBITAL_STRIKE        = 30637,
+    SPELL_SHADOW_WHIP           = 30638,
+    SPELL_TREACHEROUS_AURA      = 30695,
+    SPELL_BANE_OF_TREACHERY_H   = 37566,
+    SPELL_DEMONIC_SHIELD        = 31901,
+    SPELL_SHADOW_BOLT           = 30686,
+    SPELL_SHADOW_BOLT_H         = 39297,
+    SPELL_SUMMON_FIENDISH_HOUND = 30707,
+};
 
 struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
 {
@@ -52,32 +55,30 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
 
     bool m_bIsRegularMode;
 
-    uint32 OrbitalStrike_Timer;
-    uint32 ShadowWhip_Timer;
-    uint32 Aura_Timer;
-    uint32 DemonicShield_Timer;
-    uint32 Shadowbolt_Timer;
-    uint32 Summon_Timer;
-    uint32 SummonedCount;
+    uint32 m_uiOrbitalStrikeTimer;
+    uint32 m_uiShadowWhipTimer;
+    uint32 m_uiAuraTimer;
+    uint32 m_uiDemonicShieldTimer;
+    uint32 m_uiShadowboltTimer;
+    uint32 m_uiSummonTimer;
     ObjectGuid m_playerGuid;
-    bool CanPullBack;
+    bool m_bCanPullBack;
 
     void Reset()
     {
         DoScriptText(SAY_WIPE, m_creature);
 
-        OrbitalStrike_Timer = 25000;
-        ShadowWhip_Timer = 2000;
-        Aura_Timer = 10000;
-        DemonicShield_Timer = 1000;
-        Shadowbolt_Timer = 2000;
-        Summon_Timer = 10000;
-        SummonedCount = 0;
+        m_uiOrbitalStrikeTimer = 25000;
+        m_uiShadowWhipTimer = 2000;
+        m_uiAuraTimer = urand(12300, 23300);
+        m_uiDemonicShieldTimer = 1000;
+        m_uiShadowboltTimer = urand(6600, 8900);
+        m_uiSummonTimer = urand(19600, 23100);
         m_playerGuid.Clear();
-        CanPullBack = false;
+        m_bCanPullBack = false;
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
         switch(urand(0, 2))
         {
@@ -87,7 +88,7 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
         }
     }
 
-    void KilledUnit(Unit* victim)
+    void KilledUnit(Unit* pVictim)
     {
         if (urand(0, 1))
             return;
@@ -95,103 +96,108 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
         DoScriptText(SAY_KILL_1, m_creature);
     }
 
-    void JustSummoned(Creature* summoned)
+    void JustSummoned(Creature* pSummoned)
     {
         DoScriptText(SAY_SUMMON, m_creature);
 
-        if (Unit* random = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
-            summoned->AI()->AttackStart(random);
-
-        ++SummonedCount;
+        if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            pSummoned->AI()->AttackStart(pTarget);
     }
 
-    void JustDied(Unit* Killer)
+    void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DIE, m_creature);
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //only two may be wrong, perhaps increase timer and spawn periodically instead.
-        if (SummonedCount < 2)
+        if (m_uiSummonTimer < uiDiff)
         {
-            if (Summon_Timer < diff)
-            {
-                m_creature->InterruptNonMeleeSpells(false);
-                DoCastSpellIfCan(m_creature,SPELL_SUMMON_FIENDISH_HOUND);
-                Summon_Timer = urand(15000, 30000);
-            }else Summon_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature, SPELL_SUMMON_FIENDISH_HOUND) == CAST_OK)
+                m_uiSummonTimer = urand(24100, 26900);
         }
+        else
+            m_uiSummonTimer -= uiDiff;
 
-        if (CanPullBack)
+        if (m_bCanPullBack)
         {
-            if (ShadowWhip_Timer < diff)
+            if (m_uiShadowWhipTimer < uiDiff)
             {
                 if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid))
                 {
                     //if unit dosen't have this flag, then no pulling back (script will attempt cast, even if orbital strike was resisted)
                     if (pPlayer->HasMovementFlag(MOVEFLAG_FALLING))
-                    {
-                        m_creature->InterruptNonMeleeSpells(false);
-                        DoCastSpellIfCan(pPlayer,SPELL_SHADOW_WHIP);
-                    }
+                        DoCastSpellIfCan(pPlayer, SPELL_SHADOW_WHIP, CAST_INTERRUPT_PREVIOUS);
                 }
                 m_playerGuid.Clear();
-                ShadowWhip_Timer = 2000;
-                CanPullBack = false;
-            }else ShadowWhip_Timer -= diff;
-        }
-        else if (OrbitalStrike_Timer < diff)
-        {
-            Unit* temp = NULL;
-            if (m_creature->CanReachWithMeleeAttack(m_creature->getVictim()))
-                temp = m_creature->getVictim();
-            else temp = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
-
-            if (temp && temp->GetTypeId() == TYPEID_PLAYER)
-            {
-                DoCastSpellIfCan(temp,SPELL_ORBITAL_STRIKE);
-                OrbitalStrike_Timer = urand(14000, 16000);
-                m_playerGuid = temp->GetObjectGuid();
-
-                CanPullBack = true;
+                m_uiShadowWhipTimer = 2000;
+                m_bCanPullBack = false;
             }
-        }else OrbitalStrike_Timer -= diff;
+            else
+                m_uiShadowWhipTimer -= uiDiff;
+        }
+        else if (m_uiOrbitalStrikeTimer < uiDiff)
+        {
+            Unit* pTemp = NULL;
+            if (m_creature->CanReachWithMeleeAttack(m_creature->getVictim()))
+                pTemp = m_creature->getVictim();
+            else
+                pTemp = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0);
+
+            if (pTemp && pTemp->GetTypeId() == TYPEID_PLAYER)
+            {
+                if (DoCastSpellIfCan(pTemp, SPELL_ORBITAL_STRIKE) == CAST_OK)
+                {
+                    m_uiOrbitalStrikeTimer = urand(14000, 16000);
+                    m_playerGuid = pTemp->GetObjectGuid();
+
+                    m_bCanPullBack = true;
+                }
+            }
+        }
+        else
+            m_uiOrbitalStrikeTimer -= uiDiff;
 
         if (m_creature->GetHealthPercent() < 20.0f)
         {
-            if (DemonicShield_Timer < diff)
+            if (m_uiDemonicShieldTimer < uiDiff)
             {
-                DoCastSpellIfCan(m_creature,SPELL_DEMONIC_SHIELD);
-                DemonicShield_Timer = 15000;
-            }else DemonicShield_Timer -= diff;
+                if (DoCastSpellIfCan(m_creature, SPELL_DEMONIC_SHIELD) == CAST_OK)
+                    m_uiDemonicShieldTimer = 15000;
+            }
+            else
+                m_uiDemonicShieldTimer -= uiDiff;
         }
 
-        if (Aura_Timer < diff)
+        if (m_uiAuraTimer < uiDiff)
         {
-            DoScriptText(SAY_CURSE, m_creature);
-
-            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
             {
-                DoCastSpellIfCan(target, m_bIsRegularMode ? SPELL_TREACHEROUS_AURA : SPELL_BANE_OF_TREACHERY_H);
-                Aura_Timer = urand(8000, 16000);
+                if (DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_TREACHEROUS_AURA : SPELL_BANE_OF_TREACHERY_H) == CAST_OK)
+                {
+                    m_uiAuraTimer = urand(8000, 16000);
+                    DoScriptText(SAY_CURSE, m_creature);
+                }
             }
-        }else Aura_Timer -= diff;
+        }
+        else
+            m_uiAuraTimer -= uiDiff;
 
-        if (Shadowbolt_Timer < diff)
+        if (m_uiShadowboltTimer < uiDiff)
         {
-            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1))
             {
-                if (target)
-                    target = m_creature->getVictim();
-
-                DoCastSpellIfCan(target, m_bIsRegularMode ? SPELL_SHADOW_BOLT : SPELL_SHADOW_BOLT_H);
-                Shadowbolt_Timer = urand(4000, 6500);
+                if (DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_SHADOW_BOLT : SPELL_SHADOW_BOLT_H) == CAST_OK)
+                    m_uiShadowboltTimer = urand(4200, 7300);
             }
-        }else Shadowbolt_Timer -= diff;
+            else
+                m_uiShadowboltTimer = 2000;
+        }
+        else
+            m_uiShadowboltTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
@@ -204,10 +210,10 @@ CreatureAI* GetAI_boss_omor_the_unscarredAI(Creature* pCreature)
 
 void AddSC_boss_omor_the_unscarred()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_omor_the_unscarred";
-    newscript->GetAI = &GetAI_boss_omor_the_unscarredAI;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_omor_the_unscarred";
+    pNewScript->GetAI = &GetAI_boss_omor_the_unscarredAI;
+    pNewScript->RegisterSelf();
 }
