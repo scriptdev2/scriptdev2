@@ -20,11 +20,13 @@ ScriptedAI::ScriptedAI(Creature* pCreature) : CreatureAI(pCreature),
     m_uiEvadeCheckCooldown(2500)
 {}
 
+/// This function shows if combat movement is enabled, overwrite for more info
 void ScriptedAI::GetAIInformation(ChatHandler& reader)
 {
     reader.PSendSysMessage("ScriptedAI, combat movement is %s", reader.GetOnOffStr(m_bCombatMovement));
 }
 
+/// Return if the creature can "see" pWho
 bool ScriptedAI::IsVisible(Unit* pWho) const
 {
     if (!pWho)
@@ -33,6 +35,15 @@ bool ScriptedAI::IsVisible(Unit* pWho) const
     return m_creature->IsWithinDist(pWho, VISIBLE_RANGE) && pWho->isVisibleForOrDetect(m_creature, m_creature, true);
 }
 
+/**
+ * This function triggers the creature attacking pWho, depending on conditions like:
+ * - Can the creature start an attack?
+ * - Is pWho hostile to the creature?
+ * - Can the creature reach pWho?
+ * - Is pWho in aggro-range?
+ * If the creature can attack pWho, it will if it has no victim.
+ * Inside dungeons, the creature will get into combat with pWho, even if it has already a victim
+ */
 void ScriptedAI::MoveInLineOfSight(Unit* pWho)
 {
     if (m_creature->CanInitiateAttack() && pWho->isTargetableForAttack() &&
@@ -57,9 +68,13 @@ void ScriptedAI::MoveInLineOfSight(Unit* pWho)
     }
 }
 
+/**
+ * This function sets the TargetGuid for the creature if required
+ * Also it will handle the combat movement (chase movement), depending on SetCombatMovement(bool)
+ */
 void ScriptedAI::AttackStart(Unit* pWho)
 {
-    if (pWho && m_creature->Attack(pWho, true))
+    if (pWho && m_creature->Attack(pWho, true))             // The Attack function also uses basic checks if pWho can be attacked
     {
         m_creature->AddThreat(pWho);
         m_creature->SetInCombatWith(pWho);
@@ -70,16 +85,21 @@ void ScriptedAI::AttackStart(Unit* pWho)
     }
 }
 
+/**
+ * This function only calls Aggro, which is to be used for scripting purposes
+ */
 void ScriptedAI::EnterCombat(Unit* pEnemy)
 {
     if (pEnemy)
         Aggro(pEnemy);
 }
 
-void ScriptedAI::Aggro(Unit* pEnemy)
-{
-}
-
+/**
+ * Main update function, by default let the creature behave as expected by a mob (threat management and melee dmg)
+ * Always handle here threat-management with m_creature->SelectHostileTarget()
+ * Handle (if required) melee attack with DoMeleeAttackIfReady()
+ * This is usally overwritten to support timers for ie spells
+ */
 void ScriptedAI::UpdateAI(const uint32 uiDiff)
 {
     //Check if we have a current target
@@ -89,6 +109,16 @@ void ScriptedAI::UpdateAI(const uint32 uiDiff)
     DoMeleeAttackIfReady();
 }
 
+/**
+ * This function cleans up the combat state if the creature evades
+ * It will:
+ * - Drop Auras
+ * - Drop all threat
+ * - Stop combat
+ * - Move the creature home
+ * - Clear tagging for loot
+ * - call Reset()
+ */
 void ScriptedAI::EnterEvadeMode()
 {
     m_creature->RemoveAllAuras();
@@ -104,6 +134,7 @@ void ScriptedAI::EnterEvadeMode()
     Reset();
 }
 
+/// This function calls Reset() to reset variables as expected
 void ScriptedAI::JustRespawned()
 {
     Reset();
