@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: boss_bronjahm
-SD%Complete: 80%
-SDComment: Small unknown behaviour for his Shadow Bold use in phase 1; Soulstorm currently bugged in core, hence second phase disabled
+SD%Complete: 90%
+SDComment: Small unknown behaviour for his Shadow Bold use in phase 1; Soulstorm needs additional handling in core
 SDCategory: The Forge of Souls
 EndScriptData */
 
@@ -129,13 +129,11 @@ struct MANGOS_DLL_DECL boss_bronjahmAI : public ScriptedAI
         if (m_uiPhase == 0)                                 // Phase 1
         {
             // Switching Phase, Soulstorm is cast in SpellHitTarget
-            /* TODO - Uncomment when Soulstorm properly implemented in core
-             * if (m_creature->GetHealthPercent() < 30.0f)
-             * {
-             *     if (DoCastSpellIfCan(m_creature, SPELL_TELEPORT) == CAST_OK)
-             *         m_uiPhase = 1;
-             * }
-             */
+            if (m_creature->GetHealthPercent() < 30.0f)
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_TELEPORT) == CAST_OK)
+                    m_uiPhase = 1;
+            }
 
             // Corrupt Soul
             if (m_uiCorruptSoulTimer < uiDiff)
