@@ -191,6 +191,10 @@ enum
     // World state used for algalon timer
     WORLD_STATE_TIMER           = 4132,
     WORLD_STATE_TIMER_COUNT     = 4131,
+
+    // Achievement related
+    ACHIEV_CRIT_SARONITE_N      = 10451,                    // General Vezax, achievs 3181, 3188
+    ACHIEV_CRIT_SARONITE_H      = 10462,
 };
 
 class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance
@@ -211,6 +215,7 @@ class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance
         const char* Save() { return m_strInstData.c_str(); }
         void Load(const char* chrIn);
 
+        bool CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/);
         // Dummy, leave till correct solution for hardmode found
         bool CheckConditionCriteriaMeet(Player const* pSource, uint32 uiMapId, uint32 uiInstanceConditionId);
 

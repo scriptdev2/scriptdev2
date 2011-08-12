@@ -551,6 +551,16 @@ void instance_ulduar::Load(const char* strIn)
     OUT_LOAD_INST_DATA_COMPLETE;
 }
 
+bool instance_ulduar::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/)
+{
+    switch (uiCriteriaId)
+    {
+        case ACHIEV_CRIT_SARONITE_N:
+        case ACHIEV_CRIT_SARONITE_H:
+            return GetData(TYPE_VEZAX_HARD) == DONE;
+    }
+}
+
 InstanceData* GetInstanceData_instance_ulduar(Map* pMap)
 {
     return new instance_ulduar(pMap);
