@@ -27,22 +27,25 @@ EndContentData */
 
 #include "precompiled.h"
 
-#define SAY_AGGRO1                      -1540042
-#define SAY_AGGRO2                      -1540043
-#define SAY_AGGRO3                      -1540044
-#define SAY_SLAY1                       -1540045
-#define SAY_SLAY2                       -1540046
-#define SAY_DEATH                       -1540047
+enum
+{
+    SAY_AGGRO1                      = -1540042,
+    SAY_AGGRO2                      = -1540043,
+    SAY_AGGRO3                      = -1540044,
+    SAY_SLAY1                       = -1540045,
+    SAY_SLAY2                       = -1540046,
+    SAY_DEATH                       = -1540047,
 
-#define SPELL_BLADE_DANCE               30739
-#define SPELL_CHARGE_H                  25821
+    SPELL_BLADE_DANCE               = 30739,
+    SPELL_CHARGE_H                  = 25821,
 
-#define TARGET_NUM                      5
+    TARGET_NUM                      = 5,
 
-#define MOB_SHATTERED_ASSASSIN          17695
-#define MOB_HEARTHEN_GUARD              17621
-#define MOB_SHARPSHOOTER_GUARD          17622
-#define MOB_REAVER_GUARD                17623
+    NPC_SHATTERED_ASSASSIN          = 17695,
+    NPC_HEARTHEN_GUARD              = 17621,
+    NPC_SHARPSHOOTER_GUARD          = 17622,
+    NPC_REAVER_GUARD                = 17623,
+};
 
 float AssassEntrance[3] = {275.136f, -84.29f, 2.3f};        // y -8
 float AssassExit[3] = {184.233f, -84.29f, 2.3f};            // y -8
@@ -60,21 +63,20 @@ struct MANGOS_DLL_DECL boss_warchief_kargath_bladefistAI : public ScriptedAI
     ScriptedInstance* m_pInstance;
     bool m_bIsRegularMode;
 
-    GUIDVector adds;
-    GUIDVector assassins;
+    GUIDVector m_vAddGuids;
+    GUIDVector m_vAssassinGuids;
 
-    uint32 Charge_timer;
-    uint32 Blade_Dance_Timer;
-    uint32 Summon_Assistant_Timer;
-    uint32 resetcheck_timer;
-    uint32 Wait_Timer;
+    uint32 m_uiChargeTimer;
+    uint32 m_uiBladeDanceTimer;
+    uint32 m_uiSummonAssistantTimer;
+    uint32 m_uiWaitTimer;
 
-    uint32 Assassins_Timer;
+    uint32 m_uiAssassinsTimer;
 
-    uint32 summoned;
-    bool InBlade;
+    uint32 m_uiSummoned;
+    bool m_bInBlade;
 
-    uint32 target_num;
+    uint32 m_uiTargetNum;
 
     void Reset()
     {
@@ -82,18 +84,17 @@ struct MANGOS_DLL_DECL boss_warchief_kargath_bladefistAI : public ScriptedAI
 
         m_creature->SetSpeedRate(MOVE_RUN, 2.0f);
 
-        summoned = 2;
-        InBlade = false;
-        Wait_Timer = 0;
+        m_uiSummoned = 2;
+        m_bInBlade = false;
+        m_uiWaitTimer = 0;
 
-        Charge_timer = 0;
-        Blade_Dance_Timer = 45000;
-        Summon_Assistant_Timer = 30000;
-        Assassins_Timer = 5000;
-        resetcheck_timer = 5000;
+        m_uiChargeTimer = 0;
+        m_uiBladeDanceTimer = 45000;
+        m_uiSummonAssistantTimer = 30000;
+        m_uiAssassinsTimer = 5000;
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
         switch(urand(0, 2))
         {
@@ -103,51 +104,51 @@ struct MANGOS_DLL_DECL boss_warchief_kargath_bladefistAI : public ScriptedAI
         }
     }
 
-    void JustSummoned(Creature *summoned)
+    void JustSummoned(Creature* pSummoned)
     {
-        switch(summoned->GetEntry())
+        switch(pSummoned->GetEntry())
         {
-            case MOB_HEARTHEN_GUARD:
-            case MOB_SHARPSHOOTER_GUARD:
-            case MOB_REAVER_GUARD:
-                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
-                    summoned->AI()->AttackStart(pTarget);
+            case NPC_HEARTHEN_GUARD:
+            case NPC_SHARPSHOOTER_GUARD:
+            case NPC_REAVER_GUARD:
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                    pSummoned->AI()->AttackStart(pTarget);
 
-                adds.push_back(summoned->GetObjectGuid());
+                m_vAddGuids.push_back(pSummoned->GetObjectGuid());
                 break;
-            case MOB_SHATTERED_ASSASSIN:
-                assassins.push_back(summoned->GetObjectGuid());
+            case NPC_SHATTERED_ASSASSIN:
+                m_vAssassinGuids.push_back(pSummoned->GetObjectGuid());
                 break;
         }
     }
 
-    void KilledUnit(Unit *victim)
+    void KilledUnit(Unit* pVictim)
     {
-        if (victim->GetTypeId() == TYPEID_PLAYER)
+        if (pVictim->GetTypeId() == TYPEID_PLAYER)
             DoScriptText(urand(0, 1) ? SAY_SLAY1 : SAY_SLAY2, m_creature);
     }
 
-    void JustDied(Unit* Killer)
+    void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DEATH, m_creature);
         removeAdds();
     }
 
-    void MovementInform(uint32 type, uint32 id)
+    void MovementInform(uint32 uiType, uint32 uiPointId)
     {
-        if (InBlade)
+        if (m_bInBlade)
         {
-            if (type != POINT_MOTION_TYPE)
+            if (uiType != POINT_MOTION_TYPE)
                 return;
 
-            if (id != 1)
+            if (uiPointId != 1)
                 return;
 
-            if (target_num > 0) // to prevent loops
+            if (m_uiTargetNum > 0) // to prevent loops
             {
-                Wait_Timer = 1;
+                m_uiWaitTimer = 1;
                 DoCastSpellIfCan(m_creature, SPELL_BLADE_DANCE, CAST_TRIGGERED);
-                --target_num;
+                --m_uiTargetNum;
             }
         }
     }
@@ -157,127 +158,132 @@ struct MANGOS_DLL_DECL boss_warchief_kargath_bladefistAI : public ScriptedAI
         if (!m_pInstance)
             return;
 
-        for(GUIDVector::const_iterator itr = adds.begin(); itr != adds.end(); ++itr)
+        for (GUIDVector::const_iterator itr = m_vAddGuids.begin(); itr != m_vAddGuids.end(); ++itr)
         {
             if (Creature* pTemp = m_pInstance->instance->GetCreature(*itr))
                 pTemp->ForcedDespawn();
         }
 
-        adds.clear();
+        m_vAddGuids.clear();
 
-        for(GUIDVector::const_iterator itr = assassins.begin(); itr != assassins.end(); ++itr)
+        for (GUIDVector::const_iterator itr = m_vAssassinGuids.begin(); itr != m_vAssassinGuids.end(); ++itr)
         {
             if (Creature* pTemp = m_pInstance->instance->GetCreature(*itr))
                 pTemp->ForcedDespawn();
         }
 
-        assassins.clear();
+        m_vAssassinGuids.clear();
     }
 
     void SpawnAssassin()
     {
-        m_creature->SummonCreature(MOB_SHATTERED_ASSASSIN,AssassEntrance[0],AssassEntrance[1]+8, AssassEntrance[2], 0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,30000);
-        m_creature->SummonCreature(MOB_SHATTERED_ASSASSIN,AssassEntrance[0],AssassEntrance[1]-8, AssassEntrance[2], 0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,30000);
-        m_creature->SummonCreature(MOB_SHATTERED_ASSASSIN,AssassExit[0],AssassExit[1]+8, AssassExit[2], 0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,30000);
-        m_creature->SummonCreature(MOB_SHATTERED_ASSASSIN,AssassExit[0],AssassExit[1]-8, AssassExit[2], 0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,30000);
+        m_creature->SummonCreature(NPC_SHATTERED_ASSASSIN, AssassEntrance[0], AssassEntrance[1]+8, AssassEntrance[2], 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 24000);
+        m_creature->SummonCreature(NPC_SHATTERED_ASSASSIN, AssassEntrance[0], AssassEntrance[1]-8, AssassEntrance[2], 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 24000);
+        m_creature->SummonCreature(NPC_SHATTERED_ASSASSIN, AssassExit[0], AssassExit[1]+8, AssassExit[2], 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 24000);
+        m_creature->SummonCreature(NPC_SHATTERED_ASSASSIN, AssassExit[0], AssassExit[1]-8, AssassExit[2], 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 24000);
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (Assassins_Timer)
-            if (Assassins_Timer <= diff)
+        // Check if out of range
+        if (EnterEvadeIfOutOfCombatArea(uiDiff))
+            return;
+
+        if (m_uiAssassinsTimer)
+        {
+            if (m_uiAssassinsTimer <= uiDiff)
             {
                 SpawnAssassin();
-                Assassins_Timer = 0;
-            }else Assassins_Timer -= diff;
+                m_uiAssassinsTimer = 0;
+            }
+            else
+                m_uiAssassinsTimer -= uiDiff;
+        }
 
-        if (InBlade)
+        if (m_bInBlade)
         {
-            if (Wait_Timer)
-                if (Wait_Timer <= diff)
+            if (m_uiWaitTimer)
+            {
+                if (m_uiWaitTimer <= uiDiff)
                 {
-                    if (target_num <= 0)
+                    if (m_uiTargetNum == 0)
                     {
                         // stop bladedance
-                        InBlade = false;
+                        m_bInBlade = false;
                         m_creature->SetSpeedRate(MOVE_RUN, 2.0f);
-                        (*m_creature).GetMotionMaster()->MoveChase(m_creature->getVictim());
-                        Wait_Timer = 0;
+                        m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
+                        m_uiWaitTimer = 0;
                         if (!m_bIsRegularMode)
-                            Charge_timer = 5000;
+                            m_uiChargeTimer = 5000;
                     }
                     else
                     {
-                        //move in bladedance
-                        float x,y,randx,randy;
+                        // move in bladedance
+                        float x, y, randx, randy;
                         randx = (rand()%40);
                         randy = (rand()%40);
                         x = 210+ randx ;
                         y = -60- randy ;
-                        (*m_creature).GetMotionMaster()->MovePoint(1,x,y,m_creature->GetPositionZ());
-                        Wait_Timer = 0;
+                        m_creature->GetMotionMaster()->MovePoint(1, x, y, m_creature->GetPositionZ());
+                        m_uiWaitTimer = 0;
                     }
-                }else Wait_Timer -= diff;
+                }
+                else
+                    m_uiWaitTimer -= uiDiff;
+            }
         }
-        else
+        else                                                // !m_bInBlade
         {
-            if (Blade_Dance_Timer < diff)
+            if (m_uiBladeDanceTimer < uiDiff)
             {
-                target_num = TARGET_NUM;
-                Wait_Timer = 1;
-                InBlade = true;
-                Blade_Dance_Timer = 30000;
+                m_uiTargetNum = TARGET_NUM;
+                m_uiWaitTimer = 1;
+                m_bInBlade = true;
+                m_uiBladeDanceTimer = 30000;
                 m_creature->SetSpeedRate(MOVE_RUN, 4.0f);
                 return;
-            }else Blade_Dance_Timer -= diff;
+            }
+            else
+                m_uiBladeDanceTimer -= uiDiff;
 
-            if (Charge_timer)
-                if (Charge_timer <= diff)
+            if (m_uiChargeTimer)
+            {
+                if (m_uiChargeTimer <= uiDiff)
                 {
-                    if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
+                    if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                         DoCastSpellIfCan(pTarget, SPELL_CHARGE_H);
 
-                    Charge_timer = 0;
-                }else Charge_timer -= diff;
+                    m_uiChargeTimer = 0;
+                }
+                else
+                    m_uiChargeTimer -= uiDiff;
+            }
 
-            if (Summon_Assistant_Timer < diff)
+            if (m_uiSummonAssistantTimer < uiDiff)
             {
-                Unit* target = NULL;
-
-                for(uint32 i = 0; i < summoned; ++i)
+                for (uint32 i = 0; i < m_uiSummoned; ++i)
                 {
-                    switch(urand(0, 2))
+                    switch (urand(0, 2))
                     {
-                        case 0: m_creature->SummonCreature(MOB_HEARTHEN_GUARD, AddsEntrance[0], AddsEntrance[1], AddsEntrance[2], 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,30000); break;
-                        case 1: m_creature->SummonCreature(MOB_SHARPSHOOTER_GUARD, AddsEntrance[0], AddsEntrance[1], AddsEntrance[2], 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,30000); break;
-                        case 2: m_creature->SummonCreature(MOB_REAVER_GUARD, AddsEntrance[0], AddsEntrance[1], AddsEntrance[2], 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,30000); break;
+                        case 0: m_creature->SummonCreature(NPC_HEARTHEN_GUARD, AddsEntrance[0], AddsEntrance[1], AddsEntrance[2], 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 20000); break;
+                        case 1: m_creature->SummonCreature(NPC_SHARPSHOOTER_GUARD, AddsEntrance[0], AddsEntrance[1], AddsEntrance[2], 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 20000); break;
+                        case 2: m_creature->SummonCreature(NPC_REAVER_GUARD, AddsEntrance[0], AddsEntrance[1], AddsEntrance[2], 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 20000); break;
                     }
                 }
 
                 if (!urand(0, 4))
-                    ++summoned;
+                    ++m_uiSummoned;
 
-                Summon_Assistant_Timer = urand(25000, 35000);
+                m_uiSummonAssistantTimer = urand(25000, 35000);
             }
-            else Summon_Assistant_Timer -= diff;
+            else
+                m_uiSummonAssistantTimer -= uiDiff;
 
             DoMeleeAttackIfReady();
         }
-
-        if (resetcheck_timer < diff)
-        {
-            uint32 tempx,tempy;
-            tempx = uint32(m_creature->GetPositionX());
-            tempy = uint32(m_creature->GetPositionY());
-            if (tempx > 255 || tempx < 205)
-            {
-                EnterEvadeMode();
-            }
-            resetcheck_timer = 5000;
-        }else resetcheck_timer -= diff;
     }
 };
 
@@ -288,9 +294,10 @@ CreatureAI* GetAI_boss_warchief_kargath_bladefist(Creature* pCreature)
 
 void AddSC_boss_warchief_kargath_bladefist()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_warchief_kargath_bladefist";
-    newscript->GetAI = &GetAI_boss_warchief_kargath_bladefist;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_warchief_kargath_bladefist";
+    pNewScript->GetAI = &GetAI_boss_warchief_kargath_bladefist;
+    pNewScript->RegisterSelf();
 }

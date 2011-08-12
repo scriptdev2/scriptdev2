@@ -506,6 +506,7 @@ enum
     NPC_JAN_ALAI                = 23578,
     NPC_SARTHARION              = 28860,
     NPC_TALON_KING_IKISS        = 18473,
+    NPC_KARGATH_BLADEFIST       = 16808,
 };
 
 bool ScriptedAI::EnterEvadeIfOutOfCombatArea(const uint32 uiDiff)
@@ -544,9 +545,15 @@ bool ScriptedAI::EnterEvadeIfOutOfCombatArea(const uint32 uiDiff)
                 return false;
             break;
         case NPC_TALON_KING_IKISS:
+        {
             float fX, fY, fZ;
             m_creature->GetRespawnCoord(fX, fY, fZ);
             if (m_creature->GetDistance2d(fX, fY) < 70.0f)
+                return false;
+            break;
+        }
+        case NPC_KARGATH_BLADEFIST:
+            if (fX < 255.0f && fX > 205.0f)
                 return false;
             break;
         default:

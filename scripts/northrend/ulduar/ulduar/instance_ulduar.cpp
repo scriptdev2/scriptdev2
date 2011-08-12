@@ -558,6 +558,9 @@ bool instance_ulduar::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player c
         case ACHIEV_CRIT_SARONITE_N:
         case ACHIEV_CRIT_SARONITE_H:
             return GetData(TYPE_VEZAX_HARD) == DONE;
+
+        default:
+            return false;
     }
 }
 
