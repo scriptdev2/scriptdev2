@@ -61,6 +61,13 @@ static const float aSpawnPositions[][4] =
     {555.4514f, 205.8889f, 399.2634f, 4.886922f},           // Eydis
 };
 
+static const float aMovePositions[][3] =
+{
+    {563.748f,  179.766f,  394.4862f},                      // Gormok
+    {576.5347f, 168.9514f, 394.7064f},                      // Dreadscale
+    {563.8577f, 176.5885f, 394.4417f},                      // Icehowl
+};
+
 class MANGOS_DLL_DECL instance_trial_of_the_crusader : public ScriptedInstance, private DialogueHelper
 {
     public:
