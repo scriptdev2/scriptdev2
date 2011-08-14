@@ -185,8 +185,9 @@ struct MANGOS_DLL_DECL boss_ionarAI : public ScriptedAI
             {
                 if (pSpark->isAlive())
                 {
-                    if (pSpark->GetMotionMaster()->GetCurrentMovementGeneratorType() == CHASE_MOTION_TYPE)
-                        pSpark->GetMotionMaster()->MovementExpired();
+                    // Required to prevent combat movement, elsewise they might switch movement on aggro-change
+                    if (ScriptedAI* pSparkAI = dynamic_cast<ScriptedAI*>(pSpark->AI()))
+                        pSparkAI->SetCombatMovement(false);
 
                     pSpark->GetMotionMaster()->MovePoint(POINT_CALLBACK, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ());
                 }
@@ -205,10 +206,8 @@ struct MANGOS_DLL_DECL boss_ionarAI : public ScriptedAI
         {
             pSummoned->CastSpell(pSummoned, m_bIsRegularMode ? SPELL_SPARK_VISUAL_TRIGGER_N : SPELL_SPARK_VISUAL_TRIGGER_H, true);
 
-            Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0);
-
-            if (m_creature->getVictim())
-                pSummoned->AI()->AttackStart(pTarget ? pTarget : m_creature->getVictim());
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                pSummoned->AI()->AttackStart(pTarget);
 
             m_lSparkGUIDList.push_back(pSummoned->GetObjectGuid());
         }
