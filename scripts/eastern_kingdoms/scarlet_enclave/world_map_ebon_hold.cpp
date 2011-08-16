@@ -25,6 +25,7 @@ EndScriptData */
 #include "world_map_ebon_hold.h"
 
 world_map_ebon_hold::world_map_ebon_hold(Map* pMap) : ScriptedInstance(pMap),
+    m_uiGothikYellTimer(0),
     m_uiBattleEncounter(0)
 {
     Initialize();
@@ -32,6 +33,25 @@ world_map_ebon_hold::world_map_ebon_hold(Map* pMap) : ScriptedInstance(pMap),
 
 void world_map_ebon_hold::Initialize() {}
 
+void world_map_ebon_hold::Update(uint32 uiDiff)
+{
+    if (m_uiGothikYellTimer)
+    {
+        if (m_uiGothikYellTimer <= uiDiff)
+            m_uiGothikYellTimer = 0;
+        else
+            m_uiGothikYellTimer -= uiDiff;
+    }
+}
+
+bool world_map_ebon_hold::CanAndToggleGothikYell()
+{
+    if (m_uiGothikYellTimer)
+        return false;
+
+    m_uiGothikYellTimer = 2000;
+    return true;
+}
 
 InstanceData* GetInstance_world_map_ebon_hold(Map* pMap)
 {

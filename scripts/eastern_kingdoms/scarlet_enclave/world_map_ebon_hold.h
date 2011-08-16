@@ -12,7 +12,12 @@ class MANGOS_DLL_DECL world_map_ebon_hold : public ScriptedInstance
 
         void Initialize() override;
 
+        void Update(uint32 uiDiff) override;
+
+        bool CanAndToggleGothikYell();
+
     protected:
+        uint32 m_uiGothikYellTimer;                         // Timer to check if Gothik can yell (related q 12698)
         uint32 m_uiBattleEncounter;                         // Store state of the battle around  "The Light of Dawn"
 };
 

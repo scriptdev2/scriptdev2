@@ -3716,7 +3716,15 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1609088,'Your High Inquisitor is nothing more than a pile of meat, Crusaders! There are none beyond the grasp of the Scourge!',0,1,0,0,'koltira SAY_BREAKOUT10'),
 
 (-1609089,'The Eye of Acherus launches towards its destination',0,3,0,0,'eye of acherus EMOTE_DESTIANTION'),
-(-1609090,'The Eye of Acherus is in your control',0,3,0,0,'eye of acherus EMOTE_CONTROL');
+(-1609090,'The Eye of Acherus is in your control',0,3,0,0,'eye of acherus EMOTE_CONTROL'),
+
+(-1609091,'Mommy?',0,0,0,434,'scarlet ghoul SAY_GHUL_SPAWN_1'),
+(-1609092,'GIVE ME BRAINS!',0,0,0,434,'scarlet ghoul SAY_GHUL_SPAWN_2'),
+(-1609093,'Must feed...',0,0,0,434,'scarlet ghoul SAY_GHUL_SPAWN_3'),
+(-1609094,'So hungry...',0,0,0,434,'scarlet ghoul SAY_GHUL_SPAWN_4'),
+(-1609095,'$gPoppy:Mama;!',0,0,0,434,'scarlet ghoul SAY_GHUL_SPAWN_5'),
+(-1609096,'It puts the ghoul in the pit or else it gets the lash!',0,0,0,25,'gothik the harvester SAY_GOTHIK_THROW_IN_PIT');
+
 
 -- -1 615 000 OBSIDIAN SANCTUM
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES

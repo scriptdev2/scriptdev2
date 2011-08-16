@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Ebon_Hold
 SD%Complete: 80
-SDComment: Quest support: 12848, 12733, 12739(and 12742 to 12750), 12727, 12641
+SDComment: Quest support: 12641, 12698, 12733, 12739(and 12742 to 12750), 12727, 12848
 SDCategory: Ebon Hold
 EndScriptData */
 
@@ -28,11 +28,13 @@ npc_unworthy_initiate_anchor
 npc_unworthy_initiate
 go_acherus_soul_prison
 npc_eye_of_acherus
+npc_scarlet_ghoul
 EndContentData */
 
 #include "precompiled.h"
 #include "escort_ai.h"
 #include "world_map_ebon_hold.h"
+#include "pet_ai.h"
 
 /*######
 ## npc_a_special_surprise
@@ -1174,6 +1176,127 @@ CreatureAI* GetAI_npc_eye_of_acherus(Creature* pCreature)
     return new npc_eye_of_acherusAI(pCreature);
 }
 
+/*######
+## npc_scarlet_ghoul
+######*/
+
+enum
+{
+    SAY_GHUL_SPAWN_1            = -1609091,
+    SAY_GHUL_SPAWN_2            = -1609092,
+    SAY_GHUL_SPAWN_3            = -1609093,
+    SAY_GHUL_SPAWN_4            = -1609094,
+    SAY_GHUL_SPAWN_5            = -1609095,
+    SAY_GOTHIK_THROW_IN_PIT     = -1609096,                 // TODO: Unclear if there exist more texts
+
+    SPELL_GHOUL_SUMMONED        = 52500,
+    SPELL_GOTHIK_GHOUL_PING     = 52514,
+    SPELL_QUEST_CREDIT          = 52517,
+    SPELL_GHOUL_UNSUMMON        = 52555,
+
+    NPC_GOTHIK                  = 28658,
+};
+
+static const float aPitPosition[3] = {2380.13f, -5783.06f, 151.367f};
+
+struct MANGOS_DLL_DECL npc_scarlet_ghoulAI : public ScriptedPetAI
+{
+    npc_scarlet_ghoulAI(Creature* pCreature) : ScriptedPetAI(pCreature)
+    {
+        m_bGotHit = false;
+        m_bIsJumping = false;
+        m_bDidInitText = false;
+        m_uiUnsummonTimer = 0;
+        DoCastSpellIfCan(m_creature, SPELL_GHOUL_SUMMONED);
+        Reset();
+    }
+
+    bool m_bGotHit;
+    bool m_bIsJumping;
+    bool m_bDidInitText;
+    uint32 m_uiUnsummonTimer;
+
+    void Reset() override {}
+
+    void MovementInform(uint32 uiMotionType, uint32 uiPointId) override
+    {
+        if (uiMotionType == EFFECT_MOTION_TYPE && uiPointId == 1)
+        {
+            m_uiUnsummonTimer = 1000;
+            DoCastSpellIfCan(m_creature, SPELL_GHOUL_UNSUMMON);
+            m_creature->GetMotionMaster()->MoveIdle();
+        }
+    }
+
+    void JustDied(Unit* pKiller) override
+    {
+        DoCastSpellIfCan(m_creature, SPELL_GHOUL_UNSUMMON, CAST_TRIGGERED);
+    }
+
+    void UpdateAI(const uint32 uiDiff) override
+    {
+        if (!m_bDidInitText)
+        {
+            Unit* pOwner = m_creature->GetCharmerOrOwner();
+            DoScriptText(SAY_GHUL_SPAWN_1 - urand(0, 4), m_creature, pOwner);
+
+            m_bDidInitText = true;
+        }
+
+        if (m_uiUnsummonTimer)
+        {
+            if (m_uiUnsummonTimer <= uiDiff)
+            {
+                m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+                if (m_creature->IsPet())
+                    ((Pet*)m_creature)->Unsummon(PET_SAVE_AS_DELETED);
+                return;
+            }
+            else
+                m_uiUnsummonTimer -= uiDiff;
+        }
+
+        if (m_bIsJumping)
+            return;
+
+        ScriptedPetAI::UpdateAI(uiDiff);
+    }
+};
+
+bool EffectDummyCreature_npc_scarlet_ghoul(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+{
+    if (uiSpellId == SPELL_GOTHIK_GHOUL_PING && uiEffIndex == EFFECT_INDEX_0)
+    {
+        if (npc_scarlet_ghoulAI* pGhoulAi = dynamic_cast<npc_scarlet_ghoulAI*>(pCreatureTarget->AI()))
+        {
+            if (!pGhoulAi->m_bGotHit)                       // First hit
+            {
+                pCreatureTarget->CastSpell(pCreatureTarget, 52517, false);
+                pGhoulAi->m_bGotHit = true;
+            }
+            else                                            // Second hit
+            {
+                world_map_ebon_hold* pInstance = static_cast<world_map_ebon_hold*>(pCreatureTarget->GetInstanceData());
+                if (pCaster && pInstance && pInstance->CanAndToggleGothikYell())
+                    DoScriptText(SAY_GOTHIK_THROW_IN_PIT, pCaster);
+
+                float fX, fY, fZ;
+                pCreatureTarget->GetRandomPoint(aPitPosition[0], aPitPosition[1], aPitPosition[2], 10.0f, fX, fY, fZ);
+                pGhoulAi->m_bIsJumping = true;
+                pCreatureTarget->GetMotionMaster()->MoveJump(fX, fY, fZ, 24.21229f, 6.0f, 1);
+            }
+        }
+        return true;
+    }
+
+    return false;
+}
+
+CreatureAI* GetAI_npc_scarlet_ghoul(Creature* pCreature)
+{
+    return new npc_scarlet_ghoulAI(pCreature);
+}
+
 void AddSC_ebon_hold()
 {
     Script* pNewScript;
@@ -1214,5 +1337,11 @@ void AddSC_ebon_hold()
     pNewScript = new Script;
     pNewScript->Name = "npc_eye_of_acherus";
     pNewScript->GetAI = &GetAI_npc_eye_of_acherus;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_scarlet_ghoul";
+    pNewScript->GetAI = &GetAI_npc_scarlet_ghoul;
+    pNewScript->pEffectDummyNPC = &EffectDummyCreature_npc_scarlet_ghoul;
     pNewScript->RegisterSelf();
 }
