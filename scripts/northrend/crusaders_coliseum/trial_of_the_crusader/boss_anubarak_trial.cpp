@@ -553,13 +553,10 @@ struct MANGOS_DLL_DECL npc_anubarak_trial_frostsphereAI : public Scripted_NoMove
             return;
 
         // Set fake death in order to apply permafrost
-        if (m_bPermafrost)
-        {
-            uiDamage = 0;
-            return;
-        }
-
         uiDamage = 0;
+
+        if (m_bPermafrost)
+            return;
 
         m_creature->InterruptNonMeleeSpells(false);
         m_creature->SetHealth(0);
