@@ -104,7 +104,7 @@ static const DialogueEntryTwoSide aTocDialogues[] =
     {SAY_WILFRED_JARAXXUS_INTRO_3,  NPC_FIZZLEBANG, 0, 0,   12000}, // Summon also Jaraxxus
     {SAY_JARAXXUS_JARAXXAS_INTRO_1, NPC_JARAXXUS, 0, 0,     5000},
     {SAY_WILFRED_DEATH,             NPC_FIZZLEBANG, 0, 0,   1000},
-    {1, 0, 0, 0,                                            5000},  // Kill Fizzlebang // TODO Either skip this line, or use something better than '1' as entry
+    {EVENT_KILL_FIZZLEBANG, 0, 0, 0,                        5000},  // Kill Fizzlebang
     {SAY_TIRION_JARAXXUS_INTRO_2,   NPC_TIRION_A, 0, 0,     0},
     // Jaruxxus (Outro)
     {SAY_JARAXXUS_DEATH,            NPC_JARAXXUS, 0, 0,     6000},  // Jaraxxus Death
@@ -131,9 +131,12 @@ static const DialogueEntryTwoSide aTocDialogues[] =
     {SAY_TIRION_TWINS_WIN,          NPC_TIRION_A, 0, 0,     0},
     // Anub'arak
     {TYPE_ANUBARAK, 0, 0, 0,                                19000},
-    {SAY_LKING_ANUB_INTRO_1,        NPC_THE_LICHKING, 0, 0, 9000},
-    {SAY_TIRION_ABUN_INTRO_1,       NPC_TIRION_A, 0, 0,     6000},
-    {SAY_LKING_ANUB_INTRO_2,        NPC_THE_LICHKING, 0, 0, 19000},
+    {SAY_LKING_ANUB_INTRO_1,        NPC_THE_LICHKING, 0, 0, 4000},
+    {EVENT_ARTHAS_PORTAL, 0, 0, 0,                          2000},
+    {EVENT_SUMMON_THE_LICHKING, 0, 0, 0,                    3000},
+    {SAY_TIRION_ABUN_INTRO_1,       NPC_TIRION_A, 0, 0,     8000},
+    {SAY_LKING_ANUB_INTRO_2,        NPC_THE_LICHKING_VISUAL, 0, 0, 18500},
+    {EVENT_DESTROY_FLOOR, 0, 0, 0,                          2500},
     {SAY_LKING_ANUB_INTRO_3,        NPC_THE_LICHKING, 0, 0, 0},
     {0, 0, 0, 0 ,0}
 };
@@ -171,14 +174,17 @@ void instance_trial_of_the_crusader::OnCreatureCreate(Creature* pCreature)
         case NPC_GARROSH:
         case NPC_FIZZLEBANG:
         case NPC_JARAXXUS:
+        case NPC_WORLD_TRIGGER_LARGE:
         case NPC_THE_LICHKING:
+        case NPC_THE_LICHKING_VISUAL:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
     }
 }
 
 void instance_trial_of_the_crusader::OnObjectCreate(GameObject* pGo)
 {
-
+    if (pGo->GetEntry() == GO_COLISEUM_FLOOR)
+        m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
 }
 
 void instance_trial_of_the_crusader::OnPlayerEnter(Player* pPlayer)
@@ -367,6 +373,39 @@ void instance_trial_of_the_crusader::JustDidDialogueStep(int32 iEntry)
                 pPlayer->SummonCreature(NPC_FJOLA, aSpawnPositions[7][0], aSpawnPositions[7][1], aSpawnPositions[7][2], aSpawnPositions[7][3], TEMPSUMMON_DEAD_DESPAWN, 0);
                 pPlayer->SummonCreature(NPC_EYDIS, aSpawnPositions[8][0], aSpawnPositions[8][1], aSpawnPositions[8][2], aSpawnPositions[8][3], TEMPSUMMON_DEAD_DESPAWN, 0);
             }
+            break;
+        case SAY_LKING_ANUB_INTRO_1:
+            if (Player* pPlayer = GetPlayerInMap())
+                pPlayer->SummonCreature(NPC_WORLD_TRIGGER_LARGE, aSpawnPositions[9][0], aSpawnPositions[9][1], aSpawnPositions[9][2], aSpawnPositions[9][3], TEMPSUMMON_DEAD_DESPAWN, 0);
+            break;
+        case EVENT_ARTHAS_PORTAL:
+            if (Creature* pWorldTriggerLarge = GetSingleCreatureFromStorage(NPC_WORLD_TRIGGER_LARGE))
+                pWorldTriggerLarge->CastSpell(pWorldTriggerLarge, SPELL_ARTHAS_PORTAL, true);
+            break;
+        case EVENT_SUMMON_THE_LICHKING:
+            if (Player* pPlayer = GetPlayerInMap())
+                pPlayer->SummonCreature(NPC_THE_LICHKING_VISUAL, aSpawnPositions[10][0], aSpawnPositions[10][1], aSpawnPositions[10][2], aSpawnPositions[10][3], TEMPSUMMON_DEAD_DESPAWN, 0);
+            break;
+        case EVENT_DESTROY_FLOOR:
+            if (GameObject* pColiseumFloor = GetSingleGameObjectFromStorage(GO_COLISEUM_FLOOR))
+            {
+                pColiseumFloor->SetDisplayId(DISPLAYID_DESTROYED_FLOOR);
+                pColiseumFloor->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK_10 | GO_FLAG_NODESPAWN);
+                pColiseumFloor->SetGoState(GO_STATE_ACTIVE);
+            }
+
+            if (Creature* pLichKingVisual = GetSingleCreatureFromStorage(NPC_THE_LICHKING_VISUAL))
+            {
+                pLichKingVisual->CastSpell(pLichKingVisual, SPELL_FROSTNOVA, true);
+                //pLichKingVisual->CastSpell(pLichKingVisual, SPELL_CORPSE_TELEPORT, true); // NYI
+                pLichKingVisual->ForcedDespawn();
+            }
+
+            if (Creature* pLichKing = GetSingleCreatureFromStorage(NPC_THE_LICHKING))
+                pLichKing->CastSpell(pLichKing, SPELL_DESTROY_FLOOR_KNOCKUP, true);
+
+            if (Creature* pWorldTriggerLarge = GetSingleCreatureFromStorage(NPC_WORLD_TRIGGER_LARGE))
+                pWorldTriggerLarge->ForcedDespawn();
             break;
     }
 }

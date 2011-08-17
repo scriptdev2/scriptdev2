@@ -31,7 +31,9 @@ enum
     NPC_VARIAN                  = 34990,
     NPC_GARROSH                 = 34995,
     NPC_FIZZLEBANG              = 35458,
+    NPC_WORLD_TRIGGER_LARGE     = 22517,                    // Used for Lich King summon event
     NPC_THE_LICHKING            = 16980,
+    NPC_THE_LICHKING_VISUAL     = 35877,
     NPC_RAMSEY_1                = 34816,
     NPC_RAMSEY_2                = 35035,
     NPC_RAMSEY_3                = 35766,
@@ -40,6 +42,17 @@ enum
     NPC_RAMSEY_6                = 35895,                    // Unknown what these three NPCs are used for, maybe horde events?
     NPC_RAMSEY_7                = 35909,
     NPC_RAMSEY_8                = 35910,
+
+    GO_COLISEUM_FLOOR           = 195527,
+
+    SPELL_ARTHAS_PORTAL         = 51807,
+    SPELL_FROSTNOVA             = 68198,
+    SPELL_CORPSE_TELEPORT       = 69016, // NYI
+    SPELL_DESTROY_FLOOR_KNOCKUP = 68193,
+
+    DISPLAYID_DESTROYED_FLOOR   = 9060,
+
+    EMOTE_DESTROY_FLOOR         = 16,
 };
 
 static const float aRamsayPositions[2][4] =
@@ -59,6 +72,8 @@ static const float aSpawnPositions[][4] =
     {563.8264f, 140.6563f, 393.9861f, 4.694936f},           // Jaraxxus
     {571.684f,  204.9028f, 399.263f,  4.590216f},           // Fjola
     {555.4514f, 205.8889f, 399.2634f, 4.886922f},           // Eydis
+    {563.6996f, 175.9826f, 394.5042f, 4.694936f},           // World Trigger Large
+    {563.5712f, 174.8351f, 394.4954f, 4.712389f},           // Lich King
 };
 
 static const float aMovePositions[][3] =
