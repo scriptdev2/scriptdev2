@@ -259,35 +259,6 @@ CreatureAI* GetAI_npc_dirty_larry(Creature* pCreature)
 }
 
 /*######
-## npc_ishanah
-######*/
-
-#define GOSSIP_ISHANAH_1    "Who are the Sha'tar?"
-#define GOSSIP_ISHANAH_2    "Isn't Shattrath a draenei city? Why do you allow others here?"
-
-bool GossipHello_npc_ishanah(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
-
-    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ISHANAH_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ISHANAH_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-    return true;
-}
-
-bool GossipSelect_npc_ishanah(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
-        pPlayer->SEND_GOSSIP_MENU(9458, pCreature->GetObjectGuid());
-    else if (uiAction == GOSSIP_ACTION_INFO_DEF+2)
-        pPlayer->SEND_GOSSIP_MENU(9459, pCreature->GetObjectGuid());
-
-    return true;
-}
-
-/*######
 ## npc_khadgar
 ######*/
 
@@ -863,12 +834,6 @@ void AddSC_shattrath_city()
     newscript->GetAI = &GetAI_npc_dirty_larry;
     newscript->pGossipHello = &GossipHello_npc_dirty_larry;
     newscript->pGossipSelect = &GossipSelect_npc_dirty_larry;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_ishanah";
-    newscript->pGossipHello = &GossipHello_npc_ishanah;
-    newscript->pGossipSelect = &GossipSelect_npc_ishanah;
     newscript->RegisterSelf();
 
     newscript = new Script;
