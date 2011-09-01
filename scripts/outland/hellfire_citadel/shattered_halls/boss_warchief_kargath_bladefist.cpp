@@ -26,6 +26,7 @@ boss_warchief_kargath_bladefist
 EndContentData */
 
 #include "precompiled.h"
+#include "shattered_halls.h"
 
 enum
 {
@@ -35,6 +36,7 @@ enum
     SAY_SLAY1                       = -1540045,
     SAY_SLAY2                       = -1540046,
     SAY_DEATH                       = -1540047,
+    SAY_EVADE                       = -1540048,
 
     SPELL_BLADE_DANCE               = 30739,
     SPELL_CHARGE_H                  = 25821,
@@ -80,8 +82,6 @@ struct MANGOS_DLL_DECL boss_warchief_kargath_bladefistAI : public ScriptedAI
 
     void Reset()
     {
-        removeAdds();
-
         m_creature->SetSpeedRate(MOVE_RUN, 2.0f);
 
         m_uiSummoned = 2;
@@ -102,6 +102,9 @@ struct MANGOS_DLL_DECL boss_warchief_kargath_bladefistAI : public ScriptedAI
             case 1: DoScriptText(SAY_AGGRO2, m_creature); break;
             case 2: DoScriptText(SAY_AGGRO3, m_creature); break;
         }
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_BLADEFIST, IN_PROGRESS);
     }
 
     void JustSummoned(Creature* pSummoned)
@@ -131,7 +134,18 @@ struct MANGOS_DLL_DECL boss_warchief_kargath_bladefistAI : public ScriptedAI
     void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DEATH, m_creature);
-        removeAdds();
+        DoDespawnAdds();
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_BLADEFIST, DONE);
+    }
+
+    void JustReachedHome()
+    {
+        DoDespawnAdds();
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_BLADEFIST, FAIL);
     }
 
     void MovementInform(uint32 uiType, uint32 uiPointId)
@@ -153,14 +167,12 @@ struct MANGOS_DLL_DECL boss_warchief_kargath_bladefistAI : public ScriptedAI
         }
     }
 
-    void removeAdds()
+    // Note: this should be done by creature linkin in core
+    void DoDespawnAdds()
     {
-        if (!m_pInstance)
-            return;
-
         for (GUIDVector::const_iterator itr = m_vAddGuids.begin(); itr != m_vAddGuids.end(); ++itr)
         {
-            if (Creature* pTemp = m_pInstance->instance->GetCreature(*itr))
+            if (Creature* pTemp = m_creature->GetMap()->GetCreature(*itr))
                 pTemp->ForcedDespawn();
         }
 
@@ -168,7 +180,7 @@ struct MANGOS_DLL_DECL boss_warchief_kargath_bladefistAI : public ScriptedAI
 
         for (GUIDVector::const_iterator itr = m_vAssassinGuids.begin(); itr != m_vAssassinGuids.end(); ++itr)
         {
-            if (Creature* pTemp = m_pInstance->instance->GetCreature(*itr))
+            if (Creature* pTemp = m_creature->GetMap()->GetCreature(*itr))
                 pTemp->ForcedDespawn();
         }
 
@@ -190,7 +202,10 @@ struct MANGOS_DLL_DECL boss_warchief_kargath_bladefistAI : public ScriptedAI
 
         // Check if out of range
         if (EnterEvadeIfOutOfCombatArea(uiDiff))
+        {
+            DoScriptText(SAY_EVADE, m_creature);
             return;
+        }
 
         if (m_uiAssassinsTimer)
         {

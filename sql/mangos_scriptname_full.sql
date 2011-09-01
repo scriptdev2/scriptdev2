@@ -50,6 +50,8 @@ DELETE FROM scripted_areatrigger WHERE entry=3626;
 INSERT INTO scripted_areatrigger VALUES (3626, 'at_vaelastrasz');
 DELETE FROM scripted_areatrigger WHERE entry=4937;
 INSERT INTO scripted_areatrigger VALUES (4937, 'at_sunwell_plateau');
+DELETE FROM scripted_areatrigger WHERE entry=4524;
+INSERT INTO scripted_areatrigger VALUES (4524,'at_shattered_halls');
 
 
 /* BATTLEGROUNDS */

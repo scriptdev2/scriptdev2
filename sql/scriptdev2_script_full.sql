@@ -1607,7 +1607,11 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1540044,'I am called Bladefist for a reason, as you will see!',10325,1,0,0,'kargath SAY_AGGRO3'),
 (-1540045,'For the real Horde!',10326,1,0,0,'kargath SAY_SLAY1'),
 (-1540046,'I am the only Warchief!',10327,1,0,0,'kargath SAY_SLAY2'),
-(-1540047,'The true Horde... will.. prevail...',10328,1,0,0,'kargath SAY_DEATH');
+(-1540047,'The true Horde... will.. prevail...',10328,1,0,0,'kargath SAY_DEATH'),
+(-1540048,'Cowards! You\'ll never pull me into the shadows!',0,1,0,0,'kargath SAY_EVADE'),
+
+(-1540049,'The Alliance dares to intrude this far into my fortress? Bring out the Honor Hold prisoners and call for the executioner! They\'ll pay with their lives for this trespass!',0,6,0,0,'kargath SAY_EXECUTE_ALLY'),
+(-1540050,'It looks like we have a ranking officer among our captives...how amusing. Execute the green-skinned dog at once!',0,6,0,0,'kargath SAY_EXECUTE_HORDE');
 
 -- -1 542 000 BLOOD FURNACE
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES

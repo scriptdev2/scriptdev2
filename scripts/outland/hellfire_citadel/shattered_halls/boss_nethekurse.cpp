@@ -71,10 +71,10 @@ enum
     SPELL_SHADOW_CLEAVE    = 30495,
     SPELL_SHADOW_SLAM_H    = 35953,
 
+    SPELL_SHADOW_SEAR      = 30735,                         // On fel orcs - not sure yet how it is used
     SPELL_HEMORRHAGE       = 30478,
 
-    SPELL_CONSUMPTION      = 30497,
-    SPELL_TEMPORARY_VISUAL = 39312,                         // this is wrong, a temporary solution. spell consumption already has the purple visual, but doesn't display as it should
+    SPELL_CONSUMPTION      = 30497,                         // Cast by the shadow fissure
 
     NPC_FEL_ORC_CONVERT    = 17083,
 };
@@ -206,11 +206,8 @@ struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
 
     void MoveInLineOfSight(Unit* pWho)
     {
-        if (!m_bIntroOnce && m_creature->IsWithinDistInMap(pWho, 50.0f))
+        if (!m_bIntroOnce && pWho->GetTypeId() == TYPEID_PLAYER && !((Player*)pWho)->isGameMaster() && m_creature->IsWithinDistInMap(pWho, 50.0f) && m_creature->IsWithinLOSInMap(pWho))
         {
-            if (pWho->GetTypeId() != TYPEID_PLAYER)
-                return;
-
             DoScriptText(SAY_INTRO, m_creature);
             m_bIntroOnce = true;
             m_bIsIntroEvent = true;
@@ -239,12 +236,10 @@ struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
 
     void JustSummoned(Creature* pSummoned)
     {
-        pSummoned->setFaction(16);
+        // ToDo: this should be done in DB
         pSummoned->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
         pSummoned->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 
-        // triggered spell of consumption does not properly show it's SpellVisual, wrong spellid?
-        pSummoned->CastSpell(pSummoned, SPELL_TEMPORARY_VISUAL, true);
         pSummoned->CastSpell(pSummoned, SPELL_CONSUMPTION, false, NULL, NULL, m_creature->GetObjectGuid());
     }
 
@@ -416,9 +411,9 @@ struct MANGOS_DLL_DECL mob_fel_orc_convertAI : public ScriptedAI
 };
 
 // NOTE: this creature are also summoned by other spells, for different creatures
-struct MANGOS_DLL_DECL mob_lesser_shadow_fissureAI : public ScriptedAI
+struct MANGOS_DLL_DECL mob_lesser_shadow_fissureAI : public Scripted_NoMovementAI
 {
-    mob_lesser_shadow_fissureAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+    mob_lesser_shadow_fissureAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature) { Reset(); }
 
     void Reset() { }
     void MoveInLineOfSight(Unit* pWho) { }
