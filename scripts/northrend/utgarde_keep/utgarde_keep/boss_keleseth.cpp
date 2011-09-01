@@ -239,7 +239,10 @@ struct MANGOS_DLL_DECL boss_kelesethAI : public ScriptedAI
                 if (bDespawn)
                     pAdd->ForcedDespawn();
                 else
-                    pAdd->DealDamage(pAdd, pAdd->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+                {
+                    pAdd->SetDeathState(JUST_DIED);
+                    pAdd->SetHealth(0);
+                }
             }
         }
 
