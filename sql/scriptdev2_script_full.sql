@@ -3465,9 +3465,9 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1631081,'NOOOO! You kill Stinky! You pay!',16907,6,0,0,'festergut SAY_STINKY_DIES'),
 (-1631082,'Fun time!',16901,1,0,0,'festergut SAY_AGGRO'),
 (-1631083,'Just an ordinary gas cloud. But watch out, because that\'s no ordinary gas cloud! ',17119,1,0,0,'putricide SAY_BLIGHT'),
-(-1631084,'%s farts.',16911,2,0,0,'festergut SAY_SPORE'),
+(-1631084,'%s farts.',16911,2,0,0,'festergut SAY_SPORE'), -- TODO Can be wrong
 (-1631085,'Gyah! Uhhh, I not feel so good...',16906,1,0,0,'festergut SAY_PUNGUENT_BLIGHT'),
-(-1631086,'%s vomits',0,2,0,0,'festergut SAY_PUNGUENT_BLIGHT_EMOTE'),
+(-1631086,'%s vomits',0,2,0,0,'festergut SAY_PUNGUENT_BLIGHT_EMOTE'), -- TODO Can be wrong
 (-1631087,'Daddy, I did it',16902,1,0,0,'festergut SAY_SLAY_1'),
 (-1631088,'Dead, dead, dead!',16903,1,0,0,'festergut SAY_SLAY_2'),
 (-1631089,'Fun time over!',16905,1,0,0,'festergut SAY_BERSERK'),
@@ -3491,20 +3491,20 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1631104,'Blood will flow!',16728,1,0,0,'keleseth SAY_KELESETH_SPECIAL'),
 (-1631105,'Were you ever a threat?',16723,1,0,0,'keleseth SAY_KELESETH_SLAY_1'),
 (-1631106,'Truth is found in death.',16724,1,0,0,'keleseth SAY_SKELESETH_SLAY_2'),
-(-1631107,'%s cackles maniacally!',16726,2,0,0,'keleseth SAY_KELESETH_BERSERK'),
+(-1631107,'%s cackles maniacally!',16726,2,0,0,'keleseth SAY_KELESETH_BERSERK'), -- TODO Can be wrong
 (-1631108,'My queen... they come...',16725,1,0,0,'keleseth SAY_KELESETH_DEATH'),
 
 (-1631109,'Tremble before Taldaram, mortals, for the power of the orb flows through me!',16857,1,0,0,'taldaram SAY_TALDARAM_INVOCATION'),
 (-1631110,'Delight in the pain!',16858,1,0,0,'taldaram SAY_TALDARAM_SPECIAL'),
 (-1631111,'Worm food.',16853,1,0,0,'taldaram SAY_TALDARAM_SLAY_1'),
 (-1631112,'Beg for mercy!',16854,1,0,0,'taldaram SAY_TALDARAM_SLAY_2'),
-(-1631113,'%s laughs.',16856,2,0,0,'taldaram SAY_TALDARAM_BERSERK'),
-(-1631114,'%s gurgles and dies.',16855,2,0,0,'taldaram SAY_TALDARAM_DEATH'),
+(-1631113,'%s laughs.',16856,2,0,0,'taldaram SAY_TALDARAM_BERSERK'), -- TODO Can be wrong
+(-1631114,'%s gurgles and dies.',16855,2,0,0,'taldaram SAY_TALDARAM_DEATH'), -- TODO Can be wrong
 
 (-1631115,'Naxxanar was merely a setback! With the power of the orb, Valanar will have his vengeance!',16685,1,0,0,'valanar SAY_VALANAR_INVOCATION'),
 (-1631116,'My cup runneth over.',16686,1,0,0,'valanar SAY_VALANAR_SPECIAL'),
 (-1631117,'Dinner... is served.',16681,1,0,0,'valanar SAY_VALANAR_SLAY_1'),
-(-1631118,'Dinner... is served.',16682,1,0,0,'valanar SAY_VALANAR_SLAY_2'),
+(-1631118,'Do you see NOW the power of the Darkfallen?',16682,1,0,0,'valanar SAY_VALANAR_SLAY_2'),
 (-1631119,'BOW DOWN BEFORE THE SAN\'LAYN!',16684,1,0,0,'valanar SAY_VALANAR_BERSERK'),
 (-1631120,'...why...?',16683,1,0,0,'valanar SAY_VALANAR_DEATH'),
 
@@ -3527,7 +3527,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1631136,'Come Scourgebane, I\'ll show the Lich King which one of us is truly worthy of the title, champion!',17020,1,0,0,'svalna SAY_SVALNA_AGGRO'),
 (-1631137,'What? They died so easily? No matter.',17022,1,0,0,'svalna SAY_KILL_CAPTAIN'),
 (-1631138,'What a pitiful choice of an ally Crok.',17021,1,0,0,'svalna SAY_KILL_PLAYER'),
-(-1631139,'Perhaps... you were right... Crok, you must not approach the Frost Queen, quickly, stop them!',17023,1,0,0,'svalna SAY_DEATH'),
+(-1631139,'Perhaps... you were right... Crok.',17023,1,0,0,'svalna SAY_DEATH'),
 
 (-1631140,'Heroes, lend me your aid! I... I cannot hold them off much longer! You must heal my wounds!',17064,1,0,0,'dreamwalker SAY_AGGRO'),
 (-1631141,'I have opened a portal into the Dream. Your salvation lies within, heroes.',17068,1,0,0,'dreamwalker SAY_PORTAL'),
@@ -3583,7 +3583,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1631189,'THE LICH KING...MUST...FALL!',17389,1,0,0,'tirion SAY_OUTRO_11'),
 (-1631190,'Now I stand, the lion before the lambs... and they do not fear.',17361,1,0,0,'lich_king SAY_OUTRO_12'),
 (-1631191,'They cannot fear.',17362,1,0,0,'lich_king SAY_OUTRO_13'),
-(-1631192,'%s dies',17374,2,0,0,'lich_king SAY_OUTRO_14');
+(-1631192,'%s dies',17374,2,0,0,'lich_king SAY_OUTRO_14'); -- TODO Can be wrong
 
 -- -1 632 000 ICC: FORGE OF SOULS
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
