@@ -370,7 +370,8 @@ bool GossipSelect_npc_timothy_daniels(Player* pPlayer, Creature* pCreature, uint
 
 enum
 {
-    EVENT_ID_STORMCROW  = 11225,
+    QUEST_AS_THE_CROW_FLIES = 9718,
+    EVENT_ID_STORMCROW      = 11225,
 };
 
 bool ProcessEventId_event_taxi_stormcrow(uint32 uiEventId, Object* pSource, Object* pTarget, bool bIsStart)
@@ -378,6 +379,7 @@ bool ProcessEventId_event_taxi_stormcrow(uint32 uiEventId, Object* pSource, Obje
     if (uiEventId == EVENT_ID_STORMCROW && !bIsStart && pSource->GetTypeId() == TYPEID_PLAYER)
     {
         ((Player*)pSource)->SetDisplayId(((Player*)pSource)->GetNativeDisplayId());
+        ((Player*)pSource)->AreaExploredOrEventHappens(QUEST_AS_THE_CROW_FLIES);
         return true;
     }
     return false;
