@@ -16,6 +16,15 @@ enum
     TYPE_TWIN_VALKYR            = 4,
     TYPE_ANUBARAK               = 5,
 
+    EVENT_OPEN_PORTAL           = 6,
+    EVENT_KILL_FIZZLEBANG       = 7,
+    EVENT_JARAXXUS_START_ATTACK = 8,
+    EVENT_SUMMON_TWINS          = 9,
+    EVENT_TWINS_KILLED          = 10,
+    EVENT_ARTHAS_PORTAL         = 11,
+    EVENT_SUMMON_THE_LICHKING   = 12,
+    EVENT_DESTROY_FLOOR         = 13,
+
     NPC_BEAST_COMBAT_STALKER    = 36549,
     NPC_GORMOK                  = 34796,
     NPC_ACIDMAW                 = 35144,
@@ -31,6 +40,7 @@ enum
     NPC_VARIAN                  = 34990,
     NPC_GARROSH                 = 34995,
     NPC_FIZZLEBANG              = 35458,
+    NPC_OPEN_PORTAL_TARGET      = 17965,
     NPC_WORLD_TRIGGER_LARGE     = 22517,                    // Used for Lich King summon event
     NPC_THE_LICHKING            = 16980,
     NPC_THE_LICHKING_VISUAL     = 35877,
@@ -43,16 +53,21 @@ enum
     NPC_RAMSEY_7                = 35909,
     NPC_RAMSEY_8                = 35910,
 
+    NPC_PURPLE_RUNE             = 35651,
+
+    GO_MAIN_GATE                = 195647,
     GO_COLISEUM_FLOOR           = 195527,
 
+    SPELL_OPEN_PORTAL           = 67864,
+    SPELL_FEL_LIGHTNING_KILL    = 67888,
+    SPELL_WILFRED_PORTAL        = 68424,
     SPELL_ARTHAS_PORTAL         = 51807,
     SPELL_FROSTNOVA             = 68198,
     SPELL_CORPSE_TELEPORT       = 69016, // NYI
     SPELL_DESTROY_FLOOR_KNOCKUP = 68193,
 
     DISPLAYID_DESTROYED_FLOOR   = 9060,
-
-    EMOTE_DESTROY_FLOOR         = 16,
+    POINT_COMBAT_POSITION       = 10,
 };
 
 static const float aRamsayPositions[2][4] =
@@ -74,6 +89,7 @@ static const float aSpawnPositions[][4] =
     {555.4514f, 205.8889f, 399.2634f, 4.886922f},           // Eydis
     {563.6996f, 175.9826f, 394.5042f, 4.694936f},           // World Trigger Large
     {563.5712f, 174.8351f, 394.4954f, 4.712389f},           // Lich King
+    {563.6858f, 139.4323f, 393.9862f, 4.694936f},           // Purple Rune / Center Position
 };
 
 static const float aMovePositions[][3] =
@@ -81,6 +97,7 @@ static const float aMovePositions[][3] =
     {563.748f,  179.766f,  394.4862f},                      // Gormok
     {576.5347f, 168.9514f, 394.7064f},                      // Dreadscale
     {563.8577f, 176.5885f, 394.4417f},                      // Icehowl
+    {563.7223f, 131.2344f, 393.9901f},                      // Jaraxxus
 };
 
 class MANGOS_DLL_DECL instance_trial_of_the_crusader : public ScriptedInstance, private DialogueHelper

@@ -39,6 +39,7 @@ enum
     SAY_INFERNO                         = -1649047,
 
     // boss spells
+    SPELL_JARAXXUS_HITTIN_YA            = 66327,
     SPELL_FEL_FIREBALL                  = 66532,
     SPELL_FEL_LIGHTNING                 = 66528,
     SPELL_INCINERATE_FLESH              = 66237,
@@ -87,6 +88,8 @@ struct MANGOS_DLL_DECL boss_jaraxxusAI : public ScriptedAI
         m_uiBerserkTimer            = 10*MINUTE*IN_MILLISECONDS;
 
         m_bVolcanoSummon            = true;
+
+        DoCastSpellIfCan(m_creature, SPELL_JARAXXUS_HITTIN_YA);
     }
 
     void JustReachedHome()
@@ -115,6 +118,14 @@ struct MANGOS_DLL_DECL boss_jaraxxusAI : public ScriptedAI
         m_creature->SetInCombatWithZone();
     }
 
+    void EnterEvadeMode()
+    {
+        if (m_pInstance && m_pInstance->GetData(TYPE_JARAXXUS) != IN_PROGRESS)
+            return;
+
+        ScriptedAI::EnterEvadeMode();
+    }
+
     void KilledUnit(Unit* pVictim)
     {
         if (pVictim->GetEntry() == NPC_FIZZLEBANG)
@@ -136,6 +147,15 @@ struct MANGOS_DLL_DECL boss_jaraxxusAI : public ScriptedAI
         }
      }
 
+    void MovementInform(uint32 uiMovementType, uint32 uiPointId)
+    {
+        if (uiMovementType != POINT_MOTION_TYPE)
+            return;
+
+        if (m_pInstance && uiPointId == POINT_COMBAT_POSITION)
+            if (Creature* pFizzlebang = m_pInstance->GetSingleCreatureFromStorage(NPC_FIZZLEBANG))
+                m_creature->SetFacingToObject(pFizzlebang);
+    }
 
     void UpdateAI(const uint32 uiDiff)
     {

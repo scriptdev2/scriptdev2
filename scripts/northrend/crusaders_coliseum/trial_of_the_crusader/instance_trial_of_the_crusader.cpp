@@ -100,12 +100,14 @@ static const DialogueEntryTwoSide aTocDialogues[] =
     {SAY_TIRION_JARAXXUS_INTRO_1,   NPC_TIRION_A, 0, 0,     6000},
     {NPC_FIZZLEBANG, 0, 0, 0,                               26000},
     {SAY_WILFRED_JARAXXUS_INTRO_1,  NPC_FIZZLEBANG, 0, 0,   10000},
-    {SAY_WILFRED_JARAXXUS_INTRO_2,  NPC_FIZZLEBANG, 0, 0,   12000},
+    {SAY_WILFRED_JARAXXUS_INTRO_2,  NPC_FIZZLEBANG, 0, 0,   7000},
+    {EVENT_OPEN_PORTAL, 0, 0, 0,                            5000},
     {SAY_WILFRED_JARAXXUS_INTRO_3,  NPC_FIZZLEBANG, 0, 0,   12000}, // Summon also Jaraxxus
-    {SAY_JARAXXUS_JARAXXAS_INTRO_1, NPC_JARAXXUS, 0, 0,     5000},
+    {SAY_JARAXXUS_JARAXXAS_INTRO_1, NPC_JARAXXUS, 0, 0,     6000},
     {SAY_WILFRED_DEATH,             NPC_FIZZLEBANG, 0, 0,   1000},
     {EVENT_KILL_FIZZLEBANG, 0, 0, 0,                        5000},  // Kill Fizzlebang
-    {SAY_TIRION_JARAXXUS_INTRO_2,   NPC_TIRION_A, 0, 0,     0},
+    {SAY_TIRION_JARAXXUS_INTRO_2,   NPC_TIRION_A, 0, 0,     6000},
+    {EVENT_JARAXXUS_START_ATTACK, 0, 0, 0,                  0},
     // Jaruxxus (Outro)
     {SAY_JARAXXUS_DEATH,            NPC_JARAXXUS, 0, 0,     6000},  // Jaraxxus Death
     {SAY_TIRION_JARAXXUS_EXIT_1,    NPC_TIRION_A, 0, 0,     5000},
@@ -124,8 +126,8 @@ static const DialogueEntryTwoSide aTocDialogues[] =
     {NPC_RAMSEY_4, 0, 0, 0,                                 0},
     // Twin Valkyrs
     {TYPE_TWIN_VALKYR, 0, 0, 0,                             17000},
-    {NPC_FJOLA, 0, 0, 0,                                    0},     // Summon Twins
-    {NPC_EYDIS, 0, 0, 0,                                    2000},  // Twins killed // TODO Find better entry
+    {EVENT_SUMMON_TWINS, 0, 0, 0,                           0},
+    {EVENT_TWINS_KILLED, 0, 0, 0,                           2000},
     {NPC_RAMSEY_5, 0, 0, 0,                                 4000},
     {SAY_VARIAN_TWINS_A_WIN,        NPC_VARIAN,         SAY_GARROSH_TWINS_H_WIN,    NPC_GARROSH, 1000},
     {SAY_TIRION_TWINS_WIN,          NPC_TIRION_A, 0, 0,     0},
@@ -168,17 +170,24 @@ void instance_trial_of_the_crusader::OnCreatureCreate(Creature* pCreature)
 {
     switch (pCreature->GetEntry())
     {
+        case NPC_FIZZLEBANG:
+            DoUseDoorOrButton(GO_MAIN_GATE);
         case NPC_TIRION_A:
         case NPC_TIRION_B:
         case NPC_VARIAN:
         case NPC_GARROSH:
-        case NPC_FIZZLEBANG:
         case NPC_JARAXXUS:
+        case NPC_OPEN_PORTAL_TARGET:
+        case NPC_EYDIS:
         case NPC_WORLD_TRIGGER_LARGE:
         case NPC_THE_LICHKING:
         case NPC_THE_LICHKING_VISUAL:
-            m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
+            break;
+        default:
+            return;
     }
+
+    m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
 }
 
 void instance_trial_of_the_crusader::OnObjectCreate(GameObject* pGo)
@@ -259,7 +268,7 @@ void instance_trial_of_the_crusader::SetData(uint32 uiType, uint32 uiData)
                 StartNextDialogueText(NPC_RAMSEY_4);
             }
             else if (uiData == DONE)
-                StartNextDialogueText(NPC_EYDIS);
+                StartNextDialogueText(EVENT_TWINS_KILLED);
             m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_ANUBARAK:
@@ -363,11 +372,37 @@ void instance_trial_of_the_crusader::JustDidDialogueStep(int32 iEntry)
             if (Player* pPlayer = GetPlayerInMap())
                 pPlayer->SummonCreature(NPC_FIZZLEBANG, aSpawnPositions[5][0], aSpawnPositions[5][1], aSpawnPositions[5][2], aSpawnPositions[5][3], TEMPSUMMON_DEAD_DESPAWN, 0);
             break;
+        case SAY_WILFRED_JARAXXUS_INTRO_1:
+            DoUseDoorOrButton(GO_MAIN_GATE); // Close main gate
+            break;
+        case SAY_WILFRED_JARAXXUS_INTRO_2:
+            if (Creature* pFizzlebang = GetSingleCreatureFromStorage(NPC_FIZZLEBANG))
+            {
+                pFizzlebang->SummonCreature(NPC_PURPLE_RUNE, aSpawnPositions[11][0], aSpawnPositions[11][1], aSpawnPositions[11][2], aSpawnPositions[11][3], TEMPSUMMON_TIMED_DESPAWN, 15000);
+                pFizzlebang->CastSpell(pFizzlebang, SPELL_OPEN_PORTAL, false);
+            }
+            break;
+        case EVENT_OPEN_PORTAL:
+            if (Creature* pOpenPortalTarget = GetSingleCreatureFromStorage(NPC_OPEN_PORTAL_TARGET))
+            {
+                pOpenPortalTarget->CastSpell(pOpenPortalTarget, SPELL_WILFRED_PORTAL, true);
+                pOpenPortalTarget->ForcedDespawn(9000);
+            }
+            break;
         case SAY_WILFRED_JARAXXUS_INTRO_3:
             if (Player* pPlayer = GetPlayerInMap())
-                pPlayer->SummonCreature(NPC_JARAXXUS, aSpawnPositions[6][0], aSpawnPositions[6][1], aSpawnPositions[6][2], aSpawnPositions[6][3], TEMPSUMMON_DEAD_DESPAWN, 0);
+                if (Creature* pJaraxxus = pPlayer->SummonCreature(NPC_JARAXXUS, aSpawnPositions[6][0], aSpawnPositions[6][1], aSpawnPositions[6][2], aSpawnPositions[6][3], TEMPSUMMON_DEAD_DESPAWN, 0))
+                    pJaraxxus->GetMotionMaster()->MovePoint(POINT_COMBAT_POSITION, aMovePositions[3][0], aMovePositions[3][1], aMovePositions[3][2]);
             break;
-        case NPC_FJOLA:
+        case EVENT_KILL_FIZZLEBANG:
+            if (Creature* pJaraxxus = GetSingleCreatureFromStorage(NPC_JARAXXUS))
+                pJaraxxus->CastSpell(pJaraxxus, SPELL_FEL_LIGHTNING_KILL, true);
+            break;
+        case EVENT_JARAXXUS_START_ATTACK:
+            if (Creature* pJaraxxus = GetSingleCreatureFromStorage(NPC_JARAXXUS))
+                pJaraxxus->SetInCombatWithZone();
+            break;
+        case EVENT_SUMMON_TWINS:
             if (Player* pPlayer = GetPlayerInMap())
             {
                 pPlayer->SummonCreature(NPC_FJOLA, aSpawnPositions[7][0], aSpawnPositions[7][1], aSpawnPositions[7][2], aSpawnPositions[7][3], TEMPSUMMON_DEAD_DESPAWN, 0);
