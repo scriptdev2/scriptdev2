@@ -976,10 +976,10 @@ struct MANGOS_DLL_DECL npc_captive_child : public ScriptedAI
 
     void Reset() {}
 
-    void WaypointReached(uint32 uiPointId)
+    void MovementInform(uint32 uiMotionType, uint32 uiPointId)
     {
-        // we only have one waypoint
-        m_creature->ForcedDespawn();
+        if (uiMotionType == POINT_MOTION_TYPE)
+            m_creature->ForcedDespawn();                    // we only have one waypoint
     }
 };
 
