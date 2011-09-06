@@ -1710,6 +1710,9 @@
     <ClCompile Include="..\scripts\world\spell_scripts.cpp">
       <Filter>scripts\world</Filter>
     </ClCompile>
+    <ClCompile Include="..\scripts\world\world_map_scripts.cpp">
+      <Filter>scripts\world</Filter>
+    </ClCompile>
     <ClCompile Include="..\include\precompiled.cpp">
       <Filter>include</Filter>
     </ClCompile>
