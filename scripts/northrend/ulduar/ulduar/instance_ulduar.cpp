@@ -218,30 +218,30 @@ void instance_ulduar::OnObjectCreate(GameObject* pGo)
 
         // -----------------    Chests    -----------------
         // Kologarn
-        case GO_CACHE_OF_LIVING_STONE:
-        case GO_CACHE_OF_LIVING_STONE_H:
+        case GO_CACHE_OF_LIVING_STONE_10:
+        case GO_CACHE_OF_LIVING_STONE_25:
 
         // Hodir
-        case GO_CACHE_OF_WINTER:
-        case GO_CACHE_OF_WINTER_H:
-        case GO_CACHE_OF_RARE_WINTER:
-        case GO_CACHE_OF_RARE_WINTER_H:
+        case GO_CACHE_OF_WINTER_10:
+        case GO_CACHE_OF_WINTER_25:
+        case GO_CACHE_OF_RARE_WINTER_10:
+        case GO_CACHE_OF_RARE_WINTER_25:
 
         // Thorim
-        case GO_CACHE_OF_STORMS:
-        case GO_CACHE_OF_STORMS_H:
-        case GO_CACHE_OF_RARE_STORMS:
-        case GO_CACHE_OF_RARE_STORMS_H:
+        case GO_CACHE_OF_STORMS_10:
+        case GO_CACHE_OF_STORMS_25:
+        case GO_CACHE_OF_STORMS_10_H:
+        case GO_CACHE_OF_STORMS_25_H:
 
         // Mimiron
-        case GO_CACHE_OF_INOV:
-        case GO_CACHE_OF_INOV_H:
-        case GO_CACHE_OF_INOV_HARD:
-        case GO_CACHE_OF_INOV_HARD_H:
+        case GO_CACHE_OF_INOV_10:
+        case GO_CACHE_OF_INOV_25:
+        case GO_CACHE_OF_INOV_10_H:
+        case GO_CACHE_OF_INOV_25_H:
 
         // Alagon
-        case GO_GIFT_OF_OBSERVER:
-        case GO_GIFT_OF_OBSERVER_H:
+        case GO_GIFT_OF_OBSERVER_10:
+        case GO_GIFT_OF_OBSERVER_25:
             break;
 
         default:
@@ -294,7 +294,7 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
             DoUseDoorOrButton(GO_SHATTERED_DOOR);
             if (uiData == DONE)
             {
-                DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_OF_LIVING_STONE : GO_CACHE_OF_LIVING_STONE_H, 30*MINUTE);
+                DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_OF_LIVING_STONE_10 : GO_CACHE_OF_LIVING_STONE_25, 30*MINUTE);
                 if (GameObject* pBridge = GetSingleGameObjectFromStorage(GO_KOLOGARN_BRIDGE))
                     pBridge->SetGoState(GO_STATE_READY);
             }
@@ -311,7 +311,7 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
             if (uiData == DONE)
             {
                 if (GetData(TYPE_MIMIRON_HARD) != DONE)
-                    DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_OF_INOV : GO_CACHE_OF_INOV_H, 30*MINUTE);
+                    DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_OF_INOV_10 : GO_CACHE_OF_INOV_25, 30*MINUTE);
                 SpawnFriendlyKeeper(NPC_MIMIRON_IMAGE);
             }
             break;
@@ -322,7 +322,7 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
             {
                 DoUseDoorOrButton(GO_HODIR_ICE_WALL);
                 DoUseDoorOrButton(GO_HODIR_EXIT);
-                DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_OF_WINTER : GO_CACHE_OF_WINTER_H, 30*MINUTE);
+                DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_OF_WINTER_10 : GO_CACHE_OF_WINTER_25, 30*MINUTE);
                 SpawnFriendlyKeeper(NPC_HODIR_IMAGE);
             }
             break;
@@ -334,7 +334,7 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
             if (uiData == DONE)
             {
                 if (GetData(TYPE_THORIM_HARD) != DONE)
-                    DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_OF_STORMS : GO_CACHE_OF_STORMS_H, 30*MINUTE);
+                    DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_OF_STORMS_10 : GO_CACHE_OF_STORMS_25, 30*MINUTE);
                 SpawnFriendlyKeeper(NPC_THORIM_IMAGE);
             }
             break;
@@ -361,7 +361,7 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
             DoUseDoorOrButton(GO_CELESTIAL_DOOR);
             DoUseDoorOrButton(GO_UNIVERSE_FLOOR_CELESTIAL);
             if (uiData == DONE)
-                DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_GIFT_OF_OBSERVER : GO_GIFT_OF_OBSERVER_H, 30*MINUTE);
+                DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_GIFT_OF_OBSERVER_10 : GO_GIFT_OF_OBSERVER_25, 30*MINUTE);
             break;
 
         // Hard modes
@@ -374,17 +374,17 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
         case TYPE_HODIR_HARD:
             m_auiHardBoss[2] = uiData;
             if (uiData == DONE)
-                DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_OF_RARE_WINTER : GO_CACHE_OF_RARE_WINTER_H, 30*MINUTE);
+                DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_OF_RARE_WINTER_10 : GO_CACHE_OF_RARE_WINTER_25, 30*MINUTE);
             break;
         case TYPE_THORIM_HARD:
             m_auiHardBoss[3] = uiData;
             if (uiData == DONE)
-                DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_OF_RARE_STORMS : GO_CACHE_OF_RARE_STORMS_H, 30*MINUTE);
+                DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_OF_STORMS_10_H : GO_CACHE_OF_STORMS_25_H, 30*MINUTE);
             break;
         case TYPE_MIMIRON_HARD:
             m_auiHardBoss[4] = uiData;
             if (uiData == DONE)
-                DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_OF_INOV_HARD : GO_CACHE_OF_INOV_HARD_H, 30*MINUTE);
+                DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_OF_INOV_10_H : GO_CACHE_OF_INOV_25_H, 30*MINUTE);
             break;
         case TYPE_VEZAX_HARD:
             m_auiHardBoss[5] = uiData;                      // TODO: add extra loot
