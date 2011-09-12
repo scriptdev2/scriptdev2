@@ -23,7 +23,7 @@ enum
     GO_CONTAINMENT_SPHERE_ANOMALUS = 188527,
     GO_CONTAINMENT_SPHERE_ORMOROK  = 188528,
 
-    SPELL_FROZEN_PRISON             = 47854,                // may not be correct spell
+    SPELL_FROZEN_PRISON             = 47854,
 };
 
 class MANGOS_DLL_DECL instance_nexus : public ScriptedInstance
