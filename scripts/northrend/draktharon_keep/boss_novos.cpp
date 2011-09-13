@@ -37,7 +37,7 @@ enum
 
     SPELL_ARCANE_FIELD              = 47346,
     SPELL_IMMUNITY                  = 34098,
-    SPELL_SUMMON_MINIONS_H          = 59910,                // (at least) on Phase-Switch, TODO1 research on appearence; TODO2 implement spell. Triggers 59935, 59938, 59939, 59940
+    SPELL_SUMMON_MINIONS_H          = 59910,
     SPELL_FROSTBOLT                 = 49037,
     SPELL_FROSTBOLT_H               = 59855,
     SPELL_ARCANE_BLAST              = 49198,
@@ -58,7 +58,8 @@ enum
     NPC_CRYSTAL_HANDLER             = 26627,
     NPC_HULKING_CORPSE              = 27597,
     NPC_FETID_TROLL_CORPSE          = 27598,
-    NPC_RISON_SHADOWCASTER          = 27600
+    NPC_RISON_SHADOWCASTER          = 27600,
+    NPC_ROTTED_TROLL_CORPSE         = 32786,                // On heroic as effect of SPELL_SUMMON_MINIONS_H
 };
 
 // The Crystal Handlers are summoned around the two entrances of the room
@@ -119,6 +120,8 @@ struct MANGOS_DLL_DECL boss_novosAI : public Scripted_NoMovementAI
         m_uiLostCrystals = 0;
         // This ensures that in the shield phase m_pInstance is valid
         m_uiPhase = m_pInstance ? PHASE_SHIELDED : PHASE_NORMAL;
+
+        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     }
 
     void LostOneCrystal()
@@ -127,14 +130,8 @@ struct MANGOS_DLL_DECL boss_novosAI : public Scripted_NoMovementAI
 
         DoScriptText(urand(0, 1) ? SAY_BUBBLE_1 : SAY_BUBBLE_2, m_creature);
 
-        if (m_uiLostCrystals == MAX_CRYSTALS)
-        {
-            // Enter Phase 2
-            if (!m_bIsRegularMode)
-                DoCastSpellIfCan(m_creature, SPELL_SUMMON_MINIONS_H);
-
+        if (m_uiLostCrystals == MAX_CRYSTALS)               // Enter Phase 2
             m_uiPhase = PHASE_WAITING;
-        }
     }
 
     void MoveInLineOfSight(Unit* pWho)
@@ -155,8 +152,12 @@ struct MANGOS_DLL_DECL boss_novosAI : public Scripted_NoMovementAI
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
-        DoCastSpellIfCan(m_creature, SPELL_ARCANE_FIELD);
+        DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_ARCANE_BLAST : SPELL_ARCANE_BLAST_H, CAST_TRIGGERED);
+
         DoCastSpellIfCan(m_creature, SPELL_IMMUNITY, CAST_TRIGGERED);
+        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+
+        DoCastSpellIfCan(m_creature, SPELL_ARCANE_FIELD);
 
         if (m_pInstance)
             m_pInstance->SetData(TYPE_NOVOS, IN_PROGRESS);
@@ -186,6 +187,7 @@ struct MANGOS_DLL_DECL boss_novosAI : public Scripted_NoMovementAI
         switch (pSummoned->GetEntry())
         {
             case NPC_CRYSTAL_HANDLER:
+            case NPC_ROTTED_TROLL_CORPSE:
                 if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                     pSummoned->AI()->AttackStart(pTarget);
                 break;
@@ -262,8 +264,13 @@ struct MANGOS_DLL_DECL boss_novosAI : public Scripted_NoMovementAI
                 {
                     m_uiPhase = PHASE_NORMAL;
                     // Remove Immunity and Shield Aura
-                    m_creature->InterruptNonMeleeSpells(true);
+                    m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                     m_creature->RemoveAllAuras();
+
+                    if (!m_bIsRegularMode)
+                        DoCastSpellIfCan(m_creature, SPELL_SUMMON_MINIONS_H, CAST_INTERRUPT_PREVIOUS);
+                    else
+                        m_creature->InterruptNonMeleeSpells(true);
                 }
                 else
                     m_uiPhaseTimer -= uiDiff;
