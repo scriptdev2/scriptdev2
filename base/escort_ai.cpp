@@ -82,6 +82,9 @@ void npc_escortAI::AttackStart(Unit* pWho)
 
 void npc_escortAI::EnterCombat(Unit* pEnemy)
 {
+    // Store combat start position
+    m_creature->SetCombatStartPosition(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ());
+
     if (!pEnemy)
         return;
 
@@ -219,13 +222,17 @@ void npc_escortAI::EnterEvadeMode()
 
     if (HasEscortState(STATE_ESCORT_ESCORTING))
     {
-        debug_log("SD2: EscortAI has left combat and is now returning to CombatStartPosition.");
+        // We have left our path
+        if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() != POINT_MOTION_TYPE)
+        {
+            debug_log("SD2: EscortAI has left combat and is now returning to CombatStartPosition.");
 
-        AddEscortState(STATE_ESCORT_RETURNING);
+            AddEscortState(STATE_ESCORT_RETURNING);
 
-        float fPosX, fPosY, fPosZ;
-        m_creature->GetCombatStartPosition(fPosX, fPosY, fPosZ);
-        m_creature->GetMotionMaster()->MovePoint(POINT_LAST_POINT, fPosX, fPosY, fPosZ);
+            float fPosX, fPosY, fPosZ;
+            m_creature->GetCombatStartPosition(fPosX, fPosY, fPosZ);
+            m_creature->GetMotionMaster()->MovePoint(POINT_LAST_POINT, fPosX, fPosY, fPosZ);
+        }
     }
     else
         m_creature->GetMotionMaster()->MoveTargetedHome();
@@ -382,11 +389,14 @@ void npc_escortAI::MovementInform(uint32 uiMoveType, uint32 uiPointId)
         //Make sure that we are still on the right waypoint
         if (CurrentWP->uiId != uiPointId)
         {
-            error_log("SD2: EscortAI reached waypoint out of order %u, expected %u.", uiPointId, CurrentWP->uiId);
+            error_log("SD2: EscortAI for Npc %u reached waypoint out of order %u, expected %u.", m_creature->GetEntry(), uiPointId, CurrentWP->uiId);
             return;
         }
 
         debug_log("SD2: EscortAI waypoint %u reached.", CurrentWP->uiId);
+
+        // In case we were moving while in combat, we should evade back to this position
+        m_creature->SetCombatStartPosition(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ());
 
         //Call WP function
         WaypointReached(CurrentWP->uiId);
