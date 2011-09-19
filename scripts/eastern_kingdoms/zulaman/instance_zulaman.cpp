@@ -61,6 +61,10 @@ void instance_zulaman::OnCreatureCreate(Creature* pCreature)
         case NPC_MALACRASS:
         case NPC_HARRISON:
         case NPC_SPIRIT_LYNX:
+        case NPC_BEAR_SPIRIT:
+        case NPC_EAGLE_SPIRIT:
+        case NPC_LYNX_SPIRIT:
+        case NPC_DRAGONHAWK_SPIRIT:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
 

@@ -2350,7 +2350,12 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 
 (-1568079,'Suit yourself. At least five of you must assist me if we\'re to get inside. Follow me.',0,1,0,0,'harrison SAY_START'),
 (-1568080,'According to my calculations, if enough of us bang the gong at once the seal on these doors will break and we can enter.',0,1,0,0,'harrison SAY_AT_GONG'),
-(-1568081,'I\'ve researched this site extensively and I won\'t allow any dim-witted treasure hunters to swoop in and steal what belongs to in a museum. I\'ll lead this charge.',0,1,0,0,'harrison SAY_OPEN_ENTRANCE');
+(-1568081,'I\'ve researched this site extensively and I won\'t allow any dim-witted treasure hunters to swoop in and steal what belongs to in a museum. I\'ll lead this charge.',0,1,0,0,'harrison SAY_OPEN_ENTRANCE'),
+
+(-1568082,'%s absorbs the essence of the bear spirit!',0,2,0,0,'zuljin EMOTE_BEAR_SPIRIT'),
+(-1568083,'%s absorbs the essence of the eagle spirit!',0,2,0,0,'zuljin EMOTE_EAGLE_SPIRIT'),
+(-1568084,'%s absorbs the essence of the lynx spirit!',0,2,0,0,'zuljin EMOTE_LYNX_SPIRIT'),
+(-1568085,'%s absorbs the essence of the dragonhawk spirit!',0,2,0,0,'zuljin EMOTE_DRAGONHAWK_SPIRIT');
 
 -- -1 574 000 UTGARDE KEEP
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES

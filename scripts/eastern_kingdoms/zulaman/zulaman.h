@@ -65,6 +65,11 @@ enum InstanceZA
     NPC_ASHIL_CORPSE        = 24441,
     NPC_HARKOR_CORPSE       = 24443,
 
+    NPC_BEAR_SPIRIT         = 23878,                        // They should all have aura 42466
+    NPC_EAGLE_SPIRIT        = 23880,
+    NPC_LYNX_SPIRIT         = 23877,
+    NPC_DRAGONHAWK_SPIRIT   = 23879,
+
     GO_STRANGE_GONG         = 187359,
     GO_MASSIVE_GATE         = 186728,
     GO_WIND_DOOR            = 186858,
