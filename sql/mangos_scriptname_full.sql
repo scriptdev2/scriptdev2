@@ -817,6 +817,8 @@ UPDATE creature_template SET ScriptName='npc_bunthen_plainswind' WHERE entry=117
 UPDATE creature_template SET ScriptName='npc_clintar_dw_spirit' WHERE entry=22916;
 UPDATE creature_template SET ScriptName='npc_great_bear_spirit' WHERE entry=11956;
 UPDATE creature_template SET ScriptName='npc_silva_filnaveth' WHERE entry=11800;
+UPDATE creature_template SET ScriptName='npc_keeper_remulos' WHERE entry=11832;
+UPDATE creature_template SET ScriptName='boss_eranikus' WHERE entry=15491;
 
 /* MULGORE */
 UPDATE creature_template SET ScriptName='npc_kyle_the_frenzied' WHERE entry=23616;
