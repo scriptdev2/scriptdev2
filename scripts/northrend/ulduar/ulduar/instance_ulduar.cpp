@@ -130,7 +130,7 @@ void instance_ulduar::OnObjectCreate(GameObject* pGo)
             pGo->SetGoState(GO_STATE_READY);
             if (m_auiEncounter[TYPE_XT002] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
-            if (m_auiEncounter[TYPE_IGNIS] == DONE && m_auiEncounter[TYPE_RAZORSCALE] == DONE)
+            if (m_auiEncounter[TYPE_LEVIATHAN] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_BROKEN_HARPOON:
@@ -270,7 +270,7 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
             if (uiData == DONE)
             {
                 DoUseDoorOrButton(GO_XT002_GATE);
-                DoUseDoorOrButton(GO_LEVIATHAN_GATE);
+                DoUseDoorOrButton(GO_LIGHTNING_FIELD);
             }
             break;
         case TYPE_IGNIS:

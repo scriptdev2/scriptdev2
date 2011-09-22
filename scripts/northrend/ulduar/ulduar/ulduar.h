@@ -131,8 +131,8 @@ enum
     // Doors and other Objects
     // The siege
     GO_SHIELD_WALL              = 194416,                   // Gate before Leviathan
-    GO_LEVIATHAN_GATE           = 194630,                   // Gate after Leviathan -> this should be used before the boss enter the arena
-    // There should be another gate after the Leviathan here which should be used during the Leviathan encounter
+    GO_LIGHTNING_FIELD          = 194559,                   // Lightning gate after the Leviathan. It closes after the boss enters the arena
+    GO_LEVIATHAN_GATE           = 194630,                   // Gate after Leviathan -> this will be broken when the boss enters the arena
     GO_XT002_GATE               = 194631,                   // Gate before Xt002
     GO_BROKEN_HARPOON           = 194565,                   // Broken harpoon from Razorscale
 
@@ -176,7 +176,6 @@ enum
     GO_RUNED_STONE_DOOR         = 194557,                   // Door after the runic colossus
     GO_THORIM_STONE_DOOR        = 194558,                   // Door after the ancient rune giant
     GO_LIGHTNING_DOOR           = 194905,                   // Arena exit door
-    GO_LIGHTNING_FIELD          = 194559,                   // For the platform animation
     GO_DOOR_LEVER               = 194264,                   // In front of the door
 
     // Descent to madness
