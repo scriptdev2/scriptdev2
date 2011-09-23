@@ -145,15 +145,6 @@ extern uint32 GetSkillLevel(Player* pPlayer, uint32 uiSkill);
 // guid - npc guid (ObjectGuid)
 #define SEND_GOSSIP_MENU(uiTextId, guid)      PlayerTalkClass->SendGossipMenu(uiTextId, guid)
 
-// This fuction shows POI(point of interest) to client.
-// a - position X
-// b - position Y
-// c - Icon Id
-// d - Flags
-// e - Data
-// f - Location Name
-#define SEND_POI(a, b, c, d, e, f)      PlayerTalkClass->SendPointOfInterest(a, b, c, d, e, f)
-
 // Closes the Menu
 #define CLOSE_GOSSIP_MENU()        PlayerTalkClass->CloseGossip()
 
@@ -164,18 +155,5 @@ extern uint32 GetSkillLevel(Player* pPlayer, uint32 uiSkill);
 #define SEND_BANKERLIST(a)         GetSession()->SendShowBank(a)
 #define SEND_TABARDLIST(a)         GetSession()->SendTabardVendorActivate(a)
 #define SEND_TAXILIST(a)           GetSession()->SendTaxiStatus(a)
-
-// Function to send the Auction List
-// a - pointer to unit (Unit*)
-#define SEND_AUCTIONLIST(a)     GetSession()->SendAuctionHello(a)
-
-// Ressurect's the player if is dead.
-#define SEND_SPRESURRECT()         GetSession()->SendSpiritResurrect()
-
-// Function to send the Quest Dialogue Status
-// a - pointer to player (Player*)
-// b - pointer to questgiver (Object*)
-// c - defstatus (uint32)
-#define QUEST_DIALOG_STATUS(a, b, c)   GetSession()->getDialogStatus(a, b, c)
 
 #endif
