@@ -94,7 +94,9 @@ enum
 
 struct BossPhase
 {
-    uint32 uiSpiritSpellId, uiYellId, uiEmoteId, uiSpiritId;
+    uint32 uiSpiritSpellId;
+    int32 iYellId, iEmoteId;
+    uint32 uiSpiritId;
     uint8 uiPhase;
 };
 
@@ -265,8 +267,8 @@ struct MANGOS_DLL_DECL boss_zuljinAI : public ScriptedAI
         if (pSpell->Id == SPELL_SPIRIT_DRAIN)
         {
             DoCastSpellIfCan(m_creature, aZuljinPhases[m_uiPhase].uiSpiritSpellId);
-            DoScriptText(aZuljinPhases[m_uiPhase].uiYellId, m_creature);
-            DoScriptText(aZuljinPhases[m_uiPhase].uiEmoteId, m_creature);
+            DoScriptText(aZuljinPhases[m_uiPhase].iYellId, m_creature);
+            DoScriptText(aZuljinPhases[m_uiPhase].iEmoteId, m_creature);
 
             // in eagle phase we don't move
             if (m_uiPhase != PHASE_EAGLE)
