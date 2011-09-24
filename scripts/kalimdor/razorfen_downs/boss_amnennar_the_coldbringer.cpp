@@ -60,7 +60,7 @@ struct MANGOS_DLL_DECL boss_amnennar_the_coldbringerAI : public ScriptedAI
         DoScriptText(SAY_AGGRO, m_creature);
     }
 
-    void KilledUnit()
+    void KilledUnit(Unit* pVictim)
     {
         DoScriptText(SAY_KILL, m_creature);
     }

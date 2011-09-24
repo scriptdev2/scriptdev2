@@ -58,7 +58,7 @@ struct MANGOS_DLL_DECL boss_kruulAI : public ScriptedAI
         Hound_Timer = 8000;
     }
 
-    void KilledUnit()
+    void KilledUnit(Unit* pVictim)
     {
         // When a player, pet or totem gets killed, Lord Kazzak casts this spell to instantly regenerate 70,000 health.
         DoCastSpellIfCan(m_creature,SPELL_CAPTURESOUL);

@@ -94,7 +94,7 @@ struct MANGOS_DLL_DECL boss_forgemaster_garfrostAI : public ScriptedAI
         DoScriptText(SAY_DEATH, m_creature, pKiller);
     }
 
-    void KilledUnit()
+    void KilledUnit(Unit* pVictim)
     {
         DoScriptText(SAY_SLAY_1, m_creature);
     }

@@ -252,7 +252,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
         }
     }
 
-    void MoveInLineOfSight()
+    void MoveInLineOfSight(Unit* pWho)
     {
         //This needs to be empty because Whitemane should NOT aggro while fighting Mograine. Mograine will give us a target.
     }

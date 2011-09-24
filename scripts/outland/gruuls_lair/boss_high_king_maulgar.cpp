@@ -124,7 +124,7 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
         m_pInstance->SetData(TYPE_MAULGAR_EVENT, FAIL);
     }
 
-    void KilledUnit()
+    void KilledUnit(Unit* pVictim)
     {
         switch(urand(0, 2))
         {
