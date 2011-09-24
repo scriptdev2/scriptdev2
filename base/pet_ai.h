@@ -12,17 +12,19 @@ class MANGOS_DLL_DECL ScriptedPetAI : public CreatureAI
         explicit ScriptedPetAI(Creature* pCreature);
         ~ScriptedPetAI() {}
 
-        void MoveInLineOfSight(Unit* /*pWho*/);
+        void MoveInLineOfSight(Unit* /*pWho*/) override;
 
-        void AttackStart(Unit* /*pWho*/);
+        void AttackStart(Unit* /*pWho*/) override;
 
-        void AttackedBy(Unit* /*pAttacker*/);
+        void AttackedBy(Unit* /*pAttacker*/) override;
 
-        void KilledUnit(Unit* /*pVictim*/) {}
+        bool IsVisible(Unit* /*pWho*/) const override;
 
-        void OwnerKilledUnit(Unit* /*pVictim*/) {}
+        void KilledUnit(Unit* /*pVictim*/) override {}
 
-        void UpdateAI(const uint32 uiDiff);
+        void OwnerKilledUnit(Unit* /*pVictim*/) override {}
+
+        void UpdateAI(const uint32 uiDiff) override;
 
         virtual void Reset() {}
 
