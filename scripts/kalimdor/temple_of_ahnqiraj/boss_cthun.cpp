@@ -771,8 +771,6 @@ struct MANGOS_DLL_DECL cthunAI : public ScriptedAI
                 {
                     if (Player* pTarget = SelectRandomNotStomach())
                     {
-                        Creature* Spawned = NULL;
-
                         // Spawn claw tentacle on the random target
                         if (Creature* pSummoned = m_creature->SummonCreature(MOB_GIANT_CLAW_TENTACLE, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 500))
                             pSummoned->AI()->AttackStart(pTarget);

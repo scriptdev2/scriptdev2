@@ -206,7 +206,7 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
         Creature* DoSpawnCreature(uint32 uiId, float fX, float fY, float fZ, float fAngle, uint32 uiType, uint32 uiDespawntime);
 
         // Returns spells that meet the specified criteria from the creatures spell list
-        SpellEntry const* SelectSpell(Unit* pTarget, int32 uiSchool, int32 uiMechanic, SelectTarget selectTargets, uint32 uiPowerCostMin, uint32 uiPowerCostMax, float fRangeMin, float fRangeMax, SelectEffect selectEffect);
+        SpellEntry const* SelectSpell(Unit* pTarget, int32 uiSchool, int32 iMechanic, SelectTarget selectTargets, uint32 uiPowerCostMin, uint32 uiPowerCostMax, float fRangeMin, float fRangeMax, SelectEffect selectEffect);
 
         // Checks if you can cast the specified spell
         bool CanCast(Unit* pTarget, SpellEntry const* pSpell, bool bTriggered = false);

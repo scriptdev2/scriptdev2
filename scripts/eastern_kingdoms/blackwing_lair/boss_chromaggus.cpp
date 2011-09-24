@@ -136,15 +136,8 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
                 m_creature->RemoveAurasDueToSpell(m_uiCurrentVulnerabilitySpell);
 
             // Cast new random vurlnabilty on self
-            uint32 uiSpell;
-            switch(urand(0, 4))
-            {
-                case 0: uiSpell = SPELL_FIRE_VULNERABILITY; break;
-                case 1: uiSpell = SPELL_FROST_VULNERABILITY; break;
-                case 2: uiSpell = SPELL_SHADOW_VULNERABILITY; break;
-                case 3: uiSpell = SPELL_NATURE_VULNERABILITY; break;
-                case 4: uiSpell = SPELL_ARCANE_VULNERABILITY; break;
-            }
+            uint32 aSpellId[] = {SPELL_FIRE_VULNERABILITY, SPELL_FROST_VULNERABILITY, SPELL_SHADOW_VULNERABILITY, SPELL_NATURE_VULNERABILITY, SPELL_ARCANE_VULNERABILITY};
+            uint32 uiSpell = aSpellId[urand(0, 4)];
 
             if (DoCastSpellIfCan(m_creature, uiSpell) == CAST_OK)
             {

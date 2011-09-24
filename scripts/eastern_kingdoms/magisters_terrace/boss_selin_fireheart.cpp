@@ -91,7 +91,6 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
         if (m_lCrystalGuids.empty())
             return;
 
-        float ShortestDistance = 0;
         m_crystalGuid.Clear();
         Creature* pCrystal = NULL;
         Creature* pCrystalChosen = NULL;

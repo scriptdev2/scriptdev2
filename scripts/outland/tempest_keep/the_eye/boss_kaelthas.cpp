@@ -152,7 +152,7 @@ struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
         Reset();
     }
     protected:
-    uint32 m_uiAdvisor_Speech;
+    int32 m_iAdvisor_Speech;
 
     public:
     ScriptedInstance* m_pInstance;
@@ -217,7 +217,7 @@ struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
     void JustDied(Unit* pKiller)
     {
         if (m_pInstance && m_pInstance->GetData(TYPE_KAELTHAS_PHASE) == PHASE_3_ADVISOR_ALL)
-            DoScriptText(m_uiAdvisor_Speech, m_creature);
+            DoScriptText(m_iAdvisor_Speech, m_creature);
     }
 
     void DamageTaken(Unit* pKiller, uint32 &damage)
@@ -1036,7 +1036,7 @@ struct MANGOS_DLL_DECL boss_thaladred_the_darkenerAI : public advisorbase_ai
 {
     boss_thaladred_the_darkenerAI(Creature* pCreature) : advisorbase_ai(pCreature)
     {
-        m_uiAdvisor_Speech = SAY_THALADRED_DEATH;
+        m_iAdvisor_Speech = SAY_THALADRED_DEATH;
     }
 
     uint32 m_uiGaze_Timer;
@@ -1117,7 +1117,7 @@ struct MANGOS_DLL_DECL boss_lord_sanguinarAI : public advisorbase_ai
 {
     boss_lord_sanguinarAI(Creature* pCreature) : advisorbase_ai(pCreature)
     {
-        m_uiAdvisor_Speech = SAY_SANGUINAR_DEATH;
+        m_iAdvisor_Speech = SAY_SANGUINAR_DEATH;
     }
 
     uint32 m_uiFear_Timer;
@@ -1169,7 +1169,7 @@ struct MANGOS_DLL_DECL boss_grand_astromancer_capernianAI : public advisorbase_a
 {
     boss_grand_astromancer_capernianAI(Creature* pCreature) : advisorbase_ai(pCreature)
     {
-        m_uiAdvisor_Speech = SAY_CAPERNIAN_DEATH;
+        m_iAdvisor_Speech = SAY_CAPERNIAN_DEATH;
     }
 
     uint32 m_uiFireball_Timer;
@@ -1297,7 +1297,7 @@ struct MANGOS_DLL_DECL boss_master_engineer_telonicusAI : public advisorbase_ai
 {
     boss_master_engineer_telonicusAI(Creature* pCreature) : advisorbase_ai(pCreature)
     {
-        m_uiAdvisor_Speech = SAY_TELONICUS_DEATH;
+        m_iAdvisor_Speech = SAY_TELONICUS_DEATH;
     }
 
     uint32 m_uiBomb_Timer;

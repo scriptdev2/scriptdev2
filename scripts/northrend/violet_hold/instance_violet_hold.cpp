@@ -368,14 +368,7 @@ void instance_violet_hold::SpawnPortal()
     {
         if (Creature* pController = GetSingleCreatureFromStorage(NPC_SINCLARI_ALT))
         {
-            uint32 uiPortalEntry;
-
-            switch(pData->pPortalType)
-            {
-                case PORTAL_TYPE_NORM: uiPortalEntry = NPC_PORTAL; break;
-                case PORTAL_TYPE_SQUAD:
-                case PORTAL_TYPE_BOSS: uiPortalEntry = NPC_PORTAL_ELITE; break;
-            }
+            uint32 uiPortalEntry = pData->pPortalType == PORTAL_TYPE_NORM ? NPC_PORTAL : NPC_PORTAL_ELITE;
 
             pController->SummonCreature(uiPortalEntry, pData->fX, pData->fY, pData->fZ, pData->fOrient, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 1800*IN_MILLISECONDS);
         }

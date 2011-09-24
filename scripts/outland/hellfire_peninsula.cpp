@@ -240,7 +240,7 @@ struct MANGOS_DLL_DECL npc_demoniac_scryerAI : public ScriptedAI
     {
         ++m_uiButtressCount;
 
-        float fAngle;
+        float fAngle = 0.0f;
 
         switch(m_uiButtressCount)
         {

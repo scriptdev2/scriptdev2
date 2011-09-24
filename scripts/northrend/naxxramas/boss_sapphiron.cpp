@@ -227,7 +227,7 @@ struct MANGOS_DLL_DECL boss_sapphironAI : public ScriptedAI
                 break;
             case PHASE_AIR_BOLTS:
                 // WOTLK Changed, originally was 5
-                if (m_uiIceboltCount == (m_bIsRegularMode ? 2 : 3))
+                if (m_uiIceboltCount == (uint32)(m_bIsRegularMode ? 2 : 3))
                 {
                     if (m_uiFrostBreathTimer < uiDiff)
                     {

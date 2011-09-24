@@ -237,7 +237,7 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
             {
                 if (m_uiMarkOfHydross_Count <= 5)
                 {
-                    uint32 uiMarkSpell;
+                    uint32 uiMarkSpell = 0;
 
                     switch(m_uiMarkOfHydross_Count)
                     {

@@ -175,7 +175,7 @@ void hyjalAI::SpawnCreatureForWave(uint32 uiMobEntry)
 
     for (uint32 i = 0; i < uiMaxCount; ++i)
     {
-        if (m_aHyjalSpawnLoc[i].m_pBaseArea != m_uiBase)
+        if (m_aHyjalSpawnLoc[i].m_pBaseArea != (eBaseArea)m_uiBase)
             continue;
 
         ++uiJ;
@@ -206,7 +206,7 @@ void hyjalAI::JustSummoned(Creature* pSummoned)
 
     for (uint32 i = 0; i < uiMaxCount; ++i)
     {
-        if (m_aHyjalWaveMoveTo[i].m_pBaseArea != m_uiBase)
+        if (m_aHyjalWaveMoveTo[i].m_pBaseArea != (eBaseArea)m_uiBase)
             continue;
 
         pMove = &m_aHyjalWaveMoveTo[i];

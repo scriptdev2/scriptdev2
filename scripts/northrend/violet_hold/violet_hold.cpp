@@ -228,7 +228,7 @@ struct MANGOS_DLL_DECL npc_teleportation_portalAI : public ScriptedAI
         {
             for(uint8 i = 0; i < 4; ++i)
             {
-                uint32 uiSummonId;
+                uint32 uiSummonId = 0;
 
                 switch(i)
                 {
