@@ -87,7 +87,7 @@ enum
     //Rogue
     SPELL_RO_WOUND_POISON       = 39665,
     SPELL_RO_BLIND              = 43433,
-    SPELL_RO_SLICE_DICE         = 43457,
+    SPELL_RO_SLICE_DICE         = 43547,
 
     //Shaman
     SPELL_SH_CHAIN_LIGHT        = 43435,
