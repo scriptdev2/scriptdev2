@@ -234,8 +234,10 @@ struct MANGOS_DLL_DECL boss_galdarahAI : public ScriptedAI
             if (m_uiSpecialAbilityTimer < uiDiff)
             {
                 Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1);
+                if (!pTarget)
+                    pTarget = m_creature->getVictim();
 
-                if (DoCastSpellIfCan(pTarget ? pTarget : m_creature->getVictim(), m_bIsRegularMode ? SPELL_IMPALING_CHARGE : SPELL_IMPALING_CHARGE_H) == CAST_OK)
+                if (DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_IMPALING_CHARGE : SPELL_IMPALING_CHARGE_H) == CAST_OK)
                 {
                     DoScriptText(EMOTE_IMPALED, m_creature, pTarget);
                     m_uiSpecialAbilityTimer = 12000;
