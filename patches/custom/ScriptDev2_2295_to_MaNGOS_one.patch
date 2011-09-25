@@ -1,11 +1,11 @@
-From 97cb357e0ae38576c88d2445bd1a5df3b6f0c5db Mon Sep 17 00:00:00 2001
+From 899b1c722576f971dde0603531ac5519a29aa95a Mon Sep 17 00:00:00 2001
 From: ScriptDev2 <scriptdev2@scriptdev2.com>
 Date: Thu, 24 Mar 2011 00:16:38 +0100
 Subject: [PATCH] ScriptDev2 - One Compatibility patch
 
 Signed-off-by: Schmoozerd <Schmoozerd@scriptdev2.com>
 ---
- include/precompiled.h                              |    5 +
+ include/precompiled.h                              |    9 +
  include/sc_instance.cpp                            |   22 --
  include/sc_instance.h                              |    3 -
  .../shadowfang_keep/shadowfang_keep.cpp            |    8 +-
@@ -25,36 +25,39 @@ Signed-off-by: Schmoozerd <Schmoozerd@scriptdev2.com>
  .../ulduar/halls_of_stone/halls_of_stone.h         |    2 -
  .../halls_of_stone/instance_halls_of_stone.cpp     |    2 -
  .../auchenai_crypts/boss_exarch_maladaar.cpp       |    8 +-
+ .../hellfire_ramparts/boss_omor_the_unscarred.cpp  |    2 +-
  scripts/world/item_scripts.cpp                     |    2 +-
  system/ScriptLoader.cpp                            |  316 ++-----------------
- 22 files changed, 54 insertions(+), 354 deletions(-)
+ 23 files changed, 59 insertions(+), 355 deletions(-)
 
 diff --git a/include/precompiled.h b/include/precompiled.h
-index 11b6b31..2f202a3 100644
+index 11b6b31..40cf637 100644
 --- a/include/precompiled.h
 +++ b/include/precompiled.h
-@@ -11,6 +11,11 @@
+@@ -11,6 +11,15 @@
  #include "sc_grid_searchers.h"
  #include "sc_instance.h"
  
 +enum backports
 +{
-+    UNIT_VIRTUAL_ITEM_SLOT_ID = UNIT_VIRTUAL_ITEM_SLOT_DISPLAY
++    UNIT_VIRTUAL_ITEM_SLOT_ID = UNIT_VIRTUAL_ITEM_SLOT_DISPLAY,
++    RAID_DIFFICULTY_10MAN_NORMAL = 0,
++    RAID_DIFFICULTY_25MAN_NORMAL = 0,
++    RAID_DIFFICULTY_10MAN_HEROIC = 0,
++    RAID_DIFFICULTY_25MAN_HEROIC = 0,
 +};
 +
  #ifdef WIN32
  #  include <windows.h>
      BOOL APIENTRY DllMain(HANDLE hModule, DWORD ul_reason_for_call, LPVOID lpReserved)
 diff --git a/include/sc_instance.cpp b/include/sc_instance.cpp
-index e93cb45..d7905cc 100644
+index 9db67e6..ba224a7 100644
 --- a/include/sc_instance.cpp
 +++ b/include/sc_instance.cpp
-@@ -141,25 +141,3 @@ Creature* ScriptedInstance::GetSingleCreatureFromStorage(uint32 uiEntry, bool bS
- 
-     return NULL;
+@@ -143,28 +143,6 @@ Creature* ScriptedInstance::GetSingleCreatureFromStorage(uint32 uiEntry, bool bS
  }
--
--/**
+ 
+ /**
 -   Helper function to start a timed achievement criteria for players in the map
 -
 -   @param   criteriaType The Type that is required to complete the criteria, see enum AchievementCriteriaTypes in MaNGOS
@@ -75,8 +78,13 @@ index e93cb45..d7905cc 100644
 -    else
 -        debug_log("SD2: DoStartTimedAchievement attempt start achievements but no players in map.");
 -}
+-
+-/**
+    Constructor for DialogueHelper
+ 
+    @param   pDialogueArray The static const array of DialogueEntry holding the information about the dialogue. This array MUST be terminated by {0,0,0}
 diff --git a/include/sc_instance.h b/include/sc_instance.h
-index d7e037e..3d1450a 100644
+index 36c9336..679429a 100644
 --- a/include/sc_instance.h
 +++ b/include/sc_instance.h
 @@ -54,9 +54,6 @@ class MANGOS_DLL_DECL ScriptedInstance : public InstanceData
@@ -90,7 +98,7 @@ index d7e037e..3d1450a 100644
          // Storage for GO-Guids and NPC-Guids
          EntryGuidMap m_mGoEntryGuidStore;                   ///< Store unique GO-Guids by entry
 diff --git a/scripts/eastern_kingdoms/shadowfang_keep/shadowfang_keep.cpp b/scripts/eastern_kingdoms/shadowfang_keep/shadowfang_keep.cpp
-index c152e0e..090b8c3 100644
+index e39c690..f3cf2b9 100644
 --- a/scripts/eastern_kingdoms/shadowfang_keep/shadowfang_keep.cpp
 +++ b/scripts/eastern_kingdoms/shadowfang_keep/shadowfang_keep.cpp
 @@ -89,10 +89,10 @@ struct MANGOS_DLL_DECL npc_shadowfang_prisonerAI : public npc_escortAI
@@ -122,19 +130,19 @@ index f87a61e..79522f6 100644
              m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PVP_ATTACKABLE);
              m_creature->SetStandState(UNIT_STAND_STATE_STAND);
 diff --git a/scripts/kalimdor/onyxias_lair/boss_onyxia.cpp b/scripts/kalimdor/onyxias_lair/boss_onyxia.cpp
-index 0ad95ad..ef332f9 100644
+index 8a3673a..00697c4 100644
 --- a/scripts/kalimdor/onyxias_lair/boss_onyxia.cpp
 +++ b/scripts/kalimdor/onyxias_lair/boss_onyxia.cpp
-@@ -312,7 +312,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
+@@ -320,7 +320,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
                      DoScriptText(SAY_PHASE_2_TRANS, m_creature);
  
                      // sort of a hack, it is unclear how this really work but the values appear to be valid
 -                    m_creature->SetByteValue(UNIT_FIELD_BYTES_1, 3, UNIT_BYTE1_FLAG_ALWAYS_STAND | UNIT_BYTE1_FLAG_UNK_2);
 +                    m_creature->SetByteValue(UNIT_FIELD_BYTES_1, 3, UNIT_BYTE1_FLAG_ALWAYS_STAND/* | UNIT_BYTE1_FLAG_UNK_2*/);
-                     m_creature->AddSplineFlag(SPLINEFLAG_FLYING);
+                     m_creature->SetLevitate(true);
  
                      if (m_pPointData)
-@@ -438,7 +438,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
+@@ -446,7 +446,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
              return;
  
          // All and only the Onyxia Deep Breath Spells have these visuals
@@ -243,10 +251,10 @@ index a69dbc6..0bde6be 100644
  
      return true;
 diff --git a/scripts/northrend/naxxramas/instance_naxxramas.cpp b/scripts/northrend/naxxramas/instance_naxxramas.cpp
-index 58a83c5..37c44a1 100644
+index e85686d..8937d46 100644
 --- a/scripts/northrend/naxxramas/instance_naxxramas.cpp
 +++ b/scripts/northrend/naxxramas/instance_naxxramas.cpp
-@@ -220,10 +220,7 @@ void instance_naxxramas::SetData(uint32 uiType, uint32 uiData)
+@@ -241,10 +241,7 @@ void instance_naxxramas::SetData(uint32 uiType, uint32 uiData)
              m_auiEncounter[uiType] = uiData;
              DoUseDoorOrButton(GO_ARAC_ANUB_DOOR);
              if (uiData == DONE)
@@ -257,7 +265,7 @@ index 58a83c5..37c44a1 100644
              break;
          case TYPE_FAERLINA:
              DoUseDoorOrButton(GO_ARAC_FAER_WEB);
-@@ -325,8 +322,6 @@ void instance_naxxramas::SetData(uint32 uiType, uint32 uiData)
+@@ -346,8 +343,6 @@ void instance_naxxramas::SetData(uint32 uiType, uint32 uiData)
              break;
          case TYPE_PATCHWERK:
              m_auiEncounter[uiType] = uiData;
@@ -267,10 +275,10 @@ index 58a83c5..37c44a1 100644
                  DoUseDoorOrButton(GO_CONS_PATH_EXIT_DOOR);
              break;
 diff --git a/scripts/northrend/naxxramas/naxxramas.h b/scripts/northrend/naxxramas/naxxramas.h
-index 3ae6d95..41db6fe 100644
+index c21f817..7f2876a 100644
 --- a/scripts/northrend/naxxramas/naxxramas.h
 +++ b/scripts/northrend/naxxramas/naxxramas.h
-@@ -165,10 +165,6 @@ enum
+@@ -174,10 +174,6 @@ enum
      ACHIEV_CRIT_UNDYING_MAEX    = 13238,
      ACHIEV_CRIT_UNDYING_LOA     = 13239,
      ACHIEV_CRIT_UNDYING_THAD    = 13240,
@@ -310,10 +318,10 @@ index 989eeb9..5c8269f 100644
              {
                  DoUseDoorOrButton(GO_LOKEN_DOOR);
 diff --git a/scripts/northrend/ulduar/halls_of_stone/halls_of_stone.h b/scripts/northrend/ulduar/halls_of_stone/halls_of_stone.h
-index 9fd2637..1a4b58a 100644
+index e9c5af2..14ff4eb 100644
 --- a/scripts/northrend/ulduar/halls_of_stone/halls_of_stone.h
 +++ b/scripts/northrend/ulduar/halls_of_stone/halls_of_stone.h
-@@ -41,8 +41,6 @@ enum
+@@ -42,8 +42,6 @@ enum
      FACE_MARNAK             = 0,
      FACE_ABEDNEUM           = 1,
      FACE_KADDRAK            = 2,
@@ -323,10 +331,10 @@ index 9fd2637..1a4b58a 100644
  
  struct Face
 diff --git a/scripts/northrend/ulduar/halls_of_stone/instance_halls_of_stone.cpp b/scripts/northrend/ulduar/halls_of_stone/instance_halls_of_stone.cpp
-index 1e4f4d3..59c9ee8 100644
+index 5e52626..2930f00 100644
 --- a/scripts/northrend/ulduar/halls_of_stone/instance_halls_of_stone.cpp
 +++ b/scripts/northrend/ulduar/halls_of_stone/instance_halls_of_stone.cpp
-@@ -133,8 +133,6 @@ void instance_halls_of_stone::SetData(uint32 uiType, uint32 uiData)
+@@ -138,8 +138,6 @@ void instance_halls_of_stone::SetData(uint32 uiType, uint32 uiData)
              break;
          case TYPE_MAIDEN:
              m_auiEncounter[1] = uiData;
@@ -354,6 +362,19 @@ index 1aae4d2..862938b 100644
              }
          }
          else
+diff --git a/scripts/outland/hellfire_citadel/hellfire_ramparts/boss_omor_the_unscarred.cpp b/scripts/outland/hellfire_citadel/hellfire_ramparts/boss_omor_the_unscarred.cpp
+index 9de8415..692a391 100644
+--- a/scripts/outland/hellfire_citadel/hellfire_ramparts/boss_omor_the_unscarred.cpp
++++ b/scripts/outland/hellfire_citadel/hellfire_ramparts/boss_omor_the_unscarred.cpp
+@@ -129,7 +129,7 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
+                 if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid))
+                 {
+                     //if unit dosen't have this flag, then no pulling back (script will attempt cast, even if orbital strike was resisted)
+-                    if (pPlayer->HasMovementFlag(MOVEFLAG_FALLING))
++                    if (pPlayer->HasMovementFlag(MOVEMENTFLAG_FALLING))
+                         DoCastSpellIfCan(pPlayer, SPELL_SHADOW_WHIP, CAST_INTERRUPT_PREVIOUS);
+                 }
+                 m_playerGuid.Clear();
 diff --git a/scripts/world/item_scripts.cpp b/scripts/world/item_scripts.cpp
 index 4474aa7..8a70bbc 100644
 --- a/scripts/world/item_scripts.cpp
@@ -368,10 +389,10 @@ index 4474aa7..8a70bbc 100644
      return true;
  }
 diff --git a/system/ScriptLoader.cpp b/system/ScriptLoader.cpp
-index 0959568..02a269f 100644
+index eb2ca25..2139385 100644
 --- a/system/ScriptLoader.cpp
 +++ b/system/ScriptLoader.cpp
-@@ -98,7 +98,22 @@ extern void AddSC_boss_majordomo();
+@@ -99,7 +99,22 @@ extern void AddSC_boss_majordomo();
  extern void AddSC_boss_ragnaros();
  extern void AddSC_instance_molten_core();
  extern void AddSC_molten_core();
@@ -395,7 +416,7 @@ index 0959568..02a269f 100644
  extern void AddSC_boss_arcanist_doan();                     // scarlet_monastery
  extern void AddSC_boss_azshir_the_sleepless();
  extern void AddSC_boss_bloodmage_thalnos();
-@@ -210,8 +225,6 @@ extern void AddSC_boss_epoch_hunter();
+@@ -211,8 +226,6 @@ extern void AddSC_boss_epoch_hunter();
  extern void AddSC_boss_lieutenant_drake();
  extern void AddSC_instance_old_hillsbrad();
  extern void AddSC_old_hillsbrad();
@@ -404,7 +425,7 @@ index 0959568..02a269f 100644
  extern void AddSC_dire_maul();                              // dire_maul
  extern void AddSC_instance_dire_maul();
  extern void AddSC_boss_celebras_the_cursed();               // maraudon
-@@ -269,144 +282,7 @@ extern void AddSC_ungoro_crater();
+@@ -270,144 +283,7 @@ extern void AddSC_ungoro_crater();
  extern void AddSC_winterspring();
  
  // northrend
@@ -550,7 +571,7 @@ index 0959568..02a269f 100644
  
  // outland
  extern void AddSC_boss_exarch_maladaar();                   // auchindoun, auchenai_crypts
-@@ -587,7 +463,22 @@ void AddScripts()
+@@ -589,7 +465,22 @@ void AddScripts()
      AddSC_boss_ragnaros();
      AddSC_instance_molten_core();
      AddSC_molten_core();
@@ -574,7 +595,7 @@ index 0959568..02a269f 100644
      AddSC_boss_arcanist_doan();                             // scarlet_monastery
      AddSC_boss_azshir_the_sleepless();
      AddSC_boss_bloodmage_thalnos();
-@@ -699,8 +590,6 @@ void AddScripts()
+@@ -701,8 +592,6 @@ void AddScripts()
      AddSC_boss_lieutenant_drake();
      AddSC_instance_old_hillsbrad();
      AddSC_old_hillsbrad();
@@ -583,7 +604,7 @@ index 0959568..02a269f 100644
      AddSC_dire_maul();                                      // dire_maul
      AddSC_instance_dire_maul();
      AddSC_boss_celebras_the_cursed();                       // maraudon
-@@ -758,144 +647,7 @@ void AddScripts()
+@@ -760,144 +649,7 @@ void AddScripts()
      AddSC_winterspring();
  
      // northrend
@@ -730,5 +751,5 @@ index 0959568..02a269f 100644
      // outland
      AddSC_boss_exarch_maladaar();                           // auchindoun, auchenai_crypts
 -- 
-1.7.3.1.msysgit.0
+1.7.6.msysgit.0
 
