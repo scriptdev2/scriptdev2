@@ -56,7 +56,6 @@ class MANGOS_DLL_DECL instance_deadmines : public ScriptedInstance
         uint32 m_auiEncounter[MAX_ENCOUNTER];
 
         uint32 m_uiIronDoorTimer;
-        uint32 m_uiDoorStep;
 };
 
 #endif

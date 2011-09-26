@@ -145,7 +145,7 @@ struct MANGOS_DLL_DECL boss_mr_smiteAI : public ScriptedAI
 
         m_creature->SetStandState(UNIT_STAND_STATE_STAND);
         m_uiPhase = PHASE_EQUIP_END;
-        m_uiEquipTimer = 5000;
+        m_uiEquipTimer = 1000;
 
         Unit* pVictim = m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO, 0);
 
@@ -154,14 +154,6 @@ struct MANGOS_DLL_DECL boss_mr_smiteAI : public ScriptedAI
             EnterEvadeMode();
             return;
         }
-
-        // Takes longer to run further distance. Not accurate, but will probably be sufficient for most cases
-        if (m_creature->IsWithinDistInMap(pVictim, ATTACK_DISTANCE))
-            m_uiEquipTimer -= 1000;
-        else if (m_creature->IsWithinDistInMap(pVictim, 2*ATTACK_DISTANCE))
-            m_uiEquipTimer -= 2000;
-        else
-            m_uiEquipTimer -= 3000;
     }
 
     void PhaseEquipEnd()
@@ -248,6 +240,7 @@ struct MANGOS_DLL_DECL boss_mr_smiteAI : public ScriptedAI
                         m_uiPhase = PHASE_EQUIP_START;
                         m_uiEquipTimer = 2500;
 
+                        // will clear getVictim (m_attacking)
                         m_creature->AttackStop(true);
                         m_creature->RemoveAurasDueToSpell(SPELL_THRASH);
                     }
