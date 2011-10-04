@@ -1,0 +1,127 @@
+-- First Part:
+
+From day_1 you should have learned these things:
+* Meaning of working tree and index: The working tree are the actual files on your file system, the index is the history information
+* The concept of branches: A branch is a branch of the history index
+
+Also you should be able to switch between branches with > git checkout and to check the state of your working tree related to the index with > git status
+
+This part now should introduce you to know how to actual see the history.
+
+- (0) excursion: The pager 'less'
+This is especially important for Windows user!
+
+When using Git via Git bash, the default toolset is the archaic toolset every *nix fan will have learned by heart, but they can be extremely weird from Windows view.
+
+In old times, when there was nothing except console and there were no possibilities to scroll in the text, console environments had the so called pager programs, which were used to be able to scroll in output.
+
+Assume you would have an enourmous amount of text, so if you would push it directly onto the console, you would not be able to read anything, because it would be way too fast.
+
+So, the idea is to give the output to a program -- the pager -- which allows you to scroll up and down in the output.
+
+Default pager on *nix is 'less' - which Git bash uses by default to show the history (or many other things).
+You can scroll in there with the arrow keys or a whole page by the space bar.
+And most important: You quit less by pressing "q"
+
+The manpage for less can be found here: http://unixhelp.ed.ac.uk/CGI/man-cgi?less
+(Disclaimer: I don't take responsibilty for brain damage caused by any provided link here!)
+Anyhow: A better "guide" for less to link would be appreciated, but trying to search for "howto less" kind of doesn't work.
+
+Exercise 1: Try to find a better less howto and take a look
+Hint: add "unix" to your search attempt :)
+
+
+- (1) Viewing the history of a branch in Git
+
+Ok, now we can look into the history of the current branch, this is done simply by
+> git log
+Just do so now :)
+
+Remember: To close the output, type "q"
+
+The most recent commits (see 3) might look like this:
+< commit 1cebd00445e7bd92927f305e40225de1049d450c
+< Author: Schmoozerd <schmoozerd@scriptdev2.com>
+< Date:   Tue Oct 4 02:02:44 2011 +0200
+<
+<     Add some files and documentation for the first part
+<
+< commit e0601735424f712d685330b421898db16a366b17
+< Author: Schmoozerd <schmoozerd@scriptdev2.com>
+< Date:   Tue Oct 4 01:14:46 2011 +0200
+<
+<     Initial Commit for the ICC Learning project
+
+What does this show:
+1) commit <someFancyNumbers> <-- this is the hash of the commit, which should globally uniquely identify any commit.
+Usally it is enough to only take the first ~6 digits.
+This is more or less the "name" of the commit
+2) Author: <someNameAndEMail> <-- yes, this is the author of the commit
+3) Date: <someDate> <-- when the commit was authored
+
+4) Then comes the commit message, this is the message the author thought might be helpfull to describe the commit
+
+
+So - what is git log suefull for?
+With git log you are able to see the history, who did which changes, and in which order.
+Also git log has a big amount of options, which help you to actually search for a specific commit (ie by author)
+
+Exercise 2: If you have already submitted a patch to SD2, that got accepted it is likely that you are "author" of a commit.
+Check with
+> git log --author="yourNickName"
+If you are not, pick anyone whom you think has contributed and look what git log --author tells you ;)
+
+- (2) The structure of objects in the git history index
+
+When you do a change, and make this change known to the history, then you have a "commit"
+
+Any commit has:
+* An author
+* A commit hash (the strange numbers already seen in git log)
+* The set of changes it describes (if you didn't change anything, there is no commit!)
+
+* One previous commit on which the commit is done.
+
+As of the last statement, you have a chain of commits. And this is your history!
+
+
+- (3) View a commit
+you can view a commit with
+> git show <someIdentifier>
+
+Exercise 3: Look into the commit 111cea5073191b, type
+> git show 111cea5073191b
+What commit does this refer to: What is the commit message? Who is the author? When was it commited?
+
+
+- (4) How to access commits
+Things are only usefull if you can work with them, and to do so you need powerfull ways to access them.
+Git provides reasonable ways to "get to" a specific commit.
+
+You have already seen the commit hash, this identifies a commit and hence is a great accessor (except that no one can remember endless amounts of hash-ids)
+
+When you are on a local branch, "HEAD" always points to the top-most commit of your local branch.
+
+A branchname always points to the HEAD commit of the branch with the branchname
+
+"<Commit>~N" referes to "N commits before the commit <Commit>
+
+Exercise 4: Look into a few commits, examples are:
+> git show HEAD~1
+> git show master
+> git show master~304
+
+Remember: To close the pager, type "q"
+
+- (5) Advanced looking into the history:
+Now that you know how commits are accessed, you are able to invoke more features from git log.
+However I don't think that this is needed for our purposes just now, so if you are interested,
+see http://book.git-scm.com/3_reviewing_history_-_git_log.html
+
+
+== End of First Part
+
+What this part was about:
+* Knowing what a 'commit' means.
+* Showing a commit ( git show )
+* Knowing how to access various commits
