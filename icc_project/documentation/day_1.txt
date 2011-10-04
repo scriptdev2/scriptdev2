@@ -51,6 +51,8 @@ Do so (WARNING: This will delte all changes now) with
 - (2) Resetting your working tree to the index
 > git reset --hard
 
+Note: This will only affect files which are known to the index, so a new created file won't get deleted.
+
 Remark: This will only give you what I expect, if you didn't too many experiments yourself.
 
 - (3) Updateing your remote information for the SD2 repo.
@@ -83,7 +85,7 @@ All in all you should type:
 
 This will do the following:
 -b => create a new branch named "icc_project"
--t => use the next specifier as "tracking" branch
+-t => use the point from which you branch as "tracking" branch
 remotes/origin/icc_project is the branch icc_project in the repository origin which is a remote repository
 
 
@@ -91,7 +93,7 @@ remotes/origin/icc_project is the branch icc_project in the repository origin wh
 As already mentioned, you can easily switch between branches with
 > git checkout <branchName>
 
-Exersice 2:
+Exercise 2:
 Test switching with
 > git checkout master
 > git checkout icc_project
