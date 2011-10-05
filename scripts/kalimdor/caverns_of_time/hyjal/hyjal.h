@@ -11,19 +11,12 @@ enum
 
     TYPE_WINTERCHILL            = 0,
     TYPE_ANETHERON              = 1,
-    // TYPE_ANETHERON_OLD       = 2,                        // Used in Acid
-    TYPE_KAZROGAL               = 3,
-    TYPE_AZGALOR                = 4,
-    TYPE_ARCHIMONDE             = 5,
+    TYPE_KAZROGAL               = 2,
+    TYPE_AZGALOR                = 3,
+    TYPE_ARCHIMONDE             = 4,
 
-    // TYPE_AZGALOR_OLD         = 6,                        // Used in Acid
-    TYPE_TRASH_COUNT            = 7,
-    TYPE_RETREAT                = 8,
-
-    // ACID scripted, don't touch id's (or provide update for ACID), in Acid scripted SetData types: 11, 2, 9, 6 and 14
-    // TYPE_WINTERCHILL_OLD     = 11,
-    // DATA_TRASH_OLD           = 14,
-    // TYPE_KAZROGAL_OLD        = 9,
+    TYPE_TRASH_COUNT            = 5,
+    TYPE_RETREAT                = 6,
 
     WORLD_STATE_WAVES           = 2842,
     WORLD_STATE_ENEMY           = 2453,

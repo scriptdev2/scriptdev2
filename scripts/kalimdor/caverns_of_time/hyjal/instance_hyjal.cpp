@@ -122,27 +122,15 @@ void instance_mount_hyjal::SetData(uint32 uiType, uint32 uiData)
     switch(uiType)
     {
         case TYPE_WINTERCHILL:
-            if (m_auiEncounter[0] == DONE)
-                return;
-            m_auiEncounter[0] = uiData;
-            break;
         case TYPE_ANETHERON:
-            if (m_auiEncounter[1] == DONE)
-                return;
-            m_auiEncounter[1] = uiData;
-            break;
         case TYPE_KAZROGAL:
-            if (m_auiEncounter[2] == DONE)
-                return;
-            m_auiEncounter[2] = uiData;
-            break;
         case TYPE_AZGALOR:
-            if (m_auiEncounter[3] == DONE)
+            if (m_auiEncounter[uiType] == DONE)
                 return;
-            m_auiEncounter[3] = uiData;
+            m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_ARCHIMONDE:
-            m_auiEncounter[4] = uiData;
+            m_auiEncounter[uiType] = uiData;
             break;
 
         case TYPE_TRASH_COUNT:
@@ -186,14 +174,14 @@ uint32 instance_mount_hyjal::GetData(uint32 uiType)
 {
     switch(uiType)
     {
-        case TYPE_WINTERCHILL:  return m_auiEncounter[0];
-        case TYPE_ANETHERON:    return m_auiEncounter[1];
-        case TYPE_KAZROGAL:     return m_auiEncounter[2];
-        case TYPE_AZGALOR:      return m_auiEncounter[3];
-        case TYPE_ARCHIMONDE:   return m_auiEncounter[4];
-
-        case TYPE_TRASH_COUNT:        return m_uiTrashCount;
-
+        case TYPE_WINTERCHILL:
+        case TYPE_ANETHERON:
+        case TYPE_KAZROGAL:
+        case TYPE_AZGALOR:
+        case TYPE_ARCHIMONDE:
+            return m_auiEncounter[uiType];
+        case TYPE_TRASH_COUNT:
+            return m_uiTrashCount;
         default:
             return 0;
     }
