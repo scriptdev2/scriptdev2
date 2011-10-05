@@ -11,16 +11,11 @@ enum
     MAX_STATUES           = 6,
     MAX_FLAMES            = 4,
 
-    // Don't change types 1,2 and 3 (handled in ACID)
-    TYPE_ATALARION_OBSOLET= 1,
-    TYPE_PROTECTORS_OBS   = 2,
-    TYPE_JAMMALAN_OBS     = 3,
-
-    TYPE_ATALARION        = 4,
-    TYPE_PROTECTORS       = 5,
-    TYPE_JAMMALAN         = 6,
-    TYPE_MALFURION        = 7,
-    TYPE_AVATAR           = 8,
+    TYPE_ATALARION        = 0,
+    TYPE_PROTECTORS       = 1,
+    TYPE_JAMMALAN         = 2,
+    TYPE_MALFURION        = 3,
+    TYPE_AVATAR           = 4,
 
     NPC_ATALARION         = 8580,
     NPC_DREAMSCYTH        = 5721,

@@ -46,7 +46,7 @@ void instance_sunken_temple::OnObjectCreate(GameObject* pGo)
     switch(pGo->GetEntry())
     {
         case GO_JAMMALAN_BARRIER:
-            if (m_auiEncounter[1] == DONE)
+            if (m_auiEncounter[TYPE_PROTECTORS] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_IDOL_OF_HAKKAR:
@@ -137,7 +137,7 @@ void instance_sunken_temple::SetData(uint32 uiType, uint32 uiData)
         case TYPE_ATALARION:
             if (uiData == SPECIAL)
                 DoSpawnAtalarionIfCan();
-            m_auiEncounter[0] = uiData;
+            m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_PROTECTORS:
             if (uiData == DONE)
@@ -145,7 +145,7 @@ void instance_sunken_temple::SetData(uint32 uiType, uint32 uiData)
                 --m_uiProtectorsRemaining;
                 if (!m_uiProtectorsRemaining)
                 {
-                    m_auiEncounter[1] = uiData;
+                    m_auiEncounter[uiType] = uiData;
                     DoUseDoorOrButton(GO_JAMMALAN_BARRIER);
                     // Intro yell
                     DoOrSimulateScriptTextForThisInstance(SAY_JAMMALAN_INTRO, NPC_JAMMALAN);
@@ -153,10 +153,7 @@ void instance_sunken_temple::SetData(uint32 uiType, uint32 uiData)
             }
             break;
         case TYPE_JAMMALAN:
-            m_auiEncounter[2] = uiData;
-            break;
-        case TYPE_MALFURION:
-            m_auiEncounter[3] = uiData;
+            m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_AVATAR:
             if (uiData == SPECIAL)
@@ -192,7 +189,7 @@ void instance_sunken_temple::SetData(uint32 uiType, uint32 uiData)
             }
 
             // Prevent double processing
-            if (m_auiEncounter[4] == uiData)
+            if (m_auiEncounter[uiType] == uiData)
                 return;
 
             if (uiData == IN_PROGRESS)
@@ -236,7 +233,7 @@ void instance_sunken_temple::SetData(uint32 uiType, uint32 uiData)
             DoUseDoorOrButton(GO_HAKKAR_DOOR_1);
             DoUseDoorOrButton(GO_HAKKAR_DOOR_2);
 
-            m_auiEncounter[4] = uiData;
+            m_auiEncounter[uiType] = uiData;
 
             break;
     }
@@ -344,22 +341,15 @@ void instance_sunken_temple::Load(const char* chrIn)
 
 uint32 instance_sunken_temple::GetData(uint32 uiType)
 {
-    switch(uiType)
-    {
-        case TYPE_ATALARION:  return m_auiEncounter[0];
-        case TYPE_PROTECTORS: return m_auiEncounter[1];
-        case TYPE_JAMMALAN:   return m_auiEncounter[2];
-        case TYPE_MALFURION:  return m_auiEncounter[3];
-        case TYPE_AVATAR:     return m_auiEncounter[4];
+    if (uiType < MAX_ENCOUNTER)
+        return m_auiEncounter[uiType];
 
-        default:
-            return 0;
-    }
+    return 0;
 }
 
 void instance_sunken_temple::Update(uint32 uiDiff)
 {
-    if (m_auiEncounter[4] != IN_PROGRESS)
+    if (m_auiEncounter[TYPE_AVATAR] != IN_PROGRESS)
         return;
 
     // Summon random mobs around the circles
