@@ -283,7 +283,7 @@ void instance_stratholme::SetData(uint32 uiType, uint32 uiData)
                     SetData(TYPE_BARON_RUN, DONE);
 
                 // Close Slaughterhouse door if needed
-                if (m_auiEncounter[5] == FAIL)              // TODO
+                if (m_auiEncounter[uiType] == FAIL)
                     DoUseDoorOrButton(GO_PORT_GAUNTLET);
             }
             if (uiData == DONE)
@@ -322,7 +322,7 @@ void instance_stratholme::SetData(uint32 uiType, uint32 uiData)
             if (uiData == FAIL)
                 DoUseDoorOrButton(GO_PORT_GAUNTLET);
 
-            m_auiEncounter[5] = uiData;                     // TODO
+            m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_BARTHILAS_RUN:
             if (uiData == IN_PROGRESS)
@@ -337,15 +337,15 @@ void instance_stratholme::SetData(uint32 uiType, uint32 uiData)
                     m_uiBarthilasRunTimer = 8000;
                 }
             }
-            m_auiEncounter[6] = uiData;                     // TODO
+            m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_BLACK_GUARDS:
             // Prevent double action
-            if (m_auiEncounter[7] == uiData)                // TODO
+            if (m_auiEncounter[uiType] == uiData)
                 return;
 
             // Restart after failure, close Gauntlet
-            if (uiData == IN_PROGRESS && m_auiEncounter[7] == FAIL)
+            if (uiData == IN_PROGRESS && m_auiEncounter[uiType] == FAIL)
                 DoUseDoorOrButton(GO_PORT_GAUNTLET);
             // Wipe case - open gauntlet
             if (uiData == FAIL)
@@ -356,7 +356,7 @@ void instance_stratholme::SetData(uint32 uiType, uint32 uiData)
                     DoScriptText(SAY_UNDEAD_DEFEAT, pBaron);
                 DoUseDoorOrButton(GO_ZIGGURAT_DOOR_5);
             }
-            m_auiEncounter[7] = uiData;                     // TODO
+            m_auiEncounter[uiType] = uiData;
 
             // No need to save anything here, so return
             return;
@@ -414,12 +414,12 @@ void instance_stratholme::Load(const char* chrIn)
     }
 
     // Special Treatment for the Ziggurat-Bosses, as otherwise the event couldn't reload
-    if (m_auiEncounter[1] == DONE)
-        m_auiEncounter[1] = SPECIAL;
-    if (m_auiEncounter[2] == DONE)
-        m_auiEncounter[2] = SPECIAL;
-    if (m_auiEncounter[3] == DONE)
-        m_auiEncounter[3] = SPECIAL;
+    if (m_auiEncounter[TYPE_BARONESS] == DONE)
+        m_auiEncounter[TYPE_BARONESS] = SPECIAL;
+    if (m_auiEncounter[TYPE_NERUB] == DONE)
+        m_auiEncounter[TYPE_NERUB] = SPECIAL;
+    if (m_auiEncounter[TYPE_PALLID] == DONE)
+        m_auiEncounter[TYPE_PALLID] = SPECIAL;
 
     OUT_LOAD_INST_DATA_COMPLETE;
 }
@@ -433,19 +433,13 @@ uint32 instance_stratholme::GetData(uint32 uiType)
                 return 1;
             return 0;
         case TYPE_BARON_RUN:
-            return m_auiEncounter[0];
         case TYPE_BARONESS:
-            return m_auiEncounter[1];
         case TYPE_NERUB:
-            return m_auiEncounter[2];
         case TYPE_PALLID:
-            return m_auiEncounter[3];
         case TYPE_RAMSTEIN:
-            return m_auiEncounter[4];
         case TYPE_BARON:
-            return m_auiEncounter[5];
         case TYPE_BARTHILAS_RUN:
-            return m_auiEncounter[6];
+            return m_auiEncounter[uiType];
         default:
             return 0;
     }

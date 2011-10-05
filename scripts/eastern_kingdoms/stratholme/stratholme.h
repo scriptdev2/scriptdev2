@@ -16,10 +16,9 @@ enum
     TYPE_NERUB                  = TYPE_BARONESS + 1,        // Assert that these three TYPEs are in correct order.
     TYPE_PALLID                 = TYPE_BARONESS + 2,
     TYPE_RAMSTEIN               = 4,
-    TYPE_RAMSTEIN_OBSOLETE      = 5,                        // Still set in Acid, remove when removed from Acid :)
-    TYPE_BARON                  = 6,                        // Adapt then
-    TYPE_BARTHILAS_RUN          = 7,
-    TYPE_BLACK_GUARDS           = 8,
+    TYPE_BARON                  = 5,
+    TYPE_BARTHILAS_RUN          = 6,
+    TYPE_BLACK_GUARDS           = 7,
 
     TYPE_SH_QUEST               = 20,
     TYPE_SH_CATHELA             = 21,
