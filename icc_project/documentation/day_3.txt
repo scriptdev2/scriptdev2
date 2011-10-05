@@ -1,0 +1,128 @@
+First Part:
+-----------
+
+In Day 2 we showed what commits are, how to navigate in them, and how to create them.
+
+This part is now about the content of a commit.
+Remember the (meta) structure of a commit:
+* Commit hash
+* Commit date
+* Author information
+* Commit message
+* Content changes
+
+Today we will talk about the Content changes in each commit.
+
+(1) The diff format
+~~~~~~~~~~~~~~~~~~~
+
+One of the natural ways in programming to display changes between two files (or two states), is a so called "diff".
+
+Usually this might look like this: (pointless example to emphasise how to read it)
+--------------------------
+diff --git a/README b/README
+index bba7c29..79dc7e6 100644
+--- a/README
++++ b/README
+@@ -22,7 +23,7 @@ that comes with MaNGOS ( http://www.getmangos.com ), written in C++ and is
+ compatible with Windows and Linux. SQL needed for database support both
+ MySQL and PostgreSQL.
+
+-This script library provides unique scripts for NPCs, gameobjects, events
++This script library provides unique and great scripts for NPCs, gameobjects, events
+ and other that need unique implementation.
+
+ Once ScriptDev2 is compiled it is automatically run by MaNGOS on server
+
+--------------------------
+
+You can read such a (unified) patch format like this:
+* diff --git a/path/to/file b/path/to/file
+  This line tells you that you have a diff created with git, and it has the changes in path/to/file (two versions, a and b)
+* @@ -A,B +C,D <someString>
+  This line tells you where the hunk you have changes with is located, and how big it is.
+  - A is the line where the content did begin in the first version
+  - B is the length of the hunk before the change in the first version
+  - C is the line where the content begins in the second version
+  - D is the length of the hunk in the second version
+* A content (unchanged) line always starts with a blanc
+* A line starting with a minus sign indicates that this line is removed
+* A line starting with a plus sign indicates that this line is added
+
+So, now to our example diff:
+the first line tells us, that we look at a change for the file README (located in main ScriptDev2 directory)
+Open it and look into line 22 (A).
+line 22 currently is "compatible with Windows and Linux. SQL needed for database support both"
+so we know that we are in the right place to apply our changes
+A few lines later, we see the line "This script library provides unique scripts for NPCs, gameobjects, events"
+which out diff replaces with the line "This script library provides unique and great scripts for NPCs, gameobjects, events".
+(Clearly: if you delete a line, and insert at the same place another line, you actually do replace this line)
+
+Note that a diff can consist of changes for multiple files, and each file changes can consist of multiple hunks
+
+Further documentation: http://en.wikipedia.org/wiki/Diff (various similar diff formats are also mentioned there, perhaps just look into it when reading the second time)
+
+(2) Creating a diff with Git
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+> git diff
+
+This is one of the most important commands in Git.
+With git diff you see the change set as unified diff between the current working tree and the HEAD
+For memory: HEAD is the topmost commit in the current branch
+
+Exercise 1: Edit a few things and invoke > git diff to see the change set
+Exercise 2: Edit the README in a way to get the same unified diff I posted above - did I cheat?
+
+Further documentation: Attention, this will show additional more advanced uses of git diff, but you should be able to understand them!
+http://book.git-scm.com/3_comparing_commits_-_git_diff.html
+
+(3) Other important commands to see diffs
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You already should know > git show - this commands also shows the changes of the specified commit as unified diff (after some meta information of the commit)
+However with this command, you can only see the changes of a commit, not between current working tree and index
+
+Another tool I like very very much to see diffs of multiple commits is
+> git format-patch
+However this tool creates by default a bunch of diff-files, to prevent this you can use the --stdout option.
+Also you should specify from which point on you want to see the commits.
+Also you can specify to which point you want to see the commits.
+
+I usually use it this way:
+> git format-patch <startCommit>[..<endCommit>] --stdout
+With the meaning:
+* <startCommit> <= commit, from which the changes will be shown (see day2 how a commit can be referenced)
+* ..<endCommit> <= Option: commit, to which the changes will be shown
+* --stdout <= print the output to the console instead of creating files for each commit
+
+Exercise 3: Use format-patch to see the changes between master and icc_project
+Try > git format-patch master --stdout
+Exercise 4: Do Day 2 - Special Exercise 8 if you have not already done, and look at the format-patch output between the created testing branch and the icc_project branch
+
+(4) Cleanup what happened today
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Assuming you are on the icc_project branch, and you have no "valuable" custom changes on there, use
+> git reset --hard origin/icc_project
+to reset all changes of tracked files from your index and working tree.
+
+Check if everything is nice with > git status ;)
+
+
+== End of First Part
+
+This Part should have shown how to use the commands
+> git diff
+> git show
+> git format-patch
+to look into changes of commits, or between commits and the working-tree
+
+Basic concepts:
+You should have a rough feeling of how to "read" unified patches.
+
+What comes next:
+~~~~~~~~~~~~~~~~
+
+* A small Excursion into Bash redirection and pipes, look into http://tldp.org/HOWTO/Bash-Prog-Intro-HOWTO.html if curious
+* How to apply unified patches with git apply and git am
