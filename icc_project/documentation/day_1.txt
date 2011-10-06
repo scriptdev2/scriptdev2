@@ -46,23 +46,22 @@ nothing to commit (working directory clean)
 This shows you that you are on your "master" branch (this is default), and that you have no change related to your history (working directory clean)
 
 [NOTE]
-.*Example 1:* Check the status
+[icon="./images/icons/example.png", caption="Exercise"]
+.*Exercise 1* - Check the status
 ==================================================================
 Add or change a file, and compare the output of +git status+
 ==================================================================
 
 If you have a not clean working tree, you must clean it.
 
+=== Resetting your working tree to the index
 [WARNING]
 ==================================================================
 This will delete all changes!
-==================================================================
-Do so  with
-
-=== Resetting your working tree to the index
 --------------------------------
 git reset --hard
 --------------------------------
+==================================================================
 
 Note: This will only affect files which are known to the index, so a new created file won't get deleted.
 
@@ -115,13 +114,14 @@ git checkout <branchName>
 --------------------------------
 
 [NOTE]
-.*Example 2:* Test switching with
+[icon="./images/icons/example.png", caption="Exercise"]
+.*Exercise 2* - Test switching
 ==================================================================
+Observe changes of files in the directory (especially the sub directory icc_project) while switching with
 --------------------------------
 git checkout master
 git checkout icc_project
 --------------------------------
-And observe changes of files in the directory (especially the sub directory icc_project)
 ==================================================================
 
 == End of First Part
