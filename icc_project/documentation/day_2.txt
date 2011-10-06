@@ -1,14 +1,17 @@
--- First Part:
 
-From day_1 you should have learnt these things:
+From Day 1 you should have learnt these things:
+
 * Meaning of working tree and index: The working tree are the actual files on your file system, the index is the history information
 * The concept of branches: A branch is a branch of the history index
 
-Also you should be able to switch between branches with > git checkout and to check the state of your working tree related to the index with > git status
+Also you should be able to switch between branches with +git checkout+ and to check the state of your working tree related to the index with +git status+
+
+== First Part:
 
 This part now should introduce you to know how to actual see the history.
 
-- (0) Excursion: The pager 'less'
+=== Excursion: The pager 'less'
+
 This is especially important for Windows user!
 
 When using Git via Git bash, the default tool set is the archaic tool set every *nix fan will have learnt by heart, but they can be extremely weird from Windows view.
@@ -23,59 +26,78 @@ Default pager on *nix is 'less' - which Git bash uses by default to show the his
 You can scroll in there with the arrow keys or a whole page by the space bar.
 And most important: You quit less by pressing "q"
 
-The man page for less can be found here: http://unixhelp.ed.ac.uk/CGI/man-cgi?less
+[TIP]
+==================================================================
+http://unixhelp.ed.ac.uk/CGI/man-cgi?less[The man page for less can be found here]
+
 (Disclaimer: I don't take responsibility for brain damage caused by any provided link here!)
+
 Anyhow: A better "guide" for less to link would be appreciated, but trying to search for "how to less" kind of doesn't work.
+==================================================================
 
-Exercise 1: Try to find a better less how-to and take a look
+[NOTE]
+[icon="./images/icons/example.png", caption="Exercise"]
+.*Exercise 1* - Try to find a better less how-to and take a look
+====================================================================================================================================
 Hint: add "unix" to your search attempt :)
+====================================================================================================================================
 
-
-- (1) Viewing the history of a branch in Git
+=== Viewing the history of a branch in Git
 
 OK, now we can look into the history of the current branch, this is done simply by
-> git log
+--------------------------------
+git log
+--------------------------------
 Just do so now :)
 
 Remember: To close the output, type "q"
 
 The most recent commits (see 3) might look like this:
-< commit 1cebd00445e7bd92927f305e40225de1049d450c
-< Author: Schmoozerd <schmoozerd@scriptdev2.com>
-< Date:   Tue Oct 4 02:02:44 2011 +0200
-<
-<     Add some files and documentation for the first part
-<
-< commit e0601735424f712d685330b421898db16a366b17
-< Author: Schmoozerd <schmoozerd@scriptdev2.com>
-< Date:   Tue Oct 4 01:14:46 2011 +0200
-<
-<     Initial Commit for the ICC Learning project
+--------------------------------
+commit 1cebd00445e7bd92927f305e40225de1049d450c          <1>
+Author: Schmoozerd <schmoozerd@scriptdev2.com>           <2>
+Date:   Tue Oct 4 02:02:44 2011 +0200                    <3>
 
-What does this show:
-1) commit <someFancyNumbers> <-- this is the hash of the commit, which should globally uniquely identify any commit.
-Usually it is enough to only take the first ~6 digits.
-This is more or less the "name" of the commit
-2) Author: <someNameAndEMail> <-- yes, this is the author of the commit
-3) Date: <someDate> <-- when the commit was authored
+    Add some files and documentation for the first part  <4>
 
-4) Then comes the commit message, this is the message the author thought might be helpful to describe the commit
+commit e0601735424f712d685330b421898db16a366b17          <1>
+Author: Schmoozerd <schmoozerd@scriptdev2.com>           <2>
+Date:   Tue Oct 4 01:14:46 2011 +0200                    <3>
 
+    Initial Commit for the ICC Learning project          <4>
+--------------------------------
 
-So - what is git log useful for?
+*What does this show:*
+
+<1> This is the hash of the commit, which should globally uniquely identify any commit.
+    Usually it is enough to only take the first ~6 digits.
+    This is more or less the "name" of the commit
+<2> Yes you guessed rightly, this is the author of the commit
+<3> When the commit was authored
+<4> This is the message the author thought might be helpful to describe the commit
+
+*So - what is git log useful for?*
+
 With git log you are able to see the history, who did which changes, and in which order.
 Also git log has a big amount of options, which help you to actually search for a specific commit (ie by author)
 
-Exercise 2: If you have already submitted a patch to SD2, that got accepted it is likely that you are "author" of a commit.
-Check with
-> git log --author="yourNickName"
-If you are not, pick anyone whom you think has contributed and look what git log --author tells you ;)
+[NOTE]
+[icon="./images/icons/example.png", caption="Exercise"]
+.*Exercise 2* - Search the history by author
+==================================================================
+If you have already submitted a patch to SD2, that got accepted it is likely that you are "author" of a commit. Check with
+--------------------------------
+git log --author="yourNickName"
+--------------------------------
+If you are not, pick anyone whom you think has contributed and look what +git log --author+ tells you ;)
+==================================================================
 
-- (2) The structure of objects in the git history index
+=== The structure of objects in the git history index
 
 When you do a change, and make this change known to the history, then you have a "commit"
 
 Any commit has:
+
 * An author
 * A commit hash (the strange numbers already seen in git log)
 * The set of changes it describes (if you didn't change anything, there is no commit!)
@@ -85,16 +107,25 @@ Any commit has:
 As of the last statement, you have a chain of commits. And this is your history!
 
 
-- (3) View a commit
-you can view a commit with
-> git show <someIdentifier>
+=== View a commit
 
-Exercise 3: Look into the commit 111cea5073191b, type
-> git show 111cea5073191b
+You can view a commit with
+--------------------------------
+git show <someIdentifier>
+--------------------------------
+
+[NOTE]
+[icon="./images/icons/example.png", caption="Exercise"]
+.*Exercise 3* - View a commit by hash
+==================================================================
+--------------------------------
+git show 111cea5073191b
+--------------------------------
 What commit does this refer to: What is the commit message? Who is the author? When was it committed?
+==================================================================
 
+=== How to access commits
 
-- (4) How to access commits
 Things are only useful if you can work with them, and to do so you need powerful ways to access them.
 Git provides reasonable ways to "get to" a specific commit.
 
@@ -106,122 +137,190 @@ A branchname always points to the HEAD commit of the branch with the branchname
 
 "<Commit>~N" refers to "N commits before the commit <Commit>
 
-Exercise 4: Look into a few commits, examples are:
-> git show HEAD~1
-> git show master
-> git show master~304
-
+[NOTE]
+[icon="./images/icons/example.png", caption="Exercise"]
+.*Exercise 4* - Look into a few commits
+==================================================================
+Try these examples, maybe a few more.
+--------------------------------
+git show HEAD~1
+git show master
+git show master~304
+--------------------------------
 Remember: To close the pager, type "q"
+==================================================================
 
-- (5) Advanced looking into the history:
+=== Advanced looking into the history:
+
 Now that you know how commits are accessed, you are able to invoke more features from git log.
-However I don't think that this is needed for our purposes just now, so if you are interested,
-see http://book.git-scm.com/3_reviewing_history_-_git_log.html
 
+TIP: http://book.git-scm.com/3_reviewing_history_-_git_log.html[For interested Readers - this goes quite ahead for now]
 
 == End of First Part
 
-What this part was about:
+=== What this part was about:
+
 * Knowing what a 'commit' means.
-* Showing a commit ( git show )
+* Showing a commit ( +git show+ )
 * Knowing how to access various commits
 
-
--- Second Part
+== Second Part
 
 From the first part of today you should know what commits are, and how to find them.
 Also you should feel safe about concepts as branches, working tree and index
 
 Now it is time to start doing some own commits!
 
+=== Why commit?
 
-- (6) Why commit?
-
-When you commit, you get the full power of Git to track your history.
-Also commits are easier to merge and handle than changes that are just there.
-Also with committing, you are able to provide extra information in the commit message to tell "what you have done why".
+* When you commit, you get the full power of Git to track your history.
+* Also commits are easier to merge and handle than changes that are just there.
+* Also with committing, you are able to provide extra information in the commit message to tell "what you have done why".
 
 So, the golden rule of thumb is:
-    Commit often, commit early!
-And of course: Publish your commits! (More about this likely tomorrow)
 
-- (7) How to commit:
+[IMPORTANT]
+==================================================================
+*Commit often, commit early!*
+
+And of course: Publish your commits! (More about this likely tomorrow)
+==================================================================
+
+=== How to commit:
 
 The base command to commit changes is
-> git commit
+--------------------------------
+git commit
+--------------------------------
 however this command alone won't make you very happy.
 
 You must tell Git which changes you want to commit.
 A very reasonable way is often, to commit all changes, like with
-> git commit -a -m"My first commit"
+--------------------------------
+git commit -a -m"My first commit"
+--------------------------------
 Where
--a <= commit _all_ changes in all tracked files
--m <String> <= take <String> as commit message, note that I used ".." to mark the whole text as message
+[horizontal]
+*-a*:: commit _all_ changes in all tracked files
+*-m <String>*:: take <String> as commit message, note that I used ".." to mark the whole text as message
 
-Example:
-This commit was added with
+*Example:* This commit was added with
+--------------------------------
 > git commit -a -m"Day 2, Part 2 Howto git commit"
+--------------------------------
 
+==== Track new files
 
 As this would only commit changes in already tracked files, you might wonder how to commit (changes to) new files.
+
 You can add a new file with
-> git add path/to/fileName
-Then the file named fileName located in path/to/ will be committed with your next > git commit -a command
+--------------------------------
+git add path/to/fileName
+--------------------------------
+Then the file named fileName located in path/to/ will be committed with your next +git commit -a+ command
 
 Remark for later: If you plan a couple of commits, it might be a good idea to fork a new branch and commit them there
+
+==== Workflow in Git
 
 By using these commands, the usual work flow in Git represents itself like this:
 
 You edit a few files
-> git commit -a -m "Some cool edits"
+--------------------------------
+git commit -a -m "Some cool edits"
+--------------------------------
 You edit more
-> git commit -a -m"More cool edits"
+--------------------------------
+git commit -a -m"More cool edits"
+--------------------------------
 You edit even more
-> git commit -a -m"The coolest edits ever"
-
+--------------------------------
+git commit -a -m"The coolest edits ever"
+--------------------------------
 Then you check your work with
-> git log
+--------------------------------
+git log
+--------------------------------
+
 The topmost three commits should then be
-    The coolest edits ever
-    More cool edits
-    Some cool edits
 
-Exercise 5: Do some test commits
+. The coolest edits ever
+. More cool edits
+. Some cool edits
+
+[NOTE]
+[icon="./images/icons/example.png", caption="Exercise"]
+.*Exercise 5* - Do some test commits
+====================================================================================================================================
 Suggested files to change might be found in icc_project\research
+====================================================================================================================================
 
-Exercise 6: Look at your work with git log
+[NOTE]
+[icon="./images/icons/example.png", caption="Exercise"]
+.*Exercise 6*
+==================================================================
+Look at your work with +git log+
+==================================================================
 
-Special Exercises are not important to do right now, but if you feel confident or want to test some things feel free to explore a bit
-Special Exercise 7: Add a new file to git and commit it
-Special Exercise 8: Do the same in a branch, to start invoke > git checkout -b testing
-(Remember: the -b will create a new branch, and git checkout switches to a branch)
+WARNING: Special Exercises are not important to do right now, but if you feel confident or want to test some things feel free to explore a bit
 
-Possible additional sources related to this topic:
-http://book.git-scm.com/3_normal_workflow.html (unfortunately it seems the flash vids showing this are gone)
-http://www.youtube.com/watch?v=8dhZ9BXQgc4 must also show this stuff, but I think I don't like the style of the speaker too much - but if you have time ;)
+[NOTE]
+[icon="./images/icons/example.png", caption="Exercise"]
+.*Special Exercise 7* - Commit changes with a new file
+==================================================================
+Add a new file to git and commit it (lookup +git add+)
+==================================================================
 
-- (8) Undo Changes
+[NOTE]
+[icon="./images/icons/example.png", caption="Exercise"]
+.*Special Exercise 8* - Commit in a branch
+==================================================================
+To start invoke +git checkout -b testing+
+Remember: the -b will create a new branch, and git checkout switches to a branch
+==================================================================
+
+==== Possible additional sources related to this topic:
+
+TIP: http://book.git-scm.com/3_normal_workflow.html (unfortunately it seems the flash vids showing this are gone)
+
+TIP: http://www.youtube.com/watch?v=8dhZ9BXQgc4[Tech Talk of what Git is about] I think I don't like the style of the speaker too much - but maybe you do :)
+
+=== Undo Changes
 
 This section will show up every now and then, because there are different ways to undo things, depending on what and how you want to undo.
 
 It is not necessary, but I suggest to remove the testing changes from Ex. 5-7 from your icc_project branch.
-Do so by switching into this branch with
-> git checkout icc_project
-and reset to origin state with
-> git reset --hard origin/icc_project
 
-- (9) Excursion: The editor 'vi'
+Do so by switching into this branch with
+
+--------------------------------
+git checkout icc_project
+--------------------------------
+
+and reset to origin state with
+
+--------------------------------
+git reset --hard origin/icc_project
+--------------------------------
+
+=== Excursion: The editor 'vi'
 
 You remember that Git uses by default the archaic pager 'less' in some cases?
+
 They are even more hostile, because in some cases by default (when there is need to edit something) Git will start the well loved 'vi' editor.
 
-The good news:
+==== Change default editor in Git, aka 'The good news'
+
 You can change the default editor to some editor that at least is usable for people who didn't suffer years of brain damage caused by vi and think this is a good editor :)
+
 To change the default editor, look at this line carefully:
-> git config --global core.editor "'C:/Program Files/Notepad++/notepad++.exe' -multiInst -notabbar -nosession -noPlugin"
+--------------------------------
+git config --global core.editor "'C:/Program Files/Notepad++/notepad++.exe' -multiInst -notabbar -nosession -noPlugin"
+--------------------------------
 This is however only an example how it worked on my system.
 
-However there are a few reasons why 'vi' is still worth knowing about:
+==== Reasons why 'vi' is still worth knowing about:
+
 * Every *nix system has vi, and it works nicely over ssh -- so it might be required some day to know at least the very basics
 * Actually vi performs quite nicely related to big files
 * Well, vi is very powerful
@@ -231,34 +330,49 @@ Besides I like it, refer to brain damage to understand why ;)
 As vi originates in the golden ages when mice where only found under the desk of full-time hackers,
 and not on the desk related to GUI editors, there was the very pressing question how to know if you want to invoke a command (ie "save" ) or when to write a word (ie "save" ).
 Many editors solved this by using CTRL and similar for command mode, and normal typing else wise.
+
 However vi went another way (because of more powerful features and because ctrl and similar caused trouble on telnet sessions).
 
-So, what does vi:
+==== How 'vi' works
 vi has a few different modes, which can be switched and entered with a few buttons:
+
 * The INSERT mode: When this mode is active, there is a "-- INSERT --" marked on the bottom of your console, and in this mode vi behaves like normal editors.
 If you type things, they will show on the screen - so you will do what you expect from an editor: you will edit a file
+
 * The command mode: In this mode, pressing keys are considered as commands, and do confusing things!
 
-How to switch between the modes:
+===== How to switch between the modes:
 When you start vi you are in the command mode. Press "i" to start the insert mode.
 When you are in the INSERT mode, press "Esc" to leave the INSERT mode and return to command mode.
 
+===== Closing 'vi'
+
 Actually most people green to vi wonder about one thing most:
-    How to close the damn program?
+
+*How to close the damn program?*
+
 The answer is relatively easy:
+
 You must be in the command mode, and then press ":". This will activate a special mode (for interested: ex-mode) in which you can type in commands.
 the most useful commands are: (you don't need to press the ":" again)
-:wq <= Write and Quit, which it does, and you will have manged to quit vi ;)
-:q <= Only quit, to do so there must be no change
-:q! <= Quit and discard changes you made
 
-There are tons of docs for vi out there, maybe http://www.gentoo.org/doc/en/vi-guide.xml is a good one.
+[horizontal]
++:wq+:: Write and Quit, which it does, and you will have manged to quit vi ;)
++:q+:: Only quit, to do so there must be no change
++:q!+:: Quit and discard changes you made
 
-Special Exercise 9: Do a few changes and use > git commit -a and experiment :)
+TIP: There are tons of docs for vi out there, maybe http://www.gentoo.org/doc/en/vi-guide.xml is a good one.
 
+[NOTE]
+[icon="./images/icons/example.png", caption="Exercise"]
+.*Special Exercise 9*
+==================================================================
+Do a few changes and use > git commit -a and experiment :)
+==================================================================
 
 == End of Second Part
 
-What this part was about:
+=== What this part was about:
+
 * Doing own commits with git commit
 * Really encouraging to do own simple tests now!
