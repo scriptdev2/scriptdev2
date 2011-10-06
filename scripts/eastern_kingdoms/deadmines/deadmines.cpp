@@ -271,21 +271,6 @@ CreatureAI* GetAI_boss_mr_smite(Creature* pCreature)
     return new boss_mr_smiteAI(pCreature);
 }
 
-bool GOUse_go_door_lever_dm(Player* pPlayer, GameObject* pGo)
-{
-    ScriptedInstance* pInstance = (ScriptedInstance*)pGo->GetInstanceData();
-
-    if (!pInstance)
-        return false;
-
-    GameObject* pGoDoor = pInstance->GetSingleGameObjectFromStorage(GO_IRON_CLAD_DOOR);
-
-    if (pGoDoor && pGoDoor->GetGoState() == GO_STATE_READY)
-        return false;
-
-    return true;
-}
-
 bool GOUse_go_defias_cannon(Player* pPlayer, GameObject* pGo)
 {
     ScriptedInstance* pInstance = (ScriptedInstance*)pGo->GetInstanceData();
@@ -293,29 +278,24 @@ bool GOUse_go_defias_cannon(Player* pPlayer, GameObject* pGo)
     if (!pInstance)
         return false;
 
-    if (pInstance->GetData(TYPE_DEFIAS_ENDDOOR) == DONE || pInstance->GetData(TYPE_DEFIAS_ENDDOOR) == IN_PROGRESS)
+    if (pInstance->GetData(TYPE_IRON_CLAD_DOOR) == DONE)
         return false;
 
-    pInstance->SetData(TYPE_DEFIAS_ENDDOOR, IN_PROGRESS);
+    pInstance->SetData(TYPE_IRON_CLAD_DOOR, DONE);
     return false;
 }
 
 void AddSC_deadmines()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_mr_smite";
-    newscript->GetAI = &GetAI_boss_mr_smite;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_mr_smite";
+    pNewScript->GetAI = &GetAI_boss_mr_smite;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "go_door_lever_dm";
-    newscript->pGOUse = &GOUse_go_door_lever_dm;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "go_defias_cannon";
-    newscript->pGOUse = &GOUse_go_defias_cannon;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "go_defias_cannon";
+    pNewScript->pGOUse = &GOUse_go_defias_cannon;
+    pNewScript->RegisterSelf();
 }
