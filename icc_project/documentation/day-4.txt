@@ -24,7 +24,7 @@ A very neat way to create the patch files within a bash (ie Git bash) is to use 
 
 *Most useful commands in a bash console*
 
-Ok, to clearify: When you type commands into a console, there is actually a program that interprets these commands. Some examples are the cmd (from (win)do(w)s), or bash which got popular on linux
+OK, to clarify: When you type commands into a console, there is actually a program that interprets these commands. Some examples are the cmd (from (win)do(w)s), or bash which got popular on Linux
 
 [horizontal]
 *ls*:: List the content of the current directory (on Windows this was called +dir+)
@@ -36,15 +36,15 @@ Ok, to clearify: When you type commands into a console, there is actually a prog
 *mkdir*:: Create a directory
 *rmdir*:: Remove a directory
 
-*Very usefull things:*
+*Very useful things:*
 
-Autocompletion (Bash can do this)::
-If you want to type something, and press the +tab+ key, the bash will try to autocomplete a word for you.
+Auto completion (Bash can do this)::
+If you want to type something, and press the +tab+ key, the bash will try to auto complete a word for you.
 +
 Example: Type (in the ScriptDev2-directory) into the bash: +ls to+ and then press the +tab+ key.
 
 Copy and Paste in the bash (For Windows users)::
-If you klick on the top-left corner of your console window, you can select "Edit" and there "Mark" and "Paste".
+If you click on the top-left corner of your console window, you can select "Edit" and there "Mark" and "Paste".
 +
 (Marking is finished with +enter+, the marked text will then be in your clipboard)
 
@@ -75,28 +75,168 @@ The trick to get their output into files is to use output redirection.
 * Do Exercise 3 from Day3, but redirect the output of +git diff+ with +git diff > temp_format.patch+
 
 And look at these created files with a patch tool (if you have one installed), an editor and +cat+.
+(To use cat do: +cat temp_diff.patch+ and +cat temp_format.patch+)
 
-To use cat do: +cat temp_diff.patch+ and +cat temp_format.patch+
-
-Gratulation, you have created your first patch files!
+Congratulation, you have created your first patch files!
 ==================================================================
 
 [NOTE]
 [icon="./images/icons/example.png", caption="Exercise"]
 .*Exercise 2* - Use output redirection to create patch files
 ==================================================================
-Do some more edits and test bash autocompletion with +git diff > te+ <press +tab+ key> +d+ <press +tab+ key>
+Do some more edits and test bash auto completion with +git diff > te+ <press +tab+ key> +d+ <press +tab+ key>
 ==================================================================
 
 Sometimes you might not want to get all changes directly into a file, but would like to view the output of ie +git format-patch --stdout+ slowly.
 
-Remeber the pager 'less' from Day 2?
+Remember the pager 'less' from Day 2?
 
 [NOTE]
 [icon="./images/icons/example.png", caption="Exercise"]
-.*Exercise 3* - Fais la pipe (My french is bad, maybe it was Utilize)
+.*Exercise 3* - Fais la pipe (My French is bad, maybe it was Utilize)
 ==================================================================
 Use +git format-patch master --stdout | less+
 ==================================================================
 
 == End of First Part
+
+[TIP]
+==================================================================
+If you still cannot get enough about using bash, look http://linux.org.mt/article/terminal[here]
+
+For more bash programming purposes look http://tldp.org/LDP/Bash-Beginners-Guide/html/[here]
+
+If anybody finds a neat beginners guide suitable for this topic, please inform!
+==================================================================
+
+== Second Part:
+
+Now we want to apply a few patch files.
+
+You will need the patch files you created in Part 1 - Exercise 1!
+
+Also you should copy the content of https://github.com/scriptdev2/scriptdev2/commit/9438d49b62f81d543489b87e8c8e60d94afb1fcd.patch[SD2-Commit 2302]
+into a file in your ScriptDev2 directory, expected name +sd2_2302.patch+
+
+=== Applying patches with git apply and git am
+
+Both commands apply a patch from a filename with appropriate format if possible.
+
+git am::
+Git am applies a patch created with +format-patch+ to the 'index'
++
+As a formatted patch contains some meta information of the commit(s) from which it was created, it will directly commit the change sets from the commits, and thereby using the provided meta information in the patch file.
++
+Hence a patch file for git am must contain this information in a defined way.
+
+git apply::
+Git apply applies a patch created with git show or git diff to the 'working tree'
++
+These patches contain no additional meta information, and hence won't be committed automatically.
+
+To apply the following examples, be sure to be on clear icc_project, to do so use
+--------------------------------
+git reset --hard origin/icc_project
+--------------------------------
+
+[NOTE]
+[icon="./images/icons/example.png", caption="Exercise"]
+.*Exercise 4* - Apply a patch with git apply
+==================================================================
+Apply the patch created in Exercise 1 into file +temp_diff.patch+
+--------------------------------
+git apply temp_diff.patch
+--------------------------------
+Check what this did! Use git status, git diff and git log to see what this did!
+
+Reset your changes with +git reset --hard+
+==================================================================
+
+[NOTE]
+[icon="./images/icons/example.png", caption="Exercise"]
+.*Exercise 5* - Apply a patch with git am
+==================================================================
+Apply the patch created in Exercise 1 into file +temp_diff.patch+
+--------------------------------
+git am sd2_2302.patch
+--------------------------------
+Check what this did!
+
+Reset your changes with +git reset --hard origin/icc_project+
+==================================================================
+
+[NOTE]
+[icon="./images/icons/example.png", caption="Exercise"]
+.*Exercise 6* - Why why why?
+==================================================================
+Why did I suggest to use different ways to git reset --hard in exercises 4 and 5?
+==================================================================
+
+[NOTE]
+[icon="./images/icons/example.png", caption="Exercise"]
+.*Special Exercise 7* - Some first conflicts
+==================================================================
+Try to apply the changes in +temp_format.patch+ with +git am+
+
+This gives errors - Why?
+
+To abort the attempt to apply this with git am, use
+--------------------------------
+git am --abort
+--------------------------------
+==================================================================
+
+[NOTE]
+[icon="./images/icons/example.png", caption="Exercise"]
+.*Special Exercise 8* - Apply to a conflict free point
+==================================================================
+Find a point in the history where the changes from +temp_format.patch+ could be applied!
+
+Checkout to this point, and apply there
+--------------------------------
+git checkout -b apply-safe <ThisPoint>
+git am temp_format.patch
+--------------------------------
+Now you have applied the patch file. Check what happened with the usual suspects :)
+==================================================================
+
+[NOTE]
+[icon="./images/icons/example.png", caption="Exercise"]
+.*Special Exercise 9* - Merging conflicts
+==================================================================
+Checkout to your icc_project branch
+
+Try to merge the apply-safe branch into your current branch, try +git merge apply-safe+
+
+This will give the same conflicts as you had in Exercise 7, but now you have the possibility to use the powerful tools of git to merge. Actually for me merge went without problems!
+
+However if you still get conflicts, abort the merge with git reset --hard
+==================================================================
+
+Now, there might have been many changes, and it is time to cleanup:
+
+--------------------------------
+git checkout icc_project
+git reset --hard origin/icc_project <2>
+git branch -D apply-safe    <1>
+rm sd2_2302.patch    <3>
+rm temp_format.patch
+rm temp_diff.patch
+--------------------------------
+
+<1> git branch -D will delete a branch
+<2> Do you already know why this time the reset --hard version with origin/icc_project was used?
+<3> Remove a few untracked files - check for more with +git status+
+
+== End of Second Part
+
+Today we have seen
+
+* how to use a console environment
+* how to use dark console powers to create patch files
+* how to apply patch files
+* how using Git the right way conflict solving can become very easy! (Special exercises)
+
+So, now we have the tools in place to actually start working on ICC code.
+
+Expect the first steps toward a C++ script in the next days!
