@@ -1,0 +1,102 @@
+
+From Day 3 you should have learnt these things:
+
+* How to read unified diffs
+* How to use +git diff+, +git show+ and +git format-patch+ to create diff between different commits or the working tree
+
+Today now is about how to
+
+* Create patch files, that is files which contain the output from the above commands
+* How to apply them
+
+== First Part:
+
+A very neat way to create the patch files within a bash (ie Git bash) is to use the output redirection
+
+=== Excursion: Some notes about working with a console
+
+*Reasons to still use a console environment for some things*
+
+* You definitively will feel like a geek!\r\n
+  (Do we actually need more reasons?)
+* Using a console is for some things very fast (and very slow for others)
+* Reasonable to learn, as *nix systems won't proper work without (Windows systems won't work proper without using +cmd+ now and then, only that the cmd sucks)
+
+*Most useful commands in a bash console*
+
+Ok, to clearify: When you type commands into a console, there is actually a program that interprets these commands. Some examples are the cmd (from (win)do(w)s), or bash which got popular on linux
+
+[horizontal]
+*ls*:: List the content of the current directory (on Windows this was called +dir+)
+*cd*:: Change your directory. If you invoke +cd ..+ then you will change into the parent directory
+*cat*:: Can be used to get text from a file onto the console
+*cp* A B:: Copy a file from A to B
+*mv* A B:: Move a file from A to B (if A and B are in the same directory, than this renames)
+*rm* A:: Remove (this means delete) file A
+*mkdir*:: Create a directory
+*rmdir*:: Remove a directory
+
+*Very usefull things:*
+
+Autocompletion (Bash can do this)::
+If you want to type something, and press the +tab+ key, the bash will try to autocomplete a word for you.
++
+Example: Type (in the ScriptDev2-directory) into the bash: +ls to+ and then press the +tab+ key.
+
+Copy and Paste in the bash (For Windows users)::
+If you klick on the top-left corner of your console window, you can select "Edit" and there "Mark" and "Paste".
++
+(Marking is finished with +enter+, the marked text will then be in your clipboard)
+
+Using previously typed commands::
+With the arrow keys (up, down) you can reuse previous commands easily.
+
+=== Excursion: Bash output/ input redirection
+
+For most console based systems it is possible to use these types of output redirection
+
+[horizontal]
+*>*:: Forward the output into a file, the file will be created if it does not exist, and truncated before refilled if it exists
+*>>*:: Forward the output into a file, but append if the file already exists
+*|*:: (Called pipe) Forward the output from the program as input to the next program
+:: A few more exists which I won't cover!
+
+Remember the nice tools like +git diff+ or +git format-patch --stdout+ from Day 3?
+
+They were working nice, but only displayed there stuff in the console.
+
+The trick to get their output into files is to use output redirection.
+
+[NOTE]
+[icon="./images/icons/example.png", caption="Exercise"]
+.*Exercise 1* - Use output redirection to create patch files
+==================================================================
+* Do Exercise 1 from Day3, but redirect the output of +git diff+ with +git diff > temp_diff.patch+
+* Do Exercise 3 from Day3, but redirect the output of +git diff+ with +git diff > temp_format.patch+
+
+And look at these created files with a patch tool (if you have one installed), an editor and +cat+.
+
+To use cat do: +cat temp_diff.patch+ and +cat temp_format.patch+
+
+Gratulation, you have created your first patch files!
+==================================================================
+
+[NOTE]
+[icon="./images/icons/example.png", caption="Exercise"]
+.*Exercise 2* - Use output redirection to create patch files
+==================================================================
+Do some more edits and test bash autocompletion with +git diff > te+ <press +tab+ key> +d+ <press +tab+ key>
+==================================================================
+
+Sometimes you might not want to get all changes directly into a file, but would like to view the output of ie +git format-patch --stdout+ slowly.
+
+Remeber the pager 'less' from Day 2?
+
+[NOTE]
+[icon="./images/icons/example.png", caption="Exercise"]
+.*Exercise 3* - Fais la pipe (My french is bad, maybe it was Utilize)
+==================================================================
+Use +git format-patch master --stdout | less+
+==================================================================
+
+== End of First Part
