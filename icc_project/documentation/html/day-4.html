@@ -773,9 +773,9 @@ How to apply them
 <div class="ulist"><ul>
 <li>
 <p>
-You definitively will feel like a geek!\r\n
-  (Do we actually need more reasons?)
+You definitively will feel like a geek!
 </p>
+<div class="paragraph"><p>(Do we actually need more reasons?)</p></div>
 </li>
 <li>
 <p>
@@ -789,7 +789,8 @@ Reasonable to learn, as *nix systems won&#8217;t proper work without (Windows sy
 </li>
 </ul></div>
 <div class="paragraph"><p><strong>Most useful commands in a bash console</strong></p></div>
-<div class="paragraph"><p>OK, to clarify: When you type commands into a console, there is actually a program that interprets these commands. Some examples are the cmd (from (win)do(w)s), or bash which got popular on Linux</p></div>
+<div class="paragraph"><p>OK, to clarify: When you type commands into a console, there is actually a program that interprets these commands.</p></div>
+<div class="paragraph"><p>Some examples are the cmd (from (win)do(w)s), or bash which got popular on Linux</p></div>
 <div class="hdlist"><table>
 <tr>
 <td class="hdlist1">
@@ -896,7 +897,7 @@ Copy and Paste in the bash (For Windows users)
 </dt>
 <dd>
 <p>
-If you click on the top-left corner of your console window, you can select "Edit" and there "Mark" and "Paste".
+If you click on the top-left corner of your console window, you can select "Edit" and there "Mark" and "Paste". Also you can use the INSERT key to paste the content of your clipboard
 </p>
 <div class="paragraph"><p>(Marking is finished with <tt>enter</tt>, the marked text will then be in your clipboard)</p></div>
 </dd>
@@ -950,7 +951,7 @@ Forward the output into a file, but append if the file already exists
 </tr>
 </table></div>
 <div class="paragraph"><p>Remember the nice tools like <tt>git diff</tt> or <tt>git format-patch --stdout</tt> from Day 3?</p></div>
-<div class="paragraph"><p>They were working nice, but only displayed there stuff in the console.</p></div>
+<div class="paragraph"><p>They were working nice, but only displayed their stuff in the console.</p></div>
 <div class="paragraph"><p>The trick to get their output into files is to use output redirection.</p></div>
 <div class="admonitionblock">
 <table><tr>
@@ -1064,7 +1065,7 @@ Git apply applies a patch created with git show or git diff to the <em>working t
 </td>
 <td class="content">
 <div class="title"><strong>Exercise 4</strong> - Apply a patch with git apply</div>
-<div class="paragraph"><p>Apply the patch created in Exercise 1 into file <tt>temp_diff.patch</tt></p></div>
+<div class="paragraph"><p>Apply the patch created in Exercise 1 from file <tt>temp_diff.patch</tt></p></div>
 <div class="listingblock">
 <div class="content">
 <pre><tt>git apply temp_diff.patch</tt></pre>
@@ -1081,7 +1082,7 @@ Git apply applies a patch created with git show or git diff to the <em>working t
 </td>
 <td class="content">
 <div class="title"><strong>Exercise 5</strong> - Apply a patch with git am</div>
-<div class="paragraph"><p>Apply the patch created in Exercise 1 into file <tt>temp_diff.patch</tt></p></div>
+<div class="paragraph"><p>Apply the patch from file <tt>sd2_2302.patch</tt></p></div>
 <div class="listingblock">
 <div class="content">
 <pre><tt>git am sd2_2302.patch</tt></pre>
@@ -1155,18 +1156,18 @@ git am temp_format.patch</tt></pre>
 <div class="listingblock">
 <div class="content">
 <pre><tt>git checkout icc_project
-git reset --hard origin/icc_project <img src="./images/icons/callouts/2.png" alt="2" />
-git branch -D apply-safe    <img src="./images/icons/callouts/1.png" alt="1" />
+git reset --hard origin/icc_project <img src="./images/icons/callouts/1.png" alt="1" />
+git branch -D apply-safe    <img src="./images/icons/callouts/2.png" alt="2" />
 rm sd2_2302.patch    <img src="./images/icons/callouts/3.png" alt="3" />
 rm temp_format.patch
 rm temp_diff.patch</tt></pre>
 </div></div>
 <div class="colist arabic"><table>
 <tr><td><img src="./images/icons/callouts/1.png" alt="1" /></td><td>
-git branch -D will delete a branch
+Do you already know why this time the reset --hard version with origin/icc_project was used?
 </td></tr>
 <tr><td><img src="./images/icons/callouts/2.png" alt="2" /></td><td>
-Do you already know why this time the reset --hard version with origin/icc_project was used?
+git branch -D will delete a branch
 </td></tr>
 <tr><td><img src="./images/icons/callouts/3.png" alt="3" /></td><td>
 Remove a few untracked files - check for more with <tt>git status</tt>
@@ -1209,7 +1210,7 @@ how using Git the right way conflict solving can become very easy! (Special exer
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2011-10-07 01:55:12 Mitteleuropäische Sommerzeit
+Last updated 2011-10-07 23:33:10 Mitteleuropäische Sommerzeit
 </div>
 </div>
 </body>

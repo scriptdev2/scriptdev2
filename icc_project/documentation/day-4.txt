@@ -17,14 +17,18 @@ A very neat way to create the patch files within a bash (ie Git bash) is to use 
 
 *Reasons to still use a console environment for some things*
 
-* You definitively will feel like a geek!\r\n
-  (Do we actually need more reasons?)
+* You definitively will feel like a geek!
++
+(Do we actually need more reasons?)
+
 * Using a console is for some things very fast (and very slow for others)
 * Reasonable to learn, as *nix systems won't proper work without (Windows systems won't work proper without using +cmd+ now and then, only that the cmd sucks)
 
 *Most useful commands in a bash console*
 
-OK, to clarify: When you type commands into a console, there is actually a program that interprets these commands. Some examples are the cmd (from (win)do(w)s), or bash which got popular on Linux
+OK, to clarify: When you type commands into a console, there is actually a program that interprets these commands.
+
+Some examples are the cmd (from (win)do(w)s), or bash which got popular on Linux
 
 [horizontal]
 *ls*:: List the content of the current directory (on Windows this was called +dir+)
@@ -44,7 +48,7 @@ If you want to type something, and press the +tab+ key, the bash will try to aut
 Example: Type (in the ScriptDev2-directory) into the bash: +ls to+ and then press the +tab+ key.
 
 Copy and Paste in the bash (For Windows users)::
-If you click on the top-left corner of your console window, you can select "Edit" and there "Mark" and "Paste".
+If you click on the top-left corner of your console window, you can select "Edit" and there "Mark" and "Paste". Also you can use the INSERT key to paste the content of your clipboard
 +
 (Marking is finished with +enter+, the marked text will then be in your clipboard)
 
@@ -63,7 +67,7 @@ For most console based systems it is possible to use these types of output redir
 
 Remember the nice tools like +git diff+ or +git format-patch --stdout+ from Day 3?
 
-They were working nice, but only displayed there stuff in the console.
+They were working nice, but only displayed their stuff in the console.
 
 The trick to get their output into files is to use output redirection.
 
@@ -143,7 +147,7 @@ git reset --hard origin/icc_project
 [icon="./images/icons/example.png", caption="Exercise"]
 .*Exercise 4* - Apply a patch with git apply
 ==================================================================
-Apply the patch created in Exercise 1 into file +temp_diff.patch+
+Apply the patch created in Exercise 1 from file +temp_diff.patch+
 --------------------------------
 git apply temp_diff.patch
 --------------------------------
@@ -156,7 +160,7 @@ Reset your changes with +git reset --hard+
 [icon="./images/icons/example.png", caption="Exercise"]
 .*Exercise 5* - Apply a patch with git am
 ==================================================================
-Apply the patch created in Exercise 1 into file +temp_diff.patch+
+Apply the patch from file +sd2_2302.patch+
 --------------------------------
 git am sd2_2302.patch
 --------------------------------
@@ -217,15 +221,15 @@ Now, there might have been many changes, and it is time to cleanup:
 
 --------------------------------
 git checkout icc_project
-git reset --hard origin/icc_project <2>
-git branch -D apply-safe    <1>
+git reset --hard origin/icc_project <1>
+git branch -D apply-safe    <2>
 rm sd2_2302.patch    <3>
 rm temp_format.patch
 rm temp_diff.patch
 --------------------------------
 
-<1> git branch -D will delete a branch
-<2> Do you already know why this time the reset --hard version with origin/icc_project was used?
+<1> Do you already know why this time the reset --hard version with origin/icc_project was used?
+<2> git branch -D will delete a branch
 <3> Remove a few untracked files - check for more with +git status+
 
 == End of Second Part
