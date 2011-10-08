@@ -1242,6 +1242,8 @@ UPDATE creature_template SET ScriptName='npc_brann_hos' WHERE entry=28070;
 /* ULDUAR */
 UPDATE instance_template SET ScriptName='instance_ulduar' WHERE map=603;
 UPDATE creature_template SET ScriptName='boss_general_vezax' WHERE entry=33271;
+UPDATE creature_template SET ScriptName='boss_auriaya' WHERE entry=33515;
+UPDATE creature_template SET ScriptName='boss_feral_defender' WHERE entry=34035;
 DELETE FROM scripted_event_id WHERE id=9735;
 INSERT INTO scripted_event_id VALUES
 (9735,'event_spell_saronite_barrier');

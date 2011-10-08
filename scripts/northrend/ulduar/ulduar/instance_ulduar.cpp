@@ -47,6 +47,9 @@ void instance_ulduar::Initialize()
     memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
     memset(&m_auiHardBoss, 0, sizeof(m_auiHardBoss));
     memset(&m_auiUlduarKeepers, 0, sizeof(m_auiUlduarKeepers));
+
+    for (uint8 i = 0; i < MAX_SPECIAL_ACHIEV_CRITS; ++i)
+        m_abAchievCriteria[i] = false;
 }
 
 bool instance_ulduar::IsEncounterInProgress() const
@@ -301,6 +304,11 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
             break;
         case TYPE_AURIAYA:
             m_auiEncounter[uiType] = uiData;
+            if (uiData == IN_PROGRESS)
+            {
+                SetSpecialAchievementCriteria(TYPE_ACHIEV_CAT_LADY, true);
+                SetSpecialAchievementCriteria(TYPE_ACHIEV_NINE_LIVES, false);
+            }
             break;
         // Keepers
         case TYPE_MIMIRON:
@@ -525,6 +533,17 @@ void instance_ulduar::SpawnFriendlyKeeper(uint32 uiWho)
     }
 }
 
+void instance_ulduar::OnCreatureDeath(Creature* pCreature)
+{
+    switch(pCreature->GetEntry())
+    {
+        case NPC_SANCTUM_SENTRY:
+            if (GetData(TYPE_AURIAYA) == IN_PROGRESS)
+                SetSpecialAchievementCriteria(TYPE_ACHIEV_CAT_LADY, false);
+            break;
+    }
+}
+
 void instance_ulduar::Load(const char* strIn)
 {
     if (!strIn)
@@ -551,6 +570,12 @@ void instance_ulduar::Load(const char* strIn)
     OUT_LOAD_INST_DATA_COMPLETE;
 }
 
+void instance_ulduar::SetSpecialAchievementCriteria(uint32 uiType, bool bIsMet)
+{
+    if (uiType < MAX_SPECIAL_ACHIEV_CRITS)
+        m_abAchievCriteria[uiType] = bIsMet;
+}
+
 bool instance_ulduar::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/)
 {
     switch (uiCriteriaId)
@@ -558,6 +583,12 @@ bool instance_ulduar::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player c
         case ACHIEV_CRIT_SARONITE_N:
         case ACHIEV_CRIT_SARONITE_H:
             return GetData(TYPE_VEZAX_HARD) == DONE;
+        case ACHIEV_CRIT_CAT_LADY_N:
+        case ACHIEV_CRIT_CAT_LADY_H:
+            return m_abAchievCriteria[TYPE_ACHIEV_CAT_LADY];
+        case ACHIEV_CRIT_NINE_LIVES_N:
+        case ACHIEV_CRIT_NINE_LIVES_H:
+            return m_abAchievCriteria[TYPE_ACHIEV_NINE_LIVES];
 
         default:
             return false;
