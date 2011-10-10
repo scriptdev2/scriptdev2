@@ -408,6 +408,26 @@ enum
     MAX_SUMMON_TURNS            = 10,               // There are about 10 summoned shade waves
 };
 
+static const DialogueEntry aIntroDialogue[] =
+{
+    {NPC_REMULOS,           0,                   14000},        // target player
+    {SAY_REMULOS_INTRO_4,   NPC_REMULOS,         12000},
+    {SAY_REMULOS_INTRO_5,   NPC_REMULOS,         5000},
+    {SPELL_CONJURE_RIFT,    0,                   13000},        // conjure rift spell
+    {SAY_ERANIKUS_SPAWN,    NPC_ERANIKUS_TYRANT, 11000},
+    {SAY_REMULOS_TAUNT_1,   NPC_REMULOS,         5000},
+    {EMOTE_ERANIKUS_LAUGH,  NPC_ERANIKUS_TYRANT, 3000},
+    {SAY_ERANIKUS_TAUNT_2,  NPC_ERANIKUS_TYRANT, 10000},
+    {SAY_REMULOS_TAUNT_3,   NPC_REMULOS,         12000},
+    {SAY_ERANIKUS_TAUNT_4,  NPC_ERANIKUS_TYRANT, 6000},
+    {EMOTE_ERANIKUS_ATTACK, NPC_ERANIKUS_TYRANT, 7000},
+    {NPC_ERANIKUS_TYRANT,   0,                   0},            // target player - restart the escort and move Eranikus above the village
+    {SAY_REMULOS_DEFEND_2,  NPC_REMULOS,         6000},         // face Eranikus
+    {SAY_ERANIKUS_SHADOWS,  NPC_ERANIKUS_TYRANT, 4000},
+    {SAY_REMULOS_DEFEND_3,  NPC_REMULOS,         0},
+    {0, 0, 0},
+};
+
 struct EventLocations
 {
     float m_fX, m_fY, m_fZ, m_fO;
@@ -441,9 +461,13 @@ static EventLocations aShadowsLocations[] =
     {7963.00f, -2492.03f, 487.84f}
 };
 
-struct MANGOS_DLL_DECL npc_keeper_remulosAI : public npc_escortAI
+struct MANGOS_DLL_DECL npc_keeper_remulosAI : public npc_escortAI, private DialogueHelper
 {
-    npc_keeper_remulosAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
+    npc_keeper_remulosAI(Creature* pCreature) : npc_escortAI(pCreature),
+        DialogueHelper(aIntroDialogue)
+    {
+        Reset();
+    }
 
     uint32 m_uiHealTimer;
     uint32 m_uiStarfireTimer;
@@ -536,70 +560,60 @@ struct MANGOS_DLL_DECL npc_keeper_remulosAI : public npc_escortAI
                 DoScriptText(SAY_REMULOS_INTRO_2, m_creature);
                 break;
             case 13:
+                StartNextDialogueText(NPC_REMULOS);
+                SetEscortPaused(true);
+                break;
+            case 17:
+                StartNextDialogueText(SAY_REMULOS_DEFEND_2);
+                SetEscortPaused(true);
+                break;
+            case 18:
+                SetEscortPaused(true);
+                break;
+        }
+    }
+
+    Creature* GetSpeakerByEntry(uint32 uiEntry)
+    {
+        switch (uiEntry)
+        {
+            case NPC_REMULOS:         return m_creature;
+            case NPC_ERANIKUS_TYRANT: return m_creature->GetMap()->GetCreature(m_eranikusGuid);
+
+            default:
+                return NULL;
+        }
+    }
+
+    void JustDidDialogueStep(int32 iEntry)
+    {
+        switch(iEntry)
+        {
+            case NPC_REMULOS:
                 if (Player* pPlayer = GetPlayerForEscort())
                     DoScriptText(SAY_REMULOS_INTRO_3, m_creature, pPlayer);
                 break;
-            case 14:
-                DoScriptText(SAY_REMULOS_INTRO_4, m_creature);
-                break;
-            case 15:
-                DoScriptText(SAY_REMULOS_INTRO_5, m_creature);
-                break;
-            case 16:
+            case SPELL_CONJURE_RIFT:
                 DoCastSpellIfCan(m_creature, SPELL_CONJURE_RIFT);
                 break;
-            case 17:
-                if (Creature* pEranikus = m_creature->GetMap()->GetCreature(m_eranikusGuid))
-                {
-                    // This big yellow emote was removed at some point in WotLK
-                    //DoScriptText(EMOTE_SUMMON_ERANIKUS, pEranikus);
-                    DoScriptText(SAY_ERANIKUS_SPAWN, pEranikus);
-                }
+            case SAY_ERANIKUS_SPAWN:
+                // This big yellow emote was removed at some point in WotLK
+                //DoScriptText(EMOTE_SUMMON_ERANIKUS, pEranikus);
                 break;
-            case 18:
-                DoScriptText(SAY_REMULOS_TAUNT_1, m_creature);
-                break;
-            case 19:
-                if (Creature* pEranikus = m_creature->GetMap()->GetCreature(m_eranikusGuid))
-                    DoScriptText(EMOTE_ERANIKUS_LAUGH, pEranikus);
-                break;
-            case 20:
-                if (Creature* pEranikus = m_creature->GetMap()->GetCreature(m_eranikusGuid))
-                    DoScriptText(SAY_ERANIKUS_TAUNT_2, pEranikus);
-                break;
-            case 21:
-                DoScriptText(SAY_REMULOS_TAUNT_3, m_creature);
-                break;
-            case 22:
-                if (Creature* pEranikus = m_creature->GetMap()->GetCreature(m_eranikusGuid))
-                    DoScriptText(SAY_ERANIKUS_TAUNT_4, pEranikus);
-                break;
-            case 23:
-                if (Creature* pEranikus = m_creature->GetMap()->GetCreature(m_eranikusGuid))
-                    DoScriptText(EMOTE_ERANIKUS_ATTACK, pEranikus);
-                break;
-            case 24:
+            case NPC_ERANIKUS_TYRANT:
                 if (Player* pPlayer = GetPlayerForEscort())
                     DoScriptText(SAY_REMULOS_DEFEND_1, m_creature, pPlayer);
                 if (Creature* pEranikus = m_creature->GetMap()->GetCreature(m_eranikusGuid))
                     pEranikus->GetMotionMaster()->MovePoint(POINT_ID_ERANIKUS_FLIGHT, aEranikusLocations[1].m_fX, aEranikusLocations[1].m_fY, aEranikusLocations[1].m_fZ);
+                SetEscortPaused(false);
                 break;
-            case 28:
-                DoScriptText(SAY_REMULOS_DEFEND_2, m_creature);
+            case SAY_REMULOS_DEFEND_2:
                 if (Creature* pEranikus = m_creature->GetMap()->GetCreature(m_eranikusGuid))
                     m_creature->SetFacingToObject(pEranikus);
                 break;
-            case 29:
-                if (Creature* pEranikus = m_creature->GetMap()->GetCreature(m_eranikusGuid))
-                    DoScriptText(SAY_ERANIKUS_SHADOWS, pEranikus);
-                break;
-            case 30:
-                DoScriptText(SAY_REMULOS_DEFEND_3, m_creature);
+            case SAY_REMULOS_DEFEND_3:
                 SetEscortPaused(true);
                 m_uiShadesummonTimer = 5000;
-                break;
-            case 31:
-                SetEscortPaused(true);
                 break;
         }
     }
@@ -614,6 +628,8 @@ struct MANGOS_DLL_DECL npc_keeper_remulosAI : public npc_escortAI
 
     void UpdateEscortAI(const uint32 uiDiff)
     {
+        DialogueUpdate(uiDiff);
+
         if (m_uiOutroTimer)
         {
             if (m_uiOutroTimer <= uiDiff)
