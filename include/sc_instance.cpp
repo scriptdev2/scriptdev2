@@ -271,16 +271,19 @@ void DialogueHelper::DoNextDialogueStep()
     }
 
     // Simulate Case
-    if (m_bCanSimulate && m_pInstance && uiSpeakerEntry && iTextEntry < 0)
-        m_pInstance->DoOrSimulateScriptTextForThisInstance(iTextEntry, uiSpeakerEntry);
-    else
+    if (uiSpeakerEntry && iTextEntry < 0)
     {
-        // Get Speaker
-        Creature* pSpeaker = NULL;
-        if (m_pInstance && uiSpeakerEntry)
-            pSpeaker = m_pInstance->GetSingleCreatureFromStorage(uiSpeakerEntry);
+        // Use Speaker if directly provided
+        Creature* pSpeaker = GetSpeakerByEntry(uiSpeakerEntry);
+        if (m_pInstance && !pSpeaker)                       // Get Speaker from instance
+        {
+            if (m_bCanSimulate)                             // Simulate case
+                m_pInstance->DoOrSimulateScriptTextForThisInstance(iTextEntry, uiSpeakerEntry);
+            else
+                pSpeaker = m_pInstance->GetSingleCreatureFromStorage(uiSpeakerEntry);
+        }
 
-        if (pSpeaker && iTextEntry  < 0)
+        if (pSpeaker)
             DoScriptText(iTextEntry, pSpeaker);
     }
 
