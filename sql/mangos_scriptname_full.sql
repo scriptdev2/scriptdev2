@@ -707,6 +707,9 @@ UPDATE creature_template SET ScriptName='npc_silvermoon_harry' WHERE entry=24539
 /* ICECROWN CITADEL */
 /*  */
 
+/* ICECROWN CITADEL */
+UPDATE creature_template SET ScriptName='boss_festergut' WHERE entry=36626;
+
 /* FORGE OF SOULS */
 UPDATE creature_template SET ScriptName='boss_bronjahm' WHERE entry=36497;
 UPDATE creature_template SET ScriptName='npc_corrupted_soul_fragment' WHERE entry=36535;
