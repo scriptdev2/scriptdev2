@@ -1015,6 +1015,8 @@ UPDATE creature_template SET ScriptName='npc_vekjik' WHERE entry=28315;
 /* SILITHUS */
 UPDATE creature_template SET ScriptName='npc_highlord_demitrian' WHERE entry=14347;
 UPDATE creature_template SET ScriptName='npcs_rutgar_and_frankal' WHERE entry IN (15170,15171);
+UPDATE creature_template SET ScriptName='npc_anachronos_the_ancient' WHERE entry=15381;
+UPDATE gameobject_template SET ScriptName='go_crystalline_tear' WHERE entry=180633;
 
 /* SILVERMOON */
 UPDATE creature_template SET ScriptName='npc_blood_knight_stillblade' WHERE entry=17768;
