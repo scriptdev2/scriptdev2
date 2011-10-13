@@ -192,8 +192,22 @@ void instance_trial_of_the_crusader::OnCreatureCreate(Creature* pCreature)
 
 void instance_trial_of_the_crusader::OnObjectCreate(GameObject* pGo)
 {
-    if (pGo->GetEntry() == GO_COLISEUM_FLOOR)
-        m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
+    switch (pGo->GetEntry())
+    {
+        case GO_COLISEUM_FLOOR:
+            if (m_auiEncounter[TYPE_TWIN_VALKYR] == DONE)
+            {
+                pGo->SetDisplayId(DISPLAYID_DESTROYED_FLOOR);
+                pGo->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK_10 | GO_FLAG_NODESPAWN);
+                pGo->SetGoState(GO_STATE_ACTIVE);
+            }
+            break;
+        case GO_MAIN_GATE:
+            break;
+        default:
+            return;
+    }
+    m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
 }
 
 void instance_trial_of_the_crusader::OnPlayerEnter(Player* pPlayer)
