@@ -1,4 +1,3 @@
-
 From the first week you should have learnt how to use Git to manage your source code
 
 In this week we will start to look at the basic parts of actual boss scripting.
@@ -224,7 +223,7 @@ Here we tell the constructor to require two parameters, one of type Point, and o
 <3> Here we set the internal values of the class to the parameters given in the constructor
 <4> This is the default function to return the area of the geometric shape
 +
-The visual keyword is there, to mark this function to be overwritten by subclasses
+The virtual keyword is there, to mark this function to be overwritten by subclasses
 
 <5> These are two member variables for the class.
 +
