@@ -48,6 +48,11 @@ struct MANGOS_DLL_DECL boss_festergutAI : public ScriptedAI
     void Reset()
     {
     }
+
+    void Aggro(Unit* pWho)
+    {
+        DoScriptText(SAY_AGGRO, m_creature);
+    }
 };
 
 CreatureAI* GetAI_boss_festergut(Creature* pCreature)
