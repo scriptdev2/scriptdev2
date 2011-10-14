@@ -1,0 +1,23 @@
+Hi,
+
+I made 2 structograms about the UpdateAI of the boss festergut.
+I hope it will give you on a simple way a overview about what the boss do.
+
+### UpdateAI
+
+Basic structogram about the UpdateAI from festergut:
+http://filebeam.com/989245ce17458b524896e4baf40f2a29.jpg)
+
+After you see this, you may want to see more detail.
+To satisfy this, you can look at the second structogram:
+
+More detailed structogram about the UpdateAI of Festergut:
+http://filebeam.com/148c8edc1dd7da75c5287128ae19b57d.jpg
+
+
+### ScriptedAI
+
+After you know how the UpdateAI should look, you have to integrate it in the ScriptedAI.
+
+The structure of the ScriptedAI is shown in the following structogram:
+http://filebeam.com/d249e442935fb2c53a5e0c624af4eb92.jpg
