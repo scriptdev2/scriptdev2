@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Tanaris
 SD%Complete: 80
-SDComment: Quest support: 648, 1560, 2954, 4005, 10277, 10279(Special flight path). Noggenfogger vendor
+SDComment: Quest support: 648, 1560, 2954, 4005, 10277. Noggenfogger vendor
 SDCategory: Tanaris
 EndScriptData */
 
@@ -26,7 +26,6 @@ mob_aquementas
 npc_custodian_of_time
 npc_marin_noggenfogger
 npc_oox17tn
-npc_steward_of_time
 npc_stone_watcher_of_norgannon
 npc_tooga
 EndContentData */
@@ -338,44 +337,6 @@ bool QuestAccept_npc_oox17tn(Player* pPlayer, Creature* pCreature, const Quest* 
 }
 
 /*######
-## npc_steward_of_time
-######*/
-
-#define GOSSIP_ITEM_FLIGHT  "Please take me to the master's lair."
-
-bool GossipHello_npc_steward_of_time(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
-
-    if (pPlayer->GetQuestStatus(10279) == QUEST_STATUS_INCOMPLETE || pPlayer->GetQuestRewardStatus(10279))
-    {
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_FLIGHT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-        pPlayer->SEND_GOSSIP_MENU(9978, pCreature->GetObjectGuid());
-    }
-    else
-        pPlayer->SEND_GOSSIP_MENU(9977, pCreature->GetObjectGuid());
-
-    return true;
-}
-
-bool QuestAccept_npc_steward_of_time(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
-{
-    if (pQuest->GetQuestId() == 10279)                      //Quest: To The Master's Lair
-        pPlayer->CastSpell(pPlayer,34891,true);             //(Flight through Caverns)
-
-    return false;
-}
-
-bool GossipSelect_npc_steward_of_time(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)
-        pPlayer->CastSpell(pPlayer,34891,true);             //(Flight through Caverns)
-
-    return true;
-}
-
-/*######
 ## npc_stone_watcher_of_norgannon
 ######*/
 
@@ -592,46 +553,39 @@ bool QuestAccept_npc_tooga(Player* pPlayer, Creature* pCreature, const Quest* pQ
 
 void AddSC_tanaris()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "mob_aquementas";
-    newscript->GetAI = &GetAI_mob_aquementas;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_aquementas";
+    pNewScript->GetAI = &GetAI_mob_aquementas;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_custodian_of_time";
-    newscript->GetAI = &GetAI_npc_custodian_of_time;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_custodian_of_time";
+    pNewScript->GetAI = &GetAI_npc_custodian_of_time;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_marin_noggenfogger";
-    newscript->pGossipHello =  &GossipHello_npc_marin_noggenfogger;
-    newscript->pGossipSelect = &GossipSelect_npc_marin_noggenfogger;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_marin_noggenfogger";
+    pNewScript->pGossipHello =  &GossipHello_npc_marin_noggenfogger;
+    pNewScript->pGossipSelect = &GossipSelect_npc_marin_noggenfogger;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_oox17tn";
-    newscript->GetAI = &GetAI_npc_oox17tn;
-    newscript->pQuestAcceptNPC = &QuestAccept_npc_oox17tn;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_oox17tn";
+    pNewScript->GetAI = &GetAI_npc_oox17tn;
+    pNewScript->pQuestAcceptNPC = &QuestAccept_npc_oox17tn;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_steward_of_time";
-    newscript->pGossipHello =  &GossipHello_npc_steward_of_time;
-    newscript->pGossipSelect = &GossipSelect_npc_steward_of_time;
-    newscript->pQuestAcceptNPC =  &QuestAccept_npc_steward_of_time;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_stone_watcher_of_norgannon";
+    pNewScript->pGossipHello =  &GossipHello_npc_stone_watcher_of_norgannon;
+    pNewScript->pGossipSelect = &GossipSelect_npc_stone_watcher_of_norgannon;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_stone_watcher_of_norgannon";
-    newscript->pGossipHello =  &GossipHello_npc_stone_watcher_of_norgannon;
-    newscript->pGossipSelect = &GossipSelect_npc_stone_watcher_of_norgannon;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_tooga";
-    newscript->GetAI = &GetAI_npc_tooga;
-    newscript->pQuestAcceptNPC = &QuestAccept_npc_tooga;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_tooga";
+    pNewScript->GetAI = &GetAI_npc_tooga;
+    pNewScript->pQuestAcceptNPC = &QuestAccept_npc_tooga;
+    pNewScript->RegisterSelf();
 }

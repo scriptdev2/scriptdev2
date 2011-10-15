@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Netherstorm
 SD%Complete: 80
-SDComment: Quest support: 10438, 10652 (special flight paths), 10299, 10321, 10322, 10323, 10329, 10330, 10337, 10338, 10365(Shutting Down Manaforge), 10198, 10191, 10924
+SDComment: Quest support: 10438, 10299, 10321, 10322, 10323, 10329, 10330, 10337, 10338, 10365(Shutting Down Manaforge), 10198, 10191, 10924
 SDCategory: Netherstorm
 EndScriptData */
 
@@ -26,7 +26,6 @@ npc_manaforge_control_console
 go_manaforge_control_console
 npc_commander_dawnforge
 npc_protectorate_nether_drake
-npc_veronia
 npc_bessy
 npc_maxx_a_million
 EndContentData */
@@ -653,42 +652,6 @@ bool GossipSelect_npc_protectorate_nether_drake(Player* pPlayer, Creature* pCrea
 }
 
 /*######
-## npc_veronia
-######*/
-
-enum
-{
-    QUEST_BEHIND_ENEMY_LINES = 10652,
-    SPELL_STEALTH_FLIGHT     = 34905
-};
-
-#define GOSSIP_ITEM_FLY_CORUU  "Fly me to Manaforge Coruu please"
-
-bool GossipHello_npc_veronia(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
-
-    // Behind Enemy Lines
-    if (pPlayer->GetQuestStatus(QUEST_BEHIND_ENEMY_LINES) && !pPlayer->GetQuestRewardStatus(QUEST_BEHIND_ENEMY_LINES))
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_FLY_CORUU, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
-
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-
-    return true;
-}
-
-bool GossipSelect_npc_veronia(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_INFO_DEF)
-    {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        pPlayer->CastSpell(pPlayer, SPELL_STEALTH_FLIGHT, true);//TaxiPath 606
-    }
-    return true;
-}
-
-/*######
 ## npc_bessy
 ######*/
 
@@ -981,11 +944,6 @@ void AddSC_netherstorm()
     pNewScript->pGossipSelect = &GossipSelect_npc_protectorate_nether_drake;
     pNewScript->RegisterSelf();
 
-    pNewScript = new Script;
-    pNewScript->Name = "npc_veronia";
-    pNewScript->pGossipHello = &GossipHello_npc_veronia;
-    pNewScript->pGossipSelect = &GossipSelect_npc_veronia;
-    pNewScript->RegisterSelf();
 
     pNewScript = new Script;
     pNewScript->Name = "npc_bessy";

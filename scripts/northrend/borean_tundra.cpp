@@ -17,175 +17,19 @@
 /* ScriptData
 SDName: Borean_Tundra
 SD%Complete: 100
-SDComment: Quest support: 11708, 11692, 11961, 11865. Taxi vendors. 11570
+SDComment: Quest support: 11865, 11728, 11897, 11570
 SDCategory: Borean Tundra
 EndScriptData */
 
 /* ContentData
-npc_fizzcrank_fullthrottle
-npc_iruk
-npc_kara_thricestar
 npc_nesingwary_trapper
 go_caribou_trap
 npc_sinkhole_kill_credit
-npc_surristrasz
-npc_tiare
 npc_lurgglbr
 EndContentData */
 
 #include "precompiled.h"
 #include "escort_ai.h"
-
-/*######
-## npc_fizzcrank_fullthrottle
-######*/
-
-#define GOSSIP_ITEM_GO_ON   "Go on."
-#define GOSSIP_ITEM_TELL_ME "Tell me what's going on out here, Fizzcrank."
-
-enum
-{
-    GOSSIP_TEXTID_FIZZCRANK1    = 12456,
-    GOSSIP_TEXTID_FIZZCRANK2    = 12457,
-    GOSSIP_TEXTID_FIZZCRANK3    = 12458,
-    GOSSIP_TEXTID_FIZZCRANK4    = 12459,
-    GOSSIP_TEXTID_FIZZCRANK5    = 12460,
-    GOSSIP_TEXTID_FIZZCRANK6    = 12461,
-    GOSSIP_TEXTID_FIZZCRANK7    = 12462,
-    GOSSIP_TEXTID_FIZZCRANK8    = 12463,
-    GOSSIP_TEXTID_FIZZCRANK9    = 12464,
-
-    QUEST_THE_MECHAGNOMES       = 11708
-};
-
-bool GossipHello_npc_fizzcrank_fullthrottle(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
-
-    if (pPlayer->GetQuestStatus(QUEST_THE_MECHAGNOMES) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TELL_ME, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-    return true;
-}
-
-bool GossipSelect_npc_fizzcrank_fullthrottle(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    switch(uiAction)
-    {
-        case GOSSIP_ACTION_INFO_DEF+1:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_GO_ON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_FIZZCRANK1, pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+2:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_GO_ON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_FIZZCRANK2, pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+3:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_GO_ON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_FIZZCRANK3, pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+4:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_GO_ON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_FIZZCRANK4, pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+5:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_GO_ON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_FIZZCRANK5, pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+6:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_GO_ON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_FIZZCRANK6, pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+7:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_GO_ON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 8);
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_FIZZCRANK7, pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+8:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_GO_ON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 9);
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_FIZZCRANK8, pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+9:
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_FIZZCRANK9, pCreature->GetObjectGuid());
-            pPlayer->AreaExploredOrEventHappens(QUEST_THE_MECHAGNOMES);
-            break;
-    }
-    return true;
-}
-
-/*######
-## npc_iruk
-######*/
-
-#define GOSSIP_ITEM_IRUK        "<Search corpse for Issliruk's Totem.>"
-
-enum
-{
-    QUEST_SPIRITS_WATCH_OVER_US     = 11961,
-    SPELL_CREATE_TOTEM              = 46816
-};
-
-bool GossipHello_npc_iruk(Player* pPlayer, Creature* pCreature)
-{
-    if (pPlayer->GetQuestStatus(QUEST_SPIRITS_WATCH_OVER_US) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_IRUK, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-    return true;
-}
-
-bool GossipSelect_npc_iruk(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)
-    {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        pPlayer->CastSpell(pPlayer,SPELL_CREATE_TOTEM,true);
-    }
-
-    return true;
-}
-
-/*######
-## npc_kara_thricestar
-######*/
-
-#define GOSSIP_ITEM_THRICESTAR1      "Do you think I could take a ride on one of those flying machines?"
-#define GOSSIP_ITEM_THRICESTAR2      "Kara, I need to be flown out the Dens of Dying to find Bixie."
-
-enum
-{
-    QUEST_CHECK_IN_WITH_BIXIE       = 11692,
-    SPELL_FIZZCRANK_AIRSTRIP        = 51446
-};
-
-bool GossipHello_npc_kara_thricestar(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isTaxi())
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, GOSSIP_ITEM_THRICESTAR1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-
-    if (pPlayer->GetQuestStatus(QUEST_CHECK_IN_WITH_BIXIE) == QUEST_STATUS_COMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_THRICESTAR2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-    return true;
-}
-
-bool GossipSelect_npc_kara_thricestar(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    switch(uiAction)
-    {
-        case GOSSIP_ACTION_INFO_DEF + 1:
-            pPlayer->GetSession()->SendTaxiMenu(pCreature);
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 2:
-            pPlayer->CLOSE_GOSSIP_MENU();
-            pPlayer->CastSpell(pPlayer, SPELL_FIZZCRANK_AIRSTRIP, false);
-            break;
-    }
-
-    return true;
-}
 
 /*######
 ## npc_nesingwary_trapper
@@ -533,77 +377,6 @@ CreatureAI* GetAI_npc_sinkhole_kill_credit(Creature* pCreature)
 }
 
 /*######
-## npc_surristrasz
-######*/
-
-#define GOSSIP_ITEM_FREE_FLIGHT "I'd like passage to the Transitus Shield."
-#define GOSSIP_ITEM_FLIGHT      "May I use a drake to fly elsewhere?"
-
-enum
-{
-    SPELL_ABMER_TO_COLDARRA     = 46064
-};
-
-bool GossipHello_npc_surristrasz(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
-
-    if (pCreature->isTaxi())
-    {
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_FREE_FLIGHT, GOSSIP_SENDER_MAIN, GOSSIP_OPTION_GOSSIP);
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TAXI, GOSSIP_ITEM_FLIGHT, GOSSIP_SENDER_MAIN, GOSSIP_OPTION_TAXIVENDOR);
-    }
-
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-    return true;
-}
-
-bool GossipSelect_npc_surristrasz(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_OPTION_GOSSIP)
-    {
-        pPlayer->CLOSE_GOSSIP_MENU();
-
-        //TaxiPath 795 (amber to coldarra)
-        pPlayer->CastSpell(pPlayer, SPELL_ABMER_TO_COLDARRA, true);
-    }
-
-    if (uiAction == GOSSIP_OPTION_TAXIVENDOR)
-        pPlayer->GetSession()->SendTaxiMenu(pCreature);
-
-    return true;
-}
-
-/*######
-## npc_tiare
-######*/
-
-#define GOSSIP_ITEM_TELEPORT    "Teleport me to Amber Ledge, please."
-
-enum
-{
-    SPELL_TELEPORT_COLDARRA     = 50135
-};
-
-bool GossipHello_npc_tiare(Player* pPlayer, Creature* pCreature)
-{
-    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TELEPORT, GOSSIP_SENDER_MAIN, GOSSIP_OPTION_GOSSIP);
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-    return true;
-}
-
-bool GossipSelect_npc_tiare(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_OPTION_GOSSIP)
-    {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        pPlayer->CastSpell(pPlayer, SPELL_TELEPORT_COLDARRA, true);
-    }
-    return true;
-}
-
-/*######
 ## npc_lurgglbr
 ######*/
 
@@ -749,24 +522,6 @@ void AddSC_borean_tundra()
     Script* pNewScript;
 
     pNewScript = new Script;
-    pNewScript->Name = "npc_fizzcrank_fullthrottle";
-    pNewScript->pGossipHello = &GossipHello_npc_fizzcrank_fullthrottle;
-    pNewScript->pGossipSelect = &GossipSelect_npc_fizzcrank_fullthrottle;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_iruk";
-    pNewScript->pGossipHello = &GossipHello_npc_iruk;
-    pNewScript->pGossipSelect = &GossipSelect_npc_iruk;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_kara_thricestar";
-    pNewScript->pGossipHello = &GossipHello_npc_kara_thricestar;
-    pNewScript->pGossipSelect = &GossipSelect_npc_kara_thricestar;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
     pNewScript->Name = "npc_nesingwary_trapper";
     pNewScript->GetAI = &GetAI_npc_nesingwary_trapper;
     pNewScript->RegisterSelf();
@@ -786,18 +541,6 @@ void AddSC_borean_tundra()
     pNewScript = new Script;
     pNewScript->Name = "npc_sinkhole_kill_credit";
     pNewScript->GetAI = &GetAI_npc_sinkhole_kill_credit;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_surristrasz";
-    pNewScript->pGossipHello = &GossipHello_npc_surristrasz;
-    pNewScript->pGossipSelect = &GossipSelect_npc_surristrasz;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_tiare";
-    pNewScript->pGossipHello = &GossipHello_npc_tiare;
-    pNewScript->pGossipSelect = &GossipSelect_npc_tiare;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;

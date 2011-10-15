@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Dustwallow_Marsh
 SD%Complete: 95
-SDComment: Quest support: 558, 1173, 1273, 1324, 11209, 11126, 11142, 11180. Vendor Nat Pagle
+SDComment: Quest support: 558, 1173, 1273, 1324, 11209, 11126, 11180. Vendor Nat Pagle
 SDCategory: Dustwallow Marsh
 EndScriptData */
 
@@ -30,7 +30,6 @@ npc_morokk
 npc_nat_pagle
 npc_ogron
 npc_private_hendel
-npc_cassa_crimsonwing
 EndContentData */
 
 #include "precompiled.h"
@@ -778,37 +777,6 @@ CreatureAI* GetAI_npc_private_hendel(Creature* pCreature)
 }
 
 /*######
-## npc_cassa_crimsonwing
-######*/
-
-enum
-{
-    QUEST_SURVEY_ALCAZ          = 11142,
-    SPELL_ALCAZ_SURVEY          = 42295
-};
-
-#define GOSSIP_RIDE             "<Ride the gryphons to Survey Alcaz Island>"
-
-bool GossipHello_npc_cassa_crimsonwing(Player* pPlayer, Creature* pCreature)
-{
-    if (pPlayer->GetQuestStatus(QUEST_SURVEY_ALCAZ) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_RIDE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-    return true;
-}
-
-bool GossipSelect_npc_cassa_crimsonwing(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
-    {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        pPlayer->CastSpell(pPlayer, SPELL_ALCAZ_SURVEY, false);
-    }
-    return true;
-}
-
-/*######
 ## at_nats_landing
 ######*/
 enum
@@ -881,12 +849,6 @@ void AddSC_dustwallow_marsh()
     pNewScript->Name = "npc_private_hendel";
     pNewScript->GetAI = &GetAI_npc_private_hendel;
     pNewScript->pQuestAcceptNPC = &QuestAccept_npc_private_hendel;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_cassa_crimsonwing";
-    pNewScript->pGossipHello = &GossipHello_npc_cassa_crimsonwing;
-    pNewScript->pGossipSelect = &GossipSelect_npc_cassa_crimsonwing;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;

@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Nagrand
 SD%Complete: 90
-SDComment: Quest support: 9868, 9918, 9991, 10044, 10085, 10107, 10108, 10172, 10646. TextId's unknown for altruis_the_sufferer and greatmother_geyah (npc_text)
+SDComment: Quest support: 9868, 9918, 9991, 10044, 10085, 10172, 10646. TextId's unknown for altruis_the_sufferer and greatmother_geyah (npc_text)
 SDCategory: Nagrand
 EndScriptData */
 
@@ -25,7 +25,6 @@ EndScriptData */
 mob_lump
 npc_altruis_the_sufferer
 npc_greatmother_geyah
-npc_lantresor_of_the_blade
 npc_maghar_captive
 npc_creditmarker_visit_with_ancestors
 EndContentData */
@@ -324,66 +323,6 @@ bool GossipSelect_npc_greatmother_geyah(Player* pPlayer, Creature* pCreature, ui
     return true;
 }
 
-/*######
-## npc_lantresor_of_the_blade
-######*/
-
-bool GossipHello_npc_lantresor_of_the_blade(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
-
-    if (pPlayer->GetQuestStatus(10107) == QUEST_STATUS_INCOMPLETE || pPlayer->GetQuestStatus(10108) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "I have killed many of your ogres, Lantresor. I have no fear.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
-
-    pPlayer->SEND_GOSSIP_MENU(9361, pCreature->GetObjectGuid());
-
-    return true;
-}
-
-bool GossipSelect_npc_lantresor_of_the_blade(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    switch(uiAction)
-    {
-        case GOSSIP_ACTION_INFO_DEF:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Should I know? You look like an orc to me.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-            pPlayer->SEND_GOSSIP_MENU(9362, pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+1:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "And the other half?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-            pPlayer->SEND_GOSSIP_MENU(9363, pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+2:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "I have heard of your kind, but I never thought to see the day when I would meet a half-breed.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-            pPlayer->SEND_GOSSIP_MENU(9364, pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+3:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "My apologies. I did not mean to offend. I am here on behalf of my people.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
-            pPlayer->SEND_GOSSIP_MENU(9365, pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+4:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "My people ask that you pull back your Boulderfist ogres and cease all attacks on our territories. In return, we will also pull back our forces.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
-            pPlayer->SEND_GOSSIP_MENU(9366, pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+5:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "We will fight you until the end, then, Lantresor. We will not stand idly by as you pillage our towns and kill our people.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
-            pPlayer->SEND_GOSSIP_MENU(9367, pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+6:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "What do I need to do?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
-            pPlayer->SEND_GOSSIP_MENU(9368, pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+7:
-            pPlayer->SEND_GOSSIP_MENU(9369, pCreature->GetObjectGuid());
-            if (pPlayer->GetQuestStatus(10107) == QUEST_STATUS_INCOMPLETE)
-                pPlayer->AreaExploredOrEventHappens(10107);
-            if (pPlayer->GetQuestStatus(10108) == QUEST_STATUS_INCOMPLETE)
-                pPlayer->AreaExploredOrEventHappens(10108);
-            break;
-    }
-    return true;
-}
-
 /*#####
 ## npc_maghar_captive
 #####*/
@@ -607,12 +546,6 @@ void AddSC_nagrand()
     pNewScript->Name = "npc_greatmother_geyah";
     pNewScript->pGossipHello =  &GossipHello_npc_greatmother_geyah;
     pNewScript->pGossipSelect = &GossipSelect_npc_greatmother_geyah;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_lantresor_of_the_blade";
-    pNewScript->pGossipHello =  &GossipHello_npc_lantresor_of_the_blade;
-    pNewScript->pGossipSelect = &GossipSelect_npc_lantresor_of_the_blade;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;

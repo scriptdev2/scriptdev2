@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Terokkar_Forest
 SD%Complete: 80
-SDComment: Quest support: 9889, 10009, 10873, 10896, 10446/10447, 10852, 10887, 10922, 11096, 11093, 10051, 10052. Skettis->Ogri'la Flight
+SDComment: Quest support: 9889, 10009, 10873, 10896, 10446/10447, 10852, 10887, 10922, 11096, 11093, 10051, 10052.
 SDCategory: Terokkar Forest
 EndScriptData */
 
@@ -32,7 +32,6 @@ npc_hungry_nether_ray
 npc_letoll
 npc_mana_bomb_exp_trigger
 go_mana_bomb
-npc_skyguard_handler_deesak
 npc_slim
 go_veil_skith_cage
 npc_captive_child
@@ -369,23 +368,15 @@ CreatureAI* GetAI_npc_akuno(Creature* pCreature)
 }
 
 /*######
-## npc_floon -- TODO move to EventAI and WorldDB (gossip)
+## npc_floon -- TODO move to EventAI
 ######*/
 
 enum
 {
-    SAY_FLOON_ATTACK        = -1000195,
-
     SPELL_SILENCE           = 6726,
     SPELL_FROSTBOLT         = 9672,
     SPELL_FROST_NOVA        = 11831,
-
-    FACTION_HOSTILE_FL      = 1738,
-    QUEST_CRACK_SKULLS      = 10009
 };
-
-#define GOSSIP_FLOON1       "You owe Sim'salabim money. Hand them over or die!"
-#define GOSSIP_FLOON2       "Hand over the money or die...again!"
 
 struct MANGOS_DLL_DECL npc_floonAI : public ScriptedAI
 {
@@ -440,61 +431,6 @@ struct MANGOS_DLL_DECL npc_floonAI : public ScriptedAI
 CreatureAI* GetAI_npc_floon(Creature* pCreature)
 {
     return new npc_floonAI(pCreature);
-}
-
-bool GossipHello_npc_floon(Player* pPlayer, Creature* pCreature)
-{
-    if (pPlayer->GetQuestStatus(QUEST_CRACK_SKULLS) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_FLOON1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
-
-    pPlayer->SEND_GOSSIP_MENU(9442, pCreature->GetObjectGuid());
-    return true;
-}
-
-bool GossipSelect_npc_floon(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_INFO_DEF)
-    {
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_FLOON2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-        pPlayer->SEND_GOSSIP_MENU(9443, pCreature->GetObjectGuid());
-    }
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
-    {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        pCreature->setFaction(FACTION_HOSTILE_FL);
-        DoScriptText(SAY_FLOON_ATTACK, pCreature, pPlayer);
-        pCreature->AI()->AttackStart(pPlayer);
-    }
-    return true;
-}
-
-/*######
-## npc_skyguard_handler_deesak -- TODO move to WorldDB (gossip)
-######*/
-
-#define GOSSIP_SKYGUARD "Fly me to Ogri'la please"
-
-bool GossipHello_npc_skyguard_handler_deesak(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
-
-    if (pPlayer->GetReputationRank(1031) >= REP_HONORED)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SKYGUARD, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-
-    return true;
-}
-
-bool GossipSelect_npc_skyguard_handler_deesak(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
-    {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        pPlayer->CastSpell(pPlayer,41279,true);               //TaxiPath 705 (Taxi - Skettis to Skyguard Outpost)
-    }
-    return true;
 }
 
 /*######
@@ -1173,8 +1109,6 @@ void AddSC_terokkar_forest()
     pNewScript = new Script;
     pNewScript->Name = "npc_floon";
     pNewScript->GetAI = &GetAI_npc_floon;
-    pNewScript->pGossipHello =  &GossipHello_npc_floon;
-    pNewScript->pGossipSelect = &GossipSelect_npc_floon;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
@@ -1196,12 +1130,6 @@ void AddSC_terokkar_forest()
     pNewScript = new Script;
     pNewScript->Name = "go_mana_bomb";
     pNewScript->pGOUse = &GOUse_go_mana_bomb;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_skyguard_handler_deesak";
-    pNewScript->pGossipHello =  &GossipHello_npc_skyguard_handler_deesak;
-    pNewScript->pGossipSelect = &GossipSelect_npc_skyguard_handler_deesak;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;

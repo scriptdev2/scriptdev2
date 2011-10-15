@@ -23,7 +23,6 @@ EndScriptData */
 
 /* ContentData
 npc_dalaran_guardian_mage
-npc_zirdomi
 EndContentData */
 
 #include "precompiled.h"
@@ -75,51 +74,12 @@ CreatureAI* GetAI_npc_dalaran_guardian_mage(Creature* pCreature)
     return new npc_dalaran_guardian_mageAI(pCreature);
 }
 
-/*######
-## npc_zidormi
-######*/
-
-#define GOSSIP_ITEM_ZIDORMI1    "Take me to the Caverns of Time."
-
-enum
-{
-    SPELL_TELEPORT_COT          = 46343,
-    GOSSIP_TEXTID_ZIDORMI1      = 14066
-};
-
-bool GossipHello_npc_zidormi(Player* pPlayer, Creature* pCreature)
-{
-    if (pPlayer->getLevel() >= 65)
-    {
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_ZIDORMI1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-        pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-    }
-    else
-        pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_ZIDORMI1, pCreature->GetObjectGuid());
-
-    return true;
-}
-
-bool GossipSelect_npc_zidormi(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
-        pPlayer->CastSpell(pPlayer,SPELL_TELEPORT_COT,false);
-
-    return true;
-}
-
 void AddSC_dalaran()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "npc_dalaran_guardian_mage";
-    newscript->GetAI = &GetAI_npc_dalaran_guardian_mage;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_zidormi";
-    newscript->pGossipHello = &GossipHello_npc_zidormi;
-    newscript->pGossipSelect = &GossipSelect_npc_zidormi;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_dalaran_guardian_mage";
+    pNewScript->GetAI = &GetAI_npc_dalaran_guardian_mage;
+    pNewScript->RegisterSelf();
 }

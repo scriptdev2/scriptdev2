@@ -17,19 +17,16 @@
 /* ScriptData
 SDName: Shattrath_City
 SD%Complete: 100
-SDComment: Quest support: 10004, 10009, 10211, 10231. Flask vendors, Teleport to Caverns of Time
+SDComment: Quest support: 10004, 10231. Flask vendors
 SDCategory: Shattrath City
 EndScriptData */
 
 /* ContentData
 npc_dirty_larry
 npc_ishanah
-npc_khadgar
 npc_khadgars_servant
-npc_raliq_the_drunk
 npc_salsalabim
 npc_shattrathflaskvendors
-npc_zephyr
 EndContentData */
 
 #include "precompiled.h"
@@ -259,70 +256,6 @@ CreatureAI* GetAI_npc_dirty_larry(Creature* pCreature)
 }
 
 /*######
-## npc_khadgar
-######*/
-
-enum
-{
-    QUEST_CITY_LIGHT        = 10211,
-};
-
-#define KHADGAR_GOSSIP_1    "I've heard your name spoken only in whispers, mage. Who are you?"
-#define KHADGAR_GOSSIP_2    "Go on, please."
-#define KHADGAR_GOSSIP_3    "I see."
-#define KHADGAR_GOSSIP_4    "What did you do then?"
-#define KHADGAR_GOSSIP_5    "What happened next?"
-#define KHADGAR_GOSSIP_7    "There was something else I wanted to ask you."
-
-bool GossipHello_npc_khadgar(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
-
-    if (pPlayer->GetQuestRewardStatus(QUEST_CITY_LIGHT))
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, KHADGAR_GOSSIP_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-
-    pPlayer->SEND_GOSSIP_MENU(9243, pCreature->GetObjectGuid());
-    return true;
-}
-
-bool GossipSelect_npc_khadgar(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    switch(uiAction)
-    {
-        case GOSSIP_ACTION_INFO_DEF+1:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, KHADGAR_GOSSIP_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-            pPlayer->SEND_GOSSIP_MENU(9876, pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+2:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, KHADGAR_GOSSIP_3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
-            pPlayer->SEND_GOSSIP_MENU(9877, pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+3:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, KHADGAR_GOSSIP_4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
-            pPlayer->SEND_GOSSIP_MENU(9878, pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+4:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, KHADGAR_GOSSIP_5, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
-            pPlayer->SEND_GOSSIP_MENU(9879, pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+5:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, KHADGAR_GOSSIP_3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+6);
-            pPlayer->SEND_GOSSIP_MENU(9880, pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+6:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, KHADGAR_GOSSIP_7, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+7);
-            pPlayer->SEND_GOSSIP_MENU(9881, pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+7:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, KHADGAR_GOSSIP_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-            pPlayer->SEND_GOSSIP_MENU(9243, pCreature->GetObjectGuid());
-            break;
-    }
-    return true;
-}
-
-/*######
 ## npc_khadgars_servant
 ######*/
 
@@ -371,7 +304,9 @@ enum
     NPC_ADYRIA              = 18596,
     NPC_ANCHORITE           = 19142,
     NPC_ARCANIST            = 18547,
-    NPC_HAGGARD             = 19684
+    NPC_HAGGARD             = 19684,
+
+    QUEST_CITY_LIGHT        = 10211
 };
 
 struct MANGOS_DLL_DECL npc_khadgars_servantAI : public npc_escortAI
@@ -612,78 +547,6 @@ CreatureAI* GetAI_npc_khadgars_servant(Creature* pCreature)
 }
 
 /*######
-## npc_raliq_the_drunk
-######*/
-
-enum
-{
-    SPELL_UPPERCUT          = 10966,
-    QUEST_CRACK_SKULLS      = 10009,
-    FACTION_HOSTILE_RD      = 45
-};
-
-#define GOSSIP_RALIQ        "You owe Sim'salabim money. Hand them over or die!"
-
-struct MANGOS_DLL_DECL npc_raliq_the_drunkAI : public ScriptedAI
-{
-    npc_raliq_the_drunkAI(Creature* pCreature) : ScriptedAI(pCreature)
-    {
-        m_uiNormFaction = pCreature->getFaction();
-        Reset();
-    }
-
-    uint32 m_uiNormFaction;
-    uint32 m_uiUppercut_Timer;
-
-    void Reset()
-    {
-        m_uiUppercut_Timer = 5000;
-
-        if (m_creature->getFaction() != m_uiNormFaction)
-            m_creature->setFaction(m_uiNormFaction);
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-            return;
-
-        if (m_uiUppercut_Timer < diff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_UPPERCUT);
-            m_uiUppercut_Timer = 15000;
-        }else m_uiUppercut_Timer -= diff;
-
-        DoMeleeAttackIfReady();
-    }
-};
-
-CreatureAI* GetAI_npc_raliq_the_drunk(Creature* pCreature)
-{
-    return new npc_raliq_the_drunkAI(pCreature);
-}
-
-bool GossipHello_npc_raliq_the_drunk(Player* pPlayer, Creature* pCreature)
-{
-    if (pPlayer->GetQuestStatus(QUEST_CRACK_SKULLS) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_RALIQ, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-
-    pPlayer->SEND_GOSSIP_MENU(9440, pCreature->GetObjectGuid());
-    return true;
-}
-
-bool GossipSelect_npc_raliq_the_drunk(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
-    {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        pCreature->setFaction(FACTION_HOSTILE_RD);
-        pCreature->AI()->AttackStart(pPlayer);
-    }
-    return true;
-}
-
-/*######
 # npc_salsalabim
 ######*/
 
@@ -803,72 +666,31 @@ bool GossipSelect_npc_shattrathflaskvendors(Player* pPlayer, Creature* pCreature
     return true;
 }
 
-/*######
-# npc_zephyr
-######*/
-
-bool GossipHello_npc_zephyr(Player* pPlayer, Creature* pCreature)
-{
-    if (pPlayer->GetReputationRank(989) >= REP_REVERED)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Take me to the Caverns of Time.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-
-    return true;
-}
-
-bool GossipSelect_npc_zephyr(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
-        pPlayer->CastSpell(pPlayer,37778,false);
-
-    return true;
-}
-
 void AddSC_shattrath_city()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "npc_dirty_larry";
-    newscript->GetAI = &GetAI_npc_dirty_larry;
-    newscript->pGossipHello = &GossipHello_npc_dirty_larry;
-    newscript->pGossipSelect = &GossipSelect_npc_dirty_larry;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_dirty_larry";
+    pNewScript->GetAI = &GetAI_npc_dirty_larry;
+    pNewScript->pGossipHello = &GossipHello_npc_dirty_larry;
+    pNewScript->pGossipSelect = &GossipSelect_npc_dirty_larry;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_khadgar";
-    newscript->pGossipHello = &GossipHello_npc_khadgar;
-    newscript->pGossipSelect = &GossipSelect_npc_khadgar;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_khadgars_servant";
+    pNewScript->GetAI = &GetAI_npc_khadgars_servant;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_khadgars_servant";
-    newscript->GetAI = &GetAI_npc_khadgars_servant;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_salsalabim";
+    pNewScript->GetAI = &GetAI_npc_salsalabim;
+    pNewScript->pGossipHello = &GossipHello_npc_salsalabim;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_raliq_the_drunk";
-    newscript->GetAI = &GetAI_npc_raliq_the_drunk;
-    newscript->pGossipHello = &GossipHello_npc_raliq_the_drunk;
-    newscript->pGossipSelect = &GossipSelect_npc_raliq_the_drunk;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_salsalabim";
-    newscript->GetAI = &GetAI_npc_salsalabim;
-    newscript->pGossipHello = &GossipHello_npc_salsalabim;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_shattrathflaskvendors";
-    newscript->pGossipHello = &GossipHello_npc_shattrathflaskvendors;
-    newscript->pGossipSelect = &GossipSelect_npc_shattrathflaskvendors;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_zephyr";
-    newscript->pGossipHello = &GossipHello_npc_zephyr;
-    newscript->pGossipSelect = &GossipSelect_npc_zephyr;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_shattrathflaskvendors";
+    pNewScript->pGossipHello = &GossipHello_npc_shattrathflaskvendors;
+    pNewScript->pGossipSelect = &GossipSelect_npc_shattrathflaskvendors;
+    pNewScript->RegisterSelf();
 }

@@ -159,7 +159,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 
 (-1000194,'I give up! Please don\'t kill me!',0,0,0,0,'unkor SAY_SUBMIT'),
 
-(-1000195,'I choose the third option: KILLING YOU!',0,0,0,0,'floon SAY_FLOON_ATTACK'),
+(-1000195,'REUSE ME',0,0,0,0,'REUSE ME'),
 
 (-1000196,'Belore...',0,0,1,0,'lady_sylvanas SAY_LAMENT_END'),
 (-1000197,'%s kneels down and pick up the amulet.',0,2,1,0,'lady_sylvanas EMOTE_LAMENT_END'),

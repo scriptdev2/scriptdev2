@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Blades_Edge_Mountains
 SD%Complete: 90
-SDComment: Quest support: 10503, 10504, 10556, 10609, 10682, 10980. Ogri'la->Skettis Flight. (npc_daranelle needs bit more work before consider complete)
+SDComment: Quest support: 10503, 10504, 10556, 10609. (npc_daranelle needs bit more work before consider complete)
 SDCategory: Blade's Edge Mountains
 EndScriptData */
 
@@ -25,9 +25,6 @@ EndScriptData */
 mobs_bladespire_ogre
 mobs_nether_drake
 npc_daranelle
-npc_overseer_nuaar
-npc_saikkal_the_elder
-npc_skyguard_handler_irena
 EndContentData */
 
 #include "precompiled.h"
@@ -266,126 +263,25 @@ CreatureAI* GetAI_npc_daranelle(Creature* pCreature)
 }
 
 /*######
-## npc_overseer_nuaar
-######*/
-
-bool GossipHello_npc_overseer_nuaar(Player* pPlayer, Creature* pCreature)
-{
-    if (pPlayer->GetQuestStatus(10682) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Overseer, I am here to negotiate on behalf of the Cenarion Expedition.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-
-    pPlayer->SEND_GOSSIP_MENU(10532, pCreature->GetObjectGuid());
-
-    return true;
-}
-
-bool GossipSelect_npc_overseer_nuaar(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
-    {
-        pPlayer->SEND_GOSSIP_MENU(10533, pCreature->GetObjectGuid());
-        pPlayer->AreaExploredOrEventHappens(10682);
-    }
-    return true;
-}
-
-/*######
-## npc_saikkal_the_elder
-######*/
-
-bool GossipHello_npc_saikkal_the_elder(Player* pPlayer, Creature* pCreature)
-{
-    if (pPlayer->GetQuestStatus(10980) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Yes... yes, it's me.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-
-    pPlayer->SEND_GOSSIP_MENU(10794, pCreature->GetObjectGuid());
-
-    return true;
-}
-
-bool GossipSelect_npc_saikkal_the_elder(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    switch(uiAction)
-    {
-        case GOSSIP_ACTION_INFO_DEF+1:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Yes elder. Tell me more of the book.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-            pPlayer->SEND_GOSSIP_MENU(10795, pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+2:
-            pPlayer->TalkedToCreature(pCreature->GetEntry(), pCreature->GetObjectGuid());
-            pPlayer->SEND_GOSSIP_MENU(10796, pCreature->GetObjectGuid());
-            break;
-    }
-    return true;
-}
-
-/*######
-## npc_skyguard_handler_irena
-######*/
-
-#define GOSSIP_SKYGUARD "Fly me to Skettis please"
-
-bool GossipHello_npc_skyguard_handler_irena(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
-
-    if (pPlayer->GetReputationRank(1031) >= REP_HONORED)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SKYGUARD, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-
-    return true;
-}
-
-bool GossipSelect_npc_skyguard_handler_irena(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
-    {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        pPlayer->CastSpell(pPlayer,41278,true);               //TaxiPath 706
-    }
-    return true;
-}
-
-/*######
 ## AddSC
 ######*/
 
 void AddSC_blades_edge_mountains()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "mobs_bladespire_ogre";
-    newscript->GetAI = &GetAI_mobs_bladespire_ogre;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mobs_bladespire_ogre";
+    pNewScript->GetAI = &GetAI_mobs_bladespire_ogre;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mobs_nether_drake";
-    newscript->GetAI = &GetAI_mobs_nether_drake;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mobs_nether_drake";
+    pNewScript->GetAI = &GetAI_mobs_nether_drake;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_daranelle";
-    newscript->GetAI = &GetAI_npc_daranelle;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_overseer_nuaar";
-    newscript->pGossipHello = &GossipHello_npc_overseer_nuaar;
-    newscript->pGossipSelect = &GossipSelect_npc_overseer_nuaar;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_saikkal_the_elder";
-    newscript->pGossipHello = &GossipHello_npc_saikkal_the_elder;
-    newscript->pGossipSelect = &GossipSelect_npc_saikkal_the_elder;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_skyguard_handler_irena";
-    newscript->pGossipHello =  &GossipHello_npc_skyguard_handler_irena;
-    newscript->pGossipSelect = &GossipSelect_npc_skyguard_handler_irena;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_daranelle";
+    pNewScript->GetAI = &GetAI_npc_daranelle;
+    pNewScript->RegisterSelf();
 }

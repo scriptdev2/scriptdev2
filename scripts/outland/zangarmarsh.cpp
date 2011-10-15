@@ -17,17 +17,14 @@
 /* ScriptData
 SDName: Zangarmarsh
 SD%Complete: 100
-SDComment: Quest support: 9752, 9785, 9803, 10009. Mark Of ... buffs.
+SDComment: Quest support: 9752, 9785, 10009. Mark Of ... buffs.
 SDCategory: Zangarmarsh
 EndScriptData */
 
 /* ContentData
 npcs_ashyen_and_keleth
 npc_cooshcoosh
-npc_elder_kuruti
 npc_kayra_longmane
-npc_mortog_steamhead
-npc_timothy_daniels
 event_stormcrow
 EndContentData */
 
@@ -119,11 +116,7 @@ bool GossipSelect_npcs_ashyen_and_keleth(Player* pPlayer, Creature* pCreature, u
 enum
 {
     SPELL_LIGHTNING_BOLT    = 9532,
-    QUEST_CRACK_SKULLS      = 10009,
-    FACTION_HOSTILE_CO      = 45
 };
-
-#define GOSSIP_COOSH        "You owe Sim'salabim money. Hand them over or die!"
 
 struct MANGOS_DLL_DECL npc_cooshcooshAI : public ScriptedAI
 {
@@ -162,71 +155,6 @@ struct MANGOS_DLL_DECL npc_cooshcooshAI : public ScriptedAI
 CreatureAI* GetAI_npc_cooshcoosh(Creature* pCreature)
 {
     return new npc_cooshcooshAI(pCreature);
-}
-
-bool GossipHello_npc_cooshcoosh(Player* pPlayer, Creature* pCreature)
-{
-    if (pPlayer->GetQuestStatus(QUEST_CRACK_SKULLS) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_COOSH, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
-
-    pPlayer->SEND_GOSSIP_MENU(9441, pCreature->GetObjectGuid());
-    return true;
-}
-
-bool GossipSelect_npc_cooshcoosh(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_INFO_DEF)
-    {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        pCreature->setFaction(FACTION_HOSTILE_CO);
-        pCreature->AI()->AttackStart(pPlayer);
-    }
-    return true;
-}
-
-/*######
-## npc_elder_kuruti
-######*/
-
-#define GOSSIP_ITEM_KUR1 "Offer treat"
-#define GOSSIP_ITEM_KUR2 "Im a messenger for Draenei"
-#define GOSSIP_ITEM_KUR3 "Get message"
-
-bool GossipHello_npc_elder_kuruti(Player* pPlayer, Creature* pCreature)
-{
-    if (pPlayer->GetQuestStatus(9803) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_KUR1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
-
-    pPlayer->SEND_GOSSIP_MENU(9226, pCreature->GetObjectGuid());
-
-    return true;
-}
-
-bool GossipSelect_npc_elder_kuruti(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    switch(uiAction)
-    {
-        case GOSSIP_ACTION_INFO_DEF:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_KUR2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-            pPlayer->SEND_GOSSIP_MENU(9227, pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 1:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_KUR3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-            pPlayer->SEND_GOSSIP_MENU(9229, pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 2:
-        {
-            if (!pPlayer->HasItemCount(24573,1))
-            {
-                if (Item* pItem = pPlayer->StoreNewItemInInventorySlot(24573, 1))
-                    pPlayer->SendNewItem(pItem, 1, true, false);
-            }
-
-            pPlayer->SEND_GOSSIP_MENU(9231, pCreature->GetObjectGuid());
-            break;
-        }
-    }
-    return true;
 }
 
 /*#####
@@ -302,69 +230,6 @@ CreatureAI* GetAI_npc_kayra_longmane(Creature* pCreature)
 }
 
 /*######
-## npc_mortog_steamhead
-######*/
-
-bool GossipHello_npc_mortog_steamhead(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isVendor() && pPlayer->GetReputationRank(942) == REP_EXALTED)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
-
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-
-    return true;
-}
-
-bool GossipSelect_npc_mortog_steamhead(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_TRADE)
-    {
-        pPlayer->SEND_VENDORLIST(pCreature->GetObjectGuid());
-    }
-    return true;
-}
-
-/*######
-## npc_timothy_daniels
-######*/
-
-#define GOSSIP_TIMOTHY_DANIELS_ITEM1    "Specialist, eh? Just what kind of specialist are you, anyway?"
-#define GOSSIP_TEXT_BROWSE_POISONS      "Let me browse your reagents and poison supplies."
-
-enum
-{
-    GOSSIP_TEXTID_TIMOTHY_DANIELS1      = 9239
-};
-
-bool GossipHello_npc_timothy_daniels(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
-
-    if (pCreature->isVendor())
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_POISONS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
-
-    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_TIMOTHY_DANIELS_ITEM1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-    return true;
-}
-
-bool GossipSelect_npc_timothy_daniels(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    switch(uiAction)
-    {
-        case GOSSIP_ACTION_INFO_DEF+1:
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_TIMOTHY_DANIELS1, pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_TRADE:
-            pPlayer->SEND_VENDORLIST(pCreature->GetObjectGuid());
-            break;
-    }
-
-    return true;
-}
-
-/*######
 ## event_stormcrow
 ######*/
 
@@ -387,47 +252,27 @@ bool ProcessEventId_event_taxi_stormcrow(uint32 uiEventId, Object* pSource, Obje
 
 void AddSC_zangarmarsh()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "npcs_ashyen_and_keleth";
-    newscript->pGossipHello =  &GossipHello_npcs_ashyen_and_keleth;
-    newscript->pGossipSelect = &GossipSelect_npcs_ashyen_and_keleth;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npcs_ashyen_and_keleth";
+    pNewScript->pGossipHello =  &GossipHello_npcs_ashyen_and_keleth;
+    pNewScript->pGossipSelect = &GossipSelect_npcs_ashyen_and_keleth;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_cooshcoosh";
-    newscript->GetAI = &GetAI_npc_cooshcoosh;
-    newscript->pGossipHello =  &GossipHello_npc_cooshcoosh;
-    newscript->pGossipSelect = &GossipSelect_npc_cooshcoosh;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_cooshcoosh";
+    pNewScript->GetAI = &GetAI_npc_cooshcoosh;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_elder_kuruti";
-    newscript->pGossipHello =  &GossipHello_npc_elder_kuruti;
-    newscript->pGossipSelect = &GossipSelect_npc_elder_kuruti;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_kayra_longmane";
+    pNewScript->GetAI = &GetAI_npc_kayra_longmane;
+    pNewScript->pQuestAcceptNPC = &QuestAccept_npc_kayra_longmane;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_kayra_longmane";
-    newscript->GetAI = &GetAI_npc_kayra_longmane;
-    newscript->pQuestAcceptNPC = &QuestAccept_npc_kayra_longmane;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_mortog_steamhead";
-    newscript->pGossipHello =  &GossipHello_npc_mortog_steamhead;
-    newscript->pGossipSelect = &GossipSelect_npc_mortog_steamhead;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_timothy_daniels";
-    newscript->pGossipHello =  &GossipHello_npc_timothy_daniels;
-    newscript->pGossipSelect = &GossipSelect_npc_timothy_daniels;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "event_taxi_stormcrow";
-    newscript->pProcessEventId = &ProcessEventId_event_taxi_stormcrow;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "event_taxi_stormcrow";
+    pNewScript->pProcessEventId = &ProcessEventId_event_taxi_stormcrow;
+    pNewScript->RegisterSelf();
 }
