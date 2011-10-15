@@ -569,10 +569,10 @@ CreatureAI* GetAI_boss_kelthuzad(Creature* pCreature)
 
 void AddSC_boss_kelthuzad()
 {
-    Script* NewScript;
+    Script* pNewScript;
 
-    NewScript = new Script;
-    NewScript->Name = "boss_kelthuzad";
-    NewScript->GetAI = &GetAI_boss_kelthuzad;
-    NewScript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_kelthuzad";
+    pNewScript->GetAI = &GetAI_boss_kelthuzad;
+    pNewScript->RegisterSelf();
 }

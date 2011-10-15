@@ -304,17 +304,17 @@ CreatureAI* GetAI_npc_deathstalker_faerleia(Creature* pCreature)
 
 void AddSC_silverpine_forest()
 {
-    Script* newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "npc_deathstalker_erland";
-    newscript->GetAI = &GetAI_npc_deathstalker_erland;
-    newscript->pQuestAcceptNPC = &QuestAccept_npc_deathstalker_erland;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_deathstalker_erland";
+    pNewScript->GetAI = &GetAI_npc_deathstalker_erland;
+    pNewScript->pQuestAcceptNPC = &QuestAccept_npc_deathstalker_erland;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_deathstalker_faerleia";
-    newscript->GetAI = &GetAI_npc_deathstalker_faerleia;
-    newscript->pQuestAcceptNPC = &QuestAccept_npc_deathstalker_faerleia;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_deathstalker_faerleia";
+    pNewScript->GetAI = &GetAI_npc_deathstalker_faerleia;
+    pNewScript->pQuestAcceptNPC = &QuestAccept_npc_deathstalker_faerleia;
+    pNewScript->RegisterSelf();
 }

@@ -379,25 +379,25 @@ CreatureAI* GetAI_boss_sir_zeliek(Creature* pCreature)
 
 void AddSC_boss_four_horsemen()
 {
-    Script* NewScript;
+    Script* pNewScript;
 
-    NewScript = new Script;
-    NewScript->Name = "boss_lady_blaumeux";
-    NewScript->GetAI = &GetAI_boss_lady_blaumeux;
-    NewScript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_lady_blaumeux";
+    pNewScript->GetAI = &GetAI_boss_lady_blaumeux;
+    pNewScript->RegisterSelf();
 
-    NewScript = new Script;
-    NewScript->Name = "boss_rivendare_naxx";
-    NewScript->GetAI = &GetAI_boss_rivendare_naxx;
-    NewScript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_rivendare_naxx";
+    pNewScript->GetAI = &GetAI_boss_rivendare_naxx;
+    pNewScript->RegisterSelf();
 
-    NewScript = new Script;
-    NewScript->Name = "boss_thane_korthazz";
-    NewScript->GetAI = &GetAI_boss_thane_korthazz;
-    NewScript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_thane_korthazz";
+    pNewScript->GetAI = &GetAI_boss_thane_korthazz;
+    pNewScript->RegisterSelf();
 
-    NewScript = new Script;
-    NewScript->Name = "boss_sir_zeliek";
-    NewScript->GetAI = &GetAI_boss_sir_zeliek;
-    NewScript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_sir_zeliek";
+    pNewScript->GetAI = &GetAI_boss_sir_zeliek;
+    pNewScript->RegisterSelf();
 }

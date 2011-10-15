@@ -138,12 +138,12 @@ bool GossipSelect_npc_ragged_john(Player* pPlayer, Creature* pCreature, uint32 u
 
 void AddSC_burning_steppes()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "npc_ragged_john";
-    newscript->GetAI = &GetAI_npc_ragged_john;
-    newscript->pGossipHello =  &GossipHello_npc_ragged_john;
-    newscript->pGossipSelect = &GossipSelect_npc_ragged_john;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_ragged_john";
+    pNewScript->GetAI = &GetAI_npc_ragged_john;
+    pNewScript->pGossipHello =  &GossipHello_npc_ragged_john;
+    pNewScript->pGossipSelect = &GossipSelect_npc_ragged_john;
+    pNewScript->RegisterSelf();
 }

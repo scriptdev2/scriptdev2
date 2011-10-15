@@ -681,24 +681,25 @@ CreatureAI* GetAI_mob_abyssalAI(Creature* pCreature)
 
 void AddSC_boss_magtheridon()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_magtheridon";
-    newscript->GetAI = &GetAI_boss_magtheridon;
-    newscript->RegisterSelf();
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "mob_hellfire_channeler";
-    newscript->GetAI = &GetAI_mob_hellfire_channeler;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_magtheridon";
+    pNewScript->GetAI = &GetAI_boss_magtheridon;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "go_manticron_cube";
-    newscript->pGOUse = &GOUse_go_manticron_cube;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_hellfire_channeler";
+    pNewScript->GetAI = &GetAI_mob_hellfire_channeler;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_abyssal";
-    newscript->GetAI = &GetAI_mob_abyssalAI;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "go_manticron_cube";
+    pNewScript->pGOUse = &GOUse_go_manticron_cube;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "mob_abyssal";
+    pNewScript->GetAI = &GetAI_mob_abyssalAI;
+    pNewScript->RegisterSelf();
 }

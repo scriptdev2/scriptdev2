@@ -188,21 +188,21 @@ bool QuestAccept_npc_calvin_montague(Player* pPlayer, Creature* pCreature, const
 
 void AddSC_tirisfal_glades()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "go_mausoleum_door";
-    newscript->pGOUse = &GOUse_go_mausoleum_door;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "go_mausoleum_door";
+    pNewScript->pGOUse = &GOUse_go_mausoleum_door;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "go_mausoleum_trigger";
-    newscript->pGOUse = &GOUse_go_mausoleum_trigger;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "go_mausoleum_trigger";
+    pNewScript->pGOUse = &GOUse_go_mausoleum_trigger;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_calvin_montague";
-    newscript->GetAI = &GetAI_npc_calvin_montague;
-    newscript->pQuestAcceptNPC = &QuestAccept_npc_calvin_montague;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_calvin_montague";
+    pNewScript->GetAI = &GetAI_npc_calvin_montague;
+    pNewScript->pQuestAcceptNPC = &QuestAccept_npc_calvin_montague;
+    pNewScript->RegisterSelf();
 }

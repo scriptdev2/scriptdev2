@@ -423,15 +423,15 @@ CreatureAI* GetAI_boss_vazruden_herald(Creature* pCreature)
 
 void AddSC_boss_nazan_and_vazruden()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_vazruden";
-    newscript->GetAI = &GetAI_boss_vazruden;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_vazruden";
+    pNewScript->GetAI = &GetAI_boss_vazruden;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "boss_vazruden_herald";
-    newscript->GetAI = &GetAI_boss_vazruden_herald;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_vazruden_herald";
+    pNewScript->GetAI = &GetAI_boss_vazruden_herald;
+    pNewScript->RegisterSelf();
 }

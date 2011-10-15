@@ -944,29 +944,30 @@ CreatureAI* GetAI_npc_enslaved_soul(Creature* pCreature)
 
 void AddSC_boss_reliquary_of_souls()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_reliquary_of_souls";
-    newscript->GetAI = &GetAI_boss_reliquary_of_souls;
-    newscript->RegisterSelf();
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_essence_of_suffering";
-    newscript->GetAI = &GetAI_boss_essence_of_suffering;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_reliquary_of_souls";
+    pNewScript->GetAI = &GetAI_boss_reliquary_of_souls;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "boss_essence_of_desire";
-    newscript->GetAI = &GetAI_boss_essence_of_desire;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_essence_of_suffering";
+    pNewScript->GetAI = &GetAI_boss_essence_of_suffering;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "boss_essence_of_anger";
-    newscript->GetAI = &GetAI_boss_essence_of_anger;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_essence_of_desire";
+    pNewScript->GetAI = &GetAI_boss_essence_of_desire;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_enslaved_soul";
-    newscript->GetAI = &GetAI_npc_enslaved_soul;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_essence_of_anger";
+    pNewScript->GetAI = &GetAI_boss_essence_of_anger;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_enslaved_soul";
+    pNewScript->GetAI = &GetAI_npc_enslaved_soul;
+    pNewScript->RegisterSelf();
 }

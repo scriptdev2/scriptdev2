@@ -303,15 +303,15 @@ CreatureAI* GetAI_mob_soaring_eagle(Creature* pCreature)
 
 void AddSC_boss_akilzon()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_akilzon";
-    newscript->GetAI = &GetAI_boss_akilzon;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_akilzon";
+    pNewScript->GetAI = &GetAI_boss_akilzon;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_soaring_eagle";
-    newscript->GetAI = &GetAI_mob_soaring_eagle;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_soaring_eagle";
+    pNewScript->GetAI = &GetAI_mob_soaring_eagle;
+    pNewScript->RegisterSelf();
 }

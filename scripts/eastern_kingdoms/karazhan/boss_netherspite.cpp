@@ -217,10 +217,10 @@ CreatureAI* GetAI_boss_netherspite(Creature* pCreature)
 
 void AddSC_boss_netherspite()
 {
-    Script* newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_netherspite";
-    newscript->GetAI = &GetAI_boss_netherspite;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_netherspite";
+    pNewScript->GetAI = &GetAI_boss_netherspite;
+    pNewScript->RegisterSelf();
 }

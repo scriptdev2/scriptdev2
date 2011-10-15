@@ -201,22 +201,22 @@ CreatureAI* GetAI_npc_the_scourge_cauldron(Creature* pCreature)
 
 void AddSC_western_plaguelands()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "npcs_dithers_and_arbington";
-    newscript->pGossipHello = &GossipHello_npcs_dithers_and_arbington;
-    newscript->pGossipSelect = &GossipSelect_npcs_dithers_and_arbington;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npcs_dithers_and_arbington";
+    pNewScript->pGossipHello = &GossipHello_npcs_dithers_and_arbington;
+    pNewScript->pGossipSelect = &GossipSelect_npcs_dithers_and_arbington;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_myranda_the_hag";
-    newscript->pGossipHello = &GossipHello_npc_myranda_the_hag;
-    newscript->pGossipSelect = &GossipSelect_npc_myranda_the_hag;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_myranda_the_hag";
+    pNewScript->pGossipHello = &GossipHello_npc_myranda_the_hag;
+    pNewScript->pGossipSelect = &GossipSelect_npc_myranda_the_hag;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_the_scourge_cauldron";
-    newscript->GetAI = &GetAI_npc_the_scourge_cauldron;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_the_scourge_cauldron";
+    pNewScript->GetAI = &GetAI_npc_the_scourge_cauldron;
+    pNewScript->RegisterSelf();
 }

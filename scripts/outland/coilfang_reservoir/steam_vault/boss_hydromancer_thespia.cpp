@@ -180,15 +180,15 @@ CreatureAI* GetAI_mob_coilfang_waterelementalAI(Creature* pCreature)
 
 void AddSC_boss_hydromancer_thespia()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_hydromancer_thespia";
-    newscript->GetAI = &GetAI_boss_thespiaAI;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_hydromancer_thespia";
+    pNewScript->GetAI = &GetAI_boss_thespiaAI;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_coilfang_waterelemental";
-    newscript->GetAI = &GetAI_mob_coilfang_waterelementalAI;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_coilfang_waterelemental";
+    pNewScript->GetAI = &GetAI_mob_coilfang_waterelementalAI;
+    pNewScript->RegisterSelf();
 }

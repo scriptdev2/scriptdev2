@@ -805,40 +805,40 @@ CreatureAI* GetAI_lord_crispin_ference(Creature* pCreature)
 
 void AddSC_boss_moroes()
 {
-    Script* newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_moroes";
-    newscript->GetAI = &GetAI_boss_moroes;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_moroes";
+    pNewScript->GetAI = &GetAI_boss_moroes;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "boss_baroness_dorothea_millstipe";
-    newscript->GetAI = &GetAI_baroness_dorothea_millstipe;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_baroness_dorothea_millstipe";
+    pNewScript->GetAI = &GetAI_baroness_dorothea_millstipe;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "boss_baron_rafe_dreuger";
-    newscript->GetAI = &GetAI_baron_rafe_dreuger;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_baron_rafe_dreuger";
+    pNewScript->GetAI = &GetAI_baron_rafe_dreuger;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "boss_lady_catriona_von_indi";
-    newscript->GetAI = &GetAI_lady_catriona_von_indi;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_lady_catriona_von_indi";
+    pNewScript->GetAI = &GetAI_lady_catriona_von_indi;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "boss_lady_keira_berrybuck";
-    newscript->GetAI = &GetAI_lady_keira_berrybuck;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_lady_keira_berrybuck";
+    pNewScript->GetAI = &GetAI_lady_keira_berrybuck;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "boss_lord_robin_daris";
-    newscript->GetAI = &GetAI_lord_robin_daris;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_lord_robin_daris";
+    pNewScript->GetAI = &GetAI_lord_robin_daris;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "boss_lord_crispin_ference";
-    newscript->GetAI = &GetAI_lord_crispin_ference;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_lord_crispin_ference";
+    pNewScript->GetAI = &GetAI_lord_crispin_ference;
+    pNewScript->RegisterSelf();
 }

@@ -251,24 +251,24 @@ bool GossipSelect_npc_thrall_warchief(Player* pPlayer, Creature* pCreature, uint
 
 void AddSC_orgrimmar()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "npc_neeru_fireblade";
-    newscript->pGossipHello =  &GossipHello_npc_neeru_fireblade;
-    newscript->pGossipSelect = &GossipSelect_npc_neeru_fireblade;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_neeru_fireblade";
+    pNewScript->pGossipHello =  &GossipHello_npc_neeru_fireblade;
+    pNewScript->pGossipSelect = &GossipSelect_npc_neeru_fireblade;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_shenthul";
-    newscript->GetAI = &GetAI_npc_shenthul;
-    newscript->pQuestAcceptNPC =  &QuestAccept_npc_shenthul;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_shenthul";
+    pNewScript->GetAI = &GetAI_npc_shenthul;
+    pNewScript->pQuestAcceptNPC =  &QuestAccept_npc_shenthul;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_thrall_warchief";
-    newscript->GetAI = &GetAI_npc_thrall_warchief;
-    newscript->pGossipHello =  &GossipHello_npc_thrall_warchief;
-    newscript->pGossipSelect = &GossipSelect_npc_thrall_warchief;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_thrall_warchief";
+    pNewScript->GetAI = &GetAI_npc_thrall_warchief;
+    pNewScript->pGossipHello =  &GossipHello_npc_thrall_warchief;
+    pNewScript->pGossipSelect = &GossipSelect_npc_thrall_warchief;
+    pNewScript->RegisterSelf();
 }

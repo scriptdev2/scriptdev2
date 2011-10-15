@@ -81,9 +81,10 @@ CreatureAI* GetAI_boss_quatermasterzigris(Creature* pCreature)
 
 void AddSC_boss_quatermasterzigris()
 {
-    Script* newscript;
-    newscript = new Script;
-    newscript->Name = "quartermaster_zigris";
-    newscript->GetAI = &GetAI_boss_quatermasterzigris;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "quartermaster_zigris";
+    pNewScript->GetAI = &GetAI_boss_quatermasterzigris;
+    pNewScript->RegisterSelf();
 }

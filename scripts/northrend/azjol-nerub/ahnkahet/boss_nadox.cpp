@@ -223,15 +223,15 @@ CreatureAI* GetAI_boss_nadox(Creature* pCreature)
 
 void AddSC_boss_nadox()
 {
-    Script* newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_nadox";
-    newscript->GetAI = &GetAI_boss_nadox;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_nadox";
+    pNewScript->GetAI = &GetAI_boss_nadox;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_ahnkahar_egg";
-    newscript->GetAI = &GetAI_mob_ahnkahar_egg;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_ahnkahar_egg";
+    pNewScript->GetAI = &GetAI_mob_ahnkahar_egg;
+    pNewScript->RegisterSelf();
 }

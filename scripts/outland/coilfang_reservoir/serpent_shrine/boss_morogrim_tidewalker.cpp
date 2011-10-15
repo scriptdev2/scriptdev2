@@ -303,15 +303,15 @@ CreatureAI* GetAI_mob_water_globule(Creature* pCreature)
 
 void AddSC_boss_morogrim_tidewalker()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_morogrim_tidewalker";
-    newscript->GetAI = &GetAI_boss_morogrim_tidewalker;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_morogrim_tidewalker";
+    pNewScript->GetAI = &GetAI_boss_morogrim_tidewalker;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_water_globule";
-    newscript->GetAI = &GetAI_mob_water_globule;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_water_globule";
+    pNewScript->GetAI = &GetAI_mob_water_globule;
+    pNewScript->RegisterSelf();
 }

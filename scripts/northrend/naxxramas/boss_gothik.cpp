@@ -426,15 +426,15 @@ bool EffectDummyCreature_spell_anchor(Unit* pCaster, uint32 uiSpellId, SpellEffe
 
 void AddSC_boss_gothik()
 {
-    Script* newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_gothik";
-    newscript->GetAI = &GetAI_boss_gothik;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_gothik";
+    pNewScript->GetAI = &GetAI_boss_gothik;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "spell_anchor";
-    newscript->pEffectDummyNPC = &EffectDummyCreature_spell_anchor;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "spell_anchor";
+    pNewScript->pEffectDummyNPC = &EffectDummyCreature_spell_anchor;
+    pNewScript->RegisterSelf();
 }

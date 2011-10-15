@@ -168,10 +168,10 @@ CreatureAI* GetAI_boss_ormorok(Creature* pCreature)
 
 void AddSC_boss_ormorok()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_ormorok";
-    newscript->GetAI = &GetAI_boss_ormorok;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_ormorok";
+    pNewScript->GetAI = &GetAI_boss_ormorok;
+    pNewScript->RegisterSelf();
 }

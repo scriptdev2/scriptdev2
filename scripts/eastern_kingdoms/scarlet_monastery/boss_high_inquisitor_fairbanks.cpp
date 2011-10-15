@@ -120,9 +120,10 @@ CreatureAI* GetAI_boss_high_inquisitor_fairbanks(Creature* pCreature)
 
 void AddSC_boss_high_inquisitor_fairbanks()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_high_inquisitor_fairbanks";
-    newscript->GetAI = &GetAI_boss_high_inquisitor_fairbanks;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_high_inquisitor_fairbanks";
+    pNewScript->GetAI = &GetAI_boss_high_inquisitor_fairbanks;
+    pNewScript->RegisterSelf();
 }

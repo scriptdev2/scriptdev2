@@ -598,25 +598,25 @@ CreatureAI* GetAI_boss_kalecgos_humanoid(Creature* pCreature)
 
 void AddSC_boss_kalecgos()
 {
-    Script* newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->GetAI = &GetAI_boss_kalecgos;
-    newscript->Name = "boss_kalecgos";
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->GetAI = &GetAI_boss_kalecgos;
+    pNewScript->Name = "boss_kalecgos";
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->GetAI = &GetAI_boss_sathrovarr;
-    newscript->Name = "boss_sathrovarr";
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->GetAI = &GetAI_boss_sathrovarr;
+    pNewScript->Name = "boss_sathrovarr";
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->GetAI = &GetAI_boss_kalecgos_humanoid;
-    newscript->Name = "boss_kalecgos_humanoid";
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->GetAI = &GetAI_boss_kalecgos_humanoid;
+    pNewScript->Name = "boss_kalecgos_humanoid";
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->pGOUse = &GOUse_go_spectral_rift;
-    newscript->Name = "go_spectral_rift";
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->pGOUse = &GOUse_go_spectral_rift;
+    pNewScript->Name = "go_spectral_rift";
+    pNewScript->RegisterSelf();
 }

@@ -82,10 +82,10 @@ CreatureAI* GetAI_npc_henze_faulk(Creature* pCreature)
 
 void AddSC_elwynn_forest()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "npc_henze_faulk";
-    newscript->GetAI = &GetAI_npc_henze_faulk;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_henze_faulk";
+    pNewScript->GetAI = &GetAI_npc_henze_faulk;
+    pNewScript->RegisterSelf();
 }

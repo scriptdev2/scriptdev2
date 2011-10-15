@@ -497,19 +497,20 @@ CreatureAI* GetAI_boss_teron_gorefiend(Creature* pCreature)
 
 void AddSC_boss_teron_gorefiend()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "mob_doom_blossom";
-    newscript->GetAI = &GetAI_mob_doom_blossom;
-    newscript->RegisterSelf();
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "mob_shadowy_construct";
-    newscript->GetAI = &GetAI_mob_shadowy_construct;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_doom_blossom";
+    pNewScript->GetAI = &GetAI_mob_doom_blossom;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "boss_teron_gorefiend";
-    newscript->GetAI = &GetAI_boss_teron_gorefiend;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_shadowy_construct";
+    pNewScript->GetAI = &GetAI_mob_shadowy_construct;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_teron_gorefiend";
+    pNewScript->GetAI = &GetAI_boss_teron_gorefiend;
+    pNewScript->RegisterSelf();
 }

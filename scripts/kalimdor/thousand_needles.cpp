@@ -369,30 +369,30 @@ bool GossipSelect_npc_plucky_johnson(Player* pPlayer, Creature* pCreature, uint3
 
 void AddSC_thousand_needles()
 {
-    Script* newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "npc_kanati";
-    newscript->GetAI = &GetAI_npc_kanati;
-    newscript->pQuestAcceptNPC = &QuestAccept_npc_kanati;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_kanati";
+    pNewScript->GetAI = &GetAI_npc_kanati;
+    pNewScript->pQuestAcceptNPC = &QuestAccept_npc_kanati;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_lakota_windsong";
-    newscript->GetAI = &GetAI_npc_lakota_windsong;
-    newscript->pQuestAcceptNPC = &QuestAccept_npc_lakota_windsong;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_lakota_windsong";
+    pNewScript->GetAI = &GetAI_npc_lakota_windsong;
+    pNewScript->pQuestAcceptNPC = &QuestAccept_npc_lakota_windsong;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_paoka_swiftmountain";
-    newscript->GetAI = &GetAI_npc_paoka_swiftmountain;
-    newscript->pQuestAcceptNPC = &QuestAccept_npc_paoka_swiftmountain;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_paoka_swiftmountain";
+    pNewScript->GetAI = &GetAI_npc_paoka_swiftmountain;
+    pNewScript->pQuestAcceptNPC = &QuestAccept_npc_paoka_swiftmountain;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_plucky_johnson";
-    newscript->GetAI = &GetAI_npc_plucky_johnson;
-    newscript->pGossipHello = &GossipHello_npc_plucky_johnson;
-    newscript->pGossipSelect = &GossipSelect_npc_plucky_johnson;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_plucky_johnson";
+    pNewScript->GetAI = &GetAI_npc_plucky_johnson;
+    pNewScript->pGossipHello = &GossipHello_npc_plucky_johnson;
+    pNewScript->pGossipSelect = &GossipSelect_npc_plucky_johnson;
+    pNewScript->RegisterSelf();
 }

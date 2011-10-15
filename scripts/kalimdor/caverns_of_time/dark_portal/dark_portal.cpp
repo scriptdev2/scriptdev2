@@ -396,21 +396,21 @@ bool GossipSelect_npc_saat(Player* pPlayer, Creature* pCreature, uint32 uiSender
 
 void AddSC_dark_portal()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "npc_medivh_bm";
-    newscript->GetAI = &GetAI_npc_medivh_bm;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_medivh_bm";
+    pNewScript->GetAI = &GetAI_npc_medivh_bm;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_time_rift";
-    newscript->GetAI = &GetAI_npc_time_rift;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_time_rift";
+    pNewScript->GetAI = &GetAI_npc_time_rift;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_saat";
-    newscript->pGossipHello = &GossipHello_npc_saat;
-    newscript->pGossipSelect = &GossipSelect_npc_saat;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_saat";
+    pNewScript->pGossipHello = &GossipHello_npc_saat;
+    pNewScript->pGossipSelect = &GossipSelect_npc_saat;
+    pNewScript->RegisterSelf();
 }

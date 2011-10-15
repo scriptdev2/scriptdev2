@@ -91,9 +91,10 @@ CreatureAI* GetAI_boss_thebeast(Creature* pCreature)
 
 void AddSC_boss_thebeast()
 {
-    Script* newscript;
-    newscript = new Script;
-    newscript->Name = "boss_the_beast";
-    newscript->GetAI = &GetAI_boss_thebeast;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_the_beast";
+    pNewScript->GetAI = &GetAI_boss_thebeast;
+    pNewScript->RegisterSelf();
 }

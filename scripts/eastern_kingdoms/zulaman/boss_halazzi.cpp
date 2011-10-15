@@ -385,15 +385,15 @@ CreatureAI* GetAI_boss_spirit_lynx(Creature* pCreature)
 
 void AddSC_boss_halazzi()
 {
-    Script* newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_halazzi";
-    newscript->GetAI = &GetAI_boss_halazzi;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_halazzi";
+    pNewScript->GetAI = &GetAI_boss_halazzi;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "boss_spirit_lynx";
-    newscript->GetAI = &GetAI_boss_spirit_lynx;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_spirit_lynx";
+    pNewScript->GetAI = &GetAI_boss_spirit_lynx;
+    pNewScript->RegisterSelf();
 }

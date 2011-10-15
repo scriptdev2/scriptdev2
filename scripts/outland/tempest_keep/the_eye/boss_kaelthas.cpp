@@ -1484,39 +1484,40 @@ CreatureAI* GetAI_mob_phoenix_egg_tk(Creature* pCreature)
 
 void AddSC_boss_kaelthas()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_kaelthas";
-    newscript->GetAI = &GetAI_boss_kaelthas;
-    newscript->RegisterSelf();
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_thaladred_the_darkener";
-    newscript->GetAI = &GetAI_boss_thaladred_the_darkener;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_kaelthas";
+    pNewScript->GetAI = &GetAI_boss_kaelthas;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "boss_lord_sanguinar";
-    newscript->GetAI = &GetAI_boss_lord_sanguinar;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_thaladred_the_darkener";
+    pNewScript->GetAI = &GetAI_boss_thaladred_the_darkener;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "boss_grand_astromancer_capernian";
-    newscript->GetAI = &GetAI_boss_grand_astromancer_capernian;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_lord_sanguinar";
+    pNewScript->GetAI = &GetAI_boss_lord_sanguinar;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "boss_master_engineer_telonicus";
-    newscript->GetAI = &GetAI_boss_master_engineer_telonicus;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_grand_astromancer_capernian";
+    pNewScript->GetAI = &GetAI_boss_grand_astromancer_capernian;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_phoenix_tk";
-    newscript->GetAI = &GetAI_mob_phoenix_tk;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_master_engineer_telonicus";
+    pNewScript->GetAI = &GetAI_boss_master_engineer_telonicus;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_phoenix_egg_tk";
-    newscript->GetAI = &GetAI_mob_phoenix_egg_tk;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_phoenix_tk";
+    pNewScript->GetAI = &GetAI_mob_phoenix_tk;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "mob_phoenix_egg_tk";
+    pNewScript->GetAI = &GetAI_mob_phoenix_egg_tk;
+    pNewScript->RegisterSelf();
 }

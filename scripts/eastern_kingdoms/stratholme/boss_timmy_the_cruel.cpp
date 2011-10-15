@@ -62,9 +62,10 @@ CreatureAI* GetAI_boss_timmy_the_cruel(Creature* pCreature)
 
 void AddSC_boss_timmy_the_cruel()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_timmy_the_cruel";
-    newscript->GetAI = &GetAI_boss_timmy_the_cruel;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_timmy_the_cruel";
+    pNewScript->GetAI = &GetAI_boss_timmy_the_cruel;
+    pNewScript->RegisterSelf();
 }

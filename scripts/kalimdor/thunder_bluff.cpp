@@ -123,12 +123,12 @@ bool GossipSelect_npc_cairne_bloodhoof(Player* pPlayer, Creature* pCreature, uin
 
 void AddSC_thunder_bluff()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "npc_cairne_bloodhoof";
-    newscript->GetAI = &GetAI_npc_cairne_bloodhoof;
-    newscript->pGossipHello = &GossipHello_npc_cairne_bloodhoof;
-    newscript->pGossipSelect = &GossipSelect_npc_cairne_bloodhoof;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_cairne_bloodhoof";
+    pNewScript->GetAI = &GetAI_npc_cairne_bloodhoof;
+    pNewScript->pGossipHello = &GossipHello_npc_cairne_bloodhoof;
+    pNewScript->pGossipSelect = &GossipSelect_npc_cairne_bloodhoof;
+    pNewScript->RegisterSelf();
 }

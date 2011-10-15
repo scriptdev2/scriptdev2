@@ -214,25 +214,25 @@ bool GossipSelect_npc_tyrande_whisperwind(Player* pPlayer, Creature* pCreature, 
 
 void AddSC_hyjal()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "npc_jaina_proudmoore";
-    newscript->GetAI = &GetAI_npc_jaina_proudmoore;
-    newscript->pGossipHello = &GossipHello_npc_jaina_proudmoore;
-    newscript->pGossipSelect = &GossipSelect_npc_jaina_proudmoore;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_jaina_proudmoore";
+    pNewScript->GetAI = &GetAI_npc_jaina_proudmoore;
+    pNewScript->pGossipHello = &GossipHello_npc_jaina_proudmoore;
+    pNewScript->pGossipSelect = &GossipSelect_npc_jaina_proudmoore;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_thrall";
-    newscript->GetAI = &GetAI_npc_thrall;
-    newscript->pGossipHello = &GossipHello_npc_thrall;
-    newscript->pGossipSelect = &GossipSelect_npc_thrall;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_thrall";
+    pNewScript->GetAI = &GetAI_npc_thrall;
+    pNewScript->pGossipHello = &GossipHello_npc_thrall;
+    pNewScript->pGossipSelect = &GossipSelect_npc_thrall;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_tyrande_whisperwind";
-    newscript->pGossipHello = &GossipHello_npc_tyrande_whisperwind;
-    newscript->pGossipSelect = &GossipSelect_npc_tyrande_whisperwind;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_tyrande_whisperwind";
+    pNewScript->pGossipHello = &GossipHello_npc_tyrande_whisperwind;
+    pNewScript->pGossipSelect = &GossipSelect_npc_tyrande_whisperwind;
+    pNewScript->RegisterSelf();
 }

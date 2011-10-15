@@ -54,11 +54,11 @@ bool GossipSelect_npc_dame_evniki_kapsalis(Player* pPlayer, Creature* pCreature,
 
 void AddSC_icecrown()
 {
-    Script* newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "npc_dame_evniki_kapsalis";
-    newscript->pGossipHello = &GossipHello_npc_dame_evniki_kapsalis;
-    newscript->pGossipSelect = &GossipSelect_npc_dame_evniki_kapsalis;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_dame_evniki_kapsalis";
+    pNewScript->pGossipHello = &GossipHello_npc_dame_evniki_kapsalis;
+    pNewScript->pGossipSelect = &GossipSelect_npc_dame_evniki_kapsalis;
+    pNewScript->RegisterSelf();
 }

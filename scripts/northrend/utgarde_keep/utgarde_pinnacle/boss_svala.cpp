@@ -257,15 +257,15 @@ bool AreaTrigger_at_svala_intro(Player* pPlayer, AreaTriggerEntry const* pAt)
 
 void AddSC_boss_svala()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_svala";
-    newscript->GetAI = &GetAI_boss_svala;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_svala";
+    pNewScript->GetAI = &GetAI_boss_svala;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "at_svala_intro";
-    newscript->pAreaTrigger = &AreaTrigger_at_svala_intro;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "at_svala_intro";
+    pNewScript->pAreaTrigger = &AreaTrigger_at_svala_intro;
+    pNewScript->RegisterSelf();
 }

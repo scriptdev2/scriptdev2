@@ -403,29 +403,30 @@ CreatureAI* GetAI_mob_syth_shadow(Creature* pCreature)
 
 void AddSC_boss_darkweaver_syth()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_darkweaver_syth";
-    newscript->GetAI = &GetAI_boss_darkweaver_syth;
-    newscript->RegisterSelf();
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "mob_syth_fire";
-    newscript->GetAI = &GetAI_mob_syth_fire;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_darkweaver_syth";
+    pNewScript->GetAI = &GetAI_boss_darkweaver_syth;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_syth_arcane";
-    newscript->GetAI = &GetAI_mob_syth_arcane;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_syth_fire";
+    pNewScript->GetAI = &GetAI_mob_syth_fire;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_syth_frost";
-    newscript->GetAI = &GetAI_mob_syth_frost;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_syth_arcane";
+    pNewScript->GetAI = &GetAI_mob_syth_arcane;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_syth_shadow";
-    newscript->GetAI = &GetAI_mob_syth_shadow;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_syth_frost";
+    pNewScript->GetAI = &GetAI_mob_syth_frost;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "mob_syth_shadow";
+    pNewScript->GetAI = &GetAI_mob_syth_shadow;
+    pNewScript->RegisterSelf();
 }

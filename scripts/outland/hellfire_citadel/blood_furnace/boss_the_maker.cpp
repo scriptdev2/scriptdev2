@@ -142,9 +142,10 @@ CreatureAI* GetAI_boss_the_makerAI(Creature* pCreature)
 
 void AddSC_boss_the_maker()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_the_maker";
-    newscript->GetAI = &GetAI_boss_the_makerAI;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_the_maker";
+    pNewScript->GetAI = &GetAI_boss_the_makerAI;
+    pNewScript->RegisterSelf();
 }

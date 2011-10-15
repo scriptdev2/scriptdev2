@@ -146,9 +146,10 @@ CreatureAI* GetAI_boss_chrono_lord_deja(Creature* pCreature)
 
 void AddSC_boss_chrono_lord_deja()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_chrono_lord_deja";
-    newscript->GetAI = &GetAI_boss_chrono_lord_deja;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_chrono_lord_deja";
+    pNewScript->GetAI = &GetAI_boss_chrono_lord_deja;
+    pNewScript->RegisterSelf();
 }

@@ -98,10 +98,10 @@ CreatureAI* GetAI_mob_yenniku(Creature *_Creature)
 
 void AddSC_stranglethorn_vale()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "mob_yenniku";
-    newscript->GetAI = &GetAI_mob_yenniku;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_yenniku";
+    pNewScript->GetAI = &GetAI_mob_yenniku;
+    pNewScript->RegisterSelf();
 }

@@ -258,9 +258,10 @@ CreatureAI* GetAI_boss_nalorakk(Creature* pCreature)
 
 void AddSC_boss_nalorakk()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_nalorakk";
-    newscript->GetAI = &GetAI_boss_nalorakk;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_nalorakk";
+    pNewScript->GetAI = &GetAI_boss_nalorakk;
+    pNewScript->RegisterSelf();
 }

@@ -47,10 +47,10 @@ CreatureAI* GetAI_boss_death_knight_darkreaver(Creature* pCreature)
 
 void AddSC_boss_death_knight_darkreaver()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_death_knight_darkreaver";
-    newscript->GetAI = &GetAI_boss_death_knight_darkreaver;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_death_knight_darkreaver";
+    pNewScript->GetAI = &GetAI_boss_death_knight_darkreaver;
+    pNewScript->RegisterSelf();
 }

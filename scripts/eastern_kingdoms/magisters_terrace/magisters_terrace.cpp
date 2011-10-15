@@ -163,12 +163,12 @@ bool GossipSelect_npc_kalecgos(Player* pPlayer, Creature* pCreature, uint32 uiSe
 
 void AddSC_magisters_terrace()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "npc_kalecgos";
-    newscript->GetAI = &GetAI_npc_kalecgos;
-    newscript->pGossipHello = &GossipHello_npc_kalecgos;
-    newscript->pGossipSelect = &GossipSelect_npc_kalecgos;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_kalecgos";
+    pNewScript->GetAI = &GetAI_npc_kalecgos;
+    pNewScript->pGossipHello = &GossipHello_npc_kalecgos;
+    pNewScript->pGossipSelect = &GossipSelect_npc_kalecgos;
+    pNewScript->RegisterSelf();
 }

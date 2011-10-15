@@ -185,10 +185,10 @@ CreatureAI* GetAI_boss_laj(Creature* pCreature)
 
 void AddSC_boss_laj()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_laj";
-    newscript->GetAI = &GetAI_boss_laj;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_laj";
+    pNewScript->GetAI = &GetAI_boss_laj;
+    pNewScript->RegisterSelf();
 }

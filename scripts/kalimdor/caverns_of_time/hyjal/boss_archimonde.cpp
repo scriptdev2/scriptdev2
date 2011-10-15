@@ -549,24 +549,25 @@ CreatureAI* GetAI_mob_ancient_wisp(Creature* pCreature)
 
 void AddSC_boss_archimonde()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_archimonde";
-    newscript->GetAI = &GetAI_boss_archimonde;
-    newscript->RegisterSelf();
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "mob_doomfire";
-    newscript->GetAI = &GetAI_mob_doomfire;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_archimonde";
+    pNewScript->GetAI = &GetAI_boss_archimonde;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_doomfire_targetting";
-    newscript->GetAI = &GetAI_mob_doomfire_targetting;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_doomfire";
+    pNewScript->GetAI = &GetAI_mob_doomfire;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_ancient_wisp";
-    newscript->GetAI = &GetAI_mob_ancient_wisp;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_doomfire_targetting";
+    pNewScript->GetAI = &GetAI_mob_doomfire_targetting;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "mob_ancient_wisp";
+    pNewScript->GetAI = &GetAI_mob_ancient_wisp;
+    pNewScript->RegisterSelf();
 }

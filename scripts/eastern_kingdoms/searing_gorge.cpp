@@ -137,23 +137,23 @@ bool GossipSelect_npc_zamael_lunthistle(Player* pPlayer, Creature* pCreature, ui
 
 void AddSC_searing_gorge()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "npc_kalaran_windblade";
-    newscript->pGossipHello =  &GossipHello_npc_kalaran_windblade;
-    newscript->pGossipSelect = &GossipSelect_npc_kalaran_windblade;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_kalaran_windblade";
+    pNewScript->pGossipHello =  &GossipHello_npc_kalaran_windblade;
+    pNewScript->pGossipSelect = &GossipSelect_npc_kalaran_windblade;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_lothos_riftwaker";
-    newscript->pGossipHello =  &GossipHello_npc_lothos_riftwaker;
-    newscript->pGossipSelect = &GossipSelect_npc_lothos_riftwaker;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_lothos_riftwaker";
+    pNewScript->pGossipHello =  &GossipHello_npc_lothos_riftwaker;
+    pNewScript->pGossipSelect = &GossipSelect_npc_lothos_riftwaker;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_zamael_lunthistle";
-    newscript->pGossipHello =  &GossipHello_npc_zamael_lunthistle;
-    newscript->pGossipSelect = &GossipSelect_npc_zamael_lunthistle;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_zamael_lunthistle";
+    pNewScript->pGossipHello =  &GossipHello_npc_zamael_lunthistle;
+    pNewScript->pGossipSelect = &GossipSelect_npc_zamael_lunthistle;
+    pNewScript->RegisterSelf();
 }

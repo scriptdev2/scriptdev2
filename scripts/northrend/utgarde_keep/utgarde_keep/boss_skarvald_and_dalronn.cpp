@@ -320,15 +320,15 @@ CreatureAI* GetAI_boss_dalronn(Creature* pCreature)
 
 void AddSC_boss_skarvald_and_dalronn()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_skarvald";
-    newscript->GetAI = &GetAI_boss_skarvald;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_skarvald";
+    pNewScript->GetAI = &GetAI_boss_skarvald;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "boss_dalronn";
-    newscript->GetAI = &GetAI_boss_dalronn;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_dalronn";
+    pNewScript->GetAI = &GetAI_boss_dalronn;
+    pNewScript->RegisterSelf();
 }

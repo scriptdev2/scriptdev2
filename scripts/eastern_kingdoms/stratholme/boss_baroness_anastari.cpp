@@ -104,9 +104,10 @@ CreatureAI* GetAI_boss_baroness_anastari(Creature* pCreature)
 
 void AddSC_boss_baroness_anastari()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_baroness_anastari";
-    newscript->GetAI = &GetAI_boss_baroness_anastari;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_baroness_anastari";
+    pNewScript->GetAI = &GetAI_boss_baroness_anastari;
+    pNewScript->RegisterSelf();
 }

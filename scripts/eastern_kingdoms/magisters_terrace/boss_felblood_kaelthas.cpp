@@ -601,25 +601,25 @@ CreatureAI* GetAI_mob_felkael_phoenix_egg(Creature* pCreature)
 
 void AddSC_boss_felblood_kaelthas()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_felblood_kaelthas";
-    newscript->GetAI = &GetAI_boss_felblood_kaelthas;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_felblood_kaelthas";
+    pNewScript->GetAI = &GetAI_boss_felblood_kaelthas;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_arcane_sphere";
-    newscript->GetAI = &GetAI_mob_arcane_sphere;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_arcane_sphere";
+    pNewScript->GetAI = &GetAI_mob_arcane_sphere;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_felkael_phoenix";
-    newscript->GetAI = &GetAI_mob_felkael_phoenix;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_felkael_phoenix";
+    pNewScript->GetAI = &GetAI_mob_felkael_phoenix;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_felkael_phoenix_egg";
-    newscript->GetAI = &GetAI_mob_felkael_phoenix_egg;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_felkael_phoenix_egg";
+    pNewScript->GetAI = &GetAI_mob_felkael_phoenix_egg;
+    pNewScript->RegisterSelf();
 }

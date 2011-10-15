@@ -179,17 +179,17 @@ CreatureAI* GetAI_npc_miran(Creature* pCreature)
 
 void AddSC_loch_modan()
 {
-    Script* newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "npc_mountaineer_pebblebitty";
-    newscript->pGossipHello =  &GossipHello_npc_mountaineer_pebblebitty;
-    newscript->pGossipSelect = &GossipSelect_npc_mountaineer_pebblebitty;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_mountaineer_pebblebitty";
+    pNewScript->pGossipHello =  &GossipHello_npc_mountaineer_pebblebitty;
+    pNewScript->pGossipSelect = &GossipSelect_npc_mountaineer_pebblebitty;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_miran";
-    newscript->GetAI = &GetAI_npc_miran;
-    newscript->pQuestAcceptNPC = &QuestAccept_npc_miran;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_miran";
+    pNewScript->GetAI = &GetAI_npc_miran;
+    pNewScript->pQuestAcceptNPC = &QuestAccept_npc_miran;
+    pNewScript->RegisterSelf();
 }

@@ -149,28 +149,28 @@ bool GossipSelect_npc_tirion_fordring(Player* pPlayer, Creature* pCreature, uint
 
 void AddSC_eastern_plaguelands()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "mobs_ghoul_flayer";
-    newscript->GetAI = &GetAI_mobs_ghoul_flayer;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mobs_ghoul_flayer";
+    pNewScript->GetAI = &GetAI_mobs_ghoul_flayer;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_augustus_the_touched";
-    newscript->pGossipHello = &GossipHello_npc_augustus_the_touched;
-    newscript->pGossipSelect = &GossipSelect_npc_augustus_the_touched;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_augustus_the_touched";
+    pNewScript->pGossipHello = &GossipHello_npc_augustus_the_touched;
+    pNewScript->pGossipSelect = &GossipSelect_npc_augustus_the_touched;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_darrowshire_spirit";
-    newscript->GetAI = &GetAI_npc_darrowshire_spirit;
-    newscript->pGossipHello = &GossipHello_npc_darrowshire_spirit;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_darrowshire_spirit";
+    pNewScript->GetAI = &GetAI_npc_darrowshire_spirit;
+    pNewScript->pGossipHello = &GossipHello_npc_darrowshire_spirit;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_tirion_fordring";
-    newscript->pGossipHello =  &GossipHello_npc_tirion_fordring;
-    newscript->pGossipSelect = &GossipSelect_npc_tirion_fordring;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_tirion_fordring";
+    pNewScript->pGossipHello =  &GossipHello_npc_tirion_fordring;
+    pNewScript->pGossipSelect = &GossipSelect_npc_tirion_fordring;
+    pNewScript->RegisterSelf();
 }

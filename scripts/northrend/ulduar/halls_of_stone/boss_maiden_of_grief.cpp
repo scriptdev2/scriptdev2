@@ -143,10 +143,10 @@ CreatureAI* GetAI_boss_maiden_of_grief(Creature* pCreature)
 
 void AddSC_boss_maiden_of_grief()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_maiden_of_grief";
-    newscript->GetAI = &GetAI_boss_maiden_of_grief;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_maiden_of_grief";
+    pNewScript->GetAI = &GetAI_boss_maiden_of_grief;
+    pNewScript->RegisterSelf();
 }

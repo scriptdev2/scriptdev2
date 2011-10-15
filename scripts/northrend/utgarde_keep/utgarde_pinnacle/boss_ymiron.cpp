@@ -94,10 +94,10 @@ CreatureAI* GetAI_boss_ymiron(Creature* pCreature)
 
 void AddSC_boss_ymiron()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_ymiron";
-    newscript->GetAI = &GetAI_boss_ymiron;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_ymiron";
+    pNewScript->GetAI = &GetAI_boss_ymiron;
+    pNewScript->RegisterSelf();
 }

@@ -251,10 +251,10 @@ CreatureAI* GetAI_boss_telestra(Creature* pCreature)
 
 void AddSC_boss_telestra()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_telestra";
-    newscript->GetAI = &GetAI_boss_telestra;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_telestra";
+    pNewScript->GetAI = &GetAI_boss_telestra;
+    pNewScript->RegisterSelf();
 }

@@ -153,15 +153,15 @@ bool QuestAccept_npc_mikhail(Player* pPlayer, Creature* pCreature, const Quest* 
 
 void AddSC_wetlands()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "npc_tapoke_slim_jahn";
-    newscript->GetAI = &GetAI_npc_tapoke_slim_jahn;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_tapoke_slim_jahn";
+    pNewScript->GetAI = &GetAI_npc_tapoke_slim_jahn;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_mikhail";
-    newscript->pQuestAcceptNPC = &QuestAccept_npc_mikhail;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_mikhail";
+    pNewScript->pQuestAcceptNPC = &QuestAccept_npc_mikhail;
+    pNewScript->RegisterSelf();
 }

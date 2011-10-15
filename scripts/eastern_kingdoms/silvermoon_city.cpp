@@ -88,9 +88,10 @@ CreatureAI* GetAI_npc_blood_knight_stillblade(Creature* pCreature)
 
 void AddSC_silvermoon_city()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "npc_blood_knight_stillblade";
-    newscript->GetAI = &GetAI_npc_blood_knight_stillblade;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_blood_knight_stillblade";
+    pNewScript->GetAI = &GetAI_npc_blood_knight_stillblade;
+    pNewScript->RegisterSelf();
 }

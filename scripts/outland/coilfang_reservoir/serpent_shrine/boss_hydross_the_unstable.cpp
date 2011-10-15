@@ -314,9 +314,10 @@ CreatureAI* GetAI_boss_hydross_the_unstable(Creature* pCreature)
 
 void AddSC_boss_hydross_the_unstable()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_hydross_the_unstable";
-    newscript->GetAI = &GetAI_boss_hydross_the_unstable;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_hydross_the_unstable";
+    pNewScript->GetAI = &GetAI_boss_hydross_the_unstable;
+    pNewScript->RegisterSelf();
 }

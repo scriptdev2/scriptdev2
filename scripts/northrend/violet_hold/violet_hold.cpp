@@ -406,28 +406,28 @@ bool EffectDummyCreature_npc_teleportation_portal(Unit* pCaster, uint32 uiSpellI
 
 void AddSC_violet_hold()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "go_activation_crystal";
-    newscript->pGOUse = &GOUse_go_activation_crystal;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "go_activation_crystal";
+    pNewScript->pGOUse = &GOUse_go_activation_crystal;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_door_seal";
-    newscript->pEffectDummyNPC = &EffectDummyCreature_npc_door_seal;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_door_seal";
+    pNewScript->pEffectDummyNPC = &EffectDummyCreature_npc_door_seal;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_sinclari";
-    newscript->GetAI = &GetAI_npc_sinclari;
-    newscript->pGossipHello = &GossipHello_npc_sinclari;
-    newscript->pGossipSelect = &GossipSelect_npc_sinclari;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_sinclari";
+    pNewScript->GetAI = &GetAI_npc_sinclari;
+    pNewScript->pGossipHello = &GossipHello_npc_sinclari;
+    pNewScript->pGossipSelect = &GossipSelect_npc_sinclari;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_teleportation_portal";
-    newscript->GetAI = &GetAI_npc_teleportation_portal;
-    newscript->pEffectDummyNPC = &EffectDummyCreature_npc_teleportation_portal;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_teleportation_portal";
+    pNewScript->GetAI = &GetAI_npc_teleportation_portal;
+    pNewScript->pEffectDummyNPC = &EffectDummyCreature_npc_teleportation_portal;
+    pNewScript->RegisterSelf();
 }

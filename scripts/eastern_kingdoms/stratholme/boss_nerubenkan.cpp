@@ -123,9 +123,10 @@ CreatureAI* GetAI_boss_nerubenkan(Creature* pCreature)
 
 void AddSC_boss_nerubenkan()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_nerubenkan";
-    newscript->GetAI = &GetAI_boss_nerubenkan;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_nerubenkan";
+    pNewScript->GetAI = &GetAI_boss_nerubenkan;
+    pNewScript->RegisterSelf();
 }

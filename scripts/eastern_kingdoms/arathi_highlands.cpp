@@ -116,11 +116,11 @@ CreatureAI* GetAI_npc_professor_phizzlethorpe(Creature* pCreature)
 
 void AddSC_arathi_highlands()
 {
-    Script * newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "npc_professor_phizzlethorpe";
-    newscript->GetAI = &GetAI_npc_professor_phizzlethorpe;
-    newscript->pQuestAcceptNPC = &QuestAccept_npc_professor_phizzlethorpe;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_professor_phizzlethorpe";
+    pNewScript->GetAI = &GetAI_npc_professor_phizzlethorpe;
+    pNewScript->pQuestAcceptNPC = &QuestAccept_npc_professor_phizzlethorpe;
+    pNewScript->RegisterSelf();
 }

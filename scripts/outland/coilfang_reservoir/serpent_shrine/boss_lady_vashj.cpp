@@ -735,34 +735,35 @@ CreatureAI* GetAI_mob_shield_generator_channel(Creature* pCreature)
 
 void AddSC_boss_lady_vashj()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_lady_vashj";
-    newscript->GetAI = &GetAI_boss_lady_vashj;
-    newscript->RegisterSelf();
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "mob_enchanted_elemental";
-    newscript->GetAI = &GetAI_mob_enchanted_elemental;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_lady_vashj";
+    pNewScript->GetAI = &GetAI_boss_lady_vashj;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_tainted_elemental";
-    newscript->GetAI = &GetAI_mob_tainted_elemental;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_enchanted_elemental";
+    pNewScript->GetAI = &GetAI_mob_enchanted_elemental;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_toxic_sporebat";
-    newscript->GetAI = &GetAI_mob_toxic_sporebat;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_tainted_elemental";
+    pNewScript->GetAI = &GetAI_mob_tainted_elemental;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_shield_generator_channel";
-    newscript->GetAI = &GetAI_mob_shield_generator_channel;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_toxic_sporebat";
+    pNewScript->GetAI = &GetAI_mob_toxic_sporebat;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "item_tainted_core";
-    newscript->pItemUse = &ItemUse_item_tainted_core;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_shield_generator_channel";
+    pNewScript->GetAI = &GetAI_mob_shield_generator_channel;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "item_tainted_core";
+    pNewScript->pItemUse = &ItemUse_item_tainted_core;
+    pNewScript->RegisterSelf();
 }

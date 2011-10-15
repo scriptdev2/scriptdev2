@@ -420,28 +420,28 @@ CreatureAI* GetAI_npc_torek(Creature* pCreature)
 
 void AddSC_ashenvale()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "npc_muglash";
-    newscript->GetAI = &GetAI_npc_muglash;
-    newscript->pQuestAcceptNPC = &QuestAccept_npc_muglash;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_muglash";
+    pNewScript->GetAI = &GetAI_npc_muglash;
+    pNewScript->pQuestAcceptNPC = &QuestAccept_npc_muglash;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "go_naga_brazier";
-    newscript->pGOUse = &GOUse_go_naga_brazier;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "go_naga_brazier";
+    pNewScript->pGOUse = &GOUse_go_naga_brazier;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_ruul_snowhoof";
-    newscript->GetAI = &GetAI_npc_ruul_snowhoofAI;
-    newscript->pQuestAcceptNPC = &QuestAccept_npc_ruul_snowhoof;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_ruul_snowhoof";
+    pNewScript->GetAI = &GetAI_npc_ruul_snowhoofAI;
+    pNewScript->pQuestAcceptNPC = &QuestAccept_npc_ruul_snowhoof;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_torek";
-    newscript->GetAI = &GetAI_npc_torek;
-    newscript->pQuestAcceptNPC = &QuestAccept_npc_torek;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_torek";
+    pNewScript->GetAI = &GetAI_npc_torek;
+    pNewScript->pQuestAcceptNPC = &QuestAccept_npc_torek;
+    pNewScript->RegisterSelf();
 }

@@ -178,10 +178,10 @@ CreatureAI* GetAI_boss_high_botanist_freywinn(Creature* pCreature)
 
 void AddSC_boss_high_botanist_freywinn()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_high_botanist_freywinn";
-    newscript->GetAI = &GetAI_boss_high_botanist_freywinn;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_high_botanist_freywinn";
+    pNewScript->GetAI = &GetAI_boss_high_botanist_freywinn;
+    pNewScript->RegisterSelf();
 }

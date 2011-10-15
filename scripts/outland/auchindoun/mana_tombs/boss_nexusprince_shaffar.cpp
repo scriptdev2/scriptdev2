@@ -251,15 +251,15 @@ CreatureAI* GetAI_mob_ethereal_beacon(Creature* pCreature)
 
 void AddSC_boss_nexusprince_shaffar()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_nexusprince_shaffar";
-    newscript->GetAI = &GetAI_boss_nexusprince_shaffar;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_nexusprince_shaffar";
+    pNewScript->GetAI = &GetAI_boss_nexusprince_shaffar;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_ethereal_beacon";
-    newscript->GetAI = &GetAI_mob_ethereal_beacon;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_ethereal_beacon";
+    pNewScript->GetAI = &GetAI_mob_ethereal_beacon;
+    pNewScript->RegisterSelf();
 }

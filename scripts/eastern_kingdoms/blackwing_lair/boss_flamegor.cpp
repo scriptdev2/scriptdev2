@@ -123,9 +123,10 @@ CreatureAI* GetAI_boss_flamegor(Creature* pCreature)
 
 void AddSC_boss_flamegor()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_flamegor";
-    newscript->GetAI = &GetAI_boss_flamegor;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_flamegor";
+    pNewScript->GetAI = &GetAI_boss_flamegor;
+    pNewScript->RegisterSelf();
 }

@@ -241,29 +241,29 @@ bool GossipSelect_npc_rathis_tomber(Player* pPlayer, Creature* pCreature, uint32
 
 void AddSC_ghostlands()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "npc_blood_knight_dawnstar";
-    newscript->pGossipHello = &GossipHello_npc_blood_knight_dawnstar;
-    newscript->pGossipSelect = &GossipSelect_npc_blood_knight_dawnstar;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_blood_knight_dawnstar";
+    pNewScript->pGossipHello = &GossipHello_npc_blood_knight_dawnstar;
+    pNewScript->pGossipSelect = &GossipSelect_npc_blood_knight_dawnstar;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_budd_nedreck";
-    newscript->pGossipHello = &GossipHello_npc_budd_nedreck;
-    newscript->pGossipSelect = &GossipSelect_npc_budd_nedreck;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_budd_nedreck";
+    pNewScript->pGossipHello = &GossipHello_npc_budd_nedreck;
+    pNewScript->pGossipSelect = &GossipSelect_npc_budd_nedreck;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_ranger_lilatha";
-    newscript->GetAI = &GetAI_npc_ranger_lilathaAI;
-    newscript->pQuestAcceptNPC = &QuestAccept_npc_ranger_lilatha;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_ranger_lilatha";
+    pNewScript->GetAI = &GetAI_npc_ranger_lilathaAI;
+    pNewScript->pQuestAcceptNPC = &QuestAccept_npc_ranger_lilatha;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_rathis_tomber";
-    newscript->pGossipHello = &GossipHello_npc_rathis_tomber;
-    newscript->pGossipSelect = &GossipSelect_npc_rathis_tomber;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_rathis_tomber";
+    pNewScript->pGossipHello = &GossipHello_npc_rathis_tomber;
+    pNewScript->pGossipSelect = &GossipSelect_npc_rathis_tomber;
+    pNewScript->RegisterSelf();
 }

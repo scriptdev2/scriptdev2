@@ -416,18 +416,18 @@ bool GossipSelect_npc_berthold(Player* pPlayer, Creature* pCreature, uint32 uiSe
 
 void AddSC_karazhan()
 {
-    Script* newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "npc_barnes";
-    newscript->GetAI = &GetAI_npc_barnesAI;
-    newscript->pGossipHello = &GossipHello_npc_barnes;
-    newscript->pGossipSelect = &GossipSelect_npc_barnes;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_barnes";
+    pNewScript->GetAI = &GetAI_npc_barnesAI;
+    pNewScript->pGossipHello = &GossipHello_npc_barnes;
+    pNewScript->pGossipSelect = &GossipSelect_npc_barnes;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_berthold";
-    newscript->pGossipHello = &GossipHello_npc_berthold;
-    newscript->pGossipSelect = &GossipSelect_npc_berthold;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_berthold";
+    pNewScript->pGossipHello = &GossipHello_npc_berthold;
+    pNewScript->pGossipSelect = &GossipSelect_npc_berthold;
+    pNewScript->RegisterSelf();
 }

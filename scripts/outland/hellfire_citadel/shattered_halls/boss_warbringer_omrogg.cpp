@@ -392,15 +392,15 @@ CreatureAI* GetAI_mob_omrogg_heads(Creature* pCreature)
 
 void AddSC_boss_warbringer_omrogg()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_warbringer_omrogg";
-    newscript->GetAI = &GetAI_boss_warbringer_omrogg;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_warbringer_omrogg";
+    pNewScript->GetAI = &GetAI_boss_warbringer_omrogg;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_omrogg_heads";
-    newscript->GetAI = &GetAI_mob_omrogg_heads;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_omrogg_heads";
+    pNewScript->GetAI = &GetAI_mob_omrogg_heads;
+    pNewScript->RegisterSelf();
 }

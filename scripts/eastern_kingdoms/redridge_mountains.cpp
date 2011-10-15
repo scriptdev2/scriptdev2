@@ -135,11 +135,11 @@ bool QuestAccept_npc_corporal_keeshan(Player* pPlayer, Creature* pCreature, cons
 
 void AddSC_redridge_mountains()
 {
-    Script* NewScript;
+    Script* pNewScript;
 
-    NewScript = new Script;
-    NewScript->Name = "npc_corporal_keeshan";
-    NewScript->GetAI = &GetAI_npc_corporal_keeshan;
-    NewScript->pQuestAcceptNPC = &QuestAccept_npc_corporal_keeshan;
-    NewScript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_corporal_keeshan";
+    pNewScript->GetAI = &GetAI_npc_corporal_keeshan;
+    pNewScript->pQuestAcceptNPC = &QuestAccept_npc_corporal_keeshan;
+    pNewScript->RegisterSelf();
 }

@@ -89,9 +89,10 @@ CreatureAI* GetAI_boss_kurinnaxx(Creature* pCreature)
 
 void AddSC_boss_kurinnaxx()
 {
-    Script* newscript;
-    newscript = new Script;
-    newscript->Name = "boss_kurinnaxx";
-    newscript->GetAI = &GetAI_boss_kurinnaxx;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_kurinnaxx";
+    pNewScript->GetAI = &GetAI_boss_kurinnaxx;
+    pNewScript->RegisterSelf();
 }

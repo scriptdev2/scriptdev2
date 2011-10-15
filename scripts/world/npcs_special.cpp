@@ -1559,79 +1559,79 @@ bool GossipSelect_npc_tabard_vendor(Player* pPlayer, Creature* pCreature, uint32
 
 void AddSC_npcs_special()
 {
-    Script* newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "npc_air_force_bots";
-    newscript->GetAI = &GetAI_npc_air_force_bots;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_air_force_bots";
+    pNewScript->GetAI = &GetAI_npc_air_force_bots;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_chicken_cluck";
-    newscript->GetAI = &GetAI_npc_chicken_cluck;
-    newscript->pQuestAcceptNPC =   &QuestAccept_npc_chicken_cluck;
-    newscript->pQuestRewardedNPC = &QuestRewarded_npc_chicken_cluck;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_chicken_cluck";
+    pNewScript->GetAI = &GetAI_npc_chicken_cluck;
+    pNewScript->pQuestAcceptNPC =   &QuestAccept_npc_chicken_cluck;
+    pNewScript->pQuestRewardedNPC = &QuestRewarded_npc_chicken_cluck;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_dancing_flames";
-    newscript->GetAI = &GetAI_npc_dancing_flames;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_dancing_flames";
+    pNewScript->GetAI = &GetAI_npc_dancing_flames;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_injured_patient";
-    newscript->GetAI = &GetAI_npc_injured_patient;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_injured_patient";
+    pNewScript->GetAI = &GetAI_npc_injured_patient;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_doctor";
-    newscript->GetAI = &GetAI_npc_doctor;
-    newscript->pQuestAcceptNPC = &QuestAccept_npc_doctor;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_doctor";
+    pNewScript->GetAI = &GetAI_npc_doctor;
+    pNewScript->pQuestAcceptNPC = &QuestAccept_npc_doctor;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_garments_of_quests";
-    newscript->GetAI = &GetAI_npc_garments_of_quests;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_garments_of_quests";
+    pNewScript->GetAI = &GetAI_npc_garments_of_quests;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_guardian";
-    newscript->GetAI = &GetAI_npc_guardian;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_guardian";
+    pNewScript->GetAI = &GetAI_npc_guardian;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_innkeeper";
-    newscript->pGossipHello = &GossipHello_npc_innkeeper;
-    newscript->pGossipSelect = &GossipSelect_npc_innkeeper;
-    newscript->RegisterSelf(false);                         // script and error report disabled, but script can be used for custom needs, adding ScriptName
+    pNewScript = new Script;
+    pNewScript->Name = "npc_innkeeper";
+    pNewScript->pGossipHello = &GossipHello_npc_innkeeper;
+    pNewScript->pGossipSelect = &GossipSelect_npc_innkeeper;
+    pNewScript->RegisterSelf(false);                         // script and error report disabled, but script can be used for custom needs, adding ScriptName
 
-    newscript = new Script;
-    newscript->Name = "npc_lunaclaw_spirit";
-    newscript->pGossipHello =  &GossipHello_npc_lunaclaw_spirit;
-    newscript->pGossipSelect = &GossipSelect_npc_lunaclaw_spirit;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_lunaclaw_spirit";
+    pNewScript->pGossipHello =  &GossipHello_npc_lunaclaw_spirit;
+    pNewScript->pGossipSelect = &GossipSelect_npc_lunaclaw_spirit;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_mount_vendor";
-    newscript->pGossipHello =  &GossipHello_npc_mount_vendor;
-    newscript->pGossipSelect = &GossipSelect_npc_mount_vendor;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_mount_vendor";
+    pNewScript->pGossipHello =  &GossipHello_npc_mount_vendor;
+    pNewScript->pGossipSelect = &GossipSelect_npc_mount_vendor;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_rogue_trainer";
-    newscript->pGossipHello =  &GossipHello_npc_rogue_trainer;
-    newscript->pGossipSelect = &GossipSelect_npc_rogue_trainer;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_rogue_trainer";
+    pNewScript->pGossipHello =  &GossipHello_npc_rogue_trainer;
+    pNewScript->pGossipSelect = &GossipSelect_npc_rogue_trainer;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_sayge";
-    newscript->pGossipHello = &GossipHello_npc_sayge;
-    newscript->pGossipSelect = &GossipSelect_npc_sayge;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_sayge";
+    pNewScript->pGossipHello = &GossipHello_npc_sayge;
+    pNewScript->pGossipSelect = &GossipSelect_npc_sayge;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_tabard_vendor";
-    newscript->pGossipHello =  &GossipHello_npc_tabard_vendor;
-    newscript->pGossipSelect = &GossipSelect_npc_tabard_vendor;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_tabard_vendor";
+    pNewScript->pGossipHello =  &GossipHello_npc_tabard_vendor;
+    pNewScript->pGossipSelect = &GossipSelect_npc_tabard_vendor;
+    pNewScript->RegisterSelf();
 }

@@ -184,9 +184,10 @@ CreatureAI* GetAI_boss_anubrekhan(Creature* pCreature)
 
 void AddSC_boss_anubrekhan()
 {
-    Script* NewScript;
-    NewScript = new Script;
-    NewScript->Name = "boss_anubrekhan";
-    NewScript->GetAI = &GetAI_boss_anubrekhan;
-    NewScript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_anubrekhan";
+    pNewScript->GetAI = &GetAI_boss_anubrekhan;
+    pNewScript->RegisterSelf();
 }

@@ -179,22 +179,22 @@ bool GossipHello_npc_screecher_spirit(Player* pPlayer, Creature* pCreature)
 
 void AddSC_feralas()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "npc_gregan_brewspewer";
-    newscript->pGossipHello = &GossipHello_npc_gregan_brewspewer;
-    newscript->pGossipSelect = &GossipSelect_npc_gregan_brewspewer;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_gregan_brewspewer";
+    pNewScript->pGossipHello = &GossipHello_npc_gregan_brewspewer;
+    pNewScript->pGossipSelect = &GossipSelect_npc_gregan_brewspewer;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_oox22fe";
-    newscript->GetAI = &GetAI_npc_oox22fe;
-    newscript->pQuestAcceptNPC = &QuestAccept_npc_oox22fe;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_oox22fe";
+    pNewScript->GetAI = &GetAI_npc_oox22fe;
+    pNewScript->pQuestAcceptNPC = &QuestAccept_npc_oox22fe;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_screecher_spirit";
-    newscript->pGossipHello = &GossipHello_npc_screecher_spirit;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_screecher_spirit";
+    pNewScript->pGossipHello = &GossipHello_npc_screecher_spirit;
+    pNewScript->RegisterSelf();
 }

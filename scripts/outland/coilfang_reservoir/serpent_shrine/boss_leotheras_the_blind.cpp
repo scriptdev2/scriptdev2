@@ -327,15 +327,15 @@ CreatureAI* GetAI_boss_leotheras_the_blind_demonform(Creature* pCreature)
 
 void AddSC_boss_leotheras_the_blind()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_leotheras_the_blind";
-    newscript->GetAI = &GetAI_boss_leotheras_the_blind;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_leotheras_the_blind";
+    pNewScript->GetAI = &GetAI_boss_leotheras_the_blind;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "boss_leotheras_the_blind_demonform";
-    newscript->GetAI = &GetAI_boss_leotheras_the_blind_demonform;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_leotheras_the_blind_demonform";
+    pNewScript->GetAI = &GetAI_boss_leotheras_the_blind_demonform;
+    pNewScript->RegisterSelf();
 }

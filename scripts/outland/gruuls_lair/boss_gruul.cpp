@@ -275,9 +275,10 @@ CreatureAI* GetAI_boss_gruul(Creature* pCreature)
 
 void AddSC_boss_gruul()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_gruul";
-    newscript->GetAI = &GetAI_boss_gruul;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_gruul";
+    pNewScript->GetAI = &GetAI_boss_gruul;
+    pNewScript->RegisterSelf();
 }

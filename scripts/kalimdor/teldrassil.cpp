@@ -103,11 +103,11 @@ bool QuestAccept_npc_mist(Player* pPlayer, Creature* pCreature, const Quest* pQu
 
 void AddSC_teldrassil()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "npc_mist";
-    newscript->GetAI = &GetAI_npc_mist;
-    newscript->pQuestAcceptNPC = &QuestAccept_npc_mist;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_mist";
+    pNewScript->GetAI = &GetAI_npc_mist;
+    pNewScript->pQuestAcceptNPC = &QuestAccept_npc_mist;
+    pNewScript->RegisterSelf();
 }

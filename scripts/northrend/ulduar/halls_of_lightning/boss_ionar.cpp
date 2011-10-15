@@ -373,16 +373,16 @@ CreatureAI* GetAI_mob_spark_of_ionar(Creature* pCreature)
 
 void AddSC_boss_ionar()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_ionar";
-    newscript->GetAI = &GetAI_boss_ionar;
-    newscript->pEffectDummyNPC = &EffectDummyCreature_boss_ionar;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_ionar";
+    pNewScript->GetAI = &GetAI_boss_ionar;
+    pNewScript->pEffectDummyNPC = &EffectDummyCreature_boss_ionar;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_spark_of_ionar";
-    newscript->GetAI = &GetAI_mob_spark_of_ionar;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_spark_of_ionar";
+    pNewScript->GetAI = &GetAI_mob_spark_of_ionar;
+    pNewScript->RegisterSelf();
 }

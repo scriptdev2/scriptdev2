@@ -86,9 +86,10 @@ CreatureAI* GetAI_mob_crystalcore_devastator(Creature* pCreature)
 
 void AddSC_the_eye()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "mob_crystalcore_devastator";
-    newscript->GetAI = &GetAI_mob_crystalcore_devastator;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "mob_crystalcore_devastator";
+    pNewScript->GetAI = &GetAI_mob_crystalcore_devastator;
+    pNewScript->RegisterSelf();
 }

@@ -151,9 +151,10 @@ CreatureAI* GetAI_boss_maiden_of_virtue(Creature* pCreature)
 
 void AddSC_boss_maiden_of_virtue()
 {
-    Script* newscript;
-    newscript = new Script;
-    newscript->Name = "boss_maiden_of_virtue";
-    newscript->GetAI = &GetAI_boss_maiden_of_virtue;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_maiden_of_virtue";
+    pNewScript->GetAI = &GetAI_boss_maiden_of_virtue;
+    pNewScript->RegisterSelf();
 }

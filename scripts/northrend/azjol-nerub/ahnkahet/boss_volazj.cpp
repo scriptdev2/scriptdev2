@@ -91,10 +91,10 @@ CreatureAI* GetAI_boss_volazj(Creature* pCreature)
 
 void AddSC_boss_volazj()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_volazj";
-    newscript->GetAI = &GetAI_boss_volazj;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_volazj";
+    pNewScript->GetAI = &GetAI_boss_volazj;
+    pNewScript->RegisterSelf();
 }

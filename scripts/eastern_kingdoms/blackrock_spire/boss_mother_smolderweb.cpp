@@ -84,9 +84,10 @@ CreatureAI* GetAI_boss_mothersmolderweb(Creature* pCreature)
 
 void AddSC_boss_mothersmolderweb()
 {
-    Script* newscript;
-    newscript = new Script;
-    newscript->Name = "boss_mother_smolderweb";
-    newscript->GetAI = &GetAI_boss_mothersmolderweb;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_mother_smolderweb";
+    pNewScript->GetAI = &GetAI_boss_mothersmolderweb;
+    pNewScript->RegisterSelf();
 }

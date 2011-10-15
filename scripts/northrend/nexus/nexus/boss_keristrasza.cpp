@@ -210,10 +210,10 @@ CreatureAI* GetAI_boss_keristrasza(Creature* pCreature)
 
 void AddSC_boss_keristrasza()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_keristrasza";
-    newscript->GetAI = &GetAI_boss_keristrasza;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_keristrasza";
+    pNewScript->GetAI = &GetAI_boss_keristrasza;
+    pNewScript->RegisterSelf();
 }

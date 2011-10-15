@@ -125,9 +125,10 @@ CreatureAI* GetAI_boss_highlordomokk(Creature* pCreature)
 
 void AddSC_boss_highlordomokk()
 {
-    Script* newscript;
-    newscript = new Script;
-    newscript->Name = "boss_highlord_omokk";
-    newscript->GetAI = &GetAI_boss_highlordomokk;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_highlord_omokk";
+    pNewScript->GetAI = &GetAI_boss_highlordomokk;
+    pNewScript->RegisterSelf();
 }

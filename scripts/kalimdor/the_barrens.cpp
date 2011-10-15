@@ -644,44 +644,44 @@ CreatureAI* GetAI_npc_wizzlecranks_shredder(Creature* pCreature)
 
 void AddSC_the_barrens()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "npc_beaten_corpse";
-    newscript->pGossipHello = &GossipHello_npc_beaten_corpse;
-    newscript->pGossipSelect = &GossipSelect_npc_beaten_corpse;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_beaten_corpse";
+    pNewScript->pGossipHello = &GossipHello_npc_beaten_corpse;
+    pNewScript->pGossipSelect = &GossipSelect_npc_beaten_corpse;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_gilthares";
-    newscript->GetAI = &GetAI_npc_gilthares;
-    newscript->pQuestAcceptNPC = &QuestAccept_npc_gilthares;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_gilthares";
+    pNewScript->GetAI = &GetAI_npc_gilthares;
+    pNewScript->pQuestAcceptNPC = &QuestAccept_npc_gilthares;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_sputtervalve";
-    newscript->pGossipHello = &GossipHello_npc_sputtervalve;
-    newscript->pGossipSelect = &GossipSelect_npc_sputtervalve;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_sputtervalve";
+    pNewScript->pGossipHello = &GossipHello_npc_sputtervalve;
+    pNewScript->pGossipSelect = &GossipSelect_npc_sputtervalve;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_taskmaster_fizzule";
-    newscript->GetAI = &GetAI_npc_taskmaster_fizzule;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_taskmaster_fizzule";
+    pNewScript->GetAI = &GetAI_npc_taskmaster_fizzule;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_twiggy_flathead";
-    newscript->GetAI = &GetAI_npc_twiggy_flathead;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_twiggy_flathead";
+    pNewScript->GetAI = &GetAI_npc_twiggy_flathead;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "at_twiggy_flathead";
-    newscript->pAreaTrigger = &AreaTrigger_at_twiggy_flathead;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "at_twiggy_flathead";
+    pNewScript->pAreaTrigger = &AreaTrigger_at_twiggy_flathead;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_wizzlecranks_shredder";
-    newscript->GetAI = &GetAI_npc_wizzlecranks_shredder;
-    newscript->pQuestAcceptNPC = &QuestAccept_npc_wizzlecranks_shredder;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_wizzlecranks_shredder";
+    pNewScript->GetAI = &GetAI_npc_wizzlecranks_shredder;
+    pNewScript->pQuestAcceptNPC = &QuestAccept_npc_wizzlecranks_shredder;
+    pNewScript->RegisterSelf();
 }

@@ -1456,64 +1456,64 @@ CreatureAI* GetAI_boss_romulo(Creature* pCreature)
 
 void AddSC_bosses_opera()
 {
-    Script* newscript;
+    Script* pNewScript;
 
     // Oz
-    newscript = new Script;
-    newscript->GetAI = &GetAI_boss_dorothee;
-    newscript->Name = "boss_dorothee";
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->GetAI = &GetAI_boss_dorothee;
+    pNewScript->Name = "boss_dorothee";
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->GetAI = &GetAI_boss_strawman;
-    newscript->Name = "boss_strawman";
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->GetAI = &GetAI_boss_strawman;
+    pNewScript->Name = "boss_strawman";
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->GetAI = &GetAI_boss_tinhead;
-    newscript->Name = "boss_tinhead";
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->GetAI = &GetAI_boss_tinhead;
+    pNewScript->Name = "boss_tinhead";
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->GetAI = &GetAI_boss_roar;
-    newscript->Name = "boss_roar";
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->GetAI = &GetAI_boss_roar;
+    pNewScript->Name = "boss_roar";
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->GetAI = &GetAI_boss_crone;
-    newscript->Name = "boss_crone";
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->GetAI = &GetAI_boss_crone;
+    pNewScript->Name = "boss_crone";
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->GetAI = &GetAI_mob_tito;
-    newscript->Name = "mob_tito";
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->GetAI = &GetAI_mob_tito;
+    pNewScript->Name = "mob_tito";
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->GetAI = &GetAI_mob_cyclone;
-    newscript->Name = "mob_cyclone";
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->GetAI = &GetAI_mob_cyclone;
+    pNewScript->Name = "mob_cyclone";
+    pNewScript->RegisterSelf();
 
     // Hood
-    newscript = new Script;
-    newscript->pGossipHello = &GossipHello_npc_grandmother;
-    newscript->pGossipSelect = &GossipSelect_npc_grandmother;
-    newscript->Name = "npc_grandmother";
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->pGossipHello = &GossipHello_npc_grandmother;
+    pNewScript->pGossipSelect = &GossipSelect_npc_grandmother;
+    pNewScript->Name = "npc_grandmother";
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->GetAI = &GetAI_boss_bigbadwolf;
-    newscript->Name = "boss_bigbadwolf";
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->GetAI = &GetAI_boss_bigbadwolf;
+    pNewScript->Name = "boss_bigbadwolf";
+    pNewScript->RegisterSelf();
 
     // Romeo And Juliet
-    newscript = new Script;
-    newscript->GetAI = &GetAI_boss_julianne;
-    newscript->Name = "boss_julianne";
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->GetAI = &GetAI_boss_julianne;
+    pNewScript->Name = "boss_julianne";
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->GetAI = &GetAI_boss_romulo;
-    newscript->Name = "boss_romulo";
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->GetAI = &GetAI_boss_romulo;
+    pNewScript->Name = "boss_romulo";
+    pNewScript->RegisterSelf();
 }

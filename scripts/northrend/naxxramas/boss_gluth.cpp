@@ -197,9 +197,10 @@ CreatureAI* GetAI_boss_gluth(Creature* pCreature)
 
 void AddSC_boss_gluth()
 {
-    Script* NewScript;
-    NewScript = new Script;
-    NewScript->Name = "boss_gluth";
-    NewScript->GetAI = &GetAI_boss_gluth;
-    NewScript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_gluth";
+    pNewScript->GetAI = &GetAI_boss_gluth;
+    pNewScript->RegisterSelf();
 }

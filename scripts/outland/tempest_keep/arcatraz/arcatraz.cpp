@@ -507,20 +507,20 @@ CreatureAI* GetAI_mob_zerekethvoidzoneAI(Creature* pCreature)
 
 void AddSC_arcatraz()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "npc_millhouse_manastorm";
-    newscript->GetAI = &GetAI_npc_millhouse_manastorm;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_millhouse_manastorm";
+    pNewScript->GetAI = &GetAI_npc_millhouse_manastorm;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_warden_mellichar";
-    newscript->GetAI = &GetAI_npc_warden_mellichar;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_warden_mellichar";
+    pNewScript->GetAI = &GetAI_npc_warden_mellichar;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_zerekethvoidzone";
-    newscript->GetAI = &GetAI_mob_zerekethvoidzoneAI;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_zerekethvoidzone";
+    pNewScript->GetAI = &GetAI_mob_zerekethvoidzoneAI;
+    pNewScript->RegisterSelf();
 }

@@ -308,18 +308,18 @@ bool GossipSelect_boss_doomrel(Player* pPlayer, Creature* pCreature, uint32 uiSe
 
 void AddSC_boss_tomb_of_seven()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_gloomrel";
-    newscript->pGossipHello = &GossipHello_boss_gloomrel;
-    newscript->pGossipSelect = &GossipSelect_boss_gloomrel;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_gloomrel";
+    pNewScript->pGossipHello = &GossipHello_boss_gloomrel;
+    pNewScript->pGossipSelect = &GossipSelect_boss_gloomrel;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "boss_doomrel";
-    newscript->GetAI = &GetAI_boss_doomrel;
-    newscript->pGossipHello = &GossipHello_boss_doomrel;
-    newscript->pGossipSelect = &GossipSelect_boss_doomrel;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_doomrel";
+    pNewScript->GetAI = &GetAI_boss_doomrel;
+    pNewScript->pGossipHello = &GossipHello_boss_doomrel;
+    pNewScript->pGossipSelect = &GossipSelect_boss_doomrel;
+    pNewScript->RegisterSelf();
 }

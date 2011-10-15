@@ -137,9 +137,10 @@ CreatureAI* GetAI_boss_renataki(Creature* pCreature)
 
 void AddSC_boss_renataki()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_renataki";
-    newscript->GetAI = &GetAI_boss_renataki;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_renataki";
+    pNewScript->GetAI = &GetAI_boss_renataki;
+    pNewScript->RegisterSelf();
 }

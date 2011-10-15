@@ -218,9 +218,10 @@ CreatureAI* GetAI_boss_heigan(Creature* pCreature)
 
 void AddSC_boss_heigan()
 {
-    Script* NewScript;
-    NewScript = new Script;
-    NewScript->Name = "boss_heigan";
-    NewScript->GetAI = &GetAI_boss_heigan;
-    NewScript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_heigan";
+    pNewScript->GetAI = &GetAI_boss_heigan;
+    pNewScript->RegisterSelf();
 }

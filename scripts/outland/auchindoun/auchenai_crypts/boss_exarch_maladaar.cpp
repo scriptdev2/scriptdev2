@@ -342,20 +342,20 @@ CreatureAI* GetAI_mob_avatar_of_martyred(Creature* pCreature)
 
 void AddSC_boss_exarch_maladaar()
 {
-    Script* newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_exarch_maladaar";
-    newscript->GetAI = &GetAI_boss_exarch_maladaar;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_exarch_maladaar";
+    pNewScript->GetAI = &GetAI_boss_exarch_maladaar;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_avatar_of_martyred";
-    newscript->GetAI = &GetAI_mob_avatar_of_martyred;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_avatar_of_martyred";
+    pNewScript->GetAI = &GetAI_mob_avatar_of_martyred;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_stolen_soul";
-    newscript->GetAI = &GetAI_mob_stolen_soul;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_stolen_soul";
+    pNewScript->GetAI = &GetAI_mob_stolen_soul;
+    pNewScript->RegisterSelf();
 }

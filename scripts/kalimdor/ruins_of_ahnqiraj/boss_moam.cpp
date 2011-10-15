@@ -166,9 +166,10 @@ CreatureAI* GetAI_boss_moam(Creature* pCreature)
 
 void AddSC_boss_moam()
 {
-    Script* newscript;
-    newscript = new Script;
-    newscript->Name = "boss_moam";
-    newscript->GetAI = &GetAI_boss_moam;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_moam";
+    pNewScript->GetAI = &GetAI_boss_moam;
+    pNewScript->RegisterSelf();
 }

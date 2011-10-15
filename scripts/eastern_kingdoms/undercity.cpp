@@ -236,22 +236,22 @@ bool GossipSelect_npc_parqual_fintallas(Player* pPlayer, Creature* pCreature, ui
 
 void AddSC_undercity()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "npc_lady_sylvanas_windrunner";
-    newscript->GetAI = &GetAI_npc_lady_sylvanas_windrunner;
-    newscript->pQuestRewardedNPC = &QuestRewarded_npc_lady_sylvanas_windrunner;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_lady_sylvanas_windrunner";
+    pNewScript->GetAI = &GetAI_npc_lady_sylvanas_windrunner;
+    pNewScript->pQuestRewardedNPC = &QuestRewarded_npc_lady_sylvanas_windrunner;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_highborne_lamenter";
-    newscript->GetAI = &GetAI_npc_highborne_lamenter;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_highborne_lamenter";
+    pNewScript->GetAI = &GetAI_npc_highborne_lamenter;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_parqual_fintallas";
-    newscript->pGossipHello = &GossipHello_npc_parqual_fintallas;
-    newscript->pGossipSelect = &GossipSelect_npc_parqual_fintallas;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_parqual_fintallas";
+    pNewScript->pGossipHello = &GossipHello_npc_parqual_fintallas;
+    pNewScript->pGossipSelect = &GossipSelect_npc_parqual_fintallas;
+    pNewScript->RegisterSelf();
 }

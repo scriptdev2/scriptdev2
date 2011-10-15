@@ -223,15 +223,15 @@ CreatureAI* GetAI_npc_annhylde(Creature* pCreature)
 
 void AddSC_boss_ingvar()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_ingvar";
-    newscript->GetAI = &GetAI_boss_ingvar;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_ingvar";
+    pNewScript->GetAI = &GetAI_boss_ingvar;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_annhylde";
-    newscript->GetAI = &GetAI_npc_annhylde;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_annhylde";
+    pNewScript->GetAI = &GetAI_npc_annhylde;
+    pNewScript->RegisterSelf();
 }

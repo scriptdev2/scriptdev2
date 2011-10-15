@@ -232,15 +232,15 @@ CreatureAI* GetAI_boss_sladran(Creature* pCreature)
 
 void AddSC_boss_sladran()
 {
-    Script* newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_sladran";
-    newscript->GetAI = &GetAI_boss_sladran;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_sladran";
+    pNewScript->GetAI = &GetAI_boss_sladran;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_sladran_summon_target";
-    newscript->GetAI = &GetAI_mob_sladran_summon_target;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_sladran_summon_target";
+    pNewScript->GetAI = &GetAI_mob_sladran_summon_target;
+    pNewScript->RegisterSelf();
 }

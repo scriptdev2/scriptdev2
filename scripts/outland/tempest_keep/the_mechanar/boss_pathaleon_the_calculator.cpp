@@ -226,14 +226,15 @@ CreatureAI* GetAI_mob_nether_wraith(Creature* pCreature)
 
 void AddSC_boss_pathaleon_the_calculator()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_pathaleon_the_calculator";
-    newscript->GetAI = &GetAI_boss_pathaleon_the_calculator;
-    newscript->RegisterSelf();
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "mob_nether_wraith";
-    newscript->GetAI = &GetAI_mob_nether_wraith;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_pathaleon_the_calculator";
+    pNewScript->GetAI = &GetAI_boss_pathaleon_the_calculator;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "mob_nether_wraith";
+    pNewScript->GetAI = &GetAI_mob_nether_wraith;
+    pNewScript->RegisterSelf();
 }

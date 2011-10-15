@@ -82,9 +82,10 @@ CreatureAI* GetAI_boss_landslide(Creature* pCreature)
 
 void AddSC_boss_landslide()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_landslide";
-    newscript->GetAI = &GetAI_boss_landslide;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_landslide";
+    pNewScript->GetAI = &GetAI_boss_landslide;
+    pNewScript->RegisterSelf();
 }

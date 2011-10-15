@@ -130,9 +130,10 @@ CreatureAI* GetAI_boss_epoch_hunter(Creature* pCreature)
 
 void AddSC_boss_epoch_hunter()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_epoch_hunter";
-    newscript->GetAI = &GetAI_boss_epoch_hunter;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_epoch_hunter";
+    pNewScript->GetAI = &GetAI_boss_epoch_hunter;
+    pNewScript->RegisterSelf();
 }

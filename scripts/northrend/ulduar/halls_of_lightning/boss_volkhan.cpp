@@ -455,21 +455,21 @@ CreatureAI* GetAI_mob_molten_golem(Creature* pCreature)
 
 void AddSC_boss_volkhan()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_volkhan";
-    newscript->GetAI = &GetAI_boss_volkhan;
-    newscript->pEffectDummyNPC = &EffectDummyCreature_boss_volkhan;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_volkhan";
+    pNewScript->GetAI = &GetAI_boss_volkhan;
+    pNewScript->pEffectDummyNPC = &EffectDummyCreature_boss_volkhan;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_volkhan_anvil";
-    newscript->pEffectDummyNPC = &EffectDummyCreature_npc_volkhan_anvil;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_volkhan_anvil";
+    pNewScript->pEffectDummyNPC = &EffectDummyCreature_npc_volkhan_anvil;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_molten_golem";
-    newscript->GetAI = &GetAI_mob_molten_golem;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_molten_golem";
+    pNewScript->GetAI = &GetAI_mob_molten_golem;
+    pNewScript->RegisterSelf();
 }

@@ -298,9 +298,10 @@ CreatureAI* GetAI_boss_shahraz(Creature* pCreature)
 
 void AddSC_boss_mother_shahraz()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_mother_shahraz";
-    newscript->GetAI = &GetAI_boss_shahraz;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_mother_shahraz";
+    pNewScript->GetAI = &GetAI_boss_shahraz;
+    pNewScript->RegisterSelf();
 }

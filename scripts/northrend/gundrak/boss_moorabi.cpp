@@ -178,10 +178,10 @@ CreatureAI* GetAI_boss_moorabi(Creature* pCreature)
 
 void AddSC_boss_moorabi()
 {
-    Script* newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_moorabi";
-    newscript->GetAI = &GetAI_boss_moorabi;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_moorabi";
+    pNewScript->GetAI = &GetAI_boss_moorabi;
+    pNewScript->RegisterSelf();
 }

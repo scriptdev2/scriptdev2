@@ -105,9 +105,10 @@ CreatureAI* GetAI_boss_high_interrogator_gerstahn(Creature* pCreature)
 
 void AddSC_boss_high_interrogator_gerstahn()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_high_interrogator_gerstahn";
-    newscript->GetAI = &GetAI_boss_high_interrogator_gerstahn;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_high_interrogator_gerstahn";
+    pNewScript->GetAI = &GetAI_boss_high_interrogator_gerstahn;
+    pNewScript->RegisterSelf();
 }

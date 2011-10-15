@@ -1099,45 +1099,45 @@ CreatureAI* GetAI_mob_twilight_whelp(Creature* pCreature)
 
 void AddSC_boss_sartharion()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_sartharion";
-    newscript->GetAI = &GetAI_boss_sartharion;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_sartharion";
+    pNewScript->GetAI = &GetAI_boss_sartharion;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_vesperon";
-    newscript->GetAI = &GetAI_mob_vesperon;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_vesperon";
+    pNewScript->GetAI = &GetAI_mob_vesperon;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_shadron";
-    newscript->GetAI = &GetAI_mob_shadron;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_shadron";
+    pNewScript->GetAI = &GetAI_mob_shadron;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_tenebron";
-    newscript->GetAI = &GetAI_mob_tenebron;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_tenebron";
+    pNewScript->GetAI = &GetAI_mob_tenebron;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_acolyte_of_shadron";
-    newscript->GetAI = &GetAI_mob_acolyte_of_shadron;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_acolyte_of_shadron";
+    pNewScript->GetAI = &GetAI_mob_acolyte_of_shadron;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_acolyte_of_vesperon";
-    newscript->GetAI = &GetAI_mob_acolyte_of_vesperon;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_acolyte_of_vesperon";
+    pNewScript->GetAI = &GetAI_mob_acolyte_of_vesperon;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_twilight_eggs";
-    newscript->GetAI = &GetAI_mob_twilight_eggs;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_twilight_eggs";
+    pNewScript->GetAI = &GetAI_mob_twilight_eggs;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_twilight_whelp";
-    newscript->GetAI = &GetAI_mob_twilight_whelp;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_twilight_whelp";
+    pNewScript->GetAI = &GetAI_mob_twilight_whelp;
+    pNewScript->RegisterSelf();
 }

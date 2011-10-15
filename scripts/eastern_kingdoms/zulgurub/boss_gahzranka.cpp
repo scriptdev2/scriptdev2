@@ -80,9 +80,10 @@ CreatureAI* GetAI_boss_gahzranka(Creature* pCreature)
 
 void AddSC_boss_gahzranka()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_gahzranka";
-    newscript->GetAI = &GetAI_boss_gahzranka;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_gahzranka";
+    pNewScript->GetAI = &GetAI_boss_gahzranka;
+    pNewScript->RegisterSelf();
 }

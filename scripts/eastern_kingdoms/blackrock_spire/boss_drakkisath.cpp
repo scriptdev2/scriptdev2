@@ -101,9 +101,10 @@ CreatureAI* GetAI_boss_drakkisath(Creature* pCreature)
 
 void AddSC_boss_drakkisath()
 {
-    Script* newscript;
-    newscript = new Script;
-    newscript->Name = "boss_drakkisath";
-    newscript->GetAI = &GetAI_boss_drakkisath;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_drakkisath";
+    pNewScript->GetAI = &GetAI_boss_drakkisath;
+    pNewScript->RegisterSelf();
 }

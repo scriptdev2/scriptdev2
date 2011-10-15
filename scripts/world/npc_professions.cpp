@@ -1169,35 +1169,35 @@ bool GossipSelect_npc_prof_tailor(Player* pPlayer, Creature* pCreature, uint32 u
 
 void AddSC_npc_professions()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "npc_prof_alchemy";
-    newscript->pGossipHello =  &GossipHello_npc_prof_alchemy;
-    newscript->pGossipSelect = &GossipSelect_npc_prof_alchemy;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_prof_alchemy";
+    pNewScript->pGossipHello =  &GossipHello_npc_prof_alchemy;
+    pNewScript->pGossipSelect = &GossipSelect_npc_prof_alchemy;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_prof_blacksmith";
-    newscript->pGossipHello =  &GossipHello_npc_prof_blacksmith;
-    newscript->pGossipSelect = &GossipSelect_npc_prof_blacksmith;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_prof_blacksmith";
+    pNewScript->pGossipHello =  &GossipHello_npc_prof_blacksmith;
+    pNewScript->pGossipSelect = &GossipSelect_npc_prof_blacksmith;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_prof_leather";
-    newscript->pGossipHello =  &GossipHello_npc_prof_leather;
-    newscript->pGossipSelect = &GossipSelect_npc_prof_leather;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_prof_leather";
+    pNewScript->pGossipHello =  &GossipHello_npc_prof_leather;
+    pNewScript->pGossipSelect = &GossipSelect_npc_prof_leather;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_prof_tailor";
-    newscript->pGossipHello =  &GossipHello_npc_prof_tailor;
-    newscript->pGossipSelect = &GossipSelect_npc_prof_tailor;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_prof_tailor";
+    pNewScript->pGossipHello =  &GossipHello_npc_prof_tailor;
+    pNewScript->pGossipSelect = &GossipSelect_npc_prof_tailor;
+    pNewScript->RegisterSelf();
 
-    /*newscript = new Script;
-    newscript->Name = "go_soothsaying_for_dummies";
-    newscript->pGOUse =  &GOUse_go_soothsaying_for_dummies;
-    //newscript->pGossipSelect = &GossipSelect_go_soothsaying_for_dummies;
-    newscript->RegisterSelf();*/
+    /*pNewScript = new Script;
+    pNewScript->Name = "go_soothsaying_for_dummies";
+    pNewScript->pGOUse =  &GOUse_go_soothsaying_for_dummies;
+    //pNewScript->pGossipSelect = &GossipSelect_go_soothsaying_for_dummies;
+    pNewScript->RegisterSelf();*/
 }

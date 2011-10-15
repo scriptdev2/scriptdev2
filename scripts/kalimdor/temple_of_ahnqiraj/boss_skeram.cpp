@@ -312,9 +312,10 @@ CreatureAI* GetAI_boss_skeram(Creature* pCreature)
 
 void AddSC_boss_skeram()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_skeram";
-    newscript->GetAI = &GetAI_boss_skeram;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_skeram";
+    pNewScript->GetAI = &GetAI_boss_skeram;
+    pNewScript->RegisterSelf();
 }

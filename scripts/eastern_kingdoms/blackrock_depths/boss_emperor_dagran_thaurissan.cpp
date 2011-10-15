@@ -246,15 +246,15 @@ CreatureAI* GetAI_boss_moira_bronzebeard(Creature* pCreature)
 
 void AddSC_boss_draganthaurissan()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_emperor_dagran_thaurissan";
-    newscript->GetAI = &GetAI_boss_emperor_dagran_thaurissan;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_emperor_dagran_thaurissan";
+    pNewScript->GetAI = &GetAI_boss_emperor_dagran_thaurissan;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "boss_moira_bronzebeard";
-    newscript->GetAI = &GetAI_boss_moira_bronzebeard;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_moira_bronzebeard";
+    pNewScript->GetAI = &GetAI_boss_moira_bronzebeard;
+    pNewScript->RegisterSelf();
 }

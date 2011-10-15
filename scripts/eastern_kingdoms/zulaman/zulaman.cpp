@@ -241,22 +241,22 @@ bool GOUse_go_strange_gong(Player* pPlayer, GameObject* pGo)
 
 void AddSC_zulaman()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "npc_forest_frog";
-    newscript->GetAI = &GetAI_npc_forest_frog;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_forest_frog";
+    pNewScript->GetAI = &GetAI_npc_forest_frog;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_harrison_jones_za";
-    newscript->GetAI = &GetAI_npc_harrison_jones_za;
-    newscript->pGossipHello =  &GossipHello_npc_harrison_jones_za;
-    newscript->pGossipSelect = &GossipSelect_npc_harrison_jones_za;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_harrison_jones_za";
+    pNewScript->GetAI = &GetAI_npc_harrison_jones_za;
+    pNewScript->pGossipHello =  &GossipHello_npc_harrison_jones_za;
+    pNewScript->pGossipSelect = &GossipSelect_npc_harrison_jones_za;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "go_strange_gong";
-    newscript->pGOUse = &GOUse_go_strange_gong;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "go_strange_gong";
+    pNewScript->pGOUse = &GOUse_go_strange_gong;
+    pNewScript->RegisterSelf();
 }

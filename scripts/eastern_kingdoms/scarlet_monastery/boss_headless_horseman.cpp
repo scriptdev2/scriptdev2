@@ -81,10 +81,10 @@ CreatureAI* GetAI_boss_headless_horseman(Creature* pCreature)
 
 void AddSC_boss_headless_horseman()
 {
-    Script* NewScript;
+    Script* pNewScript;
 
-    NewScript = new Script;
-    NewScript->Name = "boss_headless_horseman";
-    NewScript->GetAI = GetAI_boss_headless_horseman;
-    NewScript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_headless_horseman";
+    pNewScript->GetAI = GetAI_boss_headless_horseman;
+    pNewScript->RegisterSelf();
 }

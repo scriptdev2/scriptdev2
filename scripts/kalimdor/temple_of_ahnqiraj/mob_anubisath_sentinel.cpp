@@ -188,9 +188,10 @@ CreatureAI* GetAI_npc_anubisath_sentinel(Creature* pCreature)
 
 void AddSC_mob_anubisath_sentinel()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "mob_anubisath_sentinel";
-    newscript->GetAI = &GetAI_npc_anubisath_sentinel;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "mob_anubisath_sentinel";
+    pNewScript->GetAI = &GetAI_npc_anubisath_sentinel;
+    pNewScript->RegisterSelf();
 }

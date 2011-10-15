@@ -174,15 +174,15 @@ CreatureAI* GetAI_boss_lieutenant_drake(Creature* pCreature)
 
 void AddSC_boss_lieutenant_drake()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "go_barrel_old_hillsbrad";
-    newscript->pGOUse = &GOUse_go_barrel_old_hillsbrad;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "go_barrel_old_hillsbrad";
+    pNewScript->pGOUse = &GOUse_go_barrel_old_hillsbrad;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "boss_lieutenant_drake";
-    newscript->GetAI = &GetAI_boss_lieutenant_drake;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_lieutenant_drake";
+    pNewScript->GetAI = &GetAI_boss_lieutenant_drake;
+    pNewScript->RegisterSelf();
 }

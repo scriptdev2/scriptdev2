@@ -115,9 +115,10 @@ CreatureAI* GetAI_boss_bloodmage_thalnos(Creature* pCreature)
 
 void AddSC_boss_bloodmage_thalnos()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_bloodmage_thalnos";
-    newscript->GetAI = &GetAI_boss_bloodmage_thalnos;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_bloodmage_thalnos";
+    pNewScript->GetAI = &GetAI_boss_bloodmage_thalnos;
+    pNewScript->RegisterSelf();
 }

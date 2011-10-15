@@ -383,15 +383,15 @@ CreatureAI* GetAI_boss_high_inquisitor_whitemane(Creature* pCreature)
 
 void AddSC_boss_mograine_and_whitemane()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_scarlet_commander_mograine";
-    newscript->GetAI = &GetAI_boss_scarlet_commander_mograine;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_scarlet_commander_mograine";
+    pNewScript->GetAI = &GetAI_boss_scarlet_commander_mograine;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "boss_high_inquisitor_whitemane";
-    newscript->GetAI = &GetAI_boss_high_inquisitor_whitemane;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_high_inquisitor_whitemane";
+    pNewScript->GetAI = &GetAI_boss_high_inquisitor_whitemane;
+    pNewScript->RegisterSelf();
 }

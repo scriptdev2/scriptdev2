@@ -87,9 +87,10 @@ CreatureAI* GetAI_celebras_the_cursed(Creature* pCreature)
 
 void AddSC_boss_celebras_the_cursed()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "celebras_the_cursed";
-    newscript->GetAI = &GetAI_celebras_the_cursed;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "celebras_the_cursed";
+    pNewScript->GetAI = &GetAI_celebras_the_cursed;
+    pNewScript->RegisterSelf();
 }

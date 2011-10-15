@@ -128,9 +128,10 @@ CreatureAI* GetAI_boss_gatewatcher_iron_hand(Creature* pCreature)
 
 void AddSC_boss_gatewatcher_iron_hand()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_gatewatcher_iron_hand";
-    newscript->GetAI = &GetAI_boss_gatewatcher_iron_hand;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_gatewatcher_iron_hand";
+    pNewScript->GetAI = &GetAI_boss_gatewatcher_iron_hand;
+    pNewScript->RegisterSelf();
 }

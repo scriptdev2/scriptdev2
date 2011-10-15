@@ -270,6 +270,7 @@ bool AreaTrigger_at_blackrock_spire(Player* pPlayer, AreaTriggerEntry const* pAt
 void AddSC_instance_blackrock_spire()
 {
     Script* pNewScript;
+
     pNewScript = new Script;
     pNewScript->Name = "instance_blackrock_spire";
     pNewScript->GetInstanceData = &GetInstanceData_instance_blackrock_spire;

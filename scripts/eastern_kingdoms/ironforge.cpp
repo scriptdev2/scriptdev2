@@ -83,11 +83,11 @@ bool GossipSelect_npc_royal_historian_archesonus(Player* pPlayer, Creature* pCre
 
 void AddSC_ironforge()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "npc_royal_historian_archesonus";
-    newscript->pGossipHello =  &GossipHello_npc_royal_historian_archesonus;
-    newscript->pGossipSelect = &GossipSelect_npc_royal_historian_archesonus;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_royal_historian_archesonus";
+    pNewScript->pGossipHello =  &GossipHello_npc_royal_historian_archesonus;
+    pNewScript->pGossipSelect = &GossipSelect_npc_royal_historian_archesonus;
+    pNewScript->RegisterSelf();
 }

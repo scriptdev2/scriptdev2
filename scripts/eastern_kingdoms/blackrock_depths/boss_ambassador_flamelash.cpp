@@ -96,9 +96,10 @@ CreatureAI* GetAI_boss_ambassador_flamelash(Creature* pCreature)
 
 void AddSC_boss_ambassador_flamelash()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_ambassador_flamelash";
-    newscript->GetAI = &GetAI_boss_ambassador_flamelash;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_ambassador_flamelash";
+    pNewScript->GetAI = &GetAI_boss_ambassador_flamelash;
+    pNewScript->RegisterSelf();
 }

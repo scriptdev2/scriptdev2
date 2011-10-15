@@ -219,10 +219,10 @@ CreatureAI* GetAI_boss_loken(Creature* pCreature)
 
 void AddSC_boss_loken()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_loken";
-    newscript->GetAI = &GetAI_boss_loken;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_loken";
+    pNewScript->GetAI = &GetAI_boss_loken;
+    pNewScript->RegisterSelf();
 }

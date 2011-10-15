@@ -143,17 +143,17 @@ bool GossipSelect_npc_fallen_hero_of_horde(Player* pPlayer, Creature* pCreature,
 
 void AddSC_blasted_lands()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "npc_deathly_usher";
-    newscript->pGossipHello =  &GossipHello_npc_deathly_usher;
-    newscript->pGossipSelect = &GossipSelect_npc_deathly_usher;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_deathly_usher";
+    pNewScript->pGossipHello =  &GossipHello_npc_deathly_usher;
+    pNewScript->pGossipSelect = &GossipSelect_npc_deathly_usher;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_fallen_hero_of_horde";
-    newscript->pGossipHello =  &GossipHello_npc_fallen_hero_of_horde;
-    newscript->pGossipSelect = &GossipSelect_npc_fallen_hero_of_horde;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_fallen_hero_of_horde";
+    pNewScript->pGossipHello =  &GossipHello_npc_fallen_hero_of_horde;
+    pNewScript->pGossipSelect = &GossipSelect_npc_fallen_hero_of_horde;
+    pNewScript->RegisterSelf();
 }

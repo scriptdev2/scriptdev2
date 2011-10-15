@@ -360,33 +360,33 @@ bool GossipSelect_npc_loramus_thalipedes(Player* pPlayer, Creature* pCreature, u
 
 void AddSC_azshara()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "npc_rizzle_sprysprocket";
-    newscript->GetAI = &GetAI_npc_rizzle_sprysprocket;
-    newscript->pGossipHello = &GossipHello_npc_rizzle_sprysprocket;
-    newscript->pGossipSelect = &GossipSelect_npc_rizzle_sprysprocket;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_rizzle_sprysprocket";
+    pNewScript->GetAI = &GetAI_npc_rizzle_sprysprocket;
+    pNewScript->pGossipHello = &GossipHello_npc_rizzle_sprysprocket;
+    pNewScript->pGossipSelect = &GossipSelect_npc_rizzle_sprysprocket;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_depth_charge";
-    newscript->GetAI = &GetAI_npc_depth_charge;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_depth_charge";
+    pNewScript->GetAI = &GetAI_npc_depth_charge;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "go_southfury_moonstone";
-    newscript->pGOUse = &GOUse_go_southfury_moonstone;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "go_southfury_moonstone";
+    pNewScript->pGOUse = &GOUse_go_southfury_moonstone;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mobs_spitelashes";
-    newscript->GetAI = &GetAI_mobs_spitelashes;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mobs_spitelashes";
+    pNewScript->GetAI = &GetAI_mobs_spitelashes;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_loramus_thalipedes";
-    newscript->pGossipHello =  &GossipHello_npc_loramus_thalipedes;
-    newscript->pGossipSelect = &GossipSelect_npc_loramus_thalipedes;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_loramus_thalipedes";
+    pNewScript->pGossipHello =  &GossipHello_npc_loramus_thalipedes;
+    pNewScript->pGossipSelect = &GossipSelect_npc_loramus_thalipedes;
+    pNewScript->RegisterSelf();
 }

@@ -431,34 +431,34 @@ bool GossipSelect_npc_susurrus(Player* pPlayer, Creature* pCreature, uint32 uiSe
 
 void AddSC_azuremyst_isle()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "npc_draenei_survivor";
-    newscript->GetAI = &GetAI_npc_draenei_survivor;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_draenei_survivor";
+    pNewScript->GetAI = &GetAI_npc_draenei_survivor;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_engineer_spark_overgrind";
-    newscript->GetAI = &GetAI_npc_engineer_spark_overgrind;
-    newscript->pGossipHello =  &GossipHello_npc_engineer_spark_overgrind;
-    newscript->pGossipSelect = &GossipSelect_npc_engineer_spark_overgrind;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_engineer_spark_overgrind";
+    pNewScript->GetAI = &GetAI_npc_engineer_spark_overgrind;
+    pNewScript->pGossipHello =  &GossipHello_npc_engineer_spark_overgrind;
+    pNewScript->pGossipSelect = &GossipSelect_npc_engineer_spark_overgrind;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_injured_draenei";
-    newscript->GetAI = &GetAI_npc_injured_draenei;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_injured_draenei";
+    pNewScript->GetAI = &GetAI_npc_injured_draenei;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_magwin";
-    newscript->GetAI = &GetAI_npc_magwinAI;
-    newscript->pQuestAcceptNPC = &QuestAccept_npc_magwin;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_magwin";
+    pNewScript->GetAI = &GetAI_npc_magwinAI;
+    pNewScript->pQuestAcceptNPC = &QuestAccept_npc_magwin;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_susurrus";
-    newscript->pGossipHello =  &GossipHello_npc_susurrus;
-    newscript->pGossipSelect = &GossipSelect_npc_susurrus;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "npc_susurrus";
+    pNewScript->pGossipHello =  &GossipHello_npc_susurrus;
+    pNewScript->pGossipSelect = &GossipSelect_npc_susurrus;
+    pNewScript->RegisterSelf();
 }

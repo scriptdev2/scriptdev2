@@ -200,9 +200,10 @@ CreatureAI* GetAI_boss_murmur(Creature* pCreature)
 
 void AddSC_boss_murmur()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_murmur";
-    newscript->GetAI = &GetAI_boss_murmur;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_murmur";
+    pNewScript->GetAI = &GetAI_boss_murmur;
+    pNewScript->RegisterSelf();
 }

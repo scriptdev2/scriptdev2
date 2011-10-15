@@ -546,15 +546,15 @@ CreatureAI* GetAI_water_elemental(Creature* pCreature)
 
 void AddSC_boss_shade_of_aran()
 {
-    Script* newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_shade_of_aran";
-    newscript->GetAI = &GetAI_boss_aran;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_shade_of_aran";
+    pNewScript->GetAI = &GetAI_boss_aran;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_aran_elemental";
-    newscript->GetAI = &GetAI_water_elemental;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_aran_elemental";
+    pNewScript->GetAI = &GetAI_water_elemental;
+    pNewScript->RegisterSelf();
 }

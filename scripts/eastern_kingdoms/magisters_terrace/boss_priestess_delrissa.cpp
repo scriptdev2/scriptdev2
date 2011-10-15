@@ -1280,55 +1280,55 @@ CreatureAI* GetAI_zelfan(Creature* pCreature)
 
 void AddSC_boss_priestess_delrissa()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_priestess_delrissa";
-    newscript->GetAI = &GetAI_boss_priestess_delrissa;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_priestess_delrissa";
+    pNewScript->GetAI = &GetAI_boss_priestess_delrissa;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "boss_kagani_nightstrike";
-    newscript->GetAI = &GetAI_boss_kagani_nightstrike;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_kagani_nightstrike";
+    pNewScript->GetAI = &GetAI_boss_kagani_nightstrike;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "boss_ellris_duskhallow";
-    newscript->GetAI = &GetAI_ellris_duskhallow;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_ellris_duskhallow";
+    pNewScript->GetAI = &GetAI_ellris_duskhallow;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "boss_eramas_brightblaze";
-    newscript->GetAI = &GetAI_eramas_brightblaze;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_eramas_brightblaze";
+    pNewScript->GetAI = &GetAI_eramas_brightblaze;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "boss_yazzai";
-    newscript->GetAI = &GetAI_yazzai;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_yazzai";
+    pNewScript->GetAI = &GetAI_yazzai;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "boss_warlord_salaris";
-    newscript->GetAI = &GetAI_warlord_salaris;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_warlord_salaris";
+    pNewScript->GetAI = &GetAI_warlord_salaris;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "boss_garaxxas";
-    newscript->GetAI = &GetAI_garaxxas;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_garaxxas";
+    pNewScript->GetAI = &GetAI_garaxxas;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "boss_apoko";
-    newscript->GetAI = &GetAI_apoko;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_apoko";
+    pNewScript->GetAI = &GetAI_apoko;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "boss_zelfan";
-    newscript->GetAI = &GetAI_zelfan;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_zelfan";
+    pNewScript->GetAI = &GetAI_zelfan;
+    pNewScript->RegisterSelf();
 
-    /*newscript = new Script;
-    newscript->Name = "mob_high_explosive_sheep";
-    newscript->GetAI = &GetAI_mob_high_explosive_sheep;
-    newscript->RegisterSelf();*/
+    /*pNewScript = new Script;
+    pNewScript->Name = "mob_high_explosive_sheep";
+    pNewScript->GetAI = &GetAI_mob_high_explosive_sheep;
+    pNewScript->RegisterSelf();*/
 }

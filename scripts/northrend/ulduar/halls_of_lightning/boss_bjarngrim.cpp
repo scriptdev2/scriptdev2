@@ -396,15 +396,15 @@ CreatureAI* GetAI_mob_stormforged_lieutenant(Creature* pCreature)
 
 void AddSC_boss_bjarngrim()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_bjarngrim";
-    newscript->GetAI = &GetAI_boss_bjarngrim;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_bjarngrim";
+    pNewScript->GetAI = &GetAI_boss_bjarngrim;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_stormforged_lieutenant";
-    newscript->GetAI = &GetAI_mob_stormforged_lieutenant;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "mob_stormforged_lieutenant";
+    pNewScript->GetAI = &GetAI_mob_stormforged_lieutenant;
+    pNewScript->RegisterSelf();
 }

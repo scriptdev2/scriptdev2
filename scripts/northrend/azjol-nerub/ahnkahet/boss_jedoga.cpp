@@ -176,10 +176,10 @@ CreatureAI* GetAI_boss_jedoga(Creature* pCreature)
 
 void AddSC_boss_jedoga()
 {
-    Script* newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_jedoga";
-    newscript->GetAI = &GetAI_boss_jedoga;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_jedoga";
+    pNewScript->GetAI = &GetAI_boss_jedoga;
+    pNewScript->RegisterSelf();
 }

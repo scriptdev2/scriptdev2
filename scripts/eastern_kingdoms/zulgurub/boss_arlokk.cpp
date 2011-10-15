@@ -273,15 +273,15 @@ CreatureAI* GetAI_boss_arlokk(Creature* pCreature)
 
 void AddSC_boss_arlokk()
 {
-    Script *newscript;
+    Script* pNewScript;
 
-    newscript = new Script;
-    newscript->Name = "go_gong_of_bethekk";
-    newscript->pGOUse = &GOUse_go_gong_of_bethekk;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "go_gong_of_bethekk";
+    pNewScript->pGOUse = &GOUse_go_gong_of_bethekk;
+    pNewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "boss_arlokk";
-    newscript->GetAI = &GetAI_boss_arlokk;
-    newscript->RegisterSelf();
+    pNewScript = new Script;
+    pNewScript->Name = "boss_arlokk";
+    pNewScript->GetAI = &GetAI_boss_arlokk;
+    pNewScript->RegisterSelf();
 }
