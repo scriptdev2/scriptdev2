@@ -1,0 +1,232 @@
+In Day 7 you should have seen:
+
+* A few basic ideas of OOP
+* What a minimal ScriptDev2 script looks like, and how it is added to the system
+
+This day is now about
+
+* A description about the main classes used for boss scripts in ScriptDev2
+* A few things you can do with the provided powers
+
+== First Part
+
+Interaction between MaNGOS and ScriptDev2 for Creature AIs
+
+=== The CreatureAI class
+
+The class 'CreatureAI' defined in MaNGOS, especially in +src/game/CreatureAI.h+ is the topmost class for any AI a creature uses.
+Any npc in the world has one AI, and this AI is a subclass of CreatureAI.
+
+The AI of any Creature can be accessed by the member function of the Creature class named +AI()+.
+
+TIP: https://github.com/mangos/mangos/blob/master/src/game/CreatureAI.h[The MaNGOS CreatureAI header]
+
+TIP: TODO Link here to auto-generated documentation
+
+When you look into the source, you will notice that nearly all of the functions are marked 'virtual'
+This means, that when anywhere in the core one of these functions is called the implementation of this function in the actual class realising the AI will be called.
+
+This is the way how the script is "informed" about events that it might want to react to.
+
+When the core will call these functions is documented there.
+
+=== The ScriptedAI class
+
+The class 'ScriptedAI' is the base class in ScriptDev2 to be used to implement scripts.
+It implements a few of the functions of CreatureAI with default behaviour you might expect from a creature.
+
+What are the actual default implementations of ScriptedAI can be seen in +include/sc_creature.cpp+:
+
+TIP: https://github.com/scriptdev2/scriptdev2/blob/master/include/sc_creature.cpp[Basic ScriptDev2 class for creature scripts]
+
+When we implement a boss script, we usally overwrite a few functions of ScriptedAI (and hence overwrite the functions of CreatureAI).
+
+=== Our example class 'boss_festergutAI'
+
+As you should remember from Day 7 that 'boss_festergutAI' is a subclass of 'ScriptedAI', which is a subclass of 'CreatureAI'.
+
+Currently, this class does not do very much, and hence also the instances of the class assigned to a spawned creature is also rather boring.
+
+== End of first part
+
+This already brings us to the end of the small introduction of the CreatureAI functions.
+This got way shorter than intended, and must be improved.
+
+The main problem here is how to bring a relatively big class with a fair amount of documentation into a usable format for this guide.
+
+[NOTE]
+[icon="./images/icons/example.png", caption="Exercise"]
+.*Exercise 1* - Do my job :)
+==================================================================
+Do look into the CreatureAI class, and think if there might be ways to present it in a guide environment!
+==================================================================
+
+== Second Part:
+
+As just noted, the script we added to boss Festergut with the class 'boss_festergutAI' is really really boring, so now we start to change it!
+
+In this part we will cover a few of the virtual functions we have available through 'CreatureAI' to do some text output.
+
+=== Text Output in ScriptDev2
+
+Luckily most of the texts in ICC are already prepared for ScriptDev2, so we can use them very easy.
+They might not be all correct, and it will become required to change some of them to make them better.
+Currently they are taken from http://www.wowwiki.com[wowwiki], which is a good source but not always perfect.
+
+
+==== The signature of a function
+
+Any function defined in C++ has a so called signature.
+This is the combination of:
+
+return-type:: The type of the values returned by the function
+function-name:: The name of the function (in case of C++ case sensetive)
+paramter-list:: The parameter types the function takes
+
+=== DoScriptText
+
+Our main method to output text is +DoScriptText+ which is defined in +ScriptMgr.cpp+, its signature looks like this:
+
+--------------------------------
+void DoScriptText(int32 iTextEntry, WorldObject* pSource, Unit* pTarget /*=NULL*/)
+--------------------------------
+
+Where the parameters have this meaning:
+
+*iTextEntry*(an int32 number):: Entry of the text, stored in SD2-database
+*pSource*(a WorldObject, often a Creature):: Who displays the text
+*pTarget*(a Unit, that is player or creature):: To whom the text will be directed, 'not' required
+
+TIP: A detailed description of how SD2 stores the texts in the database can be found in http://www.scriptdev2.com/showthread.php?t=5536[Guide for SD2-SQL]
+
+=== Doing Text on Aggro
+
+Most bosses have a text when they start attacking, this we call 'Aggro' for which a function in ScriptedAI is defined, with the signature
+
+--------------------------------
+void Aggro(Unit* pWho)
+--------------------------------
+pWho:: is the Unit (Player or Creature) whom we aggro.
+
+This we will now overwrite, to display the text "Fun time!" by Festergut when Festergut aggroes.
+
+This text is already in the SD2 database, and the number is assigned the constant +SAY_AGGRO+.
+
+The required change looks like this:
+
+--------------------------------
+From f5f3a22fec940bdf0b4a20fc6f8c09859af97609 Mon Sep 17 00:00:00 2001
+From: Schmoozerd <schmoozerd@scriptdev2.com>
+Date: Sat, 15 Oct 2011 01:31:06 +0200
+Subject: [PATCH] ICC, Festergut - Add Aggro text
+
+---
+ .../icecrown_citadel/boss_festergut.cpp            |    5 +++++
+ 1 files changed, 5 insertions(+), 0 deletions(-)
+
+diff --git a/scripts/northrend/icecrown_citadel/icecrown_citadel/boss_festergut.cpp b/scripts/northrend/icecrown_citadel/icecrown_citadel/boss_festergut.cpp
+index acd358d..940b7f7 100644
+--- a/scripts/northrend/icecrown_citadel/icecrown_citadel/boss_festergut.cpp
++++ b/scripts/northrend/icecrown_citadel/icecrown_citadel/boss_festergut.cpp
+@@ -48,6 +48,11 @@ struct MANGOS_DLL_DECL boss_festergutAI : public ScriptedAI
+     void Reset()
+     {
+     }
++
++    void Aggro(Unit* pWho)                         <1>
++    {
++        DoScriptText(SAY_AGGRO, m_creature);
++    }
+ };
+ 
+ CreatureAI* GetAI_boss_festergut(Creature* pCreature)
+-- 
+1.7.6.msysgit.0
+--------------------------------
+Where
+
+<1> The actual changes to the code
+
+Remark that the variable +m_creature+ links to Festergut.
+
+[NOTE]
+[icon="./images/icons/example.png", caption="Exercise"]
+.*Exercise 2* - Where is it from
+==================================================================
+Where is the variable m_creature defined?
+==================================================================
+
+=== Doing Text when killing a player
+
+This is very important text, because a both where this doesn't happen should not be called boss :)
+Only killed players are good players!
+
+Looking again into CreatureAI you can find:
+
+--------------------------------
+        /**
+         * Called when the creature kills a unit
+         * @param pVictim Victim that got killed
+         */
+        virtual void KilledUnit(Unit* pVictim) {}
+--------------------------------
+
+As Player is a subclass of Unit, a player is also a unit, so this function can be expected to be called when the creature kills a player.
+This is infact true, so we will use this function to display the text we want to display when killing enemies.
+
+From http://www.wowwiki.com/Festergut[wowwiki] we take the texts "Daddy, I did it!" and "Dead, dead, dead!" which should be displayed when killing.
+There are already two constants assinged: +SAY_SLAY_1+ and +SAY_SLAY_2+.
+
+The required code to overwrite the function "void KilledUnit(Unit* pVictim)" is:
+
+--------------------------------
+    void KilledUnit(Unit* pVictim)
+    {
+        DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
+    }
+--------------------------------
+
+The full changeset can be seen on https://github.com/scriptdev2/scriptdev2/commit/7a35df04b072ebbeb038235e0b6d6b68a91ab81b[Github] or on https://github.com/scriptdev2/scriptdev2/commit/7a35df04b072ebbeb038235e0b6d6b68a91ab81b.patch[Github as format-patch]
+
+In case you have never seen this construction before:
+
+With +expression ? A : B+ you tell the code to set at this place IF expression is true THEN A ELSE B, which is handy to write compact code.
+
+[NOTE]
+[icon="./images/icons/example.png", caption="Exercise"]
+.*Exercise 3* - More texts
+==================================================================
+Find a function that could be used when a creature just died, and use it to display the text of constant +SAY_DEATH+
+==================================================================
+
+== End of second part
+
+What you should have seen today:
+
+* Where the functions you can use in ScriptDev2 boss scripts come from
+* How to use them to display some texts
+
+What comes next:
+
+* The UpdateAI function, and timers
+* Some more constructs to make a boss deadly
+
+[NOTE]
+[icon="./images/icons/example.png", caption="Exercise"]
+.*Exercise 4* - Prepare yourself
+==================================================================
+Figure out how UpdateAI is called, and think about how this could be used.
+==================================================================
+
+NOTE: This is no special exercise, because I really want to encourage you guys to take matters into your own hand, and do some own stuff!
+
+[NOTE]
+[icon="./images/icons/example.png", caption="Exercise"]
+.*Exercise 5* - Do some own stuff
+==================================================================
+* Pick another boss, create a basic script (look into Day 7)
+* Let this other boss display some basic texts like done today
+* Share the code you did with us all!
++
+Best use format-patch styled output on http://paste2.org/new-paste and post your scripts in the forum. Take a look into the first week if you feel unsecure with creating patches and commits!
+==================================================================
