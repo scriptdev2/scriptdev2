@@ -102,21 +102,11 @@ class MANGOS_DLL_DECL instance_molten_core : public ScriptedInstance
         const char* Save() { return m_strInstData.c_str(); }
         void Load(const char* chrIn);
 
-        // TODO Remove this, when creature linking implemented in MaNGOS
-        void DoHandleAdds(GUIDList &m_luiAddsGUIDs, bool bRespawn = true);
-
     protected:
         void DoSpawnMajordomoIfCan(bool bByPlayerEnter);
 
         std::string m_strInstData;
         uint32 m_auiEncounter[MAX_ENCOUNTER];
-
-        // Adds lists
-        GUIDList m_luiProtectorGUIDs;
-        GUIDList m_luiFlamewakerGUIDs;
-        GUIDList m_luiFireswornGUIDs;
-        GUIDList m_luiPriestGUIDs;
-        GUIDList m_luiRagerGUIDs;
 };
 
 #endif

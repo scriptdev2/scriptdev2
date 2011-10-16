@@ -124,10 +124,7 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
         if (!m_bHasEncounterFinished)                        // Normal reached home, FAIL
         {
             if (m_pInstance)
-            {
                 m_pInstance->SetData(TYPE_MAJORDOMO, FAIL);
-                m_pInstance->DoHandleAdds(m_luiMajordomoAddsGUIDs);
-            }
         }
         else                                                 // Finished the encounter, DONE
         {
