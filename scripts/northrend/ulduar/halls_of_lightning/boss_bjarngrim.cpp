@@ -151,9 +151,6 @@ struct MANGOS_DLL_DECL boss_bjarngrimAI : public ScriptedAI
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
-        //must get both lieutenants here and make sure they are with him
-        m_creature->CallForHelp(30.0f);
-
         if (m_pInstance)
             m_pInstance->SetData(TYPE_BJARNGRIM, IN_PROGRESS);
     }

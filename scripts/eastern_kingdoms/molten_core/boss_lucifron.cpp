@@ -56,8 +56,6 @@ struct MANGOS_DLL_DECL boss_lucifronAI : public ScriptedAI
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_LUCIFRON, IN_PROGRESS);
-
-        m_creature->CallForHelp(RANGE_CALL_FOR_HELP);
     }
 
     void JustDied(Unit* pKiller)

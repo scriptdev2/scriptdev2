@@ -66,8 +66,6 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_GOLEMAGG, IN_PROGRESS);
-
-        m_creature->CallForHelp(1.5 * RANGE_CALL_FOR_HELP);
     }
 
     void JustDied(Unit* pKiller)
