@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Ashenvale
 SD%Complete: 70
-SDComment: Quest support: 6482, 6544, 6641
+SDComment: Quest support: 976, 6482, 6544, 6641
 SDCategory: Ashenvale Forest
 EndScriptData */
 
@@ -25,6 +25,7 @@ EndScriptData */
 npc_muglash
 npc_ruul_snowhoof
 npc_torek
+npc_feero_ironhand
 EndContentData */
 
 #include "precompiled.h"
@@ -418,6 +419,183 @@ CreatureAI* GetAI_npc_torek(Creature* pCreature)
     return new npc_torekAI(pCreature);
 }
 
+/*####
+# npc_feero_ironhand
+####*/
+
+enum
+{
+    SAY_QUEST_START             = -1000771,
+    SAY_FIRST_AMBUSH_START      = -1000772,
+    SAY_FIRST_AMBUSH_END        = -1000773,
+    SAY_SECOND_AMBUSH_START     = -1000774,
+    SAY_SCOUT_SECOND_AMBUSH     = -1000775,
+    SAY_SECOND_AMBUSH_END       = -1000776,
+    SAY_FINAL_AMBUSH_START      = -1000777,
+    SAY_BALIZAR_FINAL_AMBUSH    = -1000778,
+    SAY_FINAL_AMBUSH_ATTACK     = -1000779,
+    SAY_QUEST_END               = -1000780,
+
+    QUEST_SUPPLIES_TO_AUBERDINE = 976,
+
+    NPC_DARK_STRAND_ASSASSIN    = 3879,
+    NPC_FORSAKEN_SCOUT          = 3893,
+
+    NPC_ALIGAR_THE_TORMENTOR    = 3898,
+    NPC_BALIZAR_THE_UMBRAGE     = 3899,
+    NPC_CAEDAKAR_THE_VICIOUS    = 3900,
+};
+
+/*
+ * Notes about the event:
+ * The summon coords and event sequence are guesswork based on the comments from wowhead and wowwiki
+ */
+
+// Distance, Angle or Offset
+static const float aSummonPositions[2][2] =
+{
+    {30.0f, 1.25f},
+    {30.0f, 0.95f}
+};
+
+// Hardcoded positions for the last 3 mobs
+static const float aEliteSummonPositions[3][4] =
+{
+    {4243.12f, 108.22f, 38.12f, 3.62f},
+    {4240.95f, 114.04f, 38.35f, 3.56f},
+    {4235.78f, 118.09f, 38.08f, 4.12f}
+};
+
+struct MANGOS_DLL_DECL npc_feero_ironhandAI : public npc_escortAI
+{
+    npc_feero_ironhandAI(Creature* pCreature) : npc_escortAI(pCreature)
+    {
+        Reset();
+    }
+
+    uint8 m_uiCreaturesCount;
+    bool m_bIsAttacked;
+
+    void Reset()
+    {
+        if (!HasEscortState(STATE_ESCORT_ESCORTING))
+        {
+            m_uiCreaturesCount  = 0;
+            m_bIsAttacked       = false;
+        }
+    }
+
+    void WaypointReached(uint32 uiPointId)
+    {
+        switch(uiPointId)
+        {
+            case 14:
+                // Prepare the first ambush
+                DoScriptText(SAY_FIRST_AMBUSH_START, m_creature);
+                for (uint8 i = 0; i < 4; ++i)
+                    DoSpawnMob(NPC_DARK_STRAND_ASSASSIN, aSummonPositions[0][0], aSummonPositions[0][1] - M_PI_F/4 * i);
+                break;
+            case 20:
+                // Prepare the second ambush
+                DoScriptText(SAY_SECOND_AMBUSH_START, m_creature);
+                for (uint8 i = 0; i < 3; ++i)
+                    DoSpawnMob(NPC_FORSAKEN_SCOUT, aSummonPositions[1][0], aSummonPositions[1][1] - M_PI_F/3 * i);
+                break;
+            case 29:
+                // Final ambush
+                DoScriptText(SAY_FINAL_AMBUSH_START, m_creature);
+                m_creature->SummonCreature(NPC_BALIZAR_THE_UMBRAGE, aEliteSummonPositions[0][0], aEliteSummonPositions[0][1], aEliteSummonPositions[0][2], aEliteSummonPositions[0][3], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 20000);
+                m_creature->SummonCreature(NPC_ALIGAR_THE_TORMENTOR, aEliteSummonPositions[1][0], aEliteSummonPositions[1][1], aEliteSummonPositions[1][2], aEliteSummonPositions[1][3], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 20000);
+                m_creature->SummonCreature(NPC_CAEDAKAR_THE_VICIOUS, aEliteSummonPositions[2][0], aEliteSummonPositions[2][1], aEliteSummonPositions[2][2], aEliteSummonPositions[2][3], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 20000);
+                break;
+            case 30:
+                // Complete the quest
+                if (Player* pPlayer = GetPlayerForEscort())
+                    pPlayer->GroupEventHappens(QUEST_SUPPLIES_TO_AUBERDINE, m_creature);
+                break;
+        }
+    }
+
+    void AttackedBy(Unit* pWho)
+    {
+        // Yell only at the first attack
+        if (!m_bIsAttacked)
+        {
+            if (((Creature*)pWho)->GetEntry() == NPC_BALIZAR_THE_UMBRAGE)
+            {
+                DoScriptText(SAY_FINAL_AMBUSH_ATTACK, m_creature);
+                m_bIsAttacked = true;
+            }
+        }
+    }
+
+    // Summon mobs at calculated points
+    void DoSpawnMob(uint32 uiEntry, float fDistance, float fAngle)
+    {
+        float fX, fY, fZ;
+        m_creature->GetNearPoint(m_creature, fX, fY, fZ, 0, fDistance, fAngle);
+
+        m_creature->SummonCreature(uiEntry, fX, fY, fZ, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 20000);
+    }
+
+    void SummonedCreatureJustDied(Creature* pSummoned)
+    {
+        --m_uiCreaturesCount;
+
+        if (!m_uiCreaturesCount)
+        {
+            switch(pSummoned->GetEntry())
+            {
+                case NPC_DARK_STRAND_ASSASSIN:
+                    DoScriptText(SAY_FIRST_AMBUSH_END, m_creature);
+                    break;
+                case NPC_FORSAKEN_SCOUT:
+                    DoScriptText(SAY_SECOND_AMBUSH_END, m_creature);
+                    break;
+                case NPC_ALIGAR_THE_TORMENTOR:
+                case NPC_BALIZAR_THE_UMBRAGE:
+                case NPC_CAEDAKAR_THE_VICIOUS:
+                    DoScriptText(SAY_QUEST_END, m_creature);
+                    break;
+            }
+        }
+    }
+
+    void JustSummoned(Creature* pSummoned)
+    {
+        if (pSummoned->GetEntry() == NPC_FORSAKEN_SCOUT)
+        {
+            // Only one of the scouts yells
+            if (m_uiCreaturesCount == 1)
+                DoScriptText(SAY_SCOUT_SECOND_AMBUSH, pSummoned, m_creature);
+        }
+        else if (pSummoned->GetEntry() == NPC_BALIZAR_THE_UMBRAGE)
+            DoScriptText(SAY_BALIZAR_FINAL_AMBUSH, pSummoned);
+
+        ++m_uiCreaturesCount;
+        pSummoned->AI()->AttackStart(m_creature);
+    }
+};
+
+CreatureAI* GetAI_npc_feero_ironhand(Creature* pCreature)
+{
+    return new npc_feero_ironhandAI(pCreature);
+}
+
+bool QuestAccept_npc_feero_ironhand(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
+{
+    if (pQuest->GetQuestId() == QUEST_SUPPLIES_TO_AUBERDINE)
+    {
+        DoScriptText(SAY_QUEST_START, pCreature, pPlayer);
+        pCreature->setFaction(FACTION_ESCORT_A_NEUTRAL_PASSIVE);
+
+        if (npc_feero_ironhandAI* pEscortAI = dynamic_cast<npc_feero_ironhandAI*>(pCreature->AI()))
+            pEscortAI->Start(true, pPlayer, pQuest, true);
+    }
+
+    return true;
+}
+
 void AddSC_ashenvale()
 {
     Script* pNewScript;
@@ -443,5 +621,11 @@ void AddSC_ashenvale()
     pNewScript->Name = "npc_torek";
     pNewScript->GetAI = &GetAI_npc_torek;
     pNewScript->pQuestAcceptNPC = &QuestAccept_npc_torek;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_feero_ironhand";
+    pNewScript->GetAI = &GetAI_npc_feero_ironhand;
+    pNewScript->pQuestAcceptNPC = &QuestAccept_npc_feero_ironhand;
     pNewScript->RegisterSelf();
 }

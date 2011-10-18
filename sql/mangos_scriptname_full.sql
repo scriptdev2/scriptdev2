@@ -183,6 +183,7 @@ UPDATE creature_template SET ScriptName='npc_muglash' WHERE entry=12717;
 UPDATE gameobject_template SET ScriptName='go_naga_brazier' WHERE entry=178247;
 UPDATE creature_template SET ScriptName='npc_ruul_snowhoof' WHERE entry=12818;
 UPDATE creature_template SET ScriptName='npc_torek' WHERE entry=12858;
+UPDATE creature_template SET ScriptName='npc_feero_ironhand' WHERE entry=4484;
 
 /*  */
 /* AUCHINDOUN */
