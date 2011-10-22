@@ -981,7 +981,6 @@ UPDATE creature_template SET ScriptName='npc_shattrathflaskvendors' WHERE entry 
 UPDATE creature_template SET ScriptName='npc_helice' WHERE entry=28787;
 UPDATE creature_template SET ScriptName='npc_injured_rainspeaker' WHERE entry=28217;
 UPDATE creature_template SET ScriptName='npc_mosswalker_victim' WHERE entry=28113;
-UPDATE creature_template SET ScriptName='npc_vekjik' WHERE entry=28315;
 
 /* SILITHUS */
 UPDATE creature_template SET ScriptName='npc_highlord_demitrian' WHERE entry=14347;

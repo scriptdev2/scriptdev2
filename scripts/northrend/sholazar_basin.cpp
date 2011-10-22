@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Sholazar_Basin
 SD%Complete: 100
-SDComment: Quest support: 12573, 12570, 12580, 12688
+SDComment: Quest support: 12570, 12580, 12688
 SDCategory: Sholazar Basin
 EndScriptData */
 
@@ -25,7 +25,6 @@ EndScriptData */
 npc_helice
 npc_injured_rainspeaker
 npc_mosswalker_victim
-npc_vekjik - TODO, can be moved to database (already exist)
 EndContentData */
 
 #include "precompiled.h"
@@ -409,60 +408,6 @@ bool GossipSelect_npc_mosswalker_victim(Player* pPlayer, Creature* pCreature, ui
     return true;
 }
 
-/*######
-## npc_vekjik - TODO, can be moved to database (already exist)
-######*/
-
-#define GOSSIP_VEKJIK_ITEM1 "Shaman Vekjik, I have spoken with the big-tongues and they desire peace. I have brought this offering on their behalf."
-#define GOSSIP_VEKJIK_ITEM2 "No no... I had no intentions of betraying your people. I was only defending myself. it was all a misunderstanding."
-
-enum
-{
-    GOSSIP_TEXTID_VEKJIK1       = 13137,
-    GOSSIP_TEXTID_VEKJIK2       = 13138,
-
-    SAY_TEXTID_VEKJIK1          = -1000208,
-
-    SPELL_FREANZYHEARTS_FURY    = 51469,
-
-    QUEST_MAKING_PEACE          = 12573
-};
-
-bool GossipHello_npc_vekjik(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
-
-    if (pPlayer->GetQuestStatus(QUEST_MAKING_PEACE) == QUEST_STATUS_INCOMPLETE)
-    {
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_VEKJIK_ITEM1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-        pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_VEKJIK1, pCreature->GetObjectGuid());
-        return true;
-    }
-
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-    return true;
-}
-
-bool GossipSelect_npc_vekjik(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    switch(uiAction)
-    {
-        case GOSSIP_ACTION_INFO_DEF+1:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_VEKJIK_ITEM2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_VEKJIK2, pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+2:
-            pPlayer->CLOSE_GOSSIP_MENU();
-            DoScriptText(SAY_TEXTID_VEKJIK1, pCreature, pPlayer);
-            pPlayer->AreaExploredOrEventHappens(QUEST_MAKING_PEACE);
-            pCreature->CastSpell(pPlayer, SPELL_FREANZYHEARTS_FURY, false);
-            break;
-    }
-
-    return true;
-}
-
 void AddSC_sholazar_basin()
 {
     Script* pNewScript;
@@ -485,11 +430,5 @@ void AddSC_sholazar_basin()
     pNewScript->Name = "npc_mosswalker_victim";
     pNewScript->pGossipHello = &GossipHello_npc_mosswalker_victim;
     pNewScript->pGossipSelect = &GossipSelect_npc_mosswalker_victim;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_vekjik";
-    pNewScript->pGossipHello = &GossipHello_npc_vekjik;
-    pNewScript->pGossipSelect = &GossipSelect_npc_vekjik;
     pNewScript->RegisterSelf();
 }
