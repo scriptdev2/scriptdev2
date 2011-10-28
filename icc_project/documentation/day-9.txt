@@ -1,0 +1,332 @@
+In Day 8 you should have seen:
+
+* Which classes you need to specialise in order to create boss scripts
+* A bunch of functions that are useful for this
+
+This day is now about
+
+* Some thoughts about spells (as this is the thing most bosses do: Cast spells)
+* Implementing casting spells
+
+== First Part
+
+For a clean scripting attempt it is expected to handle nearly everything with spells. So this part is now about the spell system.
+
+Any spell is cast by some caster onto some victim. And a spell will hit some targets.
+
+For some direct spells like ie Fireball the target will be the victim, but ie for AoE spells like ArcaneExplosion the victim will be the caster (self-cast spell), and the targets will be enemies around.
+
+=== The spell system
+
+Spells are provided in dbc form which can be extracted from the wow-client. Actually if you installed a local test server already, you will have extracted these dbc files.
+
+The structure (as far as known) for the spell.dbc can be seen in MaNGOS::DBCStructure.h - +struct SpellEntry+. However this is rather unpleasant to read and hence I 'strongly' suggest to use a tool to help understanding these entries.
+
+TIP: https://github.com/LordJZ/spellwork_cs[SpellWork]  This is a nice tool to view the spell dbc, binary files can be downloaded from the SpellWork/bin/Release directory over github
+
+Basic structure of a spell:
+
+* Id and name - this identifies a spell
+* Some internal information
+* Spell Range
+* Difficulty information (if exists) - If a spell has difficulty information, you only need to cast the base spell, the proper one for current difficulty will be selected by MaNGOS
+* Information about Cast-Time, Duration of auras and similar
+
+* Information what the spell actually does:
++
+A spell has up to three effects (like summon or dealing damage).
++
+Each effect consists of:
++
+  - The effect type (what the effect will do)
+  - The target types (how the targeting of the spell will work - AoE, Self, enemy)
+  - Some additional information about this effect (like how many damage, what npc will be summoned and so on)
+
+=== The spell system in MaNGOS
+
+Some parts of how spells should be handled are unknown, which means we can only interpret the values from spell.dbc by what should happen (and this usually is how the handling is implemented within MaNGOS)
+
+It is not in the scope of this guide to give some detailed explanation of everything about how spells are handled. For this you must seriously study the MaNGOS code.
+
+TIP: TODO Link here to the wiki page that should exist about mangos spell system.
+
+Effects and their implementation can be seen in MaNGOS:SpellEffects.cpp. Often the name of the effect gives some good clue what they will do
+
+Targeting can be seen in MaNGOS::Spell.cpp. Most important targets are:
+
+* TARGET_SELF - the effect will target the caster
+* TARGET_*AREA* - the effect will work as AoE spell, in case of SpellRange == 0, the spell must be self cast
+* TARGET_CHAIN_DAMAGE - the effect will target the victim
+* TARGET_SCRIPT* - the target is fixed by the table `spell_script_target`
+
+[NOTE]
+[icon="./images/icons/example.png", caption="Exercise"]
+.*Exercise 1* - Check a few spells
+====================================================================================================================================
+Download SpellWork and check a few spells: Maybe IDs 9488 or 59245.
+====================================================================================================================================
+
+=== Which spells should a boss cast?
+
+Well, by now you should have seen a few spells and be able to have a rough idea what they are doing. But of course the most important question still is: What spells should a boss use? (And when)
+
+To get information what spells a boss should use, you can check:
+
+* Database sites (like wowhead) - NPCs usually have there a list of abilities, however this can be incomplete or even wrong
+* Transcriptor/ Combat logs (there are sites where such are available)
+* The DBM Addon
+* Watching videos
+* Wowwiki and similar sites
+
+There are usually two answers of *when* a spell is cast:
+
+. On a timer: This means, some time after engaging combat, and then repeating after some time.
+. On some event: Like 50% health, or when an add dies
+
+To figure this you must use resources like videos, experience or a bunch of logs (and of course good guessing also helps)
+
+== End of first part
+
+In this part you should have seen how a spell looks like, and how to obtain information about its use.
+
+== Second Part:
+
+This part now will look about how spell casting is to be implemented in MaNGOS.
+
+The main function that will be used for spell casting is:
+--------------------------------
+DoCastSpellIfCan(Unit* pVictim, uint32 uiSpellId); which returns a value of type CastResult
+--------------------------------
+
+=== The virtual function UpdateAI(const uint32 uiDiff)
+
+MaNGOS calls for every AI the function +UpdateAI(const uint32 uiDiff)+ about every 100ms. The actual time since last call is stored in uiDiff.
+
+This gives two possibilites:
+
+* Handle things that should be handled always
+* Countdown a timer
+
+==== How does a timer work, if we know the time-diff since we last called a function?
+
+A timer is a variable of type uin32 (unsingned integer), which stores the time until the timer should expire next (in millieseconds)
+
+So, a minimal timer script would look like:
+--------------------------------
+struct MANGOS_DLL_DECL boss_dummyAI : public ScriptedAI
+{
+    boss_dummyAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        Reset();
+    }
+
+    uint32 m_uiTimer;                                              <1>
+
+    void Reset()                                                   <2>
+    {
+        m_uiTimer = 17000;                                         <3>
+    }
+
+    void UpdateAI(const uint32 uiDiff)                             <4>
+    {
+        if (m_uiTimer < uiDiff)                                    <6>
+        {
+            DoScriptText(-1000001, m_creature);                    <7>
+            m_uiTimer = 30000;                                     <8>
+        }
+        else
+            m_uiTimer -= uiDiff;                                   <5>
+    }
+};
+--------------------------------
+
+Note that this misses all stuff like registering the script, but you should be able to test it, if you move the content to some other empty script (maybe festergut)
+
+The meaning of the new lines:
+
+<1> In this line the member variable +m_uiTimer+ of the struct boss_dummyAI is defined.
+<2> This is the virtual Reset function that every script implements.
+<3> And we reset here the timer to the initially value.
+<4> Here we overwrite the UpdateAI function, that will be called every +uiDiff+ millieseconds.
+<5> If the timer is not expired ("else") we decrement it.
+<6> We check if the timer is expired (which means it is time to do something for which we need the timer)
+<7> Some Text will be displayed
+<8> The timer will be set to a new value
+
+Currently this function only contains the timer handling.
+
+===== How exactly does a timer work
+
+It is probably a good idea to clarify this with pen and paper: Think what will happen in the code (assume the UpdateAI is called every 100ms)
+
+When the script is initialized the timer will be 17000. On first 'tick' of UpdateAI evaluating the code looks like:
+----------------------------------------------------------------
+    void UpdateAI(const uint32 uiDiff==100)
+    {
+        if (m_uiTimer==17000 < 100)    // evaluates to false
+        {
+            DoScriptText(-1000001, m_creature);
+            m_uiTimer = 30000;
+        }
+        else
+            m_uiTimer==17000 -= 100;
+    }
+----------------------------------------------------------------
+When this code is finished, m_uiTimer will be decremented by 100, and has then the value of 16900.
+
+The next tick would look like:
+----------------------------------------------------------------
+    void UpdateAI(const uint32 uiDiff==100)
+    {
+        if (m_uiTimer==16900 < 100)    // evaluates to false
+        {
+            DoScriptText(-1000001, m_creature);
+            m_uiTimer = 30000;
+        }
+        else
+            m_uiTimer==16900 -= 100;
+    }
+----------------------------------------------------------------
+When this code is finished, m_uiTimer will be decremented by 100, and has then the value of 16800.
+
+After a bunch of more 'ticks' the code will evaluate to (Exercise: How many ticks? - How long does it take?)
+----------------------------------------------------------------
+    void UpdateAI(const uint32 uiDiff==100)
+    {
+        if (m_uiTimer==0 < 100)    // evaluates to true
+        {
+            DoScriptText(-1000001, m_creature);
+            m_uiTimer = 30000;
+        }
+        else
+            m_uiTimer==0 -= 100;
+    }
+----------------------------------------------------------------
+And the timer will be expired, and the actions that should happen when the timer is expired will be triggered.
+
+[NOTE]
+[icon="./images/icons/example.png", caption="Exercise"]
+.*Exercise 2* - Understand the timer
+==================================================================
+When will the timer first expire?
+
+When will the timer the second time expire?
+==================================================================
+[NOTE]
+[icon="./images/icons/example.png", caption="Exercise"]
+.*Exercise 3* - Understand the timer(2)
+==================================================================
+Change the code so that the timer will initially expire after 10seconds, and from then expire every 30-40 seconds. (Hint: +urand(A, B)+ gives a random number between A and B)
+==================================================================
+
+==== What other stuff fits well into the UpdateAI function?
+
+In normal cases we want to script combat behaviour. And most important for combating is of course threat management (whom the boss should attack).
+
+This is handled by MaNGOS with the function +SelectHostileTarget+.
+
+Also we normally want a boss to do melee attack.
+
+This is handled by MaNGOS with the function +DoMeleeAttackIfReady+.
+
+So the structure for a normal +UpdateAI+ should look like this (changes might be reasonable, but only very rarely)
+----------------------------------------------------------------
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+           return;              <1>
+
+        // Some combat Timers
+
+        DoMeleeAttackIfReady();
+    }
+----------------------------------------------------------------
+<1> As of this return anything after will only be executed when we are in proper combat.
+
+=== Real example: Let Festergut cast something
+
+On http://old.wowhead.com/npc=36626#abilities[wowhead-Festergut] I found a spell ID for the Berserk spell as well as the information that the berserk should happen after 5 minutes (initially)
+
+----------------------------------------------------------------
+diff --git a/scripts/northrend/icecrown_citadel/icecrown_citadel/boss_festergut.cpp b/scripts/northrend/icecrown_citadel/icecrown_citadel/boss_festergut.cpp
+index b059c1f..30ec25e 100644
+--- a/scripts/northrend/icecrown_citadel/icecrown_citadel/boss_festergut.cpp
++++ b/scripts/northrend/icecrown_citadel/icecrown_citadel/boss_festergut.cpp
+@@ -36,6 +36,8 @@ enum
+     SAY_BERSERK                 = -1631089,
+     SAY_DEATH                   = -1631090,
+     SAY_FESTERGUT_DEATH         = -1631091,
++
++    SPELL_BERSERK               = 47008,                          <1>
+ };
+ 
+ struct MANGOS_DLL_DECL boss_festergutAI : public ScriptedAI
+@@ -45,8 +47,11 @@ struct MANGOS_DLL_DECL boss_festergutAI : public ScriptedAI
+         Reset();
+     }
+ 
++    uint32 m_uiBerserkTimer;                                      <2>
++
+     void Reset()
+     {
++        m_uiBerserkTimer = 5*MINUTE*IN_MILLISECONDS;
+     }
+ 
+     void Aggro(Unit* pWho)
+@@ -58,6 +63,21 @@ struct MANGOS_DLL_DECL boss_festergutAI : public ScriptedAI
+     {
+         DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
+     }
++
++    void UpdateAI(const uint32 uiDiff)
++    {
++        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
++            return;
++
++        if (m_uiBerserkTimer < uiDiff)                            <3>
++        {
++            DoCastSpellIfCan(m_creature, SPELL_BERSERK);
++            DoScriptText(SAY_BERSERK, m_creature);
++            m_uiBerserkTimer = 5*MINUTE*IN_MILLISECONDS;
++        }
++        else
++            m_uiBerserkTimer -= uiDiff;
++    }
+ };
+ 
+ CreatureAI* GetAI_boss_festergut(Creature* pCreature)
+----------------------------------------------------------------
+
+What is done here:
+
+<1> The Berserk spell ID is assigned to an enum (to prevent so called magic numbers)
+<2> As we can expect that there will be additional timers for this boss, we must find unique names for every timer, usually this works well with the spellname.
++
+Also note the http://www.scriptdev2.com/showthread.php?t=4098[ScriptDev2 Coding Standards]
+
+<3> The actual implementation of the timer. From the infos there should be besides the casting of the berserk spell also a text displayed that Festergut enrages.
+
+This patch was commited with bd821056ec9f
+
+[NOTE]
+[icon="./images/icons/example.png", caption="Exercise"]
+.*Exercise 4* - Add some abilities to your own script
+==================================================================
+Write a script for an own boss and add some abilites, or add some abilites to Festergut here.
+
+Provide patches to the forum thread!
+
+Also note from which sources you got which info - good place for this would be the commit message
+==================================================================
+
+== End of second part
+
+What you should have seen today:
+
+* How spells work
+* How to cast spells on a timer
+
+What comes next:
+
+* Using events to trigger some stuff
+* Using phases
