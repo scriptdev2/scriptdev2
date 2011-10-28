@@ -36,6 +36,8 @@ enum
     SAY_BERSERK                 = -1631089,
     SAY_DEATH                   = -1631090,
     SAY_FESTERGUT_DEATH         = -1631091,
+
+    SPELL_BERSERK               = 47008,
 };
 
 struct MANGOS_DLL_DECL boss_festergutAI : public ScriptedAI
@@ -45,8 +47,11 @@ struct MANGOS_DLL_DECL boss_festergutAI : public ScriptedAI
         Reset();
     }
 
+    uint32 m_uiBerserkTimer;
+
     void Reset()
     {
+        m_uiBerserkTimer = 5*MINUTE*IN_MILLISECONDS;
     }
 
     void Aggro(Unit* pWho)
@@ -57,6 +62,21 @@ struct MANGOS_DLL_DECL boss_festergutAI : public ScriptedAI
     void KilledUnit(Unit* pVictim)
     {
         DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        if (m_uiBerserkTimer < uiDiff)
+        {
+            DoCastSpellIfCan(m_creature, SPELL_BERSERK);
+            DoScriptText(SAY_BERSERK, m_creature);
+            m_uiBerserkTimer = 5*MINUTE*IN_MILLISECONDS;
+        }
+        else
+            m_uiBerserkTimer -= uiDiff;
     }
 };
 
