@@ -1110,6 +1110,8 @@ UPDATE creature_template SET ScriptName='npc_millhouse_manastorm' WHERE entry=20
 UPDATE instance_template SET ScriptName='instance_the_eye' WHERE map=550;
 /* The Eye Trash Mobs */
 UPDATE creature_template SET ScriptName='mob_crystalcore_devastator' WHERE entry=20040;
+/* Al'ar event */
+UPDATE creature_template SET ScriptName='boss_alar' WHERE entry=19514;
 /* Void Reaver event */
 UPDATE creature_template SET ScriptName='boss_void_reaver' WHERE entry=19516;
 /* Astromancer event */
