@@ -883,7 +883,6 @@ UPDATE instance_template SET ScriptName='instance_onyxias_lair' WHERE map=249;
 UPDATE creature_template SET ScriptName='boss_onyxia' WHERE entry=10184;
 
 /* ORGRIMMAR */
-UPDATE creature_template SET ScriptName='npc_neeru_fireblade' WHERE entry=3216;
 UPDATE creature_template SET ScriptName='npc_shenthul' WHERE entry=3401;
 UPDATE creature_template SET ScriptName='npc_thrall_warchief' WHERE entry=4949;
 
