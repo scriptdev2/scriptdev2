@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Ghostlands
 SD%Complete: 100
-SDComment: Quest support: 9212, 9692. Obtain Budd's Guise of Zul'aman. Vendor Rathis Tomber
+SDComment: Quest support: 9212, 9692. Obtain Budd's Guise of Zul'aman.
 SDCategory: Ghostlands
 EndScriptData */
 
@@ -25,7 +25,6 @@ EndScriptData */
 npc_blood_knight_dawnstar
 npc_budd_nedreck
 npc_ranger_lilatha
-npc_rathis_tomber
 EndContentData */
 
 #include "precompiled.h"
@@ -212,33 +211,6 @@ bool QuestAccept_npc_ranger_lilatha(Player* pPlayer, Creature* pCreature, const 
     return true;
 }
 
-/*######
-## npc_rathis_tomber
-######*/
-
-bool GossipHello_npc_rathis_tomber(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
-
-    if (pCreature->isVendor() && pPlayer->GetQuestRewardStatus(9152))
-    {
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
-        pPlayer->SEND_GOSSIP_MENU(8432, pCreature->GetObjectGuid());
-    }else
-        pPlayer->SEND_GOSSIP_MENU(8431, pCreature->GetObjectGuid());
-
-    return true;
-}
-
-bool GossipSelect_npc_rathis_tomber(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_TRADE)
-        pPlayer->SEND_VENDORLIST(pCreature->GetObjectGuid());
-
-    return true;
-}
-
 void AddSC_ghostlands()
 {
     Script* pNewScript;
@@ -259,11 +231,5 @@ void AddSC_ghostlands()
     pNewScript->Name = "npc_ranger_lilatha";
     pNewScript->GetAI = &GetAI_npc_ranger_lilathaAI;
     pNewScript->pQuestAcceptNPC = &QuestAccept_npc_ranger_lilatha;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_rathis_tomber";
-    pNewScript->pGossipHello = &GossipHello_npc_rathis_tomber;
-    pNewScript->pGossipSelect = &GossipSelect_npc_rathis_tomber;
     pNewScript->RegisterSelf();
 }
