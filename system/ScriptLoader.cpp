@@ -63,7 +63,8 @@ extern void AddSC_boss_chromaggus();
 extern void AddSC_boss_nefarian();
 extern void AddSC_boss_victor_nefarius();
 extern void AddSC_instance_blackwing_lair();
-extern void AddSC_deadmines();                              // deadmines
+extern void AddSC_boss_mr_smite();                          // deadmines
+extern void AddSC_deadmines();
 extern void AddSC_instance_deadmines();
 extern void AddSC_gnomeregan();                             // gnomeregan
 extern void AddSC_boss_thermaplugg();

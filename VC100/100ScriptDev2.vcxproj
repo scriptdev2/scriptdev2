@@ -276,6 +276,7 @@
     <ClCompile Include="..\scripts\eastern_kingdoms\blackwing_lair\boss_vaelastrasz.cpp" />
     <ClCompile Include="..\scripts\eastern_kingdoms\blackwing_lair\boss_victor_nefarius.cpp" />
     <ClCompile Include="..\scripts\eastern_kingdoms\blackwing_lair\instance_blackwing_lair.cpp" />
+    <ClCompile Include="..\scripts\eastern_kingdoms\deadmines\boss_mr_smite.cpp" />
     <ClCompile Include="..\scripts\eastern_kingdoms\deadmines\deadmines.cpp" />
     <ClCompile Include="..\scripts\eastern_kingdoms\deadmines\instance_deadmines.cpp" />
     <ClCompile Include="..\scripts\eastern_kingdoms\gnomeregan\boss_thermaplugg.cpp" />
