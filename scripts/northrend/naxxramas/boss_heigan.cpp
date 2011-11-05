@@ -42,10 +42,8 @@ enum
     EMOTE_TELEPORT          = -1533136,
     EMOTE_RETURN            = -1533137,
 
-    SPELL_ERUPTION          = 29371,                        //Spell used by floor pieces to cause damage to players
-
-    //Spells by boss
-    SPELL_DECREPIT_FEVER_N  = 29998,
+    // Spells by boss
+    SPELL_DECREPIT_FEVER    = 29998,
     SPELL_DECREPIT_FEVER_H  = 55011,
     SPELL_DISRUPTION        = 29310,
     SPELL_TELEPORT          = 30211,
@@ -149,7 +147,7 @@ struct MANGOS_DLL_DECL boss_heiganAI : public ScriptedAI
             // Fever
             if (m_uiFeverTimer < uiDiff)
             {
-                DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_DECREPIT_FEVER_N : SPELL_DECREPIT_FEVER_H);
+                DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_DECREPIT_FEVER : SPELL_DECREPIT_FEVER_H);
                 m_uiFeverTimer = 21000;
             }
             else
@@ -164,9 +162,9 @@ struct MANGOS_DLL_DECL boss_heiganAI : public ScriptedAI
             else
                 m_uiDisruptionTimer -= uiDiff;
         }
-        else                                                //Platform Phase
+        else                                                // Platform Phase
         {
-            if (m_uiPhaseTimer <= uiDiff)                   // return to fight
+            if (m_uiPhaseTimer < uiDiff)                    // Return to fight
             {
                 m_creature->InterruptNonMeleeSpells(true);
                 DoScriptText(EMOTE_RETURN, m_creature);
@@ -181,7 +179,7 @@ struct MANGOS_DLL_DECL boss_heiganAI : public ScriptedAI
 
             if (m_uiStartChannelingTimer)
             {
-                if (m_uiStartChannelingTimer <=uiDiff)
+                if (m_uiStartChannelingTimer <= uiDiff)
                 {
                     DoScriptText(SAY_CHANNELING, m_creature);
                     DoCastSpellIfCan(m_creature, SPELL_PLAGUE_CLOUD);
@@ -208,6 +206,28 @@ struct MANGOS_DLL_DECL boss_heiganAI : public ScriptedAI
             m_uiTauntTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
+
+        // Handling of the erruptions, this is not related to melee attack or spell-casting
+        if (!m_pInstance)
+            return;
+
+        // Eruption
+        if (m_uiEruptionTimer < uiDiff)
+        {
+            for (uint8 uiArea = 0; uiArea < MAX_HEIGAN_TRAP_AREAS; ++uiArea)
+            {
+                // Actually this is correct :P
+                if (uiArea == (m_uiPhaseEruption % 6) || uiArea == 6 - (m_uiPhaseEruption % 6))
+                    continue;
+
+                m_pInstance->DoTriggerHeiganTraps(m_creature, uiArea);
+            }
+
+            m_uiEruptionTimer = m_uiPhase == PHASE_GROUND ? urand(8000, 12000) : urand(2000, 3000);
+            ++m_uiPhaseEruption;
+        }
+        else
+            m_uiEruptionTimer -= uiDiff;
     }
 };
 
