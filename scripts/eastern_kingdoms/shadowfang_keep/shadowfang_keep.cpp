@@ -374,7 +374,7 @@ struct MANGOS_DLL_DECL mob_arugal_voidwalkerAI : public ScriptedAI
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop(true);
-        m_creature->LoadCreatureAddon();
+        m_creature->LoadCreatureAddon(true);
 
         m_creature->SetLootRecipient(NULL);
 
@@ -888,7 +888,7 @@ struct MANGOS_DLL_DECL npc_deathstalker_vincentAI : public ScriptedAI
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop(true);
-        m_creature->LoadCreatureAddon();
+        m_creature->LoadCreatureAddon(true);
         m_creature->SetLootRecipient(NULL);
         Reset();
     }
