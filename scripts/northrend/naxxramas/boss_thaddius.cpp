@@ -118,6 +118,8 @@ struct MANGOS_DLL_DECL boss_thaddiusAI : public Scripted_NoMovementAI
         m_uiChainLightningTimer = 8*IN_MILLISECONDS;
         m_uiBallLightningTimer = 1*IN_MILLISECONDS;
         m_uiBerserkTimer = 6*MINUTE*IN_MILLISECONDS;
+
+        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     }
 
     void Aggro(Unit* pWho)
@@ -133,7 +135,7 @@ struct MANGOS_DLL_DECL boss_thaddiusAI : public Scripted_NoMovementAI
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     }
 
-    void EnterEvadeMode()
+    void JustReachedHome()
     {
         if (m_pInstance)
         {
@@ -153,23 +155,6 @@ struct MANGOS_DLL_DECL boss_thaddiusAI : public Scripted_NoMovementAI
                 pStalagg->Respawn();
             }
         }
-
-        // Reset
-        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-
-        // Delay reloading of CreatureAddon until Reached home for proper handling
-        // Also note that m_creature->LoadCreatureAddon(); must _not_ be called before m_creature->GetMotionMaster()->MoveTargetedHome();
-        // Done this way, because MoveTargetHome ensures proper positioning (orientation)
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop(true);
-
-        if (m_creature->isAlive())
-            m_creature->GetMotionMaster()->MoveTargetedHome();
-
-        m_creature->SetLootRecipient(NULL);
-
-        Reset();
     }
 
     void KilledUnit(Unit* pVictim)
