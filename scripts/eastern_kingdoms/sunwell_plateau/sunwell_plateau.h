@@ -26,7 +26,8 @@ enum
     // NPC_FELMYST              = 25038,
     NPC_ALYTHESS                = 25166,
     NPC_SACROLASH               = 25165,
-    // NPC_MURU                 = 25741,
+    NPC_MURU                    = 25741,
+    NPC_ENTROPIUS               = 25840,
     // NPC_KILJAEDEN            = 25315,
     // NPC_KILJAEDEN_CONTROLLER = 25608,            // kiljaeden event controller
     // NPC_ANVEENA              = 26046,            // related to kiljaeden event
@@ -52,7 +53,10 @@ enum
     SPELL_TELEPORT_NORMAL_REALM         = 46020,
     SPELL_TELEPORT_TO_SPECTRAL_REALM    = 46019,
     SPELL_SPECTRAL_EXHAUSTION           = 44867,
-    SPELL_SPECTRAL_REALM_FORCE_FACTION  = 44852
+    SPELL_SPECTRAL_REALM_FORCE_FACTION  = 44852,
+
+    // used by both muru and entropius
+    SPELL_MURU_BERSERK                  = 26662,
 };
 
 class MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
@@ -85,6 +89,7 @@ class MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
 
         // Misc
         uint32 m_uiSpectralRealmTimer;
+        uint32 m_uiMuruBerserkTimer;
         GUIDList SpectralRealmList;
 };
 #endif

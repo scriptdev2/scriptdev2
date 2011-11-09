@@ -1061,6 +1061,10 @@ INSERT INTO scripted_areatrigger VALUES (4853,'at_madrigosa');
 UPDATE creature_template SET ScriptName='boss_alythess' WHERE entry=25166;
 UPDATE creature_template SET ScriptName='boss_sacrolash' WHERE entry=25165;
 UPDATE creature_template SET ScriptName='npc_shadow_image' WHERE entry=25214;
+UPDATE creature_template SET ScriptName='boss_muru' WHERE entry=25741;
+UPDATE creature_template SET ScriptName='boss_entropius' WHERE entry=25840;
+UPDATE creature_template SET ScriptName='npc_portal_target' WHERE entry=25770;
+UPDATE creature_template SET ScriptName='npc_void_sentinel_summoner' WHERE entry=25782;
 
 /* SWAMP OF SORROWS */
 UPDATE creature_template SET ScriptName='npc_galen_goodward' WHERE entry=5391;

@@ -34,6 +34,7 @@ EndScriptData */
 */
 
 instance_sunwell_plateau::instance_sunwell_plateau(Map* pMap) : ScriptedInstance(pMap),
+    m_uiMuruBerserkTimer(0),
     m_uiSpectralRealmTimer(5000)
 {
     Initialize();
@@ -64,6 +65,8 @@ void instance_sunwell_plateau::OnCreatureCreate(Creature* pCreature)
         case NPC_SATHROVARR:
         case NPC_ALYTHESS:
         case NPC_SACROLASH:
+        case NPC_MURU:
+        case NPC_ENTROPIUS:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
     }
@@ -147,6 +150,8 @@ void instance_sunwell_plateau::SetData(uint32 uiType, uint32 uiData)
                 DoUseDoorOrButton(GO_MURU_EXIT_GATE);
                 DoUseDoorOrButton(GO_THIRD_GATE);
             }
+            else if (uiData == IN_PROGRESS)
+                m_uiMuruBerserkTimer = 10*MINUTE*IN_MILLISECONDS;
             break;
         case TYPE_KILJAEDEN:
             m_auiEncounter[uiType] = uiData;
@@ -249,6 +254,22 @@ void instance_sunwell_plateau::Update(uint32 uiDiff)
         }
         else
             m_uiSpectralRealmTimer -= uiDiff;
+    }
+
+    // Muru berserk timer; needs to be done here because it involves two distinct creatures
+    if (m_auiEncounter[TYPE_MURU] == IN_PROGRESS)
+    {
+        if (m_uiMuruBerserkTimer <= uiDiff)
+        {
+            if (Creature* pEntrpius = GetSingleCreatureFromStorage(NPC_ENTROPIUS, true))
+                pEntrpius->CastSpell(pEntrpius, SPELL_MURU_BERSERK, true);
+            else if (Creature* pMuru = GetSingleCreatureFromStorage(NPC_MURU))
+                pMuru->CastSpell(pMuru, SPELL_MURU_BERSERK, true);
+
+            m_uiMuruBerserkTimer = 10*MINUTE*IN_MILLISECONDS;
+        }
+        else
+            m_uiMuruBerserkTimer -= uiDiff;
     }
 }
 
