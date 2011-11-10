@@ -166,6 +166,8 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
                     case 3:
                         m_bIntroFinished = true;
                         // TODO - Let Attack here, or change Unit_flag
+                        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE|UNIT_FLAG_OOC_NOT_ATTACKABLE|UNIT_FLAG_UNK_6);
++    					DoMeleeAttackIfReady();
                         break;
                 }
             }
