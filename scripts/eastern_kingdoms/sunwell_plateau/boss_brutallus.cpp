@@ -50,7 +50,6 @@ enum Brutallus
 
     SPELL_METEOR_SLASH              = 45150,
     SPELL_BURN                      = 45141,
-    SPELL_BURN_AURA_EFFECT          = 46394,
     SPELL_STOMP                     = 45185,
     SPELL_BERSERK                   = 26662
 };
@@ -73,15 +72,11 @@ struct MANGOS_DLL_DECL boss_brutallusAI : public ScriptedAI
 
     void Reset()
     {
-        m_uiSlashTimer = 11000;
-        m_uiStompTimer = 30000;
-        m_uiBurnTimer = 60000;
-        m_uiBerserkTimer = 360000;
-        m_uiLoveTimer = urand(10000, 17000);
-
-        //TODO: correct me when pre-event implemented
-        if (m_pInstance)
-            m_pInstance->SetData(TYPE_BRUTALLUS, NOT_STARTED);
+        m_uiSlashTimer      = 11000;
+        m_uiStompTimer      = 30000;
+        m_uiBurnTimer       = 20000;
+        m_uiBerserkTimer    = 6*MINUTE*IN_MILLISECONDS;
+        m_uiLoveTimer       = urand(10000, 17000);
     }
 
     void Aggro(Unit* pWho)
@@ -110,10 +105,10 @@ struct MANGOS_DLL_DECL boss_brutallusAI : public ScriptedAI
             m_pInstance->SetData(TYPE_BRUTALLUS, DONE);
     }
 
-    void SpellHitTarget(Unit* pCaster, const SpellEntry* pSpell)
+    void JustReachedHome()
     {
-        if (pSpell->Id == SPELL_BURN)
-            pCaster->CastSpell(pCaster, SPELL_BURN_AURA_EFFECT, true, NULL, NULL, m_creature->GetObjectGuid());
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_BRUTALLUS, FAIL);
     }
 
     void UpdateAI(const uint32 uiDiff)
@@ -136,52 +131,44 @@ struct MANGOS_DLL_DECL boss_brutallusAI : public ScriptedAI
 
         if (m_uiSlashTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_METEOR_SLASH);
-            m_uiSlashTimer = 11000;
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_METEOR_SLASH) == CAST_OK)
+                m_uiSlashTimer = 11000;
         }
         else
             m_uiSlashTimer -= uiDiff;
 
         if (m_uiStompTimer < uiDiff)
         {
-            if (Unit* pTarget = m_creature->getVictim())
-            {
-                DoCastSpellIfCan(pTarget,SPELL_STOMP);
-
-                if (pTarget->HasAura(SPELL_BURN_AURA_EFFECT, EFFECT_INDEX_0))
-                    pTarget->RemoveAurasDueToSpell(SPELL_BURN_AURA_EFFECT);
-            }
-
-            m_uiStompTimer = 30000;
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_STOMP) == CAST_OK)
+                m_uiStompTimer = 30000;
         }
         else
             m_uiStompTimer -= uiDiff;
 
         if (m_uiBurnTimer < uiDiff)
         {
-            //returns any unit
-            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_BURN, SELECT_FLAG_PLAYER))
             {
-                //so we get owner, in case unit was pet/totem/etc
-                if (Player* pPlayer = pTarget->GetCharmerOrOwnerPlayerOrPlayerItself())
-                    DoCastSpellIfCan(pPlayer, SPELL_BURN);
+                if (DoCastSpellIfCan(pTarget, SPELL_BURN) == CAST_OK)
+                    m_uiBurnTimer = 20000;
             }
-
-            m_uiBurnTimer = 60000;
         }
         else
             m_uiBurnTimer -= uiDiff;
 
-        if (m_uiBerserkTimer < uiDiff)
+        if (m_uiBerserkTimer)
         {
-            if (DoCastSpellIfCan(m_creature,SPELL_BERSERK) == CAST_OK)
+            if (m_uiBerserkTimer <= uiDiff)
             {
-                DoScriptText(YELL_BERSERK, m_creature);
-                m_uiBerserkTimer = 20000;
+                if (DoCastSpellIfCan(m_creature, SPELL_BERSERK) == CAST_OK)
+                {
+                    DoScriptText(YELL_BERSERK, m_creature);
+                    m_uiBerserkTimer = 0;
+                }
             }
+            else
+                m_uiBerserkTimer -= uiDiff;
         }
-        else
-            m_uiBerserkTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
