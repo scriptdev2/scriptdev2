@@ -109,13 +109,13 @@ void instance_shattered_halls::SetData(uint32 uiType, uint32 uiData)
             if (uiData == DONE)
             {
                 // Make executioner attackable only after the final boss is dead
-                if (Creature* pExecutioner = GetSingleCreatureFromStorage(NPC_EXECUTIONER))
+                if (Creature* pExecutioner = GetSingleCreatureFromStorage(NPC_EXECUTIONER, true))
                     pExecutioner->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
             }
             break;
         case TYPE_EXECUTION:
             m_auiEncounter[uiType] = uiData;
-            if (uiData == IN_PROGRESS)
+            if (uiData == IN_PROGRESS && !GetSingleCreatureFromStorage(NPC_EXECUTIONER, true))
             {
                 if (Player* pPlayer = GetPlayerInMap())
                 {
