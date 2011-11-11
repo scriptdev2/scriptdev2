@@ -1863,20 +1863,14 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
             if (m_uiShadowDemonTimer < uiDiff)
             {
                 m_creature->InterruptNonMeleeSpells(false);
-                Creature* ShadowDemon = NULL;
-                for(uint8 i = 0; i < 4; ++i)
+                for (uint8 i = 0; i < 4; ++i)
                 {
-                    Unit* target = NULL;
-                    target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
-
-                    // only on players.
-                    if (target && target->GetTypeId() == TYPEID_PLAYER)
+                    if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, uint32(0), SELECT_FLAG_PLAYER))
                     {
-                        ShadowDemon = m_creature->SummonCreature(SHADOW_DEMON, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 25000);
-                        if (ShadowDemon)
+                        if (Creature* ShadowDemon = m_creature->SummonCreature(SHADOW_DEMON, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 25000))
                         {
-                            ShadowDemon->AddThreat(target, 5000000.0f);
-                            ShadowDemon->AI()->AttackStart(target);
+                            ShadowDemon->AddThreat(pTarget, 5000000.0f);
+                            ShadowDemon->AI()->AttackStart(pTarget);
                             ShadowDemon->SetInCombatWithZone();
                         }
                     }

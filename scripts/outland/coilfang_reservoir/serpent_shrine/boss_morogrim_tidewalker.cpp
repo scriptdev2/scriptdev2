@@ -196,11 +196,11 @@ struct MANGOS_DLL_DECL boss_morogrim_tidewalkerAI : public ScriptedAI
             if (m_uiWateryGrave_Timer < uiDiff)
             {
                 //Teleport 4 players under the waterfalls
-                for(uint8 i = 0; i < 4; ++i)
+                for (uint8 i = 0; i < 4; ++i)
                 {
-                    Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1);
+                    Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1, SPELL_WATERY_GRAVE_1, SELECT_FLAG_PLAYER);
 
-                    if (pTarget && pTarget->GetTypeId() == TYPEID_PLAYER && !pTarget->HasAuraType(SPELL_AURA_MOD_STUN) && pTarget->IsWithinDistInMap(m_creature, 45.0f))
+                    if (pTarget && !pTarget->HasAuraType(SPELL_AURA_MOD_STUN))
                     {
                         switch(i)
                         {

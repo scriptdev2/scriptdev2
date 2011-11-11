@@ -156,12 +156,12 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
 
         if (m_uiImpalingSpineTimer < uiDiff)
         {
-            Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1);
+            Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1, SPELL_IMPALING_SPINE, SELECT_FLAG_PLAYER);
 
             if (!pTarget)
                 pTarget = m_creature->getVictim();
 
-            if (pTarget && (pTarget->GetTypeId() == TYPEID_PLAYER))
+            if (pTarget && pTarget->GetTypeId() == TYPEID_PLAYER)
             {
                 DoCastSpellIfCan(pTarget, SPELL_IMPALING_SPINE);
                 m_uiImpalingSpineTimer = 20000;

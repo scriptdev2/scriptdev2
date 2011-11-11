@@ -231,8 +231,7 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
 
         if (m_uiSacrifice_Timer < uiDiff)
         {
-            Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1);
-            if (pTarget && pTarget->isAlive() && pTarget->GetTypeId() == TYPEID_PLAYER)
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1, SPELL_SACRIFICE, SELECT_FLAG_PLAYER))
             {
                 DoCastSpellIfCan(pTarget, SPELL_SACRIFICE, CAST_TRIGGERED);
 

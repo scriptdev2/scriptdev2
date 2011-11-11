@@ -806,8 +806,7 @@ struct MANGOS_DLL_DECL boss_bigbadwolfAI : public ScriptedAI
         {
             if (!IsChasing)
             {
-                Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0);
-                if (target && target->GetTypeId() == TYPEID_PLAYER)
+                if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_LITTLE_RED_RIDING_HOOD, SELECT_FLAG_PLAYER))
                 {
                     DoScriptText(SAY_WOLF_HOOD, m_creature);
                     DoCastSpellIfCan(target, SPELL_LITTLE_RED_RIDING_HOOD, CAST_TRIGGERED);

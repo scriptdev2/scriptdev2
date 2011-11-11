@@ -254,15 +254,10 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
                 if (m_uiWrathOfTheAstromancerTimer < uiDiff)
                 {
                     // Target the tank ?
-                    if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1))
+                    if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1, SPELL_WRATH_OF_THE_ASTROMANCER, SELECT_FLAG_PLAYER))
                     {
-                        if (pTarget->GetTypeId() == TYPEID_PLAYER)
-                        {
-                            if (DoCastSpellIfCan(pTarget, SPELL_WRATH_OF_THE_ASTROMANCER, CAST_INTERRUPT_PREVIOUS) == CAST_OK)
-                                m_uiWrathOfTheAstromancerTimer = 25000;
-                        }
-                        else
-                            m_uiWrathOfTheAstromancerTimer = 1000;
+                        if (DoCastSpellIfCan(pTarget, SPELL_WRATH_OF_THE_ASTROMANCER, CAST_INTERRUPT_PREVIOUS) == CAST_OK)
+                            m_uiWrathOfTheAstromancerTimer = 25000;
                     }
                     else
                         m_uiWrathOfTheAstromancerTimer = 10000;

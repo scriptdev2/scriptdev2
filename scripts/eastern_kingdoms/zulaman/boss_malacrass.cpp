@@ -517,37 +517,6 @@ struct MANGOS_DLL_DECL boss_malacrass_addAI : public ScriptedAI
             }
         }
     }
-
-    bool IsEnemyPlayerInRangeForSpell(uint32 uiSpellId)
-    {
-        SpellEntry const* pSpell = GetSpellStore()->LookupEntry(uiSpellId);
-
-        //if spell not valid
-        if (!pSpell)
-            return false;
-
-        //spell known, so lookup using rangeIndex
-        SpellRangeEntry const* pSpellRange = GetSpellRangeStore()->LookupEntry(pSpell->rangeIndex);
-
-        //not valid, so return
-        if (!pSpellRange)
-            return false;
-
-        ThreatList const& tList = m_creature->getThreatManager().getThreatList();
-        for (ThreatList::const_iterator iter = tList.begin();iter != tList.end(); ++iter)
-        {
-            Unit* pTarget = m_creature->GetMap()->GetUnit((*iter)->getUnitGuid());
-
-            if (pTarget && pTarget->GetTypeId() == TYPEID_PLAYER)
-            {
-                //if target further away than maxrange or closer than minrange, statement is false
-                if (m_creature->IsInRange(pTarget, pSpellRange->minRange, pSpellRange->maxRange))
-                    return true;
-            }
-        }
-
-        return false;
-    }
 };
 
 enum
@@ -652,7 +621,7 @@ struct MANGOS_DLL_DECL mob_alyson_antilleAI : public boss_malacrass_addAI
 
         if (m_uiArcaneTorrentTimer < uiDiff)
         {
-            if (IsEnemyPlayerInRangeForSpell(SPELL_ARCANE_TORRENT))
+            if (m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, uint32(0), SELECT_FLAG_PLAYER | SELECT_FLAG_IN_MELEE_RANGE))
             {
                 DoCastSpellIfCan(m_creature, SPELL_ARCANE_TORRENT);
                 m_uiArcaneTorrentTimer = 60000;
@@ -798,7 +767,7 @@ struct MANGOS_DLL_DECL mob_lord_raadanAI : public boss_malacrass_addAI
 
         if (m_uiThunderclapTimer < uiDiff)
         {
-            if (IsEnemyPlayerInRangeForSpell(SPELL_THUNDERCLAP))
+            if (m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO, 0, SPELL_THUNDERCLAP, SELECT_FLAG_PLAYER))
             {
                 DoCastSpellIfCan(m_creature->getVictim(), SPELL_THUNDERCLAP);
                 m_uiThunderclapTimer = 12000;
@@ -849,9 +818,9 @@ struct MANGOS_DLL_DECL mob_darkheartAI : public boss_malacrass_addAI
 
         if (m_uiPsychicWailTimer < uiDiff)
         {
-            if (IsEnemyPlayerInRangeForSpell(SPELL_PSYCHIC_WAIL))
+            if (m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO, 0, uint32(0), SELECT_FLAG_PLAYER | SELECT_FLAG_IN_MELEE_RANGE))
             {
-                DoCastSpellIfCan(m_creature->getVictim(), SPELL_PSYCHIC_WAIL);
+                DoCastSpellIfCan(m_creature, SPELL_PSYCHIC_WAIL);
                 m_uiPsychicWailTimer = 12000;
             }
             else

@@ -196,29 +196,10 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
             // Hurtful Strike
             if (m_uiHurtfulStrike_Timer < uiDiff)
             {
-                // Find 2nd-aggro target within melee range.
-                Unit* pTarget = NULL;
-                ThreatList const& tList = m_creature->getThreatManager().getThreatList();
-                ThreatList::const_iterator itr = tList.begin();
-                std::advance(itr, 1);
-                for (;itr != tList.end(); ++itr)
-                {
-                    pTarget = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid());
-
-                    // exclude pets, totems & player out of melee range
-                    if (!pTarget || pTarget->GetTypeId() != TYPEID_PLAYER || !m_creature->CanReachWithMeleeAttack(pTarget))
-                    {
-                        pTarget = NULL;
-                        continue;
-                    }
-                    //we've found someone
-                    break;
-                }
-
-                if (pTarget)
-                    DoCastSpellIfCan(pTarget,SPELL_HURTFUL_STRIKE);
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO, 1, SPELL_HURTFUL_STRIKE, SELECT_FLAG_PLAYER))
+                    DoCastSpellIfCan(pTarget, SPELL_HURTFUL_STRIKE);
                 else
-                    DoCastSpellIfCan(m_creature->getVictim(),SPELL_HURTFUL_STRIKE);
+                    DoCastSpellIfCan(m_creature->getVictim(), SPELL_HURTFUL_STRIKE);
 
                 m_uiHurtfulStrike_Timer = 8000;
             }
