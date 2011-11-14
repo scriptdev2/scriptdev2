@@ -802,23 +802,8 @@ struct MANGOS_DLL_DECL boss_yazzaiAI : public boss_priestess_lackey_commonAI
 
         if (Blink_Timer < diff)
         {
-            bool InMeleeRange = false;
-            ThreatList const& tList = m_creature->getThreatManager().getThreatList();
-            for (ThreatList::const_iterator itr = tList.begin();itr != tList.end(); ++itr)
-            {
-                if (Unit* pTarget = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid()))
-                {
-                    //if in melee range
-                    if (m_creature->CanReachWithMeleeAttack(pTarget))
-                    {
-                        InMeleeRange = true;
-                        break;
-                    }
-                }
-            }
-
             //if anybody is in melee range than escape by blink
-            if (InMeleeRange)
+            if (m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO, 0, uint32(0), SELECT_FLAG_IN_MELEE_RANGE))
                 DoCastSpellIfCan(m_creature, SPELL_BLINK);
 
             Blink_Timer = 8000;

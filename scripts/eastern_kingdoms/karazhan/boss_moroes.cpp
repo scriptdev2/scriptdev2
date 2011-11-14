@@ -293,26 +293,7 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
 
             if (m_uiBlind_Timer < uiDiff)
             {
-                Unit* pTarget = NULL;
-
-                ThreatList const& vThreatList = m_creature->getThreatManager().getThreatList();
-                if (vThreatList.empty())
-                    return;
-
-                std::vector<Unit*> vTargetList;
-
-                for (ThreatList::const_iterator itr = vThreatList.begin();itr != vThreatList.end(); ++itr)
-                {
-                    pTarget = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid());
-
-                    if (pTarget && m_creature->CanReachWithMeleeAttack(pTarget))
-                        vTargetList.push_back(pTarget);
-                }
-
-                if (!vTargetList.empty())
-                    pTarget = *(vTargetList.begin()+rand()%vTargetList.size());
-
-                if (pTarget)
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_BLIND, SELECT_FLAG_PLAYER))
                     DoCastSpellIfCan(pTarget, SPELL_BLIND);
 
                 m_uiBlind_Timer = 40000;
@@ -432,8 +413,7 @@ struct MANGOS_DLL_DECL boss_baroness_dorothea_millstipeAI : public boss_moroes_g
 
         if (m_uiManaBurn_Timer < uiDiff)
         {
-            Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0);
-            if (pTarget && pTarget->getPowerType() == POWER_MANA)
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_MANABURN, SELECT_FLAG_POWER_MANA))
                 DoCastSpellIfCan(pTarget, SPELL_MANABURN);
 
             m_uiManaBurn_Timer = 5000;                      //3 sec cast

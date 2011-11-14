@@ -244,20 +244,9 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public Scripted_NoMovementAI
         // Hammer of Ragnaros
         if (m_uiHammerTimer < uiDiff)
         {
-            // Select a target with mana-bar
-            std::vector<Unit*> vValidTargets;
-            ThreatList const& tList = m_creature->getThreatManager().getThreatList();
-            vValidTargets.reserve(tList.size());
-            for (ThreatList::const_iterator iter = tList.begin(); iter != tList.end(); ++iter)
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_MIGHT_OF_RAGNAROS, SELECT_FLAG_POWER_MANA))
             {
-                Unit* pTempTarget = m_creature->GetMap()->GetUnit((*iter)->getUnitGuid());
-                if (pTempTarget && pTempTarget->getPowerType() == POWER_MANA)
-                    vValidTargets.push_back(pTempTarget);
-            }
-
-            if (!vValidTargets.empty())
-            {
-                if (DoCastSpellIfCan(vValidTargets[urand(0, vValidTargets.size() -1)], SPELL_MIGHT_OF_RAGNAROS) == CAST_OK)
+                if (DoCastSpellIfCan(pTarget, SPELL_MIGHT_OF_RAGNAROS) == CAST_OK)
                 {
                     DoScriptText(SAY_HAMMER, m_creature);
                     m_uiHammerTimer = 11000;
