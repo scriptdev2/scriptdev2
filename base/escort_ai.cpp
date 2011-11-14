@@ -246,15 +246,11 @@ bool npc_escortAI::IsPlayerOrGroupInRange()
     {
         if (Group* pGroup = pPlayer->GetGroup())
         {
-            for(GroupReference* pRef = pGroup->GetFirstMember(); pRef != NULL; pRef = pRef->next())
+            for (GroupReference* pRef = pGroup->GetFirstMember(); pRef != NULL; pRef = pRef->next())
             {
                 Player* pMember = pRef->getSource();
-
                 if (pMember && m_creature->IsWithinDistInMap(pMember, MAX_PLAYER_DISTANCE))
-                {
                     return true;
-                    break;
-                }
             }
         }
         else
