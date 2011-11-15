@@ -24,7 +24,7 @@ EndScriptData */
 #include "precompiled.h"
 #include "sunwell_plateau.h"
 
-enum Brutallus
+enum
 {
     YELL_INTRO                      = -1580017,
     YELL_INTRO_BREAK_ICE            = -1580018,

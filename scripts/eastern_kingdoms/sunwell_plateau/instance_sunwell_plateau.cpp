@@ -121,7 +121,7 @@ void instance_sunwell_plateau::SetData(uint32 uiType, uint32 uiData)
             DoUseDoorOrButton(GO_BOSS_COLLISION_1);
             DoUseDoorOrButton(GO_BOSS_COLLISION_2);
             if (uiData == IN_PROGRESS)
-                SpectralRealmList.clear();
+                m_lSpectralRealmList.clear();
             break;
         case TYPE_BRUTALLUS:
             m_auiEncounter[uiType] = uiData;
@@ -179,7 +179,7 @@ void instance_sunwell_plateau::SetData(uint32 uiType, uint32 uiData)
 void instance_sunwell_plateau::SetData64(uint32 uiType, uint64 uiData)
 {
     if (uiType == DATA_PLAYER_SPECTRAL_REALM)
-        SpectralRealmList.push_back(ObjectGuid(uiData));
+        m_lSpectralRealmList.push_back(ObjectGuid(uiData));
 }
 
 uint32 instance_sunwell_plateau::GetData(uint32 uiType)
@@ -190,56 +190,24 @@ uint32 instance_sunwell_plateau::GetData(uint32 uiType)
     return 0;
 }
 
-void instance_sunwell_plateau::EjectPlayer(Player* pPlayer)
+void instance_sunwell_plateau::DoEjectSpectralRealmPlayers()
 {
-    debug_log("SD2: Ejecting Player %s from Spectral Realm", pPlayer->GetName());
-
-    // Put player back in Kalecgos(Dragon)'s threat list
-    /*if (Creature* pKalecgos = GetSingleCreatureFromStorage(NPC_KALECGOS_DRAGON))
-    {
-        if (pKalecgos->isAlive())
-        {
-            debug_log("SD2: Adding %s in Kalecgos' threatlist", pPlayer->GetName());
-            pKalecgos->AddThreat(pPlayer);
-        }
-    }
-
-    // Remove player from Sathrovarr's threat list
-    if (Creature* pSath = instance->GetCreature(NPC_SATHROVARR))
-    {
-        if (pSath->isAlive())
-        {
-            if (HostileReference* pRef = pSath->getThreatManager().getOnlineContainer().getReferenceByTarget(pPlayer))
-            {
-                pRef->removeReference();
-                debug_log("SD2: Deleting %s from Sathrovarr's threatlist", pPlayer->GetName());
-            }
-        }
-    }*/
-
-    pPlayer->CastSpell(pPlayer, SPELL_SPECTRAL_EXHAUSTION, true);
-    pPlayer->CastSpell(pPlayer, SPELL_TELEPORT_NORMAL_REALM, true);
-}
-
-void instance_sunwell_plateau::EjectPlayers()
-{
-    if (SpectralRealmList.empty())
+    if (m_lSpectralRealmList.empty())
         return;
 
     Map::PlayerList const& players = instance->GetPlayers();
 
     for(Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
     {
-        Player* plr = itr->getSource();
+        Player* pPlayer = itr->getSource();
 
-        if (plr && !plr->HasAura(SPELL_SPECTRAL_REALM))
+        if (pPlayer && !pPlayer->HasAura(SPELL_SPECTRAL_REALM))
         {
-            SpectralRealmList.remove(plr->GetObjectGuid());
-            EjectPlayer(plr);
+            m_lSpectralRealmList.remove(pPlayer->GetObjectGuid());
+            pPlayer->CastSpell(pPlayer, SPELL_SPECTRAL_EXHAUSTION, true);
+            pPlayer->CastSpell(pPlayer, SPELL_TELEPORT_NORMAL_REALM, true);
         }
     }
-
-    //SpectralRealmList.clear();
 }
 
 void instance_sunwell_plateau::Update(uint32 uiDiff)
@@ -249,7 +217,7 @@ void instance_sunwell_plateau::Update(uint32 uiDiff)
     {
         if (m_uiSpectralRealmTimer <= uiDiff)
         {
-            EjectPlayers();
+            DoEjectSpectralRealmPlayers();
             m_uiSpectralRealmTimer = 1000;
         }
         else
