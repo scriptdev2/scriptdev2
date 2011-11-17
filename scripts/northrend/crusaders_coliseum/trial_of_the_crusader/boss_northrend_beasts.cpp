@@ -77,7 +77,7 @@ struct MANGOS_DLL_DECL npc_beast_combat_stalkerAI : public Scripted_NoMovementAI
         uiDamage = 0;
     }
 
-    void JustReachedHome()
+    void EnterEvadeMode()
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_NORTHREND_BEASTS, FAIL);

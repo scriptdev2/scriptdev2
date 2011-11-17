@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: trial_of_the_crusader
-SD%Complete: 0
-SDComment:
+SD%Complete: 75
+SDComment: Evade handling must be fixed, this is currently totally wrong. Some issues with emotes and texts, generic improvements related to spells can be missing
 SDCategory: Crusader Coliseum
 EndScriptData */
 
@@ -93,6 +93,8 @@ struct MANGOS_DLL_DECL boss_jaraxxusAI : public ScriptedAI
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_JARAXXUS, FAIL);
+
+        m_creature->ForcedDespawn();
     }
 
     void JustDied(Unit* pKiller)
