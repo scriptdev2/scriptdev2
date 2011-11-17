@@ -37,6 +37,23 @@ enum
     SAY_INCINERATE                      = -1649045,
     SAY_MISTRESS                        = -1649046,
     SAY_INFERNO                         = -1649047,
+
+    // boss spells
+    SPELL_FEL_FIREBALL                  = 66532,
+    SPELL_FEL_LIGHTNING                 = 66528,
+    SPELL_INCINERATE_FLESH              = 66237,
+    SPELL_BURNING_INFERNO               = 66242,
+    SPELL_LEGION_FLAME                  = 66197,
+    SPELL_INFERNAL_ERUPTION             = 66258,            // summons a volcano
+    SPELL_NETHER_PORTAL_SUMMON          = 66269,            // summons a nether portal
+    SPELL_NETHER_PORTAL                 = 66263,            // spell casted by the portal
+    SPELL_ERUPTION                      = 66252,            // spell casted by the volcano
+    SPELL_NETHER_POWER                  = 67009,
+    SPELL_BERSERK                       = 26662,
+
+    // npcs
+    NPC_INFERNAL_VOLCANO                = 34813,
+    NPC_NETHER_PORTAL                   = 34825
 };
 
 struct MANGOS_DLL_DECL boss_jaraxxusAI : public ScriptedAI
@@ -49,7 +66,28 @@ struct MANGOS_DLL_DECL boss_jaraxxusAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    void Reset() {}
+    uint32 m_uiFelFireballTimer;
+    uint32 m_uiFelLightningTimer;
+    uint32 m_uiIncinerateFleshTimer;
+    uint32 m_uiBurningInfernoTimer;
+    uint32 m_uiLegionFlameTimer;
+    uint32 m_uiSummonTimer;
+    uint32 m_uiNetherPowerTimer;
+    uint32 m_uiBerserkTimer;
+    bool m_bVolcanoSummon;
+
+    void Reset()
+    {
+        m_uiFelFireballTimer        = urand(20000, 25000);  // maybe too early, and too often!
+        m_uiFelLightningTimer       = urand(5000, 8000);
+        m_uiIncinerateFleshTimer    = 25000;
+        m_uiLegionFlameTimer        = 10000;
+        m_uiSummonTimer             = 20000;
+        m_uiNetherPowerTimer        = urand(20000, 30000);
+        m_uiBerserkTimer            = 10*MINUTE*IN_MILLISECONDS;
+
+        m_bVolcanoSummon            = true;
+    }
 
     void JustReachedHome()
     {
@@ -65,16 +103,134 @@ struct MANGOS_DLL_DECL boss_jaraxxusAI : public ScriptedAI
 
     void Aggro(Unit* pWho)
     {
+        if (pWho->GetEntry() == NPC_FIZZLEBANG)
+            return;
+
         if (m_pInstance)
             m_pInstance->SetData(TYPE_JARAXXUS, IN_PROGRESS);
 
+        DoCastSpellIfCan(m_creature, SPELL_NETHER_POWER);
         m_creature->SetInCombatWithZone();
     }
+
+    void KilledUnit(Unit* pVictim)
+    {
+        if (pVictim->GetEntry() == NPC_FIZZLEBANG)
+            return;
+
+        DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
+    }
+
+    void JustSummoned(Creature* pSummoned)
+    {
+        switch(pSummoned->GetEntry())
+        {
+            case NPC_INFERNAL_VOLCANO:
+                pSummoned->CastSpell(pSummoned, SPELL_ERUPTION, true, NULL, NULL, m_creature->GetObjectGuid());
+                break;
+            case NPC_NETHER_PORTAL:
+                pSummoned->CastSpell(pSummoned, SPELL_NETHER_PORTAL, true, NULL, NULL, m_creature->GetObjectGuid());
+                break;
+        }
+     }
+
 
     void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
+
+        // Spells
+        if (m_uiIncinerateFleshTimer < uiDiff)
+        {
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_INCINERATE_FLESH) == CAST_OK)
+                    m_uiIncinerateFleshTimer = 25000;
+            }
+        }
+        else
+            m_uiIncinerateFleshTimer -= uiDiff;
+
+        if (m_uiFelFireballTimer < uiDiff)
+        {
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_FEL_FIREBALL) == CAST_OK)
+                    m_uiFelFireballTimer = urand(20000, 30000);
+            }
+        }
+        else
+            m_uiFelFireballTimer -= uiDiff;
+
+        if (m_uiFelLightningTimer < uiDiff)
+        {
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_FEL_LIGHTNING) == CAST_OK)
+                    m_uiFelLightningTimer = urand(10000, 18000);
+            }
+        }
+        else
+            m_uiFelLightningTimer -= uiDiff;
+
+        if (m_uiSummonTimer < uiDiff)
+        {
+            if(m_bVolcanoSummon)
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_NETHER_PORTAL_SUMMON) == CAST_OK)
+                {
+                    // TODO missing emote?
+                    //DoScriptText(EMOTE_PORTAL, m_creature);
+                    m_bVolcanoSummon = false;
+                    m_uiSummonTimer = 60000;
+                }
+            }
+            // summon volcano
+            else
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_INFERNAL_ERUPTION) == CAST_OK)
+                {
+                    // TODO missing emote?
+                    //DoScriptText(EMOTE_VOLCANO, m_creature);
+                    m_bVolcanoSummon = true;
+                    m_uiSummonTimer = 60000;
+                }
+            }
+        }
+        else
+            m_uiSummonTimer -= uiDiff;
+
+        if (m_uiLegionFlameTimer < uiDiff)
+        {
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_LEGION_FLAME) == CAST_OK)
+                    m_uiLegionFlameTimer = 30000;
+            }
+        }
+        else
+            m_uiLegionFlameTimer -= uiDiff;
+
+        if (m_uiNetherPowerTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_NETHER_POWER) == CAST_OK)
+                m_uiNetherPowerTimer = 42000;
+        }
+        else
+            m_uiNetherPowerTimer -= uiDiff;
+
+        // berserk
+        if (m_uiBerserkTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_BERSERK) == CAST_OK)
+            {
+                DoScriptText(SAY_BERSERK, m_creature);
+                m_uiBerserkTimer = 60000;
+            }
+        }
+        else
+            m_uiBerserkTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
