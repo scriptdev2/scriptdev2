@@ -76,10 +76,6 @@ enum
     NPC_THE_LICHKING            = 16980,
     NPC_MR_BIGGLESWORTH         = 16998,
 
-    // Faerlina
-    NPC_NAXXRAMAS_FOLLOWER      = 16505,
-    NPC_NAXXRAMAS_WORSHIPPER    = 16506,
-
     // Gothik
     NPC_GOTHIK                  = 16060,
     NPC_SUB_BOSS_TRIGGER        = 16137,                    //summon locations
@@ -238,7 +234,6 @@ class MANGOS_DLL_DECL instance_naxxramas : public ScriptedInstance
         std::string m_strInstData;
 
         GUIDList m_lThadTeslaCoilList;
-        GUIDList m_lFaerlinaAddGUIDs;
         GUIDList m_lGothTriggerList;
 
         UNORDERED_MAP<ObjectGuid, GothTrigger> m_mGothTriggerMap;

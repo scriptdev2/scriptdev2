@@ -75,11 +75,6 @@ void instance_naxxramas::OnCreatureCreate(Creature* pCreature)
 
         case NPC_SUB_BOSS_TRIGGER:  m_lGothTriggerList.push_back(pCreature->GetObjectGuid()); break;
         case NPC_TESLA_COIL:        m_lThadTeslaCoilList.push_back(pCreature->GetObjectGuid()); break;
-
-        case NPC_NAXXRAMAS_FOLLOWER:
-        case NPC_NAXXRAMAS_WORSHIPPER:
-            m_lFaerlinaAddGUIDs.push_back(pCreature->GetObjectGuid());
-            break;
     }
 }
 
@@ -269,15 +264,6 @@ void instance_naxxramas::SetData(uint32 uiType, uint32 uiData)
             {
                 DoUseDoorOrButton(GO_ARAC_FAER_DOOR);
                 DoUseDoorOrButton(GO_ARAC_MAEX_OUTER_DOOR);
-            }
-            if (uiData == FAIL)
-            {
-                for (GUIDList::const_iterator itr = m_lFaerlinaAddGUIDs.begin(); itr != m_lFaerlinaAddGUIDs.end(); ++itr)
-                {
-                    Creature* pAdd = instance->GetCreature(*itr);
-                    if (pAdd && !pAdd->isAlive())
-                        pAdd->Respawn();
-                }
             }
             m_auiEncounter[uiType] = uiData;
             break;
