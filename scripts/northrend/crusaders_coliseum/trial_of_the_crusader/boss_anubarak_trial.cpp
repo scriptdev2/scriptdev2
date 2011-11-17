@@ -154,8 +154,6 @@ struct MANGOS_DLL_DECL boss_anubarak_trialAI : public ScriptedAI
 
         m_vSpheresGuidVector.clear();
         m_vSpheresGuidVector.resize(MAX_FROSTSPHERES, ObjectGuid());
-
-        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     }
 
     void JustReachedHome()
@@ -175,9 +173,14 @@ struct MANGOS_DLL_DECL boss_anubarak_trialAI : public ScriptedAI
     void MoveInLineOfSight(Unit* pWho)
     {
         if (!m_bDidIntroYell && pWho->GetTypeId() == TYPEID_PLAYER && !((Player*)pWho)->isGameMaster() &&
-            pWho->IsWithinDistInMap(m_creature, 100) && pWho->IsWithinLOSInMap(m_creature))
+                !m_creature->IsInEvadeMode() && pWho->IsWithinDistInMap(m_creature, 100) && pWho->IsWithinLOSInMap(m_creature))
         {
             DoScriptText(SAY_INTRO, m_creature);
+
+            m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
+            m_creature->RemoveAurasDueToSpell(SPELL_SUBMERGE);
+            DoCastSpellIfCan(m_creature, SPELL_EMERGE);
+
             m_bDidIntroYell = true;
             return;
         }
