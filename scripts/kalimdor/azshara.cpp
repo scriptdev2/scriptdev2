@@ -244,58 +244,59 @@ bool GOUse_go_southfury_moonstone(Player* pPlayer, GameObject* pGo)
 /*######
 ## mobs_spitelashes
 ######*/
+enum
+{
+    // quest related
+    SPELL_POLYMORPH_BACKFIRE    = 28406,        // summons npc 16479
+    QUEST_FRAGMENTED_MAGIC      = 9364,
+};
 
 struct MANGOS_DLL_DECL mobs_spitelashesAI : public ScriptedAI
 {
     mobs_spitelashesAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
-    uint32 morphtimer;
-    bool spellhit;
+    uint32 m_uiMorphTimer;
 
     void Reset()
     {
-        morphtimer = 0;
-        spellhit = false;
+        m_uiMorphTimer = 0;
     }
 
-    void SpellHit(Unit *Hitter, const SpellEntry *Spellkind)
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
     {
-        if (!spellhit &&
-            Hitter->GetTypeId() == TYPEID_PLAYER &&
-            ((Player*)Hitter)->GetQuestStatus(9364) == QUEST_STATUS_INCOMPLETE &&
-            (Spellkind->Id==118 || Spellkind->Id== 12824 || Spellkind->Id== 12825 || Spellkind->Id== 12826))
-        {
-            spellhit=true;
-            DoCastSpellIfCan(m_creature,29124);                       //become a sheep
-        }
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        // we mustn't remove the creature in the same round in which we cast the summon spell, otherwise there will be no summons
-        if (spellhit && morphtimer>=5000)
-        {
-            m_creature->ForcedDespawn();
+        // If already hit by the polymorph return
+        if (m_uiMorphTimer)
             return;
-        }
 
-        // walk 5 seconds before summoning
-        if (spellhit && morphtimer<5000)
-        {
-            morphtimer+=diff;
-            if (morphtimer>=5000)
-            {
-                DoCastSpellIfCan(m_creature,28406);                   //summon copies
-                DoCastSpellIfCan(m_creature,6924);                    //visual explosion
-            }
-        }
+        // Creature get polymorphed into a sheep and after 5 secs despawns
+        if (pCaster->GetTypeId() == TYPEID_PLAYER && ((Player*)pCaster)->GetQuestStatus(QUEST_FRAGMENTED_MAGIC) == QUEST_STATUS_INCOMPLETE &&
+            (pSpell->Id==118 || pSpell->Id== 12824 || pSpell->Id== 12825 || pSpell->Id== 12826))
+            m_uiMorphTimer = 5000;
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //TODO: add abilities for the different creatures
+        if (m_uiMorphTimer)
+        {
+            if (m_uiMorphTimer <= uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_POLYMORPH_BACKFIRE, CAST_TRIGGERED) == CAST_OK)
+                {
+                    m_uiMorphTimer = 0;
+                    m_creature->ForcedDespawn();
+                }
+            }
+            else
+                m_uiMorphTimer -= uiDiff;
+        }
+
         DoMeleeAttackIfReady();
     }
 };
+
 CreatureAI* GetAI_mobs_spitelashes(Creature* pCreature)
 {
     return new mobs_spitelashesAI(pCreature);
