@@ -582,6 +582,7 @@ void instance_naxxramas::GetGothSummonPointCreatures(std::list<Creature*> &lList
     }
 }
 
+// Right is right side from gothik (eastern)
 bool instance_naxxramas::IsInRightSideGothArea(Unit* pUnit)
 {
     if (GameObject* pCombatGate = GetSingleGameObjectFromStorage(GO_MILI_GOTH_COMBAT_GATE))
