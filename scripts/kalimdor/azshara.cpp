@@ -249,17 +249,72 @@ enum
     // quest related
     SPELL_POLYMORPH_BACKFIRE    = 28406,        // summons npc 16479
     QUEST_FRAGMENTED_MAGIC      = 9364,
+
+
+    // npc spells
+    SPELL_DISARM                = 6713,         // warrior
+    SPELL_SCREECH               = 3589,         // screamer
+    SPELL_FROST_SHOCK           = 12548,        // serpent guard
+    SPELL_RENEW                 = 11640,        // siren
+    SPELL_SHOOT                 = 6660,
+    SPELL_FROST_SHOT            = 12551,
+    SPELL_FROST_NOVA            = 11831,
+    SPELL_STRIKE                = 11976,        // myrmidon
+
+    NPC_SPITELASH_WARRIOR       = 6190,
+    NPC_SPITELASH_SCREAMER      = 6193,
+    NPC_SPITELASH_GUARD         = 6194,
+    NPC_SPITELASH_SIREN         = 6195,
+    NPC_SPITELASH_MYRMIDON      = 6196,
+
+    TARGET_TYPE_RANDOM          = 0,
+    TARGET_TYPE_VICTIM          = 1,
+    TARGET_TYPE_SELF            = 2,
+    TARGET_TYPE_FRIENDLY        = 3,
+};
+
+struct SpitelashAbilityStruct
+{
+    uint32 m_uiCreatureEntry, m_uiSpellId;
+    uint8 m_uiTargetType;
+    uint32 m_uiInitialTimer, m_uiCooldown;
+};
+
+static SpitelashAbilityStruct m_aSpitelashAbility[8] =
+{
+    {NPC_SPITELASH_WARRIOR,     SPELL_DISARM,       TARGET_TYPE_VICTIM,     4000,  10000},
+    {NPC_SPITELASH_SCREAMER,    SPELL_SCREECH,      TARGET_TYPE_SELF,       7000,  15000},
+    {NPC_SPITELASH_GUARD,       SPELL_FROST_SHOCK,  TARGET_TYPE_VICTIM,     7000,  13000},
+    {NPC_SPITELASH_SIREN,       SPELL_RENEW,        TARGET_TYPE_FRIENDLY,   4000,  7000},
+    {NPC_SPITELASH_SIREN,       SPELL_SHOOT,        TARGET_TYPE_RANDOM,     3000,  9000},
+    {NPC_SPITELASH_SIREN,       SPELL_FROST_SHOT,   TARGET_TYPE_RANDOM,     7000,  10000},
+    {NPC_SPITELASH_SIREN,       SPELL_FROST_NOVA,   TARGET_TYPE_SELF,       10000, 15000},
+    {NPC_SPITELASH_MYRMIDON,    SPELL_STRIKE,       TARGET_TYPE_VICTIM,     3000,  7000}
 };
 
 struct MANGOS_DLL_DECL mobs_spitelashesAI : public ScriptedAI
 {
-    mobs_spitelashesAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+    mobs_spitelashesAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        for (uint8 i = 0; i < sizeof(m_aSpitelashAbility); ++i)
+        {
+            if (m_aSpitelashAbility[i].m_uiCreatureEntry == m_creature->GetEntry())
+                m_mSpellTimers[i] = m_aSpitelashAbility[i].m_uiInitialTimer;
+        }
+
+        Reset();
+    }
 
     uint32 m_uiMorphTimer;
+
+    UNORDERED_MAP<uint8, uint32> m_mSpellTimers;
 
     void Reset()
     {
         m_uiMorphTimer = 0;
+
+        for (UNORDERED_MAP<uint8, uint32>::iterator itr = m_mSpellTimers.begin(); itr != m_mSpellTimers.end(); ++itr)
+            itr->second = m_aSpitelashAbility[itr->first].m_uiInitialTimer;
     }
 
     void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
@@ -272,6 +327,35 @@ struct MANGOS_DLL_DECL mobs_spitelashesAI : public ScriptedAI
         if (pCaster->GetTypeId() == TYPEID_PLAYER && ((Player*)pCaster)->GetQuestStatus(QUEST_FRAGMENTED_MAGIC) == QUEST_STATUS_INCOMPLETE &&
             (pSpell->Id==118 || pSpell->Id== 12824 || pSpell->Id== 12825 || pSpell->Id== 12826))
             m_uiMorphTimer = 5000;
+    }
+
+    bool CanUseSpecialAbility(uint32 uiIndex)
+    {
+        Unit* pTarget = NULL;
+
+        switch(m_aSpitelashAbility[uiIndex].m_uiTargetType)
+        {
+            case TARGET_TYPE_SELF:
+                pTarget = m_creature;
+                break;
+            case TARGET_TYPE_VICTIM:
+                pTarget = m_creature->getVictim();
+                break;
+            case TARGET_TYPE_RANDOM:
+                pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, m_aSpitelashAbility[uiIndex].m_uiSpellId, SELECT_FLAG_IN_LOS);
+                break;
+            case TARGET_TYPE_FRIENDLY:
+                pTarget = DoSelectLowestHpFriendly(10.0f);
+                break;
+        }
+
+        if (pTarget)
+        {
+            if (DoCastSpellIfCan(pTarget, m_aSpitelashAbility[uiIndex].m_uiSpellId) == CAST_OK)
+                return true;
+        }
+
+        return false;
     }
 
     void UpdateAI(const uint32 uiDiff)
@@ -291,6 +375,20 @@ struct MANGOS_DLL_DECL mobs_spitelashesAI : public ScriptedAI
             }
             else
                 m_uiMorphTimer -= uiDiff;
+        }
+
+        for (UNORDERED_MAP<uint8, uint32>::iterator itr = m_mSpellTimers.begin(); itr != m_mSpellTimers.end(); ++itr)
+        {
+            if (itr->second < uiDiff)
+            {
+                if (CanUseSpecialAbility(itr->first))
+                {
+                    itr->second = m_aSpitelashAbility[itr->first].m_uiCooldown;
+                    break;
+                }
+            }
+            else
+                itr->second -= uiDiff;
         }
 
         DoMeleeAttackIfReady();
