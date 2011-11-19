@@ -604,12 +604,13 @@ struct MANGOS_DLL_DECL npc_injured_patientAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //lower HP on every world tick makes it a useful counter, not officlone though
-        if (m_creature->isAlive() && m_creature->GetHealth() > 6)
+        uint32 uiHPLose = uint32(0.05f * diff);
+        if (m_creature->isAlive() && m_creature->GetHealth() > 1 + uiHPLose)
         {
-            m_creature->SetHealth(uint32(m_creature->GetHealth()-5));
+            m_creature->SetHealth(m_creature->GetHealth() - uiHPLose);
         }
 
-        if (m_creature->isAlive() && m_creature->GetHealth() <= 6)
+        if (m_creature->isAlive() && m_creature->GetHealth() <= 1 + uiHPLose)
         {
             m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IN_COMBAT);
             m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
