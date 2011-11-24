@@ -28,8 +28,9 @@ enum
     NPC_SACROLASH               = 25165,
     NPC_MURU                    = 25741,
     NPC_ENTROPIUS               = 25840,
-    // NPC_KILJAEDEN            = 25315,
-    // NPC_KILJAEDEN_CONTROLLER = 25608,            // kiljaeden event controller
+    NPC_DECEIVER                = 25588,
+    NPC_KILJAEDEN               = 25315,
+    NPC_KILJAEDEN_CONTROLLER    = 25608,            // kiljaeden event controller
     // NPC_ANVEENA              = 26046,            // related to kiljaeden event
     // NPC_KALECGOS             = 25319,            // related to kiljaeden event
 
@@ -55,7 +56,9 @@ enum
     SPELL_SPECTRAL_REALM_FORCE_FACTION  = 44852,
 
     // used by both muru and entropius
-    SPELL_MURU_BERSERK                  = 26662,
+    SPELL_MURU_BERSERK          = 26662,
+
+    MAX_DECEIVERS               = 3
 };
 
 class MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
@@ -69,6 +72,7 @@ class MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
 
         void OnObjectCreate(GameObject* pGo);
         void OnCreatureCreate(Creature* pCreature);
+        void OnCreatureDeath(Creature* pCreature);
 
         void SetData(uint32 uiType, uint32 uiData);
         void SetData64(uint32 uiType, uint64 uiData);
@@ -86,6 +90,7 @@ class MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
         std::string m_strInstData;
 
         // Misc
+        uint8 m_uiDeceiversKilled;
         uint32 m_uiSpectralRealmTimer;
         uint32 m_uiMuruBerserkTimer;
         GUIDList m_lSpectralRealmList;

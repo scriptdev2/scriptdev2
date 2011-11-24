@@ -35,6 +35,7 @@ EndScriptData */
 
 instance_sunwell_plateau::instance_sunwell_plateau(Map* pMap) : ScriptedInstance(pMap),
     m_uiMuruBerserkTimer(0),
+    m_uiDeceiversKilled(0),
     m_uiSpectralRealmTimer(5000)
 {
     Initialize();
@@ -67,8 +68,26 @@ void instance_sunwell_plateau::OnCreatureCreate(Creature* pCreature)
         case NPC_SACROLASH:
         case NPC_MURU:
         case NPC_ENTROPIUS:
+        case NPC_KILJAEDEN_CONTROLLER:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
+    }
+}
+
+void instance_sunwell_plateau::OnCreatureDeath(Creature* pCreature)
+{
+    if (pCreature->GetEntry() == NPC_DECEIVER)
+    {
+        ++m_uiDeceiversKilled;
+        // Spawn Kiljaeden when all deceivers are killed
+        if (m_uiDeceiversKilled == MAX_DECEIVERS)
+        {
+            if (Creature* pController = GetSingleCreatureFromStorage(NPC_KILJAEDEN_CONTROLLER))
+            {
+                if (Creature* pKiljaeden = pController->SummonCreature(NPC_KILJAEDEN, pController->GetPositionX(), pController->GetPositionY(), pController->GetPositionZ(), pController->GetOrientation(), TEMPSUMMON_DEAD_DESPAWN, 0))
+                    pKiljaeden->SetInCombatWithZone();
+            }
+        }
     }
 }
 
@@ -155,6 +174,9 @@ void instance_sunwell_plateau::SetData(uint32 uiType, uint32 uiData)
             break;
         case TYPE_KILJAEDEN:
             m_auiEncounter[uiType] = uiData;
+            // When event fails the deceivers are respawned so restart the counter
+            if (uiData == FAIL)
+                m_uiDeceiversKilled = 0;
             break;
         case DATA_SET_SPECTRAL_CHECK:
             m_uiSpectralRealmTimer = uiData;

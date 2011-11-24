@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: boss_kiljaeden
-SD%Complete:
-SDComment:
+SD%Complete: 10
+SDComment: Only spawn support
 SDCategory: Sunwell Plateau
 EndScriptData */
 
@@ -57,8 +57,73 @@ enum
     SAY_KALECGOS_ORB_2          = -1580092,
     SAY_KALECGOS_ORB_3          = -1580093,
     SAY_KALECGOS_ORB_4          = -1580094,
+
+    SPELL_BIRTH                 = 45464,            // Kiljaeden spawn animation
 };
+
+struct MANGOS_DLL_DECL boss_kiljaedenAI : public Scripted_NoMovementAI
+{
+    boss_kiljaedenAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
+    {
+        m_pInstance = ((instance_sunwell_plateau*)pCreature->GetInstanceData());
+        Reset();
+    }
+
+    instance_sunwell_plateau* m_pInstance;
+
+    void Reset()
+    {
+    }
+
+    void Aggro(Unit* pWho)
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_KILJAEDEN, IN_PROGRESS);
+
+        DoScriptText(SAY_EMERGE, m_creature);
+        DoCastSpellIfCan(m_creature, SPELL_BIRTH);
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_KILJAEDEN, FAIL);
+
+        // Despawn on wipe
+        m_creature->ForcedDespawn();
+    }
+
+    void KilledUnit(Unit* pVictim)
+    {
+        DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
+    }
+
+    void JustDied(Unit* pKiller)
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_KILJAEDEN, DONE);
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_boss_kiljaeden(Creature *pCreature)
+{
+    return new boss_kiljaedenAI(pCreature);
+}
 
 void AddSC_boss_kiljaeden()
 {
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name="boss_kiljaeden";
+    pNewScript->GetAI = &GetAI_boss_kiljaeden;
+    pNewScript->RegisterSelf();
 }
