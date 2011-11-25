@@ -58,7 +58,29 @@ enum
     SAY_KALECGOS_ORB_3          = -1580093,
     SAY_KALECGOS_ORB_4          = -1580094,
 
+    // outro
+    SAY_OUTRO_1                 = -1580095,         // Velen
+    SAY_OUTRO_2                 = -1580096,
+    SAY_OUTRO_3                 = -1580097,
+    SAY_OUTRO_4                 = -1580098,
+    SAY_OUTRO_5                 = -1580099,         // Liadrin
+    SAY_OUTRO_6                 = -1580100,         // Velen
+    SAY_OUTRO_7                 = -1580101,         // Liadrin
+    SAY_OUTRO_8                 = -1580102,         // Velen
+    SAY_OUTRO_9                 = -1580103,
+    SAY_OUTRO_10                = -1580104,         // Liadrin
+    SAY_OUTRO_11                = -1580105,         // Velen
+    SAY_OUTRO_12                = -1580106,
+
+    // spells
     SPELL_BIRTH                 = 45464,            // Kiljaeden spawn animation
+
+    // outro
+    SPELL_ENTROPIUS_BODY        = 46819,
+    SPELL_CALL_ENTROPIUS        = 46818,
+
+    NPC_VELEN_PORTAL            = 24925,
+    NPC_CORE_ENTROPIUS          = 26262,
 };
 
 struct MANGOS_DLL_DECL boss_kiljaedenAI : public Scripted_NoMovementAI
