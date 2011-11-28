@@ -187,20 +187,17 @@ void instance_zulaman::SetData(uint32 uiType, uint32 uiData)
             m_auiEncounter[2] = uiData;
             break;
         case TYPE_JANALAI:
-            if (uiData == NOT_STARTED)
+            if (uiData == FAIL)
             {
                 m_uiEggsRemainingCount_Left = 20;
                 m_uiEggsRemainingCount_Right = 20;
 
-                if (!m_lEggsGUIDList.empty())
+                for(GUIDList::const_iterator itr = m_lEggsGUIDList.begin(); itr != m_lEggsGUIDList.end(); ++itr)
                 {
-                    for(GUIDList::const_iterator itr = m_lEggsGUIDList.begin(); itr != m_lEggsGUIDList.end(); ++itr)
+                    if (Creature* pEgg = instance->GetCreature(*itr))
                     {
-                        if (Creature* pEgg = instance->GetCreature(*itr))
-                        {
-                            if (!pEgg->isAlive())
-                                pEgg->Respawn();
-                        }
+                        if (!pEgg->isAlive())
+                            pEgg->Respawn();
                     }
                 }
             }

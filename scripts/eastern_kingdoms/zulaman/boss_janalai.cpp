@@ -729,13 +729,13 @@ struct MANGOS_DLL_DECL npc_hatchlingAI : public ScriptedAI
         if (!m_bIsStarted)
         {
             if (m_creature->GetPositionY() > 1150)
-                m_creature->GetMotionMaster()->MovePoint(0, hatcherway_l[3][0]+rand()%4-2,hatcherway_l[3][1]+rand()%4-2,hatcherway_l[3][2]);
+                m_creature->GetMotionMaster()->MovePoint(0, hatcherway_l[3][0] + rand()%4-2, hatcherway_l[3][1] + rand()%4-2, hatcherway_l[3][2]);
             else
-                m_creature->GetMotionMaster()->MovePoint(0,hatcherway_r[3][0]+rand()%4-2,hatcherway_r[3][1]+rand()%4-2,hatcherway_r[3][2]);
+                m_creature->GetMotionMaster()->MovePoint(0, hatcherway_r[3][0] + rand()%4-2, hatcherway_r[3][1] + rand()%4-2, hatcherway_r[3][2]);
             m_bIsStarted = true;
         }
 
-        if (m_pInstance && m_pInstance->GetData(TYPE_JANALAI) == NOT_STARTED)
+        if (m_pInstance && m_pInstance->GetData(TYPE_JANALAI) == FAIL)
         {
             m_creature->ForcedDespawn();
             return;
@@ -746,8 +746,8 @@ struct MANGOS_DLL_DECL npc_hatchlingAI : public ScriptedAI
 
         if (m_uiBufferTimer < uiDiff)
         {
-            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
-                DoCastSpellIfCan(target,SPELL_FLAMEBUFFED);
+            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                DoCastSpellIfCan(target, SPELL_FLAMEBUFFED);
 
             m_uiBufferTimer = 7000;
         }
