@@ -27,21 +27,20 @@ enum InstanceZA
     WORLD_STATE_ID          = 3104,
     WORLD_STATE_COUNTER     = 3106,
 
-    TYPE_EVENT_RUN          = 1,
-    TYPE_AKILZON            = 2,
-    TYPE_NALORAKK           = 3,
-    TYPE_JANALAI            = 4,
-    TYPE_HALAZZI            = 5,
-    TYPE_MALACRASS          = 6,
-    TYPE_ZULJIN             = 7,
+    TYPE_EVENT_RUN          = 0,
+    TYPE_AKILZON            = 1,
+    TYPE_NALORAKK           = 2,
+    TYPE_JANALAI            = 3,
+    TYPE_HALAZZI            = 4,
+    TYPE_MALACRASS          = 5,
+    TYPE_ZULJIN             = 6,
+    TYPE_RUN_EVENT_TIME     = 7,                            // Must be MAX_ENCOUNTER -1
 
     TYPE_RAND_VENDOR_1      = 8,
     TYPE_RAND_VENDOR_2      = 9,
 
-    TYPE_RUN_EVENT_TIME     = 10,
-
-    TYPE_J_EGGS_RIGHT       = 11,
-    TYPE_J_EGGS_LEFT        = 12,
+    TYPE_J_EGGS_RIGHT       = 10,
+    TYPE_J_EGGS_LEFT        = 11,
 
     NPC_AKILZON             = 23574,
     // NPC_NALORAKK         = 23576,
