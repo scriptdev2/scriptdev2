@@ -867,30 +867,19 @@ struct MANGOS_DLL_DECL boss_warlord_salarisAI : public boss_priestess_lackey_com
 
         if (Intercept_Stun_Timer < diff)
         {
-            bool InMeleeRange = false;
-            ThreatList const& tList = m_creature->getThreatManager().getThreatList();
-            for (ThreatList::const_iterator itr = tList.begin();itr != tList.end(); ++itr)
+            //if nobody is in melee range than try to use Intercept
+            if (!m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO, 0, uint32(0), SELECT_FLAG_IN_MELEE_RANGE))
             {
-                if (Unit* target = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid()))
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_INTERCEPT_STUN, SELECT_FLAG_IN_LOS))
                 {
-                    //if in melee range
-                    if (m_creature->CanReachWithMeleeAttack(target))
-                    {
-                        InMeleeRange = true;
-                        break;
-                    }
+                    if (DoCastSpellIfCan(pTarget, SPELL_INTERCEPT_STUN) == CAST_OK)
+                        Intercept_Stun_Timer = 10000;
                 }
             }
-
-            //if nobody is in melee range than try to use Intercept
-            if (!InMeleeRange)
-            {
-                if (Unit* pUnit = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-                    DoCastSpellIfCan(pUnit, SPELL_INTERCEPT_STUN);
-            }
-
-            Intercept_Stun_Timer = 10000;
-        }else Intercept_Stun_Timer -= diff;
+            else
+                Intercept_Stun_Timer = 2000;
+        }else
+            Intercept_Stun_Timer -= diff;
 
         if (Disarm_Timer < diff)
         {
