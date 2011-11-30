@@ -3624,7 +3624,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1631103,'Such wondrous power! The Darkfallen Orb has made me INVINCIBLE!',16727,1,0,0,'keleseth SAY_KELESETH_INVOCATION'),
 (-1631104,'Blood will flow!',16728,1,0,0,'keleseth SAY_KELESETH_SPECIAL'),
 (-1631105,'Were you ever a threat?',16723,1,0,0,'keleseth SAY_KELESETH_SLAY_1'),
-(-1631106,'Truth is found in death.',16724,1,0,0,'keleseth SAY_SKELESETH_SLAY_2'),
+(-1631106,'Truth is found in death.',16724,1,0,0,'keleseth SAY_KELESETH_SLAY_2'),
 (-1631107,'%s cackles maniacally!',16726,2,0,0,'keleseth SAY_KELESETH_BERSERK'), -- TODO Can be wrong
 (-1631108,'My queen... they come...',16725,1,0,0,'keleseth SAY_KELESETH_DEATH'),
 
