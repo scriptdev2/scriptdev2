@@ -34,6 +34,7 @@ enum
     // NPC_CAPTAIN_QEEZ         = 15391,
 
     GO_OSSIRIAN_CRYSTAL         = 180619,                   // Used in the ossirian encounter
+    NPC_OSSIRIAN_TRIGGER        = 15590,                    // Triggers ossirian weakness
 
     SAY_OSSIRIAN_INTRO          = -1509022                  // Yelled after Kurinnax dies
 };
@@ -44,7 +45,7 @@ struct SpawnLocation
     float m_fX, m_fY, m_fZ, m_fO;
 };
 
-static  const SpawnLocation aAndorovSpawnLocs[MAX_HELPERS] =
+static const SpawnLocation aAndorovSpawnLocs[MAX_HELPERS] =
 {
     {NPC_GENERAL_ANDOROV, -8660.4f,  1510.29f, 32.449f,  2.2184f},
     {NPC_KALDOREI_ELITE,  -8655.84f, 1509.78f, 32.462f,  2.33341f},
@@ -64,7 +65,6 @@ class MANGOS_DLL_DECL instance_ruins_of_ahnqiraj : public ScriptedInstance
         // bool IsEncounterInProgress() const;              // not active in AQ20
 
         void OnCreatureCreate(Creature* pCreature);
-        void OnObjectCreate(GameObject* pGo);
         void OnPlayerEnter(Player* pPlayer);
 
         void OnCreatureEnterCombat(Creature* pCreature);
