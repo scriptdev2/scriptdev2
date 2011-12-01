@@ -31,52 +31,55 @@ EndContentData */
 # npc_blood_knight_stillblade
 #######*/
 
-#define SAY_HEAL                        -1000193
+enum
+{
+    QUEST_REDEEMING_THE_DEAD     = 9685,
 
-#define QUEST_REDEEMING_THE_DEAD        9685
-#define SPELL_SHIMMERING_VESSEL         31225
-#define SPELL_REVIVE_SELF               32343
+    SAY_HEAL                     = -1000193,
+    SPELL_SHIMMERING_VESSEL      = 31225,
+    SPELL_REVIVE_SELF            = 32343,
+};
 
 struct MANGOS_DLL_DECL npc_blood_knight_stillbladeAI : public ScriptedAI
 {
-    npc_blood_knight_stillbladeAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+    npc_blood_knight_stillbladeAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
-    uint32 lifeTimer;
-    bool spellHit;
+    uint32 m_uiLifeTimer;
+    bool m_bSpellHit;
 
     void Reset()
     {
-        lifeTimer = 120000;
+        m_uiLifeTimer = 120000;
         m_creature->SetUInt32Value(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_DEAD);
         m_creature->SetStandState(UNIT_STAND_STATE_DEAD);
-        spellHit = false;
+        m_bSpellHit = false;
     }
 
-    void MoveInLineOfSight(Unit *who) { }
+    void MoveInLineOfSight(Unit* pWho) {}
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (m_creature->IsStandState())
         {
-            if (lifeTimer < diff)
+            if (m_uiLifeTimer < uiDiff)
                 m_creature->AI()->EnterEvadeMode();
             else
-                lifeTimer -= diff;
+                m_uiLifeTimer -= uiDiff;
         }
     }
 
-    void SpellHit(Unit *Hitter, const SpellEntry *Spellkind)
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpellInfo)
     {
-        if ((Spellkind->Id == SPELL_SHIMMERING_VESSEL) && !spellHit &&
-            (Hitter->GetTypeId() == TYPEID_PLAYER) && (((Player*)Hitter)->IsActiveQuest(QUEST_REDEEMING_THE_DEAD)))
+        if ((pSpellInfo->Id == SPELL_SHIMMERING_VESSEL) && !m_bSpellHit &&
+            (pCaster->GetTypeId() == TYPEID_PLAYER) && (((Player*)pCaster)->IsActiveQuest(QUEST_REDEEMING_THE_DEAD)))
         {
-            ((Player*)Hitter)->AreaExploredOrEventHappens(QUEST_REDEEMING_THE_DEAD);
-            DoCastSpellIfCan(m_creature,SPELL_REVIVE_SELF);
+            ((Player*)pCaster)->KilledMonsterCredit(m_creature->GetEntry(), m_creature->GetObjectGuid());
+            DoCastSpellIfCan(m_creature, SPELL_REVIVE_SELF);
             m_creature->SetStandState(UNIT_STAND_STATE_STAND);
             m_creature->SetUInt32Value(UNIT_DYNAMIC_FLAGS, 0);
             //m_creature->RemoveAllAuras();
-            DoScriptText(SAY_HEAL, m_creature, Hitter);
-            spellHit = true;
+            DoScriptText(SAY_HEAL, m_creature, pCaster);
+            m_bSpellHit = true;
         }
     }
 };
