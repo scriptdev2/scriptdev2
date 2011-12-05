@@ -36,6 +36,7 @@ EndScriptData */
 instance_sunwell_plateau::instance_sunwell_plateau(Map* pMap) : ScriptedInstance(pMap),
     m_uiMuruBerserkTimer(0),
     m_uiDeceiversKilled(0),
+    m_uiKalecRespawnTimer(0),
     m_uiSpectralRealmTimer(5000)
 {
     Initialize();
@@ -139,8 +140,17 @@ void instance_sunwell_plateau::SetData(uint32 uiType, uint32 uiData)
             DoUseDoorOrButton(GO_FORCEFIELD);
             DoUseDoorOrButton(GO_BOSS_COLLISION_1);
             DoUseDoorOrButton(GO_BOSS_COLLISION_2);
-            if (uiData == IN_PROGRESS)
-                m_lSpectralRealmList.clear();
+            if (uiData == FAIL)
+            {
+                m_uiKalecRespawnTimer = 20000;
+
+                if (Creature* pKalecDragon = GetSingleCreatureFromStorage(NPC_KALECGOS_DRAGON))
+                    pKalecDragon->ForcedDespawn();
+                if (Creature* pKalecHuman = GetSingleCreatureFromStorage(NPC_KALECGOS_HUMAN))
+                    pKalecHuman->ForcedDespawn();
+                if (Creature* pSathrovarr = GetSingleCreatureFromStorage(NPC_SATHROVARR))
+                    pSathrovarr->AI()->EnterEvadeMode();
+            }
             break;
         case TYPE_BRUTALLUS:
             m_auiEncounter[uiType] = uiData;
@@ -178,9 +188,6 @@ void instance_sunwell_plateau::SetData(uint32 uiType, uint32 uiData)
             if (uiData == FAIL)
                 m_uiDeceiversKilled = 0;
             break;
-        case DATA_SET_SPECTRAL_CHECK:
-            m_uiSpectralRealmTimer = uiData;
-            break;
     }
 
     if (uiData == DONE)
@@ -198,12 +205,6 @@ void instance_sunwell_plateau::SetData(uint32 uiType, uint32 uiData)
     }
 }
 
-void instance_sunwell_plateau::SetData64(uint32 uiType, uint64 uiData)
-{
-    if (uiType == DATA_PLAYER_SPECTRAL_REALM)
-        m_lSpectralRealmList.push_back(ObjectGuid(uiData));
-}
-
 uint32 instance_sunwell_plateau::GetData(uint32 uiType)
 {
     if (uiType < MAX_ENCOUNTER)
@@ -212,38 +213,20 @@ uint32 instance_sunwell_plateau::GetData(uint32 uiType)
     return 0;
 }
 
-void instance_sunwell_plateau::DoEjectSpectralRealmPlayers()
-{
-    if (m_lSpectralRealmList.empty())
-        return;
-
-    Map::PlayerList const& players = instance->GetPlayers();
-
-    for(Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
-    {
-        Player* pPlayer = itr->getSource();
-
-        if (pPlayer && !pPlayer->HasAura(SPELL_SPECTRAL_REALM))
-        {
-            m_lSpectralRealmList.remove(pPlayer->GetObjectGuid());
-            pPlayer->CastSpell(pPlayer, SPELL_SPECTRAL_EXHAUSTION, true);
-            pPlayer->CastSpell(pPlayer, SPELL_TELEPORT_NORMAL_REALM, true);
-        }
-    }
-}
-
 void instance_sunwell_plateau::Update(uint32 uiDiff)
 {
-    // Only check for Spectral Realm if Kalecgos Encounter is running
-    if (m_auiEncounter[TYPE_KALECGOS] == IN_PROGRESS)
+    if (m_uiKalecRespawnTimer)
     {
-        if (m_uiSpectralRealmTimer <= uiDiff)
+        if (m_uiKalecRespawnTimer <= uiDiff)
         {
-            DoEjectSpectralRealmPlayers();
-            m_uiSpectralRealmTimer = 1000;
+            if (Creature* pKalecDragon = GetSingleCreatureFromStorage(NPC_KALECGOS_DRAGON))
+                pKalecDragon->Respawn();
+            if (Creature* pKalecHuman = GetSingleCreatureFromStorage(NPC_KALECGOS_HUMAN))
+                pKalecHuman->Respawn();
+            m_uiKalecRespawnTimer = 0;
         }
         else
-            m_uiSpectralRealmTimer -= uiDiff;
+            m_uiKalecRespawnTimer -= uiDiff;
     }
 
     // Muru berserk timer; needs to be done here because it involves two distinct creatures

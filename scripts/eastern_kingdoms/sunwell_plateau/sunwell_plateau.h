@@ -16,9 +16,6 @@ enum
     TYPE_MURU                   = 4,
     TYPE_KILJAEDEN              = 5,
 
-    DATA_PLAYER_SPECTRAL_REALM  = 6,
-    DATA_SET_SPECTRAL_CHECK     = 7,
-
     NPC_KALECGOS_DRAGON         = 24850,            // kalecgos blue dragon hostile
     NPC_KALECGOS_HUMAN          = 24891,            // kalecgos human form in spectral realm
     NPC_SATHROVARR              = 24892,
@@ -51,12 +48,6 @@ enum
 
     AREATRIGGER_TWINS           = 4937,
 
-    // spells related to kalecgos event
-    SPELL_SPECTRAL_REALM                = 46021,
-    SPELL_TELEPORT_NORMAL_REALM         = 46020,
-    SPELL_SPECTRAL_EXHAUSTION           = 44867,
-    SPELL_SPECTRAL_REALM_FORCE_FACTION  = 44852,
-
     // used by both muru and entropius
     SPELL_MURU_BERSERK          = 26662,
 
@@ -77,7 +68,6 @@ class MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
         void OnCreatureDeath(Creature* pCreature);
 
         void SetData(uint32 uiType, uint32 uiData);
-        void SetData64(uint32 uiType, uint64 uiData);
         uint32 GetData(uint32 uiType);
 
         void Update(uint32 uiDiff);
@@ -86,15 +76,13 @@ class MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
         void Load(const char* chrIn);
 
     protected:
-        void DoEjectSpectralRealmPlayers();
-
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strInstData;
 
         // Misc
         uint8 m_uiDeceiversKilled;
         uint32 m_uiSpectralRealmTimer;
+        uint32 m_uiKalecRespawnTimer;
         uint32 m_uiMuruBerserkTimer;
-        GUIDList m_lSpectralRealmList;
 };
 #endif
