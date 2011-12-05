@@ -375,6 +375,28 @@ struct MANGOS_DLL_DECL boss_sathrovarrAI : public ScriptedAI
     void KilledUnit(Unit* pVictim)
     {
         DoScriptText(urand(0, 1) ? SAY_SATH_SLAY_1 : SAY_SATH_SLAY_2, m_creature);
+
+        // !!! Workaround which ejects the players from the spectral realm on death !!!
+        if (pVictim->GetTypeId() == TYPEID_PLAYER)
+        {
+            pVictim->CastSpell(pVictim, SPELL_TELEPORT_NORMAL_REALM, true);
+            pVictim->CastSpell(pVictim, SPELL_SPECTRAL_EXHAUSTION, true);
+        }
+    }
+
+    void MoveInLineOfSight(Unit* pWho)
+    {
+        // !!! Workaround which ejects the players from the spectral realm !!!
+        if (pWho->GetTypeId() == TYPEID_PLAYER && pWho->IsWithinLOSInMap(m_creature) && pWho->IsWithinDistInMap(m_creature, 75.0f))
+        {
+            if (!pWho->HasAura(SPELL_SPECTRAL_REALM_AURA))
+            {
+                pWho->CastSpell(pWho, SPELL_TELEPORT_NORMAL_REALM, true);
+                pWho->CastSpell(pWho, SPELL_SPECTRAL_EXHAUSTION, true);
+            }
+        }
+
+        ScriptedAI::MoveInLineOfSight(pWho);
     }
 
     void JustDied(Unit* pKiller)
