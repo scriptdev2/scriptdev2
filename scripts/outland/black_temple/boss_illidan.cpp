@@ -825,7 +825,7 @@ struct MANGOS_DLL_DECL npc_akama_illidanAI : public ScriptedAI
                 if (m_illidanGuid)
                 {
                     Creature* Illidan = m_creature->GetMap()->GetCreature(m_illidanGuid);
-                    if (!Illidan || Illidan->IsInEvadeMode())
+                    if (!Illidan || !Illidan->isInCombat())
                     {
                         Reset();
                         EnterEvadeMode();
