@@ -70,6 +70,9 @@ void instance_sunwell_plateau::OnCreatureCreate(Creature* pCreature)
         case NPC_MURU:
         case NPC_ENTROPIUS:
         case NPC_KILJAEDEN_CONTROLLER:
+        case NPC_KALECGOS:
+        case NPC_VELEN:
+        case NPC_LIADRIN:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
     }
@@ -87,6 +90,8 @@ void instance_sunwell_plateau::OnCreatureDeath(Creature* pCreature)
             {
                 if (Creature* pKiljaeden = pController->SummonCreature(NPC_KILJAEDEN, pController->GetPositionX(), pController->GetPositionY(), pController->GetPositionZ(), pController->GetOrientation(), TEMPSUMMON_DEAD_DESPAWN, 0))
                     pKiljaeden->SetInCombatWithZone();
+
+                pController->RemoveAurasDueToSpell(SPELL_ANVEENA_DRAIN);
             }
         }
     }
