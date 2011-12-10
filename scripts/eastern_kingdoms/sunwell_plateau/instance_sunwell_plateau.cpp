@@ -65,6 +65,9 @@ void instance_sunwell_plateau::OnCreatureCreate(Creature* pCreature)
         case NPC_KALECGOS_DRAGON:
         case NPC_KALECGOS_HUMAN:
         case NPC_SATHROVARR:
+        case NPC_FLIGHT_TRIGGER_LEFT:
+        case NPC_MADRIGOSA:
+        case NPC_BRUTALLUS:
         case NPC_ALYTHESS:
         case NPC_SACROLASH:
         case NPC_MURU:
@@ -159,11 +162,13 @@ void instance_sunwell_plateau::SetData(uint32 uiType, uint32 uiData)
             break;
         case TYPE_BRUTALLUS:
             m_auiEncounter[uiType] = uiData;
+            // Temporary - until spells 46609 and 46637 are properly fixed
             if (uiData == SPECIAL)
                 DoUseDoorOrButton(GO_ICE_BARRIER, MINUTE);
             break;
         case TYPE_FELMYST:
             m_auiEncounter[uiType] = uiData;
+            // Temporary - until spell 46650 is properly fixed
             if (uiData == DONE)
                 DoUseDoorOrButton(GO_FIRE_BARRIER);
             break;

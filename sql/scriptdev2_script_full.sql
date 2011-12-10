@@ -2607,7 +2607,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1580017,'Puny lizard! Death is the only answer you\'ll find here!',12458,1,0,0,'brutallus YELL_INTRO'),
 (-1580018,'Grah! Your magic is weak!',12459,1,0,0,'brutallus YELL_INTRO_BREAK_ICE'),
 (-1580019,'I will crush you!',12460,1,0,0,'brutallus YELL_INTRO_CHARGE'),
-(-1580020,'That was fun.',12461,1,0,0,'brutallus YELL_INTRO_KILL_MADRIGOSA'),
+(-1580020,'That was fun, but I still await a true challenge!',12461,1,0,0,'brutallus YELL_INTRO_KILL_MADRIGOSA'),
 (-1580021,'Come, try your luck!',12462,1,0,0,'brutallus YELL_INTRO_TAUNT'),
 (-1580022,'Ahh! More lambs to the slaughter!',12463,1,0,0,'brutallus YELL_AGGRO'),
 (-1580023,'Perish, insect!',12464,1,0,0,'brutallus YELL_KILL1'),

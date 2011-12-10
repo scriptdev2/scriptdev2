@@ -19,7 +19,9 @@ enum
     NPC_KALECGOS_DRAGON         = 24850,            // kalecgos blue dragon hostile
     NPC_KALECGOS_HUMAN          = 24891,            // kalecgos human form in spectral realm
     NPC_SATHROVARR              = 24892,
-    // NPC_BRUTALLUS            = 24882,
+    NPC_MADRIGOSA               = 25160,
+    NPC_FLIGHT_TRIGGER_LEFT     = 25357,            // Related to Felmyst flight path. Also the anchor to summon Madrigosa
+    NPC_BRUTALLUS               = 24882,
     // NPC_FELMYST              = 25038,
     NPC_ALYTHESS                = 25166,
     NPC_SACROLASH               = 25165,
@@ -36,7 +38,7 @@ enum
     GO_FORCEFIELD               = 188421,           // kalecgos door + collisions
     GO_BOSS_COLLISION_1         = 188523,
     GO_BOSS_COLLISION_2         = 188524,
-    GO_ICE_BARRIER              = 188119,           // use unk; related to brutallus intro
+    GO_ICE_BARRIER              = 188119,           // used to block the players path during the Brutallus intro event
     GO_FIRE_BARRIER             = 188075,           // door after felmyst
     GO_FIRST_GATE               = 187766,           // door between felmyst and eredar twins
     GO_SECOND_GATE              = 187764,           // door after eredar twins
