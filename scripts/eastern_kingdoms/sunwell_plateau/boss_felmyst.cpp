@@ -33,10 +33,8 @@ enum
     SAY_TAKEOFF         = -1580040,
     SAY_BREATH          = -1580039,
     SAY_BERSERK         = -1580041,
-    SAY_KALECGOS_OUTRO  = -1580043,
 
     SPELL_FELBLAZE_VISUAL   = 45068,            // Visual transform aura
-    SPELL_OPEN_BACK_DOOR    = 46650,            // Opens the fire barrier - script effect for 46652
 };
 
 struct MANGOS_DLL_DECL boss_felmystAI : public ScriptedAI
@@ -55,14 +53,38 @@ struct MANGOS_DLL_DECL boss_felmystAI : public ScriptedAI
     void Reset()
     {
         // Transform into Felmyst dragon
+        DoCastSpellIfCan(m_creature, SPELL_FELBLAZE_VISUAL);
+    }
+
+    void MoveInLineOfSight(Unit* pWho)
+    {
         if (!m_bHasTransformed)
         {
-            if (DoCastSpellIfCan(m_creature, SPELL_FELBLAZE_VISUAL) == CAST_OK)
+            if (pWho->GetTypeId() == TYPEID_PLAYER && pWho->IsWithinLOSInMap(m_creature) && pWho->IsWithinDistInMap(m_creature, 100.0f))
             {
                 DoScriptText(SAY_INTRO, m_creature);
                 m_bHasTransformed = true;
             }
         }
+
+        ScriptedAI::MoveInLineOfSight(pWho);
+    }
+
+    void EnterEvadeMode()
+    {
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop(true);
+
+        // Add the visual aura back when evading - workaround because there is no way to remove only the negative auras
+        DoCastSpellIfCan(m_creature, SPELL_FELBLAZE_VISUAL, CAST_TRIGGERED);
+
+        if (m_creature->isAlive())
+            m_creature->GetMotionMaster()->MoveTargetedHome();
+
+        m_creature->SetLootRecipient(NULL);
+
+        Reset();
     }
 
     void Aggro(Unit* pWho)

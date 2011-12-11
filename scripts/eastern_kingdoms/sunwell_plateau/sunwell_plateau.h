@@ -46,10 +46,13 @@ enum
     GO_MURU_EXIT_GATE           = 188118,
     GO_THIRD_GATE               = 187765,           // door after muru; why another?
 
+    SAY_KALECGOS_OUTRO          = -1580043,
     SAY_TWINS_INTRO             = -1580044,
 
     AREATRIGGER_TWINS           = 4937,
 
+    // Felmyst ouro spell
+    SPELL_OPEN_BACK_DOOR        = 46650,            // Opens the fire barrier - script effect for 46652
     // used by both muru and entropius
     SPELL_MURU_BERSERK          = 26662,
     // visuals for Kiljaeden encounter
@@ -61,8 +64,10 @@ enum
 
 // Used to summon Felmyst in reload case. This is the place where Madrigosa is killed in the intro event
 static const float aMadrigosaGroundLoc[4] = {1459.35f, 636.81f, 19.94f, 4.88f};
+// Used as an anchor to move Madrigosa and Kalec during the cinematic
+static const float aMadrigosaFlyLoc[3] = {1459.35f, 636.81f, 59.234f};
 
-class MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
+class MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance, private DialogueHelper
 {
     public:
         instance_sunwell_plateau(Map* pMap);
@@ -85,6 +90,8 @@ class MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
         void Load(const char* chrIn);
 
     protected:
+        void JustDidDialogueStep(int32 iEntry);
+
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strInstData;
 

@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Brutallus
-SD%Complete: 50
-SDComment: Intro not made. Script for Madrigosa to be added here.
+SD%Complete: 90
+SDComment: Intro may need some adjustments
 SDCategory: Sunwell Plateau
 EndScriptData */
 
@@ -95,8 +95,6 @@ static const DialogueEntry aIntroDialogue[] =
     {YELL_INTRO_TAUNT,          NPC_BRUTALLUS,  0},
     {0, 0, 0},
 };
-
-static const float aMadrigosaFlyLoc[3] = {1459.35f, 636.81f, 59.234f};
 
 struct MANGOS_DLL_DECL boss_brutallusAI : public ScriptedAI, private DialogueHelper
 {
