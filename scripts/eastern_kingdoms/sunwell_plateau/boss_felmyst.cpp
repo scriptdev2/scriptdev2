@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: boss_felmyst
-SD%Complete:
-SDComment:
+SD%Complete: 20%
+SDComment: Spawn support only
 SDCategory: Sunwell Plateau
 EndScriptData */
 
@@ -34,8 +34,82 @@ enum
     SAY_BREATH          = -1580039,
     SAY_BERSERK         = -1580041,
     SAY_KALECGOS_OUTRO  = -1580043,
+
+    SPELL_FELBLAZE_VISUAL   = 45068,            // Visual transform aura
+    SPELL_OPEN_BACK_DOOR    = 46650,            // Opens the fire barrier - script effect for 46652
 };
+
+struct MANGOS_DLL_DECL boss_felmystAI : public ScriptedAI
+{
+    boss_felmystAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (instance_sunwell_plateau*)pCreature->GetInstanceData();
+        m_bHasTransformed = false;
+        Reset();
+    }
+
+    instance_sunwell_plateau* m_pInstance;
+
+    bool m_bHasTransformed;
+
+    void Reset()
+    {
+        // Transform into Felmyst dragon
+        if (!m_bHasTransformed)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_FELBLAZE_VISUAL) == CAST_OK)
+            {
+                DoScriptText(SAY_INTRO, m_creature);
+                m_bHasTransformed = true;
+            }
+        }
+    }
+
+    void Aggro(Unit* pWho)
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_FELMYST, IN_PROGRESS);
+    }
+
+    void KilledUnit(Unit* pVictim)
+    {
+        DoScriptText(urand(0, 1) ? SAY_KILL_1 : SAY_KILL_2, m_creature);
+    }
+
+    void JustDied(Unit* pKiller)
+    {
+        DoScriptText(SAY_DEATH, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_FELMYST, DONE);
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_FELMYST, FAIL);
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_boss_felmyst(Creature* pCreature)
+{
+    return new boss_felmystAI(pCreature);
+}
 
 void AddSC_boss_felmyst()
 {
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_felmyst";
+    pNewScript->GetAI = &GetAI_boss_felmyst;
+    pNewScript->RegisterSelf();
 }

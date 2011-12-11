@@ -52,6 +52,14 @@ enum
     SPELL_BURN                      = 45141,
     SPELL_STOMP                     = 45185,
     SPELL_BERSERK                   = 26662,
+    SPELL_SUMMON_DEATH_CLOUD        = 45884,                // Summoned on death
+
+    // Epilogue spells
+    SPELL_BRUTALLUS_DEATH_CLOUD     = 45212,
+    SPELL_FELBLAZE_PREVIZUAL        = 44885,
+    SPELL_SUMMON_FELBLAZE           = 45069,
+
+    NPC_BRUTALLUS_DEATH_CLOUD       = 25703,
 
     // spells used during the intro event
     SPELL_FROST_BLAST               = 45203,                // Madrigosa's spells
@@ -89,7 +97,6 @@ static const DialogueEntry aIntroDialogue[] =
 };
 
 static const float aMadrigosaFlyLoc[3] = {1459.35f, 636.81f, 59.234f};
-static const float aMadrigosaGroundLoc[3] = {1459.35f, 636.81f, 19.94f};
 
 struct MANGOS_DLL_DECL boss_brutallusAI : public ScriptedAI, private DialogueHelper
 {
@@ -155,6 +162,7 @@ struct MANGOS_DLL_DECL boss_brutallusAI : public ScriptedAI, private DialogueHel
     void JustDied(Unit* pKiller)
     {
         DoScriptText(YELL_DEATH, m_creature);
+        DoCastSpellIfCan(m_creature, SPELL_SUMMON_DEATH_CLOUD, CAST_TRIGGERED);
 
         if (m_pInstance)
             m_pInstance->SetData(TYPE_BRUTALLUS, DONE);
@@ -172,11 +180,11 @@ struct MANGOS_DLL_DECL boss_brutallusAI : public ScriptedAI, private DialogueHel
         }
     }
 
-    void SummonedCreatureJustDied(Creature* pSummoned)
+    void SummonedCreatureDespawn(Creature* pSummoned)
     {
         // Yell of Madrigosa on death
         if (pSummoned->GetEntry() == NPC_MADRIGOSA)
-            DoScriptText(YELL_MADR_DEATH, pSummoned);
+            pSummoned->CastSpell(pSummoned, SPELL_SUMMON_FELBLAZE, true);
     }
 
     void JustSummoned(Creature* pSummoned)
@@ -187,6 +195,8 @@ struct MANGOS_DLL_DECL boss_brutallusAI : public ScriptedAI, private DialogueHel
             pSummoned->SetLevitate(true);
             pSummoned->GetMotionMaster()->MovePoint(0, aMadrigosaFlyLoc[0], aMadrigosaFlyLoc[1], aMadrigosaFlyLoc[2]);
         }
+        else if (pSummoned->GetEntry() == NPC_BRUTALLUS_DEATH_CLOUD)
+            pSummoned->CastSpell(pSummoned, SPELL_BRUTALLUS_DEATH_CLOUD, true);
     }
 
     void SummonedMovementInform(Creature* pSummoned, uint32 uiType, uint32 uiPointId)
@@ -200,9 +210,26 @@ struct MANGOS_DLL_DECL boss_brutallusAI : public ScriptedAI, private DialogueHel
 
     void SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell)
     {
-        // Kill Madrigosa when charged
+        // Fake death Madrigosa when charged
         if (pTarget->GetEntry() == NPC_MADRIGOSA && pSpell->Id == SPELL_CHARGE)
-            m_creature->DealDamage(pTarget, pTarget->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+        {
+            DoScriptText(YELL_MADR_DEATH, pTarget);
+            pTarget->InterruptNonMeleeSpells(true);
+            pTarget->SetHealth(0);
+            pTarget->StopMoving();
+            pTarget->ClearComboPointHolders();
+            pTarget->RemoveAllAurasOnDeath();
+            pTarget->ModifyAuraState(AURA_STATE_HEALTHLESS_20_PERCENT, false);
+            pTarget->ModifyAuraState(AURA_STATE_HEALTHLESS_35_PERCENT, false);
+            pTarget->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+            pTarget->ClearAllReactives();
+            pTarget->GetMotionMaster()->Clear();
+            pTarget->GetMotionMaster()->MoveIdle();
+            pTarget->SetStandState(UNIT_STAND_STATE_DEAD);
+
+            // Brutallus evades
+            EnterEvadeMode();
+        }
     }
 
     void JustDidDialogueStep(int32 iEntry)
@@ -397,6 +424,26 @@ CreatureAI* GetAI_boss_brutallus(Creature* pCreature)
     return new boss_brutallusAI(pCreature);
 }
 
+bool EffectAuraDummy_spell_aura_dummy_npc_brutallus_cloud(const Aura* pAura, bool bApply)
+{
+    // On Aura removal start Felmyst summon visuals
+    if (pAura->GetId() == SPELL_BRUTALLUS_DEATH_CLOUD && pAura->GetEffIndex() == EFFECT_INDEX_0 && !bApply)
+    {
+        if (Creature* pTarget = (Creature*)pAura->GetTarget())
+        {
+            if (ScriptedInstance* pInstance = (ScriptedInstance*)pTarget->GetInstanceData())
+            {
+                if (Creature* pMadrigosa = pInstance->GetSingleCreatureFromStorage(NPC_MADRIGOSA))
+                {
+                    pMadrigosa->CastSpell(pMadrigosa, SPELL_FELBLAZE_PREVIZUAL, true);
+                    pMadrigosa->ForcedDespawn(10000);
+                }
+            }
+        }
+    }
+    return true;
+}
+
 bool AreaTrigger_at_madrigosa(Player* pPlayer, AreaTriggerEntry const* pAt)
 {
     if (ScriptedInstance* pInstance = (ScriptedInstance*)pPlayer->GetInstanceData())
@@ -426,6 +473,11 @@ void AddSC_boss_brutallus()
     pNewScript = new Script;
     pNewScript->Name = "boss_brutallus";
     pNewScript->GetAI = &GetAI_boss_brutallus;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "spell_dummy_npc_brutallus_cloud";
+    pNewScript->pEffectAuraDummy = &EffectAuraDummy_spell_aura_dummy_npc_brutallus_cloud;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;

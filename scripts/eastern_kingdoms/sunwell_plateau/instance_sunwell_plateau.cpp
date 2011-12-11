@@ -58,6 +58,20 @@ bool instance_sunwell_plateau::IsEncounterInProgress() const
     return false;
 }
 
+void instance_sunwell_plateau::OnPlayerEnter(Player* pPlayer)
+{
+    // Return if Felmyst already dead, or Brutallus alive
+    if (m_auiEncounter[TYPE_BRUTALLUS] != DONE || m_auiEncounter[TYPE_FELMYST] == DONE)
+        return;
+
+    // Return if already summoned
+    if (GetSingleCreatureFromStorage(NPC_FELMYST, true))
+        return;
+
+    // Summon Felmyst in reload case
+    pPlayer->SummonCreature(NPC_FELMYST, aMadrigosaGroundLoc[0], aMadrigosaGroundLoc[1], aMadrigosaGroundLoc[2], aMadrigosaGroundLoc[3], TEMPSUMMON_DEAD_DESPAWN, 0);
+}
+
 void instance_sunwell_plateau::OnCreatureCreate(Creature* pCreature)
 {
     switch(pCreature->GetEntry())
@@ -68,6 +82,7 @@ void instance_sunwell_plateau::OnCreatureCreate(Creature* pCreature)
         case NPC_FLIGHT_TRIGGER_LEFT:
         case NPC_MADRIGOSA:
         case NPC_BRUTALLUS:
+        case NPC_FELMYST:
         case NPC_ALYTHESS:
         case NPC_SACROLASH:
         case NPC_MURU:

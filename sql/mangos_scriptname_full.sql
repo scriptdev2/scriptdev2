@@ -1068,6 +1068,8 @@ UPDATE creature_template SET ScriptName='npc_portal_target' WHERE entry=25770;
 UPDATE creature_template SET ScriptName='npc_void_sentinel_summoner' WHERE entry=25782;
 UPDATE creature_template SET ScriptName='boss_kiljaeden' WHERE entry=25315;
 UPDATE creature_template SET ScriptName='npc_kiljaeden_controller' WHERE entry=25608;
+UPDATE creature_template SET ScriptName='spell_dummy_npc_brutallus_cloud' WHERE entry=25703;
+UPDATE creature_template SET ScriptName='boss_felmyst' WHERE entry=25038;
 
 /* SWAMP OF SORROWS */
 UPDATE creature_template SET ScriptName='npc_galen_goodward' WHERE entry=5391;

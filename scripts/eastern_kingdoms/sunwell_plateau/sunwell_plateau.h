@@ -22,7 +22,7 @@ enum
     NPC_MADRIGOSA               = 25160,
     NPC_FLIGHT_TRIGGER_LEFT     = 25357,            // Related to Felmyst flight path. Also the anchor to summon Madrigosa
     NPC_BRUTALLUS               = 24882,
-    // NPC_FELMYST              = 25038,
+    NPC_FELMYST                 = 25038,
     NPC_ALYTHESS                = 25166,
     NPC_SACROLASH               = 25165,
     NPC_MURU                    = 25741,
@@ -59,6 +59,9 @@ enum
     MAX_DECEIVERS               = 3
 };
 
+// Used to summon Felmyst in reload case. This is the place where Madrigosa is killed in the intro event
+static const float aMadrigosaGroundLoc[4] = {1459.35f, 636.81f, 19.94f, 4.88f};
+
 class MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
 {
     public:
@@ -68,6 +71,7 @@ class MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
         void Initialize();
         bool IsEncounterInProgress() const;
 
+        void OnPlayerEnter(Player* pPlayer);
         void OnObjectCreate(GameObject* pGo);
         void OnCreatureCreate(Creature* pCreature);
         void OnCreatureDeath(Creature* pCreature);
