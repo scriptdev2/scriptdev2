@@ -21,6 +21,7 @@ enum
     NPC_SATHROVARR              = 24892,
     NPC_MADRIGOSA               = 25160,
     NPC_FLIGHT_TRIGGER_LEFT     = 25357,            // Related to Felmyst flight path. Also the anchor to summon Madrigosa
+    // NPC_FLIGHT_TRIGGER_RIGHT = 25358,            // related to Felmyst flight path
     NPC_BRUTALLUS               = 24882,
     NPC_FELMYST                 = 25038,
     NPC_ALYTHESS                = 25166,
