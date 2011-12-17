@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: boss_kiljaeden
-SD%Complete: 20
-SDComment: Only spawn support and epilogue event
+SD%Complete: 30
+SDComment: Only spawn support, epilogue event and encounter phase transitions
 SDCategory: Sunwell Plateau
 EndScriptData */
 
@@ -72,8 +72,50 @@ enum
     SAY_OUTRO_11                = -1580105,         // Velen
     SAY_OUTRO_12                = -1580106,
 
-    // spells
+    // generic spells
     SPELL_BIRTH                 = 37745,            // Kiljaeden spawn animation
+
+    // transition spells
+    SPELL_DESTROY_DRAKES        = 46707,
+    SPELL_SINISTER_REFLECTION   = 45892,
+    SPELL_SHADOW_SPIKE          = 46680,
+
+    // phase 1
+    SPELL_SOULFLY               = 45442,
+    SPELL_LEGION_LIGHTING       = 45664,
+    SPELL_FIREBLOOM             = 45641,
+
+    // phase 2
+    SPELL_FLAMEDART             = 45740,
+    SPELL_DARKNESS_OF_SOULS     = 46605,
+
+    // phase 3
+    SPELL_ARMAGEDDON            = 45921,        // used from 50% hp - summons 25735 - related to the following spells: 45909, 45915, 45911, 45914
+
+    // Npc spells
+    SPELL_SHADOW_BOLT_AURA      = 45679,        // periodic aura on shield orbs
+    SPELL_RING_BLUE_FLAME       = 45825,        // cast by the orb targets when activated
+    SPELL_ANVEENA_PRISON        = 46367,
+    SPELL_SACRIFICE_ANVEENA     = 46474,
+
+    // Npcs
+    NPC_SHIELD_ORB              = 25502,
+    NPC_SINISTER_REFLECTION     = 25708,
+    NPC_ARMAGEDON               = 25735,
+    NPC_BLUE_ORB_TARGET         = 25640,        // dummy npc near gameobjects 187869, 188414, 188415, 188416
+
+    // phases
+    PHASE_INFERNO               = 1,
+    PHASE_DARKNESS              = 2,
+    PHASE_ARMAGEDDON            = 3,
+    PHASE_SACRIFICE             = 4,
+    PHASE_TRANSITION            = 5,
+
+    // dummy members, used in the phase switch event
+    EVENT_SWITCH_PHASE_2        = 6,
+    EVENT_SWITCH_PHASE_3        = 7,
+    EVENT_SWITCH_PHASE_4        = 8,
+    EVENT_DRAGON_ORB            = 9,
 
     // outro
     SPELL_TELEPORT_VISUAL       = 41232,
@@ -93,6 +135,34 @@ enum
     POINT_EVENT_EXIT            = 3,
 };
 
+// Encounter phase dialogue
+static const DialogueEntry aPhaseDialogue[] =
+{
+    {PHASE_DARKNESS,            0,              2000},
+    {EVENT_SWITCH_PHASE_2,      0,              17000},
+    {SAY_KALECGOS_AWAKE_1,      NPC_KALECGOS,   6000},
+    {SAY_ANVEENA_IMPRISONED,    NPC_ANVEENA,    5000},
+    {SAY_PHASE_3,               NPC_KILJAEDEN,  6000},
+    {SAY_KALECGOS_ORB_1,        NPC_KALECGOS,   0},             // phase 2 transition end
+    {PHASE_ARMAGEDDON,          0,              2000},
+    {EVENT_SWITCH_PHASE_3,      0,              14000},
+    {SAY_KALECGOS_AWAKE_2,      NPC_KALECGOS,   7000},
+    {SAY_ANVEENA_LOST,          NPC_ANVEENA,    7000},
+    {SAY_PHASE_4,               NPC_KILJAEDEN,  6000},
+    {EVENT_DRAGON_ORB,          0,              0},             // phase 3 transition end
+    {PHASE_SACRIFICE,           0,              2000},
+    {EVENT_SWITCH_PHASE_4,      0,              5000},
+    {SAY_KALECGOS_AWAKE_4,      NPC_KALECGOS,   10000},
+    {SAY_ANVEENA_AWAKE,         NPC_ANVEENA,    2000},
+    {SAY_KALECGOS_AWAKE_5,      NPC_KALECGOS,   6000},
+    {SAY_ANVEENA_SACRIFICE,     NPC_ANVEENA,    5000},
+    {SAY_PHASE_5,               NPC_KILJAEDEN,  13000},
+    {SAY_KALECGOS_ORB_4,        NPC_KALECGOS,   5000},
+    {SAY_KALECGOS_ENCOURAGE,    NPC_KALECGOS,   0},             // phase 4 transition end
+    {0, 0, 0},
+};
+
+// Epilogue dialogue
 static const DialogueEntry aOutroDialogue[] =
 {
     {NPC_KALECGOS,          0,              15000},
@@ -156,13 +226,16 @@ struct MANGOS_DLL_DECL npc_kiljaeden_controllerAI : public Scripted_NoMovementAI
     }
 
     // Wrapper to start the dialogue text from another AI
-    void DoStartDialogue(uint32 uiEntry)
+    void DoStartOutroDialogue()
     {
-        StartNextDialogueText(uiEntry);
+        StartNextDialogueText(NPC_KALECGOS);
     }
 
     void JustDidDialogueStep(int32 iEntry)
     {
+        if (!m_pInstance)
+            return;
+
         switch (iEntry)
         {
             case NPC_KALECGOS:
@@ -283,18 +356,26 @@ struct MANGOS_DLL_DECL npc_kiljaeden_controllerAI : public Scripted_NoMovementAI
     }
 };
 
-struct MANGOS_DLL_DECL boss_kiljaedenAI : public Scripted_NoMovementAI
+struct MANGOS_DLL_DECL boss_kiljaedenAI : public Scripted_NoMovementAI, private DialogueHelper
 {
-    boss_kiljaedenAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
+    boss_kiljaedenAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature),
+        DialogueHelper(aPhaseDialogue)
     {
         m_pInstance = ((instance_sunwell_plateau*)pCreature->GetInstanceData());
+        InitializeDialogueHelper(m_pInstance);
         Reset();
     }
 
     instance_sunwell_plateau* m_pInstance;
 
+    uint8 m_uiPhase;
+
+    uint32 m_uiKalecSummonTimer;
+
     void Reset()
     {
+        m_uiPhase                   = PHASE_INFERNO;
+        m_uiKalecSummonTimer        = 35000;
     }
 
     void Aggro(Unit* pWho)
@@ -312,8 +393,16 @@ struct MANGOS_DLL_DECL boss_kiljaedenAI : public Scripted_NoMovementAI
         {
             m_pInstance->SetData(TYPE_KILJAEDEN, FAIL);
 
+            // Reset the corrupt Sunwell aura
             if (Creature* pKiljaedenController = m_pInstance->GetSingleCreatureFromStorage(NPC_KILJAEDEN_CONTROLLER))
                 pKiljaedenController->CastSpell(pKiljaedenController, SPELL_ANVEENA_DRAIN, true);
+
+            // Respawn Anveena if necessary
+            if (Creature* pAnveena = m_pInstance->GetSingleCreatureFromStorage(NPC_ANVEENA))
+            {
+                if (!pAnveena->isAlive())
+                    pAnveena->Respawn();
+            }
         }
 
         // Despawn on wipe
@@ -335,8 +424,65 @@ struct MANGOS_DLL_DECL boss_kiljaedenAI : public Scripted_NoMovementAI
             if (Creature* pKiljaedenController = m_pInstance->GetSingleCreatureFromStorage(NPC_KILJAEDEN_CONTROLLER))
             {
                 if (npc_kiljaeden_controllerAI* pControllerAI = dynamic_cast<npc_kiljaeden_controllerAI*>(pKiljaedenController->AI()))
-                    pControllerAI->DoStartDialogue(NPC_KALECGOS);
+                    pControllerAI->DoStartOutroDialogue();
             }
+        }
+    }
+
+    void JustSummoned(Creature* pSummoned)
+    {
+        if (pSummoned->GetEntry() == NPC_KALECGOS)
+        {
+            DoScriptText(SAY_KALECGOS_INTRO, pSummoned);
+            pSummoned->SetLevitate(true);
+        }
+    }
+
+    void JustDidDialogueStep(int32 iEntry)
+    {
+        if (!m_pInstance)
+            return;
+
+        switch (iEntry)
+        {
+            case PHASE_DARKNESS:
+            case PHASE_ARMAGEDDON:
+            case PHASE_SACRIFICE:
+                if (DoCastSpellIfCan(m_creature, SPELL_SINISTER_REFLECTION, CAST_INTERRUPT_PREVIOUS) == CAST_OK)
+                {
+                    DoScriptText(irand(0, 1) ? SAY_REFLECTION_1 : SAY_REFLECTION_2, m_creature);
+                    m_uiPhase = PHASE_TRANSITION;
+                    // ToDo: reset spell timers
+                }
+                break;
+            case EVENT_SWITCH_PHASE_2:
+            case EVENT_SWITCH_PHASE_3:
+            case EVENT_SWITCH_PHASE_4:
+                DoCastSpellIfCan(m_creature, SPELL_SHADOW_SPIKE);
+                break;
+            case EVENT_DRAGON_ORB:
+                if (Creature* pKalec = m_pInstance->GetSingleCreatureFromStorage(NPC_KALECGOS))
+                    DoScriptText(irand(0, 1) ? SAY_KALECGOS_ORB_2 : SAY_KALECGOS_ORB_3, pKalec);
+                // no break
+            case SAY_KALECGOS_ORB_1:
+            case SAY_KALECGOS_ORB_4:
+                // ToDo: activate the blue dragon orbs
+                break;
+            case SAY_PHASE_3:
+                m_uiPhase = PHASE_DARKNESS;
+                break;
+            case SAY_PHASE_4:
+                m_uiPhase = PHASE_ARMAGEDDON;
+                break;
+            case SAY_PHASE_5:
+                if (Creature* pAnveena = m_pInstance->GetSingleCreatureFromStorage(NPC_ANVEENA))
+                {
+                    pAnveena->RemoveAurasDueToSpell(SPELL_ANVEENA_PRISON);
+                    pAnveena->CastSpell(pAnveena, SPELL_SACRIFICE_ANVEENA, true);
+                    pAnveena->ForcedDespawn(1000);
+                }
+                m_uiPhase = PHASE_SACRIFICE;
+                break;
         }
     }
 
@@ -345,7 +491,51 @@ struct MANGOS_DLL_DECL boss_kiljaedenAI : public Scripted_NoMovementAI
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        DoMeleeAttackIfReady();
+        DialogueUpdate(uiDiff);
+
+        switch (m_uiPhase)
+        {
+            case PHASE_TRANSITION:
+                // Transition phase is handled in the dialogue helper; however we don't want the spell timers to be decreased so we use a specific phase
+                break;
+            case PHASE_SACRIFICE:
+                // Final phase - use the same spells
+                // no break;
+            case PHASE_ARMAGEDDON:
+
+                // Go to next phase and start transition dialogue
+                if (m_uiPhase == PHASE_ARMAGEDDON && m_creature->GetHealthPercent() < 25.0f)
+                    StartNextDialogueText(PHASE_SACRIFICE);
+
+                // no break - use the spells from the phases below;
+            case PHASE_DARKNESS:
+
+                // Go to next phase and start transition dialogue
+                if (m_uiPhase == PHASE_DARKNESS && m_creature->GetHealthPercent() < 55.0f)
+                    StartNextDialogueText(PHASE_ARMAGEDDON);
+
+                // no break - use the spells from the phase below;
+            case PHASE_INFERNO:
+
+                if (m_uiKalecSummonTimer)
+                {
+                    if (m_uiKalecSummonTimer <= uiDiff)
+                    {
+                        m_creature->SummonCreature(NPC_KALECGOS, m_creature->GetPositionX(), m_creature->GetPositionY(), 85.0f, 3.80f, TEMPSUMMON_CORPSE_DESPAWN, 0);
+                        m_uiKalecSummonTimer = 0;
+                    }
+                    else
+                        m_uiKalecSummonTimer -= uiDiff;
+                }
+
+                // Go to next phase and start transition dialogue
+                if (m_uiPhase == PHASE_INFERNO && m_creature->GetHealthPercent() < 85.0f)
+                    StartNextDialogueText(PHASE_DARKNESS);
+
+                DoMeleeAttackIfReady();
+
+                break;
+        }
     }
 };
 

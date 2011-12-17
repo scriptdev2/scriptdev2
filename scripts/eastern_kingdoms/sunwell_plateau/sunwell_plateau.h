@@ -31,7 +31,7 @@ enum
     NPC_DECEIVER                = 25588,
     NPC_KILJAEDEN               = 25315,
     NPC_KILJAEDEN_CONTROLLER    = 25608,            // kiljaeden event controller
-    // NPC_ANVEENA              = 26046,            // related to kiljaeden event
+    NPC_ANVEENA                 = 26046,            // related to kiljaeden event
     NPC_KALECGOS                = 25319,            // related to kiljaeden event
     NPC_VELEN                   = 26246,
     NPC_LIADRIN                 = 26247,
@@ -57,7 +57,6 @@ enum
     // used by both muru and entropius
     SPELL_MURU_BERSERK          = 26662,
     // visuals for Kiljaeden encounter
-    SPELL_ANVEENA_PRISON        = 46367,
     SPELL_ANVEENA_DRAIN         = 46410,
 
     MAX_DECEIVERS               = 3

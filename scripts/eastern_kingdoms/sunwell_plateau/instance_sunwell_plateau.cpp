@@ -97,7 +97,9 @@ void instance_sunwell_plateau::OnCreatureCreate(Creature* pCreature)
         case NPC_MURU:
         case NPC_ENTROPIUS:
         case NPC_KILJAEDEN_CONTROLLER:
+        case NPC_KILJAEDEN:
         case NPC_KALECGOS:
+        case NPC_ANVEENA:
         case NPC_VELEN:
         case NPC_LIADRIN:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();

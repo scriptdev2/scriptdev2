@@ -174,7 +174,7 @@ struct MANGOS_DLL_DECL boss_felmystAI : public ScriptedAI
 
         if (m_uiBerserkTimer)
         {
-            if(m_uiBerserkTimer <= uiDiff)
+            if (m_uiBerserkTimer <= uiDiff)
             {
                 if (DoCastSpellIfCan(m_creature, SPELL_BERSERK) == CAST_OK)
                 {
