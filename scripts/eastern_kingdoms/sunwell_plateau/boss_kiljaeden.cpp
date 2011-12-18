@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: boss_kiljaeden
-SD%Complete: 30
-SDComment: Only spawn support, epilogue event and encounter phase transitions
+SD%Complete: 50
+SDComment: Sinister Reflection need core and AI support; Orb of the Blue Fight activation NYI; Shield Orb summoning NYI; Armageddon NYI; Offcombat yells NYI;
 SDCategory: Sunwell Plateau
 EndScriptData */
 
@@ -81,16 +81,16 @@ enum
     SPELL_SHADOW_SPIKE          = 46680,
 
     // phase 1
-    SPELL_SOULFLY               = 45442,
+    SPELL_SOUL_FLY              = 45442,
     SPELL_LEGION_LIGHTING       = 45664,
-    SPELL_FIREBLOOM             = 45641,
+    SPELL_FIRE_BLOOM            = 45641,
 
     // phase 2
-    SPELL_FLAMEDART             = 45740,
+    SPELL_FLAME_DART            = 45740,
     SPELL_DARKNESS_OF_SOULS     = 46605,
 
     // phase 3
-    SPELL_ARMAGEDDON            = 45921,        // used from 50% hp - summons 25735 - related to the following spells: 45909, 45915, 45911, 45914
+    SPELL_ARMAGEDDON            = 45921,        // used from 50% hp - summons 25735 on target location
 
     // Npc spells
     SPELL_SHADOW_BOLT_AURA      = 45679,        // periodic aura on shield orbs
@@ -101,8 +101,8 @@ enum
     // Npcs
     NPC_SHIELD_ORB              = 25502,
     NPC_SINISTER_REFLECTION     = 25708,
-    NPC_ARMAGEDON               = 25735,
-    NPC_BLUE_ORB_TARGET         = 25640,        // dummy npc near gameobjects 187869, 188414, 188415, 188416
+    NPC_ARMAGEDDON              = 25735,        // uses spell 45914 followed by spell 45911, 45912, then by 45909
+    NPC_BLUE_ORB_TARGET         = 25640,        // dummy npc near gameobjects 187869, 188114, 188115, 188116
 
     // phases
     PHASE_INFERNO               = 1,
@@ -372,10 +372,30 @@ struct MANGOS_DLL_DECL boss_kiljaedenAI : public Scripted_NoMovementAI, private 
 
     uint32 m_uiKalecSummonTimer;
 
+    uint32 m_uiSoulFlyTimer;
+    uint32 m_uiLegionLightingTimer;
+    uint32 m_uiFireBloomTimer;
+    uint32 m_uiShieldOrbTimer;
+
+    uint32 m_uiFlameDartTimer;
+    uint32 m_uiDarknessOfSoulsTimer;
+
+    uint32 m_uiArmageddonTimer;
+
     void Reset()
     {
         m_uiPhase                   = PHASE_INFERNO;
         m_uiKalecSummonTimer        = 35000;
+
+        m_uiSoulFlyTimer            = 10000;
+        m_uiLegionLightingTimer     = urand(10000, 15000);
+        m_uiFireBloomTimer          = urand(15000, 20000);
+        m_uiShieldOrbTimer          = 30000;
+
+        m_uiFlameDartTimer          = urand(20000, 25000);
+        m_uiDarknessOfSoulsTimer    = urand(45000, 50000);
+
+        m_uiArmageddonTimer         = 20000;
     }
 
     void Aggro(Unit* pWho)
@@ -403,6 +423,10 @@ struct MANGOS_DLL_DECL boss_kiljaedenAI : public Scripted_NoMovementAI, private 
                 if (!pAnveena->isAlive())
                     pAnveena->Respawn();
             }
+
+            // Despawn Kalec if already summoned
+            if (Creature* pKalec = m_pInstance->GetSingleCreatureFromStorage(NPC_KALECGOS, true))
+                pKalec->ForcedDespawn();
         }
 
         // Despawn on wipe
@@ -451,8 +475,14 @@ struct MANGOS_DLL_DECL boss_kiljaedenAI : public Scripted_NoMovementAI, private 
                 if (DoCastSpellIfCan(m_creature, SPELL_SINISTER_REFLECTION, CAST_INTERRUPT_PREVIOUS) == CAST_OK)
                 {
                     DoScriptText(irand(0, 1) ? SAY_REFLECTION_1 : SAY_REFLECTION_2, m_creature);
+
+                    // In the 2nd and 3rd transition kill all drakes
+                    if (iEntry == PHASE_ARMAGEDDON || iEntry == PHASE_SACRIFICE)
+                        DoCastSpellIfCan(m_creature, SPELL_DESTROY_DRAKES, CAST_TRIGGERED);
+
                     m_uiPhase = PHASE_TRANSITION;
-                    // ToDo: reset spell timers
+                    // Darkness of Souls needs the timer reseted
+                    m_uiDarknessOfSoulsTimer = iEntry == PHASE_SACRIFICE ? 30000 : 45000;
                 }
                 break;
             case EVENT_SWITCH_PHASE_2:
@@ -479,7 +509,7 @@ struct MANGOS_DLL_DECL boss_kiljaedenAI : public Scripted_NoMovementAI, private 
                 {
                     pAnveena->RemoveAurasDueToSpell(SPELL_ANVEENA_PRISON);
                     pAnveena->CastSpell(pAnveena, SPELL_SACRIFICE_ANVEENA, true);
-                    pAnveena->ForcedDespawn(1000);
+                    pAnveena->ForcedDespawn(3000);
                 }
                 m_uiPhase = PHASE_SACRIFICE;
                 break;
@@ -503,12 +533,40 @@ struct MANGOS_DLL_DECL boss_kiljaedenAI : public Scripted_NoMovementAI, private 
                 // no break;
             case PHASE_ARMAGEDDON:
 
+                // In the last phase he uses Armageddon continuously
+                if (m_uiArmageddonTimer < uiDiff)
+                {
+                    if (DoCastSpellIfCan(m_creature, SPELL_ARMAGEDDON) == CAST_OK)
+                        m_uiArmageddonTimer = m_uiPhase == PHASE_SACRIFICE ? 20000 : 30000;
+                }
+                else
+                    m_uiArmageddonTimer -= uiDiff;
+
                 // Go to next phase and start transition dialogue
                 if (m_uiPhase == PHASE_ARMAGEDDON && m_creature->GetHealthPercent() < 25.0f)
                     StartNextDialogueText(PHASE_SACRIFICE);
 
                 // no break - use the spells from the phases below;
             case PHASE_DARKNESS:
+
+                // In the last phase he uses this spell more often
+                /* ToDo: Uncomment this spell when the Blue Dragonfight Orbs are implemented
+                if (m_uiDarknessOfSoulsTimer < uiDiff)
+                {
+                    if (DoCastSpellIfCan(m_creature, SPELL_DARKNESS_OF_SOULS) == CAST_OK)
+                        m_uiDarknessOfSoulsTimer = m_uiPhase == PHASE_SACRIFICE ? 30000 : 45000;
+                }
+                else
+                    m_uiDarknessOfSoulsTimer -= uiDiff;
+                */
+
+                if (m_uiFlameDartTimer < uiDiff)
+                {
+                    if (DoCastSpellIfCan(m_creature, SPELL_FLAME_DART) == CAST_OK)
+                        m_uiFlameDartTimer = urand(25000, 30000);
+                }
+                else
+                    m_uiFlameDartTimer -= uiDiff;
 
                 // Go to next phase and start transition dialogue
                 if (m_uiPhase == PHASE_DARKNESS && m_creature->GetHealthPercent() < 55.0f)
@@ -528,6 +586,33 @@ struct MANGOS_DLL_DECL boss_kiljaedenAI : public Scripted_NoMovementAI, private 
                         m_uiKalecSummonTimer -= uiDiff;
                 }
 
+                if (m_uiLegionLightingTimer < uiDiff)
+                {
+                    if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                    {
+                        if (DoCastSpellIfCan(pTarget, SPELL_LEGION_LIGHTING) == CAST_OK)
+                            m_uiLegionLightingTimer = urand(10000, 15000);
+                    }
+                }
+                else
+                    m_uiLegionLightingTimer -= uiDiff;
+
+                if (m_uiFireBloomTimer < uiDiff)
+                {
+                    if (DoCastSpellIfCan(m_creature, SPELL_FIRE_BLOOM) == CAST_OK)
+                        m_uiFireBloomTimer = 20000;
+                }
+                else
+                    m_uiFireBloomTimer -= uiDiff;
+
+                if (m_uiSoulFlyTimer < uiDiff)
+                {
+                    if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_SOUL_FLY) == CAST_OK)
+                        m_uiSoulFlyTimer = urand(3000, 10000);
+                }
+                else
+                    m_uiSoulFlyTimer -= uiDiff;
+
                 // Go to next phase and start transition dialogue
                 if (m_uiPhase == PHASE_INFERNO && m_creature->GetHealthPercent() < 85.0f)
                     StartNextDialogueText(PHASE_DARKNESS);
@@ -538,6 +623,33 @@ struct MANGOS_DLL_DECL boss_kiljaedenAI : public Scripted_NoMovementAI, private 
         }
     }
 };
+
+bool EffectAuraDummy_spell_aura_dummy_darkness_of_souls(const Aura* pAura, bool bApply)
+{
+    // On Aura removal cast the explosion and yell
+    // This is a special case when the dummy effect should be triggered at the end of the channeling
+    if (pAura->GetId() == SPELL_DARKNESS_OF_SOULS && pAura->GetEffIndex() == EFFECT_INDEX_0 && !bApply)
+    {
+        if (Creature* pTarget = (Creature*)pAura->GetTarget())
+        {
+            pTarget->CastSpell(pTarget, pAura->GetSpellProto()->CalculateSimpleValue(EFFECT_INDEX_2), true);
+
+            switch (irand(0, 2))
+            {
+                case 0:
+                    DoScriptText(SAY_DARKNESS_1, pTarget);
+                    break;
+                case 1:
+                    DoScriptText(SAY_DARKNESS_2, pTarget);
+                    break;
+                case 3:
+                    DoScriptText(SAY_DARKNESS_3, pTarget);
+                    break;
+            }
+        }
+    }
+    return true;
+}
 
 CreatureAI* GetAI_boss_kiljaeden(Creature *pCreature)
 {
@@ -556,6 +668,7 @@ void AddSC_boss_kiljaeden()
     pNewScript = new Script;
     pNewScript->Name="boss_kiljaeden";
     pNewScript->GetAI = &GetAI_boss_kiljaeden;
+    pNewScript->pEffectAuraDummy = &EffectAuraDummy_spell_aura_dummy_darkness_of_souls;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
