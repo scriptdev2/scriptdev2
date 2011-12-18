@@ -462,6 +462,11 @@ struct MANGOS_DLL_DECL boss_kiljaedenAI : public Scripted_NoMovementAI, private 
         }
     }
 
+    void GetAIInformation(ChatHandler& reader)
+    {
+        reader.PSendSysMessage("Kil'jaeden is currently in phase %u", m_uiPhase);
+    }
+
     void JustDidDialogueStep(int32 iEntry)
     {
         if (!m_pInstance)

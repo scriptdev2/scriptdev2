@@ -117,6 +117,7 @@ struct MANGOS_DLL_DECL boss_brutallusAI : public ScriptedAI, private DialogueHel
     uint32 m_uiMadrigosaSpellTimer;
 
     bool m_bCanDoMeleeAttack;
+    bool m_bIsIntroInProgress;
 
     void Reset()
     {
@@ -129,6 +130,7 @@ struct MANGOS_DLL_DECL boss_brutallusAI : public ScriptedAI, private DialogueHel
         m_uiMadrigosaSpellTimer = 0;
 
         m_bCanDoMeleeAttack = true;
+        m_bIsIntroInProgress = false;
     }
 
     void Aggro(Unit* pWho)
@@ -176,6 +178,30 @@ struct MANGOS_DLL_DECL boss_brutallusAI : public ScriptedAI, private DialogueHel
 
             m_pInstance->SetData(TYPE_BRUTALLUS, FAIL);
         }
+    }
+
+    void GetAIInformation(ChatHandler& reader)
+    {
+        if (m_pInstance)
+        {
+            if (m_pInstance->GetData(TYPE_BRUTALLUS) == SPECIAL)
+                reader.PSendSysMessage("Brutallus intro event is currently %s", m_bIsIntroInProgress ? "in progress" : "completed");
+            else
+                reader.PSendSysMessage("Brutallus intro event is currently %s", m_pInstance->GetData(TYPE_BRUTALLUS) == NOT_STARTED ? "not started" : "completed");
+
+            if (m_pInstance->GetData(TYPE_BRUTALLUS) != NOT_STARTED)
+            {
+                if (Creature* pMadrigosa = m_pInstance->GetSingleCreatureFromStorage(NPC_MADRIGOSA, true))
+                    reader.PSendSysMessage("Madrigosa guid is %s and has %u health.", pMadrigosa->GetObjectGuid().GetString().c_str(), pMadrigosa->GetHealth());
+            }
+        }
+    }
+
+    void SummonedCreatureJustDied(Creature* pSummoned)
+    {
+        // Error log if Madrigosa dies
+        if (pSummoned->GetEntry() == NPC_MADRIGOSA)
+            error_log("SD2: Npc %u, %s, died unexpectedly. Felmyst won't be summoned anymore.", pSummoned->GetEntry(), pSummoned->GetName());
     }
 
     void SummonedCreatureDespawn(Creature* pSummoned)
@@ -240,6 +266,7 @@ struct MANGOS_DLL_DECL boss_brutallusAI : public ScriptedAI, private DialogueHel
             case NPC_MADRIGOSA:
                 if (Creature* pTrigger = m_pInstance->GetSingleCreatureFromStorage(NPC_FLIGHT_TRIGGER_LEFT))
                     m_creature->SummonCreature(NPC_MADRIGOSA, pTrigger->GetPositionX(), pTrigger->GetPositionY(), pTrigger->GetPositionZ(), 0, TEMPSUMMON_DEAD_DESPAWN, 0);
+                m_bIsIntroInProgress = true;
                 break;
             case YELL_MADR_ICE_BARRIER:
                 if (Creature* pMadrigosa = m_pInstance->GetSingleCreatureFromStorage(NPC_MADRIGOSA))
@@ -311,6 +338,7 @@ struct MANGOS_DLL_DECL boss_brutallusAI : public ScriptedAI, private DialogueHel
                 break;
             case YELL_INTRO_TAUNT:
                 DoCastSpellIfCan(m_creature, SPELL_BREAK_ICE);
+                m_bIsIntroInProgress = false;
                 break;
         }
     }
