@@ -647,7 +647,7 @@ bool EffectAuraDummy_spell_aura_dummy_darkness_of_souls(const Aura* pAura, bool 
                 case 1:
                     DoScriptText(SAY_DARKNESS_2, pTarget);
                     break;
-                case 3:
+                case 2:
                     DoScriptText(SAY_DARKNESS_3, pTarget);
                     break;
             }
