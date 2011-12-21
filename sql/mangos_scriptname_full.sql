@@ -938,7 +938,6 @@ INSERT INTO scripted_event_id VALUES
 (5623,'event_spell_gandling_shadow_portal');
 
 /* SEARING GORGE */
-UPDATE creature_template SET ScriptName='npc_zamael_lunthistle' WHERE entry=8436;
 
 /* SHADOWFANG KEEP */
 UPDATE instance_template SET ScriptName='instance_shadowfang_keep' WHERE map=33;

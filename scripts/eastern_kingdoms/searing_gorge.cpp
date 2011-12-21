@@ -16,53 +16,15 @@
 
 /* ScriptData
 SDName: Searing_Gorge
-SD%Complete: 80
-SDComment: Quest support: 3377
+SD%Complete: 0
+SDComment: Placeholder
 SDCategory: Searing Gorge
 EndScriptData */
 
 /* ContentData
-npc_zamael_lunthistle
 EndContentData */
 
 #include "precompiled.h"
-
-/*######
-## npc_zamael_lunthistle
-######*/
-
-bool GossipHello_npc_zamael_lunthistle(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
-
-    if (pPlayer->GetQuestStatus(3377) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Tell me your story", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
-
-    pPlayer->SEND_GOSSIP_MENU(1920, pCreature->GetObjectGuid());
-
-    return true;
-}
-
-bool GossipSelect_npc_zamael_lunthistle(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    switch(uiAction)
-    {
-        case GOSSIP_ACTION_INFO_DEF:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Please continue...", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-            pPlayer->SEND_GOSSIP_MENU(1921, pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+1:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Goodbye", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-            pPlayer->SEND_GOSSIP_MENU(1922, pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+2:
-            pPlayer->CLOSE_GOSSIP_MENU();
-            pPlayer->AreaExploredOrEventHappens(3377);
-            break;
-    }
-    return true;
-}
 
 /*######
 ##
@@ -70,11 +32,4 @@ bool GossipSelect_npc_zamael_lunthistle(Player* pPlayer, Creature* pCreature, ui
 
 void AddSC_searing_gorge()
 {
-    Script* pNewScript;
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_zamael_lunthistle";
-    pNewScript->pGossipHello =  &GossipHello_npc_zamael_lunthistle;
-    pNewScript->pGossipSelect = &GossipSelect_npc_zamael_lunthistle;
-    pNewScript->RegisterSelf();
 }
