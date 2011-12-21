@@ -835,7 +835,11 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000777,'These three again?',0,0,0,0,'Feero Ironhand SAY_FINAL_AMBUSH_START'),
 (-1000778,'Not quite so sure of yourself without the Purifier, hm?',0,0,0,0,'Balizar the Umbrage SAY_BALIZAR_FINAL_AMBUSH'),
 (-1000779,'I\'ll finish you off for good this time!',0,0,0,0,'Feero Ironhand SAY_FINAL_AMBUSH_ATTACK'),
-(-1000780,'Well done! I should be fine on my own from here. Remember to talk to Delgren when you return to Maestra\'s Post in Ashenvale.',0,0,0,0,'Feero Ironhand SAY_QUEST_END');
+(-1000780,'Well done! I should be fine on my own from here. Remember to talk to Delgren when you return to Maestra\'s Post in Ashenvale.',0,0,0,0,'Feero Ironhand SAY_QUEST_END'),
+
+(-1000781,'I knew Lurielle would send help! Thank you, friend, and give Lurielle my thanls as well!',0,0,0,0,'Chill Nymph SAY_FREE_1'),
+(-1000782,'Where am I? What happend to me? You... you freed me?',0,0,0,0,'Chill Nymph SAY_FREE_2'),
+(-1000783,'Thank you. I thought I would die without seeing my sisters again!',0,0,0,0,'Chill Nymph SAY_FREE_3');
 
 -- -1 033 000 SHADOWFANG KEEP
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
