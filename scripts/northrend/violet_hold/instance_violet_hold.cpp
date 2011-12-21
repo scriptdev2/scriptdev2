@@ -58,7 +58,7 @@ void instance_violet_hold::ResetAll()
     for (std::vector<BossSpawn*>::const_iterator itr = m_vRandomBosses.begin(); itr != m_vRandomBosses.end(); ++itr)
     {
         const BossInformation* pData = GetBossInformation((*itr)->uiEntry);
-        if (pData && GetData(pData->uiType) == DONE)
+        if (pData && m_auiEncounter[pData->uiType] == DONE)
         {
             if (Creature* pGhostBoss = GetSingleCreatureFromStorage(pData->uiGhostEntry))
             {
@@ -181,7 +181,7 @@ void instance_violet_hold::UpdateWorldState(bool bEnable)
 
 void instance_violet_hold::OnPlayerEnter(Player* pPlayer)
 {
-    UpdateWorldState(m_auiEncounter[0] == IN_PROGRESS ? true : false);
+    UpdateWorldState(m_auiEncounter[TYPE_MAIN] == IN_PROGRESS ? true : false);
 
     if (m_vRandomBosses.empty())
     {
@@ -194,13 +194,13 @@ void instance_violet_hold::SetData(uint32 uiType, uint32 uiData)
 {
     debug_log("SD2: instance_violet_hold: SetData got type % u, data %u.", uiType, uiData);
 
-    switch(uiType)
+    switch (uiType)
     {
         case TYPE_MAIN:
         {
-            if (uiData == m_auiEncounter[0])
+            if (uiData == m_auiEncounter[uiType])
                 return;
-            if (m_auiEncounter[0] == DONE)
+            if (m_auiEncounter[uiType] == DONE)
                 return;
 
             switch(uiData)
@@ -224,15 +224,15 @@ void instance_violet_hold::SetData(uint32 uiType, uint32 uiData)
                 case SPECIAL:
                     break;
             }
-            m_auiEncounter[0] = uiData;
+            m_auiEncounter[uiType] = uiData;
             break;
         }
         case TYPE_SEAL:
-            m_auiEncounter[1] = uiData;
+            m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_PORTAL:
         {
-            switch(uiData)
+            switch (uiData)
             {
                 case SPECIAL:                               // timer to next
                     m_uiPortalTimer = 90000;
@@ -241,50 +241,24 @@ void instance_violet_hold::SetData(uint32 uiType, uint32 uiData)
                     m_uiPortalTimer = 5000;
                     break;
             }
-            m_auiEncounter[2] = uiData;
+            m_auiEncounter[uiType] = uiData;
             break;
         }
         case TYPE_LAVANTHOR:
-            if (uiData == DONE)
-                m_uiPortalTimer = 35000;
-            if (m_auiEncounter[3] != DONE)                  // Keep the DONE-information stored
-                m_auiEncounter[3] = uiData;
-            break;
         case TYPE_MORAGG:
-            if (uiData == DONE)
-                m_uiPortalTimer = 35000;
-            if (m_auiEncounter[4] != DONE)                  // Keep the DONE-information stored
-                m_auiEncounter[4] = uiData;
-            break;
         case TYPE_EREKEM:
-            if (uiData == DONE)
-                m_uiPortalTimer = 35000;
-            if (m_auiEncounter[5] != DONE)                  // Keep the DONE-information stored
-                m_auiEncounter[5] = uiData;
-            break;
         case TYPE_ICHORON:
-            if (uiData == DONE)
-                m_uiPortalTimer = 35000;
-            if (m_auiEncounter[6] != DONE)                  // Keep the DONE-information stored
-                m_auiEncounter[6] = uiData;
-            break;
         case TYPE_XEVOZZ:
-            if (uiData == DONE)
-                m_uiPortalTimer = 35000;
-            if (m_auiEncounter[7] != DONE)                  // Keep the DONE-information stored
-                m_auiEncounter[7] = uiData;
-            break;
         case TYPE_ZURAMAT:
             if (uiData == DONE)
                 m_uiPortalTimer = 35000;
-            if (m_auiEncounter[8] != DONE)                  // Keep the DONE-information stored
-                m_auiEncounter[8] = uiData;
+            if (m_auiEncounter[uiType] != DONE)             // Keep the DONE-information stored
+                m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_CYANIGOSA:
             if (uiData == DONE)
-                m_auiEncounter[9] = uiData;
-            if (uiData == DONE)
                 SetData(TYPE_MAIN, DONE);
+            m_auiEncounter[uiType] = uiData;
             break;
         default:
             return;
@@ -309,19 +283,9 @@ void instance_violet_hold::SetData(uint32 uiType, uint32 uiData)
 
 uint32 instance_violet_hold::GetData(uint32 uiType)
 {
-    switch (uiType)
-    {
-        case TYPE_MAIN:         return m_auiEncounter[0];
-        case TYPE_LAVANTHOR:    return m_auiEncounter[3];
-        case TYPE_MORAGG:       return m_auiEncounter[4];
-        case TYPE_EREKEM:       return m_auiEncounter[5];
-        case TYPE_ICHORON:      return m_auiEncounter[6];
-        case TYPE_XEVOZZ:       return m_auiEncounter[7];
-        case TYPE_ZURAMAT:      return m_auiEncounter[8];
-        case TYPE_CYANIGOSA:    return m_auiEncounter[9];
-        default:
-            return 0;
-    }
+    if (uiType < MAX_ENCOUNTER)
+        return m_auiEncounter[uiType];
+    return 0;
 }
 
 void instance_violet_hold::Load(const char* chrIn)
@@ -416,7 +380,7 @@ void instance_violet_hold::SetRandomBosses()
     if (m_vRandomBosses.empty())
         for (uint8 i = 0; i < MAX_MINIBOSSES; ++i)
         {
-            if (GetData(aBossInformation[i].uiType) == DONE)
+            if (m_auiEncounter[aBossInformation[i].uiType] == DONE)
                 m_vRandomBosses.push_back(CreateBossSpawnByEntry(aBossInformation[i].uiEntry));
         }
 
@@ -619,7 +583,7 @@ void instance_violet_hold::OnCreatureDeath(Creature* pCreature)
 
 void instance_violet_hold::Update(uint32 uiDiff)
 {
-    if (m_auiEncounter[0] != IN_PROGRESS)
+    if (m_auiEncounter[TYPE_MAIN] != IN_PROGRESS)
         return;
 
     if (m_uiPortalTimer)

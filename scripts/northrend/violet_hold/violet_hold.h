@@ -10,18 +10,16 @@ enum
     MAX_ENCOUNTER               = 10,
     MAX_MINIBOSSES              = 6,
 
-    TYPE_MAIN                   = 1,
-    TYPE_SEAL                   = 2,
-    TYPE_PORTAL                 = 3,
-    // Sub Bosses
-    TYPE_LAVANTHOR              = 4,
-    TYPE_MORAGG                 = 5,
-    TYPE_EREKEM                 = 6,
-    TYPE_ICHORON                = 7,
-    TYPE_XEVOZZ                 = 8,
-    TYPE_ZURAMAT                = 9,
-
-    TYPE_CYANIGOSA              = 10,
+    TYPE_MAIN                   = 0,
+    TYPE_SEAL                   = 1,
+    TYPE_PORTAL                 = 2,
+    TYPE_LAVANTHOR              = 3,
+    TYPE_MORAGG                 = 4,
+    TYPE_EREKEM                 = 5,
+    TYPE_ICHORON                = 6,
+    TYPE_XEVOZZ                 = 7,
+    TYPE_ZURAMAT                = 8,
+    TYPE_CYANIGOSA              = 9,
 
     WORLD_STATE_ID              = 3816,
     WORLD_STATE_SEAL            = 3815,
