@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: GO_Scripts
 SD%Complete: 100
-SDComment: Quest support: 4296, 5088, 5097, 5098, 5381, 6481, 10990, 10991, 10992, 12557, 14092/14076. Field_Repair_Bot->Teaches spell 22704. Barov_journal->Teaches spell 26089
+SDComment: Quest support: 4296, 5088, 5097, 5098, 5381, 6481, 10990, 10991, 10992, 12557, 14092/14076. Barov_journal->Teaches spell 26089
 SDCategory: Game Objects
 EndScriptData */
 
@@ -26,7 +26,6 @@ go_cat_figurine (the "trap" version of GO, two different exist)
 go_barov_journal
 go_ethereum_prison
 go_ethereum_stasis
-go_field_repair_bot_74A
 go_mysterious_snow_mound
 go_orb_of_command
 go_resonite_cask
@@ -158,24 +157,6 @@ bool GOUse_go_ethereum_stasis(Player* pPlayer, GameObject* pGo)
         TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
 
     return false;
-}
-
-/*######
-## go_field_repair_bot_74A
-######*/
-
-enum
-{
-    SPELL_ENGINEER_FIELD_REPAIR_BOT_74A = 22704,
-    SPELL_LEARN_FIELD_REPAIR_BOT_74A    = 22864
-};
-
-bool GOUse_go_field_repair_bot_74A(Player* pPlayer, GameObject* pGo)
-{
-    if (pPlayer->HasSkill(SKILL_ENGINEERING) && pPlayer->GetBaseSkillValue(SKILL_ENGINEERING) >= 300 && !pPlayer->HasSpell(SPELL_ENGINEER_FIELD_REPAIR_BOT_74A))
-        pPlayer->CastSpell(pPlayer, SPELL_LEARN_FIELD_REPAIR_BOT_74A, false);
-
-    return true;
 }
 
 /*######
@@ -568,11 +549,6 @@ void AddSC_go_scripts()
     pNewScript = new Script;
     pNewScript->Name = "go_ethereum_stasis";
     pNewScript->pGOUse =          &GOUse_go_ethereum_stasis;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "go_field_repair_bot_74A";
-    pNewScript->pGOUse =          &GOUse_go_field_repair_bot_74A;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
