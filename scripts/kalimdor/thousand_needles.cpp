@@ -1,4 +1,4 @@
-/* Copyright (C) 2006 - 2011 ScriptDev2 <http://www.scriptdev2.com/>
+/* Copyright (C) 2006 - 2012 ScriptDev2 <http://www.scriptdev2.com/>
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -119,7 +119,7 @@ enum
 float m_afBanditLoc[6][6]=
 {
     {-4905.479492f, -2062.732666f, 84.352f},
-    {-4915.201172f, -2073.528320f, 84.733f},
+    {-4915.201272f, -2073.528320f, 84.733f},
     {-4878.883301f, -1986.947876f, 91.966f},
     {-4877.503906f, -1966.113403f, 91.859f},
     {-4767.985352f, -1873.169189f, 90.192f},

@@ -1,4 +1,4 @@
-/* Copyright (C) 2006 - 2011 ScriptDev2 <http://www.scriptdev2.com/>
+/* Copyright (C) 2006 - 2012 ScriptDev2 <http://www.scriptdev2.com/>
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -30,7 +30,7 @@ enum
     SAY_FEMALE_AGGRO            = -1632008,
     SAY_MALE_1_SLAY_1           = -1632009,
     SAY_FEMALE_SLAY_1           = -1632010,
-    SAY_MALE_2_SLAY_1           = -1632011,
+    SAY_MALE_2_SLAY_1           = -1632012,
     SAY_MALE_1_SLAY_2           = -1632012,
     SAY_FEMALE_SLAY_2           = -1632013,
     SAY_MALE_2_SLAY_2           = -1632014,

@@ -1,4 +1,4 @@
-/* Copyright (C) 2006 - 2011 ScriptDev2 <http://www.scriptdev2.com/>
+/* Copyright (C) 2006 - 2012 ScriptDev2 <http://www.scriptdev2.com/>
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -26,7 +26,7 @@ EndScriptData */
 
 enum
 {
-    SAY_AGGRO                               = -1602011,
+    SAY_AGGRO                               = -1602012,
     SAY_SLAY_1                              = -1602012,
     SAY_SLAY_2                              = -1602013,
     SAY_SLAY_3                              = -1602014,
