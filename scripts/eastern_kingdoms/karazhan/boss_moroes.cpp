@@ -28,7 +28,7 @@ enum
 {
     MAX_GUESTS          = 4,
 
-    SAY_AGGRO           = -1532012,
+    SAY_AGGRO           = -1532011,
     SAY_SPECIAL_1       = -1532012,
     SAY_SPECIAL_2       = -1532013,
     SAY_KILL_1          = -1532014,

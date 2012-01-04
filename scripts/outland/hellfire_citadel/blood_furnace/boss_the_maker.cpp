@@ -28,7 +28,7 @@ enum
 {
     SAY_AGGRO_1                 = -1542009,
     SAY_AGGRO_2                 = -1542010,
-    SAY_AGGRO_3                 = -1542012,
+    SAY_AGGRO_3                 = -1542011,
     SAY_KILL_1                  = -1542012,
     SAY_KILL_2                  = -1542013,
     SAY_DIE                     = -1542014,

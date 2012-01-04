@@ -37,7 +37,7 @@ EndScriptData */
 
 enum
 {
-    SPELL_SPIRIT_HEAL_CHANNEL       = 22012,                // Spirit Heal Channel
+    SPELL_SPIRIT_HEAL_CHANNEL       = 22011,                // Spirit Heal Channel
 
     SPELL_SPIRIT_HEAL               = 22012,                // Spirit Heal
     SPELL_SPIRIT_HEAL_MANA          = 44535,                // in battlegrounds player get this no-mana-cost-buff

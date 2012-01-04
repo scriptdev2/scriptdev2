@@ -26,7 +26,7 @@ EndScriptData */
 
 enum
 {
-    SAY_AGGRO                               = -1602012,
+    SAY_AGGRO                               = -1602011,
     SAY_SLAY_1                              = -1602012,
     SAY_SLAY_2                              = -1602013,
     SAY_SLAY_3                              = -1602014,

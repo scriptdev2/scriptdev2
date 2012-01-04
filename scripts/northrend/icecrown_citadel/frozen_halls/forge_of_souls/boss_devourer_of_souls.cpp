@@ -30,7 +30,7 @@ enum
     SAY_FEMALE_AGGRO            = -1632008,
     SAY_MALE_1_SLAY_1           = -1632009,
     SAY_FEMALE_SLAY_1           = -1632010,
-    SAY_MALE_2_SLAY_1           = -1632012,
+    SAY_MALE_2_SLAY_1           = -1632011,
     SAY_MALE_1_SLAY_2           = -1632012,
     SAY_FEMALE_SLAY_2           = -1632013,
     SAY_MALE_2_SLAY_2           = -1632014,

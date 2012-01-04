@@ -37,7 +37,7 @@ EndContentData */
 enum
 {
     SAY_INTRO_1                     = -1552010,
-    SAY_INTRO_2                     = -1552012,
+    SAY_INTRO_2                     = -1552011,
     SAY_WATER                       = -1552012,
     SAY_BUFFS                       = -1552013,
     SAY_DRINK                       = -1552014,
