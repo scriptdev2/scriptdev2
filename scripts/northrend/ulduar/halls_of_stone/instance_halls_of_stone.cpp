@@ -74,9 +74,10 @@ void instance_halls_of_stone::OnObjectCreate(GameObject* pGo)
     {
         case GO_DOOR_SJONNIR:
             break;
-        case GO_DOOR_TRIBUNAL:
         case GO_TRIBUNAL_CHEST:
         case GO_TRIBUNAL_CHEST_H:
+            if (m_auiEncounter[TYPE_TRIBUNAL] == DONE)
+                pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
             break;
         case GO_TRIBUNAL_HEAD_RIGHT:
             m_aFaces[FACE_MARNAK].m_goFaceGuid = pGo->GetObjectGuid();
@@ -87,6 +88,7 @@ void instance_halls_of_stone::OnObjectCreate(GameObject* pGo)
         case GO_TRIBUNAL_HEAD_LEFT:
             m_aFaces[FACE_KADDRAK].m_goFaceGuid = pGo->GetObjectGuid();
             return;
+        case GO_DOOR_TRIBUNAL:
         case GO_TRIBUNAL_CONSOLE:
         case GO_TRIBUNAL_FLOOR:
         case GO_SJONNIR_CONSOLE:
@@ -110,8 +112,8 @@ void instance_halls_of_stone::SetData(uint32 uiType, uint32 uiData)
                     SortFaces();
                     break;
                 case DONE:
-                    // Actually, this one need to be changed faction or similar..
-                    DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_TRIBUNAL_CHEST : GO_TRIBUNAL_CHEST_H);
+                    if (GameObject* pChest = GetSingleGameObjectFromStorage(instance->IsRegularDifficulty() ? GO_TRIBUNAL_CHEST : GO_TRIBUNAL_CHEST_H))
+                        pChest->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
                     // Door workaround because of the missing Bran event
                     DoUseDoorOrButton(GO_DOOR_SJONNIR);
                     break;
