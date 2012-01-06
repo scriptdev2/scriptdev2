@@ -14,6 +14,7 @@ enum
     TYPE_IKISS                  = 2,
 
     GO_IKISS_DOOR               = 177203,
+    GO_IKISS_CHEST              = 187372,
 
     ACHIEV_CRITA_TURKEY_TIME    = 11142,
     ITEM_PILGRIMS_HAT           = 46723,

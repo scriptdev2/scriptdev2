@@ -35,13 +35,22 @@ void instance_sethekk_halls::Initialize()
 
 void instance_sethekk_halls::OnObjectCreate(GameObject* pGo)
 {
-    if (pGo->GetEntry() == GO_IKISS_DOOR)
+    switch (pGo->GetEntry())
     {
-        if (m_auiEncounter[TYPE_IKISS] == DONE)
-            pGo->SetGoState(GO_STATE_ACTIVE);
+        case GO_IKISS_DOOR:
+            if (m_auiEncounter[TYPE_IKISS] == DONE)
+                pGo->SetGoState(GO_STATE_ACTIVE);
+            break;
+        case GO_IKISS_CHEST:
+            if (m_auiEncounter[TYPE_IKISS] == DONE)
+                pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT | GO_FLAG_INTERACT_COND);
+            break;
 
-        m_mGoEntryGuidStore[GO_IKISS_DOOR] = pGo->GetObjectGuid();
+        default:
+            return;
     }
+
+    m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
 }
 
 void instance_sethekk_halls::SetData(uint32 uiType, uint32 uiData)
@@ -54,7 +63,12 @@ void instance_sethekk_halls::SetData(uint32 uiType, uint32 uiData)
             break;
         case TYPE_IKISS:
             if (uiData == DONE)
+            {
                 DoUseDoorOrButton(GO_IKISS_DOOR, DAY);
+
+                if(GameObject* pChest = GetSingleGameObjectFromStorage(GO_IKISS_CHEST))
+                    pChest->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT | GO_FLAG_INTERACT_COND);
+            }
             m_auiEncounter[uiType] = uiData;
             break;
         default:
