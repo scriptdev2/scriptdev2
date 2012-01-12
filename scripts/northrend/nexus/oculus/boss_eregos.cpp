@@ -16,12 +16,26 @@
 
 /* ScriptData
 SDName: boss_eregos
-SD%Complete: 0
-SDComment: Placeholder
+SD%Complete: 20
+SDComment: only yells
 SDCategory: Oculus
 EndScriptData */
 
 #include "precompiled.h"
+
+enum
+{
+    SAY_SPAWN                       = -1578010,
+    SAY_AGGRO                       = -1578011,
+    SAY_ARCANE_SHIELD               = -1578012,
+    SAY_FIRE_SHIELD                 = -1578013,
+    SAY_NATURE_SHIELD               = -1578014,
+    SAY_FRENZY                      = -1578015,
+    SAY_KILL_1                      = -1578016,
+    SAY_KILL_2                      = -1578017,
+    SAY_KILL_3                      = -1578018,
+    SAY_DEATH                       = -1578019,
+};
 
 void AddSC_boss_eregos()
 {

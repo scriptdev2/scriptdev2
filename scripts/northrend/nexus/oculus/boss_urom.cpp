@@ -16,12 +16,26 @@
 
 /* ScriptData
 SDName: boss_urom
-SD%Complete: 0
-SDComment: Placeholder
+SD%Complete: 20
+SDComment: only yells
 SDCategory: Oculus
 EndScriptData */
 
 #include "precompiled.h"
+
+enum
+{
+    SAY_SUMMON_1                    = -1578000,
+    SAY_SUMMON_2                    = -1578001,
+    SAY_SUMMON_3                    = -1578002,
+    SAY_AGGRO                       = -1578003,
+    SAY_EXPLOSION_1                 = -1578004,
+    SAY_EXPLOSION_2                 = -1578005,
+    SAY_KILL_1                      = -1578006,
+    SAY_KILL_2                      = -1578007,
+    SAY_KILL_3                      = -1578008,
+    SAY_DEATH                       = -1578009,
+};
 
 void AddSC_boss_urom()
 {
