@@ -860,7 +860,7 @@ UPDATE gameobject_template SET ScriptName='go_containment_sphere' WHERE entry IN
 UPDATE instance_template SET ScriptName='instance_nexus' WHERE map=576;
 
 /* OCULUS */
-
+UPDATE instance_template SET ScriptName='instance_oculus' WHERE map=578;
 
 /* OBSIDIAN SANCTUM */
 UPDATE instance_template SET ScriptName='instance_obsidian_sanctum' WHERE map=615;
