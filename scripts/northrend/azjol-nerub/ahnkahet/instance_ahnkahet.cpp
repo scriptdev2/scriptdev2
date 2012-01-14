@@ -42,6 +42,12 @@ void instance_ahnkahet::OnCreatureCreate(Creature* pCreature)
         case NPC_ELDER_NADOX:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
+        case NPC_AHNKAHAR_GUARDIAN_EGG:
+            m_GuardianEggList.push_back(pCreature->GetObjectGuid());
+            break;
+        case NPC_AHNKAHAR_SWARM_EGG:
+            m_SwarmerEggList.push_back(pCreature->GetObjectGuid());
+            break;
     }
 }
 
@@ -128,6 +134,28 @@ void instance_ahnkahet::SetData(uint32 uiType, uint32 uiData)
         SaveToDB();
         OUT_SAVE_INST_DATA_COMPLETE;
     }
+}
+
+ObjectGuid instance_ahnkahet::SelectRandomGuardianEggGuid()
+{
+    if (m_GuardianEggList.empty())
+        return ObjectGuid();
+
+    std::list<ObjectGuid>::iterator iter = m_GuardianEggList.begin();
+    advance(iter, urand(0, m_GuardianEggList.size()-1));
+
+    return *iter;
+}
+
+ObjectGuid instance_ahnkahet::SelectRandomSwarmerEggGuid()
+{
+    if (m_SwarmerEggList.empty())
+        return ObjectGuid();
+
+    std::list<ObjectGuid>::iterator iter = m_SwarmerEggList.begin();
+    advance(iter, urand(0, m_SwarmerEggList.size()-1));
+
+    return *iter;
 }
 
 void instance_ahnkahet::Load(const char* chrIn)

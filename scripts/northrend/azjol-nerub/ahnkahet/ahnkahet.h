@@ -27,6 +27,8 @@ enum
     GO_VORTEX                   = 193564,
 
     NPC_ELDER_NADOX             = 29309,
+    NPC_AHNKAHAR_GUARDIAN_EGG   = 30173,
+    NPC_AHNKAHAR_SWARM_EGG      = 30172,
     //NPC_JEDOGA_SHADOWSEEKER   = 29310,
 
     ACHIEV_START_VOLAZJ_ID      = 20382,
@@ -45,6 +47,9 @@ class MANGOS_DLL_DECL instance_ahnkahet : public ScriptedInstance
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
 
+        ObjectGuid SelectRandomGuardianEggGuid();
+        ObjectGuid SelectRandomSwarmerEggGuid();
+
         const char* Save() { return m_strInstData.c_str(); }
         void Load(const char* chrIn);
 
@@ -53,6 +58,9 @@ class MANGOS_DLL_DECL instance_ahnkahet : public ScriptedInstance
         std::string m_strInstData;
 
         uint8 m_uiDevicesActivated;
+
+        GUIDList m_GuardianEggList;
+        GUIDList m_SwarmerEggList;
 };
 
 #endif
