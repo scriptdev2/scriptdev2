@@ -16,12 +16,13 @@
 
 /* ScriptData
 SDName: boss_eregos
-SD%Complete: 20
-SDComment: only yells
+SD%Complete: 30
+SDComment: only yells and instance data support
 SDCategory: Oculus
 EndScriptData */
 
 #include "precompiled.h"
+#include "oculus.h"
 
 enum
 {
@@ -37,6 +38,74 @@ enum
     SAY_DEATH                       = -1578019,
 };
 
+struct MANGOS_DLL_DECL boss_eregosAI : public ScriptedAI
+{
+    boss_eregosAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
+        Reset();
+    }
+
+    ScriptedInstance* m_pInstance;
+    bool m_bIsRegularMode;
+
+    void Reset()
+    {
+    }
+
+    void Aggro(Unit* pWho)
+    {
+        DoScriptText(SAY_AGGRO, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_EREGOS, IN_PROGRESS);
+    }
+
+    void KilledUnit(Unit* pVictim)
+    {
+        switch(urand(0, 2))
+        {
+            case 0: DoScriptText(SAY_KILL_1, m_creature); break;
+            case 1: DoScriptText(SAY_KILL_2, m_creature); break;
+            case 2: DoScriptText(SAY_KILL_3, m_creature); break;
+        }
+    }
+
+    void JustDied(Unit* pKiller)
+    {
+        DoScriptText(SAY_DEATH, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_EREGOS, DONE);
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_EREGOS, FAIL);
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_boss_eregos(Creature* pCreature)
+{
+    return new boss_eregosAI(pCreature);
+}
+
 void AddSC_boss_eregos()
 {
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_eregos";
+    pNewScript->GetAI = &GetAI_boss_eregos;
+    pNewScript->RegisterSelf();
 }
