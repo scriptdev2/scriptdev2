@@ -102,6 +102,33 @@ uint32 instance_oculus::GetData(uint32 uiType)
     return 0;
 }
 
+void instance_oculus::OnCreatureEnterCombat(Creature* pCreature)
+{
+    switch (pCreature->GetEntry())
+    {
+        case NPC_DRAKOS: SetData(TYPE_DRAKOS, IN_PROGRESS); break;
+        case NPC_VAROS:  SetData(TYPE_VAROS,  IN_PROGRESS); break;
+    }
+}
+
+void instance_oculus::OnCreatureEvade(Creature* pCreature)
+{
+    switch (pCreature->GetEntry())
+    {
+        case NPC_DRAKOS: SetData(TYPE_DRAKOS, FAIL); break;
+        case NPC_VAROS:  SetData(TYPE_VAROS,  FAIL); break;
+    }
+}
+
+void instance_oculus::OnCreatureDeath(Creature* pCreature)
+{
+    switch (pCreature->GetEntry())
+    {
+        case NPC_DRAKOS: SetData(TYPE_DRAKOS, DONE); break;
+        case NPC_VAROS:  SetData(TYPE_VAROS,  DONE); break;
+    }
+}
+
 void instance_oculus::Load(const char* chrIn)
 {
     if (!chrIn)
