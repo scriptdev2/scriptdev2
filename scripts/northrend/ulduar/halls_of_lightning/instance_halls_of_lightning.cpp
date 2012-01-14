@@ -64,10 +64,6 @@ void instance_halls_of_lightning::OnObjectCreate(GameObject* pGo)
             if (m_auiEncounter[TYPE_IONAR] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
-        case GO_LOKEN_DOOR:
-            if (m_auiEncounter[TYPE_LOKEN] == DONE)
-                pGo->SetGoState(GO_STATE_ACTIVE);
-            break;
         case GO_LOKEN_THRONE:
             break;
 
@@ -99,8 +95,6 @@ void instance_halls_of_lightning::SetData(uint32 uiType, uint32 uiData)
                 DoStartTimedAchievement(ACHIEVEMENT_CRITERIA_TYPE_KILL_CREATURE, ACHIEV_START_LOKEN_ID);
             if (uiData == DONE)
             {
-                DoUseDoorOrButton(GO_LOKEN_DOOR);
-
                 //Appears to be type 5 GO with animation. Need to figure out how this work, code below only placeholder
                 if (GameObject* pGlobe = GetSingleGameObjectFromStorage(GO_LOKEN_THRONE))
                     pGlobe->SetGoState(GO_STATE_ACTIVE);
