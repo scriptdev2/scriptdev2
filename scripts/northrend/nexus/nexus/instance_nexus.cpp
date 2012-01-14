@@ -45,6 +45,9 @@ bool GOUse_go_containment_sphere(Player* pPlayer, GameObject* pGo)
 instance_nexus::instance_nexus(Map* pMap) : ScriptedInstance(pMap)
 {
     Initialize();
+
+    for (uint8 i = 0; i < MAX_SPECIAL_ACHIEV_CRITS; ++i)
+        m_abAchievCriteria[i] = false;
 }
 
 void instance_nexus::Initialize()
@@ -103,6 +106,8 @@ void instance_nexus::SetData(uint32 uiType, uint32 uiData)
             break;
         case TYPE_ANOMALUS:
             m_auiEncounter[uiType] = uiData;
+            if (uiData == IN_PROGRESS)
+                SetSpecialAchievementCriteria(TYPE_ACHIEV_CHAOS_THEORY, true);
             if (uiData == DONE)
             {
                 if (GameObject* pGo = GetSingleGameObjectFromStorage(GO_CONTAINMENT_SPHERE_ANOMALUS))
@@ -149,6 +154,24 @@ void instance_nexus::SetData(uint32 uiType, uint32 uiData)
 
         SaveToDB();
         OUT_SAVE_INST_DATA_COMPLETE;
+    }
+}
+
+void instance_nexus::SetSpecialAchievementCriteria(uint32 uiType, bool bIsMet)
+{
+    if (uiType < MAX_SPECIAL_ACHIEV_CRITS)
+        m_abAchievCriteria[uiType] = bIsMet;
+}
+
+bool instance_nexus::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/)
+{
+    switch (uiCriteriaId)
+    {
+        case ACHIEV_CRIT_CHAOS_THEORY:
+            return m_abAchievCriteria[TYPE_ACHIEV_CHAOS_THEORY];
+
+        default:
+            return false;
     }
 }
 

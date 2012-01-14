@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Anomalus
-SD%Complete: 80%
-SDComment: Achiev support NYI
+SD%Complete: 90%
+SDComment: Small adjustments required
 SDCategory: Nexus
 EndScriptData */
 
@@ -123,6 +123,10 @@ struct MANGOS_DLL_DECL boss_anomalusAI : public ScriptedAI
         if (pSummoned->GetEntry() == NPC_CHAOTIC_RIFT)
         {
             --m_uiChaoticRiftCount;
+
+            // If players kill the Chaotic Rifts then mark the achievement as false
+            if (m_pInstance)
+                m_pInstance->SetSpecialAchievementCriteria(TYPE_ACHIEV_CHAOS_THEORY, false);
 
             if (!m_uiChaoticRiftCount)
             {
