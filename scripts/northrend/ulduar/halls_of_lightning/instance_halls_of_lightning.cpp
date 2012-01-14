@@ -47,6 +47,7 @@ void instance_halls_of_lightning::OnCreatureCreate(Creature* pCreature)
     {
         case NPC_BJARNGRIM:
         case NPC_IONAR:
+        case NPC_VOLKHAN_ANVIL:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
     }

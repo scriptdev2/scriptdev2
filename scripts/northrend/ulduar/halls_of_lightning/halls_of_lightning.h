@@ -18,6 +18,7 @@ enum
     NPC_VOLKHAN             = 28587,
     NPC_IONAR               = 28546,
     NPC_LOKEN               = 28923,
+    NPC_VOLKHAN_ANVIL       = 28823,
 
     GO_VOLKHAN_DOOR         = 191325,                       //_doors07
     GO_IONAR_DOOR           = 191326,                       //_doors05
