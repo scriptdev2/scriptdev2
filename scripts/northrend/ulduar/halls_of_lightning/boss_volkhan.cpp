@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss Volkhan
-SD%Complete: 70%
-SDComment: The dummy spells need more research and should be handled in core; achiev NYI
+SD%Complete: 80%
+SDComment: The dummy spells need more research and should be handled in core
 SDCategory: Halls of Lightning
 EndScriptData */
 
