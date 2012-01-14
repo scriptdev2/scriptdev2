@@ -25,6 +25,7 @@ EndScriptData */
 #include "ahnkahet.h"
 
 instance_ahnkahet::instance_ahnkahet(Map* pMap) : ScriptedInstance(pMap),
+    m_bRespectElders(false),
     m_uiDevicesActivated(0)
 {
     Initialize();
@@ -87,6 +88,10 @@ void instance_ahnkahet::SetData(uint32 uiType, uint32 uiData)
     {
         case TYPE_NADOX:
             m_auiEncounter[uiType] = uiData;
+            if (uiData == IN_PROGRESS)
+                m_bRespectElders = true;
+            if (uiData == SPECIAL)
+                m_bRespectElders = false;
             break;
         case TYPE_TALDARAM:
             if (uiData == SPECIAL)
@@ -156,6 +161,18 @@ ObjectGuid instance_ahnkahet::SelectRandomSwarmerEggGuid()
     advance(iter, urand(0, m_SwarmerEggList.size()-1));
 
     return *iter;
+}
+
+bool instance_ahnkahet::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/)
+{
+    switch (uiCriteriaId)
+    {
+        case ACHIEV_CRIT_RESPECT_ELDERS:
+            return m_bRespectElders;
+
+        default:
+            return false;
+    }
 }
 
 void instance_ahnkahet::Load(const char* chrIn)

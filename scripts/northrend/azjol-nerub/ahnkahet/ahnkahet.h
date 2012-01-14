@@ -32,6 +32,8 @@ enum
     //NPC_JEDOGA_SHADOWSEEKER   = 29310,
 
     ACHIEV_START_VOLAZJ_ID      = 20382,
+
+    ACHIEV_CRIT_RESPECT_ELDERS  = 7317,             // Nadox, achiev 2038
 };
 
 class MANGOS_DLL_DECL instance_ahnkahet : public ScriptedInstance
@@ -50,12 +52,16 @@ class MANGOS_DLL_DECL instance_ahnkahet : public ScriptedInstance
         ObjectGuid SelectRandomGuardianEggGuid();
         ObjectGuid SelectRandomSwarmerEggGuid();
 
+        bool CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/);
+
         const char* Save() { return m_strInstData.c_str(); }
         void Load(const char* chrIn);
 
     private:
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strInstData;
+
+        bool m_bRespectElders;
 
         uint8 m_uiDevicesActivated;
 

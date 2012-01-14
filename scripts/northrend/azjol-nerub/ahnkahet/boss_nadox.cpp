@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Boss_Nadox
 SD%Complete: 90%
-SDComment: TODO: some more research on guardian aura needed, BroodRage needs core and db support
+SDComment: Some adjustment may be required
 SDCategory: Ahn'kahet
 EndScriptData */
 
@@ -84,6 +84,16 @@ struct MANGOS_DLL_DECL mob_ahnkahar_eggAI : public ScriptedAI
                 pSummoned->SetWalk(false);
                 pSummoned->GetMotionMaster()->MovePoint(0, fPosX, fPosY, fPosZ);
             }
+        }
+    }
+
+    void SummonedCreatureJustDied(Creature* pSummoned)
+    {
+        // If the Guardian is killed set the achiev criteria to false
+        if (pSummoned->GetEntry() == NPC_AHNKAHAR_GUARDIAN)
+        {
+            if (m_pInstance)
+                m_pInstance->SetData(TYPE_NADOX, SPECIAL);
         }
     }
 };
@@ -175,15 +185,20 @@ struct MANGOS_DLL_DECL boss_nadoxAI : public ScriptedAI
 
         if (m_uiSummonTimer < uiDiff)
         {
-            DoScriptText(urand(0, 1) ? SAY_SUMMON_EGG_1 : SAY_SUMMON_EGG_2, m_creature);
+            if (roll_chance_i(50))
+                DoScriptText(urand(0, 1) ? SAY_SUMMON_EGG_1 : SAY_SUMMON_EGG_2, m_creature);
 
             if (m_pInstance)
             {
+                // There are 2 Swarmers summoned at a timer
                 if (Creature* pSwarmerEgg = m_creature->GetMap()->GetCreature(m_pInstance->SelectRandomSwarmerEggGuid()))
-                    pSwarmerEgg->CastSpell(pSwarmerEgg, SPELL_SUMMON_SWARMERS, false);
-
-                m_uiSummonTimer = 10000;
+                {
+                    for (uint8 i = 0; i < 2; ++i)
+                        pSwarmerEgg->CastSpell(pSwarmerEgg, SPELL_SUMMON_SWARMERS, false);
+                }
             }
+
+            m_uiSummonTimer = urand(5000, 10000);
         }
         else
             m_uiSummonTimer -= uiDiff;
