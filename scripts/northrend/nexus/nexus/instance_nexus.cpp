@@ -126,6 +126,13 @@ void instance_nexus::SetData(uint32 uiType, uint32 uiData)
             break;
         case TYPE_KERISTRASZA:
             m_auiEncounter[uiType] = uiData;
+            if (uiData == IN_PROGRESS)
+                m_sIntenseColdFailPlayers.clear();
+            break;
+        case TYPE_INTENSE_COLD_FAILED:
+            // Insert the players who fail the achiev and haven't been already inserted in the set
+            if (m_sIntenseColdFailPlayers.find(uiData) == m_sIntenseColdFailPlayers.end())
+                m_sIntenseColdFailPlayers.insert(uiData);
             break;
         default:
             error_log("SD2: Instance Nexus: ERROR SetData = %u for type %u does not exist/not implemented.", uiType, uiData);
@@ -173,6 +180,9 @@ bool instance_nexus::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player co
             return m_abAchievCriteria[TYPE_ACHIEV_CHAOS_THEORY];
         case ACHIEV_CRIT_SPLIT_PERSONALITY:
             return m_abAchievCriteria[TYPE_ACHIEV_SPLIT_PERSONALITY];
+        case ACHIEV_CRIT_INTENSE_COLD:
+            // Return true if not found in the set
+            return m_sIntenseColdFailPlayers.find(pSource->GetGUIDLow()) == m_sIntenseColdFailPlayers.end();
 
         default:
             return false;
