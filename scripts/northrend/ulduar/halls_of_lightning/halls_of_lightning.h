@@ -26,6 +26,8 @@ enum
     GO_LOKEN_THRONE         = 192654,
 
     ACHIEV_START_LOKEN_ID   = 20384,
+
+    ACHIEV_CRIT_RESISTANT   = 7321,                         // Volkhan, achiev 2042
 };
 
 class MANGOS_DLL_DECL instance_halls_of_lightning : public ScriptedInstance
@@ -41,12 +43,16 @@ class MANGOS_DLL_DECL instance_halls_of_lightning : public ScriptedInstance
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
 
+        bool CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/);
+
         const char* Save() { return m_strInstData.c_str(); }
         void Load(const char* chrIn);
 
     private:
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strInstData;
+
+        bool m_bIsShatterResistant;
 };
 
 #endif

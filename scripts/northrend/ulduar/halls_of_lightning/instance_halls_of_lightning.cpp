@@ -31,7 +31,8 @@ EndScriptData */
 3 - Loken
 */
 
-instance_halls_of_lightning::instance_halls_of_lightning(Map* pMap) : ScriptedInstance(pMap)
+instance_halls_of_lightning::instance_halls_of_lightning(Map* pMap) : ScriptedInstance(pMap),
+    m_bIsShatterResistant(false)
 {
     Initialize();
 }
@@ -84,6 +85,10 @@ void instance_halls_of_lightning::SetData(uint32 uiType, uint32 uiData)
         case TYPE_VOLKHAN:
             if (uiData == DONE)
                 DoUseDoorOrButton(GO_VOLKHAN_DOOR);
+            if (uiData == IN_PROGRESS)
+                m_bIsShatterResistant = true;
+            if (uiData == SPECIAL)
+                m_bIsShatterResistant = false;
             m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_IONAR:
@@ -124,6 +129,14 @@ uint32 instance_halls_of_lightning::GetData(uint32 uiType)
         return m_auiEncounter[uiType];
 
     return 0;
+}
+
+bool instance_halls_of_lightning::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/)
+{
+    if (uiCriteriaId == ACHIEV_CRIT_RESISTANT)
+        return m_bIsShatterResistant;
+
+    return false;
 }
 
 void instance_halls_of_lightning::Load(const char* chrIn)

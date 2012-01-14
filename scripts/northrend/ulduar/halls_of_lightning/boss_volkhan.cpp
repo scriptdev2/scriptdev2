@@ -60,7 +60,8 @@ enum
     NPC_MOLTEN_GOLEM                        = 28695,
     NPC_BRITTLE_GOLEM                       = 28681,
 
-    MAX_GOLEM                               = 2
+    MAX_GOLEM                               = 2,
+    MAX_ACHIEV_GOLEMS                       = 4
 };
 
 /*######
@@ -151,14 +152,26 @@ struct MANGOS_DLL_DECL boss_volkhanAI : public ScriptedAI
         if (m_lGolemGUIDList.empty())
             return;
 
+        uint8 m_uiBrittleGolemsCount = 0;
+
         for(GUIDList::const_iterator itr = m_lGolemGUIDList.begin(); itr != m_lGolemGUIDList.end(); ++itr)
         {
             if (Creature* pTemp = m_creature->GetMap()->GetCreature(*itr))
             {
                  // only shatter brittle golems
                 if (pTemp->GetEntry() == NPC_BRITTLE_GOLEM)
+                {
                     pTemp->CastSpell(pTemp, m_bIsRegularMode ? SPELL_SHATTER : SPELL_SHATTER_H, true);
+                    ++m_uiBrittleGolemsCount;
+                }
             }
+        }
+
+        // If shattered more than 4 golems mark achiev as failed
+        if (m_uiBrittleGolemsCount > MAX_ACHIEV_GOLEMS)
+        {
+            if (m_pInstance)
+                m_pInstance->SetData(TYPE_VOLKHAN, SPECIAL);
         }
     }
 
