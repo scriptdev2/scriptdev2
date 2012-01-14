@@ -98,6 +98,8 @@ void instance_nexus::SetData(uint32 uiType, uint32 uiData)
     {
         case TYPE_TELESTRA:
             m_auiEncounter[uiType] = uiData;
+            if (uiData == IN_PROGRESS)
+                SetSpecialAchievementCriteria(TYPE_ACHIEV_SPLIT_PERSONALITY, true);
             if (uiData == DONE)
             {
                 if (GameObject* pGo = GetSingleGameObjectFromStorage(GO_CONTAINMENT_SPHERE_TELESTRA))
@@ -169,6 +171,8 @@ bool instance_nexus::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player co
     {
         case ACHIEV_CRIT_CHAOS_THEORY:
             return m_abAchievCriteria[TYPE_ACHIEV_CHAOS_THEORY];
+        case ACHIEV_CRIT_SPLIT_PERSONALITY:
+            return m_abAchievCriteria[TYPE_ACHIEV_SPLIT_PERSONALITY];
 
         default:
             return false;

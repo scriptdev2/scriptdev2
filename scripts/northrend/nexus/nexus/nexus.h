@@ -8,7 +8,7 @@
 enum
 {
     MAX_ENCOUNTER                  = 4,
-    MAX_SPECIAL_ACHIEV_CRITS       = 1,
+    MAX_SPECIAL_ACHIEV_CRITS       = 2,
 
     TYPE_TELESTRA                  = 0,
     TYPE_ANOMALUS                  = 1,
@@ -16,6 +16,7 @@ enum
     TYPE_KERISTRASZA               = 3,
 
     TYPE_ACHIEV_CHAOS_THEORY       = 0,
+    TYPE_ACHIEV_SPLIT_PERSONALITY  = 1,
 
     NPC_TELESTRA                   = 26731,
     NPC_ANOMALUS                   = 26763,
@@ -29,6 +30,7 @@ enum
     SPELL_FROZEN_PRISON             = 47854,
 
     ACHIEV_CRIT_CHAOS_THEORY        = 7316,                 // Anomalus, achiev 2037
+    ACHIEV_CRIT_SPLIT_PERSONALITY   = 7577,                 // Telestra, achiev 2150
 };
 
 class MANGOS_DLL_DECL instance_nexus : public ScriptedInstance

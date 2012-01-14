@@ -75,29 +75,35 @@ struct MANGOS_DLL_DECL boss_telestraAI : public ScriptedAI
 {
     boss_telestraAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_pInstance = (instance_nexus*)pCreature->GetInstanceData();
         m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Reset();
     }
 
-    ScriptedInstance* m_pInstance;
+    instance_nexus* m_pInstance;
     bool m_bIsRegularMode;
 
     uint8 m_uiPhase;
     uint8 m_uiCloneDeadCount;
 
+    uint32 m_uiPersonalityTimer;
     uint32 m_uiFirebombTimer;
     uint32 m_uiIceNovaTimer;
     uint32 m_uiGravityWellTimer;
+
+    bool m_bCanCheckAchiev;
 
     void Reset()
     {
         m_uiPhase = PHASE_1;
         m_uiCloneDeadCount = 0;
 
+        m_uiPersonalityTimer = 0;
         m_uiFirebombTimer = urand(2000, 4000);
         m_uiIceNovaTimer = urand(8000, 12000);
         m_uiGravityWellTimer = urand(15000, 25000);
+
+        m_bCanCheckAchiev = false;
     }
 
     void JustReachedHome()
@@ -120,6 +126,9 @@ struct MANGOS_DLL_DECL boss_telestraAI : public ScriptedAI
     void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_TELESTRA, IN_PROGRESS);
     }
 
     void JustDied(Unit* pKiller)
@@ -147,6 +156,13 @@ struct MANGOS_DLL_DECL boss_telestraAI : public ScriptedAI
             {
                 ++m_uiCloneDeadCount;
 
+                // After the first clone from each split phase is dead start the achiev timer
+                if (m_uiCloneDeadCount == 1 || m_uiCloneDeadCount == 4)
+                {
+                    m_bCanCheckAchiev = true;
+                    m_uiPersonalityTimer = 0;
+                }
+
                 if (m_uiCloneDeadCount == 3 || m_uiCloneDeadCount == 6)
                 {
                     m_creature->RemoveAurasDueToSpell(SPELL_SUMMON_CLONES);
@@ -155,6 +171,14 @@ struct MANGOS_DLL_DECL boss_telestraAI : public ScriptedAI
                     m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
 
                     DoScriptText(SAY_MERGE, m_creature);
+
+                    // Check if it took longer than 5 sec
+                    if (m_uiPersonalityTimer > 5000)
+                    {
+                        if (m_pInstance)
+                            m_pInstance->SetSpecialAchievementCriteria(TYPE_ACHIEV_SPLIT_PERSONALITY, false);
+                    }
+                    m_bCanCheckAchiev = false;
 
                     m_uiPhase = m_uiCloneDeadCount == 3 ? PHASE_3 : PHASE_4;
                 }
@@ -180,6 +204,9 @@ struct MANGOS_DLL_DECL boss_telestraAI : public ScriptedAI
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
+
+        if (m_bCanCheckAchiev)
+            m_uiPersonalityTimer += uiDiff;
 
         switch(m_uiPhase)
         {
