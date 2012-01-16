@@ -25,6 +25,7 @@ EndScriptData */
 #include "azjol-nerub.h"
 
 instance_azjol_nerub::instance_azjol_nerub(Map* pMap) : ScriptedInstance(pMap),
+    m_bWatchHimDie(true),
     m_uiWatcherTimer(0)
 {
     Initialize();
@@ -83,6 +84,9 @@ void instance_azjol_nerub::OnCreatureDeath(Creature* pCreature)
     {
         if (m_auiEncounter[TYPE_KRIKTHIR] == NOT_STARTED)
             m_uiWatcherTimer = 5000;
+
+        // Set achiev criteriat to false if one of the watchers dies
+        m_bWatchHimDie = false;
     }
 }
 
@@ -194,6 +198,14 @@ void instance_azjol_nerub::SetData(uint32 uiType, uint32 uiData)
         SaveToDB();
         OUT_SAVE_INST_DATA_COMPLETE;
     }
+}
+
+bool instance_azjol_nerub::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/)
+{
+    if (uiCriteriaId == ACHIEV_CRITERIA_WATCH_DIE)
+        return m_bWatchHimDie;
+
+    return false;
 }
 
 void instance_azjol_nerub::Load(const char* chrIn)
