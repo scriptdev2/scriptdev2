@@ -3532,12 +3532,12 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1619032,'I give myself to the master!',0,1,0,0,'jedoga SAY_VOLUNTEER_2'),
 
 (-1619033,'Shgla\'yos plahf mh\'naus.',14043,1,0,0,'volazj SAY_AGGRO'),
-(-1619034,' ',14044,1,0,0,'volazj SAY_INSANITY'),
-(-1619035,' ',14045,1,0,0,'volazj SAY_SLAY_1'),
-(-1619036,' ',14046,1,0,0,'volazj SAY_SLAY_2'),
-(-1619037,' ',14047,1,0,0,'volazj SAY_SLAY_3'),
+(-1619034,'Gul\'kafh an\'shel. Yoq\'al shn ky ywaq nuul.',14044,1,0,0,'volazj SAY_INSANITY'),
+(-1619035,'Ywaq puul skshgn: on\'ma yeh\'glu zuq.',14045,1,0,0,'volazj SAY_SLAY_1'),
+(-1619036,'Ywaq ma phgwa\'cul hnakf.',14046,1,0,0,'volazj SAY_SLAY_2'),
+(-1619037,'Ywaq maq oou; ywaq maq ssaggh. Ywaq ma shg\'fhn.',14047,1,0,0,'volazj SAY_SLAY_3'),
 (-1619038,' ',14048,1,0,0,'volazj SAY_DEATH_1'),
-(-1619039,' ',14049,1,0,0,'volazj SAY_DEATH_2');
+(-1619039,'Iilth vwah, uhn\'agth fhssh za.',14049,1,0,0,'volazj SAY_DEATH_2');
 
 -- -1 631 000 ICC: ICECROWN CITADEL
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES

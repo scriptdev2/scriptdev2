@@ -16,14 +16,13 @@
 
 /* ScriptData
 SDName: Boss_Volazj
-SD%Complete: 20%
-SDComment:
+SD%Complete: 50%
+SDComment: Insanity NYI; Timers need adjustments
 SDCategory: Ahn'kahet
 EndScriptData */
 
 #include "precompiled.h"
 
-//TODO: fill in texts in database. Also need to add text for whisper.
 enum
 {
     SAY_AGGRO                       = -1619033,
@@ -31,8 +30,31 @@ enum
     SAY_SLAY_1                      = -1619035,
     SAY_SLAY_2                      = -1619036,
     SAY_SLAY_3                      = -1619037,
-    SAY_DEATH_1                     = -1619038,
-    SAY_DEATH_2                     = -1619039
+    SAY_DEATH_1                     = -1619038,         // missing text
+    SAY_DEATH_2                     = -1619039,
+
+    SPELL_MIND_FLAY                 = 57941,
+    SPELL_MIND_FLAY_H               = 59974,
+    SPELL_SHADOW_BOLT               = 57942,
+    SPELL_SHADOW_BOLT_H             = 59975,
+    SPELL_SHIVER                    = 57949,
+    SPELL_SHIVER_H                  = 59978,
+
+    SPELL_INSANITY                  = 57496,            // start insanity phasing
+    SPELL_INSANITY_CLEAR            = 57558,            // clear all insanity phasing
+    SPELL_WHISPER_INSANITY          = 60292,            // whisper insanity to players
+
+    /* Some notes about the Insanity spell */
+    /*
+        Related spells:
+        57561 - visual effect
+        57538 - switch insanity phase when a visage is killed
+        57507 to 57512 - phasing spells for players
+        59982 - summon twisted visage - script effect
+        57500 to 57504 - summon twisted visage in each phase
+        57506, 57507 - clone spells for the twisted visages
+        57551, 57555 - visuals for twisted visages
+    */
 };
 
 /*######
@@ -51,8 +73,17 @@ struct MANGOS_DLL_DECL boss_volazjAI : public ScriptedAI
     ScriptedInstance* m_pInstance;
     bool m_bIsRegularMode;
 
+    uint8 m_uiCombatPhase;
+    uint32 m_uiMindFlayTimer;
+    uint32 m_uiShadowBoltTimer;
+    uint32 m_uiShiverTimer;
+
     void Reset()
     {
+        m_uiCombatPhase = 1;
+        m_uiMindFlayTimer = 10000;
+        m_uiShadowBoltTimer = 5000;
+        m_uiShiverTimer = 18000;
     }
 
     void Aggro(Unit* pWho)
@@ -79,6 +110,41 @@ struct MANGOS_DLL_DECL boss_volazjAI : public ScriptedAI
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
+
+        /* Note: Insanity is not yet implemented - this is just a placeholder
+        if (m_creature->GetHealthPercent() < 100 - m_uiCombatPhase*33)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_INSANITY) == CAST_OK)
+                ++m_uiCombatPhase;
+        }
+        */
+
+        if (m_uiMindFlayTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan (m_creature->getVictim(), m_bIsRegularMode ? SPELL_MIND_FLAY : SPELL_MIND_FLAY_H) == CAST_OK)
+                m_uiMindFlayTimer = urand(10000, 20000);
+        }
+        else
+            m_uiMindFlayTimer -= uiDiff;
+
+        if (m_uiShadowBoltTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_SHADOW_BOLT : SPELL_SHADOW_BOLT_H) == CAST_OK)
+                m_uiShadowBoltTimer = urand(8000, 13000);
+        }
+        else
+            m_uiShadowBoltTimer -= uiDiff;
+
+        if (m_uiShiverTimer < uiDiff)
+        {
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_SHIVER : SPELL_SHIVER_H) == CAST_OK)
+                    m_uiShiverTimer = 30000;
+            }
+        }
+        else
+            m_uiShiverTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
