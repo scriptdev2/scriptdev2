@@ -4083,6 +4083,11 @@ INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 (-3560005,'Strange wizard?','taretha GOSSIP_ITEM_EPOCH1'),
 (-3560006,'We\'ll get you out. Taretha. Don\'t worry. I doubt the wizard would wander too far away.','taretha GOSSIP_ITEM_EPOCH2');
 
+-- -3 564 000 BLACK TEMPLE
+INSERT INTO gossip_texts (entry,content_default,comment) VALUES
+(-3564000,'We are ready to fight alongside you, Akama','akama(shade) GOSSIP_ITEM_START_ENCOUNTER');
+
+
 -- -3 595 000 CULLING OF STRATHOLME
 INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 (-3595000,'What do you think they\'re up to?','chromie GOSSIP_ITEM_ENTRANCE_1'),
