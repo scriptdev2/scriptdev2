@@ -34,6 +34,35 @@ void instance_icecrown_citadel::Initialize()
     memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
 }
 
+void instance_icecrown_citadel::SetData(uint32 uiType, uint32 uiData)
+{
+    switch (uiType)
+    {
+        case TYPE_MARROWGAR:
+        case TYPE_DEATHWHISPER:
+        case TYPE_GUNSHIP:
+        case TYPE_SAURFANG:
+        case TYPE_FESTERGUT:
+        case TYPE_ROTFACE:
+        case TYPE_PUTRICIDE:
+        case TYPE_COUNCIL:
+        case TYPE_BLOOD_QUEEN:
+        case TYPE_VALITHRIA:
+        case TYPE_SINDRAGOSA:
+        case TYPE_LICH_KING:
+            m_auiEncounter[uiType] = uiData;
+            break;
+    }
+}
+
+uint32 instance_icecrown_citadel::GetData(uint32 uiType)
+{
+    if (uiType < MAX_ENCOUNTER)
+        return m_auiEncounter[uiType];
+
+    return 0;
+}
+
 InstanceData* GetInstanceData_instance_icecrown_citadel(Map* pMap)
 {
     return new instance_icecrown_citadel(pMap);
