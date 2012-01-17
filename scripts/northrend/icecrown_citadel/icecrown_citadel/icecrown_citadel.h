@@ -34,8 +34,12 @@ class MANGOS_DLL_DECL instance_icecrown_citadel : public ScriptedInstance
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
 
+        const char* Save() { return m_strInstData.c_str(); }
+        void Load(const char* chrIn);
+
     private:
         uint32 m_auiEncounter[MAX_ENCOUNTER];
+        std::string m_strInstData;
 };
 
 #endif
