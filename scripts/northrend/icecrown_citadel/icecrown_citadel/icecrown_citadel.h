@@ -8,7 +8,20 @@
 
 enum
 {
-    MAX_ENCOUNTER               = 1,
+    MAX_ENCOUNTER               = 12,
+
+    TYPE_MARROWGAR              = 0,
+    TYPE_DEATHWHISPER           = 1,
+    TYPE_GUNSHIP                = 2,
+    TYPE_SAURFANG               = 3,
+    TYPE_FESTERGUT              = 4,
+    TYPE_ROTFACE                = 5,
+    TYPE_PUTRICIDE              = 6,
+    TYPE_COUNCIL                = 7,
+    TYPE_BLOOD_QUEEN            = 8,
+    TYPE_VALITHRIA              = 9,
+    TYPE_SINDRAGOSA             = 10,
+    TYPE_LICH_KING              = 11,
 };
 
 class MANGOS_DLL_DECL instance_icecrown_citadel : public ScriptedInstance
