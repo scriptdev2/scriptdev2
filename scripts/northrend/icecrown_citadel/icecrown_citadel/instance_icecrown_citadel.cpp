@@ -34,6 +34,17 @@ void instance_icecrown_citadel::Initialize()
     memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
 }
 
+bool instance_icecrown_citadel::IsEncounterInProgress() const
+{
+    for (uint8 i = TYPE_MARROWGAR; i <= TYPE_LICH_KING; ++i)
+    {
+        if (m_auiEncounter[i] == IN_PROGRESS)
+            return true;
+    }
+
+    return false;
+}
+
 void instance_icecrown_citadel::SetData(uint32 uiType, uint32 uiData)
 {
     switch (uiType)

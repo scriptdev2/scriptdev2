@@ -31,6 +31,8 @@ class MANGOS_DLL_DECL instance_icecrown_citadel : public ScriptedInstance
 
         void Initialize();
 
+        bool IsEncounterInProgress() const;
+
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
 
