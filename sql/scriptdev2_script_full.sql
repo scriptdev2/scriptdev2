@@ -2894,11 +2894,11 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1601016,'You shall experience my torment, first-hand!',14055,1,0,0,'anubarak SAY_KILL_1'),
 (-1601017,'You have made your choice.',14056,1,0,0,'anubarak SAY_KILL_2'),
 (-1601018,'Soon, the Master\'s voice will call to you.',14057,1,0,0,'anubarak SAY_KILL_3'),
-(-1601019,'Come forth, my brethren. Feast on their flesh!',14058,1,0,0,'anubarak SAY_SUBMERGE_1'),
-(-1601020,'Auum na-l ak-k-k-k, isshhh.',14059,1,0,0,'anubarak SAY_SUBMERGE_2'),
+(-1601019,'Come forth, my brethren. Feast on their flesh!',14059,1,0,0,'anubarak SAY_SUBMERGE_1'),
+(-1601020,'Auum na-l ak-k-k-k, isshhh.',14058,1,0,0,'anubarak SAY_SUBMERGE_2'),
 (-1601021,'Your armor is useless against my locusts!',14060,1,0,0,'anubarak SAY_LOCUST_1'),
-(-1601022,'The pestilence upon you!',14067,1,0,0,'anubarak SAY_LOCUST_2'),
-(-1601023,'Uunak-hissss tik-k-k-k-k!',14068,1,0,0,'anubarak SAY_LOCUST_3'),
+(-1601022,'The pestilence upon you!',14068,1,0,0,'anubarak SAY_LOCUST_2'),
+(-1601023,'Uunak-hissss tik-k-k-k-k!',14067,1,0,0,'anubarak SAY_LOCUST_3'),
 (-1601024,'Ahhh... RAAAAAGH! Never thought... I would be free of him...',14069,1,0,0,'anubarak SAY_DEATH');
 
 -- -1 602 000 HALLS OF LIGHTNING

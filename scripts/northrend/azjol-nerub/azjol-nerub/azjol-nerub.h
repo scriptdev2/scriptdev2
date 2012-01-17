@@ -14,6 +14,7 @@ enum
     TYPE_ANUBARAK               = 2,
 
     NPC_KRIKTHIR                = 28684,
+    NPC_ANUBARAK                = 29120,
 
     SAY_SEND_GROUP_1            = -1601004,
     SAY_SEND_GROUP_2            = -1601005,
@@ -22,6 +23,8 @@ enum
     NPC_GASHRA                  = 28730,
     NPC_NARJIL                  = 28729,
     NPC_SILTHIK                 = 28731,
+
+    NPC_WORLD_TRIGGER           = 22515,
 
     GO_DOOR_KRIKTHIR            = 192395,
     GO_DOOR_ANUBARAK_1          = 192396,
@@ -34,6 +37,9 @@ enum
 };
 
 static const uint32 aWatchers[] = {NPC_GASHRA, NPC_NARJIL, NPC_SILTHIK};
+
+// Used to sort the summont triggers
+static const int aSortDistance[4] = {-90, 10, 20, 30};
 
 class MANGOS_DLL_DECL instance_azjol_nerub : public ScriptedInstance
 {
@@ -53,6 +59,11 @@ class MANGOS_DLL_DECL instance_azjol_nerub : public ScriptedInstance
 
         bool CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/);
 
+        ObjectGuid GetRandomAssassinTrigger();
+        ObjectGuid GetGuardianTrigger() { return m_guardianSummonTarget; }
+        ObjectGuid GetDarterTrigger() { return m_darterSummonTarget; }
+        ObjectGuid GetAnubTrigger() { return m_anubSummonTarget; }
+
         const char* Save() { return m_strInstData.c_str(); }
         void Load(const char* chrIn);
 
@@ -60,11 +71,17 @@ class MANGOS_DLL_DECL instance_azjol_nerub : public ScriptedInstance
 
     private:
         void DoSendWatcherOrKrikthir();
+        void DoSortWorldTriggers();
 
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strInstData;
 
         ObjectGuid m_playerGuid;
+        ObjectGuid m_darterSummonTarget;
+        ObjectGuid m_guardianSummonTarget;
+        ObjectGuid m_anubSummonTarget;
+        GUIDVector m_vAssassinSummonTargetsVect;
+        GUIDList m_lTriggerGuids;
 
         uint32 m_uiWatcherTimer;
 
