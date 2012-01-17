@@ -142,14 +142,6 @@ struct MANGOS_DLL_DECL boss_mr_smiteAI : public ScriptedAI
         m_creature->SetStandState(UNIT_STAND_STATE_STAND);
         m_uiPhase = PHASE_EQUIP_END;
         m_uiEquipTimer = 1000;
-
-        Unit* pVictim = m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO, 0);
-
-        if (!pVictim)
-        {
-            EnterEvadeMode();
-            return;
-        }
     }
 
     void PhaseEquipEnd()
