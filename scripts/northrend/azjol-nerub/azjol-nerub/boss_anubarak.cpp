@@ -278,6 +278,8 @@ struct MANGOS_DLL_DECL boss_anubarakAI : public ScriptedAI
             else
                 m_uiEmergeTimer -= uiDiff;
         }
+
+        EnterEvadeIfOutOfCombatArea(uiDiff);
     }
 };
 
