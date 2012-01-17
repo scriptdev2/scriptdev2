@@ -22,7 +22,29 @@ SDCategory: Icecrown Citadel
 EndScriptData */
 
 #include "precompiled.h"
+#include "icecrown_citadel.h"
+
+instance_icecrown_citadel::instance_icecrown_citadel(Map* pMap) : ScriptedInstance(pMap)
+{
+    Initialize();
+}
+
+void instance_icecrown_citadel::Initialize()
+{
+    memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
+}
+
+InstanceData* GetInstanceData_instance_icecrown_citadel(Map* pMap)
+{
+    return new instance_icecrown_citadel(pMap);
+}
 
 void AddSC_instance_icecrown_citadel()
 {
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "instance_icecrown_citadel";
+    pNewScript->GetInstanceData = &GetInstanceData_instance_icecrown_citadel;
+    pNewScript->RegisterSelf();
 }
