@@ -24,14 +24,15 @@ EndScriptData */
 #include "precompiled.h"
 #include "hyjalAI.h"
 
-struct sHyjalLocation
+struct HyjalLocation
 {
     eBaseArea m_pBaseArea;
     float m_fX, m_fY, m_fZ;
 };
 
 // Locations for summoning waves
-sHyjalLocation m_aHyjalSpawnLoc[]=
+// Must be even number
+static const HyjalLocation aHyjalSpawnLoc[]=
 {
     {BASE_ALLY,  4979.010f, -1709.134f, 1339.674f},
     {BASE_ALLY,  4969.123f, -1705.904f, 1341.363f},
@@ -44,20 +45,20 @@ sHyjalLocation m_aHyjalSpawnLoc[]=
 };
 
 // used to inform the wave where to move
-sHyjalLocation m_aHyjalWaveMoveTo[]=
+static const HyjalLocation aHyjalWaveMoveTo[]=
 {
     {BASE_ALLY,  5018.654f, -1752.074f, 1322.203f},
     {BASE_HORDE, 5504.569f, -2688.489f, 1479.991f}
 };
 
-struct sHyjalYells
+struct HyjalYells
 {
     uint32   uiCreatureEntry;
     YellType m_pYellType;                                   // Used to determine the type of yell (attack, rally, etc)
     int32    m_iTextId;                                     // The text id to be yelled
 };
 
-sHyjalYells m_aHyjalYell[]=
+static const HyjalYells aHyjalYell[]=
 {
     {NPC_JAINA,  ATTACKED, -1534000},
     {NPC_JAINA,  ATTACKED, -1534001},
@@ -78,6 +79,67 @@ sHyjalYells m_aHyjalYell[]=
     {NPC_THRALL, FAILURE,  -1534015},
     {NPC_THRALL, SUCCESS,  -1534016},
     {NPC_THRALL, DEATH,    -1534017}
+};
+
+struct HyjalWave
+{
+    uint32 m_auiMobEntry[MAX_WAVE_MOB];                     // Stores Creature Entries to be summoned in Waves
+    uint32 m_uiWaveTimer;                                   // The timer before the next wave is summoned
+    bool   m_bIsBoss;                                       // Simply used to inform the wave summoner that the next wave contains a boss to halt all waves after that
+};
+
+// Waves that will be summoned in the Alliance Base
+static const HyjalWave aHyjalWavesAlliance[]=
+{
+    // Rage Winterchill Wave 1-8
+    {{NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, 0, 0, 0, 0, 0, 0, 0, 0}, 120000, false},
+    {{NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_CRYPT, NPC_CRYPT, 0, 0, 0, 0, 0, 0}, 120000, false},
+    {{NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_CRYPT, NPC_CRYPT, NPC_CRYPT, NPC_CRYPT, NPC_CRYPT, NPC_CRYPT, 0, 0, 0, 0, 0, 0}, 120000, false},
+    {{NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_CRYPT, NPC_CRYPT, NPC_CRYPT, NPC_CRYPT, NPC_NECRO, NPC_NECRO, 0, 0, 0, 0, 0, 0}, 120000, false},
+    {{NPC_GHOUL, NPC_GHOUL, NPC_CRYPT, NPC_CRYPT, NPC_CRYPT, NPC_CRYPT, NPC_CRYPT, NPC_CRYPT, NPC_NECRO, NPC_NECRO, NPC_NECRO, NPC_NECRO, 0, 0, 0, 0, 0, 0}, 120000, false},
+    {{NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_ABOMI, NPC_ABOMI, NPC_ABOMI, NPC_ABOMI, NPC_ABOMI, NPC_ABOMI, NPC_ABOMI, 0, 0, 0, 0, 0}, 120000, false},
+    {{NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_NECRO, NPC_NECRO, NPC_NECRO, NPC_NECRO, NPC_ABOMI, NPC_ABOMI, NPC_ABOMI, NPC_ABOMI, 0, 0, 0, 0, 0, 0}, 120000, false},
+    {{NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_CRYPT, NPC_CRYPT, NPC_CRYPT, NPC_CRYPT, NPC_ABOMI, NPC_ABOMI, NPC_NECRO, NPC_NECRO, 0, 0, 0, 0}, 180000, false},
+    // All 8 Waves are summoned, summon Rage Winterchill, next few waves are for Anetheron
+    {{NPC_WINTERCHILL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 0, true},
+    // Anetheron Wave 1-8
+    {{NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, 0, 0, 0, 0, 0, 0, 0, 0}, 120000, false},
+    {{NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_ABOMI, NPC_ABOMI, NPC_ABOMI, NPC_ABOMI, 0, 0, 0, 0, 0, 0}, 120000, false},
+    {{NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_CRYPT, NPC_CRYPT, NPC_CRYPT, NPC_CRYPT, NPC_NECRO, NPC_NECRO, NPC_NECRO, NPC_NECRO, 0, 0, 0, 0, 0, 0}, 120000, false},
+    {{NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_CRYPT, NPC_CRYPT, NPC_CRYPT, NPC_CRYPT, NPC_BANSH, NPC_BANSH, NPC_BANSH, NPC_BANSH, 0, 0, 0, 0, 0, 0}, 120000, false},
+    {{NPC_CRYPT, NPC_CRYPT, NPC_CRYPT, NPC_CRYPT, NPC_CRYPT, NPC_CRYPT, NPC_NECRO, NPC_NECRO, NPC_BANSH, NPC_BANSH, NPC_BANSH, NPC_BANSH, 0, 0, 0, 0, 0, 0}, 120000, false},
+    {{NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_ABOMI, NPC_ABOMI, NPC_NECRO, NPC_NECRO, NPC_NECRO, NPC_NECRO, 0, 0, 0, 0, 0, 0}, 120000, false},
+    {{NPC_CRYPT, NPC_CRYPT, NPC_CRYPT, NPC_CRYPT, NPC_BANSH, NPC_BANSH, NPC_BANSH, NPC_BANSH, NPC_ABOMI, NPC_ABOMI, NPC_ABOMI, NPC_ABOMI, 0, 0, 0, 0, 0, 0}, 120000, false},
+    {{NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_ABOMI, NPC_ABOMI, NPC_ABOMI, NPC_ABOMI, NPC_CRYPT, NPC_CRYPT, NPC_CRYPT, NPC_BANSH, NPC_BANSH, NPC_NECRO, NPC_NECRO, 0, 0, 0, 0}, 180000, false},
+    // All 8 Waves are summoned, summon Anatheron
+    {{NPC_ANETHERON, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 0, true}
+};
+
+// Waves that are summoned in the Horde base
+static const HyjalWave aHyjalWavesHorde[]=
+{
+    // Kaz'Rogal Wave 1-8
+    {{NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_ABOMI, NPC_ABOMI, NPC_ABOMI, NPC_ABOMI, NPC_BANSH, NPC_BANSH, NPC_NECRO, NPC_NECRO, 0, 0, 0, 0, 0, 0}, 120000, false},
+    {{NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GARGO, NPC_GARGO, NPC_GARGO, NPC_GARGO, NPC_GARGO, NPC_GARGO, NPC_GARGO, NPC_GARGO, NPC_GARGO, NPC_GARGO, 0, 0, 0, 0}, 120000, false},
+    {{NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_CRYPT, NPC_CRYPT, NPC_CRYPT, NPC_CRYPT, NPC_CRYPT, NPC_CRYPT, NPC_NECRO, NPC_NECRO, NPC_NECRO, NPC_NECRO, 0, 0, 0, 0}, 120000, false},
+    {{NPC_CRYPT, NPC_CRYPT, NPC_CRYPT, NPC_CRYPT, NPC_CRYPT, NPC_CRYPT, NPC_GARGO, NPC_GARGO, NPC_GARGO, NPC_GARGO, NPC_GARGO, NPC_GARGO, NPC_NECRO, NPC_NECRO, 0, 0, 0, 0}, 120000, false},
+    {{NPC_GHOUL, NPC_GHOUL, NPC_CRYPT, NPC_CRYPT, NPC_CRYPT, NPC_CRYPT, NPC_CRYPT, NPC_CRYPT, NPC_NECRO, NPC_NECRO, NPC_NECRO, NPC_NECRO, 0, 0, 0, 0, 0, 0}, 120000, false},
+    {{NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_ABOMI, NPC_ABOMI, NPC_ABOMI, NPC_ABOMI, NPC_ABOMI, NPC_ABOMI, NPC_NECRO, NPC_NECRO, NPC_NECRO, NPC_FROST, 0, 0}, 120000, false},
+    {{NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_ABOMI, NPC_ABOMI, NPC_ABOMI, NPC_ABOMI, NPC_ABOMI, NPC_ABOMI, NPC_NECRO, NPC_NECRO, NPC_NECRO, NPC_FROST, 0, 0}, 120000, false},
+    {{NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_CRYPT, NPC_CRYPT, NPC_ABOMI, NPC_ABOMI, NPC_ABOMI, NPC_ABOMI, NPC_ABOMI, NPC_ABOMI, NPC_NECRO, NPC_NECRO, NPC_BANSH, NPC_BANSH}, 180000, false},
+    // All 8 Waves are summoned, summon Kaz'Rogal, next few waves are for Azgalor
+    {{NPC_KAZROGAL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 0, true},
+    // Azgalor Wave 1-8
+    {{NPC_ABOMI, NPC_ABOMI, NPC_ABOMI, NPC_ABOMI, NPC_ABOMI, NPC_ABOMI, NPC_NECRO, NPC_NECRO, NPC_NECRO, NPC_NECRO, NPC_NECRO, NPC_NECRO, 0, 0, 0, 0, 0, 0}, 120000, false},
+    {{NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_FROST, NPC_GARGO, NPC_GARGO, NPC_GARGO, NPC_GARGO, NPC_GARGO, NPC_GARGO, NPC_GARGO, NPC_GARGO, 0, 0, 0, 0}, 120000, false},
+    {{NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GIANT, NPC_GIANT, NPC_GIANT, NPC_GIANT, NPC_GIANT, NPC_GIANT, NPC_GIANT, NPC_GIANT, 0, 0, 0, 0}, 120000, false},
+    {{NPC_GIANT, NPC_GIANT, NPC_GIANT, NPC_GIANT, NPC_GIANT, NPC_GIANT, NPC_GIANT, NPC_GIANT, NPC_STALK, NPC_STALK, NPC_STALK, NPC_STALK, NPC_STALK, NPC_STALK, 0, 0, 0, 0}, 120000, false},
+    {{NPC_STALK, NPC_STALK, NPC_STALK, NPC_STALK, NPC_STALK, NPC_STALK, NPC_ABOMI, NPC_ABOMI, NPC_ABOMI, NPC_ABOMI, NPC_NECRO, NPC_NECRO, NPC_NECRO, NPC_NECRO, 0, 0, 0, 0}, 120000, false},
+    {{NPC_NECRO, NPC_NECRO, NPC_NECRO, NPC_NECRO, NPC_NECRO, NPC_NECRO, NPC_NECRO, NPC_NECRO, NPC_BANSH, NPC_BANSH, NPC_BANSH, NPC_BANSH, NPC_BANSH, NPC_BANSH, 0, 0, 0, 0}, 120000, false},
+    {{NPC_GHOUL, NPC_GHOUL, NPC_CRYPT, NPC_CRYPT, NPC_STALK, NPC_STALK, NPC_GIANT, NPC_GIANT, NPC_GIANT, NPC_GIANT, NPC_GIANT, NPC_GIANT, 0, 0, 0, 0, 0, 0}, 120000, false},
+    {{NPC_CRYPT, NPC_CRYPT, NPC_CRYPT, NPC_CRYPT, NPC_STALK, NPC_STALK, NPC_ABOMI, NPC_ABOMI, NPC_ABOMI, NPC_ABOMI, NPC_BANSH, NPC_BANSH, NPC_BANSH, NPC_BANSH, NPC_NECRO, NPC_NECRO, 0, 0}, 180000, false},
+    // All 8 Waves are summoned, summon Azgalor
+    {{NPC_AZGALOR, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 0, true}
 };
 
 void hyjalAI::Reset()
@@ -165,23 +227,23 @@ void hyjalAI::Aggro(Unit *who)
 
 void hyjalAI::SpawnCreatureForWave(uint32 uiMobEntry)
 {
-    sHyjalLocation* pSpawn = NULL;
+    HyjalLocation const* pSpawn = NULL;
 
-    uint32 uiMaxCount = sizeof(m_aHyjalSpawnLoc)/sizeof(sHyjalLocation);
+    uint32 uiMaxCount = countof(aHyjalSpawnLoc);
     uint32 uiRandId = urand(1, uiMaxCount/2);               //unsafe, if array becomes uneven.
 
     uint32 uiJ = 0;
 
     for (uint32 i = 0; i < uiMaxCount; ++i)
     {
-        if (m_aHyjalSpawnLoc[i].m_pBaseArea != (eBaseArea)m_uiBase)
+        if (aHyjalSpawnLoc[i].m_pBaseArea != (eBaseArea)m_uiBase)
             continue;
 
         ++uiJ;
 
         if (uiJ == uiRandId)
         {
-            pSpawn = &m_aHyjalSpawnLoc[i];
+            pSpawn = &aHyjalSpawnLoc[i];
             break;
         }
     }
@@ -199,16 +261,14 @@ void hyjalAI::JustSummoned(Creature* pSummoned)
     // Increment Enemy Count to be used in World States and instance script
     ++m_uiEnemyCount;
 
-    sHyjalLocation* pMove = NULL;
+    HyjalLocation const* pMove = NULL;
 
-    uint32 uiMaxCount = sizeof(m_aHyjalWaveMoveTo)/sizeof(sHyjalLocation);
-
-    for (uint32 i = 0; i < uiMaxCount; ++i)
+    for (uint32 i = 0; i < countof(aHyjalWaveMoveTo); ++i)
     {
-        if (m_aHyjalWaveMoveTo[i].m_pBaseArea != (eBaseArea)m_uiBase)
+        if (aHyjalWaveMoveTo[i].m_pBaseArea != (eBaseArea)m_uiBase)
             continue;
 
-        pMove = &m_aHyjalWaveMoveTo[i];
+        pMove = &aHyjalWaveMoveTo[i];
         break;
     }
 
@@ -244,7 +304,7 @@ void hyjalAI::SummonNextWave()
     if (!m_pInstance)
         return;
 
-    sHyjalWave* pWaveData = m_uiBase ? &m_aHyjalWavesHorde[m_uiWaveCount] : &m_aHyjalWavesAlliance[m_uiWaveCount];
+    HyjalWave const* pWaveData = m_uiBase ? &aHyjalWavesHorde[m_uiWaveCount] : &aHyjalWavesAlliance[m_uiWaveCount];
 
     if (!pWaveData)
     {
@@ -321,14 +381,13 @@ void hyjalAI::StartEvent()
 
 void hyjalAI::DoTalk(YellType pYellType)
 {
-    sHyjalYells* pYell = NULL;
+    HyjalYells const* pYell = NULL;
 
-    uint32 uiMaxCount = sizeof(m_aHyjalYell)/sizeof(sHyjalYells);
     bool bGetNext = false;
 
-    for (uint32 i = 0; i < uiMaxCount; ++i)
+    for (uint32 i = 0; i < countof(aHyjalYell); ++i)
     {
-        if (m_aHyjalYell[i].uiCreatureEntry == m_creature->GetEntry() && m_aHyjalYell[i].m_pYellType == pYellType)
+        if (aHyjalYell[i].uiCreatureEntry == m_creature->GetEntry() && aHyjalYell[i].m_pYellType == pYellType)
         {
             //this would not be safe unless we knew these had two entries in m_aYell
             if (pYellType == ATTACKED || pYellType== RALLY)
@@ -340,7 +399,7 @@ void hyjalAI::DoTalk(YellType pYellType)
                 }
             }
 
-            pYell = &m_aHyjalYell[i];
+            pYell = &aHyjalYell[i];
             break;
         }
     }
