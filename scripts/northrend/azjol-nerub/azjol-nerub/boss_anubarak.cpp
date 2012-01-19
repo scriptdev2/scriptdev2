@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Anubarak
-SD%Complete: 70%
-SDComment: Summoned creatures movement NYI;
+SD%Complete: 80%
+SDComment: Summoned creatures movement may need some adjustments - may be solved with movement maps
 SDCategory: Azjol'Nerub
 EndScriptData */
 
@@ -55,7 +55,11 @@ enum
     SPELL_SUMMON_VENOMANCER         = 53615,        // summons 29217
     SPELL_SUMMON_DARTER             = 53599,        // summons 29213
 
-    //NPC_IMPALE_TARGET             = 29184,        // scripted in ACID
+    NPC_ANUBAR_DARTER               = 29213,
+    NPC_ANUBAR_ASSASSIN             = 29214,
+    NPC_ANUBAR_GUARDIAN             = 29216,
+    NPC_ANUBAR_VENOMANCER           = 29217,
+    NPC_IMPALE_TARGET               = 29184,
 
     PHASE_GROUND                    = 1,
     PHASE_SUBMERGED                 = 2
@@ -150,9 +154,31 @@ struct MANGOS_DLL_DECL boss_anubarakAI : public ScriptedAI
 
     void JustSummoned(Creature* pSummoned)
     {
-        // Need to set the impale target in combat in order to be handled by acid
-        if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-            pSummoned->AI()->AttackStart(pTarget);
+        if (!m_pInstance)
+            return;
+
+        switch (pSummoned->GetEntry())
+        {
+            case NPC_ANUBAR_GUARDIAN:
+            case NPC_ANUBAR_VENOMANCER:
+                pSummoned->SetWalk(false);
+                if (Creature* pTrigger = m_creature->GetMap()->GetCreature(m_pInstance->GetAnubTrigger()))
+                    pSummoned->GetMotionMaster()->MovePoint(0, pTrigger->GetPositionX(), pTrigger->GetPositionY(), pTrigger->GetPositionZ());
+                break;
+            case NPC_ANUBAR_DARTER:
+            case NPC_ANUBAR_ASSASSIN:
+                float fX, fY, fZ;
+                if (Creature* pTrigger = m_creature->GetMap()->GetCreature(m_pInstance->GetAnubTrigger()))
+                    m_creature->GetRandomPoint(pTrigger->GetPositionX(), pTrigger->GetPositionY(), pTrigger->GetPositionZ(), 15.0f, fX, fY, fZ);
+
+                pSummoned->SetWalk(false);
+                pSummoned->GetMotionMaster()->MovePoint(0, fX, fY, fZ);
+                break;
+            case NPC_IMPALE_TARGET:
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                    pSummoned->AI()->AttackStart(pTarget);
+                break;
+        }
     }
 
     void UpdateAI(const uint32 uiDiff)
