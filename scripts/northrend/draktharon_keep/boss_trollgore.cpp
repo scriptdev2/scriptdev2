@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Trollgore
-SD%Complete: 70%
-SDComment: Achievement NYI;
+SD%Complete: 80%
+SDComment: Some details related to the summoned creatures need more adjustments
 SDCategory: Drak'Tharon Keep
 EndScriptData */
 
@@ -35,14 +35,18 @@ enum
     SPELL_CRUSH                     = 49639,
     SPELL_INFECTED_WOUND            = 49637,
     SPELL_CORPSE_EXPLODE            = 49555,
-    SPELL_CORPSE_EXPLODE_H          = 59087,
+    SPELL_CORPSE_EXPLODE_H          = 59807,
     SPELL_CONSUME                   = 49380,
     SPELL_CONSUME_H                 = 59803,
+    SPELL_CONSUME_BUFF              = 49381,            // used to measure the achiev
+    SPELL_CONSUME_BUFF_H            = 59805,
 
     SPELL_SUMMON_INVADER_1          = 49456,            // summon 27709
     SPELL_SUMMON_INVADER_2          = 49457,            // summon 27753
     //SPELL_SUMMON_INVADER_3        = 49458,            // summon 27754
     SPELL_INVADER_TAUNT             = 49405,            // triggers 49406
+
+    MAX_CONSOME_STACKS              = 10,
 };
 
 /*######
@@ -61,6 +65,8 @@ struct MANGOS_DLL_DECL boss_trollgoreAI : public ScriptedAI
     instance_draktharon_keep* m_pInstance;
     bool m_bIsRegularMode;
 
+    uint8 m_uiConsumeStacks;
+
     uint32 m_uiConsumeTimer;
     uint32 m_uiCrushTimer;
     uint32 m_uiInfectedWoundTimer;
@@ -76,6 +82,7 @@ struct MANGOS_DLL_DECL boss_trollgoreAI : public ScriptedAI
         m_uiCrushTimer          = 10000;
         m_uiInfectedWoundTimer  = 5000;
         m_uiWaveTimer           = 0;
+        m_uiConsumeStacks       = 0;
     }
 
     void Aggro(Unit* pWho)
@@ -107,6 +114,21 @@ struct MANGOS_DLL_DECL boss_trollgoreAI : public ScriptedAI
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_TROLLGORE, FAIL);
+    }
+
+    void SpellHit(Unit* pTarget, const SpellEntry* pSpell)
+    {
+        if (pSpell->Id == SPELL_CONSUME_BUFF || pSpell->Id == SPELL_CONSUME_BUFF_H)
+        {
+            ++m_uiConsumeStacks;
+
+            // if the boss has 10 stacks then set the achiev to fail
+            if (m_uiConsumeStacks == MAX_CONSOME_STACKS)
+            {
+                if (m_pInstance)
+                    m_pInstance->SetData(TYPE_TROLLGORE, SPECIAL);
+            }
+        }
     }
 
     void JustSummoned(Creature* pSummoned)
