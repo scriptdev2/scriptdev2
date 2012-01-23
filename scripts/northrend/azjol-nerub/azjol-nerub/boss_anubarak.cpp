@@ -167,12 +167,14 @@ struct MANGOS_DLL_DECL boss_anubarakAI : public ScriptedAI
                 break;
             case NPC_ANUBAR_DARTER:
             case NPC_ANUBAR_ASSASSIN:
-                float fX, fY, fZ;
                 if (Creature* pTrigger = m_creature->GetMap()->GetCreature(m_pInstance->GetAnubTrigger()))
+                {
+                    float fX, fY, fZ;
                     m_creature->GetRandomPoint(pTrigger->GetPositionX(), pTrigger->GetPositionY(), pTrigger->GetPositionZ(), 15.0f, fX, fY, fZ);
 
-                pSummoned->SetWalk(false);
-                pSummoned->GetMotionMaster()->MovePoint(0, fX, fY, fZ);
+                    pSummoned->SetWalk(false);
+                    pSummoned->GetMotionMaster()->MovePoint(0, fX, fY, fZ);
+                }
                 break;
             case NPC_IMPALE_TARGET:
                 if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
