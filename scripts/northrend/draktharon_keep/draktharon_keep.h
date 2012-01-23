@@ -20,6 +20,7 @@ enum
     // Adds of King Dred Encounter - deaths counted for achievement
     NPC_DRAKKARI_GUTRIPPER          = 26641,
     NPC_DRAKKARI_SCYTHECLAW         = 26628,
+    NPC_WORLD_TRIGGER               = 22515,
 
     // Novos Encounter
     SPELL_BEAM_CHANNEL              = 52106,
@@ -69,6 +70,9 @@ class MANGOS_DLL_DECL instance_draktharon_keep : public ScriptedInstance
         void OnCreatureCreate(Creature* pCreature);
         void OnObjectCreate(GameObject* pGo);
 
+        void GetTrollgoreOutsideTriggers(GUIDVector& vTriggers) { vTriggers = m_vTriggerGuids; }
+        ObjectGuid GetTrollgoreCornerTrigger() { return m_trollgoreCornerTriggerGuid; }
+
         bool CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/);
 
         const char* Save() { return m_strInstData.c_str(); }
@@ -89,11 +93,13 @@ class MANGOS_DLL_DECL instance_draktharon_keep : public ScriptedInstance
         bool m_bTrollgoreConsume;
 
         ObjectGuid m_novosChannelGuid;
+        ObjectGuid m_trollgoreCornerTriggerGuid;
 
         NovosCrystalInfo m_aNovosCrystalInfo[MAX_CRYSTALS];
 
         GUIDVector m_vSummonDummyGuids;
         GUIDList m_lNovosDummyGuids;
+        GUIDVector m_vTriggerGuids;
 };
 
 #endif

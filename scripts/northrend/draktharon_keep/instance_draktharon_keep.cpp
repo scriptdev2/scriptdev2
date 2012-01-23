@@ -68,6 +68,12 @@ void instance_draktharon_keep::OnCreatureCreate(Creature* pCreature)
         case NPC_CRYSTAL_CHANNEL_TARGET:
             m_lNovosDummyGuids.push_back(pCreature->GetObjectGuid());
             break;
+        case NPC_WORLD_TRIGGER:
+            if (pCreature->GetPositionZ() > 30.0f)
+                m_vTriggerGuids.push_back(pCreature->GetObjectGuid());
+            else
+                m_trollgoreCornerTriggerGuid = pCreature->GetObjectGuid();
+            break;
     }
 }
 
