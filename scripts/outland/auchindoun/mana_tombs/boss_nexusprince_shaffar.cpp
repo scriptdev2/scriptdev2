@@ -58,24 +58,21 @@ struct MANGOS_DLL_DECL boss_nexusprince_shaffarAI : public ScriptedAI
         Reset();
     }
 
-    uint32 m_uiBlink_Timer;
-    uint32 m_uiBeacon_Timer;
-    uint32 m_uiFireBall_Timer;
-    uint32 m_uiFrostbolt_Timer;
-    uint32 m_uiFrostNova_Timer;
+    uint32 m_uiBlinkTimer;
+    uint32 m_uiBeaconTimer;
+    uint32 m_uiFireBallTimer;
+    uint32 m_uiFrostboltTimer;
+    uint32 m_uiFrostNovaTimer;
 
     bool m_bHasTaunted;
-    bool m_bCanBlink;
 
     void Reset()
     {
-        m_uiBlink_Timer = 1500;
-        m_uiBeacon_Timer = 10000;
-        m_uiFireBall_Timer = 8000;
-        m_uiFrostbolt_Timer = 4000;
-        m_uiFrostNova_Timer = 15000;
-
-        m_bCanBlink = false;
+        m_uiBlinkTimer      = 30000;
+        m_uiBeaconTimer     = 10000;
+        m_uiFireBallTimer   = 8000;
+        m_uiFrostboltTimer  = 4000;
+        m_uiFrostNovaTimer  = 15000;
     }
 
     void MoveInLineOfSight(Unit* pWho)
@@ -103,7 +100,7 @@ struct MANGOS_DLL_DECL boss_nexusprince_shaffarAI : public ScriptedAI
     {
         if (pSummoned->GetEntry() == NPC_BEACON)
         {
-            pSummoned->CastSpell(pSummoned,SPELL_ETHEREAL_BEACON_VISUAL,false);
+            pSummoned->CastSpell(pSummoned, SPELL_ETHEREAL_BEACON_VISUAL, false);
 
             if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
                 pSummoned->AI()->AttackStart(pTarget);
@@ -125,56 +122,57 @@ struct MANGOS_DLL_DECL boss_nexusprince_shaffarAI : public ScriptedAI
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (m_uiFrostNova_Timer < uiDiff)
+        if (m_uiFrostNovaTimer < uiDiff)
         {
-            if (m_creature->IsNonMeleeSpellCasted(false))
-                m_creature->InterruptNonMeleeSpells(true);
+            if (DoCastSpellIfCan(m_creature, SPELL_FROSTNOVA) == CAST_OK)
+                m_uiFrostNovaTimer = urand(17500, 25000);
+        }
+        else
+            m_uiFrostNovaTimer -= uiDiff;
 
-            DoCastSpellIfCan(m_creature,SPELL_FROSTNOVA);
-            m_uiFrostNova_Timer = urand(17500, 25000);
-            m_bCanBlink = true;
-        }else m_uiFrostNova_Timer -= uiDiff;
-
-        if (m_uiFrostbolt_Timer < uiDiff)
+        if (m_uiFrostboltTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_FROSTBOLT);
-            m_uiFrostbolt_Timer = urand(4500, 6000);
-        }else m_uiFrostbolt_Timer -= uiDiff;
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_FROSTBOLT) == CAST_OK)
+                m_uiFrostboltTimer = urand(4500, 6000);
+        }
+        else
+            m_uiFrostboltTimer -= uiDiff;
 
-        if (m_uiFireBall_Timer < uiDiff)
+        if (m_uiFireBallTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_FIREBALL);
-            m_uiFireBall_Timer = urand(4500, 6000);
-        }else m_uiFireBall_Timer -= uiDiff;
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_FIREBALL) == CAST_OK)
+                m_uiFireBallTimer = urand(4500, 6000);
+        }
+        else
+            m_uiFireBallTimer -= uiDiff;
 
-        if (m_bCanBlink)
+        if (m_uiBlinkTimer <= uiDiff)
         {
-            if (m_uiBlink_Timer < uiDiff)
+            if (DoCastSpellIfCan(m_creature, SPELL_BLINK) == CAST_OK)
             {
-                if (m_creature->IsNonMeleeSpellCasted(false))
-                    m_creature->InterruptNonMeleeSpells(true);
-
                 //expire movement, will prevent from running right back to victim after cast
                 //(but should MoveChase be used again at a certain time or should he not move?)
                 if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() == CHASE_MOTION_TYPE)
                     m_creature->GetMotionMaster()->MovementExpired();
 
-                DoCastSpellIfCan(m_creature,SPELL_BLINK);
-
-                m_uiBlink_Timer = urand(1000, 2500);
-                m_bCanBlink = false;
-            }else m_uiBlink_Timer -= uiDiff;
+                m_uiBlinkTimer = urand(25000, 30000);
+            }
         }
+        else
+            m_uiBlinkTimer -= uiDiff;
 
-        if (m_uiBeacon_Timer < uiDiff)
+        if (m_uiBeaconTimer < uiDiff)
         {
-            if (!urand(0,3))
-                DoScriptText(SAY_SUMMON, m_creature);
+            if (DoCastSpellIfCan(m_creature, SPELL_ETHEREAL_BEACON) == CAST_OK)
+            {
+                if (!urand(0,3))
+                    DoScriptText(SAY_SUMMON, m_creature);
 
-            DoCastSpellIfCan(m_creature, SPELL_ETHEREAL_BEACON, CAST_TRIGGERED);
-
-            m_uiBeacon_Timer = 10000;
-        }else m_uiBeacon_Timer -= uiDiff;
+                m_uiBeaconTimer = 10000;
+            }
+        }
+        else
+            m_uiBeaconTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
@@ -201,13 +199,13 @@ struct MANGOS_DLL_DECL mob_ethereal_beaconAI : public ScriptedAI
 
     bool m_bIsRegularMode;
 
-    uint32 m_uiApprentice_Timer;
-    uint32 m_uiArcaneBolt_Timer;
+    uint32 m_uiApprenticeTimer;
+    uint32 m_uiArcaneBoltTimer;
 
     void Reset()
     {
-        m_uiApprentice_Timer = m_bIsRegularMode ? 20000 : 10000;
-        m_uiArcaneBolt_Timer = 1000;
+        m_uiApprenticeTimer = m_bIsRegularMode ? 20000 : 10000;
+        m_uiArcaneBoltTimer = 1000;
     }
 
     void JustSummoned(Creature* pSummoned)
@@ -221,23 +219,28 @@ struct MANGOS_DLL_DECL mob_ethereal_beaconAI : public ScriptedAI
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (m_uiArcaneBolt_Timer < uiDiff)
+        if (m_uiArcaneBoltTimer < uiDiff)
         {
             DoCastSpellIfCan(m_creature->getVictim(), SPELL_ARCANE_BOLT);
-            m_uiArcaneBolt_Timer = urand(2000, 4500);
-        }else m_uiArcaneBolt_Timer -= uiDiff;
+            m_uiArcaneBoltTimer = urand(2000, 4500);
+        }
+        else
+            m_uiArcaneBoltTimer -= uiDiff;
 
-        if (m_uiApprentice_Timer < uiDiff)
+        if (m_uiApprenticeTimer)
         {
-            if (m_creature->IsNonMeleeSpellCasted(false))
-                m_creature->InterruptNonMeleeSpells(true);
-
-            m_creature->CastSpell(m_creature, SPELL_ETHEREAL_APPRENTICE, true);
-
-            m_creature->ForcedDespawn();
-            return;
-
-        }else m_uiApprentice_Timer -= uiDiff;
+            if (m_uiApprenticeTimer <= uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_ETHEREAL_APPRENTICE) == CAST_OK)
+                {
+                    // despawn in 2 sec because of the spell visual
+                    m_creature->ForcedDespawn(2000);
+                    m_uiApprenticeTimer = 0;
+                }
+            }
+            else
+                m_uiApprenticeTimer -= uiDiff;
+        }
 
         //should they do meele?
         DoMeleeAttackIfReady();
