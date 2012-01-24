@@ -16,13 +16,60 @@
 
 /* ScriptData
 SDName: boss_shirrak
-SD%Complete: 0
-SDComment: Placeholder
+SD%Complete: 20
+SDComment: Basic script only
 SDCategory: Auchindoun, Auchenai Crypts
 EndScriptData */
 
 #include "precompiled.h"
 
+enum
+{
+    EMOTE_FOCUS                     = -1558010,
+
+    SPELL_CARNIVOROUS_BITE          = 36383,
+    SPELL_CARNIVOROUS_BITE_H        = 39382,
+    SPELL_INHIBIT_MAGIC             = 32264,
+    SPELL_ATTRACT_MAGIC             = 32265,
+
+    SPELL_FOCUS_TARGET_VISUAL       = 32286,
+    NPC_FOCUS_FIRE                  = 18374
+};
+
+struct MANGOS_DLL_DECL boss_shirrakAI : public ScriptedAI
+{
+    boss_shirrakAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
+        Reset();
+    }
+
+    bool m_bIsRegularMode;
+
+    void Reset()
+    {
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_boss_shirrak(Creature* pCreature)
+{
+    return new boss_shirrakAI(pCreature);
+}
+
 void AddSC_boss_shirrak()
 {
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_shirrak";
+    pNewScript->GetAI = &GetAI_boss_shirrak;
+    pNewScript->RegisterSelf();
 }

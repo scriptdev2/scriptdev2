@@ -194,6 +194,7 @@ UPDATE creature_template SET ScriptName='mob_ethereal_beacon' WHERE entry=18431;
 UPDATE creature_template SET ScriptName='boss_exarch_maladaar' WHERE entry=18373;
 UPDATE creature_template SET ScriptName='mob_avatar_of_martyred' WHERE entry=18478;
 UPDATE creature_template SET ScriptName='mob_stolen_soul' WHERE entry=18441;
+UPDATE creature_template SET ScriptName='boss_shirrak' WHERE entry=18371;
 
 /* SETHEKK HALLS */
 UPDATE instance_template SET ScriptName='instance_sethekk_halls' WHERE map=556;
