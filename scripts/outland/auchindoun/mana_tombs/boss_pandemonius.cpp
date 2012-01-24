@@ -23,21 +23,23 @@ EndScriptData */
 
 #include "precompiled.h"
 
-#define SAY_AGGRO_1                     -1557008
-#define SAY_AGGRO_2                     -1557009
-#define SAY_AGGRO_3                     -1557010
+enum
+{
+    SAY_AGGRO_1                     = -1557008,
+    SAY_AGGRO_2                     = -1557009,
+    SAY_AGGRO_3                     = -1557010,
+    SAY_KILL_1                      = -1557011,
+    SAY_KILL_2                      = -1557012,
+    SAY_DEATH                       = -1557013,
+    EMOTE_DARK_SHELL                = -1557014,
 
-#define SAY_KILL_1                      -1557011
-#define SAY_KILL_2                      -1557012
+    SPELL_VOID_BLAST                = 32325,
+    SPELL_VOID_BLAST_H              = 38760,
+    SPELL_DARK_SHELL                = 32358,
+    SPELL_DARK_SHELL_H              = 38759,
 
-#define SAY_DEATH                       -1557013
-
-#define EMOTE_DARK_SHELL                -1557014
-
-#define SPELL_VOID_BLAST                32325
-#define SPELL_VOID_BLAST_H              38760
-#define SPELL_DARK_SHELL                32358
-#define SPELL_DARK_SHELL_H              38759
+    MAX_VOID_BLASTS                 = 5,
+};
 
 struct MANGOS_DLL_DECL boss_pandemoniusAI : public ScriptedAI
 {
@@ -48,28 +50,29 @@ struct MANGOS_DLL_DECL boss_pandemoniusAI : public ScriptedAI
     }
 
     bool m_bIsRegularMode;
-    uint32 VoidBlast_Timer;
-    uint32 DarkShell_Timer;
-    uint32 VoidBlast_Counter;
+
+    uint32 m_uiVoidBlastTimer;
+    uint32 m_uiDarkShellTimer;
+    uint8 m_uiVoidBlastCounter;
 
     void Reset()
     {
-        VoidBlast_Timer = urand(8000, 23000);
-        DarkShell_Timer = 20000;
-        VoidBlast_Counter = 0;
+        m_uiVoidBlastTimer   = urand(8000, 23000);
+        m_uiDarkShellTimer   = 20000;
+        m_uiVoidBlastCounter = 0;
     }
 
-    void JustDied(Unit* Killer)
+    void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DEATH, m_creature);
     }
 
-    void KilledUnit(Unit* victim)
+    void KilledUnit(Unit* pVictim)
     {
         DoScriptText(urand(0, 1) ? SAY_KILL_1 : SAY_KILL_2, m_creature);
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
         switch(urand(0, 2))
         {
@@ -77,42 +80,47 @@ struct MANGOS_DLL_DECL boss_pandemoniusAI : public ScriptedAI
             case 1: DoScriptText(SAY_AGGRO_2, m_creature); break;
             case 2: DoScriptText(SAY_AGGRO_3, m_creature); break;
         }
-
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (VoidBlast_Timer < diff)
+        if (m_uiVoidBlastTimer < uiDiff)
         {
-            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-            {
-                DoCastSpellIfCan(target, m_bIsRegularMode ? SPELL_VOID_BLAST : SPELL_VOID_BLAST_H);
-                VoidBlast_Timer = 500;
-                ++VoidBlast_Counter;
-            }
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_VOID_BLAST : SPELL_VOID_BLAST_H);
 
-            if (VoidBlast_Counter == 5)
+            // reset timer and counter when counter has reached the max limit
+            if (m_uiVoidBlastCounter == MAX_VOID_BLASTS)
             {
-                VoidBlast_Timer = urand(15000, 25000);
-                VoidBlast_Counter = 0;
+                m_uiVoidBlastTimer = urand(15000, 25000);
+                m_uiVoidBlastCounter = 0;
             }
-        }else VoidBlast_Timer -= diff;
+            // cast the void blasts in a row until we reach the max limit
+            else
+            {
+                m_uiVoidBlastTimer = 500;
+                ++m_uiVoidBlastCounter;
+            }
+        }
+        else
+            m_uiVoidBlastTimer -= uiDiff;
 
-        if (!VoidBlast_Counter)
+        // use the darkshell only when the boss isn't casting the void blasts
+        if (!m_uiVoidBlastCounter)
         {
-            if (DarkShell_Timer < diff)
+            if (m_uiDarkShellTimer < uiDiff)
             {
-                if (m_creature->IsNonMeleeSpellCasted(false))
-                    m_creature->InterruptNonMeleeSpells(true);
-
-                DoScriptText(EMOTE_DARK_SHELL, m_creature);
-
-                DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_DARK_SHELL : SPELL_DARK_SHELL_H);
-                DarkShell_Timer = 20000;
-            }else DarkShell_Timer -= diff;
+                if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_DARK_SHELL : SPELL_DARK_SHELL_H) == CAST_OK)
+                {
+                    DoScriptText(EMOTE_DARK_SHELL, m_creature);
+                    m_uiDarkShellTimer = 20000;
+                }
+            }
+            else
+                m_uiDarkShellTimer -= uiDiff;
         }
 
         DoMeleeAttackIfReady();
