@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Grandmaster_Vorpil
-SD%Complete: 75
-SDComment: Despawn all summoned on death not implemented. Void Traveler effects not implemented.
+SD%Complete: 90
+SDComment: Timers may need adjustments
 SDCategory: Auchindoun, Shadow Labyrinth
 EndScriptData */
 
@@ -75,6 +75,8 @@ static const SummonLocations aVorpilLocation[MAX_PORTALS] =
 
 static const float aVorpilTeleportLoc[3] = {-253.06f, -264.02f, 17.08f};
 
+static const uint32 aTravelerSummonSpells[5] = {SPELL_SUMMON_VOIDWALKER_A, SPELL_SUMMON_VOIDWALKER_B, SPELL_SUMMON_VOIDWALKER_C, SPELL_SUMMON_VOIDWALKER_D, SPELL_SUMMON_VOIDWALKER_E};
+
 struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
 {
     boss_grandmaster_vorpilAI(Creature* pCreature) : ScriptedAI(pCreature)
@@ -100,7 +102,7 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
         m_uiShadowBoltVolleyTimer   = urand(7000, 14000);
         m_uiDrawShadowsTimer        = 40000;
         m_uiRainOfFireTimer         = 0;
-        m_uiVoidTravelerTimer       = 20000;
+        m_uiVoidTravelerTimer       = 5000;
         m_uiBanishTimer             = 25000;
     }
 
@@ -224,18 +226,11 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
 
         if (m_uiVoidTravelerTimer < uiDiff)
         {
-            DoScriptText(SAY_HELP, m_creature);
-
-            switch(urand(0, 4))
+            if (DoCastSpellIfCan(m_creature, aTravelerSummonSpells[urand(0, 4)]) == CAST_OK)
             {
-                case 0: DoCastSpellIfCan(m_creature, SPELL_SUMMON_VOIDWALKER_A); break;
-                case 1: DoCastSpellIfCan(m_creature, SPELL_SUMMON_VOIDWALKER_B); break;
-                case 2: DoCastSpellIfCan(m_creature, SPELL_SUMMON_VOIDWALKER_C); break;
-                case 3: DoCastSpellIfCan(m_creature, SPELL_SUMMON_VOIDWALKER_D); break;
-                case 4: DoCastSpellIfCan(m_creature, SPELL_SUMMON_VOIDWALKER_E); break;
+                DoScriptText(SAY_HELP, m_creature);
+                m_uiVoidTravelerTimer = urand(10000, 15000);
             }
-            //faster rate when below (X) health?
-            m_uiVoidTravelerTimer = 35000;
         }
         else
             m_uiVoidTravelerTimer -= uiDiff;
@@ -263,6 +258,62 @@ CreatureAI* GetAI_boss_grandmaster_vorpil(Creature* pCreature)
     return new boss_grandmaster_vorpilAI(pCreature);
 }
 
+struct MANGOS_DLL_DECL npc_void_travelerAI : public ScriptedAI
+{
+    npc_void_travelerAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
+        Reset();
+    }
+
+    bool m_bIsRegularMode;
+    bool m_bHasExploded;
+
+    uint32 m_uiDeathTimer;
+
+    void Reset()
+    {
+        m_uiDeathTimer = 0;
+        m_bHasExploded = false;
+    }
+
+    void MoveInLineOfSight(Unit* pWho)
+    {
+        if (!m_bHasExploded && pWho->GetEntry() == NPC_VORPIL && pWho->IsWithinDistInMap(m_creature, 3.0f))
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_SHADOW_NOVA) == CAST_OK)
+            {
+                m_bHasExploded = true;
+                m_uiDeathTimer = 1000;
+            }
+        }
+    }
+
+    void AttackStart(Unit* pWho) { }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (m_uiDeathTimer)
+        {
+            if (m_uiDeathTimer <= uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_EMPOWERING_SHADOWS : SPELL_EMPOWERING_SHADOWS_H, CAST_TRIGGERED) == CAST_OK)
+                {
+                    m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+                    m_uiDeathTimer = 0;
+                }
+            }
+            else
+                m_uiDeathTimer -= uiDiff;
+        }
+    }
+};
+
+CreatureAI* GetAI_npc_void_traveler(Creature* pCreature)
+{
+    return new npc_void_travelerAI(pCreature);
+}
+
 void AddSC_boss_grandmaster_vorpil()
 {
     Script* pNewScript;
@@ -270,5 +321,10 @@ void AddSC_boss_grandmaster_vorpil()
     pNewScript = new Script;
     pNewScript->Name = "boss_grandmaster_vorpil";
     pNewScript->GetAI = &GetAI_boss_grandmaster_vorpil;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_void_traveler";
+    pNewScript->GetAI = &GetAI_npc_void_traveler;
     pNewScript->RegisterSelf();
 }
