@@ -428,7 +428,7 @@ struct MANGOS_DLL_DECL npc_akama_illidanAI : public ScriptedAI
             if (pGate && !pGate->GetGoState())
                 pGate->SetGoState(GO_STATE_READY);
 
-            for(uint32 i = GO_ILLIDAN_DOOR_R; i < GO_ILLIDAN_DOOR_L + 1; ++i)
+            for(uint32 i = GO_ILLIDAN_DOOR_R; i <= GO_ILLIDAN_DOOR_L; ++i)
             {
                 if (GameObject* pDoor = m_pInstance->GetSingleGameObjectFromStorage(i))
                     pDoor->SetGoState(GO_STATE_ACTIVE);
@@ -644,13 +644,13 @@ struct MANGOS_DLL_DECL npc_akama_illidanAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
+        if (!m_pInstance)
+            return;
+
         if (m_illidanGuid)
         {
             if (Creature* Illidan = m_creature->GetMap()->GetCreature(m_illidanGuid))
             {
-                if (Illidan->IsInEvadeMode() && !m_creature->IsInEvadeMode())
-                    EnterEvadeMode();
-
                 if (Illidan->GetHealthPercent() < 85.0f && m_creature->isInCombat() && !m_bFightMinions)
                 {
                     if (m_uiTalkTimer < diff)
@@ -692,10 +692,23 @@ struct MANGOS_DLL_DECL npc_akama_illidanAI : public ScriptedAI
                 if (Illidan->GetHealthPercent() < 4.0f && !m_bIsReturningToIllidan)
                     ReturnToIllidan();
             }
-        }else
+        }
+        else
+            m_illidanGuid = m_pInstance->GetGuid(NPC_ILLIDAN_STORMRAGE);
+
+        // Reset Encounter
+        if (m_pInstance->GetData(TYPE_ILLIDAN) == FAIL)
         {
-            if (m_pInstance)
-                m_illidanGuid = m_pInstance->GetGuid(NPC_ILLIDAN_STORMRAGE);
+            m_pInstance->SetData(TYPE_ILLIDAN, NOT_STARTED);
+
+            m_creature->GetMotionMaster()->Clear(false);
+            Reset();
+            // Get Akama Home
+            float fX, fY, fZ, fO;
+            m_creature->GetRespawnCoord(fX, fY, fZ, &fO);
+            m_creature->NearTeleportTo(fX, fY, fZ, fO);
+
+            return;
         }
 
         if (m_bIsWalking && m_uiWalkTimer)
@@ -822,17 +835,6 @@ struct MANGOS_DLL_DECL npc_akama_illidanAI : public ScriptedAI
         {
             if (m_uiSummonMinionTimer < diff)
             {
-                if (m_illidanGuid)
-                {
-                    Creature* Illidan = m_creature->GetMap()->GetCreature(m_illidanGuid);
-                    if (!Illidan || !Illidan->isInCombat())
-                    {
-                        Reset();
-                        EnterEvadeMode();
-                        return;
-                    }
-                }
-
                 float x,y,z;
                 m_creature->GetPosition(x,y,z);
                 Creature* Elite = m_creature->SummonCreature(ILLIDARI_ELITE, x+rand()%10, y+rand()%10, z, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 30000);
