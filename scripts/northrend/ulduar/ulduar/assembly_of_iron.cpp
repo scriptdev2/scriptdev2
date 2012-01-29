@@ -148,6 +148,8 @@ struct MANGOS_DLL_DECL boss_brundirAI : public ScriptedAI
 
         if (m_pInstance)
             m_pInstance->SetData(TYPE_ASSEMBLY, IN_PROGRESS);
+
+        DoCastSpellIfCan(m_creature, SPELL_BERSERK, CAST_TRIGGERED);
     }
 
     void KilledUnit(Unit* pVictim)
@@ -159,6 +161,23 @@ struct MANGOS_DLL_DECL boss_brundirAI : public ScriptedAI
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_ASSEMBLY, FAIL);
+    }
+
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
+    {
+        // Increase the phase when hit with the supercharge spell by his brothers
+        if (pSpell->Id == SPELL_SUPERCHARGE)
+        {
+            // Not sure if there is a spell for this, so we are doing it here
+            m_creature->SetHealth(m_creature->GetMaxHealth());
+            ++m_uiPhase;
+        }
+
+        if (m_uiPhase == PHASE_CHARGE_TWO)
+        {
+            // Cast stormshield in the last phase
+            DoCastSpellIfCan(m_creature, SPELL_STORMSHIELD, CAST_TRIGGERED);
+        }
     }
 
     void UpdateAI(const uint32 uiDiff)
@@ -214,6 +233,8 @@ struct MANGOS_DLL_DECL boss_molgeimAI : public ScriptedAI
 
         if (m_pInstance)
             m_pInstance->SetData(TYPE_ASSEMBLY, IN_PROGRESS);
+
+        DoCastSpellIfCan(m_creature, SPELL_BERSERK, CAST_TRIGGERED);
     }
 
     void KilledUnit(Unit* pVictim)
@@ -225,6 +246,17 @@ struct MANGOS_DLL_DECL boss_molgeimAI : public ScriptedAI
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_ASSEMBLY, FAIL);
+    }
+
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
+    {
+        // Increase the phase when hit with the supercharge spell by his brothers
+        if (pSpell->Id == SPELL_SUPERCHARGE)
+        {
+            // Not sure if there is a spell for this, so we are doing it here
+            m_creature->SetHealth(m_creature->GetMaxHealth());
+            ++m_uiPhase;
+        }
     }
 
     void UpdateAI(const uint32 uiDiff)
@@ -280,6 +312,9 @@ struct MANGOS_DLL_DECL boss_steelbreakerAI : public ScriptedAI
 
         if (m_pInstance)
             m_pInstance->SetData(TYPE_ASSEMBLY, IN_PROGRESS);
+
+        DoCastSpellIfCan(m_creature, SPELL_BERSERK, CAST_TRIGGERED);
+        DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_HIGH_VOLTAGE : SPELL_HIGH_VOLTAGE_H, CAST_TRIGGERED);
     }
 
     void KilledUnit(Unit* pVictim)
@@ -291,6 +326,23 @@ struct MANGOS_DLL_DECL boss_steelbreakerAI : public ScriptedAI
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_ASSEMBLY, FAIL);
+    }
+
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
+    {
+        // Increase the phase when hit with the supercharge spell by his brothers
+        if (pSpell->Id == SPELL_SUPERCHARGE)
+        {
+            // Not sure if there is a spell for this, so we are doing it here
+            m_creature->SetHealth(m_creature->GetMaxHealth());
+            ++m_uiPhase;
+        }
+
+        if (m_uiPhase == PHASE_CHARGE_TWO)
+        {
+            // Cast electrical charge aura on all players - this will proc when player dies
+            DoCastSpellIfCan(m_creature, SPELL_ELECTRICAL_CHARGE, CAST_TRIGGERED);
+        }
     }
 
     void UpdateAI(const uint32 uiDiff)
