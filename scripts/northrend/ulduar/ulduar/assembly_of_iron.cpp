@@ -316,10 +316,16 @@ struct MANGOS_DLL_DECL boss_steelbreakerAI : public ScriptedAI
     bool m_bIsRegularMode;
 
     uint8 m_uiPhase;
+    uint32 m_uiFusionPunchTimer;
+    uint32 m_uiDisruptionTimer;
+    uint32 m_uiPowerTimer;
 
     void Reset()
     {
         m_uiPhase               = PHASE_NO_CHARGE;
+        m_uiFusionPunchTimer = 15000;
+        m_uiDisruptionTimer  = 15000;
+        m_uiPowerTimer       = 10000;
     }
 
     void JustDied(Unit* pKiller)
@@ -379,6 +385,53 @@ struct MANGOS_DLL_DECL boss_steelbreakerAI : public ScriptedAI
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
+
+        switch (m_uiPhase)
+        {
+            case PHASE_CHARGE_TWO:
+
+                if (m_uiPowerTimer < uiDiff)
+                {
+                    if (DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_OVERWHELMING_POWER : SPELL_OVERWHELMING_POWER_H) == CAST_OK)
+                    {
+                        DoScriptText(SAY_STEEL_OVERWHELM, m_creature);
+                        m_uiPowerTimer = m_bIsRegularMode ? 60000 : 35000;
+                    }
+                }
+                else
+                    m_uiPowerTimer -= uiDiff;
+
+                // no break here; he uses the other spells as well
+            case PHASE_CHARGE_ONE:
+
+                if (m_uiDisruptionTimer < uiDiff)
+                {
+                    // NOTE: This spell is not cast right: Normally it should be triggered by 64641 in core
+                    // Because of the poor target selection in core we'll implement it here with select flag targeting
+                    Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1, uint32(0), SELECT_FLAG_NOT_IN_MELEE_RANGE);
+
+                    if (!pTarget)
+                        pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0);
+
+                    if (DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_STATIC_DISRUPTION : SPELL_STATIC_DISRUPTION_H) == CAST_OK)
+                        m_uiDisruptionTimer = urand(10000, 15000);
+                }
+                else
+                    m_uiDisruptionTimer -= uiDiff;
+
+                // no break here; he uses the other spells as well
+            case PHASE_NO_CHARGE:
+
+                if (m_uiFusionPunchTimer < uiDiff)
+                {
+                    if (DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_FUSION_PUNCH : SPELL_FUSION_PUNCH_H) == CAST_OK)
+                        m_uiFusionPunchTimer = 15000;
+                }
+                else
+                    m_uiFusionPunchTimer -= uiDiff;
+
+                break;
+        }
 
         DoMeleeAttackIfReady();
     }
