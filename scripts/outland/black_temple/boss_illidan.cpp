@@ -966,6 +966,8 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
 
         m_uiTalkCount = 0;
         m_uiTalkTimer = 0;
+
+        SetCombatMovement(false);                           // Start idle
     }
 
     void GetAIInformation(ChatHandler& reader)
@@ -1012,24 +1014,6 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
 
         if (m_pInstance)
             m_pInstance->SetData(TYPE_ILLIDAN, FAIL);
-    }
-
-    void AttackStart(Unit* pWho)
-    {
-        if (!pWho || m_bIsTalking || m_uiPhase == PHASE_FLIGHT || m_uiPhase == PHASE_DEMON || m_uiPhase == PHASE_DEMON_SEQUENCE || m_creature->HasAura(SPELL_KNEEL, EFFECT_INDEX_0))
-            return;
-
-        if (pWho == m_creature)
-            return;
-
-        if (m_creature->Attack(pWho, true))
-        {
-            m_creature->AddThreat(pWho);
-            m_creature->SetInCombatWith(pWho);
-            pWho->SetInCombatWith(m_creature);
-
-            DoStartMovement(pWho);
-        }
     }
 
     void MoveInLineOfSight(Unit* pWho)
@@ -1255,6 +1239,7 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
         else
         {
             // Refollow and attack our old victim
+            SetCombatMovement(true);
             m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
 
             // Depending on whether we summoned Maiev, we switch to either uiPhase 5 or 3
@@ -1295,7 +1280,8 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
 
         // We now hover!
         m_creature->SetLevitate(true);
-
+        SetCombatMovement(false);
+        m_creature->GetMotionMaster()->Clear(false);
         m_creature->GetMotionMaster()->MovePoint(0, CENTER_X, CENTER_Y, CENTER_Z);
         for(uint8 i = 0; i < 2; ++i)
         {
@@ -1390,6 +1376,7 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
         Maiev = m_creature->SummonCreature(MAIEV_SHADOWSONG, m_creature->GetPositionX() + 10, m_creature->GetPositionY() + 5, m_creature->GetPositionZ()+2, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 45000);
         if (Maiev)
         {
+            SetCombatMovement(false);
             m_creature->GetMotionMaster()->Clear(false);    // Stop moving, it's rude to walk and talk!
             m_creature->GetMotionMaster()->MoveIdle();
                                                             // Just in case someone is unaffected by Shadow Prison
@@ -1415,6 +1402,7 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
         DoCastSpellIfCan(m_creature, SPELL_DEATH);          // Animate his kneeling + stun him
                                                             // Don't let the players interrupt our talk!
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+        SetCombatMovement(false);
         m_creature->GetMotionMaster()->Clear(false);        // No moving!
         m_creature->GetMotionMaster()->MoveIdle();
 
@@ -1460,6 +1448,7 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
                         m_creature->setFaction(14);
                         break;
                     case 9:
+                        SetCombatMovement(true);
                         if (m_akamaGuid)
                         {
                             if (Creature* pAkama = m_creature->GetMap()->GetCreature(m_akamaGuid))
@@ -1509,6 +1498,7 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
                             pMaiev->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                         }
                         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                        SetCombatMovement(true);
                         m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
                         m_bIsTalking = false;
                         m_uiFaceVictimTimer = 2000;
@@ -1770,6 +1760,7 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
                         m_creature->SetTargetGuid(m_creature->getVictim()->GetObjectGuid());
 
                         // Chase our victim!
+                        SetCombatMovement(true);
                         m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
                     }
                     else
@@ -1846,6 +1837,7 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
                 m_uiTransformTimer = 60000;
                 m_uiFlameBurstTimer = 10000;
                 m_uiShadowDemonTimer = 30000;
+                SetCombatMovement(false);
                 m_creature->GetMotionMaster()->Clear(false);// Stop moving
             }
             else
