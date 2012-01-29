@@ -913,34 +913,6 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
     {
         m_uiPhase = PHASE_NORMAL;
 
-        // Check if any flames/glaives are alive/existing. Kill if alive and set GUIDs to 0
-        for(uint8 i = 0; i < 2; ++i)
-        {
-            if (Creature* pFlame = m_creature->GetMap()->GetCreature(m_flameGuids[i]))
-            {
-                if (pFlame->isAlive())
-                    pFlame->SetDeathState(JUST_DIED);
-
-                m_flameGuids[i].Clear();
-            }
-
-            if (Creature* pGlaive = m_creature->GetMap()->GetCreature(m_glaiveGuids[i]))
-            {
-                if (pGlaive->isAlive())
-                    pGlaive->SetDeathState(JUST_DIED);
-
-                m_glaiveGuids[i].Clear();
-            }
-        }
-
-        if (Creature* pAkama = m_creature->GetMap()->GetCreature(m_akamaGuid))
-        {
-            if (!pAkama->isAlive())
-                pAkama->Respawn();
-
-            pAkama->AI()->EnterEvadeMode();
-        }
-
         m_bRefaceVictim = false;
         m_bHasSummoned = false;
 
@@ -992,9 +964,6 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
 
         m_uiTalkCount = 0;
         m_uiTalkTimer = 0;
-
-        if (m_pInstance)
-            m_pInstance->SetData(TYPE_ILLIDAN, NOT_STARTED);
     }
 
     void GetAIInformation(ChatHandler& reader)
@@ -1002,6 +971,45 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
         reader.PSendSysMessage("Boss Illidan, current uiPhase = %u, m_uiDemonFormSequence = %u", m_uiPhase, m_uiDemonFormSequence);
         reader.PSendSysMessage("Boolean Vars: m_bIsTalking is %s, m_bHasSummoned is %s, m_bRefaceVictim is %s", m_bIsTalking ? "true" :  "false", m_bHasSummoned ? "true" : "false", m_bRefaceVictim ? "true" : "false");
         reader.PSendSysMessage("Guids: Akama is %s, Maiev is %s", m_akamaGuid.GetString().c_str(), m_maievGuid.GetString().c_str());
+    }
+
+    void JustReachedHome()
+    {
+        // Check if Maiev are alive/existing. Despawn and clear Guid
+        if (Creature* Maiev = m_creature->GetMap()->GetCreature(m_maievGuid))
+            Maiev->ForcedDespawn();
+        m_maievGuid.Clear();
+
+        // Check if any flames/glaives are alive/existing. Kill if alive and clear Guids
+        for (uint8 i = 0; i < 2; ++i)
+        {
+            if (Creature* pFlame = m_creature->GetMap()->GetCreature(m_flameGuids[i]))
+            {
+                if (pFlame->isAlive())
+                    pFlame->SetDeathState(JUST_DIED);
+
+                m_flameGuids[i].Clear();
+            }
+
+            if (Creature* pGlaive = m_creature->GetMap()->GetCreature(m_glaiveGuids[i]))
+            {
+                if (pGlaive->isAlive())
+                    pGlaive->SetDeathState(JUST_DIED);
+
+                m_glaiveGuids[i].Clear();
+            }
+        }
+
+        if (Creature* pAkama = m_creature->GetMap()->GetCreature(m_akamaGuid))
+        {
+            if (!pAkama->isAlive())
+                pAkama->Respawn();
+
+            pAkama->AI()->EnterEvadeMode();
+        }
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_ILLIDAN, FAIL);
     }
 
     void AttackStart(Unit* pWho)
