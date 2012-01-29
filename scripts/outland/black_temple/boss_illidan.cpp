@@ -1410,7 +1410,7 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
     void InitializeDeath()
     {
         m_creature->RemoveAllAuras();
-        DoCastSpellIfCan(m_creature, SPELL_DEATH);                    // Animate his kneeling + stun him
+        DoCastSpellIfCan(m_creature, SPELL_DEATH);          // Animate his kneeling + stun him
                                                             // Don't let the players interrupt our talk!
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
         m_creature->GetMotionMaster()->Clear(false);        // No moving!
@@ -1535,11 +1535,10 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
             }
             else
                 m_uiTalkTimer -= uiDiff;
-        }
 
-        // No further action while talking
-        if (m_bIsTalking)
+            // No further action while talking
             return;
+        }
 
         // If we don't have a target, return.
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
@@ -1585,15 +1584,15 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI
             return;
         }
 
-        /** Signal to summon Maiev **/
-        if (m_creature->GetHealthPercent() < 30.0f && !m_maievGuid && (m_uiPhase != PHASE_DEMON || m_uiPhase != PHASE_DEMON_SEQUENCE))
+        /** Signal to summon Maiev at 30% health**/
+        if (!m_maievGuid && !(m_uiPhase == PHASE_DEMON || m_uiPhase == PHASE_DEMON_SEQUENCE) && m_creature->GetHealthPercent() < 30.0f)
         {
             SummonMaiev();
             return;
         }
 
         /** Time for the death speech **/
-        if (m_creature->GetHealthPercent() < 1.0f && (m_uiPhase != PHASE_DEMON || m_uiPhase != PHASE_DEMON_SEQUENCE))
+        if (!(m_uiPhase == PHASE_DEMON || m_uiPhase == PHASE_DEMON_SEQUENCE) && m_creature->GetHealthPercent() < 1.0f)
         {
             InitializeDeath();
             return;
