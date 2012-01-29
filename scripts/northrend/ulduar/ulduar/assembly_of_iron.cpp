@@ -104,6 +104,9 @@ enum
     PHASE_NO_CHARGE                     = 0,
     PHASE_CHARGE_ONE                    = 1,
     PHASE_CHARGE_TWO                    = 2,
+
+    POINT_ID_LIFT_OFF                   = 1,
+    POINT_ID_LAND                       = 2,
 };
 
 struct MANGOS_DLL_DECL boss_brundirAI : public ScriptedAI
@@ -123,6 +126,9 @@ struct MANGOS_DLL_DECL boss_brundirAI : public ScriptedAI
     uint32 m_uiChainLightningTimer;
     uint32 m_uiOverloadTimer;
     uint32 m_uiWhirlTimer;
+    uint32 m_uiTendrilsTimer;
+    uint32 m_uiTendrilsTargetTimer;
+    uint32 m_uiTendrilsEndTimer;
 
     void Reset()
     {
@@ -131,6 +137,11 @@ struct MANGOS_DLL_DECL boss_brundirAI : public ScriptedAI
         m_uiChainLightningTimer = 0;
         m_uiOverloadTimer       = 35000;
         m_uiWhirlTimer          = 10000;
+        m_uiTendrilsTimer       = 60000;
+        m_uiTendrilsEndTimer    = 0;
+        m_uiTendrilsTargetTimer = 0;
+
+        m_creature->SetLevitate(false);
     }
 
     void JustDied(Unit* pKiller)
@@ -225,6 +236,44 @@ struct MANGOS_DLL_DECL boss_brundirAI : public ScriptedAI
         }
     }
 
+    void MovementInform(uint32 uiMoveType, uint32 uiPointId)
+    {
+        if (uiMoveType != POINT_MOTION_TYPE || !uiPointId)
+            return;
+
+        switch (uiPointId)
+        {
+            // After lift up follow a target and set the target change timer
+            case POINT_ID_LIFT_OFF:
+                // TODO: the boss should follow without changing his Z position - missing core feature
+                // Current implementation with move point is wrong
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, uint32(0), SELECT_FLAG_PLAYER | SELECT_FLAG_NOT_IN_MELEE_RANGE))
+                    DoMoveToTarget(pTarget);
+                m_uiTendrilsTargetTimer = 5000;
+                break;
+            // After reached the land remove all the auras and resume basic combat
+            case POINT_ID_LAND:
+                m_creature->SetLevitate(false);
+                SetCombatMovement(true);
+                if (m_creature->getVictim())
+                    m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
+
+                m_creature->RemoveAurasDueToSpell(SPELL_TENDRILS_VISUAL);
+                m_creature->RemoveAurasDueToSpell(m_bIsRegularMode ? SPELL_LIGHTNING_TENDRILS : SPELL_LIGHTNING_TENDRILS_H);
+                break;
+        }
+    }
+
+    // Wrapper for target movement
+    void DoMoveToTarget(Unit* pTarget)
+    {
+        if (pTarget)
+        {
+            m_creature->GetMotionMaster()->Clear();
+            m_creature->GetMotionMaster()->MovePoint(0, pTarget->GetPositionX(), pTarget->GetPositionY(), m_creature->GetPositionZ());
+        }
+    }
+
     void UpdateAI(const uint32 uiDiff)
     {
         // Pre fight visual spell
@@ -245,6 +294,57 @@ struct MANGOS_DLL_DECL boss_brundirAI : public ScriptedAI
         switch(m_uiPhase)
         {
             case PHASE_CHARGE_TWO:
+
+                if (m_uiTendrilsTimer < uiDiff)
+                {
+                    if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_LIGHTNING_TENDRILS : SPELL_LIGHTNING_TENDRILS_H) == CAST_OK)
+                    {
+                        DoCastSpellIfCan(m_creature, SPELL_TENDRILS_VISUAL, CAST_TRIGGERED);
+                        DoScriptText(SAY_BRUNDIR_FLY, m_creature);
+                        SetCombatMovement(false);
+                        m_creature->SetLevitate(true);
+                        m_creature->GetMotionMaster()->MovePoint(POINT_ID_LIFT_OFF, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ() + 15.0f);
+                        m_uiTendrilsTimer = 90000;
+                        m_uiTendrilsEndTimer = 25000;
+                    }
+                }
+                else
+                    m_uiTendrilsTimer -= uiDiff;
+
+                if (m_uiTendrilsEndTimer)
+                {
+                    if (m_uiTendrilsEndTimer <= uiDiff)
+                    {
+                        // Get proper Z position and land
+                        float fZ = m_creature->GetTerrain()->GetWaterOrGroundLevel(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ());
+                        m_creature->GetMotionMaster()->MovePoint(POINT_ID_LAND, m_creature->GetPositionX(), m_creature->GetPositionY(), fZ);
+                        m_uiOverloadTimer       = 40000;
+                        m_uiWhirlTimer          = 15000;
+                        m_uiChainLightningTimer = 3000;
+                        m_uiTendrilsEndTimer    = 0;
+                        m_uiTendrilsTargetTimer = 0;
+                    }
+                    else
+                        m_uiTendrilsEndTimer -= uiDiff;
+
+                    // Change follow target every 5 seconds
+                    if (m_uiTendrilsTargetTimer)
+                    {
+                        if (m_uiTendrilsTargetTimer <= uiDiff)
+                        {
+                            // TODO: the boss should follow without changing his Z position - missing core feature
+                            // Current implementation with move point is wrong
+                            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, uint32(0), SELECT_FLAG_PLAYER | SELECT_FLAG_NOT_IN_MELEE_RANGE))
+                                DoMoveToTarget(pTarget);
+                            m_uiTendrilsTargetTimer = 5000;
+                        }
+                        else
+                            m_uiTendrilsTargetTimer -= uiDiff;
+                    }
+
+                    // no other spells during tendrils
+                    return;
+                }
 
                 // no break here; he uses the other spells as well
             case PHASE_CHARGE_ONE:
