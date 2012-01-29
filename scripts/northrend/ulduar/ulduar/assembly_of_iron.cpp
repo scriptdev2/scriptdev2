@@ -120,11 +120,17 @@ struct MANGOS_DLL_DECL boss_brundirAI : public ScriptedAI
 
     uint8 m_uiPhase;
     uint32 m_uiVisualTimer;
+    uint32 m_uiChainLightningTimer;
+    uint32 m_uiOverloadTimer;
+    uint32 m_uiWhirlTimer;
 
     void Reset()
     {
         m_uiPhase               = PHASE_NO_CHARGE;
         m_uiVisualTimer         = 5000;
+        m_uiChainLightningTimer = 0;
+        m_uiOverloadTimer       = 35000;
+        m_uiWhirlTimer          = 10000;
     }
 
     void JustDied(Unit* pKiller)
@@ -200,6 +206,49 @@ struct MANGOS_DLL_DECL boss_brundirAI : public ScriptedAI
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
+        switch(m_uiPhase)
+        {
+            case PHASE_CHARGE_TWO:
+
+                // no break here; he uses the other spells as well
+            case PHASE_CHARGE_ONE:
+
+                if (m_uiWhirlTimer < uiDiff)
+                {
+                    if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_LIGHTNING_WHIRL : SPELL_LIGHTNING_WHIRL_H) == CAST_OK)
+                    {
+                        DoScriptText(SAY_BRUNDIR_WHIRL, m_creature);
+                        m_uiWhirlTimer = 30000;
+                    }
+                }
+                else
+                    m_uiWhirlTimer -= uiDiff;
+
+                // no break here; he uses the other spells as well
+            case PHASE_NO_CHARGE:
+
+                if (m_uiChainLightningTimer < uiDiff)
+                {
+                    if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                    {
+                        if (DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_CHAIN_LIGHTNING : SPELL_CHAIN_LIGHTNING_H) == CAST_OK)
+                            m_uiChainLightningTimer = 2000;
+                    }
+                }
+                else
+                    m_uiChainLightningTimer -= uiDiff;
+
+                if (m_uiOverloadTimer < uiDiff)
+                {
+                    if (DoCastSpellIfCan(m_creature, SPELL_OVERLOAD) == CAST_OK)
+                        m_uiOverloadTimer = 80000;
+                }
+                else
+                    m_uiOverloadTimer -= uiDiff;
+
+                break;
+        }
+
         DoMeleeAttackIfReady();
     }
 };
@@ -223,11 +272,19 @@ struct MANGOS_DLL_DECL boss_molgeimAI : public ScriptedAI
 
     uint8 m_uiPhase;
     uint32 m_uiVisualTimer;
+    uint32 m_uiShieldTimer;
+    uint32 m_uiRunePowerTimer;
+    uint32 m_uiRuneDeathTimer;
+    uint32 m_uiRuneSummonTimer;
 
     void Reset()
     {
         m_uiPhase               = PHASE_NO_CHARGE;
         m_uiVisualTimer         = 5000;
+        m_uiShieldTimer         = 25000;
+        m_uiRunePowerTimer      = 15000;
+        m_uiRuneSummonTimer     = 10000;
+        m_uiRuneDeathTimer      = 30000;
     }
 
     void JustDied(Unit* pKiller)
@@ -294,6 +351,60 @@ struct MANGOS_DLL_DECL boss_molgeimAI : public ScriptedAI
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
+        switch (m_uiPhase)
+        {
+            case PHASE_CHARGE_TWO:
+
+                if (m_uiRuneSummonTimer < uiDiff)
+                {
+                    if (DoCastSpellIfCan(m_creature, SPELL_RUNE_OF_SUMMONING) == CAST_OK)
+                    {
+                        DoScriptText(SAY_MOLGEIM_SURGE, m_creature);
+                        m_uiRuneSummonTimer = 30000;
+                    }
+                }
+                else
+                    m_uiRuneSummonTimer -= uiDiff;
+
+                // no break here; he uses the other spells as well
+            case PHASE_CHARGE_ONE:
+
+                if (m_uiRuneDeathTimer < uiDiff)
+                {
+                    if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                    {
+                        if (DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_RUNE_OF_DEATH : SPELL_RUNE_OF_DEATH_H) == CAST_OK)
+                        {
+                            DoScriptText(SAY_MOLGEIM_DEATH_RUNE, m_creature);
+                            m_uiRuneDeathTimer = 30000;
+                        }
+                    }
+                }
+                else
+                    m_uiRuneDeathTimer -= uiDiff;
+
+                // no break here; he uses the other spells as well
+            case PHASE_NO_CHARGE:
+
+                if (m_uiShieldTimer < uiDiff)
+                {
+                    if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_SHIELD : SPELL_SHIELD_H) == CAST_OK)
+                        m_uiShieldTimer = 40000;
+                }
+                else
+                    m_uiShieldTimer -= uiDiff;
+
+                if (m_uiRunePowerTimer < uiDiff)
+                {
+                    if (DoCastSpellIfCan(m_creature, SPELL_RUNE_OF_POWER) == CAST_OK)
+                        m_uiRunePowerTimer = 45000;
+                }
+                else
+                    m_uiRunePowerTimer -= uiDiff;
+
+                break;
+        }
+
         DoMeleeAttackIfReady();
     }
 };
@@ -323,9 +434,9 @@ struct MANGOS_DLL_DECL boss_steelbreakerAI : public ScriptedAI
     void Reset()
     {
         m_uiPhase               = PHASE_NO_CHARGE;
-        m_uiFusionPunchTimer = 15000;
-        m_uiDisruptionTimer  = 15000;
-        m_uiPowerTimer       = 10000;
+        m_uiFusionPunchTimer    = 15000;
+        m_uiDisruptionTimer     = 15000;
+        m_uiPowerTimer          = 10000;
     }
 
     void JustDied(Unit* pKiller)
