@@ -172,6 +172,17 @@ struct MANGOS_DLL_DECL boss_brundirAI : public ScriptedAI
             m_pInstance->SetData(TYPE_ASSEMBLY, FAIL);
     }
 
+    void JustSummoned(Creature* pSummoned)
+    {
+        if (pSummoned->GetEntry() == NPC_OVERLOAD_VISUAL)
+        {
+            pSummoned->CastSpell(pSummoned, SPELL_OVERLOAD_AURA, true);
+            // Visual npc- shouldn't move and should despawn in 6 sec
+            pSummoned->GetMotionMaster()->MoveIdle();
+            pSummoned->ForcedDespawn(6000);
+        }
+    }
+
     void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
     {
         // Increase the phase when hit with the supercharge spell by his brothers
@@ -321,6 +332,14 @@ struct MANGOS_DLL_DECL boss_molgeimAI : public ScriptedAI
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_ASSEMBLY, FAIL);
+    }
+
+    void JustSummoned(Creature* pSummoned)
+    {
+        if (pSummoned->GetEntry() == NPC_RUNE_OF_SUMMONING)
+            pSummoned->CastSpell(pSummoned, SPELL_RUNE_OF_SUMMONING_AURA, true);
+        else if (pSummoned->GetEntry() == NPC_RUNE_OF_POWER)
+            pSummoned->CastSpell(pSummoned, SPELL_RUNE_OF_POWER_AURA, true);
     }
 
     void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
