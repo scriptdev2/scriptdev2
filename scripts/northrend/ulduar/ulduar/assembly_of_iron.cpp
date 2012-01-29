@@ -129,6 +129,9 @@ struct MANGOS_DLL_DECL boss_brundirAI : public ScriptedAI
     uint32 m_uiTendrilsTimer;
     uint32 m_uiTendrilsTargetTimer;
     uint32 m_uiTendrilsEndTimer;
+    uint32 m_uiTendrilsFollowTimer;
+
+    ObjectGuid m_followTargetGuid;
 
     void Reset()
     {
@@ -140,6 +143,7 @@ struct MANGOS_DLL_DECL boss_brundirAI : public ScriptedAI
         m_uiTendrilsTimer       = 60000;
         m_uiTendrilsEndTimer    = 0;
         m_uiTendrilsTargetTimer = 0;
+        m_uiTendrilsFollowTimer = 500;
 
         m_creature->SetLevitate(false);
     }
@@ -248,8 +252,12 @@ struct MANGOS_DLL_DECL boss_brundirAI : public ScriptedAI
                 // TODO: the boss should follow without changing his Z position - missing core feature
                 // Current implementation with move point is wrong
                 if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, uint32(0), SELECT_FLAG_PLAYER | SELECT_FLAG_NOT_IN_MELEE_RANGE))
+                {
                     DoMoveToTarget(pTarget);
+                    m_followTargetGuid = pTarget->GetObjectGuid();
+                }
                 m_uiTendrilsTargetTimer = 5000;
+                m_uiTendrilsFollowTimer = 500;
                 break;
             // After reached the land remove all the auras and resume basic combat
             case POINT_ID_LAND:
@@ -335,11 +343,25 @@ struct MANGOS_DLL_DECL boss_brundirAI : public ScriptedAI
                             // TODO: the boss should follow without changing his Z position - missing core feature
                             // Current implementation with move point is wrong
                             if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, uint32(0), SELECT_FLAG_PLAYER | SELECT_FLAG_NOT_IN_MELEE_RANGE))
+                            {
                                 DoMoveToTarget(pTarget);
+                                m_followTargetGuid = pTarget->GetObjectGuid();
+                            }
                             m_uiTendrilsTargetTimer = 5000;
+                            m_uiTendrilsFollowTimer = 500;
                         }
                         else
                             m_uiTendrilsTargetTimer -= uiDiff;
+
+                        // Workaround to follow the target
+                        if (m_uiTendrilsFollowTimer < uiDiff)
+                        {
+                            if (Unit* pTarget = m_creature->GetMap()->GetUnit(m_followTargetGuid))
+                                DoMoveToTarget(pTarget);
+                            m_uiTendrilsFollowTimer = 500;
+                        }
+                        else
+                            m_uiTendrilsFollowTimer -= uiDiff;
                     }
 
                     // no other spells during tendrils
