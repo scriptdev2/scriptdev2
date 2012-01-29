@@ -102,7 +102,157 @@ enum
     NPC_RUNE_OF_SUMMONING               = 33051,
 };
 
+struct MANGOS_DLL_DECL boss_brundirAI : public ScriptedAI
+{
+    boss_brundirAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (instance_ulduar*)pCreature->GetInstanceData();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
+        Reset();
+    }
+
+    instance_ulduar* m_pInstance;
+    bool m_bIsRegularMode;
+
+    void Reset()
+    {
+    }
+
+    void JustDied(Unit* pKiller)
+    {
+        DoScriptText(urand(0, 1) ? SAY_BRUNDIR_DEATH_1 : SAY_BRUNDIR_DEATH_2, m_creature);
+    }
+
+    void Aggro(Unit* pWho)
+    {
+        DoScriptText(SAY_BRUNDIR_AGGRO, m_creature);
+    }
+
+    void KilledUnit(Unit* pVictim)
+    {
+        DoScriptText(urand(0, 1) ? SAY_BRUNDIR_SLAY_1 : SAY_BRUNDIR_SLAY_2, m_creature);
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_boss_brundir(Creature* pCreature)
+{
+    return new boss_brundirAI(pCreature);
+}
+
+struct MANGOS_DLL_DECL boss_molgeimAI : public ScriptedAI
+{
+    boss_molgeimAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (instance_ulduar*)pCreature->GetInstanceData();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
+        Reset();
+    }
+
+    instance_ulduar* m_pInstance;
+    bool m_bIsRegularMode;
+
+    void Reset()
+    {
+    }
+
+    void JustDied(Unit* pKiller)
+    {
+        DoScriptText(urand(0, 1) ? SAY_MOLGEIM_DEATH_1 : SAY_MOLGEIM_DEATH_2, m_creature);
+    }
+
+    void Aggro(Unit* pWho)
+    {
+        DoScriptText(SAY_MOLGEIM_AGGRO, m_creature);
+    }
+
+    void KilledUnit(Unit* pVictim)
+    {
+        DoScriptText(urand(0, 1) ? SAY_MOLGEIM_SLAY_1 : SAY_MOLGEIM_SLAY_2, m_creature);
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_boss_molgeim(Creature* pCreature)
+{
+    return new boss_molgeimAI(pCreature);
+}
+
+struct MANGOS_DLL_DECL boss_steelbreakerAI : public ScriptedAI
+{
+    boss_steelbreakerAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (instance_ulduar*)pCreature->GetInstanceData();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
+        Reset();
+    }
+
+    instance_ulduar* m_pInstance;
+    bool m_bIsRegularMode;
+
+    void Reset()
+    {
+    }
+
+    void JustDied(Unit* pKiller)
+    {
+        DoScriptText(urand(0, 1) ? SAY_STEEL_DEATH_1 : SAY_STEEL_DEATH_2, m_creature);
+    }
+
+    void Aggro(Unit* pWho)
+    {
+        DoScriptText(SAY_STEEL_AGGRO, m_creature);
+    }
+
+    void KilledUnit(Unit* pVictim)
+    {
+        DoScriptText(urand(0, 1) ? SAY_STEEL_SLAY_1 : SAY_STEEL_SLAY_2, m_creature);
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_boss_steelbreaker(Creature* pCreature)
+{
+    return new boss_steelbreakerAI(pCreature);
+}
+
 void AddSC_boss_assembly_of_iron()
 {
+    Script* pNewScript;
 
+    pNewScript = new Script;
+    pNewScript->Name = "boss_brundir";
+    pNewScript->GetAI = GetAI_boss_brundir;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_molgeim";
+    pNewScript->GetAI = GetAI_boss_molgeim;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_steelbreaker";
+    pNewScript->GetAI = GetAI_boss_steelbreaker;
+    pNewScript->RegisterSelf();
 }

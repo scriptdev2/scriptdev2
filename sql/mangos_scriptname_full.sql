@@ -1217,6 +1217,9 @@ UPDATE instance_template SET ScriptName='instance_ulduar' WHERE map=603;
 UPDATE creature_template SET ScriptName='boss_general_vezax' WHERE entry=33271;
 UPDATE creature_template SET ScriptName='boss_auriaya' WHERE entry=33515;
 UPDATE creature_template SET ScriptName='boss_feral_defender' WHERE entry=34035;
+UPDATE creature_template SET ScriptName='boss_brundir' WHERE entry=32857;
+UPDATE creature_template SET ScriptName='boss_molgeim' WHERE entry=32927;
+UPDATE creature_template SET ScriptName='boss_steelbreaker' WHERE entry=32867;
 DELETE FROM scripted_event_id WHERE id=9735;
 INSERT INTO scripted_event_id VALUES
 (9735,'event_spell_saronite_barrier');
