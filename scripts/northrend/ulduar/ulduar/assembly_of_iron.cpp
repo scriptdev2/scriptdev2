@@ -100,6 +100,10 @@ enum
     NPC_OVERLOAD_VISUAL                 = 32866,
     NPC_RUNE_OF_POWER                   = 33705,
     NPC_RUNE_OF_SUMMONING               = 33051,
+
+    PHASE_NO_CHARGE                     = 0,
+    PHASE_CHARGE_ONE                    = 1,
+    PHASE_CHARGE_TWO                    = 2,
 };
 
 struct MANGOS_DLL_DECL boss_brundirAI : public ScriptedAI
@@ -114,23 +118,47 @@ struct MANGOS_DLL_DECL boss_brundirAI : public ScriptedAI
     instance_ulduar* m_pInstance;
     bool m_bIsRegularMode;
 
+    uint8 m_uiPhase;
+
     void Reset()
     {
+        m_uiPhase               = PHASE_NO_CHARGE;
     }
 
     void JustDied(Unit* pKiller)
     {
+        if (!m_pInstance)
+            return;
+
+        // If we are not on the last phase then cast Supercharge and set as unlootable
+        if (m_uiPhase != PHASE_CHARGE_TWO)
+        {
+            m_creature->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
+            DoCastSpellIfCan(m_creature, SPELL_SUPERCHARGE, CAST_TRIGGERED);
+        }
+        else
+            m_pInstance->SetData(TYPE_ASSEMBLY, DONE);
+
         DoScriptText(urand(0, 1) ? SAY_BRUNDIR_DEATH_1 : SAY_BRUNDIR_DEATH_2, m_creature);
     }
 
     void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_BRUNDIR_AGGRO, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_ASSEMBLY, IN_PROGRESS);
     }
 
     void KilledUnit(Unit* pVictim)
     {
         DoScriptText(urand(0, 1) ? SAY_BRUNDIR_SLAY_1 : SAY_BRUNDIR_SLAY_2, m_creature);
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_ASSEMBLY, FAIL);
     }
 
     void UpdateAI(const uint32 uiDiff)
@@ -159,23 +187,44 @@ struct MANGOS_DLL_DECL boss_molgeimAI : public ScriptedAI
     instance_ulduar* m_pInstance;
     bool m_bIsRegularMode;
 
+    uint8 m_uiPhase;
+
     void Reset()
     {
+        m_uiPhase               = PHASE_NO_CHARGE;
     }
 
     void JustDied(Unit* pKiller)
     {
+        // If we are not on the last phase then cast Supercharge and set as unlootable
+        if (m_uiPhase != PHASE_CHARGE_TWO)
+        {
+            m_creature->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
+            DoCastSpellIfCan(m_creature, SPELL_SUPERCHARGE, CAST_TRIGGERED);
+        }
+        else
+            m_pInstance->SetData(TYPE_ASSEMBLY, DONE);
+
         DoScriptText(urand(0, 1) ? SAY_MOLGEIM_DEATH_1 : SAY_MOLGEIM_DEATH_2, m_creature);
     }
 
     void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_MOLGEIM_AGGRO, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_ASSEMBLY, IN_PROGRESS);
     }
 
     void KilledUnit(Unit* pVictim)
     {
         DoScriptText(urand(0, 1) ? SAY_MOLGEIM_SLAY_1 : SAY_MOLGEIM_SLAY_2, m_creature);
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_ASSEMBLY, FAIL);
     }
 
     void UpdateAI(const uint32 uiDiff)
@@ -204,23 +253,44 @@ struct MANGOS_DLL_DECL boss_steelbreakerAI : public ScriptedAI
     instance_ulduar* m_pInstance;
     bool m_bIsRegularMode;
 
+    uint8 m_uiPhase;
+
     void Reset()
     {
+        m_uiPhase               = PHASE_NO_CHARGE;
     }
 
     void JustDied(Unit* pKiller)
     {
+        // If we are not on the last phase then cast Supercharge and set as unlootable
+        if (m_uiPhase != PHASE_CHARGE_TWO)
+        {
+            m_creature->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
+            DoCastSpellIfCan(m_creature, SPELL_SUPERCHARGE, CAST_TRIGGERED);
+        }
+        else
+            m_pInstance->SetData(TYPE_ASSEMBLY, DONE);
+
         DoScriptText(urand(0, 1) ? SAY_STEEL_DEATH_1 : SAY_STEEL_DEATH_2, m_creature);
     }
 
     void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_STEEL_AGGRO, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_ASSEMBLY, IN_PROGRESS);
     }
 
     void KilledUnit(Unit* pVictim)
     {
         DoScriptText(urand(0, 1) ? SAY_STEEL_SLAY_1 : SAY_STEEL_SLAY_2, m_creature);
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_ASSEMBLY, FAIL);
     }
 
     void UpdateAI(const uint32 uiDiff)

@@ -287,6 +287,9 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
             DoUseDoorOrButton(GO_XT002_GATE);
             break;
         case TYPE_ASSEMBLY:
+            // Don't set the same encounter data twice
+            if (uiData == m_auiEncounter[uiType])
+                return;
             m_auiEncounter[uiType] = uiData;
             DoUseDoorOrButton(GO_IRON_ENTRANCE_DOOR);
             if (uiData == DONE)
