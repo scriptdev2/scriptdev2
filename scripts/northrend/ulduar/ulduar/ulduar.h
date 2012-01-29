@@ -101,10 +101,14 @@ enum
     NPC_KEEPER_MIMIRON          = 33244,
     NPC_KEEPER_THORIM           = 33242,
 
-    MAX_SPECIAL_ACHIEV_CRITS    = 2,
+    MAX_SPECIAL_ACHIEV_CRITS    = 6,
 
     TYPE_ACHIEV_CAT_LADY        = 0,
     TYPE_ACHIEV_NINE_LIVES      = 1,
+    TYPE_ACHIEV_STEELBREAKER    = 2,
+    TYPE_ACHIEV_BRUNDIR         = 3,
+    TYPE_ACHIEV_MOLGEIM         = 4,
+    TYPE_ACHIEV_STUNNED         = 5,
 
     // Loot chests
     // Kologarn
@@ -202,6 +206,18 @@ enum
     ACHIEV_CRIT_CAT_LADY_H      = 10184,
     ACHIEV_CRIT_NINE_LIVES_N    = 10399,                    // Auriaya, achievs 3076, 3077
     ACHIEV_CRIT_NINE_LIVES_H    = 10243,
+    ACHIEV_CRIT_STEELBREAKER_N  = 10084,                    // Iron council, achievs 2941, 2944
+    ACHIEV_CRIT_STEELBREAKER_H  = 10087,
+    ACHIEV_CRIT_MOLGEIM_N       = 10082,                    // Iron council, achievs 2939, 2942
+    ACHIEV_CRIT_MOLGEIM_H       = 10085,
+    ACHIEV_CRIT_BRUNDIR_N       = 10083,                    // Iron council, achievs 2940, 2943
+    ACHIEV_CRIT_BRUNDIR_H       = 10086,
+    ACHIEV_CRIT_STUNNED_BRUND_N = 10090,                    // Iron council, achiev 2947
+    ACHIEV_CRIT_STUNNED_STEEL_N = 10422,
+    ACHIEV_CRIT_STUNNED_MOLG_N  = 10423,
+    ACHIEV_CRIT_STUNNED_BRUND_H = 10091,                    // Iron council, achiev 2948
+    ACHIEV_CRIT_STUNNED_STEEL_H = 10424,
+    ACHIEV_CRIT_STUNNED_MOLG_H  = 10425,
 };
 
 class MANGOS_DLL_DECL instance_ulduar : public ScriptedInstance

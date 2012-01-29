@@ -291,9 +291,18 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
             if (uiData == m_auiEncounter[uiType])
                 return;
             m_auiEncounter[uiType] = uiData;
+            // don't continue for encounter = special
+            if (uiData == SPECIAL)
+                return;
             DoUseDoorOrButton(GO_IRON_ENTRANCE_DOOR);
             if (uiData == DONE)
                 DoUseDoorOrButton(GO_ARCHIVUM_DOOR);
+            else if (uiData == IN_PROGRESS)
+            {
+                SetSpecialAchievementCriteria(TYPE_ACHIEV_BRUNDIR, true);
+                SetSpecialAchievementCriteria(TYPE_ACHIEV_MOLGEIM, true);
+                SetSpecialAchievementCriteria(TYPE_ACHIEV_STEELBREAKER, true);
+            }
             break;
         case TYPE_KOLOGARN:
             m_auiEncounter[uiType] = uiData;
@@ -592,6 +601,18 @@ bool instance_ulduar::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player c
         case ACHIEV_CRIT_NINE_LIVES_N:
         case ACHIEV_CRIT_NINE_LIVES_H:
             return m_abAchievCriteria[TYPE_ACHIEV_NINE_LIVES];
+        case ACHIEV_CRIT_BRUNDIR_N:
+        case ACHIEV_CRIT_BRUNDIR_H:
+            if (GetData(TYPE_ASSEMBLY) == SPECIAL)
+                return m_abAchievCriteria[TYPE_ACHIEV_BRUNDIR];
+        case ACHIEV_CRIT_MOLGEIM_N:
+        case ACHIEV_CRIT_MOLGEIM_H:
+            if (GetData(TYPE_ASSEMBLY) == SPECIAL)
+                return m_abAchievCriteria[TYPE_ACHIEV_MOLGEIM];
+        case ACHIEV_CRIT_STEELBREAKER_N:
+        case ACHIEV_CRIT_STEELBREAKER_H:
+            if (GetData(TYPE_ASSEMBLY) == SPECIAL)
+                return m_abAchievCriteria[TYPE_ACHIEV_STEELBREAKER];
 
         default:
             return false;

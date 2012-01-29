@@ -143,6 +143,7 @@ struct MANGOS_DLL_DECL boss_brundirAI : public ScriptedAI
         {
             m_creature->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
             DoCastSpellIfCan(m_creature, SPELL_SUPERCHARGE, CAST_TRIGGERED);
+            m_pInstance->SetSpecialAchievementCriteria(TYPE_ACHIEV_BRUNDIR, false);
         }
         else
             m_pInstance->SetData(TYPE_ASSEMBLY, DONE);
@@ -197,6 +198,10 @@ struct MANGOS_DLL_DECL boss_brundirAI : public ScriptedAI
         {
             // Cast stormshield in the last phase
             DoCastSpellIfCan(m_creature, SPELL_STORMSHIELD, CAST_TRIGGERED);
+
+            // set the instace data to special in order to mark the last phase - this is used to check the achiev criteria
+            if (m_pInstance)
+                m_pInstance->SetData(TYPE_ASSEMBLY, SPECIAL);
         }
     }
 
@@ -300,11 +305,15 @@ struct MANGOS_DLL_DECL boss_molgeimAI : public ScriptedAI
 
     void JustDied(Unit* pKiller)
     {
+        if (!m_pInstance)
+            return;
+
         // If we are not on the last phase then cast Supercharge and set as unlootable
         if (m_uiPhase != PHASE_CHARGE_TWO)
         {
             m_creature->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
             DoCastSpellIfCan(m_creature, SPELL_SUPERCHARGE, CAST_TRIGGERED);
+            m_pInstance->SetSpecialAchievementCriteria(TYPE_ACHIEV_MOLGEIM, false);
         }
         else
             m_pInstance->SetData(TYPE_ASSEMBLY, DONE);
@@ -350,6 +359,13 @@ struct MANGOS_DLL_DECL boss_molgeimAI : public ScriptedAI
             // Not sure if there is a spell for this, so we are doing it here
             m_creature->SetHealth(m_creature->GetMaxHealth());
             ++m_uiPhase;
+        }
+
+        if (m_uiPhase == PHASE_CHARGE_TWO)
+        {
+            // set the instace data to special in order to mark the last phase - this is used to check the achiev criteria
+            if (m_pInstance)
+                m_pInstance->SetData(TYPE_ASSEMBLY, SPECIAL);
         }
     }
 
@@ -460,11 +476,15 @@ struct MANGOS_DLL_DECL boss_steelbreakerAI : public ScriptedAI
 
     void JustDied(Unit* pKiller)
     {
+        if (!m_pInstance)
+            return;
+
         // If we are not on the last phase then cast Supercharge and set as unlootable
         if (m_uiPhase != PHASE_CHARGE_TWO)
         {
             m_creature->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
             DoCastSpellIfCan(m_creature, SPELL_SUPERCHARGE, CAST_TRIGGERED);
+            m_pInstance->SetSpecialAchievementCriteria(TYPE_ACHIEV_STEELBREAKER, false);
         }
         else
             m_pInstance->SetData(TYPE_ASSEMBLY, DONE);
@@ -508,6 +528,10 @@ struct MANGOS_DLL_DECL boss_steelbreakerAI : public ScriptedAI
         {
             // Cast electrical charge aura on all players - this will proc when player dies
             DoCastSpellIfCan(m_creature, SPELL_ELECTRICAL_CHARGE, CAST_TRIGGERED);
+
+            // set the instace data to special in order to mark the last phase - this is used to check the achiev criteria
+            if (m_pInstance)
+                m_pInstance->SetData(TYPE_ASSEMBLY, SPECIAL);
         }
     }
 
