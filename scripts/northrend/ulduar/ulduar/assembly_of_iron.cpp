@@ -205,6 +205,26 @@ struct MANGOS_DLL_DECL boss_brundirAI : public ScriptedAI
         }
     }
 
+    void SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell)
+    {
+        if (pTarget->GetTypeId() != TYPEID_PLAYER)
+            return;
+
+        if (!m_pInstance)
+            return;
+
+        // Check achiev criterias
+        switch (pSpell->Id)
+        {
+            case SPELL_CHAIN_LIGHTNING:
+            case SPELL_CHAIN_LIGHTNING_H:
+            case SPELL_LIGHTNING_WHIRL_DAMAGE:
+            case SPELL_LIGHTNING_WHIRL_DAMAGE_H:
+                    m_pInstance->SetSpecialAchievementCriteria(TYPE_ACHIEV_STUNNED, false);
+                break;
+        }
+    }
+
     void UpdateAI(const uint32 uiDiff)
     {
         // Pre fight visual spell

@@ -302,6 +302,7 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
                 SetSpecialAchievementCriteria(TYPE_ACHIEV_BRUNDIR, true);
                 SetSpecialAchievementCriteria(TYPE_ACHIEV_MOLGEIM, true);
                 SetSpecialAchievementCriteria(TYPE_ACHIEV_STEELBREAKER, true);
+                SetSpecialAchievementCriteria(TYPE_ACHIEV_STUNNED, true);
             }
             break;
         case TYPE_KOLOGARN:
@@ -613,6 +614,14 @@ bool instance_ulduar::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player c
         case ACHIEV_CRIT_STEELBREAKER_H:
             if (GetData(TYPE_ASSEMBLY) == SPECIAL)
                 return m_abAchievCriteria[TYPE_ACHIEV_STEELBREAKER];
+        case ACHIEV_CRIT_STUNNED_BRUND_N:
+        case ACHIEV_CRIT_STUNNED_STEEL_N:
+        case ACHIEV_CRIT_STUNNED_MOLG_N:
+        case ACHIEV_CRIT_STUNNED_BRUND_H:
+        case ACHIEV_CRIT_STUNNED_STEEL_H:
+        case ACHIEV_CRIT_STUNNED_MOLG_H:
+            if (GetData(TYPE_ASSEMBLY) == SPECIAL)
+                return m_abAchievCriteria[TYPE_ACHIEV_STUNNED];
 
         default:
             return false;
