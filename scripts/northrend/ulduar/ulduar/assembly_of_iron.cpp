@@ -119,10 +119,12 @@ struct MANGOS_DLL_DECL boss_brundirAI : public ScriptedAI
     bool m_bIsRegularMode;
 
     uint8 m_uiPhase;
+    uint32 m_uiVisualTimer;
 
     void Reset()
     {
         m_uiPhase               = PHASE_NO_CHARGE;
+        m_uiVisualTimer         = 5000;
     }
 
     void JustDied(Unit* pKiller)
@@ -149,6 +151,7 @@ struct MANGOS_DLL_DECL boss_brundirAI : public ScriptedAI
         if (m_pInstance)
             m_pInstance->SetData(TYPE_ASSEMBLY, IN_PROGRESS);
 
+        m_creature->InterruptNonMeleeSpells(false);
         DoCastSpellIfCan(m_creature, SPELL_BERSERK, CAST_TRIGGERED);
     }
 
@@ -182,6 +185,18 @@ struct MANGOS_DLL_DECL boss_brundirAI : public ScriptedAI
 
     void UpdateAI(const uint32 uiDiff)
     {
+        // Pre fight visual spell
+        if (m_uiVisualTimer)
+        {
+            if (m_uiVisualTimer <= uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_LIGHTNING_CHANNEL_PREFIGHT) == CAST_OK)
+                    m_uiVisualTimer = 0;
+            }
+            else
+                m_uiVisualTimer -= uiDiff;
+        }
+
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
@@ -207,10 +222,12 @@ struct MANGOS_DLL_DECL boss_molgeimAI : public ScriptedAI
     bool m_bIsRegularMode;
 
     uint8 m_uiPhase;
+    uint32 m_uiVisualTimer;
 
     void Reset()
     {
         m_uiPhase               = PHASE_NO_CHARGE;
+        m_uiVisualTimer         = 5000;
     }
 
     void JustDied(Unit* pKiller)
@@ -234,6 +251,7 @@ struct MANGOS_DLL_DECL boss_molgeimAI : public ScriptedAI
         if (m_pInstance)
             m_pInstance->SetData(TYPE_ASSEMBLY, IN_PROGRESS);
 
+        m_creature->InterruptNonMeleeSpells(false);
         DoCastSpellIfCan(m_creature, SPELL_BERSERK, CAST_TRIGGERED);
     }
 
@@ -261,6 +279,18 @@ struct MANGOS_DLL_DECL boss_molgeimAI : public ScriptedAI
 
     void UpdateAI(const uint32 uiDiff)
     {
+        // Pre fight visual spell
+        if (m_uiVisualTimer)
+        {
+            if (m_uiVisualTimer <= uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_RUNE_OF_POWER_PREFIGHT) == CAST_OK)
+                    m_uiVisualTimer = 0;
+            }
+            else
+                m_uiVisualTimer -= uiDiff;
+        }
+
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
