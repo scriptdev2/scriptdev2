@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: assembly_of_iron
-SD%Complete: 0%
-SDComment:
+SD%Complete: 90%
+SDComment: Lightning Tendrils target following could use some love from the core side
 SDCategory: Ulduar
 EndScriptData */
 
