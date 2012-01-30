@@ -95,11 +95,14 @@ enum
     SPELL_OVERLOAD_AURA                 = 61877,
     SPELL_RUNE_OF_POWER_AURA            = 61974,
     SPELL_RUNE_OF_SUMMONING_AURA        = 62019,        // triggers 62020 which summons 32958
+    SPELL_LIGHTNING_ELEMENTAL_PASSIVE   = 62052,
+    SPELL_LIGHTNING_ELEMENTAL_PASSIVE_H = 63492,
 
     // summoned npcs
     NPC_OVERLOAD_VISUAL                 = 32866,
     NPC_RUNE_OF_POWER                   = 33705,
     NPC_RUNE_OF_SUMMONING               = 33051,
+    NPC_LIGHTNING_ELEMENTAL             = 32958,
 
     PHASE_NO_CHARGE                     = 0,
     PHASE_CHARGE_ONE                    = 1,
@@ -488,9 +491,16 @@ struct MANGOS_DLL_DECL boss_molgeimAI : public ScriptedAI
     void JustSummoned(Creature* pSummoned)
     {
         if (pSummoned->GetEntry() == NPC_RUNE_OF_SUMMONING)
-            pSummoned->CastSpell(pSummoned, SPELL_RUNE_OF_SUMMONING_AURA, true);
+            pSummoned->CastSpell(pSummoned, SPELL_RUNE_OF_SUMMONING_AURA, true, NULL, NULL, m_creature->GetObjectGuid());
         else if (pSummoned->GetEntry() == NPC_RUNE_OF_POWER)
             pSummoned->CastSpell(pSummoned, SPELL_RUNE_OF_POWER_AURA, true);
+        else if (pSummoned->GetEntry() == NPC_LIGHTNING_ELEMENTAL)
+        {
+            pSummoned->CastSpell(pSummoned, m_bIsRegularMode ? SPELL_LIGHTNING_ELEMENTAL_PASSIVE : SPELL_LIGHTNING_ELEMENTAL_PASSIVE_H, true);
+
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                pSummoned->AI()->AttackStart(pTarget);
+        }
     }
 
     void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
