@@ -23,45 +23,53 @@ EndScriptData */
 
 #include "precompiled.h"
 
-#define SPELL_WHIRLWIND             15589
-#define SPELL_MORTALSTRIKE          24573
+enum
+{
+    SPELL_WHIRLWIND             = 15589,
+    SPELL_MORTALSTRIKE          = 24573,
+};
 
 struct MANGOS_DLL_DECL boss_gorosh_the_dervishAI : public ScriptedAI
 {
     boss_gorosh_the_dervishAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
-    uint32 WhirlWind_Timer;
-    uint32 MortalStrike_Timer;
+    uint32 m_uiWhirlWindTimer;
+    uint32 m_uiMortalStrikeTimer;
 
     void Reset()
     {
-        WhirlWind_Timer = 12000;
-        MortalStrike_Timer = 22000;
+        m_uiWhirlWindTimer = 12000;
+        m_uiMortalStrikeTimer = 22000;
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         //Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         //WhirlWind_Timer
-        if (WhirlWind_Timer < diff)
+        if (m_uiWhirlWindTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature,SPELL_WHIRLWIND);
-            WhirlWind_Timer = 15000;
-        }else WhirlWind_Timer -= diff;
+            DoCastSpellIfCan(m_creature, SPELL_WHIRLWIND);
+            m_uiWhirlWindTimer = 15000;
+        }
+        else
+            m_uiWhirlWindTimer -= uiDiff;
 
         //MortalStrike_Timer
-        if (MortalStrike_Timer < diff)
+        if (m_uiMortalStrikeTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_MORTALSTRIKE);
-            MortalStrike_Timer = 15000;
-        }else MortalStrike_Timer -= diff;
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_MORTALSTRIKE);
+            m_uiMortalStrikeTimer = 15000;
+        }
+        else
+            m_uiMortalStrikeTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
 };
+
 CreatureAI* GetAI_boss_gorosh_the_dervish(Creature* pCreature)
 {
     return new boss_gorosh_the_dervishAI(pCreature);
