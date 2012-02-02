@@ -16,79 +16,95 @@
 
 /* ScriptData
 SDName: Boss_Ambassador_Flamelash
-SD%Complete: 100
-SDComment:
+SD%Complete: 80
+SDComment: Texts missing, Add handling rather guesswork, Add spell Burning Spirit likely won't work
 SDCategory: Blackrock Depths
 EndScriptData */
 
 #include "precompiled.h"
 
-#define SPELL_FIREBLAST            15573
+enum
+{
+    SPELL_FIREBLAST             = 15573,
+    SPELL_BURNING_SPIRIT        = 13489,
+    SPELL_BURNING_SPIRIT_BUFF   = 14744,
+
+    NPC_BURNING_SPIRIT          = 9178,
+};
 
 struct MANGOS_DLL_DECL boss_ambassador_flamelashAI : public ScriptedAI
 {
     boss_ambassador_flamelashAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
-    uint32 FireBlast_Timer;
-    uint32 Spirit_Timer;
+    uint32 m_uiSpiritTimer;
     int Rand;
     int RandX;
     int RandY;
-    Creature* Summoned;
 
     void Reset()
     {
-        FireBlast_Timer = 2000;
-        Spirit_Timer = 24000;
+        m_uiSpiritTimer = 12000;
     }
 
-    void SummonSpirits(Unit* victim)
+    void SummonSpirits()
     {
-        Rand = rand()%10;
-        switch(urand(0, 1))
-        {
-            case 0: RandX -= Rand; break;
-            case 1: RandX += Rand; break;
-        }
-        Rand = 0;
-        Rand = rand()%10;
-        switch(urand(0, 1))
-        {
-            case 0: RandY -= Rand; break;
-            case 1: RandY += Rand; break;
-        }
-        Summoned = DoSpawnCreature(9178, RandX, RandY, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 60000);
-        if (Summoned)
-            Summoned->AI()->AttackStart(victim);
+        float fX, fY, fZ;
+        m_creature->GetRandomPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 30.0f, fX, fY, fZ);
+        m_creature->SummonCreature(NPC_BURNING_SPIRIT, fX, fY, fZ, m_creature->GetAngle(fX, fY)+M_PI_F, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 60000);
     }
 
-    void UpdateAI(const uint32 diff)
+    void Aggro(Unit* pWho)
+    {
+        DoCastSpellIfCan(m_creature, SPELL_FIREBLAST);
+    }
+
+    void JustSummoned(Creature* pSummoned)
+    {
+        pSummoned->GetMotionMaster()->MovePoint(1, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ());
+    }
+
+    void SummonedMovementInform(Creature* pSummoned, uint32 uiMotionType, uint32 uiPointId)
+    {
+        if (uiPointId != 1)
+            return;
+
+        pSummoned->CastSpell(m_creature, SPELL_BURNING_SPIRIT, true);
+    }
+
+    void UpdateAI(const uint32 uiDiff)
     {
         //Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //FireBlast_Timer
-        if (FireBlast_Timer < diff)
+        //m_uiSpiritTimer
+        if (m_uiSpiritTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_FIREBLAST);
-            FireBlast_Timer = 7000;
-        }else FireBlast_Timer -= diff;
+            SummonSpirits();
+            SummonSpirits();
+            SummonSpirits();
+            SummonSpirits();
 
-        //Spirit_Timer
-        if (Spirit_Timer < diff)
-        {
-            SummonSpirits(m_creature->getVictim());
-            SummonSpirits(m_creature->getVictim());
-            SummonSpirits(m_creature->getVictim());
-            SummonSpirits(m_creature->getVictim());
-
-            Spirit_Timer = 30000;
-        }else Spirit_Timer -= diff;
+            m_uiSpiritTimer = 20000;
+        }
+        else
+            m_uiSpiritTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
 };
+
+bool EffectDummyCreature_spell_boss_ambassador_flamelash(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+{
+    if (uiSpellId == SPELL_BURNING_SPIRIT && uiEffIndex == EFFECT_INDEX_1)
+    {
+        pCreatureTarget->CastSpell(pCreatureTarget, SPELL_BURNING_SPIRIT_BUFF, true);
+        return true;
+    }
+
+    return false;
+}
+
 CreatureAI* GetAI_boss_ambassador_flamelash(Creature* pCreature)
 {
     return new boss_ambassador_flamelashAI(pCreature);
@@ -101,5 +117,6 @@ void AddSC_boss_ambassador_flamelash()
     pNewScript = new Script;
     pNewScript->Name = "boss_ambassador_flamelash";
     pNewScript->GetAI = &GetAI_boss_ambassador_flamelash;
+    pNewScript->pEffectDummyNPC = &EffectDummyCreature_spell_boss_ambassador_flamelash;
     pNewScript->RegisterSelf();
 }
