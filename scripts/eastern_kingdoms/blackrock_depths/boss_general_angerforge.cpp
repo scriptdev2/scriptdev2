@@ -23,131 +23,109 @@ EndScriptData */
 
 #include "precompiled.h"
 
-#define SPELL_MIGHTYBLOW            14099
-#define SPELL_HAMSTRING             9080
-#define SPELL_CLEAVE                20691
+enum
+{
+    SPELL_MIGHTYBLOW            = 14099,
+    SPELL_HAMSTRING             = 9080,
+    SPELL_CLEAVE                = 20691,
+
+    NPC_ANVILRAGE_RESERVIST     = 8901,
+    NPC_ANVILRAGE_MEDIC         = 8894,
+};
 
 struct MANGOS_DLL_DECL boss_general_angerforgeAI : public ScriptedAI
 {
-    boss_general_angerforgeAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+    boss_general_angerforgeAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
-    uint32 MightyBlow_Timer;
-    uint32 HamString_Timer;
-    uint32 Cleave_Timer;
-    uint32 Adds_Timer;
-    bool Medics;
-    int Rand1;
-    int Rand1X;
-    int Rand1Y;
-    int Rand2;
-    int Rand2X;
-    int Rand2Y;
-    Creature* SummonedAdds;
-    Creature* SummonedMedics;
+    uint32 m_uiMightyBlowTimer;
+    uint32 m_uiHamStringTimer;
+    uint32 m_uiCleaveTimer;
+    uint32 m_uiAddsTimer;
+    bool m_bSummonedMedics;
 
     void Reset()
     {
-        MightyBlow_Timer = 8000;
-        HamString_Timer = 12000;
-        Cleave_Timer = 16000;
-        Adds_Timer = 0;
-        Medics = false;
+        m_uiMightyBlowTimer = 8000;
+        m_uiHamStringTimer = 12000;
+        m_uiCleaveTimer = 16000;
+        m_uiAddsTimer = 0;
+        m_bSummonedMedics = false;
     }
 
-    void SummonAdds(Unit* victim)
+    void SummonAdd(uint32 uiEntry)
     {
-        Rand1 = rand()%15;
-        switch(urand(0, 1))
-        {
-            case 0: Rand1X = 0 - Rand1; break;
-            case 1: Rand1X = 0 + Rand1; break;
-        }
-        Rand1 = 0;
-        Rand1 = rand()%15;
-        switch(urand(0, 1))
-        {
-            case 0: Rand1Y = 0 - Rand1; break;
-            case 1: Rand1Y = 0 + Rand1; break;
-        }
-        Rand1 = 0;
-        SummonedAdds = DoSpawnCreature(8901, Rand1X, Rand1Y, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 120000);
-        if (SummonedAdds)
-            SummonedAdds->AI()->AttackStart(victim);
+        float fX, fY, fZ;
+        m_creature->GetRandomPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 20.0f, fX, fY, fZ);
+        m_creature->SummonCreature(uiEntry, fX, fY, fZ, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 60000);
     }
 
-    void SummonMedics(Unit* victim)
+    void JustSummoned(Creature* pSummoned)
     {
-        Rand2 = rand()%10;
-        switch(urand(0, 1))
-        {
-            case 0: Rand2X = 0 - Rand2; break;
-            case 1: Rand2X = 0 + Rand2; break;
-        }
-        Rand2 = 0;
-        Rand2 = rand()%10;
-        switch(urand(0, 1))
-        {
-            case 0: Rand2Y = 0 - Rand2; break;
-            case 1: Rand2Y = 0 + Rand2; break;
-        }
-        Rand2 = 0;
-        SummonedMedics = DoSpawnCreature(8894, Rand2X, Rand2Y, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 120000);
-        if (SummonedMedics)
-            SummonedMedics->AI()->AttackStart(victim);
+        if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            pSummoned->AI()->AttackStart(pTarget);
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         //Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         //MightyBlow_Timer
-        if (MightyBlow_Timer < diff)
+        if (m_uiMightyBlowTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_MIGHTYBLOW);
-            MightyBlow_Timer = 18000;
-        }else MightyBlow_Timer -= diff;
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_MIGHTYBLOW);
+            m_uiMightyBlowTimer = 18000;
+        }
+        else
+            m_uiMightyBlowTimer -= uiDiff;
 
         //HamString_Timer
-        if (HamString_Timer < diff)
+        if (m_uiHamStringTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_HAMSTRING);
-            HamString_Timer = 15000;
-        }else HamString_Timer -= diff;
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_HAMSTRING);
+            m_uiHamStringTimer = 15000;
+        }
+        else
+            m_uiHamStringTimer -= uiDiff;
 
         //Cleave_Timer
-        if (Cleave_Timer < diff)
+        if (m_uiCleaveTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_CLEAVE);
-            Cleave_Timer = 9000;
-        }else Cleave_Timer -= diff;
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_CLEAVE);
+            m_uiCleaveTimer = 9000;
+        }
+        else
+            m_uiCleaveTimer -= uiDiff;
 
         //Adds_Timer
         if (m_creature->GetHealthPercent() < 21.0f)
         {
-            if (Adds_Timer < diff)
+            if (m_uiAddsTimer < uiDiff)
             {
                 // summon 3 Adds every 25s
-                SummonAdds(m_creature->getVictim());
-                SummonAdds(m_creature->getVictim());
-                SummonAdds(m_creature->getVictim());
+                SummonAdd(NPC_ANVILRAGE_RESERVIST);
+                SummonAdd(NPC_ANVILRAGE_RESERVIST);
+                SummonAdd(NPC_ANVILRAGE_RESERVIST);
 
-                Adds_Timer = 25000;
-            } else Adds_Timer -= diff;
+                m_uiAddsTimer = 25000;
+            }
+            else
+                m_uiAddsTimer -= uiDiff;
         }
 
         //Summon Medics
-        if (!Medics && m_creature->GetHealthPercent() < 21.0f)
+        if (!m_bSummonedMedics && m_creature->GetHealthPercent() < 21.0f)
         {
-            SummonMedics(m_creature->getVictim());
-            SummonMedics(m_creature->getVictim());
-            Medics = true;
+            SummonAdd(NPC_ANVILRAGE_MEDIC);
+            SummonAdd(NPC_ANVILRAGE_MEDIC);
+            m_bSummonedMedics = true;
         }
 
         DoMeleeAttackIfReady();
     }
 };
+
 CreatureAI* GetAI_boss_general_angerforge(Creature* pCreature)
 {
     return new boss_general_angerforgeAI(pCreature);
