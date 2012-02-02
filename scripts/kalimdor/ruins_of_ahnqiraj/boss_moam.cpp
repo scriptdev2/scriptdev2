@@ -47,17 +47,17 @@ struct MANGOS_DLL_DECL boss_moamAI : public ScriptedAI
 
     uint8 m_uiPhase;
 
-    uint32 m_uiTrample_Timer;
-    uint32 m_uiManaDrain_Timer;
-    uint32 m_uiCheckoutMana_Timer;
-    uint32 m_uiSummonManaFiends_Timer;
+    uint32 m_uiTrampleTimer;
+    uint32 m_uiManaDrainTimer;
+    uint32 m_uiCheckoutManaTimer;
+    uint32 m_uiSummonManaFiendsTimer;
 
     void Reset()
     {
-        m_uiTrample_Timer           = 9000;
-        m_uiManaDrain_Timer         = 3000;
-        m_uiSummonManaFiends_Timer  = 90000;
-        m_uiCheckoutMana_Timer      = 1500;
+        m_uiTrampleTimer            = 9000;
+        m_uiManaDrainTimer          = 3000;
+        m_uiSummonManaFiendsTimer   = 90000;
+        m_uiCheckoutManaTimer       = 1500;
         m_uiPhase                   = PHASE_ATTACKING;
         m_creature->SetPower(POWER_MANA, 0);
         m_creature->SetMaxPower(POWER_MANA, 0);
@@ -77,9 +77,9 @@ struct MANGOS_DLL_DECL boss_moamAI : public ScriptedAI
         switch(m_uiPhase)
         {
             case PHASE_ATTACKING:
-                if (m_uiCheckoutMana_Timer <= uiDiff)
+                if (m_uiCheckoutManaTimer <= uiDiff)
                 {
-                    m_uiCheckoutMana_Timer = 1500;
+                    m_uiCheckoutManaTimer = 1500;
                     if (m_creature->GetPower(POWER_MANA) * 100 / m_creature->GetMaxPower(POWER_MANA) > 75.0f)
                     {
                         DoCastSpellIfCan(m_creature, SPELL_ENERGIZE);
@@ -89,60 +89,43 @@ struct MANGOS_DLL_DECL boss_moamAI : public ScriptedAI
                     }
                 }
                 else
-                    m_uiCheckoutMana_Timer -= uiDiff;
+                    m_uiCheckoutManaTimer -= uiDiff;
 
-                if (m_uiSummonManaFiends_Timer <= uiDiff)
+                if (m_uiSummonManaFiendsTimer <= uiDiff)
                 {
                     DoCastSpellIfCan(m_creature->getVictim(), SPELL_SUMMON_MANAFIEND_1, CAST_TRIGGERED);
                     DoCastSpellIfCan(m_creature->getVictim(), SPELL_SUMMON_MANAFIEND_2, CAST_TRIGGERED);
                     DoCastSpellIfCan(m_creature->getVictim(), SPELL_SUMMON_MANAFIEND_3, CAST_TRIGGERED);
-                    m_uiSummonManaFiends_Timer = 90000;
+                    m_uiSummonManaFiendsTimer = 90000;
                 }
                 else
-                    m_uiSummonManaFiends_Timer -= uiDiff;
+                    m_uiSummonManaFiendsTimer -= uiDiff;
 
-                if (m_uiManaDrain_Timer <= uiDiff)
+                if (m_uiManaDrainTimer <= uiDiff)
                 {
-                    m_uiManaDrain_Timer = urand(2000, 6000);
-                    // choose random target with mana
-                    std::list<Unit*> lTargets;
-                    ThreatList const& threatlist = m_creature->getThreatManager().getThreatList();
-                    if (threatlist.empty())
-                        return;
-
-                    for (ThreatList::const_iterator itr = threatlist.begin(); itr != threatlist.end(); ++itr)
+                    if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_DRAIN_MANA, SELECT_FLAG_POWER_MANA))
                     {
-                        Unit* pUnit = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid());
-
-                        if (pUnit && pUnit->isAlive() && pUnit->GetPower(POWER_MANA))
-                            lTargets.push_back(pUnit);
+                        if (DoCastSpellIfCan(pTarget, SPELL_DRAIN_MANA) == CAST_OK)
+                            m_uiManaDrainTimer = urand(2000, 6000);
                     }
-
-                    if (lTargets.empty())
-                        return;
-
-                    std::list<Unit*>::iterator itr = lTargets.begin();
-                    std::advance(itr, urand(0, lTargets.size()-1));
-
-                    DoCastSpellIfCan(*itr, SPELL_DRAIN_MANA);
                 }
                 else
-                    m_uiManaDrain_Timer -= uiDiff;
+                    m_uiManaDrainTimer -= uiDiff;
 
-                if (m_uiTrample_Timer <= uiDiff)
+                if (m_uiTrampleTimer <= uiDiff)
                 {
                     DoCastSpellIfCan(m_creature->getVictim(), SPELL_TRAMPLE);
-                    m_uiTrample_Timer = 15000;
+                    m_uiTrampleTimer = 15000;
                 }
                 else
-                    m_uiTrample_Timer -= uiDiff;
+                    m_uiTrampleTimer -= uiDiff;
 
                 DoMeleeAttackIfReady();
                 break;
             case PHASE_ENERGIZING:
-                if (m_uiCheckoutMana_Timer <= uiDiff)
+                if (m_uiCheckoutManaTimer <= uiDiff)
                 {
-                    m_uiCheckoutMana_Timer = 1500;
+                    m_uiCheckoutManaTimer = 1500;
                     if (m_creature->GetPower(POWER_MANA) == m_creature->GetMaxPower(POWER_MANA))
                     {
                         m_creature->RemoveAurasDueToSpell(SPELL_ENERGIZE);
@@ -153,7 +136,7 @@ struct MANGOS_DLL_DECL boss_moamAI : public ScriptedAI
                     }
                 }
                 else
-                    m_uiCheckoutMana_Timer -= uiDiff;
+                    m_uiCheckoutManaTimer -= uiDiff;
                 break;
         }
     }
