@@ -40,13 +40,13 @@ struct MANGOS_DLL_DECL boss_magmusAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    uint32 m_uiFieryBurst_Timer;
-    uint32 m_uiWarStomp_Timer;
+    uint32 m_uiFieryBurstTimer;
+    uint32 m_uiWarStompTimer;
 
     void Reset()
     {
-        m_uiFieryBurst_Timer = 5000;
-        m_uiWarStomp_Timer = 0;
+        m_uiFieryBurstTimer = 5000;
+        m_uiWarStompTimer = 0;
     }
 
     void Aggro(Unit* pWho)
@@ -74,24 +74,24 @@ struct MANGOS_DLL_DECL boss_magmusAI : public ScriptedAI
             return;
 
         //FieryBurst_Timer
-        if (m_uiFieryBurst_Timer < uiDiff)
+        if (m_uiFieryBurstTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_FIERYBURST);
-            m_uiFieryBurst_Timer = 6000;
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_FIERYBURST);
+            m_uiFieryBurstTimer = 6000;
         }
         else
-            m_uiFieryBurst_Timer -= uiDiff;
+            m_uiFieryBurstTimer -= uiDiff;
 
         //WarStomp_Timer
         if (m_creature->GetHealthPercent() < 51.0f)
         {
-            if (m_uiWarStomp_Timer < uiDiff)
+            if (m_uiWarStompTimer < uiDiff)
             {
-                DoCastSpellIfCan(m_creature->getVictim(),SPELL_WARSTOMP);
-                m_uiWarStomp_Timer = 8000;
+                DoCastSpellIfCan(m_creature, SPELL_WARSTOMP);
+                m_uiWarStompTimer = 8000;
             }
             else
-                m_uiWarStomp_Timer -= uiDiff;
+                m_uiWarStompTimer -= uiDiff;
         }
 
         DoMeleeAttackIfReady();
