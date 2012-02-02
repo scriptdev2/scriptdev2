@@ -35,17 +35,17 @@ struct MANGOS_DLL_DECL boss_high_interrogator_gerstahnAI : public ScriptedAI
 {
     boss_high_interrogator_gerstahnAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
-    uint32 m_uiShadowWordPain_Timer;
-    uint32 m_uiManaBurn_Timer;
-    uint32 m_uiPsychicScream_Timer;
-    uint32 m_uiShadowShield_Timer;
+    uint32 m_uiShadowWordPainTimer;
+    uint32 m_uiManaBurnTimer;
+    uint32 m_uiPsychicScreamTimer;
+    uint32 m_uiShadowShieldTimer;
 
     void Reset()
     {
-        m_uiShadowWordPain_Timer = 4000;
-        m_uiManaBurn_Timer = 14000;
-        m_uiPsychicScream_Timer = 32000;
-        m_uiShadowShield_Timer = 8000;
+        m_uiShadowWordPainTimer = 4000;
+        m_uiManaBurnTimer = 14000;
+        m_uiPsychicScreamTimer = 32000;
+        m_uiShadowShieldTimer = 8000;
     }
 
     void UpdateAI(const uint32 uiDiff)
@@ -55,44 +55,44 @@ struct MANGOS_DLL_DECL boss_high_interrogator_gerstahnAI : public ScriptedAI
             return;
 
         //ShadowWordPain_Timer
-        if (m_uiShadowWordPain_Timer < uiDiff)
+        if (m_uiShadowWordPainTimer < uiDiff)
         {
-            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                 DoCastSpellIfCan(pTarget, SPELL_SHADOWWORDPAIN);
 
-            m_uiShadowWordPain_Timer = 7000;
+            m_uiShadowWordPainTimer = 7000;
         }
         else
-            m_uiShadowWordPain_Timer -= uiDiff;
+            m_uiShadowWordPainTimer -= uiDiff;
 
         //ManaBurn_Timer
-        if (m_uiManaBurn_Timer < uiDiff)
+        if (m_uiManaBurnTimer < uiDiff)
         {
-            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_MANABURN, SELECT_FLAG_POWER_MANA))
                 DoCastSpellIfCan(pTarget, SPELL_MANABURN);
 
-            m_uiManaBurn_Timer = 10000;
+            m_uiManaBurnTimer = 10000;
         }
         else
-            m_uiManaBurn_Timer -= uiDiff;
+            m_uiManaBurnTimer -= uiDiff;
 
         //PsychicScream_Timer
-        if (m_uiPsychicScream_Timer < uiDiff)
+        if (m_uiPsychicScreamTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_PSYCHICSCREAM);
-            m_uiPsychicScream_Timer = 30000;
+            DoCastSpellIfCan(m_creature, SPELL_PSYCHICSCREAM);
+            m_uiPsychicScreamTimer = 30000;
         }
         else
-            m_uiPsychicScream_Timer -= uiDiff;
+            m_uiPsychicScreamTimer -= uiDiff;
 
         //ShadowShield_Timer
-        if (m_uiShadowShield_Timer < uiDiff)
+        if (m_uiShadowShieldTimer < uiDiff)
         {
             DoCastSpellIfCan(m_creature, SPELL_SHADOWSHIELD);
-            m_uiShadowShield_Timer = 25000;
+            m_uiShadowShieldTimer = 25000;
         }
         else
-            m_uiShadowShield_Timer -= uiDiff;
+            m_uiShadowShieldTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
