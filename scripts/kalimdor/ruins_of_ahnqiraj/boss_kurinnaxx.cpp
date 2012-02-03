@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Kurinnaxx
-SD%Complete: 80
-SDComment: Summon Player ability NYI; Sand trap trigger NYI
+SD%Complete: 90
+SDComment: Summon Player ability NYI
 SDCategory: Ruins of Ahn'Qiraj
 EndScriptData */
 
@@ -31,6 +31,8 @@ enum
     SPELL_SANDTRAP          = 25648,        // summons gameobject 180647
     SPELL_ENRAGE            = 26527,
     SPELL_SUMMON_PLAYER     = 26446,
+
+    GO_SAND_TRAP            = 180647,
 };
 
 struct MANGOS_DLL_DECL boss_kurinnaxxAI : public ScriptedAI
@@ -41,7 +43,10 @@ struct MANGOS_DLL_DECL boss_kurinnaxxAI : public ScriptedAI
     uint32 m_uiSandTrapTimer;
     uint32 m_uiTrashTimer;
     uint32 m_uiWideSlashTimer;
+    uint32 m_uiTrapTriggerTimer;
     bool m_bEnraged;
+
+    ObjectGuid m_sandtrapGuid;
 
     void Reset()
     {
@@ -51,6 +56,16 @@ struct MANGOS_DLL_DECL boss_kurinnaxxAI : public ScriptedAI
         m_uiSandTrapTimer    = urand(5000, 10000);
         m_uiTrashTimer       = urand(1000, 5000);
         m_uiWideSlashTimer   = urand(10000, 15000);
+        m_uiTrapTriggerTimer = 0;
+    }
+
+    void JustSummoned(GameObject* pGo)
+    {
+        if (pGo->GetEntry() == GO_SAND_TRAP)
+        {
+            m_uiTrapTriggerTimer = 3000;
+            m_sandtrapGuid = pGo->GetObjectGuid();
+        }
     }
 
     void UpdateAI(const uint32 uiDiff)
@@ -86,6 +101,19 @@ struct MANGOS_DLL_DECL boss_kurinnaxxAI : public ScriptedAI
         }
         else
             m_uiSandTrapTimer -= uiDiff;
+
+        // Trigger the sand trap in 3 secs after spawn
+        if (m_uiTrapTriggerTimer)
+        {
+            if (m_uiTrapTriggerTimer <= uiDiff)
+            {
+                if (GameObject* pTrap = m_creature->GetMap()->GetGameObject(m_sandtrapGuid))
+                    pTrap->Use(m_creature);
+                m_uiTrapTriggerTimer = 0;
+            }
+            else
+                m_uiTrapTriggerTimer -= uiDiff;
+        }
 
         // Wide Slash
         if (m_uiWideSlashTimer < uiDiff)
