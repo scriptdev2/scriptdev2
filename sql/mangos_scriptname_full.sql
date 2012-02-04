@@ -909,6 +909,8 @@ UPDATE creature_template SET ScriptName='boss_moam' WHERE entry=15340;
 UPDATE creature_template SET ScriptName='boss_ossirian' WHERE entry=15339;
 UPDATE gameobject_template SET ScriptName='go_ossirian_crystal' WHERE entry=180619;
 UPDATE creature_template SET ScriptName='npc_hive_zara_larva' WHERE entry=15555;
+UPDATE creature_template SET ScriptName='boss_buru' WHERE entry=15370;
+UPDATE creature_template SET ScriptName='npc_buru_egg' WHERE entry=15514;
 
 /* SCARLET MONASTERY */
 UPDATE instance_template SET ScriptName='instance_scarlet_monastery' WHERE map=189;
