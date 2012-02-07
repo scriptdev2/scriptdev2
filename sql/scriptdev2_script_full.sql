@@ -649,7 +649,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000610,'The mosswalker victim groans in pain.',0,2,0,0,'mosswalker victim EMOTE_PAIN'),
 
 (-1000611,'Maybe you make weather better too?',0,0,0,0,'mosswalker victim SAY_RESCUE_1'),
-(-1000612,'We saved. You nice, $N.',0,0,0,0,'mosswalker victim SAY_RESCUE_2'),
+(-1000612,'We saved. You nice, dryskin.',0,0,0,0,'mosswalker victim SAY_RESCUE_2'),
 (-1000613,'You save us! Yay for you!',0,0,0,0,'mosswalker victim SAY_RESCUE_3'),
 (-1000614,'Thank you! You good!',0,0,0,0,'mosswalker victim SAY_RESCUE_4'),
 
