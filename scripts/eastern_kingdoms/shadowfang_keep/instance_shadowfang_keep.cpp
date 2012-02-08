@@ -24,7 +24,8 @@ EndScriptData */
 #include "precompiled.h"
 #include "shadowfang_keep.h"
 
-instance_shadowfang_keep::instance_shadowfang_keep(Map* pMap) : ScriptedInstance(pMap)
+instance_shadowfang_keep::instance_shadowfang_keep(Map* pMap) : ScriptedInstance(pMap),
+    m_uiApothecaryDead(0)
 {
     Initialize();
 }
@@ -41,6 +42,11 @@ void instance_shadowfang_keep::OnCreatureCreate(Creature* pCreature)
         case NPC_ASH:
         case NPC_ADA:
         case NPC_FENRUS:
+        case NPC_HUMMEL:
+        case NPC_FRYE:
+        case NPC_BAXTER:
+        case NPC_APOTHECARY_GENERATOR:
+        case NPC_VALENTINE_BOSS_MGR:
             break;
         case NPC_VINCENT:
             // If Arugal has done the intro, make Vincent dead!
@@ -73,12 +79,43 @@ void instance_shadowfang_keep::OnObjectCreate(GameObject* pGo)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_ARUGAL_FOCUS:
+        case GO_APOTHECARE_VIALS:
+        case GO_CHEMISTRY_SET:
             break;
 
         default:
             return;
     }
     m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
+}
+
+void instance_shadowfang_keep::OnCreatureDeath(Creature* pCreature)
+{
+    switch(pCreature->GetEntry())
+    {
+        // Remove lootable flag from Hummel
+        // Instance data is set to SPECIAL because the encounter depends on multiple bosses
+        case NPC_HUMMEL:
+            pCreature->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
+            DoScriptText(SAY_HUMMEL_DEATH, pCreature);
+            // no break;
+        case NPC_FRYE:
+        case NPC_BAXTER:
+            SetData(TYPE_APOTHECARY, SPECIAL);
+            break;
+    }
+}
+
+void instance_shadowfang_keep::OnCreatureEvade(Creature* pCreature)
+{
+    switch(pCreature->GetEntry())
+    {
+        case NPC_HUMMEL:
+        case NPC_FRYE:
+        case NPC_BAXTER:
+            SetData(TYPE_APOTHECARY, FAIL);
+            break;
+    }
 }
 
 void instance_shadowfang_keep::DoSpeech()
@@ -131,6 +168,27 @@ void instance_shadowfang_keep::SetData(uint32 uiType, uint32 uiData)
                     DoUseDoorOrButton(GO_SORCERER_DOOR);
             }
             break;
+        case TYPE_APOTHECARY:
+            // Reset apothecary counter on fail
+            if (uiData == IN_PROGRESS)
+                m_uiApothecaryDead = 0;
+            if (uiData == SPECIAL)
+            {
+                ++m_uiApothecaryDead;
+
+                // Set Hummel as lootable only when the others are dead
+                if (m_uiApothecaryDead == MAX_APOTHECARY)
+                {
+                    if (Creature* pHummel = GetSingleCreatureFromStorage(NPC_HUMMEL))
+                        pHummel->SetFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
+
+                    SetData(TYPE_APOTHECARY, DONE);
+                }
+            }
+            // We don't want to store the SPECIAL data
+            else
+                m_auiEncounter[6] = uiData;
+            break;
     }
 
     if (uiData == DONE)
@@ -139,7 +197,7 @@ void instance_shadowfang_keep::SetData(uint32 uiType, uint32 uiData)
 
         std::ostringstream saveStream;
         saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " " << m_auiEncounter[3]
-             << " " << m_auiEncounter[4] << " " << m_auiEncounter[5];
+             << " " << m_auiEncounter[4] << " " << m_auiEncounter[5] << " " << m_auiEncounter[6];
 
         m_strInstData = saveStream.str();
 
@@ -157,6 +215,7 @@ uint32 instance_shadowfang_keep::GetData(uint32 uiType)
         case TYPE_FENRUS:     return m_auiEncounter[2];
         case TYPE_NANDOS:     return m_auiEncounter[3];
         case TYPE_INTRO:      return m_auiEncounter[4];
+        case TYPE_APOTHECARY: return m_auiEncounter[6];
 
         default:
             return 0;
@@ -175,7 +234,7 @@ void instance_shadowfang_keep::Load(const char* chrIn)
 
     std::istringstream loadStream(chrIn);
     loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3]
-        >> m_auiEncounter[4] >> m_auiEncounter[5];
+        >> m_auiEncounter[4] >> m_auiEncounter[5] >> m_auiEncounter[6];
 
     for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
     {
