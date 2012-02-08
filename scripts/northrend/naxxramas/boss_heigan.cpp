@@ -76,7 +76,7 @@ struct MANGOS_DLL_DECL boss_heiganAI : public ScriptedAI
     {
         m_uiPhaseEruption = 0;
         m_uiFeverTimer = 4000;
-        m_uiEruptionTimer = m_uiPhase == PHASE_GROUND ? urand(8000, 12000) : urand(2000, 3000);
+        m_uiEruptionTimer = m_uiPhase == PHASE_GROUND ? 15000 : 7500;
         m_uiDisruptionTimer = 5000;
         m_uiStartChannelingTimer = 1000;
         m_uiPhaseTimer = m_uiPhase == PHASE_GROUND ? 90000 : 45000;
@@ -223,7 +223,7 @@ struct MANGOS_DLL_DECL boss_heiganAI : public ScriptedAI
                 m_pInstance->DoTriggerHeiganTraps(m_creature, uiArea);
             }
 
-            m_uiEruptionTimer = m_uiPhase == PHASE_GROUND ? urand(8000, 12000) : urand(2000, 3000);
+            m_uiEruptionTimer = m_uiPhase == PHASE_GROUND ? 10000 : 3000;
             ++m_uiPhaseEruption;
         }
         else
