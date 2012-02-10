@@ -23,154 +23,104 @@ EndScriptData */
 
 #include "precompiled.h"
 
-#define SPELL_CURSEOFBLOOD          24673
-//#define SPELL_ILLUSION              17773
+enum
+{
+    SPELL_CURSE_OF_BLOOD        = 16098,
+    SPELL_SUMMON_ILLUSIONS      = 17773,
+    SPELL_BANISH                = 8994,
 
-//Spells of Illusion of Jandice Barov
-#define SPELL_CLEAVE                15584
+    //Spells of Illusion of Jandice Barov
+    SPELL_CLEAVE                = 15584,
+};
 
 struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
 {
     boss_jandicebarovAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
-    uint32 CurseOfBlood_Timer;
-    uint32 Illusion_Timer;
-    //uint32 Illusioncounter;
-    uint32 Invisible_Timer;
-    bool Invisible;
-    int Rand;
-    int RandX;
-    int RandY;
-    Creature* Summoned;
+    uint32 m_uiCurseOfBloodTimer;
+    uint32 m_uiIllusionTimer;
+    uint32 m_uiBanishTimer;
 
     void Reset()
     {
-        CurseOfBlood_Timer = 15000;
-        Illusion_Timer = 30000;
-        Invisible_Timer = 3000;                             //Too much too low?
-        Invisible = false;
+        m_uiCurseOfBloodTimer = 5000;
+        m_uiIllusionTimer = 15000;
+        m_uiBanishTimer = urand(9000, 13000);
     }
 
-    void SummonIllusions(Unit* victim)
+    void JustSummoned(Creature* pSummoned)
     {
-        Rand = rand()%10;
-        switch(urand(0, 1))
-        {
-        case 0: RandX = 0 - Rand; break;
-        case 1: RandX = 0 + Rand; break;
-        }
-        Rand = 0;
-        Rand = rand()%10;
-        switch(urand(0, 1))
-        {
-        case 0: RandY = 0 - Rand; break;
-        case 1: RandY = 0 + Rand; break;
-        }
-        Rand = 0;
-        Summoned = DoSpawnCreature(11439, RandX, RandY, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 60000);
-        if (Summoned)
-            Summoned->AI()->AttackStart(victim);
+        pSummoned->ApplySpellImmune(0, IMMUNITY_DAMAGE, SPELL_SCHOOL_MASK_MAGIC, true);
+
+        if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            pSummoned->AI()->AttackStart(pTarget);
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
-        if (Invisible && Invisible_Timer < diff)
-        {
-            //Become visible again
-            m_creature->setFaction(14);
-            m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-            m_creature->SetDisplayId(11073);                //Jandice Model
-            Invisible = false;
-        } else if (Invisible)
-        {
-            Invisible_Timer -= diff;
-            //Do nothing while invisible
-            return;
-        }
-
-        //Return since we have no target
+        // Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //CurseOfBlood_Timer
-        if (CurseOfBlood_Timer < diff)
+        // CurseOfBlood_Timer
+        if (m_uiCurseOfBloodTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_CURSEOFBLOOD);
-            CurseOfBlood_Timer = 30000;
-        }else CurseOfBlood_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature, SPELL_CURSE_OF_BLOOD) == CAST_OK)
+                m_uiCurseOfBloodTimer = urand(30000, 35000);
+        }
+        else
+            m_uiCurseOfBloodTimer -= uiDiff;
 
-        //Illusion_Timer
-        if (!Invisible && Illusion_Timer < diff)
+        // Banish
+        if (m_uiBanishTimer < uiDiff)
         {
-            //Inturrupt any spell casting
-            m_creature->InterruptNonMeleeSpells(false);
-            m_creature->setFaction(35);
-            m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-            m_creature->SetDisplayId(11686);                // Invisible Model
-            m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-99);
-
-            //Summon 10 Illusions attacking random gamers
-            Unit* target = NULL;
-            for(int i = 0; i < 10; ++i)
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1))
             {
-                target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
-                SummonIllusions(target);
+                if (DoCastSpellIfCan(pTarget, SPELL_BANISH) == CAST_OK)
+                    m_uiBanishTimer = urand(17000, 21000);
             }
-            Invisible = true;
-            Invisible_Timer = 3000;
+        }
+        else
+            m_uiBanishTimer -= uiDiff;
 
-            //25 seconds until we should cast this agian
-            Illusion_Timer = 25000;
-        }else Illusion_Timer -= diff;
-
-        //            //Illusion_Timer
-        //            if (Illusion_Timer < diff)
-        //            {
-        //                  //Cast
-        //                DoCastSpellIfCan(m_creature->getVictim(),SPELL_ILLUSION);
-        //                  //3 Illusion will be summoned
-        //                  if (Illusioncounter < 3)
-        //                  {
-        //                    Illusion_Timer = 500;
-        //                    ++Illusioncounter;
-        //                  }
-        //                  else {
-        //                      //15 seconds until we should cast this again
-        //                      Illusion_Timer = 15000;
-        //                      Illusioncounter=0;
-        //                  }
-        //            }else Illusion_Timer -= diff;
+        // Illusion_Timer
+        if (m_uiIllusionTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_SUMMON_ILLUSIONS) == CAST_OK)
+                m_uiIllusionTimer = 25000;
+        }
+        else
+            m_uiIllusionTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
 };
 
-// Illusion of Jandice Barov Script
-
 struct MANGOS_DLL_DECL mob_illusionofjandicebarovAI : public ScriptedAI
 {
     mob_illusionofjandicebarovAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
-    uint32 Cleave_Timer;
+    uint32 m_uiCleaveTimer;
 
     void Reset()
     {
-        Cleave_Timer = urand(2000, 8000);
-        m_creature->ApplySpellImmune(0, IMMUNITY_DAMAGE, SPELL_SCHOOL_MASK_MAGIC, true);
+        m_uiCleaveTimer = urand(2000, 8000);
     }
 
     void UpdateAI(const uint32 diff)
     {
-        //Return since we have no target
+        // Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //Cleave_Timer
-        if (Cleave_Timer < diff)
+        // Cleave_Timer
+        if (m_uiCleaveTimer < diff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_CLEAVE);
-            Cleave_Timer = urand(5000, 8000);
-        }else Cleave_Timer -= diff;
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_CLEAVE);
+            m_uiCleaveTimer = urand(5000, 8000);
+        }
+        else
+            m_uiCleaveTimer -= diff;
 
         DoMeleeAttackIfReady();
     }
