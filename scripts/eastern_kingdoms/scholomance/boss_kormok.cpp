@@ -23,121 +23,105 @@ EndScriptData */
 
 #include "precompiled.h"
 
-#define SPELL_SHADOWBOLTVOLLEY      20741
-#define SPELL_BONESHIELD            27688
+enum
+{
+    EMOTE_GENERIC_FRENZY        = -1000002,
+
+    SPELL_SHADOWBOLT_VOLLEY     = 20741,
+    SPELL_BONE_SHIELD           = 27688,
+    SPELL_BLOODLUST             = 27689,
+    SPELL_SUMMON_BONE_MAGES     = 27695,        // triggers 27696, 27697, 27698, 27699
+    SPELL_SUMMON_BONE_MINIONS   = 27687,        // triggers 27690, 27691, 27692, 27693 (spells were removed after vanilla)
+    SPELL_FRENZY                = 8269,
+};
 
 struct MANGOS_DLL_DECL boss_kormokAI : public ScriptedAI
 {
     boss_kormokAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
-    uint32 ShadowVolley_Timer;
-    uint32 BoneShield_Timer;
-    uint32 Minion_Timer;
-    uint32 Mage_Timer;
-    bool Mages;
-    int Rand1;
-    int Rand1X;
-    int Rand1Y;
-    int Rand2;
-    int Rand2X;
-    int Rand2Y;
-    Creature* SummonedMinions;
-    Creature* SummonedMages;
+    uint32 m_uiShadowVolleyTimer;
+    uint32 m_uiBoneShieldTimer;
+    uint32 m_uiMinionTimer;
+    uint32 m_uiBloodlustTimer;
+    bool m_bHasMages;
+    bool m_bIsFrenzy;
 
     void Reset()
     {
-        ShadowVolley_Timer = 10000;
-        BoneShield_Timer = 2000;
-        Minion_Timer = 15000;
-        Mage_Timer = 0;
-        Mages = false;
+        m_uiShadowVolleyTimer   = urand(10000, 12000);
+        m_uiMinionTimer         = 15000;
+        m_uiBloodlustTimer      = urand(20000, 25000);
+        m_bHasMages             = false;
+        m_bIsFrenzy             = false;
+
+        // the boss casts this on spawn because he is summoned
+        DoCastSpellIfCan(m_creature, SPELL_BONE_SHIELD);
     }
 
-    void SummonMinion(Unit* victim)
+    void Aggro(Unit* pWho)
     {
-        Rand1 = rand()%8;
-        switch(urand(0, 1))
-        {
-            case 0: Rand1X = 0 - Rand1; break;
-            case 1: Rand1X = 0 + Rand1; break;
-        }
-        Rand1 = 0;
-        Rand1 = rand()%8;
-        switch(urand(0, 1))
-        {
-            case 0: Rand1Y = 0 - Rand1; break;
-            case 1: Rand1Y = 0 + Rand1; break;
-        }
-        Rand1 = 0;
-        SummonedMinions = DoSpawnCreature(16119, Rand1X, Rand1Y, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 120000);
-        if (SummonedMinions)
-            SummonedMinions->AI()->AttackStart(victim);
+        DoCastSpellIfCan(m_creature, SPELL_BONE_SHIELD, CAST_AURA_NOT_PRESENT);
     }
 
-    void SummonMages(Unit* victim)
+    void JustSummoned(Creature* pSummoned)
     {
-        Rand2 = rand()%10;
-        switch(urand(0, 1))
-        {
-            case 0: Rand2X = 0 - Rand2; break;
-            case 1: Rand2X = 0 + Rand2; break;
-        }
-        Rand2 = 0;
-        Rand2 = rand()%10;
-        switch(urand(0, 1))
-        {
-            case 0: Rand2Y = 0 - Rand2; break;
-            case 1: Rand2Y = 0 + Rand2; break;
-        }
-        Rand2 = 0;
-        SummonedMages = DoSpawnCreature(16120, Rand2X, Rand2Y, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 120000);
-        if (SummonedMages)
-            SummonedMages->AI()->AttackStart(victim);
+        if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            pSummoned->AI()->AttackStart(pTarget);
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //ShadowVolley_Timer
-        if (ShadowVolley_Timer < diff)
+        // ShadowVolley_Timer
+        if (m_uiShadowVolleyTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_SHADOWBOLTVOLLEY);
-            ShadowVolley_Timer = 15000;
-        }else ShadowVolley_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature, SPELL_SHADOWBOLT_VOLLEY) == CAST_OK)
+                m_uiShadowVolleyTimer = 15000;
+        }
+        else
+            m_uiShadowVolleyTimer -= uiDiff;
 
-        //BoneShield_Timer
-        if (BoneShield_Timer < diff)
+        // Minion_Timer
+        if (m_uiMinionTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_BONESHIELD);
-            BoneShield_Timer = 45000;
-        }else BoneShield_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature, SPELL_SUMMON_BONE_MINIONS) == CAST_OK)
+                m_uiMinionTimer = urand(12000, 15000);
+        }
+        else
+            m_uiMinionTimer -= uiDiff;
 
-        //Minion_Timer
-        if (Minion_Timer < diff)
+        // Bloodlust
+        if (m_uiBloodlustTimer < uiDiff)
         {
-            //Cast
-            SummonMinion(m_creature->getVictim());
-            SummonMinion(m_creature->getVictim());
-            SummonMinion(m_creature->getVictim());
-            SummonMinion(m_creature->getVictim());
+            if (DoCastSpellIfCan(m_creature, SPELL_BLOODLUST) == CAST_OK)
+                m_uiBloodlustTimer = urand(25000, 30000);
+        }
+        else
+            m_uiBloodlustTimer -= uiDiff;
 
-            Minion_Timer = 12000;
-        }else Minion_Timer -= diff;
-
-        //Summon 2 Bone Mages
-        if (!Mages && m_creature->GetHealthPercent() < 26.0f)
+        // Summon Bone Mages
+        if (!m_bHasMages && m_creature->GetHealthPercent() < 26.0f)
         {
-            //Cast
-            SummonMages(m_creature->getVictim());
-            SummonMages(m_creature->getVictim());
-            Mages = true;
+            if (DoCastSpellIfCan(m_creature, SPELL_SUMMON_BONE_MAGES) == CAST_OK)
+                m_bHasMages = true;
+        }
+
+        // Frenzy
+        if (!m_bIsFrenzy && m_creature->GetHealthPercent() < 20.0f)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_FRENZY) == CAST_OK)
+            {
+                DoScriptText(EMOTE_GENERIC_FRENZY, m_creature);
+                m_bIsFrenzy = true;
+            }
         }
 
         DoMeleeAttackIfReady();
     }
 };
+
 CreatureAI* GetAI_boss_kormok(Creature* pCreature)
 {
     return new boss_kormokAI(pCreature);
