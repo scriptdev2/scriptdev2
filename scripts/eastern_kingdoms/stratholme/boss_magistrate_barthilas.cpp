@@ -22,97 +22,78 @@ SDCategory: Stratholme
 EndScriptData */
 
 #include "precompiled.h"
-#include "stratholme.h"
 
-#define SPELL_DRAININGBLOW      16793
-#define SPELL_CROWDPUMMEL       10887
-#define SPELL_MIGHTYBLOW        14099
-#define SPELL_FURIOUS_ANGER     16791
+enum
+{
+    SPELL_DRAINING_BLOW     = 16793,
+    SPELL_CROWD_PUMMEL      = 10887,
+    SPELL_MIGHTY_BLOW       = 14099,
+    SPELL_FURIOUS_ANGER     = 16792,
 
-#define MODEL_NORMAL            10433
-#define MODEL_HUMAN             3637
+    MODEL_HUMAN             = 3637
+};
 
 struct MANGOS_DLL_DECL boss_magistrate_barthilasAI : public ScriptedAI
 {
-    boss_magistrate_barthilasAI(Creature* pCreature) : ScriptedAI(pCreature)
-    {
-        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        Reset();
-    }
+    boss_magistrate_barthilasAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
-    ScriptedInstance* m_pInstance;
-
-    uint32 DrainingBlow_Timer;
-    uint32 CrowdPummel_Timer;
-    uint32 MightyBlow_Timer;
-    uint32 FuriousAnger_Timer;
-    uint32 AngerCount;
+    uint32 m_uiDrainingBlowTimer;
+    uint32 m_uiCrowdPummelTimer;
+    uint32 m_uiMightyBlowTimer;
 
     void Reset()
     {
-        DrainingBlow_Timer = 20000;
-        CrowdPummel_Timer = 15000;
-        MightyBlow_Timer = 10000;
-        FuriousAnger_Timer = 5000;
-        AngerCount = 0;
-
-        if (m_creature->isAlive())
-            m_creature->SetDisplayId(MODEL_NORMAL);
-        else
-            m_creature->SetDisplayId(MODEL_HUMAN);
+        m_uiDrainingBlowTimer = 20000;
+        m_uiCrowdPummelTimer = 15000;
+        m_uiMightyBlowTimer = 10000;
     }
 
-    void MoveInLineOfSight(Unit *who)
+    void Aggro(Unit* pWho)
     {
-        //nothing to see here yet
-
-        ScriptedAI::MoveInLineOfSight(who);
+        DoCastSpellIfCan(m_creature, SPELL_FURIOUS_ANGER);
     }
 
-    void JustDied(Unit* Killer)
+    void JustDied(Unit* pKiller)
     {
         m_creature->SetDisplayId(MODEL_HUMAN);
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (FuriousAnger_Timer < diff)
+        // DrainingBlow
+        if (m_uiDrainingBlowTimer < uiDiff)
         {
-            FuriousAnger_Timer = 4000;
-            if (AngerCount > 25)
-                return;
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_DRAINING_BLOW) == CAST_OK)
+                m_uiDrainingBlowTimer = 15000;
+        }
+        else
+            m_uiDrainingBlowTimer -= uiDiff;
 
-            ++AngerCount;
-            m_creature->CastSpell(m_creature,SPELL_FURIOUS_ANGER,false);
-        }else FuriousAnger_Timer -= diff;
-
-        //DrainingBlow
-        if (DrainingBlow_Timer < diff)
+        // CrowdPummel
+        if (m_uiCrowdPummelTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_DRAININGBLOW);
-            DrainingBlow_Timer = 15000;
-        }else DrainingBlow_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature, SPELL_CROWD_PUMMEL) == CAST_OK)
+                m_uiCrowdPummelTimer = 15000;
+        }
+        else
+            m_uiCrowdPummelTimer -= uiDiff;
 
-        //CrowdPummel
-        if (CrowdPummel_Timer < diff)
+        // MightyBlow
+        if (m_uiMightyBlowTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_CROWDPUMMEL);
-            CrowdPummel_Timer = 15000;
-        }else CrowdPummel_Timer -= diff;
-
-        //MightyBlow
-        if (MightyBlow_Timer < diff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_MIGHTYBLOW);
-            MightyBlow_Timer = 20000;
-        }else MightyBlow_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_MIGHTY_BLOW) == CAST_OK)
+                m_uiMightyBlowTimer = 20000;
+        }
+        else
+            m_uiMightyBlowTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
 };
+
 CreatureAI* GetAI_boss_magistrate_barthilas(Creature* pCreature)
 {
     return new boss_magistrate_barthilasAI(pCreature);
