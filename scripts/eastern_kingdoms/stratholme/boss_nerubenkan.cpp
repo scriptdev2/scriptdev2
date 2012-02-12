@@ -22,100 +22,83 @@ SDCategory: Stratholme
 EndScriptData */
 
 #include "precompiled.h"
-#include "stratholme.h"
 
-#define SPELL_ENCASINGWEBS          4962
-#define SPELL_PIERCEARMOR           6016
-#define SPELL_CRYPT_SCARABS         31602
-#define SPELL_RAISEUNDEADSCARAB     17235
+enum
+{
+    SPELL_ENCASING_WEBS         = 4962,
+    SPELL_PIERCE_ARMOR          = 6016,
+    SPELL_CRYPT_SCARABS         = 31602,
+    SPELL_RAISE_UNDEAD_SCARAB   = 17235
+};
 
 struct MANGOS_DLL_DECL boss_nerubenkanAI : public ScriptedAI
 {
-    boss_nerubenkanAI(Creature* pCreature) : ScriptedAI(pCreature)
-    {
-        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        Reset();
-    }
+    boss_nerubenkanAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
-    ScriptedInstance* m_pInstance;
-
-    uint32 EncasingWebs_Timer;
-    uint32 PierceArmor_Timer;
-    uint32 CryptScarabs_Timer;
-    uint32 RaiseUndeadScarab_Timer;
-
-    int Rand;
-    int RandX;
-    int RandY;
-    Creature* Summoned;
+    uint32 m_uiEncasingWebsTimer;
+    uint32 m_uiPierceArmorTimer;
+    uint32 m_uiCryptScarabsTimer;
+    uint32 m_uiRaiseUndeadScarabTimer;
 
     void Reset()
     {
-        CryptScarabs_Timer = 3000;
-        EncasingWebs_Timer = 7000;
-        PierceArmor_Timer = 19000;
-        RaiseUndeadScarab_Timer = 3000;
+        m_uiCryptScarabsTimer       = 3000;
+        m_uiEncasingWebsTimer       = 7000;
+        m_uiPierceArmorTimer        = 19000;
+        m_uiRaiseUndeadScarabTimer  = 3000;
     }
 
-    void RaiseUndeadScarab(Unit* victim)
-    {
-        Rand = rand()%10;
-        switch(urand(0, 1))
-        {
-        case 0: RandX = 0 - Rand; break;
-        case 1: RandX = 0 + Rand; break;
-        }
-        Rand = 0;
-        Rand = rand()%10;
-        switch(urand(0, 1))
-        {
-        case 0: RandY = 0 - Rand; break;
-        case 1: RandY = 0 + Rand; break;
-        }
-        Rand = 0;
-        Summoned = DoSpawnCreature(10876, RandX, RandY, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 180000);
-        if (Summoned)
-            Summoned->AI()->AttackStart(victim);
-    }
-
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //EncasingWebs
-        if (EncasingWebs_Timer < diff)
+        // EncasingWebs
+        if (m_uiEncasingWebsTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_ENCASINGWEBS);
-            EncasingWebs_Timer = 30000;
-        }else EncasingWebs_Timer -= diff;
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_ENCASING_WEBS) == CAST_OK)
+                    m_uiEncasingWebsTimer = 30000;
+            }
+        }
+        else
+            m_uiEncasingWebsTimer -= uiDiff;
 
-        //PierceArmor
-        if (PierceArmor_Timer < diff)
+        // PierceArmor
+        if (m_uiPierceArmorTimer < uiDiff)
         {
-            if (rand()%100 < 75)
-                DoCastSpellIfCan(m_creature->getVictim(),SPELL_PIERCEARMOR);
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_PIERCE_ARMOR) == CAST_OK)
+                m_uiPierceArmorTimer = 35000;
+        }
+        else
+            m_uiPierceArmorTimer -= uiDiff;
 
-            PierceArmor_Timer = 35000;
-        }else PierceArmor_Timer -= diff;
-
-        //CryptScarabs
-        if (CryptScarabs_Timer < diff)
+        // CryptScarabs
+        if (m_uiCryptScarabsTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_CRYPT_SCARABS);
-            CryptScarabs_Timer = 16000;
-        }else CryptScarabs_Timer -= diff;
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_CRYPT_SCARABS) == CAST_OK)
+                    m_uiCryptScarabsTimer = 16000;
+            }
+        }
+        else
+            m_uiCryptScarabsTimer -= uiDiff;
 
-        //RaiseUndeadScarab
-        if (RaiseUndeadScarab_Timer < diff)
+        // RaiseUndeadScarab
+        if (m_uiRaiseUndeadScarabTimer < uiDiff)
         {
-            RaiseUndeadScarab(m_creature->getVictim());
-            RaiseUndeadScarab_Timer = 18000;
-        }else RaiseUndeadScarab_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature, SPELL_RAISE_UNDEAD_SCARAB) == CAST_OK)
+                m_uiRaiseUndeadScarabTimer = 18000;
+        }
+        else
+            m_uiRaiseUndeadScarabTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
 };
+
 CreatureAI* GetAI_boss_nerubenkan(Creature* pCreature)
 {
     return new boss_nerubenkanAI(pCreature);
