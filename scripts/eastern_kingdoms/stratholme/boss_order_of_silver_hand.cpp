@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Silver_Hand_Bosses
-SD%Complete: 40
-SDComment: Basic script to have support for Horde paladin epic mount (quest 9737). All 5 members of Order of the Silver Hand running this script (least for now)
+SD%Complete: 80
+SDComment: Timers; Not sure if we need to respawn dead npcs on evade; May need additional adjustments / research
 SDCategory: Stratholme
 EndScriptData */
 
@@ -31,112 +31,141 @@ EndScriptData */
 # Once Aurius is defeated, he should be the one summoning the ghosts.
 #####*/
 
-#define SH_GREGOR           17910
-#define SH_CATHELA          17911
-#define SH_NEMAS            17912
-#define SH_AELMAR           17913
-#define SH_VICAR            17914
-#define SH_QUEST_CREDIT     17915
+enum
+{
+    // Gregor
+    SPELL_HAMMER_JUSTICE        = 13005,
+    SPELL_HAMMER_WRATH          = 32772,
+    SPELL_HOLY_SHOCK            = 32771,
+    // Cathela
+    SPELL_HOLY_SHIELD           = 32777,
+    SPELL_REDOUBT               = 32776,
+    // Aelmar
+    SPELL_JUDGEMENT             = 32778,
+    // Vicar
+    SPELL_BLESSING              = 32770,
+    SPELL_HOLY_LIGHT            = 32769,
 
-#define SPELL_HOLY_LIGHT    25263
-#define SPELL_DIVINE_SHIELD 13874
+    TARGET_TYPE_RANDOM          = 0,
+    TARGET_TYPE_VICTIM          = 1,
+    TARGET_TYPE_SELF            = 2,
+    TARGET_TYPE_FRIENDLY        = 3,
+};
 
+struct SilverHandAbilityStruct
+{
+    uint32 m_uiCreatureEntry, m_uiSpellId;
+    uint8 m_uiTargetType;
+    uint32 m_uiInitialTimer, m_uiCooldown;
+};
+
+static SilverHandAbilityStruct m_aSilverHandAbility[8] =
+{
+    {NPC_GREGOR_THE_JUSTICIAR,  SPELL_HAMMER_JUSTICE,   TARGET_TYPE_RANDOM,     2000,  15000},
+    {NPC_GREGOR_THE_JUSTICIAR,  SPELL_HAMMER_WRATH,     TARGET_TYPE_RANDOM,     10000, 15000},
+    {NPC_GREGOR_THE_JUSTICIAR,  SPELL_HOLY_SHOCK,       TARGET_TYPE_RANDOM,     4000,  7000},
+    {NPC_CATHELA_THE_SEEKER,    SPELL_HOLY_SHIELD,      TARGET_TYPE_SELF,       1000,  60000},
+    {NPC_CATHELA_THE_SEEKER,    SPELL_REDOUBT,          TARGET_TYPE_SELF,       5000,  15000},
+    {NPC_AELMAR_THE_VANQUISHER, SPELL_JUDGEMENT,        TARGET_TYPE_VICTIM,     4000,  9000},
+    {NPC_VICAR_HYERONIMUS,      SPELL_BLESSING,         TARGET_TYPE_FRIENDLY,   2000,  13000},
+    {NPC_VICAR_HYERONIMUS,      SPELL_HOLY_LIGHT,       TARGET_TYPE_FRIENDLY,   5000,  9000},
+};
 struct MANGOS_DLL_DECL boss_silver_hand_bossesAI : public ScriptedAI
 {
     boss_silver_hand_bossesAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_pInstance = (instance_stratholme*)pCreature->GetInstanceData();
+        for (uint8 i = 0; i < sizeof(m_aSilverHandAbility); ++i)
+        {
+            if (m_aSilverHandAbility[i].m_uiCreatureEntry == m_creature->GetEntry())
+                m_mSpellTimers[i] = m_aSilverHandAbility[i].m_uiInitialTimer;
+        }
         Reset();
     }
 
-    ScriptedInstance* m_pInstance;
+    instance_stratholme* m_pInstance;
 
-    uint32 HolyLight_Timer;
-    uint32 DivineShield_Timer;
+    UNORDERED_MAP<uint8, uint32> m_mSpellTimers;
 
     void Reset()
     {
-        HolyLight_Timer = 20000;
-        DivineShield_Timer = 20000;
-
-        if (m_pInstance)
-        {
-            switch(m_creature->GetEntry())
-            {
-                case SH_AELMAR:
-                    m_pInstance->SetData(TYPE_SH_AELMAR, 0);
-                    break;
-                case SH_CATHELA:
-                    m_pInstance->SetData(TYPE_SH_CATHELA, 0);
-                    break;
-                case SH_GREGOR:
-                    m_pInstance->SetData(TYPE_SH_GREGOR, 0);
-                    break;
-                case SH_NEMAS:
-                    m_pInstance->SetData(TYPE_SH_NEMAS, 0);
-                    break;
-                case SH_VICAR:
-                    m_pInstance->SetData(TYPE_SH_VICAR, 0);
-                    break;
-            }
-        }
+        for (UNORDERED_MAP<uint8, uint32>::iterator itr = m_mSpellTimers.begin(); itr != m_mSpellTimers.end(); ++itr)
+            itr->second = m_aSilverHandAbility[itr->first].m_uiInitialTimer;
     }
 
-    void JustDied(Unit* Killer)
+    void JustDied(Unit* pKiller)
     {
         if (m_pInstance)
         {
-            switch(m_creature->GetEntry())
+            // Set data to special when each paladin dies
+            m_pInstance->SetData(TYPE_TRUE_MASTERS, SPECIAL);
+
+            // For the last one which dies, give the quest credit
+            if (m_pInstance->GetData(TYPE_TRUE_MASTERS) == DONE)
             {
-                case SH_AELMAR:
-                    m_pInstance->SetData(TYPE_SH_AELMAR, 2);
-                    break;
-                case SH_CATHELA:
-                    m_pInstance->SetData(TYPE_SH_CATHELA, 2);
-                    break;
-                case SH_GREGOR:
-                    m_pInstance->SetData(TYPE_SH_GREGOR, 2);
-                    break;
-                case SH_NEMAS:
-                    m_pInstance->SetData(TYPE_SH_NEMAS, 2);
-                    break;
-                case SH_VICAR:
-                    m_pInstance->SetData(TYPE_SH_VICAR, 2);
-                    break;
+                if (pKiller->GetTypeId() == TYPEID_PLAYER)
+                {
+                    if (Creature* pCredit = m_pInstance->GetSingleCreatureFromStorage(NPC_PALADIN_QUEST_CREDIT))
+                        ((Player*)pKiller)->KilledMonsterCredit(NPC_PALADIN_QUEST_CREDIT, pCredit->GetObjectGuid());
+                }
             }
-            if (m_pInstance->GetData(TYPE_SH_QUEST) && Killer->GetTypeId() == TYPEID_PLAYER)
-                ((Player*)Killer)->KilledMonsterCredit(SH_QUEST_CREDIT, m_creature->GetObjectGuid());
         }
     }
 
-    void UpdateAI(const uint32 diff)
+    bool CanUseSpecialAbility(uint32 uiIndex)
+    {
+        Unit* pTarget = NULL;
+
+        switch(m_aSilverHandAbility[uiIndex].m_uiTargetType)
+        {
+            case TARGET_TYPE_SELF:
+                pTarget = m_creature;
+                break;
+            case TARGET_TYPE_VICTIM:
+                pTarget = m_creature->getVictim();
+                break;
+            case TARGET_TYPE_RANDOM:
+                pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, m_aSilverHandAbility[uiIndex].m_uiSpellId, SELECT_FLAG_IN_LOS);
+                break;
+            case TARGET_TYPE_FRIENDLY:
+                pTarget = DoSelectLowestHpFriendly(10.0f);
+                break;
+        }
+
+        if (pTarget)
+        {
+            if (DoCastSpellIfCan(pTarget, m_aSilverHandAbility[uiIndex].m_uiSpellId) == CAST_OK)
+                return true;
+        }
+
+        return false;
+    }
+
+    void UpdateAI(const uint32 uiDiff)
     {
         //Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (HolyLight_Timer < diff)
+        for (UNORDERED_MAP<uint8, uint32>::iterator itr = m_mSpellTimers.begin(); itr != m_mSpellTimers.end(); ++itr)
         {
-            if (m_creature->GetHealthPercent() < 20.0f)
+            if (itr->second < uiDiff)
             {
-                DoCastSpellIfCan(m_creature, SPELL_HOLY_LIGHT);
-                HolyLight_Timer = 20000;
+                if (CanUseSpecialAbility(itr->first))
+                {
+                    itr->second = m_aSilverHandAbility[itr->first].m_uiCooldown;
+                    break;
+                }
             }
-        }else HolyLight_Timer -= diff;
-
-        if (DivineShield_Timer < diff)
-        {
-            if (m_creature->GetHealthPercent() < 5.0f)
-            {
-                DoCastSpellIfCan(m_creature, SPELL_DIVINE_SHIELD);
-                DivineShield_Timer = 40000;
-            }
-        }else DivineShield_Timer -= diff;
+            else
+                itr->second -= uiDiff;
+        }
 
         DoMeleeAttackIfReady();
     }
 
 };
+
 CreatureAI* GetAI_boss_silver_hand_bossesAI(Creature* pCreature)
 {
     return new boss_silver_hand_bossesAI(pCreature);

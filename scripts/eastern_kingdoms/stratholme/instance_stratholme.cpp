@@ -31,7 +31,8 @@ instance_stratholme::instance_stratholme(Map* pMap) : ScriptedInstance(pMap),
     m_uiSlaugtherSquareTimer(0),
     m_uiYellCounter(0),
     m_uiMindlessCount(0),
-    m_uiPostboxesUsed(0)
+    m_uiPostboxesUsed(0),
+    m_uiSilverHandKilled(0)
 {
     Initialize();
 }
@@ -39,7 +40,6 @@ instance_stratholme::instance_stratholme(Map* pMap) : ScriptedInstance(pMap),
 void instance_stratholme::Initialize()
 {
     memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
-    memset(&m_bIsSilverHandDead, false, sizeof(m_bIsSilverHandDead));
 }
 
 bool instance_stratholme::StartSlaugtherSquare()
@@ -66,6 +66,7 @@ void instance_stratholme::OnCreatureCreate(Creature* pCreature)
         case NPC_BARON:
         case NPC_YSIDA_TRIGGER:
         case NPC_BARTHILAS:
+        case NPC_PALADIN_QUEST_CREDIT:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
 
@@ -373,22 +374,18 @@ void instance_stratholme::SetData(uint32 uiType, uint32 uiData)
             }
             // No need to save anything here, so return
             return;
+        case TYPE_TRUE_MASTERS:
+            m_auiEncounter[uiType] = uiData;
+            if (uiData == SPECIAL)
+            {
+                ++m_uiSilverHandKilled;
 
-        case TYPE_SH_AELMAR:
-            m_bIsSilverHandDead[0] = (uiData) ? true : false;
-            break;
-        case TYPE_SH_CATHELA:
-            m_bIsSilverHandDead[1] = (uiData) ? true : false;
-            break;
-        case TYPE_SH_GREGOR:
-            m_bIsSilverHandDead[2] = (uiData) ? true : false;
-            break;
-        case TYPE_SH_NEMAS:
-            m_bIsSilverHandDead[3] = (uiData) ? true : false;
-            break;
-        case TYPE_SH_VICAR:
-            m_bIsSilverHandDead[4] = (uiData) ? true : false;
-            break;
+                // When the 5th paladin is killed set data to DONE in order to give the quest credit for the last paladin
+                if (m_uiSilverHandKilled == MAX_SILVERHAND)
+                    SetData(TYPE_TRUE_MASTERS, DONE);
+            }
+            // No need to save anything here, so return
+            return;
     }
 
     if (uiData == DONE)
@@ -441,10 +438,6 @@ uint32 instance_stratholme::GetData(uint32 uiType)
 {
     switch(uiType)
     {
-        case TYPE_SH_QUEST:
-            if (m_bIsSilverHandDead[0] && m_bIsSilverHandDead[1] && m_bIsSilverHandDead[2] && m_bIsSilverHandDead[3] && m_bIsSilverHandDead[4])
-                return 1;
-            return 0;
         case TYPE_BARON_RUN:
         case TYPE_BARONESS:
         case TYPE_NERUB:
@@ -453,6 +446,7 @@ uint32 instance_stratholme::GetData(uint32 uiType)
         case TYPE_BARON:
         case TYPE_BARTHILAS_RUN:
         case TYPE_POSTMASTER:
+        case TYPE_TRUE_MASTERS:
             return m_auiEncounter[uiType];
         default:
             return 0;
