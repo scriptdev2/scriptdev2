@@ -30,7 +30,8 @@ instance_stratholme::instance_stratholme(Map* pMap) : ScriptedInstance(pMap),
     m_uiMindlessSummonTimer(0),
     m_uiSlaugtherSquareTimer(0),
     m_uiYellCounter(0),
-    m_uiMindlessCount(0)
+    m_uiMindlessCount(0),
+    m_uiPostboxesUsed(0)
 {
     Initialize();
 }
@@ -360,6 +361,18 @@ void instance_stratholme::SetData(uint32 uiType, uint32 uiData)
 
             // No need to save anything here, so return
             return;
+        case TYPE_POSTMASTER:
+            m_auiEncounter[uiType] = uiData;
+            if (uiData == IN_PROGRESS)
+            {
+                ++m_uiPostboxesUsed;
+
+                // After the second post box prepare to spawn the Post Master
+                if (m_uiPostboxesUsed == 2)
+                    SetData(TYPE_POSTMASTER, SPECIAL);
+            }
+            // No need to save anything here, so return
+            return;
 
         case TYPE_SH_AELMAR:
             m_bIsSilverHandDead[0] = (uiData) ? true : false;
@@ -439,6 +452,7 @@ uint32 instance_stratholme::GetData(uint32 uiType)
         case TYPE_RAMSTEIN:
         case TYPE_BARON:
         case TYPE_BARTHILAS_RUN:
+        case TYPE_POSTMASTER:
             return m_auiEncounter[uiType];
         default:
             return 0;

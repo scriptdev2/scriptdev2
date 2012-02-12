@@ -1035,6 +1035,7 @@ UPDATE creature_template SET ScriptName='mob_restless_soul' WHERE entry=11122;
 UPDATE creature_template SET ScriptName='mob_freed_soul' WHERE entry=11136;
 UPDATE gameobject_template SET ScriptName='go_gauntlet_gate' WHERE entry=175357;
 UPDATE gameobject_template SET ScriptName='go_service_gate' WHERE entry=175368;
+UPDATE gameobject_template SET ScriptName='go_stratholme_postbox' WHERE entry IN (176346,176349,176350,176351,176352,176353);
 
 /* SUNKEN TEMPLE */
 UPDATE instance_template SET ScriptName='instance_sunken_temple' WHERE map=109;

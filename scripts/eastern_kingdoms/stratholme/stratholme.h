@@ -7,7 +7,7 @@
 
 enum
 {
-    MAX_ENCOUNTER               = 8,
+    MAX_ENCOUNTER               = 9,
     MAX_SILVERHAND              = 5,
     MAX_ZIGGURATS               = 3,
 
@@ -19,6 +19,7 @@ enum
     TYPE_BARON                  = 5,
     TYPE_BARTHILAS_RUN          = 6,
     TYPE_BLACK_GUARDS           = 7,
+    TYPE_POSTMASTER             = 8,
 
     TYPE_SH_QUEST               = 20,
     TYPE_SH_CATHELA             = 21,
@@ -46,6 +47,7 @@ enum
     NPC_CRIMSON_GALLANT         = 10424,
     NPC_CRIMSON_GUARDSMAN       = 10418,
     NPC_CRIMSON_CONJURER        = 10419,
+    NPC_UNDEAD_POSTMAN          = 11142,
 
     GO_SERVICE_ENTRANCE         = 175368,
     GO_GAUNTLET_GATE1           = 175357,
@@ -62,6 +64,7 @@ enum
 
     QUEST_DEAD_MAN_PLEA         = 8945,
     SPELL_BARON_ULTIMATUM       = 27861,
+    SPELL_SUMMON_POSTMASTER     = 24627,
 
     SAY_ANNOUNCE_ZIGGURAT_1     = -1329004,
     SAY_ANNOUNCE_ZIGGURAT_2     = -1329005,
@@ -147,6 +150,7 @@ class MANGOS_DLL_DECL instance_stratholme : public ScriptedInstance
 
         uint32 m_uiYellCounter;
         uint32 m_uiMindlessCount;
+        uint8 m_uiPostboxesUsed;
 
         ZigguratStore m_zigguratStorage[MAX_ZIGGURATS];
 

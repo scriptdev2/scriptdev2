@@ -22,7 +22,9 @@ SDCategory: Stratholme
 EndScriptData */
 
 /* ContentData
+go_service_gate
 go_gauntlet_gate
+go_stratholme_postbox
 mob_freed_soul
 mob_restless_soul
 mobs_spectral_ghostly_citizen
@@ -83,6 +85,40 @@ bool GOUse_go_gauntlet_gate(Player* pPlayer, GameObject* pGo)
     }
 
     pInstance->SetData(TYPE_BARON_RUN, IN_PROGRESS);
+    return false;
+}
+
+/*######
+## go_stratholme_postbox
+######*/
+
+bool GOUse_go_stratholme_postbox(Player* pPlayer, GameObject* pGo)
+{
+    ScriptedInstance* pInstance = (ScriptedInstance*)pGo->GetInstanceData();
+
+    if (!pInstance)
+        return false;
+
+    if (pInstance->GetData(TYPE_POSTMASTER) == DONE)
+        return false;
+
+    // When the data is Special, spawn the postmaster
+    if (pInstance->GetData(TYPE_POSTMASTER) == SPECIAL)
+    {
+        pPlayer->CastSpell(pPlayer, SPELL_SUMMON_POSTMASTER, true);
+        pInstance->SetData(TYPE_POSTMASTER, DONE);
+    }
+    else
+        pInstance->SetData(TYPE_POSTMASTER, IN_PROGRESS);
+
+    // Summon 3 postmen for each postbox
+    float fX, fY, fZ;
+    for (uint8 i = 0; i < 3; ++i)
+    {
+        pPlayer->GetRandomPoint(pPlayer->GetPositionX(), pPlayer->GetPositionY(), pPlayer->GetPositionZ(), 3.0f, fX, fY, fZ);
+        pPlayer->SummonCreature(NPC_UNDEAD_POSTMAN, fX, fY, fZ, 0.0f, TEMPSUMMON_DEAD_DESPAWN, 0);
+    }
+
     return false;
 }
 
@@ -301,6 +337,11 @@ void AddSC_stratholme()
     pNewScript = new Script;
     pNewScript->Name = "go_gauntlet_gate";
     pNewScript->pGOUse = &GOUse_go_gauntlet_gate;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "go_stratholme_postbox";
+    pNewScript->pGOUse = &GOUse_go_stratholme_postbox;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
