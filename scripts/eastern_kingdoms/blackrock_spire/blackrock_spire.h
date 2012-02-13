@@ -13,7 +13,7 @@ enum
     TYPE_ROOM_EVENT             = 1,
     TYPE_EMBERSEER              = 2,
     TYPE_FLAMEWREATH            = 3,                        // Only summon once per instance
-    TYPE_GYTH                   = 4,
+    TYPE_STADIUM                = 4,
     TYPE_VALTHALAK              = 5,                        // Only summon once per instance
 
     NPC_SCARSHIELD_INFILTRATOR  = 10299,
@@ -22,7 +22,13 @@ enum
     NPC_PYROGUARD_EMBERSEER     = 9816,
     NPC_BLACKHAND_INCANCERATOR  = 10316,
     NPC_LORD_VICTOR_NEFARIUS    = 10162,
+    NPC_REND_BLACKHAND          = 10429,
     NPC_GYTH                    = 10339,
+    NPC_DRAKKISATH              = 10363,
+    NPC_FIRE_TONGUE             = 10372,                    // related to Gyth arena event
+    NPC_CHROMATIC_WHELP         = 10442,
+    NPC_CHROMATIC_DRAGON        = 10447,
+    NPC_BLACKHAND_ELITE         = 10317,
 
     // Doors
     GO_EMBERSEER_IN             = 175244,
@@ -31,6 +37,8 @@ enum
     GO_GYTH_ENTRY_DOOR          = 164726,
     GO_GYTH_COMBAT_DOOR         = 175185,                   // control in boss_script, because will auto-close after each wave
     GO_GYTH_EXIT_DOOR           = 175186,
+    GO_DRAKKISATH_DOOR_1        = 175946,
+    GO_DRAKKISATH_DOOR_2        = 175947,
 
     GO_ROOM_7_RUNE              = 175194,
     GO_ROOM_3_RUNE              = 175195,
@@ -53,6 +61,7 @@ class MANGOS_DLL_DECL instance_blackrock_spire : public ScriptedInstance
 
         void OnObjectCreate(GameObject* pGo);
         void OnCreatureCreate(Creature* pCreature);
+        void OnCreatureDeath(Creature* pCreature);
 
         void SetData(uint32 uiType, uint32 uiData);
         void SetData64(uint32 uiType, uint64 uiData);

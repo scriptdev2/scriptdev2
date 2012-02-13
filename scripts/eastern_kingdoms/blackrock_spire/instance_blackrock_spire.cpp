@@ -27,7 +27,24 @@ EndScriptData */
 enum
 {
     AREATRIGGER_ENTER_UBRS      = 2046,
-    AREATRIGGER_STADIUM         = 2026
+    AREATRIGGER_STADIUM         = 2026,
+
+    // Arena event dialogue - handled by instance
+    SAY_NEFARIUS_INTRO_1        = -1229004,
+    SAY_NEFARIUS_INTRO_2        = -1229005,
+    SAY_NEFARIUS_ATTACK_1       = -1229006,
+    SAY_REND_JOIN               = -1229007,
+    SAY_NEFARIUS_ATTACK_2       = -1229008,
+    SAY_NEFARIUS_ATTACK_3       = -1229009,
+    SAY_NEFARIUS_ATTACK_4       = -1229010,
+    SAY_REND_LOSE_1             = -1229011,
+    SAY_REND_LOSE_2             = -1229012,
+    SAY_NEFARIUS_LOSE_3         = -1229013,
+    SAY_NEFARIUS_LOSE_4         = -1229014,
+    SAY_REND_ATTACK             = -1229015,
+    SAY_NEFARIUS_WARCHIEF       = -1229016,
+    SAY_NEFARIUS_BUFF_GYTH      = -1229017,
+    SAY_NEFARIUS_VICTORY        = -1229018,
 };
 
 /* Areatrigger
@@ -71,9 +88,11 @@ void instance_blackrock_spire::OnObjectCreate(GameObject* pGo)
             break;
         case GO_GYTH_ENTRY_DOOR:
         case GO_GYTH_COMBAT_DOOR:
+        case GO_DRAKKISATH_DOOR_1:
+        case GO_DRAKKISATH_DOOR_2:
             break;
         case GO_GYTH_EXIT_DOOR:
-            if (GetData(TYPE_GYTH) == DONE)
+            if (GetData(TYPE_STADIUM) == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
 
@@ -132,7 +151,7 @@ void instance_blackrock_spire::SetData(uint32 uiType, uint32 uiData)
         case TYPE_FLAMEWREATH:
             m_auiEncounter[2] = uiData;
             break;
-        case TYPE_GYTH:
+        case TYPE_STADIUM:
             if (uiData == IN_PROGRESS || uiData == FAIL)
                 DoUseDoorOrButton(GO_GYTH_ENTRY_DOOR);
             else if (uiData == DONE)
@@ -214,7 +233,7 @@ uint32 instance_blackrock_spire::GetData(uint32 uiType)
         case TYPE_ROOM_EVENT:   return m_auiEncounter[0];
         case TYPE_EMBERSEER:    return m_auiEncounter[1];
         case TYPE_FLAMEWREATH:  return m_auiEncounter[2];
-        case TYPE_GYTH:         return m_auiEncounter[3];
+        case TYPE_STADIUM:      return m_auiEncounter[3];
         case TYPE_VALTHALAK:    return m_auiEncounter[4];
     }
     return 0;
@@ -239,6 +258,18 @@ void instance_blackrock_spire::DoSortRoomEventMobs()
     }
 
     SetData(TYPE_ROOM_EVENT, IN_PROGRESS);
+}
+
+void instance_blackrock_spire::OnCreatureDeath(Creature* pCreature)
+{
+    switch (pCreature->GetEntry())
+    {
+        case NPC_DRAKKISATH:
+            // Just open the doors, don't save anything because it's the last boss
+            DoUseDoorOrButton(GO_DRAKKISATH_DOOR_1);
+            DoUseDoorOrButton(GO_DRAKKISATH_DOOR_2);
+            break;
+    }
 }
 
 InstanceData* GetInstanceData_instance_blackrock_spire(Map* pMap)

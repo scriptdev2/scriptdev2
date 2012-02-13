@@ -26,6 +26,8 @@ EndScriptData */
 
 enum
 {
+    SPELL_REND_MOUNTS       = 16167,
+    SPELL_SUMMON_REND       = 16328,
     SPELL_CORROSIVEACID     = 20667,
     SPELL_FREEZE            = 16350,                        // ID was wrong!
     SPELL_FLAMEBREATH       = 20712,
@@ -34,12 +36,6 @@ enum
     MODEL_ID_INVISIBLE      = 11686,
     MODEL_ID_GYTH_MOUNTED   = 9723,
     MODEL_ID_GYTH           = 9806,
-
-    NPC_FIRE_TONGUE         = 10372,
-    NPC_CHROMATIC_WHELP     = 10442,
-    NPC_CHROMATIC_DRAGON    = 10447,
-    NPC_BLACKHAND_ELITE     = 10317,
-    NPC_REND_BLACKHAND      = 10429
 };
 
 struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
@@ -89,19 +85,19 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
     void Aggro(Unit* pWho)
     {
         if (m_pInstance)
-            m_pInstance->SetData(TYPE_GYTH, IN_PROGRESS);
+            m_pInstance->SetData(TYPE_STADIUM, IN_PROGRESS);
     }
 
     void JustDied(Unit* pKiller)
     {
         if (m_pInstance)
-            m_pInstance->SetData(TYPE_GYTH, DONE);
+            m_pInstance->SetData(TYPE_STADIUM, DONE);
     }
 
     void JustReachedHome()
     {
         if (m_pInstance)
-            m_pInstance->SetData(TYPE_GYTH, FAIL);
+            m_pInstance->SetData(TYPE_STADIUM, FAIL);
     }
 
     void SummonCreatureWithRandomTarget(uint32 uiCreatureId)
