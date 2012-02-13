@@ -489,6 +489,7 @@ UPDATE creature_template SET ScriptName='npc_dalaran_guardian_mage' WHERE entry 
 UPDATE creature_template SET ScriptName='npc_kerlonian' WHERE entry=11218;
 UPDATE creature_template SET ScriptName='npc_prospector_remtravel' WHERE entry=2917;
 UPDATE creature_template SET ScriptName='npc_threshwackonator' WHERE entry=6669;
+UPDATE creature_template SET ScriptName='npc_volcor' WHERE entry=3692;
 
 /* DARNASSUS */
 
