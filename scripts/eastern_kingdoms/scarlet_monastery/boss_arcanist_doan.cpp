@@ -29,89 +29,102 @@ enum
     SAY_SPECIALAE               = -1189020,
 
     SPELL_POLYMORPH             = 13323,
-    SPELL_AOESILENCE            = 8988,
-    SPELL_ARCANEEXPLOSION       = 9433,
-    SPELL_FIREAOE               = 9435,
-    SPELL_ARCANEBUBBLE          = 9438,
+    SPELL_SILENCE               = 8988,
+    SPELL_ARCANE_EXPLOSION      = 9433,
+    SPELL_DETONATION            = 9435,
+    SPELL_ARCANE_BUBBLE         = 9438,
 };
 
 struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
 {
     boss_arcanist_doanAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
-    uint32 Polymorph_Timer;
-    uint32 AoESilence_Timer;
-    uint32 ArcaneExplosion_Timer;
-    bool bCanDetonate;
+    uint32 m_uiPolymorphTimer;
+    uint32 m_uiSilenceTimer;
+    uint32 m_uiArcaneExplosionTimer;
+    uint32 m_uiDetonationTimer;
     bool bShielded;
 
     void Reset()
     {
-        Polymorph_Timer = 20000;
-        AoESilence_Timer = 15000;
-        ArcaneExplosion_Timer = 3000;
-        bCanDetonate = false;
+        m_uiPolymorphTimer       = 15000;
+        m_uiSilenceTimer         = 18000;
+        m_uiArcaneExplosionTimer = 3000;
+        m_uiDetonationTimer      = 0;
         bShielded = false;
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (bShielded && bCanDetonate)
+        if (m_uiDetonationTimer)
         {
-            DoCastSpellIfCan(m_creature,SPELL_FIREAOE);
-            bCanDetonate = false;
+            if (m_uiDetonationTimer <= uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_DETONATION) == CAST_OK)
+                {
+                    DoScriptText(SAY_SPECIALAE, m_creature);
+                    m_uiDetonationTimer = 0;
+                }
+            }
+            else
+                m_uiDetonationTimer -= uiDiff;
         }
 
-        if (m_creature->HasAura(SPELL_ARCANEBUBBLE))
+        // Do not attack while having the bubble active
+        if (m_creature->HasAura(SPELL_ARCANE_BUBBLE))
             return;
 
-        //If we are <50% hp cast Arcane Bubble
+        // If we are <50% hp cast Arcane Bubble
         if (!bShielded && m_creature->GetHealthPercent() <= 50.0f)
         {
-            //wait if we already casting
-            if (m_creature->IsNonMeleeSpellCasted(false))
-                return;
-
-            DoScriptText(SAY_SPECIALAE, m_creature);
-            DoCastSpellIfCan(m_creature,SPELL_ARCANEBUBBLE);
-
-            bCanDetonate = true;
-            bShielded = true;
+            if (DoCastSpellIfCan(m_creature, SPELL_ARCANE_BUBBLE) == CAST_OK)
+            {
+                m_uiDetonationTimer = 1000;
+                bShielded = true;
+            }
         }
 
-        if (Polymorph_Timer < diff)
+        if (m_uiPolymorphTimer < uiDiff)
         {
-            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,1))
-                DoCastSpellIfCan(target,SPELL_POLYMORPH);
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_POLYMORPH) == CAST_OK)
+                    m_uiPolymorphTimer = 20000;
+            }
+        }
+        else
+            m_uiPolymorphTimer -= uiDiff;
 
-            Polymorph_Timer = 20000;
-        }else Polymorph_Timer -= diff;
-
-        //AoESilence_Timer
-        if (AoESilence_Timer < diff)
+        // Silence_Timer
+        if (m_uiSilenceTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_AOESILENCE);
-            AoESilence_Timer = urand(15000, 20000);
-        }else AoESilence_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature, SPELL_SILENCE) == CAST_OK)
+                m_uiSilenceTimer = urand(15000, 20000);
+        }
+        else
+            m_uiSilenceTimer -= uiDiff;
 
-        //ArcaneExplosion_Timer
-        if (ArcaneExplosion_Timer < diff)
+        // ArcaneExplosion_Timer
+        if (m_uiArcaneExplosionTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_ARCANEEXPLOSION);
-            ArcaneExplosion_Timer = 8000;
-        }else ArcaneExplosion_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature, SPELL_ARCANE_EXPLOSION) == CAST_OK)
+                m_uiArcaneExplosionTimer = 8000;
+        }
+        else
+            m_uiArcaneExplosionTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
 };
+
 CreatureAI* GetAI_boss_arcanist_doan(Creature* pCreature)
 {
     return new boss_arcanist_doanAI(pCreature);
