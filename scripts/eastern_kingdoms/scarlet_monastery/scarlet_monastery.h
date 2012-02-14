@@ -14,8 +14,11 @@ enum
     NPC_MOGRAINE                    = 3976,
     NPC_WHITEMANE                   = 3977,
     NPC_VORREL                      = 3981,
+    NPC_INTERROGATOR_VISHAS         = 3983,
 
     GO_WHITEMANE_DOOR               = 104600,
+
+    SAY_TRIGGER_VORREL              = -1189015,
 };
 
 class MANGOS_DLL_DECL instance_scarlet_monastery : public ScriptedInstance
@@ -26,6 +29,7 @@ class MANGOS_DLL_DECL instance_scarlet_monastery : public ScriptedInstance
         void Initialize();
 
         void OnCreatureCreate(Creature* pCreature);
+        void OnCreatureDeath(Creature* pCreature);
         void OnObjectCreate(GameObject* pGo);
 
         void SetData(uint32 uiType, uint32 uiData);

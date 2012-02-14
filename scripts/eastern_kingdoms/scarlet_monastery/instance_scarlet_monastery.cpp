@@ -46,6 +46,16 @@ void instance_scarlet_monastery::OnCreatureCreate(Creature* pCreature)
     }
 }
 
+void instance_scarlet_monastery::OnCreatureDeath(Creature* pCreature)
+{
+    if (pCreature->GetEntry() == NPC_INTERROGATOR_VISHAS)
+    {
+        // Any other actions to do with Vorrel? setStandState?
+        if (Creature* pVorrel = GetSingleCreatureFromStorage(NPC_VORREL))
+            DoScriptText(SAY_TRIGGER_VORREL, pVorrel);
+    }
+}
+
 void instance_scarlet_monastery::OnObjectCreate(GameObject* pGo)
 {
     if (pGo->GetEntry() == GO_WHITEMANE_DOOR)
