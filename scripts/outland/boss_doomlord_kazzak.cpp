@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Doomlord_Kazzak
-SD%Complete: 70
-SDComment: Using incorrect spell for Mark of Kazzak
+SD%Complete: 80
+SDComment: Timers; Hard enrage NYI
 SDCategory: Hellfire Peninsula
 EndScriptData */
 
@@ -38,37 +38,38 @@ enum
     SAY_RAND1                       = -1000157,
     SAY_RAND2                       = -1000158,
 
-    SPELL_SHADOWVOLLEY              = 32963,
+    SPELL_SHADOW_VOLLEY             = 32963,
     SPELL_CLEAVE                    = 31779,
     SPELL_THUNDERCLAP               = 36706,
-    SPELL_VOIDBOLT                  = 39329,
-    SPELL_MARKOFKAZZAK              = 32960,
-    SPELL_ENRAGE                    = 32964,
-    SPELL_CAPTURESOUL               = 32966,
-    SPELL_TWISTEDREFLECTION         = 21063
+    SPELL_VOID_BOLT                 = 39329,
+    SPELL_MARK_OF_KAZZAK            = 32960,
+    SPELL_FRENZY                    = 32964,        // triggers 32963
+    SPELL_CAPTURE_SOUL              = 48473,        // procs 32966 on player kill
+    SPELL_TWISTED_REFLECTION        = 21063,
+    SPELL_BERSERK                   = 32965,        // triggers 32963
 };
 
 struct MANGOS_DLL_DECL boss_doomlordkazzakAI : public ScriptedAI
 {
-    boss_doomlordkazzakAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+    boss_doomlordkazzakAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
-    uint32 ShadowVolley_Timer;
-    uint32 Cleave_Timer;
-    uint32 ThunderClap_Timer;
-    uint32 VoidBolt_Timer;
-    uint32 MarkOfKazzak_Timer;
-    uint32 Enrage_Timer;
-    uint32 Twisted_Reflection_Timer;
+    uint32 m_uiShadowVolleyTimer;
+    uint32 m_uiCleaveTimer;
+    uint32 m_uiThunderClapTimer;
+    uint32 m_uiVoidBoltTimer;
+    uint32 m_uiMarkOfKazzakTimer;
+    uint32 m_uiEnrageTimer;
+    uint32 m_uiTwistedReflectionTimer;
 
     void Reset()
     {
-        ShadowVolley_Timer = urand(6000, 10000);
-        Cleave_Timer = 7000;
-        ThunderClap_Timer = urand(14000, 18000);
-        VoidBolt_Timer = 30000;
-        MarkOfKazzak_Timer = 25000;
-        Enrage_Timer = 60000;
-        Twisted_Reflection_Timer = 33000;                   // Timer may be incorrect
+        m_uiShadowVolleyTimer       = urand(6000, 10000);
+        m_uiCleaveTimer             = 7000;
+        m_uiThunderClapTimer        = urand(14000, 18000);
+        m_uiVoidBoltTimer           = 30000;
+        m_uiMarkOfKazzakTimer       = 25000;
+        m_uiEnrageTimer             = 60000;
+        m_uiTwistedReflectionTimer  = 33000;                   // Timer may be incorrect
     }
 
     void JustRespawned()
@@ -76,18 +77,17 @@ struct MANGOS_DLL_DECL boss_doomlordkazzakAI : public ScriptedAI
         DoScriptText(SAY_INTRO, m_creature);
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
         DoScriptText(urand(0, 1) ? SAY_AGGRO1 : SAY_AGGRO2, m_creature);
+        DoCastSpellIfCan(m_creature, SPELL_CAPTURE_SOUL, CAST_AURA_NOT_PRESENT);
     }
 
-    void KilledUnit(Unit* victim)
+    void KilledUnit(Unit* pVictim)
     {
         // When Kazzak kills a player (not pets/totems), he regens some health
-        if (victim->GetTypeId() != TYPEID_PLAYER)
+        if (pVictim->GetTypeId() != TYPEID_PLAYER)
             return;
-
-        DoCastSpellIfCan(m_creature,SPELL_CAPTURESOUL);
 
         switch(urand(0, 2))
         {
@@ -97,71 +97,91 @@ struct MANGOS_DLL_DECL boss_doomlordkazzakAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit *victim)
+    void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DEATH, m_creature);
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
-        //Return since we have no target
+        // Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //ShadowVolley_Timer
-        if (ShadowVolley_Timer < diff)
+        // ShadowVolley_Timer
+        if (m_uiShadowVolleyTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_SHADOWVOLLEY);
-            ShadowVolley_Timer = urand(4000, 6000);
-        }else ShadowVolley_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature, SPELL_SHADOW_VOLLEY) == CAST_OK)
+                m_uiShadowVolleyTimer = urand(10000, 30000);
+        }
+        else
+            m_uiShadowVolleyTimer -= uiDiff;
 
-        //Cleave_Timer
-        if (Cleave_Timer < diff)
+        // Cleave_Timer
+        if (m_uiCleaveTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_CLEAVE);
-            Cleave_Timer = urand(8000, 12000);
-        }else Cleave_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_CLEAVE) == CAST_OK)
+                m_uiCleaveTimer = urand(8000, 12000);
+        }
+        else
+            m_uiCleaveTimer -= uiDiff;
 
-        //ThunderClap_Timer
-        if (ThunderClap_Timer < diff)
+        // ThunderClap_Timer
+        if (m_uiThunderClapTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_THUNDERCLAP);
-            ThunderClap_Timer = urand(10000, 14000);
-        }else ThunderClap_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature, SPELL_THUNDERCLAP) == CAST_OK)
+                m_uiThunderClapTimer = urand(10000, 14000);
+        }
+        else
+            m_uiThunderClapTimer -= uiDiff;
 
-        //VoidBolt_Timer
-        if (VoidBolt_Timer < diff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_VOIDBOLT);
-            VoidBolt_Timer = urand(15000, 18000);
-        }else VoidBolt_Timer -= diff;
-
-        //MarkOfKazzak_Timer
-        if (MarkOfKazzak_Timer < diff)
-        {
-            Unit* victim = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0);
-            if (victim->GetPower(POWER_MANA))
-            {
-                DoCastSpellIfCan(victim, SPELL_MARKOFKAZZAK);
-                MarkOfKazzak_Timer = 20000;
-            }
-        }else MarkOfKazzak_Timer -= diff;
-
-        //Enrage_Timer
-        if (Enrage_Timer < diff)
-        {
-            DoScriptText(EMOTE_GENERIC_FRENZY, m_creature);
-            DoCastSpellIfCan(m_creature,SPELL_ENRAGE);
-            Enrage_Timer = 30000;
-        }else Enrage_Timer -= diff;
-
-        if (Twisted_Reflection_Timer < diff)
+        // VoidBolt_Timer
+        if (m_uiVoidBoltTimer < uiDiff)
         {
             if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-                DoCastSpellIfCan(pTarget, SPELL_TWISTEDREFLECTION);
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_VOID_BOLT) == CAST_OK)
+                    m_uiVoidBoltTimer = urand(15000, 18000);
+            }
+        }
+        else
+            m_uiVoidBoltTimer -= uiDiff;
 
-            Twisted_Reflection_Timer = 15000;
-        }else Twisted_Reflection_Timer -= diff;
+        // MarkOfKazzak_Timer
+        if (m_uiMarkOfKazzakTimer < uiDiff)
+        {
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_MARK_OF_KAZZAK, SELECT_FLAG_POWER_MANA))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_MARK_OF_KAZZAK) == CAST_OK)
+                    m_uiMarkOfKazzakTimer = 20000;
+            }
+        }
+        else
+            m_uiMarkOfKazzakTimer -= uiDiff;
+
+        // Enrage_Timer
+        if (m_uiEnrageTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_FRENZY) == CAST_OK)
+            {
+                DoScriptText(EMOTE_GENERIC_FRENZY, m_creature);
+                m_uiEnrageTimer = 60000;
+            }
+        }
+        else
+            m_uiEnrageTimer -= uiDiff;
+
+        // Twisted Reflection
+        if (m_uiTwistedReflectionTimer < uiDiff)
+        {
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_TWISTED_REFLECTION) == CAST_OK)
+                    m_uiTwistedReflectionTimer = 15000;
+            }
+        }
+        else
+            m_uiTwistedReflectionTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
