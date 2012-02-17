@@ -16,15 +16,26 @@
 
 /* ScriptData
 SDName: Boss_Hungarfen
-SD%Complete: 95
-SDComment: Need confirmation if spell data are same in both modes. Summons should have faster rate in heroic
+SD%Complete: 80
+SDComment: Need confirmation if spell data are same in both modes; The Underbog Mushroom may need some more research
 SDCategory: Coilfang Resevoir, Underbog
 EndScriptData */
 
 #include "precompiled.h"
 
-#define SPELL_FOUL_SPORES   31673
-#define SPELL_ACID_GEYSER   38739
+enum
+{
+    SPELL_FOUL_SPORES           = 31673,
+    SPELL_ACID_GEYSER           = 38739,
+    SPELL_DESPAWN_MUSHROOMS     = 34874,
+
+    // Mushroom spells
+    SPELL_SPORE_CLOUD           = 34168,
+    SPELL_PUTRID_MUSHROOM       = 31690,
+    SPELL_GROW                  = 31698,
+
+    NPC_UNDERBOG_MUSHROOM       = 17990,
+};
 
 struct MANGOS_DLL_DECL boss_hungarfenAI : public ScriptedAI
 {
@@ -35,100 +46,129 @@ struct MANGOS_DLL_DECL boss_hungarfenAI : public ScriptedAI
     }
 
     bool m_bIsRegularMode;
-    bool Root;
-    uint32 Mushroom_Timer;
-    uint32 AcidGeyser_Timer;
+    bool m_bHasSpores;
+    uint32 m_uiMushroomTimer;
+    uint32 m_uiAcidGeyserTimer;
 
     void Reset()
     {
-        Root = false;
-        Mushroom_Timer = 5000;                              // 1 mushroom after 5s, then one per 10s. This should be different in heroic mode
-        AcidGeyser_Timer = 10000;
+        m_bHasSpores        = false;
+        m_uiMushroomTimer   = 5000;                              // 1 mushroom after 5s, then one per 10s. This should be different in heroic mode
+        m_uiAcidGeyserTimer = 10000;
     }
 
-    void UpdateAI(const uint32 diff)
+    void JustDied(Unit* pKiller)
+    {
+        DoCastSpellIfCan(m_creature, SPELL_DESPAWN_MUSHROOMS, CAST_TRIGGERED);
+    }
+
+    void JustReachedHome()
+    {
+        DoCastSpellIfCan(m_creature, SPELL_DESPAWN_MUSHROOMS, CAST_TRIGGERED);
+    }
+
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (m_creature->GetHealthPercent() <= 20.0f)
+        if (m_creature->GetHealthPercent() <= 20.0f && !m_bHasSpores)
         {
-            if (!Root)
-            {
-                DoCastSpellIfCan(m_creature,SPELL_FOUL_SPORES);
-                Root = true;
-            }
+            if (DoCastSpellIfCan(m_creature, SPELL_FOUL_SPORES) == CAST_OK)
+                m_bHasSpores = true;
         }
 
-        if (Mushroom_Timer < diff)
+        if (m_uiMushroomTimer < uiDiff)
         {
-            if (Unit *target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
-                m_creature->SummonCreature(17990, target->GetPositionX()+(rand()%8), target->GetPositionY()+(rand()%8), target->GetPositionZ(), (rand()%5), TEMPSUMMON_TIMED_DESPAWN, 22000);
-            else
-                m_creature->SummonCreature(17990, m_creature->GetPositionX()+(rand()%8), m_creature->GetPositionY()+(rand()%8), m_creature->GetPositionZ(), (rand()%5), TEMPSUMMON_TIMED_DESPAWN, 22000);
+            // Summon a mushroom exactly on target position
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                m_creature->SummonCreature(NPC_UNDERBOG_MUSHROOM, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(), 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
 
-            Mushroom_Timer = 10000;
-        }else Mushroom_Timer -= diff;
+            m_uiMushroomTimer = m_bIsRegularMode ? 10000 : 5000;
+        }
+        else
+            m_uiMushroomTimer -= uiDiff;
 
-        if (AcidGeyser_Timer < diff)
+        if (m_uiAcidGeyserTimer < uiDiff)
         {
-            if (Unit *target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
-                DoCastSpellIfCan(target,SPELL_ACID_GEYSER);
-            AcidGeyser_Timer = urand(10000, 17500);
-        }else AcidGeyser_Timer -= diff;
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_ACID_GEYSER) == CAST_OK)
+                    m_uiAcidGeyserTimer = urand(10000, 17500);
+            }
+        }
+        else
+            m_uiAcidGeyserTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
 };
+
 CreatureAI* GetAI_boss_hungarfen(Creature* pCreature)
 {
     return new boss_hungarfenAI(pCreature);
 }
 
-#define SPELL_SPORE_CLOUD       34168
-#define SPELL_PUTRID_MUSHROOM   31690
-#define SPELL_GROW              31698
-
 struct MANGOS_DLL_DECL mob_underbog_mushroomAI : public ScriptedAI
 {
     mob_underbog_mushroomAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
-    bool Stop;
-    uint32 Grow_Timer;
-    uint32 Shrink_Timer;
+    uint32 m_uiGrowTimer;
+    uint32 m_uiShrinkTimer;
+    uint32 m_uiSporeTimer;
 
     void Reset()
     {
-        Stop = false;
-        Grow_Timer = 0;
-        Shrink_Timer = 20000;
+        m_uiGrowTimer   = 1000;
+        m_uiSporeTimer  = 15000;
+        m_uiShrinkTimer = 20000;
 
-        DoCastSpellIfCan(m_creature, SPELL_PUTRID_MUSHROOM, CAST_TRIGGERED);
-        DoCastSpellIfCan(m_creature, SPELL_SPORE_CLOUD, CAST_TRIGGERED);
+        DoCastSpellIfCan(m_creature, SPELL_PUTRID_MUSHROOM);
     }
 
-    void MoveInLineOfSight(Unit *who) { return; }
+    void MoveInLineOfSight(Unit* pWho) { return; }
+    void AttackStart(Unit* pWho) { return; }
 
-    void AttackStart(Unit* who) { return; }
-
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
-        if (Stop)
-            return;
-
-        if (Grow_Timer <= diff)
+        if (m_uiSporeTimer)
         {
-            DoCastSpellIfCan(m_creature,SPELL_GROW);
-            Grow_Timer = 3000;
-        }else Grow_Timer -= diff;
+            if (m_uiSporeTimer <= uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_SPORE_CLOUD) == CAST_OK)
+                {
+                    m_uiGrowTimer = 0;
+                    m_uiSporeTimer = 0;
+                }
+            }
+            else
+                m_uiSporeTimer -= uiDiff;
+        }
 
-        if (Shrink_Timer <= diff)
+        if (m_uiGrowTimer)
         {
-            m_creature->RemoveAurasDueToSpell(SPELL_GROW);
-            Stop = true;
-        }else Shrink_Timer -= diff;
+            if (m_uiGrowTimer <= uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_GROW) == CAST_OK)
+                    m_uiGrowTimer = 3000;
+            }
+            else
+                m_uiGrowTimer -= uiDiff;
+        }
+
+        if (m_uiShrinkTimer)
+        {
+            if (m_uiShrinkTimer <= uiDiff)
+            {
+                m_creature->RemoveAurasDueToSpell(SPELL_GROW);
+                m_uiShrinkTimer = 0;
+            }
+            else
+                m_uiShrinkTimer -= uiDiff;
+        }
     }
 };
+
 CreatureAI* GetAI_mob_underbog_mushroom(Creature* pCreature)
 {
     return new mob_underbog_mushroomAI(pCreature);
