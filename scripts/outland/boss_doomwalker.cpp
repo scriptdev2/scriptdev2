@@ -23,56 +23,59 @@ EndScriptData */
 
 #include "precompiled.h"
 
-#define SAY_AGGRO                   -1000159
-#define SAY_EARTHQUAKE_1            -1000160
-#define SAY_EARTHQUAKE_2            -1000161
-#define SAY_OVERRUN_1               -1000162
-#define SAY_OVERRUN_2               -1000163
-#define SAY_SLAY_1                  -1000164
-#define SAY_SLAY_2                  -1000165
-#define SAY_SLAY_3                  -1000166
-#define SAY_DEATH                   -1000167
+enum
+{
+    SAY_AGGRO                   = -1000159,
+    SAY_EARTHQUAKE_1            = -1000160,
+    SAY_EARTHQUAKE_2            = -1000161,
+    SAY_OVERRUN_1               = -1000162,
+    SAY_OVERRUN_2               = -1000163,
+    SAY_SLAY_1                  = -1000164,
+    SAY_SLAY_2                  = -1000165,
+    SAY_SLAY_3                  = -1000166,
+    SAY_DEATH                   = -1000167,
 
-#define SPELL_EARTHQUAKE            32686
-#define SPELL_SUNDER_ARMOR          33661
-#define SPELL_CHAIN_LIGHTNING       33665
-#define SPELL_OVERRUN               32636
-#define SPELL_ENRAGE                33653
-#define SPELL_MARK_DEATH            37128
-#define SPELL_AURA_DEATH            37131
+    SPELL_EARTHQUAKE            = 32686,
+    SPELL_CRUSH_ARMOR           = 33661,
+    SPELL_LIGHTNING_WRATH       = 33665,
+    SPELL_OVERRUN               = 32636,
+    SPELL_ENRAGE                = 33653,
+    SPELL_MARK_OF_DEATH_PLAYER  = 37128,
+    SPELL_MARK_OF_DEATH_AURA    = 37125,        // triggers 37131 on target if it has aura 37128
+};
 
 struct MANGOS_DLL_DECL boss_doomwalkerAI : public ScriptedAI
 {
-    boss_doomwalkerAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+    boss_doomwalkerAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
-    uint32 Chain_Timer;
-    uint32 Enrage_Timer;
-    uint32 Overrun_Timer;
-    uint32 Quake_Timer;
-    uint32 Armor_Timer;
+    uint32 m_uiChainTimer;
+    uint32 m_uiOverrunTimer;
+    uint32 m_uiQuakeTimer;
+    uint32 m_uiArmorTimer;
 
-    bool InEnrage;
+    bool m_bHasEnrage;
 
     void Reset()
     {
-        Enrage_Timer    = 0;
-        Armor_Timer     = urand(5000, 13000);
-        Chain_Timer     = urand(10000, 30000);
-        Quake_Timer     = urand(25000, 35000);
-        Overrun_Timer   = urand(30000, 45000);
+        m_uiArmorTimer     = urand(5000, 13000);
+        m_uiChainTimer     = urand(10000, 30000);
+        m_uiQuakeTimer     = urand(25000, 35000);
+        m_uiOverrunTimer   = urand(30000, 45000);
 
-        InEnrage = false;
+        m_bHasEnrage       = false;
     }
 
-    void KilledUnit(Unit* Victim)
+    void KilledUnit(Unit* pVictim)
     {
+        if (pVictim->GetTypeId() != TYPEID_PLAYER)
+            return;
 
-        Victim->CastSpell(Victim, SPELL_MARK_DEATH, true);
+        pVictim->CastSpell(pVictim, SPELL_MARK_OF_DEATH_PLAYER, true, NULL, NULL, m_creature->GetObjectGuid());
 
         if (urand(0, 4))
             return;
 
-        switch(urand(0, 2))
+        switch (urand(0, 2))
         {
             case 0: DoScriptText(SAY_SLAY_1, m_creature); break;
             case 1: DoScriptText(SAY_SLAY_2, m_creature); break;
@@ -81,88 +84,77 @@ struct MANGOS_DLL_DECL boss_doomwalkerAI : public ScriptedAI
 
     }
 
-    void JustDied(Unit* Killer)
+    void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DEATH, m_creature);
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
+        DoCastSpellIfCan(m_creature, SPELL_MARK_OF_DEATH_AURA, CAST_TRIGGERED);
         DoScriptText(SAY_AGGRO, m_creature);
     }
 
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (who && who->GetTypeId() == TYPEID_PLAYER && m_creature->IsHostileTo(who))
-        {
-            if (who->HasAura(SPELL_MARK_DEATH, EFFECT_INDEX_0))
-            {
-                who->CastSpell(who,SPELL_AURA_DEATH,true);
-            }
-        }
-    }
-
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //Spell Enrage, when hp <= 20% gain enrage
-        if (m_creature->GetHealthPercent() <= 20.0f)
+        // Spell Enrage, when hp <= 20% gain enrage
+        if (m_creature->GetHealthPercent() <= 20.0f && !m_bHasEnrage)
         {
-            if (Enrage_Timer < diff)
-            {
-                DoCastSpellIfCan(m_creature,SPELL_ENRAGE);
-                Enrage_Timer = 6000;
-                InEnrage = true;
-            }else Enrage_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature, SPELL_ENRAGE) == CAST_OK)
+                m_bHasEnrage = true;
         }
 
-        //Spell Overrun
-        if (Overrun_Timer < diff)
+        // Spell Overrun
+        if (m_uiOverrunTimer < uiDiff)
         {
-            DoScriptText(urand(0, 1) ? SAY_OVERRUN_1 : SAY_OVERRUN_2, m_creature);
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_OVERRUN);
-            Overrun_Timer = urand(25000, 40000);
-        }else Overrun_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature, SPELL_OVERRUN) == CAST_OK)
+            {
+                DoScriptText(urand(0, 1) ? SAY_OVERRUN_1 : SAY_OVERRUN_2, m_creature);
+                m_uiOverrunTimer = urand(25000, 40000);
+            }
+        }
+        else
+            m_uiOverrunTimer -= uiDiff;
 
-        //Spell Earthquake
-        if (Quake_Timer < diff)
+        // Spell Earthquake
+        if (m_uiQuakeTimer < uiDiff)
         {
-            if (urand(0, 1))
-                return;
+            if (DoCastSpellIfCan(m_creature, SPELL_EARTHQUAKE) == CAST_OK)
+            {
+                DoScriptText(urand(0, 1) ? SAY_EARTHQUAKE_1 : SAY_EARTHQUAKE_2, m_creature);
+                m_uiQuakeTimer = urand(30000, 55000);
+            }
+        }
+        else
+            m_uiQuakeTimer -= uiDiff;
 
-            DoScriptText(urand(0, 1) ? SAY_EARTHQUAKE_1 : SAY_EARTHQUAKE_2, m_creature);
-
-            //remove enrage before casting earthquake because enrage + earthquake = 16000dmg over 8sec and all dead
-            if (InEnrage)
-                m_creature->RemoveAurasDueToSpell(SPELL_ENRAGE);
-
-            DoCastSpellIfCan(m_creature,SPELL_EARTHQUAKE);
-            Quake_Timer = urand(30000, 55000);
-        }else Quake_Timer -= diff;
-
-        //Spell Chain Lightning
-        if (Chain_Timer < diff)
+        // Spell Chain Lightning
+        if (m_uiChainTimer < uiDiff)
         {
-            Unit* target = NULL;
-            target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,1);
+            Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1);
+            if (!pTarget)
+                pTarget = m_creature->getVictim();
 
-            if (!target)
-                target = m_creature->getVictim();
+            if (pTarget)
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_LIGHTNING_WRATH) == CAST_OK)
+                    m_uiChainTimer = urand(7000, 27000);
+            }
+        }
+        else
+            m_uiChainTimer -= uiDiff;
 
-            if (target)
-                DoCastSpellIfCan(target,SPELL_CHAIN_LIGHTNING);
-
-            Chain_Timer = urand(7000, 27000);
-        }else Chain_Timer -= diff;
-
-        //Spell Sunder Armor
-        if (Armor_Timer < diff)
+        // Spell Sunder Armor
+        if (m_uiArmorTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_SUNDER_ARMOR);
-            Armor_Timer = urand(10000, 25000);
-        }else Armor_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_CRUSH_ARMOR) == CAST_OK)
+                m_uiArmorTimer = urand(10000, 25000);
+        }
+        else
+            m_uiArmorTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }

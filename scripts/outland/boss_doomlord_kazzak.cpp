@@ -80,7 +80,7 @@ struct MANGOS_DLL_DECL boss_doomlordkazzakAI : public ScriptedAI
     void Aggro(Unit* pWho)
     {
         DoScriptText(urand(0, 1) ? SAY_AGGRO1 : SAY_AGGRO2, m_creature);
-        DoCastSpellIfCan(m_creature, SPELL_CAPTURE_SOUL, CAST_AURA_NOT_PRESENT);
+        DoCastSpellIfCan(m_creature, SPELL_CAPTURE_SOUL, CAST_TRIGGERED);
     }
 
     void KilledUnit(Unit* pVictim)
