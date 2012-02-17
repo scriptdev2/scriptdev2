@@ -52,22 +52,22 @@ struct MANGOS_DLL_DECL boss_the_makerAI : public ScriptedAI
     ScriptedInstance* m_pInstance;
     bool m_bIsRegularMode;
 
-    uint32 AcidSpray_Timer;
-    uint32 ExplodingBreaker_Timer;
-    uint32 Domination_Timer;
-    uint32 Knockdown_Timer;
+    uint32 m_uiAcidSprayTimer;
+    uint32 m_uiExplodingBreakerTimer;
+    uint32 m_uiDominationTimer;
+    uint32 m_uiKnockdownTimer;
 
     void Reset()
     {
-        AcidSpray_Timer = 15000;
-        ExplodingBreaker_Timer = 6000;
-        Domination_Timer = 20000;
-        Knockdown_Timer = 10000;
+        m_uiAcidSprayTimer          = 15000;
+        m_uiExplodingBreakerTimer   = 6000;
+        m_uiDominationTimer         = 20000;
+        m_uiKnockdownTimer          = 10000;
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
-        switch(urand(0, 2))
+        switch (urand(0, 2))
         {
             case 0: DoScriptText(SAY_AGGRO_1, m_creature); break;
             case 1: DoScriptText(SAY_AGGRO_2, m_creature); break;
@@ -75,61 +75,70 @@ struct MANGOS_DLL_DECL boss_the_makerAI : public ScriptedAI
         }
 
         if (m_pInstance)
-            m_pInstance->SetData(TYPE_THE_MAKER_EVENT,IN_PROGRESS);
+            m_pInstance->SetData(TYPE_THE_MAKER_EVENT, IN_PROGRESS);
     }
 
     void JustReachedHome()
     {
         if (m_pInstance)
-            m_pInstance->SetData(TYPE_THE_MAKER_EVENT,FAIL);
+            m_pInstance->SetData(TYPE_THE_MAKER_EVENT, FAIL);
     }
 
-    void KilledUnit(Unit* victim)
+    void KilledUnit(Unit* pVictim)
     {
         DoScriptText(urand(0, 1) ? SAY_KILL_1 : SAY_KILL_2, m_creature);
     }
 
-    void JustDied(Unit* Killer)
+    void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DIE, m_creature);
 
         if (m_pInstance)
-            m_pInstance->SetData(TYPE_THE_MAKER_EVENT,DONE);
+            m_pInstance->SetData(TYPE_THE_MAKER_EVENT, DONE);
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (AcidSpray_Timer < diff)
+        if (m_uiAcidSprayTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_ACID_SPRAY);
-            AcidSpray_Timer = urand(15000, 23000);
-        }else AcidSpray_Timer -=diff;
+            if (DoCastSpellIfCan(m_creature, SPELL_ACID_SPRAY) == CAST_OK)
+                m_uiAcidSprayTimer = urand(15000, 23000);
+        }
+        else
+            m_uiAcidSprayTimer -= uiDiff;
 
-        if (ExplodingBreaker_Timer < diff)
+        if (m_uiExplodingBreakerTimer < uiDiff)
         {
-            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
-                DoCastSpellIfCan(target, m_bIsRegularMode ? SPELL_EXPLODING_BREAKER : SPELL_EXPLODING_BREAKER_H);
-            ExplodingBreaker_Timer = urand(4000, 12000);
-        }else ExplodingBreaker_Timer -=diff;
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_EXPLODING_BREAKER : SPELL_EXPLODING_BREAKER_H) == CAST_OK)
+                    m_uiExplodingBreakerTimer = urand(4000, 12000);
+            }
+        }
+        else
+            m_uiExplodingBreakerTimer -= uiDiff;
 
-        if (Domination_Timer < diff)
+        if (m_uiDominationTimer < uiDiff)
         {
-            Unit* target;
-            target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_DOMINATION) == CAST_OK)
+                    m_uiDominationTimer = urand(15000, 25000);
+            }
+        }
+        else
+            m_uiDominationTimer -= uiDiff;
 
-            DoCastSpellIfCan(target,SPELL_DOMINATION);
-
-            Domination_Timer = 15000+rand()%10000;
-        }else Domination_Timer -=diff;
-
-        if (Knockdown_Timer < diff)
+        if (m_uiKnockdownTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_KNOCKDOWN);
-            Knockdown_Timer = urand(4000, 12000);
-        }else Knockdown_Timer -=diff;
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_KNOCKDOWN) == CAST_OK)
+                m_uiKnockdownTimer = urand(4000, 12000);
+        }
+        else
+            m_uiKnockdownTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }

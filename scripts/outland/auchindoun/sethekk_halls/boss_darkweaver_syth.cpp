@@ -77,9 +77,7 @@ struct MANGOS_DLL_DECL boss_darkweaver_sythAI : public ScriptedAI
     uint32 m_uiShadowshockTimer;
     uint32 m_uiChainlightningTimer;
 
-    bool m_bCanSummon90;
-    bool m_bCanSummon50;
-    bool m_bCanSummon10;
+    float m_fHpCheck;
 
     void Reset()
     {
@@ -89,9 +87,7 @@ struct MANGOS_DLL_DECL boss_darkweaver_sythAI : public ScriptedAI
         m_uiShadowshockTimer    = 8000;
         m_uiChainlightningTimer = 15000;
 
-        m_bCanSummon90          = false;
-        m_bCanSummon50          = false;
-        m_bCanSummon10          = false;
+        m_fHpCheck              = 90.0f;
     }
 
     void Aggro(Unit* pWho)
@@ -158,22 +154,11 @@ struct MANGOS_DLL_DECL boss_darkweaver_sythAI : public ScriptedAI
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (m_creature->GetHealthPercent() < 90.0f && !m_bCanSummon90)
+        // Summon elementals at 90%, 50% and 10% health
+        if (m_creature->GetHealthPercent() < m_fHpCheck)
         {
             SythSummoning();
-            m_bCanSummon90 = true;
-        }
-
-        if (m_creature->GetHealthPercent() < 50.0f && !m_bCanSummon50)
-        {
-            SythSummoning();
-            m_bCanSummon50 = true;
-        }
-
-        if (m_creature->GetHealthPercent() < 10.0f && !m_bCanSummon10)
-        {
-            SythSummoning();
-            m_bCanSummon10 = true;
+            m_fHpCheck -= 40.0f;
         }
 
         if (m_uiFlameshockTimer < uiDiff)
