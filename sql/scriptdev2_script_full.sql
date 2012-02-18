@@ -1870,7 +1870,9 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1545020,'Ba\'ahntha sol\'dorei!',10394,1,0,0,'kalithresh SAY_AGGRO3'),
 (-1545021,'Scram, surface filth!',10395,1,0,0,'kalithresh SAY_SLAY1'),
 (-1545022,'Ah ha ha ha ha ha ha!',10396,1,0,0,'kalithresh SAY_SLAY2'),
-(-1545023,'For her Excellency... for... Vashj!',10397,1,0,0,'kalithresh SAY_DEATH');
+(-1545023,'For her Excellency... for... Vashj!',10397,1,0,0,'kalithresh SAY_DEATH'),
+
+(-1545024,'Enjoy the storm, warm bloods!',0,1,0,0,'thespia SAY_CLOUD');
 
 -- -1 546 000 THE UNDERBOG
 
