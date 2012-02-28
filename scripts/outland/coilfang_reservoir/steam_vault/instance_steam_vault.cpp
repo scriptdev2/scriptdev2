@@ -61,7 +61,8 @@ void instance_steam_vault::OnCreatureCreate(Creature* pCreature)
     switch(pCreature->GetEntry())
     {
         case NPC_STEAMRIGGER:
-            m_mNpcEntryGuidStore[NPC_STEAMRIGGER] = pCreature->GetObjectGuid();
+        case NPC_KALITHRESH:
+            m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
     }
 }
@@ -75,6 +76,16 @@ void instance_steam_vault::OnObjectCreate(GameObject* pGo)
         case GO_ACCESS_PANEL_MEK:
             m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
             break;
+    }
+}
+
+void instance_steam_vault::OnCreatureDeath(Creature* pCreature)
+{
+    // Break the Warlord spell on the Distiller death
+    if (pCreature->GetEntry() == NPC_NAGA_DISTILLER)
+    {
+        if (Creature* pWarlord = GetSingleCreatureFromStorage(NPC_KALITHRESH))
+            pWarlord->InterruptNonMeleeSpells(false);
     }
 }
 
@@ -109,9 +120,6 @@ void instance_steam_vault::SetData(uint32 uiType, uint32 uiData)
         case TYPE_WARLORD_KALITHRESH:
             m_auiEncounter[2] = uiData;
             break;
-        case TYPE_DISTILLER:
-            m_auiEncounter[3] = uiData;
-            break;
     }
 }
 
@@ -122,7 +130,6 @@ uint32 instance_steam_vault::GetData(uint32 uiType)
         case TYPE_HYDROMANCER_THESPIA:   return m_auiEncounter[0];
         case TYPE_MEKGINEER_STEAMRIGGER: return m_auiEncounter[1];
         case TYPE_WARLORD_KALITHRESH:    return m_auiEncounter[2];
-        case TYPE_DISTILLER:             return m_auiEncounter[3];
 
         default:
             return 0;

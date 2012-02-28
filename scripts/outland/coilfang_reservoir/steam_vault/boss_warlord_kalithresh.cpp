@@ -16,102 +16,67 @@
 
 /* ScriptData
 SDName: Boss_Warlord_Kalithres
-SD%Complete: 65
-SDComment: Contains workarounds regarding warlord's rage spells not acting as expected. Both scripts here require review and fine tuning.
+SD%Complete: 90
+SDComment: Timers may need some fine adjustments
 SDCategory: Coilfang Resevoir, The Steamvault
 EndScriptData */
 
 #include "precompiled.h"
 #include "steam_vault.h"
 
-#define SAY_INTRO                   -1545016
-#define SAY_REGEN                   -1545017
-#define SAY_AGGRO1                  -1545018
-#define SAY_AGGRO2                  -1545019
-#define SAY_AGGRO3                  -1545020
-#define SAY_SLAY1                   -1545021
-#define SAY_SLAY2                   -1545022
-#define SAY_DEATH                   -1545023
-
-#define SPELL_SPELL_REFLECTION      31534
-#define SPELL_IMPALE                39061
-#define SPELL_WARLORDS_RAGE         37081
-#define SPELL_WARLORDS_RAGE_NAGA    31543
-
-#define SPELL_WARLORDS_RAGE_PROC    36453
-
-struct MANGOS_DLL_DECL mob_naga_distillerAI : public ScriptedAI
+enum
 {
-    mob_naga_distillerAI(Creature* pCreature) : ScriptedAI(pCreature)
-    {
-        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        Reset();
-    }
+    SAY_INTRO                   = -1545016,
+    SAY_REGEN                   = -1545017,
+    SAY_AGGRO1                  = -1545018,
+    SAY_AGGRO2                  = -1545019,
+    SAY_AGGRO3                  = -1545020,
+    SAY_SLAY1                   = -1545021,
+    SAY_SLAY2                   = -1545022,
+    SAY_DEATH                   = -1545023,
 
-    ScriptedInstance* m_pInstance;
-
-    void Reset()
-    {
-        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-
-        //hack, due to really weird spell behaviour :(
-        if (m_pInstance)
-        {
-            if (m_pInstance->GetData(TYPE_DISTILLER) == IN_PROGRESS)
-            {
-                m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-            }
-        }
-    }
-
-    void StartRageGen(Unit *caster)
-    {
-        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-
-        DoCastSpellIfCan(m_creature, SPELL_WARLORDS_RAGE_NAGA, CAST_TRIGGERED);
-
-        if (m_pInstance)
-            m_pInstance->SetData(TYPE_DISTILLER,IN_PROGRESS);
-    }
-
-    void DamageTaken(Unit *done_by, uint32 &damage)
-    {
-        if (m_creature->GetHealth() <= damage)
-            if (m_pInstance)
-                m_pInstance->SetData(TYPE_DISTILLER,DONE);
-    }
+    SPELL_SPELL_REFLECTION      = 31534,
+    SPELL_IMPALE                = 39061,
+    SPELL_WARLORDS_RAGE         = 37081,        // triggers 36453
+    SPELL_WARLORDS_RAGE_NAGA    = 31543,        // triggers 37076
+    SPELL_WARLORDS_RAGE_AURA    = 36453,
 };
 
 struct MANGOS_DLL_DECL boss_warlord_kalithreshAI : public ScriptedAI
 {
     boss_warlord_kalithreshAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_pInstance = (instance_steam_vault*)pCreature->GetInstanceData();
+        m_bHasTaunted = false;
         Reset();
     }
 
-    ScriptedInstance* m_pInstance;
+    instance_steam_vault* m_pInstance;
 
-    uint32 Reflection_Timer;
-    uint32 Impale_Timer;
-    uint32 Rage_Timer;
-    bool CanRage;
+    uint32 m_uiReflectionTimer;
+    uint32 m_uiImpaleTimer;
+    uint32 m_uiRageTimer;
+    uint32 m_uiRageCastTimer;
+
+    ObjectGuid m_distillerGuid;
+
+    bool m_bHasTaunted;
 
     void Reset()
     {
-        Reflection_Timer = 10000;
-        Impale_Timer = urand(7000, 14000);
-        Rage_Timer = 45000;
-        CanRage = false;
-
-        if (m_pInstance)
-            m_pInstance->SetData(TYPE_WARLORD_KALITHRESH, NOT_STARTED);
+        m_uiReflectionTimer = 15000;
+        m_uiImpaleTimer     = urand(7000, 14000);
+        m_uiRageTimer       = urand(15000, 20000);
+        m_uiRageCastTimer   = 0;
     }
 
-    void Aggro(Unit *who)
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_WARLORD_KALITHRESH, FAIL);
+    }
+
+    void Aggro(Unit* pWho)
     {
         switch(urand(0, 2))
         {
@@ -124,21 +89,12 @@ struct MANGOS_DLL_DECL boss_warlord_kalithreshAI : public ScriptedAI
             m_pInstance->SetData(TYPE_WARLORD_KALITHRESH, IN_PROGRESS);
     }
 
-    void KilledUnit(Unit* victim)
+    void KilledUnit(Unit* pVictim)
     {
         DoScriptText(urand(0, 1) ? SAY_SLAY1 : SAY_SLAY2, m_creature);
     }
 
-    void SpellHit(Unit *caster, const SpellEntry *spell)
-    {
-        //hack :(
-        if (spell->Id == SPELL_WARLORDS_RAGE_PROC)
-            if (m_pInstance)
-                if (m_pInstance->GetData(TYPE_DISTILLER) == DONE)
-                    m_creature->RemoveAurasDueToSpell(SPELL_WARLORDS_RAGE_PROC);
-    }
-
-    void JustDied(Unit* Killer)
+    void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -146,52 +102,152 @@ struct MANGOS_DLL_DECL boss_warlord_kalithreshAI : public ScriptedAI
             m_pInstance->SetData(TYPE_WARLORD_KALITHRESH, DONE);
     }
 
-    void UpdateAI(const uint32 diff)
+    void MoveInLineOfSight(Unit* pWho)
+    {
+        if (!m_bHasTaunted && m_creature->IsWithinDistInMap(pWho, 40.0f))
+        {
+            DoScriptText(SAY_INTRO, m_creature);
+            m_bHasTaunted = true;
+        }
+
+        ScriptedAI::MoveInLineOfSight(pWho);
+    }
+
+    void MovementInform(uint32 uiMoveType, uint32 uiPointId)
+    {
+        if (uiMoveType != POINT_MOTION_TYPE || !uiPointId)
+            return;
+
+        // There is a small delay between the point reach and the channeling start
+        m_uiRageCastTimer = 1000;
+    }
+
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (Rage_Timer < diff)
+        if (m_uiRageCastTimer)
         {
-            if (Creature* pDistiller = GetClosestCreatureWithEntry(m_creature, 17954, 100.0f))
+            if (m_uiRageCastTimer <= uiDiff)
             {
-                DoScriptText(SAY_REGEN, m_creature);
-                DoCastSpellIfCan(m_creature,SPELL_WARLORDS_RAGE);
+                if (DoCastSpellIfCan(m_creature, SPELL_WARLORDS_RAGE) == CAST_OK)
+                {
+                    DoScriptText(SAY_REGEN, m_creature);
+                    SetCombatMovement(true);
+                    m_uiRageCastTimer = 0;
 
-                if (mob_naga_distillerAI* pDistillerAI = dynamic_cast<mob_naga_distillerAI*>(pDistiller->AI()))
-                    pDistillerAI->StartRageGen(m_creature);
+                    // Also make the distiller cast
+                    if (Creature* pDistiller = m_creature->GetMap()->GetCreature(m_distillerGuid))
+                    {
+                        pDistiller->CastSpell(pDistiller, SPELL_WARLORDS_RAGE_NAGA, true);
+                        // ToDo: check with DB if this is really needed
+                        pDistiller->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                        pDistiller->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                    }
+                }
             }
-            Rage_Timer = urand(3000, 18000);
-        }else Rage_Timer -= diff;
+            else
+                m_uiRageCastTimer -= uiDiff;
+        }
 
-        //Reflection_Timer
-        if (Reflection_Timer < diff)
+        // Move to closest distiller
+        if (m_uiRageTimer)
         {
-            DoCastSpellIfCan(m_creature, SPELL_SPELL_REFLECTION);
-            Reflection_Timer = urand(15000, 25000);
-        }else Reflection_Timer -= diff;
+            if (m_uiRageTimer <= uiDiff)
+            {
+                // If the boss already has the rage aura we don't have to do this again
+                if (m_creature->HasAura(SPELL_WARLORDS_RAGE_AURA))
+                {
+                    m_uiRageTimer = 0;
+                    return;
+                }
 
-        //Impale_Timer
-        if (Impale_Timer < diff)
+                if (Creature* pDistiller = GetClosestCreatureWithEntry(m_creature, NPC_NAGA_DISTILLER, 100.0f))
+                {
+                    float fX, fY, fZ;
+                    pDistiller->GetContactPoint(m_creature, fX, fY, fZ, INTERACTION_DISTANCE);
+                    m_creature->GetMotionMaster()->MovePoint(1, fX, fY, fZ);
+                    SetCombatMovement(false);
+                    m_distillerGuid = pDistiller->GetObjectGuid();
+                }
+
+                m_uiRageTimer = urand(35000, 45000);
+            }
+            else
+                m_uiRageTimer -= uiDiff;
+        }
+
+        // Reflection_Timer
+        if (m_uiReflectionTimer < uiDiff)
         {
-            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
-                DoCastSpellIfCan(target,SPELL_IMPALE);
+            if (DoCastSpellIfCan(m_creature, SPELL_SPELL_REFLECTION) == CAST_OK)
+                m_uiReflectionTimer = 30000;
+        }
+        else
+            m_uiReflectionTimer -= uiDiff;
 
-            Impale_Timer = urand(7500, 12500);
-        }else Impale_Timer -= diff;
+        // Impale_Timer
+        if (m_uiImpaleTimer < uiDiff)
+        {
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_IMPALE) == CAST_OK)
+                    m_uiImpaleTimer = urand(7500, 12500);
+            }
+        }
+        else
+            m_uiImpaleTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
 };
 
-CreatureAI* GetAI_mob_naga_distiller(Creature* pCreature)
+bool EffectAuraDummy_spell_aura_dummy_warlord_rage(const Aura* pAura, bool bApply)
 {
-    return new mob_naga_distillerAI(pCreature);
+    if (pAura->GetId() == SPELL_WARLORDS_RAGE && pAura->GetEffIndex() == EFFECT_INDEX_0)
+    {
+        if (Creature* pTarget = (Creature*)pAura->GetTarget())
+        {
+            // Resume combat when the cast is finished or interrupted
+            if (!bApply)
+            {
+                if (pTarget->getVictim())
+                {
+                    pTarget->GetMotionMaster()->MovementExpired();
+                    pTarget->GetMotionMaster()->MoveChase(pTarget->getVictim());
+                }
+            }
+        }
+    }
+
+    return true;
 }
+
+struct MANGOS_DLL_DECL mob_naga_distillerAI : public Scripted_NoMovementAI
+{
+    mob_naga_distillerAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature) { Reset(); }
+
+    void Reset()
+    {
+        // ToDo - move to DB
+        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+    }
+
+    void MoveInLineOfSight(Unit* pWho) { }
+    void AttackStart(Unit* pWho) { }
+    void UpdateAI(const uint32 uiDiff) { }
+};
 
 CreatureAI* GetAI_boss_warlord_kalithresh(Creature* pCreature)
 {
     return new boss_warlord_kalithreshAI(pCreature);
+}
+
+CreatureAI* GetAI_mob_naga_distiller(Creature* pCreature)
+{
+    return new mob_naga_distillerAI(pCreature);
 }
 
 void AddSC_boss_warlord_kalithresh()
@@ -199,12 +255,13 @@ void AddSC_boss_warlord_kalithresh()
     Script* pNewScript;
 
     pNewScript = new Script;
-    pNewScript->Name = "mob_naga_distiller";
-    pNewScript->GetAI = &GetAI_mob_naga_distiller;
+    pNewScript->Name = "boss_warlord_kalithresh";
+    pNewScript->GetAI = &GetAI_boss_warlord_kalithresh;
+    pNewScript->pEffectAuraDummy = &EffectAuraDummy_spell_aura_dummy_warlord_rage;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
-    pNewScript->Name = "boss_warlord_kalithresh";
-    pNewScript->GetAI = &GetAI_boss_warlord_kalithresh;
+    pNewScript->Name = "mob_naga_distiller";
+    pNewScript->GetAI = &GetAI_mob_naga_distiller;
     pNewScript->RegisterSelf();
 }
