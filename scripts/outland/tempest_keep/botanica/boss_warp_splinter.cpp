@@ -16,200 +16,151 @@
 
 /* ScriptData
 SDName: Boss_Warp_Splinter
-SD%Complete: 80
-SDComment: Includes Sapling (need some better control with these). Spells for boss possibly need some rework.
+SD%Complete: 90
+SDComment: Timers may need adjustments
 SDCategory: Tempest Keep, The Botanica
 EndScriptData */
 
 #include "precompiled.h"
 
 /*#####
-# mob_treant (Sapling)
-#####*/
-
-struct MANGOS_DLL_DECL mob_treantAI  : public ScriptedAI
-{
-    mob_treantAI (Creature* pCreature) : ScriptedAI(pCreature)
-    {
-        Reset();
-    }
-
-    ObjectGuid m_warpGuid;
-
-    void Reset()
-    {
-        m_creature->SetSpeedRate(MOVE_RUN, 0.5f);
-    }
-
-    void MoveInLineOfSight(Unit *who) { }
-
-    void UpdateAI(const uint32 diff)
-    {
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-            return;
-
-        if (m_creature->getVictim()->GetObjectGuid() != m_warpGuid)
-            DoMeleeAttackIfReady();
-    }
-};
-
-/*#####
 # boss_warp_splinter
 #####*/
 
-#define SAY_AGGRO           -1553007
-#define SAY_SLAY_1          -1553008
-#define SAY_SLAY_2          -1553009
-#define SAY_SUMMON_1        -1553010
-#define SAY_SUMMON_2        -1553011
-#define SAY_DEATH           -1553012
-
-#define WAR_STOMP           34716
-#define SUMMON_TREANTS      34727                           // DBC: 34727, 34731, 34733, 34734, 34736, 34739, 34741 (with Ancestral Life spell 34742)   // won't work (guardian summon)
-#define ARCANE_VOLLEY       36705                           //37078, 34785 //must additional script them (because Splinter eats them after 20 sec ^)
-#define SPELL_HEAL_FATHER   6262
-
-#define CREATURE_TREANT     19949
-#define TREANT_SPAWN_DIST   50                              //50 yards from Warp Splinter's spawn point
-
-float treant_pos[6][3] =
+enum
 {
-    {24.301233f, 427.221100f, -27.060635f},
-    {16.795492f, 359.678802f, -27.355425f},
-    {53.493484f, 345.381470f, -26.196192f},
-    {61.867096f, 439.362732f, -25.921030f},
-    {109.86187f, 423.201630f, -27.356019f},
-    {106.78015f, 355.582580f, -27.593357f}
+    SAY_AGGRO                   = -1553007,
+    SAY_SLAY_1                  = -1553008,
+    SAY_SLAY_2                  = -1553009,
+    SAY_SUMMON_1                = -1553010,
+    SAY_SUMMON_2                = -1553011,
+    SAY_DEATH                   = -1553012,
+
+    SPELL_WAR_STOMP             = 34716,
+    SPELL_SUMMON_SAPLINGS       = 34741,            // this will leech the health from all saplings
+    SPELL_ARCANE_VOLLEY         = 36705,
+    SPELL_ARCANE_VOLLEY_H       = 39133,
+
+    NPC_SAPLING                 = 19949,
 };
+
+// Summon Saplings spells (too many to declare them above)
+static const uint32 aSaplingsSummonSpells[10] = {34727,34730,34731,34732,34733,34734,34735,34736,34737,34739};
 
 struct MANGOS_DLL_DECL boss_warp_splinterAI : public ScriptedAI
 {
     boss_warp_splinterAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        Treant_Spawn_Pos_X = pCreature->GetPositionX();
-        Treant_Spawn_Pos_Y = pCreature->GetPositionY();
+        // Add the summon spells to a vector for better handling
+        for (uint8 i = 0; i < 10; ++i)
+            m_vSummonSpells.push_back(aSaplingsSummonSpells[i]);
+
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Reset();
     }
 
-    uint32 War_Stomp_Timer;
-    uint32 Summon_Treants_Timer;
-    uint32 Arcane_Volley_Timer;
-    uint32 CheckTreantLOS_Timer;
-    uint32 TreantLife_Timer;
-    ObjectGuid m_aTreantGuid[6];
+    bool m_bIsRegularMode;
 
-    float Treant_Spawn_Pos_X;
-    float Treant_Spawn_Pos_Y;
+    uint32 m_uiWarStompTimer;
+    uint32 m_uiSummonTreantsTimer;
+    uint32 m_uiArcaneVolleyTimer;
+
+    std::vector<uint32> m_vSummonSpells;
 
     void Reset()
     {
-        War_Stomp_Timer = urand(25000, 40000);
-        Summon_Treants_Timer = 45000;
-        Arcane_Volley_Timer = urand(8000, 20000);
-        CheckTreantLOS_Timer = 1000;
-        TreantLife_Timer = 999999;
-
-        for(int i = 0; i < 6; ++i)
-            m_aTreantGuid[i].Clear();
-
-        m_creature->SetSpeedRate(MOVE_RUN, 0.7f);
+        m_uiWarStompTimer       = 20000;
+        m_uiSummonTreantsTimer  = 15000;
+        m_uiArcaneVolleyTimer   = urand(20000, 25000);
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
     }
 
-    void KilledUnit(Unit* victim)
+    void KilledUnit(Unit* pVictim)
     {
         DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
     }
 
-    void JustDied(Unit* Killer)
+    void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DEATH, m_creature);
     }
 
+    void JustSummoned(Creature* pSummoned)
+    {
+        if (pSummoned->GetEntry() == NPC_SAPLING)
+            pSummoned->GetMotionMaster()->MoveFollow(m_creature, 0, 0);
+    }
+
+    // Wrapper to summon all Saplings
     void SummonTreants()
     {
-        for(int i = 0; i < 6; ++i)
-        {
-            float angle = (M_PI / 3) * i;
+        // Choose 6 random spells out of 10
+        std::random_shuffle(m_vSummonSpells.begin(), m_vSummonSpells.end());
+        for (uint8 i = 0; i < 6; ++i)
+            DoCastSpellIfCan(m_creature, m_vSummonSpells[i], CAST_TRIGGERED);
 
-            float X = Treant_Spawn_Pos_X + TREANT_SPAWN_DIST * cos(angle);
-            float Y = Treant_Spawn_Pos_Y + TREANT_SPAWN_DIST * sin(angle);
-            //float Z = m_creature->GetMap()->GetHeight(X,Y, m_creature->GetPositionZ());
-            //float Z = m_creature->GetPositionZ();
-            float O = - m_creature->GetAngle(X,Y);
-
-            if (Creature* pTreant = m_creature->SummonCreature(CREATURE_TREANT,treant_pos[i][0],treant_pos[i][1],treant_pos[i][2],O,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,40000))
-            {
-                //pTreant->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*m_creature));
-                pTreant->AddThreat(m_creature);
-                m_aTreantGuid[i] = pTreant->GetObjectGuid();
-
-                if (mob_treantAI* pTreantAI = dynamic_cast<mob_treantAI*>(pTreant->AI()))
-                    pTreantAI->m_warpGuid = m_creature->GetObjectGuid();
-            }
-        }
-
+        DoCastSpellIfCan(m_creature, SPELL_SUMMON_SAPLINGS, CAST_TRIGGERED);
         DoScriptText(urand(0, 1) ? SAY_SUMMON_1 : SAY_SUMMON_2, m_creature);
     }
 
-    // Warp Splinter eat treants if they are near him
-    void EatTreant()
-    {
-        for(int i=0; i<6; ++i)
-        {
-            Creature* pTreant = m_creature->GetMap()->GetCreature(m_aTreantGuid[i]);
-
-            if (pTreant)
-            {
-                if (m_creature->IsWithinDistInMap(pTreant, 5))
-                {
-                    // 2) Heal Warp Splinter
-                    int32 CurrentHP_Treant = (int32)pTreant->GetHealth();
-                    m_creature->CastCustomSpell(m_creature, SPELL_HEAL_FATHER, &CurrentHP_Treant, 0, 0, true, 0 ,0, m_creature->GetObjectGuid());
-
-                    // 3) Kill Treant
-                    pTreant->DealDamage(pTreant, pTreant->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-                }
-            }
-        }
-    }
-
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //Check for War Stomp
-        if (War_Stomp_Timer < diff)
+        // War Stomp
+        if (m_uiWarStompTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),WAR_STOMP);
-            War_Stomp_Timer = urand(25000, 40000);
-        } else War_Stomp_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature, SPELL_WAR_STOMP) == CAST_OK)
+                m_uiWarStompTimer = urand(25000, 30000);
+        }
+        else
+            m_uiWarStompTimer -= uiDiff;
 
-        //Check for Arcane Volley
-        if (Arcane_Volley_Timer < diff)
+        // Arcane Volley
+        if (m_uiArcaneVolleyTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),ARCANE_VOLLEY);
-            Arcane_Volley_Timer = urand(20000, 35000);
-        } else Arcane_Volley_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_ARCANE_VOLLEY : SPELL_ARCANE_VOLLEY_H) == CAST_OK)
+                m_uiArcaneVolleyTimer = urand(20000, 35000);
+        }
+        else
+            m_uiArcaneVolleyTimer -= uiDiff;
 
-        //Check for Summon Treants
-        if (Summon_Treants_Timer < diff)
+        // Summon Treants
+        if (m_uiSummonTreantsTimer < uiDiff)
         {
             SummonTreants();
-            Summon_Treants_Timer = 45000;
-        } else Summon_Treants_Timer -= diff;
+            m_uiSummonTreantsTimer = 45000;
+        }
+        else
+            m_uiSummonTreantsTimer -= uiDiff;
 
-        // I check if there is a Treant in Warp Splinter's LOS, so he can eat them
-        if (CheckTreantLOS_Timer < diff)
-        {
-            EatTreant();
-            CheckTreantLOS_Timer = 1000;
-        } else CheckTreantLOS_Timer -= diff;
+        DoMeleeAttackIfReady();
+    }
+};
+
+/*#####
+# mob_treant (Sapling)
+#####*/
+struct MANGOS_DLL_DECL npc_saplingAI  : public ScriptedAI
+{
+    npc_saplingAI (Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
+
+    void Reset()
+    {
+        // ToDo: This one may need further reserch
+        //m_creature->SetSpeedRate(MOVE_RUN, 0.5f);
+    }
+
+    void MoveInLineOfSight(Unit* pWho) { }
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
 
         DoMeleeAttackIfReady();
     }
@@ -220,9 +171,9 @@ CreatureAI* GetAI_boss_warp_splinter(Creature* pCreature)
     return new boss_warp_splinterAI(pCreature);
 }
 
-CreatureAI* GetAI_mob_treant(Creature* pCreature)
+CreatureAI* GetAI_npc_sapling(Creature* pCreature)
 {
-    return new mob_treantAI(pCreature);
+    return new npc_saplingAI(pCreature);
 }
 
 void AddSC_boss_warp_splinter()
@@ -236,6 +187,6 @@ void AddSC_boss_warp_splinter()
 
     pNewScript = new Script;
     pNewScript->Name = "mob_warp_splinter_treant";
-    pNewScript->GetAI = &GetAI_mob_treant;
+    pNewScript->GetAI = &GetAI_npc_sapling;
     pNewScript->RegisterSelf();
 }
