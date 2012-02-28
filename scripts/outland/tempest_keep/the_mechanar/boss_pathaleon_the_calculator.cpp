@@ -16,209 +16,233 @@
 
 /* ScriptData
 SDName: Boss Pathaleon the Calculator
-SD%Complete: 50
-SDComment: Event missing. Script for himself 99% blizzlike.
+SD%Complete: 40
+SDComment: Pathway event NYI; The Nether Wraith script is wrong - needs research and update
 SDCategory: Tempest Keep, The Mechanar
 EndScriptData */
 
 #include "precompiled.h"
 
-#define SAY_AGGRO                       -1554020
-#define SAY_DOMINATION_1                -1554021
-#define SAY_DOMINATION_2                -1554022
-#define SAY_SUMMON                      -1554023
-#define SAY_ENRAGE                      -1554024
-#define SAY_SLAY_1                      -1554025
-#define SAY_SLAY_2                      -1554026
-#define SAY_DEATH                       -1554027
+enum
+{
+    SAY_AGGRO                       = -1554020,
+    SAY_DOMINATION_1                = -1554021,
+    SAY_DOMINATION_2                = -1554022,
+    SAY_SUMMON                      = -1554023,
+    SAY_ENRAGE                      = -1554024,
+    SAY_SLAY_1                      = -1554025,
+    SAY_SLAY_2                      = -1554026,
+    SAY_DEATH                       = -1554027,
 
-// Spells to be casted
-#define SPELL_MANA_TAP                  36021
-#define SPELL_ARCANE_TORRENT            36022
-#define SPELL_DOMINATION                35280
-#define SPELL_ARCANE_EXPLOSION_H        15453
-#define SPELL_FRENZY                    36992
+    // Spells to be casted
+    SPELL_MANA_TAP                  = 36021,
+    SPELL_ARCANE_TORRENT            = 36022,
+    SPELL_DOMINATION                = 35280,
+    SPELL_ARCANE_EXPLOSION_H        = 15453,
+    SPELL_FRENZY                    = 36992,
+    SPELL_DISGRUNTLED_ANGER         = 35289,        // research where to use this - possible to be used by Nether Wraits when boss is at 20% HP
 
-#define SPELL_SUMMON_NETHER_WRAITH_1    35285               //Spells work, but not implemented
-#define SPELL_SUMMON_NETHER_WRAITH_2    35286
-#define SPELL_SUMMON_NETHER_WRAITH_3    35287
-#define SPELL_SUMMON_NETHER_WRAITH_4    35288
+    SPELL_SUMMON_NETHER_WRAITH_1    = 35285,
+    SPELL_SUMMON_NETHER_WRAITH_2    = 35286,
+    SPELL_SUMMON_NETHER_WRAITH_3    = 35287,
+    SPELL_SUMMON_NETHER_WRAITH_4    = 35288,
 
-// Add Spells
-#define SPELL_DETONATION                35058
-#define SPELL_ARCANE_MISSILES           35034
+    // Add Spells
+    SPELL_DETONATION                = 35058,
+    SPELL_ARCANE_BOLT               = 20720,
+};
+
+static const uint32 aWraithSummonSpells[4] = {SPELL_SUMMON_NETHER_WRAITH_1, SPELL_SUMMON_NETHER_WRAITH_2, SPELL_SUMMON_NETHER_WRAITH_3, SPELL_SUMMON_NETHER_WRAITH_4};
 
 struct MANGOS_DLL_DECL boss_pathaleon_the_calculatorAI : public ScriptedAI
 {
     boss_pathaleon_the_calculatorAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
+        // Add the summon spells to a vector for better handling
+        for (uint8 i = 0; i < 4; ++i)
+            m_vSummonSpells.push_back(aWraithSummonSpells[i]);
+
         m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Reset();
     }
 
     bool m_bIsRegularMode;
 
-    uint32 Summon_Timer;
-    uint32 ManaTap_Timer;
-    uint32 ArcaneTorrent_Timer;
-    uint32 Domination_Timer;
-    uint32 ArcaneExplosion_Timer;
-    bool Enraged;
+    uint32 m_uiSummonTimer;
+    uint32 m_uiManaTapTimer;
+    uint32 m_uiArcaneTorrentTimer;
+    uint32 m_uiDominationTimer;
+    uint32 m_uiArcaneExplosionTimer;
+    bool m_bIsEnraged;
 
-    uint32 Counter;
+    std::vector<uint32> m_vSummonSpells;
 
     void Reset()
     {
-        Summon_Timer = 30000;
-        ManaTap_Timer = urand(12000, 20000);
-        ArcaneTorrent_Timer = urand(16000, 25000);
-        Domination_Timer = urand(25000, 40000);
-        ArcaneExplosion_Timer = urand(8000, 13000);
-
-        Enraged = false;
-        Counter = 0;
+        m_uiSummonTimer          = 30000;
+        m_uiManaTapTimer         = urand(12000, 20000);
+        m_uiArcaneTorrentTimer   = urand(16000, 25000);
+        m_uiDominationTimer      = urand(25000, 40000);
+        m_uiArcaneExplosionTimer = urand(8000, 13000);
+        m_bIsEnraged             = false;
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
     }
 
-    void KilledUnit(Unit* victim)
+    void KilledUnit(Unit* pVictim)
     {
         DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
     }
 
-    void JustDied(Unit* Killer)
+    void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DEATH, m_creature);
     }
 
-    void UpdateAI(const uint32 diff)
+    void JustSummoned(Creature* pSummoned)
+    {
+        if (m_creature->getVictim())
+            pSummoned->AI()->AttackStart(m_creature->getVictim());
+    }
+
+    void UpdateAI(const uint32 uiDiff)
     {
         //Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (Summon_Timer < diff)
+        if (m_uiSummonTimer < uiDiff)
         {
-            for(int i = 0; i < 3; ++i)
-            {
-                Unit* target = NULL;
-                target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
-                Creature* Wraith = m_creature->SummonCreature(21062,m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(),0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
-                if (target && Wraith)
-                    Wraith->AI()->AttackStart(target);
-            }
+            // Choose 3 random spells out of 4
+            std::random_shuffle(m_vSummonSpells.begin(), m_vSummonSpells.end());
+            for (uint8 i = 0; i < 3; ++i)
+                DoCastSpellIfCan(m_creature, m_vSummonSpells[i], CAST_TRIGGERED);
 
             DoScriptText(SAY_SUMMON, m_creature);
+            m_uiSummonTimer = urand(30000, 45000);
+        }
+        else
+            m_uiSummonTimer -= uiDiff;
 
-            Summon_Timer = urand(30000, 45000);
-        }else Summon_Timer -= diff;
-
-        if (ManaTap_Timer < diff)
+        if (m_uiManaTapTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_MANA_TAP);
-            ManaTap_Timer = urand(14000, 22000);
-        }else ManaTap_Timer -= diff;
-
-        if (ArcaneTorrent_Timer < diff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_ARCANE_TORRENT);
-            ArcaneTorrent_Timer = urand(12000, 18000);
-        }else ArcaneTorrent_Timer -= diff;
-
-        if (Domination_Timer < diff)
-        {
-            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,1))
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_MANA_TAP, SELECT_FLAG_POWER_MANA))
             {
-                DoScriptText(urand(0, 1) ? SAY_DOMINATION_1 : SAY_DOMINATION_2, m_creature);
-                DoCastSpellIfCan(target,SPELL_DOMINATION);
+                if (DoCastSpellIfCan(pTarget, SPELL_MANA_TAP) == CAST_OK)
+                    m_uiManaTapTimer = urand(14000, 22000);
             }
+        }
+        else
+            m_uiManaTapTimer -= uiDiff;
 
-            Domination_Timer = urand(25000, 30000);
-        }else Domination_Timer -= diff;
+        if (m_uiArcaneTorrentTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_ARCANE_TORRENT) == CAST_OK)
+                m_uiArcaneTorrentTimer = urand(12000, 18000);
+        }
+        else
+            m_uiArcaneTorrentTimer -= uiDiff;
 
-        //Only casting if Heroic Mode is used
+        if (m_uiDominationTimer < uiDiff)
+        {
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_DOMINATION) == CAST_OK)
+                {
+                    DoScriptText(urand(0, 1) ? SAY_DOMINATION_1 : SAY_DOMINATION_2, m_creature);
+                    m_uiDominationTimer = urand(25000, 30000);
+                }
+            }
+        }
+        else
+            m_uiDominationTimer -= uiDiff;
+
+        // Only casting if Heroic Mode is used
         if (!m_bIsRegularMode)
         {
-            if (ArcaneExplosion_Timer < diff)
+            if (m_uiArcaneExplosionTimer < uiDiff)
             {
-                DoCastSpellIfCan(m_creature->getVictim(),SPELL_ARCANE_EXPLOSION_H);
-                ArcaneExplosion_Timer = urand(10000, 14000);
-            }else ArcaneExplosion_Timer -= diff;
+                if (DoCastSpellIfCan(m_creature, SPELL_ARCANE_EXPLOSION_H) == CAST_OK)
+                    m_uiArcaneExplosionTimer = urand(10000, 14000);
+            }
+            else
+                m_uiArcaneExplosionTimer -= uiDiff;
         }
 
-        if (!Enraged && m_creature->GetHealthPercent() < 21.0f)
+        if (!m_bIsEnraged && m_creature->GetHealthPercent() < 21.0f)
         {
-            DoCastSpellIfCan(m_creature, SPELL_FRENZY);
-            DoScriptText(SAY_ENRAGE, m_creature);
-            Enraged = true;
+            if (DoCastSpellIfCan(m_creature, SPELL_FRENZY) == CAST_OK)
+            {
+                // ToDo: despawn nether wraiths here
+                DoScriptText(SAY_ENRAGE, m_creature);
+                m_bIsEnraged = true;
+            }
         }
 
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_pathaleon_the_calculator(Creature* pCreature)
-{
-    return new boss_pathaleon_the_calculatorAI(pCreature);
-}
 
 struct MANGOS_DLL_DECL mob_nether_wraithAI : public ScriptedAI
 {
     mob_nether_wraithAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
-    ScriptedInstance* m_pInstance;
-
-    uint32 ArcaneMissiles_Timer;
-    uint32 Detonation_Timer;
-    uint32 Die_Timer;
-    bool Detonation;
+    uint32 m_uiArcaneMissilesTimer;
+    uint32 m_uiDetonationTimer;
 
     void Reset()
     {
-        ArcaneMissiles_Timer = urand(1000, 4000);
-        Detonation_Timer = 20000;
-        Die_Timer = 2200;
-        Detonation = false;
+        m_uiArcaneMissilesTimer = urand(1000, 4000);
+        m_uiDetonationTimer = 20000;
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (ArcaneMissiles_Timer < diff)
+        if (m_uiArcaneMissilesTimer < uiDiff)
         {
-            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,1))
-                DoCastSpellIfCan(target,SPELL_ARCANE_MISSILES);
-            else
-                DoCastSpellIfCan(m_creature->getVictim(),SPELL_ARCANE_MISSILES);
+            Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1);
+            if (!pTarget)
+                pTarget = m_creature->getVictim();
 
-            ArcaneMissiles_Timer = urand(5000, 10000);
-        }else ArcaneMissiles_Timer -=diff;
-
-        if (!Detonation)
-        {
-            if (Detonation_Timer < diff)
+            if (pTarget)
             {
-                DoCastSpellIfCan(m_creature,SPELL_DETONATION);
-                Detonation = true;
-            }else Detonation_Timer -= diff;
+                if (DoCastSpellIfCan(pTarget, SPELL_ARCANE_BOLT) == CAST_OK)
+                    m_uiArcaneMissilesTimer = urand(5000, 10000);
+            }
         }
+        else
+            m_uiArcaneMissilesTimer -=uiDiff;
 
-        if (Detonation)
+        if (m_uiDetonationTimer)
         {
-            if (Die_Timer < diff)
+            if (m_uiDetonationTimer <= uiDiff)
             {
-                m_creature->SetDeathState(JUST_DIED);
-                m_creature->RemoveCorpse();
-            }else Die_Timer -= diff;
+                if (DoCastSpellIfCan(m_creature, SPELL_DETONATION) == CAST_OK)
+                {
+                    // Not sure if this one needs to be despawned here. Needs further research
+                    //m_creature->ForcedDespawn(2200);
+                    m_uiDetonationTimer = 0;
+                }
+            }
+            else
+                m_uiDetonationTimer -= uiDiff;
         }
 
         DoMeleeAttackIfReady();
     }
 };
+
+CreatureAI* GetAI_boss_pathaleon_the_calculator(Creature* pCreature)
+{
+    return new boss_pathaleon_the_calculatorAI(pCreature);
+}
+
 CreatureAI* GetAI_mob_nether_wraith(Creature* pCreature)
 {
     return new mob_nether_wraithAI(pCreature);
