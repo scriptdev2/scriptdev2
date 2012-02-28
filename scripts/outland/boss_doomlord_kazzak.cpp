@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Doomlord_Kazzak
-SD%Complete: 80
-SDComment: Timers; Hard enrage NYI
+SD%Complete: 90
+SDComment: Timers
 SDCategory: Hellfire Peninsula
 EndScriptData */
 
@@ -59,6 +59,7 @@ struct MANGOS_DLL_DECL boss_doomlordkazzakAI : public ScriptedAI
     uint32 m_uiVoidBoltTimer;
     uint32 m_uiMarkOfKazzakTimer;
     uint32 m_uiEnrageTimer;
+    uint32 m_uiGreatEnrageTimer;
     uint32 m_uiTwistedReflectionTimer;
 
     void Reset()
@@ -69,6 +70,7 @@ struct MANGOS_DLL_DECL boss_doomlordkazzakAI : public ScriptedAI
         m_uiVoidBoltTimer           = 30000;
         m_uiMarkOfKazzakTimer       = 25000;
         m_uiEnrageTimer             = 60000;
+        m_uiGreatEnrageTimer        = 3*MINUTE*IN_MILLISECONDS;
         m_uiTwistedReflectionTimer  = 33000;                   // Timer may be incorrect
     }
 
@@ -170,6 +172,18 @@ struct MANGOS_DLL_DECL boss_doomlordkazzakAI : public ScriptedAI
         }
         else
             m_uiEnrageTimer -= uiDiff;
+
+        // Great_Enrage_Timer
+        if (m_uiGreatEnrageTimer)
+        {
+            if (m_uiGreatEnrageTimer <= uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_BERSERK) == CAST_OK)
+                    m_uiGreatEnrageTimer = 0;
+            }
+            else
+                m_uiGreatEnrageTimer -= uiDiff;
+        }
 
         // Twisted Reflection
         if (m_uiTwistedReflectionTimer < uiDiff)
