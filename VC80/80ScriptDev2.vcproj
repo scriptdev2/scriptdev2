@@ -1269,6 +1269,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\scripts\kalimdor\durotar.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\scripts\kalimdor\dustwallow_marsh.cpp"
 					>
 				</File>

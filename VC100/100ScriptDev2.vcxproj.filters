@@ -846,6 +846,9 @@
     <ClCompile Include="..\scripts\kalimdor\desolace.cpp">
       <Filter>scripts\kalimdor</Filter>
     </ClCompile>
+    <ClCompile Include="..\scripts\kalimdor\durotar.cpp">
+      <Filter>scripts\kalimdor</Filter>
+    </ClCompile>
     <ClCompile Include="..\scripts\kalimdor\dustwallow_marsh.cpp">
       <Filter>scripts\kalimdor</Filter>
     </ClCompile>

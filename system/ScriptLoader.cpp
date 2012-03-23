@@ -256,6 +256,7 @@ extern void AddSC_bloodmyst_isle();
 extern void AddSC_boss_azuregos();
 extern void AddSC_darkshore();
 extern void AddSC_desolace();
+extern void AddSC_durotar();
 extern void AddSC_dustwallow_marsh();
 extern void AddSC_felwood();
 extern void AddSC_feralas();
@@ -752,6 +753,7 @@ void AddScripts()
     AddSC_boss_azuregos();
     AddSC_darkshore();
     AddSC_desolace();
+    AddSC_durotar();
     AddSC_dustwallow_marsh();
     AddSC_felwood();
     AddSC_feralas();

@@ -392,6 +392,7 @@
     <ClCompile Include="..\scripts\kalimdor\boss_azuregos.cpp" />
     <ClCompile Include="..\scripts\kalimdor\darkshore.cpp" />
     <ClCompile Include="..\scripts\kalimdor\desolace.cpp" />
+    <ClCompile Include="..\scripts\kalimdor\durotar.cpp" />
     <ClCompile Include="..\scripts\kalimdor\dustwallow_marsh.cpp" />
     <ClCompile Include="..\scripts\kalimdor\felwood.cpp" />
     <ClCompile Include="..\scripts\kalimdor\feralas.cpp" />
