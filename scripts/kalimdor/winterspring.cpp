@@ -17,14 +17,13 @@
 /* ScriptData
 SDName: Winterspring
 SD%Complete: 90
-SDComment: Quest support: 4901, 5126 (Loraxs' tale missing proper gossip items text). Vendor Rivern Frostwind. Obtain Cache of Mau'ari
+SDComment: Quest support: 4901, 5126 (Loraxs' tale missing proper gossip items text). Vendor Rivern Frostwind.
 SDCategory: Winterspring
 EndScriptData */
 
 /* ContentData
 npc_lorax
 npc_rivern_frostwind
-npc_witch_doctor_mauari
 npc_ranshalla
 EndContentData */
 
@@ -101,36 +100,6 @@ bool GossipSelect_npc_rivern_frostwind(Player* pPlayer, Creature* pCreature, uin
 {
     if (uiAction == GOSSIP_ACTION_TRADE)
         pPlayer->SEND_VENDORLIST(pCreature->GetObjectGuid());
-
-    return true;
-}
-
-/*######
-## npc_witch_doctor_mauari
-######*/
-
-bool GossipHello_npc_witch_doctor_mauari(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
-
-    if (pPlayer->GetQuestRewardStatus(975))
-    {
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "I'd like you to make me a new Cache of Mau'ari please.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-        pPlayer->SEND_GOSSIP_MENU(3377, pCreature->GetObjectGuid());
-    }else
-        pPlayer->SEND_GOSSIP_MENU(3375, pCreature->GetObjectGuid());
-
-    return true;
-}
-
-bool GossipSelect_npc_witch_doctor_mauari(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    if (uiAction==GOSSIP_ACTION_INFO_DEF+1)
-    {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        pCreature->CastSpell(pPlayer, 16351, false);
-    }
 
     return true;
 }
@@ -578,12 +547,6 @@ void AddSC_winterspring()
     pNewScript->Name = "npc_rivern_frostwind";
     pNewScript->pGossipHello =  &GossipHello_npc_rivern_frostwind;
     pNewScript->pGossipSelect = &GossipSelect_npc_rivern_frostwind;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_witch_doctor_mauari";
-    pNewScript->pGossipHello =  &GossipHello_npc_witch_doctor_mauari;
-    pNewScript->pGossipSelect = &GossipSelect_npc_witch_doctor_mauari;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
