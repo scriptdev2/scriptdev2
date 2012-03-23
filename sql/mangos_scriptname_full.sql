@@ -243,7 +243,6 @@ UPDATE creature_template SET ScriptName='npc_draenei_survivor' WHERE entry=16483
 UPDATE creature_template SET ScriptName='npc_engineer_spark_overgrind' WHERE entry=17243;
 UPDATE creature_template SET ScriptName='npc_injured_draenei' WHERE entry=16971;
 UPDATE creature_template SET ScriptName='npc_magwin' WHERE entry=17312;
-UPDATE creature_template SET ScriptName='npc_susurrus' WHERE entry=17435;
 
 /* BADLANDS */
 
