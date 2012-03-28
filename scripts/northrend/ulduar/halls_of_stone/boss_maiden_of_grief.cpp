@@ -54,28 +54,39 @@ struct MANGOS_DLL_DECL boss_maiden_of_griefAI : public ScriptedAI
 {
     boss_maiden_of_griefAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_pInstance = (instance_halls_of_stone*)pCreature->GetInstanceData();
         m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Reset();
     }
 
-    ScriptedInstance* m_pInstance;
+    instance_halls_of_stone* m_pInstance;
     bool m_bIsRegularMode;
 
     uint32 m_uiStormTimer;
     uint32 m_uiShockTimer;
     uint32 m_uiPillarTimer;
+    uint32 m_uiPartingSorrowTimer;
 
     void Reset()
     {
         m_uiStormTimer = 5000;
         m_uiShockTimer = 10000;
         m_uiPillarTimer = 15000;
+        m_uiPartingSorrowTimer = 12000;
     }
 
     void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
+
+        if(m_pInstance)
+            m_pInstance->SetData(TYPE_MAIDEN, IN_PROGRESS);
+    }
+
+    void JustReachedHome()
+    {
+        if(m_pInstance)
+            m_pInstance->SetData(TYPE_MAIDEN, FAIL);
     }
 
     void KilledUnit(Unit* pVictim)
@@ -102,6 +113,18 @@ struct MANGOS_DLL_DECL boss_maiden_of_griefAI : public ScriptedAI
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
+        if (m_uiPartingSorrowTimer < uiDiff)
+        {
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_PARTING_SORROW, SELECT_FLAG_PLAYER | SELECT_FLAG_POWER_MANA))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_PARTING_SORROW) == CAST_OK)
+                    m_uiPartingSorrowTimer = 12000 + rand()%5000;
+            }
+        }
+        else
+            m_uiPartingSorrowTimer -= uiDiff;
+
+
         if (m_uiStormTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_STORM_OF_GRIEF : SPELL_STORM_OF_GRIEF_H) == CAST_OK)
@@ -112,7 +135,7 @@ struct MANGOS_DLL_DECL boss_maiden_of_griefAI : public ScriptedAI
 
         if (m_uiPillarTimer < uiDiff)
         {
-            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, m_bIsRegularMode ? SPELL_PILLAR_OF_WOE_H : SPELL_PILLAR_OF_WOE, SELECT_FLAG_PLAYER))
             {
                 if (DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_PILLAR_OF_WOE : SPELL_PILLAR_OF_WOE_H) == CAST_OK)
                     m_uiPillarTimer = 10000;
@@ -123,7 +146,7 @@ struct MANGOS_DLL_DECL boss_maiden_of_griefAI : public ScriptedAI
 
         if (m_uiShockTimer < uiDiff)
         {
-            if (DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_SHOCK_OF_SORROW : SPELL_SHOCK_OF_SORROW_H) == CAST_OK)
+            if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_SHOCK_OF_SORROW : SPELL_SHOCK_OF_SORROW_H) == CAST_OK)
             {
                 DoScriptText(SAY_STUN, m_creature);
                 m_uiShockTimer = 35000;
