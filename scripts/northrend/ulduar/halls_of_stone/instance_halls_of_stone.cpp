@@ -72,8 +72,6 @@ void instance_halls_of_stone::OnObjectCreate(GameObject* pGo)
 {
     switch(pGo->GetEntry())
     {
-        case GO_DOOR_SJONNIR:
-            break;
         case GO_TRIBUNAL_CHEST:
         case GO_TRIBUNAL_CHEST_H:
             if (m_auiEncounter[TYPE_TRIBUNAL] == DONE)
@@ -88,6 +86,9 @@ void instance_halls_of_stone::OnObjectCreate(GameObject* pGo)
         case GO_TRIBUNAL_HEAD_LEFT:
             m_aFaces[FACE_KADDRAK].m_goFaceGuid = pGo->GetObjectGuid();
             return;
+        case GO_DOOR_TO_TRIBUNAL:
+        case GO_DOOR_MAIDEN:
+        case GO_DOOR_SJONNIR:
         case GO_DOOR_TRIBUNAL:
         case GO_TRIBUNAL_CONSOLE:
         case GO_TRIBUNAL_FLOOR:
@@ -102,10 +103,10 @@ void instance_halls_of_stone::OnObjectCreate(GameObject* pGo)
 
 void instance_halls_of_stone::SetData(uint32 uiType, uint32 uiData)
 {
-    switch(uiType)
+    switch (uiType)
     {
         case TYPE_TRIBUNAL:
-            m_auiEncounter[0] = uiData;
+            m_auiEncounter[uiType] = uiData;
             switch (uiData)
             {
                 case IN_PROGRESS:
@@ -139,15 +140,15 @@ void instance_halls_of_stone::SetData(uint32 uiType, uint32 uiData)
             }
             break;
         case TYPE_MAIDEN:
-            m_auiEncounter[1] = uiData;
+            m_auiEncounter[uiType] = uiData;
             if (uiData == IN_PROGRESS)
                 DoStartTimedAchievement(ACHIEVEMENT_CRITERIA_TYPE_KILL_CREATURE, ACHIEV_START_MAIDEN_ID);
             break;
         case TYPE_KRYSTALLUS:
-            m_auiEncounter[2] = uiData;
+            m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_SJONNIR:
-            m_auiEncounter[3] = uiData;
+            m_auiEncounter[uiType] = uiData;
             DoUseDoorOrButton(GO_DOOR_SJONNIR);
             break;
     }
@@ -168,15 +169,10 @@ void instance_halls_of_stone::SetData(uint32 uiType, uint32 uiData)
 
 uint32 instance_halls_of_stone::GetData(uint32 uiType)
 {
-    switch(uiType)
-    {
-        case TYPE_TRIBUNAL:   return m_auiEncounter[0];
-        case TYPE_MAIDEN:     return m_auiEncounter[1];
-        case TYPE_KRYSTALLUS: return m_auiEncounter[2];
-        case TYPE_SJONNIR:    return m_auiEncounter[3];
-        default:
-            return 0;
-    }
+    if (uiType < MAX_ENCOUNTER)
+        return m_auiEncounter[uiType];
+
+    return 0;
 }
 
 struct SortHelper
@@ -288,7 +284,8 @@ void instance_halls_of_stone::ActivateFace(uint8 uiFace, bool bAfterEvent)
         DoUseDoorOrButton(m_aFaces[uiFace].m_goFaceGuid);
     else
     {
-        DoUseDoorOrButton(m_aFaces[uiFace].m_goFaceGuid, 0, true);
+        // TODO: How to get them red?
+        DoUseDoorOrButton(m_aFaces[uiFace].m_goFaceGuid);
         m_aFaces[uiFace].m_bIsActive = true;
     }
 }
@@ -350,7 +347,7 @@ void instance_halls_of_stone::ProcessFace(uint8 uiFace)
             if (Creature* pEye = instance->GetCreature(m_aFaces[uiFace].m_leftEyeGuid))
                 pEye->CastSpell(pEye, instance->IsRegularDifficulty() ? SPELL_GLARE_OF_THE_TRIBUNAL : SPELL_GLARE_OF_THE_TRIBUNAL_H, true);
             if (Creature* pEye = instance->GetCreature(m_aFaces[uiFace].m_rightEyeGuid))
-                pEye->CastSpell(pEye, instance->IsRegularDifficulty() ? SPELL_GLARE_OF_THE_TRIBUNAL : SPELL_GLARE_OF_THE_TRIBUNAL_H, true);
+                pEye->CastSpell(pEye, instance->IsRegularDifficulty() ? SPELL_GLARE_OF_THE_TRIBUNAL : SPELL_GLARE_OF_THE_TRIBUNAL_H, true, NULL, NULL, m_aFaces[uiFace].m_leftEyeGuid);
             m_aFaces[uiFace].m_uiTimer = 1500;              // TODO, verify
             break;
         case FACE_MARNAK:
@@ -359,7 +356,7 @@ void instance_halls_of_stone::ProcessFace(uint8 uiFace)
             // One should be enough..
             //if (Creature* pEye = instance->GetCreature(m_aFaces[uiFace].m_rightEyeGuid))
             //    pEye->CastSpell(pEye, SPELL_SUMMON_DARK_MATTER_TARGET, true);
-            m_aFaces[uiFace].m_uiTimer = 6000;              // TODO, verify, was 3s+0..1s
+            m_aFaces[uiFace].m_uiTimer = 21000;             // TODO, verify, was 3s+0..1s
             break;
         case FACE_ABEDNEUM:
             if (Creature* pEye = instance->GetCreature(m_aFaces[uiFace].m_leftEyeGuid))
@@ -367,7 +364,7 @@ void instance_halls_of_stone::ProcessFace(uint8 uiFace)
             // One should be enough..
             //if (Creature* pEye = instance->GetCreature(m_aFaces[uiFace].m_rightEyeGuid))
             //    pEye->CastSpell(pEye, SPELL_SUMMON_SEARING_GAZE_TARGET, true);
-            m_aFaces[uiFace].m_uiTimer = 6000;              // TODO, verify, was 3s+0..2s
+            m_aFaces[uiFace].m_uiTimer = 21000;             // TODO, verify, was 3s+0..2s
             break;
         default:
             return;

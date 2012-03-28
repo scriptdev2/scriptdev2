@@ -23,8 +23,10 @@ enum
     NPC_WORLDTRIGGER        = 22515,
     NPC_SJONNIR             = 27978,
 
-    GO_DOOR_SJONNIR         = 191296,
+    GO_DOOR_MAIDEN          = 191292,
     GO_DOOR_TRIBUNAL        = 191294,                       // possibly closed during event?
+    GO_DOOR_TO_TRIBUNAL     = 191295,
+    GO_DOOR_SJONNIR         = 191296,
 
     GO_TRIBUNAL_CHEST       = 190586,
     GO_TRIBUNAL_CHEST_H     = 193996,
