@@ -224,7 +224,7 @@ struct MANGOS_DLL_DECL npc_defias_traitorAI : public npc_escortAI
 
     void Aggro(Unit* pWho)
     {
-        DoScriptText(urand(0, 1) ? SAY_AGGRO_1 : SAY_AGGRO_2, m_creature);
+        DoScriptText(urand(0, 1) ? SAY_AGGRO_1 : SAY_AGGRO_2, m_creature, pWho);
     }
 
     void Reset() { }
