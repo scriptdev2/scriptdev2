@@ -974,6 +974,7 @@ INSERT INTO scripted_event_id VALUES
 (13516,'event_spell_soul_captured_credit');
 UPDATE creature_template SET ScriptName='npc_lord_illidan_stormrage' WHERE entry=22083;
 UPDATE gameobject_template SET ScriptName='go_crystal_prison' WHERE entry=185126;
+UPDATE creature_template SET ScriptName='npc_spawned_oronok_tornheart' WHERE entry=21685;
 
 /* SHATTRATH */
 UPDATE creature_template SET ScriptName='npc_dirty_larry' WHERE entry=19720;

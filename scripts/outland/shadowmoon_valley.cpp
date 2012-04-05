@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Shadowmoon_Valley
 SD%Complete: 100
-SDComment: Quest support: 10781, 10804, 10854, 10458, 10480, 10481, 11020. Vendor Drake Dealer Hurlunk.
+SDComment: Quest support: 10781, 10804, 10854, 10458, 10480, 10481, 10588, 11020. Vendor Drake Dealer Hurlunk.
 SDCategory: Shadowmoon Valley
 EndScriptData */
 
@@ -33,6 +33,7 @@ npc_lord_illidan_stormrage
 npc_totem_of_spirits
 event_spell_soul_captured_credit
 go_crystal_prison
+npc_spawned_oronok_tornheart
 EndContentData */
 
 #include "precompiled.h"
@@ -1333,6 +1334,349 @@ bool ProcessEventId_event_spell_soul_captured_credit(uint32 uiEventId, Object* p
     return false;
 }
 
+/*#####
+#npc_spawned_oronok_tornheart
+#####*/
+
+enum
+{
+    // texts
+    SAY_ORONOK_TOGETHER             = -1000803,
+    SAY_ORONOK_READY                = -1000804,
+    SAY_ORONOK_ELEMENTS             = -1000805,
+    SAY_ORONOK_EPILOGUE_1           = -1000806,
+    SAY_TORLOK_EPILOGUE_2           = -1000807,
+    SAY_ORONOK_EPILOGUE_3           = -1000808,
+    SAY_EARTH_EPILOGUE_4            = -1000809,
+    SAY_FIRE_EPILOGUE_5             = -1000810,
+    SAY_EARTH_EPILOGUE_6            = -1000811,
+    SAY_ORONOK_EPILOGUE_7           = -1000812,
+    EMOTE_GIVE_WEAPONS              = -1000813,
+    SAY_ORONOK_EPILOGUE_8           = -1000814,
+
+    GOSSIP_ITEM_FIGHT               = -3000109,
+    GOSSIP_TEXT_ID_ORONOK           = 10421,
+
+    // spells - some are already defined above
+    //SPELL_CHAIN_LIGHTNING         = 16006,
+    SPELL_EARTHBIND_TOTEM           = 15786,
+    //SPELL_FROST_SHOCK             = 12548,
+    //SPELL_HEALING_WAVE            = 12491,
+
+    // npcs
+    NPC_ORONOK_TORN_HEART           = 21685,
+    NPC_GROMTOR_SON_OF_ORONOK       = 21687,
+    NPC_BORAK_SON_OF_ORONOK         = 21686,
+    NPC_CYRUKH_THE_FIRELORD         = 21181,
+    //NPC_EARTH_SPIRIT              = 21050,
+    NPC_REDEEMED_SPIRIT_OF_EARTH    = 21739,
+    NPC_REDEEMED_SPIRIT_OF_FIRE     = 21740,
+    NPC_REDEEMED_SPIRIT_OF_AIR      = 21738,
+    NPC_REDEEMED_SPIRIT_OF_WATER    = 21741,
+    NPC_EARTHMENDER_TORLOK          = 21024,
+
+    GO_MARK_OF_KAELTHAS             = 185170,
+
+    QUEST_CIPHER_OF_DAMNATION       = 10588,
+
+    POINT_ID_ATTACK_READY           = 1,
+    POINT_ID_ELEMENTS               = 2,
+    POINT_ID_EPILOGUE               = 3,
+};
+
+static const DialogueEntry aOutroDialogue[] =
+{
+    {QUEST_CIPHER_OF_DAMNATION,     0,                              1000},
+    {NPC_CYRUKH_THE_FIRELORD,       0,                              0},
+    {NPC_EARTHMENDER_TORLOK,        0,                              1000},
+    {SAY_ORONOK_EPILOGUE_1,         NPC_ORONOK_TORN_HEART,          5000},
+    {SAY_TORLOK_EPILOGUE_2,         NPC_EARTHMENDER_TORLOK,         5000},
+    {NPC_REDEEMED_SPIRIT_OF_EARTH,  0,                              5000},
+    {SAY_ORONOK_EPILOGUE_3,         NPC_ORONOK_TORN_HEART,          5000},
+    {SAY_EARTH_EPILOGUE_4,          NPC_REDEEMED_SPIRIT_OF_EARTH,   5000},
+    {SAY_FIRE_EPILOGUE_5,           NPC_REDEEMED_SPIRIT_OF_FIRE,    14000},
+    {SAY_EARTH_EPILOGUE_6,          NPC_REDEEMED_SPIRIT_OF_EARTH,   6000},
+    {SAY_ORONOK_EPILOGUE_7,         NPC_ORONOK_TORN_HEART,          6000},
+    {EMOTE_GIVE_WEAPONS,            NPC_ORONOK_TORN_HEART,          6000},
+    {SAY_ORONOK_EPILOGUE_8,         NPC_ORONOK_TORN_HEART,          10000},
+    {NPC_ORONOK_TORN_HEART,         0,                              0},
+    {0, 0, 0},
+};
+
+struct EventLocations
+{
+    float m_fX, m_fY, m_fZ, m_fO;
+};
+
+const static EventLocations aDamnationLocations[] =
+{
+    {-3605.09f, 1885.47f, 47.24f, 1.81f},      // 0 fire spirit summon loc
+    {-3600.68f, 1886.58f, 47.24f, 1.81f},      // 1 earth spirit summon loc
+    {-3597.19f, 1887.46f, 47.24f, 1.77f},      // 2 water spirit summon loc
+    {-3593.18f, 1888.27f, 47.24f, 1.77f},      // 3 air spirit summon loc
+    {-3595.36f, 1869.78f, 47.24f},             // 4 fight ready move loc
+    {-3635.90f, 1860.94f, 52.93f},             // 5 elementals move loc
+    {-3599.71f, 1897.94f, 47.24f}              // 6 epilogue move loc
+};
+
+struct MANGOS_DLL_DECL npc_spawned_oronok_tornheartAI : public ScriptedAI, private DialogueHelper
+{
+    npc_spawned_oronok_tornheartAI(Creature* pCreature) : ScriptedAI(pCreature),
+        DialogueHelper(aOutroDialogue)
+    {
+        Reset();
+        StartNextDialogueText(QUEST_CIPHER_OF_DAMNATION);
+    }
+
+    uint32 m_uiLightningTimer;
+    uint32 m_uiTotemTimer;
+    uint32 m_uiFrostTimer;
+    uint32 m_uiHealTimer;
+
+    ObjectGuid m_torlokGuid;
+    ObjectGuid m_fireSpiritGuid;
+    ObjectGuid m_earthSpiritGuid;
+    ObjectGuid m_borakGuid;
+    ObjectGuid m_gromtorGuid;
+    ObjectGuid m_cyrukhGuid;
+
+    bool m_bHasAttackStart;
+
+    void Reset()
+    {
+        m_uiLightningTimer  = 15000;
+        m_uiTotemTimer      = 10000;
+        m_uiFrostTimer      = 20000;
+        m_uiHealTimer       = 8000;
+
+        m_bHasAttackStart   = false;
+    }
+
+    void JustDidDialogueStep(int32 iEntry)
+    {
+        switch(iEntry)
+        {
+            case NPC_CYRUKH_THE_FIRELORD:
+                // Set them in motion
+                m_creature->SetWalk(false);
+                m_creature->GetMotionMaster()->MovePoint(POINT_ID_ATTACK_READY, aDamnationLocations[4].m_fX, aDamnationLocations[4].m_fY, aDamnationLocations[4].m_fZ);
+                if (Creature* pBorak = GetClosestCreatureWithEntry(m_creature, NPC_BORAK_SON_OF_ORONOK, 10.0f))
+                {
+                    m_borakGuid = pBorak->GetObjectGuid();
+                    pBorak->GetMotionMaster()->MoveFollow(m_creature, 5.0f, -M_PI_F/2);
+                }
+                if (Creature* pGromtor = GetClosestCreatureWithEntry(m_creature, NPC_GROMTOR_SON_OF_ORONOK, 10.0f))
+                {
+                    m_gromtorGuid = pGromtor->GetObjectGuid();
+                    pGromtor->GetMotionMaster()->MoveFollow(m_creature, 5.0f, M_PI_F/2);
+                }
+                break;
+            case NPC_EARTHMENDER_TORLOK:
+                if (Creature* pTorlok = GetClosestCreatureWithEntry(m_creature, NPC_EARTHMENDER_TORLOK, 25.0f))
+                {
+                    m_torlokGuid = pTorlok->GetObjectGuid();
+                    m_creature->SetFacingToObject(pTorlok);
+                }
+                break;
+            case NPC_REDEEMED_SPIRIT_OF_EARTH:
+                m_creature->SetFacingTo(4.9f);
+                m_creature->SummonCreature(NPC_REDEEMED_SPIRIT_OF_FIRE, aDamnationLocations[0].m_fX, aDamnationLocations[0].m_fY, aDamnationLocations[0].m_fZ, aDamnationLocations[0].m_fO, TEMPSUMMON_TIMED_DESPAWN, 32000);
+                m_creature->SummonCreature(NPC_REDEEMED_SPIRIT_OF_EARTH, aDamnationLocations[1].m_fX, aDamnationLocations[1].m_fY, aDamnationLocations[1].m_fZ, aDamnationLocations[1].m_fO, TEMPSUMMON_TIMED_DESPAWN, 32000);
+                m_creature->SummonCreature(NPC_REDEEMED_SPIRIT_OF_WATER, aDamnationLocations[2].m_fX, aDamnationLocations[2].m_fY, aDamnationLocations[2].m_fZ, aDamnationLocations[2].m_fO, TEMPSUMMON_TIMED_DESPAWN, 32000);
+                m_creature->SummonCreature(NPC_REDEEMED_SPIRIT_OF_AIR, aDamnationLocations[3].m_fX, aDamnationLocations[3].m_fY, aDamnationLocations[3].m_fZ, aDamnationLocations[3].m_fO, TEMPSUMMON_TIMED_DESPAWN, 32000);
+                break;
+            case SAY_ORONOK_EPILOGUE_7:
+                if (Creature* pTorlok = m_creature->GetMap()->GetCreature(m_torlokGuid))
+                    m_creature->SetFacingToObject(pTorlok);
+                break;
+            case NPC_ORONOK_TORN_HEART:
+                if (GameObject* pMark = GetClosestGameObjectWithEntry(m_creature, GO_MARK_OF_KAELTHAS, 30.0f))
+                {
+                    pMark->SetRespawnTime(5*MINUTE);
+                    pMark->Refresh();
+                }
+                if (Creature* pBorak = m_creature->GetMap()->GetCreature(m_borakGuid))
+                    pBorak->ForcedDespawn();
+                if (Creature* pGromtor = m_creature->GetMap()->GetCreature(m_gromtorGuid))
+                    pGromtor->ForcedDespawn();
+                m_creature->ForcedDespawn();
+                break;
+        }
+    }
+
+    Creature* GetSpeakerByEntry(uint32 uiEntry)
+    {
+        switch (uiEntry)
+        {
+            case NPC_ORONOK_TORN_HEART:         return m_creature;
+            case NPC_EARTHMENDER_TORLOK:        return m_creature->GetMap()->GetCreature(m_torlokGuid);
+            case NPC_REDEEMED_SPIRIT_OF_EARTH:  return m_creature->GetMap()->GetCreature(m_earthSpiritGuid);
+            case NPC_REDEEMED_SPIRIT_OF_FIRE:   return m_creature->GetMap()->GetCreature(m_fireSpiritGuid);
+
+            default:
+                return NULL;
+        }
+    }
+
+    void Aggro(Unit* pWho)
+    {
+        if (!m_bHasAttackStart && pWho->GetEntry() == NPC_EARTH_SPIRIT)
+        {
+            // Cyrukh starts to attack
+            if (Creature* pCyrukh = m_creature->GetMap()->GetCreature(m_cyrukhGuid))
+            {
+                pCyrukh->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE);
+                pCyrukh->AI()->AttackStart(m_creature);
+                AttackStart(pCyrukh);
+                m_bHasAttackStart = true;
+            }
+        }
+    }
+
+    void JustSummoned(Creature* pSummoned)
+    {
+        switch (pSummoned->GetEntry())
+        {
+            case NPC_REDEEMED_SPIRIT_OF_FIRE:
+                m_fireSpiritGuid = pSummoned->GetObjectGuid();
+                break;
+            case NPC_REDEEMED_SPIRIT_OF_EARTH:
+                m_earthSpiritGuid = pSummoned->GetObjectGuid();
+                break;
+        }
+    }
+
+    void EnterEvadeMode()
+    {
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop(true);
+        m_creature->LoadCreatureAddon(true);
+
+        m_creature->SetLootRecipient(NULL);
+
+        Reset();
+
+        if (!m_creature->isAlive())
+            return;
+
+        if (Creature* pCyrukh = m_creature->GetMap()->GetCreature(m_cyrukhGuid))
+        {
+            if (!pCyrukh->isAlive())
+                m_creature->GetMotionMaster()->MovePoint(POINT_ID_EPILOGUE, aDamnationLocations[6].m_fX, aDamnationLocations[6].m_fY, aDamnationLocations[6].m_fZ);
+        }
+        else
+        {
+            error_log("SD2: Npc %u couldn't be found or something really bad happened. Epilogue event for quest %u will stop.", NPC_CYRUKH_THE_FIRELORD, QUEST_CIPHER_OF_DAMNATION);
+            m_creature->GetMotionMaster()->MoveTargetedHome();
+        }
+    }
+
+    void MovementInform(uint32 uiMotionType, uint32 uiPointId)
+    {
+        if (uiMotionType != POINT_MOTION_TYPE)
+            return;
+
+        switch (uiPointId)
+        {
+            case POINT_ID_ATTACK_READY:
+                // Get Cyrukh guid now, because we are at a closer distance
+                if (Creature* pCyrukh = GetClosestCreatureWithEntry(m_creature, NPC_CYRUKH_THE_FIRELORD, 70.0f))
+                    m_cyrukhGuid = pCyrukh->GetObjectGuid();
+
+                m_creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+                DoScriptText(SAY_ORONOK_READY, m_creature);
+                break;
+            case POINT_ID_ELEMENTS:
+                // Attack the closest earth element
+                if (Creature* pElement = GetClosestCreatureWithEntry(m_creature, NPC_EARTH_SPIRIT, 50.0f))
+                    AttackStart(pElement);
+                break;
+            case POINT_ID_EPILOGUE:
+                StartNextDialogueText(NPC_EARTHMENDER_TORLOK);
+                break;
+        }
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        DialogueUpdate(uiDiff);
+
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        if (m_uiLightningTimer < uiDiff)
+        {
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_CHAIN_LIGHTNING) == CAST_OK)
+                    m_uiLightningTimer = urand(9000, 15000);
+            }
+        }
+        else
+            m_uiLightningTimer -= uiDiff;
+
+        if (m_uiTotemTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_EARTHBIND_TOTEM) == CAST_OK)
+                m_uiTotemTimer = urand(40000, 60000);
+        }
+        else
+            m_uiTotemTimer -= uiDiff;
+
+        if (m_uiFrostTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_FROST_SHOCK) == CAST_OK)
+                m_uiFrostTimer = urand(14000, 18000);
+        }
+        else
+            m_uiFrostTimer -= uiDiff;
+
+        if (m_uiHealTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_HEALING_WAVE) == CAST_OK)
+                m_uiHealTimer = urand(6000, 10000);
+        }
+        else
+            m_uiHealTimer -= uiDiff;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_npc_spawned_oronok_tornheart(Creature* pCreature)
+{
+    return new npc_spawned_oronok_tornheartAI(pCreature);
+}
+
+bool GossipHello_npc_spawned_oronok_tornheart(Player* pPlayer, Creature* pCreature)
+{
+    if (pPlayer->GetQuestStatus(QUEST_CIPHER_OF_DAMNATION) == QUEST_STATUS_INCOMPLETE)
+    {
+        pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_FIGHT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_ID_ORONOK, pCreature->GetObjectGuid());
+    }
+    else
+        pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
+
+    return true;
+}
+
+bool GossipSelect_npc_spawned_oronok_tornheart(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+{
+    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
+    {
+        // Note: this movement expects MMaps.
+        DoScriptText(SAY_ORONOK_ELEMENTS, pCreature);
+        pCreature->GetMotionMaster()->MovePoint(POINT_ID_ELEMENTS, aDamnationLocations[5].m_fX, aDamnationLocations[5].m_fY, aDamnationLocations[5].m_fZ);
+        pCreature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+
+        pPlayer->CLOSE_GOSSIP_MENU();
+    }
+
+    return true;
+}
+
 void AddSC_shadowmoon_valley()
 {
     Script* pNewScript;
@@ -1395,5 +1739,12 @@ void AddSC_shadowmoon_valley()
     pNewScript = new Script;
     pNewScript->Name = "go_crystal_prison";
     pNewScript->pQuestAcceptGO = &GOQuestAccept_GO_crystal_prison;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_spawned_oronok_tornheart";
+    pNewScript->GetAI = &GetAI_npc_spawned_oronok_tornheart;
+    pNewScript->pGossipHello =  &GossipHello_npc_spawned_oronok_tornheart;
+    pNewScript->pGossipSelect = &GossipSelect_npc_spawned_oronok_tornheart;
     pNewScript->RegisterSelf();
 }
