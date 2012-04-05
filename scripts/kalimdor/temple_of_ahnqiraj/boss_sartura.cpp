@@ -159,8 +159,8 @@ struct MANGOS_DLL_DECL boss_sarturaAI : public ScriptedAI
 
         // If she is 20% enrage
         if (!m_bIsEnraged && m_creature->GetHealthPercent() <= 20.0f)
-		{
-			if (DoCastSpellIfCan(m_creature, SPELL_ENRAGE, m_bIsWhirlWind ? CAST_TRIGGERED : 0) == CAST_OK)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_ENRAGE, m_bIsWhirlWind ? CAST_TRIGGERED : 0) == CAST_OK)
                 m_bIsEnraged = true;
         }
 
