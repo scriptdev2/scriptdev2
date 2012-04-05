@@ -1289,7 +1289,6 @@ UPDATE creature_template SET ScriptName='npc_mikhail' WHERE entry=4963;
 
 /* WINTERSPRING */
 UPDATE creature_template SET ScriptName='npc_lorax' WHERE entry=10918;
-UPDATE creature_template SET ScriptName='npc_rivern_frostwind' WHERE entry=10618;
 UPDATE creature_template SET ScriptName='npc_ranshalla' WHERE entry=10300;
 UPDATE gameobject_template SET ScriptName='go_elune_fire' WHERE entry IN (177417, 177404);
 

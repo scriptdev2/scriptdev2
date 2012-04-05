@@ -17,13 +17,12 @@
 /* ScriptData
 SDName: Winterspring
 SD%Complete: 90
-SDComment: Quest support: 4901, 5126 (Loraxs' tale missing proper gossip items text). Vendor Rivern Frostwind.
+SDComment: Quest support: 4901, 5126 (Loraxs' tale missing proper gossip items text).
 SDCategory: Winterspring
 EndScriptData */
 
 /* ContentData
 npc_lorax
-npc_rivern_frostwind
 npc_ranshalla
 EndContentData */
 
@@ -76,31 +75,6 @@ bool GossipSelect_npc_lorax(Player* pPlayer, Creature* pCreature, uint32 uiSende
             pPlayer->AreaExploredOrEventHappens(5126);
             break;
     }
-    return true;
-}
-
-/*######
-## npc_rivern_frostwind
-######*/
-
-bool GossipHello_npc_rivern_frostwind(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
-
-    if (pCreature->isVendor() && pPlayer->GetReputationRank(589) == REP_EXALTED)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
-
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-
-    return true;
-}
-
-bool GossipSelect_npc_rivern_frostwind(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_TRADE)
-        pPlayer->SEND_VENDORLIST(pCreature->GetObjectGuid());
-
     return true;
 }
 
@@ -541,12 +515,6 @@ void AddSC_winterspring()
     pNewScript->Name = "npc_lorax";
     pNewScript->pGossipHello =  &GossipHello_npc_lorax;
     pNewScript->pGossipSelect = &GossipSelect_npc_lorax;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_rivern_frostwind";
-    pNewScript->pGossipHello =  &GossipHello_npc_rivern_frostwind;
-    pNewScript->pGossipSelect = &GossipSelect_npc_rivern_frostwind;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
