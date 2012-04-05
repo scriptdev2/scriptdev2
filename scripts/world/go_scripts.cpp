@@ -30,7 +30,6 @@ go_mysterious_snow_mound
 go_resonite_cask
 go_sacred_fire_of_life
 go_shrine_of_the_birds
-go_tablet_of_madness
 go_tele_to_dalaran_crystal
 go_tele_to_violet_stand
 go_andorhal_tower
@@ -300,24 +299,6 @@ bool GOUse_go_shrine_of_the_birds(Player* pPlayer, GameObject* pGo)
 }
 
 /*######
-## go_tablet_of_madness
-######*/
-
-enum
-{
-    SPELL_ALCHEMY_GURUBASHI_MOJO_MADNESS = 24266,
-    SPELL_LEARN_GURUBASHI_MOJO_MADNESS   = 24267
-};
-
-bool GOUse_go_tablet_of_madness(Player* pPlayer, GameObject* pGo)
-{
-    if (pPlayer->HasSkill(SKILL_ALCHEMY) && pPlayer->GetSkillValue(SKILL_ALCHEMY) >= 300 && !pPlayer->HasSpell(SPELL_ALCHEMY_GURUBASHI_MOJO_MADNESS))
-        pPlayer->CastSpell(pPlayer, SPELL_LEARN_GURUBASHI_MOJO_MADNESS, false);
-
-    return true;
-}
-
-/*######
 ## go_tele_to_dalaran_crystal
 ######*/
 
@@ -543,11 +524,6 @@ void AddSC_go_scripts()
     pNewScript = new Script;
     pNewScript->Name = "go_shrine_of_the_birds";
     pNewScript->pGOUse =          &GOUse_go_shrine_of_the_birds;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "go_tablet_of_madness";
-    pNewScript->pGOUse =          &GOUse_go_tablet_of_madness;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
