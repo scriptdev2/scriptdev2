@@ -17,14 +17,13 @@
 /* ScriptData
 SDName: Dustwallow_Marsh
 SD%Complete: 95
-SDComment: Quest support: 558, 1173, 1273, 1324, 11209, 11126, 11180.
+SDComment: Quest support: 558, 1173, 1273, 1324, 11209, 11180.
 SDCategory: Dustwallow Marsh
 EndScriptData */
 
 /* ContentData
 mobs_risen_husk_spirit
 npc_restless_apparition
-npc_deserter_agitator
 npc_lady_jaina_proudmoore
 npc_morokk
 npc_ogron
@@ -176,44 +175,6 @@ struct MANGOS_DLL_DECL npc_restless_apparitionAI : public ScriptedAI
 CreatureAI* GetAI_npc_restless_apparition(Creature* pCreature)
 {
     return new npc_restless_apparitionAI(pCreature);
-}
-
-/*######
-## npc_deserter_agitator
-######*/
-
-enum
-{
-    QUEST_TRAITORS_AMONG_US = 11126,
-    FACTION_THER_DESERTER   = 1883
-};
-
-struct MANGOS_DLL_DECL npc_deserter_agitatorAI : public ScriptedAI
-{
-    npc_deserter_agitatorAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
-
-    void Reset()
-    {
-        m_creature->setFaction(m_creature->GetCreatureInfo()->faction_A);
-    }
-};
-
-CreatureAI* GetAI_npc_deserter_agitator(Creature* pCreature)
-{
-    return new npc_deserter_agitatorAI(pCreature);
-}
-
-bool GossipHello_npc_deserter_agitator(Player* pPlayer, Creature* pCreature)
-{
-    if (pPlayer->GetQuestStatus(QUEST_TRAITORS_AMONG_US) == QUEST_STATUS_INCOMPLETE)
-    {
-        pCreature->setFaction(FACTION_THER_DESERTER);
-        pPlayer->TalkedToCreature(pCreature->GetEntry(), pCreature->GetObjectGuid());
-    }
-    else
-        pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-
-    return true;
 }
 
 /*######
@@ -780,12 +741,6 @@ void AddSC_dustwallow_marsh()
     pNewScript = new Script;
     pNewScript->Name = "npc_restless_apparition";
     pNewScript->GetAI = &GetAI_npc_restless_apparition;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_deserter_agitator";
-    pNewScript->GetAI = &GetAI_npc_deserter_agitator;
-    pNewScript->pGossipHello = &GossipHello_npc_deserter_agitator;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
