@@ -17,14 +17,13 @@
 /* ScriptData
 SDName: Dustwallow_Marsh
 SD%Complete: 95
-SDComment: Quest support: 558, 1173, 1273, 1324, 11209, 11180.
+SDComment: Quest support: 1173, 1273, 1324, 11209, 11180.
 SDCategory: Dustwallow Marsh
 EndScriptData */
 
 /* ContentData
 mobs_risen_husk_spirit
 npc_restless_apparition
-npc_lady_jaina_proudmoore
 npc_morokk
 npc_ogron
 npc_private_hendel
@@ -175,41 +174,6 @@ struct MANGOS_DLL_DECL npc_restless_apparitionAI : public ScriptedAI
 CreatureAI* GetAI_npc_restless_apparition(Creature* pCreature)
 {
     return new npc_restless_apparitionAI(pCreature);
-}
-
-/*######
-## npc_lady_jaina_proudmoore
-######*/
-
-enum
-{
-    QUEST_JAINAS_AUTOGRAPH = 558,
-    SPELL_JAINAS_AUTOGRAPH = 23122
-};
-
-#define GOSSIP_ITEM_JAINA "I know this is rather silly but i have a young ward who is a bit shy and would like your autograph."
-
-bool GossipHello_npc_lady_jaina_proudmoore(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
-
-    if (pPlayer->GetQuestStatus(QUEST_JAINAS_AUTOGRAPH) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_JAINA, GOSSIP_SENDER_MAIN, GOSSIP_SENDER_INFO);
-
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-
-    return true;
-}
-
-bool GossipSelect_npc_lady_jaina_proudmoore(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_SENDER_INFO)
-    {
-        pPlayer->SEND_GOSSIP_MENU(7012, pCreature->GetObjectGuid());
-        pPlayer->CastSpell(pPlayer, SPELL_JAINAS_AUTOGRAPH, false);
-    }
-    return true;
 }
 
 /*######
@@ -741,12 +705,6 @@ void AddSC_dustwallow_marsh()
     pNewScript = new Script;
     pNewScript->Name = "npc_restless_apparition";
     pNewScript->GetAI = &GetAI_npc_restless_apparition;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_lady_jaina_proudmoore";
-    pNewScript->pGossipHello = &GossipHello_npc_lady_jaina_proudmoore;
-    pNewScript->pGossipSelect = &GossipSelect_npc_lady_jaina_proudmoore;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
