@@ -358,7 +358,6 @@ UPDATE creature_template SET ScriptName='mobs_nether_drake' WHERE entry IN (2002
 UPDATE creature_template SET ScriptName='npc_daranelle' WHERE entry=21469;
 
 /* BLASTED LANDS */
-UPDATE creature_template SET ScriptName='npc_deathly_usher' WHERE entry=8816;
 UPDATE creature_template SET ScriptName='npc_fallen_hero_of_horde' WHERE entry=7572;
 
 /* BLOODMYST ISLE */

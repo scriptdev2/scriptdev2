@@ -17,47 +17,15 @@
 /* ScriptData
 SDName: Blasted_Lands
 SD%Complete: 90
-SDComment: Quest support: 2784, 2801, 3628. Missing some texts for Fallen Hero. Teleporter to Rise of the Defiler missing group support.
+SDComment: Quest support: 2784, 2801. Missing some texts for Fallen Hero. Teleporter to Rise of the Defiler missing group support.
 SDCategory: Blasted Lands
 EndScriptData */
 
 /* ContentData
-npc_deathly_usher
 npc_fallen_hero_of_horde
 EndContentData */
 
 #include "precompiled.h"
-
-/*######
-## npc_deathly_usher
-######*/
-
-#define GOSSIP_ITEM_USHER "I wish to to visit the Rise of the Defiler."
-
-#define SPELL_TELEPORT_SINGLE           12885
-#define SPELL_TELEPORT_SINGLE_IN_GROUP  13142
-#define SPELL_TELEPORT_GROUP            27686
-
-bool GossipHello_npc_deathly_usher(Player* pPlayer, Creature* pCreature)
-{
-    if (pPlayer->GetQuestStatus(3628) == QUEST_STATUS_INCOMPLETE && pPlayer->HasItemCount(10757, 1))
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_USHER, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
-
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-
-    return true;
-}
-
-bool GossipSelect_npc_deathly_usher(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_INFO_DEF)
-    {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        pCreature->CastSpell(pPlayer, SPELL_TELEPORT_SINGLE, true);
-    }
-
-    return true;
-}
 
 /*######
 ## npc_fallen_hero_of_horde
@@ -144,12 +112,6 @@ bool GossipSelect_npc_fallen_hero_of_horde(Player* pPlayer, Creature* pCreature,
 void AddSC_blasted_lands()
 {
     Script* pNewScript;
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_deathly_usher";
-    pNewScript->pGossipHello =  &GossipHello_npc_deathly_usher;
-    pNewScript->pGossipSelect = &GossipSelect_npc_deathly_usher;
-    pNewScript->RegisterSelf();
 
     pNewScript = new Script;
     pNewScript->Name = "npc_fallen_hero_of_horde";
