@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Dustwallow_Marsh
 SD%Complete: 95
-SDComment: Quest support: 558, 1173, 1273, 1324, 11209, 11126, 11180. Vendor Nat Pagle
+SDComment: Quest support: 558, 1173, 1273, 1324, 11209, 11126, 11180.
 SDCategory: Dustwallow Marsh
 EndScriptData */
 
@@ -27,7 +27,6 @@ npc_restless_apparition
 npc_deserter_agitator
 npc_lady_jaina_proudmoore
 npc_morokk
-npc_nat_pagle
 npc_ogron
 npc_private_hendel
 EndContentData */
@@ -368,38 +367,6 @@ bool QuestAccept_npc_morokk(Player* pPlayer, Creature* pCreature, const Quest* p
     }
 
     return false;
-}
-/*######
-## npc_nat_pagle
-######*/
-
-enum
-{
-    QUEST_NATS_MEASURING_TAPE = 8227
-};
-
-bool GossipHello_npc_nat_pagle(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
-
-    if (pCreature->isVendor() && pPlayer->GetQuestRewardStatus(QUEST_NATS_MEASURING_TAPE))
-    {
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
-        pPlayer->SEND_GOSSIP_MENU(7640, pCreature->GetObjectGuid());
-    }
-    else
-        pPlayer->SEND_GOSSIP_MENU(7638, pCreature->GetObjectGuid());
-
-    return true;
-}
-
-bool GossipSelect_npc_nat_pagle(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_TRADE)
-        pPlayer->SEND_VENDORLIST(pCreature->GetObjectGuid());
-
-    return true;
 }
 
 /*######
@@ -831,12 +798,6 @@ void AddSC_dustwallow_marsh()
     pNewScript->Name = "npc_morokk";
     pNewScript->GetAI = &GetAI_npc_morokk;
     pNewScript->pQuestAcceptNPC = &QuestAccept_npc_morokk;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_nat_pagle";
-    pNewScript->pGossipHello = &GossipHello_npc_nat_pagle;
-    pNewScript->pGossipSelect = &GossipSelect_npc_nat_pagle;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
