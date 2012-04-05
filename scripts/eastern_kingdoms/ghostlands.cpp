@@ -17,46 +17,17 @@
 /* ScriptData
 SDName: Ghostlands
 SD%Complete: 100
-SDComment: Quest support: 9212, 9692. Obtain Budd's Guise of Zul'aman.
+SDComment: Quest support: 9212. Obtain Budd's Guise of Zul'aman.
 SDCategory: Ghostlands
 EndScriptData */
 
 /* ContentData
-npc_blood_knight_dawnstar
 npc_budd_nedreck
 npc_ranger_lilatha
 EndContentData */
 
 #include "precompiled.h"
 #include "escort_ai.h"
-
-/*######
-## npc_blood_knight_dawnstar
-######*/
-
-#define GOSSIP_ITEM_INSIGNIA    "Take Blood Knight Insignia"
-
-bool GossipHello_npc_blood_knight_dawnstar(Player* pPlayer, Creature* pCreature)
-{
-    if (pPlayer->GetQuestStatus(9692) == QUEST_STATUS_INCOMPLETE && !pPlayer->HasItemCount(24226,1,true))
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT,GOSSIP_ITEM_INSIGNIA,GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF+1);
-
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-
-    return true;
-}
-
-bool GossipSelect_npc_blood_knight_dawnstar(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
-    {
-        if (Item* pItem = pPlayer->StoreNewItemInInventorySlot(24226, 1))
-            pPlayer->SendNewItem(pItem, 1, true, false);
-
-        pPlayer->CLOSE_GOSSIP_MENU();
-    }
-    return true;
-}
 
 /*######
 ## npc_budd_nedreck
@@ -214,12 +185,6 @@ bool QuestAccept_npc_ranger_lilatha(Player* pPlayer, Creature* pCreature, const 
 void AddSC_ghostlands()
 {
     Script* pNewScript;
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_blood_knight_dawnstar";
-    pNewScript->pGossipHello = &GossipHello_npc_blood_knight_dawnstar;
-    pNewScript->pGossipSelect = &GossipSelect_npc_blood_knight_dawnstar;
-    pNewScript->RegisterSelf();
 
     pNewScript = new Script;
     pNewScript->Name = "npc_budd_nedreck";
