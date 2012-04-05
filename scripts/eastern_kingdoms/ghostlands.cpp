@@ -17,45 +17,16 @@
 /* ScriptData
 SDName: Ghostlands
 SD%Complete: 100
-SDComment: Quest support: 9212. Obtain Budd's Guise of Zul'aman.
+SDComment: Quest support: 9212.
 SDCategory: Ghostlands
 EndScriptData */
 
 /* ContentData
-npc_budd_nedreck
 npc_ranger_lilatha
 EndContentData */
 
 #include "precompiled.h"
 #include "escort_ai.h"
-
-/*######
-## npc_budd_nedreck
-######*/
-
-#define GOSSIP_ITEM_DISGUISE        "You gave the crew disguises?"
-
-bool GossipHello_npc_budd_nedreck(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
-
-    if (pPlayer->GetQuestStatus(11166) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT,GOSSIP_ITEM_DISGUISE,GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF);
-
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-    return true;
-}
-
-bool GossipSelect_npc_budd_nedreck(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    if (uiAction==GOSSIP_ACTION_INFO_DEF)
-    {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        pCreature->CastSpell(pPlayer, 42540, false);
-    }
-    return true;
-}
 
 /*######
 ## npc_ranger_lilatha
@@ -185,12 +156,6 @@ bool QuestAccept_npc_ranger_lilatha(Player* pPlayer, Creature* pCreature, const 
 void AddSC_ghostlands()
 {
     Script* pNewScript;
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_budd_nedreck";
-    pNewScript->pGossipHello = &GossipHello_npc_budd_nedreck;
-    pNewScript->pGossipSelect = &GossipSelect_npc_budd_nedreck;
-    pNewScript->RegisterSelf();
 
     pNewScript = new Script;
     pNewScript->Name = "npc_ranger_lilatha";
