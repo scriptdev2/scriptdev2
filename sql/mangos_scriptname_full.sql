@@ -7,51 +7,68 @@ DELETE FROM scripted_areatrigger WHERE entry=4560;
 INSERT INTO scripted_areatrigger VALUES (4560,'at_legion_teleporter');
 DELETE FROM scripted_areatrigger WHERE entry=3066;
 INSERT INTO scripted_areatrigger VALUES (3066,'at_ravenholdt');
-DELETE FROM scripted_areatrigger WHERE entry IN (4871, 4872, 4873);
+DELETE FROM scripted_areatrigger WHERE entry IN (4871,4872,4873);
 INSERT INTO scripted_areatrigger VALUES
 (4871,'at_warsong_farms'),
 (4872,'at_warsong_farms'),
 (4873,'at_warsong_farms');
-DELETE FROM scripted_areatrigger WHERE entry IN (5046, 5047);
+DELETE FROM scripted_areatrigger WHERE entry IN (5046,5047);
 INSERT INTO scripted_areatrigger VALUES
-(5046, 'at_waygate'),
-(5047, 'at_waygate');
+(5046,'at_waygate'),
+(5047,'at_waygate');
 DELETE FROM scripted_areatrigger WHERE entry BETWEEN 5284 AND 5287;
 INSERT INTO scripted_areatrigger VALUES
 (5284,'at_aldurthar_gate'),
 (5285,'at_aldurthar_gate'),
 (5286,'at_aldurthar_gate'),
 (5287,'at_aldurthar_gate');
-DELETE FROM scripted_areatrigger WHERE entry IN (4112, 4113);
+DELETE FROM scripted_areatrigger WHERE entry IN (4112,4113);
 INSERT INTO scripted_areatrigger VALUES
 (4112,'at_naxxramas'),
 (4113,'at_naxxramas');
 DELETE FROM scripted_areatrigger WHERE entry=5108;
 INSERT INTO scripted_areatrigger VALUES (5108,'at_stormwright_shelf');
-DELETE FROM scripted_areatrigger WHERE entry IN (3546, 3547, 3548, 3549, 3550, 3552);
+DELETE FROM scripted_areatrigger WHERE entry IN (3546,3547,3548,3549,3550,3552);
 INSERT INTO scripted_areatrigger VALUES
-(3546, 'at_childrens_week_spot'), -- Darnassian bank
-(3547, 'at_childrens_week_spot'), -- Undercity - thone room
-(3548, 'at_childrens_week_spot'), -- Stonewrought Dam
-(3549, 'at_childrens_week_spot'), -- The Mor'shan Rampart
-(3550, 'at_childrens_week_spot'), -- Ratchet Docks
-(3552, 'at_childrens_week_spot'); -- Westfall Lighthouse
-DELETE FROM scripted_areatrigger WHERE entry IN (2026, 2046);
+(3546,'at_childrens_week_spot'), -- Darnassian bank
+(3547,'at_childrens_week_spot'), -- Undercity - thone room
+(3548,'at_childrens_week_spot'), -- Stonewrought Dam
+(3549,'at_childrens_week_spot'), -- The Mor'shan Rampart
+(3550,'at_childrens_week_spot'), -- Ratchet Docks
+(3552,'at_childrens_week_spot'); -- Westfall Lighthouse
+DELETE FROM scripted_areatrigger WHERE entry IN (2026,2046);
 INSERT INTO scripted_areatrigger VALUES
-(2026, 'at_blackrock_spire'),
-(2046, 'at_blackrock_spire');
+(2026,'at_blackrock_spire'),
+(2046,'at_blackrock_spire');
 DELETE FROM scripted_areatrigger WHERE entry=5030;
 INSERT INTO scripted_areatrigger VALUES (5030,'at_spearborn_encampment');
-DELETE FROM scripted_areatrigger WHERE entry IN (3958, 3960);
+DELETE FROM scripted_areatrigger WHERE entry IN (3958,3960);
 INSERT INTO scripted_areatrigger VALUES
-(3958, 'at_zulgurub'),
-(3960, 'at_zulgurub');
+(3958,'at_zulgurub'),
+(3960,'at_zulgurub');
 DELETE FROM scripted_areatrigger WHERE entry=3626;
-INSERT INTO scripted_areatrigger VALUES (3626, 'at_vaelastrasz');
+INSERT INTO scripted_areatrigger VALUES (3626,'at_vaelastrasz');
 DELETE FROM scripted_areatrigger WHERE entry=4937;
-INSERT INTO scripted_areatrigger VALUES (4937, 'at_sunwell_plateau');
+INSERT INTO scripted_areatrigger VALUES (4937,'at_sunwell_plateau');
 DELETE FROM scripted_areatrigger WHERE entry=4524;
 INSERT INTO scripted_areatrigger VALUES (4524,'at_shattered_halls');
+DELETE FROM scripted_areatrigger WHERE entry BETWEEN 1726 AND 1740;
+INSERT INTO scripted_areatrigger VALUES
+(1726,'at_scent_larkorwi'),
+(1727,'at_scent_larkorwi'),
+(1728,'at_scent_larkorwi'),
+(1729,'at_scent_larkorwi'),
+(1730,'at_scent_larkorwi'),
+(1731,'at_scent_larkorwi'),
+(1732,'at_scent_larkorwi'),
+(1733,'at_scent_larkorwi'),
+(1734,'at_scent_larkorwi'),
+(1735,'at_scent_larkorwi'),
+(1736,'at_scent_larkorwi'),
+(1737,'at_scent_larkorwi'),
+(1738,'at_scent_larkorwi'),
+(1739,'at_scent_larkorwi'),
+(1740,'at_scent_larkorwi');
 
 
 /* BATTLEGROUNDS */
