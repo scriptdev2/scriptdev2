@@ -28,6 +28,9 @@ enum
     NPC_NEFARIAN                = 11583,
     NPC_LORD_NEFARIAN           = 10162,
     NPC_BLACKWING_TECHNICIAN    = 13996,                    // Flees at Vael intro event
+    NPC_GRETHOK_CONTROLLER      = 12557,
+    NPC_BLACKWING_ORB_TRIGGER   = 14449,
+    NPC_MONSTER_GENERATOR       = 12434,
 
     GO_DOOR_RAZORGORE_ENTER     = 176964,
     GO_DOOR_RAZORGORE_EXIT      = 176965,
@@ -37,6 +40,8 @@ enum
     GO_DOOR_CHROMAGGUS_EXIT     = 179117,
     GO_DOOR_VAELASTRASZ         = 179364,
     GO_DOOR_LASHLAYER           = 179365,
+    GO_ORB_OF_DOMINATION        = 177808,                   // trigger 19832 on Razorgore
+    GO_BLACK_DRAGON_EGG         = 177807,
 };
 
 // Coords used to spawn Nefarius at the throne
@@ -53,6 +58,7 @@ class MANGOS_DLL_DECL instance_blackwing_lair : public ScriptedInstance
 
         void OnCreatureCreate(Creature* pCreature);
         void OnObjectCreate(GameObject* pGo);
+        void OnCreatureDeath(Creature* pCreature);
 
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
@@ -65,6 +71,8 @@ class MANGOS_DLL_DECL instance_blackwing_lair : public ScriptedInstance
         uint32 m_auiEncounter[MAX_ENCOUNTER];
 
         GUIDList m_lTechnicianGuids;
+        GUIDList m_lGeneratorGuids;
+        GUIDList m_lDragonEggGuids;
 };
 
 #endif

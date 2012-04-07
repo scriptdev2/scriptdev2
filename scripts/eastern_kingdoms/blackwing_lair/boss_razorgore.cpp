@@ -24,7 +24,6 @@ EndScriptData */
 #include "precompiled.h"
 #include "blackwing_lair.h"
 
-// Razorgore Phase 2 Script
 enum
 {
     SAY_EGGS_BROKEN_1           = -1469022,
@@ -34,22 +33,32 @@ enum
 
     EMOTE_TROOPS_FLEE           = -1469033,                 // emote by Nefarian's Troops npc
 
+    // phase I event spells
+    SPELL_POSSESS               = 23014,                    // visual effect and increase the damage taken
+    SPELL_EXPLODE_ORB           = 20037,                    // used if attacked without destroying the eggs - related to 20038
+
     SPELL_CLEAVE                = 19632,
     SPELL_WARSTOMP              = 24375,
     SPELL_FIREBALL_VOLLEY       = 22425,
     SPELL_CONFLAGRATION         = 23023,
+
+    // npcs used in phase I
+    NPC_BLACKWING_LEGIONNAIRE   = 12416,
+    NPC_BLACKWING_MAGE          = 12420,
+    NPC_DRAGONSPAWN             = 12422,
 };
 
 struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
 {
     boss_razorgoreAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_pInstance = (instance_blackwing_lair*)pCreature->GetInstanceData();
         Reset();
     }
 
-    ScriptedInstance* m_pInstance;
+    instance_blackwing_lair* m_pInstance;
 
+    uint32 m_uiIntroVisualTimer;
     uint32 m_uiCleaveTimer;
     uint32 m_uiWarStompTimer;
     uint32 m_uiFireballVolleyTimer;
@@ -57,11 +66,12 @@ struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
 
     void Reset()
     {
+        m_uiIntroVisualTimer    = 5000;
+
         m_uiCleaveTimer         = 15000;                       // These times are probably wrong
         m_uiWarStompTimer       = 35000;
         m_uiConflagrationTimer  = 12000;
         m_uiFireballVolleyTimer = 7000;
-
     }
 
     void Aggro(Unit* pWho)
@@ -87,6 +97,19 @@ struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
 
     void UpdateAI(const uint32 uiDiff)
     {
+        // Set visual on OOC timer
+        if (m_uiIntroVisualTimer)
+        {
+            if (m_uiIntroVisualTimer <= uiDiff)
+            {
+                if (Creature* pOrbTrigger = m_pInstance->GetSingleCreatureFromStorage(NPC_BLACKWING_ORB_TRIGGER))
+                    pOrbTrigger->CastSpell(m_creature, SPELL_POSSESS, false);
+                m_uiIntroVisualTimer = 0;
+            }
+            else
+                m_uiIntroVisualTimer -= uiDiff;
+        }
+
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
