@@ -37,6 +37,7 @@ enum
     NPC_TIME_RIFT           = 17838,
 
     SPELL_RIFT_CHANNEL      = 31387,
+    SPELL_BANISH_HELPER     = 31550,
 
     RIFT_BOSS               = 1
 };
