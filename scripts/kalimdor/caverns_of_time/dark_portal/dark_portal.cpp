@@ -24,7 +24,6 @@ EndScriptData */
 /* ContentData
 npc_medivh_bm
 npc_time_rift
-npc_saat
 EndContentData */
 
 #include "precompiled.h"
@@ -356,44 +355,6 @@ CreatureAI* GetAI_npc_time_rift(Creature* pCreature)
     return new npc_time_riftAI(pCreature);
 }
 
-#define SAY_SAAT_WELCOME        -1269019
-
-#define GOSSIP_ITEM_OBTAIN      "[PH] Obtain Chrono-Beacon"
-#define SPELL_CHRONO_BEACON     34975
-#define ITEM_CHRONO_BEACON      24289
-
-bool GossipHello_npc_saat(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
-
-    if (pPlayer->GetQuestStatus(QUEST_OPENING_PORTAL) == QUEST_STATUS_INCOMPLETE && !pPlayer->HasItemCount(ITEM_CHRONO_BEACON,1))
-    {
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_OBTAIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-        pPlayer->SEND_GOSSIP_MENU(10000, pCreature->GetObjectGuid());
-        return true;
-    }
-    else if (pPlayer->GetQuestRewardStatus(QUEST_OPENING_PORTAL) && !pPlayer->HasItemCount(ITEM_CHRONO_BEACON,1))
-    {
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_OBTAIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-        pPlayer->SEND_GOSSIP_MENU(10001, pCreature->GetObjectGuid());
-        return true;
-    }
-
-    pPlayer->SEND_GOSSIP_MENU(10002, pCreature->GetObjectGuid());
-    return true;
-}
-
-bool GossipSelect_npc_saat(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
-    {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        pCreature->CastSpell(pPlayer,SPELL_CHRONO_BEACON,false);
-    }
-    return true;
-}
-
 void AddSC_dark_portal()
 {
     Script* pNewScript;
@@ -406,11 +367,5 @@ void AddSC_dark_portal()
     pNewScript = new Script;
     pNewScript->Name = "npc_time_rift";
     pNewScript->GetAI = &GetAI_npc_time_rift;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_saat";
-    pNewScript->pGossipHello = &GossipHello_npc_saat;
-    pNewScript->pGossipSelect = &GossipSelect_npc_saat;
     pNewScript->RegisterSelf();
 }
