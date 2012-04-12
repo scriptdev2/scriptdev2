@@ -356,6 +356,9 @@ UPDATE creature_template SET ScriptName='boss_drakkisath' WHERE entry=10363;
 UPDATE creature_template SET ScriptName='boss_gyth' WHERE entry=10339;
 UPDATE creature_template SET ScriptName='boss_rend_blackhand' WHERE entry=10429;
 UPDATE creature_template SET ScriptName='boss_pyroguard_emberseer' WHERE entry=9816;
+DELETE FROM scripted_event_id WHERE id=4884;
+INSERT INTO scripted_event_id VALUES
+(4884,'event_spell_altar_emberseer');
 
 /* BLACKWING LAIR */
 UPDATE instance_template SET ScriptName='instance_blackwing_lair' WHERE map=469;
