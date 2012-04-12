@@ -17,14 +17,13 @@
 /* ScriptData
 SDName: Undercity
 SD%Complete: 95
-SDComment: Quest support: 6628(Parqual Fintallas questions/'answers' might have more to it, need more info), 9180(post-event).
+SDComment: Quest support: 9180(post-event).
 SDCategory: Undercity
 EndScriptData */
 
 /* ContentData
 npc_lady_sylvanas_windrunner
 npc_highborne_lamenter
-npc_parqual_fintallas
 EndContentData */
 
 #include "precompiled.h"
@@ -120,6 +119,7 @@ struct MANGOS_DLL_DECL npc_lady_sylvanas_windrunnerAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
+
 CreatureAI* GetAI_npc_lady_sylvanas_windrunner(Creature* pCreature)
 {
     return new npc_lady_sylvanas_windrunnerAI(pCreature);
@@ -186,53 +186,11 @@ struct MANGOS_DLL_DECL npc_highborne_lamenterAI : public ScriptedAI
         }
     }
 };
+
 CreatureAI* GetAI_npc_highborne_lamenter(Creature* pCreature)
 {
     return new npc_highborne_lamenterAI(pCreature);
 }
-
-/*######
-## npc_parqual_fintallas
-######*/
-
-#define SPELL_MARK_OF_SHAME 6767
-
-bool GossipHello_npc_parqual_fintallas(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
-
-    if (pPlayer->GetQuestStatus(6628) == QUEST_STATUS_INCOMPLETE && !pPlayer->HasAura(SPELL_MARK_OF_SHAME, EFFECT_INDEX_0))
-    {
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Gul'dan", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Kel'Thuzad", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Ner'zhul", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-        pPlayer->SEND_GOSSIP_MENU(5822, pCreature->GetObjectGuid());
-    }
-    else
-        pPlayer->SEND_GOSSIP_MENU(5821, pCreature->GetObjectGuid());
-
-    return true;
-}
-
-bool GossipSelect_npc_parqual_fintallas(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
-    {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        pCreature->CastSpell(pPlayer,SPELL_MARK_OF_SHAME,false);
-    }
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+2)
-    {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        pPlayer->AreaExploredOrEventHappens(6628);
-    }
-    return true;
-}
-
-/*######
-## AddSC
-######*/
 
 void AddSC_undercity()
 {
@@ -247,11 +205,5 @@ void AddSC_undercity()
     pNewScript = new Script;
     pNewScript->Name = "npc_highborne_lamenter";
     pNewScript->GetAI = &GetAI_npc_highborne_lamenter;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_parqual_fintallas";
-    pNewScript->pGossipHello = &GossipHello_npc_parqual_fintallas;
-    pNewScript->pGossipSelect = &GossipSelect_npc_parqual_fintallas;
     pNewScript->RegisterSelf();
 }
