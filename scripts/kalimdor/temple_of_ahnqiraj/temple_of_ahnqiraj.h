@@ -10,13 +10,14 @@ enum
     MAX_ENCOUNTER               = 4,
 
     TYPE_SKERAM                 = 0,
-    TYPE_VEM                    = 1,
+    TYPE_BUG_TRIO               = 1,
     TYPE_TWINS                  = 2,
     TYPE_CTHUN_PHASE            = 3,
 
     // NPC_SKERAM               = 15263,
-    NPC_KRI                     = 15511,
-    NPC_VEM                     = 15544,
+    //NPC_KRI                   = 15511,
+    //NPC_VEM                   = 15544,
+    //NPC_YAUJ                  = 15543,
     NPC_VEKLOR                  = 15276,
     NPC_VEKNILASH               = 15275,
     NPC_CTHUN                   = 15727,
@@ -25,7 +26,7 @@ enum
     GO_TWINS_ENTER_DOOR         = 180634,
     GO_TWINS_EXIT_DOOR          = 180635,
 
-    DATA_BUG_TRIO_DEATH         = 10,
+    SPELL_SUMMON_PLAYER         = 20477,
 };
 
 enum CThunPhase
@@ -61,7 +62,7 @@ class MANGOS_DLL_DECL instance_temple_of_ahnqiraj : public ScriptedInstance
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strInstData;
 
-        uint32 m_uiBugTrioDeathCount;
+        uint8 m_uiBugTrioDeathCount;
 };
 
 #endif

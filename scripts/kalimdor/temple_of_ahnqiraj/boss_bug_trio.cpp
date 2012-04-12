@@ -15,25 +15,33 @@
  */
 
 /* ScriptData
-SDName: boss_kri, boss_yauj, boss_vem : The Bug Trio
-SD%Complete: 100
-SDComment:
+SDName: bug_trio
+SD%Complete: 75
+SDComment: Summon Player spell NYI; Poison Cloud damage spell NYI; Timers need adjustments
 SDCategory: Temple of Ahn'Qiraj
 EndScriptData */
 
 #include "precompiled.h"
 #include "temple_of_ahnqiraj.h"
 
-#define SPELL_CLEAVE        26350
-#define SPELL_TOXIC_VOLLEY  25812
-#define SPELL_POISON_CLOUD  38718                           //Only Spell with right dmg.
-#define SPELL_ENRAGE        34624                           //Changed cause 25790 is casted on gamers too. Same prob with old explosion of twin emperors.
+enum
+{
+    // kri
+    SPELL_CLEAVE            = 26350,
+    SPELL_TOXIC_VOLLEY      = 25812,
+    SPELL_SUMMON_CLOUD      = 26590,            // summons 15933
 
-#define SPELL_CHARGE        26561
-#define SPELL_KNOCKBACK     26027
+    // vem
+    SPELL_CHARGE            = 26561,
+    SPELL_VENGEANCE         = 25790,
+    SPELL_KNOCKBACK         = 26027,
 
-#define SPELL_HEAL      25807
-#define SPELL_FEAR      19408
+    // yauj
+    SPELL_HEAL              = 25807,
+    SPELL_FEAR              = 26580,
+
+    NPC_YAUJ_BROOD          = 15621
+};
 
 struct MANGOS_DLL_DECL boss_kriAI : public ScriptedAI
 {
@@ -45,73 +53,60 @@ struct MANGOS_DLL_DECL boss_kriAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    uint32 Cleave_Timer;
-    uint32 ToxicVolley_Timer;
-    uint32 Check_Timer;
-
-    bool VemDead;
-    bool Death;
+    uint32 m_uiCleaveTimer;
+    uint32 m_uiToxicVolleyTimer;
 
     void Reset()
     {
-        Cleave_Timer = urand(4000, 8000);
-        ToxicVolley_Timer = urand(6000, 12000);
-        Check_Timer = 2000;
-
-        VemDead = false;
-        Death = false;
+        m_uiCleaveTimer      = urand(4000, 8000);
+        m_uiToxicVolleyTimer = urand(6000, 12000);
     }
 
-    void JustDied(Unit* killer)
+    void JustDied(Unit* pKiller)
     {
-        if (m_pInstance)
-        {
-            if (m_pInstance->GetData(DATA_BUG_TRIO_DEATH) < 2)
-                                                            // Unlootable if death
-                m_creature->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
+        // poison cloud on death
+        DoCastSpellIfCan(m_creature, SPELL_SUMMON_CLOUD, CAST_TRIGGERED);
 
-            m_pInstance->SetData(DATA_BUG_TRIO_DEATH, 1);
+        if (!m_pInstance)
+            return;
+
+        // If the other 2 bugs are still alive, make unlootable
+        if (m_pInstance->GetData(TYPE_BUG_TRIO) != DONE)
+        {
+            m_creature->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
+            m_pInstance->SetData(TYPE_BUG_TRIO, SPECIAL);
         }
     }
-    void UpdateAI(const uint32 diff)
+
+    void JustReachedHome()
     {
-        //Return since we have no target
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_BUG_TRIO, FAIL);
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        // Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //Cleave_Timer
-        if (Cleave_Timer < diff)
+        // Cleave_Timer
+        if (m_uiCleaveTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_CLEAVE);
-            Cleave_Timer = urand(5000, 12000);
-        }else Cleave_Timer -= diff;
-
-        //ToxicVolley_Timer
-        if (ToxicVolley_Timer < diff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_TOXIC_VOLLEY);
-            ToxicVolley_Timer = urand(10000, 15000);
-        }else ToxicVolley_Timer -= diff;
-
-        if (m_creature->GetHealthPercent() < 5.0f && !Death)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_POISON_CLOUD);
-            Death = true;
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_CLEAVE) == CAST_OK)
+                m_uiCleaveTimer = urand(5000, 12000);
         }
+        else
+            m_uiCleaveTimer -= uiDiff;
 
-        if (!VemDead)
+        // ToxicVolley_Timer
+        if (m_uiToxicVolleyTimer < uiDiff)
         {
-            //Checking if Vem is dead. If yes we will enrage.
-            if (Check_Timer < diff)
-            {
-                if (m_pInstance && m_pInstance->GetData(TYPE_VEM) == DONE)
-                {
-                    DoCastSpellIfCan(m_creature, SPELL_ENRAGE);
-                    VemDead = true;
-                }
-                Check_Timer = 2000;
-            }else Check_Timer -=diff;
+            if (DoCastSpellIfCan(m_creature, SPELL_TOXIC_VOLLEY) == CAST_OK)
+                m_uiToxicVolleyTimer = urand(10000, 15000);
         }
+        else
+            m_uiToxicVolleyTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
@@ -127,65 +122,68 @@ struct MANGOS_DLL_DECL boss_vemAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    uint32 Charge_Timer;
-    uint32 KnockBack_Timer;
-    uint32 Enrage_Timer;
-
-    bool Enraged;
+    uint32 m_uiChargeTimer;
+    uint32 m_uiKnockBackTimer;
 
     void Reset()
     {
-        Charge_Timer = urand(15000, 27000);
-        KnockBack_Timer = urand(8000, 20000);
-        Enrage_Timer = 120000;
-
-        Enraged = false;
+        m_uiChargeTimer     = urand(15000, 27000);
+        m_uiKnockBackTimer  = urand(8000, 20000);
     }
 
-    void JustDied(Unit* Killer)
+    void JustDied(Unit* pKiller)
     {
-        if (m_pInstance)
+        // Enrage the other bugs
+        DoCastSpellIfCan(m_creature, SPELL_VENGEANCE, CAST_TRIGGERED);
+
+        if (!m_pInstance)
+            return;
+
+        // If the other 2 bugs are still alive, make unlootable
+        if (m_pInstance->GetData(TYPE_BUG_TRIO) != DONE)
         {
-            m_pInstance->SetData(TYPE_VEM, DONE);
-
-            // Unlootable if death
-            if (m_pInstance->GetData(DATA_BUG_TRIO_DEATH) < 2)
-                m_creature->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
-
-            m_pInstance->SetData(DATA_BUG_TRIO_DEATH, 1);
+            m_creature->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
+            m_pInstance->SetData(TYPE_BUG_TRIO, SPECIAL);
         }
     }
 
-    void UpdateAI(const uint32 diff)
+    void JustReachedHome()
     {
-        //Return since we have no target
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_BUG_TRIO, FAIL);
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        // Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //Charge_Timer
-        if (Charge_Timer < diff)
+        // Charge_Timer
+        if (m_uiChargeTimer < uiDiff)
         {
-            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
-                DoCastSpellIfCan(target, SPELL_CHARGE);
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_CHARGE) == CAST_OK)
+                    m_uiChargeTimer = urand(8000, 16000);
+            }
+        }
+        else
+            m_uiChargeTimer -= uiDiff;
 
-            Charge_Timer = urand(8000, 16000);
-        }else Charge_Timer -= diff;
-
-        //KnockBack_Timer
-        if (KnockBack_Timer < diff)
+        // KnockBack_Timer
+        if (m_uiKnockBackTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_KNOCKBACK);
-            if (m_creature->getThreatManager().getThreat(m_creature->getVictim()))
-                m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-80);
-            KnockBack_Timer = urand(15000, 25000);
-        }else KnockBack_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature, SPELL_KNOCKBACK) == CAST_OK)
+            {
+                if (m_creature->getThreatManager().getThreat(m_creature->getVictim()))
+                    m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(), -80);
 
-        //Enrage_Timer
-        if (!Enraged && Enrage_Timer < diff)
-        {
-            DoCastSpellIfCan(m_creature,SPELL_ENRAGE);
-            Enraged = true;
-        }else Charge_Timer -= diff;
+                m_uiKnockBackTimer = urand(15000, 25000);
+            }
+        }
+        else
+            m_uiKnockBackTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
@@ -201,97 +199,71 @@ struct MANGOS_DLL_DECL boss_yaujAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    uint32 Heal_Timer;
-    uint32 Fear_Timer;
-    uint32 Check_Timer;
-
-    bool VemDead;
+    uint32 m_uiHealTimer;
+    uint32 m_uiFearTimer;
 
     void Reset()
     {
-        Heal_Timer = urand(25000, 40000);
-        Fear_Timer = urand(12000, 24000);
-        Check_Timer = 2000;
-
-        VemDead = false;
+        m_uiHealTimer = urand(25000, 40000);
+        m_uiFearTimer = urand(12000, 24000);
     }
 
     void JustDied(Unit* Killer)
     {
-        if (m_pInstance)
-        {
-            if (m_pInstance->GetData(DATA_BUG_TRIO_DEATH) < 2)
-                                                            // Unlootable if death
-                m_creature->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
-            m_pInstance->SetData(DATA_BUG_TRIO_DEATH, 1);
-        }
-
+        // Spawn 10 yauj brood on death
+        float fX, fY, fZ;
         for(int i = 0; i < 10; ++i)
         {
-            Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
-            Creature* Summoned = m_creature->SummonCreature(15621,m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(),0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,90000);
-            if (Summoned && target)
-                Summoned->AI()->AttackStart(target);
+            m_creature->GetRandomPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 10.0f, fX, fY, fZ);
+            m_creature->SummonCreature(NPC_YAUJ_BROOD, fX, fY, fZ, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+        }
+
+        if (!m_pInstance)
+            return;
+
+        // If the other 2 bugs are still alive, make unlootable
+        if (m_pInstance->GetData(TYPE_BUG_TRIO) != DONE)
+        {
+            m_creature->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
+            m_pInstance->SetData(TYPE_BUG_TRIO, SPECIAL);
         }
     }
 
-    void UpdateAI(const uint32 diff)
+    void JustReachedHome()
     {
-        //Return since we have no target
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_BUG_TRIO, FAIL);
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        // Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //Fear_Timer
-        if (Fear_Timer < diff)
+        // Fear_Timer
+        if (m_uiFearTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_FEAR);
-            DoResetThreat();
-            Fear_Timer = 20000;
-        }else Fear_Timer -= diff;
-
-        //Casting Heal to other twins or herself.
-        if (Heal_Timer < diff)
-        {
-            if (m_pInstance)
+            if (DoCastSpellIfCan(m_creature, SPELL_FEAR) == CAST_OK)
             {
-                Creature* pKri = m_pInstance->GetSingleCreatureFromStorage(NPC_KRI);
-                Creature* pVem = m_pInstance->GetSingleCreatureFromStorage(NPC_VEM);
-
-                switch(urand(0, 2))
-                {
-                    case 0:
-                        if (pKri)
-                            DoCastSpellIfCan(pKri, SPELL_HEAL);
-                        break;
-                    case 1:
-                        if (pVem)
-                            DoCastSpellIfCan(pVem, SPELL_HEAL);
-                        break;
-                    case 2:
-                        DoCastSpellIfCan(m_creature, SPELL_HEAL);
-                        break;
-                }
+                DoResetThreat();
+                m_uiFearTimer = 20000;
             }
+        }
+        else
+            m_uiFearTimer -= uiDiff;
 
-            Heal_Timer = urand(15000, 30000);
-        }else Heal_Timer -= diff;
-
-        //Checking if Vem is dead. If yes we will enrage.
-        if (Check_Timer < diff)
+        // Heal
+        if (m_uiHealTimer < uiDiff)
         {
-            if (!VemDead)
+            if (Unit* pTarget = DoSelectLowestHpFriendly(100.0f))
             {
-                if (m_pInstance)
-                {
-                    if (m_pInstance->GetData(TYPE_VEM) == DONE)
-                    {
-                        DoCastSpellIfCan(m_creature, SPELL_ENRAGE);
-                        VemDead = true;
-                    }
-                }
+                if (DoCastSpellIfCan(pTarget, SPELL_HEAL) == CAST_OK)
+                    m_uiHealTimer = urand(15000, 30000);
             }
-            Check_Timer = 2000;
-        }else Check_Timer -= diff;
+        }
+        else
+            m_uiHealTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }

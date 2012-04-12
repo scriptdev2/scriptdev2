@@ -39,8 +39,6 @@ void instance_temple_of_ahnqiraj::OnCreatureCreate (Creature* pCreature)
 {
     switch (pCreature->GetEntry())
     {
-        case NPC_VEM:
-        case NPC_KRI:
         case NPC_VEKLOR:
         case NPC_VEKNILASH:
         case NPC_CTHUN:
@@ -86,7 +84,18 @@ void instance_temple_of_ahnqiraj::SetData(uint32 uiType, uint32 uiData)
             if (uiData == DONE)
                 DoUseDoorOrButton(GO_SKERAM_GATE);
             break;
-        case TYPE_VEM:
+        case TYPE_BUG_TRIO:
+            if (uiData == SPECIAL)
+            {
+                ++m_uiBugTrioDeathCount;
+                if (m_uiBugTrioDeathCount == 2)
+                    SetData(TYPE_BUG_TRIO, DONE);
+
+                // don't store any special data
+                break;
+            }
+            if (uiData == FAIL)
+                m_uiBugTrioDeathCount = 0;
             m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_TWINS:
@@ -102,11 +111,6 @@ void instance_temple_of_ahnqiraj::SetData(uint32 uiType, uint32 uiData)
         case TYPE_CTHUN_PHASE:
             m_auiEncounter[uiType] = uiData;
             break;
-
-        // The following temporarily datas are not to be saved
-        case DATA_BUG_TRIO_DEATH:
-            ++m_uiBugTrioDeathCount;
-            return;
     }
 
     if (uiData == DONE)
@@ -147,18 +151,10 @@ void instance_temple_of_ahnqiraj::Load(const char* chrIn)
 
 uint32 instance_temple_of_ahnqiraj::GetData(uint32 uiType)
 {
-    switch(uiType)
-    {
-        case TYPE_VEM:
-            return m_auiEncounter[1];
-        case TYPE_CTHUN_PHASE:
-            return m_auiEncounter[3];;
+    if (uiType < MAX_ENCOUNTER)
+        return m_auiEncounter[uiType];
 
-        case DATA_BUG_TRIO_DEATH:
-            return m_uiBugTrioDeathCount;
-        default:
-            return 0;
-    }
+    return 0;
 }
 
 InstanceData* GetInstanceData_instance_temple_of_ahnqiraj(Map* pMap)
