@@ -61,7 +61,25 @@ void instance_zulgurub::OnCreatureCreate(Creature* pCreature)
         case NPC_HAKKAR:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
+        case NPC_PANTHER_TRIGGER:
+            if (pCreature->GetPositionY() < -1626)
+                m_lLeftPantherTriggerGUIDList.push_back(pCreature->GetObjectGuid());
+            else
+                m_lRightPantherTirggerGUIDList.push_back(pCreature->GetObjectGuid());
+            break;
     }
+}
+
+void instance_zulgurub::OnObjectCreate(GameObject* pGo)
+{
+    switch (pGo->GetEntry())
+    {
+        case GO_GONG_OF_BETHEKK:
+        case GO_FORCEFIELD:
+            break;
+    }
+
+    m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
 }
 
 void instance_zulgurub::SetData(uint32 uiType, uint32 uiData)
@@ -72,10 +90,16 @@ void instance_zulgurub::SetData(uint32 uiType, uint32 uiData)
         case TYPE_VENOXIS:
         case TYPE_MARLI:
         case TYPE_THEKAL:
-        case TYPE_ARLOKK:
             m_auiEncounter[uiType] = uiData;
             if (uiData == DONE)
                 DoLowerHakkarHitPoints();
+            break;
+        case TYPE_ARLOKK:
+            m_auiEncounter[uiType] = uiData;
+            DoUseDoorOrButton(GO_FORCEFIELD);
+            if (uiData == DONE)
+                DoLowerHakkarHitPoints();
+            // ToDo: Reset the Gong on FAIL
             break;
         case TYPE_OHGAN:
         case TYPE_LORKHAN:
@@ -142,6 +166,24 @@ uint32 instance_zulgurub::GetData(uint32 uiType)
         return m_auiEncounter[uiType];
 
     return 0;
+}
+
+Creature* instance_zulgurub::SelectRandomPantherTrigger(bool bIsLeft)
+{
+    GUIDList* plTempList = bIsLeft ? &m_lLeftPantherTriggerGUIDList : &m_lRightPantherTirggerGUIDList;
+    std::vector<Creature*> vTriggers;
+    vTriggers.reserve(plTempList->size());
+
+    for (GUIDList::const_iterator itr = plTempList->begin(); itr != plTempList->end(); ++itr)
+    {
+        if (Creature* pTemp = instance->GetCreature(*itr))
+            vTriggers.push_back(pTemp);
+    }
+
+    if (vTriggers.empty())
+        return NULL;
+
+    return vTriggers[urand(0, vTriggers.size()-1)];
 }
 
 InstanceData* GetInstanceData_instance_zulgurub(Map* pMap)

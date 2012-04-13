@@ -24,6 +24,10 @@ enum
     NPC_THEKAL              = 14509,
     NPC_JINDO               = 11380,
     NPC_HAKKAR              = 14834,
+    NPC_PANTHER_TRIGGER     = 15091,
+
+    GO_GONG_OF_BETHEKK      = 180526,
+    GO_FORCEFIELD           = 180497,
 
     SAY_MINION_DESTROY      = -1309022,
     SAY_HAKKAR_PROTECT      = -1309023,
@@ -44,6 +48,7 @@ class MANGOS_DLL_DECL instance_zulgurub : public ScriptedInstance
         // IsEncounterInProgress() const { return false; }  // not active in Zul'Gurub
 
         void OnCreatureCreate(Creature* pCreature);
+        void OnObjectCreate(GameObject* pGo);
 
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
@@ -53,11 +58,16 @@ class MANGOS_DLL_DECL instance_zulgurub : public ScriptedInstance
 
         void DoYellAtTriggerIfCan(uint32 uiTriggerId);
 
+        Creature* SelectRandomPantherTrigger(bool bIsLeft);
+
     protected:
         void DoLowerHakkarHitPoints();
 
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strInstData;
+
+        GUIDList m_lRightPantherTirggerGUIDList;
+        GUIDList m_lLeftPantherTriggerGUIDList;
 
         bool m_bHasIntroYelled;
         bool m_bHasAltarYelled;
