@@ -16,112 +16,104 @@
 
 /* ScriptData
 SDName: Boss_Huhuran
-SD%Complete: 100
-SDComment:
+SD%Complete: 90
+SDComment: Timed enrage NYI; Timers
 SDCategory: Temple of Ahn'Qiraj
 EndScriptData */
 
 #include "precompiled.h"
 
-#define EMOTE_GENERIC_FRENZY_KILL   -1000001
-#define EMOTE_GENERIC_BERSERK       -1000004
+enum
+{
+    EMOTE_GENERIC_FRENZY_KILL   = -1000001,
+    EMOTE_GENERIC_BERSERK       = -1000004,
 
-#define SPELL_FRENZY 26051
-#define SPELL_BERSERK 26068
-#define SPELL_POISONBOLT 26052
-#define SPELL_NOXIOUSPOISON 26053
-#define SPELL_WYVERNSTING 26180
-#define SPELL_ACIDSPIT 26050
+    SPELL_ENRAGE                = 26051,        // triggers 26052
+    SPELL_BERSERK               = 26068,        // triggers 26052
+    SPELL_NOXIOUS_POISON        = 26053,
+    SPELL_WYVERN_STING          = 26180,
+    SPELL_ACID_SPIT             = 26050
+};
 
 struct MANGOS_DLL_DECL boss_huhuranAI : public ScriptedAI
 {
     boss_huhuranAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
-    uint32 Frenzy_Timer;
-    uint32 Wyvern_Timer;
-    uint32 Spit_Timer;
-    uint32 PoisonBolt_Timer;
-    uint32 NoxiousPoison_Timer;
-    uint32 FrenzyBack_Timer;
+    uint32 m_uiFrenzyTimer;
+    uint32 m_uiWyvernTimer;
+    uint32 m_uiSpitTimer;
+    uint32 m_uiNoxiousPoisonTimer;
 
-    bool Frenzy;
-    bool Berserk;
+    bool m_bIsBerserk;
 
     void Reset()
     {
-        Frenzy_Timer = urand(25000, 35000);
-        Wyvern_Timer = urand(18000, 28000);
-        Spit_Timer = 8000;
-        PoisonBolt_Timer = 4000;
-        NoxiousPoison_Timer = urand(10000, 20000);
-        FrenzyBack_Timer = 15000;
-
-        Frenzy = false;
-        Berserk = false;
+        m_uiFrenzyTimer         = urand(25000, 35000);
+        m_uiWyvernTimer         = urand(18000, 28000);
+        m_uiSpitTimer           = 8000;
+        m_uiNoxiousPoisonTimer  = urand(10000, 20000);
+        m_bIsBerserk            = false;
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
-        //Return since we have no target
+        // Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //Frenzy_Timer
-        if (!Frenzy && Frenzy_Timer < diff)
+        // Frenzy_Timer
+        if (!m_bIsBerserk)
         {
-            DoCastSpellIfCan(m_creature, SPELL_FRENZY);
-            DoScriptText(EMOTE_GENERIC_FRENZY_KILL, m_creature);
-            Frenzy = true;
-            PoisonBolt_Timer = 3000;
-            Frenzy_Timer = urand(25000, 35000);
-        }else Frenzy_Timer -= diff;
-
-        // Wyvern Timer
-        if (Wyvern_Timer < diff)
-        {
-            if (Unit *target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
-                DoCastSpellIfCan(target,SPELL_WYVERNSTING);
-            Wyvern_Timer = urand(15000, 32000);
-        }else Wyvern_Timer -= diff;
-
-        //Spit Timer
-        if (Spit_Timer < diff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_ACIDSPIT);
-            Spit_Timer = urand(5000, 10000);
-        }else Spit_Timer -= diff;
-
-        //NoxiousPoison_Timer
-        if (NoxiousPoison_Timer < diff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_NOXIOUSPOISON);
-            NoxiousPoison_Timer = urand(12000, 24000);
-        }else NoxiousPoison_Timer -= diff;
-
-        //PoisonBolt only if frenzy or berserk
-        if (Frenzy || Berserk)
-        {
-            if (PoisonBolt_Timer < diff)
+            if (m_uiFrenzyTimer < uiDiff)
             {
-                DoCastSpellIfCan(m_creature->getVictim(),SPELL_POISONBOLT);
-                PoisonBolt_Timer = 3000;
-            }else PoisonBolt_Timer -= diff;
+                if (DoCastSpellIfCan(m_creature, SPELL_ENRAGE) == CAST_OK)
+                {
+                    DoScriptText(EMOTE_GENERIC_FRENZY_KILL, m_creature);
+                    m_uiFrenzyTimer = urand(25000, 35000);
+                }
+            }
+            else
+                m_uiFrenzyTimer -= uiDiff;
         }
 
-        //FrenzyBack_Timer
-        if (Frenzy && FrenzyBack_Timer < diff)
+        // Wyvern Timer
+        if (m_uiWyvernTimer < uiDiff)
         {
-            m_creature->InterruptNonMeleeSpells(false);
-            Frenzy = false;
-            FrenzyBack_Timer = 15000;
-        }else FrenzyBack_Timer -= diff;
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_WYVERN_STING) == CAST_OK)
+                    m_uiWyvernTimer = urand(15000, 32000);
+            }
+        }
+        else
+            m_uiWyvernTimer -= uiDiff;
 
-        if (!Berserk && m_creature->GetHealthPercent() < 31.0f)
+        // Spit Timer
+        if (m_uiSpitTimer < uiDiff)
         {
-            m_creature->InterruptNonMeleeSpells(false);
-            DoScriptText(EMOTE_GENERIC_BERSERK, m_creature);
-            DoCastSpellIfCan(m_creature, SPELL_BERSERK);
-            Berserk = true;
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_ACID_SPIT) == CAST_OK)
+                m_uiSpitTimer = urand(5000, 10000);
+        }
+        else
+            m_uiSpitTimer -= uiDiff;
+
+        // NoxiousPoison_Timer
+        if (m_uiNoxiousPoisonTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_NOXIOUS_POISON) == CAST_OK)
+                m_uiNoxiousPoisonTimer = urand(12000, 24000);
+        }
+        else
+            m_uiNoxiousPoisonTimer -= uiDiff;
+
+        // Berserk
+        if (!m_bIsBerserk && m_creature->GetHealthPercent() < 30.0f)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_BERSERK) == CAST_OK)
+            {
+                DoScriptText(EMOTE_GENERIC_BERSERK, m_creature);
+                m_bIsBerserk = true;
+            }
         }
 
         DoMeleeAttackIfReady();
