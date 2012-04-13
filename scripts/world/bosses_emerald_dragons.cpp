@@ -24,6 +24,8 @@ EndScriptData */
 /* ContentData
 boss_emerald_dragon -- Superclass for the four dragons
 boss_emeriss
+boss_lethon
+npc_spirit_shade
 boss_taerar
 boss_shade_of_taerar -- TODO move to Acid
 boss_ysondre
@@ -230,6 +232,7 @@ enum
     SPELL_DRAW_SPIRIT           = 24811,
     SPELL_SUMMON_SPIRIT_SHADE   = 24810,                    // Summon spell was removed, was SPELL_EFFECT_SUMMON_DEMON
 
+    NPC_LETHON                  = 14888,
     NPC_SPIRIT_SHADE            = 15261,                    // Add summoned by Lethon
     SPELL_DARK_OFFERING         = 24804,
     SPELL_SPIRIT_SHAPE_VISUAL   = 24809,
@@ -257,11 +260,67 @@ struct MANGOS_DLL_DECL boss_lethonAI : public boss_emerald_dragonAI
 
         return false;
     }
+
+    // Need this code here, as SPELL_DRAW_SPIRIT has no Script- or Dummyeffect
+    void SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell)
+    {
+        // Summon a shade for each player hit
+        if (pTarget->GetTypeId() == TYPEID_PLAYER && pSpell->Id == SPELL_DRAW_SPIRIT)
+        {
+            // Summon this way, to be able to cast the shade visual spell with player as original caster
+            // This might not be supported currently by core, but this spell's visual should be dependend on the player
+            // Also possible that this was no problem due to the special way these NPCs had been summoned in classic times
+            if (Creature* pSummoned = pTarget->SummonCreature(NPC_SPIRIT_SHADE, 0.0f, 0.0f, 0.0f, pTarget->GetOrientation(), TEMPSUMMON_DEAD_DESPAWN, 0))
+                pSummoned->CastSpell(pSummoned, SPELL_SPIRIT_SHAPE_VISUAL, true, NULL, NULL, pTarget->GetObjectGuid());
+        }
+    }
+
+    void JustSummoned(Creature* pSummoned)
+    {
+        // Move the shade to lethon
+        if (pSummoned->GetEntry() == NPC_SPIRIT_SHADE)
+            pSummoned->GetMotionMaster()->MoveFollow(m_creature, 0.0f, 0.0f);
+        else
+            boss_emerald_dragonAI::JustSummoned(pSummoned);
+    }
+};
+
+struct MANGOS_DLL_DECL npc_spirit_shadeAI : public ScriptedAI
+{
+    npc_spirit_shadeAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
+
+    bool m_bHasHealed;
+
+    void Reset()
+    {
+        m_bHasHealed = false;
+    }
+
+    void MoveInLineOfSight(Unit* pWho)
+    {
+        if (!m_bHasHealed && pWho->GetEntry() == NPC_LETHON && pWho->IsWithinDistInMap(m_creature, 3.0f))
+        {
+            if (DoCastSpellIfCan(pWho, SPELL_DARK_OFFERING) == CAST_OK)
+            {
+                m_bHasHealed = true;
+                m_creature->ForcedDespawn(1000);
+            }
+        }
+    }
+
+    void AttackStart(Unit* pWho) { }
+
+    void UpdateAI(const uint32 uiDiff) { }
 };
 
 CreatureAI* GetAI_boss_lethon(Creature* pCreature)
 {
     return new boss_lethonAI(pCreature);
+}
+
+CreatureAI* GetAI_npc_spirit_shade(Creature* pCreature)
+{
+    return new npc_spirit_shadeAI(pCreature);
 }
 
 /*######
@@ -559,6 +618,11 @@ void AddSC_bosses_emerald_dragons()
     pNewScript = new Script;
     pNewScript->Name = "boss_lethon";
     pNewScript->GetAI = &GetAI_boss_lethon;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_spirit_shade";
+    pNewScript->GetAI = &GetAI_npc_spirit_shade;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
