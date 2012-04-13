@@ -319,6 +319,13 @@ enum
 
     // quest 12213, 12220, item 37173
     SPELL_SAMPLING_ENERGY               = 48218,
+
+    // npcs that are only interactable while dead
+    SPELL_SHROUD_OF_DEATH               = 10848,
+    SPELL_SPIRIT_PARTICLES              = 17327,
+    NPC_FRANCLORN_FORGEWRIGHT           = 8888,
+    NPC_GAERIYAN                        = 9299,
+    NPC_GANJO                           = 26924,
 };
 
 bool EffectAuraDummy_spell_aura_dummy_npc(const Aura* pAura, bool bApply)
@@ -464,6 +471,21 @@ bool EffectAuraDummy_spell_aura_dummy_npc(const Aura* pAura, bool bApply)
                 pTarget->AI()->AttackStart(pCreature);
                 return true;
             }
+
+            return false;
+        }
+        case SPELL_SHROUD_OF_DEATH:
+        case SPELL_SPIRIT_PARTICLES:
+        {
+            Creature* pCreature = (Creature*)pAura->GetTarget();
+
+            if (!pCreature || (pCreature->GetEntry() != NPC_FRANCLORN_FORGEWRIGHT && pCreature->GetEntry() != NPC_GAERIYAN && pCreature->GetEntry() != NPC_GANJO))
+                return false;
+
+            if (bApply)
+                pCreature->m_AuraFlags |= UNIT_AURAFLAG_ALIVE_INVISIBLE;
+            else
+                pCreature->m_AuraFlags |= ~UNIT_AURAFLAG_ALIVE_INVISIBLE;
 
             return false;
         }
