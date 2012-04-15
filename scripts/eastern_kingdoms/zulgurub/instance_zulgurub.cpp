@@ -65,7 +65,7 @@ void instance_zulgurub::OnCreatureCreate(Creature* pCreature)
             if (pCreature->GetPositionY() < -1626)
                 m_lLeftPantherTriggerGUIDList.push_back(pCreature->GetObjectGuid());
             else
-                m_lRightPantherTirggerGUIDList.push_back(pCreature->GetObjectGuid());
+                m_lRightPantherTriggerGUIDList.push_back(pCreature->GetObjectGuid());
             break;
     }
 }
