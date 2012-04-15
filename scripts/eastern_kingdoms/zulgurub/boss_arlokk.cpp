@@ -78,6 +78,10 @@ struct MANGOS_DLL_DECL boss_arlokkAI : public ScriptedAI
         m_uiSummonTimer     = 5000;
 
         m_bIsPhaseTwo = false;
+
+        // Restore visibility
+        if (m_creature->GetVisibility() != VISIBILITY_ON)
+            m_creature->SetVisibility(VISIBILITY_ON);
     }
 
     void Aggro(Unit* pWho)
@@ -98,7 +102,8 @@ struct MANGOS_DLL_DECL boss_arlokkAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH, m_creature);
         // Restore visibility in case of killed by dots
-        m_creature->SetVisibility(VISIBILITY_ON);
+        if (m_creature->GetVisibility() != VISIBILITY_ON)
+            m_creature->SetVisibility(VISIBILITY_ON);
 
         if (m_pInstance)
             m_pInstance->SetData(TYPE_ARLOKK, DONE);
