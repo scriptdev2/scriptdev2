@@ -72,7 +72,7 @@ void ScriptedInstance::DoToggleGameObjectFlags(uint32 uiEntry, uint32 uiGOflags,
 {
     EntryGuidMap::iterator find = m_mGoEntryGuidStore.find(uiEntry);
     if (find != m_mGoEntryGuidStore.end())
-        ToggleGameObjectFlags(find->second, uiGOflags, bApply);
+        DoToggleGameObjectFlags(find->second, uiGOflags, bApply);
     else
         // Output log, possible reason is not added GO to storage, or not yet loaded
         debug_log("SD2: Script call ToogleTameObjectFlags (by Entry), but no gameobject of entry %u was created yet, or it was not stored by script for map %u.", uiEntry, instance->GetId());

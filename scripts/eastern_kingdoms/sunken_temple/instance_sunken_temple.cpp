@@ -304,16 +304,7 @@ bool instance_sunken_temple::ProcessStatueEvent(uint32 uiEventId)
 void instance_sunken_temple::DoUpdateFlamesFlags(bool bRestore)
 {
     for (GUIDList::const_iterator itr = m_luiFlameGUIDs.begin(); itr != m_luiFlameGUIDs.end(); ++itr)
-    {
-        if (GameObject* pFlame = instance->GetGameObject(*itr))
-        {
-            // Remove the flags of the flames for Hakkar event
-            if (!bRestore)
-                pFlame->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
-            else
-                pFlame->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
-        }
-    }
+        DoToggleGameObjectFlags(*itr, GO_FLAG_NO_INTERACT, bRestore);
 }
 
 void instance_sunken_temple::Load(const char* chrIn)

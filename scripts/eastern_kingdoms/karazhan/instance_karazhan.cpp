@@ -146,8 +146,7 @@ void instance_karazhan::SetData(uint32 uiType, uint32 uiData)
             {
                 DoUseDoorOrButton(GO_STAGE_DOOR_LEFT);
                 DoUseDoorOrButton(GO_STAGE_DOOR_RIGHT);
-                if (GameObject* pSideEntrance = GetSingleGameObjectFromStorage(GO_SIDE_ENTRANCE_DOOR))
-                    pSideEntrance->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_LOCKED);
+                DoToggleGameObjectFlags(GO_SIDE_ENTRANCE_DOOR, GO_FLAG_LOCKED, false);
             }
             break;
         case TYPE_CURATOR:

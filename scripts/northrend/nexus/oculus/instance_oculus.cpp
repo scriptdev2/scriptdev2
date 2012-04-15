@@ -73,10 +73,7 @@ void instance_oculus::SetData(uint32 uiType, uint32 uiData)
         case TYPE_EREGOS:
             m_auiEncounter[TYPE_EREGOS] = uiData;
             if (uiData == DONE)
-            {
-                if (GameObject* pChest = GetSingleGameObjectFromStorage(instance->IsRegularDifficulty() ? GO_CACHE_EREGOS : GO_CACHE_EREGOS_H))
-                    pChest->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
-            }
+                DoToggleGameObjectFlags(instance->IsRegularDifficulty() ? GO_CACHE_EREGOS : GO_CACHE_EREGOS_H, GO_FLAG_NO_INTERACT, false);
             break;
     }
 

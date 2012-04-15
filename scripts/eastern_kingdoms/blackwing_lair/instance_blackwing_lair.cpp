@@ -109,8 +109,7 @@ void instance_blackwing_lair::SetData(uint32 uiType, uint32 uiData)
             else if (uiData == FAIL)
             {
                 // Reset the Orb of Domination and the eggs
-                if (GameObject* pOrb = GetSingleGameObjectFromStorage(GO_ORB_OF_DOMINATION))
-                    pOrb->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
+                DoToggleGameObjectFlags(GO_ORB_OF_DOMINATION, GO_FLAG_NO_INTERACT, true);
 
                 // ToDo: reset the Dragon Eggs
             }
@@ -195,8 +194,7 @@ void instance_blackwing_lair::OnCreatureDeath(Creature* pCreature)
 {
     if (pCreature->GetEntry() == NPC_GRETHOK_CONTROLLER)
     {
-        if (GameObject* pOrb = GetSingleGameObjectFromStorage(GO_ORB_OF_DOMINATION))
-            pOrb->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
+        DoToggleGameObjectFlags(GO_ORB_OF_DOMINATION, GO_FLAG_NO_INTERACT, false);
 
         if (Creature* pOrbTrigger = GetSingleCreatureFromStorage(NPC_BLACKWING_ORB_TRIGGER))
             pOrbTrigger->InterruptNonMeleeSpells(false);

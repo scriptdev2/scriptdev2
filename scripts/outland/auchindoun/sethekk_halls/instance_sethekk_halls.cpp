@@ -65,9 +65,7 @@ void instance_sethekk_halls::SetData(uint32 uiType, uint32 uiData)
             if (uiData == DONE)
             {
                 DoUseDoorOrButton(GO_IKISS_DOOR, DAY);
-
-                if(GameObject* pChest = GetSingleGameObjectFromStorage(GO_IKISS_CHEST))
-                    pChest->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT | GO_FLAG_INTERACT_COND);
+                DoToggleGameObjectFlags(GO_IKISS_CHEST, GO_FLAG_NO_INTERACT | GO_FLAG_INTERACT_COND, false);
             }
             m_auiEncounter[uiType] = uiData;
             break;
