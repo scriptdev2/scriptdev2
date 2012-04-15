@@ -41,6 +41,10 @@ class MANGOS_DLL_DECL ScriptedInstance : public InstanceData
         void DoRespawnGameObject(ObjectGuid guid, uint32 uiTimeToDespawn = MINUTE);
         void DoRespawnGameObject(uint32 uiEntry, uint32 uiTimeToDespawn = MINUTE);
 
+        // Toggle the flags of a GO
+        void DoToggleGameObjectFlags(ObjectGuid guid, uint32 uiGOflags, bool bApply);
+        void DoToggleGameObjectFlags(uint32 uiEntry, uint32 uiGOflags, bool bApply);
+
         // Sends world state update to all players in instance
         void DoUpdateWorldState(uint32 uiStateId, uint32 uiStateData);
 
