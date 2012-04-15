@@ -4,6 +4,12 @@
 
 #include "precompiled.h"
 
+#include "Cell.h"
+#include "CellImpl.h"
+#include "GridNotifiers.h"
+#include "GridNotifiersImpl.h"
+
+
 //return closest GO in grid, with range from pSource
 GameObject* GetClosestGameObjectWithEntry(WorldObject* pSource, uint32 uiEntry, float fMaxSearchRange)
 {
@@ -32,16 +38,16 @@ Creature* GetClosestCreatureWithEntry(WorldObject* pSource, uint32 uiEntry, floa
 
 void GetGameObjectListWithEntryInGrid(std::list<GameObject*>& lList , WorldObject* pSource, uint32 uiEntry, float fMaxSearchRange)
 {
-    AllGameObjectsWithEntryInRangeCheck check(pSource, uiEntry, fMaxSearchRange);
-    MaNGOS::GameObjectListSearcher<AllGameObjectsWithEntryInRangeCheck> searcher(lList, check);
+    MaNGOS::GameObjectEntryInPosRangeCheck check(*pSource, uiEntry, pSource->GetPositionX(), pSource->GetPositionY(), pSource->GetPositionZ(), fMaxSearchRange);
+    MaNGOS::GameObjectListSearcher<MaNGOS::GameObjectEntryInPosRangeCheck> searcher(lList, check);
 
     Cell::VisitGridObjects(pSource, searcher, fMaxSearchRange);
 }
 
 void GetCreatureListWithEntryInGrid(std::list<Creature*>& lList, WorldObject* pSource, uint32 uiEntry, float fMaxSearchRange)
 {
-    AllCreaturesOfEntryInRangeCheck check(pSource, uiEntry, fMaxSearchRange);
-    MaNGOS::CreatureListSearcher<AllCreaturesOfEntryInRangeCheck> searcher(lList, check);
+    MaNGOS::AllCreaturesOfEntryInRangeCheck check(pSource, uiEntry, fMaxSearchRange);
+    MaNGOS::CreatureListSearcher<MaNGOS::AllCreaturesOfEntryInRangeCheck> searcher(lList, check);
 
     Cell::VisitGridObjects(pSource, searcher, fMaxSearchRange);
 }

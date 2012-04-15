@@ -7,6 +7,10 @@
 #include "Spell.h"
 #include "WorldPacket.h"
 #include "ObjectMgr.h"
+#include "Cell.h"
+#include "CellImpl.h"
+#include "GridNotifiers.h"
+#include "GridNotifiersImpl.h"
 
 // Spell summary for ScriptedAI::SelectSpell
 struct TSpellSummary

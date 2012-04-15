@@ -5,8 +5,6 @@
 #ifndef SC_CREATURE_H
 #define SC_CREATURE_H
 
-#include "CreatureAI.h"
-#include "Creature.h"
 #include "Chat.h"
 
 //Spell targets used by SelectSpell
