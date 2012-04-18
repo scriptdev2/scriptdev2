@@ -26,7 +26,7 @@ enum
     NPC_FLAMEGOR                = 11981,
     NPC_CHROMAGGUS              = 14020,
     NPC_NEFARIAN                = 11583,
-    NPC_LORD_NEFARIAN           = 10162,
+    NPC_LORD_VICTOR_NEFARIUS    = 10162,
     NPC_BLACKWING_TECHNICIAN    = 13996,                    // Flees at Vael intro event
     NPC_GRETHOK_CONTROLLER      = 12557,
     NPC_BLACKWING_ORB_TRIGGER   = 14449,

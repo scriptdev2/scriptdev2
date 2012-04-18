@@ -27,9 +27,8 @@ EndScriptData */
 
 enum
 {
-    SAY_AGGRO                   = -1469007,
     SAY_XHEALTH                 = -1469008,             // at 5% hp
-    SAY_SHADOWFLAME             = -1469009,
+    SAY_AGGRO                   = -1469009,
     SAY_RAISE_SKELETONS         = -1469010,
     SAY_SLAY                    = -1469011,
     SAY_DEATH                   = -1469012,
@@ -153,11 +152,7 @@ struct MANGOS_DLL_DECL boss_nefarianAI : public ScriptedAI
         if (m_uiShadowFlameTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature, SPELL_SHADOWFLAME) == CAST_OK)
-            {
-                // ToDo: check if he yells at every cast
-                DoScriptText(SAY_SHADOWFLAME, m_creature);
                 m_uiShadowFlameTimer = 12000;
-            }
         }
         else
             m_uiShadowFlameTimer -= uiDiff;

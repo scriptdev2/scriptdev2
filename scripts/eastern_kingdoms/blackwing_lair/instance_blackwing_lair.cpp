@@ -58,6 +58,7 @@ void instance_blackwing_lair::OnCreatureCreate(Creature* pCreature)
             break;
         case NPC_BLACKWING_ORB_TRIGGER:
         case NPC_VAELASTRASZ:
+        case NPC_LORD_VICTOR_NEFARIUS:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
     }

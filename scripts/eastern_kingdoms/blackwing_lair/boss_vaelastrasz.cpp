@@ -160,7 +160,7 @@ struct MANGOS_DLL_DECL boss_vaelastraszAI : public ScriptedAI
 
     void JustSummoned(Creature* pSummoned)
     {
-        if (pSummoned->GetEntry() == NPC_LORD_NEFARIAN)
+        if (pSummoned->GetEntry() == NPC_LORD_VICTOR_NEFARIUS)
         {
             // Set not selectable, so players won't interact with it
             pSummoned->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -177,7 +177,7 @@ struct MANGOS_DLL_DECL boss_vaelastraszAI : public ScriptedAI
                 switch (m_uiIntroPhase)
                 {
                     case 0:
-                        m_creature->SummonCreature(NPC_LORD_NEFARIAN, aNefariusSpawnLoc[0], aNefariusSpawnLoc[1], aNefariusSpawnLoc[2], aNefariusSpawnLoc[3], TEMPSUMMON_TIMED_DESPAWN, 25000);
+                        m_creature->SummonCreature(NPC_LORD_VICTOR_NEFARIUS, aNefariusSpawnLoc[0], aNefariusSpawnLoc[1], aNefariusSpawnLoc[2], aNefariusSpawnLoc[3], TEMPSUMMON_TIMED_DESPAWN, 25000);
                         m_uiIntroTimer = 1000;
                         break;
                     case 1:
