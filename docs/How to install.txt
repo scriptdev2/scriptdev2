@@ -42,4 +42,4 @@ a) apply only the changes that were made during that revision by looking in the 
 b) reapply "mangos_scriptname_full.sql" to your MaNGOS database. - WARNING this will NOT include removed script names!
 
 You can view the ScriptDev2 Change Log at:
-https://github.com/scriptdev/scriptdev2/commits/master
+https://github.com/scriptdev2/scriptdev2/commits/master
