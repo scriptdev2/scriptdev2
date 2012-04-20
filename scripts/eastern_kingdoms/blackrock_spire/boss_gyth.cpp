@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Boss_Gyth
 SD%Complete: 100
-SDComment: Whole Event needs some rewrite
+SDComment: Timers may need adjustments
 SDCategory: Blackrock Spire
 EndScriptData */
 
@@ -26,16 +26,16 @@ EndScriptData */
 
 enum
 {
+    SAY_NEFARIUS_BUFF_GYTH  = -1229017,
+    EMOTE_KNOCKED_OFF       = -1229019,
+
+    SPELL_CHROMATIC_CHAOS   = 16337,                // casted by Nefarius at 50%
     SPELL_REND_MOUNTS       = 16167,
     SPELL_SUMMON_REND       = 16328,
-    SPELL_CORROSIVEACID     = 20667,
-    SPELL_FREEZE            = 16350,                        // ID was wrong!
-    SPELL_FLAMEBREATH       = 20712,
-    SPELL_ROOT_SELF         = 33356,
-
-    MODEL_ID_INVISIBLE      = 11686,
-    MODEL_ID_GYTH_MOUNTED   = 9723,
-    MODEL_ID_GYTH           = 9806,
+    SPELL_CORROSIVE_ACID    = 16359,
+    SPELL_FREEZE            = 16350,
+    SPELL_FLAME_BREATH      = 16390,
+    SPELL_KNOCK_AWAY        = 10101,
 };
 
 struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
@@ -47,67 +47,28 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
     }
 
     instance_blackrock_spire* m_pInstance;
-    uint32 uiAggroTimer;
-    uint32 uiDragonsTimer;
-    uint32 uiOrcTimer;
+
     uint32 uiCorrosiveAcidTimer;
     uint32 uiFreezeTimer;
     uint32 uiFlamebreathTimer;
-    uint32 uiLine1Count;
-    uint32 uiLine2Count;
 
     bool m_bSummonedRend;
-    bool m_bAggro;
-    bool m_bRootSelf;
+    bool m_bHasChromaticChaos;
 
     void Reset()
     {
-        uiDragonsTimer = 3000;
-        uiOrcTimer = 60000;
-        uiAggroTimer = 60000;
         uiCorrosiveAcidTimer = 8000;
-        uiFreezeTimer = 11000;
-        uiFlamebreathTimer = 4000;
-        m_bSummonedRend = false;
-        m_bAggro = false;
-        m_bRootSelf = false;
+        uiFreezeTimer        = 11000;
+        uiFlamebreathTimer   = 4000;
+        m_bSummonedRend      = false;
+        m_bHasChromaticChaos = false;
 
-        // how many times should the two lines of summoned creatures be spawned
-        // min 2 x 2, max 7 lines of attack in total
-        uiLine1Count = urand(2, 5);
-        uiLine2Count = urand(2, 7 - uiLine1Count);
-
-        // Invisible for event start
-        m_creature->SetDisplayId(MODEL_ID_INVISIBLE);
-        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+        DoCastSpellIfCan(m_creature, SPELL_REND_MOUNTS);
     }
 
-    void Aggro(Unit* pWho)
+    void JustSummoned(Creature* pSummoned)
     {
-        if (m_pInstance)
-            m_pInstance->SetData(TYPE_STADIUM, IN_PROGRESS);
-    }
-
-    void JustDied(Unit* pKiller)
-    {
-        if (m_pInstance)
-            m_pInstance->SetData(TYPE_STADIUM, DONE);
-    }
-
-    void JustReachedHome()
-    {
-        if (m_pInstance)
-            m_pInstance->SetData(TYPE_STADIUM, FAIL);
-    }
-
-    void SummonCreatureWithRandomTarget(uint32 uiCreatureId)
-    {
-        float fX, fY, fZ;
-        m_creature->GetRandomPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 2*INTERACTION_DISTANCE, fX, fY, fZ);
-        fX = std::min(m_creature->GetPositionX(), fX);      // Halfcircle - suits better the rectangular form
-        if (Creature* pSummoned = m_creature->SummonCreature(uiCreatureId, fX, fY, fZ, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 240000))
-            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-                pSummoned->AI()->AttackStart(pTarget);
+        DoScriptText(EMOTE_KNOCKED_OFF, pSummoned);
     }
 
     void UpdateAI(const uint32 uiDiff)
@@ -116,112 +77,58 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (!m_bRootSelf)
+        // Chromatic Chaos at 50%
+        if (!m_bHasChromaticChaos && m_creature->GetHealthPercent() < 50.0f)
         {
-            DoCastSpellIfCan(m_creature, SPELL_ROOT_SELF);
-            m_bRootSelf = true;
-        }
-
-        if (!m_bAggro && uiLine1Count == 0 && uiLine2Count == 0)
-        {
-            if (uiAggroTimer < uiDiff)
+            if (m_pInstance)
             {
-                m_bAggro = true;
-                // Visible now!
-                m_creature->SetDisplayId(MODEL_ID_GYTH_MOUNTED);
-                m_creature->setFaction(14);
-                m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                m_creature->RemoveAurasDueToSpell(SPELL_ROOT_SELF);
-                if (m_pInstance)
-                    m_pInstance->DoUseDoorOrButton(GO_GYTH_COMBAT_DOOR);
-
+                if (Creature* pNefarius = m_pInstance->GetSingleCreatureFromStorage(NPC_LORD_VICTOR_NEFARIUS))
+                {
+                    pNefarius->CastSpell(m_creature, SPELL_CHROMATIC_CHAOS, true);
+                    DoScriptText(SAY_NEFARIUS_BUFF_GYTH, pNefarius);
+                    m_bHasChromaticChaos = true;
+                }
             }
-            else
-                uiAggroTimer -= uiDiff;
         }
 
-        // Summon Dragon pack. 2 Dragons and 3 Whelps
-        if (!m_bAggro && !m_bSummonedRend && uiLine1Count > 0)
+        // CorrosiveAcid_Timer
+        if (uiCorrosiveAcidTimer < uiDiff)
         {
-            if (uiDragonsTimer < uiDiff)
-            {
-                SummonCreatureWithRandomTarget(NPC_FIRE_TONGUE);
-                SummonCreatureWithRandomTarget(NPC_FIRE_TONGUE);
-                SummonCreatureWithRandomTarget(NPC_CHROMATIC_WHELP);
-                SummonCreatureWithRandomTarget(NPC_CHROMATIC_WHELP);
-                SummonCreatureWithRandomTarget(NPC_CHROMATIC_WHELP);
-                --uiLine1Count;
-                if (m_pInstance)
-                    m_pInstance->DoUseDoorOrButton(GO_GYTH_COMBAT_DOOR);
-                uiDragonsTimer = 60000;
-            }
-            else
-                uiDragonsTimer -= uiDiff;
-        }
-
-        //Summon Orc pack. 1 Orc Handler 1 Elite Dragonkin and 3 Whelps
-        if (!m_bAggro && !m_bSummonedRend && uiLine1Count == 0 && uiLine2Count > 0)
-        {
-            if (uiOrcTimer < uiDiff)
-            {
-                SummonCreatureWithRandomTarget(NPC_CHROMATIC_DRAGON);
-                SummonCreatureWithRandomTarget(NPC_BLACKHAND_ELITE);
-                SummonCreatureWithRandomTarget(NPC_CHROMATIC_WHELP);
-                SummonCreatureWithRandomTarget(NPC_CHROMATIC_WHELP);
-                SummonCreatureWithRandomTarget(NPC_CHROMATIC_WHELP);
-                if (m_pInstance)
-                    m_pInstance->DoUseDoorOrButton(GO_GYTH_COMBAT_DOOR);
-                --uiLine2Count;
-                uiOrcTimer = 60000;
-            }
-            else
-                uiOrcTimer -= uiDiff;
-        }
-
-        // we take part in the fight
-        if (m_bAggro)
-        {
-             // CorrosiveAcid_Timer
-            if (uiCorrosiveAcidTimer < uiDiff)
-            {
-                DoCastSpellIfCan(m_creature, SPELL_CORROSIVEACID);
+            if (DoCastSpellIfCan(m_creature, SPELL_CORROSIVE_ACID) == CAST_OK)
                 uiCorrosiveAcidTimer = 7000;
-            }
-            else
-                uiCorrosiveAcidTimer -= uiDiff;
+        }
+        else
+            uiCorrosiveAcidTimer -= uiDiff;
 
-            // Freeze_Timer
-            if (uiFreezeTimer < uiDiff)
-            {
-                if (DoCastSpellIfCan(m_creature, SPELL_FREEZE) == CAST_OK)
-                    uiFreezeTimer = 16000;
-            }
-            else
-                uiFreezeTimer -= uiDiff;
+        // Freeze_Timer
+        if (uiFreezeTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_FREEZE) == CAST_OK)
+                uiFreezeTimer = 16000;
+        }
+        else
+            uiFreezeTimer -= uiDiff;
 
-            // Flamebreath_Timer
-            if (uiFlamebreathTimer < uiDiff)
-            {
-                DoCastSpellIfCan(m_creature, SPELL_FLAMEBREATH);
+        // Flamebreath_Timer
+        if (uiFlamebreathTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_FLAME_BREATH) == CAST_OK)
                 uiFlamebreathTimer = 10500;
-            }
-            else
-                uiFlamebreathTimer -= uiDiff;
+        }
+        else
+            uiFlamebreathTimer -= uiDiff;
 
-            //Summon Rend
-            if (!m_bSummonedRend && m_creature->GetHealthPercent() < 11.0f)
+        // Summon Rend
+        if (!m_bSummonedRend && m_creature->GetHealthPercent() < 11.0f)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_SUMMON_REND) == CAST_OK)
             {
-                // summon Rend and Change model to normal Gyth
-                // Inturrupt any spell casting
-                m_creature->InterruptNonMeleeSpells(false);
-                // Gyth model
-                m_creature->SetDisplayId(MODEL_ID_GYTH);
-                m_creature->SummonCreature(NPC_REND_BLACKHAND, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 900000);
+                m_creature->RemoveAurasDueToSpell(SPELL_REND_MOUNTS);
                 m_bSummonedRend = true;
             }
+        }
 
-            DoMeleeAttackIfReady();
-        }                                                   // end if Aggro
+        DoMeleeAttackIfReady();
     }
 };
 

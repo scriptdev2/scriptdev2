@@ -25,17 +25,16 @@ enum
     NPC_REND_BLACKHAND          = 10429,
     NPC_GYTH                    = 10339,
     NPC_DRAKKISATH              = 10363,
-    NPC_FIRE_TONGUE             = 10372,                    // related to Gyth arena event
-    NPC_CHROMATIC_WHELP         = 10442,
+    NPC_CHROMATIC_WHELP         = 10442,                    // related to Gyth arena event
     NPC_CHROMATIC_DRAGON        = 10447,
-    NPC_BLACKHAND_ELITE         = 10317,
+    NPC_BLACKHAND_HANDLER       = 10742,
 
     // Doors
     GO_EMBERSEER_IN             = 175244,
     GO_DOORS                    = 175705,
     GO_EMBERSEER_OUT            = 175153,
     GO_GYTH_ENTRY_DOOR          = 164726,
-    GO_GYTH_COMBAT_DOOR         = 175185,                   // control in boss_script, because will auto-close after each wave
+    GO_GYTH_COMBAT_DOOR         = 175185,
     GO_GYTH_EXIT_DOOR           = 175186,
     GO_DRAKKISATH_DOOR_1        = 175946,
     GO_DRAKKISATH_DOOR_2        = 175947,
@@ -57,9 +56,42 @@ enum
     GO_EMBERSEER_RUNE_5         = 175270,
     GO_EMBERSEER_RUNE_6         = 175271,
     GO_EMBERSEER_RUNE_7         = 175272,
+
+    MAX_STADIUM_WAVES           = 7,
+    MAX_STADIUM_MOBS_PER_WAVE   = 5,
+
+    FACTION_BLACK_DRAGON        = 103
 };
 
-class MANGOS_DLL_DECL instance_blackrock_spire : public ScriptedInstance
+struct SpawnLocation
+{
+    float m_fX, m_fY, m_fZ, m_fO;
+};
+
+static const SpawnLocation aStadiumLocs[7] =
+{
+    {210.00f, -420.30f, 110.94f, 3.14f},                    // dragons summon location
+    {210.14f, -397.54f, 111.1f},                            // Gyth summon location
+    {163.62f, -420.33f, 110.47f},                           // center of the stadium location (for movement)
+    {164.63f, -444.04f, 121.97f, 3.22f},                    // Lord Nefarius summon position
+    {161.01f, -443.73f, 121.97f, 6.26f},                    // Rend summon position
+    {164.64f, -443.30f, 121.97f, 1.61f},                    // Nefarius move position
+    {165.74f, -466.46f, 116.80f},                           // Rend move position
+};
+
+// Stadium event description
+static const uint32 aStadiumEventNpcs[MAX_STADIUM_WAVES][5] =
+{
+    {NPC_CHROMATIC_WHELP, NPC_CHROMATIC_WHELP, NPC_CHROMATIC_WHELP, NPC_CHROMATIC_DRAGON, 0},
+    {NPC_CHROMATIC_WHELP, NPC_CHROMATIC_WHELP, NPC_CHROMATIC_WHELP, NPC_CHROMATIC_DRAGON, 0},
+    {NPC_CHROMATIC_WHELP, NPC_CHROMATIC_WHELP, NPC_CHROMATIC_DRAGON, NPC_BLACKHAND_HANDLER, 0},
+    {NPC_CHROMATIC_WHELP, NPC_CHROMATIC_WHELP, NPC_CHROMATIC_DRAGON, NPC_BLACKHAND_HANDLER, 0},
+    {NPC_CHROMATIC_WHELP, NPC_CHROMATIC_WHELP, NPC_CHROMATIC_WHELP, NPC_CHROMATIC_DRAGON, NPC_BLACKHAND_HANDLER},
+    {NPC_CHROMATIC_WHELP, NPC_CHROMATIC_WHELP, NPC_CHROMATIC_DRAGON, NPC_CHROMATIC_DRAGON, NPC_BLACKHAND_HANDLER},
+    {NPC_CHROMATIC_WHELP, NPC_CHROMATIC_WHELP, NPC_CHROMATIC_DRAGON, NPC_CHROMATIC_DRAGON, NPC_BLACKHAND_HANDLER},
+};
+
+class MANGOS_DLL_DECL instance_blackrock_spire : public ScriptedInstance, private DialogueHelper
 {
     public:
         instance_blackrock_spire(Map* pMap);
@@ -87,9 +119,18 @@ class MANGOS_DLL_DECL instance_blackrock_spire : public ScriptedInstance
         void GetIncarceratorGUIDList(GUIDList &lList) { lList = m_lIncarceratorGUIDList; }
         void GetRookeryEggGUIDList(GUIDList &lList) { lList = m_lRookeryEggGUIDList; }
 
-    protected:
+        void Update(uint32 uiDiff);
+
+    private:
+        void JustDidDialogueStep(int32 iEntry);
+        void DoSendNextStadiumWave();
+
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strInstData;
+
+        uint32 m_uiStadiumEventTimer;
+        uint8 m_uiStadiumWaves;
+        uint8 m_uiStadiumMobsAlive;
 
         ObjectGuid m_aRoomRuneGuid[MAX_ROOMS];
         GUIDList m_alRoomEventMobGUIDSorted[MAX_ROOMS];
