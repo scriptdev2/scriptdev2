@@ -22,114 +22,100 @@ SDCategory: Zul'Gurub
 EndScriptData */
 
 #include "precompiled.h"
-#include "zulgurub.h"
 
-#define SPELL_AMBUSH            24337
-#define SPELL_THOUSANDBLADES    24649
-
-#define EQUIP_ID_MAIN_HAND      0                           //was item display id 31818, but this id does not exist
+enum
+{
+    SPELL_THOUSAND_BLADES   = 24649,
+    SPELL_VANISH            = 24699,
+    SPELL_GOUGE             = 24698,
+    SPELL_TRASH             = 3391
+};
 
 struct MANGOS_DLL_DECL boss_renatakiAI : public ScriptedAI
 {
-    boss_renatakiAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+    boss_renatakiAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
-    uint32 Invisible_Timer;
-    uint32 Ambush_Timer;
-    uint32 Visible_Timer;
-    uint32 Aggro_Timer;
-    uint32 ThousandBlades_Timer;
-
-    bool Invisible;
-    bool Ambushed;
+    uint32 m_uiVanishTimer;
+    uint32 m_uiAmbushTimer;
+    uint32 m_uiGougeTimer;
+    uint32 m_uiThousandBladesTimer;
 
     void Reset()
     {
-        Invisible_Timer = urand(8000, 18000);
-        Ambush_Timer = 3000;
-        Visible_Timer = 4000;
-        Aggro_Timer = urand(15000, 25000);
-        ThousandBlades_Timer = urand(4000, 8000);
-
-        Invisible = false;
-        Ambushed = false;
+        m_uiVanishTimer         = urand(25000, 30000);
+        m_uiAmbushTimer         = 0;
+        m_uiGougeTimer          = urand(15000, 25000);
+        m_uiThousandBladesTimer = urand(4000, 8000);
     }
 
-    void UpdateAI(const uint32 diff)
+    void EnterEvadeMode()
+    {
+        // If is vanished, don't evade
+        if (m_uiAmbushTimer)
+            return;
+
+        ScriptedAI::EnterEvadeMode();
+    }
+
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //Invisible_Timer
-        if (Invisible_Timer < diff)
+        // Note: because the Vanish spell adds invisibility effect on the target, the timers won't be decreased during the vanish phase
+        if (m_uiAmbushTimer)
         {
-            m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
-
-            SetEquipmentSlots(false, EQUIP_UNEQUIP, EQUIP_NO_CHANGE, EQUIP_NO_CHANGE);
-            m_creature->SetDisplayId(11686);
-
-            m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-            Invisible = true;
-
-            Invisible_Timer = urand(15000, 30000);
-        }else Invisible_Timer -= diff;
-
-        if (Invisible)
-        {
-            if (Ambush_Timer < diff)
+            if (m_uiAmbushTimer <= uiDiff)
             {
-                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
-                {
-                    m_creature->NearTeleportTo(pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(), 0.0f);
-                    DoCastSpellIfCan(pTarget, SPELL_AMBUSH);
-                }
+                if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_TRASH) == CAST_OK)
+                    m_uiAmbushTimer = 0;
+            }
+            else
+                m_uiAmbushTimer -= uiDiff;
 
-                Ambushed = true;
-                Ambush_Timer = 3000;
-            }else Ambush_Timer -= diff;
+            // don't do anything else while vanished
+            return;
         }
 
-        if (Ambushed)
+        // Invisible_Timer
+        if (m_uiVanishTimer < uiDiff)
         {
-            if (Visible_Timer < diff)
+            if (DoCastSpellIfCan(m_creature, SPELL_VANISH) == CAST_OK)
             {
-                m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
-
-                m_creature->SetDisplayId(15268);
-                SetEquipmentSlots(false, EQUIP_ID_MAIN_HAND, EQUIP_NO_CHANGE, EQUIP_NO_CHANGE);
-
-                m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                Invisible = false;
-
-                Visible_Timer = 4000;
-            }else Visible_Timer -= diff;
+                m_uiVanishTimer = urand(25000, 40000);
+                m_uiAmbushTimer = 2000;
+            }
         }
+        else
+            m_uiVanishTimer -= uiDiff;
 
-        //Resetting some aggro so he attacks other gamers
-        if (!Invisible)
-            if (Aggro_Timer < diff)
+        // Resetting some aggro so he attacks other gamers
+        if (m_uiGougeTimer < uiDiff)
         {
-            Unit* target = NULL;
-            target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,1);
+            if (DoCastSpellIfCan(m_creature, SPELL_GOUGE) == CAST_OK)
+            {
+                if (m_creature->getThreatManager().getThreat(m_creature->getVictim()))
+                    m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-50);
 
-            if (m_creature->getThreatManager().getThreat(m_creature->getVictim()))
-                m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-50);
+                m_uiGougeTimer = urand(7000, 20000);
+            }
+        }
+        else
+            m_uiGougeTimer -= uiDiff;
 
-            if (target)
-                AttackStart(target);
-
-            Aggro_Timer = urand(7000, 20000);
-        }else Aggro_Timer -= diff;
-
-        if (!Invisible)
-            if (ThousandBlades_Timer < diff)
+        // Thausand Blades
+        if (m_uiThousandBladesTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_THOUSANDBLADES);
-            ThousandBlades_Timer = urand(7000, 12000);
-        }else ThousandBlades_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_THOUSAND_BLADES) == CAST_OK)
+                m_uiThousandBladesTimer = urand(7000, 12000);
+        }
+        else
+            m_uiThousandBladesTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
 };
+
 CreatureAI* GetAI_boss_renataki(Creature* pCreature)
 {
     return new boss_renatakiAI(pCreature);

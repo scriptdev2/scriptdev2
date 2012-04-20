@@ -22,65 +22,94 @@ SDCategory: Zul'Gurub
 EndScriptData */
 
 #include "precompiled.h"
-#include "zulgurub.h"
 
-#define SPELL_MANABURN         26046
-#define SPELL_SLEEP            24664
+enum
+{
+    SPELL_CHAIN_BURN            = 24684,
+    SPELL_SLEEP                 = 24664,
+    SPELL_EARTH_SHOCK           = 24685,
+    SPELL_SUMMON_ILLUSION_1     = 24681,
+    SPELL_SUMMON_ILLUSION_2     = 24728,
+    SPELL_SUMMON_ILLUSION_3     = 24729,
+};
 
 struct MANGOS_DLL_DECL boss_hazzarahAI : public ScriptedAI
 {
-    boss_hazzarahAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+    boss_hazzarahAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
-    uint32 ManaBurn_Timer;
-    uint32 Sleep_Timer;
-    uint32 Illusions_Timer;
+    uint32 m_uiManaBurnTimer;
+    uint32 m_uiSleepTimer;
+    uint32 m_uiEarthShockTimer;
+    uint32 m_uiIllusionsTimer;
 
     void Reset()
     {
-        ManaBurn_Timer = urand(4000, 10000);
-        Sleep_Timer = urand(10000, 18000);
-        Illusions_Timer = urand(10000, 18000);
+        m_uiManaBurnTimer   = urand(4000, 10000);
+        m_uiSleepTimer      = urand(10000, 18000);
+        m_uiEarthShockTimer = urand(7000, 14000);
+        m_uiIllusionsTimer  = urand(10000, 18000);
     }
 
-    void UpdateAI(const uint32 diff)
+    void JustSummoned(Creature* pSummoned)
+    {
+        if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            pSummoned->AI()->AttackStart(pTarget);
+    }
+
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //ManaBurn_Timer
-        if (ManaBurn_Timer < diff)
+        // ManaBurn_Timer
+        if (m_uiManaBurnTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_MANABURN);
-            ManaBurn_Timer = urand(8000, 16000);
-        }else ManaBurn_Timer -= diff;
-
-        //Sleep_Timer
-        if (Sleep_Timer < diff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_SLEEP);
-            Sleep_Timer = urand(12000, 20000);
-        }else Sleep_Timer -= diff;
-
-        //Illusions_Timer
-        if (Illusions_Timer < diff)
-        {
-            //We will summon 3 illusions that will spawn on a random gamer and attack this gamer
-            //We will just use one model for the beginning
-            for(int i = 0; i < 3; ++i)
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_CHAIN_BURN, SELECT_FLAG_POWER_MANA))
             {
-                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
-                {
-                    if (Creature* pIllusion = m_creature->SummonCreature(15163, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(), 0.0f, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 30000))
-                        pIllusion->AI()->AttackStart(pTarget);
-                }
+                if (DoCastSpellIfCan(pTarget, SPELL_CHAIN_BURN) == CAST_OK)
+                    m_uiManaBurnTimer = urand(8000, 16000);
             }
+        }
+        else
+            m_uiManaBurnTimer -= uiDiff;
 
-            Illusions_Timer = urand(15000, 25000);
-        }else Illusions_Timer -= diff;
+        // Sleep_Timer
+        if (m_uiSleepTimer < uiDiff)
+        {
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_SLEEP) == CAST_OK)
+                    m_uiSleepTimer = urand(12000, 20000);
+            }
+        }
+        else
+            m_uiSleepTimer -= uiDiff;
+
+        // Earthshock
+        if (m_uiEarthShockTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_EARTH_SHOCK) == CAST_OK)
+                m_uiEarthShockTimer = urand(9000, 16000);
+        }
+        else
+            m_uiEarthShockTimer -= uiDiff;
+
+        // Illusions_Timer
+        if (m_uiIllusionsTimer < uiDiff)
+        {
+            DoCastSpellIfCan(m_creature, SPELL_SUMMON_ILLUSION_1, CAST_TRIGGERED);
+            DoCastSpellIfCan(m_creature, SPELL_SUMMON_ILLUSION_2, CAST_TRIGGERED);
+            DoCastSpellIfCan(m_creature, SPELL_SUMMON_ILLUSION_3, CAST_TRIGGERED);
+
+            m_uiIllusionsTimer = urand(15000, 25000);
+        }
+        else
+            m_uiIllusionsTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
 };
+
 CreatureAI* GetAI_boss_hazzarah(Creature* pCreature)
 {
     return new boss_hazzarahAI(pCreature);
