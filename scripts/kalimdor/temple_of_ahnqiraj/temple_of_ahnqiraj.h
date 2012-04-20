@@ -14,7 +14,7 @@ enum
     TYPE_TWINS                  = 2,
     TYPE_CTHUN_PHASE            = 3,
 
-    // NPC_SKERAM               = 15263,
+    NPC_SKERAM                  = 15263,
     //NPC_KRI                   = 15511,
     //NPC_VEM                   = 15544,
     //NPC_YAUJ                  = 15543,

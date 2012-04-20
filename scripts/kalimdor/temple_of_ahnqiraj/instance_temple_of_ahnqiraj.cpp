@@ -39,6 +39,10 @@ void instance_temple_of_ahnqiraj::OnCreatureCreate (Creature* pCreature)
 {
     switch (pCreature->GetEntry())
     {
+        case NPC_SKERAM:
+            // Don't store the summoned images guid
+            if (GetData(TYPE_SKERAM) == IN_PROGRESS)
+                break;
         case NPC_VEKLOR:
         case NPC_VEKNILASH:
         case NPC_CTHUN:

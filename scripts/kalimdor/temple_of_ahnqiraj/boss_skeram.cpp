@@ -16,37 +16,33 @@
 
 /* ScriptData
 SDName: Boss_Skeram
-SD%Complete: 75
-SDComment: Mind Control buggy.
+SD%Complete: 90
+SDComment: Timers
 SDCategory: Temple of Ahn'Qiraj
 EndScriptData */
 
 #include "precompiled.h"
 #include "temple_of_ahnqiraj.h"
-#include "Group.h"
 
-#define SAY_AGGRO1                  -1531000
-#define SAY_AGGRO2                  -1531001
-#define SAY_AGGRO3                  -1531002
-#define SAY_SLAY1                   -1531003
-#define SAY_SLAY2                   -1531004
-#define SAY_SLAY3                   -1531005
-#define SAY_SPLIT                   -1531006
-#define SAY_DEATH                   -1531007
-
-#define SPELL_ARCANE_EXPLOSION      25679
-#define SPELL_EARTH_SHOCK           26194
-#define SPELL_TRUE_FULFILLMENT4     26526
-#define SPELL_BLINK                 28391
-
-class ov_mycoordinates
+enum
 {
-    public:
-        float x,y,z,r;
-        ov_mycoordinates(float cx, float cy, float cz, float cr)
-        {
-            x = cx; y = cy; z = cz; r = cr;
-        }
+    SAY_AGGRO1                  = -1531000,
+    SAY_AGGRO2                  = -1531001,
+    SAY_AGGRO3                  = -1531002,
+    SAY_SLAY1                   = -1531003,
+    SAY_SLAY2                   = -1531004,
+    SAY_SLAY3                   = -1531005,
+    SAY_SPLIT                   = -1531006,
+    SAY_DEATH                   = -1531007,
+
+    SPELL_ARCANE_EXPLOSION      = 26192,
+    SPELL_EARTH_SHOCK           = 26194,
+    SPELL_TRUE_FULFILLMENT      = 785,
+    SPELL_TELEPORT_1            = 4801,
+    SPELL_TELEPORT_2            = 8195,
+    SPELL_TELEPORT_3            = 20449,
+    SPELL_INITIALIZE_IMAGE      = 3730,
+    SPELL_SUMMON_IMAGES         = 747,
 };
 
 struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
@@ -54,47 +50,40 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
     boss_skeramAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        IsImage = false;
         Reset();
+
+        // Check this for images, because the Initialize spell hits the target only after aggro
+        if (m_creature->IsTemporarySummon())
+            m_bIsImage = true;
+        else
+            m_bIsImage = false;
     }
 
     ScriptedInstance* m_pInstance;
 
-    uint32 ArcaneExplosion_Timer;
-    uint32 EarthShock_Timer;
-    uint32 FullFillment_Timer;
-    uint32 Blink_Timer;
-    uint32 Invisible_Timer;
+    uint32 m_uiArcaneExplosionTimer;
+    uint32 m_uiEarthShockTimer;
+    uint32 m_uiFullFillmentTimer;
+    uint32 m_uiBlinkTimer;
 
-    Creature *Image1, *Image2;
+    float m_fHpCheck;
 
-    bool Images75;
-    bool Images50;
-    bool Images25;
-    bool IsImage;
-    bool Invisible;
+    bool m_bIsImage;
 
     void Reset()
     {
-        ArcaneExplosion_Timer = urand(6000, 12000);
-        EarthShock_Timer = 2000;
-        FullFillment_Timer = 15000;
-        Blink_Timer = urand(8000, 20000);
-        Invisible_Timer = 500;
+        m_uiArcaneExplosionTimer = urand(6000, 12000);
+        m_uiEarthShockTimer      = 2000;
+        m_uiFullFillmentTimer    = 15000;
+        m_uiBlinkTimer           = urand(30000, 45000);
 
-        Images75 = false;
-        Images50 = false;
-        Images25 = false;
-        Invisible = false;
+        m_fHpCheck               = 75.0f;
 
-        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-        m_creature->SetVisibility(VISIBILITY_ON);
-
-        if (IsImage)
-            m_creature->SetDeathState(JUST_DIED);
+        if (m_creature->GetVisibility() != VISIBILITY_ON)
+            m_creature->SetVisibility(VISIBILITY_ON);
     }
 
-    void KilledUnit(Unit* victim)
+    void KilledUnit(Unit* pVictim)
     {
         switch(urand(0, 2))
         {
@@ -104,20 +93,23 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* Killer)
+    void JustDied(Unit* pKiller)
     {
-        if (!IsImage)
+        if (!m_bIsImage)
         {
             DoScriptText(SAY_DEATH, m_creature);
 
             if (m_pInstance)
                 m_pInstance->SetData(TYPE_SKERAM, DONE);
         }
+        // Else despawn to avoid looting
+        else
+            m_creature->ForcedDespawn();
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
-        if (IsImage || Images75)
+        if (m_bIsImage)
             return;
 
         switch(urand(0, 2))
@@ -135,22 +127,105 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_SKERAM, FAIL);
+
+        if (m_bIsImage)
+            m_creature->ForcedDespawn();
     }
 
-    void UpdateAI(const uint32 diff)
+    void JustSummoned(Creature* pSummoned)
     {
-        //Return since we have no target
+        if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            pSummoned->AI()->AttackStart(pTarget);
+
+        DoCastSpellIfCan(pSummoned, SPELL_INITIALIZE_IMAGE, CAST_TRIGGERED);
+    }
+
+    // Wrapper to handle the image version initialize
+    void DoInitializeImage()
+    {
+        if (!m_pInstance)
+            return;
+
+        // Initialize the health of the clone
+        if (Creature* pProphet = m_pInstance->GetSingleCreatureFromStorage(NPC_SKERAM))
+        {
+            float fHealthPct = pProphet->GetHealthPercent();
+            float fMaxHealthPct = 0;
+
+            // The max health depends on the split phase. It's percent * original boss health
+            if (fHealthPct < 25.0f)
+                fMaxHealthPct = 0.50f;
+            else if (fHealthPct < 50.0f)
+                fMaxHealthPct = 0.20f;
+            else
+                fMaxHealthPct = 0.10f;
+
+            // Set the same health percent as the original boss
+            m_creature->SetMaxHealth(m_creature->GetMaxHealth()*fMaxHealthPct);
+            m_creature->SetHealthPercent(fHealthPct);
+        }
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        // Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //ArcaneExplosion_Timer
-        if (ArcaneExplosion_Timer < diff)
+        // ArcaneExplosion_Timer
+        if (m_uiArcaneExplosionTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_ARCANE_EXPLOSION);
-            ArcaneExplosion_Timer = urand(8000, 18000);
-        }else ArcaneExplosion_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature, SPELL_ARCANE_EXPLOSION) == CAST_OK)
+                m_uiArcaneExplosionTimer = urand(8000, 18000);
+        }
+        else
+            m_uiArcaneExplosionTimer -= uiDiff;
 
-        //If we are within range melee the target
+        // True Fullfilment
+        if (m_uiFullFillmentTimer < uiDiff)
+        {
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_TRUE_FULFILLMENT) == CAST_OK)
+                    m_uiFullFillmentTimer = urand(20000, 30000);
+            }
+        }
+        else
+            m_uiFullFillmentTimer -= uiDiff;
+
+        // Blink_Timer
+        if (m_uiBlinkTimer < uiDiff)
+        {
+            switch(urand(0, 2))
+            {
+                case 0: DoCastSpellIfCan(m_creature, SPELL_TELEPORT_1); break;
+                case 1: DoCastSpellIfCan(m_creature, SPELL_TELEPORT_2); break;
+                case 2: DoCastSpellIfCan(m_creature, SPELL_TELEPORT_3); break;
+            }
+
+            DoResetThreat();
+            if (m_creature->GetVisibility() != VISIBILITY_ON)
+                m_creature->SetVisibility(VISIBILITY_ON);
+
+            m_uiBlinkTimer = urand(10000, 30000);
+        }
+        else
+            m_uiBlinkTimer -= uiDiff;
+
+        // Summon images at 75%, 50% and 25%
+        if (!m_bIsImage && m_creature->GetHealthPercent() < m_fHpCheck)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_SUMMON_IMAGES) == CAST_OK)
+            {
+                DoScriptText(SAY_SPLIT, m_creature);
+                m_fHpCheck -= 25.0f;
+                // Teleport shortly after the images are summoned and set invisible to clear the selection (Workaround alert!!!)
+                m_creature->SetVisibility(VISIBILITY_OFF);
+                m_uiBlinkTimer = 2000;
+            }
+        }
+
+        // If we are within range melee the target
         if (m_creature->CanReachWithMeleeAttack(m_creature->getVictim()))
         {
             //Make sure our attack is ready and we arn't currently casting
@@ -159,155 +234,46 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
                 m_creature->AttackerStateUpdate(m_creature->getVictim());
                 m_creature->resetAttackTimer();
             }
-        }else
-        {
-            //EarthShock_Timer
-            if (EarthShock_Timer < diff)
-            {
-                DoCastSpellIfCan(m_creature->getVictim(),SPELL_EARTH_SHOCK);
-                EarthShock_Timer = 1000;
-            }else EarthShock_Timer -= diff;
         }
-
-        //Blink_Timer
-        if (Blink_Timer < diff)
+        else
         {
-            //DoCastSpellIfCan(m_creature, SPELL_BLINK);
-            switch(urand(0, 2))
+            // EarthShock_Timer
+            if (m_uiEarthShockTimer < uiDiff)
             {
-                case 0:
-                    m_creature->GetMap()->CreatureRelocation(m_creature, -8340.782227f, 2083.814453f, 125.648788f, 0.0f);
-                    DoResetThreat();
-                    break;
-                case 1:
-                    m_creature->GetMap()->CreatureRelocation(m_creature, -8341.546875f, 2118.504639f, 133.058151f, 0.0f);
-                    DoResetThreat();
-                    break;
-                case 2:
-                    m_creature->GetMap()->CreatureRelocation(m_creature, -8318.822266f, 2058.231201f, 133.058151f, 0.0f);
-                    DoResetThreat();
-                    break;
+                if (DoCastSpellIfCan(m_creature, SPELL_EARTH_SHOCK) == CAST_OK)
+                    m_uiEarthShockTimer = 1000;
             }
-            DoStopAttack();
-
-            Blink_Timer = urand(20000, 40000);
-        }else Blink_Timer -= diff;
-
-        float procent = m_creature->GetHealthPercent();
-
-        //Summoning 2 Images and teleporting to a random position on 75% health
-        if (!Images75 && !IsImage && procent <= 75.0f && procent > 70.0f)
-            DoSplit(75);
-
-        //Summoning 2 Images and teleporting to a random position on 50% health
-        if (!Images50 && !IsImage && procent <= 50.0f && procent > 45.0f)
-            DoSplit(50);
-
-        //Summoning 2 Images and teleporting to a random position on 25% health
-        if (!Images25 && !IsImage && procent <= 25.0f && procent > 20.0f)
-            DoSplit(25);
-
-        //Invisible_Timer
-        if (Invisible)
-        {
-            if (Invisible_Timer < diff)
-            {
-                //Making Skeram visible after telporting
-                m_creature->SetVisibility(VISIBILITY_ON);
-                m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-
-                Invisible_Timer = 2500;
-                Invisible = false;
-            }else Invisible_Timer -= diff;
+            else
+                m_uiEarthShockTimer -= uiDiff;
         }
-
-        DoMeleeAttackIfReady();
-    }
-
-    void DoSplit(int atPercent /* 75 50 25 */)
-    {
-        DoScriptText(SAY_SPLIT, m_creature);
-
-        ov_mycoordinates *place1 = new ov_mycoordinates(-8340.782227f, 2083.814453f, 125.648788f, 0.0f);
-        ov_mycoordinates *place2 = new ov_mycoordinates(-8341.546875f, 2118.504639f, 133.058151f, 0.0f);
-        ov_mycoordinates *place3 = new ov_mycoordinates(-8318.822266f, 2058.231201f, 133.058151f, 0.0f);
-
-        ov_mycoordinates *bossc=place1, *i1=place2, *i2=place3;
-
-        switch(urand(0, 2))
-        {
-            case 0:
-                bossc = place1;
-                i1 = place2;
-                i2 = place3;
-                break;
-            case 1:
-                bossc = place2;
-                i1 = place1;
-                i2 = place3;
-                break;
-            case 2:
-                bossc = place3;
-                i1 = place1;
-                i2 = place2;
-                break;
-        }
-
-        m_creature->RemoveAllAuras();
-        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-        m_creature->SetVisibility(VISIBILITY_OFF);
-
-        m_creature->GetMap()->CreatureRelocation(m_creature, bossc->x, bossc->y, bossc->z, bossc->r);
-
-        Invisible = true;
-        DoResetThreat();
-        DoStopAttack();
-
-        switch (atPercent)
-        {
-            case 75: Images75 = true; break;
-            case 50: Images50 = true; break;
-            case 25: Images25 = true; break;
-        }
-
-        Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
-
-        Image1 = m_creature->SummonCreature(15263, i1->x, i1->y, i1->z, i1->r, TEMPSUMMON_CORPSE_DESPAWN, 30000);
-        if (Image1)
-        {
-            Image1->SetMaxHealth(m_creature->GetMaxHealth() / 5);
-            Image1->SetHealth(m_creature->GetHealth() / 5);
-
-            if (boss_skeramAI* pImageAI = dynamic_cast<boss_skeramAI*>(Image1->AI()))
-                pImageAI->IsImage = true;
-
-            if (target)
-                Image1->AI()->AttackStart(target);
-        }
-
-        Image2 = m_creature->SummonCreature(15263,i2->x, i2->y, i2->z, i2->r, TEMPSUMMON_CORPSE_DESPAWN, 30000);
-        if (Image2)
-        {
-            Image2->SetMaxHealth(m_creature->GetMaxHealth() / 5);
-            Image2->SetHealth(m_creature->GetHealth() / 5);
-
-            if (boss_skeramAI* pImageAI = dynamic_cast<boss_skeramAI*>(Image2->AI()))
-                pImageAI->IsImage = true;
-
-            if (target)
-                Image2->AI()->AttackStart(target);
-        }
-
-        Invisible = true;
-        delete place1;
-        delete place2;
-        delete place3;
     }
 };
 
 CreatureAI* GetAI_boss_skeram(Creature* pCreature)
 {
     return new boss_skeramAI(pCreature);
+}
+
+bool EffectDummyCreature_prophet_skeram(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+{
+    //always check spellid and effectindex
+    if (uiSpellId == SPELL_INITIALIZE_IMAGE && uiEffIndex == EFFECT_INDEX_0)
+    {
+        // check for target == caster first
+        if (instance_temple_of_ahnqiraj* pInstance = (instance_temple_of_ahnqiraj*)pCreatureTarget->GetInstanceData())
+        {
+            if (Creature* pProphet = pInstance->GetSingleCreatureFromStorage(NPC_SKERAM))
+            {
+                if (pProphet == pCreatureTarget)
+                    return false;
+            }
+        }
+
+        if (boss_skeramAI* pSkeramAI = dynamic_cast<boss_skeramAI*>(pCreatureTarget->AI()))
+            pSkeramAI->DoInitializeImage();
+    }
+
+    return false;
 }
 
 void AddSC_boss_skeram()
@@ -317,5 +283,6 @@ void AddSC_boss_skeram()
     pNewScript = new Script;
     pNewScript->Name = "boss_skeram";
     pNewScript->GetAI = &GetAI_boss_skeram;
+    pNewScript->pEffectDummyNPC = &EffectDummyCreature_prophet_skeram;
     pNewScript->RegisterSelf();
 }
