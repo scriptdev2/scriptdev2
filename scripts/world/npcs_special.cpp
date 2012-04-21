@@ -41,6 +41,7 @@ npc_mount_vendor        100%    Regular mount vendors all over the world. Displa
 npc_sayge               100%    Darkmoon event fortune teller, buff player based on answers given
 npc_tabard_vendor        50%    allow recovering quest related tabards, achievement related ones need core support
 npc_spring_rabbit         1%    Used for pet "Spring Rabbit" of Noblegarden
+npc_redemption_target   100%    Used for the paladin quests: 1779,1781,9600,9685
 EndContentData */
 
 /*########
@@ -1660,6 +1661,109 @@ CreatureAI* GetAI_npc_spring_rabbit(Creature* pCreature)
     return new npc_spring_rabbitAI(pCreature);
 }
 
+/*######
+## npc_redemption_target
+######*/
+
+enum
+{
+    SAY_HEAL                    = -1000187,
+
+    SPELL_SYMBOL_OF_LIFE        = 8593,
+    SPELL_SHIMMERING_VESSEL     = 31225,
+    SPELL_REVIVE_SELF           = 32343,
+
+    NPC_FURBOLG_SHAMAN          = 17542,        // draenei side
+    NPC_BLOOD_KNIGHT            = 17768,        // blood elf side
+};
+
+struct MANGOS_DLL_DECL npc_redemption_targetAI : public ScriptedAI
+{
+    npc_redemption_targetAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
+
+    uint32 m_uiEvadeTimer;
+    uint32 m_uiHealTimer;
+
+    ObjectGuid m_playerGuid;
+
+    void Reset()
+    {
+        m_uiEvadeTimer = 0;
+        m_uiHealTimer  = 0;
+
+        m_creature->SetFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_DEAD);
+        m_creature->SetStandState(UNIT_STAND_STATE_DEAD);
+    }
+
+    void DoReviveSelf(ObjectGuid m_guid)
+    {
+        // Wait until he resets again
+        if (m_uiEvadeTimer)
+            return;
+
+        DoCastSpellIfCan(m_creature, SPELL_REVIVE_SELF);
+        m_creature->SetDeathState(JUST_ALIVED);
+        m_playerGuid = m_guid;
+        m_uiHealTimer = 2000;
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (m_uiHealTimer)
+        {
+            if (m_uiHealTimer <= uiDiff)
+            {
+                if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid))
+                {
+                    DoScriptText(SAY_HEAL, m_creature, pPlayer);
+
+                    // Quests 9600 and 9685 requires kill credit
+                    if (m_creature->GetEntry() == NPC_FURBOLG_SHAMAN || m_creature->GetEntry() == NPC_BLOOD_KNIGHT)
+                        pPlayer->KilledMonsterCredit(m_creature->GetEntry(), m_creature->GetObjectGuid());
+                }
+
+                m_creature->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_DEAD);
+                m_creature->SetStandState(UNIT_STAND_STATE_STAND);
+                m_uiHealTimer = 0;
+                m_uiEvadeTimer = 2*MINUTE*IN_MILLISECONDS;
+            }
+            else
+                m_uiHealTimer -= uiDiff;
+        }
+
+        if (m_uiEvadeTimer)
+        {
+            if (m_uiEvadeTimer <= uiDiff)
+            {
+                EnterEvadeMode();
+                m_uiEvadeTimer = 0;
+            }
+            else
+                m_uiEvadeTimer -= uiDiff;
+        }
+    }
+};
+
+CreatureAI* GetAI_npc_redemption_target(Creature* pCreature)
+{
+    return new npc_redemption_targetAI(pCreature);
+}
+
+bool EffectDummyCreature_npc_redemption_target(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+{
+    //always check spellid and effectindex
+    if ((uiSpellId == SPELL_SYMBOL_OF_LIFE || uiSpellId == SPELL_SHIMMERING_VESSEL) && uiEffIndex == EFFECT_INDEX_0)
+    {
+        if (npc_redemption_targetAI* pTargetAI = dynamic_cast<npc_redemption_targetAI*>(pCreatureTarget->AI()))
+            pTargetAI->DoReviveSelf(pCaster->GetObjectGuid());
+
+        //always return true when we are handling this spell and effect
+        return true;
+    }
+
+    return false;
+}
+
 void AddSC_npcs_special()
 {
     Script* pNewScript;
@@ -1729,5 +1833,11 @@ void AddSC_npcs_special()
     pNewScript = new Script;
     pNewScript->Name = "npc_spring_rabbit";
     pNewScript->GetAI = &GetAI_npc_spring_rabbit;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_redemption_target";
+    pNewScript->GetAI = &GetAI_npc_redemption_target;
+    pNewScript->pEffectDummyNPC = &EffectDummyCreature_npc_redemption_target;
     pNewScript->RegisterSelf();
 }

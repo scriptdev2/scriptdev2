@@ -16,76 +16,16 @@
 
 /* ScriptData
 SDName: Dun_Morogh
-SD%Complete: 50
-SDComment: Quest support: 1783
+SD%Complete: 0
+SDComment: Placeholder
 SDCategory: Dun Morogh
 EndScriptData */
 
 /* ContentData
-npc_narm_faulk
 EndContentData */
 
 #include "precompiled.h"
 
-/*######
-## npc_narm_faulk
-######*/
-
-#define SAY_HEAL    -1000187
-
-struct MANGOS_DLL_DECL npc_narm_faulkAI : public ScriptedAI
-{
-    uint32 lifeTimer;
-    bool spellHit;
-
-    npc_narm_faulkAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
-
-    void Reset()
-    {
-        lifeTimer = 120000;
-        m_creature->SetUInt32Value(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_DEAD);
-        m_creature->SetStandState(UNIT_STAND_STATE_DEAD);
-        spellHit = false;
-    }
-
-    void MoveInLineOfSight(Unit *who) { }
-
-    void UpdateAI(const uint32 diff)
-    {
-        if (m_creature->IsStandState())
-        {
-            if (lifeTimer < diff)
-                m_creature->AI()->EnterEvadeMode();
-            else
-                lifeTimer -= diff;
-        }
-    }
-
-    void SpellHit(Unit *Hitter, const SpellEntry *Spellkind)
-    {
-        if (Spellkind->Id == 8593 && !spellHit)
-        {
-            DoCastSpellIfCan(m_creature,32343);
-            m_creature->SetStandState(UNIT_STAND_STATE_STAND);
-            m_creature->SetUInt32Value(UNIT_DYNAMIC_FLAGS, 0);
-            //m_creature->RemoveAllAuras();
-            DoScriptText(SAY_HEAL, m_creature, Hitter);
-            spellHit = true;
-        }
-    }
-
-};
-CreatureAI* GetAI_npc_narm_faulk(Creature* pCreature)
-{
-    return new npc_narm_faulkAI(pCreature);
-}
-
 void AddSC_dun_morogh()
 {
-    Script* pNewScript;
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_narm_faulk";
-    pNewScript->GetAI = &GetAI_npc_narm_faulk;
-    pNewScript->RegisterSelf();
 }
