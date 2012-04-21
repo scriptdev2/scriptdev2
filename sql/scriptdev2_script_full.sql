@@ -146,7 +146,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000185,'%s puts the shell to his ear.',0,2,7,0,'engineer_spark EMOTE_SHELL'),
 (-1000186,'Now I cut you!',0,1,7,0,'engineer_spark SAY_ATTACK'),
 
-(-1000187,'Thank you, dear $C, you just saved my life.',0,0,7,0,'faulk SAY_HEAL'),
+(-1000187,'Thank you, dear $C, you just saved my life.',0,0,0,0,'npc_redemption_target SAY_HEAL'),
 
 (-1000188,'Deployment sucessful. Trespassers will be neutralized.',0,0,0,0,'converted_sentry SAY_CONVERTED_1'),
 (-1000189,'Objective acquired. Initiating security routines.',0,0,0,0,'converted_sentry SAY_CONVERTED_2'),
@@ -155,7 +155,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000191,'You taste good with maybe a little salt and pepper.',0,0,0,0,' SAY_LUMP_1'),
 (-1000192,'OK, OK! Lump give up!',0,0,0,0,' SAY_LUMP_DEFEAT'),
 
-(-1000193,'Thank you, dear $C, you just saved my life.',0,0,1,0,'stillblade SAY_HEAL'),
+(-1000193,'REUSE ME',0,0,0,0,'REUSE ME'),
 
 (-1000194,'I give up! Please don\'t kill me!',0,0,0,0,'unkor SAY_SUBMIT'),
 
