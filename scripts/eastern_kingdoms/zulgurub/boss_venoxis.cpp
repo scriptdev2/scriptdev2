@@ -26,22 +26,25 @@ EndScriptData */
 
 enum
 {
-    NPC_RAZZASHI_COBRA  = 11373,
+    SAY_TRANSFORM           = -1309000,
+    SAY_DEATH               = -1309001,
 
-    SAY_TRANSFORM       = -1309000,
-    SAY_DEATH           = -1309001,
+    // troll spells
+    SPELL_HOLY_FIRE         = 23860,
+    SPELL_HOLY_WRATH        = 23979,
+    SPELL_HOLY_NOVA         = 23858,
+    SPELL_DISPELL           = 23859,
+    SPELL_RENEW             = 23895,
 
-    SPELL_HOLY_FIRE     = 23860,
-    SPELL_HOLY_WRATH    = 23979,
-    SPELL_VENOMSPIT     = 23862,
-    SPELL_HOLY_NOVA     = 23858,
-    SPELL_POISON_CLOUD  = 23861,
-    SPELL_SNAKE_FORM    = 23849,
-    SPELL_RENEW         = 23895,
-    SPELL_BERSERK       = 23537,
-    SPELL_DISPELL       = 23859,
-    SPELL_PARASITIC     = 23865,
-    SPELL_TRASH         = 3391
+    // serpent spells
+    SPELL_VENOMSPIT         = 23862,
+    SPELL_POISON_CLOUD      = 23861,
+    SPELL_PARASITIC_SERPENT = 23867,
+
+    // common spells
+    SPELL_SNAKE_FORM        = 23849,
+    SPELL_FRENZY            = 23537,
+    SPELL_TRASH             = 3391
 };
 
 struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
@@ -49,64 +52,40 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
     boss_venoxisAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_fDefaultSize = m_creature->GetFloatValue(OBJECT_FIELD_SCALE_X);
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
 
-    uint32 m_uiHolyFire_Timer;
-    uint32 m_uiHolyWrath_Timer;
-    uint32 m_uiVenomSpit_Timer;
-    uint32 m_uiRenew_Timer;
-    uint32 m_uiPoisonCloud_Timer;
-    uint32 m_uiHolyNova_Timer;
-    uint32 m_uiDispell_Timer;
-    uint32 m_uiParasitic_Timer;
-    uint32 m_uiTrash_Timer;
-
-    uint8 m_uiTargetsInRangeCount;
+    uint32 m_uiHolyWrathTimer;
+    uint32 m_uiVenomSpitTimer;
+    uint32 m_uiRenewTimer;
+    uint32 m_uiPoisonCloudTimer;
+    uint32 m_uiHolySpellTimer;
+    uint32 m_uiDispellTimer;
+    uint32 m_uiTrashTimer;
 
     bool m_bPhaseTwo;
     bool m_bInBerserk;
 
-    float m_fDefaultSize;
-
     void Reset()
     {
-        m_uiHolyFire_Timer = 10000;
-        m_uiHolyWrath_Timer = 60500;
-        m_uiVenomSpit_Timer = 5500;
-        m_uiRenew_Timer = 30500;
-        m_uiPoisonCloud_Timer = 2000;
-        m_uiHolyNova_Timer = 5000;
-        m_uiDispell_Timer = 35000;
-        m_uiParasitic_Timer = 10000;
-        m_uiTrash_Timer = 5000;
+        m_uiHolyWrathTimer      = 40000;
+        m_uiVenomSpitTimer      = 5500;
+        m_uiRenewTimer          = 30000;
+        m_uiPoisonCloudTimer    = 2000;
+        m_uiHolySpellTimer      = 10000;
+        m_uiDispellTimer        = 35000;
+        m_uiTrashTimer          = 5000;
 
-        m_uiTargetsInRangeCount = 0;
-
-        m_creature->SetFloatValue(OBJECT_FIELD_SCALE_X, m_fDefaultSize);
-
-        m_bPhaseTwo = false;
-        m_bInBerserk = false;
+        m_bPhaseTwo             = false;
+        m_bInBerserk            = false;
     }
 
     void JustReachedHome()
     {
-        std::list<Creature*> m_lCobras;
-        GetCreatureListWithEntryInGrid(m_lCobras, m_creature, NPC_RAZZASHI_COBRA, DEFAULT_VISIBILITY_INSTANCE);
-
-        if (m_lCobras.empty())
-            debug_log("SD2: boss_venoxis, no Cobras with the entry %u were found", NPC_RAZZASHI_COBRA);
-        else
-        {
-            for(std::list<Creature*>::iterator iter = m_lCobras.begin(); iter != m_lCobras.end(); ++iter)
-            {
-                if ((*iter) && !(*iter)->isAlive())
-                    (*iter)->Respawn();
-            }
-        }
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_VENOXIS, FAIL);
     }
 
     void JustDied(Unit* pKiller)
@@ -117,134 +96,116 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
             m_pInstance->SetData(TYPE_VENOXIS, DONE);
     }
 
-    void DamageTaken(Unit* pDoneBy, uint32 &uiDamage)
-    {
-        if (!m_bPhaseTwo && (m_creature->GetHealth()+uiDamage)*100 / m_creature->GetMaxHealth() < 50)
-        {
-            DoScriptText(SAY_TRANSFORM, m_creature);
-
-            m_creature->InterruptNonMeleeSpells(false);
-            DoCastSpellIfCan(m_creature,SPELL_SNAKE_FORM);
-
-            m_creature->SetFloatValue(OBJECT_FIELD_SCALE_X, m_fDefaultSize*2);
-            const CreatureInfo *cinfo = m_creature->GetCreatureInfo();
-            m_creature->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, (cinfo->mindmg +((cinfo->mindmg/100) * 25)));
-            m_creature->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, (cinfo->maxdmg +((cinfo->maxdmg/100) * 25)));
-            m_creature->UpdateDamagePhysical(BASE_ATTACK);
-            DoResetThreat();
-            m_bPhaseTwo = true;
-        }
-
-        if (m_bPhaseTwo && !m_bInBerserk && (m_creature->GetHealth()+uiDamage)*100 / m_creature->GetMaxHealth() < 11)
-        {
-            m_creature->InterruptNonMeleeSpells(false);
-            DoCastSpellIfCan(m_creature, SPELL_BERSERK);
-            m_bInBerserk = true;
-        }
-    }
-
     void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
+        // Troll phase
         if (!m_bPhaseTwo)
         {
-            if (m_uiDispell_Timer < uiDiff)
+            if (m_uiDispellTimer < uiDiff)
             {
-                DoCastSpellIfCan(m_creature, SPELL_DISPELL);
-                m_uiDispell_Timer = urand(15000, 30000);
+                if (DoCastSpellIfCan(m_creature, SPELL_DISPELL) == CAST_OK)
+                    m_uiDispellTimer = urand(15000, 30000);
             }
             else
-                m_uiDispell_Timer -= uiDiff;
+                m_uiDispellTimer -= uiDiff;
 
-            if (m_uiRenew_Timer < uiDiff)
+            if (m_uiRenewTimer < uiDiff)
             {
-                DoCastSpellIfCan(m_creature, SPELL_RENEW);
-                m_uiRenew_Timer = urand(20000, 30000);
+                if (DoCastSpellIfCan(m_creature, SPELL_RENEW) == CAST_OK)
+                    m_uiRenewTimer = urand(20000, 30000);
             }
             else
-                m_uiRenew_Timer -= uiDiff;
+                m_uiRenewTimer -= uiDiff;
 
-            if (m_uiHolyWrath_Timer < uiDiff)
+            if (m_uiHolyWrathTimer < uiDiff)
             {
-                DoCastSpellIfCan(m_creature->getVictim(), SPELL_HOLY_WRATH);
-                m_uiHolyWrath_Timer = urand(15000, 25000);
+                if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_HOLY_WRATH) == CAST_OK)
+                    m_uiHolyWrathTimer = urand(15000, 25000);
             }
             else
-                m_uiHolyWrath_Timer -= uiDiff;
+                m_uiHolyWrathTimer -= uiDiff;
 
-            if (m_uiHolyNova_Timer < uiDiff)
+            if (m_uiHolySpellTimer < uiDiff)
             {
-                m_uiTargetsInRangeCount = 0;
-                for(uint8 i = 0; i < 10; ++i)
+                uint8 uiTargetsInRange = 0;
+
+                // See how many targets are in melee range
+                ThreatList const& tList = m_creature->getThreatManager().getThreatList();
+                for (ThreatList::const_iterator iter = tList.begin(); iter != tList.end(); ++iter)
                 {
-                    if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO,i))
-                        if (m_creature->CanReachWithMeleeAttack(pTarget))
-                            ++m_uiTargetsInRangeCount;
+                    if (Unit* pTempTarget = m_creature->GetMap()->GetUnit((*iter)->getUnitGuid()))
+                    {
+                        if (pTempTarget->GetTypeId() == TYPEID_PLAYER && m_creature->CanReachWithMeleeAttack(pTempTarget))
+                            ++uiTargetsInRange;
+                    }
                 }
 
-                if (m_uiTargetsInRangeCount > 1)
-                {
-                    DoCastSpellIfCan(m_creature->getVictim(),SPELL_HOLY_NOVA);
-                    m_uiHolyNova_Timer = 1000;
-                }
+                // If there are more targets in melee range cast holy nova, else holy fire
+                // not sure which is the minimum targets for holy nova
+                if (uiTargetsInRange > 3)
+                    DoCastSpellIfCan(m_creature, SPELL_HOLY_NOVA);
                 else
                 {
-                    m_uiHolyNova_Timer = 2000;
+                    if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                        DoCastSpellIfCan(pTarget, SPELL_HOLY_FIRE);
+                }
+
+                m_uiHolySpellTimer = urand(4000, 8000);
+            }
+            else
+                m_uiHolySpellTimer -= uiDiff;
+
+            // Transform at 50% hp
+            if (m_creature->GetHealthPercent() < 50.0f)
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_SNAKE_FORM, CAST_INTERRUPT_PREVIOUS) == CAST_OK)
+                {
+                    DoCastSpellIfCan(m_creature, SPELL_PARASITIC_SERPENT, CAST_TRIGGERED);
+                    DoScriptText(SAY_TRANSFORM, m_creature);
+                    DoResetThreat();
+                    m_bPhaseTwo = true;
+                }
+            }
+        }
+        // Snake phase
+        else
+        {
+            if (m_uiPoisonCloudTimer < uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_POISON_CLOUD) == CAST_OK)
+                    m_uiPoisonCloudTimer = 15000;
+            }
+            else
+                m_uiPoisonCloudTimer -= uiDiff;
+
+            if (m_uiVenomSpitTimer < uiDiff)
+            {
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                {
+                    if (DoCastSpellIfCan(pTarget, SPELL_VENOMSPIT) == CAST_OK)
+                        m_uiVenomSpitTimer = urand(15000, 20000);
                 }
             }
             else
-                m_uiHolyNova_Timer -= uiDiff;
+                m_uiVenomSpitTimer -= uiDiff;
+        }
 
-            if (m_uiHolyFire_Timer < uiDiff && m_uiTargetsInRangeCount < 3)
-            {
-                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
-                    DoCastSpellIfCan(pTarget, SPELL_HOLY_FIRE);
-
-                m_uiHolyFire_Timer = 8000;
-            }
-            else
-                m_uiHolyFire_Timer -= uiDiff;
+        if (m_uiTrashTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_TRASH) == CAST_OK)
+                m_uiTrashTimer = urand(10000, 20000);
         }
         else
+            m_uiTrashTimer -= uiDiff;
+
+        if (!m_bInBerserk && m_creature->GetHealthPercent() < 11.0f)
         {
-            if (m_uiPoisonCloud_Timer < uiDiff)
-            {
-                DoCastSpellIfCan(m_creature->getVictim(), SPELL_POISON_CLOUD);
-                m_uiPoisonCloud_Timer = 15000;
-            }
-            else
-                m_uiPoisonCloud_Timer -= uiDiff;
-
-            if (m_uiVenomSpit_Timer < uiDiff)
-            {
-                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
-                    DoCastSpellIfCan(pTarget, SPELL_VENOMSPIT);
-
-                m_uiVenomSpit_Timer = urand(15000, 20000);
-            }
-            else
-                m_uiVenomSpit_Timer -= uiDiff;
-
-            if (m_uiParasitic_Timer < uiDiff)
-            {
-                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
-                    DoCastSpellIfCan(pTarget, SPELL_PARASITIC);
-
-                m_uiParasitic_Timer = 10000;
-            }
-            else
-                m_uiParasitic_Timer -= uiDiff;
+            if (DoCastSpellIfCan(m_creature, SPELL_FRENZY) == CAST_OK)
+                m_bInBerserk = true;
         }
-
-        if (m_uiTrash_Timer < uiDiff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_TRASH);
-            m_uiTrash_Timer = urand(10000, 20000);
-        }
-        else
-            m_uiTrash_Timer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
