@@ -208,7 +208,7 @@ struct MANGOS_DLL_DECL boss_general_vezaxAI : public ScriptedAI
                 m_uiSaroniteBarrierTimer -= uiDiff;
         }
 
-        // summon saronite vapors and searing flamesbefore the hard mode
+        // summon saronite vapors before the hard mode
         if (m_pInstance && m_pInstance->GetData(TYPE_VEZAX_HARD) == NOT_STARTED)
         {
             if (m_uiSaroniteVaporTimer < uiDiff)
@@ -221,7 +221,11 @@ struct MANGOS_DLL_DECL boss_general_vezaxAI : public ScriptedAI
             }
             else
                 m_uiSaroniteVaporTimer -= uiDiff;
+        }
 
+        // Searing flames only while animus is not around
+        if (m_pInstance && m_pInstance->GetData(TYPE_VEZAX_HARD) != IN_PROGRESS)
+        {
             if (m_uiFlamesTimer < uiDiff)
             {
                 if (DoCastSpellIfCan(m_creature, SPELL_SEARING_FLAMES) == CAST_OK)
