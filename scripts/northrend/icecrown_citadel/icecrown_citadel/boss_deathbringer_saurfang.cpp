@@ -16,12 +16,13 @@
 
 /* ScriptData
 SDName: boss_deathbringer_saurfang
-SD%Complete: 0%
-SDComment:
+SD%Complete: 20%
+SDComment: Basic script
 SDCategory: Icecrown Citadel
 EndScriptData */
 
 #include "precompiled.h"
+#include "icecrown_citadel.h"
 
 enum
 {
@@ -69,6 +70,71 @@ enum
     SAY_OUTRO_HORDE_4           = -1631069,
 };
 
+struct MANGOS_DLL_DECL boss_deathbringer_saurfangAI : public ScriptedAI
+{
+    boss_deathbringer_saurfangAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (instance_icecrown_citadel*)pCreature->GetInstanceData();
+        Reset();
+    }
+
+    instance_icecrown_citadel* m_pInstance;
+
+    void Reset()
+    {
+    }
+
+    void Aggro(Unit* pWho)
+    {
+        DoScriptText(SAY_AGGRO, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_DEATHBRINGER_SAURFANG, IN_PROGRESS);
+    }
+
+    void KilledUnit(Unit* pVictim)
+    {
+        if (pVictim->GetTypeId() != TYPEID_PLAYER)
+            return;
+
+        if (urand(0, 1))
+            DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
+    }
+
+    void JustDied(Unit* pKiller)
+    {
+        DoScriptText(SAY_DEATH, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_DEATHBRINGER_SAURFANG, DONE);
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_DEATHBRINGER_SAURFANG, FAIL);
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_boss_deathbringer_saurfang(Creature* pCreature)
+{
+    return new boss_deathbringer_saurfangAI(pCreature);
+}
+
 void AddSC_boss_deathbringer_saurfang()
 {
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_deathbringer_saurfang";
+    pNewScript->GetAI = &GetAI_boss_deathbringer_saurfang;
+    pNewScript->RegisterSelf();
 }

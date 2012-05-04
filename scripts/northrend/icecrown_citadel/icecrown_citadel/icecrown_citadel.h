@@ -179,6 +179,10 @@ class MANGOS_DLL_DECL instance_icecrown_citadel : public ScriptedInstance
         const char* Save() { return m_strInstData.c_str(); }
         void Load(const char* strIn);
 
+        // Difficulty wrappers
+        bool IsHeroicDifficulty() { return instance->GetDifficulty() > RAID_DIFFICULTY_25MAN_NORMAL; }
+        bool Is25ManDifficulty() { return instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL || instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC; }
+
         // Open Putricide door in a few seconds
         void DoPreparePutricideDoor() { m_uiPutricideValveTimer = 15000; }
 

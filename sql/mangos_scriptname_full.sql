@@ -699,6 +699,9 @@ UPDATE creature_template SET ScriptName='npc_silvermoon_harry' WHERE entry=24539
 
 /* ICECROWN CITADEL */
 UPDATE instance_template SET ScriptName='instance_icecrown_citadel' WHERE map=631;
+UPDATE creature_template SET ScriptName='boss_lord_marrowgar' WHERE entry=36612;
+UPDATE creature_template SET ScriptName='boss_lady_deathwhisper' WHERE entry=36855;
+UPDATE creature_template SET ScriptName='boss_deathbringer_saurfang' WHERE entry=37813;
 DELETE FROM scripted_event_id WHERE id IN (23426,23438);
 INSERT INTO scripted_event_id VALUES
 (23426,'event_gameobject_citadel_valve'),

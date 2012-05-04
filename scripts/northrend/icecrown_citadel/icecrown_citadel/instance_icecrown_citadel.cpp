@@ -16,7 +16,7 @@
 
 /* ScriptData
 SDName: instance_icecrown_citadel
-SD%Complete: 20
+SD%Complete: 20%
 SDComment: Just basic stuff
 SDCategory: Icecrown Citadel
 EndScriptData */
