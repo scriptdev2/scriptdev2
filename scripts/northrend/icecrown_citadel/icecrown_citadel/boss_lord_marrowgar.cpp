@@ -26,7 +26,6 @@ EndScriptData */
 
 enum
 {
-    SAY_INTRO                   = -1631001,
     SAY_AGGRO                   = -1631002,
     SAY_BONE_STORM              = -1631003,
     SAY_BONE_SPIKE_1            = -1631004,
@@ -71,13 +70,11 @@ struct MANGOS_DLL_DECL boss_lord_marrowgarAI : public ScriptedAI
         m_pInstance = (instance_icecrown_citadel*)pCreature->GetInstanceData();
         // on heroic, there is 1 more Bone Storm charge
         m_uiMaxCharges = m_pInstance && m_pInstance->IsHeroicDifficulty() ? MAX_CHARGES_HEROIC : MAX_CHARGES_NORMAL;
-        m_bSaidIntro = false;
         Reset();
     }
 
     instance_icecrown_citadel* m_pInstance;
 
-    bool m_bSaidIntro;
     uint8 m_uiPhase;
     uint8 m_uiChargesCount;
     uint8 m_uiMaxCharges;
@@ -110,17 +107,6 @@ struct MANGOS_DLL_DECL boss_lord_marrowgarAI : public ScriptedAI
 
         if (m_pInstance)
             m_pInstance->SetData(TYPE_MARROWGAR, IN_PROGRESS);
-    }
-
-    void MoveInLineOfSight(Unit* pWho)
-    {
-        if (!m_bSaidIntro && pWho->GetTypeId() == TYPEID_PLAYER && !((Player*)pWho)->isGameMaster())
-        {
-            DoScriptText(SAY_INTRO, m_creature);
-            m_bSaidIntro = true;
-        }
-
-        ScriptedAI::MoveInLineOfSight(pWho);
     }
 
     void KilledUnit(Unit* pVictim)
@@ -280,7 +266,7 @@ struct MANGOS_DLL_DECL boss_lord_marrowgarAI : public ScriptedAI
         {
             if (m_uiBoneSpikeTimer < uiDiff)
             {
-                if (DoCastSpellIfCan(m_creature, m_uiPhase == PHASE_NORMAL ? SPELL_BONE_SPIKE_STORM : SPELL_BONE_SPIKE_STORM) == CAST_OK)
+                if (DoCastSpellIfCan(m_creature, m_uiPhase == PHASE_NORMAL ? SPELL_BONE_SPIKE : SPELL_BONE_SPIKE_STORM) == CAST_OK)
                 {
                     switch (urand(0, 2))
                     {

@@ -39,6 +39,7 @@ enum
 
     // boss-related and other NPCs
     NPC_DEATHWHISPER_SPAWN_STALKER  = 37947,
+    NPC_DEATHWHISPER_CONTROLLER     = 37948,
     NPC_OVERLORD_SAURFANG           = 37187,
     NPC_KORKRON_REAVER              = 37920,
     NPC_MURADIN_BRONZEBEARD         = 37200,        // Saurfang's encounter and at the instance entrance
@@ -134,11 +135,37 @@ enum
     GO_DREAMWALKER_CACHE_10_H       = 202338,
     GO_DREAMWALKER_CACHE_25_H       = 202340,
 
+    // Area triggers
+    AREATRIGGER_MARROWGAR_INTRO     = 5732,
+
+    // Yells
+    SAY_MARROWGAR_INTRO             = -1631001,
+
     // Achievement criterias
     ACHIEV_CRIT_BONED_10N                  = 12775,     // Lord Marrowgar, achievs 4534, 4610
     ACHIEV_CRIT_BONED_25N                  = 12962,
     ACHIEV_CRIT_BONED_10H                  = 13393,
     ACHIEV_CRIT_BONED_25H                  = 13394,
+
+    ACHIEV_CRIT_HOUSE_10N                  = 12776,     // Lady Deathwhisper, achievs 4535, 4611
+    ACHIEV_CRIT_HOUSE_25N                  = 12997,
+    ACHIEV_CRIT_HOUSE_10H                  = 12995,
+    ACHIEV_CRIT_HOUSE_25H                  = 12998,
+
+    ACHIEV_CRIT_IM_ON_A_BOAT_10N           = 12777,     // Gunship Battle, achievs 4536, 4612
+    ACHIEV_CRIT_IM_ON_A_BOAT_25N           = 13080,
+    ACHIEV_CRIT_IM_ON_A_BOAT_10H           = 13079,
+    ACHIEV_CRIT_IM_ON_A_BOAT_25H           = 13081,
+
+    ACHIEV_CRIT_MADE_A_MESS_10N            = 12778,     // Deathbringer Saurfang, achievs 4537, 4613
+    ACHIEV_CRIT_MADE_A_MESS_25N            = 13036,
+    ACHIEV_CRIT_MADE_A_MESS_10H            = 13035,
+    ACHIEV_CRIT_MADE_A_MESS_25H            = 13037,
+
+    ACHIEV_CRIT_FLU_SHOT_SHORTAGE_10N      = 12977,     // Festergut, achievs 4615, 4577
+    ACHIEV_CRIT_FLU_SHOT_SHORTAGE_25N      = 12982,
+    ACHIEV_CRIT_FLU_SHOT_SHORTAGE_10H      = 12986,
+    ACHIEV_CRIT_FLU_SHOT_SHORTAGE_25H      = 12967,
 
     ACHIEV_CRIT_DANCES_WITH_OOZES_10N      = 12984,     // Rotface, achievs 4538, 4614
     ACHIEV_CRIT_DANCES_WITH_OOZES_25N      = 12966,
@@ -159,6 +186,21 @@ enum
     ACHIEV_CRIT_ONCE_BITTEN_TWICE_SHY_25N  = 13012,
     ACHIEV_CRIT_ONCE_BITTEN_TWICE_SHY_10V  = 13011,
     ACHIEV_CRIT_ONCE_BITTEN_TWICE_SHY_25V  = 13013,
+
+    ACHIEV_CRIT_PORTAL_JOCKEY_10N          = 12978,    // Valithria, achievs 4579, 4619
+    ACHIEV_CRIT_PORTAL_JOCKEY_25N          = 12971,
+    ACHIEV_CRIT_PORTAL_JOCKEY_10H          = 12979,
+    ACHIEV_CRIT_PORTAL_JOCKEY_25H          = 12980,
+
+    ACHIEV_CRIT_ALL_YOU_CAN_EAT_10N        = 12822,    // Sindragosa, achievs 4580, 4620
+    ACHIEV_CRIT_ALL_YOU_CAN_EAT_25N        = 12972,
+    ACHIEV_CRIT_ALL_YOU_CAN_EAT_10V        = 12996,
+    ACHIEV_CRIT_ALL_YOU_CAN_EAT_25V        = 12989,
+
+    ACHIEV_CRIT_WAITING_A_LONG_TIME_10N    = 13246,    // Lich King, achievs 4601, 4621
+    ACHIEV_CRIT_WAITING_A_LONG_TIME_25N    = 13244,
+    ACHIEV_CRIT_WAITING_A_LONG_TIME_10H    = 13247,
+    ACHIEV_CRIT_WAITING_A_LONG_TIME_25H    = 13245,
 };
 
 class MANGOS_DLL_DECL instance_icecrown_citadel : public ScriptedInstance
@@ -179,9 +221,13 @@ class MANGOS_DLL_DECL instance_icecrown_citadel : public ScriptedInstance
         const char* Save() { return m_strInstData.c_str(); }
         void Load(const char* strIn);
 
+        void DoHandleCitadelAreaTrigger(uint32 uiTriggerId);
+
         // Difficulty wrappers
         bool IsHeroicDifficulty() { return instance->GetDifficulty() > RAID_DIFFICULTY_25MAN_NORMAL; }
         bool Is25ManDifficulty() { return instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL || instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC; }
+
+        void GetDeathwhisperStalkersList(GUIDList &lList) { lList = m_lDeathwhisperStalkersGuids; }
 
         // Open Putricide door in a few seconds
         void DoPreparePutricideDoor() { m_uiPutricideValveTimer = 15000; }
@@ -196,6 +242,10 @@ class MANGOS_DLL_DECL instance_icecrown_citadel : public ScriptedInstance
 
         uint32 m_uiTeam;                                    // Team of first entered player, used on the Gunship event
         uint32 m_uiPutricideValveTimer;
+
+        bool m_bHasMarrowgarIntroYelled;
+
+        GUIDList m_lDeathwhisperStalkersGuids;
 };
 
 #endif

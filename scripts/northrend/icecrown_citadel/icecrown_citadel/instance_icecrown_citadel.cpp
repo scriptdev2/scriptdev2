@@ -26,7 +26,8 @@ EndScriptData */
 
 instance_icecrown_citadel::instance_icecrown_citadel(Map *pMap) : ScriptedInstance(pMap),
     m_uiTeam(0),
-    m_uiPutricideValveTimer(0)
+    m_uiPutricideValveTimer(0),
+    m_bHasMarrowgarIntroYelled(false)
 {
     Initialize();
 }
@@ -45,6 +46,18 @@ bool instance_icecrown_citadel::IsEncounterInProgress() const
     }
 
     return false;
+}
+
+void instance_icecrown_citadel::DoHandleCitadelAreaTrigger(uint32 uiTriggerId)
+{
+    if (uiTriggerId == AREATRIGGER_MARROWGAR_INTRO && !m_bHasMarrowgarIntroYelled)
+    {
+        if (Creature* pMarrowgar = GetSingleCreatureFromStorage(NPC_LORD_MARROWGAR))
+        {
+            DoScriptText(SAY_MARROWGAR_INTRO, pMarrowgar);
+            m_bHasMarrowgarIntroYelled = true;
+        }
+    }
 }
 
 void instance_icecrown_citadel::OnPlayerEnter(Player* pPlayer)
@@ -80,6 +93,9 @@ void instance_icecrown_citadel::OnCreatureCreate(Creature *pCreature)
         case NPC_BLOOD_ORB_CONTROL:
              m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
              break;
+        case NPC_DEATHWHISPER_SPAWN_STALKER:
+            m_lDeathwhisperStalkersGuids.push_back(pCreature->GetObjectGuid());
+            return;
     }
 }
 
@@ -372,6 +388,21 @@ InstanceData* GetInstanceData_instance_icecrown_citadel(Map* pMap)
     return new instance_icecrown_citadel(pMap);
 }
 
+bool AreaTrigger_at_icecrown_citadel(Player* pPlayer, AreaTriggerEntry const* pAt)
+{
+    if (pAt->id == AREATRIGGER_MARROWGAR_INTRO)
+    {
+        if (pPlayer->isGameMaster() || pPlayer->isDead())
+            return false;
+
+        if (instance_icecrown_citadel* pInstance = (instance_icecrown_citadel*)pPlayer->GetInstanceData())
+            pInstance->DoHandleCitadelAreaTrigger(pAt->id);
+    }
+
+    return false;
+}
+
+
 bool ProcessEventId_event_gameobject_citadel_valve(uint32 uiEventId, Object* pSource, Object* pTarget, bool bIsStart)
 {
     if (bIsStart && pSource->GetTypeId() == TYPEID_PLAYER)
@@ -395,6 +426,11 @@ void AddSC_instance_icecrown_citadel()
     pNewScript = new Script;
     pNewScript->Name = "instance_icecrown_citadel";
     pNewScript->GetInstanceData = &GetInstanceData_instance_icecrown_citadel;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "at_icecrown_citadel";
+    pNewScript->pAreaTrigger = &AreaTrigger_at_icecrown_citadel;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;

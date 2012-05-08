@@ -69,6 +69,9 @@ INSERT INTO scripted_areatrigger VALUES
 (1738,'at_scent_larkorwi'),
 (1739,'at_scent_larkorwi'),
 (1740,'at_scent_larkorwi');
+DELETE FROM scripted_areatrigger WHERE entry=5732;
+INSERT INTO scripted_areatrigger VALUES
+(5732,'at_icecrown_citadel');
 
 
 /* BATTLEGROUNDS */
