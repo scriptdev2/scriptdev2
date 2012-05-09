@@ -137,9 +137,7 @@ enum
 
     // Area triggers
     AREATRIGGER_MARROWGAR_INTRO     = 5732,
-
-    // Yells
-    SAY_MARROWGAR_INTRO             = -1631001,
+    AREATRIGGER_DEATHWHISPER_INTRO  = 5709,
 
     // Achievement criterias
     ACHIEV_CRIT_BONED_10N                  = 12775,     // Lord Marrowgar, achievs 4534, 4610
@@ -203,7 +201,7 @@ enum
     ACHIEV_CRIT_WAITING_A_LONG_TIME_25H    = 13245,
 };
 
-class MANGOS_DLL_DECL instance_icecrown_citadel : public ScriptedInstance
+class MANGOS_DLL_DECL instance_icecrown_citadel : public ScriptedInstance, private DialogueHelper
 {
     public:
         instance_icecrown_citadel(Map *pMap);
@@ -244,6 +242,7 @@ class MANGOS_DLL_DECL instance_icecrown_citadel : public ScriptedInstance
         uint32 m_uiPutricideValveTimer;
 
         bool m_bHasMarrowgarIntroYelled;
+        bool m_bHasDeathwhisperIntroYelled;
 
         GUIDList m_lDeathwhisperStalkersGuids;
 };

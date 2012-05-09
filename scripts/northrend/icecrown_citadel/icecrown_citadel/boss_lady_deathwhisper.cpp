@@ -26,13 +26,6 @@ EndScriptData */
 
 enum
 {
-    SAY_SPEECH_1                = -1631011,
-    SAY_SPEECH_2                = -1631012,
-    SAY_SPEECH_3                = -1631013,
-    SAY_SPEECH_4                = -1631014,
-    SAY_SPEECH_5                = -1631015,
-    SAY_SPEECH_6                = -1631016,
-    SAY_SPEECH_7                = -1631017,
     SAY_AGGRO                   = -1631018,
     SAY_PHASE_TWO               = -1631019,
     SAY_DARK_EMPOWERMENT        = -1631020,

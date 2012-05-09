@@ -24,16 +24,45 @@ EndScriptData */
 #include "precompiled.h"
 #include "icecrown_citadel.h"
 
-instance_icecrown_citadel::instance_icecrown_citadel(Map *pMap) : ScriptedInstance(pMap),
+enum
+{
+    // Marrowgar
+    SAY_MARROWGAR_INTRO             = -1631001,
+
+    // Deathwhisper
+    SAY_DEATHWHISPER_SPEECH_1       = -1631011,
+    SAY_DEATHWHISPER_SPEECH_2       = -1631012,
+    SAY_DEATHWHISPER_SPEECH_3       = -1631013,
+    SAY_DEATHWHISPER_SPEECH_4       = -1631014,
+    SAY_DEATHWHISPER_SPEECH_5       = -1631015,
+    SAY_DEATHWHISPER_SPEECH_6       = -1631016,
+    SAY_DEATHWHISPER_SPEECH_7       = -1631017,
+};
+
+static const DialogueEntry aCitadelDialogue[] =
+{
+    {SAY_DEATHWHISPER_SPEECH_1,  NPC_LADY_DEATHWHISPER,  12000},
+    {SAY_DEATHWHISPER_SPEECH_2,  NPC_LADY_DEATHWHISPER,  11000},
+    {SAY_DEATHWHISPER_SPEECH_3,  NPC_LADY_DEATHWHISPER,  10000},
+    {SAY_DEATHWHISPER_SPEECH_4,  NPC_LADY_DEATHWHISPER,  9000},
+    {SAY_DEATHWHISPER_SPEECH_5,  NPC_LADY_DEATHWHISPER,  10000},
+    {SAY_DEATHWHISPER_SPEECH_6,  NPC_LADY_DEATHWHISPER,  10000},
+    {SAY_DEATHWHISPER_SPEECH_7,  NPC_LADY_DEATHWHISPER,  0},
+    {0, 0, 0},
+};
+
+instance_icecrown_citadel::instance_icecrown_citadel(Map *pMap) : ScriptedInstance(pMap), DialogueHelper(aCitadelDialogue),
     m_uiTeam(0),
     m_uiPutricideValveTimer(0),
-    m_bHasMarrowgarIntroYelled(false)
+    m_bHasMarrowgarIntroYelled(false),
+    m_bHasDeathwhisperIntroYelled(false)
 {
     Initialize();
 }
 
 void instance_icecrown_citadel::Initialize()
 {
+    InitializeDialogueHelper(this);
     memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
 }
 
@@ -57,6 +86,11 @@ void instance_icecrown_citadel::DoHandleCitadelAreaTrigger(uint32 uiTriggerId)
             DoScriptText(SAY_MARROWGAR_INTRO, pMarrowgar);
             m_bHasMarrowgarIntroYelled = true;
         }
+    }
+    else if (uiTriggerId == AREATRIGGER_DEATHWHISPER_INTRO && !m_bHasDeathwhisperIntroYelled)
+    {
+        StartNextDialogueText(SAY_DEATHWHISPER_SPEECH_1);
+        m_bHasDeathwhisperIntroYelled = true;
     }
 }
 
@@ -365,6 +399,8 @@ void instance_icecrown_citadel::Load(const char *strIn)
 
 void instance_icecrown_citadel::Update(uint32 uiDiff)
 {
+    DialogueUpdate(uiDiff);
+
     if (m_uiPutricideValveTimer)
     {
         if (m_uiPutricideValveTimer <= uiDiff)
@@ -390,7 +426,7 @@ InstanceData* GetInstanceData_instance_icecrown_citadel(Map* pMap)
 
 bool AreaTrigger_at_icecrown_citadel(Player* pPlayer, AreaTriggerEntry const* pAt)
 {
-    if (pAt->id == AREATRIGGER_MARROWGAR_INTRO)
+    if (pAt->id == AREATRIGGER_MARROWGAR_INTRO || pAt->id == AREATRIGGER_DEATHWHISPER_INTRO)
     {
         if (pPlayer->isGameMaster() || pPlayer->isDead())
             return false;
