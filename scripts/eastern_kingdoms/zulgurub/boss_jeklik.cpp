@@ -304,6 +304,10 @@ struct MANGOS_DLL_DECL npc_gurubashi_bat_riderAI : public ScriptedAI
 
     void Aggro(Unit* pWho)
     {
+        // Don't attack if is summoned by Jeklik - the npc gets aggro because of the Liquid Fire
+        if (m_bIsSummon)
+            return;
+
         DoCastSpellIfCan(m_creature, SPELL_DEMORALIZING_SHOUT);
         // For normal mobs flag needs to be removed
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);

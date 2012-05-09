@@ -26,7 +26,9 @@ enum
     NPC_HAKKAR              = 14834,
     NPC_PANTHER_TRIGGER     = 15091,
     NPC_BLOODLORD_MANDOKIR  = 11382,
+    NPC_MARLI               = 14510,
 
+    GO_SPIDER_EGG           = 179985,
     GO_GONG_OF_BETHEKK      = 180526,
     GO_FORCEFIELD           = 180497,
 
@@ -71,6 +73,7 @@ class MANGOS_DLL_DECL instance_zulgurub : public ScriptedInstance
 
         GUIDList m_lRightPantherTriggerGUIDList;
         GUIDList m_lLeftPantherTriggerGUIDList;
+        GUIDList m_lSpiderEggGUIDList;
 
         bool m_bHasIntroYelled;
         bool m_bHasAltarYelled;

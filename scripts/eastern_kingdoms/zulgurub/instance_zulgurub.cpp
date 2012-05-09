@@ -60,6 +60,7 @@ void instance_zulgurub::OnCreatureCreate(Creature* pCreature)
         case NPC_JINDO:
         case NPC_HAKKAR:
         case NPC_BLOODLORD_MANDOKIR:
+        case NPC_MARLI:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
         case NPC_PANTHER_TRIGGER:
@@ -78,6 +79,9 @@ void instance_zulgurub::OnObjectCreate(GameObject* pGo)
         case GO_GONG_OF_BETHEKK:
         case GO_FORCEFIELD:
             break;
+        case GO_SPIDER_EGG:
+            m_lSpiderEggGUIDList.push_back(pGo->GetObjectGuid());
+            return;
     }
 
     m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
@@ -89,18 +93,42 @@ void instance_zulgurub::SetData(uint32 uiType, uint32 uiData)
     {
         case TYPE_JEKLIK:
         case TYPE_VENOXIS:
-        case TYPE_MARLI:
         case TYPE_THEKAL:
             m_auiEncounter[uiType] = uiData;
             if (uiData == DONE)
                 DoLowerHakkarHitPoints();
+            break;
+        case TYPE_MARLI:
+            m_auiEncounter[uiType] = uiData;
+            if (uiData == DONE)
+                DoLowerHakkarHitPoints();
+            if (uiData == FAIL)
+            {
+                for (GUIDList::const_iterator itr = m_lSpiderEggGUIDList.begin(); itr != m_lSpiderEggGUIDList.end(); ++itr)
+                {
+                    if (GameObject* pEgg = instance->GetGameObject(*itr))
+                    {
+                        // Note: this type of Gameobject needs to be respawned manually
+                        pEgg->SetRespawnTime(2*DAY);
+                        pEgg->Respawn();
+                    }
+                }
+            }
             break;
         case TYPE_ARLOKK:
             m_auiEncounter[uiType] = uiData;
             DoUseDoorOrButton(GO_FORCEFIELD);
             if (uiData == DONE)
                 DoLowerHakkarHitPoints();
-            // ToDo: Reset the Gong on FAIL
+            if (uiData == FAIL)
+            {
+                // Note: this gameobject should change flags - currently it despawns which isn't correct
+                if (GameObject* pGong = GetSingleGameObjectFromStorage(GO_GONG_OF_BETHEKK))
+                {
+                    pGong->SetRespawnTime(2*DAY);
+                    pGong->Respawn();
+                }
+            }
             break;
         case TYPE_OHGAN:
             // Note: SPECIAL instance data is set via ACID!

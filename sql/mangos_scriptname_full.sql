@@ -1386,7 +1386,6 @@ UPDATE creature_template SET ScriptName='boss_wushoolay' WHERE entry=15085;
 UPDATE creature_template SET ScriptName='mob_zealot_lorkhan' WHERE entry=11347;
 UPDATE creature_template SET ScriptName='mob_zealot_zath' WHERE entry=11348;
 UPDATE creature_template SET ScriptName='mob_healing_ward' WHERE entry=14987;
-UPDATE creature_template SET ScriptName='mob_spawn_of_marli' WHERE entry=15041;
 UPDATE creature_template SET ScriptName='npc_gurubashi_bat_rider' WHERE entry=14750;
 UPDATE creature_template SET ScriptName='mob_shade_of_jindo' WHERE entry=14986;
 
