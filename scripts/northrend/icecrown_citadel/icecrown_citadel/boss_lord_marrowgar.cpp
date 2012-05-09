@@ -40,7 +40,7 @@ enum
     SPELL_BERSERK               = 47008,
     SPELL_BONE_SLICE            = 69055,
     SPELL_BONE_STORM            = 69076,
-    SPELL_COLDFLAME             = 69138,            // Note: The spell used should be 69140, but we won't use it because of some targeting issues
+    SPELL_COLDFLAME             = 69140,
     SPELL_COLDFLAME_STORM       = 72705,
     SPELL_BONE_SPIKE            = 69057,
     SPELL_BONE_SPIKE_STORM      = 73142,
@@ -170,13 +170,8 @@ struct MANGOS_DLL_DECL boss_lord_marrowgarAI : public ScriptedAI
                 // Coldflame
                 if (m_uiColdflameTimer < uiDiff)
                 {
-                    // NOTE: This spell is not cast right: Normally it should be triggered by 69140 in core
-                    // Because of the poor target selection in core we'll implement the targeting here
-                    if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_COLDFLAME, SELECT_FLAG_IN_MELEE_RANGE))
-                    {
-                        if (DoCastSpellIfCan(pTarget, SPELL_COLDFLAME) == CAST_OK)
-                            m_uiColdflameTimer = 5000;
-                    }
+                    if (DoCastSpellIfCan(m_creature, SPELL_COLDFLAME) == CAST_OK)
+                        m_uiColdflameTimer = 5000;
                 }
                 else
                     m_uiColdflameTimer -= uiDiff;
