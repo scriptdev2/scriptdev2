@@ -420,7 +420,6 @@ UPDATE creature_template SET ScriptName='boss_lieutenant_drake' WHERE entry=1784
 UPDATE creature_template SET ScriptName='boss_epoch_hunter' WHERE entry=18096;
 UPDATE creature_template SET ScriptName='boss_captain_skarloc' WHERE entry=17862;
 UPDATE gameobject_template SET ScriptName='go_barrel_old_hillsbrad' WHERE entry=182589;
-UPDATE creature_template SET ScriptName='npc_brazen' WHERE entry=18725;
 UPDATE creature_template SET ScriptName='npc_erozion' WHERE entry=18723;
 UPDATE creature_template SET ScriptName='npc_taretha' WHERE entry=18887;
 UPDATE creature_template SET ScriptName='npc_thrall_old_hillsbrad' WHERE entry=17876;
@@ -532,10 +531,7 @@ UPDATE creature_template SET ScriptName='npc_melizza_brimbuzzle' WHERE entry=122
 UPDATE instance_template SET ScriptName='instance_dire_maul' WHERE map=429;
 
 /* DRAGONBLIGHT */
-UPDATE creature_template SET ScriptName='npc_afrasastrasz' WHERE entry=27575;
 UPDATE creature_template SET ScriptName='npc_destructive_ward' WHERE entry=27430;
-UPDATE creature_template SET ScriptName='npc_tariolstrasz' WHERE entry=26443;
-UPDATE creature_template SET ScriptName='npc_torastrasza' WHERE entry=26949;
 
 /* DRAK'THARON KEEP */
 UPDATE creature_template SET ScriptName='boss_novos' WHERE entry=26631;
@@ -867,7 +863,6 @@ INSERT INTO scripted_areatrigger VALUES (4497,'at_commander_dawnforge');
 UPDATE gameobject_template SET ScriptName='go_manaforge_control_console' WHERE entry IN (183770,183956,184311,184312);
 UPDATE creature_template SET ScriptName='npc_manaforge_control_console' WHERE entry IN (20209,20417,20418,20440);
 UPDATE creature_template SET ScriptName='npc_commander_dawnforge' WHERE entry=19831;
-UPDATE creature_template SET ScriptName='npc_protectorate_nether_drake' WHERE entry=20903;
 UPDATE creature_template SET ScriptName='npc_bessy' WHERE entry=20415;
 UPDATE creature_template SET ScriptName='npc_maxx_a_million' WHERE entry=19589;
 UPDATE creature_template SET ScriptName='npc_zeppit' WHERE entry=22484;
@@ -987,7 +982,6 @@ UPDATE creature_template SET ScriptName='npc_drake_dealer_hurlunk' WHERE entry=2
 UPDATE creature_template SET ScriptName='npc_dragonmaw_peon' WHERE entry=22252;
 UPDATE creature_template SET ScriptName='mob_mature_netherwing_drake' WHERE entry=21648;
 UPDATE creature_template SET ScriptName='mob_enslaved_netherwing_drake' WHERE entry=21722;
-UPDATE creature_template SET ScriptName='npc_karynaku' WHERE entry=22112;
 UPDATE creature_template SET ScriptName='npc_wilda' WHERE entry=21027;
 UPDATE creature_template SET ScriptName='mob_torloth' WHERE entry=22076;
 UPDATE creature_template SET ScriptName='npc_totem_of_spirits' WHERE entry=21071;

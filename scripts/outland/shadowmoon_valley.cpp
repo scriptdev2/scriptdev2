@@ -26,7 +26,6 @@ mob_mature_netherwing_drake
 mob_enslaved_netherwing_drake
 npc_dragonmaw_peon
 npc_drake_dealer_hurlunk
-npc_karynaku
 npc_wilda
 mob_torloth
 npc_lord_illidan_stormrage
@@ -470,24 +469,6 @@ bool GossipSelect_npc_drake_dealer_hurlunk(Player* pPlayer, Creature* pCreature,
 }
 
 /*####
-# npc_karynaku
-####*/
-
-enum
-{
-    QUEST_ALLY_OF_NETHER    = 10870,
-    TAXI_PATH_ID            = 649
-};
-
-bool QuestAccept_npc_karynaku(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
-{
-    if (pQuest->GetQuestId() == QUEST_ALLY_OF_NETHER)
-        pPlayer->ActivateTaxiPathTo(TAXI_PATH_ID);
-
-    return true;
-}
-
-/*######
 # npc_wilda
 ######*/
 
@@ -1701,11 +1682,6 @@ void AddSC_shadowmoon_valley()
     pNewScript->Name = "npc_drake_dealer_hurlunk";
     pNewScript->pGossipHello =  &GossipHello_npc_drake_dealer_hurlunk;
     pNewScript->pGossipSelect = &GossipSelect_npc_drake_dealer_hurlunk;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_karynaku";
-    pNewScript->pQuestAcceptNPC = &QuestAccept_npc_karynaku;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;

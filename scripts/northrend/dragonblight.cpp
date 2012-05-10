@@ -17,60 +17,17 @@
 /* ScriptData
 SDName: Dragonblight
 SD%Complete: 100
-SDComment: Quest support: 12166, 12261. Taxi paths Wyrmrest temple.
+SDComment: Quest support: 12166, 12261.
 SDCategory: Dragonblight
 EndScriptData */
 
 /* ContentData
-npc_afrasastrasz
 npc_destructive_ward
-npc_tariolstrasz
-npc_torastrasza
 EndContentData */
 
 #include "precompiled.h"
 
 /*######
-## npc_afrasastrasz
-######*/
-
-enum
-{
-    TAXI_PATH_ID_MIDDLE_DOWN            = 882,
-    TAXI_PATH_ID_MIDDLE_TOP             = 881
-};
-
-#define GOSSIP_ITEM_TAXI_MIDDLE_DOWN    "I would like to take a flight to the ground, Lord Of Afrasastrasz."
-#define GOSSIP_ITEM_TAXI_MIDDLE_TOP     "My Lord, I must go to the upper floor of the temple."
-
-bool GossipHello_npc_afrasastrasz(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
-
-    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TAXI_MIDDLE_DOWN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TAXI_MIDDLE_TOP, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-    return true;
-}
-
-bool GossipSelect_npc_afrasastrasz(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
-    {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        pPlayer->ActivateTaxiPathTo(TAXI_PATH_ID_MIDDLE_DOWN);
-    }
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+2)
-    {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        pPlayer->ActivateTaxiPathTo(TAXI_PATH_ID_MIDDLE_TOP);
-    }
-    return true;
-}
-
-/*#####
 # npc_destructive_ward
 #####*/
 
@@ -207,112 +164,12 @@ CreatureAI* GetAI_npc_destructive_ward(Creature* pCreature)
     return new npc_destructive_wardAI(pCreature);
 }
 
-/*######
-## npc_tariolstrasz
-######*/
-
-enum
-{
-    QUEST_INFORM_QUEEN_A                = 12123,            //need to check if quests are required before gossip available
-    QUEST_INFORM_QUEEN_H                = 12124,
-    TAXI_PATH_ID_BOTTOM_TOP             = 878,
-    TAXI_PATH_ID_BOTTOM_MIDDLE          = 883
-};
-
-#define GOSSIP_ITEM_TAXI_BOTTOM_TOP     "My Lord, I must go to the upper floor of the temple."
-#define GOSSIP_ITEM_TAXI_BOTTOM_MIDDLE  "Can you spare a drake to travel to Lord Of Afrasastrasz, in the middle of the temple?"
-
-bool GossipHello_npc_tariolstrasz(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
-
-    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TAXI_BOTTOM_TOP, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TAXI_BOTTOM_MIDDLE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-    return true;
-}
-
-bool GossipSelect_npc_tariolstrasz(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
-    {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        pPlayer->ActivateTaxiPathTo(TAXI_PATH_ID_BOTTOM_TOP);
-    }
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+2)
-    {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        pPlayer->ActivateTaxiPathTo(TAXI_PATH_ID_BOTTOM_MIDDLE);
-    }
-    return true;
-}
-
-/*######
-## npc_torastrasza
-######*/
-
-enum
-{
-    TAXI_PATH_ID_TOP_MIDDLE             = 880,
-    TAXI_PATH_ID_TOP_BOTTOM             = 879
-};
-
-#define GOSSIP_ITEM_TAXI_TOP_MIDDLE     "I would like to see Lord Of Afrasastrasz, in the middle of the temple."
-#define GOSSIP_ITEM_TAXI_TOP_BOTTOM     "Yes, Please. I would like to return to the ground floor of the temple."
-
-bool GossipHello_npc_torastrasza(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
-
-    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TAXI_TOP_MIDDLE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TAXI_TOP_BOTTOM, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-    return true;
-}
-
-bool GossipSelect_npc_torastrasza(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
-    {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        pPlayer->ActivateTaxiPathTo(TAXI_PATH_ID_TOP_MIDDLE);
-    }
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+2)
-    {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        pPlayer->ActivateTaxiPathTo(TAXI_PATH_ID_TOP_BOTTOM);
-    }
-    return true;
-}
-
 void AddSC_dragonblight()
 {
     Script* pNewScript;
 
     pNewScript = new Script;
-    pNewScript->Name = "npc_afrasastrasz";
-    pNewScript->pGossipHello = &GossipHello_npc_afrasastrasz;
-    pNewScript->pGossipSelect = &GossipSelect_npc_afrasastrasz;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
     pNewScript->Name = "npc_destructive_ward";
     pNewScript->GetAI = &GetAI_npc_destructive_ward;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_tariolstrasz";
-    pNewScript->pGossipHello = &GossipHello_npc_tariolstrasz;
-    pNewScript->pGossipSelect = &GossipSelect_npc_tariolstrasz;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_torastrasza";
-    pNewScript->pGossipHello = &GossipHello_npc_torastrasza;
-    pNewScript->pGossipSelect = &GossipSelect_npc_torastrasza;
     pNewScript->RegisterSelf();
 }
