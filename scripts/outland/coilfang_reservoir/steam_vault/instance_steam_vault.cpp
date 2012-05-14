@@ -35,15 +35,14 @@ bool GOUse_go_main_chambers_access_panel(Player* pPlayer, GameObject* pGo)
     ScriptedInstance* pInstance = (ScriptedInstance*)pGo->GetInstanceData();
 
     if (!pInstance)
-        return false;
+        return true;
 
-    if (pGo->GetEntry() == GO_ACCESS_PANEL_HYDRO && pInstance->GetData(TYPE_HYDROMANCER_THESPIA) == DONE)
+    if (pGo->GetEntry() == GO_ACCESS_PANEL_HYDRO)
         pInstance->SetData(TYPE_HYDROMANCER_THESPIA, SPECIAL);
-
-    if (pGo->GetEntry() == GO_ACCESS_PANEL_MEK && pInstance->GetData(TYPE_MEKGINEER_STEAMRIGGER) == DONE)
+    else if (pGo->GetEntry() == GO_ACCESS_PANEL_MEK)
         pInstance->SetData(TYPE_MEKGINEER_STEAMRIGGER, SPECIAL);
 
-    return true;
+    return false;
 }
 
 instance_steam_vault::instance_steam_vault(Map* pMap) : ScriptedInstance(pMap)
@@ -64,6 +63,9 @@ void instance_steam_vault::OnCreatureCreate(Creature* pCreature)
         case NPC_KALITHRESH:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
+        case NPC_NAGA_DISTILLER:
+            m_lNagaDistillerGuidList.push_back(pCreature->GetObjectGuid());
+            break;
     }
 }
 
@@ -72,11 +74,21 @@ void instance_steam_vault::OnObjectCreate(GameObject* pGo)
     switch(pGo->GetEntry())
     {
         case GO_MAIN_CHAMBERS_DOOR:
-        case GO_ACCESS_PANEL_HYDRO:
-        case GO_ACCESS_PANEL_MEK:
-            m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
+            if (m_auiEncounter[TYPE_HYDROMANCER_THESPIA] == SPECIAL && m_auiEncounter[TYPE_MEKGINEER_STEAMRIGGER] == SPECIAL)
+                pGo->SetGoState(GO_STATE_ACTIVE);
             break;
+        case GO_ACCESS_PANEL_HYDRO:
+            if (m_auiEncounter[TYPE_HYDROMANCER_THESPIA] == DONE)
+                pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
+            break;
+        case GO_ACCESS_PANEL_MEK:
+            if (m_auiEncounter[TYPE_MEKGINEER_STEAMRIGGER] == DONE)
+                pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
+            break;
+        default:
+            return;
     }
+    m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
 }
 
 void instance_steam_vault::OnCreatureDeath(Creature* pCreature)
@@ -94,46 +106,85 @@ void instance_steam_vault::SetData(uint32 uiType, uint32 uiData)
     switch (uiType)
     {
         case TYPE_HYDROMANCER_THESPIA:
+            if (uiData == DONE)
+                DoToggleGameObjectFlags(GO_ACCESS_PANEL_HYDRO, GO_FLAG_NO_INTERACT, false);
             if (uiData == SPECIAL)
             {
-                DoUseDoorOrButton(GO_ACCESS_PANEL_HYDRO);
-
                 if (GetData(TYPE_MEKGINEER_STEAMRIGGER) == SPECIAL)
                     DoUseDoorOrButton(GO_MAIN_CHAMBERS_DOOR);
-
-                debug_log("SD2: Instance Steamvault: Access panel used.");
             }
-            m_auiEncounter[0] = uiData;
+            m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_MEKGINEER_STEAMRIGGER:
+            if (uiData == DONE)
+                DoToggleGameObjectFlags(GO_ACCESS_PANEL_MEK, GO_FLAG_NO_INTERACT, false);
             if (uiData == SPECIAL)
             {
-                DoUseDoorOrButton(GO_ACCESS_PANEL_MEK);
-
                 if (GetData(TYPE_HYDROMANCER_THESPIA) == SPECIAL)
                     DoUseDoorOrButton(GO_MAIN_CHAMBERS_DOOR);
-
-                    debug_log("SD2: Instance Steamvault: Access panel used.");
             }
-            m_auiEncounter[1] = uiData;
+            m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_WARLORD_KALITHRESH:
-            m_auiEncounter[2] = uiData;
+            DoUseDoorOrButton(GO_MAIN_CHAMBERS_DOOR);
+            if (uiData == FAIL)
+            {
+                // Reset Distiller flags - respawn is handled by DB
+                for (GUIDList::const_iterator itr = m_lNagaDistillerGuidList.begin(); itr != m_lNagaDistillerGuidList.end(); ++itr)
+                {
+                    if (Creature* pDistiller = instance->GetCreature(*itr))
+                    {
+                        if (!pDistiller->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE))
+                            pDistiller->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                    }
+                }
+            }
+            m_auiEncounter[uiType] = uiData;
             break;
+    }
+
+    if (uiData == DONE || uiData == SPECIAL)
+    {
+        OUT_SAVE_INST_DATA;
+
+        std::ostringstream saveStream;
+        saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2];
+
+        m_strInstData = saveStream.str();
+
+        SaveToDB();
+        OUT_SAVE_INST_DATA_COMPLETE;
     }
 }
 
 uint32 instance_steam_vault::GetData(uint32 uiType)
 {
-    switch(uiType)
-    {
-        case TYPE_HYDROMANCER_THESPIA:   return m_auiEncounter[0];
-        case TYPE_MEKGINEER_STEAMRIGGER: return m_auiEncounter[1];
-        case TYPE_WARLORD_KALITHRESH:    return m_auiEncounter[2];
+    if (uiType < MAX_ENCOUNTER)
+        return m_auiEncounter[uiType];
 
-        default:
-            return 0;
+    return 0;
+}
+
+void instance_steam_vault::Load(const char* chrIn)
+{
+    if (!chrIn)
+    {
+        OUT_LOAD_INST_DATA_FAIL;
+        return;
     }
+
+    OUT_LOAD_INST_DATA(chrIn);
+
+    std::istringstream loadStream(chrIn);
+    loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2];
+
+    for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+    {
+        if (m_auiEncounter[i] == IN_PROGRESS)
+            m_auiEncounter[i] = NOT_STARTED;
+    }
+
+    OUT_LOAD_INST_DATA_COMPLETE;
 }
 
 InstanceData* GetInstanceData_instance_steam_vault(Map* pMap)

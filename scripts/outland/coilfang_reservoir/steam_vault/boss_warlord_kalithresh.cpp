@@ -141,9 +141,7 @@ struct MANGOS_DLL_DECL boss_warlord_kalithreshAI : public ScriptedAI
                     if (Creature* pDistiller = m_creature->GetMap()->GetCreature(m_distillerGuid))
                     {
                         pDistiller->CastSpell(pDistiller, SPELL_WARLORDS_RAGE_NAGA, true);
-                        // ToDo: check with DB if this is really needed
                         pDistiller->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                        pDistiller->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     }
                 }
             }
@@ -230,9 +228,7 @@ struct MANGOS_DLL_DECL mob_naga_distillerAI : public Scripted_NoMovementAI
 
     void Reset()
     {
-        // ToDo - move to DB
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
     }
 
     void MoveInLineOfSight(Unit* pWho) { }
