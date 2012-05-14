@@ -59,9 +59,8 @@ struct MANGOS_DLL_DECL npc_lazy_peonAI : public ScriptedAI
         if (uiMotionType != POINT_MOTION_TYPE || !uiPointId)
             return;
 
-        // ToDo: check the reset timer
         m_creature->HandleEmote(EMOTE_STATE_WORK_CHOPWOOD);
-        m_uiResetSleepTimer = 1*MINUTE*IN_MILLISECONDS;
+        m_uiResetSleepTimer = 80000;
     }
 
     void UpdateAI(const uint32 uiDiff)
