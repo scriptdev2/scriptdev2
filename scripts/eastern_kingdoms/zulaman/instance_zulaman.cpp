@@ -27,6 +27,8 @@ EndScriptData */
 instance_zulaman::instance_zulaman(Map* pMap) : ScriptedInstance(pMap),
     m_uiEventTimer(MINUTE*IN_MILLISECONDS),
     m_uiGongCount(0),
+    m_uiBearEventPhase(0),
+    m_bIsBearPhaseInProgress(false),
 
     m_uiEggsRemainingCount_Left(20),
     m_uiEggsRemainingCount_Right(20)
@@ -58,6 +60,7 @@ void instance_zulaman::OnCreatureCreate(Creature* pCreature)
     {
         case NPC_AKILZON:
         case NPC_HALAZZI:
+        case NPC_NALORAKK:
         case NPC_MALACRASS:
         case NPC_HARRISON:
         case NPC_SPIRIT_LYNX:
@@ -76,6 +79,70 @@ void instance_zulaman::OnCreatureCreate(Creature* pCreature)
         case NPC_EGG:
             if (m_auiEncounter[TYPE_JANALAI] != DONE)
                 m_lEggsGUIDList.push_back(pCreature->GetObjectGuid());
+            break;
+
+        case NPC_MEDICINE_MAN:
+        case NPC_TRIBES_MAN:
+        case NPC_WARBRINGER:
+        case NPC_AXETHROWER:
+            if (pCreature->GetPositionZ() > 10.0f && pCreature->GetPositionZ() < 15.0f)
+                m_aNalorakkEvent[0].sBearTrashGuidSet.insert(pCreature->GetObjectGuid());
+            else if (pCreature->GetPositionZ() > 25.0f && pCreature->GetPositionZ() < 30.0f)
+                m_aNalorakkEvent[1].sBearTrashGuidSet.insert(pCreature->GetObjectGuid());
+            else if (pCreature->GetPositionZ() > 40.0f && pCreature->GetPositionZ() < 41.0f)
+                m_aNalorakkEvent[2].sBearTrashGuidSet.insert(pCreature->GetObjectGuid());
+            else if (pCreature->GetPositionZ() > 41.0f)
+                m_aNalorakkEvent[3].sBearTrashGuidSet.insert(pCreature->GetObjectGuid());
+            break;
+    }
+}
+
+void instance_zulaman::OnCreatureDeath(Creature* pCreature)
+{
+    switch(pCreature->GetEntry())
+    {
+        case NPC_MEDICINE_MAN:
+        case NPC_TRIBES_MAN:
+        case NPC_WARBRINGER:
+        case NPC_AXETHROWER:
+            if (m_aNalorakkEvent[m_uiBearEventPhase].sBearTrashGuidSet.find(pCreature->GetObjectGuid()) != m_aNalorakkEvent[m_uiBearEventPhase].sBearTrashGuidSet.end())
+            {
+                ++m_aNalorakkEvent[m_uiBearEventPhase].uiTrashKilled;
+                if (m_aNalorakkEvent[m_uiBearEventPhase].uiTrashKilled == m_aNalorakkEvent[m_uiBearEventPhase].sBearTrashGuidSet.size())
+                {
+                    if (Creature* pNalorakk = GetSingleCreatureFromStorage(NPC_NALORAKK))
+                    {
+                        ++m_uiBearEventPhase;
+                        if (m_uiBearEventPhase == MAX_BEAR_WAVES)
+                            pNalorakk->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE);
+                        else
+                        {
+                            pNalorakk->SetWalk(false);
+                            pNalorakk->GetMotionMaster()->MovePoint(1, aBearEventInfo[m_uiBearEventPhase].fX, aBearEventInfo[m_uiBearEventPhase].fY, aBearEventInfo[m_uiBearEventPhase].fZ);
+                        }
+                    }
+                }
+            }
+            break;
+    }
+}
+
+void instance_zulaman::OnCreatureEvade(Creature* pCreature)
+{
+    switch(pCreature->GetEntry())
+    {
+        case NPC_MEDICINE_MAN:
+        case NPC_TRIBES_MAN:
+        case NPC_WARBRINGER:
+        case NPC_AXETHROWER:
+            for (GUIDSet::const_iterator itr = m_aNalorakkEvent[m_uiBearEventPhase].sBearTrashGuidSet.begin(); itr != m_aNalorakkEvent[m_uiBearEventPhase].sBearTrashGuidSet.end(); ++itr)
+            {
+                Creature* pTemp = instance->GetCreature(*itr);
+                if (pTemp && !pTemp->isAlive())
+                    pTemp->Respawn();
+            }
+            m_aNalorakkEvent[m_uiBearEventPhase].uiTrashKilled = 0;
+            m_bIsBearPhaseInProgress = false;
             break;
     }
 }
@@ -324,6 +391,29 @@ uint32 instance_zulaman::GetData(uint32 uiType)
         default:
             return 0;
     }
+}
+
+void instance_zulaman::SendNextBearWave(Unit* pTarget)
+{
+    for (GUIDSet::const_iterator itr = m_aNalorakkEvent[m_uiBearEventPhase].sBearTrashGuidSet.begin(); itr != m_aNalorakkEvent[m_uiBearEventPhase].sBearTrashGuidSet.end(); ++itr)
+    {
+        Creature* pTemp = instance->GetCreature(*itr);
+        if (pTemp && pTemp->isAlive())
+        {
+            pTemp->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE);
+            pTemp->AI()->AttackStart(pTarget);
+
+            // For the first wave we need to make them jump to the ground before attacking
+            if (!m_uiBearEventPhase)
+            {
+                float fX, fY, fZ;
+                pTemp->GetRandomPoint(35.31f, 1412.24f, 2.04f, 3.0f, fX, fY, fZ);
+                pTemp->GetMotionMaster()->MoveJump(fX, fY, fZ, pTemp->GetSpeed(MOVE_RUN)*2, 5.0f);
+            }
+        }
+    }
+
+    m_bIsBearPhaseInProgress = true;
 }
 
 uint8 instance_zulaman::GetKilledPreBosses()

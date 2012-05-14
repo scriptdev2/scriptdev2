@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Nalorakk
-SD%Complete: 80
-SDComment: Todo: Trash Waves
+SD%Complete: 95
+SDComment: Small adjustments may be required
 SDCategory: Zul'Aman
 EndScriptData */
 
@@ -26,11 +26,6 @@ EndScriptData */
 
 enum
 {
-    SAY_WAVE1_AGGRO         = -1568010,
-    SAY_WAVE2_STAIR1        = -1568011,
-    SAY_WAVE3_STAIR2        = -1568012,
-    SAY_WAVE4_PLATFORM      = -1568013,
-
     SAY_EVENT1_SACRIFICE    = -1568014,
     SAY_EVENT2_SACRIFICE    = -1568015,
 
@@ -61,11 +56,12 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
 {
     boss_nalorakkAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_pInstance = (instance_zulaman*)pCreature->GetInstanceData();
+        m_uiCurrentWave = 0;
         Reset();
     }
 
-    ScriptedInstance* m_pInstance;
+    instance_zulaman* m_pInstance;
 
     uint32 m_uiChangeFormTimer;
     uint32 m_uiBrutalSwipeTimer;
@@ -75,6 +71,7 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
     uint32 m_uiRendFleshTimer;
     uint32 m_uiDeafeningRoarTimer;
     uint32 m_uiBerserkTimer;
+    uint8 m_uiCurrentWave;
     bool m_bIsInBearForm;
 
     void Reset()
@@ -88,6 +85,62 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
         m_uiDeafeningRoarTimer      = 20000;
         m_uiBerserkTimer            = 10*MINUTE*IN_MILLISECONDS;
         m_bIsInBearForm             = false;
+    }
+
+    void MoveInLineOfSight(Unit* pWho)
+    {
+        ScriptedAI::MoveInLineOfSight(pWho);
+
+        if (m_pInstance && m_pInstance->IsBearPhaseInProgress())
+            return;
+
+        if (pWho->GetTypeId() == TYPEID_PLAYER && !((Player*)pWho)->isGameMaster() && m_creature->IsWithinDistInMap(pWho, aBearEventInfo[m_uiCurrentWave].fAggroDist))
+        {
+            DoScriptText(aBearEventInfo[m_uiCurrentWave].iYellId, m_creature);
+            if (m_pInstance)
+                m_pInstance->SendNextBearWave(pWho);
+        }
+    }
+
+    void MovementInform(uint32 uiMotionType, uint32 uiPointId)
+    {
+        if (uiMotionType != POINT_MOTION_TYPE)
+            return;
+
+        if (uiPointId)
+        {
+            m_creature->SetFacingTo(aBearEventInfo[m_uiCurrentWave].fO);
+
+            if (m_uiCurrentWave < MAX_BEAR_WAVES - 1)
+            {
+                if (m_pInstance)
+                    m_pInstance->SetBearEventProgress(false);
+                ++m_uiCurrentWave;
+            }
+            else
+            {
+                // Set the instance data to fail on movement inform because we are not moving the boss to home position
+                if (m_pInstance)
+                    m_pInstance->SetData(TYPE_NALORAKK, FAIL);
+            }
+        }
+    }
+
+    // Nalorakk evades only after the trash waves are finished
+    void EnterEvadeMode()
+    {
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop(true);
+        m_creature->LoadCreatureAddon(true);
+
+        // Boss should evade on the top of the platform
+        if (m_creature->isAlive())
+            m_creature->GetMotionMaster()->MovePoint(1, aBearEventInfo[m_uiCurrentWave].fX, aBearEventInfo[m_uiCurrentWave].fY, aBearEventInfo[m_uiCurrentWave].fZ);
+
+        m_creature->SetLootRecipient(NULL);
+
+        Reset();
     }
 
     void Aggro(Unit* pWho)
@@ -111,12 +164,6 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
             return;
 
         m_pInstance->SetData(TYPE_NALORAKK, DONE);
-    }
-
-    void JustReachedHome()
-    {
-        if (m_pInstance)
-            m_pInstance->SetData(TYPE_NALORAKK, FAIL);
     }
 
     void UpdateAI(const uint32 uiDiff)
