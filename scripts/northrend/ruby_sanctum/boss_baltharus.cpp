@@ -22,11 +22,14 @@ SDCategory: Ruby Sanctum
 EndScriptData */
 
 #include "precompiled.h"
+#include "ruby_sanctum.h"
 
 enum
 {
     // Xerestrasza intro and outro texts
     SAY_HELP                    = -1724000,
+    SAY_INTRO                   = -1724001,
+
     SAY_THANKS                  = -1724002,
     SAY_OUTRO_1                 = -1724003,
     SAY_OUTRO_2                 = -1724004,
@@ -37,14 +40,105 @@ enum
     SAY_OUTRO_7                 = -1724009,
 
     // Baltharus texts
-    SAY_INTRO                   = -1724001,
     SAY_AGGRO                   = -1724010,
     SAY_SLAY_1                  = -1724011,
     SAY_SLAY_2                  = -1724012,
     SAY_DEATH                   = -1724013,
     SAY_SPLIT                   = -1724014,
+
+    SPELL_BARRIER_CHANNEL       = 76221,            // channeled on the tree
 };
+
+static const DialogueEntry aIntroDialogue[] =
+{
+    {SAY_HELP,  NPC_XERESTRASZA,  7000},
+    {SAY_INTRO, NPC_BALTHARUS,    0},
+    {0, 0, 0},
+};
+
+struct MANGOS_DLL_DECL boss_baltharusAI : public ScriptedAI, private DialogueHelper
+{
+    boss_baltharusAI(Creature* pCreature) : ScriptedAI(pCreature),
+        DialogueHelper(aIntroDialogue)
+    {
+        m_pInstance = (instance_ruby_sanctum*)pCreature->GetInstanceData();
+        InitializeDialogueHelper(m_pInstance);
+        m_bHasDoneIntro = false;
+        Reset();
+    }
+
+    instance_ruby_sanctum* m_pInstance;
+
+    bool m_bHasDoneIntro;
+
+    void Reset()
+    {
+    }
+
+    void Aggro(Unit* pWho)
+    {
+        DoScriptText(SAY_AGGRO, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_BALTHARUS, IN_PROGRESS);
+    }
+
+    void MoveInLineOfSight(Unit* pWho)
+    {
+        if (!m_bHasDoneIntro && pWho->GetTypeId() == TYPEID_PLAYER && !((Player*)pWho)->isGameMaster())
+        {
+            StartNextDialogueText(SAY_HELP);
+            m_bHasDoneIntro = true;
+        }
+
+        ScriptedAI::MoveInLineOfSight(pWho);
+    }
+
+    void KilledUnit(Unit* pVictim)
+    {
+        if (pVictim->GetTypeId() != TYPEID_PLAYER)
+            return;
+
+        if (urand(0, 1))
+            DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
+    }
+
+    void JustDied(Unit* pKiller)
+    {
+        DoScriptText(SAY_DEATH, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_BALTHARUS, DONE);
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_BALTHARUS, FAIL);
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        DialogueUpdate(uiDiff);
+
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_boss_baltharus(Creature* pCreature)
+{
+    return new boss_baltharusAI(pCreature);
+}
 
 void AddSC_boss_baltharus()
 {
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_baltharus";
+    pNewScript->GetAI = &GetAI_boss_baltharus;
+    pNewScript->RegisterSelf();
 }

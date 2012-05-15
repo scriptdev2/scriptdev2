@@ -22,6 +22,7 @@ SDCategory: Ruby Sanctum
 EndScriptData */
 
 #include "precompiled.h"
+#include "ruby_sanctum.h"
 
 enum
 {
@@ -32,6 +33,71 @@ enum
     SOUND_DEATH                 = 17531,                    // On death it has only a screaming sound
 };
 
+struct MANGOS_DLL_DECL boss_savianaAI : public ScriptedAI
+{
+    boss_savianaAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (instance_ruby_sanctum*)pCreature->GetInstanceData();
+        Reset();
+    }
+
+    instance_ruby_sanctum* m_pInstance;
+
+    void Reset()
+    {
+    }
+
+    void Aggro(Unit* pWho)
+    {
+        DoScriptText(SAY_AGGRO, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_SAVIANA, IN_PROGRESS);
+    }
+
+    void KilledUnit(Unit* pVictim)
+    {
+        if (pVictim->GetTypeId() != TYPEID_PLAYER)
+            return;
+
+        if (urand(0, 1))
+            DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
+    }
+
+    void JustDied(Unit* pKiller)
+    {
+        DoPlaySoundToSet(m_creature, SOUND_DEATH);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_SAVIANA, DONE);
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_SAVIANA, FAIL);
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_boss_saviana(Creature* pCreature)
+{
+    return new boss_savianaAI(pCreature);
+}
+
 void AddSC_boss_saviana()
 {
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_saviana";
+    pNewScript->GetAI = &GetAI_boss_saviana;
+    pNewScript->RegisterSelf();
 }

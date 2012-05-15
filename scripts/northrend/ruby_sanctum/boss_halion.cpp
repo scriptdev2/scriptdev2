@@ -25,7 +25,6 @@ EndScriptData */
 
 enum
 {
-    SAY_SPAWN                   = -1724024,
     SAY_AGGRO                   = -1724025,
     SAY_SLAY                    = -1724026,                 // There is an additonal sound entry related to SLAY: 17502
     SAY_DEATH                   = -1724027,

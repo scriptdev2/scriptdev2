@@ -22,6 +22,7 @@ SDCategory: Ruby Sanctum
 EndScriptData */
 
 #include "precompiled.h"
+#include "ruby_sanctum.h"
 
 enum
 {
@@ -32,6 +33,71 @@ enum
     SAY_SUMMON          = -1724023,
 };
 
+struct MANGOS_DLL_DECL boss_zarithrianAI : public ScriptedAI
+{
+    boss_zarithrianAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (instance_ruby_sanctum*)pCreature->GetInstanceData();
+        Reset();
+    }
+
+    instance_ruby_sanctum* m_pInstance;
+
+    void Reset()
+    {
+    }
+
+    void Aggro(Unit* pWho)
+    {
+        DoScriptText(SAY_AGGRO, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_ZARITHRIAN, IN_PROGRESS);
+    }
+
+    void KilledUnit(Unit* pVictim)
+    {
+        if (pVictim->GetTypeId() != TYPEID_PLAYER)
+            return;
+
+        if (urand(0, 1))
+            DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
+    }
+
+    void JustDied(Unit* pKiller)
+    {
+        DoScriptText(SAY_DEATH, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_ZARITHRIAN, DONE);
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_ZARITHRIAN, FAIL);
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_boss_zarithrian(Creature* pCreature)
+{
+    return new boss_zarithrianAI(pCreature);
+}
+
 void AddSC_boss_zarithrian()
 {
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_zarithrian";
+    pNewScript->GetAI = &GetAI_boss_zarithrian;
+    pNewScript->RegisterSelf();
 }

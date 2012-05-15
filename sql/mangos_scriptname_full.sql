@@ -920,6 +920,12 @@ UPDATE creature_template SET ScriptName='npc_willix_the_importer' WHERE entry=45
 /* REDRIDGE MOUNTAINS */
 UPDATE creature_template SET ScriptName='npc_corporal_keeshan' WHERE entry=349;
 
+/* RUBY SANCTUM */
+UPDATE instance_template SET ScriptName='instance_ruby_sanctum' WHERE map=724;
+UPDATE creature_template SET ScriptName='boss_baltharus' WHERE entry=39751;
+UPDATE creature_template SET ScriptName='boss_saviana' WHERE entry=39747;
+UPDATE creature_template SET ScriptName='boss_zarithrian' WHERE entry=39746;
+
 /* RUINS OF AHN'QIRAJ */
 UPDATE instance_template SET ScriptName='instance_ruins_of_ahnqiraj' WHERE map=509;
 UPDATE creature_template SET ScriptName='mob_anubisath_guardian' WHERE entry=15355;
