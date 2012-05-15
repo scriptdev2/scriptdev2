@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Howling_Fjord
 SD%Complete: ?
-SDComment: Quest support: 11221, 11300, 11464, 11343
+SDComment: Quest support: 11300, 11464, 11343
 SDCategory: Howling Fjord
 EndScriptData */
 
@@ -25,8 +25,6 @@ EndScriptData */
 npc_ancient_male_vrykul
 at_ancient_male_vrykul
 npc_daegarn
-npc_deathstalker_razael - TODO, can be moved to database
-npc_dark_ranger_lyana - TODO, can be moved to database
 npc_silvermoon_harry
 EndContentData */
 
@@ -255,149 +253,6 @@ CreatureAI* GetAI_npc_daegarn(Creature* pCreature)
 }
 
 /*######
-## npc_deathstalker_razael - TODO, can be moved to database
-######*/
-
-#define GOSSIP_ITEM_DEATHSTALKER_RAZAEL "High Executor Anselm requests your report."
-
-enum
-{
-    QUEST_REPORTS_FROM_THE_FIELD       = 11221,
-    SPELL_RAZAEL_KILL_CREDIT           = 42756,
-    GOSSIP_TEXTID_DEATHSTALKER_RAZAEL1 = 11562,
-    GOSSIP_TEXTID_DEATHSTALKER_RAZAEL2 = 11564
-};
-
-bool GossipHello_npc_deathstalker_razael(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
-
-    if (pPlayer->GetQuestStatus(QUEST_REPORTS_FROM_THE_FIELD) == QUEST_STATUS_INCOMPLETE)
-    {
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_DEATHSTALKER_RAZAEL, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-        pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_DEATHSTALKER_RAZAEL1, pCreature->GetObjectGuid());
-    }
-    else
-        pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-
-    return true;
-}
-
-bool GossipSelect_npc_deathstalker_razael(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    switch(uiAction)
-    {
-        case GOSSIP_ACTION_INFO_DEF+1:
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_DEATHSTALKER_RAZAEL2, pCreature->GetObjectGuid());
-            pCreature->CastSpell(pPlayer, SPELL_RAZAEL_KILL_CREDIT, true);
-            break;
-    }
-
-    return true;
-}
-
-/*######
-## npc_dark_ranger_lyana - TODO, can be moved to database
-######*/
-
-#define GOSSIP_ITEM_DARK_RANGER_LYANA "High Executor Anselm requests your report."
-
-enum
-{
-    GOSSIP_TEXTID_DARK_RANGER_LYANA1    = 11586,
-    GOSSIP_TEXTID_DARK_RANGER_LYANA2    = 11588,
-    SPELL_DARK_RANGER_LYANA_KILL_CREDIT = 42799
-};
-
-bool GossipHello_npc_dark_ranger_lyana(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
-
-    if (pPlayer->GetQuestStatus(QUEST_REPORTS_FROM_THE_FIELD) == QUEST_STATUS_INCOMPLETE)
-    {
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_DARK_RANGER_LYANA, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-        pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_DARK_RANGER_LYANA1, pCreature->GetObjectGuid());
-    }
-    else
-        pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-
-    return true;
-}
-
-bool GossipSelect_npc_dark_ranger_lyana(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    switch(uiAction)
-    {
-        case GOSSIP_ACTION_INFO_DEF+1:
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_DARK_RANGER_LYANA2, pCreature->GetObjectGuid());
-            pCreature->CastSpell(pPlayer, SPELL_DARK_RANGER_LYANA_KILL_CREDIT, true);
-            break;
-    }
-
-    return true;
-}
-
-/*######
-## npc_greer_orehammer
-######*/
-
-enum
-{
-    GOSSIP_ITEM_TAXI                        = -3000106,
-    GOSSIP_ITEM_GET_BOMBS                   = -3000107,
-    GOSSIP_ITEM_FLIGHT                      = -3000108,
-
-    QUEST_MISSION_PLAGUE_THIS               = 11332,
-    ITEM_PRECISION_BOMBS                    = 33634,
-    TAXI_PATH_PLAGUE_THIS                   = 745,
-};
-
-bool GossipHello_npc_greer_orehammer(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
-
-    if (pPlayer->GetQuestStatus(QUEST_MISSION_PLAGUE_THIS) == QUEST_STATUS_INCOMPLETE)
-    {
-        if (!pPlayer->HasItemCount(ITEM_PRECISION_BOMBS, 1, true))
-            pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_GET_BOMBS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-
-        pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_FLIGHT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-    }
-
-    if (pCreature->isTaxi())
-        pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_TAXI, GOSSIP_ITEM_TAXI, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-
-    return true;
-}
-
-bool GossipSelect_npc_greer_orehammer(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    switch(uiAction)
-    {
-        case GOSSIP_ACTION_INFO_DEF + 1:
-            if (Item* pItem = pPlayer->StoreNewItemInInventorySlot(ITEM_PRECISION_BOMBS, 10))
-                pPlayer->SendNewItem(pItem, 10, true, false);
-
-            pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 2:
-            pPlayer->CLOSE_GOSSIP_MENU();
-            pPlayer->ActivateTaxiPathTo(TAXI_PATH_PLAGUE_THIS);
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 3:
-            pPlayer->GetSession()->SendTaxiMenu(pCreature);
-            break;
-    }
-
-    return true;
-}
-
-/*######
 ## npc_silvermoon_harry
 ######*/
 
@@ -589,24 +444,6 @@ void AddSC_howling_fjord()
     pNewScript->Name = "npc_daegarn";
     pNewScript->GetAI = &GetAI_npc_daegarn;
     pNewScript->pQuestAcceptNPC = &QuestAccept_npc_daegarn;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_deathstalker_razael";
-    pNewScript->pGossipHello = &GossipHello_npc_deathstalker_razael;
-    pNewScript->pGossipSelect = &GossipSelect_npc_deathstalker_razael;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_dark_ranger_lyana";
-    pNewScript->pGossipHello = &GossipHello_npc_dark_ranger_lyana;
-    pNewScript->pGossipSelect = &GossipSelect_npc_dark_ranger_lyana;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_greer_orehammer";
-    pNewScript->pGossipHello = &GossipHello_npc_greer_orehammer;
-    pNewScript->pGossipSelect = &GossipSelect_npc_greer_orehammer;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;

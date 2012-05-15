@@ -4112,9 +4112,9 @@ INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 (-3000103,'I am ready to travel to you village now.','rainspeaker GOSSIP_ITEM_READY'),
 (-3000104,'<Check for pulse...>','mosswalker victim GOSSIP_ITEM_PULSE'),
 (-3000105,'Ezekiel said that you might have a certain book...','dirty larry GOSSIP_ITEM_BOOK'),
-(-3000106,'Show me where I can fly.','greer orehammer GOSSIP_ITEM_TAXI'),
-(-3000107,'[PH] Get Presicion Bombs','greer orehammer GOSSIP_ITEM_GET_BOMBS'),
-(-3000108,'[PH] Start bombing mission','greer orehammer GOSSIP_ITEM_FLIGHT'),
+(-3000106,'REUSE ME','REUSE ME'),
+(-3000107,'REUSE ME','REUSE ME'),
+(-3000108,'REUSE ME','REUSE ME'),
 (-3000109,'I am ready, Oronok. Let us destroy Cyrukh and free the elements!','oronok torn-heart GOSSIP_ITEM_FIGHT');
 
 -- -3 033 000 SHADOWFANG KEEP
@@ -4146,6 +4146,7 @@ INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 
 -- -3 560 000 ESCAPE FROM DURNHOLDE (OLD HILLSBRAD)
 INSERT INTO gossip_texts (entry,content_default,comment) VALUES
+(-3560000,'REUSE ME','REUSE ME'),
 (-3560001,'I need a pack of Incendiary Bombs.','erozion GOSSIP_ITEM_NEED_BOMBS'),
 (-3560002,'Taretha cannot see you, Thrall.','thrall GOSSIP_ITEM_SKARLOC1'),
 (-3560003,'The situation is rather complicated, Thrall. It would be best for you to head into the mountains now, before more of Blackmoore\'s men show up. We\'ll make sure Taretha is safe.','thrall GOSSIP_ITEM_SKARLOC2'),
