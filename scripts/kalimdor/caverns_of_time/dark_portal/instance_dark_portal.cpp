@@ -16,108 +16,91 @@
 
 /* ScriptData
 SDName: Instance_Dark_Portal
-SD%Complete: 50
-SDComment: Quest support: 9836, 10297. Currently in progress.
+SD%Complete: 75
+SDComment: Quest support: 9836, 10297. Some visuals for the event are missing; Event epilogue NYI.
 SDCategory: Caverns of Time, The Dark Portal
 EndScriptData */
 
 #include "precompiled.h"
 #include "dark_portal.h"
 
-inline uint32 RandRiftBoss() { return (urand(0, 1) ? NPC_RKEEP : NPC_RLORD); }
+instance_dark_portal::instance_dark_portal(Map* pMap) : ScriptedInstance(pMap),
+    m_uiWorldState(0),
+    m_uiWorldStateRiftCount(0),
+    m_uiWorldStateShieldCount(100),
 
-float PortalLocation[4][4]=
-{
-    {-2041.06f, 7042.08f, 29.99f, 1.30f},
-    {-1968.18f, 7042.11f, 21.93f, 2.12f},
-    {-1885.82f, 7107.36f, 22.32f, 3.07f},
-    {-1928.11f, 7175.95f, 22.11f, 3.44f}
-};
+    m_uiMedivhYellCount(1),
+    m_uiNextPortalTimer(0),
+    m_uiCurrentRiftId(0),
 
-struct Wave
-{
-    uint32 PortalBoss;                                      // protector of current portal
-    uint32 NextPortalTime;                                  // time to next portal, or 0 if portal boss need to be killed
-};
-
-static Wave RiftWaves[]=
-{
-    {RIFT_BOSS,  0},
-    {NPC_DEJA,   0},
-    {RIFT_BOSS,  120000},
-    {NPC_TEMPO,  140000},
-    {RIFT_BOSS,  120000},
-    {NPC_AEONUS, 0}
-};
-
-instance_dark_portal::instance_dark_portal(Map* pMap) : ScriptedInstance(pMap)
+    m_bHasIntroYelled(false)
 {
     Initialize();
 }
 
 void instance_dark_portal::Initialize()
 {
-    Clear();
+    memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
 }
 
-void instance_dark_portal::Clear()
+void instance_dark_portal::DoResetEvent()
 {
-    memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
+    UpdateWorldState(false);
 
-    m_uiRiftPortalCount  = 0;
-    m_uiShieldPercent    = 100;
-    m_uiRiftWaveCount    = 0;
-    m_uiRiftWaveId       = 0;
+    m_uiWorldStateShieldCount = 100;
+    m_uiWorldStateRiftCount   = 0;
 
     m_uiCurrentRiftId    = 0;
-
-    m_uiNextPortalTimer = 0;
+    m_uiNextPortalTimer  = 0;
+    m_uiMedivhYellCount  = 1;
 }
 
-void instance_dark_portal::InitWorldState(bool bEnable /*= true*/)
+void instance_dark_portal::UpdateWorldState(bool bEnable)
 {
-    DoUpdateWorldState(WORLD_STATE_BM, bEnable ? 1 : 0);
-    DoUpdateWorldState(WORLD_STATE_BM_SHIELD, 100);
-    DoUpdateWorldState(WORLD_STATE_BM_RIFT, 0);
+    m_uiWorldState = bEnable ? 1 : 0;
+
+    DoUpdateWorldState(WORLD_STATE_ID,     m_uiWorldState);
+    DoUpdateWorldState(WORLD_STATE_SHIELD, m_uiWorldStateShieldCount);
+    DoUpdateWorldState(WORLD_STATE_RIFT,   m_uiWorldStateRiftCount);
 }
 
 void instance_dark_portal::OnPlayerEnter(Player* pPlayer)
 {
-    if (m_auiEncounter[0] == IN_PROGRESS)
-        return;
+    UpdateWorldState(m_auiEncounter[TYPE_MEDIVH] == IN_PROGRESS ? true : false);
+}
 
-    pPlayer->SendUpdateWorldState(WORLD_STATE_BM, 0);
+void instance_dark_portal::DoHandleAreaTrigger(uint32 uiTriggerId)
+{
+    if (uiTriggerId == AREATRIGGER_ENTER)
+    {
+        // Yell at instance entrance
+        if (!m_bHasIntroYelled)
+        {
+            if (Creature* pSaat = GetSingleCreatureFromStorage(NPC_SAAT))
+                DoScriptText(SAY_SAAT_WELCOME, pSaat);
+            m_bHasIntroYelled = true;
+        }
+    }
+    else if (uiTriggerId == AREATRIGGER_MEDIVH)
+    {
+        // Start Dark Portal event
+        if (GetData(TYPE_MEDIVH) == NOT_STARTED || GetData(TYPE_MEDIVH) == FAIL)
+            SetData(TYPE_MEDIVH, IN_PROGRESS);
+        // Start Epilogue
+        else if (GetData(TYPE_AEONUS) == DONE && GetData(TYPE_MEDIVH) != DONE)
+            SetData(TYPE_MEDIVH, DONE);
+    }
 }
 
 void instance_dark_portal::OnCreatureCreate(Creature* pCreature)
 {
-    if (pCreature->GetEntry() == NPC_MEDIVH)
-        m_mNpcEntryGuidStore[NPC_MEDIVH] = pCreature->GetObjectGuid();
-}
-
-// what other conditions to check?
-bool instance_dark_portal::CanProgressEvent()
-{
-    if (instance->GetPlayers().isEmpty())
-        return false;
-
-    return true;
-}
-
-uint8 instance_dark_portal::GetRiftWaveId()
-{
-    switch(m_uiRiftPortalCount)
+    switch (pCreature->GetEntry())
     {
-        case 6:
-            m_uiRiftWaveId = 2;
-            return 1;
-        case 12:
-            m_uiRiftWaveId = 4;
-            return 3;
-        case 18:
-            return 5;
-        default:
-            return m_uiRiftWaveId;
+        case NPC_MEDIVH:
+        case NPC_SAAT:
+        case NPC_DARK_PORTAL_DUMMY:
+            m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
+            break;
     }
 }
 
@@ -126,162 +109,266 @@ void instance_dark_portal::SetData(uint32 uiType, uint32 uiData)
     switch(uiType)
     {
         case TYPE_MEDIVH:
-            if (uiData == SPECIAL && m_auiEncounter[0] == IN_PROGRESS)
+        {
+            if (uiData == IN_PROGRESS)
             {
-                --m_uiShieldPercent;
+                if (Creature* pMedivh = GetSingleCreatureFromStorage(NPC_MEDIVH))
+                {
+                    if (pMedivh->isAlive())
+                        DoScriptText(SAY_MEDIVH_ENTER, pMedivh);
+                    // If Medivh is not available the do not store the uiData;
+                    else
+                        return;
+                }
 
-                DoUpdateWorldState(WORLD_STATE_BM_SHIELD, m_uiShieldPercent);
+                // ToDo:
+                // Start the Portal Crystal casting - by the Dark Portal Dumm Npc
+                // Also Start summoning the Dark Portal Beams
 
-                if (!m_uiShieldPercent)
+                UpdateWorldState();
+                m_uiNextPortalTimer = 3000;
+            }
+            if (uiData == DONE)
+            {
+                // Yell for event finished
+                if (Creature* pMedivh = GetSingleCreatureFromStorage(NPC_MEDIVH))
+                {
+                    DoScriptText(SAY_MEDIVH_WIN, pMedivh);
+                    pMedivh->SetFacingTo(6.15f);
+                    pMedivh->InterruptNonMeleeSpells(false);
+                    pMedivh->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER);
+                }
+
+                // this may be completed further out in the post-event
+                Map::PlayerList const& players = instance->GetPlayers();
+
+                if (!players.isEmpty())
+                {
+                    for(Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
+                    {
+                        if (Player* pPlayer = itr->getSource())
+                        {
+                            if (pPlayer->GetQuestStatus(QUEST_OPENING_PORTAL) == QUEST_STATUS_INCOMPLETE)
+                                pPlayer->AreaExploredOrEventHappens(QUEST_OPENING_PORTAL);
+
+                            if (pPlayer->GetQuestStatus(QUEST_MASTER_TOUCH) == QUEST_STATUS_INCOMPLETE)
+                                pPlayer->AreaExploredOrEventHappens(QUEST_MASTER_TOUCH);
+                        }
+                    }
+                }
+            }
+            if (uiData == FAIL)
+                DoResetEvent();
+            m_auiEncounter[uiType] = uiData;
+            break;
+        }
+        case TYPE_SHIELD:
+            if (uiData == SPECIAL)
+            {
+                --m_uiWorldStateShieldCount;
+                DoUpdateWorldState(WORLD_STATE_SHIELD, m_uiWorldStateShieldCount);
+
+                // Yell at 75%, 50% and 25% shield
+                if (m_uiWorldStateShieldCount < 100-25*m_uiMedivhYellCount)
+                {
+                    if (Creature* pMedivh = GetSingleCreatureFromStorage(NPC_MEDIVH))
+                    {
+                        DoScriptText(uiMedivhWeakYell[m_uiMedivhYellCount-1], pMedivh);
+                        ++m_uiMedivhYellCount;
+                    }
+                }
+
+                // Kill the npc when the shield is broken
+                if (!m_uiWorldStateShieldCount)
                 {
                     if (Creature* pMedivh = GetSingleCreatureFromStorage(NPC_MEDIVH))
                     {
                         if (pMedivh->isAlive())
-                        {
                             pMedivh->DealDamage(pMedivh, pMedivh->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-                            m_auiEncounter[0] = FAIL;
-                            m_auiEncounter[1] = NOT_STARTED;
-                        }
                     }
                 }
             }
-            else
-            {
-                if (uiData == IN_PROGRESS)
-                {
-                    debug_log("SD2: Instance Dark Portal: Starting event.");
-                    InitWorldState();
-                    m_auiEncounter[1] = IN_PROGRESS;
-                    m_uiNextPortalTimer = 15000;
-                }
+            m_auiEncounter[uiType] = uiData;
+            return;
+        case TYPE_TIME_RIFT:
+        {
+            // Set the delay to the next time rift from the point the rift despawns
+            if (uiData == DONE)
+                m_uiNextPortalTimer = IsBossTimeRift() ? 125000 : 3000;
+            // Set the delay to the next time rift from the point the rift summons it's guardian
+            // ToDo: research if these timers are correct
+            else if (uiData == SPECIAL)
+                m_uiNextPortalTimer = IsBossTimeRift() ? 0 : m_uiWorldStateRiftCount > 12 ? 90000 : 2*MINUTE*IN_MILLISECONDS;
 
-                if (uiData == DONE)
-                {
-                    // this may be completed further out in the post-event
-                    debug_log("SD2: Instance Dark Portal: Event completed.");
-
-                    Map::PlayerList const& players = instance->GetPlayers();
-
-                    if (!players.isEmpty())
-                    {
-                        for(Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
-                        {
-                            if (Player* pPlayer = itr->getSource())
-                            {
-                                if (pPlayer->GetQuestStatus(QUEST_OPENING_PORTAL) == QUEST_STATUS_INCOMPLETE)
-                                    pPlayer->AreaExploredOrEventHappens(QUEST_OPENING_PORTAL);
-
-                                if (pPlayer->GetQuestStatus(QUEST_MASTER_TOUCH) == QUEST_STATUS_INCOMPLETE)
-                                    pPlayer->AreaExploredOrEventHappens(QUEST_MASTER_TOUCH);
-                            }
-                        }
-                    }
-                }
-
-                m_auiEncounter[0] = uiData;
-            }
+            m_auiEncounter[uiType] = uiData;
+            return;
+        }
+        case TYPE_CHRONO_LORD:
+        case TYPE_TEMPORUS:
+            if (m_auiEncounter[uiType] != DONE)             // Keep the DONE-information stored
+                m_auiEncounter[uiType] = uiData;
             break;
-        case TYPE_RIFT:
-            if (uiData == SPECIAL)
-            {
-                if (m_uiRiftPortalCount < 7)
-                    m_uiNextPortalTimer = 5000;
-            }
-            else
-                m_auiEncounter[1] = uiData;
+        case TYPE_AEONUS:
+            if (uiData == DONE)
+                UpdateWorldState(false);
+            m_auiEncounter[uiType] = uiData;
             break;
+        default:
+            return;
+    }
+
+    if (uiData == DONE)
+    {
+        OUT_SAVE_INST_DATA;
+
+        std::ostringstream saveStream;
+        saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " "
+            << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5];
+
+        m_strInstData = saveStream.str();
+
+        SaveToDB();
+        OUT_SAVE_INST_DATA_COMPLETE;
     }
 }
 
 uint32 instance_dark_portal::GetData(uint32 uiType)
 {
-    switch(uiType)
-    {
-        case TYPE_MEDIVH:       return m_auiEncounter[0];
-        case TYPE_RIFT:         return m_auiEncounter[1];
-        case DATA_PORTAL_COUNT: return m_uiRiftPortalCount;
-        case DATA_SHIELD:       return m_uiShieldPercent;
+    if (uiType < MAX_ENCOUNTER)
+        return m_auiEncounter[uiType];
 
-        default:
-            return 0;
+    return 0;
+}
+
+void instance_dark_portal::Load(const char* chrIn)
+{
+    if (!chrIn)
+    {
+        OUT_LOAD_INST_DATA_FAIL;
+        return;
+    }
+
+    OUT_LOAD_INST_DATA(chrIn);
+
+    std::istringstream loadStream(chrIn);
+    loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3]
+        >> m_auiEncounter[4] >> m_auiEncounter[5];
+
+    for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+    {
+        if (m_auiEncounter[i] == IN_PROGRESS)
+            m_auiEncounter[i] = NOT_STARTED;
+    }
+
+    OUT_LOAD_INST_DATA_COMPLETE;
+}
+
+void instance_dark_portal::OnCreatureEnterCombat(Creature* pCreature)
+{
+    switch (pCreature->GetEntry())
+    {
+        case NPC_CHRONO_LORD_DEJA:
+        case NPC_CHRONO_LORD:
+            SetData(TYPE_CHRONO_LORD, IN_PROGRESS);
+            break;
+        case NPC_TEMPORUS:
+        case NPC_TIMEREAVER:
+            SetData(TYPE_TEMPORUS, IN_PROGRESS);
+            break;
+        case NPC_AEONUS:
+            SetData(TYPE_AEONUS, IN_PROGRESS);
+            // no break
+        case NPC_ASSASSIN:
+        case NPC_WHELP:
+        case NPC_CHRONOMANCER:
+        case NPC_EXECUTIONER:
+        case NPC_VANQUISHER:
+            pCreature->InterruptNonMeleeSpells(false);
+            break;
     }
 }
 
-Creature* instance_dark_portal::SummonedPortalBoss(Creature* pSource)
+void instance_dark_portal::OnCreatureEvade(Creature* pCreature)
 {
-    uint32 uiEntry = RiftWaves[GetRiftWaveId()].PortalBoss;
-
-    if (uiEntry == RIFT_BOSS)
-        uiEntry = RandRiftBoss();
-
-    float x, y, z;
-    pSource->GetRandomPoint(pSource->GetPositionX(), pSource->GetPositionY(), pSource->GetPositionZ(), 10.0f, x, y, z);
-    // uncomment the following if something doesn't work correctly, otherwise just delete
-    // pSource->UpdateAllowedPositionZ(x, y, z);
-
-    debug_log("SD2: Instance Dark Portal: Summoning rift boss uiEntry %u.", uiEntry);
-
-    if (Creature* pSummoned = pSource->SummonCreature(uiEntry, x, y, z, pSource->GetOrientation(), TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000))
-        return pSummoned;
-
-    debug_log("SD2: Instance Dark Portal: what just happened there? No boss, no loot, no fun...");
-    return NULL;
+    switch (pCreature->GetEntry())
+    {
+        case NPC_CHRONO_LORD_DEJA:
+        case NPC_CHRONO_LORD:
+            SetData(TYPE_CHRONO_LORD, FAIL);
+            break;
+        case NPC_TEMPORUS:
+        case NPC_TIMEREAVER:
+            SetData(TYPE_TEMPORUS, FAIL);
+            break;
+        case NPC_AEONUS:
+            SetData(TYPE_AEONUS, FAIL);
+            // no break;
+            // Allow these guys to go and finish off Medivh
+        case NPC_ASSASSIN:
+        case NPC_WHELP:
+        case NPC_CHRONOMANCER:
+        case NPC_EXECUTIONER:
+        case NPC_VANQUISHER:
+            if (Creature* pMedivh = GetSingleCreatureFromStorage(NPC_MEDIVH))
+            {
+                float fX, fY, fZ;
+                pMedivh->GetNearPoint(pMedivh, fX, fY, fZ, 0, 20.0f, pMedivh->GetAngle(pCreature));
+                pCreature->GetMotionMaster()->MovePoint(1, fX, fY, fZ);
+            }
+            break;
+    }
 }
 
-void instance_dark_portal::DoSpawnPortal()
+void instance_dark_portal::OnCreatureDeath(Creature* pCreature)
+{
+    switch (pCreature->GetEntry())
+    {
+        case NPC_CHRONO_LORD_DEJA:
+        case NPC_CHRONO_LORD:
+            SetData(TYPE_CHRONO_LORD, DONE);
+            break;
+        case NPC_TEMPORUS:
+        case NPC_TIMEREAVER:
+            SetData(TYPE_TEMPORUS, DONE);
+            break;
+        case NPC_AEONUS:
+            SetData(TYPE_AEONUS, DONE);
+            break;
+    }
+}
+
+void instance_dark_portal::DoSpawnNextPortal()
 {
     if (Creature* pMedivh = GetSingleCreatureFromStorage(NPC_MEDIVH))
     {
+        // Randomize portal locations
         uint8 uiTmp = urand(0, 2);
 
         if (uiTmp >= m_uiCurrentRiftId)
             ++uiTmp;
 
-        debug_log("SD2: Instance Dark Portal: Creating Time Rift at locationId %i (old locationId was %u).", uiTmp, m_uiCurrentRiftId);
+        debug_log("SD2: instance_dark_portal: SetRiftId %u, old was id %u.", uiTmp, m_uiCurrentRiftId);
 
         m_uiCurrentRiftId = uiTmp;
 
-        if (Creature* pTemp = pMedivh->SummonCreature(NPC_TIME_RIFT, PortalLocation[uiTmp][0], PortalLocation[uiTmp][1], PortalLocation[uiTmp][2], PortalLocation[uiTmp][3], TEMPSUMMON_CORPSE_DESPAWN, 0))
-        {
-            pTemp->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-            pTemp->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-
-            if (Creature* pBoss = SummonedPortalBoss(pTemp))
-            {
-                if (pBoss->GetEntry() == NPC_AEONUS)
-                    pBoss->AddThreat(pMedivh);
-                else
-                {
-                    pBoss->AddThreat(pTemp);
-                    pTemp->CastSpell(pBoss, SPELL_RIFT_CHANNEL, false);
-                }
-            }
-        }
+        // Summon next portal
+        pMedivh->SummonCreature(NPC_TIME_RIFT, afPortalLocation[uiTmp].fX, afPortalLocation[uiTmp].fY, afPortalLocation[uiTmp].fZ, afPortalLocation[uiTmp].fOrient, TEMPSUMMON_CORPSE_DESPAWN, 0);
     }
 }
 
 void instance_dark_portal::Update(uint32 uiDiff)
 {
-    if (m_auiEncounter[1] != IN_PROGRESS)
+    if (GetData(TYPE_MEDIVH) != IN_PROGRESS)
         return;
-
-    //add delay timer?
-    if (!CanProgressEvent())
-    {
-        Clear();
-        return;
-    }
 
     if (m_uiNextPortalTimer)
     {
         if (m_uiNextPortalTimer <= uiDiff)
         {
-            ++m_uiRiftPortalCount;
+            DoUpdateWorldState(WORLD_STATE_RIFT, ++m_uiWorldStateRiftCount);
 
-            DoUpdateWorldState(WORLD_STATE_BM_RIFT, m_uiRiftPortalCount);
-
-            DoSpawnPortal();
-            m_uiNextPortalTimer = RiftWaves[GetRiftWaveId()].NextPortalTime;
+            DoSpawnNextPortal();
+            m_uiNextPortalTimer = 0;
         }
         else
             m_uiNextPortalTimer -= uiDiff;
@@ -293,6 +380,20 @@ InstanceData* GetInstanceData_instance_dark_portal(Map* pMap)
     return new instance_dark_portal(pMap);
 }
 
+bool AreaTrigger_at_dark_portal(Player* pPlayer, AreaTriggerEntry const* pAt)
+{
+    if (pAt->id == AREATRIGGER_MEDIVH || pAt->id == AREATRIGGER_ENTER)
+    {
+        if (pPlayer->isGameMaster() || pPlayer->isDead())
+            return false;
+
+        if (instance_dark_portal* pInstance = (instance_dark_portal*)pPlayer->GetInstanceData())
+            pInstance->DoHandleAreaTrigger(pAt->id);
+    }
+
+    return false;
+}
+
 void AddSC_instance_dark_portal()
 {
     Script* pNewScript;
@@ -300,5 +401,10 @@ void AddSC_instance_dark_portal()
     pNewScript = new Script;
     pNewScript->Name = "instance_dark_portal";
     pNewScript->GetInstanceData = &GetInstanceData_instance_dark_portal;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "at_dark_portal";
+    pNewScript->pAreaTrigger = &AreaTrigger_at_dark_portal;
     pNewScript->RegisterSelf();
 }

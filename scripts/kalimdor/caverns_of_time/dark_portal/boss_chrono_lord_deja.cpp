@@ -26,7 +26,6 @@ EndScriptData */
 
 enum
 {
-    SAY_ENTER                   = -1269006,
     SAY_AGGRO                   = -1269007,
     SAY_BANISH                  = -1269008,
     SAY_SLAY1                   = -1269009,
@@ -94,9 +93,6 @@ struct MANGOS_DLL_DECL boss_chrono_lord_dejaAI : public ScriptedAI
     void JustDied(Unit* pVictim)
     {
         DoScriptText(SAY_DEATH, m_creature);
-
-        if (m_pInstance)
-            m_pInstance->SetData(TYPE_RIFT, SPECIAL);
     }
 
     void UpdateAI(const uint32 uiDiff)
@@ -153,6 +149,22 @@ CreatureAI* GetAI_boss_chrono_lord_deja(Creature* pCreature)
     return new boss_chrono_lord_dejaAI(pCreature);
 }
 
+bool EffectAuraDummy_boss_chrono_lord_deja(const Aura* pAura, bool bApply)
+{
+    // Despawn the Time Rift when the aura is canceled
+    if (pAura->GetId() == SPELL_RIFT_CHANNEL && pAura->GetEffIndex() == EFFECT_INDEX_0 && !bApply)
+    {
+        if (Creature* pCaster = (Creature*)pAura->GetCaster())
+        {
+            if (ScriptedInstance* pInstance = (ScriptedInstance*)pCaster->GetInstanceData())
+                pInstance->SetData(TYPE_TIME_RIFT, DONE);
+
+            pCaster->ForcedDespawn(3000);
+        }
+    }
+    return true;
+}
+
 void AddSC_boss_chrono_lord_deja()
 {
     Script* pNewScript;
@@ -160,5 +172,6 @@ void AddSC_boss_chrono_lord_deja()
     pNewScript = new Script;
     pNewScript->Name = "boss_chrono_lord_deja";
     pNewScript->GetAI = &GetAI_boss_chrono_lord_deja;
+    pNewScript->pEffectAuraDummy = &EffectAuraDummy_boss_chrono_lord_deja;
     pNewScript->RegisterSelf();
 }

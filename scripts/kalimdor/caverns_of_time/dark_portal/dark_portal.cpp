@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Dark_Portal
-SD%Complete: 30
-SDComment: Misc NPC's and mobs for instance. Most here far from complete.
+SD%Complete: 80
+SDComment: Some things may be still missing from here
 SDCategory: Caverns of Time, The Dark Portal
 EndScriptData */
 
@@ -29,33 +29,20 @@ EndContentData */
 #include "precompiled.h"
 #include "dark_portal.h"
 
-#define SAY_ENTER               -1269020                    //where does this belong?
-#define SAY_INTRO               -1269021
-#define SAY_WEAK75              -1269022
-#define SAY_WEAK50              -1269023
-#define SAY_WEAK25              -1269024
-#define SAY_DEATH               -1269025
-#define SAY_WIN                 -1269026
-#define SAY_ORCS_ENTER          -1269027
-#define SAY_ORCS_ANSWER         -1269028
+/*######
+## npc_medivh_black_morass
+######*/
 
-#define SPELL_CHANNEL           31556
-#define SPELL_PORTAL_RUNE       32570                       //aura(portal on ground effect)
-
-#define SPELL_BLACK_CRYSTAL     32563                       //aura
-#define SPELL_PORTAL_CRYSTAL    32564                       //summon
-
-#define SPELL_BANISH_PURPLE     32566                       //aura
-#define SPELL_BANISH_GREEN      32567                       //aura
-
-#define SPELL_CORRUPT           31326
-#define SPELL_CORRUPT_AEONUS    37853
-
-#define C_COUNCIL_ENFORCER      17023
-
-struct MANGOS_DLL_DECL npc_medivh_bmAI : public ScriptedAI
+enum
 {
-    npc_medivh_bmAI(Creature* pCreature) : ScriptedAI(pCreature)
+    SAY_DEATH               = -1269025,
+
+    SPELL_CORRUPT           = 31326,
+};
+
+struct MANGOS_DLL_DECL npc_medivh_black_morassAI : public ScriptedAI
+{
+    npc_medivh_black_morassAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
@@ -63,291 +50,249 @@ struct MANGOS_DLL_DECL npc_medivh_bmAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    uint32 SpellCorrupt_Timer;
-    uint32 Check_Timer;
+    void Reset() { }
 
-    bool Life75;
-    bool Life50;
-    bool Life25;
+    void AttackStart(Unit* pWho) { }
 
-    void Reset()
+    void JustSummoned(Creature* pSummoned)
     {
-        SpellCorrupt_Timer = 0;
-        Check_Timer = 0;
-
-        Life75 = true;
-        Life50 = true;
-        Life25 = true;
-
-        if (!m_pInstance)
-            return;
-
-        if (m_pInstance->GetData(TYPE_MEDIVH) == IN_PROGRESS)
-            m_creature->CastSpell(m_creature, SPELL_CHANNEL, true);
-        else if (m_creature->HasAura(SPELL_CHANNEL, EFFECT_INDEX_0))
-            m_creature->RemoveAurasDueToSpell(SPELL_CHANNEL);
-
-        m_creature->CastSpell(m_creature, SPELL_PORTAL_RUNE, true);
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!m_pInstance)
-            return;
-
-        if (who->GetTypeId() == TYPEID_PLAYER && m_creature->IsWithinDistInMap(who, 10.0f))
+        // The rift trash mobs are summoned by Medivh, so we can control the movement
+        if (pSummoned->GetEntry() != NPC_TIME_RIFT && pSummoned->GetEntry() != NPC_COUNCIL_ENFORCER)
         {
-            if (m_pInstance->GetData(TYPE_MEDIVH) == IN_PROGRESS || m_pInstance->GetData(TYPE_MEDIVH) == DONE)
-                return;
-
-            DoScriptText(SAY_INTRO, m_creature);
-            m_pInstance->SetData(TYPE_MEDIVH, IN_PROGRESS);
-            m_creature->CastSpell(m_creature, SPELL_CHANNEL, false);
-            Check_Timer = 5000;
-        }
-        else if (who->GetTypeId() == TYPEID_UNIT && m_creature->IsWithinDistInMap(who, 15.0f))
-        {
-            if (m_pInstance->GetData(TYPE_MEDIVH) != IN_PROGRESS)
-                return;
-
-            uint32 entry = who->GetEntry();
-            if (entry == NPC_ASSAS || entry == NPC_WHELP || entry == NPC_CHRON || entry == NPC_EXECU || entry == NPC_VANQU)
-            {
-                who->StopMoving();
-                who->CastSpell(m_creature, SPELL_CORRUPT, false);
-            }
-            else if (entry == NPC_AEONUS)
-            {
-                who->StopMoving();
-                who->CastSpell(m_creature, SPELL_CORRUPT_AEONUS, false);
-            }
+            float fX, fY, fZ;
+            m_creature->GetNearPoint(m_creature, fX, fY, fZ, 0, 20.0f, m_creature->GetAngle(pSummoned));
+            pSummoned->SetWalk(false);
+            pSummoned->GetMotionMaster()->MovePoint(1, fX, fY, fZ);
         }
     }
 
-    void AttackStart(Unit *who)
+    void SummonedMovementInform(Creature* pSummoned, uint32 uiMotionType, uint32 uiPointId)
     {
-        //if (m_pInstance && m_pInstance->GetData(TYPE_MEDIVH) == IN_PROGRESS)
-            //return;
-
-        //ScriptedAI::AttackStart(who);
-    }
-
-    void SpellHit(Unit* caster, const SpellEntry* spell)
-    {
-        if (SpellCorrupt_Timer)
+        if (uiMotionType != POINT_MOTION_TYPE || !uiPointId)
             return;
 
-        if (spell->Id == SPELL_CORRUPT_AEONUS)
-            SpellCorrupt_Timer = 1000;
-
-        if (spell->Id == SPELL_CORRUPT)
-            SpellCorrupt_Timer = 3000;
+        pSummoned->CastSpell(m_creature, SPELL_CORRUPT, false);
     }
 
-    void JustDied(Unit* Killer)
+    void JustDied(Unit* pKiller)
     {
-        if (Killer->GetEntry() == m_creature->GetEntry())
-            return;
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_MEDIVH, FAIL);
 
         DoScriptText(SAY_DEATH, m_creature);
     }
 
-    void UpdateAI(const uint32 diff)
-    {
-        if (!m_pInstance)
-            return;
-
-        if (SpellCorrupt_Timer)
-        {
-            if (SpellCorrupt_Timer <= diff)
-            {
-                m_pInstance->SetData(TYPE_MEDIVH, SPECIAL);
-
-                if (m_creature->HasAura(SPELL_CORRUPT_AEONUS, EFFECT_INDEX_0))
-                    SpellCorrupt_Timer = 1000;
-                else if (m_creature->HasAura(SPELL_CORRUPT, EFFECT_INDEX_0))
-                    SpellCorrupt_Timer = 3000;
-                else
-                    SpellCorrupt_Timer = 0;
-            }
-            else
-                SpellCorrupt_Timer -= diff;
-        }
-
-        if (Check_Timer)
-        {
-            if (Check_Timer <= diff)
-            {
-                uint32 pct = m_pInstance->GetData(DATA_SHIELD);
-
-                Check_Timer = 5000;
-
-                if (Life25 && pct <= 25)
-                {
-                    DoScriptText(SAY_WEAK25, m_creature);
-                    Life25 = false;
-                }
-                else if (Life50 && pct <= 50)
-                {
-                    DoScriptText(SAY_WEAK50, m_creature);
-                    Life50 = false;
-                }
-                else if (Life75 && pct <= 75)
-                {
-                    DoScriptText(SAY_WEAK75, m_creature);
-                    Life75 = false;
-                }
-
-                //if we reach this it means event was running but at some point reset.
-                if (m_pInstance->GetData(TYPE_MEDIVH) == NOT_STARTED)
-                {
-                    m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-                    m_creature->RemoveCorpse();
-                    m_creature->Respawn();
-                    return;
-                }
-
-                if (m_pInstance->GetData(TYPE_RIFT) == DONE)
-                {
-                    DoScriptText(SAY_WIN, m_creature);
-                    Check_Timer = 0;
-
-                    if (m_creature->HasAura(SPELL_CHANNEL, EFFECT_INDEX_0))
-                        m_creature->RemoveAurasDueToSpell(SPELL_CHANNEL);
-
-                    //TODO: start the post-event here
-                    m_pInstance->SetData(TYPE_MEDIVH,DONE);
-                }
-            }
-            else
-                Check_Timer -= diff;
-        }
-
-        //if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-            //return;
-
-        //DoMeleeAttackIfReady();
-    }
+    void UpdateAI(const uint32 uiDiff) { }
 };
 
-CreatureAI* GetAI_npc_medivh_bm(Creature* pCreature)
+CreatureAI* GetAI_npc_medivh_black_morass(Creature* pCreature)
 {
-    return new npc_medivh_bmAI(pCreature);
+    return new npc_medivh_black_morassAI(pCreature);
 }
 
-struct Wave
+bool EffectDummyCreature_npc_medivh_black_morass(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
 {
-    uint32 PortalMob[4];                                    //spawns for portal waves (in order)
+    //always check spellid and effectindex
+    if ((uiSpellId == SPELL_CORRUPT && uiEffIndex == EFFECT_INDEX_0) || (uiSpellId == SPELL_CORRUPT_AEONUS && uiEffIndex == EFFECT_INDEX_0))
+    {
+        if (instance_dark_portal* pInstance = (instance_dark_portal*)pCreatureTarget->GetInstanceData())
+            pInstance->SetData(TYPE_SHIELD, SPECIAL);
+
+        //always return true when we are handling this spell and effect
+        return true;
+    }
+
+    return false;
+}
+
+/*######
+## npc_time_rift
+######*/
+
+enum
+{
+    SPELL_RIFT_PERIODIC     = 31320,            // should trigger 31388
+
+    // Boss spawn yells
+    SAY_CHRONO_LORD_ENTER   = -1269006,
+    SAY_TEMPORUS_ENTER      = -1269000,
+    SAY_AEONUS_ENTER        = -1269012,
 };
 
-static Wave PortalWaves[]=
+struct RiftWaveData
 {
-    {NPC_ASSAS, NPC_WHELP, NPC_CHRON, 0},
-    {NPC_EXECU, NPC_CHRON, NPC_WHELP, NPC_ASSAS},
-    {NPC_EXECU, NPC_VANQU, NPC_CHRON, NPC_ASSAS}
+    uint32 uiPortalMob[4];                      // spawns for portal waves (in order)
+};
+
+static const RiftWaveData aPortalWaves[]=
+{
+    {NPC_ASSASSIN,    NPC_WHELP,        NPC_CHRONOMANCER, 0},
+    {NPC_EXECUTIONER, NPC_CHRONOMANCER, NPC_WHELP,        NPC_ASSASSIN},
+    {NPC_EXECUTIONER, NPC_VANQUISHER,   NPC_CHRONOMANCER, NPC_ASSASSIN}
 };
 
 struct MANGOS_DLL_DECL npc_time_riftAI : public ScriptedAI
 {
     npc_time_riftAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_pInstance = (instance_dark_portal*)pCreature->GetInstanceData();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
+        m_bIsFirstSummon = true;
+        m_uiRiftNumber   = 0;
+        m_uiRiftWaveId   = 0;
         Reset();
     }
 
-    ScriptedInstance* m_pInstance;
+    instance_dark_portal* m_pInstance;
 
-    uint32 TimeRiftWave_Timer;
-    uint8 mRiftWaveCount;
-    uint8 mPortalCount;
-    uint8 mWaveId;
+    bool m_bIsRegularMode;
+    bool m_bIsFirstSummon;
+
+    uint8 m_uiRiftWaveCount;
+    uint8 m_uiRiftNumber;
+    uint8 m_uiRiftWaveId;
 
     void Reset()
     {
-        TimeRiftWave_Timer = 15000;
-        mRiftWaveCount = 0;
+        DoCastSpellIfCan(m_creature, SPELL_RIFT_PERIODIC);
 
-        if (!m_pInstance)
-            return;
+        m_uiRiftWaveCount       = 0;
 
-        mPortalCount = m_pInstance->GetData(DATA_PORTAL_COUNT);
+        if (m_pInstance)
+        {
+            m_uiRiftNumber = m_pInstance->GetCurrentRiftId();
 
-        if (mPortalCount < 6)
-            mWaveId = 0;
-        else if (mPortalCount > 12)
-            mWaveId = 2;
-        else
-            mWaveId = 1;
-
+            if (m_uiRiftNumber < 6)
+                m_uiRiftWaveId = 0;
+            else if (m_uiRiftNumber > 12)
+                m_uiRiftWaveId = 2;
+            else
+                m_uiRiftWaveId = 1;
+        }
     }
 
-    void DoSummonAtRift(uint32 creature_entry)
+    void DoSummonCreatureAtRift(uint32 uiCreatureEntry, Creature* pSummoner)
     {
-        if (!creature_entry)
+        if (!uiCreatureEntry)
             return;
 
-        if (m_pInstance->GetData(TYPE_MEDIVH) != IN_PROGRESS)
-        {
-            m_creature->InterruptNonMeleeSpells(true);
-            m_creature->RemoveAllAuras();
-            return;
-        }
-
-        float x, y, z;
-        m_creature->GetRandomPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 10.0f, x, y, z);
-        // uncomment the following if something doesn't work correctly, otherwise just delete
-        // m_creature->UpdateAllowedPositionZ(x, y, z);
-
-        if (Unit* pSummon = m_creature->SummonCreature(creature_entry, x, y, z, m_creature->GetOrientation(), TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000))
-        {
-            if (Creature* pMedivh = m_pInstance->GetSingleCreatureFromStorage(NPC_MEDIVH))
-                pSummon->AddThreat(pMedivh);
-        }
+        float fX, fY, fZ;
+        m_creature->GetRandomPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 10.0f, fX, fY, fZ);
+        pSummoner->SummonCreature(uiCreatureEntry, fX, fY, fZ, m_creature->GetOrientation(), TEMPSUMMON_DEAD_DESPAWN, 0);
     }
 
-    void DoSelectSummon()
-    {
-        uint32 entry = 0;
-
-        if ((mRiftWaveCount > 2 && mWaveId < 1) || mRiftWaveCount > 3)
-            mRiftWaveCount = 0;
-
-        entry = PortalWaves[mWaveId].PortalMob[mRiftWaveCount];
-        debug_log("SD2: npc_time_rift: summoning wave creature (Wave %u, Entry %u).", mRiftWaveCount, entry);
-
-        ++mRiftWaveCount;
-
-        if (entry == NPC_WHELP)
-        {
-            for(uint8 i = 0; i < 3; ++i)
-                DoSummonAtRift(entry);
-        }
-        else
-            DoSummonAtRift(entry);
-    }
-
-    void UpdateAI(const uint32 diff)
+    void DoSummon()
     {
         if (!m_pInstance)
             return;
 
-        if (TimeRiftWave_Timer < diff)
+        uint32 uiSummonEntry = 0;
+
+        if (m_bIsFirstSummon)
         {
-            DoSelectSummon();
-            TimeRiftWave_Timer = 15000;
+            // Select portal keeper / boss to summon
+            // On Heroic Mode if Chrono Lord and Temporus are already killed, we need to summon the replacement
+            switch (m_uiRiftNumber)
+            {
+                case 6:
+                    uiSummonEntry = (m_pInstance->GetData(TYPE_CHRONO_LORD) == DONE && !m_bIsRegularMode) ? NPC_CHRONO_LORD : NPC_CHRONO_LORD_DEJA;
+                    break;
+                case 12:
+                    uiSummonEntry = (m_pInstance->GetData(TYPE_TEMPORUS) == DONE && !m_bIsRegularMode) ? NPC_TIMEREAVER : NPC_TEMPORUS;
+                    break;
+                case 18:
+                    uiSummonEntry = NPC_AEONUS;
+                    break;
+                default:
+                    uiSummonEntry = urand(0, 1) ? NPC_RIFT_KEEPER : NPC_RIFT_LORD;
+                    break;
+            }
+
+            // Set the next rift delay
+            if (uiSummonEntry != NPC_AEONUS)
+                m_pInstance->SetData(TYPE_TIME_RIFT, SPECIAL);
+
+            DoSummonCreatureAtRift(uiSummonEntry, m_creature);
+            m_bIsFirstSummon = false;
         }
         else
-            TimeRiftWave_Timer -= diff;
+        {
+            // Some creatures are summoned by Medivh, because we can better handle the movement this way
+            Creature* pMedivh = m_pInstance->GetSingleCreatureFromStorage(NPC_MEDIVH);
+            if (!pMedivh)
+                return;
 
-        if (m_creature->IsNonMeleeSpellCasted(false))
+            // Reset the RiftWaveCount if we reached the maximum number of the currentRiftWave is 0
+            if ((m_uiRiftWaveCount > 2 && !m_uiRiftWaveId) || m_uiRiftWaveCount > 3)
+                m_uiRiftWaveCount = 0;
+
+            uiSummonEntry = aPortalWaves[m_uiRiftWaveId].uiPortalMob[m_uiRiftWaveCount];
+            ++m_uiRiftWaveCount;
+
+            // Summon the trash waves by Medivh, so we can better handle the movement
+            // For Whelps we need to summon them in packs of 3
+            if (uiSummonEntry == NPC_WHELP)
+            {
+                for (uint8 i = 0; i < 3; ++i)
+                    DoSummonCreatureAtRift(uiSummonEntry, pMedivh);
+            }
+            else
+                DoSummonCreatureAtRift(uiSummonEntry, pMedivh);
+        }
+    }
+
+    void JustSummoned(Creature* pSummoned)
+    {
+        switch (pSummoned->GetEntry())
+        {
+            case NPC_CHRONO_LORD_DEJA:
+                DoCastSpellIfCan(pSummoned, SPELL_RIFT_CHANNEL);
+                DoScriptText(SAY_CHRONO_LORD_ENTER, pSummoned);
+                break;
+            case NPC_TEMPORUS:
+                DoCastSpellIfCan(pSummoned, SPELL_RIFT_CHANNEL);
+                DoScriptText(SAY_TEMPORUS_ENTER, pSummoned);
+                break;
+            case NPC_CHRONO_LORD:
+            case NPC_TIMEREAVER:
+            case NPC_RIFT_KEEPER:
+            case NPC_RIFT_LORD:
+                DoCastSpellIfCan(pSummoned, SPELL_RIFT_CHANNEL);
+                break;
+            case NPC_AEONUS:
+                DoScriptText(SAY_AEONUS_ENTER, pSummoned);
+                // Remove Time Rift aura so it won't spawn other mobs
+                m_creature->RemoveAurasDueToSpell(SPELL_RIFT_PERIODIC);
+                // Move to Medivh and cast Corrupt on him
+                pSummoned->SetWalk(false);
+                if (m_pInstance)
+                {
+                    if (Creature* pMedivh = m_pInstance->GetSingleCreatureFromStorage(NPC_MEDIVH))
+                    {
+                        float fX, fY, fZ;
+                        pMedivh->GetNearPoint(pMedivh, fX, fY, fZ, 0, 20.0f, pMedivh->GetAngle(pSummoned));
+                        pSummoned->GetMotionMaster()->MovePoint(1, fX, fY, fZ);
+                    }
+                }
+                break;
+        }
+    }
+
+    void SummonedCreatureJustDied(Creature* pSummoned)
+    {
+        if (pSummoned->GetEntry() == NPC_AEONUS)
+            m_creature->ForcedDespawn();
+    }
+
+    void SummonedMovementInform(Creature* pSummoned, uint32 uiMotionType, uint32 uiPointId)
+    {
+        if (uiMotionType != POINT_MOTION_TYPE || !uiPointId || pSummoned->GetEntry() != NPC_AEONUS)
             return;
 
-        debug_log("SD2: npc_time_rift: not casting anylonger, i need to die.");
-        m_creature->SetDeathState(JUST_DIED);
-
-        if (m_pInstance->GetData(TYPE_RIFT) == IN_PROGRESS)
-            m_pInstance->SetData(TYPE_RIFT, SPECIAL);
+        pSummoned->CastSpell(pSummoned, SPELL_CORRUPT_AEONUS, false);
     }
+
+    void UpdateAI(const uint32 uiDiff) { }
 };
 
 CreatureAI* GetAI_npc_time_rift(Creature* pCreature)
@@ -355,17 +300,59 @@ CreatureAI* GetAI_npc_time_rift(Creature* pCreature)
     return new npc_time_riftAI(pCreature);
 }
 
+bool EffectDummyCreature_npc_time_rift_channel(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+{
+    //always check spellid and effectindex
+    if (uiSpellId == SPELL_RIFT_PERIODIC && uiEffIndex == EFFECT_INDEX_0)
+    {
+        if (npc_time_riftAI* pTimeRiftAI = dynamic_cast<npc_time_riftAI*>(pCreatureTarget->AI()))
+            pTimeRiftAI->DoSummon();
+
+        //always return true when we are handling this spell and effect
+        return true;
+    }
+
+    return false;
+}
+
+/*######
+## npc_time_rift_channeler
+######*/
+
+bool EffectAuraDummy_npc_time_rift_channeler(const Aura* pAura, bool bApply)
+{
+    // Despawn the Time Rift when the aura is canceled
+    if (pAura->GetId() == SPELL_RIFT_CHANNEL && pAura->GetEffIndex() == EFFECT_INDEX_0 && !bApply)
+    {
+        if (Creature* pCaster = (Creature*)pAura->GetCaster())
+        {
+            if (ScriptedInstance* pInstance = (ScriptedInstance*)pCaster->GetInstanceData())
+                pInstance->SetData(TYPE_TIME_RIFT, DONE);
+
+            pCaster->ForcedDespawn(3000);
+        }
+    }
+    return true;
+}
+
 void AddSC_dark_portal()
 {
     Script* pNewScript;
 
     pNewScript = new Script;
-    pNewScript->Name = "npc_medivh_bm";
-    pNewScript->GetAI = &GetAI_npc_medivh_bm;
+    pNewScript->Name = "npc_medivh_black_morass";
+    pNewScript->GetAI = &GetAI_npc_medivh_black_morass;
+    pNewScript->pEffectDummyNPC = &EffectDummyCreature_npc_medivh_black_morass;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
     pNewScript->Name = "npc_time_rift";
     pNewScript->GetAI = &GetAI_npc_time_rift;
+    pNewScript->pEffectDummyNPC = &EffectDummyCreature_npc_time_rift_channel;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_time_rift_channeler";
+    pNewScript->pEffectAuraDummy = &EffectAuraDummy_npc_time_rift_channeler;
     pNewScript->RegisterSelf();
 }

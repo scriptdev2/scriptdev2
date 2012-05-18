@@ -73,6 +73,10 @@ DELETE FROM scripted_areatrigger WHERE entry IN (5709,5732);
 INSERT INTO scripted_areatrigger VALUES
 (5709,'at_icecrown_citadel'),
 (5732,'at_icecrown_citadel');
+DELETE FROM scripted_areatrigger WHERE entry in (4288,4485);
+INSERT INTO scripted_areatrigger VALUES
+(4288,'at_dark_portal'),
+(4485,'at_dark_portal');
 
 
 /* BATTLEGROUNDS */
@@ -434,8 +438,9 @@ UPDATE creature_template SET ScriptName='boss_chrono_lord_deja' WHERE entry=1787
 UPDATE creature_template SET ScriptName='boss_aeonus' WHERE entry=17881;
 UPDATE creature_template SET ScriptName='boss_temporus' WHERE entry=17880;
 UPDATE instance_template SET ScriptName='instance_dark_portal' WHERE map=269;
-UPDATE creature_template SET ScriptName='npc_medivh_bm' WHERE entry=15608;
+UPDATE creature_template SET ScriptName='npc_medivh_black_morass' WHERE entry=15608;
 UPDATE creature_template SET ScriptName='npc_time_rift' WHERE entry=17838;
+UPDATE creature_template SET ScriptName='npc_time_rift_channeler' WHERE entry IN (21104,17839,21697,21698);
 
 /*  */
 /* COILFANG RESERVOIR */
