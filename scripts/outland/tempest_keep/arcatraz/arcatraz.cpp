@@ -48,7 +48,6 @@ enum
     SAY_ICEBLOCK                    = -1552019,
     SAY_LOWHP                       = -1552020,
     SAY_DEATH                       = -1552021,
-    SAY_COMPLETE                    = -1552022,
 
     SPELL_CONJURE_WATER             = 36879,
     SPELL_ARCANE_INTELLECT          = 36880,
@@ -60,44 +59,58 @@ enum
     SPELL_FIREBALL                  = 14034,
     SPELL_FROSTBOLT                 = 15497,
     SPELL_PYROBLAST                 = 33975,
+    SPELL_ICE_BLOCK                 = 36911,
+
+    POINT_ID_CENTER                 = 1,
 };
 
-struct MANGOS_DLL_DECL npc_millhouse_manastormAI : public ScriptedAI
+static const DialogueEntry aIntroDialogue[] =
 {
-    npc_millhouse_manastormAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {NPC_MILLHOUSE,   0,             2000},
+    {SAY_INTRO_1,     NPC_MILLHOUSE, 10000},
+    {TYPE_WARDEN_2,   0,             10000},
+    {SAY_INTRO_2,     NPC_MILLHOUSE, 18000},
+    {SAY_WATER,       NPC_MILLHOUSE, 7000},
+    {SAY_BUFFS,       NPC_MILLHOUSE, 7000},
+    {SAY_DRINK,       NPC_MILLHOUSE, 7000},
+    {SAY_READY,       NPC_MILLHOUSE, 6000},
+    {POINT_ID_CENTER, 0,             0},
+    {0, 0, 0},
+};
+
+static const float fRoomCenterCoords[3] = {445.92f, -158.37f, 43.06f};
+
+struct MANGOS_DLL_DECL npc_millhouse_manastormAI : public ScriptedAI, private DialogueHelper
+{
+    npc_millhouse_manastormAI(Creature* pCreature) : ScriptedAI(pCreature),
+        DialogueHelper(aIntroDialogue)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        InitializeDialogueHelper(m_pInstance);
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
 
-    uint32 m_uiEventProgressTimer;
-    uint32 m_uiPhase;
-    bool m_bInitFinished;
     bool m_bHasLowHp;
-
     uint32 m_uiPyroblastTimer;
     uint32 m_uiFireballTimer;
+    uint32 m_uiFrostBoltTimer;
+    uint32 m_uiFireBlastTimer;
+    uint32 m_uiConeColtTimer;
+    uint32 m_uiArcaneMissileTimer;
 
     void Reset()
     {
-        m_uiEventProgressTimer = 2000;
-        m_bHasLowHp = false;
-        m_bInitFinished = false;
-        m_uiPhase = 1;
+        m_bHasLowHp             = false;
+        m_uiPyroblastTimer      = urand(6000, 9000);
+        m_uiFireballTimer       = urand(2500, 4000);
+        m_uiFrostBoltTimer      = urand(3000, 5000);
+        m_uiFireBlastTimer      = urand(6000, 14000);
+        m_uiConeColtTimer       = urand(7000, 12000);
+        m_uiArcaneMissileTimer  = urand(5000, 8000);
 
-        m_uiPyroblastTimer = 1000;
-        m_uiFireballTimer = 2500;
-
-        if (m_pInstance)
-        {
-            if (m_pInstance->GetData(TYPE_WARDEN_2) == DONE)
-                m_bInitFinished = true;
-
-            if (m_pInstance->GetData(TYPE_HARBINGERSKYRISS) == DONE)
-                DoScriptText(SAY_COMPLETE, m_creature);
-        }
+        StartNextDialogueText(NPC_MILLHOUSE);
     }
 
     void AttackStart(Unit* pWho)
@@ -107,8 +120,7 @@ struct MANGOS_DLL_DECL npc_millhouse_manastormAI : public ScriptedAI
             m_creature->AddThreat(pWho);
             m_creature->SetInCombatWith(pWho);
             pWho->SetInCombatWith(m_creature);
-
-            m_creature->GetMotionMaster()->MoveChase(pWho, 25.0f);
+            DoStartMovement(pWho, 25.0f);
         }
     }
 
@@ -126,55 +138,49 @@ struct MANGOS_DLL_DECL npc_millhouse_manastormAI : public ScriptedAI
             ->FailQuest();*/
     }
 
+    void EnterEvadeMode()
+    {
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop(true);
+        m_creature->LoadCreatureAddon(true);
+
+        // Boss should evade in the center of the room
+        if (m_creature->isAlive())
+            m_creature->GetMotionMaster()->MovePoint(1, fRoomCenterCoords[0], fRoomCenterCoords[1], fRoomCenterCoords[2]);
+
+        m_creature->SetLootRecipient(NULL);
+
+        Reset();
+    }
+
+    void JustDidDialogueStep(int32 iEntry)
+    {
+        switch (iEntry)
+        {
+            case TYPE_WARDEN_2:
+                if (m_pInstance)
+                    m_pInstance->SetData(TYPE_WARDEN_2, DONE);
+                break;
+            case SAY_WATER:
+                DoCastSpellIfCan(m_creature, SPELL_CONJURE_WATER);
+                break;
+            case SAY_BUFFS:
+                DoCastSpellIfCan(m_creature, SPELL_ICE_ARMOR);
+                break;
+            case SAY_DRINK:
+                DoCastSpellIfCan(m_creature, SPELL_ARCANE_INTELLECT);
+                break;
+            case POINT_ID_CENTER:
+                m_creature->SetWalk(false);
+                m_creature->GetMotionMaster()->MovePoint(1, fRoomCenterCoords[0], fRoomCenterCoords[1], fRoomCenterCoords[2]);
+                break;
+        }
+    }
+
     void UpdateAI(const uint32 uiDiff)
     {
-        if (!m_bInitFinished)
-        {
-            if (m_uiEventProgressTimer < uiDiff)
-            {
-                if (m_uiPhase < 8)
-                {
-                    switch(m_uiPhase)
-                    {
-                        case 1:
-                            DoScriptText(SAY_INTRO_1, m_creature);
-                            m_uiEventProgressTimer = 18000;
-                            break;
-                        case 2:
-                            DoScriptText(SAY_INTRO_2, m_creature);
-                            m_uiEventProgressTimer = 18000;
-                            break;
-                        case 3:
-                            DoScriptText(SAY_WATER, m_creature);
-                            DoCastSpellIfCan(m_creature, SPELL_CONJURE_WATER);
-                            m_uiEventProgressTimer = 7000;
-                            break;
-                        case 4:
-                            DoScriptText(SAY_BUFFS, m_creature);
-                            DoCastSpellIfCan(m_creature, SPELL_ICE_ARMOR);
-                            m_uiEventProgressTimer = 7000;
-                            break;
-                        case 5:
-                            DoScriptText(SAY_DRINK, m_creature);
-                            DoCastSpellIfCan(m_creature, SPELL_ARCANE_INTELLECT);
-                            m_uiEventProgressTimer = 7000;
-                            break;
-                        case 6:
-                            DoScriptText(SAY_READY, m_creature);
-                            m_uiEventProgressTimer = 6000;
-                            break;
-                        case 7:
-                            if (m_pInstance)
-                                m_pInstance->SetData(TYPE_WARDEN_2, DONE);
-                            m_bInitFinished = true;
-                            break;
-                    }
-                    ++m_uiPhase;
-                }
-            }
-            else
-                m_uiEventProgressTimer -= uiDiff;
-        }
+        DialogueUpdate(uiDiff);
 
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -204,6 +210,38 @@ struct MANGOS_DLL_DECL npc_millhouse_manastormAI : public ScriptedAI
         else
             m_uiFireballTimer -=uiDiff;
 
+        if (m_uiFrostBoltTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_FROSTBOLT) == CAST_OK)
+                m_uiFrostBoltTimer = urand(4000, 6000);
+        }
+        else
+            m_uiFrostBoltTimer -= uiDiff;
+
+        if (m_uiConeColtTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_CONE_OF_COLD) == CAST_OK)
+                m_uiConeColtTimer = urand(7000, 12000);
+        }
+        else
+            m_uiConeColtTimer -= uiDiff;
+
+        if (m_uiFireBlastTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_FIRE_BLAST) == CAST_OK)
+                m_uiFireBlastTimer = urand(5000, 16000);
+        }
+        else
+            m_uiFireBlastTimer -= uiDiff;
+
+        if (m_uiArcaneMissileTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_ARCANE_MISSILES) == CAST_OK)
+                m_uiArcaneMissileTimer = urand(5000, 8000);
+        }
+        else
+            m_uiArcaneMissileTimer -= uiDiff;
+
         DoMeleeAttackIfReady();
     }
 };
@@ -219,44 +257,8 @@ CreatureAI* GetAI_npc_millhouse_manastorm(Creature* pCreature)
 
 enum
 {
-    YELL_INTRO1             = -1552023,
-    YELL_INTRO2             = -1552024,
-    YELL_RELEASE1           = -1552025,
-    YELL_RELEASE2A          = -1552026,
-    YELL_RELEASE2B          = -1552027,
-    YELL_RELEASE3           = -1552028,
-    YELL_RELEASE4           = -1552029,
-    YELL_WELCOME            = -1552030,
-
-    // phase 2(acid mobs)
-    ENTRY_TRICKSTER         = 20905,
-    ENTRY_PH_HUNTER         = 20906,
-    // phase 3
-    ENTRY_MILLHOUSE         = 20977,
-    // phase 4(acid mobs)
-    ENTRY_AKKIRIS           = 20908,
-    ENTRY_SULFURON          = 20909,
-    // phase 5(acid mobs)
-    ENTRY_TW_DRAK           = 20910,
-    ENTRY_BL_DRAK           = 20911,
-    // phase 6
-    ENTRY_SKYRISS           = 20912,
-
-    SPELL_TARGET_ALPHA      = 36856,
-    SPELL_TARGET_BETA       = 36854,
-    SPELL_TARGET_DELTA      = 36857,
-    SPELL_TARGET_GAMMA      = 36858,
-    SPELL_TARGET_OMEGA      = 36852,
     SPELL_BUBBLE_VISUAL     = 36849,
-};
-
-static const float aSummonPosition[5][4] =
-{
-    {478.326f, -148.505f, 42.56f, 3.19f},                   // Trickster or Phase Hunter
-    {413.292f, -148.378f, 42.56f, 6.27f},                   // Millhouse
-    {420.179f, -174.396f, 42.58f, 0.02f},                   // Akkiris or Sulfuron
-    {471.795f, -174.58f, 42.58f, 3.06f},                    // Twilight or Blackwing Drakonaar
-    {445.763f, -191.639f, 44.64f, 1.60f}                    // Skyriss
+    SPELL_SIMPLE_TELEPORT   = 12980,
 };
 
 struct MANGOS_DLL_DECL npc_warden_mellicharAI : public ScriptedAI
@@ -269,207 +271,68 @@ struct MANGOS_DLL_DECL npc_warden_mellicharAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    bool m_bIsEventRunning;
-    bool m_bCanSpawnNextWave;
-
-    uint32 m_uiEventProgressTimer;
-    uint32 m_uiPhase;
+    uint32 m_uiIntroTimer;
+    ObjectGuid m_targetPlayerGuid;
 
     void Reset()
     {
-        m_bIsEventRunning = false;
-        m_bCanSpawnNextWave = false;
-
-        m_uiEventProgressTimer = 22000;
-        m_uiPhase = 1;
-
-        m_creature->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE);
-        DoCastSpellIfCan(m_creature,SPELL_TARGET_OMEGA);
-
-        if (m_pInstance)
-            m_pInstance->SetData(TYPE_HARBINGERSKYRISS,NOT_STARTED);
+        m_uiIntroTimer = 5000;
+        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
     }
 
     void AttackStart(Unit* pWho) {}
 
-    void MoveInLineOfSight(Unit* pWho)
-    {
-        if (m_bIsEventRunning)
-            return;
-
-        if (pWho->GetTypeId() != TYPEID_PLAYER)
-            return;
-
-        if (!m_creature->getVictim() && pWho->isTargetableForAttack() && (m_creature->IsHostileTo(pWho)) && pWho->isInAccessablePlaceFor(m_creature))
-        {
-            if (!m_creature->CanFly() && m_creature->GetDistanceZ(pWho) > CREATURE_Z_ATTACK_RANGE)
-                return;
-
-            float attackRadius = m_creature->GetAttackDistance(pWho)/10;
-            if (m_creature->IsWithinDistInMap(pWho, attackRadius) && m_creature->IsWithinLOSInMap(pWho))
-                Aggro(pWho);
-        }
-    }
-
     void Aggro(Unit* pWho)
     {
-        DoScriptText(YELL_INTRO1, m_creature);
+        m_creature->InterruptNonMeleeSpells(false);
+        m_creature->SetFacingToObject(pWho);
+        m_targetPlayerGuid = pWho->GetObjectGuid();
+
         DoCastSpellIfCan(m_creature, SPELL_BUBBLE_VISUAL);
 
+        // In theory the Seal Sphere should protect the npc from being attacked, but because LoS isn't enabled for Gameobjects we have to use this workaround
+        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+
         if (m_pInstance)
-        {
             m_pInstance->SetData(TYPE_HARBINGERSKYRISS, IN_PROGRESS);
+    }
 
-            if (GameObject* pSphere = m_pInstance->GetSingleGameObjectFromStorage(GO_SEAL_SPHERE))
-                pSphere->SetGoState(GO_STATE_READY);
+    void JustSummoned(Creature* pSummoned)
+    {
+        pSummoned->CastSpell(pSummoned, SPELL_SIMPLE_TELEPORT, false);
 
-            m_bIsEventRunning = true;
+        if (pSummoned->GetEntry() != NPC_MILLHOUSE && pSummoned->GetEntry() != NPC_SKYRISS)
+        {
+            if (Unit* pTarget = m_creature->GetMap()->GetUnit(m_targetPlayerGuid))
+                pSummoned->AI()->AttackStart(pTarget);
         }
     }
 
-    bool CanProgress()
+    void JustDied(Unit* pKiller)
     {
         if (m_pInstance)
         {
-            if (m_uiPhase == 7 && m_pInstance->GetData(TYPE_WARDEN_4) == DONE)
-                return true;
-            if (m_uiPhase == 6 && m_pInstance->GetData(TYPE_WARDEN_3) == DONE)
-                return true;
-            if (m_uiPhase == 5 && m_pInstance->GetData(TYPE_WARDEN_2) == DONE)
-                return true;
-            if (m_uiPhase == 4)
-                return true;
-            if (m_uiPhase == 3 && m_pInstance->GetData(TYPE_WARDEN_1) == DONE)
-                return true;
-            if (m_uiPhase == 2 && m_pInstance->GetData(TYPE_HARBINGERSKYRISS) == IN_PROGRESS)
-                return true;
-            if (m_uiPhase == 1 && m_pInstance->GetData(TYPE_HARBINGERSKYRISS) == IN_PROGRESS)
-                return true;
-
-            return false;
-        }
-        return false;
-    }
-
-    void DoPrepareForPhase()
-    {
-        if (m_pInstance)
-        {
-            m_creature->InterruptNonMeleeSpells(true);
-            m_creature->RemoveSpellsCausingAura(SPELL_AURA_DUMMY);
-
-            switch(m_uiPhase)
+            if (Creature* pSkyriss = m_pInstance->GetSingleCreatureFromStorage(NPC_SKYRISS))
             {
-                case 2:
-                    DoCastSpellIfCan(m_creature, SPELL_TARGET_ALPHA);
-                    m_pInstance->SetData(TYPE_WARDEN_1, IN_PROGRESS);
-                    break;
-                case 3:
-                    DoCastSpellIfCan(m_creature, SPELL_TARGET_BETA);
-                    m_pInstance->SetData(TYPE_WARDEN_2, IN_PROGRESS);
-                    break;
-                case 5:
-                    DoCastSpellIfCan(m_creature, SPELL_TARGET_DELTA);
-                    m_pInstance->SetData(TYPE_WARDEN_3, IN_PROGRESS);
-                    break;
-                case 6:
-                    DoCastSpellIfCan(m_creature, SPELL_TARGET_GAMMA);
-                    m_pInstance->SetData(TYPE_WARDEN_4, IN_PROGRESS);
-                    break;
-                case 7:
-                    m_pInstance->SetData(TYPE_WARDEN_5, IN_PROGRESS);
-                    break;
+                if (Unit* pTarget = m_creature->GetMap()->GetUnit(m_targetPlayerGuid))
+                    pSkyriss->AI()->AttackStart(pTarget);
             }
-            m_bCanSpawnNextWave = true;
         }
     }
 
     void UpdateAI(const uint32 uiDiff)
     {
-        if (!m_bIsEventRunning)
-            return;
-
-        if (m_uiEventProgressTimer < uiDiff)
+        // Set the visual intro on OOC timer
+        if (m_uiIntroTimer)
         {
-            if (m_pInstance)
+            if (m_uiIntroTimer <= uiDiff)
             {
-                if (m_pInstance->GetData(TYPE_HARBINGERSKYRISS) == FAIL)
-                    Reset();
+                DoCastSpellIfCan(m_creature, SPELL_TARGET_OMEGA);
+                m_uiIntroTimer = 0;
             }
-
-            if (m_bCanSpawnNextWave)
-            {
-                //continue beam omega pod, unless we are about to summon skyriss
-                if (m_uiPhase != 7)
-                    DoCastSpellIfCan(m_creature, SPELL_TARGET_OMEGA);
-
-                switch (m_uiPhase)
-                {
-                    case 2:
-                        m_creature->SummonCreature(urand(0, 1) ? ENTRY_TRICKSTER : ENTRY_PH_HUNTER, aSummonPosition[0][0], aSummonPosition[0][1], aSummonPosition[0][2], aSummonPosition[0][3], TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
-                        break;
-                    case 3:
-                        m_creature->SummonCreature(ENTRY_MILLHOUSE, aSummonPosition[1][0], aSummonPosition[1][1], aSummonPosition[1][2], aSummonPosition[1][3], TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
-                        break;
-                    case 4:
-                        DoScriptText(YELL_RELEASE2B, m_creature);
-                        break;
-                    case 5:
-                        m_creature->SummonCreature(urand(0, 1) ? ENTRY_AKKIRIS : ENTRY_SULFURON, aSummonPosition[2][0], aSummonPosition[2][1], aSummonPosition[2][2], aSummonPosition[2][3], TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
-                        break;
-                    case 6:
-                        m_creature->SummonCreature(urand(0, 1) ? ENTRY_TW_DRAK : ENTRY_BL_DRAK, aSummonPosition[3][0], aSummonPosition[3][1], aSummonPosition[3][2], aSummonPosition[3][3], TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
-                        break;
-                    case 7:
-                        m_creature->SummonCreature(ENTRY_SKYRISS, aSummonPosition[4][0], aSummonPosition[4][1], aSummonPosition[4][2], aSummonPosition[4][3], TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
-                        DoScriptText(YELL_WELCOME, m_creature);
-                        break;
-                }
-                m_bCanSpawnNextWave = false;
-                ++m_uiPhase;
-            }
-            if (CanProgress())
-            {
-                switch(m_uiPhase)
-                {
-                    case 1:
-                        DoScriptText(YELL_INTRO2, m_creature);
-                        m_uiEventProgressTimer = 10000;
-                        ++m_uiPhase;
-                        break;
-                    case 2:
-                        DoScriptText(YELL_RELEASE1, m_creature);
-                        DoPrepareForPhase();
-                        m_uiEventProgressTimer = 7000;
-                        break;
-                    case 3:
-                        DoScriptText(YELL_RELEASE2A, m_creature);
-                        DoPrepareForPhase();
-                        m_uiEventProgressTimer = 10000;
-                        break;
-                    case 4:
-                        DoPrepareForPhase();
-                        m_uiEventProgressTimer = 15000;
-                        break;
-                    case 5:
-                        DoScriptText(YELL_RELEASE3, m_creature);
-                        DoPrepareForPhase();
-                        m_uiEventProgressTimer = 15000;
-                        break;
-                    case 6:
-                        DoScriptText(YELL_RELEASE4, m_creature);
-                        DoPrepareForPhase();
-                        m_uiEventProgressTimer = 15000;
-                        break;
-                    case 7:
-                        DoPrepareForPhase();
-                        m_uiEventProgressTimer = 15000;
-                        break;
-                }
-            }
+            else
+                m_uiIntroTimer -= uiDiff;
         }
-        else
-            m_uiEventProgressTimer -= uiDiff;
     }
 };
 

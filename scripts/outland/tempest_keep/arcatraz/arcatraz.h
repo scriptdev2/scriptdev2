@@ -20,6 +20,21 @@ enum
     TYPE_WARDEN_5                   = 9,
 
     NPC_MELLICHAR                   = 20904,                // Skyriss will kill this unit
+    NPC_PRISON_APHPA_POD            = 21436,
+    NPC_PRISON_BETA_POD             = 21437,
+    NPC_PRISON_DELTA_POD            = 21438,
+    NPC_PRISON_GAMMA_POD            = 21439,
+    NPC_PRISON_BOSS_POD             = 21440,
+
+    // Harbinger Skyriss event related (trash mobs are scripted in ACID)
+    NPC_BLAZING_TRICKSTER           = 20905,                // phase 1
+    NPC_PHASE_HUNTER                = 20906,
+    NPC_MILLHOUSE                   = 20977,                // phase 2
+    NPC_AKKIRIS                     = 20908,                // phase 3
+    NPC_SULFURON                    = 20909,
+    NPC_TW_DRAKONAAR                = 20910,                // phase 4
+    NPC_BL_DRAKONAAR                = 20911,
+    NPC_SKYRISS                     = 20912,                // phase 5
 
     GO_CORE_SECURITY_FIELD_ALPHA    = 184318,               // Door opened when Wrath-Scryer Soccothrates dies
     GO_CORE_SECURITY_FIELD_BETA     = 184319,               // Door opened when Dalliah the Doomsayer dies
@@ -29,9 +44,25 @@ enum
     GO_POD_DELTA                    = 183964,               // Pod third boss wave
     GO_POD_GAMMA                    = 183962,               // Pod fourth boss wave
     GO_POD_OMEGA                    = 183965,               // Pod fifth boss wave
+
+    SPELL_TARGET_OMEGA              = 36852,                // Visual spell used by Mellichar
 };
 
-class MANGOS_DLL_DECL instance_arcatraz : public ScriptedInstance
+struct SpawnLocation
+{
+    float m_fX, m_fY, m_fZ, m_fO;
+};
+
+static const SpawnLocation aSummonPosition[5] =
+{
+    {478.326f, -148.505f, 42.56f, 3.19f},                   // Trickster or Phase Hunter
+    {413.292f, -148.378f, 42.56f, 6.27f},                   // Millhouse
+    {420.179f, -174.396f, 42.58f, 0.02f},                   // Akkiris or Sulfuron
+    {471.795f, -174.58f,  42.58f, 3.06f},                   // Twilight or Blackwing Drakonaar
+    {445.763f, -191.639f, 44.64f, 1.60f}                    // Skyriss
+};
+
+class MANGOS_DLL_DECL instance_arcatraz : public ScriptedInstance, private DialogueHelper
 {
     public:
         instance_arcatraz(Map* pMap);
@@ -44,8 +75,20 @@ class MANGOS_DLL_DECL instance_arcatraz : public ScriptedInstance
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
 
+        const char* Save() { return m_strInstData.c_str(); }
+        void Load(const char* chrIn);
+
+        void Update(uint32 uiDiff);
+
     private:
+        void JustDidDialogueStep(int32 iEntry);
+
         uint32 m_auiEncounter[MAX_ENCOUNTER];
+        std::string m_strInstData;
+
+        uint32 m_uiResetDelayTimer;
+
+        GUIDList m_lSkyrissEventMobsGuidList;
 };
 
 #endif
