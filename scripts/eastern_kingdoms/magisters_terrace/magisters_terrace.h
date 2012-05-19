@@ -19,6 +19,7 @@ enum
     NPC_SELIN_FIREHEART         = 24723,
     NPC_DELRISSA                = 24560,
     NPC_FEL_CRYSTAL             = 24722,
+    NPC_KALECGOS_DRAGON         = 24844,
 
     GO_VEXALLUS_DOOR            = 187896,
     GO_SELIN_DOOR               = 187979,                   // SunwellRaid Gate 02

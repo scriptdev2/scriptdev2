@@ -790,7 +790,10 @@ UPDATE creature_template SET ScriptName='boss_felblood_kaelthas' WHERE entry=246
 UPDATE creature_template SET ScriptName='mob_arcane_sphere' WHERE entry=24708;
 UPDATE creature_template SET ScriptName='mob_felkael_phoenix' WHERE entry=24674;
 UPDATE creature_template SET ScriptName='mob_felkael_phoenix_egg' WHERE entry=24675;
-UPDATE creature_template SET ScriptName='npc_kalecgos' WHERE entry IN (24844, 24848);
+UPDATE creature_template SET ScriptName='npc_kalecgos' WHERE entry=24844;
+DELETE FROM scripted_event_id WHERE id=16547;
+INSERT INTO scripted_event_id VALUES
+(16547,'event_go_scrying_orb');
 
 /* MARAUDON */
 UPDATE creature_template SET ScriptName='boss_princess_theradras' WHERE entry=12201;

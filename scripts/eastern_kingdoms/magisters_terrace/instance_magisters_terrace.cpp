@@ -48,6 +48,7 @@ void instance_magisters_terrace::OnCreatureCreate(Creature* pCreature)
     {
         case NPC_SELIN_FIREHEART:
         case NPC_DELRISSA:
+        case NPC_KALECGOS_DRAGON:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
         case NPC_FEL_CRYSTAL:
