@@ -16,12 +16,13 @@
 
 /* ScriptData
 SDName: Boss Pathaleon the Calculator
-SD%Complete: 40
-SDComment: Pathway event NYI; The Nether Wraith script is wrong - needs research and update
+SD%Complete: 85
+SDComment: The Nether Wraith script needs additional research and update
 SDCategory: Tempest Keep, The Mechanar
 EndScriptData */
 
 #include "precompiled.h"
+#include "mechanar.h"
 
 enum
 {
@@ -58,14 +59,12 @@ struct MANGOS_DLL_DECL boss_pathaleon_the_calculatorAI : public ScriptedAI
 {
     boss_pathaleon_the_calculatorAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        // Add the summon spells to a vector for better handling
-        for (uint8 i = 0; i < 4; ++i)
-            m_vSummonSpells.push_back(aWraithSummonSpells[i]);
-
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
         Reset();
     }
 
+    ScriptedInstance* m_pInstance;
     bool m_bIsRegularMode;
 
     uint32 m_uiSummonTimer;
@@ -74,8 +73,6 @@ struct MANGOS_DLL_DECL boss_pathaleon_the_calculatorAI : public ScriptedAI
     uint32 m_uiDominationTimer;
     uint32 m_uiArcaneExplosionTimer;
     bool m_bIsEnraged;
-
-    std::vector<uint32> m_vSummonSpells;
 
     void Reset()
     {
@@ -100,6 +97,9 @@ struct MANGOS_DLL_DECL boss_pathaleon_the_calculatorAI : public ScriptedAI
     void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DEATH, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_PATHALEON, DONE);
     }
 
     void JustSummoned(Creature* pSummoned)
@@ -116,10 +116,9 @@ struct MANGOS_DLL_DECL boss_pathaleon_the_calculatorAI : public ScriptedAI
 
         if (m_uiSummonTimer < uiDiff)
         {
-            // Choose 3 random spells out of 4
-            std::random_shuffle(m_vSummonSpells.begin(), m_vSummonSpells.end());
-            for (uint8 i = 0; i < 3; ++i)
-                DoCastSpellIfCan(m_creature, m_vSummonSpells[i], CAST_TRIGGERED);
+            uint8 uiMaxWraith = urand(3, 4);
+            for (uint8 i = 0; i < uiMaxWraith; ++i)
+                DoCastSpellIfCan(m_creature, aWraithSummonSpells[i], CAST_TRIGGERED);
 
             DoScriptText(SAY_SUMMON, m_creature);
             m_uiSummonTimer = urand(30000, 45000);

@@ -2110,7 +2110,8 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1554024,'I prefeer to be hands-on...',11199,1,0,0,'pathaleon SAY_ENRAGE'),
 (-1554025,'A minor inconvenience.',11194,1,0,0,'pathaleon SAY_SLAY_1'),
 (-1554026,'Looks like you lose.',11195,1,0,0,'pathaleon SAY_SLAY_2'),
-(-1554027,'The project will... continue.',11200,1,0,0,'pathaleon SAY_DEATH');
+(-1554027,'The project will... continue.',11200,1,0,0,'pathaleon SAY_DEATH'),
+(-1554028,'I have been waiting for you!',0,1,0,0,'pathaleon SAY_INTRO');
 
 -- -1 555 000 SHADOW LABYRINTH
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
