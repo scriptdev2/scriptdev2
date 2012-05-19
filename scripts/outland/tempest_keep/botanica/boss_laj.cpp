@@ -23,58 +23,63 @@ EndScriptData */
 
 #include "precompiled.h"
 
-#define EMOTE_SUMMON                -1553006
+enum
+{
+    EMOTE_SUMMON                = -1553006,
 
-#define SPELL_ALLERGIC_REACTION     34697
-#define SPELL_TELEPORT_SELF         34673
+    SPELL_ALLERGIC_REACTION     = 34697,
+    SPELL_TELEPORT_SELF         = 34673,
+    SPELL_TRASH                 = 3391,
 
-#define SPELL_SUMMON_LASHER_1       34681
-#define SPELL_SUMMON_FLAYER_1       34682
-#define SPELL_SUMMON_LASHER_2       34684
-#define SPELL_SUMMON_FLAYER_2       34685
-#define SPELL_SUMMON_LASHER_3       34686
-#define SPELL_SUMMON_FLAYER_4       34687
-#define SPELL_SUMMON_LASHER_4       34688
-#define SPELL_SUMMON_FLAYER_3       34690
+    SPELL_SUMMON_LASHER_1       = 34681,
+    SPELL_SUMMON_FLAYER_1       = 34682,
+    SPELL_SUMMON_LASHER_2       = 34684,
+    SPELL_SUMMON_FLAYER_2       = 34685,
+    SPELL_SUMMON_LASHER_3       = 34686,
+    SPELL_SUMMON_FLAYER_4       = 34687,
+    SPELL_SUMMON_LASHER_4       = 34688,
+    SPELL_SUMMON_FLAYER_3       = 34690,
 
-#define MODEL_DEFAULT               13109
-#define MODEL_ARCANE                14213
-#define MODEL_FIRE                  13110
-#define MODEL_FROST                 14112
-#define MODEL_NATURE                14214
+    MODEL_ID_DEFAULT            = 13109,
+    MODEL_ID_ARCANE             = 14213,
+    MODEL_ID_FIRE               = 13110,
+    MODEL_ID_FROST              = 14112,
+    MODEL_ID_NATURE             = 14214,
+};
 
 struct MANGOS_DLL_DECL boss_lajAI : public ScriptedAI
 {
     boss_lajAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
-    bool CanSummon;
-    uint32 Teleport_Timer;
-    uint32 Summon_Timer;
-    uint32 Transform_Timer;
-    uint32 Allergic_Timer;
+    uint32 m_uiTeleportTimer;
+    uint32 m_uiSummonTimer;
+    uint32 m_uiTransformTimer;
+    uint32 m_uiAllergicTimer;
+    uint32 m_uiTrashTimer;
 
     void Reset()
     {
-        m_creature->SetDisplayId(MODEL_DEFAULT);
+        m_creature->SetDisplayId(MODEL_ID_DEFAULT);
         m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_SHADOW, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_ARCANE, false);
         m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_FIRE, false);
         m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_FROST, false);
         m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_NATURE, false);
 
-        CanSummon = false;
-        Teleport_Timer = 20000;
-        Summon_Timer = 2500;
-        Transform_Timer = 30000;
-        Allergic_Timer = 5000;
+        m_uiTeleportTimer   = 15000;
+        m_uiSummonTimer     = 0;
+        m_uiTransformTimer  = 30000;
+        m_uiAllergicTimer   = 5000;
+        m_uiTrashTimer      = urand(4000, 7000);
     }
 
     void DoTransform()
     {
+        // Random transform into a different form
         switch(urand(0, 4))
         {
             case 0:
-                m_creature->SetDisplayId(MODEL_DEFAULT);
+                m_creature->SetDisplayId(MODEL_ID_DEFAULT);
                 m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_SHADOW, true);
                 m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_ARCANE, false);
                 m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_FIRE, false);
@@ -82,7 +87,7 @@ struct MANGOS_DLL_DECL boss_lajAI : public ScriptedAI
                 m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_NATURE, false);
                 break;
             case 1:
-                m_creature->SetDisplayId(MODEL_ARCANE);
+                m_creature->SetDisplayId(MODEL_ID_ARCANE);
                 m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_SHADOW, false);
                 m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_ARCANE, true);
                 m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_FIRE, false);
@@ -90,7 +95,7 @@ struct MANGOS_DLL_DECL boss_lajAI : public ScriptedAI
                 m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_NATURE, false);
                 break;
             case 2:
-                m_creature->SetDisplayId(MODEL_FIRE);
+                m_creature->SetDisplayId(MODEL_ID_FIRE);
                 m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_SHADOW, false);
                 m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_ARCANE, false);
                 m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_FIRE, true);
@@ -98,7 +103,7 @@ struct MANGOS_DLL_DECL boss_lajAI : public ScriptedAI
                 m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_NATURE, false);
                 break;
             case 3:
-                m_creature->SetDisplayId(MODEL_FROST);
+                m_creature->SetDisplayId(MODEL_ID_FROST);
                 m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_SHADOW, false);
                 m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_ARCANE, false);
                 m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_FIRE, false);
@@ -106,7 +111,7 @@ struct MANGOS_DLL_DECL boss_lajAI : public ScriptedAI
                 m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_NATURE, false);
                 break;
             case 4:
-                m_creature->SetDisplayId(MODEL_NATURE);
+                m_creature->SetDisplayId(MODEL_ID_NATURE);
                 m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_SHADOW, false);
                 m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_ARCANE, false);
                 m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_FIRE, false);
@@ -137,42 +142,70 @@ struct MANGOS_DLL_DECL boss_lajAI : public ScriptedAI
                 DoCastSpellIfCan(m_creature, SPELL_SUMMON_FLAYER_4, CAST_TRIGGERED);
                 break;
         }
-        CanSummon = false;
     }
 
-    void UpdateAI(const uint32 diff)
+    void JustSummoned(Creature* pSummoned)
+    {
+        if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            pSummoned->AI()->AttackStart(pTarget);
+    }
+
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (CanSummon)
+        if (m_uiSummonTimer)
         {
-            if (Summon_Timer < diff)
+            if (m_uiSummonTimer <= uiDiff)
             {
-                DoScriptText(EMOTE_SUMMON, m_creature);
+                // Summon adds and restart chasing the victim
                 DoSummons();
-                Summon_Timer = 2500;
-            }else Summon_Timer -= diff;
+                DoScriptText(EMOTE_SUMMON, m_creature);
+
+                if (m_creature->getVictim())
+                    m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
+                m_uiSummonTimer = 0;
+            }
+            else
+                m_uiSummonTimer -= uiDiff;
         }
 
-        if (Allergic_Timer < diff)
+        if (m_uiAllergicTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_ALLERGIC_REACTION);
-            Allergic_Timer = urand(25000, 40000);
-        }else Allergic_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_ALLERGIC_REACTION) == CAST_OK)
+                m_uiAllergicTimer = urand(25000, 40000);
+        }
+        else
+            m_uiAllergicTimer -= uiDiff;
 
-        if (Teleport_Timer < diff)
+        if (m_uiTeleportTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature,SPELL_TELEPORT_SELF);
-            Teleport_Timer = urand(30000, 40000);
-            CanSummon = true;
-        }else Teleport_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature, SPELL_TELEPORT_SELF) == CAST_OK)
+            {
+                m_creature->GetMotionMaster()->MoveIdle();
+                m_uiTeleportTimer = urand(30000, 40000);
+                m_uiSummonTimer = 4000;
+            }
+        }
+        else
+            m_uiTeleportTimer -= uiDiff;
 
-        if (Transform_Timer < diff)
+        if (m_uiTransformTimer < uiDiff)
         {
             DoTransform();
-            Transform_Timer = urand(25000, 40000);
-        }else Transform_Timer -= diff;
+            m_uiTransformTimer = urand(25000, 40000);
+        }
+        else
+            m_uiTransformTimer -= uiDiff;
+
+        if (m_uiTrashTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_TRASH) == CAST_OK)
+                m_uiTrashTimer = urand(4000, 9000);
+        }
+        else
+            m_uiTrashTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
