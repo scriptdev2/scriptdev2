@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Shattrath_City
 SD%Complete: 100
-SDComment: Quest support: 10004, 10231. Flask vendors
+SDComment: Quest support: 10004, 10231.
 SDCategory: Shattrath City
 EndScriptData */
 
@@ -26,7 +26,6 @@ npc_dirty_larry
 npc_ishanah
 npc_khadgars_servant
 npc_salsalabim
-npc_shattrathflaskvendors
 EndContentData */
 
 #include "precompiled.h"
@@ -614,58 +613,6 @@ bool GossipHello_npc_salsalabim(Player* pPlayer, Creature* pCreature)
     return true;
 }
 
-/*
-##################################################
-Shattrath City Flask Vendors provides flasks to people exalted with 3 factions:
-Haldor the Compulsive
-Arcanist Xorith
-Both sell special flasks for use in Outlands 25man raids only,
-purchasable for one Mark of Illidari each
-Purchase requires exalted reputation with Scryers/Aldor, Cenarion Expedition and The Sha'tar
-##################################################
-*/
-
-bool GossipHello_npc_shattrathflaskvendors(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->GetEntry() == 23484)
-    {
-        // Aldor vendor
-        if (pCreature->isVendor() && (pPlayer->GetReputationRank(932) == REP_EXALTED) && (pPlayer->GetReputationRank(935) == REP_EXALTED) && (pPlayer->GetReputationRank(942) == REP_EXALTED))
-        {
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
-            pPlayer->SEND_GOSSIP_MENU(11085, pCreature->GetObjectGuid());
-        }
-        else
-        {
-            pPlayer->SEND_GOSSIP_MENU(11083, pCreature->GetObjectGuid());
-        }
-    }
-
-    if (pCreature->GetEntry() == 23483)
-    {
-        // Scryers vendor
-        if (pCreature->isVendor() && (pPlayer->GetReputationRank(934) == REP_EXALTED) && (pPlayer->GetReputationRank(935) == REP_EXALTED) && (pPlayer->GetReputationRank(942) == REP_EXALTED))
-        {
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
-            pPlayer->SEND_GOSSIP_MENU(11085, pCreature->GetObjectGuid());
-        }
-        else
-        {
-            pPlayer->SEND_GOSSIP_MENU(11084, pCreature->GetObjectGuid());
-        }
-    }
-
-    return true;
-}
-
-bool GossipSelect_npc_shattrathflaskvendors(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_TRADE)
-        pPlayer->SEND_VENDORLIST(pCreature->GetObjectGuid());
-
-    return true;
-}
-
 void AddSC_shattrath_city()
 {
     Script* pNewScript;
@@ -686,11 +633,5 @@ void AddSC_shattrath_city()
     pNewScript->Name = "npc_salsalabim";
     pNewScript->GetAI = &GetAI_npc_salsalabim;
     pNewScript->pGossipHello = &GossipHello_npc_salsalabim;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_shattrathflaskvendors";
-    pNewScript->pGossipHello = &GossipHello_npc_shattrathflaskvendors;
-    pNewScript->pGossipSelect = &GossipSelect_npc_shattrathflaskvendors;
     pNewScript->RegisterSelf();
 }

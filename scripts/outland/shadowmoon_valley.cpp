@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Shadowmoon_Valley
 SD%Complete: 100
-SDComment: Quest support: 10781, 10804, 10854, 10458, 10480, 10481, 10588, 11020. Vendor Drake Dealer Hurlunk.
+SDComment: Quest support: 10781, 10804, 10854, 10458, 10480, 10481, 10588, 11020.
 SDCategory: Shadowmoon Valley
 EndScriptData */
 
@@ -25,7 +25,6 @@ EndScriptData */
 mob_mature_netherwing_drake
 mob_enslaved_netherwing_drake
 npc_dragonmaw_peon
-npc_drake_dealer_hurlunk
 npc_wilda
 mob_torloth
 npc_lord_illidan_stormrage
@@ -447,28 +446,6 @@ bool EffectDummyCreature_npc_dragonmaw_peon(Unit* pCaster, uint32 uiSpellId, Spe
 }
 
 /*######
-## npc_drake_dealer_hurlunk
-######*/
-
-bool GossipHello_npc_drake_dealer_hurlunk(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isVendor() && pPlayer->GetReputationRank(1015) == REP_EXALTED)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
-
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-
-    return true;
-}
-
-bool GossipSelect_npc_drake_dealer_hurlunk(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_TRADE)
-        pPlayer->SEND_VENDORLIST(pCreature->GetObjectGuid());
-
-    return true;
-}
-
-/*####
 # npc_wilda
 ######*/
 
@@ -1676,12 +1653,6 @@ void AddSC_shadowmoon_valley()
     pNewScript->Name = "npc_dragonmaw_peon";
     pNewScript->GetAI = &GetAI_npc_dragonmaw_peon;
     pNewScript->pEffectDummyNPC = &EffectDummyCreature_npc_dragonmaw_peon;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_drake_dealer_hurlunk";
-    pNewScript->pGossipHello =  &GossipHello_npc_drake_dealer_hurlunk;
-    pNewScript->pGossipSelect = &GossipSelect_npc_drake_dealer_hurlunk;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
