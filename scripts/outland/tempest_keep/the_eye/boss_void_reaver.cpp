@@ -135,7 +135,7 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
             {
                 if (Unit* pTarget = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid()))
                 {
-                    if (pTarget->GetTypeId() == TYPEID_PLAYER && !pTarget->IsWithinDist(m_creature, 18))
+                    if (pTarget->GetTypeId() == TYPEID_PLAYER && !pTarget->IsWithinDist(m_creature, 18.0f))
                         suitableTargets.push_back(pTarget);
                 }
             }

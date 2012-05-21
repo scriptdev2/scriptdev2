@@ -58,7 +58,6 @@ void instance_the_eye::OnCreatureCreate(Creature* pCreature)
         case NPC_CAPERNIAN:
         case NPC_SANGUINAR:
         case NPC_KAELTHAS:
-        case NPC_ASTROMANCER:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
     }

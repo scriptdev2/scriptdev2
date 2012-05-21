@@ -15,7 +15,7 @@ enum
 
     TYPE_KAELTHAS_PHASE         = 3,                        // not regular encounter, contains phase instead
 
-    NPC_ASTROMANCER             = 18805,
+    //NPC_ASTROMANCER           = 18805,
     NPC_KAELTHAS                = 19622,
 
     NPC_CAPERNIAN               = 20062,
