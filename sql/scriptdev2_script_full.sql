@@ -3817,7 +3817,10 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1631189,'THE LICH KING...MUST...FALL!',17389,1,0,0,'tirion SAY_OUTRO_11'),
 (-1631190,'Now I stand, the lion before the lambs... and they do not fear.',17361,1,0,0,'lich_king SAY_OUTRO_12'),
 (-1631191,'They cannot fear.',17362,1,0,0,'lich_king SAY_OUTRO_13'),
-(-1631192,'%s dies',17374,2,0,0,'lich_king SAY_OUTRO_14'); -- TODO Can be wrong
+(-1631192,'%s dies',17374,2,0,0,'lich_king SAY_OUTRO_14'), -- TODO Can be wrong
+
+(-1631193,'%s goes into a frenzy!',0,3,0,0,'saurfang EMOTE_FRENZY'),
+(-1631194,'%s\'s Blood Beasts gain the scent of blood!',0,3,0,0,'saurfang EMOTE_SCENT');
 
 -- -1 632 000 ICC: FORGE OF SOULS
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
