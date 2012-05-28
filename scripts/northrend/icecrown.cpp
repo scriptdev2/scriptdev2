@@ -16,49 +16,20 @@
 
 /* ScriptData
 SDName: Icecrown
-SD%Complete: 100
-SDComment: Vendor support: 34885
+SD%Complete: 0
+SDComment: Placeholder
 SDCategory: Icecrown
 EndScriptData */
 
 /* ContentData
-npc_dame_evniki_kapsalis
 EndContentData */
 
 #include "precompiled.h"
 
 /*######
-## npc_dame_evniki_kapsalis
+##
 ######*/
-
-enum
-{
-    TITLE_CRUSADER    = 123
-};
-
-bool GossipHello_npc_dame_evniki_kapsalis(Player* pPlayer, Creature* pCreature)
-{
-    if (pPlayer->HasTitle(TITLE_CRUSADER))
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
-
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-    return true;
-}
-
-bool GossipSelect_npc_dame_evniki_kapsalis(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_TRADE)
-        pPlayer->SEND_VENDORLIST(pCreature->GetObjectGuid());
-    return true;
-}
 
 void AddSC_icecrown()
 {
-    Script* pNewScript;
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_dame_evniki_kapsalis";
-    pNewScript->pGossipHello = &GossipHello_npc_dame_evniki_kapsalis;
-    pNewScript->pGossipSelect = &GossipSelect_npc_dame_evniki_kapsalis;
-    pNewScript->RegisterSelf();
 }
