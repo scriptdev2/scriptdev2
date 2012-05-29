@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Skadi
-SD%Complete: 20%
-SDComment: starts at trigger 4991
+SD%Complete: 30%
+SDComment: Only combat abilities are implemented; Starts at trigger 4991
 SDCategory: Utgarde Pinnacle
 EndScriptData */
 
@@ -74,8 +74,15 @@ struct MANGOS_DLL_DECL boss_skadiAI : public ScriptedAI
     ScriptedInstance* m_pInstance;
     bool m_bIsRegularMode;
 
+    uint32 m_uiCrush;
+    uint32 m_uiWhirlwind;
+    uint32 m_uiPoisonedSpear;
+
     void Reset()
     {
+        m_uiCrush         = 15000;
+        m_uiWhirlwind     = 23000;
+        m_uiPoisonedSpear = 10000;
     }
 
     void JustReachedHome()
@@ -111,6 +118,33 @@ struct MANGOS_DLL_DECL boss_skadiAI : public ScriptedAI
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
+
+        if (m_uiCrush < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_CRUSH : SPELL_CRUSH_H) == CAST_OK)
+                m_uiCrush = urand(10000, 15000);
+        }
+        else
+            m_uiCrush -= uiDiff;
+
+        if (m_uiWhirlwind < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_WHIRLWIND : SPELL_WHIRLWIND_H) == CAST_OK)
+                m_uiWhirlwind = 23000;
+        }
+        else
+            m_uiWhirlwind -= uiDiff;
+
+        if (m_uiPoisonedSpear < uiDiff)
+        {
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_POISONED_SPEAR : SPELL_POISONED_SPEAR_H) == CAST_OK)
+                    m_uiPoisonedSpear = urand(10000, 15000);
+            }
+        }
+        else
+            m_uiPoisonedSpear -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
