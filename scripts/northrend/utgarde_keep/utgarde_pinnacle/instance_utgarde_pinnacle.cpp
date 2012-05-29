@@ -34,6 +34,19 @@ void instance_pinnacle::Initialize()
     memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
 }
 
+void instance_pinnacle::OnCreatureCreate(Creature* pCreature)
+{
+    switch(pCreature->GetEntry())
+    {
+        case NPC_BJORN:
+        case NPC_HALDOR:
+        case NPC_RANULF:
+        case NPC_TORGYN:
+            m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
+            break;
+    }
+}
+
 void instance_pinnacle::OnObjectCreate(GameObject* pGo)
 {
     switch(pGo->GetEntry())
@@ -41,9 +54,15 @@ void instance_pinnacle::OnObjectCreate(GameObject* pGo)
         case GO_DOOR_SKADI:
             if (m_auiEncounter[TYPE_SKADI] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
-            m_mGoEntryGuidStore[GO_DOOR_SKADI] = pGo->GetObjectGuid();
             break;
+        case GO_DOOR_YMIRON:
+            if (m_auiEncounter[TYPE_YMIRON] == DONE)
+                pGo->SetGoState(GO_STATE_ACTIVE);
+            break;
+        default:
+            return;
     }
+    m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
 }
 
 void instance_pinnacle::SetData(uint32 uiType, uint32 uiData)
@@ -63,6 +82,12 @@ void instance_pinnacle::SetData(uint32 uiType, uint32 uiData)
             m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_YMIRON:
+            if (uiData == DONE)
+                DoUseDoorOrButton(GO_DOOR_YMIRON);
+            if (uiData == IN_PROGRESS)
+                m_bIsKingBane = true;
+            if (uiData == SPECIAL)
+                m_bIsKingBane = false;
             m_auiEncounter[uiType] = uiData;
             break;
         default:
@@ -113,6 +138,18 @@ void instance_pinnacle::Load(const char* chrIn)
     }
 
     OUT_LOAD_INST_DATA_COMPLETE;
+}
+
+bool instance_pinnacle::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/)
+{
+    switch (uiCriteriaId)
+    {
+        case ACHIEV_CRIT_KINGS_BANE:
+            return m_bIsKingBane;
+
+        default:
+            return false;
+    }
 }
 
 InstanceData* GetInstanceData_instance_pinnacle(Map* pMap)
