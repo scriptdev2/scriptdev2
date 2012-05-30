@@ -8,11 +8,16 @@
 enum
 {
     MAX_ENCOUNTER                   = 4,
+    MAX_SPECIAL_ACHIEV_CRITS        = 3,
 
     TYPE_SVALA                      = 0,
     TYPE_GORTOK                     = 1,
     TYPE_SKADI                      = 2,
     TYPE_YMIRON                     = 3,
+
+    TYPE_ACHIEV_INCREDIBLE_HULK     = 0,
+    TYPE_ACHIEV_LOVE_SKADI          = 1,
+    TYPE_ACHIEV_KINGS_BANE          = 2,
 
     GO_STASIS_GENERATOR             = 188593,
     GO_DOOR_SKADI                   = 192173,
@@ -49,6 +54,7 @@ class MANGOS_DLL_DECL instance_pinnacle : public ScriptedInstance
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
 
+        void SetSpecialAchievementCriteria(uint32 uiType, bool bIsMet);
         bool CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/);
 
         const char* Save() { return m_strInstData.c_str(); }
@@ -56,9 +62,8 @@ class MANGOS_DLL_DECL instance_pinnacle : public ScriptedInstance
 
     private:
         uint32 m_auiEncounter[MAX_ENCOUNTER];
+        bool m_abAchievCriteria[MAX_SPECIAL_ACHIEV_CRITS];
         std::string m_strInstData;
-
-        bool m_bIsKingBane;
 };
 
 #endif

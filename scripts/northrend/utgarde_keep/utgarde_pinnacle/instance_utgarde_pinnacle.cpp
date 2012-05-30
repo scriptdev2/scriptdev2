@@ -32,6 +32,9 @@ instance_pinnacle::instance_pinnacle(Map* pMap) : ScriptedInstance(pMap)
 void instance_pinnacle::Initialize()
 {
     memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
+
+    for (uint8 i = 0; i < MAX_SPECIAL_ACHIEV_CRITS; ++i)
+        m_abAchievCriteria[i] = false;
 }
 
 void instance_pinnacle::OnCreatureCreate(Creature* pCreature)
@@ -70,6 +73,8 @@ void instance_pinnacle::SetData(uint32 uiType, uint32 uiData)
     switch (uiType)
     {
         case TYPE_SVALA:
+            if (uiData == IN_PROGRESS || uiData == FAIL)
+                SetSpecialAchievementCriteria(TYPE_ACHIEV_INCREDIBLE_HULK, false);
             m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_GORTOK:
@@ -85,9 +90,9 @@ void instance_pinnacle::SetData(uint32 uiType, uint32 uiData)
             if (uiData == DONE)
                 DoUseDoorOrButton(GO_DOOR_YMIRON);
             if (uiData == IN_PROGRESS)
-                m_bIsKingBane = true;
+                SetSpecialAchievementCriteria(TYPE_ACHIEV_KINGS_BANE, true);
             if (uiData == SPECIAL)
-                m_bIsKingBane = false;
+                SetSpecialAchievementCriteria(TYPE_ACHIEV_KINGS_BANE, false);
             m_auiEncounter[uiType] = uiData;
             break;
         default:
@@ -140,12 +145,22 @@ void instance_pinnacle::Load(const char* chrIn)
     OUT_LOAD_INST_DATA_COMPLETE;
 }
 
+void instance_pinnacle::SetSpecialAchievementCriteria(uint32 uiType, bool bIsMet)
+{
+    if (uiType < MAX_SPECIAL_ACHIEV_CRITS)
+        m_abAchievCriteria[uiType] = bIsMet;
+}
+
 bool instance_pinnacle::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/)
 {
     switch (uiCriteriaId)
     {
+        case ACHIEV_CRIT_INCREDIBLE_HULK:
+            return m_abAchievCriteria[TYPE_ACHIEV_INCREDIBLE_HULK];
+        case ACHIEV_CRIT_GIRL_LOVES_SKADI:
+            return m_abAchievCriteria[TYPE_ACHIEV_LOVE_SKADI];
         case ACHIEV_CRIT_KINGS_BANE:
-            return m_bIsKingBane;
+            return m_abAchievCriteria[TYPE_ACHIEV_KINGS_BANE];
 
         default:
             return false;
