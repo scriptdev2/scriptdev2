@@ -39,9 +39,6 @@ enum
 
     EMOTE_IMPALED              = -1604030,
 
-    ACHIEVEMENT_WHAT_THE_ECK   = 1864,
-    ACHIEVEMENT_SHARE_THE_LOVE = 2152,
-
     NPC_RHINO_SPIRIT           = 29791,
     SPELL_STAMPEDE_RHINO       = 55220,
     SPELL_STAMPEDE_RHINO_H     = 59823,
@@ -136,8 +133,14 @@ struct MANGOS_DLL_DECL boss_galdarahAI : public ScriptedAI
     {
         if (pSummoned->GetEntry() == NPC_RHINO_SPIRIT)
         {
-            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1))
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1, m_bIsRegularMode ? SPELL_STAMPEDE_RHINO : SPELL_STAMPEDE_RHINO_H, SELECT_FLAG_PLAYER))
+            {
                 pSummoned->CastSpell(pTarget, m_bIsRegularMode ? SPELL_STAMPEDE_RHINO : SPELL_STAMPEDE_RHINO_H, false, NULL, NULL, m_creature->GetObjectGuid());
+
+                // Store the player guid in order to count it for the achievement
+                if (m_pInstance)
+                    m_pInstance->SetData(TYPE_ACHIEV_SHARE_LOVE, pTarget->GetGUIDLow());
+            }
         }
     }
 

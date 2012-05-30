@@ -14,12 +14,17 @@
 enum
 {
     MAX_ENCOUNTER          = 5,
+    MIN_LOVE_SHARE_PLAYERS = 5,
 
     TYPE_SLADRAN           = 0,
     TYPE_MOORABI           = 1,
     TYPE_COLOSSUS          = 2,
     TYPE_GALDARAH          = 3,
     TYPE_ECK               = 4,
+
+    // Used to handle achievements
+    TYPE_ACHIEV_WHY_SNAKES = 5,
+    TYPE_ACHIEV_SHARE_LOVE = 6,
 
     NPC_SLADRAN            = 29304,
     NPC_MOORABI            = 29305,
@@ -55,6 +60,10 @@ enum
     TIMER_VISUAL_ALTAR     = 3000,
     TIMER_VISUAL_BEAM      = 2500,
     TIMER_VISUAL_KEY       = 2000,
+
+    ACHIEV_CRIT_LESS_RABI  = 7319,              // Moorabi achiev 2040
+    ACHIEV_CRIT_WHY_SNAKES = 7363,              // Sladran achiev 2058
+    ACHIEV_CRIT_SHARE_LOVE = 7583,              // Galdarah achiev 2152
 };
 
 typedef std::map<uint8, uint32>  TypeTimerMap;
@@ -77,6 +86,9 @@ class MANGOS_DLL_DECL instance_gundrak : public ScriptedInstance
         const char* Save() { return m_strInstData.c_str(); }
         void Load(const char* chrIn);
 
+        void SetLessRabiAchievementCriteria(bool bIsMet) { m_bLessRabi = bIsMet; }
+        bool CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/);
+
         void Update(uint32 uiDiff);
 
     protected:
@@ -91,6 +103,11 @@ class MANGOS_DLL_DECL instance_gundrak : public ScriptedInstance
         GUIDList m_luiStalkerGUIDs;
         GUIDVector m_vStalkerCasterGuids;
         GUIDVector m_vStalkerTargetGuids;
+
+        bool m_bLessRabi;
+
+        std::set<uint32> m_uisShareLoveAchievPlayers;
+        std::set<uint32> m_uisWhySnakesAchievPlayers;
 };
 
 #endif

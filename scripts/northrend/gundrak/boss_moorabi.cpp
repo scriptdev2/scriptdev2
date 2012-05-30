@@ -121,6 +121,10 @@ struct MANGOS_DLL_DECL boss_moorabiAI : public ScriptedAI
         {
             DoScriptText(EMOTE_TRANSFORMED, m_creature);
             m_bMammothPhase = true;
+
+            // Set the achievement to failed
+            if (m_pInstance)
+                m_pInstance->SetLessRabiAchievementCriteria(false);
         }
 
         if (m_uiRoarTimer < uiDiff)

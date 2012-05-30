@@ -42,7 +42,8 @@ bool GOUse_go_gundrak_altar(Player* pPlayer, GameObject* pGo)
     return true;
 }
 
-instance_gundrak::instance_gundrak(Map* pMap) : ScriptedInstance(pMap)
+instance_gundrak::instance_gundrak(Map* pMap) : ScriptedInstance(pMap),
+    m_bLessRabi(false)
 {
     Initialize();
 }
@@ -182,6 +183,8 @@ void instance_gundrak::SetData(uint32 uiType, uint32 uiData)
                 if (GameObject* pGo = GetSingleGameObjectFromStorage(GO_ALTAR_OF_MOORABI))
                     pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
             }
+            if (uiData == IN_PROGRESS)
+                SetLessRabiAchievementCriteria(true);
             if (uiData == SPECIAL)
                 m_mAltarInProgress.insert(TypeTimerPair(TYPE_MOORABI, TIMER_VISUAL_ALTAR));
             break;
@@ -206,6 +209,16 @@ void instance_gundrak::SetData(uint32 uiType, uint32 uiData)
             m_auiEncounter[TYPE_ECK] = uiData;
             if (uiData == DONE)
                 DoUseDoorOrButton(GO_ECK_UNDERWATER_DOOR);
+            break;
+        case TYPE_ACHIEV_WHY_SNAKES:
+            // insert the players who failed the achiev and haven't been already inserted in the set
+            if (m_uisWhySnakesAchievPlayers.find(uiData) == m_uisWhySnakesAchievPlayers.end())
+                m_uisWhySnakesAchievPlayers.insert(uiData);
+            break;
+        case TYPE_ACHIEV_SHARE_LOVE:
+            // insert players who got stampeled and haven't been already inserted in the set
+            if (m_uisShareLoveAchievPlayers.find(uiData) == m_uisShareLoveAchievPlayers.end())
+                m_uisShareLoveAchievPlayers.insert(uiData);
             break;
         default:
             error_log("SD2: Instance Gundrak: ERROR SetData = %u for type %u does not exist/not implemented.", uiType, uiData);
@@ -233,6 +246,25 @@ uint32 instance_gundrak::GetData(uint32 uiType)
         return m_auiEncounter[uiType];
 
     return 0;
+}
+
+bool instance_gundrak::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/)
+{
+    switch (uiCriteriaId)
+    {
+        case ACHIEV_CRIT_LESS_RABI:
+            return m_bLessRabi;
+        case ACHIEV_CRIT_SHARE_LOVE:
+            // Return true if all the players in the group got stampeled
+            return m_uisShareLoveAchievPlayers.size() == MIN_LOVE_SHARE_PLAYERS;
+        // ToDo: enable this criteria when the script will be implemented
+        //case ACHIEV_CRIT_WHY_SNAKES:
+        //    // Return true if not found in the set
+        //    return m_uisWhySnakesAchievPlayers.find(pSource->GetGUIDLow()) == m_uisWhySnakesAchievPlayers.end();
+
+        default:
+            return false;
+    }
 }
 
 static bool sortFromEastToWest(Creature* pFirst, Creature* pSecond)
