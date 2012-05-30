@@ -1280,16 +1280,18 @@ UPDATE creature_template SET ScriptName='mob_vrykul_skeleton' WHERE entry=23970;
 
 /* UTGARDE PINNACLE */
 UPDATE creature_template SET ScriptName='boss_gortok' WHERE entry=26687;
-DELETE FROM scripted_areatrigger WHERE entry=4991;
-INSERT INTO scripted_areatrigger VALUES (4991,'at_skadi');
+UPDATE creature_template SET ScriptName='npc_gortok_subboss' WHERE entry IN (26683,26684,26685,26686);
 UPDATE creature_template SET ScriptName='boss_skadi' WHERE entry=26693;
 UPDATE creature_template SET ScriptName='boss_svala' WHERE entry=29281;
-DELETE FROM scripted_areatrigger WHERE entry=5140;
-INSERT INTO scripted_areatrigger VALUES (5140,'at_svala_intro');
 UPDATE creature_template SET ScriptName='boss_ymiron' WHERE entry=26861;
 UPDATE instance_template SET ScriptName='instance_pinnacle' WHERE map=575;
-DELETE FROM scripted_event_id WHERE id=20651;
+DELETE FROM scripted_areatrigger WHERE entry IN (4991,5140);
+INSERT INTO scripted_areatrigger VALUES
+(4991,'at_skadi'),
+(5140,'at_svala_intro');
+DELETE FROM scripted_event_id WHERE id IN (17728,20651);
 INSERT INTO scripted_event_id VALUES
+(17728,'event_spell_gortok_event'),
 (20651,'event_achiev_kings_bane');
 
 /* VAULT OF ARCHAVON */

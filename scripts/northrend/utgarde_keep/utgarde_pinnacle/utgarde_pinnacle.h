@@ -23,6 +23,8 @@ enum
     GO_DOOR_SKADI                   = 192173,
     GO_DOOR_YMIRON                  = 192174,
 
+    NPC_WORLD_TRIGGER               = 22515,
+
     NPC_FURBOLG                     = 26684,
     NPC_WORGEN                      = 26683,
     NPC_JORMUNGAR                   = 26685,
@@ -39,7 +41,20 @@ enum
     ACHIEV_CRIT_KINGS_BANE          = 7598,             // Ymiron, achiev - 2157
 
     ACHIEV_START_SKADI_ID           = 17726,            // Starts Skadi timed achiev - 1873
+
+    // Gortok event spells
+    SPELL_ORB_VISUAL                = 48044,
+    SPELL_AWAKEN_SUBBOSS            = 47669,
+    SPELL_AWAKEN_GORTOK             = 47670,
 };
+
+static const float aOrbPositions[2][3] =
+{
+    {238.6077f, -460.7103f, 112.5671f},                 // Orb lift up
+    {279.26f,   -452.1f,    110.0f},                    // Orb center stop
+};
+
+static const uint32 aGortokMiniBosses[MAX_ENCOUNTER] = {NPC_WORGEN, NPC_FURBOLG, NPC_JORMUNGAR, NPC_RHINO};
 
 class MANGOS_DLL_DECL instance_pinnacle : public ScriptedInstance
 {
@@ -51,19 +66,33 @@ class MANGOS_DLL_DECL instance_pinnacle : public ScriptedInstance
         void OnCreatureCreate(Creature* pCreature);
         void OnObjectCreate(GameObject* pGo);
 
+        void OnCreatureEvade(Creature* pCreature);
+        void OnCreatureDeath(Creature* pCreature);
+
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
 
         void SetSpecialAchievementCriteria(uint32 uiType, bool bIsMet);
         bool CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/);
 
+        void SetGortokEventStarter(ObjectGuid playerGuid) { m_gortokEventStarterGuid = playerGuid; }
+        ObjectGuid GetGortokEventStarter() { return m_gortokEventStarterGuid; }
+
         const char* Save() { return m_strInstData.c_str(); }
         void Load(const char* chrIn);
+
+        void Update(uint32 uiDiff);
 
     private:
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         bool m_abAchievCriteria[MAX_SPECIAL_ACHIEV_CRITS];
         std::string m_strInstData;
+
+        uint32 m_uiGortokOrbTimer;
+        uint8 m_uiGortokOrbPhase;
+
+        ObjectGuid m_gortokEventTriggerGuid;
+        ObjectGuid m_gortokEventStarterGuid;
 };
 
 #endif

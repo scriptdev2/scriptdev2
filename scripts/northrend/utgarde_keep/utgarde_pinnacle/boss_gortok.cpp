@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Gortok
-SD%Complete: 20%
-SDComment:
+SD%Complete: 90%
+SDComment: Timers; The subbosses and Gortok should be activated on aura remove
 SDCategory: Utgarde Pinnacle
 EndScriptData */
 
@@ -58,8 +58,18 @@ struct MANGOS_DLL_DECL boss_gortokAI : public ScriptedAI
     ScriptedInstance* m_pInstance;
     bool m_bIsRegularMode;
 
+    uint32 m_uiRoarTimer;
+    uint32 m_uiImpaleTimer;
+    uint32 m_uiArcingSmashTimer;
+
     void Reset()
     {
+        m_uiRoarTimer        = 10000;
+        m_uiImpaleTimer      = 15000;
+        m_uiArcingSmashTimer = urand(5000, 8000);
+
+        // This needs to be reset in case the event fails
+        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     }
 
     void Aggro(Unit* pWho)
@@ -80,10 +90,43 @@ struct MANGOS_DLL_DECL boss_gortokAI : public ScriptedAI
             m_pInstance->SetData(TYPE_GORTOK, DONE);
     }
 
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_GORTOK, FAIL);
+    }
+
     void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
+
+        if (m_uiRoarTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_WITHERING_ROAR : SPELL_WITHERING_ROAR_H) == CAST_OK)
+                m_uiRoarTimer = 10000;
+        }
+        else
+            m_uiRoarTimer -= uiDiff;
+
+        if (m_uiImpaleTimer < uiDiff)
+        {
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_IMPALE : SPELL_IMPALE_H) == CAST_OK)
+                    m_uiImpaleTimer = urand(8000, 15000);
+            }
+        }
+        else
+            m_uiImpaleTimer -= uiDiff;
+
+        if (m_uiArcingSmashTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_ARCING_SMASH) == CAST_OK)
+                m_uiArcingSmashTimer = urand(5000, 13000);
+        }
+        else
+            m_uiArcingSmashTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
@@ -94,6 +137,63 @@ CreatureAI* GetAI_boss_gortok(Creature* pCreature)
     return new boss_gortokAI(pCreature);
 }
 
+bool EffectDummyCreature_spell_awaken_gortok(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+{
+    //always check spellid and effectindex
+    if (uiSpellId == SPELL_AWAKEN_GORTOK && uiEffIndex == EFFECT_INDEX_0)
+    {
+        pCreatureTarget->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+        pCreatureTarget->RemoveAurasDueToSpell(SPELL_FREEZE_ANIM);
+
+        // Start attacking the players
+        if (instance_pinnacle* pInstance = (instance_pinnacle*)pCreatureTarget->GetInstanceData())
+        {
+            if (Unit* pStarter = pCreatureTarget->GetMap()->GetUnit(pInstance->GetGortokEventStarter()))
+                pCreatureTarget->AI()->AttackStart(pStarter);
+        }
+
+        //always return true when we are handling this spell and effect
+        return true;
+    }
+
+    return false;
+}
+
+bool EffectAuraDummy_spell_aura_dummy_awaken_subboss(const Aura* pAura, bool bApply)
+{
+    // Note: this should be handled on aura remove, but this can't be done because there are some core issues with areaeffect spells
+    if (pAura->GetId() == SPELL_AWAKEN_SUBBOSS && pAura->GetEffIndex() == EFFECT_INDEX_0 && bApply)
+    {
+        if (Creature* pTarget = (Creature*)pAura->GetTarget())
+        {
+            pTarget->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+            pTarget->RemoveAurasDueToSpell(SPELL_FREEZE_ANIM);
+
+            // Start attacking the players
+            if (instance_pinnacle* pInstance = (instance_pinnacle*)pTarget->GetInstanceData())
+            {
+                if (Unit* pStarter = pTarget->GetMap()->GetUnit(pInstance->GetGortokEventStarter()))
+                    pTarget->AI()->AttackStart(pStarter);
+            }
+        }
+    }
+    return true;
+}
+
+bool ProcessEventId_event_spell_gortok_event(uint32 uiEventId, Object* pSource, Object* pTarget, bool bIsStart)
+{
+    if (instance_pinnacle* pInstance = (instance_pinnacle*)((Creature*)pSource)->GetInstanceData())
+    {
+        if (pInstance->GetData(TYPE_GORTOK) == IN_PROGRESS || pInstance->GetData(TYPE_GORTOK) == DONE)
+            return false;
+
+        pInstance->SetData(TYPE_GORTOK, IN_PROGRESS);
+        pInstance->SetGortokEventStarter(pSource->GetObjectGuid());
+        return true;
+    }
+    return false;
+}
+
 void AddSC_boss_gortok()
 {
     Script* pNewScript;
@@ -101,5 +201,16 @@ void AddSC_boss_gortok()
     pNewScript = new Script;
     pNewScript->Name = "boss_gortok";
     pNewScript->GetAI = &GetAI_boss_gortok;
+    pNewScript->pEffectDummyNPC = &EffectDummyCreature_spell_awaken_gortok;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name="npc_gortok_subboss";
+    pNewScript->pEffectAuraDummy = &EffectAuraDummy_spell_aura_dummy_awaken_subboss;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "event_spell_gortok_event";
+    pNewScript->pProcessEventId = &ProcessEventId_event_spell_gortok_event;
     pNewScript->RegisterSelf();
 }

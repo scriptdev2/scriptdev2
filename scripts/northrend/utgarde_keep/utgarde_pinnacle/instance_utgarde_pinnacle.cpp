@@ -16,7 +16,7 @@
 
 /* ScriptData
 SDName: instance_pinnacle
-SD%Complete: 25%
+SD%Complete: 75%
 SDComment:
 SDCategory: Utgarde Pinnacle
 EndScriptData */
@@ -24,7 +24,9 @@ EndScriptData */
 #include "precompiled.h"
 #include "utgarde_pinnacle.h"
 
-instance_pinnacle::instance_pinnacle(Map* pMap) : ScriptedInstance(pMap)
+instance_pinnacle::instance_pinnacle(Map* pMap) : ScriptedInstance(pMap),
+    m_uiGortokOrbTimer(0),
+    m_uiGortokOrbPhase(0)
 {
     Initialize();
 }
@@ -41,11 +43,19 @@ void instance_pinnacle::OnCreatureCreate(Creature* pCreature)
 {
     switch(pCreature->GetEntry())
     {
+        case NPC_FURBOLG:
+        case NPC_WORGEN:
+        case NPC_JORMUNGAR:
+        case NPC_RHINO:
         case NPC_BJORN:
         case NPC_HALDOR:
         case NPC_RANULF:
         case NPC_TORGYN:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
+            break;
+        case NPC_WORLD_TRIGGER:
+            if (pCreature->GetPositionX() < 250.0f)
+                m_gortokEventTriggerGuid = pCreature->GetObjectGuid();
             break;
     }
 }
@@ -78,6 +88,44 @@ void instance_pinnacle::SetData(uint32 uiType, uint32 uiData)
             m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_GORTOK:
+            if (uiData == IN_PROGRESS)
+            {
+                if (Creature* pOrb = instance->GetCreature(m_gortokEventTriggerGuid))
+                {
+                    pOrb->SetLevitate(true);
+                    pOrb->CastSpell(pOrb, SPELL_ORB_VISUAL, true);
+                    pOrb->GetMotionMaster()->MovePoint(0, aOrbPositions[0][0], aOrbPositions[0][1], aOrbPositions[0][2]);
+
+                    m_uiGortokOrbTimer = 2000;
+                }
+            }
+            if (uiData == FAIL)
+            {
+                if (Creature* pOrb = instance->GetCreature(m_gortokEventTriggerGuid))
+                {
+                    if (!pOrb->isAlive())
+                        pOrb->Respawn();
+                    else
+                        pOrb->RemoveAllAuras();
+
+                    // For some reasone the Orb doesn't evade automatically
+                    pOrb->GetMotionMaster()->MoveTargetedHome();
+                }
+
+                for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+                {
+                    // Reset each miniboss
+                    if (Creature* pTemp = GetSingleCreatureFromStorage(aGortokMiniBosses[i]))
+                    {
+                        if (!pTemp->isAlive())
+                            pTemp->Respawn();
+
+                        pTemp->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                    }
+                }
+
+                m_uiGortokOrbPhase = 0;
+            }
             m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_SKADI:
@@ -164,6 +212,68 @@ bool instance_pinnacle::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player
 
         default:
             return false;
+    }
+}
+
+void instance_pinnacle::OnCreatureEvade(Creature* pCreature)
+{
+    switch(pCreature->GetEntry())
+    {
+        case NPC_FURBOLG:
+        case NPC_WORGEN:
+        case NPC_JORMUNGAR:
+        case NPC_RHINO:
+            SetData(TYPE_GORTOK, FAIL);
+            break;
+    }
+}
+
+void instance_pinnacle::OnCreatureDeath(Creature* pCreature)
+{
+    switch(pCreature->GetEntry())
+    {
+        case NPC_FURBOLG:
+        case NPC_WORGEN:
+        case NPC_JORMUNGAR:
+        case NPC_RHINO:
+            m_uiGortokOrbTimer = 3000;
+            break;
+    }
+}
+
+void instance_pinnacle::Update(uint32 const uiDiff)
+{
+    if (m_uiGortokOrbTimer)
+    {
+        if (m_uiGortokOrbTimer <= uiDiff)
+        {
+            if (!m_uiGortokOrbPhase)
+            {
+                if (Creature* pOrb = instance->GetCreature(m_gortokEventTriggerGuid))
+                    pOrb->GetMotionMaster()->MovePoint(0, aOrbPositions[1][0], aOrbPositions[1][1], aOrbPositions[1][2]);
+
+                m_uiGortokOrbTimer = 18000;
+            }
+            // Awaken Gortok if this is the last phase
+            else
+            {
+                uint8 uiMaxOrbPhase = instance->IsRegularDifficulty() ? 3 : 5;
+                uint32 uiSpellId = m_uiGortokOrbPhase == uiMaxOrbPhase ? SPELL_AWAKEN_GORTOK : SPELL_AWAKEN_SUBBOSS;
+
+                if (Creature* pOrb = instance->GetCreature(m_gortokEventTriggerGuid))
+                {
+                    pOrb->CastSpell(pOrb, uiSpellId, false);
+
+                    if (m_uiGortokOrbPhase == uiMaxOrbPhase)
+                        pOrb->ForcedDespawn(10000);
+                }
+
+                m_uiGortokOrbTimer = 0;
+            }
+            ++m_uiGortokOrbPhase;
+        }
+        else
+            m_uiGortokOrbTimer -= uiDiff;
     }
 }
 
