@@ -69,6 +69,12 @@ void instance_gundrak::OnCreatureCreate(Creature* pCreature)
         case NPC_INVISIBLE_STALKER:
             m_luiStalkerGUIDs.push_back(pCreature->GetObjectGuid());
             break;
+
+        case NPC_LIVIN_MOJO:
+            // Store only the Mojos used to activate the Colossus
+            if (pCreature->GetPositionX() > 1650.0f)
+                m_sColossusMojosGuids.insert(pCreature->GetObjectGuid());
+            break;
     }
 }
 
@@ -171,6 +177,8 @@ void instance_gundrak::SetData(uint32 uiType, uint32 uiData)
             if (uiData == DONE)
                 if (GameObject* pGo = GetSingleGameObjectFromStorage(GO_ALTAR_OF_SLADRAN))
                     pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
+            if (uiData == FAIL)
+                m_uisWhySnakesAchievPlayers.clear();
             if (uiData == SPECIAL)
                 m_mAltarInProgress.insert(TypeTimerPair(TYPE_SLADRAN, TIMER_VISUAL_ALTAR));
             break;
@@ -193,6 +201,17 @@ void instance_gundrak::SetData(uint32 uiType, uint32 uiData)
             if (uiData == DONE)
                 if (GameObject* pGo = GetSingleGameObjectFromStorage(GO_ALTAR_OF_COLOSSUS))
                     pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
+            if (uiData == FAIL)
+            {
+                for (GUIDSet::const_iterator itr = m_sColossusMojosGuids.begin(); itr != m_sColossusMojosGuids.end(); ++itr)
+                {
+                    if (Creature* pMojo = instance->GetCreature(*itr))
+                    {
+                        pMojo->Respawn();
+                        pMojo->GetMotionMaster()->MoveTargetedHome();
+                    }
+                }
+            }
             if (uiData == SPECIAL)
                 m_mAltarInProgress.insert(TypeTimerPair(TYPE_COLOSSUS, TIMER_VISUAL_ALTAR));
             break;
@@ -204,6 +223,8 @@ void instance_gundrak::SetData(uint32 uiType, uint32 uiData)
                 DoUseDoorOrButton(GO_EXIT_DOOR_L);
                 DoUseDoorOrButton(GO_EXIT_DOOR_R);
             }
+            if (uiData == FAIL)
+                m_uisShareLoveAchievPlayers.clear();
             break;
         case TYPE_ECK:
             m_auiEncounter[TYPE_ECK] = uiData;
@@ -264,6 +285,23 @@ bool instance_gundrak::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player 
 
         default:
             return false;
+    }
+}
+
+void instance_gundrak::OnCreatureEnterCombat(Creature* pCreature)
+{
+    if (pCreature->GetEntry() == NPC_LIVIN_MOJO)
+    {
+        // If not found in the set, or the event is already started, return
+        if (m_sColossusMojosGuids.find(pCreature->GetObjectGuid()) == m_sColossusMojosGuids.end())
+            return;
+
+        // Move all 4 Mojos to evade and move to the Colossus position
+        for (GUIDSet::const_iterator itr = m_sColossusMojosGuids.begin(); itr != m_sColossusMojosGuids.end(); ++itr)
+        {
+            if (Creature* pMojo = instance->GetCreature(*itr))
+                pMojo->AI()->EnterEvadeMode();
+        }
     }
 }
 

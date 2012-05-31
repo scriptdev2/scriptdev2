@@ -118,7 +118,7 @@ struct MANGOS_DLL_DECL boss_galdarahAI : public ScriptedAI
     void JustReachedHome()
     {
         if (m_pInstance)
-            m_pInstance->SetData(TYPE_GALDARAH, NOT_STARTED);
+            m_pInstance->SetData(TYPE_GALDARAH, FAIL);
     }
 
     void JustDied(Unit* pKiller)

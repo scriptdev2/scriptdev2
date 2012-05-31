@@ -80,6 +80,8 @@ class MANGOS_DLL_DECL instance_gundrak : public ScriptedInstance
         void OnCreatureCreate(Creature* pCreature);
         void OnObjectCreate(GameObject* pGo);
 
+        void OnCreatureEnterCombat(Creature* pCreature);
+
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
 
@@ -103,6 +105,7 @@ class MANGOS_DLL_DECL instance_gundrak : public ScriptedInstance
         GUIDList m_luiStalkerGUIDs;
         GUIDVector m_vStalkerCasterGuids;
         GUIDVector m_vStalkerTargetGuids;
+        GUIDSet m_sColossusMojosGuids;
 
         bool m_bLessRabi;
 

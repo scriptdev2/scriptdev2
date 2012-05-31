@@ -148,6 +148,12 @@ struct MANGOS_DLL_DECL boss_sladranAI : public ScriptedAI
             m_pInstance->SetData(TYPE_SLADRAN, DONE);
     }
 
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_SLADRAN, FAIL);
+    }
+
     Creature* SelectRandomCreatureOfEntryInRange(uint32 uiEntry, float fRange)
     {
         std::list<Creature* > lCreatureList;
