@@ -26,7 +26,6 @@ EndScriptData */
 
 enum
 {
-    SAY_SPAWN                       = -1578010,
     SAY_AGGRO                       = -1578011,
     SAY_ARCANE_SHIELD               = -1578012,
     SAY_FIRE_SHIELD                 = -1578013,
