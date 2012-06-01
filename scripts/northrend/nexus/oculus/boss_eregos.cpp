@@ -188,7 +188,7 @@ struct MANGOS_DLL_DECL boss_eregosAI : public ScriptedAI
         if (m_uiSummonWhelpsTimer < uiDiff)
         {
             // ToDo: the number of whelps summoned may be different based on difficulty. Needs research!
-            for (uint8 i = 0; i < 4; i++)
+            for (uint8 i = 0; i < 4; ++i)
             {
                 if (DoCastSpellIfCan(m_creature, SPELL_SUMMON_LEY_WHELP, CAST_TRIGGERED) == CAST_OK)
                     m_uiSummonWhelpsTimer = 20000;

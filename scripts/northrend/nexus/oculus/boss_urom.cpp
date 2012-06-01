@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: boss_urom
-SD%Complete: 30
-SDComment: only yells and instance data support
+SD%Complete: 90
+SDComment: Small adjustments may be required.
 SDCategory: Oculus
 EndScriptData */
 
@@ -36,6 +36,41 @@ enum
     SAY_KILL_2                      = -1578007,
     SAY_KILL_3                      = -1578008,
     SAY_DEATH                       = -1578009,
+    EMOTE_EXPLOSION                 = -1578025,
+
+    // spells
+    SPELL_ARCANE_SHIELD             = 53813,                // This spell id may be wrong. Needs research!
+    SPELL_ARCANE_EXPLOSION          = 51110,
+    SPELL_ARCANE_EXPLOSION_H        = 59377,
+    SPELL_FROSTBOMB                 = 51103,
+    SPELL_TIME_BOMB                 = 51121,
+    SPELL_TIME_BOMB_H               = 59376,
+    SPELL_SUMMON_MENAGERIE_1        = 50476,
+    SPELL_SUMMON_MENAGERIE_2        = 50495,
+    SPELL_SUMMON_MENAGERIE_3        = 50496,
+    SPELL_TELEPORT                  = 51112,
+
+    // npcs
+    NPC_PHANTASMAL_CLOUDSCRAPER     = 27645,
+    NPC_PHANTASMAL_MAMMOTH          = 27642,
+    NPC_PHANTASMAL_WOLF             = 27644,
+
+    NPC_PHANTASMAL_AIR              = 27650,
+    NPC_PHANTASMAL_FIRE             = 27651,
+    NPC_PHANTASMAL_WATER            = 27653,
+
+    NPC_PHANTASMAL_MURLOC           = 27649,
+    NPC_PHANTASMAL_NAGAL            = 27648,
+    NPC_PHANTASMAL_OGRE             = 27647,
+
+    MAX_PLATFORMS                   = 3,
+};
+
+static uint32 uiTrashPacks[MAX_PLATFORMS][MAX_PLATFORMS]=
+{
+    {NPC_PHANTASMAL_CLOUDSCRAPER,   NPC_PHANTASMAL_MAMMOTH, NPC_PHANTASMAL_WOLF},
+    {NPC_PHANTASMAL_AIR,            NPC_PHANTASMAL_FIRE,    NPC_PHANTASMAL_WATER},
+    {NPC_PHANTASMAL_MURLOC,         NPC_PHANTASMAL_NAGAL,   NPC_PHANTASMAL_OGRE},
 };
 
 struct MANGOS_DLL_DECL boss_uromAI : public ScriptedAI
@@ -44,22 +79,99 @@ struct MANGOS_DLL_DECL boss_uromAI : public ScriptedAI
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
+
+        // Randomize the trash mobs packs
+        for (uint8 i = 0; i < MAX_PLATFORMS; ++i)
+            m_vuiTrashPacksIds.push_back(i);
+
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
     bool m_bIsRegularMode;
 
+    bool m_bIsTeleporting;
+    bool m_bIsPlatformPhase;
+    uint8 m_uiPlatformPhase;
+    uint32 m_uiExplosionExpireTimer;
+    uint32 m_uiArcaneShieldTimer;
+    uint32 m_uiExplosionTimer;
+    uint32 m_uiTeleportTimer;
+    uint32 m_uiFrostBombTimer;
+    uint32 m_uiTimeBombTimer;
+
+    float m_fX, m_fY, m_fZ;
+
+    ObjectGuid m_attackTarget;
+
+    std::vector<uint32> m_vuiTrashPacksIds;
+
     void Reset()
     {
+        m_bIsPlatformPhase       = true;
+        m_uiPlatformPhase        = 0;
+        m_uiExplosionTimer       = 0;
+        m_uiExplosionExpireTimer = 0;
+        m_uiTeleportTimer        = 20000;
+        m_uiFrostBombTimer       = 5000;
+        m_uiTimeBombTimer        = urand(10000, 15000);
+
+        ResetPlatformVariables();
+
+        std::random_shuffle(m_vuiTrashPacksIds.begin(), m_vuiTrashPacksIds.end());
+    }
+
+    void ResetPlatformVariables()
+    {
+        m_bIsTeleporting        = false;
+        m_uiArcaneShieldTimer   = 1000;
     }
 
     void Aggro(Unit* pWho)
     {
-        DoScriptText(SAY_AGGRO, m_creature);
-
         if (m_pInstance)
             m_pInstance->SetData(TYPE_UROM, IN_PROGRESS);
+    }
+
+    void AttackStart(Unit* pWho)
+    {
+        if (m_uiPlatformPhase < MAX_PLATFORMS)
+        {
+            if (m_bIsTeleporting)
+                return;
+
+            // Summon the trash mobs pack
+            m_bIsTeleporting = true;
+            m_attackTarget = pWho->GetObjectGuid();
+            m_creature->InterruptNonMeleeSpells(false);
+            DoSpawnTrashPack();
+
+            // teleport to next platform and spawn adds
+            switch (m_uiPlatformPhase)
+            {
+                case 0:
+                    if (DoCastSpellIfCan(m_creature, SPELL_SUMMON_MENAGERIE_1) == CAST_OK)
+                        DoScriptText(SAY_SUMMON_1, m_creature);
+                    break;
+                case 1:
+                    if (DoCastSpellIfCan(m_creature, SPELL_SUMMON_MENAGERIE_2) == CAST_OK)
+                        DoScriptText(SAY_SUMMON_2, m_creature);
+                    break;
+                case 2:
+                    if (DoCastSpellIfCan(m_creature, SPELL_SUMMON_MENAGERIE_3) == CAST_OK)
+                        DoScriptText(SAY_SUMMON_3, m_creature);
+                    break;
+            }
+        }
+        // Boss has teleported in the central ring - start normal combat
+        else if (m_bIsPlatformPhase)
+        {
+            DoScriptText(SAY_AGGRO, m_creature);
+            m_creature->InterruptNonMeleeSpells(false);
+            m_bIsPlatformPhase = false;
+
+            ScriptedAI::AttackStart(pWho);
+        }
     }
 
     void KilledUnit(Unit* pVictim)
@@ -86,10 +198,155 @@ struct MANGOS_DLL_DECL boss_uromAI : public ScriptedAI
             m_pInstance->SetData(TYPE_UROM, FAIL);
     }
 
+    void EnterEvadeMode()
+    {
+        // Don't evade while casting explosion
+        if (m_uiExplosionExpireTimer)
+            return;
+
+        if (m_bIsPlatformPhase)
+        {
+            m_creature->RemoveAllAuras();
+            m_creature->DeleteThreatList();
+            m_creature->CombatStop(true);
+
+            m_creature->SetLootRecipient(NULL);
+
+            ResetPlatformVariables();
+        }
+        else
+            ScriptedAI::EnterEvadeMode();
+    }
+
+    void JustSummoned(Creature* pSummon)
+    {
+        if (Unit* pTarget = m_creature->GetMap()->GetUnit(m_attackTarget))
+            pSummon->AI()->AttackStart(pTarget);
+    }
+
+    void DoSpawnTrashPack()
+    {
+        float fX, fY, fZ;
+
+        // Summon the 3 mobs contained in the pack
+        for (uint8 i = 0; i < MAX_PLATFORMS; ++i)
+        {
+            m_creature->GetNearPoint(m_creature, fX, fY, fZ, 0, 10.0f, M_PI_F/2 * i);
+            m_creature->SummonCreature(uiTrashPacks[m_vuiTrashPacksIds[m_uiPlatformPhase]][i], fX, fY, fZ, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+        }
+
+        // Summon a fourth mob, which can be random
+        uint32 uiEntry = uiTrashPacks[m_vuiTrashPacksIds[m_uiPlatformPhase]][urand(0,2)];
+        m_creature->GetNearPoint(m_creature, fX, fY, fZ, 0, 10.0f, M_PI_F/2 * 3);
+        m_creature->SummonCreature(uiEntry, fX, fY, fZ, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+    }
+
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
+    {
+        switch (pSpell->Id)
+        {
+            case SPELL_SUMMON_MENAGERIE_3:
+            case SPELL_SUMMON_MENAGERIE_2:
+            case SPELL_SUMMON_MENAGERIE_1:
+                EnterEvadeMode();
+                ++m_uiPlatformPhase;
+                break;
+        }
+    }
+
     void UpdateAI(const uint32 uiDiff)
     {
+        // Set the Arcane Shield on out of combat timer
+        if (m_uiArcaneShieldTimer)
+        {
+            if (m_uiArcaneShieldTimer <= uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_ARCANE_SHIELD) == CAST_OK)
+                    m_uiArcaneShieldTimer = 0;
+            }
+            else
+                m_uiArcaneShieldTimer -= uiDiff;
+        }
+
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
+
+        // Don't use any combat abilities during the platform transition
+        if (m_bIsPlatformPhase)
+            return;
+
+        if (m_uiExplosionTimer)
+        {
+            if (m_uiExplosionTimer <= uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_ARCANE_EXPLOSION : SPELL_ARCANE_EXPLOSION_H) == CAST_OK)
+                {
+                    DoScriptText(EMOTE_EXPLOSION, m_creature);
+                    m_uiExplosionTimer = 0;
+                }
+            }
+            else
+                m_uiExplosionTimer -= uiDiff;
+        }
+
+        if (m_uiExplosionExpireTimer)
+        {
+            if (m_uiExplosionExpireTimer <= uiDiff)
+            {
+                // Teleport to the original location
+                m_creature->NearTeleportTo(m_fX, m_fY, m_fZ, 0);
+
+                // Resume combat movement
+                SetCombatMovement(true);
+                m_creature->GetMotionMaster()->Clear();
+                m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
+                m_uiExplosionExpireTimer = 0;
+            }
+            else
+                m_uiExplosionExpireTimer -= uiDiff;
+
+            // Don't decrease timers during the explosion event
+            return;
+        }
+
+        if (m_uiTeleportTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_TELEPORT) == CAST_OK)
+            {
+                DoScriptText(urand(0, 1) ? SAY_EXPLOSION_1 : SAY_EXPLOSION_2, m_creature);
+
+                // Store the original position - boss needs to be teleported back
+                m_creature->GetPosition(m_fX, m_fY, m_fZ);
+
+                // Stop movement until he casts the arcane explosion
+                SetCombatMovement(false);
+                m_creature->GetMotionMaster()->MoveIdle();
+                m_uiTeleportTimer = 20000;
+                m_uiExplosionExpireTimer = m_bIsRegularMode ? 9500 : 7500;
+                m_uiExplosionTimer = 1000;
+            }
+        }
+        else
+            m_uiTeleportTimer -= uiDiff;
+
+        if (m_uiFrostBombTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_FROSTBOMB) == CAST_OK)
+                m_uiFrostBombTimer = urand(4000, 6000);
+        }
+        else
+            m_uiFrostBombTimer -= uiDiff;
+
+        if (m_uiTimeBombTimer < uiDiff)
+        {
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_TIME_BOMB : SPELL_TIME_BOMB_H) == CAST_OK)
+                    m_uiTimeBombTimer = urand(10000, 15000);
+            }
+        }
+        else
+            m_uiTimeBombTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
