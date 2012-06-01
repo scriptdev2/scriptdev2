@@ -1080,6 +1080,9 @@
     <ClCompile Include="..\scripts\northrend\zuldrak.cpp">
       <Filter>scripts\northrend</Filter>
     </ClCompile>
+    <ClCompile Include="..\scripts\northrend\azjol-nerub\ahnkahet\boss_amanitar.cpp">
+      <Filter>scripts\northrend\azjol-nerub\ahnkahet</Filter>
+    </ClCompile>
     <ClCompile Include="..\scripts\northrend\azjol-nerub\ahnkahet\boss_jedoga.cpp">
       <Filter>scripts\northrend\azjol-nerub\ahnkahet</Filter>
     </ClCompile>

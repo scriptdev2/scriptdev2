@@ -1707,6 +1707,14 @@
 						Name="ahnkahet"
 						>
 						<File
+							RelativePath="..\scripts\northrend\azjol-nerub\ahnkahet\ahnkahet.h"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\northrend\azjol-nerub\ahnkahet\boss_amanitar.cpp"
+							>
+						</File>
+						<File
 							RelativePath="..\scripts\northrend\azjol-nerub\ahnkahet\boss_jedoga.cpp"
 							>
 						</File>
@@ -1720,10 +1728,6 @@
 						</File>
 						<File
 							RelativePath="..\scripts\northrend\azjol-nerub\ahnkahet\boss_volazj.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\northrend\azjol-nerub\ahnkahet\ahnkahet.h"
 							>
 						</File>
 						<File

@@ -274,7 +274,8 @@ extern void AddSC_ungoro_crater();
 extern void AddSC_winterspring();
 
 // northrend
-extern void AddSC_boss_jedoga();                            // azjol-nerub, ahnkahet
+extern void AddSC_boss_amanitar();                          // azjol-nerub, ahnkahet
+extern void AddSC_boss_jedoga();
 extern void AddSC_boss_nadox();
 extern void AddSC_boss_taldaram();
 extern void AddSC_boss_volazj();
@@ -771,7 +772,8 @@ void AddScripts()
     AddSC_winterspring();
 
     // northrend
-    AddSC_boss_jedoga();                                    // azjol-nerub, ahnkahet
+    AddSC_boss_amanitar();                                  // azjol-nerub, ahnkahet
+    AddSC_boss_jedoga();
     AddSC_boss_nadox();
     AddSC_boss_taldaram();
     AddSC_boss_volazj();
