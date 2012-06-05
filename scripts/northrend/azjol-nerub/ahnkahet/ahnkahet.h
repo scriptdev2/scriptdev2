@@ -27,14 +27,19 @@ enum
     GO_VORTEX                   = 193564,
 
     NPC_ELDER_NADOX             = 29309,
+    NPC_TALDARAM                = 29308,
+    //NPC_JEDOGA_SHADOWSEEKER   = 29310,
     NPC_AHNKAHAR_GUARDIAN_EGG   = 30173,
     NPC_AHNKAHAR_SWARM_EGG      = 30172,
-    //NPC_JEDOGA_SHADOWSEEKER   = 29310,
+    NPC_JEDOGA_CONTROLLER       = 30181,
 
     ACHIEV_START_VOLAZJ_ID      = 20382,
 
     ACHIEV_CRIT_RESPECT_ELDERS  = 7317,             // Nadox, achiev 2038
+    ACHIEV_CRIT_VOLUNTEER_WORK  = 7359,             // Jedoga, achiev 2056
 };
+
+static const float aTaldaramLandingLoc[4] = {528.734f, -845.998f, 11.54f, 0.68f};
 
 class MANGOS_DLL_DECL instance_ahnkahet : public ScriptedInstance
 {
@@ -52,6 +57,8 @@ class MANGOS_DLL_DECL instance_ahnkahet : public ScriptedInstance
         ObjectGuid SelectRandomGuardianEggGuid();
         ObjectGuid SelectRandomSwarmerEggGuid();
 
+        void GetJedogaControllersList(GUIDList &lList) { lList = m_lJedogaControllersGuidList; }
+
         bool CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/);
 
         const char* Save() { return m_strInstData.c_str(); }
@@ -67,6 +74,7 @@ class MANGOS_DLL_DECL instance_ahnkahet : public ScriptedInstance
 
         GUIDList m_GuardianEggList;
         GUIDList m_SwarmerEggList;
+        GUIDList m_lJedogaControllersGuidList;
 };
 
 #endif

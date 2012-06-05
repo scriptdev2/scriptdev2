@@ -16,7 +16,7 @@
 
 /* ScriptData
 SDName: instance_ahnkahet
-SD%Complete: 0
+SD%Complete: 50
 SDComment:
 SDCategory: Ahn'kahet
 EndScriptData */
@@ -41,6 +41,7 @@ void instance_ahnkahet::OnCreatureCreate(Creature* pCreature)
     switch(pCreature->GetEntry())
     {
         case NPC_ELDER_NADOX:
+        case NPC_TALDARAM:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
         case NPC_AHNKAHAR_GUARDIAN_EGG:
@@ -48,6 +49,9 @@ void instance_ahnkahet::OnCreatureCreate(Creature* pCreature)
             break;
         case NPC_AHNKAHAR_SWARM_EGG:
             m_SwarmerEggList.push_back(pCreature->GetObjectGuid());
+            break;
+        case NPC_JEDOGA_CONTROLLER:
+            m_lJedogaControllersGuidList.push_back(pCreature->GetObjectGuid());
             break;
     }
 }
@@ -61,18 +65,15 @@ void instance_ahnkahet::OnObjectCreate(GameObject* pGo)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_VORTEX:
-            if (m_auiEncounter[TYPE_TALDARAM] != NOT_STARTED)
+            if (m_auiEncounter[TYPE_TALDARAM] == SPECIAL)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
 
         case GO_ANCIENT_DEVICE_L:
-            if (m_auiEncounter[TYPE_TALDARAM] == NOT_STARTED)
-                pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
-            return;
         case GO_ANCIENT_DEVICE_R:
-            if (m_auiEncounter[TYPE_TALDARAM] == NOT_STARTED)
+            if (m_auiEncounter[TYPE_NADOX] == DONE)
                 pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
-            return;
+            break;
 
         default:
             return;
@@ -92,17 +93,32 @@ void instance_ahnkahet::SetData(uint32 uiType, uint32 uiData)
                 m_bRespectElders = true;
             if (uiData == SPECIAL)
                 m_bRespectElders = false;
+            if (uiData == DONE)
+            {
+                DoToggleGameObjectFlags(GO_ANCIENT_DEVICE_L, GO_FLAG_NO_INTERACT, false);
+                DoToggleGameObjectFlags(GO_ANCIENT_DEVICE_R, GO_FLAG_NO_INTERACT, false);
+            }
             break;
         case TYPE_TALDARAM:
             if (uiData == SPECIAL)
             {
-                if (m_uiDevicesActivated < 2)
-                    ++m_uiDevicesActivated;
+                ++m_uiDevicesActivated;
 
                 if (m_uiDevicesActivated == 2)
                 {
                     m_auiEncounter[uiType] = uiData;
                     DoUseDoorOrButton(GO_VORTEX);
+
+                    // Lower Taldaram
+                    if (Creature* pTaldaram = GetSingleCreatureFromStorage(NPC_TALDARAM))
+                        pTaldaram->GetMotionMaster()->MovePoint(1, aTaldaramLandingLoc[0], aTaldaramLandingLoc[1], aTaldaramLandingLoc[2]);
+
+                    // Interrupt the channeling
+                    for (GUIDList::const_iterator itr = m_lJedogaControllersGuidList.begin(); itr != m_lJedogaControllersGuidList.end(); ++itr)
+                    {
+                        if (Creature* pTemp = instance->GetCreature(*itr))
+                            pTemp->InterruptNonMeleeSpells(false);
+                    }
                 }
             }
             if (uiData == DONE)
@@ -126,7 +142,8 @@ void instance_ahnkahet::SetData(uint32 uiType, uint32 uiData)
             break;
     }
 
-    if (uiData == DONE)
+    // For some encounters Special data needs to be saved
+    if (uiData == DONE || uiData == SPECIAL)
     {
         OUT_SAVE_INST_DATA;
 

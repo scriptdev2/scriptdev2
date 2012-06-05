@@ -46,6 +46,7 @@ enum
     SAY_VOLUNTEER_CHOOSEN    = -1619031,                    // I have been choosen!
     SAY_VOLUNTEER_SACRIFICED = -1619032,                    // I give myself to the master!
 
+    SPELL_BEAM_VISUAL        = 56312,
     SPELL_CYCLONE_STRIKE     = 56855,
     SPELL_CYCLONE_STRIKE_H   = 60030,
     SPELL_LIGHTNING_BOLT     = 56891,
@@ -57,7 +58,6 @@ enum
     SPELL_SACRIFICE_VISUAL   = 56133,
     SPELL_SACRIFICE_BEAM     = 56150,
 
-    NPC_JEDOGA_CONTROLLER    = 30181,
     NPC_TWILIGHT_INITIATE    = 30114,
     NPC_TWILIGHT_VOLUNTEER   = 30385
 };
