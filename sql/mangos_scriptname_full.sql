@@ -247,6 +247,7 @@ UPDATE creature_template SET ScriptName='npc_void_traveler' WHERE entry=19226;
 UPDATE creature_template SET ScriptName='boss_amanitar' WHERE entry=30258;
 UPDATE creature_template SET ScriptName='npc_amanitar_mushroom' WHERE entry IN (30391,30435);
 UPDATE creature_template SET ScriptName='boss_jedoga' WHERE entry=29310;
+UPDATE creature_template SET ScriptName='npc_twilight_volunteer' WHERE entry=30385;
 UPDATE creature_template SET ScriptName='boss_nadox' WHERE entry=29309;
 UPDATE creature_template SET ScriptName='mob_ahnkahar_egg' WHERE entry IN (30172,30173);
 UPDATE creature_template SET ScriptName='boss_taldaram' WHERE entry=29308;

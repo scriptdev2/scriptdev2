@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Jedoga
-SD%Complete: 40
-SDComment:
+SD%Complete: 90
+SDComment: The movement points for the volunteers are not 100% blizzlike. On retail they use hardcoded points
 SDCategory: Ahn'kahet
 EndScriptData */
 
@@ -47,19 +47,36 @@ enum
     SAY_VOLUNTEER_SACRIFICED = -1619032,                    // I give myself to the master!
 
     SPELL_BEAM_VISUAL        = 56312,
+    SPELL_SPHERE_VISUAL      = 56075,                       // already included in creature_template_addon
+    SPELL_LIGHTNING_VISUAL   = 56327,
+
     SPELL_CYCLONE_STRIKE     = 56855,
     SPELL_CYCLONE_STRIKE_H   = 60030,
     SPELL_LIGHTNING_BOLT     = 56891,
     SPELL_LIGHTNING_BOLT_H   = 60032,
     SPELL_THUNDERSHOCK       = 56926,
     SPELL_THUNDERSHOCK_H     = 60029,
-    SPELL_GIFT_OF_THE_HERALD = 56219,
 
+    SPELL_HOVER_FALL         = 56100,
     SPELL_SACRIFICE_VISUAL   = 56133,
     SPELL_SACRIFICE_BEAM     = 56150,
+    SPELL_VOLUNTEER_SPHERE   = 56102,
+    SPELL_PILLAR_LIGHTNING   = 56868,
 
-    NPC_TWILIGHT_INITIATE    = 30114,
-    NPC_TWILIGHT_VOLUNTEER   = 30385
+    NPC_TWILIGHT_VOLUNTEER   = 30385,
+
+    MAX_VOLUNTEERS_PER_SIDE  = 13,
+
+    POINT_ID_PREPARE         = 1,
+    POINT_ID_SACRIFICE       = 2,
+    POINT_ID_LEVITATE        = 3,
+    POINT_ID_COMBAT          = 4,
+};
+
+static const float aVolunteerPosition[2][3] =
+{
+    {456.09f, -724.34f, -31.58f},
+    {410.11f, -785.46f, -31.58f},
 };
 
 /*######
@@ -70,38 +87,48 @@ struct MANGOS_DLL_DECL boss_jedogaAI : public ScriptedAI
 {
     boss_jedogaAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_pInstance = (instance_ahnkahet*)pCreature->GetInstanceData();
         m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
+        m_bHasDoneIntro = false;
         Reset();
     }
 
-    ScriptedInstance* m_pInstance;
+    instance_ahnkahet* m_pInstance;
     bool m_bIsRegularMode;
 
+    uint32 m_uiVisualTimer;
     uint32 m_uiThundershockTimer;
     uint32 m_uiCycloneStrikeTimer;
     uint32 m_uiLightningBoltTimer;
     uint8 m_uiSacrificeCount;
     bool m_bSacrifice;
+    bool m_bIsSacrificing;
+    bool m_bHasDoneIntro;
+
+    GUIDList m_lVolunteerGuidList;
 
     void Reset()
     {
         m_uiThundershockTimer  = 40000;
         m_uiCycloneStrikeTimer = 15000;
         m_uiLightningBoltTimer = 7000;
+        m_uiVisualTimer        = 5000;
         m_bSacrifice           = false;
+        m_bIsSacrificing       = false;
+
+        m_lVolunteerGuidList.clear();
+
+        SetCombatMovement(true);
+        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     }
 
-    Creature* SelectRandomCreatureOfEntryInRange(uint32 uiEntry, float fRange)
+    ObjectGuid SelectRandomVolunteer()
     {
-        std::list<Creature* > lCreatureList;
-        GetCreatureListWithEntryInGrid(lCreatureList, m_creature, uiEntry, fRange);
+        if (m_lVolunteerGuidList.empty())
+            return ObjectGuid();
 
-        if (lCreatureList.empty())
-            return NULL;
-
-        std::list<Creature* >::iterator iter = lCreatureList.begin();
-        advance(iter, urand(0, lCreatureList.size()-1));
+        std::list<ObjectGuid>::iterator iter = m_lVolunteerGuidList.begin();
+        advance(iter, urand(0, m_lVolunteerGuidList.size()-1));
 
         return *iter;
     }
@@ -109,6 +136,10 @@ struct MANGOS_DLL_DECL boss_jedogaAI : public ScriptedAI
     void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
+        DoCallVolunteers();
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_JEDOGA, IN_PROGRESS);
     }
 
     void KilledUnit(Unit* pVictim)
@@ -124,17 +155,212 @@ struct MANGOS_DLL_DECL boss_jedogaAI : public ScriptedAI
     void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DEATH, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_JEDOGA, DONE);
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_JEDOGA, FAIL);
+    }
+
+    void MoveInLineOfSight(Unit* pWho)
+    {
+        if (!m_bHasDoneIntro && pWho->GetTypeId() == TYPEID_PLAYER && m_creature->IsWithinLOSInMap(pWho))
+        {
+            switch(urand(0, 4))
+            {
+                case 0: DoScriptText(SAY_PREACHING1, m_creature); break;
+                case 1: DoScriptText(SAY_PREACHING2, m_creature); break;
+                case 2: DoScriptText(SAY_PREACHING3, m_creature); break;
+                case 3: DoScriptText(SAY_PREACHING4, m_creature); break;
+                case 4: DoScriptText(SAY_PREACHING5, m_creature); break;
+            }
+            m_bHasDoneIntro = true;
+        }
+
+        ScriptedAI::MoveInLineOfSight(pWho);
+    }
+
+    // Helper function which summons all the Volunteers
+    void DoCallVolunteers()
+    {
+        // The volunteers should be summoned on the bottom of each stair in 2 lines - 7 in the front line and 6 in the back line
+        // However, because this would involve too many hardcoded coordinates we'll summon this on random point near the stairs
+
+        float fX, fY, fZ;
+        for (uint8 j = 0; j < 2; ++j)
+        {
+            for (uint8 i = 0; i < MAX_VOLUNTEERS_PER_SIDE; ++i)
+            {
+                // In order to get a good movement position we need to handle the coordinates calculation here, inside the iteration.
+                m_creature->GetRandomPoint(aVolunteerPosition[j][0], aVolunteerPosition[j][1], aVolunteerPosition[j][2], 10.0f, fX, fY, fZ);
+                if (Creature* pVolunteer = m_creature->SummonCreature(NPC_TWILIGHT_VOLUNTEER, fX, fY, fZ, 0, TEMPSUMMON_DEAD_DESPAWN, 0))
+                {
+                    // Adjust coordinates based on the wave number and side
+                    float fDist = i < 7 ? 20.0f : 30.0f;
+                    float fAngle = 0;
+                    if (!j)
+                        fAngle = i < 7 ? (i-2)*(3*M_PI_F/35) : (i-6)*(M_PI_F/16);
+                    else
+                        fAngle = i < 7 ? (i-10)*(3*M_PI_F/35) : 3*M_PI_F/2 - (i-6)*(M_PI_F/16);
+
+                    m_creature->GetNearPoint(m_creature, fX, fY, fZ, 0, fDist, fAngle);
+                    pVolunteer->GetMotionMaster()->MovePoint(POINT_ID_PREPARE, fX, fY, fZ);
+                }
+            }
+        }
+
+        // Summon one more Volunteer for the center position
+        m_creature->GetRandomPoint(aVolunteerPosition[0][0], aVolunteerPosition[0][1], aVolunteerPosition[0][2], 10.0f, fX, fY, fZ);
+        if (Creature* pVolunteer = m_creature->SummonCreature(NPC_TWILIGHT_VOLUNTEER, fX, fY, fZ, 0, TEMPSUMMON_DEAD_DESPAWN, 0))
+        {
+            m_creature->GetNearPoint(m_creature, fX, fY, fZ, 0, 20.0f, 7*M_PI_F/4);
+            pVolunteer->GetMotionMaster()->MovePoint(POINT_ID_PREPARE, fX, fY, fZ);
+        }
+    }
+
+    void JustSummoned(Creature* pSummoned)
+    {
+        if (pSummoned->GetEntry() == NPC_TWILIGHT_VOLUNTEER)
+        {
+            pSummoned->SetWalk(false);
+            pSummoned->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_UNK_6);
+            m_lVolunteerGuidList.push_back(pSummoned->GetObjectGuid());
+        }
+    }
+
+    void SummonedCreatureJustDied(Creature* pSummoned)
+    {
+        if (pSummoned->GetEntry() == NPC_TWILIGHT_VOLUNTEER)
+        {
+            m_lVolunteerGuidList.remove(pSummoned->GetObjectGuid());
+
+            if (m_pInstance)
+            {
+                if (Creature* pTemp = m_creature->GetMap()->GetCreature(m_pInstance->SelectJedogaSacrificeControllerGuid()))
+                    pTemp->RemoveAurasDueToSpell(SPELL_SACRIFICE_VISUAL);
+            }
+
+            m_creature->GetMotionMaster()->MovePoint(POINT_ID_COMBAT, aJedogaLandingLoc[0], aJedogaLandingLoc[1], aJedogaLandingLoc[2]);
+        }
+    }
+
+    void SummonedMovementInform(Creature* pSummoned, uint32 uiType, uint32 uiPointId)
+    {
+        if (uiType != POINT_MOTION_TYPE || pSummoned->GetEntry() != NPC_TWILIGHT_VOLUNTEER)
+            return;
+
+        if (uiPointId == POINT_ID_PREPARE)
+        {
+            pSummoned->CastSpell(pSummoned, SPELL_VOLUNTEER_SPHERE, true);
+            pSummoned->SetFacingToObject(m_creature);
+            pSummoned->SetStandState(UNIT_STAND_STATE_KNEEL);
+        }
+        else if (uiPointId == POINT_ID_SACRIFICE)
+            DoCastSpellIfCan(pSummoned, SPELL_SACRIFICE_BEAM);
+    }
+
+    void MovementInform(uint32 uiMoveType, uint32 uiPointId)
+    {
+        if (uiMoveType != POINT_MOTION_TYPE)
+            return;
+
+        switch (uiPointId)
+        {
+            // Prepare for combat
+            case POINT_ID_PREPARE:
+
+                m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                m_creature->RemoveAurasDueToSpell(SPELL_LIGHTNING_VISUAL);
+                m_creature->RemoveAurasDueToSpell(SPELL_SPHERE_VISUAL);
+                m_creature->SetLevitate(false);
+                break;
+
+            // Prepare for sacrifice lift off
+            case POINT_ID_SACRIFICE:
+                DoCastSpellIfCan(m_creature, SPELL_HOVER_FALL);
+                m_creature->SetLevitate(true);
+                m_creature->GetMotionMaster()->MovePoint(POINT_ID_LEVITATE, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ() + 10.0f);
+                break;
+
+            // Call a volunteer to sacrifice
+            case POINT_ID_LEVITATE:
+                if (Creature* pVolunteer = m_creature->GetMap()->GetCreature(SelectRandomVolunteer()))
+                {
+                    DoScriptText(urand(0, 1) ? SAY_CALL_SACRIFICE1 : SAY_CALL_SACRIFICE2, m_creature);
+                    DoScriptText(SAY_VOLUNTEER_CHOOSEN, pVolunteer);
+
+                    pVolunteer->RemoveAurasDueToSpell(SPELL_VOLUNTEER_SPHERE);
+                    pVolunteer->SetStandState(UNIT_STAND_STATE_STAND);
+                    pVolunteer->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                    pVolunteer->CastSpell(pVolunteer, SPELL_PILLAR_LIGHTNING, false);
+                    pVolunteer->SetWalk(true);
+                    pVolunteer->GetMotionMaster()->MovePoint(POINT_ID_SACRIFICE, aJedogaLandingLoc[0], aJedogaLandingLoc[1], aJedogaLandingLoc[2]);
+                }
+
+                // Set visual aura
+                if (m_pInstance)
+                {
+                    if (Creature* pTemp = m_creature->GetMap()->GetCreature(m_pInstance->SelectJedogaSacrificeControllerGuid()))
+                        pTemp->CastSpell(pTemp, SPELL_SACRIFICE_VISUAL, false);
+                }
+                break;
+
+            // Resume combat
+            case POINT_ID_COMBAT:
+                m_creature->RemoveAurasDueToSpell(SPELL_HOVER_FALL);
+                m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+
+                m_bIsSacrificing = false;
+                SetCombatMovement(true);
+                m_creature->SetLevitate(false);
+                if (m_creature->getVictim())
+                    m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
+                break;
+        }
     }
 
     void UpdateAI(const uint32 uiDiff)
     {
+        if (m_uiVisualTimer)
+        {
+            if (m_uiVisualTimer <= uiDiff)
+            {
+                GUIDList lControllersList;
+                if (m_pInstance)
+                    m_pInstance->GetJedogaEventControllersList(lControllersList);
+
+                for (GUIDList::const_iterator itr = lControllersList.begin(); itr != lControllersList.end(); ++itr)
+                {
+                    if (Creature* pTemp = m_creature->GetMap()->GetCreature(*itr))
+                        pTemp->CastSpell(m_creature, SPELL_BEAM_VISUAL, false);
+                }
+
+                if (DoCastSpellIfCan(m_creature, SPELL_LIGHTNING_VISUAL) == CAST_OK)
+                    m_uiVisualTimer = 0;
+            }
+            else
+                m_uiVisualTimer -= uiDiff;
+        }
+
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
+        // Don't use abilities while sacrificing
+        if (m_bIsSacrificing)
+            return;
+
+        // Note: this was changed in 3.3.2 and now it does this only once
         if (m_creature->GetHealthPercent() < 50.0f && !m_bSacrifice)
         {
-            // start sacrifice here
+            SetCombatMovement(false);
+            m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+            m_creature->GetMotionMaster()->MovePoint(POINT_ID_SACRIFICE, aJedogaLandingLoc[0], aJedogaLandingLoc[1], aJedogaLandingLoc[2]);
             m_bSacrifice = true;
+            m_bIsSacrificing = true;
         }
 
         if (m_uiThundershockTimer < uiDiff)
@@ -174,6 +400,58 @@ CreatureAI* GetAI_boss_jedoga(Creature* pCreature)
     return new boss_jedogaAI(pCreature);
 }
 
+/*######
+## npc_twilight_volunteer
+######*/
+
+struct MANGOS_DLL_DECL npc_twilight_volunteerAI : public Scripted_NoMovementAI
+{
+    npc_twilight_volunteerAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
+    {
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        Reset();
+    }
+
+    ScriptedInstance* m_pInstance;
+
+    void Reset() { }
+
+    void JustDied(Unit* pKiller)
+    {
+        // If it's not killed by Jedoga then set the achiev to fail
+        if (pKiller->GetEntry() == NPC_JEDOGA_SHADOWSEEKER)
+            return;
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_JEDOGA, SPECIAL);
+    }
+
+    void AttackStart(Unit* pWho) { }
+    void MoveInLineOfSight(Unit* pWho) { }
+    void UpdateAI(const uint32 uiDiff) { }
+};
+
+CreatureAI* GetAI_npc_twilight_volunteer(Creature* pCreature)
+{
+    return new npc_twilight_volunteerAI(pCreature);
+}
+
+bool EffectAuraDummy_spell_aura_dummy_sacrifice_beam(const Aura* pAura, bool bApply)
+{
+    if (pAura->GetId() == SPELL_SACRIFICE_BEAM && pAura->GetEffIndex() == EFFECT_INDEX_0 && !bApply)
+    {
+        if (Creature* pTarget = (Creature*)pAura->GetTarget())
+        {
+            if (ScriptedInstance* pInstance = (ScriptedInstance*)pTarget->GetInstanceData())
+            {
+                if (Creature* pJedoga = pInstance->GetSingleCreatureFromStorage(NPC_JEDOGA_SHADOWSEEKER))
+                    pJedoga->DealDamage(pTarget, pTarget->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+            }
+        }
+    }
+    return true;
+}
+
 void AddSC_boss_jedoga()
 {
     Script* pNewScript;
@@ -181,5 +459,11 @@ void AddSC_boss_jedoga()
     pNewScript = new Script;
     pNewScript->Name = "boss_jedoga";
     pNewScript->GetAI = &GetAI_boss_jedoga;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_twilight_volunteer";
+    pNewScript->GetAI = &GetAI_npc_twilight_volunteer;
+    pNewScript->pEffectAuraDummy = &EffectAuraDummy_spell_aura_dummy_sacrifice_beam;
     pNewScript->RegisterSelf();
 }

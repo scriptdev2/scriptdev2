@@ -16,7 +16,7 @@
 
 /* ScriptData
 SDName: instance_ahnkahet
-SD%Complete: 50
+SD%Complete: 75
 SDComment:
 SDCategory: Ahn'kahet
 EndScriptData */
@@ -26,6 +26,8 @@ EndScriptData */
 
 instance_ahnkahet::instance_ahnkahet(Map* pMap) : ScriptedInstance(pMap),
     m_bRespectElders(false),
+    m_bVolunteerWork(false),
+    m_uiInitiatesKilled(0),
     m_uiDevicesActivated(0)
 {
     Initialize();
@@ -42,6 +44,7 @@ void instance_ahnkahet::OnCreatureCreate(Creature* pCreature)
     {
         case NPC_ELDER_NADOX:
         case NPC_TALDARAM:
+        case NPC_JEDOGA_SHADOWSEEKER:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
         case NPC_AHNKAHAR_GUARDIAN_EGG:
@@ -51,7 +54,16 @@ void instance_ahnkahet::OnCreatureCreate(Creature* pCreature)
             m_SwarmerEggList.push_back(pCreature->GetObjectGuid());
             break;
         case NPC_JEDOGA_CONTROLLER:
-            m_lJedogaControllersGuidList.push_back(pCreature->GetObjectGuid());
+            // Sort the controllers based on their purpose
+            if (pCreature->GetPositionZ() > 30.0f)
+                // Used for Taldaram visual
+                m_lJedogaControllersGuidList.push_back(pCreature->GetObjectGuid());
+            else if (pCreature->GetPositionZ() > 20.0f)
+                // Used for Jedoga visual
+                m_lJedogaEventControllersGuidList.push_back(pCreature->GetObjectGuid());
+            else if (pCreature->GetPositionZ() < -16.0f)
+                // Used for Jedoga sacrifice
+                m_jedogaSacrificeController = pCreature->GetObjectGuid();
             break;
     }
 }
@@ -128,6 +140,14 @@ void instance_ahnkahet::SetData(uint32 uiType, uint32 uiData)
             }
             break;
         case TYPE_JEDOGA:
+            m_auiEncounter[uiType] = uiData;
+            if (uiData == IN_PROGRESS)
+                m_bVolunteerWork = true;
+            if (uiData == SPECIAL)
+                m_bVolunteerWork = false;
+            if (uiData == FAIL)
+                m_uiInitiatesKilled = 0;
+            break;
         case TYPE_AMANITAR:
             m_auiEncounter[uiType] = uiData;
             break;
@@ -155,6 +175,27 @@ void instance_ahnkahet::SetData(uint32 uiType, uint32 uiData)
 
         SaveToDB();
         OUT_SAVE_INST_DATA_COMPLETE;
+    }
+}
+
+void instance_ahnkahet::OnCreatureDeath(Creature* pCreature)
+{
+    if (pCreature->GetEntry() == NPC_TWILIGHT_INITIATE)
+    {
+        ++m_uiInitiatesKilled;
+
+        // If all initiates are killed, then land Jedoga and stop the channeling
+        if (m_uiInitiatesKilled == MAX_INITIATES)
+        {
+            if (Creature* pJedoga = GetSingleCreatureFromStorage(NPC_JEDOGA_SHADOWSEEKER))
+                pJedoga->GetMotionMaster()->MovePoint(1, aJedogaLandingLoc[0], aJedogaLandingLoc[1], aJedogaLandingLoc[2]);
+
+            for (GUIDList::const_iterator itr = m_lJedogaEventControllersGuidList.begin(); itr != m_lJedogaEventControllersGuidList.end(); ++itr)
+            {
+                if (Creature* pTemp = instance->GetCreature(*itr))
+                    pTemp->InterruptNonMeleeSpells(false);
+            }
+        }
     }
 }
 
@@ -186,6 +227,8 @@ bool instance_ahnkahet::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player
     {
         case ACHIEV_CRIT_RESPECT_ELDERS:
             return m_bRespectElders;
+        case ACHIEV_CRIT_VOLUNTEER_WORK:
+            return m_bVolunteerWork;
 
         default:
             return false;

@@ -14,6 +14,7 @@
 enum
 {
     MAX_ENCOUNTER               = 5,
+    MAX_INITIATES               = 15,
 
     TYPE_NADOX                  = 0,
     TYPE_TALDARAM               = 1,
@@ -28,10 +29,11 @@ enum
 
     NPC_ELDER_NADOX             = 29309,
     NPC_TALDARAM                = 29308,
-    //NPC_JEDOGA_SHADOWSEEKER   = 29310,
+    NPC_JEDOGA_SHADOWSEEKER     = 29310,
     NPC_AHNKAHAR_GUARDIAN_EGG   = 30173,
     NPC_AHNKAHAR_SWARM_EGG      = 30172,
     NPC_JEDOGA_CONTROLLER       = 30181,
+    NPC_TWILIGHT_INITIATE       = 30114,
 
     ACHIEV_START_VOLAZJ_ID      = 20382,
 
@@ -40,6 +42,7 @@ enum
 };
 
 static const float aTaldaramLandingLoc[4] = {528.734f, -845.998f, 11.54f, 0.68f};
+static const float aJedogaLandingLoc[4] = {375.4977f, -707.3635f, -16.094f, 5.42f};
 
 class MANGOS_DLL_DECL instance_ahnkahet : public ScriptedInstance
 {
@@ -51,13 +54,17 @@ class MANGOS_DLL_DECL instance_ahnkahet : public ScriptedInstance
         void OnCreatureCreate(Creature* pCreature);
         void OnObjectCreate(GameObject* pGo);
 
+        void OnCreatureDeath(Creature* pCreature);
+
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
 
         ObjectGuid SelectRandomGuardianEggGuid();
         ObjectGuid SelectRandomSwarmerEggGuid();
+        ObjectGuid SelectJedogaSacrificeControllerGuid() { return m_jedogaSacrificeController; }
 
         void GetJedogaControllersList(GUIDList &lList) { lList = m_lJedogaControllersGuidList; }
+        void GetJedogaEventControllersList(GUIDList &lList) {lList = m_lJedogaEventControllersGuidList; }
 
         bool CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/);
 
@@ -69,12 +76,17 @@ class MANGOS_DLL_DECL instance_ahnkahet : public ScriptedInstance
         std::string m_strInstData;
 
         bool m_bRespectElders;
+        bool m_bVolunteerWork;
 
         uint8 m_uiDevicesActivated;
+        uint8 m_uiInitiatesKilled;
+
+        ObjectGuid m_jedogaSacrificeController;
 
         GUIDList m_GuardianEggList;
         GUIDList m_SwarmerEggList;
         GUIDList m_lJedogaControllersGuidList;
+        GUIDList m_lJedogaEventControllersGuidList;
 };
 
 #endif
