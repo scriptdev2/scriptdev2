@@ -260,7 +260,10 @@ struct MANGOS_DLL_DECL boss_jedogaAI : public ScriptedAI
             pSummoned->SetStandState(UNIT_STAND_STATE_KNEEL);
         }
         else if (uiPointId == POINT_ID_SACRIFICE)
+        {
             DoCastSpellIfCan(pSummoned, SPELL_SACRIFICE_BEAM);
+            DoScriptText(urand(0, 1) ? SAY_SACRIFICE1 : SAY_SACRIFICE2, m_creature);
+        }
     }
 
     void MovementInform(uint32 uiMoveType, uint32 uiPointId)

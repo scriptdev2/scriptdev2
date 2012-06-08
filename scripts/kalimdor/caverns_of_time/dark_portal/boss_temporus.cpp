@@ -148,22 +148,6 @@ CreatureAI* GetAI_boss_temporus(Creature* pCreature)
     return new boss_temporusAI(pCreature);
 }
 
-bool EffectAuraDummy_boss_temporus(const Aura* pAura, bool bApply)
-{
-    // Despawn the Time Rift when the aura is canceled
-    if (pAura->GetId() == SPELL_RIFT_CHANNEL && pAura->GetEffIndex() == EFFECT_INDEX_0 && !bApply)
-    {
-        if (Creature* pCaster = (Creature*)pAura->GetCaster())
-        {
-            if (ScriptedInstance* pInstance = (ScriptedInstance*)pCaster->GetInstanceData())
-                pInstance->SetData(TYPE_TIME_RIFT, DONE);
-
-            pCaster->ForcedDespawn(3000);
-        }
-    }
-    return true;
-}
-
 void AddSC_boss_temporus()
 {
     Script* pNewScript;
@@ -171,6 +155,5 @@ void AddSC_boss_temporus()
     pNewScript = new Script;
     pNewScript->Name = "boss_temporus";
     pNewScript->GetAI = &GetAI_boss_temporus;
-    pNewScript->pEffectAuraDummy = &EffectAuraDummy_boss_temporus;
     pNewScript->RegisterSelf();
 }

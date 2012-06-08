@@ -157,6 +157,7 @@ struct MANGOS_DLL_DECL npc_time_riftAI : public ScriptedAI
         DoCastSpellIfCan(m_creature, SPELL_RIFT_PERIODIC);
 
         m_uiRiftWaveCount       = 0;
+        m_uiRiftNumber          = 0;
 
         if (m_pInstance)
         {
@@ -280,8 +281,23 @@ struct MANGOS_DLL_DECL npc_time_riftAI : public ScriptedAI
 
     void SummonedCreatureJustDied(Creature* pSummoned)
     {
-        if (pSummoned->GetEntry() == NPC_AEONUS)
-            m_creature->ForcedDespawn();
+        switch (pSummoned->GetEntry())
+        {
+            case NPC_AEONUS:
+                m_creature->ForcedDespawn();
+                break;
+            case NPC_CHRONO_LORD_DEJA:
+            case NPC_TEMPORUS:
+            case NPC_CHRONO_LORD:
+            case NPC_TIMEREAVER:
+            case NPC_RIFT_KEEPER:
+            case NPC_RIFT_LORD:
+                m_creature->ForcedDespawn(3000);
+                // No need to set the data to DONE if there is a new portal spawned already
+                if (m_pInstance && m_uiRiftNumber == m_pInstance->GetCurrentRiftId())
+                    m_pInstance->SetData(TYPE_TIME_RIFT, DONE);
+                break;
+        }
     }
 
     void SummonedMovementInform(Creature* pSummoned, uint32 uiMotionType, uint32 uiPointId)
@@ -315,26 +331,6 @@ bool EffectDummyCreature_npc_time_rift_channel(Unit* pCaster, uint32 uiSpellId, 
     return false;
 }
 
-/*######
-## npc_time_rift_channeler
-######*/
-
-bool EffectAuraDummy_npc_time_rift_channeler(const Aura* pAura, bool bApply)
-{
-    // Despawn the Time Rift when the aura is canceled
-    if (pAura->GetId() == SPELL_RIFT_CHANNEL && pAura->GetEffIndex() == EFFECT_INDEX_0 && !bApply)
-    {
-        if (Creature* pCaster = (Creature*)pAura->GetCaster())
-        {
-            if (ScriptedInstance* pInstance = (ScriptedInstance*)pCaster->GetInstanceData())
-                pInstance->SetData(TYPE_TIME_RIFT, DONE);
-
-            pCaster->ForcedDespawn(3000);
-        }
-    }
-    return true;
-}
-
 void AddSC_dark_portal()
 {
     Script* pNewScript;
@@ -349,10 +345,5 @@ void AddSC_dark_portal()
     pNewScript->Name = "npc_time_rift";
     pNewScript->GetAI = &GetAI_npc_time_rift;
     pNewScript->pEffectDummyNPC = &EffectDummyCreature_npc_time_rift_channel;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_time_rift_channeler";
-    pNewScript->pEffectAuraDummy = &EffectAuraDummy_npc_time_rift_channeler;
     pNewScript->RegisterSelf();
 }
