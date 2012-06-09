@@ -12,11 +12,12 @@ The different tables has ranges of entries allowed for that table.
 Reserved EventAI in Mangos     entry -1       -> -999999
 script_texts:                  entry -1000000 -> -1999999
 custom_texts:                  entry -2000000 -> -2999999
+gossip_texts:                  entry -3000000 -> -3999999
 Any entry out of range for that table will display a start-up error.
 
 
 =========================================
-Basic Structure of script_texts and custom_texts
+Basic Structure of script_texts, custom_texts and gossip_texts
 =========================================
 Below is a the list of current fields within the texts tables.
 
@@ -38,8 +39,10 @@ sound                 This value is the Sound ID that corresponds to the actual 
 type                  Variables used to define type of text (Say/Yell/Textemote/Whisper).
 language              This value is the Language that the text is native in (Defined in Languages.dbc).
 emote                 Value from enum Emote (defined in Emotes.dbc). Only source of text will play this emote (not target, if target are defined in DoScriptText)
+
 comment               This is a comment regarding the text entry (For ACID, accepted format is to use Creature ID of NPC using it).
 
+Note: sound, type, language and emote exist only in tables script_texts and custom_texts
 Note: Fields `content_loc1` to `content_loc8` are NULL values by default and are handled by separate localization projects.
 
 

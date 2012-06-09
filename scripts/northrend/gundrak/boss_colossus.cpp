@@ -367,6 +367,8 @@ struct MANGOS_DLL_DECL npc_living_mojoAI : public ScriptedAI
             if (m_pInstance)
             {
                 float fX, fY, fZ;
+                m_creature->GetPosition(fX, fY, fZ);
+
                 if (Creature* pColossus = m_pInstance->GetSingleCreatureFromStorage(NPC_COLOSSUS))
                     pColossus->GetPosition(fX, fY, fZ);
 
