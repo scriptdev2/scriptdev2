@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: boss_ichoron
-SD%Complete: 0
-SDComment: Placeholder
+SD%Complete: 50
+SDComment: Water Globule event NYI
 SDCategory: Violet Hold
 EndScriptData */
 
@@ -34,7 +34,30 @@ enum
     SAY_SLAY_3          = -1608024,
     SAY_ENRAGE          = -1608025,
     SAY_DEATH           = -1608026,
+    EMOTE_BUBBLE        = -1608028,
+
+    SPELL_SPLASH                = 59516,
+    SPELL_DRAINED               = 59820,
+    SPELL_FRENZY                = 54312,
+    SPELL_FRENZY_H              = 59522,
+    SPELL_PROTECTIVE_BUBBLE     = 54306,
+    SPELL_WATER_BLAST           = 54237,
+    SPELL_WATER_BLAST_H         = 59520,
+    SPELL_WATER_BOLT_VOLLEY     = 54241,
+    SPELL_WATER_BOLT_VOLLEY_H   = 59521,
+    SPELL_WATER_GLOBULE         = 54260,
+
+    SPELL_WATER_GLOBULE_SPAWN_1 = 54258,
+    SPELL_WATER_GLOBULE_SPAWN_2 = 54264,
+    SPELL_WATER_GLOBULE_SPAWN_3 = 54265,
+    SPELL_WATER_GLOBULE_SPAWN_4 = 54266,
+    SPELL_WATER_GLOBULE_SPAWN_5 = 54267,
+
+    SPELL_MERGE                 = 54269,                // used by globules
+    SPELL_WATER_GLOBULE_TRANS   = 54268,
 };
+
+static const uint32 aWaterGlobuleSpells[5] = {SPELL_WATER_GLOBULE_SPAWN_1, SPELL_WATER_GLOBULE_SPAWN_2, SPELL_WATER_GLOBULE_SPAWN_3, SPELL_WATER_GLOBULE_SPAWN_4, SPELL_WATER_GLOBULE_SPAWN_5};
 
 struct MANGOS_DLL_DECL boss_ichoronAI : public ScriptedAI
 {
@@ -49,13 +72,22 @@ struct MANGOS_DLL_DECL boss_ichoronAI : public ScriptedAI
     instance_violet_hold* m_pInstance;
     bool m_bIsRegularMode;
 
+    uint32 m_uiWaterBoltVolleyTimer;
+    uint32 m_uiWaterBlastTimer;
+    bool m_bIsFrenzy;
+
     void Reset()
     {
+        m_uiWaterBoltVolleyTimer = urand(10000, 12000);
+        m_uiWaterBlastTimer      = 10000;
+        m_bIsFrenzy              = false;
     }
 
     void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
+
+        DoCastSpellIfCan(m_creature, SPELL_PROTECTIVE_BUBBLE);
     }
 
     void JustDied(Unit* pKiller)
@@ -80,6 +112,34 @@ struct MANGOS_DLL_DECL boss_ichoronAI : public ScriptedAI
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
+
+        if (m_uiWaterBlastTimer < uiDiff)
+        {
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_WATER_BLAST : SPELL_WATER_BLAST_H) == CAST_OK)
+                    m_uiWaterBlastTimer = urand(8000, 14000);
+            }
+        }
+        else
+            m_uiWaterBlastTimer -= uiDiff;
+
+        if (m_uiWaterBoltVolleyTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_WATER_BOLT_VOLLEY : SPELL_WATER_BOLT_VOLLEY_H) == CAST_OK)
+                m_uiWaterBoltVolleyTimer = urand(7000, 12000);
+        }
+        else
+            m_uiWaterBoltVolleyTimer -= uiDiff;
+
+        if (!m_bIsFrenzy && m_creature->GetHealthPercent() < 25.0f)
+        {
+            if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_FRENZY : SPELL_FRENZY_H) == CAST_OK)
+            {
+                DoScriptText(SAY_ENRAGE, m_creature);
+                m_bIsFrenzy = true;
+            }
+        }
 
         DoMeleeAttackIfReady();
     }

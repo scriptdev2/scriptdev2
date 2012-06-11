@@ -3376,7 +3376,9 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1608025,'I shall consume,decimate, devastate,and destroy! Yield now to the wrath of the pounding sea!',14231,1,0,0,'ichoron SAY_ENRAGE'),
 (-1608026,'I... recede.',14237,1,0,0,'ichoron SAY_DEATH'),
 
-(-1608027,'You did it! You held the Blue Dragonflight back and defeated their commander. Amazing work!',0,0,0,1,'sinclari SAY_VICTORY');
+(-1608027,'You did it! You held the Blue Dragonflight back and defeated their commander. Amazing work!',0,0,0,1,'sinclari SAY_VICTORY'),
+
+(-1608028,'%s\'s Protective Bubble shatters!',0,3,0,0,'ichoron EMOTE_BUBBLE');
 
 -- -1 609 000 EBON HOLD (DK START)
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES

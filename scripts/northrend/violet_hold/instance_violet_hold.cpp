@@ -131,6 +131,9 @@ void instance_violet_hold::OnCreatureCreate(Creature* pCreature)
         case NPC_EREKEM_GUARD:
             m_lErekemGuardList.push_back(pCreature->GetObjectGuid());
             return;
+        case NPC_ICHORON_SUMMON_TARGET:
+            m_lIchoronTargetsList.push_back(pCreature->GetObjectGuid());
+            return;
 
         case NPC_ARAKKOA:
         case NPC_VOID_LORD:
