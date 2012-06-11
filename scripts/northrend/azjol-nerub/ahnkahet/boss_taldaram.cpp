@@ -180,15 +180,17 @@ struct MANGOS_DLL_DECL boss_taldaramAI : public ScriptedAI
     void DoSetOrbsInMotion()
     {
         float fX, fY;
+        uint8 uiIndex = 0;
         for (GUIDList::const_iterator itr = m_lFlameOrbsGuidList.begin(); itr != m_lFlameOrbsGuidList.end(); ++itr)
         {
             if (Creature* pOrb = m_creature->GetMap()->GetCreature(*itr))
             {
                 pOrb->CastSpell(pOrb, m_bIsRegularMode ? SPELL_FLAME_ORB : SPELL_FLAME_ORB_H, true);
 
-                pOrb->GetNearPoint2D(fX, fY, 70.0f, (2*M_PI_F/3)*(*itr).GetCounter());
+                pOrb->GetNearPoint2D(fX, fY, 70.0f, (2*M_PI_F/3)*uiIndex);
                 pOrb->GetMotionMaster()->MovePoint(0, fX, fY, pOrb->GetPositionZ());
             }
+            ++uiIndex;
         }
     }
 

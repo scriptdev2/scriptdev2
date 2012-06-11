@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Instance_Violet_Hold
-SD%Complete: 50
-SDComment: "experimental" use of header/source object
+SD%Complete: 75
+SDComment: Prison defense system requires more research
 SDCategory: Violet Hold
 EndScriptData */
 
@@ -28,6 +28,13 @@ instance_violet_hold::instance_violet_hold(Map* pMap) : ScriptedInstance(pMap),
     m_uiWorldState(0),
     m_uiWorldStateSealCount(100),
     m_uiWorldStatePortalCount(0),
+
+    m_bIsVoidDance(false),
+    m_bIsDefenseless(false),
+    m_bIsDehydratation(false),
+
+    m_uiSealYellCount(0),
+    m_uiEventResetTimer(0),
 
     m_uiPortalId(0),
     m_uiPortalTimer(0),
@@ -46,6 +53,7 @@ void instance_violet_hold::ResetVariables()
 {
     m_uiWorldStateSealCount = 100;
     m_uiWorldStatePortalCount = 0;
+    m_uiSealYellCount = 0;
 }
 
 void instance_violet_hold::ResetAll()
@@ -54,6 +62,10 @@ void instance_violet_hold::ResetAll()
     UpdateWorldState(false);
     CallGuards(true);
     SetIntroPortals(false);
+    // ToDo: reset the activation crystals when implemented
+
+    // open instance door
+    DoUseDoorOrButton(GO_PRISON_SEAL_DOOR);
 
     for (std::vector<BossSpawn*>::const_iterator itr = m_vRandomBosses.begin(); itr != m_vRandomBosses.end(); ++itr)
     {
@@ -64,13 +76,30 @@ void instance_violet_hold::ResetAll()
             {
                 if (!pGhostBoss->isAlive())
                     pGhostBoss->Respawn();
+
+                // Reset passive flags
+                pGhostBoss->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE);
             }
             else if (Creature* pSummoner = GetSingleCreatureFromStorage(NPC_SINCLARI_ALT))
                 pSummoner->SummonCreature(pData->uiGhostEntry, (*itr)->fX, (*itr)->fY, (*itr)->fZ, (*itr)->fO, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600*IN_MILLISECONDS);
 
-            // Close Door if still open
-            UpdateCellForBoss(pData->uiEntry, true);
+            // Respawn Erekem guards
+            if (pData->uiType == TYPE_EREKEM)
+            {
+                for (GUIDList::const_iterator itr = m_lErekemGuardList.begin(); itr != m_lErekemGuardList.end(); ++itr)
+                {
+                    if (Creature* pGuard = instance->GetCreature(*itr))
+                    {
+                        pGuard->Respawn();
+                        pGuard->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE);
+                    }
+                }
+            }
         }
+
+        // Close Door if still open
+        if (pData && (m_auiEncounter[pData->uiType] == DONE || m_auiEncounter[pData->uiType] == FAIL))
+            UpdateCellForBoss(pData->uiEntry, true);
     }
 }
 
@@ -81,6 +110,7 @@ void instance_violet_hold::OnCreatureCreate(Creature* pCreature)
         case NPC_SINCLARI:
         case NPC_SINCLARI_ALT:
         case NPC_DOOR_SEAL:
+        case NPC_EVENT_CONTROLLER:
             break;
 
         case NPC_EREKEM:
@@ -97,6 +127,9 @@ void instance_violet_hold::OnCreatureCreate(Creature* pCreature)
             return;
         case NPC_HOLD_GUARD:
             m_lGuardsList.push_back(pCreature->GetObjectGuid());
+            return;
+        case NPC_EREKEM_GUARD:
+            m_lErekemGuardList.push_back(pCreature->GetObjectGuid());
             return;
 
         case NPC_ARAKKOA:
@@ -164,7 +197,7 @@ void instance_violet_hold::UpdateCellForBoss(uint32 uiBossEntry, bool bForceClos
         else
         {
             GameObject* pGo = instance->GetGameObject(itr->second);
-            if (pGo && pGo->GetGoType() == GAMEOBJECT_TYPE_DOOR && pGo->getLootState() == GO_ACTIVATED)
+            if (pGo && pGo->GetGoType() == GAMEOBJECT_TYPE_DOOR && pGo->GetGoState() == GO_STATE_ACTIVE)
                 pGo->ResetDoorOrButton();
         }
     }
@@ -205,20 +238,25 @@ void instance_violet_hold::SetData(uint32 uiType, uint32 uiData)
 
             switch(uiData)
             {
-                case NOT_STARTED:
-                    ResetAll();
-                    break;
                 case IN_PROGRESS:
+                    // ToDo: enable the prison defense system when implemented
                     DoUseDoorOrButton(GO_PRISON_SEAL_DOOR);
                     UpdateWorldState();
+                    m_bIsDefenseless = true;
                     m_uiPortalId = urand(0, 2);
                     m_uiPortalTimer = 15000;
                     break;
                 case FAIL:
                     if (Creature* pSinclari = GetSingleCreatureFromStorage(NPC_SINCLARI))
-                        pSinclari->Respawn();
+                        pSinclari->DealDamage(pSinclari, pSinclari->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+                    if (Creature* pController = GetSingleCreatureFromStorage(NPC_EVENT_CONTROLLER))
+                        pController->AI()->EnterEvadeMode();
+                    // Reset the event (creature cleanup is handled in creature_linking)
+                    ResetAll();
+                    m_uiEventResetTimer = 20000;            // Timer may not be correct - 20 sec is default reset timer for blizz
                     break;
                 case DONE:
+                    DoUseDoorOrButton(GO_PRISON_SEAL_DOOR);
                     UpdateWorldState(false);
                     break;
                 case SPECIAL:
@@ -229,6 +267,32 @@ void instance_violet_hold::SetData(uint32 uiType, uint32 uiData)
         }
         case TYPE_SEAL:
             m_auiEncounter[uiType] = uiData;
+            if (uiData == SPECIAL)
+            {
+                --m_uiWorldStateSealCount;
+                DoUpdateWorldState(WORLD_STATE_SEAL, m_uiWorldStateSealCount);
+
+                // Yell at 75%, 50% and 25% shield
+                if (m_uiWorldStateSealCount < 100-25*m_uiSealYellCount)
+                {
+                    if (Creature* pSinclari = GetSingleCreatureFromStorage(NPC_SINCLARI_ALT))
+                    {
+                        // ToDo: I'm not sure if the last yell should be at 25% or at 5%. Needs research
+                        DoScriptText(aSealWeakYell[m_uiSealYellCount-1], pSinclari);
+                        ++m_uiSealYellCount;
+                    }
+                }
+
+                // set achiev to failed
+                if (m_bIsDefenseless)
+                    m_bIsDefenseless = false;
+
+                if (!m_uiWorldStateSealCount)
+                {
+                    SetData(TYPE_MAIN, FAIL);
+                    SetData(TYPE_SEAL, NOT_STARTED);
+                }
+            }
             break;
         case TYPE_PORTAL:
         {
@@ -238,7 +302,7 @@ void instance_violet_hold::SetData(uint32 uiType, uint32 uiData)
                     m_uiPortalTimer = 90000;
                     break;
                 case DONE:                                  // portal done, set timer to 5 secs
-                    m_uiPortalTimer = 5000;
+                    m_uiPortalTimer = 3000;
                     break;
             }
             m_auiEncounter[uiType] = uiData;
@@ -254,10 +318,24 @@ void instance_violet_hold::SetData(uint32 uiType, uint32 uiData)
                 m_uiPortalTimer = 35000;
             if (m_auiEncounter[uiType] != DONE)             // Keep the DONE-information stored
                 m_auiEncounter[uiType] = uiData;
+            // Handle achievements if necessary
+            if (uiData == IN_PROGRESS)
+            {
+                if (uiType == TYPE_ZURAMAT)
+                    m_bIsVoidDance = true;
+                else if (uiType == TYPE_ICHORON)
+                    m_bIsDehydratation = true;
+            }
+            if (uiData == SPECIAL && uiType == TYPE_ICHORON)
+                m_bIsDehydratation = false;
+            if (uiData == FAIL)
+                SetData(TYPE_MAIN, FAIL);
             break;
         case TYPE_CYANIGOSA:
             if (uiData == DONE)
                 SetData(TYPE_MAIN, DONE);
+            if (uiData == FAIL)
+                SetData(TYPE_MAIN, FAIL);
             m_auiEncounter[uiType] = uiData;
             break;
         default:
@@ -431,15 +509,13 @@ void instance_violet_hold::CallGuards(bool bRespawn)
             if (bRespawn)
             {
                 pGuard->Respawn();
+                pGuard->GetMotionMaster()->MoveTargetedHome();
             }
             else if (pGuard->isAlive())
             {
-                pGuard->AI()->EnterEvadeMode();
-
-                if (Creature* pSinclari = GetSingleCreatureFromStorage(NPC_SINCLARI))
-                    pGuard->GetMotionMaster()->MoveFollow(pSinclari, 0.0f, 0.0f);
-
-                pGuard->ForcedDespawn(20000);
+                pGuard->SetWalk(false);
+                pGuard->GetMotionMaster()->MovePoint(0, fGuardExitLoc[0], fGuardExitLoc[1], fGuardExitLoc[2]);
+                pGuard->ForcedDespawn(6000);
             }
         }
     }
@@ -461,21 +537,20 @@ void instance_violet_hold::ProcessActivationCrystal(Unit* pUser, bool bIsIntro)
     // else, kill (and despawn?) certain trash mobs. Also boss affected, but not killed.
 }
 
-uint32 instance_violet_hold::GetRandomPortalEliteEntry()
+bool instance_violet_hold::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/)
 {
-    return (urand(0, 1) ? NPC_PORTAL_GUARDIAN : NPC_PORTAL_KEEPER);
-}
-
-uint32 instance_violet_hold::GetRandomMobForNormalPortal()
-{
-    switch(urand(1, 4))
+    switch (uiCriteriaId)
     {
-        case 1: return NPC_AZURE_INVADER;
-        case 2: return NPC_MAGE_HUNTER;
-        case 3: return NPC_AZURE_SPELLBREAKER;
-        case 4: return NPC_AZURE_BINDER;
+        // ToDo: uncomment these when they are implemented
+        //case ACHIEV_CRIT_DEFENSELES:
+        //    return m_bIsDefenseless;
+        //case ACHIEV_CRIT_DEHYDRATATION:
+        //    return m_bIsDehydratation;
+        case ACHIEV_CRIT_VOID_DANCE:
+            return m_bIsVoidDance;
+
         default:
-            return 0;
+            return false;
     }
 }
 
@@ -510,6 +585,18 @@ void instance_violet_hold::OnCreatureEnterCombat(Creature* pCreature)
         case NPC_CYANIGOSA:
             SetData(TYPE_CYANIGOSA, IN_PROGRESS);
             break;
+        case NPC_AZURE_CAPTAIN:
+        case NPC_AZURE_RAIDER:
+        case NPC_AZURE_SORCEROR:
+        case NPC_AZURE_STALKER:
+        case NPC_AZURE_INVADER:
+        case NPC_MAGE_HUNTER:
+        case NPC_AZURE_SPELLBREAKER:
+        case NPC_AZURE_BINDER:
+        case NPC_AZURE_MAGE_SLAYER:
+            // Interrupt door seal casting (if necessary)
+            pCreature->InterruptNonMeleeSpells(false);
+            break;
     }
 }
 
@@ -520,29 +607,51 @@ void instance_violet_hold::OnCreatureEvade(Creature* pCreature)
         case NPC_ZURAMAT:
         case NPC_VOID_LORD:
             SetData(TYPE_ZURAMAT, FAIL);
+            pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE);
             break;
         case NPC_XEVOZZ:
         case NPC_ETHERAL:
             SetData(TYPE_XEVOZZ, FAIL);
+            pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE);
             break;
         case NPC_LAVANTHOR:
         case NPC_LAVA_HOUND:
             SetData(TYPE_LAVANTHOR, FAIL);
+            pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE);
             break;
         case NPC_MORAGG:
         case NPC_WATCHER:
             SetData(TYPE_MORAGG, FAIL);
+            pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE);
             break;
         case NPC_EREKEM:
         case NPC_ARAKKOA:
             SetData(TYPE_EREKEM, FAIL);
+            pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE);
+            break;
+        case NPC_EREKEM_GUARD:
+            pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE);
             break;
         case NPC_ICHORON:
         case NPC_SWIRLING:
             SetData(TYPE_ICHORON, FAIL);
+            pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE);
             break;
         case NPC_CYANIGOSA:
             SetData(TYPE_CYANIGOSA, FAIL);
+            break;
+        case NPC_AZURE_CAPTAIN:
+        case NPC_AZURE_RAIDER:
+        case NPC_AZURE_SORCEROR:
+        case NPC_AZURE_STALKER:
+        case NPC_AZURE_INVADER:
+        case NPC_MAGE_HUNTER:
+        case NPC_AZURE_SPELLBREAKER:
+        case NPC_AZURE_BINDER:
+        case NPC_AZURE_MAGE_SLAYER:
+            // Allow them to finish off the door seal
+            pCreature->SetWalk(false);
+            pCreature->GetMotionMaster()->MovePoint(1, fSealAttackLoc[0], fSealAttackLoc[1], fSealAttackLoc[2]);
             break;
     }
 }
@@ -578,11 +687,28 @@ void instance_violet_hold::OnCreatureDeath(Creature* pCreature)
         case NPC_CYANIGOSA:
             SetData(TYPE_CYANIGOSA, DONE);
             break;
+        case NPC_VOID_SENTRY:
+            if (GetData(TYPE_ZURAMAT) == IN_PROGRESS)
+                m_bIsVoidDance = false;
+            break;
     }
 }
 
 void instance_violet_hold::Update(uint32 uiDiff)
 {
+    if (m_uiEventResetTimer)
+    {
+        if (m_uiEventResetTimer <= uiDiff)
+        {
+            if (Creature* pSinclari = GetSingleCreatureFromStorage(NPC_SINCLARI))
+                pSinclari->Respawn();
+
+            m_uiEventResetTimer = 0;
+        }
+        else
+            m_uiEventResetTimer -= uiDiff;
+    }
+
     if (m_auiEncounter[TYPE_MAIN] != IN_PROGRESS)
         return;
 

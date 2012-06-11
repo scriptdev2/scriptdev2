@@ -3346,8 +3346,8 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 
 -- -1 608 000 VIOLET HOLD
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
-(-1608000,'Prison guards, we are leaving! These adventurers are taking over! Go, go, go!',0,1,0,0,'sinclair SAY_BEGIN'),
-(-1608001,'I\'m locking the door. Good luck, and thank you for doing this.',0,0,0,0,'sinclair SAY_LOCK_DOOR'),
+(-1608000,'Prison guards, we are leaving! These adventurers are taking over! Go, go, go!',0,1,0,0,'sinclari SAY_BEGIN'),
+(-1608001,'I\'m locking the door. Good luck, and thank you for doing this.',0,0,0,1,'sinclari SAY_LOCK_DOOR'),
 
 (-1608002,'Adventurers, the door is beinning to weaken!',0,1,0,0,'sinclair SAY_SEAL_75'),
 (-1608003,'Only half of the door seal\'s strength remains! You must fight on!',0,1,0,0,'sinclair SAY_SEAL_50'),
@@ -3374,7 +3374,9 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1608023,'I shall pass!',14235,1,0,0,'ichoron SAY_SLAY_2'),
 (-1608024,'You can not stop the tide!',14236,1,0,0,'ichoron SAY_SLAY_3'),
 (-1608025,'I shall consume,decimate, devastate,and destroy! Yield now to the wrath of the pounding sea!',14231,1,0,0,'ichoron SAY_ENRAGE'),
-(-1608026,'I... recede.',14237,1,0,0,'ichoron SAY_DEATH');
+(-1608026,'I... recede.',14237,1,0,0,'ichoron SAY_DEATH'),
+
+(-1608027,'You did it! You held the Blue Dragonflight back and defeated their commander. Amazing work!',0,0,0,1,'sinclari SAY_VICTORY');
 
 -- -1 609 000 EBON HOLD (DK START)
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
@@ -4192,7 +4194,8 @@ INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 -- -3 608 000 VIOLET HOLD
 INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 (-3608000,'Activate the crystals when we get in trouble, right?','sinclari GOSSIP_ITEM_INTRO'),
-(-3608001,'Get your people to safety, we\'ll keep the Blue Dragonflight\'s forces at bay.','sinclari GOSSIP_ITEM_START');
+(-3608001,'Get your people to safety, we\'ll keep the Blue Dragonflight\'s forces at bay.','sinclari GOSSIP_ITEM_START'),
+(-3608002,'I\'m not fighting, so send me in now!','sinclari GOSSIP_ITEM_TELEPORT');
 
 -- -3 649 000 TRIAL OF CRUSADER
 INSERT INTO gossip_texts (entry,content_default,comment) VALUES
@@ -5935,9 +5938,10 @@ DELETE FROM script_waypoint WHERE entry=30658;
 INSERT INTO script_waypoint VALUES
 (30658, 0, 1830.504517, 799.356506, 44.341801, 5000, 'use activation'),
 (30658, 1, 1832.461792, 800.431396, 44.311745, 10000, 'SAY_BEGIN call back guards'),
-(30658, 2, 1824.786987, 803.828369, 44.363434, 0, 'SAY_LOCK_DOOR close door'),
-(30658, 3, 1807.245483, 803.904114, 44.363434, 0, ''),
-(30658, 4, 1785.160400, 803.856873, 44.364830, 30000, '');
+(30658, 2, 1824.786987, 803.828369, 44.363434, 3000, 'SAY_LOCK_DOOR'),
+(30658, 3, 1824.786987, 803.828369, 44.363434, 0, 'close door'),
+(30658, 4, 1817.315674, 804.060608, 44.363998, 0, 'escort paused - allow teleport inside'),
+(30658, 5, 1826.889648, 803.929993, 44.363239, 30000, 'SAY_VICTORY');
 
 DELETE FROM script_waypoint WHERE entry = 349;
 INSERT INTO script_waypoint VALUES

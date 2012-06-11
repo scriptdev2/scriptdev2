@@ -300,6 +300,23 @@ struct MANGOS_DLL_DECL npc_time_riftAI : public ScriptedAI
         }
     }
 
+    void SummonedCreatureDespawn(Creature* pSummoned)
+    {
+        switch (pSummoned->GetEntry())
+        {
+            case NPC_AEONUS:
+            case NPC_CHRONO_LORD_DEJA:
+            case NPC_TEMPORUS:
+            case NPC_CHRONO_LORD:
+            case NPC_TIMEREAVER:
+            case NPC_RIFT_KEEPER:
+            case NPC_RIFT_LORD:
+                // Despawn in case of event reset
+                m_creature->ForcedDespawn();
+                break;
+        }
+    }
+
     void SummonedMovementInform(Creature* pSummoned, uint32 uiMotionType, uint32 uiPointId)
     {
         if (uiMotionType != POINT_MOTION_TYPE || !uiPointId || pSummoned->GetEntry() != NPC_AEONUS)

@@ -26,6 +26,7 @@ enum
     WORLD_STATE_PORTALS         = 3810,
 
     GO_INTRO_CRYSTAL            = 193615,
+    GO_PRISON_CRYSTAL           = 193611,
     GO_PRISON_SEAL_DOOR         = 191723,
 
     GO_CELL_LAVANTHOR           = 191566,
@@ -69,6 +70,9 @@ enum
     NPC_AZURE_RAIDER            = 30668,
     NPC_AZURE_STALKER           = 32191,
 
+    NPC_VOID_SENTRY             = 29364,                    // Npc checked for Zuramat achiev
+    NPC_ICHORON_SUMMON_TARGET   = 29326,                    // Npc which summons the Ichoron globules
+
     // used for intro
     NPC_AZURE_BINDER_INTRO      = 31007,
     NPC_AZURE_INVADER_INTRO     = 31008,
@@ -90,11 +94,14 @@ enum
 
     SPELL_DEFENSE_SYSTEM_VISUAL = 57887,
     SPELL_DEFENSE_SYSTEM_SPAWN  = 57886,
+    SPELL_LIGHTNING_INTRO       = 60038,                    // intro kill spells, also related to spell 58152
+    SPELL_ARCANE_LIGHTNING      = 57930,                    // damage spells, related to spell 57912
 
     SPELL_DESTROY_DOOR_SEAL     = 58040,                    // spell periodic cast by misc
     SPELL_TELEPORTATION_PORTAL  = 57687,                    // visual aura, but possibly not used? creature_template model for portals are same
 
     SPELL_SHIELD_DISRUPTION     = 58291,                    // dummy when opening a cell
+    SPELL_SIMPLE_TELEPORT       = 12980,                    // used after a cell has been opened - not sure if the id is correct
 
     SPELL_PORTAL_PERIODIC       = 58008,                    // most likely the tick for each summon (tick each 15 seconds)
     SPELL_PORTAL_CHANNEL        = 58012,                    // the blue "stream" between portal and guardian/keeper
@@ -116,10 +123,21 @@ enum
     EMOTE_DRAGONFLIGHT_PORTAL   = -1608006,
     EMOTE_KEEPER_PORTAL         = -1608007,
 
-    MAX_NORMAL_PORTAL           = 8
+    MAX_NORMAL_PORTAL           = 8,
+
+    ACHIEV_CRIT_DEFENSELES      = 6803,                     // event achiev - 1816
+    ACHIEV_CRIT_DEHYDRATATION   = 7320,                     // Ichoron achiev - 2041
+    ACHIEV_CRIT_VOID_DANCE      = 7587,                     // Zuramat achiev - 2153
 };
 
 static const float fDefenseSystemLoc[4] = {1888.146f, 803.382f, 58.604f, 3.072f};
+static const float fGuardExitLoc[3] = {1806.955f, 803.851f, 44.36f};
+static const float fSealAttackLoc[3] = {1858.027f, 804.11f, 44.008f};
+
+static const uint32 aRandomPortalNpcs[5] = {NPC_AZURE_INVADER, NPC_MAGE_HUNTER, NPC_AZURE_SPELLBREAKER, NPC_AZURE_BINDER, NPC_AZURE_MAGE_SLAYER};
+static const uint32 aRandomIntroNpcs[4] = {NPC_AZURE_BINDER_INTRO, NPC_AZURE_INVADER_INTRO, NPC_AZURE_SPELLBREAKER_INTRO, NPC_AZURE_MAGE_SLAYER_INTRO};
+
+static const int32 aSealWeakYell[3] = {SAY_SEAL_75, SAY_SEAL_50, SAY_SEAL_5};
 
 enum ePortalType
 {
@@ -177,28 +195,22 @@ class MANGOS_DLL_DECL instance_violet_hold : public ScriptedInstance
         ~instance_violet_hold();                            // Destructor used to free m_vRandomBosses
 
         void Initialize();
-        void ResetAll();
-        void ResetVariables();
 
         void OnCreatureCreate(Creature* pCreature);
         void OnObjectCreate(GameObject* pGo);
 
         void UpdateCellForBoss(uint32 uiBossEntry, bool bForceClosing = false);
-        void UpdateWorldState(bool bEnable = true);
 
         void SetIntroPortals(bool bDeactivate);
-        void SpawnPortal();
-
-        void SetPortalId();
 
         void CallGuards(bool bRespawn);
 
-        uint32 GetRandomPortalEliteEntry();
-        uint32 GetRandomMobForNormalPortal();
+        uint32 GetRandomPortalEliteEntry() { return (urand(0, 1) ? NPC_PORTAL_GUARDIAN : NPC_PORTAL_KEEPER); }
+        uint32 GetRandomMobForNormalPortal() { return aRandomPortalNpcs[urand(0, 4)]; }
+        uint32 GetRandomMobForIntroPortal() { return aRandomIntroNpcs[urand(0, 3)]; }
 
         uint32 GetCurrentPortalNumber() { return m_uiWorldStatePortalCount; }
 
-        PortalData const* GetPortalData() { return &afPortalLocation[m_uiPortalId]; }
         BossInformation const* GetBossInformation(uint32 uiEntry = 0);
 
         bool IsCurrentPortalForTrash()
@@ -209,17 +221,9 @@ class MANGOS_DLL_DECL instance_violet_hold : public ScriptedInstance
             return false;
         }
 
-        bool IsNextPortalForTrash()
-        {
-            if ((m_uiWorldStatePortalCount+1) % MAX_MINIBOSSES)
-                return true;
-
-            return false;
-        }
-
         void ProcessActivationCrystal(Unit* pUser, bool bIsIntro = false);
 
-        void SetRandomBosses();
+        void GetErekemGuardList(GUIDList& lList) { lList = m_lErekemGuardList; }
 
         void OnPlayerEnter(Player* pPlayer);
 
@@ -230,6 +234,8 @@ class MANGOS_DLL_DECL instance_violet_hold : public ScriptedInstance
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
 
+        bool CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/);
+
         const char* Save() { return m_strInstData.c_str(); }
         void Load(const char* chrIn);
 
@@ -238,6 +244,26 @@ class MANGOS_DLL_DECL instance_violet_hold : public ScriptedInstance
         typedef std::multimap<uint32, ObjectGuid> BossToCellMap;
 
     protected:
+        PortalData const* GetPortalData() { return &afPortalLocation[m_uiPortalId]; }
+
+        void UpdateWorldState(bool bEnable = true);
+
+        void SetRandomBosses();
+
+        void SpawnPortal();
+        void SetPortalId();
+
+        void ResetAll();
+        void ResetVariables();
+
+        bool IsNextPortalForTrash()
+        {
+            if ((m_uiWorldStatePortalCount+1) % MAX_MINIBOSSES)
+                return true;
+
+            return false;
+        }
+
         BossSpawn* CreateBossSpawnByEntry(uint32 uiEntry);
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strInstData;
@@ -250,10 +276,18 @@ class MANGOS_DLL_DECL instance_violet_hold : public ScriptedInstance
         uint32 m_uiPortalTimer;
         uint32 m_uiMaxCountPortalLoc;
 
+        uint32 m_uiSealYellCount;
+        uint32 m_uiEventResetTimer;
+
+        bool m_bIsVoidDance;
+        bool m_bIsDehydratation;
+        bool m_bIsDefenseless;
+
         BossToCellMap m_mBossToCellMap;
 
         GUIDList m_lIntroPortalList;
         GUIDList m_lGuardsList;
+        GUIDList m_lErekemGuardList;
         std::list<uint32> m_lRandomBossList;
 
         std::vector<BossSpawn*> m_vRandomBosses;
