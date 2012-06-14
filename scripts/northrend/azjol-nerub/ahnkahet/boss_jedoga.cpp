@@ -168,7 +168,7 @@ struct MANGOS_DLL_DECL boss_jedogaAI : public ScriptedAI
 
     void MoveInLineOfSight(Unit* pWho)
     {
-        if (!m_bHasDoneIntro && pWho->GetTypeId() == TYPEID_PLAYER && m_creature->IsWithinLOSInMap(pWho))
+        if (!m_bHasDoneIntro && pWho->GetTypeId() == TYPEID_PLAYER && m_creature->IsWithinDistInMap(pWho, 110.0f) && m_creature->IsWithinLOSInMap(pWho))
         {
             switch(urand(0, 4))
             {
