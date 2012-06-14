@@ -52,7 +52,7 @@ enum
     SPELL_SPIRIT_STRIKE_H       = 59304,
     SPELL_SUMMON_SPIRIT_FOUNT   = 48386,            // by Bjorn
     SPELL_SPIRIT_FOUNT_BEAM     = 48385,            // channeled beam on the spirit fount - triggers 48380 : 59320 on aura expire
-    SPELL_AVENGING_SPIRITS      = 48590,            // by Torgyn - has script effect - 48592
+    SPELL_AVENGING_SPIRITS      = 48590,            // by Torgyn
 
     // visuals
     SPELL_CHANNEL_YMIRON_SPIRIT = 48307,
@@ -61,8 +61,8 @@ enum
     SPELL_SPIRIT_DIES           = 48596,            // cast by a boat spirit
 
     // by summoned creatures
-    SPELL_SPIRIT_VISUAL         = 48593,            // avenging spirit summon visual
-    SPELL_WITHER_TRIGG          = 48584,            // aura for avenging spirits - triggers 48585 on melee
+    //SPELL_SPIRIT_VISUAL       = 48593,            // avenging spirit summon visual - handled in eventAI
+    //SPELL_WITHER_TRIGG        = 48584,            // aura for avenging spirits - triggers 48585 on melee  - handled in eventAI
 
     // spirit transforms
     SPELL_BJORN_TRANSFORM       = 48308,
@@ -71,7 +71,8 @@ enum
     SPELL_TORGYN_TRANSFORM      = 48313,
 
     NPC_SPIRIT_FOUNT            = 27339,
-    NPC_AVENGING_SPIRIT         = 27386,
+    //NPC_AVENGING_SPIRIT       = 27386,
+    //NPC_SPIRIT_SUMMONER       = 27392,            // summoned around the boss - triggers 48592
 
     MAX_BOATS                   = 4,
 
@@ -237,17 +238,8 @@ struct MANGOS_DLL_DECL boss_ymironAI : public ScriptedAI
 
     void JustSummoned(Creature* pSummoned)
     {
-        switch(pSummoned->GetEntry())
-        {
-            case NPC_SPIRIT_FOUNT:
-                DoCastSpellIfCan(pSummoned, SPELL_SPIRIT_FOUNT_BEAM, CAST_INTERRUPT_PREVIOUS);
-                break;
-            // ToDo: This needs further research and core support
-            //case NPC_AVENGING_SPIRIT:
-            //    pSummoned->CastSpell(pSummoned, SPELL_SPIRIT_VISUAL, true);
-            //    pSummoned->CastSpell(pSummoned, SPELL_WITHER_TRIGG, true);
-            //    break;
-        }
+        if (pSummoned->GetEntry() == NPC_SPIRIT_FOUNT)
+            DoCastSpellIfCan(pSummoned, SPELL_SPIRIT_FOUNT_BEAM, CAST_INTERRUPT_PREVIOUS);
     }
 
     void MovementInform(uint32 uiMotionType, uint32 uiPointId)
