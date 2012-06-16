@@ -25,6 +25,19 @@ enum
     SAY_SAPP_DIALOG3            = -1533086,
     SAY_SAPP_DIALOG4_LICH       = -1533087,
     SAY_SAPP_DIALOG5            = -1533088,
+    // Horsemen dialogue texts
+    SAY_BLAU_TAUNT1             = -1533045,
+    SAY_BLAU_TAUNT2             = -1533046,
+    SAY_BLAU_TAUNT3             = -1533047,             // NYI - requires additiona research
+    SAY_RIVE_TAUNT1             = -1533071,
+    SAY_RIVE_TAUNT2             = -1533072,
+    SAY_RIVE_TAUNT3             = -1533073,             // NYI - requires additiona research
+    SAY_KORT_TAUNT1             = -1533052,
+    SAY_KORT_TAUNT2             = -1533053,
+    SAY_KORT_TAUNT3             = -1533054,             // NYI - requires additiona research
+    SAY_ZELI_TAUNT1             = -1533059,
+    SAY_ZELI_TAUNT2             = -1533060,
+    SAY_ZELI_TAUNT3             = -1533061,             // NYI - requires additiona research
 
     TYPE_ANUB_REKHAN            = 0,
     TYPE_FAERLINA               = 1,
@@ -136,6 +149,11 @@ enum
     GO_MILI_EYE_RAMP            = 181210,
     GO_CONS_EYE_RAMP            = 181213,
 
+    GO_ARAC_EYE_BOSS            = 181233,
+    GO_PLAG_EYE_BOSS            = 181231,
+    GO_MILI_EYE_BOSS            = 181230,
+    GO_CONS_EYE_BOSS            = 181232,
+
     // Portals
     GO_ARAC_PORTAL              = 181575,
     GO_PLAG_PORTAL              = 181577,
@@ -244,6 +262,7 @@ class MANGOS_DLL_DECL instance_naxxramas : public ScriptedInstance
         float m_fChamberCenterZ;
 
         uint32 m_uiTauntTimer;
+        uint8 m_uiHorseMenKilled;
 
         DialogueHelper m_dialogueHelper;
 };

@@ -26,16 +26,27 @@ EndScriptData */
 
 static const DialogueEntry aNaxxDialogue[] =
 {
-    {SAY_SAPP_DIALOG1,      NPC_KELTHUZAD,      6000},
-    {SAY_SAPP_DIALOG2_LICH, NPC_THE_LICHKING,   6000},
+    {NPC_KELTHUZAD,         0,                  10000},
+    {SAY_SAPP_DIALOG1,      NPC_KELTHUZAD,      8000},
+    {SAY_SAPP_DIALOG2_LICH, NPC_THE_LICHKING,   14000},
     {SAY_SAPP_DIALOG3,      NPC_KELTHUZAD,      10000},
     {SAY_SAPP_DIALOG4_LICH, NPC_THE_LICHKING,   12000},
     {SAY_SAPP_DIALOG5,      NPC_KELTHUZAD,      0},
+    {NPC_THANE,             0,                  10000},
+    {SAY_KORT_TAUNT1,       NPC_THANE,          5000},
+    {SAY_ZELI_TAUNT1,       NPC_ZELIEK,         6000},
+    {SAY_BLAU_TAUNT1,       NPC_BLAUMEUX,       6000},
+    {SAY_RIVE_TAUNT1,       NPC_RIVENDARE,      6000},
+    {SAY_BLAU_TAUNT2,       NPC_BLAUMEUX,       6000},
+    {SAY_ZELI_TAUNT2,       NPC_ZELIEK,         5000},
+    {SAY_KORT_TAUNT2,       NPC_THANE,          7000},
+    {SAY_RIVE_TAUNT2,       NPC_RIVENDARE,      0},
     {0,0,0}
 };
 
 instance_naxxramas::instance_naxxramas(Map* pMap) : ScriptedInstance(pMap),
     m_uiTauntTimer(0),
+    m_uiHorseMenKilled(0),
     m_dialogueHelper(aNaxxDialogue),
     m_fChamberCenterX(0.0f),
     m_fChamberCenterY(0.0f),
@@ -169,27 +180,42 @@ void instance_naxxramas::OnObjectCreate(GameObject* pGo)
 
         // Eyes
         case GO_ARAC_EYE_RAMP:
+        case GO_ARAC_EYE_BOSS:
             if (m_auiEncounter[TYPE_MAEXXNA] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_PLAG_EYE_RAMP:
+        case GO_PLAG_EYE_BOSS:
             if (m_auiEncounter[TYPE_LOATHEB] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_MILI_EYE_RAMP:
+        case GO_MILI_EYE_BOSS:
             if (m_auiEncounter[TYPE_FOUR_HORSEMEN] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_CONS_EYE_RAMP:
+        case GO_CONS_EYE_BOSS:
             if (m_auiEncounter[TYPE_THADDIUS] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
 
         // Portals
         case GO_ARAC_PORTAL:
+            if (m_auiEncounter[TYPE_MAEXXNA] == DONE)
+                pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
+            break;
         case GO_PLAG_PORTAL:
+            if (m_auiEncounter[TYPE_LOATHEB] == DONE)
+                pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
+            break;
         case GO_MILI_PORTAL:
+            if (m_auiEncounter[TYPE_FOUR_HORSEMEN] == DONE)
+                pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
+            break;
         case GO_CONS_PORTAL:
+            if (m_auiEncounter[TYPE_THADDIUS] == DONE)
+                pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
             break;
 
         default:
@@ -273,7 +299,9 @@ void instance_naxxramas::SetData(uint32 uiType, uint32 uiData)
             if (uiData == DONE)
             {
                 DoUseDoorOrButton(GO_ARAC_EYE_RAMP);
+                DoUseDoorOrButton(GO_ARAC_EYE_BOSS);
                 DoRespawnGameObject(GO_ARAC_PORTAL, 30*MINUTE);
+                DoToggleGameObjectFlags(GO_ARAC_PORTAL, GO_FLAG_NO_INTERACT, false);
                 m_uiTauntTimer = 5000;
             }
             break;
@@ -302,7 +330,9 @@ void instance_naxxramas::SetData(uint32 uiType, uint32 uiData)
             if (uiData == DONE)
             {
                 DoUseDoorOrButton(GO_PLAG_EYE_RAMP);
+                DoUseDoorOrButton(GO_PLAG_EYE_BOSS);
                 DoRespawnGameObject(GO_PLAG_PORTAL, 30*MINUTE);
+                DoToggleGameObjectFlags(GO_PLAG_PORTAL, GO_FLAG_NO_INTERACT, false);
                 m_uiTauntTimer = 5000;
             }
             break;
@@ -329,17 +359,36 @@ void instance_naxxramas::SetData(uint32 uiType, uint32 uiData)
                     DoUseDoorOrButton(GO_MILI_GOTH_ENTRY_GATE);
                     DoUseDoorOrButton(GO_MILI_GOTH_EXIT_GATE);
                     DoUseDoorOrButton(GO_MILI_HORSEMEN_DOOR);
+
+                    m_dialogueHelper.StartNextDialogueText(NPC_THANE);
                     break;
             }
             m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_FOUR_HORSEMEN:
+            // Skip if already set
+            if (m_auiEncounter[uiType] == uiData)
+                return;
+            if (uiData == SPECIAL)
+            {
+                ++m_uiHorseMenKilled;
+
+                if (m_uiHorseMenKilled == 4)
+                    SetData(TYPE_FOUR_HORSEMEN, DONE);
+
+                // Don't store special data
+                break;
+            }
+            if (uiData == FAIL)
+                m_uiHorseMenKilled = 0;
             m_auiEncounter[uiType] = uiData;
             DoUseDoorOrButton(GO_MILI_HORSEMEN_DOOR);
             if (uiData == DONE)
             {
                 DoUseDoorOrButton(GO_MILI_EYE_RAMP);
+                DoUseDoorOrButton(GO_MILI_EYE_BOSS);
                 DoRespawnGameObject(GO_MILI_PORTAL, 30*MINUTE);
+                DoToggleGameObjectFlags(GO_MILI_PORTAL, GO_FLAG_NO_INTERACT, false);
                 DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CHEST_HORSEMEN_NORM : GO_CHEST_HORSEMEN_HERO, 30*MINUTE);
                 m_uiTauntTimer = 5000;
             }
@@ -376,7 +425,9 @@ void instance_naxxramas::SetData(uint32 uiType, uint32 uiData)
             if (uiData == DONE)
             {
                 DoUseDoorOrButton(GO_CONS_EYE_RAMP);
+                DoUseDoorOrButton(GO_CONS_EYE_BOSS);
                 DoRespawnGameObject(GO_CONS_PORTAL, 30*MINUTE);
+                DoToggleGameObjectFlags(GO_CONS_PORTAL, GO_FLAG_NO_INTERACT, false);
                 m_uiTauntTimer = 5000;
             }
             break;
@@ -388,7 +439,7 @@ void instance_naxxramas::SetData(uint32 uiType, uint32 uiData)
             if (uiData == DONE)
             {
                 DoUseDoorOrButton(GO_KELTHUZAD_WATERFALL_DOOR);
-                m_dialogueHelper.StartNextDialogueText(SAY_SAPP_DIALOG1);
+                m_dialogueHelper.StartNextDialogueText(NPC_KELTHUZAD);
             }
             break;
         case TYPE_KELTHUZAD:
