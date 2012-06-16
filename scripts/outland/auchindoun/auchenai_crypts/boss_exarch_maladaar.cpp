@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Boss_Exarch_Maladaar
 SD%Complete: 95
-SDComment: Most of event implemented, some adjustments to timers remain and possibly make some better code for switching his dark side in to better "images" of player.
+SDComment: Most of event implemented, possibly make some better code for switching his dark side in to better "images" of player.
 SDCategory: Auchindoun, Auchenai Crypts
 EndScriptData */
 
@@ -31,6 +31,8 @@ EndContentData */
 
 enum
 {
+    SPELL_STOLEN_SOUL_DISPEL= 33326,
+
     SPELL_MOONFIRE          = 37328,
     SPELL_FIREBALL          = 37329,
     SPELL_MIND_FLAY         = 37330,
@@ -50,6 +52,8 @@ struct MANGOS_DLL_DECL mob_stolen_soulAI : public ScriptedAI
     uint8 m_uiStolenClass;
     uint32 m_uiSpellTimer;
 
+    ObjectGuid m_targetGuid;
+
     void Reset()
     {
         m_uiSpellTimer = 1000;
@@ -58,8 +62,14 @@ struct MANGOS_DLL_DECL mob_stolen_soulAI : public ScriptedAI
     void SetSoulInfo(Unit* pTarget)
     {
         m_uiStolenClass = pTarget->getClass();
+        m_targetGuid = pTarget->GetObjectGuid();
         m_creature->SetDisplayId(pTarget->GetDisplayId());
+    }
 
+    void JustDied(Unit* pKiller)
+    {
+        if (Unit* pTarget = m_creature->GetMap()->GetUnit(m_targetGuid))
+            DoCastSpellIfCan(pTarget, SPELL_STOLEN_SOUL_DISPEL, CAST_TRIGGERED);
     }
 
     void UpdateAI(const uint32 uiDiff)
@@ -169,16 +179,16 @@ struct MANGOS_DLL_DECL boss_exarch_maladaarAI : public ScriptedAI
     {
         m_targetGuid.Clear();
 
-        m_uiFearTimer          = urand(15000, 20000);
-        m_uiRibbonOfSoulsTimer = 5000;
-        m_uiStolenSoulTimer    = urand(25000, 35000);
+        m_uiFearTimer          = urand(11000, 29000);
+        m_uiRibbonOfSoulsTimer = urand(4000, 8000);
+        m_uiStolenSoulTimer    = urand(19000, 31000);
 
         m_bHasSummonedAvatar = false;
     }
 
     void MoveInLineOfSight(Unit* pWho)
     {
-        if (!m_bHasTaunted && m_creature->IsWithinDistInMap(pWho, 150.0))
+        if (!m_bHasTaunted && pWho->GetTypeId() == TYPEID_PLAYER && m_creature->IsWithinDistInMap(pWho, 150.0f) && m_creature->IsWithinLOSInMap(pWho))
         {
             DoScriptText(SAY_INTRO, m_creature);
             m_bHasTaunted = true;
@@ -203,15 +213,13 @@ struct MANGOS_DLL_DECL boss_exarch_maladaarAI : public ScriptedAI
         {
             //SPELL_STOLEN_SOUL_VISUAL has shapeshift effect, but not implemented feature in mangos for this spell.
             pSummoned->CastSpell(pSummoned, SPELL_STOLEN_SOUL_VISUAL, false);
-            pSummoned->setFaction(m_creature->getFaction());
 
             if (Player* pTarget = m_creature->GetMap()->GetPlayer(m_targetGuid))
             {
                 if (mob_stolen_soulAI* pSoulAI = dynamic_cast<mob_stolen_soulAI*>(pSummoned->AI()))
-                {
                     pSoulAI->SetSoulInfo(pTarget);
-                    pSoulAI->AttackStart(pTarget);
-                }
+
+                pSummoned->AI()->AttackStart(pTarget);
             }
         }
     }
@@ -232,6 +240,12 @@ struct MANGOS_DLL_DECL boss_exarch_maladaarAI : public ScriptedAI
         DoSpawnCreature(NPC_DORE, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN, 600000);
     }
 
+    void SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell)
+    {
+        if (pSpell->Id == SPELL_STOLEN_SOUL && pTarget->GetTypeId() == TYPEID_PLAYER)
+            DoSpawnCreature(NPC_STOLEN_SOUL, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10000);
+    }
+
     void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
@@ -239,28 +253,27 @@ struct MANGOS_DLL_DECL boss_exarch_maladaarAI : public ScriptedAI
 
         if (!m_bHasSummonedAvatar && m_creature->GetHealthPercent() < 25.0f)
         {
-            if (m_creature->IsNonMeleeSpellCasted(false))
-                m_creature->InterruptNonMeleeSpells(true);
-
-            DoScriptText(SAY_SUMMON, m_creature);
-
-            DoCastSpellIfCan(m_creature, SPELL_SUMMON_AVATAR);
-            m_bHasSummonedAvatar = true;
-            m_uiStolenSoulTimer = urand(15000, 30000);
+            if (DoCastSpellIfCan(m_creature, SPELL_SUMMON_AVATAR) == CAST_OK)
+            {
+                DoScriptText(SAY_SUMMON, m_creature);
+                m_bHasSummonedAvatar = true;
+                m_uiStolenSoulTimer = urand(15000, 30000);
+            }
         }
 
         if (m_uiStolenSoulTimer < uiDiff)
         {
             if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_STOLEN_SOUL, SELECT_FLAG_PLAYER))
             {
-                DoScriptText(urand(0, 1) ? SAY_ROAR : SAY_SOUL_CLEAVE, m_creature);
+                if (DoCastSpellIfCan(pTarget, SPELL_STOLEN_SOUL) == CAST_OK)
+                {
+                    if (urand(0, 1))
+                        DoScriptText(urand(0, 1) ? SAY_ROAR : SAY_SOUL_CLEAVE, m_creature);
 
-                m_targetGuid = pTarget->GetObjectGuid();
+                    m_targetGuid = pTarget->GetObjectGuid();
 
-                DoCastSpellIfCan(pTarget, SPELL_STOLEN_SOUL, CAST_INTERRUPT_PREVIOUS);
-                DoSpawnCreature(NPC_STOLEN_SOUL, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10000);
-
-                m_uiStolenSoulTimer = urand(20000, 30000);
+                    m_uiStolenSoulTimer = urand(35000, 67000);
+                }
             }
         }
         else
@@ -269,17 +282,18 @@ struct MANGOS_DLL_DECL boss_exarch_maladaarAI : public ScriptedAI
         if (m_uiRibbonOfSoulsTimer < uiDiff)
         {
             if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-                DoCastSpellIfCan(pTarget, SPELL_RIBBON_OF_SOULS);
-
-            m_uiRibbonOfSoulsTimer = urand(5000, 25000);
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_RIBBON_OF_SOULS) == CAST_OK)
+                    m_uiRibbonOfSoulsTimer = urand(4000, 18000);
+            }
         }
         else
             m_uiRibbonOfSoulsTimer -= uiDiff;
 
         if (m_uiFearTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature, SPELL_SOUL_SCREAM);
-            m_uiFearTimer = urand(15000, 30000);
+            if (DoCastSpellIfCan(m_creature, SPELL_SOUL_SCREAM) == CAST_OK)
+                m_uiFearTimer = urand(13000, 30000);
         }
         else
             m_uiFearTimer -= uiDiff;

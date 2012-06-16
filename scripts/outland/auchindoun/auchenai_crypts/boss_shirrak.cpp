@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: boss_shirrak
-SD%Complete: 90
-SDComment: Timers may need small adjustments
+SD%Complete: 100
+SDComment:
 SDCategory: Auchindoun, Auchenai Crypts
 EndScriptData */
 
@@ -56,9 +56,9 @@ struct MANGOS_DLL_DECL boss_shirrakAI : public ScriptedAI
 
     void Reset()
     {
-        m_uiCarnivorousBiteTimer    = 10000;
+        m_uiCarnivorousBiteTimer    = urand(4000, 7000);
         m_uiFocusFireTimer          = 15000;
-        m_uiAttractMagicTimer       = 25000;
+        m_uiAttractMagicTimer       = urand(20000, 24000);
         m_uiFocusFireCount          = 0;
 
         DoCastSpellIfCan(m_creature, SPELL_INHIBIT_MAGIC);
@@ -79,7 +79,7 @@ struct MANGOS_DLL_DECL boss_shirrakAI : public ScriptedAI
         if (m_uiCarnivorousBiteTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_CARNIVOROUS_BITE : SPELL_CARNIVOROUS_BITE_H) == CAST_OK)
-                m_uiCarnivorousBiteTimer = urand(8000, 12000);
+                m_uiCarnivorousBiteTimer = urand(4000, 10000);
         }
         else
             m_uiCarnivorousBiteTimer -= uiDiff;
@@ -87,7 +87,7 @@ struct MANGOS_DLL_DECL boss_shirrakAI : public ScriptedAI
         if (m_uiAttractMagicTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature, SPELL_ATTRACT_MAGIC) == CAST_OK)
-                m_uiAttractMagicTimer = urand(20000, 25000);
+                m_uiAttractMagicTimer = urand(25000, 38000);
         }
         else
             m_uiAttractMagicTimer -= uiDiff;
