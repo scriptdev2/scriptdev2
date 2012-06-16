@@ -17,40 +17,12 @@
 /* ScriptData
 SDName: Feralas
 SD%Complete: 100
-SDComment: Quest support: 3520, 2767. Special vendor Gregan Brewspewer
+SDComment: Quest support: 2767.
 SDCategory: Feralas
 EndScriptData */
 
 #include "precompiled.h"
 #include "escort_ai.h"
-
-/*######
-## npc_gregan_brewspewer
-######*/
-
-bool GossipHello_npc_gregan_brewspewer(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
-
-    if (pCreature->isVendor() && pPlayer->GetQuestStatus(3909) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Buy somethin', will ya?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-
-    pPlayer->SEND_GOSSIP_MENU(2433, pCreature->GetObjectGuid());
-    return true;
-}
-
-bool GossipSelect_npc_gregan_brewspewer(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
-    {
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
-        pPlayer->SEND_GOSSIP_MENU(2434, pCreature->GetObjectGuid());
-    }
-    if (uiAction == GOSSIP_ACTION_TRADE)
-        pPlayer->SEND_VENDORLIST(pCreature->GetObjectGuid());
-    return true;
-}
 
 /*######
 ## npc_oox22fe
@@ -161,19 +133,6 @@ bool QuestAccept_npc_oox22fe(Player* pPlayer, Creature* pCreature, const Quest* 
 }
 
 /*######
-## npc_screecher_spirit
-######*/
-
-bool GossipHello_npc_screecher_spirit(Player* pPlayer, Creature* pCreature)
-{
-    pPlayer->SEND_GOSSIP_MENU(2039, pCreature->GetObjectGuid());
-    pPlayer->TalkedToCreature(pCreature->GetEntry(), pCreature->GetObjectGuid());
-    pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-
-    return true;
-}
-
-/*######
 ## AddSC
 ######*/
 
@@ -182,19 +141,8 @@ void AddSC_feralas()
     Script* pNewScript;
 
     pNewScript = new Script;
-    pNewScript->Name = "npc_gregan_brewspewer";
-    pNewScript->pGossipHello = &GossipHello_npc_gregan_brewspewer;
-    pNewScript->pGossipSelect = &GossipSelect_npc_gregan_brewspewer;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
     pNewScript->Name = "npc_oox22fe";
     pNewScript->GetAI = &GetAI_npc_oox22fe;
     pNewScript->pQuestAcceptNPC = &QuestAccept_npc_oox22fe;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_screecher_spirit";
-    pNewScript->pGossipHello = &GossipHello_npc_screecher_spirit;
     pNewScript->RegisterSelf();
 }

@@ -25,7 +25,6 @@ EndScriptData */
 npc_aeranas
 npc_ancestral_wolf
 npc_demoniac_scryer
-npc_tracy_proudwell
 npc_wounded_blood_elf
 EndContentData */
 
@@ -342,54 +341,6 @@ bool GossipSelect_npc_demoniac_scryer(Player* pPlayer, Creature* pCreature, uint
 }
 
 /*######
-## npc_tracy_proudwell
-######*/
-
-#define GOSSIP_TEXT_REDEEM_MARKS        "I have marks to redeem!"
-#define GOSSIP_TRACY_PROUDWELL_ITEM1    "I heard that your dog Fei Fei took Klatu's prayer beads..."
-#define GOSSIP_TRACY_PROUDWELL_ITEM2    "<back>"
-
-enum
-{
-    GOSSIP_TEXTID_TRACY_PROUDWELL1       = 10689,
-    QUEST_DIGGING_FOR_PRAYER_BEADS       = 10916
-};
-
-bool GossipHello_npc_tracy_proudwell(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
-
-    if (pCreature->isVendor())
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_TEXT_REDEEM_MARKS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
-
-    if (pPlayer->GetQuestStatus(QUEST_DIGGING_FOR_PRAYER_BEADS) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_TRACY_PROUDWELL_ITEM1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-    return true;
-}
-
-bool GossipSelect_npc_tracy_proudwell(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    switch(uiAction)
-    {
-        case GOSSIP_ACTION_INFO_DEF+1:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_TRACY_PROUDWELL_ITEM2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_TRACY_PROUDWELL1, pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+2:
-            pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_TRADE:
-            pPlayer->SEND_VENDORLIST(pCreature->GetObjectGuid());
-            break;
-    }
-
-    return true;
-}
-
-/*######
 ## npc_wounded_blood_elf
 ######*/
 
@@ -493,12 +444,6 @@ void AddSC_hellfire_peninsula()
     pNewScript->GetAI = &GetAI_npc_demoniac_scryer;
     pNewScript->pGossipHello = &GossipHello_npc_demoniac_scryer;
     pNewScript->pGossipSelect = &GossipSelect_npc_demoniac_scryer;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_tracy_proudwell";
-    pNewScript->pGossipHello = &GossipHello_npc_tracy_proudwell;
-    pNewScript->pGossipSelect = &GossipSelect_npc_tracy_proudwell;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;

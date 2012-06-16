@@ -17,13 +17,12 @@
 /* ScriptData
 SDName: Mulgore
 SD%Complete: 100
-SDComment: Quest support: 11129. Skorn Whitecloud: Just a story if not rewarded for quest
+SDComment: Quest support: 11129.
 SDCategory: Mulgore
 EndScriptData */
 
 /* ContentData
 npc_kyle_the_frenzied
-npc_skorn_whitecloud
 EndContentData */
 
 #include "precompiled.h"
@@ -168,31 +167,6 @@ CreatureAI* GetAI_npc_kyle_the_frenzied(Creature* pCreature)
     return new npc_kyle_the_frenziedAI(pCreature);
 }
 
-/*######
-# npc_skorn_whitecloud
-######*/
-
-bool GossipHello_npc_skorn_whitecloud(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
-
-    if (!pPlayer->GetQuestRewardStatus(770))
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Tell me a story, Skorn.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
-
-    pPlayer->SEND_GOSSIP_MENU(522, pCreature->GetObjectGuid());
-
-    return true;
-}
-
-bool GossipSelect_npc_skorn_whitecloud(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_INFO_DEF)
-        pPlayer->SEND_GOSSIP_MENU(523, pCreature->GetObjectGuid());
-
-    return true;
-}
-
 void AddSC_mulgore()
 {
     Script* pNewScript;
@@ -200,11 +174,5 @@ void AddSC_mulgore()
     pNewScript = new Script;
     pNewScript->Name = "npc_kyle_the_frenzied";
     pNewScript->GetAI = &GetAI_npc_kyle_the_frenzied;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_skorn_whitecloud";
-    pNewScript->pGossipHello = &GossipHello_npc_skorn_whitecloud;
-    pNewScript->pGossipSelect = &GossipSelect_npc_skorn_whitecloud;
     pNewScript->RegisterSelf();
 }

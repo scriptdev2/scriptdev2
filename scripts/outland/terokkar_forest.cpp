@@ -32,7 +32,6 @@ npc_hungry_nether_ray
 npc_letoll
 npc_mana_bomb_exp_trigger
 go_mana_bomb
-npc_slim
 go_veil_skith_cage
 npc_captive_child
 npc_isla_starmane
@@ -840,36 +839,6 @@ bool GOUse_go_mana_bomb(Player* pPlayer, GameObject* pGo)
 }
 
 /*######
-## npc_slim
-######*/
-
-enum
-{
-    FACTION_CONSORTIUM  = 933
-};
-
-bool GossipHello_npc_slim(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isVendor() && pPlayer->GetReputationRank(FACTION_CONSORTIUM) >= REP_FRIENDLY)
-    {
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
-        pPlayer->SEND_GOSSIP_MENU(9896, pCreature->GetObjectGuid());
-    }
-    else
-        pPlayer->SEND_GOSSIP_MENU(9895, pCreature->GetObjectGuid());
-
-    return true;
-}
-
-bool GossipSelect_npc_slim(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_TRADE)
-        pPlayer->SEND_VENDORLIST(pCreature->GetObjectGuid());
-
-    return true;
-}
-
-/*#####
 ## go_veil_skith_cage & npc_captive_child
 #####*/
 
@@ -1217,12 +1186,6 @@ void AddSC_terokkar_forest()
     pNewScript = new Script;
     pNewScript->Name = "go_mana_bomb";
     pNewScript->pGOUse = &GOUse_go_mana_bomb;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_slim";
-    pNewScript->pGossipHello =  &GossipHello_npc_slim;
-    pNewScript->pGossipSelect = &GossipSelect_npc_slim;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;

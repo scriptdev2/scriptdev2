@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Thunder_Bluff
 SD%Complete: 100
-SDComment: Quest support: 925
+SDComment: ToDo: Cairne BloodHoof can be moved to eventAI
 SDCategory: Thunder Bluff
 EndScriptData */
 
@@ -98,29 +98,6 @@ CreatureAI* GetAI_npc_cairne_bloodhoof(Creature* pCreature)
     return new npc_cairne_bloodhoofAI(pCreature);
 }
 
-bool GossipHello_npc_cairne_bloodhoof(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
-
-    if (pPlayer->GetQuestStatus(925) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "I know this is rather silly but a young ward who is a bit shy would like your hoofprint.", GOSSIP_SENDER_MAIN, GOSSIP_SENDER_INFO);
-
-    pPlayer->SEND_GOSSIP_MENU(7013, pCreature->GetObjectGuid());
-
-    return true;
-}
-
-bool GossipSelect_npc_cairne_bloodhoof(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_SENDER_INFO)
-    {
-        pPlayer->CastSpell(pPlayer, 23123, false);
-        pPlayer->SEND_GOSSIP_MENU(7014, pCreature->GetObjectGuid());
-    }
-    return true;
-}
-
 void AddSC_thunder_bluff()
 {
     Script* pNewScript;
@@ -128,7 +105,5 @@ void AddSC_thunder_bluff()
     pNewScript = new Script;
     pNewScript->Name = "npc_cairne_bloodhoof";
     pNewScript->GetAI = &GetAI_npc_cairne_bloodhoof;
-    pNewScript->pGossipHello = &GossipHello_npc_cairne_bloodhoof;
-    pNewScript->pGossipSelect = &GossipSelect_npc_cairne_bloodhoof;
     pNewScript->RegisterSelf();
 }
