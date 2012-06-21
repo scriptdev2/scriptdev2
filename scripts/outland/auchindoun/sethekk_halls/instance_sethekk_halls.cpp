@@ -134,6 +134,22 @@ InstanceData* GetInstanceData_instance_sethekk_halls(Map* pMap)
     return new instance_sethekk_halls(pMap);
 }
 
+bool ProcessEventId_event_spell_summon_raven_god(uint32 uiEventId, Object* pSource, Object* pTarget, bool bIsStart)
+{
+    if (bIsStart && pSource->GetTypeId() == TYPEID_PLAYER)
+    {
+        if (instance_sethekk_halls* pInstance = (instance_sethekk_halls*)((Player*)pSource)->GetInstanceData())
+        {
+            // This should be checked by despawning the Raven Claw Go; However it's better to double check the condition
+            if (pInstance->GetData(TYPE_ANZU) == DONE || pInstance->GetData(TYPE_ANZU) == IN_PROGRESS)
+                return true;
+
+            // ToDo: add more code here to handle the summoning event. For the moment it's handled in DB because of the missing info
+        }
+    }
+    return false;
+}
+
 void AddSC_instance_sethekk_halls()
 {
     Script* pNewScript;
@@ -141,5 +157,10 @@ void AddSC_instance_sethekk_halls()
     pNewScript = new Script;
     pNewScript->Name = "instance_sethekk_halls";
     pNewScript->GetInstanceData = &GetInstanceData_instance_sethekk_halls;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "event_spell_summon_raven_god";
+    pNewScript->pProcessEventId = &ProcessEventId_event_spell_summon_raven_god;
     pNewScript->RegisterSelf();
 }

@@ -230,6 +230,10 @@ UPDATE creature_template SET ScriptName='mob_syth_frost' WHERE entry=19204;
 UPDATE creature_template SET ScriptName='mob_syth_shadow' WHERE entry=19206;
 UPDATE creature_template SET ScriptName='boss_talon_king_ikiss' WHERE entry=18473;
 UPDATE creature_template SET ScriptName='boss_darkweaver_syth' WHERE entry=18472;
+UPDATE creature_template SET ScriptName='boss_anzu' WHERE entry=23035;
+DELETE FROM scripted_event_id WHERE id=14797;
+INSERT INTO scripted_event_id VALUES
+(14797,'event_spell_summon_raven_god');
 
 /* SHADOW LABYRINTH */
 UPDATE instance_template SET ScriptName='instance_shadow_labyrinth' WHERE map=555;
