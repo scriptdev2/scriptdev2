@@ -16,7 +16,7 @@
 
 /* ScriptData
 SDName: Boss_Ragnaros
-SD%Complete: 60
+SD%Complete: 70
 SDComment: Melee/ Range Combat behavior is not correct(any enemy in melee range, not only getVictim), Some abilities are missing
 SDCategory: Molten Core
 EndScriptData */
@@ -26,8 +26,7 @@ EndScriptData */
 
 /* There have been quite some bugs about his spells, keep this as reference untill all finished
  * Missing features (based on wowwiki)
- *   Lava Splash - Localized Damage
- *   Melt Weapon - Proc Aura missing in DBC, or hack missing
+ *   Lava Burst - this spell is handled by Go 178088 which is summoned by spells 21886, 21900 - 21907
  */
 
 enum
@@ -43,7 +42,7 @@ enum
     SPELL_WRATH_OF_RAGNAROS     = 20566,
     SPELL_ELEMENTAL_FIRE        = 20564,
     SPELL_MAGMA_BLAST           = 20565,                    // Ranged attack if nobody is in melee range
-    SPELL_MELT_WEAPON           = 21388,                    // Passive aura was spell 21387, TODO need some hack..
+    SPELL_MELT_WEAPON           = 21387,
     SPELL_RAGNA_SUBMERGE        = 21107,                    // Stealth aura
     SPELL_RAGNA_EMERGE          = 20568,                    // Emerge from lava
     SPELL_ELEMENTAL_FIRE_KILL   = 19773,
@@ -117,6 +116,8 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public Scripted_NoMovementAI
     {
         if (pWho->GetTypeId() == TYPEID_UNIT && pWho->GetEntry() == NPC_MAJORDOMO)
             return;
+
+        DoCastSpellIfCan(m_creature, SPELL_MELT_WEAPON);
 
         if (m_pInstance)
             m_pInstance->SetData(TYPE_RAGNAROS, IN_PROGRESS);

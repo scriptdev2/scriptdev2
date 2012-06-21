@@ -91,6 +91,9 @@ void instance_blackwing_lair::OnObjectCreate(GameObject* pGo)
         case GO_BLACK_DRAGON_EGG:
             m_lDragonEggGuids.push_back(pGo->GetObjectGuid());
             return;
+        case GO_DRAKONID_BONES:
+            m_lDrakonidBonesGuids.push_back(pGo->GetObjectGuid());
+            return;
 
         default:
             return;
@@ -139,8 +142,38 @@ void instance_blackwing_lair::SetData(uint32 uiType, uint32 uiData)
                 DoUseDoorOrButton(GO_DOOR_CHROMAGGUS_EXIT);
             break;
         case TYPE_NEFARIAN:
+            // Don't store the same thing twice
+            if (m_auiEncounter[uiType] == uiData)
+                break;
+            if (uiData == SPECIAL)
+            {
+                //handle missing spell 23362
+                Creature* pNefarius = GetSingleCreatureFromStorage(NPC_LORD_VICTOR_NEFARIUS);
+                if (!pNefarius)
+                    break;
+
+                for (GUIDList::const_iterator itr = m_lDrakonidBonesGuids.begin(); itr != m_lDrakonidBonesGuids.end(); ++itr)
+                {
+                    // The Go script will handle the missing spell 23361
+                    if (GameObject* pGo = instance->GetGameObject(*itr))
+                        pGo->Use(pNefarius);
+                }
+                // Don't store special data
+                break;
+            }
             m_auiEncounter[uiType] = uiData;
             DoUseDoorOrButton(GO_DOOR_NEFARIAN);
+            // Cleanup the drakonid bones
+            if (uiData == FAIL)
+            {
+                for (GUIDList::const_iterator itr = m_lDrakonidBonesGuids.begin(); itr != m_lDrakonidBonesGuids.end(); ++itr)
+                {
+                    if (GameObject* pGo = instance->GetGameObject(*itr))
+                        pGo->SetLootState(GO_JUST_DEACTIVATED);
+                }
+
+                m_lDrakonidBonesGuids.clear();
+            }
             break;
     }
 

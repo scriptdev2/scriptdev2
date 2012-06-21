@@ -42,6 +42,7 @@ enum
     GO_DOOR_LASHLAYER           = 179365,
     GO_ORB_OF_DOMINATION        = 177808,                   // trigger 19832 on Razorgore
     GO_BLACK_DRAGON_EGG         = 177807,
+    GO_DRAKONID_BONES           = 179804,
 };
 
 // Coords used to spawn Nefarius at the throne
@@ -73,6 +74,7 @@ class MANGOS_DLL_DECL instance_blackwing_lair : public ScriptedInstance
         GUIDList m_lTechnicianGuids;
         GUIDList m_lGeneratorGuids;
         GUIDList m_lDragonEggGuids;
+        GUIDList m_lDrakonidBonesGuids;
 };
 
 #endif

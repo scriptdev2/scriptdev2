@@ -55,6 +55,8 @@ enum
     SPELL_FEAR                      = 22678,
     SPELL_SHADOWBLINK               = 22681,                // triggers a random from spells (22668 - 22676)
 
+    SPELL_SUMMON_DRAKONID_BONES     = 23363,
+
     MAP_ID_BWL                      = 469,
 
     FACTION_BLACK_DRAGON            = 103
@@ -199,8 +201,6 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI, private Dialo
             if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                 pSummoned->AI()->AttackStart(pTarget);
         }
-
-        pSummoned->SetRespawnDelay(7*DAY);
     }
 
     void SummonedMovementInform(Creature* pSummoned, uint32 uiMotionType, uint32 uiPointId)
@@ -224,6 +224,8 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI, private Dialo
         // Despawn self when Nefarian is killed
         if (pSummoned->GetEntry() == NPC_NEFARIAN)
             m_creature->ForcedDespawn();
+        else
+            pSummoned->CastSpell(pSummoned, SPELL_SUMMON_DRAKONID_BONES, true);
     }
 
     void JustDidDialogueStep(int32 iEntry)
@@ -331,11 +333,11 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI, private Dialo
 
                 // 1 in 3 chance it will be a chromatic
                 uiCreatureId = urand(0, 2) ? m_uiDrakeTypeOne : NPC_CHROMATIC_DRAKANOID;
-                m_creature->SummonCreature(uiCreatureId, aNefarianLocs[0].m_fX, aNefarianLocs[0].m_fY, aNefarianLocs[0].m_fZ, 5.000f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30*MINUTE*IN_MILLISECONDS);
+                m_creature->SummonCreature(uiCreatureId, aNefarianLocs[0].m_fX, aNefarianLocs[0].m_fY, aNefarianLocs[0].m_fZ, 5.000f, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 30000);
 
                 // 1 in 3 chance it will be a chromatic
                 uiCreatureId = urand(0, 2) ? m_uiDrakeTypeTwo : NPC_CHROMATIC_DRAKANOID;
-                m_creature->SummonCreature(uiCreatureId, aNefarianLocs[1].m_fX, aNefarianLocs[1].m_fY, aNefarianLocs[1].m_fZ, 5.000, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30*MINUTE*IN_MILLISECONDS);
+                m_creature->SummonCreature(uiCreatureId, aNefarianLocs[1].m_fX, aNefarianLocs[1].m_fY, aNefarianLocs[1].m_fZ, 5.000, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 30000);
 
                 //Begin phase 2 by spawning Nefarian
                 if (m_uiSpawnedAdds >= MAX_DRAKE_SUMMONS)

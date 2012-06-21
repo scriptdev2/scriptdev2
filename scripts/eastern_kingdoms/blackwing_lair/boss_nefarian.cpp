@@ -50,7 +50,7 @@ enum
     SPELL_VEIL_OF_SHADOW        = 22687,                // old spell id 7068 -> wrong
     SPELL_CLEAVE                = 20691,
     SPELL_TAIL_LASH             = 23364,
-    SPELL_BONE_CONTRUST         = 23363,                //23362, 23361   Missing from DBC!
+    //SPELL_BONE_CONTRUST       = 23363,                //23362, 23361   Missing from DBC!
 
     SPELL_MAGE                  = 23410,                // wild magic
     SPELL_WARRIOR               = 23397,                // beserk
@@ -248,7 +248,8 @@ struct MANGOS_DLL_DECL boss_nefarianAI : public ScriptedAI
         // Phase3 begins when we are below X health
         if (!m_bPhase3 && m_creature->GetHealthPercent() < 20.0f)
         {
-            // todo revive all dead dragos as 14605
+            if (m_pInstance)
+                m_pInstance->SetData(TYPE_NEFARIAN, SPECIAL);
             m_bPhase3 = true;
             DoScriptText(SAY_RAISE_SKELETONS, m_creature);
         }
