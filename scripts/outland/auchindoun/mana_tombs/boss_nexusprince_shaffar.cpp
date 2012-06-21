@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_NexusPrince_Shaffar
-SD%Complete: 80
-SDComment: Need more tuning of spell timers, it should not be as linear fight as current. Also should possibly find a better way to deal with his three initial beacons to make sure all aggro.
+SD%Complete: 100
+SDComment: ToDo: move the Ethereal Beacon script to eventAI
 SDCategory: Auchindoun, Mana Tombs
 EndScriptData */
 
@@ -44,10 +44,8 @@ enum
     SPELL_FIREBALL                  = 32363,
     SPELL_FROSTNOVA                 = 32365,
 
-    SPELL_ETHEREAL_BEACON           = 32371,                // Summons NPC_BEACON
-    SPELL_ETHEREAL_BEACON_VISUAL    = 32368,
-
-    NPC_BEACON                      = 18431
+    SPELL_ETHEREAL_BEACON           = 32371,                // Summons 18431
+    //SPELL_ETHEREAL_BEACON_VISUAL  = 32368,                // included in creature_template_addon
 };
 
 struct MANGOS_DLL_DECL boss_nexusprince_shaffarAI : public ScriptedAI
@@ -69,15 +67,15 @@ struct MANGOS_DLL_DECL boss_nexusprince_shaffarAI : public ScriptedAI
     void Reset()
     {
         m_uiBlinkTimer      = 30000;
-        m_uiBeaconTimer     = 10000;
-        m_uiFireBallTimer   = 8000;
-        m_uiFrostboltTimer  = 4000;
-        m_uiFrostNovaTimer  = 15000;
+        m_uiBeaconTimer     = urand(12000, 15000);
+        m_uiFireBallTimer   = urand(2000, 12000);
+        m_uiFrostboltTimer  = urand(1000, 14000);
+        m_uiFrostNovaTimer  = urand(18000, 25000);
     }
 
     void MoveInLineOfSight(Unit* pWho)
     {
-        if (!m_bHasTaunted && pWho->GetTypeId() == TYPEID_PLAYER && m_creature->IsWithinDistInMap(pWho, 100.0f))
+        if (!m_bHasTaunted && pWho->GetTypeId() == TYPEID_PLAYER && m_creature->IsWithinDistInMap(pWho, 100.0f) && m_creature->IsWithinLOSInMap(pWho))
         {
             DoScriptText(SAY_INTRO, m_creature);
             m_bHasTaunted = true;
@@ -98,13 +96,8 @@ struct MANGOS_DLL_DECL boss_nexusprince_shaffarAI : public ScriptedAI
 
     void JustSummoned(Creature* pSummoned)
     {
-        if (pSummoned->GetEntry() == NPC_BEACON)
-        {
-            pSummoned->CastSpell(pSummoned, SPELL_ETHEREAL_BEACON_VISUAL, false);
-
-            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
-                pSummoned->AI()->AttackStart(pTarget);
-        }
+        if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
+            pSummoned->AI()->AttackStart(pTarget);
     }
 
     void KilledUnit(Unit* pVictim)
@@ -125,7 +118,7 @@ struct MANGOS_DLL_DECL boss_nexusprince_shaffarAI : public ScriptedAI
         if (m_uiFrostNovaTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature, SPELL_FROSTNOVA) == CAST_OK)
-                m_uiFrostNovaTimer = urand(17500, 25000);
+                m_uiFrostNovaTimer = urand(10000, 20000);
         }
         else
             m_uiFrostNovaTimer -= uiDiff;
@@ -133,7 +126,7 @@ struct MANGOS_DLL_DECL boss_nexusprince_shaffarAI : public ScriptedAI
         if (m_uiFrostboltTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_FROSTBOLT) == CAST_OK)
-                m_uiFrostboltTimer = urand(4500, 6000);
+                m_uiFrostboltTimer = urand(3000, 8000);
         }
         else
             m_uiFrostboltTimer -= uiDiff;
@@ -141,7 +134,7 @@ struct MANGOS_DLL_DECL boss_nexusprince_shaffarAI : public ScriptedAI
         if (m_uiFireBallTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_FIREBALL) == CAST_OK)
-                m_uiFireBallTimer = urand(4500, 6000);
+                m_uiFireBallTimer = urand(3000, 8000);
         }
         else
             m_uiFireBallTimer -= uiDiff;
@@ -168,7 +161,7 @@ struct MANGOS_DLL_DECL boss_nexusprince_shaffarAI : public ScriptedAI
                 if (!urand(0,3))
                     DoScriptText(SAY_SUMMON, m_creature);
 
-                m_uiBeaconTimer = 10000;
+                m_uiBeaconTimer = urand(45000, 75000);
             }
         }
         else
@@ -205,7 +198,7 @@ struct MANGOS_DLL_DECL mob_ethereal_beaconAI : public ScriptedAI
     void Reset()
     {
         m_uiApprenticeTimer = m_bIsRegularMode ? 20000 : 10000;
-        m_uiArcaneBoltTimer = 1000;
+        m_uiArcaneBoltTimer = 0;
     }
 
     void JustSummoned(Creature* pSummoned)
@@ -222,7 +215,7 @@ struct MANGOS_DLL_DECL mob_ethereal_beaconAI : public ScriptedAI
         if (m_uiArcaneBoltTimer < uiDiff)
         {
             DoCastSpellIfCan(m_creature->getVictim(), SPELL_ARCANE_BOLT);
-            m_uiArcaneBoltTimer = urand(2000, 4500);
+            m_uiArcaneBoltTimer = urand(3000, 8000);
         }
         else
             m_uiArcaneBoltTimer -= uiDiff;

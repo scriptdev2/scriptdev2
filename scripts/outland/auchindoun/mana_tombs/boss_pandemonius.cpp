@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Pandemonius
-SD%Complete: 75
-SDComment: Not known how void blast is done (amount of rapid cast seems to be related to players in party). All mobs remaining in surrounding area should aggro when engaged.
+SD%Complete: 80
+SDComment: Not known how void blast is done (amount of rapid cast seems to be related to players in party).
 SDCategory: Auchindoun, Mana Tombs
 EndScriptData */
 
@@ -57,8 +57,8 @@ struct MANGOS_DLL_DECL boss_pandemoniusAI : public ScriptedAI
 
     void Reset()
     {
-        m_uiVoidBlastTimer   = urand(8000, 23000);
-        m_uiDarkShellTimer   = 20000;
+        m_uiVoidBlastTimer   = urand(15000, 20000);
+        m_uiDarkShellTimer   = 15000;
         m_uiVoidBlastCounter = 0;
     }
 
@@ -95,7 +95,7 @@ struct MANGOS_DLL_DECL boss_pandemoniusAI : public ScriptedAI
             // reset timer and counter when counter has reached the max limit
             if (m_uiVoidBlastCounter == MAX_VOID_BLASTS)
             {
-                m_uiVoidBlastTimer = urand(15000, 25000);
+                m_uiVoidBlastTimer = urand(25000, 30000);
                 m_uiVoidBlastCounter = 0;
             }
             // cast the void blasts in a row until we reach the max limit
@@ -116,7 +116,7 @@ struct MANGOS_DLL_DECL boss_pandemoniusAI : public ScriptedAI
                 if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_DARK_SHELL : SPELL_DARK_SHELL_H) == CAST_OK)
                 {
                     DoScriptText(EMOTE_DARK_SHELL, m_creature);
-                    m_uiDarkShellTimer = 20000;
+                    m_uiDarkShellTimer = urand(25000, 30000);
                 }
             }
             else
