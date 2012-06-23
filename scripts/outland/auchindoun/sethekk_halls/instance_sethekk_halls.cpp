@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Instance - Sethekk Halls
-SD%Complete: 50
-SDComment: Instance Data for Sethekk Halls instance
+SD%Complete: 60
+SDComment: Summoning event for Anzu NYI
 SDCategory: Auchindoun, Sethekk Halls
 EndScriptData */
 
@@ -33,6 +33,12 @@ void instance_sethekk_halls::Initialize()
     memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
 }
 
+void instance_sethekk_halls::OnCreatureCreate(Creature* pCreature)
+{
+    if (pCreature->GetEntry() == NPC_ANZU)
+        m_mNpcEntryGuidStore[NPC_ANZU] = pCreature->GetObjectGuid();
+}
+
 void instance_sethekk_halls::OnObjectCreate(GameObject* pGo)
 {
     switch (pGo->GetEntry())
@@ -44,6 +50,8 @@ void instance_sethekk_halls::OnObjectCreate(GameObject* pGo)
         case GO_IKISS_CHEST:
             if (m_auiEncounter[TYPE_IKISS] == DONE)
                 pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT | GO_FLAG_INTERACT_COND);
+            break;
+        case GO_RAVENS_CLAW:
             break;
 
         default:
@@ -58,8 +66,16 @@ void instance_sethekk_halls::SetData(uint32 uiType, uint32 uiData)
     switch(uiType)
     {
         case TYPE_SYTH:
+            m_auiEncounter[uiType] = uiData;
+            break;
         case TYPE_ANZU:
             m_auiEncounter[uiType] = uiData;
+            // Respawn the Raven's Claw if event fails
+            if (uiData == FAIL)
+            {
+                if (GameObject* pClaw = GetSingleGameObjectFromStorage(GO_RAVENS_CLAW))
+                    pClaw->Respawn();
+            }
             break;
         case TYPE_IKISS:
             if (uiData == DONE)
@@ -142,6 +158,10 @@ bool ProcessEventId_event_spell_summon_raven_god(uint32 uiEventId, Object* pSour
         {
             // This should be checked by despawning the Raven Claw Go; However it's better to double check the condition
             if (pInstance->GetData(TYPE_ANZU) == DONE || pInstance->GetData(TYPE_ANZU) == IN_PROGRESS)
+                return true;
+
+            // Don't summon him twice
+            if (pInstance->GetSingleCreatureFromStorage(NPC_ANZU, true))
                 return true;
 
             // ToDo: add more code here to handle the summoning event. For the moment it's handled in DB because of the missing info
