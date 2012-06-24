@@ -51,6 +51,8 @@ struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public ScriptedAI
         {
             if (m_pInstance->GetData(TYPE_OVERSEER) != DONE)
                 DoCastSpellIfCan(m_creature, SPELL_BANISH, CAST_TRIGGERED);
+            else
+                m_creature->GetMotionMaster()->MoveWaypoint();
         }
     }
 

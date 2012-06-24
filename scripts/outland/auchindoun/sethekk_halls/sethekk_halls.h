@@ -14,6 +14,7 @@ enum
     TYPE_IKISS                  = 2,
 
     NPC_ANZU                    = 23035,
+    NPC_RAVEN_GOD_TARGET        = 23057,
 
     GO_IKISS_DOOR               = 177203,
     GO_IKISS_CHEST              = 187372,
@@ -21,6 +22,11 @@ enum
 
     SAY_ANZU_INTRO_1            = -1556016,
     SAY_ANZU_INTRO_2            = -1556017,
+
+    // possible spells used for Anzu summoning event
+    SPELL_PORTAL                = 39952,
+    SPELL_SUMMONING_BEAMS       = 39978,
+    SPELL_RED_LIGHTNING         = 39990,
 
     ACHIEV_CRITA_TURKEY_TIME    = 11142,
     ITEM_PILGRIMS_HAT           = 46723,

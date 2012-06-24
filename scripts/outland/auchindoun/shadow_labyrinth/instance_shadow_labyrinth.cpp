@@ -108,6 +108,7 @@ void instance_shadow_labyrinth::SetData(uint32 uiType, uint32 uiData)
                     {
                         // yell intro and remove banish aura
                         DoScriptText(SAY_HELLMAW_INTRO, pHellmaw);
+                        pHellmaw->GetMotionMaster()->MoveWaypoint();
                         if (pHellmaw->HasAura(SPELL_BANISH))
                             pHellmaw->RemoveAurasDueToSpell(SPELL_BANISH);
                     }
