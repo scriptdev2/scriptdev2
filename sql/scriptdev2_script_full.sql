@@ -883,7 +883,11 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000818,'I now return to whence I came, only to find myself here once more to relive the same epic tragedy.',0,0,0,0,'Eris Havenfire SAY_EVENT_FAIL_2'),
 (-1000819,'The Scourge are upon us! Run! Run for your lives!',0,1,0,0,'Peasant SAY_PEASANT_APPEAR_1'),
 (-1000820,'Please help us! The Prince has gone mad!',0,1,0,0,'Peasant SAY_PEASANT_APPEAR_2'),
-(-1000821,'Seek sanctuary in Hearthglen! It is our only hope!',0,1,0,0,'Peasant SAY_PEASANT_APPEAR_3');
+(-1000821,'Seek sanctuary in Hearthglen! It is our only hope!',0,1,0,0,'Peasant SAY_PEASANT_APPEAR_3'),
+
+(-1000822,'The signal has been sent. He should be arriving shortly.',0,0,0,1,'squire rowe SAY_SIGNAL_SENT'),
+(-1000823,'Yawww!',0,0,0,35,'reginald windsor SAY_DISMOUNT'),
+(-1000824,'I knew you would come, $N. It is good to see you again, friend.',0,0,0,1,'reginald windsor SAY_WELCOME');
 
 -- -1 033 000 SHADOWFANG KEEP
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
@@ -4139,7 +4143,7 @@ INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 (-3000103,'I am ready to travel to you village now.','rainspeaker GOSSIP_ITEM_READY'),
 (-3000104,'<Check for pulse...>','mosswalker victim GOSSIP_ITEM_PULSE'),
 (-3000105,'Ezekiel said that you might have a certain book...','dirty larry GOSSIP_ITEM_BOOK'),
-(-3000106,'REUSE ME','REUSE ME'),
+(-3000106,'Let Marshal Windsor know that I am ready.','squire rowe GOSSIP_ITEM_WINDSOR'),
 (-3000107,'REUSE ME','REUSE ME'),
 (-3000108,'REUSE ME','REUSE ME'),
 (-3000109,'I am ready, Oronok. Let us destroy Cyrukh and free the elements!','oronok torn-heart GOSSIP_ITEM_FIGHT');
@@ -4184,7 +4188,6 @@ INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 -- -3 564 000 BLACK TEMPLE
 INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 (-3564000,'We are ready to fight alongside you, Akama','akama(shade) GOSSIP_ITEM_START_ENCOUNTER');
-
 
 -- -3 595 000 CULLING OF STRATHOLME
 INSERT INTO gossip_texts (entry,content_default,comment) VALUES
@@ -6553,5 +6556,15 @@ INSERT INTO script_waypoint VALUES
 (22424, 80, -3503.24, 4076.63, 92.92, 0, 'SAY_SKYWING_SUMMON'),
 (22424, 81, -3504.23, 4080.47, 92.92, 7000, 'SPELL_TRANSFORM'),
 (22424, 82, -3504.23, 4080.47, 92.92, 20000, 'SAY_SKYWING_END');
+
+DELETE FROM script_waypoint WHERE entry=17804;
+INSERT INTO script_waypoint VALUES
+(17804, 0, -9054.86, 443.58, 93.05, 0, ''),
+(17804, 1, -9079.33, 424.49, 92.52, 0, ''),
+(17804, 2, -9086.21, 419.02, 92.32, 3000, ''),
+(17804, 3, -9086.21, 419.02, 92.32, 1000, ''),
+(17804, 4, -9079.33, 424.49, 92.52, 0, ''),
+(17804, 5, -9054.38, 436.30, 93.05, 0, ''),
+(17804, 6, -9042.23, 434.24, 93.37, 5000, 'SAY_SIGNAL_SENT');
 
 -- EOF
