@@ -1977,6 +1977,9 @@
     <ClInclude Include="..\scripts\outland\tempest_keep\the_mechanar\mechanar.h">
       <Filter>scripts\outland\tempest_keep\the_mechanar</Filter>
     </ClInclude>
+    <ClInclude Include="..\scripts\world\world_map_scripts.h">
+      <Filter>scripts\world</Filter>
+    </ClInclude>
     <ClInclude Include="..\include\precompiled.h">
       <Filter>include</Filter>
     </ClInclude>

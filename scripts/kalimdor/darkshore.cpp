@@ -382,8 +382,8 @@ bool GossipSelect_npc_threshwackonator(Player* pPlayer, Creature* pCreature, uin
 }
 
 /*######
-+# npc_volcor
-+######*/
+# npc_volcor
+######*/
 
 enum
 {
