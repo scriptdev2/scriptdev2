@@ -31,6 +31,19 @@ struct MANGOS_DLL_DECL world_map_eastern_kingdoms : public ScriptedMap
 {
     world_map_eastern_kingdoms(Map* pMap) : ScriptedMap(pMap) {}
 
+    void OnCreatureCreate(Creature* pCreature)
+    {
+        switch (pCreature->GetEntry())
+        {
+            case NPC_JONATHAN:
+            case NPC_WRYNN:
+            case NPC_BOLVAR:
+            case NPC_PRESTOR:
+            case NPC_WINDSOR:
+                m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
+        }
+    }
+
     void SetData(uint32 uiType, uint32 uiData) {}
 };
 

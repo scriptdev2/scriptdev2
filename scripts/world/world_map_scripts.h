@@ -14,6 +14,13 @@ enum
     NPC_MURKDEEP                = 10323,
     QUEST_WANTED_MURKDEEP       = 4740,
 
+    // Quest 6403
+    NPC_JONATHAN                = 466,
+    NPC_WRYNN                   = 1747,
+    NPC_BOLVAR                  = 1748,
+    NPC_PRESTOR                 = 1749,
+    NPC_WINDSOR                 = 12580,
+
     // Quest 11538
     NPC_EMISSARY_OF_HATE        = 25003,
     NPC_IRESPEAKER              = 24999,
