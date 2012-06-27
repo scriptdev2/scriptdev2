@@ -77,6 +77,8 @@ DELETE FROM scripted_areatrigger WHERE entry in (4288,4485);
 INSERT INTO scripted_areatrigger VALUES
 (4288,'at_dark_portal'),
 (4485,'at_dark_portal');
+DELETE FROM scripted_areatrigger WHERE entry=1966;
+INSERT INTO scripted_areatrigger VALUES (1966,'at_murkdeep');
 
 
 /* BATTLEGROUNDS */
