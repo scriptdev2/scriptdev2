@@ -45,7 +45,9 @@ void instance_ruins_of_ahnqiraj::OnCreatureCreate(Creature* pCreature)
     switch(pCreature->GetEntry())
     {
         case NPC_OSSIRIAN_TRIGGER:
-            // Only store static spawned (if this can be checked, else use a bool)
+            // Only store static spawned
+            if (pCreature->IsTemporarySummon())
+                break;
         case NPC_BURU:
         case NPC_OSSIRIAN:
         case NPC_GENERAL_ANDOROV:

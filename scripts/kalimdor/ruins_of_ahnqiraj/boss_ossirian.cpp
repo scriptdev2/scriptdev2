@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Ossirian
-SD%Complete: 50%
-SDComment: Tornados missing, Crystal handling missing, Weather missing
+SD%Complete: 70%
+SDComment: Tornados missing, Weather missing
 SDCategory: Ruins of Ahn'Qiraj
 EndScriptData */
 
@@ -40,6 +40,8 @@ enum
     SPELL_CYCLONE           = 25189,
     SPELL_STOMP             = 25188,
     SPELL_SUPREME           = 25176,
+    SPELL_SUMMON_CRYSTAL    = 25192,
+    SPELL_SAND_STORM        = 25160,                        // tornado spell
     SPELL_SUMMON            = 20477,                        // TODO NYI
 
     MAX_CRYSTAL_POSITIONS   = 1,                            // TODO
@@ -49,8 +51,11 @@ enum
     SPELL_WEAKNESS_NATURE   = 25180,
     SPELL_WEAKNESS_ARCANE   = 25181,
     SPELL_WEAKNESS_SHADOW   = 25183,
+
+    NPC_SAND_VORTEX         = 15428,                        // tornado npc
 };
 
+static const float aCrystalSpawnPos[3] = {-9355.75f, 1905.43f, 85.55f};
 static const uint32 aWeaknessSpell[] = {SPELL_WEAKNESS_FIRE, SPELL_WEAKNESS_FROST, SPELL_WEAKNESS_NATURE, SPELL_WEAKNESS_ARCANE, SPELL_WEAKNESS_SHADOW};
 
 struct MANGOS_DLL_DECL boss_ossirianAI : public ScriptedAI
@@ -115,6 +120,10 @@ struct MANGOS_DLL_DECL boss_ossirianAI : public ScriptedAI
         else
         {
             // Summon a new crystal trigger at some position depending on m_uiCrystalPosition
+            // Note: the summon points seem to be very random; requires additional research
+            float fX, fY, fZ;
+            m_creature->GetRandomPoint(aCrystalSpawnPos[0], aCrystalSpawnPos[1], aCrystalSpawnPos[2], 100.0f, fX, fY, fZ);
+            m_creature->SummonCreature(NPC_OSSIRIAN_TRIGGER, fX, fY, fZ, 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
         }
         if (!pOssirianTrigger)
             return;
@@ -126,6 +135,12 @@ struct MANGOS_DLL_DECL boss_ossirianAI : public ScriptedAI
         // Increase position
         ++m_uiCrystalPosition %= MAX_CRYSTAL_POSITIONS;
     }
+
+    void JustSummoned(Creature* pSummoned)
+    {
+        if (pSummoned->GetEntry() == NPC_OSSIRIAN_TRIGGER)
+            pSummoned->CastSpell(pSummoned, SPELL_SUMMON_CRYSTAL, true);
+     }
 
     void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
     {
