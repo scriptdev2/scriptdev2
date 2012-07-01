@@ -75,7 +75,7 @@ struct MANGOS_DLL_DECL boss_silver_hand_bossesAI : public ScriptedAI
     boss_silver_hand_bossesAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (instance_stratholme*)pCreature->GetInstanceData();
-        for (uint8 i = 0; i < sizeof(m_aSilverHandAbility); ++i)
+        for (uint8 i = 0; i < countof(m_aSilverHandAbility); ++i)
         {
             if (m_aSilverHandAbility[i].m_uiCreatureEntry == m_creature->GetEntry())
                 m_mSpellTimers[i] = m_aSilverHandAbility[i].m_uiInitialTimer;

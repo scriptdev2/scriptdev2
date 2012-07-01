@@ -260,7 +260,7 @@ void instance_blackrock_depths::OnCreatureEvade(Creature* pCreature)
 {
     if (GetData(TYPE_RING_OF_LAW) == IN_PROGRESS || GetData(TYPE_RING_OF_LAW) == SPECIAL)
     {
-        for (uint8 i = 0; i < sizeof(aArenaNPCs)/sizeof(uint32); ++i)
+        for (uint8 i = 0; i < countof(aArenaNPCs); ++i)
         {
             if (pCreature->GetEntry() == aArenaNPCs[i])
             {

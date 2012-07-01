@@ -67,7 +67,7 @@ void instance_forge_of_souls::ProcessEventNpcs(Player* pPlayer, bool bChanged)
     if (m_auiEncounter[0] != DONE || m_auiEncounter[1] != DONE)
     {
         // Spawn Begin Mobs
-        for (uint8 i = 0; i < sizeof(aEventBeginLocations)/sizeof(sIntoEventNpcSpawnLocations); ++i)
+        for (uint8 i = 0; i < countof(aEventBeginLocations); ++i)
         {
             if (Creature* pSummon = pPlayer->SummonCreature(m_uiTeam == HORDE ? aEventBeginLocations[i].uiEntryHorde : aEventBeginLocations[i].uiEntryAlliance,
                                                             aEventBeginLocations[i].fSpawnX, aEventBeginLocations[i].fSpawnY, aEventBeginLocations[i].fSpawnZ, aEventBeginLocations[i].fSpawnO, TEMPSUMMON_DEAD_DESPAWN, 24*HOUR*IN_MILLISECONDS))
@@ -85,7 +85,7 @@ void instance_forge_of_souls::ProcessEventNpcs(Player* pPlayer, bool bChanged)
                     pSummoned->ForcedDespawn();
             }
 
-            for (uint8 i = 0; i < sizeof(aEventEndLocations)/sizeof(sExtroEventNpcLocations); ++i)
+            for (uint8 i = 0; i < countof(aEventEndLocations); ++i)
             {
                 pPlayer->SummonCreature(m_uiTeam == HORDE ? aEventEndLocations[i].uiEntryHorde : aEventEndLocations[i].uiEntryAlliance,
                                         aEventEndLocations[i].fSpawnX, aEventEndLocations[i].fSpawnY, aEventEndLocations[i].fSpawnZ, aEventEndLocations[i].fStartO, TEMPSUMMON_DEAD_DESPAWN, 24*HOUR*IN_MILLISECONDS);
@@ -95,7 +95,7 @@ void instance_forge_of_souls::ProcessEventNpcs(Player* pPlayer, bool bChanged)
         }
         else
         {   // Summon at end, without event
-            for (uint8 i = 0; i < sizeof(aEventEndLocations)/sizeof(sExtroEventNpcLocations); ++i)
+            for (uint8 i = 0; i < countof(aEventEndLocations); ++i)
             {
                 pPlayer->SummonCreature(m_uiTeam == HORDE ? aEventEndLocations[i].uiEntryHorde : aEventEndLocations[i].uiEntryAlliance,
                                         aEventEndLocations[i].fEndX, aEventEndLocations[i].fEndY, aEventEndLocations[i].fEndZ, aEventEndLocations[i].fEndO, TEMPSUMMON_DEAD_DESPAWN, 24*HOUR*IN_MILLISECONDS);

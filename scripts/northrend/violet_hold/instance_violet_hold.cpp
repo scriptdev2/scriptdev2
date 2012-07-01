@@ -46,7 +46,7 @@ instance_violet_hold::instance_violet_hold(Map* pMap) : ScriptedInstance(pMap),
 void instance_violet_hold::Initialize()
 {
     memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
-    m_uiMaxCountPortalLoc = (sizeof(afPortalLocation)/sizeof(PortalData)) - 1;
+    m_uiMaxCountPortalLoc = countof(afPortalLocation) - 1;
 }
 
 void instance_violet_hold::ResetVariables()
@@ -424,14 +424,14 @@ void instance_violet_hold::SetPortalId()
 {
     if (IsCurrentPortalForTrash())
     {
-        int iTemp = rand()%(m_uiMaxCountPortalLoc - 1);
+        // Find another Trash portal position
+        uint8 uiTemp = m_uiPortalId + urand(1, m_uiMaxCountPortalLoc - 1);
+        // Decrease m_uiMaxCountPortalLoc so that the center position is skipped
+        uiTemp %= m_uiMaxCountPortalLoc - 1;
 
-        if (iTemp >= m_uiPortalId)
-            ++iTemp;
+        debug_log("SD2: instance_violet_hold: SetPortalId %u, old was id %u.", uiTemp, m_uiPortalId);
 
-        debug_log("SD2: instance_violet_hold: SetPortalId %i, old was id %u.", iTemp, m_uiPortalId);
-
-        m_uiPortalId = iTemp;
+        m_uiPortalId = uiTemp;
     }
     else if (GetCurrentPortalNumber() == 18)
     {

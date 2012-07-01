@@ -103,7 +103,7 @@ const uint32 uiNpcPrisonEntry[] =
 
 bool GOUse_go_ethereum_prison(Player* pPlayer, GameObject* pGo)
 {
-    uint8 uiRandom = urand(0, (sizeof(uiNpcPrisonEntry) / sizeof(uint32)) -1);
+    uint8 uiRandom = urand(0, countof(uiNpcPrisonEntry) - 1);
 
     if (Creature* pCreature = pPlayer->SummonCreature(uiNpcPrisonEntry[uiRandom],
         pGo->GetPositionX(), pGo->GetPositionY(), pGo->GetPositionZ(), pGo->GetAngle(pPlayer),
@@ -147,7 +147,7 @@ const uint32 uiNpcStasisEntry[] =
 
 bool GOUse_go_ethereum_stasis(Player* pPlayer, GameObject* pGo)
 {
-    uint8 uiRandom = urand(0, (sizeof(uiNpcStasisEntry) / sizeof(uint32)) -1);
+    uint8 uiRandom = urand(0, countof(uiNpcStasisEntry) - 1);
 
     pPlayer->SummonCreature(uiNpcStasisEntry[uiRandom],
         pGo->GetPositionX(), pGo->GetPositionY(), pGo->GetPositionZ(), pGo->GetAngle(pPlayer),

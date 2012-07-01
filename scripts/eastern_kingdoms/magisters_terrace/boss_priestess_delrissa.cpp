@@ -161,7 +161,7 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
         if (LackeyEntryList.empty())
         {
             //pre-allocate size for speed
-            LackeyEntryList.resize((sizeof(m_auiAddEntries) / sizeof(uint32)));
+            LackeyEntryList.resize(countof(m_auiAddEntries));
 
             //fill vector array with entries from creature array
             for(uint8 i = 0; i < LackeyEntryList.size(); ++i)

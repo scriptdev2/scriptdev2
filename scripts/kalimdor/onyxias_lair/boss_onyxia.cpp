@@ -108,7 +108,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
     {
         m_pInstance = (instance_onyxias_lair*)pCreature->GetInstanceData();
         m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
-        m_uiMaxBreathPositions = sizeof(aMoveData)/sizeof(OnyxiaMove);
+        m_uiMaxBreathPositions = countof(aMoveData);
         Reset();
     }
 

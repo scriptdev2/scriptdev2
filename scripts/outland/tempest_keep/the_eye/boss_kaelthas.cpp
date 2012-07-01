@@ -695,9 +695,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                 {
                     m_creature->CastSpell(m_creature, SPELL_SUMMON_WEAPONS, false);
 
-                    uint8 uiMaxWeapon = sizeof(m_auiSpellSummonWeapon)/sizeof(uint32);
-
-                    for (uint32 i = 0; i < uiMaxWeapon; ++i)
+                    for (uint32 i = 0; i < countof(m_auiSpellSummonWeapon); ++i)
                         m_creature->CastSpell(m_creature,m_auiSpellSummonWeapon[i],true);
 
                     m_uiPhaseSubphase = 2;

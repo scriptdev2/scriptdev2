@@ -628,8 +628,7 @@ bool GossipSelect_npc_death_knight_initiate(Player* pPlayer, Creature* pCreature
 
         pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_UNK_15);
 
-        int32 uiSayId = rand()% (sizeof(m_auiRandomSay)/sizeof(int32));
-        DoScriptText(m_auiRandomSay[uiSayId], pCreature, pPlayer);
+        DoScriptText(m_auiRandomSay[urand(0, countof(m_auiRandomSay) - 1)], pCreature, pPlayer);
 
         pCreature->CastSpell(pPlayer, SPELL_DUEL, false);
         pCreature->CastSpell(pPlayer, SPELL_DUEL_FLAG, true);

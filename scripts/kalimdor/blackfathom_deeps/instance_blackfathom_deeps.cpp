@@ -77,7 +77,7 @@ void instance_blackfathom_deeps::DoSpawnMobs(uint8 uiWaveIndex)
 
     pKelris->GetRespawnCoord(fX_resp, fY_resp, fZ_resp);
 
-    for (uint8 i = 0; i < sizeof(aWaveSummonInformation) / sizeof(SummonInformation); ++i)
+    for (uint8 i = 0; i < countof(aWaveSummonInformation); ++i)
     {
         if (aWaveSummonInformation[i].m_uiWaveIndex != uiWaveIndex)
             continue;

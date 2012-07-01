@@ -565,14 +565,11 @@ struct MANGOS_DLL_DECL dummy_dragonAI : public ScriptedAI
             return;
         }
 
-        //get amount of common points
-        uint32 uiCommonWPCount = sizeof(m_aDragonCommon)/sizeof(Waypoint);
-
         //increase
         m_uiWaypointId = uiPointId+1;
 
         //if we have reached a point bigger or equal to count, it mean we must reset to point 0
-        if (m_uiWaypointId >= uiCommonWPCount)
+        if (m_uiWaypointId >= countof(m_aDragonCommon))
         {
             if (!m_bCanMoveFree)
                 m_bCanMoveFree = true;

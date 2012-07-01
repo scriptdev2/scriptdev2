@@ -296,7 +296,7 @@ struct MANGOS_DLL_DECL mobs_spitelashesAI : public ScriptedAI
 {
     mobs_spitelashesAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        for (uint8 i = 0; i < sizeof(m_aSpitelashAbility); ++i)
+        for (uint8 i = 0; i < countof(m_aSpitelashAbility); ++i)
         {
             if (m_aSpitelashAbility[i].m_uiCreatureEntry == m_creature->GetEntry())
                 m_mSpellTimers[i] = m_aSpitelashAbility[i].m_uiInitialTimer;

@@ -124,9 +124,7 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
-        uint32 uiCount = sizeof(aSpirits)/sizeof(SpawnLocations);
-
-        for(uint8 i = 0; i < uiCount; ++i)
+        for(uint8 i = 0; i < countof(aSpirits); ++i)
             m_creature->SummonCreature(NPC_CHAINED_SPIRIT, aSpirits[i].fX, aSpirits[i].fY, aSpirits[i].fZ, aSpirits[i].fAng, TEMPSUMMON_CORPSE_DESPAWN, 0);
 
         //At combat start Mandokir is mounted so we must unmount it first

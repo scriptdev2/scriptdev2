@@ -148,7 +148,7 @@ struct MANGOS_DLL_DECL boss_ossirianAI : public ScriptedAI
         {
             // Check for proper spell id
             bool bIsWeaknessSpell = false;
-            for (uint8 i = 0; i < sizeof(aWeaknessSpell); ++i)
+            for (uint8 i = 0; i < countof(aWeaknessSpell); ++i)
             {
                 if (pSpell->Id == aWeaknessSpell[i])
                 {

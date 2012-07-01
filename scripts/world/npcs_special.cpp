@@ -108,9 +108,7 @@ struct MANGOS_DLL_DECL npc_air_force_botsAI : public ScriptedAI
         m_pSpawnAssoc = NULL;
 
         // find the correct spawnhandling
-        static uint32 uiEntryCount = sizeof(m_aSpawnAssociations)/sizeof(SpawnAssociation);
-
-        for (uint8 i=0; i<uiEntryCount; ++i)
+        for (uint8 i = 0; i < countof(m_aSpawnAssociations); ++i)
         {
             if (m_aSpawnAssociations[i].m_uiThisCreatureEntry == pCreature->GetEntry())
             {
