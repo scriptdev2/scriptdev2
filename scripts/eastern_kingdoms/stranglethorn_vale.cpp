@@ -31,62 +31,74 @@ EndContentData */
 ## mob_yenniku
 ######*/
 
+enum
+{
+    SPELL_YENNIKUS_RELEASE      = 3607,
+
+    QUEST_ID_SAVING_YENNIKU     = 592,
+
+    FACTION_ID_HORDE_GENERIC    = 83,                       // Note: faction may not be correct!
+};
+
 struct MANGOS_DLL_DECL mob_yennikuAI : public ScriptedAI
 {
-    mob_yennikuAI(Creature *c) : ScriptedAI(c)
-    {
-        bReset = false;
-        Reset();
-    }
+    mob_yennikuAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
-    uint32 Reset_Timer;
-    bool bReset;
+    uint32 m_uiResetTimer;
 
-    void Reset()
-    {
-        Reset_Timer = 0;
-        m_creature->HandleEmote(EMOTE_STATE_NONE);
-    }
+    void Reset() { m_uiResetTimer = 0; }
 
-    void SpellHit(Unit *caster, const SpellEntry *spell)
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
     {
-        if (caster->GetTypeId() == TYPEID_PLAYER)
+        if (pSpell->Id == SPELL_YENNIKUS_RELEASE && pCaster->GetTypeId() == TYPEID_PLAYER)
         {
-                                                            //Yenniku's Release
-            if (!bReset && ((Player*)caster)->GetQuestStatus(592) == QUEST_STATUS_INCOMPLETE && spell->Id == 3607)
+            if (!m_uiResetTimer && ((Player*)pCaster)->GetQuestStatus(QUEST_ID_SAVING_YENNIKU) == QUEST_STATUS_INCOMPLETE)
             {
-                m_creature->HandleEmote(EMOTE_STATE_STUN);
-                m_creature->CombatStop();                   //stop combat
-                m_creature->DeleteThreatList();             //unsure of this
-                m_creature->setFaction(83);                 //horde generic
-
-                bReset = true;
-                Reset_Timer = 60000;
+                m_uiResetTimer = 60000;
+                EnterEvadeMode();
             }
         }
-        return;
     }
 
-    void Aggro(Unit *who) {}
-
-    void UpdateAI(const uint32 diff)
+    void EnterEvadeMode()
     {
-        if (bReset)
-            if (Reset_Timer < diff)
+        if (m_uiResetTimer)
         {
-            EnterEvadeMode();
-            bReset = false;
-            m_creature->setFaction(28);                     //troll, bloodscalp
-        }
-        else Reset_Timer -= diff;
+            m_creature->RemoveAllAuras();
+            m_creature->DeleteThreatList();
+            m_creature->CombatStop(true);
+            m_creature->LoadCreatureAddon(true);
 
-        //Return since we have no target
+            m_creature->SetLootRecipient(NULL);
+
+            m_creature->HandleEmote(EMOTE_STATE_STUN);
+            m_creature->SetFactionTemporary(FACTION_ID_HORDE_GENERIC, TEMPFACTION_RESTORE_REACH_HOME);
+        }
+        else
+            ScriptedAI::EnterEvadeMode();
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (m_uiResetTimer)
+        {
+            if (m_uiResetTimer <= uiDiff)
+            {
+                m_creature->HandleEmote(EMOTE_STATE_NONE);
+                m_uiResetTimer = 0;
+                EnterEvadeMode();
+            }
+            else
+                m_uiResetTimer -= uiDiff;
+        }
+
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         DoMeleeAttackIfReady();
     }
 };
+
 CreatureAI* GetAI_mob_yenniku(Creature *_Creature)
 {
     return new mob_yennikuAI (_Creature);

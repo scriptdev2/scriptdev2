@@ -155,14 +155,14 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000191,'You taste good with maybe a little salt and pepper.',0,0,0,0,' SAY_LUMP_1'),
 (-1000192,'OK, OK! Lump give up!',0,0,0,0,' SAY_LUMP_DEFEAT'),
 
-(-1000193,'REUSE ME',0,0,0,0,'REUSE ME'),
+(-1000193,'%s looks down at the discarded necklace. In her sadness, the lady incants a glamour, which beckons forth Highborne spirits. The chamber resonates with their ancient song about the Sin\'dorei...',10896,2,1,0,'lady_sylvanas EMOTE_LAMENT_START'),
 
 (-1000194,'I give up! Please don\'t kill me!',0,0,0,0,'unkor SAY_SUBMIT'),
 
 (-1000195,'Thank you again, $N. I\'ll make my way to the road now. When you can, find Terenthis and let him know we escaped.',0,0,0,1,'volcor SAY_ESCAPE'),
 
 (-1000196,'Belore...',0,0,1,0,'lady_sylvanas SAY_LAMENT_END'),
-(-1000197,'%s kneels down and pick up the amulet.',0,2,1,0,'lady_sylvanas EMOTE_LAMENT_END'),
+(-1000197,'%s kneels down and pick up the amulet.',0,2,1,16,'lady_sylvanas EMOTE_LAMENT_END'),
 
 (-1000198,'Taste blade, mongrel!',0,0,0,0,'SAY_GUARD_SIL_AGGRO1'),
 (-1000199,'Please tell me that you didn\'t just do what I think you just did. Please tell me that I\'m not going to have to hurt you...',0,0,0,0,'SAY_GUARD_SIL_AGGRO2'),
