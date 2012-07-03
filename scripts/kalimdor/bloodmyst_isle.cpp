@@ -31,36 +31,39 @@ EndContentData */
 ## mob_webbed_creature
 ######*/
 
-//possible creatures to be spawned
+enum
+{
+    NPC_EXPEDITION_RESEARCHER       = 17681,
+};
+
+// possible creatures to be spawned (too many to be added to enum)
 const uint32 possibleSpawns[31] = {17322, 17661, 17496, 17522, 17340, 17352, 17333, 17524, 17654, 17348, 17339, 17345, 17359, 17353, 17336, 17550, 17330, 17701, 17321, 17325, 17320, 17683, 17342, 17715, 17334, 17341, 17338, 17337, 17346, 17344, 17327};
 
 struct MANGOS_DLL_DECL mob_webbed_creatureAI : public ScriptedAI
 {
-    mob_webbed_creatureAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+    mob_webbed_creatureAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
-    void Reset()
-    {
-    }
+    void Reset() { }
 
-    void JustDied(Unit* Killer)
+    void JustDied(Unit* pKiller)
     {
-        uint32 spawnCreatureID = 0;
+        uint32 uiSpawnCreatureEntry = 0;
 
         switch(urand(0, 2))
         {
             case 0:
-                spawnCreatureID = 17681;
-                if (Killer->GetTypeId() == TYPEID_PLAYER)
-                    ((Player*)Killer)->KilledMonsterCredit(spawnCreatureID, m_creature->GetObjectGuid());
+                uiSpawnCreatureEntry = NPC_EXPEDITION_RESEARCHER;
+                if (pKiller->GetTypeId() == TYPEID_PLAYER)
+                    ((Player*)pKiller)->KilledMonsterCredit(uiSpawnCreatureEntry, m_creature->GetObjectGuid());
                 break;
             case 1:
             case 2:
-                spawnCreatureID = possibleSpawns[urand(0, 30)];
+                uiSpawnCreatureEntry = possibleSpawns[urand(0, 30)];
                 break;
         }
 
-        if (spawnCreatureID)
-            m_creature->SummonCreature(spawnCreatureID, 0.0f, 0.0f, 0.0f, m_creature->GetOrientation(), TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
+        if (uiSpawnCreatureEntry)
+            m_creature->SummonCreature(uiSpawnCreatureEntry, 0.0f, 0.0f, 0.0f, m_creature->GetOrientation(), TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
     }
 };
 

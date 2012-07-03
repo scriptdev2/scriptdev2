@@ -202,57 +202,57 @@ enum
 
 struct MANGOS_DLL_DECL npc_taskmaster_fizzuleAI : public ScriptedAI
 {
-    npc_taskmaster_fizzuleAI(Creature* pCreature) : ScriptedAI(pCreature)
-    {
-        factionNorm = pCreature->getFaction();
-        Reset();
-    }
+    npc_taskmaster_fizzuleAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
-    uint32 factionNorm;
-    bool IsFriend;
-    uint32 Reset_Timer;
-    uint8 FlareCount;
+    uint32 m_uiResetTimer;
+    uint8 m_uiFlareCount;
 
     void Reset()
     {
-        IsFriend = false;
-        Reset_Timer = 120000;
-        FlareCount = 0;
-        m_creature->setFaction(factionNorm);
+        m_uiResetTimer = 0;
+        m_uiFlareCount = 0;
     }
 
-    void DoFriend()
+    void EnterEvadeMode()
     {
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop(true);
-
-        m_creature->StopMoving();
-        m_creature->GetMotionMaster()->MoveIdle();
-
-        m_creature->setFaction(FACTION_FRIENDLY_F);
-        m_creature->HandleEmote(EMOTE_ONESHOT_SALUTE);
-    }
-
-    void SpellHit(Unit *caster, const SpellEntry *spell)
-    {
-        if (spell->Id == SPELL_FLARE || spell->Id == SPELL_FOLLY)
+        if (m_uiResetTimer)
         {
-            ++FlareCount;
+            m_creature->RemoveAllAuras();
+            m_creature->DeleteThreatList();
+            m_creature->CombatStop(true);
+            m_creature->LoadCreatureAddon(true);
 
-            if (FlareCount >= 2)
-                IsFriend = true;
+            m_creature->SetLootRecipient(NULL);
+
+            m_creature->SetFactionTemporary(FACTION_FRIENDLY_F, TEMPFACTION_RESTORE_REACH_HOME);
+            m_creature->HandleEmote(EMOTE_ONESHOT_SALUTE);
+        }
+        else
+            ScriptedAI::EnterEvadeMode();
+    }
+
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
+    {
+        if (pCaster->GetTypeId() == TYPEID_PLAYER && (pSpell->Id == SPELL_FLARE || pSpell->Id == SPELL_FOLLY))
+        {
+            ++m_uiFlareCount;
+
+            if (m_uiFlareCount >= 2 && m_creature->getFaction() != FACTION_FRIENDLY_F)
+                m_uiResetTimer = 120000;
         }
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
-        if (IsFriend)
+        if (m_uiResetTimer)
         {
-            if (Reset_Timer < diff)
+            if (m_uiResetTimer <= uiDiff)
             {
+                m_uiResetTimer = 0;
                 EnterEvadeMode();
-            } else Reset_Timer -= diff;
+            }
+            else
+                m_uiResetTimer -= uiDiff;
         }
 
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
@@ -261,17 +261,12 @@ struct MANGOS_DLL_DECL npc_taskmaster_fizzuleAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 
-    void ReceiveEmote(Player* pPlayer, uint32 emote)
+    void ReceiveEmote(Player* pPlayer, uint32 uiTextEmote)
     {
-        if (emote == TEXTEMOTE_SALUTE)
+        if (uiTextEmote == TEXTEMOTE_SALUTE)
         {
-            if (FlareCount >= 2)
-            {
-                if (m_creature->getFaction() == FACTION_FRIENDLY_F)
-                    return;
-
-                DoFriend();
-            }
+            if (m_uiFlareCount >= 2 && m_creature->getFaction() != FACTION_FRIENDLY_F)
+                EnterEvadeMode();
         }
     }
 };
@@ -285,65 +280,74 @@ CreatureAI* GetAI_npc_taskmaster_fizzule(Creature* pCreature)
 ## npc_twiggy_flathead
 #####*/
 
-#define SAY_BIG_WILL_READY                  -1000123
-#define SAY_TWIGGY_BEGIN                    -1000124
-#define SAY_TWIGGY_FRAY                     -1000125
-#define SAY_TWIGGY_DOWN                     -1000126
-#define SAY_TWIGGY_OVER                     -1000127
+enum
+{
+    SAY_BIG_WILL_READY                  = -1000123,
+    SAY_TWIGGY_BEGIN                    = -1000124,
+    SAY_TWIGGY_FRAY                     = -1000125,
+    SAY_TWIGGY_DOWN                     = -1000126,
+    SAY_TWIGGY_OVER                     = -1000127,
 
-#define NPC_TWIGGY                          6248
-#define NPC_BIG_WILL                        6238
-#define NPC_AFFRAY_CHALLENGER               6240
-#define QUEST_AFFRAY                        1719
+    NPC_TWIGGY                          = 6248,
+    NPC_BIG_WILL                        = 6238,
+    NPC_AFFRAY_CHALLENGER               = 6240,
 
-float AffrayChallengerLoc[6][4]=
+    QUEST_AFFRAY                        = 1719,
+
+    FACTION_FRIENDLY                    = 35,
+    FACTION_HOSTILE_WILL                = 32,
+    FACTION_HOSTILE_CHALLENGER          = 14,
+
+    MAX_CHALLENGERS                     = 6,
+};
+
+static const float aAffrayChallengerLoc[8][4]=
 {
     {-1683.0f, -4326.0f, 2.79f, 0.00f},
     {-1682.0f, -4329.0f, 2.79f, 0.00f},
     {-1683.0f, -4330.0f, 2.79f, 0.00f},
     {-1680.0f, -4334.0f, 2.79f, 1.49f},
     {-1674.0f, -4326.0f, 2.79f, 3.49f},
-    {-1677.0f, -4334.0f, 2.79f, 1.66f}
+    {-1677.0f, -4334.0f, 2.79f, 1.66f},
+    {-1713.79f, -4342.09f, 6.05f, 6.15f},           // Big Will spawn loc
+    {-1682.31f, -4329.68f, 2.78f, 0.0f},            // Big Will move loc
 };
 
 struct MANGOS_DLL_DECL npc_twiggy_flatheadAI : public ScriptedAI
 {
-    npc_twiggy_flatheadAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+    npc_twiggy_flatheadAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
-    bool EventInProgress;
+    bool m_bIsEventInProgress;
 
-    uint32 Event_Timer;
-    uint32 Step;
-    uint32 Challenger_Count;
-    uint32 ChallengerDeath_Timer;
+    uint32 m_uiEventTimer;
+    uint32 m_uiChallengerCount;
+    uint8 m_uiStep;
 
     ObjectGuid m_playerGuid;
     ObjectGuid m_bigWillGuid;
-    ObjectGuid m_aAffrayChallengerGuids[6];
+    GUIDVector m_vAffrayChallengerGuidsVector;
 
     void Reset()
     {
-        EventInProgress = false;
+        m_bIsEventInProgress = false;
 
-        Event_Timer = 2000;
-        Step = 0;
-        Challenger_Count = 0;
-        ChallengerDeath_Timer = 0;
+        m_uiEventTimer = 1000;
+        m_uiChallengerCount = 0;
+        m_uiStep = 0;
 
         m_playerGuid.Clear();
         m_bigWillGuid.Clear();
-
-        for(uint8 i = 0; i < 6; ++i)
-            m_aAffrayChallengerGuids[i].Clear();
+        m_vAffrayChallengerGuidsVector.clear();
     }
 
     bool CanStartEvent(Player* pPlayer)
     {
-        if (!EventInProgress)
+        if (!m_bIsEventInProgress)
         {
-            EventInProgress = true;
-            m_playerGuid = pPlayer->GetObjectGuid();
             DoScriptText(SAY_TWIGGY_BEGIN, m_creature, pPlayer);
+            m_playerGuid = pPlayer->GetObjectGuid();
+            m_bIsEventInProgress = true;
+
             return true;
         }
 
@@ -353,110 +357,113 @@ struct MANGOS_DLL_DECL npc_twiggy_flatheadAI : public ScriptedAI
 
     void SetChallengers()
     {
-        for(uint8 i = 0; i < 6; ++i)
-        {
-            Creature* pCreature = m_creature->SummonCreature(NPC_AFFRAY_CHALLENGER, AffrayChallengerLoc[i][0], AffrayChallengerLoc[i][1], AffrayChallengerLoc[i][2], AffrayChallengerLoc[i][3], TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
-            if (!pCreature)
-            {
-                debug_log("SD2: npc_twiggy_flathead event cannot summon challenger as expected.");
-                continue;
-            }
+        m_vAffrayChallengerGuidsVector.reserve(MAX_CHALLENGERS);
 
-            pCreature->setFaction(35);
-            pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-            pCreature->HandleEmote(EMOTE_ONESHOT_ROAR);
-            m_aAffrayChallengerGuids[i] = pCreature->GetObjectGuid();
+        for (uint8 i = 0; i < MAX_CHALLENGERS; ++i)
+            m_creature->SummonCreature(NPC_AFFRAY_CHALLENGER, aAffrayChallengerLoc[i][0], aAffrayChallengerLoc[i][1], aAffrayChallengerLoc[i][2], aAffrayChallengerLoc[i][3], TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
+    }
+
+    void SetChallengerReady(Creature* pChallenger)
+    {
+        pChallenger->setFaction(FACTION_HOSTILE_CHALLENGER);
+        pChallenger->HandleEmote(EMOTE_ONESHOT_ROAR);
+        ++m_uiChallengerCount;
+
+        if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid))
+            pChallenger->AI()->AttackStart(pPlayer);
+    }
+
+    void JustSummoned(Creature* pSummoned)
+    {
+        if (pSummoned->GetEntry() == NPC_BIG_WILL)
+        {
+            m_bigWillGuid = pSummoned->GetObjectGuid();
+            pSummoned->setFaction(FACTION_FRIENDLY);
+            pSummoned->SetWalk(false);
+            pSummoned->GetMotionMaster()->MovePoint(1, aAffrayChallengerLoc[7][0], aAffrayChallengerLoc[7][1], aAffrayChallengerLoc[7][2]);
+        }
+        else
+        {
+            pSummoned->setFaction(FACTION_FRIENDLY);
+            pSummoned->HandleEmote(EMOTE_ONESHOT_ROAR);
+            m_vAffrayChallengerGuidsVector.push_back(pSummoned->GetObjectGuid());
         }
     }
 
-    void SetChallengerReady(Unit *pUnit)
+    void SummonedMovementInform(Creature* pSummoned, uint32 uiMoveType, uint32 uiPointId)
     {
-        pUnit->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-        pUnit->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-        pUnit->HandleEmote(EMOTE_ONESHOT_ROAR);
-        pUnit->setFaction(14);
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        if (!EventInProgress)
+        if (uiMoveType != POINT_MOTION_TYPE || !uiPointId || pSummoned->GetEntry() != NPC_BIG_WILL)
             return;
 
-        if (ChallengerDeath_Timer)
-        {
-            if (ChallengerDeath_Timer <= diff)
-            {
-                for(uint8 i = 0; i < 6; ++i)
-                {
-                    Creature *challenger = m_creature->GetMap()->GetCreature(m_aAffrayChallengerGuids[i]);
-                    if (challenger && !challenger->isAlive() && challenger->isDead())
-                    {
-                        DoScriptText(SAY_TWIGGY_DOWN, m_creature);
-                        challenger->RemoveCorpse();
-                        m_aAffrayChallengerGuids[i].Clear();
-                        continue;
-                    }
-                }
-                ChallengerDeath_Timer = 2500;
-            } else ChallengerDeath_Timer -= diff;
-        }
+        pSummoned->setFaction(FACTION_HOSTILE_WILL);
 
-        if (Event_Timer < diff)
+        if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid))
+        {
+            DoScriptText(SAY_BIG_WILL_READY, pSummoned, pPlayer);
+            pSummoned->SetFacingToObject(pPlayer);
+        }
+    }
+
+    void SummonedCreatureJustDied(Creature* pSummoned)
+    {
+        if (pSummoned->GetEntry() == NPC_BIG_WILL)
+        {
+            DoScriptText(SAY_TWIGGY_OVER, m_creature);
+            EnterEvadeMode();
+        }
+        else
+        {
+            DoScriptText(SAY_TWIGGY_DOWN, m_creature);
+            m_uiEventTimer = 15000;
+        }
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (!m_bIsEventInProgress)
+            return;
+
+        if (m_uiEventTimer < uiDiff)
         {
             Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid);
 
-            if (!pPlayer || pPlayer->isDead())
-                Reset();
+            if (!pPlayer || !pPlayer->isAlive())
+                EnterEvadeMode();
 
-            switch(Step)
+            switch (m_uiStep)
             {
                 case 0:
                     SetChallengers();
-                    ChallengerDeath_Timer = 2500;
-                    Event_Timer = 5000;
-                    ++Step;
+                    m_uiEventTimer = 5000;
+                    ++m_uiStep;
                     break;
                 case 1:
                     DoScriptText(SAY_TWIGGY_FRAY, m_creature);
-                    if (Creature *challenger = m_creature->GetMap()->GetCreature(m_aAffrayChallengerGuids[Challenger_Count]))
-                        SetChallengerReady(challenger);
-                    else Reset();
-                    ++Challenger_Count;
-                    Event_Timer = 25000;
-                    if (Challenger_Count == 6)
-                        ++Step;
+                    if (Creature* pChallenger = m_creature->GetMap()->GetCreature(m_vAffrayChallengerGuidsVector[m_uiChallengerCount]))
+                        SetChallengerReady(pChallenger);
+                    else
+                        EnterEvadeMode();
+
+                    if (m_uiChallengerCount == MAX_CHALLENGERS)
+                    {
+                        ++m_uiStep;
+                        m_uiEventTimer = 5000;
+                    }
+                    else
+                        m_uiEventTimer = 25000;
                     break;
                 case 2:
-                    if (Unit *temp = m_creature->SummonCreature(NPC_BIG_WILL, -1713.79f, -4342.09f, 6.05f, 6.15f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,300000))
-                    {
-                        m_bigWillGuid = temp->GetObjectGuid();
-                        temp->setFaction(35);
-                        temp->GetMotionMaster()->MovePoint(0, -1682.31f, -4329.68f, 2.78f);
-                    }
-                    Event_Timer = 15000;
-                    ++Step;
+                    m_creature->SummonCreature(NPC_BIG_WILL, aAffrayChallengerLoc[6][0], aAffrayChallengerLoc[6][1], aAffrayChallengerLoc[6][2], aAffrayChallengerLoc[6][3], TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 300000);
+                    m_uiEventTimer = 15000;
+                    ++m_uiStep;
                     break;
-                case 3:
-                    if (Creature *will = m_creature->GetMap()->GetCreature(m_bigWillGuid))
-                    {
-                        will->setFaction(32);
-                        DoScriptText(SAY_BIG_WILL_READY, will, pPlayer);
-                    }
-                    Event_Timer = 5000;
-                    ++Step;
-                    break;
-                case 4:
-                    Creature *will = m_creature->GetMap()->GetCreature(m_bigWillGuid);
-                    if (will && will->isDead())
-                    {
-                        DoScriptText(SAY_TWIGGY_OVER, m_creature);
-                        Reset();
-                    } else if (!will)
-                        Reset();
-                    Event_Timer = 5000;
+                default:
+                    m_uiEventTimer = 5000;
                     break;
             }
-        } else Event_Timer -= diff;
+        }
+        else
+            m_uiEventTimer -= uiDiff;
     }
 };
 
@@ -467,10 +474,9 @@ CreatureAI* GetAI_npc_twiggy_flathead(Creature* pCreature)
 
 bool AreaTrigger_at_twiggy_flathead(Player* pPlayer, AreaTriggerEntry const* pAt)
 {
-    if (!pPlayer->isDead() && pPlayer->GetQuestStatus(QUEST_AFFRAY) == QUEST_STATUS_INCOMPLETE)
+    if (pPlayer->isAlive() && !pPlayer->isGameMaster() && pPlayer->GetQuestStatus(QUEST_AFFRAY) == QUEST_STATUS_INCOMPLETE)
     {
         Creature* pCreature = GetClosestCreatureWithEntry(pPlayer, NPC_TWIGGY, 30.0f);
-
         if (!pCreature)
             return true;
 

@@ -303,17 +303,11 @@ struct MANGOS_DLL_DECL npc_injured_draeneiAI : public ScriptedAI
         }
     }
 
-    void MoveInLineOfSight(Unit *who)
-    {
-        return;                                             //ignore everyone around them (won't aggro anything)
-    }
+    void MoveInLineOfSight(Unit* pWho) { }                  // ignore everyone around them (won't aggro anything)
 
-    void UpdateAI(const uint32 diff)
-    {
-        return;
-    }
-
+    void UpdateAI(const uint32 uiDiff) { }
 };
+
 CreatureAI* GetAI_npc_injured_draenei(Creature* pCreature)
 {
     return new npc_injured_draeneiAI(pCreature);
@@ -323,27 +317,30 @@ CreatureAI* GetAI_npc_injured_draenei(Creature* pCreature)
 ## npc_magwin
 ######*/
 
-#define SAY_START               -1000111
-#define SAY_AGGRO               -1000112
-#define SAY_PROGRESS            -1000113
-#define SAY_END1                -1000114
-#define SAY_END2                -1000115
-#define EMOTE_HUG               -1000116
+enum
+{
+    SAY_START               = -1000111,
+    SAY_AGGRO               = -1000112,
+    SAY_PROGRESS            = -1000113,
+    SAY_END1                = -1000114,
+    SAY_END2                = -1000115,
+    EMOTE_HUG               = -1000116,
 
-#define QUEST_A_CRY_FOR_HELP    9528
+    QUEST_A_CRY_FOR_HELP    = 9528
+};
 
 struct MANGOS_DLL_DECL npc_magwinAI : public npc_escortAI
 {
-    npc_magwinAI(Creature* pCreature) : npc_escortAI(pCreature) {Reset();}
+    npc_magwinAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
 
-    void WaypointReached(uint32 i)
+    void WaypointReached(uint32 uiPointId)
     {
         Player* pPlayer = GetPlayerForEscort();
 
         if (!pPlayer)
             return;
 
-        switch(i)
+        switch(uiPointId)
         {
             case 0:
                 DoScriptText(SAY_START, m_creature, pPlayer);
@@ -362,9 +359,9 @@ struct MANGOS_DLL_DECL npc_magwinAI : public npc_escortAI
         }
     }
 
-    void Aggro(Unit* who)
+    void Aggro(Unit* pWho)
     {
-        DoScriptText(SAY_AGGRO, m_creature, who);
+        DoScriptText(SAY_AGGRO, m_creature, pWho);
     }
 
     void Reset() { }

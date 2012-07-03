@@ -38,89 +38,92 @@ EndContentData */
 ## mob_aquementas
 ######*/
 
-#define AGGRO_YELL_AQUE     -1000168
+enum
+{
+    AGGRO_YELL_AQUE         = -1000168,
 
-#define SPELL_AQUA_JET      13586
-#define SPELL_FROST_SHOCK   15089
+    SPELL_AQUA_JET          = 13586,
+    SPELL_FROST_SHOCK       = 15089,
+
+    ITEM_SILVER_TOTEM       = 11522,
+    ITEM_BOOK_AQUOR         = 11169,
+    ITEM_SILVERY_CLAWS      = 11172,
+    ITEM_IRONTREE_HEART     = 11173,
+
+    FACTION_FRIENDLY        = 35,
+    FACTION_ELEMENTAL       = 91,
+};
 
 struct MANGOS_DLL_DECL mob_aquementasAI : public ScriptedAI
 {
-    mob_aquementasAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+    mob_aquementasAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
-    uint32 SendItem_Timer;
-    uint32 SwitchFaction_Timer;
-    bool isFriendly;
-
-    uint32 FrostShock_Timer;
-    uint32 AquaJet_Timer;
+    uint32 m_uiSwitchFactionTimer;
+    uint32 m_uiFrostShockTimer;
+    uint32 m_uiAquaJetTimer;
 
     void Reset()
     {
-        SendItem_Timer = 0;
-        SwitchFaction_Timer = 10000;
-        m_creature->setFaction(35);
-        isFriendly = true;
+        m_uiSwitchFactionTimer  = 10000;
+        m_uiAquaJetTimer        = 5000;
+        m_uiFrostShockTimer     = 1000;
 
-        AquaJet_Timer = 5000;
-        FrostShock_Timer = 1000;
+        m_creature->setFaction(FACTION_FRIENDLY);
     }
 
-    void SendItem(Unit* receiver)
+    void SendItem(Unit* pReceiver)
     {
-        if (((Player*)receiver)->HasItemCount(11169,1,false) &&
-            ((Player*)receiver)->HasItemCount(11172,11,false) &&
-            ((Player*)receiver)->HasItemCount(11173,1,false) &&
-            !((Player*)receiver)->HasItemCount(11522,1,true))
+        if (((Player*)pReceiver)->HasItemCount(ITEM_BOOK_AQUOR, 1) &&
+            ((Player*)pReceiver)->HasItemCount(ITEM_SILVERY_CLAWS, 11) &&
+            ((Player*)pReceiver)->HasItemCount(ITEM_IRONTREE_HEART, 1))
         {
-            if (Item* pItem = ((Player*)receiver)->StoreNewItemInInventorySlot(11522, 1))
-                ((Player*)receiver)->SendNewItem(pItem, 1, true, false);
+            if (Item* pItem = ((Player*)pReceiver)->StoreNewItemInInventorySlot(ITEM_SILVER_TOTEM, 1))
+                ((Player*)pReceiver)->SendNewItem(pItem, 1, true, false);
         }
     }
 
-    void Aggro(Unit* who)
+    void Aggro(Unit* pWho)
     {
-        DoScriptText(AGGRO_YELL_AQUE, m_creature, who);
+        DoScriptText(AGGRO_YELL_AQUE, m_creature, pWho);
+        SendItem(pWho);
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
-        if (isFriendly)
+        if (m_uiSwitchFactionTimer)
         {
-            if (SwitchFaction_Timer < diff)
+            if (m_uiSwitchFactionTimer <= uiDiff)
             {
-                m_creature->setFaction(91);
-                isFriendly = false;
-            }else SwitchFaction_Timer -= diff;
+                m_creature->setFaction(FACTION_ELEMENTAL);
+                m_uiSwitchFactionTimer = 0;
+            }
+            else
+                m_uiSwitchFactionTimer -= uiDiff;
         }
 
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (!isFriendly)
+        if (m_uiFrostShockTimer < uiDiff)
         {
-            if (SendItem_Timer < diff)
-            {
-                if (m_creature->getVictim()->GetTypeId() == TYPEID_PLAYER)
-                    SendItem(m_creature->getVictim());
-                SendItem_Timer = 5000;
-            }else SendItem_Timer -= diff;
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_FROST_SHOCK);
+            m_uiFrostShockTimer = 15000;
         }
+        else
+            m_uiFrostShockTimer -= uiDiff;
 
-        if (FrostShock_Timer < diff)
+        if (m_uiAquaJetTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_FROST_SHOCK);
-            FrostShock_Timer = 15000;
-        }else FrostShock_Timer -= diff;
-
-        if (AquaJet_Timer < diff)
-        {
-            DoCastSpellIfCan(m_creature,SPELL_AQUA_JET);
-            AquaJet_Timer = 15000;
-        }else AquaJet_Timer -= diff;
+            DoCastSpellIfCan(m_creature, SPELL_AQUA_JET);
+            m_uiAquaJetTimer = 15000;
+        }
+        else
+            m_uiAquaJetTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
 };
+
 CreatureAI* GetAI_mob_aquementas(Creature* pCreature)
 {
     return new mob_aquementasAI(pCreature);
@@ -130,33 +133,41 @@ CreatureAI* GetAI_mob_aquementas(Creature* pCreature)
 ## npc_custodian_of_time
 ######*/
 
-#define WHISPER_CUSTODIAN_1     -1000217
-#define WHISPER_CUSTODIAN_2     -1000218
-#define WHISPER_CUSTODIAN_3     -1000219
-#define WHISPER_CUSTODIAN_4     -1000220
-#define WHISPER_CUSTODIAN_5     -1000221
-#define WHISPER_CUSTODIAN_6     -1000222
-#define WHISPER_CUSTODIAN_7     -1000223
-#define WHISPER_CUSTODIAN_8     -1000224
-#define WHISPER_CUSTODIAN_9     -1000225
-#define WHISPER_CUSTODIAN_10    -1000226
-#define WHISPER_CUSTODIAN_11    -1000227
-#define WHISPER_CUSTODIAN_12    -1000228
-#define WHISPER_CUSTODIAN_13    -1000229
-#define WHISPER_CUSTODIAN_14    -1000230
+enum
+{
+    WHISPER_CUSTODIAN_1         = -1000217,
+    WHISPER_CUSTODIAN_2         = -1000218,
+    WHISPER_CUSTODIAN_3         = -1000219,
+    WHISPER_CUSTODIAN_4         = -1000220,
+    WHISPER_CUSTODIAN_5         = -1000221,
+    WHISPER_CUSTODIAN_6         = -1000222,
+    WHISPER_CUSTODIAN_7         = -1000223,
+    WHISPER_CUSTODIAN_8         = -1000224,
+    WHISPER_CUSTODIAN_9         = -1000225,
+    WHISPER_CUSTODIAN_10        = -1000226,
+    WHISPER_CUSTODIAN_11        = -1000227,
+    WHISPER_CUSTODIAN_12        = -1000228,
+    WHISPER_CUSTODIAN_13        = -1000229,
+    WHISPER_CUSTODIAN_14        = -1000230,
+
+    SPELL_CUSTODIAN_OF_TIME     = 34877,
+    SPELL_QID_10277             = 34883,
+
+    QUEST_ID_CAVERNS_OF_TIME    = 10277,
+};
 
 struct MANGOS_DLL_DECL npc_custodian_of_timeAI : public npc_escortAI
 {
     npc_custodian_of_timeAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
 
-    void WaypointReached(uint32 i)
+    void WaypointReached(uint32 uiPointId)
     {
         Player* pPlayer = GetPlayerForEscort();
 
         if (!pPlayer)
             return;
 
-        switch(i)
+        switch(uiPointId)
         {
             case 0: DoScriptText(WHISPER_CUSTODIAN_1, m_creature, pPlayer); break;
             case 1: DoScriptText(WHISPER_CUSTODIAN_2, m_creature, pPlayer); break;
@@ -177,9 +188,7 @@ struct MANGOS_DLL_DECL npc_custodian_of_timeAI : public npc_escortAI
             case 23: DoScriptText(WHISPER_CUSTODIAN_4, m_creature, pPlayer); break;
             case 24:
                 DoScriptText(WHISPER_CUSTODIAN_14, m_creature, pPlayer);
-                DoCastSpellIfCan(pPlayer, 34883);
-                //below here is temporary workaround, to be removed when spell works properly
-                pPlayer->AreaExploredOrEventHappens(10277);
+                DoCastSpellIfCan(pPlayer, SPELL_QID_10277);
                 break;
         }
     }
@@ -191,11 +200,11 @@ struct MANGOS_DLL_DECL npc_custodian_of_timeAI : public npc_escortAI
 
         if (pWho->GetTypeId() == TYPEID_PLAYER)
         {
-            if (pWho->HasAura(34877, EFFECT_INDEX_1) && ((Player*)pWho)->GetQuestStatus(10277) == QUEST_STATUS_INCOMPLETE)
+            if (pWho->HasAura(SPELL_CUSTODIAN_OF_TIME) && ((Player*)pWho)->GetQuestStatus(QUEST_ID_CAVERNS_OF_TIME) == QUEST_STATUS_INCOMPLETE)
             {
-                float Radius = 10.0;
+                float fRadius = 10.0f;
 
-                if (m_creature->IsWithinDistInMap(pWho, Radius))
+                if (m_creature->IsWithinDistInMap(pWho, fRadius))
                     Start(false, (Player*)pWho);
             }
         }

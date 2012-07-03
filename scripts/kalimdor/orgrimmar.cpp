@@ -41,56 +41,63 @@ struct MANGOS_DLL_DECL npc_shenthulAI : public ScriptedAI
 {
     npc_shenthulAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
-    bool CanTalk;
-    bool CanEmote;
-    uint32 Salute_Timer;
-    uint32 Reset_Timer;
+    uint32 m_uiSaluteTimer;
+    uint32 m_uiResetTimer;
+
     ObjectGuid m_playerGuid;
 
     void Reset()
     {
-        CanTalk = false;
-        CanEmote = false;
-        Salute_Timer = 6000;
-        Reset_Timer = 0;
+        m_uiSaluteTimer = 0;
+        m_uiResetTimer = 0;
+
         m_playerGuid.Clear();
     }
 
-    void ReceiveEmote(Player* pPlayer, uint32 emote)
+    void ReceiveEmote(Player* pPlayer, uint32 uiTextEmote)
     {
-        if (emote == TEXTEMOTE_SALUTE && pPlayer->GetQuestStatus(QUEST_SHATTERED_SALUTE) == QUEST_STATUS_INCOMPLETE)
+        if (m_uiResetTimer && uiTextEmote == TEXTEMOTE_SALUTE && pPlayer->GetQuestStatus(QUEST_SHATTERED_SALUTE) == QUEST_STATUS_INCOMPLETE)
         {
-            if (CanEmote)
-            {
-                pPlayer->AreaExploredOrEventHappens(QUEST_SHATTERED_SALUTE);
-                Reset();
-            }
+            pPlayer->AreaExploredOrEventHappens(QUEST_SHATTERED_SALUTE);
+            EnterEvadeMode();
         }
     }
 
-    void UpdateAI(const uint32 diff)
+    void DoStartQuestEvent(Player* pPlayer)
     {
-        if (CanEmote)
+        m_playerGuid = pPlayer->GetObjectGuid();
+        m_uiSaluteTimer = 6000;
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (m_uiResetTimer)
         {
-            if (Reset_Timer < diff)
+            if (m_uiResetTimer <= uiDiff)
             {
                 if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid))
                 {
                     if (pPlayer->GetTypeId() == TYPEID_PLAYER && pPlayer->GetQuestStatus(QUEST_SHATTERED_SALUTE) == QUEST_STATUS_INCOMPLETE)
                         pPlayer->FailQuest(QUEST_SHATTERED_SALUTE);
                 }
-                Reset();
-            } else Reset_Timer -= diff;
+
+                m_uiResetTimer = 0;
+                EnterEvadeMode();
+            }
+            else
+                m_uiResetTimer -= uiDiff;
         }
 
-        if (CanTalk && !CanEmote)
+        if (m_uiSaluteTimer)
         {
-            if (Salute_Timer < diff)
+            if (m_uiSaluteTimer <= uiDiff)
             {
                 m_creature->HandleEmote(EMOTE_ONESHOT_SALUTE);
-                CanEmote = true;
-                Reset_Timer = 60000;
-            } else Salute_Timer -= diff;
+                m_uiResetTimer = 60000;
+                m_uiSaluteTimer = 0;
+            }
+            else
+                m_uiSaluteTimer -= uiDiff;
         }
 
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
@@ -110,11 +117,9 @@ bool QuestAccept_npc_shenthul(Player* pPlayer, Creature* pCreature, const Quest*
     if (pQuest->GetQuestId() == QUEST_SHATTERED_SALUTE)
     {
         if (npc_shenthulAI* pShenAI = dynamic_cast<npc_shenthulAI*>(pCreature->AI()))
-        {
-            pShenAI->CanTalk = true;
-            pShenAI->m_playerGuid = pPlayer->GetObjectGuid();
-        }
+            pShenAI->DoStartQuestEvent(pPlayer);
     }
+
     return true;
 }
 
