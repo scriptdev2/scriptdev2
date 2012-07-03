@@ -47,7 +47,7 @@ class MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
         uint32 GetData(uint32 uiType);
         void SetData(uint32 uiType, uint32 uiData);
 
-        void GetFelCrystalList(GUIDList& lList);
+        void GetFelCrystalList(GuidList& lList);
 
         const char* Save() { return m_strInstData.c_str(); }
         void Load(const char* chrIn);
@@ -58,7 +58,7 @@ class MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
 
         uint32 m_uiDelrissaDeathCount;
 
-        GUIDList m_lFelCrystalGuid;
+        GuidList m_lFelCrystalGuid;
 };
 
 #endif

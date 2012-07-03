@@ -128,8 +128,8 @@ class MANGOS_DLL_DECL instance_culling_of_stratholme : public ScriptedInstance
 
         void Update(uint32 uiDiff);
 
-        void GetStratAgiatedCitizenList(GUIDList &lList){ lList = m_lAgiatedCitizenGUIDList; };
-        void GetStratAgiatedResidentList(GUIDList &lList){ lList = m_lAgiatedResidentGUIDList; };
+        void GetStratAgiatedCitizenList(GuidList &lList){ lList = m_lAgiatedCitizenGUIDList; };
+        void GetStratAgiatedResidentList(GuidList &lList){ lList = m_lAgiatedResidentGUIDList; };
 
         void GetCratesBunnyOrderedList(std::list<Creature*> &lList);
         Creature* GetStratIntroFootman();
@@ -150,12 +150,12 @@ class MANGOS_DLL_DECL instance_culling_of_stratholme : public ScriptedInstance
         uint32 m_uiRemoveCrateStateTimer;
         uint32 m_uiArthasRespawnTimer;
 
-        GUIDList m_luiCratesBunnyGUIDs;
-        GUIDList m_luiFootmanGUIDs;
-        GUIDList m_luiResidentGUIDs;
+        GuidList m_luiCratesBunnyGUIDs;
+        GuidList m_luiFootmanGUIDs;
+        GuidList m_luiResidentGUIDs;
 
-        GUIDList m_lAgiatedCitizenGUIDList;
-        GUIDList m_lAgiatedResidentGUIDList;
+        GuidList m_lAgiatedCitizenGUIDList;
+        GuidList m_lAgiatedResidentGUIDList;
 };
 
 #endif

@@ -89,7 +89,7 @@ class MANGOS_DLL_DECL instance_oculus : public ScriptedInstance
 
         uint8 m_uiConstructsDead;
 
-        GUIDList m_lCageDoorGUIDs;
+        GuidList m_lCageDoorGUIDs;
 };
 
 #endif

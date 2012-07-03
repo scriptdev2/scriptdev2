@@ -225,7 +225,7 @@ class MANGOS_DLL_DECL instance_icecrown_citadel : public ScriptedInstance, priva
         bool IsHeroicDifficulty() { return instance->GetDifficulty() > RAID_DIFFICULTY_25MAN_NORMAL; }
         bool Is25ManDifficulty() { return instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL || instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC; }
 
-        void GetDeathwhisperStalkersList(GUIDList &lList) { lList = m_lDeathwhisperStalkersGuids; }
+        void GetDeathwhisperStalkersList(GuidList &lList) { lList = m_lDeathwhisperStalkersGuids; }
 
         // Open Putricide door in a few seconds
         void DoPreparePutricideDoor() { m_uiPutricideValveTimer = 15000; }
@@ -244,7 +244,7 @@ class MANGOS_DLL_DECL instance_icecrown_citadel : public ScriptedInstance, priva
         bool m_bHasMarrowgarIntroYelled;
         bool m_bHasDeathwhisperIntroYelled;
 
-        GUIDList m_lDeathwhisperStalkersGuids;
+        GuidList m_lDeathwhisperStalkersGuids;
 };
 
 #endif

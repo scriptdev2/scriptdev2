@@ -132,7 +132,7 @@ struct MANGOS_DLL_DECL hyjalAI : public ScriptedAI
 
     private:
         uint32 m_uiSpellTimer[MAX_SPELL];
-        GUIDList lWaveMobGUIDList;
+        GuidList lWaveMobGUIDList;
 };
 
 #endif

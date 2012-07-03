@@ -130,7 +130,7 @@ void instance_steam_vault::SetData(uint32 uiType, uint32 uiData)
             if (uiData == FAIL)
             {
                 // Reset Distiller flags - respawn is handled by DB
-                for (GUIDList::const_iterator itr = m_lNagaDistillerGuidList.begin(); itr != m_lNagaDistillerGuidList.end(); ++itr)
+                for (GuidList::const_iterator itr = m_lNagaDistillerGuidList.begin(); itr != m_lNagaDistillerGuidList.end(); ++itr)
                 {
                     if (Creature* pDistiller = instance->GetCreature(*itr))
                     {

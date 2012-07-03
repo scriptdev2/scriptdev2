@@ -203,7 +203,7 @@ void instance_gundrak::SetData(uint32 uiType, uint32 uiData)
                     pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
             if (uiData == FAIL)
             {
-                for (GUIDSet::const_iterator itr = m_sColossusMojosGuids.begin(); itr != m_sColossusMojosGuids.end(); ++itr)
+                for (GuidSet::const_iterator itr = m_sColossusMojosGuids.begin(); itr != m_sColossusMojosGuids.end(); ++itr)
                 {
                     if (Creature* pMojo = instance->GetCreature(*itr))
                     {
@@ -297,7 +297,7 @@ void instance_gundrak::OnCreatureEnterCombat(Creature* pCreature)
             return;
 
         // Move all 4 Mojos to evade and move to the Colossus position
-        for (GUIDSet::const_iterator itr = m_sColossusMojosGuids.begin(); itr != m_sColossusMojosGuids.end(); ++itr)
+        for (GuidSet::const_iterator itr = m_sColossusMojosGuids.begin(); itr != m_sColossusMojosGuids.end(); ++itr)
         {
             if (Creature* pMojo = instance->GetCreature(*itr))
                 pMojo->AI()->EnterEvadeMode();
@@ -320,7 +320,7 @@ void instance_gundrak::DoAltarVisualEffect(uint8 uiType)
             fHeight += pCollusAltar->GetPositionZ();
 
         std::list<Creature*> lStalkerTargets, lStalkerCasters;
-        for (GUIDList::const_iterator itr = m_luiStalkerGUIDs.begin(); itr != m_luiStalkerGUIDs.end(); ++itr)
+        for (GuidList::const_iterator itr = m_luiStalkerGUIDs.begin(); itr != m_luiStalkerGUIDs.end(); ++itr)
         {
             if (Creature* pStalker = instance->GetCreature(*itr))
             {

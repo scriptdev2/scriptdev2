@@ -186,7 +186,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
     uint32 m_uiAxesTargetSwitchTimer;
     uint32 m_uiInfernalCleanupTimer;
 
-    GUIDVector m_vInfernalGuids;
+    GuidVector m_vInfernalGuids;
     std::vector<InfernalPoint*> m_positions;
 
     ObjectGuid m_aAxeGuid[2];
@@ -255,7 +255,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
     void InfernalCleanup()
     {
         // Infernal Cleanup
-        for(GUIDVector::const_iterator itr = m_vInfernalGuids.begin(); itr!= m_vInfernalGuids.end(); ++itr)
+        for(GuidVector::const_iterator itr = m_vInfernalGuids.begin(); itr!= m_vInfernalGuids.end(); ++itr)
         {
             Creature *pInfernal = m_creature->GetMap()->GetCreature(*itr);
             if (pInfernal && pInfernal->isAlive())
@@ -627,7 +627,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
 
     void Cleanup(Creature *infernal, InfernalPoint *point)
     {
-        for(GUIDVector::iterator itr = m_vInfernalGuids.begin(); itr!= m_vInfernalGuids.end(); ++itr)
+        for(GuidVector::iterator itr = m_vInfernalGuids.begin(); itr!= m_vInfernalGuids.end(); ++itr)
             if (*itr == infernal->GetObjectGuid())
         {
             m_vInfernalGuids.erase(itr);

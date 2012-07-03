@@ -174,7 +174,7 @@ void instance_arcatraz::SetData(uint32 uiType, uint32 uiData)
                 m_uiResetDelayTimer = 60000;
 
                 // Despawn all the summons manually
-                for (GUIDList::const_iterator itr = m_lSkyrissEventMobsGuidList.begin(); itr != m_lSkyrissEventMobsGuidList.end(); ++itr)
+                for (GuidList::const_iterator itr = m_lSkyrissEventMobsGuidList.begin(); itr != m_lSkyrissEventMobsGuidList.end(); ++itr)
                 {
                     if (Creature* pTemp = instance->GetCreature(*itr))
                         pTemp->ForcedDespawn();

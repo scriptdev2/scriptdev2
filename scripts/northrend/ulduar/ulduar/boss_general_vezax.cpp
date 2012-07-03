@@ -77,7 +77,7 @@ struct MANGOS_DLL_DECL boss_general_vezaxAI : public ScriptedAI
 
     uint8 m_uiVaporsGathered;
 
-    GUIDList m_lVaporsGuids;
+    GuidList m_lVaporsGuids;
 
     void Reset()
     {
@@ -169,7 +169,7 @@ struct MANGOS_DLL_DECL boss_general_vezaxAI : public ScriptedAI
             pSummoned->CastSpell(pSummoned, SPELL_ANIMUS_FORMATION, true);
 
             // Despawn the vapors
-            for (GUIDList::const_iterator itr = m_lVaporsGuids.begin(); itr != m_lVaporsGuids.end(); ++itr)
+            for (GuidList::const_iterator itr = m_lVaporsGuids.begin(); itr != m_lVaporsGuids.end(); ++itr)
             {
                 if (Creature* pVapor = m_creature->GetMap()->GetCreature(*itr))
                     pVapor->ForcedDespawn(4000);
@@ -184,7 +184,7 @@ struct MANGOS_DLL_DECL boss_general_vezaxAI : public ScriptedAI
     void DoPrepareAnimusIfCan()
     {
         // Gather the vapors to the boss - NOTE: not sure if position is ok
-        for (GUIDList::const_iterator itr = m_lVaporsGuids.begin(); itr != m_lVaporsGuids.end(); ++itr)
+        for (GuidList::const_iterator itr = m_lVaporsGuids.begin(); itr != m_lVaporsGuids.end(); ++itr)
         {
             // Better place: near him or some fixed position?
             if (Creature* pVapor = m_creature->GetMap()->GetCreature(*itr))

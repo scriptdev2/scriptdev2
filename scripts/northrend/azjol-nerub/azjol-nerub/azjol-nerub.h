@@ -80,8 +80,8 @@ class MANGOS_DLL_DECL instance_azjol_nerub : public ScriptedInstance
         ObjectGuid m_darterSummonTarget;
         ObjectGuid m_guardianSummonTarget;
         ObjectGuid m_anubSummonTarget;
-        GUIDVector m_vAssassinSummonTargetsVect;
-        GUIDList m_lTriggerGuids;
+        GuidVector m_vAssassinSummonTargetsVect;
+        GuidList m_lTriggerGuids;
 
         uint32 m_uiWatcherTimer;
 

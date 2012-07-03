@@ -230,7 +230,7 @@ struct MANGOS_DLL_DECL npc_prison_event_controllerAI : public ScriptedAI
 
     instance_violet_hold* m_pInstance;
 
-    GUIDSet m_sTrashPackSet;
+    GuidSet m_sTrashPackSet;
 
     uint32 m_uiSaboteurTimer;
     uint8 m_uiSaboteurPhase;
@@ -346,12 +346,12 @@ struct MANGOS_DLL_DECL npc_prison_event_controllerAI : public ScriptedAI
                 // Handle Erekem guards
                 if (pData->uiType == TYPE_EREKEM)
                 {
-                    GUIDList lAddGuids;
+                    GuidList lAddGuids;
                     if (m_pInstance)
                         m_pInstance->GetErekemGuardList(lAddGuids);
 
                     float fMoveX;
-                    for (GUIDList::const_iterator itr = lAddGuids.begin(); itr != lAddGuids.end(); ++itr)
+                    for (GuidList::const_iterator itr = lAddGuids.begin(); itr != lAddGuids.end(); ++itr)
                     {
                         if (Creature* pAdd = m_pInstance->instance->GetCreature(*itr))
                         {

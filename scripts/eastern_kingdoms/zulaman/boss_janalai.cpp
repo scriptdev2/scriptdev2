@@ -147,7 +147,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
 
     uint32 m_uiFireBreathTimer;
 
-    GUIDList m_lBombsGUIDList;
+    GuidList m_lBombsGUIDList;
     std::list<Creature*> m_lEggsRemainingList;
 
     uint32 m_uiBombTimer;
@@ -205,7 +205,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
 
     void JustReachedHome()
     {
-        for (GUIDList::const_iterator itr = m_lBombsGUIDList.begin(); itr != m_lBombsGUIDList.end(); ++itr)
+        for (GuidList::const_iterator itr = m_lBombsGUIDList.begin(); itr != m_lBombsGUIDList.end(); ++itr)
         {
             if (Creature* pBomb = m_creature->GetMap()->GetCreature(*itr))
                 pBomb->ForcedDespawn();
@@ -327,7 +327,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
 
     void BlowUpBombs()
     {
-        for (GUIDList::const_iterator itr = m_lBombsGUIDList.begin(); itr != m_lBombsGUIDList.end(); ++itr)
+        for (GuidList::const_iterator itr = m_lBombsGUIDList.begin(); itr != m_lBombsGUIDList.end(); ++itr)
         {
             if (Creature* pBomb = m_creature->GetMap()->GetCreature(*itr))
             {

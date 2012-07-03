@@ -102,7 +102,7 @@ struct MANGOS_DLL_DECL boss_devourer_of_soulsAI : public ScriptedAI
     uint32 m_uiWailingTimer;
     uint32 m_uiEndPhaseTimer;
 
-    GUIDList m_lWellGuids;
+    GuidList m_lWellGuids;
 
     void Reset()
     {
@@ -139,7 +139,7 @@ struct MANGOS_DLL_DECL boss_devourer_of_soulsAI : public ScriptedAI
         if (m_pInstance)
             m_pInstance->SetData(TYPE_DEVOURER_OF_SOULS, DONE);
 
-        for (GUIDList::const_iterator itr = m_lWellGuids.begin(); itr != m_lWellGuids.end(); ++itr)
+        for (GuidList::const_iterator itr = m_lWellGuids.begin(); itr != m_lWellGuids.end(); ++itr)
         {
             if (Creature* pWell = m_creature->GetMap()->GetCreature(*itr))
                 pWell->ForcedDespawn();
@@ -156,7 +156,7 @@ struct MANGOS_DLL_DECL boss_devourer_of_soulsAI : public ScriptedAI
             m_pInstance->SetData(TYPE_ACHIEV_PHANTOM_BLAST, IN_PROGRESS);
         }
 
-        for (GUIDList::const_iterator itr = m_lWellGuids.begin(); itr != m_lWellGuids.end(); ++itr)
+        for (GuidList::const_iterator itr = m_lWellGuids.begin(); itr != m_lWellGuids.end(); ++itr)
         {
             if (Creature* pWell = m_creature->GetMap()->GetCreature(*itr))
                 pWell->ForcedDespawn();

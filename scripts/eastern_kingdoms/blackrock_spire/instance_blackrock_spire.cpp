@@ -180,7 +180,7 @@ void instance_blackrock_spire::SetData(uint32 uiType, uint32 uiData)
             // Respawn all incarcerators and reset the runes on FAIL
             if (uiData == FAIL)
             {
-                for (GUIDList::const_iterator itr = m_lIncarceratorGUIDList.begin(); itr != m_lIncarceratorGUIDList.end(); ++itr)
+                for (GuidList::const_iterator itr = m_lIncarceratorGUIDList.begin(); itr != m_lIncarceratorGUIDList.end(); ++itr)
                 {
                     if (Creature* pIncarcerator = instance->GetCreature(*itr))
                     {
@@ -316,7 +316,7 @@ void instance_blackrock_spire::DoSortRoomEventMobs()
     {
         if (GameObject* pRune = instance->GetGameObject(m_aRoomRuneGuid[i]))
         {
-            for (GUIDList::const_iterator itr = m_lRoomEventMobGUIDList.begin(); itr != m_lRoomEventMobGUIDList.end(); ++itr)
+            for (GuidList::const_iterator itr = m_lRoomEventMobGUIDList.begin(); itr != m_lRoomEventMobGUIDList.end(); ++itr)
             {
                 Creature* pCreature = instance->GetCreature(*itr);
                 if (pCreature && pCreature->isAlive() && pCreature->GetDistance(pRune) < 10.0f)
@@ -413,7 +413,7 @@ void instance_blackrock_spire::DoProcessEmberseerEvent()
     }
 
     // remove the incarcerators flags and stop casting
-    for (GUIDList::const_iterator itr = m_lIncarceratorGUIDList.begin(); itr != m_lIncarceratorGUIDList.end(); ++itr)
+    for (GuidList::const_iterator itr = m_lIncarceratorGUIDList.begin(); itr != m_lIncarceratorGUIDList.end(); ++itr)
     {
         if (Creature* pCreature = instance->GetCreature(*itr))
         {
@@ -431,7 +431,7 @@ void instance_blackrock_spire::DoUseEmberseerRunes(bool bReset)
     if (m_lEmberseerRunesGUIDList.empty())
         return;
 
-    for (GUIDList::const_iterator itr = m_lEmberseerRunesGUIDList.begin(); itr != m_lEmberseerRunesGUIDList.end(); itr++)
+    for (GuidList::const_iterator itr = m_lEmberseerRunesGUIDList.begin(); itr != m_lEmberseerRunesGUIDList.end(); itr++)
     {
         if (bReset)
         {

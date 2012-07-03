@@ -143,7 +143,7 @@ void instance_mount_hyjal::SetData(uint32 uiType, uint32 uiData)
             {
                 if (!lAncientGemGUIDList.empty())
                 {
-                    for(GUIDList::const_iterator itr = lAncientGemGUIDList.begin(); itr != lAncientGemGUIDList.end(); ++itr)
+                    for(GuidList::const_iterator itr = lAncientGemGUIDList.begin(); itr != lAncientGemGUIDList.end(); ++itr)
                     {
                         //don't know how long it expected
                         DoRespawnGameObject(*itr, DAY);

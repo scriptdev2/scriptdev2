@@ -45,7 +45,7 @@ class MANGOS_DLL_DECL instance_steam_vault : public ScriptedInstance
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strInstData;
 
-        GUIDList m_lNagaDistillerGuidList;
+        GuidList m_lNagaDistillerGuidList;
 };
 
 #endif

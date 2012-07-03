@@ -125,8 +125,8 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    GUIDList m_lChannelersGUIDList;
-    GUIDList m_lSorcerersGUIDList;
+    GuidList m_lChannelersGUIDList;
+    GuidList m_lSorcerersGUIDList;
 
     uint32 m_uiDeathChannelerCount;
 
@@ -231,7 +231,7 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
 
     void DespawnSorceres()
     {
-        for (GUIDList::const_iterator itr = m_lSorcerersGUIDList.begin(); itr != m_lSorcerersGUIDList.end(); ++itr)
+        for (GuidList::const_iterator itr = m_lSorcerersGUIDList.begin(); itr != m_lSorcerersGUIDList.end(); ++itr)
         {
             if (Creature* pSorcerer = m_creature->GetMap()->GetCreature(*itr))
             {
@@ -243,7 +243,7 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
 
     void RespawnChannelersIfDeadOrEvade()
     {
-        for (GUIDList::const_iterator itr = m_lChannelersGUIDList.begin(); itr != m_lChannelersGUIDList.end(); ++itr)
+        for (GuidList::const_iterator itr = m_lChannelersGUIDList.begin(); itr != m_lChannelersGUIDList.end(); ++itr)
         {
             if (Creature* pChanneler = m_creature->GetMap()->GetCreature(*itr))
             {
@@ -405,7 +405,7 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
     uint32 m_uiWayPointId;
     uint32 m_uiBrokenSummonIndex;
 
-    GUIDList m_lBrokenGUIDList;
+    GuidList m_lBrokenGUIDList;
 
     bool m_bIsEventBegun;
     bool m_bIsShadeDead;
@@ -603,7 +603,7 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
                         {
                             bool bYelled = false;
 
-                            for (GUIDList::const_iterator itr = m_lBrokenGUIDList.begin(); itr != m_lBrokenGUIDList.end(); ++itr)
+                            for (GuidList::const_iterator itr = m_lBrokenGUIDList.begin(); itr != m_lBrokenGUIDList.end(); ++itr)
                             {
                                 if (Creature* pBroken = m_creature->GetMap()->GetCreature(*itr))
                                 {
@@ -621,7 +621,7 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
                         m_uiSoulRetrieveTimer = 1500;
                         break;
                     case 3:
-                        for (GUIDList::const_iterator itr = m_lBrokenGUIDList.begin(); itr != m_lBrokenGUIDList.end(); ++itr)
+                        for (GuidList::const_iterator itr = m_lBrokenGUIDList.begin(); itr != m_lBrokenGUIDList.end(); ++itr)
                         {
                             // This is the incorrect spell, but can't seem to find the right one.
                             if (Creature* pBroken = m_creature->GetMap()->GetCreature(*itr))
@@ -631,7 +631,7 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
                         m_uiSoulRetrieveTimer = 5000;
                         break;
                     case 4:
-                        for (GUIDList::const_iterator itr = m_lBrokenGUIDList.begin(); itr != m_lBrokenGUIDList.end(); ++itr)
+                        for (GuidList::const_iterator itr = m_lBrokenGUIDList.begin(); itr != m_lBrokenGUIDList.end(); ++itr)
                         {
                             if (Creature* pBroken = m_creature->GetMap()->GetCreature(*itr))
                                 DoScriptText(SAY_BROKEN_FREE_02, pBroken);

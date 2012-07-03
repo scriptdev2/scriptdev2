@@ -483,7 +483,7 @@ struct MANGOS_DLL_DECL npc_doctorAI : public ScriptedAI
 
     bool Event;
 
-    GUIDList Patients;
+    GuidList Patients;
     std::vector<Location*> Coordinates;
 
     void Reset()
@@ -698,7 +698,7 @@ void npc_doctorAI::PatientSaved(Creature* soldier, Player* pPlayer, Location* Po
 
             if (PatientSavedCount == 15)
             {
-                for(GUIDList::const_iterator itr = Patients.begin(); itr != Patients.end(); ++itr)
+                for(GuidList::const_iterator itr = Patients.begin(); itr != Patients.end(); ++itr)
                 {
                     if (Creature* Patient = m_creature->GetMap()->GetCreature(*itr))
                         Patient->SetDeathState(JUST_DIED);

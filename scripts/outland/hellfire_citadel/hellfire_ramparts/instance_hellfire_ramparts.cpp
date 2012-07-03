@@ -115,7 +115,7 @@ void instance_ramparts::DoFailVazruden()
 
     // Restore Sentries (counter and respawn them)
     m_uiSentryCounter = 0;
-    for (GUIDList::const_iterator itr = m_lSentryGUIDs.begin(); itr != m_lSentryGUIDs.end(); ++itr)
+    for (GuidList::const_iterator itr = m_lSentryGUIDs.begin(); itr != m_lSentryGUIDs.end(); ++itr)
     {
         if (Creature* pSentry = instance->GetCreature(*itr))
             pSentry->Respawn();

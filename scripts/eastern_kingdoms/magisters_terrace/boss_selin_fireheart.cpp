@@ -59,7 +59,7 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
     instance_magisters_terrace* m_pInstance;
     bool m_bIsRegularMode;
 
-    GUIDList m_lCrystalGuids;
+    GuidList m_lCrystalGuids;
 
     uint32 m_uiDrainLifeTimer;
     uint32 m_uiDrainManaTimer;
@@ -95,7 +95,7 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
         Creature* pCrystal = NULL;
         Creature* pCrystalChosen = NULL;
 
-        for (GUIDList::const_iterator itr = m_lCrystalGuids.begin(); itr != m_lCrystalGuids.end(); ++itr)
+        for (GuidList::const_iterator itr = m_lCrystalGuids.begin(); itr != m_lCrystalGuids.end(); ++itr)
         {
             pCrystal = m_creature->GetMap()->GetCreature(*itr);
 
@@ -130,7 +130,7 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
         if (m_lCrystalGuids.empty())
             return;
 
-        for (GUIDList::const_iterator itr = m_lCrystalGuids.begin(); itr != m_lCrystalGuids.end(); ++itr)
+        for (GuidList::const_iterator itr = m_lCrystalGuids.begin(); itr != m_lCrystalGuids.end(); ++itr)
         {
             //Creature* pCrystal = m_creature->GetMap()->GetCreature(FelCrystals[i]);
             Creature* pCrystal = m_creature->GetMap()->GetCreature(*itr);
@@ -152,7 +152,7 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
             {
                 // Get and output crystals
                 m_pInstance->GetFelCrystalList(m_lCrystalGuids);
-                for (GUIDList::const_iterator itr = m_lCrystalGuids.begin(); itr != m_lCrystalGuids.end(); ++itr)
+                for (GuidList::const_iterator itr = m_lCrystalGuids.begin(); itr != m_lCrystalGuids.end(); ++itr)
                     debug_log("SD2: Selin: Added Fel Crystal %s to list", ObjectGuid(*itr).GetString().c_str());
             }
         }
@@ -164,7 +164,7 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
         {
             m_pInstance->SetData(TYPE_SELIN, FAIL);
 
-            for (GUIDList::const_iterator itr = m_lCrystalGuids.begin(); itr != m_lCrystalGuids.end(); ++itr)
+            for (GuidList::const_iterator itr = m_lCrystalGuids.begin(); itr != m_lCrystalGuids.end(); ++itr)
             {
                 if (Creature* pCrystal = m_creature->GetMap()->GetCreature(*itr))
                 {

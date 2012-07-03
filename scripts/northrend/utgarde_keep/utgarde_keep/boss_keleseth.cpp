@@ -192,7 +192,7 @@ struct MANGOS_DLL_DECL boss_kelesethAI : public ScriptedAI
     uint32 m_uiSummonTimer;
     uint32 m_uiShadowboltTimer;
 
-    GUIDList m_lSummonedAddGuids;
+    GuidList m_lSummonedAddGuids;
 
     void Reset()
     {
@@ -232,7 +232,7 @@ struct MANGOS_DLL_DECL boss_kelesethAI : public ScriptedAI
 
     void DespawnOrKillAdds(bool bDespawn)
     {
-        for (GUIDList::const_iterator itr = m_lSummonedAddGuids.begin(); itr != m_lSummonedAddGuids.end(); ++itr)
+        for (GuidList::const_iterator itr = m_lSummonedAddGuids.begin(); itr != m_lSummonedAddGuids.end(); ++itr)
         {
             if (Creature* pAdd = m_creature->GetMap()->GetCreature(*itr))
             {

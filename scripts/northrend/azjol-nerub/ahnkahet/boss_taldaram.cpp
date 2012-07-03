@@ -80,7 +80,7 @@ struct MANGOS_DLL_DECL boss_taldaramAI : public ScriptedAI
     uint32 m_uiVanishExpireTimer;
     uint32 m_uiEmbraceTimer;
 
-    GUIDList m_lFlameOrbsGuidList;
+    GuidList m_lFlameOrbsGuidList;
 
     void Reset()
     {
@@ -181,7 +181,7 @@ struct MANGOS_DLL_DECL boss_taldaramAI : public ScriptedAI
     {
         float fX, fY;
         uint8 uiIndex = 0;
-        for (GUIDList::const_iterator itr = m_lFlameOrbsGuidList.begin(); itr != m_lFlameOrbsGuidList.end(); ++itr)
+        for (GuidList::const_iterator itr = m_lFlameOrbsGuidList.begin(); itr != m_lFlameOrbsGuidList.end(); ++itr)
         {
             if (Creature* pOrb = m_creature->GetMap()->GetCreature(*itr))
             {
@@ -200,11 +200,11 @@ struct MANGOS_DLL_DECL boss_taldaramAI : public ScriptedAI
         {
             if (m_uiVisualTimer <= uiDiff)
             {
-                GUIDList lControllersList;
+                GuidList lControllersList;
                 if (m_pInstance)
                     m_pInstance->GetJedogaControllersList(lControllersList);
 
-                for (GUIDList::const_iterator itr = lControllersList.begin(); itr != lControllersList.end(); ++itr)
+                for (GuidList::const_iterator itr = lControllersList.begin(); itr != lControllersList.end(); ++itr)
                 {
                     if (Creature* pTemp = m_creature->GetMap()->GetCreature(*itr))
                         pTemp->CastSpell(m_creature, SPELL_BEAM_VISUAL, false);

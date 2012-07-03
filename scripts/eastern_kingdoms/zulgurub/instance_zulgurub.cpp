@@ -104,7 +104,7 @@ void instance_zulgurub::SetData(uint32 uiType, uint32 uiData)
                 DoLowerHakkarHitPoints();
             if (uiData == FAIL)
             {
-                for (GUIDList::const_iterator itr = m_lSpiderEggGUIDList.begin(); itr != m_lSpiderEggGUIDList.end(); ++itr)
+                for (GuidList::const_iterator itr = m_lSpiderEggGUIDList.begin(); itr != m_lSpiderEggGUIDList.end(); ++itr)
                 {
                     if (GameObject* pEgg = instance->GetGameObject(*itr))
                     {
@@ -210,11 +210,11 @@ uint32 instance_zulgurub::GetData(uint32 uiType)
 
 Creature* instance_zulgurub::SelectRandomPantherTrigger(bool bIsLeft)
 {
-    GUIDList* plTempList = bIsLeft ? &m_lLeftPantherTriggerGUIDList : &m_lRightPantherTriggerGUIDList;
+    GuidList* plTempList = bIsLeft ? &m_lLeftPantherTriggerGUIDList : &m_lRightPantherTriggerGUIDList;
     std::vector<Creature*> vTriggers;
     vTriggers.reserve(plTempList->size());
 
-    for (GUIDList::const_iterator itr = plTempList->begin(); itr != plTempList->end(); ++itr)
+    for (GuidList::const_iterator itr = plTempList->begin(); itr != plTempList->end(); ++itr)
     {
         if (Creature* pTemp = instance->GetCreature(*itr))
             vTriggers.push_back(pTemp);

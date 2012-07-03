@@ -68,7 +68,7 @@ struct MANGOS_DLL_DECL boss_ionarAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    GUIDList m_lSparkGUIDList;
+    GuidList m_lSparkGUIDList;
 
     bool m_bIsRegularMode;
 
@@ -159,7 +159,7 @@ struct MANGOS_DLL_DECL boss_ionarAI : public ScriptedAI
 
     void DespawnSpark()
     {
-        for (GUIDList::const_iterator itr = m_lSparkGUIDList.begin(); itr != m_lSparkGUIDList.end(); ++itr)
+        for (GuidList::const_iterator itr = m_lSparkGUIDList.begin(); itr != m_lSparkGUIDList.end(); ++itr)
         {
             if (Creature* pTemp = m_creature->GetMap()->GetCreature(*itr))
             {
@@ -174,7 +174,7 @@ struct MANGOS_DLL_DECL boss_ionarAI : public ScriptedAI
     // make sparks come back
     void CallBackSparks()
     {
-        for (GUIDList::const_iterator itr = m_lSparkGUIDList.begin(); itr != m_lSparkGUIDList.end(); ++itr)
+        for (GuidList::const_iterator itr = m_lSparkGUIDList.begin(); itr != m_lSparkGUIDList.end(); ++itr)
         {
             if (Creature* pSpark = m_creature->GetMap()->GetCreature(*itr))
             {

@@ -442,7 +442,7 @@ struct MANGOS_DLL_DECL npc_anachronos_the_ancientAI : public ScriptedAI, private
     ObjectGuid m_playerGuid;
     ObjectGuid m_triggerGuid;
 
-    GUIDList m_lQirajiWarriorsList;
+    GuidList m_lQirajiWarriorsList;
 
     void Reset()
     {
@@ -693,7 +693,7 @@ struct MANGOS_DLL_DECL npc_anachronos_the_ancientAI : public ScriptedAI, private
 
     void DoUnsummonArmy()
     {
-        for (GUIDList::const_iterator itr = m_lQirajiWarriorsList.begin(); itr != m_lQirajiWarriorsList.end(); ++itr)
+        for (GuidList::const_iterator itr = m_lQirajiWarriorsList.begin(); itr != m_lQirajiWarriorsList.end(); ++itr)
         {
             if (Creature* pTemp = m_creature->GetMap()->GetCreature(*itr))
                 pTemp->ForcedDespawn();

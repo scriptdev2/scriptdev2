@@ -134,7 +134,7 @@ void instance_blood_furnace::SetData(uint32 uiType, uint32 uiData)
                             continue;
 
                         m_aBroggokEvent[i].m_uiKilledOrcCount = 0;
-                        for (GUIDSet::const_iterator itr = m_aBroggokEvent[i].m_sSortedOrcGuids.begin(); itr != m_aBroggokEvent[i].m_sSortedOrcGuids.end(); ++itr)
+                        for (GuidSet::const_iterator itr = m_aBroggokEvent[i].m_sSortedOrcGuids.begin(); itr != m_aBroggokEvent[i].m_sSortedOrcGuids.end(); ++itr)
                         {
                             if (Creature* pOrc = instance->GetCreature(*itr))
                             {
@@ -203,7 +203,7 @@ void instance_blood_furnace::DoNextBroggokEventPhase()
 
         m_aBroggokEvent[m_uiBroggokEventPhase].m_bIsCellOpened = true;
 
-        for(GUIDSet::const_iterator itr = m_aBroggokEvent[m_uiBroggokEventPhase].m_sSortedOrcGuids.begin(); itr != m_aBroggokEvent[m_uiBroggokEventPhase].m_sSortedOrcGuids.end(); ++itr)
+        for(GuidSet::const_iterator itr = m_aBroggokEvent[m_uiBroggokEventPhase].m_sSortedOrcGuids.begin(); itr != m_aBroggokEvent[m_uiBroggokEventPhase].m_sSortedOrcGuids.end(); ++itr)
         {
             if (Creature* pOrc = instance->GetCreature(*itr))
             {
@@ -314,7 +314,7 @@ void instance_blood_furnace::Load(const char* chrIn)
 // Sort all nascent orcs in the instance in order to get only those near broggok doors
 void instance_blood_furnace::DoSortBroggokOrcs()
 {
-    for (GUIDList::const_iterator itr = m_luiNascentOrcGuids.begin(); itr != m_luiNascentOrcGuids.end(); ++itr)
+    for (GuidList::const_iterator itr = m_luiNascentOrcGuids.begin(); itr != m_luiNascentOrcGuids.end(); ++itr)
     {
         if (Creature* pOrc = instance->GetCreature(*itr))
         {

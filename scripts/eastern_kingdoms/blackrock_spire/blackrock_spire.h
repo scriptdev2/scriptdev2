@@ -116,8 +116,8 @@ class MANGOS_DLL_DECL instance_blackrock_spire : public ScriptedInstance, privat
         void DoProcessEmberseerEvent();
 
         void DoSortRoomEventMobs();
-        void GetIncarceratorGUIDList(GUIDList &lList) { lList = m_lIncarceratorGUIDList; }
-        void GetRookeryEggGUIDList(GUIDList &lList) { lList = m_lRookeryEggGUIDList; }
+        void GetIncarceratorGUIDList(GuidList &lList) { lList = m_lIncarceratorGUIDList; }
+        void GetRookeryEggGUIDList(GuidList &lList) { lList = m_lRookeryEggGUIDList; }
 
         void Update(uint32 uiDiff);
 
@@ -133,11 +133,11 @@ class MANGOS_DLL_DECL instance_blackrock_spire : public ScriptedInstance, privat
         uint8 m_uiStadiumMobsAlive;
 
         ObjectGuid m_aRoomRuneGuid[MAX_ROOMS];
-        GUIDList m_alRoomEventMobGUIDSorted[MAX_ROOMS];
-        GUIDList m_lRoomEventMobGUIDList;
-        GUIDList m_lIncarceratorGUIDList;
-        GUIDList m_lRookeryEggGUIDList;
-        GUIDList m_lEmberseerRunesGUIDList;
+        GuidList m_alRoomEventMobGUIDSorted[MAX_ROOMS];
+        GuidList m_lRoomEventMobGUIDList;
+        GuidList m_lIncarceratorGUIDList;
+        GuidList m_lRookeryEggGUIDList;
+        GuidList m_lEmberseerRunesGUIDList;
 };
 
 #endif

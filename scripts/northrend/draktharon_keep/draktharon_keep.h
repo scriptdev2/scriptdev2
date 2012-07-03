@@ -70,7 +70,7 @@ class MANGOS_DLL_DECL instance_draktharon_keep : public ScriptedInstance
         void OnCreatureCreate(Creature* pCreature);
         void OnObjectCreate(GameObject* pGo);
 
-        void GetTrollgoreOutsideTriggers(GUIDVector& vTriggers) { vTriggers = m_vTriggerGuids; }
+        void GetTrollgoreOutsideTriggers(GuidVector& vTriggers) { vTriggers = m_vTriggerGuids; }
         ObjectGuid GetTrollgoreCornerTrigger() { return m_trollgoreCornerTriggerGuid; }
 
         bool CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/);
@@ -97,9 +97,9 @@ class MANGOS_DLL_DECL instance_draktharon_keep : public ScriptedInstance
 
         NovosCrystalInfo m_aNovosCrystalInfo[MAX_CRYSTALS];
 
-        GUIDVector m_vSummonDummyGuids;
-        GUIDList m_lNovosDummyGuids;
-        GUIDVector m_vTriggerGuids;
+        GuidVector m_vSummonDummyGuids;
+        GuidList m_lNovosDummyGuids;
+        GuidVector m_vTriggerGuids;
 };
 
 #endif

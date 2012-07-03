@@ -166,7 +166,7 @@ void instance_azjol_nerub::DoSortWorldTriggers()
         float fZ = pAnub->GetPositionZ();
         float fTriggZ = 0;
 
-        for (GUIDList::const_iterator itr = m_lTriggerGuids.begin(); itr != m_lTriggerGuids.end(); ++itr)
+        for (GuidList::const_iterator itr = m_lTriggerGuids.begin(); itr != m_lTriggerGuids.end(); ++itr)
         {
             if (Creature* pTrigg = instance->GetCreature(*itr))
             {

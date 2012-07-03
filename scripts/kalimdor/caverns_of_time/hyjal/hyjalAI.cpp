@@ -454,7 +454,7 @@ void hyjalAI::UpdateAI(const uint32 uiDiff)
                 m_uiNextWaveTimer = std::min(m_uiNextWaveTimer, (uint32)5000);
             }
 
-            for (GUIDList::const_iterator itr = lWaveMobGUIDList.begin(); itr != lWaveMobGUIDList.end(); ++itr)
+            for (GuidList::const_iterator itr = lWaveMobGUIDList.begin(); itr != lWaveMobGUIDList.end(); ++itr)
             {
                 if (Creature* pTemp = m_pInstance->instance->GetCreature(*itr))
                 {

@@ -185,10 +185,10 @@ struct SortHelper
 };
 
 // Small Helper-function
-static void GetValidNPCsOfList(Map* pMap, GUIDList& lGUIDs, std::list<Creature*>& lNPCs)
+static void GetValidNPCsOfList(Map* pMap, GuidList& lGUIDs, std::list<Creature*>& lNPCs)
 {
     lNPCs.clear();
-    for (GUIDList::const_iterator itr = lGUIDs.begin(); itr != lGUIDs.end(); ++itr)
+    for (GuidList::const_iterator itr = lGUIDs.begin(); itr != lGUIDs.end(); ++itr)
     {
         if (Creature* pMob = pMap->GetCreature(*itr))
             lNPCs.push_back(pMob);

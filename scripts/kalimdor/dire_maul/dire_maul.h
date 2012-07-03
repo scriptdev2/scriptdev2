@@ -109,13 +109,13 @@ class MANGOS_DLL_DECL instance_dire_maul : public ScriptedInstance
 
         // East
         bool m_bWallDestroyed;
-        GUIDList m_lFelvineShardGUIDs;
+        GuidList m_lFelvineShardGUIDs;
 
         // West
         ObjectGuid m_aCrystalGeneratorGuid[MAX_GENERATORS];
 
-        GUIDList m_luiHighborneSummonerGUIDs;
-        GUIDList m_lGeneratorGuardGUIDs;
+        GuidList m_luiHighborneSummonerGUIDs;
+        GuidList m_lGeneratorGuardGUIDs;
         std::set<uint32> m_sSortedGeneratorGuards[MAX_GENERATORS];
 };
 

@@ -64,7 +64,7 @@ struct MANGOS_DLL_DECL boss_anzuAI : public ScriptedAI
     uint32 m_uiCycloneTimer;
     uint8 m_uiBanishPhase;
 
-    GUIDList m_lBirdsGuidList;
+    GuidList m_lBirdsGuidList;
 
     void Reset()
     {
@@ -145,7 +145,7 @@ struct MANGOS_DLL_DECL boss_anzuAI : public ScriptedAI
 
     void DespawnBirdHelpers()
     {
-        for (GUIDList::const_iterator itr = m_lBirdsGuidList.begin(); itr != m_lBirdsGuidList.end(); ++itr)
+        for (GuidList::const_iterator itr = m_lBirdsGuidList.begin(); itr != m_lBirdsGuidList.end(); ++itr)
         {
             if (Creature* pTemp = m_creature->GetMap()->GetCreature(*itr))
                 pTemp->ForcedDespawn();

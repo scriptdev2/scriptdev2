@@ -105,7 +105,7 @@ struct MANGOS_DLL_DECL boss_jedogaAI : public ScriptedAI
     bool m_bIsSacrificing;
     bool m_bHasDoneIntro;
 
-    GUIDList m_lVolunteerGuidList;
+    GuidList m_lVolunteerGuidList;
 
     void Reset()
     {
@@ -332,11 +332,11 @@ struct MANGOS_DLL_DECL boss_jedogaAI : public ScriptedAI
         {
             if (m_uiVisualTimer <= uiDiff)
             {
-                GUIDList lControllersList;
+                GuidList lControllersList;
                 if (m_pInstance)
                     m_pInstance->GetJedogaEventControllersList(lControllersList);
 
-                for (GUIDList::const_iterator itr = lControllersList.begin(); itr != lControllersList.end(); ++itr)
+                for (GuidList::const_iterator itr = lControllersList.begin(); itr != lControllersList.end(); ++itr)
                 {
                     if (Creature* pTemp = m_creature->GetMap()->GetCreature(*itr))
                         pTemp->CastSpell(m_creature, SPELL_BEAM_VISUAL, false);

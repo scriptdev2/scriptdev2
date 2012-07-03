@@ -76,7 +76,7 @@ struct MANGOS_DLL_DECL boss_ayamissAI : public ScriptedAI
     bool m_bHasFrenzy;
 
     ObjectGuid m_paralyzeTarget;
-    GUIDList m_lSwarmersGuidList;
+    GuidList m_lSwarmersGuidList;
 
     void Reset()
     {
@@ -191,7 +191,7 @@ struct MANGOS_DLL_DECL boss_ayamissAI : public ScriptedAI
         // All the swarmers attack at a certain period of time
         if (m_uiSwarmerAttackTimer < uiDiff)
         {
-            for (GUIDList::const_iterator itr = m_lSwarmersGuidList.begin(); itr != m_lSwarmersGuidList.end(); ++itr)
+            for (GuidList::const_iterator itr = m_lSwarmersGuidList.begin(); itr != m_lSwarmersGuidList.end(); ++itr)
             {
                 if (Creature* pTemp = m_creature->GetMap()->GetCreature(*itr))
                 {

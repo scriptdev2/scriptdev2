@@ -142,7 +142,7 @@ struct MANGOS_DLL_DECL npc_eris_havenfireAI : public ScriptedAI
     uint8 m_uiSaveCounter;
 
     ObjectGuid m_playerGuid;
-    GUIDList m_lSummonedGuidList;
+    GuidList m_lSummonedGuidList;
 
     void Reset()
     {
@@ -292,7 +292,7 @@ struct MANGOS_DLL_DECL npc_eris_havenfireAI : public ScriptedAI
 
     void DoDespawnSummons(bool bIsEventEnd = false)
     {
-        for (GUIDList::const_iterator itr = m_lSummonedGuidList.begin(); itr != m_lSummonedGuidList.end(); ++itr)
+        for (GuidList::const_iterator itr = m_lSummonedGuidList.begin(); itr != m_lSummonedGuidList.end(); ++itr)
         {
             if (Creature* pTemp = m_creature->GetMap()->GetCreature(*itr))
             {

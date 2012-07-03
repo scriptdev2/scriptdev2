@@ -170,7 +170,7 @@ uint32 instance_magisters_terrace::GetData(uint32 uiType)
     }
 }
 
-void instance_magisters_terrace::GetFelCrystalList(GUIDList& lList)
+void instance_magisters_terrace::GetFelCrystalList(GuidList& lList)
 {
     if (m_lFelCrystalGuid.empty())
         error_log("SD2: Magisters Terrace: No Fel Crystals loaded in Inst Data");

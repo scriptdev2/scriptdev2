@@ -77,7 +77,7 @@ void instance_oculus::SetData(uint32 uiType, uint32 uiData)
             if (uiData == DONE)
             {
                 // Open all cages
-                for (GUIDList::const_iterator itr = m_lCageDoorGUIDs.begin(); itr != m_lCageDoorGUIDs.end(); ++itr)
+                for (GuidList::const_iterator itr = m_lCageDoorGUIDs.begin(); itr != m_lCageDoorGUIDs.end(); ++itr)
                     DoUseDoorOrButton(*itr);
 
                 // Notes: There should also be a small dialogue here involving Belgaristrasz and Varos

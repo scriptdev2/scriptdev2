@@ -73,7 +73,7 @@ struct MANGOS_DLL_DECL boss_gluthAI : public ScriptedAI
 
     uint32 m_uiBerserkTimer;
 
-    GUIDList m_lZombieChowGuidList;
+    GuidList m_lZombieChowGuidList;
 
     void Reset()
     {
@@ -128,7 +128,7 @@ struct MANGOS_DLL_DECL boss_gluthAI : public ScriptedAI
     // Replaces missing spell 29682
     void DoCallAllZombieChow()
     {
-        for (GUIDList::const_iterator itr = m_lZombieChowGuidList.begin(); itr != m_lZombieChowGuidList.end(); ++itr)
+        for (GuidList::const_iterator itr = m_lZombieChowGuidList.begin(); itr != m_lZombieChowGuidList.end(); ++itr)
         {
             if (Creature* pZombie = m_creature->GetMap()->GetCreature(*itr))
                 pZombie->GetMotionMaster()->MoveFollow(m_creature, ATTACK_DISTANCE, 0);
@@ -138,7 +138,7 @@ struct MANGOS_DLL_DECL boss_gluthAI : public ScriptedAI
     // Replaces missing spell 28236
     void DoSearchZombieChow()
     {
-        for (GUIDList::const_iterator itr = m_lZombieChowGuidList.begin(); itr != m_lZombieChowGuidList.end(); ++itr)
+        for (GuidList::const_iterator itr = m_lZombieChowGuidList.begin(); itr != m_lZombieChowGuidList.end(); ++itr)
         {
             if (Creature* pZombie = m_creature->GetMap()->GetCreature(*itr))
             {

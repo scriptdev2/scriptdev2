@@ -95,9 +95,9 @@ struct MANGOS_DLL_DECL boss_lady_deathwhisperAI : public ScriptedAI
 
     uint8 m_uiMindControlCount;
 
-    GUIDList m_lCultistSpawnedGuidList;
-    GUIDVector m_vRightStalkersGuidVector;
-    GUIDVector m_vLeftStalkersGuidVector;
+    GuidList m_lCultistSpawnedGuidList;
+    GuidVector m_vRightStalkersGuidVector;
+    GuidVector m_vLeftStalkersGuidVector;
     ObjectGuid m_middleStalkerGuid;
 
     void Reset()
@@ -140,7 +140,7 @@ struct MANGOS_DLL_DECL boss_lady_deathwhisperAI : public ScriptedAI
             m_pInstance->SetData(TYPE_LADY_DEATHWHISPER, IN_PROGRESS);
 
             // Sort the summoning stalkers
-            GUIDList lStalkersGuidList;
+            GuidList lStalkersGuidList;
             m_pInstance->GetDeathwhisperStalkersList(lStalkersGuidList);
             DoSortSummoningStalkers(lStalkersGuidList);
         }
@@ -190,14 +190,14 @@ struct MANGOS_DLL_DECL boss_lady_deathwhisperAI : public ScriptedAI
     }
 
     // Wrapper to help sort the summoning stalkers
-    void DoSortSummoningStalkers(GUIDList &lDeathwhisperStalkers)
+    void DoSortSummoningStalkers(GuidList &lDeathwhisperStalkers)
     {
         std::list<Creature*> lRightStalkers;
         std::list<Creature*> lLeftStalkers;
 
         if (!lDeathwhisperStalkers.empty())
         {
-            for (GUIDList::const_iterator itr = lDeathwhisperStalkers.begin(); itr != lDeathwhisperStalkers.end(); ++itr)
+            for (GuidList::const_iterator itr = lDeathwhisperStalkers.begin(); itr != lDeathwhisperStalkers.end(); ++itr)
             {
                 if (Creature* pStalker = m_creature->GetMap()->GetCreature(*itr))
                 {
@@ -232,7 +232,7 @@ struct MANGOS_DLL_DECL boss_lady_deathwhisperAI : public ScriptedAI
         std::vector<Creature*> vCultists;
         vCultists.reserve(m_lCultistSpawnedGuidList.size());
 
-        for (GUIDList::const_iterator itr = m_lCultistSpawnedGuidList.begin(); itr != m_lCultistSpawnedGuidList.end(); ++itr)
+        for (GuidList::const_iterator itr = m_lCultistSpawnedGuidList.begin(); itr != m_lCultistSpawnedGuidList.end(); ++itr)
         {
             if (Creature* pCultist = m_creature->GetMap()->GetCreature(*itr))
             {
@@ -281,7 +281,7 @@ struct MANGOS_DLL_DECL boss_lady_deathwhisperAI : public ScriptedAI
             }
             else
             {
-                GUIDVector vTempVector = m_bIsLeftSideSummon ? m_vLeftStalkersGuidVector : m_vRightStalkersGuidVector;
+                GuidVector vTempVector = m_bIsLeftSideSummon ? m_vLeftStalkersGuidVector : m_vRightStalkersGuidVector;
                 for (uint8 i = 0; i < 3; ++i)
                 {
                     if (Creature* pStalker = m_creature->GetMap()->GetCreature(vTempVector[i]))

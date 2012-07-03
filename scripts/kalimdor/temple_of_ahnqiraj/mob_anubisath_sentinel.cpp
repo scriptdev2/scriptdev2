@@ -53,7 +53,7 @@ struct MANGOS_DLL_DECL npc_anubisath_sentinelAI : public ScriptedAI
     uint32 m_uiMyAbility;
     bool m_bEnraged;
 
-    GUIDList m_lAssistList;
+    GuidList m_lAssistList;
 
     void Reset()
     {
@@ -63,7 +63,7 @@ struct MANGOS_DLL_DECL npc_anubisath_sentinelAI : public ScriptedAI
 
     void JustReachedHome()
     {
-        for(GUIDList::const_iterator itr = m_lAssistList.begin(); itr != m_lAssistList.end(); ++itr)
+        for(GuidList::const_iterator itr = m_lAssistList.begin(); itr != m_lAssistList.end(); ++itr)
         {
             if (*itr == m_creature->GetObjectGuid())
                 continue;
@@ -108,7 +108,7 @@ struct MANGOS_DLL_DECL npc_anubisath_sentinelAI : public ScriptedAI
 
     void DoTransferAbility()
     {
-        for(GUIDList::const_iterator itr = m_lAssistList.begin(); itr != m_lAssistList.end(); ++itr)
+        for(GuidList::const_iterator itr = m_lAssistList.begin(); itr != m_lAssistList.end(); ++itr)
         {
             if (Creature* pBuddy = m_creature->GetMap()->GetCreature(*itr))
             {
@@ -128,7 +128,7 @@ struct MANGOS_DLL_DECL npc_anubisath_sentinelAI : public ScriptedAI
     {
         if (!m_lAssistList.empty())
         {
-            for(GUIDList::const_iterator itr = m_lAssistList.begin(); itr != m_lAssistList.end(); ++itr)
+            for(GuidList::const_iterator itr = m_lAssistList.begin(); itr != m_lAssistList.end(); ++itr)
             {
                 if (*itr == m_creature->GetObjectGuid())
                     continue;

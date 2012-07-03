@@ -88,11 +88,11 @@ class MANGOS_DLL_DECL instance_halls_of_stone : public ScriptedInstance
         Face m_aFaces[MAX_FACES];
         std::string m_strInstData;
 
-        GUIDList m_lKaddrakGUIDs;
-        GUIDList m_lAbedneumGUIDs;
-        GUIDList m_lMarnakGUIDs;
-        GUIDList m_lTribunalGUIDs;
-        GUIDList m_lWorldtriggerGUIDs;
+        GuidList m_lKaddrakGUIDs;
+        GuidList m_lAbedneumGUIDs;
+        GuidList m_lMarnakGUIDs;
+        GuidList m_lTribunalGUIDs;
+        GuidList m_lWorldtriggerGUIDs;
 };
 
 #endif

@@ -223,8 +223,8 @@ class MANGOS_DLL_DECL instance_violet_hold : public ScriptedInstance
 
         void ProcessActivationCrystal(Unit* pUser, bool bIsIntro = false);
 
-        void GetErekemGuardList(GUIDList& lList) { lList = m_lErekemGuardList; }
-        void GetIchoronTriggerList(GUIDList& lList) { lList = m_lIchoronTargetsList; }
+        void GetErekemGuardList(GuidList& lList) { lList = m_lErekemGuardList; }
+        void GetIchoronTriggerList(GuidList& lList) { lList = m_lIchoronTargetsList; }
 
         void OnPlayerEnter(Player* pPlayer);
 
@@ -286,10 +286,10 @@ class MANGOS_DLL_DECL instance_violet_hold : public ScriptedInstance
 
         BossToCellMap m_mBossToCellMap;
 
-        GUIDList m_lIntroPortalList;
-        GUIDList m_lGuardsList;
-        GUIDList m_lErekemGuardList;
-        GUIDList m_lIchoronTargetsList;
+        GuidList m_lIntroPortalList;
+        GuidList m_lGuardsList;
+        GuidList m_lErekemGuardList;
+        GuidList m_lIchoronTargetsList;
         std::list<uint32> m_lRandomBossList;
 
         std::vector<BossSpawn*> m_vRandomBosses;

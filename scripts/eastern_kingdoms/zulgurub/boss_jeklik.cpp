@@ -84,7 +84,7 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
 
     bool m_bIsPhaseOne;
 
-    GUIDList m_lBombRiderGuidsList;
+    GuidList m_lBombRiderGuidsList;
 
     void Reset()
     {
@@ -151,7 +151,7 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
         if (m_lBombRiderGuidsList.empty())
             return;
 
-        for (GUIDList::const_iterator itr = m_lBombRiderGuidsList.begin(); itr != m_lBombRiderGuidsList.end(); ++itr)
+        for (GuidList::const_iterator itr = m_lBombRiderGuidsList.begin(); itr != m_lBombRiderGuidsList.end(); ++itr)
         {
             if (Creature* pRider = m_creature->GetMap()->GetCreature(*itr))
                 pRider->ForcedDespawn();

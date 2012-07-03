@@ -142,7 +142,7 @@ struct MANGOS_DLL_DECL boss_zuljinAI : public ScriptedAI
     bool m_bIsInTransition;
     uint32 m_uiTransformTimer;
 
-    GUIDList m_lSummonsList;
+    GuidList m_lSummonsList;
 
     void Reset()
     {
@@ -222,7 +222,7 @@ struct MANGOS_DLL_DECL boss_zuljinAI : public ScriptedAI
 
     void DoDespawnVortexes()
     {
-        for (GUIDList::const_iterator itr = m_lSummonsList.begin(); itr != m_lSummonsList.end(); ++itr)
+        for (GuidList::const_iterator itr = m_lSummonsList.begin(); itr != m_lSummonsList.end(); ++itr)
         {
             if (Creature* pVortex = m_creature->GetMap()->GetCreature(*itr))
                 pVortex->ForcedDespawn();

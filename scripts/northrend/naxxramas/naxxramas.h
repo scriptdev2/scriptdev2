@@ -239,7 +239,7 @@ class MANGOS_DLL_DECL instance_naxxramas : public ScriptedInstance
         bool IsInRightSideGothArea(Unit* pUnit);
 
         // thaddius
-        void GetThadTeslaCreatures(GUIDList &lList){ lList = m_lThadTeslaCoilList; };
+        void GetThadTeslaCreatures(GuidList &lList){ lList = m_lThadTeslaCoilList; };
 
         // kel
         void SetChamberCenterCoords(float fX, float fY, float fZ);
@@ -251,11 +251,11 @@ class MANGOS_DLL_DECL instance_naxxramas : public ScriptedInstance
         bool m_abAchievCriteria[MAX_SPECIAL_ACHIEV_CRITS];
         std::string m_strInstData;
 
-        GUIDList m_lThadTeslaCoilList;
-        GUIDList m_lGothTriggerList;
+        GuidList m_lThadTeslaCoilList;
+        GuidList m_lGothTriggerList;
 
         UNORDERED_MAP<ObjectGuid, GothTrigger> m_mGothTriggerMap;
-        GUIDList m_alHeiganTrapGuids[MAX_HEIGAN_TRAP_AREAS];
+        GuidList m_alHeiganTrapGuids[MAX_HEIGAN_TRAP_AREAS];
 
         float m_fChamberCenterX;
         float m_fChamberCenterY;

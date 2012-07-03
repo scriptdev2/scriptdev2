@@ -86,7 +86,7 @@ void instance_violet_hold::ResetAll()
             // Respawn Erekem guards
             if (pData->uiType == TYPE_EREKEM)
             {
-                for (GUIDList::const_iterator itr = m_lErekemGuardList.begin(); itr != m_lErekemGuardList.end(); ++itr)
+                for (GuidList::const_iterator itr = m_lErekemGuardList.begin(); itr != m_lErekemGuardList.end(); ++itr)
                 {
                     if (Creature* pGuard = instance->GetCreature(*itr))
                     {
@@ -395,7 +395,7 @@ void instance_violet_hold::Load(const char* chrIn)
 
 void instance_violet_hold::SetIntroPortals(bool bDeactivate)
 {
-    for(GUIDList::const_iterator itr = m_lIntroPortalList.begin(); itr != m_lIntroPortalList.end(); ++itr)
+    for(GuidList::const_iterator itr = m_lIntroPortalList.begin(); itr != m_lIntroPortalList.end(); ++itr)
     {
         if (Creature* pPortal = instance->GetCreature(*itr))
         {
@@ -505,7 +505,7 @@ void instance_violet_hold::SetRandomBosses()
 
 void instance_violet_hold::CallGuards(bool bRespawn)
 {
-    for(GUIDList::const_iterator itr = m_lGuardsList.begin(); itr != m_lGuardsList.end(); ++itr)
+    for(GuidList::const_iterator itr = m_lGuardsList.begin(); itr != m_lGuardsList.end(); ++itr)
     {
         if (Creature* pGuard = instance->GetCreature(*itr))
         {

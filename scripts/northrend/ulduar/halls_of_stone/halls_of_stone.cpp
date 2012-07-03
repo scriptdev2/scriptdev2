@@ -146,7 +146,7 @@ struct MANGOS_DLL_DECL npc_brann_hosAI : public npc_escortAI
     uint32 m_uiStep;
     uint32 m_uiPhaseTimer;
 
-    GUIDList m_luiDwarfGUIDs;
+    GuidList m_luiDwarfGUIDs;
 
     void Reset()
     {
@@ -183,7 +183,7 @@ struct MANGOS_DLL_DECL npc_brann_hosAI : public npc_escortAI
                 m_pInstance->SetData(TYPE_TRIBUNAL, IN_PROGRESS);
         }
 
-        for (GUIDList::const_iterator itr = m_luiDwarfGUIDs.begin(); itr != m_luiDwarfGUIDs.end(); ++itr)
+        for (GuidList::const_iterator itr = m_luiDwarfGUIDs.begin(); itr != m_luiDwarfGUIDs.end(); ++itr)
         {
             if (Creature* pDwarf = m_creature->GetMap()->GetCreature(*itr))
                 pDwarf->ForcedDespawn();

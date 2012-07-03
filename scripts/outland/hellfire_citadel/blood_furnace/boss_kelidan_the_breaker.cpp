@@ -92,7 +92,7 @@ struct MANGOS_DLL_DECL boss_kelidan_the_breakerAI : public ScriptedAI
     uint8 m_uiKilledAdds;
     bool m_bDidMagtheridonYell;
 
-    GUIDVector m_vAddGuids;
+    GuidVector m_vAddGuids;
 
     void Reset()
     {
@@ -153,7 +153,7 @@ struct MANGOS_DLL_DECL boss_kelidan_the_breakerAI : public ScriptedAI
         if (!m_pInstance)
             return;
 
-        GUIDList lAddGuids;
+        GuidList lAddGuids;
         m_pInstance->GetKelidanAddList(lAddGuids);
 
         // Sort Adds to vector if not already done
@@ -161,7 +161,7 @@ struct MANGOS_DLL_DECL boss_kelidan_the_breakerAI : public ScriptedAI
         {
             m_vAddGuids.reserve(lAddGuids.size());
             std::list<Creature*> lAdds;
-            for (GUIDList::const_iterator itr = lAddGuids.begin(); itr != lAddGuids.end(); ++itr)
+            for (GuidList::const_iterator itr = lAddGuids.begin(); itr != lAddGuids.end(); ++itr)
             {
                 if (Creature* pAdd = m_pInstance->instance->GetCreature(*itr))
                     lAdds.push_back(pAdd);
@@ -174,7 +174,7 @@ struct MANGOS_DLL_DECL boss_kelidan_the_breakerAI : public ScriptedAI
 
         // Respawn killed adds and reset counter
         m_uiKilledAdds = 0;
-        for (GUIDVector::const_iterator itr = m_vAddGuids.begin(); itr != m_vAddGuids.end(); ++itr)
+        for (GuidVector::const_iterator itr = m_vAddGuids.begin(); itr != m_vAddGuids.end(); ++itr)
         {
             Creature* pAdd = m_pInstance->instance->GetCreature(*itr);
             if (pAdd && !pAdd->isAlive())
@@ -195,7 +195,7 @@ struct MANGOS_DLL_DECL boss_kelidan_the_breakerAI : public ScriptedAI
     void AddJustAggroed(Unit* pWho)
     {
         // Let all adds attack
-        for (GUIDVector::const_iterator itr = m_vAddGuids.begin(); itr != m_vAddGuids.end(); ++itr)
+        for (GuidVector::const_iterator itr = m_vAddGuids.begin(); itr != m_vAddGuids.end(); ++itr)
         {
             Creature* pAdd = m_creature->GetMap()->GetCreature(*itr);
             if (pAdd && !pAdd->getVictim())

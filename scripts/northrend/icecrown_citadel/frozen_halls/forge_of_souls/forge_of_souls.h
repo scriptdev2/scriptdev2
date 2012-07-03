@@ -117,8 +117,8 @@ class MANGOS_DLL_DECL instance_forge_of_souls : public ScriptedInstance
 
         uint32 m_uiTeam;                                    // Team of first entered player, used to set if Jaina or Silvana to spawn
 
-        GUIDList m_luiSoulFragmentAliveGUIDs;
-        GUIDList m_lEventMobGUIDs;
+        GuidList m_luiSoulFragmentAliveGUIDs;
+        GuidList m_lEventMobGUIDs;
 };
 
 #endif

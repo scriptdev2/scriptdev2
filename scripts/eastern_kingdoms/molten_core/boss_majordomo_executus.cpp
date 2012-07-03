@@ -85,7 +85,7 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
     bool m_bHasEncounterFinished;
     uint8 m_uiAddsKilled;
     uint8 m_uiSpeech;
-    GUIDList m_luiMajordomoAddsGUIDs;
+    GuidList m_luiMajordomoAddsGUIDs;
 
     void Reset()
     {
@@ -232,7 +232,7 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
     // Unsummon Majordomo adds
     void UnsummonMajordomoAdds()
     {
-        for (GUIDList::const_iterator itr = m_luiMajordomoAddsGUIDs.begin(); itr != m_luiMajordomoAddsGUIDs.end(); ++itr)
+        for (GuidList::const_iterator itr = m_luiMajordomoAddsGUIDs.begin(); itr != m_luiMajordomoAddsGUIDs.end(); ++itr)
         {
             if (Creature* pAdd = m_creature->GetMap()->GetCreature(*itr))
                 if (pAdd->IsTemporarySummon())

@@ -152,7 +152,7 @@ void instance_blackwing_lair::SetData(uint32 uiType, uint32 uiData)
                 if (!pNefarius)
                     break;
 
-                for (GUIDList::const_iterator itr = m_lDrakonidBonesGuids.begin(); itr != m_lDrakonidBonesGuids.end(); ++itr)
+                for (GuidList::const_iterator itr = m_lDrakonidBonesGuids.begin(); itr != m_lDrakonidBonesGuids.end(); ++itr)
                 {
                     // The Go script will handle the missing spell 23361
                     if (GameObject* pGo = instance->GetGameObject(*itr))
@@ -166,7 +166,7 @@ void instance_blackwing_lair::SetData(uint32 uiType, uint32 uiData)
             // Cleanup the drakonid bones
             if (uiData == FAIL)
             {
-                for (GUIDList::const_iterator itr = m_lDrakonidBonesGuids.begin(); itr != m_lDrakonidBonesGuids.end(); ++itr)
+                for (GuidList::const_iterator itr = m_lDrakonidBonesGuids.begin(); itr != m_lDrakonidBonesGuids.end(); ++itr)
                 {
                     if (GameObject* pGo = instance->GetGameObject(*itr))
                         pGo->SetLootState(GO_JUST_DEACTIVATED);

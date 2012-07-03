@@ -130,7 +130,7 @@ class MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
 
         float m_fArenaCenterX, m_fArenaCenterY, m_fArenaCenterZ;
 
-        GUIDSet m_sVaultNpcGuids;
+        GuidSet m_sVaultNpcGuids;
 };
 
 #endif

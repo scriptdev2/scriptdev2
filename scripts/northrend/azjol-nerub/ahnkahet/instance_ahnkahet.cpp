@@ -126,7 +126,7 @@ void instance_ahnkahet::SetData(uint32 uiType, uint32 uiData)
                         pTaldaram->GetMotionMaster()->MovePoint(1, aTaldaramLandingLoc[0], aTaldaramLandingLoc[1], aTaldaramLandingLoc[2]);
 
                     // Interrupt the channeling
-                    for (GUIDList::const_iterator itr = m_lJedogaControllersGuidList.begin(); itr != m_lJedogaControllersGuidList.end(); ++itr)
+                    for (GuidList::const_iterator itr = m_lJedogaControllersGuidList.begin(); itr != m_lJedogaControllersGuidList.end(); ++itr)
                     {
                         if (Creature* pTemp = instance->GetCreature(*itr))
                             pTemp->InterruptNonMeleeSpells(false);
@@ -190,7 +190,7 @@ void instance_ahnkahet::OnCreatureDeath(Creature* pCreature)
             if (Creature* pJedoga = GetSingleCreatureFromStorage(NPC_JEDOGA_SHADOWSEEKER))
                 pJedoga->GetMotionMaster()->MovePoint(1, aJedogaLandingLoc[0], aJedogaLandingLoc[1], aJedogaLandingLoc[2]);
 
-            for (GUIDList::const_iterator itr = m_lJedogaEventControllersGuidList.begin(); itr != m_lJedogaEventControllersGuidList.end(); ++itr)
+            for (GuidList::const_iterator itr = m_lJedogaEventControllersGuidList.begin(); itr != m_lJedogaEventControllersGuidList.end(); ++itr)
             {
                 if (Creature* pTemp = instance->GetCreature(*itr))
                     pTemp->InterruptNonMeleeSpells(false);

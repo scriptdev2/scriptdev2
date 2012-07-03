@@ -73,7 +73,7 @@ struct MANGOS_DLL_DECL boss_trollgoreAI : public ScriptedAI
     uint32 m_uiWaveTimer;
     uint32 m_uiCorpseExplodeTimer;
 
-    GUIDVector m_vTriggers;
+    GuidVector m_vTriggers;
 
     void Reset()
     {

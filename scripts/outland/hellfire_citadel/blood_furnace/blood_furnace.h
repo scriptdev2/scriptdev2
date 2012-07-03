@@ -48,7 +48,7 @@ struct BroggokEventInfo
     ObjectGuid m_cellGuid;
     bool m_bIsCellOpened;
     uint8 m_uiKilledOrcCount;
-    GUIDSet m_sSortedOrcGuids;
+    GuidSet m_sSortedOrcGuids;
 };
 
 class MANGOS_DLL_DECL instance_blood_furnace : public ScriptedInstance
@@ -74,7 +74,7 @@ class MANGOS_DLL_DECL instance_blood_furnace : public ScriptedInstance
 
         void GetMovementDistanceForIndex(uint32 uiIndex, float& dx, float& dy);
 
-        void GetKelidanAddList(GUIDList& lList) { lList = m_lChannelersGuids; m_lChannelersGuids.clear(); }
+        void GetKelidanAddList(GuidList& lList) { lList = m_lChannelersGuids; m_lChannelersGuids.clear(); }
 
     private:
         void DoSortBroggokOrcs();
@@ -88,8 +88,8 @@ class MANGOS_DLL_DECL instance_blood_furnace : public ScriptedInstance
         uint32 m_uiBroggokEventTimer;                       // Timer for opening the event cages; only on heroic mode = 30 secs
         uint32 m_uiBroggokEventPhase;
 
-        GUIDList m_luiNascentOrcGuids;
-        GUIDList m_lChannelersGuids;
+        GuidList m_luiNascentOrcGuids;
+        GuidList m_lChannelersGuids;
 };
 
 #endif

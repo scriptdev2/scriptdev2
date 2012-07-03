@@ -63,8 +63,8 @@ class MANGOS_DLL_DECL instance_ahnkahet : public ScriptedInstance
         ObjectGuid SelectRandomSwarmerEggGuid();
         ObjectGuid SelectJedogaSacrificeControllerGuid() { return m_jedogaSacrificeController; }
 
-        void GetJedogaControllersList(GUIDList &lList) { lList = m_lJedogaControllersGuidList; }
-        void GetJedogaEventControllersList(GUIDList &lList) {lList = m_lJedogaEventControllersGuidList; }
+        void GetJedogaControllersList(GuidList &lList) { lList = m_lJedogaControllersGuidList; }
+        void GetJedogaEventControllersList(GuidList &lList) {lList = m_lJedogaEventControllersGuidList; }
 
         bool CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/);
 
@@ -83,10 +83,10 @@ class MANGOS_DLL_DECL instance_ahnkahet : public ScriptedInstance
 
         ObjectGuid m_jedogaSacrificeController;
 
-        GUIDList m_GuardianEggList;
-        GUIDList m_SwarmerEggList;
-        GUIDList m_lJedogaControllersGuidList;
-        GUIDList m_lJedogaEventControllersGuidList;
+        GuidList m_GuardianEggList;
+        GuidList m_SwarmerEggList;
+        GuidList m_lJedogaControllersGuidList;
+        GuidList m_lJedogaEventControllersGuidList;
 };
 
 #endif

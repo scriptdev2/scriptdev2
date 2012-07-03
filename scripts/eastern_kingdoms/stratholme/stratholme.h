@@ -108,7 +108,7 @@ struct ZigguratStore
 {
     ObjectGuid m_doorGuid;
     ObjectGuid m_crystalGuid;
-    GUIDList m_lZigguratAcolyteGuid;
+    GuidList m_lZigguratAcolyteGuid;
 };
 
 class MANGOS_DLL_DECL instance_stratholme : public ScriptedInstance
@@ -155,11 +155,11 @@ class MANGOS_DLL_DECL instance_stratholme : public ScriptedInstance
         ZigguratStore m_zigguratStorage[MAX_ZIGGURATS];
 
         std::set<uint32> m_suiCrimsonLowGuids;
-        GUIDList m_luiCrystalGUIDs;
-        GUIDSet m_sAbomnationGUID;
-        GUIDList m_luiAcolyteGUIDs;
-        GUIDList m_luiUndeadGUIDs;
-        GUIDList m_luiGuardGUIDs;
+        GuidList m_luiCrystalGUIDs;
+        GuidSet m_sAbomnationGUID;
+        GuidList m_luiAcolyteGUIDs;
+        GuidList m_luiUndeadGUIDs;
+        GuidList m_luiGuardGUIDs;
 };
 
 #endif
