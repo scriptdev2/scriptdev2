@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: boss_anzu
 SD%Complete: 70
-SDComment: Timers need improvement; Intro event NYI.
+SDComment: Intro event NYI.
 SDCategory: Auchindoun, Sethekk Halls
 EndScriptData */
 
@@ -27,7 +27,9 @@ EndScriptData */
 enum
 {
     SAY_BANISH          = -1556018,
-    SAY_WHISPER_MAGIC   = -1556019,
+    SAY_WHISPER_MAGIC_1 = -1556019,
+    SAY_WHISPER_MAGIC_2 = -1556021,
+    SAY_WHISPER_MAGIC_3 = -1556022,
     EMOTE_BIRD_STONE    = -1556020,
 
     SPELL_FLESH_RIP     = 40199,
@@ -62,17 +64,17 @@ struct MANGOS_DLL_DECL boss_anzuAI : public ScriptedAI
     uint32 m_uiScreechTimer;
     uint32 m_uiSpellBombTimer;
     uint32 m_uiCycloneTimer;
-    uint8 m_uiBanishPhase;
+    float m_fHealthCheck;
 
     GuidList m_lBirdsGuidList;
 
     void Reset()
     {
-        m_uiFleshRipTimer   = urand(9000, 13000);
-        m_uiScreechTimer    = 30000;
-        m_uiSpellBombTimer  = 22000;
+        m_uiFleshRipTimer   = urand(9000, 10000);
+        m_uiScreechTimer    = 23000;
+        m_uiSpellBombTimer  = 17000;
         m_uiCycloneTimer    = 5000;
-        m_uiBanishPhase     = 2;
+        m_fHealthCheck      = 75.0f;
     }
 
     void Aggro(Unit* pWho)
@@ -158,20 +160,20 @@ struct MANGOS_DLL_DECL boss_anzuAI : public ScriptedAI
             return;
 
         // Banish at 66% and 33%; Boss can still use spells while banished
-        if (m_creature->GetHealthPercent() < 33.3f * m_uiBanishPhase)
+        if (m_creature->GetHealthPercent() < m_fHealthCheck)
         {
             if (DoCastSpellIfCan(m_creature, SPELL_BANISH_SELF) == CAST_OK)
             {
                 DoScriptText(SAY_BANISH, m_creature);
                 DoSummonBroodsOfAnzu();
-                --m_uiBanishPhase;
+                m_fHealthCheck -= 40.0f;
             }
         }
 
         if (m_uiFleshRipTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_FLESH_RIP) == CAST_OK)
-                m_uiFleshRipTimer = urand(17000, 21000);
+                m_uiFleshRipTimer = urand(10000, 20000);
         }
         else
             m_uiFleshRipTimer -= uiDiff;
@@ -179,7 +181,7 @@ struct MANGOS_DLL_DECL boss_anzuAI : public ScriptedAI
         if (m_uiScreechTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature, SPELL_SCREECH) == CAST_OK)
-                m_uiScreechTimer = 30000;
+                m_uiScreechTimer = urand(31000, 35000);
         }
         else
             m_uiScreechTimer -= uiDiff;
@@ -190,8 +192,13 @@ struct MANGOS_DLL_DECL boss_anzuAI : public ScriptedAI
             {
                 if (DoCastSpellIfCan(pTarget, SPELL_SPELL_BOMB) == CAST_OK)
                 {
-                    DoScriptText(SAY_WHISPER_MAGIC, m_creature, pTarget);
-                    m_uiSpellBombTimer = urand(25000, 30000);
+                    switch (urand(0, 2))
+                    {
+                        case 0: DoScriptText(SAY_WHISPER_MAGIC_1, m_creature, pTarget); break;
+                        case 1: DoScriptText(SAY_WHISPER_MAGIC_2, m_creature, pTarget); break;
+                        case 2: DoScriptText(SAY_WHISPER_MAGIC_3, m_creature, pTarget); break;
+                    }
+                    m_uiSpellBombTimer = urand(24000, 40000);
                 }
             }
         }
@@ -200,7 +207,7 @@ struct MANGOS_DLL_DECL boss_anzuAI : public ScriptedAI
 
         if (m_uiCycloneTimer < uiDiff)
         {
-            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1))
             {
                 if (DoCastSpellIfCan(pTarget, SPELL_CYCLONE) == CAST_OK)
                     m_uiCycloneTimer = 21000;

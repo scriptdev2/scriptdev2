@@ -65,8 +65,9 @@ struct MANGOS_DLL_DECL boss_talon_king_ikissAI : public ScriptedAI
 
     uint32 m_uiArcaneVolleyTimer;
     uint32 m_uiSheepTimer;
-    uint32 m_uiBlinkTimer;
     uint32 m_uiSlowTimer;
+    uint8 m_uiBlinkPhase;
+    float m_fHealthCheck;
 
     bool m_bManaShield;
     bool m_bBlink;
@@ -74,10 +75,11 @@ struct MANGOS_DLL_DECL boss_talon_king_ikissAI : public ScriptedAI
 
     void Reset()
     {
-        m_uiArcaneVolleyTimer = 5000;
+        m_uiArcaneVolleyTimer = urand(5000, 12000);
         m_uiSheepTimer = 8000;
-        m_uiBlinkTimer = 35000;
-        m_uiSlowTimer = urand(15000, 30000);
+        m_uiSlowTimer = urand(9000, 13000);
+        m_uiBlinkPhase = 0;
+        m_fHealthCheck = 80.0f;
 
         m_bBlink = false;
         m_bManaShield = false;
@@ -148,7 +150,7 @@ struct MANGOS_DLL_DECL boss_talon_king_ikissAI : public ScriptedAI
         if (m_uiArcaneVolleyTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_ARCANE_VOLLEY : SPELL_ARCANE_VOLLEY_H) == CAST_OK)
-                m_uiArcaneVolleyTimer = urand(7000, 12000);
+                m_uiArcaneVolleyTimer = urand(8000, 12000);
         }
         else
             m_uiArcaneVolleyTimer -= uiDiff;
@@ -163,7 +165,7 @@ struct MANGOS_DLL_DECL boss_talon_king_ikissAI : public ScriptedAI
         else
             m_uiSheepTimer -= uiDiff;
 
-        if (!m_bManaShield && m_creature->GetHealthPercent() < 20.0f)
+        if (!m_bManaShield && m_creature->GetHealthPercent() < 15.0f)
         {
             if (DoCastSpellIfCan(m_creature, SPELL_MANA_SHIELD) == CAST_OK)
                 m_bManaShield = true;
@@ -174,24 +176,30 @@ struct MANGOS_DLL_DECL boss_talon_king_ikissAI : public ScriptedAI
             if (m_uiSlowTimer < uiDiff)
             {
                 if (DoCastSpellIfCan(m_creature, SPELL_SLOW_H) == CAST_OK)
-                    m_uiSlowTimer = urand(15000, 30000);
+                    m_uiSlowTimer = urand(15000, 24000);
             }
             else
                 m_uiSlowTimer -= uiDiff;
         }
 
-        if (m_uiBlinkTimer < uiDiff)
+        if (m_creature->GetHealthPercent() < m_fHealthCheck)
         {
-            DoScriptText(EMOTE_ARCANE_EXP, m_creature);
-
             if (DoCastSpellIfCan(m_creature, SPELL_BLINK, CAST_INTERRUPT_PREVIOUS) == CAST_OK)
             {
                 m_bBlink = true;
-                m_uiBlinkTimer = urand(35000, 40000);
+                DoScriptText(EMOTE_ARCANE_EXP, m_creature);
+
+                // There is no relationship between the health percentages
+                switch (m_uiBlinkPhase)
+                {
+                    case 0: m_fHealthCheck = 50.0f; break;
+                    case 1: m_fHealthCheck = 25.0f; break;
+                    case 2: m_fHealthCheck = 0.0f; break;
+                }
+
+                ++m_uiBlinkPhase;
             }
         }
-        else
-            m_uiBlinkTimer -= uiDiff;
 
         if (!m_bBlink)
             DoMeleeAttackIfReady();

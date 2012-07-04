@@ -2264,8 +2264,10 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1556016,'No! How can this be?',0,1,0,0,'anzu SAY_INTRO_1'),
 (-1556017,'Pain will be the price for your insolence! You cannot stop me from claiming the Emerald Dream as my own!',0,1,0,0,'anzu SAY_INTRO_2'),
 (-1556018,'Awaken, my children and assist your master!',0,1,0,0,'anzu SAY_BANISH'),
-(-1556019,'Your magics shall be your undoing... ak-a-ak...',0,4,0,0,'anzu SAY_WHISPER_MAGIC'),
-(-1556020,'%s returns to stone.',0,2,0,0,'anzu EMOTE_BIRD_STONE');
+(-1556019,'Your magics shall be your undoing... ak-a-ak...',0,5,0,0,'anzu SAY_WHISPER_MAGIC_1'),
+(-1556020,'%s returns to stone.',0,2,0,0,'anzu EMOTE_BIRD_STONE'),
+(-1556021,'Your powers... ak-ak... turn against you...',0,5,0,0,'anzu SAY_WHISPER_MAGIC_2'),
+(-1556022,'Your spells... ke-kaw... are weak magics... easy to turn against you...',0,5,0,0,'anzu SAY_WHISPER_MAGIC_3');
 
 -- -1 557 000 MANA TOMBS
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES

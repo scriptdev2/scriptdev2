@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Darkweaver_Syth
-SD%Complete: 85
-SDComment: Shock spells/times need more work.
+SD%Complete: 100
+SDComment:
 SDCategory: Auchindoun, Sethekk Halls
 EndScriptData */
 
@@ -33,13 +33,17 @@ enum
     SAY_SLAY_2                  = -1556005,
     SAY_DEATH                   = -1556006,
 
-    // TODO Heroic spells (shock, chain lightning) missing, unknown if IDs are correct
-    SPELL_FROST_SHOCK           = 37865,
-    SPELL_FLAME_SHOCK           = 34354,
-    SPELL_SHADOW_SHOCK          = 30138,
-    SPELL_ARCANE_SHOCK          = 37132,
+    SPELL_FROST_SHOCK           = 12548,
+    SPELL_FROST_SHOCK_H         = 21401,
+    SPELL_FLAME_SHOCK           = 15039,
+    SPELL_FLAME_SHOCK_H         = 15616,
+    SPELL_SHADOW_SHOCK          = 33620,
+    SPELL_SHADOW_SHOCK_H        = 38136,
+    SPELL_ARCANE_SHOCK          = 33534,
+    SPELL_ARCANE_SHOCK_H        = 38135,
 
-    SPELL_CHAIN_LIGHTNING       = 39945,
+    SPELL_CHAIN_LIGHTNING       = 15659,
+    SPELL_CHAIN_LIGHTNING_H     = 15305,
 
     SPELL_SUMMON_SYTH_FIRE      = 33537,                    // Spawns 19203
     SPELL_SUMMON_SYTH_ARCANE    = 33538,                    // Spawns 19205
@@ -81,11 +85,11 @@ struct MANGOS_DLL_DECL boss_darkweaver_sythAI : public ScriptedAI
 
     void Reset()
     {
-        m_uiFlameshockTimer     = 2000;
-        m_uiArcaneshockTimer    = 4000;
-        m_uiFrostshockTimer     = 6000;
-        m_uiShadowshockTimer    = 8000;
-        m_uiChainlightningTimer = 15000;
+        m_uiFlameshockTimer     = 18000;
+        m_uiArcaneshockTimer    = 19000;
+        m_uiFrostshockTimer     = 18000;
+        m_uiShadowshockTimer    = 17000;
+        m_uiChainlightningTimer = urand(6000, 9000);
 
         m_fHpCheck              = 90.0f;
     }
@@ -165,8 +169,8 @@ struct MANGOS_DLL_DECL boss_darkweaver_sythAI : public ScriptedAI
         {
             if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
             {
-                if (DoCastSpellIfCan(pTarget, SPELL_FLAME_SHOCK) == CAST_OK)
-                    m_uiFlameshockTimer = urand(10000, 15000);
+                if (DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_FLAME_SHOCK : SPELL_FLAME_SHOCK_H) == CAST_OK)
+                    m_uiFlameshockTimer = m_bIsRegularMode ? urand(13000, 28000) : urand(11000, 20000);
             }
         }
         else
@@ -176,8 +180,8 @@ struct MANGOS_DLL_DECL boss_darkweaver_sythAI : public ScriptedAI
         {
             if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
             {
-                if (DoCastSpellIfCan(pTarget, SPELL_ARCANE_SHOCK) == CAST_OK)
-                    m_uiArcaneshockTimer = urand(10000, 15000);
+                if (DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_ARCANE_SHOCK : SPELL_ARCANE_SHOCK_H) == CAST_OK)
+                    m_uiArcaneshockTimer = m_bIsRegularMode ? urand(13000, 28000) : urand(11000, 20000);
             }
         }
         else
@@ -187,8 +191,8 @@ struct MANGOS_DLL_DECL boss_darkweaver_sythAI : public ScriptedAI
         {
             if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
             {
-                if (DoCastSpellIfCan(pTarget, SPELL_FROST_SHOCK) == CAST_OK)
-                    m_uiFrostshockTimer = urand(10000, 15000);
+                if (DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_FROST_SHOCK : SPELL_FROST_SHOCK_H) == CAST_OK)
+                    m_uiFrostshockTimer = m_bIsRegularMode ? urand(13000, 28000) : urand(11000, 20000);
             }
         }
         else
@@ -198,8 +202,8 @@ struct MANGOS_DLL_DECL boss_darkweaver_sythAI : public ScriptedAI
         {
             if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
             {
-                if (DoCastSpellIfCan(pTarget, SPELL_SHADOW_SHOCK) == CAST_OK)
-                    m_uiShadowshockTimer = urand(10000, 15000);
+                if (DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_SHADOW_SHOCK : SPELL_SHADOW_SHOCK_H) == CAST_OK)
+                    m_uiShadowshockTimer = m_bIsRegularMode ? urand(13000, 28000) : urand(11000, 20000);
             }
         }
         else
@@ -209,8 +213,8 @@ struct MANGOS_DLL_DECL boss_darkweaver_sythAI : public ScriptedAI
         {
             if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
             {
-                if (DoCastSpellIfCan(pTarget, SPELL_CHAIN_LIGHTNING) == CAST_OK)
-                    m_uiChainlightningTimer = 25000;
+                if (DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_CHAIN_LIGHTNING : SPELL_CHAIN_LIGHTNING_H) == CAST_OK)
+                    m_uiChainlightningTimer = m_bIsRegularMode ? urand(14000, 26000) : urand(13000, 19000);
             }
         }
         else
