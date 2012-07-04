@@ -127,8 +127,8 @@ struct MANGOS_DLL_DECL boss_jedogaAI : public ScriptedAI
         if (m_lVolunteerGuidList.empty())
             return ObjectGuid();
 
-        std::list<ObjectGuid>::iterator iter = m_lVolunteerGuidList.begin();
-        advance(iter, urand(0, m_lVolunteerGuidList.size()-1));
+        GuidList::iterator iter = m_lVolunteerGuidList.begin();
+        advance(iter, urand(0, m_lVolunteerGuidList.size() - 1));
 
         return *iter;
     }

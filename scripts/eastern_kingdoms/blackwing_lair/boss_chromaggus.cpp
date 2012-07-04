@@ -182,9 +182,9 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
                 case 4: m_uiSpellAfflict = SPELL_BROODAF_GREEN; break;
             }
 
-            std::vector<ObjectGuid> vGuids;
+            GuidVector vGuids;
             m_creature->FillGuidsListFromThreatList(vGuids);
-            for (std::vector<ObjectGuid>::const_iterator i = vGuids.begin();i != vGuids.end(); ++i)
+            for (GuidVector::const_iterator i = vGuids.begin(); i != vGuids.end(); ++i)
             {
                 Unit* pUnit = m_creature->GetMap()->GetUnit(*i);
 

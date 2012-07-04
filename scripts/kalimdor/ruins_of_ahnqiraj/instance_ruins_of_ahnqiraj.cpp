@@ -37,7 +37,8 @@ void instance_ruins_of_ahnqiraj::Initialize()
 void instance_ruins_of_ahnqiraj::OnPlayerEnter(Player* pPlayer)
 {
     // Spawn andorov if necessary
-    DoSapwnAndorovIfCan();
+    if (m_auiEncounter[TYPE_KURINNAXX] == DONE)
+        DoSapwnAndorovIfCan();
 }
 
 void instance_ruins_of_ahnqiraj::OnCreatureCreate(Creature* pCreature)
@@ -143,10 +144,6 @@ uint32 instance_ruins_of_ahnqiraj::GetData(uint32 uiType)
 
 void instance_ruins_of_ahnqiraj::DoSapwnAndorovIfCan()
 {
-    // The npc is also a vendor so always spawn after kurinnaxx
-    if (m_auiEncounter[TYPE_KURINNAXX] != DONE)
-        return;
-
     if (GetSingleCreatureFromStorage(NPC_GENERAL_ANDOROV))
         return;
 
