@@ -3094,7 +3094,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 
 (-1602018,'What hope is there for you? None!',14162,1,0,0,'loken SAY_AGGRO0'),
 (-1602019,'I have witnessed the rise and fall of empires. The birth and extinction of entire species. Over countless millennia the foolishness of mortals has remained beyond a constant. Your presence here confirms this.',14160,1,0,0,'loken SAY_INTRO_1'),
-(-1602020,'My master has shown me the future, and you have no place in it. Azeroth will be reborn in darkness. Yogg-Saron shall be released! The Pantheon shall fall!',14162,1,0,0,'loken SAY_INTRO_2'),
+(-1602020,'My master has shown me the future, and you have no place in it. Azeroth will be reborn in darkness. Yogg-Saron shall be released! The Pantheon shall fall!',14161,1,0,0,'loken SAY_INTRO_2'),
 (-1602021,'Only mortal...',14166,1,0,0,'loken SAY_SLAY_1'),
 (-1602022,'I... am... FOREVER!',14167,1,0,0,'loken SAY_SLAY_2'),
 (-1602023,'What little time you had, you wasted!',14168,1,0,0,'loken SAY_SLAY_3'),
