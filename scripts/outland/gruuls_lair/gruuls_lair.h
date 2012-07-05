@@ -8,20 +8,21 @@
 enum
 {
     MAX_ENCOUNTER                   = 2,
+    MAX_COUNCIL                     = 5,
 
     // Encounter Status
-    TYPE_MAULGAR_EVENT              = 1,
-    TYPE_GRUUL_EVENT                = 2,
+    TYPE_MAULGAR_EVENT              = 0,
+    TYPE_GRUUL_EVENT                = 1,
 
     GO_PORT_GRONN_1                 = 183817,               // 184468 not in use
     GO_PORT_GRONN_2                 = 184662,
 
     // NPC GUIDs
-    NPC_MAULGAR                    = 18831,
-    NPC_BLINDEYE                   = 18836,
-    NPC_KIGGLER                    = 18835,
-    NPC_KROSH                      = 18832,
-    NPC_OLM                        = 18834,
+    NPC_MAULGAR                     = 18831,
+    //NPC_BLINDEYE                  = 18836,
+    //NPC_KIGGLER                   = 18835,
+    //NPC_KROSH                     = 18832,
+    //NPC_OLM                       = 18834,
 };
 
 class MANGOS_DLL_DECL instance_gruuls_lair : public ScriptedInstance
@@ -44,6 +45,8 @@ class MANGOS_DLL_DECL instance_gruuls_lair : public ScriptedInstance
     private:
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strSaveData;
+
+        uint8 m_uiCouncilMembersDied;
 };
 
 #endif

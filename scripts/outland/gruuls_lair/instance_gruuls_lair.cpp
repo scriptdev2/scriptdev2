@@ -29,7 +29,8 @@ EndScriptData */
 2 - Gruul event
 */
 
-instance_gruuls_lair::instance_gruuls_lair(Map *pMap) : ScriptedInstance(pMap)
+instance_gruuls_lair::instance_gruuls_lair(Map *pMap) : ScriptedInstance(pMap),
+    m_uiCouncilMembersDied(0)
 {
     Initialize();
 }
@@ -50,16 +51,8 @@ bool instance_gruuls_lair::IsEncounterInProgress() const
 
 void instance_gruuls_lair::OnCreatureCreate(Creature* pCreature)
 {
-    switch (pCreature->GetEntry())
-    {
-        case NPC_MAULGAR:
-        case NPC_KROSH:
-        case NPC_OLM:
-        case NPC_KIGGLER:
-        case NPC_BLINDEYE:
-            m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
-            break;
-    }
+    if (pCreature->GetEntry() == NPC_MAULGAR)
+        m_mNpcEntryGuidStore[NPC_MAULGAR] = pCreature->GetObjectGuid();
 }
 
 void instance_gruuls_lair::OnObjectCreate(GameObject* pGo)
@@ -67,7 +60,7 @@ void instance_gruuls_lair::OnObjectCreate(GameObject* pGo)
     switch (pGo->GetEntry())
     {
         case GO_PORT_GRONN_1:
-            if (m_auiEncounter[0] == DONE)
+            if (m_auiEncounter[TYPE_MAULGAR_EVENT] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_PORT_GRONN_2:
@@ -84,13 +77,24 @@ void instance_gruuls_lair::SetData(uint32 uiType, uint32 uiData)
     switch (uiType)
     {
         case TYPE_MAULGAR_EVENT:
+            if (uiData == SPECIAL)
+            {
+                ++m_uiCouncilMembersDied;
+
+                if (m_uiCouncilMembersDied == MAX_COUNCIL)
+                    SetData(TYPE_MAULGAR_EVENT, DONE);
+                // Don't store special data
+                break;
+            }
+            if (uiData == FAIL)
+                m_uiCouncilMembersDied = 0;
             if (uiData == DONE)
                 DoUseDoorOrButton(GO_PORT_GRONN_1);
-            m_auiEncounter[0] = uiData;
+            m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_GRUUL_EVENT:
             DoUseDoorOrButton(GO_PORT_GRONN_2);
-            m_auiEncounter[1] = uiData;
+            m_auiEncounter[uiType] = uiData;
             break;
     }
 
@@ -110,14 +114,10 @@ void instance_gruuls_lair::SetData(uint32 uiType, uint32 uiData)
 
 uint32 instance_gruuls_lair::GetData(uint32 uiType)
 {
-    switch (uiType)
-    {
-    case TYPE_MAULGAR_EVENT: return m_auiEncounter[0];
-    case TYPE_GRUUL_EVENT:   return m_auiEncounter[1];
+    if (uiType < MAX_ENCOUNTER)
+        return m_auiEncounter[uiType];
 
-    default:
-        return 0;
-    }
+    return 0;
 }
 
 void instance_gruuls_lair::Load(const char* chrIn)

@@ -65,14 +65,7 @@ enum
     SPELL_GREATER_FIREBALL      = 33051,
     SPELL_SPELLSHIELD           = 33054,
     SPELL_BLAST_WAVE            = 33061,
-
-    MAX_COUNCIL                 = 4
 };
-
-const float DISTANCE_KIGGLER    = 20.0f;
-const float DISTANCE_KROSH      = 30.0f;
-
-static const uint32 aCouncilMember[] = {NPC_BLINDEYE, NPC_KIGGLER, NPC_KROSH, NPC_OLM};
 
 //High King Maulgar AI
 struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
@@ -85,43 +78,30 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    uint32 m_uiArcingSmash_Timer;
-    uint32 m_uiMightyBlow_Timer;
-    uint32 m_uiWhirlwind_Timer;
-    uint32 m_uiCharge_Timer;
-    uint32 m_uiFear_Timer;
+    uint32 m_uiArcingSmashTimer;
+    uint32 m_uiMightyBlowTimer;
+    uint32 m_uiWhirlwindTimer;
+    uint32 m_uiChargeTimer;
+    uint32 m_uiFearTimer;
     uint32 m_uiCouncilDeathCount;
 
     bool m_bPhase2;
 
     void Reset()
     {
-        m_uiArcingSmash_Timer   = urand(8000, 14000);
-        m_uiMightyBlow_Timer    = urand(15000, 25000);
-        m_uiWhirlwind_Timer     = 30000;
-        m_uiCharge_Timer        = 2000;
-        m_uiFear_Timer          = urand(10000, 25000);
+        m_uiArcingSmashTimer    = urand(8000, 14000);
+        m_uiMightyBlowTimer     = urand(15000, 25000);
+        m_uiWhirlwindTimer      = 30000;
+        m_uiChargeTimer         = 2000;
+        m_uiFearTimer           = urand(10000, 25000);
         m_uiCouncilDeathCount   = 0;
         m_bPhase2               = false;
     }
 
     void JustReachedHome()
     {
-        if (!m_pInstance)
-            return;
-
-        for (uint8 i = 0; i < MAX_COUNCIL; ++i)
-        {
-            if (Creature* pCreature = m_pInstance->GetSingleCreatureFromStorage(aCouncilMember[i]))
-            {
-                if (!pCreature->isAlive())
-                    pCreature->Respawn();
-                else if (pCreature->getVictim())
-                    pCreature->AI()->EnterEvadeMode();
-            }
-        }
-
-        m_pInstance->SetData(TYPE_MAULGAR_EVENT, FAIL);
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_MAULGAR_EVENT, FAIL);
     }
 
     void KilledUnit(Unit* pVictim)
@@ -138,32 +118,17 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH, m_creature);
 
-        if (!m_pInstance)
-            return;
-
-        //we risk being DONE before adds are in fact dead
-        m_pInstance->SetData(TYPE_MAULGAR_EVENT, DONE);
+        // Set data to Special on Death
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_MAULGAR_EVENT, SPECIAL);
     }
 
-    void Aggro(Unit *pWho)
+    void Aggro(Unit* pWho)
     {
-        if (!m_pInstance)
-            return;
-
         DoScriptText(SAY_AGGRO, m_creature);
 
-        m_pInstance->SetData(TYPE_MAULGAR_EVENT, IN_PROGRESS);
-
-        for (uint8 i = 0; i < MAX_COUNCIL; ++i)
-        {
-            if (Creature* pCreature = m_pInstance->GetSingleCreatureFromStorage(aCouncilMember[i]))
-            {
-                if (!pCreature->isAlive())
-                    pCreature->Respawn();
-                if (!pCreature->getVictim())
-                    pCreature->AI()->AttackStart(pWho);
-            }
-        }
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_MAULGAR_EVENT, IN_PROGRESS);
     }
 
     void EventCouncilDeath()
@@ -179,66 +144,62 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
 
     void UpdateAI(const uint32 uiDiff)
     {
-        //Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //m_uiArcingSmash_Timer
-        if (m_uiArcingSmash_Timer < uiDiff)
+        if (m_uiArcingSmashTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature, SPELL_ARCING_SMASH);
-            m_uiArcingSmash_Timer = urand(8000, 12000);
+            if (DoCastSpellIfCan(m_creature, SPELL_ARCING_SMASH) == CAST_OK)
+                m_uiArcingSmashTimer = urand(8000, 12000);
         }
         else
-            m_uiArcingSmash_Timer -= uiDiff;
+            m_uiArcingSmashTimer -= uiDiff;
 
-        //m_uiWhirlwind_Timer
-        if (m_uiWhirlwind_Timer < uiDiff)
+        if (m_uiWhirlwindTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature, SPELL_WHIRLWIND);
-            m_uiWhirlwind_Timer = urand(30000, 40000);
+            if (DoCastSpellIfCan(m_creature, SPELL_WHIRLWIND) == CAST_OK)
+                m_uiWhirlwindTimer = urand(30000, 40000);
         }
         else
-            m_uiWhirlwind_Timer -= uiDiff;
+            m_uiWhirlwindTimer -= uiDiff;
 
-        //m_uiMightyBlow_Timer
-        if (m_uiMightyBlow_Timer < uiDiff)
+        if (m_uiMightyBlowTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_MIGHTY_BLOW);
-            m_uiMightyBlow_Timer = urand(20000, 35000);
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_MIGHTY_BLOW) == CAST_OK)
+                m_uiMightyBlowTimer = urand(20000, 35000);
         }
         else
-            m_uiMightyBlow_Timer -= uiDiff;
+            m_uiMightyBlowTimer -= uiDiff;
 
-        //Entering Phase 2
         if (!m_bPhase2 && m_creature->GetHealthPercent() < 50.0f)
         {
-            m_bPhase2 = true;
-            DoScriptText(SAY_ENRAGE, m_creature);
-            DoCastSpellIfCan(m_creature, SPELL_FLURRY);
+            if (DoCastSpellIfCan(m_creature, SPELL_FLURRY) == CAST_OK)
+            {
+                DoScriptText(SAY_ENRAGE, m_creature);
+                m_bPhase2 = true;
+            }
         }
 
         if (m_bPhase2)
         {
-            //m_uiCharge_Timer
-            if (m_uiCharge_Timer < uiDiff)
+            if (m_uiChargeTimer < uiDiff)
             {
                 if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1))
-                    DoCastSpellIfCan(pTarget, SPELL_CHARGE);
-
-                m_uiCharge_Timer = urand(14000, 20000);
+                {
+                    if (DoCastSpellIfCan(pTarget, SPELL_CHARGE) == CAST_OK)
+                        m_uiChargeTimer = urand(14000, 20000);
+                }
             }
             else
-                m_uiCharge_Timer -= uiDiff;
+                m_uiChargeTimer -= uiDiff;
 
-            //m_uiFear_Timer
-            if (m_uiFear_Timer < uiDiff)
+            if (m_uiFearTimer < uiDiff)
             {
-                DoCastSpellIfCan(m_creature->getVictim(), SPELL_FEAR);
-                m_uiFear_Timer = urand(20000, 35000);
+                if (DoCastSpellIfCan(m_creature, SPELL_FEAR) == CAST_OK)
+                    m_uiFearTimer = urand(20000, 35000);
             }
             else
-                m_uiFear_Timer -= uiDiff;
+                m_uiFearTimer -= uiDiff;
         }
 
         DoMeleeAttackIfReady();
@@ -255,26 +216,6 @@ struct MANGOS_DLL_DECL Council_Base_AI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    void JustReachedHome()
-    {
-        if (!m_pInstance)
-            return;
-
-        Creature* pMaulgar = m_pInstance->GetSingleCreatureFromStorage(NPC_MAULGAR);
-        if (pMaulgar && pMaulgar->isAlive() && pMaulgar->getVictim())
-            pMaulgar->AI()->EnterEvadeMode();
-    }
-
-    void Aggro(Unit *pWho)
-    {
-        if (!m_pInstance)
-            return;
-
-        Creature* pMaulgar = m_pInstance->GetSingleCreatureFromStorage(NPC_MAULGAR);
-        if (pMaulgar && pMaulgar->isAlive() && !pMaulgar->getVictim())
-            pMaulgar->AI()->AttackStart((pWho));
-    }
-
     void JustDied(Unit* pVictim)
     {
         if (!m_pInstance)
@@ -286,6 +227,9 @@ struct MANGOS_DLL_DECL Council_Base_AI : public ScriptedAI
             if (boss_high_king_maulgarAI* pMaulgarAI = dynamic_cast<boss_high_king_maulgarAI*>(pMaulgar->AI()))
                 pMaulgarAI->EventCouncilDeath();
         }
+
+        // Set data to Special on Death
+        m_pInstance->SetData(TYPE_MAULGAR_EVENT, SPECIAL);
     }
 };
 
@@ -294,49 +238,45 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public Council_Base_AI
 {
     boss_olm_the_summonerAI(Creature* pCreature) : Council_Base_AI(pCreature) {Reset();}
 
-    uint32 m_uiDarkDecay_Timer;
-    uint32 m_uiDeathCoil_Timer;
-    uint32 m_uiSummon_Timer;
+    uint32 m_uiDarkDecayTimer;
+    uint32 m_uiDeathCoilTimer;
+    uint32 m_uiSummonTimer;
 
     void Reset()
     {
-        m_uiDarkDecay_Timer = 18000;
-        m_uiDeathCoil_Timer = 14000;
-        m_uiSummon_Timer    = 10000;
+        m_uiDarkDecayTimer = 18000;
+        m_uiDeathCoilTimer = 14000;
+        m_uiSummonTimer    = 10000;
     }
 
     void UpdateAI(const uint32 uiDiff)
     {
-        //Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //m_uiDarkDecay_Timer
-        if (m_uiDarkDecay_Timer < uiDiff)
+        if (m_uiDarkDecayTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_DARK_DECAY);
-            m_uiDarkDecay_Timer = 20000;
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_DARK_DECAY) == CAST_OK)
+                m_uiDarkDecayTimer = 20000;
         }
         else
-            m_uiDarkDecay_Timer -= uiDiff;
+            m_uiDarkDecayTimer -= uiDiff;
 
-        //m_uiDeathCoil_Timer
-        if (m_uiDeathCoil_Timer < uiDiff)
+        if (m_uiDeathCoilTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_DEATH_COIL);
-            m_uiDeathCoil_Timer = urand(8000, 13000);
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_DEATH_COIL) == CAST_OK)
+                m_uiDeathCoilTimer = urand(8000, 13000);
         }
         else
-            m_uiDeathCoil_Timer -= uiDiff;
+            m_uiDeathCoilTimer -= uiDiff;
 
-        //m_uiSummon_Timer
-        if (m_uiSummon_Timer < uiDiff)
+        if (m_uiSummonTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature, SPELL_SUMMON_WILD_FELHUNTER);
-            m_uiSummon_Timer = urand(25000, 35000);
+            if (DoCastSpellIfCan(m_creature, SPELL_SUMMON_WILD_FELHUNTER) == CAST_OK)
+                m_uiSummonTimer = urand(25000, 35000);
         }
         else
-            m_uiSummon_Timer -= uiDiff;
+            m_uiSummonTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
@@ -347,17 +287,17 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public Council_Base_AI
 {
     boss_kiggler_the_crazedAI(Creature* pCreature) : Council_Base_AI(pCreature) {Reset();}
 
-    uint32 m_uiGreatherPolymorph_Timer;
-    uint32 m_uiLightningBolt_Timer;
-    uint32 m_uiArcaneShock_Timer;
-    uint32 m_uiArcaneExplosion_Timer;
+    uint32 m_uiGreatherPolymorphTimer;
+    uint32 m_uiLightningBoltTimer;
+    uint32 m_uiArcaneShockTimer;
+    uint32 m_uiArcaneExplosionTimer;
 
     void Reset()
     {
-        m_uiGreatherPolymorph_Timer = 15000;
-        m_uiLightningBolt_Timer = 10000;
-        m_uiArcaneShock_Timer = 20000;
-        m_uiArcaneExplosion_Timer = 30000;
+        m_uiGreatherPolymorphTimer  = 15000;
+        m_uiLightningBoltTimer      = 10000;
+        m_uiArcaneShockTimer        = 20000;
+        m_uiArcaneExplosionTimer    = 30000;
     }
 
     void SpellHitTarget(Unit* pVictim, const SpellEntry* pSpell)
@@ -384,51 +324,49 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public Council_Base_AI
             m_creature->SetInCombatWith(pWho);
             pWho->SetInCombatWith(m_creature);
 
-            m_creature->GetMotionMaster()->MoveChase(pWho, DISTANCE_KIGGLER);
+            m_creature->GetMotionMaster()->MoveChase(pWho, 20.0f);
         }
     }
 
     void UpdateAI(const uint32 uiDiff)
     {
-        //Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (m_uiGreatherPolymorph_Timer < uiDiff)
+        if (m_uiGreatherPolymorphTimer < uiDiff)
         {
             if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-                DoCastSpellIfCan(pTarget, SPELL_GREATER_POLYMORPH);
-            m_uiGreatherPolymorph_Timer = urand(15000, 20000);
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_GREATER_POLYMORPH) == CAST_OK)
+                    m_uiGreatherPolymorphTimer = urand(15000, 20000);
+            }
         }
         else
-            m_uiGreatherPolymorph_Timer -= uiDiff;
+            m_uiGreatherPolymorphTimer -= uiDiff;
 
-        //LightningBolt_Timer
-        if (m_uiLightningBolt_Timer < uiDiff)
+        if (m_uiLightningBoltTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_LIGHTNING_BOLT);
-            m_uiLightningBolt_Timer = urand(2500, 4000);
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_LIGHTNING_BOLT) == CAST_OK)
+                m_uiLightningBoltTimer = urand(2500, 4000);
         }
         else
-            m_uiLightningBolt_Timer -= uiDiff;
+            m_uiLightningBoltTimer -= uiDiff;
 
-        //ArcaneShock_Timer
-        if (m_uiArcaneShock_Timer < uiDiff)
+        if (m_uiArcaneShockTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_ARCANE_SHOCK);
-            m_uiArcaneShock_Timer = urand(15000, 20000);
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_ARCANE_SHOCK) == CAST_OK)
+                m_uiArcaneShockTimer = urand(15000, 20000);
         }
         else
-            m_uiArcaneShock_Timer -= uiDiff;
+            m_uiArcaneShockTimer -= uiDiff;
 
-        //ArcaneExplosion_Timer
-        if (m_uiArcaneExplosion_Timer < uiDiff)
+        if (m_uiArcaneExplosionTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature, SPELL_ARCANE_EXPLOSION);
-            m_uiArcaneExplosion_Timer = 30000;
+            if (DoCastSpellIfCan(m_creature, SPELL_ARCANE_EXPLOSION) == CAST_OK)
+                m_uiArcaneExplosionTimer = 30000;
         }
         else
-            m_uiArcaneExplosion_Timer -= uiDiff;
+            m_uiArcaneExplosionTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
@@ -439,49 +377,48 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public Council_Base_AI
 {
     boss_blindeye_the_seerAI(Creature* pCreature) : Council_Base_AI(pCreature) {Reset();}
 
-    uint32 m_uiGreaterPowerWordShield_Timer;
-    uint32 m_uiHeal_Timer;
-    uint32 m_uiPrayerofHealing_Timer;
+    uint32 m_uiGreaterPowerWordShieldTimer;
+    uint32 m_uiHealTimer;
+    uint32 m_uiPrayerofHealingTimer;
 
     void Reset()
     {
-        m_uiGreaterPowerWordShield_Timer    = 5000;
-        m_uiHeal_Timer                      = urand(25000, 40000);
-        m_uiPrayerofHealing_Timer           = urand(45000, 55000);
+        m_uiGreaterPowerWordShieldTimer    = 5000;
+        m_uiHealTimer                      = urand(25000, 40000);
+        m_uiPrayerofHealingTimer           = urand(45000, 55000);
     }
 
     void UpdateAI(const uint32 uiDiff)
     {
-        //Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //m_uiGreaterPowerWordShield_Timer
-        if (m_uiGreaterPowerWordShield_Timer < uiDiff)
+        if (m_uiGreaterPowerWordShieldTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature, SPELL_GREATER_PW_SHIELD);
-            m_uiGreaterPowerWordShield_Timer = urand(30000, 40000);
+            if (DoCastSpellIfCan(m_creature, SPELL_GREATER_PW_SHIELD) == CAST_OK)
+                m_uiGreaterPowerWordShieldTimer = urand(30000, 40000);
         }
         else
-            m_uiGreaterPowerWordShield_Timer -= uiDiff;
+            m_uiGreaterPowerWordShieldTimer -= uiDiff;
 
-        //m_uiHeal_Timer
-        if (m_uiHeal_Timer < uiDiff)
+        if (m_uiHealTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature, SPELL_HEAL);
-            m_uiHeal_Timer = urand(15000, 40000);
+            if (Unit* pTarget = DoSelectLowestHpFriendly(50.0f))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_HEAL) == CAST_OK)
+                    m_uiHealTimer = urand(15000, 40000);
+            }
         }
         else
-            m_uiHeal_Timer -= uiDiff;
+            m_uiHealTimer -= uiDiff;
 
-        //PrayerofHealing_Timer
-        if (m_uiPrayerofHealing_Timer < uiDiff)
+        if (m_uiPrayerofHealingTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature, SPELL_PRAYEROFHEALING);
-            m_uiPrayerofHealing_Timer = urand(35000, 50000);
+            if (DoCastSpellIfCan(m_creature, SPELL_PRAYEROFHEALING) == CAST_OK)
+                m_uiPrayerofHealingTimer = urand(35000, 50000);
         }
         else
-            m_uiPrayerofHealing_Timer -= uiDiff;
+            m_uiPrayerofHealingTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
@@ -492,15 +429,15 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public Council_Base_AI
 {
     boss_krosh_firehandAI(Creature* pCreature) : Council_Base_AI(pCreature) {Reset();}
 
-    uint32 m_uiGreaterFireball_Timer;
-    uint32 m_uiSpellShield_Timer;
-    uint32 m_uiBlastWave_Timer;
+    uint32 m_uiGreaterFireballTimer;
+    uint32 m_uiSpellShieldTimer;
+    uint32 m_uiBlastWaveTimer;
 
     void Reset()
     {
-        m_uiGreaterFireball_Timer = 4000;
-        m_uiSpellShield_Timer = 1000;
-        m_uiBlastWave_Timer = 12000;
+        m_uiGreaterFireballTimer = 4000;
+        m_uiSpellShieldTimer     = 1000;
+        m_uiBlastWaveTimer       = 12000;
     }
 
     void AttackStart(Unit* pWho)
@@ -514,36 +451,32 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public Council_Base_AI
             m_creature->SetInCombatWith(pWho);
             pWho->SetInCombatWith(m_creature);
 
-            m_creature->GetMotionMaster()->MoveChase(pWho, DISTANCE_KROSH);
+            m_creature->GetMotionMaster()->MoveChase(pWho, 30.0f);
         }
     }
 
     void UpdateAI(const uint32 uiDiff)
     {
-        //Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //m_uiGreaterFireball_Timer
-        if (m_uiGreaterFireball_Timer < uiDiff)
+        if (m_uiGreaterFireballTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_GREATER_FIREBALL);
-            m_uiGreaterFireball_Timer = 3200;
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_GREATER_FIREBALL) == CAST_OK)
+                m_uiGreaterFireballTimer = 3200;
         }
         else
-            m_uiGreaterFireball_Timer -= uiDiff;
+            m_uiGreaterFireballTimer -= uiDiff;
 
-        //SpellShield_Timer
-        if (m_uiSpellShield_Timer < uiDiff)
+        if (m_uiSpellShieldTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature, SPELL_SPELLSHIELD, CAST_INTERRUPT_PREVIOUS);
-            m_uiSpellShield_Timer = 30000;
+            if (DoCastSpellIfCan(m_creature, SPELL_SPELLSHIELD) == CAST_OK)
+                m_uiSpellShieldTimer = 30000;
         }
         else
-            m_uiSpellShield_Timer -= uiDiff;
+            m_uiSpellShieldTimer -= uiDiff;
 
-        //BlastWave_Timer
-        if (m_uiBlastWave_Timer < uiDiff)
+        if (m_uiBlastWaveTimer < uiDiff)
         {
             GuidVector vGuids;
             m_creature->FillGuidsListFromThreatList(vGuids);
@@ -558,10 +491,10 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public Council_Base_AI
                 }
             }
 
-            m_uiBlastWave_Timer = 6000;
+            m_uiBlastWaveTimer = 6000;
         }
         else
-            m_uiBlastWave_Timer -= uiDiff;
+            m_uiBlastWaveTimer -= uiDiff;
     }
 };
 
