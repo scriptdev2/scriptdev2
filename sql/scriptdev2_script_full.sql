@@ -1398,8 +1398,8 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 
 (-1509002,'%s sets eyes on $N!',0,2,0,0,'buru EMOTE_TARGET'),
 
-(-1509003,'They come now. Try not to get yourself killed, young blood.',0,1,0,0,'andorov SAY_ANDOROV_INTRO'),
-(-1509004,'Remember, Rajaxx, when I said I\'d kill you last? I lied...',0,1,0,0,'andorov SAY_ANDOROV_ATTACK'),
+(-1509003,'They come now. Try not to get yourself killed, young blood.',0,1,0,22,'andorov SAY_ANDOROV_INTRO_3'),
+(-1509004,'Remember, Rajaxx, when I said I\'d kill you last?',0,1,0,0,'andorov SAY_ANDOROV_INTRO_1'),
 
 (-1509005,'The time of our retribution is at hand! Let darkness reign in the hearts of our enemies!',8612,1,0,0,'rajaxx SAY_WAVE3'),
 (-1509006,'No longer will we wait behind barred doors and walls of stone! No longer will our vengeance be denied! The dragons themselves will tremble before our wrath!',8610,1,0,0,'rajaxx SAY_WAVE4'),
@@ -1424,7 +1424,11 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1509024,'Tresspassers will be terminated.',8601,1,0,0,'ossirian SAY_RAND_INTRO4'),
 (-1509025,'Sands of the desert rise and block out the sun!',8598,1,0,0,'ossirian SAY_AGGRO'),
 (-1509026,'You are terminated.',8602,1,0,0,'ossirian SAY_SLAY'),
-(-1509027,'I...have...failed.',8594,1,0,0,'ossirian SAY_DEATH');
+(-1509027,'I...have...failed.',8594,1,0,0,'ossirian SAY_DEATH'),
+
+(-1509028,'I lied...',0,1,0,0,'andorov SAY_ANDOROV_INTRO_2'),
+(-1509029,'Come get some!',0,0,0,0,'andorov SAY_ANDOROV_INTRO_4'),
+(-1509030,'Kill first, ask questions later... Incoming!',0,1,0,0,'andorov SAY_ANDOROV_ATTACK_START');
 
 -- -1 531 000 TEMPLE OF AHN'QIRAJ
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
@@ -4251,6 +4255,11 @@ INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 
 (-3469003,'I cannot, Vaelastrasz! Surely something can be done to heal you!','vaelastrasz GOSSIP_ITEM_VAEL_1'),
 (-3469004,'Vaelastrasz, no!!!','vaelastrasz GOSSIP_ITEM_VAEL_2');
+
+-- -3 509 000 RUINS OF AHN'QIRAJ
+INSERT INTO gossip_texts (entry,content_default,comment) VALUES
+(-3509000,'Let\'s find out.','andorov GOSSIP_ITEM_START'),
+(-3509001,'Let\'s see what you have.','andorov GOSSIP_ITEM_TRADE');
 
 -- -3 560 000 ESCAPE FROM DURNHOLDE (OLD HILLSBRAD)
 INSERT INTO gossip_texts (entry,content_default,comment) VALUES
