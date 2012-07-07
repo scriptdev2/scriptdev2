@@ -1425,10 +1425,10 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1509025,'Sands of the desert rise and block out the sun!',8598,1,0,0,'ossirian SAY_AGGRO'),
 (-1509026,'You are terminated.',8602,1,0,0,'ossirian SAY_SLAY'),
 (-1509027,'I...have...failed.',8594,1,0,0,'ossirian SAY_DEATH'),
-
-(-1509028,'I lied...',0,1,0,0,'andorov SAY_ANDOROV_INTRO_2'),
+-- 28 (above) = EMOTE_ENERGIZING
 (-1509029,'Come get some!',0,0,0,0,'andorov SAY_ANDOROV_INTRO_4'),
-(-1509030,'Kill first, ask questions later... Incoming!',0,1,0,0,'andorov SAY_ANDOROV_ATTACK_START');
+(-1509030,'Kill first, ask questions later... Incoming!',0,1,0,0,'andorov SAY_ANDOROV_ATTACK_START'),
+(-1509031,'I lied...',0,1,0,0,'andorov SAY_ANDOROV_INTRO_2');
 
 -- -1 531 000 TEMPLE OF AHN'QIRAJ
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES

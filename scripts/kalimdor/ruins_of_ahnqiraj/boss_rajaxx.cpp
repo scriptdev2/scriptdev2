@@ -28,7 +28,7 @@ enum
 {
     // Event yells
     SAY_ANDOROV_INTRO_1         = -1509004,
-    SAY_ANDOROV_INTRO_2         = -1509028,
+    SAY_ANDOROV_INTRO_2         = -1509031,
     SAY_ANDOROV_INTRO_3         = -1509003,
     SAY_ANDOROV_INTRO_4         = -1509029,
     SAY_ANDOROV_ATTACK_START    = -1509030,
