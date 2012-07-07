@@ -43,9 +43,6 @@ bool instance_the_eye::IsEncounterInProgress() const
             return true;
     }
 
-    if (PHASE_1_ADVISOR <= m_uiKaelthasEventPhase  && m_uiKaelthasEventPhase <= PHASE_5_GRAVITY)
-        return true;
-
     return false;
 }
 
@@ -63,6 +60,20 @@ void instance_the_eye::OnCreatureCreate(Creature* pCreature)
     }
 }
 
+void instance_the_eye::OnObjectCreate(GameObject* pGo)
+{
+    switch(pGo->GetEntry())
+    {
+        case GO_ARCANE_DOOR_HORIZ_3:
+        case GO_ARCANE_DOOR_HORIZ_4:
+        case GO_KAEL_STATUE_LEFT:
+        case GO_KAEL_STATUE_RIGHT:
+        case GO_BRIDGE_WINDOW:
+            m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
+            break;
+    }
+}
+
 void instance_the_eye::SetData(uint32 uiType, uint32 uiData)
 {
     switch (uiType)
@@ -72,27 +83,44 @@ void instance_the_eye::SetData(uint32 uiType, uint32 uiData)
         case TYPE_VOIDREAVER:
             m_auiEncounter[uiType] = uiData;
             break;
+        case TYPE_KAELTHAS:
+            // Don't set the same data twice
+            if (m_auiEncounter[uiType] == uiData)
+                break;
+            DoUseDoorOrButton(GO_ARCANE_DOOR_HORIZ_3);
+            DoUseDoorOrButton(GO_ARCANE_DOOR_HORIZ_4);
+            if (uiData == FAIL)
+            {
+                if (GameObject* pGo = GetSingleGameObjectFromStorage(GO_KAEL_STATUE_LEFT))
+                    pGo->ResetDoorOrButton();
+                if (GameObject* pGo = GetSingleGameObjectFromStorage(GO_KAEL_STATUE_RIGHT))
+                    pGo->ResetDoorOrButton();
+                if (GameObject* pGo = GetSingleGameObjectFromStorage(GO_BRIDGE_WINDOW))
+                    pGo->ResetDoorOrButton();
 
-        case TYPE_KAELTHAS_PHASE:
-            m_uiKaelthasEventPhase = uiData;
+                // Respawn or reset the advisors
+                for (uint8 i = 0; i < MAX_ADVISORS; ++i)
+                {
+                    if (Creature* pTemp = GetSingleCreatureFromStorage(aAdvisors[i]))
+                    {
+                        if (!pTemp->isAlive())
+                            pTemp->Respawn();
+                        else
+                            pTemp->AI()->EnterEvadeMode();
+                    }
+                }
+            }
+            m_auiEncounter[uiType] = uiData;
             break;
     }
 }
 
 uint32 instance_the_eye::GetData(uint32 uiType)
 {
-    switch(uiType)
-    {
-        case TYPE_ALAR:
-        case TYPE_SOLARIAN:
-        case TYPE_VOIDREAVER:
-            return m_auiEncounter[uiType];
-        case TYPE_KAELTHAS_PHASE:
-            return m_uiKaelthasEventPhase;
+    if (uiType < MAX_ENCOUNTER)
+        return m_auiEncounter[uiType];
 
-        default:
-            return 0;
-    }
+    return 0;
 }
 
 InstanceData* GetInstanceData_instance_the_eye(Map* pMap)

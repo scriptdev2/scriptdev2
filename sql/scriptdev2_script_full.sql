@@ -2111,7 +2111,9 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1550041,'This is not over!',11118,1,0,0,'capernian SAY_CAPERNIAN_DEATH'),
 
 (-1550042,'Anar\'alah belore!',11157,1,0,0,'telonicus SAY_TELONICUS_AGGRO'),
-(-1550043,'More perils... await',11158,1,0,0,'telonicus SAY_TELONICUS_DEATH');
+(-1550043,'More perils... await',11158,1,0,0,'telonicus SAY_TELONICUS_DEATH'),
+
+(-1550044,'%s begins to cast Pyroblast!',0,3,0,0,'kaelthas EMOTE_PYROBLAST');
 
 -- -1 552 000 THE ARCATRAZ
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES

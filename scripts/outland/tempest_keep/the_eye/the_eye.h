@@ -7,13 +7,13 @@
 
 enum
 {
-    MAX_ENCOUNTER               = 3,
+    MAX_ENCOUNTER               = 4,
+    MAX_ADVISORS                = 4,
 
     TYPE_ALAR                   = 0,
     TYPE_SOLARIAN               = 1,
     TYPE_VOIDREAVER             = 2,
-
-    TYPE_KAELTHAS_PHASE         = 3,                        // not regular encounter, contains phase instead
+    TYPE_KAELTHAS               = 3,
 
     //NPC_ASTROMANCER           = 18805,
     NPC_KAELTHAS                = 19622,
@@ -22,18 +22,19 @@ enum
     NPC_SANGUINAR               = 20060,
     NPC_TELONICUS               = 20063,
     NPC_THALADRED               = 20064,
+
+    GO_ARCANE_DOOR_HORIZ_3      = 184325,               // combat doors for Kael
+    GO_ARCANE_DOOR_HORIZ_4      = 184324,
+    //GO_RAID_DOOR_4            = 184329,               // encounter doors - no longer used since 2.4.0
+    //GO_RAID_DOOR_3            = 184327,
+    //GO_ARCANE_DOOR_VERT_3     = 184326,
+    //GO_ARCANE_DOOR_VERT_4     = 184328,
+    GO_KAEL_STATUE_LEFT         = 184597,               // cosmetic objects for Kael encounter
+    GO_KAEL_STATUE_RIGHT        = 184596,
+    GO_BRIDGE_WINDOW            = 184069,
 };
 
-enum KaelPhases
-{
-    PHASE_0_NOT_BEGUN           = 0,
-    PHASE_1_ADVISOR             = 1,
-    PHASE_2_WEAPON              = 2,
-    PHASE_3_ADVISOR_ALL         = 3,
-    PHASE_4_SOLO                = 4,
-    PHASE_5_GRAVITY             = 5,
-    PHASE_6_COMPLETE            = 6,
-};
+static const uint32 aAdvisors[MAX_ADVISORS] = {NPC_CAPERNIAN, NPC_SANGUINAR, NPC_TELONICUS, NPC_THALADRED};
 
 class MANGOS_DLL_DECL instance_the_eye : public ScriptedInstance
 {
@@ -44,6 +45,7 @@ class MANGOS_DLL_DECL instance_the_eye : public ScriptedInstance
         bool IsEncounterInProgress() const;
 
         void OnCreatureCreate(Creature* pCreature);
+        void OnObjectCreate(GameObject* pGo);
 
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
