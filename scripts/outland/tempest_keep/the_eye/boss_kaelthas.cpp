@@ -231,6 +231,11 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
         SetCombatMovement(true);
     }
 
+    void GetAIInformation(ChatHandler& reader)
+    {
+        reader.PSendSysMessage("Kael'thas is currently in phase %u", m_uiPhase);
+    }
+
     // Custom Move in LoS function
     void MoveInLineOfSight(Unit* pWho)
     {
@@ -503,11 +508,8 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                 {
                     if (m_uiNetherBeamTimer < uiDiff)
                     {
-                        if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-                        {
-                            if (DoCastSpellIfCan(m_creature, SPELL_NETHER_BEAM) == CAST_OK)
-                                m_uiNetherBeamTimer = urand(2000, 4000);
-                        }
+                        if (DoCastSpellIfCan(m_creature, SPELL_NETHER_BEAM) == CAST_OK)
+                            m_uiNetherBeamTimer = urand(2000, 4000);
                     }
                     else
                         m_uiNetherBeamTimer -= uiDiff;
@@ -761,6 +763,13 @@ struct MANGOS_DLL_DECL advisor_base_ai : public ScriptedAI
 
         if (uiDamage < m_creature->GetHealth())
             return;
+
+        // Make sure it won't die by accident
+        if (m_bFakeDeath)
+        {
+            uiDamage = 0;
+            return;
+        }
 
         uiDamage = 0;
         m_bFakeDeath = true;
@@ -1091,16 +1100,91 @@ struct MANGOS_DLL_DECL mob_phoenix_tkAI : public ScriptedAI
 
     uint32 m_uiCycleTimer;
 
+    bool m_bFakeDeath;
+
     void Reset()
     {
         m_uiCycleTimer = 2000;
+        m_bFakeDeath = false;
+    }
+
+    void Aggro(Unit* pWho)
+    {
         DoCastSpellIfCan(m_creature, SPELL_BURN);
     }
 
-    void JustDied(Unit* pKiller)
+    void EnterEvadeMode()
     {
+        // Don't evade during ember blast
+        if (m_bFakeDeath)
+            return;
+
+        ScriptedAI::EnterEvadeMode();
+    }
+
+    void DamageTaken(Unit* pKiller, uint32& uiDamage)
+    {
+        if (uiDamage < m_creature->GetHealth())
+            return;
+
+        // Prevent glitch if in fake death
+        if (m_bFakeDeath)
+        {
+            uiDamage = 0;
+            return;
+        }
+
+        // prevent death
+        uiDamage = 0;
+        DoSetFakeDeath();
+    }
+
+    void DoSetFakeDeath()
+    {
+        m_bFakeDeath = true;
+
+        m_creature->InterruptNonMeleeSpells(false);
+        m_creature->SetHealth(1);
+        m_creature->StopMoving();
+        m_creature->ClearComboPointHolders();
+        m_creature->RemoveAllAurasOnDeath();
+        m_creature->ModifyAuraState(AURA_STATE_HEALTHLESS_20_PERCENT, false);
+        m_creature->ModifyAuraState(AURA_STATE_HEALTHLESS_35_PERCENT, false);
+        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+        m_creature->ClearAllReactives();
+        m_creature->SetTargetGuid(ObjectGuid());
+        m_creature->GetMotionMaster()->Clear();
+        m_creature->GetMotionMaster()->MoveIdle();
+        m_creature->SetStandState(UNIT_STAND_STATE_DEAD);
+
+        // Spawn egg and make invisible
         DoCastSpellIfCan(m_creature, SPELL_EMBER_BLAST, CAST_TRIGGERED);
-        m_creature->SummonCreature(NPC_PHOENIX_EGG, 0, 0, 0, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 16000);
+        m_creature->SummonCreature(NPC_PHOENIX_EGG, 0, 0, 0, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 15000);
+    }
+
+    void SummonedCreatureDespawn(Creature* pSummoned)
+    {
+        // Remove fake death if the egg despawns after 15 secs
+        m_creature->RemoveAurasDueToSpell(SPELL_EMBER_BLAST);
+        m_creature->SetStandState(UNIT_STAND_STATE_STAND);
+        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+
+        if (DoCastSpellIfCan(m_creature, SPELL_REBIRTH) == CAST_OK)
+        {
+            m_creature->SetHealth(m_creature->GetMaxHealth());
+            m_creature->GetMotionMaster()->Clear();
+            DoStartMovement(m_creature->getVictim());
+            m_bFakeDeath = false;
+
+            DoCastSpellIfCan(m_creature, SPELL_BURN, CAST_TRIGGERED);
+        }
+    }
+
+    void SummonedCreatureJustDied(Creature* pSummoned)
+    {
+        // Self kill if the egg is killed
+        if (m_bFakeDeath)
+            m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
     }
 
     void UpdateAI(const uint32 uiDiff)
@@ -1108,14 +1192,18 @@ struct MANGOS_DLL_DECL mob_phoenix_tkAI : public ScriptedAI
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
+        if (m_bFakeDeath)
+            return;
+
         // ToDo: research if this is correct and how can this be done by spell
         if (m_uiCycleTimer < uiDiff)
         {
             //spell Burn should possible do this, but it doesn't, so do this for now.
             uint32 uiDmg = urand(4500, 5500);
-
-            if (m_creature->GetHealth() > uiDmg)
-                m_creature->SetHealth(uint32(m_creature->GetHealth() - uiDmg));
+            if (uiDmg > m_creature->GetHealth())
+                DoSetFakeDeath();
+            else
+                m_creature->DealDamage(m_creature, uiDmg, 0, DOT, SPELL_SCHOOL_MASK_FIRE, NULL, false);
 
             m_uiCycleTimer = 2000;
         }
@@ -1130,40 +1218,15 @@ struct MANGOS_DLL_DECL mob_phoenix_tkAI : public ScriptedAI
 ## mob_phoenix_egg_tk
 ######*/
 
+// TODO Remove this 'script' when combat movement can be proper prevented from core-side
 struct MANGOS_DLL_DECL mob_phoenix_egg_tkAI : public Scripted_NoMovementAI
 {
     mob_phoenix_egg_tkAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature) { Reset(); }
 
-    uint32 m_uiRebirthTimer;
-
-    void Reset()
-    {
-        m_uiRebirthTimer = 15000;
-    }
-
+    void Reset() { }
     void MoveInLineOfSight(Unit* pWho) { }
     void AttackStart(Unit* pWho) { }
-
-    void JustSummoned(Creature* pSummoned)
-    {
-        pSummoned->CastSpell(pSummoned, SPELL_REBIRTH, true);
-        pSummoned->SetInCombatWithZone();
-    }
-
-    void UpdateAI(const uint32 uiDiff)
-    {
-        if (m_uiRebirthTimer)
-        {
-            if (m_uiRebirthTimer <= uiDiff)
-            {
-                // Summon a new Phoenix before despawn
-                m_creature->SummonCreature(NPC_PHOENIX, 0, 0, 0, 0,TEMPSUMMON_DEAD_DESPAWN, 0);
-                m_uiRebirthTimer = 0;
-            }
-            else
-                m_uiRebirthTimer -= uiDiff;
-        }
-    }
+    void UpdateAI(const uint32 uiDiff) { }
 };
 
 CreatureAI* GetAI_boss_kaelthas(Creature* pCreature)

@@ -49,6 +49,7 @@ void instance_magisters_terrace::OnCreatureCreate(Creature* pCreature)
         case NPC_SELIN_FIREHEART:
         case NPC_DELRISSA:
         case NPC_KALECGOS_DRAGON:
+        case NPC_KAELTHAS:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
         case NPC_FEL_CRYSTAL:
@@ -75,8 +76,7 @@ void instance_magisters_terrace::OnObjectCreate(GameObject* pGo)
             break;
         case GO_SELIN_ENCOUNTER_DOOR:
         case GO_KAEL_DOOR:
-        case GO_KAEL_STATUE_LEFT:
-        case GO_KAEL_STATUE_RIGHT:
+        case GO_ESCAPE_QUEL_DANAS:
             break;
 
         default:
@@ -109,6 +109,8 @@ void instance_magisters_terrace::SetData(uint32 uiType, uint32 uiData)
             break;
         case TYPE_KAELTHAS:
             DoUseDoorOrButton(GO_KAEL_DOOR);
+            if (uiData == DONE)
+                DoToggleGameObjectFlags(GO_ESCAPE_QUEL_DANAS, GO_FLAG_NO_INTERACT, false);
             m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_DELRISSA_DEATH_COUNT:

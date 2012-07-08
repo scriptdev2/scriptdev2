@@ -217,7 +217,7 @@ struct MANGOS_DLL_DECL boss_brutallusAI : public ScriptedAI, private DialogueHel
         {
             pSummoned->SetWalk(false);
             pSummoned->SetLevitate(true);
-            pSummoned->GetMotionMaster()->MovePoint(0, aMadrigosaFlyLoc[0], aMadrigosaFlyLoc[1], aMadrigosaFlyLoc[2]);
+            pSummoned->GetMotionMaster()->MovePoint(0, aMadrigosaFlyLoc[0], aMadrigosaFlyLoc[1], aMadrigosaFlyLoc[2], false);
         }
         else if (pSummoned->GetEntry() == NPC_BRUTALLUS_DEATH_CLOUD)
             pSummoned->CastSpell(pSummoned, SPELL_BRUTALLUS_DEATH_CLOUD, true);

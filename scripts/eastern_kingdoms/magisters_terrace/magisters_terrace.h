@@ -20,6 +20,7 @@ enum
     NPC_DELRISSA                = 24560,
     NPC_FEL_CRYSTAL             = 24722,
     NPC_KALECGOS_DRAGON         = 24844,
+    NPC_KAELTHAS                = 24664,
 
     GO_VEXALLUS_DOOR            = 187896,
     GO_SELIN_DOOR               = 187979,                   // SunwellRaid Gate 02
@@ -27,8 +28,9 @@ enum
     GO_SELIN_ENCOUNTER_DOOR     = 188065,                   // Assembly Chamber Door
 
     GO_KAEL_DOOR                = 188064,
-    GO_KAEL_STATUE_LEFT         = 188165,
-    GO_KAEL_STATUE_RIGHT        = 188166,
+    //GO_KAEL_STATUE_LEFT       = 188165,                   // animation statues - they do not reset on fail
+    //GO_KAEL_STATUE_RIGHT      = 188166,
+    GO_ESCAPE_QUEL_DANAS        = 188173,
 };
 
 class MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
@@ -37,9 +39,6 @@ class MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
         instance_magisters_terrace(Map* pMap);
 
         void Initialize();
-
-        // Was used, likely wrong for normal dungeon
-        //bool IsEncounterInProgress() const
 
         void OnCreatureCreate(Creature* pCreature);
         void OnObjectCreate(GameObject* pGo);

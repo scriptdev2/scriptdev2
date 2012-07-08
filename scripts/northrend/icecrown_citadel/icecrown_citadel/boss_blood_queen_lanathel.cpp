@@ -43,7 +43,7 @@ enum
     SPELL_SHROUD_OF_SORROW          = 70986,
 
     // ground phase
-    SPELL_BLOOD_MIRROR              = 70450,            // triggers 70445 and other similar spells
+    SPELL_BLOOD_MIRROR              = 70837,            // triggers 70445 and other similar spells
     SPELL_SWARMING_SHADOWS          = 71861,            // triggers 71264 and 71267
     SPELL_PACT_OF_THE_DARKFALLEN    = 71336,            // triggers 71340
     SPELL_VAMPIRIC_BITE             = 71837,            // triggers 71726 and 70946
