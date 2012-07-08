@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Boss_Vexallus
 SD%Complete: 90
-SDComment: Heroic and Normal support. Needs further testing.
+SDComment: Timers.
 SDCategory: Magister's Terrace
 EndScriptData */
 
@@ -39,6 +39,7 @@ enum
     //Pure energy spell info
     SPELL_ENERGY_BOLT               = 46156,
     SPELL_ENERGY_FEEDBACK           = 44335,
+    SPELL_ENERGY_PASSIVE            = 44326,
 
     //Vexallus spell info
     SPELL_CHAIN_LIGHTNING           = 44318,
@@ -53,9 +54,6 @@ enum
 
     //Creatures
     NPC_PURE_ENERGY                 = 24745,
-
-    INTERVAL_MODIFIER               = 15,
-    INTERVAL_SWITCH                 = 6
 };
 
 struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
@@ -70,36 +68,39 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
     ScriptedInstance* m_pInstance;
     bool m_bIsRegularMode;
 
-    uint32 ChainLightningTimer;
-    uint32 ArcaneShockTimer;
-    uint32 OverloadTimer;
-    uint32 IntervalHealthAmount;
-    bool Enraged;
+    uint32 m_uiChainLightningTimer;
+    uint32 m_uiArcaneShockTimer;
+    uint32 m_uiOverloadTimer;
+    uint32 m_uiIntervalHealthAmount;
+    bool m_bEnraged;
 
     void Reset()
     {
-        ChainLightningTimer = 8000;
-        ArcaneShockTimer = 5000;
-        OverloadTimer = 1200;
-        IntervalHealthAmount = 1;
-        Enraged = false;
-
-        if (m_pInstance)
-            m_pInstance->SetData(TYPE_VEXALLUS, NOT_STARTED);
+        m_uiChainLightningTimer  = 8000;
+        m_uiArcaneShockTimer     = 5000;
+        m_uiOverloadTimer        = 1200;
+        m_uiIntervalHealthAmount = 1;
+        m_bEnraged               = false;
     }
 
-    void KilledUnit(Unit *victim)
+    void KilledUnit(Unit* pVictim)
     {
         DoScriptText(SAY_KILL, m_creature);
     }
 
-    void JustDied(Unit *victim)
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_VEXALLUS, FAIL);
+    }
+
+    void JustDied(Unit* pKiller)
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_VEXALLUS, DONE);
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -112,64 +113,71 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
         if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
             pSummoned->GetMotionMaster()->MoveFollow(pTarget, 0.0f, 0.0f);
 
-        pSummoned->CastSpell(pSummoned, SPELL_ENERGY_BOLT, false, NULL, NULL, m_creature->GetObjectGuid());
+        pSummoned->CastSpell(pSummoned, SPELL_ENERGY_PASSIVE, true, NULL, NULL, m_creature->GetObjectGuid());
+        pSummoned->CastSpell(pSummoned, SPELL_ENERGY_BOLT, true, NULL, NULL, m_creature->GetObjectGuid());
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (!Enraged)
+        if (!m_bEnraged)
         {
-            //used for check, when Vexallus cast adds 85%, 70%, 55%, 40%, 25%
-            if (m_creature->GetHealthPercent() <= float(100 - INTERVAL_MODIFIER*IntervalHealthAmount))
+            // Enrage at 20% hp
+            if (m_creature->GetHealthPercent() < 20.0f)
             {
-                //increase amount, unless we're at 10%, then we switch and return
-                if (IntervalHealthAmount == INTERVAL_SWITCH)
-                {
-                    Enraged = true;
-                    return;
-                }
-                else
-                    ++IntervalHealthAmount;
+                m_bEnraged = true;
+                return;
+            }
 
+            //used for check, when Vexallus cast adds 85%, 70%, 55%, 40%, 25%
+            if (m_creature->GetHealthPercent() <= float(100.0f - 15.0f * m_uiIntervalHealthAmount))
+            {
                 DoScriptText(SAY_ENERGY, m_creature);
                 DoScriptText(EMOTE_DISCHARGE_ENERGY, m_creature);
+                ++m_uiIntervalHealthAmount;
 
                 if (m_bIsRegularMode)
-                    m_creature->CastSpell(m_creature, SPELL_SUMMON_PURE_ENERGY, true);
+                    DoCastSpellIfCan(m_creature, SPELL_SUMMON_PURE_ENERGY);
                 else
                 {
-                    m_creature->CastSpell(m_creature, SPELL_SUMMON_PURE_ENERGY1_H, true);
-                    m_creature->CastSpell(m_creature, SPELL_SUMMON_PURE_ENERGY2_H, true);
+                    DoCastSpellIfCan(m_creature, SPELL_SUMMON_PURE_ENERGY1_H, CAST_TRIGGERED);
+                    DoCastSpellIfCan(m_creature, SPELL_SUMMON_PURE_ENERGY2_H, CAST_TRIGGERED);
                 }
             }
 
-            if (ChainLightningTimer < diff)
+            if (m_uiChainLightningTimer < uiDiff)
             {
-                if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-                    DoCastSpellIfCan(target, m_bIsRegularMode ? SPELL_CHAIN_LIGHTNING : SPELL_CHAIN_LIGHTNING_H);
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                {
+                    if (DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_CHAIN_LIGHTNING : SPELL_CHAIN_LIGHTNING_H) == CAST_OK)
+                        m_uiChainLightningTimer = 8000;
+                }
+            }
+            else
+                m_uiChainLightningTimer -= uiDiff;
 
-                ChainLightningTimer = 8000;
-            }else ChainLightningTimer -= diff;
-
-            if (ArcaneShockTimer < diff)
+            if (m_uiArcaneShockTimer < uiDiff)
             {
-                if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-                    DoCastSpellIfCan(target, m_bIsRegularMode ? SPELL_ARCANE_SHOCK : SPELL_ARCANE_SHOCK_H);
-
-                ArcaneShockTimer = 8000;
-            }else ArcaneShockTimer -= diff;
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                {
+                    if (DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_ARCANE_SHOCK : SPELL_ARCANE_SHOCK_H) == CAST_OK)
+                        m_uiArcaneShockTimer = 8000;
+                }
+            }
+            else
+                m_uiArcaneShockTimer -= uiDiff;
         }
         else
         {
-            if (OverloadTimer < diff)
+            if (m_uiOverloadTimer < uiDiff)
             {
-                DoCastSpellIfCan(m_creature->getVictim(), SPELL_OVERLOAD);
-
-                OverloadTimer = 2000;
-            }else OverloadTimer -= diff;
+                if (DoCastSpellIfCan(m_creature, SPELL_OVERLOAD) == CAST_OK)
+                    m_uiOverloadTimer = 2000;
+            }
+            else
+                m_uiOverloadTimer -= uiDiff;
         }
 
         DoMeleeAttackIfReady();
@@ -206,8 +214,8 @@ struct MANGOS_DLL_DECL mob_pure_energyAI : public ScriptedAI
         }
     }
 
-    void MoveInLineOfSight(Unit *who) { }
-    void AttackStart(Unit *who) { }
+    void MoveInLineOfSight(Unit* pWho) { }
+    void AttackStart(Unit* pWho) { }
 };
 
 CreatureAI* GetAI_mob_pure_energy(Creature* pCreature)
