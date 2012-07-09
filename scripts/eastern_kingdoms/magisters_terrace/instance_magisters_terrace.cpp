@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Instance_Magisters_Terrace
-SD%Complete: 60
-SDComment:  Designed only for Selin Fireheart
+SD%Complete: 80
+SDComment:
 SDCategory: Magister's Terrace
 EndScriptData */
 
@@ -50,6 +50,15 @@ void instance_magisters_terrace::OnCreatureCreate(Creature* pCreature)
         case NPC_DELRISSA:
         case NPC_KALECGOS_DRAGON:
         case NPC_KAELTHAS:
+        // insert Delrissa adds here, for better handling
+        case NPC_KAGANI:
+        case NPC_ELLRYS:
+        case NPC_ERAMAS:
+        case NPC_YAZZAI:
+        case NPC_SALARIS:
+        case NPC_GARAXXAS:
+        case NPC_APOKO:
+        case NPC_ZELFAN:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
         case NPC_FEL_CRYSTAL:
@@ -83,6 +92,36 @@ void instance_magisters_terrace::OnObjectCreate(GameObject* pGo)
             return;
     }
     m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
+}
+
+void instance_magisters_terrace::OnCreatureDeath(Creature* pCreature)
+{
+    switch (pCreature->GetEntry())
+    {
+        case NPC_KAGANI:
+        case NPC_ELLRYS:
+        case NPC_ERAMAS:
+        case NPC_YAZZAI:
+        case NPC_SALARIS:
+        case NPC_GARAXXAS:
+        case NPC_APOKO:
+        case NPC_ZELFAN:
+            ++m_uiDelrissaDeathCount;
+            if (m_uiDelrissaDeathCount == MAX_DELRISSA_ADDS)
+                SetData(TYPE_DELRISSA, SPECIAL);
+            // yell on summoned death
+            if (Creature* pDelrissa = GetSingleCreatureFromStorage(NPC_DELRISSA))
+            {
+                if (pDelrissa->isAlive())
+                    DoScriptText(aDelrissaAddDeath[m_uiDelrissaDeathCount - 1], pDelrissa);
+                else if (GetData(TYPE_DELRISSA) == SPECIAL)
+                {
+                    SetData(TYPE_DELRISSA, DONE);
+                    pDelrissa->SetFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
+                }
+            }
+            break;
+    }
 }
 
 void instance_magisters_terrace::SetData(uint32 uiType, uint32 uiData)
@@ -137,12 +176,6 @@ void instance_magisters_terrace::SetData(uint32 uiType, uint32 uiData)
                 DoToggleGameObjectFlags(GO_ESCAPE_QUEL_DANAS, GO_FLAG_NO_INTERACT, false);
             m_auiEncounter[uiType] = uiData;
             break;
-        case TYPE_DELRISSA_DEATH_COUNT:
-            if (uiData == SPECIAL)
-                ++m_uiDelrissaDeathCount;
-            else
-                m_uiDelrissaDeathCount = 0;
-            return;
     }
 
     if (uiData == DONE)
@@ -183,17 +216,10 @@ void instance_magisters_terrace::Load(const char* chrIn)
 
 uint32 instance_magisters_terrace::GetData(uint32 uiType)
 {
-    switch (uiType)
-    {
-        case TYPE_SELIN:                return m_auiEncounter[0];
-        case TYPE_VEXALLUS:             return m_auiEncounter[1];
-        case TYPE_DELRISSA:             return m_auiEncounter[2];
-        case TYPE_KAELTHAS:             return m_auiEncounter[3];
-        case TYPE_DELRISSA_DEATH_COUNT: return m_uiDelrissaDeathCount;
+    if (uiType < MAX_ENCOUNTER)
+        return m_auiEncounter[uiType];
 
-        default:
-            return 0;
-    }
+    return 0;
 }
 
 InstanceData* GetInstanceData_instance_magisters_terrace(Map* pMap)
