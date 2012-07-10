@@ -3827,7 +3827,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1631099,'Great news, everyone!',17118,1,0,0,'putricide SAY_BERSERK'),
 (-1631100,'Bad news, everyone! I don\'t think I\'m going to make it',17117,1,0,0,'putricide SAY_DEATH'),
 
-(-1631101,'Foolish mortals. You thought us defeated so easily? The San\'layn are the Lich King\'s immortal soldiers! Now you shall face their might combined!',16795,6,0,0,'lanathel SAY_COUNCIL_INTRO_1'),
+(-1631101,'Foolish mortals. You thought us defeated so easily? The San\'layn are the Lich King\'s immortal soldiers! Now you shall face their might combined!',16795,6,0,1,'lanathel SAY_COUNCIL_INTRO_1'),
 (-1631102,'Rise up, brothers, and destroy our enemies',16796,6,0,0,'lanathel SAY_COUNCIL_INTRO_2'),
 
 (-1631103,'Such wondrous power! The Darkfallen Orb has made me INVINCIBLE!',16727,1,0,0,'keleseth SAY_KELESETH_INVOCATION'),

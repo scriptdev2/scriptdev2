@@ -296,6 +296,8 @@ void instance_icecrown_citadel::SetData(uint32 uiType, uint32 uiData)
             DoUseDoorOrButton(GO_SCIENTIST_DOOR);
             break;
          case TYPE_BLOOD_PRINCE_COUNCIL:
+            if (uiData == m_auiEncounter[uiType])
+                break;
             m_auiEncounter[uiType] = uiData;
             DoUseDoorOrButton(GO_CRIMSON_HALL_DOOR);
             if (uiData == DONE)

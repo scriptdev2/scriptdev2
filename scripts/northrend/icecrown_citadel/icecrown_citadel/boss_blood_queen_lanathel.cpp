@@ -109,6 +109,8 @@ struct MANGOS_DLL_DECL boss_blood_queen_lanathelAI : public ScriptedAI
         m_uiBloodboltTimer       = urand(15000, 20000);
         m_uiPactDarkfallenTimer  = 15000;
         m_uiSwarmingShadowsTimer = 30000;
+
+        m_creature->RemoveByteFlag(UNIT_FIELD_BYTES_1, 3, UNIT_BYTE1_FLAG_ALWAYS_STAND | UNIT_BYTE1_FLAG_UNK_2);
     }
 
     void JustReachedHome()

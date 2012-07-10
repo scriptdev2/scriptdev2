@@ -713,6 +713,7 @@ UPDATE instance_template SET ScriptName='instance_icecrown_citadel' WHERE map=63
 UPDATE creature_template SET ScriptName='boss_lord_marrowgar' WHERE entry=36612;
 UPDATE creature_template SET ScriptName='boss_lady_deathwhisper' WHERE entry=36855;
 UPDATE creature_template SET ScriptName='boss_deathbringer_saurfang' WHERE entry=37813;
+UPDATE creature_template SET ScriptName='npc_queen_lanathel_intro' WHERE entry=38004;
 UPDATE creature_template SET ScriptName='boss_blood_queen_lanathel' WHERE entry=37955;
 DELETE FROM scripted_event_id WHERE id IN (23426,23438);
 INSERT INTO scripted_event_id VALUES
