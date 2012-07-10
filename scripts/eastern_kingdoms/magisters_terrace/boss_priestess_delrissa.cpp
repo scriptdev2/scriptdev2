@@ -217,7 +217,15 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
 
         if (m_uiDispelTimer < uiDiff)
         {
-            if (Unit* pTarget = DoSelectLowestHpFriendly(50.0f))
+            Unit* pTarget = NULL;
+            std::list<Creature*> lTempList = DoFindFriendlyCC(50.0f);
+
+            if (!lTempList.empty())
+                pTarget = *(lTempList.begin());
+            else
+                pTarget = DoSelectLowestHpFriendly(50.0f);
+
+            if (pTarget)
             {
                 if (DoCastSpellIfCan(pTarget, SPELL_DISPEL_MAGIC) == CAST_OK)
                     m_uiDispelTimer = urand(12000, 15000);
@@ -426,7 +434,8 @@ struct MANGOS_DLL_DECL npc_kagani_nightstrikeAI : public priestess_companion_com
         {
             if (DoCastSpellIfCan(m_creature, SPELL_VANISH) == CAST_OK)
             {
-                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                // Prefer targets with mana
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, uint32(0), SELECT_FLAG_POWER_MANA))
                 {
                     DoResetThreat();
                     AttackStart(pTarget);
@@ -745,7 +754,7 @@ struct MANGOS_DLL_DECL npc_yazzaiAI : public priestess_companion_commonAI
             if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
             {
                 if (DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_BLIZZARD : SPELL_BLIZZARD_H) == CAST_OK)
-                    m_uiBlizzardTimer = 8000;
+                    m_uiBlizzardTimer = urand(8000, 15000);
             }
         }
         else
@@ -784,7 +793,7 @@ struct MANGOS_DLL_DECL npc_yazzaiAI : public priestess_companion_commonAI
         if (m_uiBlinkTimer < uiDiff)
         {
             //if anybody is in melee range than escape by blink
-            if (m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO, 0, uint32(0), SELECT_FLAG_IN_MELEE_RANGE))
+            if (m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, uint32(0), SELECT_FLAG_IN_MELEE_RANGE))
             {
                 if (DoCastSpellIfCan(m_creature, SPELL_BLINK) == CAST_OK)
                     m_uiBlinkTimer = 8000;
@@ -852,9 +861,9 @@ struct MANGOS_DLL_DECL npc_warlord_salarisAI : public priestess_companion_common
         if (m_uiInterceptStunTimer < uiDiff)
         {
             //if nobody is in melee range than try to use Intercept
-            if (!m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO, 0, uint32(0), SELECT_FLAG_IN_MELEE_RANGE))
+            if (!m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, uint32(0), SELECT_FLAG_IN_MELEE_RANGE))
             {
-                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_INTERCEPT_STUN, SELECT_FLAG_IN_LOS))
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_INTERCEPT_STUN, SELECT_FLAG_NOT_IN_MELEE_RANGE | SELECT_FLAG_IN_LOS))
                 {
                     if (DoCastSpellIfCan(pTarget, SPELL_INTERCEPT_STUN) == CAST_OK)
                         m_uiInterceptStunTimer = 10000;
@@ -1225,8 +1234,16 @@ struct MANGOS_DLL_DECL npc_zelfanAI : public priestess_companion_commonAI
 
         if (m_uiRecombobulateTimer < uiDiff)
         {
-            // This should cast only on polymorphed targets
-            if (Unit* pTarget = DoSelectLowestHpFriendly(50.0f))
+            // Note: this should be casted only on Polyformed targets
+            Unit* pTarget = NULL;
+            std::list<Creature*> lTempList = DoFindFriendlyCC(50.0f);
+
+            if (!lTempList.empty())
+                pTarget = *(lTempList.begin());
+            else
+                pTarget = DoSelectLowestHpFriendly(50.0f);
+
+            if (pTarget)
             {
                 if (DoCastSpellIfCan(pTarget, SPELL_RECOMBOBULATE) == CAST_OK)
                     m_uiRecombobulateTimer = 2000;

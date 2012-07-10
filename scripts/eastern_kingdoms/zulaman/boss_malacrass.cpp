@@ -16,7 +16,7 @@
 
 /* ScriptData
 SDName: Boss_Malacrass
-SD%Complete: 70
+SD%Complete: 80
 SDComment: Contain adds and adds selection; Stolen abilities timers need improvement
 SDCategory: Zul'Aman
 EndScriptData */
@@ -113,25 +113,22 @@ enum
     MAX_ACTIVE_ADDS             = 4
 };
 
-//Adds X positions
-static float m_afAddPosX[4] = {128.279f, 123.261f, 112.084f, 106.473f};
-
-const float ADD_POS_Y       = 921.279f;
-const float ADD_POS_Z       = 33.889f;
-const float ADD_ORIENT      = 1.527f;
-
-struct SpawnGroup
+//Adds positions
+static const float m_aAddPositions[MAX_ACTIVE_ADDS][4] =
 {
-    uint32 m_uiCreatureEntry;
-    uint32 m_uiCreatureEntryAlt;
+    {128.279f, 921.279f, 33.889f, 1.527f},
+    {123.261f, 921.279f, 33.889f, 1.527f},
+    {112.084f, 921.279f, 33.889f, 1.527f},
+    {106.473f, 921.279f, 33.889f, 1.527f},
 };
 
-SpawnGroup m_auiSpawnEntry[] =
+// Each position is a random of two spawns
+static const uint32 aSpawnEntries[MAX_ACTIVE_ADDS][2]=
 {
-    {24240, 24241},                                         //Alyson Antille / Thurg
-    {24242, 24243},                                         //Slither / Lord Raadan
-    {24244, 24245},                                         //Gazakroth / Fenstalker
-    {24246, 24247},                                         //Darkheart / Koragg
+    {NPC_ALYSON,    NPC_THURG},
+    {NPC_SLITHER,   NPC_RADAAN},
+    {NPC_GAZAKROTH, NPC_FENSTALKER},
+    {NPC_DARKHEART, NPC_KORAGG},
 };
 
 struct PlayerAbilityStruct
@@ -209,7 +206,6 @@ struct MANGOS_DLL_DECL boss_malacrassAI : public ScriptedAI
     boss_malacrassAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        m_lAddsEntryList.clear();
         Reset();
     }
 
@@ -223,9 +219,8 @@ struct MANGOS_DLL_DECL boss_malacrassAI : public ScriptedAI
 
     bool m_bCanUsePlayerSpell;
 
+    std::vector<uint32> m_vAddsEntryList;
     std::vector<uint32> m_vPlayerSpellTimer;
-    std::list<uint32> m_lAddsEntryList;
-    ObjectGuid m_aAddGuid[MAX_ACTIVE_ADDS];
 
     void Reset()
     {
@@ -237,58 +232,46 @@ struct MANGOS_DLL_DECL boss_malacrassAI : public ScriptedAI
 
         m_bCanUsePlayerSpell    = false;
 
-        InitializeAdds();
+        DoInitializeAdds();
     }
 
     void JustReachedHome()
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_MALACRASS, FAIL);
-
-        for(uint8 i = 0; i < MAX_ACTIVE_ADDS; ++i)
-        {
-            if (Creature* pAdd = m_creature->GetMap()->GetCreature(m_aAddGuid[i]))
-                pAdd->AI()->EnterEvadeMode();
-        }
     }
 
-    void InitializeAdds()
+    void DoInitializeAdds()
     {
         //not if m_creature are dead, so avoid
         if (!m_creature->isAlive())
             return;
 
-        uint8 j = 0;
-
-        //it's empty, so first time
-        if (m_lAddsEntryList.empty())
+        // it's empty, so first time
+        if (m_vAddsEntryList.empty())
         {
-            //fill list with entries from creature array
-            for(uint8 i = 0; i < MAX_ACTIVE_ADDS; ++i)
-                m_lAddsEntryList.push_back(rand()%2 ? m_auiSpawnEntry[i].m_uiCreatureEntry : m_auiSpawnEntry[i].m_uiCreatureEntryAlt);
+            m_vAddsEntryList.resize(MAX_ACTIVE_ADDS);
 
-            //summon mobs from the list
-            for(std::list<uint32>::iterator itr = m_lAddsEntryList.begin(); itr != m_lAddsEntryList.end(); ++itr)
+            for (uint8 i = 0; i < MAX_ACTIVE_ADDS; ++i)
             {
-                if (Creature* pAdd = m_creature->SummonCreature((*itr), m_afAddPosX[j], ADD_POS_Y, ADD_POS_Z, ADD_ORIENT, TEMPSUMMON_CORPSE_DESPAWN, 0))
-                    m_aAddGuid[j] = pAdd->GetObjectGuid();
-
-                ++j;
+                uint8 uiAddVersion = urand(0, 1);
+                m_vAddsEntryList[i] = aSpawnEntries[i][uiAddVersion];
+                m_creature->SummonCreature(aSpawnEntries[i][uiAddVersion], m_aAddPositions[i][0], m_aAddPositions[i][1], m_aAddPositions[i][2], m_aAddPositions[i][3], TEMPSUMMON_CORPSE_DESPAWN, 0);
             }
         }
+        // Resummon the killed adds
         else
         {
-            for(std::list<uint32>::iterator itr = m_lAddsEntryList.begin(); itr != m_lAddsEntryList.end(); ++itr)
-            {
-                Creature* pAdd = m_creature->GetMap()->GetCreature(m_aAddGuid[j]);
+            if (!m_pInstance)
+                return;
 
-                //object already removed, not exist
-                if (!pAdd)
-                {
-                    if (pAdd = m_creature->SummonCreature((*itr), m_afAddPosX[j], ADD_POS_Y, ADD_POS_Z, ADD_ORIENT, TEMPSUMMON_CORPSE_DESPAWN, 0))
-                        m_aAddGuid[j] = pAdd->GetObjectGuid();
-                }
-                ++j;
+            for (uint8 i = 0; i < MAX_ACTIVE_ADDS; ++i)
+            {
+                // If we already have the creature on the map, then don't summon it
+                if (Creature* pAdd = m_pInstance->GetSingleCreatureFromStorage(m_vAddsEntryList[i], true))
+                    continue;
+
+                m_creature->SummonCreature(m_vAddsEntryList[i], m_aAddPositions[i][0], m_aAddPositions[i][1], m_aAddPositions[i][2], m_aAddPositions[i][3], TEMPSUMMON_CORPSE_DESPAWN, 0);
             }
         }
     }
@@ -296,24 +279,9 @@ struct MANGOS_DLL_DECL boss_malacrassAI : public ScriptedAI
     void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
-        AddsAttack(pWho);
 
-        if (!m_pInstance)
-            return;
-
-        m_pInstance->SetData(TYPE_MALACRASS, IN_PROGRESS);
-    }
-
-    void AddsAttack(Unit* pWho)
-    {
-        for(uint8 i = 0; i < MAX_ACTIVE_ADDS; ++i)
-        {
-            if (Creature* pAdd = m_creature->GetMap()->GetCreature(m_aAddGuid[i]))
-            {
-                if (!pAdd->getVictim())
-                    pAdd->AI()->AttackStart(pWho);
-            }
-        }
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_MALACRASS, IN_PROGRESS);
     }
 
     void KilledUnit(Unit* pVictim)
@@ -327,12 +295,19 @@ struct MANGOS_DLL_DECL boss_malacrassAI : public ScriptedAI
     void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DEATH, m_creature);
-        CleanAdds();
 
-        if (!m_pInstance)
-            return;
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_MALACRASS, DONE);
+    }
 
-        m_pInstance->SetData(TYPE_MALACRASS, DONE);
+    void SummonedCreatureJustDied(Creature* pSummoned)
+    {
+        switch(urand(0, 2))
+        {
+            case 0: DoScriptText(SAY_ADD_DIED1, m_creature); break;
+            case 1: DoScriptText(SAY_ADD_DIED2, m_creature); break;
+            case 2: DoScriptText(SAY_ADD_DIED3, m_creature); break;
+        }
     }
 
     void SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell)
@@ -355,23 +330,6 @@ struct MANGOS_DLL_DECL boss_malacrassAI : public ScriptedAI
             for (uint8 i = 0; i < m_uiMaxSpells; ++i)
                 m_vPlayerSpellTimer.push_back(m_aMalacrassStolenAbility[m_uiPlayerClass][i].m_uiInitialTimer);
         }
-    }
-
-    void CleanAdds()
-    {
-        for(uint8 i = 0; i < MAX_ACTIVE_ADDS; ++i)
-        {
-            if (Creature* pAdd = m_creature->GetMap()->GetCreature(m_aAddGuid[i]))
-            {
-                pAdd->AI()->EnterEvadeMode();
-                pAdd->SetDeathState(JUST_DIED);
-            }
-        }
-
-        for (uint8 i = 0; i < MAX_ACTIVE_ADDS; ++i)
-            m_aAddGuid[i].Clear();
-
-        m_lAddsEntryList.clear();
     }
 
     bool CanUseSpecialAbility(uint32 uiSpellIndex)
@@ -472,9 +430,9 @@ CreatureAI* GetAI_boss_malacrass(Creature* pCreature)
 }
 
 //common AI for adds
-struct MANGOS_DLL_DECL boss_malacrass_addAI : public ScriptedAI
+struct MANGOS_DLL_DECL malacrass_add_commmonAI : public ScriptedAI
 {
-    boss_malacrass_addAI(Creature* pCreature) : ScriptedAI(pCreature)
+    malacrass_add_commmonAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
@@ -484,15 +442,6 @@ struct MANGOS_DLL_DECL boss_malacrass_addAI : public ScriptedAI
 
     void Reset() { }
 
-    void Aggro(Unit* pWho)
-    {
-        m_creature->SetInCombatWithZone();
-    }
-
-    void MoveInLineOfSight(Unit* pWho)
-    {
-    }
-
     void KilledUnit(Unit* pVictim)
     {
         if (!m_pInstance)
@@ -500,22 +449,6 @@ struct MANGOS_DLL_DECL boss_malacrass_addAI : public ScriptedAI
 
         if (Creature* pMalacrass = m_pInstance->GetSingleCreatureFromStorage(NPC_MALACRASS))
             pMalacrass->AI()->KilledUnit(pVictim);
-    }
-
-    void JustDied(Unit* pKiller)
-    {
-        if (!m_pInstance)
-            return;
-
-        if (Creature* pMalacrass = m_pInstance->GetSingleCreatureFromStorage(NPC_MALACRASS))
-        {
-            switch(urand(0, 2))
-            {
-                case 0: DoScriptText(SAY_ADD_DIED1, pMalacrass); break;
-                case 1: DoScriptText(SAY_ADD_DIED2, pMalacrass); break;
-                case 2: DoScriptText(SAY_ADD_DIED3, pMalacrass); break;
-            }
-        }
     }
 };
 
@@ -525,9 +458,9 @@ enum
     SPELL_CLEAVE    = 15496
 };
 
-struct MANGOS_DLL_DECL mob_thurgAI : public boss_malacrass_addAI
+struct MANGOS_DLL_DECL mob_thurgAI : public malacrass_add_commmonAI
 {
-    mob_thurgAI(Creature* pCreature) : boss_malacrass_addAI(pCreature) { Reset(); }
+    mob_thurgAI(Creature* pCreature) : malacrass_add_commmonAI(pCreature) { Reset(); }
 
     uint32 m_uiBloodlustTimer;
     uint32 m_uiCleaveTimer;
@@ -535,7 +468,7 @@ struct MANGOS_DLL_DECL mob_thurgAI : public boss_malacrass_addAI
     void Reset()
     {
         m_uiBloodlustTimer = 15000;
-        m_uiCleaveTimer = 10000;
+        m_uiCleaveTimer    = 10000;
     }
 
     void UpdateAI(const uint32 uiDiff)
@@ -549,19 +482,22 @@ struct MANGOS_DLL_DECL mob_thurgAI : public boss_malacrass_addAI
 
             if (!lTempList.empty())
             {
-                Unit* pTarget = *(lTempList.begin());
-                DoCastSpellIfCan(pTarget, SPELL_BLOODLUST);
+                if (Unit* pTarget = *(lTempList.begin()))
+                {
+                    if (DoCastSpellIfCan(pTarget, SPELL_BLOODLUST) == CAST_OK)
+                        m_uiBloodlustTimer = 12000;
+                }
             }
-
-            m_uiBloodlustTimer = 12000;
+            else
+                m_uiBloodlustTimer = 2000;
         }
         else
             m_uiBloodlustTimer -= uiDiff;
 
         if (m_uiCleaveTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_CLEAVE);
-            m_uiCleaveTimer = 12000;
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_CLEAVE) == CAST_OK)
+                m_uiCleaveTimer = 12000;
         }
         else
             m_uiCleaveTimer -= uiDiff;
@@ -582,11 +518,9 @@ enum
     SPELL_DISPEL_MAGIC   = 43577
 };
 
-const float RANGE_FRIENDLY_TARGET = 40.0;
-
-struct MANGOS_DLL_DECL mob_alyson_antilleAI : public boss_malacrass_addAI
+struct MANGOS_DLL_DECL mob_alyson_antilleAI : public malacrass_add_commmonAI
 {
-    mob_alyson_antilleAI(Creature* pCreature) : boss_malacrass_addAI(pCreature) { Reset(); }
+    mob_alyson_antilleAI(Creature* pCreature) : malacrass_add_commmonAI(pCreature) { Reset(); }
 
     uint32 m_uiArcaneTorrentTimer;
     uint32 m_uiFlashHealTimer;
@@ -595,8 +529,8 @@ struct MANGOS_DLL_DECL mob_alyson_antilleAI : public boss_malacrass_addAI
     void Reset()
     {
         m_uiArcaneTorrentTimer = 0;
-        m_uiFlashHealTimer = 2500;
-        m_uiDispelMagicTimer = 10000;
+        m_uiFlashHealTimer     = 2500;
+        m_uiDispelMagicTimer   = 10000;
     }
 
     void AttackStart(Unit* pWho)
@@ -623,8 +557,8 @@ struct MANGOS_DLL_DECL mob_alyson_antilleAI : public boss_malacrass_addAI
         {
             if (m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, uint32(0), SELECT_FLAG_PLAYER | SELECT_FLAG_IN_MELEE_RANGE))
             {
-                DoCastSpellIfCan(m_creature, SPELL_ARCANE_TORRENT);
-                m_uiArcaneTorrentTimer = 60000;
+                if (DoCastSpellIfCan(m_creature, SPELL_ARCANE_TORRENT) == CAST_OK)
+                    m_uiArcaneTorrentTimer = 60000;
             }
             else
                 m_uiArcaneTorrentTimer = 1000;
@@ -634,29 +568,11 @@ struct MANGOS_DLL_DECL mob_alyson_antilleAI : public boss_malacrass_addAI
 
         if (m_uiFlashHealTimer < uiDiff)
         {
-            //this will fail if we previously was following target and pTarget is now different than before
-            if (Unit* pTarget = DoSelectLowestHpFriendly(RANGE_FRIENDLY_TARGET*2, 30000))
+            if (Unit* pTarget = DoSelectLowestHpFriendly(80.0f))
             {
-                if (pTarget->IsWithinDistInMap(m_creature, RANGE_FRIENDLY_TARGET))
-                {
-                    DoCastSpellIfCan(pTarget, SPELL_FLASH_HEAL);
-
-                    //if not already chasing, start chase
-                    if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() != CHASE_MOTION_TYPE)
-                        m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim(), 20.0f);
-                }
-                else
-                {
-                    //if chasing, start follow target instead
-                    if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() == CHASE_MOTION_TYPE)
-                    {
-                        m_creature->GetMotionMaster()->MovementExpired();
-                        m_creature->GetMotionMaster()->MoveFollow(pTarget, 20.0f, 0.0f);
-                    }
-                }
+                if (DoCastSpellIfCan(pTarget, SPELL_FLASH_HEAL) == CAST_OK)
+                    m_uiFlashHealTimer = urand(2000, 3000);
             }
-
-            m_uiFlashHealTimer = 2500;
         }
         else
             m_uiFlashHealTimer -= uiDiff;
@@ -664,17 +580,18 @@ struct MANGOS_DLL_DECL mob_alyson_antilleAI : public boss_malacrass_addAI
         if (m_uiDispelMagicTimer < uiDiff)
         {
             Unit* pTarget = NULL;
-            std::list<Creature*> lTempList = DoFindFriendlyCC(RANGE_FRIENDLY_TARGET);
+            std::list<Creature*> lTempList = DoFindFriendlyCC(40.0f);
 
             if (!lTempList.empty())
                 pTarget = *(lTempList.begin());
             else
-                pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0);
+                pTarget = DoSelectLowestHpFriendly(40.0f);
 
             if (pTarget)
-                DoCastSpellIfCan(pTarget, SPELL_DISPEL_MAGIC);
-
-            m_uiDispelMagicTimer = 12000;
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_DISPEL_MAGIC) == CAST_OK)
+                    m_uiDispelMagicTimer = 12000;
+            }
         }
         else
             m_uiDispelMagicTimer -= uiDiff;
@@ -693,9 +610,9 @@ enum
     SPELL_FIREBOLT = 43584
 };
 
-struct MANGOS_DLL_DECL mob_gazakrothAI : public boss_malacrass_addAI
+struct MANGOS_DLL_DECL mob_gazakrothAI : public malacrass_add_commmonAI
 {
-    mob_gazakrothAI(Creature* pCreature) : boss_malacrass_addAI(pCreature){ Reset(); }
+    mob_gazakrothAI(Creature* pCreature) : malacrass_add_commmonAI(pCreature){ Reset(); }
 
     uint32 m_uiFireboltTimer;
 
@@ -726,8 +643,11 @@ struct MANGOS_DLL_DECL mob_gazakrothAI : public boss_malacrass_addAI
 
         if (m_uiFireboltTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_FIREBOLT);
-            m_uiFireboltTimer = 1000;
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_FIREBOLT) == CAST_OK)
+                    m_uiFireboltTimer = 1000;
+            }
         }
         else
             m_uiFireboltTimer -= uiDiff;
@@ -747,9 +667,9 @@ enum
     SPELL_THUNDERCLAP  = 43583
 };
 
-struct MANGOS_DLL_DECL mob_lord_raadanAI : public boss_malacrass_addAI
+struct MANGOS_DLL_DECL mob_lord_raadanAI : public malacrass_add_commmonAI
 {
-    mob_lord_raadanAI(Creature* pCreature) : boss_malacrass_addAI(pCreature) { Reset(); }
+    mob_lord_raadanAI(Creature* pCreature) : malacrass_add_commmonAI(pCreature) { Reset(); }
 
     uint32 m_uiFlameBreathTimer;
     uint32 m_uiThunderclapTimer;
@@ -767,10 +687,10 @@ struct MANGOS_DLL_DECL mob_lord_raadanAI : public boss_malacrass_addAI
 
         if (m_uiThunderclapTimer < uiDiff)
         {
-            if (m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO, 0, SPELL_THUNDERCLAP, SELECT_FLAG_PLAYER))
+            if (m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_THUNDERCLAP, SELECT_FLAG_PLAYER | SELECT_FLAG_IN_MELEE_RANGE))
             {
-                DoCastSpellIfCan(m_creature->getVictim(), SPELL_THUNDERCLAP);
-                m_uiThunderclapTimer = 12000;
+                if (DoCastSpellIfCan(m_creature, SPELL_THUNDERCLAP) == CAST_OK)
+                    m_uiThunderclapTimer = 12000;
             }
             else
                 m_uiThunderclapTimer = 1000;
@@ -780,8 +700,8 @@ struct MANGOS_DLL_DECL mob_lord_raadanAI : public boss_malacrass_addAI
 
         if (m_uiFlameBreathTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_FLAME_BREATH);
-            m_uiFlameBreathTimer = 12000;
+            if (DoCastSpellIfCan(m_creature, SPELL_FLAME_BREATH) == CAST_OK)
+                m_uiFlameBreathTimer = 12000;
         }
         else
             m_uiFlameBreathTimer -= uiDiff;
@@ -800,9 +720,9 @@ enum
     SPELL_PSYCHIC_WAIL = 43590
 };
 
-struct MANGOS_DLL_DECL mob_darkheartAI : public boss_malacrass_addAI
+struct MANGOS_DLL_DECL mob_darkheartAI : public malacrass_add_commmonAI
 {
-    mob_darkheartAI(Creature* pCreature) : boss_malacrass_addAI(pCreature) { Reset(); }
+    mob_darkheartAI(Creature* pCreature) : malacrass_add_commmonAI(pCreature) { Reset(); }
 
     uint32 m_uiPsychicWailTimer;
 
@@ -818,10 +738,10 @@ struct MANGOS_DLL_DECL mob_darkheartAI : public boss_malacrass_addAI
 
         if (m_uiPsychicWailTimer < uiDiff)
         {
-            if (m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO, 0, uint32(0), SELECT_FLAG_PLAYER | SELECT_FLAG_IN_MELEE_RANGE))
+            if (m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, uint32(0), SELECT_FLAG_PLAYER | SELECT_FLAG_IN_MELEE_RANGE))
             {
-                DoCastSpellIfCan(m_creature, SPELL_PSYCHIC_WAIL);
-                m_uiPsychicWailTimer = 12000;
+                if (DoCastSpellIfCan(m_creature, SPELL_PSYCHIC_WAIL) == CAST_OK)
+                    m_uiPsychicWailTimer = 12000;
             }
             else
                 m_uiPsychicWailTimer = 1000;
@@ -843,15 +763,15 @@ enum
     SPELL_VENOM_SPIT = 43579
 };
 
-struct MANGOS_DLL_DECL mob_slitherAI : public boss_malacrass_addAI
+struct MANGOS_DLL_DECL mob_slitherAI : public malacrass_add_commmonAI
 {
-    mob_slitherAI(Creature* pCreature) : boss_malacrass_addAI(pCreature) { Reset(); }
+    mob_slitherAI(Creature* pCreature) : malacrass_add_commmonAI(pCreature) { Reset(); }
 
     uint32 m_uiVenomSpitTimer;
 
     void Reset()
     {
-        m_uiVenomSpitTimer = 4000;
+        m_uiVenomSpitTimer = 2000;
     }
 
     void AttackStart(Unit* pWho)
@@ -876,10 +796,11 @@ struct MANGOS_DLL_DECL mob_slitherAI : public boss_malacrass_addAI
 
         if (m_uiVenomSpitTimer < uiDiff)
         {
-            if (Unit* pVictim = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-                DoCastSpellIfCan(pVictim, SPELL_VENOM_SPIT);
-
-            m_uiVenomSpitTimer = 2500;
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_VENOM_SPIT) == CAST_OK)
+                    m_uiVenomSpitTimer = 2500;
+            }
         }
         else
             m_uiVenomSpitTimer -= uiDiff;
@@ -898,9 +819,9 @@ enum
     SPELL_VOLATILE_INFECTION = 43586
 };
 
-struct MANGOS_DLL_DECL mob_fenstalkerAI : public boss_malacrass_addAI
+struct MANGOS_DLL_DECL mob_fenstalkerAI : public malacrass_add_commmonAI
 {
-    mob_fenstalkerAI(Creature* pCreature) : boss_malacrass_addAI(pCreature) { Reset(); }
+    mob_fenstalkerAI(Creature* pCreature) : malacrass_add_commmonAI(pCreature) { Reset(); }
 
     uint32 m_uiVolatileInfectionTimer;
 
@@ -916,8 +837,8 @@ struct MANGOS_DLL_DECL mob_fenstalkerAI : public boss_malacrass_addAI
 
         if (m_uiVolatileInfectionTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_VOLATILE_INFECTION);
-            m_uiVolatileInfectionTimer = 12000;
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_VOLATILE_INFECTION) == CAST_OK)
+                m_uiVolatileInfectionTimer = 12000;
         }
         else
             m_uiVolatileInfectionTimer -= uiDiff;
@@ -937,16 +858,16 @@ enum
     SPELL_MIGHTY_BLOW = 43592,
 };
 
-struct MANGOS_DLL_DECL mob_koraggAI : public boss_malacrass_addAI
+struct MANGOS_DLL_DECL mob_koraggAI : public malacrass_add_commmonAI
 {
-    mob_koraggAI(Creature* pCreature) : boss_malacrass_addAI(pCreature) { Reset(); }
+    mob_koraggAI(Creature* pCreature) : malacrass_add_commmonAI(pCreature) { Reset(); }
 
     uint32 m_uiColdStareTimer;
     uint32 m_uiMightyBlowTimer;
 
     void Reset()
     {
-        m_uiColdStareTimer = 15000;
+        m_uiColdStareTimer  = 15000;
         m_uiMightyBlowTimer = 10000;
     }
 
@@ -957,8 +878,8 @@ struct MANGOS_DLL_DECL mob_koraggAI : public boss_malacrass_addAI
 
         if (m_uiMightyBlowTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_MIGHTY_BLOW);
-            m_uiMightyBlowTimer = 12000;
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_MIGHTY_BLOW) == CAST_OK)
+                m_uiMightyBlowTimer = 12000;
         }
         else
             m_uiMightyBlowTimer -= uiDiff;
@@ -966,9 +887,10 @@ struct MANGOS_DLL_DECL mob_koraggAI : public boss_malacrass_addAI
         if (m_uiColdStareTimer < uiDiff)
         {
             if (Unit* pVictim = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-                DoCastSpellIfCan(pVictim, SPELL_COLD_STARE);
-
-            m_uiColdStareTimer = 12000;
+            {
+                if (DoCastSpellIfCan(pVictim, SPELL_COLD_STARE) == CAST_OK)
+                    m_uiColdStareTimer = 12000;
+            }
         }
         else
             m_uiColdStareTimer -= uiDiff;

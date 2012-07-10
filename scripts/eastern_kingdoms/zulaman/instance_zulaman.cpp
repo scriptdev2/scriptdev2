@@ -68,6 +68,15 @@ void instance_zulaman::OnCreatureCreate(Creature* pCreature)
         case NPC_EAGLE_SPIRIT:
         case NPC_LYNX_SPIRIT:
         case NPC_DRAGONHAWK_SPIRIT:
+        // Insert Malacrass companions here for better handling
+        case NPC_ALYSON:
+        case NPC_THURG:
+        case NPC_SLITHER:
+        case NPC_RADAAN:
+        case NPC_GAZAKROTH:
+        case NPC_FENSTALKER:
+        case NPC_DARKHEART:
+        case NPC_KORAGG:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
 

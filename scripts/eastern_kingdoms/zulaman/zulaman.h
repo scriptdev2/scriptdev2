@@ -62,6 +62,16 @@ enum InstanceZA
     NPC_AXETHROWER          = 23542,
     NPC_WARBRINGER          = 23580,
 
+    // Malacrass companions
+    NPC_ALYSON              = 24240,
+    NPC_THURG               = 24241,
+    NPC_SLITHER             = 24242,
+    NPC_RADAAN              = 24243,
+    NPC_GAZAKROTH           = 24244,
+    NPC_FENSTALKER          = 24245,
+    NPC_DARKHEART           = 24246,
+    NPC_KORAGG              = 24247,
+
     NPC_EGG                 = 23817,
     NPC_SPIRIT_LYNX         = 24143,
 
