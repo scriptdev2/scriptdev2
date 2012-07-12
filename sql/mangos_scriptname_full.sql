@@ -714,6 +714,13 @@ UPDATE creature_template SET ScriptName='boss_lord_marrowgar' WHERE entry=36612;
 UPDATE creature_template SET ScriptName='boss_lady_deathwhisper' WHERE entry=36855;
 UPDATE creature_template SET ScriptName='boss_deathbringer_saurfang' WHERE entry=37813;
 UPDATE creature_template SET ScriptName='npc_queen_lanathel_intro' WHERE entry=38004;
+UPDATE creature_template SET ScriptName='npc_blood_orb_control' WHERE entry=38008;
+UPDATE creature_template SET ScriptName='npc_ball_of_flame' WHERE entry IN (38332,38451);
+UPDATE creature_template SET ScriptName='npc_kinetic_bomb' WHERE entry=38454;
+UPDATE creature_template SET ScriptName='npc_dark_nucleus' WHERE entry=38369;
+UPDATE creature_template SET ScriptName='boss_taldaram_icc' WHERE entry=37973;
+UPDATE creature_template SET ScriptName='boss_keleseth_icc' WHERE entry=37972;
+UPDATE creature_template SET ScriptName='boss_valanar_icc' WHERE entry=37970;
 UPDATE creature_template SET ScriptName='boss_blood_queen_lanathel' WHERE entry=37955;
 DELETE FROM scripted_event_id WHERE id IN (23426,23438);
 INSERT INTO scripted_event_id VALUES
