@@ -213,6 +213,8 @@ class MANGOS_DLL_DECL instance_icecrown_citadel : public ScriptedInstance, priva
         void OnCreatureCreate(Creature* pCreature);
         void OnObjectCreate(GameObject* pGo);
 
+        void OnCreatureDeath(Creature* pCreature);
+
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
 

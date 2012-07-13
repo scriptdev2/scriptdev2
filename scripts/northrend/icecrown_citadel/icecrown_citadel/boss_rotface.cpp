@@ -25,7 +25,6 @@ EndScriptData */
 
 enum
 {
-    SAY_PRECIOUS_DIES           = -1631070,
     SAY_AGGRO                   = -1631071,
     SAY_SLIME_SPRAY             = -1631072,
     SAY_OOZE_EXPLODE            = -1631073,

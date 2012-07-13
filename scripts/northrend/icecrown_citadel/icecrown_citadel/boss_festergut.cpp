@@ -25,7 +25,6 @@ EndScriptData */
 
 enum
 {
-    SAY_STINKY_DIES             = -1631081,
     SAY_AGGRO                   = -1631082,
     SAY_BLIGHT                  = -1631083,
     SAY_SPORE                   = -1631084,

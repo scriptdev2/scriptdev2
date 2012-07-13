@@ -37,6 +37,11 @@ enum
     SAY_DEATHWHISPER_SPEECH_5       = -1631015,
     SAY_DEATHWHISPER_SPEECH_6       = -1631016,
     SAY_DEATHWHISPER_SPEECH_7       = -1631017,
+
+    // Festergut
+    SAY_STINKY_DIES                 = -1631081,
+    // Rotface
+    SAY_PRECIOUS_DIES               = -1631070,
 };
 
 static const DialogueEntry aCitadelDialogue[] =
@@ -113,7 +118,6 @@ void instance_icecrown_citadel::OnCreatureCreate(Creature *pCreature)
         case NPC_TALDARAM:
         case NPC_VALANAR:
         case NPC_KELESETH:
-        case NPC_QUEEN_LANATHEL:
         case NPC_LANATHEL_INTRO:
         case NPC_VALITHRIA:
         case NPC_SINDRAGOSA:
@@ -121,8 +125,6 @@ void instance_icecrown_citadel::OnCreatureCreate(Creature *pCreature)
         case NPC_TIRION:
         case NPC_RIMEFANG:
         case NPC_SPINESTALKER:
-        case NPC_STINKY:
-        case NPC_PRECIOUS:
         case NPC_VALITHRIA_COMBAT_TRIGGER:
         case NPC_BLOOD_ORB_CONTROL:
              m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
@@ -238,6 +240,27 @@ void instance_icecrown_citadel::OnObjectCreate(GameObject *pGo)
             break;
     }
     m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
+}
+
+void instance_icecrown_citadel::OnCreatureDeath(Creature* pCreature)
+{
+    switch (pCreature->GetEntry())
+    {
+        case NPC_STINKY:
+            if (Creature* pFestergut = GetSingleCreatureFromStorage(NPC_FESTERGUT))
+            {
+                if (pFestergut->isAlive())
+                    DoScriptText(SAY_STINKY_DIES, pFestergut);
+            }
+            break;
+        case NPC_PRECIOUS:
+            if (Creature* pRotface = GetSingleCreatureFromStorage(NPC_ROTFACE))
+            {
+                if (pRotface->isAlive())
+                    DoScriptText(SAY_PRECIOUS_DIES, pRotface);
+            }
+            break;
+    }
 }
 
 void instance_icecrown_citadel::SetData(uint32 uiType, uint32 uiData)
