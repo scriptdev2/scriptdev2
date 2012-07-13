@@ -56,7 +56,26 @@ enum
     NPC_PURPLE_RUNE             = 35651,
 
     GO_MAIN_GATE                = 195647,
+    GO_WEST_GATE                = 195648,                   // entrance gate
+    GO_SOUTH_GATE               = 195649,                   // south and north doors are used to allow the Champions to enter the arena
+    GO_NORTH_GATE               = 195650,
     GO_COLISEUM_FLOOR           = 195527,
+    GO_WEB_DOOR                 = 195485,
+
+    GO_CRUSADERS_CACHE          = 195631,
+    GO_CRUSADERS_CACHE_25       = 195632,
+    GO_CRUSADERS_CACHE_10_H     = 195633,
+    GO_CRUSADERS_CACHE_25_H     = 195635,
+
+    GO_TRIBUTE_CHEST_10H_25     = 195665,
+    GO_TRIBUTE_CHEST_10H_45     = 195666,
+    GO_TRIBUTE_CHEST_10H_50     = 195667,
+    GO_TRIBUTE_CHEST_10H_99     = 195668,
+
+    GO_TRIBUTE_CHEST_25H_25     = 195669,
+    GO_TRIBUTE_CHEST_25H_45     = 195670,
+    GO_TRIBUTE_CHEST_25H_50     = 195671,
+    GO_TRIBUTE_CHEST_25H_99     = 195672,
 
     SPELL_OPEN_PORTAL           = 67864,
     SPELL_FEL_LIGHTNING_KILL    = 67888,
@@ -115,6 +134,10 @@ class MANGOS_DLL_DECL instance_trial_of_the_crusader : public ScriptedInstance, 
 
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
+
+        // Difficulty wrappers
+        bool IsHeroicDifficulty() { return instance->GetDifficulty() > RAID_DIFFICULTY_25MAN_NORMAL; }
+        bool Is25ManDifficulty() { return instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL || instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC; }
 
         const char* Save() { return m_strInstData.c_str(); }
         void Load(const char* chrIn);

@@ -82,7 +82,6 @@ enum
     SAY_TIRION_ABUN_INTRO_1             = -1649035,
     SAY_LKING_ANUB_INTRO_2              = -1649036,
     SAY_LKING_ANUB_INTRO_3              = -1649037,
-    SAY_ANUB_ANUB_INTRO_1               = -1649038,         // NYI
 };
 
 static const DialogueEntryTwoSide aTocDialogues[] =
@@ -203,6 +202,7 @@ void instance_trial_of_the_crusader::OnObjectCreate(GameObject* pGo)
             }
             break;
         case GO_MAIN_GATE:
+        case GO_WEB_DOOR:
             break;
         default:
             return;
@@ -290,6 +290,8 @@ void instance_trial_of_the_crusader::SetData(uint32 uiType, uint32 uiData)
                 StartNextDialogueText(TYPE_ANUBARAK);
             else if (uiData == FAIL)
                 SetData(TYPE_WIPE_COUNT, m_auiEncounter[TYPE_WIPE_COUNT] + 1);
+            if (uiData != SPECIAL)
+                DoUseDoorOrButton(GO_WEB_DOOR);
             m_auiEncounter[uiType] = uiData;
             break;
         default:

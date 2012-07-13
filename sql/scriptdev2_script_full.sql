@@ -4049,7 +4049,12 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1649067,'I have failed you, master...',16238,1,0,0,'anubarak SAY_DEATH'),
 (-1649068,'<SD2 Text missing>',16239,1,0,0,'anubarak SAY_BERSERK'),
 (-1649069,'Auum na-l ak-k-k-k, isshhh. Rise, minions. Devour...',16240,1,0,0,'anubarak SAY_SUBMERGE'),
-(-1649070,'The swarm shall overtake you!',16241,1,0,0,'anubarak SAY_LEECHING_SWARM');
+(-1649070,'The swarm shall overtake you!',16241,1,0,0,'anubarak SAY_LEECHING_SWARM'),
+
+(-1649071,'%s burrows into the ground!',0,3,0,0,'anubarak EMOTE_BURROW'),
+(-1649072,'%s spikes pursue $N!',0,3,0,0,'anubarak EMOTE_PURSUE'),
+(-1649073,'%s emerges from the ground!',0,3,0,0,'anubarak EMOTE_EMERGE'),
+(-1649074,'%s unleashes a Leeching Swarm to heal himself!',0,3,0,0,'anubarak EMOTE_SWARM');
 
 -- -1 650 000 TRIAL OF THE CHAMPION
 
