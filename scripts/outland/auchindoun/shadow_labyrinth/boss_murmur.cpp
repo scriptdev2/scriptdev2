@@ -28,6 +28,11 @@ enum
 {
     EMOTE_SONIC_BOOM            = -1555036,
 
+    // Intro spells - used on npcs
+    SPELL_SUPPRESSION_BLAST     = 33332,
+    SPELL_MURMURS_WRATH         = 33331,
+    SPELL_MURMURS_WRATH_2       = 33329,
+
     SPELL_MAGNETIC_PULL         = 33689,
     SPELL_SONIC_BOOM            = 33923,        // dummy spell - triggers 33666
     SPELL_SONIC_BOOM_H          = 38796,        // dummy spell - triggers 38795
@@ -60,12 +65,12 @@ struct MANGOS_DLL_DECL boss_murmurAI : public Scripted_NoMovementAI
 
     void Reset()
     {
-        m_uiSonicBoomTimer          = 30000;
-        m_uiMurmursTouchTimer       = urand(8000, 20000);
-        m_uiResonanceTimer          = 5000;
-        m_uiMagneticPullTimer       = urand(15000, 30000);
-        m_uiSonicShockTimer         = urand(4000, 10000);
-        m_uiThunderingStormTimer    = 12000;                // Casting directly after Sonic Boom.
+        m_uiSonicBoomTimer          = urand(21000, 35000);
+        m_uiMurmursTouchTimer       = urand(9000, 18000);
+        m_uiResonanceTimer          = urand(1000, 7000);
+        m_uiMagneticPullTimer       = urand(15000, 25000);
+        m_uiSonicShockTimer         = urand(5000, 15000);
+        m_uiThunderingStormTimer    = urand(10000, 50000);
 
         // Boss has only 0.4 of max health
         m_creature->SetHealth(uint32(m_creature->GetMaxHealth()*.4));
@@ -83,7 +88,7 @@ struct MANGOS_DLL_DECL boss_murmurAI : public Scripted_NoMovementAI
             if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_SONIC_BOOM : SPELL_SONIC_BOOM_H) == CAST_OK)
             {
                 DoScriptText(EMOTE_SONIC_BOOM, m_creature);
-                m_uiSonicBoomTimer = 30000;
+                m_uiSonicBoomTimer = urand(31000, 38000);
             }
         }
         else
@@ -93,7 +98,7 @@ struct MANGOS_DLL_DECL boss_murmurAI : public Scripted_NoMovementAI
         if (m_uiMurmursTouchTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_MURMURS_TOUCH : SPELL_MURMURS_TOUCH_H) == CAST_OK)
-                m_uiMurmursTouchTimer = urand(25000, 35000);
+                m_uiMurmursTouchTimer = m_bIsRegularMode ? urand(21000, 21000) : urand(29000, 40000);
         }
         else
             m_uiMurmursTouchTimer -= uiDiff;
@@ -104,7 +109,7 @@ struct MANGOS_DLL_DECL boss_murmurAI : public Scripted_NoMovementAI
             if (m_uiResonanceTimer < uiDiff)
             {
                 if (DoCastSpellIfCan(m_creature, SPELL_RESONANCE) == CAST_OK)
-                    m_uiResonanceTimer = 5000;
+                    m_uiResonanceTimer = urand(5000, 12000);
             }
             else
                 m_uiResonanceTimer -= uiDiff;
@@ -113,10 +118,10 @@ struct MANGOS_DLL_DECL boss_murmurAI : public Scripted_NoMovementAI
         // MagneticPull_Timer
         if (m_uiMagneticPullTimer < uiDiff)
         {
-            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_MAGNETIC_PULL, SELECT_FLAG_PLAYER))
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_MAGNETIC_PULL, SELECT_FLAG_PLAYER | SELECT_FLAG_NOT_IN_MELEE_RANGE))
             {
                 if (DoCastSpellIfCan(pTarget, SPELL_MAGNETIC_PULL) == CAST_OK)
-                    m_uiMagneticPullTimer = urand(15000, 30000);
+                    m_uiMagneticPullTimer = urand(21000, 30000);
             }
         }
         else
@@ -129,7 +134,7 @@ struct MANGOS_DLL_DECL boss_murmurAI : public Scripted_NoMovementAI
                 if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_SONIC_SHOCK, SELECT_FLAG_IN_MELEE_RANGE))
                 {
                     if (DoCastSpellIfCan(pTarget, SPELL_SONIC_SHOCK) == CAST_OK)
-                        m_uiSonicShockTimer = urand(8000, 12000);
+                        m_uiSonicShockTimer = urand(3000, 10000);
                 }
             }
             else
@@ -138,7 +143,7 @@ struct MANGOS_DLL_DECL boss_murmurAI : public Scripted_NoMovementAI
             if (m_uiThunderingStormTimer < uiDiff)
             {
                 if (DoCastSpellIfCan(m_creature, SPELL_THUNDERING_STORM) == CAST_OK)
-                    m_uiThunderingStormTimer = 12000;
+                    m_uiThunderingStormTimer = urand(5000, 6000);
             }
             else
                 m_uiThunderingStormTimer -= uiDiff;

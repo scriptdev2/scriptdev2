@@ -99,11 +99,11 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
 
     void Reset()
     {
-        m_uiShadowBoltVolleyTimer   = urand(7000, 14000);
-        m_uiDrawShadowsTimer        = 40000;
+        m_uiShadowBoltVolleyTimer   = urand(13000, 19000);
+        m_uiDrawShadowsTimer        = urand(38000, 44000);
         m_uiRainOfFireTimer         = 0;
         m_uiVoidTravelerTimer       = 5000;
-        m_uiBanishTimer             = 25000;
+        m_uiBanishTimer             = urand(12000, 16000);
     }
 
     void MoveInLineOfSight(Unit* pWho)
@@ -208,7 +208,7 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
         if (m_uiShadowBoltVolleyTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature, SPELL_SHADOW_BOLT_VOLLEY) == CAST_OK)
-                m_uiShadowBoltVolleyTimer = urand(15000, 30000);
+                m_uiShadowBoltVolleyTimer = urand(10000, 26000);
         }
         else
             m_uiShadowBoltVolleyTimer -= uiDiff;
@@ -217,7 +217,7 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
         {
             if (DoCastSpellIfCan(m_creature, SPELL_DRAW_SHADOWS) == CAST_OK)
             {
-                m_uiDrawShadowsTimer = 37000;
+                m_uiDrawShadowsTimer = urand(36000, 44000);
                 m_uiRainOfFireTimer  = 1000;
             }
         }
@@ -242,7 +242,7 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
                 if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1))
                 {
                     if (DoCastSpellIfCan(pTarget, SPELL_BANISH_H) == CAST_OK)
-                        m_uiBanishTimer = 35000;
+                        m_uiBanishTimer = urand(17000, 23000);
                 }
             }
             else

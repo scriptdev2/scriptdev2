@@ -69,9 +69,9 @@ struct MANGOS_DLL_DECL boss_blackheart_the_inciterAI : public ScriptedAI
 
     void Reset()
     {
-        m_uiInciteChaosTimer = 15000;
-        m_uiChargeTimer      = 5000;
-        m_uiKnockbackTimer   = 15000;
+        m_uiInciteChaosTimer = 50000;
+        m_uiChargeTimer      = urand(30000, 37000);
+        m_uiKnockbackTimer   = urand(10000, 14000);
     }
 
     void KilledUnit(Unit* pVictim)
@@ -126,7 +126,7 @@ struct MANGOS_DLL_DECL boss_blackheart_the_inciterAI : public ScriptedAI
         {
             Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0);
             if (pTarget && DoCastSpellIfCan(pTarget, SPELL_CHARGE) == CAST_OK)
-                m_uiChargeTimer = urand(15000, 25000);
+                m_uiChargeTimer = urand(30000, 43000);
         }
         else
             m_uiChargeTimer -= uiDiff;
@@ -135,7 +135,7 @@ struct MANGOS_DLL_DECL boss_blackheart_the_inciterAI : public ScriptedAI
         if (m_uiKnockbackTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature, SPELL_WAR_STOMP) == CAST_OK)
-                m_uiKnockbackTimer = urand(18000, 24000);
+                m_uiKnockbackTimer = urand(15000, 30000);
         }
         else
             m_uiKnockbackTimer -= uiDiff;
