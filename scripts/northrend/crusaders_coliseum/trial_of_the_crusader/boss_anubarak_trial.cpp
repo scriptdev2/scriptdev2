@@ -55,6 +55,7 @@ enum
 
     // Pursuing Spikes
     SPELL_PURSUING_SPIKES_FAIL          = 66181,
+    SPELL_PURSUING_SPIKES_DUMMY         = 67470,            // target selection spell - currently not used
     SPELL_PURSUING_SPIKES_SPEED1        = 65920,
     //SPELL_PURSUING_SPIKES_GROUND      = 65921,            // included in creature_template_addon
     SPELL_PURSUING_SPIKES_SPEED2        = 65922,
@@ -327,17 +328,9 @@ struct MANGOS_DLL_DECL boss_anubarak_trialAI : public ScriptedAI
                 {
                     if (m_uiBurrowerSummonTimer < uiDiff)
                     {
-                        DoCastSpellIfCan(m_creature, SPELL_SUMMON_NERUBIAN_BURROWER, CAST_TRIGGERED);
-                        DoCastSpellIfCan(m_creature, SPELL_SUMMON_NERUBIAN_BURROWER, CAST_TRIGGERED);
-
-                        // There are 4 summons on 25 man
-                        if (m_pInstance && m_pInstance->Is25ManDifficulty())
-                        {
-                            DoCastSpellIfCan(m_creature, SPELL_SUMMON_NERUBIAN_BURROWER, CAST_TRIGGERED);
-                            DoCastSpellIfCan(m_creature, SPELL_SUMMON_NERUBIAN_BURROWER, CAST_TRIGGERED);
-                        }
-
-                        m_uiBurrowerSummonTimer = 45000;
+                        // The number of targets is handled in core, based on difficulty
+                        if (DoCastSpellIfCan(m_creature, SPELL_SUMMON_NERUBIAN_BURROWER) == CAST_OK)
+                            m_uiBurrowerSummonTimer = 45000;
                     }
                     else
                         m_uiBurrowerSummonTimer -= uiDiff;
@@ -408,14 +401,11 @@ struct MANGOS_DLL_DECL npc_anubarak_trial_spikeAI : public ScriptedAI
     PursuingSpikesPhases m_Phase;
     uint32 m_PhaseSwitchTimer;
 
-    ObjectGuid m_PursuingVictimGuid;
-
     void Reset()
     {
         m_Phase = PHASE_NO_MOVEMENT;
         m_PhaseSwitchTimer = 5000;
 
-        m_PursuingVictimGuid.Clear();
         SetCombatMovement(false);
     }
 
@@ -464,7 +454,6 @@ struct MANGOS_DLL_DECL npc_anubarak_trial_spikeAI : public ScriptedAI
 
         DoScriptText(EMOTE_PURSUE, m_creature, pWho);
         DoCastSpellIfCan(pWho, SPELL_MARK, CAST_TRIGGERED);
-        m_PursuingVictimGuid = pWho->GetObjectGuid();
     }
 
     void UpdateAI(const uint32 uiDiff)
@@ -481,7 +470,7 @@ struct MANGOS_DLL_DECL npc_anubarak_trial_spikeAI : public ScriptedAI
                     case PHASE_NO_MOVEMENT:
                         if (DoCastSpellIfCan(m_creature, SPELL_PURSUING_SPIKES_SPEED1) == CAST_OK)
                         {
-                            // select a random target
+                            // select a random target - ToDo: use the dummy spell in order to select target!
                             Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_MARK, SELECT_FLAG_PLAYER | SELECT_FLAG_NOT_IN_MELEE_RANGE);
                             if (!pTarget)
                                 pTarget = m_creature->getVictim();
