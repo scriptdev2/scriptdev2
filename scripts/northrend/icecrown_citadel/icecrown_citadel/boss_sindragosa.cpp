@@ -22,6 +22,7 @@ SDCategory: Icecrown Citadel
 EndScriptData */
 
 #include "precompiled.h"
+#include "icecrown_citadel.h"
 
 enum
 {
@@ -37,6 +38,141 @@ enum
     SAY_DEATH                   = -1631157,
 };
 
+struct MANGOS_DLL_DECL boss_sindragosaAI : public ScriptedAI
+{
+    boss_sindragosaAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (instance_icecrown_citadel*)pCreature->GetInstanceData();
+        Reset();
+    }
+
+    instance_icecrown_citadel* m_pInstance;
+
+    void Reset()
+    {
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_SINDRAGOSA, FAIL);
+    }
+
+    void KilledUnit(Unit* pVictim)
+    {
+        DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
+    }
+
+    void Aggro(Unit* pWho)
+    {
+        DoScriptText(SAY_AGGRO, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_SINDRAGOSA, IN_PROGRESS);
+    }
+
+    void JustDied(Unit* pKiller)
+    {
+        DoScriptText(SAY_DEATH, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_SINDRAGOSA, DONE);
+    }
+
+    void MovementInform(uint32 uiMovementType, uint32 uiPointId)
+    {
+        if (uiMovementType != POINT_MOTION_TYPE)
+            return;
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_boss_sindragosa(Creature* pCreature)
+{
+    return new boss_sindragosaAI(pCreature);
+}
+
+
+struct MANGOS_DLL_DECL npc_rimefang_iccAI : public ScriptedAI
+{
+    npc_rimefang_iccAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (instance_icecrown_citadel*)pCreature->GetInstanceData();
+        Reset();
+    }
+
+    instance_icecrown_citadel* m_pInstance;
+
+    void Reset()
+    {
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_npc_rimefang_icc(Creature* pCreature)
+{
+    return new npc_rimefang_iccAI(pCreature);
+}
+
+
+struct MANGOS_DLL_DECL npc_spinestalker_iccAI : public ScriptedAI
+{
+    npc_spinestalker_iccAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (instance_icecrown_citadel*)pCreature->GetInstanceData();
+        Reset();
+    }
+
+    instance_icecrown_citadel* m_pInstance;
+
+    void Reset()
+    {
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_npc_spinestalker_icc(Creature* pCreature)
+{
+    return new npc_spinestalker_iccAI(pCreature);
+}
+
 void AddSC_boss_sindragosa()
 {
+    Script *pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_sindragosa";
+    pNewScript->GetAI = &GetAI_boss_sindragosa;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_rimefang_icc";
+    pNewScript->GetAI = &GetAI_npc_rimefang_icc;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_spinestalker_icc";
+    pNewScript->GetAI = &GetAI_npc_spinestalker_icc;
+    pNewScript->RegisterSelf();
 }
