@@ -55,7 +55,7 @@ enum
 
     // Pursuing Spikes
     SPELL_PURSUING_SPIKES_FAIL          = 66181,
-    SPELL_PURSUING_SPIKES_DUMMY         = 67470,            // target selection spell - currently not used
+    SPELL_PURSUING_SPIKES_DUMMY         = 67470,            // target selection spell
     SPELL_PURSUING_SPIKES_SPEED1        = 65920,
     //SPELL_PURSUING_SPIKES_GROUND      = 65921,            // included in creature_template_addon
     SPELL_PURSUING_SPIKES_SPEED2        = 65922,
@@ -409,6 +409,16 @@ struct MANGOS_DLL_DECL npc_anubarak_trial_spikeAI : public ScriptedAI
         SetCombatMovement(false);
     }
 
+    void SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell)
+    {
+        if (pSpell->Id == SPELL_PURSUING_SPIKES_DUMMY && pTarget->GetTypeId() == TYPEID_PLAYER)
+        {
+            DoScriptText(EMOTE_PURSUE, m_creature, pTarget);
+            DoCastSpellIfCan(pTarget, SPELL_MARK, CAST_TRIGGERED);
+            DoStartMovement(pTarget);
+        }
+    }
+
     // Handle permafrost hit from dummy spell
     void PermafrostHit(Creature* pPermafrost)
     {
@@ -446,16 +456,6 @@ struct MANGOS_DLL_DECL npc_anubarak_trial_spikeAI : public ScriptedAI
         m_creature->GetMotionMaster()->MoveIdle();
     }
 
-    // Aquire a new victim
-    void SetPursuingVictim(Unit* pWho)
-    {
-        if (!pWho)
-            return;
-
-        DoScriptText(EMOTE_PURSUE, m_creature, pWho);
-        DoCastSpellIfCan(pWho, SPELL_MARK, CAST_TRIGGERED);
-    }
-
     void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
@@ -470,15 +470,7 @@ struct MANGOS_DLL_DECL npc_anubarak_trial_spikeAI : public ScriptedAI
                     case PHASE_NO_MOVEMENT:
                         if (DoCastSpellIfCan(m_creature, SPELL_PURSUING_SPIKES_SPEED1) == CAST_OK)
                         {
-                            // select a random target - ToDo: use the dummy spell in order to select target!
-                            Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_MARK, SELECT_FLAG_PLAYER | SELECT_FLAG_NOT_IN_MELEE_RANGE);
-                            if (!pTarget)
-                                pTarget = m_creature->getVictim();
-
-                            // Start following target
-                            SetCombatMovement(true);
-                            SetPursuingVictim(pTarget);
-                            DoStartMovement(pTarget);
+                            DoCastSpellIfCan(m_creature, SPELL_PURSUING_SPIKES_DUMMY, CAST_TRIGGERED);
 
                             m_Phase = PHASE_IMPALE_NORMAL;
                             m_PhaseSwitchTimer = 7000;
