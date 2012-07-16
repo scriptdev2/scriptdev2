@@ -1817,7 +1817,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1534016,'We have played our part and done well. It is up to the others now.',11035,1,0,0,'thrall hyjal SUCCESS'),
 (-1534017,'Uraaa...',11034,1,0,0,'thrall hyjal DEATH'),
 
-(-1534018,'All of your efforts have been in vain, for the draining of the World Tree has already begun. Soon the heart of your world will beat no more.',10986,1,0,0,'archimonde SAY_PRE_EVENTS_COMPLETE'),
+(-1534018,'All of your efforts have been in vain, for the draining of the World Tree has already begun. Soon the heart of your world will beat no more.',10986,6,0,0,'archimonde SAY_PRE_EVENTS_COMPLETE'),
 (-1534019,'Your resistance is insignificant.',10987,1,0,0,'archimonde SAY_AGGRO'),
 (-1534020,'This world will burn!',10990,1,0,0,'archimonde SAY_DOOMFIRE1'),
 (-1534021,'Manach sheek-thrish!',11041,1,0,0,'archimonde SAY_DOOMFIRE2'),
@@ -4272,6 +4272,16 @@ INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 (-3509000,'Let\'s find out.','andorov GOSSIP_ITEM_START'),
 (-3509001,'Let\'s see what you have.','andorov GOSSIP_ITEM_TRADE');
+
+-- -3 534 000 THE BATTLE OF MT. HYJAL
+INSERT INTO gossip_texts (entry,content_default,comment) VALUES
+(-3534000,'My companions and I are with you, Lady Proudmoore.','jaina GOSSIP_ITEM_JAIN_START'),
+(-3534001,'We are ready for whatever Archimonde might send our way, Lady Proudmoore.','jaina GOSSIP_ITEM_ANATHERON'),
+(-3534002,'Until we meet again, Lady Proudmoore.','jaina GOSSIP_ITEM_SUCCESS'),
+(-3534003,'I am with you, Thrall.','thrall GOSSIP_ITEM_THRALL_START'),
+(-3534004,'We have nothing to fear.','thrall GOSSIP_ITEM_AZGALOR'),
+(-3534005,'Until we meet again, Thrall.','thrall GOSSIP_ITEM_SUCCESS'),
+(-3534006,'I would be grateful for any aid you can provide, Priestess.','tyrande GOSSIP_ITEM_AID');
 
 -- -3 560 000 ESCAPE FROM DURNHOLDE (OLD HILLSBRAD)
 INSERT INTO gossip_texts (entry,content_default,comment) VALUES

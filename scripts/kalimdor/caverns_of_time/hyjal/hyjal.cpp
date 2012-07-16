@@ -30,14 +30,21 @@ EndContentData */
 #include "precompiled.h"
 #include "hyjalAI.h"
 
-#define GOSSIP_ITEM_BEGIN_ALLY      "My companions and I are with you, Lady Proudmoore."
-#define GOSSIP_ITEM_ANETHERON       "We are ready for whatever Archimonde might send our way, Lady Proudmoore."
-#define GOSSIP_ITEM_BEGIN_HORDE     "I am with you, Thrall."
-#define GOSSIP_ITEM_AZGALOR         "We have nothing to fear."
+enum
+{
+    GOSSIP_ITEM_JAINA_BEGIN         = -3534000,
+    GOSSIP_ITEM_JAINA_ANATHERON     = -3534001,
+    GOSSIP_ITEM_JAINA_SUCCCESS      = -3534002,
 
-#define GOSSIP_ITEM_RETREAT         "We can't keep this up. Let's retreat!"
+    GOSSIP_ITEM_THRALL_BEGIN        = -3534003,
+    GOSSIP_ITEM_THRALL_AZGALOR      = -3534004,
+    GOSSIP_ITEM_THRALL_SUCCESS      = -3534005,
 
-#define GOSSIP_ITEM_TYRANDE         "Aid us in defending Nordrassil"
+    GOSSIP_ITEM_TYRANDE_AID         = -3534006,
+
+    // Note: additional menu items include 9230 and 9398.
+    GOSSIP_MENU_ID_DEFAULT          = 907,                  // this is wrong, but currently we don't know which are the right ids
+};
 
 CreatureAI* GetAI_npc_jaina_proudmoore(Creature* pCreature)
 {
@@ -70,11 +77,11 @@ bool GossipHello_npc_jaina_proudmoore(Player* pPlayer, Creature* pCreature)
                 if (pInstance->GetData(TYPE_KAZROGAL) != DONE)
                 {
                     if (pInstance->GetData(TYPE_WINTERCHILL) == NOT_STARTED)
-                        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_BEGIN_ALLY, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+                        pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_JAINA_BEGIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
                     else if (pInstance->GetData(TYPE_WINTERCHILL) == DONE && pInstance->GetData(TYPE_ANETHERON) == NOT_STARTED)
-                        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_ANETHERON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+                        pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_JAINA_ANATHERON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
                     else if (pInstance->GetData(TYPE_ANETHERON) == DONE)
-                        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_RETREAT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+                        pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_JAINA_SUCCCESS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
 
                     if (pPlayer->isGameMaster())
                         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "[GM] Toggle Debug Timers", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
@@ -83,7 +90,7 @@ bool GossipHello_npc_jaina_proudmoore(Player* pPlayer, Creature* pCreature)
         }
     }
 
-    pPlayer->SEND_GOSSIP_MENU(907, pCreature->GetObjectGuid());
+    pPlayer->SEND_GOSSIP_MENU(GOSSIP_MENU_ID_DEFAULT, pCreature->GetObjectGuid());
     return true;
 }
 
@@ -142,11 +149,11 @@ bool GossipHello_npc_thrall(Player* pPlayer, Creature* pCreature)
                 if (pInstance->GetData(TYPE_ANETHERON) == DONE)
                 {
                     if (pInstance->GetData(TYPE_KAZROGAL) == NOT_STARTED)
-                        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_BEGIN_HORDE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+                        pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_THRALL_BEGIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
                     else if (pInstance->GetData(TYPE_KAZROGAL) == DONE && pInstance->GetData(TYPE_AZGALOR) == NOT_STARTED)
-                        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_AZGALOR, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+                        pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_THRALL_AZGALOR, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
                     else if (pInstance->GetData(TYPE_AZGALOR) == DONE)
-                        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_RETREAT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+                        pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_THRALL_SUCCESS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
 
                     if (pPlayer->isGameMaster())
                         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "[GM] Toggle Debug Timers", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
@@ -155,7 +162,7 @@ bool GossipHello_npc_thrall(Player* pPlayer, Creature* pCreature)
         }
     }
 
-    pPlayer->SEND_GOSSIP_MENU(907, pCreature->GetObjectGuid());
+    pPlayer->SEND_GOSSIP_MENU(GOSSIP_MENU_ID_DEFAULT, pCreature->GetObjectGuid());
     return true;
 }
 
@@ -193,10 +200,10 @@ bool GossipHello_npc_tyrande_whisperwind(Player* pPlayer, Creature* pCreature)
     {
         // Only let them get item if Azgalor is dead.
         if (pInstance->GetData(TYPE_AZGALOR) == DONE && !pPlayer->HasItemCount(ITEM_TEAR_OF_GODDESS, 1))
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TYRANDE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+            pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TYRANDE_AID, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
     }
 
-    pPlayer->SEND_GOSSIP_MENU(907, pCreature->GetObjectGuid());
+    pPlayer->SEND_GOSSIP_MENU(GOSSIP_MENU_ID_DEFAULT, pCreature->GetObjectGuid());
     return true;
 }
 

@@ -51,6 +51,12 @@ bool instance_mount_hyjal::IsEncounterInProgress() const
     return false;
 }
 
+void instance_mount_hyjal::OnPlayerEnter(Player* pPlayer)
+{
+    if (GetData(TYPE_AZGALOR) == DONE)
+        DoSpawnArchimonde();
+}
+
 void instance_mount_hyjal::OnCreatureCreate(Creature* pCreature)
 {
     if (pCreature->GetEntry() == NPC_ARCHIMONDE)
@@ -83,7 +89,6 @@ void instance_mount_hyjal::OnCreatureEvade(Creature* pCreature)
         case NPC_ANETHERON:   SetData(TYPE_ANETHERON, FAIL);   break;
         case NPC_KAZROGAL:    SetData(TYPE_KAZROGAL, FAIL);    break;
         case NPC_AZGALOR:     SetData(TYPE_AZGALOR, FAIL);     break;
-        case NPC_ARCHIMONDE:  SetData(TYPE_ARCHIMONDE, FAIL);  break;
     }
 }
 
@@ -124,10 +129,12 @@ void instance_mount_hyjal::SetData(uint32 uiType, uint32 uiData)
         case TYPE_WINTERCHILL:
         case TYPE_ANETHERON:
         case TYPE_KAZROGAL:
-        case TYPE_AZGALOR:
-            if (m_auiEncounter[uiType] == DONE)
-                return;
             m_auiEncounter[uiType] = uiData;
+            break;
+        case TYPE_AZGALOR:
+            m_auiEncounter[uiType] = uiData;
+            if (uiData == DONE)
+                DoSpawnArchimonde();
             break;
         case TYPE_ARCHIMONDE:
             m_auiEncounter[uiType] = uiData;
@@ -168,6 +175,21 @@ void instance_mount_hyjal::SetData(uint32 uiType, uint32 uiData)
         SaveToDB();
         OUT_SAVE_INST_DATA_COMPLETE;
     }
+}
+
+void instance_mount_hyjal::DoSpawnArchimonde()
+{
+    // Don't spawn if already killed
+    if (GetData(TYPE_ARCHIMONDE) == DONE)
+        return;
+
+    // Don't spawn him twice
+    if (GetSingleCreatureFromStorage(NPC_ARCHIMONDE, true))
+        return;
+
+    // Summon Archimonde
+    if (Player* pPlayer = GetPlayerInMap())
+        pPlayer->SummonCreature(NPC_ARCHIMONDE, aArchimondeSpawnLoc[0], aArchimondeSpawnLoc[1], aArchimondeSpawnLoc[2], aArchimondeSpawnLoc[3], TEMPSUMMON_DEAD_DESPAWN, 0);
 }
 
 uint32 instance_mount_hyjal::GetData(uint32 uiType)

@@ -425,8 +425,7 @@ UPDATE creature_template SET ScriptName='npc_tyrande_whisperwind' WHERE entry=17
 UPDATE creature_template SET ScriptName='npc_thrall' WHERE entry=17852;
 UPDATE creature_template SET ScriptName='npc_jaina_proudmoore' WHERE entry=17772;
 UPDATE creature_template SET ScriptName='boss_archimonde' WHERE entry=17968;
-UPDATE creature_template SET ScriptName='mob_doomfire' WHERE entry=18095;
-UPDATE creature_template SET ScriptName='mob_doomfire_targetting' WHERE entry=18104;
+UPDATE creature_template SET ScriptName='npc_doomfire_spirit' WHERE entry=18104;
 UPDATE creature_template SET ScriptName='mob_ancient_wisp' WHERE entry=17946;
 
 /* OLD HILLSBRAD */

@@ -50,6 +50,8 @@ enum
     GO_ANCIENT_GEM              = 185557,
 };
 
+static const float aArchimondeSpawnLoc[4] = {5581.49f, -3445.63f, 1575.1f, 3.905f};
+
 class MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
 {
     public:
@@ -57,6 +59,8 @@ class MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
 
         void Initialize();
         bool IsEncounterInProgress() const;
+
+        void OnPlayerEnter(Player* pPlayer);
 
         void OnCreatureCreate(Creature* pCreature);
         void OnObjectCreate(GameObject* pGo);
@@ -72,6 +76,8 @@ class MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
         void Load(const char* chrIn);
 
     private:
+        void DoSpawnArchimonde();
+
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strSaveData;
 
