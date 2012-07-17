@@ -8,6 +8,7 @@
 enum
 {
     MAX_ENCOUNTER               = 6,
+    MAX_WIPES_ALLOWED           = 50,
 
     TYPE_WIPE_COUNT             = 0,
     TYPE_NORTHREND_BEASTS       = 1,
@@ -37,6 +38,7 @@ enum
 
     NPC_TIRION_A                = 34996,
     NPC_TIRION_B                = 36095,                    // Summoned after his text (Champions, you're alive! Not only have you defeated every challenge of the Trial of the Crusader, but also thwarted Arthas' plans! Your skill and cunning will prove to be a powerful weapon against the Scourge. Well done! Allow one of the Crusade's mages to transport you to the surface!) is said..
+    NPC_ARGENT_MAGE             = 36097,                    // Summoned along with Tirion B
     NPC_VARIAN                  = 34990,
     NPC_GARROSH                 = 34995,
     NPC_FIZZLEBANG              = 35458,
@@ -67,15 +69,15 @@ enum
     GO_CRUSADERS_CACHE_10_H     = 195633,
     GO_CRUSADERS_CACHE_25_H     = 195635,
 
-    GO_TRIBUTE_CHEST_10H_25     = 195665,
-    GO_TRIBUTE_CHEST_10H_45     = 195666,
-    GO_TRIBUTE_CHEST_10H_50     = 195667,
-    GO_TRIBUTE_CHEST_10H_99     = 195668,
+    GO_TRIBUTE_CHEST_10H_01     = 195665,
+    GO_TRIBUTE_CHEST_10H_25     = 195666,
+    GO_TRIBUTE_CHEST_10H_45     = 195667,
+    GO_TRIBUTE_CHEST_10H_50     = 195668,
 
-    GO_TRIBUTE_CHEST_25H_25     = 195669,
-    GO_TRIBUTE_CHEST_25H_45     = 195670,
-    GO_TRIBUTE_CHEST_25H_50     = 195671,
-    GO_TRIBUTE_CHEST_25H_99     = 195672,
+    GO_TRIBUTE_CHEST_25H_01     = 195669,
+    GO_TRIBUTE_CHEST_25H_25     = 195670,
+    GO_TRIBUTE_CHEST_25H_45     = 195671,
+    GO_TRIBUTE_CHEST_25H_50     = 195672,
 
     SPELL_OPEN_PORTAL           = 67864,
     SPELL_FEL_LIGHTNING_KILL    = 67888,
@@ -87,6 +89,9 @@ enum
 
     DISPLAYID_DESTROYED_FLOOR   = 9060,
     POINT_COMBAT_POSITION       = 10,
+
+    WORLD_STATE_WIPES           = 4390,
+    WORLD_STATE_WIPES_COUNT     = 4389,
 };
 
 static const float aRamsayPositions[2][4] =
@@ -109,6 +114,8 @@ static const float aSpawnPositions[][4] =
     {563.6996f, 175.9826f, 394.5042f, 4.694936f},           // World Trigger Large
     {563.5712f, 174.8351f, 394.4954f, 4.712389f},           // Lich King
     {563.6858f, 139.4323f, 393.9862f, 4.694936f},           // Purple Rune / Center Position
+    {648.9169f, 131.0209f, 141.6159f, 0.0f},                // Tirion B
+    {649.1610f, 142.0399f, 141.3060f, 0.0f},                // Argent mage
 };
 
 static const float aMovePositions[][3] =
@@ -147,6 +154,7 @@ class MANGOS_DLL_DECL instance_trial_of_the_crusader : public ScriptedInstance, 
     private:
         void DoSummonRamsey(uint32 uiEntry);
         void JustDidDialogueStep(int32 iEntry);
+        void DoHandleEventEpilogue();
 
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strInstData;

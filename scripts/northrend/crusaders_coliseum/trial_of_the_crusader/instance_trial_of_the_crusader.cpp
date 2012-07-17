@@ -82,6 +82,9 @@ enum
     SAY_TIRION_ABUN_INTRO_1             = -1649035,
     SAY_LKING_ANUB_INTRO_2              = -1649036,
     SAY_LKING_ANUB_INTRO_3              = -1649037,
+
+    // Epilogue
+    SAY_TIRION_EPILOGUE                 = -1649075,
 };
 
 static const DialogueEntryTwoSide aTocDialogues[] =
@@ -201,9 +204,23 @@ void instance_trial_of_the_crusader::OnObjectCreate(GameObject* pGo)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             }
             break;
+        case GO_TRIBUTE_CHEST_10H_01:
+        case GO_TRIBUTE_CHEST_10H_25:
+        case GO_TRIBUTE_CHEST_10H_45:
+        case GO_TRIBUTE_CHEST_10H_50:
+        case GO_TRIBUTE_CHEST_25H_01:
+        case GO_TRIBUTE_CHEST_25H_25:
+        case GO_TRIBUTE_CHEST_25H_45:
+        case GO_TRIBUTE_CHEST_25H_50:
         case GO_MAIN_GATE:
         case GO_WEB_DOOR:
             break;
+        case GO_CRUSADERS_CACHE:
+        case GO_CRUSADERS_CACHE_25:
+        case GO_CRUSADERS_CACHE_10_H:
+        case GO_CRUSADERS_CACHE_25_H:
+            m_mGoEntryGuidStore[GO_CRUSADERS_CACHE] = pGo->GetObjectGuid();
+            return;
         default:
             return;
     }
@@ -219,6 +236,13 @@ void instance_trial_of_the_crusader::OnPlayerEnter(Player* pPlayer)
     SetDialogueSide(m_uiTeam == ALLIANCE);
 
     DoSummonRamsey(0);
+
+    // Show wipe world state on heroic difficulty
+    if (IsHeroicDifficulty())
+    {
+        pPlayer->SendUpdateWorldState(WORLD_STATE_WIPES, 1);
+        pPlayer->SendUpdateWorldState(WORLD_STATE_WIPES_COUNT, MAX_WIPES_ALLOWED - GetData(TYPE_WIPE_COUNT));
+    }
 }
 
 void instance_trial_of_the_crusader::SetData(uint32 uiType, uint32 uiData)
@@ -226,6 +250,7 @@ void instance_trial_of_the_crusader::SetData(uint32 uiType, uint32 uiData)
     switch(uiType)
     {
         case TYPE_WIPE_COUNT:
+            DoUpdateWorldState(WORLD_STATE_WIPES_COUNT, MAX_WIPES_ALLOWED - m_auiEncounter[TYPE_WIPE_COUNT]);
             m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_NORTHREND_BEASTS:
@@ -266,7 +291,10 @@ void instance_trial_of_the_crusader::SetData(uint32 uiType, uint32 uiData)
                 StartNextDialogueText(NPC_RAMSEY_3);
             }
             else if (uiData == DONE)
+            {
+                DoRespawnGameObject(GO_CRUSADERS_CACHE, 60*MINUTE);
                 StartNextDialogueText(SAY_VARIAN_PVP_A_WIN);
+            }
             m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_TWIN_VALKYR:
@@ -274,7 +302,6 @@ void instance_trial_of_the_crusader::SetData(uint32 uiType, uint32 uiData)
             {
                 if (Creature* pTirion = GetSingleCreatureFromStorage(NPC_TIRION_A))
                     DoScriptText(m_auiEncounter[uiType] != FAIL ? SAY_TIRION_TWINS_INTRO : SAY_RAID_INTRO_SHORT, pTirion);
-
             }
             else if (uiData == FAIL)
             {
@@ -290,6 +317,9 @@ void instance_trial_of_the_crusader::SetData(uint32 uiType, uint32 uiData)
                 StartNextDialogueText(TYPE_ANUBARAK);
             else if (uiData == FAIL)
                 SetData(TYPE_WIPE_COUNT, m_auiEncounter[TYPE_WIPE_COUNT] + 1);
+            else if (uiData == DONE)
+                DoHandleEventEpilogue();
+            // Handle combat door
             if (uiData != SPECIAL)
                 DoUseDoorOrButton(GO_WEB_DOOR);
             m_auiEncounter[uiType] = uiData;
@@ -364,6 +394,32 @@ void instance_trial_of_the_crusader::DoSummonRamsey(uint32 uiEntry)
         uiEntry = NPC_RAMSEY_1;
 
     pPlayer->SummonCreature(uiEntry, aRamsayPositions[0][0], aRamsayPositions[0][1], aRamsayPositions[0][2], aRamsayPositions[0][3], TEMPSUMMON_DEAD_DESPAWN, 0);
+}
+
+void instance_trial_of_the_crusader::DoHandleEventEpilogue()
+{
+    Player* pPlayer = GetPlayerInMap();
+    if (!pPlayer)
+        return;
+
+    // Spawn Tirion and the mage
+    if (Creature* pTirion = pPlayer->SummonCreature(NPC_TIRION_B, aSpawnPositions[12][0], aSpawnPositions[12][1], aSpawnPositions[12][2], aSpawnPositions[12][3], TEMPSUMMON_CORPSE_DESPAWN, 0))
+        DoScriptText(SAY_TIRION_EPILOGUE, pTirion);
+
+    pPlayer->SummonCreature(NPC_ARGENT_MAGE, aSpawnPositions[13][0], aSpawnPositions[13][1], aSpawnPositions[13][2], aSpawnPositions[13][3], TEMPSUMMON_CORPSE_DESPAWN, 0);
+
+    // Spawn the chest for heroic difficulty
+    if (IsHeroicDifficulty())
+    {
+        if (GetData(TYPE_WIPE_COUNT) == 0)
+            DoRespawnGameObject(Is25ManDifficulty() ? GO_TRIBUTE_CHEST_25H_50 : GO_TRIBUTE_CHEST_10H_50, 60*MINUTE);
+        else if (GetData(TYPE_WIPE_COUNT) < 5)
+            DoRespawnGameObject(Is25ManDifficulty() ? GO_TRIBUTE_CHEST_25H_45 : GO_TRIBUTE_CHEST_10H_45, 60*MINUTE);
+        else if (GetData(TYPE_WIPE_COUNT) < 25)
+            DoRespawnGameObject(Is25ManDifficulty() ? GO_TRIBUTE_CHEST_25H_25 : GO_TRIBUTE_CHEST_10H_25, 60*MINUTE);
+        else
+            DoRespawnGameObject(Is25ManDifficulty() ? GO_TRIBUTE_CHEST_25H_01 : GO_TRIBUTE_CHEST_10H_01, 60*MINUTE);
+    }
 }
 
 void instance_trial_of_the_crusader::JustDidDialogueStep(int32 iEntry)
