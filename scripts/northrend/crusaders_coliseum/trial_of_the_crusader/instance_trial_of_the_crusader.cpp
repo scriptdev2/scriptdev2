@@ -241,7 +241,7 @@ void instance_trial_of_the_crusader::OnPlayerEnter(Player* pPlayer)
     if (IsHeroicDifficulty())
     {
         pPlayer->SendUpdateWorldState(WORLD_STATE_WIPES, 1);
-        pPlayer->SendUpdateWorldState(WORLD_STATE_WIPES_COUNT, MAX_WIPES_ALLOWED - GetData(TYPE_WIPE_COUNT));
+        pPlayer->SendUpdateWorldState(WORLD_STATE_WIPES_COUNT, MAX_WIPES_ALLOWED - GetData(TYPE_WIPE_COUNT) >= 0 ? MAX_WIPES_ALLOWED - GetData(TYPE_WIPE_COUNT) : 0);
     }
 }
 
@@ -250,7 +250,8 @@ void instance_trial_of_the_crusader::SetData(uint32 uiType, uint32 uiData)
     switch(uiType)
     {
         case TYPE_WIPE_COUNT:
-            DoUpdateWorldState(WORLD_STATE_WIPES_COUNT, MAX_WIPES_ALLOWED - m_auiEncounter[TYPE_WIPE_COUNT]);
+            if (IsHeroicDifficulty())
+                DoUpdateWorldState(WORLD_STATE_WIPES_COUNT, MAX_WIPES_ALLOWED - m_auiEncounter[TYPE_WIPE_COUNT] >= 0 ? MAX_WIPES_ALLOWED - m_auiEncounter[TYPE_WIPE_COUNT] : 0);
             m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_NORTHREND_BEASTS:

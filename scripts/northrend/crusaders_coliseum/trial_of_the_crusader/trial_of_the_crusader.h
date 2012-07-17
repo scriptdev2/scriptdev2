@@ -143,7 +143,7 @@ class MANGOS_DLL_DECL instance_trial_of_the_crusader : public ScriptedInstance, 
         uint32 GetData(uint32 uiType);
 
         // Difficulty wrappers
-        bool IsHeroicDifficulty() { return instance->GetDifficulty() > RAID_DIFFICULTY_25MAN_NORMAL; }
+        bool IsHeroicDifficulty() { return instance->GetDifficulty() == RAID_DIFFICULTY_10MAN_HEROIC || instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC; }
         bool Is25ManDifficulty() { return instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL || instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC; }
 
         const char* Save() { return m_strInstData.c_str(); }

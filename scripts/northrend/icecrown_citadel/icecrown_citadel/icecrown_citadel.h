@@ -224,7 +224,7 @@ class MANGOS_DLL_DECL instance_icecrown_citadel : public ScriptedInstance, priva
         void DoHandleCitadelAreaTrigger(uint32 uiTriggerId);
 
         // Difficulty wrappers
-        bool IsHeroicDifficulty() { return instance->GetDifficulty() > RAID_DIFFICULTY_25MAN_NORMAL; }
+        bool IsHeroicDifficulty() { return instance->GetDifficulty() == RAID_DIFFICULTY_10MAN_HEROIC || instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC; }
         bool Is25ManDifficulty() { return instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL || instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC; }
 
         void GetDeathwhisperStalkersList(GuidList &lList) { lList = m_lDeathwhisperStalkersGuids; }
