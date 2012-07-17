@@ -1221,6 +1221,9 @@
     <ClCompile Include="..\scripts\northrend\nexus\eye_of_eternity\boss_malygos.cpp">
       <Filter>scripts\northrend\nexus\eye_of_eternity</Filter>
     </ClCompile>
+    <ClCompile Include="..\scripts\northrend\nexus\eye_of_eternity\instance_eye_of_eternity.cpp">
+      <Filter>scripts\northrend\nexus\eye_of_eternity</Filter>
+    </ClCompile>
     <ClCompile Include="..\scripts\northrend\nexus\nexus\boss_anomalus.cpp">
       <Filter>scripts\northrend\nexus\nexus</Filter>
     </ClCompile>
@@ -1904,6 +1907,9 @@
     </ClInclude>
     <ClInclude Include="..\scripts\northrend\naxxramas\naxxramas.h">
       <Filter>scripts\northrend\naxxramas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scripts\northrend\nexus\eye_of_eternity\eye_of_eternity.h">
+      <Filter>scripts\northrend\nexus\eye_of_eternity</Filter>
     </ClInclude>
     <ClInclude Include="..\scripts\northrend\nexus\nexus\nexus.h">
       <Filter>scripts\northrend\nexus\nexus</Filter>
