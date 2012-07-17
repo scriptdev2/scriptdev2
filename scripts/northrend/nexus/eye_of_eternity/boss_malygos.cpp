@@ -16,12 +16,13 @@
 
 /* ScriptData
 SDName: boss_malygos
-SD%Complete: 0
-SDComment: Placeholder
+SD%Complete: 10
+SDComment: Basic script
 SDCategory: Eye of Eternity
 EndScriptData */
 
 #include "precompiled.h"
+#include "eye_of_eternity.h"
 
 enum
 {
@@ -63,6 +64,119 @@ enum
     SAY_EMOTE_BREATH        = -1616034,
 };
 
+/*######
+## boss_malygos
+######*/
+
+struct MANGOS_DLL_DECL boss_malygosAI : public ScriptedAI
+{
+    boss_malygosAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (instance_eye_of_eternity*)pCreature->GetInstanceData();
+        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
+        Reset();
+    }
+
+    instance_eye_of_eternity* m_pInstance;
+    bool m_bIsRegularMode;
+
+    void Reset()
+    {
+        SetCombatMovement(false);
+    }
+
+    void Aggro(Unit* pWho)
+    {
+        DoScriptText(SAY_AGGRO, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_MALYGOS, IN_PROGRESS);
+    }
+
+    void KilledUnit(Unit* pVictim)
+    {
+        // ToDo: add kill yells, based on encounter phase
+    }
+
+    void JustDied(Unit* pKiller)
+    {
+        DoScriptText(SAY_DEATH, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_MALYGOS, DONE);
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_MALYGOS, FAIL);
+    }
+
+    void MovementInform(uint32 uiMoveType, uint32 uiPointId)
+    {
+        if (uiMoveType != POINT_MOTION_TYPE)
+            return;
+
+        if (uiPointId)
+        {
+            m_creature->SetLevitate(false);
+            SetCombatMovement(true);
+            DoStartMovement(m_creature->getVictim());
+            m_creature->RemoveByteFlag(UNIT_FIELD_BYTES_1, 3, UNIT_BYTE1_FLAG_ALWAYS_STAND | UNIT_BYTE1_FLAG_UNK_2);
+        }
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_boss_malygos(Creature* pCreature)
+{
+    return new boss_malygosAI(pCreature);
+}
+
+bool ProcessEventId_event_go_focusing_iris(uint32 uiEventId, Object* pSource, Object* pTarget, bool bIsStart)
+{
+    if (instance_eye_of_eternity* pInstance = (instance_eye_of_eternity*)((Creature*)pSource)->GetInstanceData())
+    {
+        if (pSource->GetTypeId() != TYPEID_PLAYER)
+            return false;
+
+        if (pInstance->GetData(TYPE_MALYGOS) == IN_PROGRESS || pInstance->GetData(TYPE_MALYGOS) == DONE)
+            return false;
+
+        Creature* pMalygos = pInstance->GetSingleCreatureFromStorage(NPC_MALYGOS);
+        Creature* pTrigger = pInstance->GetSingleCreatureFromStorage(NPC_LARGE_TRIGGER);
+        if (!pMalygos || !pTrigger)
+            return false;
+
+        // Enter combat area
+        float fX, fY, fZ;
+        pTrigger->GetNearPoint(pTrigger, fX, fY, fZ, 0, 30.0f, pTrigger->GetAngle(pMalygos));
+        pMalygos->GetMotionMaster()->MovePoint(1, fX, fY, fZ);
+        pMalygos->AI()->AttackStart((Player*)pSource);
+
+        return true;
+    }
+    return false;
+}
+
 void AddSC_boss_malygos()
 {
+    Script* pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_malygos";
+    pNewScript->GetAI = &GetAI_boss_malygos;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "event_go_focusing_iris";
+    pNewScript->pProcessEventId = &ProcessEventId_event_go_focusing_iris;
+    pNewScript->RegisterSelf();
 }
