@@ -16,7 +16,7 @@
 
 /* ScriptData
 SDName: instance_eye_of_eternity
-SD%Complete: 20
+SD%Complete: 50
 SDComment:
 SDCategory: Eye of Eternity
 EndScriptData */
@@ -24,7 +24,21 @@ EndScriptData */
 #include "precompiled.h"
 #include "eye_of_eternity.h"
 
-instance_eye_of_eternity::instance_eye_of_eternity(Map* pMap) : ScriptedInstance(pMap)
+static const DialogueEntry aEpilogueDialogue[] =
+{
+    {NPC_ALEXSTRASZA,               0,                  10000},
+    {SPELL_ALEXSTRASZAS_GIFT_BEAM,  0,                  3000},
+    {NPC_ALEXSTRASZAS_GIFT,         0,                  2000},
+    {SAY_OUTRO_1,                   NPC_ALEXSTRASZA,    6000},
+    {SAY_OUTRO_2,                   NPC_ALEXSTRASZA,    4000},
+    {SAY_OUTRO_3,                   NPC_ALEXSTRASZA,    23000},
+    {SAY_OUTRO_4,                   NPC_ALEXSTRASZA,    20000},
+    {GO_PLATFORM,                   0,                  0},
+    {0, 0, 0},
+};
+
+instance_eye_of_eternity::instance_eye_of_eternity(Map* pMap) : ScriptedInstance(pMap),
+    DialogueHelper(aEpilogueDialogue)
 {
     Initialize();
 }
@@ -32,6 +46,7 @@ instance_eye_of_eternity::instance_eye_of_eternity(Map* pMap) : ScriptedInstance
 void instance_eye_of_eternity::Initialize()
 {
     m_uiEncounter = NOT_STARTED;
+    InitializeDialogueHelper(this);
 }
 
 bool instance_eye_of_eternity::IsEncounterInProgress() const
@@ -46,6 +61,7 @@ void instance_eye_of_eternity::OnCreatureCreate(Creature* pCreature)
         case NPC_MALYGOS:
         case NPC_ALEXSTRASZA:
         case NPC_LARGE_TRIGGER:
+        case NPC_ALEXSTRASZAS_GIFT:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
     }
@@ -78,13 +94,30 @@ void instance_eye_of_eternity::SetData(uint32 uiType, uint32 uiData)
 
         DoStartTimedAchievement(ACHIEVEMENT_CRITERIA_TYPE_KILL_CREATURE, ACHIEV_START_MALYGOS_ID);
     }
-    if (uiData == DONE)
-    {
-        DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_HEART_OF_MAGIC : GO_HEART_OF_MAGIC_H, 30*MINUTE);
-        DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_ALEXSTRASZAS_GIFT : GO_ALEXSTRASZAS_GIFT_H, 30*MINUTE);
-    }
+    else if (uiData == DONE)
+        StartNextDialogueText(NPC_ALEXSTRASZA);
 
     // Currently no reason to save anything
+}
+
+void instance_eye_of_eternity::JustDidDialogueStep(int32 iEntry)
+{
+    switch (iEntry)
+    {
+        case SPELL_ALEXSTRASZAS_GIFT_BEAM:
+            if (Creature* pAlextrasza = GetSingleCreatureFromStorage(NPC_ALEXSTRASZA))
+                pAlextrasza->CastSpell(pAlextrasza, SPELL_ALEXSTRASZAS_GIFT_BEAM, false);
+            break;
+        case NPC_ALEXSTRASZAS_GIFT:
+            if (Creature* pGift = GetSingleCreatureFromStorage(NPC_ALEXSTRASZAS_GIFT))
+                pGift->CastSpell(pGift, SPELL_ALEXSTRASZAS_GIFT_VISUAL, false);
+            DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_ALEXSTRASZAS_GIFT : GO_ALEXSTRASZAS_GIFT_H, 30*MINUTE);
+            break;
+        case GO_PLATFORM:
+            // ToDo: respawn the platform and the portal
+            DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_HEART_OF_MAGIC : GO_HEART_OF_MAGIC_H, 30*MINUTE);
+            break;
+    }
 }
 
 InstanceData* GetInstanceData_instance_eye_of_eternity(Map* pMap)
