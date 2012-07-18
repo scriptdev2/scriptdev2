@@ -94,6 +94,10 @@ void instance_eye_of_eternity::SetData(uint32 uiType, uint32 uiData)
 
         DoStartTimedAchievement(ACHIEVEMENT_CRITERIA_TYPE_KILL_CREATURE, ACHIEV_START_MALYGOS_ID);
     }
+    else if (uiData == FAIL)
+    {
+        // ToDo: respawn the platform and the portal
+    }
     else if (uiData == DONE)
         StartNextDialogueText(NPC_ALEXSTRASZA);
 

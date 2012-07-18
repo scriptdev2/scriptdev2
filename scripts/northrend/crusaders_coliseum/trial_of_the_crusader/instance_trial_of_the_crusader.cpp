@@ -214,6 +214,7 @@ void instance_trial_of_the_crusader::OnObjectCreate(GameObject* pGo)
         case GO_TRIBUTE_CHEST_25H_50:
         case GO_MAIN_GATE:
         case GO_WEB_DOOR:
+        case GO_PORTAL_DALARAN:
             break;
         case GO_CRUSADERS_CACHE:
         case GO_CRUSADERS_CACHE_25:
@@ -408,6 +409,8 @@ void instance_trial_of_the_crusader::DoHandleEventEpilogue()
         DoScriptText(SAY_TIRION_EPILOGUE, pTirion);
 
     pPlayer->SummonCreature(NPC_ARGENT_MAGE, aSpawnPositions[13][0], aSpawnPositions[13][1], aSpawnPositions[13][2], aSpawnPositions[13][3], TEMPSUMMON_CORPSE_DESPAWN, 0);
+
+    DoRespawnGameObject(GO_PORTAL_DALARAN, 60*MINUTE);
 
     // Spawn the chest for heroic difficulty
     if (IsHeroicDifficulty())

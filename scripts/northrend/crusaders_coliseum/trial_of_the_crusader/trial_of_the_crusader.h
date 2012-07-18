@@ -63,6 +63,7 @@ enum
     GO_NORTH_GATE               = 195650,
     GO_COLISEUM_FLOOR           = 195527,
     GO_WEB_DOOR                 = 195485,
+    GO_PORTAL_DALARAN           = 195682,
 
     GO_CRUSADERS_CACHE          = 195631,
     GO_CRUSADERS_CACHE_25       = 195632,

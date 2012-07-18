@@ -272,7 +272,7 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public Scripted_NoMovementAI
 
             // Say dependend if first time or not
             DoScriptText(!m_bHasSubmergedOnce ? SAY_REINFORCEMENTS_1 : SAY_REINFORCEMENTS_2, m_creature);
-            m_bHasSubmergedOnce = false;
+            m_bHasSubmergedOnce = true;
 
             // Summon 8 elementals at random points around the boss
             float fX, fY, fZ;

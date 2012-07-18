@@ -898,6 +898,7 @@ UPDATE creature_template SET ScriptName='npc_zeppit' WHERE entry=22484;
 /* EYE OF ETERNITY */
 UPDATE instance_template SET ScriptName='instance_eye_of_eternity' WHERE map=616;
 UPDATE creature_template SET ScriptName='boss_malygos' WHERE entry=28859;
+UPDATE creature_template SET ScriptName='npc_power_spark' WHERE entry=30084;
 DELETE FROM scripted_event_id WHERE id IN (20711);
 INSERT INTO scripted_event_id VALUES
 (20711,'event_go_focusing_iris');

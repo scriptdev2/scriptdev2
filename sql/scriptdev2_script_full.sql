@@ -3650,7 +3650,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,LANGUAGE,emote,commen
 (-1616010,'<Laughs> How very... naive...',14521,1,0,0,'malygos SAY_SLAY_1_C'),
 (-1616011,'I had hoped to end your lives quickly, but you have proven more...resilient then I had anticipated. Nonetheless, your efforts are in vain, it is you reckless, careless mortals who are to blame for this war! I do what I must...And if it means your...extinction...THEN SO BE IT!',14522,1,0,0,'malygos SAY_END_PHASE_1'),
 (-1616012,'Few have experienced the pain I will now inflict upon you!',14523,1,0,0,'malygos SAY_START_PHASE_2'),
-(-1616013,'YOU WILL NOT SUCCEED WHILE I DRAW BREATH!',14518,1,0,0,'malygos SAY_DEEP_BREATH'),
+(-1616013,'You will not succeed while I draw breath!',14518,1,0,0,'malygos SAY_DEEP_BREATH'),
 (-1616014,'I will teach you IGNORANT children just how little you know of magic...',14524,1,0,0,'malygos SAY_SHELL'),
 (-1616015,'Your energy will be put to good use!',14526,1,0,0,'malygos SAY_SLAY_2_A'),
 (-1616016,'I am the spell-weaver! My power is infinite!',14527,1,0,0,'malygos SAY_SLAY_2_B'),
