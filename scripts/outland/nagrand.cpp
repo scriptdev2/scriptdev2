@@ -64,9 +64,6 @@ struct MANGOS_DLL_DECL mob_lumpAI : public ScriptedAI
     {
         m_uiResetTimer = MINUTE*IN_MILLISECONDS;
         m_uiSpearThrowTimer = 2000;
-
-        if (m_creature->getFaction() != m_creature->GetCreatureInfo()->faction_A)
-            m_creature->setFaction(m_creature->GetCreatureInfo()->faction_A);
     }
 
     void AttackedBy(Unit* pAttacker)
@@ -91,7 +88,7 @@ struct MANGOS_DLL_DECL mob_lumpAI : public ScriptedAI
             m_creature->CombatStop(true);
 
             // should get unit_flags UNIT_FLAG_OOC_NOT_ATTACKABLE | UNIT_FLAG_PASSIVE at faction change, but unclear why/for what reason, skipped (no flags expected as default)
-            m_creature->setFaction(FACTION_FRIENDLY);
+            m_creature->SetFactionTemporary(FACTION_FRIENDLY, TEMPFACTION_RESTORE_REACH_HOME);
 
             m_creature->SetStandState(UNIT_STAND_STATE_SIT);
             DoScriptText(SAY_LUMP_DEFEAT, m_creature);

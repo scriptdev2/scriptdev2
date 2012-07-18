@@ -549,49 +549,55 @@ CreatureAI* GetAI_npc_khadgars_servant(Creature* pCreature)
 # npc_salsalabim
 ######*/
 
-#define FACTION_HOSTILE_SA              90
-#define FACTION_FRIENDLY_SA             35
-#define QUEST_10004                     10004
+enum
+{
+    FACTION_HOSTILE_SA              = 90,
+    QUEST_10004                     = 10004,
 
-#define SPELL_MAGNETIC_PULL             31705
+    SPELL_MAGNETIC_PULL             = 31705,
+};
 
 struct MANGOS_DLL_DECL npc_salsalabimAI : public ScriptedAI
 {
     npc_salsalabimAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
-    uint32 MagneticPull_Timer;
+    uint32 m_uiMagneticPullTimer;
 
     void Reset()
     {
-        MagneticPull_Timer = 15000;
-        m_creature->setFaction(FACTION_FRIENDLY_SA);
+        m_uiMagneticPullTimer = 15000;
     }
 
-    void DamageTaken(Unit *done_by, uint32 &damage)
+    void DamageTaken(Unit* pDoneBy, uint32 &uiDamage)
     {
-        if (done_by->GetTypeId() == TYPEID_PLAYER)
-            if ((m_creature->GetHealth()-damage)*100 / m_creature->GetMaxHealth() < 20)
+        if (pDoneBy->GetTypeId() == TYPEID_PLAYER)
         {
-            ((Player*)done_by)->GroupEventHappens(QUEST_10004,m_creature);
-            damage = 0;
-            EnterEvadeMode();
+            if (m_creature->GetHealthPercent() < 20.0f)
+            {
+                ((Player*)pDoneBy)->GroupEventHappens(QUEST_10004,m_creature);
+                uiDamage = 0;
+                EnterEvadeMode();
+            }
         }
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (MagneticPull_Timer < diff)
+        if (m_uiMagneticPullTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_MAGNETIC_PULL);
-            MagneticPull_Timer = 15000;
-        }else MagneticPull_Timer -= diff;
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_MAGNETIC_PULL);
+            m_uiMagneticPullTimer = 15000;
+        }
+        else
+            m_uiMagneticPullTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
 };
+
 CreatureAI* GetAI_npc_salsalabim(Creature* pCreature)
 {
     return new npc_salsalabimAI(pCreature);
@@ -601,15 +607,17 @@ bool GossipHello_npc_salsalabim(Player* pPlayer, Creature* pCreature)
 {
     if (pPlayer->GetQuestStatus(QUEST_10004) == QUEST_STATUS_INCOMPLETE)
     {
-        pCreature->setFaction(FACTION_HOSTILE_SA);
+        pCreature->SetFactionTemporary(FACTION_HOSTILE_SA, TEMPFACTION_RESTORE_REACH_HOME);
         pCreature->AI()->AttackStart(pPlayer);
     }
     else
     {
         if (pCreature->isQuestGiver())
             pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
+
         pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
     }
+
     return true;
 }
 

@@ -58,133 +58,138 @@ CreatureAI* GetAI_mobs_bladespire_ogre(Creature* pCreature)
 ## mobs_nether_drake
 ######*/
 
-#define SAY_NIHIL_1                 -1000169
-#define SAY_NIHIL_2                 -1000170
-#define SAY_NIHIL_3                 -1000171
-#define SAY_NIHIL_4                 -1000172
-#define SAY_NIHIL_INTERRUPT         -1000173
+enum
+{
+    SAY_NIHIL_1                 = -1000169,
+    SAY_NIHIL_2                 = -1000170,
+    SAY_NIHIL_3                 = -1000171,
+    SAY_NIHIL_4                 = -1000172,
+    SAY_NIHIL_INTERRUPT         = -1000173,
 
-#define ENTRY_WHELP                 20021
-#define ENTRY_PROTO                 21821
-#define ENTRY_ADOLE                 21817
-#define ENTRY_MATUR                 21820
-#define ENTRY_NIHIL                 21823
+    MAX_ENTRIES                 = 4,
 
-#define SPELL_T_PHASE_MODULATOR     37573
+    NPC_PROTO                   = 21821,
+    NPC_ADOLESCENT              = 21817,
+    NPC_MATURE                  = 21820,
+    NPC_NIHIL                   = 21823,
 
-#define SPELL_ARCANE_BLAST          38881
-#define SPELL_MANA_BURN             38884
-#define SPELL_INTANGIBLE_PRESENCE   36513
+    SPELL_T_PHASE_MODULATOR     = 37573,
+
+    SPELL_ARCANE_BLAST          = 38881,
+    SPELL_MANA_BURN             = 38884,
+    SPELL_INTANGIBLE_PRESENCE   = 36513,
+};
+
+static const uint32 aNetherDrakeEntries[MAX_ENTRIES] = {NPC_PROTO, NPC_ADOLESCENT, NPC_MATURE, NPC_NIHIL};
 
 struct MANGOS_DLL_DECL mobs_nether_drakeAI : public ScriptedAI
 {
     mobs_nether_drakeAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
-    bool IsNihil;
-    uint32 NihilSpeech_Timer;
-    uint32 NihilSpeech_Phase;
+    bool m_bIsNihil;
+    uint32 m_uiNihilSpeechTimer;
+    uint32 m_uiNihilSpeechPhase;
 
-    uint32 ArcaneBlast_Timer;
-    uint32 ManaBurn_Timer;
-    uint32 IntangiblePresence_Timer;
+    uint32 m_uiArcaneBlastTimer;
+    uint32 m_uiManaBurnTimer;
+    uint32 m_uiIntangiblePresenceTimer;
 
     void Reset()
     {
-        IsNihil = false;
-        NihilSpeech_Timer = 3000;
-        NihilSpeech_Phase = 0;
+        m_bIsNihil                  = false;
+        m_uiNihilSpeechTimer        = 3000;
+        m_uiNihilSpeechPhase        = 0;
 
-        ArcaneBlast_Timer = 7500;
-        ManaBurn_Timer = 10000;
-        IntangiblePresence_Timer = 15000;
+        m_uiArcaneBlastTimer        = 7500;
+        m_uiManaBurnTimer           = 10000;
+        m_uiIntangiblePresenceTimer = 15000;
     }
 
-    void MoveInLineOfSight(Unit *who)
+    void MoveInLineOfSight(Unit* pWho)
     {
         if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE))
             return;
 
-        ScriptedAI::MoveInLineOfSight(who);
+        ScriptedAI::MoveInLineOfSight(pWho);
     }
 
     //in case creature was not summoned (not expected)
-    void MovementInform(uint32 type, uint32 id)
+    void MovementInform(uint32 uiMoveType, uint32 uiPointId)
     {
-        if (type != POINT_MOTION_TYPE)
+        if (uiMoveType != POINT_MOTION_TYPE)
             return;
 
-        if (id == 0)
-        {
-            m_creature->SetDeathState(JUST_DIED);
-            m_creature->RemoveCorpse();
-            m_creature->SetHealth(0);
-        }
+        if (uiPointId)
+            m_creature->ForcedDespawn();
     }
 
-    void SpellHit(Unit *caster, const SpellEntry *spell)
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
     {
-        if (spell->Id == SPELL_T_PHASE_MODULATOR && caster->GetTypeId() == TYPEID_PLAYER)
+        if (pSpell->Id == SPELL_T_PHASE_MODULATOR && pCaster->GetTypeId() == TYPEID_PLAYER)
         {
-            const uint32 entry_list[4] = {ENTRY_PROTO, ENTRY_ADOLE, ENTRY_MATUR, ENTRY_NIHIL};
-            int cid = rand()%(4-1);
-
-            if (entry_list[cid] == m_creature->GetEntry())
-                ++cid;
-
-            //we are nihil, so say before transform
-            if (m_creature->GetEntry() == ENTRY_NIHIL)
+            // we are nihil, so say before transform
+            if (m_creature->GetEntry() == NPC_NIHIL)
             {
                 DoScriptText(SAY_NIHIL_INTERRUPT, m_creature);
                 m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                IsNihil = false;
+                m_bIsNihil = false;
             }
 
-            if (m_creature->UpdateEntry(entry_list[cid]))
+            // choose a new entry
+            uint8 uiIndex = urand(0, MAX_ENTRIES - 1);
+
+            // If we choose the same entry, try again
+            while (aNetherDrakeEntries[uiIndex] == m_creature->GetEntry())
+                uiIndex = urand(0, MAX_ENTRIES - 1);
+
+            if (m_creature->UpdateEntry(aNetherDrakeEntries[uiIndex]))
             {
-                if (entry_list[cid] == ENTRY_NIHIL)
+                // Nihil does only dialogue
+                if (aNetherDrakeEntries[uiIndex] == NPC_NIHIL)
                 {
                     EnterEvadeMode();
                     m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                    IsNihil = true;
-                }else
-                    AttackStart(caster);
+                    m_bIsNihil = true;
+                }
+                else
+                    AttackStart(pCaster);
             }
         }
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
-        if (IsNihil)
+        if (m_bIsNihil)
         {
-            if (NihilSpeech_Timer <= diff)
+            if (m_uiNihilSpeechTimer < uiDiff)
             {
-                switch(NihilSpeech_Phase)
+                switch (m_uiNihilSpeechPhase)
                 {
                     case 0:
                         DoScriptText(SAY_NIHIL_1, m_creature);
-                        ++NihilSpeech_Phase;
                         break;
                     case 1:
                         DoScriptText(SAY_NIHIL_2, m_creature);
-                        ++NihilSpeech_Phase;
                         break;
                     case 2:
                         DoScriptText(SAY_NIHIL_3, m_creature);
-                        ++NihilSpeech_Phase;
                         break;
                     case 3:
                         DoScriptText(SAY_NIHIL_4, m_creature);
-                        ++NihilSpeech_Phase;
                         break;
                     case 4:
                         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                         //take off to location above
-                        m_creature->GetMotionMaster()->MovePoint(0, m_creature->GetPositionX()+50.0f, m_creature->GetPositionY(), m_creature->GetPositionZ()+50.0f);
-                        ++NihilSpeech_Phase;
+                        m_creature->SetLevitate(true);
+                        m_creature->SetByteFlag(UNIT_FIELD_BYTES_1, 3, UNIT_BYTE1_FLAG_ALWAYS_STAND | UNIT_BYTE1_FLAG_UNK_2);
+                        m_creature->GetMotionMaster()->MovePoint(1, m_creature->GetPositionX() + 50.0f, m_creature->GetPositionY(), m_creature->GetPositionZ() + 50.0f);
                         break;
                 }
-                NihilSpeech_Timer = 5000;
-            }else NihilSpeech_Timer -=diff;
+                ++m_uiNihilSpeechPhase;
+                m_uiNihilSpeechTimer = 5000;
+            }
+            else
+                m_uiNihilSpeechTimer -= uiDiff;
 
             //anything below here is not interesting for Nihil, so skip it
             return;
@@ -193,25 +198,32 @@ struct MANGOS_DLL_DECL mobs_nether_drakeAI : public ScriptedAI
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (IntangiblePresence_Timer <= diff)
+        if (m_uiIntangiblePresenceTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_INTANGIBLE_PRESENCE);
-            IntangiblePresence_Timer = urand(15000, 30000);
-        }else IntangiblePresence_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature, SPELL_INTANGIBLE_PRESENCE) == CAST_OK)
+                m_uiIntangiblePresenceTimer = urand(15000, 30000);
+        }
+        else
+            m_uiIntangiblePresenceTimer -= uiDiff;
 
-        if (ManaBurn_Timer <= diff)
+        if (m_uiManaBurnTimer < uiDiff)
         {
-            Unit* target = m_creature->getVictim();
-            if (target && target->getPowerType() == POWER_MANA)
-                DoCastSpellIfCan(target,SPELL_MANA_BURN);
-            ManaBurn_Timer = urand(8000, 16000);
-        }else ManaBurn_Timer -= diff;
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_MANA_BURN, SELECT_FLAG_POWER_MANA))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_MANA_BURN) == CAST_OK)
+                    m_uiManaBurnTimer = urand(8000, 16000);
+            }
+        }
+        else
+            m_uiManaBurnTimer -= uiDiff;
 
-        if (ArcaneBlast_Timer <= diff)
+        if (m_uiArcaneBlastTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_ARCANE_BLAST);
-            ArcaneBlast_Timer = urand(2500, 7500);
-        }else ArcaneBlast_Timer -= diff;
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_ARCANE_BLAST) == CAST_OK)
+                m_uiArcaneBlastTimer = urand(2500, 7500);
+        }
+        else
+            m_uiArcaneBlastTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }

@@ -49,10 +49,11 @@ enum
     SPELL_PLACE_CARCASS         = 38439,
     SPELL_JUST_EATEN            = 38502,
     SPELL_NETHER_BREATH         = 38467,
-    POINT_ID                    = 1,
 
     QUEST_KINDNESS              = 10804,
-    NPC_EVENT_PINGER            = 22131
+    NPC_EVENT_PINGER            = 22131,
+
+    GO_FLAYER_CARCASS           = 185155,
 };
 
 struct MANGOS_DLL_DECL mob_mature_netherwing_drakeAI : public ScriptedAI
@@ -61,100 +62,89 @@ struct MANGOS_DLL_DECL mob_mature_netherwing_drakeAI : public ScriptedAI
 
     ObjectGuid m_playerGuid;
 
-    bool bCanEat;
-    bool bIsEating;
-
-    uint32 EatTimer;
-    uint32 CastTimer;
+    uint32 m_uiEatTimer;
+    uint32 m_uiCreditTimer;
+    uint32 m_uiCastTimer;
 
     void Reset()
     {
         m_playerGuid.Clear();
 
-        bCanEat = false;
-        bIsEating = false;
-
-        EatTimer = 5000;
-        CastTimer = 5000;
+        m_uiEatTimer    = 0;
+        m_uiCreditTimer = 0;
+        m_uiCastTimer   = 5000;
     }
 
     void SpellHit(Unit* pCaster, SpellEntry const* pSpell)
     {
-        if (bCanEat || bIsEating)
+        if (m_uiEatTimer || m_uiCreditTimer)
             return;
 
         if (pCaster->GetTypeId() == TYPEID_PLAYER && pSpell->Id == SPELL_PLACE_CARCASS && !m_creature->HasAura(SPELL_JUST_EATEN))
         {
             m_playerGuid = pCaster->GetObjectGuid();
-            bCanEat = true;
+            m_uiEatTimer = 5000;
         }
     }
 
-    void MovementInform(uint32 type, uint32 id)
+    void MovementInform(uint32 uiMoveType, uint32 uiPointId)
     {
-        if (type != POINT_MOTION_TYPE)
+        if (uiMoveType != POINT_MOTION_TYPE)
             return;
 
-        if (id == POINT_ID)
+        if (uiPointId)
         {
-            bIsEating = true;
-            EatTimer = 7000;
+            m_uiCreditTimer = 7000;
+            m_creature->SetLevitate(false);
             m_creature->HandleEmote(EMOTE_ONESHOT_ATTACKUNARMED);
+            m_creature->RemoveByteFlag(UNIT_FIELD_BYTES_1, 3, UNIT_BYTE1_FLAG_ALWAYS_STAND | UNIT_BYTE1_FLAG_UNK_2);
         }
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
-        if (bCanEat || bIsEating)
+        if (m_uiEatTimer)
         {
-            if (EatTimer < diff)
+            if (m_uiEatTimer <= uiDiff)
             {
-                if (bCanEat && !bIsEating)
+                if (GameObject* pGo = GetClosestGameObjectWithEntry(m_creature, GO_FLAYER_CARCASS, 80.0f))
                 {
-                    if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid))
-                    {
-                        GameObject* pGo = pPlayer->GetGameObject(SPELL_PLACE_CARCASS);
+                    if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() == WAYPOINT_MOTION_TYPE)
+                        m_creature->GetMotionMaster()->MovementExpired();
 
-                        // Workaround for broken function GetGameObject
-                        if (!pGo)
-                        {
-                            const SpellEntry* pSpell = GetSpellStore()->LookupEntry(SPELL_PLACE_CARCASS);
+                    m_creature->GetMotionMaster()->MoveIdle();
 
-                            uint32 uiGameobjectEntry = pSpell->EffectMiscValue[EFFECT_INDEX_0];
+                    float fX, fY, fZ;
+                    pGo->GetContactPoint(m_creature, fX, fY, fZ, CONTACT_DISTANCE);
 
-                            pGo = GetClosestGameObjectWithEntry(pPlayer, uiGameobjectEntry, 2*INTERACTION_DISTANCE);
-                        }
-
-                        if (pGo)
-                        {
-                            if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() == WAYPOINT_MOTION_TYPE)
-                                m_creature->GetMotionMaster()->MovementExpired();
-
-                            m_creature->GetMotionMaster()->MoveIdle();
-                            m_creature->StopMoving();
-
-                            float fX, fY, fZ;
-                            pGo->GetContactPoint(m_creature, fX, fY, fZ, CONTACT_DISTANCE);
-
-                            m_creature->GetMotionMaster()->MovePoint(POINT_ID, fX, fY, fZ);
-                        }
-                    }
-                    bCanEat = false;
+                    m_creature->GetMotionMaster()->MovePoint(1, fX, fY, fZ);
                 }
-                else if (bIsEating)
-                {
-                    DoCastSpellIfCan(m_creature, SPELL_JUST_EATEN);
-                    DoScriptText(SAY_JUST_EATEN, m_creature);
-
-                    if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid))
-                        pPlayer->KilledMonsterCredit(NPC_EVENT_PINGER, m_creature->GetObjectGuid());
-
-                    Reset();
-                    m_creature->GetMotionMaster()->Clear();
-                }
+                m_uiEatTimer = 0;
             }
             else
-                EatTimer -= diff;
+                m_uiEatTimer -= uiDiff;
+
+            return;
+        }
+
+        if (m_uiCreditTimer)
+        {
+            if (m_uiCreditTimer <= uiDiff)
+            {
+                DoCastSpellIfCan(m_creature, SPELL_JUST_EATEN);
+                DoScriptText(SAY_JUST_EATEN, m_creature);
+
+                if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid))
+                    pPlayer->KilledMonsterCredit(NPC_EVENT_PINGER, m_creature->GetObjectGuid());
+
+                Reset();
+                m_creature->SetLevitate(true);
+                m_creature->SetByteFlag(UNIT_FIELD_BYTES_1, 3, UNIT_BYTE1_FLAG_ALWAYS_STAND | UNIT_BYTE1_FLAG_UNK_2);
+                m_creature->GetMotionMaster()->Clear();
+                m_uiCreditTimer = 0;
+            }
+            else
+                m_uiCreditTimer -= uiDiff;
 
             return;
         }
@@ -162,11 +152,13 @@ struct MANGOS_DLL_DECL mob_mature_netherwing_drakeAI : public ScriptedAI
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (CastTimer < diff)
+        if (m_uiCastTimer < uiDiff)
         {
             DoCastSpellIfCan(m_creature->getVictim(), SPELL_NETHER_BREATH);
-            CastTimer = 5000;
-        }else CastTimer -= diff;
+            m_uiCastTimer = 5000;
+        }
+        else
+            m_uiCastTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
@@ -183,7 +175,6 @@ CreatureAI* GetAI_mob_mature_netherwing_drake(Creature* pCreature)
 
 enum
 {
-    FACTION_DEFAULT                 = 62,
     FACTION_FRIENDLY                = 1840,                 // Not sure if this is correct, it was taken off of Mordenai.
 
     SPELL_HIT_FORCE_OF_NELTHARAKU   = 38762,
@@ -198,32 +189,25 @@ struct MANGOS_DLL_DECL mob_enslaved_netherwing_drakeAI : public ScriptedAI
 {
     mob_enslaved_netherwing_drakeAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        Tapped = false;
+        m_uiFlyTimer = 0;
         Reset();
     }
 
     ObjectGuid m_playerGuid;
-    uint32 FlyTimer;
-    bool Tapped;
+    uint32 m_uiFlyTimer;
 
-    void Reset()
-    {
-        if (!Tapped)
-            m_creature->setFaction(FACTION_DEFAULT);
-
-        FlyTimer = 2500;
-    }
+    void Reset() { }
 
     void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
     {
-        if (pSpell->Id == SPELL_HIT_FORCE_OF_NELTHARAKU && !Tapped)
+        if (pSpell->Id == SPELL_HIT_FORCE_OF_NELTHARAKU && !m_uiFlyTimer)
         {
             if (Player* pPlayer = pCaster->GetCharmerOrOwnerPlayerOrPlayerItself())
             {
-                Tapped = true;
+                m_uiFlyTimer = 2500;
                 m_playerGuid = pPlayer->GetObjectGuid();
 
-                m_creature->setFaction(FACTION_FRIENDLY);
+                m_creature->SetFactionTemporary(FACTION_FRIENDLY, TEMPFACTION_RESTORE_RESPAWN);
 
                 if (Creature* pDragonmaw = GetClosestCreatureWithEntry(m_creature, NPC_DRAGONMAW_SUBJUGATOR, 50.0f))
                     AttackStart(pDragonmaw);
@@ -231,25 +215,23 @@ struct MANGOS_DLL_DECL mob_enslaved_netherwing_drakeAI : public ScriptedAI
         }
     }
 
-    void MovementInform(uint32 type, uint32 id)
+    void MovementInform(uint32 uiMoveType, uint32 uiPointId)
     {
-        if (type != POINT_MOTION_TYPE)
+        if (uiMoveType != POINT_MOTION_TYPE)
             return;
 
-        if (id == 1)
+        if (uiPointId)
             m_creature->ForcedDespawn();
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
         {
-            if (Tapped)
+            if (m_uiFlyTimer)
             {
-                if (FlyTimer <= diff)
+                if (m_uiFlyTimer <= uiDiff)
                 {
-                    Tapped = false;
-
                     if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid))
                     {
                         if (pPlayer->GetQuestStatus(QUEST_FORCE_OF_NELT) == QUEST_STATUS_INCOMPLETE)
@@ -257,23 +239,26 @@ struct MANGOS_DLL_DECL mob_enslaved_netherwing_drakeAI : public ScriptedAI
                             DoCastSpellIfCan(pPlayer, SPELL_FORCE_OF_NELTHARAKU, CAST_TRIGGERED);
                             m_playerGuid.Clear();
 
-                            float dx, dy, dz;
+                            float fX, fY, fZ;
 
-                            if (Creature* EscapeDummy = GetClosestCreatureWithEntry(m_creature, NPC_ESCAPE_DUMMY, 30.0f))
-                                EscapeDummy->GetPosition(dx, dy, dz);
+                            // Get an escape position
+                            if (Creature* pEscapeDummy = GetClosestCreatureWithEntry(m_creature, NPC_ESCAPE_DUMMY, 50.0f))
+                                pEscapeDummy->GetPosition(fX, fY, fZ);
                             else
                             {
-                                m_creature->GetRandomPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 20, dx, dy, dz);
-                                dz += 25;
+                                m_creature->GetRandomPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 20.0f, fX, fY, fZ);
+                                fZ += 25;
                             }
 
-                            m_creature->GetMotionMaster()->MovePoint(1, dx, dy, dz);
+                            m_creature->GetMotionMaster()->MovePoint(1, fX, fY, fZ);
                         }
                     }
+                    m_uiFlyTimer = 0;
                 }
                 else
-                    FlyTimer -= diff;
+                    m_uiFlyTimer -= uiDiff;
             }
+
             return;
         }
 

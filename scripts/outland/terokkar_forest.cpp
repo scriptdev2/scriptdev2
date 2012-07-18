@@ -50,12 +50,10 @@ enum
 {
     SAY_SUBMIT                  = -1000194,
 
-    FACTION_HOSTILE             = 45,
     FACTION_FRIENDLY            = 35,
-    QUEST_DONT_KILL_THE_FAT_ONE = 9889,
 
     SPELL_PULVERIZE             = 2676,
-    // SPELL_QUID9889           = 32174,                    // TODO Make use of this quest-credit spell
+    SPELL_QUID9889              = 32174,
 };
 
 struct MANGOS_DLL_DECL mob_unkor_the_ruthlessAI : public ScriptedAI
@@ -65,20 +63,21 @@ struct MANGOS_DLL_DECL mob_unkor_the_ruthlessAI : public ScriptedAI
     bool m_bCanDoQuest;
     uint32 m_uiUnfriendlyTimer;
     uint32 m_uiPulverizeTimer;
+    uint32 m_uiFriendlyTimer;
 
     void Reset()
     {
-        m_bCanDoQuest = false;
+        m_bCanDoQuest       = false;
         m_uiUnfriendlyTimer = 0;
-        m_uiPulverizeTimer = 3000;
+        m_uiFriendlyTimer   = 0;
+        m_uiPulverizeTimer  = 3000;
         m_creature->SetStandState(UNIT_STAND_STATE_STAND);
-        m_creature->setFaction(FACTION_HOSTILE);
     }
 
     void DoNice()
     {
         DoScriptText(SAY_SUBMIT, m_creature);
-        m_creature->setFaction(FACTION_FRIENDLY);
+        m_creature->SetFactionTemporary(FACTION_FRIENDLY, TEMPFACTION_RESTORE_REACH_HOME);
         m_creature->SetStandState(UNIT_STAND_STATE_SIT);
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
@@ -86,57 +85,39 @@ struct MANGOS_DLL_DECL mob_unkor_the_ruthlessAI : public ScriptedAI
         m_uiUnfriendlyTimer = 60000;
     }
 
-    void DamageTaken(Unit* pDealer, uint32 &uiDamage)
-    {
-        if ((m_creature->GetHealth() - uiDamage)*100 / m_creature->GetMaxHealth() >= 30)
-            return;
-
-        if (Player* pPlayer = pDealer->GetCharmerOrOwnerPlayerOrPlayerItself())
-        {
-            if (Group* pGroup = pPlayer->GetGroup())
-            {
-                for(GroupReference* itr = pGroup->GetFirstMember(); itr != NULL; itr = itr->next())
-                {
-                    Player* pGroupie = itr->getSource();
-                    if (pGroupie &&
-                        pGroupie->GetQuestStatus(QUEST_DONT_KILL_THE_FAT_ONE) == QUEST_STATUS_INCOMPLETE &&
-                        pGroupie->GetReqKillOrCastCurrentCount(QUEST_DONT_KILL_THE_FAT_ONE, 18260) == 10)
-                    {
-                        pGroupie->AreaExploredOrEventHappens(QUEST_DONT_KILL_THE_FAT_ONE);
-                        if (!m_bCanDoQuest)
-                            m_bCanDoQuest = true;
-                    }
-                }
-            }
-            else if (pPlayer->GetQuestStatus(QUEST_DONT_KILL_THE_FAT_ONE) == QUEST_STATUS_INCOMPLETE &&
-                pPlayer->GetReqKillOrCastCurrentCount(QUEST_DONT_KILL_THE_FAT_ONE, 18260) == 10)
-            {
-                pPlayer->AreaExploredOrEventHappens(QUEST_DONT_KILL_THE_FAT_ONE);
-                m_bCanDoQuest = true;
-            }
-        }
-    }
-
     void UpdateAI(const uint32 uiDiff)
     {
-        if (m_bCanDoQuest)
+        // Reset npc on timer
+        if (m_uiUnfriendlyTimer)
         {
-            if (!m_uiUnfriendlyTimer)
-            {
-                //DoCastSpellIfCan(m_creature,SPELL_QUID9889);        //not using spell for now
-                DoNice();
-            }
+            if (m_uiUnfriendlyTimer <= uiDiff)
+                EnterEvadeMode();
             else
-            {
-                if (m_uiUnfriendlyTimer <= uiDiff)
-                    EnterEvadeMode();
-                else
-                    m_uiUnfriendlyTimer -= uiDiff;
-            }
+                m_uiUnfriendlyTimer -= uiDiff;
         }
 
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
+
+        // Do quest kill credit at 30%
+        if (!m_bCanDoQuest && m_creature->GetHealthPercent() < 30.0f)
+        {
+            DoCastSpellIfCan(m_creature, SPELL_QUID9889, CAST_TRIGGERED);
+            m_uiFriendlyTimer = 1000;
+            m_bCanDoQuest = true;
+        }
+
+        // Set faction right after the spell is casted, in order to avoid any issues
+        if (m_uiFriendlyTimer)
+        {
+            if (m_uiFriendlyTimer <= uiDiff)
+            {
+                DoNice();
+                m_uiFriendlyTimer = 0;
+            }
+            else
+                m_uiFriendlyTimer -= uiDiff;
+        }
 
         if (m_uiPulverizeTimer < uiDiff)
         {
@@ -229,6 +210,7 @@ const uint32 netherwebVictims[6] =
 {
     18470, 16805, 21242, 18452, 22482, 21285
 };
+
 struct MANGOS_DLL_DECL mob_netherweb_victimAI : public ScriptedAI
 {
     mob_netherweb_victimAI(Creature* pCreature) : ScriptedAI(pCreature)
