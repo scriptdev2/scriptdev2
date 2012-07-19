@@ -70,6 +70,7 @@ enum
     SPELL_ARCANE_STORM              = 57459,            // related to spell 61693
     SPELL_ARCANE_STORM_H            = 61694,
     SPELL_SUMMON_ARCANE_BOMB        = 56429,
+    SPELL_ARCANE_BOMB               = 56430,            // triggers 56432 and 56431 on target hit
     SPELL_SURGE_OF_POWER_PULSE      = 56505,            // deep breath spell
     //SPELL_ARCANE_PULSE            = 57432,            // purpose unk
 
@@ -95,8 +96,9 @@ enum
     SPELL_VORTEX_VISUAL             = 55873,
     SPELL_VORTEX_CHANNEL            = 56237,
 
-    // arcane overload
-    SPELL_ARCANE_OVERLOAD           = 56432,
+    // arcane overload - handled in core
+    //SPELL_ARCANE_OVERLOAD         = 56432,
+    //SPELL_ARCANE_BOMB_DAMAGE      = 56431,
 
     // static field
     SPELL_STATIC_FIELD              = 57428,
@@ -174,7 +176,6 @@ struct MANGOS_DLL_DECL boss_malygosAI : public ScriptedAI, private DialogueHelpe
     uint8 m_uiMaxNexusLords;
     uint8 m_uiMaxScions;
     uint8 m_uiAddsDeadCount;
-    uint8 m_uiCurrentWaypoint;
     uint8 m_uiMaxStaticFieldTargets;
 
     uint32 m_uiBerserkTimer;
@@ -185,7 +186,6 @@ struct MANGOS_DLL_DECL boss_malygosAI : public ScriptedAI, private DialogueHelpe
     uint32 m_uiArcanePulseTimer;
     uint32 m_uiOverloadTimer;
     uint32 m_uiArcaneStormTimer;
-    uint32 m_uiWaypointTimer;
 
     uint32 m_uiStaticFieldTimer;
     uint32 m_uiSurgeOfPowerTimer;
@@ -202,9 +202,7 @@ struct MANGOS_DLL_DECL boss_malygosAI : public ScriptedAI, private DialogueHelpe
         m_uiArcanePulseTimer    = 60000;
         m_uiOverloadTimer       = 1000;
         m_uiArcaneStormTimer    = 15000;
-        m_uiWaypointTimer       = 15000;
         m_uiAddsDeadCount       = 0;
-        m_uiCurrentWaypoint     = 0;
 
         m_uiStaticFieldTimer    = 15000;
         m_uiSurgeOfPowerTimer   = 30000;
@@ -302,7 +300,7 @@ struct MANGOS_DLL_DECL boss_malygosAI : public ScriptedAI, private DialogueHelpe
                 pSummoned->GetMotionMaster()->MoveFollow(m_creature, 0, 0);
                 break;
             case NPC_ARCANE_OVERLOAD:
-                pSummoned->CastSpell(pSummoned, SPELL_ARCANE_OVERLOAD, false);
+                DoCastSpellIfCan(pSummoned, SPELL_ARCANE_BOMB, CAST_TRIGGERED);
                 break;
             case NPC_STATIC_FIELD:
                 pSummoned->CastSpell(pSummoned, SPELL_STATIC_FIELD, false);
