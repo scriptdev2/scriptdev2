@@ -43,17 +43,17 @@ struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
 {
     boss_maiden_of_virtueAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
-    uint32 m_uiRepentance_Timer;
-    uint32 m_uiHolyfire_Timer;
-    uint32 m_uiHolywrath_Timer;
-    uint32 m_uiHolyground_Timer;
+    uint32 m_uiRepentanceTimer;
+    uint32 m_uiHolyfireTimer;
+    uint32 m_uiHolywrathTimer;
+    uint32 m_uiHolygroundTimer;
 
     void Reset()
     {
-        m_uiRepentance_Timer    = urand(25000, 40000);
-        m_uiHolyfire_Timer      = urand(8000, 25000);
-        m_uiHolywrath_Timer     = urand(15000, 25000);
-        m_uiHolyground_Timer    = 3000;
+        m_uiRepentanceTimer    = urand(25000, 40000);
+        m_uiHolyfireTimer      = urand(8000, 25000);
+        m_uiHolywrathTimer     = urand(15000, 25000);
+        m_uiHolygroundTimer    = 3000;
     }
 
     void KilledUnit(Unit* pVictim)
@@ -71,7 +71,7 @@ struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
         DoScriptText(SAY_DEATH, m_creature);
     }
 
-    void Aggro(Unit *pWho)
+    void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
     }
@@ -81,64 +81,45 @@ struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (m_uiHolyground_Timer < uiDiff)
+        if (m_uiHolygroundTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature, SPELL_HOLYGROUND, CAST_TRIGGERED);     //Triggered so it doesn't interrupt her at all
-            m_uiHolyground_Timer = 3000;
+            if (DoCastSpellIfCan(m_creature, SPELL_HOLYGROUND, CAST_TRIGGERED) == CAST_OK)
+                m_uiHolygroundTimer = 3000;
         }
         else
-            m_uiHolyground_Timer -= uiDiff;
+            m_uiHolygroundTimer -= uiDiff;
 
-        if (m_uiRepentance_Timer < uiDiff)
+        if (m_uiRepentanceTimer < uiDiff)
         {
-            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_REPENTANCE) == CAST_OK)
+            if (DoCastSpellIfCan(m_creature, SPELL_REPENTANCE) == CAST_OK)
             {
                 DoScriptText(urand(0, 1) ? SAY_REPENTANCE1 : SAY_REPENTANCE2, m_creature);
-
-                //A little randomness on that spell
-                m_uiRepentance_Timer = urand(25000, 35000);
+                m_uiRepentanceTimer = urand(25000, 35000);
             }
         }
         else
-            m_uiRepentance_Timer -= uiDiff;
+            m_uiRepentanceTimer -= uiDiff;
 
-        if (m_uiHolyfire_Timer < uiDiff)
+        if (m_uiHolyfireTimer < uiDiff)
         {
-            //Time for an omgwtfpwn code to make maiden cast holy fire only on units outside the holy ground's 18 yard range
-            Unit* pTarget = NULL;
-            std::vector<Unit *> target_list;
-
-            ThreatList const& tList = m_creature->getThreatManager().getThreatList();
-            for (ThreatList::const_iterator itr = tList.begin();itr != tList.end(); ++itr)
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_HOLYFIRE, SELECT_FLAG_NOT_IN_MELEE_RANGE))
             {
-                pTarget = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid());
-
-                if (pTarget && !pTarget->IsWithinDist(m_creature, 12.0f, false))
-                    target_list.push_back(pTarget);
-
-                pTarget = NULL;
+                if (DoCastSpellIfCan(pTarget, SPELL_HOLYFIRE) == CAST_OK)
+                    m_uiHolyfireTimer = urand(8000, 23000);
             }
-
-            if (target_list.size())
-            {
-                if (pTarget = *(target_list.begin()+rand()%target_list.size()))
-                    DoCastSpellIfCan(pTarget,SPELL_HOLYFIRE);
-            }
-
-            m_uiHolyfire_Timer = urand(8000, 23000);        //Anywhere from 8 to 23 seconds, good luck having several of those in a row!
         }
         else
-            m_uiHolyfire_Timer -= uiDiff;
+            m_uiHolyfireTimer -= uiDiff;
 
-        if (m_uiHolywrath_Timer < uiDiff)
+        if (m_uiHolywrathTimer < uiDiff)
         {
-            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                 DoCastSpellIfCan(pTarget, SPELL_HOLYWRATH);
 
-            m_uiHolywrath_Timer = urand(20000, 25000);      //20-25 secs sounds nice
+            m_uiHolywrathTimer = urand(20000, 25000);
         }
         else
-            m_uiHolywrath_Timer -= uiDiff;
+            m_uiHolywrathTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }

@@ -16,7 +16,7 @@
 
 /* ScriptData
 SDName: Boss_Curator
-SD%Complete: 80%
+SD%Complete: 90%
 SDComment:
 SDCategory: Karazhan
 EndScriptData */
@@ -37,11 +37,12 @@ enum
     // Flare
     NPC_ASTRAL_FLARE            = 17096,
     SPELL_ASTRAL_FLARE_PASSIVE  = 30234,
+    SPELL_ASTRAL_FLARE_VISUAL   = 30237,
 
     // The Curator
     SPELL_HATEFUL_BOLT          = 30383,
     SPELL_EVOCATION             = 30254,
-    SPELL_ENRAGE                = 30403,
+    SPELL_ARCANE_INFUSION       = 30403,
     SPELL_BERSERK               = 26662
 };
 
@@ -53,16 +54,14 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
     uint32 m_uiHatefulBoltTimer;
     uint32 m_uiBerserkTimer;
 
-    bool m_bIsBerserk;
     bool m_bIsEnraged;
 
     void Reset()
     {
-        m_uiFlareTimer = 10000;
+        m_uiFlareTimer       = 10000;
         m_uiHatefulBoltTimer = 15000;                       // This time may be wrong
-        m_uiBerserkTimer = 12*MINUTE*IN_MILLISECONDS;
-        m_bIsBerserk = false;
-        m_bIsEnraged = false;
+        m_uiBerserkTimer     = 10*MINUTE*IN_MILLISECONDS;
+        m_bIsEnraged         = false;
 
         m_creature->ApplySpellImmune(0, IMMUNITY_DAMAGE, SPELL_SCHOOL_MASK_ARCANE, true);
     }
@@ -86,16 +85,13 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
     {
         if (pSummoned->GetEntry() == NPC_ASTRAL_FLARE)
         {
-            // Flare start with agro on it's target, should be immune to arcane
-            pSummoned->CastSpell(pSummoned, SPELL_ASTRAL_FLARE_PASSIVE, false);
+            // Flare start with aggro on it's target, should be immune to arcane
+            pSummoned->CastSpell(pSummoned, SPELL_ASTRAL_FLARE_PASSIVE, true);
+            pSummoned->CastSpell(pSummoned, SPELL_ASTRAL_FLARE_VISUAL, true);
             pSummoned->ApplySpellImmune(0, IMMUNITY_DAMAGE, SPELL_SCHOOL_MASK_ARCANE, true);
 
-            if (m_creature->getVictim())
-            {
-                Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1);
-
-                pSummoned->AddThreat(pTarget ? pTarget : m_creature->getVictim(), 1000.0f);
-            }
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                pSummoned->AI()->AttackStart(pTarget);
         }
     }
 
@@ -105,13 +101,12 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
             return;
 
         // always decrease BerserkTimer
-        if (!m_bIsBerserk)
+        if (m_uiBerserkTimer)
         {
-            if (m_uiBerserkTimer < uiDiff)
+            if (m_uiBerserkTimer <= uiDiff)
             {
-                // break evocation if we are under it's effect
-                if (m_creature->HasAura(SPELL_EVOCATION))
-                    m_creature->RemoveAurasDueToSpell(SPELL_EVOCATION);
+                // Also interrupt evocation
+                m_creature->RemoveAurasDueToSpell(SPELL_EVOCATION);
 
                 if (DoCastSpellIfCan(m_creature, SPELL_BERSERK, CAST_INTERRUPT_PREVIOUS) == CAST_OK)
                 {
@@ -119,7 +114,7 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
                     DoScriptText(SAY_ENRAGE, m_creature);
 
                     // don't know if he's supposed to do summon/evocate after hard enrage (probably not)
-                    m_bIsBerserk = true;
+                    m_uiBerserkTimer = 0;
                 }
             }
             else
@@ -130,14 +125,16 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
         if (m_creature->HasAura(SPELL_EVOCATION))
             return;
 
-        if (!m_bIsEnraged && !m_bIsBerserk)
+        if (!m_bIsEnraged)
         {
             if (m_uiFlareTimer < uiDiff)
             {
                 m_uiFlareTimer = 10000;
 
                 // summon Astral Flare
-                DoSpawnCreature(NPC_ASTRAL_FLARE, rand()%37, rand()%37, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
+                float fX, fY, fZ;
+                m_creature->GetRandomPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 10.0f, fX, fY, fZ);
+                m_creature->SummonCreature(NPC_ASTRAL_FLARE, fX, fY, fZ, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
 
                 // reduce mana by 10% of maximum
                 if (int32 iMana = m_creature->GetMaxPower(POWER_MANA))
@@ -147,15 +144,12 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
                     //if this get's us below 10%, then we evocate (the 10th should be summoned now
                     if (m_creature->GetPower(POWER_MANA)*10 < m_creature->GetMaxPower(POWER_MANA))
                     {
-                        DoScriptText(SAY_EVOCATE, m_creature);
-
-                        if (m_creature->IsNonMeleeSpellCasted(false))
-                            m_creature->InterruptNonMeleeSpells(false);
-
-                        m_creature->CastSpell(m_creature, SPELL_EVOCATION, false);
-
-                        //this small delay should make first flare appear fast after evocate, and also prevent possible spawn flood
-                        m_uiFlareTimer = 1000;
+                        if (DoCastSpellIfCan(m_creature, SPELL_EVOCATION, CAST_INTERRUPT_PREVIOUS) == CAST_OK)
+                        {
+                            DoScriptText(SAY_EVOCATE, m_creature);
+                            //this small delay should make first flare appear fast after evocate, and also prevent possible spawn flood
+                            m_uiFlareTimer = 1000;
+                        }
                         return;
                     }
                     else
@@ -173,11 +167,13 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
 
             if (m_creature->GetHealthPercent() < 15.0f)
             {
-                if (!m_creature->IsNonMeleeSpellCasted(false))
+                // Also stop evocation
+                m_creature->RemoveAurasDueToSpell(SPELL_EVOCATION);
+
+                if (DoCastSpellIfCan(m_creature, SPELL_ARCANE_INFUSION, CAST_INTERRUPT_PREVIOUS) == CAST_OK)
                 {
-                    m_bIsEnraged = true;
                     DoScriptText(SAY_ENRAGE, m_creature);
-                    DoCastSpellIfCan(m_creature, SPELL_ENRAGE);
+                    m_bIsEnraged = true;
                 }
             }
         }
@@ -185,9 +181,10 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
         if (m_uiHatefulBoltTimer < uiDiff)
         {
             if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO, 1))
-                m_creature->CastSpell(pTarget, SPELL_HATEFUL_BOLT, false);
-
-            m_uiHatefulBoltTimer = m_bIsEnraged ? 7000 : 15000;
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_HATEFUL_BOLT) == CAST_OK)
+                    m_uiHatefulBoltTimer = m_bIsEnraged ? 7000 : 15000;
+            }
         }
         else
             m_uiHatefulBoltTimer -= uiDiff;
