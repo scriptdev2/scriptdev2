@@ -245,8 +245,6 @@ struct MANGOS_DLL_DECL boss_anubarak_trialAI : public ScriptedAI
     // Wrapper to refresh frost spheres - it's not very clear how ofter should this happen
     void DoRefreshSpheres()
     {
-        uint8 uiNewSpheres = 0;
-
         for (uint8 i = 0; i < MAX_FROSTSPHERES; ++i)
         {
             // If the sphere is alive and hasn't transfomed to permafrost yet summon a new one
