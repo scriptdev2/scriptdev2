@@ -22,6 +22,7 @@ SDCategory: Karazhan
 EndScriptData */
 
 #include "precompiled.h"
+#include "karazhan.h"
 
 enum
 {
@@ -48,7 +49,13 @@ enum
 
 struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
 {
-    boss_curatorAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+    boss_curatorAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance  = (ScriptedInstance*)pCreature->GetInstanceData();
+        Reset();
+    }
+
+    ScriptedInstance* m_pInstance;
 
     uint32 m_uiFlareTimer;
     uint32 m_uiHatefulBoltTimer;
@@ -74,11 +81,23 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
     void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DEATH, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_CURATOR, DONE);
     }
 
     void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_CURATOR, IN_PROGRESS);
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_CURATOR, FAIL);
     }
 
     void JustSummoned(Creature* pSummoned)

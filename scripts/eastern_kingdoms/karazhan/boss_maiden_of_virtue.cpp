@@ -22,6 +22,7 @@ SDCategory: Karazhan
 EndScriptData */
 
 #include "precompiled.h"
+#include "karazhan.h"
 
 enum
 {
@@ -41,7 +42,13 @@ enum
 
 struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
 {
-    boss_maiden_of_virtueAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+    boss_maiden_of_virtueAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance  = (ScriptedInstance*)pCreature->GetInstanceData();
+        Reset();
+    }
+
+    ScriptedInstance* m_pInstance;
 
     uint32 m_uiRepentanceTimer;
     uint32 m_uiHolyfireTimer;
@@ -69,11 +76,23 @@ struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
     void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DEATH, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_MAIDEN, DONE);
     }
 
     void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_MAIDEN, IN_PROGRESS);
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_MAIDEN, FAIL);
     }
 
     void UpdateAI(const uint32 uiDiff)

@@ -67,6 +67,12 @@ void instance_karazhan::OnCreatureCreate(Creature* pCreature)
     {
         case NPC_MOROES:
         case NPC_NIGHTBANE:
+        case NPC_LADY_KEIRA_BERRYBUCK:
+        case NPC_LADY_CATRIONA_VON_INDI:
+        case NPC_LORD_CRISPIN_FERENCE:
+        case NPC_BARON_RAFE_DREUGER:
+        case NPC_BARONESS_DOROTHEA_MILLSTIPE:
+        case NPC_LORD_ROBIN_DARIS:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
     }
