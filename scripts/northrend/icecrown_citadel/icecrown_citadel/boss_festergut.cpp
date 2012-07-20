@@ -16,12 +16,13 @@
 
 /* ScriptData
 SDName: boss_festergut
-SD%Complete: 0%
+SD%Complete: 10%
 SDComment:
 SDCategory: Icecrown Citadel
 EndScriptData */
 
 #include "precompiled.h"
+#include "icecrown_citadel.h"
 
 enum
 {
@@ -37,6 +38,67 @@ enum
     SAY_FESTERGUT_DEATH         = -1631091,
 };
 
+struct MANGOS_DLL_DECL boss_festergutAI : public ScriptedAI
+{
+    boss_festergutAI(Creature *pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (instance_icecrown_citadel*)pCreature->GetMap()->GetInstanceData();
+        Reset();
+    }
+
+    instance_icecrown_citadel *m_pInstance;
+
+    void Reset()
+    {
+    }
+
+    void Aggro(Unit *pWho)
+    {
+        DoScriptText(SAY_AGGRO, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_FESTERGUT, IN_PROGRESS);
+    }
+
+    void KilledUnit(Unit *pVictim)
+    {
+        DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_FESTERGUT, FAIL);
+    }
+
+    void JustDied(Unit *pKiller)
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_FESTERGUT, DONE);
+
+        DoScriptText(SAY_DEATH, m_creature);
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_boss_festergut(Creature* pCreature)
+{
+    return new boss_festergutAI(pCreature);
+}
+
 void AddSC_boss_festergut()
 {
+    Script *pNewScript;
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_festergut";
+    pNewScript->GetAI = &GetAI_boss_festergut;
+    pNewScript->RegisterSelf();
 }

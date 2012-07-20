@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: boss_sindragosa
-SD%Complete: 0%
-SDComment:
+SD%Complete: 50%
+SDComment: requires core support for ice blocks (spells and GO in LoS checking)
 SDCategory: Icecrown Citadel
 EndScriptData */
 

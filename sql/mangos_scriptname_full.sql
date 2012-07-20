@@ -727,6 +727,7 @@ UPDATE creature_template SET ScriptName='boss_blood_queen_lanathel' WHERE entry=
 UPDATE creature_template SET ScriptName='boss_sindragosa' WHERE entry=36853;
 UPDATE creature_template SET ScriptName='npc_rimefang_icc' WHERE entry=37533;
 UPDATE creature_template SET ScriptName='npc_spinestalker_icc' WHERE entry=37534;
+UPDATE creature_template SET ScriptName='boss_festergut' WHERE entry=36626;
 DELETE FROM scripted_event_id WHERE id IN (23426,23438);
 INSERT INTO scripted_event_id VALUES
 (23426,'event_gameobject_citadel_valve'),
