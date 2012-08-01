@@ -98,26 +98,20 @@ UPDATE creature_template SET ScriptName='boss_lethon' WHERE entry=14888;
 UPDATE creature_template SET ScriptName='npc_spirit_shade' WHERE entry=15261;
 
 /* GO */
-UPDATE gameobject_template SET ScriptName='go_cat_figurine' WHERE entry=13873;
 UPDATE gameobject_template SET ScriptName='go_barov_journal' WHERE entry=180794;
 UPDATE gameobject_template SET ScriptName='go_ethereum_prison' WHERE entry BETWEEN 184418 AND 184431;
 UPDATE gameobject_template SET ScriptName='go_ethereum_stasis' WHERE entry BETWEEN 185465 AND 185467;
 UPDATE gameobject_template SET ScriptName='go_ethereum_stasis' WHERE entry=184595;
 UPDATE gameobject_template SET ScriptName='go_ethereum_stasis' WHERE entry BETWEEN 185461 AND 185464;
-UPDATE gameobject_template SET ScriptName='go_gilded_brazier' WHERE entry=181956;
 UPDATE gameobject_template SET ScriptName='go_jump_a_tron' WHERE entry=183146;
 UPDATE gameobject_template SET ScriptName='go_mysterious_snow_mound' WHERE entry=195308;
-UPDATE gameobject_template SET ScriptName='go_resonite_cask' WHERE entry=178145;
-UPDATE gameobject_template SET ScriptName='go_sacred_fire_of_life' WHERE entry=175944;
 UPDATE gameobject_template SET ScriptName='go_shrine_of_the_birds' WHERE entry IN (185547,185553,185551);
 UPDATE gameobject_template SET ScriptName='go_tele_to_dalaran_crystal' WHERE entry=191230;
 UPDATE gameobject_template SET ScriptName='go_tele_to_violet_stand' WHERE entry=191229;
-UPDATE gameobject_template SET ScriptName='go_blood_filled_orb' WHERE entry=182024;
 UPDATE gameobject_template SET ScriptName='go_andorhal_tower' WHERE entry IN (176094,176095,176096,176097);
 UPDATE gameobject_template SET ScriptName='go_scourge_enclosure' WHERE entry=191548;
 UPDATE gameobject_template SET ScriptName='go_veil_skith_cage' WHERE entry IN (185202,185203,185204,185205);
 UPDATE gameobject_template SET ScriptName='go_lab_work_reagents' WHERE entry IN (190462, 190473, 190478, 190459);
-UPDATE gameobject_template SET ScriptName='go_hand_of_iruxos_crystal' WHERE entry=176581;
 
 /* GUARD */
 UPDATE creature_template SET ScriptName='guard_azuremyst' WHERE entry=18038;

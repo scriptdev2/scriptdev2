@@ -606,7 +606,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000577,'This is far enough. I can make it on my own from here.',0,0,0,0,'Lurgglbr - SAY_END_1'),
 (-1000578,'Thank you for helping me $r. Please tell the king I am back.',0,0,0,0,'Lurgglbr - SAY_END_2'),
 
-(-1000579,'Insolent fool! You thought to steal Zelemar\'s blood? You shall pay with your own!',0,1,0,0,'Zelemar the Wrathful - Aggro'),
+(-1000579,'REUSE ME',0,0,0,0,'REUSE ME'),
 
 (-1000580,'Sleep now, young one ...',0,0,0,0,'Raelorasz SAY_SLEEP'),
 (-1000581,'A wonderful specimen.',0,0,0,0,'Raeloarsz SAY_SPECIMEN'),
