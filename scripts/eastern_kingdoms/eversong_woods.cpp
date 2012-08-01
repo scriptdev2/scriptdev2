@@ -254,7 +254,12 @@ enum
     SAY_ANVIL1            = -1000209,
     SAY_ANVIL2            = -1000210,
 
-    FACTION_DEFAULT       = 35,
+    GOSSIP_ITEM_MOMENT    = -3000108,
+    GOSSIP_ITEM_SHOW      = -3000110,
+
+    GOSSIP_TEXT_ID_MOMENT = 8239,
+    GOSSIP_TEXT_ID_SHOW   = 8240,
+
     FACTION_HOSTILE       = 24,
 
     QUEST_THE_DWARVEN_SPY = 8483
@@ -264,6 +269,8 @@ struct MANGOS_DLL_DECL npc_prospector_anvilwardAI : public npc_escortAI
 {
     // CreatureAI functions
     npc_prospector_anvilwardAI(Creature* pCreature) : npc_escortAI(pCreature) {Reset();}
+
+    void Reset() { }
 
     // Pure Virtual Functions
     void WaypointReached(uint32 uiPointId)
@@ -282,21 +289,10 @@ struct MANGOS_DLL_DECL npc_prospector_anvilwardAI : public npc_escortAI
                 DoScriptText(SAY_ANVIL2, m_creature, pPlayer);
                 break;
             case 6:
-                m_creature->setFaction(FACTION_HOSTILE);
+                m_creature->SetFactionTemporary(FACTION_HOSTILE, TEMPFACTION_RESTORE_REACH_HOME | TEMPFACTION_RESTORE_RESPAWN);
+                AttackStart(pPlayer);
                 break;
         }
-    }
-
-    void Reset()
-    {
-        //Default npc faction
-        m_creature->setFaction(FACTION_DEFAULT);
-    }
-
-    void JustDied(Unit* pKiller)
-    {
-        //Default npc faction
-        m_creature->setFaction(FACTION_DEFAULT);
     }
 };
 
@@ -305,15 +301,12 @@ CreatureAI* GetAI_npc_prospector_anvilward(Creature* pCreature)
     return new npc_prospector_anvilwardAI(pCreature);
 }
 
-#define GOSSIP_ITEM_MOMENT "I need a moment of your time, sir."
-#define GOSSIP_ITEM_SHOW   "Why... yes, of course. I've something to show you right inside this building, Mr. Anvilward."
-
 bool GossipHello_npc_prospector_anvilward(Player* pPlayer, Creature* pCreature)
 {
     if (pPlayer->GetQuestStatus(QUEST_THE_DWARVEN_SPY) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_MOMENT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_MOMENT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-    pPlayer->SEND_GOSSIP_MENU(8239, pCreature->GetObjectGuid());
+    pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_ID_MOMENT, pCreature->GetObjectGuid());
     return true;
 }
 
@@ -322,8 +315,8 @@ bool GossipSelect_npc_prospector_anvilward(Player* pPlayer, Creature* pCreature,
     switch(uiAction)
     {
         case GOSSIP_ACTION_INFO_DEF+1:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_SHOW, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-            pPlayer->SEND_GOSSIP_MENU(8240, pCreature->GetObjectGuid());
+            pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_SHOW, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_ID_SHOW, pCreature->GetObjectGuid());
             break;
         case GOSSIP_ACTION_INFO_DEF+2:
             pPlayer->CLOSE_GOSSIP_MENU();
