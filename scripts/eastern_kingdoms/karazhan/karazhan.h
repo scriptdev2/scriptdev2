@@ -24,6 +24,8 @@ enum
     DATA_OPERA_PERFORMANCE          = 11,
     DATA_OPERA_OZ_DEATHCOUNT        = 12,
 
+    NPC_ATTUMEN                     = 15550,
+    NPC_MIDNIGHT                    = 16151,
     NPC_MOROES                      = 15687,
     // NPC_TERESTIAN                = 15688,
     NPC_NIGHTBANE                   = 17225,

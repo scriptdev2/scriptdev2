@@ -755,7 +755,7 @@ UPDATE creature_template SET ScriptName='npc_converted_sentry' WHERE entry=24981
 /* KARAZHAN */
 UPDATE instance_template SET ScriptName='instance_karazhan' WHERE map=532;
 UPDATE creature_template SET ScriptName='boss_midnight' WHERE entry=16151;
-UPDATE creature_template SET ScriptName='boss_attumen' WHERE entry=15550;
+UPDATE creature_template SET ScriptName='boss_attumen' WHERE entry IN (15550,16152);
 UPDATE creature_template SET ScriptName='boss_moroes' WHERE entry=15687;
 UPDATE creature_template SET ScriptName='boss_maiden_of_virtue' WHERE entry=16457;
 UPDATE creature_template SET ScriptName='boss_curator' WHERE entry=15691;

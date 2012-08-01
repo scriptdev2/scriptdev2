@@ -65,6 +65,8 @@ void instance_karazhan::OnCreatureCreate(Creature* pCreature)
 {
     switch (pCreature->GetEntry())
     {
+        case NPC_ATTUMEN:
+        case NPC_MIDNIGHT:
         case NPC_MOROES:
         case NPC_NIGHTBANE:
         case NPC_LADY_KEIRA_BERRYBUCK:
@@ -137,17 +139,26 @@ void instance_karazhan::SetData(uint32 uiType, uint32 uiData)
     switch(uiType)
     {
         case TYPE_ATTUMEN:
-            m_auiEncounter[0] = uiData;
+            m_auiEncounter[uiType] = uiData;
+            if (uiData == FAIL)
+            {
+                // Respawn Midnight on Fail
+                if (Creature* pMidnight = GetSingleCreatureFromStorage(NPC_MIDNIGHT))
+                {
+                    if (!pMidnight->isAlive())
+                    {
+                        pMidnight->Respawn();
+                        pMidnight->GetMotionMaster()->MoveTargetedHome();
+                    }
+                }
+            }
             break;
         case TYPE_MOROES:
-            if (m_auiEncounter[1] != DONE)
-                m_auiEncounter[1] = uiData;
-            break;
         case TYPE_MAIDEN:
-            m_auiEncounter[2] = uiData;
+            m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_OPERA:
-            m_auiEncounter[3] = uiData;
+            m_auiEncounter[uiType] = uiData;
             if (uiData == DONE)
             {
                 DoUseDoorOrButton(GO_STAGE_DOOR_LEFT);
@@ -156,30 +167,30 @@ void instance_karazhan::SetData(uint32 uiType, uint32 uiData)
             }
             break;
         case TYPE_CURATOR:
-            m_auiEncounter[4] = uiData;
+            m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_TERESTIAN:
-            m_auiEncounter[5] = uiData;
+            m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_ARAN:
-            m_auiEncounter[6] = uiData;
+            m_auiEncounter[uiType] = uiData;
             if (uiData != IN_PROGRESS)
                 DoUseDoorOrButton(GO_PRIVATE_LIBRARY_DOOR);
             break;
         case TYPE_NETHERSPITE:
-            m_auiEncounter[7] = uiData;
+            m_auiEncounter[uiType] = uiData;
             DoUseDoorOrButton(GO_MASSIVE_DOOR);
             break;
         case TYPE_CHESS:
             if (uiData == DONE)
                 DoRespawnGameObject(GO_DUST_COVERED_CHEST, DAY);
-            m_auiEncounter[8] = uiData;
+            m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_MALCHEZZAR:
-            m_auiEncounter[9] = uiData;
+            m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_NIGHTBANE:
-            m_auiEncounter[10] = uiData;
+            m_auiEncounter[uiType] = uiData;
             break;
 
         case DATA_OPERA_OZ_DEATHCOUNT:

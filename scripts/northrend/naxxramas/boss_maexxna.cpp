@@ -207,7 +207,7 @@ struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
     bool DoCastWebWrap()
     {
         // If we can't select a player for web wrap then skip the summoning
-        if (!m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1, SPELL_WEBWRAP, SELECT_FLAG_PLAYER))
+        if (!m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1, uint32(0), SELECT_FLAG_PLAYER))
             return false;
 
         uint8 uiPos1 = urand(0, MAX_WEB_WRAP_POSITIONS - 1);
