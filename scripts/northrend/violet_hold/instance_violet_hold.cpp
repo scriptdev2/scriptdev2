@@ -281,8 +281,8 @@ void instance_violet_hold::SetData(uint32 uiType, uint32 uiData)
                     if (Creature* pSinclari = GetSingleCreatureFromStorage(NPC_SINCLARI_ALT))
                     {
                         // ToDo: I'm not sure if the last yell should be at 25% or at 5%. Needs research
-                        DoScriptText(aSealWeakYell[m_uiSealYellCount-1], pSinclari);
                         ++m_uiSealYellCount;
+                        DoScriptText(aSealWeakYell[m_uiSealYellCount-1], pSinclari);
                     }
                 }
 

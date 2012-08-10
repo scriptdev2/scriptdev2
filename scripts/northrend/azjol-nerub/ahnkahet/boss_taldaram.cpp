@@ -38,20 +38,20 @@ enum
 
     SPELL_BEAM_VISUAL               = 60342,        // Visual spell, used before Taltaram is lowered to the ground
     SPELL_CONJURE_FLAME_SPHERE      = 55931,
-    SPELL_FLAME_ORB_SUMMON          = 57752,        // summons 30702
+    SPELL_FLAME_SPHERE_SUMMON_1     = 55895,        // summons 30106
+    SPELL_FLAME_SPHERE_SUMMON_2     = 59511,        // summons 31686
+    SPELL_FLAME_SPHERE_SUMMON_3     = 59512,        // summons 31687
     SPELL_BLOODTHIRST               = 55968,
     SPELL_VANISH                    = 55964,
     SPELL_EMBRACE_OF_THE_VAMPYR     = 55959,
     SPELL_EMBRACE_OF_THE_VAMPYR_H   = 59513,
 
-    // Spells used by the Flame Orb
-    SPELL_FLAME_ORB                 = 57750,
-    SPELL_FLAME_ORB_H               = 58937,
+    // Spells used by the Flame Sphere
+    SPELL_FLAME_SPHERE_PERIODIC     = 55926,
+    SPELL_FLAME_SPHERE_PERIODIC_H   = 59508,
     SPELL_FLAME_SPHERE_SPAWN_EFFECT = 55891,
     SPELL_FLAME_SPHERE_VISUAL       = 55928,
     SPELL_FLAME_SPHERE_DEATH_EFFECT = 55947,
-
-    MAX_FLAME_ORBS                  = 3,
 };
 
 /*######
@@ -77,7 +77,6 @@ struct MANGOS_DLL_DECL boss_taldaramAI : public ScriptedAI
     uint32 m_uiBloodthirstTimer;
     uint32 m_uiFlameOrbTimer;
     uint32 m_uiVanishTimer;
-    uint32 m_uiVanishExpireTimer;
     uint32 m_uiEmbraceTimer;
 
     GuidList m_lFlameOrbsGuidList;
@@ -89,7 +88,6 @@ struct MANGOS_DLL_DECL boss_taldaramAI : public ScriptedAI
         m_uiFlameOrbTimer       = urand(15000, 20000);
         m_uiVanishTimer         = 0;
         m_uiEmbraceTimer        = 0;
-        m_uiVanishExpireTimer   = 0;
         m_bIsFirstAggro         = false;
     }
 
@@ -133,7 +131,7 @@ struct MANGOS_DLL_DECL boss_taldaramAI : public ScriptedAI
     void EnterEvadeMode()
     {
         // Don't allow him to evade during vanish
-        if (m_uiVanishExpireTimer)
+        if (m_uiEmbraceTimer)
             return;
 
         m_creature->RemoveAllAuras();
@@ -176,16 +174,16 @@ struct MANGOS_DLL_DECL boss_taldaramAI : public ScriptedAI
         pSummoned->CastSpell(pSummoned, SPELL_FLAME_SPHERE_DEATH_EFFECT, true);
     }
 
-    // Wrapper which sends each orb in a different direction
-    void DoSetOrbsInMotion()
+    // Wrapper which sends each sphere in a different direction
+    void DoSetSpheresInMotion()
     {
         float fX, fY;
-        uint8 uiIndex = 0;
+        uint8 uiIndex = m_bIsRegularMode ? urand(0, 2) : 0;
         for (GuidList::const_iterator itr = m_lFlameOrbsGuidList.begin(); itr != m_lFlameOrbsGuidList.end(); ++itr)
         {
             if (Creature* pOrb = m_creature->GetMap()->GetCreature(*itr))
             {
-                pOrb->CastSpell(pOrb, m_bIsRegularMode ? SPELL_FLAME_ORB : SPELL_FLAME_ORB_H, true);
+                pOrb->CastSpell(pOrb, m_bIsRegularMode ? SPELL_FLAME_SPHERE_PERIODIC : SPELL_FLAME_SPHERE_PERIODIC_H, true);
 
                 pOrb->GetNearPoint2D(fX, fY, 70.0f, (2*M_PI_F/3)*uiIndex);
                 pOrb->GetMotionMaster()->MovePoint(0, fX, fY, pOrb->GetPositionZ());
@@ -218,36 +216,7 @@ struct MANGOS_DLL_DECL boss_taldaramAI : public ScriptedAI
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (m_uiVanishExpireTimer)
-        {
-            if (m_uiVanishExpireTimer <= uiDiff)
-            {
-                m_uiEmbraceTimer      = 1000;
-                m_uiVanishExpireTimer = 0;
-            }
-            else
-                m_uiVanishExpireTimer -= uiDiff;
-
-            // do not use other abilities during vanish
-            return;
-        }
-
-        if (m_uiVanishTimer)
-        {
-            if (m_uiVanishTimer <= uiDiff)
-            {
-                if (DoCastSpellIfCan (m_creature, SPELL_VANISH) == CAST_OK)
-                {
-                    DoScriptText(urand(0, 1) ? SAY_VANISH_1 : SAY_VANISH_2, m_creature);
-                    m_uiVanishTimer       = 0;
-                    m_uiVanishExpireTimer = 2500;
-                }
-            }
-            else
-                m_uiVanishTimer -= uiDiff;
-        }
-
-        // Cast Embrace of the Vampyr after Vanish expires
+        // Cast Embrace of the Vampyr after Vanish expires - note: because of the invisibility effect, the timers won't decrease during vanish
         if (m_uiEmbraceTimer)
         {
             if (m_uiEmbraceTimer <= uiDiff)
@@ -263,6 +232,24 @@ struct MANGOS_DLL_DECL boss_taldaramAI : public ScriptedAI
             }
             else
                 m_uiEmbraceTimer -= uiDiff;
+
+            // do not use other abilities during vanish
+            return;
+        }
+
+        if (m_uiVanishTimer)
+        {
+            if (m_uiVanishTimer <= uiDiff)
+            {
+                if (DoCastSpellIfCan (m_creature, SPELL_VANISH) == CAST_OK)
+                {
+                    DoScriptText(urand(0, 1) ? SAY_VANISH_1 : SAY_VANISH_2, m_creature);
+                    m_uiVanishTimer  = 0;
+                    m_uiEmbraceTimer = 2000;
+                }
+            }
+            else
+                m_uiVanishTimer -= uiDiff;
         }
 
         if (m_uiBloodthirstTimer < uiDiff)
@@ -279,9 +266,15 @@ struct MANGOS_DLL_DECL boss_taldaramAI : public ScriptedAI
             {
                 m_lFlameOrbsGuidList.clear();
 
-                // Flame orbs are summoned above the boss
-                for (uint8 i = 0; i < MAX_FLAME_ORBS; ++i)
-                    m_creature->CastSpell(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ() + 5.0f, SPELL_FLAME_ORB_SUMMON, true);
+                // Flame speres are summoned above the boss
+                m_creature->CastSpell(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ() + 5.0f, SPELL_FLAME_SPHERE_SUMMON_1, true);
+
+                // 2 more spheres on heroic
+                if (!m_bIsRegularMode)
+                {
+                    m_creature->CastSpell(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ() + 5.0f, SPELL_FLAME_SPHERE_SUMMON_2, true);
+                    m_creature->CastSpell(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ() + 5.0f, SPELL_FLAME_SPHERE_SUMMON_3, true);
+                }
 
                 m_uiFlameOrbTimer = urand(50000, 60000);
                 m_uiVanishTimer   = 12000;
@@ -305,7 +298,7 @@ bool EffectDummyCreature_spell_conjure_flame_orbs(Unit* pCaster, uint32 uiSpellI
     if (uiSpellId == SPELL_CONJURE_FLAME_SPHERE && uiEffIndex == EFFECT_INDEX_0)
     {
         if (boss_taldaramAI* pBossAI = dynamic_cast<boss_taldaramAI*>(pCreatureTarget->AI()))
-            pBossAI->DoSetOrbsInMotion();
+            pBossAI->DoSetSpheresInMotion();
 
         //always return true when we are handling this spell and effect
         return true;
