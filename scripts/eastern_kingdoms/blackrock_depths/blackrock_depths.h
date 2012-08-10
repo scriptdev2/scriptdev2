@@ -7,7 +7,7 @@
 
 enum
 {
-    MAX_ENCOUNTER           = 6,
+    MAX_ENCOUNTER           = 7,
     MAX_RELIC_DOORS         = 12,
 
     TYPE_RING_OF_LAW        = 1,
@@ -16,6 +16,7 @@ enum
     TYPE_TOMB_OF_SEVEN      = 4,
     TYPE_LYCEUM             = 5,
     TYPE_IRON_HALL          = 6,
+    TYPE_QUEST_JAIL_BREAK   = 7,
 
     NPC_EMPEROR             = 9019,
     NPC_PRINCESS            = 8929,
@@ -29,6 +30,14 @@ enum
     NPC_DOPEREL             = 9040,
     NPC_WATCHER_DOOMGRIP    = 9476,
     NPC_WARBRINGER_CONST    = 8905,                         // Four of them in Relict Vault are related to Doomgrip summon event
+
+    // Jail Break event related
+    NPC_OGRABISI            = 9677,
+    NPC_SHILL               = 9678,
+    NPC_CREST               = 9680,
+    NPC_JAZ                 = 9681,
+    NPC_TOBIAS              = 9679,
+    NPC_DUGHAL              = 9022,
 
     GO_ARENA_1              = 161525,
     GO_ARENA_2              = 161522,
@@ -53,6 +62,10 @@ enum
     GO_CHEST_SEVEN          = 169243,
     GO_ARENA_SPOILS         = 181074,
     GO_SECRET_DOOR          = 174553,
+
+    // Jail break event related
+    GO_JAIL_DOOR_SUPPLY     = 170561,
+    GO_JAIL_SUPPLY_CRATE    = 166872,
 
     SPELL_STONED            = 10255,                        // Aura of Warbringer Constructs in Relict Vault
 };

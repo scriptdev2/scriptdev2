@@ -353,6 +353,9 @@ UPDATE creature_template SET ScriptName='npc_theldren_trigger' WHERE entry=16079
 UPDATE creature_template SET ScriptName='npc_lokhtos_darkbargainer' WHERE entry=12944;
 UPDATE creature_template SET ScriptName='npc_kharan_mighthammer' WHERE entry=9021;
 UPDATE creature_template SET ScriptName='npc_rocknot' WHERE entry=9503;
+UPDATE creature_template SET ScriptName ='npc_marshal_windsor' WHERE entry=9023;
+UPDATE creature_template SET ScriptName ='npc_dughal_stormwing' WHERE entry=9022;
+UPDATE creature_template SET ScriptName ='npc_tobias_seecher' WHERE entry=9679;
 UPDATE gameobject_template SET ScriptName='go_shadowforge_brazier' WHERE entry IN (174744, 174745);
 UPDATE gameobject_template SET ScriptName='go_relic_coffer_door' WHERE entry IN (174554, 174555, 174556, 174557, 174558, 174559, 174560, 174561, 174562, 174563, 174564, 174566);
 

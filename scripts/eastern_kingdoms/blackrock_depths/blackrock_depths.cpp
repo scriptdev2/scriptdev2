@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Blackrock_Depths
 SD%Complete: 80
-SDComment: Quest support: 4001, 4342, 7604, 9015. Vendor Lokhtos Darkbargainer.
+SDComment: Quest support: 4001, 4322, 4342, 7604, 9015. Vendor Lokhtos Darkbargainer.
 SDCategory: Blackrock Depths
 EndScriptData */
 
@@ -29,6 +29,9 @@ npc_grimstone
 mob_phalanx
 npc_kharan_mighthammer
 npc_lokhtos_darkbargainer
+npc_marshal_windsor
+npc_dughal_stormwing
+npc_tobias_seecher
 EndContentData */
 
 #include "precompiled.h"
@@ -804,6 +807,333 @@ bool QuestRewarded_npc_rocknot(Player* pPlayer, Creature* pCreature, Quest const
     return true;
 }
 
+/*######
+## npc_marshal_windsor
+######*/
+
+enum
+{
+    // Windsor texts
+    SAY_WINDSOR_AGGRO1          = -1230011,
+    SAY_WINDSOR_AGGRO2          = -1230012,
+    SAY_WINDSOR_AGGRO3          = -1230013,
+    SAY_WINDSOR_START           = -1230014,
+    SAY_WINDSOR_CELL_DUGHAL_1   = -1230015,
+    SAY_WINDSOR_CELL_DUGHAL_3   = -1230016,
+    SAY_WINDSOR_EQUIPMENT_1     = -1230017,
+    SAY_WINDSOR_EQUIPMENT_2     = -1230018,
+    SAY_WINDSOR_EQUIPMENT_3     = -1230019,
+    SAY_WINDSOR_EQUIPMENT_4     = -1230020,
+    SAY_WINDSOR_CELL_JAZ_1      = -1230021,
+    SAY_WINDSOR_CELL_JAZ_2      = -1230022,
+    SAY_WINDSOR_CELL_SHILL_1    = -1230023,
+    SAY_WINDSOR_CELL_SHILL_2    = -1230024,
+    SAY_WINDSOR_CELL_SHILL_3    = -1230025,
+    SAY_WINDSOR_CELL_CREST_1    = -1230026,
+    SAY_WINDSOR_CELL_CREST_2    = -1230027,
+    SAY_WINDSOR_CELL_TOBIAS_1   = -1230028,
+    SAY_WINDSOR_CELL_TOBIAS_2   = -1230029,
+    SAY_WINDSOR_FREE_1          = -1230030,
+    SAY_WINDSOR_FREE_2          = -1230031,
+
+    // Additional gossips
+    SAY_DUGHAL_FREE             = -1230010,
+    GOSSIP_ID_DUGHAL            = -3230000,
+    GOSSIP_TEXT_ID_DUGHAL       = 2846,
+
+    SAY_TOBIAS_FREE_1           = -1230032,
+    SAY_TOBIAS_FREE_2           = -1230033,
+    GOSSIP_ID_TOBIAS            = -3230001,
+    GOSSIP_TEXT_ID_TOBIAS       = 2847,
+
+    NPC_REGINALD_WINDSOR        = 9682,
+
+    QUEST_JAIL_BREAK            = 4322
+};
+
+struct MANGOS_DLL_DECL npc_marshal_windsorAI : public npc_escortAI
+{
+    npc_marshal_windsorAI(Creature* m_creature) : npc_escortAI(m_creature)
+    {
+        m_pInstance = (instance_blackrock_depths*)m_creature->GetInstanceData();
+        Reset();
+    }
+
+    instance_blackrock_depths* m_pInstance;
+
+    uint8 m_uiEventPhase;
+
+    void Reset()
+    {
+        if (!HasEscortState(STATE_ESCORT_ESCORTING))
+            m_uiEventPhase = 0;
+    }
+
+    void Aggro(Unit* pWho)
+    {
+        switch (urand(0, 2))
+        {
+            case 0: DoScriptText(SAY_WINDSOR_AGGRO1, m_creature, pWho); break;
+            case 1: DoScriptText(SAY_WINDSOR_AGGRO2, m_creature); break;
+            case 2: DoScriptText(SAY_WINDSOR_AGGRO3, m_creature, pWho); break;
+        }
+    }
+
+    void WaypointReached(uint32 uiPointId)
+    {
+        switch (uiPointId)
+        {
+            case 1:
+                if (m_pInstance)
+                    m_pInstance->SetData(TYPE_QUEST_JAIL_BREAK, IN_PROGRESS);
+
+                DoScriptText(SAY_WINDSOR_START, m_creature);
+                break;
+            case 7:
+                if (Player* pPlayer = GetPlayerForEscort())
+                    DoScriptText(SAY_WINDSOR_CELL_DUGHAL_1, m_creature, pPlayer);
+                if (m_pInstance)
+                {
+                    if (Creature* pDughal = m_pInstance->GetSingleCreatureFromStorage(NPC_DUGHAL))
+                    {
+                        pDughal->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+                        m_creature->SetFacingToObject(pDughal);
+                    }
+                }
+                ++m_uiEventPhase;
+                SetEscortPaused(true);
+                break;
+            case 9:
+                if (Player* pPlayer = GetPlayerForEscort())
+                    DoScriptText(SAY_WINDSOR_CELL_DUGHAL_3, m_creature, pPlayer);
+                break;
+            case 14:
+                if (Player* pPlayer = GetPlayerForEscort())
+                    DoScriptText(SAY_WINDSOR_EQUIPMENT_1, m_creature, pPlayer);
+                break;
+            case 15:
+                m_creature->HandleEmoteCommand(EMOTE_ONESHOT_USESTANDING);
+                break;
+            case 16:
+                if (m_pInstance)
+                    m_pInstance->DoUseDoorOrButton(GO_JAIL_DOOR_SUPPLY);
+                break;
+            case 18:
+                DoScriptText(SAY_WINDSOR_EQUIPMENT_2, m_creature);
+                break;
+            case 19:
+                m_creature->HandleEmoteCommand(EMOTE_ONESHOT_USESTANDING);
+                break;
+            case 20:
+                if (m_pInstance)
+                    m_pInstance->DoUseDoorOrButton(GO_JAIL_SUPPLY_CRATE);
+                break;
+            case 21:
+                m_creature->UpdateEntry(NPC_REGINALD_WINDSOR);
+                break;
+            case 22:
+                if (Player* pPlayer = GetPlayerForEscort())
+                {
+                    DoScriptText(SAY_WINDSOR_EQUIPMENT_3, m_creature, pPlayer);
+                    m_creature->SetFacingToObject(pPlayer);
+                }
+                break;
+            case 23:
+                DoScriptText(SAY_WINDSOR_EQUIPMENT_4, m_creature);
+                if (Player* pPlayer = GetPlayerForEscort())
+                    m_creature->SetFacingToObject(pPlayer);
+                break;
+            case 30:
+                if (m_pInstance)
+                {
+                    if (Creature* pJaz = m_pInstance->GetSingleCreatureFromStorage(NPC_JAZ))
+                        m_creature->SetFacingToObject(pJaz);
+                }
+                DoScriptText(SAY_WINDSOR_CELL_JAZ_1, m_creature);
+                ++m_uiEventPhase;
+                SetEscortPaused(true);
+                break;
+            case 32:
+                DoScriptText(SAY_WINDSOR_CELL_JAZ_2, m_creature);
+                break;
+            case 35:
+                if (m_pInstance)
+                {
+                    if (Creature* pShill = m_pInstance->GetSingleCreatureFromStorage(NPC_SHILL))
+                        m_creature->SetFacingToObject(pShill);
+                }
+                DoScriptText(SAY_WINDSOR_CELL_SHILL_1, m_creature);
+                ++m_uiEventPhase;
+                SetEscortPaused(true);
+                break;
+            case 37:
+                DoScriptText(SAY_WINDSOR_CELL_SHILL_2, m_creature);
+                break;
+            case 38:
+                DoScriptText(SAY_WINDSOR_CELL_SHILL_3, m_creature);
+                break;
+            case 45:
+                if (m_pInstance)
+                {
+                    if (Creature* pCrest = m_pInstance->GetSingleCreatureFromStorage(NPC_CREST))
+                        m_creature->SetFacingToObject(pCrest);
+                }
+                DoScriptText(SAY_WINDSOR_CELL_CREST_1, m_creature);
+                ++m_uiEventPhase;
+                SetEscortPaused(true);
+                break;
+            case 47:
+                DoScriptText(SAY_WINDSOR_CELL_CREST_2, m_creature);
+                break;
+            case 49:
+                DoScriptText(SAY_WINDSOR_CELL_TOBIAS_1, m_creature);
+                if (m_pInstance)
+                {
+                    if (Creature* pTobias = m_pInstance->GetSingleCreatureFromStorage(NPC_TOBIAS))
+                    {
+                        pTobias->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+                        m_creature->SetFacingToObject(pTobias);
+                    }
+                }
+                ++m_uiEventPhase;
+                SetEscortPaused(true);
+                break;
+            case 51:
+                if (Player* pPlayer = GetPlayerForEscort())
+                    DoScriptText(SAY_WINDSOR_CELL_TOBIAS_2, m_creature, pPlayer);
+                break;
+            case 57:
+                DoScriptText(SAY_WINDSOR_FREE_1, m_creature);
+                if (Player* pPlayer = GetPlayerForEscort())
+                    m_creature->SetFacingToObject(pPlayer);
+                break;
+            case 58:
+                DoScriptText(SAY_WINDSOR_FREE_2, m_creature);
+                if (m_pInstance)
+                    m_pInstance->SetData(TYPE_QUEST_JAIL_BREAK, DONE);
+
+                if (Player* pPlayer = GetPlayerForEscort())
+                    pPlayer->GroupEventHappens(QUEST_JAIL_BREAK, m_creature);
+                break;
+        }
+    }
+
+    void UpdateEscortAI(const uint32 uiDiff)
+    {
+        // Handle escort resume events
+        if (m_pInstance && m_pInstance->GetData(TYPE_QUEST_JAIL_BREAK) == SPECIAL)
+        {
+            switch (m_uiEventPhase)
+            {
+                case 1:                     // Dughal
+                case 3:                     // Ograbisi
+                case 4:                     // Crest
+                case 5:                     // Shill
+                case 6:                     // Tobias
+                    SetEscortPaused(false);
+                    break;
+                case 2:                     // Jaz
+                    ++m_uiEventPhase;
+                    break;
+            }
+
+            m_pInstance->SetData(TYPE_QUEST_JAIL_BREAK, IN_PROGRESS);
+        }
+
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_npc_marshal_windsor(Creature* pCreature)
+{
+    return new npc_marshal_windsorAI(pCreature);
+}
+
+bool QuestAccept_npc_marshal_windsor(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
+{
+    if (pQuest->GetQuestId() == QUEST_JAIL_BREAK)
+    {
+        pCreature->SetFactionTemporary(FACTION_ESCORT_A_NEUTRAL_ACTIVE, TEMPFACTION_RESTORE_RESPAWN);
+
+        if (npc_marshal_windsorAI* pEscortAI = dynamic_cast<npc_marshal_windsorAI*>(pCreature->AI()))
+            pEscortAI->Start(false, pPlayer, pQuest);
+
+        return true;
+    }
+
+    return false;
+}
+
+/*######
+## npc_dughal_stormwing
+######*/
+
+bool GossipHello_npc_dughal_stormwing(Player* pPlayer, Creature* pCreature)
+{
+    if (pPlayer->GetQuestStatus(QUEST_JAIL_BREAK) == QUEST_STATUS_INCOMPLETE)
+        pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ID_DUGHAL, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+
+    pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_ID_DUGHAL, pCreature->GetObjectGuid());
+    return true;
+}
+
+bool GossipSelect_npc_dughal_stormwing(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+{
+    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
+    {
+        // Set instance data in order to allow the quest to continue
+        if (instance_blackrock_depths* pInstance = (instance_blackrock_depths*)pCreature->GetInstanceData())
+            pInstance->SetData(TYPE_QUEST_JAIL_BREAK, SPECIAL);
+
+        DoScriptText(SAY_DUGHAL_FREE, pCreature, pPlayer);
+        pCreature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+
+        pCreature->SetWalk(false);
+        pCreature->GetMotionMaster()->MoveWaypoint();
+
+        pPlayer->CLOSE_GOSSIP_MENU();
+    }
+
+    return true;
+}
+
+/*######
+## npc_tobias_seecher
+######*/
+
+bool GossipHello_npc_tobias_seecher(Player* pPlayer, Creature* pCreature)
+{
+    if (pPlayer->GetQuestStatus(QUEST_JAIL_BREAK) == QUEST_STATUS_INCOMPLETE)
+        pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ID_TOBIAS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+
+    pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_ID_TOBIAS, pCreature->GetObjectGuid());
+
+    return true;
+}
+
+bool GossipSelect_npc_tobias_seecher(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+{
+    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
+    {
+        // Set instance data in order to allow the quest to continue
+        if (instance_blackrock_depths* pInstance = (instance_blackrock_depths*)pCreature->GetInstanceData())
+            pInstance->SetData(TYPE_QUEST_JAIL_BREAK, SPECIAL);
+
+        DoScriptText(urand(0, 1) ? SAY_TOBIAS_FREE_1 : SAY_TOBIAS_FREE_2, pCreature);
+        pCreature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+
+        pCreature->SetWalk(false);
+        pCreature->GetMotionMaster()->MoveWaypoint();
+
+        pPlayer->CLOSE_GOSSIP_MENU();
+    }
+
+    return true;
+}
+
 void AddSC_blackrock_depths()
 {
     Script* pNewScript;
@@ -854,5 +1184,23 @@ void AddSC_blackrock_depths()
     pNewScript->Name = "npc_rocknot";
     pNewScript->GetAI = &GetAI_npc_rocknot;
     pNewScript->pQuestRewardedNPC = &QuestRewarded_npc_rocknot;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_marshal_windsor";
+    pNewScript->GetAI = &GetAI_npc_marshal_windsor;
+    pNewScript->pQuestAcceptNPC = &QuestAccept_npc_marshal_windsor;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_tobias_seecher";
+    pNewScript->pGossipHello =  &GossipHello_npc_tobias_seecher;
+    pNewScript->pGossipSelect = &GossipSelect_npc_tobias_seecher;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_dughal_stormwing";
+    pNewScript->pGossipHello =  &GossipHello_npc_dughal_stormwing;
+    pNewScript->pGossipSelect = &GossipSelect_npc_dughal_stormwing;
     pNewScript->RegisterSelf();
 }

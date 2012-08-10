@@ -53,6 +53,11 @@ void instance_blackrock_depths::OnCreatureCreate(Creature* pCreature)
         case NPC_GLOOMREL:
         case NPC_SEETHREL:
         case NPC_DOPEREL:
+        case NPC_SHILL:
+        case NPC_CREST:
+        case NPC_JAZ:
+        case NPC_TOBIAS:
+        case NPC_DUGHAL:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
 
@@ -94,6 +99,8 @@ void instance_blackrock_depths::OnObjectCreate(GameObject* pGo)
         case GO_CHEST_SEVEN:
         case GO_ARENA_SPOILS:
         case GO_SECRET_DOOR:
+        case GO_JAIL_DOOR_SUPPLY:
+        case GO_JAIL_SUPPLY_CRATE:
             break;
 
         default:
@@ -194,6 +201,9 @@ void instance_blackrock_depths::SetData(uint32 uiType, uint32 uiData)
             }
             m_auiEncounter[5] = uiData;
             break;
+        case TYPE_QUEST_JAIL_BREAK:
+            m_auiEncounter[6] = uiData;
+            return;
     }
 
     if (uiData == DONE)
@@ -202,7 +212,7 @@ void instance_blackrock_depths::SetData(uint32 uiType, uint32 uiData)
 
         std::ostringstream saveStream;
         saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " "
-            << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5];
+            << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5] << " " << m_auiEncounter[6];
 
         m_strInstData = saveStream.str();
 
@@ -230,6 +240,8 @@ uint32 instance_blackrock_depths::GetData(uint32 uiType)
             return m_auiEncounter[4];
         case TYPE_IRON_HALL:
             return m_auiEncounter[5];
+        case TYPE_QUEST_JAIL_BREAK:
+            return m_auiEncounter[6];
         default:
             return 0;
     }
@@ -247,7 +259,7 @@ void instance_blackrock_depths::Load(const char* chrIn)
 
     std::istringstream loadStream(chrIn);
     loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3]
-        >> m_auiEncounter[4] >> m_auiEncounter[5];
+        >> m_auiEncounter[4] >> m_auiEncounter[5] >> m_auiEncounter[6];
 
     for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
         if (m_auiEncounter[i] == IN_PROGRESS)
@@ -285,6 +297,13 @@ void instance_blackrock_depths::OnCreatureDeath(Creature* pCreature)
                 if (m_sVaultNpcGuids.empty())
                     SetData(TYPE_VAULT, DONE);
             }
+            break;
+        case NPC_OGRABISI:
+        case NPC_SHILL:
+        case NPC_CREST:
+        case NPC_JAZ:
+            if (GetData(TYPE_QUEST_JAIL_BREAK) == IN_PROGRESS)
+                SetData(TYPE_QUEST_JAIL_BREAK, SPECIAL);
             break;
     }
 }
