@@ -22,6 +22,7 @@ SDCategory: Temple of Ahn'Qiraj
 EndScriptData */
 
 #include "precompiled.h"
+#include "temple_of_ahnqiraj.h"
 
 enum
 {
@@ -54,7 +55,13 @@ enum
 
 struct MANGOS_DLL_DECL boss_viscidusAI : public ScriptedAI
 {
-    boss_viscidusAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
+    boss_viscidusAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        Reset();
+    }
+
+    ScriptedInstance* m_pInstance;
 
     uint32 m_uiPoisonShockTimer;
     uint32 m_uiPoisonBoltVolleyTimer;
@@ -68,6 +75,21 @@ struct MANGOS_DLL_DECL boss_viscidusAI : public ScriptedAI
     void Aggro(Unit* pWho)
     {
         DoCastSpellIfCan(m_creature, SPELL_TOXIN);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_VISCIDUS, IN_PROGRESS);
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_VISCIDUS, FAIL);
+    }
+
+    void JustDied(Unit* pKiller)
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_VISCIDUS, DONE);
     }
 
     void UpdateAI(const uint32 uiDiff)

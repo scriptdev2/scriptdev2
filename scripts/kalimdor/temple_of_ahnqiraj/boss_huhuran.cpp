@@ -22,6 +22,7 @@ SDCategory: Temple of Ahn'Qiraj
 EndScriptData */
 
 #include "precompiled.h"
+#include "temple_of_ahnqiraj.h"
 
 enum
 {
@@ -37,7 +38,13 @@ enum
 
 struct MANGOS_DLL_DECL boss_huhuranAI : public ScriptedAI
 {
-    boss_huhuranAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+    boss_huhuranAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        Reset();
+    }
+
+    ScriptedInstance* m_pInstance;
 
     uint32 m_uiFrenzyTimer;
     uint32 m_uiWyvernTimer;
@@ -53,6 +60,24 @@ struct MANGOS_DLL_DECL boss_huhuranAI : public ScriptedAI
         m_uiSpitTimer           = 8000;
         m_uiNoxiousPoisonTimer  = urand(10000, 20000);
         m_bIsBerserk            = false;
+    }
+
+    void Aggro(Unit* pWho)
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_HUHURAN, IN_PROGRESS);
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_HUHURAN, FAIL);
+    }
+
+    void JustDied(Unit* pKiller)
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_HUHURAN, DONE);
     }
 
     void UpdateAI(const uint32 uiDiff)

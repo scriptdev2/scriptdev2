@@ -161,6 +161,9 @@ enum
     SAY_LEXLORT_3               = -1000887,
     SAY_LEXLORT_4               = -1000888,
 
+    EMOTE_SUBMIT                = -1000889,
+    SAY_AGGRO                   = -1000890,
+
     SPELL_CAPTURE_GRARK             = 14250,
 
     NPC_BLACKROCK_AMBUSHER          = 9522,
@@ -217,6 +220,12 @@ struct MANGOS_DLL_DECL npc_grark_lorkrubAI : public npc_escortAI, private Dialog
 
             m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         }
+    }
+
+    void Aggro(Unit* pWho)
+    {
+        if (!HasEscortState(STATE_ESCORT_ESCORTING))
+            DoScriptText(SAY_AGGRO, m_creature);
     }
 
     void MoveInLineOfSight(Unit* pWho)
@@ -427,6 +436,7 @@ bool EffectDummyCreature_spell_capture_grark(Unit* pCaster, uint32 uiSpellId, Sp
             return false;
 
         // The faction is guesswork - needs more research
+        DoScriptText(EMOTE_SUBMIT, pCreatureTarget);
         pCreatureTarget->SetFactionTemporary(FACTION_FRIENDLY, TEMPFACTION_RESTORE_RESPAWN);
         pCreatureTarget->AI()->EnterEvadeMode();
 

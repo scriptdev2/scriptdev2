@@ -51,6 +51,17 @@ void instance_temple_of_ahnqiraj::Initialize()
     m_dialogueHelper.InitializeDialogueHelper(this);
 }
 
+bool instance_temple_of_ahnqiraj::IsEncounterInProgress() const
+{
+    for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+    {
+        if (m_auiEncounter[i] == IN_PROGRESS)
+            return true;
+    }
+
+    return false;
+}
+
 void instance_temple_of_ahnqiraj::DoHandleTempleAreaTrigger(uint32 uiTriggerId)
 {
     if (uiTriggerId == AREATRIGGER_TWIN_EMPERORS && !m_bIsEmperorsIntroDone)
@@ -103,12 +114,6 @@ void instance_temple_of_ahnqiraj::OnObjectCreate(GameObject* pGo)
     m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
 }
 
-bool instance_temple_of_ahnqiraj::IsEncounterInProgress() const
-{
-    // not active in AQ40
-    return false;
-}
-
 void instance_temple_of_ahnqiraj::SetData(uint32 uiType, uint32 uiData)
 {
     switch(uiType)
@@ -130,6 +135,12 @@ void instance_temple_of_ahnqiraj::SetData(uint32 uiType, uint32 uiData)
             }
             if (uiData == FAIL)
                 m_uiBugTrioDeathCount = 0;
+            m_auiEncounter[uiType] = uiData;
+            break;
+        case TYPE_SARTURA:
+        case TYPE_FANKRISS:
+        case TYPE_VISCIDUS:
+        case TYPE_HUHURAN:
             m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_TWINS:
@@ -162,7 +173,8 @@ void instance_temple_of_ahnqiraj::SetData(uint32 uiType, uint32 uiData)
 
         std::ostringstream saveStream;
         saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " " << m_auiEncounter[3] << " "
-            << m_auiEncounter[4];
+            << m_auiEncounter[4] << " " << m_auiEncounter[5] << " " << m_auiEncounter[6] << " " << m_auiEncounter[7] << " "
+            << m_auiEncounter[8] << " " << m_auiEncounter[9];
 
         m_strInstData = saveStream.str();
 
@@ -183,7 +195,8 @@ void instance_temple_of_ahnqiraj::Load(const char* chrIn)
 
     std::istringstream loadStream(chrIn);
     loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3]
-        >> m_auiEncounter[4];
+        >> m_auiEncounter[4] >> m_auiEncounter[5] >> m_auiEncounter[6] >> m_auiEncounter[7]
+        >> m_auiEncounter[8] >> m_auiEncounter[9];
 
     for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
     {

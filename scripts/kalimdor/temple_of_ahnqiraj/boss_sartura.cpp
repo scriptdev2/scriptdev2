@@ -22,6 +22,7 @@ SDCategory: Temple of Ahn'Qiraj
 EndScriptData */
 
 #include "precompiled.h"
+#include "temple_of_ahnqiraj.h"
 
 enum
 {
@@ -40,7 +41,13 @@ enum
 
 struct MANGOS_DLL_DECL boss_sarturaAI : public ScriptedAI
 {
-    boss_sarturaAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
+    boss_sarturaAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        Reset();
+    }
+
+    ScriptedInstance* m_pInstance;
 
     uint32 m_uiWhirlWindTimer;
     uint32 m_uiWhirlWindRandomTimer;
@@ -72,6 +79,9 @@ struct MANGOS_DLL_DECL boss_sarturaAI : public ScriptedAI
     void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_SARTURA, IN_PROGRESS);
     }
 
     void KilledUnit(Unit* pVictim)
@@ -82,6 +92,15 @@ struct MANGOS_DLL_DECL boss_sarturaAI : public ScriptedAI
     void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DEATH, m_creature);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_SARTURA, DONE);
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_SARTURA, FAIL);
     }
 
     void UpdateAI(const uint32 uiDiff)

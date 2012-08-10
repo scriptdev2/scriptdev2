@@ -953,7 +953,9 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000885,'%s raises his massive axe over Grark.',0,2,0,27,'nuzark EMOTE_RAISE_AXE'),
 (-1000886,'%s raises his hand and then lowers it.',0,2,0,0,'lexlort EMOTE_LOWER_HAND'),
 (-1000887,'End him...',0,0,0,0,'lexlort SAY_LEXLORT_3'),
-(-1000888,'You, soldier, report back to Kargath at once!',0,0,0,1,'lexlort SAY_LEXLORT_4');
+(-1000888,'You, soldier, report back to Kargath at once!',0,0,0,1,'lexlort SAY_LEXLORT_4'),
+(-1000889,'%s submits.',0,2,0,0,'grark EMOTE_SUBMIT'),
+(-1000890,'You have come to play? Then let us play!',0,0,0,0,'grark SAY_AGGRO');
 
 -- -1 033 000 SHADOWFANG KEEP
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES

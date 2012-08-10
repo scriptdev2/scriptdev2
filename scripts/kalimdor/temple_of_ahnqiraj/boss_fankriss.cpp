@@ -22,6 +22,7 @@ SDCategory: Temple of Ahn'Qiraj
 EndScriptData */
 
 #include "precompiled.h"
+#include "temple_of_ahnqiraj.h"
 
 enum
 {
@@ -48,7 +49,13 @@ static const uint32 aEntangleSpells[3] = {SPELL_ENTANGLE_1, SPELL_ENTANGLE_2, SP
 
 struct MANGOS_DLL_DECL boss_fankrissAI : public ScriptedAI
 {
-    boss_fankrissAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
+    boss_fankrissAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        Reset();
+    }
+
+    ScriptedInstance* m_pInstance;
 
     uint32 m_uiMortalWoundTimer;
     uint32 m_uiSummonWormTimer;
@@ -63,6 +70,24 @@ struct MANGOS_DLL_DECL boss_fankrissAI : public ScriptedAI
         m_uiSummonWormTimer  = urand(30000, 50000);
         m_uiEntangleTimer    = urand(25000, 40000);
         m_uiEntangleSummonTimer = 0;
+    }
+
+    void Aggro(Unit* pWho)
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_FANKRISS, IN_PROGRESS);
+    }
+
+    void JustReachedHome()
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_FANKRISS, FAIL);
+    }
+
+    void JustDied(Unit* pKiller)
+    {
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_FANKRISS, DONE);
     }
 
     void JustSummoned(Creature* pSummoned)
