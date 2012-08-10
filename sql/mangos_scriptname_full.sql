@@ -1198,6 +1198,7 @@ UPDATE creature_template SET ScriptName='boss_huhuran' WHERE entry=15509;
 UPDATE creature_template SET ScriptName='boss_veklor' WHERE entry=15276;
 UPDATE creature_template SET ScriptName='boss_veknilash' WHERE entry=15275;
 UPDATE creature_template SET ScriptName='boss_ouro' WHERE entry=15517;
+UPDATE creature_template SET ScriptName='npc_ouro_spawner' WHERE entry=15957;
 UPDATE creature_template SET ScriptName='boss_eye_of_cthun' WHERE entry=15589;
 UPDATE creature_template SET ScriptName='mob_sartura_royal_guard' WHERE entry=15984;
 UPDATE creature_template SET ScriptName='mob_claw_tentacle' WHERE entry=15725;

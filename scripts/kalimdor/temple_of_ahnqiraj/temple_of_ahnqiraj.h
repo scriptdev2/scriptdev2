@@ -7,12 +7,13 @@
 
 enum
 {
-    MAX_ENCOUNTER               = 4,
+    MAX_ENCOUNTER               = 5,
 
     TYPE_SKERAM                 = 0,
     TYPE_BUG_TRIO               = 1,
     TYPE_TWINS                  = 2,
-    TYPE_CTHUN_PHASE            = 3,
+    TYPE_OURO                   = 3,
+    TYPE_CTHUN_PHASE            = 4,
 
     NPC_SKERAM                  = 15263,
     //NPC_KRI                   = 15511,
@@ -21,6 +22,7 @@ enum
     NPC_VEKLOR                  = 15276,
     NPC_VEKNILASH               = 15275,
     NPC_MASTERS_EYE             = 15963,
+    NPC_OURO_SPAWNER            = 15957,
     NPC_CTHUN                   = 15727,
 
     GO_SKERAM_GATE              = 180636,
