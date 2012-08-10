@@ -350,7 +350,6 @@ UPDATE creature_template SET ScriptName='boss_magmus' WHERE entry=9938;
 UPDATE creature_template SET ScriptName='mob_phalanx' WHERE entry=9502;
 UPDATE creature_template SET ScriptName='npc_grimstone' WHERE entry=10096;
 UPDATE creature_template SET ScriptName='npc_theldren_trigger' WHERE entry=16079;
-UPDATE creature_template SET ScriptName='npc_lokhtos_darkbargainer' WHERE entry=12944;
 UPDATE creature_template SET ScriptName='npc_kharan_mighthammer' WHERE entry=9021;
 UPDATE creature_template SET ScriptName='npc_rocknot' WHERE entry=9503;
 UPDATE creature_template SET ScriptName ='npc_marshal_windsor' WHERE entry=9023;
@@ -603,7 +602,6 @@ INSERT INTO scripted_event_id VALUES
 (8328, 'npc_kroshius');
 UPDATE creature_template SET ScriptName='npc_kitten' WHERE entry=9937;
 UPDATE creature_template SET ScriptName='npc_corrupt_saber' WHERE entry=10042;
-UPDATE creature_template SET ScriptName='npcs_riverbreeze_and_silversky' WHERE entry IN (9528,9529);
 UPDATE creature_template SET ScriptName='npc_niby_the_almighty' WHERE entry=14469;
 UPDATE creature_template SET ScriptName='npc_kroshius' WHERE entry=14467;
 
@@ -837,10 +835,7 @@ UPDATE creature_template SET ScriptName='mob_core_rager' WHERE entry=11672;
 UPDATE creature_template SET ScriptName='mob_flamewaker_priest' WHERE entry=11662;
 
 /* MOONGLADE */
-UPDATE creature_template SET ScriptName='npc_bunthen_plainswind' WHERE entry=11798;
 UPDATE creature_template SET ScriptName='npc_clintar_dw_spirit' WHERE entry=22916;
-UPDATE creature_template SET ScriptName='npc_great_bear_spirit' WHERE entry=11956;
-UPDATE creature_template SET ScriptName='npc_silva_filnaveth' WHERE entry=11800;
 UPDATE creature_template SET ScriptName='npc_keeper_remulos' WHERE entry=11832;
 UPDATE creature_template SET ScriptName='boss_eranikus' WHERE entry=15491;
 
@@ -1056,7 +1051,6 @@ UPDATE creature_template SET ScriptName='npc_deathstalker_faerleia' WHERE entry=
 /* STOCKADES */
 
 /* STONETALON MOUNTAINS */
-UPDATE creature_template SET ScriptName='npc_braug_dimspirit' WHERE entry=4489;
 UPDATE creature_template SET ScriptName='npc_kaya' WHERE entry=11856;
 
 /* STORM PEAKS */
@@ -1340,7 +1334,6 @@ UPDATE instance_template SET ScriptName='instance_wailing_caverns' WHERE map=43;
 UPDATE creature_template SET ScriptName='npc_disciple_of_naralex' WHERE entry=3678;
 
 /* WESTERN PLAGUELANDS */
-UPDATE creature_template SET ScriptName='npc_myranda_the_hag' WHERE entry=11872;
 UPDATE creature_template SET ScriptName='npc_the_scourge_cauldron' WHERE entry=11152;
 
 /* WESTFALL */

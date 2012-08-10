@@ -17,13 +17,12 @@
 /* ScriptData
 SDName: Felwood
 SD%Complete: 95
-SDComment: Quest support: related to 4101/4102 (To obtain Cenarion Beacon), 4506, 7603, 7603 (Summon Pollo Grande)
+SDComment: Quest support: 4506, 7603, 7603 (Summon Pollo Grande)
 SDCategory: Felwood
 EndScriptData */
 
 /* ContentData
 npc_kitten
-npcs_riverbreeze_and_silversky
 npc_niby_the_almighty
 npc_kroshius
 EndContentData */
@@ -157,65 +156,6 @@ bool GossipSelect_npc_corrupt_saber(Player* pPlayer, Creature* pCreature, uint32
         pPlayer->AreaExploredOrEventHappens(QUEST_CORRUPT_SABER);
     }
 
-    return true;
-}
-
-/*######
-## npcs_riverbreeze_and_silversky
-######*/
-
-enum
-{
-    QUEST_CLEANSING_FELWOOD_A = 4101,
-    QUEST_CLEANSING_FELWOOD_H = 4102,
-
-    NPC_ARATHANDIS_SILVERSKY  = 9528,
-    NPC_MAYBESS_RIVERBREEZE   = 9529,
-
-    SPELL_CENARION_BEACON     = 15120
-};
-
-#define GOSSIP_ITEM_BEACON  "Please make me a Cenarion Beacon"
-
-bool GossipHello_npcs_riverbreeze_and_silversky(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
-
-    switch (pCreature->GetEntry())
-    {
-        case NPC_ARATHANDIS_SILVERSKY:
-            if (pPlayer->GetQuestRewardStatus(QUEST_CLEANSING_FELWOOD_A))
-            {
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_BEACON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-                pPlayer->SEND_GOSSIP_MENU(2848, pCreature->GetObjectGuid());
-            }else if (pPlayer->GetTeam() == HORDE)
-                pPlayer->SEND_GOSSIP_MENU(2845, pCreature->GetObjectGuid());
-            else
-                pPlayer->SEND_GOSSIP_MENU(2844, pCreature->GetObjectGuid());
-            break;
-        case NPC_MAYBESS_RIVERBREEZE:
-            if (pPlayer->GetQuestRewardStatus(QUEST_CLEANSING_FELWOOD_H))
-            {
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_BEACON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-                pPlayer->SEND_GOSSIP_MENU(2849, pCreature->GetObjectGuid());
-            }else if (pPlayer->GetTeam() == ALLIANCE)
-                pPlayer->SEND_GOSSIP_MENU(2843, pCreature->GetObjectGuid());
-            else
-                pPlayer->SEND_GOSSIP_MENU(2842, pCreature->GetObjectGuid());
-            break;
-    }
-
-    return true;
-}
-
-bool GossipSelect_npcs_riverbreeze_and_silversky(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
-    {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        pCreature->CastSpell(pPlayer, SPELL_CENARION_BEACON, false);
-    }
     return true;
 }
 
@@ -484,12 +424,6 @@ void AddSC_felwood()
     pNewScript->Name = "npc_corrupt_saber";
     pNewScript->pGossipHello = &GossipHello_npc_corrupt_saber;
     pNewScript->pGossipSelect = &GossipSelect_npc_corrupt_saber;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "npcs_riverbreeze_and_silversky";
-    pNewScript->pGossipHello = &GossipHello_npcs_riverbreeze_and_silversky;
-    pNewScript->pGossipSelect = &GossipSelect_npcs_riverbreeze_and_silversky;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;

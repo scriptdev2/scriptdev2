@@ -17,15 +17,12 @@
 /* ScriptData
 SDName: Moonglade
 SD%Complete: 100
-SDComment: Quest support: 30, 272, 5929, 5930, 8736, 10965. Special Flight Paths for Druid class.
+SDComment: Quest support: 8736, 10965.
 SDCategory: Moonglade
 EndScriptData */
 
 /* ContentData
-npc_bunthen_plainswind
 npc_clintar_dw_spirit
-npc_great_bear_spirit
-npc_silva_filnaveth
 npc_keeper_remulos
 boss_eranikus
 EndContentData */
@@ -35,65 +32,6 @@ EndContentData */
 #include "ObjectMgr.h"
 
 /*######
-## npc_bunthen_plainswind
-######*/
-
-enum
-{
-    QUEST_SEA_LION_HORDE        = 30,
-    QUEST_SEA_LION_ALLY         = 272,
-    TAXI_PATH_ID_ALLY           = 315,
-    TAXI_PATH_ID_HORDE          = 316
-};
-
-#define GOSSIP_ITEM_THUNDER     "I'd like to fly to Thunder Bluff."
-#define GOSSIP_ITEM_AQ_END      "Do you know where I can find Half Pendant of Aquatic Endurance?"
-
-bool GossipHello_npc_bunthen_plainswind(Player* pPlayer, Creature* pCreature)
-{
-    if (pPlayer->getClass() != CLASS_DRUID)
-        pPlayer->SEND_GOSSIP_MENU(4916, pCreature->GetObjectGuid());
-    else if (pPlayer->GetTeam() != HORDE)
-    {
-        if (pPlayer->GetQuestStatus(QUEST_SEA_LION_ALLY) == QUEST_STATUS_INCOMPLETE)
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_AQ_END, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-
-        pPlayer->SEND_GOSSIP_MENU(4917, pCreature->GetObjectGuid());
-    }
-    else if (pPlayer->getClass() == CLASS_DRUID && pPlayer->GetTeam() == HORDE)
-    {
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_THUNDER, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-
-        if (pPlayer->GetQuestStatus(QUEST_SEA_LION_HORDE) == QUEST_STATUS_INCOMPLETE)
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_AQ_END, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-
-        pPlayer->SEND_GOSSIP_MENU(4918, pCreature->GetObjectGuid());
-    }
-    return true;
-}
-
-bool GossipSelect_npc_bunthen_plainswind(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    switch(uiAction)
-    {
-        case GOSSIP_ACTION_INFO_DEF + 1:
-            pPlayer->CLOSE_GOSSIP_MENU();
-
-            if (pPlayer->getClass() == CLASS_DRUID && pPlayer->GetTeam() == HORDE)
-                pPlayer->ActivateTaxiPathTo(TAXI_PATH_ID_HORDE);
-
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 2:
-            pPlayer->SEND_GOSSIP_MENU(5373, pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 3:
-            pPlayer->SEND_GOSSIP_MENU(5376, pCreature->GetObjectGuid());
-            break;
-    }
-    return true;
-}
-
-/*####
 # npc_clintar_dw_spirit
 ####*/
 
@@ -226,107 +164,6 @@ bool EffectDummyCreature_npc_clintar_dw_spirit(Unit *pCaster, uint32 spellId, Sp
 
         //always return true when we are handling this spell and effect
         return true;
-    }
-    return true;
-}
-
-/*######
-## npc_great_bear_spirit
-######*/
-
-#define GOSSIP_BEAR1 "What do you represent, spirit?"
-#define GOSSIP_BEAR2 "I seek to understand the importance of strength of the body."
-#define GOSSIP_BEAR3 "I seek to understand the importance of strength of the heart."
-#define GOSSIP_BEAR4 "I have heard your words, Great Bear Spirit, and I understand. I now seek your blessings to fully learn the way of the Claw."
-
-bool GossipHello_npc_great_bear_spirit(Player* pPlayer, Creature* pCreature)
-{
-    //ally or horde quest
-    if (pPlayer->GetQuestStatus(5929) == QUEST_STATUS_INCOMPLETE || pPlayer->GetQuestStatus(5930) == QUEST_STATUS_INCOMPLETE)
-    {
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_BEAR1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
-        pPlayer->SEND_GOSSIP_MENU(4719, pCreature->GetObjectGuid());
-    }
-    else
-        pPlayer->SEND_GOSSIP_MENU(4718, pCreature->GetObjectGuid());
-
-    return true;
-}
-
-bool GossipSelect_npc_great_bear_spirit(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    switch(uiAction)
-    {
-        case GOSSIP_ACTION_INFO_DEF:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_BEAR2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-            pPlayer->SEND_GOSSIP_MENU(4721, pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 1:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_BEAR3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-            pPlayer->SEND_GOSSIP_MENU(4733, pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 2:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_BEAR4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-            pPlayer->SEND_GOSSIP_MENU(4734, pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 3:
-            pPlayer->SEND_GOSSIP_MENU(4735, pCreature->GetObjectGuid());
-            if (pPlayer->GetQuestStatus(5929)==QUEST_STATUS_INCOMPLETE)
-                pPlayer->AreaExploredOrEventHappens(5929);
-            if (pPlayer->GetQuestStatus(5930)==QUEST_STATUS_INCOMPLETE)
-                pPlayer->AreaExploredOrEventHappens(5930);
-            break;
-    }
-    return true;
-}
-
-/*######
-## npc_silva_filnaveth
-######*/
-
-#define GOSSIP_ITEM_RUTHERAN    "I'd like to fly to Rut'theran Village."
-#define GOSSIP_ITEM_AQ_AGI      "Do you know where I can find Half Pendant of Aquatic Agility?"
-
-bool GossipHello_npc_silva_filnaveth(Player* pPlayer, Creature* pCreature)
-{
-    if (pPlayer->getClass() != CLASS_DRUID)
-        pPlayer->SEND_GOSSIP_MENU(4913, pCreature->GetObjectGuid());
-    else if (pPlayer->GetTeam() != ALLIANCE)
-    {
-        if (pPlayer->GetQuestStatus(QUEST_SEA_LION_HORDE) == QUEST_STATUS_INCOMPLETE)
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_AQ_AGI, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-
-        pPlayer->SEND_GOSSIP_MENU(4915, pCreature->GetObjectGuid());
-    }
-    else if (pPlayer->getClass() == CLASS_DRUID && pPlayer->GetTeam() == ALLIANCE)
-    {
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_RUTHERAN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-
-        if (pPlayer->GetQuestStatus(QUEST_SEA_LION_ALLY) == QUEST_STATUS_INCOMPLETE)
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_AQ_AGI, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-
-        pPlayer->SEND_GOSSIP_MENU(4914, pCreature->GetObjectGuid());
-    }
-    return true;
-}
-
-bool GossipSelect_npc_silva_filnaveth(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    switch(uiAction)
-    {
-        case GOSSIP_ACTION_INFO_DEF + 1:
-            pPlayer->CLOSE_GOSSIP_MENU();
-
-            if (pPlayer->getClass() == CLASS_DRUID && pPlayer->GetTeam() == ALLIANCE)
-                pPlayer->ActivateTaxiPathTo(TAXI_PATH_ID_ALLY);
-
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 2:
-            pPlayer->SEND_GOSSIP_MENU(5374, pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 3:
-            pPlayer->SEND_GOSSIP_MENU(5375, pCreature->GetObjectGuid());
-            break;
     }
     return true;
 }
@@ -1134,27 +971,9 @@ void AddSC_moonglade()
     Script* pNewScript;
 
     pNewScript = new Script;
-    pNewScript->Name = "npc_bunthen_plainswind";
-    pNewScript->pGossipHello =  &GossipHello_npc_bunthen_plainswind;
-    pNewScript->pGossipSelect = &GossipSelect_npc_bunthen_plainswind;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
     pNewScript->Name = "npc_clintar_dw_spirit";
     pNewScript->GetAI = &GetAI_npc_clintar_dw_spirit;
     pNewScript->pEffectDummyNPC = &EffectDummyCreature_npc_clintar_dw_spirit;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_great_bear_spirit";
-    pNewScript->pGossipHello =  &GossipHello_npc_great_bear_spirit;
-    pNewScript->pGossipSelect = &GossipSelect_npc_great_bear_spirit;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_silva_filnaveth";
-    pNewScript->pGossipHello =  &GossipHello_npc_silva_filnaveth;
-    pNewScript->pGossipSelect = &GossipSelect_npc_silva_filnaveth;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;

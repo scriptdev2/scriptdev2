@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Blackrock_Depths
 SD%Complete: 80
-SDComment: Quest support: 4001, 4322, 4342, 7604, 9015. Vendor Lokhtos Darkbargainer.
+SDComment: Quest support: 4001, 4322, 4342, 7604, 9015.
 SDCategory: Blackrock Depths
 EndScriptData */
 
@@ -28,7 +28,6 @@ at_ring_of_law
 npc_grimstone
 mob_phalanx
 npc_kharan_mighthammer
-npc_lokhtos_darkbargainer
 npc_marshal_windsor
 npc_dughal_stormwing
 npc_tobias_seecher
@@ -609,62 +608,6 @@ bool GossipSelect_npc_kharan_mighthammer(Player* pPlayer, Creature* pCreature, u
 }
 
 /*######
-## npc_lokhtos_darkbargainer
-######*/
-
-enum
-{
-    FACTION_THORIUM_BROTHERHOOD               = 59,
-
-    ITEM_THRORIUM_BROTHERHOOD_CONTRACT        = 18628,
-    ITEM_SULFURON_INGOT                       = 17203,
-
-    QUEST_A_BINDING_CONTRACT                  = 7604,
-
-    SPELL_CREATE_THORIUM_BROTHERHOOD_CONTRACT = 23059
-};
-
-#define GOSSIP_ITEM_SHOW_ACCESS     "Show me what I have access to, Lothos."
-#define GOSSIP_ITEM_GET_CONTRACT    "Get Thorium Brotherhood Contract"
-
-bool GossipHello_npc_lokhtos_darkbargainer(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
-
-    if (pCreature->isVendor() && pPlayer->GetReputationRank(FACTION_THORIUM_BROTHERHOOD) >= REP_FRIENDLY)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_ITEM_SHOW_ACCESS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
-
-    if (!pPlayer->GetQuestRewardStatus(QUEST_A_BINDING_CONTRACT) &&
-        !pPlayer->HasItemCount(ITEM_THRORIUM_BROTHERHOOD_CONTRACT, 1, true) &&
-        pPlayer->HasItemCount(ITEM_SULFURON_INGOT, 1))
-    {
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_GET_CONTRACT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-    }
-
-    if (pPlayer->GetReputationRank(FACTION_THORIUM_BROTHERHOOD) < REP_FRIENDLY)
-        pPlayer->SEND_GOSSIP_MENU(3673, pCreature->GetObjectGuid());
-    else
-        pPlayer->SEND_GOSSIP_MENU(3677, pCreature->GetObjectGuid());
-
-    return true;
-}
-
-bool GossipSelect_npc_lokhtos_darkbargainer(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)
-    {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        pPlayer->CastSpell(pPlayer, SPELL_CREATE_THORIUM_BROTHERHOOD_CONTRACT, false);
-    }
-
-    if (uiAction == GOSSIP_ACTION_TRADE)
-        pPlayer->SEND_VENDORLIST(pCreature->GetObjectGuid());
-
-    return true;
-}
-
-/*######
 ## npc_rocknot
 ######*/
 
@@ -1172,12 +1115,6 @@ void AddSC_blackrock_depths()
     pNewScript->Name = "npc_kharan_mighthammer";
     pNewScript->pGossipHello =  &GossipHello_npc_kharan_mighthammer;
     pNewScript->pGossipSelect = &GossipSelect_npc_kharan_mighthammer;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_lokhtos_darkbargainer";
-    pNewScript->pGossipHello =  &GossipHello_npc_lokhtos_darkbargainer;
-    pNewScript->pGossipSelect = &GossipSelect_npc_lokhtos_darkbargainer;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;

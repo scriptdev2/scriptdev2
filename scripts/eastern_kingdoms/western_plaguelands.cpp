@@ -22,52 +22,10 @@ SDCategory: Western Plaguelands
 EndScriptData */
 
 /* ContentData
-npc_myranda_hag
 npc_the_scourge_cauldron
 EndContentData */
 
 #include "precompiled.h"
-
-/*######
-## npc_myranda_the_hag
-######*/
-
-enum
-{
-    QUEST_SUBTERFUGE        = 5862,
-    QUEST_IN_DREAMS         = 5944,
-    SPELL_SCARLET_ILLUSION  = 17961
-};
-
-#define GOSSIP_ITEM_ILLUSION    "I am ready for the illusion, Myranda."
-
-bool GossipHello_npc_myranda_the_hag(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
-
-    if (pPlayer->GetQuestStatus(QUEST_SUBTERFUGE) == QUEST_STATUS_COMPLETE &&
-        !pPlayer->GetQuestRewardStatus(QUEST_IN_DREAMS) && !pPlayer->HasAura(SPELL_SCARLET_ILLUSION))
-    {
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_ILLUSION, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-        pPlayer->SEND_GOSSIP_MENU(4773, pCreature->GetObjectGuid());
-        return true;
-    }
-    else
-        pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-
-    return true;
-}
-
-bool GossipSelect_npc_myranda_the_hag(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
-    {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        pCreature->CastSpell(pPlayer, SPELL_SCARLET_ILLUSION, false);
-    }
-    return true;
-}
 
 /*######
 ## npc_the_scourge_cauldron
@@ -147,12 +105,6 @@ CreatureAI* GetAI_npc_the_scourge_cauldron(Creature* pCreature)
 void AddSC_western_plaguelands()
 {
     Script* pNewScript;
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_myranda_the_hag";
-    pNewScript->pGossipHello = &GossipHello_npc_myranda_the_hag;
-    pNewScript->pGossipSelect = &GossipSelect_npc_myranda_the_hag;
-    pNewScript->RegisterSelf();
 
     pNewScript = new Script;
     pNewScript->Name = "npc_the_scourge_cauldron";
