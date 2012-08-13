@@ -145,8 +145,9 @@ struct MANGOS_DLL_DECL boss_ouroAI : public Scripted_NoMovementAI
             {
                 if (m_uiSummonBaseTimer <= uiDiff)
                 {
-                    if (DoCastSpellIfCan(m_creature, SPELL_SUMMON_BASE) == CAST_OK)
-                        m_uiSummonBaseTimer = 0;
+                    // Note: server side spells should be cast directly
+                    m_creature->CastSpell(m_creature, SPELL_SUMMON_BASE, true);
+                    m_uiSummonBaseTimer = 0;
                 }
                 else
                     m_uiSummonBaseTimer -= uiDiff;

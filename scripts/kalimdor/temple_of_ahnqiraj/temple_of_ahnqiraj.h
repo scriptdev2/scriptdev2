@@ -17,7 +17,7 @@ enum
     TYPE_HUHURAN                = 5,
     TYPE_TWINS                  = 6,
     TYPE_OURO                   = 7,
-    TYPE_CTHUN_PHASE            = 8,
+    TYPE_CTHUN                  = 8,
 
     NPC_SKERAM                  = 15263,
     //NPC_KRI                   = 15511,
@@ -27,11 +27,13 @@ enum
     NPC_VEKNILASH               = 15275,
     NPC_MASTERS_EYE             = 15963,
     NPC_OURO_SPAWNER            = 15957,
+    //NPC_EYE_OF_CTHUN          = 15589,
     NPC_CTHUN                   = 15727,
 
     GO_SKERAM_GATE              = 180636,
     GO_TWINS_ENTER_DOOR         = 180634,
     GO_TWINS_EXIT_DOOR          = 180635,
+    GO_SANDWORM_BASE            = 180795,
 
     EMOTE_EYE_INTRO             = -1531012,
     SAY_EMPERORS_INTRO_1        = -1531013,
@@ -41,20 +43,26 @@ enum
     SAY_EMPERORS_INTRO_5        = -1531017,
     SAY_EMPERORS_INTRO_6        = -1531018,
 
+    // Whispered on players around the map
+    SAY_CTHUN_WHISPER_1         = -1531033,
+    SAY_CTHUN_WHISPER_2         = -1531034,
+    SAY_CTHUN_WHISPER_3         = -1531035,
+    SAY_CTHUN_WHISPER_4         = -1531036,
+    SAY_CTHUN_WHISPER_5         = -1531037,
+    SAY_CTHUN_WHISPER_6         = -1531038,
+    SAY_CTHUN_WHISPER_7         = -1531039,
+    SAY_CTHUN_WHISPER_8         = -1531040,
+
     AREATRIGGER_TWIN_EMPERORS   = 4047,
 
     SPELL_SUMMON_PLAYER         = 20477,
-};
 
-enum CThunPhase
-{
-    PHASE_NOT_STARTED           = 0,
-    PHASE_EYE_NORMAL            = 1,
-    PHASE_EYE_DARK_GLARE        = 2,
-    PHASE_TRANSITION            = 3,
-    PHASE_CTHUN                 = 4,
-    PHASE_CTHUN_WEAKENED        = 5,
-    PHASE_FINISH                = 6,
+    // Cast periodically on players around the instance
+    SPELL_WHISPERINGS_CTHUN_1   = 26195,
+    SPELL_WHISPERINGS_CTHUN_2   = 26197,
+    SPELL_WHISPERINGS_CTHUN_3   = 26198,
+    SPELL_WHISPERINGS_CTHUN_4   = 26258,
+    SPELL_WHISPERINGS_CTHUN_5   = 26259,
 };
 
 class MANGOS_DLL_DECL instance_temple_of_ahnqiraj : public ScriptedInstance
@@ -77,13 +85,14 @@ class MANGOS_DLL_DECL instance_temple_of_ahnqiraj : public ScriptedInstance
         const char* Save() { return m_strInstData.c_str(); }
         void Load(const char* chrIn);
 
-        void Update(uint32 uiDiff) { m_dialogueHelper.DialogueUpdate(uiDiff); }
+        void Update(uint32 uiDiff);
 
     private:
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strInstData;
 
         uint8 m_uiBugTrioDeathCount;
+        uint32 m_uiCthunWhisperTimer;
 
         bool m_bIsEmperorsIntroDone;
 
