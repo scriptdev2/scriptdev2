@@ -16,7 +16,7 @@
 
 /* ScriptData
 SDName: Boss_Nethermancer_Sepethrea
-SD%Complete: 90
+SD%Complete: 95
 SDComment: May need some small adjustments
 SDCategory: Tempest Keep, The Mechanar
 EndScriptData */
@@ -34,12 +34,11 @@ enum
     SAY_SLAY2                       = -1554018,
     SAY_DEATH                       = -1554019,
 
-    SPELL_SUMMON_RAGIN_FLAMES       = 35275,
-    SPELL_FROST_ATTACK              = 35263,
+    SPELL_SUMMON_RAGING_FLAMES      = 35275,
+    SPELL_SUMMON_RAGING_FLAMES_H    = 39084,
+    SPELL_FROST_ATTACK              = 45195,
     SPELL_ARCANE_BLAST              = 35314,
     SPELL_DRAGONS_BREATH            = 35250,
-    SPELL_KNOCKBACK                 = 37317,
-    SPELL_SOLARBURN                 = 35267,
 
     NPC_RAGING_FLAMES               = 20481,
 
@@ -64,22 +63,18 @@ struct MANGOS_DLL_DECL boss_nethermancer_sepethreaAI : public ScriptedAI
     uint32 m_uiFrostAttackTimer;
     uint32 m_uiArcaneBlastTimer;
     uint32 m_uiDragonsBreathTimer;
-    uint32 m_uiKnockbackTimer;
-    uint32 m_uiSolarburnTimer;
 
     void Reset()
     {
         m_uiFrostAttackTimer    = urand(7000, 10000);
         m_uiArcaneBlastTimer    = urand(12000, 18000);
         m_uiDragonsBreathTimer  = urand(18000, 22000);
-        m_uiKnockbackTimer      = urand(22000, 28000);
-        m_uiSolarburnTimer      = 30000;
     }
 
     void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
-        DoCastSpellIfCan(m_creature, SPELL_SUMMON_RAGIN_FLAMES);
+        DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_SUMMON_RAGING_FLAMES : SPELL_SUMMON_RAGING_FLAMES_H);
     }
 
     void KilledUnit(Unit* pVictim)
@@ -145,27 +140,6 @@ struct MANGOS_DLL_DECL boss_nethermancer_sepethreaAI : public ScriptedAI
         }
         else
             m_uiDragonsBreathTimer -= uiDiff;
-
-        // Knockback
-        if (m_uiKnockbackTimer < uiDiff)
-        {
-            if (DoCastSpellIfCan(m_creature, SPELL_KNOCKBACK) == CAST_OK)
-                m_uiKnockbackTimer = urand(15000, 25000);
-        }
-        else
-            m_uiKnockbackTimer -= uiDiff;
-
-        // Solarburn
-        if (m_uiSolarburnTimer < uiDiff)
-        {
-            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1))
-            {
-                if (DoCastSpellIfCan(pTarget, SPELL_SOLARBURN) == CAST_OK)
-                    m_uiSolarburnTimer = 30000;
-            }
-        }
-        else
-            m_uiSolarburnTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }

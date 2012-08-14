@@ -341,6 +341,9 @@ void instance_blackrock_depths::OnCreatureDeath(Creature* pCreature)
         case NPC_GLOOMREL:
         case NPC_SEETHREL:
         case NPC_DOPEREL:
+            // Only handle the event when event is in progress
+            if (GetData(TYPE_TOMB_OF_SEVEN) != IN_PROGRESS)
+                return;
             // Call the next dwarf only if it's the last one which joined the fight
             if (pCreature->GetEntry() == aTombDwarfes[m_uiDwarfRound - 1])
                 DoCallNextDwarf();

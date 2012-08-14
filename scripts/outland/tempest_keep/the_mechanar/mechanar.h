@@ -33,36 +33,55 @@ enum
 
     GO_FACTORY_ELEVATOR     = 183788,
 
-    SPELL_SIMPLE_TELEPORT   = 12980,
+    SPELL_ETHEREAL_TELEPORT = 34427,
 
     SAY_PATHALEON_INTRO     = -1554028,
 };
 
 struct SpawnLocation
 {
+    uint32 m_uiSpawnEntry;
     float m_fX, m_fY, m_fZ, m_fO;
 };
 
-static const SpawnLocation aBridgeLocs[MAX_BRIDGE_LOCATIONS] =
+static const SpawnLocation aBridgeEventLocs[MAX_BRIDGE_LOCATIONS][4] =
 {
-    {246.29f, -22.41f, 26.32f, 0},
-    {207.52f, -23.13f, 24.87f, 0},
-    {181.58f, -23.01f, 24.87f, 0},
-    {137.87f,  28.67f, 24.87f, 4.65f},
-    {137.95f,  52.72f, 24.87f, 4.65f},
-    {138.25f,  93.51f, 26.37f, 4.65f},
-    {138.44f, 150.28f, 25.57f, 4.63f}           // Pathaleon summon location
-};
-
-static const uint32 aBridgeEventNpcs[MAX_BRIDGE_LOCATIONS][MAX_BRIDGE_TRASH] =
-{
-    {NPC_ASTROMAGE,       NPC_ASTROMAGE, NPC_PHYSICIAN, NPC_CENTURION},
-    {NPC_FORGE_DESTROYER, 0, 0, 0},
-    {NPC_ENGINEER,        NPC_PHYSICIAN, NPC_ENGINEER,  0},
-    {NPC_ASTROMAGE,       NPC_PHYSICIAN, NPC_ENGINEER,  0},
-    {NPC_FORGE_DESTROYER, 0, 0, 0},
-    {NPC_PHYSICIAN,       NPC_ASTROMAGE, NPC_ENGINEER,  NPC_NETHERBINDER},
-    {NPC_PATHALEON,       0, 0, 0}
+    {
+        {NPC_ASTROMAGE,     243.9323f, -24.53621f, 26.3284f, 0},
+        {NPC_ASTROMAGE,     240.5847f, -21.25438f, 26.3284f, 0},
+        {NPC_PHYSICIAN,     238.4178f, -25.92982f, 26.3284f, 0},
+        {NPC_CENTURION,     237.1122f, -19.14261f, 26.3284f, 0},
+    },
+    {
+        {NPC_FORGE_DESTROYER, 199.945f, -22.85885f, 24.95783f, 0},
+        {0, 0, 0, 0, 0},
+    },
+    {
+        {NPC_ENGINEER,      179.8642f, -25.84609f, 24.8745f, 0},
+        {NPC_ENGINEER,      181.9983f, -17.56084f, 24.8745f, 0},
+        {NPC_PHYSICIAN,     183.4078f, -22.46612f, 24.8745f, 0},
+        {0, 0, 0, 0, 0},
+    },
+    {
+        {NPC_ENGINEER,      141.0496f, 37.86048f, 24.87399f, 4.65f},
+        {NPC_ASTROMAGE,     137.6626f, 34.89631f, 24.8742f,  4.65f},
+        {NPC_PHYSICIAN,     135.3587f, 38.03816f, 24.87417f, 4.65f},
+        {0, 0, 0, 0, 0},
+    },
+    {
+        {NPC_FORGE_DESTROYER, 137.8275f, 53.18128f, 24.95783f, 4.65f},
+        {0, 0, 0, 0, 0},
+    },
+    {
+        {NPC_PHYSICIAN,     134.3062f, 109.1506f, 26.45663f, 4.65f},
+        {NPC_ASTROMAGE,     135.3307f, 99.96439f, 26.45663f, 4.65f},
+        {NPC_NETHERBINDER,  141.3976f, 102.7863f, 26.45663f, 4.65f},
+        {NPC_ENGINEER,      140.8281f, 112.0363f, 26.45663f, 4.65f},
+    },
+    {
+        {NPC_PATHALEON,     139.5425f, 149.3192f, 25.65904f, 4.63f},
+        {0, 0, 0, 0, 0},
+    },
 };
 
 class MANGOS_DLL_DECL instance_mechanar : public ScriptedInstance
