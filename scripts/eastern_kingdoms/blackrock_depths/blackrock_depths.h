@@ -9,6 +9,7 @@ enum
 {
     MAX_ENCOUNTER           = 7,
     MAX_RELIC_DOORS         = 12,
+    MAX_DWARFS              = 7,
 
     TYPE_RING_OF_LAW        = 1,
     TYPE_VAULT              = 2,
@@ -26,7 +27,7 @@ enum
     NPC_VILEREL             = 9036,
     NPC_GLOOMREL            = 9037,
     NPC_SEETHREL            = 9038,
-    // NPC_DOOMREL          = 9039,
+    NPC_DOOMREL             = 9039,
     NPC_DOPEREL             = 9040,
     NPC_WATCHER_DOOMGRIP    = 9476,
     NPC_WARBRINGER_CONST    = 8905,                         // Four of them in Relict Vault are related to Doomgrip summon event
@@ -68,6 +69,8 @@ enum
     GO_JAIL_SUPPLY_CRATE    = 166872,
 
     SPELL_STONED            = 10255,                        // Aura of Warbringer Constructs in Relict Vault
+
+    FACTION_DWARF_HOSTILE   = 754,                          // Hostile faction for the Tomb of the Seven dwarfs
 };
 
 enum ArenaNPCs
@@ -111,6 +114,9 @@ static const uint32 aArenaNPCs[] =
 // Used to summon Watcher Doomgrip
 static const float aVaultPositions[4] = {821.905f, -338.382f, -50.134f, 3.78736f};
 
+// Tomb of the Seven dwarfs
+static const uint32 aTombDwarfes[MAX_DWARFS] = {NPC_ANGERREL, NPC_SEETHREL, NPC_DOPEREL, NPC_GLOOMREL, NPC_VILEREL, NPC_HATEREL, NPC_DOOMREL};
+
 class MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
 {
     public:
@@ -121,6 +127,7 @@ class MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
 
         void OnCreatureCreate(Creature* pCreature);
         void OnCreatureDeath(Creature* pCreature);
+        void OnCreatureEvade(Creature* pCreature);
         void OnObjectCreate(GameObject* pGo);
 
         void SetData(uint32 uiType, uint32 uiData);
@@ -128,18 +135,24 @@ class MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
 
         const char* Save() { return m_strInstData.c_str(); }
         void Load(const char* chrIn);
-        void OnCreatureEvade(Creature* pCreature);
+
+        void Update(uint32 uiDiff);
 
         // Arena Event
         void SetArenaCenterCoords(float fX, float fY, float fZ) { m_fArenaCenterX = fX; m_fArenaCenterY = fY; m_fArenaCenterZ = fZ; }
         void GetArenaCenterCoords(float &fX, float &fY, float &fZ) { fX = m_fArenaCenterX; fY = m_fArenaCenterY; fZ = m_fArenaCenterZ; }
 
     private:
+        void DoCallNextDwarf();
+
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strInstData;
 
         uint32 m_uiBarAleCount;
         uint8 m_uiCofferDoorsOpened;
+
+        uint8 m_uiDwarfRound;
+        uint32 m_uiDwarfFightTimer;
 
         float m_fArenaCenterX, m_fArenaCenterY, m_fArenaCenterZ;
 

@@ -341,7 +341,6 @@ UPDATE creature_template SET ScriptName='boss_moira_bronzebeard' WHERE entry=892
 UPDATE creature_template SET ScriptName='boss_ambassador_flamelash' WHERE entry=9156;
 UPDATE creature_template SET ScriptName='boss_anubshiah' WHERE entry=9031;
 UPDATE creature_template SET ScriptName='boss_doomrel' WHERE entry=9039;
-UPDATE creature_template SET ScriptName='boss_gloomrel' WHERE entry=9037;
 UPDATE creature_template SET ScriptName='boss_general_angerforge' WHERE entry=9033;
 UPDATE creature_template SET ScriptName='boss_gorosh_the_dervish' WHERE entry=9027;
 UPDATE creature_template SET ScriptName='boss_grizzle' WHERE entry=9028;
@@ -352,9 +351,9 @@ UPDATE creature_template SET ScriptName='npc_grimstone' WHERE entry=10096;
 UPDATE creature_template SET ScriptName='npc_theldren_trigger' WHERE entry=16079;
 UPDATE creature_template SET ScriptName='npc_kharan_mighthammer' WHERE entry=9021;
 UPDATE creature_template SET ScriptName='npc_rocknot' WHERE entry=9503;
-UPDATE creature_template SET ScriptName ='npc_marshal_windsor' WHERE entry=9023;
-UPDATE creature_template SET ScriptName ='npc_dughal_stormwing' WHERE entry=9022;
-UPDATE creature_template SET ScriptName ='npc_tobias_seecher' WHERE entry=9679;
+UPDATE creature_template SET ScriptName='npc_marshal_windsor' WHERE entry=9023;
+UPDATE creature_template SET ScriptName='npc_dughal_stormwing' WHERE entry=9022;
+UPDATE creature_template SET ScriptName='npc_tobias_seecher' WHERE entry=9679;
 UPDATE gameobject_template SET ScriptName='go_shadowforge_brazier' WHERE entry IN (174744, 174745);
 UPDATE gameobject_template SET ScriptName='go_relic_coffer_door' WHERE entry IN (174554, 174555, 174556, 174557, 174558, 174559, 174560, 174561, 174562, 174563, 174564, 174566);
 

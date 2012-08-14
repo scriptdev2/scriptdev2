@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Tomb_Of_Seven
-SD%Complete: 90
-SDComment: Learning Smelt Dark Iron if tribute quest rewarded. Basic event implemented. Correct order and timing of event is unknown.
+SD%Complete: 100
+SDComment:
 SDCategory: Blackrock Depths
 EndScriptData */
 
@@ -26,81 +26,16 @@ EndScriptData */
 
 enum
 {
-    FACTION_NEUTRAL             = 734,
-    FACTION_HOSTILE             = 754,
+    SPELL_SHADOW_BOLT_VOLLEY    = 15245,
+    SPELL_IMMOLATE              = 12742,
+    SPELL_CURSE_OF_WEAKNESS     = 12493,
+    SPELL_DEMON_ARMOR           = 13787,
+    SPELL_SUMMON_VOIDWALKERS    = 15092,
 
-    SPELL_SMELT_DARK_IRON       = 14891,
-    SPELL_LEARN_SMELT           = 14894,
-    QUEST_SPECTRAL_CHALICE      = 4083,
-    SKILLPOINT_MIN              = 230
+    SAY_DOOMREL_START_EVENT     = -1230003,
+    GOSSIP_ITEM_CHALLENGE       = -3230002,
+    GOSSIP_TEXT_ID_CHALLENGE    = 2601,
 };
-
-#define GOSSIP_ITEM_TEACH_1 "Teach me the art of smelting dark iron"
-#define GOSSIP_ITEM_TEACH_2 "Continue..."
-#define GOSSIP_ITEM_TRIBUTE "I want to pay tribute"
-
-bool GossipHello_boss_gloomrel(Player* pPlayer, Creature* pCreature)
-{
-    if (ScriptedInstance* pInstance = (ScriptedInstance*)pCreature->GetInstanceData())
-    {
-        if (pInstance->GetData(TYPE_TOMB_OF_SEVEN) == NOT_STARTED)
-        {
-            if (pPlayer->GetQuestRewardStatus(QUEST_SPECTRAL_CHALICE) &&
-                pPlayer->GetSkillValue(SKILL_MINING) >= SKILLPOINT_MIN &&
-                !pPlayer->HasSpell(SPELL_SMELT_DARK_IRON))
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TEACH_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-
-            if (!pPlayer->GetQuestRewardStatus(QUEST_SPECTRAL_CHALICE) &&
-                pPlayer->GetSkillValue(SKILL_MINING) >= SKILLPOINT_MIN)
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TRIBUTE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-        }
-    }
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-    return true;
-}
-
-bool GossipSelect_boss_gloomrel(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    switch(uiAction)
-    {
-        case GOSSIP_ACTION_INFO_DEF+1:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TEACH_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
-            pPlayer->SEND_GOSSIP_MENU(2606, pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+11:
-            pPlayer->CLOSE_GOSSIP_MENU();
-            pCreature->CastSpell(pPlayer, SPELL_LEARN_SMELT, false);
-            break;
-        case GOSSIP_ACTION_INFO_DEF+2:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "[PH] Continue...", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 22);
-            pPlayer->SEND_GOSSIP_MENU(2604, pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+22:
-            pPlayer->CLOSE_GOSSIP_MENU();
-            if (ScriptedInstance* pInstance = (ScriptedInstance*)pCreature->GetInstanceData())
-            {
-                //are 5 minutes expected? go template may have data to despawn when used at quest
-                pInstance->DoRespawnGameObject(GO_SPECTRAL_CHALICE, MINUTE*5);
-            }
-            break;
-    }
-    return true;
-}
-
-enum
-{
-    SPELL_SHADOWBOLTVOLLEY              = 15245,
-    SPELL_IMMOLATE                      = 12742,
-    SPELL_CURSEOFWEAKNESS               = 12493,
-    SPELL_DEMONARMOR                    = 13787,
-    SPELL_SUMMON_VOIDWALKERS            = 15092,
-
-    SAY_DOOMREL_START_EVENT             = -1230003,
-
-    MAX_DWARF                           = 7
-};
-
-#define GOSSIP_ITEM_CHALLENGE   "Your bondage is at an end, Doom'rel. I challenge you!"
 
 struct MANGOS_DLL_DECL boss_doomrelAI : public ScriptedAI
 {
@@ -112,23 +47,22 @@ struct MANGOS_DLL_DECL boss_doomrelAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    uint32 m_uiShadowVolley_Timer;
-    uint32 m_uiImmolate_Timer;
-    uint32 m_uiCurseOfWeakness_Timer;
-    uint32 m_uiDemonArmor_Timer;
-    uint32 m_uiCallToFight_Timer;
-    uint8 m_uiDwarfRound;
-    bool m_bHasSummoned;
+    uint32 m_uiShadowVolleyTimer;
+    uint32 m_uiImmolateTimer;
+    uint32 m_uiCurseOfWeaknessTimer;
+    uint32 m_uiDemonArmorTimer;
 
     void Reset()
     {
-        m_uiShadowVolley_Timer = 10000;
-        m_uiImmolate_Timer = 18000;
-        m_uiCurseOfWeakness_Timer = 5000;
-        m_uiDemonArmor_Timer = 16000;
-        m_uiCallToFight_Timer = 0;
-        m_uiDwarfRound = 0;
-        m_bHasSummoned = false;
+        m_uiShadowVolleyTimer    = 10000;
+        m_uiImmolateTimer        = 18000;
+        m_uiCurseOfWeaknessTimer = 5000;
+        m_uiDemonArmorTimer      = 1000;
+    }
+
+    void Aggro(Unit* pWho)
+    {
+        DoCastSpellIfCan(m_creature, SPELL_SUMMON_VOIDWALKERS);
     }
 
     void JustReachedHome()
@@ -149,125 +83,48 @@ struct MANGOS_DLL_DECL boss_doomrelAI : public ScriptedAI
             pSummoned->AI()->AttackStart(pTarget);
     }
 
-    Creature* GetDwarfForPhase(uint8 uiPhase)
+    void UpdateAI(const uint32 uiDiff)
     {
-        switch(uiPhase)
-        {
-            case 0:
-                return m_pInstance->GetSingleCreatureFromStorage(NPC_ANGERREL);
-            case 1:
-                return m_pInstance->GetSingleCreatureFromStorage(NPC_SEETHREL);
-            case 2:
-                return m_pInstance->GetSingleCreatureFromStorage(NPC_DOPEREL);
-            case 3:
-                return m_pInstance->GetSingleCreatureFromStorage(NPC_GLOOMREL);
-            case 4:
-                return m_pInstance->GetSingleCreatureFromStorage(NPC_VILEREL);
-            case 5:
-                return m_pInstance->GetSingleCreatureFromStorage(NPC_HATEREL);
-            case 6:
-                return m_creature;
-        }
-        return NULL;
-    }
-
-    void CallToFight(bool bStartFight)
-    {
-        if (Creature* pDwarf = GetDwarfForPhase(m_uiDwarfRound))
-        {
-            if (bStartFight && pDwarf->isAlive())
-            {
-                pDwarf->setFaction(FACTION_HOSTILE);
-                pDwarf->SetInCombatWithZone();              // attackstart
-            }
-            else
-            {
-                if (!pDwarf->isAlive() || pDwarf->isDead())
-                    pDwarf->Respawn();
-
-                pDwarf->setFaction(FACTION_NEUTRAL);
-            }
-        }
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        if (m_pInstance)
-        {
-            if (m_pInstance->GetData(TYPE_TOMB_OF_SEVEN) == IN_PROGRESS)
-            {
-                if (m_uiDwarfRound < MAX_DWARF)
-                {
-                    if (m_uiCallToFight_Timer < diff)
-                    {
-                        CallToFight(true);
-                        ++m_uiDwarfRound;
-                        m_uiCallToFight_Timer = 30000;
-                    }
-                    else
-                        m_uiCallToFight_Timer -= diff;
-                }
-            }
-            else if (m_pInstance->GetData(TYPE_TOMB_OF_SEVEN) == FAIL)
-            {
-                for (m_uiDwarfRound = 0; m_uiDwarfRound < MAX_DWARF; ++m_uiDwarfRound)
-                    CallToFight(false);
-
-                m_uiDwarfRound = 0;
-                m_uiCallToFight_Timer = 0;
-
-                if (m_pInstance)
-                    m_pInstance->SetData(TYPE_TOMB_OF_SEVEN, NOT_STARTED);
-            }
-        }
-
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //ShadowVolley_Timer
-        if (m_uiShadowVolley_Timer < diff)
+        if (m_uiShadowVolleyTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_SHADOWBOLTVOLLEY);
-            m_uiShadowVolley_Timer = 12000;
+            if (DoCastSpellIfCan(m_creature, SPELL_SHADOW_BOLT_VOLLEY) == CAST_OK)
+                m_uiShadowVolleyTimer = 12000;
         }
         else
-            m_uiShadowVolley_Timer -= diff;
+            m_uiShadowVolleyTimer -= uiDiff;
 
-        //Immolate_Timer
-        if (m_uiImmolate_Timer < diff)
+        if (m_uiImmolateTimer < uiDiff)
         {
-            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
-                DoCastSpellIfCan(target,SPELL_IMMOLATE);
-
-            m_uiImmolate_Timer = 25000;
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_IMMOLATE) == CAST_OK)
+                    m_uiImmolateTimer = 25000;
+            }
         }
         else
-            m_uiImmolate_Timer -= diff;
+            m_uiImmolateTimer -= uiDiff;
 
-        //CurseOfWeakness_Timer
-        if (m_uiCurseOfWeakness_Timer < diff)
+        if (m_uiCurseOfWeaknessTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_CURSEOFWEAKNESS);
-            m_uiCurseOfWeakness_Timer = 45000;
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_CURSE_OF_WEAKNESS) == CAST_OK)
+                    m_uiCurseOfWeaknessTimer = 45000;
+            }
         }
         else
-            m_uiCurseOfWeakness_Timer -= diff;
+            m_uiCurseOfWeaknessTimer -= uiDiff;
 
-        //DemonArmor_Timer
-        if (m_uiDemonArmor_Timer < diff)
+        if (m_uiDemonArmorTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature,SPELL_DEMONARMOR);
-            m_uiDemonArmor_Timer = 300000;
+            if (DoCastSpellIfCan(m_creature, SPELL_DEMON_ARMOR) == CAST_OK)
+                m_uiDemonArmorTimer = 300000;
         }
         else
-            m_uiDemonArmor_Timer -= diff;
-
-        //Summon Voidwalkers
-        if (!m_bHasSummoned && m_creature->GetHealthPercent() <= 50.0f)
-        {
-            m_creature->CastSpell(m_creature, SPELL_SUMMON_VOIDWALKERS, true);
-            m_bHasSummoned = true;
-        }
+            m_uiDemonArmorTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
@@ -282,11 +139,11 @@ bool GossipHello_boss_doomrel(Player* pPlayer, Creature* pCreature)
 {
     if (ScriptedInstance* pInstance = (ScriptedInstance*)pCreature->GetInstanceData())
     {
-        if (pInstance->GetData(TYPE_TOMB_OF_SEVEN) == NOT_STARTED)
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_CHALLENGE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+        if (pInstance->GetData(TYPE_TOMB_OF_SEVEN) == NOT_STARTED || pInstance->GetData(TYPE_TOMB_OF_SEVEN) == FAIL)
+            pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_CHALLENGE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     }
 
-    pPlayer->SEND_GOSSIP_MENU(2601, pCreature->GetObjectGuid());
+    pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_ID_CHALLENGE, pCreature->GetObjectGuid());
     return true;
 }
 
@@ -296,7 +153,7 @@ bool GossipSelect_boss_doomrel(Player* pPlayer, Creature* pCreature, uint32 uiSe
     {
         case GOSSIP_ACTION_INFO_DEF+1:
             pPlayer->CLOSE_GOSSIP_MENU();
-            DoScriptText(SAY_DOOMREL_START_EVENT, pCreature, pPlayer);
+            DoScriptText(SAY_DOOMREL_START_EVENT, pCreature);
             // start event
             if (ScriptedInstance* pInstance = (ScriptedInstance*)pCreature->GetInstanceData())
                 pInstance->SetData(TYPE_TOMB_OF_SEVEN, IN_PROGRESS);
@@ -309,12 +166,6 @@ bool GossipSelect_boss_doomrel(Player* pPlayer, Creature* pCreature, uint32 uiSe
 void AddSC_boss_tomb_of_seven()
 {
     Script* pNewScript;
-
-    pNewScript = new Script;
-    pNewScript->Name = "boss_gloomrel";
-    pNewScript->pGossipHello = &GossipHello_boss_gloomrel;
-    pNewScript->pGossipSelect = &GossipSelect_boss_gloomrel;
-    pNewScript->RegisterSelf();
 
     pNewScript = new Script;
     pNewScript->Name = "boss_doomrel";
