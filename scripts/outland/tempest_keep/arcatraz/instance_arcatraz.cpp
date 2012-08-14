@@ -50,6 +50,8 @@ enum
     SPELL_TARGET_ALPHA              = 36856,
     SPELL_TARGET_DELTA              = 36857,
     SPELL_TARGET_GAMMA              = 36858,
+    SPELL_SIMPLE_TELEPORT           = 12980,
+    SPELL_MIND_REND                 = 36859,
 };
 
 static const DialogueEntry aArcatrazDialogue[] =
@@ -70,7 +72,7 @@ static const DialogueEntry aArcatrazDialogue[] =
     {YELL_MELLICHAR_RELEASE5, NPC_MELLICHAR, 8000},
     {TYPE_WARDEN_5,           0,             5000},
     {SAY_SKYRISS_INTRO,       NPC_SKYRISS,   25000},
-    {YELL_MELLICAR_WELCOME,   NPC_MELLICHAR, 5000},
+    {YELL_MELLICAR_WELCOME,   NPC_MELLICHAR, 3000},
     {SAY_SKYRISS_AGGRO,       NPC_SKYRISS,   0},
     {0, 0, 0},
 };
@@ -356,7 +358,12 @@ void instance_arcatraz::JustDidDialogueStep(int32 iEntry)
             SetData(TYPE_WARDEN_5, IN_PROGRESS);
             break;
         case TYPE_WARDEN_5:
-            pMellichar->SummonCreature(NPC_SKYRISS, aSummonPosition[4].m_fX, aSummonPosition[4].m_fY, aSummonPosition[4].m_fZ, aSummonPosition[4].m_fO, TEMPSUMMON_DEAD_DESPAWN, 0);
+            if (Creature* pSkyriss = pMellichar->SummonCreature(NPC_SKYRISS, aSummonPosition[4].m_fX, aSummonPosition[4].m_fY, aSummonPosition[4].m_fZ, aSummonPosition[4].m_fO, TEMPSUMMON_DEAD_DESPAWN, 0))
+                pSkyriss->CastSpell(pSkyriss, SPELL_SIMPLE_TELEPORT, false);
+            break;
+        case YELL_MELLICAR_WELCOME:
+            if (Creature* pSkyriss = GetSingleCreatureFromStorage(NPC_SKYRISS))
+                pSkyriss->CastSpell(pSkyriss, SPELL_MIND_REND, false);
             break;
         case SAY_SKYRISS_AGGRO:
             // Kill Mellichar and start combat

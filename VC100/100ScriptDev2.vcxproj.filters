@@ -1659,7 +1659,13 @@
     <ClCompile Include="..\scripts\outland\tempest_keep\arcatraz\arcatraz.cpp">
       <Filter>scripts\outland\tempest_keep\arcatraz</Filter>
     </ClCompile>
+    <ClCompile Include="..\scripts\outland\tempest_keep\arcatraz\boss_dalliah.cpp">
+      <Filter>scripts\outland\tempest_keep\arcatraz</Filter>
+    </ClCompile>
     <ClCompile Include="..\scripts\outland\tempest_keep\arcatraz\boss_harbinger_skyriss.cpp">
+      <Filter>scripts\outland\tempest_keep\arcatraz</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scripts\outland\tempest_keep\arcatraz\boss_soccothrates.cpp">
       <Filter>scripts\outland\tempest_keep\arcatraz</Filter>
     </ClCompile>
     <ClCompile Include="..\scripts\outland\tempest_keep\arcatraz\instance_arcatraz.cpp">
