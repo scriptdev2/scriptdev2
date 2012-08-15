@@ -1159,6 +1159,8 @@ UPDATE creature_template SET ScriptName='mob_warp_splinter_treant' WHERE entry=1
 UPDATE instance_template SET ScriptName='instance_arcatraz' WHERE map=552;
 UPDATE creature_template SET ScriptName='mob_zerekethvoidzone' WHERE entry=21101;
 UPDATE creature_template SET ScriptName='boss_harbinger_skyriss' WHERE entry=20912;
+UPDATE creature_template SET ScriptName='boss_dalliah' WHERE entry=20885;
+UPDATE creature_template SET ScriptName='boss_soccothrates' WHERE entry=20886;
 UPDATE creature_template SET ScriptName='npc_warden_mellichar' WHERE entry=20904;
 UPDATE creature_template SET ScriptName='npc_millhouse_manastorm' WHERE entry=20977;
 

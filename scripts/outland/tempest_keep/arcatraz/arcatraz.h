@@ -10,8 +10,8 @@ enum
     MAX_ENCOUNTER                   = 9,
 
     TYPE_ZEREKETH                   = 1,
-    TYPE_DALLIAH                    = 2,                    // Handled in ACID (20885 - Dalliah the Doomsayer)
-    TYPE_SOCCOTHRATES               = 3,                    // Handled in ACID (20886 - Wrath-Scryer Soccothrates)
+    TYPE_DALLIAH                    = 2,
+    TYPE_SOCCOTHRATES               = 3,
     TYPE_HARBINGERSKYRISS           = 4,                    // Handled with ACID (FAIL of 20905, 20906, 20908, 20909, 20910, 20911)
     TYPE_WARDEN_1                   = 5,                    // Handled with ACID (20905 - Blazing Trickster, 20906 - Phase-Hunter)
     TYPE_WARDEN_2                   = 6,
@@ -19,6 +19,7 @@ enum
     TYPE_WARDEN_4                   = 8,                    // Handled with ACID (20910 - Twilight Drakonaar, 20911 - Blackwing Drakonaar)
     TYPE_WARDEN_5                   = 9,
 
+    NPC_SOCCOTHRATES                = 20886,
     NPC_MELLICHAR                   = 20904,                // Skyriss will kill this unit
     NPC_PRISON_APHPA_POD            = 21436,
     NPC_PRISON_BETA_POD             = 21437,

@@ -128,6 +128,7 @@ void instance_arcatraz::OnCreatureCreate(Creature* pCreature)
         case NPC_PRISON_GAMMA_POD:
         case NPC_PRISON_BOSS_POD:
         case NPC_MELLICHAR:
+        case NPC_SOCCOTHRATES:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
         case NPC_BLAZING_TRICKSTER:
