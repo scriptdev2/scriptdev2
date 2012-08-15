@@ -73,7 +73,6 @@ enum InstanceZA
     NPC_KORAGG              = 24247,
 
     NPC_EGG                 = 23817,
-    NPC_SPIRIT_LYNX         = 24143,
 
     NPC_HARRISON            = 24358,
     // Time Run Event NPCs
@@ -87,6 +86,7 @@ enum InstanceZA
     NPC_ASHIL_CORPSE        = 24441,
     NPC_HARKOR_CORPSE       = 24443,
 
+    // Zul'jin event spirits
     NPC_BEAR_SPIRIT         = 23878,                        // They should all have aura 42466
     NPC_EAGLE_SPIRIT        = 23880,
     NPC_LYNX_SPIRIT         = 23877,
