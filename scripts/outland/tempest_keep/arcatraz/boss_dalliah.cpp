@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: boss_dalliah
-SD%Complete: 20
-SDComment: Basic script
+SD%Complete: 100
+SDComment:
 SDCategory: Tempest Keep, The Arcatraz
 EndScriptData */
 
@@ -27,7 +27,6 @@ EndScriptData */
 enum
 {
     SAY_AGGRO                       = -1552031,
-    SAY_SOCCOTHRATES_AGGRO_1        = -1552039,
     SAY_SOCCOTHRATES_TAUNT_1        = -1552040,
     SAY_SOCCOTHRATES_TAUNT_2        = -1552041,
     SAY_SOCCOTHRATES_TAUNT_3        = -1552042,
@@ -38,7 +37,6 @@ enum
     SAY_WHIRLWIND_1                 = -1552036,
     SAY_WHIRLWIND_2                 = -1552037,
     SAY_DEATH                       = -1552038,
-    SAY_SOCCOTHRATES_DEATH          = -1552043,
 
     SPELL_GIFT_DOOMSAYER            = 36173,
     SPELL_GIFT_DOOMSAYER_H          = 39009,
@@ -60,8 +58,21 @@ struct MANGOS_DLL_DECL boss_dalliahAI : public ScriptedAI
     ScriptedInstance* m_pInstance;
     bool m_bIsRegularMode;
 
+    uint32 m_uiGiftDoomsayerTimer;
+    uint32 m_uiHealTimer;
+    uint32 m_uiWhirlwindTimer;
+    uint32 m_uiShadowWaveTimer;
+
+    bool m_bHasTaunted;
+
     void Reset()
     {
+        m_uiGiftDoomsayerTimer  = urand(4000, 7000);
+        m_uiHealTimer           = 0;
+        m_uiWhirlwindTimer      = 15000;
+        m_uiShadowWaveTimer     = urand(9000, 13000);
+
+        m_bHasTaunted           = false;
     }
 
     void Aggro(Unit* pWho)
@@ -95,6 +106,73 @@ struct MANGOS_DLL_DECL boss_dalliahAI : public ScriptedAI
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
+
+        if (m_uiGiftDoomsayerTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_GIFT_DOOMSAYER : SPELL_GIFT_DOOMSAYER_H) == CAST_OK)
+                m_uiGiftDoomsayerTimer = urand(14000, 19000);
+        }
+        else
+            m_uiGiftDoomsayerTimer -= uiDiff;
+
+        if (m_uiWhirlwindTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_WHIRLWIND) == CAST_OK)
+            {
+                DoScriptText(urand(0, 1) ? SAY_WHIRLWIND_1 : SAY_WHIRLWIND_2, m_creature);
+                m_uiWhirlwindTimer = urand(25000, 30000);
+                m_uiHealTimer      = urand(6000, 10000);
+            }
+        }
+        else
+            m_uiWhirlwindTimer -= uiDiff;
+
+        if (m_uiHealTimer)
+        {
+            if (m_uiHealTimer <= uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_HEAL : SPELL_HEAL_H) == CAST_OK)
+                {
+                    DoScriptText(urand(0, 1) ? SAY_HEAL_1 : SAY_HEAL_2, m_creature);
+                    m_uiHealTimer = 0;
+                }
+            }
+            else
+                m_uiHealTimer -= uiDiff;
+        }
+
+        if (!m_bIsRegularMode)
+        {
+            if (m_uiShadowWaveTimer < uiDiff)
+            {
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                {
+                    if (DoCastSpellIfCan(pTarget, SPELL_SHADOW_WAVE) == CAST_OK)
+                        m_uiShadowWaveTimer = urand(13000, 17000);
+                }
+            }
+            else
+                m_uiShadowWaveTimer -= uiDiff;
+        }
+
+        if (!m_bHasTaunted && m_creature->GetHealthPercent() < 25.0f)
+        {
+            // Taunt if Soccothares isn't dead yet
+            if (m_pInstance && m_pInstance->GetData(TYPE_SOCCOTHRATES) != DONE)
+            {
+                if (Creature* pSoccothares = m_pInstance->GetSingleCreatureFromStorage(NPC_SOCCOTHRATES))
+                {
+                    switch (urand(0, 2))
+                    {
+                        case 0: DoScriptText(SAY_SOCCOTHRATES_TAUNT_1, pSoccothares); break;
+                        case 1: DoScriptText(SAY_SOCCOTHRATES_TAUNT_2, pSoccothares); break;
+                        case 2: DoScriptText(SAY_SOCCOTHRATES_TAUNT_3, pSoccothares); break;
+                    }
+                }
+            }
+
+            m_bHasTaunted = true;
+        }
 
         DoMeleeAttackIfReady();
     }

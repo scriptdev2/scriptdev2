@@ -33,6 +33,9 @@ EndScriptData */
 
 enum
 {
+    SAY_SOCCOTHRATES_AGGRO          = -1552039,
+    SAY_SOCCOTHRATES_DEATH          = -1552043,
+
     YELL_MELLICHAR_INTRO1           = -1552023,
     YELL_MELLICHAR_INTRO2           = -1552024,
     YELL_MELLICHAR_RELEASE1         = -1552025,
@@ -56,6 +59,12 @@ enum
 
 static const DialogueEntry aArcatrazDialogue[] =
 {
+    // Soccothares taunts
+    {TYPE_DALLIAH,            0,             5000},
+    {SAY_SOCCOTHRATES_AGGRO,  NPC_SOCCOTHRATES, 0},
+    {TYPE_SOCCOTHRATES,       0,             5000},
+    {SAY_SOCCOTHRATES_DEATH,  NPC_SOCCOTHRATES, 0},
+    // Skyriss event
     {YELL_MELLICHAR_INTRO1,   NPC_MELLICHAR, 22000},
     {YELL_MELLICHAR_INTRO2,   NPC_MELLICHAR, 7000},
     {SPELL_TARGET_ALPHA,      0,             7000},
@@ -151,8 +160,20 @@ void instance_arcatraz::SetData(uint32 uiType, uint32 uiData)
             break;
 
         case TYPE_DALLIAH:
+            if (uiData == IN_PROGRESS)
+            {
+                // Soccothares taunts after Dalliah gets aggro
+                if (GetData(TYPE_SOCCOTHRATES) != DONE)
+                    StartNextDialogueText(TYPE_DALLIAH);
+            }
             if (uiData == DONE)
+            {
                 DoUseDoorOrButton(GO_CORE_SECURITY_FIELD_BETA);
+
+                // Soccothares taunts after Dalliah dies
+                if (GetData(TYPE_SOCCOTHRATES) != DONE)
+                    StartNextDialogueText(TYPE_SOCCOTHRATES);
+            }
             m_auiEncounter[1] = uiData;
             break;
 
