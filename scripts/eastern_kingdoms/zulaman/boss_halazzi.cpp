@@ -51,6 +51,7 @@ enum
     // Phase switch spells
     SPELL_HALAZZI_TRANSFORM_SUMMON  = 43143,            // summons 24143
     SPELL_TRANSFIGURE_TO_TROLL      = 43142,            // triggers 43573
+    SPELL_TRANSFIGURE_TRANSFORM     = 43573,
 
     SPELL_TRANSFORM_TO_LYNX_75      = 43145,
     SPELL_TRANSFORM_TO_LYNX_50      = 43271,
@@ -93,6 +94,8 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
     uint32 m_uiTotemTimer;
     uint32 m_uiBerserkTimer;
 
+    bool m_bHasTransformed;
+
     ObjectGuid m_spiritLynxGuid;
 
     void Reset()
@@ -105,6 +108,8 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
         m_uiShockTimer      = 10000;
         m_uiTotemTimer      = 12000;
         m_uiBerserkTimer    = 10*MINUTE*IN_MILLISECONDS;
+
+        m_bHasTransformed   = false;
     }
 
     void EnterEvadeMode()
@@ -156,6 +161,19 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
         }
     }
 
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
+    {
+        if (pSpell->Id == SPELL_TRANSFIGURE_TRANSFORM)
+        {
+            DoCastSpellIfCan(m_creature, SPELL_HALAZZI_TRANSFORM_SUMMON, CAST_TRIGGERED);
+            m_creature->UpdateEntry(NPC_HALAZZI_TROLL);
+
+            m_uiPhase      = PHASE_TOTEM;
+            m_uiShockTimer = 10000;
+            m_uiTotemTimer = 12000;
+        }
+    }
+
     // Wrapper to handle the phase transform
     void DoReuniteSpirits()
     {
@@ -186,6 +204,7 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
             m_uiPhase           = m_uiPhaseCounter > 0 ? PHASE_SINGLE : PHASE_FINAL;
             m_uiFrenzyTimer     = 16000;
             m_uiSaberLashTimer  = 20000;
+            m_bHasTransformed   = false;
         }
     }
 
@@ -212,17 +231,12 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
         if (m_uiPhase == PHASE_SINGLE || m_uiPhase == PHASE_FINAL)
         {
             // Split boss at 75%, 50% and 25%
-            if (m_creature->GetHealthPercent() <= float(25*m_uiPhaseCounter))
+            if (!m_bHasTransformed && m_creature->GetHealthPercent() <= float(25*m_uiPhaseCounter))
             {
                 if (DoCastSpellIfCan(m_creature, SPELL_TRANSFIGURE_TO_TROLL) == CAST_OK)
                 {
-                    DoCastSpellIfCan(m_creature, SPELL_HALAZZI_TRANSFORM_SUMMON, CAST_TRIGGERED);
                     DoScriptText(SAY_SPLIT, m_creature);
-                    m_creature->UpdateEntry(NPC_HALAZZI_TROLL);
-
-                    m_uiPhase      = PHASE_TOTEM;
-                    m_uiShockTimer = 10000;
-                    m_uiTotemTimer = 12000;
+                    m_bHasTransformed = true;
                 }
             }
 
@@ -341,7 +355,7 @@ struct MANGOS_DLL_DECL boss_spirit_lynxAI : public ScriptedAI
 
         // Unite spirits at 20% health
         // Note: maybe there is some spell related to this - needs research
-        if (!m_bHasUnited && m_creature->GetHealthPercent() < 20.0f && m_pInstance)
+        if (!m_bHasUnited && m_creature->GetHealthPercent() < 10.0f && m_pInstance)
         {
             if (Creature* pHalazzi = m_pInstance->GetSingleCreatureFromStorage(NPC_HALAZZI))
             {
