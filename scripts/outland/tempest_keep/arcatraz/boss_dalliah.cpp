@@ -102,6 +102,32 @@ struct MANGOS_DLL_DECL boss_dalliahAI : public ScriptedAI
             m_pInstance->SetData(TYPE_DALLIAH, FAIL);
     }
 
+    void EnterEvadeMode()
+    {
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop(true);
+        m_creature->LoadCreatureAddon(true);
+
+        // should evade to the attack position
+        if (m_creature->isAlive())
+            m_creature->GetMotionMaster()->MovePoint(1, aDalliahStartPos[0], aDalliahStartPos[1], aDalliahStartPos[2]);
+
+        m_creature->SetLootRecipient(NULL);
+
+        Reset();
+    }
+
+    void MovementInform(uint32 uiMoveType, uint32 uiPointId)
+    {
+        if (uiMoveType != POINT_MOTION_TYPE)
+            return;
+
+        // Adjust orientation
+        if (uiPointId)
+            m_creature->SetFacingTo(aDalliahStartPos[3]);
+    }
+
     void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())

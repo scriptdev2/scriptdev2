@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: boss_soccothrates
-SD%Complete: 20
-SDComment: Basic script
+SD%Complete: 80
+SDComment: Spell Felfire Line Up and Wrath-Scryer's Felfire npc are summoning are NYI and they need additional research.
 SDCategory: Tempest Keep, The Arcatraz
 EndScriptData */
 
@@ -44,34 +44,74 @@ enum
     SPELL_IMMOLATION                = 36051,
     SPELL_IMMOLATION_H              = 39007,
     SPELL_KNOCK_AWAY                = 36512,
-    SPELL_FELFIRE_LINE_UP           = 35770,
+    SPELL_FELFIRE_LINE_UP           = 35770,                // dummy spell - should summon a line of npcs - 20978 to the target
+    SPELL_CHARGE_TARGETING          = 36038,                // summons 21030 on target
+    SPELL_CHARGE                    = 35754,                // script target on 21030; also dummy effect area effect target on 20978 - makes the target cast 35769
     SPELL_FELFIRE_SHOCK             = 35759,
     SPELL_FELFIRE_SHOCK_H           = 39006,
 };
 
-struct MANGOS_DLL_DECL boss_soccothratesAI : public ScriptedAI
+static const DialogueEntry aIntroDialogue[] =
 {
-    boss_soccothratesAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {SAY_SOCCOTHRATES_INTRO_1,  NPC_SOCCOTHRATES,   3000},
+    {SAY_DALLIAH_INTRO_2,       NPC_DALLIAH,        2000},
+    {SAY_SOCCOTHRATES_INTRO_3,  NPC_SOCCOTHRATES,   4000},
+    {SAY_DALLIAH_INTRO_4,       NPC_DALLIAH,        5000},
+    {SAY_SOCCOTHRATES_INTRO_5,  NPC_SOCCOTHRATES,   3000},
+    {SAY_DALLIAH_INTRO_6,       NPC_DALLIAH,        3000},
+    {SAY_SOCCOTHRATES_INTRO_7,  NPC_SOCCOTHRATES,   0},
+    {0, 0, 0},
+};
+
+struct MANGOS_DLL_DECL boss_soccothratesAI : public ScriptedAI, private DialogueHelper
+{
+    boss_soccothratesAI(Creature* pCreature) : ScriptedAI(pCreature),
+        DialogueHelper(aIntroDialogue)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
+        InitializeDialogueHelper(m_pInstance);
+        m_bHasYelledIntro = false;
         Reset();
     }
 
     ScriptedInstance* m_pInstance;
     bool m_bIsRegularMode;
 
+    uint32 m_uiKnockAwayTimer;
+    uint32 m_uiFelfireShockTimer;
+    uint32 m_uiFelfireLineupTimer;
+    uint32 m_uiChargeTimer;
+
+    bool m_bHasYelledIntro;
+
     void Reset()
     {
+        m_uiFelfireShockTimer   = urand(10000, 13000);
+        m_uiKnockAwayTimer      = urand(22000, 25000);
+        m_uiFelfireLineupTimer  = 0;
+        m_uiChargeTimer         = 0;
+
+        DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_IMMOLATION : SPELL_IMMOLATION_H);
     }
 
     void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
-        DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_IMMOLATION : SPELL_IMMOLATION_H);
 
         if (m_pInstance)
             m_pInstance->SetData(TYPE_SOCCOTHRATES, IN_PROGRESS);
+    }
+
+    void MoveInLineOfSight(Unit* pWho)
+    {
+        if (!m_bHasYelledIntro && pWho->GetTypeId() == TYPEID_PLAYER && m_creature->IsWithinDistInMap(pWho, 75.0f) && m_creature->IsWithinLOSInMap(pWho))
+        {
+            StartNextDialogueText(SAY_SOCCOTHRATES_INTRO_1);
+            m_bHasYelledIntro = true;
+        }
+
+        ScriptedAI::MoveInLineOfSight(pWho);
     }
 
     void KilledUnit(Unit* pVictim)
@@ -93,10 +133,107 @@ struct MANGOS_DLL_DECL boss_soccothratesAI : public ScriptedAI
             m_pInstance->SetData(TYPE_SOCCOTHRATES, FAIL);
     }
 
+    void EnterEvadeMode()
+    {
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop(true);
+        m_creature->LoadCreatureAddon(true);
+
+        // should evade to the attack position
+        if (m_creature->isAlive())
+            m_creature->GetMotionMaster()->MovePoint(1, aSoccotharesStartPos[0], aSoccotharesStartPos[1], aSoccotharesStartPos[2]);
+
+        m_creature->SetLootRecipient(NULL);
+
+        Reset();
+    }
+
+    void MovementInform(uint32 uiMoveType, uint32 uiPointId)
+    {
+        if (uiMoveType != POINT_MOTION_TYPE)
+            return;
+
+        // Adjust orientation
+        if (uiPointId)
+            m_creature->SetFacingTo(aSoccotharesStartPos[3]);
+    }
+
+    void JustDidDialogueStep(int32 iEntry)
+    {
+        // Move each of them to their places
+        if (iEntry == SAY_SOCCOTHRATES_INTRO_7)
+        {
+            m_creature->GetMotionMaster()->MovePoint(1, aSoccotharesStartPos[0], aSoccotharesStartPos[1], aSoccotharesStartPos[2]);
+
+            if (m_pInstance)
+            {
+                if (Creature* pDalliah = m_pInstance->GetSingleCreatureFromStorage(NPC_DALLIAH))
+                    pDalliah->GetMotionMaster()->MovePoint(1, aDalliahStartPos[0], aDalliahStartPos[1], aDalliahStartPos[2]);
+            }
+        }
+    }
+
     void UpdateAI(const uint32 uiDiff)
     {
+        DialogueUpdate(uiDiff);
+
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
+
+        if (m_uiFelfireShockTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_FELFIRE_SHOCK : SPELL_FELFIRE_SHOCK_H) == CAST_OK)
+                m_uiFelfireShockTimer = urand(35000, 45000);
+        }
+        else
+            m_uiFelfireShockTimer -= uiDiff;
+
+        if (m_uiKnockAwayTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_KNOCK_AWAY) == CAST_OK)
+            {
+                m_uiKnockAwayTimer = urand(30000, 35000);
+                m_uiFelfireLineupTimer = 3000;
+            }
+        }
+        else
+            m_uiKnockAwayTimer -= uiDiff;
+
+        // Prepare the boss for charging
+        if (m_uiFelfireLineupTimer)
+        {
+            if (m_uiFelfireLineupTimer <= uiDiff)
+            {
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                {
+                    if (DoCastSpellIfCan(pTarget, SPELL_CHARGE_TARGETING) == CAST_OK)
+                    {
+                        // ToDo: the Wrath-Scryer's Felfire npcs should be summoned at this point and aligned to the chosen target!
+                        DoCastSpellIfCan(m_creature, SPELL_FELFIRE_LINE_UP, CAST_TRIGGERED);
+                        DoScriptText(urand(0, 1) ? SAY_CHARGE_1 : SAY_CHARGE_2, m_creature);
+
+                        m_uiChargeTimer        = 1500;
+                        m_uiFelfireLineupTimer = 0;
+                    }
+                }
+            }
+            else
+                m_uiFelfireLineupTimer -= uiDiff;
+        }
+
+        // Charge the target
+        if (m_uiChargeTimer)
+        {
+            if (m_uiChargeTimer <= uiDiff)
+            {
+                // Note: this spell will also light up the Wrath-Scryer's Felfire npcs
+                if (DoCastSpellIfCan(m_creature, SPELL_CHARGE) == CAST_OK)
+                    m_uiChargeTimer = 0;
+            }
+            else
+                m_uiChargeTimer -= uiDiff;
+        }
 
         DoMeleeAttackIfReady();
     }

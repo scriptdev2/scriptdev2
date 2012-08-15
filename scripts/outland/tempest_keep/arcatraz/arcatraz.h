@@ -19,6 +19,7 @@ enum
     TYPE_WARDEN_4                   = 8,                    // Handled with ACID (20910 - Twilight Drakonaar, 20911 - Blackwing Drakonaar)
     TYPE_WARDEN_5                   = 9,
 
+    NPC_DALLIAH                     = 20885,
     NPC_SOCCOTHRATES                = 20886,
     NPC_MELLICHAR                   = 20904,                // Skyriss will kill this unit
     NPC_PRISON_APHPA_POD            = 21436,
@@ -62,6 +63,9 @@ static const SpawnLocation aSummonPosition[5] =
     {471.795f, -174.58f,  42.58f, 3.06f},                   // Twilight or Blackwing Drakonaar
     {445.763f, -191.639f, 44.64f, 1.60f}                    // Skyriss
 };
+
+static const float aDalliahStartPos[4] = {118.6038f, 96.84682f, 22.44115f, 1.012f};
+static const float aSoccotharesStartPos[4] = {122.1035f, 192.7203f, 22.44115f, 5.235f};
 
 class MANGOS_DLL_DECL instance_arcatraz : public ScriptedInstance, private DialogueHelper
 {

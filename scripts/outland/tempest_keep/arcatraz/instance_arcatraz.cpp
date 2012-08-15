@@ -137,6 +137,7 @@ void instance_arcatraz::OnCreatureCreate(Creature* pCreature)
         case NPC_PRISON_GAMMA_POD:
         case NPC_PRISON_BOSS_POD:
         case NPC_MELLICHAR:
+        case NPC_DALLIAH:
         case NPC_SOCCOTHRATES:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
@@ -284,6 +285,8 @@ uint32 instance_arcatraz::GetData(uint32 uiType)
 {
     switch(uiType)
     {
+        case TYPE_DALLIAH:          return m_auiEncounter[1];
+        case TYPE_SOCCOTHRATES:     return m_auiEncounter[2];
         case TYPE_HARBINGERSKYRISS: return m_auiEncounter[3];
         case TYPE_WARDEN_1:         return m_auiEncounter[4];
         case TYPE_WARDEN_2:         return m_auiEncounter[5];
