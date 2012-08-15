@@ -127,12 +127,6 @@ struct MANGOS_DLL_DECL boss_soccothratesAI : public ScriptedAI, private Dialogue
             m_pInstance->SetData(TYPE_SOCCOTHRATES, DONE);
     }
 
-    void JustReachedHome()
-    {
-        if (m_pInstance)
-            m_pInstance->SetData(TYPE_SOCCOTHRATES, FAIL);
-    }
-
     void EnterEvadeMode()
     {
         m_creature->RemoveAllAuras();
@@ -143,6 +137,9 @@ struct MANGOS_DLL_DECL boss_soccothratesAI : public ScriptedAI, private Dialogue
         // should evade to the attack position
         if (m_creature->isAlive())
             m_creature->GetMotionMaster()->MovePoint(1, aSoccotharesStartPos[0], aSoccotharesStartPos[1], aSoccotharesStartPos[2]);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_SOCCOTHRATES, FAIL);
 
         m_creature->SetLootRecipient(NULL);
 

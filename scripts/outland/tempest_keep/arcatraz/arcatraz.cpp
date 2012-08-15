@@ -52,6 +52,7 @@ enum
     SPELL_CONJURE_WATER             = 36879,
     SPELL_ARCANE_INTELLECT          = 36880,
     SPELL_ICE_ARMOR                 = 36881,
+    SPELL_DRINK                     = 30024,
 
     SPELL_ARCANE_MISSILES           = 33833,
     SPELL_CONE_OF_COLD              = 12611,
@@ -71,14 +72,15 @@ static const DialogueEntry aIntroDialogue[] =
     {TYPE_WARDEN_2,   0,             10000},
     {SAY_INTRO_2,     NPC_MILLHOUSE, 18000},
     {SAY_WATER,       NPC_MILLHOUSE, 7000},
-    {SAY_BUFFS,       NPC_MILLHOUSE, 7000},
+    {SAY_BUFFS,       NPC_MILLHOUSE, 6000},
+    {SPELL_ICE_ARMOR, 0,             1000},
     {SAY_DRINK,       NPC_MILLHOUSE, 7000},
     {SAY_READY,       NPC_MILLHOUSE, 6000},
     {POINT_ID_CENTER, 0,             0},
     {0, 0, 0},
 };
 
-static const float fRoomCenterCoords[3] = {445.92f, -158.37f, 43.06f};
+static const float fRoomCenterCoords[3] = {445.8804f, -158.7055f, 43.06898f};
 
 struct MANGOS_DLL_DECL npc_millhouse_manastormAI : public ScriptedAI, private DialogueHelper
 {
@@ -166,10 +168,13 @@ struct MANGOS_DLL_DECL npc_millhouse_manastormAI : public ScriptedAI, private Di
                 DoCastSpellIfCan(m_creature, SPELL_CONJURE_WATER);
                 break;
             case SAY_BUFFS:
+                DoCastSpellIfCan(m_creature, SPELL_ARCANE_INTELLECT);
+                break;
+            case SPELL_ICE_ARMOR:
                 DoCastSpellIfCan(m_creature, SPELL_ICE_ARMOR);
                 break;
             case SAY_DRINK:
-                DoCastSpellIfCan(m_creature, SPELL_ARCANE_INTELLECT);
+                DoCastSpellIfCan(m_creature, SPELL_DRINK);
                 break;
             case POINT_ID_CENTER:
                 m_creature->SetWalk(false);

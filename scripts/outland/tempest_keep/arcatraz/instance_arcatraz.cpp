@@ -68,7 +68,7 @@ static const DialogueEntry aArcatrazDialogue[] =
     {YELL_MELLICHAR_INTRO1,   NPC_MELLICHAR, 22000},
     {YELL_MELLICHAR_INTRO2,   NPC_MELLICHAR, 7000},
     {SPELL_TARGET_ALPHA,      0,             7000},
-    {TYPE_WARDEN_1,           0,             0},
+    {YELL_MELLICHAR_RELEASE1, NPC_MELLICHAR, 0},
     {YELL_MELLICHAR_RELEASE2, NPC_MELLICHAR, 7000},
     {SPELL_TARGET_BETA,       0,             7000},
     {TYPE_WARDEN_2,           0,             0},
@@ -335,7 +335,7 @@ void instance_arcatraz::JustDidDialogueStep(int32 iEntry)
                 pMellichar->SetFacingToObject(pTarget);
             SetData(TYPE_WARDEN_1, IN_PROGRESS);
             break;
-        case TYPE_WARDEN_1:
+        case YELL_MELLICHAR_RELEASE1:
             pMellichar->SummonCreature(urand(0, 1) ? NPC_BLAZING_TRICKSTER : NPC_PHASE_HUNTER, aSummonPosition[0].m_fX, aSummonPosition[0].m_fY, aSummonPosition[0].m_fZ, aSummonPosition[0].m_fO, TEMPSUMMON_DEAD_DESPAWN, 0);
             break;
         case YELL_MELLICHAR_RELEASE2:

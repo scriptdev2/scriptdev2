@@ -96,12 +96,6 @@ struct MANGOS_DLL_DECL boss_dalliahAI : public ScriptedAI
             m_pInstance->SetData(TYPE_DALLIAH, DONE);
     }
 
-    void JustReachedHome()
-    {
-        if (m_pInstance)
-            m_pInstance->SetData(TYPE_DALLIAH, FAIL);
-    }
-
     void EnterEvadeMode()
     {
         m_creature->RemoveAllAuras();
@@ -112,6 +106,9 @@ struct MANGOS_DLL_DECL boss_dalliahAI : public ScriptedAI
         // should evade to the attack position
         if (m_creature->isAlive())
             m_creature->GetMotionMaster()->MovePoint(1, aDalliahStartPos[0], aDalliahStartPos[1], aDalliahStartPos[2]);
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_DALLIAH, FAIL);
 
         m_creature->SetLootRecipient(NULL);
 
