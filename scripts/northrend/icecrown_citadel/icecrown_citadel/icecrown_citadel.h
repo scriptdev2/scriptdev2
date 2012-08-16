@@ -138,6 +138,7 @@ enum
     // Area triggers
     AREATRIGGER_MARROWGAR_INTRO     = 5732,
     AREATRIGGER_DEATHWHISPER_INTRO  = 5709,
+    AREATRIGGER_SINDRAGOSA_PLATFORM = 5604,
 
     // Achievement criterias
     ACHIEV_CRIT_BONED_10N                  = 12775,     // Lord Marrowgar, achievs 4534, 4610
@@ -221,7 +222,7 @@ class MANGOS_DLL_DECL instance_icecrown_citadel : public ScriptedInstance, priva
         const char* Save() { return m_strInstData.c_str(); }
         void Load(const char* strIn);
 
-        void DoHandleCitadelAreaTrigger(uint32 uiTriggerId);
+        void DoHandleCitadelAreaTrigger(uint32 uiTriggerId, Player* pPlayer);
 
         // Difficulty wrappers
         bool IsHeroicDifficulty() { return instance->GetDifficulty() == RAID_DIFFICULTY_10MAN_HEROIC || instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC; }
@@ -245,6 +246,8 @@ class MANGOS_DLL_DECL instance_icecrown_citadel : public ScriptedInstance, priva
 
         bool m_bHasMarrowgarIntroYelled;
         bool m_bHasDeathwhisperIntroYelled;
+        bool m_bHasRimefangLanded;
+        bool m_bHasSpinestalkerLanded;
 
         GuidList m_lDeathwhisperStalkersGuids;
 };

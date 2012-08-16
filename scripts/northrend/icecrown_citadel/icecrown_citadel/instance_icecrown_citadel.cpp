@@ -60,7 +60,9 @@ instance_icecrown_citadel::instance_icecrown_citadel(Map *pMap) : ScriptedInstan
     m_uiTeam(0),
     m_uiPutricideValveTimer(0),
     m_bHasMarrowgarIntroYelled(false),
-    m_bHasDeathwhisperIntroYelled(false)
+    m_bHasDeathwhisperIntroYelled(false),
+    m_bHasRimefangLanded(false),
+    m_bHasSpinestalkerLanded(false)
 {
     Initialize();
 }
@@ -82,7 +84,7 @@ bool instance_icecrown_citadel::IsEncounterInProgress() const
     return false;
 }
 
-void instance_icecrown_citadel::DoHandleCitadelAreaTrigger(uint32 uiTriggerId)
+void instance_icecrown_citadel::DoHandleCitadelAreaTrigger(uint32 uiTriggerId, Player* pPlayer)
 {
     if (uiTriggerId == AREATRIGGER_MARROWGAR_INTRO && !m_bHasMarrowgarIntroYelled)
     {
@@ -96,6 +98,34 @@ void instance_icecrown_citadel::DoHandleCitadelAreaTrigger(uint32 uiTriggerId)
     {
         StartNextDialogueText(SAY_DEATHWHISPER_SPEECH_1);
         m_bHasDeathwhisperIntroYelled = true;
+    }
+    else if (uiTriggerId == AREATRIGGER_SINDRAGOSA_PLATFORM)
+    {
+        if (Creature *pSindragosa = GetSingleCreatureFromStorage(NPC_SINDRAGOSA))
+        {
+            if (pSindragosa->isAlive() && !pSindragosa->isInCombat())
+                pSindragosa->SetInCombatWithZone();
+        }
+        else
+        {
+            if (!m_bHasRimefangLanded)
+            {
+                if (Creature *pRimefang = GetSingleCreatureFromStorage(NPC_RIMEFANG))
+                {
+                    pRimefang->AI()->AttackStart(pPlayer);
+                    m_bHasRimefangLanded = true;
+                }
+            }
+
+            if (!m_bHasSpinestalkerLanded)
+            {
+                if (Creature *pSpinestalker = GetSingleCreatureFromStorage(NPC_SPINESTALKER))
+                {
+                    pSpinestalker->AI()->AttackStart(pPlayer);
+                    m_bHasSpinestalkerLanded = true;
+                }
+            }
+        }
     }
 }
 
@@ -449,13 +479,14 @@ InstanceData* GetInstanceData_instance_icecrown_citadel(Map* pMap)
 
 bool AreaTrigger_at_icecrown_citadel(Player* pPlayer, AreaTriggerEntry const* pAt)
 {
-    if (pAt->id == AREATRIGGER_MARROWGAR_INTRO || pAt->id == AREATRIGGER_DEATHWHISPER_INTRO)
+    if (pAt->id == AREATRIGGER_MARROWGAR_INTRO || pAt->id == AREATRIGGER_DEATHWHISPER_INTRO ||
+        pAt->id == AREATRIGGER_SINDRAGOSA_PLATFORM)
     {
         if (pPlayer->isGameMaster() || pPlayer->isDead())
             return false;
 
         if (instance_icecrown_citadel* pInstance = (instance_icecrown_citadel*)pPlayer->GetInstanceData())
-            pInstance->DoHandleCitadelAreaTrigger(pAt->id);
+            pInstance->DoHandleCitadelAreaTrigger(pAt->id, pPlayer);
     }
 
     return false;

@@ -66,7 +66,7 @@ enum
     // Spinestalker
     SPELL_SPINESTALKER_BELLOWING_ROAR   = 36922,
     SPELL_SPINESTALKER_CLEAVE           = 40505,
-    SPELL_SPINESTALKER_TAIL_SWEEP       = 71369,
+    SPELL_SPINESTALKER_TAIL_SWEEP       = 71369
 };
 
 enum SindragosaPhase
@@ -77,7 +77,7 @@ enum SindragosaPhase
     SINDRAGOSA_PHASE_FLYING_TO_AIR      = 3,
     SINDRAGOSA_PHASE_AIR                = 4,
     SINDRAGOSA_PHASE_FLYING_TO_GROUND   = 5,
-    SINDRAGOSA_PHASE_THREE              = 6,
+    SINDRAGOSA_PHASE_THREE              = 6
 };
 
 enum SindragosaPoint
@@ -85,28 +85,43 @@ enum SindragosaPoint
     SINDRAGOSA_POINT_GROUND_CENTER      = 0,
     SINDRAGOSA_POINT_AIR_CENTER         = 1,
     SINDRAGOSA_POINT_AIR_PHASE_2        = 2,
+    SINDRAGOSA_POINT_AIR_EAST           = 3,
+    SINDRAGOSA_POINT_AIR_WEST           = 4
 };
 
 enum RimefangPhase
 {
     RIMEFANG_PHASE_GROUND               = 0,
     RIMEFANG_PHASE_FLYING               = 1,
-    RIMEFANG_PHASE_AIR                  = 2,
+    RIMEFANG_PHASE_AIR                  = 2
 };
 
 enum RimefangPoint
 {
     RIMEFANG_POINT_GROUND               = 0,
     RIMEFANG_POINT_AIR                  = 1,
+    RIMEFANG_POINT_INITIAL_LAND_AIR     = 2,
+    RIMEFANG_POINT_INITIAL_LAND         = 3
 };
 
-static const float SindragosaPosition[6][3] =
+enum SpinestalkerPoint
 {
-    {4407.44f, 2484.37f, 203.37f},      // center, ground
-    {4407.44f, 2484.37f, 235.37f},      // center, air
-    {4470.00f, 2484.37f, 235.37f},      // Sindragosa air phase point
-    {4414.32f, 2456.94f, 203.37f},      // Rimefang landing point?
-    {4414.32f, 2512.73f, 203.37f},      // Spinestalker landing point?
+    SPINESTALKER_POINT_INITIAL_LAND_AIR = 0,
+    SPINESTALKER_POINT_INITIAL_LAND     = 1
+};
+
+static const float SindragosaPosition[10][3] =
+{
+    {4407.44f, 2484.37f, 203.37f},      // 0 center, ground
+    {4407.44f, 2484.37f, 235.37f},      // 1 center, air
+    {4470.00f, 2484.37f, 235.37f},      // 2 Sindragosa air phase point
+    {4414.32f, 2456.94f, 203.37f},      // 3 Rimefang landing point
+    {4414.32f, 2456.94f, 228.37f},      // 4 Rimefang above landing point
+    {4414.32f, 2512.73f, 203.37f},      // 5 Spinestalker landing point
+    {4414.32f, 2512.73f, 228.37f},      // 6 Spinestalker above landing point
+    {4505.00f, 2484.37f, 235.37f},      // 7 Sindragosa spawn point
+    {4505.00f, 2444.37f, 235.37f},      // 8 Sindragosa east flying point
+    {4505.00f, 2524.37f, 235.37f},      // 9 Sindragosa west flying point
 };
 
 struct MANGOS_DLL_DECL boss_sindragosaAI : public ScriptedAI
@@ -161,6 +176,8 @@ struct MANGOS_DLL_DECL boss_sindragosaAI : public ScriptedAI
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_SINDRAGOSA, FAIL);
+
+        m_creature->GetMotionMaster()->MovePoint(SINDRAGOSA_POINT_AIR_EAST, SindragosaPosition[8][0], SindragosaPosition[8][1], SindragosaPosition[8][2], false);
     }
 
     void KilledUnit(Unit* pVictim)
@@ -178,6 +195,7 @@ struct MANGOS_DLL_DECL boss_sindragosaAI : public ScriptedAI
             m_uiPhase = SINDRAGOSA_PHASE_AGGRO;
             SetCombatMovement(false);
             m_creature->SetWalk(true);
+            m_creature->GetMotionMaster()->Clear();
             m_creature->GetMotionMaster()->MovePoint(SINDRAGOSA_POINT_AIR_CENTER, SindragosaPosition[1][0], SindragosaPosition[1][1], SindragosaPosition[1][2], false);
         }
     }
@@ -201,7 +219,15 @@ struct MANGOS_DLL_DECL boss_sindragosaAI : public ScriptedAI
         if (uiMovementType != POINT_MOTION_TYPE)
             return;
 
-        if (uiPointId == SINDRAGOSA_POINT_GROUND_CENTER)
+        if (uiPointId == SINDRAGOSA_POINT_AIR_EAST)
+        {
+            m_creature->GetMotionMaster()->MovePoint(SINDRAGOSA_POINT_AIR_WEST, SindragosaPosition[9][0], SindragosaPosition[9][1], SindragosaPosition[9][2], false);
+        }
+        else if (uiPointId == SINDRAGOSA_POINT_AIR_WEST)
+        {
+            m_creature->GetMotionMaster()->MovePoint(SINDRAGOSA_POINT_AIR_EAST, SindragosaPosition[8][0], SindragosaPosition[8][1], SindragosaPosition[8][2], false);
+        }
+        else if (uiPointId == SINDRAGOSA_POINT_GROUND_CENTER)
         {
             // fly up
             if (m_uiPhase == SINDRAGOSA_PHASE_GROUND)
@@ -399,6 +425,9 @@ struct MANGOS_DLL_DECL npc_rimefang_iccAI : public ScriptedAI
         if (m_pInstance && m_pInstance->Is25ManDifficulty())
             m_uiIcyBlastMaxCount = 6;
 
+        m_bHasLanded = false;
+        m_bIsReady = false;
+
         Reset();
     }
 
@@ -410,6 +439,8 @@ struct MANGOS_DLL_DECL npc_rimefang_iccAI : public ScriptedAI
     uint32 m_uiIcyBlastCounter;
     uint32 m_uiIcyBlastMaxCount;
     uint32 m_uiIcyBlastTimer;
+    bool m_bHasLanded; // landed after player entered areatrigger
+    bool m_bIsReady;
 
     void Reset()
     {
@@ -433,20 +464,53 @@ struct MANGOS_DLL_DECL npc_rimefang_iccAI : public ScriptedAI
         m_creature->SetWalk(bIsFlying);
     }
 
-    void EnterEvadeMode()
-    {
-        SetFlying(true);
-        ScriptedAI::EnterEvadeMode();
-    }
-
     void Aggro(Unit *pWho)
     {
         DoCastSpellIfCan(m_creature, SPELL_RIMEFANG_FROST_AURA, CAST_TRIGGERED);
     }
 
+    void AttackStart(Unit *pWho)
+    {
+        if (!m_bIsReady)
+        {
+            if (!m_bHasLanded)
+            {
+                m_bHasLanded = true;
+                m_creature->GetMotionMaster()->MovePoint(RIMEFANG_POINT_INITIAL_LAND_AIR, SindragosaPosition[4][0], SindragosaPosition[4][1], SindragosaPosition[4][2], false);
+            }
+
+            return;
+        }
+        
+        ScriptedAI::AttackStart(pWho);
+    }
+
     void JustDied(Unit *pKiller)
     {
-        // TODO: Sindragosa invisible spawn or summon?
+        if (!m_pInstance)
+            return;
+
+        Creature *pSpinestalker = m_pInstance->GetSingleCreatureFromStorage(NPC_SPINESTALKER);
+        if (!pSpinestalker || !pSpinestalker->isAlive())
+        {
+            if (Creature *pSindragosa = m_creature->SummonCreature(NPC_SINDRAGOSA, SindragosaPosition[7][0], SindragosaPosition[7][1], SindragosaPosition[7][2], 0.0f, TEMPSUMMON_MANUAL_DESPAWN, 0))
+                pSindragosa->SetInCombatWithZone();
+        }
+    }
+
+    // evade to point on platform
+    void EnterEvadeMode()
+    {
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop(true);
+
+        if (m_creature->isAlive())
+            m_creature->GetMotionMaster()->MovePoint(RIMEFANG_POINT_INITIAL_LAND, SindragosaPosition[3][0], SindragosaPosition[3][1], SindragosaPosition[3][2], false);
+
+        m_creature->SetLootRecipient(NULL);
+
+        Reset();
     }
 
     void MovementInform(uint32 uiMovementType, uint32 uiPointId)
@@ -454,7 +518,18 @@ struct MANGOS_DLL_DECL npc_rimefang_iccAI : public ScriptedAI
         if (uiMovementType != POINT_MOTION_TYPE)
             return;
 
-        if (uiPointId == RIMEFANG_POINT_GROUND)
+        if (uiPointId == RIMEFANG_POINT_INITIAL_LAND_AIR)
+        {
+            m_creature->GetMotionMaster()->MovePoint(RIMEFANG_POINT_INITIAL_LAND, SindragosaPosition[3][0], SindragosaPosition[3][1], SindragosaPosition[3][2], false);
+        }
+        else if (uiPointId == RIMEFANG_POINT_INITIAL_LAND)
+        {
+            m_creature->GetMotionMaster()->MoveIdle();
+            m_creature->SetFacingTo(M_PI_F);
+            m_bIsReady = true;
+            SetFlying(false);
+        }
+        else if (uiPointId == RIMEFANG_POINT_GROUND)
         {
             m_uiPhase = RIMEFANG_PHASE_GROUND;
             SetFlying(false);
@@ -492,7 +567,6 @@ struct MANGOS_DLL_DECL npc_rimefang_iccAI : public ScriptedAI
                 m_uiPhase = RIMEFANG_PHASE_FLYING;
                 SetFlying(true);
                 SetCombatMovement(false);
-                m_creature->GetMotionMaster()->Clear();
                 m_creature->GetMotionMaster()->MovePoint(RIMEFANG_POINT_AIR, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ() + 20.0f, false);
                 return;
             }
@@ -519,7 +593,6 @@ struct MANGOS_DLL_DECL npc_rimefang_iccAI : public ScriptedAI
                             m_uiIcyBlastCounter = 0;
                             m_uiIcyBlastTimer = 0;
                             m_uiPhase = RIMEFANG_PHASE_FLYING;
-                            m_creature->GetMotionMaster()->Clear();
                             m_creature->GetMotionMaster()->MovePoint(RIMEFANG_POINT_GROUND, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ() - 20.0f, false);
                         }
                     }
@@ -542,6 +615,8 @@ struct MANGOS_DLL_DECL npc_spinestalker_iccAI : public ScriptedAI
     npc_spinestalker_iccAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (instance_icecrown_citadel*)pCreature->GetInstanceData();
+        m_bHasLanded = false;
+        m_bIsReady = false;
         Reset();
     }
 
@@ -550,6 +625,8 @@ struct MANGOS_DLL_DECL npc_spinestalker_iccAI : public ScriptedAI
     uint32 m_uiBellowingRoarTimer;
     uint32 m_uiTailSweepTimer;
     uint32 m_uiCleaveTimer;
+    bool m_bHasLanded;
+    bool m_bIsReady;
 
     void Reset()
     {
@@ -558,9 +635,76 @@ struct MANGOS_DLL_DECL npc_spinestalker_iccAI : public ScriptedAI
         m_uiCleaveTimer         = urand(5000, 8000);
     }
 
+    void SetFlying(bool bIsFlying)
+    {
+        if (bIsFlying)
+            m_creature->SetByteFlag(UNIT_FIELD_BYTES_1, 3, UNIT_BYTE1_FLAG_UNK_2);
+        else
+            m_creature->RemoveByteFlag(UNIT_FIELD_BYTES_1, 3, UNIT_BYTE1_FLAG_UNK_2);
+
+        m_creature->SetLevitate(bIsFlying);
+        m_creature->SetWalk(bIsFlying);
+    }
+
     void JustDied(Unit *pKiller)
     {
-        // TODO: Sindragosa invisible spawn or summon?
+        if (!m_pInstance)
+            return;
+
+        Creature *pRimefang = m_pInstance->GetSingleCreatureFromStorage(NPC_RIMEFANG);
+        if (!pRimefang || !pRimefang->isAlive())
+        {
+            if (Creature *pSindragosa = m_creature->SummonCreature(NPC_SINDRAGOSA, SindragosaPosition[7][0], SindragosaPosition[7][1], SindragosaPosition[7][2], 0.0f, TEMPSUMMON_MANUAL_DESPAWN, 0))
+                pSindragosa->SetInCombatWithZone();
+        }
+    }
+
+    void AttackStart(Unit *pWho)
+    {
+        if (!m_bIsReady)
+        {
+            if (!m_bHasLanded)
+            {
+                m_bHasLanded = true;
+                m_creature->GetMotionMaster()->MovePoint(SPINESTALKER_POINT_INITIAL_LAND_AIR, SindragosaPosition[6][0], SindragosaPosition[6][1], SindragosaPosition[6][2], false);
+            }
+
+            return;
+        }
+
+        ScriptedAI::AttackStart(pWho);
+    }
+
+    void EnterEvadeMode()
+    {
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop(true);
+
+        if (m_creature->isAlive())
+            m_creature->GetMotionMaster()->MovePoint(SPINESTALKER_POINT_INITIAL_LAND, SindragosaPosition[5][0], SindragosaPosition[5][1], SindragosaPosition[5][2]);
+
+        m_creature->SetLootRecipient(NULL);
+
+        Reset();
+    }
+
+    void MovementInform(uint32 uiMovementType, uint32 uiPointId)
+    {
+        if (uiMovementType != POINT_MOTION_TYPE)
+            return;
+
+        if (uiPointId == SPINESTALKER_POINT_INITIAL_LAND_AIR)
+        {
+            m_creature->GetMotionMaster()->MovePoint(SPINESTALKER_POINT_INITIAL_LAND, SindragosaPosition[5][0], SindragosaPosition[5][1], SindragosaPosition[5][2], false);
+        }
+        else if (uiPointId == SPINESTALKER_POINT_INITIAL_LAND)
+        {
+            m_creature->GetMotionMaster()->MoveIdle();
+            m_creature->SetFacingTo(M_PI_F);
+            m_bIsReady = true;
+            SetFlying(false);
+        }
     }
 
     void UpdateAI(const uint32 uiDiff)
