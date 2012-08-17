@@ -54,6 +54,13 @@ enum
     SPELL_UNCHAINED_MAGIC       = 69762,
 
     // Phase 2
+    SPELL_ICE_TOMB              = 69712, // triggers Frost Beacon on random targets, which triggers actual Ice Tomb after 7 sec.
+
+    // Frost Bomb related
+    SPELL_FROST_BOMB            = 69846, // summons dummy target npc
+    SPELL_FROST_BOMB_DMG        = 69845,
+    SPELL_FROST_BOMB_VISUAL     = 70022, // circle mark
+ // SPELL_FROST_BOMB_OTHER      = 70521, // no idea where it is used, wowhead says it is used by some other Sindragosa (37755)
 
     // Phase 3
     SPELL_MYSTIC_BUFFET         = 70128,
@@ -110,6 +117,11 @@ enum SpinestalkerPoint
     SPINESTALKER_POINT_INITIAL_LAND     = 1
 };
 
+#define FROST_BOMB_MIN_X 4367.0f
+#define FROST_BOMB_MAX_X 4424.0f
+#define FROST_BOMB_MIN_Y 2437.0f
+#define FROST_BOMB_MAX_Y 2527.0f
+
 static const float SindragosaPosition[10][3] =
 {
     {4407.44f, 2484.37f, 203.37f},      // 0 center, ground
@@ -142,6 +154,7 @@ struct MANGOS_DLL_DECL boss_sindragosaAI : public ScriptedAI
     uint32 m_uiTailSmashTimer;
     uint32 m_uiIcyGripTimer;
     uint32 m_uiUnchainedMagicTimer;
+    uint32 m_uiFrostBombTimer;
 
     void Reset()
     {
@@ -271,10 +284,21 @@ struct MANGOS_DLL_DECL boss_sindragosaAI : public ScriptedAI
         }
         else if (uiPointId == SINDRAGOSA_POINT_AIR_PHASE_2)
         {
-            // face the platform
-            m_creature->SetOrientation(M_PI_F);
+            m_creature->SetOrientation(M_PI_F); // face the platform
+            m_uiFrostBombTimer = 10000; // set initial Frost Bomb timer
+            DoCastSpellIfCan(m_creature, SPELL_ICE_TOMB);
             m_uiPhase = SINDRAGOSA_PHASE_AIR;
         }
+    }
+
+    void DoFrostBomb()
+    {
+        float x, y, z;
+        x = frand(FROST_BOMB_MIN_X, FROST_BOMB_MAX_X);
+        y = frand(FROST_BOMB_MIN_Y, FROST_BOMB_MAX_Y);
+        z = SindragosaPosition[0][2]; // platform height
+
+        m_creature->CastSpell(x, y, z, SPELL_FROST_BOMB, false);
     }
 
     void UpdateAI(const uint32 uiDiff)
@@ -321,7 +345,7 @@ struct MANGOS_DLL_DECL boss_sindragosaAI : public ScriptedAI
                     // Phase 2 (air)
                     if (m_uiPhaseTimer <= uiDiff)
                     {
-                        m_uiPhaseTimer = 35000;
+                        m_uiPhaseTimer = 33000;
                         DoScriptText(SAY_TAKEOFF, m_creature);
                         SetCombatMovement(false);
                         m_creature->GetMotionMaster()->MovePoint(SINDRAGOSA_POINT_GROUND_CENTER, SindragosaPosition[0][0], SindragosaPosition[0][1], SindragosaPosition[0][2], false);
@@ -398,6 +422,15 @@ struct MANGOS_DLL_DECL boss_sindragosaAI : public ScriptedAI
                 }
                 else
                     m_uiPhaseTimer -= uiDiff;
+
+                // Frost Bomb
+                if (m_uiFrostBombTimer <= uiDiff)
+                {
+                    DoFrostBomb();
+                    m_uiFrostBombTimer = 6000;
+                }
+                else
+                    m_uiFrostBombTimer -= uiDiff;
 
                 break;
             }
@@ -748,6 +781,63 @@ CreatureAI* GetAI_npc_spinestalker_icc(Creature* pCreature)
     return new npc_spinestalker_iccAI(pCreature);
 }
 
+/**
+ * Frost Bomb - npc marking the target of Frost Bomb
+ *
+ * NOTE: should triggering damage spell be done
+ *       after dummy spell hits instead of a timer?
+ */
+struct MANGOS_DLL_DECL mob_frost_bombAI : public ScriptedAI
+{
+    mob_frost_bombAI(Creature *pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (instance_icecrown_citadel*)pCreature->GetInstanceData();
+        Reset();
+    }
+
+    instance_icecrown_citadel* m_pInstance;
+    uint32 m_uiFrostBombTimer;
+
+    void Reset()
+    {
+        SetCombatMovement(false);
+        DoCastSpellIfCan(m_creature, SPELL_FROST_BOMB_VISUAL, CAST_TRIGGERED);
+        m_uiFrostBombTimer = 6000;
+    }
+
+    void AttackStart(Unit *pWho){}
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        // Frost Bomb (dmg)
+        if (m_uiFrostBombTimer)
+        {
+            if (m_uiFrostBombTimer <= uiDiff)
+            {
+                if (m_pInstance)
+                {
+                    if (Creature* pSindragosa = m_pInstance->GetSingleCreatureFromStorage(NPC_SINDRAGOSA))
+                    {
+                        if (pSindragosa->AI()->DoCastSpellIfCan(m_creature, SPELL_FROST_BOMB_DMG) == CAST_OK)
+                        {
+                            m_creature->RemoveAurasDueToSpell(SPELL_FROST_BOMB_VISUAL);
+                            m_creature->ForcedDespawn(2000);
+                            m_uiFrostBombTimer = 0;
+                        }
+                    }
+                }
+            }
+            else
+                m_uiFrostBombTimer -= uiDiff;
+        }
+    }
+};
+
+CreatureAI* GetAI_mob_frost_bomb(Creature* pCreature)
+{
+    return new mob_frost_bombAI(pCreature);
+}
+
 void AddSC_boss_sindragosa()
 {
     Script *pNewScript;
@@ -765,5 +855,10 @@ void AddSC_boss_sindragosa()
     pNewScript = new Script;
     pNewScript->Name = "npc_spinestalker_icc";
     pNewScript->GetAI = &GetAI_npc_spinestalker_icc;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "mob_frost_bomb";
+    pNewScript->GetAI = &GetAI_mob_frost_bomb;
     pNewScript->RegisterSelf();
 }
