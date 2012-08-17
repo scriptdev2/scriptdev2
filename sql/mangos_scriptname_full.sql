@@ -844,8 +844,6 @@ UPDATE creature_template SET ScriptName='npc_kyle_the_frenzied' WHERE entry=2361
 
 /* NAGRAND */
 UPDATE creature_template SET ScriptName='mob_lump' WHERE entry=18351;
-UPDATE creature_template SET ScriptName='npc_altruis_the_sufferer' WHERE entry=18417;
-UPDATE creature_template SET ScriptName='npc_greatmother_geyah' WHERE entry=18141;
 UPDATE creature_template SET ScriptName='npc_maghar_captive' WHERE entry=18210;
 UPDATE creature_template SET ScriptName='npc_creditmarker_visit_with_ancestors' WHERE entry IN (18840,18841,18842,18843);
 

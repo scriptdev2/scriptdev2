@@ -353,7 +353,7 @@ struct MANGOS_DLL_DECL boss_spirit_lynxAI : public ScriptedAI
         else
             m_uiShredArmorTimer -= uiDiff;
 
-        // Unite spirits at 20% health
+        // Unite spirits at 10% health
         // Note: maybe there is some spell related to this - needs research
         if (!m_bHasUnited && m_creature->GetHealthPercent() < 10.0f && m_pInstance)
         {

@@ -17,14 +17,12 @@
 /* ScriptData
 SDName: Nagrand
 SD%Complete: 90
-SDComment: Quest support: 9868, 9918, 9991, 10044, 10085, 10172, 10646. TextId's unknown for altruis_the_sufferer and greatmother_geyah (npc_text)
+SDComment: Quest support: 9868, 9918, 10085, 10646.
 SDCategory: Nagrand
 EndScriptData */
 
 /* ContentData
 mob_lump
-npc_altruis_the_sufferer
-npc_greatmother_geyah
 npc_maghar_captive
 npc_creditmarker_visit_with_ancestors
 EndContentData */
@@ -145,182 +143,6 @@ CreatureAI* GetAI_mob_lump(Creature* pCreature)
 }
 
 /*######
-## npc_altruis_the_sufferer
-######*/
-
-enum
-{
-    QUEST_SURVEY        = 9991,
-    QUEST_PUPIL         = 10646,
-
-    TAXI_PATH_ID        = 532
-};
-
-bool GossipHello_npc_altruis_the_sufferer(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
-
-    //gossip before obtaining Survey the Land
-    if (pPlayer->GetQuestStatus(QUEST_SURVEY) == QUEST_STATUS_NONE)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "I see twisted steel and smell sundered earth.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+10);
-
-    //gossip when Survey the Land is incomplete (technically, after the flight)
-    if (pPlayer->GetQuestStatus(QUEST_SURVEY) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Well...?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+20);
-
-    //wowwiki.com/Varedis
-    if (pPlayer->GetQuestStatus(QUEST_PUPIL) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "[PH] Story about Illidan's Pupil", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+30);
-
-    pPlayer->SEND_GOSSIP_MENU(9419, pCreature->GetObjectGuid());
-    return true;
-}
-
-bool GossipSelect_npc_altruis_the_sufferer(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    switch(uiAction)
-    {
-        case GOSSIP_ACTION_INFO_DEF+10:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Legion?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
-            pPlayer->SEND_GOSSIP_MENU(9420, pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+11:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "And now?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 12);
-            pPlayer->SEND_GOSSIP_MENU(9421, pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+12:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "How do you see them now?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 13);
-            pPlayer->SEND_GOSSIP_MENU(9422, pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+13:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Forge camps?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 14);
-            pPlayer->SEND_GOSSIP_MENU(9423, pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+14:
-            pPlayer->SEND_GOSSIP_MENU(9424, pCreature->GetObjectGuid());
-            break;
-
-        case GOSSIP_ACTION_INFO_DEF+20:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Ok.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 21);
-            pPlayer->SEND_GOSSIP_MENU(9427, pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+21:
-            pPlayer->CLOSE_GOSSIP_MENU();
-            pPlayer->AreaExploredOrEventHappens(QUEST_SURVEY);
-            break;
-
-        case GOSSIP_ACTION_INFO_DEF+30:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "[PH] Story done", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 31);
-            pPlayer->SEND_GOSSIP_MENU(384, pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+31:
-            pPlayer->CLOSE_GOSSIP_MENU();
-            pPlayer->AreaExploredOrEventHappens(QUEST_PUPIL);
-            break;
-    }
-    return true;
-}
-
-bool QuestAccept_npc_altruis_the_sufferer(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
-{
-    if (!pPlayer->GetQuestRewardStatus(QUEST_SURVEY))       //Survey the Land
-    {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        pPlayer->ActivateTaxiPathTo(TAXI_PATH_ID);
-    }
-    return true;
-}
-
-/*######
-## npc_greatmother_geyah
-######*/
-
-//all the textId's for the below is unknown, but i do believe the gossip item texts are proper.
-bool GossipHello_npc_greatmother_geyah(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
-
-    if (pPlayer->GetQuestStatus(10044) == QUEST_STATUS_INCOMPLETE)
-    {
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Hello, Greatmother. Garrosh told me that you wanted to speak with me.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-        pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-    }
-    else if (pPlayer->GetQuestStatus(10172) == QUEST_STATUS_INCOMPLETE)
-    {
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Garrosh is beyond redemption, Greatmother. I fear that in helping the Mag'har, I have convinced Garrosh that he is unfit to lead.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 10);
-        pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-    }
-    else
-
-        pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-
-    return true;
-}
-
-bool GossipSelect_npc_greatmother_geyah(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    switch(uiAction)
-    {
-        case GOSSIP_ACTION_INFO_DEF + 1:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "You raised all of the orcs here, Greatmother?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-            pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 2:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Do you believe that?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-            pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 3:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "What can be done? I have tried many different things. I have done my best to help the people of Nagrand. Each time I have approached Garrosh, he has dismissed me.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
-            pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 4:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Left? How can you choose to leave?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
-            pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 5:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "What is this duty?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
-            pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 6:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Is there anything I can do for you, Greatmother?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
-            pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 7:
-            pPlayer->AreaExploredOrEventHappens(10044);
-            pPlayer->CLOSE_GOSSIP_MENU();
-            break;
-
-        case GOSSIP_ACTION_INFO_DEF + 10:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "I have done all that I could, Greatmother. I thank you for your kind words.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
-            pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 11:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Greatmother, you are the mother of Durotan?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 12);
-            pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 12:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Greatmother, I never had the honor. Durotan died long before my time, but his heroics are known to all on my world. The orcs of Azeroth reside in a place known as Durotar, named after your son. And ... (You take a moment to breathe and think through what you are about to tell the Greatmother.)", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 13);
-            pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 13:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "It is my Warchief, Greatmother. The leader of my people. From my world. He ... He is the son of Durotan. He is your grandchild.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 14);
-            pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 14:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "I will return to Azeroth at once, Greatmother.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 15);
-            pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 15:
-            pPlayer->AreaExploredOrEventHappens(10172);
-            pPlayer->CLOSE_GOSSIP_MENU();
-            break;
-    }
-    return true;
-}
-
-/*#####
 ## npc_maghar_captive
 #####*/
 
@@ -530,19 +352,6 @@ void AddSC_nagrand()
     pNewScript = new Script;
     pNewScript->Name = "mob_lump";
     pNewScript->GetAI = &GetAI_mob_lump;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_altruis_the_sufferer";
-    pNewScript->pGossipHello =  &GossipHello_npc_altruis_the_sufferer;
-    pNewScript->pGossipSelect = &GossipSelect_npc_altruis_the_sufferer;
-    pNewScript->pQuestAcceptNPC =  &QuestAccept_npc_altruis_the_sufferer;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_greatmother_geyah";
-    pNewScript->pGossipHello =  &GossipHello_npc_greatmother_geyah;
-    pNewScript->pGossipSelect = &GossipSelect_npc_greatmother_geyah;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
