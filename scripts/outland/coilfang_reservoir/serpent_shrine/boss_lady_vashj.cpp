@@ -548,67 +548,6 @@ struct MANGOS_DLL_DECL mob_tainted_elementalAI : public ScriptedAI
     }
 };
 
-//Toxic Sporebat
-//Toxic Spores: Used in m_uiPhase 3 by the Spore Bats, it creates a contaminated green patch of ground, dealing about 2775-3225 nature damage every second to anyone who stands in it.
-struct MANGOS_DLL_DECL mob_toxic_sporebatAI : public ScriptedAI
-{
-    mob_toxic_sporebatAI(Creature* pCreature) : ScriptedAI(pCreature)
-    {
-        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        Reset();
-    }
-
-    ScriptedInstance* m_pInstance;
-
-    uint32 m_uiToxicSpore_Timer;
-    uint32 m_uiCheck_Timer;
-
-    void Reset()
-    {
-        m_creature->setFaction(14);
-        m_uiToxicSpore_Timer = 5000;
-        m_uiCheck_Timer = 1000;
-    }
-
-    void UpdateAI(const uint32 uiDiff)
-    {
-        //Return since we have no target
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-            return;
-
-        //m_uiToxicSpore_Timer
-        if (m_uiToxicSpore_Timer < uiDiff)
-        {
-            //The Spores will hit you anywhere in the instance: underwater, at the elevator, at the entrance, wherever.
-            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-                DoCastSpellIfCan(pTarget, SPELL_TOXIC_SPORES);
-
-            m_uiToxicSpore_Timer = urand(20000, 25000);
-        }else m_uiToxicSpore_Timer -= uiDiff;
-
-        //m_uiCheck_Timer
-        if (m_uiCheck_Timer < uiDiff)
-        {
-            if (m_pInstance)
-            {
-                //check if vashj is death
-                Creature* pVashj = m_pInstance->GetSingleCreatureFromStorage(NPC_LADYVASHJ);
-                if (!pVashj || !pVashj->isAlive())
-                {
-                    //remove
-                    m_creature->SetDeathState(DEAD);
-                    m_creature->RemoveCorpse();
-                    m_creature->setFaction(35);
-                }
-            }
-
-            m_uiCheck_Timer = 1000;
-        }else m_uiCheck_Timer -= uiDiff;
-
-        DoMeleeAttackIfReady();
-    }
-};
-
 enum
 {
     SPELL_CLEAVE        = 31345,
@@ -709,11 +648,6 @@ CreatureAI* GetAI_mob_tainted_elemental(Creature* pCreature)
     return new mob_tainted_elementalAI(pCreature);
 }
 
-CreatureAI* GetAI_mob_toxic_sporebat(Creature* pCreature)
-{
-    return new mob_toxic_sporebatAI(pCreature);
-}
-
 CreatureAI* GetAI_mob_shield_generator_channel(Creature* pCreature)
 {
     return new mob_shield_generator_channelAI(pCreature);
@@ -736,11 +670,6 @@ void AddSC_boss_lady_vashj()
     pNewScript = new Script;
     pNewScript->Name = "mob_tainted_elemental";
     pNewScript->GetAI = &GetAI_mob_tainted_elemental;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "mob_toxic_sporebat";
-    pNewScript->GetAI = &GetAI_mob_toxic_sporebat;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;

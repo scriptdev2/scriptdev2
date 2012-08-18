@@ -176,75 +176,6 @@ CreatureAI* GetAI_boss_nexusprince_shaffar(Creature* pCreature)
     return new boss_nexusprince_shaffarAI(pCreature);
 }
 
-enum
-{
-    SPELL_ARCANE_BOLT               = 15254,
-    SPELL_ETHEREAL_APPRENTICE       = 32372                 // Summon 18430
-};
-
-struct MANGOS_DLL_DECL mob_ethereal_beaconAI : public ScriptedAI
-{
-    mob_ethereal_beaconAI(Creature* pCreature) : ScriptedAI(pCreature)
-    {
-        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
-        Reset();
-    }
-
-    bool m_bIsRegularMode;
-
-    uint32 m_uiApprenticeTimer;
-    uint32 m_uiArcaneBoltTimer;
-
-    void Reset()
-    {
-        m_uiApprenticeTimer = m_bIsRegularMode ? 20000 : 10000;
-        m_uiArcaneBoltTimer = 0;
-    }
-
-    void JustSummoned(Creature* pSummoned)
-    {
-        if (m_creature->getVictim())
-            pSummoned->AI()->AttackStart(m_creature->getVictim());
-    }
-
-    void UpdateAI(const uint32 uiDiff)
-    {
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-            return;
-
-        if (m_uiArcaneBoltTimer < uiDiff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_ARCANE_BOLT);
-            m_uiArcaneBoltTimer = urand(3000, 8000);
-        }
-        else
-            m_uiArcaneBoltTimer -= uiDiff;
-
-        if (m_uiApprenticeTimer)
-        {
-            if (m_uiApprenticeTimer <= uiDiff)
-            {
-                if (DoCastSpellIfCan(m_creature, SPELL_ETHEREAL_APPRENTICE) == CAST_OK)
-                {
-                    // despawn in 2 sec because of the spell visual
-                    m_creature->ForcedDespawn(2000);
-                    m_uiApprenticeTimer = 0;
-                }
-            }
-            else
-                m_uiApprenticeTimer -= uiDiff;
-        }
-
-        //should they do meele?
-        DoMeleeAttackIfReady();
-    }
-};
-
-CreatureAI* GetAI_mob_ethereal_beacon(Creature* pCreature)
-{
-    return new mob_ethereal_beaconAI(pCreature);
-}
-
 void AddSC_boss_nexusprince_shaffar()
 {
     Script* pNewScript;
@@ -252,10 +183,5 @@ void AddSC_boss_nexusprince_shaffar()
     pNewScript = new Script;
     pNewScript->Name = "boss_nexusprince_shaffar";
     pNewScript->GetAI = &GetAI_boss_nexusprince_shaffar;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "mob_ethereal_beacon";
-    pNewScript->GetAI = &GetAI_mob_ethereal_beacon;
     pNewScript->RegisterSelf();
 }

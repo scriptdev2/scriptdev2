@@ -346,33 +346,6 @@ CreatureAI* GetAI_npc_warden_mellichar(Creature* pCreature)
     return new npc_warden_mellicharAI(pCreature);
 }
 
-/*#####
-# mob_zerekethvoidzone (this script probably not needed in future -> `creature_template_addon`.`auras`='36120 0')
-#####*/
-
-enum
-{
-    SPELL_VOID_ZONE_DAMAGE  = 36120,
-};
-
-struct MANGOS_DLL_DECL mob_zerekethvoidzoneAI : public ScriptedAI
-{
-    mob_zerekethvoidzoneAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
-
-    void Reset()
-    {
-        m_creature->SetUInt32Value(UNIT_NPC_FLAGS, 0);
-        m_creature->setFaction(16);
-        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-
-        DoCastSpellIfCan(m_creature, SPELL_VOID_ZONE_DAMAGE);
-    }
-};
-CreatureAI* GetAI_mob_zerekethvoidzoneAI(Creature* pCreature)
-{
-    return new mob_zerekethvoidzoneAI(pCreature);
-}
-
 void AddSC_arcatraz()
 {
     Script* pNewScript;
@@ -385,10 +358,5 @@ void AddSC_arcatraz()
     pNewScript = new Script;
     pNewScript->Name = "npc_warden_mellichar";
     pNewScript->GetAI = &GetAI_npc_warden_mellichar;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "mob_zerekethvoidzone";
-    pNewScript->GetAI = &GetAI_mob_zerekethvoidzoneAI;
     pNewScript->RegisterSelf();
 }

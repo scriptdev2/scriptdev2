@@ -16,80 +16,16 @@
 
 /* ScriptData
 SDName: The_Eye
-SD%Complete: 100
-SDComment:
+SD%Complete: 0
+SDComment: Placeholder
 SDCategory: Tempest Keep, The Eye
 EndScriptData */
 
 /* ContentData
-mob_crystalcore_devastator
 EndContentData */
 
 #include "precompiled.h"
-#include "the_eye.h"
-
-#define SPELL_COUNTERCHARGE     35035
-#define SPELL_KNOCKAWAY         22893
-
-struct MANGOS_DLL_DECL mob_crystalcore_devastatorAI : public ScriptedAI
-{
-    mob_crystalcore_devastatorAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
-
-    uint32 Knockaway_Timer;
-    uint32 Countercharge_Timer;
-
-    void Reset()
-    {
-        Countercharge_Timer = 9000;
-        Knockaway_Timer = 25000;
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-            return;
-
-        //Check if we have a current target
-        //Knockaway_Timer
-        if (Knockaway_Timer < diff)
-        {
-            m_creature->CastSpell(m_creature->getVictim(),SPELL_KNOCKAWAY, true);
-
-            // current aggro target is knocked away pick new target
-            Unit* Target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO, 0);
-
-            if (!Target || Target == m_creature->getVictim())
-                Target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO, 1);
-
-            if (Target)
-                m_creature->TauntApply(Target);
-
-            Knockaway_Timer = 23000;
-        }
-        else Knockaway_Timer -= diff;
-
-        //Countercharge_Timer
-        if (Countercharge_Timer < diff)
-        {
-            DoCastSpellIfCan(this->m_creature,SPELL_COUNTERCHARGE);
-            Countercharge_Timer = 45000;
-        }else Countercharge_Timer -= diff;
-
-        DoMeleeAttackIfReady();
-    }
-};
-
-CreatureAI* GetAI_mob_crystalcore_devastator(Creature* pCreature)
-{
-    return new mob_crystalcore_devastatorAI(pCreature);
-}
 
 void AddSC_the_eye()
 {
-    Script* pNewScript;
-
-    pNewScript = new Script;
-    pNewScript->Name = "mob_crystalcore_devastator";
-    pNewScript->GetAI = &GetAI_mob_crystalcore_devastator;
-    pNewScript->RegisterSelf();
 }

@@ -273,56 +273,9 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
     }
 };
 
-//Leotheras the Blind Demon Form AI
-struct MANGOS_DLL_DECL boss_leotheras_the_blind_demonformAI : public ScriptedAI
-{
-    boss_leotheras_the_blind_demonformAI(Creature* pCreature) : ScriptedAI(pCreature)
-    {
-        SetCombatMovement(false);
-        Reset();
-    }
-
-    void Reset() { }
-
-    void Aggro(Unit* pWho)
-    {
-        DoScriptText(SAY_FREE, m_creature);
-    }
-
-    void KilledUnit(Unit* pVictim)
-    {
-        if (pVictim->GetTypeId() != TYPEID_PLAYER)
-            return;
-
-        switch(urand(0, 2))
-        {
-            case 0: DoScriptText(SAY_DEMON_SLAY1, m_creature); break;
-            case 1: DoScriptText(SAY_DEMON_SLAY2, m_creature); break;
-            case 2: DoScriptText(SAY_DEMON_SLAY3, m_creature); break;
-        }
-    }
-
-    void UpdateAI(const uint32 uiDiff)
-    {
-        //Return since we have no target
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-            return;
-
-        if (!m_creature->IsNonMeleeSpellCasted(false))
-            m_creature->CastSpell(m_creature->getVictim(), SPELL_CHAOS_BLAST, false);
-
-        //Do NOT deal any melee damage to the target.
-    }
-};
-
 CreatureAI* GetAI_boss_leotheras_the_blind(Creature* pCreature)
 {
     return new boss_leotheras_the_blindAI(pCreature);
-}
-
-CreatureAI* GetAI_boss_leotheras_the_blind_demonform(Creature* pCreature)
-{
-    return new boss_leotheras_the_blind_demonformAI(pCreature);
 }
 
 void AddSC_boss_leotheras_the_blind()
@@ -332,10 +285,5 @@ void AddSC_boss_leotheras_the_blind()
     pNewScript = new Script;
     pNewScript->Name = "boss_leotheras_the_blind";
     pNewScript->GetAI = &GetAI_boss_leotheras_the_blind;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "boss_leotheras_the_blind_demonform";
-    pNewScript->GetAI = &GetAI_boss_leotheras_the_blind_demonform;
     pNewScript->RegisterSelf();
 }

@@ -44,10 +44,6 @@ enum
     SPELL_LUNG_BURST            = 31481,
     SPELL_ENVELOPING_WINDS      = 31718,
     SPELL_SUMMON_ELEMENTALS     = 31476,            // not sure where to use this
-
-    // Water elemental spells
-    SPELL_WATER_BOLT_VOLLEY     = 34449,
-    SPELL_WATER_BOLT_VOLLEY_H   = 37924,
 };
 
 struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
@@ -154,45 +150,9 @@ struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
     }
 };
 
-struct MANGOS_DLL_DECL mob_coilfang_waterelementalAI : public ScriptedAI
-{
-    mob_coilfang_waterelementalAI(Creature* pCreature) : ScriptedAI(pCreature)
-    {
-        m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
-        Reset();
-    }
-
-    bool m_bIsRegularMode;
-    uint32 WaterBoltVolley_Timer;
-
-    void Reset()
-    {
-        WaterBoltVolley_Timer = urand(3000, 6000);
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-            return;
-
-        if (WaterBoltVolley_Timer < diff)
-        {
-            DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_WATER_BOLT_VOLLEY : SPELL_WATER_BOLT_VOLLEY_H);
-            WaterBoltVolley_Timer = urand(7000, 12000);
-        }else WaterBoltVolley_Timer -= diff;
-
-        DoMeleeAttackIfReady();
-    }
-};
-
 CreatureAI* GetAI_boss_thespiaAI(Creature* pCreature)
 {
     return new boss_thespiaAI(pCreature);
-}
-
-CreatureAI* GetAI_mob_coilfang_waterelementalAI(Creature* pCreature)
-{
-    return new mob_coilfang_waterelementalAI(pCreature);
 }
 
 void AddSC_boss_hydromancer_thespia()
@@ -202,10 +162,5 @@ void AddSC_boss_hydromancer_thespia()
     pNewScript = new Script;
     pNewScript->Name = "boss_hydromancer_thespia";
     pNewScript->GetAI = &GetAI_boss_thespiaAI;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "mob_coilfang_waterelemental";
-    pNewScript->GetAI = &GetAI_mob_coilfang_waterelementalAI;
     pNewScript->RegisterSelf();
 }

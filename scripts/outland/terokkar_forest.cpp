@@ -23,11 +23,8 @@ EndScriptData */
 
 /* ContentData
 mob_unkor_the_ruthless
-mob_infested_root_walker
-mob_rotting_forest_rager
 mob_netherweb_victim
 npc_akuno
-npc_floon
 npc_hungry_nether_ray
 npc_letoll
 npc_mana_bomb_exp_trigger
@@ -134,65 +131,6 @@ struct MANGOS_DLL_DECL mob_unkor_the_ruthlessAI : public ScriptedAI
 CreatureAI* GetAI_mob_unkor_the_ruthless(Creature* pCreature)
 {
     return new mob_unkor_the_ruthlessAI(pCreature);
-}
-
-/*######
-## mob_infested_root_walker
-######*/
-
-enum
-{
-    SPELL_SUMMON_WOOD_MITES     = 39130,
-};
-
-struct MANGOS_DLL_DECL mob_infested_root_walkerAI : public ScriptedAI
-{
-    mob_infested_root_walkerAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
-
-    void Reset() { }
-
-    void DamageTaken(Unit* pDealer, uint32 &uiDamage)
-    {
-        if (m_creature->GetHealth() <= uiDamage)
-            if (pDealer->IsControlledByPlayer())
-                if (urand(0, 3))
-                    //Summon Wood Mites
-                    DoCastSpellIfCan(m_creature, SPELL_SUMMON_WOOD_MITES, CAST_TRIGGERED);
-    }
-};
-
-CreatureAI* GetAI_mob_infested_root_walker(Creature* pCreature)
-{
-    return new mob_infested_root_walkerAI(pCreature);
-}
-
-/*######
-## mob_rotting_forest_rager
-######*/
-
-enum
-{
-    SPELL_SUMMON_LOTS_OF_WOOD_MIGHTS    = 39134,
-};
-
-struct MANGOS_DLL_DECL mob_rotting_forest_ragerAI : public ScriptedAI
-{
-    mob_rotting_forest_ragerAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
-
-    void Reset() { }
-
-    void DamageTaken(Unit* pDealer, uint32 &uiDamage)
-    {
-        if (m_creature->GetHealth() <= uiDamage)
-            if (pDealer->IsControlledByPlayer())
-                if (urand(0, 3))
-                    //Summon Lots of Wood Mights
-                    DoCastSpellIfCan(m_creature, SPELL_SUMMON_LOTS_OF_WOOD_MIGHTS, CAST_TRIGGERED);
-    }
-};
-CreatureAI* GetAI_mob_rotting_forest_rager(Creature* pCreature)
-{
-    return new mob_rotting_forest_ragerAI(pCreature);
 }
 
 /*######
@@ -347,72 +285,6 @@ bool QuestAccept_npc_akuno(Player* pPlayer, Creature* pCreature, const Quest* pQ
 CreatureAI* GetAI_npc_akuno(Creature* pCreature)
 {
     return new npc_akunoAI(pCreature);
-}
-
-/*######
-## npc_floon -- TODO move to EventAI
-######*/
-
-enum
-{
-    SPELL_SILENCE           = 6726,
-    SPELL_FROSTBOLT         = 9672,
-    SPELL_FROST_NOVA        = 11831,
-};
-
-struct MANGOS_DLL_DECL npc_floonAI : public ScriptedAI
-{
-    npc_floonAI(Creature* pCreature) : ScriptedAI(pCreature)
-    {
-        m_uiNormFaction = pCreature->getFaction();
-        Reset();
-    }
-
-    uint32 m_uiNormFaction;
-    uint32 m_uiSilence_Timer;
-    uint32 m_uiFrostbolt_Timer;
-    uint32 m_uiFrostNova_Timer;
-
-    void Reset()
-    {
-        m_uiSilence_Timer = 2000;
-        m_uiFrostbolt_Timer = 4000;
-        m_uiFrostNova_Timer = 9000;
-
-        if (m_creature->getFaction() != m_uiNormFaction)
-            m_creature->setFaction(m_uiNormFaction);
-    }
-
-    void UpdateAI(const uint32 uiDiff)
-    {
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-            return;
-
-        if (m_uiSilence_Timer < uiDiff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_SILENCE);
-            m_uiSilence_Timer = 30000;
-        }else m_uiSilence_Timer -= uiDiff;
-
-        if (m_uiFrostNova_Timer < uiDiff)
-        {
-            DoCastSpellIfCan(m_creature,SPELL_FROST_NOVA);
-            m_uiFrostNova_Timer = 20000;
-        }else m_uiFrostNova_Timer -= uiDiff;
-
-        if (m_uiFrostbolt_Timer < uiDiff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_FROSTBOLT);
-            m_uiFrostbolt_Timer = 5000;
-        }else m_uiFrostbolt_Timer -= uiDiff;
-
-        DoMeleeAttackIfReady();
-    }
-};
-
-CreatureAI* GetAI_npc_floon(Creature* pCreature)
-{
-    return new npc_floonAI(pCreature);
 }
 
 /*######
@@ -1124,16 +996,6 @@ void AddSC_terokkar_forest()
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
-    pNewScript->Name = "mob_infested_root_walker";
-    pNewScript->GetAI = &GetAI_mob_infested_root_walker;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "mob_rotting_forest_rager";
-    pNewScript->GetAI = &GetAI_mob_rotting_forest_rager;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
     pNewScript->Name = "mob_netherweb_victim";
     pNewScript->GetAI = &GetAI_mob_netherweb_victim;
     pNewScript->RegisterSelf();
@@ -1142,11 +1004,6 @@ void AddSC_terokkar_forest()
     pNewScript->Name = "npc_akuno";
     pNewScript->GetAI = &GetAI_npc_akuno;
     pNewScript->pQuestAcceptNPC = &QuestAccept_npc_akuno;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_floon";
-    pNewScript->GetAI = &GetAI_npc_floon;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;

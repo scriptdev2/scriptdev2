@@ -307,45 +307,6 @@ CreatureAI* GetAI_boss_exarch_maladaar(Creature* pCreature)
     return new boss_exarch_maladaarAI(pCreature);
 }
 
-enum
-{
-    SPELL_AV_MORTAL_STRIKE = 16856,
-    SPELL_AV_SUNDER_ARMOR  = 16145
-};
-
-struct MANGOS_DLL_DECL mob_avatar_of_martyredAI : public ScriptedAI
-{
-    mob_avatar_of_martyredAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
-
-    void Reset()
-    {
-        m_uiMortalStrikeTimer = 10000;
-    }
-
-    uint32 m_uiMortalStrikeTimer;
-
-    void UpdateAI(const uint32 uiDiff)
-    {
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-            return;
-
-        if (m_uiMortalStrikeTimer < uiDiff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_AV_MORTAL_STRIKE);
-            m_uiMortalStrikeTimer = urand(10000, 30000);
-        }
-        else
-            m_uiMortalStrikeTimer -= uiDiff;
-
-        DoMeleeAttackIfReady();
-    }
-};
-
-CreatureAI* GetAI_mob_avatar_of_martyred(Creature* pCreature)
-{
-    return new mob_avatar_of_martyredAI(pCreature);
-}
-
 void AddSC_boss_exarch_maladaar()
 {
     Script* pNewScript;
@@ -353,11 +314,6 @@ void AddSC_boss_exarch_maladaar()
     pNewScript = new Script;
     pNewScript->Name = "boss_exarch_maladaar";
     pNewScript->GetAI = &GetAI_boss_exarch_maladaar;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "mob_avatar_of_martyred";
-    pNewScript->GetAI = &GetAI_mob_avatar_of_martyred;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;

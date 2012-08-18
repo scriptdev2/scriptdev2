@@ -52,63 +52,6 @@ enum
     NPC_SHADOWY_CONSTRUCT    = 23111
 };
 
-struct MANGOS_DLL_DECL mob_doom_blossomAI : public ScriptedAI
-{
-    mob_doom_blossomAI(Creature* pCreature) : ScriptedAI(pCreature)
-    {
-        Reset();
-    }
-
-    uint32 m_uiCheckTeronTimer;
-    uint32 m_uiShadowBoltTimer;
-    ObjectGuid m_teronGuid;
-
-    void Reset()
-    {
-        m_uiCheckTeronTimer = 5000;
-        m_uiShadowBoltTimer = 12000;
-    }
-
-    void AttackStart(Unit* pWho) { }
-    void MoveInLineOfSight(Unit* pWho) { }
-
-    void UpdateAI(const uint32 uiDiff)
-    {
-        if (m_uiCheckTeronTimer < uiDiff)
-        {
-            if (m_teronGuid)
-            {
-                m_creature->SetInCombatWithZone();
-
-                Creature* pTeron = m_creature->GetMap()->GetCreature(m_teronGuid);
-                if (pTeron && (!pTeron->isAlive() || pTeron->IsInEvadeMode()))
-                    m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-            }
-            else
-                m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-
-            m_uiCheckTeronTimer = 5000;
-        }
-        else
-            m_uiCheckTeronTimer -= uiDiff;
-
-        if (!m_creature->getVictim() || !m_creature->SelectHostileTarget())
-            return;
-
-        if (m_uiShadowBoltTimer < uiDiff)
-        {
-            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-                DoCastSpellIfCan(pTarget, SPELL_SHADOWBOLT);
-
-            m_uiShadowBoltTimer = 10000;
-        }
-        else
-            m_uiShadowBoltTimer -= uiDiff;
-    }
-
-    void SetTeronGUID(ObjectGuid guid){ m_teronGuid = guid; }
-};
-
 struct MANGOS_DLL_DECL mob_shadowy_constructAI : public ScriptedAI
 {
     mob_shadowy_constructAI(Creature* pCreature) : ScriptedAI(pCreature)
@@ -406,9 +349,6 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
                     pDoomBlossom->setFaction(m_creature->getFaction());
                     pDoomBlossom->AddThreat(pTarget);
 
-                    if (mob_doom_blossomAI* pDoomBlossomAI = dynamic_cast<mob_doom_blossomAI*>(pDoomBlossom->AI()))
-                        pDoomBlossomAI->SetTeronGUID(m_creature->GetObjectGuid());
-
                     SetThreatList(pDoomBlossom);
                 }
 
@@ -480,11 +420,6 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_doom_blossom(Creature* pCreature)
-{
-    return new mob_doom_blossomAI(pCreature);
-}
-
 CreatureAI* GetAI_mob_shadowy_construct(Creature* pCreature)
 {
     return new mob_shadowy_constructAI(pCreature);
@@ -498,11 +433,6 @@ CreatureAI* GetAI_boss_teron_gorefiend(Creature* pCreature)
 void AddSC_boss_teron_gorefiend()
 {
     Script* pNewScript;
-
-    pNewScript = new Script;
-    pNewScript->Name = "mob_doom_blossom";
-    pNewScript->GetAI = &GetAI_mob_doom_blossom;
-    pNewScript->RegisterSelf();
 
     pNewScript = new Script;
     pNewScript->Name = "mob_shadowy_construct";

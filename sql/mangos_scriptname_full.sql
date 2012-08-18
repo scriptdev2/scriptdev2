@@ -213,20 +213,14 @@ UPDATE creature_template SET ScriptName='npc_feero_ironhand' WHERE entry=4484;
 /* MANA TOMBS */
 UPDATE creature_template SET ScriptName='boss_pandemonius' WHERE entry=18341;
 UPDATE creature_template SET ScriptName='boss_nexusprince_shaffar' WHERE entry=18344;
-UPDATE creature_template SET ScriptName='mob_ethereal_beacon' WHERE entry=18431;
 
 /* AUCHENAI CRYPTS */
 UPDATE creature_template SET ScriptName='boss_exarch_maladaar' WHERE entry=18373;
-UPDATE creature_template SET ScriptName='mob_avatar_of_martyred' WHERE entry=18478;
 UPDATE creature_template SET ScriptName='mob_stolen_soul' WHERE entry=18441;
 UPDATE creature_template SET ScriptName='boss_shirrak' WHERE entry=18371;
 
 /* SETHEKK HALLS */
 UPDATE instance_template SET ScriptName='instance_sethekk_halls' WHERE map=556;
-UPDATE creature_template SET ScriptName='mob_syth_fire' WHERE entry=19203;
-UPDATE creature_template SET ScriptName='mob_syth_arcane' WHERE entry=19205;
-UPDATE creature_template SET ScriptName='mob_syth_frost' WHERE entry=19204;
-UPDATE creature_template SET ScriptName='mob_syth_shadow' WHERE entry=19206;
 UPDATE creature_template SET ScriptName='boss_talon_king_ikiss' WHERE entry=18473;
 UPDATE creature_template SET ScriptName='boss_darkweaver_syth' WHERE entry=18472;
 UPDATE creature_template SET ScriptName='boss_anzu' WHERE entry=23035;
@@ -324,8 +318,6 @@ UPDATE creature_template SET ScriptName='npc_volcano' WHERE entry=23085; -- Supr
 UPDATE creature_template SET ScriptName='molten_flame' WHERE entry=23095; -- Molten Flame in SUpremus
 UPDATE creature_template SET ScriptName='mob_ashtongue_channeler' WHERE entry=23421; -- Ashtongue CHanneler in Shade of AKama
 UPDATE creature_template SET ScriptName='mob_ashtongue_sorcerer' WHERE entry=23215; -- Ashtongue Sorcerer in Shade of Akama
-UPDATE creature_template SET ScriptName='npc_enslaved_soul' WHERE entry=23469; -- Enslaved Soul in Reliquary Event
-UPDATE creature_template SET ScriptName='mob_doom_blossom' WHERE entry=23123; -- Doom Blossoms in Teron Gorefiend's encounter
 UPDATE creature_template SET ScriptName='npc_spirit_of_olum' WHERE entry=23411;
 -- UPDATE creature_template SET ScriptName='mob_shadowy_construct' WHERE entry=23111; -- Shadowy Construct in Teron Gorefiend's encounter. Commented until Mind Control is implemented.
 
@@ -464,7 +456,6 @@ UPDATE creature_template SET ScriptName='boss_hydromancer_thespia' WHERE entry=1
 UPDATE creature_template SET ScriptName='boss_mekgineer_steamrigger' WHERE entry=17796;
 UPDATE creature_template SET ScriptName='boss_warlord_kalithresh' WHERE entry=17798;
 UPDATE gameobject_template SET ScriptName='go_main_chambers_access_panel' WHERE entry IN (184125,184126);
-UPDATE creature_template SET ScriptName='mob_coilfang_waterelemental' WHERE entry=17917;
 UPDATE creature_template SET ScriptName='mob_naga_distiller' WHERE entry=17954;
 UPDATE creature_template SET ScriptName='mob_steamrigger_mechanic' WHERE entry=17951;
 
@@ -473,7 +464,6 @@ UPDATE instance_template SET ScriptName='instance_serpent_shrine' WHERE map=548;
 UPDATE creature_template SET ScriptName='boss_hydross_the_unstable' WHERE entry=21216;
 /* Leotheras the Blind event */
 UPDATE creature_template SET ScriptName='boss_leotheras_the_blind' WHERE entry=21215;
-UPDATE creature_template SET ScriptName='boss_leotheras_the_blind_demonform' WHERE entry=21875;
 /* Fathom-lord Karathress event */
 UPDATE creature_template SET ScriptName='boss_fathomlord_karathress' WHERE entry=21214;
 UPDATE creature_template SET ScriptName='boss_fathomguard_sharkkis' WHERE entry=21966;
@@ -486,7 +476,6 @@ UPDATE creature_template SET ScriptName='mob_water_globule' WHERE entry=21913;
 UPDATE creature_template SET ScriptName='boss_lady_vashj' WHERE entry=21212;
 UPDATE creature_template SET ScriptName='mob_enchanted_elemental' WHERE entry=21958;
 UPDATE creature_template SET ScriptName='mob_tainted_elemental' WHERE entry=22009;
-UPDATE creature_template SET ScriptName='mob_toxic_sporebat' WHERE entry=22140;
 UPDATE creature_template SET ScriptName='mob_shield_generator_channel' WHERE entry=19870;
 /* The Lurker Below event */
 UPDATE gameobject_template SET ScriptName='go_strange_pool' WHERE entry=184956;
@@ -1142,9 +1131,7 @@ UPDATE creature_template SET ScriptName='npc_mist' WHERE entry=3568;
 /*  */
 
 /* THE MECHANAR */
-UPDATE creature_template SET ScriptName='boss_gatewatcher_iron_hand' WHERE entry=19710;
 UPDATE creature_template SET ScriptName='boss_nethermancer_sepethrea' WHERE entry=19221;
-UPDATE creature_template SET ScriptName='mob_ragin_flames' WHERE entry=20481;
 UPDATE creature_template SET ScriptName='boss_pathaleon_the_calculator' WHERE entry=19220;
 UPDATE creature_template SET ScriptName='mob_nether_wraith' WHERE entry=21062;
 UPDATE instance_template SET ScriptName='instance_mechanar' WHERE map=554;
@@ -1157,7 +1144,6 @@ UPDATE creature_template SET ScriptName='mob_warp_splinter_treant' WHERE entry=1
 
 /* THE ARCATRAZ */
 UPDATE instance_template SET ScriptName='instance_arcatraz' WHERE map=552;
-UPDATE creature_template SET ScriptName='mob_zerekethvoidzone' WHERE entry=21101;
 UPDATE creature_template SET ScriptName='boss_harbinger_skyriss' WHERE entry=20912;
 UPDATE creature_template SET ScriptName='boss_dalliah' WHERE entry=20885;
 UPDATE creature_template SET ScriptName='boss_soccothrates' WHERE entry=20886;
@@ -1166,8 +1152,6 @@ UPDATE creature_template SET ScriptName='npc_millhouse_manastorm' WHERE entry=20
 
 /* THE EYE */
 UPDATE instance_template SET ScriptName='instance_the_eye' WHERE map=550;
-/* The Eye Trash Mobs */
-UPDATE creature_template SET ScriptName='mob_crystalcore_devastator' WHERE entry=20040;
 /* Al'ar event */
 UPDATE creature_template SET ScriptName='boss_alar' WHERE entry=19514;
 /* Void Reaver event */
@@ -1214,12 +1198,9 @@ INSERT INTO scripted_areatrigger VALUES
 (4034,'at_stomach_cthun');
 
 /* TEROKKAR FOREST */
-UPDATE creature_template SET ScriptName='mob_infested_root_walker' WHERE entry=22095;
 UPDATE creature_template SET ScriptName='mob_netherweb_victim' WHERE entry=22355;
-UPDATE creature_template SET ScriptName='mob_rotting_forest_rager' WHERE entry=22307;
 UPDATE creature_template SET ScriptName='mob_unkor_the_ruthless' WHERE entry=18262;
 UPDATE creature_template SET ScriptName='npc_akuno' WHERE entry=22377;
-UPDATE creature_template SET ScriptName='npc_floon' WHERE entry=18588;
 UPDATE creature_template SET ScriptName='npc_hungry_nether_ray' WHERE entry=23439;
 UPDATE creature_template SET ScriptName='npc_letoll' WHERE entry=22458;
 UPDATE creature_template SET ScriptName='npc_mana_bomb_exp_trigger' WHERE entry=20767;

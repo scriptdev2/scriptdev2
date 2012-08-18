@@ -94,40 +94,6 @@ static ReliquaryPosition Coords[]=
     {450.4f, 168.3f}
 };
 
-struct MANGOS_DLL_DECL npc_enslaved_soulAI : public ScriptedAI
-{
-    npc_enslaved_soulAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
-
-    ObjectGuid m_reliquaryGuid;
-
-    void Reset()
-    {
-        m_reliquaryGuid.Clear();
-    }
-
-    void DamageTaken(Unit *done_by, uint32 &damage)
-    {
-        if (damage >= m_creature->GetHealth())
-        {
-            if (done_by->GetTypeId() == TYPEID_PLAYER)
-            {
-                done_by->CastSpell(done_by, SPELL_RESTORE_HEALTH, true);
-                if (done_by->GetMaxPower(POWER_MANA) > 0)
-                {
-                    if ((done_by->GetPower(POWER_MANA) / done_by->GetMaxPower(POWER_MANA)) < 70)
-                    {
-                        uint32 mana = done_by->GetPower(POWER_MANA) + (uint32)(done_by->GetMaxPower(POWER_MANA)*0.3);
-                        done_by->SetPower(POWER_MANA, mana);
-                    }else done_by->SetPower(POWER_MANA, done_by->GetMaxPower(POWER_MANA));
-                }
-            }
-            DoCastSpellIfCan(done_by, SPELL_SOUL_RELEASE);
-        }
-    }
-
-    void JustDied(Unit *killer);
-};
-
 struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
 {
     boss_reliquary_of_soulsAI(Creature* pCreature) : ScriptedAI(pCreature)
@@ -238,13 +204,16 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
         Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0);
         if (target && Soul)
         {
-            if (npc_enslaved_soulAI* pSoulAI = dynamic_cast<npc_enslaved_soulAI*>(Soul->AI()))
-                pSoulAI->m_reliquaryGuid = m_creature->GetObjectGuid();
-
             Soul->CastSpell(Soul, ENSLAVED_SOUL_PASSIVE, true);
             Soul->AddThreat(target);
             ++SoulCount;
         }
+    }
+
+    void SummonedCreatureJustDied(Creature* pSummoned)
+    {
+        if (pSummoned->GetEntry() == CREATURE_ENSLAVED_SOUL)
+            ++SoulDeathCount;
     }
 
     void MergeThreatList(Creature* target)
@@ -905,18 +874,6 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
     }
 };
 
-void npc_enslaved_soulAI::JustDied(Unit *killer)
-{
-    if (m_reliquaryGuid)
-    {
-        if (Creature* pReliquary = m_creature->GetMap()->GetCreature(m_reliquaryGuid))
-        {
-            if (boss_reliquary_of_soulsAI* pReliqAI = dynamic_cast<boss_reliquary_of_soulsAI*>(pReliquary->AI()))
-                pReliqAI->SoulDeathCount++;
-        }
-    }
-}
-
 CreatureAI* GetAI_boss_reliquary_of_souls(Creature* pCreature)
 {
     return new boss_reliquary_of_soulsAI(pCreature);
@@ -935,11 +892,6 @@ CreatureAI* GetAI_boss_essence_of_desire(Creature* pCreature)
 CreatureAI* GetAI_boss_essence_of_anger(Creature* pCreature)
 {
     return new boss_essence_of_angerAI(pCreature);
-}
-
-CreatureAI* GetAI_npc_enslaved_soul(Creature* pCreature)
-{
-    return new npc_enslaved_soulAI(pCreature);
 }
 
 void AddSC_boss_reliquary_of_souls()
@@ -964,10 +916,5 @@ void AddSC_boss_reliquary_of_souls()
     pNewScript = new Script;
     pNewScript->Name = "boss_essence_of_anger";
     pNewScript->GetAI = &GetAI_boss_essence_of_anger;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_enslaved_soul";
-    pNewScript->GetAI = &GetAI_npc_enslaved_soul;
     pNewScript->RegisterSelf();
 }
