@@ -404,32 +404,6 @@ struct MANGOS_DLL_DECL npc_doomfire_spiritAI : public ScriptedAI
     }
 };
 
-struct mob_ancient_wispAI : public ScriptedAI
-{
-    mob_ancient_wispAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
-
-    uint32 m_uiCheckTimer;
-
-    void Reset()
-    {
-        m_uiCheckTimer = 1000;
-    }
-
-    void UpdateAI(const uint32 uiDiff)
-    {
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-            return;
-
-        if (m_uiCheckTimer < uiDiff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_ANCIENT_SPARK);
-            m_uiCheckTimer = urand(2000, 3000);
-        }
-        else
-            m_uiCheckTimer -= uiDiff;
-    }
-};
-
 CreatureAI* GetAI_boss_archimonde(Creature* pCreature)
 {
     return new boss_archimondeAI(pCreature);
@@ -438,11 +412,6 @@ CreatureAI* GetAI_boss_archimonde(Creature* pCreature)
 CreatureAI* GetAI_npc_doomfire_spirit(Creature* pCreature)
 {
     return new npc_doomfire_spiritAI(pCreature);
-}
-
-CreatureAI* GetAI_mob_ancient_wisp(Creature* pCreature)
-{
-    return new mob_ancient_wispAI(pCreature);
 }
 
 void AddSC_boss_archimonde()
@@ -457,10 +426,5 @@ void AddSC_boss_archimonde()
     pNewScript = new Script;
     pNewScript->Name = "npc_doomfire_spirit";
     pNewScript->GetAI = &GetAI_npc_doomfire_spirit;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "mob_ancient_wisp";
-    pNewScript->GetAI = &GetAI_mob_ancient_wisp;
     pNewScript->RegisterSelf();
 }

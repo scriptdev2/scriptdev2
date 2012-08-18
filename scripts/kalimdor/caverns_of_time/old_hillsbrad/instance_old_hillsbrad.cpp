@@ -50,11 +50,19 @@ void instance_old_hillsbrad::OnCreatureCreate(Creature* pCreature)
 
 void instance_old_hillsbrad::OnCreatureDeath(Creature* pCreature)
 {
-    if (pCreature->GetEntry() == NPC_EPOCH)
+    switch (pCreature->GetEntry())
     {
-        // notify thrall so he can continue
-        if (Creature* pThrall = GetSingleCreatureFromStorage(NPC_THRALL))
-            pThrall->AI()->KilledUnit(pCreature);
+        case NPC_SKARLOC:
+            if (GetData(TYPE_THRALL_EVENT) == IN_PROGRESS)
+                SetData(TYPE_THRALL_PART1, DONE);
+            break;
+        case NPC_EPOCH:
+            if (GetData(TYPE_THRALL_EVENT) == IN_PROGRESS)
+                SetData(TYPE_THRALL_PART4, DONE);
+            // notify thrall so he can continue
+            if (Creature* pThrall = GetSingleCreatureFromStorage(NPC_THRALL))
+                pThrall->AI()->KilledUnit(pCreature);
+            break;
     }
 }
 

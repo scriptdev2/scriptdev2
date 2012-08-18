@@ -415,13 +415,9 @@ UPDATE creature_template SET ScriptName='npc_thrall' WHERE entry=17852;
 UPDATE creature_template SET ScriptName='npc_jaina_proudmoore' WHERE entry=17772;
 UPDATE creature_template SET ScriptName='boss_archimonde' WHERE entry=17968;
 UPDATE creature_template SET ScriptName='npc_doomfire_spirit' WHERE entry=18104;
-UPDATE creature_template SET ScriptName='mob_ancient_wisp' WHERE entry=17946;
 
 /* OLD HILLSBRAD */
 UPDATE instance_template SET ScriptName='instance_old_hillsbrad' WHERE map=560;
-UPDATE creature_template SET ScriptName='boss_lieutenant_drake' WHERE entry=17848;
-UPDATE creature_template SET ScriptName='boss_epoch_hunter' WHERE entry=18096;
-UPDATE creature_template SET ScriptName='boss_captain_skarloc' WHERE entry=17862;
 UPDATE gameobject_template SET ScriptName='go_barrel_old_hillsbrad' WHERE entry=182589;
 UPDATE creature_template SET ScriptName='npc_erozion' WHERE entry=18723;
 UPDATE creature_template SET ScriptName='npc_taretha' WHERE entry=18887;
@@ -803,10 +799,7 @@ INSERT INTO scripted_event_id VALUES
 (16547,'event_go_scrying_orb');
 
 /* MARAUDON */
-UPDATE creature_template SET ScriptName='boss_princess_theradras' WHERE entry=12201;
 UPDATE creature_template SET ScriptName='boss_noxxion' WHERE entry=13282;
-UPDATE creature_template SET ScriptName='boss_landslide' WHERE entry=12203;
-UPDATE creature_template SET ScriptName='celebras_the_cursed' WHERE entry=12225;
 
 /* MOLTEN CORE */
 UPDATE instance_template SET ScriptName='instance_molten_core' WHERE map=409;
@@ -922,7 +915,6 @@ UPDATE creature_template SET ScriptName='npc_thrall_warchief' WHERE entry=4949;
 
 
 /* RAZORFEN DOWNS */
-UPDATE creature_template SET ScriptName='boss_amnennar_the_coldbringer' WHERE entry=7358;
 UPDATE creature_template SET ScriptName='npc_belnistrasz' WHERE entry=8516;
 
 /* RAZORFEN KRAUL */
@@ -1186,11 +1178,7 @@ UPDATE creature_template SET ScriptName='boss_ouro' WHERE entry=15517;
 UPDATE creature_template SET ScriptName='npc_ouro_spawner' WHERE entry=15957;
 UPDATE creature_template SET ScriptName='boss_eye_of_cthun' WHERE entry=15589;
 UPDATE creature_template SET ScriptName='mob_sartura_royal_guard' WHERE entry=15984;
-UPDATE creature_template SET ScriptName='mob_claw_tentacle' WHERE entry=15725;
-UPDATE creature_template SET ScriptName='mob_eye_tentacle' WHERE entry=15726;
 UPDATE creature_template SET ScriptName='mob_giant_claw_tentacle' WHERE entry=15728;
-UPDATE creature_template SET ScriptName='mob_giant_eye_tentacle' WHERE entry=15334;
-UPDATE creature_template SET ScriptName='mob_giant_flesh_tentacle' WHERE entry=15802;
 UPDATE creature_template SET ScriptName='mob_anubisath_sentinel' WHERE entry=15264;
 DELETE FROM scripted_areatrigger WHERE entry IN (4033,4034);
 INSERT INTO scripted_areatrigger VALUES
@@ -1216,7 +1204,6 @@ UPDATE creature_template SET ScriptName='npc_paoka_swiftmountain' WHERE entry=10
 UPDATE creature_template SET ScriptName='npc_lakota_windsong' WHERE entry=10646;
 
 /* THUNDER BLUFF */
-UPDATE creature_template SET ScriptName='npc_cairne_bloodhoof' WHERE entry=3057;
 
 /* TIRISFAL GLADES */
 UPDATE gameobject_template SET ScriptName='go_mausoleum_trigger' WHERE entry=104593;

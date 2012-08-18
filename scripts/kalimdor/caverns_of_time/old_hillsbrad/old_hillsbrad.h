@@ -20,6 +20,7 @@ enum
     NPC_TARETHA                     = 18887,
     NPC_DRAKE                       = 17848,
     NPC_LODGE_QUEST_TRIGGER         = 20155,
+    NPC_SKARLOC                     = 17862,
     NPC_EPOCH                       = 18096,
 
     QUEST_ENTRY_HILLSBRAD           = 10282,
