@@ -55,7 +55,7 @@ enum
 
     // Phase 2
     SPELL_ICE_TOMB              = 69712, // triggers Frost Beacon on random targets, which triggers actual Ice Tomb after 7 sec.
-
+    SPELL_ICE_TOMB_PROTECTION   = 69700, // protects from taking dmg while in Ice Tomb, should be triggered by Ice Tomb stunning spell
     // Frost Bomb related
     SPELL_FROST_BOMB            = 69846, // summons dummy target npc
     SPELL_FROST_BOMB_DMG        = 69845,
@@ -64,6 +64,7 @@ enum
 
     // Phase 3
     SPELL_MYSTIC_BUFFET         = 70128,
+    SPELL_ICE_TOMB_SINGLE       = 69675,
 
     // Rimefang
     SPELL_RIMEFANG_FROST_AURA   = 71387,
@@ -155,6 +156,7 @@ struct MANGOS_DLL_DECL boss_sindragosaAI : public ScriptedAI
     uint32 m_uiIcyGripTimer;
     uint32 m_uiUnchainedMagicTimer;
     uint32 m_uiFrostBombTimer;
+    uint32 m_uiIceTombSingleTimer;
 
     void Reset()
     {
@@ -165,6 +167,7 @@ struct MANGOS_DLL_DECL boss_sindragosaAI : public ScriptedAI
         m_uiTailSmashTimer          = 20000;
         m_uiFrostBreathTimer        = 5000;
         m_uiIcyGripTimer            = 35000;
+        m_uiIceTombSingleTimer      = 15000;
         m_uiUnchainedMagicTimer     = urand(15000, 30000);
     }
 
@@ -324,9 +327,21 @@ struct MANGOS_DLL_DECL boss_sindragosaAI : public ScriptedAI
         switch(m_uiPhase)
         {
             case SINDRAGOSA_PHASE_THREE:
-                // TODO:Ice Tombs
+            {
+                // Ice Tomb
+                if (m_uiIceTombSingleTimer <= uiDiff)
+                {
+                    if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1, SPELL_ICE_TOMB_SINGLE, SELECT_FLAG_PLAYER))
+                    {
+                        if (DoCastSpellIfCan(pTarget, SPELL_ICE_TOMB) == CAST_OK)
+                            m_uiIceTombSingleTimer = 15000;
+                    }
+                }
+                else
+                    m_uiIceTombSingleTimer -= uiDiff;
 
                 // no break
+            }
             case SINDRAGOSA_PHASE_GROUND:
             {
                 // Phase 1 only
