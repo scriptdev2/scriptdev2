@@ -347,6 +347,16 @@ struct MANGOS_DLL_DECL npc_dark_nucleusAI : public ScriptedAI
         }
     }
 
+    void DamageTaken(Unit *pDealer, uint32 &uiDamage)
+    {
+        if (m_creature->getVictim() && pDealer != m_creature->getVictim())
+        {
+            DoResetThreat();
+            m_creature->AddThreat(pDealer, 100000.0f);
+            m_creature->InterruptNonMeleeSpells(true);
+        }
+    }
+
     void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())

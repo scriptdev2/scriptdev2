@@ -16,7 +16,7 @@
 
 /* ScriptData
 SDName: boss_festergut
-SD%Complete: 10%
+SD%Complete: 90%
 SDComment:
 SDCategory: Icecrown Citadel
 EndScriptData */
