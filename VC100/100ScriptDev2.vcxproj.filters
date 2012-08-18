@@ -324,9 +324,6 @@
     <ClCompile Include="..\scripts\eastern_kingdoms\blasted_lands.cpp">
       <Filter>scripts\eastern_kingdoms</Filter>
     </ClCompile>
-    <ClCompile Include="..\scripts\eastern_kingdoms\boss_kruul.cpp">
-      <Filter>scripts\eastern_kingdoms</Filter>
-    </ClCompile>
     <ClCompile Include="..\scripts\eastern_kingdoms\burning_steppes.cpp">
       <Filter>scripts\eastern_kingdoms</Filter>
     </ClCompile>
@@ -399,9 +396,6 @@
     <ClCompile Include="..\scripts\eastern_kingdoms\blackrock_depths\boss_ambassador_flamelash.cpp">
       <Filter>scripts\eastern_kingdoms\blackrock_depths</Filter>
     </ClCompile>
-    <ClCompile Include="..\scripts\eastern_kingdoms\blackrock_depths\boss_anubshiah.cpp">
-      <Filter>scripts\eastern_kingdoms\blackrock_depths</Filter>
-    </ClCompile>
     <ClCompile Include="..\scripts\eastern_kingdoms\blackrock_depths\boss_coren_direbrew.cpp">
       <Filter>scripts\eastern_kingdoms\blackrock_depths</Filter>
     </ClCompile>
@@ -411,58 +405,19 @@
     <ClCompile Include="..\scripts\eastern_kingdoms\blackrock_depths\boss_general_angerforge.cpp">
       <Filter>scripts\eastern_kingdoms\blackrock_depths</Filter>
     </ClCompile>
-    <ClCompile Include="..\scripts\eastern_kingdoms\blackrock_depths\boss_gorosh_the_dervish.cpp">
-      <Filter>scripts\eastern_kingdoms\blackrock_depths</Filter>
-    </ClCompile>
-    <ClCompile Include="..\scripts\eastern_kingdoms\blackrock_depths\boss_grizzle.cpp">
-      <Filter>scripts\eastern_kingdoms\blackrock_depths</Filter>
-    </ClCompile>
     <ClCompile Include="..\scripts\eastern_kingdoms\blackrock_depths\boss_high_interrogator_gerstahn.cpp">
-      <Filter>scripts\eastern_kingdoms\blackrock_depths</Filter>
-    </ClCompile>
-    <ClCompile Include="..\scripts\eastern_kingdoms\blackrock_depths\boss_magmus.cpp">
-      <Filter>scripts\eastern_kingdoms\blackrock_depths</Filter>
-    </ClCompile>
-    <ClCompile Include="..\scripts\eastern_kingdoms\blackrock_depths\boss_tomb_of_seven.cpp">
       <Filter>scripts\eastern_kingdoms\blackrock_depths</Filter>
     </ClCompile>
     <ClCompile Include="..\scripts\eastern_kingdoms\blackrock_depths\instance_blackrock_depths.cpp">
       <Filter>scripts\eastern_kingdoms\blackrock_depths</Filter>
     </ClCompile>
-    <ClCompile Include="..\scripts\eastern_kingdoms\blackrock_spire\boss_drakkisath.cpp">
-      <Filter>scripts\eastern_kingdoms\blackrock_spire</Filter>
-    </ClCompile>
     <ClCompile Include="..\scripts\eastern_kingdoms\blackrock_spire\boss_gyth.cpp">
-      <Filter>scripts\eastern_kingdoms\blackrock_spire</Filter>
-    </ClCompile>
-    <ClCompile Include="..\scripts\eastern_kingdoms\blackrock_spire\boss_halycon.cpp">
-      <Filter>scripts\eastern_kingdoms\blackrock_spire</Filter>
-    </ClCompile>
-    <ClCompile Include="..\scripts\eastern_kingdoms\blackrock_spire\boss_highlord_omokk.cpp">
-      <Filter>scripts\eastern_kingdoms\blackrock_spire</Filter>
-    </ClCompile>
-    <ClCompile Include="..\scripts\eastern_kingdoms\blackrock_spire\boss_mother_smolderweb.cpp">
       <Filter>scripts\eastern_kingdoms\blackrock_spire</Filter>
     </ClCompile>
     <ClCompile Include="..\scripts\eastern_kingdoms\blackrock_spire\boss_overlord_wyrmthalak.cpp">
       <Filter>scripts\eastern_kingdoms\blackrock_spire</Filter>
     </ClCompile>
     <ClCompile Include="..\scripts\eastern_kingdoms\blackrock_spire\boss_pyroguard_emberseer.cpp">
-      <Filter>scripts\eastern_kingdoms\blackrock_spire</Filter>
-    </ClCompile>
-    <ClCompile Include="..\scripts\eastern_kingdoms\blackrock_spire\boss_quartermaster_zigris.cpp">
-      <Filter>scripts\eastern_kingdoms\blackrock_spire</Filter>
-    </ClCompile>
-    <ClCompile Include="..\scripts\eastern_kingdoms\blackrock_spire\boss_rend_blackhand.cpp">
-      <Filter>scripts\eastern_kingdoms\blackrock_spire</Filter>
-    </ClCompile>
-    <ClCompile Include="..\scripts\eastern_kingdoms\blackrock_spire\boss_shadow_hunter_voshgajin.cpp">
-      <Filter>scripts\eastern_kingdoms\blackrock_spire</Filter>
-    </ClCompile>
-    <ClCompile Include="..\scripts\eastern_kingdoms\blackrock_spire\boss_the_beast.cpp">
-      <Filter>scripts\eastern_kingdoms\blackrock_spire</Filter>
-    </ClCompile>
-    <ClCompile Include="..\scripts\eastern_kingdoms\blackrock_spire\boss_warmaster_voone.cpp">
       <Filter>scripts\eastern_kingdoms\blackrock_spire</Filter>
     </ClCompile>
     <ClCompile Include="..\scripts\eastern_kingdoms\blackrock_spire\instance_blackrock_spire.cpp">
@@ -615,31 +570,13 @@
     <ClCompile Include="..\scripts\eastern_kingdoms\scarlet_monastery\boss_arcanist_doan.cpp">
       <Filter>scripts\eastern_kingdoms\scarlet_monastery</Filter>
     </ClCompile>
-    <ClCompile Include="..\scripts\eastern_kingdoms\scarlet_monastery\boss_azshir_the_sleepless.cpp">
-      <Filter>scripts\eastern_kingdoms\scarlet_monastery</Filter>
-    </ClCompile>
-    <ClCompile Include="..\scripts\eastern_kingdoms\scarlet_monastery\boss_bloodmage_thalnos.cpp">
-      <Filter>scripts\eastern_kingdoms\scarlet_monastery</Filter>
-    </ClCompile>
     <ClCompile Include="..\scripts\eastern_kingdoms\scarlet_monastery\boss_headless_horseman.cpp">
       <Filter>scripts\eastern_kingdoms\scarlet_monastery</Filter>
     </ClCompile>
     <ClCompile Include="..\scripts\eastern_kingdoms\scarlet_monastery\boss_herod.cpp">
       <Filter>scripts\eastern_kingdoms\scarlet_monastery</Filter>
     </ClCompile>
-    <ClCompile Include="..\scripts\eastern_kingdoms\scarlet_monastery\boss_high_inquisitor_fairbanks.cpp">
-      <Filter>scripts\eastern_kingdoms\scarlet_monastery</Filter>
-    </ClCompile>
-    <ClCompile Include="..\scripts\eastern_kingdoms\scarlet_monastery\boss_houndmaster_loksey.cpp">
-      <Filter>scripts\eastern_kingdoms\scarlet_monastery</Filter>
-    </ClCompile>
-    <ClCompile Include="..\scripts\eastern_kingdoms\scarlet_monastery\boss_interrogator_vishas.cpp">
-      <Filter>scripts\eastern_kingdoms\scarlet_monastery</Filter>
-    </ClCompile>
     <ClCompile Include="..\scripts\eastern_kingdoms\scarlet_monastery\boss_mograine_and_whitemane.cpp">
-      <Filter>scripts\eastern_kingdoms\scarlet_monastery</Filter>
-    </ClCompile>
-    <ClCompile Include="..\scripts\eastern_kingdoms\scarlet_monastery\boss_scorn.cpp">
       <Filter>scripts\eastern_kingdoms\scarlet_monastery</Filter>
     </ClCompile>
     <ClCompile Include="..\scripts\eastern_kingdoms\scarlet_monastery\instance_scarlet_monastery.cpp">
@@ -648,13 +585,7 @@
     <ClCompile Include="..\scripts\eastern_kingdoms\scholomance\boss_darkmaster_gandling.cpp">
       <Filter>scripts\eastern_kingdoms\scholomance</Filter>
     </ClCompile>
-    <ClCompile Include="..\scripts\eastern_kingdoms\scholomance\boss_death_knight_darkreaver.cpp">
-      <Filter>scripts\eastern_kingdoms\scholomance</Filter>
-    </ClCompile>
     <ClCompile Include="..\scripts\eastern_kingdoms\scholomance\boss_jandice_barov.cpp">
-      <Filter>scripts\eastern_kingdoms\scholomance</Filter>
-    </ClCompile>
-    <ClCompile Include="..\scripts\eastern_kingdoms\scholomance\boss_kormok.cpp">
       <Filter>scripts\eastern_kingdoms\scholomance</Filter>
     </ClCompile>
     <ClCompile Include="..\scripts\eastern_kingdoms\scholomance\boss_vectus.cpp">
@@ -672,9 +603,6 @@
     <ClCompile Include="..\scripts\eastern_kingdoms\shadowfang_keep\shadowfang_keep.cpp">
       <Filter>scripts\eastern_kingdoms\shadowfang_keep</Filter>
     </ClCompile>
-    <ClCompile Include="..\scripts\eastern_kingdoms\stratholme\boss_baron_rivendare.cpp">
-      <Filter>scripts\eastern_kingdoms\stratholme</Filter>
-    </ClCompile>
     <ClCompile Include="..\scripts\eastern_kingdoms\stratholme\boss_baroness_anastari.cpp">
       <Filter>scripts\eastern_kingdoms\stratholme</Filter>
     </ClCompile>
@@ -684,25 +612,10 @@
     <ClCompile Include="..\scripts\eastern_kingdoms\stratholme\boss_dathrohan_balnazzar.cpp">
       <Filter>scripts\eastern_kingdoms\stratholme</Filter>
     </ClCompile>
-    <ClCompile Include="..\scripts\eastern_kingdoms\stratholme\boss_magistrate_barthilas.cpp">
-      <Filter>scripts\eastern_kingdoms\stratholme</Filter>
-    </ClCompile>
     <ClCompile Include="..\scripts\eastern_kingdoms\stratholme\boss_maleki_the_pallid.cpp">
       <Filter>scripts\eastern_kingdoms\stratholme</Filter>
     </ClCompile>
-    <ClCompile Include="..\scripts\eastern_kingdoms\stratholme\boss_nerubenkan.cpp">
-      <Filter>scripts\eastern_kingdoms\stratholme</Filter>
-    </ClCompile>
     <ClCompile Include="..\scripts\eastern_kingdoms\stratholme\boss_order_of_silver_hand.cpp">
-      <Filter>scripts\eastern_kingdoms\stratholme</Filter>
-    </ClCompile>
-    <ClCompile Include="..\scripts\eastern_kingdoms\stratholme\boss_postmaster_malown.cpp">
-      <Filter>scripts\eastern_kingdoms\stratholme</Filter>
-    </ClCompile>
-    <ClCompile Include="..\scripts\eastern_kingdoms\stratholme\boss_ramstein_the_gorger.cpp">
-      <Filter>scripts\eastern_kingdoms\stratholme</Filter>
-    </ClCompile>
-    <ClCompile Include="..\scripts\eastern_kingdoms\stratholme\boss_timmy_the_cruel.cpp">
       <Filter>scripts\eastern_kingdoms\stratholme</Filter>
     </ClCompile>
     <ClCompile Include="..\scripts\eastern_kingdoms\stratholme\instance_stratholme.cpp">
@@ -774,12 +687,6 @@
     <ClCompile Include="..\scripts\eastern_kingdoms\zulgurub\boss_arlokk.cpp">
       <Filter>scripts\eastern_kingdoms\zulgurub</Filter>
     </ClCompile>
-    <ClCompile Include="..\scripts\eastern_kingdoms\zulgurub\boss_gahzranka.cpp">
-      <Filter>scripts\eastern_kingdoms\zulgurub</Filter>
-    </ClCompile>
-    <ClCompile Include="..\scripts\eastern_kingdoms\zulgurub\boss_grilek.cpp">
-      <Filter>scripts\eastern_kingdoms\zulgurub</Filter>
-    </ClCompile>
     <ClCompile Include="..\scripts\eastern_kingdoms\zulgurub\boss_hakkar.cpp">
       <Filter>scripts\eastern_kingdoms\zulgurub</Filter>
     </ClCompile>
@@ -805,9 +712,6 @@
       <Filter>scripts\eastern_kingdoms\zulgurub</Filter>
     </ClCompile>
     <ClCompile Include="..\scripts\eastern_kingdoms\zulgurub\boss_venoxis.cpp">
-      <Filter>scripts\eastern_kingdoms\zulgurub</Filter>
-    </ClCompile>
-    <ClCompile Include="..\scripts\eastern_kingdoms\zulgurub\boss_wushoolay.cpp">
       <Filter>scripts\eastern_kingdoms\zulgurub</Filter>
     </ClCompile>
     <ClCompile Include="..\scripts\eastern_kingdoms\zulgurub\instance_zulgurub.cpp">
@@ -930,15 +834,6 @@
     <ClCompile Include="..\scripts\kalimdor\caverns_of_time\hyjal\instance_hyjal.cpp">
       <Filter>scripts\kalimdor\caverns_of_time\hyjal</Filter>
     </ClCompile>
-    <ClCompile Include="..\scripts\kalimdor\caverns_of_time\old_hillsbrad\boss_captain_skarloc.cpp">
-      <Filter>scripts\kalimdor\caverns_of_time\old_hillsbrad</Filter>
-    </ClCompile>
-    <ClCompile Include="..\scripts\kalimdor\caverns_of_time\old_hillsbrad\boss_epoch_hunter.cpp">
-      <Filter>scripts\kalimdor\caverns_of_time\old_hillsbrad</Filter>
-    </ClCompile>
-    <ClCompile Include="..\scripts\kalimdor\caverns_of_time\old_hillsbrad\boss_leutenant_drake.cpp">
-      <Filter>scripts\kalimdor\caverns_of_time\old_hillsbrad</Filter>
-    </ClCompile>
     <ClCompile Include="..\scripts\kalimdor\caverns_of_time\old_hillsbrad\instance_old_hillsbrad.cpp">
       <Filter>scripts\kalimdor\caverns_of_time\old_hillsbrad</Filter>
     </ClCompile>
@@ -951,16 +846,7 @@
     <ClCompile Include="..\scripts\kalimdor\dire_maul\instance_dire_maul.cpp">
       <Filter>scripts\kalimdor\dire_maul</Filter>
     </ClCompile>
-    <ClCompile Include="..\scripts\kalimdor\maraudon\boss_celebras_the_cursed.cpp">
-      <Filter>scripts\kalimdor\maraudon</Filter>
-    </ClCompile>
-    <ClCompile Include="..\scripts\kalimdor\maraudon\boss_landslide.cpp">
-      <Filter>scripts\kalimdor\maraudon</Filter>
-    </ClCompile>
     <ClCompile Include="..\scripts\kalimdor\maraudon\boss_noxxion.cpp">
-      <Filter>scripts\kalimdor\maraudon</Filter>
-    </ClCompile>
-    <ClCompile Include="..\scripts\kalimdor\maraudon\boss_princess_theradras.cpp">
       <Filter>scripts\kalimdor\maraudon</Filter>
     </ClCompile>
     <ClCompile Include="..\scripts\kalimdor\onyxias_lair\boss_onyxia.cpp">
@@ -968,9 +854,6 @@
     </ClCompile>
     <ClCompile Include="..\scripts\kalimdor\onyxias_lair\instance_onyxias_lair.cpp">
       <Filter>scripts\kalimdor\onyxias_lair</Filter>
-    </ClCompile>
-    <ClCompile Include="..\scripts\kalimdor\razorfen_downs\boss_amnennar_the_coldbringer.cpp">
-      <Filter>scripts\kalimdor\razorfen_downs</Filter>
     </ClCompile>
     <ClCompile Include="..\scripts\kalimdor\razorfen_downs\razorfen_downs.cpp">
       <Filter>scripts\kalimdor\razorfen_downs</Filter>
@@ -1694,12 +1577,6 @@
     </ClCompile>
     <ClCompile Include="..\scripts\outland\tempest_keep\the_eye\instance_the_eye.cpp">
       <Filter>scripts\outland\tempest_keep\the_eye</Filter>
-    </ClCompile>
-    <ClCompile Include="..\scripts\outland\tempest_keep\the_eye\the_eye.cpp">
-      <Filter>scripts\outland\tempest_keep\the_eye</Filter>
-    </ClCompile>
-    <ClCompile Include="..\scripts\outland\tempest_keep\the_mechanar\boss_gatewatcher_ironhand.cpp">
-      <Filter>scripts\outland\tempest_keep\the_mechanar</Filter>
     </ClCompile>
     <ClCompile Include="..\scripts\outland\tempest_keep\the_mechanar\boss_nethermancer_sepethrea.cpp">
       <Filter>scripts\outland\tempest_keep\the_mechanar</Filter>

@@ -8,7 +8,7 @@ UPDATE creature_template SET ScriptName='' WHERE entry=10440;
 UPDATE creature_template SET ScriptName='' WHERE entry=10435;
 UPDATE creature_template SET ScriptName='' WHERE entry=10437;
 UPDATE creature_template SET ScriptName='' WHERE entry=11143;
-UPDATE creature_template SET ScriptName='' WHERE entry=11136
+UPDATE creature_template SET ScriptName='' WHERE entry=11136;
 UPDATE creature_template SET ScriptName='' WHERE entry=10439;
 UPDATE creature_template SET ScriptName='' WHERE entry=10808;
 UPDATE creature_template SET ScriptName='' WHERE entry=11439;

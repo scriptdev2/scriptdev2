@@ -26,7 +26,6 @@ EndContentData */
 
 #include "precompiled.h"
 
-/*void AddSC_alterac_mountains()
+void AddSC_alterac_mountains()
 {
-    Script* pNewScript;
-}*/
+}
