@@ -87,6 +87,7 @@ static const DialogueEntry aArcatrazDialogue[] =
 };
 
 instance_arcatraz::instance_arcatraz(Map* pMap) : ScriptedInstance(pMap), DialogueHelper(aArcatrazDialogue),
+    m_uiEntranceEventTimer(0),
     m_uiResetDelayTimer(0)
 {
     Initialize();
@@ -96,6 +97,16 @@ void instance_arcatraz::Initialize()
 {
     memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
     InitializeDialogueHelper(this);
+}
+
+void instance_arcatraz::OnPlayerEnter(Player* pPlayer)
+{
+    // Check encounter states
+    if (GetData(TYPE_ENTRANCE) == DONE || GetData(TYPE_ENTRANCE) == IN_PROGRESS)
+        return;
+
+    SetData(TYPE_ENTRANCE, IN_PROGRESS);
+    m_uiEntranceEventTimer = 1000;
 }
 
 void instance_arcatraz::OnObjectCreate(GameObject* pGo)
@@ -149,6 +160,12 @@ void instance_arcatraz::OnCreatureCreate(Creature* pCreature)
         case NPC_BL_DRAKONAAR:
             m_lSkyrissEventMobsGuidList.push_back(pCreature->GetObjectGuid());
             break;
+        case NPC_PROTEAN_HORROR:
+        case NPC_PROTEAN_NIGHTMARE:
+            // Only take the mobs from the entrance
+            if (pCreature->GetPositionY() > 0 && pCreature->GetPositionY() < 1.0f)
+                m_qIntroEventMobsGuidQueue.push(pCreature->GetObjectGuid());
+            break;
     }
 }
 
@@ -156,8 +173,9 @@ void instance_arcatraz::SetData(uint32 uiType, uint32 uiData)
 {
     switch(uiType)
     {
+        case TYPE_ENTRANCE:
         case TYPE_ZEREKETH:
-            m_auiEncounter[0] = uiData;
+            m_auiEncounter[uiType] = uiData;
             break;
 
         case TYPE_DALLIAH:
@@ -175,23 +193,23 @@ void instance_arcatraz::SetData(uint32 uiType, uint32 uiData)
                 if (GetData(TYPE_SOCCOTHRATES) != DONE)
                     StartNextDialogueText(TYPE_SOCCOTHRATES);
             }
-            m_auiEncounter[1] = uiData;
+            m_auiEncounter[uiType] = uiData;
             break;
 
         case TYPE_SOCCOTHRATES:
             if (uiData == DONE)
                 DoUseDoorOrButton(GO_CORE_SECURITY_FIELD_ALPHA);
-            m_auiEncounter[2] = uiData;
+            m_auiEncounter[uiType] = uiData;
             break;
 
         case TYPE_HARBINGERSKYRISS:
             if (uiData == FAIL)
             {
-                m_auiEncounter[4] = NOT_STARTED;
-                m_auiEncounter[5] = NOT_STARTED;
-                m_auiEncounter[6] = NOT_STARTED;
-                m_auiEncounter[7] = NOT_STARTED;
-                m_auiEncounter[8] = NOT_STARTED;
+                SetData(TYPE_WARDEN_1, NOT_STARTED);
+                SetData(TYPE_WARDEN_2, NOT_STARTED);
+                SetData(TYPE_WARDEN_3, NOT_STARTED);
+                SetData(TYPE_WARDEN_4, NOT_STARTED);
+                SetData(TYPE_WARDEN_5, NOT_STARTED);
 
                 // Reset event in 1 min
                 if (Creature* pMellichar = GetSingleCreatureFromStorage(NPC_MELLICHAR))
@@ -231,7 +249,7 @@ void instance_arcatraz::SetData(uint32 uiType, uint32 uiData)
                 DoUseDoorOrButton(GO_POD_ALPHA);
             if (uiData == DONE)
                 StartNextDialogueText(YELL_MELLICHAR_RELEASE2);
-            m_auiEncounter[4] = uiData;
+            m_auiEncounter[uiType] = uiData;
             break;
 
         case TYPE_WARDEN_2:
@@ -239,7 +257,7 @@ void instance_arcatraz::SetData(uint32 uiType, uint32 uiData)
                 DoUseDoorOrButton(GO_POD_BETA);
             if (uiData == DONE)
                 StartNextDialogueText(YELL_MELLICHAR_RELEASE3);
-            m_auiEncounter[5] = uiData;
+            m_auiEncounter[uiType] = uiData;
             break;
 
         case TYPE_WARDEN_3:
@@ -247,7 +265,7 @@ void instance_arcatraz::SetData(uint32 uiType, uint32 uiData)
                 DoUseDoorOrButton(GO_POD_DELTA);
             if (uiData == DONE)
                 StartNextDialogueText(YELL_MELLICHAR_RELEASE4);
-            m_auiEncounter[6] = uiData;
+            m_auiEncounter[uiType] = uiData;
             break;
 
         case TYPE_WARDEN_4:
@@ -255,13 +273,13 @@ void instance_arcatraz::SetData(uint32 uiType, uint32 uiData)
                 DoUseDoorOrButton(GO_POD_GAMMA);
             if (uiData == DONE)
                 StartNextDialogueText(YELL_MELLICHAR_RELEASE5);
-            m_auiEncounter[7] = uiData;
+            m_auiEncounter[uiType] = uiData;
             break;
 
         case TYPE_WARDEN_5:
             if (uiData == IN_PROGRESS)
                 DoUseDoorOrButton(GO_POD_OMEGA);
-            m_auiEncounter[8] = uiData;
+            m_auiEncounter[uiType] = uiData;
             break;
     }
 
@@ -272,7 +290,7 @@ void instance_arcatraz::SetData(uint32 uiType, uint32 uiData)
         std::ostringstream saveStream;
 
         saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " "
-            << m_auiEncounter[3];
+            << m_auiEncounter[3] << " " << m_auiEncounter[4];
 
         m_strInstData = saveStream.str();
 
@@ -283,20 +301,10 @@ void instance_arcatraz::SetData(uint32 uiType, uint32 uiData)
 
 uint32 instance_arcatraz::GetData(uint32 uiType)
 {
-    switch(uiType)
-    {
-        case TYPE_DALLIAH:          return m_auiEncounter[1];
-        case TYPE_SOCCOTHRATES:     return m_auiEncounter[2];
-        case TYPE_HARBINGERSKYRISS: return m_auiEncounter[3];
-        case TYPE_WARDEN_1:         return m_auiEncounter[4];
-        case TYPE_WARDEN_2:         return m_auiEncounter[5];
-        case TYPE_WARDEN_3:         return m_auiEncounter[6];
-        case TYPE_WARDEN_4:         return m_auiEncounter[7];
-        case TYPE_WARDEN_5:         return m_auiEncounter[8];
+    if (uiType < MAX_ENCOUNTER)
+        return m_auiEncounter[uiType];
 
-        default:
-            return 0;
-    }
+    return 0;
 }
 
 void instance_arcatraz::Load(const char* chrIn)
@@ -310,7 +318,8 @@ void instance_arcatraz::Load(const char* chrIn)
     OUT_LOAD_INST_DATA(chrIn);
 
     std::istringstream loadStream(chrIn);
-    loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3];
+    loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3]
+        >> m_auiEncounter[4];
 
     for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
     {
@@ -416,6 +425,34 @@ void instance_arcatraz::Update(uint32 uiDiff)
         }
         else
             m_uiResetDelayTimer -= uiDiff;
+    }
+
+    if (m_uiEntranceEventTimer)
+    {
+        if (m_uiEntranceEventTimer <= uiDiff)
+        {
+            // Move the intro creatures into combat positions
+            if (Creature* pTemp = instance->GetCreature(m_qIntroEventMobsGuidQueue.front()))
+            {
+                if (pTemp->isAlive())
+                {
+                    pTemp->SetWalk(false);
+                    pTemp->GetMotionMaster()->MovePoint(0, aEntranceMoveLoc[0], aEntranceMoveLoc[1], aEntranceMoveLoc[2]);
+                }
+                m_qIntroEventMobsGuidQueue.pop();
+            }
+
+            // When all intro creatures were moved, stop the timer
+            if (m_qIntroEventMobsGuidQueue.empty())
+            {
+                SetData(TYPE_ENTRANCE, DONE);
+                m_uiEntranceEventTimer = 0;
+            }
+            else
+                m_uiEntranceEventTimer = urand(10000, 15000);
+        }
+        else
+            m_uiEntranceEventTimer -= uiDiff;
     }
 }
 
