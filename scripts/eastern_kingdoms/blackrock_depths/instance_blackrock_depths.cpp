@@ -284,6 +284,12 @@ void instance_blackrock_depths::Load(const char* chrIn)
     OUT_LOAD_INST_DATA_COMPLETE;
 }
 
+void instance_blackrock_depths::OnCreatureEnterCombat(Creature* pCreature)
+{
+    if (pCreature->GetEntry() == NPC_MAGMUS)
+        SetData(TYPE_IRON_HALL, IN_PROGRESS);
+}
+
 void instance_blackrock_depths::OnCreatureEvade(Creature* pCreature)
 {
     if (GetData(TYPE_RING_OF_LAW) == IN_PROGRESS || GetData(TYPE_RING_OF_LAW) == SPECIAL)
@@ -307,7 +313,11 @@ void instance_blackrock_depths::OnCreatureEvade(Creature* pCreature)
         case NPC_GLOOMREL:
         case NPC_SEETHREL:
         case NPC_DOPEREL:
+        case NPC_DOOMREL:
             SetData(TYPE_TOMB_OF_SEVEN, FAIL);
+            break;
+        case NPC_MAGMUS:
+            SetData(TYPE_IRON_HALL, FAIL);
             break;
     }
 }
@@ -347,6 +357,12 @@ void instance_blackrock_depths::OnCreatureDeath(Creature* pCreature)
             // Call the next dwarf only if it's the last one which joined the fight
             if (pCreature->GetEntry() == aTombDwarfes[m_uiDwarfRound - 1])
                 DoCallNextDwarf();
+            break;
+        case NPC_DOOMREL:
+            SetData(TYPE_TOMB_OF_SEVEN, DONE);
+            break;
+        case NPC_MAGMUS:
+            SetData(TYPE_IRON_HALL, DONE);
             break;
     }
 }

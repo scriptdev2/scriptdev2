@@ -36,10 +36,6 @@ enum
 
     SPELL_HEALING_WARD_HEAL         = 24311,
 
-    // Shade of Jindo Spell
-    SPELL_SHADOWSHOCK               = 19460,
-    SPELL_SHADE_OF_JINDO_PASSIVE    = 24307,                // shade invisibility, needs core support to prevent removing when attacking
-
     // npcs
     NPC_SHADE_OF_JINDO              = 14986,
     NPC_SACRIFICED_TROLL            = 14826,
@@ -199,43 +195,6 @@ struct MANGOS_DLL_DECL mob_healing_wardAI : public ScriptedAI
     }
 };
 
-// TODO Move to Acid
-struct MANGOS_DLL_DECL mob_shade_of_jindoAI : public ScriptedAI
-{
-    mob_shade_of_jindoAI(Creature* pCreature) : ScriptedAI(pCreature)
-    {
-        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        Reset();
-    }
-
-    ScriptedInstance* m_pInstance;
-
-    uint32 m_uiShadowShockTimer;
-
-    void Reset()
-    {
-        m_uiShadowShockTimer = 1000;
-        DoCastSpellIfCan(m_creature, SPELL_SHADE_OF_JINDO_PASSIVE);
-    }
-
-    void UpdateAI (const uint32 uiDiff)
-    {
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-            return;
-
-        // ShadowShock Timer
-        if (m_uiShadowShockTimer < uiDiff)
-        {
-            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_SHADOWSHOCK) == CAST_OK)
-                m_uiShadowShockTimer = 2000;
-        }
-        else
-            m_uiShadowShockTimer -= uiDiff;
-
-        DoMeleeAttackIfReady();
-    }
-};
-
 CreatureAI* GetAI_boss_jindo(Creature* pCreature)
 {
     return new boss_jindoAI(pCreature);
@@ -244,11 +203,6 @@ CreatureAI* GetAI_boss_jindo(Creature* pCreature)
 CreatureAI* GetAI_mob_healing_ward(Creature* pCreature)
 {
     return new mob_healing_wardAI(pCreature);
-}
-
-CreatureAI* GetAI_mob_shade_of_jindo(Creature* pCreature)
-{
-    return new mob_shade_of_jindoAI(pCreature);
 }
 
 void AddSC_boss_jindo()
@@ -263,10 +217,5 @@ void AddSC_boss_jindo()
     pNewScript = new Script;
     pNewScript->Name = "mob_healing_ward";
     pNewScript->GetAI = &GetAI_mob_healing_ward;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "mob_shade_of_jindo";
-    pNewScript->GetAI = &GetAI_mob_shade_of_jindo;
     pNewScript->RegisterSelf();
 }

@@ -26,11 +26,11 @@ go_shadowforge_brazier
 go_relic_coffer_door
 at_ring_of_law
 npc_grimstone
-mob_phalanx
 npc_kharan_mighthammer
 npc_marshal_windsor
 npc_dughal_stormwing
 npc_tobias_seecher
+boss_doomrel
 EndContentData */
 
 #include "precompiled.h"
@@ -447,76 +447,6 @@ bool EffectDummyCreature_spell_banner_of_provocation(Unit* pCaster, uint32 uiSpe
         return true;
     }
     return false;
-}
-
-/*######
-## mob_phalanx
-######*/
-
-enum
-{
-    SPELL_THUNDERCLAP    = 15588,
-    SPELL_FIREBALLVOLLEY = 15285,
-    SPELL_MIGHTYBLOW     = 14099
-};
-
-struct MANGOS_DLL_DECL mob_phalanxAI : public ScriptedAI
-{
-    mob_phalanxAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
-
-    uint32 m_uiThunderClapTimer;
-    uint32 m_uiFireballVolleyTimer;
-    uint32 m_uiMightyBlowTimer;
-
-    void Reset()
-    {
-        m_uiThunderClapTimer    = 12000;
-        m_uiFireballVolleyTimer = 0;
-        m_uiMightyBlowTimer     = 15000;
-    }
-
-    void UpdateAI(const uint32 uiDiff)
-    {
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-            return;
-
-        // ThunderClap
-        if (m_uiThunderClapTimer < uiDiff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_THUNDERCLAP);
-            m_uiThunderClapTimer = 10000;
-        }
-        else
-            m_uiThunderClapTimer -= uiDiff;
-
-        // FireballVolley
-        if (m_creature->GetHealthPercent() < 51.0f)
-        {
-            if (m_uiFireballVolleyTimer < uiDiff)
-            {
-                DoCastSpellIfCan(m_creature->getVictim(), SPELL_FIREBALLVOLLEY);
-                m_uiFireballVolleyTimer = 15000;
-            }
-            else
-                m_uiFireballVolleyTimer -= uiDiff;
-        }
-
-        // MightyBlow
-        if (m_uiMightyBlowTimer < uiDiff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_MIGHTYBLOW);
-            m_uiMightyBlowTimer = 10000;
-        }
-        else
-            m_uiMightyBlowTimer -= uiDiff;
-
-        DoMeleeAttackIfReady();
-    }
-};
-
-CreatureAI* GetAI_mob_phalanx(Creature* pCreature)
-{
-    return new mob_phalanxAI(pCreature);
 }
 
 /*######
@@ -1077,6 +1007,45 @@ bool GossipSelect_npc_tobias_seecher(Player* pPlayer, Creature* pCreature, uint3
     return true;
 }
 
+/*######
+## boss_doomrel
+######*/
+
+enum
+{
+    SAY_DOOMREL_START_EVENT     = -1230003,
+    GOSSIP_ITEM_CHALLENGE       = -3230002,
+    GOSSIP_TEXT_ID_CHALLENGE    = 2601,
+};
+
+bool GossipHello_boss_doomrel(Player* pPlayer, Creature* pCreature)
+{
+    if (ScriptedInstance* pInstance = (ScriptedInstance*)pCreature->GetInstanceData())
+    {
+        if (pInstance->GetData(TYPE_TOMB_OF_SEVEN) == NOT_STARTED || pInstance->GetData(TYPE_TOMB_OF_SEVEN) == FAIL)
+            pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_CHALLENGE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+    }
+
+    pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_ID_CHALLENGE, pCreature->GetObjectGuid());
+    return true;
+}
+
+bool GossipSelect_boss_doomrel(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+{
+    switch(uiAction)
+    {
+        case GOSSIP_ACTION_INFO_DEF+1:
+            pPlayer->CLOSE_GOSSIP_MENU();
+            DoScriptText(SAY_DOOMREL_START_EVENT, pCreature);
+            // start event
+            if (ScriptedInstance* pInstance = (ScriptedInstance*)pCreature->GetInstanceData())
+                pInstance->SetData(TYPE_TOMB_OF_SEVEN, IN_PROGRESS);
+
+            break;
+    }
+    return true;
+}
+
 void AddSC_blackrock_depths()
 {
     Script* pNewScript;
@@ -1107,11 +1076,6 @@ void AddSC_blackrock_depths()
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
-    pNewScript->Name = "mob_phalanx";
-    pNewScript->GetAI = &GetAI_mob_phalanx;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
     pNewScript->Name = "npc_kharan_mighthammer";
     pNewScript->pGossipHello =  &GossipHello_npc_kharan_mighthammer;
     pNewScript->pGossipSelect = &GossipSelect_npc_kharan_mighthammer;
@@ -1139,5 +1103,11 @@ void AddSC_blackrock_depths()
     pNewScript->Name = "npc_dughal_stormwing";
     pNewScript->pGossipHello =  &GossipHello_npc_dughal_stormwing;
     pNewScript->pGossipSelect = &GossipSelect_npc_dughal_stormwing;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "boss_doomrel";
+    pNewScript->pGossipHello = &GossipHello_boss_doomrel;
+    pNewScript->pGossipSelect = &GossipSelect_boss_doomrel;
     pNewScript->RegisterSelf();
 }

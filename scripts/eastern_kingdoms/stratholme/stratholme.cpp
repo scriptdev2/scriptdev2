@@ -25,7 +25,6 @@ EndScriptData */
 go_service_gate
 go_gauntlet_gate
 go_stratholme_postbox
-mob_freed_soul
 mob_restless_soul
 mobs_spectral_ghostly_citizen
 EndContentData */
@@ -123,45 +122,17 @@ bool GOUse_go_stratholme_postbox(Player* pPlayer, GameObject* pGo)
 }
 
 /*######
-## mob_freed_soul
-######*/
-
-// Possibly more of these quotes around.
-enum
-{
-    SAY_ZAPPED0     = -1329000,
-    SAY_ZAPPED1     = -1329001,
-    SAY_ZAPPED2     = -1329002,
-    SAY_ZAPPED3     = -1329003,
-};
-
-struct MANGOS_DLL_DECL mob_freed_soulAI : public ScriptedAI
-{
-    mob_freed_soulAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
-
-    void Reset()
-    {
-        switch(urand(0, 3))
-        {
-            case 0: DoScriptText(SAY_ZAPPED0, m_creature); break;
-            case 1: DoScriptText(SAY_ZAPPED1, m_creature); break;
-            case 2: DoScriptText(SAY_ZAPPED2, m_creature); break;
-            case 3: DoScriptText(SAY_ZAPPED3, m_creature); break;
-        }
-    }
-};
-
-CreatureAI* GetAI_mob_freed_soul(Creature* pCreature)
-{
-    return new mob_freed_soulAI(pCreature);
-}
-
-/*######
 ## mob_restless_soul
 ######*/
 
 enum
 {
+    // Possibly more of these quotes around.
+    SAY_ZAPPED0     = -1329000,
+    SAY_ZAPPED1     = -1329001,
+    SAY_ZAPPED2     = -1329002,
+    SAY_ZAPPED3     = -1329003,
+
     QUEST_RESTLESS_SOUL     = 5282,
 
     SPELL_EGAN_BLASTER      = 17368,
@@ -201,7 +172,18 @@ struct MANGOS_DLL_DECL mob_restless_soulAI : public ScriptedAI
 
     void JustSummoned(Creature* pSummoned)
     {
-        pSummoned->CastSpell(pSummoned, SPELL_SOUL_FREED, false);
+        if (pSummoned->GetEntry() == NPC_FREED_SOUL)
+        {
+            pSummoned->CastSpell(pSummoned, SPELL_SOUL_FREED, false);
+
+            switch(urand(0, 3))
+            {
+                case 0: DoScriptText(SAY_ZAPPED0, pSummoned); break;
+                case 1: DoScriptText(SAY_ZAPPED1, pSummoned); break;
+                case 2: DoScriptText(SAY_ZAPPED2, pSummoned); break;
+                case 3: DoScriptText(SAY_ZAPPED3, pSummoned); break;
+            }
+        }
     }
 
     void JustDied(Unit* Killer)
@@ -342,11 +324,6 @@ void AddSC_stratholme()
     pNewScript = new Script;
     pNewScript->Name = "go_stratholme_postbox";
     pNewScript->pGOUse = &GOUse_go_stratholme_postbox;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "mob_freed_soul";
-    pNewScript->GetAI = &GetAI_mob_freed_soul;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;

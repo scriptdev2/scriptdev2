@@ -16,66 +16,13 @@
 
 /* ScriptData
 SDName: Boss_Wushoolay
-SD%Complete: 100
-SDComment:
+SD%Complete: 0
+SDComment: Placeholder
 SDCategory: Zul'Gurub
 EndScriptData */
 
 #include "precompiled.h"
-#include "zulgurub.h"
-
-#define SPELL_LIGHTNINGCLOUD         25033
-#define SPELL_LIGHTNINGWAVE          24819
-
-struct MANGOS_DLL_DECL boss_wushoolayAI : public ScriptedAI
-{
-    boss_wushoolayAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
-
-    uint32 LightningCloud_Timer;
-    uint32 LightningWave_Timer;
-
-    void Reset()
-    {
-        LightningCloud_Timer = urand(5000, 10000);
-        LightningWave_Timer = urand(8000, 16000);
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-            return;
-
-        //LightningCloud_Timer
-        if (LightningCloud_Timer < diff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_LIGHTNINGCLOUD);
-            LightningCloud_Timer = urand(15000, 20000);
-        }else LightningCloud_Timer -= diff;
-
-        //LightningWave_Timer
-        if (LightningWave_Timer < diff)
-        {
-            Unit* target = NULL;
-            target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0);
-            if (target) DoCastSpellIfCan(target,SPELL_LIGHTNINGWAVE);
-
-            LightningWave_Timer = urand(12000, 16000);
-        }else LightningWave_Timer -= diff;
-
-        DoMeleeAttackIfReady();
-    }
-};
-CreatureAI* GetAI_boss_wushoolay(Creature* pCreature)
-{
-    return new boss_wushoolayAI(pCreature);
-}
 
 void AddSC_boss_wushoolay()
 {
-    Script* pNewScript;
-
-    pNewScript = new Script;
-    pNewScript->Name = "boss_wushoolay";
-    pNewScript->GetAI = &GetAI_boss_wushoolay;
-    pNewScript->RegisterSelf();
 }

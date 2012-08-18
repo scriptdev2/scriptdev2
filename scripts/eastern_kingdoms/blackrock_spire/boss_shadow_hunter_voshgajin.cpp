@@ -16,86 +16,13 @@
 
 /* ScriptData
 SDName: Boss_Shadow_Hunter_Voshgajin
-SD%Complete: 100
-SDComment:
+SD%Complete: 0
+SDComment: Placeholder
 SDCategory: Blackrock Spire
 EndScriptData */
 
 #include "precompiled.h"
 
-enum
-{
-    SPELL_CURSEOFBLOOD = 24673,
-    SPELL_HEX          = 16708,
-    SPELL_CLEAVE       = 20691
-};
-
-struct MANGOS_DLL_DECL boss_shadowvoshAI : public ScriptedAI
-{
-    boss_shadowvoshAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
-
-    uint32 m_uiCurseOfBloodTimer;
-    uint32 m_uiHexTimer;
-    uint32 m_uiCleaveTimer;
-
-    void Reset()
-    {
-        m_uiCurseOfBloodTimer = 2000;
-        m_uiHexTimer          = 8000;
-        m_uiCleaveTimer       = 14000;
-
-        //m_creature->CastSpell(m_creature,SPELL_ICEARMOR,true);
-    }
-
-    void UpdateAI(const uint32 uiDiff)
-    {
-        // Return since we have no target
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-            return;
-
-        // Curse Of Blood
-        if (m_uiCurseOfBloodTimer < uiDiff)
-        {
-            DoCastSpellIfCan(m_creature, SPELL_CURSEOFBLOOD);
-            m_uiCurseOfBloodTimer = 45000;
-        }
-        else
-            m_uiCurseOfBloodTimer -= uiDiff;
-
-        // Hex
-        if (m_uiHexTimer < uiDiff)
-        {
-            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-                DoCastSpellIfCan(pTarget, SPELL_HEX);
-            m_uiHexTimer = 15000;
-        }
-        else
-            m_uiHexTimer -= uiDiff;
-
-        // Cleave
-        if (m_uiCleaveTimer < uiDiff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_CLEAVE);
-            m_uiCleaveTimer = 7000;
-        }
-        else
-            m_uiCleaveTimer -= uiDiff;
-
-        DoMeleeAttackIfReady();
-    }
-};
-
-CreatureAI* GetAI_boss_shadowvosh(Creature* pCreature)
-{
-    return new boss_shadowvoshAI(pCreature);
-}
-
 void AddSC_boss_shadowvosh()
 {
-    Script* pNewScript;
-
-    pNewScript = new Script;
-    pNewScript->Name = "boss_shadow_hunter_voshgajin";
-    pNewScript->GetAI = &GetAI_boss_shadowvosh;
-    pNewScript->RegisterSelf();
 }

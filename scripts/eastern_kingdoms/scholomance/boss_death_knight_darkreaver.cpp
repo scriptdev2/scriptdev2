@@ -16,41 +16,13 @@
 
 /* ScriptData
 SDName: Boss_Death_knight_darkreaver
-SD%Complete: 100
-SDComment:
+SD%Complete: 0
+SDComment: Placeholder
 SDCategory: Scholomance
 EndScriptData */
 
 #include "precompiled.h"
 
-struct MANGOS_DLL_DECL boss_death_knight_darkreaverAI : public ScriptedAI
-{
-    boss_death_knight_darkreaverAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
-
-    void Reset()
-    {
-    }
-
-    void DamageTaken(Unit *done_by, uint32 &damage)
-    {
-        if (m_creature->GetHealth() <= damage)
-        {
-            m_creature->CastSpell(m_creature,23261,true);   //Summon Darkreaver's Fallen Charger
-        }
-    }
-};
-
-CreatureAI* GetAI_boss_death_knight_darkreaver(Creature* pCreature)
-{
-    return new boss_death_knight_darkreaverAI(pCreature);
-}
-
 void AddSC_boss_death_knight_darkreaver()
 {
-    Script* pNewScript;
-
-    pNewScript = new Script;
-    pNewScript->Name = "boss_death_knight_darkreaver";
-    pNewScript->GetAI = &GetAI_boss_death_knight_darkreaver;
-    pNewScript->RegisterSelf();
 }

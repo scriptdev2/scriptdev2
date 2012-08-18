@@ -16,119 +16,13 @@
 
 /* ScriptData
 SDName: Boss_Highlord_Omokk
-SD%Complete: 100
-SDComment:
+SD%Complete: 0
+SDComment: Placeholder.
 SDCategory: Blackrock Spire
 EndScriptData */
 
 #include "precompiled.h"
 
-enum
-{
-    SPELL_WARSTOMP    = 24375,
-    SPELL_STRIKE      = 18368,
-    SPELL_REND        = 18106,
-    SPELL_SUNDERARMOR = 24317,
-    SPELL_KNOCKAWAY   = 20686,
-    SPELL_SLOW        = 22356
-};
-
-struct MANGOS_DLL_DECL boss_highlordomokkAI : public ScriptedAI
-{
-    boss_highlordomokkAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
-
-    uint32 m_uiWarStompTimer;
-    uint32 m_uiStrikeTimer;
-    uint32 m_uiRendTimer;
-    uint32 m_uiSunderArmorTimer;
-    uint32 m_uiKnockAwayTimer;
-    uint32 m_uiSlowTimer;
-
-    void Reset()
-    {
-        m_uiWarStompTimer    = 15000;
-        m_uiStrikeTimer      = 10000;
-        m_uiRendTimer        = 14000;
-        m_uiSunderArmorTimer = 2000;
-        m_uiKnockAwayTimer   = 18000;
-        m_uiSlowTimer        = 24000;
-    }
-
-    void UpdateAI(const uint32 uiDiff)
-    {
-        //Return since we have no target
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-            return;
-
-        // WarStomp
-        if (m_uiWarStompTimer < uiDiff)
-        {
-            DoCastSpellIfCan(m_creature, SPELL_WARSTOMP);
-            m_uiWarStompTimer = 14000;
-        }
-        else
-            m_uiWarStompTimer -= uiDiff;
-
-        // Strike
-        if (m_uiStrikeTimer < uiDiff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_STRIKE);
-            m_uiStrikeTimer = 10000;
-        }
-        else
-            m_uiStrikeTimer -= uiDiff;
-
-        // Rend
-        if (m_uiRendTimer < uiDiff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_REND);
-            m_uiRendTimer = 18000;
-        }
-        else
-            m_uiRendTimer -= uiDiff;
-
-        // Sunder Armor
-        if (m_uiSunderArmorTimer < uiDiff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_SUNDERARMOR);
-            m_uiSunderArmorTimer = 25000;
-        }
-        else
-            m_uiSunderArmorTimer -= uiDiff;
-
-        // KnockAway
-        if (m_uiKnockAwayTimer < uiDiff)
-        {
-            DoCastSpellIfCan(m_creature, SPELL_KNOCKAWAY);
-            m_uiKnockAwayTimer = 12000;
-        }
-        else
-            m_uiKnockAwayTimer -= uiDiff;
-
-        // Slow
-        if (m_uiSlowTimer < uiDiff)
-        {
-            DoCastSpellIfCan(m_creature, SPELL_SLOW);
-            m_uiSlowTimer = 18000;
-        }
-        else
-            m_uiSlowTimer -= uiDiff;
-
-        DoMeleeAttackIfReady();
-    }
-};
-
-CreatureAI* GetAI_boss_highlordomokk(Creature* pCreature)
-{
-    return new boss_highlordomokkAI(pCreature);
-}
-
 void AddSC_boss_highlordomokk()
 {
-    Script* pNewScript;
-
-    pNewScript = new Script;
-    pNewScript->Name = "boss_highlord_omokk";
-    pNewScript->GetAI = &GetAI_boss_highlordomokk;
-    pNewScript->RegisterSelf();
 }

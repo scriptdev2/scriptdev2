@@ -1133,20 +1133,21 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1189009,'The Light has spoken!',5839,1,0,0,'whitemane SAY_WH_KILL'),
 (-1189010,'Arise, my champion!',5840,1,0,0,'whitemane SAY_WH_RESSURECT'),
 
-(-1189011,'Tell me... tell me everything!',5847,1,0,0,'vishas SAY_AGGRO'),
-(-1189012,'Naughty secrets!',5849,1,0,0,'vishas SAY_HEALTH1'),
-(-1189013,'I\'ll rip the secrets from your flesh!',5850,1,0,0,'vishas SAY_HEALTH2'),
-(-1189014,'Purged by pain!',5848,1,0,0,'vishas SAY_KILL'),
+(-1189011,'REUSE_ME',0,0,0,0,'REUSE_ME'),
+(-1189012,'REUSE_ME',0,0,0,0,'REUSE_ME'),
+(-1189013,'REUSE_ME',0,0,0,0,'REUSE_ME'),
+(-1189014,'REUSE_ME',0,0,0,0,'REUSE_ME'),
+
 (-1189015,'The monster got what he deserved.',0,0,1,0,'vishas SAY_TRIGGER_VORREL'),
 
-(-1189016,'We hunger for vengeance.',5844,1,0,0,'thalnos SAY_AGGRO'),
-(-1189017,'No rest, for the angry dead.',5846,1,0,0,'thalnos SAY_HEALTH'),
-(-1189018,'More... More souls.',5845,1,0,0,'thalnos SAY_KILL'),
+(-1189016,'REUSE_ME',0,0,0,0,'REUSE_ME'),
+(-1189017,'REUSE_ME',0,0,0,0,'REUSE_ME'),
+(-1189018,'REUSE_ME',0,0,0,0,'REUSE_ME'),
 
 (-1189019,'You will not defile these mysteries!',5842,1,0,0,'doan SAY_AGGRO'),
 (-1189020,'Burn in righteous fire!',5843,1,0,0,'doan SAY_SPECIALAE'),
 
-(-1189021,'Release the hounds!',5841,1,0,0,'loksey SAY_AGGRO'),
+(-1189021,'REUSE_ME',0,0,0,0,'REUSE_ME'),
 
 (-1189022,'It is over, your search is done! Let fate choose now, the righteous one.',11961,1,0,0,'horseman SAY_ENTRANCE'),
 (-1189023,'Here\'s my body, fit and pure! Now, your blackened souls I\'ll cure!',12567,1,0,0,'horseman SAY_REJOINED'),

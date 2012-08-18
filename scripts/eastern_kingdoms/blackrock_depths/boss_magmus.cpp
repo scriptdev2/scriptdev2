@@ -16,99 +16,13 @@
 
 /* ScriptData
 SDName: Boss_Magmus
-SD%Complete: 80
-SDComment: Missing pre-event to open doors
+SD%Complete: 0
+SDComment: Placeholder
 SDCategory: Blackrock Depths
 EndScriptData */
 
 #include "precompiled.h"
-#include "blackrock_depths.h"
-
-enum
-{
-    SPELL_FIERYBURST        = 13900,
-    SPELL_WARSTOMP          = 24375
-};
-
-struct MANGOS_DLL_DECL boss_magmusAI : public ScriptedAI
-{
-    boss_magmusAI(Creature* pCreature) : ScriptedAI(pCreature)
-    {
-        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        Reset();
-    }
-
-    ScriptedInstance* m_pInstance;
-
-    uint32 m_uiFieryBurstTimer;
-    uint32 m_uiWarStompTimer;
-
-    void Reset()
-    {
-        m_uiFieryBurstTimer = 5000;
-        m_uiWarStompTimer = 0;
-    }
-
-    void Aggro(Unit* pWho)
-    {
-        if (m_pInstance)
-            m_pInstance->SetData(TYPE_IRON_HALL, IN_PROGRESS);
-    }
-
-    void JustReachedHome()
-    {
-        if (m_pInstance)
-            m_pInstance->SetData(TYPE_IRON_HALL, FAIL);
-    }
-
-    void JustDied(Unit* pVictim)
-    {
-        if (m_pInstance)
-            m_pInstance->SetData(TYPE_IRON_HALL, DONE);
-    }
-
-    void UpdateAI(const uint32 uiDiff)
-    {
-        //Return since we have no target
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-            return;
-
-        //FieryBurst_Timer
-        if (m_uiFieryBurstTimer < uiDiff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_FIERYBURST);
-            m_uiFieryBurstTimer = 6000;
-        }
-        else
-            m_uiFieryBurstTimer -= uiDiff;
-
-        //WarStomp_Timer
-        if (m_creature->GetHealthPercent() < 51.0f)
-        {
-            if (m_uiWarStompTimer < uiDiff)
-            {
-                DoCastSpellIfCan(m_creature, SPELL_WARSTOMP);
-                m_uiWarStompTimer = 8000;
-            }
-            else
-                m_uiWarStompTimer -= uiDiff;
-        }
-
-        DoMeleeAttackIfReady();
-    }
-};
-
-CreatureAI* GetAI_boss_magmus(Creature* pCreature)
-{
-    return new boss_magmusAI(pCreature);
-}
 
 void AddSC_boss_magmus()
 {
-    Script* pNewScript;
-
-    pNewScript = new Script;
-    pNewScript->Name = "boss_magmus";
-    pNewScript->GetAI = &GetAI_boss_magmus;
-    pNewScript->RegisterSelf();
 }

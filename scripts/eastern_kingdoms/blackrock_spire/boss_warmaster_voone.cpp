@@ -16,104 +16,13 @@
 
 /* ScriptData
 SDName: Boss_Warmaster_Voone
-SD%Complete: 100
-SDComment:
+SD%Complete: 0
+SDComment: Placeholder
 SDCategory: Blackrock Spire
 EndScriptData */
 
 #include "precompiled.h"
 
-#define SPELL_SNAPKICK          15618
-#define SPELL_CLEAVE            15284
-#define SPELL_UPPERCUT          10966
-#define SPELL_MORTALSTRIKE      15708
-#define SPELL_PUMMEL            15615
-#define SPELL_THROWAXE          16075
-
-struct MANGOS_DLL_DECL boss_warmastervooneAI : public ScriptedAI
-{
-    boss_warmastervooneAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
-
-    uint32 Snapkick_Timer;
-    uint32 Cleave_Timer;
-    uint32 Uppercut_Timer;
-    uint32 MortalStrike_Timer;
-    uint32 Pummel_Timer;
-    uint32 ThrowAxe_Timer;
-
-    void Reset()
-    {
-        Snapkick_Timer = 8000;
-        Cleave_Timer = 14000;
-        Uppercut_Timer = 20000;
-        MortalStrike_Timer = 12000;
-        Pummel_Timer = 32000;
-        ThrowAxe_Timer = 1000;
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        //Return since we have no target
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-            return;
-
-        //Snapkick_Timer
-        if (Snapkick_Timer < diff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_SNAPKICK);
-            Snapkick_Timer = 6000;
-        }else Snapkick_Timer -= diff;
-
-        //Cleave_Timer
-        if (Cleave_Timer < diff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_CLEAVE);
-            Cleave_Timer = 12000;
-        }else Cleave_Timer -= diff;
-
-        //Uppercut_Timer
-        if (Uppercut_Timer < diff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_UPPERCUT);
-            Uppercut_Timer = 14000;
-        }else Uppercut_Timer -= diff;
-
-        //MortalStrike_Timer
-        if (MortalStrike_Timer < diff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_MORTALSTRIKE);
-            MortalStrike_Timer = 10000;
-        }else MortalStrike_Timer -= diff;
-
-        //Pummel_Timer
-        if (Pummel_Timer < diff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_PUMMEL);
-            Pummel_Timer = 16000;
-        }else Pummel_Timer -= diff;
-
-        //ThrowAxe_Timer
-        if (ThrowAxe_Timer < diff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_THROWAXE);
-            ThrowAxe_Timer = 8000;
-        }else ThrowAxe_Timer -= diff;
-
-        DoMeleeAttackIfReady();
-    }
-};
-
-CreatureAI* GetAI_boss_warmastervoone(Creature* pCreature)
-{
-    return new boss_warmastervooneAI(pCreature);
-}
-
 void AddSC_boss_warmastervoone()
 {
-    Script* pNewScript;
-
-    pNewScript = new Script;
-    pNewScript->Name = "boss_warmaster_voone";
-    pNewScript->GetAI = &GetAI_boss_warmastervoone;
-    pNewScript->RegisterSelf();
 }

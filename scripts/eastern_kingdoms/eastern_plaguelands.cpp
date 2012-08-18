@@ -22,57 +22,15 @@ SDCategory: Eastern Plaguelands
 EndScriptData */
 
 /* ContentData
-mobs_ghoul_flayer
 npc_darrowshire_spirit
 npc_eris_havenfire
 EndContentData */
 
 #include "precompiled.h"
 
-//id8530 - cannibal ghoul
-//id8531 - gibbering ghoul
-//id8532 - diseased flayer
-
-struct MANGOS_DLL_DECL mobs_ghoul_flayerAI : public ScriptedAI
-{
-    mobs_ghoul_flayerAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
-
-    void Reset() { }
-
-    void JustDied(Unit* Killer)
-    {
-        if (Killer->GetTypeId() == TYPEID_PLAYER)
-            m_creature->SummonCreature(11064, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN, 60000);
-    }
-
-};
-
-CreatureAI* GetAI_mobs_ghoul_flayer(Creature* pCreature)
-{
-    return new mobs_ghoul_flayerAI(pCreature);
-}
-
 /*######
 ## npc_darrowshire_spirit
 ######*/
-
-#define SPELL_SPIRIT_SPAWNIN    17321
-
-struct MANGOS_DLL_DECL npc_darrowshire_spiritAI : public ScriptedAI
-{
-    npc_darrowshire_spiritAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
-
-    void Reset()
-    {
-        DoCastSpellIfCan(m_creature,SPELL_SPIRIT_SPAWNIN);
-        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-    }
-};
-
-CreatureAI* GetAI_npc_darrowshire_spirit(Creature* pCreature)
-{
-    return new npc_darrowshire_spiritAI(pCreature);
-}
 
 bool GossipHello_npc_darrowshire_spirit(Player* pPlayer, Creature* pCreature)
 {
@@ -369,13 +327,7 @@ void AddSC_eastern_plaguelands()
     Script* pNewScript;
 
     pNewScript = new Script;
-    pNewScript->Name = "mobs_ghoul_flayer";
-    pNewScript->GetAI = &GetAI_mobs_ghoul_flayer;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
     pNewScript->Name = "npc_darrowshire_spirit";
-    pNewScript->GetAI = &GetAI_npc_darrowshire_spirit;
     pNewScript->pGossipHello = &GossipHello_npc_darrowshire_spirit;
     pNewScript->RegisterSelf();
 

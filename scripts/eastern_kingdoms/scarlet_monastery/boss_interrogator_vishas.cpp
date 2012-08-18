@@ -16,89 +16,13 @@
 
 /* ScriptData
 SDName: Boss_Interrogator_Vishas
-SD%Complete: 100
-SDComment:
+SD%Complete: 0
+SDComment: Placeholder
 SDCategory: Scarlet Monastery
 EndScriptData */
 
 #include "precompiled.h"
-#include "scarlet_monastery.h"
-
-enum
-{
-    SAY_AGGRO               = -1189011,
-    SAY_HEALTH1             = -1189012,
-    SAY_HEALTH2             = -1189013,
-    SAY_KILL                = -1189014,
-
-    SPELL_SHADOWWORDPAIN    = 2767,
-};
-
-struct MANGOS_DLL_DECL boss_interrogator_vishasAI : public ScriptedAI
-{
-    boss_interrogator_vishasAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
-
-    bool Yell30;
-    bool Yell60;
-    uint32 ShadowWordPain_Timer;
-
-    void Reset()
-    {
-        Yell30 = false;
-        Yell60 = false;
-        ShadowWordPain_Timer = 5000;
-    }
-
-    void Aggro(Unit *who)
-    {
-        DoScriptText(SAY_AGGRO, m_creature);
-    }
-
-    void KilledUnit(Unit* Victim)
-    {
-        DoScriptText(SAY_KILL, m_creature);
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-            return;
-
-        //If we are low on hp Do sayings
-        if (!Yell60 && m_creature->GetHealthPercent() <= 60.0f)
-        {
-            DoScriptText(SAY_HEALTH1, m_creature);
-            Yell60 = true;
-        }
-
-        if (!Yell30 && m_creature->GetHealthPercent() <= 30.0f)
-        {
-            DoScriptText(SAY_HEALTH2, m_creature);
-            Yell30 = true;
-        }
-
-        //ShadowWordPain_Timer
-        if (ShadowWordPain_Timer < diff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_SHADOWWORDPAIN);
-            ShadowWordPain_Timer = urand(5000, 15000);
-        }else ShadowWordPain_Timer -= diff;
-
-        DoMeleeAttackIfReady();
-    }
-};
-
-CreatureAI* GetAI_boss_interrogator_vishas(Creature* pCreature)
-{
-    return new boss_interrogator_vishasAI(pCreature);
-}
 
 void AddSC_boss_interrogator_vishas()
 {
-    Script* pNewScript;
-
-    pNewScript = new Script;
-    pNewScript->Name = "boss_interrogator_vishas";
-    pNewScript->GetAI = &GetAI_boss_interrogator_vishas;
-    pNewScript->RegisterSelf();
 }

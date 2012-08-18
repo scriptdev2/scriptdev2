@@ -16,74 +16,13 @@
 
 /* ScriptData
 SDName: Boss_Gahz'ranka
-SD%Complete: 85
-SDComment: Massive Geyser with knockback not working. Spell buggy.
+SD%Complete: 0
+SDComment: Placeholder
 SDCategory: Zul'Gurub
 EndScriptData */
 
 #include "precompiled.h"
 
-#define SPELL_FROSTBREATH            16099
-#define SPELL_MASSIVEGEYSER          22421                  //Not working. Cause its a summon...
-#define SPELL_SLAM                   24326
-
-struct MANGOS_DLL_DECL boss_gahzrankaAI : public ScriptedAI
-{
-    boss_gahzrankaAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
-    uint32 Frostbreath_Timer;
-    uint32 MassiveGeyser_Timer;
-    uint32 Slam_Timer;
-
-    void Reset()
-    {
-        Frostbreath_Timer = 8000;
-        MassiveGeyser_Timer = 25000;
-        Slam_Timer = 17000;
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        //Return since we have no target
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-            return;
-
-        //Frostbreath_Timer
-        if (Frostbreath_Timer < diff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_FROSTBREATH);
-            Frostbreath_Timer = urand(7000, 11000);
-        }else Frostbreath_Timer -= diff;
-
-        //MassiveGeyser_Timer
-        if (MassiveGeyser_Timer < diff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_MASSIVEGEYSER);
-            DoResetThreat();
-
-            MassiveGeyser_Timer = urand(22000, 32000);
-        }else MassiveGeyser_Timer -= diff;
-
-        //Slam_Timer
-        if (Slam_Timer < diff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_SLAM);
-            Slam_Timer = urand(12000, 20000);
-        }else Slam_Timer -= diff;
-
-        DoMeleeAttackIfReady();
-    }
-};
-CreatureAI* GetAI_boss_gahzranka(Creature* pCreature)
-{
-    return new boss_gahzrankaAI(pCreature);
-}
-
 void AddSC_boss_gahzranka()
 {
-    Script* pNewScript;
-
-    pNewScript = new Script;
-    pNewScript->Name = "boss_gahzranka";
-    pNewScript->GetAI = &GetAI_boss_gahzranka;
-    pNewScript->RegisterSelf();
 }

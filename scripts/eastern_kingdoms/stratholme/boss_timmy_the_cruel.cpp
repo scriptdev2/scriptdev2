@@ -16,56 +16,13 @@
 
 /* ScriptData
 SDName: boss_timmy_the_cruel
-SD%Complete: 100
-SDComment:
+SD%Complete: 0
+SDComment: Placeholder
 SDCategory: Stratholme
 EndScriptData */
 
 #include "precompiled.h"
 
-#define SAY_SPAWN               "TIMMY!"
-
-#define SPELL_RAVENOUSCLAW      17470
-
-struct MANGOS_DLL_DECL boss_timmy_the_cruelAI : public ScriptedAI
-{
-    boss_timmy_the_cruelAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
-
-    uint32 RavenousClaw_Timer;
-
-    void Reset()
-    {
-        RavenousClaw_Timer = 10000;
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        //Return since we have no target
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-            return;
-
-        //RavenousClaw
-        if (RavenousClaw_Timer < diff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_RAVENOUSCLAW);
-            RavenousClaw_Timer = 15000;
-        }else RavenousClaw_Timer -= diff;
-
-        DoMeleeAttackIfReady();
-    }
-};
-
-CreatureAI* GetAI_boss_timmy_the_cruel(Creature* pCreature)
-{
-    return new boss_timmy_the_cruelAI(pCreature);
-}
-
 void AddSC_boss_timmy_the_cruel()
 {
-    Script* pNewScript;
-
-    pNewScript = new Script;
-    pNewScript->Name = "boss_timmy_the_cruel";
-    pNewScript->GetAI = &GetAI_boss_timmy_the_cruel;
-    pNewScript->RegisterSelf();
 }

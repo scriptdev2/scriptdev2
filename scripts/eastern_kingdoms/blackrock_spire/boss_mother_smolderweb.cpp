@@ -16,78 +16,13 @@
 
 /* ScriptData
 SDName: Boss_Mother_Smolderweb
-SD%Complete: 100
-SDComment: Uncertain how often mother's milk is casted
+SD%Complete: 0
+SDComment: Placeholder.
 SDCategory: Blackrock Spire
 EndScriptData */
 
 #include "precompiled.h"
 
-enum
-{
-    SPELL_CRYSTALIZE              = 16104,
-    SPELL_MOTHERSMILK             = 16468,
-    SPELL_SUMMON_SPIRE_SPIDERLING = 16103
-};
-
-struct MANGOS_DLL_DECL boss_mothersmolderwebAI : public ScriptedAI
-{
-    boss_mothersmolderwebAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
-
-    uint32 m_uiCrystalizeTimer;
-    uint32 m_uiMothersMilkTimer;
-
-    void Reset()
-    {
-        m_uiCrystalizeTimer  = 20000;
-        m_uiMothersMilkTimer = 10000;
-    }
-
-    void DamageTaken(Unit* pDoneBy, uint32 &uiDamage)
-    {
-        if (m_creature->GetHealth() <= uiDamage)
-            DoCastSpellIfCan(m_creature, SPELL_SUMMON_SPIRE_SPIDERLING, CAST_TRIGGERED);
-    }
-
-    void UpdateAI(const uint32 uiDiff)
-    {
-        // Return since we have no target
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-            return;
-
-        // Crystalize
-        if (m_uiCrystalizeTimer < uiDiff)
-        {
-            DoCastSpellIfCan(m_creature, SPELL_CRYSTALIZE);
-            m_uiCrystalizeTimer = 15000;
-        }
-        else
-            m_uiCrystalizeTimer -= uiDiff;
-
-        // Mothers Milk
-        if (m_uiMothersMilkTimer < uiDiff)
-        {
-            DoCastSpellIfCan(m_creature, SPELL_MOTHERSMILK);
-            m_uiMothersMilkTimer = urand(5000, 12500);
-        }
-        else
-            m_uiMothersMilkTimer -= uiDiff;
-
-        DoMeleeAttackIfReady();
-    }
-};
-
-CreatureAI* GetAI_boss_mothersmolderweb(Creature* pCreature)
-{
-    return new boss_mothersmolderwebAI(pCreature);
-}
-
 void AddSC_boss_mothersmolderweb()
 {
-    Script* pNewScript;
-
-    pNewScript = new Script;
-    pNewScript->Name = "boss_mother_smolderweb";
-    pNewScript->GetAI = &GetAI_boss_mothersmolderweb;
-    pNewScript->RegisterSelf();
 }

@@ -16,85 +16,13 @@
 
 /* ScriptData
 SDName: Boss_The_Best
-SD%Complete: 100
-SDComment:
+SD%Complete: 0
+SDComment: Placeholder
 SDCategory: Blackrock Spire
 EndScriptData */
 
 #include "precompiled.h"
 
-enum
-{
-    SPELL_FLAMEBREAK     = 16785,
-    SPELL_IMMOLATE       = 20294,
-    SPELL_TERRIFYINGROAR = 14100
-};
-
-struct MANGOS_DLL_DECL boss_thebeastAI : public ScriptedAI
-{
-    boss_thebeastAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
-
-    uint32 m_uiFlamebreakTimer;
-    uint32 m_uiImmolateTimer;
-    uint32 m_uiTerrifyingRoarTimer;
-
-    void Reset()
-    {
-        m_uiFlamebreakTimer     = 12000;
-        m_uiImmolateTimer       = 3000;
-        m_uiTerrifyingRoarTimer = 23000;
-    }
-
-    void UpdateAI(const uint32 uiDiff)
-    {
-        // Return since we have no target
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-            return;
-
-        // Flamebreak
-        if (m_uiFlamebreakTimer < uiDiff)
-        {
-            DoCastSpellIfCan(m_creature, SPELL_FLAMEBREAK);
-            m_uiFlamebreakTimer = 10000;
-        }
-        else
-            m_uiFlamebreakTimer -= uiDiff;
-
-        // Immolate
-        if (m_uiImmolateTimer < uiDiff)
-        {
-            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-                DoCastSpellIfCan(pTarget, SPELL_IMMOLATE);
-
-            m_uiImmolateTimer = 8000;
-        }
-        else
-            m_uiImmolateTimer -= uiDiff;
-
-        // Terrifying Roar
-        if (m_uiTerrifyingRoarTimer < uiDiff)
-        {
-            DoCastSpellIfCan(m_creature, SPELL_TERRIFYINGROAR);
-            m_uiTerrifyingRoarTimer = 20000;
-        }
-        else
-            m_uiTerrifyingRoarTimer -= uiDiff;
-
-        DoMeleeAttackIfReady();
-    }
-};
-
-CreatureAI* GetAI_boss_thebeast(Creature* pCreature)
-{
-    return new boss_thebeastAI(pCreature);
-}
-
 void AddSC_boss_thebeast()
 {
-    Script* pNewScript;
-
-    pNewScript = new Script;
-    pNewScript->Name = "boss_the_beast";
-    pNewScript->GetAI = &GetAI_boss_thebeast;
-    pNewScript->RegisterSelf();
 }

@@ -16,75 +16,13 @@
 
 /* ScriptData
 SDName: Boss_Quartmaster_Zigris
-SD%Complete: 100
-SDComment: Needs revision
+SD%Complete: 0
+SDComment: Placeholder
 SDCategory: Blackrock Spire
 EndScriptData */
 
 #include "precompiled.h"
 
-enum
-{
-    SPELL_SHOOT          = 16496,
-    SPELL_STUNBOMB       = 16497,
-    SPELL_HEALING_POTION = 15504,
-    SPELL_HOOKEDNET      = 15609
-};
-
-struct MANGOS_DLL_DECL boss_quatermasterzigrisAI : public ScriptedAI
-{
-    boss_quatermasterzigrisAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
-
-    uint32 m_uiShootTimer;
-    uint32 m_uiStunBombTimer;
-    //uint32 HelingPotion_Timer;
-
-    void Reset()
-    {
-        m_uiShootTimer    = 1000;
-        m_uiStunBombTimer = 16000;
-        //HelingPotion_Timer = 25000;
-    }
-
-    void UpdateAI(const uint32 uiDiff)
-    {
-        // Return since we have no target
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-            return;
-
-        // Shoot
-        if (m_uiShootTimer < uiDiff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_SHOOT);
-            m_uiShootTimer = 500;
-        }
-        else
-            m_uiShootTimer -= uiDiff;
-
-        // StunBomb
-        if (m_uiStunBombTimer < uiDiff)
-        {
-            DoCastSpellIfCan(m_creature, SPELL_STUNBOMB);
-            m_uiStunBombTimer = 14000;
-        }
-        else
-            m_uiStunBombTimer -= uiDiff;
-
-        DoMeleeAttackIfReady();
-    }
-};
-
-CreatureAI* GetAI_boss_quatermasterzigris(Creature* pCreature)
-{
-    return new boss_quatermasterzigrisAI(pCreature);
-}
-
 void AddSC_boss_quatermasterzigris()
 {
-    Script* pNewScript;
-
-    pNewScript = new Script;
-    pNewScript->Name = "quartermaster_zigris";
-    pNewScript->GetAI = &GetAI_boss_quatermasterzigris;
-    pNewScript->RegisterSelf();
 }

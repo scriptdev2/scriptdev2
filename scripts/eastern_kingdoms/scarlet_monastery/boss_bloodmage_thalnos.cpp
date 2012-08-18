@@ -16,109 +16,13 @@
 
 /* ScriptData
 SDName: Boss_Bloodmage_Thalnos
-SD%Complete: 100
-SDComment:
+SD%Complete: 0
+SDComment: Placeholder
 SDCategory: Scarlet Monastery
 EndScriptData */
 
 #include "precompiled.h"
 
-enum
-{
-    SAY_AGGRO               = -1189016,
-    SAY_HEALTH              = -1189017,
-    SAY_KILL                = -1189018,
-
-    SPELL_FLAMESHOCK        = 8053,
-    SPELL_SHADOWBOLT        = 1106,
-    SPELL_FLAMESPIKE        = 8814,
-    SPELL_FIRENOVA          = 16079,
-};
-
-struct MANGOS_DLL_DECL boss_bloodmage_thalnosAI : public ScriptedAI
-{
-    boss_bloodmage_thalnosAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
-
-    bool HpYell;
-    uint32 FlameShock_Timer;
-    uint32 ShadowBolt_Timer;
-    uint32 FlameSpike_Timer;
-    uint32 FireNova_Timer;
-
-    void Reset()
-    {
-        HpYell = false;
-        FlameShock_Timer = 10000;
-        ShadowBolt_Timer = 2000;
-        FlameSpike_Timer = 8000;
-        FireNova_Timer = 40000;
-    }
-
-    void Aggro(Unit *who)
-    {
-        DoScriptText(SAY_AGGRO, m_creature);
-    }
-
-    void KilledUnit(Unit* Victim)
-    {
-        DoScriptText(SAY_KILL, m_creature);
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-            return;
-
-        //If we are <35% hp
-        if (!HpYell && m_creature->GetHealthPercent() <= 35.0f)
-        {
-            DoScriptText(SAY_HEALTH, m_creature);
-            HpYell = true;
-        }
-
-        //FlameShock_Timer
-        if (FlameShock_Timer < diff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_FLAMESHOCK);
-            FlameShock_Timer = urand(10000, 15000);
-        }else FlameShock_Timer -= diff;
-
-        //FlameSpike_Timer
-        if (FlameSpike_Timer < diff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_FLAMESPIKE);
-            FlameSpike_Timer = 30000;
-        }else FlameSpike_Timer -= diff;
-
-        //FireNova_Timer
-        if (FireNova_Timer < diff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_FIRENOVA);
-            FireNova_Timer = 40000;
-        }else FireNova_Timer -= diff;
-
-        //ShadowBolt_Timer
-        if (ShadowBolt_Timer < diff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_SHADOWBOLT);
-            ShadowBolt_Timer = 2000;
-        }else ShadowBolt_Timer -= diff;
-
-        DoMeleeAttackIfReady();
-    }
-};
-
-CreatureAI* GetAI_boss_bloodmage_thalnos(Creature* pCreature)
-{
-    return new boss_bloodmage_thalnosAI(pCreature);
-}
-
 void AddSC_boss_bloodmage_thalnos()
 {
-    Script* pNewScript;
-
-    pNewScript = new Script;
-    pNewScript->Name = "boss_bloodmage_thalnos";
-    pNewScript->GetAI = &GetAI_boss_bloodmage_thalnos;
-    pNewScript->RegisterSelf();
 }

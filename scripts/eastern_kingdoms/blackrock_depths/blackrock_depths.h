@@ -29,6 +29,7 @@ enum
     NPC_SEETHREL            = 9038,
     NPC_DOOMREL             = 9039,
     NPC_DOPEREL             = 9040,
+    NPC_MAGMUS              = 9938,
     NPC_WATCHER_DOOMGRIP    = 9476,
     NPC_WARBRINGER_CONST    = 8905,                         // Four of them in Relict Vault are related to Doomgrip summon event
 
@@ -126,6 +127,7 @@ class MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
         void Initialize();
 
         void OnCreatureCreate(Creature* pCreature);
+        void OnCreatureEnterCombat(Creature* pCreature);
         void OnCreatureDeath(Creature* pCreature);
         void OnCreatureEvade(Creature* pCreature);
         void OnObjectCreate(GameObject* pGo);

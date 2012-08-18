@@ -16,63 +16,13 @@
 
 /* ScriptData
 SDName: Boss_Houndmaster_Loksey
-SD%Complete: 100
-SDComment: TODO: if this guy not involved in some special event, remove (and let ACID script)
+SD%Complete: 0
+SDComment: Placeholder
 SDCategory: Scarlet Monastery
 EndScriptData */
 
 #include "precompiled.h"
 
-enum
-{
-    SAY_AGGRO                       = -1189021,
-    SPELL_SUMMONSCARLETHOUND        = 17164,
-    SPELL_BLOODLUST                 = 6742
-};
-
-struct MANGOS_DLL_DECL boss_houndmaster_lokseyAI : public ScriptedAI
-{
-    boss_houndmaster_lokseyAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
-
-    uint32 BloodLust_Timer;
-
-    void Reset()
-    {
-        BloodLust_Timer = 20000;
-    }
-
-    void Aggro(Unit *who)
-    {
-        DoScriptText(SAY_AGGRO, m_creature);
-        DoCastSpellIfCan(m_creature,SPELL_SUMMONSCARLETHOUND);
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-            return;
-
-        if (BloodLust_Timer < diff)
-        {
-            DoCastSpellIfCan(m_creature,SPELL_BLOODLUST);
-            BloodLust_Timer = 20000;
-        }else BloodLust_Timer -= diff;
-
-        DoMeleeAttackIfReady();
-    }
-};
-
-CreatureAI* GetAI_boss_houndmaster_loksey(Creature* pCreature)
-{
-    return new boss_houndmaster_lokseyAI(pCreature);
-}
-
 void AddSC_boss_houndmaster_loksey()
 {
-    Script* pNewScript;
-
-    pNewScript = new Script;
-    pNewScript->Name = "boss_houndmaster_loksey";
-    pNewScript->GetAI = &GetAI_boss_houndmaster_loksey;
-    pNewScript->RegisterSelf();
 }

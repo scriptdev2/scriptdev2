@@ -16,77 +16,13 @@
 
 /* ScriptData
 SDName: Boss_Halycon
-SD%Complete: 100
-SDComment:
+SD%Complete: 0
+SDComment: Placeholder
 SDCategory: Blackrock Spire
 EndScriptData */
 
 #include "precompiled.h"
 
-#define SPELL_CROWDPUMMEL       10887
-#define SPELL_MIGHTYBLOW        14099
-
-#define ADD_1X                  -169.839203f
-#define ADD_1Y                  -324.961395f
-#define ADD_1Z                  64.401443f
-#define ADD_1O                  3.124724f
-
-struct MANGOS_DLL_DECL boss_halyconAI : public ScriptedAI
-{
-    boss_halyconAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
-
-    uint32 CrowdPummel_Timer;
-    uint32 MightyBlow_Timer;
-    bool Summoned;
-
-    void Reset()
-    {
-        CrowdPummel_Timer = 8000;
-        MightyBlow_Timer = 14000;
-        Summoned = false;
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        //Return since we have no target
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-            return;
-
-        //CrowdPummel_Timer
-        if (CrowdPummel_Timer < diff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_CROWDPUMMEL);
-            CrowdPummel_Timer = 14000;
-        }else CrowdPummel_Timer -= diff;
-
-        //MightyBlow_Timer
-        if (MightyBlow_Timer < diff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_MIGHTYBLOW);
-            MightyBlow_Timer = 10000;
-        }else MightyBlow_Timer -= diff;
-
-        //Summon Gizrul
-        if (!Summoned && m_creature->GetHealthPercent() < 25.0f)
-        {
-            m_creature->SummonCreature(10268,ADD_1X,ADD_1Y,ADD_1Z,ADD_1O,TEMPSUMMON_TIMED_DESPAWN,300000);
-            Summoned = true;
-        }
-
-        DoMeleeAttackIfReady();
-    }
-};
-CreatureAI* GetAI_boss_halycon(Creature* pCreature)
-{
-    return new boss_halyconAI(pCreature);
-}
-
 void AddSC_boss_halycon()
 {
-    Script* pNewScript;
-
-    pNewScript = new Script;
-    pNewScript->Name = "boss_halycon";
-    pNewScript->GetAI = &GetAI_boss_halycon;
-    pNewScript->RegisterSelf();
 }

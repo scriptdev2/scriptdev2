@@ -16,95 +16,13 @@
 
 /* ScriptData
 SDName: Boss_Magistrate_Barthilas
-SD%Complete: 70
-SDComment:
+SD%Complete: 0
+SDComment: Placeholder
 SDCategory: Stratholme
 EndScriptData */
 
 #include "precompiled.h"
 
-enum
-{
-    SPELL_DRAINING_BLOW     = 16793,
-    SPELL_CROWD_PUMMEL      = 10887,
-    SPELL_MIGHTY_BLOW       = 14099,
-    SPELL_FURIOUS_ANGER     = 16792,
-
-    MODEL_HUMAN             = 3637
-};
-
-struct MANGOS_DLL_DECL boss_magistrate_barthilasAI : public ScriptedAI
-{
-    boss_magistrate_barthilasAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
-
-    uint32 m_uiDrainingBlowTimer;
-    uint32 m_uiCrowdPummelTimer;
-    uint32 m_uiMightyBlowTimer;
-
-    void Reset()
-    {
-        m_uiDrainingBlowTimer = 20000;
-        m_uiCrowdPummelTimer = 15000;
-        m_uiMightyBlowTimer = 10000;
-    }
-
-    void Aggro(Unit* pWho)
-    {
-        DoCastSpellIfCan(m_creature, SPELL_FURIOUS_ANGER);
-    }
-
-    void JustDied(Unit* pKiller)
-    {
-        m_creature->SetDisplayId(MODEL_HUMAN);
-    }
-
-    void UpdateAI(const uint32 uiDiff)
-    {
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-            return;
-
-        // DrainingBlow
-        if (m_uiDrainingBlowTimer < uiDiff)
-        {
-            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_DRAINING_BLOW) == CAST_OK)
-                m_uiDrainingBlowTimer = 15000;
-        }
-        else
-            m_uiDrainingBlowTimer -= uiDiff;
-
-        // CrowdPummel
-        if (m_uiCrowdPummelTimer < uiDiff)
-        {
-            if (DoCastSpellIfCan(m_creature, SPELL_CROWD_PUMMEL) == CAST_OK)
-                m_uiCrowdPummelTimer = 15000;
-        }
-        else
-            m_uiCrowdPummelTimer -= uiDiff;
-
-        // MightyBlow
-        if (m_uiMightyBlowTimer < uiDiff)
-        {
-            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_MIGHTY_BLOW) == CAST_OK)
-                m_uiMightyBlowTimer = 20000;
-        }
-        else
-            m_uiMightyBlowTimer -= uiDiff;
-
-        DoMeleeAttackIfReady();
-    }
-};
-
-CreatureAI* GetAI_boss_magistrate_barthilas(Creature* pCreature)
-{
-    return new boss_magistrate_barthilasAI(pCreature);
-}
-
 void AddSC_boss_magistrate_barthilas()
 {
-    Script* pNewScript;
-
-    pNewScript = new Script;
-    pNewScript->Name = "boss_magistrate_barthilas";
-    pNewScript->GetAI = &GetAI_boss_magistrate_barthilas;
-    pNewScript->RegisterSelf();
 }

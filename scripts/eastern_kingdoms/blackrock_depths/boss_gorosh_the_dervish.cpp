@@ -16,71 +16,13 @@
 
 /* ScriptData
 SDName: Boss_Gorosh_the_Dervish
-SD%Complete: 100
-SDComment:
+SD%Complete: 0
+SDComment: Placeholder
 SDCategory: Blackrock Depths
 EndScriptData */
 
 #include "precompiled.h"
 
-enum
-{
-    SPELL_WHIRLWIND             = 15589,
-    SPELL_MORTALSTRIKE          = 24573,
-};
-
-struct MANGOS_DLL_DECL boss_gorosh_the_dervishAI : public ScriptedAI
-{
-    boss_gorosh_the_dervishAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
-
-    uint32 m_uiWhirlWindTimer;
-    uint32 m_uiMortalStrikeTimer;
-
-    void Reset()
-    {
-        m_uiWhirlWindTimer = 12000;
-        m_uiMortalStrikeTimer = 22000;
-    }
-
-    void UpdateAI(const uint32 uiDiff)
-    {
-        //Return since we have no target
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-            return;
-
-        //WhirlWind_Timer
-        if (m_uiWhirlWindTimer < uiDiff)
-        {
-            DoCastSpellIfCan(m_creature, SPELL_WHIRLWIND);
-            m_uiWhirlWindTimer = 15000;
-        }
-        else
-            m_uiWhirlWindTimer -= uiDiff;
-
-        //MortalStrike_Timer
-        if (m_uiMortalStrikeTimer < uiDiff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_MORTALSTRIKE);
-            m_uiMortalStrikeTimer = 15000;
-        }
-        else
-            m_uiMortalStrikeTimer -= uiDiff;
-
-        DoMeleeAttackIfReady();
-    }
-};
-
-CreatureAI* GetAI_boss_gorosh_the_dervish(Creature* pCreature)
-{
-    return new boss_gorosh_the_dervishAI(pCreature);
-}
-
 void AddSC_boss_gorosh_the_dervish()
 {
-    Script* pNewScript;
-
-    pNewScript = new Script;
-    pNewScript->Name = "boss_gorosh_the_dervish";
-    pNewScript->GetAI = &GetAI_boss_gorosh_the_dervish;
-    pNewScript->RegisterSelf();
 }

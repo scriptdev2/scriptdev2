@@ -28,9 +28,6 @@ enum
     SPELL_CURSE_OF_BLOOD        = 16098,
     SPELL_SUMMON_ILLUSIONS      = 17773,
     SPELL_BANISH                = 8994,
-
-    //Spells of Illusion of Jandice Barov
-    SPELL_CLEAVE                = 15584,
 };
 
 struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
@@ -96,44 +93,9 @@ struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
     }
 };
 
-struct MANGOS_DLL_DECL mob_illusionofjandicebarovAI : public ScriptedAI
-{
-    mob_illusionofjandicebarovAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
-
-    uint32 m_uiCleaveTimer;
-
-    void Reset()
-    {
-        m_uiCleaveTimer = urand(2000, 8000);
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        // Return since we have no target
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-            return;
-
-        // Cleave_Timer
-        if (m_uiCleaveTimer < diff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_CLEAVE);
-            m_uiCleaveTimer = urand(5000, 8000);
-        }
-        else
-            m_uiCleaveTimer -= diff;
-
-        DoMeleeAttackIfReady();
-    }
-};
-
 CreatureAI* GetAI_boss_jandicebarov(Creature* pCreature)
 {
     return new boss_jandicebarovAI(pCreature);
-}
-
-CreatureAI* GetAI_mob_illusionofjandicebarov(Creature* pCreature)
-{
-    return new mob_illusionofjandicebarovAI(pCreature);
 }
 
 void AddSC_boss_jandicebarov()
@@ -143,10 +105,5 @@ void AddSC_boss_jandicebarov()
     pNewScript = new Script;
     pNewScript->Name = "boss_jandice_barov";
     pNewScript->GetAI = &GetAI_boss_jandicebarov;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "mob_illusionofjandicebarov";
-    pNewScript->GetAI = &GetAI_mob_illusionofjandicebarov;
     pNewScript->RegisterSelf();
 }

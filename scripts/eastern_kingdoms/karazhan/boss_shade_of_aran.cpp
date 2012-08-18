@@ -508,40 +508,9 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
     }
 };
 
-struct MANGOS_DLL_DECL water_elementalAI : public ScriptedAI
-{
-    water_elementalAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
-
-    uint32 m_uiCast_Timer;
-
-    void Reset()
-    {
-        m_uiCast_Timer = urand(2000, 5000);
-    }
-
-    void UpdateAI(const uint32 uiDiff)
-    {
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-            return;
-
-        if (m_uiCast_Timer < uiDiff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_WATERBOLT);
-            m_uiCast_Timer = urand(2000, 5000);
-        }
-        else
-            m_uiCast_Timer -= uiDiff;
-    }
-};
-
 CreatureAI* GetAI_boss_aran(Creature* pCreature)
 {
     return new boss_aranAI(pCreature);
-}
-
-CreatureAI* GetAI_water_elemental(Creature* pCreature)
-{
-    return new water_elementalAI(pCreature);
 }
 
 void AddSC_boss_shade_of_aran()
@@ -551,10 +520,5 @@ void AddSC_boss_shade_of_aran()
     pNewScript = new Script;
     pNewScript->Name = "boss_shade_of_aran";
     pNewScript->GetAI = &GetAI_boss_aran;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "mob_aran_elemental";
-    pNewScript->GetAI = &GetAI_water_elemental;
     pNewScript->RegisterSelf();
 }
