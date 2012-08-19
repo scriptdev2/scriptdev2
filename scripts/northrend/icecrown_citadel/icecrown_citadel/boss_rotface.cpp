@@ -40,8 +40,6 @@ enum
 
 enum
 {
-    SPELL_BERSERK               = 47008,
-
     // Mutated Infection
     SPELL_MUTATED_INFECTION_1   = 70090, // periodic trigger auras
     SPELL_MUTATED_INFECTION_2   = 70003,
@@ -50,7 +48,7 @@ enum
     SPELL_MUTATED_INFECTION_5   = 70006,
 
     // Slime Spray
-    SPELL_SLIME_SPRAY_SUMMON    = 70882,
+ // SPELL_SLIME_SPRAY_SUMMON    = 70882, // precast of Slime Spray dmg spell
     SPELL_SLIME_SPRAY           = 69508,
 
     // Ooze Flood
@@ -147,13 +145,10 @@ struct MANGOS_DLL_DECL boss_rotfaceAI : public ScriptedAI
         // Slime Spray
         if (m_uiSlimeSprayTimer <= uiDiff)
         {
-            if (DoCastSpellIfCan(m_creature, SPELL_SLIME_SPRAY_SUMMON, CAST_TRIGGERED) == CAST_OK)
+            if (DoCastSpellIfCan(m_creature, SPELL_SLIME_SPRAY) == CAST_OK)
             {
-                if (DoCastSpellIfCan(m_creature, SPELL_SLIME_SPRAY) == CAST_OK)
-                {
-                    DoScriptText(SAY_SLIME_SPRAY, m_creature);
-                    m_uiSlimeSprayTimer = urand(17000, 23000);
-                }
+                DoScriptText(SAY_SLIME_SPRAY, m_creature);
+                m_uiSlimeSprayTimer = urand(17000, 23000);
             }
         }
         else
