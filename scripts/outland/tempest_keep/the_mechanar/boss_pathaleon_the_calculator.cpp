@@ -78,12 +78,12 @@ struct MANGOS_DLL_DECL boss_pathaleon_the_calculatorAI : public ScriptedAI
 
     void Reset()
     {
-        m_uiSummonTimer          = 30000;
-        m_uiAngerTimer           = urand(30000, 35000);
-        m_uiManaTapTimer         = urand(12000, 20000);
-        m_uiArcaneTorrentTimer   = urand(16000, 25000);
+        m_uiSummonTimer          = urand(12000, 23000);
+        m_uiAngerTimer           = urand(31000, 42000);
+        m_uiManaTapTimer         = urand(2000, 9000);
+        m_uiArcaneTorrentTimer   = urand(11000, 24000);
         m_uiDominationTimer      = urand(25000, 40000);
-        m_uiArcaneExplosionTimer = urand(8000, 13000);
+        m_uiArcaneExplosionTimer = urand(18000, 45000);
         m_bIsEnraged             = false;
     }
 
@@ -122,7 +122,7 @@ struct MANGOS_DLL_DECL boss_pathaleon_the_calculatorAI : public ScriptedAI
             if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_MANA_TAP, SELECT_FLAG_POWER_MANA))
             {
                 if (DoCastSpellIfCan(pTarget, SPELL_MANA_TAP) == CAST_OK)
-                    m_uiManaTapTimer = urand(14000, 22000);
+                    m_uiManaTapTimer = urand(16000, 34000);
             }
         }
         else
@@ -131,7 +131,7 @@ struct MANGOS_DLL_DECL boss_pathaleon_the_calculatorAI : public ScriptedAI
         if (m_uiArcaneTorrentTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature, SPELL_ARCANE_TORRENT) == CAST_OK)
-                m_uiArcaneTorrentTimer = urand(40000, 50000);
+                m_uiArcaneTorrentTimer = urand(40000, 52000);
         }
         else
             m_uiArcaneTorrentTimer -= uiDiff;
@@ -156,7 +156,7 @@ struct MANGOS_DLL_DECL boss_pathaleon_the_calculatorAI : public ScriptedAI
             if (m_uiArcaneExplosionTimer < uiDiff)
             {
                 if (DoCastSpellIfCan(m_creature, SPELL_ARCANE_EXPLOSION_H) == CAST_OK)
-                    m_uiArcaneExplosionTimer = urand(18000, 20000);
+                    m_uiArcaneExplosionTimer = urand(13000, 25000);
             }
             else
                 m_uiArcaneExplosionTimer -= uiDiff;
@@ -181,7 +181,7 @@ struct MANGOS_DLL_DECL boss_pathaleon_the_calculatorAI : public ScriptedAI
                     DoCastSpellIfCan(m_creature, aWraithSummonSpells[i], CAST_TRIGGERED);
 
                 DoScriptText(SAY_SUMMON, m_creature);
-                m_uiSummonTimer = 50000;
+                m_uiSummonTimer = urand(45000, 50000);
             }
             else
                 m_uiSummonTimer -= uiDiff;
@@ -189,7 +189,7 @@ struct MANGOS_DLL_DECL boss_pathaleon_the_calculatorAI : public ScriptedAI
             if (m_uiAngerTimer < uiDiff)
             {
                 if (DoCastSpellIfCan(m_creature, SPELL_DISGRUNTLED_ANGER) == CAST_OK)
-                    m_uiAngerTimer = urand(60000, 90000);
+                    m_uiAngerTimer = urand(55000, 84000);
             }
             else
                 m_uiAngerTimer -= uiDiff;
@@ -204,12 +204,12 @@ struct MANGOS_DLL_DECL mob_nether_wraithAI : public ScriptedAI
     mob_nether_wraithAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     uint32 m_uiArcaneMissilesTimer;
-    uint32 m_uiDetonationTimer;
+    bool m_bHasDetonated;
 
     void Reset()
     {
         m_uiArcaneMissilesTimer = urand(1000, 4000);
-        m_uiDetonationTimer = 30000;
+        m_bHasDetonated         = false;
     }
 
     void UpdateAI(const uint32 uiDiff)
@@ -232,20 +232,15 @@ struct MANGOS_DLL_DECL mob_nether_wraithAI : public ScriptedAI
         else
             m_uiArcaneMissilesTimer -=uiDiff;
 
-        if (m_uiDetonationTimer)
+        if (!m_bHasDetonated && m_creature->GetHealthPercent() < 10.0f)
         {
-            if (m_uiDetonationTimer <= uiDiff)
+            if (DoCastSpellIfCan(m_creature, SPELL_DETONATION, CAST_TRIGGERED) == CAST_OK)
             {
-                if (DoCastSpellIfCan(m_creature, SPELL_DETONATION, CAST_TRIGGERED) == CAST_OK)
-                {
-                    // Selfkill after the detonation
-                    m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NONE, NULL, false);
-                    m_uiDetonationTimer = 0;
-                    return;
-                }
+                // Selfkill after the detonation
+                m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NONE, NULL, false);
+                m_bHasDetonated = true;
+                return;
             }
-            else
-                m_uiDetonationTimer -= uiDiff;
         }
 
         DoMeleeAttackIfReady();

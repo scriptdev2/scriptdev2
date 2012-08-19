@@ -69,9 +69,9 @@ struct MANGOS_DLL_DECL boss_warp_splinterAI : public ScriptedAI
 
     void Reset()
     {
-        m_uiWarStompTimer       = 20000;
-        m_uiSummonTreantsTimer  = 15000;
-        m_uiArcaneVolleyTimer   = urand(20000, 25000);
+        m_uiWarStompTimer       = urand(6000, 7000);
+        m_uiSummonTreantsTimer  = urand(25000, 35000);
+        m_uiArcaneVolleyTimer   = urand(12000, 14500);
     }
 
     void Aggro(Unit* pWho)
@@ -116,7 +116,7 @@ struct MANGOS_DLL_DECL boss_warp_splinterAI : public ScriptedAI
         if (m_uiWarStompTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature, SPELL_WAR_STOMP) == CAST_OK)
-                m_uiWarStompTimer = urand(25000, 30000);
+                m_uiWarStompTimer = urand(17000, 38000);
         }
         else
             m_uiWarStompTimer -= uiDiff;
@@ -125,7 +125,7 @@ struct MANGOS_DLL_DECL boss_warp_splinterAI : public ScriptedAI
         if (m_uiArcaneVolleyTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_ARCANE_VOLLEY : SPELL_ARCANE_VOLLEY_H) == CAST_OK)
-                m_uiArcaneVolleyTimer = urand(20000, 35000);
+                m_uiArcaneVolleyTimer = urand(16000, 38000);
         }
         else
             m_uiArcaneVolleyTimer -= uiDiff;
@@ -134,7 +134,7 @@ struct MANGOS_DLL_DECL boss_warp_splinterAI : public ScriptedAI
         if (m_uiSummonTreantsTimer < uiDiff)
         {
             SummonTreants();
-            m_uiSummonTreantsTimer = 45000;
+            m_uiSummonTreantsTimer = urand(37000, 55000);
         }
         else
             m_uiSummonTreantsTimer -= uiDiff;

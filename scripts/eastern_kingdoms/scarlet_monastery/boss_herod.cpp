@@ -57,8 +57,8 @@ struct MANGOS_DLL_DECL boss_herodAI : public ScriptedAI
         m_bTraineeSay = false;
         m_bEnrage     = false;
 
-        m_uiCleaveTimer    = 12000;
-        m_uiWhirlwindTimer = 45000;
+        m_uiCleaveTimer    = 7500;
+        m_uiWhirlwindTimer = 14500;
     }
 
     void Aggro(Unit* pWho)
@@ -75,7 +75,6 @@ struct MANGOS_DLL_DECL boss_herodAI : public ScriptedAI
             DoScriptText(SAY_TRAINEE_SPAWN, pSummoned);
             m_bTraineeSay = true;
         }
-
     }
 
     void KilledUnit(Unit* pVictim)
@@ -109,7 +108,7 @@ struct MANGOS_DLL_DECL boss_herodAI : public ScriptedAI
         if (m_uiCleaveTimer < uiDiff)
         {
             DoCastSpellIfCan(m_creature->getVictim(), SPELL_CLEAVE);
-            m_uiCleaveTimer = 12000;
+            m_uiCleaveTimer = urand(7500, 17500);
         }
         else
             m_uiCleaveTimer -= uiDiff;
@@ -119,7 +118,7 @@ struct MANGOS_DLL_DECL boss_herodAI : public ScriptedAI
             if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_WHIRLWIND) == CAST_OK)
             {
                 DoScriptText(SAY_WHIRLWIND, m_creature);
-                m_uiWhirlwindTimer = 30000;
+                m_uiWhirlwindTimer = urand(15000, 25000);
             }
         }
         else

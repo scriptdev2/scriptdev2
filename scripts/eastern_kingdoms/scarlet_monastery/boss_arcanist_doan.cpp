@@ -48,10 +48,10 @@ struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
     void Reset()
     {
         m_uiPolymorphTimer       = 15000;
-        m_uiSilenceTimer         = 18000;
-        m_uiArcaneExplosionTimer = 3000;
+        m_uiSilenceTimer         = 7500;
+        m_uiArcaneExplosionTimer = urand(1000, 3000);
         m_uiDetonationTimer      = 0;
-        bShielded = false;
+        bShielded                = false;
     }
 
     void Aggro(Unit* pWho)
@@ -107,7 +107,7 @@ struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
         if (m_uiSilenceTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature, SPELL_SILENCE) == CAST_OK)
-                m_uiSilenceTimer = urand(15000, 20000);
+                m_uiSilenceTimer = urand(15000, 22000);
         }
         else
             m_uiSilenceTimer -= uiDiff;
@@ -116,7 +116,7 @@ struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
         if (m_uiArcaneExplosionTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature, SPELL_ARCANE_EXPLOSION) == CAST_OK)
-                m_uiArcaneExplosionTimer = 8000;
+                m_uiArcaneExplosionTimer = urand(2500, 8500);
         }
         else
             m_uiArcaneExplosionTimer -= uiDiff;

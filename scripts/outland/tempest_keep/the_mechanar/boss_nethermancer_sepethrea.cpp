@@ -61,9 +61,9 @@ struct MANGOS_DLL_DECL boss_nethermancer_sepethreaAI : public ScriptedAI
 
     void Reset()
     {
-        m_uiFrostAttackTimer    = urand(7000, 10000);
-        m_uiArcaneBlastTimer    = urand(12000, 18000);
-        m_uiDragonsBreathTimer  = urand(18000, 22000);
+        m_uiFrostAttackTimer    = urand(8000, 17000);
+        m_uiArcaneBlastTimer    = urand(14000, 25000);
+        m_uiDragonsBreathTimer  = urand(20000, 26000);
     }
 
     void Aggro(Unit* pWho)
@@ -108,7 +108,7 @@ struct MANGOS_DLL_DECL boss_nethermancer_sepethreaAI : public ScriptedAI
         if (m_uiFrostAttackTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_FROST_ATTACK) == CAST_OK)
-                m_uiFrostAttackTimer = urand(7000, 10000);
+                m_uiFrostAttackTimer = urand(5000, 17000);
         }
         else
             m_uiFrostAttackTimer -= uiDiff;
@@ -117,7 +117,7 @@ struct MANGOS_DLL_DECL boss_nethermancer_sepethreaAI : public ScriptedAI
         if (m_uiArcaneBlastTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_ARCANE_BLAST) == CAST_OK)
-                m_uiArcaneBlastTimer = 15000;
+                m_uiArcaneBlastTimer = urand(15000, 30000);
         }
         else
             m_uiArcaneBlastTimer -= uiDiff;
@@ -130,7 +130,7 @@ struct MANGOS_DLL_DECL boss_nethermancer_sepethreaAI : public ScriptedAI
                 if (urand(0, 1))
                     DoScriptText(urand(0, 1) ? SAY_DRAGONS_BREATH_1 : SAY_DRAGONS_BREATH_2, m_creature);
 
-                m_uiDragonsBreathTimer = urand(12000, 22000);
+                m_uiDragonsBreathTimer = urand(20000, 35000);
             }
         }
         else

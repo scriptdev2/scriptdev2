@@ -66,11 +66,11 @@ struct MANGOS_DLL_DECL boss_lajAI : public ScriptedAI
         m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_FROST, false);
         m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_NATURE, false);
 
-        m_uiTeleportTimer   = 15000;
+        m_uiTeleportTimer   = urand(17000, 26000);
         m_uiSummonTimer     = 0;
         m_uiTransformTimer  = 30000;
-        m_uiAllergicTimer   = 5000;
-        m_uiTrashTimer      = urand(4000, 7000);
+        m_uiAllergicTimer   = urand(8500, 30000);
+        m_uiTrashTimer      = urand(3600, 5000);
     }
 
     void DoTransform()
@@ -174,7 +174,7 @@ struct MANGOS_DLL_DECL boss_lajAI : public ScriptedAI
         if (m_uiAllergicTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_ALLERGIC_REACTION) == CAST_OK)
-                m_uiAllergicTimer = urand(25000, 40000);
+                m_uiAllergicTimer = urand(21000, 32000);
         }
         else
             m_uiAllergicTimer -= uiDiff;
@@ -184,7 +184,7 @@ struct MANGOS_DLL_DECL boss_lajAI : public ScriptedAI
             if (DoCastSpellIfCan(m_creature, SPELL_TELEPORT_SELF) == CAST_OK)
             {
                 m_creature->GetMotionMaster()->MoveIdle();
-                m_uiTeleportTimer = urand(30000, 40000);
+                m_uiTeleportTimer = urand(25000, 33000);
                 m_uiSummonTimer = 4000;
             }
         }
@@ -202,7 +202,7 @@ struct MANGOS_DLL_DECL boss_lajAI : public ScriptedAI
         if (m_uiTrashTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_TRASH) == CAST_OK)
-                m_uiTrashTimer = urand(4000, 9000);
+                m_uiTrashTimer = urand(10000, 24000);
         }
         else
             m_uiTrashTimer -= uiDiff;
