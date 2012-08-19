@@ -16,7 +16,7 @@
 
 /* ScriptData
 SDName: boss_rotface
-SD%Complete: 10%
+SD%Complete: 70%
 SDComment:
 SDCategory: Icecrown Citadel
 EndScriptData */
@@ -59,16 +59,17 @@ enum
 
     // Little Ooze
     SPELL_STICKY_OOZE           = 69774,
-    SPELL_STICKY_AURA           = 69776,
+    SPELL_STICKY_AURA           = 69776, // aura on dummy Sticky Ooze NPC
     SPELL_WEAK_RADIATING_OOZE   = 69750,
     SPELL_LITTLE_OOZE_COMBINE   = 69537, // periodic check
-    SPELL_MERGE                 = 69889,
+ // SPELL_MERGE                 = 69889,
 
     // Big Ooze
     SPELL_UNSTABLE_OOZE         = 69558, // stacking buff
     SPELL_RADIATING_OOZE        = 69760,
     SPELL_BIG_OOZE_COMBINE      = 69552, // periodic check
-    SPELL_BIG_OOZE_BUFF_COMB    = 69611  // periodic check
+    SPELL_BIG_OOZE_BUFF_COMB    = 69611, // periodic check
+    SPELL_UNSTABLE_EXPLOSION    = 69839
 };
 
 static uint32 uiMutatedInfections[5] =
@@ -196,11 +197,152 @@ CreatureAI* GetAI_boss_rotface(Creature* pCreature)
     return new boss_rotfaceAI(pCreature);
 }
 
+
+struct MANGOS_DLL_DECL mob_little_oozeAI : public ScriptedAI
+{
+    mob_little_oozeAI(Creature *pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (instance_icecrown_citadel*)pCreature->GetInstanceData();
+        Reset();
+    }
+
+    instance_icecrown_citadel* m_pInstance;
+    uint32 m_uiStickyOozeTimer;
+
+    void Reset()
+    {
+        m_uiStickyOozeTimer = 5000;
+    }
+
+    void EnterEvadeMode()
+    {
+        m_creature->ForcedDespawn();
+    }
+
+    void Aggro(Unit *pWho)
+    {
+        m_creature->AddThreat(pWho, 500000.0f); // not sure about the threat amount but should be very high
+        DoCastSpellIfCan(m_creature, SPELL_WEAK_RADIATING_OOZE, CAST_TRIGGERED);
+        DoCastSpellIfCan(m_creature, SPELL_LITTLE_OOZE_COMBINE, CAST_TRIGGERED);
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        if (m_uiStickyOozeTimer <= uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_STICKY_OOZE) == CAST_OK)
+                m_uiStickyOozeTimer = urand(10000, 15000);
+        }
+        else
+            m_uiStickyOozeTimer -= uiDiff;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_mob_little_ooze(Creature* pCreature)
+{
+    return new mob_little_oozeAI(pCreature);
+}
+
+
+struct MANGOS_DLL_DECL mob_big_oozeAI : public ScriptedAI
+{
+    mob_big_oozeAI(Creature *pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (instance_icecrown_citadel*)pCreature->GetInstanceData();
+        Reset();
+    }
+
+    instance_icecrown_citadel *m_pInstance;
+    uint32 m_uiStickyOozeTimer;
+    uint32 m_uiUnstableExplosionCheckTimer;
+
+    void Reset()
+    {
+        m_uiStickyOozeTimer             = 5000;
+        m_uiUnstableExplosionCheckTimer = 1000;
+    }
+
+    void EnterEvadeMode()
+    {
+        m_creature->ForcedDespawn();
+    }
+
+    void Aggro(Unit *pWho)
+    {
+        m_creature->AddThreat(pWho, 500000.0f);
+        DoCastSpellIfCan(m_creature, SPELL_RADIATING_OOZE, CAST_TRIGGERED);
+        DoCastSpellIfCan(m_creature, SPELL_BIG_OOZE_COMBINE, CAST_TRIGGERED);
+        DoCastSpellIfCan(m_creature, SPELL_BIG_OOZE_BUFF_COMB, CAST_TRIGGERED);
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        // Unstable Ooze
+        if (m_uiUnstableExplosionCheckTimer)
+        {
+            if (m_uiUnstableExplosionCheckTimer <= uiDiff)
+            {
+                m_uiUnstableExplosionCheckTimer = 1000;
+
+                SpellAuraHolder* holder= m_creature->GetSpellAuraHolder(SPELL_UNSTABLE_OOZE);
+                if (holder && holder->GetStackAmount() >= 5)
+                {
+                    if (DoCastSpellIfCan(m_creature, SPELL_UNSTABLE_EXPLOSION) == CAST_OK)
+                    {
+                        if (m_pInstance)
+                        {
+                            if (Creature *pRotface = m_pInstance->GetSingleCreatureFromStorage(NPC_ROTFACE))
+                                DoScriptText(SAY_OOZE_EXPLODE, pRotface);
+                        }
+                    }
+                }
+            }
+            else
+                m_uiUnstableExplosionCheckTimer -= uiDiff;
+        }
+
+        // Sticky Ooze
+        if (m_uiStickyOozeTimer <= uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_STICKY_OOZE) == CAST_OK)
+                m_uiStickyOozeTimer = urand(10000, 15000);
+        }
+        else
+            m_uiStickyOozeTimer -= uiDiff;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_mob_big_ooze(Creature* pCreature)
+{
+    return new mob_big_oozeAI(pCreature);
+}
+
 void AddSC_boss_rotface()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_rotface";
-    newscript->GetAI = &GetAI_boss_rotface;
-    newscript->RegisterSelf();
+    Script* pNewscript;
+
+    pNewscript = new Script;
+    pNewscript->Name = "boss_rotface";
+    pNewscript->GetAI = &GetAI_boss_rotface;
+    pNewscript->RegisterSelf();
+
+    pNewscript = new Script;
+    pNewscript->Name = "mob_little_ooze";
+    pNewscript->GetAI = &GetAI_mob_little_ooze;
+    pNewscript->RegisterSelf();
+
+    pNewscript = new Script;
+    pNewscript->Name = "mob_big_ooze";
+    pNewscript->GetAI = &GetAI_mob_big_ooze;
+    pNewscript->RegisterSelf();
 }

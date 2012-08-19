@@ -683,7 +683,9 @@ UPDATE creature_template SET ScriptName='npc_rimefang_icc' WHERE entry=37533;
 UPDATE creature_template SET ScriptName='npc_spinestalker_icc' WHERE entry=37534;
 UPDATE creature_template SET ScriptName='mob_frost_bomb' WHERE entry=37186;
 UPDATE creature_template SET ScriptName='boss_festergut' WHERE entry=36626;
-UPDATE creature_template SET ScriptName='boss_rotface' WHERE entry=36626;
+UPDATE creature_template SET ScriptName='boss_rotface' WHERE entry=36627;
+UPDATE creature_template SET ScriptName='mob_little_ooze' WHERE entry=36897;
+UPDATE creature_template SET ScriptName='mob_big_ooze' WHERE entry=36899;
 DELETE FROM scripted_event_id WHERE id IN (23426,23438);
 INSERT INTO scripted_event_id VALUES
 (23426,'event_gameobject_citadel_valve'),
