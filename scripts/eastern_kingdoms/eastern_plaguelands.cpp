@@ -17,28 +17,15 @@
 /* ScriptData
 SDName: Eastern_Plaguelands
 SD%Complete: 100
-SDComment: Quest support: 5211, 7622.
+SDComment: Quest support: 7622.
 SDCategory: Eastern Plaguelands
 EndScriptData */
 
 /* ContentData
-npc_darrowshire_spirit
 npc_eris_havenfire
 EndContentData */
 
 #include "precompiled.h"
-
-/*######
-## npc_darrowshire_spirit
-######*/
-
-bool GossipHello_npc_darrowshire_spirit(Player* pPlayer, Creature* pCreature)
-{
-    pPlayer->SEND_GOSSIP_MENU(3873, pCreature->GetObjectGuid());
-    pPlayer->TalkedToCreature(pCreature->GetEntry(), pCreature->GetObjectGuid());
-    pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-    return true;
-}
 
 /*######
 ## npc_eris_havenfire
@@ -325,11 +312,6 @@ bool QuestAccept_npc_eris_havenfire(Player* pPlayer, Creature* pCreature, const 
 void AddSC_eastern_plaguelands()
 {
     Script* pNewScript;
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_darrowshire_spirit";
-    pNewScript->pGossipHello = &GossipHello_npc_darrowshire_spirit;
-    pNewScript->RegisterSelf();
 
     pNewScript = new Script;
     pNewScript->Name = "npc_eris_havenfire";

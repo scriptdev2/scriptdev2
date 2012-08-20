@@ -535,7 +535,6 @@ INSERT INTO scripted_areatrigger VALUES
 (4752,'at_nats_landing');
 
 /* EASTERN PLAGUELANDS */
-UPDATE creature_template SET ScriptName='npc_darrowshire_spirit' WHERE entry=11064;
 UPDATE creature_template SET ScriptName='npc_eris_havenfire' WHERE entry=14494;
 
 /* EBON HOLD */
