@@ -17,14 +17,13 @@
 /* ScriptData
 SDName: Tanaris
 SD%Complete: 80
-SDComment: Quest support: 648, 1560, 2954, 4005, 10277. Noggenfogger vendor
+SDComment: Quest support: 648, 1560, 2954, 4005, 10277.
 SDCategory: Tanaris
 EndScriptData */
 
 /* ContentData
 mob_aquementas
 npc_custodian_of_time
-npc_marin_noggenfogger
 npc_oox17tn
 npc_stone_watcher_of_norgannon
 npc_tooga
@@ -216,31 +215,6 @@ struct MANGOS_DLL_DECL npc_custodian_of_timeAI : public npc_escortAI
 CreatureAI* GetAI_npc_custodian_of_time(Creature* pCreature)
 {
     return new npc_custodian_of_timeAI(pCreature);
-}
-
-/*######
-## npc_marin_noggenfogger
-######*/
-
-bool GossipHello_npc_marin_noggenfogger(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
-
-    if (pCreature->isVendor() && pPlayer->GetQuestRewardStatus(2662))
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
-
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-
-    return true;
-}
-
-bool GossipSelect_npc_marin_noggenfogger(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_TRADE)
-        pPlayer->SEND_VENDORLIST(pCreature->GetObjectGuid());
-
-    return true;
 }
 
 /*######
@@ -572,12 +546,6 @@ void AddSC_tanaris()
     pNewScript = new Script;
     pNewScript->Name = "npc_custodian_of_time";
     pNewScript->GetAI = &GetAI_npc_custodian_of_time;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_marin_noggenfogger";
-    pNewScript->pGossipHello =  &GossipHello_npc_marin_noggenfogger;
-    pNewScript->pGossipSelect = &GossipSelect_npc_marin_noggenfogger;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;

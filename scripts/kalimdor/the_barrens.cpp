@@ -17,14 +17,13 @@
 /* ScriptData
 SDName: The_Barrens
 SD%Complete: 90
-SDComment: Quest support: 863, 898, 1719, 2458, 4921, 6981
+SDComment: Quest support: 863, 898, 1719, 2458, 4921.
 SDCategory: Barrens
 EndScriptData */
 
 /* ContentData
 npc_beaten_corpse
 npc_gilthares
-npc_sputtervalve
 npc_taskmaster_fizzule
 npc_twiggy_flathead
 at_twiggy_flathead
@@ -159,32 +158,6 @@ bool QuestAccept_npc_gilthares(Player* pPlayer, Creature* pCreature, const Quest
 
         if (npc_giltharesAI* pEscortAI = dynamic_cast<npc_giltharesAI*>(pCreature->AI()))
             pEscortAI->Start(false, pPlayer, pQuest);
-    }
-    return true;
-}
-
-/*######
-## npc_sputtervalve
-######*/
-
-bool GossipHello_npc_sputtervalve(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
-
-    if (pPlayer->GetQuestStatus(6981) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT,"Can you tell me about this shard?",GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF);
-
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
-    return true;
-}
-
-bool GossipSelect_npc_sputtervalve(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_INFO_DEF)
-    {
-        pPlayer->SEND_GOSSIP_MENU(2013, pCreature->GetObjectGuid());
-        pPlayer->AreaExploredOrEventHappens(6981);
     }
     return true;
 }
@@ -662,12 +635,6 @@ void AddSC_the_barrens()
     pNewScript->Name = "npc_gilthares";
     pNewScript->GetAI = &GetAI_npc_gilthares;
     pNewScript->pQuestAcceptNPC = &QuestAccept_npc_gilthares;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_sputtervalve";
-    pNewScript->pGossipHello = &GossipHello_npc_sputtervalve;
-    pNewScript->pGossipSelect = &GossipSelect_npc_sputtervalve;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
