@@ -16,8 +16,9 @@
 
 /* ScriptData
 SDName: boss_professor_putricide
-SD%Complete: 10%
-SDComment:
+SD%Complete: 70%
+SDComment: NYI: Abomination and table handling, Malleable Goo,
+           possibly Green Ooze and Orange Gas scripts require handling in sd2, but need further research on their spells
 SDCategory: Icecrown Citadel
 EndScriptData */
 

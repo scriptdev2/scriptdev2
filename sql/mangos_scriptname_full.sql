@@ -686,6 +686,7 @@ UPDATE creature_template SET ScriptName='mob_little_ooze' WHERE entry=36897;
 UPDATE creature_template SET ScriptName='mob_big_ooze' WHERE entry=36899;
 UPDATE creature_template SET ScriptName='boss_valithria_dreamwalker' WHERE entry=36789;
 UPDATE creature_template SET ScriptName='boss_professor_putricide' WHERE entry=36678;
+UPDATE creature_template SET ScriptName='boss_the_lich_king_icc' WHERE entry=36597;
 DELETE FROM scripted_event_id WHERE id IN (23426,23438);
 INSERT INTO scripted_event_id VALUES
 (23426,'event_gameobject_citadel_valve'),

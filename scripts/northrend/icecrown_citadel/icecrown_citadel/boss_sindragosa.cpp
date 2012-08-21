@@ -798,9 +798,6 @@ CreatureAI* GetAI_npc_spinestalker_icc(Creature* pCreature)
 
 /**
  * Frost Bomb - npc marking the target of Frost Bomb
- *
- * NOTE: should triggering damage spell be done
- *       after dummy spell hits instead of a timer?
  */
 struct MANGOS_DLL_DECL mob_frost_bombAI : public ScriptedAI
 {
