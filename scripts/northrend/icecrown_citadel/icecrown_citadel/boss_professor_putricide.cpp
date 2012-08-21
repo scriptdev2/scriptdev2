@@ -51,7 +51,13 @@ enum
     SPELL_ABOMINATION_POWER_DRAIN   = 70385, // prevents normal regen of abomination's power
 
     SPELL_UNSTABLE_EXPERIMENT       = 70351, // ooze and gas summoning spells in basepoints of effects of this spell suggest that they should be handled in core
-    SPELL_VOLATILE_EXPERIMENT       = 72842, // heroic
+
+    // Volatile Experiment on heroic difficulties
+    SPELL_VOLATILE_EXPERIMENT       = 72840, // single target dummy effect
+    SPELL_VOLATILE_EXPERIMENT_2     = 72841, // single target dummy effect
+    SPELL_VOLATILE_EXPERIMENT_3     = 72842, // radius target dummy effect
+    SPELL_VOLATILE_EXPERIMENT_4     = 72843, // radius target dummy effect
+
     SPELL_GREEN_OOZE_SUMMON         = 71412,
     SPELL_ORANGE_OOZE_SUMMON        = 71415,
 
@@ -94,11 +100,7 @@ enum
     SPELL_GAS_VARIABLE              = 70353,
     SPELL_GAS_VARIABLE_GAS          = 74119,
 
-    SPELL_OOZE_GAS_PROTECTION     = 70812,
-    SPELL_OOZE_BEAM_PROTECTION    = 71530,
-    SPELL_OOZE_TANK_PROTECTION    = 71770,
-
-    SPELL_ORANGE_RADIATION        = 45857, //Additional visual
+    SPELL_OOZE_TANK_PROTECTION      = 71770
 };
 
 enum Phase

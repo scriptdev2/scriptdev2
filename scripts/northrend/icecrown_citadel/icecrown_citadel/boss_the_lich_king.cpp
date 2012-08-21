@@ -390,9 +390,6 @@ struct MANGOS_DLL_DECL boss_the_lich_king_iccAI : public ScriptedAI
             case PHASE_TRANSITION_ONE:
             case PHASE_TRANSITION_TWO:
             {
-                if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-                    return;
-
                 // phase end timer
                 if (m_uiPhaseTimer < uiDiff)
                 {
