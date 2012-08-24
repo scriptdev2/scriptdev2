@@ -397,10 +397,12 @@ UPDATE creature_template SET ScriptName='npc_doomfire_spirit' WHERE entry=18104;
 
 /* OLD HILLSBRAD */
 UPDATE instance_template SET ScriptName='instance_old_hillsbrad' WHERE map=560;
-UPDATE gameobject_template SET ScriptName='go_barrel_old_hillsbrad' WHERE entry=182589;
 UPDATE creature_template SET ScriptName='npc_erozion' WHERE entry=18723;
 UPDATE creature_template SET ScriptName='npc_taretha' WHERE entry=18887;
 UPDATE creature_template SET ScriptName='npc_thrall_old_hillsbrad' WHERE entry=17876;
+DELETE FROM scripted_event_id WHERE id=11111;
+INSERT INTO scripted_event_id VALUES
+(11111,'event_go_barrel_old_hillsbrad');
 
 /* THE CULLING OF STRATHOLME */
 UPDATE instance_template SET ScriptName='instance_culling_of_stratholme' WHERE map=595;
