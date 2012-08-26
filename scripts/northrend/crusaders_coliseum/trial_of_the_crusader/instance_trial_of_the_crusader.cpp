@@ -304,6 +304,7 @@ void instance_trial_of_the_crusader::SetData(uint32 uiType, uint32 uiData)
             {
                 if (Creature* pTirion = GetSingleCreatureFromStorage(NPC_TIRION_A))
                     DoScriptText(m_auiEncounter[uiType] != FAIL ? SAY_TIRION_TWINS_INTRO : SAY_RAID_INTRO_SHORT, pTirion);
+                StartNextDialogueText(TYPE_TWIN_VALKYR);
             }
             else if (uiData == FAIL)
             {
