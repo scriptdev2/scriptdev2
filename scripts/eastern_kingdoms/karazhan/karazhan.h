@@ -8,6 +8,7 @@
 enum
 {
     MAX_ENCOUNTER                   = 11,
+    MAX_OZ_OPERA_MOBS               = 4,
 
     TYPE_ATTUMEN                    = 0,
     TYPE_MOROES                     = 1,
@@ -20,13 +21,14 @@ enum
     TYPE_CHESS                      = 8,
     TYPE_MALCHEZZAR                 = 9,
     TYPE_NIGHTBANE                  = 10,
+    TYPE_OPERA_PERFORMANCE          = 11,               // no regular encounter - just store one random opera event
 
-    DATA_OPERA_PERFORMANCE          = 11,
     DATA_OPERA_OZ_DEATHCOUNT        = 12,
 
     NPC_ATTUMEN                     = 15550,
     NPC_MIDNIGHT                    = 16151,
     NPC_MOROES                      = 15687,
+    NPC_BARNES                      = 16812,
     // NPC_TERESTIAN                = 15688,
     NPC_NIGHTBANE                   = 17225,
 
@@ -38,6 +40,15 @@ enum
     NPC_BARONESS_DOROTHEA_MILLSTIPE = 19875,
     NPC_LORD_ROBIN_DARIS            = 19876,
 
+    // Opera event
+    NPC_DOROTHEE                    = 17535,
+    NPC_ROAR                        = 17546,
+    NPC_TINHEAD                     = 17547,
+    NPC_STRAWMAN                    = 17543,
+    NPC_GRANDMOTHER                 = 17603,
+    NPC_JULIANNE                    = 17534,
+    NPC_ROMULO                      = 17533,
+
     GO_STAGE_CURTAIN                = 183932,
     GO_STAGE_DOOR_LEFT              = 184278,
     GO_STAGE_DOOR_RIGHT             = 184279,
@@ -48,6 +59,8 @@ enum
     GO_NETHERSPACE_DOOR             = 185134,
     GO_SIDE_ENTRANCE_DOOR           = 184275,
     GO_DUST_COVERED_CHEST           = 185119,
+    GO_MASTERS_TERRACE_DOOR_1       = 184274,
+    GO_MASTERS_TERRACE_DOOR_2       = 184280,
 
     // Opera event stage decoration
     GO_OZ_BACKDROP                  = 183442,
@@ -62,10 +75,27 @@ enum
 
 enum OperaEvents
 {
-    EVENT_OZ                        = 1,
-    EVENT_HOOD                      = 2,
-    EVENT_RAJ                       = 3
+    OPERA_EVENT_WIZARD_OZ           = 1,
+    OPERA_EVENT_BIG_BAD_WOLF        = 2,
+    OPERA_EVENT_ROMULO_AND_JUL      = 3
 };
+
+struct OperaSpawns
+{
+    uint32 uiEntry;
+    float fX, fY, fZ, fO;
+};
+
+static const OperaSpawns aOperaLocOz[MAX_OZ_OPERA_MOBS]=
+{
+    {NPC_DOROTHEE,  -10896.65f, -1757.62f, 90.55f, 4.86f},
+    {NPC_ROAR,      -10889.53f, -1758.10f, 90.55f, 4.57f},
+    {NPC_TINHEAD,   -10883.84f, -1758.85f, 90.55f, 4.53f},
+    {NPC_STRAWMAN,  -10902.11f, -1756.45f, 90.55f, 4.66f},
+};
+
+static const OperaSpawns aOperaLocWolf = {NPC_GRANDMOTHER, -10892.0f, -1758.0f, 90.55f, 4.738f};
+static const OperaSpawns aOperaLocJul  = {NPC_JULIANNE,    -10900.0f, -1758.0f, 90.55f, 4.738f};
 
 class MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
 {
@@ -76,11 +106,14 @@ class MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
         void Initialize();
         bool IsEncounterInProgress() const;
 
+        void OnPlayerEnter(Player* pPlayer);
         void OnCreatureCreate(Creature* pCreature);
         void OnObjectCreate(GameObject* pGo);
 
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
+
+        void DoPrepareOperaStage(Creature* pOrganizer);
 
         void Load(const char* chrIn);
         const char* Save() { return m_strInstData.c_str(); }

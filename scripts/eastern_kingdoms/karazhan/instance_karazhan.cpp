@@ -39,7 +39,8 @@ EndScriptData */
 */
 
 instance_karazhan::instance_karazhan(Map* pMap) : ScriptedInstance(pMap),
-    m_uiOzDeathCount(0)
+    m_uiOzDeathCount(0),
+    m_uiOperaEvent(0)
 {
     Initialize();
 }
@@ -47,18 +48,27 @@ instance_karazhan::instance_karazhan(Map* pMap) : ScriptedInstance(pMap),
 void instance_karazhan::Initialize()
 {
     memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
-
-    // 1 - OZ, 2 - HOOD, 3 - RAJ, this never gets altered.
-    m_uiOperaEvent = urand(EVENT_OZ, EVENT_RAJ);
 }
 
 bool instance_karazhan::IsEncounterInProgress() const
 {
     for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+    {
         if (m_auiEncounter[i] == IN_PROGRESS)
             return true;
+    }
 
     return false;
+}
+
+void instance_karazhan::OnPlayerEnter(Player* pPlayer)
+{
+    // If the opera event is already set, return
+    if (GetData(TYPE_OPERA_PERFORMANCE) != 0)
+        return;
+
+    // Set the Opera Performance type on the first player enter
+    SetData(TYPE_OPERA_PERFORMANCE, urand(OPERA_EVENT_WIZARD_OZ, OPERA_EVENT_ROMULO_AND_JUL));
 }
 
 void instance_karazhan::OnCreatureCreate(Creature* pCreature)
@@ -68,6 +78,7 @@ void instance_karazhan::OnCreatureCreate(Creature* pCreature)
         case NPC_ATTUMEN:
         case NPC_MIDNIGHT:
         case NPC_MOROES:
+        case NPC_BARNES:
         case NPC_NIGHTBANE:
         case NPC_LADY_KEIRA_BERRYBUCK:
         case NPC_LADY_CATRIONA_VON_INDI:
@@ -84,49 +95,39 @@ void instance_karazhan::OnObjectCreate(GameObject* pGo)
 {
     switch(pGo->GetEntry())
     {
-        case GO_STAGE_CURTAIN:
-            break;
         case GO_STAGE_DOOR_LEFT:
-            if (m_auiEncounter[4] == DONE)
-                pGo->SetGoState(GO_STATE_ACTIVE);
-            break;
         case GO_STAGE_DOOR_RIGHT:
             if (m_auiEncounter[4] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
-        case GO_PRIVATE_LIBRARY_DOOR:
-            break;
-        case GO_MASSIVE_DOOR:
-            break;
-        case GO_GAMESMANS_HALL_DOOR:
-            break;
         case GO_GAMESMANS_HALL_EXIT_DOOR:
-            break;
-        case GO_NETHERSPACE_DOOR:
+            if (m_auiEncounter[8] == DONE)
+                pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_SIDE_ENTRANCE_DOOR:
-            if (m_auiEncounter[4] != DONE)
-                pGo->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_LOCKED);
-            else
+            if (m_auiEncounter[4] == DONE)
                 pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_LOCKED);
             break;
+        case GO_STAGE_CURTAIN:
+        case GO_PRIVATE_LIBRARY_DOOR:
+        case GO_MASSIVE_DOOR:
+        case GO_GAMESMANS_HALL_DOOR:
+        case GO_NETHERSPACE_DOOR:
         case GO_DUST_COVERED_CHEST:
+        case GO_MASTERS_TERRACE_DOOR_1:
+        case GO_MASTERS_TERRACE_DOOR_2:
             break;
 
+        // Opera event backgrounds
         case GO_OZ_BACKDROP:
         case GO_OZ_HAY:
-            // if (m_uiOperaEvent == EVENT_OZ)              // TODO - respawn, store for later respawn?
-            return;
         case GO_HOOD_BACKDROP:
         case GO_HOOD_TREE:
         case GO_HOOD_HOUSE:
-            // if (m_uiOperaEvent == EVENT_HOOD)            // TODO - respawn, store for later respawn?
-            return;
         case GO_RAJ_BACKDROP:
         case GO_RAJ_MOON:
         case GO_RAJ_BALCONY:
-            // if (m_uiOperaEvent == EVENT_RAJ)             // TODO - respawn, store for later respawn?
-            return;
+            break;
 
         default:
             return;
@@ -165,17 +166,14 @@ void instance_karazhan::SetData(uint32 uiType, uint32 uiData)
                 DoUseDoorOrButton(GO_STAGE_DOOR_RIGHT);
                 DoToggleGameObjectFlags(GO_SIDE_ENTRANCE_DOOR, GO_FLAG_LOCKED, false);
             }
+            // use curtain only for event start or fail
+            else
+                DoUseDoorOrButton(GO_STAGE_CURTAIN);
             break;
         case TYPE_CURATOR:
-            m_auiEncounter[uiType] = uiData;
-            break;
         case TYPE_TERESTIAN:
-            m_auiEncounter[uiType] = uiData;
-            break;
         case TYPE_ARAN:
             m_auiEncounter[uiType] = uiData;
-            if (uiData != IN_PROGRESS)
-                DoUseDoorOrButton(GO_PRIVATE_LIBRARY_DOOR);
             break;
         case TYPE_NETHERSPITE:
             m_auiEncounter[uiType] = uiData;
@@ -183,14 +181,24 @@ void instance_karazhan::SetData(uint32 uiType, uint32 uiData)
             break;
         case TYPE_CHESS:
             if (uiData == DONE)
+            {
+                DoUseDoorOrButton(GO_GAMESMANS_HALL_EXIT_DOOR);
                 DoRespawnGameObject(GO_DUST_COVERED_CHEST, DAY);
+            }
             m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_MALCHEZZAR:
+            DoUseDoorOrButton(GO_NETHERSPACE_DOOR);
             m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_NIGHTBANE:
             m_auiEncounter[uiType] = uiData;
+            DoUseDoorOrButton(GO_MASTERS_TERRACE_DOOR_1);
+            DoUseDoorOrButton(GO_MASTERS_TERRACE_DOOR_2);
+            break;
+        // Store the event type for the Opera
+        case TYPE_OPERA_PERFORMANCE:
+            m_uiOperaEvent = uiData;
             break;
 
         case DATA_OPERA_OZ_DEATHCOUNT:
@@ -201,7 +209,8 @@ void instance_karazhan::SetData(uint32 uiType, uint32 uiData)
             return;
     }
 
-    if (uiData == DONE)
+    // Also save the opera performance, once it's set
+    if (uiData == DONE || uiType == TYPE_OPERA_PERFORMANCE)
     {
         OUT_SAVE_INST_DATA;
 
@@ -209,7 +218,7 @@ void instance_karazhan::SetData(uint32 uiType, uint32 uiData)
         saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " "
             << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5] << " "
             << m_auiEncounter[6] << " " << m_auiEncounter[7] << " " << m_auiEncounter[8] << " "
-            << m_auiEncounter[9] << " " << m_auiEncounter[10];
+            << m_auiEncounter[9] << " " << m_auiEncounter[10] << " " << m_uiOperaEvent;
 
         m_strInstData = saveStream.str();
 
@@ -233,8 +242,8 @@ uint32 instance_karazhan::GetData(uint32 uiType)
         case TYPE_CHESS:                return m_auiEncounter[8];
         case TYPE_MALCHEZZAR:           return m_auiEncounter[9];
         case TYPE_NIGHTBANE:            return m_auiEncounter[10];
+        case TYPE_OPERA_PERFORMANCE:    return m_uiOperaEvent;
 
-        case DATA_OPERA_PERFORMANCE:    return m_uiOperaEvent;
         case DATA_OPERA_OZ_DEATHCOUNT:  return m_uiOzDeathCount;
 
         default:
@@ -256,13 +265,48 @@ void instance_karazhan::Load(const char* chrIn)
 
     loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3]
         >> m_auiEncounter[4] >> m_auiEncounter[5] >> m_auiEncounter[6] >> m_auiEncounter[7]
-        >> m_auiEncounter[8] >> m_auiEncounter[9] >> m_auiEncounter[10];
+        >> m_auiEncounter[8] >> m_auiEncounter[9] >> m_auiEncounter[10] >> m_uiOperaEvent;
 
     for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+    {
         if (m_auiEncounter[i] == IN_PROGRESS)               // Do not load an encounter as "In Progress" - reset it instead.
             m_auiEncounter[i] = NOT_STARTED;
+    }
 
     OUT_LOAD_INST_DATA_COMPLETE;
+}
+
+void instance_karazhan::DoPrepareOperaStage(Creature* pOrganizer)
+{
+    if (!pOrganizer)
+        return;
+
+    debug_log("SD2: Barnes Opera Event - Introduction complete - preparing encounter %d", GetData(TYPE_OPERA_PERFORMANCE));
+
+    // summon the bosses and respawn the stage background
+    switch (GetData(TYPE_OPERA_PERFORMANCE))
+    {
+        case OPERA_EVENT_WIZARD_OZ:
+            for (uint8 i = 0; i < MAX_OZ_OPERA_MOBS; ++i)
+                pOrganizer->SummonCreature(aOperaLocOz[i].uiEntry, aOperaLocOz[i].fX, aOperaLocOz[i].fY, aOperaLocOz[i].fZ, aOperaLocOz[i].fO, TEMPSUMMON_DEAD_DESPAWN, 0);
+            DoRespawnGameObject(GO_OZ_BACKDROP, 12*HOUR);
+            DoRespawnGameObject(GO_OZ_HAY,      12*HOUR);
+            break;
+        case OPERA_EVENT_BIG_BAD_WOLF:
+            pOrganizer->SummonCreature(aOperaLocWolf.uiEntry, aOperaLocWolf.fX, aOperaLocWolf.fY, aOperaLocWolf.fZ, aOperaLocWolf.fO, TEMPSUMMON_DEAD_DESPAWN, 0);
+            DoRespawnGameObject(GO_HOOD_BACKDROP, 12*HOUR);
+            DoRespawnGameObject(GO_HOOD_HOUSE,    12*HOUR);
+            DoRespawnGameObject(GO_HOOD_TREE,     12*HOUR);
+            break;
+        case OPERA_EVENT_ROMULO_AND_JUL:
+            pOrganizer->SummonCreature(aOperaLocJul.uiEntry, aOperaLocJul.fX, aOperaLocJul.fY, aOperaLocJul.fZ, aOperaLocJul.fO, TEMPSUMMON_DEAD_DESPAWN, 0);
+            DoRespawnGameObject(GO_RAJ_BACKDROP, 12*HOUR);
+            DoRespawnGameObject(GO_RAJ_MOON,     12*HOUR);
+            DoRespawnGameObject(GO_RAJ_BALCONY,  12*HOUR);
+            break;
+    }
+
+    SetData(TYPE_OPERA, IN_PROGRESS);
 }
 
 InstanceData* GetInstanceData_instance_karazhan(Map* pMap)

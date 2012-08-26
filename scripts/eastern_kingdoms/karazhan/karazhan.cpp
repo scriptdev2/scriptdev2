@@ -34,128 +34,86 @@ EndContentData */
 # npc_barnesAI
 ######*/
 
-#define GOSSIP_READY        "I'm not an actor."
-
-#define SAY_READY           "Splendid, I'm going to get the audience ready. Break a leg!"
-#define SAY_OZ_INTRO1       "Finally, everything is in place. Are you ready for your big stage debut?"
-#define OZ_GOSSIP1          "I'm not an actor."
-#define SAY_OZ_INTRO2       "Don't worry, you'll be fine. You look like a natural!"
-#define OZ_GOSSIP2          "Ok, I'll give it a try, then."
-
-#define SAY_RAJ_INTRO1      "The romantic plays are really tough, but you'll do better this time. You have TALENT. Ready?"
-#define RAJ_GOSSIP1         "I've never been more ready."
-
-#define OZ_GM_GOSSIP1       "[GM] Change event to EVENT_OZ"
-#define OZ_GM_GOSSIP2       "[GM] Change event to EVENT_HOOD"
-#define OZ_GM_GOSSIP3       "[GM] Change event to EVENT_RAJ"
-
-struct Dialogue
-{
-    int32  iTextId;
-    uint32 uiTimer;
-};
-
-static Dialogue aOzDialogue[4]=
-{
-    {-1532103, 6000},
-    {-1532104, 18000},
-    {-1532105, 9000},
-    {-1532106, 15000}
-};
-
-static Dialogue aHoodDialogue[4]=
-{
-    {-1532107, 6000},
-    {-1532108, 10000},
-    {-1532109, 14000},
-    {-1532110, 15000}
-};
-
-static Dialogue aRAJDialogue[4]=
-{
-    {-1532111, 5000},
-    {-1532112, 7000},
-    {-1532113, 14000},
-    {-1532114, 14000}
-};
-
-struct Spawn
-{
-    uint32  uiEntry;
-    float   fPosX;
-};
-
-// Entries and spawn locations for creatures in Oz event
-Spawn aSpawns_OZ[4]=
-{
-    {17535, -10896.0f},                                     // Dorothee
-    {17546, -10891.0f},                                     // Roar
-    {17547, -10884.0f},                                     // Tinhead
-    {17543, -10902.0f},                                     // Strawman
-};
-Spawn Spawn_HOOD = {17603, -10892.0f};                      // Grandmother
-Spawn Spawn_RAJ  = {17534, -10900.0f};                      // Julianne
-
 enum
 {
-    NPC_SPOTLIGHT       = 19525,
+    SAY_BARNES_EVENT_START  = -1532115,
 
-    SPELL_SPOTLIGHT     = 25824,
-    SPELL_TUXEDO        = 32616
+    SAY_BARNES_OZ_1         = -1532103,
+    SAY_BARNES_OZ_2         = -1532104,
+    SAY_BARNES_OZ_3         = -1532105,
+    SAY_BARNES_OZ_4         = -1532106,
+
+    SAY_BARNES_HOOD_1       = -1532107,
+    SAY_BARNES_HOOD_2       = -1532108,
+    SAY_BARNES_HOOD_3       = -1532109,
+    SAY_BARNES_HOOD_4       = -1532110,
+
+    SAY_BARNES_RAJ_1        = -1532111,
+    SAY_BARNES_RAJ_2        = -1532112,
+    SAY_BARNES_RAJ_3        = -1532113,
+    SAY_BARNES_RAJ_4        = -1532114,
+
+    // ToDo: it's not very clear which is the gossip sequence for event FAIL case
+    GOSSIP_ITEM_OPERA_1     = -3532001,
+    GOSSIP_ITEM_OPERA_2     = -3532002,
+
+    TEXT_ID_OPERA_1         = 8970,
+    TEXT_ID_OPERA_2         = 8971,
+    TEXT_ID_OPERA_WIPE      = 8975,
+
+    //SPELL_SPOTLIGHT       = 25824,            // in creature_template_addon
+    SPELL_TUXEDO            = 32616,
+
+    NPC_SPOTLIGHT           = 19525,
 };
 
-const float SPAWN_Z = 90.5f;
-const float SPAWN_Y = -1758.0f;
-const float SPAWN_O = 4.738f;
+// ToDo: these may be the gossip items for raid wipe. Needs research!
+//#define TEXT_ID_WIPE      "The romantic plays are really tough, but you'll do better this time. You have TALENT. Ready?"
+//#define GOSSIP_ITEM_WIPE  "I've never been more ready."
 
-struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
+static const DialogueEntry aIntroDialogue[] =
 {
-    npc_barnesAI(Creature* pCreature) : npc_escortAI(pCreature)
+    {SAY_BARNES_OZ_1,   NPC_BARNES,  6000},
+    {SAY_BARNES_OZ_2,   NPC_BARNES,  18000},
+    {SAY_BARNES_OZ_3,   NPC_BARNES,  9000},
+    {SAY_BARNES_OZ_4,   NPC_BARNES,  15000},
+    {OPERA_EVENT_WIZARD_OZ, 0,       0},
+    {SAY_BARNES_HOOD_1, NPC_BARNES,  6000},
+    {SAY_BARNES_HOOD_2, NPC_BARNES,  10000},
+    {SAY_BARNES_HOOD_3, NPC_BARNES,  14000},
+    {SAY_BARNES_HOOD_4, NPC_BARNES,  15000},
+    {OPERA_EVENT_BIG_BAD_WOLF, 0,    0},
+    {SAY_BARNES_RAJ_1,  NPC_BARNES,  5000},
+    {SAY_BARNES_RAJ_2,  NPC_BARNES,  7000},
+    {SAY_BARNES_RAJ_3,  NPC_BARNES,  14000},
+    {SAY_BARNES_RAJ_4,  NPC_BARNES,  14000},
+    {OPERA_EVENT_ROMULO_AND_JUL, 0,  0},
+    {0, 0, 0},
+};
+
+struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI, private DialogueHelper
+{
+    npc_barnesAI(Creature* pCreature) : npc_escortAI(pCreature),
+        DialogueHelper(aIntroDialogue)
     {
-        m_bRaidWiped = false;
-        m_uiEventId  = 0;
-        m_pInstance  = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_pInstance  = (instance_karazhan*)pCreature->GetInstanceData();
+        InitializeDialogueHelper(m_pInstance);
         Reset();
     }
 
-    ScriptedInstance* m_pInstance;
+    instance_karazhan* m_pInstance;
 
     ObjectGuid m_spotlightGuid;
-
-    uint32 m_uiTalkCount;
-    uint32 m_uiTalkTimer;
-    uint32 m_uiWipeTimer;
-    uint32 m_uiEventId;
-
-    bool m_bPerformanceReady;
-    bool m_bRaidWiped;
 
     void Reset()
     {
         m_spotlightGuid.Clear();
-
-        m_uiTalkCount = 0;
-        m_uiTalkTimer = 2000;
-        m_uiWipeTimer = 5000;
-
-        m_bPerformanceReady = false;
-
-        if (m_pInstance)
-            m_uiEventId = m_pInstance->GetData(DATA_OPERA_PERFORMANCE);
     }
 
-    void StartEvent()
+    void JustSummoned(Creature* pSummoned)
     {
-        if (!m_pInstance)
-            return;
-
-        m_pInstance->SetData(TYPE_OPERA, IN_PROGRESS);
-
-        //resets count for this event, in case earlier failed
-        if (m_uiEventId == EVENT_OZ)
-            m_pInstance->SetData(DATA_OPERA_OZ_DEATHCOUNT, IN_PROGRESS);
-
-        Start(false, NULL, NULL, true);
+        if (pSummoned->GetEntry() == NPC_SPOTLIGHT)
+            m_spotlightGuid = pSummoned->GetObjectGuid();
     }
 
     void WaypointReached(uint32 uiPointId)
@@ -166,144 +124,50 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
         switch(uiPointId)
         {
             case 0:
-                m_creature->CastSpell(m_creature, SPELL_TUXEDO, false);
+                DoCastSpellIfCan(m_creature, SPELL_TUXEDO);
                 m_pInstance->DoUseDoorOrButton(GO_STAGE_DOOR_LEFT);
                 break;
             case 4:
-                m_uiTalkCount = 0;
-                SetEscortPaused(true);
-
-                if (Creature* pSpotlight = m_creature->SummonCreature(NPC_SPOTLIGHT,
-                    m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 0.0f,
-                    TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 60000))
+                switch (m_pInstance->GetData(TYPE_OPERA_PERFORMANCE))
                 {
-                    pSpotlight->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                    pSpotlight->CastSpell(pSpotlight, SPELL_SPOTLIGHT, false);
-                    m_spotlightGuid = pSpotlight->GetObjectGuid();
+                    case OPERA_EVENT_WIZARD_OZ:
+                        StartNextDialogueText(SAY_BARNES_OZ_1);
+                        break;
+                    case OPERA_EVENT_BIG_BAD_WOLF:
+                        StartNextDialogueText(SAY_BARNES_HOOD_1);
+                        break;
+                    case OPERA_EVENT_ROMULO_AND_JUL:
+                        StartNextDialogueText(SAY_BARNES_RAJ_1);
+                        break;
                 }
+                SetEscortPaused(true);
+                m_creature->SummonCreature(NPC_SPOTLIGHT, 0, 0, 0, 0, TEMPSUMMON_DEAD_DESPAWN, 0);
                 break;
             case 8:
                 m_pInstance->DoUseDoorOrButton(GO_STAGE_DOOR_LEFT);
-                m_bPerformanceReady = true;
                 break;
             case 9:
-                PrepareEncounter();
-                m_pInstance->DoUseDoorOrButton(GO_STAGE_CURTAIN);
+                m_pInstance->DoPrepareOperaStage(m_creature);
                 break;
         }
     }
 
-    void Talk(uint32 uiCount)
+    void JustDidDialogueStep(int32 iEntry)
     {
-        int32 iTextId = 0;
-
-        switch(m_uiEventId)
+        switch (iEntry)
         {
-            case EVENT_OZ:
-                if (aOzDialogue[uiCount].iTextId)
-                    iTextId = aOzDialogue[uiCount].iTextId;
-                if (aOzDialogue[uiCount].uiTimer)
-                    m_uiTalkTimer = aOzDialogue[uiCount].uiTimer;
+            case OPERA_EVENT_WIZARD_OZ:
+            case OPERA_EVENT_BIG_BAD_WOLF:
+            case OPERA_EVENT_ROMULO_AND_JUL:
+                // Despawn spotlight and resume escort
+                if (Creature* pSpotlight = m_creature->GetMap()->GetCreature(m_spotlightGuid))
+                    pSpotlight->ForcedDespawn();
+                SetEscortPaused(false);
                 break;
-
-            case EVENT_HOOD:
-                if (aHoodDialogue[uiCount].iTextId)
-                    iTextId = aHoodDialogue[uiCount].iTextId;
-                if (aHoodDialogue[uiCount].uiTimer)
-                    m_uiTalkTimer = aHoodDialogue[uiCount].uiTimer;
-                break;
-
-            case EVENT_RAJ:
-                if (aRAJDialogue[uiCount].iTextId)
-                    iTextId = aRAJDialogue[uiCount].iTextId;
-                if (aRAJDialogue[uiCount].uiTimer)
-                    m_uiTalkTimer = aRAJDialogue[uiCount].uiTimer;
-                break;
-        }
-
-        if (iTextId)
-            DoScriptText(iTextId, m_creature);
-    }
-
-    void PrepareEncounter()
-    {
-        debug_log("SD2: Barnes Opera Event - Introduction complete - preparing encounter %d", m_uiEventId);
-
-        switch(m_uiEventId)
-        {
-            case EVENT_OZ:
-                for(int i=0; i < 4; ++i)
-                    m_creature->SummonCreature(aSpawns_OZ[i].uiEntry, aSpawns_OZ[i].fPosX, SPAWN_Y, SPAWN_Z, SPAWN_O, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, HOUR*2*IN_MILLISECONDS);
-                break;
-            case EVENT_HOOD:
-                m_creature->SummonCreature(Spawn_HOOD.uiEntry, Spawn_HOOD.fPosX, SPAWN_Y, SPAWN_Z, SPAWN_O, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, HOUR*2*IN_MILLISECONDS);
-                break;
-            case EVENT_RAJ:
-                m_creature->SummonCreature(Spawn_RAJ.uiEntry, Spawn_RAJ.fPosX, SPAWN_Y, SPAWN_Z, SPAWN_O, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, HOUR*2*IN_MILLISECONDS);
-                break;
-            default:
-                error_log("SD2: Barnes Opera Event - Wrong EventId set: %d", m_uiEventId);
-                break;
-        }
-
-        m_bRaidWiped = false;
-    }
-
-    void UpdateEscortAI(const uint32 uiDiff)
-    {
-        if (HasEscortState(STATE_ESCORT_PAUSED))
-        {
-            if (m_uiTalkTimer < uiDiff)
-            {
-                if (m_uiTalkCount > 3)
-                {
-                    if (Creature* pSpotlight = m_creature->GetMap()->GetCreature(m_spotlightGuid))
-                        pSpotlight->ForcedDespawn();
-
-                    SetEscortPaused(false);
-                    return;
-                }
-
-                Talk(m_uiTalkCount++);
-            }
-            else
-                m_uiTalkTimer -= uiDiff;
-        }
-
-        if (m_bPerformanceReady)
-        {
-            if (!m_bRaidWiped)
-            {
-                if (m_uiWipeTimer < uiDiff)
-                {
-                    Map *pMap = m_creature->GetMap();
-                    if (!pMap->IsDungeon())
-                        return;
-
-                    Map::PlayerList const &PlayerList = pMap->GetPlayers();
-                    if (PlayerList.isEmpty())
-                        return;
-
-                    m_bRaidWiped = true;
-                    for(Map::PlayerList::const_iterator i = PlayerList.begin();i != PlayerList.end(); ++i)
-                    {
-                        if (i->getSource()->isAlive() && !i->getSource()->isGameMaster())
-                        {
-                            m_bRaidWiped = false;
-                            break;
-                        }
-                    }
-
-                    if (m_bRaidWiped)
-                        EnterEvadeMode();
-
-                    m_uiWipeTimer = 15000;
-                }
-                else
-                    m_uiWipeTimer -= uiDiff;
-            }
         }
     }
+
+    void UpdateEscortAI(const uint32 uiDiff) { DialogueUpdate(uiDiff); }
 };
 
 CreatureAI* GetAI_npc_barnesAI(Creature* pCreature)
@@ -315,66 +179,71 @@ bool GossipHello_npc_barnes(Player* pPlayer, Creature* pCreature)
 {
     if (ScriptedInstance* pInstance = (ScriptedInstance*)pCreature->GetInstanceData())
     {
-        // Check for death of Moroes and if opera event is not done already
-        if (pInstance->GetData(TYPE_MOROES) == DONE && pInstance->GetData(TYPE_OPERA) != DONE)
+        // Check if opera event is not yet in progress
+        if (pInstance->GetData(TYPE_OPERA) == IN_PROGRESS || pInstance->GetData(TYPE_OPERA) == DONE)
+            return true;
+
+        // Check for death of Moroes
+        if (pInstance->GetData(TYPE_MOROES) == DONE)
         {
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, OZ_GOSSIP1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+            pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_OPERA_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
 
-            if (pPlayer->isGameMaster())                    // for GMs we add the possibility to change the event
+            // for GMs we add the possibility to change the event
+            if (pPlayer->isGameMaster())
             {
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, OZ_GM_GOSSIP1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, OZ_GM_GOSSIP2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, OZ_GM_GOSSIP3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "[GM] Change event to EVENT_OZ",   GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "[GM] Change event to EVENT_HOOD", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "[GM] Change event to EVENT_RAJ",  GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
             }
 
-            if (npc_barnesAI* pBarnesAI = dynamic_cast<npc_barnesAI*>(pCreature->AI()))
-            {
-                if (!pBarnesAI->m_bRaidWiped)
-                    pPlayer->SEND_GOSSIP_MENU(8970, pCreature->GetObjectGuid());
-                else
-                    pPlayer->SEND_GOSSIP_MENU(8975, pCreature->GetObjectGuid());
+            pPlayer->SEND_GOSSIP_MENU(pInstance->GetData(TYPE_OPERA) == FAIL ? TEXT_ID_OPERA_1 : TEXT_ID_OPERA_WIPE, pCreature->GetObjectGuid());
 
-                return true;
-            }
+            return true;
         }
     }
 
-    pPlayer->SEND_GOSSIP_MENU(8978, pCreature->GetObjectGuid());
     return true;
 }
 
 bool GossipSelect_npc_barnes(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    npc_barnesAI* pBarnesAI = dynamic_cast<npc_barnesAI*>(pCreature->AI());
-
     switch(uiAction)
     {
         case GOSSIP_ACTION_INFO_DEF+1:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, OZ_GOSSIP2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-            pPlayer->SEND_GOSSIP_MENU(8971, pCreature->GetObjectGuid());
+            pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_OPERA_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+            pPlayer->SEND_GOSSIP_MENU(TEXT_ID_OPERA_2, pCreature->GetObjectGuid());
             break;
         case GOSSIP_ACTION_INFO_DEF+2:
             pPlayer->CLOSE_GOSSIP_MENU();
-            if (pBarnesAI)
-                pBarnesAI->StartEvent();
+            DoScriptText(SAY_BARNES_EVENT_START, pCreature);
+            // start the stage escort
+            if (npc_barnesAI* pBarnesAI = dynamic_cast<npc_barnesAI*>(pCreature->AI()))
+                pBarnesAI->Start(false, NULL, NULL, true);
             break;
+        // GM gossip options
         case GOSSIP_ACTION_INFO_DEF+3:
             pPlayer->CLOSE_GOSSIP_MENU();
-            if (pBarnesAI && pPlayer->isGameMaster())
-                pBarnesAI->m_uiEventId = EVENT_OZ;
-            outstring_log("SD2: %s manually set Opera event to EVENT_OZ", pPlayer->GetGuidStr().c_str());
+            if (ScriptedInstance* pInstance = (ScriptedInstance*)pCreature->GetInstanceData())
+            {
+                pInstance->SetData(TYPE_OPERA_PERFORMANCE, OPERA_EVENT_WIZARD_OZ);
+                outstring_log("SD2: %s manually set Opera event to EVENT_OZ", pPlayer->GetGuidStr().c_str());
+            }
             break;
         case GOSSIP_ACTION_INFO_DEF+4:
             pPlayer->CLOSE_GOSSIP_MENU();
-            if (pBarnesAI && pPlayer->isGameMaster())
-                pBarnesAI->m_uiEventId = EVENT_HOOD;
-            outstring_log("SD2: %s manually set Opera event to EVENT_HOOD", pPlayer->GetGuidStr().c_str());
+            if (ScriptedInstance* pInstance = (ScriptedInstance*)pCreature->GetInstanceData())
+            {
+                pInstance->SetData(TYPE_OPERA_PERFORMANCE, OPERA_EVENT_BIG_BAD_WOLF);
+                outstring_log("SD2: %s manually set Opera event to EVENT_HOOD", pPlayer->GetGuidStr().c_str());
+            }
             break;
         case GOSSIP_ACTION_INFO_DEF+5:
             pPlayer->CLOSE_GOSSIP_MENU();
-            if (pBarnesAI && pPlayer->isGameMaster())
-                pBarnesAI->m_uiEventId = EVENT_RAJ;
-            outstring_log("SD2: %s manually set Opera event to EVENT_RAJ", pPlayer->GetGuidStr().c_str());
+            if (ScriptedInstance* pInstance = (ScriptedInstance*)pCreature->GetInstanceData())
+            {
+                pInstance->SetData(TYPE_OPERA_PERFORMANCE, OPERA_EVENT_ROMULO_AND_JUL);
+                outstring_log("SD2: %s manually set Opera event to EVENT_RAJ", pPlayer->GetGuidStr().c_str());
+            }
             break;
     }
 
@@ -387,10 +256,10 @@ bool GossipSelect_npc_barnes(Player* pPlayer, Creature* pCreature, uint32 uiSend
 
 enum
 {
+    GOSSIP_ITEM_TELEPORT        = -3532000,
+
     SPELL_TELEPORT              = 39567
 };
-
-#define GOSSIP_ITEM_TELEPORT    "Teleport me to the Guardian's Library"
 
 bool GossipHello_npc_berthold(Player* pPlayer, Creature* pCreature)
 {
@@ -398,7 +267,7 @@ bool GossipHello_npc_berthold(Player* pPlayer, Creature* pCreature)
     {
         // Check if Shade of Aran event is done
         if (pInstance->GetData(TYPE_ARAN) == DONE)
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TELEPORT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+            pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TELEPORT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     }
 
     pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
