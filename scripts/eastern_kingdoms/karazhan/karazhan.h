@@ -76,7 +76,7 @@ enum
 enum OperaEvents
 {
     OPERA_EVENT_WIZARD_OZ           = 1,
-    OPERA_EVENT_BIG_BAD_WOLF        = 2,
+    OPERA_EVENT_RED_RIDING_HOOD     = 2,
     OPERA_EVENT_ROMULO_AND_JUL      = 3
 };
 
@@ -124,6 +124,9 @@ class MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
 
         uint32 m_uiOperaEvent;
         uint32 m_uiOzDeathCount;
+
+        GuidList m_lOperaTreeGuidList;
+        GuidList m_lOperaHayGuidList;
 };
 
 class MANGOS_DLL_DECL npc_fiendish_portalAI : public ScriptedAI

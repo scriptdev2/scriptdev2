@@ -56,20 +56,20 @@ enum
     // ToDo: it's not very clear which is the gossip sequence for event FAIL case
     GOSSIP_ITEM_OPERA_1     = -3532001,
     GOSSIP_ITEM_OPERA_2     = -3532002,
+    GOSSIP_ITEM_JUL_WIPE    = -3532003,
+    GOSSIP_ITEM_WOLF_WIPE   = -3532004,
 
     TEXT_ID_OPERA_1         = 8970,
     TEXT_ID_OPERA_2         = 8971,
-    TEXT_ID_OPERA_WIPE      = 8975,
+    TEXT_ID_OPERA_WOLF_WIPE = 8975,
+    TEXT_ID_OPERA_OZ_WIPE   = 8781,             // guesswork, not confirmed
+    //TEXT_ID_OPERA_JUL_WIPE  = ????,           // Item not found in DB: "The romantic plays are really tough, but you'll do better this time. You have TALENT. Ready?"
 
     //SPELL_SPOTLIGHT       = 25824,            // in creature_template_addon
     SPELL_TUXEDO            = 32616,
 
     NPC_SPOTLIGHT           = 19525,
 };
-
-// ToDo: these may be the gossip items for raid wipe. Needs research!
-//#define TEXT_ID_WIPE      "The romantic plays are really tough, but you'll do better this time. You have TALENT. Ready?"
-//#define GOSSIP_ITEM_WIPE  "I've never been more ready."
 
 static const DialogueEntry aIntroDialogue[] =
 {
@@ -82,7 +82,7 @@ static const DialogueEntry aIntroDialogue[] =
     {SAY_BARNES_HOOD_2, NPC_BARNES,  10000},
     {SAY_BARNES_HOOD_3, NPC_BARNES,  14000},
     {SAY_BARNES_HOOD_4, NPC_BARNES,  15000},
-    {OPERA_EVENT_BIG_BAD_WOLF, 0,    0},
+    {OPERA_EVENT_RED_RIDING_HOOD, 0, 0},
     {SAY_BARNES_RAJ_1,  NPC_BARNES,  5000},
     {SAY_BARNES_RAJ_2,  NPC_BARNES,  7000},
     {SAY_BARNES_RAJ_3,  NPC_BARNES,  14000},
@@ -133,7 +133,7 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI, private DialogueHelpe
                     case OPERA_EVENT_WIZARD_OZ:
                         StartNextDialogueText(SAY_BARNES_OZ_1);
                         break;
-                    case OPERA_EVENT_BIG_BAD_WOLF:
+                    case OPERA_EVENT_RED_RIDING_HOOD:
                         StartNextDialogueText(SAY_BARNES_HOOD_1);
                         break;
                     case OPERA_EVENT_ROMULO_AND_JUL:
@@ -157,7 +157,7 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI, private DialogueHelpe
         switch (iEntry)
         {
             case OPERA_EVENT_WIZARD_OZ:
-            case OPERA_EVENT_BIG_BAD_WOLF:
+            case OPERA_EVENT_RED_RIDING_HOOD:
             case OPERA_EVENT_ROMULO_AND_JUL:
                 // Despawn spotlight and resume escort
                 if (Creature* pSpotlight = m_creature->GetMap()->GetCreature(m_spotlightGuid))
@@ -196,7 +196,7 @@ bool GossipHello_npc_barnes(Player* pPlayer, Creature* pCreature)
                 pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "[GM] Change event to EVENT_RAJ",  GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
             }
 
-            pPlayer->SEND_GOSSIP_MENU(pInstance->GetData(TYPE_OPERA) == FAIL ? TEXT_ID_OPERA_1 : TEXT_ID_OPERA_WIPE, pCreature->GetObjectGuid());
+            pPlayer->SEND_GOSSIP_MENU(TEXT_ID_OPERA_1, pCreature->GetObjectGuid());
 
             return true;
         }
@@ -233,7 +233,7 @@ bool GossipSelect_npc_barnes(Player* pPlayer, Creature* pCreature, uint32 uiSend
             pPlayer->CLOSE_GOSSIP_MENU();
             if (ScriptedInstance* pInstance = (ScriptedInstance*)pCreature->GetInstanceData())
             {
-                pInstance->SetData(TYPE_OPERA_PERFORMANCE, OPERA_EVENT_BIG_BAD_WOLF);
+                pInstance->SetData(TYPE_OPERA_PERFORMANCE, OPERA_EVENT_RED_RIDING_HOOD);
                 outstring_log("SD2: %s manually set Opera event to EVENT_HOOD", pPlayer->GetGuidStr().c_str());
             }
             break;

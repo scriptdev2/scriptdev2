@@ -120,14 +120,18 @@ void instance_karazhan::OnObjectCreate(GameObject* pGo)
 
         // Opera event backgrounds
         case GO_OZ_BACKDROP:
-        case GO_OZ_HAY:
         case GO_HOOD_BACKDROP:
-        case GO_HOOD_TREE:
         case GO_HOOD_HOUSE:
         case GO_RAJ_BACKDROP:
         case GO_RAJ_MOON:
         case GO_RAJ_BALCONY:
             break;
+        case GO_OZ_HAY:
+            m_lOperaHayGuidList.push_back(pGo->GetObjectGuid());
+            return;
+        case GO_HOOD_TREE:
+            m_lOperaTreeGuidList.push_back(pGo->GetObjectGuid());
+            return;
 
         default:
             return;
@@ -290,13 +294,15 @@ void instance_karazhan::DoPrepareOperaStage(Creature* pOrganizer)
             for (uint8 i = 0; i < MAX_OZ_OPERA_MOBS; ++i)
                 pOrganizer->SummonCreature(aOperaLocOz[i].uiEntry, aOperaLocOz[i].fX, aOperaLocOz[i].fY, aOperaLocOz[i].fZ, aOperaLocOz[i].fO, TEMPSUMMON_DEAD_DESPAWN, 0);
             DoRespawnGameObject(GO_OZ_BACKDROP, 12*HOUR);
-            DoRespawnGameObject(GO_OZ_HAY,      12*HOUR);
+            for (GuidList::const_iterator itr = m_lOperaHayGuidList.begin(); itr != m_lOperaHayGuidList.end(); ++itr)
+                DoRespawnGameObject(*itr, 12*HOUR);
             break;
-        case OPERA_EVENT_BIG_BAD_WOLF:
+        case OPERA_EVENT_RED_RIDING_HOOD:
             pOrganizer->SummonCreature(aOperaLocWolf.uiEntry, aOperaLocWolf.fX, aOperaLocWolf.fY, aOperaLocWolf.fZ, aOperaLocWolf.fO, TEMPSUMMON_DEAD_DESPAWN, 0);
             DoRespawnGameObject(GO_HOOD_BACKDROP, 12*HOUR);
             DoRespawnGameObject(GO_HOOD_HOUSE,    12*HOUR);
-            DoRespawnGameObject(GO_HOOD_TREE,     12*HOUR);
+            for (GuidList::const_iterator itr = m_lOperaTreeGuidList.begin(); itr != m_lOperaTreeGuidList.end(); ++itr)
+                DoRespawnGameObject(*itr, 12*HOUR);
             break;
         case OPERA_EVENT_ROMULO_AND_JUL:
             pOrganizer->SummonCreature(aOperaLocJul.uiEntry, aOperaLocJul.fX, aOperaLocJul.fY, aOperaLocJul.fZ, aOperaLocJul.fO, TEMPSUMMON_DEAD_DESPAWN, 0);

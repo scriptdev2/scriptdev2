@@ -4371,7 +4371,10 @@ INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 (-3532000,'Teleport me to the Guardian\'s Library','berthold GOSSIP_ITEM_TELEPORT'),
 (-3532001,'I\'m not an actor.','barnes GOSSIP_ITEM_OPERA_1'),
-(-3532002,'Ok, I\'ll give it a try, then.','barnes GOSSIP_ITEM_OPERA_2');
+(-3532002,'Ok, I\'ll give it a try, then.','barnes GOSSIP_ITEM_OPERA_2'),
+(-3532003,'I\'ve never been more ready.','barnes GOSSIP_ITEM_OPERA_JULIANNE_WIPE'),
+(-3532004,'The wolf\'s going down.','barnes GOSSIP_ITEM_OPERA_WOLF_WIPE'),
+(-3532005,'What phat lewtz you have grandmother?','grandma GOSSIP_ITEM_GRANDMA');
 
 -- -3 534 000 THE BATTLE OF MT. HYJAL
 INSERT INTO gossip_texts (entry,content_default,comment) VALUES
