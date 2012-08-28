@@ -67,10 +67,12 @@ enum
     SPELL_RADIATING_OOZE        = 69760,
     SPELL_BIG_OOZE_COMBINE      = 69552, // periodic check
     SPELL_BIG_OOZE_BUFF_COMB    = 69611, // periodic check
-    SPELL_UNSTABLE_EXPLOSION    = 69839
+    SPELL_UNSTABLE_EXPLOSION    = 69839,
+
+    MAX_MUTATE_INFACTION_STEPS  = 5,
 };
 
-static uint32 uiMutatedInfections[5] =
+static const uint32 uiMutatedInfections[MAX_MUTATE_INFACTION_STEPS] =
 {
     SPELL_MUTATED_INFECTION_1,
     SPELL_MUTATED_INFECTION_2,
@@ -92,7 +94,6 @@ struct MANGOS_DLL_DECL boss_rotfaceAI : public ScriptedAI
     uint32 m_uiSlimeSprayTimer;
     uint32 m_uiSlimeFlowTimer;
     uint32 m_uiMutatedInfectionTimer;
-    uint32 m_uiMutatedInfectionBeforeTimer;
     uint32 m_uiInfectionsRate;
 
     void Reset()
@@ -100,7 +101,6 @@ struct MANGOS_DLL_DECL boss_rotfaceAI : public ScriptedAI
         m_uiSlimeSprayTimer             = urand(17000, 23000);
         m_uiSlimeFlowTimer              = 20000;
         m_uiMutatedInfectionTimer       = 60000;
-        m_uiMutatedInfectionBeforeTimer = 60000;
         m_uiInfectionsRate              = 1;
     }
 
@@ -156,15 +156,15 @@ struct MANGOS_DLL_DECL boss_rotfaceAI : public ScriptedAI
 
         // Mutated Infection - faster with time
         // implemented this instead of phases
-        if (m_uiInfectionsRate < 5)
+        if (m_uiInfectionsRate < MAX_MUTATE_INFACTION_STEPS)
         {
             if (m_uiMutatedInfectionTimer <= uiDiff)
             {
-                if (DoCastSpellIfCan(m_creature, uiMutatedInfections[m_uiInfectionsRate]) == CAST_OK)
+                if (DoCastSpellIfCan(m_creature, uiMutatedInfections[m_uiInfectionsRate], CAST_TRIGGERED) == CAST_OK)
                 {
                     m_creature->RemoveAurasDueToSpell(uiMutatedInfections[m_uiInfectionsRate - 1]);
-                    m_uiMutatedInfectionBeforeTimer = - 10000; // every next 15 seconds faster
-                    m_uiMutatedInfectionTimer = m_uiMutatedInfectionBeforeTimer;
+                    // every next 15 seconds faster
+                    m_uiMutatedInfectionTimer = 60000 - m_uiInfectionsRate * 15000;
                     ++m_uiInfectionsRate;
                 }
             }
