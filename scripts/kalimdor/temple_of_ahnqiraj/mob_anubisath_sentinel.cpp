@@ -61,6 +61,16 @@ struct MANGOS_DLL_DECL npc_anubisath_sentinelAI : public ScriptedAI
         m_bEnraged = false;
     }
 
+    void GetAIInformation(ChatHandler& reader)
+    {
+        if (m_lAssistList.empty())
+            reader.PSendSysMessage("Anubisath Sentinel - group not assigned, will be assigned OnAggro");
+        if (m_lAssistList.size() == MAX_BUDDY)
+            reader.PSendSysMessage("Anubisath Sentinel - proper group found");
+        else
+            reader.PSendSysMessage("Anubisath Sentinel - not correct number of mobs for group found. Number found %u, should be %u", m_lAssistList.size(), MAX_BUDDY);
+    }
+
     void JustReachedHome()
     {
         for(GuidList::const_iterator itr = m_lAssistList.begin(); itr != m_lAssistList.end(); ++itr)
@@ -146,10 +156,7 @@ struct MANGOS_DLL_DECL npc_anubisath_sentinelAI : public ScriptedAI
         std::list<Creature*> lAssistList;
         GetCreatureListWithEntryInGrid(lAssistList, m_creature, m_creature->GetEntry(), 80.0f);
 
-        if (lAssistList.empty())
-            return;
-
-        for(std::list<Creature*>::iterator iter = lAssistList.begin(); iter != lAssistList.end(); ++iter)
+        for (std::list<Creature*>::iterator iter = lAssistList.begin(); iter != lAssistList.end(); ++iter)
         {
             m_lAssistList.push_back((*iter)->GetObjectGuid());
 
@@ -160,7 +167,7 @@ struct MANGOS_DLL_DECL npc_anubisath_sentinelAI : public ScriptedAI
         }
 
         if (m_lAssistList.size() != MAX_BUDDY)
-            error_log("SD2: npc_anubisath_sentinel found too few/too many buddies, expected %u.", MAX_BUDDY);
+            error_log("SD2: npc_anubisath_sentinel for %s found too few/too many buddies, expected %u.", m_creature->GetGuidStr().c_str(), MAX_BUDDY);
     }
 
     void UpdateAI(const uint32 uiDiff)
