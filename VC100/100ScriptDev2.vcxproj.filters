@@ -588,9 +588,6 @@
     <ClCompile Include="..\scripts\eastern_kingdoms\scholomance\boss_jandice_barov.cpp">
       <Filter>scripts\eastern_kingdoms\scholomance</Filter>
     </ClCompile>
-    <ClCompile Include="..\scripts\eastern_kingdoms\scholomance\boss_vectus.cpp">
-      <Filter>scripts\eastern_kingdoms\scholomance</Filter>
-    </ClCompile>
     <ClCompile Include="..\scripts\eastern_kingdoms\scholomance\instance_scholomance.cpp">
       <Filter>scripts\eastern_kingdoms\scholomance</Filter>
     </ClCompile>

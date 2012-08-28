@@ -851,10 +851,6 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\eastern_kingdoms\scholomance\boss_vectus.cpp"
-						>
-					</File>
-					<File
 						RelativePath="..\scripts\eastern_kingdoms\scholomance\instance_scholomance.cpp"
 						>
 					</File>
