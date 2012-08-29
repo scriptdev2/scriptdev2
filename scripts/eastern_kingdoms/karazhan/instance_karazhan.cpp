@@ -80,6 +80,8 @@ void instance_karazhan::OnCreatureCreate(Creature* pCreature)
         case NPC_MOROES:
         case NPC_BARNES:
         case NPC_NIGHTBANE:
+        case NPC_JULIANNE:
+        case NPC_ROMULO:
         case NPC_LADY_KEIRA_BERRYBUCK:
         case NPC_LADY_CATRIONA_VON_INDI:
         case NPC_LORD_CRISPIN_FERENCE:
@@ -97,7 +99,7 @@ void instance_karazhan::OnObjectCreate(GameObject* pGo)
     {
         case GO_STAGE_DOOR_LEFT:
         case GO_STAGE_DOOR_RIGHT:
-            if (m_auiEncounter[4] == DONE)
+            if (m_auiEncounter[3] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_GAMESMANS_HALL_EXIT_DOOR:
@@ -105,7 +107,7 @@ void instance_karazhan::OnObjectCreate(GameObject* pGo)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_SIDE_ENTRANCE_DOOR:
-            if (m_auiEncounter[4] == DONE)
+            if (m_auiEncounter[3] == DONE)
                 pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_LOCKED);
             break;
         case GO_STAGE_CURTAIN:
@@ -163,7 +165,12 @@ void instance_karazhan::SetData(uint32 uiType, uint32 uiData)
             m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_OPERA:
+            // Don't store the same data twice
+            if (uiData == m_auiEncounter[uiType])
+                break;
             m_auiEncounter[uiType] = uiData;
+            if (uiData == IN_PROGRESS)
+                m_uiOzDeathCount = 0;
             if (uiData == DONE)
             {
                 DoUseDoorOrButton(GO_STAGE_DOOR_LEFT);
@@ -278,6 +285,28 @@ void instance_karazhan::Load(const char* chrIn)
     }
 
     OUT_LOAD_INST_DATA_COMPLETE;
+}
+
+void instance_karazhan::OnCreatureDeath(Creature* pCreature)
+{
+    switch (pCreature->GetEntry())
+    {
+        case NPC_DOROTHEE:
+        case NPC_ROAR:
+        case NPC_TINHEAD:
+        case NPC_STRAWMAN:
+            ++m_uiOzDeathCount;
+            // Summon Chrone when all 4 Oz mobs are killed
+            if (m_uiOzDeathCount == MAX_OZ_OPERA_MOBS)
+            {
+                if (Creature* pCrone = pCreature->SummonCreature(NPC_CRONE, afChroneSpawnLoc[0], afChroneSpawnLoc[1], afChroneSpawnLoc[2], afChroneSpawnLoc[3], TEMPSUMMON_DEAD_DESPAWN, 0))
+                {
+                    if (pCreature->getVictim())
+                        pCrone->AI()->AttackStart(pCreature->getVictim());
+                }
+            }
+            break;
+    }
 }
 
 void instance_karazhan::DoPrepareOperaStage(Creature* pOrganizer)

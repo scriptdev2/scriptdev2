@@ -45,6 +45,7 @@ enum
     NPC_ROAR                        = 17546,
     NPC_TINHEAD                     = 17547,
     NPC_STRAWMAN                    = 17543,
+    NPC_CRONE                       = 18168,
     NPC_GRANDMOTHER                 = 17603,
     NPC_JULIANNE                    = 17534,
     NPC_ROMULO                      = 17533,
@@ -94,8 +95,10 @@ static const OperaSpawns aOperaLocOz[MAX_OZ_OPERA_MOBS]=
     {NPC_STRAWMAN,  -10902.11f, -1756.45f, 90.55f, 4.66f},
 };
 
-static const OperaSpawns aOperaLocWolf = {NPC_GRANDMOTHER, -10892.0f, -1758.0f, 90.55f, 4.738f};
-static const OperaSpawns aOperaLocJul  = {NPC_JULIANNE,    -10900.0f, -1758.0f, 90.55f, 4.738f};
+static const OperaSpawns aOperaLocWolf = {NPC_GRANDMOTHER, -10892.01f, -1758.01f, 90.55f, 4.73f};
+static const OperaSpawns aOperaLocJul  = {NPC_JULIANNE,    -10893.56f, -1760.43f, 90.55f, 4.55f};
+
+static const float afChroneSpawnLoc[4] = {-10893.11f, -1757.85f, 90.55f, 4.60f};
 
 class MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
 {
@@ -109,6 +112,8 @@ class MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
         void OnPlayerEnter(Player* pPlayer);
         void OnCreatureCreate(Creature* pCreature);
         void OnObjectCreate(GameObject* pGo);
+
+        void OnCreatureDeath(Creature* pCreature);
 
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
