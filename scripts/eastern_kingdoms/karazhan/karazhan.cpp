@@ -25,6 +25,8 @@ EndScriptData */
 npc_barnes
 npc_berthold
 npc_image_of_medivh
+npc_image_arcanagos
+event_spell_medivh_journal
 EndContentData */
 
 #include "precompiled.h"
@@ -303,34 +305,54 @@ enum
 
     // spells
     // Arcanagos
-    SPELL_NOTIFY_FLEE       = 30985,
-    SPELL_PREPARE_FIREBALL  = 30970,
+    //SPELL_NOTIFY_FLEE     = 30985,            // not used - allow Medivh to return inside after the dragon has escaped
+    //SPELL_PREPARE_FIREBALL= 30970,            // not used - allow Medivh to cast fireball
     SPELL_REFLECTION        = 30969,
-    SPELL_SHOOT_FIREBALL    = 30968,
+    //SPELL_SHOOT_FIREBALL  = 30968,            // not used
     SPELL_FIREBALL_REFLECT  = 30971,
 
     // Medivh
-    SPELL_FROST_BREATH      = 30974,
-    SPELL_CONFLAG_BLAST     = 30977,
-    SPELL_EVOCATION         = 30972,
+    //SPELL_FROST_BREATH    = 30974,            // not used
+    SPELL_CONFLAG_BLAST     = 30977,            // cast on Arcanagos
+    SPELL_EVOCATION         = 30972,            // prepare the Conflagration Blast
     SPELL_FIREBALL          = 30967,
-    SPELL_FLY_TO_DEATH      = 30936,
+    //SPELL_FLY_TO_DEATH    = 30936,            // not used - inform the dragon to move to death Location
     SPELL_MANA_SHIELD       = 30973,
 
     //NPC_ARCANAGOS_CREDIT  = 17665,            // purpose unk
+
+    QUEST_MASTERS_TERRACE   = 9645,
 
     POINT_ID_INTRO          = 1,
     POINT_ID_DESPAWN        = 2,
 };
 
-// Note: all coords are guesswork
+/* Notes for future development of the event:
+ * this whole event includes a lot of guesswork
+ * the dummy spells usage is unk; for the moment they are not used
+ * also all coords are guesswork
+ */
 static const float afMedivhSpawnLoc[4] = {-11153.18f, -1889.65f, 91.47f, 2.07f};
+static const float afMedivhExitLoc[3] = {-11121.81f, -1881.24f, 91.47f};
+
 static const float afArcanagosSpawnLoc[4] = {-11242.66f, -1778.55f, 125.35f};
 static const float afArcanagosMoveLoc[3] = {-11170.28f, -1865.09f, 125.35f};
+static const float afArcanagosFleeLoc[3] = {-11003.70f, -1760.18f, 180.25f};
 
 static const DialogueEntry aMedivhDialogue[] =
 {
-    // ToDo:
+    {NPC_IMAGE_OF_MEDIVH,   0,                      10000},
+    {SAY_MEDIVH_1,          NPC_IMAGE_OF_MEDIVH,    6000},
+    {SAY_ARCANAGOS_2,       NPC_IMAGE_OF_ARCANAGOS, 10000},
+    {SAY_MEDIVH_3,          NPC_IMAGE_OF_MEDIVH,    6000},
+    {SAY_ARCANAGOS_4,       NPC_IMAGE_OF_ARCANAGOS, 8000},
+    {SAY_MEDIVH_5,          NPC_IMAGE_OF_MEDIVH,    7000},
+    {SAY_ARCANAGOS_6,       NPC_IMAGE_OF_ARCANAGOS, 0},
+    {SPELL_MANA_SHIELD,     0,                      4000},
+    {EMOTE_CAST_SPELL,      NPC_IMAGE_OF_MEDIVH,    5000},
+    {SPELL_CONFLAG_BLAST,   0,                      1000},
+    {SAY_ARCANAGOS_7,       NPC_IMAGE_OF_ARCANAGOS, 10000},
+    {SAY_MEDIVH_8,          NPC_IMAGE_OF_MEDIVH,    0},
     {0, 0, 0},
 };
 
@@ -346,9 +368,12 @@ struct MANGOS_DLL_DECL npc_image_of_medivhAI : public ScriptedAI, private Dialog
 
     instance_karazhan* m_pInstance;
 
-    void Reset()
-    {
-    }
+    ObjectGuid m_eventStarterGuid;
+
+    void Reset() { }
+
+    void AttackStart(Unit* pWho) { }
+    void MoveInLineOfSight(Unit* pWho) { }
 
     void JustSummoned(Creature* pSummoned)
     {
@@ -356,7 +381,7 @@ struct MANGOS_DLL_DECL npc_image_of_medivhAI : public ScriptedAI, private Dialog
         {
             pSummoned->SetLevitate(true);
             pSummoned->SetWalk(false);
-            pSummoned->GetMotionMaster()->MovePoint(1, afArcanagosMoveLoc[0], afArcanagosMoveLoc[1], afArcanagosMoveLoc[2]);
+            pSummoned->GetMotionMaster()->MovePoint(POINT_ID_INTRO, afArcanagosMoveLoc[0], afArcanagosMoveLoc[1], afArcanagosMoveLoc[2]);
             pSummoned->SetByteFlag(UNIT_FIELD_BYTES_1, 3, UNIT_BYTE1_FLAG_ALWAYS_STAND | UNIT_BYTE1_FLAG_UNK_2);
         }
     }
@@ -369,17 +394,54 @@ struct MANGOS_DLL_DECL npc_image_of_medivhAI : public ScriptedAI, private Dialog
         switch (uiPointId)
         {
             case POINT_ID_INTRO:
-                // ToDo: start dialogue here
+                StartNextDialogueText(NPC_IMAGE_OF_MEDIVH);
                 break;
             case POINT_ID_DESPAWN:
+                pSummoned->ForcedDespawn();
+                m_creature->ForcedDespawn(10000);
+                m_creature->GetMotionMaster()->MovePoint(0, afMedivhExitLoc[0], afMedivhExitLoc[1], afMedivhExitLoc[2]);
+                // complete quest
+                if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_eventStarterGuid))
+                    pPlayer->GroupEventHappens(QUEST_MASTERS_TERRACE, m_creature);
                 break;
+        }
+    }
+
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
+    {
+        if (pSpell->Id == SPELL_FIREBALL_REFLECT && pCaster->GetEntry() == NPC_IMAGE_OF_ARCANAGOS)
+        {
+            StartNextDialogueText(SPELL_MANA_SHIELD);
+            DoCastSpellIfCan(m_creature, SPELL_MANA_SHIELD);
         }
     }
 
     void JustDidDialogueStep(int32 iEntry)
     {
-        // ToDo:
+        if (!m_pInstance)
+            return;
+
+        switch (iEntry)
+        {
+            case SAY_ARCANAGOS_6:
+                if (Creature* pDragon = m_pInstance->GetSingleCreatureFromStorage(NPC_IMAGE_OF_ARCANAGOS))
+                    DoCastSpellIfCan(pDragon, SPELL_FIREBALL);
+                break;
+            case EMOTE_CAST_SPELL:
+                DoCastSpellIfCan(m_creature, SPELL_EVOCATION);
+                break;
+            case SPELL_CONFLAG_BLAST:
+                m_creature->RemoveAurasDueToSpell(SPELL_EVOCATION);
+                if (Creature* pDragon = m_pInstance->GetSingleCreatureFromStorage(NPC_IMAGE_OF_ARCANAGOS))
+                {
+                    DoCastSpellIfCan(pDragon, SPELL_CONFLAG_BLAST, CAST_TRIGGERED);
+                    pDragon->GetMotionMaster()->MovePoint(POINT_ID_DESPAWN, afArcanagosFleeLoc[0], afArcanagosFleeLoc[1], afArcanagosFleeLoc[2]);
+                }
+                break;
+        }
     }
+
+    void SetEventStarter(ObjectGuid m_starterGuid) { m_eventStarterGuid = m_starterGuid; }
 
     void UpdateAI(const uint32 uiDiff) { DialogueUpdate(uiDiff); }
 };
@@ -389,13 +451,57 @@ CreatureAI* GetAI_npc_image_of_medivhAI(Creature* pCreature)
     return new npc_image_of_medivhAI(pCreature);
 }
 
+/*######
+# npc_image_arcanagos
+######*/
+
+struct MANGOS_DLL_DECL npc_image_arcanagosAI : public ScriptedAI
+{
+    npc_image_arcanagosAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
+
+    void Reset() { }
+
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
+    {
+        if (pSpell->Id == SPELL_FIREBALL && pCaster->GetEntry() == NPC_IMAGE_OF_MEDIVH)
+        {
+            // !!!Workaround Alert!!! - the spell should be cast on Medivh without changing the unit flags!
+            pCaster->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+
+            DoCastSpellIfCan(pCaster, SPELL_FIREBALL_REFLECT, CAST_TRIGGERED);
+            DoCastSpellIfCan(m_creature, SPELL_REFLECTION, CAST_TRIGGERED);
+
+            pCaster->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+        }
+    }
+
+    void AttackStart(Unit* pWho) { }
+    void MoveInLineOfSight(Unit* pWho) { }
+    void UpdateAI (const uint32 uiDiff) { }
+};
+
+CreatureAI* GetAI_npc_image_arcanagosAI(Creature* pCreature)
+{
+    return new npc_image_arcanagosAI(pCreature);
+}
+
+/*######
+# event_spell_medivh_journal
+######*/
+
 bool ProcessEventId_event_spell_medivh_journal(uint32 uiEventId, Object* pSource, Object* pTarget, bool bIsStart)
 {
     if (bIsStart && pSource->GetTypeId() == TYPEID_PLAYER)
     {
         // Summon Medivh and Arcanagos
         if (Creature* pMedivh = ((Player*)pSource)->SummonCreature(NPC_IMAGE_OF_MEDIVH, afMedivhSpawnLoc[0], afMedivhSpawnLoc[1], afMedivhSpawnLoc[2], afMedivhSpawnLoc[3], TEMPSUMMON_DEAD_DESPAWN, 0))
+        {
             pMedivh->SummonCreature(NPC_IMAGE_OF_ARCANAGOS, afArcanagosSpawnLoc[0], afArcanagosSpawnLoc[1], afArcanagosSpawnLoc[2], afArcanagosSpawnLoc[2], TEMPSUMMON_DEAD_DESPAWN, 0);
+
+            // store the player who started the event
+            if (npc_image_of_medivhAI* pMedivhAI = dynamic_cast<npc_image_of_medivhAI*>(pMedivh->AI()))
+                pMedivhAI->SetEventStarter(pSource->GetObjectGuid());
+        }
     }
 
     return true;
@@ -421,6 +527,11 @@ void AddSC_karazhan()
     pNewScript = new Script;
     pNewScript->Name = "npc_image_of_medivh";
     pNewScript->GetAI = &GetAI_npc_image_of_medivhAI;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_image_arcanagos";
+    pNewScript->GetAI = &GetAI_npc_image_arcanagosAI;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
