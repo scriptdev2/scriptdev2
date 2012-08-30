@@ -17,13 +17,14 @@
 /* ScriptData
 SDName: Karazhan
 SD%Complete: 100
-SDComment: Support for Barnes (Opera controller) and Berthold (Doorman).
+SDComment: Quest support: 9645. Support for Barnes (Opera controller) and Berthold (Doorman).
 SDCategory: Karazhan
 EndScriptData */
 
 /* ContentData
 npc_barnes
 npc_berthold
+npc_image_of_medivh
 EndContentData */
 
 #include "precompiled.h"
@@ -283,6 +284,123 @@ bool GossipSelect_npc_berthold(Player* pPlayer, Creature* pCreature, uint32 uiSe
     return true;
 }
 
+/*######
+# npc_image_of_medivh
+######*/
+
+enum
+{
+    // yells
+    SAY_MEDIVH_1            = -1532116,
+    SAY_ARCANAGOS_2         = -1532117,
+    SAY_MEDIVH_3            = -1532118,
+    SAY_ARCANAGOS_4         = -1532119,
+    SAY_MEDIVH_5            = -1532120,
+    SAY_ARCANAGOS_6         = -1532121,
+    EMOTE_CAST_SPELL        = -1532122,
+    SAY_ARCANAGOS_7         = -1532123,
+    SAY_MEDIVH_8            = -1532124,
+
+    // spells
+    // Arcanagos
+    SPELL_NOTIFY_FLEE       = 30985,
+    SPELL_PREPARE_FIREBALL  = 30970,
+    SPELL_REFLECTION        = 30969,
+    SPELL_SHOOT_FIREBALL    = 30968,
+    SPELL_FIREBALL_REFLECT  = 30971,
+
+    // Medivh
+    SPELL_FROST_BREATH      = 30974,
+    SPELL_CONFLAG_BLAST     = 30977,
+    SPELL_EVOCATION         = 30972,
+    SPELL_FIREBALL          = 30967,
+    SPELL_FLY_TO_DEATH      = 30936,
+    SPELL_MANA_SHIELD       = 30973,
+
+    //NPC_ARCANAGOS_CREDIT  = 17665,            // purpose unk
+
+    POINT_ID_INTRO          = 1,
+    POINT_ID_DESPAWN        = 2,
+};
+
+// Note: all coords are guesswork
+static const float afMedivhSpawnLoc[4] = {-11153.18f, -1889.65f, 91.47f, 2.07f};
+static const float afArcanagosSpawnLoc[4] = {-11242.66f, -1778.55f, 125.35f};
+static const float afArcanagosMoveLoc[3] = {-11170.28f, -1865.09f, 125.35f};
+
+static const DialogueEntry aMedivhDialogue[] =
+{
+    // ToDo:
+    {0, 0, 0},
+};
+
+struct MANGOS_DLL_DECL npc_image_of_medivhAI : public ScriptedAI, private DialogueHelper
+{
+    npc_image_of_medivhAI(Creature* pCreature) : ScriptedAI(pCreature),
+        DialogueHelper(aMedivhDialogue)
+    {
+        m_pInstance  = (instance_karazhan*)pCreature->GetInstanceData();
+        InitializeDialogueHelper(m_pInstance);
+        Reset();
+    }
+
+    instance_karazhan* m_pInstance;
+
+    void Reset()
+    {
+    }
+
+    void JustSummoned(Creature* pSummoned)
+    {
+        if (pSummoned->GetEntry() == NPC_IMAGE_OF_ARCANAGOS)
+        {
+            pSummoned->SetLevitate(true);
+            pSummoned->SetWalk(false);
+            pSummoned->GetMotionMaster()->MovePoint(1, afArcanagosMoveLoc[0], afArcanagosMoveLoc[1], afArcanagosMoveLoc[2]);
+            pSummoned->SetByteFlag(UNIT_FIELD_BYTES_1, 3, UNIT_BYTE1_FLAG_ALWAYS_STAND | UNIT_BYTE1_FLAG_UNK_2);
+        }
+    }
+
+    void SummonedMovementInform(Creature* pSummoned, uint32 uiMotionType, uint32 uiPointId)
+    {
+        if (uiMotionType != POINT_MOTION_TYPE || pSummoned->GetEntry() != NPC_IMAGE_OF_ARCANAGOS)
+            return;
+
+        switch (uiPointId)
+        {
+            case POINT_ID_INTRO:
+                // ToDo: start dialogue here
+                break;
+            case POINT_ID_DESPAWN:
+                break;
+        }
+    }
+
+    void JustDidDialogueStep(int32 iEntry)
+    {
+        // ToDo:
+    }
+
+    void UpdateAI(const uint32 uiDiff) { DialogueUpdate(uiDiff); }
+};
+
+CreatureAI* GetAI_npc_image_of_medivhAI(Creature* pCreature)
+{
+    return new npc_image_of_medivhAI(pCreature);
+}
+
+bool ProcessEventId_event_spell_medivh_journal(uint32 uiEventId, Object* pSource, Object* pTarget, bool bIsStart)
+{
+    if (bIsStart && pSource->GetTypeId() == TYPEID_PLAYER)
+    {
+        // Summon Medivh and Arcanagos
+        if (Creature* pMedivh = ((Player*)pSource)->SummonCreature(NPC_IMAGE_OF_MEDIVH, afMedivhSpawnLoc[0], afMedivhSpawnLoc[1], afMedivhSpawnLoc[2], afMedivhSpawnLoc[3], TEMPSUMMON_DEAD_DESPAWN, 0))
+            pMedivh->SummonCreature(NPC_IMAGE_OF_ARCANAGOS, afArcanagosSpawnLoc[0], afArcanagosSpawnLoc[1], afArcanagosSpawnLoc[2], afArcanagosSpawnLoc[2], TEMPSUMMON_DEAD_DESPAWN, 0);
+    }
+
+    return true;
+}
+
 void AddSC_karazhan()
 {
     Script* pNewScript;
@@ -298,5 +416,15 @@ void AddSC_karazhan()
     pNewScript->Name = "npc_berthold";
     pNewScript->pGossipHello = &GossipHello_npc_berthold;
     pNewScript->pGossipSelect = &GossipSelect_npc_berthold;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_image_of_medivh";
+    pNewScript->GetAI = &GetAI_npc_image_of_medivhAI;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "event_spell_medivh_journal";
+    pNewScript->pProcessEventId = &ProcessEventId_event_spell_medivh_journal;
     pNewScript->RegisterSelf();
 }

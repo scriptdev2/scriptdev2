@@ -23,8 +23,6 @@ enum
     TYPE_NIGHTBANE                  = 10,
     TYPE_OPERA_PERFORMANCE          = 11,               // no regular encounter - just store one random opera event
 
-    DATA_OPERA_OZ_DEATHCOUNT        = 12,
-
     NPC_ATTUMEN                     = 15550,
     NPC_MIDNIGHT                    = 16151,
     NPC_MOROES                      = 15687,
@@ -49,6 +47,10 @@ enum
     NPC_GRANDMOTHER                 = 17603,
     NPC_JULIANNE                    = 17534,
     NPC_ROMULO                      = 17533,
+
+    // The Master's Terrace quest related
+    NPC_IMAGE_OF_MEDIVH             = 17651,
+    NPC_IMAGE_OF_ARCANAGOS          = 17652,
 
     GO_STAGE_CURTAIN                = 183932,
     GO_STAGE_DOOR_LEFT              = 184278,
