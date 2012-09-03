@@ -732,7 +732,7 @@ UPDATE creature_template SET ScriptName='boss_terestian_illhoof' WHERE entry=156
 UPDATE creature_template SET ScriptName='boss_shade_of_aran' WHERE entry=16524;
 UPDATE creature_template SET ScriptName='boss_netherspite' WHERE entry=15689;
 UPDATE creature_template SET ScriptName='boss_malchezaar' WHERE entry=15690;
--- UPDATE creature_template SET ScriptName='boss_nightbane' WHERE entry=17225;
+UPDATE creature_template SET ScriptName='boss_nightbane' WHERE entry=17225;
 UPDATE creature_template SET ScriptName='boss_bigbadwolf' WHERE entry=17521;
 UPDATE creature_template SET ScriptName='mob_demon_chain' WHERE entry=17248;
 UPDATE creature_template SET ScriptName='npc_fiendish_portal' WHERE entry=17265;
@@ -742,8 +742,9 @@ UPDATE creature_template SET ScriptName='npc_barnes' WHERE entry=16812;
 UPDATE creature_template SET ScriptName='npc_grandmother' WHERE entry=17603;
 UPDATE creature_template SET ScriptName='npc_image_of_medivh' WHERE entry=17651;
 UPDATE creature_template SET ScriptName='npc_image_arcanagos' WHERE entry=17652;
-DELETE FROM scripted_event_id WHERE id=10951;
+DELETE FROM scripted_event_id WHERE id IN (10591,10951);
 INSERT INTO scripted_event_id VALUES
+(10591,'event_spell_summon_nightbane'),
 (10951,'event_spell_medivh_journal');
 
 /* LOCH MODAN */

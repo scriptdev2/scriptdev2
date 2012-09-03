@@ -335,7 +335,7 @@ enum
 static const float afMedivhSpawnLoc[4] = {-11153.18f, -1889.65f, 91.47f, 2.07f};
 static const float afMedivhExitLoc[3] = {-11121.81f, -1881.24f, 91.47f};
 
-static const float afArcanagosSpawnLoc[4] = {-11242.66f, -1778.55f, 125.35f};
+static const float afArcanagosSpawnLoc[4] = {-11242.66f, -1778.55f, 125.35f, 0.0f};
 static const float afArcanagosMoveLoc[3] = {-11170.28f, -1865.09f, 125.35f};
 static const float afArcanagosFleeLoc[3] = {-11003.70f, -1760.18f, 180.25f};
 
