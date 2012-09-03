@@ -29,6 +29,7 @@ enum
     NPC_BARNES                      = 16812,
     // NPC_TERESTIAN                = 15688,
     NPC_NIGHTBANE                   = 17225,
+    NPC_NIGHTBANE_HELPER            = 17260,
 
     // Moroes event related
     NPC_LADY_KEIRA_BERRYBUCK        = 17007,
@@ -122,6 +123,9 @@ class MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
 
         void DoPrepareOperaStage(Creature* pOrganizer);
 
+        void GetNightbaneGroundTriggers(GuidList &lList) { lList = m_lNightbaneGroundTriggers; }
+        void GetNightbaneAirTriggers(GuidList &lList) { lList = m_lNightbaneAirTriggers; }
+
         void Load(const char* chrIn);
         const char* Save() { return m_strInstData.c_str(); }
 
@@ -134,6 +138,8 @@ class MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
 
         GuidList m_lOperaTreeGuidList;
         GuidList m_lOperaHayGuidList;
+        GuidList m_lNightbaneGroundTriggers;
+        GuidList m_lNightbaneAirTriggers;
 };
 
 class MANGOS_DLL_DECL npc_fiendish_portalAI : public ScriptedAI

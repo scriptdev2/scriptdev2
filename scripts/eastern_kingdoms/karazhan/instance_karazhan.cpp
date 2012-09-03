@@ -92,6 +92,12 @@ void instance_karazhan::OnCreatureCreate(Creature* pCreature)
         case NPC_IMAGE_OF_ARCANAGOS:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
+        case NPC_NIGHTBANE_HELPER:
+            if (pCreature->GetPositionZ() < 100.0f)
+                m_lNightbaneGroundTriggers.push_back(pCreature->GetObjectGuid());
+            else
+                m_lNightbaneAirTriggers.push_back(pCreature->GetObjectGuid());
+            break;
     }
 }
 
