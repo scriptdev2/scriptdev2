@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Instance_Karazhan
 SD%Complete: 70
-SDComment: Instance Script for Karazhan to help in various encounters. TODO: GameObject visibility for Opera event.
+SDComment: Instance Script for Karazhan to help in various encounters.
 SDCategory: Karazhan
 EndScriptData */
 
@@ -191,7 +191,13 @@ void instance_karazhan::SetData(uint32 uiType, uint32 uiData)
             break;
         case TYPE_CURATOR:
         case TYPE_TERESTIAN:
+            m_auiEncounter[uiType] = uiData;
+            break;
         case TYPE_ARAN:
+            if (uiData == FAIL || uiData == DONE)
+                DoToggleGameObjectFlags(GO_PRIVATE_LIBRARY_DOOR, GO_FLAG_LOCKED, false);
+            if (uiData == IN_PROGRESS)
+                DoToggleGameObjectFlags(GO_PRIVATE_LIBRARY_DOOR, GO_FLAG_LOCKED, true);
             m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_NETHERSPITE:

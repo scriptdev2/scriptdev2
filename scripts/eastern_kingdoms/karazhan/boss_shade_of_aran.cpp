@@ -17,13 +17,12 @@
 /* ScriptData
 SDName: Boss_Shade_of_Aran
 SD%Complete: 95
-SDComment: Flame wreath missing cast animation, mods won't trigger.
+SDComment: When drinking mana, it should remove all negative damage auras and should sit. Timers may need adjustments.
 SDCategory: Karazhan
 EndScriptData */
 
 #include "precompiled.h"
 #include "karazhan.h"
-#include "GameObject.h"
 
 enum
 {
@@ -44,44 +43,50 @@ enum
     SAY_DEATH                   = -1532087,
     SAY_ATIESH                  = -1532088,                 //Atiesh is equipped by a raid member
 
-    //Spells
+    // basic spells
     SPELL_FROSTBOLT             = 29954,
     SPELL_FIREBALL              = 29953,
-    SPELL_ARCMISSLE             = 29955,
-    SPELL_CHAINSOFICE           = 29991,
-    SPELL_DRAGONSBREATH         = 29964,
-    SPELL_MASSSLOW              = 30035,
-    SPELL_FLAME_WREATH          = 29946,
-    SPELL_AOE_CS                = 29961,
-    SPELL_PLAYERPULL            = 32265,
-    SPELL_AEXPLOSION            = 29973,
-    SPELL_MASS_POLY             = 29963,
-    SPELL_BLINK_CENTER          = 29967,
-    SPELL_ELEMENTALS            = 29962,
-    SPELL_CONJURE               = 29975,
+    SPELL_ARCANE_MISSILES       = 29955,
+    //SPELL_DRAGONS_BREATH      = 29964,                    // not used since 2.1.0
+    SPELL_CHAINS_OF_ICE         = 29991,
+    SPELL_COUNTERSPELL          = 29961,
+    //SPELL_COMBUSTION          = 29977,                    // spell not confirmed
+    //SPELL_PRESENCE_OF_MIND    = 29976,                    // spell not confirmed
+    //SPELL_WATER_BREAK         = 39177,                    // purpose unk
+
+    // low mana spells
+    SPELL_MASS_POLYMORPH        = 29963,
+    SPELL_CONJURE_WATER         = 29975,
     SPELL_DRINK                 = 30024,
-    SPELL_POTION                = 32453,
-    SPELL_AOE_PYROBLAST         = 29978,
+    SPELL_MANA_POTION           = 32453,
+    SPELL_PYROBLAST             = 29978,
 
-    SPELL_EXPLOSION             = 20476,
-    SPELL_KNOCKBACK_500         = 11027,
+    // super spells
+    SPELL_FLAME_WREATH          = 30004,                // triggers 29946 on targets
+    SPELL_SUMMON_BLIZZARD       = 29969,                // script target on npc 17161 - triggers spell 29952 on target
+    SPELL_BLINK_CENTER          = 29967,
+    SPELL_MASSIVE_MAGNETIC_PULL = 29979,                // triggers 30010 on target
+    SPELL_MASS_SLOW             = 30035,
+    SPELL_ARCANE_EXPLOSION      = 29973,
 
-    //Creature Spells
-    SPELL_CIRCULAR_BLIZZARD     = 29951,                    //29952 is the REAL circular blizzard that leaves persistant blizzards that last for 10 seconds
-    SPELL_WATERBOLT             = 31012,
-    SPELL_SHADOW_PYRO           = 29978,
+    // summon elemental spells
+    SPELL_SUMMON_WATER_ELEM_1   = 29962,
+    SPELL_SUMMON_WATER_ELEM_2   = 37051,
+    SPELL_SUMMON_WATER_ELEM_3   = 37052,
+    SPELL_SUMMON_WATER_ELEM_4   = 37053,
 
-    //Creatures
+    // Creatures
     NPC_WATER_ELEMENTAL         = 17167,
     NPC_SHADOW_OF_ARAN          = 18254,
-    NPC_ARAN_BLIZZARD           = 17161
+
+    MAX_SHADOWS_OF_ARAN         = 5,                    // this is not confirmed
 };
 
-enum SuperSpell
+enum SuperSpells
 {
-    SUPER_FLAME = 0,
-    SUPER_BLIZZARD,
-    SUPER_AE,
+    SUPER_FLAME_WREATH  = 0,
+    SUPER_BLIZZARD      = 1,
+    SUPER_ARCANE_EXPL   = 2,
 };
 
 struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
@@ -94,57 +99,38 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    uint32 m_uiSecondarySpell_Timer;
-    uint32 m_uiNormalCast_Timer;
-    uint32 m_uiSuperCast_Timer;
-    uint32 m_uiBerserk_Timer;
-    uint32 m_uiCloseDoor_Timer;                                  // Don't close the door right on aggro in case some people are still entering.
+    uint32 m_uiSecondarySpellTimer;
+    uint32 m_uiNormalCastTimer;
+    uint32 m_uiSuperCastTimer;
+    uint32 m_uiBerserkTimer;
 
     uint8 m_uiLastSuperSpell;
+    uint8 m_uiLastNormalSpell;
 
-    uint32 m_uiFlameWreath_Timer;
-    uint32 m_uiFlameWreathCheck_Timer;
-    ObjectGuid m_aFlameWreathTargetGuid[3];
-    float m_fFWTargPosX[3];
-    float m_fFWTargPosY[3];
-
-    uint32 m_uiCurrentNormalSpell;
-    uint32 m_uiArcaneCooldown;
-    uint32 m_uiFireCooldown;
-    uint32 m_uiFrostCooldown;
-
-    uint32 m_uiDrinkInturrupt_Timer;
+    uint32 m_uiManaRecoveryTimer;
+    uint8 m_uiManaRecoveryStage;
 
     bool m_bElementalsSpawned;
-    bool m_bDrinking;
+    bool m_bIsDrinking;
     bool m_bDrinkInturrupted;
 
     void Reset()
     {
-        m_uiSecondarySpell_Timer = 5000;
-        m_uiNormalCast_Timer = 0;
-        m_uiSuperCast_Timer = 35000;
-        m_uiBerserk_Timer = 720000;
-        m_uiCloseDoor_Timer = 15000;
+        m_uiLastSuperSpell      = urand(SUPER_FLAME_WREATH, SUPER_ARCANE_EXPL);
+        m_uiLastNormalSpell     = urand(0, 2);
 
-        m_uiLastSuperSpell = urand(0, 2);
+        m_uiSecondarySpellTimer = 5000;
+        m_uiNormalCastTimer     = 0;
+        m_uiSuperCastTimer      = 35000;
+        m_uiManaRecoveryTimer   = 0;
+        m_uiManaRecoveryStage   = 0;
+        m_uiBerserkTimer        = 12*MINUTE*IN_MILLISECONDS;
 
-        m_uiFlameWreath_Timer = 0;
-        m_uiFlameWreathCheck_Timer = 0;
+        m_bElementalsSpawned    = false;
+        m_bIsDrinking           = false;
+        m_bDrinkInturrupted     = false;
 
-        m_uiCurrentNormalSpell = 0;
-        m_uiArcaneCooldown = 0;
-        m_uiFireCooldown = 0;
-        m_uiFrostCooldown = 0;
-
-        m_uiDrinkInturrupt_Timer = 10000;
-
-        m_bElementalsSpawned = false;
-        m_bDrinking = false;
-        m_bDrinkInturrupted = false;
-
-        if (m_pInstance)
-            m_pInstance->SetData(TYPE_ARAN, NOT_STARTED);
+        SetCombatMovement(true);
     }
 
     void KilledUnit(Unit* pVictim)
@@ -155,6 +141,9 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
     void JustDied(Unit* pVictim)
     {
         DoScriptText(SAY_DEATH, m_creature);
+
+        // Remove the summoned elementals - which are considered guardians
+        m_creature->RemoveGuardians();
 
         if (m_pInstance)
             m_pInstance->SetData(TYPE_ARAN, DONE);
@@ -173,39 +162,41 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
             m_pInstance->SetData(TYPE_ARAN, IN_PROGRESS);
     }
 
-    void FlameWreathEffect()
+    void JustReachedHome()
     {
-        std::vector<Unit*> targets;
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_ARAN, FAIL);
 
-        ThreatList const& tList = m_creature->getThreatManager().getThreatList();
-        if (tList.empty())
-            return;
+        // Remove the summoned elementals - which are considered guardians
+        m_creature->RemoveGuardians();
+    }
 
-        //store the threat list in a different container
-        for (ThreatList::const_iterator itr = tList.begin();itr != tList.end(); ++itr)
+    void DamageTaken(Unit* pDoneBy, uint32& uiDamage)
+    {
+        if (!m_bDrinkInturrupted && m_bIsDrinking && uiDamage > 0)
         {
-            Unit* pTarget = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid());
+            if (!m_creature->HasAura(SPELL_DRINK))
+                return;
 
-            //only on alive players
-            if (pTarget && pTarget->isAlive() && pTarget->GetTypeId() == TYPEID_PLAYER)
-                targets.push_back(pTarget);
-        }
-
-        //cut down to size if we have more than 3 targets
-        while(targets.size() > 3)
-            targets.erase(targets.begin()+rand()%targets.size());
-
-        uint32 i = 0;
-        for(std::vector<Unit*>::iterator itr = targets.begin(); itr!= targets.end(); ++itr)
-        {
-            if (*itr)
+            if (DoCastSpellIfCan(m_creature, SPELL_MANA_POTION) == CAST_OK)
             {
-                m_aFlameWreathTargetGuid[i] = (*itr)->GetObjectGuid();
-                m_fFWTargPosX[i] = (*itr)->GetPositionX();
-                m_fFWTargPosY[i] = (*itr)->GetPositionY();
-                m_creature->CastSpell((*itr), SPELL_FLAME_WREATH, true);
-                ++i;
+                m_creature->RemoveAurasDueToSpell(SPELL_DRINK);
+                m_creature->SetStandState(UNIT_STAND_STATE_STAND);
+                m_uiManaRecoveryTimer = 1000;
+                m_uiManaRecoveryStage = 2;
+                m_bDrinkInturrupted = true;
             }
+        }
+    }
+
+    void JustSummoned(Creature* pSummoned)
+    {
+        switch (pSummoned->GetEntry())
+        {
+            case NPC_WATER_ELEMENTAL:
+            case NPC_SHADOW_OF_ARAN:
+                pSummoned->SetInCombatWithZone();
+                break;
         }
     }
 
@@ -214,95 +205,64 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (m_uiCloseDoor_Timer)
+        // Start drinking when below 20% mana
+        if (!m_bIsDrinking && m_creature->getPowerType() == POWER_MANA && (m_creature->GetPower(POWER_MANA)*100 / m_creature->GetMaxPower(POWER_MANA)) < 20)
         {
-            if (m_uiCloseDoor_Timer <= uiDiff)
+            if (DoCastSpellIfCan(m_creature, SPELL_MASS_POLYMORPH) == CAST_OK)
             {
-                if (m_pInstance)
+                DoScriptText(SAY_DRINK, m_creature);
+                SetCombatMovement(false);
+                m_creature->GetMotionMaster()->MoveIdle();
+
+                m_uiManaRecoveryStage = 0;
+                m_uiManaRecoveryTimer = 2000;
+                m_bDrinkInturrupted   = false;
+                m_bIsDrinking = true;
+                return;
+            }
+        }
+
+        if (m_bIsDrinking)
+        {
+            // Do the mana recovery process
+            if (m_uiManaRecoveryTimer < uiDiff)
+            {
+                switch (m_uiManaRecoveryStage)
                 {
-                    if (GameObject* pDoor = m_pInstance->GetSingleGameObjectFromStorage(GO_PRIVATE_LIBRARY_DOOR))
-                        pDoor->SetGoState(GO_STATE_READY);
+                    case 0:
+                        if (DoCastSpellIfCan(m_creature, SPELL_CONJURE_WATER) == CAST_OK)
+                            m_uiManaRecoveryTimer = 2000;
+                        break;
+                    case 1:
+                        if (DoCastSpellIfCan(m_creature, SPELL_DRINK) == CAST_OK)
+                        {
+                            m_creature->SetStandState(UNIT_STAND_STATE_SIT);
+                            m_uiManaRecoveryTimer = 5000;
+                        }
+                        break;
+                    case 2:
+                        if (DoCastSpellIfCan(m_creature, SPELL_PYROBLAST) == CAST_OK)
+                        {
+                            SetCombatMovement(true);
+                            DoStartMovement(m_creature->getVictim());
+                            m_creature->SetStandState(UNIT_STAND_STATE_STAND);
 
-                    m_uiCloseDoor_Timer = 0;
+                            m_uiManaRecoveryTimer = 2000;
+                            m_bIsDrinking = false;
+                        }
+                        break;
                 }
+                ++m_uiManaRecoveryStage;
             }
             else
-                m_uiCloseDoor_Timer -= uiDiff;
-        }
+                m_uiManaRecoveryTimer -= uiDiff;
 
-        //Cooldowns for casts
-        if (m_uiArcaneCooldown)
-        {
-            if (m_uiArcaneCooldown >= uiDiff)
-                m_uiArcaneCooldown -= uiDiff;
-            else
-                m_uiArcaneCooldown = 0;
-        }
-
-        if (m_uiFireCooldown)
-        {
-            if (m_uiFireCooldown >= uiDiff)
-                m_uiFireCooldown -= uiDiff;
-            else
-                m_uiFireCooldown = 0;
-        }
-
-        if (m_uiFrostCooldown)
-        {
-            if (m_uiFrostCooldown >= uiDiff)
-                m_uiFrostCooldown -= uiDiff;
-            else
-                m_uiFrostCooldown = 0;
-        }
-
-        if (!m_bDrinking && m_creature->GetMaxPower(POWER_MANA) && (m_creature->GetPower(POWER_MANA)*100 / m_creature->GetMaxPower(POWER_MANA)) < 20)
-        {
-            m_bDrinking = true;
-            m_creature->InterruptNonMeleeSpells(false);
-
-            DoScriptText(SAY_DRINK, m_creature);
-
-            if (!m_bDrinkInturrupted)
-            {
-                m_creature->CastSpell(m_creature, SPELL_MASS_POLY, true);
-                m_creature->CastSpell(m_creature, SPELL_CONJURE, false);
-                m_creature->CastSpell(m_creature, SPELL_DRINK, false);
-                m_creature->SetStandState(UNIT_STAND_STATE_SIT);
-                m_uiDrinkInturrupt_Timer = 10000;
-            }
-        }
-
-        //Drink Inturrupt
-        if (m_bDrinking && m_bDrinkInturrupted)
-        {
-            m_bDrinking = false;
-            m_creature->RemoveAurasDueToSpell(SPELL_DRINK);
-            m_creature->SetStandState(UNIT_STAND_STATE_STAND);
-            m_creature->SetPower(POWER_MANA, m_creature->GetMaxPower(POWER_MANA)-32000);
-            m_creature->CastSpell(m_creature, SPELL_POTION, false);
-        }
-
-        //Drink Inturrupt Timer
-        if (m_bDrinking && !m_bDrinkInturrupted)
-        {
-            if (m_uiDrinkInturrupt_Timer >= uiDiff)
-                m_uiDrinkInturrupt_Timer -= uiDiff;
-            else
-            {
-                m_creature->SetStandState(UNIT_STAND_STATE_STAND);
-                m_creature->CastSpell(m_creature, SPELL_POTION, true);
-                m_creature->CastSpell(m_creature, SPELL_AOE_PYROBLAST, false);
-                m_bDrinkInturrupted = true;
-                m_bDrinking = false;
-            }
-        }
-
-        //Don't execute any more code if we are drinking
-        if (m_bDrinking)
+            // no other spells during mana recovery
             return;
+        }
 
-        //Normal casts
-        if (m_uiNormalCast_Timer < uiDiff)
+        // Normal spell casts
+        if (m_uiNormalCastTimer < uiDiff)
         {
             if (!m_creature->IsNonMeleeSpellCasted(false))
             {
@@ -310,207 +270,148 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
                 if (!pTarget)
                     return;
 
-                uint32 auiSpells[3];
-                uint8 uiAvailableSpells = 0;
+                uint8 uiCurrentSpell = urand(0, 2);
+                uint32 uiCurrentSpellId = 0;
 
-                //Check for what spells are not on cooldown
-                if (!m_uiArcaneCooldown)
-                    auiSpells[uiAvailableSpells++] = SPELL_ARCMISSLE;
-                if (!m_uiFireCooldown)
-                    auiSpells[uiAvailableSpells++] = SPELL_FIREBALL;
-                if (!m_uiFrostCooldown)
-                    auiSpells[uiAvailableSpells++] = SPELL_FROSTBOLT;
+                // randomize so it won't be the same spell twice in a row
+                while (uiCurrentSpell == m_uiLastNormalSpell)
+                    uiCurrentSpell = urand(0, 2);
 
-                //If no available spells wait 1 second and try again
-                if (uiAvailableSpells)
+                m_uiLastNormalSpell = uiCurrentSpell;
+
+                switch (uiCurrentSpell)
                 {
-                    m_uiCurrentNormalSpell = auiSpells[rand() % uiAvailableSpells];
-                    DoCastSpellIfCan(pTarget, m_uiCurrentNormalSpell);
+                    case 0:
+                        uiCurrentSpellId = SPELL_ARCANE_MISSILES;
+                        m_uiNormalCastTimer = urand(6000, 7000);
+                        break;
+                    case 1:
+                        uiCurrentSpellId = SPELL_FIREBALL;
+                        m_uiNormalCastTimer = urand(2000, 3000);
+                        break;
+                    case 2:
+                        uiCurrentSpellId = SPELL_FROSTBOLT;
+                        m_uiNormalCastTimer = urand(2000, 3000);
+                        break;
                 }
+
+                if (uiCurrentSpellId)
+                    DoCastSpellIfCan(pTarget, uiCurrentSpellId);
             }
-            m_uiNormalCast_Timer = 1000;
         }
         else
-            m_uiNormalCast_Timer -= uiDiff;
+            m_uiNormalCastTimer -= uiDiff;
 
-        if (m_uiSecondarySpell_Timer < uiDiff)
+        // Secondary spells
+        if (m_uiSecondarySpellTimer < uiDiff)
         {
+            CanCastResult spellResult = CAST_OK;
+
             switch(urand(0, 1))
             {
                 case 0:
-                    DoCastSpellIfCan(m_creature, SPELL_AOE_CS);
+                    spellResult = DoCastSpellIfCan(m_creature, SPELL_COUNTERSPELL);
                     break;
                 case 1:
                     if (Unit* pUnit = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-                        DoCastSpellIfCan(pUnit, SPELL_CHAINSOFICE);
+                        spellResult = DoCastSpellIfCan(pUnit, SPELL_CHAINS_OF_ICE);
                     break;
             }
-            m_uiSecondarySpell_Timer = urand(5000, 20000);
+            if (spellResult == CAST_OK)
+                m_uiSecondarySpellTimer = urand(5000, 20000);
         }
         else
-            m_uiSecondarySpell_Timer -= uiDiff;
+            m_uiSecondarySpellTimer -= uiDiff;
 
-        if (m_uiSuperCast_Timer < uiDiff)
+        if (m_uiSuperCastTimer < uiDiff)
         {
-            uint8 auiAvailable[2];
-
-            switch (m_uiLastSuperSpell)
+            if (!m_creature->IsNonMeleeSpellCasted(false))
             {
-                case SUPER_AE:
-                    auiAvailable[0] = SUPER_FLAME;
-                    auiAvailable[1] = SUPER_BLIZZARD;
-                    break;
-                case SUPER_FLAME:
-                    auiAvailable[0] = SUPER_AE;
-                    auiAvailable[1] = SUPER_BLIZZARD;
-                    break;
-                case SUPER_BLIZZARD:
-                    auiAvailable[0] = SUPER_FLAME;
-                    auiAvailable[1] = SUPER_AE;
-                    break;
+                uint8 uiAvailableSpell = urand(SUPER_FLAME_WREATH, SUPER_ARCANE_EXPL);
+
+                // randomize so it won't be the same spell twice in a row
+                while (uiAvailableSpell == m_uiLastSuperSpell)
+                    uiAvailableSpell = urand(SUPER_FLAME_WREATH, SUPER_ARCANE_EXPL);
+
+                m_uiLastSuperSpell = uiAvailableSpell;
+
+                switch (m_uiLastSuperSpell)
+                {
+                    case SUPER_ARCANE_EXPL:
+                        if (DoCastSpellIfCan(m_creature, SPELL_ARCANE_EXPLOSION) == CAST_OK)
+                        {
+                            DoCastSpellIfCan(m_creature, SPELL_BLINK_CENTER, CAST_TRIGGERED);
+                            DoCastSpellIfCan(m_creature, SPELL_MASSIVE_MAGNETIC_PULL, CAST_TRIGGERED);
+                            DoCastSpellIfCan(m_creature, SPELL_MASS_SLOW, CAST_TRIGGERED);
+
+                            DoScriptText(urand(0, 1) ? SAY_EXPLOSION1 : SAY_EXPLOSION2, m_creature);
+                        }
+                        break;
+                    case SUPER_FLAME_WREATH:
+                        if (DoCastSpellIfCan(m_creature, SPELL_FLAME_WREATH) == CAST_OK)
+                            DoScriptText(urand(0, 1) ? SAY_FLAMEWREATH1 : SAY_FLAMEWREATH2, m_creature);
+                        break;
+                    case SUPER_BLIZZARD:
+                        if (DoCastSpellIfCan(m_creature, SPELL_SUMMON_BLIZZARD) == CAST_OK)
+                            DoScriptText(urand(0, 1) ? SAY_BLIZZARD1 : SAY_BLIZZARD2, m_creature);
+                        break;
+                }
+                m_uiSuperCastTimer = 30000;
             }
-
-            m_uiLastSuperSpell = auiAvailable[urand(0, 2)];
-
-            switch (m_uiLastSuperSpell)
-            {
-                case SUPER_AE:
-                    DoScriptText(urand(0, 1) ? SAY_EXPLOSION1 : SAY_EXPLOSION2, m_creature);
-
-                    m_creature->CastSpell(m_creature, SPELL_BLINK_CENTER, true);
-                    m_creature->CastSpell(m_creature, SPELL_PLAYERPULL, true);
-                    m_creature->CastSpell(m_creature, SPELL_MASSSLOW, true);
-                    m_creature->CastSpell(m_creature, SPELL_AEXPLOSION, false);
-                    break;
-
-                case SUPER_FLAME:
-                    DoScriptText(urand(0, 1) ? SAY_FLAMEWREATH1 : SAY_FLAMEWREATH2, m_creature);
-
-                    m_uiFlameWreath_Timer = 20000;
-                    m_uiFlameWreathCheck_Timer = 500;
-
-                    for (uint8 i = 0; i < 3; ++i)
-                        m_aFlameWreathTargetGuid[i].Clear();
-
-                    FlameWreathEffect();
-                    break;
-
-                case SUPER_BLIZZARD:
-                    DoScriptText(urand(0, 1) ? SAY_BLIZZARD1 : SAY_BLIZZARD2, m_creature);
-
-                    if (Creature* pSpawn = m_creature->SummonCreature(NPC_ARAN_BLIZZARD, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN, 25000))
-                    {
-                        pSpawn->setFaction(m_creature->getFaction());
-                        pSpawn->CastSpell(pSpawn, SPELL_CIRCULAR_BLIZZARD, false);
-                    }
-                    break;
-            }
-
-            m_uiSuperCast_Timer = urand(35000, 40000);
         }
         else
-            m_uiSuperCast_Timer -= uiDiff;
+            m_uiSuperCastTimer -= uiDiff;
 
         if (!m_bElementalsSpawned && m_creature->GetHealthPercent() < 40.0f)
         {
-            m_bElementalsSpawned = true;
-
-            for (uint32 i = 0; i < 4; ++i)
-            {
-                if (Creature* pElemental = m_creature->SummonCreature(NPC_WATER_ELEMENTAL, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN, 90000))
-                {
-                    pElemental->Attack(m_creature->getVictim(), true);
-                    pElemental->setFaction(m_creature->getFaction());
-                }
-            }
+            DoCastSpellIfCan(m_creature, SPELL_SUMMON_WATER_ELEM_1, CAST_TRIGGERED);
+            DoCastSpellIfCan(m_creature, SPELL_SUMMON_WATER_ELEM_2, CAST_TRIGGERED);
+            DoCastSpellIfCan(m_creature, SPELL_SUMMON_WATER_ELEM_3, CAST_TRIGGERED);
+            DoCastSpellIfCan(m_creature, SPELL_SUMMON_WATER_ELEM_4, CAST_TRIGGERED);
 
             DoScriptText(SAY_ELEMENTALS, m_creature);
+
+            m_bElementalsSpawned = true;
         }
 
-        if (m_uiBerserk_Timer < uiDiff)
+        // Berserk timer - the summons position is guesswork
+        if (m_uiBerserkTimer)
         {
-            for (uint32 i = 0; i < 5; ++i)
+            if (m_uiBerserkTimer <= uiDiff)
             {
-                if (Creature* pShadow = m_creature->SummonCreature(NPC_SHADOW_OF_ARAN, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000))
-                {
-                    pShadow->Attack(m_creature->getVictim(), true);
-                    pShadow->setFaction(m_creature->getFaction());
-                }
-            }
+                for (uint8 i = 0; i < MAX_SHADOWS_OF_ARAN; ++i)
+                    DoSpawnCreature(NPC_SHADOW_OF_ARAN, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
 
-            DoScriptText(SAY_TIMEOVER, m_creature);
-
-            m_uiBerserk_Timer = 60000;
-        }
-        else
-            m_uiBerserk_Timer -= uiDiff;
-
-        //Flame Wreath check
-        if (m_uiFlameWreath_Timer)
-        {
-            if (m_uiFlameWreath_Timer >= uiDiff)
-                m_uiFlameWreath_Timer -= uiDiff;
-            else
-                m_uiFlameWreath_Timer = 0;
-
-            if (m_uiFlameWreathCheck_Timer < uiDiff)
-            {
-                for (uint32 i = 0; i < 3; ++i)
-                {
-                    if (!m_aFlameWreathTargetGuid[i])
-                        continue;
-
-                    Player* pPlayer = m_creature->GetMap()->GetPlayer(m_aFlameWreathTargetGuid[i]);
-
-                    if (pPlayer && !pPlayer->IsWithinDist2d(m_fFWTargPosX[i], m_fFWTargPosY[i], 3.0f))
-                    {
-                        pPlayer->CastSpell(pPlayer, SPELL_EXPLOSION, true, 0, 0, m_creature->GetObjectGuid());
-                        pPlayer->CastSpell(pPlayer, SPELL_KNOCKBACK_500, true);
-                        m_aFlameWreathTargetGuid[i].Clear();
-                    }
-                }
-                m_uiFlameWreathCheck_Timer = 500;
+                DoScriptText(SAY_TIMEOVER, m_creature);
+                m_uiBerserkTimer = 0;
             }
             else
-                m_uiFlameWreathCheck_Timer -= uiDiff;
+                m_uiBerserkTimer -= uiDiff;
         }
 
-        if (m_uiArcaneCooldown && m_uiFireCooldown && m_uiFrostCooldown)
-            DoMeleeAttackIfReady();
-    }
-
-    void DamageTaken(Unit* pAttacker, uint32 &damage)
-    {
-        if (!m_bDrinkInturrupted && m_bDrinking && damage)
-            m_bDrinkInturrupted = true;
-    }
-
-    void SpellHit(Unit* pAttacker, const SpellEntry* Spell)
-    {
-        //We only care about inturrupt effects and only if they are durring a spell currently being casted
-        if ((Spell->Effect[0]!=SPELL_EFFECT_INTERRUPT_CAST &&
-            Spell->Effect[1]!=SPELL_EFFECT_INTERRUPT_CAST &&
-            Spell->Effect[2]!=SPELL_EFFECT_INTERRUPT_CAST) || !m_creature->IsNonMeleeSpellCasted(false))
-            return;
-
-        //Inturrupt effect
-        m_creature->InterruptNonMeleeSpells(false);
-
-        //Normally we would set the cooldown equal to the spell duration
-        //but we do not have access to the DurationStore
-
-        switch (m_uiCurrentNormalSpell)
-        {
-            case SPELL_ARCMISSLE: m_uiArcaneCooldown = 5000; break;
-            case SPELL_FIREBALL:  m_uiFireCooldown = 5000; break;
-            case SPELL_FROSTBOLT: m_uiFrostCooldown = 5000; break;
-        }
+        DoMeleeAttackIfReady();
     }
 };
 
 CreatureAI* GetAI_boss_aran(Creature* pCreature)
 {
     return new boss_aranAI(pCreature);
+}
+
+// TODO Remove this 'script' when combat can be proper prevented from core-side
+struct MANGOS_DLL_DECL npc_shade_of_aran_blizzardAI : public ScriptedAI
+{
+    npc_shade_of_aran_blizzardAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
+
+    void Reset() { }
+    void MoveInLineOfSight(Unit* pWho) { }
+    void AttackStart(Unit* pWho) { }
+    void UpdateAI(const uint32 uiDiff) { }
+};
+
+CreatureAI* GetAI_npc_shade_of_aran_blizzard(Creature* pCreature)
+{
+    return new npc_shade_of_aran_blizzardAI(pCreature);
 }
 
 void AddSC_boss_shade_of_aran()
@@ -520,5 +421,10 @@ void AddSC_boss_shade_of_aran()
     pNewScript = new Script;
     pNewScript->Name = "boss_shade_of_aran";
     pNewScript->GetAI = &GetAI_boss_aran;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_shade_of_aran_blizzard";
+    pNewScript->GetAI = &GetAI_npc_shade_of_aran_blizzard;
     pNewScript->RegisterSelf();
 }
