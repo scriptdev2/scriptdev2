@@ -59,9 +59,6 @@ enum
     SPELL_SCREAM                = 31013,
     SPELL_SUMMONTITO            = 31014,
 
-    // Tito
-    SPELL_YIPPING               = 31015,
-
     // Strawman
     SPELL_BRAIN_BASH            = 31046,
     SPELL_BRAIN_WIPE            = 31069,
@@ -216,40 +213,6 @@ struct MANGOS_DLL_DECL boss_dorotheeAI : public ScriptedAI
             else
                 m_uiSummonTitoTimer -= uiDiff;
         }
-
-        DoMeleeAttackIfReady();
-    }
-};
-
-// ToDo: move to eventAI!!!
-struct MANGOS_DLL_DECL mob_titoAI : public ScriptedAI
-{
-    mob_titoAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
-
-    uint32 m_uiYipTimer;
-
-    void Reset()
-    {
-        m_uiYipTimer = 10000;
-    }
-
-    void JustReachedHome()
-    {
-        m_creature->ForcedDespawn();
-    }
-
-    void UpdateAI(const uint32 uiDiff)
-    {
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-            return;
-
-        if (m_uiYipTimer < uiDiff)
-        {
-            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_YIPPING) == CAST_OK)
-                m_uiYipTimer = 10000;
-        }
-        else
-            m_uiYipTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
@@ -656,11 +619,6 @@ CreatureAI* GetAI_boss_roar(Creature* pCreature)
 CreatureAI* GetAI_boss_crone(Creature* pCreature)
 {
     return new boss_croneAI(pCreature);
-}
-
-CreatureAI* GetAI_mob_tito(Creature* pCreature)
-{
-    return new mob_titoAI(pCreature);
 }
 
 /**************************************/
@@ -1347,11 +1305,6 @@ void AddSC_bosses_opera()
     pNewScript = new Script;
     pNewScript->Name = "boss_crone";
     pNewScript->GetAI = &GetAI_boss_crone;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "mob_tito";
-    pNewScript->GetAI = &GetAI_mob_tito;
     pNewScript->RegisterSelf();
 
     // Hood
