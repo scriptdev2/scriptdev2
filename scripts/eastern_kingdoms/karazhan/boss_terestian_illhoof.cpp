@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Terestian_Illhoof
-SD%Complete: 95
-SDComment: Complete! Needs adjustments to use spell though.
+SD%Complete: 100
+SDComment:
 SDCategory: Karazhan
 EndScriptData */
 

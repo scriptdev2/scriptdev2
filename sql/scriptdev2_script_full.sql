@@ -1630,8 +1630,8 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1532087,'At last... The nightmare is.. over...',9244,1,0,0,'aran SAY_DEATH'),
 (-1532088,'Where did you get that?! Did HE send you?!',9249,1,0,0,'aran SAY_ATIESH'),
 
-(-1532089,'%s cries out in withdrawal, opening gates to the warp.',0,2,0,0,'netherspite EMOTE_PHASE_PORTAL'),
-(-1532090,'%s goes into a nether-fed rage!',0,2,0,0,'netherspite EMOTE_PHASE_BANISH'),
+(-1532089,'%s cries out in withdrawal, opening gates to the warp.',0,3,0,0,'netherspite EMOTE_PHASE_PORTAL'),
+(-1532090,'%s goes into a nether-fed rage!',0,3,0,0,'netherspite EMOTE_PHASE_BANISH'),
 
 (-1532091,'Madness has brought you here to me. I shall be your undoing!',9218,1,0,0,'malchezaar SAY_AGGRO'),
 (-1532092,'Simple fools! Time is the fire in which you\'ll burn!',9220,1,0,0,'malchezaar SAY_AXE_TOSS1'),

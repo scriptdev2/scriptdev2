@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Netherspite
-SD%Complete: 30%
-SDComment: find spell ID for tail swipe added in patch 3.0.2
+SD%Complete: 50
+SDComment: Nether portals NYI. Find spell ID for tail swipe added in patch 3.0.2
 SDCategory: Karazhan
 EndScriptData */
 
@@ -31,33 +31,41 @@ enum
     SPELL_VOID_ZONE             = 37063,
     SPELL_NETHERBREATH          = 38523,
     SPELL_EMPOWERMENT           = 38549,
-    SPELL_NETHER_INFUSION       = 38688,
-    SPELL_NETHERSPITE_ROAR      = 38684,
-    SPELL_BANISH_VISUAL         = 39833,
-    SPELL_ROOT                  = 42716,
+    SPELL_NETHER_INFUSION       = 38688,                // hard enrage spell
+    SPELL_NETHERSPITE_ROAR      = 38684,                // on banish phase begin
+    SPELL_SHADOWFORM            = 38542,                // banish visual spell
+    SPELL_FACE_RANDOM_TARGET    = 38546,                // triggered by spell 38684 - currently not used
+    SPELL_PORTAL_ATTUNEMENT     = 30425,
 
     //void zone spells
-    SPELL_CONSUMPTION           = 30497,
+    SPELL_CONSUMPTION           = 28865,
 
     //beam buffs
-    SPELL_PERSEVERENCE_NS       = 30466,
-    SPELL_PERSEVERENCE_PLR      = 30421,
     SPELL_SERENITY_NS           = 30467,
     SPELL_SERENITY_PLR          = 30422,
     SPELL_DOMINANCE_NS          = 30468,
     SPELL_DOMINANCE_PLR         = 30423,
+    SPELL_PERSEVERENCE_NS       = 30466,
+    SPELL_PERSEVERENCE_PLR      = 30421,
 
     //beam debuffs
-    SPELL_EXHAUSTION_DOM        = 38639,
     SPELL_EXHAUSTION_SER        = 38638,
+    SPELL_EXHAUSTION_DOM        = 38639,
     SPELL_EXHAUSTION_PER        = 38637,
 
-    //beam spells
-    SPELL_BEAM_DOM              = 30402,
+    // spells which hit players
     SPELL_BEAM_SER              = 30401,
+    SPELL_BEAM_DOM              = 30402,
     SPELL_BEAM_PER              = 30400,
-    SPELL_BLUE_PORTAL           = 30491,
+
+    // spells which hit Netherspite
+    SPELL_BEAM_GREEN            = 30464,
+    SPELL_BEAM_BLUE             = 30463,
+    SPELL_BEAM_RED              = 30465,
+
+    // portal visual spells
     SPELL_GREEN_PORTAL          = 30490,
+    SPELL_BLUE_PORTAL           = 30491,
     SPELL_RED_PORTAL            = 30487,
 
     //emotes
@@ -65,27 +73,38 @@ enum
     EMOTE_PHASE_BANISH          = -1532090,
 
     //npcs
-    NPC_PORTAL_CREATURE         = 17369,
-    NPC_VOID_ZONE               = 16697
+    NPC_PORTAL_GREEN            = 17367,
+    NPC_PORTAL_BLUE             = 17368,
+    NPC_PORTAL_RED              = 17369,
+    NPC_VOID_ZONE               = 16697,
+
+    MAX_PORTALS                 = 3,
 };
 
 struct SpawnLocation
 {
-    float x, y, z;
+    float fX, fY, fZ, fO;
 };
 
 // at first spawn portals got fixed coords, should be shuffled in subsequent beam phases
-static SpawnLocation PortalCoordinates[] =
+static const SpawnLocation aPortalCoordinates[MAX_PORTALS] =
 {
-    {-11105.508789f, -1600.851685f, 279.950256f},
-    {-11195.353516f, -1613.237183f, 278.237258f},
-    {-11137.846680f, -1685.607422f, 278.239258f}
+    {-11195.14f, -1616.375f, 278.3217f, 6.230825f},
+    {-11108.13f, -1602.839f, 280.0323f, 3.717551f},
+    {-11139.78f, -1681.278f, 278.3217f, 1.396263f},
 };
 
-enum Phases
+enum NetherspitePhases
 {
     BEAM_PHASE   = 0,
     BANISH_PHASE = 1,
+};
+
+static const uint32 auiPortals[MAX_PORTALS] =
+{
+    NPC_PORTAL_GREEN,
+    NPC_PORTAL_BLUE,
+    NPC_PORTAL_RED,
 };
 
 struct MANGOS_DLL_DECL boss_netherspiteAI : public ScriptedAI
@@ -98,22 +117,33 @@ struct MANGOS_DLL_DECL boss_netherspiteAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    bool m_bIsEnraged;
-    uint8 m_uiActivePhase;
+    NetherspitePhases m_uiActivePhase;
 
     uint32 m_uiEnrageTimer;
     uint32 m_uiVoidZoneTimer;
     uint32 m_uiPhaseSwitchTimer;
     uint32 m_uiNetherbreathTimer;
+    uint32 m_uiEmpowermentTimer;
+
+    std::vector<uint32> m_vPortalEntryList;
 
     void Reset()
     {
-        m_bIsEnraged    = false;
-        m_uiActivePhase = BEAM_PHASE;
+        m_uiActivePhase       = BEAM_PHASE;
 
-        m_uiEnrageTimer       = MINUTE*9*IN_MILLISECONDS;
+        m_uiEmpowermentTimer  = 10000;
+        m_uiEnrageTimer       = 9*MINUTE*IN_MILLISECONDS;
         m_uiVoidZoneTimer     = 15000;
         m_uiPhaseSwitchTimer  = MINUTE*IN_MILLISECONDS;
+
+        SetCombatMovement(true);
+
+        // initialize the portal list
+        m_vPortalEntryList.clear();
+        m_vPortalEntryList.resize(MAX_PORTALS);
+
+        for (uint8 i = 0; i < MAX_PORTALS; ++i)
+            m_vPortalEntryList[i] = auiPortals[i];
     }
 
     void Aggro(Unit* pWho)
@@ -121,6 +151,7 @@ struct MANGOS_DLL_DECL boss_netherspiteAI : public ScriptedAI
         if (m_pInstance)
             m_pInstance->SetData(TYPE_NETHERSPITE, IN_PROGRESS);
 
+        DoSummonPortals();
         DoCastSpellIfCan(m_creature, SPELL_NETHERBURN);
     }
 
@@ -133,30 +164,72 @@ struct MANGOS_DLL_DECL boss_netherspiteAI : public ScriptedAI
     void JustReachedHome()
     {
         if (m_pInstance)
-            m_pInstance->SetData(TYPE_NETHERSPITE, NOT_STARTED);
+            m_pInstance->SetData(TYPE_NETHERSPITE, FAIL);
     }
 
     void SwitchPhases()
     {
         if (m_uiActivePhase == BEAM_PHASE)
         {
-            m_uiActivePhase = BANISH_PHASE;
-            DoScriptText(EMOTE_PHASE_BANISH, m_creature);
+            if (DoCastSpellIfCan(m_creature, SPELL_NETHERSPITE_ROAR) == CAST_OK)
+            {
+                DoCastSpellIfCan(m_creature, SPELL_SHADOWFORM, CAST_TRIGGERED);
+                m_creature->RemoveAurasDueToSpell(SPELL_EMPOWERMENT);
 
-            m_uiNetherbreathTimer = 500;
-            m_uiPhaseSwitchTimer  = (MINUTE/2)*IN_MILLISECONDS;
+                SetCombatMovement(false);
+                m_creature->GetMotionMaster()->MoveIdle();
+
+                m_uiActivePhase = BANISH_PHASE;
+                DoScriptText(EMOTE_PHASE_BANISH, m_creature);
+
+                m_uiNetherbreathTimer = 2000;
+                m_uiPhaseSwitchTimer  = 30000;
+            }
         }
         else
         {
+            m_creature->RemoveAurasDueToSpell(SPELL_SHADOWFORM);
+            SetCombatMovement(true);
+            DoStartMovement(m_creature->getVictim());
+
             m_uiActivePhase = BEAM_PHASE;
             DoScriptText(EMOTE_PHASE_BEAM, m_creature);
-            DoCastSpellIfCan(m_creature, SPELL_NETHERSPITE_ROAR);
 
-            m_uiPhaseSwitchTimer = MINUTE*IN_MILLISECONDS;
+            DoSummonPortals();
+            m_uiEmpowermentTimer  = 10000;
+            m_uiPhaseSwitchTimer  = MINUTE*IN_MILLISECONDS;
         }
 
         //reset threat every phase switch
         DoResetThreat();
+    }
+
+    void DoSummonPortals()
+    {
+        for (uint8 i = 0; i < MAX_PORTALS; ++i)
+            m_creature->SummonCreature(m_vPortalEntryList[i], aPortalCoordinates[i].fX, aPortalCoordinates[i].fY, aPortalCoordinates[i].fZ, aPortalCoordinates[i].fO, TEMPSUMMON_TIMED_DESPAWN, 60000);
+
+        // randomize the portals after the first summon
+        std::random_shuffle(m_vPortalEntryList.begin(), m_vPortalEntryList.end());
+    }
+
+    void JustSummoned(Creature* pSummoned)
+    {
+        switch (pSummoned->GetEntry())
+        {
+            case NPC_VOID_ZONE:
+                pSummoned->CastSpell(pSummoned, SPELL_CONSUMPTION, false);
+                break;
+            case NPC_PORTAL_RED:
+                pSummoned->CastSpell(pSummoned, SPELL_RED_PORTAL, false);
+                break;
+            case NPC_PORTAL_GREEN:
+                pSummoned->CastSpell(pSummoned, SPELL_GREEN_PORTAL, false);
+                break;
+            case NPC_PORTAL_BLUE:
+                pSummoned->CastSpell(pSummoned, SPELL_BLUE_PORTAL, false);
+                break;
+        }
     }
 
     void UpdateAI(const uint32 uiDiff)
@@ -169,12 +242,12 @@ struct MANGOS_DLL_DECL boss_netherspiteAI : public ScriptedAI
         else
             m_uiPhaseSwitchTimer -= uiDiff;
 
-        if (!m_bIsEnraged)
+        if (m_uiEnrageTimer)
         {
-            if (m_uiEnrageTimer < uiDiff)
+            if (m_uiEnrageTimer <= uiDiff)
             {
-                DoCastSpellIfCan(m_creature, SPELL_NETHER_INFUSION, CAST_FORCE_CAST);
-                m_bIsEnraged = true;
+                if (DoCastSpellIfCan(m_creature, SPELL_NETHER_INFUSION) == CAST_OK)
+                    m_uiEnrageTimer = 0;
             }
             else
                 m_uiEnrageTimer -= uiDiff;
@@ -185,28 +258,40 @@ struct MANGOS_DLL_DECL boss_netherspiteAI : public ScriptedAI
             if (m_uiVoidZoneTimer < uiDiff)
             {
                 if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-                    DoCastSpellIfCan(pTarget, SPELL_VOID_ZONE, true);
-
-                m_uiVoidZoneTimer = 15000;
+                {
+                    if (DoCastSpellIfCan(pTarget, SPELL_VOID_ZONE) == CAST_OK)
+                        m_uiVoidZoneTimer = 15000;
+                }
             }
             else
                 m_uiVoidZoneTimer -= uiDiff;
 
+            if (m_uiEmpowermentTimer)
+            {
+                if (m_uiEmpowermentTimer <= uiDiff)
+                {
+                    if (DoCastSpellIfCan(m_creature, SPELL_EMPOWERMENT) == CAST_OK)
+                    {
+                        DoCastSpellIfCan(m_creature, SPELL_PORTAL_ATTUNEMENT, CAST_TRIGGERED);
+                        m_uiEmpowermentTimer = 0;
+                    }
+                }
+                else
+                    m_uiEmpowermentTimer -= uiDiff;
+            }
+
+            DoMeleeAttackIfReady();
         }
         else
         {
             if (m_uiNetherbreathTimer < uiDiff)
             {
-                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-                    DoCastSpellIfCan(pTarget, SPELL_NETHERBREATH);
-
-                m_uiNetherbreathTimer = urand(4000, 5000);
+                if (DoCastSpellIfCan(m_creature, SPELL_NETHERBREATH) == CAST_OK)
+                    m_uiNetherbreathTimer = urand(4000, 5000);
             }
             else
                 m_uiNetherbreathTimer -= uiDiff;
         }
-
-        DoMeleeAttackIfReady();
     }
 };
 
