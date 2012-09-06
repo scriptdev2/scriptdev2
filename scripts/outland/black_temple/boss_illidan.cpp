@@ -107,7 +107,7 @@ static const Yells aConversation[]=
     // Emote dead for now. Kill him later
     {SAY_CONVO_12, ILLIDAN_STORMRAGE, 22000, 0, true},
     {SAY_CONVO_13, MAIEV_SHADOWSONG, 9000, 0, true},
-    {SAY_CONVO_14, MAIEV_SHADOWSONG, 0, true},
+    {SAY_CONVO_14, MAIEV_SHADOWSONG, 3000, 0, true},
     {SAY_CONVO_15, AKAMA, 8000, 0, true},
     {0, EMPTY, 1000, 0, false}
 };
