@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Janalai
-SD%Complete: 75
-SDComment:
+SD%Complete: 90
+SDComment: The hatchers may need some additional behavior adjustments.
 SDCategory: Zul'Aman
 EndScriptData */
 
@@ -39,52 +39,43 @@ enum
 
     //Jan'alai
     SPELL_FLAME_BREATH              = 43140,
-    SPELL_FIRE_WALL                 = 43113,
+    SPELL_HATCH_ALL_EGGS            = 43144,                    // triggers 42493
+    SPELL_TELEPORT_TO_CENTER        = 43098,
+    SPELL_SUMMON_ALL_PLAYERS        = 43096,                    // triggers 43097
     SPELL_ENRAGE                    = 44779,
-    SPELL_TELETOCENTER              = 43098,
-    SPELL_SUMMONALL                 = 43097,
     SPELL_BERSERK                   = 47008,
     SPELL_SUMMON_HATCHER_1          = 43962,
     SPELL_SUMMON_HATCHER_2          = 45340,
 
     //Fire Bob Spells
     SPELL_FIRE_BOMB_CHANNEL         = 42621,
-    SPELL_FIRE_BOMB_THROW           = 42628,
-    SPELL_FIRE_BOMB_DUMMY           = 42629,
-    SPELL_FIRE_BOMB_DAMAGE          = 42630,
+    SPELL_FIRE_BOMB_THROW           = 42628,                    // triggers 42629
+    SPELL_FIRE_BOMB_EXPLODE         = 42631,                    // triggers 42630
 
-    //NPC's
+    //NPCs
     NPC_FIRE_BOMB                   = 23920,
     NPC_AMANI_HATCHER_1             = 23818,
     NPC_AMANI_HATCHER_2             = 24504,
     NPC_HATCHLING                   = 23598,
+    NPC_DRAGONHAWK_EGG              = 23817,
 
     //Hatcher Spells
-    SPELL_HATCH_EGG                 = 43734,                //spell 42471 also exist
-    SPELL_HATCH_ALL_EGGS            = 43144,
+    SPELL_HATCH_EGG_1               = 43734,
+    SPELL_HATCH_EGG_2               = 42471,
 
-    //Eggs spells
+    // Fire Wall
+    SPELL_FIRE_WALL                 = 43113,
+
+    // Eggs spells
     SPELL_SUMMON_DRAGONHAWK         = 42493,
 
     //Hatchling Spells
-    SPELL_FLAMEBUFFED               = 43299
+    SPELL_FLAMEBUFFED               = 43299,
+
+    MAX_EGGS_ON_SIDE                = 20,                       // there are 20 eggs spawned on each side
 };
 
-//spells should summon Fire Bomb, used in Throw5Bombs()
-static uint32 m_auiSpellFireBombSummon[]=
-{
-    42622, 42623, 42624, 42625, 42626
-};
-
-const int area_dx = 44;
-const int area_dy = 51;
-
-float JanalainPos[1][3] =
-{
-    {-33.93f, 1149.27f, 19.0f}
-};
-
-float FireWallCoords[4][4] =
+static const float afFireWallCoords[4][4] =
 {
     {-10.13f, 1149.27f, 19.0f, M_PI_F},
     {-33.93f, 1123.90f, 19.0f, 0.5f*M_PI_F},
@@ -97,42 +88,24 @@ struct WaypointDef
     float m_fX, m_fY, m_fZ;
 };
 
-WaypointDef m_aHatcherRight[]=
+static const WaypointDef m_aHatcherRight[]=
 {
-    {-86.203f, 1136.834f, 5.594f},                          //this is summon point, not regular waypoint
     {-74.783f, 1145.827f, 5.420f},
+    {-54.476f, 1146.934f, 18.705f},
     {-56.957f, 1146.713f, 18.725f},
     {-45.428f, 1141.697f, 18.709f},
     {-34.002f, 1124.427f, 18.711f},
     {-34.085f, 1106.158f, 18.711f}
 };
 
-WaypointDef m_aHatcherLeft[]=
+static const WaypointDef m_aHatcherLeft[]=
 {
-    {-85.420f, 1167.321f, 5.594f},                          //this is summon point, not regular waypoint
     {-73.569f, 1154.960f, 5.510f},
+    {-54.264f, 1153.968f, 18.705f},
     {-56.985f, 1153.373f, 18.608f},
     {-45.515f, 1158.356f, 18.709f},
     {-33.314f, 1174.816f, 18.709f},
     {-33.097f, 1195.359f, 18.709f}
-};
-
-float hatcherway_l[5][3] =
-{
-    {-87.46f, 1170.09f, 6.0f},
-    {-74.41f, 1154.75f, 6.0f},
-    {-52.74f, 1153.32f, 19.0f},
-    {-33.37f, 1172.46f, 19.0f},
-    {-33.09f, 1203.87f, 19.0f}
-};
-
-float hatcherway_r[5][3] =
-{
-    {-86.57f, 1132.85f, 6.0f},
-    {-73.94f, 1146.00f, 6.0f},
-    {-52.29f, 1146.51f, 19.0f},
-    {-33.57f, 1125.72f, 19.0f},
-    {-34.29f, 1095.22f, 19.0f}
 };
 
 struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
@@ -146,77 +119,48 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
     ScriptedInstance* m_pInstance;
 
     uint32 m_uiFireBreathTimer;
-
-    GuidList m_lBombsGUIDList;
-    std::list<Creature*> m_lEggsRemainingList;
-
-    uint32 m_uiBombTimer;
-    uint32 m_uiBombSequenzeTimer;
-    uint32 m_uiBombPhase;
-    uint32 m_uiBombCounter;
-
     uint32 m_uiEnrageTimer;
     uint32 m_uiHatcherTimer;
-    uint32 m_uiWipeTimer;
+    uint32 m_uiBerserkTimer;
+    uint32 m_uiBombTimer;
+    uint32 m_uiBombAuraTimer;
+    uint32 m_uiExplodeTimer;
 
-    bool m_bIsBombing;
-    bool m_bCanBlowUpBombs;
-    bool m_bIsEggRemaining;
+    uint8 m_uiEggsHatchedLeft;
+    uint8 m_uiEggsHatchedRight;
+
+    bool m_bIsFlameWall;
+    bool m_bHasHatchedEggs;
     bool m_bIsEnraged;
-    bool m_bCanEnrage;
 
     ObjectGuid m_hatcherOneGuid;
     ObjectGuid m_hatcherTwoGuid;
 
     void Reset()
     {
-        m_lEggsRemainingList.clear();
-
-        if (Creature* pHatcher = m_creature->GetMap()->GetCreature(m_hatcherOneGuid))
-        {
-            pHatcher->AI()->EnterEvadeMode();
-            pHatcher->SetDeathState(JUST_DIED);
-            m_hatcherOneGuid.Clear();
-        }
-
-        if (Creature* pHatcher = m_creature->GetMap()->GetCreature(m_hatcherTwoGuid))
-        {
-            pHatcher->AI()->EnterEvadeMode();
-            pHatcher->SetDeathState(JUST_DIED);
-            m_hatcherTwoGuid.Clear();
-        }
-
         m_uiFireBreathTimer = 8000;
+        m_uiEnrageTimer     = 5*MINUTE*IN_MILLISECONDS;
+        m_uiHatcherTimer    = 10000;
+        m_uiBerserkTimer    = 10*MINUTE*IN_MILLISECONDS;
+        m_uiBombTimer       = 30000;
+        m_uiBombAuraTimer   = 0;
+        m_uiExplodeTimer    = 0;
 
-        m_uiBombTimer = 30000;
-        m_bIsBombing = false;
-        m_uiBombSequenzeTimer = 1500;
-        m_uiBombPhase = 0;
-        m_uiBombCounter = 0;
-        m_bCanBlowUpBombs = false;
-        m_bIsEggRemaining = true;
+        m_uiEggsHatchedLeft = 0;
+        m_uiEggsHatchedRight= 0;
 
-        m_uiEnrageTimer = MINUTE*5*IN_MILLISECONDS;
-        m_uiHatcherTimer = 10000;
-        m_uiWipeTimer = MINUTE*10*IN_MILLISECONDS;
-        m_bIsEnraged = false;
-        m_bCanEnrage = false;
+        m_bHasHatchedEggs   = false;
+        m_bIsEnraged        = false;
+        m_bIsFlameWall      = false;
     }
 
     void JustReachedHome()
     {
-        for (GuidList::const_iterator itr = m_lBombsGUIDList.begin(); itr != m_lBombsGUIDList.end(); ++itr)
-        {
-            if (Creature* pBomb = m_creature->GetMap()->GetCreature(*itr))
-                pBomb->ForcedDespawn();
-        }
-        m_lBombsGUIDList.clear();
-
         if (m_pInstance)
             m_pInstance->SetData(TYPE_JANALAI, FAIL);
     }
 
-    void JustDied(Unit* Killer)
+    void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -224,12 +168,12 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
             m_pInstance->SetData(TYPE_JANALAI, DONE);
     }
 
-    void KilledUnit(Unit* victim)
+    void KilledUnit(Unit* pVictim)
     {
         DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -243,132 +187,59 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
         {
             case NPC_AMANI_HATCHER_1:
                 m_hatcherOneGuid = pSummoned->GetObjectGuid();
+                // If all the eggs from one side are hatched, move to the other side
+                if (m_uiEggsHatchedRight == MAX_EGGS_ON_SIDE)
+                    pSummoned->GetMotionMaster()->MovePoint(1, m_aHatcherLeft[0].m_fX, m_aHatcherLeft[0].m_fY, m_aHatcherLeft[0].m_fZ);
+                else
+                    pSummoned->GetMotionMaster()->MovePoint(1, m_aHatcherRight[0].m_fX, m_aHatcherRight[0].m_fY, m_aHatcherRight[0].m_fZ);
                 break;
             case NPC_AMANI_HATCHER_2:
                 m_hatcherTwoGuid = pSummoned->GetObjectGuid();
+                // If all the eggs from one side are hatched, move to the other side
+                if (m_uiEggsHatchedLeft == MAX_EGGS_ON_SIDE)
+                    pSummoned->GetMotionMaster()->MovePoint(1, m_aHatcherRight[0].m_fX, m_aHatcherRight[0].m_fY, m_aHatcherRight[0].m_fZ);
+                else
+                    pSummoned->GetMotionMaster()->MovePoint(1, m_aHatcherLeft[0].m_fX, m_aHatcherLeft[0].m_fY, m_aHatcherLeft[0].m_fZ);
                 break;
             case NPC_FIRE_BOMB:
-                if (m_bIsBombing)
-                {
-                    //store bombs in list to be used in BlowUpBombs()
-                    m_lBombsGUIDList.push_back(pSummoned->GetObjectGuid());
-
-                    if (pSummoned->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE))
-                        pSummoned->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-
-                    //visual spell, spell hit pSummoned after a short time
-                    m_creature->CastSpell(pSummoned,SPELL_FIRE_BOMB_THROW,true);
-                }
+                if (!m_bIsFlameWall)
+                    DoCastSpellIfCan(pSummoned, SPELL_FIRE_BOMB_THROW, CAST_TRIGGERED);
                 else
-                {
                     pSummoned->CastSpell(pSummoned, SPELL_FIRE_WALL, true);
+                break;
+            case NPC_HATCHLING:
+                pSummoned->SetInCombatWithZone();
+                // Count the Hatched eggs
+                pSummoned->GetPositionY() > 1100.0f ? ++m_uiEggsHatchedLeft : ++m_uiEggsHatchedRight;
+                // Notify the script when all the eggs were hatched
+                if (m_uiEggsHatchedRight == MAX_EGGS_ON_SIDE && m_uiEggsHatchedLeft == MAX_EGGS_ON_SIDE)
+                    m_bHasHatchedEggs = true;
+                // Change the side of the hatcher if necessary
+                if (m_uiEggsHatchedRight == MAX_EGGS_ON_SIDE && m_uiEggsHatchedLeft < MAX_EGGS_ON_SIDE)
+                {
+                    if (Creature* pHatcer = m_creature->GetMap()->GetCreature(m_hatcherOneGuid))
+                        pHatcer->GetMotionMaster()->MovePoint(1, m_aHatcherLeft[5].m_fX, m_aHatcherLeft[5].m_fY, m_aHatcherLeft[5].m_fZ);
+                }
+                if (m_uiEggsHatchedLeft == MAX_EGGS_ON_SIDE && m_uiEggsHatchedRight < MAX_EGGS_ON_SIDE)
+                {
+                    if (Creature* pHatcer = m_creature->GetMap()->GetCreature(m_hatcherTwoGuid))
+                        pHatcer->GetMotionMaster()->MovePoint(1, m_aHatcherRight[5].m_fX, m_aHatcherRight[5].m_fY, m_aHatcherRight[5].m_fZ);
                 }
                 break;
         }
     }
 
-    void SpellHitTarget(Unit* pUnit, const SpellEntry* pSpell)
+    // Wrapper to create the firewalls during Bomb phase
+    void DoCreateFireWall()
     {
-        //when spell actually hit the fire bombs, make then cast spell(making them "visible")
-        if (pUnit->GetEntry() == NPC_FIRE_BOMB && pSpell->Id == SPELL_FIRE_BOMB_THROW)
-            pUnit->CastSpell(pUnit,SPELL_FIRE_BOMB_DUMMY,false);
-    }
-
-    void CreateFireWall()                                   // Create Firewall
-    {
-        m_creature->SummonCreature(NPC_FIRE_BOMB,FireWallCoords[0][0],FireWallCoords[0][1],FireWallCoords[0][2],FireWallCoords[0][3],TEMPSUMMON_TIMED_DESPAWN,11500);
-
-        m_creature->SummonCreature(NPC_FIRE_BOMB,FireWallCoords[0][0],FireWallCoords[0][1]+5,FireWallCoords[0][2],FireWallCoords[0][3],TEMPSUMMON_TIMED_DESPAWN,11500);
-
-        m_creature->SummonCreature(NPC_FIRE_BOMB,FireWallCoords[0][0],FireWallCoords[0][1]-5,FireWallCoords[0][2],FireWallCoords[0][3],TEMPSUMMON_TIMED_DESPAWN,11500);
-
-        m_creature->SummonCreature(NPC_FIRE_BOMB,FireWallCoords[1][0]-2,FireWallCoords[1][1]-2,FireWallCoords[1][2],FireWallCoords[1][3],TEMPSUMMON_TIMED_DESPAWN,11500);
-
-        m_creature->SummonCreature(NPC_FIRE_BOMB,FireWallCoords[1][0]+2,FireWallCoords[1][1]+2,FireWallCoords[1][2],FireWallCoords[1][3],TEMPSUMMON_TIMED_DESPAWN,11500);
-
-        m_creature->SummonCreature(NPC_FIRE_BOMB,FireWallCoords[2][0],FireWallCoords[2][1],FireWallCoords[2][2],FireWallCoords[2][3],TEMPSUMMON_TIMED_DESPAWN,11500);
-
-        m_creature->SummonCreature(NPC_FIRE_BOMB,FireWallCoords[2][0],FireWallCoords[2][1]-5,FireWallCoords[2][2],FireWallCoords[2][3],TEMPSUMMON_TIMED_DESPAWN,11500);
-
-        m_creature->SummonCreature(NPC_FIRE_BOMB,FireWallCoords[2][0],FireWallCoords[2][1]+5,FireWallCoords[2][2],FireWallCoords[2][3],TEMPSUMMON_TIMED_DESPAWN,11500);
-
-        m_creature->SummonCreature(NPC_FIRE_BOMB,FireWallCoords[3][0]-2,FireWallCoords[3][1],FireWallCoords[3][2],FireWallCoords[3][3],TEMPSUMMON_TIMED_DESPAWN,11500);
-
-        m_creature->SummonCreature(NPC_FIRE_BOMB,FireWallCoords[3][0]+2,FireWallCoords[3][1],FireWallCoords[3][2],FireWallCoords[3][3],TEMPSUMMON_TIMED_DESPAWN,11500);
-    }
-
-    void Throw5Bombs()
-    {
-        for(uint8 i = 0; i < countof(m_auiSpellFireBombSummon); ++i)
-        {
-            m_creature->CastSpell(m_creature, m_auiSpellFireBombSummon[i], true);
-
-            //workaround part
-            //m_creature->GetRandomPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), fRadius+(fRadius*i), fX, fY, fZ);
-            //m_creature->SummonCreature(NPC_FIRE_BOMB, fX, fY, fZ, 0.0f, TEMPSUMMON_TIMED_DESPAWN, MINUTE*IN_MILLISECONDS);
-        }
-
-        ++m_uiBombCounter;
-    }
-
-    //Teleport every player into the middle if more than 20 yards away (possibly what spell 43096 should do)
-    void TeleportPlayersOutOfRange()
-    {
-        GuidVector vGuids;
-        m_creature->FillGuidsListFromThreatList(vGuids);
-        for (GuidVector::const_iterator i = vGuids.begin(); i != vGuids.end(); ++i)
-        {
-            Unit* pTemp = m_creature->GetMap()->GetUnit(*i);
-
-            if (pTemp && pTemp->GetTypeId() == TYPEID_PLAYER && !m_creature->IsWithinDist(pTemp, 20.0f))
-                m_creature->CastSpell(pTemp, SPELL_SUMMONALL, true);
-        }
-    }
-
-    void BlowUpBombs()
-    {
-        for (GuidList::const_iterator itr = m_lBombsGUIDList.begin(); itr != m_lBombsGUIDList.end(); ++itr)
-        {
-            if (Creature* pBomb = m_creature->GetMap()->GetCreature(*itr))
-            {
-                //do damage and then remove aura (making them "disappear")
-                pBomb->CastSpell(pBomb, SPELL_FIRE_BOMB_DAMAGE, false, NULL, NULL, m_creature->GetObjectGuid());
-                pBomb->RemoveAurasDueToSpell(SPELL_FIRE_BOMB_DUMMY);
-            }
-        }
-
-        m_lBombsGUIDList.clear();
-    }
-
-    void DoHatchRemainingEggs()
-    {
-        GetCreatureListWithEntryInGrid(m_lEggsRemainingList, m_creature, NPC_EGG, 125.0f);
-
-        if (!m_lEggsRemainingList.empty())
-        {
-            for(std::list<Creature*>::iterator itr = m_lEggsRemainingList.begin(); itr != m_lEggsRemainingList.end(); ++itr)
-            {
-                if ((*itr)->isAlive())
-                    (*itr)->CastSpell((*itr), SPELL_SUMMON_DRAGONHAWK, true);
-            }
-
-            m_bIsEggRemaining = false;
-
-            if (!m_pInstance)
-                return;
-
-            if (uint32 uiEggsRemaining_Right = m_pInstance->GetData(TYPE_J_EGGS_RIGHT))
-            {
-                for(uint32 i = 0; i < uiEggsRemaining_Right; ++i)
-                    m_pInstance->SetData(TYPE_J_EGGS_RIGHT, SPECIAL);
-            }
-
-            if (uint32 uiEggsRemaining_Left = m_pInstance->GetData(TYPE_J_EGGS_LEFT))
-            {
-                for(uint32 i = 0; i < uiEggsRemaining_Left; ++i)
-                    m_pInstance->SetData(TYPE_J_EGGS_LEFT, SPECIAL);
-            }
-        }
+        // This function involves a lot of guesswork!!!
+        // The npc entry isn't sure and the locations are guessed
+        m_bIsFlameWall = true;
+        m_creature->SummonCreature(NPC_FIRE_BOMB, afFireWallCoords[0][0], afFireWallCoords[0][1], afFireWallCoords[0][2], afFireWallCoords[0][3], TEMPSUMMON_TIMED_DESPAWN, 12000);
+        m_creature->SummonCreature(NPC_FIRE_BOMB, afFireWallCoords[1][0], afFireWallCoords[1][1], afFireWallCoords[1][2], afFireWallCoords[1][3], TEMPSUMMON_TIMED_DESPAWN, 12000);
+        m_creature->SummonCreature(NPC_FIRE_BOMB, afFireWallCoords[2][0], afFireWallCoords[2][1], afFireWallCoords[2][2], afFireWallCoords[2][3], TEMPSUMMON_TIMED_DESPAWN, 12000);
+        m_creature->SummonCreature(NPC_FIRE_BOMB, afFireWallCoords[3][0], afFireWallCoords[3][1], afFireWallCoords[3][2], afFireWallCoords[3][3], TEMPSUMMON_TIMED_DESPAWN, 12000);
+        m_bIsFlameWall = false;
     }
 
     void UpdateAI(const uint32 uiDiff)
@@ -376,178 +247,125 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //blow up bombs happen after bombing is over, so handle this here
-        if (m_bCanBlowUpBombs)
+        // Start bombing
+        if (m_uiBombTimer < uiDiff)
         {
-            if (m_uiBombSequenzeTimer < uiDiff)
+            if (DoCastSpellIfCan(m_creature, SPELL_FIRE_BOMB_CHANNEL) == CAST_OK)
             {
-                BlowUpBombs();
-                m_bCanBlowUpBombs = false;
-            }
-            else
-                m_uiBombSequenzeTimer -= uiDiff;
-        }
-
-        if (!m_bIsBombing)                                  // every Spell if NOT Bombing
-        {
-            if (m_uiBombTimer < uiDiff)
-            {
+                DoCastSpellIfCan(m_creature, SPELL_TELEPORT_TO_CENTER, CAST_TRIGGERED);
+                DoCastSpellIfCan(m_creature, SPELL_SUMMON_ALL_PLAYERS, CAST_TRIGGERED);
                 DoScriptText(SAY_FIRE_BOMBS, m_creature);
+                DoCreateFireWall();
 
-                //first clear movement
-                if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() == CHASE_MOTION_TYPE)
-                    m_creature->GetMotionMaster()->MovementExpired();
-
-                //then teleport self
-                DoCastSpellIfCan(m_creature, SPELL_TELETOCENTER, CAST_INTERRUPT_PREVIOUS | CAST_TRIGGERED);
-
-                //then players and create the firewall
-                TeleportPlayersOutOfRange();
-                CreateFireWall();
-
-                //prepare variables for bombing sequenze
-                m_lBombsGUIDList.clear();
-
-                m_uiBombPhase = 0;
-                m_uiBombSequenzeTimer = 500;
-                m_uiBombCounter = 0;
-
-                m_uiBombTimer = urand(20000, 40000);
-                m_bIsBombing = true;
-
-                //we don't want anything else to happen this Update()
-                return;
+                m_uiBombAuraTimer   = 5000;
+                m_uiBombTimer       = urand(20000, 40000);
             }
-            else
-                m_uiBombTimer -= uiDiff;
-
-            //FIRE BREATH  several videos says every 8Secounds
-            if (m_uiFireBreathTimer < uiDiff)
-            {
-                if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
-                    DoCastSpellIfCan(target,SPELL_FLAME_BREATH);
-                m_uiFireBreathTimer = 8000;
-            }else m_uiFireBreathTimer -= uiDiff;
-
-            //enrage if under 25% hp before 5 min.
-            if (m_creature->GetHealthPercent() < 25.0f && !m_bIsEnraged)
-            {
-                m_bCanEnrage = true;
-                m_uiEnrageTimer = 600000;
-            }
-
-            //Enrage but only if not bombing
-            if (m_bCanEnrage && !m_bIsEnraged)
-            {
-                DoScriptText(SAY_BERSERK, m_creature);
-
-                DoCastSpellIfCan(m_creature, SPELL_ENRAGE, CAST_INTERRUPT_PREVIOUS);
-                m_bIsEnraged = true;
-            }
-
-            //Hatch All
-            if (m_bIsEggRemaining && m_creature->GetHealthPercent() < 35.0f)
-            {
-                DoScriptText(SAY_ALL_EGGS, m_creature);
-
-                DoCastSpellIfCan(m_creature, SPELL_HATCH_ALL_EGGS, CAST_INTERRUPT_PREVIOUS);
-
-                DoHatchRemainingEggs();
-            }
-
-            DoMeleeAttackIfReady();
-        }
-        else                                                // every Spell if Bombing
-        {
-            if (m_uiBombSequenzeTimer < uiDiff)
-            {
-                switch(m_uiBombPhase)
-                {
-                    case 0:
-                        DoCastSpellIfCan(m_creature, SPELL_FIRE_BOMB_CHANNEL, CAST_TRIGGERED);
-                        m_uiBombSequenzeTimer = 500;
-                        ++m_uiBombPhase;
-                        break;
-                    case 1:
-                        if (m_uiBombCounter < 8)
-                        {
-                            Throw5Bombs();
-                            m_uiBombSequenzeTimer = 500;
-                        }
-                        else
-                        {
-                            m_uiBombSequenzeTimer = 1000;
-                            ++m_uiBombPhase;
-                        }
-                        break;
-                    case 2:
-                        m_bCanBlowUpBombs = true;
-                        m_uiBombSequenzeTimer = 2000;
-                        m_creature->RemoveAurasDueToSpell(SPELL_FIRE_BOMB_CHANNEL);
-                        m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
-                        m_bIsBombing = false;
-                        break;
-                }
-
-            }
-            else
-                m_uiBombSequenzeTimer -= uiDiff;
-        }
-
-        //Enrage after 5 minutes
-        if (m_uiEnrageTimer < uiDiff)
-        {
-            m_bCanEnrage = true;
-            m_uiEnrageTimer = 600000;
         }
         else
-            m_uiEnrageTimer -= uiDiff;
+            m_uiBombTimer -= uiDiff;
 
-        //Call Hatcher
-        if (m_bIsEggRemaining)
+        if (m_uiFireBreathTimer < uiDiff)
+        {
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_FLAME_BREATH) == CAST_OK)
+                    m_uiFireBreathTimer = 8000;
+            }
+        }
+        else
+            m_uiFireBreathTimer -= uiDiff;
+
+        // Remove bomb aura after five seconds
+        if (m_uiBombAuraTimer)
+        {
+            if (m_uiBombAuraTimer <= uiDiff)
+            {
+                m_creature->RemoveAurasDueToSpell(SPELL_FIRE_BOMB_CHANNEL);
+                m_uiBombAuraTimer = 0;
+                m_uiExplodeTimer  = 5000;
+            }
+            else
+                m_uiBombAuraTimer -= uiDiff;
+        }
+
+        // Explode the summoned bombs on timer
+        if (m_uiExplodeTimer)
+        {
+            if (m_uiExplodeTimer <= uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_FIRE_BOMB_EXPLODE) == CAST_OK)
+                    m_uiExplodeTimer = 0;
+            }
+            else
+                m_uiExplodeTimer -= uiDiff;
+        }
+
+        // Hatch all eggs at 35% health
+        if (!m_bHasHatchedEggs && m_creature->GetHealthPercent() < 35.0f)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_HATCH_ALL_EGGS) == CAST_OK)
+            {
+                DoScriptText(SAY_ALL_EGGS, m_creature);
+                m_bHasHatchedEggs = true;
+            }
+        }
+
+        // Soft Enrage - after 5 min, or at 20% health
+        if (!m_bIsEnraged)
+        {
+            if (m_uiEnrageTimer < uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_ENRAGE) == CAST_OK)
+                    m_bIsEnraged = true;
+            }
+            else
+                m_uiEnrageTimer -= uiDiff;
+
+            if (m_creature->GetHealthPercent() < 20.0f)
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_ENRAGE) == CAST_OK)
+                    m_bIsEnraged = true;
+            }
+        }
+
+        // Spawn Hatchers - if necessary
+        if (!m_bHasHatchedEggs)
         {
             if (m_uiHatcherTimer < uiDiff)
             {
-                if (!m_pInstance || (m_pInstance->GetData(TYPE_J_EGGS_LEFT) == 0 && m_pInstance->GetData(TYPE_J_EGGS_RIGHT) == 0))
-                    m_bIsEggRemaining = false;
-                else
-                {
-                    DoScriptText(SAY_SUMMON_HATCHER, m_creature);
+                DoScriptText(SAY_SUMMON_HATCHER, m_creature);
 
-                    Creature* pHatcer1 = m_creature->GetMap()->GetCreature(m_hatcherOneGuid);
-                    Creature* pHatcer2 = m_creature->GetMap()->GetCreature(m_hatcherTwoGuid);
+                Creature* pHatcer1 = m_creature->GetMap()->GetCreature(m_hatcherOneGuid);
+                Creature* pHatcer2 = m_creature->GetMap()->GetCreature(m_hatcherTwoGuid);
 
-                    if (!pHatcer1 || (pHatcer1 && !pHatcer1->isAlive()))
-                    {
-                        if (Creature* pHatcher = m_creature->SummonCreature(NPC_AMANI_HATCHER_1, m_aHatcherRight[0].m_fX, m_aHatcherRight[0].m_fY, m_aHatcherRight[0].m_fZ, 0.0f, TEMPSUMMON_CORPSE_DESPAWN, 0))
-                            pHatcher->GetMotionMaster()->MovePoint(1, m_aHatcherRight[1].m_fX, m_aHatcherRight[1].m_fY, m_aHatcherRight[1].m_fZ);
-                    }
+                if (!pHatcer1 || !pHatcer1->isAlive())
+                    DoCastSpellIfCan(m_creature, SPELL_SUMMON_HATCHER_1, CAST_TRIGGERED);
 
-                    if (!pHatcer2 || (pHatcer2 && !pHatcer2->isAlive()))
-                    {
-                        if (Creature* pHatcher = m_creature->SummonCreature(NPC_AMANI_HATCHER_2, m_aHatcherLeft[0].m_fX, m_aHatcherLeft[0].m_fY, m_aHatcherLeft[0].m_fZ, 0.0f, TEMPSUMMON_CORPSE_DESPAWN, 0))
-                            pHatcher->GetMotionMaster()->MovePoint(1, m_aHatcherLeft[1].m_fX, m_aHatcherLeft[1].m_fY, m_aHatcherLeft[1].m_fZ);
-                    }
+                if (!pHatcer2 || !pHatcer2->isAlive())
+                    DoCastSpellIfCan(m_creature, SPELL_SUMMON_HATCHER_2, CAST_TRIGGERED);
 
-                    m_uiHatcherTimer = 90000;
-                }
-
+                m_uiHatcherTimer = 90000;
             }
             else
                 m_uiHatcherTimer -= uiDiff;
         }
 
-        //WIPE after 10 minutes
-        if (m_uiWipeTimer < uiDiff)
+        // Hard enrage
+        if (m_uiBerserkTimer)
         {
-            if (DoCastSpellIfCan(m_creature,SPELL_ENRAGE) == CAST_OK)
+            if (m_uiBerserkTimer <= uiDiff)
             {
-                DoScriptText(SAY_BERSERK, m_creature);
-                m_uiWipeTimer = 30000;
+                if (DoCastSpellIfCan(m_creature, SPELL_BERSERK) == CAST_OK)
+                {
+                    DoScriptText(SAY_BERSERK, m_creature);
+                    m_uiBerserkTimer = 0;
+                }
             }
+            else
+                m_uiBerserkTimer -= uiDiff;
         }
-        else
-            m_uiWipeTimer -= uiDiff;
+
+        DoMeleeAttackIfReady();
 
         //check for reset ... exploit preventing ... pulled from his podest
         EnterEvadeIfOutOfCombatArea(uiDiff);
@@ -557,24 +375,6 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
 CreatureAI* GetAI_boss_janalaiAI(Creature* pCreature)
 {
     return new boss_janalaiAI(pCreature);
-}
-
-struct MANGOS_DLL_DECL npc_janalai_firebombAI : public ScriptedAI
-{
-    npc_janalai_firebombAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
-
-    void Reset() {}
-
-    void AttackStart(Unit* pWho) {}
-
-    void MoveInLineOfSight(Unit* pWho) {}
-
-    void UpdateAI(const uint32 uiDiff) {}
-};
-
-CreatureAI* GetAI_npc_janalai_firebombAI(Creature* pCreature)
-{
-    return new npc_janalai_firebombAI(pCreature);
 }
 
 struct MANGOS_DLL_DECL npc_amanishi_hatcherAI : public ScriptedAI
@@ -589,106 +389,91 @@ struct MANGOS_DLL_DECL npc_amanishi_hatcherAI : public ScriptedAI
 
     uint32 m_uiWaypoint;
     uint32 m_uiHatchlingTimer;
-    uint32 m_uiHatchlingCount;
-    bool m_bCanMoveNext;
+    uint8 m_uiHatchlingCount;
+    uint8 m_uiEggsHatched;
     bool m_bWaypointEnd;
 
     void Reset()
     {
-        m_uiWaypoint = 0;
-        m_uiHatchlingTimer = 1000;
-        m_uiHatchlingCount = 1;
-        m_bCanMoveNext = false;
-        m_bWaypointEnd = false;
+        m_uiWaypoint        = 0;
+        m_uiHatchlingTimer  = 0;
+        m_uiHatchlingCount  = 0;
+        m_uiEggsHatched     = 0;
+        m_bWaypointEnd      = false;
+
         m_creature->SetWalk(false);
     }
 
-    void MoveInLineOfSight(Unit* pWho) {}
-
-    void AttackStart(Unit* pWho)
-    {
-        if (!pWho)
-            return;
-
-        if (m_creature->Attack(pWho, false))
-        {
-            m_creature->AddThreat(pWho);
-            m_creature->SetInCombatWith(pWho);
-            pWho->SetInCombatWith(m_creature);
-        }
-    }
+    void MoveInLineOfSight(Unit* pWho) { }
+    void AttackStart(Unit* pWho) { }
 
     void MovementInform(uint32 uiType, uint32 uiPointId)
     {
-        if (uiType != POINT_MOTION_TYPE || m_bWaypointEnd)
+        if (uiType != POINT_MOTION_TYPE)
             return;
+
+        // Used when a hatcher is forced to switch sides
+        if (m_bWaypointEnd && uiPointId)
+        {
+            m_creature->GetMotionMaster()->Clear();
+            m_uiHatchlingTimer = 1000;
+            return;
+        }
 
         uint32 uiCount = m_creature->GetEntry() == NPC_AMANI_HATCHER_1 ? countof(m_aHatcherRight) : countof(m_aHatcherLeft);
 
         m_uiWaypoint = uiPointId + 1;
 
         if (uiCount == m_uiWaypoint)
+        {
+            m_creature->GetMotionMaster()->Clear();
+            m_uiHatchlingTimer = 1000;
             m_bWaypointEnd = true;
-
-        m_bCanMoveNext = true;
+        }
+        else
+        {
+            if (m_creature->GetEntry() == NPC_AMANI_HATCHER_1)
+                m_creature->GetMotionMaster()->MovePoint(m_uiWaypoint, m_aHatcherRight[m_uiWaypoint].m_fX, m_aHatcherRight[m_uiWaypoint].m_fY, m_aHatcherRight[m_uiWaypoint].m_fZ);
+            else
+                m_creature->GetMotionMaster()->MovePoint(m_uiWaypoint, m_aHatcherLeft[m_uiWaypoint].m_fX, m_aHatcherLeft[m_uiWaypoint].m_fY, m_aHatcherLeft[m_uiWaypoint].m_fZ);
+        }
     }
 
-    void DoHatchEggs(uint32 uiCount)
+    void SpellHitTarget(Unit* pTarget, SpellEntry const* pSpell)
     {
-        uint32 uiSaveRightOrLeft = m_creature->GetEntry() == NPC_AMANI_HATCHER_1 ? TYPE_J_EGGS_RIGHT : TYPE_J_EGGS_LEFT;
+        if ((pSpell->Id != SPELL_HATCH_EGG_1 && pSpell->Id != SPELL_HATCH_EGG_2) || pTarget->GetEntry() != NPC_DRAGONHAWK_EGG)
+            return;
 
-        for(uint32 i = 0; i < uiCount; ++i)
+        // If we already hatched the number of eggs allowed per hatch phase, stop the hatching
+        if (m_uiEggsHatched >= m_uiHatchlingCount)
+            return;
+
+        if (!m_pInstance)
+            return;
+
+        if (Creature* pJanalai = m_pInstance->GetSingleCreatureFromStorage(NPC_JANALAI))
         {
-            if (Creature* pEgg = GetClosestCreatureWithEntry(m_creature, NPC_EGG, 40.0f))
-                pEgg->CastSpell(pEgg, SPELL_SUMMON_DRAGONHAWK, true);
-
-            m_pInstance->SetData(uiSaveRightOrLeft, SPECIAL);
+            pTarget->CastSpell(pTarget, SPELL_SUMMON_DRAGONHAWK, true, NULL, NULL, pJanalai->GetObjectGuid());
+            ++m_uiEggsHatched;
         }
     }
 
     void UpdateAI(const uint32 uiDiff)
     {
-        if (m_bCanMoveNext)
+        if (!m_bWaypointEnd)
+            return;
+
+        if (m_uiHatchlingTimer)
         {
-            m_bCanMoveNext = false;
-
-            if (m_bWaypointEnd)
-                m_creature->GetMotionMaster()->Clear();
-            else
+            if (m_uiHatchlingTimer <= uiDiff)
             {
-                if (m_creature->GetEntry() == NPC_AMANI_HATCHER_1)
-                    m_creature->GetMotionMaster()->MovePoint(m_uiWaypoint, m_aHatcherRight[m_uiWaypoint].m_fX, m_aHatcherRight[m_uiWaypoint].m_fY, m_aHatcherRight[m_uiWaypoint].m_fZ);
-                else
-                    m_creature->GetMotionMaster()->MovePoint(m_uiWaypoint, m_aHatcherLeft[m_uiWaypoint].m_fX, m_aHatcherLeft[m_uiWaypoint].m_fY, m_aHatcherLeft[m_uiWaypoint].m_fZ);
-            }
-        }
-
-        if (m_bWaypointEnd)
-        {
-            if (m_uiHatchlingTimer < uiDiff)
-            {
-                m_uiHatchlingTimer = 10000;
-
-                if (!m_pInstance)
-                    return;
-
-                uint32 uiEggsRemaining = m_creature->GetEntry() == NPC_AMANI_HATCHER_1 ? m_pInstance->GetData(TYPE_J_EGGS_RIGHT) : m_pInstance->GetData(TYPE_J_EGGS_LEFT);
-
-                if (!uiEggsRemaining)
+                // Note: there are 2 Hatch Eggs spells. Not sure which one to use
+                if (DoCastSpellIfCan(m_creature, SPELL_HATCH_EGG_2) == CAST_OK)
                 {
-                    //instead, should run to other side and start hatch if eggs remain
-                    m_creature->ForcedDespawn();
-                    return;
+                    m_uiHatchlingTimer = m_uiHatchlingCount < 5 ? 10000 : 0;
+                    m_uiEggsHatched    = 0;
+                    ++m_uiHatchlingCount;
                 }
-                else if (m_uiHatchlingCount >= uiEggsRemaining/2)
-                    m_uiHatchlingCount = uiEggsRemaining;
-
-                DoCastSpellIfCan(m_creature,SPELL_HATCH_EGG);
-
-                DoHatchEggs(m_uiHatchlingCount);
-
-                ++m_uiHatchlingCount;
-
             }
             else
                 m_uiHatchlingTimer -= uiDiff;
@@ -701,42 +486,54 @@ CreatureAI* GetAI_npc_amanishi_hatcherAI(Creature* pCreature)
     return new npc_amanishi_hatcherAI(pCreature);
 }
 
+// TODO Remove this 'script' when combat can be proper prevented from core-side
+struct MANGOS_DLL_DECL npc_dragonhawk_eggAI : public Scripted_NoMovementAI
+{
+    npc_dragonhawk_eggAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature) {Reset();}
+
+    void Reset() {}
+
+    void AttackStart(Unit* pWho) {}
+    void MoveInLineOfSight(Unit* pWho) {}
+    void UpdateAI(const uint32 uiDiff) {}
+};
+
+CreatureAI* GetAI_npc_dragonhawk_eggAI(Creature* pCreature)
+{
+    return new npc_dragonhawk_eggAI(pCreature);
+}
+
+// TODO Remove this 'script' when combat can be proper prevented from core-side
+struct MANGOS_DLL_DECL npc_janalai_firebombAI : public Scripted_NoMovementAI
+{
+    npc_janalai_firebombAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature) {Reset();}
+
+    void Reset() {}
+
+    void AttackStart(Unit* pWho) {}
+    void MoveInLineOfSight(Unit* pWho) {}
+    void UpdateAI(const uint32 uiDiff) {}
+};
+
+CreatureAI* GetAI_npc_janalai_firebombAI(Creature* pCreature)
+{
+    return new npc_janalai_firebombAI(pCreature);
+}
+
+// ToDo: move to eventAI
 struct MANGOS_DLL_DECL npc_hatchlingAI : public ScriptedAI
 {
-    npc_hatchlingAI(Creature* pCreature) : ScriptedAI(pCreature)
-    {
-        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        Reset();
-    }
-
-    ScriptedInstance* m_pInstance;
+    npc_hatchlingAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
     uint32 m_uiBufferTimer;
-    bool m_bIsStarted;
 
     void Reset()
     {
         m_uiBufferTimer = 7000;
-        m_bIsStarted = false;
     }
 
     void UpdateAI(const uint32 uiDiff)
     {
-        if (!m_bIsStarted)
-        {
-            if (m_creature->GetPositionY() > 1150)
-                m_creature->GetMotionMaster()->MovePoint(0, hatcherway_l[3][0] + rand()%4-2, hatcherway_l[3][1] + rand()%4-2, hatcherway_l[3][2]);
-            else
-                m_creature->GetMotionMaster()->MovePoint(0, hatcherway_r[3][0] + rand()%4-2, hatcherway_r[3][1] + rand()%4-2, hatcherway_r[3][2]);
-            m_bIsStarted = true;
-        }
-
-        if (m_pInstance && m_pInstance->GetData(TYPE_JANALAI) == FAIL)
-        {
-            m_creature->ForcedDespawn();
-            return;
-        }
-
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
@@ -766,6 +563,11 @@ void AddSC_boss_janalai()
     pNewScript = new Script;
     pNewScript->Name = "boss_janalai";
     pNewScript->GetAI = &GetAI_boss_janalaiAI;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_dragonhawk_egg";
+    pNewScript->GetAI = &GetAI_npc_dragonhawk_eggAI;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;

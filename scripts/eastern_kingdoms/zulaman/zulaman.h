@@ -46,12 +46,9 @@ enum InstanceZA
     TYPE_RAND_VENDOR_1      = 8,
     TYPE_RAND_VENDOR_2      = 9,
 
-    TYPE_J_EGGS_RIGHT       = 10,
-    TYPE_J_EGGS_LEFT        = 11,
-
     NPC_AKILZON             = 23574,
     NPC_NALORAKK            = 23576,
-    // NPC_JANALAI          = 23578,
+    NPC_JANALAI             = 23578,
     NPC_HALAZZI             = 23577,
     NPC_MALACRASS           = 24239,
     // NPC_ZULJIN           = 23863,
@@ -71,8 +68,6 @@ enum InstanceZA
     NPC_FENSTALKER          = 24245,
     NPC_DARKHEART           = 24246,
     NPC_KORAGG              = 24247,
-
-    NPC_EGG                 = 23817,
 
     NPC_HARRISON            = 24358,
     // Time Run Event NPCs
@@ -194,10 +189,6 @@ class MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
         NalorakkTrashInfo m_aNalorakkEvent[MAX_BEAR_WAVES];
         uint8 m_uiBearEventPhase;
         bool m_bIsBearPhaseInProgress;
-
-        GuidList m_lEggsGUIDList;
-        uint32 m_uiEggsRemainingCount_Left;
-        uint32 m_uiEggsRemainingCount_Right;
 };
 
 #endif
