@@ -145,6 +145,7 @@ enum
 
     // quest 6124/6129
     SPELL_APPLY_SALVE                   = 19512,
+    SPELL_SICKLY_AURA                   = 19502,
 
     NPC_SICKLY_DEER                     = 12298,
     NPC_SICKLY_GAZELLE                  = 12296,
@@ -519,11 +520,15 @@ bool EffectDummyCreature_spell_dummy_npc(Unit* pCaster, uint32 uiSpellId, SpellE
                 if (pCaster->GetTypeId() != TYPEID_PLAYER)
                     return true;
 
-                if (pCreatureTarget->GetEntry() == NPC_SICKLY_DEER && ((Player*)pCaster)->GetTeam() == ALLIANCE)
-                    pCreatureTarget->UpdateEntry(NPC_CURED_DEER);
+                if (pCreatureTarget->GetEntry() != NPC_SICKLY_DEER && pCreatureTarget->GetEntry() != NPC_SICKLY_GAZELLE)
+                    return true;
 
-                if (pCreatureTarget->GetEntry() == NPC_SICKLY_GAZELLE && ((Player*)pCaster)->GetTeam() == HORDE)
-                    pCreatureTarget->UpdateEntry(NPC_CURED_GAZELLE);
+                // Update entry, remove aura, set the kill credit and despawn
+                uint32 uiUpdateEntry = pCreatureTarget->GetEntry() == NPC_SICKLY_DEER ? NPC_CURED_DEER : NPC_CURED_GAZELLE;
+                pCreatureTarget->RemoveAurasDueToSpell(SPELL_SICKLY_AURA);
+                pCreatureTarget->UpdateEntry(uiUpdateEntry);
+                ((Player*)pCaster)->KilledMonsterCredit(uiUpdateEntry);
+                pCreatureTarget->ForcedDespawn(20000);
 
                 return true;
             }
