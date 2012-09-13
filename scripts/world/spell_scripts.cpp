@@ -601,6 +601,7 @@ bool EffectDummyCreature_spell_dummy_npc(Unit* pCaster, uint32 uiSpellId, SpellE
                     return true;
 
                 pCreatureTarget->UpdateEntry(NPC_OWLKIN_INOC);
+                ((Player*)pCaster)->KilledMonsterCredit(NPC_OWLKIN_INOC);
 
                 //set despawn timer, since we want to remove creature after a short time
                 pCreatureTarget->ForcedDespawn(15000);
