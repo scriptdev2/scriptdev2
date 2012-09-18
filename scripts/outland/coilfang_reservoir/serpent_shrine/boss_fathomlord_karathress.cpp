@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Fathomlord_Karathress
-SD%Complete: 60
-SDComment: Missing Multishot, Totems, Windfury, Whirlwind
+SD%Complete: 95
+SDComment: Timers may need adjustments.
 SDCategory: Coilfang Resevoir, Serpent Shrine Cavern
 EndScriptData */
 
@@ -38,12 +38,9 @@ enum
 
     //Karathress spells
     SPELL_CATACLYSMIC_BOLT          = 38441,
-    SPELL_POWER_OF_SHARKKIS         = 38455,
-    SPELL_POWER_OF_TIDALVESS        = 38452,
-    SPELL_POWER_OF_CARIBDIS         = 38451,
-    SPELL_ENRAGE                    = 24318,
+    SPELL_ENRAGE                    = 24318,                // ToDo: spell needs to be confirmed
     SPELL_SEAR_NOVA                 = 38445,
-    SPELL_BLESSING_OF_THE_TIDES     = 38449,
+    SPELL_BLESSING_OF_THE_TIDES     = 38449,                // cast by each of the advisors when the boss reaches 75% hp
 
     //Sharkkis spells
     SPELL_LEECHING_THROW            = 29436,
@@ -52,6 +49,7 @@ enum
     SPELL_MULTI_TOSS                = 38366,
     SPELL_SUMMON_FATHOM_LURKER      = 38433,
     SPELL_SUMMON_FATHOM_SPOREBAT    = 38431,
+    SPELL_POWER_OF_SHARKKIS         = 38455,                // cast on Karathress, on death
 
     //Tidalvess spells
     SPELL_FROST_SHOCK               = 38234,
@@ -59,24 +57,32 @@ enum
     SPELL_POISON_CLEANSING_TOTEM    = 38306,
     SPELL_EARTHBIND_TOTEM           = 38304,
     SPELL_WINDFURY_WEAPON           = 32911,                // triggers spell 32912 (Windfury)
+    SPELL_POWER_OF_TIDALVESS        = 38452,                // cast on Karathress, on death
 
     //Caribdis Spells
     SPELL_WATER_BOLT_VOLLEY         = 38335,
     SPELL_TIDAL_SURGE               = 38358,                // triggers 38353 which then triggers 38357
-    SPELL_HEAL                      = 38330,
+    SPELL_HEALING_WAVE              = 38330,
     SPELL_SUMMON_CYCLONE            = 38337,                // summons creature 22104 which uses spell 29538
+    SPELL_POWER_OF_CARIBDIS         = 38451,                // cast on Karathress, on death
+
+    SPELL_CYCLONE                   = 29538,
 
     MAX_ADVISORS                    = 3,
 
+    NPC_CYCLONE                     = 22104,
     NPC_SEER_OLUM                   = 22820
 };
 
 // position for Seer Olum
-const float afCoords_Olum[] = {446.78f, -542.76f, -7.54773f, 0.401581f};
+static const float afCoordsOlum[4] = {446.78f, -542.76f, -7.547f, 0.401f};
 
-static const uint32 aAdvisors[] = {NPC_SHARKKIS, NPC_TIDALVESS, NPC_CARIBDIS};
+static const uint32 aAdvisors[MAX_ADVISORS] = {NPC_SHARKKIS, NPC_TIDALVESS, NPC_CARIBDIS};
 
-//Fathom-Lord Karathress AI
+/*######
+## boss_fathomlord_karathress
+######*/
+
 struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
 {
     boss_fathomlord_karathressAI(Creature* pCreature) : ScriptedAI(pCreature)
@@ -87,64 +93,42 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    // timers
     uint32 m_uiCataclysmicBoltTimer;
+    uint32 m_uiSearingNovaTimer;
     uint32 m_uiEnrageTimer;
 
-    bool   m_bBlessingOfTides_MobsChecked;
+    bool m_bBlessingOfTides;
 
     void Reset()
     {
-        m_uiCataclysmicBoltTimer       = 10000;
-        m_uiEnrageTimer                = 600000;
-        m_bBlessingOfTides_MobsChecked = false;
+        m_uiCataclysmicBoltTimer    = 10000;
+        m_uiSearingNovaTimer        = urand(20000, 30000);
+        m_uiEnrageTimer             = 10*MINUTE*IN_MILLISECONDS;
+        m_bBlessingOfTides          = false;
     }
 
-    // TODO - unneeded workaround - the spell should be cast by adviser onto karathress; text can also be handled in their AI
-    // select the spell and the text based on the advisor which died
-    void EventAdvisorDeath(uint32 uiAdvisor)
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
     {
-        if (!m_creature->isAlive())
-            return;
-
-        int32  iSayGainAbility = 0;
-        uint32 uiSpell = 0;
-
-        switch(uiAdvisor)
+        switch (pSpell->Id)
         {
-            case NPC_SHARKKIS:
-                iSayGainAbility = SAY_GAIN_ABILITY1;
-                uiSpell = SPELL_POWER_OF_SHARKKIS;
+            case SPELL_POWER_OF_SHARKKIS:
+                DoScriptText(SAY_GAIN_ABILITY1, m_creature);
                 break;
-            case NPC_TIDALVESS:
-                iSayGainAbility = SAY_GAIN_ABILITY2;
-                uiSpell = SPELL_POWER_OF_TIDALVESS;
+            case SPELL_POWER_OF_TIDALVESS:
+                DoScriptText(SAY_GAIN_ABILITY1, m_creature);
                 break;
-            case NPC_CARIBDIS:
-                iSayGainAbility = SAY_GAIN_ABILITY3;
-                uiSpell = SPELL_POWER_OF_CARIBDIS;
+            case SPELL_POWER_OF_CARIBDIS:
+                DoScriptText(SAY_GAIN_ABILITY3, m_creature);
                 break;
-            default:
-                error_log("SD2: invalid advisor (id %u) for karathress!", uiAdvisor);
-                return;
         }
-
-        DoScriptText(iSayGainAbility, m_creature);
-        DoCastSpellIfCan(m_creature, uiSpell);
     }
 
     void Aggro(Unit* pWho)
     {
-        if (!m_pInstance)
-            return;
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_KARATHRESS_EVENT, IN_PROGRESS);
 
         DoScriptText(SAY_AGGRO, m_creature);
-
-        if (Player* pPlayer = pWho->GetCharmerOrOwnerPlayerOrPlayerItself())
-        {
-            m_pInstance->SetGuid(DATA_KARATHRESS_STARTER, pPlayer->GetObjectGuid());
-            m_pInstance->SetData(TYPE_KARATHRESS_EVENT, IN_PROGRESS);
-        }
     }
 
     void KilledUnit(Unit* pVictim)
@@ -165,54 +149,20 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
             m_pInstance->SetData(TYPE_KARATHRESS_EVENT, DONE);
 
         //support for quest 10944
-        m_creature->SummonCreature(NPC_SEER_OLUM, afCoords_Olum[0], afCoords_Olum[1], afCoords_Olum[2], afCoords_Olum[3], TEMPSUMMON_TIMED_DESPAWN, 3600000);
+        m_creature->SummonCreature(NPC_SEER_OLUM, afCoordsOlum[0], afCoordsOlum[1], afCoordsOlum[2], afCoordsOlum[3], TEMPSUMMON_TIMED_DESPAWN, 1*HOUR*IN_MILLISECONDS);
     }
 
     void JustReachedHome()
     {
-        if (!m_pInstance)
-            return;
-
-        for (uint8 i = 0; i < MAX_ADVISORS; ++i)
-        {
-            if (Creature* pAdvisor = m_pInstance->GetSingleCreatureFromStorage(aAdvisors[i]))
-            {
-                if (pAdvisor->getVictim())
-                    pAdvisor->AI()->EnterEvadeMode();
-                else if (!pAdvisor->isAlive())
-                    pAdvisor->Respawn();
-            }
-        }
-
         if (m_pInstance)
             m_pInstance->SetData(TYPE_KARATHRESS_EVENT, FAIL);
     }
 
     void UpdateAI(const uint32 uiDiff)
     {
-        if (!m_pInstance)
-            return;
-
-        //Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-        {
-            //check if the event is started
-            if (m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == IN_PROGRESS)
-            {
-                if (Player* pTarget = m_creature->GetMap()->GetPlayer(m_pInstance->GetGuid(DATA_KARATHRESS_STARTER)))
-                    AttackStart(pTarget);
-            }
             return;
-        }
 
-        //someone evaded!
-        if (m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == FAIL)
-        {
-            EnterEvadeMode();
-            return;
-        }
-
-        //m_uiCataclysmicBoltTimer
         if (m_uiCataclysmicBoltTimer < uiDiff)
         {
             //select a random unit other than the main tank
@@ -222,16 +172,18 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
             if (!pTarget)
                 pTarget = m_creature->getVictim();
 
-            if (DoCastSpellIfCan(pTarget, SPELL_CATACLYSMIC_BOLT) == CAST_OK)
-                m_uiCataclysmicBoltTimer = 10000;
+            if (pTarget)
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_CATACLYSMIC_BOLT) == CAST_OK)
+                    m_uiCataclysmicBoltTimer = 10000;
+            }
         }
         else
             m_uiCataclysmicBoltTimer -= uiDiff;
 
-        //hp under 75%
-        if (!m_bBlessingOfTides_MobsChecked && m_creature->GetHealthPercent() < 75.0f)
+        if (!m_bBlessingOfTides && m_creature->GetHealthPercent() < 75.0f)
         {
-            for(uint8 i = 0; i < MAX_ADVISORS; ++i)
+            for (uint8 i = 0; i < MAX_ADVISORS; ++i)
             {
                 if (Creature* pAdvisor = m_pInstance->GetSingleCreatureFromStorage(aAdvisors[i]))
                 {
@@ -239,7 +191,7 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
                     if (pAdvisor->isAlive())
                     {
                         pAdvisor->InterruptNonMeleeSpells(false);
-                        pAdvisor->CastSpell(m_creature, SPELL_BLESSING_OF_THE_TIDES, false);
+                        pAdvisor->CastSpell(m_creature, SPELL_BLESSING_OF_THE_TIDES, true);
                     }
                 }
             }
@@ -248,165 +200,101 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
             if (m_creature->HasAura(SPELL_BLESSING_OF_THE_TIDES))
                 DoScriptText(SAY_GAIN_BLESSING, m_creature);
 
-            m_bBlessingOfTides_MobsChecked = true;
+            m_bBlessingOfTides = true;
         }
 
-        //m_uiEnrageTimer
-        if (m_uiEnrageTimer < uiDiff)
+        if (m_uiSearingNovaTimer < uiDiff)
         {
-            if (DoCastSpellIfCan(m_creature, SPELL_ENRAGE) == CAST_OK)
-                m_uiEnrageTimer = 90000;
+            if (DoCastSpellIfCan(m_creature, SPELL_SEAR_NOVA) == CAST_OK)
+                m_uiSearingNovaTimer = urand(20000, 30000);
         }
         else
-            m_uiEnrageTimer -= uiDiff;
+            m_uiSearingNovaTimer -= uiDiff;
+
+        if (m_uiEnrageTimer)
+        {
+            if (m_uiEnrageTimer <= uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_ENRAGE) == CAST_OK)
+                    m_uiEnrageTimer = 0;
+            }
+            else
+                m_uiEnrageTimer -= uiDiff;
+        }
 
         DoMeleeAttackIfReady();
     }
 };
 
-// Base AI for every advisor
-struct MANGOS_DLL_DECL Advisor_Base_AI : public ScriptedAI
+/*######
+## boss_fathomguard_sharkkis
+######*/
+
+struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public ScriptedAI
 {
-    Advisor_Base_AI(Creature* pCreature) : ScriptedAI(pCreature)
-    {
-        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-    }
+    boss_fathomguard_sharkkisAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
-    ScriptedInstance* m_pInstance;
-
-    void JustReachedHome()
-    {
-        if (m_pInstance && m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == IN_PROGRESS)
-            m_pInstance->SetData(TYPE_KARATHRESS_EVENT, FAIL);
-    }
-
-    void Aggro(Unit *pWho)
-    {
-        if (!m_pInstance)
-            return;
-
-        if (m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == NOT_STARTED || m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == FAIL)
-            m_pInstance->SetData(TYPE_KARATHRESS_EVENT, IN_PROGRESS);
-
-        if (Player* pPlayer = pWho->GetCharmerOrOwnerPlayerOrPlayerItself())
-            m_pInstance->SetGuid(DATA_KARATHRESS_STARTER, pPlayer->GetObjectGuid());
-    }
-
-    void JustDied(Unit* pVictim)
-    {
-        if (!m_pInstance)
-            return;
-
-        if (Creature* pKarathress = m_pInstance->GetSingleCreatureFromStorage(NPC_KARATHRESS))
-        {
-            if (boss_fathomlord_karathressAI* pKaraAI = dynamic_cast<boss_fathomlord_karathressAI*>(pKarathress->AI()))
-                pKaraAI->EventAdvisorDeath(m_creature->GetEntry());
-        }
-    }
-};
-
-//Fathom-Guard Sharkkis AI
-struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public Advisor_Base_AI
-{
-    boss_fathomguard_sharkkisAI(Creature* pCreature) : Advisor_Base_AI(pCreature) { Reset(); }
-
-    // timers
     uint32 m_uiHurlTridentTimer;
     uint32 m_uiLeechingThrowTimer;
     uint32 m_uiTheBeastWithinTimer;
+    uint32 m_uiMultiTossTimer;
     uint32 m_uiPetTimer;
-
-    bool m_bIsPetCheckNeeded;
 
     void Reset()
     {
         m_uiHurlTridentTimer    = 2500;
         m_uiLeechingThrowTimer  = 20000;
         m_uiTheBeastWithinTimer = 30000;
-        m_uiPetTimer            = 10000;
-
-        m_bIsPetCheckNeeded     = true;
+        m_uiMultiTossTimer      = urand(7000, 11000);
+        if (!m_creature->GetPet())
+            m_uiPetTimer        = 10000;
     }
 
-    void AttackStart(Unit* pWho)
+    void JustDied(Unit* pKiller)
     {
-        if (!pWho)
-            return;
-
-        if (m_creature->Attack(pWho, false))
-        {
-            m_creature->AddThreat(pWho);
-            m_creature->SetInCombatWith(pWho);
-            pWho->SetInCombatWith(m_creature);
-
-            //using larger distance, since hunter type
-            m_creature->GetMotionMaster()->MoveChase(pWho, 15.0f);
-        }
+        DoCastSpellIfCan(m_creature, SPELL_POWER_OF_SHARKKIS, CAST_TRIGGERED);
     }
 
     void JustSummoned(Creature* pSummoned)
     {
-        if (pSummoned->IsPet())
-        {
-            m_uiPetTimer = 10000;
-            m_bIsPetCheckNeeded = false;
-        }
+        if (m_creature->getVictim())
+            pSummoned->AI()->AttackStart(m_creature->getVictim());
     }
 
-    void SummonedCreatureDespawn(Creature* pDespawned)
+    void SummonedCreatureJustDied(Creature* pSummoned)
     {
-        if (pDespawned->IsPet())
-            m_bIsPetCheckNeeded = true;
+        // resummon the pet in 10 secs
+        if (pSummoned->IsPet())
+            m_uiPetTimer = 10000;
     }
 
     void UpdateAI(const uint32 uiDiff)
     {
-        if (!m_pInstance)
-            return;
-
-        //Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-        {
-            //check if the event is started
-            if (m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == IN_PROGRESS)
-            {
-                if (Player* pTarget = m_creature->GetMap()->GetPlayer(m_pInstance->GetGuid(DATA_KARATHRESS_STARTER)))
-                    AttackStart(pTarget);
-            }
             return;
-        }
 
-        //someone evaded!
-        if (m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == FAIL)
+        if (m_uiPetTimer)
         {
-            EnterEvadeMode();
-            return;
-        }
-
-        //after 10 seconds: spawn pet if not exist
-        if (m_bIsPetCheckNeeded)
-        {
-            if (m_uiPetTimer < uiDiff)
+            if (m_uiPetTimer <= uiDiff)
             {
-                if (!m_creature->GetPet())
-                    DoCastSpellIfCan(m_creature, urand(0,1) ? SPELL_SUMMON_FATHOM_LURKER : SPELL_SUMMON_FATHOM_SPOREBAT);
+                if (DoCastSpellIfCan(m_creature, urand(0, 1) ? SPELL_SUMMON_FATHOM_LURKER : SPELL_SUMMON_FATHOM_SPOREBAT) == CAST_OK)
+                    m_uiPetTimer = 0;
             }
             else
                 m_uiPetTimer -= uiDiff;
         }
 
-        //m_uiHurlTridentTimer
         if (m_uiHurlTridentTimer < uiDiff)
         {
             if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_HURL_TRIDENT, 0))
-                DoCastSpellIfCan(pTarget, SPELL_HURL_TRIDENT);
-
-                m_uiHurlTridentTimer = 5000;
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_HURL_TRIDENT) == CAST_OK)
+                    m_uiHurlTridentTimer = 5000;
+            }
         }
         else
             m_uiHurlTridentTimer -= uiDiff;
 
-        //m_uiLeechingThrowTimer
         if (m_uiLeechingThrowTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_LEECHING_THROW) == CAST_OK)
@@ -415,7 +303,6 @@ struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public Advisor_Base_AI
         else
             m_uiLeechingThrowTimer -= uiDiff;
 
-        //m_uiTheBeastWithinTimer
         if (m_uiTheBeastWithinTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature, SPELL_THE_BEAST_WITHIN) == CAST_OK)
@@ -424,102 +311,124 @@ struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public Advisor_Base_AI
         else
             m_uiTheBeastWithinTimer -= uiDiff;
 
+        if (m_uiMultiTossTimer < uiDiff)
+        {
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
+                if (DoCastSpellIfCan(pTarget, SPELL_HURL_TRIDENT) == CAST_OK)
+                    m_uiMultiTossTimer = urand(7000, 12000);
+            }
+        }
+        else
+            m_uiMultiTossTimer -= uiDiff;
+
         DoMeleeAttackIfReady();
     }
 };
 
-//Fathom-Guard Tidalvess AI
-struct MANGOS_DLL_DECL boss_fathomguard_tidalvessAI : public Advisor_Base_AI
-{
-    boss_fathomguard_tidalvessAI(Creature* pCreature) : Advisor_Base_AI(pCreature) { Reset(); }
+/*######
+## boss_fathomguard_tidalvess
+######*/
 
-    // timers
+struct MANGOS_DLL_DECL boss_fathomguard_tidalvessAI : public ScriptedAI
+{
+    boss_fathomguard_tidalvessAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
+
     uint32 m_uiFrostShockTimer;
+    uint32 m_uiWindfuryTimer;
+    uint32 m_uiTotemTimer;
 
     void Reset()
     {
         m_uiFrostShockTimer = 25000;
+        m_uiWindfuryTimer   = 0;
+        m_uiTotemTimer      = urand(2000, 5000);
+    }
+
+    void JustDied(Unit* pKiller)
+    {
+        DoCastSpellIfCan(m_creature, SPELL_POWER_OF_TIDALVESS, CAST_TRIGGERED);
     }
 
     void UpdateAI(const uint32 uiDiff)
     {
-        if (!m_pInstance)
-            return;
-
-        //Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-        {
-            //check if the event is started
-            if (m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == IN_PROGRESS)
-            {
-                if (Player* pTarget = m_creature->GetMap()->GetPlayer(m_pInstance->GetGuid(DATA_KARATHRESS_STARTER)))
-                    AttackStart(pTarget);
-            }
             return;
-        }
 
-        //someone evaded!
-        if (m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == FAIL)
-        {
-            EnterEvadeMode();
-            return;
-        }
-
-        //m_uiFrostShockTimer
         if (m_uiFrostShockTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_FROST_SHOCK);
-            m_uiFrostShockTimer = urand(25000, 30000);
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_FROST_SHOCK) == CAST_OK)
+                m_uiFrostShockTimer = urand(25000, 30000);
         }
         else
             m_uiFrostShockTimer -= uiDiff;
+
+        if (m_uiWindfuryTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_WINDFURY_WEAPON) == CAST_OK)
+                m_uiWindfuryTimer = urand(90000, 100000);
+        }
+        else
+            m_uiWindfuryTimer -= uiDiff;
+
+        if (m_uiTotemTimer < uiDiff)
+        {
+            if (m_creature->IsNonMeleeSpellCasted(false))
+            {
+                switch (urand(0, 2))
+                {
+                    case 0: DoCastSpellIfCan(m_creature, SPELL_SPITFIRE_TOTEM);
+                    case 1: DoCastSpellIfCan(m_creature, SPELL_POISON_CLEANSING_TOTEM);
+                    case 2: DoCastSpellIfCan(m_creature, SPELL_EARTHBIND_TOTEM);
+                }
+                m_uiTotemTimer = urand(30000, 60000);
+            }
+        }
+        else
+            m_uiTotemTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
 };
 
-//Fathom-Guard Caribdis AI
-struct MANGOS_DLL_DECL boss_fathomguard_caribdisAI : public Advisor_Base_AI
-{
-    boss_fathomguard_caribdisAI(Creature* pCreature) : Advisor_Base_AI(pCreature) { Reset(); }
+/*######
+## boss_fathomguard_caribdis
+######*/
 
-    // timers
+struct MANGOS_DLL_DECL boss_fathomguard_caribdisAI : public ScriptedAI
+{
+    boss_fathomguard_caribdisAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
+
     uint32 m_uiWaterBoltVolleyTimer;
     uint32 m_uiTidalSurgeTimer;
     uint32 m_uiHealTimer;
+    uint32 m_uiCycloneTimer;
 
     void Reset()
     {
         m_uiWaterBoltVolleyTimer = 35000;
         m_uiTidalSurgeTimer      = urand(15000, 20000);
         m_uiHealTimer            = 55000;
+        m_uiCycloneTimer         = urand(10000, 15000);
+    }
+
+    void JustDied(Unit* pKiller)
+    {
+        DoCastSpellIfCan(m_creature, SPELL_POWER_OF_CARIBDIS, CAST_TRIGGERED);
+    }
+
+    void JustSummoned(Creature* pSummoned)
+    {
+        // ToDo: research if this creature should follow the summoner or a random target
+        if (pSummoned->GetEntry() == NPC_CYCLONE)
+            pSummoned->CastSpell(pSummoned, SPELL_CYCLONE, true);
     }
 
     void UpdateAI(const uint32 uiDiff)
     {
-        if (!m_pInstance)
-            return;
-
-        //Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-        {
-            //check if the event is started
-            if (m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == IN_PROGRESS)
-            {
-                if (Player* pTarget = m_creature->GetMap()->GetPlayer(m_pInstance->GetGuid(DATA_KARATHRESS_STARTER)))
-                    AttackStart(pTarget);
-            }
             return;
-        }
 
-        //someone evaded!
-        if (m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == FAIL)
-        {
-            EnterEvadeMode();
-            return;
-        }
-
-        //m_uiWaterBoltVolleyTimer
         if (m_uiWaterBoltVolleyTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature, SPELL_WATER_BOLT_VOLLEY) == CAST_OK)
@@ -528,7 +437,6 @@ struct MANGOS_DLL_DECL boss_fathomguard_caribdisAI : public Advisor_Base_AI
         else
             m_uiWaterBoltVolleyTimer -= uiDiff;
 
-        //m_uiTidalSurgeTimer
         if (m_uiTidalSurgeTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature, SPELL_TIDAL_SURGE) == CAST_OK)
@@ -537,26 +445,19 @@ struct MANGOS_DLL_DECL boss_fathomguard_caribdisAI : public Advisor_Base_AI
         else
             m_uiTidalSurgeTimer -= uiDiff;
 
-        //m_uiHealTimer
+        if (m_uiCycloneTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_SUMMON_CYCLONE) == CAST_OK)
+                m_uiCycloneTimer = urand(45000, 60000);
+        }
+        else
+            m_uiCycloneTimer -= uiDiff;
+
         if (m_uiHealTimer < uiDiff)
         {
-            // It can be cast on any of the mobs
-            Unit* pUnit = NULL;
-
-            switch (urand(0, 3))
+            if (Unit* pTarget = DoSelectLowestHpFriendly(50.0f))
             {
-                case 0: pUnit = m_pInstance->GetSingleCreatureFromStorage(NPC_KARATHRESS); break;
-                case 1: pUnit = m_pInstance->GetSingleCreatureFromStorage(NPC_SHARKKIS);   break;
-                case 2: pUnit = m_pInstance->GetSingleCreatureFromStorage(NPC_TIDALVESS);  break;
-                case 3: pUnit = m_creature; break;
-            }
-
-            if (!pUnit)
-                pUnit = m_creature;
-
-            if (pUnit->isAlive())
-            {
-                if (DoCastSpellIfCan(pUnit, SPELL_HEAL) == CAST_OK)
+                if (DoCastSpellIfCan(pTarget, SPELL_HEALING_WAVE) == CAST_OK)
                     m_uiHealTimer = 60000;
             }
         }

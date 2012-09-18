@@ -60,27 +60,12 @@ void instance_serpentshrine_cavern::OnCreatureCreate(Creature* pCreature)
     switch (pCreature->GetEntry())
     {
         case NPC_LADYVASHJ:
-        case NPC_KARATHRESS:
         case NPC_SHARKKIS:
         case NPC_TIDALVESS:
         case NPC_CARIBDIS:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
     }
-}
-
-void instance_serpentshrine_cavern::SetData64(uint32 uiType, uint64 uiData)
-{
-    if (uiType == DATA_KARATHRESS_STARTER)
-        m_karathressEventStarterGuid = ObjectGuid(uiData);
-}
-
-uint64 instance_serpentshrine_cavern::GetData64(uint32 uiData)
-{
-    if (uiData == DATA_KARATHRESS_STARTER)
-        return m_karathressEventStarterGuid.GetRawValue();
-
-    return 0;
 }
 
 void instance_serpentshrine_cavern::SetData(uint32 uiType, uint32 uiData)
