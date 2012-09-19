@@ -227,6 +227,7 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI, private Dia
                 m_creature->HandleEmote(EMOTE_ONESHOT_ROAR);
                 break;
             case NPC_PHOENIX_EGG:
+                m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
                 break;
         }

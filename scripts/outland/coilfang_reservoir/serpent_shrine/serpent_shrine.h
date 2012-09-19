@@ -9,6 +9,7 @@ enum
 {
     MAX_ENCOUNTER                   = 6,
     MAX_GENERATOR                   = 4,
+    MAX_SPELLBINDERS                = 3,
 
     TYPE_HYDROSS_EVENT              = 1,
     TYPE_KARATHRESS_EVENT           = 2,
@@ -27,7 +28,11 @@ enum
     NPC_CARIBDIS                    = 21964,
     NPC_SHARKKIS                    = 21966,
     NPC_TIDALVESS                   = 21965,
+    NPC_LEOTHERAS                   = 21215,
     NPC_LADYVASHJ                   = 21212,
+    NPC_GREYHEART_SPELLBINDER       = 21806,
+
+    SPELL_LEOTHERAS_BANISH          = 37546,
 };
 
 class MANGOS_DLL_DECL instance_serpentshrine_cavern : public ScriptedInstance
@@ -39,6 +44,8 @@ class MANGOS_DLL_DECL instance_serpentshrine_cavern : public ScriptedInstance
         bool IsEncounterInProgress() const;
 
         void OnCreatureCreate(Creature* pCreature);
+        void OnCreatureEnterCombat(Creature* pCreature);
+        void OnCreatureDeath(Creature* pCreature);
 
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
@@ -50,6 +57,10 @@ class MANGOS_DLL_DECL instance_serpentshrine_cavern : public ScriptedInstance
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         uint32 m_auiShieldGenerator[MAX_GENERATOR];
         std::string m_strInstData;
+
+        uint32 m_uiSpellBinderCount;
+
+        GuidList m_lSpellBindersGUIDList;
 };
 
 #endif

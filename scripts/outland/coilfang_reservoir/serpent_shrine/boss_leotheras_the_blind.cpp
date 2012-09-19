@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Leotheras_The_Blind
-SD%Complete: 60
-SDComment: Banish spell event NYI; Inner Demons NYI; Transition to final phase needs more work.
+SD%Complete: 70
+SDComment: Inner Demons NYI; Transition to final phase needs more work.
 SDCategory: Coilfang Resevoir, Serpent Shrine Cavern
 EndScriptData */
 
@@ -39,7 +39,6 @@ enum
     SAY_FREE                = -1548019,
     SAY_DEATH               = -1548020,
 
-    SPELL_BANISH            = 37546,                    // may be related to spell 37833 - boss should be banished with this spell. Only by killing npcs 21806, will become unbanished
     SPELL_BERSERK           = 27680,
     SPELL_WHIRLWIND         = 37640,
     SPELL_CHAOS_BLAST       = 37674,                    // triggers 37675
@@ -73,6 +72,7 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
+    uint32 m_uiBanishTimer;
     uint32 m_uiWhirlwindTimer;
     uint32 m_uiInnerDemonTimer;
     uint32 m_uiSwitchTimer;
@@ -85,6 +85,7 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
 
     void Reset()
     {
+        m_uiBanishTimer     = 10000;
         m_uiWhirlwindTimer  = 18500;
         m_uiInnerDemonTimer = 27500;
         m_uiSwitchTimer     = 60000;
@@ -95,6 +96,7 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
         m_bDemonForm        = false;
         m_bIsFinalForm      = false;
 
+        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         SetCombatMovement(true);
     }
 
@@ -104,6 +106,24 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
 
         if (m_pInstance)
             m_pInstance->SetData(TYPE_LEOTHERAS_EVENT, IN_PROGRESS);
+    }
+
+    void AttackStart(Unit* pWho)
+    {
+        // Don't attack while banished
+        if (m_creature->HasAura(SPELL_LEOTHERAS_BANISH))
+            return;
+
+        ScriptedAI::AttackStart(pWho);
+    }
+
+    void MoveInLineOfSight(Unit* pWho)
+    {
+        // Don't attack while banished
+        if (m_creature->HasAura(SPELL_LEOTHERAS_BANISH))
+            return;
+
+        ScriptedAI::MoveInLineOfSight(pWho);
     }
 
     void KilledUnit(Unit* pVictim)
@@ -144,6 +164,18 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
 
     void UpdateAI(const uint32 uiDiff)
     {
+        // Banish the boss before combat
+        if (m_uiBanishTimer)
+        {
+            if (m_uiBanishTimer <= uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_LEOTHERAS_BANISH) == CAST_OK)
+                    m_uiBanishTimer = 0;
+            }
+            else
+                m_uiBanishTimer -= uiDiff;
+        }
+
         //Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

@@ -33,7 +33,8 @@ EndScriptData */
 5 - Lady Vashj Event
 */
 
-instance_serpentshrine_cavern::instance_serpentshrine_cavern(Map* pMap) : ScriptedInstance(pMap)
+instance_serpentshrine_cavern::instance_serpentshrine_cavern(Map* pMap) : ScriptedInstance(pMap),
+    m_uiSpellBinderCount(0)
 {
     Initialize();
 }
@@ -63,7 +64,11 @@ void instance_serpentshrine_cavern::OnCreatureCreate(Creature* pCreature)
         case NPC_SHARKKIS:
         case NPC_TIDALVESS:
         case NPC_CARIBDIS:
+        case NPC_LEOTHERAS:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
+            break;
+        case NPC_GREYHEART_SPELLBINDER:
+            m_lSpellBindersGUIDList.push_back(pCreature->GetObjectGuid());
             break;
     }
 }
@@ -77,6 +82,16 @@ void instance_serpentshrine_cavern::SetData(uint32 uiType, uint32 uiData)
             break;
         case TYPE_LEOTHERAS_EVENT:
             m_auiEncounter[1] = uiData;
+            if (uiData == FAIL)
+            {
+                for (GuidList::const_iterator itr = m_lSpellBindersGUIDList.begin(); itr != m_lSpellBindersGUIDList.end(); ++itr)
+                {
+                    if (Creature* pSpellBinder = instance->GetCreature(*itr))
+                        pSpellBinder->Respawn();
+                }
+
+                m_uiSpellBinderCount = 0;
+            }
             break;
         case TYPE_THELURKER_EVENT:
             m_auiEncounter[2] = uiData;
@@ -164,6 +179,30 @@ uint32 instance_serpentshrine_cavern::GetData(uint32 uiType)
 
         default:
             return 0;
+    }
+}
+
+void instance_serpentshrine_cavern::OnCreatureEnterCombat(Creature* pCreature)
+{
+    // Interrupt spell casting on aggro
+    if (pCreature->GetEntry() == NPC_GREYHEART_SPELLBINDER)
+        pCreature->InterruptNonMeleeSpells(false);
+}
+
+void instance_serpentshrine_cavern::OnCreatureDeath(Creature* pCreature)
+{
+    if (pCreature->GetEntry() == NPC_GREYHEART_SPELLBINDER)
+    {
+        ++m_uiSpellBinderCount;
+
+        if (m_uiSpellBinderCount == MAX_SPELLBINDERS)
+        {
+            if (Creature* pLeotheras = GetSingleCreatureFromStorage(NPC_LEOTHERAS))
+            {
+                pLeotheras->RemoveAurasDueToSpell(SPELL_LEOTHERAS_BANISH);
+                pLeotheras->SetInCombatWithZone();
+            }
+        }
     }
 }
 
