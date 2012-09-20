@@ -62,7 +62,6 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
     ScriptedInstance* m_pInstance;
 
     uint32 m_uiArcaneExplosionTimer;
-    uint32 m_uiEarthShockTimer;
     uint32 m_uiFullFillmentTimer;
     uint32 m_uiBlinkTimer;
 
@@ -73,7 +72,6 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
     void Reset()
     {
         m_uiArcaneExplosionTimer = urand(6000, 12000);
-        m_uiEarthShockTimer      = 2000;
         m_uiFullFillmentTimer    = 15000;
         m_uiBlinkTimer           = urand(30000, 45000);
 
@@ -227,24 +225,14 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
 
         // If we are within range melee the target
         if (m_creature->CanReachWithMeleeAttack(m_creature->getVictim()))
-        {
-            //Make sure our attack is ready and we arn't currently casting
-            if (m_creature->isAttackReady() && !m_creature->IsNonMeleeSpellCasted(false))
-            {
-                m_creature->AttackerStateUpdate(m_creature->getVictim());
-                m_creature->resetAttackTimer();
-            }
-        }
+            DoMeleeAttackIfReady();
         else
         {
-            // EarthShock_Timer
-            if (m_uiEarthShockTimer < uiDiff)
+            if (!m_creature->IsNonMeleeSpellCasted(false))
             {
-                if (DoCastSpellIfCan(m_creature, SPELL_EARTH_SHOCK) == CAST_OK)
-                    m_uiEarthShockTimer = 1000;
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                    DoCastSpellIfCan(pTarget, SPELL_EARTH_SHOCK);
             }
-            else
-                m_uiEarthShockTimer -= uiDiff;
         }
     }
 };

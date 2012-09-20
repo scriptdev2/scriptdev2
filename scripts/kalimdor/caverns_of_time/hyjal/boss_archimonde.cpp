@@ -328,27 +328,15 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
 
         // If we are within range melee the target
         if (m_creature->CanReachWithMeleeAttack(m_creature->getVictim()))
-        {
-            //Make sure our attack is ready and we arn't currently casting
-            if (m_creature->isAttackReady() && !m_creature->IsNonMeleeSpellCasted(false))
-            {
-                m_creature->AttackerStateUpdate(m_creature->getVictim());
-                m_creature->resetAttackTimer();
-            }
-        }
+            DoMeleeAttackIfReady();
         // Else spam Finger of Death
         else
         {
-            if (m_uiFingerOfDeathTimer < uiDiff)
+            if (!m_creature->IsNonMeleeSpellCasted(false))
             {
                 if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-                {
-                    if (DoCastSpellIfCan(pTarget, SPELL_FINGER_DEATH) == CAST_OK)
-                        m_uiFingerOfDeathTimer = 5000;
-                }
+                    DoCastSpellIfCan(pTarget, SPELL_FINGER_DEATH);
             }
-            else
-                m_uiFingerOfDeathTimer -= uiDiff;
         }
     }
 };

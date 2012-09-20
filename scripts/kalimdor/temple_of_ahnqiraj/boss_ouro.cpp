@@ -77,7 +77,6 @@ struct MANGOS_DLL_DECL boss_ouroAI : public Scripted_NoMovementAI
     uint32 m_uiSubmergeTimer;
     uint32 m_uiSummonBaseTimer;
 
-    uint32 m_uiBoulderTimer;
     uint32 m_uiSummonMoundTimer;
 
     bool m_bEnraged;
@@ -92,7 +91,6 @@ struct MANGOS_DLL_DECL boss_ouroAI : public Scripted_NoMovementAI
         m_uiSubmergeTimer     = 90000;
         m_uiSummonBaseTimer   = 2000;
 
-        m_uiBoulderTimer      = urand(1000, 2000);
         m_uiSummonMoundTimer  = 10000;
 
         m_bEnraged            = false;
@@ -214,27 +212,15 @@ struct MANGOS_DLL_DECL boss_ouroAI : public Scripted_NoMovementAI
 
             // If we are within range melee the target
             if (m_creature->CanReachWithMeleeAttack(m_creature->getVictim()))
-            {
-                //Make sure our attack is ready and we arn't currently casting
-                if (m_creature->isAttackReady() && !m_creature->IsNonMeleeSpellCasted(false))
-                {
-                    m_creature->AttackerStateUpdate(m_creature->getVictim());
-                    m_creature->resetAttackTimer();
-                }
-            }
+                DoMeleeAttackIfReady();
             // Spam Boulder spell when enraged and not tanked
             else if (m_bEnraged)
             {
-                if (m_uiBoulderTimer < uiDiff)
+                if (!m_creature->IsNonMeleeSpellCasted(false))
                 {
                     if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-                    {
-                        if (DoCastSpellIfCan(pTarget, SPELL_BOULDER) == CAST_OK)
-                            m_uiBoulderTimer = urand(2000, 3000);
-                    }
+                        DoCastSpellIfCan(pTarget, SPELL_BOULDER);
                 }
-                else
-                    m_uiBoulderTimer -= uiDiff;
             }
         }
         else
