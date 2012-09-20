@@ -2130,7 +2130,9 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1548052,'Your time ends now!',11541,1,0,0,'vashj SAY_SLAY1'),
 (-1548053,'You have failed!',11542,1,0,0,'vashj SAY_SLAY2'),
 (-1548054,'Be\'lamere an\'delay',11543,1,0,0,'vashj SAY_SLAY3'),
-(-1548055,'Lord Illidan, I... I am... sorry.',11544,1,0,0,'vashj SAY_DEATH');
+(-1548055,'Lord Illidan, I... I am... sorry.',11544,1,0,0,'vashj SAY_DEATH'),
+
+(-1548056,'%s takes a deep breath!',0,3,0,0,'lurker below EMOTE_DEEP_BREATH');
 
 -- -1 550 000 THE EYE
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
