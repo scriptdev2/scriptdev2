@@ -1298,7 +1298,6 @@ UPDATE creature_template SET ScriptName='boss_zuljin' WHERE entry=23863;
 UPDATE creature_template SET ScriptName='npc_dragonhawk_egg' WHERE entry=23817;
 UPDATE creature_template SET ScriptName='npc_janalai_firebomb' WHERE entry=23920;
 UPDATE creature_template SET ScriptName='npc_amanishi_hatcher' WHERE entry IN (23818,24504);
-UPDATE creature_template SET ScriptName='npc_hatchling' WHERE entry=23598;
 UPDATE creature_template SET ScriptName='npc_forest_frog' WHERE entry=24396;
 
 /* ZUL'DRAK */

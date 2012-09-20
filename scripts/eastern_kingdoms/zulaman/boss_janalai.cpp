@@ -69,9 +69,6 @@ enum
     // Eggs spells
     SPELL_SUMMON_DRAGONHAWK         = 42493,
 
-    //Hatchling Spells
-    SPELL_FLAMEBUFFED               = 43299,
-
     MAX_EGGS_ON_SIDE                = 20,                       // there are 20 eggs spawned on each side
 };
 
@@ -520,42 +517,6 @@ CreatureAI* GetAI_npc_janalai_firebombAI(Creature* pCreature)
     return new npc_janalai_firebombAI(pCreature);
 }
 
-// ToDo: move to eventAI
-struct MANGOS_DLL_DECL npc_hatchlingAI : public ScriptedAI
-{
-    npc_hatchlingAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
-
-    uint32 m_uiBufferTimer;
-
-    void Reset()
-    {
-        m_uiBufferTimer = 7000;
-    }
-
-    void UpdateAI(const uint32 uiDiff)
-    {
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-            return;
-
-        if (m_uiBufferTimer < uiDiff)
-        {
-            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-                DoCastSpellIfCan(target, SPELL_FLAMEBUFFED);
-
-            m_uiBufferTimer = 7000;
-        }
-        else
-            m_uiBufferTimer -= uiDiff;
-
-        DoMeleeAttackIfReady();
-    }
-};
-
-CreatureAI* GetAI_npc_hatchlingAI(Creature* pCreature)
-{
-    return new npc_hatchlingAI(pCreature);
-}
-
 void AddSC_boss_janalai()
 {
     Script* pNewScript;
@@ -578,10 +539,5 @@ void AddSC_boss_janalai()
     pNewScript = new Script;
     pNewScript->Name = "npc_amanishi_hatcher";
     pNewScript->GetAI = &GetAI_npc_amanishi_hatcherAI;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "npc_hatchling";
-    pNewScript->GetAI = &GetAI_npc_hatchlingAI;
     pNewScript->RegisterSelf();
 }
