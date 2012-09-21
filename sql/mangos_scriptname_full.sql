@@ -330,6 +330,7 @@ UPDATE creature_template SET ScriptName='boss_ambassador_flamelash' WHERE entry=
 UPDATE creature_template SET ScriptName='boss_doomrel' WHERE entry=9039;
 UPDATE creature_template SET ScriptName='boss_general_angerforge' WHERE entry=9033;
 UPDATE creature_template SET ScriptName='boss_high_interrogator_gerstahn' WHERE entry=9018;
+UPDATE creature_template SET ScriptName='boss_coren_direbrew' WHERE entry=23872;
 UPDATE creature_template SET ScriptName='npc_grimstone' WHERE entry=10096;
 UPDATE creature_template SET ScriptName='npc_theldren_trigger' WHERE entry=16079;
 UPDATE creature_template SET ScriptName='npc_kharan_mighthammer' WHERE entry=9021;
