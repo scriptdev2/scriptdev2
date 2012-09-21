@@ -2113,9 +2113,9 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1548036,'Strugging only makes it worse.',11327,1,0,0,'morogrim SAY_SLAY2'),
 (-1548037,'Only the strong survive.',11328,1,0,0,'morogrim SAY_SLAY3'),
 (-1548038,'Great... currents of... Ageon.',11329,1,0,0,'morogrim SAY_DEATH'),
-(-1548039,'%s sends his enemies to their watery graves!',0,2,0,0,'morogrim EMOTE_WATERY_GRAVE'),
+(-1548039,'%s sends his enemies to their watery graves!',0,3,0,0,'morogrim EMOTE_WATERY_GRAVE'),
 (-1548040,'The violent earthquake has alerted nearby murlocs!',0,3,0,0,'morogrim EMOTE_EARTHQUAKE'),
-(-1548041,'%s summons Watery Globules!',0,2,0,0,'morogrim EMOTE_WATERY_GLOBULES'),
+(-1548041,'%s summons Watery Globules!',0,3,0,0,'morogrim EMOTE_WATERY_GLOBULES'),
 
 (-1548042,'Water is life. It has become a rare commodity here in Outland. A commodity that we alone shall control. We are the Highborne, and the time has come at last for us to retake our rightful place in the world!',11531,1,0,0,'vashj SAY_INTRO'),
 (-1548043,'I\'ll split you from stem to stern!',11532,1,0,0,'vashj SAY_AGGRO1'),
