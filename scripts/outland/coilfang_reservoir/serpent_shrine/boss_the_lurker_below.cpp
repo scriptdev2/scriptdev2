@@ -94,6 +94,11 @@ struct MANGOS_DLL_DECL boss_the_lurker_belowAI : public Scripted_NoMovementAI
         m_uiPhase           = PHASE_NORMAL;
         m_uiPhaseChangeTimer= 90000;
 
+        DoResetCombatTimers();
+    }
+
+    void DoResetCombatTimers()
+    {
         m_uiWhirlTimer      = 18000;
         m_uiGeyserTimer     = 50000;
         m_uiSpoutTimer      = 42000;
@@ -251,6 +256,7 @@ struct MANGOS_DLL_DECL boss_the_lurker_belowAI : public Scripted_NoMovementAI
 
                 if (m_uiPhaseChangeTimer < uiDiff)
                 {
+                    DoResetCombatTimers();
                     m_uiPhase = PHASE_NORMAL;
                     m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                     m_creature->RemoveAurasDueToSpell(SPELL_SUBMERGE);

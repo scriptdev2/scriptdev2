@@ -70,6 +70,9 @@ void instance_serpentshrine_cavern::OnCreatureCreate(Creature* pCreature)
         case NPC_GREYHEART_SPELLBINDER:
             m_lSpellBindersGUIDList.push_back(pCreature->GetObjectGuid());
             break;
+        case NPC_HYDROSS_BEAM_HELPER:
+            m_lBeamHelpersGUIDList.push_back(pCreature->GetObjectGuid());
+            break;
     }
 }
 

@@ -31,6 +31,7 @@ enum
     NPC_LEOTHERAS                   = 21215,
     NPC_LADYVASHJ                   = 21212,
     NPC_GREYHEART_SPELLBINDER       = 21806,
+    NPC_HYDROSS_BEAM_HELPER         = 21933,
 
     SPELL_LEOTHERAS_BANISH          = 37546,
 };
@@ -50,6 +51,8 @@ class MANGOS_DLL_DECL instance_serpentshrine_cavern : public ScriptedInstance
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
 
+        void GetBeamHelpersGUIDList(GuidList &lList) { lList = m_lBeamHelpersGUIDList; }
+
         const char* Save() { return m_strInstData.c_str(); }
         void Load(const char* chrIn);
 
@@ -61,6 +64,7 @@ class MANGOS_DLL_DECL instance_serpentshrine_cavern : public ScriptedInstance
         uint32 m_uiSpellBinderCount;
 
         GuidList m_lSpellBindersGUIDList;
+        GuidList m_lBeamHelpersGUIDList;
 };
 
 #endif
