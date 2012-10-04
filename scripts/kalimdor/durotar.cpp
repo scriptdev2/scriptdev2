@@ -47,11 +47,38 @@ struct MANGOS_DLL_DECL npc_lazy_peonAI : public ScriptedAI
 {
     npc_lazy_peonAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset (); }
 
-    uint32 m_uiResetSleepTimer;
+    uint32 m_uiResetSleepTimer;                             // Time, until the npc stops harvesting lumber
+    uint32 m_uiStopSleepingTimer;                           // Time, until the npcs (re)starts working on its own
 
     void Reset()
     {
         m_uiResetSleepTimer = 0;
+        m_uiStopSleepingTimer = urand(30000, 120000);       // Sleeping aura has only 2min duration
+    }
+
+    // Can also be self invoked for random working
+    void StartLumbering(Unit* pInvoker)
+    {
+        m_uiStopSleepingTimer = 0;
+        if (GameObject* pLumber = GetClosestGameObjectWithEntry(m_creature, GO_LUMBERPILE, 15.0f))
+        {
+            m_creature->RemoveAurasDueToSpell(SPELL_PEON_SLEEP);
+            DoScriptText(urand(0, 1) ? SAY_PEON_AWAKE_1 : SAY_PEON_AWAKE_2, m_creature);
+
+            float fX, fY, fZ;
+            m_creature->SetWalk(false);
+            pLumber->GetContactPoint(m_creature, fX, fY, fZ, CONTACT_DISTANCE);
+
+            if (pInvoker->GetTypeId() == TYPEID_PLAYER)
+            {
+                ((Player*)pInvoker)->KilledMonsterCredit(m_creature->GetEntry(), m_creature->GetObjectGuid());
+                m_creature->GetMotionMaster()->MovePoint(1, fX, fY, fZ);
+            }
+            else
+                m_creature->GetMotionMaster()->MovePoint(2, fX, fY, fZ);
+        }
+        else
+            error_log("SD2: No GameObject of entry %u was found in range or something really bad happened.", GO_LUMBERPILE);
     }
 
     void MovementInform(uint32 uiMotionType, uint32 uiPointId)
@@ -60,7 +87,8 @@ struct MANGOS_DLL_DECL npc_lazy_peonAI : public ScriptedAI
             return;
 
         m_creature->HandleEmote(EMOTE_STATE_WORK_CHOPWOOD);
-        m_uiResetSleepTimer = 80000;
+        // TODO - random bevahior for self-invoked awakening guesswork
+        m_uiResetSleepTimer = uiPointId == 1 ? 80000 : urand(30000, 60000);
     }
 
     void UpdateAI(const uint32 uiDiff)
@@ -75,6 +103,14 @@ struct MANGOS_DLL_DECL npc_lazy_peonAI : public ScriptedAI
             }
             else
                 m_uiResetSleepTimer -= uiDiff;
+        }
+
+        if (m_uiStopSleepingTimer)
+        {
+            if (m_uiStopSleepingTimer <= uiDiff)
+                StartLumbering(m_creature);
+            else
+                m_uiStopSleepingTimer -= uiDiff;
         }
     }
 };
@@ -92,19 +128,8 @@ bool EffectDummyCreature_lazy_peon_awake(Unit* pCaster, uint32 uiSpellId, SpellE
         if (!pCreatureTarget->HasAura(SPELL_PEON_SLEEP) || pCaster->GetTypeId() != TYPEID_PLAYER || pCreatureTarget->GetEntry() != NPC_SLEEPING_PEON)
             return true;
 
-        if (GameObject* pLumber = GetClosestGameObjectWithEntry(pCreatureTarget, GO_LUMBERPILE, 15.0f))
-        {
-            pCreatureTarget->RemoveAurasDueToSpell(SPELL_PEON_SLEEP);
-            DoScriptText(urand(0, 1) ? SAY_PEON_AWAKE_1 : SAY_PEON_AWAKE_2, pCreatureTarget);
-            ((Player*)pCaster)->KilledMonsterCredit(pCreatureTarget->GetEntry());
-
-            float fX, fY, fZ;
-            pCreatureTarget->SetWalk(false);
-            pLumber->GetContactPoint(pCreatureTarget, fX, fY, fZ, CONTACT_DISTANCE);
-            pCreatureTarget->GetMotionMaster()->MovePoint(1, fX, fY, fZ);
-        }
-        else
-            error_log("SD2: No GameObject of entry %u was found in range or something really bad happened.", GO_LUMBERPILE);
+        if (npc_lazy_peonAI* pPeonAI = dynamic_cast<npc_lazy_peonAI*>(pCreatureTarget->AI()))
+            pPeonAI->StartLumbering(pCaster);
 
         //always return true when we are handling this spell and effect
         return true;
