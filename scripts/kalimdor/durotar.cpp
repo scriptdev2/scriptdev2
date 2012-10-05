@@ -45,7 +45,11 @@ enum
 
 struct MANGOS_DLL_DECL npc_lazy_peonAI : public ScriptedAI
 {
-    npc_lazy_peonAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset (); }
+    npc_lazy_peonAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        Reset ();
+        m_uiStopSleepingTimer = urand(30000, 120000);       // Set on spawn to a potential small timer, to get nice results for initial case
+    }
 
     uint32 m_uiResetSleepTimer;                             // Time, until the npc stops harvesting lumber
     uint32 m_uiStopSleepingTimer;                           // Time, until the npcs (re)starts working on its own
@@ -53,7 +57,7 @@ struct MANGOS_DLL_DECL npc_lazy_peonAI : public ScriptedAI
     void Reset()
     {
         m_uiResetSleepTimer = 0;
-        m_uiStopSleepingTimer = urand(30000, 120000);       // Sleeping aura has only 2min duration
+        m_uiStopSleepingTimer = urand(90000, 120000);       // Sleeping aura has only 2min duration
     }
 
     // Can also be self invoked for random working
@@ -63,7 +67,6 @@ struct MANGOS_DLL_DECL npc_lazy_peonAI : public ScriptedAI
         if (GameObject* pLumber = GetClosestGameObjectWithEntry(m_creature, GO_LUMBERPILE, 15.0f))
         {
             m_creature->RemoveAurasDueToSpell(SPELL_PEON_SLEEP);
-            DoScriptText(urand(0, 1) ? SAY_PEON_AWAKE_1 : SAY_PEON_AWAKE_2, m_creature);
 
             float fX, fY, fZ;
             m_creature->SetWalk(false);
@@ -71,6 +74,7 @@ struct MANGOS_DLL_DECL npc_lazy_peonAI : public ScriptedAI
 
             if (pInvoker->GetTypeId() == TYPEID_PLAYER)
             {
+                DoScriptText(SAY_PEON_AWAKE_1, m_creature);
                 ((Player*)pInvoker)->KilledMonsterCredit(m_creature->GetEntry(), m_creature->GetObjectGuid());
                 m_creature->GetMotionMaster()->MovePoint(1, fX, fY, fZ);
             }
@@ -97,6 +101,7 @@ struct MANGOS_DLL_DECL npc_lazy_peonAI : public ScriptedAI
         {
             if (m_uiResetSleepTimer <= uiDiff)
             {
+                DoScriptText(SAY_PEON_AWAKE_2, m_creature);
                 m_creature->HandleEmote(EMOTE_STATE_NONE);
                 EnterEvadeMode();
                 m_uiResetSleepTimer = 0;
