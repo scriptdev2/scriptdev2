@@ -221,12 +221,12 @@ struct MANGOS_DLL_DECL boss_sartharionAI : public ScriptedAI
     void JustReachedHome()
     {
         if (m_pInstance)
-            m_pInstance->SetData(TYPE_SARTHARION_EVENT, NOT_STARTED);
+            m_pInstance->SetData(TYPE_SARTHARION_EVENT, FAIL);
     }
 
     void Aggro(Unit* pWho)
     {
-        DoScriptText(SAY_SARTHARION_AGGRO,m_creature);
+        DoScriptText(SAY_SARTHARION_AGGRO, m_creature);
 
         if (m_pInstance)
         {
@@ -237,7 +237,7 @@ struct MANGOS_DLL_DECL boss_sartharionAI : public ScriptedAI
 
     void JustDied(Unit* pKiller)
     {
-        DoScriptText(SAY_SARTHARION_DEATH,m_creature);
+        DoScriptText(SAY_SARTHARION_DEATH, m_creature);
 
         if (m_pInstance)
             m_pInstance->SetData(TYPE_SARTHARION_EVENT, DONE);
@@ -300,13 +300,15 @@ struct MANGOS_DLL_DECL boss_sartharionAI : public ScriptedAI
         if (m_pInstance)
         {
             Creature* pTemp = m_pInstance->GetSingleCreatureFromStorage(uiEntry);
-
-            if (pTemp && pTemp->isAlive() && !pTemp->getVictim())
+            if (pTemp && pTemp->isAlive())
             {
-                pTemp->SetWalk(false);
-
                 if (pTemp->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE))
                     pTemp->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+
+                if (pTemp->getVictim())
+                    return;
+
+                pTemp->SetWalk(false);
 
                 int32 iTextId = 0;
 
