@@ -190,6 +190,9 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
     // Wrapper to handle the blue beams animation
     void DoHandleBeamHelpers(bool bReset)
     {
+        if (!m_pInstance)
+            return;
+
         GuidList lBeamHelpersGuid;
         m_pInstance->GetBeamHelpersGUIDList(lBeamHelpersGuid);
 

@@ -42,7 +42,6 @@ instance_serpentshrine_cavern::instance_serpentshrine_cavern(Map* pMap) : Script
 void instance_serpentshrine_cavern::Initialize()
 {
     memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
-    memset(&m_auiShieldGenerator, 0, sizeof(m_auiShieldGenerator));
 }
 
 bool instance_serpentshrine_cavern::IsEncounterInProgress() const
@@ -73,6 +72,22 @@ void instance_serpentshrine_cavern::OnCreatureCreate(Creature* pCreature)
         case NPC_HYDROSS_BEAM_HELPER:
             m_lBeamHelpersGUIDList.push_back(pCreature->GetObjectGuid());
             break;
+        case NPC_SHIELD_GENERATOR:
+            m_lShieldGeneratorGUIDList.push_back(pCreature->GetObjectGuid());
+            break;
+    }
+}
+
+void instance_serpentshrine_cavern::OnObjectCreate(GameObject* pGo)
+{
+    switch(pGo->GetEntry())
+    {
+        case GO_SHIELD_GENERATOR_1:
+        case GO_SHIELD_GENERATOR_2:
+        case GO_SHIELD_GENERATOR_3:
+        case GO_SHIELD_GENERATOR_4:
+            m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
+            break;
     }
 }
 
@@ -81,7 +96,7 @@ void instance_serpentshrine_cavern::SetData(uint32 uiType, uint32 uiData)
     switch (uiType)
     {
         case TYPE_HYDROSS_EVENT:
-            m_auiEncounter[0] = uiData;
+            m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_LEOTHERAS_EVENT:
             m_auiEncounter[1] = uiData;
@@ -97,25 +112,28 @@ void instance_serpentshrine_cavern::SetData(uint32 uiType, uint32 uiData)
             }
             break;
         case TYPE_THELURKER_EVENT:
-            m_auiEncounter[2] = uiData;
-            break;
         case TYPE_KARATHRESS_EVENT:
-            m_auiEncounter[3] = uiData;
-            break;
         case TYPE_MOROGRIM_EVENT:
-            m_auiEncounter[4] = uiData;
+            m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_LADYVASHJ_EVENT:
-            if (uiData == NOT_STARTED)
-                memset(&m_auiShieldGenerator, 0, sizeof(m_auiShieldGenerator));
-            m_auiEncounter[5] = uiData;
+            m_auiEncounter[uiType] = uiData;
+            if (uiData == FAIL)
+            {
+                // interrupt the shield
+                for (GuidList::const_iterator itr = m_lShieldGeneratorGUIDList.begin(); itr != m_lShieldGeneratorGUIDList.end(); ++itr)
+                {
+                    if (Creature* pGenerator = instance->GetCreature(*itr))
+                        pGenerator->InterruptNonMeleeSpells(false);
+                }
+
+                // reset generators
+                DoToggleGameObjectFlags(GO_SHIELD_GENERATOR_1, GO_FLAG_NO_INTERACT, false);
+                DoToggleGameObjectFlags(GO_SHIELD_GENERATOR_2, GO_FLAG_NO_INTERACT, false);
+                DoToggleGameObjectFlags(GO_SHIELD_GENERATOR_3, GO_FLAG_NO_INTERACT, false);
+                DoToggleGameObjectFlags(GO_SHIELD_GENERATOR_4, GO_FLAG_NO_INTERACT, false);
+            }
             break;
-        case TYPE_SHIELDGENERATOR1:
-        case TYPE_SHIELDGENERATOR2:
-        case TYPE_SHIELDGENERATOR3:
-        case TYPE_SHIELDGENERATOR4:
-            m_auiShieldGenerator[uiType - TYPE_SHIELDGENERATOR1] = uiData;
-            return;
     }
 
     if (uiData == DONE)
@@ -158,31 +176,10 @@ void instance_serpentshrine_cavern::Load(const char* chrIn)
 
 uint32 instance_serpentshrine_cavern::GetData(uint32 uiType)
 {
-    switch (uiType)
-    {
-        case TYPE_HYDROSS_EVENT:    return m_auiEncounter[0];
-        case TYPE_LEOTHERAS_EVENT:  return m_auiEncounter[1];
-        case TYPE_THELURKER_EVENT:  return m_auiEncounter[2];
-        case TYPE_KARATHRESS_EVENT: return m_auiEncounter[3];
-        case TYPE_MOROGRIM_EVENT:   return m_auiEncounter[4];
-        case TYPE_LADYVASHJ_EVENT:  return m_auiEncounter[5];
+    if (uiType < MAX_ENCOUNTER)
+        return m_auiEncounter[uiType];
 
-        case TYPE_SHIELDGENERATOR1: return m_auiShieldGenerator[0];
-        case TYPE_SHIELDGENERATOR2: return m_auiShieldGenerator[1];
-        case TYPE_SHIELDGENERATOR3: return m_auiShieldGenerator[2];
-        case TYPE_SHIELDGENERATOR4: return m_auiShieldGenerator[3];
-
-        case TYPE_VASHJ_PHASE3_CHECK:
-            for(uint8 i = 0; i < MAX_GENERATOR; ++i)
-            {
-                if (m_auiShieldGenerator[i] != DONE)
-                    return NOT_STARTED;
-            }
-            return DONE;
-
-        default:
-            return 0;
-    }
+    return 0;
 }
 
 void instance_serpentshrine_cavern::OnCreatureEnterCombat(Creature* pCreature)

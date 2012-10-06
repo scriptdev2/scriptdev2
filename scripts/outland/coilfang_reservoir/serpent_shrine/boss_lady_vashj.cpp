@@ -16,18 +16,17 @@
 
 /* ScriptData
 SDName: Boss_Lady_Vashj
-SD%Complete: 60
-SDComment: Code cleanup needed. This script needs further adjustments.
+SD%Complete: 80
+SDComment: Some details are not very clear: the usage of Shoot and Multishot spells; the summons positions. Tainted Core paralize NYI. Timers need improvements.
 SDCategory: Coilfang Resevoir, Serpent Shrine Cavern
 EndScriptData */
 
 #include "precompiled.h"
 #include "serpent_shrine.h"
-#include "Item.h"
-#include "Spell.h"
 
 enum
 {
+    // yells
     SAY_INTRO                   = -1548042,
     SAY_AGGRO1                  = -1548043,
     SAY_AGGRO2                  = -1548044,
@@ -43,43 +42,44 @@ enum
     SAY_SLAY3                   = -1548054,
     SAY_DEATH                   = -1548055,
 
-    POINT_MOVE_CENTER           = 0,
-
-    PHASE_1                     = 1,
-    PHASE_2                     = 2,
-    PHASE_3                     = 3,
-
-    MAX_SHIELD_GEN              = 4,
-
+    // spells
     SPELL_MULTI_SHOT            = 38310,
     SPELL_SHOCK_BLAST           = 38509,
     SPELL_ENTANGLE              = 38316,
-    SPELL_STATIC_CHARGE_TRIGGER = 38280,
+    SPELL_STATIC_CHARGE         = 38280,
     SPELL_FORKED_LIGHTNING      = 38145,
     SPELL_SHOOT                 = 38295,
 
-    SPELL_TOXIC_SPORES          = 38575,
     SPELL_MAGIC_BARRIER         = 38112,
     SPELL_SURGE                 = 38044,
+    SPELL_SUMMON_TAINTED_ELEM   = 38139,                    // maybe also related to spell 38494
+    SPELL_PARALIZE              = 38132,                    // aura which should apply to the player which picked the tainted core
 
-    //tainted elemental
-    SPELL_POISON_BOLT           = 38253,
-    SPELL_SUMMON_TAINTED        = 38139,
-
+    // summons
     NPC_ENCHANTED_ELEMENTAL     = 21958,
     NPC_TAINTED_ELEMENTAL       = 22009,
     NPC_COILFANG_STRIDER        = 22056,
     NPC_COILFANG_ELITE          = 22055,
     NPC_TOXIC_SPOREBAT          = 22140,
 
-    NPC_SHIELD_GENERATOR        = 19870
+    // other
+    POINT_MOVE_CENTER           = 1,
+
+    PHASE_1                     = 1,
+    PHASE_2                     = 2,
+    PHASE_3                     = 3,
+
+    MAX_SHIELD_GEN              = 4,
 };
 
-const float afMiddlePos[3]   = {30.134f, -923.65f, 42.9f};
+static const float afMiddlePos[3]   = {30.134f, -923.65f, 42.9f};
 
-const float afSporebatPos[4] = {30.977156f, -925.297761f, 77.176567f, 5.223932f};
+// ToDo: all the following mobs are probably summoned by trigger npcs.
+// Remove the hardcoded coords and set the right summoning when then DB will suppot this!
 
-const float afElementPos[8][4] =
+static const float afSporebatPos[4] = {30.977156f, -925.297761f, 77.176567f, 5.223932f};
+
+static const float afElementPos[8][4] =
 {
     {8.3f  , -835.3f , 21.9f, 5.0f},
     {53.4f , -835.3f , 21.9f, 4.5f},
@@ -105,41 +105,30 @@ const float afCoilfangStriderPos[3][4] =
     {-12.843f, -907.798f, 41.239620f, 6.087f}
 };
 
-const float afShieldGeneratorChannelPos[4][4] =
-{
-    {49.626f, -902.181f, 41.54f, 3.956f},
-    {10.988f, -901.616f, 41.54f, 5.437f},
-    {10.385f, -944.036f, 41.54f, 0.779f},
-    {49.312f, -943.398f, 41.54f, 2.401f}
-};
-
-//Lady Vashj AI
 struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
 {
     boss_lady_vashjAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_pInstance = (instance_serpentshrine_cavern*)pCreature->GetInstanceData();
         Reset();
     }
 
-    ScriptedInstance *m_pInstance;                          // the instance
+    instance_serpentshrine_cavern* m_pInstance;
 
-    ObjectGuid m_auiShieldGeneratorChannel[MAX_SHIELD_GEN];
+    uint32 m_uiShockBlastTimer;
+    uint32 m_uiEntangleTimer;
+    uint32 m_uiStaticChargeTimer;
+    uint32 m_uiRangedCheckTimer;
+    uint32 m_uiForkedLightningTimer;
+    uint32 m_uiEnchantedElementalTimer;
+    uint32 m_uiTaintedElementalTimer;
+    uint32 m_uiCoilfangEliteTimer;
+    uint32 m_uiCoilfangStriderTimer;
+    uint32 m_uiSummonSporebatTimer;
+    uint32 m_uiSummonSporebatStaticTimer;
 
-    // timers
-    uint32 m_uiShockBlast_Timer;
-    uint32 m_uiEntangle_Timer;
-    uint32 m_uiStaticCharge_Timer;
-    uint32 m_uiForkedLightning_Timer;
-    uint32 m_uiCheck_Timer;
-    uint32 m_uiEnchantedElemental_Timer;
-    uint32 m_uiTaintedElemental_Timer;
-    uint32 m_uiCoilfangElite_Timer;
-    uint32 m_uiCoilfangStrider_Timer;
-    uint32 m_uiSummonSporebat_Timer;
-    uint32 m_uiSummonSporebat_StaticTimer;
-    uint8  m_uiEnchantedElemental_Pos;
-    uint8  m_uiPhase;
+    uint8 m_uiPhase;
+    uint8 m_uiGeneratorsUsed;
 
     bool m_bEntangle;
 
@@ -147,42 +136,23 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
     {
         SetCombatMovement(true);
 
-        m_uiShockBlast_Timer           = urand(1000, 60000);
-        m_uiEntangle_Timer             = 30000;
-        m_uiStaticCharge_Timer         = urand(10000, 25000);
-        m_uiCheck_Timer                = 1000;
+        m_uiPhase                     = PHASE_1;
+        m_uiGeneratorsUsed            = 0;
 
-        m_uiForkedLightning_Timer      = urand(43000, 49000);
-        m_uiEnchantedElemental_Timer   = 10000;
-        m_uiTaintedElemental_Timer     = 50000;
-        m_uiCoilfangElite_Timer        = 45000;
-        m_uiCoilfangStrider_Timer      = 60000;
+        m_uiShockBlastTimer           = urand(1000, 60000);
+        m_uiEntangleTimer             = 30000;
+        m_uiStaticChargeTimer         = urand(10000, 25000);
+        m_uiRangedCheckTimer          = 2000;
+        m_bEntangle                   = false;
 
-        m_uiSummonSporebat_Timer       = 10000;
-        m_uiSummonSporebat_StaticTimer = 30000;
-        m_uiEnchantedElemental_Pos     = 0;
-        m_uiPhase                      = PHASE_1;
+        m_uiForkedLightningTimer      = urand(3000, 5000);
+        m_uiEnchantedElementalTimer   = 10000;
+        m_uiTaintedElementalTimer     = 53000;
+        m_uiCoilfangEliteTimer        = 47000;
+        m_uiCoilfangStriderTimer      = 60000;
 
-        m_bEntangle = false;
-
-        RemoveAllShieldGenerators();
-
-        if (m_pInstance)
-            m_pInstance->SetData(TYPE_LADYVASHJ_EVENT, NOT_STARTED);
-    }
-
-    void RemoveAllShieldGenerators()
-    {
-        for(uint8 i = 0; i < MAX_SHIELD_GEN; ++i)
-        {
-            if (Creature* pTemp = m_creature->GetMap()->GetCreature(m_auiShieldGeneratorChannel[i]))
-            {
-                if (pTemp->isAlive())
-                    pTemp->SetDeathState(JUST_DIED);
-
-                m_auiShieldGeneratorChannel[i].Clear();
-            }
-        }
+        m_uiSummonSporebatTimer       = 10000;
+        m_uiSummonSporebatStaticTimer = 30000;
     }
 
     void Aggro(Unit* pWho)
@@ -206,46 +176,53 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
 
         if (uiPointId == POINT_MOVE_CENTER)
         {
-            m_creature->RemoveAllAuras();
-
-            for(uint8 i = 0; i < MAX_SHIELD_GEN; ++i)
+            // Initialize all the shield generators
+            if (m_pInstance)
             {
-                if (Creature* pCreature = m_creature->SummonCreature(NPC_SHIELD_GENERATOR, afShieldGeneratorChannelPos[i][0],  afShieldGeneratorChannelPos[i][1],  afShieldGeneratorChannelPos[i][2],  afShieldGeneratorChannelPos[i][3], TEMPSUMMON_CORPSE_DESPAWN, 0))
-                    m_auiShieldGeneratorChannel[i] = pCreature->GetObjectGuid();
+                GuidList lShieldGeneratorsGuid;
+                m_pInstance->GetShieldGeneratorsGUIDList(lShieldGeneratorsGuid);
+
+                for (GuidList::const_iterator itr = lShieldGeneratorsGuid.begin(); itr != lShieldGeneratorsGuid.end(); ++itr)
+                {
+                    if (Creature* pGenerator = m_creature->GetMap()->GetCreature(*itr))
+                        pGenerator->CastSpell(m_creature, SPELL_MAGIC_BARRIER, false);
+                }
             }
+
+            m_uiPhase = PHASE_2;
         }
     }
 
     void JustSummoned(Creature* pSummoned)
     {
-        uint32 uiEntry = pSummoned->GetEntry();
-
-        if (uiEntry == NPC_COILFANG_STRIDER || uiEntry == NPC_COILFANG_ELITE || uiEntry == NPC_TOXIC_SPOREBAT)
+        switch (pSummoned->GetEntry())
         {
-            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-                pSummoned->AI()->AttackStart(pTarget);
-        }
-
-        if (uiEntry == NPC_SHIELD_GENERATOR)
-        {
-            //we should really expect database to have this set already
-            if (!pSummoned->HasFlag(UNIT_FIELD_FLAGS, (UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE)))
-            {
-                pSummoned->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                pSummoned->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-            }
-
-            pSummoned->CastSpell(m_creature,SPELL_MAGIC_BARRIER,true);
+            case NPC_COILFANG_STRIDER:
+            case NPC_COILFANG_ELITE:
+            case NPC_TOXIC_SPOREBAT:
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                    pSummoned->AI()->AttackStart(pTarget);
+                break;
+            case NPC_ENCHANTED_ELEMENTAL:
+                pSummoned->GetMotionMaster()->MoveFollow(m_creature, 0, 0);
+                break;
         }
     }
 
-    //called when any summoned (by m_creature) despawns
-    void SummonedCreatureDespawn(Creature* pDespawned)
+    void SummonedCreatureJustDied(Creature* pSummoned)
     {
-        if (pDespawned->GetEntry() == NPC_TAINTED_ELEMENTAL)
+        // Set the timer when summoned killed
+        if (pSummoned->GetEntry() == NPC_TAINTED_ELEMENTAL)
+            m_uiTaintedElementalTimer = 50000;
+    }
+
+    void SummonedCreatureDespawn(Creature* pSummoned)
+    {
+        // Set the timer when summoned despawned, if not already killed
+        if (pSummoned->GetEntry() == NPC_TAINTED_ELEMENTAL)
         {
-            if (m_uiTaintedElemental_Timer > 50000)
-                m_uiTaintedElemental_Timer = 50000;
+            if (!m_uiTaintedElementalTimer)
+                m_uiTaintedElementalTimer = 50000;
         }
     }
 
@@ -259,7 +236,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* pVictim)
+    void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -267,65 +244,99 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
             m_pInstance->SetData(TYPE_LADYVASHJ_EVENT, DONE);
     }
 
-    void CastShootOrMultishot()
+    void JustReachedHome()
     {
-        //Shoot: Used in m_uiPhases 1 and 3 after Entangle or while having nobody in melee range. A shot that hits her target for 4097-5543 Physical damage.
-        //Multishot: Used in m_uiPhases 1 and 3 after Entangle or while having nobody in melee range. A shot that hits 1 person and 4 people around him for 6475-7525 physical damage.
-        DoCastSpellIfCan(m_creature->getVictim(), urand(0,1) ? SPELL_SHOOT : SPELL_MULTI_SHOT);
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_LADYVASHJ_EVENT, FAIL);
+    }
 
-        if (urand(0, 2))
-            DoScriptText(urand(0,1) ? SAY_BOWSHOT1 : SAY_BOWSHOT2, m_creature);
+    bool CanCastShootOrMultishot()
+    {
+        // It's not very clear how this should work - requires additional research!
+        if (DoCastSpellIfCan(m_creature->getVictim(), urand(0,1) ? SPELL_SHOOT : SPELL_MULTI_SHOT) == CAST_OK)
+        {
+            if (urand(0, 2))
+                DoScriptText(urand(0,1) ? SAY_BOWSHOT1 : SAY_BOWSHOT2, m_creature);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    // Wrapper to inform the boss that a generator has been deactivated
+    void DoInformGeneratorStopped()
+    {
+        ++m_uiGeneratorsUsed;
+
+        // Remove 5% of health on each generator used
+        // ToDo: research if this should be done by spell
+        m_creature->SetHealth(m_creature->GetHealth() - m_creature->GetMaxHealth()*.05f);
+
+        // Check if all generators have been deactivated, or the creature doesn't have the spell barrier aura (in order to avoid eventual aura stacking bugs)
+        if (m_uiGeneratorsUsed == MAX_SHIELD_GEN || !m_creature->HasAura(SPELL_MAGIC_BARRIER))
+        {
+            DoScriptText(SAY_PHASE3, m_creature);
+            SetCombatMovement(true);
+
+            if (m_creature->getVictim())
+                m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
+
+            m_uiPhase = PHASE_3;
+            m_uiRangedCheckTimer = 3000;
+        }
     }
 
     void UpdateAI(const uint32 uiDiff)
     {
-        //Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         if (m_uiPhase == PHASE_1 || m_uiPhase == PHASE_3)
         {
-            //m_uiShockBlast_Timer
-            if (m_uiShockBlast_Timer < uiDiff)
+            if (m_uiShockBlastTimer < uiDiff)
             {
-                //Randomly used in m_uiPhases 1 and 3 on Vashj's target, it's a Shock spell doing 8325-9675 nature damage and stunning the target for 5 seconds, during which she will not attack her target but switch to the next person on the aggro list.
-                DoCastSpellIfCan(m_creature->getVictim(), SPELL_SHOCK_BLAST);
+                if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_SHOCK_BLAST) == CAST_OK)
+                    m_uiShockBlastTimer = urand(1000, 15000);
+            }
+            else
+                m_uiShockBlastTimer -= uiDiff;
 
-                m_uiShockBlast_Timer = urand(1000, 15000);  //random cooldown
-            }else m_uiShockBlast_Timer -= uiDiff;
-
-            //m_uiStaticCharge_Timer
-            if (m_uiStaticCharge_Timer < uiDiff)
+            if (m_uiStaticChargeTimer < uiDiff)
             {
-                //Used on random people (only 1 person at any given time) in m_uiPhases 1 and 3, it's a debuff doing 2775 to 3225 Nature damage to the target and everybody in about 5 yards around it, every 1 seconds for 30 seconds. It can be removed by Cloak of Shadows, Iceblock, Divine Shield, etc, but not by Cleanse or Dispel Magic.
-                Unit *pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0);
+                if (Unit *pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_STATIC_CHARGE, SELECT_FLAG_IN_MELEE_RANGE))
+                {
+                    if (DoCastSpellIfCan(pTarget, SPELL_STATIC_CHARGE) == CAST_OK)
+                        m_uiStaticChargeTimer = urand(10000, 30000);
+                }
+            }
+            else
+                m_uiStaticChargeTimer -= uiDiff;
 
-                //cast Static Charge every 2 seconds for 20 seconds
-                if (pTarget && !pTarget->HasAura(SPELL_STATIC_CHARGE_TRIGGER))
-                    DoCastSpellIfCan(pTarget, SPELL_STATIC_CHARGE_TRIGGER);
-
-                m_uiStaticCharge_Timer = urand(10000, 30000);
-            }else m_uiStaticCharge_Timer -= uiDiff;
-
-            //m_uiEntangle_Timer
-            if (m_uiEntangle_Timer < uiDiff)
+            if (m_uiEntangleTimer < uiDiff)
             {
                 if (!m_bEntangle)
                 {
-                    //Used in m_uiPhases 1 and 3, it casts Entangling Roots on everybody in a 15 yard radius of Vashj, immobilzing them for 10 seconds and dealing 500 damage every 2 seconds. It's not a magic effect so it cannot be dispelled, but is removed by various buffs such as Cloak of Shadows or Blessing of Freedom.
-                    DoCastSpellIfCan(m_creature->getVictim(), SPELL_ENTANGLE);
-                    m_bEntangle = true;
-                    m_uiEntangle_Timer = 10000;
+                    if (DoCastSpellIfCan(m_creature, SPELL_ENTANGLE) == CAST_OK)
+                    {
+                        m_bEntangle = true;
+                        m_uiEntangleTimer = 5000;
+                    }
                 }
                 else
                 {
-                    CastShootOrMultishot();
-                    m_bEntangle = false;
-                    m_uiEntangle_Timer = urand(20000, 25000);
+                    // Cast Shoot or Multishot after Entangle
+                    if (CanCastShootOrMultishot())
+                    {
+                        m_bEntangle = false;
+                        m_uiEntangleTimer = urand(20000, 25000);
+                    }
                 }
-            }else m_uiEntangle_Timer -= uiDiff;
+            }
+            else
+                m_uiEntangleTimer -= uiDiff;
 
-            //m_uiPhase 1
+            // Phase 1 abilities
             if (m_uiPhase == PHASE_1)
             {
                 //m_uiPhase 2 begins when Vashj hits 70%. She will run to the middle of her platform and surround herself in a shield making her invulerable.
@@ -333,304 +344,147 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
                 {
                     DoScriptText(SAY_PHASE2, m_creature);
 
-                    if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() == CHASE_MOTION_TYPE)
-                    {
-                        //set false, so MoveChase is not triggered in AttackStart
-                        SetCombatMovement(false);
+                    SetCombatMovement(false);
 
-                        m_creature->GetMotionMaster()->MovementExpired();
-                        m_creature->GetMotionMaster()->MovePoint(POINT_MOVE_CENTER, afMiddlePos[0], afMiddlePos[1], afMiddlePos[2]);
-                    }
+                    m_creature->GetMotionMaster()->Clear();
+                    m_creature->GetMotionMaster()->MovePoint(POINT_MOVE_CENTER, afMiddlePos[0], afMiddlePos[1], afMiddlePos[2]);
 
                     m_uiPhase = PHASE_2;
-                    return;
+                    m_uiRangedCheckTimer = 10000;
                 }
             }
-            //m_uiPhase PHASE_3
+            // Phase 3 abilities
             else
             {
-                //m_uiSummonSporebat_Timer
-                if (m_uiSummonSporebat_Timer < uiDiff)
+                // ToDo: this is not very clear how it should work - requires additional research!
+                if (m_uiSummonSporebatTimer < uiDiff)
                 {
-                    m_creature->SummonCreature(NPC_TOXIC_SPOREBAT,
-                        afSporebatPos[0], afSporebatPos[1], afSporebatPos[2], afSporebatPos[3],
-                        TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
+                    m_creature->SummonCreature(NPC_TOXIC_SPOREBAT, afSporebatPos[0], afSporebatPos[1], afSporebatPos[2], afSporebatPos[3], TEMPSUMMON_DEAD_DESPAWN, 0);
 
-                    //summon sporebats faster and faster
-                    if (m_uiSummonSporebat_StaticTimer > 1000)
-                        m_uiSummonSporebat_StaticTimer -= 1000;
+                    // summon sporebats faster and faster
+                    if (m_uiSummonSporebatStaticTimer > 1000)
+                        m_uiSummonSporebatStaticTimer -= 1000;
 
-                    m_uiSummonSporebat_Timer = m_uiSummonSporebat_StaticTimer;
-                }else m_uiSummonSporebat_Timer -= uiDiff;
+                    m_uiSummonSporebatTimer = m_uiSummonSporebatStaticTimer;
+                }
+                else
+                    m_uiSummonSporebatTimer -= uiDiff;
             }
 
-            //Melee attack
-            DoMeleeAttackIfReady();
-
-            //m_uiCheck_Timer - used to check if somebody is in melee range
-            if (m_uiCheck_Timer < uiDiff)
+            // If we are within range melee the target
+            if (m_creature->CanReachWithMeleeAttack(m_creature->getVictim()))
+                DoMeleeAttackIfReady();
+            else
             {
-                //if nobody is in melee range
-                if (!m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO, 0, uint32(0), SELECT_FLAG_IN_MELEE_RANGE))
-                    CastShootOrMultishot();
-
-                m_uiCheck_Timer = 1500;
-            }else m_uiCheck_Timer -= uiDiff;
+                // Cast Shoot or Multishot when nobody in melee range
+                if (m_uiRangedCheckTimer < uiDiff)
+                {
+                    if (CanCastShootOrMultishot())
+                        m_uiRangedCheckTimer = urand(1000, 2000);
+                }
+                else
+                    m_uiRangedCheckTimer -= uiDiff;
+            }
         }
-        //m_uiPhase PHASE_2
+        // Phase 2 only
         else
         {
-            //m_uiForkedLightning_Timer
-            if (m_uiForkedLightning_Timer < uiDiff)
+            if (m_uiForkedLightningTimer < uiDiff)
             {
-                //Used constantly in m_uiPhase 2, it shoots out completely randomly targeted bolts of lightning which hit everybody in a roughtly 60 degree cone in front of Vashj for 2313-2687 nature damage.
-                Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0);
-
-                if (!pTarget)
-                    pTarget = m_creature->getVictim();
-
-                DoCastSpellIfCan(pTarget, SPELL_FORKED_LIGHTNING);
-
-                m_uiForkedLightning_Timer = urand(3000, 9000);
-            }else m_uiForkedLightning_Timer -= uiDiff;
-
-            //NPC_ENCHANTED_ELEMENTAL
-            if (m_uiEnchantedElemental_Timer < uiDiff)
-            {
-                if (Creature* pElemental = m_creature->SummonCreature(NPC_ENCHANTED_ELEMENTAL, afElementPos[m_uiEnchantedElemental_Pos][0], afElementPos[m_uiEnchantedElemental_Pos][1], afElementPos[m_uiEnchantedElemental_Pos][2], afElementPos[m_uiEnchantedElemental_Pos][3], TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 60000))
-                    pElemental->GetMotionMaster()->MoveFollow(m_creature, 0.0f, 0.0f);
-
-                if (m_uiEnchantedElemental_Pos == 7)
-                    m_uiEnchantedElemental_Pos = 0;
-                else
-                    ++m_uiEnchantedElemental_Pos;
-
-                m_uiEnchantedElemental_Timer = urand(10000, 15000);
-            }else m_uiEnchantedElemental_Timer -= uiDiff;
-
-            //NPC_TAINTED_ELEMENTAL
-            if (m_uiTaintedElemental_Timer < uiDiff)
-            {
-                uint32 uiPos = urand(0,7);
-
-                m_creature->SummonCreature(NPC_TAINTED_ELEMENTAL,
-                    afElementPos[uiPos][0], afElementPos[uiPos][1], afElementPos[uiPos][2], afElementPos[uiPos][3],
-                    TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 15000);
-
-                m_uiTaintedElemental_Timer = 120000;
-            }else m_uiTaintedElemental_Timer -= uiDiff;
-
-            //NPC_COILFANG_ELITE
-            if (m_uiCoilfangElite_Timer < uiDiff)
-            {
-                uint32 uiPos = urand(0,2);
-
-                m_creature->SummonCreature(NPC_COILFANG_ELITE,
-                    afCoilfangElitePos[uiPos][0], afCoilfangElitePos[uiPos][1], afCoilfangElitePos[uiPos][2], afCoilfangElitePos[uiPos][3],
-                    TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 45000);
-
-                //wowwiki says 50 seconds, bosskillers says 45
-                m_uiCoilfangElite_Timer = urand(45000, 50000);
-            }else m_uiCoilfangElite_Timer -= uiDiff;
-
-            //NPC_COILFANG_STRIDER
-            if (m_uiCoilfangStrider_Timer < uiDiff)
-            {
-                uint32 uiPos = urand(0,2);
-
-                m_creature->SummonCreature(NPC_COILFANG_STRIDER,
-                    afCoilfangStriderPos[uiPos][0], afCoilfangStriderPos[uiPos][1], afCoilfangStriderPos[uiPos][2], afCoilfangStriderPos[uiPos][3],
-                    TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
-
-                //wowwiki says 60 seconds, bosskillers says 60-70
-                m_uiCoilfangStrider_Timer = urand(60000, 70000);
-            }else m_uiCoilfangStrider_Timer -= uiDiff;
-
-            //m_uiCheck_Timer
-            if (m_uiCheck_Timer < uiDiff)
-            {
-                //Start m_uiPhase 3
-                if (m_pInstance && m_pInstance->GetData(TYPE_VASHJ_PHASE3_CHECK) == DONE)
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                 {
-                    DoScriptText(SAY_PHASE3, m_creature);
-
-                    //set life 50%, not correct. Must remove 5% for each generator switched off
-                    m_creature->SetHealth(m_creature->GetMaxHealth()/2);
-
-                    //m_creature->RemoveAurasDueToSpell(SPELL_MAGIC_BARRIER);
-
-                    SetCombatMovement(true);
-
-                    //return to chase top aggro
-                    if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() != CHASE_MOTION_TYPE)
-                        m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
-
-                    m_uiPhase = PHASE_3;
+                    if (DoCastSpellIfCan(pTarget, SPELL_FORKED_LIGHTNING) == CAST_OK)
+                        m_uiForkedLightningTimer = urand(3000, 6000);
                 }
-                m_uiCheck_Timer = 1000;
-            }else m_uiCheck_Timer -= uiDiff;
+            }
+            else
+                m_uiForkedLightningTimer -= uiDiff;
+
+            if (m_uiEnchantedElementalTimer < uiDiff)
+            {
+                uint8 uiPos = urand(0, 7);
+                m_creature->SummonCreature(NPC_ENCHANTED_ELEMENTAL, afElementPos[uiPos][0], afElementPos[uiPos][1], afElementPos[uiPos][2], afElementPos[uiPos][3], TEMPSUMMON_DEAD_DESPAWN, 0);
+
+                m_uiEnchantedElementalTimer = urand(5000, 10000);
+            }
+            else
+                m_uiEnchantedElementalTimer -= uiDiff;
+
+            if (m_uiTaintedElementalTimer)
+            {
+                if (m_uiTaintedElementalTimer <= uiDiff)
+                {
+                    uint8 uiPos = urand(0, 7);
+
+                    m_creature->SummonCreature(NPC_TAINTED_ELEMENTAL, afElementPos[uiPos][0], afElementPos[uiPos][1], afElementPos[uiPos][2], afElementPos[uiPos][3], TEMPSUMMON_DEAD_DESPAWN, 0);
+                    m_uiTaintedElementalTimer = 0;
+                }
+                else
+                    m_uiTaintedElementalTimer -= uiDiff;
+            }
+
+            if (m_uiCoilfangEliteTimer < uiDiff)
+            {
+                uint8 uiPos = urand(0, 2);
+
+                m_creature->SummonCreature(NPC_COILFANG_ELITE, afCoilfangElitePos[uiPos][0], afCoilfangElitePos[uiPos][1], afCoilfangElitePos[uiPos][2], afCoilfangElitePos[uiPos][3], TEMPSUMMON_DEAD_DESPAWN, 0);
+                m_uiCoilfangEliteTimer = urand(45000, 50000);
+            }
+            else
+                m_uiCoilfangEliteTimer -= uiDiff;
+
+            if (m_uiCoilfangStriderTimer < uiDiff)
+            {
+                uint8 uiPos = urand(0, 2);
+
+                m_creature->SummonCreature(NPC_COILFANG_STRIDER, afCoilfangStriderPos[uiPos][0], afCoilfangStriderPos[uiPos][1], afCoilfangStriderPos[uiPos][2], afCoilfangStriderPos[uiPos][3], TEMPSUMMON_DEAD_DESPAWN, 0);
+                m_uiCoilfangStriderTimer = urand(60000, 70000);
+            }
+            else
+                m_uiCoilfangStriderTimer -= uiDiff;
         }
     }
 };
 
-//Enchanted Elemental
-//If one of them reaches Vashj he will increase her damage done by 5%.
 struct MANGOS_DLL_DECL mob_enchanted_elementalAI : public ScriptedAI
 {
     mob_enchanted_elementalAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         SetCombatMovement(false);
         Reset();
     }
-
-    ScriptedInstance *m_pInstance;                          // the instance
 
     void Reset() { }
 
     void MoveInLineOfSight(Unit* pWho)
     {
-        if (m_pInstance)
-        {
-            if (Creature* pVashj = m_pInstance->GetSingleCreatureFromStorage(NPC_LADYVASHJ))
-            {
-                if (pVashj->IsWithinDistInMap(m_creature, INTERACTION_DISTANCE))
-                {
-                    //increase lady vashj damage
-                    if (pVashj->isAlive() && pVashj->isInCombat())
-                        m_creature->CastSpell(pVashj, SPELL_SURGE, false, NULL, NULL, pVashj->GetObjectGuid());
-                    else
-                        m_creature->SetDeathState(JUST_DIED);
-                }
-            }
-        }
+        // Buff Lady Vashj on range check - spell has script target
+        if (pWho->GetEntry() == NPC_LADYVASHJ && pWho->IsWithinDistInMap(m_creature, INTERACTION_DISTANCE) && pWho->IsWithinLOSInMap(m_creature))
+            DoCastSpellIfCan(m_creature, SPELL_SURGE, CAST_TRIGGERED);
     }
 
+    void AttackStart(Unit* pWho) { }
     void UpdateAI(const uint32 uiDiff) { }
 };
 
-//Tainted Elemental
-//This mob has 7,900 life, doesn't move, and shoots Poison Bolts at one person anywhere in the area, doing 3,000 nature damage and placing a posion doing 2,000 damage every 2 seconds. He will switch targets often, or sometimes just hang on a single player, but there is nothing you can do about it except heal the damage and kill the Tainted Elemental
-struct MANGOS_DLL_DECL mob_tainted_elementalAI : public ScriptedAI
+bool GOUse_go_shield_generator(Player* pPlayer, GameObject* pGo)
 {
-    mob_tainted_elementalAI(Creature* pCreature) : ScriptedAI(pCreature)
+    // Interrupt Magic barrier spell casting, inform the boss and make the GO unusable
+    if (ScriptedInstance* pInstance = (ScriptedInstance*)pGo->GetInstanceData())
     {
-        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        SetCombatMovement(false);
-        Reset();
-    }
+        if (Creature* pGenerator = GetClosestCreatureWithEntry(pGo, NPC_SHIELD_GENERATOR, 5.0f))
+            pGenerator->InterruptNonMeleeSpells(false);
 
-    ScriptedInstance* m_pInstance;                          // the instance
-
-    // timers
-    uint32 m_uiPoisonBolt_Timer;
-
-    void Reset()
-    {
-        m_uiPoisonBolt_Timer = urand(5000, 10000);
-    }
-
-    void UpdateAI(const uint32 uiDiff)
-    {
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
-            return;
-
-        //m_uiPoisonBolt_Timer
-        if (m_uiPoisonBolt_Timer < uiDiff)
+        if (Creature* pVashj = pInstance->GetSingleCreatureFromStorage(NPC_LADYVASHJ))
         {
-            Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0);
-
-            if (pTarget && pTarget->IsWithinDistInMap(m_creature, 30.0f))
-                DoCastSpellIfCan(pTarget, SPELL_POISON_BOLT);
-
-            m_uiPoisonBolt_Timer = urand(5000, 10000);
-        }else m_uiPoisonBolt_Timer -= uiDiff;
-    }
-};
-
-enum
-{
-    SPELL_CLEAVE        = 31345,
-    SPELL_MIND_BLAST    = 41374
-};
-
-//can probably be removed
-struct MANGOS_DLL_DECL mob_shield_generator_channelAI : public ScriptedAI
-{
-    mob_shield_generator_channelAI(Creature* pCreature) : ScriptedAI(pCreature)
-    {
-        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        Reset();
-    }
-
-    ScriptedInstance* m_pInstance;                          // the instance
-
-    void Reset() { }
-
-    void MoveInLineOfSight(Unit* pWho) { }
-};
-
-//this is wrong, alternative script needed
-bool ItemUse_item_tainted_core(Player* pPlayer, Item* pItem, SpellCastTargets const& sctTargets)
-{
-    ScriptedInstance* pInstance = (ScriptedInstance*)pPlayer->GetInstanceData();
-
-    if (!pInstance)
-    {
-        error_log("SD2: Lady Vashj Tainted Core: Instance Script Not Initialized");
-        return true;
-    }
-
-    Creature* pVashj = pInstance->GetSingleCreatureFromStorage(NPC_LADYVASHJ);
-
-    if (!pVashj)
-        return true;
-
-    boss_lady_vashjAI* pVashjAI = dynamic_cast<boss_lady_vashjAI*>(pVashj->AI());
-
-    if (pVashjAI && pVashjAI->m_uiPhase == 2)
-    {
-        if (sctTargets.getGOTarget() && sctTargets.getGOTarget()->GetTypeId()==TYPEID_GAMEOBJECT)
-        {
-            uint32 uiIdentifier;
-            uint8 uiChannelIdentifier;
-            switch(sctTargets.getGOTarget()->GetEntry())
-            {
-                case 185052:
-                    uiIdentifier = TYPE_SHIELDGENERATOR1;
-                    uiChannelIdentifier = 0;
-                    break;
-                case 185053:
-                    uiIdentifier = TYPE_SHIELDGENERATOR2;
-                    uiChannelIdentifier = 1;
-                    break;
-                case 185051:
-                    uiIdentifier = TYPE_SHIELDGENERATOR3;
-                    uiChannelIdentifier = 2;
-                    break;
-                case 185054:
-                    uiIdentifier = TYPE_SHIELDGENERATOR4;
-                    uiChannelIdentifier = 3;
-                    break;
-                default:
-                    return true;
-                    break;
-            }
-
-            if (pInstance->GetData(uiIdentifier) == DONE)
-                return true;
-
-            //get and remove channel
-            if (Creature* pChannel = pVashj->GetMap()->GetCreature(pVashjAI->m_auiShieldGeneratorChannel[uiChannelIdentifier]))
-                pChannel->SetDeathState(JUST_DIED);         //calls Unsummon()
-
-            pInstance->SetData(uiIdentifier, DONE);
-
-            //remove this item
-            pPlayer->DestroyItemCount(31088, 1, true);
+            if (boss_lady_vashjAI* pLadyAI = dynamic_cast<boss_lady_vashjAI*>(pVashj->AI()))
+                pLadyAI->DoInformGeneratorStopped();
         }
+
+        pGo->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
     }
-    return true;
+
+    return false;
 }
 
 CreatureAI* GetAI_boss_lady_vashj(Creature* pCreature)
@@ -641,16 +495,6 @@ CreatureAI* GetAI_boss_lady_vashj(Creature* pCreature)
 CreatureAI* GetAI_mob_enchanted_elemental(Creature* pCreature)
 {
     return new mob_enchanted_elementalAI(pCreature);
-}
-
-CreatureAI* GetAI_mob_tainted_elemental(Creature* pCreature)
-{
-    return new mob_tainted_elementalAI(pCreature);
-}
-
-CreatureAI* GetAI_mob_shield_generator_channel(Creature* pCreature)
-{
-    return new mob_shield_generator_channelAI(pCreature);
 }
 
 void AddSC_boss_lady_vashj()
@@ -668,17 +512,7 @@ void AddSC_boss_lady_vashj()
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
-    pNewScript->Name = "mob_tainted_elemental";
-    pNewScript->GetAI = &GetAI_mob_tainted_elemental;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "mob_shield_generator_channel";
-    pNewScript->GetAI = &GetAI_mob_shield_generator_channel;
-    pNewScript->RegisterSelf();
-
-    pNewScript = new Script;
-    pNewScript->Name = "item_tainted_core";
-    pNewScript->pItemUse = &ItemUse_item_tainted_core;
+    pNewScript->Name = "go_shield_generator";
+    pNewScript->pGOUse = &GOUse_go_shield_generator;
     pNewScript->RegisterSelf();
 }
