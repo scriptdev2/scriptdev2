@@ -86,7 +86,8 @@ enum Phases
 {
     PHASE_GROUND         = 0,
     PHASE_UNDERGROUND    = 1,
-    PHASE_LEECHING_SWARM = 2
+    PHASE_LEECHING_SWARM = 2,
+    PHASE_SUBMERGING     = 3,                               // virtual use only while casting SPELL_SUBMERGE (triggered by script!)
 };
 
 enum PursuingSpikesPhases
@@ -152,6 +153,7 @@ struct MANGOS_DLL_DECL boss_anubarak_trialAI : public ScriptedAI
         m_uiBerserkTimer         = 10*MINUTE*IN_MILLISECONDS;
 
         m_vSpheresGuidVector.clear();
+        m_vSpheresGuidVector.resize(MAX_FROSTSPHERES, ObjectGuid());
 
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     }
@@ -187,8 +189,6 @@ struct MANGOS_DLL_DECL boss_anubarak_trialAI : public ScriptedAI
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
-        m_vSpheresGuidVector.reserve(MAX_FROSTSPHERES);
-
         // Summon the spheres on random points
         for (uint8 i = 0; i < MAX_FROSTSPHERES; ++i)
         {
@@ -217,6 +217,12 @@ struct MANGOS_DLL_DECL boss_anubarak_trialAI : public ScriptedAI
         if (pSpell->Id == SPELL_SUBMERGE)
         {
             m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+
+            // Extra check here, because AnubArak must be submerged by default
+            if (m_Phase != PHASE_SUBMERGING)
+                return;
+
+            m_Phase = PHASE_UNDERGROUND;
 
             // Refresh spheres only on normal difficulty
             if (m_pInstance && !m_pInstance->IsHeroicDifficulty())
@@ -283,8 +289,8 @@ struct MANGOS_DLL_DECL boss_anubarak_trialAI : public ScriptedAI
                     {
                         DoScriptText(SAY_SUBMERGE, m_creature);
                         DoScriptText(EMOTE_BURROW, m_creature);
-                        m_PhaseSwitchTimer = 65000;
-                        m_Phase = PHASE_UNDERGROUND;
+                        m_PhaseSwitchTimer = 63000;
+                        m_Phase = PHASE_SUBMERGING;
                         return;
                     }
                 }
@@ -361,6 +367,8 @@ struct MANGOS_DLL_DECL boss_anubarak_trialAI : public ScriptedAI
                 else
                     m_PhaseSwitchTimer -= uiDiff;
 
+                break;
+            case PHASE_SUBMERGING:                          // Do nothing, but continue berserk timer
                 break;
         }
 
