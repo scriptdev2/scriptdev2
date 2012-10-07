@@ -26,7 +26,8 @@ EndScriptData */
 
 instance_blood_furnace::instance_blood_furnace(Map* pMap) : ScriptedInstance(pMap),
     m_uiBroggokEventTimer(30000),
-    m_uiBroggokEventPhase(0)
+    m_uiBroggokEventPhase(0),
+    m_uiRandYellTimer(90000)
 {
     Initialize();
 }
@@ -42,6 +43,7 @@ void instance_blood_furnace::OnCreatureCreate(Creature* pCreature)
     {
         case NPC_BROGGOK:
         case NPC_KELIDAN_THE_BREAKER:
+        case NPC_MAGTHERIDON:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
 
@@ -281,6 +283,17 @@ void instance_blood_furnace::Update(uint32 uiDiff)
         else
             m_uiBroggokEventTimer -= uiDiff;
     }
+
+    if (m_uiRandYellTimer < uiDiff)
+    {
+        if (Creature* pMagtheridon = GetSingleCreatureFromStorage(NPC_MAGTHERIDON))
+        {
+            DoScriptText(aRandomTaunt[urand(0, 5)], pMagtheridon);
+            m_uiRandYellTimer = 90000;
+        }
+    }
+    else
+        m_uiRandYellTimer -= uiDiff;
 }
 
 uint32 instance_blood_furnace::GetData(uint32 uiType)
