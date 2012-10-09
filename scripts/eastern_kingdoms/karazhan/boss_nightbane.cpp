@@ -188,14 +188,14 @@ struct MANGOS_DLL_DECL boss_nightbaneAI : public npc_escortAI
         float fX, fY, fZ;
 
         // get the list of wanted triggers
-        bGround ? m_pInstance->GetNightbaneGroundTriggers(lTriggersList) : m_pInstance->GetNightbaneAirTriggers(lTriggersList);
+        m_pInstance->GetNightbaneTriggers(lTriggersList, bGround);
 
         // calculate the closest trigger from the list
         for (GuidList::const_iterator itr = lTriggersList.begin(); itr != lTriggersList.end(); ++itr)
         {
             if (Creature* pTrigger = m_creature->GetMap()->GetCreature(*itr))
             {
-                if (!pTrigger || m_creature->GetDistanceOrder(pTrigger, pChosenTrigger, false))
+                if (!pChosenTrigger || m_creature->GetDistanceOrder(pTrigger, pChosenTrigger, false))
                     pChosenTrigger = pTrigger;
             }
         }

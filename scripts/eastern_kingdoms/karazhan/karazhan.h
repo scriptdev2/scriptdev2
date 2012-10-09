@@ -123,8 +123,7 @@ class MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
 
         void DoPrepareOperaStage(Creature* pOrganizer);
 
-        void GetNightbaneGroundTriggers(GuidList &lList) { lList = m_lNightbaneGroundTriggers; }
-        void GetNightbaneAirTriggers(GuidList &lList) { lList = m_lNightbaneAirTriggers; }
+        void GetNightbaneTriggers(GuidList &lList, bool bGround) { lList = bGround ? m_lNightbaneGroundTriggers : m_lNightbaneAirTriggers; }
 
         void Load(const char* chrIn);
         const char* Save() { return m_strInstData.c_str(); }
