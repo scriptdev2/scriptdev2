@@ -17,40 +17,41 @@
 /* ScriptData
 SDName: Boss_Mother_Shahraz
 SD%Complete: 80
-SDComment: Saber Lash missing, Fatal Attraction slightly incorrect; need to damage only if affected players are within range of each other
+SDComment: Saber Lash and Fatal Attraction need core support. Timers may need some tunning.
 SDCategory: Black Temple
 EndScriptData */
 
 #include "precompiled.h"
 #include "black_temple.h"
 
-//Speech'n'Sounds
-#define SAY_TAUNT1              -1564018
-#define SAY_TAUNT2              -1564019
-#define SAY_TAUNT3              -1564020
-#define SAY_AGGRO               -1564021
-#define SAY_SPELL1              -1564022
-#define SAY_SPELL2              -1564023
-#define SAY_SPELL3              -1564024
-#define SAY_SLAY1               -1564025
-#define SAY_SLAY2               -1564026
-#define SAY_ENRAGE              -1564027
-#define SAY_DEATH               -1564028
+enum
+{
+    // Speech'n'Sounds
+    SAY_TAUNT_1                 = -1564018,
+    SAY_TAUNT_2                 = -1564019,
+    SAY_TAUNT_3                 = -1564020,
+    SAY_AGGRO                   = -1564021,
+    SAY_SPELL_1                 = -1564022,
+    SAY_SPELL_2                 = -1564023,
+    SAY_SPELL_3                 = -1564024,
+    SAY_SLAY_1                  = -1564025,
+    SAY_SLAY_2                  = -1564026,
+    SAY_ENRAGE                  = -1564027,
+    SAY_DEATH                   = -1564028,
 
-//Spells
-#define SPELL_BEAM_SINISTER     40859
-#define SPELL_BEAM_VILE         40860
-#define SPELL_BEAM_WICKED       40861
-#define SPELL_BEAM_SINFUL       40827
-#define SPELL_ATTRACTION        40871
-#define SPELL_SILENCING_SHRIEK  40823
-#define SPELL_ENRAGE            23537
-#define SPELL_SABER_LASH        43267
-#define SPELL_SABER_LASH_IMM    43690
-#define SPELL_TELEPORT_VISUAL   40869
-#define SPELL_BERSERK           45078
+    // Spells
+    SPELL_SINFUL_PERIODIC       = 40862,        // periodic triggers 40827
+    SPELL_SINISTER_PERIODIC     = 40863,        // periodic triggers 40859
+    SPELL_VILE_PERIODIC         = 40865,        // periodic triggers 40860
+    SPELL_WICKED_PERIODIC       = 40866,        // periodic triggers 40861
+    SPELL_FATAL_ATTRACTION      = 40869,        // dummy, triggers 41001
+    SPELL_SILENCING_SHRIEK      = 40823,
+    SPELL_SABER_LASH_PROC       = 40816,        // procs 40810 and 43690 on melee damage
+    SPELL_FRENZY                = 23537,
+    SPELL_BERSERK               = 45078,
+};
 
-uint32 PrismaticAuras[]=
+static const uint32 aPrismaticAuras[]=
 {
     40880,                                                  // Shadow
     40882,                                                  // Fire
@@ -60,63 +61,42 @@ uint32 PrismaticAuras[]=
     40897,                                                  // Holy
 };
 
-struct Locations
-{
-    float x,y,z;
-};
-
-static Locations TeleportPoint[]=
-{
-    {959.996f, 212.576f, 193.843f},
-    {932.537f, 231.813f, 193.838f},
-    {958.675f, 254.767f, 193.822f},
-    {946.955f, 201.316f, 192.535f},
-    {944.294f, 149.676f, 197.551f},
-    {930.548f, 284.888f, 193.367f},
-    {965.997f, 278.398f, 195.777f}
-};
+static const uint32 aPeriodicBeams[]= {SPELL_SINFUL_PERIODIC, SPELL_SINISTER_PERIODIC, SPELL_VILE_PERIODIC, SPELL_WICKED_PERIODIC};
 
 struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
 {
     boss_shahrazAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_pInstance = (instance_black_temple*)pCreature->GetInstanceData();
         Reset();
     }
 
-    ScriptedInstance* m_pInstance;
+    instance_black_temple* m_pInstance;
 
-    ObjectGuid m_targetGuid[3];
-    uint32 BeamTimer;
-    uint32 BeamCount;
-    uint32 CurrentBeam;
-    uint32 PrismaticShieldTimer;
-    uint32 FatalAttractionTimer;
-    uint32 FatalAttractionExplodeTimer;
-    uint32 ShriekTimer;
-    uint32 RandomYellTimer;
-    uint32 EnrageTimer;
-    uint32 ExplosionCount;
+    uint32 m_uiBeamTimer;
+    uint32 m_uiPrismaticShieldTimer;
+    uint32 m_uiFatalAttractionTimer;
+    uint32 m_uiShriekTimer;
+    uint32 m_uiRandomYellTimer;
+    uint32 m_uiBerserkTimer;
+    uint8 m_uiCurrentBeam;
 
-    bool Enraged;
+    bool m_bIsEnraged;
 
     void Reset()
     {
-        for (uint8 i = 0; i < 3; ++i)
-            m_targetGuid[i].Clear();
+        m_uiBeamTimer               = urand(5000, 10000);
+        m_uiCurrentBeam             = urand(0, 3);
+        m_uiPrismaticShieldTimer    = 0;
+        m_uiFatalAttractionTimer    = 25000;
+        m_uiShriekTimer             = 30000;
+        m_uiRandomYellTimer         = urand(70000, 110000);
+        m_uiBerserkTimer            = 10*MINUTE*IN_MILLISECONDS;
 
-        BeamTimer = 60000;                                  // Timers may be incorrect
-        BeamCount = 0;
-        CurrentBeam = 0;                                    // 0 - Sinister, 1 - Vile, 2 - Wicked, 3 - Sinful
-        PrismaticShieldTimer = 0;
-        FatalAttractionTimer = 60000;
-        FatalAttractionExplodeTimer = 70000;
-        ShriekTimer = 30000;
-        RandomYellTimer = urand(70000, 110000);
-        EnrageTimer = 600000;
-        ExplosionCount = 0;
+        m_bIsEnraged                = false;
 
-        Enraged = false;
+        // ToDo: Enable this when the core will properly support the damage split! We can't deal 70-80k damage only to one player.
+        //DoCastSpellIfCan(m_creature, SPELL_SABER_LASH_PROC);
     }
 
     void Aggro(Unit* pWho)
@@ -130,15 +110,15 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
     void JustReachedHome()
     {
         if (m_pInstance)
-            m_pInstance->SetData(TYPE_SHAHRAZ, NOT_STARTED);
+            m_pInstance->SetData(TYPE_SHAHRAZ, FAIL);
     }
 
-    void KilledUnit(Unit *victim)
+    void KilledUnit(Unit* pVictim)
     {
-        DoScriptText(urand(0, 1) ? SAY_SLAY1 : SAY_SLAY2, m_creature);
+        DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
     }
 
-    void JustDied(Unit *victim)
+    void JustDied(Unit* pKiller)
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_SHAHRAZ, DONE);
@@ -146,146 +126,95 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
         DoScriptText(SAY_DEATH, m_creature);
     }
 
-    void TeleportPlayers()
-    {
-        uint32 random = urand(0, 6);
-        float X = TeleportPoint[random].x;
-        float Y = TeleportPoint[random].y;
-        float Z = TeleportPoint[random].z;
-
-        for(uint8 i = 0; i < 3; ++i)
-        {
-            Unit* pUnit = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1);
-            if (pUnit && pUnit->isAlive() && (pUnit->GetTypeId() == TYPEID_PLAYER))
-            {
-                m_targetGuid[i] = pUnit->GetObjectGuid();
-                pUnit->CastSpell(pUnit, SPELL_TELEPORT_VISUAL, true);
-                DoTeleportPlayer(pUnit, X, Y, Z, pUnit->GetOrientation());
-            }
-        }
-    }
-
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (m_creature->GetHealthPercent() < 10.0f && !Enraged)
+        if (m_creature->GetHealthPercent() < 10.0f && !m_bIsEnraged)
         {
-            Enraged = true;
-            DoCastSpellIfCan(m_creature, SPELL_ENRAGE, CAST_TRIGGERED);
-            DoScriptText(SAY_ENRAGE, m_creature);
+            if (DoCastSpellIfCan(m_creature, SPELL_FRENZY) == CAST_OK)
+            {
+                DoScriptText(SAY_ENRAGE, m_creature);
+                m_bIsEnraged = true;
+            }
         }
 
-        //Randomly cast one beam.
-        if (BeamTimer < diff)
+        // Randomly cast one beam.
+        if (m_uiBeamTimer < uiDiff)
         {
-            Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0);
-            if (!target || !target->isAlive())
-                return;
-
-            BeamTimer = 9000;
-
-            switch(CurrentBeam)
+            if (DoCastSpellIfCan(m_creature, aPeriodicBeams[m_uiCurrentBeam]) == CAST_OK)
             {
-                case 0:
-                    DoCastSpellIfCan(target, SPELL_BEAM_SINISTER);
-                    break;
-                case 1:
-                    DoCastSpellIfCan(target, SPELL_BEAM_VILE);
-                    break;
-                case 2:
-                    DoCastSpellIfCan(target, SPELL_BEAM_WICKED);
-                    break;
-                case 3:
-                    DoCastSpellIfCan(target, SPELL_BEAM_SINFUL);
-                    break;
+                uint8 uiNextBeam = (m_uiCurrentBeam + urand(1, 3)) % 4;
+                m_uiCurrentBeam = uiNextBeam;
+                m_uiBeamTimer = urand(10000, 13000);
             }
-            ++BeamCount;
-            uint32 Beam = CurrentBeam;
-
-            if (BeamCount > 3)
-                while(CurrentBeam == Beam)
-                    CurrentBeam = urand(0, 2);
-
-        }else BeamTimer -= diff;
+        }
+        else
+            m_uiBeamTimer -= uiDiff;
 
         // Random Prismatic Shield every 15 seconds.
-        if (PrismaticShieldTimer < diff)
+        if (m_uiPrismaticShieldTimer < uiDiff)
         {
-            uint32 random = urand(0, 5);
-            if (PrismaticAuras[random])
-                DoCastSpellIfCan(m_creature, PrismaticAuras[random]);
-            PrismaticShieldTimer = 15000;
-        }else PrismaticShieldTimer -= diff;
+            if (DoCastSpellIfCan(m_creature, aPrismaticAuras[urand(0, 5)]) == CAST_OK)
+                m_uiPrismaticShieldTimer = 15000;
+        }
+        else
+            m_uiPrismaticShieldTimer -= uiDiff;
 
-        // Select 3 random targets (can select same target more than once), teleport to a random location then make them cast explosions until they get away from each other.
-        if (FatalAttractionTimer < diff)
+        // ToDo: Enable this spell when it will be properly supported by core! Right now it teleports players under the map.
+        /*if (m_uiFatalAttractionTimer < uiDiff)
         {
-            ExplosionCount = 0;
-
-            TeleportPlayers();
-
-            DoScriptText(urand(0, 1) ? SAY_SPELL2 : SAY_SPELL3, m_creature);
-
-            FatalAttractionExplodeTimer = 2000;
-            FatalAttractionTimer = urand(40000, 70000);
-        }else FatalAttractionTimer -= diff;
-
-        if (FatalAttractionExplodeTimer < diff)
-        {
-            // Just make them explode three times... they're supposed to keep exploding while they are in range, but it'll take too much code. I'll try to think of an efficient way for it later.
-            if (ExplosionCount < 3)
+            if (DoCastSpellIfCan(m_creature, SPELL_FATAL_ATTRACTION) == CAST_OK)
             {
-                for(uint8 i = 0; i < 3; ++i)
+                switch (urand(0, 2))
                 {
-                    if (m_targetGuid[i])
-                    {
-                        if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_targetGuid[i]))
-                            pPlayer->CastSpell(pPlayer, SPELL_ATTRACTION, true);
-
-                        m_targetGuid[i].Clear();
-                    }
+                    case 0: DoScriptText(SAY_SPELL_1, m_creature); break;
+                    case 1: DoScriptText(SAY_SPELL_2, m_creature); break;
+                    case 2: DoScriptText(SAY_SPELL_3, m_creature); break;
                 }
+                m_uiFatalAttractionTimer = 30000;
+            }
+        }
+        else
+            m_uiFatalAttractionTimer -= uiDiff;*/
 
-                ++ExplosionCount;
-                FatalAttractionExplodeTimer = 1000;
+        if (m_uiShriekTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature, SPELL_SILENCING_SHRIEK) == CAST_OK)
+                m_uiShriekTimer = 30000;
+        }
+        else
+            m_uiShriekTimer -= uiDiff;
+
+        if (m_uiBerserkTimer)
+        {
+            if (m_uiBerserkTimer <= uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_BERSERK) == CAST_OK)
+                {
+                    DoScriptText(SAY_ENRAGE, m_creature);
+                    m_uiBerserkTimer = 0;
+                }
             }
             else
-            {
-                FatalAttractionExplodeTimer = FatalAttractionTimer + 2000;
-                ExplosionCount = 0;
-            }
-        }else FatalAttractionExplodeTimer -= diff;
-
-        if (ShriekTimer < diff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_SILENCING_SHRIEK);
-            ShriekTimer = 30000;
-        }else ShriekTimer -= diff;
-
-        //Enrage
-        if (!m_creature->HasAura(SPELL_BERSERK, EFFECT_INDEX_0))
-        {
-            if (EnrageTimer < diff)
-            {
-                DoCastSpellIfCan(m_creature, SPELL_BERSERK);
-                DoScriptText(SAY_ENRAGE, m_creature);
-            }else EnrageTimer -= diff;
+                m_uiBerserkTimer -= uiDiff;
         }
 
-        //Random taunts
-        if (RandomYellTimer < diff)
+        // Random taunts
+        if (m_uiRandomYellTimer < uiDiff)
         {
-            switch(urand(0, 2))
+            switch (urand(0, 2))
             {
-                case 0: DoScriptText(SAY_TAUNT1, m_creature); break;
-                case 1: DoScriptText(SAY_TAUNT2, m_creature); break;
-                case 2: DoScriptText(SAY_TAUNT3, m_creature); break;
+                case 0: DoScriptText(SAY_TAUNT_1, m_creature); break;
+                case 1: DoScriptText(SAY_TAUNT_2, m_creature); break;
+                case 2: DoScriptText(SAY_TAUNT_3, m_creature); break;
             }
 
-            RandomYellTimer = urand(60000, 150000);
-        }else RandomYellTimer -= diff;
+            m_uiRandomYellTimer = urand(60000, 150000);
+        }
+        else
+            m_uiRandomYellTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
