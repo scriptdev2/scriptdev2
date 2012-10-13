@@ -45,7 +45,8 @@ instance_sunwell_plateau::instance_sunwell_plateau(Map* pMap) : ScriptedInstance
     m_uiMuruBerserkTimer(0),
     m_uiDeceiversKilled(0),
     m_uiKalecRespawnTimer(0),
-    m_uiSpectralRealmTimer(5000)
+    m_uiSpectralRealmTimer(5000),
+    m_uiKiljaedenYellTimer(90000)
 {
     Initialize();
 }
@@ -104,6 +105,9 @@ void instance_sunwell_plateau::OnCreatureCreate(Creature* pCreature)
         case NPC_LIADRIN:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
+        case NPC_DECEIVER:
+            m_lDeceiversGuidList.push_back(pCreature->GetObjectGuid());
+            break;
     }
 }
 
@@ -124,6 +128,13 @@ void instance_sunwell_plateau::OnCreatureDeath(Creature* pCreature)
             }
         }
     }
+}
+
+void instance_sunwell_plateau::OnCreatureEvade(Creature* pCreature)
+{
+    // Reset encounter if raid wipes at deceivers
+    if (pCreature->GetEntry() == NPC_DECEIVER)
+        SetData(TYPE_KILJAEDEN, FAIL);
 }
 
 void instance_sunwell_plateau::OnObjectCreate(GameObject* pGo)
@@ -156,6 +167,11 @@ void instance_sunwell_plateau::OnObjectCreate(GameObject* pGo)
         case GO_THIRD_GATE:
             if (m_auiEncounter[TYPE_MURU] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
+            break;
+        case GO_ORB_BLUE_FLIGHT_1:
+        case GO_ORB_BLUE_FLIGHT_2:
+        case GO_ORB_BLUE_FLIGHT_3:
+        case GO_ORB_BLUE_FLIGHT_4:
             break;
 
         default:
@@ -223,9 +239,26 @@ void instance_sunwell_plateau::SetData(uint32 uiType, uint32 uiData)
             break;
         case TYPE_KILJAEDEN:
             m_auiEncounter[uiType] = uiData;
-            // When event fails the deceivers are respawned so restart the counter
             if (uiData == FAIL)
+            {
                 m_uiDeceiversKilled = 0;
+
+                // Reset Orbs
+                DoToggleGameObjectFlags(GO_ORB_BLUE_FLIGHT_1, GO_FLAG_NO_INTERACT, true);
+                DoToggleGameObjectFlags(GO_ORB_BLUE_FLIGHT_2, GO_FLAG_NO_INTERACT, true);
+                DoToggleGameObjectFlags(GO_ORB_BLUE_FLIGHT_3, GO_FLAG_NO_INTERACT, true);
+                DoToggleGameObjectFlags(GO_ORB_BLUE_FLIGHT_4, GO_FLAG_NO_INTERACT, true);
+
+                // Respawn deceivers
+                for (GuidList::const_iterator itr = m_lDeceiversGuidList.begin(); itr != m_lDeceiversGuidList.end(); ++itr)
+                {
+                    if (Creature* pDeceiver = instance->GetCreature(*itr))
+                    {
+                        if (!pDeceiver->isAlive())
+                            pDeceiver->Respawn();
+                    }
+                }
+            }
             break;
     }
 
@@ -273,7 +306,7 @@ void instance_sunwell_plateau::Update(uint32 uiDiff)
     // Muru berserk timer; needs to be done here because it involves two distinct creatures
     if (m_auiEncounter[TYPE_MURU] == IN_PROGRESS)
     {
-        if (m_uiMuruBerserkTimer <= uiDiff)
+        if (m_uiMuruBerserkTimer < uiDiff)
         {
             if (Creature* pEntrpius = GetSingleCreatureFromStorage(NPC_ENTROPIUS, true))
                 pEntrpius->CastSpell(pEntrpius, SPELL_MURU_BERSERK, true);
@@ -284,6 +317,27 @@ void instance_sunwell_plateau::Update(uint32 uiDiff)
         }
         else
             m_uiMuruBerserkTimer -= uiDiff;
+    }
+
+    if (m_auiEncounter[TYPE_KILJAEDEN] == NOT_STARTED || m_auiEncounter[TYPE_KILJAEDEN] == FAIL)
+    {
+        if (m_uiKiljaedenYellTimer < uiDiff)
+        {
+            if (Creature* pKiljaeden = GetSingleCreatureFromStorage(NPC_KILJAEDEN_CONTROLLER))
+            {
+                switch (urand(0, 4))
+                {
+                    case 0: DoScriptText(SAY_ORDER_1, pKiljaeden); break;
+                    case 1: DoScriptText(SAY_ORDER_2, pKiljaeden); break;
+                    case 2: DoScriptText(SAY_ORDER_3, pKiljaeden); break;
+                    case 3: DoScriptText(SAY_ORDER_4, pKiljaeden); break;
+                    case 4: DoScriptText(SAY_ORDER_5, pKiljaeden); break;
+                }
+            }
+            m_uiKiljaedenYellTimer = 90000;
+        }
+        else
+            m_uiKiljaedenYellTimer -= uiDiff;
     }
 }
 

@@ -47,8 +47,20 @@ enum
     GO_MURU_EXIT_GATE           = 188118,
     GO_THIRD_GATE               = 187765,           // door after muru; why another?
 
+    GO_ORB_BLUE_FLIGHT_1        = 187869,           // orbs used in the Kil'jaeden fight
+    GO_ORB_BLUE_FLIGHT_2        = 188114,
+    GO_ORB_BLUE_FLIGHT_3        = 188115,
+    GO_ORB_BLUE_FLIGHT_4        = 188116,
+
     SAY_KALECGOS_OUTRO          = -1580043,
     SAY_TWINS_INTRO             = -1580044,
+
+    // Kil'jaeden yells
+    SAY_ORDER_1                 = -1580064,
+    SAY_ORDER_2                 = -1580065,
+    SAY_ORDER_3                 = -1580066,
+    SAY_ORDER_4                 = -1580067,
+    SAY_ORDER_5                 = -1580068,
 
     AREATRIGGER_TWINS           = 4937,
 
@@ -80,6 +92,7 @@ class MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance, privat
         void OnObjectCreate(GameObject* pGo);
         void OnCreatureCreate(Creature* pCreature);
         void OnCreatureDeath(Creature* pCreature);
+        void OnCreatureEvade(Creature* pCreature);
 
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
@@ -100,5 +113,8 @@ class MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance, privat
         uint32 m_uiSpectralRealmTimer;
         uint32 m_uiKalecRespawnTimer;
         uint32 m_uiMuruBerserkTimer;
+        uint32 m_uiKiljaedenYellTimer;
+
+        GuidList m_lDeceiversGuidList;
 };
 #endif

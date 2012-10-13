@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: boss_kiljaeden
-SD%Complete: 50
-SDComment: Sinister Reflection need core and AI support; Orb of the Blue Fight activation NYI; Shield Orb summoning NYI; Armageddon NYI; Offcombat yells NYI;
+SD%Complete: 80
+SDComment: Sinister Reflection need core and AI support.
 SDCategory: Sunwell Plateau
 EndScriptData */
 
@@ -26,11 +26,6 @@ EndScriptData */
 
 enum
 {
-    SAY_ORDER_1                 = -1580064,
-    SAY_ORDER_2                 = -1580065,
-    SAY_ORDER_3                 = -1580066,
-    SAY_ORDER_4                 = -1580067,
-    SAY_ORDER_5                 = -1580068,
     SAY_EMERGE                  = -1580069,
     SAY_SLAY_1                  = -1580070,
     SAY_SLAY_2                  = -1580071,
@@ -97,11 +92,12 @@ enum
     SPELL_RING_BLUE_FLAME       = 45825,        // cast by the orb targets when activated
     SPELL_ANVEENA_PRISON        = 46367,
     SPELL_SACRIFICE_ANVEENA     = 46474,
+    SPELL_SINISTER_REFL_CLASS   = 45893,        // increase the size of the clones
 
     // Npcs
     NPC_SHIELD_ORB              = 25502,
     NPC_SINISTER_REFLECTION     = 25708,
-    NPC_ARMAGEDDON              = 25735,        // uses spell 45914 followed by spell 45911, 45912, then by 45909
+    NPC_ARMAGEDDON              = 25735,        // npc handled by eventAI
     NPC_BLUE_ORB_TARGET         = 25640,        // dummy npc near gameobjects 187869, 188114, 188115, 188116
 
     // phases
@@ -204,6 +200,10 @@ static const EventLocations aOutroLocations[] =
     {1711.537f, 637.600f, 27.34f}               // liadrin move forward
 };
 
+/*######
+## npc_kiljaeden_controller
+######*/
+
 struct MANGOS_DLL_DECL npc_kiljaeden_controllerAI : public Scripted_NoMovementAI, private DialogueHelper
 {
     npc_kiljaeden_controllerAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature),
@@ -223,12 +223,6 @@ struct MANGOS_DLL_DECL npc_kiljaeden_controllerAI : public Scripted_NoMovementAI
     {
         // Visual spell before the encounter starts
         DoCastSpellIfCan(m_creature, SPELL_ANVEENA_DRAIN);
-    }
-
-    // Wrapper to start the dialogue text from another AI
-    void DoStartOutroDialogue()
-    {
-        StartNextDialogueText(NPC_KALECGOS);
     }
 
     void JustDidDialogueStep(int32 iEntry)
@@ -311,6 +305,13 @@ struct MANGOS_DLL_DECL npc_kiljaeden_controllerAI : public Scripted_NoMovementAI
         }
     }
 
+    void SummonedCreatureJustDied(Creature* pSummoned)
+    {
+        // Start outro dialogue when Kil'jaeden is killed
+        if (pSummoned->GetEntry() == NPC_KILJAEDEN)
+            StartNextDialogueText(NPC_KALECGOS);
+    }
+
     void SummonedMovementInform(Creature* pSummoned, uint32 uiType, uint32 uiPointId)
     {
         if (uiType != POINT_MOTION_TYPE)
@@ -356,6 +357,10 @@ struct MANGOS_DLL_DECL npc_kiljaeden_controllerAI : public Scripted_NoMovementAI
     }
 };
 
+/*######
+## boss_kiljaeden
+######*/
+
 struct MANGOS_DLL_DECL boss_kiljaedenAI : public Scripted_NoMovementAI, private DialogueHelper
 {
     boss_kiljaedenAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature),
@@ -369,6 +374,8 @@ struct MANGOS_DLL_DECL boss_kiljaedenAI : public Scripted_NoMovementAI, private 
     instance_sunwell_plateau* m_pInstance;
 
     uint8 m_uiPhase;
+    uint8 m_uiMaxShieldOrbs;
+    uint8 m_uiShieldOrbCount;
 
     uint32 m_uiKalecSummonTimer;
 
@@ -386,6 +393,8 @@ struct MANGOS_DLL_DECL boss_kiljaedenAI : public Scripted_NoMovementAI, private 
     {
         m_uiPhase                   = PHASE_INFERNO;
         m_uiKalecSummonTimer        = 35000;
+        m_uiMaxShieldOrbs           = 1;
+        m_uiShieldOrbCount          = 0;
 
         m_uiSoulFlyTimer            = 10000;
         m_uiLegionLightingTimer     = urand(10000, 15000);
@@ -416,17 +425,6 @@ struct MANGOS_DLL_DECL boss_kiljaedenAI : public Scripted_NoMovementAI, private 
             // Reset the corrupt Sunwell aura
             if (Creature* pKiljaedenController = m_pInstance->GetSingleCreatureFromStorage(NPC_KILJAEDEN_CONTROLLER))
                 pKiljaedenController->CastSpell(pKiljaedenController, SPELL_ANVEENA_DRAIN, true);
-
-            // Respawn Anveena if necessary
-            if (Creature* pAnveena = m_pInstance->GetSingleCreatureFromStorage(NPC_ANVEENA))
-            {
-                if (!pAnveena->isAlive())
-                    pAnveena->Respawn();
-            }
-
-            // Despawn Kalec if already summoned
-            if (Creature* pKalec = m_pInstance->GetSingleCreatureFromStorage(NPC_KALECGOS, true))
-                pKalec->ForcedDespawn();
         }
 
         // Despawn on wipe
@@ -435,31 +433,45 @@ struct MANGOS_DLL_DECL boss_kiljaedenAI : public Scripted_NoMovementAI, private 
 
     void KilledUnit(Unit* pVictim)
     {
+        if (pVictim->GetTypeId() != TYPEID_PLAYER)
+            return;
+
         DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
     }
 
     void JustDied(Unit* pKiller)
     {
         if (m_pInstance)
-        {
             m_pInstance->SetData(TYPE_KILJAEDEN, DONE);
-
-            // Start the outro
-            if (Creature* pKiljaedenController = m_pInstance->GetSingleCreatureFromStorage(NPC_KILJAEDEN_CONTROLLER))
-            {
-                if (npc_kiljaeden_controllerAI* pControllerAI = dynamic_cast<npc_kiljaeden_controllerAI*>(pKiljaedenController->AI()))
-                    pControllerAI->DoStartOutroDialogue();
-            }
-        }
     }
 
     void JustSummoned(Creature* pSummoned)
     {
         if (pSummoned->GetEntry() == NPC_KALECGOS)
-        {
             DoScriptText(SAY_KALECGOS_INTRO, pSummoned);
-            pSummoned->SetLevitate(true);
+        else if (pSummoned->GetEntry() == NPC_SHIELD_ORB)
+        {
+            pSummoned->CastSpell(pSummoned, SPELL_SHADOW_BOLT_AURA, true);
+
+            // Start the movement of the shadow orb - calculate new position based on the angle between the boss and orb
+            float fX, fY, fAng;
+            fAng = m_creature->GetAngle(pSummoned) + M_PI_F/8;
+            // Normalize angle
+            if (fAng > 2*M_PI_F)
+                fAng = fAng - 2*M_PI_F;
+
+            m_creature->GetNearPoint2D(fX, fY, 25.0f, fAng);
+
+            // Move to new position
+            pSummoned->GetMotionMaster()->Clear();
+            pSummoned->GetMotionMaster()->MovePoint(1, fX, fY, pSummoned->GetPositionZ());
         }
+    }
+
+    void SummonedCreatureJustDied(Creature* pSummoned)
+    {
+        if (pSummoned->GetEntry() == NPC_SHIELD_ORB)
+            --m_uiShieldOrbCount;
     }
 
     void GetAIInformation(ChatHandler& reader)
@@ -496,20 +508,30 @@ struct MANGOS_DLL_DECL boss_kiljaedenAI : public Scripted_NoMovementAI, private 
                 DoCastSpellIfCan(m_creature, SPELL_SHADOW_SPIKE);
                 break;
             case EVENT_DRAGON_ORB:
+                // Activate blue orbs
                 if (Creature* pKalec = m_pInstance->GetSingleCreatureFromStorage(NPC_KALECGOS))
                     DoScriptText(irand(0, 1) ? SAY_KALECGOS_ORB_2 : SAY_KALECGOS_ORB_3, pKalec);
-                // no break
+                DoActivateDragonOrb(GO_ORB_BLUE_FLIGHT_2);
+                break;
             case SAY_KALECGOS_ORB_1:
+                DoActivateDragonOrb(GO_ORB_BLUE_FLIGHT_1);
+                break;
             case SAY_KALECGOS_ORB_4:
-                // ToDo: activate the blue dragon orbs
+                DoActivateDragonOrb(GO_ORB_BLUE_FLIGHT_3);
+                DoActivateDragonOrb(GO_ORB_BLUE_FLIGHT_4);
                 break;
             case SAY_PHASE_3:
+                // Set next phase and increase the max shield orbs
                 m_uiPhase = PHASE_DARKNESS;
+                ++m_uiMaxShieldOrbs;
                 break;
             case SAY_PHASE_4:
+                // Set next phase and increase the max shield orbs
                 m_uiPhase = PHASE_ARMAGEDDON;
+                ++m_uiMaxShieldOrbs;
                 break;
             case SAY_PHASE_5:
+                // Set next phase and sacrifice Anveena
                 if (Creature* pAnveena = m_pInstance->GetSingleCreatureFromStorage(NPC_ANVEENA))
                 {
                     pAnveena->RemoveAurasDueToSpell(SPELL_ANVEENA_PRISON);
@@ -519,6 +541,23 @@ struct MANGOS_DLL_DECL boss_kiljaedenAI : public Scripted_NoMovementAI, private 
                 m_uiPhase = PHASE_SACRIFICE;
                 break;
         }
+    }
+
+    // Wrapper to activate dragon orbs
+    void DoActivateDragonOrb(uint32 uiEntry)
+    {
+        if (!m_pInstance)
+            return;
+
+        // Set the visual around the Orb
+        if (GameObject* pGo = m_pInstance->GetSingleGameObjectFromStorage(uiEntry))
+        {
+            if (Creature* pTarget = GetClosestCreatureWithEntry(pGo, NPC_BLUE_ORB_TARGET, 5.0f))
+                pTarget->CastSpell(pTarget, SPELL_RING_BLUE_FLAME, false);
+        }
+
+        // Make the orb usable
+        m_pInstance->DoToggleGameObjectFlags(uiEntry, GO_FLAG_NO_INTERACT, false);
     }
 
     void UpdateAI(const uint32 uiDiff)
@@ -618,6 +657,24 @@ struct MANGOS_DLL_DECL boss_kiljaedenAI : public Scripted_NoMovementAI, private 
                 else
                     m_uiSoulFlyTimer -= uiDiff;
 
+                // Only spawn a Shadow orb when necessary
+                if (m_uiShieldOrbCount < m_uiMaxShieldOrbs)
+                {
+                    if (m_uiShieldOrbTimer < uiDiff)
+                    {
+                        // Get some random coords for the Orb
+                        float fX, fY, fZ;
+                        m_creature->GetNearPoint2D(fX, fY, 25.0f, frand(0, 2*M_PI_F));
+                        fZ = frand(35.0f, 45.0f);
+
+                        m_creature->SummonCreature(NPC_SHIELD_ORB, fX, fY, fZ, 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
+                        ++m_uiShieldOrbCount;
+                        m_uiShieldOrbTimer = 30000;
+                    }
+                    else
+                        m_uiShieldOrbTimer -= uiDiff;
+                }
+
                 // Go to next phase and start transition dialogue
                 if (m_uiPhase == PHASE_INFERNO && m_creature->GetHealthPercent() < 85.0f)
                     StartNextDialogueText(PHASE_DARKNESS);
@@ -639,22 +696,60 @@ bool EffectAuraDummy_spell_aura_dummy_darkness_of_souls(const Aura* pAura, bool 
         {
             pTarget->CastSpell(pTarget, pAura->GetSpellProto()->CalculateSimpleValue(EFFECT_INDEX_2), true);
 
-            switch (irand(0, 2))
+            switch (urand(0, 2))
             {
-                case 0:
-                    DoScriptText(SAY_DARKNESS_1, pTarget);
-                    break;
-                case 1:
-                    DoScriptText(SAY_DARKNESS_2, pTarget);
-                    break;
-                case 2:
-                    DoScriptText(SAY_DARKNESS_3, pTarget);
-                    break;
+                case 0: DoScriptText(SAY_DARKNESS_1, pTarget); break;
+                case 1: DoScriptText(SAY_DARKNESS_2, pTarget); break;
+                case 2: DoScriptText(SAY_DARKNESS_3, pTarget); break;
             }
         }
     }
     return true;
 }
+
+/*######
+## npc_shield_orb
+######*/
+
+struct MANGOS_DLL_DECL npc_shield_orbAI : public ScriptedAI
+{
+    npc_shield_orbAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = ((instance_sunwell_plateau*)pCreature->GetInstanceData());
+        Reset();
+    }
+
+    instance_sunwell_plateau* m_pInstance;
+
+    void Reset() { }
+
+    // Handle circel movement around the boss
+    void MovementInform(uint32 uiMoveType, uint32 uiPointId)
+    {
+        if (uiMoveType != POINT_MOTION_TYPE || !uiPointId || !m_pInstance)
+            return;
+
+        if (Creature* pSummoner = m_pInstance->GetSingleCreatureFromStorage(NPC_KILJAEDEN))
+        {
+            // Calculate new position based on the angle between the boss and self
+            float fX, fY, fAng;
+            fAng = pSummoner->GetAngle(m_creature) + M_PI_F/8;
+            // Normalize angle
+            if (fAng > 2*M_PI_F)
+                fAng = fAng - 2*M_PI_F;
+
+            pSummoner->GetNearPoint2D(fX, fY, 25.0f, fAng);
+
+            // Move to new position
+            m_creature->GetMotionMaster()->Clear();
+            m_creature->GetMotionMaster()->MovePoint(1, fX, fY, m_creature->GetPositionZ());
+        }
+    }
+
+    void AttackStart(Unit* pWho) {}
+    void MoveInLineOfSight(Unit* pWho) {}
+    void UpdateAI(const uint32 uiDiff) { }
+};
 
 CreatureAI* GetAI_boss_kiljaeden(Creature *pCreature)
 {
@@ -664,6 +759,11 @@ CreatureAI* GetAI_boss_kiljaeden(Creature *pCreature)
 CreatureAI* GetAI_npc_kiljaeden_controller(Creature *pCreature)
 {
     return new npc_kiljaeden_controllerAI(pCreature);
+}
+
+CreatureAI* GetAI_npc_shield_orb(Creature *pCreature)
+{
+    return new npc_shield_orbAI(pCreature);
 }
 
 void AddSC_boss_kiljaeden()
@@ -679,5 +779,10 @@ void AddSC_boss_kiljaeden()
     pNewScript = new Script;
     pNewScript->Name="npc_kiljaeden_controller";
     pNewScript->GetAI = &GetAI_npc_kiljaeden_controller;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name="npc_shield_orb";
+    pNewScript->GetAI = &GetAI_npc_shield_orb;
     pNewScript->RegisterSelf();
 }
