@@ -16,41 +16,55 @@
 
 /* ScriptData
 SDName: Boss_Bloodboil
-SD%Complete: 85
-SDComment: Bloodboil not working correctly
+SD%Complete: 90
+SDComment: Timers may need adjustments.
 SDCategory: Black Temple
 EndScriptData */
 
 #include "precompiled.h"
 #include "black_temple.h"
 
-//Speech'n'Sound
-#define SAY_AGGRO               -1564029
-#define SAY_SLAY1               -1564030
-#define SAY_SLAY2               -1564031
-#define SAY_SPECIAL1            -1564032
-#define SAY_SPECIAL2            -1564033
-#define SAY_ENRAGE1             -1564034
-#define SAY_ENRAGE2             -1564035
-#define SAY_DEATH               -1564036
+enum
+{
+    // Speech'n'Sound
+    SAY_AGGRO                   = -1564029,
+    SAY_SLAY1                   = -1564030,
+    SAY_SLAY2                   = -1564031,
+    SAY_SPECIAL1                = -1564032,
+    SAY_SPECIAL2                = -1564033,
+    SAY_ENRAGE1                 = -1564034,
+    SAY_ENRAGE2                 = -1564035,
+    SAY_DEATH                   = -1564036,
 
-//Spells
-#define SPELL_ACID_GEYSER        40630
-#define SPELL_ACIDIC_WOUND       40481
-#define SPELL_ARCING_SMASH       40599
-#define SPELL_BLOODBOIL          42005                      // This spell is AoE whereas it shouldn't be
-#define SPELL_FEL_ACID           40508
-#define SPELL_FEL_RAGE_SELF      40594
-#define SPELL_FEL_RAGE_TARGET    40604
-#define SPELL_FEL_RAGE_2         40616
-#define SPELL_FEL_RAGE_3         41625
-#define SPELL_BEWILDERING_STRIKE 40491
-#define SPELL_EJECT1             40486                      // 1000 Physical damage + knockback + script effect (should handle threat reduction I think)
-#define SPELL_EJECT2             40597                      // 1000 Physical damage + Stun (used in phase 2?)
-#define SPELL_TAUNT_GURTOGG      40603
-#define SPELL_INSIGNIFIGANCE     40618
-#define SPELL_BERSERK            45078
-#define SPELL_ENRAGE             27680
+    // Spells
+    // Phase 1
+    SPELL_FEL_ACID_1            = 40508,
+    SPELL_ARCING_SMASH_1        = 40457,
+    SPELL_EJECT_1               = 40486,
+    SPELL_ACIDIC_WOUND          = 40481,
+    SPELL_BLOODBOIL             = 42005,
+    SPELL_BEWILDERING_STRIKE    = 40491,
+
+    // Phase 2
+    SPELL_ACID_GEYSER           = 40630,
+    SPELL_FEL_ACID_2            = 40595,
+    SPELL_ARCING_SMASH_2        = 40599,
+    SPELL_EJECT_2               = 40597,
+    SPELL_INSIGNIFIGANCE        = 40618,
+    SPELL_FEL_RAGE              = 40594,
+    SPELL_FEL_RAGE_PLAYER_1     = 40604,
+    SPELL_FEL_RAGE_PLAYER_2     = 40616,
+    SPELL_FEL_RAGE_PLAYER_3     = 41625,
+    SPELL_FEL_RAGE_4            = 40617,                // spell not confirmed
+    SPELL_FEL_RAGE_5            = 46787,                // spell not confirmed
+    SPELL_TAUNT_GURTOGG         = 40603,
+
+    // Other spells
+    SPELL_CHARGE                = 40602,                // spell not confirmed
+    SPELL_BERSERK               = 27680,
+
+    MAX_BLOODBOILS              = 5,
+};
 
 struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
 {
@@ -62,52 +76,42 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    ObjectGuid m_targetGuid;
+    uint32 m_uiBloodboilTimer;
+    uint32 m_uiAcidGeyserTimer;
+    uint32 m_uiAcidicWoundTimer;
+    uint32 m_uiArcingSmashTimer;
+    uint32 m_uiFelAcidTimer;
+    uint32 m_uiEjectTimer;
+    uint32 m_uiStrikeTimer;
+    uint32 m_uiPhaseChangeTimer;
+    uint32 m_uiBerserkTimer;
+    uint8 m_uiBloodboilCount;
 
-    float TargetThreat;
-
-    uint32 BloodboilTimer;
-    uint32 BloodboilCount;
-    uint32 AcidGeyserTimer;
-    uint32 AcidicWoundTimer;
-    uint32 ArcingSmashTimer;
-    uint32 EnrageTimer;
-    uint32 FelAcidTimer;
-    uint32 EjectTimer;
-    uint32 BewilderingStrikeTimer;
-    uint32 PhaseChangeTimer;
-    uint32 m_uiEnrageTimer;
-
-    bool Phase1;
+    bool m_bIsPhase1;
 
     void Reset()
     {
-        m_targetGuid.Clear();
+        m_uiBloodboilTimer      = 10000;
+        m_uiBloodboilCount      = 0;
+        m_uiAcidGeyserTimer     = 1000;
+        m_uiAcidicWoundTimer    = 6000;
+        m_uiArcingSmashTimer    = 19000;
+        m_uiFelAcidTimer        = 25000;
+        m_uiEjectTimer          = 10000;
+        m_uiStrikeTimer         = 15000;
+        m_uiPhaseChangeTimer    = MINUTE*IN_MILLISECONDS;
+        m_uiBerserkTimer        = 10*MINUTE*IN_MILLISECONDS;
 
-        TargetThreat = 0;
-
-        BloodboilTimer = 10000;
-        BloodboilCount = 0;
-        AcidGeyserTimer = 1000;
-        AcidicWoundTimer = 6000;
-        ArcingSmashTimer = 19000;
-        EnrageTimer = 600000;
-        FelAcidTimer = 25000;
-        EjectTimer = 10000;
-        BewilderingStrikeTimer = 15000;
-        PhaseChangeTimer = 60000;
-        m_uiEnrageTimer = 600000;
-
-        Phase1 = true;
+        m_bIsPhase1             = true;
     }
 
     void JustReachedHome()
     {
         if (m_pInstance)
-            m_pInstance->SetData(TYPE_BLOODBOIL, NOT_STARTED);
+            m_pInstance->SetData(TYPE_BLOODBOIL, FAIL);
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -115,12 +119,12 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
             m_pInstance->SetData(TYPE_BLOODBOIL, IN_PROGRESS);
     }
 
-    void KilledUnit(Unit *victim)
+    void KilledUnit(Unit* pVictim)
     {
         DoScriptText(urand(0, 1) ? SAY_SLAY1 : SAY_SLAY2, m_creature);
     }
 
-    void JustDied(Unit *victim)
+    void JustDied(Unit* pKiller)
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_BLOODBOIL, DONE);
@@ -128,203 +132,157 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
         DoScriptText(SAY_DEATH, m_creature);
     }
 
-    // Note: This seems like a very complicated fix. The fix needs to be handled by the core, as implementation of limited-target AoE spells are still not limited.
-    void CastBloodboil()
-    {
-        // Get the Threat List
-        ThreatList const& tList = m_creature->getThreatManager().getThreatList();
-
-        // He doesn't have anyone in his threatlist, useless to continue
-        if (tList.empty())
-            return;
-
-        std::list<Unit *> targets;
-
-        //store the threat list in a different container
-        for (ThreatList::const_iterator itr = tList.begin();itr != tList.end(); ++itr)
-        {
-            Unit *target = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid());
-
-            //only on alive players
-            if (target && target->isAlive() && target->GetTypeId() == TYPEID_PLAYER)
-                targets.push_back(target);
-        }
-
-        //Sort the list of players
-        targets.sort(ObjectDistanceOrderReversed(m_creature));
-        //Resize so we only get top 5
-        targets.resize(5);
-
-        //Aura each player in the targets list with Bloodboil. Aura code copied+pasted from Aura command in Level3.cpp
-        /*SpellEntry const *spellInfo = GetSpellStore()->LookupEntry(SPELL_BLOODBOIL);
-        if (spellInfo)
-        {
-            for(std::list<Unit *>::iterator itr = targets.begin(); itr != targets.end(); ++itr)
-            {
-                Unit* target = *itr;
-                if (!target) return;
-                for(uint32 i = 0;i<3; ++i)
-                {
-                    uint8 eff = spellInfo->Effect[i];
-                    if (eff>=TOTAL_SPELL_EFFECTS)
-                        continue;
-
-                    Aura *Aur = new Aura(spellInfo, i, NULL, target);
-                    target->AddAura(Aur);
-                }
-            }
-        }*/
-    }
-
-    void RevertThreatOnTarget(ObjectGuid guid)
-    {
-        if (Player* pPlayer = m_creature->GetMap()->GetPlayer(guid))
-        {
-            if (m_creature->getThreatManager().getThreat(pPlayer))
-                m_creature->getThreatManager().modifyThreatPercent(pPlayer, -100);
-
-            if (TargetThreat)
-                m_creature->AddThreat(pPlayer, TargetThreat);
-        }
-    }
-
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (ArcingSmashTimer < diff)
+        if (m_uiArcingSmashTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_ARCING_SMASH);
-            ArcingSmashTimer = 10000;
-        }else ArcingSmashTimer -= diff;
+            if (DoCastSpellIfCan(m_creature, m_bIsPhase1 ? SPELL_ARCING_SMASH_1 : SPELL_ARCING_SMASH_2) == CAST_OK)
+                m_uiArcingSmashTimer = 10000;
+        }
+        else
+            m_uiArcingSmashTimer -= uiDiff;
 
-        if (FelAcidTimer < diff)
+        if (m_uiFelAcidTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_FEL_ACID);
-            FelAcidTimer = 25000;
-        }else FelAcidTimer -= diff;
+            if (DoCastSpellIfCan(m_creature->getVictim(), m_bIsPhase1 ? SPELL_FEL_ACID_1 : SPELL_FEL_ACID_2) == CAST_OK)
+                m_uiFelAcidTimer = 25000;
+        }
+        else
+            m_uiFelAcidTimer -= uiDiff;
 
-        if (!m_creature->HasAura(SPELL_BERSERK, EFFECT_INDEX_0))
+        // Phase 1 spells
+        if (m_bIsPhase1)
         {
-            if (EnrageTimer < diff)
+            if (m_uiStrikeTimer < uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_BEWILDERING_STRIKE) == CAST_OK)
+                    m_uiStrikeTimer = 20000;
+            }
+            else
+                m_uiStrikeTimer -= uiDiff;
+
+            if (m_uiEjectTimer < uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_EJECT_1) == CAST_OK)
+                {
+                    // Script effect: reduce threat on main target
+                    m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(), -40);
+                    m_uiEjectTimer = 15000;
+                }
+            }
+            else
+                m_uiEjectTimer -= uiDiff;
+
+            if (m_uiAcidicWoundTimer < uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_ACIDIC_WOUND) == CAST_OK)
+                    m_uiAcidicWoundTimer = 10000;
+            }
+            else
+                m_uiAcidicWoundTimer -= uiDiff;
+
+            if (m_uiBloodboilTimer)
+            {
+                if (m_uiBloodboilTimer <= uiDiff)
+                {
+                    if (DoCastSpellIfCan(m_creature, SPELL_BLOODBOIL) == CAST_OK)
+                    {
+                        ++m_uiBloodboilCount;
+
+                        // Allow only 5 Bloodboils per phase.
+                        if (m_uiBloodboilCount == MAX_BLOODBOILS)
+                            m_uiBloodboilTimer = 0;
+                        else
+                            m_uiBloodboilTimer = 10000;
+                    }
+                }
+                else
+                    m_uiBloodboilTimer -= uiDiff;
+            }
+        }
+        // Phase 2 spells
+        else
+        {
+            if (m_uiAcidGeyserTimer)
+            {
+                if (m_uiAcidGeyserTimer <= uiDiff)
+                {
+                    if (DoCastSpellIfCan(m_creature, SPELL_ACID_GEYSER) == CAST_OK)
+                        m_uiAcidGeyserTimer = 0;
+                }
+                else
+                    m_uiAcidGeyserTimer -= uiDiff;
+            }
+
+            if (m_uiEjectTimer < uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_EJECT_2) == CAST_OK)
+                    m_uiEjectTimer = 15000;
+            }
+            else
+                m_uiEjectTimer -= uiDiff;
+        }
+
+        if (m_uiPhaseChangeTimer < uiDiff)
+        {
+            if (m_bIsPhase1)
+            {
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                {
+                    // Buff self
+                    if (DoCastSpellIfCan(m_creature, SPELL_FEL_RAGE) == CAST_OK)
+                    {
+                        DoScriptText(urand(0, 1) ? SAY_SPECIAL1 : SAY_SPECIAL2, m_creature);
+
+                        // Debuff player
+                        DoCastSpellIfCan(pTarget, SPELL_FEL_RAGE_PLAYER_1, CAST_TRIGGERED);
+                        DoCastSpellIfCan(pTarget, SPELL_FEL_RAGE_PLAYER_2, CAST_TRIGGERED);
+                        DoCastSpellIfCan(pTarget, SPELL_FEL_RAGE_PLAYER_3, CAST_TRIGGERED);
+                        // Allow player to taunt Gurtogg
+                        pTarget->CastSpell(m_creature, SPELL_TAUNT_GURTOGG, true);
+
+                        // Don't allow others to generate threat
+                        DoCastSpellIfCan(m_creature, SPELL_INSIGNIFIGANCE, CAST_TRIGGERED);
+
+                        // Reset timers
+                        m_bIsPhase1          = false;
+                        m_uiAcidGeyserTimer  = 1000;
+                        m_uiPhaseChangeTimer = 30000;
+                    }
+                }
+            }
+            else
+            {
+                // Reset timers
+                m_bIsPhase1          = true;
+                m_uiBloodboilTimer   = 10000;
+                m_uiBloodboilCount   = 0;
+                m_uiAcidicWoundTimer += 2000;
+                m_uiArcingSmashTimer += 2000;
+                m_uiFelAcidTimer     += 2000;
+                m_uiEjectTimer       += 2000;
+                m_uiPhaseChangeTimer = 60000;
+            }
+        }
+        else
+            m_uiPhaseChangeTimer -= uiDiff;
+
+        if (m_uiBerserkTimer)
+        {
+            if (m_uiBerserkTimer < uiDiff)
             {
                 if (DoCastSpellIfCan(m_creature, SPELL_BERSERK) == CAST_OK)
+                {
                     DoScriptText(urand(0, 1) ? SAY_ENRAGE1 : SAY_ENRAGE2, m_creature);
-            }else EnrageTimer -= diff;
-        }
-
-        if (Phase1)
-        {
-            if (BewilderingStrikeTimer < diff)
-            {
-                DoCastSpellIfCan(m_creature->getVictim(), SPELL_BEWILDERING_STRIKE);
-                float mt_threat = m_creature->getThreatManager().getThreat(m_creature->getVictim());
-
-                if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO, 1))
-                    m_creature->AddThreat(target, mt_threat);
-
-                BewilderingStrikeTimer = 20000;
-            }else BewilderingStrikeTimer -= diff;
-
-            if (EjectTimer < diff)
-            {
-                DoCastSpellIfCan(m_creature->getVictim(), SPELL_EJECT1);
-                m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(), -40);
-                EjectTimer = 15000;
-            }else EjectTimer -= diff;
-
-            if (AcidicWoundTimer < diff)
-            {
-                DoCastSpellIfCan(m_creature->getVictim(), SPELL_ACIDIC_WOUND);
-                AcidicWoundTimer = 10000;
-            }else AcidicWoundTimer -= diff;
-
-            if (BloodboilTimer < diff)
-            {
-                if (BloodboilCount < 5)                     // Only cast it five times.
-                {
-                    //CastBloodboil(); // Causes issues on windows, so is commented out.
-                    DoCastSpellIfCan(m_creature->getVictim(), SPELL_BLOODBOIL);
-                    ++BloodboilCount;
-                    BloodboilTimer = 10000*BloodboilCount;
+                    m_uiBerserkTimer = 0;
                 }
-            }else BloodboilTimer -= diff;
-        }
-
-        if (!Phase1)
-        {
-            if (AcidGeyserTimer < diff)
-            {
-                DoCastSpellIfCan(m_creature->getVictim(), SPELL_ACID_GEYSER);
-                AcidGeyserTimer = 30000;
-            }else AcidGeyserTimer -= diff;
-
-            if (EjectTimer < diff)
-            {
-                DoCastSpellIfCan(m_creature->getVictim(), SPELL_EJECT2);
-                EjectTimer = 15000;
-            }else EjectTimer -= diff;
-        }
-
-        if (PhaseChangeTimer < diff)
-        {
-            if (Phase1)
-            {
-                Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0);
-                if (target && target->isAlive())
-                {
-                    Phase1 = false;
-
-                    TargetThreat = m_creature->getThreatManager().getThreat(target);
-                    m_targetGuid = target->GetObjectGuid();
-                    target->CastSpell(m_creature, SPELL_TAUNT_GURTOGG, true);
-
-                    if (m_creature->getThreatManager().getThreat(target))
-                        m_creature->getThreatManager().modifyThreatPercent(target, -100);
-
-                    m_creature->AddThreat(target, 50000000.0f);
-
-                    // If VMaps are disabled, this spell can call the whole instance
-                    DoCastSpellIfCan(m_creature, SPELL_INSIGNIFIGANCE, CAST_TRIGGERED);
-                    DoCastSpellIfCan(target, SPELL_FEL_RAGE_TARGET, CAST_TRIGGERED);
-                    DoCastSpellIfCan(target, SPELL_FEL_RAGE_2, CAST_TRIGGERED);
-
-                    /* These spells do not work, comment them out for now.
-                    DoCastSpellIfCan(target, SPELL_FEL_RAGE_2, CAST_TRIGGERED);
-                    DoCastSpellIfCan(target, SPELL_FEL_RAGE_3, CAST_TRIGGERED);*/
-
-                    //Cast this without triggered so that it appears in combat logs and shows visual.
-                    DoCastSpellIfCan(m_creature, SPELL_FEL_RAGE_SELF);
-
-                    DoScriptText(urand(0, 1) ? SAY_SPECIAL1 : SAY_SPECIAL2, m_creature);
-
-                    AcidGeyserTimer = 1000;
-                    PhaseChangeTimer = 30000;
-                }
-            }else                                           // Encounter is a loop pretty much. Phase 1 -> Phase 2 -> Phase 1 -> Phase 2 till death or enrage
-            {
-                if (m_targetGuid)
-                    RevertThreatOnTarget(m_targetGuid);
-
-                m_targetGuid.Clear();
-                Phase1 = true;
-                BloodboilTimer = 10000;
-                BloodboilCount = 0;
-                AcidicWoundTimer += 2000;
-                ArcingSmashTimer += 2000;
-                FelAcidTimer += 2000;
-                EjectTimer += 2000;
-                PhaseChangeTimer = 60000;
             }
-        }else PhaseChangeTimer -= diff;
-
-        //Enrage
-        if (m_uiEnrageTimer < diff)
-        {
-            DoCast(m_creature, SPELL_ENRAGE);
-            m_uiEnrageTimer = 60000;
-        }else m_uiEnrageTimer -= diff;
+            else
+                m_uiBerserkTimer -= uiDiff;
+        }
 
         DoMeleeAttackIfReady();
     }
