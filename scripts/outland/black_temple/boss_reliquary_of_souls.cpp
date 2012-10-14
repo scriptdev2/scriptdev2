@@ -24,79 +24,90 @@ EndScriptData */
 #include "precompiled.h"
 #include "black_temple.h"
 
-//Sound'n'speech
-//Suffering
-#define SUFF_SAY_FREED              -1564047
-#define SUFF_SAY_AGGRO              -1564048
-#define SUFF_SAY_SLAY1              -1564049
-#define SUFF_SAY_SLAY2              -1564050
-#define SUFF_SAY_SLAY3              -1564051
-#define SUFF_SAY_RECAP              -1564052
-#define SUFF_SAY_AFTER              -1564053
-#define EMOTE_BOSS_GENERIC_ENRAGED  -1000006
-
-//Desire
-#define DESI_SAY_FREED              -1564055
-#define DESI_SAY_SLAY1              -1564056
-#define DESI_SAY_SLAY2              -1564057
-#define DESI_SAY_SLAY3              -1564058
-#define DESI_SAY_SPEC               -1564059
-#define DESI_SAY_RECAP              -1564060
-#define DESI_SAY_AFTER              -1564061
-
-//Anger
-#define ANGER_SAY_FREED             -1564062
-#define ANGER_SAY_FREED2            -1564063
-#define ANGER_SAY_SLAY1             -1564064
-#define ANGER_SAY_SLAY2             -1564065
-#define ANGER_SAY_SPEC              -1564066
-#define ANGER_SAY_BEFORE            -1564067
-#define ANGER_SAY_DEATH             -1564068
-
-//Spells
-#define AURA_OF_SUFFERING               41292
-#define AURA_OF_SUFFERING_ARMOR         42017
-#define ESSENCE_OF_SUFFERING_PASSIVE    41296
-#define SPELL_ENRAGE                    41305
-#define SPELL_SOUL_DRAIN                41303
-#define SPELL_FIXATE                    41295
-
-#define AURA_OF_DESIRE                  41350
-#define SPELL_RUNE_SHIELD               41431
-#define SPELL_DEADEN                    41410
-#define SPELL_SOUL_SHOCK                41426
-
-#define AURA_OF_ANGER                   41337
-#define SPELL_SELF_SEETHE               41364
-#define SPELL_ENEMY_SEETHE              41520
-#define SPELL_SOUL_SCREAM               41545
-#define SPELL_SPITE                     41377
-
-#define ENSLAVED_SOUL_PASSIVE           41535
-#define SPELL_SOUL_RELEASE              41542
-#define SPELL_RESTORE_MANA              32848
-#define SPELL_RESTORE_HEALTH            25329
-
-#define CREATURE_ENSLAVED_SOUL          23469
-
-struct ReliquaryPosition
+enum
 {
-    float x,y;
+    // Sound'n'speech
+    // Suffering
+    SUFF_SAY_FREED                  = -1564047,
+    SUFF_SAY_AGGRO                  = -1564048,
+    SUFF_SAY_SLAY1                  = -1564049,
+    SUFF_SAY_SLAY2                  = -1564050,
+    SUFF_SAY_FRENZY                 = -1564051,
+    SUFF_SAY_RECAP                  = -1564052,
+    SUFF_SAY_AFTER                  = -1564053,
+    EMOTE_BOSS_GENERIC_ENRAGED      = -1000006,
+
+    // Desire
+    DESI_SAY_FREED                  = -1564055,
+    DESI_SAY_SLAY1                  = -1564056,
+    DESI_SAY_SLAY2                  = -1564057,
+    DESI_SAY_SLAY3                  = -1564058,
+    DESI_SAY_SPEC                   = -1564059,
+    DESI_SAY_RECAP                  = -1564060,
+    DESI_SAY_AFTER                  = -1564061,
+
+    // Anger
+    ANGER_SAY_FREED                 = -1564062,
+    ANGER_SAY_FREED2                = -1564063,
+    ANGER_SAY_SLAY1                 = -1564064,
+    ANGER_SAY_SLAY2                 = -1564065,
+    ANGER_SAY_SPEC                  = -1564066,
+    ANGER_SAY_BEFORE                = -1564067,
+    ANGER_SAY_DEATH                 = -1564068,
+
+    // Spells
+    // Suffering
+    SPELL_AURA_OF_SUFFERING         = 41292,
+    SPELL_AURA_OF_SUFFERING_ARMOR   = 42017,
+    SPELL_SUFFERING_PASSIVE         = 41296,
+    SPELL_SUFFERING_PASSIVE_2       = 41623,
+    SPELL_FRENZY                    = 41305,
+    SPELL_SOUL_DRAIN                = 41303,
+
+    // Desire
+    SPELL_AURA_OF_DESIRE            = 41350,
+    SPELL_RUNE_SHIELD               = 41431,
+    SPELL_DEADEN                    = 41410,
+    SPELL_SPIRIT_SHOCK              = 41426,
+
+    // Anger
+    SPELL_AURA_OF_ANGER             = 41337,
+    SPELL_SEETHE                    = 41364,
+    SPELL_SOUL_SCREAM               = 41545,
+    SPELL_SPITE                     = 41376,                // triggers 41377 after 2 seconds
+
+    // Generic
+    SPELL_SUMMON_ESSENCE_SUFFERING  = 41488,
+    SPELL_SUMMON_ESSENCE_DESIRE     = 41493,
+    SPELL_SUMMON_ESSENCE_ANGER      = 41496,
+    SPELL_SUMMON_ENSLAVED_SOUL      = 41537,
+
+    // Soul spells
+    SPELL_ENSLAVED_SOUL_PASSIVE     = 41535,
+    SPELL_SOUL_RELEASE              = 41542,
+
+    // Summons
+    NPC_ESSENCE_SUFFERING           = 23418,
+    NPC_ESSENCE_DESIRE              = 23419,
+    NPC_ESSENCE_ANGER               = 23420,
+    NPC_ENSLAVED_SOUL               = 23469,                // scripted in eventAI
+
+    // Phases
+    PHASE_0_NOT_BEGUN               = 0,
+    PHASE_1_SUFFERING               = 1,
+    PHASE_2_DESIRE                  = 2,
+    PHASE_3_ANGER                   = 3,
+
+    MAX_ENSLAVED_SOULS              = 36,
 };
 
-static ReliquaryPosition Coords[]=
-{
-    {450.4f, 212.3f},
-    {542.1f, 212.3f},
-    {542.1f, 168.3f},
-    {542.1f, 137.4f},
-    {450.4f, 137.4f},
-    {450.4f, 168.3f}
-};
+/*######
+## boss_reliquary_of_souls
+######*/
 
-struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
+struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public Scripted_NoMovementAI
 {
-    boss_reliquary_of_soulsAI(Creature* pCreature) : ScriptedAI(pCreature)
+    boss_reliquary_of_soulsAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
@@ -104,592 +115,357 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    ObjectGuid m_sufferingGuid;
-    ObjectGuid m_desireGuid;
-    ObjectGuid m_angerGuid;
+    uint8 m_uiPhase;
+    uint8 m_uiSoulSummonedCount;
+    uint8 m_uiSoulDeathCount;
 
-    uint32 SoulDeathCount;
-    // 0 = Out of Combat, 1 = Not started, 2 = Suffering, 3 = Souls, 4 = Desire, 5 = Souls, 6 = Anger
-    uint32 Phase;
-    uint32 SummonEssenceTimer;
-    uint32 DespawnEssenceTimer;
-    uint32 SoulCount;
-    uint32 SummonSoulTimer;
-    uint32 AnimationTimer;
-
-    bool IsDead;
-    bool EndingPhase;
+    uint32 m_uiSummonEssenceTimer;
+    uint32 m_uiSummonSoulTimer;
+    uint32 m_uiAnimationTimer;
+    uint32 m_uiAnimResetTimer;
 
     void Reset()
     {
-        DespawnEssences();
+        m_uiPhase               = PHASE_0_NOT_BEGUN;
+        m_uiSoulDeathCount      = 0;
+        m_uiSoulSummonedCount   = 0;
 
-        SoulDeathCount = 0;
-        Phase = 0;
-        SummonEssenceTimer = 8000;
-        DespawnEssenceTimer = 2000;
-        SoulCount = 0;
-        SummonSoulTimer = 1000;
-        AnimationTimer = 8000;
+        m_uiSummonSoulTimer     = 1000;
+        m_uiAnimationTimer      = 0;
+        m_uiAnimResetTimer      = 0;
+        m_uiSummonEssenceTimer  = 0;
 
-        IsDead = false;
-        EndingPhase = false;
-
-        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-        m_creature->HandleEmote(EMOTE_ONESHOT_NONE);
-        m_creature->GetMotionMaster()->Clear(false);
+        // Reset animation
+        m_creature->HandleEmote(EMOTE_STATE_NONE);
     }
 
-    void JustReachedHome()
-    {
-        if (m_pInstance)
-            m_pInstance->SetData(TYPE_RELIQUIARY, NOT_STARTED);
-    }
-
-    void DespawnEssences()
-    {
-        Creature* pEssence = NULL;
-
-        if (m_sufferingGuid)
-            pEssence = m_creature->GetMap()->GetCreature(m_sufferingGuid);
-        else if (m_desireGuid)
-            pEssence = m_creature->GetMap()->GetCreature(m_desireGuid);
-        else if (m_angerGuid)
-            pEssence = m_creature->GetMap()->GetCreature(m_angerGuid);
-
-        if (pEssence && pEssence->isAlive())
-            pEssence->ForcedDespawn();
-    }
-
-    void AttackStart(Unit* who) { }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                if (m_creature->getThreatManager().getThreatList().empty())
-                {
-                    if (m_pInstance)
-                        m_pInstance->SetData(TYPE_RELIQUIARY, IN_PROGRESS);
-
-                    Phase = 1;
-
-                    // I R ANNNGRRRY!
-                    m_creature->HandleEmote(EMOTE_STATE_READY2H);
-                    SummonEssenceTimer = 8000;
-                    AnimationTimer = 5100;
-                    m_creature->AddThreat(who);
-                    //m_creature->SetInCombatWith(who);     // Don't know what is like retail
-                    //who->SetInCombatWith(m_creature);
-                    m_creature->SetInCombatWithZone();      // Same goes here, but setting to zone will prevent bug if the only player of threatList dies
-
-                }
-            }
-        }
-    }
-
-    void SummonSoul()
-    {
-        uint32 random = urand(0, 5);
-        float x = Coords[random].x;
-        float y = Coords[random].y;
-
-        Creature* Soul = m_creature->SummonCreature(CREATURE_ENSLAVED_SOUL, x, y, m_creature->GetPositionZ(), m_creature->GetOrientation(), TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 45000);
-        Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0);
-        if (target && Soul)
-        {
-            Soul->CastSpell(Soul, ENSLAVED_SOUL_PASSIVE, true);
-            Soul->AddThreat(target);
-            ++SoulCount;
-        }
-    }
-
-    void SummonedCreatureJustDied(Creature* pSummoned)
-    {
-        if (pSummoned->GetEntry() == CREATURE_ENSLAVED_SOUL)
-            ++SoulDeathCount;
-    }
-
-    void MergeThreatList(Creature* target)
-    {
-        if (!target)
-            return;
-
-        ThreatList const& tList = m_creature->getThreatManager().getThreatList();
-        for (ThreatList::const_iterator itr = tList.begin();itr != tList.end(); ++itr)
-        {
-            if (Unit* pUnit = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid()))
-            {
-                m_creature->AddThreat(pUnit);                // This is so that we make sure the unit is in Reliquary's threat list before we reset the unit's threat.
-                m_creature->getThreatManager().modifyThreatPercent(pUnit, -100);
-                float threat = target->getThreatManager().getThreat(pUnit);
-                m_creature->AddThreat(pUnit, threat);       // This makes it so that the unit has the same amount of threat in Reliquary's threatlist as in the target creature's (One of the Essences).
-            }
-        }
-    }
-
-    void JustDied(Unit* killer)
+    void JustDied(Unit* pKiller)
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_RELIQUIARY, DONE);
     }
 
-    void UpdateAI(const uint32 diff)
+    void JustReachedHome()
     {
-        if (!Phase)
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_RELIQUIARY, FAIL);
+    }
+
+    void AttackStart(Unit* pWho) { }
+
+    void MoveInLineOfSight(Unit* pWho)
+    {
+        if (m_uiPhase == PHASE_0_NOT_BEGUN && pWho->GetTypeId() == TYPEID_PLAYER && !((Player*)pWho)->isGameMaster() &&
+            m_creature->IsWithinDistInMap(pWho, m_creature->GetAttackDistance(pWho)) && m_creature->IsWithinLOSInMap(pWho))
+        {
+            // Start phase 1
+            m_uiPhase = PHASE_1_SUFFERING;
+            m_uiSummonEssenceTimer = 7000;
+            m_uiAnimationTimer = 4000;
+
+            // Set the player in combat with the boss
+            pWho->SetInCombatWith(m_creature);
+            m_creature->AddThreat(pWho);
+
+            // Start animation
+            m_creature->SetStandState(UNIT_STAND_STATE_STAND);
+
+            if (m_pInstance)
+                m_pInstance->SetData(TYPE_RELIQUIARY, IN_PROGRESS);
+        }
+    }
+
+    void JustSummoned(Creature* pSummoned)
+    {
+        switch (pSummoned->GetEntry())
+        {
+            case NPC_ESSENCE_SUFFERING:
+                DoScriptText(SUFF_SAY_FREED, pSummoned);
+                break;
+            case NPC_ESSENCE_DESIRE:
+                DoScriptText(DESI_SAY_FREED, pSummoned);
+                break;
+            case NPC_ESSENCE_ANGER:
+                DoScriptText(ANGER_SAY_FREED, pSummoned);
+                break;
+        }
+
+        // All summons are set in combat
+        pSummoned->SetInCombatWithZone();
+    }
+
+    void SummonedCreatureJustDied(Creature* pSummoned)
+    {
+        // Self kill when the Essence of Anger is killed
+        if (pSummoned->GetEntry() == NPC_ESSENCE_ANGER)
+            m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+    }
+
+    void SummonedMovementInform(Creature* pSummoned, uint32 uiMoveType, uint32 uiPointId)
+    {
+        if (uiMoveType != POINT_MOTION_TYPE || !uiPointId)
             return;
 
-        // Reset if event is begun and we don't have a threatlist
-        if (Phase && m_creature->getThreatManager().getThreatList().empty())
-            EnterEvadeMode();
-
-        if (Phase == 1)
+        // Switch to next phase when the essence gets back
+        switch (pSummoned->GetEntry())
         {
-            if (AnimationTimer < diff)
+            case NPC_ESSENCE_SUFFERING:
+                DoScriptText(SUFF_SAY_AFTER, pSummoned);
+                m_uiPhase = PHASE_2_DESIRE;;
+                break;
+            case NPC_ESSENCE_DESIRE:
+                DoScriptText(DESI_SAY_AFTER, pSummoned);
+                m_uiPhase = PHASE_3_ANGER;
+                break;
+        }
+
+        // Despawn and set animation
+        pSummoned->ForcedDespawn();
+
+        m_uiSoulDeathCount = 0;
+        m_uiSoulSummonedCount = 0;
+        m_uiAnimResetTimer = 2000;
+        // Reset animation
+        m_creature->HandleEmote(EMOTE_ONESHOT_EMERGE);
+    }
+
+    // Wrapper to count the dead spirits
+    void DoNotifySouldDead()
+    {
+        ++m_uiSoulDeathCount;
+
+        // Prepare to summon the essence
+        if (m_uiSoulDeathCount == MAX_ENSLAVED_SOULS)
+        {
+            m_uiSummonEssenceTimer = 7000;
+            m_uiAnimationTimer     = 4000;
+        }
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        // Animation for opening the Reliquary
+        if (m_uiAnimationTimer)
+        {
+            if (m_uiAnimationTimer <= uiDiff)
             {
-                // Release the cube
                 m_creature->HandleEmote(EMOTE_ONESHOT_SUBMERGE);
-                AnimationTimer = 8300;
-            }else AnimationTimer -= diff;
-
-            if (SummonEssenceTimer < diff)
-            {
-                // Ribs: open
-                m_creature->HandleEmote(EMOTE_STATE_SUBMERGED);
-
-                Creature* EssenceSuffering = m_creature->SummonCreature(23418, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 1.57f, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 10000);
-
-                if (EssenceSuffering)
-                {
-                    DoScriptText(SUFF_SAY_FREED, EssenceSuffering);
-
-                    if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO, 0))
-                    {
-                        EssenceSuffering->AddThreat(target);
-                        EssenceSuffering->AI()->AttackStart(target);
-                    }
-
-                    m_sufferingGuid = EssenceSuffering->GetObjectGuid();
-                }
-
-                EndingPhase = false;
-                Phase = 2;
-            }else SummonEssenceTimer -= diff;
+                m_uiAnimationTimer = 0;
+            }
+            else
+                m_uiAnimationTimer -= uiDiff;
         }
 
-        if (Phase == 2)
+        // Animation for reset Reliquary
+        if (m_uiAnimResetTimer)
         {
-            if (m_sufferingGuid)
+            if (m_uiAnimResetTimer <= uiDiff)
             {
-                Creature* EssenceSuffering = m_creature->GetMap()->GetCreature(m_sufferingGuid);
-
-                if (!EssenceSuffering || (!EssenceSuffering->isAlive()))
-                    EnterEvadeMode();
-
-                if (!EndingPhase)
-                {
-                    if (EssenceSuffering)
-                    {
-                        if (EssenceSuffering->GetHealthPercent() < 10.0f)
-                        {
-                            DoScriptText(SUFF_SAY_RECAP, EssenceSuffering);
-                            MergeThreatList(EssenceSuffering);
-                            EssenceSuffering->RemoveAllAuras();
-                            EssenceSuffering->DeleteThreatList();
-                            EssenceSuffering->GetMotionMaster()->MoveFollow(m_creature,0.0f,0.0f);
-                            EssenceSuffering->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                            DespawnEssenceTimer = 4000;
-                            AnimationTimer = 2200;
-                            EndingPhase = true;
-                        }
-                    }
-                }
-
-                if ((EndingPhase) && (EssenceSuffering) && (EssenceSuffering->isAlive()))
-                {
-                    if (AnimationTimer < diff)
-                    {
-                        // Return
-                        EssenceSuffering->HandleEmote(EMOTE_ONESHOT_SUBMERGE);
-                        AnimationTimer = 10000;
-                    }else AnimationTimer -= diff;
-
-                    if (DespawnEssenceTimer < diff)
-                    {
-                        DoScriptText(SUFF_SAY_AFTER, EssenceSuffering);
-
-                        EssenceSuffering->DeleteThreatList();
-                        EssenceSuffering->SetDisplayId(11686);
-                        EssenceSuffering->setFaction(35);
-                        m_creature->HandleEmote(EMOTE_ONESHOT_NONE);
-                        SummonEssenceTimer = 20000;         //60000;
-                        AnimationTimer = 18200;             //58100;
-                        SoulDeathCount = 0;
-                        SoulCount = 0;
-                        SummonSoulTimer = 1000;
-                        EndingPhase = false;
-                        Phase = 3;
-                        m_sufferingGuid.Clear();
-                    }else DespawnEssenceTimer -= diff;
-                }
+                // Reset animation
+                m_creature->HandleEmote(EMOTE_STATE_NONE);
+                m_uiAnimResetTimer = 0;
             }
+            else
+                m_uiAnimResetTimer -= uiDiff;
         }
 
-        if (Phase == 3)
+        // Summon the Essence on timer
+        if (m_uiSummonEssenceTimer)
         {
-            if (SoulCount < 36)
+            if (m_uiSummonEssenceTimer <= uiDiff)
             {
-                if (SummonSoulTimer < diff)
+                uint32 uiSpellId = 0;
+                switch (m_uiPhase)
                 {
-                    SummonSoul();
-                    SummonSoulTimer = 500;
-                }else SummonSoulTimer -= diff;
-            }
+                    case PHASE_1_SUFFERING: uiSpellId = SPELL_SUMMON_ESSENCE_SUFFERING; break;
+                    case PHASE_2_DESIRE:    uiSpellId = SPELL_SUMMON_ESSENCE_DESIRE;    break;
+                    case PHASE_3_ANGER:     uiSpellId = SPELL_SUMMON_ESSENCE_ANGER;     break;
+                }
 
-            if (SoulDeathCount >= SoulCount)
-            {
-                if (AnimationTimer < diff)
+                if (DoCastSpellIfCan(m_creature, uiSpellId) == CAST_OK)
                 {
-                    // Release the cube
-                    m_creature->HandleEmote(EMOTE_ONESHOT_SUBMERGE);
-                    AnimationTimer = 10000;
-                }else AnimationTimer -= diff;
-
-                if (SummonEssenceTimer < diff)
-                {
-                    // Ribs: open
                     m_creature->HandleEmote(EMOTE_STATE_SUBMERGED);
+                    m_uiSummonEssenceTimer = 0;
+                }
+            }
+            else
+                m_uiSummonEssenceTimer -= uiDiff;
+        }
 
-                    Creature* EssenceDesire = m_creature->SummonCreature(23419, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 1.57f, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 10000);
+        // Summon Enslaved souls between the essence
+        switch (m_uiPhase)
+        {
+            case PHASE_2_DESIRE:
+            case PHASE_3_ANGER:
 
-                    if (EssenceDesire)
+                if (m_uiSoulSummonedCount < MAX_ENSLAVED_SOULS)
+                {
+                    if (m_uiSummonSoulTimer < uiDiff)
                     {
-                        DoScriptText(DESI_SAY_FREED, EssenceDesire);
-
-                        if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                        if (DoCastSpellIfCan(m_creature, SPELL_SUMMON_ENSLAVED_SOUL) == CAST_OK)
                         {
-                            EssenceDesire->AddThreat(target);
-                            EssenceDesire->AI()->AttackStart(target);
+                            ++m_uiSoulSummonedCount;
+                            m_uiSummonSoulTimer = 500;
                         }
-
-                        m_desireGuid = EssenceDesire->GetObjectGuid();
-                        SoulDeathCount = 0;
                     }
-
-                    Phase = 4;
-                }else SummonEssenceTimer -= diff;
-            }
-        }
-
-        if (Phase == 4)
-        {
-            if (m_desireGuid)
-            {
-                Creature* EssenceDesire = m_creature->GetMap()->GetCreature(m_desireGuid);
-
-                if (!EssenceDesire || !EssenceDesire->isAlive())
-                    EnterEvadeMode();
-
-                if (!EndingPhase && EssenceDesire)
-                {
-                    if (EssenceDesire->GetHealthPercent() < 10.0f)
-                    {
-                        MergeThreatList(EssenceDesire);
-                        EssenceDesire->GetMotionMaster()->MoveFollow(m_creature,0.0f,0.0f);
-                        EssenceDesire->RemoveAllAuras();
-                        EssenceDesire->DeleteThreatList();
-
-                        DoScriptText(DESI_SAY_RECAP, EssenceDesire);
-
-                        EssenceDesire->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                        DespawnEssenceTimer = 4000;
-                        AnimationTimer = 2200;
-                        EndingPhase = true;
-                    }
+                    else
+                        m_uiSummonSoulTimer -= uiDiff;
                 }
 
-                if (EndingPhase && EssenceDesire)
-                {
-                    if (EssenceDesire->isAlive())
-                    {
-                        if (AnimationTimer < diff)
-                        {
-                            // Return
-                            EssenceDesire->HandleEmote(EMOTE_ONESHOT_SUBMERGE);
-                            AnimationTimer = 10000;
-                        }else AnimationTimer -= diff;
-
-                        if (DespawnEssenceTimer < diff)
-                        {
-                            EssenceDesire->DeleteThreatList();
-                            EssenceDesire->setFaction(35);
-
-                            DoScriptText(DESI_SAY_AFTER, EssenceDesire);
-
-                            EssenceDesire->SetDisplayId(11686);
-                            m_creature->HandleEmote(EMOTE_ONESHOT_NONE);
-                            SummonEssenceTimer = 20000;
-                            AnimationTimer = 18200;
-                            SoulDeathCount = 0;
-                            SoulCount = 0;
-                            SummonSoulTimer = 1000;
-                            EndingPhase = false;
-                            Phase = 5;
-                            m_desireGuid.Clear();
-                        }else DespawnEssenceTimer -= diff;
-                    }
-                }
-            }
-        }
-
-        if (Phase == 5)
-        {
-            if (SoulCount < 36)
-            {
-                if (SummonSoulTimer < diff)
-                {
-                    SummonSoul();
-                    SummonSoulTimer = 500;
-                }else SummonSoulTimer -= diff;
-            }
-
-            if (SoulDeathCount >= SoulCount)
-            {
-                if (AnimationTimer < diff)
-                {
-                    // Release the cube
-                    m_creature->HandleEmote(EMOTE_ONESHOT_SUBMERGE);
-                    AnimationTimer = 10000;
-                }else AnimationTimer -= diff;
-
-                if (SummonEssenceTimer < diff)
-                {
-                    // Ribs: open
-                    m_creature->HandleEmote(EMOTE_STATE_SUBMERGED);
-
-                    Creature* EssenceAnger = m_creature->SummonCreature(23420, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 1.57f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 45000);
-
-                    if (EssenceAnger)
-                    {
-                        if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO, 0))
-                        {
-                            EssenceAnger->AddThreat(target);
-                            EssenceAnger->AI()->AttackStart(target);
-                        }
-
-                        m_angerGuid = EssenceAnger->GetObjectGuid();
-                        DoScriptText(ANGER_SAY_FREED, EssenceAnger);
-                        SoulDeathCount = 0;
-                    }
-
-                    Phase = 6;
-                }else SummonEssenceTimer -= diff;
-            }
-        }
-
-        if (Phase == 6)
-        {
-            if (m_angerGuid)
-            {
-                Creature* EssenceAnger = m_creature->GetMap()->GetCreature(m_angerGuid);
-
-                if (!EssenceAnger)
-                    EnterEvadeMode();
-
-                if (m_creature->isAlive() && EssenceAnger)
-                {
-                    if (!EssenceAnger->isAlive())
-                    {
-                        m_angerGuid.Clear();
-                        m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-                    }
-                }
-            }
+                break;
         }
     }
 };
 
-struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
+/*######
+## essence_base_AI
+######*/
+
+struct MANGOS_DLL_DECL essence_base_AI : public ScriptedAI
 {
-    boss_essence_of_sufferingAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+    essence_base_AI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        m_bIsPhaseFinished = false;
+    }
 
-    ObjectGuid m_statAuraGuid;                              // TODO currently unused - bug?
+    ScriptedInstance* m_pInstance;
 
-    uint32 AggroYellTimer;
-    uint32 FixateTimer;
-    uint32 EnrageTimer;
-    uint32 SoulDrainTimer;
+    bool m_bIsPhaseFinished;
+
+    virtual void OnPhaseFinished() {}
+
+    void JustReachedHome()
+    {
+        // Reset encounter and despawn Essence
+        if (m_pInstance)
+        {
+            if (Creature* pReliquary = m_pInstance->GetSingleCreatureFromStorage(NPC_RELIQUARY_OF_SOULS))
+                pReliquary->AI()->EnterEvadeMode();
+        }
+
+        m_creature->ForcedDespawn();
+    }
+
+    void DamageTaken(Unit* pKiller, uint32& uiDamage)
+    {
+        if (uiDamage < m_creature->GetHealth())
+            return;
+
+        // Prevent glitch if in fake death
+        if (m_bIsPhaseFinished)
+        {
+            uiDamage = 0;
+            return;
+        }
+
+        uiDamage = 0;
+
+        m_creature->InterruptNonMeleeSpells(true);
+        m_creature->SetHealth(0);
+        m_creature->StopMoving();
+        m_creature->ClearComboPointHolders();
+        m_creature->RemoveAllAurasOnDeath();
+        m_creature->ModifyAuraState(AURA_STATE_HEALTHLESS_20_PERCENT, false);
+        m_creature->ModifyAuraState(AURA_STATE_HEALTHLESS_35_PERCENT, false);
+        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+        m_creature->ClearAllReactives();
+        m_creature->GetMotionMaster()->Clear();
+
+        if (!m_pInstance)
+            return;
+
+        // Move to home position
+        if (Creature* pReliquary = m_pInstance->GetSingleCreatureFromStorage(NPC_RELIQUARY_OF_SOULS))
+            m_creature->GetMotionMaster()->MovePoint(1, pReliquary->GetPositionX(), pReliquary->GetPositionY(), pReliquary->GetPositionZ());
+
+        m_bIsPhaseFinished = true;
+
+        OnPhaseFinished();
+    }
+};
+
+/*######
+## boss_essence_of_suffering
+######*/
+
+struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public essence_base_AI
+{
+    boss_essence_of_sufferingAI(Creature* pCreature) : essence_base_AI(pCreature) { Reset(); }
+
+    uint32 m_uiEnrageTimer;
+    uint32 m_uiSoulDrainTimer;
 
     void Reset()
     {
-        m_statAuraGuid.Clear();
+        DoCastSpellIfCan(m_creature, SPELL_AURA_OF_SUFFERING, CAST_TRIGGERED);
+        DoCastSpellIfCan(m_creature, SPELL_SUFFERING_PASSIVE, CAST_TRIGGERED);
 
-        AggroYellTimer = 5000;
-        FixateTimer = 5000;
-        EnrageTimer = 30000;
-        SoulDrainTimer = 150000;
+        m_uiEnrageTimer     = 45000;
+        m_uiSoulDrainTimer  = 20000;
     }
 
-    void DamageTaken(Unit *done_by, uint32 &damage)
+    void KilledUnit(Unit* pVictim)
     {
-        if ((damage >= m_creature->GetHealth()) && (done_by != m_creature))
-        {
-            damage = 0;
-            // 10% of total health, signalling time to return
-            m_creature->SetHealth(m_creature->GetMaxHealth()/10);
-            if (m_statAuraGuid)
-            {
-                if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_statAuraGuid))
-                    pPlayer->RemoveAurasDueToSpell(AURA_OF_SUFFERING_ARMOR);
-            }
-        }
+        DoScriptText(urand(0, 1) ? SUFF_SAY_SLAY1 : SUFF_SAY_SLAY2, m_creature);
     }
 
-    void Aggro(Unit* pWho)
+    void OnPhaseFinished()
     {
-        DoCastSpellIfCan(pWho, AURA_OF_SUFFERING, CAST_TRIGGERED);
-        DoCastSpellIfCan(m_creature, ESSENCE_OF_SUFFERING_PASSIVE, CAST_TRIGGERED);
+        DoScriptText(SUFF_SAY_RECAP, m_creature);
     }
 
-    void KilledUnit(Unit *victim)
-    {
-        switch(urand(0, 2))
-        {
-            case 0: DoScriptText(SUFF_SAY_SLAY1, m_creature); break;
-            case 1: DoScriptText(SUFF_SAY_SLAY2, m_creature); break;
-            case 2: DoScriptText(SUFF_SAY_SLAY3, m_creature); break;
-        }
-    }
-
-    void JustDied(Unit* killer)
-    {
-    }
-
-    void CastFixate()
-    {
-        ThreatList const& tList = m_creature->getThreatManager().getThreatList();
-        if (tList.empty())
-            return;                                         // No point continuing if empty threatlist.
-
-        std::list<Unit*> targets;
-
-        for (ThreatList::const_iterator itr = tList.begin();itr != tList.end(); ++itr)
-        {
-            Unit* pUnit = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid());
-
-            // Only alive players
-            if (pUnit && pUnit->isAlive() && pUnit->GetTypeId() == TYPEID_PLAYER)
-                targets.push_back(pUnit);
-        }
-
-        if (targets.empty())
-            return;                                         // No targets added for some reason. No point continuing.
-
-        targets.sort(ObjectDistanceOrder(m_creature));      // Sort players by distance.
-        targets.resize(1);                                  // Only need closest target.
-        Unit* target = targets.front();                     // Get the first target.
-
-        // Add threat equivalent to threat on victim.
-        m_creature->AddThreat(target, m_creature->getThreatManager().getThreat(m_creature->getVictim()));
-        DoCastSpellIfCan(target, SPELL_FIXATE);
-    }
-
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (m_creature->GetHealthPercent() <= 10.0f)
+        if (m_uiEnrageTimer < uiDiff)
         {
-            if (m_statAuraGuid)
-            {
-                if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_statAuraGuid))
-                    pPlayer->RemoveAurasDueToSpell(AURA_OF_SUFFERING_ARMOR);
-            }
-        }
-
-        if (m_creature->GetHealthPercent() <= 10.0f)
-        {
-            if (m_creature->getVictim())
-                m_creature->DeleteThreatList();             // Delete our threatlist if below 10% as we should no longer attack.
-            return;
-        }
-
-        // Prevent overlapping yells
-        if (AggroYellTimer)
-        {
-            if (AggroYellTimer <= diff)
-            {
-                DoScriptText(SUFF_SAY_AGGRO, m_creature);
-                AggroYellTimer = 0;
-            }else AggroYellTimer -= diff;
-        }
-
-        //Supposed to be cast on nearest target
-        if (FixateTimer < diff)
-        {
-            CastFixate();
-            FixateTimer = 5000;
-        }else FixateTimer -= diff;
-
-        if (EnrageTimer < diff)
-        {
-            if (DoCastSpellIfCan(m_creature, SPELL_ENRAGE) == CAST_OK)
+            if (DoCastSpellIfCan(m_creature, SPELL_FRENZY) == CAST_OK)
             {
                 DoScriptText(EMOTE_BOSS_GENERIC_ENRAGED, m_creature);
-                EnrageTimer = 60000;
+                DoScriptText(SUFF_SAY_FRENZY, m_creature);
+                m_uiEnrageTimer = 45000;
             }
-        }else EnrageTimer -= diff;
+        }
+        else
+            m_uiEnrageTimer -= uiDiff;
 
-        if (SoulDrainTimer < diff)
+        if (m_uiSoulDrainTimer < uiDiff)
         {
-            if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-                DoCastSpellIfCan(target, SPELL_SOUL_DRAIN);
-            SoulDrainTimer = 60000;
-        }else SoulDrainTimer -= diff;
+            if (DoCastSpellIfCan(m_creature, SPELL_SOUL_DRAIN) == CAST_OK)
+                m_uiSoulDrainTimer = urand(45000, 60000);
+        }
+        else
+            m_uiSoulDrainTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
 };
-struct MANGOS_DLL_DECL boss_essence_of_desireAI : public ScriptedAI
-{
-    boss_essence_of_desireAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
-    uint32 AggroYellTimer;
-    uint32 RuneShieldTimer;
-    uint32 DeadenTimer;
-    uint32 SoulShockTimer;
+/*######
+## boss_essence_of_desire
+######*/
+
+struct MANGOS_DLL_DECL boss_essence_of_desireAI : public essence_base_AI
+{
+    boss_essence_of_desireAI(Creature* pCreature) : essence_base_AI(pCreature) { Reset(); }
+
+    uint32 m_uiRuneShieldTimer;
+    uint32 m_uiDeadenTimer;
+    uint32 m_uiSoulShockTimer;
 
     void Reset()
     {
-        AggroYellTimer = 5000;
-        RuneShieldTimer = 60000;
-        DeadenTimer = 15000;
-        SoulShockTimer = 40000;
+        m_uiRuneShieldTimer = urand(10000, 15000);
+        m_uiDeadenTimer     = 15000;
+        m_uiSoulShockTimer  = urand(5000, 10000);
+
+        DoCastSpellIfCan(m_creature, SPELL_AURA_OF_DESIRE);
     }
 
-    void DamageTaken(Unit *done_by, uint32 &damage)
-    {
-        if ((damage >= m_creature->GetHealth()) && (done_by != m_creature))
-        {
-            damage = 0;
-            // 10% of total health, signalling time to return
-            m_creature->SetHealth(m_creature->GetMaxHealth()/10);
-        }
-        else
-        {
-            if (done_by && (done_by->GetTypeId() == TYPEID_PLAYER) && done_by->isAlive())
-                done_by->DealDamage(done_by, damage/2, NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-        }
-    }
-
-    void KilledUnit(Unit *victim)
+    void KilledUnit(Unit* pVictim)
     {
         switch(urand(0, 2))
         {
@@ -699,180 +475,187 @@ struct MANGOS_DLL_DECL boss_essence_of_desireAI : public ScriptedAI
         }
     }
 
-    void MoveInLineOfSight(Unit *who)
+    void OnPhaseFinished()
     {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if (!m_creature->isInCombat())
-                {
-                    DoCastSpellIfCan(who, AURA_OF_DESIRE);
-                }
-
-                who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-                AttackStart(who);
-            }
-        }
+        DoScriptText(DESI_SAY_RECAP, m_creature);
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
-        //Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (m_creature->GetHealthPercent() <= 10.0f)
+        if (m_uiRuneShieldTimer < uiDiff)
         {
-            if (m_creature->getVictim())
-                m_creature->DeleteThreatList();             // Delete our threatlist if below 10% as we should no longer attack.
-            return;
+            if (DoCastSpellIfCan(m_creature, SPELL_RUNE_SHIELD) == CAST_OK)
+                m_uiRuneShieldTimer = 15000;
         }
+        else
+            m_uiRuneShieldTimer -= uiDiff;
 
-        if (RuneShieldTimer < diff)
+        if (m_uiDeadenTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature, SPELL_RUNE_SHIELD);
-            RuneShieldTimer = 60000;
-        }else RuneShieldTimer -= diff;
-
-        if (DeadenTimer < diff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_DEADEN);
-            DeadenTimer = urand(30000, 60000);
-        }else DeadenTimer -= diff;
-
-        if (SoulShockTimer < diff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_SOUL_SHOCK);
-            SoulShockTimer = 40000;
-
-            if (urand(0, 1))
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_DEADEN) == CAST_OK)
+            {
                 DoScriptText(DESI_SAY_SPEC, m_creature);
+                m_uiDeadenTimer = 30000;
+            }
+        }
+        else
+            m_uiDeadenTimer -= uiDiff;
 
-        }else SoulShockTimer -= diff;
+        if (m_uiSoulShockTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_SPIRIT_SHOCK) == CAST_OK)
+                m_uiSoulShockTimer = urand(5000, 10000);
+        }
+        else
+            m_uiSoulShockTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
 };
 
+/*######
+## boss_essence_of_anger
+######*/
+
 struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
 {
-    boss_essence_of_angerAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+    boss_essence_of_angerAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        Reset();
+    }
 
-    ObjectGuid m_aggroTargetGuid;
+    ScriptedInstance* m_pInstance;
 
-    uint32 AggroYellTimer;
-    uint32 CheckTankTimer;
-    uint32 SoulScreamTimer;
-    uint32 SpiteTimer;
-
-    bool CheckedAggro;
+    uint32 m_uiSeetheTimer;
+    uint32 m_uiSoulScreamTimer;
+    uint32 m_uiSpiteTimer;
 
     void Reset()
     {
-        m_aggroTargetGuid.Clear();
+        m_uiSeetheTimer      = 5000;
+        m_uiSoulScreamTimer  = 10000;
+        m_uiSpiteTimer       = 20000;
 
-        AggroYellTimer = 5000;
-        CheckTankTimer = 5000;
-        SoulScreamTimer = 10000;
-        SpiteTimer = 30000;
-
-        CheckedAggro = false;
+        DoCastSpellIfCan(m_creature, SPELL_AURA_OF_ANGER);
     }
 
-    void Aggro(Unit* pWho)
-    {
-        DoCastSpellIfCan(m_creature->getVictim(), AURA_OF_ANGER, CAST_TRIGGERED);
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if (!m_creature->isInCombat())
-                {
-                    DoCastSpellIfCan(who, AURA_OF_ANGER);
-                }
-
-                who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-                AttackStart(who);
-            }
-        }
-    }
-
-    void JustDied(Unit *victim)
-    {
-        DoScriptText(ANGER_SAY_DEATH, m_creature);
-    }
-
-    void KilledUnit(Unit *victim)
+    void KilledUnit(Unit* pVictim)
     {
         DoScriptText(urand(0, 1) ? ANGER_SAY_SLAY1 : ANGER_SAY_SLAY2, m_creature);
     }
 
-    void UpdateAI(const uint32 diff)
+    void JustDied(Unit* pKiller)
+    {
+        DoScriptText(ANGER_SAY_DEATH, m_creature);
+    }
+
+    void JustReachedHome()
+    {
+        // Reset encounter and despawn Essence
+        if (m_pInstance)
+        {
+            if (Creature* pReliquary = m_pInstance->GetSingleCreatureFromStorage(NPC_RELIQUARY_OF_SOULS))
+                pReliquary->AI()->EnterEvadeMode();
+        }
+
+        m_creature->ForcedDespawn();
+    }
+
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        if (!CheckedAggro)
+        if (m_uiSeetheTimer < uiDiff)
         {
-            m_aggroTargetGuid = m_creature->getVictim()->GetObjectGuid();
-            CheckedAggro = true;
+            if (DoCastSpellIfCan(m_creature, SPELL_SEETHE) == CAST_OK)
+                m_uiSeetheTimer = urand(20000, 30000);
         }
+        else
+            m_uiSeetheTimer -= uiDiff;
 
-        if (AggroYellTimer)
+        if (m_uiSoulScreamTimer < uiDiff)
         {
-            if (AggroYellTimer <= diff)
-            {
-                DoScriptText(ANGER_SAY_FREED2, m_creature);
-                AggroYellTimer = 0;
-            }else AggroYellTimer -= diff;
+            if (DoCastSpellIfCan(m_creature, SPELL_SOUL_SCREAM) == CAST_OK)
+                m_uiSoulScreamTimer = 10000;
         }
+        else
+            m_uiSoulScreamTimer -= uiDiff;
 
-        if (CheckTankTimer < diff)
+        if (m_uiSpiteTimer < uiDiff)
         {
-            if (m_creature->getVictim()->GetObjectGuid() != m_aggroTargetGuid)
+            if (DoCastSpellIfCan(m_creature, SPELL_SPITE) == CAST_OK)
             {
                 DoScriptText(ANGER_SAY_BEFORE, m_creature);
-                DoCastSpellIfCan(m_creature, SPELL_SELF_SEETHE);
-                DoCastSpellIfCan(m_creature->getVictim(), SPELL_ENEMY_SEETHE, CAST_TRIGGERED);
-                m_aggroTargetGuid = m_creature->getVictim()->GetObjectGuid();
+                m_uiSpiteTimer = 20000;
             }
-            CheckTankTimer = 2000;
-        }else CheckTankTimer -= diff;
-
-        if (SoulScreamTimer < diff)
-        {
-            DoCastSpellIfCan(m_creature->getVictim(), SPELL_SOUL_SCREAM);
-            SoulScreamTimer = 10000;
-        }else SoulScreamTimer -= diff;
-
-        if (SpiteTimer < diff)
-        {
-            for(uint8 i = 0; i < 4; ++i)
-            {
-                if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-                    DoCastSpellIfCan(target, SPELL_SPITE);
-            }
-
-            SpiteTimer = 30000;
-            DoScriptText(ANGER_SAY_SPEC, m_creature);
-        }else SpiteTimer -= diff;
+        }
+        else
+            m_uiSpiteTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
 };
+
+/*######
+## npc_enslaved_soul
+######*/
+
+struct MANGOS_DLL_DECL npc_enslaved_soulAI : public ScriptedAI
+{
+    npc_enslaved_soulAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        Reset();
+    }
+
+    ScriptedInstance* m_pInstance;
+
+    void Reset()
+    {
+        DoCastSpellIfCan(m_creature, SPELL_ENSLAVED_SOUL_PASSIVE);
+    }
+
+    void JustDied(Unit* pKiller)
+    {
+        DoCastSpellIfCan(m_creature, SPELL_SOUL_RELEASE, CAST_TRIGGERED);
+
+        // Notify the main boss about the spirit death. Needs to be done here, because the spirit is summoned with triggered spell
+        if (m_pInstance)
+        {
+            if (Creature* pReliquary = m_pInstance->GetSingleCreatureFromStorage(NPC_RELIQUARY_OF_SOULS))
+            {
+                if (boss_reliquary_of_soulsAI* pBossAI = dynamic_cast<boss_reliquary_of_soulsAI*>(pReliquary->AI()))
+                    pBossAI->DoNotifySouldDead();
+            }
+        }
+    }
+
+    void JustReachedHome()
+    {
+        // Reset encounter and despawn the spirit
+        if (m_pInstance)
+        {
+            if (Creature* pReliquary = m_pInstance->GetSingleCreatureFromStorage(NPC_RELIQUARY_OF_SOULS))
+                pReliquary->AI()->EnterEvadeMode();
+        }
+
+        m_creature->ForcedDespawn();
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
 
 CreatureAI* GetAI_boss_reliquary_of_souls(Creature* pCreature)
 {
@@ -892,6 +675,11 @@ CreatureAI* GetAI_boss_essence_of_desire(Creature* pCreature)
 CreatureAI* GetAI_boss_essence_of_anger(Creature* pCreature)
 {
     return new boss_essence_of_angerAI(pCreature);
+}
+
+CreatureAI* GetAI_npc_enslaved_soul(Creature* pCreature)
+{
+    return new npc_enslaved_soulAI(pCreature);
 }
 
 void AddSC_boss_reliquary_of_souls()
@@ -916,5 +704,10 @@ void AddSC_boss_reliquary_of_souls()
     pNewScript = new Script;
     pNewScript->Name = "boss_essence_of_anger";
     pNewScript->GetAI = &GetAI_boss_essence_of_anger;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_enslaved_soul";
+    pNewScript->GetAI = &GetAI_npc_enslaved_soul;
     pNewScript->RegisterSelf();
 }

@@ -64,6 +64,7 @@ void instance_black_temple::OnCreatureCreate(Creature* pCreature)
 
         case NPC_AKAMA_SHADE:
         case NPC_SHADE_OF_AKAMA:
+        case NPC_RELIQUARY_OF_SOULS:
         case NPC_GATHIOS:
         case NPC_ZEREVOR:
         case NPC_LADY_MALANDE:
