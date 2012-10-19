@@ -176,9 +176,7 @@ struct MANGOS_DLL_DECL boss_anubarakAI : public ScriptedAI
                     pSummoned->GetMotionMaster()->MovePoint(0, fX, fY, fZ);
                 }
                 break;
-            case NPC_IMPALE_TARGET:
-                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-                    pSummoned->AI()->AttackStart(pTarget);
+            default:
                 break;
         }
     }
