@@ -47,11 +47,13 @@ enum
 
 struct MANGOS_DLL_DECL npc_spirit_guideAI : public ScriptedAI
 {
-    npc_spirit_guideAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
-
-    void Reset()
+    npc_spirit_guideAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
+        pCreature->SetActiveObjectState(true);
+        Reset();
     }
+
+    void Reset() {}
 
     void UpdateAI(const uint32 uiDiff)
     {
