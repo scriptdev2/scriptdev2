@@ -111,7 +111,16 @@ struct MANGOS_DLL_DECL boss_midnightAI : public ScriptedAI
             }
         }
         else if (pSummoned->GetEntry() == NPC_ATTUMEN_MOUNTED)
+        {
             DoScriptText(SAY_MOUNT, pSummoned);
+
+            if (!m_pInstance)
+                return;
+
+            // The summoned has the health equal to the one which has the higher HP percentage of both
+            if (Creature* pAttumen = m_pInstance->GetSingleCreatureFromStorage(NPC_ATTUMEN))
+                pSummoned->SetHealth(pAttumen->GetHealth() > m_creature->GetHealth() ? pAttumen->GetHealth() : m_creature->GetHealth());
+        }
     }
 
     void MovementInform(uint32 uiMoveType, uint32 uiPointId)
