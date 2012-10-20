@@ -2501,8 +2501,8 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1564011,'%s punches the ground in anger!',0,3,0,0,'supremus EMOTE_PUNCH_GROUND'),
 (-1564012,'The ground begins to crack open!',0,3,0,0,'supremus EMOTE_GROUND_CRACK'),
 
-(-1564013,'No! Not yet...',11385,1,0,0,'akama shade SAY_LOW_HEALTH'),
-(-1564014,'I will not last much longer...',11386,1,0,0,'akama shade SAY_DEATH'),
+(-1564013,'No! Not yet...',11386,1,0,0,'akama shade SAY_LOW_HEALTH'),
+(-1564014,'I will not last much longer...',11385,1,0,0,'akama shade SAY_DEATH'),
 (-1564015,'Come out from the shadows! I\'ve returned to lead you against our true enemy! Shed your chains and raise your weapons against your Illidari masters!',0,1,0,0,'akama shade SAY_FREE'),
 (-1564016,'Hail our leader! Hail Akama!',0,1,0,0,'akama shade broken SAY_BROKEN_FREE_01'),
 (-1564017,'Hail Akama!',0,1,0,0,'akama shade broken SAY_BROKEN_FREE_02'),
@@ -2631,7 +2631,9 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1564126,'Behold the flames of Azzinoth!',11480,1,0,0,'illidan SAY_SUMMONFLAMES'),
 (-1564127,'Stare into the eyes of the Betrayer!',11481,1,0,0,'illidan SAY_EYE_BLAST'),
 (-1564128,'Behold the power... of the demon within!',11475,1,0,0,'illidan SAY_MORPH'),
-(-1564129,'You\'ve wasted too much time mortals, now you shall fall!',11474,1,0,0,'illidan SAY_ENRAGE');
+(-1564129,'You\'ve wasted too much time mortals, now you shall fall!',11474,1,0,0,'illidan SAY_ENRAGE'),
+
+(-1564130,'Broken of the Ashtongue tribe, your leader speaks!',0,1,0,0,'akama shade SAY_FREE_1');
 
 -- -1 565 000 GRUUL'S LAIR
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
@@ -4421,7 +4423,7 @@ INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 
 -- -3 564 000 BLACK TEMPLE
 INSERT INTO gossip_texts (entry,content_default,comment) VALUES
-(-3564000,'We are ready to fight alongside you, Akama','akama(shade) GOSSIP_ITEM_START_ENCOUNTER');
+(-3564000,'I\'m with you, Akama.','akama(shade) GOSSIP_ITEM_START_ENCOUNTER');
 
 -- -3 595 000 CULLING OF STRATHOLME
 INSERT INTO gossip_texts (entry,content_default,comment) VALUES

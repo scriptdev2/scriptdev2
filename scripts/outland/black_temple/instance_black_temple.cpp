@@ -73,6 +73,12 @@ void instance_black_temple::OnCreatureCreate(Creature* pCreature)
         case NPC_COUNCIL_VOICE:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
+        case NPC_ASH_CHANNELER:
+            m_lChannelersGuidList.push_back(pCreature->GetObjectGuid());
+            break;
+        case NPC_CREATURE_GENERATOR:
+            m_vCreatureGeneratorGuidVector.push_back(pCreature->GetObjectGuid());
+            break;
     }
 }
 
@@ -89,13 +95,18 @@ void instance_black_temple::OnObjectCreate(GameObject* pGo)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_SHADE_OF_AKAMA:                             // Door close during encounter
+        case GO_GOREFIEND_DOOR:                             // Door close during encounter
             break;
-        case GO_PRE_SHAHRAZ_DOOR:                           // Door leading to Mother Shahraz
-            if (CanPreMotherDoorOpen())
+        case GO_GURTOGG_DOOR:                               // Door opens after encounter
+            if (m_auiEncounter[TYPE_BLOODBOIL] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
-        case GO_POST_SHAHRAZ_DOOR:                           // Door after shahraz
-            if (m_auiEncounter[6] == DONE)
+        case GO_PRE_SHAHRAZ_DOOR:                           // Door leading to Mother Shahraz
+            if (m_auiEncounter[TYPE_SHADE] == DONE && m_auiEncounter[TYPE_GOREFIEND] == DONE && m_auiEncounter[TYPE_BLOODBOIL] == DONE && m_auiEncounter[TYPE_RELIQUIARY] == DONE)
+                pGo->SetGoState(GO_STATE_ACTIVE);
+            break;
+        case GO_POST_SHAHRAZ_DOOR:                          // Door after shahraz
+            if (m_auiEncounter[TYPE_SHAHRAZ] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_PRE_COUNCIL_DOOR:                           // Door leading to the Council (grand promenade)
@@ -115,16 +126,10 @@ void instance_black_temple::OnObjectCreate(GameObject* pGo)
     m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
 }
 
-bool instance_black_temple::CanPreMotherDoorOpen()
+void instance_black_temple::DoOpenPreMotherDoor()
 {
-    if (m_auiEncounter[TYPE_SHADE] == DONE && m_auiEncounter[TYPE_GOREFIEND] == DONE && m_auiEncounter[TYPE_BLOODBOIL] == DONE && m_auiEncounter[TYPE_RELIQUIARY] == DONE)
-    {
-        debug_log("SD2: Black Temple: door to Mother Shahraz can open");
-        return true;
-    }
-
-    debug_log("SD2: Black Temple: Door data to Mother Shahraz requested, cannot open yet (Encounter data: %u %u %u %u)",m_auiEncounter[2],m_auiEncounter[3],m_auiEncounter[4],m_auiEncounter[5]);
-    return false;
+    if (GetData(TYPE_SHADE) == DONE && GetData(TYPE_GOREFIEND) == DONE && GetData(TYPE_BLOODBOIL) == DONE && GetData(TYPE_RELIQUIARY) == DONE)
+        DoUseDoorOrButton(GO_PRE_SHAHRAZ_DOOR);
 }
 
 void instance_black_temple::SetData(uint32 uiType, uint32 uiData)
@@ -144,12 +149,44 @@ void instance_black_temple::SetData(uint32 uiType, uint32 uiData)
                 DoUseDoorOrButton(GO_SUPREMUS_DOORS);
             break;
         case TYPE_SHADE:
+            m_auiEncounter[uiType] = uiData;
+            // combat door
+            DoUseDoorOrButton(GO_SHADE_OF_AKAMA);
+            if (uiData == FAIL)
+            {
+                // Reset channelers on fail
+                for (GuidList::const_iterator itr = m_lChannelersGuidList.begin(); itr != m_lChannelersGuidList.end(); ++itr)
+                {
+                    if (Creature* pChanneler = instance->GetCreature(*itr))
+                    {
+                        if (!pChanneler->isAlive())
+                            pChanneler->Respawn();
+                        else
+                            pChanneler->AI()->EnterEvadeMode();
+                    }
+                }
+            }
+            if (uiData == DONE)
+                DoOpenPreMotherDoor();
+            break;
         case TYPE_GOREFIEND:
+            m_auiEncounter[uiType] = uiData;
+            DoUseDoorOrButton(GO_GOREFIEND_DOOR);
+            if (uiData == DONE)
+                DoOpenPreMotherDoor();
+            break;
         case TYPE_BLOODBOIL:
+            m_auiEncounter[uiType] = uiData;
+            if (uiData == DONE)
+            {
+                DoOpenPreMotherDoor();
+                DoUseDoorOrButton(GO_GURTOGG_DOOR);
+            }
+            break;
         case TYPE_RELIQUIARY:
             m_auiEncounter[uiType] = uiData;
-            if (uiData == DONE && CanPreMotherDoorOpen())
-                DoUseDoorOrButton(GO_PRE_SHAHRAZ_DOOR);
+            if (uiData == DONE)
+                DoOpenPreMotherDoor();
             break;
         case TYPE_SHAHRAZ:
             if (uiData == DONE)

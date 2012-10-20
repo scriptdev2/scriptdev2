@@ -90,7 +90,7 @@ enum
     NPC_ESSENCE_SUFFERING           = 23418,
     NPC_ESSENCE_DESIRE              = 23419,
     NPC_ESSENCE_ANGER               = 23420,
-    NPC_ENSLAVED_SOUL               = 23469,                // scripted in eventAI
+    NPC_ENSLAVED_SOUL               = 23469,
 
     // Phases
     PHASE_0_NOT_BEGUN               = 0,
@@ -655,7 +655,6 @@ struct MANGOS_DLL_DECL npc_enslaved_soulAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-
 
 CreatureAI* GetAI_boss_reliquary_of_souls(Creature* pCreature)
 {

@@ -33,9 +33,14 @@ enum
     NPC_AKAMA                       = 23089,
     NPC_ILLIDAN_STORMRAGE           = 22917,
 
+    NPC_ASH_CHANNELER               = 23421,
+    NPC_CREATURE_GENERATOR          = 23210,
+
     GO_NAJENTUS_GATE                = 185483,
     GO_SUPREMUS_DOORS               = 185882,
     GO_SHADE_OF_AKAMA               = 185478,
+    GO_GOREFIEND_DOOR               = 186153,
+    GO_GURTOGG_DOOR                 = 185892,
     GO_PRE_SHAHRAZ_DOOR             = 185479,
     GO_POST_SHAHRAZ_DOOR            = 185482,
     GO_PRE_COUNCIL_DOOR             = 185481,
@@ -61,17 +66,23 @@ class MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
         uint32 GetData(uint32 uiType);
         uint64 GetData64(uint32 uiData);
 
+        void GetChannelersGuidList(GuidList &lList) { lList = m_lChannelersGuidList; }
+        void GetGeneratorGuidVector(GuidVector &vVector) { vVector = m_vCreatureGeneratorGuidVector; }
+
         const char* Save() { return m_strInstData.c_str(); }
         void Load(const char* chrIn);
 
     private:
-        bool CanPreMotherDoorOpen();
+        void DoOpenPreMotherDoor();
 
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strInstData;
 
         ObjectGuid m_akamaGuid;                             // This is the Akama that starts the Illidan encounter.
         ObjectGuid m_illidanStormrageGuid;
+
+        GuidList m_lChannelersGuidList;
+        GuidVector m_vCreatureGeneratorGuidVector;
 };
 
 #endif
