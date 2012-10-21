@@ -843,6 +843,7 @@ UPDATE creature_template SET ScriptName='npc_bessy' WHERE entry=20415;
 UPDATE creature_template SET ScriptName='npc_maxx_a_million' WHERE entry=19589;
 UPDATE creature_template SET ScriptName='npc_zeppit' WHERE entry=22484;
 UPDATE creature_template SET ScriptName='npc_protectorate_demolitionist' WHERE entry=20802;
+UPDATE creature_template SET ScriptName='npc_captured_vanguard' WHERE entry=20763;
 
 /*  */
 /* THE NEXUS */

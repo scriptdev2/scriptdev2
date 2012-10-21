@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Netherstorm
 SD%Complete: 80
-SDComment: Quest support: 10191, 10198, 10299, 10321, 10322, 10323, 10329, 10330, 10337, 10338, 10365(Shutting Down Manaforge), 10406, 10438, 10924.
+SDComment: Quest support: 10191, 10198, 10299, 10321, 10322, 10323, 10329, 10330, 10337, 10338, 10365(Shutting Down Manaforge), 10406, 10425, 10438, 10924.
 SDCategory: Netherstorm
 EndScriptData */
 
@@ -29,6 +29,7 @@ npc_bessy
 npc_maxx_a_million
 npc_zeppit
 npc_protectorate_demolitionist
+npc_captured_vanguard
 EndContentData */
 
 #include "precompiled.h"
@@ -1041,6 +1042,110 @@ CreatureAI* GetAI_npc_protectorate_demolitionist(Creature* pCreature)
     return new npc_protectorate_demolitionistAI(pCreature);
 }
 
+/*######
+## npc_captured_vanguard
+######*/
+
+enum
+{
+    SAY_VANGUARD_INTRO              = -1000901,
+    SAY_VANGUARD_START              = -1000902,
+    SAY_VANGUARD_FINISH             = -1000903,
+    EMOTE_VANGUARD_FINISH           = -1000904,
+
+    SPELL_GLAIVE                    = 36500,
+    SPELL_HAMSTRING                 = 31553,
+
+    NPC_COMMANDER_AMEER             = 20448,
+
+    QUEST_ID_ESCAPE_STAGING_GROUNDS = 10425,
+};
+
+struct MANGOS_DLL_DECL npc_captured_vanguardAI : public npc_escortAI
+{
+    npc_captured_vanguardAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
+
+    uint32 m_uiGlaiveTimer;
+    uint32 m_uiHamstringTimer;
+
+    void Reset()
+    {
+        m_uiGlaiveTimer = urand(4000, 8000);
+        m_uiHamstringTimer = urand(8000, 13000);
+    }
+
+    void JustReachedHome()
+    {
+        // Happens only if the player helps the npc in the fight - otherwise he dies
+        DoScriptText(SAY_VANGUARD_INTRO, m_creature);
+    }
+
+    void WaypointReached(uint32 uiPointId)
+    {
+        switch(uiPointId)
+        {
+            case 15:
+                if (Player* pPlayer = GetPlayerForEscort())
+                    pPlayer->GroupEventHappens(QUEST_ID_ESCAPE_STAGING_GROUNDS, m_creature);
+                break;
+            case 16:
+                DoScriptText(SAY_VANGUARD_FINISH, m_creature);
+                SetRun();
+                break;
+            case 17:
+                if (Creature* pAmeer = GetClosestCreatureWithEntry(m_creature, NPC_COMMANDER_AMEER, 5.0f))
+                    DoScriptText(EMOTE_VANGUARD_FINISH, m_creature, pAmeer);
+                break;
+            case 18:
+                if (DoCastSpellIfCan(m_creature, SPELL_ETHEREAL_TELEPORT, CAST_TRIGGERED) == CAST_OK)
+                    m_creature->ForcedDespawn(1000);
+                break;
+        }
+    }
+
+    void UpdateEscortAI(const uint32 uiDiff)
+    {
+        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+            return;
+
+        if (m_uiGlaiveTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_GLAIVE) == CAST_OK)
+                m_uiGlaiveTimer = urand(5000, 9000);
+        }
+        else
+            m_uiGlaiveTimer -= uiDiff;
+
+        if (m_uiHamstringTimer < uiDiff)
+        {
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_HAMSTRING) == CAST_OK)
+                m_uiHamstringTimer = urand(10000, 16000);
+        }
+        else
+            m_uiHamstringTimer -= uiDiff;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_npc_captured_vanguard(Creature* pCreature)
+{
+    return new npc_captured_vanguardAI(pCreature);
+}
+
+bool QuestAccept_npc_captured_vanguard(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
+{
+    if (pQuest->GetQuestId() == QUEST_ID_ESCAPE_STAGING_GROUNDS)
+    {
+        if (npc_captured_vanguardAI* pEscortAI = dynamic_cast<npc_captured_vanguardAI*>(pCreature->AI()))
+            pEscortAI->Start(false, pPlayer, pQuest);
+
+        DoScriptText(SAY_VANGUARD_START, pCreature, pPlayer);
+    }
+
+    return true;
+}
+
 void AddSC_netherstorm()
 {
     Script* pNewScript;
@@ -1085,5 +1190,11 @@ void AddSC_netherstorm()
     pNewScript = new Script;
     pNewScript->Name = "npc_protectorate_demolitionist";
     pNewScript->GetAI = &GetAI_npc_protectorate_demolitionist;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_captured_vanguard";
+    pNewScript->GetAI = &GetAI_npc_captured_vanguard;
+    pNewScript->pQuestAcceptNPC = &QuestAccept_npc_captured_vanguard;
     pNewScript->RegisterSelf();
 }
