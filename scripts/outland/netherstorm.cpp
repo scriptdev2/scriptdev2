@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Netherstorm
 SD%Complete: 80
-SDComment: Quest support: 10438, 10299, 10321, 10322, 10323, 10329, 10330, 10337, 10338, 10365(Shutting Down Manaforge), 10198, 10191, 10924
+SDComment: Quest support: 10191, 10198, 10299, 10321, 10322, 10323, 10329, 10330, 10337, 10338, 10365(Shutting Down Manaforge), 10406, 10438, 10924.
 SDCategory: Netherstorm
 EndScriptData */
 
@@ -27,6 +27,8 @@ go_manaforge_control_console
 npc_commander_dawnforge
 npc_bessy
 npc_maxx_a_million
+npc_zeppit
+npc_protectorate_demolitionist
 EndContentData */
 
 #include "precompiled.h"
@@ -880,6 +882,165 @@ CreatureAI* GetAI_npc_zeppit(Creature* pCreature)
     return new npc_zeppitAI(pCreature);
 }
 
+/*######
+## npc_protectorate_demolitionist
+######*/
+
+enum
+{
+    SAY_INTRO                       = -1000891,
+    SAY_ATTACKED_1                  = -1000892,
+    SAY_ATTACKED_2                  = -1000893,
+    SAY_STAGING_GROUNDS             = -1000894,
+    SAY_TOXIC_HORROR                = -1000895,
+    SAY_SALHADAAR                   = -1000896,
+    SAY_DISRUPTOR                   = -1000897,
+    SAY_NEXUS_PROTECT               = -1000898,
+    SAY_FINISH_1                    = -1000899,
+    SAY_FINISH_2                    = -1000900,
+
+    SPELL_ETHEREAL_TELEPORT         = 34427,
+    SPELL_PROTECTORATE              = 35679,                    // dummy aura applied on player
+
+    NPC_NEXUS_STALKER               = 20474,
+    NPC_ARCHON                      = 20458,
+
+    FACTION_FRIENDLY                = 35,
+
+    QUEST_ID_DELIVERING_MESSAGE     = 10406,
+};
+
+struct MANGOS_DLL_DECL npc_protectorate_demolitionistAI : public npc_escortAI
+{
+    npc_protectorate_demolitionistAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
+
+    uint32 m_uiEventTimer;
+    uint8 m_uiEventStage;
+
+    void Reset()
+    {
+        if (!HasEscortState(STATE_ESCORT_ESCORTING))
+        {
+            m_uiEventTimer = 0;
+            m_uiEventStage = 0;
+        }
+    }
+
+    void Aggro(Unit* pWho)
+    {
+        DoScriptText(urand(0, 1) ? SAY_ATTACKED_1 : SAY_ATTACKED_2, m_creature);
+    }
+
+    // No attack done by this npc
+    void AttackStart(Unit* pWho) { }
+
+    void MoveInLineOfSight(Unit* pWho)
+    {
+        if (HasEscortState(STATE_ESCORT_ESCORTING))
+            return;
+
+        // Star the escort
+        if (pWho->GetTypeId() == TYPEID_PLAYER)
+        {
+            if (pWho->HasAura(SPELL_PROTECTORATE) && ((Player*)pWho)->GetQuestStatus(QUEST_ID_DELIVERING_MESSAGE) == QUEST_STATUS_INCOMPLETE)
+            {
+                if (m_creature->IsWithinDistInMap(pWho, 10.0f))
+                {
+                    m_creature->SetFactionTemporary(FACTION_FRIENDLY, TEMPFACTION_RESTORE_RESPAWN);
+                    Start(false, (Player*)pWho);
+                }
+            }
+        }
+    }
+
+    void JustSummoned(Creature* pSummoned)
+    {
+        if (pSummoned->GetEntry() == NPC_NEXUS_STALKER)
+            DoScriptText(SAY_NEXUS_PROTECT, pSummoned);
+        else if (pSummoned->GetEntry() == NPC_ARCHON)
+            pSummoned->CastSpell(pSummoned, SPELL_ETHEREAL_TELEPORT, true);
+
+        pSummoned->AI()->AttackStart(m_creature);
+    }
+
+    void WaypointReached(uint32 uiPointId)
+    {
+        switch(uiPointId)
+        {
+            case 0:
+                DoScriptText(SAY_INTRO, m_creature);
+                break;
+            case 3:
+                DoScriptText(SAY_STAGING_GROUNDS, m_creature);
+                break;
+            case 4:
+                DoScriptText(SAY_TOXIC_HORROR, m_creature);
+                break;
+            case 9:
+                DoScriptText(SAY_SALHADAAR, m_creature);
+                break;
+            case 12:
+                DoScriptText(SAY_DISRUPTOR, m_creature);
+                SetEscortPaused(true);
+                m_uiEventTimer = 5000;
+                break;
+            case 13:
+                DoScriptText(SAY_FINISH_2, m_creature);
+                if (Player* pPlayer = GetPlayerForEscort())
+                {
+                    m_creature->SetFacingToObject(pPlayer);
+                    pPlayer->GroupEventHappens(QUEST_ID_DELIVERING_MESSAGE, m_creature);
+                }
+                SetEscortPaused(true);
+                m_uiEventTimer = 6000;
+                break;
+        }
+    }
+
+    void UpdateEscortAI(const uint32 uiDiff)
+    {
+        if (m_uiEventTimer)
+        {
+            if (m_uiEventTimer <= uiDiff)
+            {
+                switch (m_uiEventStage)
+                {
+                    case 0:
+                        m_creature->SummonCreature(NPC_ARCHON, 3875.69f, 2308.72f, 115.80f, 1.48f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 30000);
+                        m_uiEventTimer = 4000;
+                        break;
+                    case 1:
+                        m_creature->SummonCreature(NPC_NEXUS_STALKER, 3884.06f, 2325.22f, 111.37f, 3.45f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 30000);
+                        m_creature->SummonCreature(NPC_NEXUS_STALKER, 3861.54f, 2320.44f, 111.48f, 0.32f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 30000);
+                        m_uiEventTimer = 9000;
+                        break;
+                    case 2:
+                        DoScriptText(SAY_FINISH_1, m_creature);
+                        SetRun();
+                        SetEscortPaused(false);
+                        m_uiEventTimer = 0;
+                        break;
+                    case 3:
+                        if (DoCastSpellIfCan(m_creature, SPELL_ETHEREAL_TELEPORT, CAST_TRIGGERED) == CAST_OK)
+                            m_creature->ForcedDespawn(1000);
+                        m_uiEventTimer = 0;
+                        break;
+                }
+                ++m_uiEventStage;
+            }
+            else
+                m_uiEventTimer -= uiDiff;
+        }
+
+        // ToDo: research if the npc uses spells or melee for combat
+    }
+};
+
+CreatureAI* GetAI_npc_protectorate_demolitionist(Creature* pCreature)
+{
+    return new npc_protectorate_demolitionistAI(pCreature);
+}
+
 void AddSC_netherstorm()
 {
     Script* pNewScript;
@@ -919,5 +1080,10 @@ void AddSC_netherstorm()
     pNewScript = new Script;
     pNewScript->Name = "npc_zeppit";
     pNewScript->GetAI = &GetAI_npc_zeppit;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_protectorate_demolitionist";
+    pNewScript->GetAI = &GetAI_npc_protectorate_demolitionist;
     pNewScript->RegisterSelf();
 }
