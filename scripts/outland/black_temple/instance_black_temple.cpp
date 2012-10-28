@@ -194,6 +194,9 @@ void instance_black_temple::SetData(uint32 uiType, uint32 uiData)
             m_auiEncounter[uiType] = uiData;
             break;
         case TYPE_COUNCIL:
+            // Don't set the same data twice
+            if (m_auiEncounter[uiType] == uiData)
+                return;
             DoUseDoorOrButton(GO_COUNCIL_DOOR);
             m_auiEncounter[uiType] = uiData;
             break;
