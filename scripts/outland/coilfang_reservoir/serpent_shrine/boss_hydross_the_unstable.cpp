@@ -42,7 +42,7 @@ enum
     SPELL_ENRAGE                = 27680,                    // ToDo: this spell need verification
     SPELL_BLUE_BEAM             = 38015,
     SPELL_SUMMON_WATER_ELEMENT  = 36459,                    // spawn elemental on OOC timer
-    //SPELL_ELEMENTAL_SPAWNIN   = 25035,                    // already handled in eventAI
+    // SPELL_ELEMENTAL_SPAWNIN   = 25035,                   // already handled in eventAI
     SPELL_PURIFY_ELEMENTAL      = 36461,                    // purify elemental on OOC timer
 
     NPC_PURE_SPAWN              = 22035,
@@ -61,8 +61,8 @@ enum
 static const uint32 aMarkHydross[MAX_HYDROSS_MARKS] = {38215, 38216, 38217, 38218, 38231, 40584};
 static const uint32 aMarkCorruption[MAX_HYDROSS_MARKS] = {38219, 38220, 38221, 38222, 38230, 40583};
 
-static const float aElementalCleanPoint[3] = {-231.48f, -343.05f, -1.58f};
-static const float aElementalExitPoint[3] = {-177.41f, -395.72f, -1.60f};
+static const float aElementalCleanPoint[3] = { -231.48f, -343.05f, -1.58f};
+static const float aElementalExitPoint[3] = { -177.41f, -395.72f, -1.60f};
 
 struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
 {
@@ -93,7 +93,7 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
         m_uiWaterTombTimer          = 7000;
         m_uiVileSludgeTimer         = 7000;
         m_uiMarkCount               = 0;
-        m_uiEnrageTimer             = 10*MINUTE*IN_MILLISECONDS;
+        m_uiEnrageTimer             = 10 * MINUTE * IN_MILLISECONDS;
 
         m_bCorruptedForm            = false;
 
@@ -113,9 +113,9 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
     void KilledUnit(Unit* pVictim)
     {
         if (m_bCorruptedForm)
-            DoScriptText(urand(0,1) ? SAY_CORRUPT_SLAY1 : SAY_CORRUPT_SLAY2, m_creature);
+            DoScriptText(urand(0, 1) ? SAY_CORRUPT_SLAY1 : SAY_CORRUPT_SLAY2, m_creature);
         else
-            DoScriptText(urand(0,1) ? SAY_CLEAN_SLAY1 : SAY_CLEAN_SLAY2, m_creature);
+            DoScriptText(urand(0, 1) ? SAY_CLEAN_SLAY1 : SAY_CLEAN_SLAY2, m_creature);
     }
 
     void JustDied(Unit* pKiller)
@@ -180,9 +180,9 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
     void DoSpawnAdds()
     {
         float fX, fY, fZ;
-        for(uint8 i = 0; i < MAX_HYDROSS_ADDS; ++i)
+        for (uint8 i = 0; i < MAX_HYDROSS_ADDS; ++i)
         {
-            m_creature->GetNearPoint(m_creature, fX, fY, fZ, 0, 10, M_PI_F/2*i);
+            m_creature->GetNearPoint(m_creature, fX, fY, fZ, 0, 10, M_PI_F / 2 * i);
             m_creature->SummonCreature(m_bCorruptedForm ? NPC_PURE_SPAWN : NPC_TAINTED_SPAWN, fX, fY, fZ, 0, TEMPSUMMON_DEAD_DESPAWN, 0);
         }
     }
@@ -276,7 +276,7 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
                 m_uiPosCheckTimer = 2000;
             }
             else
-                m_uiPosCheckTimer -=uiDiff;
+                m_uiPosCheckTimer -= uiDiff;
         }
         // clean form
         else
@@ -321,7 +321,7 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
                 m_uiPosCheckTimer = 2000;
             }
             else
-                m_uiPosCheckTimer -=uiDiff;
+                m_uiPosCheckTimer -= uiDiff;
         }
 
         // Apply mark debuff

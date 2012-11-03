@@ -55,7 +55,7 @@ enum
     NPC_SAND_VORTEX         = 15428,                        // tornado npc
 };
 
-static const float aCrystalSpawnPos[3] = {-9355.75f, 1905.43f, 85.55f};
+static const float aCrystalSpawnPos[3] = { -9355.75f, 1905.43f, 85.55f};
 static const uint32 aWeaknessSpell[] = {SPELL_WEAKNESS_FIRE, SPELL_WEAKNESS_FROST, SPELL_WEAKNESS_NATURE, SPELL_WEAKNESS_ARCANE, SPELL_WEAKNESS_SHADOW};
 
 struct MANGOS_DLL_DECL boss_ossirianAI : public ScriptedAI
@@ -130,7 +130,7 @@ struct MANGOS_DLL_DECL boss_ossirianAI : public ScriptedAI
 
         // Respawn GO near crystal trigger
         if (GameObject* pCrystal = GetClosestGameObjectWithEntry(pOssirianTrigger, GO_OSSIRIAN_CRYSTAL, 10.0f))
-            m_pInstance->DoRespawnGameObject(pCrystal->GetObjectGuid(), 5*MINUTE);
+            m_pInstance->DoRespawnGameObject(pCrystal->GetObjectGuid(), 5 * MINUTE);
 
         // Increase position
         ++m_uiCrystalPosition %= MAX_CRYSTAL_POSITIONS;
@@ -140,7 +140,7 @@ struct MANGOS_DLL_DECL boss_ossirianAI : public ScriptedAI
     {
         if (pSummoned->GetEntry() == NPC_OSSIRIAN_TRIGGER)
             pSummoned->CastSpell(pSummoned, SPELL_SUMMON_CRYSTAL, true);
-     }
+    }
 
     void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
     {

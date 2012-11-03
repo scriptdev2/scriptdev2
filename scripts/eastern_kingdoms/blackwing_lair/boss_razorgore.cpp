@@ -68,7 +68,7 @@ struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
     {
         m_uiIntroVisualTimer    = 5000;
 
-        m_uiCleaveTimer         = 15000;                       // These times are probably wrong
+        m_uiCleaveTimer         = 15000;                    // These times are probably wrong
         m_uiWarStompTimer       = 35000;
         m_uiConflagrationTimer  = 12000;
         m_uiFireballVolleyTimer = 7000;

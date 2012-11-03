@@ -128,12 +128,12 @@ class MANGOS_DLL_DECL instance_culling_of_stratholme : public ScriptedInstance
 
         void Update(uint32 uiDiff);
 
-        void GetStratAgiatedCitizenList(GuidList &lList){ lList = m_lAgiatedCitizenGUIDList; };
-        void GetStratAgiatedResidentList(GuidList &lList){ lList = m_lAgiatedResidentGUIDList; };
+        void GetStratAgiatedCitizenList(GuidList& lList) { lList = m_lAgiatedCitizenGUIDList; };
+        void GetStratAgiatedResidentList(GuidList& lList) { lList = m_lAgiatedResidentGUIDList; };
 
-        void GetCratesBunnyOrderedList(std::list<Creature*> &lList);
+        void GetCratesBunnyOrderedList(std::list<Creature*>& lList);
         Creature* GetStratIntroFootman();
-        void GetResidentOrderedList(std::list<Creature*> &lList);
+        void GetResidentOrderedList(std::list<Creature*>& lList);
         void DoSpawnArthasIfNeeded();
         void DoSpawnChromieIfNeeded();
         uint8 GetInstancePosition();

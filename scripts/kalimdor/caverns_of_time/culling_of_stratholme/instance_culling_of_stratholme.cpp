@@ -67,7 +67,7 @@ void instance_culling_of_stratholme::Initialize()
 
 void instance_culling_of_stratholme::OnCreatureCreate(Creature* pCreature)
 {
-    switch(pCreature->GetEntry())
+    switch (pCreature->GetEntry())
     {
         case NPC_CHROMIE_ENTRANCE:
         case NPC_CHROMIE_END:
@@ -106,7 +106,7 @@ void instance_culling_of_stratholme::OnCreatureCreate(Creature* pCreature)
 
 void instance_culling_of_stratholme::OnObjectCreate(GameObject* pGo)
 {
-    switch(pGo->GetEntry())
+    switch (pGo->GetEntry())
     {
         case GO_DOOR_BOOKCASE:
             if (m_auiEncounter[TYPE_EPOCH_EVENT] == DONE)
@@ -129,7 +129,7 @@ void instance_culling_of_stratholme::DoChromieHurrySpeech()
         Map::PlayerList const& players = instance->GetPlayers();
         if (!players.isEmpty())
         {
-            for(Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
+            for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
             {
                 if (Player* pPlayer = itr->getSource())
                     DoScriptText(SAY_CHROMIE_HURRY, pChromie, pPlayer);
@@ -140,7 +140,7 @@ void instance_culling_of_stratholme::DoChromieHurrySpeech()
 
 void instance_culling_of_stratholme::SetData(uint32 uiType, uint32 uiData)
 {
-    switch(uiType)
+    switch (uiType)
     {
         case TYPE_GRAIN_EVENT:
             m_auiEncounter[uiType] = uiData;
@@ -184,7 +184,7 @@ void instance_culling_of_stratholme::SetData(uint32 uiType, uint32 uiData)
             m_auiEncounter[uiType] = uiData;
             if (uiData == DONE)
             {
-                DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_DARK_RUNED_CHEST : GO_DARK_RUNED_CHEST_H, 30*MINUTE);
+                DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_DARK_RUNED_CHEST : GO_DARK_RUNED_CHEST_H, 30 * MINUTE);
                 DoSpawnChromieIfNeeded();
             }
             break;
@@ -196,15 +196,15 @@ void instance_culling_of_stratholme::SetData(uint32 uiType, uint32 uiData)
                 DoUpdateWorldState(WORLD_STATE_TIME_COUNTER, 0);
             }
             else
-                DoUpdateWorldState(WORLD_STATE_TIME_COUNTER, uiData/(MINUTE*IN_MILLISECONDS));
+                DoUpdateWorldState(WORLD_STATE_TIME_COUNTER, uiData / (MINUTE * IN_MILLISECONDS));
             break;
         case TYPE_INFINITE_CORRUPTER:
             m_auiEncounter[uiType] = uiData;
-            switch(uiData)
+            switch (uiData)
             {
                 case IN_PROGRESS:
                     if (!m_auiEncounter[TYPE_INFINITE_CORRUPTER_TIME])
-                        SetData(TYPE_INFINITE_CORRUPTER_TIME, MINUTE*25*IN_MILLISECONDS);
+                        SetData(TYPE_INFINITE_CORRUPTER_TIME, MINUTE * 25 * IN_MILLISECONDS);
                     DoUpdateWorldState(WORLD_STATE_TIME, 1);// Show Timer
                     break;
                 case DONE:
@@ -229,8 +229,8 @@ void instance_culling_of_stratholme::SetData(uint32 uiType, uint32 uiData)
 
         std::ostringstream saveStream;
         saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " "
-            << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5] << " "
-            << m_auiEncounter[6] << " " << m_auiEncounter[7] << " " << m_auiEncounter[8];
+                   << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5] << " "
+                   << m_auiEncounter[6] << " " << m_auiEncounter[7] << " " << m_auiEncounter[8];
 
         m_strInstData = saveStream.str();
 
@@ -251,9 +251,9 @@ void instance_culling_of_stratholme::Load(const char* chrIn)
 
     std::istringstream loadStream(chrIn);
     loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3]
-        >> m_auiEncounter[4] >> m_auiEncounter[5] >> m_auiEncounter[6] >> m_auiEncounter[7] >> m_auiEncounter[8];
+               >> m_auiEncounter[4] >> m_auiEncounter[5] >> m_auiEncounter[6] >> m_auiEncounter[7] >> m_auiEncounter[8];
 
-    for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+    for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
     {
         if (i != TYPE_INFINITE_CORRUPTER_TIME)
         {
@@ -334,7 +334,7 @@ static bool sortFromSouthToNorth(Creature* pFirst, Creature* pSecond)
     return pFirst && pSecond && pFirst->GetPositionX() < pSecond->GetPositionX();
 }
 
-void instance_culling_of_stratholme::GetCratesBunnyOrderedList(std::list<Creature*> &lList)
+void instance_culling_of_stratholme::GetCratesBunnyOrderedList(std::list<Creature*>& lList)
 {
     std::list<Creature*> lCratesBunnyList;
     for (GuidList::const_iterator itr = m_luiCratesBunnyGUIDs.begin(); itr != m_luiCratesBunnyGUIDs.end(); ++itr)
@@ -367,7 +367,7 @@ Creature* instance_culling_of_stratholme::GetStratIntroFootman()
     }
 }
 
-void instance_culling_of_stratholme::GetResidentOrderedList(std::list<Creature*> &lList)
+void instance_culling_of_stratholme::GetResidentOrderedList(std::list<Creature*>& lList)
 {
     std::list<Creature*> lResidentList;
     for (GuidList::const_iterator itr = m_luiResidentGUIDs.begin(); itr != m_luiResidentGUIDs.end(); ++itr)
@@ -397,7 +397,7 @@ void instance_culling_of_stratholme::DoSpawnArthasIfNeeded()
     if (uiPosition && uiPosition <= MAX_ARTHAS_SPAWN_POS)
     {
         if (Player* pPlayer = GetPlayerInMap())
-            pPlayer->SummonCreature(NPC_ARTHAS, m_aArthasSpawnLocs[uiPosition-1].m_fX, m_aArthasSpawnLocs[uiPosition-1].m_fY, m_aArthasSpawnLocs[uiPosition-1].m_fZ, m_aArthasSpawnLocs[uiPosition-1].m_fO, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
+            pPlayer->SummonCreature(NPC_ARTHAS, m_aArthasSpawnLocs[uiPosition - 1].m_fX, m_aArthasSpawnLocs[uiPosition - 1].m_fY, m_aArthasSpawnLocs[uiPosition - 1].m_fZ, m_aArthasSpawnLocs[uiPosition - 1].m_fO, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
     }
 }
 
@@ -434,12 +434,12 @@ void instance_culling_of_stratholme::Update(uint32 uiDiff)
         else
         {
             m_auiEncounter[TYPE_INFINITE_CORRUPTER_TIME] -= uiDiff;
-            if (m_auiEncounter[TYPE_INFINITE_CORRUPTER_TIME]/IN_MILLISECONDS % 20 == 0)
+            if (m_auiEncounter[TYPE_INFINITE_CORRUPTER_TIME] / IN_MILLISECONDS % 20 == 0)
                 SetData(TYPE_INFINITE_CORRUPTER_TIME, m_auiEncounter[TYPE_INFINITE_CORRUPTER_TIME]);
         }
 
         // This part is needed for a small "hurry up guys" note, TODO, verify 20min
-        if (m_auiEncounter[TYPE_INFINITE_CORRUPTER] == IN_PROGRESS && m_auiEncounter[TYPE_INFINITE_CORRUPTER_TIME] <= 24*MINUTE*IN_MILLISECONDS)
+        if (m_auiEncounter[TYPE_INFINITE_CORRUPTER] == IN_PROGRESS && m_auiEncounter[TYPE_INFINITE_CORRUPTER_TIME] <= 24 * MINUTE * IN_MILLISECONDS)
             SetData(TYPE_INFINITE_CORRUPTER, SPECIAL);
     }
 

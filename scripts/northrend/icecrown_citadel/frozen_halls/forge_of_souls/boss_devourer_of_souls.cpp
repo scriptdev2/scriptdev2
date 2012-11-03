@@ -74,12 +74,12 @@ enum
 
 static const int aTexts[6][3] =
 {
-    {SAY_MALE_1_AGGRO,       SAY_FEMALE_AGGRO,       0},                        // 0 - aggro
+    {SAY_MALE_1_AGGRO,       SAY_FEMALE_AGGRO,       0},    // 0 - aggro
     {SAY_MALE_1_SLAY_1,      SAY_FEMALE_SLAY_1,      SAY_MALE_2_SLAY_1},        // 1 - slay1
     {SAY_MALE_1_SLAY_2,      SAY_FEMALE_SLAY_2,      SAY_MALE_2_SLAY_2},        // 2 - slay2
     {SAY_MALE_1_DEATH,       SAY_FEMALE_DEATH,       SAY_MALE_2_DEATH},         // 3 - death
     {SAY_MALE_1_SOUL_ATTACK, SAY_FEMALE_SOUL_ATTACK, SAY_MALE_2_SOUL_ATTACK},   // 4 - unleashing soul
-    {SAY_MALE_1_DARK_GLARE,  SAY_FEMALE_DARK_GLARE,  0}                         // 5 - glare
+    {SAY_MALE_1_DARK_GLARE,  SAY_FEMALE_DARK_GLARE,  0}     // 5 - glare
 };
 
 struct MANGOS_DLL_DECL boss_devourer_of_soulsAI : public ScriptedAI
@@ -171,8 +171,8 @@ struct MANGOS_DLL_DECL boss_devourer_of_soulsAI : public ScriptedAI
             m_lWellGuids.push_back(pSummoned->GetObjectGuid());
             pSummoned->CastSpell(pSummoned, SPELL_WELL_OF_SOULS_TRIGGER, true, NULL, NULL, m_creature->GetObjectGuid());
             // Commented as of not stacking auras
-            //pSummoned->CastSpell(pSummoned, SPELL_WELL_OF_SOULS_VISUAL1, true);
-            //pSummoned->CastSpell(pSummoned, SPELL_WELL_OF_SOULS_VISUAL2, true);
+            // pSummoned->CastSpell(pSummoned, SPELL_WELL_OF_SOULS_VISUAL1, true);
+            // pSummoned->CastSpell(pSummoned, SPELL_WELL_OF_SOULS_VISUAL2, true);
         }
         else if (pSummoned->GetEntry() == NPC_UNLEASHED_SOUL)
         {
@@ -190,13 +190,13 @@ struct MANGOS_DLL_DECL boss_devourer_of_soulsAI : public ScriptedAI
     {
         switch (pSpellEntry->Id)
         {
-            // If we hit a target with phantom blast, the achievement_criteria is failed
+                // If we hit a target with phantom blast, the achievement_criteria is failed
             case SPELL_PHANTOM_BLAST:
             case SPELL_PHANTOM_BLAST_H:
                 if (m_pInstance)
                     m_pInstance->SetData(TYPE_ACHIEV_PHANTOM_BLAST, FAIL);
                 break;
-            // Might be placed somewhere else better, important is to note that this text is said after the 3s cast time
+                // Might be placed somewhere else better, important is to note that this text is said after the 3s cast time
             case SPELL_WAILING_SOULS:
                 DoScriptText(aTexts[5][m_uiFace], m_creature);
                 break;
@@ -250,11 +250,11 @@ struct MANGOS_DLL_DECL boss_devourer_of_soulsAI : public ScriptedAI
         // Phantom Blast
         if (m_uiPhantomBlastTimer < uiDiff)
         {
-           if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
-           {
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+            {
                 if (DoCastSpellIfCan(pTarget, m_bIsRegularMode ? SPELL_PHANTOM_BLAST : SPELL_PHANTOM_BLAST_H) == CAST_OK)
                     m_uiPhantomBlastTimer = urand(5000, 10000); // TODO
-           }
+            }
         }
         else
             m_uiPhantomBlastTimer -= uiDiff;

@@ -60,12 +60,12 @@ enum
     SPELL_IDOL_SHUTDOWN             = 12774,
 
     // summon spells only exist in 1.x
-    //SPELL_SUMMON_1                  = 12694,              // NPC_WITHERED_BATTLE_BOAR
-    //SPELL_SUMMON_2                  = 14802,              // NPC_DEATHS_HEAD_GEOMANCER
-    //SPELL_SUMMON_3                  = 14801,              // NPC_WITHERED_QUILGUARD
+    // SPELL_SUMMON_1                  = 12694,             // NPC_WITHERED_BATTLE_BOAR
+    // SPELL_SUMMON_2                  = 14802,             // NPC_DEATHS_HEAD_GEOMANCER
+    // SPELL_SUMMON_3                  = 14801,             // NPC_WITHERED_QUILGUARD
 };
 
-static float m_fSpawnerCoord[3][4]=
+static float m_fSpawnerCoord[3][4] =
 {
     {2582.79f, 954.392f, 52.4821f, 3.78736f},
     {2569.42f, 956.380f, 52.2732f, 5.42797f},
@@ -101,7 +101,7 @@ struct MANGOS_DLL_DECL npc_belnistraszAI : public npc_escortAI
         {
             if (!m_bAggro)
             {
-                DoScriptText(urand(0,1) ? SAY_BELNISTRASZ_AGGRO_1 : SAY_BELNISTRASZ_AGGRO_1, m_creature, pAttacker);
+                DoScriptText(urand(0, 1) ? SAY_BELNISTRASZ_AGGRO_1 : SAY_BELNISTRASZ_AGGRO_1, m_creature, pAttacker);
                 m_bAggro = true;
             }
 
@@ -119,7 +119,7 @@ struct MANGOS_DLL_DECL npc_belnistraszAI : public npc_escortAI
             return;
         }
 
-        for(int i = 0; i < 4; ++i)
+        for (int i = 0; i < 4; ++i)
         {
             uint32 uiEntry = 0;
 
@@ -128,7 +128,7 @@ struct MANGOS_DLL_DECL npc_belnistraszAI : public npc_escortAI
             float fX, fZ, fY;
             pSummoner->GetClosePoint(fX, fZ, fY, 0.0f, 2.0f, angle);
 
-            switch(i)
+            switch (i)
             {
                 case 0:
                 case 1:
@@ -171,7 +171,7 @@ struct MANGOS_DLL_DECL npc_belnistraszAI : public npc_escortAI
         {
             if (m_uiRitualTimer < uiDiff)
             {
-                switch(m_uiRitualPhase)
+                switch (m_uiRitualPhase)
                 {
                     case 0:
                         DoCastSpellIfCan(m_creature, SPELL_IDOL_SHUTDOWN);
@@ -224,7 +224,7 @@ struct MANGOS_DLL_DECL npc_belnistraszAI : public npc_escortAI
                             {
                                 if (!pGo->isSpawned())
                                 {
-                                    pGo->SetRespawnTime(HOUR*IN_MILLISECONDS);
+                                    pGo->SetRespawnTime(HOUR * IN_MILLISECONDS);
                                     pGo->Refresh();
                                 }
                             }
@@ -250,7 +250,7 @@ struct MANGOS_DLL_DECL npc_belnistraszAI : public npc_escortAI
         if (m_uiFireballTimer < uiDiff)
         {
             DoCastSpellIfCan(m_creature->getVictim(), SPELL_FIREBALL);
-            m_uiFireballTimer  = urand(2000,3000);
+            m_uiFireballTimer  = urand(2000, 3000);
         }
         else
             m_uiFireballTimer -= uiDiff;
@@ -258,7 +258,7 @@ struct MANGOS_DLL_DECL npc_belnistraszAI : public npc_escortAI
         if (m_uiFrostNovaTimer < uiDiff)
         {
             DoCastSpellIfCan(m_creature->getVictim(), SPELL_FROST_NOVA);
-            m_uiFrostNovaTimer = urand(10000,15000);
+            m_uiFrostNovaTimer = urand(10000, 15000);
         }
         else
             m_uiFrostNovaTimer -= uiDiff;

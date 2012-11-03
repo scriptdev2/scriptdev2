@@ -117,7 +117,7 @@ class MANGOS_DLL_DECL instance_ruins_of_ahnqiraj : public ScriptedInstance
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
 
-        void GetKaldoreiGuidList(GuidList &lList) { lList = m_lKaldoreiGuidList; }
+        void GetKaldoreiGuidList(GuidList& lList) { lList = m_lKaldoreiGuidList; }
 
         void Update(uint32 uiDiff);
 

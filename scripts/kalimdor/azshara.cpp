@@ -49,20 +49,20 @@ enum
     NPC_DEPTH_CHARGE            = 23025,
 
     SPELL_SUMMON_RIZZLE         = 39866,
-    SPELL_BLACKJACK             = 39865,                    //stuns player
-    SPELL_ESCAPE                = 39871,                    //teleports to water
+    SPELL_BLACKJACK             = 39865,                    // stuns player
+    SPELL_ESCAPE                = 39871,                    // teleports to water
     SPELL_SWIM_SPEED            = 40596,
 
-    SPELL_FROST_TRAP            = 39902,                    //not used?
+    SPELL_FROST_TRAP            = 39902,                    // not used?
 
-    SPELL_PERIODIC_GRENADE      = 40553,                    //cannot tell who are supposed to have this aura
-    SPELL_FROST_GRENADE         = 40525,                    //triggered by periodic grenade
+    SPELL_PERIODIC_GRENADE      = 40553,                    // cannot tell who are supposed to have this aura
+    SPELL_FROST_GRENADE         = 40525,                    // triggered by periodic grenade
 
-    SPELL_SUMMON_DEPTH_CHARGE   = 39907,                    //summons the bomb creature
-    SPELL_TRAP                  = 39899,                    //knockback
+    SPELL_SUMMON_DEPTH_CHARGE   = 39907,                    // summons the bomb creature
+    SPELL_TRAP                  = 39899,                    // knockback
 
     SPELL_PERIODIC_CHECK        = 39888,
-    SPELL_SURRENDER             = 39889,                    //should be triggered by periodic check, if player comes in certain distance with quest incomplete
+    SPELL_SURRENDER             = 39889,                    // should be triggered by periodic check, if player comes in certain distance with quest incomplete
 
     SPELL_GIVE_MOONSTONE        = 39886
 };
@@ -102,10 +102,10 @@ struct MANGOS_DLL_DECL npc_rizzle_sprysprocketAI : public npc_escortAI
 
     void WaypointReached(uint32 uiPointId)
     {
-        switch(uiPointId)
+        switch (uiPointId)
         {
             case 0:
-                m_creature->CastSpell(m_creature,SPELL_PERIODIC_CHECK,true);
+                m_creature->CastSpell(m_creature, SPELL_PERIODIC_CHECK, true);
                 break;
         }
     }
@@ -122,17 +122,17 @@ struct MANGOS_DLL_DECL npc_rizzle_sprysprocketAI : public npc_escortAI
         }
     }
 
-    //this may be wrong (and doesn't work)
+    // this may be wrong (and doesn't work)
     void SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell)
     {
         if (pTarget->GetTypeId() == TYPEID_PLAYER && pSpell->Id == SPELL_FROST_GRENADE)
             DoScriptText(SAY_WHISPER_CHILL, m_creature, pTarget);
     }
 
-    //this may be wrong
+    // this may be wrong
     void JustSummoned(Creature* pSummoned)
     {
-        //pSummoned->CastSpell(pSummoned,SPELL_PERIODIC_GRENADE,false,NULL,NULL,m_creature->GetObjectGuid());
+        // pSummoned->CastSpell(pSummoned,SPELL_PERIODIC_GRENADE,false,NULL,NULL,m_creature->GetObjectGuid());
     }
 
     void UpdateEscortAI(const uint32 uiDiff)
@@ -147,14 +147,14 @@ struct MANGOS_DLL_DECL npc_rizzle_sprysprocketAI : public npc_escortAI
                 return;
             }
 
-            switch(m_uiIntroPhase)
+            switch (m_uiIntroPhase)
             {
                 case 0:
                     DoScriptText(SAY_START, m_creature);
                     DoScriptText(EMOTE_START, m_creature);
                     break;
                 case 1:
-                    //teleports to water _before_ we Start()
+                    // teleports to water _before_ we Start()
                     m_creature->CastSpell(m_creature, SPELL_ESCAPE, false);
                     break;
                 case 2:
@@ -188,7 +188,7 @@ CreatureAI* GetAI_npc_rizzle_sprysprocket(Creature* pCreature)
 bool GossipHello_npc_rizzle_sprysprocket(Player* pPlayer, Creature* pCreature)
 {
     if (pPlayer->GetQuestStatus(QUEST_MOONSTONE) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_MOONSTONE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_MOONSTONE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
 
     pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
     return true;
@@ -196,7 +196,7 @@ bool GossipHello_npc_rizzle_sprysprocket(Player* pPlayer, Creature* pCreature)
 
 bool GossipSelect_npc_rizzle_sprysprocket(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
+    if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)
     {
         pPlayer->CLOSE_GOSSIP_MENU();
         pPlayer->CastSpell(pPlayer, SPELL_GIVE_MOONSTONE, false);
@@ -232,8 +232,8 @@ CreatureAI* GetAI_npc_depth_charge(Creature* pCreature)
 
 bool GOUse_go_southfury_moonstone(Player* pPlayer, GameObject* pGo)
 {
-    //implicitTarget=48 not implemented as of writing this code, and manual summon may be just ok for our purpose
-    //pPlayer->CastSpell(pPlayer,SPELL_SUMMON_RIZZLE,false);
+    // implicitTarget=48 not implemented as of writing this code, and manual summon may be just ok for our purpose
+    // pPlayer->CastSpell(pPlayer,SPELL_SUMMON_RIZZLE,false);
 
     if (Creature* pCreature = pPlayer->SummonCreature(NPC_RIZZLE, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_DEAD_DESPAWN, 0))
         pCreature->CastSpell(pPlayer, SPELL_BLACKJACK, false);
@@ -325,7 +325,7 @@ struct MANGOS_DLL_DECL mobs_spitelashesAI : public ScriptedAI
 
         // Creature get polymorphed into a sheep and after 5 secs despawns
         if (pCaster->GetTypeId() == TYPEID_PLAYER && ((Player*)pCaster)->GetQuestStatus(QUEST_FRAGMENTED_MAGIC) == QUEST_STATUS_INCOMPLETE &&
-            (pSpell->Id==118 || pSpell->Id== 12824 || pSpell->Id== 12825 || pSpell->Id== 12826))
+                (pSpell->Id == 118 || pSpell->Id == 12824 || pSpell->Id == 12825 || pSpell->Id == 12826))
             m_uiMorphTimer = 5000;
     }
 
@@ -333,7 +333,7 @@ struct MANGOS_DLL_DECL mobs_spitelashesAI : public ScriptedAI
     {
         Unit* pTarget = NULL;
 
-        switch(m_aSpitelashAbility[uiIndex].m_uiTargetType)
+        switch (m_aSpitelashAbility[uiIndex].m_uiTargetType)
         {
             case TARGET_TYPE_SELF:
                 pTarget = m_creature;
@@ -410,10 +410,10 @@ bool GossipHello_npc_loramus_thalipedes(Player* pPlayer, Creature* pCreature)
         pPlayer->PrepareQuestMenu(pCreature->GetObjectGuid());
 
     if (pPlayer->GetQuestStatus(2744) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Can you help me?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Can you help me?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
 
     if (pPlayer->GetQuestStatus(3141) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Tell me your story", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Tell me your story", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
 
     pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
 
@@ -422,7 +422,7 @@ bool GossipHello_npc_loramus_thalipedes(Player* pPlayer, Creature* pCreature)
 
 bool GossipSelect_npc_loramus_thalipedes(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    switch(uiAction)
+    switch (uiAction)
     {
         case GOSSIP_ACTION_INFO_DEF+1:
             pPlayer->CLOSE_GOSSIP_MENU();

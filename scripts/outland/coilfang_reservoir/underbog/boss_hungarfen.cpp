@@ -53,7 +53,7 @@ struct MANGOS_DLL_DECL boss_hungarfenAI : public ScriptedAI
     void Reset()
     {
         m_bHasSpores        = false;
-        m_uiMushroomTimer   = 5000;                              // 1 mushroom after 5s, then one per 10s. This should be different in heroic mode
+        m_uiMushroomTimer   = 5000;                         // 1 mushroom after 5s, then one per 10s. This should be different in heroic mode
         m_uiAcidGeyserTimer = 10000;
     }
 

@@ -42,7 +42,7 @@ enum
     SPELL_MOUNT                 = 29770,
     SPELL_KNOCKDOWN             = 29711,
     SPELL_SUMMON_ATTUMEN        = 29714,
-    SPELL_SUMMON_ATTUMEN_MOUNTED= 29799,
+    SPELL_SUMMON_ATTUMEN_MOUNTED = 29799,
 
     // Attumen
     SPELL_SHADOWCLEAVE          = 29832,
@@ -204,7 +204,7 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
     uint32 m_uiCurseTimer;
     uint32 m_uiRandomYellTimer;
     uint32 m_uiKnockDown;
-    uint32 m_uiChargeTimer;                                 //only when mounted
+    uint32 m_uiChargeTimer;                                 // only when mounted
 
     bool m_bHasSummonRider;
 
@@ -212,7 +212,7 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
     {
         m_uiCleaveTimer     = urand(10000, 16000);
         m_uiCurseTimer      = 30000;
-        m_uiRandomYellTimer = urand(30000, 60000);          //Occasionally yell
+        m_uiRandomYellTimer = urand(30000, 60000);          // Occasionally yell
         m_uiChargeTimer     = 20000;
         m_uiKnockDown       = urand(6000, 9000);
 
@@ -322,7 +322,7 @@ CreatureAI* GetAI_boss_attumen(Creature* pCreature)
 
 bool EffectDummyCreature_spell_mount_attumen(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
 {
-    //always check spellid and effectindex
+    // always check spellid and effectindex
     if (uiSpellId == SPELL_MOUNT && uiEffIndex == EFFECT_INDEX_0)
     {
         // Avoid possible DB errors
@@ -333,7 +333,7 @@ bool EffectDummyCreature_spell_mount_attumen(Unit* pCaster, uint32 uiSpellId, Sp
                 pMidnightAI->DoPrepareMount(pCreatureTarget);
         }
 
-        //always return true when we are handling this spell and effect
+        // always return true when we are handling this spell and effect
         return true;
     }
 

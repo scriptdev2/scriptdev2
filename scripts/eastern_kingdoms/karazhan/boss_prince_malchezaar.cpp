@@ -39,7 +39,7 @@ enum
     SAY_SUMMON2                 = -1532101,
     SAY_DEATH                   = -1532102,
 
-    //Enfeeble is supposed to reduce hp to 1 and then heal player back to full when it ends
+    // Enfeeble is supposed to reduce hp to 1 and then heal player back to full when it ends
     SPELL_ENFEEBLE              = 30843,                    // Enfeeble during phases 1 and 2
     SPELL_ENFEEBLE_EFFECT       = 41624,                    // purpose unk - cast during the transition from phase 2 to 3
     SPELL_SHADOW_NOVA           = 30852,                    // Shadownova used during all phases
@@ -50,8 +50,8 @@ enum
     SPELL_SUMMON_AXES           = 30891,                    // Summon 17650
     SPELL_EQUIP_AXES            = 30857,                    // Visual for axe equiping - transition to phase 2
     SPELL_AMPLIFY_DAMAGE        = 39095,                    // Amplifiy during phase 3 3
-    //SPELL_CLEAVE              = 30131,                    // spell not confirmed
-    //SPELL_INFERNAL_RELAY      = 30834,                    // purpose unk
+    // SPELL_CLEAVE              = 30131,                   // spell not confirmed
+    // SPELL_INFERNAL_RELAY      = 30834,                   // purpose unk
     SPELL_INFERNAL_RELAY_SUMMON = 30835,                    // triggers 30836, which summons an infernal
 
     SPELL_HELLFIRE              = 30859,                    // Infernal damage aura
@@ -117,7 +117,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
 
     void KilledUnit(Unit* pVictim)
     {
-        switch(urand(0, 2))
+        switch (urand(0, 2))
         {
             case 0: DoScriptText(SAY_SLAY1, m_creature); break;
             case 1: DoScriptText(SAY_SLAY2, m_creature); break;
@@ -229,7 +229,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
 
                     // Reset Enfeebled targets if necessary
                     DoHandleEnfeebleHealthReset();
-                    m_uiEnfeebleResetTimer=0;
+                    m_uiEnfeebleResetTimer = 0;
 
                     m_creature->RemoveAurasDueToSpell(SPELL_THRASH_AURA);
                     m_uiShadowNovaTimer = m_uiEnfeebleTimer + 5000;
@@ -317,7 +317,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
             if (m_uiEnfeebleResetTimer <= uiDiff)
             {
                 DoHandleEnfeebleHealthReset();
-                m_uiEnfeebleResetTimer=0;
+                m_uiEnfeebleResetTimer = 0;
             }
             else
                 m_uiEnfeebleResetTimer -= uiDiff;

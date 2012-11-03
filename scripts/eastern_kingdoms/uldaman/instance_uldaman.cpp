@@ -39,7 +39,7 @@ void instance_uldaman::Initialize()
 
 void instance_uldaman::OnObjectCreate(GameObject* pGo)
 {
-    switch(pGo->GetEntry())
+    switch (pGo->GetEntry())
     {
         case GO_TEMPLE_DOOR_UPPER:
             if (m_auiEncounter[0] == DONE)
@@ -61,7 +61,7 @@ void instance_uldaman::OnObjectCreate(GameObject* pGo)
 
 void instance_uldaman::OnCreatureCreate(Creature* pCreature)
 {
-    switch(pCreature->GetEntry())
+    switch (pCreature->GetEntry())
     {
         case NPC_HALLSHAPER:
         case NPC_CUSTODIAN:
@@ -82,7 +82,7 @@ void instance_uldaman::OnCreatureCreate(Creature* pCreature)
 
 void instance_uldaman::SetData(uint32 uiType, uint32 uiData)
 {
-    switch(uiType)
+    switch (uiType)
     {
         case TYPE_ALTAR_EVENT:
             if (uiData == DONE)
@@ -148,7 +148,7 @@ void instance_uldaman::Load(const char* chrIn)
     std::istringstream loadStream(chrIn);
     loadStream >> m_auiEncounter[0] >> m_auiEncounter[1];
 
-    for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+    for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
     {
         if (m_auiEncounter[i] == IN_PROGRESS)
             m_auiEncounter[i] = NOT_STARTED;
@@ -159,17 +159,17 @@ void instance_uldaman::Load(const char* chrIn)
 
 void instance_uldaman::SetData64(uint32 uiData, uint64 uiGuid)
 {
-    switch(uiData)
+    switch (uiData)
     {
         case DATA_EVENT_STARTER:
             m_playerGuid = ObjectGuid(uiGuid);
-        break;
+            break;
     }
 }
 
 uint32 instance_uldaman::GetData(uint32 uiType)
 {
-    switch(uiType)
+    switch (uiType)
     {
         case TYPE_ARCHAEDAS:
             return m_auiEncounter[1];
@@ -179,7 +179,7 @@ uint32 instance_uldaman::GetData(uint32 uiType)
 
 uint64 instance_uldaman::GetData64(uint32 uiData)
 {
-    switch(uiData)
+    switch (uiData)
     {
         case DATA_EVENT_STARTER:
             return m_playerGuid.GetRawValue();
@@ -227,7 +227,7 @@ Creature* instance_uldaman::GetClosestDwarfNotInCombat(Creature* pSearcher, uint
 
         if (pTemp && pTemp->isAlive() && !pTemp->getVictim())
         {
-            switch(uiPhase)
+            switch (uiPhase)
             {
                 case PHASE_ARCHA_1:
                     if (pTemp->GetEntry() != NPC_CUSTODIAN && pTemp->GetEntry() != NPC_HALLSHAPER)
@@ -266,7 +266,7 @@ void instance_uldaman::Update(uint32 uiDiff)
 
             if (!m_mKeeperMap.empty())
             {
-                for(std::map<ObjectGuid, bool>::iterator itr = m_mKeeperMap.begin(); itr != m_mKeeperMap.end(); ++itr)
+                for (std::map<ObjectGuid, bool>::iterator itr = m_mKeeperMap.begin(); itr != m_mKeeperMap.end(); ++itr)
                 {
                     // died earlier
                     if (!itr->second)

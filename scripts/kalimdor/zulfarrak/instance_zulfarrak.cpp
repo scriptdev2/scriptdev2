@@ -29,7 +29,7 @@ instance_zulfarrak::instance_zulfarrak(Map* pMap) : ScriptedInstance(pMap)
     Initialize();
 }
 
- void instance_zulfarrak::Initialize()
+void instance_zulfarrak::Initialize()
 {
     memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
 }
@@ -46,7 +46,7 @@ void instance_zulfarrak::OnCreatureCreate(Creature* pCreature)
 
 void instance_zulfarrak::SetData(uint32 uiType, uint32 uiData)
 {
-    switch(uiType)
+    switch (uiType)
     {
         case TYPE_VELRATHA:
         case TYPE_GAHZRILLA:
@@ -91,7 +91,7 @@ void instance_zulfarrak::Load(const char* chrIn)
     loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3]
                >> m_auiEncounter[4] >> m_auiEncounter[5] >> m_auiEncounter[6] >> m_auiEncounter[7];
 
-    for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+    for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
     {
         if (m_auiEncounter[i] == IN_PROGRESS)
             m_auiEncounter[i] = NOT_STARTED;

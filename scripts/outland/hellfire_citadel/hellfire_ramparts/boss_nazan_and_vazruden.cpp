@@ -38,11 +38,11 @@ enum
 
     SPELL_SUMMON_VAZRUDEN   = 30717,
 
-    //vazruden
+    // vazruden
     SPELL_REVENGE           = 19130,
     SPELL_REVENGE_H         = 40392,
 
-    //nazan
+    // nazan
     SPELL_FIREBALL          = 30691,                        // This and the next while flying (dmg values will change in cata)
     SPELL_FIREBALL_B        = 33793,
     SPELL_FIREBALL_H        = 32491,
@@ -55,7 +55,7 @@ enum
 
     SPELL_BELLOW_ROAR_H     = 39427,
 
-    //misc
+    // misc
     POINT_ID_CENTER         = 100,
     POINT_ID_FLYING         = 101,
     POINT_ID_COMBAT         = 102,
@@ -63,8 +63,8 @@ enum
     NPC_NAZAN               = 17536,
 };
 
-const float afCenterPos[3] = {-1399.401f, 1736.365f, 87.008f}; //moves here to drop off nazan
-const float afCombatPos[3] = {-1413.848f, 1754.019f, 83.146f}; //moves here when decending
+const float afCenterPos[3] = { -1399.401f, 1736.365f, 87.008f}; // moves here to drop off nazan
+const float afCombatPos[3] = { -1413.848f, 1754.019f, 83.146f}; // moves here when decending
 
 struct MANGOS_DLL_DECL boss_vazrudenAI : public ScriptedAI
 {
@@ -89,7 +89,7 @@ struct MANGOS_DLL_DECL boss_vazrudenAI : public ScriptedAI
 
     void Aggro(Unit* pWho)
     {
-        switch(urand(0, 2))
+        switch (urand(0, 2))
         {
             case 0: DoScriptText(SAY_AGGRO1, m_creature); break;
             case 1: DoScriptText(SAY_AGGRO2, m_creature); break;

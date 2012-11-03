@@ -72,7 +72,7 @@ enum
     SPELL_SUMMON_ARCANE_BOMB        = 56429,
     SPELL_ARCANE_BOMB               = 56430,            // triggers 56432 and 56431 on target hit
     SPELL_SURGE_OF_POWER_PULSE      = 56505,            // deep breath spell
-    //SPELL_ARCANE_PULSE            = 57432,            // purpose unk
+    // SPELL_ARCANE_PULSE            = 57432,            // purpose unk
 
     // transition spells
     SPELL_DESTROY_PLATFORM_PRE      = 58842,
@@ -97,8 +97,8 @@ enum
     SPELL_VORTEX_CHANNEL            = 56237,
 
     // arcane overload - handled in core
-    //SPELL_ARCANE_OVERLOAD         = 56432,
-    //SPELL_ARCANE_BOMB_DAMAGE      = 56431,
+    // SPELL_ARCANE_OVERLOAD         = 56432,
+    // SPELL_ARCANE_BOMB_DAMAGE      = 56431,
 
     // static field
     SPELL_STATIC_FIELD              = 57428,
@@ -194,7 +194,7 @@ struct MANGOS_DLL_DECL boss_malygosAI : public ScriptedAI, private DialogueHelpe
     {
         m_uiPhase               = PHASE_FLOOR;
 
-        m_uiBerserkTimer        = 10*MINUTE*IN_MILLISECONDS;
+        m_uiBerserkTimer        = 10 * MINUTE * IN_MILLISECONDS;
         m_uiVortexTimer         = 60000;
         m_uiArcaneBreathTimer   = 15000;
         m_uiPowerSparkTimer     = 30000;
@@ -262,7 +262,7 @@ struct MANGOS_DLL_DECL boss_malygosAI : public ScriptedAI, private DialogueHelpe
     void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DEATH, m_creature);
-        m_creature->SummonCreature(NPC_ALEXSTRASZA, aAlextraszaSpawnPos[0], aAlextraszaSpawnPos[1], aAlextraszaSpawnPos[2], aAlextraszaSpawnPos[3], TEMPSUMMON_TIMED_DESPAWN, 5*MINUTE*IN_MILLISECONDS);
+        m_creature->SummonCreature(NPC_ALEXSTRASZA, aAlextraszaSpawnPos[0], aAlextraszaSpawnPos[1], aAlextraszaSpawnPos[2], aAlextraszaSpawnPos[3], TEMPSUMMON_TIMED_DESPAWN, 5 * MINUTE * IN_MILLISECONDS);
 
         if (m_pInstance)
             m_pInstance->SetData(TYPE_MALYGOS, DONE);

@@ -65,9 +65,9 @@ bool GOUse_go_gauntlet_gate(Player* pPlayer, GameObject* pGo)
     if (pInstance->GetData(TYPE_BARON_RUN) != NOT_STARTED)
         return false;
 
-    if (Group *pGroup = pPlayer->GetGroup())
+    if (Group* pGroup = pPlayer->GetGroup())
     {
-        for(GroupReference *itr = pGroup->GetFirstMember(); itr != NULL; itr = itr->next())
+        for (GroupReference* itr = pGroup->GetFirstMember(); itr != NULL; itr = itr->next())
         {
             Player* pGroupie = itr->getSource();
             if (!pGroupie)
@@ -176,7 +176,7 @@ struct MANGOS_DLL_DECL mob_restless_soulAI : public ScriptedAI
         {
             pSummoned->CastSpell(pSummoned, SPELL_SOUL_FREED, false);
 
-            switch(urand(0, 3))
+            switch (urand(0, 3))
             {
                 case 0: DoScriptText(SAY_ZAPPED0, pSummoned); break;
                 case 1: DoScriptText(SAY_ZAPPED1, pSummoned); break;
@@ -245,7 +245,7 @@ struct MANGOS_DLL_DECL mobs_spectral_ghostly_citizenAI : public ScriptedAI
     {
         if (m_bIsTagged)
         {
-            for(uint32 i = 0; i < 4; ++i)
+            for (uint32 i = 0; i < 4; ++i)
             {
                 float x, y, z;
                 m_creature->GetRandomPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 20.0f, x, y, z);
@@ -278,7 +278,7 @@ struct MANGOS_DLL_DECL mobs_spectral_ghostly_citizenAI : public ScriptedAI
 
     void ReceiveEmote(Player* pPlayer, uint32 uiEmote)
     {
-        switch(uiEmote)
+        switch (uiEmote)
         {
             case TEXTEMOTE_DANCE:
                 EnterEvadeMode();

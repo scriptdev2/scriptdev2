@@ -139,7 +139,7 @@ CreatureAI* GetAI_boss_gortok(Creature* pCreature)
 
 bool EffectDummyCreature_spell_awaken_gortok(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
 {
-    //always check spellid and effectindex
+    // always check spellid and effectindex
     if (uiSpellId == SPELL_AWAKEN_GORTOK && uiEffIndex == EFFECT_INDEX_0)
     {
         pCreatureTarget->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -152,7 +152,7 @@ bool EffectDummyCreature_spell_awaken_gortok(Unit* pCaster, uint32 uiSpellId, Sp
                 pCreatureTarget->AI()->AttackStart(pStarter);
         }
 
-        //always return true when we are handling this spell and effect
+        // always return true when we are handling this spell and effect
         return true;
     }
 
@@ -205,7 +205,7 @@ void AddSC_boss_gortok()
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
-    pNewScript->Name="npc_gortok_subboss";
+    pNewScript->Name = "npc_gortok_subboss";
     pNewScript->pEffectAuraDummy = &EffectAuraDummy_spell_aura_dummy_awaken_subboss;
     pNewScript->RegisterSelf();
 

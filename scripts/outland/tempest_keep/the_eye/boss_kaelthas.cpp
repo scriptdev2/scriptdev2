@@ -27,7 +27,7 @@ EndScriptData */
 enum
 {
     // ***** Event yells ********
-    //kael'thas Speech
+    // kael'thas Speech
     SAY_INTRO                           = -1550016,
     SAY_INTRO_CAPERNIAN                 = -1550017,
     SAY_INTRO_TELONICUS                 = -1550018,
@@ -49,25 +49,25 @@ enum
     SAY_DEATH                           = -1550034,
     EMOTE_PYROBLAST                     = -1550044,
 
-    //Thaladred the Darkener speech
+    // Thaladred the Darkener speech
     SAY_THALADRED_AGGRO                 = -1550035,
     SAY_THALADRED_DEATH                 = -1550036,
     EMOTE_THALADRED_GAZE                = -1550037,
 
-    //Lord Sanguinar speech
+    // Lord Sanguinar speech
     SAY_SANGUINAR_AGGRO                 = -1550038,
     SAY_SANGUINAR_DEATH                 = -1550039,
 
-    //Grand Astromancer Capernian speech
+    // Grand Astromancer Capernian speech
     SAY_CAPERNIAN_AGGRO                 = -1550040,
     SAY_CAPERNIAN_DEATH                 = -1550041,
 
-    //Master Engineer Telonicus speech
+    // Master Engineer Telonicus speech
     SAY_TELONICUS_AGGRO                 = -1550042,
     SAY_TELONICUS_DEATH                 = -1550043,
 
     // ***** Kaelthas spells ********
-    //Phase 2 spells
+    // Phase 2 spells
     SPELL_KAEL_PHASE_2                  = 36709,            // not sure if this is used in the right way
     SPELL_SUMMON_WEAPONS                = 36976,
     SPELL_SUMMON_WEAPONA                = 36958,
@@ -79,7 +79,7 @@ enum
     SPELL_SUMMON_WEAPONG                = 36964,
     SPELL_RESURRECTION                  = 36450,
 
-    //Phase 4 spells
+    // Phase 4 spells
     SPELL_FIREBALL                      = 36805,
     SPELL_PYROBLAST                     = 36819,
     SPELL_FLAME_STRIKE                  = 36735,            // summons 21369
@@ -89,14 +89,14 @@ enum
     SPELL_PHOENIX_ANIMATION             = 36723,            // summons 21362
     SPELL_MIND_CONTROL                  = 32830,
 
-    //Phase 5 spells
+    // Phase 5 spells
     SPELL_GAIN_POWER                    = 36091,
     SPELL_EXPLODE                       = 36092,
-    //SPELL_EXPLODE_1                   = 36354,            // it's not very clear what all these spells should do
+    // SPELL_EXPLODE_1                   = 36354,           // it's not very clear what all these spells should do
     SPELL_EXPLODE_2                     = 36373,
-    //SPELL_EXPLODE_3                   = 36375,
-    //SPELL_EXPLODE_4                   = 36376,
-    //SPELL_KAEL_STUN                   = 36185,            // purpose unk
+    // SPELL_EXPLODE_3                   = 36375,
+    // SPELL_EXPLODE_4                   = 36376,
+    // SPELL_KAEL_STUN                   = 36185,           // purpose unk
     SPELL_FULLPOWER                     = 36187,
     SPELL_GRAVITY_LAPSE                 = 35941,
     SPELL_GRAVITY_LAPSE_KNOCKBACK       = 34480,            // cast by players - damage effect
@@ -105,27 +105,27 @@ enum
     SPELL_NETHER_VAPOR_SUMMON           = 35865,            // script effect - probably related to 35879
 
     // ***** Advisors spells ********
-    //Thaladred the Darkener spells
+    // Thaladred the Darkener spells
     SPELL_PSYCHIC_BLOW                  = 36966,
     SPELL_SILENCE                       = 30225,
     SPELL_REND                          = 36965,
 
-    //Lord Sanguinar spells
+    // Lord Sanguinar spells
     SPELL_BELLOWING_ROAR                = 44863,
 
-    //Grand Astromancer Capernian spells
+    // Grand Astromancer Capernian spells
     SPELL_CAPERNIAN_FIREBALL            = 36971,
     SPELL_CONFLAGRATION                 = 37018,
     SPELL_ARCANE_BURST                  = 36970,
 
-    //Master Engineer Telonicus spells
+    // Master Engineer Telonicus spells
     SPELL_BOMB                          = 37036,
     SPELL_REMOTE_TOY                    = 37027,
 
     // ***** Other summons spells ********
-    //Nether Vapor spell
+    // Nether Vapor spell
     SPELL_NETHER_VAPOR                  = 35858,
-    //Phoenix spell
+    // Phoenix spell
     SPELL_BURN                          = 36720,
     SPELL_EMBER_BLAST                   = 34341,
     SPELL_REBIRTH                       = 35369,
@@ -153,7 +153,7 @@ enum
     MAX_MIND_CONTROL                    = 3,
 };
 
-static const uint32 m_auiSpellSummonWeapon[MAX_WEAPONS]=
+static const uint32 m_auiSpellSummonWeapon[MAX_WEAPONS] =
 {
     SPELL_SUMMON_WEAPONA, SPELL_SUMMON_WEAPONB, SPELL_SUMMON_WEAPONC, SPELL_SUMMON_WEAPOND,
     SPELL_SUMMON_WEAPONE, SPELL_SUMMON_WEAPONF, SPELL_SUMMON_WEAPONG
@@ -162,8 +162,8 @@ static const uint32 m_auiSpellSummonWeapon[MAX_WEAPONS]=
 // teleport spells for gravity lapse event
 static const uint32 m_auiSpellGravityLapseTeleport[] =
 {
-    35966,35967,35968,35969,35970,35971,35972,35973,35974,35975,35976,35977,35978,35979,35980,
-    35981,35982,35983,35984,35985,35986,35987,35988,35989,35990
+    35966, 35967, 35968, 35969, 35970, 35971, 35972, 35973, 35974, 35975, 35976, 35977, 35978, 35979, 35980,
+    35981, 35982, 35983, 35984, 35985, 35986, 35987, 35988, 35989, 35990
 };
 
 static const float aCenterPos[3] = {795.00f, -0.46f, 48.72f};
@@ -240,7 +240,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
     void MoveInLineOfSight(Unit* pWho)
     {
         if (m_uiPhase == PHASE_0_NOT_BEGUN && pWho->GetTypeId() == TYPEID_PLAYER && !((Player*)pWho)->isGameMaster() &&
-            m_creature->IsWithinDistInMap(pWho, m_creature->GetAttackDistance(pWho)) && m_creature->IsWithinLOSInMap(pWho))
+                m_creature->IsWithinDistInMap(pWho, m_creature->GetAttackDistance(pWho)) && m_creature->IsWithinLOSInMap(pWho))
         {
             DoScriptText(SAY_INTRO, m_creature);
             m_uiPhase = PHASE_1_ADVISOR;
@@ -267,7 +267,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
     void KilledUnit(Unit* pUnit)
     {
-        switch(urand(0, 2))
+        switch (urand(0, 2))
         {
             case 0: DoScriptText(SAY_SLAY1, m_creature); break;
             case 1: DoScriptText(SAY_SLAY2, m_creature); break;
@@ -381,7 +381,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
     {
         switch (m_uiPhase)
         {
-            // ***** Advisors phase ********
+                // ***** Advisors phase ********
             case PHASE_1_ADVISOR:
             {
                 if (!m_uiPhaseTimer)
@@ -392,7 +392,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                     if (!m_pInstance)
                         return;
 
-                    switch(m_uiPhaseSubphase)
+                    switch (m_uiPhaseSubphase)
                     {
                         case 0:
                             DoScriptText(SAY_INTRO_THALADRED, m_creature);
@@ -449,7 +449,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                             }
                             m_uiPhaseTimer = 0;
                             break;
-                        }
+                    }
 
                     ++m_uiPhaseSubphase;
                 }
@@ -662,7 +662,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
             case PHASE_5_WAITING:
                 // Nothing here; wait for boss to arive at point
                 break;
-            // ***** Phase 6 - explode the bridge ********
+                // ***** Phase 6 - explode the bridge ********
             case PHASE_6_FLYING:
                 if (m_uiExplodeTimer)
                 {
@@ -703,13 +703,13 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
 bool EffectDummyCreature_kael_phase_2(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
 {
-    //always check spellid and effectindex
+    // always check spellid and effectindex
     if (uiSpellId == SPELL_KAEL_PHASE_2 && uiEffIndex == EFFECT_INDEX_0)
     {
         if (boss_kaelthasAI* pKaelAI = dynamic_cast<boss_kaelthasAI*>(pCreatureTarget->AI()))
             pKaelAI->AdvisorDefeated(pCaster->GetEntry());
 
-        //always return true when we are handling this spell and effect
+        // always return true when we are handling this spell and effect
         return true;
     }
 
@@ -755,7 +755,7 @@ struct MANGOS_DLL_DECL advisor_base_ai : public ScriptedAI
         }
     }
 
-    void DamageTaken(Unit* pDoneby, uint32 &uiDamage)
+    void DamageTaken(Unit* pDoneby, uint32& uiDamage)
     {
         // Allow fake death only in the first phase
         if (!m_bCanFakeDeath)
@@ -1025,7 +1025,7 @@ struct MANGOS_DLL_DECL boss_grand_astromancer_capernianAI : public advisor_base_
         else
             m_uiArcaneExplosionTimer -= uiDiff;
 
-        //Do NOT deal any melee damage.
+        // Do NOT deal any melee damage.
     }
 };
 
@@ -1048,7 +1048,7 @@ struct MANGOS_DLL_DECL boss_master_engineer_telonicusAI : public advisor_base_ai
         advisor_base_ai::Reset();
     }
 
-    void Aggro(Unit *pWho)
+    void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_TELONICUS_AGGRO, m_creature);
     }
@@ -1198,7 +1198,7 @@ struct MANGOS_DLL_DECL mob_phoenix_tkAI : public ScriptedAI
         // ToDo: research if this is correct and how can this be done by spell
         if (m_uiCycleTimer < uiDiff)
         {
-            //spell Burn should possible do this, but it doesn't, so do this for now.
+            // spell Burn should possible do this, but it doesn't, so do this for now.
             uint32 uiDmg = urand(4500, 5500);
             if (uiDmg > m_creature->GetHealth())
                 DoSetFakeDeath();

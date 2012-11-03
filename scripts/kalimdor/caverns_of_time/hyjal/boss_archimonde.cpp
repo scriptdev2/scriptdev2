@@ -42,7 +42,7 @@ enum
 
     // spells
     SPELL_DRAIN_TREE            = 39140,                    // intro cosmetic spell
-    //SPELL_DRAIN_TREE_DUMMY    = 39141,                    // purpose unk
+    // SPELL_DRAIN_TREE_DUMMY    = 39141,                   // purpose unk
 
     SPELL_FINGER_DEATH          = 31984,
     SPELL_FINGER_DEATH_SCRIPT   = 32111,                    // targets whisps
@@ -60,7 +60,7 @@ enum
 
     // summoned creatures
     NPC_DOOMFIRE                = 18095,
-    //NPC_DOOMFIRE_SPIRIT       = 18104,
+    // NPC_DOOMFIRE_SPIRIT       = 18104,
     NPC_ANCIENT_WISP            = 17946,
     NPC_CHANNEL_TARGET          = 22418,                    // if he gets in range of 75.0f, then he gets enraged
 
@@ -119,7 +119,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         m_uiFingerOfDeathTimer   = 15000;
         m_uiHandOfDeathTimer     = 2000;
         m_uiWispCount            = 0;
-        m_uiEnrageTimer          = 10*MINUTE*IN_MILLISECONDS;
+        m_uiEnrageTimer          = 10 * MINUTE * IN_MILLISECONDS;
 
         m_bIsEnraged             = false;
         m_bIsEpilogue            = false;
@@ -148,14 +148,14 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         if (pVictim->GetTypeId() != TYPEID_PLAYER)
             return;
 
-        switch(urand(0, 2))
+        switch (urand(0, 2))
         {
             case 0: DoScriptText(SAY_SLAY1, m_creature); break;
             case 1: DoScriptText(SAY_SLAY2, m_creature); break;
             case 2: DoScriptText(SAY_SLAY3, m_creature); break;
         }
 
-        switch(pVictim->getClass())
+        switch (pVictim->getClass())
         {
             case CLASS_PRIEST:
             case CLASS_PALADIN:
@@ -259,7 +259,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
                 if (m_uiSummonWispTimer < uiDiff)
                 {
                     float fX, fY, fZ;
-                    m_creature->GetNearPoint(m_creature, fX, fY, fZ, 0, 75.0f, urand(0, 1) ? frand(0, 2.8f) : frand(4.3f, M_PI_F*2));
+                    m_creature->GetNearPoint(m_creature, fX, fY, fZ, 0, 75.0f, urand(0, 1) ? frand(0, 2.8f) : frand(4.3f, M_PI_F * 2));
                     m_creature->SummonCreature(NPC_ANCIENT_WISP, fX, fY, fZ, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
                     m_uiSummonWispTimer = urand(1000, 1500);
                 }
@@ -356,7 +356,7 @@ struct MANGOS_DLL_DECL npc_doomfire_spiritAI : public ScriptedAI
     {
         m_uiDoomfireLoadTimer = 1000;
         m_uiChangeTargetTimer = 1500;
-        m_fAngle              = urand(0, M_PI_F*2);
+        m_fAngle              = urand(0, M_PI_F * 2);
     }
 
     void UpdateAI(const uint32 uiDiff)
@@ -381,7 +381,7 @@ struct MANGOS_DLL_DECL npc_doomfire_spiritAI : public ScriptedAI
             if (Creature* pDoomfire = m_creature->GetMap()->GetCreature(m_doomfireGuid))
             {
                 float fX, fY, fZ;
-                pDoomfire->GetNearPoint(pDoomfire, fX, fY, fZ, 0, 30.0f, m_fAngle + frand(0, M_PI_F*.5));
+                pDoomfire->GetNearPoint(pDoomfire, fX, fY, fZ, 0, 30.0f, m_fAngle + frand(0, M_PI_F * .5));
                 pDoomfire->GetMotionMaster()->MovePoint(0, fX, fY, fZ);
             }
 

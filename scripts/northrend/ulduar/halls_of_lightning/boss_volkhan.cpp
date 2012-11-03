@@ -43,14 +43,14 @@ enum
     SPELL_SHATTERING_STOMP                  = 52237,
     SPELL_SHATTERING_STOMP_H                = 59529,
 
-    //unclear how "directions" of spells must be. Last, summoning GO, what is it for? Script depend on:
-    SPELL_TEMPER                            = 52238,        //TARGET_SCRIPT boss->anvil
-    SPELL_TEMPER_DUMMY                      = 52654,        //TARGET_SCRIPT anvil->boss
-    //SPELL_TEMPER_VISUAL                   = 52661,        //summons GO
+    // unclear how "directions" of spells must be. Last, summoning GO, what is it for? Script depend on:
+    SPELL_TEMPER                            = 52238,        // TARGET_SCRIPT boss->anvil
+    SPELL_TEMPER_DUMMY                      = 52654,        // TARGET_SCRIPT anvil->boss
+    // SPELL_TEMPER_VISUAL                   = 52661,       // summons GO
 
     SPELL_SUMMON_MOLTEN_GOLEM               = 52405,
 
-    //Molten Golem
+    // Molten Golem
     SPELL_BLAST_WAVE                        = 23113,
     SPELL_IMMOLATION_STRIKE                 = 52433,
     SPELL_IMMOLATION_STRIKE_H               = 59530,
@@ -70,7 +70,7 @@ enum
 
 struct MANGOS_DLL_DECL boss_volkhanAI : public ScriptedAI
 {
-    boss_volkhanAI(Creature *pCreature) : ScriptedAI(pCreature)
+    boss_volkhanAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
@@ -124,7 +124,7 @@ struct MANGOS_DLL_DECL boss_volkhanAI : public ScriptedAI
 
     void KilledUnit(Unit* pVictim)
     {
-        switch(urand(0, 2))
+        switch (urand(0, 2))
         {
             case 0: DoScriptText(SAY_SLAY_1, m_creature); break;
             case 1: DoScriptText(SAY_SLAY_2, m_creature); break;
@@ -137,7 +137,7 @@ struct MANGOS_DLL_DECL boss_volkhanAI : public ScriptedAI
         if (m_lGolemGUIDList.empty())
             return;
 
-        for(GuidList::const_iterator itr = m_lGolemGUIDList.begin(); itr != m_lGolemGUIDList.end(); ++itr)
+        for (GuidList::const_iterator itr = m_lGolemGUIDList.begin(); itr != m_lGolemGUIDList.end(); ++itr)
         {
             if (Creature* pTemp = m_creature->GetMap()->GetCreature(*itr))
             {
@@ -154,11 +154,11 @@ struct MANGOS_DLL_DECL boss_volkhanAI : public ScriptedAI
 
         uint8 m_uiBrittleGolemsCount = 0;
 
-        for(GuidList::const_iterator itr = m_lGolemGUIDList.begin(); itr != m_lGolemGUIDList.end(); ++itr)
+        for (GuidList::const_iterator itr = m_lGolemGUIDList.begin(); itr != m_lGolemGUIDList.end(); ++itr)
         {
             if (Creature* pTemp = m_creature->GetMap()->GetCreature(*itr))
             {
-                 // only shatter brittle golems
+                // only shatter brittle golems
                 if (pTemp->GetEntry() == NPC_BRITTLE_GOLEM)
                 {
                     pTemp->CastSpell(pTemp, m_bIsRegularMode ? SPELL_SHATTER : SPELL_SHATTER_H, true);
@@ -197,7 +197,7 @@ struct MANGOS_DLL_DECL boss_volkhanAI : public ScriptedAI
 
     void UpdateAI(const uint32 uiDiff)
     {
-        //Return since we have no target
+        // Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
@@ -271,7 +271,7 @@ CreatureAI* GetAI_boss_volkhan(Creature* pCreature)
 
 bool EffectDummyCreature_boss_volkhan(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
 {
-    //always check spellid and effectindex
+    // always check spellid and effectindex
     if (uiSpellId == SPELL_TEMPER_DUMMY && uiEffIndex == EFFECT_INDEX_0)
     {
         if (pCaster->GetEntry() != NPC_VOLKHAN_ANVIL || pCreatureTarget->GetEntry() != NPC_VOLKHAN)
@@ -280,7 +280,7 @@ bool EffectDummyCreature_boss_volkhan(Unit* pCaster, uint32 uiSpellId, SpellEffe
         for (uint8 i = 0; i < MAX_GOLEM; ++i)
             pCreatureTarget->CastSpell(pCaster, SPELL_SUMMON_MOLTEN_GOLEM, true);
 
-        //always return true when we are handling this spell and effect
+        // always return true when we are handling this spell and effect
         return true;
     }
 
@@ -293,7 +293,7 @@ bool EffectDummyCreature_boss_volkhan(Unit* pCaster, uint32 uiSpellId, SpellEffe
 
 bool EffectDummyCreature_npc_volkhan_anvil(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
 {
-    //always check spellid and effectindex
+    // always check spellid and effectindex
     if (uiSpellId == SPELL_TEMPER && uiEffIndex == EFFECT_INDEX_0)
     {
         if (pCaster->GetEntry() != NPC_VOLKHAN || pCreatureTarget->GetEntry() != NPC_VOLKHAN_ANVIL)
@@ -308,7 +308,7 @@ bool EffectDummyCreature_npc_volkhan_anvil(Unit* pCaster, uint32 uiSpellId, Spel
             pCaster->GetMotionMaster()->MoveChase(pCaster->getVictim());
         }
 
-        //always return true when we are handling this spell and effect
+        // always return true when we are handling this spell and effect
         return true;
     }
 
@@ -321,7 +321,7 @@ bool EffectDummyCreature_npc_volkhan_anvil(Unit* pCaster, uint32 uiSpellId, Spel
 
 struct MANGOS_DLL_DECL mob_molten_golemAI : public ScriptedAI
 {
-    mob_molten_golemAI(Creature *pCreature) : ScriptedAI(pCreature)
+    mob_molten_golemAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
@@ -356,7 +356,7 @@ struct MANGOS_DLL_DECL mob_molten_golemAI : public ScriptedAI
         m_creature->UpdateEntry(NPC_BRITTLE_GOLEM);
     }
 
-    void DamageTaken(Unit* pDoneBy, uint32 &uiDamage)
+    void DamageTaken(Unit* pDoneBy, uint32& uiDamage)
     {
         // Transform intro Brittle when damaged to 0 HP
         if (uiDamage >= m_creature->GetHealth())
@@ -382,7 +382,7 @@ struct MANGOS_DLL_DECL mob_molten_golemAI : public ScriptedAI
 
     void UpdateAI(const uint32 uiDiff)
     {
-        //Return since we have no target or if we are frozen
+        // Return since we have no target or if we are frozen
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 

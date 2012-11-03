@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: instance_ulduar
-SD%Complete: 
-SDComment: 
+SD%Complete:
+SDComment:
 SDCategory: Ulduar
 EndScriptData */
 
@@ -113,16 +113,16 @@ void instance_ulduar::OnCreatureCreate(Creature* pCreature)
 
         default:
             return;
-     }
-     m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
+    }
+    m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
 }
 
 void instance_ulduar::OnObjectCreate(GameObject* pGo)
 {
-    switch(pGo->GetEntry())
+    switch (pGo->GetEntry())
     {
-        // -----------------    Doors & Other   -----------------
-        // The siege
+            // -----------------    Doors & Other   -----------------
+            // The siege
         case GO_SHIELD_WALL:
             break;
         case GO_LEVIATHAN_GATE:
@@ -140,7 +140,7 @@ void instance_ulduar::OnObjectCreate(GameObject* pGo)
             pGo->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
             break;
 
-        // Archivum
+            // Archivum
         case GO_IRON_ENTRANCE_DOOR:
             break;
         case GO_ARCHIVUM_DOOR:
@@ -149,13 +149,13 @@ void instance_ulduar::OnObjectCreate(GameObject* pGo)
             break;
         case GO_ARCHIVUM_CONSOLE:
         case GO_UNIVERSE_FLOOR_ARCHIVUM:
-        // Celestial Planetarium
+            // Celestial Planetarium
         case GO_CELESTIAL_ACCES:
         case GO_CELESTIAL_DOOR:
         case GO_UNIVERSE_FLOOR_CELESTIAL:
         case GO_AZEROTH_GLOBE:
             break;
-        // Shattered Hallway
+            // Shattered Hallway
         case GO_KOLOGARN_BRIDGE:
             pGo->SetGoState(GO_STATE_ACTIVE);
             if (m_auiEncounter[TYPE_KOLOGARN] == DONE)
@@ -164,8 +164,8 @@ void instance_ulduar::OnObjectCreate(GameObject* pGo)
         case GO_SHATTERED_DOOR:
             break;
 
-        // -----------------    The Keepers    -----------------
-        // Hodir
+            // -----------------    The Keepers    -----------------
+            // Hodir
         case GO_HODIR_EXIT:
             if (m_auiEncounter[TYPE_HODIR])
                 pGo->SetGoState(GO_STATE_ACTIVE);
@@ -176,7 +176,7 @@ void instance_ulduar::OnObjectCreate(GameObject* pGo)
             break;
         case GO_HODIR_ENTER:
             break;
-        // Mimiron
+            // Mimiron
         case G0_MIMIRON_BUTTON:
             if (m_auiEncounter[TYPE_MIMIRON] == NOT_STARTED)
                 pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
@@ -194,7 +194,7 @@ void instance_ulduar::OnObjectCreate(GameObject* pGo)
         case GO_MIMIRON_TEL7:
         case GO_MIMIRON_TEL8:
         case GO_MIMIRON_TEL9:
-        // Thorim
+            // Thorim
         case GO_DARK_IRON_PORTCULIS:
         case GO_RUNED_STONE_DOOR:
         case GO_THORIM_STONE_DOOR:
@@ -204,7 +204,7 @@ void instance_ulduar::OnObjectCreate(GameObject* pGo)
             pGo->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
             break;
 
-        // Prison
+            // Prison
         case GO_ANCIENT_GATE:
             DoOpenMadnessDoorIfCan();
             break;
@@ -219,30 +219,30 @@ void instance_ulduar::OnObjectCreate(GameObject* pGo)
         case GO_BRAIN_DOOR3:
             break;
 
-        // -----------------    Chests    -----------------
-        // Kologarn
+            // -----------------    Chests    -----------------
+            // Kologarn
         case GO_CACHE_OF_LIVING_STONE_10:
         case GO_CACHE_OF_LIVING_STONE_25:
 
-        // Hodir
+            // Hodir
         case GO_CACHE_OF_WINTER_10:
         case GO_CACHE_OF_WINTER_25:
         case GO_CACHE_OF_RARE_WINTER_10:
         case GO_CACHE_OF_RARE_WINTER_25:
 
-        // Thorim
+            // Thorim
         case GO_CACHE_OF_STORMS_10:
         case GO_CACHE_OF_STORMS_25:
         case GO_CACHE_OF_STORMS_10_H:
         case GO_CACHE_OF_STORMS_25_H:
 
-        // Mimiron
+            // Mimiron
         case GO_CACHE_OF_INOV_10:
         case GO_CACHE_OF_INOV_25:
         case GO_CACHE_OF_INOV_10_H:
         case GO_CACHE_OF_INOV_25_H:
 
-        // Alagon
+            // Alagon
         case GO_GIFT_OF_OBSERVER_10:
         case GO_GIFT_OF_OBSERVER_25:
             break;
@@ -310,7 +310,7 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
             DoUseDoorOrButton(GO_SHATTERED_DOOR);
             if (uiData == DONE)
             {
-                DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_OF_LIVING_STONE_10 : GO_CACHE_OF_LIVING_STONE_25, 30*MINUTE);
+                DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_OF_LIVING_STONE_10 : GO_CACHE_OF_LIVING_STONE_25, 30 * MINUTE);
                 if (GameObject* pBridge = GetSingleGameObjectFromStorage(GO_KOLOGARN_BRIDGE))
                     pBridge->SetGoState(GO_STATE_READY);
             }
@@ -323,7 +323,7 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
                 SetSpecialAchievementCriteria(TYPE_ACHIEV_NINE_LIVES, false);
             }
             break;
-        // Keepers
+            // Keepers
         case TYPE_MIMIRON:
             m_auiEncounter[uiType] = uiData;
             DoUseDoorOrButton(GO_MIMIRON_DOOR_1);
@@ -332,7 +332,7 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
             if (uiData == DONE)
             {
                 if (GetData(TYPE_MIMIRON_HARD) != DONE)
-                    DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_OF_INOV_10 : GO_CACHE_OF_INOV_25, 30*MINUTE);
+                    DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_OF_INOV_10 : GO_CACHE_OF_INOV_25, 30 * MINUTE);
                 SpawnFriendlyKeeper(NPC_MIMIRON_IMAGE);
             }
             break;
@@ -343,7 +343,7 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
             {
                 DoUseDoorOrButton(GO_HODIR_ICE_WALL);
                 DoUseDoorOrButton(GO_HODIR_EXIT);
-                DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_OF_WINTER_10 : GO_CACHE_OF_WINTER_25, 30*MINUTE);
+                DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_OF_WINTER_10 : GO_CACHE_OF_WINTER_25, 30 * MINUTE);
                 SpawnFriendlyKeeper(NPC_HODIR_IMAGE);
             }
             break;
@@ -355,7 +355,7 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
             if (uiData == DONE)
             {
                 if (GetData(TYPE_THORIM_HARD) != DONE)
-                    DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_OF_STORMS_10 : GO_CACHE_OF_STORMS_25, 30*MINUTE);
+                    DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_OF_STORMS_10 : GO_CACHE_OF_STORMS_25, 30 * MINUTE);
                 SpawnFriendlyKeeper(NPC_THORIM_IMAGE);
             }
             break;
@@ -364,7 +364,7 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
             if (uiData == DONE)
                 SpawnFriendlyKeeper(NPC_FREYA_IMAGE);
             break;
-        // Prison
+            // Prison
         case TYPE_VEZAX:
             m_auiEncounter[uiType] = uiData;
             if (uiData == DONE)
@@ -375,17 +375,17 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
             DoUseDoorOrButton(GO_YOGG_GATE);
             break;
 
-        // Celestial Planetarium
+            // Celestial Planetarium
         case TYPE_ALGALON:
             m_auiEncounter[uiType] = uiData;
-            //TODO: need to find the proper way to use these
+            // TODO: need to find the proper way to use these
             DoUseDoorOrButton(GO_CELESTIAL_DOOR);
             DoUseDoorOrButton(GO_UNIVERSE_FLOOR_CELESTIAL);
             if (uiData == DONE)
-                DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_GIFT_OF_OBSERVER_10 : GO_GIFT_OF_OBSERVER_25, 30*MINUTE);
+                DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_GIFT_OF_OBSERVER_10 : GO_GIFT_OF_OBSERVER_25, 30 * MINUTE);
             break;
 
-        // Hard modes
+            // Hard modes
         case TYPE_LEVIATHAN_HARD:
             m_auiHardBoss[0] = uiData;                      // TODO: add extra loot
             break;
@@ -395,17 +395,17 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
         case TYPE_HODIR_HARD:
             m_auiHardBoss[2] = uiData;
             if (uiData == DONE)
-                DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_OF_RARE_WINTER_10 : GO_CACHE_OF_RARE_WINTER_25, 30*MINUTE);
+                DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_OF_RARE_WINTER_10 : GO_CACHE_OF_RARE_WINTER_25, 30 * MINUTE);
             break;
         case TYPE_THORIM_HARD:
             m_auiHardBoss[3] = uiData;
             if (uiData == DONE)
-                DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_OF_STORMS_10_H : GO_CACHE_OF_STORMS_25_H, 30*MINUTE);
+                DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_OF_STORMS_10_H : GO_CACHE_OF_STORMS_25_H, 30 * MINUTE);
             break;
         case TYPE_MIMIRON_HARD:
             m_auiHardBoss[4] = uiData;
             if (uiData == DONE)
-                DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_OF_INOV_10_H : GO_CACHE_OF_INOV_25_H, 30*MINUTE);
+                DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_CACHE_OF_INOV_10_H : GO_CACHE_OF_INOV_25_H, 30 * MINUTE);
             break;
         case TYPE_VEZAX_HARD:
             m_auiHardBoss[5] = uiData;                      // TODO: add extra loot
@@ -414,7 +414,7 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
             m_auiHardBoss[6] = uiData;                      // TODO: add extra loot
             break;
 
-        // Ulduar keepers
+            // Ulduar keepers
         case TYPE_KEEPER_HODIR:
             m_auiUlduarKeepers[0] = uiData;
             break;
@@ -438,13 +438,13 @@ void instance_ulduar::SetData(uint32 uiType, uint32 uiData)
         // Save all encounters, hard bosses, keepers and teleporters
         std::ostringstream saveStream;
         saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " "
-            << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5] << " "
-            << m_auiEncounter[6] << " " << m_auiEncounter[7] << " " << m_auiEncounter[8] << " "
-            << m_auiEncounter[9] << " " << m_auiEncounter[10] << " " << m_auiEncounter[11] << " "
-            << m_auiEncounter[12] << " " << m_auiEncounter[13] << " " << m_auiHardBoss[0] << " "
-            << m_auiHardBoss[1] << " " << m_auiHardBoss[2] << " " << m_auiHardBoss[2] << " "
-            << m_auiHardBoss[4] << " " << m_auiHardBoss[5] << " " << m_auiHardBoss[6] << " "
-            << m_auiUlduarKeepers[0] << " " << m_auiUlduarKeepers[1] << " " << m_auiUlduarKeepers[2] << " " << m_auiUlduarKeepers[3];
+                   << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5] << " "
+                   << m_auiEncounter[6] << " " << m_auiEncounter[7] << " " << m_auiEncounter[8] << " "
+                   << m_auiEncounter[9] << " " << m_auiEncounter[10] << " " << m_auiEncounter[11] << " "
+                   << m_auiEncounter[12] << " " << m_auiEncounter[13] << " " << m_auiHardBoss[0] << " "
+                   << m_auiHardBoss[1] << " " << m_auiHardBoss[2] << " " << m_auiHardBoss[2] << " "
+                   << m_auiHardBoss[4] << " " << m_auiHardBoss[5] << " " << m_auiHardBoss[6] << " "
+                   << m_auiUlduarKeepers[0] << " " << m_auiUlduarKeepers[1] << " " << m_auiUlduarKeepers[2] << " " << m_auiUlduarKeepers[3];
 
         m_strInstData = saveStream.str();
 
@@ -460,17 +460,17 @@ bool instance_ulduar::CheckConditionCriteriaMeet(Player const* pSource, uint32 u
         return false;
 
     switch (uiInstanceConditionId)
-     {
+    {
         case TYPE_XT002_HARD:
             break;
-     }
+    }
     return false;
 }
 
 uint32 instance_ulduar::GetData(uint32 uiType)
 {
     switch (uiType)
-     {
+    {
         case TYPE_LEVIATHAN:
             return m_auiEncounter[0];
         case TYPE_IGNIS:
@@ -500,7 +500,7 @@ uint32 instance_ulduar::GetData(uint32 uiType)
         case TYPE_ALGALON:
             return m_auiEncounter[13];
 
-        // Hard modes
+            // Hard modes
         case TYPE_LEVIATHAN_HARD:
             return m_auiHardBoss[0];
         case TYPE_XT002_HARD:
@@ -516,7 +516,7 @@ uint32 instance_ulduar::GetData(uint32 uiType)
         case TYPE_YOGGSARON_HARD:
             return m_auiHardBoss[6];
 
-        // Ulduar Keepers
+            // Ulduar Keepers
         case TYPE_KEEPER_HODIR:
             return m_auiUlduarKeepers[0];
         case TYPE_KEEPER_THORIM:
@@ -525,7 +525,7 @@ uint32 instance_ulduar::GetData(uint32 uiType)
             return m_auiUlduarKeepers[2];
         case TYPE_KEEPER_MIMIRON:
             return m_auiUlduarKeepers[3];
-     }
+    }
 
     return 0;
 }
@@ -537,7 +537,7 @@ void instance_ulduar::SpawnFriendlyKeeper(uint32 uiWho)
     if (!pPlayer)
         return;
 
-    switch(uiWho)
+    switch (uiWho)
     {
         case NPC_MIMIRON_IMAGE: pPlayer->SummonCreature(NPC_MIMIRON_IMAGE, m_aKeepersSpawnLocs[1].m_fX, m_aKeepersSpawnLocs[1].m_fY, m_aKeepersSpawnLocs[1].m_fZ, m_aKeepersSpawnLocs[1].m_fO, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000); break;
         case NPC_HODIR_IMAGE:   pPlayer->SummonCreature(NPC_HODIR_IMAGE,   m_aKeepersSpawnLocs[2].m_fX, m_aKeepersSpawnLocs[2].m_fY, m_aKeepersSpawnLocs[2].m_fZ, m_aKeepersSpawnLocs[2].m_fO, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000); break;
@@ -548,7 +548,7 @@ void instance_ulduar::SpawnFriendlyKeeper(uint32 uiWho)
 
 void instance_ulduar::OnCreatureDeath(Creature* pCreature)
 {
-    switch(pCreature->GetEntry())
+    switch (pCreature->GetEntry())
     {
         case NPC_SANCTUM_SENTRY:
             if (GetData(TYPE_AURIAYA) == IN_PROGRESS)
@@ -569,10 +569,10 @@ void instance_ulduar::Load(const char* strIn)
 
     std::istringstream loadStream(strIn);
     loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3]
-        >> m_auiEncounter[4] >> m_auiEncounter[5] >> m_auiEncounter[6] >> m_auiEncounter[7] >> m_auiEncounter[8]
-        >> m_auiEncounter[9] >> m_auiEncounter[10] >> m_auiEncounter[11] >> m_auiEncounter[12] >> m_auiEncounter[13]
-        >> m_auiHardBoss[0] >> m_auiHardBoss[1] >> m_auiHardBoss[2] >> m_auiHardBoss[3] >> m_auiHardBoss[4] >> m_auiHardBoss[5] >> m_auiHardBoss[6]
-        >> m_auiUlduarKeepers[0] >> m_auiUlduarKeepers[1] >> m_auiUlduarKeepers[2] >> m_auiUlduarKeepers[3];
+               >> m_auiEncounter[4] >> m_auiEncounter[5] >> m_auiEncounter[6] >> m_auiEncounter[7] >> m_auiEncounter[8]
+               >> m_auiEncounter[9] >> m_auiEncounter[10] >> m_auiEncounter[11] >> m_auiEncounter[12] >> m_auiEncounter[13]
+               >> m_auiHardBoss[0] >> m_auiHardBoss[1] >> m_auiHardBoss[2] >> m_auiHardBoss[3] >> m_auiHardBoss[4] >> m_auiHardBoss[5] >> m_auiHardBoss[6]
+               >> m_auiUlduarKeepers[0] >> m_auiUlduarKeepers[1] >> m_auiUlduarKeepers[2] >> m_auiUlduarKeepers[3];
 
     for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
     {

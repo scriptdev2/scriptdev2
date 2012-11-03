@@ -50,24 +50,24 @@ enum
     SPELL_DEATH_COIL            = 33130,
     SPELL_SUMMON_WILD_FELHUNTER = 33131,
 
-    //Kiggler the Crazed Spells
+    // Kiggler the Crazed Spells
     SPELL_GREATER_POLYMORPH     = 33173,
     SPELL_LIGHTNING_BOLT        = 36152,
     SPELL_ARCANE_SHOCK          = 33175,
     SPELL_ARCANE_EXPLOSION      = 33237,
 
-    //Blindeye the Seer Spells
+    // Blindeye the Seer Spells
     SPELL_GREATER_PW_SHIELD     = 33147,
     SPELL_HEAL                  = 33144,
     SPELL_PRAYEROFHEALING       = 33152,
 
-    //Krosh Firehand Spells
+    // Krosh Firehand Spells
     SPELL_GREATER_FIREBALL      = 33051,
     SPELL_SPELLSHIELD           = 33054,
     SPELL_BLAST_WAVE            = 33061,
 };
 
-//High King Maulgar AI
+// High King Maulgar AI
 struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
 {
     boss_high_king_maulgarAI(Creature* pCreature) : ScriptedAI(pCreature)
@@ -106,7 +106,7 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
 
     void KilledUnit(Unit* pVictim)
     {
-        switch(urand(0, 2))
+        switch (urand(0, 2))
         {
             case 0: DoScriptText(SAY_SLAY1, m_creature); break;
             case 1: DoScriptText(SAY_SLAY2, m_creature); break;
@@ -133,7 +133,7 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
 
     void EventCouncilDeath()
     {
-        switch(++m_uiCouncilDeathCount)
+        switch (++m_uiCouncilDeathCount)
         {
             case 1: DoScriptText(SAY_OGRE_DEATH1, m_creature); break;
             case 2: DoScriptText(SAY_OGRE_DEATH2, m_creature); break;
@@ -233,7 +233,7 @@ struct MANGOS_DLL_DECL Council_Base_AI : public ScriptedAI
     }
 };
 
-//Olm The Summoner AI
+// Olm The Summoner AI
 struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public Council_Base_AI
 {
     boss_olm_the_summonerAI(Creature* pCreature) : Council_Base_AI(pCreature) {Reset();}
@@ -282,7 +282,7 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public Council_Base_AI
     }
 };
 
-//Kiggler The Crazed AI
+// Kiggler The Crazed AI
 struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public Council_Base_AI
 {
     boss_kiggler_the_crazedAI(Creature* pCreature) : Council_Base_AI(pCreature) {Reset();}
@@ -309,7 +309,7 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public Council_Base_AI
             if (pVictim->GetTypeId() != TYPEID_PLAYER)
                 return;
 
-            m_creature->getThreatManager().modifyThreatPercent(pVictim,-75);
+            m_creature->getThreatManager().modifyThreatPercent(pVictim, -75);
         }
     }
 
@@ -372,7 +372,7 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public Council_Base_AI
     }
 };
 
-//Blindeye The Seer AI
+// Blindeye The Seer AI
 struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public Council_Base_AI
 {
     boss_blindeye_the_seerAI(Creature* pCreature) : Council_Base_AI(pCreature) {Reset();}
@@ -424,7 +424,7 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public Council_Base_AI
     }
 };
 
-//Krosh Firehand AI
+// Krosh Firehand AI
 struct MANGOS_DLL_DECL boss_krosh_firehandAI : public Council_Base_AI
 {
     boss_krosh_firehandAI(Creature* pCreature) : Council_Base_AI(pCreature) {Reset();}
@@ -508,17 +508,17 @@ CreatureAI* GetAI_boss_olm_the_summoner(Creature* pCreature)
     return new boss_olm_the_summonerAI(pCreature);
 }
 
-CreatureAI *GetAI_boss_kiggler_the_crazed(Creature* pCreature)
+CreatureAI* GetAI_boss_kiggler_the_crazed(Creature* pCreature)
 {
     return new boss_kiggler_the_crazedAI(pCreature);
 }
 
-CreatureAI *GetAI_boss_blindeye_the_seer(Creature* pCreature)
+CreatureAI* GetAI_boss_blindeye_the_seer(Creature* pCreature)
 {
     return new boss_blindeye_the_seerAI(pCreature);
 }
 
-CreatureAI *GetAI_boss_krosh_firehand(Creature* pCreature)
+CreatureAI* GetAI_boss_krosh_firehand(Creature* pCreature)
 {
     return new boss_krosh_firehandAI(pCreature);
 }

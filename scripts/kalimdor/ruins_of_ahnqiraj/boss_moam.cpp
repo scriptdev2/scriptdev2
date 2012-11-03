@@ -74,7 +74,7 @@ struct MANGOS_DLL_DECL boss_moamAI : public ScriptedAI
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        switch(m_uiPhase)
+        switch (m_uiPhase)
         {
             case PHASE_ATTACKING:
                 if (m_uiCheckoutManaTimer <= uiDiff)

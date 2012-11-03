@@ -85,7 +85,7 @@ struct MANGOS_DLL_DECL boss_jaraxxusAI : public ScriptedAI
         m_uiLegionFlameTimer        = 10000;
         m_uiSummonTimer             = 20000;
         m_uiNetherPowerTimer        = urand(20000, 30000);
-        m_uiBerserkTimer            = 10*MINUTE*IN_MILLISECONDS;
+        m_uiBerserkTimer            = 10 * MINUTE * IN_MILLISECONDS;
 
         m_bVolcanoSummon            = true;
 
@@ -136,7 +136,7 @@ struct MANGOS_DLL_DECL boss_jaraxxusAI : public ScriptedAI
 
     void JustSummoned(Creature* pSummoned)
     {
-        switch(pSummoned->GetEntry())
+        switch (pSummoned->GetEntry())
         {
             case NPC_INFERNAL_VOLCANO:
                 pSummoned->CastSpell(pSummoned, SPELL_ERUPTION, true, NULL, NULL, m_creature->GetObjectGuid());
@@ -145,7 +145,7 @@ struct MANGOS_DLL_DECL boss_jaraxxusAI : public ScriptedAI
                 pSummoned->CastSpell(pSummoned, SPELL_NETHER_PORTAL, true, NULL, NULL, m_creature->GetObjectGuid());
                 break;
         }
-     }
+    }
 
     void MovementInform(uint32 uiMovementType, uint32 uiPointId)
     {
@@ -198,12 +198,12 @@ struct MANGOS_DLL_DECL boss_jaraxxusAI : public ScriptedAI
 
         if (m_uiSummonTimer < uiDiff)
         {
-            if(m_bVolcanoSummon)
+            if (m_bVolcanoSummon)
             {
                 if (DoCastSpellIfCan(m_creature, SPELL_NETHER_PORTAL_SUMMON) == CAST_OK)
                 {
                     // TODO missing emote?
-                    //DoScriptText(EMOTE_PORTAL, m_creature);
+                    // DoScriptText(EMOTE_PORTAL, m_creature);
                     m_bVolcanoSummon = false;
                     m_uiSummonTimer = 60000;
                 }
@@ -214,7 +214,7 @@ struct MANGOS_DLL_DECL boss_jaraxxusAI : public ScriptedAI
                 if (DoCastSpellIfCan(m_creature, SPELL_INFERNAL_ERUPTION) == CAST_OK)
                 {
                     // TODO missing emote?
-                    //DoScriptText(EMOTE_VOLCANO, m_creature);
+                    // DoScriptText(EMOTE_VOLCANO, m_creature);
                     m_bVolcanoSummon = true;
                     m_uiSummonTimer = 60000;
                 }

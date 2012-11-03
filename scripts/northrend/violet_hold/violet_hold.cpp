@@ -51,13 +51,13 @@ bool GOUse_go_activation_crystal(Player* pPlayer, GameObject* pGo)
 
 bool EffectDummyCreature_npc_door_seal(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
 {
-    //always check spellid and effectindex
+    // always check spellid and effectindex
     if (uiSpellId == SPELL_DESTROY_DOOR_SEAL && uiEffIndex == EFFECT_INDEX_0)
     {
         if (instance_violet_hold* pInstance = (instance_violet_hold*)pCreatureTarget->GetInstanceData())
             pInstance->SetData(TYPE_SEAL, SPECIAL);
 
-        //always return true when we are handling this spell and effect
+        // always return true when we are handling this spell and effect
         return true;
     }
 
@@ -106,7 +106,7 @@ struct MANGOS_DLL_DECL npc_sinclariAI : public npc_escortAI
         if (!m_pInstance)
             return;
 
-        switch(uiPointId)
+        switch (uiPointId)
         {
             case 0:
                 m_pInstance->ProcessActivationCrystal(m_creature, true);
@@ -164,9 +164,9 @@ bool GossipHello_npc_sinclari(Player* pPlayer, Creature* pCreature)
     if (instance_violet_hold* pInstance = (instance_violet_hold*)pCreature->GetInstanceData())
     {
         if (pInstance->GetData(TYPE_MAIN) != IN_PROGRESS)
-            pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_INTRO, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+            pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_INTRO, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
         else
-            pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TELEPORT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
+            pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TELEPORT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
     }
 
     pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_ID_INTRO, pCreature->GetObjectGuid());
@@ -175,13 +175,13 @@ bool GossipHello_npc_sinclari(Player* pPlayer, Creature* pCreature)
 
 bool GossipSelect_npc_sinclari(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
+    if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)
     {
         if (instance_violet_hold* pInstance = (instance_violet_hold*)pCreature->GetInstanceData())
         {
             if (pInstance->GetData(TYPE_MAIN) == NOT_STARTED)
             {
-                pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_START, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+                pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_START, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
                 pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_ID_START, pCreature->GetObjectGuid());
             }
         }
@@ -189,7 +189,7 @@ bool GossipSelect_npc_sinclari(Player* pPlayer, Creature* pCreature, uint32 uiSe
             pPlayer->CLOSE_GOSSIP_MENU();
     }
 
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+2)
+    if (uiAction == GOSSIP_ACTION_INFO_DEF + 2)
     {
         if (instance_violet_hold* pInstance = (instance_violet_hold*)pCreature->GetInstanceData())
         {
@@ -207,7 +207,7 @@ bool GossipSelect_npc_sinclari(Player* pPlayer, Creature* pCreature, uint32 uiSe
             pPlayer->CLOSE_GOSSIP_MENU();
     }
 
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+3)
+    if (uiAction == GOSSIP_ACTION_INFO_DEF + 3)
     {
         pCreature->CastSpell(pPlayer, SPELL_TELEPORT_INSIDE, true);
         pPlayer->CLOSE_GOSSIP_MENU();
@@ -252,7 +252,7 @@ struct MANGOS_DLL_DECL npc_prison_event_controllerAI : public ScriptedAI
 
     void JustSummoned(Creature* pSummoned)
     {
-        switch(pSummoned->GetEntry())
+        switch (pSummoned->GetEntry())
         {
             case NPC_AZURE_CAPTAIN:
                 DoScriptText(EMOTE_DRAGONFLIGHT_PORTAL, pSummoned);
@@ -355,7 +355,7 @@ struct MANGOS_DLL_DECL npc_prison_event_controllerAI : public ScriptedAI
                     {
                         if (Creature* pAdd = m_pInstance->instance->GetCreature(*itr))
                         {
-                            fMoveX = (pData->fX - pAdd->GetPositionX())*.25;
+                            fMoveX = (pData->fX - pAdd->GetPositionX()) * .25;
                             pAdd->GetMotionMaster()->MovePoint(0, pData->fX - fMoveX, pData->fY, pData->fZ);
                             pAdd->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE);
                         }
@@ -448,7 +448,7 @@ struct MANGOS_DLL_DECL npc_teleportation_portalAI : public ScriptedAI
         if (m_creature->GetEntry() == NPC_PORTAL_INTRO)
         {
             // ToDo: uncomment this when the information and DB data is confirmed. Right now the mobs may overrun the guards after a few min of fightning
-            //m_creature->SummonCreature(m_pInstance->GetRandomMobForIntroPortal(), 0, 0, 0, 0, TEMPSUMMON_DEAD_DESPAWN, 0);
+            // m_creature->SummonCreature(m_pInstance->GetRandomMobForIntroPortal(), 0, 0, 0, 0, TEMPSUMMON_DEAD_DESPAWN, 0);
             return;
         }
 
@@ -459,9 +459,9 @@ struct MANGOS_DLL_DECL npc_teleportation_portalAI : public ScriptedAI
             {
                 // Summon a guardian keeper or Cyanigosa
                 if (m_uiMyPortalNumber == 18)
-                    m_creature->SummonCreature(NPC_CYANIGOSA, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600*IN_MILLISECONDS);
+                    m_creature->SummonCreature(NPC_CYANIGOSA, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600 * IN_MILLISECONDS);
                 else
-                    m_creature->SummonCreature(m_pInstance->GetRandomPortalEliteEntry(), 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600*IN_MILLISECONDS);
+                    m_creature->SummonCreature(m_pInstance->GetRandomPortalEliteEntry(), 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600 * IN_MILLISECONDS);
             }
             else if (m_creature->GetEntry() == NPC_PORTAL_ELITE)
             {
@@ -479,8 +479,8 @@ struct MANGOS_DLL_DECL npc_teleportation_portalAI : public ScriptedAI
                         uint32 uiSummonId = aTrashPortalNpcs[i];
 
                         // Summon the trash pack around the portal
-                        m_creature->GetNearPoint(m_creature, fX, fY, fZ, 0, 3.0f, M_PI_F/2*i);
-                        pController->SummonCreature(uiSummonId, fX, fY, fZ, m_creature->GetOrientation(), TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600*IN_MILLISECONDS);
+                        m_creature->GetNearPoint(m_creature, fX, fY, fZ, 0, 3.0f, M_PI_F / 2 * i);
+                        pController->SummonCreature(uiSummonId, fX, fY, fZ, m_creature->GetOrientation(), TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600 * IN_MILLISECONDS);
                     }
 
                     // If this is a trash portal, set the current number in the
@@ -488,7 +488,7 @@ struct MANGOS_DLL_DECL npc_teleportation_portalAI : public ScriptedAI
                         pControllerAI->DoSetCurrentTrashPortal(m_uiMyPortalNumber);
                 }
                 else
-                    pController->SummonCreature(NPC_AZURE_SABOTEUR, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), m_creature->GetOrientation(), TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600*IN_MILLISECONDS);
+                    pController->SummonCreature(NPC_AZURE_SABOTEUR, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), m_creature->GetOrientation(), TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600 * IN_MILLISECONDS);
 
                 m_creature->ForcedDespawn(5000);
             }
@@ -568,7 +568,7 @@ struct MANGOS_DLL_DECL npc_teleportation_portalAI : public ScriptedAI
             if (m_uiCyanigosaMoveTimer <= uiDiff)
             {
                 if (Creature* pCyanigosa = m_creature->GetMap()->GetCreature(m_cyanigosaGuid))
-                    pCyanigosa->GetMotionMaster()->MoveJump(afPortalLocation[8].fX, afPortalLocation[8].fY, afPortalLocation[8].fZ, pCyanigosa->GetSpeed(MOVE_RUN)*2, 10.0f);
+                    pCyanigosa->GetMotionMaster()->MoveJump(afPortalLocation[8].fX, afPortalLocation[8].fY, afPortalLocation[8].fZ, pCyanigosa->GetSpeed(MOVE_RUN) * 2, 10.0f);
 
                 m_uiCyanigosaMoveTimer = 0;
             }
@@ -585,13 +585,13 @@ CreatureAI* GetAI_npc_teleportation_portal(Creature* pCreature)
 
 bool EffectDummyCreature_npc_teleportation_portal(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
 {
-    //always check spellid and effectindex
+    // always check spellid and effectindex
     if (uiSpellId == SPELL_PORTAL_PERIODIC && uiEffIndex == EFFECT_INDEX_0)
     {
         if (npc_teleportation_portalAI* pPortalAI = dynamic_cast<npc_teleportation_portalAI*>(pCreatureTarget->AI()))
             pPortalAI->DoSummon();
 
-        //always return true when we are handling this spell and effect
+        // always return true when we are handling this spell and effect
         return true;
     }
 

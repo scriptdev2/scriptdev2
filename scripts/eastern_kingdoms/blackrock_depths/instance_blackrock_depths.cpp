@@ -44,7 +44,7 @@ void instance_blackrock_depths::Initialize()
 
 void instance_blackrock_depths::OnCreatureCreate(Creature* pCreature)
 {
-    switch(pCreature->GetEntry())
+    switch (pCreature->GetEntry())
     {
         case NPC_EMPEROR:
         case NPC_PRINCESS:
@@ -79,7 +79,7 @@ void instance_blackrock_depths::OnCreatureCreate(Creature* pCreature)
 
 void instance_blackrock_depths::OnObjectCreate(GameObject* pGo)
 {
-    switch(pGo->GetEntry())
+    switch (pGo->GetEntry())
     {
         case GO_ARENA_1:
         case GO_ARENA_2:
@@ -114,7 +114,7 @@ void instance_blackrock_depths::OnObjectCreate(GameObject* pGo)
 
 void instance_blackrock_depths::SetData(uint32 uiType, uint32 uiData)
 {
-    switch(uiType)
+    switch (uiType)
     {
         case TYPE_RING_OF_LAW:
             // If finished the arena event after theldren fight
@@ -199,7 +199,7 @@ void instance_blackrock_depths::SetData(uint32 uiType, uint32 uiData)
             m_auiEncounter[4] = uiData;
             break;
         case TYPE_IRON_HALL:
-            switch(uiData)
+            switch (uiData)
             {
                 case IN_PROGRESS:
                     DoUseDoorOrButton(GO_GOLEM_ROOM_N);
@@ -228,7 +228,7 @@ void instance_blackrock_depths::SetData(uint32 uiType, uint32 uiData)
 
         std::ostringstream saveStream;
         saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " "
-            << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5] << " " << m_auiEncounter[6];
+                   << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5] << " " << m_auiEncounter[6];
 
         m_strInstData = saveStream.str();
 
@@ -239,7 +239,7 @@ void instance_blackrock_depths::SetData(uint32 uiType, uint32 uiData)
 
 uint32 instance_blackrock_depths::GetData(uint32 uiType)
 {
-    switch(uiType)
+    switch (uiType)
     {
         case TYPE_RING_OF_LAW:
             return m_auiEncounter[0];
@@ -275,9 +275,9 @@ void instance_blackrock_depths::Load(const char* chrIn)
 
     std::istringstream loadStream(chrIn);
     loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3]
-        >> m_auiEncounter[4] >> m_auiEncounter[5] >> m_auiEncounter[6];
+               >> m_auiEncounter[4] >> m_auiEncounter[5] >> m_auiEncounter[6];
 
-    for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+    for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
         if (m_auiEncounter[i] == IN_PROGRESS)
             m_auiEncounter[i] = NOT_STARTED;
 
@@ -298,15 +298,15 @@ void instance_blackrock_depths::OnCreatureEvade(Creature* pCreature)
         {
             if (pCreature->GetEntry() == aArenaNPCs[i])
             {
-                 SetData(TYPE_RING_OF_LAW, FAIL);
-                 return;
-             }
+                SetData(TYPE_RING_OF_LAW, FAIL);
+                return;
+            }
         }
     }
 
     switch (pCreature->GetEntry())
     {
-        // Handle Tomb of the Seven reset in case of wipe
+            // Handle Tomb of the Seven reset in case of wipe
         case NPC_HATEREL:
         case NPC_ANGERREL:
         case NPC_VILEREL:
@@ -324,7 +324,7 @@ void instance_blackrock_depths::OnCreatureEvade(Creature* pCreature)
 
 void instance_blackrock_depths::OnCreatureDeath(Creature* pCreature)
 {
-    switch(pCreature->GetEntry())
+    switch (pCreature->GetEntry())
     {
         case NPC_WARBRINGER_CONST:
         case NPC_WATCHER_DOOMGRIP:
@@ -344,7 +344,7 @@ void instance_blackrock_depths::OnCreatureDeath(Creature* pCreature)
             if (GetData(TYPE_QUEST_JAIL_BREAK) == IN_PROGRESS)
                 SetData(TYPE_QUEST_JAIL_BREAK, SPECIAL);
             break;
-        // Handle Tomb of the Seven dwarf death event
+            // Handle Tomb of the Seven dwarf death event
         case NPC_HATEREL:
         case NPC_ANGERREL:
         case NPC_VILEREL:

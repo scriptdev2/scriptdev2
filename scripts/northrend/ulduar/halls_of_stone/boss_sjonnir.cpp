@@ -98,11 +98,11 @@ struct MANGOS_DLL_DECL boss_sjonnirAI : public ScriptedAI
 
     void Reset()
     {
-        m_uiChainLightningTimer     = urand(3000, 8000);        // TODO timers weak
+        m_uiChainLightningTimer     = urand(3000, 8000);    // TODO timers weak
         m_uiLightningShieldTimer    = urand(20000, 25000);
         m_uiStaticChargeTimer       = urand(20000, 25000);
         m_uiLightningRingTimer      = urand(30000, 35000);
-        m_uiFrenzyTimer             = 4*MINUTE*IN_MILLISECONDS; // TODO no proper source for this "long"
+        m_uiFrenzyTimer             = 4 * MINUTE * IN_MILLISECONDS; // TODO no proper source for this "long"
 
         m_uiHpCheck                 = 75;
     }
@@ -148,7 +148,7 @@ struct MANGOS_DLL_DECL boss_sjonnirAI : public ScriptedAI
 
     void KilledUnit(Unit* pVictim)
     {
-        switch(urand(0, 2))
+        switch (urand(0, 2))
         {
             case 0: DoScriptText(SAY_SLAY_1, m_creature); break;
             case 1: DoScriptText(SAY_SLAY_2, m_creature); break;
@@ -179,7 +179,7 @@ struct MANGOS_DLL_DECL boss_sjonnirAI : public ScriptedAI
 
         if (m_creature->GetHealthPercent() <= (float)m_uiHpCheck)
         {
-            switch(m_uiHpCheck)
+            switch (m_uiHpCheck)
             {
                 case 75:
                     if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_SUMMON_IRON_TROGG : SPELL_SUMMON_IRON_TROGG_H, CAST_TRIGGERED) == CAST_OK)

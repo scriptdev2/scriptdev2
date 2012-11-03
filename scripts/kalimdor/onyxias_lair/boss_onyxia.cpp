@@ -43,7 +43,7 @@ enum
     SPELL_FIREBALL              = 18392,
     SPELL_FIREBALL_H            = 68926,
 
-    //Not much choise about these. We have to make own defintion on the direction/start-end point
+    // Not much choise about these. We have to make own defintion on the direction/start-end point
     SPELL_BREATH_NORTH_TO_SOUTH = 17086,                    // 20x in "array"
     SPELL_BREATH_SOUTH_TO_NORTH = 18351,                    // 11x in "array"
 
@@ -58,7 +58,7 @@ enum
     SPELL_VISUAL_BREATH_A       = 4880,                     // Only and all of the above Breath spells (and their triggered spells) have these visuals
     SPELL_VISUAL_BREATH_B       = 4919,
 
-    //SPELL_BREATH                = 21131,                  // 8x in "array", different initial cast than the other arrays
+    // SPELL_BREATH                = 21131,                 // 8x in "array", different initial cast than the other arrays
 
     SPELL_BELLOWINGROAR         = 18431,
     SPELL_HEATED_GROUND         = 22191,                    // TODO
@@ -83,23 +83,23 @@ struct OnyxiaMove
     float fX, fY, fZ;
 };
 
-static OnyxiaMove aMoveData[]=
+static OnyxiaMove aMoveData[] =
 {
-    {0, 4, SPELL_BREATH_NORTH_TO_SOUTH,  22.8763f, -217.152f, -60.0548f},   //north
-    {1, 5, SPELL_BREATH_NE_TO_SW,        10.2191f, -247.912f, -60.896f},    //north-east
-    {2, 6, SPELL_BREATH_EAST_TO_WEST,   -31.4963f, -250.123f, -60.1278f},   //east
-    {3, 7, SPELL_BREATH_SE_TO_NW,       -63.5156f, -240.096f, -60.477f},    //south-east
-    {4, 0, SPELL_BREATH_SOUTH_TO_NORTH, -65.8444f, -213.809f, -60.2985f},   //south
-    {5, 1, SPELL_BREATH_SW_TO_NE,       -58.2509f, -189.020f, -60.790f},    //south-west
-    {6, 2, SPELL_BREATH_WEST_TO_EAST,   -33.5561f, -182.682f, -60.9457f},   //west
-    {7, 3, SPELL_BREATH_NW_TO_SE,         6.8951f, -180.246f, -60.896f},    //north-west
+    {0, 4, SPELL_BREATH_NORTH_TO_SOUTH,  22.8763f, -217.152f, -60.0548f},   // north
+    {1, 5, SPELL_BREATH_NE_TO_SW,        10.2191f, -247.912f, -60.896f},    // north-east
+    {2, 6, SPELL_BREATH_EAST_TO_WEST,   -31.4963f, -250.123f, -60.1278f},   // east
+    {3, 7, SPELL_BREATH_SE_TO_NW,       -63.5156f, -240.096f, -60.477f},    // south-east
+    {4, 0, SPELL_BREATH_SOUTH_TO_NORTH, -65.8444f, -213.809f, -60.2985f},   // south
+    {5, 1, SPELL_BREATH_SW_TO_NE,       -58.2509f, -189.020f, -60.790f},    // south-west
+    {6, 2, SPELL_BREATH_WEST_TO_EAST,   -33.5561f, -182.682f, -60.9457f},   // west
+    {7, 3, SPELL_BREATH_NW_TO_SE,         6.8951f, -180.246f, -60.896f},    // north-west
 };
 
-static const float afSpawnLocations[3][3]=
+static const float afSpawnLocations[3][3] =
 {
-    {-30.127f, -254.463f, -89.440f},                        // whelps
-    {-30.817f, -177.106f, -89.258f},                        // whelps
-    {-126.57f, -214.609f, -71.446f}                         // guardians
+    { -30.127f, -254.463f, -89.440f},                       // whelps
+    { -30.817f, -177.106f, -89.258f},                       // whelps
+    { -126.57f, -214.609f, -71.446f}                        // guardians
 };
 
 struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
@@ -223,13 +223,13 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
     void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
     {
         if (pSpell->Id == SPELL_BREATH_EAST_TO_WEST ||
-            pSpell->Id == SPELL_BREATH_WEST_TO_EAST ||
-            pSpell->Id == SPELL_BREATH_SE_TO_NW ||
-            pSpell->Id == SPELL_BREATH_NW_TO_SE ||
-            pSpell->Id == SPELL_BREATH_SW_TO_NE ||
-            pSpell->Id == SPELL_BREATH_NE_TO_SW ||
-            pSpell->Id == SPELL_BREATH_SOUTH_TO_NORTH ||
-            pSpell->Id == SPELL_BREATH_NORTH_TO_SOUTH)
+                pSpell->Id == SPELL_BREATH_WEST_TO_EAST ||
+                pSpell->Id == SPELL_BREATH_SE_TO_NW ||
+                pSpell->Id == SPELL_BREATH_NW_TO_SE ||
+                pSpell->Id == SPELL_BREATH_SW_TO_NE ||
+                pSpell->Id == SPELL_BREATH_NE_TO_SW ||
+                pSpell->Id == SPELL_BREATH_SOUTH_TO_NORTH ||
+                pSpell->Id == SPELL_BREATH_NORTH_TO_SOUTH)
         {
             // This was sent with SendMonsterMove - which resulted in better speed than now
             if (m_pPointData = GetMoveData())
@@ -356,7 +356,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
                     m_uiMovementTimer = 25000;
 
                     // 3 possible actions
-                    switch(urand(0, 2))
+                    switch (urand(0, 2))
                     {
                         case 0:                             // breath
                             if (m_pPointData = GetMoveData())
@@ -393,7 +393,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
                     }
                 }
                 else
-                    m_uiFireballTimer -= uiDiff;            //engulfingflames is supposed to be activated by a fireball but haven't come by
+                    m_uiFireballTimer -= uiDiff;            // engulfingflames is supposed to be activated by a fireball but haven't come by
 
                 if (m_bIsSummoningWhelps)
                 {
@@ -401,8 +401,8 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
                     {
                         if (m_uiWhelpTimer < uiDiff)
                         {
-                            m_creature->SummonCreature(NPC_ONYXIA_WHELP, afSpawnLocations[0][0], afSpawnLocations[0][1], afSpawnLocations[0][2], 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, MINUTE*IN_MILLISECONDS);
-                            m_creature->SummonCreature(NPC_ONYXIA_WHELP, afSpawnLocations[1][0], afSpawnLocations[1][1], afSpawnLocations[1][2], 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, MINUTE*IN_MILLISECONDS);
+                            m_creature->SummonCreature(NPC_ONYXIA_WHELP, afSpawnLocations[0][0], afSpawnLocations[0][1], afSpawnLocations[0][2], 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, MINUTE * IN_MILLISECONDS);
+                            m_creature->SummonCreature(NPC_ONYXIA_WHELP, afSpawnLocations[1][0], afSpawnLocations[1][1], afSpawnLocations[1][2], 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, MINUTE * IN_MILLISECONDS);
                             m_uiWhelpTimer = 500;
                         }
                         else

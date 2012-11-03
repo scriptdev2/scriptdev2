@@ -90,16 +90,16 @@ struct SummonLocations
 
 static const SummonLocations aSunkenTempleLocation[] =
 {
-    {-466.5130f, 95.19820f, -189.646f, 0.0349f},            // Atalarion summon loc
-    {-466.8673f,272.31204f, -90.7441f, 3.5255f},            // Shade of hakkar summon loc
-    {-660.5277f, -16.7117f, -90.8357f, 1.6055f}             // Malfurion summon loc
+    { -466.5130f, 95.19820f, -189.646f, 0.0349f},           // Atalarion summon loc
+    { -466.8673f, 272.31204f, -90.7441f, 3.5255f},          // Shade of hakkar summon loc
+    { -660.5277f, -16.7117f, -90.8357f, 1.6055f}            // Malfurion summon loc
 };
 
 // Summon location for the suppressors
 static const SummonLocations aHakkariDoorLocations[2] =
 {
-    {-420.629f, 276.682f, -90.827f},
-    {-512.015f, 276.134f, -90.827f}
+    { -420.629f, 276.682f, -90.827f},
+    { -512.015f, 276.134f, -90.827f}
 };
 
 class MANGOS_DLL_DECL instance_sunken_temple : public ScriptedInstance

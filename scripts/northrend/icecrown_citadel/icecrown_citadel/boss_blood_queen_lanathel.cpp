@@ -57,7 +57,7 @@ enum
     SPELL_BLOODBOLT_WHIRL           = 71772,
 
     // others
-    //NPC_SWARMING_SHADOWS          = 38163,            // has aura 71267 (or 71277?)
+    // NPC_SWARMING_SHADOWS          = 38163,            // has aura 71267 (or 71277?)
 
     // encounter phases
     PHASE_GROUND                    = 1,
@@ -100,9 +100,9 @@ struct MANGOS_DLL_DECL boss_blood_queen_lanathelAI : public ScriptedAI
     void Reset()
     {
         m_uiPhase                = PHASE_GROUND;
-        m_uiPhaseTimer           = 120000;                   // 2 min
+        m_uiPhaseTimer           = 120000;                  // 2 min
 
-        m_uiEnrageTimer          = 330000;                   // 5 min and 30 secs
+        m_uiEnrageTimer          = 330000;                  // 5 min and 30 secs
         m_uiBloodMirrorTimer     = 0;
         m_uiDeliriousSlashTimer  = 20000;
         m_uiVampiricBiteTimer    = 15000;
@@ -328,7 +328,7 @@ CreatureAI* GetAI_boss_blood_queen_lanathel(Creature* pCreature)
 
 void AddSC_boss_blood_queen_lanathel()
 {
-    Script *pNewScript;
+    Script* pNewScript;
 
     pNewScript = new Script;
     pNewScript->Name = "boss_blood_queen_lanathel";

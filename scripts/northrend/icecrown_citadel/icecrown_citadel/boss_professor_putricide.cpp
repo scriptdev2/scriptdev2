@@ -71,8 +71,8 @@ enum
     SPELL_SLIME_PUDDLE              = 70341,
     SPELL_SLIME_PUDDLE_SUMMON       = 70342,
     SPELL_SLIME_PUDDLE_AURA         = 70343,
- // SPELL_SLIME_PUDDLE_TRIGGER      = 71424, // trigger summon spell from target?
- // SPELL_SLIME_PUDDLE_SUMMON_TRIG  = 71425,
+// SPELL_SLIME_PUDDLE_TRIGGER      = 71424, // trigger summon spell from target?
+// SPELL_SLIME_PUDDLE_SUMMON_TRIG  = 71425,
     SPELL_GROW_STACKER              = 70345,
     SPELL_GROW_STACKER_GROW_AURA    = 70347,
 
@@ -168,7 +168,7 @@ struct MANGOS_DLL_DECL boss_professor_putricideAI : public ScriptedAI
         DoScriptText(SAY_AGGRO, m_creature);
     }
 
-    void JustDied(Unit *pKiller)
+    void JustDied(Unit* pKiller)
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_PROFESSOR_PUTRICIDE, DONE);
@@ -203,7 +203,7 @@ struct MANGOS_DLL_DECL boss_professor_putricideAI : public ScriptedAI
                     m_uiTransitionTimer = 15000;
                 }
 
-                m_uiPhase = PHASE_TRANSITION_ONE; // waiting for entering phase 2
+                m_uiPhase = PHASE_TRANSITION_ONE;           // waiting for entering phase 2
             }
             else if (m_uiPhase == PHASE_RUNNING_TWO)
             {
@@ -219,7 +219,7 @@ struct MANGOS_DLL_DECL boss_professor_putricideAI : public ScriptedAI
                     m_uiTransitionTimer = 15000;
                 }
 
-                m_uiPhase = PHASE_TRANSITION_TWO; // waiting for entering phase 3
+                m_uiPhase = PHASE_TRANSITION_TWO;           // waiting for entering phase 3
             }
         }
     }
@@ -244,7 +244,7 @@ struct MANGOS_DLL_DECL boss_professor_putricideAI : public ScriptedAI
                 m_uiEnrageTimer -= uiDiff;
         }
 
-        switch(m_uiPhase)
+        switch (m_uiPhase)
         {
             case PHASE_ONE:
             {
@@ -274,7 +274,7 @@ struct MANGOS_DLL_DECL boss_professor_putricideAI : public ScriptedAI
                 {
                     if (m_uiUnboundPlagueTimer <= uiDiff)
                     {
-                        if (Unit *pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1, SPELL_UNBOUND_PLAGUE, SELECT_FLAG_PLAYER))
+                        if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1, SPELL_UNBOUND_PLAGUE, SELECT_FLAG_PLAYER))
                         {
                             if (DoCastSpellIfCan(pTarget, SPELL_UNBOUND_PLAGUE) == CAST_OK)
                                 m_uiUnboundPlagueTimer = 70000;
@@ -289,7 +289,7 @@ struct MANGOS_DLL_DECL boss_professor_putricideAI : public ScriptedAI
                 {
                     for (int i = 0; i < 2; ++i)
                     {
-                        if (Unit *pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_SLIME_PUDDLE_SUMMON, SELECT_FLAG_PLAYER))
+                        if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_SLIME_PUDDLE_SUMMON, SELECT_FLAG_PLAYER))
                             DoCastSpellIfCan(pTarget, SPELL_SLIME_PUDDLE, CAST_TRIGGERED);
                     }
                     m_uiPuddleTimer = 30000;
@@ -361,7 +361,7 @@ struct MANGOS_DLL_DECL boss_professor_putricideAI : public ScriptedAI
                 {
                     if (m_uiUnboundPlagueTimer <= uiDiff)
                     {
-                        if (Unit *pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1, SPELL_UNBOUND_PLAGUE, SELECT_FLAG_PLAYER))
+                        if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1, SPELL_UNBOUND_PLAGUE, SELECT_FLAG_PLAYER))
                         {
                             if (DoCastSpellIfCan(pTarget, SPELL_UNBOUND_PLAGUE) == CAST_OK)
                                 m_uiUnboundPlagueTimer = 70000;
@@ -376,7 +376,7 @@ struct MANGOS_DLL_DECL boss_professor_putricideAI : public ScriptedAI
                 {
                     for (int i = 0; i < 2; ++i)
                     {
-                        if (Unit *pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_SLIME_PUDDLE_SUMMON, SELECT_FLAG_PLAYER))
+                        if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_SLIME_PUDDLE_SUMMON, SELECT_FLAG_PLAYER))
                             DoCastSpellIfCan(pTarget, SPELL_SLIME_PUDDLE, CAST_TRIGGERED);
                     }
 
@@ -436,7 +436,7 @@ struct MANGOS_DLL_DECL boss_professor_putricideAI : public ScriptedAI
                 {
                     if (m_uiUnboundPlagueTimer <= uiDiff)
                     {
-                        if (Unit *pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1, SPELL_UNBOUND_PLAGUE, SELECT_FLAG_PLAYER))
+                        if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1, SPELL_UNBOUND_PLAGUE, SELECT_FLAG_PLAYER))
                         {
                             if (DoCastSpellIfCan(pTarget, SPELL_UNBOUND_PLAGUE) == CAST_OK)
                                 m_uiUnboundPlagueTimer = 70000;
@@ -451,7 +451,7 @@ struct MANGOS_DLL_DECL boss_professor_putricideAI : public ScriptedAI
                 {
                     for (int i = 0; i < 2; ++i)
                     {
-                        if (Unit *pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1, SPELL_SLIME_PUDDLE_SUMMON, SELECT_FLAG_PLAYER))
+                        if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1, SPELL_SLIME_PUDDLE_SUMMON, SELECT_FLAG_PLAYER))
                             DoCastSpellIfCan(pTarget, SPELL_SLIME_PUDDLE, CAST_TRIGGERED);
                     }
                     m_uiPuddleTimer = 30000;
@@ -491,7 +491,7 @@ CreatureAI* GetAI_boss_professor_putricide(Creature* pCreature)
 
 void AddSC_boss_professor_putricide()
 {
-    Script *pNewScript;
+    Script* pNewScript;
 
     pNewScript = new Script;
     pNewScript->Name = "boss_professor_putricide";

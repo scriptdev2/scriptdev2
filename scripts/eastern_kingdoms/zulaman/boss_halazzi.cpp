@@ -41,8 +41,8 @@ enum
     // generic spells
     SPELL_BERSERK                   = 45078,
     SPELL_TRANSFORM_TO_ORIGINAL     = 43311,
-    //SPELL_DUAL_WIELD              = 42459,            // spell not confirmed
-    //SPELL_TRANSFIGURE             = 44054,            // purpose unk
+    // SPELL_DUAL_WIELD              = 42459,            // spell not confirmed
+    // SPELL_TRANSFIGURE             = 44054,            // purpose unk
 
     // Phase single spells
     SPELL_SABER_LASH                = 43267,
@@ -57,7 +57,7 @@ enum
     SPELL_TRANSFORM_TO_LYNX_50      = 43271,
     SPELL_TRANSFORM_TO_LYNX_25      = 43272,
     SPELL_HALAZZI_TRANSFORM_DUMMY   = 43615,
-    //SPELL_HALAZZI_TRANSFORM_VISUAL= 43293,
+    // SPELL_HALAZZI_TRANSFORM_VISUAL= 43293,
 
     // Phase spirits spells
     SPELL_FLAMESHOCK                = 43303,
@@ -107,7 +107,7 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
         m_uiSaberLashTimer  = 20000;
         m_uiShockTimer      = 10000;
         m_uiTotemTimer      = 12000;
-        m_uiBerserkTimer    = 10*MINUTE*IN_MILLISECONDS;
+        m_uiBerserkTimer    = 10 * MINUTE * IN_MILLISECONDS;
 
         m_bHasTransformed   = false;
     }
@@ -180,7 +180,7 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
         uint32 uiSpellId = 0;
 
         // Each health level has it's own spell - but they all do the same thing
-        switch(m_uiPhaseCounter)
+        switch (m_uiPhaseCounter)
         {
             case 3: uiSpellId = SPELL_TRANSFORM_TO_LYNX_75; break;
             case 2: uiSpellId = SPELL_TRANSFORM_TO_LYNX_50; break;
@@ -198,7 +198,7 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
                 pLynx->ForcedDespawn();
 
             // Set the proper health level - workaround for missing server side spell 43538
-            m_creature->SetHealth(m_creature->GetMaxHealth()/4*m_uiPhaseCounter);
+            m_creature->SetHealth(m_creature->GetMaxHealth() / 4 * m_uiPhaseCounter);
             --m_uiPhaseCounter;
 
             m_uiPhase           = m_uiPhaseCounter > 0 ? PHASE_SINGLE : PHASE_FINAL;
@@ -231,7 +231,7 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
         if (m_uiPhase == PHASE_SINGLE || m_uiPhase == PHASE_FINAL)
         {
             // Split boss at 75%, 50% and 25%
-            if (!m_bHasTransformed && m_creature->GetHealthPercent() <= float(25*m_uiPhaseCounter))
+            if (!m_bHasTransformed && m_creature->GetHealthPercent() <= float(25 * m_uiPhaseCounter))
             {
                 if (DoCastSpellIfCan(m_creature, SPELL_TRANSFIGURE_TO_TROLL) == CAST_OK)
                 {
@@ -318,7 +318,7 @@ struct MANGOS_DLL_DECL boss_spirit_lynxAI : public ScriptedAI
 
     void Reset()
     {
-        m_uiFrenzyTimer     = urand(10000, 20000);              //first frenzy after 10-20 seconds
+        m_uiFrenzyTimer     = urand(10000, 20000);          // first frenzy after 10-20 seconds
         m_uiShredArmorTimer = 4000;
         m_bHasUnited        = false;
     }
@@ -340,7 +340,7 @@ struct MANGOS_DLL_DECL boss_spirit_lynxAI : public ScriptedAI
         if (m_uiFrenzyTimer < uiDiff)
         {
             DoCastSpellIfCan(m_creature, SPELL_LYNX_FRENZY);
-            m_uiFrenzyTimer = urand(20000, 30000);          //subsequent frenzys casted every 20-30 seconds
+            m_uiFrenzyTimer = urand(20000, 30000);          // subsequent frenzys casted every 20-30 seconds
         }
         else
             m_uiFrenzyTimer -= uiDiff;

@@ -29,7 +29,7 @@ EndScriptData */
 2 - Gruul event
 */
 
-instance_gruuls_lair::instance_gruuls_lair(Map *pMap) : ScriptedInstance(pMap),
+instance_gruuls_lair::instance_gruuls_lair(Map* pMap) : ScriptedInstance(pMap),
     m_uiCouncilMembersDied(0)
 {
     Initialize();
@@ -134,7 +134,7 @@ void instance_gruuls_lair::Load(const char* chrIn)
 
     loadStream >> m_auiEncounter[0] >> m_auiEncounter[1];
 
-    for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+    for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
         if (m_auiEncounter[i] == IN_PROGRESS)
             m_auiEncounter[i] = NOT_STARTED;
 

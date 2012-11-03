@@ -39,7 +39,7 @@ enum
     SPELL_ARCANE_CHARGES    = 45072
 };
 
-bool ItemUse_item_arcane_charges(Player* pPlayer, Item* pItem, const SpellCastTargets &pTargets)
+bool ItemUse_item_arcane_charges(Player* pPlayer, Item* pItem, const SpellCastTargets& pTargets)
 {
     if (pPlayer->IsTaxiFlying())
         return false;
@@ -56,7 +56,7 @@ bool ItemUse_item_arcane_charges(Player* pPlayer, Item* pItem, const SpellCastTa
 # item_flying_machine
 #####*/
 
-bool ItemUse_item_flying_machine(Player* pPlayer, Item* pItem, const SpellCastTargets &pTargets)
+bool ItemUse_item_flying_machine(Player* pPlayer, Item* pItem, const SpellCastTargets& pTargets)
 {
     uint32 itemId = pItem->GetEntry();
 
@@ -68,7 +68,7 @@ bool ItemUse_item_flying_machine(Player* pPlayer, Item* pItem, const SpellCastTa
         if (pPlayer->GetBaseSkillValue(SKILL_RIDING) == 300)
             return false;
 
-    debug_log("SD2: Player attempt to use item %u, but did not meet riding requirement",itemId);
+    debug_log("SD2: Player attempt to use item %u, but did not meet riding requirement", itemId);
     pPlayer->SendEquipError(EQUIP_ERR_CANT_EQUIP_SKILL, pItem, NULL);
     return true;
 }
@@ -83,7 +83,7 @@ enum
     SPELL_GORDREKS_OINTMENT = 32578
 };
 
-bool ItemUse_item_gor_dreks_ointment(Player* pPlayer, Item* pItem, const SpellCastTargets &pTargets)
+bool ItemUse_item_gor_dreks_ointment(Player* pPlayer, Item* pItem, const SpellCastTargets& pTargets)
 {
     if (pTargets.getUnitTarget() && pTargets.getUnitTarget()->GetTypeId() == TYPEID_UNIT && pTargets.getUnitTarget()->HasAura(SPELL_GORDREKS_OINTMENT))
     {
@@ -109,7 +109,7 @@ enum
     ZONE_ID_HOWLING             = 495
 };
 
-bool ItemUse_item_petrov_cluster_bombs(Player* pPlayer, Item* pItem, const SpellCastTargets &pTargets)
+bool ItemUse_item_petrov_cluster_bombs(Player* pPlayer, Item* pItem, const SpellCastTargets& pTargets)
 {
     if (pPlayer->GetZoneId() != ZONE_ID_HOWLING)
         return false;

@@ -38,7 +38,7 @@ void instance_wailing_caverns::OnPlayerEnter(Player* pPlayer)
 {
     // Respawn the Mysterious chest if one of the players who enter the instance has the quest in his log
     if (pPlayer->GetQuestStatus(QUEST_FORTUNE_AWAITS) == QUEST_STATUS_COMPLETE &&
-        !pPlayer->GetQuestRewardStatus(QUEST_FORTUNE_AWAITS))
+            !pPlayer->GetQuestRewardStatus(QUEST_FORTUNE_AWAITS))
         DoRespawnGameObject(GO_MYSTERIOUS_CHEST, HOUR);
 }
 
@@ -61,7 +61,7 @@ void instance_wailing_caverns::OnObjectCreate(GameObject* pGo)
 
 void instance_wailing_caverns::SetData(uint32 uiType, uint32 uiData)
 {
-    switch(uiType)
+    switch (uiType)
     {
         case TYPE_ANACONDRA:
             m_auiEncounter[0] = uiData;
@@ -103,7 +103,7 @@ void instance_wailing_caverns::SetData(uint32 uiType, uint32 uiData)
         std::ostringstream saveStream;
 
         saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " "
-                << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5];
+                   << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5];
 
         m_strInstData = saveStream.str();
         SaveToDB();
@@ -123,9 +123,9 @@ void instance_wailing_caverns::Load(const char* chrIn)
 
     std::istringstream loadStream(chrIn);
     loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2]
-            >> m_auiEncounter[3] >> m_auiEncounter[4] >> m_auiEncounter[5];
+               >> m_auiEncounter[3] >> m_auiEncounter[4] >> m_auiEncounter[5];
 
-    for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+    for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
     {
         if (m_auiEncounter[i] == IN_PROGRESS)
             m_auiEncounter[i] = NOT_STARTED;

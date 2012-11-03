@@ -15,7 +15,7 @@ enum
     TYPE_VOIDREAVER             = 2,
     TYPE_KAELTHAS               = 3,
 
-    //NPC_ASTROMANCER           = 18805,
+    // NPC_ASTROMANCER           = 18805,
     NPC_KAELTHAS                = 19622,
 
     NPC_CAPERNIAN               = 20062,
@@ -25,10 +25,10 @@ enum
 
     GO_ARCANE_DOOR_HORIZ_3      = 184325,               // combat doors for Kael
     GO_ARCANE_DOOR_HORIZ_4      = 184324,
-    //GO_RAID_DOOR_4            = 184329,               // encounter doors - no longer used since 2.4.0
-    //GO_RAID_DOOR_3            = 184327,
-    //GO_ARCANE_DOOR_VERT_3     = 184326,
-    //GO_ARCANE_DOOR_VERT_4     = 184328,
+    // GO_RAID_DOOR_4            = 184329,               // encounter doors - no longer used since 2.4.0
+    // GO_RAID_DOOR_3            = 184327,
+    // GO_ARCANE_DOOR_VERT_3     = 184326,
+    // GO_ARCANE_DOOR_VERT_4     = 184328,
     GO_KAEL_STATUE_LEFT         = 184597,               // cosmetic objects for Kael encounter
     GO_KAEL_STATUE_RIGHT        = 184596,
     GO_BRIDGE_WINDOW            = 184069,

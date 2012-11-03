@@ -144,7 +144,7 @@ struct MANGOS_DLL_DECL boss_jedogaAI : public ScriptedAI
 
     void KilledUnit(Unit* pVictim)
     {
-        switch(urand(0, 2))
+        switch (urand(0, 2))
         {
             case 0: DoScriptText(SAY_SLAY_1, m_creature); break;
             case 1: DoScriptText(SAY_SLAY_2, m_creature); break;
@@ -170,7 +170,7 @@ struct MANGOS_DLL_DECL boss_jedogaAI : public ScriptedAI
     {
         if (!m_bHasDoneIntro && pWho->GetTypeId() == TYPEID_PLAYER && m_creature->IsWithinDistInMap(pWho, 110.0f) && m_creature->IsWithinLOSInMap(pWho))
         {
-            switch(urand(0, 4))
+            switch (urand(0, 4))
             {
                 case 0: DoScriptText(SAY_PREACHING1, m_creature); break;
                 case 1: DoScriptText(SAY_PREACHING2, m_creature); break;
@@ -203,9 +203,9 @@ struct MANGOS_DLL_DECL boss_jedogaAI : public ScriptedAI
                     float fDist = i < 7 ? 20.0f : 30.0f;
                     float fAngle = 0;
                     if (!j)
-                        fAngle = i < 7 ? (i-2)*(3*M_PI_F/35) : (i-6)*(M_PI_F/16);
+                        fAngle = i < 7 ? (i - 2) * (3 * M_PI_F / 35) : (i - 6) * (M_PI_F / 16);
                     else
-                        fAngle = i < 7 ? (i-10)*(3*M_PI_F/35) : 3*M_PI_F/2 - (i-6)*(M_PI_F/16);
+                        fAngle = i < 7 ? (i - 10) * (3 * M_PI_F / 35) : 3 * M_PI_F / 2 - (i - 6) * (M_PI_F / 16);
 
                     m_creature->GetNearPoint(m_creature, fX, fY, fZ, 0, fDist, fAngle);
                     pVolunteer->GetMotionMaster()->MovePoint(POINT_ID_PREPARE, fX, fY, fZ);
@@ -217,7 +217,7 @@ struct MANGOS_DLL_DECL boss_jedogaAI : public ScriptedAI
         m_creature->GetRandomPoint(aVolunteerPosition[0][0], aVolunteerPosition[0][1], aVolunteerPosition[0][2], 10.0f, fX, fY, fZ);
         if (Creature* pVolunteer = m_creature->SummonCreature(NPC_TWILIGHT_VOLUNTEER, fX, fY, fZ, 0, TEMPSUMMON_DEAD_DESPAWN, 0))
         {
-            m_creature->GetNearPoint(m_creature, fX, fY, fZ, 0, 20.0f, 7*M_PI_F/4);
+            m_creature->GetNearPoint(m_creature, fX, fY, fZ, 0, 20.0f, 7 * M_PI_F / 4);
             pVolunteer->GetMotionMaster()->MovePoint(POINT_ID_PREPARE, fX, fY, fZ);
         }
     }
@@ -273,7 +273,7 @@ struct MANGOS_DLL_DECL boss_jedogaAI : public ScriptedAI
 
         switch (uiPointId)
         {
-            // Prepare for combat
+                // Prepare for combat
             case POINT_ID_PREPARE:
 
                 m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -282,14 +282,14 @@ struct MANGOS_DLL_DECL boss_jedogaAI : public ScriptedAI
                 m_creature->SetLevitate(false);
                 break;
 
-            // Prepare for sacrifice lift off
+                // Prepare for sacrifice lift off
             case POINT_ID_SACRIFICE:
                 DoCastSpellIfCan(m_creature, SPELL_HOVER_FALL);
                 m_creature->SetLevitate(true);
                 m_creature->GetMotionMaster()->MovePoint(POINT_ID_LEVITATE, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ() + 10.0f);
                 break;
 
-            // Call a volunteer to sacrifice
+                // Call a volunteer to sacrifice
             case POINT_ID_LEVITATE:
                 if (Creature* pVolunteer = m_creature->GetMap()->GetCreature(SelectRandomVolunteer()))
                 {
@@ -312,7 +312,7 @@ struct MANGOS_DLL_DECL boss_jedogaAI : public ScriptedAI
                 }
                 break;
 
-            // Resume combat
+                // Resume combat
             case POINT_ID_COMBAT:
                 m_creature->RemoveAurasDueToSpell(SPELL_HOVER_FALL);
                 m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);

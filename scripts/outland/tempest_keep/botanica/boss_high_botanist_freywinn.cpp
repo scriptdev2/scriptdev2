@@ -104,7 +104,7 @@ struct MANGOS_DLL_DECL boss_high_botanist_freywinnAI : public ScriptedAI
     // Wrapper to summon one seedling
     void DoSummonSeedling()
     {
-        switch(urand(0, 3))
+        switch (urand(0, 3))
         {
             case 0: DoCastSpellIfCan(m_creature, SPELL_PLANT_WHITE); break;
             case 1: DoCastSpellIfCan(m_creature, SPELL_PLANT_GREEN); break;
@@ -132,7 +132,7 @@ struct MANGOS_DLL_DECL boss_high_botanist_freywinnAI : public ScriptedAI
         {
             if (DoCastSpellIfCan(m_creature, SPELL_TRANQUILITY) == CAST_OK)
             {
-                 // Note: This should remove only negative auras
+                // Note: This should remove only negative auras
                 m_creature->RemoveAllAuras();
 
                 DoCastSpellIfCan(m_creature, SPELL_TREE_FORM, CAST_TRIGGERED);

@@ -48,7 +48,7 @@ enum
     SPELL_MUTATED_INFECTION_5   = 70006,
 
     // Slime Spray
- // SPELL_SLIME_SPRAY_SUMMON    = 70882, // precast of Slime Spray dmg spell
+// SPELL_SLIME_SPRAY_SUMMON    = 70882, // precast of Slime Spray dmg spell
     SPELL_SLIME_SPRAY           = 69508,
 
     // Ooze Flood
@@ -60,7 +60,7 @@ enum
     SPELL_STICKY_AURA           = 69776, // aura on dummy Sticky Ooze NPC
     SPELL_WEAK_RADIATING_OOZE   = 69750,
     SPELL_LITTLE_OOZE_COMBINE   = 69537, // periodic check
- // SPELL_MERGE                 = 69889,
+// SPELL_MERGE                 = 69889,
 
     // Big Ooze
     SPELL_UNSTABLE_OOZE         = 69558, // stacking buff
@@ -104,7 +104,7 @@ struct MANGOS_DLL_DECL boss_rotfaceAI : public ScriptedAI
         m_uiInfectionsRate              = 1;
     }
 
-    void Aggro(Unit *pWho)
+    void Aggro(Unit* pWho)
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_ROTFACE, IN_PROGRESS);
@@ -126,10 +126,10 @@ struct MANGOS_DLL_DECL boss_rotfaceAI : public ScriptedAI
     void KilledUnit(Unit* pVictim)
     {
         if (pVictim->GetTypeId() == TYPEID_PLAYER)
-            DoScriptText(urand(0,1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature, pVictim);
+            DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature, pVictim);
     }
 
-    void JustDied(Unit *pKiller)
+    void JustDied(Unit* pKiller)
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_ROTFACE, DONE);
@@ -175,7 +175,7 @@ struct MANGOS_DLL_DECL boss_rotfaceAI : public ScriptedAI
         // Slime Flow
         if (m_uiSlimeFlowTimer <= uiDiff)
         {
-            if (Creature *pProfessor = m_pInstance->GetSingleCreatureFromStorage(NPC_PROFESSOR_PUTRICIDE))
+            if (Creature* pProfessor = m_pInstance->GetSingleCreatureFromStorage(NPC_PROFESSOR_PUTRICIDE))
                 DoScriptText(urand(0, 1) ? SAY_SLIME_FLOW_1 : SAY_SLIME_FLOW_2, pProfessor);
 
             m_uiSlimeFlowTimer = 20000;
@@ -195,7 +195,7 @@ CreatureAI* GetAI_boss_rotface(Creature* pCreature)
 
 struct MANGOS_DLL_DECL mob_little_oozeAI : public ScriptedAI
 {
-    mob_little_oozeAI(Creature *pCreature) : ScriptedAI(pCreature)
+    mob_little_oozeAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (instance_icecrown_citadel*)pCreature->GetInstanceData();
         Reset();
@@ -214,7 +214,7 @@ struct MANGOS_DLL_DECL mob_little_oozeAI : public ScriptedAI
         m_creature->ForcedDespawn();
     }
 
-    void Aggro(Unit *pWho)
+    void Aggro(Unit* pWho)
     {
         m_creature->AddThreat(pWho, 500000.0f); // not sure about the threat amount but should be very high
         DoCastSpellIfCan(m_creature, SPELL_WEAK_RADIATING_OOZE, CAST_TRIGGERED);
@@ -246,13 +246,13 @@ CreatureAI* GetAI_mob_little_ooze(Creature* pCreature)
 
 struct MANGOS_DLL_DECL mob_big_oozeAI : public ScriptedAI
 {
-    mob_big_oozeAI(Creature *pCreature) : ScriptedAI(pCreature)
+    mob_big_oozeAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (instance_icecrown_citadel*)pCreature->GetInstanceData();
         Reset();
     }
 
-    instance_icecrown_citadel *m_pInstance;
+    instance_icecrown_citadel* m_pInstance;
     uint32 m_uiStickyOozeTimer;
     uint32 m_uiUnstableExplosionCheckTimer;
 
@@ -267,7 +267,7 @@ struct MANGOS_DLL_DECL mob_big_oozeAI : public ScriptedAI
         m_creature->ForcedDespawn();
     }
 
-    void Aggro(Unit *pWho)
+    void Aggro(Unit* pWho)
     {
         m_creature->AddThreat(pWho, 500000.0f);
         DoCastSpellIfCan(m_creature, SPELL_RADIATING_OOZE, CAST_TRIGGERED);
@@ -287,14 +287,14 @@ struct MANGOS_DLL_DECL mob_big_oozeAI : public ScriptedAI
             {
                 m_uiUnstableExplosionCheckTimer = 1000;
 
-                SpellAuraHolder* holder= m_creature->GetSpellAuraHolder(SPELL_UNSTABLE_OOZE);
+                SpellAuraHolder* holder = m_creature->GetSpellAuraHolder(SPELL_UNSTABLE_OOZE);
                 if (holder && holder->GetStackAmount() >= 5)
                 {
                     if (DoCastSpellIfCan(m_creature, SPELL_UNSTABLE_EXPLOSION) == CAST_OK)
                     {
                         if (m_pInstance)
                         {
-                            if (Creature *pRotface = m_pInstance->GetSingleCreatureFromStorage(NPC_ROTFACE))
+                            if (Creature* pRotface = m_pInstance->GetSingleCreatureFromStorage(NPC_ROTFACE))
                                 DoScriptText(SAY_OOZE_EXPLODE, pRotface);
                         }
                     }

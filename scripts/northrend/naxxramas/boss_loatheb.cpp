@@ -64,9 +64,9 @@ struct MANGOS_DLL_DECL boss_loathebAI : public ScriptedAI
     {
         m_uiDeathbloomTimer = 5000;
         m_uiNecroticAuraTimer = 12000;
-        m_uiInevitableDoomTimer = MINUTE*2*IN_MILLISECONDS;
+        m_uiInevitableDoomTimer = MINUTE * 2 * IN_MILLISECONDS;
         m_uiSummonTimer = urand(10000, 15000);              // first seen in vid after approx 12s
-        m_uiBerserkTimer = MINUTE*12*IN_MILLISECONDS;       // only in heroic, after 12min
+        m_uiBerserkTimer = MINUTE * 12 * IN_MILLISECONDS;   // only in heroic, after 12min
         m_uiNecroticAuraCount = 0;
     }
 

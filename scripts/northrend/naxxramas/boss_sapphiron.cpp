@@ -116,7 +116,7 @@ struct MANGOS_DLL_DECL boss_sapphironAI : public ScriptedAI
 
         SetCombatMovement(true);
         m_creature->SetLevitate(false);
-        //m_creature->ApplySpellMod(SPELL_FROST_AURA, SPELLMOD_DURATION, -1);
+        // m_creature->ApplySpellMod(SPELL_FROST_AURA, SPELLMOD_DURATION, -1);
     }
 
     void Aggro(Unit* pWho)

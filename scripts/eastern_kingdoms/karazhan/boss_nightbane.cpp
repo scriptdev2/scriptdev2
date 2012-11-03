@@ -36,7 +36,7 @@ enum
 
     // ground phase spells
     SPELL_BELLOWING_ROAR        = 39427,
-    SPELL_CHARRED_EARTH         = 30129,                    //Also 30209 (Target Charred Earth) triggers this
+    SPELL_CHARRED_EARTH         = 30129,                    // Also 30209 (Target Charred Earth) triggers this
     SPELL_SMOLDERING_BREATH     = 30210,
     SPELL_TAIL_SWEEP            = 25653,
     SPELL_CLEAVE                = 30131,
@@ -260,7 +260,7 @@ struct MANGOS_DLL_DECL boss_nightbaneAI : public npc_escortAI
                 else
                     m_uiCleavetimer -= uiDiff;
 
-                if (m_creature->GetHealthPercent() < 100 - 25*m_uiFlightPhase)
+                if (m_creature->GetHealthPercent() < 100 - 25 * m_uiFlightPhase)
                 {
                     // Start air phase movement (handled by creature_movement_template)
                     SetCombatMovement(false);

@@ -81,7 +81,7 @@ void instance_violet_hold::ResetAll()
                 pGhostBoss->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE);
             }
             else if (Creature* pSummoner = GetSingleCreatureFromStorage(NPC_SINCLARI_ALT))
-                pSummoner->SummonCreature(pData->uiGhostEntry, (*itr)->fX, (*itr)->fY, (*itr)->fZ, (*itr)->fO, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600*IN_MILLISECONDS);
+                pSummoner->SummonCreature(pData->uiGhostEntry, (*itr)->fX, (*itr)->fY, (*itr)->fZ, (*itr)->fO, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600 * IN_MILLISECONDS);
 
             // Respawn Erekem guards
             if (pData->uiType == TYPE_EREKEM)
@@ -105,7 +105,7 @@ void instance_violet_hold::ResetAll()
 
 void instance_violet_hold::OnCreatureCreate(Creature* pCreature)
 {
-    switch(pCreature->GetEntry())
+    switch (pCreature->GetEntry())
     {
         case NPC_SINCLARI:
         case NPC_SINCLARI_ALT:
@@ -151,7 +151,7 @@ void instance_violet_hold::OnCreatureCreate(Creature* pCreature)
 
 void instance_violet_hold::OnObjectCreate(GameObject* pGo)
 {
-    switch(pGo->GetEntry())
+    switch (pGo->GetEntry())
     {
         case GO_CELL_LAVANTHOR:
             m_mBossToCellMap.insert(BossToCellMap::value_type(NPC_LAVANTHOR, pGo->GetObjectGuid()));
@@ -193,7 +193,7 @@ void instance_violet_hold::UpdateCellForBoss(uint32 uiBossEntry, bool bForceClos
     if (itrCellLower == itrCellUpper)
         return;
 
-    for(BossToCellMap::const_iterator itr = itrCellLower; itr != itrCellUpper; ++itr)
+    for (BossToCellMap::const_iterator itr = itrCellLower; itr != itrCellUpper; ++itr)
     {
         if (!bForceClosing)
             DoUseDoorOrButton(itr->second);
@@ -239,7 +239,7 @@ void instance_violet_hold::SetData(uint32 uiType, uint32 uiData)
             if (m_auiEncounter[uiType] == DONE)
                 return;
 
-            switch(uiData)
+            switch (uiData)
             {
                 case IN_PROGRESS:
                     // ToDo: enable the prison defense system when implemented
@@ -276,13 +276,13 @@ void instance_violet_hold::SetData(uint32 uiType, uint32 uiData)
                 DoUpdateWorldState(WORLD_STATE_SEAL, m_uiWorldStateSealCount);
 
                 // Yell at 75%, 50% and 25% shield
-                if (m_uiWorldStateSealCount < 100-25*m_uiSealYellCount)
+                if (m_uiWorldStateSealCount < 100 - 25 * m_uiSealYellCount)
                 {
                     if (Creature* pSinclari = GetSingleCreatureFromStorage(NPC_SINCLARI_ALT))
                     {
                         // ToDo: I'm not sure if the last yell should be at 25% or at 5%. Needs research
                         ++m_uiSealYellCount;
-                        DoScriptText(aSealWeakYell[m_uiSealYellCount-1], pSinclari);
+                        DoScriptText(aSealWeakYell[m_uiSealYellCount - 1], pSinclari);
                     }
                 }
 
@@ -351,9 +351,9 @@ void instance_violet_hold::SetData(uint32 uiType, uint32 uiData)
 
         std::ostringstream saveStream;
         saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " "
-            << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5] << " "
-            << m_auiEncounter[6] << " " << m_auiEncounter[7] << " " << m_auiEncounter[8] << " "
-            << m_auiEncounter[9];
+                   << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5] << " "
+                   << m_auiEncounter[6] << " " << m_auiEncounter[7] << " " << m_auiEncounter[8] << " "
+                   << m_auiEncounter[9];
 
         m_strInstData = saveStream.str();
 
@@ -381,10 +381,10 @@ void instance_violet_hold::Load(const char* chrIn)
 
     std::istringstream loadStream(chrIn);
     loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3]
-        >> m_auiEncounter[4] >> m_auiEncounter[5] >> m_auiEncounter[6] >> m_auiEncounter[7]
-        >> m_auiEncounter[8] >> m_auiEncounter[9];
+               >> m_auiEncounter[4] >> m_auiEncounter[5] >> m_auiEncounter[6] >> m_auiEncounter[7]
+               >> m_auiEncounter[8] >> m_auiEncounter[9];
 
-    for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+    for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
     {
         if (m_auiEncounter[i] == IN_PROGRESS)
             m_auiEncounter[i] = NOT_STARTED;
@@ -395,7 +395,7 @@ void instance_violet_hold::Load(const char* chrIn)
 
 void instance_violet_hold::SetIntroPortals(bool bDeactivate)
 {
-    for(GuidList::const_iterator itr = m_lIntroPortalList.begin(); itr != m_lIntroPortalList.end(); ++itr)
+    for (GuidList::const_iterator itr = m_lIntroPortalList.begin(); itr != m_lIntroPortalList.end(); ++itr)
     {
         if (Creature* pPortal = instance->GetCreature(*itr))
         {
@@ -415,7 +415,7 @@ void instance_violet_hold::SpawnPortal()
         {
             uint32 uiPortalEntry = pData->pPortalType == PORTAL_TYPE_NORM ? NPC_PORTAL : NPC_PORTAL_ELITE;
 
-            pController->SummonCreature(uiPortalEntry, pData->fX, pData->fY, pData->fZ, pData->fOrient, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 1800*IN_MILLISECONDS);
+            pController->SummonCreature(uiPortalEntry, pData->fX, pData->fY, pData->fZ, pData->fOrient, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 1800 * IN_MILLISECONDS);
         }
     }
 }
@@ -472,7 +472,7 @@ void instance_violet_hold::SetRandomBosses()
     {
         uint32 uiPosition = urand(0, m_lRandomBossList.size() - 1);
 
-        for(std::list<uint32>::iterator itr = m_lRandomBossList.begin(); itr != m_lRandomBossList.end(); ++itr, --uiPosition)
+        for (std::list<uint32>::iterator itr = m_lRandomBossList.begin(); itr != m_lRandomBossList.end(); ++itr, --uiPosition)
         {
             if (!*itr)
                 continue;
@@ -505,7 +505,7 @@ void instance_violet_hold::SetRandomBosses()
 
 void instance_violet_hold::CallGuards(bool bRespawn)
 {
-    for(GuidList::const_iterator itr = m_lGuardsList.begin(); itr != m_lGuardsList.end(); ++itr)
+    for (GuidList::const_iterator itr = m_lGuardsList.begin(); itr != m_lGuardsList.end(); ++itr)
     {
         if (Creature* pGuard = instance->GetCreature(*itr))
         {
@@ -544,11 +544,11 @@ bool instance_violet_hold::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Pla
 {
     switch (uiCriteriaId)
     {
-        // ToDo: uncomment these when they are implemented
-        //case ACHIEV_CRIT_DEFENSELES:
-        //    return m_bIsDefenseless;
-        //case ACHIEV_CRIT_DEHYDRATATION:
-        //    return m_bIsDehydratation;
+            // ToDo: uncomment these when they are implemented
+            // case ACHIEV_CRIT_DEFENSELES:
+            //    return m_bIsDefenseless;
+            // case ACHIEV_CRIT_DEHYDRATATION:
+            //    return m_bIsDehydratation;
         case ACHIEV_CRIT_VOID_DANCE:
             return m_bIsVoidDance;
 
@@ -760,7 +760,7 @@ instance_violet_hold::~instance_violet_hold()
     for (std::vector<BossSpawn*>::const_iterator itr = m_vRandomBosses.begin(); itr != m_vRandomBosses.end(); ++itr)
     {
         if (*itr)
-            delete (*itr);
+            delete(*itr);
     }
 }
 

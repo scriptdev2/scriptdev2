@@ -64,7 +64,7 @@ bool instance_black_temple::IsEncounterInProgress() const
 
 void instance_black_temple::OnCreatureCreate(Creature* pCreature)
 {
-    switch(pCreature->GetEntry())
+    switch (pCreature->GetEntry())
     {
         case NPC_SPIRIT_OF_OLUM:
         case NPC_SPIRIT_OF_UDALO:
@@ -100,7 +100,7 @@ void instance_black_temple::OnCreatureCreate(Creature* pCreature)
 
 void instance_black_temple::OnObjectCreate(GameObject* pGo)
 {
-    switch(pGo->GetEntry())
+    switch (pGo->GetEntry())
     {
         case GO_NAJENTUS_GATE:                              // Gate past Naj'entus (at the entrance to Supermoose's courtyards)
             if (m_auiEncounter[TYPE_NAJENTUS] == DONE)
@@ -140,7 +140,7 @@ void instance_black_temple::OnObjectCreate(GameObject* pGo)
 
 void instance_black_temple::SetData(uint32 uiType, uint32 uiData)
 {
-    switch(uiType)
+    switch (uiType)
     {
         case TYPE_NAJENTUS:
             m_auiEncounter[uiType] = uiData;
@@ -228,8 +228,8 @@ void instance_black_temple::SetData(uint32 uiType, uint32 uiData)
 
         std::ostringstream saveStream;
         saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " "
-            << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5] << " "
-            << m_auiEncounter[6] << " " << m_auiEncounter[7] << " " << m_auiEncounter[8];
+                   << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5] << " "
+                   << m_auiEncounter[6] << " " << m_auiEncounter[7] << " " << m_auiEncounter[8];
 
         m_strInstData = saveStream.str();
 
@@ -278,7 +278,7 @@ void instance_black_temple::Load(const char* chrIn)
 
     std::istringstream loadStream(chrIn);
     loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3]
-        >> m_auiEncounter[4] >> m_auiEncounter[5] >> m_auiEncounter[6] >> m_auiEncounter[7] >> m_auiEncounter[8];
+               >> m_auiEncounter[4] >> m_auiEncounter[5] >> m_auiEncounter[6] >> m_auiEncounter[7] >> m_auiEncounter[8];
 
     for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
     {

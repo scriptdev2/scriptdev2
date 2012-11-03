@@ -107,7 +107,7 @@ struct MANGOS_DLL_DECL boss_galdarahAI : public ScriptedAI
 
     void KilledUnit(Unit* pVictim)
     {
-        switch(urand(0, 2))
+        switch (urand(0, 2))
         {
             case 0: DoScriptText(SAY_SLAY_1, m_creature); break;
             case 1: DoScriptText(SAY_SLAY_2, m_creature); break;
@@ -192,7 +192,7 @@ struct MANGOS_DLL_DECL boss_galdarahAI : public ScriptedAI
 
             if (m_uiStampedeTimer < uiDiff)
             {
-                switch(urand(0, 2))
+                switch (urand(0, 2))
                 {
                     case 0: DoScriptText(SAY_SUMMON_1, m_creature); break;
                     case 1: DoScriptText(SAY_SUMMON_2, m_creature); break;

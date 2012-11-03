@@ -90,7 +90,7 @@ struct OperaSpawns
     float fX, fY, fZ, fO;
 };
 
-static const OperaSpawns aOperaLocOz[MAX_OZ_OPERA_MOBS]=
+static const OperaSpawns aOperaLocOz[MAX_OZ_OPERA_MOBS] =
 {
     {NPC_DOROTHEE,  -10896.65f, -1757.62f, 90.55f, 4.86f},
     {NPC_ROAR,      -10889.53f, -1758.10f, 90.55f, 4.57f},
@@ -101,7 +101,7 @@ static const OperaSpawns aOperaLocOz[MAX_OZ_OPERA_MOBS]=
 static const OperaSpawns aOperaLocWolf = {NPC_GRANDMOTHER, -10892.01f, -1758.01f, 90.55f, 4.73f};
 static const OperaSpawns aOperaLocJul  = {NPC_JULIANNE,    -10893.56f, -1760.43f, 90.55f, 4.55f};
 
-static const float afChroneSpawnLoc[4] = {-10893.11f, -1757.85f, 90.55f, 4.60f};
+static const float afChroneSpawnLoc[4] = { -10893.11f, -1757.85f, 90.55f, 4.60f};
 
 class MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
 {
@@ -123,7 +123,7 @@ class MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
 
         void DoPrepareOperaStage(Creature* pOrganizer);
 
-        void GetNightbaneTriggers(GuidList &lList, bool bGround) { lList = bGround ? m_lNightbaneGroundTriggers : m_lNightbaneAirTriggers; }
+        void GetNightbaneTriggers(GuidList& lList, bool bGround) { lList = bGround ? m_lNightbaneGroundTriggers : m_lNightbaneAirTriggers; }
 
         void Load(const char* chrIn);
         const char* Save() { return m_strInstData.c_str(); }

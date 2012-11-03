@@ -47,7 +47,7 @@ struct MANGOS_DLL_DECL npc_lazy_peonAI : public ScriptedAI
 {
     npc_lazy_peonAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        Reset ();
+        Reset();
         m_uiStopSleepingTimer = urand(30000, 120000);       // Set on spawn to a potential small timer, to get nice results for initial case
     }
 
@@ -127,7 +127,7 @@ CreatureAI* GetAI_npc_lazy_peon(Creature* pCreature)
 
 bool EffectDummyCreature_lazy_peon_awake(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
 {
-    //always check spellid and effectindex
+    // always check spellid and effectindex
     if (uiSpellId == SPELL_AWAKEN_PEON && uiEffIndex == EFFECT_INDEX_0)
     {
         if (!pCreatureTarget->HasAura(SPELL_PEON_SLEEP) || pCaster->GetTypeId() != TYPEID_PLAYER || pCreatureTarget->GetEntry() != NPC_SLEEPING_PEON)
@@ -136,7 +136,7 @@ bool EffectDummyCreature_lazy_peon_awake(Unit* pCaster, uint32 uiSpellId, SpellE
         if (npc_lazy_peonAI* pPeonAI = dynamic_cast<npc_lazy_peonAI*>(pCreatureTarget->AI()))
             pPeonAI->StartLumbering(pCaster);
 
-        //always return true when we are handling this spell and effect
+        // always return true when we are handling this spell and effect
         return true;
     }
 

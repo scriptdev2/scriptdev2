@@ -73,8 +73,8 @@ struct MANGOS_DLL_DECL mob_aquementasAI : public ScriptedAI
     void SendItem(Unit* pReceiver)
     {
         if (((Player*)pReceiver)->HasItemCount(ITEM_BOOK_AQUOR, 1) &&
-            ((Player*)pReceiver)->HasItemCount(ITEM_SILVERY_CLAWS, 11) &&
-            ((Player*)pReceiver)->HasItemCount(ITEM_IRONTREE_HEART, 1))
+                ((Player*)pReceiver)->HasItemCount(ITEM_SILVERY_CLAWS, 11) &&
+                ((Player*)pReceiver)->HasItemCount(ITEM_IRONTREE_HEART, 1))
         {
             if (Item* pItem = ((Player*)pReceiver)->StoreNewItemInInventorySlot(ITEM_SILVER_TOTEM, 1))
                 ((Player*)pReceiver)->SendNewItem(pItem, 1, true, false);
@@ -166,7 +166,7 @@ struct MANGOS_DLL_DECL npc_custodian_of_timeAI : public npc_escortAI
         if (!pPlayer)
             return;
 
-        switch(uiPointId)
+        switch (uiPointId)
         {
             case 0: DoScriptText(WHISPER_CUSTODIAN_1, m_creature, pPlayer); break;
             case 1: DoScriptText(WHISPER_CUSTODIAN_2, m_creature, pPlayer); break;
@@ -250,14 +250,14 @@ struct MANGOS_DLL_DECL npc_oox17tnAI : public npc_escortAI
 
         switch (i)
         {
-            //1. Ambush: 3 scorpions
+                // 1. Ambush: 3 scorpions
             case 22:
                 DoScriptText(SAY_OOX_AMBUSH, m_creature);
                 m_creature->SummonCreature(NPC_SCORPION, -8340.70f, -4448.17f, 9.17f, 3.10f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000);
                 m_creature->SummonCreature(NPC_SCORPION, -8343.18f, -4444.35f, 9.44f, 2.35f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000);
                 m_creature->SummonCreature(NPC_SCORPION, -8348.70f, -4457.80f, 9.58f, 2.02f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000);
                 break;
-            //2. Ambush: 2 Rogues & 1 Shadow Mage
+                // 2. Ambush: 2 Rogues & 1 Shadow Mage
             case 28:
                 DoScriptText(SAY_OOX_AMBUSH, m_creature);
 
@@ -265,7 +265,7 @@ struct MANGOS_DLL_DECL npc_oox17tnAI : public npc_escortAI
                 m_creature->SummonCreature(NPC_SHADOW_MAGE, -7486.41f, -4791.55f, 10.54f, 3.26f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000);
 
                 if (Creature* pCreature = m_creature->SummonCreature(NPC_SCOFFLAW, -7488.47f, -4800.77f, 9.77f, 2.50f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000))
-                    DoScriptText(SAY_OOX17_AMBUSH_REPLY,pCreature);
+                    DoScriptText(SAY_OOX17_AMBUSH_REPLY, pCreature);
 
                 break;
             case 34:
@@ -280,11 +280,11 @@ struct MANGOS_DLL_DECL npc_oox17tnAI : public npc_escortAI
 
     void Aggro(Unit* who)
     {
-        //For an small probability he say something when it aggros
-        switch(urand(0, 9))
+        // For an small probability he say something when it aggros
+        switch (urand(0, 9))
         {
-           case 0: DoScriptText(SAY_OOX_AGGRO1, m_creature); break;
-           case 1: DoScriptText(SAY_OOX_AGGRO2, m_creature); break;
+            case 0: DoScriptText(SAY_OOX_AGGRO1, m_creature); break;
+            case 1: DoScriptText(SAY_OOX_AGGRO2, m_creature); break;
         }
     }
 
@@ -345,26 +345,26 @@ bool GossipHello_npc_stone_watcher_of_norgannon(Player* pPlayer, Creature* pCrea
 
 bool GossipSelect_npc_stone_watcher_of_norgannon(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    switch(uiAction)
+    switch (uiAction)
     {
         case GOSSIP_ACTION_INFO_DEF:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_NORGANNON_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_NORGANNON_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
             pPlayer->SEND_GOSSIP_MENU(1675, pCreature->GetObjectGuid());
             break;
         case GOSSIP_ACTION_INFO_DEF+1:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_NORGANNON_3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_NORGANNON_3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
             pPlayer->SEND_GOSSIP_MENU(1676, pCreature->GetObjectGuid());
             break;
         case GOSSIP_ACTION_INFO_DEF+2:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_NORGANNON_4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_NORGANNON_4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
             pPlayer->SEND_GOSSIP_MENU(1677, pCreature->GetObjectGuid());
             break;
         case GOSSIP_ACTION_INFO_DEF+3:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_NORGANNON_5, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_NORGANNON_5, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
             pPlayer->SEND_GOSSIP_MENU(1678, pCreature->GetObjectGuid());
             break;
         case GOSSIP_ACTION_INFO_DEF+4:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_NORGANNON_6, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_NORGANNON_6, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
             pPlayer->SEND_GOSSIP_MENU(1679, pCreature->GetObjectGuid());
             break;
         case GOSSIP_ACTION_INFO_DEF+5:
@@ -396,7 +396,7 @@ enum
     POINT_ID_TO_WATER           = 1
 };
 
-const float m_afToWaterLoc[] = {-7032.664551f, -4906.199219f, -1.606446f};
+const float m_afToWaterLoc[] = { -7032.664551f, -4906.199219f, -1.606446f};
 
 struct MANGOS_DLL_DECL npc_toogaAI : public FollowerAI
 {
@@ -452,7 +452,7 @@ struct MANGOS_DLL_DECL npc_toogaAI : public FollowerAI
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
         {
-            //we are doing the post-event, or...
+            // we are doing the post-event, or...
             if (HasFollowState(STATE_FOLLOW_POSTEVENT))
             {
                 if (m_uiPostEventTimer < uiDiff)
@@ -461,12 +461,12 @@ struct MANGOS_DLL_DECL npc_toogaAI : public FollowerAI
 
                     if (!pTorta || !pTorta->isAlive())
                     {
-                        //something happened, so just complete
+                        // something happened, so just complete
                         SetFollowComplete();
                         return;
                     }
 
-                    switch(m_uiPhasePostEvent)
+                    switch (m_uiPhasePostEvent)
                     {
                         case 1:
                             DoScriptText(SAY_TOOG_POST_1, m_creature);
@@ -501,7 +501,7 @@ struct MANGOS_DLL_DECL npc_toogaAI : public FollowerAI
                 {
                     m_uiCheckSpeechTimer = 5000;
 
-                    switch(urand(0, 50))
+                    switch (urand(0, 50))
                     {
                         case 10: DoScriptText(SAY_TOOG_THIRST, m_creature); break;
                         case 25: DoScriptText(SAY_TOOG_WORRIED, m_creature); break;

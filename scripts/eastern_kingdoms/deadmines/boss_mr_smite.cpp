@@ -181,7 +181,7 @@ struct MANGOS_DLL_DECL boss_mr_smiteAI : public ScriptedAI
                     m_uiEquipTimer = 0;
             }
 
-            switch(m_uiPhase)
+            switch (m_uiPhase)
             {
                 case PHASE_EQUIP_START:
                     PhaseEquipStart();
@@ -198,7 +198,7 @@ struct MANGOS_DLL_DECL boss_mr_smiteAI : public ScriptedAI
         }
 
         // the normal combat phases
-        switch(m_uiPhase)
+        switch (m_uiPhase)
         {
             case PHASE_1:
             {

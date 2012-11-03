@@ -67,7 +67,7 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
     {
         m_uiFlareTimer       = 10000;
         m_uiHatefulBoltTimer = 15000;                       // This time may be wrong
-        m_uiBerserkTimer     = 10*MINUTE*IN_MILLISECONDS;
+        m_uiBerserkTimer     = 10 * MINUTE * IN_MILLISECONDS;
         m_bIsEnraged         = false;
 
         m_creature->ApplySpellImmune(0, IMMUNITY_DAMAGE, SPELL_SCHOOL_MASK_ARCANE, true);
@@ -158,22 +158,22 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
                 // reduce mana by 10% of maximum
                 if (int32 iMana = m_creature->GetMaxPower(POWER_MANA))
                 {
-                    m_creature->ModifyPower(POWER_MANA, -(iMana/10));
+                    m_creature->ModifyPower(POWER_MANA, -(iMana / 10));
 
-                    //if this get's us below 10%, then we evocate (the 10th should be summoned now
-                    if (m_creature->GetPower(POWER_MANA)*10 < m_creature->GetMaxPower(POWER_MANA))
+                    // if this get's us below 10%, then we evocate (the 10th should be summoned now
+                    if (m_creature->GetPower(POWER_MANA) * 10 < m_creature->GetMaxPower(POWER_MANA))
                     {
                         if (DoCastSpellIfCan(m_creature, SPELL_EVOCATION, CAST_INTERRUPT_PREVIOUS) == CAST_OK)
                         {
                             DoScriptText(SAY_EVOCATE, m_creature);
-                            //this small delay should make first flare appear fast after evocate, and also prevent possible spawn flood
+                            // this small delay should make first flare appear fast after evocate, and also prevent possible spawn flood
                             m_uiFlareTimer = 1000;
                         }
                         return;
                     }
                     else
                     {
-                        switch(urand(0, 3))
+                        switch (urand(0, 3))
                         {
                             case 0: DoScriptText(SAY_SUMMON1, m_creature); break;
                             case 1: DoScriptText(SAY_SUMMON2, m_creature); break;

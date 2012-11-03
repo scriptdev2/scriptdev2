@@ -78,8 +78,8 @@ enum
 
 const uint32 uiNpcPrisonEntry[] =
 {
-    22810, 22811, 22812, 22813, 22814, 22815,               //good guys
-    20783, 20784, 20785, 20786, 20788, 20789, 20790         //bad guys
+    22810, 22811, 22812, 22813, 22814, 22815,               // good guys
+    20783, 20784, 20785, 20786, 20788, 20789, 20790         // bad guys
 };
 
 bool GOUse_go_ethereum_prison(Player* pPlayer, GameObject* pGo)
@@ -87,8 +87,8 @@ bool GOUse_go_ethereum_prison(Player* pPlayer, GameObject* pGo)
     uint8 uiRandom = urand(0, countof(uiNpcPrisonEntry) - 1);
 
     if (Creature* pCreature = pPlayer->SummonCreature(uiNpcPrisonEntry[uiRandom],
-        pGo->GetPositionX(), pGo->GetPositionY(), pGo->GetPositionZ(), pGo->GetAngle(pPlayer),
-        TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000))
+                              pGo->GetPositionX(), pGo->GetPositionY(), pGo->GetPositionZ(), pGo->GetAngle(pPlayer),
+                              TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000))
     {
         if (!pCreature->IsHostileTo(pPlayer))
         {
@@ -96,7 +96,7 @@ bool GOUse_go_ethereum_prison(Player* pPlayer, GameObject* pGo)
 
             if (FactionTemplateEntry const* pFaction = pCreature->getFactionTemplateEntry())
             {
-                switch(pFaction->faction)
+                switch (pFaction->faction)
                 {
                     case FACTION_LC:   uiSpell = SPELL_REP_LC;   break;
                     case FACTION_SHAT: uiSpell = SPELL_REP_SHAT; break;
@@ -107,9 +107,9 @@ bool GOUse_go_ethereum_prison(Player* pPlayer, GameObject* pGo)
                 }
 
                 if (uiSpell)
-                    pCreature->CastSpell(pPlayer,uiSpell,false);
+                    pCreature->CastSpell(pPlayer, uiSpell, false);
                 else
-                    error_log("SD2: go_ethereum_prison summoned creature (entry %u) but faction (%u) are not expected by script.",pCreature->GetEntry(),pCreature->getFaction());
+                    error_log("SD2: go_ethereum_prison summoned creature (entry %u) but faction (%u) are not expected by script.", pCreature->GetEntry(), pCreature->getFaction());
             }
         }
     }
@@ -131,8 +131,8 @@ bool GOUse_go_ethereum_stasis(Player* pPlayer, GameObject* pGo)
     uint8 uiRandom = urand(0, countof(uiNpcStasisEntry) - 1);
 
     pPlayer->SummonCreature(uiNpcStasisEntry[uiRandom],
-        pGo->GetPositionX(), pGo->GetPositionY(), pGo->GetPositionZ(), pGo->GetAngle(pPlayer),
-        TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+                            pGo->GetPositionX(), pGo->GetPositionY(), pGo->GetPositionZ(), pGo->GetAngle(pPlayer),
+                            TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
 
     return false;
 }
@@ -168,7 +168,7 @@ enum
 
 bool GOUse_go_mysterious_snow_mound(Player* pPlayer, GameObject* pGo)
 {
-    if (urand(0,1))
+    if (urand(0, 1))
     {
         pPlayer->CastSpell(pPlayer, SPELL_SUMMON_DEEP_JORMUNGAR, true);
     }
@@ -203,10 +203,10 @@ bool GOUse_go_shrine_of_the_birds(Player* pPlayer, GameObject* pGo)
 {
     uint32 uiBirdEntry = 0;
 
-    float fX,fY,fZ;
+    float fX, fY, fZ;
     pGo->GetClosePoint(fX, fY, fZ, pGo->GetObjectBoundingRadius(), INTERACTION_DISTANCE);
 
-    switch(pGo->GetEntry())
+    switch (pGo->GetEntry())
     {
         case GO_SHRINE_HAWK:
             uiBirdEntry = NPC_HAWK_GUARD;
@@ -240,7 +240,7 @@ bool GOUse_go_tele_to_dalaran_crystal(Player* pPlayer, GameObject* pGo)
     if (pPlayer->GetQuestRewardStatus(QUEST_TELE_CRYSTAL_FLAG))
         return false;
 
-    //TODO: must send error message (what kind of message? On-screen?)
+    // TODO: must send error message (what kind of message? On-screen?)
     return true;
 }
 
@@ -279,7 +279,7 @@ bool GOUse_go_andorhal_tower(Player* pPlayer, GameObject* pGo)
     if (pPlayer->GetQuestStatus(QUEST_ALL_ALONG_THE_WATCHTOWERS_ALLIANCE) == QUEST_STATUS_INCOMPLETE || pPlayer->GetQuestStatus(QUEST_ALL_ALONG_THE_WATCHTOWERS_HORDE) == QUEST_STATUS_INCOMPLETE)
     {
         uint32 uiKillCredit = 0;
-        switch(pGo->GetEntry())
+        switch (pGo->GetEntry())
         {
             case GO_ANDORHAL_TOWER_1:   uiKillCredit = NPC_ANDORHAL_TOWER_1;   break;
             case GO_ANDORHAL_TOWER_2:   uiKillCredit = NPC_ANDORHAL_TOWER_2;   break;
@@ -309,9 +309,9 @@ bool GOUse_go_scourge_enclosure(Player* pPlayer, GameObject* pGo)
     GetCreatureListWithEntryInGrid(m_lResearchersList, pGo, NPC_GYMER_LOCK_DUMMY, 15.0f);
     if (!m_lResearchersList.empty())
     {
-        for(std::list<Creature*>::iterator itr = m_lResearchersList.begin(); itr != m_lResearchersList.end(); ++itr)
+        for (std::list<Creature*>::iterator itr = m_lResearchersList.begin(); itr != m_lResearchersList.end(); ++itr)
         {
-            (*itr)->CastSpell((*itr),SPELL_GYMER_LOCK_EXPLOSION,true);
+            (*itr)->CastSpell((*itr), SPELL_GYMER_LOCK_EXPLOSION, true);
         }
     }
     pPlayer->KilledMonsterCredit(NPC_GYMER_LOCK_DUMMY);

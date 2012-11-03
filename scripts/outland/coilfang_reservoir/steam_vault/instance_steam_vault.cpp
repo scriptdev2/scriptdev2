@@ -57,7 +57,7 @@ void instance_steam_vault::Initialize()
 
 void instance_steam_vault::OnCreatureCreate(Creature* pCreature)
 {
-    switch(pCreature->GetEntry())
+    switch (pCreature->GetEntry())
     {
         case NPC_STEAMRIGGER:
         case NPC_KALITHRESH:
@@ -71,7 +71,7 @@ void instance_steam_vault::OnCreatureCreate(Creature* pCreature)
 
 void instance_steam_vault::OnObjectCreate(GameObject* pGo)
 {
-    switch(pGo->GetEntry())
+    switch (pGo->GetEntry())
     {
         case GO_MAIN_CHAMBERS_DOOR:
             if (m_auiEncounter[TYPE_HYDROMANCER_THESPIA] == SPECIAL && m_auiEncounter[TYPE_MEKGINEER_STEAMRIGGER] == SPECIAL)
@@ -178,7 +178,7 @@ void instance_steam_vault::Load(const char* chrIn)
     std::istringstream loadStream(chrIn);
     loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2];
 
-    for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+    for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
     {
         if (m_auiEncounter[i] == IN_PROGRESS)
             m_auiEncounter[i] = NOT_STARTED;

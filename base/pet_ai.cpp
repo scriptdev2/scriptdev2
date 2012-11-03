@@ -18,7 +18,7 @@ ScriptedPetAI::ScriptedPetAI(Creature* pCreature) : CreatureAI(pCreature)
 bool ScriptedPetAI::IsVisible(Unit* pWho) const
 {
     return pWho && m_creature->IsWithinDist(pWho, VISIBLE_RANGE)
-        && pWho->isVisibleForOrDetect(m_creature, m_creature, true);
+           && pWho->isVisibleForOrDetect(m_creature, m_creature, true);
 }
 
 void ScriptedPetAI::MoveInLineOfSight(Unit* pWho)
@@ -30,7 +30,7 @@ void ScriptedPetAI::MoveInLineOfSight(Unit* pWho)
         return;
 
     if (m_creature->CanInitiateAttack() && pWho->isTargetableForAttack() &&
-        m_creature->IsHostileTo(pWho) && pWho->isInAccessablePlaceFor(m_creature))
+            m_creature->IsHostileTo(pWho) && pWho->isInAccessablePlaceFor(m_creature))
     {
         if (!m_creature->CanFly() && m_creature->GetDistanceZ(pWho) > CREATURE_Z_ATTACK_RANGE)
             return;
@@ -55,7 +55,7 @@ void ScriptedPetAI::AttackedBy(Unit* pAttacker)
         return;
 
     if (m_creature->GetCharmInfo() && !m_creature->GetCharmInfo()->HasReactState(REACT_PASSIVE) &&
-        m_creature->CanReachWithMeleeAttack(pAttacker))
+            m_creature->CanReachWithMeleeAttack(pAttacker))
         AttackStart(pAttacker);
 }
 

@@ -97,7 +97,7 @@ struct MANGOS_DLL_DECL npc_destructive_wardAI : public Scripted_NoMovementAI
                 else
                     m_uiSummonTimer = 0;
 
-                switch(m_uiStack)
+                switch (m_uiStack)
                 {
                     case 0:
                         DoCastSpellIfCan(m_creature, SPELL_SUMMON_SMOLDERING_SKELETON, CAST_TRIGGERED);

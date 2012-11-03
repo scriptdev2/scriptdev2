@@ -39,52 +39,52 @@ struct MANGOS_DLL_DECL npc_the_scourge_cauldronAI : public ScriptedAI
 
     void DoDie()
     {
-        //summoner dies here
+        // summoner dies here
         m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-        //override any database `spawntimesecs` to prevent duplicated summons
+        // override any database `spawntimesecs` to prevent duplicated summons
         uint32 rTime = m_creature->GetRespawnDelay();
-        if (rTime<600)
+        if (rTime < 600)
             m_creature->SetRespawnDelay(600);
     }
 
-    void MoveInLineOfSight(Unit *who)
+    void MoveInLineOfSight(Unit* who)
     {
         if (!who || who->GetTypeId() != TYPEID_PLAYER)
             return;
 
         if (who->GetTypeId() == TYPEID_PLAYER)
         {
-            switch(m_creature->GetAreaId())
+            switch (m_creature->GetAreaId())
             {
-                case 199:                                   //felstone
+                case 199:                                   // felstone
                     if (((Player*)who)->GetQuestStatus(5216) == QUEST_STATUS_INCOMPLETE ||
-                        ((Player*)who)->GetQuestStatus(5229) == QUEST_STATUS_INCOMPLETE)
+                            ((Player*)who)->GetQuestStatus(5229) == QUEST_STATUS_INCOMPLETE)
                     {
                         m_creature->SummonCreature(11075, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
                         DoDie();
                     }
                     break;
-                case 200:                                   //dalson
+                case 200:                                   // dalson
                     if (((Player*)who)->GetQuestStatus(5219) == QUEST_STATUS_INCOMPLETE ||
-                        ((Player*)who)->GetQuestStatus(5231) == QUEST_STATUS_INCOMPLETE)
+                            ((Player*)who)->GetQuestStatus(5231) == QUEST_STATUS_INCOMPLETE)
                     {
                         m_creature->SummonCreature(11077, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
                         DoDie();
                     }
                     break;
-                case 201:                                   //gahrron
+                case 201:                                   // gahrron
                     if (((Player*)who)->GetQuestStatus(5225) == QUEST_STATUS_INCOMPLETE ||
-                        ((Player*)who)->GetQuestStatus(5235) == QUEST_STATUS_INCOMPLETE)
+                            ((Player*)who)->GetQuestStatus(5235) == QUEST_STATUS_INCOMPLETE)
                     {
-                        m_creature->SummonCreature(11078, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,600000);
+                        m_creature->SummonCreature(11078, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
                         DoDie();
                     }
                     break;
-                case 202:                                   //writhing
+                case 202:                                   // writhing
                     if (((Player*)who)->GetQuestStatus(5222) == QUEST_STATUS_INCOMPLETE ||
-                        ((Player*)who)->GetQuestStatus(5233) == QUEST_STATUS_INCOMPLETE)
+                            ((Player*)who)->GetQuestStatus(5233) == QUEST_STATUS_INCOMPLETE)
                     {
-                        m_creature->SummonCreature(11076, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,600000);
+                        m_creature->SummonCreature(11076, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
                         DoDie();
                     }
                     break;

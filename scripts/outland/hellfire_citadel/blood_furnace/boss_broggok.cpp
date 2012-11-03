@@ -159,8 +159,8 @@ struct MANGOS_DLL_DECL mob_broggok_poisoncloudAI : public ScriptedAI
     mob_broggok_poisoncloudAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
     void Reset() { }
-    void MoveInLineOfSight(Unit *who) { }
-    void AttackStart(Unit *who) { }
+    void MoveInLineOfSight(Unit* who) { }
+    void AttackStart(Unit* who) { }
 };
 
 CreatureAI* GetAI_boss_broggok(Creature* pCreature)

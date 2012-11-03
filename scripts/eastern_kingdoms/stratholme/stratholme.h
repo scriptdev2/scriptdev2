@@ -137,7 +137,7 @@ class MANGOS_DLL_DECL instance_stratholme : public ScriptedInstance
     protected:
         bool StartSlaugtherSquare();
         void DoSortZiggurats();
-        void ThazudinAcolyteJustDied( Creature* pCreature );
+        void ThazudinAcolyteJustDied(Creature* pCreature);
 
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strInstData;

@@ -32,7 +32,7 @@ struct HyjalLocation
 
 // Locations for summoning waves
 // Must be even number
-static const HyjalLocation aHyjalSpawnLoc[]=
+static const HyjalLocation aHyjalSpawnLoc[] =
 {
     {BASE_ALLY,  4979.010f, -1709.134f, 1339.674f},
     {BASE_ALLY,  4969.123f, -1705.904f, 1341.363f},
@@ -45,7 +45,7 @@ static const HyjalLocation aHyjalSpawnLoc[]=
 };
 
 // used to inform the wave where to move
-static const HyjalLocation aHyjalWaveMoveTo[]=
+static const HyjalLocation aHyjalWaveMoveTo[] =
 {
     {BASE_ALLY,  5018.654f, -1752.074f, 1322.203f},
     {BASE_HORDE, 5504.569f, -2688.489f, 1479.991f}
@@ -58,7 +58,7 @@ struct HyjalYells
     int32    m_iTextId;                                     // The text id to be yelled
 };
 
-static const HyjalYells aHyjalYell[]=
+static const HyjalYells aHyjalYell[] =
 {
     {NPC_JAINA,  ATTACKED, -1534000},
     {NPC_JAINA,  ATTACKED, -1534001},
@@ -89,7 +89,7 @@ struct HyjalWave
 };
 
 // Waves that will be summoned in the Alliance Base
-static const HyjalWave aHyjalWavesAlliance[]=
+static const HyjalWave aHyjalWavesAlliance[] =
 {
     // Rage Winterchill Wave 1-8
     {{NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, 0, 0, 0, 0, 0, 0, 0, 0}, 125000, false},
@@ -116,7 +116,7 @@ static const HyjalWave aHyjalWavesAlliance[]=
 };
 
 // Waves that are summoned in the Horde base
-static const HyjalWave aHyjalWavesHorde[]=
+static const HyjalWave aHyjalWavesHorde[] =
 {
     // Kaz'Rogal Wave 1-8
     {{NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_GHOUL, NPC_ABOMI, NPC_ABOMI, NPC_ABOMI, NPC_ABOMI, NPC_BANSH, NPC_BANSH, NPC_NECRO, NPC_NECRO, 0, 0, 0, 0, 0, 0}, 135000, false},
@@ -159,7 +159,7 @@ void hyjalAI::Reset()
     m_uiEnemyCount = 0;
 
     // Set base area based on creature entry
-    switch(m_creature->GetEntry())
+    switch (m_creature->GetEntry())
     {
         case NPC_JAINA:
             m_uiBase = BASE_ALLY;
@@ -216,9 +216,9 @@ void hyjalAI::JustReachedHome()
     m_bIsSecondBossDead = m_uiBase ? m_pInstance->GetData(TYPE_AZGALOR) == DONE : m_pInstance->GetData(TYPE_ANETHERON) == DONE;
 }
 
-void hyjalAI::Aggro(Unit *who)
+void hyjalAI::Aggro(Unit* who)
 {
-    for(uint8 i = 0; i < MAX_SPELL; ++i)
+    for (uint8 i = 0; i < MAX_SPELL; ++i)
         if (m_aSpells[i].m_uiCooldown)
             m_uiSpellTimer[i] = m_aSpells[i].m_uiCooldown;
 
@@ -230,7 +230,7 @@ void hyjalAI::SpawnCreatureForWave(uint32 uiMobEntry)
     HyjalLocation const* pSpawn = NULL;
 
     uint32 uiMaxCount = countof(aHyjalSpawnLoc);
-    uint32 uiRandId = urand(1, uiMaxCount/2);               //unsafe, if array becomes uneven.
+    uint32 uiRandId = urand(1, uiMaxCount / 2);             // unsafe, if array becomes uneven.
 
     uint32 uiJ = 0;
 
@@ -314,7 +314,7 @@ void hyjalAI::SummonNextWave()
 
     m_uiEnemyCount = m_pInstance->GetData(TYPE_TRASH_COUNT);
 
-    for(uint8 i = 0; i < MAX_WAVE_MOB; ++i)
+    for (uint8 i = 0; i < MAX_WAVE_MOB; ++i)
     {
         if (pWaveData->m_auiMobEntry[i])
             SpawnCreatureForWave(pWaveData->m_auiMobEntry[i]);
@@ -322,7 +322,7 @@ void hyjalAI::SummonNextWave()
 
     if (!pWaveData->m_bIsBoss)
     {
-        uint32 stateValue = m_uiWaveCount+1;
+        uint32 stateValue = m_uiWaveCount + 1;
 
         if (m_bIsFirstBossDead)
             stateValue -= MAX_WAVES;                        // Subtract 9 from it to give the proper wave number if we are greater than 8
@@ -391,8 +391,8 @@ void hyjalAI::DoTalk(YellType pYellType)
     {
         if (aHyjalYell[i].uiCreatureEntry == m_creature->GetEntry() && aHyjalYell[i].m_pYellType == pYellType)
         {
-            //this would not be safe unless we knew these had two entries in m_aYell
-            if (pYellType == ATTACKED || pYellType== RALLY)
+            // this would not be safe unless we knew these had two entries in m_aYell
+            if (pYellType == ATTACKED || pYellType == RALLY)
             {
                 if (!bGetNext && urand(0, 1))
                 {
@@ -412,16 +412,16 @@ void hyjalAI::DoTalk(YellType pYellType)
 
 void hyjalAI::SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell)
 {
-    //TODO: this spell should cause misc mobs to despawn
-    //if (pSpell->Id == SPELL_MASS_TELEPORT && pTarget->GetTypeId() != TYPEID_PLAYER)
+    // TODO: this spell should cause misc mobs to despawn
+    // if (pSpell->Id == SPELL_MASS_TELEPORT && pTarget->GetTypeId() != TYPEID_PLAYER)
     //{
-        //despawn;
+    // despawn;
     //}
 }
 
 void hyjalAI::Retreat()
 {
-    //this will trigger ancient gem respawn
+    // this will trigger ancient gem respawn
     if (m_pInstance)
         m_pInstance->SetData(TYPE_RETREAT, SPECIAL);
 
@@ -435,7 +435,7 @@ void hyjalAI::JustDied(Unit* pKiller)
     DoTalk(DEATH);
     m_creature->SetActiveObjectState(false);
 
-    //TODO: in case they die during boss encounter, then what? despawn boss?
+    // TODO: in case they die during boss encounter, then what? despawn boss?
 }
 
 void hyjalAI::UpdateAI(const uint32 uiDiff)
@@ -478,7 +478,7 @@ void hyjalAI::UpdateAI(const uint32 uiDiff)
 
     if (m_uiCheckTimer < uiDiff)
     {
-        for(uint8 i = 0; i < 2; ++i)
+        for (uint8 i = 0; i < 2; ++i)
         {
             if (m_aBossGuid[i])
             {
@@ -520,7 +520,7 @@ void hyjalAI::UpdateAI(const uint32 uiDiff)
     if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
         return;
 
-    for(uint8 i = 0; i < MAX_SPELL; ++i)
+    for (uint8 i = 0; i < MAX_SPELL; ++i)
     {
         if (m_aSpells[i].m_uiSpellId)
         {
@@ -531,7 +531,7 @@ void hyjalAI::UpdateAI(const uint32 uiDiff)
 
                 Unit* pTarget = NULL;
 
-                switch(m_aSpells[i].m_pType)
+                switch (m_aSpells[i].m_pType)
                 {
                     case TARGETTYPE_SELF:   pTarget = m_creature; break;
                     case TARGETTYPE_RANDOM: pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0); break;

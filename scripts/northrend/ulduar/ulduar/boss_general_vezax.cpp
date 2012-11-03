@@ -81,7 +81,7 @@ struct MANGOS_DLL_DECL boss_general_vezaxAI : public ScriptedAI
 
     void Reset()
     {
-        m_uiEnrageTimer          = 10*MINUTE*IN_MILLISECONDS;
+        m_uiEnrageTimer          = 10 * MINUTE * IN_MILLISECONDS;
         m_uiFlamesTimer          = 8000;
         m_uiSaroniteVaporTimer   = 30000;
         m_uiSurgeTimer           = 60000;

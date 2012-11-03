@@ -26,7 +26,7 @@ EndScriptData */
 
 enum
 {
-    //Yell
+    // Yell
     SAY_AGGRO                               = -1602000,
     SAY_SLAY_1                              = -1602001,
     SAY_SLAY_2                              = -1602002,
@@ -54,9 +54,9 @@ enum
     SPELL_MORTAL_STRIKE                     = 16856,
     SPELL_SLAM                              = 52026,
 
-    //OTHER SPELLS
-    //SPELL_CHARGE_UP                         = 52098,      // only used when starting walk from one platform to the other
-    //SPELL_TEMPORARY_ELECTRICAL_CHARGE       = 52092,      // triggered part of above
+    // OTHER SPELLS
+    // SPELL_CHARGE_UP                         = 52098,     // only used when starting walk from one platform to the other
+    // SPELL_TEMPORARY_ELECTRICAL_CHARGE       = 52092,     // triggered part of above
 
     NPC_STORMFORGED_LIEUTENANT              = 29240,
     SPELL_ARC_WELD                          = 59085,
@@ -74,7 +74,7 @@ enum
 
 struct MANGOS_DLL_DECL boss_bjarngrimAI : public ScriptedAI
 {
-    boss_bjarngrimAI(Creature *pCreature) : ScriptedAI(pCreature)
+    boss_bjarngrimAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
@@ -128,7 +128,7 @@ struct MANGOS_DLL_DECL boss_bjarngrimAI : public ScriptedAI
         m_uiMortalStrike_Timer = 8000;
         m_uiSlam_Timer = 10000;
 
-        for(uint8 i = 0; i < 2; ++i)
+        for (uint8 i = 0; i < 2; ++i)
         {
             if (Creature* pStormforgedLieutenant = m_creature->GetMap()->GetCreature(m_aStormforgedLieutenantGuid[i]))
             {
@@ -157,7 +157,7 @@ struct MANGOS_DLL_DECL boss_bjarngrimAI : public ScriptedAI
 
     void KilledUnit(Unit* pVictim)
     {
-        switch(urand(0, 2))
+        switch (urand(0, 2))
         {
             case 0: DoScriptText(SAY_SLAY_1, m_creature); break;
             case 1: DoScriptText(SAY_SLAY_2, m_creature); break;
@@ -175,25 +175,25 @@ struct MANGOS_DLL_DECL boss_bjarngrimAI : public ScriptedAI
 
     void UpdateAI(const uint32 uiDiff)
     {
-        //Return since we have no target
+        // Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
         // Change stance
         if (m_uiChangeStance_Timer < uiDiff)
         {
-            //wait for current spell to finish before change stance
+            // wait for current spell to finish before change stance
             if (m_creature->IsNonMeleeSpellCasted(false))
                 return;
 
-            int uiTempStance = rand()%(3-1);
+            int uiTempStance = rand() % (3 - 1);
 
             if (uiTempStance >= m_uiStance)
                 ++uiTempStance;
 
             m_uiStance = uiTempStance;
 
-            switch(m_uiStance)
+            switch (m_uiStance)
             {
                 case STANCE_DEFENSIVE:
                     DoScriptText(SAY_DEFENSIVE_STANCE, m_creature);
@@ -218,7 +218,7 @@ struct MANGOS_DLL_DECL boss_bjarngrimAI : public ScriptedAI
         else
             m_uiChangeStance_Timer -= uiDiff;
 
-        switch(m_uiStance)
+        switch (m_uiStance)
         {
             case STANCE_DEFENSIVE:
             {
@@ -260,7 +260,7 @@ struct MANGOS_DLL_DECL boss_bjarngrimAI : public ScriptedAI
             {
                 if (m_uiIntercept_Timer < uiDiff)
                 {
-                    //not much point is this, better random target and more often?
+                    // not much point is this, better random target and more often?
                     DoCastSpellIfCan(m_creature->getVictim(), SPELL_INTERCEPT);
                     m_uiIntercept_Timer = urand(45000, 46000);
                 }
@@ -317,7 +317,7 @@ struct MANGOS_DLL_DECL boss_bjarngrimAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL mob_stormforged_lieutenantAI : public ScriptedAI
 {
-    mob_stormforged_lieutenantAI(Creature *pCreature) : ScriptedAI(pCreature)
+    mob_stormforged_lieutenantAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
@@ -350,7 +350,7 @@ struct MANGOS_DLL_DECL mob_stormforged_lieutenantAI : public ScriptedAI
 
     void UpdateAI(const uint32 uiDiff)
     {
-        //Return since we have no target
+        // Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 

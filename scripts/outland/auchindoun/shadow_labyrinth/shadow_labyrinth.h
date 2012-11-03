@@ -19,8 +19,8 @@ enum
     NPC_VORPIL              = 18732,
     NPC_FEL_OVERSEER        = 18796,
 
-    GO_REFECTORY_DOOR       = 183296,                       //door opened when blackheart the inciter dies
-    GO_SCREAMING_HALL_DOOR  = 183295,                       //door opened when grandmaster vorpil dies
+    GO_REFECTORY_DOOR       = 183296,                       // door opened when blackheart the inciter dies
+    GO_SCREAMING_HALL_DOOR  = 183295,                       // door opened when grandmaster vorpil dies
 
     SAY_HELLMAW_INTRO       = -1555000,
 

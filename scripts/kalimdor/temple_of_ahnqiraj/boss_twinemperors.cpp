@@ -81,11 +81,11 @@ struct MANGOS_DLL_DECL boss_twin_emperorsAI : public ScriptedAI
     {
         m_uiTeleportTimer   = 35000;
         m_uiBugAbilityTimer = urand(7000, 14000);
-        m_uiBerserkTimer    = 15*MINUTE*IN_MILLISECONDS;
+        m_uiBerserkTimer    = 15 * MINUTE * IN_MILLISECONDS;
     }
 
     // Workaround for the shared health pool
-    void DamageTaken(Unit* pDoneBy, uint32 &uiDamage)
+    void DamageTaken(Unit* pDoneBy, uint32& uiDamage)
     {
         if (!m_pInstance)
             return;
@@ -166,7 +166,7 @@ struct MANGOS_DLL_DECL boss_twin_emperorsAI : public ScriptedAI
                 m_uiBugAbilityTimer = urand(10000, 17000);
         }
         else
-            m_uiBugAbilityTimer-= uiDiff;
+            m_uiBugAbilityTimer -= uiDiff;
 
         if (m_uiBerserkTimer)
         {
@@ -208,7 +208,7 @@ struct MANGOS_DLL_DECL boss_veknilashAI : public boss_twin_emperorsAI
     {
         boss_twin_emperorsAI::Aggro(pWho);
 
-        switch(urand(0, 3))
+        switch (urand(0, 3))
         {
             case 0: DoScriptText(SAY_VEKNILASH_AGGRO_1, m_creature); break;
             case 1: DoScriptText(SAY_VEKNILASH_AGGRO_2, m_creature); break;
@@ -318,7 +318,7 @@ struct MANGOS_DLL_DECL boss_veklorAI : public boss_twin_emperorsAI
     {
         boss_twin_emperorsAI::Aggro(pWho);
 
-        switch(urand(0, 3))
+        switch (urand(0, 3))
         {
             case 0: DoScriptText(SAY_VEKLOR_AGGRO_1, m_creature); break;
             case 1: DoScriptText(SAY_VEKLOR_AGGRO_2, m_creature); break;

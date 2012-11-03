@@ -43,7 +43,7 @@ enum
     SPELL_TIDAL_WAVE                = 37730,
     SPELL_EARTHQUAKE                = 37764,
     SPELL_WATERY_GRAVE              = 38028,
-    //SPELL_WATERY_GRAVE_EXPLOSION  = 38049,                    // spell purpose unk
+    // SPELL_WATERY_GRAVE_EXPLOSION  = 38049,               // spell purpose unk
 
     SPELL_SUMMON_MURLOC_A6          = 39813,
     SPELL_SUMMON_MURLOC_A7          = 39814,
@@ -62,7 +62,7 @@ enum
     SPELL_SUMMON_GLOBULE_3          = 37860,
     SPELL_SUMMON_GLOBULE_4          = 37861,
 
-    SPELL_WATER_GLOBULE_NEW_TARGET  = 39848,                    // spell requires additional research and probably core or script support
+    SPELL_WATER_GLOBULE_NEW_TARGET  = 39848,                // spell requires additional research and probably core or script support
 
     NPC_WATER_GLOBULE               = 21913,
     NPC_TIDEWALKER_LURKER           = 21920
@@ -111,7 +111,7 @@ struct MANGOS_DLL_DECL boss_morogrim_tidewalkerAI : public ScriptedAI
 
     void KilledUnit(Unit* pVictim)
     {
-        switch(urand(0, 2))
+        switch (urand(0, 2))
         {
             case 0: DoScriptText(SAY_SLAY1, m_creature); break;
             case 1: DoScriptText(SAY_SLAY2, m_creature); break;
@@ -225,9 +225,9 @@ struct MANGOS_DLL_DECL boss_morogrim_tidewalkerAI : public ScriptedAI
                     DoScriptText(EMOTE_WATERY_GLOBULES, m_creature);
                     DoScriptText(urand(0, 1) ? SAY_SUMMON_BUBL1 : SAY_SUMMON_BUBL2, m_creature);
 
-                    DoCastSpellIfCan(m_creature,SPELL_SUMMON_GLOBULE_2, CAST_TRIGGERED);
-                    DoCastSpellIfCan(m_creature,SPELL_SUMMON_GLOBULE_3, CAST_TRIGGERED);
-                    DoCastSpellIfCan(m_creature,SPELL_SUMMON_GLOBULE_4, CAST_TRIGGERED);
+                    DoCastSpellIfCan(m_creature, SPELL_SUMMON_GLOBULE_2, CAST_TRIGGERED);
+                    DoCastSpellIfCan(m_creature, SPELL_SUMMON_GLOBULE_3, CAST_TRIGGERED);
+                    DoCastSpellIfCan(m_creature, SPELL_SUMMON_GLOBULE_4, CAST_TRIGGERED);
 
                     m_uiWateryGlobulesTimer = 25000;
                 }
@@ -270,12 +270,12 @@ struct MANGOS_DLL_DECL mob_water_globuleAI : public ScriptedAI
 
 CreatureAI* GetAI_boss_morogrim_tidewalker(Creature* pCreature)
 {
-    return new boss_morogrim_tidewalkerAI (pCreature);
+    return new boss_morogrim_tidewalkerAI(pCreature);
 }
 
 CreatureAI* GetAI_mob_water_globule(Creature* pCreature)
 {
-    return new mob_water_globuleAI (pCreature);
+    return new mob_water_globuleAI(pCreature);
 }
 
 void AddSC_boss_morogrim_tidewalker()

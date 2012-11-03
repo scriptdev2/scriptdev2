@@ -132,7 +132,7 @@ struct MANGOS_DLL_DECL boss_sladranAI : public ScriptedAI
 
     void KilledUnit(Unit* pVictim)
     {
-        switch(urand(0, 2))
+        switch (urand(0, 2))
         {
             case 0: DoScriptText(SAY_SLAY_1, m_creature); break;
             case 1: DoScriptText(SAY_SLAY_2, m_creature); break;
@@ -163,7 +163,7 @@ struct MANGOS_DLL_DECL boss_sladranAI : public ScriptedAI
             return NULL;
 
         std::list<Creature* >::iterator iter = lCreatureList.begin();
-        advance(iter, urand(0, lCreatureList.size()-1));
+        advance(iter, urand(0, lCreatureList.size() - 1));
 
         return *iter;
     }
@@ -176,7 +176,7 @@ struct MANGOS_DLL_DECL boss_sladranAI : public ScriptedAI
         if (m_uiPoisonNovaTimer < uiDiff)
         {
             DoScriptText(EMOTE_NOVA, m_creature);
-            DoCastSpellIfCan(m_creature->getVictim(),m_bIsRegularMode ? SPELL_POISON_NOVA : SPELL_POISON_NOVA_H);
+            DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_POISON_NOVA : SPELL_POISON_NOVA_H);
             m_uiPoisonNovaTimer = 22000;
         }
         else

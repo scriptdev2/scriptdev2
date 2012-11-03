@@ -18,10 +18,10 @@ enum
     NPC_HALION_TWILIGHT             = 40142,            // Halion - Twilight Realm NPC
     NPC_HALION_CONTROLLER           = 40146,
 
-    //NPC_SHADOW_PULSAR_N           = 40083,            // Halion event - Shadow orb
-    //NPC_SHADOW_PULSAR_S           = 40100,
-    //NPC_ORB_CARRIER               = 40081,
-    //NPC_ORB_ROTATION_FOCUS        = 40091,
+    // NPC_SHADOW_PULSAR_N           = 40083,            // Halion event - Shadow orb
+    // NPC_SHADOW_PULSAR_S           = 40100,
+    // NPC_ORB_CARRIER               = 40081,
+    // NPC_ORB_ROTATION_FOCUS        = 40091,
 
     NPC_SAVIANA                     = 39747,            // minibosses
     NPC_BALTHARUS                   = 39751,
@@ -30,9 +30,9 @@ enum
     NPC_XERESTRASZA                 = 40429,            // friendly npc, used for some cinematic and quest
     NPC_ZARITHRIAN_SPAWN_STALKER    = 39794,
 
-    //GO_HALION_PORTAL_1            = 202794,           // Portals used in the Halion encounter
-    //GO_HALION_PORTAL_2            = 202795,
-    //GO_HALION_PORTAL_3            = 202796,
+    // GO_HALION_PORTAL_1            = 202794,           // Portals used in the Halion encounter
+    // GO_HALION_PORTAL_2            = 202795,
+    // GO_HALION_PORTAL_3            = 202796,
 
     GO_FIRE_FIELD                   = 203005,           // Xerestrasza flame door
     GO_FLAME_WALLS                  = 203006,           // Zarithrian flame walls

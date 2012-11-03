@@ -46,9 +46,9 @@ enum
     SPELL_FRENZY                = 54123,
     SPELL_FRENZY_H              = 54124,
 
-    //SPELL_SUMMON_SPIDERLING_1 = 29434,                    // removed from dbc. Summons 10 spiderlings
-    //SPELL_SUMMON_SPIDERLING_2 = 30076,                    // removed from dbc. Summons 3 spiderlings
-    //SPELL_SUMMON_WEB_WRAP     = 28627,                    // removed from dbc. Summons one web wrap and transforms it into creature 17286
+    // SPELL_SUMMON_SPIDERLING_1 = 29434,                   // removed from dbc. Summons 10 spiderlings
+    // SPELL_SUMMON_SPIDERLING_2 = 30076,                   // removed from dbc. Summons 3 spiderlings
+    // SPELL_SUMMON_WEB_WRAP     = 28627,                   // removed from dbc. Summons one web wrap and transforms it into creature 17286
 
     NPC_WEB_WRAP                = 16486,
     NPC_SPIDERLING              = 17055,
@@ -100,7 +100,7 @@ struct MANGOS_DLL_DECL npc_web_wrapAI : public ScriptedAI
                 uiEffectMiscValue = 400;
 
             // Note: normally we should use the Knockback effect to handle this, but because this doesn't behave as expected we'll just use Jump Movement
-            //pVictim->KnockBackFrom(m_creature, -fDist, uiEffectMiscValue * 0.1f);
+            // pVictim->KnockBackFrom(m_creature, -fDist, uiEffectMiscValue * 0.1f);
 
             float fSpeed = fDist * (uiEffectMiscValue * 0.01f);
             pVictim->GetMotionMaster()->MoveJump(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), fSpeed, 0.0f);

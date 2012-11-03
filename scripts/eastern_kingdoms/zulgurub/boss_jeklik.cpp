@@ -35,7 +35,7 @@ enum
     // Bat spells
     SPELL_CHARGE                = 22911,
     SPELL_SONIC_BURST           = 23918,
-    //SPELL_PSYHIC_SCREAM       = 22884,                    // spell not confirmed - needs research
+    // SPELL_PSYHIC_SCREAM       = 22884,                   // spell not confirmed - needs research
     SPELL_SWOOP                 = 23919,
     SPELL_SUMMON_FRENZIED_BATS  = 23974,
 
@@ -331,7 +331,7 @@ struct MANGOS_DLL_DECL npc_gurubashi_bat_riderAI : public ScriptedAI
         ScriptedAI::MoveInLineOfSight(pWho);
     }
 
-    void UpdateAI (const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

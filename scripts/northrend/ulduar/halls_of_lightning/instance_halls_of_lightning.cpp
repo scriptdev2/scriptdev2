@@ -44,7 +44,7 @@ void instance_halls_of_lightning::Initialize()
 
 void instance_halls_of_lightning::OnCreatureCreate(Creature* pCreature)
 {
-    switch(pCreature->GetEntry())
+    switch (pCreature->GetEntry())
     {
         case NPC_BJARNGRIM:
         case NPC_IONAR:
@@ -56,7 +56,7 @@ void instance_halls_of_lightning::OnCreatureCreate(Creature* pCreature)
 
 void instance_halls_of_lightning::OnObjectCreate(GameObject* pGo)
 {
-    switch(pGo->GetEntry())
+    switch (pGo->GetEntry())
     {
         case GO_VOLKHAN_DOOR:
             if (m_auiEncounter[TYPE_VOLKHAN] == DONE)
@@ -77,7 +77,7 @@ void instance_halls_of_lightning::OnObjectCreate(GameObject* pGo)
 
 void instance_halls_of_lightning::SetData(uint32 uiType, uint32 uiData)
 {
-    switch(uiType)
+    switch (uiType)
     {
         case TYPE_BJARNGRIM:
             m_auiEncounter[uiType] = uiData;
@@ -101,7 +101,7 @@ void instance_halls_of_lightning::SetData(uint32 uiType, uint32 uiData)
                 DoStartTimedAchievement(ACHIEVEMENT_CRITERIA_TYPE_KILL_CREATURE, ACHIEV_START_LOKEN_ID);
             if (uiData == DONE)
             {
-                //Appears to be type 5 GO with animation. Need to figure out how this work, code below only placeholder
+                // Appears to be type 5 GO with animation. Need to figure out how this work, code below only placeholder
                 if (GameObject* pGlobe = GetSingleGameObjectFromStorage(GO_LOKEN_THRONE))
                     pGlobe->SetGoState(GO_STATE_ACTIVE);
             }
@@ -152,7 +152,7 @@ void instance_halls_of_lightning::Load(const char* chrIn)
     std::istringstream loadStream(chrIn);
     loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3];
 
-    for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+    for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
     {
         if (m_auiEncounter[i] == IN_PROGRESS)
             m_auiEncounter[i] = NOT_STARTED;

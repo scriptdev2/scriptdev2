@@ -76,7 +76,7 @@ struct MANGOS_DLL_DECL boss_lajAI : public ScriptedAI
     void DoTransform()
     {
         // Random transform into a different form
-        switch(urand(0, 4))
+        switch (urand(0, 4))
         {
             case 0:
                 m_creature->SetDisplayId(MODEL_ID_DEFAULT);
@@ -123,7 +123,7 @@ struct MANGOS_DLL_DECL boss_lajAI : public ScriptedAI
 
     void DoSummons()
     {
-        switch(urand(0, 3))
+        switch (urand(0, 3))
         {
             case 0:
                 DoCastSpellIfCan(m_creature, SPELL_SUMMON_LASHER_1, CAST_TRIGGERED);

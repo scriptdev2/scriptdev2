@@ -65,7 +65,7 @@ bool GOUse_go_mausoleum_trigger(Player* pPlayer, GameObject* pGo)
     if (GameObject* pDoor = GetClosestGameObjectWithEntry(pPlayer, GO_DOOR, 30.0f))
     {
         pGo->SetGoState(GO_STATE_ACTIVE);
-        pDoor->RemoveFlag(GAMEOBJECT_FLAGS,GO_FLAG_INTERACT_COND);
+        pDoor->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_INTERACT_COND);
         return true;
     }
 
@@ -115,9 +115,9 @@ struct MANGOS_DLL_DECL npc_calvin_montagueAI : public ScriptedAI
         AttackStart(pAttacker);
     }
 
-    void DamageTaken(Unit* pDoneBy, uint32 &uiDamage)
+    void DamageTaken(Unit* pDoneBy, uint32& uiDamage)
     {
-        if (uiDamage > m_creature->GetHealth() || ((m_creature->GetHealth() - uiDamage)*100 / m_creature->GetMaxHealth() < 15))
+        if (uiDamage > m_creature->GetHealth() || ((m_creature->GetHealth() - uiDamage) * 100 / m_creature->GetMaxHealth() < 15))
         {
             uiDamage = 0;
 
@@ -143,7 +143,7 @@ struct MANGOS_DLL_DECL npc_calvin_montagueAI : public ScriptedAI
                 return;
             }
 
-            switch(m_uiPhase)
+            switch (m_uiPhase)
             {
                 case 1:
                     DoScriptText(SAY_COMPLETE, m_creature);
@@ -153,7 +153,7 @@ struct MANGOS_DLL_DECL npc_calvin_montagueAI : public ScriptedAI
                     if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid))
                         pPlayer->AreaExploredOrEventHappens(QUEST_590);
 
-                    m_creature->CastSpell(m_creature,SPELL_DRINK,true);
+                    m_creature->CastSpell(m_creature, SPELL_DRINK, true);
                     ++m_uiPhase;
                     break;
                 case 3:

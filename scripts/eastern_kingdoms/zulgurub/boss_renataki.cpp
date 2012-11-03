@@ -95,7 +95,7 @@ struct MANGOS_DLL_DECL boss_renatakiAI : public ScriptedAI
             if (DoCastSpellIfCan(m_creature, SPELL_GOUGE) == CAST_OK)
             {
                 if (m_creature->getThreatManager().getThreat(m_creature->getVictim()))
-                    m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-50);
+                    m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(), -50);
 
                 m_uiGougeTimer = urand(7000, 20000);
             }

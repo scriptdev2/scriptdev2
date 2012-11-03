@@ -49,7 +49,7 @@ struct MANGOS_DLL_DECL mob_webbed_creatureAI : public ScriptedAI
     {
         uint32 uiSpawnCreatureEntry = 0;
 
-        switch(urand(0, 2))
+        switch (urand(0, 2))
         {
             case 0:
                 uiSpawnCreatureEntry = NPC_EXPEDITION_RESEARCHER;

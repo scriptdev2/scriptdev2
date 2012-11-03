@@ -65,8 +65,8 @@ enum
 // The Crystal Handlers are summoned around the two entrances of the room
 static const float aHandlerSummonPos[2][3] =
 {
-    {-342.894836f, -727.016846f, 28.581081f},
-    {-410.644653f, -731.826904f, 28.580412f}
+    { -342.894836f, -727.016846f, 28.581081f},
+    { -410.644653f, -731.826904f, 28.580412f}
 };
 
 /*######
@@ -344,7 +344,7 @@ struct MANGOS_DLL_DECL npc_crystal_channel_targetAI : public ScriptedAI
             // The end of the stairs is approximately at 1/3 of the way between summoning-position and novos, height of Novos
             if (Creature* pNovos = m_pInstance->GetSingleCreatureFromStorage(NPC_NOVOS))
             {
-                m_creature->GetRandomPoint(0.70*pNovos->GetPositionX() + 0.30*pSummoned->GetPositionX(), 0.70*pNovos->GetPositionY() + 0.30*pSummoned->GetPositionY(), pNovos->GetPositionZ() + 1.5f, 4.0f, fX, fY, fZ);
+                m_creature->GetRandomPoint(0.70 * pNovos->GetPositionX() + 0.30 * pSummoned->GetPositionX(), 0.70 * pNovos->GetPositionY() + 0.30 * pSummoned->GetPositionY(), pNovos->GetPositionZ() + 1.5f, 4.0f, fX, fY, fZ);
                 pSummoned->GetMotionMaster()->MovePoint(1, fX, fY, fZ);
             }
         }

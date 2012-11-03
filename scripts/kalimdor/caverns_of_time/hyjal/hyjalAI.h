@@ -57,50 +57,50 @@ enum YellType
 
 struct MANGOS_DLL_DECL hyjalAI : public ScriptedAI
 {
-    hyjalAI(Creature* pCreature) : ScriptedAI(pCreature)
-    {
-        memset(m_aSpells, 0, sizeof(m_aSpells));
-        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        Reset();
-    }
+        hyjalAI(Creature* pCreature) : ScriptedAI(pCreature)
+        {
+            memset(m_aSpells, 0, sizeof(m_aSpells));
+            m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            Reset();
+        }
 
-    // Generically used to reset our variables. Do *not* call in EnterEvadeMode as this may make problems if the raid is still in combat
-    void Reset();
+        // Generically used to reset our variables. Do *not* call in EnterEvadeMode as this may make problems if the raid is still in combat
+        void Reset();
 
-    // Send creature back to spawn location and evade.
-    void EnterEvadeMode();
+        // Send creature back to spawn location and evade.
+        void EnterEvadeMode();
 
-    // Called when creature reached home location after evade.
-    void JustReachedHome();
+        // Called when creature reached home location after evade.
+        void JustReachedHome();
 
-    // Used to reset cooldowns for our spells and to inform the raid that we're under attack
-    void Aggro(Unit* pWho);
+        // Used to reset cooldowns for our spells and to inform the raid that we're under attack
+        void Aggro(Unit* pWho);
 
-    // Called to summon waves, check for boss deaths and to cast our spells.
-    void UpdateAI(const uint32 uiDiff);
+        // Called to summon waves, check for boss deaths and to cast our spells.
+        void UpdateAI(const uint32 uiDiff);
 
-    // Called on death, informs the raid that they have failed.
-    void JustDied(Unit* pKiller);
+        // Called on death, informs the raid that they have failed.
+        void JustDied(Unit* pKiller);
 
-    // "Teleport" all friendly creatures away from the base.
-    void Retreat();
+        // "Teleport" all friendly creatures away from the base.
+        void Retreat();
 
-    // Summons a creature for that wave in that base
-    void SpawnCreatureForWave(uint32 uiMobEntry);
+        // Summons a creature for that wave in that base
+        void SpawnCreatureForWave(uint32 uiMobEntry);
 
-    void JustSummoned(Creature*);
+        void JustSummoned(Creature*);
 
-    // Summons the next wave, calls SummonCreature
-    void SummonNextWave();
+        // Summons the next wave, calls SummonCreature
+        void SummonNextWave();
 
-    // Begins the event by gossip click
-    void StartEvent();
+        // Begins the event by gossip click
+        void StartEvent();
 
-    // Searches for the appropriate yell and sound and uses it to inform the raid of various things
-    void DoTalk(YellType pYellType);
+        // Searches for the appropriate yell and sound and uses it to inform the raid of various things
+        void DoTalk(YellType pYellType);
 
-    // Used to filter who to despawn after mass teleport
-    void SpellHitTarget(Unit*, const SpellEntry*);
+        // Used to filter who to despawn after mass teleport
+        void SpellHitTarget(Unit*, const SpellEntry*);
 
     public:
 

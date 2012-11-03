@@ -40,7 +40,7 @@ void instance_ahnkahet::Initialize()
 
 void instance_ahnkahet::OnCreatureCreate(Creature* pCreature)
 {
-    switch(pCreature->GetEntry())
+    switch (pCreature->GetEntry())
     {
         case NPC_ELDER_NADOX:
         case NPC_TALDARAM:
@@ -70,7 +70,7 @@ void instance_ahnkahet::OnCreatureCreate(Creature* pCreature)
 
 void instance_ahnkahet::OnObjectCreate(GameObject* pGo)
 {
-    switch(pGo->GetEntry())
+    switch (pGo->GetEntry())
     {
         case GO_DOOR_TALDARAM:
             if (m_auiEncounter[TYPE_TALDARAM] == DONE)
@@ -97,7 +97,7 @@ void instance_ahnkahet::SetData(uint32 uiType, uint32 uiData)
 {
     debug_log("SD2: Instance Ahn'Kahet: SetData received for type %u with data %u", uiType, uiData);
 
-    switch(uiType)
+    switch (uiType)
     {
         case TYPE_NADOX:
             m_auiEncounter[uiType] = uiData;
@@ -169,7 +169,7 @@ void instance_ahnkahet::SetData(uint32 uiType, uint32 uiData)
 
         std::ostringstream saveStream;
         saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " " << m_auiEncounter[3]
-            << " " << m_auiEncounter[4];
+                   << " " << m_auiEncounter[4];
 
         m_strInstData = saveStream.str();
 
@@ -248,7 +248,7 @@ void instance_ahnkahet::Load(const char* chrIn)
     std::istringstream loadStream(chrIn);
     loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3] >> m_auiEncounter[4];
 
-    for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+    for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
     {
         if (m_auiEncounter[i] == IN_PROGRESS)
             m_auiEncounter[i] = NOT_STARTED;

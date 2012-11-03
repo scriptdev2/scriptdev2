@@ -43,7 +43,7 @@ enum
 
     SPELL_SUMMON_INVADER_1          = 49456,            // summon 27709
     SPELL_SUMMON_INVADER_2          = 49457,            // summon 27753
-    //SPELL_SUMMON_INVADER_3        = 49458,            // summon 27754
+    // SPELL_SUMMON_INVADER_3        = 49458,            // summon 27754
     SPELL_INVADER_TAUNT             = 49405,            // triggers 49406
 
     MAX_CONSOME_STACKS              = 10,
@@ -166,7 +166,7 @@ struct MANGOS_DLL_DECL boss_trollgoreAI : public ScriptedAI
         else
         {
             // Summon 3 trolls in the air
-            for(uint8 i = 0; i < m_vTriggers.size(); ++i)
+            for (uint8 i = 0; i < m_vTriggers.size(); ++i)
             {
                 if (Creature* pTrigger = m_creature->GetMap()->GetCreature(m_vTriggers[i]))
                     pTrigger->CastSpell(pTrigger, roll_chance_i(30) ? SPELL_SUMMON_INVADER_1 : SPELL_SUMMON_INVADER_2, true, NULL, NULL, m_creature->GetObjectGuid());

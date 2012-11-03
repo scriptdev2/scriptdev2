@@ -37,12 +37,12 @@ enum
     GO_SELIN_ENCOUNTER_DOOR     = 188065,                   // Assembly Chamber Door
 
     GO_KAEL_DOOR                = 188064,
-    //GO_KAEL_STATUE_LEFT       = 188165,                   // animation statues - they do not reset on fail
-    //GO_KAEL_STATUE_RIGHT      = 188166,
+    // GO_KAEL_STATUE_LEFT       = 188165,                  // animation statues - they do not reset on fail
+    // GO_KAEL_STATUE_RIGHT      = 188166,
     GO_ESCAPE_QUEL_DANAS        = 188173,
 };
 
-static const int32 aDelrissaAddDeath[MAX_DELRISSA_ADDS] = {-1585013, -1585014, -1585015, -1585016};
+static const int32 aDelrissaAddDeath[MAX_DELRISSA_ADDS] = { -1585013, -1585014, -1585015, -1585016};
 
 class MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
 {

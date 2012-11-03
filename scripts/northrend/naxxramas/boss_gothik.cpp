@@ -107,15 +107,15 @@ struct MANGOS_DLL_DECL boss_gothikAI : public ScriptedAI
         m_uiPhase = PHASE_SPEECH;
         m_uiSpeech = 1;
 
-        m_uiTraineeTimer = 24*IN_MILLISECONDS;
-        m_uiDeathKnightTimer = 74*IN_MILLISECONDS;
-        m_uiRiderTimer = 134*IN_MILLISECONDS;
-        m_uiTeleportTimer = 20*IN_MILLISECONDS;
-        m_uiShadowboltTimer = 2*IN_MILLISECONDS;
+        m_uiTraineeTimer = 24 * IN_MILLISECONDS;
+        m_uiDeathKnightTimer = 74 * IN_MILLISECONDS;
+        m_uiRiderTimer = 134 * IN_MILLISECONDS;
+        m_uiTeleportTimer = 20 * IN_MILLISECONDS;
+        m_uiShadowboltTimer = 2 * IN_MILLISECONDS;
         m_uiHarvestSoulTimer = 2500;
-        m_uiPhaseTimer = 4*MINUTE*IN_MILLISECONDS + 7*IN_MILLISECONDS; // last summon at 4:04, next would be 4:09
-        m_uiControlZoneTimer = urand(120*IN_MILLISECONDS,150*IN_MILLISECONDS);
-        m_uiSpeechTimer = 1*IN_MILLISECONDS;
+        m_uiPhaseTimer = 4 * MINUTE * IN_MILLISECONDS + 7 * IN_MILLISECONDS; // last summon at 4:04, next would be 4:09
+        m_uiControlZoneTimer = urand(120 * IN_MILLISECONDS, 150 * IN_MILLISECONDS);
+        m_uiSpeechTimer = 1 * IN_MILLISECONDS;
 
         // Despawn Adds
         for (GuidList::const_iterator itr = m_lSummonedAddGuids.begin(); itr != m_lSummonedAddGuids.end(); itr++)
@@ -165,7 +165,7 @@ struct MANGOS_DLL_DECL boss_gothikAI : public ScriptedAI
         if (lPlayers.isEmpty())
             return false;
 
-        for(Map::PlayerList::const_iterator itr = lPlayers.begin(); itr != lPlayers.end(); ++itr)
+        for (Map::PlayerList::const_iterator itr = lPlayers.begin(); itr != lPlayers.end(); ++itr)
         {
             if (Player* pPlayer = itr->getSource())
             {
@@ -244,7 +244,7 @@ struct MANGOS_DLL_DECL boss_gothikAI : public ScriptedAI
     void SummonAdds(bool bRightSide, uint32 uiSummonEntry)
     {
         GuidList* plSummonPosGuids;
-        switch(uiSummonEntry)
+        switch (uiSummonEntry)
         {
             case NPC_UNREL_TRAINEE:      plSummonPosGuids = &m_lTraineeSummonPosGuids;     break;
             case NPC_UNREL_DEATH_KNIGHT: plSummonPosGuids = &m_lDeathKnightSummonPosGuids; break;
@@ -280,9 +280,9 @@ struct MANGOS_DLL_DECL boss_gothikAI : public ScriptedAI
         {
             switch (pSummoned->GetEntry())
             {
-                // Wrong caster, it expected to be pSummoned.
-                // Mangos deletes the spell event at caster death, so for delayed spell like this
-                // it's just a workaround. Does not affect other than the visual though (+ spell takes longer to "travel")
+                    // Wrong caster, it expected to be pSummoned.
+                    // Mangos deletes the spell event at caster death, so for delayed spell like this
+                    // it's just a workaround. Does not affect other than the visual though (+ spell takes longer to "travel")
                 case NPC_UNREL_TRAINEE:         m_creature->CastSpell(pAnchor, SPELL_A_TO_ANCHOR_1, true, NULL, NULL, pSummoned->GetObjectGuid()); break;
                 case NPC_UNREL_DEATH_KNIGHT:    m_creature->CastSpell(pAnchor, SPELL_B_TO_ANCHOR_1, true, NULL, NULL, pSummoned->GetObjectGuid()); break;
                 case NPC_UNREL_RIDER:           m_creature->CastSpell(pAnchor, SPELL_C_TO_ANCHOR_1, true, NULL, NULL, pSummoned->GetObjectGuid()); break;
@@ -300,11 +300,11 @@ struct MANGOS_DLL_DECL boss_gothikAI : public ScriptedAI
             case PHASE_SPEECH:
                 if (m_uiSpeechTimer < uiDiff)
                 {
-                    switch(m_uiSpeech)
+                    switch (m_uiSpeech)
                     {
-                        case 1: DoScriptText(SAY_SPEECH_1, m_creature); m_uiSpeechTimer = 4*IN_MILLISECONDS; break;
-                        case 2: DoScriptText(SAY_SPEECH_2, m_creature); m_uiSpeechTimer = 6*IN_MILLISECONDS; break;
-                        case 3: DoScriptText(SAY_SPEECH_3, m_creature); m_uiSpeechTimer = 5*IN_MILLISECONDS; break;
+                        case 1: DoScriptText(SAY_SPEECH_1, m_creature); m_uiSpeechTimer = 4 * IN_MILLISECONDS; break;
+                        case 2: DoScriptText(SAY_SPEECH_2, m_creature); m_uiSpeechTimer = 6 * IN_MILLISECONDS; break;
+                        case 3: DoScriptText(SAY_SPEECH_3, m_creature); m_uiSpeechTimer = 5 * IN_MILLISECONDS; break;
                         case 4: DoScriptText(SAY_SPEECH_4, m_creature); m_uiPhase = PHASE_BALCONY; break;
                     }
                     m_uiSpeech++;
@@ -318,21 +318,21 @@ struct MANGOS_DLL_DECL boss_gothikAI : public ScriptedAI
                 if (m_uiTraineeTimer < uiDiff)
                 {
                     SummonAdds(true, NPC_UNREL_TRAINEE);
-                    m_uiTraineeTimer = 20*IN_MILLISECONDS;
+                    m_uiTraineeTimer = 20 * IN_MILLISECONDS;
                 }
                 else
                     m_uiTraineeTimer -= uiDiff;
                 if (m_uiDeathKnightTimer < uiDiff)
                 {
                     SummonAdds(true, NPC_UNREL_DEATH_KNIGHT);
-                    m_uiDeathKnightTimer = 25*IN_MILLISECONDS;
+                    m_uiDeathKnightTimer = 25 * IN_MILLISECONDS;
                 }
                 else
                     m_uiDeathKnightTimer -= uiDiff;
                 if (m_uiRiderTimer < uiDiff)
                 {
                     SummonAdds(true, NPC_UNREL_RIDER);
-                    m_uiRiderTimer = 30*IN_MILLISECONDS;
+                    m_uiRiderTimer = 30 * IN_MILLISECONDS;
                 }
                 else
                     m_uiRiderTimer -= uiDiff;
@@ -340,7 +340,7 @@ struct MANGOS_DLL_DECL boss_gothikAI : public ScriptedAI
                 if (m_uiPhaseTimer < uiDiff)
                 {
                     m_uiPhase = PHASE_STOP_SUMMONING;
-                    m_uiPhaseTimer = 27*IN_MILLISECONDS;
+                    m_uiPhaseTimer = 27 * IN_MILLISECONDS;
                 }
                 else
                     m_uiPhaseTimer -= uiDiff;
@@ -375,8 +375,8 @@ struct MANGOS_DLL_DECL boss_gothikAI : public ScriptedAI
                     uint32 uiTeleportSpell = m_pInstance->IsInRightSideGothArea(m_creature) ? SPELL_TELEPORT_LEFT : SPELL_TELEPORT_RIGHT;
                     if (DoCastSpellIfCan(m_creature, uiTeleportSpell) == CAST_OK)
                     {
-                        m_uiTeleportTimer = 20*IN_MILLISECONDS;
-                        m_uiShadowboltTimer = 2*IN_MILLISECONDS;
+                        m_uiTeleportTimer = 20 * IN_MILLISECONDS;
+                        m_uiShadowboltTimer = 2 * IN_MILLISECONDS;
                     }
                 }
                 else
@@ -395,7 +395,7 @@ struct MANGOS_DLL_DECL boss_gothikAI : public ScriptedAI
                 if (m_uiHarvestSoulTimer < uiDiff)
                 {
                     if (DoCastSpellIfCan(m_creature, SPELL_HARVESTSOUL) == CAST_OK)
-                        m_uiHarvestSoulTimer = 15*IN_MILLISECONDS;
+                        m_uiHarvestSoulTimer = 15 * IN_MILLISECONDS;
                 }
                 else
                     m_uiHarvestSoulTimer -= uiDiff;
@@ -459,7 +459,7 @@ bool EffectDummyCreature_spell_anchor(Unit* pCaster, uint32 uiSpellId, SpellEffe
     if (!pInstance)
         return true;
 
-    switch(uiSpellId)
+    switch (uiSpellId)
     {
         case SPELL_A_TO_ANCHOR_1:                           // trigger mobs at high right side
         case SPELL_B_TO_ANCHOR_1:
@@ -489,7 +489,7 @@ bool EffectDummyCreature_spell_anchor(Unit* pCaster, uint32 uiSpellId, SpellEffe
             if (!lTargets.empty())
             {
                 std::list<Creature*>::iterator itr = lTargets.begin();
-                uint32 uiPosition = urand(0, lTargets.size()-1);
+                uint32 uiPosition = urand(0, lTargets.size() - 1);
                 advance(itr, uiPosition);
 
                 if (Creature* pTarget = (*itr))

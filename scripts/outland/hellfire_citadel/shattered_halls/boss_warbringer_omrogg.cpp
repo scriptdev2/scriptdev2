@@ -52,50 +52,50 @@ struct Yell
     uint32 creature;
 };
 
-static Yell GoCombat[]=
+static Yell GoCombat[] =
 {
-    {-1540018, NPC_LEFT_HEAD},
-    {-1540019, NPC_LEFT_HEAD},
-    {-1540020, NPC_LEFT_HEAD},
+    { -1540018, NPC_LEFT_HEAD},
+    { -1540019, NPC_LEFT_HEAD},
+    { -1540020, NPC_LEFT_HEAD},
 };
-static Yell GoCombatDelay[]=
+static Yell GoCombatDelay[] =
 {
-    {-1540021, NPC_RIGHT_HEAD},
-    {-1540022, NPC_RIGHT_HEAD},
-    {-1540023, NPC_RIGHT_HEAD},
-};
-
-static Yell Threat[]=
-{
-    {-1540024, NPC_LEFT_HEAD},
-    {-1540025, NPC_RIGHT_HEAD},
-    {-1540026, NPC_LEFT_HEAD},
-    {-1540027, NPC_LEFT_HEAD},
-};
-static Yell ThreatDelay1[]=
-{
-    {-1540028, NPC_RIGHT_HEAD},
-    {-1540029, NPC_LEFT_HEAD},
-    {-1540030, NPC_RIGHT_HEAD},
-    {-1540031, NPC_RIGHT_HEAD},
-};
-static Yell ThreatDelay2[]=
-{
-    {-1540032, NPC_LEFT_HEAD},
-    {-1540033, NPC_RIGHT_HEAD},
-    {-1540034, NPC_LEFT_HEAD},
-    {-1540035, NPC_LEFT_HEAD},
+    { -1540021, NPC_RIGHT_HEAD},
+    { -1540022, NPC_RIGHT_HEAD},
+    { -1540023, NPC_RIGHT_HEAD},
 };
 
-static Yell Killing[]=
+static Yell Threat[] =
 {
-    {-1540036, NPC_LEFT_HEAD},
-    {-1540037, NPC_RIGHT_HEAD},
+    { -1540024, NPC_LEFT_HEAD},
+    { -1540025, NPC_RIGHT_HEAD},
+    { -1540026, NPC_LEFT_HEAD},
+    { -1540027, NPC_LEFT_HEAD},
 };
-static Yell KillingDelay[]=
+static Yell ThreatDelay1[] =
 {
-    {-1540038, NPC_RIGHT_HEAD},
-    {-1000000, NPC_LEFT_HEAD},
+    { -1540028, NPC_RIGHT_HEAD},
+    { -1540029, NPC_LEFT_HEAD},
+    { -1540030, NPC_RIGHT_HEAD},
+    { -1540031, NPC_RIGHT_HEAD},
+};
+static Yell ThreatDelay2[] =
+{
+    { -1540032, NPC_LEFT_HEAD},
+    { -1540033, NPC_RIGHT_HEAD},
+    { -1540034, NPC_LEFT_HEAD},
+    { -1540035, NPC_LEFT_HEAD},
+};
+
+static Yell Killing[] =
+{
+    { -1540036, NPC_LEFT_HEAD},
+    { -1540037, NPC_RIGHT_HEAD},
+};
+static Yell KillingDelay[] =
+{
+    { -1540038, NPC_RIGHT_HEAD},
+    { -1000000, NPC_LEFT_HEAD},
 };
 
 struct MANGOS_DLL_DECL mob_omrogg_headsAI : public ScriptedAI
@@ -237,7 +237,7 @@ struct MANGOS_DLL_DECL boss_warbringer_omroggAI : public ScriptedAI
 
         Creature* pSource = (pLeftHead->GetEntry() == Killing[m_iKilling].creature ? pLeftHead : pRightHead);
 
-        switch(m_iKilling)
+        switch (m_iKilling)
         {
             case 0:
                 DoScriptText(Killing[m_iKilling].id, pSource);

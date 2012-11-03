@@ -43,7 +43,7 @@ enum
     SPELL_FETID_ROT             = 48291,
     SPELL_FETID_ROT_H           = 59300,
     SPELL_SCREAMS_OF_THE_DEAD   = 51750,            // knockback players to summon boat
-    //SPELL_CHOOSE_SPIRIT       = 48306,            // boss chooses spirit
+    // SPELL_CHOOSE_SPIRIT       = 48306,            // boss chooses spirit
 
     // blessings
     SPELL_SPIRIT_BURST          = 48529,            // by Ranulf
@@ -61,8 +61,8 @@ enum
     SPELL_SPIRIT_DIES           = 48596,            // cast by a boat spirit
 
     // by summoned creatures
-    //SPELL_SPIRIT_VISUAL       = 48593,            // avenging spirit summon visual - handled in eventAI
-    //SPELL_WITHER_TRIGG        = 48584,            // aura for avenging spirits - triggers 48585 on melee  - handled in eventAI
+    // SPELL_SPIRIT_VISUAL       = 48593,            // avenging spirit summon visual - handled in eventAI
+    // SPELL_WITHER_TRIGG        = 48584,            // aura for avenging spirits - triggers 48585 on melee  - handled in eventAI
 
     // spirit transforms
     SPELL_BJORN_TRANSFORM       = 48308,
@@ -71,8 +71,8 @@ enum
     SPELL_TORGYN_TRANSFORM      = 48313,
 
     NPC_SPIRIT_FOUNT            = 27339,
-    //NPC_AVENGING_SPIRIT       = 27386,
-    //NPC_SPIRIT_SUMMONER       = 27392,            // summoned around the boss - triggers 48592
+    // NPC_AVENGING_SPIRIT       = 27386,
+    // NPC_SPIRIT_SUMMONER       = 27392,            // summoned around the boss - triggers 48592
 
     MAX_BOATS                   = 4,
 
@@ -172,7 +172,7 @@ struct MANGOS_DLL_DECL boss_ymironAI : public ScriptedAI
 
     void KilledUnit(Unit* pVictim)
     {
-        switch(urand(0, 3))
+        switch (urand(0, 3))
         {
             case 0: DoScriptText(SAY_SLAY_1, m_creature); break;
             case 1: DoScriptText(SAY_SLAY_2, m_creature); break;

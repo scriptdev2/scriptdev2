@@ -50,7 +50,7 @@ enum
     SPELL_VEIL_OF_SHADOW        = 22687,                // old spell id 7068 -> wrong
     SPELL_CLEAVE                = 20691,
     SPELL_TAIL_LASH             = 23364,
-    //SPELL_BONE_CONTRUST       = 23363,                //23362, 23361   Missing from DBC!
+    // SPELL_BONE_CONTRUST       = 23363,                // 23362, 23361   Missing from DBC!
 
     SPELL_MAGE                  = 23410,                // wild magic
     SPELL_WARRIOR               = 23397,                // beserk
@@ -84,12 +84,12 @@ struct MANGOS_DLL_DECL boss_nefarianAI : public ScriptedAI
 
     void Reset()
     {
-        m_uiShadowFlameTimer    = 12000;                            // These times are probably wrong
+        m_uiShadowFlameTimer    = 12000;                    // These times are probably wrong
         m_uiBellowingRoarTimer  = 30000;
         m_uiVeilOfShadowTimer   = 15000;
         m_uiCleaveTimer         = 7000;
         m_uiTailLashTimer       = 10000;
-        m_uiClassCallTimer      = 35000;                            // 35-40 seconds
+        m_uiClassCallTimer      = 35000;                    // 35-40 seconds
         m_bPhase3               = false;
         m_bHasEndYell           = false;
     }
@@ -196,11 +196,11 @@ struct MANGOS_DLL_DECL boss_nefarianAI : public ScriptedAI
         // ClassCall_Timer
         if (m_uiClassCallTimer < uiDiff)
         {
-            //Cast a random class call
-            //On official it is based on what classes are currently on the hostil list
-            //but we can't do that yet so just randomly call one
+            // Cast a random class call
+            // On official it is based on what classes are currently on the hostil list
+            // but we can't do that yet so just randomly call one
 
-            switch(urand(0, 8))
+            switch (urand(0, 8))
             {
                 case 0:
                     DoScriptText(SAY_MAGE, m_creature);

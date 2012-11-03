@@ -35,23 +35,23 @@ enum
     SPELL_WEB_GRAB_H            = 59421,
 
     // Gauntlet end spells - send events 19101 and 19102
-    //SPELL_WEB_FRONT_DOORS     = 53177,
-    //SPELL_WEB_SIDE_DOORS      = 53185,
+    // SPELL_WEB_FRONT_DOORS     = 53177,
+    // SPELL_WEB_SIDE_DOORS      = 53185,
 
     // Gauntlet summoned npcs
-    //NPC_ANUBAR_CHAMPION_1     = 29062,
-    //NPC_ANUBAR_CRYPT_FIEND_1  = 29063,
-    //NPC_ANUBAR_NECROMANCER_1  = 29064,
-    //NPC_ANUBAR_CHAMPION_2     = 29096,
-    //NPC_ANUBAR_CRYPT_FIEND_2  = 29097,
-    //NPC_ANUBAR_NECROMANCER_2  = 29098,
+    // NPC_ANUBAR_CHAMPION_1     = 29062,
+    // NPC_ANUBAR_CRYPT_FIEND_1  = 29063,
+    // NPC_ANUBAR_NECROMANCER_1  = 29064,
+    // NPC_ANUBAR_CHAMPION_2     = 29096,
+    // NPC_ANUBAR_CRYPT_FIEND_2  = 29097,
+    // NPC_ANUBAR_NECROMANCER_2  = 29098,
 };
 
- /* ##### Gauntlet description #####
-  * This is the timed gauntlet - waves of non-elite spiders will spawn from the 3 doors located a little above the main room
-  * They will make their way down to fight Hadronox but she will head to the main room, fighting the spiders
-  * When Hadronox enters the main room, she will web the doors, and no more spiders will spawn.
-  */
+/* ##### Gauntlet description #####
+ * This is the timed gauntlet - waves of non-elite spiders will spawn from the 3 doors located a little above the main room
+ * They will make their way down to fight Hadronox but she will head to the main room, fighting the spiders
+ * When Hadronox enters the main room, she will web the doors, and no more spiders will spawn.
+ */
 
 /*######
 ## boss_hadronox
@@ -94,7 +94,7 @@ struct MANGOS_DLL_DECL boss_hadronoxAI : public ScriptedAI
 
         if (m_uiPierceTimer < uiDiff)
         {
-            if(DoCastSpellIfCan(m_creature->getVictim(), SPELL_PIERCE_ARMOR) == CAST_OK)
+            if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_PIERCE_ARMOR) == CAST_OK)
                 m_uiPierceTimer = 8000;
         }
         else

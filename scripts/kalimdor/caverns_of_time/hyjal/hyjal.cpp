@@ -98,7 +98,7 @@ bool GossipSelect_npc_jaina_proudmoore(Player* pPlayer, Creature* pCreature, uin
 {
     if (hyjalAI* pJainaAI = dynamic_cast<hyjalAI*>(pCreature->AI()))
     {
-        switch(uiAction)
+        switch (uiAction)
         {
             case GOSSIP_ACTION_INFO_DEF + 1:
                 pJainaAI->StartEvent();
@@ -170,7 +170,7 @@ bool GossipSelect_npc_thrall(Player* pPlayer, Creature* pCreature, uint32 uiSend
 {
     if (hyjalAI* pThrallAI = dynamic_cast<hyjalAI*>(pCreature->AI()))
     {
-        switch(uiAction)
+        switch (uiAction)
         {
             case GOSSIP_ACTION_INFO_DEF + 1:
                 pThrallAI->StartEvent();

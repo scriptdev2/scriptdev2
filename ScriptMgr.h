@@ -74,30 +74,30 @@ struct Script
 
     std::string Name;
 
-    bool (*pGossipHello             )(Player*, Creature*);
-    bool (*pGossipHelloGO           )(Player*, GameObject*);
-    bool (*pGossipSelect            )(Player*, Creature*, uint32, uint32);
-    bool (*pGossipSelectGO          )(Player*, GameObject*, uint32, uint32);
-    bool (*pGossipSelectWithCode    )(Player*, Creature*, uint32, uint32, const char*);
-    bool (*pGossipSelectGOWithCode  )(Player*, GameObject*, uint32, uint32, const char*);
-    uint32 (*pDialogStatusNPC       )(Player*, Creature*);
-    uint32 (*pDialogStatusGO        )(Player*, GameObject*);
-    bool (*pQuestAcceptNPC          )(Player*, Creature*, Quest const*);
-    bool (*pQuestAcceptGO           )(Player*, GameObject*, Quest const*);
-    bool (*pQuestAcceptItem         )(Player*, Item*, Quest const*);
-    bool (*pQuestRewardedNPC        )(Player*, Creature*, Quest const*);
-    bool (*pQuestRewardedGO         )(Player*, GameObject*, Quest const*);
-    bool (*pGOUse                   )(Player*, GameObject*);
-    bool (*pItemUse                 )(Player*, Item*, SpellCastTargets const&);
-    bool (*pAreaTrigger             )(Player*, AreaTriggerEntry const*);
-    bool (*pProcessEventId          )(uint32, Object*, Object*, bool);
-    bool (*pEffectDummyNPC          )(Unit*, uint32, SpellEffectIndex, Creature*);
-    bool (*pEffectDummyGO           )(Unit*, uint32, SpellEffectIndex, GameObject*);
-    bool (*pEffectDummyItem         )(Unit*, uint32, SpellEffectIndex, Item*);
-    bool (*pEffectAuraDummy         )(const Aura*, bool);
+    bool (*pGossipHello)(Player*, Creature*);
+    bool (*pGossipHelloGO)(Player*, GameObject*);
+    bool (*pGossipSelect)(Player*, Creature*, uint32, uint32);
+    bool (*pGossipSelectGO)(Player*, GameObject*, uint32, uint32);
+    bool (*pGossipSelectWithCode)(Player*, Creature*, uint32, uint32, const char*);
+    bool (*pGossipSelectGOWithCode)(Player*, GameObject*, uint32, uint32, const char*);
+    uint32(*pDialogStatusNPC)(Player*, Creature*);
+    uint32(*pDialogStatusGO)(Player*, GameObject*);
+    bool (*pQuestAcceptNPC)(Player*, Creature*, Quest const*);
+    bool (*pQuestAcceptGO)(Player*, GameObject*, Quest const*);
+    bool (*pQuestAcceptItem)(Player*, Item*, Quest const*);
+    bool (*pQuestRewardedNPC)(Player*, Creature*, Quest const*);
+    bool (*pQuestRewardedGO)(Player*, GameObject*, Quest const*);
+    bool (*pGOUse)(Player*, GameObject*);
+    bool (*pItemUse)(Player*, Item*, SpellCastTargets const&);
+    bool (*pAreaTrigger)(Player*, AreaTriggerEntry const*);
+    bool (*pProcessEventId)(uint32, Object*, Object*, bool);
+    bool (*pEffectDummyNPC)(Unit*, uint32, SpellEffectIndex, Creature*);
+    bool (*pEffectDummyGO)(Unit*, uint32, SpellEffectIndex, GameObject*);
+    bool (*pEffectDummyItem)(Unit*, uint32, SpellEffectIndex, Item*);
+    bool (*pEffectAuraDummy)(const Aura*, bool);
 
-    CreatureAI* (*GetAI             )(Creature*);
-    InstanceData* (*GetInstanceData )(Map*);
+    CreatureAI* (*GetAI)(Creature*);
+    InstanceData* (*GetInstanceData)(Map*);
 
     void RegisterSelf(bool bReportError = true);
 };

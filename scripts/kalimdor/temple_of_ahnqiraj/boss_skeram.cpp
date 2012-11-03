@@ -83,7 +83,7 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
 
     void KilledUnit(Unit* pVictim)
     {
-        switch(urand(0, 2))
+        switch (urand(0, 2))
         {
             case 0: DoScriptText(SAY_SLAY1, m_creature); break;
             case 1: DoScriptText(SAY_SLAY2, m_creature); break;
@@ -110,7 +110,7 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
         if (m_bIsImage)
             return;
 
-        switch(urand(0, 2))
+        switch (urand(0, 2))
         {
             case 0: DoScriptText(SAY_AGGRO1, m_creature); break;
             case 1: DoScriptText(SAY_AGGRO2, m_creature); break;
@@ -194,7 +194,7 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
         // Blink_Timer
         if (m_uiBlinkTimer < uiDiff)
         {
-            switch(urand(0, 2))
+            switch (urand(0, 2))
             {
                 case 0: DoCastSpellIfCan(m_creature, SPELL_TELEPORT_1); break;
                 case 1: DoCastSpellIfCan(m_creature, SPELL_TELEPORT_2); break;
@@ -244,7 +244,7 @@ CreatureAI* GetAI_boss_skeram(Creature* pCreature)
 
 bool EffectDummyCreature_prophet_skeram(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
 {
-    //always check spellid and effectindex
+    // always check spellid and effectindex
     if (uiSpellId == SPELL_INITIALIZE_IMAGE && uiEffIndex == EFFECT_INDEX_0)
     {
         // check for target == caster first

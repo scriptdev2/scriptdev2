@@ -103,7 +103,7 @@ struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
             if (!pList.empty())
             {
                 std::list<Creature*>::iterator i = pList.begin();
-                advance(i, (rand()%pList.size()));
+                advance(i, (rand() % pList.size()));
                 pTarget = (*i);
             }
 

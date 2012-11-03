@@ -20,14 +20,14 @@ enum
     TYPE_CTHUN                  = 8,
 
     NPC_SKERAM                  = 15263,
-    //NPC_KRI                   = 15511,
-    //NPC_VEM                   = 15544,
-    //NPC_YAUJ                  = 15543,
+    // NPC_KRI                   = 15511,
+    // NPC_VEM                   = 15544,
+    // NPC_YAUJ                  = 15543,
     NPC_VEKLOR                  = 15276,
     NPC_VEKNILASH               = 15275,
     NPC_MASTERS_EYE             = 15963,
     NPC_OURO_SPAWNER            = 15957,
-    //NPC_EYE_OF_CTHUN          = 15589,
+    // NPC_EYE_OF_CTHUN          = 15589,
     NPC_CTHUN                   = 15727,
 
     GO_SKERAM_GATE              = 180636,

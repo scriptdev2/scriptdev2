@@ -106,7 +106,7 @@ struct MANGOS_DLL_DECL npc_kyle_the_frenziedAI : public ScriptedAI
                 m_uiEventTimer = 5000;
                 ++m_uiEventPhase;
 
-                switch(m_uiEventPhase)
+                switch (m_uiEventPhase)
                 {
                     case 1:
                         if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid))
@@ -120,7 +120,7 @@ struct MANGOS_DLL_DECL npc_kyle_the_frenziedAI : public ScriptedAI
 
                                 uint32 uiGameobjectEntry = pSpell->EffectMiscValue[EFFECT_INDEX_1];
 
-                                pGo = GetClosestGameObjectWithEntry(pPlayer, uiGameobjectEntry, 2*INTERACTION_DISTANCE);
+                                pGo = GetClosestGameObjectWithEntry(pPlayer, uiGameobjectEntry, 2 * INTERACTION_DISTANCE);
                             }
 
                             if (pGo)

@@ -62,7 +62,7 @@ struct MANGOS_DLL_DECL npc_professor_phizzlethorpeAI : public npc_escortAI
         if (!pPlayer)
             return;
 
-        switch(uiPointId)
+        switch (uiPointId)
         {
             case 4: DoScriptText(SAY_PROGRESS_2, m_creature, pPlayer); break;
             case 5: DoScriptText(SAY_PROGRESS_3, m_creature, pPlayer); break;

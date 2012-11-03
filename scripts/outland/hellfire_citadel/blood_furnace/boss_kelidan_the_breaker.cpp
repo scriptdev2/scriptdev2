@@ -242,7 +242,7 @@ struct MANGOS_DLL_DECL boss_kelidan_the_breakerAI : public ScriptedAI
                 }
             }
             else
-                m_uiFirenovaTimer -=uiDiff;
+                m_uiFirenovaTimer -= uiDiff;
         }
 
         if (m_uiShadowVolleyTimer < uiDiff)
@@ -251,7 +251,7 @@ struct MANGOS_DLL_DECL boss_kelidan_the_breakerAI : public ScriptedAI
                 m_uiShadowVolleyTimer = urand(5000, 13000);
         }
         else
-            m_uiShadowVolleyTimer -=uiDiff;
+            m_uiShadowVolleyTimer -= uiDiff;
 
         if (m_uiCorruptionTimer < uiDiff)
         {
@@ -259,7 +259,7 @@ struct MANGOS_DLL_DECL boss_kelidan_the_breakerAI : public ScriptedAI
                 m_uiCorruptionTimer = urand(30000, 50000);
         }
         else
-            m_uiCorruptionTimer -=uiDiff;
+            m_uiCorruptionTimer -= uiDiff;
 
         if (m_uiBurningNovaTimer < uiDiff)
         {
@@ -323,7 +323,7 @@ struct MANGOS_DLL_DECL mob_shadowmoon_channelerAI : public ScriptedAI
     {
         m_creature->InterruptNonMeleeSpells(false);
 
-        switch(urand(0, 2))
+        switch (urand(0, 2))
         {
             case 0:
                 DoScriptText(SAY_ADD_AGGRO_1, m_creature);
@@ -340,7 +340,7 @@ struct MANGOS_DLL_DECL mob_shadowmoon_channelerAI : public ScriptedAI
             return;
 
         if (Creature* pKelidan = m_pInstance->GetSingleCreatureFromStorage(NPC_KELIDAN_THE_BREAKER))
-            if (boss_kelidan_the_breakerAI* pKelidanAI = dynamic_cast<boss_kelidan_the_breakerAI*> (pKelidan->AI()))
+            if (boss_kelidan_the_breakerAI* pKelidanAI = dynamic_cast<boss_kelidan_the_breakerAI*>(pKelidan->AI()))
                 pKelidanAI->AddJustAggroed(pWho);
     }
 
@@ -350,7 +350,7 @@ struct MANGOS_DLL_DECL mob_shadowmoon_channelerAI : public ScriptedAI
             return;
 
         if (Creature* pKelidan = m_pInstance->GetSingleCreatureFromStorage(NPC_KELIDAN_THE_BREAKER))
-            if (boss_kelidan_the_breakerAI* pKelidanAI = dynamic_cast<boss_kelidan_the_breakerAI*> (pKelidan->AI()))
+            if (boss_kelidan_the_breakerAI* pKelidanAI = dynamic_cast<boss_kelidan_the_breakerAI*>(pKelidan->AI()))
                 pKelidanAI->AddJustDied(pKiller);
     }
 
@@ -360,7 +360,7 @@ struct MANGOS_DLL_DECL mob_shadowmoon_channelerAI : public ScriptedAI
             return;
 
         if (Creature* pKelidan = m_pInstance->GetSingleCreatureFromStorage(NPC_KELIDAN_THE_BREAKER))
-            if (boss_kelidan_the_breakerAI* pKelidanAI = dynamic_cast<boss_kelidan_the_breakerAI*> (pKelidan->AI()))
+            if (boss_kelidan_the_breakerAI* pKelidanAI = dynamic_cast<boss_kelidan_the_breakerAI*>(pKelidan->AI()))
                 pKelidanAI->AddJustReachedHome();
     }
 
@@ -378,7 +378,7 @@ struct MANGOS_DLL_DECL mob_shadowmoon_channelerAI : public ScriptedAI
             }
         }
         else
-            m_uiMarkOfShadowTimer -=uiDiff;
+            m_uiMarkOfShadowTimer -= uiDiff;
 
         if (m_uiShadowBoltTimer < uiDiff)
         {
@@ -389,7 +389,7 @@ struct MANGOS_DLL_DECL mob_shadowmoon_channelerAI : public ScriptedAI
             }
         }
         else
-            m_uiShadowBoltTimer -=uiDiff;
+            m_uiShadowBoltTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }

@@ -200,12 +200,12 @@ struct MANGOS_DLL_DECL npc_millhouse_manastormAI : public ScriptedAI, private Di
         {
             if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_PYROBLAST) == CAST_OK)
             {
-                 m_uiPyroblastTimer = 40000;
-                 DoScriptText(SAY_PYRO, m_creature);
+                m_uiPyroblastTimer = 40000;
+                DoScriptText(SAY_PYRO, m_creature);
             }
         }
         else
-            m_uiPyroblastTimer -=uiDiff;
+            m_uiPyroblastTimer -= uiDiff;
 
         if (m_uiFireballTimer < uiDiff)
         {
@@ -213,7 +213,7 @@ struct MANGOS_DLL_DECL npc_millhouse_manastormAI : public ScriptedAI, private Di
                 m_uiFireballTimer = 4000;
         }
         else
-            m_uiFireballTimer -=uiDiff;
+            m_uiFireballTimer -= uiDiff;
 
         if (m_uiFrostBoltTimer < uiDiff)
         {

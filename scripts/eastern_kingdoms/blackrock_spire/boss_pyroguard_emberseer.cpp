@@ -94,7 +94,7 @@ struct MANGOS_DLL_DECL boss_pyroguard_emberseerAI : public ScriptedAI
     {
         ++m_uiGrowingStacks;
 
-        if (m_uiGrowingStacks == MAX_GROWING_STACKS*0.5f)
+        if (m_uiGrowingStacks == MAX_GROWING_STACKS * 0.5f)
             DoScriptText(EMOTE_NEAR, m_creature);
         else if (m_uiGrowingStacks == MAX_GROWING_STACKS)
         {
@@ -185,7 +185,7 @@ CreatureAI* GetAI_boss_pyroguard_emberseer(Creature* pCreature)
 
 bool EffectDummyCreature_pyroguard_emberseer(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
 {
-    //always check spellid and effectindex
+    // always check spellid and effectindex
     if (uiSpellId == SPELL_GROWING && uiEffIndex == EFFECT_INDEX_0)
     {
         if (boss_pyroguard_emberseerAI* pEmberseerAI = dynamic_cast<boss_pyroguard_emberseerAI*>(pCreatureTarget->AI()))

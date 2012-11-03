@@ -38,7 +38,7 @@ enum
     SAY_SLAY2               = -1568022,
     SAY_DEATH               = -1568023,
 
-    SPELL_BERSERK           = 45078,                        //unsure, this increases damage, size and speed
+    SPELL_BERSERK           = 45078,                        // unsure, this increases damage, size and speed
 
     // Defines for Troll form
     SPELL_BRUTAL_SWIPE      = 42384,
@@ -83,7 +83,7 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
         m_uiLaceratingSlashTimer    = 6000;
         m_uiRendFleshTimer          = 6000;
         m_uiDeafeningRoarTimer      = 20000;
-        m_uiBerserkTimer            = 10*MINUTE*IN_MILLISECONDS;
+        m_uiBerserkTimer            = 10 * MINUTE * IN_MILLISECONDS;
         m_bIsInBearForm             = false;
     }
 
@@ -187,7 +187,7 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
                 m_uiBerserkTimer -= uiDiff;
         }
 
-        //Spells for Troll Form (only to be casted if we NOT have bear phase aura)
+        // Spells for Troll Form (only to be casted if we NOT have bear phase aura)
         if (!m_bIsInBearForm)
         {
             // Brutal Swipe (some sources may say otherwise, but I've never seen this in Bear form)
@@ -211,10 +211,10 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
             // Surge
             if (m_uiSurgeTimer < uiDiff)
             {
-                //select a random unit other than the main tank
+                // select a random unit other than the main tank
                 Unit* pTtarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1);
 
-                //if there aren't other units, cast on the tank
+                // if there aren't other units, cast on the tank
                 if (!pTtarget)
                     pTtarget = m_creature->getVictim();
 
@@ -244,7 +244,7 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
             else
                 m_uiChangeFormTimer -= uiDiff;
         }
-        //Spells for Bear Form (only to be casted if we have bear phase aura)
+        // Spells for Bear Form (only to be casted if we have bear phase aura)
         else
         {
             // Timer to yell and reset spell timers when bear aura expires

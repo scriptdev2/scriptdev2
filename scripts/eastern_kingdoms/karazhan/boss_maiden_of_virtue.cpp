@@ -65,7 +65,7 @@ struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
 
     void KilledUnit(Unit* pVictim)
     {
-        switch(urand(0, 5))                                    // 50% chance to say something out of 3 texts
+        switch (urand(0, 5))                                // 50% chance to say something out of 3 texts
         {
             case 0: DoScriptText(SAY_SLAY1, m_creature); break;
             case 1: DoScriptText(SAY_SLAY2, m_creature); break;

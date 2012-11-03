@@ -46,13 +46,13 @@ struct MANGOS_DLL_DECL boss_emperor_dagran_thaurissanAI : public ScriptedAI
 
     uint32 m_uiHandOfThaurissan_Timer;
     uint32 m_uiAvatarOfFlame_Timer;
-    //uint32 m_uiCounter;
+    // uint32 m_uiCounter;
 
     void Reset()
     {
         m_uiHandOfThaurissan_Timer = 4000;
         m_uiAvatarOfFlame_Timer = 25000;
-        //m_uiCounter = 0;
+        // m_uiCounter = 0;
     }
 
     void Aggro(Unit* pWho)
@@ -88,28 +88,28 @@ struct MANGOS_DLL_DECL boss_emperor_dagran_thaurissanAI : public ScriptedAI
 
         if (m_uiHandOfThaurissan_Timer < uiDiff)
         {
-            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
-                DoCastSpellIfCan(pTarget,SPELL_HANDOFTHAURISSAN);
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                DoCastSpellIfCan(pTarget, SPELL_HANDOFTHAURISSAN);
 
-            //3 Hands of Thaurissan will be casted
-            //if (m_uiCounter < 3)
+            // 3 Hands of Thaurissan will be casted
+            // if (m_uiCounter < 3)
             //{
             //    m_uiHandOfThaurissan_Timer = 1000;
             //    ++m_uiCounter;
             //}
-            //else
+            // else
             //{
-                m_uiHandOfThaurissan_Timer = 5000;
-                //m_uiCounter = 0;
+            m_uiHandOfThaurissan_Timer = 5000;
+            // m_uiCounter = 0;
             //}
         }
         else
             m_uiHandOfThaurissan_Timer -= uiDiff;
 
-        //AvatarOfFlame_Timer
+        // AvatarOfFlame_Timer
         if (m_uiAvatarOfFlame_Timer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_AVATAROFFLAME);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_AVATAROFFLAME);
             m_uiAvatarOfFlame_Timer = 18000;
         }
         else
@@ -157,7 +157,7 @@ struct MANGOS_DLL_DECL boss_moira_bronzebeardAI : public ScriptedAI
 
     void Reset()
     {
-        m_uiHeal_Timer = 12000;                                 //These times are probably wrong
+        m_uiHeal_Timer = 12000;                             // These times are probably wrong
         m_uiMindBlast_Timer = 16000;
         m_uiShadowWordPain_Timer = 2000;
         m_uiSmite_Timer = 8000;
@@ -190,38 +190,38 @@ struct MANGOS_DLL_DECL boss_moira_bronzebeardAI : public ScriptedAI
 
     void UpdateAI(const uint32 uiDiff)
     {
-        //Return since we have no target
+        // Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //MindBlast_Timer
+        // MindBlast_Timer
         if (m_uiMindBlast_Timer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_MINDBLAST);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_MINDBLAST);
             m_uiMindBlast_Timer = 14000;
         }
         else
             m_uiMindBlast_Timer -= uiDiff;
 
-        //ShadowWordPain_Timer
+        // ShadowWordPain_Timer
         if (m_uiShadowWordPain_Timer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_SHADOWWORDPAIN);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_SHADOWWORDPAIN);
             m_uiShadowWordPain_Timer = 18000;
         }
         else
             m_uiShadowWordPain_Timer -= uiDiff;
 
-        //Smite_Timer
+        // Smite_Timer
         if (m_uiSmite_Timer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_SMITE);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_SMITE);
             m_uiSmite_Timer = 10000;
         }
         else
             m_uiSmite_Timer -= uiDiff;
 
-        //Heal_Timer
+        // Heal_Timer
         if (m_uiHeal_Timer < uiDiff)
         {
             if (Creature* pEmperor = m_pInstance->GetSingleCreatureFromStorage(NPC_EMPEROR))
@@ -235,7 +235,7 @@ struct MANGOS_DLL_DECL boss_moira_bronzebeardAI : public ScriptedAI
         else
             m_uiHeal_Timer -= uiDiff;
 
-        //No meele?
+        // No meele?
     }
 };
 

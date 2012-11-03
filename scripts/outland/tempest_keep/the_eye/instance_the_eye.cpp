@@ -62,7 +62,7 @@ void instance_the_eye::OnCreatureCreate(Creature* pCreature)
 
 void instance_the_eye::OnObjectCreate(GameObject* pGo)
 {
-    switch(pGo->GetEntry())
+    switch (pGo->GetEntry())
     {
         case GO_ARCANE_DOOR_HORIZ_3:
         case GO_ARCANE_DOOR_HORIZ_4:

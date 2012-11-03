@@ -43,7 +43,7 @@ bool instance_onyxias_lair::IsEncounterInProgress() const
 
 void instance_onyxias_lair::OnCreatureCreate(Creature* pCreature)
 {
-    switch(pCreature->GetEntry())
+    switch (pCreature->GetEntry())
     {
         case NPC_ONYXIA_TRIGGER:
             m_mNpcEntryGuidStore[NPC_ONYXIA_TRIGGER] = pCreature->GetObjectGuid();

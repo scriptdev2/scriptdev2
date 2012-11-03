@@ -67,13 +67,13 @@ struct SummonLocations
 // Summon locations for the void portals
 static const SummonLocations aVorpilLocation[MAX_PORTALS] =
 {
-    {-262.40f, -229.57f, 17.08f},
-    {-260.35f, -297.56f, 17.08f},
-    {-292.05f, -270.37f, 12.68f},
-    {-301.64f, -255.97f, 12.68f}
+    { -262.40f, -229.57f, 17.08f},
+    { -260.35f, -297.56f, 17.08f},
+    { -292.05f, -270.37f, 12.68f},
+    { -301.64f, -255.97f, 12.68f}
 };
 
-static const float aVorpilTeleportLoc[3] = {-253.06f, -264.02f, 17.08f};
+static const float aVorpilTeleportLoc[3] = { -253.06f, -264.02f, 17.08f};
 
 static const uint32 aTravelerSummonSpells[5] = {SPELL_SUMMON_VOIDWALKER_A, SPELL_SUMMON_VOIDWALKER_B, SPELL_SUMMON_VOIDWALKER_C, SPELL_SUMMON_VOIDWALKER_D, SPELL_SUMMON_VOIDWALKER_E};
 
@@ -108,7 +108,7 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
 
     void MoveInLineOfSight(Unit* pWho)
     {
-        //not sure about right radius
+        // not sure about right radius
         if (!m_bHasDoneIntro && pWho->GetTypeId() == TYPEID_PLAYER && pWho->IsWithinDistInMap(m_creature, 50.0f) && pWho->IsWithinLOSInMap(m_creature))
         {
             DoScriptText(SAY_INTRO, m_creature);
@@ -120,7 +120,7 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
 
     void Aggro(Unit* pWho)
     {
-        switch(urand(0, 2))
+        switch (urand(0, 2))
         {
             case 0: DoScriptText(SAY_AGGRO_1, m_creature); break;
             case 1: DoScriptText(SAY_AGGRO_2, m_creature); break;
@@ -174,7 +174,7 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
 
         GuidVector vGuids;
         m_creature->FillGuidsListFromThreatList(vGuids);
-        for (GuidVector::const_iterator itr = vGuids.begin();itr != vGuids.end(); ++itr)
+        for (GuidVector::const_iterator itr = vGuids.begin(); itr != vGuids.end(); ++itr)
         {
             Unit* pTarget = m_creature->GetMap()->GetUnit(*itr);
 
@@ -188,7 +188,7 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
 
     void UpdateAI(const uint32 uiDiff)
     {
-        //Return since we have no target
+        // Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 

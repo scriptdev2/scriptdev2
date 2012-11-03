@@ -19,16 +19,16 @@ enum
 
     // NPC GUIDs
     NPC_MAULGAR                     = 18831,
-    //NPC_BLINDEYE                  = 18836,
-    //NPC_KIGGLER                   = 18835,
-    //NPC_KROSH                     = 18832,
-    //NPC_OLM                       = 18834,
+    // NPC_BLINDEYE                  = 18836,
+    // NPC_KIGGLER                   = 18835,
+    // NPC_KROSH                     = 18832,
+    // NPC_OLM                       = 18834,
 };
 
 class MANGOS_DLL_DECL instance_gruuls_lair : public ScriptedInstance
 {
     public:
-        instance_gruuls_lair(Map *pMap);
+        instance_gruuls_lair(Map* pMap);
 
         void Initialize();
         bool IsEncounterInProgress() const;

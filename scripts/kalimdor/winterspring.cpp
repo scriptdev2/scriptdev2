@@ -96,32 +96,32 @@ static const DialogueEntry aIntroDialogue[] =
 {
     {SAY_REACH_ALTAR_1,      NPC_RANSHALLA,        2000},
     {SAY_REACH_ALTAR_2,      NPC_RANSHALLA,        3000},
-    {NPC_RANSHALLA,          0,                    0},          // start the altar channeling
+    {NPC_RANSHALLA,          0,                    0},      // start the altar channeling
     {SAY_PRIESTESS_ALTAR_3,  NPC_PRIESTESS_DATA_2, 1000},
     {SAY_PRIESTESS_ALTAR_4,  NPC_PRIESTESS_DATA_1, 4000},
     {SAY_RANSHALLA_ALTAR_5,  NPC_RANSHALLA,        4000},
-    {SAY_RANSHALLA_ALTAR_6,  NPC_RANSHALLA,        4000},       // start the escort here
+    {SAY_RANSHALLA_ALTAR_6,  NPC_RANSHALLA,        4000},   // start the escort here
     {SAY_PRIESTESS_ALTAR_7,  NPC_PRIESTESS_DATA_2, 4000},
-    {SAY_PRIESTESS_ALTAR_8,  NPC_PRIESTESS_DATA_2, 5000},       // show the gem
+    {SAY_PRIESTESS_ALTAR_8,  NPC_PRIESTESS_DATA_2, 5000},   // show the gem
     {GO_ELUNE_GEM,           0,                    5000},
-    {SAY_PRIESTESS_ALTAR_9,  NPC_PRIESTESS_DATA_1, 4000},       // move priestess 1 near m_creature
+    {SAY_PRIESTESS_ALTAR_9,  NPC_PRIESTESS_DATA_1, 4000},   // move priestess 1 near m_creature
     {NPC_PRIESTESS_DATA_1,   0,                    3000},
     {SAY_PRIESTESS_ALTAR_10, NPC_PRIESTESS_DATA_1, 5000},
     {SAY_PRIESTESS_ALTAR_11, NPC_PRIESTESS_DATA_1, 4000},
     {SAY_PRIESTESS_ALTAR_12, NPC_PRIESTESS_DATA_1, 5000},
-    {SAY_PRIESTESS_ALTAR_13, NPC_PRIESTESS_DATA_1, 8000},       // summon voice and guard of elune
+    {SAY_PRIESTESS_ALTAR_13, NPC_PRIESTESS_DATA_1, 8000},   // summon voice and guard of elune
     {NPC_VOICE_ELUNE,        0,                    12000},
-    {SAY_VOICE_ALTAR_15,     NPC_VOICE_ELUNE,      5000},       // move priestess 2 near m_creature
+    {SAY_VOICE_ALTAR_15,     NPC_VOICE_ELUNE,      5000},   // move priestess 2 near m_creature
     {NPC_PRIESTESS_DATA_2,   0,                    3000},
     {SAY_PRIESTESS_ALTAR_16, NPC_PRIESTESS_DATA_2, 4000},
     {SAY_PRIESTESS_ALTAR_17, NPC_PRIESTESS_DATA_2, 6000},
     {SAY_PRIESTESS_ALTAR_18, NPC_PRIESTESS_DATA_1, 5000},
-    {SAY_PRIESTESS_ALTAR_19, NPC_PRIESTESS_DATA_1, 3000},       // move the owlbeast
+    {SAY_PRIESTESS_ALTAR_19, NPC_PRIESTESS_DATA_1, 3000},   // move the owlbeast
     {NPC_GUARDIAN_ELUNE,     0,                    2000},
-    {SAY_PRIESTESS_ALTAR_20, NPC_PRIESTESS_DATA_1, 4000},       // move the first priestess up
-    {SAY_PRIESTESS_ALTAR_21, NPC_PRIESTESS_DATA_2, 10000},      // move second priestess up
-    {DATA_MOVE_PRIESTESS,    0,                    6000},       // despawn the gem
-    {DATA_EVENT_END,         0,                    2000},       // turn towards the player
+    {SAY_PRIESTESS_ALTAR_20, NPC_PRIESTESS_DATA_1, 4000},   // move the first priestess up
+    {SAY_PRIESTESS_ALTAR_21, NPC_PRIESTESS_DATA_2, 10000},  // move second priestess up
+    {DATA_MOVE_PRIESTESS,    0,                    6000},   // despawn the gem
+    {DATA_EVENT_END,         0,                    2000},   // turn towards the player
     {SAY_QUEST_END_2,        NPC_RANSHALLA,        0},
     {0, 0, 0},
 };
@@ -171,7 +171,7 @@ struct MANGOS_DLL_DECL npc_ranshallaAI : public npc_escortAI, private DialogueHe
             DoScriptText(SAY_RANSHALLA_ALTAR_1, m_creature);
         else
         {
-            switch(urand(0, 1))
+            switch (urand(0, 1))
             {
                 case 0: DoScriptText(SAY_AFTER_TORCH_1, m_creature); break;
                 case 1: DoScriptText(SAY_AFTER_TORCH_2, m_creature); break;
@@ -201,7 +201,7 @@ struct MANGOS_DLL_DECL npc_ranshallaAI : public npc_escortAI, private DialogueHe
         }
 
         // Yell and set escort to pause
-        switch(urand(0, 2))
+        switch (urand(0, 2))
         {
             case 0: DoScriptText(SAY_REACH_TORCH_1, m_creature); break;
             case 1: DoScriptText(SAY_REACH_TORCH_2, m_creature); break;
@@ -240,7 +240,7 @@ struct MANGOS_DLL_DECL npc_ranshallaAI : public npc_escortAI, private DialogueHe
 
     void WaypointReached(uint32 uiPointId)
     {
-        switch(uiPointId)
+        switch (uiPointId)
         {
             case 3:
                 DoScriptText(SAY_ENTER_OWL_THICKET, m_creature);
@@ -257,23 +257,23 @@ struct MANGOS_DLL_DECL npc_ranshallaAI : public npc_escortAI, private DialogueHe
                 SetEscortPaused(true);
                 break;
             case 41:
+            {
+                // Search for all nearest lights and respawn them
+                std::list<GameObject*> m_lEluneLights;
+                GetGameObjectListWithEntryInGrid(m_lEluneLights, m_creature, GO_ELUNE_LIGHT, 20.0f);
+                for (std::list<GameObject*>::const_iterator itr = m_lEluneLights.begin(); itr != m_lEluneLights.end(); ++itr)
                 {
-                    // Search for all nearest lights and respawn them
-                    std::list<GameObject*> m_lEluneLights;
-                    GetGameObjectListWithEntryInGrid(m_lEluneLights, m_creature, GO_ELUNE_LIGHT, 20.0f);
-                    for (std::list<GameObject*>::const_iterator itr = m_lEluneLights.begin(); itr != m_lEluneLights.end(); ++itr)
-                    {
-                        if ((*itr)->isSpawned())
-                            continue;
+                    if ((*itr)->isSpawned())
+                        continue;
 
-                        (*itr)->SetRespawnTime(115);
-                        (*itr)->Refresh();
-                    }
-
-                    if (GameObject* pAltar = m_creature->GetMap()->GetGameObject(m_altarGuid))
-                        m_creature->SetFacingToObject(pAltar);
-                    break;
+                    (*itr)->SetRespawnTime(115);
+                    (*itr)->Refresh();
                 }
+
+                if (GameObject* pAltar = m_creature->GetMap()->GetGameObject(m_altarGuid))
+                    m_creature->SetFacingToObject(pAltar);
+                break;
+            }
             case 42:
                 // Summon the 2 priestess
                 SetEscortPaused(true);
@@ -291,7 +291,7 @@ struct MANGOS_DLL_DECL npc_ranshallaAI : public npc_escortAI, private DialogueHe
 
     void JustDidDialogueStep(int32 iEntry)
     {
-        switch(iEntry)
+        switch (iEntry)
         {
             case NPC_RANSHALLA:
                 // Start the altar channeling

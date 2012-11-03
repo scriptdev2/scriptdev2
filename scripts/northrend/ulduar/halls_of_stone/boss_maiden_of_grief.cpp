@@ -79,19 +79,19 @@ struct MANGOS_DLL_DECL boss_maiden_of_griefAI : public ScriptedAI
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
-        if(m_pInstance)
+        if (m_pInstance)
             m_pInstance->SetData(TYPE_MAIDEN, IN_PROGRESS);
     }
 
     void JustReachedHome()
     {
-        if(m_pInstance)
+        if (m_pInstance)
             m_pInstance->SetData(TYPE_MAIDEN, FAIL);
     }
 
     void KilledUnit(Unit* pVictim)
     {
-        switch(urand(0, 3))
+        switch (urand(0, 3))
         {
             case 0: DoScriptText(SAY_SLAY_1, m_creature); break;
             case 1: DoScriptText(SAY_SLAY_2, m_creature); break;
@@ -118,7 +118,7 @@ struct MANGOS_DLL_DECL boss_maiden_of_griefAI : public ScriptedAI
             if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_PARTING_SORROW, SELECT_FLAG_PLAYER | SELECT_FLAG_POWER_MANA))
             {
                 if (DoCastSpellIfCan(pTarget, SPELL_PARTING_SORROW) == CAST_OK)
-                    m_uiPartingSorrowTimer = 12000 + rand()%5000;
+                    m_uiPartingSorrowTimer = 12000 + rand() % 5000;
             }
         }
         else

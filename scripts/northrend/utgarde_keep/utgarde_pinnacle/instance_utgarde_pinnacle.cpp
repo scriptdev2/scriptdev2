@@ -41,7 +41,7 @@ void instance_pinnacle::Initialize()
 
 void instance_pinnacle::OnCreatureCreate(Creature* pCreature)
 {
-    switch(pCreature->GetEntry())
+    switch (pCreature->GetEntry())
     {
         case NPC_FURBOLG:
         case NPC_WORGEN:
@@ -62,7 +62,7 @@ void instance_pinnacle::OnCreatureCreate(Creature* pCreature)
 
 void instance_pinnacle::OnObjectCreate(GameObject* pGo)
 {
-    switch(pGo->GetEntry())
+    switch (pGo->GetEntry())
     {
         case GO_DOOR_SKADI:
             if (m_auiEncounter[TYPE_SKADI] == DONE)
@@ -184,7 +184,7 @@ void instance_pinnacle::Load(const char* chrIn)
     std::istringstream loadStream(chrIn);
     loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3];
 
-    for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+    for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
     {
         if (m_auiEncounter[i] == IN_PROGRESS)
             m_auiEncounter[i] = NOT_STARTED;
@@ -217,7 +217,7 @@ bool instance_pinnacle::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player
 
 void instance_pinnacle::OnCreatureEvade(Creature* pCreature)
 {
-    switch(pCreature->GetEntry())
+    switch (pCreature->GetEntry())
     {
         case NPC_FURBOLG:
         case NPC_WORGEN:
@@ -230,7 +230,7 @@ void instance_pinnacle::OnCreatureEvade(Creature* pCreature)
 
 void instance_pinnacle::OnCreatureDeath(Creature* pCreature)
 {
-    switch(pCreature->GetEntry())
+    switch (pCreature->GetEntry())
     {
         case NPC_FURBOLG:
         case NPC_WORGEN:

@@ -92,7 +92,7 @@ struct MANGOS_DLL_DECL boss_lord_marrowgarAI : public ScriptedAI
 
         m_uiPhase                   = PHASE_NORMAL;
         m_uiChargesCount            = 0;
-        m_uiBerserkTimer            = 10*MINUTE*IN_MILLISECONDS;
+        m_uiBerserkTimer            = 10 * MINUTE * IN_MILLISECONDS;
         m_uiBoneSliceTimer          = 1000;
         m_uiColdflameTimer          = 5000;
         m_uiBoneSpikeTimer          = 15000;
@@ -246,7 +246,7 @@ struct MANGOS_DLL_DECL boss_lord_marrowgarAI : public ScriptedAI
                         else
                             m_uiPhase = PHASE_BONE_STORM_CHARGE;
 
-                         m_uiBoneStormColdflameTimer = 1000;
+                        m_uiBoneStormColdflameTimer = 1000;
                     }
                 }
                 else

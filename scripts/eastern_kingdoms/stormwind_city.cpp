@@ -70,9 +70,9 @@ struct MANGOS_DLL_DECL npc_bartlebyAI : public ScriptedAI
         AttackStart(pAttacker);
     }
 
-    void DamageTaken(Unit* pDoneBy, uint32 &uiDamage)
+    void DamageTaken(Unit* pDoneBy, uint32& uiDamage)
     {
-        if (uiDamage > m_creature->GetHealth() || ((m_creature->GetHealth() - uiDamage)*100 / m_creature->GetMaxHealth() < 15))
+        if (uiDamage > m_creature->GetHealth() || ((m_creature->GetHealth() - uiDamage) * 100 / m_creature->GetMaxHealth() < 15))
         {
             uiDamage = 0;
 
@@ -136,9 +136,9 @@ struct MANGOS_DLL_DECL npc_dashel_stonefistAI : public ScriptedAI
         AttackStart(pAttacker);
     }
 
-    void DamageTaken(Unit* pDoneBy, uint32 &uiDamage)
+    void DamageTaken(Unit* pDoneBy, uint32& uiDamage)
     {
-        if (uiDamage > m_creature->GetHealth() || ((m_creature->GetHealth() - uiDamage)*100 / m_creature->GetMaxHealth() < 15))
+        if (uiDamage > m_creature->GetHealth() || ((m_creature->GetHealth() - uiDamage) * 100 / m_creature->GetMaxHealth() < 15))
         {
             uiDamage = 0;
 
@@ -189,7 +189,7 @@ bool GossipHello_npc_lady_katrana_prestor(Player* pPlayer, Creature* pCreature)
 
 bool GossipSelect_npc_lady_katrana_prestor(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    switch(uiAction)
+    switch (uiAction)
     {
         case GOSSIP_ACTION_INFO_DEF:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_KAT_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
@@ -243,8 +243,8 @@ static const DialogueEntry aIntroDialogue[] =
     {0, 0, 0},
 };
 
-static const float aWindsorSpawnLoc[3] = {-9145.68f, 373.79f, 90.64f};
-static const float aWindsorMoveLoc[3] = {-9050.39f, 443.55f, 93.05f};
+static const float aWindsorSpawnLoc[3] = { -9145.68f, 373.79f, 90.64f};
+static const float aWindsorMoveLoc[3] = { -9050.39f, 443.55f, 93.05f};
 
 struct MANGOS_DLL_DECL npc_squire_roweAI : public npc_escortAI, private DialogueHelper
 {
@@ -297,7 +297,7 @@ struct MANGOS_DLL_DECL npc_squire_roweAI : public npc_escortAI, private Dialogue
 
     void WaypointReached(uint32 uiPointId)
     {
-        switch(uiPointId)
+        switch (uiPointId)
         {
             case 2:
                 m_creature->SetStandState(UNIT_STAND_STATE_KNEEL);
@@ -316,7 +316,7 @@ struct MANGOS_DLL_DECL npc_squire_roweAI : public npc_escortAI, private Dialogue
 
     void JustDidDialogueStep(int32 iEntry)
     {
-        switch(iEntry)
+        switch (iEntry)
         {
             case NPC_WINDSOR_MOUNT:
             {
@@ -385,7 +385,7 @@ bool GossipHello_npc_squire_rowe(Player* pPlayer, Creature* pCreature)
 {
     // Allow gossip if quest 6402 is completed but not yet rewarded or 6402 is rewarded but 6403 isn't yet completed
     if ((pPlayer->GetQuestStatus(QUEST_STORMWIND_RENDEZVOUS) == QUEST_STATUS_COMPLETE && !pPlayer->GetQuestRewardStatus(QUEST_STORMWIND_RENDEZVOUS)) ||
-        (pPlayer->GetQuestRewardStatus(QUEST_STORMWIND_RENDEZVOUS) && pPlayer->GetQuestStatus(QUEST_THE_GREAT_MASQUERADE) != QUEST_STATUS_COMPLETE))
+            (pPlayer->GetQuestRewardStatus(QUEST_STORMWIND_RENDEZVOUS) && pPlayer->GetQuestStatus(QUEST_THE_GREAT_MASQUERADE) != QUEST_STATUS_COMPLETE))
     {
         bool bIsEventInProgress = true;
 
@@ -398,7 +398,7 @@ bool GossipHello_npc_squire_rowe(Player* pPlayer, Creature* pCreature)
             pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_ID_PROGRESS, pCreature->GetObjectGuid());
         else
         {
-            pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_WINDSOR, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+            pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_WINDSOR, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
             pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_ID_START, pCreature->GetObjectGuid());
         }
     }
@@ -406,11 +406,11 @@ bool GossipHello_npc_squire_rowe(Player* pPlayer, Creature* pCreature)
         pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_ID_DEFAULT, pCreature->GetObjectGuid());
 
     return true;
- }
+}
 
 bool GossipSelect_npc_squire_rowe(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
+    if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)
     {
         if (npc_squire_roweAI* pRoweAI = dynamic_cast<npc_squire_roweAI*>(pCreature->AI()))
             pRoweAI->Start(true, pPlayer, 0, true, false);
@@ -477,7 +477,7 @@ enum
 
     GOSSIP_TEXT_ID_MASQUERADE   = 5633,
 
-    //SPELL_ONYXIA_TRANSFORM    = 20409,            // removed from DBC
+    // SPELL_ONYXIA_TRANSFORM    = 20409,            // removed from DBC
     SPELL_WINDSOR_READ          = 20358,
     SPELL_WINDSOR_DEATH         = 20465,
     SPELL_ONYXIA_DESPAWN        = 20466,
@@ -494,25 +494,25 @@ enum
 
 static const float aGuardLocations[MAX_ROYAL_GUARDS][4] =
 {
-    {-8968.510f, 512.556f, 96.352f, 3.849f},                // guard right - left
-    {-8969.780f, 515.012f, 96.593f, 3.955f},                // guard right - middle
-    {-8972.410f, 518.228f, 96.594f, 4.281f},                // guard right - right
-    {-8965.170f, 508.565f, 96.352f, 3.825f},                // guard left - right
-    {-8962.960f, 506.583f, 96.593f, 3.802f},                // guard left - middle
-    {-8961.080f, 503.828f, 96.593f, 3.465f},                // guard left - left
+    { -8968.510f, 512.556f, 96.352f, 3.849f},               // guard right - left
+    { -8969.780f, 515.012f, 96.593f, 3.955f},               // guard right - middle
+    { -8972.410f, 518.228f, 96.594f, 4.281f},               // guard right - right
+    { -8965.170f, 508.565f, 96.352f, 3.825f},               // guard left - right
+    { -8962.960f, 506.583f, 96.593f, 3.802f},               // guard left - middle
+    { -8961.080f, 503.828f, 96.593f, 3.465f},               // guard left - left
 };
 
 static const float aMoveLocations[10][3] =
- {
-    {-8967.960f, 510.008f, 96.351f},                        // Jonathan move
-    {-8959.440f, 505.424f, 96.595f},                        // Guard Left - Middle kneel
-    {-8957.670f, 507.056f, 96.595f},                        // Guard Left - Right kneel
-    {-8970.680f, 519.252f, 96.595f},                        // Guard Right - Middle kneel
-    {-8969.100f, 520.395f, 96.595f},                        // Guard Right - Left kneel
-    {-8974.590f, 516.213f, 96.590f},                        // Jonathan kneel
-    {-8505.770f, 338.312f, 120.886f},                       // Wrynn safe
-    {-8448.690f, 337.074f, 121.330f},                       // Bolvar help
-    {-8448.279f, 338.398f, 121.329f}                        // Bolvar kneel
+{
+    { -8967.960f, 510.008f, 96.351f},                       // Jonathan move
+    { -8959.440f, 505.424f, 96.595f},                       // Guard Left - Middle kneel
+    { -8957.670f, 507.056f, 96.595f},                       // Guard Left - Right kneel
+    { -8970.680f, 519.252f, 96.595f},                       // Guard Right - Middle kneel
+    { -8969.100f, 520.395f, 96.595f},                       // Guard Right - Left kneel
+    { -8974.590f, 516.213f, 96.590f},                       // Jonathan kneel
+    { -8505.770f, 338.312f, 120.886f},                      // Wrynn safe
+    { -8448.690f, 337.074f, 121.330f},                      // Bolvar help
+    { -8448.279f, 338.398f, 121.329f}                       // Bolvar kneel
 };
 
 static const DialogueEntry aMasqueradeDialogue[] =
@@ -574,7 +574,7 @@ static const DialogueEntry aMasqueradeDialogue[] =
     {0, 0, 0},
 };
 
-static const int32 aGuardSalute[MAX_GUARD_SALUTES] = {-1000842, -1000843, -1000844, -1000845, -1000846, -1000847, -1000848};
+static const int32 aGuardSalute[MAX_GUARD_SALUTES] = { -1000842, -1000843, -1000844, -1000845, -1000846, -1000847, -1000848};
 
 struct MANGOS_DLL_DECL npc_reginald_windsorAI : public npc_escortAI, private DialogueHelper
 {
@@ -611,8 +611,8 @@ struct MANGOS_DLL_DECL npc_reginald_windsorAI : public npc_escortAI, private Dia
     {
         // Note: this implementation is not the best; It should be better handled by the guard script
         if (m_bCanGuardSalute && (pWho->GetEntry() == NPC_GUARD_CITY || pWho->GetEntry() == NPC_GUARD_ROYAL ||
-            pWho->GetEntry() == NPC_GUARD_PATROLLER) && pWho->IsWithinDistInMap(m_creature, 15.0f) &&
-            m_sGuardsSalutedGuidSet.find(pWho->GetObjectGuid()) == m_sGuardsSalutedGuidSet.end() && pWho->IsWithinLOSInMap(m_creature))
+                                  pWho->GetEntry() == NPC_GUARD_PATROLLER) && pWho->IsWithinDistInMap(m_creature, 15.0f) &&
+                m_sGuardsSalutedGuidSet.find(pWho->GetObjectGuid()) == m_sGuardsSalutedGuidSet.end() && pWho->IsWithinLOSInMap(m_creature))
         {
             DoScriptText(aGuardSalute[urand(0, MAX_GUARD_SALUTES - 1)], pWho);
             m_sGuardsSalutedGuidSet.insert(pWho->GetObjectGuid());
@@ -701,9 +701,9 @@ struct MANGOS_DLL_DECL npc_reginald_windsorAI : public npc_escortAI, private Dia
         if (!m_pScriptedMap)
             return;
 
-        switch(iEntry)
+        switch (iEntry)
         {
-            // Set orientation and prepare the npcs for the next event
+                // Set orientation and prepare the npcs for the next event
             case SAY_WINDSOR_GET_READY:
                 m_creature->SetFacingTo(0.6f);
                 break;
@@ -998,7 +998,7 @@ bool GossipHello_npc_reginald_windsor(Player* pPlayer, Creature* pCreature)
     // Check if event is possible and also check the status of the quests
     if (bIsEventReady && pPlayer->GetQuestStatus(QUEST_THE_GREAT_MASQUERADE) != QUEST_STATUS_COMPLETE && pPlayer->GetQuestRewardStatus(QUEST_STORMWIND_RENDEZVOUS))
     {
-        pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_REGINALD, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_REGINALD, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
         pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_ID_MASQUERADE, pCreature->GetObjectGuid());
     }
     else
@@ -1014,7 +1014,7 @@ bool GossipHello_npc_reginald_windsor(Player* pPlayer, Creature* pCreature)
 
 bool GossipSelect_npc_reginald_windsor(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
+    if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)
     {
         if (npc_reginald_windsorAI* pReginaldAI = dynamic_cast<npc_reginald_windsorAI*>(pCreature->AI()))
             pReginaldAI->DoStartKeepEvent();

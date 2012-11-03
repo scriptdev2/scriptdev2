@@ -40,16 +40,16 @@ enum
 
     SPELL_GROWTH                = 36300,
     SPELL_CAVE_IN               = 36240,
-    SPELL_GROUND_SLAM           = 33525,                    //AoE Ground Slam applying Ground Slam to everyone with a script effect (most likely the knock back, we can code it to a set knockback)
+    SPELL_GROUND_SLAM           = 33525,                    // AoE Ground Slam applying Ground Slam to everyone with a script effect (most likely the knock back, we can code it to a set knockback)
     SPELL_REVERBERATION         = 36297,
     SPELL_SHATTER               = 33654,
 
     SPELL_SHATTER_EFFECT        = 33671,
     SPELL_HURTFUL_STRIKE        = 33813,
-    SPELL_STONED                = 33652,                    //Spell is self cast by target
+    SPELL_STONED                = 33652,                    // Spell is self cast by target
 
     SPELL_MAGNETIC_PULL         = 28337,
-    SPELL_KNOCK_BACK            = 24199                     //Knockback spell until correct implementation is made
+    SPELL_KNOCK_BACK            = 24199                     // Knockback spell until correct implementation is made
 };
 
 struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
@@ -98,7 +98,7 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
 
     void KilledUnit(Unit* pVictim)
     {
-        switch(urand(0, 2))
+        switch (urand(0, 2))
         {
             case 0: DoScriptText(SAY_SLAY1, m_creature); break;
             case 1: DoScriptText(SAY_SLAY2, m_creature); break;
@@ -116,13 +116,13 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
 
     void SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell)
     {
-        //This to emulate effect1 (77) of SPELL_GROUND_SLAM, knock back to any direction
-        //It's initially wrong, since this will cause fall damage, which is by comments, not intended.
+        // This to emulate effect1 (77) of SPELL_GROUND_SLAM, knock back to any direction
+        // It's initially wrong, since this will cause fall damage, which is by comments, not intended.
         if (pSpell->Id == SPELL_GROUND_SLAM)
         {
             if (pTarget->GetTypeId() == TYPEID_PLAYER)
             {
-                switch(urand(0, 1))
+                switch (urand(0, 1))
                 {
                     case 0: pTarget->CastSpell(pTarget, SPELL_MAGNETIC_PULL, true, NULL, NULL, m_creature->GetObjectGuid()); break;
                     case 1: pTarget->CastSpell(pTarget, SPELL_KNOCK_BACK, true, NULL, NULL, m_creature->GetObjectGuid()); break;
@@ -130,21 +130,21 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
             }
         }
 
-        //this part should be in mangos
+        // this part should be in mangos
         if (pSpell->Id == SPELL_SHATTER)
         {
-            //this spell must have custom handling in mangos, dealing damage based on distance
+            // this spell must have custom handling in mangos, dealing damage based on distance
             pTarget->CastSpell(pTarget, SPELL_SHATTER_EFFECT, true);
 
             if (pTarget->HasAura(SPELL_STONED))
                 pTarget->RemoveAurasDueToSpell(SPELL_STONED);
 
-            //clear this, if we are still performing
+            // clear this, if we are still performing
             if (m_bPerformingGroundSlam)
             {
                 m_bPerformingGroundSlam = false;
 
-                //and correct movement, if not already
+                // and correct movement, if not already
                 if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() != CHASE_MOTION_TYPE)
                 {
                     if (m_creature->getVictim())
@@ -181,7 +181,7 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
                     m_uiGroundSlamTimer     = 120000;
                     m_uiHurtfulStrikeTimer  = 8000;
 
-                    //Give a little time to the players to undo the damage from shatter
+                    // Give a little time to the players to undo the damage from shatter
                     if (m_uiReverberationTimer < 10000)
                         m_uiReverberationTimer += 10000;
                 }

@@ -40,7 +40,7 @@ enum
     NPC_THROW_DUMMY             = 23997,                    // the axe, moving to target
     NPC_GROUND_VISUAL           = 24012,                    // has SPELL_SCOURGE_RES_BUBBLE aura
 
-    //phase 1
+    // phase 1
     SPELL_CLEAVE                = 42724,
 
     SPELL_SMASH                 = 42669,
@@ -52,7 +52,7 @@ enum
     SPELL_STAGGERING_ROAR       = 42708,
     SPELL_STAGGERING_ROAR_H     = 59708,
 
-    //phase 2
+    // phase 2
     SPELL_DARK_SMASH_H          = 42723,
 
     SPELL_DREADFUL_ROAR         = 42729,
@@ -65,7 +65,7 @@ enum
     SPELL_SHADOW_AXE_PROC       = 42750,                    // triggers 42751
     SPELL_SHADOW_AXE_PROC_H     = 59719,                    // triggers 59720
 
-    //ressurection sequenze
+    // ressurection sequenze
     SPELL_ASTRAL_TELEPORT       = 34427,                    // aura cast by Annhylde on spawn
     SPELL_SUMMON_BANSHEE        = 42912,                    // summons Annhylde and sets a glow aura
     SPELL_FEIGN_DEATH           = 42795,
@@ -241,7 +241,7 @@ struct MANGOS_DLL_DECL boss_ingvarAI : public ScriptedAI
         {
             if (m_uiCleaveTimer < uiDiff)
             {
-                if (DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode? SPELL_WOE_STRIKE : SPELL_WOE_STRIKE_H) == CAST_OK)
+                if (DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_WOE_STRIKE : SPELL_WOE_STRIKE_H) == CAST_OK)
                     m_uiCleaveTimer = urand(2500, 7000);
             }
             else

@@ -101,7 +101,7 @@ struct MANGOS_DLL_DECL boss_eregosAI : public ScriptedAI
 
     void KilledUnit(Unit* pVictim)
     {
-        switch(urand(0, 2))
+        switch (urand(0, 2))
         {
             case 0: DoScriptText(SAY_KILL_1, m_creature); break;
             case 1: DoScriptText(SAY_KILL_2, m_creature); break;
@@ -161,7 +161,7 @@ struct MANGOS_DLL_DECL boss_eregosAI : public ScriptedAI
                 // This will summon an anomaly on each player coordinates
                 DoCastSpellIfCan(m_creature, SPELL_PLANAR_ANOMALIES, CAST_TRIGGERED);
 
-                switch(urand(0, 2))
+                switch (urand(0, 2))
                 {
                     case 0: DoScriptText(SAY_ARCANE_SHIELD, m_creature); break;
                     case 1: DoScriptText(SAY_FIRE_SHIELD, m_creature); break;

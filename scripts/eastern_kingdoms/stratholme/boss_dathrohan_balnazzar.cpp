@@ -29,15 +29,15 @@ enum
     SAY_TRANSFORM                   = -1329017,
     SAY_DEATH                       = -1329018,
 
-    //Dathrohan spells
-    SPELL_CRUSADERSHAMMER           = 17286,                //AOE stun
+    // Dathrohan spells
+    SPELL_CRUSADERSHAMMER           = 17286,                // AOE stun
     SPELL_CRUSADERSTRIKE            = 17281,
-    SPELL_HOLYSTRIKE                = 17284,                //weapon dmg +3
+    SPELL_HOLYSTRIKE                = 17284,                // weapon dmg +3
 
-    //Transform
-    SPELL_BALNAZZARTRANSFORM        = 17288,                //restore full HP/mana, trigger spell Balnazzar Transform Stun
+    // Transform
+    SPELL_BALNAZZARTRANSFORM        = 17288,                // restore full HP/mana, trigger spell Balnazzar Transform Stun
 
-    //Balnazzar spells
+    // Balnazzar spells
     SPELL_SHADOWSHOCK               = 17399,
     SPELL_MINDBLAST                 = 17287,
     SPELL_PSYCHICSCREAM             = 13704,
@@ -56,7 +56,7 @@ struct SummonDef
     float m_fX, m_fY, m_fZ, m_fOrient;
 };
 
-SummonDef m_aSummonPoint[]=
+SummonDef m_aSummonPoint[] =
 {
     {NPC_SKELETAL_BERSERKER, 3460.356f, -3070.572f, 135.086f, 0.332f},
     {NPC_SKELETAL_BERSERKER, 3465.289f, -3069.987f, 135.086f, 5.480f},
@@ -115,8 +115,8 @@ struct MANGOS_DLL_DECL boss_dathrohan_balnazzarAI : public ScriptedAI
 
         for (uint32 i = 0; i < countof(m_aSummonPoint); ++i)
             m_creature->SummonCreature(m_aSummonPoint[i].m_uiEntry,
-            m_aSummonPoint[i].m_fX, m_aSummonPoint[i].m_fY, m_aSummonPoint[i].m_fZ, m_aSummonPoint[i].m_fOrient,
-            TEMPSUMMON_TIMED_DESPAWN, HOUR*IN_MILLISECONDS);
+                                       m_aSummonPoint[i].m_fX, m_aSummonPoint[i].m_fY, m_aSummonPoint[i].m_fZ, m_aSummonPoint[i].m_fOrient,
+                                       TEMPSUMMON_TIMED_DESPAWN, HOUR * IN_MILLISECONDS);
     }
 
     void UpdateAI(const uint32 uiDiff)
@@ -124,41 +124,45 @@ struct MANGOS_DLL_DECL boss_dathrohan_balnazzarAI : public ScriptedAI
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //START NOT TRANSFORMED
+        // START NOT TRANSFORMED
         if (!m_bTransformed)
         {
-            //MindBlast
+            // MindBlast
             if (m_uiMindBlast_Timer < uiDiff)
             {
-                DoCastSpellIfCan(m_creature->getVictim(),SPELL_MINDBLAST);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_MINDBLAST);
                 m_uiMindBlast_Timer = urand(15000, 20000);
-            }else m_uiMindBlast_Timer -= uiDiff;
+            }
+            else m_uiMindBlast_Timer -= uiDiff;
 
-            //CrusadersHammer
+            // CrusadersHammer
             if (m_uiCrusadersHammer_Timer < uiDiff)
             {
-                DoCastSpellIfCan(m_creature->getVictim(),SPELL_CRUSADERSHAMMER);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_CRUSADERSHAMMER);
                 m_uiCrusadersHammer_Timer = 12000;
-            }else m_uiCrusadersHammer_Timer -= uiDiff;
+            }
+            else m_uiCrusadersHammer_Timer -= uiDiff;
 
-            //CrusaderStrike
+            // CrusaderStrike
             if (m_uiCrusaderStrike_Timer < uiDiff)
             {
-                DoCastSpellIfCan(m_creature->getVictim(),SPELL_CRUSADERSTRIKE);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_CRUSADERSTRIKE);
                 m_uiCrusaderStrike_Timer = 15000;
-            }else m_uiCrusaderStrike_Timer -= uiDiff;
+            }
+            else m_uiCrusaderStrike_Timer -= uiDiff;
 
-            //HolyStrike
+            // HolyStrike
             if (m_uiHolyStrike_Timer < uiDiff)
             {
-                DoCastSpellIfCan(m_creature->getVictim(),SPELL_HOLYSTRIKE);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_HOLYSTRIKE);
                 m_uiHolyStrike_Timer = 15000;
-            }else m_uiHolyStrike_Timer -= uiDiff;
+            }
+            else m_uiHolyStrike_Timer -= uiDiff;
 
-            //BalnazzarTransform
+            // BalnazzarTransform
             if (m_creature->GetHealthPercent() < 40.0f)
             {
-                //restore hp, mana and stun
+                // restore hp, mana and stun
                 if (DoCastSpellIfCan(m_creature, SPELL_BALNAZZARTRANSFORM) == CAST_OK)
                 {
                     m_creature->UpdateEntry(NPC_BALNAZZAR);
@@ -169,44 +173,49 @@ struct MANGOS_DLL_DECL boss_dathrohan_balnazzarAI : public ScriptedAI
         }
         else
         {
-            //MindBlast
+            // MindBlast
             if (m_uiMindBlast_Timer < uiDiff)
             {
-                DoCastSpellIfCan(m_creature->getVictim(),SPELL_MINDBLAST);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_MINDBLAST);
                 m_uiMindBlast_Timer = urand(15000, 20000);
-            }else m_uiMindBlast_Timer -= uiDiff;
+            }
+            else m_uiMindBlast_Timer -= uiDiff;
 
-            //ShadowShock
+            // ShadowShock
             if (m_uiShadowShock_Timer < uiDiff)
             {
-                DoCastSpellIfCan(m_creature->getVictim(),SPELL_SHADOWSHOCK);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_SHADOWSHOCK);
                 m_uiShadowShock_Timer = 11000;
-            }else m_uiShadowShock_Timer -= uiDiff;
+            }
+            else m_uiShadowShock_Timer -= uiDiff;
 
-            //PsychicScream
+            // PsychicScream
             if (m_uiPsychicScream_Timer < uiDiff)
             {
-                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
-                    DoCastSpellIfCan(pTarget,SPELL_PSYCHICSCREAM);
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                    DoCastSpellIfCan(pTarget, SPELL_PSYCHICSCREAM);
 
                 m_uiPsychicScream_Timer = 20000;
-            }else m_uiPsychicScream_Timer -= uiDiff;
+            }
+            else m_uiPsychicScream_Timer -= uiDiff;
 
-            //DeepSleep
+            // DeepSleep
             if (m_uiDeepSleep_Timer < uiDiff)
             {
-                if (Unit *pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,0))
-                    DoCastSpellIfCan(pTarget,SPELL_SLEEP);
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                    DoCastSpellIfCan(pTarget, SPELL_SLEEP);
 
                 m_uiDeepSleep_Timer = 15000;
-            }else m_uiDeepSleep_Timer -= uiDiff;
+            }
+            else m_uiDeepSleep_Timer -= uiDiff;
 
-            //MindControl
+            // MindControl
             if (m_uiMindControl_Timer < uiDiff)
             {
-                DoCastSpellIfCan(m_creature->getVictim(),SPELL_MINDCONTROL);
+                DoCastSpellIfCan(m_creature->getVictim(), SPELL_MINDCONTROL);
                 m_uiMindControl_Timer = 15000;
-            }else m_uiMindControl_Timer -= uiDiff;
+            }
+            else m_uiMindControl_Timer -= uiDiff;
         }
 
         DoMeleeAttackIfReady();

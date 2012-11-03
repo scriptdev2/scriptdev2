@@ -20,7 +20,7 @@ enum
     NPC_GYRO_KILL           = 19218,
     NPC_IRON_HAND           = 19710,
     NPC_LORD_CAPACITUS      = 19219,
-    //NPC_SEPETHREA         = 19221,
+    // NPC_SEPETHREA         = 19221,
     NPC_PATHALEON           = 19220,
 
     // bridge event related

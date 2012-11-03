@@ -49,34 +49,34 @@ enum
     SPELL_SIPHON_SOUL           = 43501,
     SPELL_DRAIN_POWER           = 44131,
 
-    //for various powers he uses after using soul drain
-    //Death Knight
+    // for various powers he uses after using soul drain
+    // Death Knight
     SPELL_DK_DEATH_AND_DECAY    = 61603,
     SPELL_DK_PLAGUE_STRIKE      = 61600,
     SPELL_DK_MARK_OF_BLOOD      = 61606,
 
-    //Druid
+    // Druid
     SPELL_DR_THORNS             = 43420,
     SPELL_DR_LIFEBLOOM          = 43421,
     SPELL_DR_MOONFIRE           = 43545,
 
-    //Hunter
+    // Hunter
     SPELL_HU_EXPLOSIVE_TRAP     = 43444,
     SPELL_HU_FREEZING_TRAP      = 43447,
     SPELL_HU_SNAKE_TRAP         = 43449,
 
-    //Mage
+    // Mage
     SPELL_MG_FIREBALL           = 41383,
     SPELL_MG_FROST_NOVA         = 43426,
     SPELL_MG_ICE_LANCE          = 43427,
     SPELL_MG_FROSTBOLT          = 43428,
 
-    //Paladin
+    // Paladin
     SPELL_PA_CONSECRATION       = 43429,
     SPELL_PA_AVENGING_WRATH     = 43430,
     SPELL_PA_HOLY_LIGHT         = 43451,
 
-    //Priest
+    // Priest
     SPELL_PR_HEAL               = 41372,
     SPELL_PR_MIND_BLAST         = 41374,
     SPELL_PR_SW_DEATH           = 41375,
@@ -84,27 +84,27 @@ enum
     SPELL_PR_MIND_CONTROL       = 43550,
     SPELL_PR_PAIN_SUPP          = 44416,
 
-    //Rogue
+    // Rogue
     SPELL_RO_WOUND_POISON       = 39665,
     SPELL_RO_BLIND              = 43433,
     SPELL_RO_SLICE_DICE         = 43547,
 
-    //Shaman
+    // Shaman
     SPELL_SH_CHAIN_LIGHT        = 43435,
     SPELL_SH_FIRE_NOVA          = 43436,
     SPELL_SH_HEALING_WAVE       = 43548,
 
-    //Warlock
+    // Warlock
     SPELL_WL_CURSE_OF_DOOM      = 43439,
     SPELL_WL_RAIN_OF_FIRE       = 43440,
     SPELL_WL_UNSTABLE_AFFL      = 35183,
 
-    //Warrior
+    // Warrior
     SPELL_WR_MORTAL_STRIKE      = 43441,
     SPELL_WR_WHIRLWIND          = 43442,
     SPELL_WR_SPELL_REFLECT      = 43443,
 
-    //misc
+    // misc
     TARGET_TYPE_RANDOM          = 0,
     TARGET_TYPE_VICTIM          = 1,
     TARGET_TYPE_SELF            = 2,
@@ -113,7 +113,7 @@ enum
     MAX_ACTIVE_ADDS             = 4
 };
 
-//Adds positions
+// Adds positions
 static const float m_aAddPositions[MAX_ACTIVE_ADDS][4] =
 {
     {128.279f, 921.279f, 33.889f, 1.527f},
@@ -123,7 +123,7 @@ static const float m_aAddPositions[MAX_ACTIVE_ADDS][4] =
 };
 
 // Each position is a random of two spawns
-static const uint32 aSpawnEntries[MAX_ACTIVE_ADDS][2]=
+static const uint32 aSpawnEntries[MAX_ACTIVE_ADDS][2] =
 {
     {NPC_ALYSON,    NPC_THURG},
     {NPC_SLITHER,   NPC_RADAAN},
@@ -141,60 +141,72 @@ struct PlayerAbilityStruct
 // Classes are in the same order as they are in DBC
 static PlayerAbilityStruct m_aMalacrassStolenAbility[][4] =
 {
-    {   // 0* shadow priest - exception: it seems that the priest has two specs. We use this slot for the shadow priest
+    {
+        // 0* shadow priest - exception: it seems that the priest has two specs. We use this slot for the shadow priest
         {SPELL_PR_MIND_CONTROL,     TARGET_TYPE_RANDOM,   15000, 30000},
         {SPELL_PR_MIND_BLAST,       TARGET_TYPE_RANDOM,   23000, 30000},
         {SPELL_PR_SW_DEATH,         TARGET_TYPE_RANDOM,   5000,  16000}
     },
-    {   // 1 warrior
+    {
+        // 1 warrior
         {SPELL_WR_SPELL_REFLECT,    TARGET_TYPE_SELF,     2000,  30000},
         {SPELL_WR_WHIRLWIND,        TARGET_TYPE_SELF,     10000, 30000},
         {SPELL_WR_MORTAL_STRIKE,    TARGET_TYPE_VICTIM,   6000,  15000}
     },
-    {   // 2 paladin
+    {
+        // 2 paladin
         {SPELL_PA_CONSECRATION,     TARGET_TYPE_SELF,     10000, 30000},
         {SPELL_PA_HOLY_LIGHT,       TARGET_TYPE_FRIENDLY, 17000, 30000},
         {SPELL_PA_AVENGING_WRATH,   TARGET_TYPE_SELF,     0,     30000}
     },
-    {   // 3 hunter
+    {
+        // 3 hunter
         {SPELL_HU_EXPLOSIVE_TRAP,   TARGET_TYPE_SELF,     12000, 30000},
         {SPELL_HU_FREEZING_TRAP,    TARGET_TYPE_SELF,     3000,  30000},
         {SPELL_HU_SNAKE_TRAP,       TARGET_TYPE_SELF,     21000, 30000}
     },
-    {   // 4 rogue
+    {
+        // 4 rogue
         {SPELL_RO_WOUND_POISON,     TARGET_TYPE_VICTIM,   3000,  17000},
         {SPELL_RO_SLICE_DICE,       TARGET_TYPE_SELF,     17000, 30000},
         {SPELL_RO_BLIND,            TARGET_TYPE_RANDOM,   12000, 30000}
     },
-    {   // 5 priest
+    {
+        // 5 priest
         {SPELL_PR_PAIN_SUPP,        TARGET_TYPE_FRIENDLY, 24000, 30000},
         {SPELL_PR_HEAL,             TARGET_TYPE_FRIENDLY, 16000, 30000},
         {SPELL_PR_PSYCHIC_SCREAM,   TARGET_TYPE_RANDOM,   8000,  30000}
     },
-    {   // 6 death knight
+    {
+        // 6 death knight
         {SPELL_DK_DEATH_AND_DECAY,  TARGET_TYPE_RANDOM,   25000, 30000},
         {SPELL_DK_PLAGUE_STRIKE,    TARGET_TYPE_VICTIM,   5000,  17000},
         {SPELL_DK_MARK_OF_BLOOD,    TARGET_TYPE_RANDOM,   14000, 30000}
     },
-    {   // 7 shaman
+    {
+        // 7 shaman
         {SPELL_SH_FIRE_NOVA,        TARGET_TYPE_SELF,     25000, 30000},
         {SPELL_SH_HEALING_WAVE,     TARGET_TYPE_FRIENDLY, 15000, 30000},
         {SPELL_SH_CHAIN_LIGHT,      TARGET_TYPE_RANDOM,   4000,  16000}
     },
-    {   // 8 mage
+    {
+        // 8 mage
         {SPELL_MG_FIREBALL,         TARGET_TYPE_RANDOM,   8000,  30000},
         {SPELL_MG_FROSTBOLT,        TARGET_TYPE_RANDOM,   25000, 30000},
         {SPELL_MG_ICE_LANCE,        TARGET_TYPE_RANDOM,   2000,  18000},
         {SPELL_MG_FROST_NOVA,       TARGET_TYPE_SELF,     17000, 30000}
     },
-    {   // 9 warlock
+    {
+        // 9 warlock
         {SPELL_WL_CURSE_OF_DOOM,    TARGET_TYPE_RANDOM,   0,     30000},
         {SPELL_WL_RAIN_OF_FIRE,     TARGET_TYPE_RANDOM,   16000, 30000},
         {SPELL_WL_UNSTABLE_AFFL,    TARGET_TYPE_RANDOM,   8000,  13000}
     },
-    {   // 10 unused - no class in DBC here
+    {
+        // 10 unused - no class in DBC here
     },
-    {   // 11 druid
+    {
+        // 11 druid
         {SPELL_DR_LIFEBLOOM,        TARGET_TYPE_FRIENDLY, 15000, 30000},
         {SPELL_DR_THORNS,           TARGET_TYPE_SELF,     0,     30000},
         {SPELL_DR_MOONFIRE,         TARGET_TYPE_RANDOM,   8000,  13000}
@@ -243,7 +255,7 @@ struct MANGOS_DLL_DECL boss_malacrassAI : public ScriptedAI
 
     void DoInitializeAdds()
     {
-        //not if m_creature are dead, so avoid
+        // not if m_creature are dead, so avoid
         if (!m_creature->isAlive())
             return;
 
@@ -302,7 +314,7 @@ struct MANGOS_DLL_DECL boss_malacrassAI : public ScriptedAI
 
     void SummonedCreatureJustDied(Creature* pSummoned)
     {
-        switch(urand(0, 2))
+        switch (urand(0, 2))
         {
             case 0: DoScriptText(SAY_ADD_DIED1, m_creature); break;
             case 1: DoScriptText(SAY_ADD_DIED2, m_creature); break;
@@ -336,7 +348,7 @@ struct MANGOS_DLL_DECL boss_malacrassAI : public ScriptedAI
     {
         Unit* pTarget = NULL;
 
-        switch(m_aMalacrassStolenAbility[m_uiPlayerClass][uiSpellIndex].m_uiTargetType)
+        switch (m_aMalacrassStolenAbility[m_uiPlayerClass][uiSpellIndex].m_uiTargetType)
         {
             case TARGET_TYPE_SELF:
                 pTarget = m_creature;

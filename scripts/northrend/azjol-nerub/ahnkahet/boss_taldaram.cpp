@@ -106,7 +106,7 @@ struct MANGOS_DLL_DECL boss_taldaramAI : public ScriptedAI
 
     void KilledUnit(Unit* pVictim)
     {
-        switch(urand(0, 2))
+        switch (urand(0, 2))
         {
             case 0: DoScriptText(SAY_SLAY_1, m_creature); break;
             case 1: DoScriptText(SAY_SLAY_2, m_creature); break;
@@ -185,7 +185,7 @@ struct MANGOS_DLL_DECL boss_taldaramAI : public ScriptedAI
             {
                 pOrb->CastSpell(pOrb, m_bIsRegularMode ? SPELL_FLAME_SPHERE_PERIODIC : SPELL_FLAME_SPHERE_PERIODIC_H, true);
 
-                pOrb->GetNearPoint2D(fX, fY, 70.0f, (2*M_PI_F/3)*uiIndex);
+                pOrb->GetNearPoint2D(fX, fY, 70.0f, (2 * M_PI_F / 3)*uiIndex);
                 pOrb->GetMotionMaster()->MovePoint(0, fX, fY, pOrb->GetPositionZ());
             }
             ++uiIndex;
@@ -241,7 +241,7 @@ struct MANGOS_DLL_DECL boss_taldaramAI : public ScriptedAI
         {
             if (m_uiVanishTimer <= uiDiff)
             {
-                if (DoCastSpellIfCan (m_creature, SPELL_VANISH) == CAST_OK)
+                if (DoCastSpellIfCan(m_creature, SPELL_VANISH) == CAST_OK)
                 {
                     DoScriptText(urand(0, 1) ? SAY_VANISH_1 : SAY_VANISH_2, m_creature);
                     m_uiVanishTimer  = 0;
@@ -294,13 +294,13 @@ CreatureAI* GetAI_boss_taldaram(Creature* pCreature)
 
 bool EffectDummyCreature_spell_conjure_flame_orbs(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
 {
-    //always check spellid and effectindex
+    // always check spellid and effectindex
     if (uiSpellId == SPELL_CONJURE_FLAME_SPHERE && uiEffIndex == EFFECT_INDEX_0)
     {
         if (boss_taldaramAI* pBossAI = dynamic_cast<boss_taldaramAI*>(pCreatureTarget->AI()))
             pBossAI->DoSetSpheresInMotion();
 
-        //always return true when we are handling this spell and effect
+        // always return true when we are handling this spell and effect
         return true;
     }
 

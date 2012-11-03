@@ -45,7 +45,7 @@ enum
     SPELL_GREATER_HEAL      = 24208,
     SPELL_DISARM            = 22691,
 
-    //Zealot Lor'Khan Spells
+    // Zealot Lor'Khan Spells
     SPELL_SWEEPING_STRIKES  = 18765,
     SPELL_SINISTER_STRIKE   = 15667,
     SPELL_GOUGE             = 24698,
@@ -401,7 +401,7 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public boss_thekalBaseAI
             m_pInstance->SetData(TYPE_LORKHAN, SPECIAL);
     }
 
-    void UpdateAI (const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -458,14 +458,14 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public boss_thekalBaseAI
                         Creature* pThekal = m_pInstance->GetSingleCreatureFromStorage(NPC_THEKAL);
                         Creature* pZath = m_pInstance->GetSingleCreatureFromStorage(NPC_ZATH);
 
-                        switch(urand(0, 1))
+                        switch (urand(0, 1))
                         {
                             case 0:
-                                if (pThekal && m_creature->IsWithinDistInMap(pThekal, 3*ATTACK_DISTANCE))
+                                if (pThekal && m_creature->IsWithinDistInMap(pThekal, 3 * ATTACK_DISTANCE))
                                     DoCastSpellIfCan(pThekal, SPELL_GREATER_HEAL);
                                 break;
                             case 1:
-                                if (pZath && m_creature->IsWithinDistInMap(pZath, 3*ATTACK_DISTANCE))
+                                if (pZath && m_creature->IsWithinDistInMap(pZath, 3 * ATTACK_DISTANCE))
                                     DoCastSpellIfCan(pZath, SPELL_GREATER_HEAL);
                                 break;
                         }
@@ -542,7 +542,7 @@ struct MANGOS_DLL_DECL mob_zealot_zathAI : public boss_thekalBaseAI
             m_pInstance->SetData(TYPE_ZATH, SPECIAL);
     }
 
-    void UpdateAI (const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -595,7 +595,7 @@ struct MANGOS_DLL_DECL mob_zealot_zathAI : public boss_thekalBaseAI
                     if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_GOUGE) == CAST_OK)
                     {
                         if (m_creature->getThreatManager().getThreat(m_creature->getVictim()))
-                            m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-100);
+                            m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(), -100);
 
                         m_uiGougeTimer = urand(17000, 27000);
                     }
@@ -630,13 +630,13 @@ struct MANGOS_DLL_DECL mob_zealot_zathAI : public boss_thekalBaseAI
 
 bool EffectDummyCreature_thekal_resurrection(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
 {
-    //always check spellid and effectindex
+    // always check spellid and effectindex
     if (uiSpellId == SPELL_RESURRECT && uiEffIndex == EFFECT_INDEX_0)
     {
         if (boss_thekalBaseAI* pFakerAI = dynamic_cast<boss_thekalBaseAI*>(pCreatureTarget->AI()))
             pFakerAI->Revive();
 
-        //always return true when we are handling this spell and effect
+        // always return true when we are handling this spell and effect
         return true;
     }
 

@@ -526,7 +526,7 @@ struct MANGOS_DLL_DECL boss_roarAI : public ScriptedAI
     }
 };
 
-static const float afCycloneSpawnLoc[4] = {-10907.68f, -1778.651f, 90.56018f, 0.61f};
+static const float afCycloneSpawnLoc[4] = { -10907.68f, -1778.651f, 90.56018f, 0.61f};
 
 struct MANGOS_DLL_DECL boss_croneAI : public ScriptedAI
 {
@@ -783,8 +783,8 @@ enum
     SPELL_POISON_THRUST             = 30822,
 
     /**** Other Misc. Spells ****/
-    SPELL_FULL_HEALTH               = 43979,                    // res effect on Julianne
-    SPELL_UNDYING_LOVE              = 30951,                    // res effect on Romulo
+    SPELL_FULL_HEALTH               = 43979,                // res effect on Julianne
+    SPELL_UNDYING_LOVE              = 30951,                // res effect on Romulo
 };
 
 enum OperaPhase
@@ -794,7 +794,7 @@ enum OperaPhase
     PHASE_BOTH          = 2,
 };
 
-static const float afRomuloSpawnLoc[4] = {-10893.62f, -1760.78f, 90.55f, 4.76f};
+static const float afRomuloSpawnLoc[4] = { -10893.62f, -1760.78f, 90.55f, 4.76f};
 
 struct MANGOS_DLL_DECL boss_julianneAI : public ScriptedAI
 {
@@ -1032,7 +1032,7 @@ struct MANGOS_DLL_DECL boss_julianneAI : public ScriptedAI
 
 bool EffectDummyCreature_spell_drink_poison(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
 {
-    //always check spellid and effectindex
+    // always check spellid and effectindex
     if (uiSpellId == SPELL_DRINK_POISON && uiEffIndex == EFFECT_INDEX_0)
     {
         // Set fake death on poison
@@ -1041,7 +1041,7 @@ bool EffectDummyCreature_spell_drink_poison(Unit* pCaster, uint32 uiSpellId, Spe
 
         DoScriptText(SAY_JULIANNE_DEATH01, pCreatureTarget);
 
-        //always return true when we are handling this spell and effect
+        // always return true when we are handling this spell and effect
         return true;
     }
 

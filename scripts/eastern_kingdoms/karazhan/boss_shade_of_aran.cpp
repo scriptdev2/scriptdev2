@@ -35,24 +35,24 @@ enum
     SAY_BLIZZARD2               = -1532079,
     SAY_EXPLOSION1              = -1532080,
     SAY_EXPLOSION2              = -1532081,
-    SAY_DRINK                   = -1532082,                 //Low Mana / AoE Pyroblast
+    SAY_DRINK                   = -1532082,                 // Low Mana / AoE Pyroblast
     SAY_ELEMENTALS              = -1532083,
     SAY_KILL1                   = -1532084,
     SAY_KILL2                   = -1532085,
     SAY_TIMEOVER                = -1532086,
     SAY_DEATH                   = -1532087,
-    SAY_ATIESH                  = -1532088,                 //Atiesh is equipped by a raid member
+    SAY_ATIESH                  = -1532088,                 // Atiesh is equipped by a raid member
 
     // basic spells
     SPELL_FROSTBOLT             = 29954,
     SPELL_FIREBALL              = 29953,
     SPELL_ARCANE_MISSILES       = 29955,
-    //SPELL_DRAGONS_BREATH      = 29964,                    // not used since 2.1.0
+    // SPELL_DRAGONS_BREATH      = 29964,                   // not used since 2.1.0
     SPELL_CHAINS_OF_ICE         = 29991,
     SPELL_COUNTERSPELL          = 29961,
-    //SPELL_COMBUSTION          = 29977,                    // spell not confirmed
-    //SPELL_PRESENCE_OF_MIND    = 29976,                    // spell not confirmed
-    //SPELL_WATER_BREAK         = 39177,                    // purpose unk
+    // SPELL_COMBUSTION          = 29977,                   // spell not confirmed
+    // SPELL_PRESENCE_OF_MIND    = 29976,                   // spell not confirmed
+    // SPELL_WATER_BREAK         = 39177,                   // purpose unk
 
     // low mana spells
     SPELL_MASS_POLYMORPH        = 29963,
@@ -124,7 +124,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
         m_uiSuperCastTimer      = 35000;
         m_uiManaRecoveryTimer   = 0;
         m_uiManaRecoveryStage   = 0;
-        m_uiBerserkTimer        = 12*MINUTE*IN_MILLISECONDS;
+        m_uiBerserkTimer        = 12 * MINUTE * IN_MILLISECONDS;
 
         m_bElementalsSpawned    = false;
         m_bIsDrinking           = false;
@@ -151,7 +151,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
 
     void Aggro(Unit* pWho)
     {
-        switch(urand(0, 2))
+        switch (urand(0, 2))
         {
             case 0: DoScriptText(SAY_AGGRO1, m_creature); break;
             case 1: DoScriptText(SAY_AGGRO2, m_creature); break;
@@ -206,7 +206,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
             return;
 
         // Start drinking when below 20% mana
-        if (!m_bIsDrinking && m_creature->getPowerType() == POWER_MANA && (m_creature->GetPower(POWER_MANA)*100 / m_creature->GetMaxPower(POWER_MANA)) < 20)
+        if (!m_bIsDrinking && m_creature->getPowerType() == POWER_MANA && (m_creature->GetPower(POWER_MANA) * 100 / m_creature->GetMaxPower(POWER_MANA)) < 20)
         {
             if (DoCastSpellIfCan(m_creature, SPELL_MASS_POLYMORPH) == CAST_OK)
             {
@@ -307,7 +307,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
         {
             CanCastResult spellResult = CAST_OK;
 
-            switch(urand(0, 1))
+            switch (urand(0, 1))
             {
                 case 0:
                     spellResult = DoCastSpellIfCan(m_creature, SPELL_COUNTERSPELL);

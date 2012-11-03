@@ -62,11 +62,11 @@ struct MANGOS_DLL_DECL npc_corporal_keeshan_escortAI : public npc_escortAI
     {
         switch (uiWP)
         {
-            case 27:                                        //break outside
+            case 27:                                        // break outside
                 DoScriptText(SAY_CORPORAL_KEESHAN_3, m_creature);
                 m_creature->SetStandState(UNIT_STAND_STATE_STAND);
                 break;
-            case 54:                                        //say goodbye
+            case 54:                                        // say goodbye
                 DoScriptText(SAY_CORPORAL_KEESHAN_5, m_creature);
                 break;
         }
@@ -76,11 +76,11 @@ struct MANGOS_DLL_DECL npc_corporal_keeshan_escortAI : public npc_escortAI
     {
         switch (uiWP)
         {
-            case 26:                                        //break outside
+            case 26:                                        // break outside
                 m_creature->SetStandState(UNIT_STAND_STATE_SIT);
                 DoScriptText(SAY_CORPORAL_KEESHAN_2, m_creature);
                 break;
-            case 53:                                        //quest_complete
+            case 53:                                        // quest_complete
                 DoScriptText(SAY_CORPORAL_KEESHAN_4, m_creature);
                 if (Player* pPlayer = GetPlayerForEscort())
                     pPlayer->GroupEventHappens(QUEST_MISSING_IN_ACTION, m_creature);
@@ -90,7 +90,7 @@ struct MANGOS_DLL_DECL npc_corporal_keeshan_escortAI : public npc_escortAI
 
     void UpdateEscortAI(const uint32 uiDiff)
     {
-        //Combat check
+        // Combat check
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 

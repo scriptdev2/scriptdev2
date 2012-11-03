@@ -75,7 +75,7 @@ struct MANGOS_DLL_DECL boss_akilzonAI : public ScriptedAI
         m_uiGustOfWindTimer     = urand(20000, 30000);
         m_uiStormTimer          = 50000;
         m_uiSummonEagleTimer    = 65000;
-        m_uiBerserkTimer        = 10*MINUTE*IN_MILLISECONDS;
+        m_uiBerserkTimer        = 10 * MINUTE * IN_MILLISECONDS;
     }
 
     void Aggro(Unit* pWho)
@@ -154,7 +154,7 @@ struct MANGOS_DLL_DECL boss_akilzonAI : public ScriptedAI
         {
             if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
             {
-                if(DoCastSpellIfCan(pTarget, SPELL_ELECTRICAL_STORM) == CAST_OK)
+                if (DoCastSpellIfCan(pTarget, SPELL_ELECTRICAL_STORM) == CAST_OK)
                 {
                     DoScriptText(EMOTE_STORM, m_creature);
                     m_uiStormTimer = 55000;
@@ -257,7 +257,7 @@ struct MANGOS_DLL_DECL mob_soaring_eagleAI : public ScriptedAI
         if (Creature* pAzkil = m_pInstance->GetSingleCreatureFromStorage(NPC_AKILZON))
         {
             float fX, fY, fZ;
-            pAzkil->GetRandomPoint(pAzkil->GetPositionX(), pAzkil->GetPositionY(), pAzkil->GetPositionZ()+15.0f, 30.0f, fX, fY, fZ);
+            pAzkil->GetRandomPoint(pAzkil->GetPositionX(), pAzkil->GetPositionY(), pAzkil->GetPositionZ() + 15.0f, 30.0f, fX, fY, fZ);
 
             m_creature->SetWalk(false);
             m_creature->GetMotionMaster()->MovePoint(1, fX, fY, fZ);

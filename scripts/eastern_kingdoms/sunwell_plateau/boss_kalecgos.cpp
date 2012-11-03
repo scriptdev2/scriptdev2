@@ -26,7 +26,7 @@ EndScriptData */
 
 enum
 {
-    //kalecgos dragon form
+    // kalecgos dragon form
     SAY_EVIL_AGGRO                  = -1580000,
     SAY_EVIL_SPELL_1                = -1580001,
     SAY_EVIL_SPELL_2                = -1580002,
@@ -34,7 +34,7 @@ enum
     SAY_EVIL_SLAY_2                 = -1580004,
     SAY_EVIL_ENRAGE                 = -1580005,
 
-    //kalecgos humanoid form
+    // kalecgos humanoid form
     SAY_GOOD_AGGRO                  = -1580006,
     SAY_GOOD_NEAR_DEATH_20          = -1580007,
     SAY_GOOD_NEAR_DEATH_10          = -1580008,
@@ -48,7 +48,7 @@ enum
     SAY_SATH_SLAY_2                 = -1580015,
     SAY_SATH_ENRAGE                 = -1580016,
 
-    //Kalecgos
+    // Kalecgos
     SPELL_SPECTRAL_BLAST            = 44869,
     SPELL_SPECTRAL_REALM_EJECT      = 44845,        // pull the players ouside the spectral realm in case of wipe
     SPELL_ARCANE_BUFFET             = 45018,
@@ -60,7 +60,7 @@ enum
     SPELL_HEROIC_STRIKE             = 45026,
     SPELL_REVITALIZE                = 45027,
 
-     //Sathrovarr
+    // Sathrovarr
     SPELL_SPECTRAL_INVISIBILITY     = 44801,
     SPELL_CORRUPTING_STRIKE         = 45029,
     SPELL_CURSE_OF_BOUNDLESS_AGONY  = 45032,
@@ -70,11 +70,11 @@ enum
     SPELL_SPECTRAL_REALM_AURA       = 46021,
     SPELL_SPECTRAL_EXHAUSTION       = 44867,
 
-    //Misc
+    // Misc
     SPELL_BANISH                    = 44836
 };
 
-static const uint32 aWildMagicSpells[6]= {44978, 45001, 45002, 45004, 45006, 45010};
+static const uint32 aWildMagicSpells[6] = {44978, 45001, 45002, 45004, 45006, 45010};
 
 struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
 {
@@ -147,7 +147,7 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
             m_pInstance->SetData(TYPE_KALECGOS, IN_PROGRESS);
     }
 
-    void DamageTaken(Unit* pDoneBy, uint32 &uiDamage)
+    void DamageTaken(Unit* pDoneBy, uint32& uiDamage)
     {
         if (uiDamage > m_creature->GetHealth())
         {
@@ -349,7 +349,7 @@ struct MANGOS_DLL_DECL boss_sathrovarrAI : public ScriptedAI
             pKalec->AI()->AttackStart(m_creature);
     }
 
-    void DamageTaken(Unit* pDoneBy, uint32 &uiDamage)
+    void DamageTaken(Unit* pDoneBy, uint32& uiDamage)
     {
         if (uiDamage > m_creature->GetHealth())
         {
@@ -484,7 +484,7 @@ struct MANGOS_DLL_DECL boss_kalecgos_humanoidAI : public ScriptedAI
 
     void Reset()
     {
-        //TODO: Times!
+        // TODO: Times!
         m_uiRevitalizeTimer     = 30000;
         m_uiHeroicStrikeTimer   = 8000;
 

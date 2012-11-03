@@ -99,8 +99,8 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
         m_uiFelAcidTimer        = 25000;
         m_uiEjectTimer          = 10000;
         m_uiStrikeTimer         = 15000;
-        m_uiPhaseChangeTimer    = MINUTE*IN_MILLISECONDS;
-        m_uiBerserkTimer        = 10*MINUTE*IN_MILLISECONDS;
+        m_uiPhaseChangeTimer    = MINUTE * IN_MILLISECONDS;
+        m_uiBerserkTimer        = 10 * MINUTE * IN_MILLISECONDS;
 
         m_bIsPhase1             = true;
     }

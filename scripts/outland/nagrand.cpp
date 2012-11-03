@@ -60,7 +60,7 @@ struct MANGOS_DLL_DECL mob_lumpAI : public ScriptedAI
 
     void Reset()
     {
-        m_uiResetTimer = MINUTE*IN_MILLISECONDS;
+        m_uiResetTimer = MINUTE * IN_MILLISECONDS;
         m_uiSpearThrowTimer = 2000;
     }
 
@@ -77,9 +77,9 @@ struct MANGOS_DLL_DECL mob_lumpAI : public ScriptedAI
 
     void DamageTaken(Unit* pDealer, uint32& uiDamage)
     {
-        if (m_creature->GetHealth() < uiDamage || (m_creature->GetHealth() - uiDamage)*100 / m_creature->GetMaxHealth() < 30)
+        if (m_creature->GetHealth() < uiDamage || (m_creature->GetHealth() - uiDamage) * 100 / m_creature->GetMaxHealth() < 30)
         {
-            uiDamage = 0;                               //Take 0 damage
+            uiDamage = 0;                               // Take 0 damage
 
             m_creature->RemoveAllAuras();
             m_creature->DeleteThreatList();
@@ -169,8 +169,8 @@ enum
     NPC_MURK_PUTRIFIER          = 18202
 };
 
-static float m_afAmbushA[]= {-1568.805786f, 8533.873047f, 1.958f};
-static float m_afAmbushB[]= {-1491.554321f, 8506.483398f, 1.248f};
+static float m_afAmbushA[] = { -1568.805786f, 8533.873047f, 1.958f};
+static float m_afAmbushB[] = { -1491.554321f, 8506.483398f, 1.248f};
 
 struct MANGOS_DLL_DECL npc_maghar_captiveAI : public npc_escortAI
 {
@@ -194,7 +194,7 @@ struct MANGOS_DLL_DECL npc_maghar_captiveAI : public npc_escortAI
 
     void WaypointReached(uint32 uiPointId)
     {
-        switch(uiPointId)
+        switch (uiPointId)
         {
             case 7:
                 DoScriptText(SAY_MAG_MORE, m_creature);
@@ -202,10 +202,10 @@ struct MANGOS_DLL_DECL npc_maghar_captiveAI : public npc_escortAI
                 if (Creature* pTemp = m_creature->SummonCreature(NPC_MURK_PUTRIFIER, m_afAmbushB[0], m_afAmbushB[1], m_afAmbushB[2], 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000))
                     DoScriptText(SAY_MAG_MORE_REPLY, pTemp);
 
-                m_creature->SummonCreature(NPC_MURK_PUTRIFIER, m_afAmbushB[0]-2.5f, m_afAmbushB[1]-2.5f, m_afAmbushB[2], 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
+                m_creature->SummonCreature(NPC_MURK_PUTRIFIER, m_afAmbushB[0] - 2.5f, m_afAmbushB[1] - 2.5f, m_afAmbushB[2], 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
 
-                m_creature->SummonCreature(NPC_MURK_SCAVENGER, m_afAmbushB[0]+2.5f, m_afAmbushB[1]+2.5f, m_afAmbushB[2], 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
-                m_creature->SummonCreature(NPC_MURK_SCAVENGER, m_afAmbushB[0]+2.5f, m_afAmbushB[1]-2.5f, m_afAmbushB[2], 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
+                m_creature->SummonCreature(NPC_MURK_SCAVENGER, m_afAmbushB[0] + 2.5f, m_afAmbushB[1] + 2.5f, m_afAmbushB[2], 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
+                m_creature->SummonCreature(NPC_MURK_SCAVENGER, m_afAmbushB[0] + 2.5f, m_afAmbushB[1] - 2.5f, m_afAmbushB[2], 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
                 break;
             case 16:
                 DoScriptText(SAY_MAG_COMPLETE, m_creature);
@@ -290,8 +290,8 @@ bool QuestAccept_npc_maghar_captive(Player* pPlayer, Creature* pCreature, const 
 
             DoScriptText(SAY_MAG_START, pCreature);
 
-            pCreature->SummonCreature(NPC_MURK_RAIDER, m_afAmbushA[0]+2.5f, m_afAmbushA[1]-2.5f, m_afAmbushA[2], 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
-            pCreature->SummonCreature(NPC_MURK_PUTRIFIER, m_afAmbushA[0]-2.5f, m_afAmbushA[1]+2.5f, m_afAmbushA[2], 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
+            pCreature->SummonCreature(NPC_MURK_RAIDER, m_afAmbushA[0] + 2.5f, m_afAmbushA[1] - 2.5f, m_afAmbushA[2], 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
+            pCreature->SummonCreature(NPC_MURK_PUTRIFIER, m_afAmbushA[0] - 2.5f, m_afAmbushA[1] + 2.5f, m_afAmbushA[2], 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
             pCreature->SummonCreature(NPC_MURK_BRUTE, m_afAmbushA[0], m_afAmbushA[1], m_afAmbushA[2], 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
         }
     }

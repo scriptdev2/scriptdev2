@@ -76,8 +76,8 @@ enum
     NPC_KINETIC_BOMB_TARGET     = 38458,
 
     // shock vortex spells - in eventAI
-    //SPELL_SHOCK_VORTEX_AURA   = 71945,
-    //SPELL_SHOCK_VORTEX_VISUAL = 72633,
+    // SPELL_SHOCK_VORTEX_AURA   = 71945,
+    // SPELL_SHOCK_VORTEX_VISUAL = 72633,
 
     // kinetic bomb spells
     SPELL_KINETIC_BOMB_DMG      = 72052,
@@ -90,7 +90,7 @@ enum
     SPELL_SHADOW_LANCE          = 71405,
     SPELL_EMP_SHADOW_LANCE      = 71815,
     SPELL_SHADOW_RESONANCE      = 71943,            // summons 38369
-    //SPELL_SHADOW_PRISON       = 73001,            // on heroic - not sure how to use
+    // SPELL_SHADOW_PRISON       = 73001,            // on heroic - not sure how to use
 
     // dark nucleus spells
     SPELL_SHADOW_RESONANCE_AURA = 71911,            // purpose unk - maybe range check
@@ -154,7 +154,7 @@ struct MANGOS_DLL_DECL npc_queen_lanathel_introAI : public ScriptedAI, private D
     {
         // The range distance is not sure
         if (!m_bEventStarted && pWho->GetTypeId() == TYPEID_PLAYER && !((Player*)pWho)->isGameMaster() &&
-            pWho->IsWithinDistInMap(m_creature, 100.0f) && pWho->IsWithinLOSInMap(m_creature))
+                pWho->IsWithinDistInMap(m_creature, 100.0f) && pWho->IsWithinLOSInMap(m_creature))
         {
             StartNextDialogueText(SAY_COUNCIL_INTRO_1);
             m_bEventStarted = true;
@@ -256,7 +256,7 @@ struct MANGOS_DLL_DECL npc_ball_of_flameAI : public ScriptedAI
     void MoveInLineOfSight(Unit* pWho)
     {
         if (!m_bHasFlamesCasted && pWho->GetTypeId() == TYPEID_PLAYER && pWho->GetGUIDLow() == m_uiTargetGuidLow &&
-            pWho->IsWithinDist(m_creature, ATTACK_DISTANCE))
+                pWho->IsWithinDist(m_creature, ATTACK_DISTANCE))
         {
             if (DoCastSpellIfCan(m_creature, SPELL_FLAMES) == CAST_OK)
             {
@@ -274,7 +274,7 @@ struct MANGOS_DLL_DECL npc_ball_of_flameAI : public ScriptedAI
 
 CreatureAI* GetAI_npc_ball_of_flame(Creature* pCreature)
 {
-     return new npc_ball_of_flameAI (pCreature);
+    return new npc_ball_of_flameAI(pCreature);
 };
 
 /*######
@@ -291,7 +291,7 @@ struct MANGOS_DLL_DECL npc_kinetic_bombAI : public ScriptedAI
         DoCastSpellIfCan(m_creature, SPELL_KINETIC_BOMB_VISUAL, CAST_TRIGGERED);
     }
 
-    void DamageTaken(Unit* pDealer, uint32 &uiDamage)
+    void DamageTaken(Unit* pDealer, uint32& uiDamage)
     {
         // Note: this npc shouldn't take any damage - however this has an issue in the core, because the Unstanble spell doesn't proc on 0 damage
         uiDamage = 0;
@@ -315,7 +315,7 @@ struct MANGOS_DLL_DECL npc_kinetic_bombAI : public ScriptedAI
 
 CreatureAI* GetAI_npc_kinetic_bomb(Creature* pCreature)
 {
-     return new npc_kinetic_bombAI (pCreature);
+    return new npc_kinetic_bombAI(pCreature);
 };
 
 /*######
@@ -347,7 +347,7 @@ struct MANGOS_DLL_DECL npc_dark_nucleusAI : public ScriptedAI
         }
     }
 
-    void DamageTaken(Unit *pDealer, uint32 &uiDamage)
+    void DamageTaken(Unit* pDealer, uint32& uiDamage)
     {
         if (m_creature->getVictim() && pDealer != m_creature->getVictim())
         {
@@ -376,7 +376,7 @@ struct MANGOS_DLL_DECL npc_dark_nucleusAI : public ScriptedAI
 
 CreatureAI* GetAI_npc_dark_nucleus(Creature* pCreature)
 {
-     return new npc_dark_nucleusAI (pCreature);
+    return new npc_dark_nucleusAI(pCreature);
 };
 
 /*######
@@ -503,7 +503,7 @@ struct MANGOS_DLL_DECL blood_prince_council_baseAI : public ScriptedAI
         m_bIsSaidSpecial     = false;
         m_uiEmpowermentTimer = 0;
         m_uiSphereTimer      = urand(5000, 15000);
-        m_uiBerserkTimer     = 10*MINUTE*IN_MILLISECONDS;
+        m_uiBerserkTimer     = 10 * MINUTE * IN_MILLISECONDS;
     }
 
     void EnterEvadeMode()
@@ -518,7 +518,7 @@ struct MANGOS_DLL_DECL blood_prince_council_baseAI : public ScriptedAI
         ScriptedAI::EnterEvadeMode();
     }
 
-    void DamageTaken(Unit* pDealer, uint32 &uiDamage)
+    void DamageTaken(Unit* pDealer, uint32& uiDamage)
     {
         // Damage is shared by the Blood Orb Control npc
         if (!m_uiEmpowermentTimer)

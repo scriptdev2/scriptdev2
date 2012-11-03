@@ -125,7 +125,7 @@ struct MANGOS_DLL_DECL mob_vrykul_skeletonAI : public ScriptedAI
             m_creature->SetFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_DEAD);
             m_creature->SetStandState(UNIT_STAND_STATE_DEAD);
             return;
-       }
+        }
     }
 
     void UpdateAI(const uint32 uiDiff)
@@ -226,8 +226,8 @@ struct MANGOS_DLL_DECL boss_kelesethAI : public ScriptedAI
 
     void SummonAdds()
     {
-        for (uint8 i=0; i<4; ++i)
-            m_creature->SummonCreature(NPC_VRYKUL_SKELETON, fAddPosition[0]+rand()%7, fAddPosition[1]+rand()%7, fAddPosition[2], fAddPosition[3], TEMPSUMMON_DEAD_DESPAWN, 0);
+        for (uint8 i = 0; i < 4; ++i)
+            m_creature->SummonCreature(NPC_VRYKUL_SKELETON, fAddPosition[0] + rand() % 7, fAddPosition[1] + rand() % 7, fAddPosition[2], fAddPosition[3], TEMPSUMMON_DEAD_DESPAWN, 0);
     }
 
     void DespawnOrKillAdds(bool bDespawn)
@@ -310,7 +310,7 @@ struct MANGOS_DLL_DECL boss_kelesethAI : public ScriptedAI
         {
             if (Unit* pTombTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
             {
-                //DoCastSpellIfCan(pTombTarget, SPELL_SUMMON_FROST_TOMB);
+                // DoCastSpellIfCan(pTombTarget, SPELL_SUMMON_FROST_TOMB);
                 float fPosX, fPosY, fPosZ;
                 pTombTarget->GetPosition(fPosX, fPosY, fPosZ);
 

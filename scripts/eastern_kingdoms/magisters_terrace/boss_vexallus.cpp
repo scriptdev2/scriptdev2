@@ -33,26 +33,26 @@ enum
     SAY_KILL                        = -1585010,
     EMOTE_DISCHARGE_ENERGY          = -1585011,
 
-    //is this text for real?
+    // is this text for real?
     //#define SAY_DEATH             "What...happen...ed."
 
-    //Pure energy spell info
+    // Pure energy spell info
     SPELL_ENERGY_BOLT               = 46156,
     SPELL_ENERGY_FEEDBACK           = 44335,
     SPELL_ENERGY_PASSIVE            = 44326,
 
-    //Vexallus spell info
+    // Vexallus spell info
     SPELL_CHAIN_LIGHTNING           = 44318,
-    SPELL_CHAIN_LIGHTNING_H         = 46380,                //heroic spell
+    SPELL_CHAIN_LIGHTNING_H         = 46380,                // heroic spell
     SPELL_OVERLOAD                  = 44353,
     SPELL_ARCANE_SHOCK              = 44319,
-    SPELL_ARCANE_SHOCK_H            = 46381,                //heroic spell
+    SPELL_ARCANE_SHOCK_H            = 46381,                // heroic spell
 
-    SPELL_SUMMON_PURE_ENERGY        = 44322,                //mod scale -10
-    SPELL_SUMMON_PURE_ENERGY1_H     = 46154,                //mod scale -5
-    SPELL_SUMMON_PURE_ENERGY2_H     = 46159,                //mod scale -5
+    SPELL_SUMMON_PURE_ENERGY        = 44322,                // mod scale -10
+    SPELL_SUMMON_PURE_ENERGY1_H     = 46154,                // mod scale -5
+    SPELL_SUMMON_PURE_ENERGY2_H     = 46159,                // mod scale -5
 
-    //Creatures
+    // Creatures
     NPC_PURE_ENERGY                 = 24745,
 };
 
@@ -131,7 +131,7 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
                 return;
             }
 
-            //used for check, when Vexallus cast adds 85%, 70%, 55%, 40%, 25%
+            // used for check, when Vexallus cast adds 85%, 70%, 55%, 40%, 25%
             if (m_creature->GetHealthPercent() <= float(100.0f - 15.0f * m_uiIntervalHealthAmount))
             {
                 DoScriptText(SAY_ENERGY, m_creature);

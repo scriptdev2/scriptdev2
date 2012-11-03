@@ -182,7 +182,7 @@ struct MANGOS_DLL_DECL mob_healing_wardAI : public ScriptedAI
     void AttackStart(Unit* pWho) {}
     void MoveInLineOfSight(Unit* pWho) {}
 
-    void UpdateAI (const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff)
     {
         // Heal Timer
         if (m_uiHealTimer < uiDiff)

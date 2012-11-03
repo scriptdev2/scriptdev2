@@ -26,23 +26,23 @@ EndScriptData */
 
 enum
 {
-    //Mograine says
+    // Mograine says
     SAY_MO_AGGRO                 = -1189005,
     SAY_MO_KILL                  = -1189006,
     SAY_MO_RESSURECTED           = -1189007,
 
-    //Whitemane says
+    // Whitemane says
     SAY_WH_INTRO                 = -1189008,
     SAY_WH_KILL                  = -1189009,
     SAY_WH_RESSURECT             = -1189010,
 
-    //Mograine Spells
+    // Mograine Spells
     SPELL_CRUSADERSTRIKE         = 14518,
     SPELL_HAMMEROFJUSTICE        = 5589,
     SPELL_LAYONHANDS             = 9257,
     SPELL_RETRIBUTIONAURA        = 8990,
 
-    //Whitemanes Spells
+    // Whitemanes Spells
     SPELL_DEEPSLEEP              = 9256,
     SPELL_SCARLETRESURRECTION    = 9232,
     SPELL_DOMINATEMIND           = 14515,
@@ -77,7 +77,7 @@ struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
         m_bHeal                   = false;
         m_bFakeDeath              = false;
 
-        //Incase wipe during phase that mograine fake death
+        // Incase wipe during phase that mograine fake death
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->SetStandState(UNIT_STAND_STATE_STAND);
@@ -95,7 +95,7 @@ struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
     void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_MO_AGGRO, m_creature);
-        DoCastSpellIfCan(m_creature,SPELL_RETRIBUTIONAURA);
+        DoCastSpellIfCan(m_creature, SPELL_RETRIBUTIONAURA);
 
         m_creature->CallForHelp(VISIBLE_RANGE);
     }
@@ -105,7 +105,7 @@ struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
         DoScriptText(SAY_MO_KILL, m_creature);
     }
 
-    void DamageTaken(Unit* pDoneBy, uint32 &uiDamage)
+    void DamageTaken(Unit* pDoneBy, uint32& uiDamage)
     {
         if (uiDamage < m_creature->GetHealth() || m_bHasDied)
             return;
@@ -113,7 +113,7 @@ struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
         if (!m_pInstance)
             return;
 
-        //On first death, fake death and open door, as well as initiate whitemane if exist
+        // On first death, fake death and open door, as well as initiate whitemane if exist
         if (Creature* pWhitemane = m_pInstance->GetSingleCreatureFromStorage(NPC_WHITEMANE))
         {
             m_pInstance->SetData(TYPE_MOGRAINE_AND_WHITE_EVENT, IN_PROGRESS);
@@ -144,7 +144,7 @@ struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
 
     void SpellHit(Unit* pWho, const SpellEntry* pSpell)
     {
-        //When hit with ressurection say text
+        // When hit with ressurection say text
         if (pSpell->Id == SPELL_SCARLETRESURRECTION)
         {
             DoScriptText(SAY_MO_RESSURECTED, m_creature);
@@ -162,7 +162,7 @@ struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
 
         if (m_bHasDied && !m_bHeal && m_pInstance && m_pInstance->GetData(TYPE_MOGRAINE_AND_WHITE_EVENT) == SPECIAL)
         {
-            //On ressurection, stop fake death and heal whitemane and resume fight
+            // On ressurection, stop fake death and heal whitemane and resume fight
             m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
             m_creature->SetStandState(UNIT_STAND_STATE_STAND);
             // spell has script target on Whitemane
@@ -177,11 +177,11 @@ struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
             m_bHeal = true;
         }
 
-        //This if-check to make sure mograine does not attack while fake death
+        // This if-check to make sure mograine does not attack while fake death
         if (m_bFakeDeath)
             return;
 
-        //m_uiCrusaderStrike_Timer
+        // m_uiCrusaderStrike_Timer
         if (m_uiCrusaderStrike_Timer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_CRUSADERSTRIKE) == CAST_OK)
@@ -190,7 +190,7 @@ struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
         else
             m_uiCrusaderStrike_Timer -= uiDiff;
 
-        //m_uiHammerOfJustice_Timer
+        // m_uiHammerOfJustice_Timer
         if (m_uiHammerOfJustice_Timer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_HAMMEROFJUSTICE) == CAST_OK)
@@ -252,10 +252,10 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
 
     void MoveInLineOfSight(Unit* pWho)
     {
-        //This needs to be empty because Whitemane should NOT aggro while fighting Mograine. Mograine will give us a target.
+        // This needs to be empty because Whitemane should NOT aggro while fighting Mograine. Mograine will give us a target.
     }
 
-    void DamageTaken(Unit* pDoneBy, uint32 &uiDamage)
+    void DamageTaken(Unit* pDoneBy, uint32& uiDamage)
     {
         if (uiDamage < m_creature->GetHealth())
             return;
@@ -263,7 +263,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
         if (!m_bCanResurrectCheck || m_bCanResurrect)
         {
             // prevent killing blow before rezzing commander
-            m_creature->SetHealth(uiDamage+1);
+            m_creature->SetHealth(uiDamage + 1);
         }
     }
 
@@ -292,7 +292,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
 
         if (m_bCanResurrect)
         {
-            //When casting resuruction make sure to delay so on rez when reinstate battle deepsleep runs out
+            // When casting resuruction make sure to delay so on rez when reinstate battle deepsleep runs out
             if (m_uiWait_Timer < uiDiff)
             {
                 // spell has script target on Mograine
@@ -304,7 +304,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
                 m_uiWait_Timer -= uiDiff;
         }
 
-        //Cast Deep sleep when health is less than 50%
+        // Cast Deep sleep when health is less than 50%
         if (!m_bCanResurrectCheck && m_creature->GetHealthPercent() <= 50.0f)
         {
             DoCastSpellIfCan(m_creature, SPELL_DEEPSLEEP, CAST_INTERRUPT_PREVIOUS);
@@ -313,11 +313,11 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
             return;
         }
 
-        //while in "resurrect-mode", don't do anything
+        // while in "resurrect-mode", don't do anything
         if (m_bCanResurrect)
             return;
 
-        //If we are <75% hp cast healing spells at self or Mograine
+        // If we are <75% hp cast healing spells at self or Mograine
         if (m_uiHeal_Timer < uiDiff)
         {
             if (Unit* pTarget = DoSelectLowestHpFriendly(50.0f))
@@ -329,7 +329,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
         else
             m_uiHeal_Timer -= uiDiff;
 
-        //m_uiPowerWordShield_Timer
+        // m_uiPowerWordShield_Timer
         if (m_uiPowerWordShield_Timer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature, SPELL_POWERWORDSHIELD) == CAST_OK)
@@ -338,7 +338,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
         else
             m_uiPowerWordShield_Timer -= uiDiff;
 
-        //m_uiHolySmite_Timer
+        // m_uiHolySmite_Timer
         if (m_uiHolySmite_Timer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_HOLYSMITE) == CAST_OK)

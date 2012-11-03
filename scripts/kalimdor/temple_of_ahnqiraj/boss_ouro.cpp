@@ -46,18 +46,18 @@ enum
     SPELL_QUAKE             = 26093,
 
     // other spells - not used
-    //SPELL_SUMMON_SCARABS    = 26060,                      // triggered after 30 secs - cast by the Dirt Mounds
-    //SPELL_DIRTMOUND_PASSIVE = 26092,                      // casts 26093 every 1 sec - removed from DBC
-    //SPELL_SET_OURO_HEALTH   = 26075,                      // removed from DBC
-    //SPELL_SAVE_OURO_HEALTH  = 26076,                      // removed from DBC
-    //SPELL_TELEPORT_TRIGGER  = 26285,                      // removed from DBC
-    //SPELL_SUBMERGE_TRIGGER  = 26104,                      // removed from DBC
-    //SPELL_SUMMON_OURO_MOUND = 26617,                      // removed from DBC
-    //SPELL_SCARABS_PERIODIC  = 26619,                      // cast by the Dirt Mounds in order to spawn the scarabs - removed from DBC
+    // SPELL_SUMMON_SCARABS    = 26060,                     // triggered after 30 secs - cast by the Dirt Mounds
+    // SPELL_DIRTMOUND_PASSIVE = 26092,                     // casts 26093 every 1 sec - removed from DBC
+    // SPELL_SET_OURO_HEALTH   = 26075,                     // removed from DBC
+    // SPELL_SAVE_OURO_HEALTH  = 26076,                     // removed from DBC
+    // SPELL_TELEPORT_TRIGGER  = 26285,                     // removed from DBC
+    // SPELL_SUBMERGE_TRIGGER  = 26104,                     // removed from DBC
+    // SPELL_SUMMON_OURO_MOUND = 26617,                     // removed from DBC
+    // SPELL_SCARABS_PERIODIC  = 26619,                     // cast by the Dirt Mounds in order to spawn the scarabs - removed from DBC
 
     // summoned npcs
     NPC_OURO                = 15517,
-    //NPC_OURO_SCARAB       = 15718,                        // summoned by Dirt Mounds
+    // NPC_OURO_SCARAB       = 15718,                       // summoned by Dirt Mounds
     NPC_OURO_TRIGGER        = 15717,
     NPC_DIRT_MOUND          = 15712,                        // summoned also by missing spell 26617
 };

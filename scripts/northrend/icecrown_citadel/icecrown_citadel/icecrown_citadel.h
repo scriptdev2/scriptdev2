@@ -81,14 +81,14 @@ enum
     GO_ORANGE_TUBE                  = 201617,
     GO_GREEN_TUBE                   = 201618,
 
-    //GO_BLOODWING_DOOR             = 201920,       // not used
+    // GO_BLOODWING_DOOR             = 201920,       // not used
     GO_CRIMSON_HALL_DOOR            = 201376,       // Council combat door
     GO_COUNCIL_DOOR_1               = 201377,
     GO_COUNCIL_DOOR_2               = 201378,
     GO_BLOODPRINCE_DOOR             = 201746,       // Lanathel combat door
     GO_ICECROWN_GRATE               = 201755,       // Lanathel trap door
 
-    //GO_FROSTWING_DOOR             = 201919,       // not used
+    // GO_FROSTWING_DOOR             = 201919,       // not used
     GO_GREEN_DRAGON_ENTRANCE        = 201375,       // Valithria combat door
     GO_GREEN_DRAGON_EXIT            = 201374,
     GO_VALITHRIA_DOOR_1             = 201381,       // Valithria event doors
@@ -205,7 +205,7 @@ enum
 class MANGOS_DLL_DECL instance_icecrown_citadel : public ScriptedInstance, private DialogueHelper
 {
     public:
-        instance_icecrown_citadel(Map *pMap);
+        instance_icecrown_citadel(Map* pMap);
 
         void Initialize();
         bool IsEncounterInProgress() const;
@@ -228,7 +228,7 @@ class MANGOS_DLL_DECL instance_icecrown_citadel : public ScriptedInstance, priva
         bool IsHeroicDifficulty() { return instance->GetDifficulty() == RAID_DIFFICULTY_10MAN_HEROIC || instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC; }
         bool Is25ManDifficulty() { return instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL || instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC; }
 
-        void GetDeathwhisperStalkersList(GuidList &lList) { lList = m_lDeathwhisperStalkersGuids; }
+        void GetDeathwhisperStalkersList(GuidList& lList) { lList = m_lDeathwhisperStalkersGuids; }
 
         // Open Putricide door in a few seconds
         void DoPreparePutricideDoor() { m_uiPutricideValveTimer = 15000; }

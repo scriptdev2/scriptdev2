@@ -56,8 +56,8 @@ enum
     SPELL_DARK_EMPOWERMENT      = 70896,            // dummy - triggers 70901 - only on Adherents - transforms target into 38136
     SPELL_DARK_TRANSFORMATION   = 70895,            // dummy - triggers 70900 - only on Fanatics - transforms target into 38135
     SPELL_DARK_MARTYRDOM        = 70897,            // dummy - triggers 70903 on Adherents or 71236 on Fanatics
-    //SPELL_SUMMON_ADHERENT     = 70820,            // cast by the stalkers - only server side
-    //SPELL_SUMMON_FANATIC      = 70819,            // cast by the stalkers - only server side
+    // SPELL_SUMMON_ADHERENT     = 70820,            // cast by the stalkers - only server side
+    // SPELL_SUMMON_FANATIC      = 70819,            // cast by the stalkers - only server side
 
     // npcs
     NPC_CULT_ADHERENT           = 37949,
@@ -104,7 +104,7 @@ struct MANGOS_DLL_DECL boss_lady_deathwhisperAI : public ScriptedAI
     {
         m_bIsPhaseOne                   = true;
         m_bIsLeftSideSummon             = roll_chance_i(50) ? true : false;
-        m_uiBerserkTimer                = 10*MINUTE*IN_MILLISECONDS;
+        m_uiBerserkTimer                = 10 * MINUTE * IN_MILLISECONDS;
         m_uiSummonWaveTimer             = 10000;
         m_uiCultistBuffTimer            = 0;
         m_uiDarkMartyrdomTimer          = 30000;
@@ -190,7 +190,7 @@ struct MANGOS_DLL_DECL boss_lady_deathwhisperAI : public ScriptedAI
     }
 
     // Wrapper to help sort the summoning stalkers
-    void DoSortSummoningStalkers(GuidList &lDeathwhisperStalkers)
+    void DoSortSummoningStalkers(GuidList& lDeathwhisperStalkers)
     {
         std::list<Creature*> lRightStalkers;
         std::list<Creature*> lLeftStalkers;
@@ -247,7 +247,7 @@ struct MANGOS_DLL_DECL boss_lady_deathwhisperAI : public ScriptedAI
         if (vCultists.empty())
             return NULL;
 
-        return vCultists[urand(0, vCultists.size()-1)];
+        return vCultists[urand(0, vCultists.size() - 1)];
     }
 
     // Wrapper to handle the adds summmoning
@@ -358,7 +358,7 @@ struct MANGOS_DLL_DECL boss_lady_deathwhisperAI : public ScriptedAI
                 DoSummonCultistWave();
                 m_uiCultistBuffTimer = 10000;
                 m_uiDarkMartyrdomTimer = 40000;
-                m_uiSummonWaveTimer = m_pInstance->IsHeroicDifficulty() ? 45000: 60000;
+                m_uiSummonWaveTimer = m_pInstance->IsHeroicDifficulty() ? 45000 : 60000;
             }
             else
                 m_uiSummonWaveTimer -= uiDiff;
@@ -471,7 +471,7 @@ CreatureAI* GetAI_boss_lady_deathwhisper(Creature* pCreature)
 
 bool EffectDummyCreature_spell_mana_barrier(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
 {
-    //always check spellid and effectindex
+    // always check spellid and effectindex
     if (uiSpellId == SPELL_MANA_BARRIER && uiEffIndex == EFFECT_INDEX_0)
     {
         uint32 uiDamage = pCreatureTarget->GetMaxHealth() - pCreatureTarget->GetHealth();
@@ -490,7 +490,7 @@ bool EffectDummyCreature_spell_mana_barrier(Unit* pCaster, uint32 uiSpellId, Spe
         pCreatureTarget->DealHeal(pCreatureTarget, uiDamage, GetSpellStore()->LookupEntry(SPELL_MANA_BARRIER));
         pCreatureTarget->ModifyPower(POWER_MANA, -int32(uiDamage));
 
-        //always return true when we are handling this spell and effect
+        // always return true when we are handling this spell and effect
         return true;
     }
 

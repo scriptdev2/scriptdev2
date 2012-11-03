@@ -6,9 +6,9 @@
 #define SC_SYSTEM_H
 
 extern DatabaseType SD2Database;
-extern std::string  strSD2Version;                          //version info: database entry and revision
+extern std::string  strSD2Version;                          // version info: database entry and revision
 
-#define TEXT_SOURCE_RANGE -1000000                          //the amount of entries each text source has available
+#define TEXT_SOURCE_RANGE -1000000                          // the amount of entries each text source has available
 
 #define TEXT_SOURCE_TEXT_START      TEXT_SOURCE_RANGE
 #define TEXT_SOURCE_TEXT_END        TEXT_SOURCE_RANGE*2 + 1
@@ -47,18 +47,18 @@ class SystemMgr
 
         static SystemMgr& Instance();
 
-        //Maps and lists
+        // Maps and lists
         typedef UNORDERED_MAP<int32, StringTextData> TextDataMap;
         typedef UNORDERED_MAP<uint32, std::vector<ScriptPointMove> > PointMoveMap;
 
-        //Database
+        // Database
         void LoadVersion();
         void LoadScriptTexts();
         void LoadScriptTextsCustom();
         void LoadScriptGossipTexts();
         void LoadScriptWaypoints();
 
-        //Retrive from storage
+        // Retrive from storage
         StringTextData const* GetTextData(int32 uiTextId) const
         {
             TextDataMap::const_iterator itr = m_mTextDataMap.find(uiTextId);
@@ -69,7 +69,7 @@ class SystemMgr
             return &itr->second;
         }
 
-        std::vector<ScriptPointMove> const &GetPointMoveList(uint32 uiCreatureEntry) const
+        std::vector<ScriptPointMove> const& GetPointMoveList(uint32 uiCreatureEntry) const
         {
             static std::vector<ScriptPointMove> vEmpty;
 
@@ -82,8 +82,8 @@ class SystemMgr
         }
 
     protected:
-        TextDataMap     m_mTextDataMap;                     //additional data for text strings
-        PointMoveMap    m_mPointMoveMap;                    //coordinates for waypoints
+        TextDataMap     m_mTextDataMap;                     // additional data for text strings
+        PointMoveMap    m_mPointMoveMap;                    // coordinates for waypoints
 };
 
 #endif

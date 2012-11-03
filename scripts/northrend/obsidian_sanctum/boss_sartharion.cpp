@@ -26,7 +26,7 @@ EndScriptData */
 
 enum
 {
-    //Sartharion Yell
+    // Sartharion Yell
     SAY_SARTHARION_AGGRO                        = -1615018,
     SAY_SARTHARION_BERSERK                      = -1615019,
     SAY_SARTHARION_BREATH                       = -1615020,
@@ -49,7 +49,7 @@ enum
     WHISPER_HATCH_EGGS                          = -1615017,
     WHISPER_OPEN_PORTAL                         = -1615042, // whisper, shared by two dragons
 
-    //Sartharion Spells
+    // Sartharion Spells
     SPELL_BERSERK                               = 61632,    // Increases the caster's attack speed by 150% and all damage it deals by 500% for 5 min.
     SPELL_CLEAVE                                = 56909,    // Inflicts 35% weapon damage to an enemy and its nearest allies, affecting up to 10 targets.
     SPELL_FLAME_BREATH                          = 56908,    // Inflicts 8750 to 11250 Fire damage to enemies in a cone in front of the caster.
@@ -67,34 +67,34 @@ enum
     SPELL_TWILIGHT_SHIFT_REMOVAL                = 61187,    // leave phase
     SPELL_TWILIGHT_SHIFT_REMOVAL_ALL            = 61190,    // leave phase (probably version to make all leave)
 
-    //Mini bosses common spells
+    // Mini bosses common spells
     SPELL_TWILIGHT_RESIDUE                      = 61885,    // makes immune to shadow damage, applied when leave phase
 
-    //Miniboses (Vesperon, Shadron, Tenebron)
+    // Miniboses (Vesperon, Shadron, Tenebron)
     SPELL_SHADOW_BREATH_H                       = 59126,    // Inflicts 8788 to 10212 Fire damage to enemies in a cone in front of the caster.
     SPELL_SHADOW_BREATH                         = 57570,    // Inflicts 6938 to 8062 Fire damage to enemies in a cone in front of the caster.
 
     SPELL_SHADOW_FISSURE_H                      = 59127,    // Deals 9488 to 13512 Shadow damage to any enemy within the Shadow fissure after 5 sec.
     SPELL_SHADOW_FISSURE                        = 57579,    // Deals 6188 to 8812 Shadow damage to any enemy within the Shadow fissure after 5 sec.
 
-    //Vesperon
-    //In portal is a disciple, when disciple killed remove Power_of_vesperon, portal open multiple times
+    // Vesperon
+    // In portal is a disciple, when disciple killed remove Power_of_vesperon, portal open multiple times
     NPC_ACOLYTE_OF_VESPERON                     = 31219,    // Acolyte of Vesperon
     SPELL_POWER_OF_VESPERON                     = 61251,    // Vesperon's presence decreases the maximum health of all enemies by 25%.
     SPELL_TWILIGHT_TORMENT_VESP                 = 57948,    // (Shadow only) trigger 57935 then 57988
     SPELL_TWILIGHT_TORMENT_VESP_ACO             = 58853,    // (Fire and Shadow) trigger 58835 then 57988
 
-    //Shadron
-    //In portal is a disciple, when disciple killed remove Power_of_vesperon, portal open multiple times
+    // Shadron
+    // In portal is a disciple, when disciple killed remove Power_of_vesperon, portal open multiple times
     NPC_ACOLYTE_OF_SHADRON                      = 31218,    // Acolyte of Shadron
     SPELL_POWER_OF_SHADRON                      = 58105,    // Shadron's presence increases Fire damage taken by all enemies by 100%.
     SPELL_GIFT_OF_TWILIGTH_SHA                  = 57835,    // TARGET_SCRIPT shadron
     SPELL_GIFT_OF_TWILIGTH_SAR                  = 58766,    // TARGET_SCRIPT sartharion
 
-    //Tenebron
-    //in the portal spawns 6 eggs, if not killed in time (approx. 20s)  they will hatch,  whelps can cast 60708
+    // Tenebron
+    // in the portal spawns 6 eggs, if not killed in time (approx. 20s)  they will hatch,  whelps can cast 60708
     SPELL_POWER_OF_TENEBRON                     = 61248,    // Tenebron's presence increases Shadow damage taken by all enemies by 100%.
-    //Tenebron, dummy spell
+    // Tenebron, dummy spell
     SPELL_SUMMON_TWILIGHT_WHELP                 = 58035,    // doesn't work, will spawn NPC_TWILIGHT_WHELP
     SPELL_SUMMON_SARTHARION_TWILIGHT_WHELP      = 58826,    // doesn't work, will spawn NPC_SHARTHARION_TWILIGHT_WHELP
 
@@ -103,12 +103,12 @@ enum
     SPELL_HATCH_EGGS_EFFECT_H                   = 59190,
     SPELL_HATCH_EGGS_EFFECT                     = 58685,
 
-    //Whelps
+    // Whelps
     NPC_TWILIGHT_WHELP                          = 30890,
     NPC_SHARTHARION_TWILIGHT_WHELP              = 31214,
     SPELL_FADE_ARMOR                            = 60708,    // Reduces the armor of an enemy by 1500 for 15s
 
-    //flame tsunami
+    // flame tsunami
     SPELL_FLAME_TSUNAMI                         = 57494,    // the visual dummy
     SPELL_FLAME_TSUNAMI_LEAP                    = 60241,    // SPELL_EFFECT_138 some leap effect, causing caster to move in direction
     SPELL_FLAME_TSUNAMI_DMG_AURA                = 57492,    // periodic damage, npc has this aura
@@ -116,7 +116,7 @@ enum
     NPC_FLAME_TSUNAMI                           = 30616,    // for the flame waves
     NPC_LAVA_BLAZE                              = 30643,    // adds spawning from flame strike
 
-    //using these custom points for dragons start and end
+    // using these custom points for dragons start and end
     POINT_ID_INIT                               = 100,
     POINT_ID_LAND                               = 200
 };
@@ -126,27 +126,27 @@ struct Waypoint
     float m_fX, m_fY, m_fZ;
 };
 
-//each dragons special points. First where fly to before connect to connon, second where land point is.
-Waypoint m_aTene[]=
+// each dragons special points. First where fly to before connect to connon, second where land point is.
+Waypoint m_aTene[] =
 {
-    {3212.854f, 575.597f, 109.856f},                        //init
-    {3246.425f, 565.367f, 61.249f}                          //end
+    {3212.854f, 575.597f, 109.856f},                        // init
+    {3246.425f, 565.367f, 61.249f}                          // end
 };
 
-Waypoint m_aShad[]=
+Waypoint m_aShad[] =
 {
     {3293.238f, 472.223f, 106.968f},
     {3271.669f, 526.907f, 61.931f}
 };
 
-Waypoint m_aVesp[]=
+Waypoint m_aVesp[] =
 {
     {3193.310f, 472.861f, 102.697f},
     {3227.268f, 533.238f, 59.995f}
 };
 
-//points around raid "isle", counter clockwise. should probably be adjusted to be more alike
-Waypoint m_aDragonCommon[]=
+// points around raid "isle", counter clockwise. should probably be adjusted to be more alike
+Waypoint m_aDragonCommon[] =
 {
     {3214.012f, 468.932f, 98.652f},
     {3244.950f, 468.427f, 98.652f},
@@ -197,7 +197,7 @@ struct MANGOS_DLL_DECL boss_sartharionAI : public ScriptedAI
         m_bIsBerserk = false;
         m_bIsSoftEnraged = false;
 
-        m_uiEnrageTimer = MINUTE*15*IN_MILLISECONDS;
+        m_uiEnrageTimer = MINUTE * 15 * IN_MILLISECONDS;
         m_bIsHardEnraged = false;
 
         m_uiTenebronTimer = 30000;
@@ -245,7 +245,7 @@ struct MANGOS_DLL_DECL boss_sartharionAI : public ScriptedAI
 
     void KilledUnit(Unit* pVictim)
     {
-        switch(urand(0, 2))
+        switch (urand(0, 2))
         {
             case 0: DoScriptText(SAY_SARTHARION_SLAY_1, m_creature); break;
             case 1: DoScriptText(SAY_SARTHARION_SLAY_2, m_creature); break;
@@ -259,7 +259,7 @@ struct MANGOS_DLL_DECL boss_sartharionAI : public ScriptedAI
         Creature* pShad = m_pInstance->GetSingleCreatureFromStorage(NPC_SHADRON);
         Creature* pVesp = m_pInstance->GetSingleCreatureFromStorage(NPC_VESPERON);
 
-        //if at least one of the dragons are alive and are being called
+        // if at least one of the dragons are alive and are being called
         uint8 uiCountFetchableDragons = 0;
 
         if (pTene && pTene->isAlive() && !pTene->getVictim())
@@ -312,7 +312,7 @@ struct MANGOS_DLL_DECL boss_sartharionAI : public ScriptedAI
 
                 int32 iTextId = 0;
 
-                switch(uiEntry)
+                switch (uiEntry)
                 {
                     case NPC_TENEBRON:
                         iTextId = SAY_SARTHARION_CALL_TENEBRON;
@@ -339,14 +339,14 @@ struct MANGOS_DLL_DECL boss_sartharionAI : public ScriptedAI
 
         if (pMap && pMap->IsDungeon())
         {
-            Map::PlayerList const &PlayerList = pMap->GetPlayers();
+            Map::PlayerList const& PlayerList = pMap->GetPlayers();
 
             if (!PlayerList.isEmpty())
             {
                 for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
                 {
                     if (i->getSource()->isAlive())
-                        DoScriptText(WHISPER_LAVA_CHURN, m_creature,i->getSource());
+                        DoScriptText(WHISPER_LAVA_CHURN, m_creature, i->getSource());
                 }
             }
         }
@@ -354,11 +354,11 @@ struct MANGOS_DLL_DECL boss_sartharionAI : public ScriptedAI
 
     void UpdateAI(const uint32 uiDiff)
     {
-        //Return since we have no target
+        // Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //spell will target dragons, if they are still alive at 35%
+        // spell will target dragons, if they are still alive at 35%
         if (!m_bIsBerserk && m_creature->GetHealthPercent() < 35.0f)
         {
             DoScriptText(SAY_SARTHARION_BERSERK, m_creature);
@@ -366,7 +366,7 @@ struct MANGOS_DLL_DECL boss_sartharionAI : public ScriptedAI
             m_bIsBerserk = true;
         }
 
-        //soft enrage
+        // soft enrage
         if (!m_bIsSoftEnraged && m_creature->GetHealthPercent() <= 10.0f)
         {
             // TODO
@@ -429,7 +429,7 @@ struct MANGOS_DLL_DECL boss_sartharionAI : public ScriptedAI
             {
                 DoCastSpellIfCan(pTarget, SPELL_LAVA_STRIKE);
 
-                switch(urand(0, 15))
+                switch (urand(0, 15))
                 {
                     case 0: DoScriptText(SAY_SARTHARION_SPECIAL_1, m_creature); break;
                     case 1: DoScriptText(SAY_SARTHARION_SPECIAL_2, m_creature); break;
@@ -515,7 +515,7 @@ enum VespText
     SAY_VESPERON_SPECIAL_2                  = -1615040
 };
 
-//to control each dragons common abilities
+// to control each dragons common abilities
 struct MANGOS_DLL_DECL dummy_dragonAI : public ScriptedAI
 {
     dummy_dragonAI(Creature* pCreature) : ScriptedAI(pCreature)
@@ -551,14 +551,14 @@ struct MANGOS_DLL_DECL dummy_dragonAI : public ScriptedAI
 
         debug_log("dummy_dragonAI: %s reached point %u", m_creature->GetName(), uiPointId);
 
-        //if healers messed up the raid and we was already initialized
+        // if healers messed up the raid and we was already initialized
         if (m_pInstance->GetData(TYPE_SARTHARION_EVENT) != IN_PROGRESS)
         {
             EnterEvadeMode();
             return;
         }
 
-        //this is the end (!)
+        // this is the end (!)
         if (uiPointId == POINT_ID_LAND)
         {
             m_creature->GetMotionMaster()->Clear();
@@ -567,10 +567,10 @@ struct MANGOS_DLL_DECL dummy_dragonAI : public ScriptedAI
             return;
         }
 
-        //increase
-        m_uiWaypointId = uiPointId+1;
+        // increase
+        m_uiWaypointId = uiPointId + 1;
 
-        //if we have reached a point bigger or equal to count, it mean we must reset to point 0
+        // if we have reached a point bigger or equal to count, it mean we must reset to point 0
         if (m_uiWaypointId >= countof(m_aDragonCommon))
         {
             if (!m_bCanMoveFree)
@@ -582,14 +582,14 @@ struct MANGOS_DLL_DECL dummy_dragonAI : public ScriptedAI
         m_uiMoveNextTimer = 500;
     }
 
-    //used when open portal and spawn mobs in phase
+    // used when open portal and spawn mobs in phase
     void DoRaidWhisper(int32 iTextId)
     {
         Map* pMap = m_creature->GetMap();
 
         if (pMap && pMap->IsDungeon())
         {
-            Map::PlayerList const &PlayerList = pMap->GetPlayers();
+            Map::PlayerList const& PlayerList = pMap->GetPlayers();
 
             if (!PlayerList.isEmpty())
             {
@@ -604,13 +604,13 @@ struct MANGOS_DLL_DECL dummy_dragonAI : public ScriptedAI
     {
         int32 iTextId = 0;
 
-        //there are 4 portal spawn locations, each are expected to be spawned with negative spawntimesecs in database
+        // there are 4 portal spawn locations, each are expected to be spawned with negative spawntimesecs in database
 
-        //using a grid search here seem to be more efficient than caching all four guids
-        //in instance script and calculate range to each.
-        GameObject* pPortal = GetClosestGameObjectWithEntry(m_creature,GO_TWILIGHT_PORTAL,50.0f);
+        // using a grid search here seem to be more efficient than caching all four guids
+        // in instance script and calculate range to each.
+        GameObject* pPortal = GetClosestGameObjectWithEntry(m_creature, GO_TWILIGHT_PORTAL, 50.0f);
 
-        switch(m_creature->GetEntry())
+        switch (m_creature->GetEntry())
         {
             case NPC_TENEBRON:
                 iTextId = WHISPER_HATCH_EGGS;
@@ -623,26 +623,26 @@ struct MANGOS_DLL_DECL dummy_dragonAI : public ScriptedAI
 
         DoRaidWhisper(iTextId);
 
-        //By using SetRespawnTime() we will actually "spawn" the object with our defined time.
-        //Once time is up, portal will disappear again.
+        // By using SetRespawnTime() we will actually "spawn" the object with our defined time.
+        // Once time is up, portal will disappear again.
         if (pPortal && !pPortal->isSpawned())
         {
             pPortal->SetRespawnTime(m_iPortalRespawnTime);
             pPortal->Refresh();
         }
 
-        //Unclear what are expected to happen if one drake has a portal open already
-        //Refresh respawnTime so time again are set to 30secs?
+        // Unclear what are expected to happen if one drake has a portal open already
+        // Refresh respawnTime so time again are set to 30secs?
     }
 
-    //Removes each drakes unique debuff from players
+    // Removes each drakes unique debuff from players
     void RemoveDebuff(uint32 uiSpellId)
     {
         Map* pMap = m_creature->GetMap();
 
         if (pMap && pMap->IsDungeon())
         {
-            Map::PlayerList const &PlayerList = pMap->GetPlayers();
+            Map::PlayerList const& PlayerList = pMap->GetPlayers();
 
             if (PlayerList.isEmpty())
                 return;
@@ -660,7 +660,7 @@ struct MANGOS_DLL_DECL dummy_dragonAI : public ScriptedAI
         int32 iTextId = 0;
         uint32 uiSpellId = 0;
 
-        switch(m_creature->GetEntry())
+        switch (m_creature->GetEntry())
         {
             case NPC_TENEBRON:
                 iTextId = SAY_TENEBRON_DEATH;
@@ -702,7 +702,7 @@ struct MANGOS_DLL_DECL dummy_dragonAI : public ScriptedAI
             if (m_uiMoveNextTimer <= uiDiff)
             {
                 m_creature->GetMotionMaster()->MovePoint(m_uiWaypointId,
-                    m_aDragonCommon[m_uiWaypointId].m_fX, m_aDragonCommon[m_uiWaypointId].m_fY, m_aDragonCommon[m_uiWaypointId].m_fZ);
+                        m_aDragonCommon[m_uiWaypointId].m_fX, m_aDragonCommon[m_uiWaypointId].m_fY, m_aDragonCommon[m_uiWaypointId].m_fZ);
 
                 debug_log("dummy_dragonAI: %s moving to point %u", m_creature->GetName(), m_uiWaypointId);
                 m_uiMoveNextTimer = 0;
@@ -745,7 +745,7 @@ struct MANGOS_DLL_DECL mob_tenebronAI : public dummy_dragonAI
 
     void UpdateAI(const uint32 uiDiff)
     {
-        //if no target, update dummy and return
+        // if no target, update dummy and return
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
         {
             dummy_dragonAI::UpdateAI(uiDiff);
@@ -809,7 +809,7 @@ struct MANGOS_DLL_DECL mob_shadronAI : public dummy_dragonAI
 
     void Aggro(Unit* pWho)
     {
-        DoScriptText(SAY_SHADRON_AGGRO,m_creature);
+        DoScriptText(SAY_SHADRON_AGGRO, m_creature);
         DoCastSpellIfCan(m_creature, SPELL_POWER_OF_SHADRON);
     }
 
@@ -820,7 +820,7 @@ struct MANGOS_DLL_DECL mob_shadronAI : public dummy_dragonAI
 
     void UpdateAI(const uint32 uiDiff)
     {
-        //if no target, update dummy and return
+        // if no target, update dummy and return
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
         {
             dummy_dragonAI::UpdateAI(uiDiff);
@@ -878,7 +878,7 @@ struct MANGOS_DLL_DECL mob_vesperonAI : public dummy_dragonAI
 
     void Aggro(Unit* pWho)
     {
-        DoScriptText(SAY_VESPERON_AGGRO,m_creature);
+        DoScriptText(SAY_VESPERON_AGGRO, m_creature);
         DoCastSpellIfCan(m_creature, SPELL_POWER_OF_VESPERON);
     }
 
@@ -889,7 +889,7 @@ struct MANGOS_DLL_DECL mob_vesperonAI : public dummy_dragonAI
 
     void UpdateAI(const uint32 uiDiff)
     {
-        //if no target, update dummy and return
+        // if no target, update dummy and return
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
         {
             dummy_dragonAI::UpdateAI(uiDiff);
@@ -944,7 +944,7 @@ struct MANGOS_DLL_DECL mob_acolyte_of_shadronAI : public ScriptedAI
     {
         if (m_pInstance)
         {
-            //if not solo figth, buff main boss, else place debuff on mini-boss. both spells TARGET_SCRIPT
+            // if not solo figth, buff main boss, else place debuff on mini-boss. both spells TARGET_SCRIPT
             if (m_pInstance->GetData(TYPE_SARTHARION_EVENT) == IN_PROGRESS)
                 DoCastSpellIfCan(m_creature, SPELL_GIFT_OF_TWILIGTH_SAR);
             else
@@ -960,7 +960,7 @@ struct MANGOS_DLL_DECL mob_acolyte_of_shadronAI : public ScriptedAI
 
             if (m_pInstance->GetData(TYPE_SARTHARION_EVENT) == IN_PROGRESS)
             {
-                //not solo fight, so main boss has deduff
+                // not solo fight, so main boss has deduff
                 pDebuffTarget = m_pInstance->GetSingleCreatureFromStorage(NPC_SARTHARION);
 
                 if (pDebuffTarget && pDebuffTarget->isAlive() && pDebuffTarget->HasAura(SPELL_GIFT_OF_TWILIGTH_SAR))
@@ -968,7 +968,7 @@ struct MANGOS_DLL_DECL mob_acolyte_of_shadronAI : public ScriptedAI
             }
             else
             {
-                //event not in progress, then solo fight and must remove debuff mini-boss
+                // event not in progress, then solo fight and must remove debuff mini-boss
                 pDebuffTarget = m_pInstance->GetSingleCreatureFromStorage(NPC_SHADRON);
 
                 if (pDebuffTarget && pDebuffTarget->isAlive() && pDebuffTarget->HasAura(SPELL_GIFT_OF_TWILIGTH_SHA))
@@ -1074,7 +1074,7 @@ struct MANGOS_DLL_DECL mob_twilight_whelpAI : public ScriptedAI
 
     void UpdateAI(const uint32 uiDiff)
     {
-        //Return since we have no target
+        // Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 

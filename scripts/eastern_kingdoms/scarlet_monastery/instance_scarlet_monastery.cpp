@@ -36,7 +36,7 @@ void instance_scarlet_monastery::Initialize()
 
 void instance_scarlet_monastery::OnCreatureCreate(Creature* pCreature)
 {
-    switch(pCreature->GetEntry())
+    switch (pCreature->GetEntry())
     {
         case NPC_MOGRAINE:
         case NPC_WHITEMANE:

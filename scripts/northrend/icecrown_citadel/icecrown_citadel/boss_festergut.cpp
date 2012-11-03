@@ -79,13 +79,13 @@ enum
 
 struct MANGOS_DLL_DECL boss_festergutAI : public ScriptedAI
 {
-    boss_festergutAI(Creature *pCreature) : ScriptedAI(pCreature)
+    boss_festergutAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (instance_icecrown_citadel*)pCreature->GetMap()->GetInstanceData();
         Reset();
     }
 
-    instance_icecrown_citadel *m_pInstance;
+    instance_icecrown_citadel* m_pInstance;
 
     uint32 m_uiBerserkTimer;
     uint32 m_uiGastricBloatTimer;
@@ -102,10 +102,10 @@ struct MANGOS_DLL_DECL boss_festergutAI : public ScriptedAI
         m_uiVileGasTimer = 10000;
     }
 
-    void Aggro(Unit *pWho)
+    void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
-        
+
         DoCastSpellIfCan(m_creature, SPELL_GASTRIC_BLOAT, CAST_TRIGGERED); // not working as intended currently
         DoCastSpellIfCan(m_creature, SPELL_GASEOUS_BLIGHT_1, CAST_TRIGGERED); // DoT aura
         DoCastSpellIfCan(m_creature, SPELL_GASEUS_BLIGHT_DUMMY, CAST_TRIGGERED); // visual cast on dummy npc
@@ -114,7 +114,7 @@ struct MANGOS_DLL_DECL boss_festergutAI : public ScriptedAI
             m_pInstance->SetData(TYPE_FESTERGUT, IN_PROGRESS);
     }
 
-    void KilledUnit(Unit *pVictim)
+    void KilledUnit(Unit* pVictim)
     {
         DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
     }
@@ -127,7 +127,7 @@ struct MANGOS_DLL_DECL boss_festergutAI : public ScriptedAI
         DoCastSpellIfCan(m_creature, SPELL_REMOVE_INOCULENT, CAST_TRIGGERED);
     }
 
-    void JustDied(Unit *pKiller)
+    void JustDied(Unit* pKiller)
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_FESTERGUT, DONE);
@@ -175,7 +175,7 @@ struct MANGOS_DLL_DECL boss_festergutAI : public ScriptedAI
             {
                 if (m_pInstance)
                 {
-                    if (Creature *pProfessor = m_pInstance->GetSingleCreatureFromStorage(NPC_PROFESSOR_PUTRICIDE))
+                    if (Creature* pProfessor = m_pInstance->GetSingleCreatureFromStorage(NPC_PROFESSOR_PUTRICIDE))
                         DoScriptText(SAY_BLIGHT, pProfessor);
                 }
                 m_uiInhaleBlightTimer = 30000;
@@ -219,7 +219,7 @@ CreatureAI* GetAI_boss_festergut(Creature* pCreature)
 
 void AddSC_boss_festergut()
 {
-    Script *pNewScript;
+    Script* pNewScript;
 
     pNewScript = new Script;
     pNewScript->Name = "boss_festergut";

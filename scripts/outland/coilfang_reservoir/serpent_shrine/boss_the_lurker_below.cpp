@@ -58,7 +58,7 @@ struct AddsLocations
 };
 
 // Coords are guesswork
-static const AddsLocations aLurkerLoc[MAX_SUBMERGE_ADDS]=
+static const AddsLocations aLurkerLoc[MAX_SUBMERGE_ADDS] =
 {
     {NPC_COILFANG_AMBUSHER, 2.855f,  -459.823f, -19.18f},
     {NPC_COILFANG_AMBUSHER, 12.458f, -466.042f, -19.18f},
@@ -92,7 +92,7 @@ struct MANGOS_DLL_DECL boss_the_lurker_belowAI : public Scripted_NoMovementAI
     void Reset()
     {
         m_uiPhase           = PHASE_NORMAL;
-        m_uiPhaseChangeTimer= 90000;
+        m_uiPhaseChangeTimer = 90000;
 
         DoResetCombatTimers();
     }
@@ -192,7 +192,7 @@ struct MANGOS_DLL_DECL boss_the_lurker_belowAI : public Scripted_NoMovementAI
                         DoSummonCoilfangNaga();
                         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                         m_uiPhase = PHASE_SUBMERGED;
-                        m_uiPhaseChangeTimer = MINUTE*IN_MILLISECONDS;
+                        m_uiPhaseChangeTimer = MINUTE * IN_MILLISECONDS;
                     }
                 }
                 else
@@ -260,7 +260,7 @@ struct MANGOS_DLL_DECL boss_the_lurker_belowAI : public Scripted_NoMovementAI
                     m_uiPhase = PHASE_NORMAL;
                     m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                     m_creature->RemoveAurasDueToSpell(SPELL_SUBMERGE);
-                    m_uiPhaseChangeTimer = 2*MINUTE*IN_MILLISECONDS;
+                    m_uiPhaseChangeTimer = 2 * MINUTE * IN_MILLISECONDS;
                 }
                 else
                     m_uiPhaseChangeTimer -= uiDiff;
@@ -279,7 +279,7 @@ CreatureAI* GetAI_boss_the_lurker_below(Creature* pCreature)
 bool GOUse_go_strange_pool(Player* pPlayer, GameObject* pGo)
 {
     // There is some chance to fish The Lurker Below, sources are from 20s to 10minutes, average 5min => 20 tries, hence 5%
-    if (urand(0,99) < 5)
+    if (urand(0, 99) < 5)
     {
         if (ScriptedInstance* pInstance = (ScriptedInstance*)pGo->GetInstanceData())
         {

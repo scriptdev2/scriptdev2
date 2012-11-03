@@ -17,7 +17,7 @@ enum
     TYPE_MOROGRIM_EVENT             = 4,
     TYPE_THELURKER_EVENT            = 5,
 
-    //NPC_KARATHRESS                = 21214,
+    // NPC_KARATHRESS                = 21214,
     NPC_CARIBDIS                    = 21964,
     NPC_SHARKKIS                    = 21966,
     NPC_TIDALVESS                   = 21965,
@@ -33,15 +33,15 @@ enum
     GO_SHIELD_GENERATOR_4           = 185054,
 
     // Objects and doors no longer used since 2.4.0
-    //GO_CONSOLE_HYDROSS            = 185117,
-    //GO_CONSOLE_LURKER             = 185118,
-    //GO_CONSOLE_LEOTHERAS          = 185115,
-    //GO_CONSOLE_KARATHRESS         = 185114,
-    //GO_CONSOLE_MOROGRIM           = 185116,
-    //GO_CONSOLE_VASHJ              = 184568,
-    //GO_BRIDGE_PART_1              = 184203,
-    //GO_BRIDGE_PART_2              = 184204,
-    //GO_BRIDGE_PART_3              = 184205,
+    // GO_CONSOLE_HYDROSS            = 185117,
+    // GO_CONSOLE_LURKER             = 185118,
+    // GO_CONSOLE_LEOTHERAS          = 185115,
+    // GO_CONSOLE_KARATHRESS         = 185114,
+    // GO_CONSOLE_MOROGRIM           = 185116,
+    // GO_CONSOLE_VASHJ              = 184568,
+    // GO_BRIDGE_PART_1              = 184203,
+    // GO_BRIDGE_PART_2              = 184204,
+    // GO_BRIDGE_PART_3              = 184205,
 
     SPELL_LEOTHERAS_BANISH          = 37546,
 };
@@ -62,8 +62,8 @@ class MANGOS_DLL_DECL instance_serpentshrine_cavern : public ScriptedInstance
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
 
-        void GetBeamHelpersGUIDList(GuidList &lList) { lList = m_lBeamHelpersGUIDList; }
-        void GetShieldGeneratorsGUIDList(GuidList &lList) { lList = m_lShieldGeneratorGUIDList; }
+        void GetBeamHelpersGUIDList(GuidList& lList) { lList = m_lBeamHelpersGUIDList; }
+        void GetShieldGeneratorsGUIDList(GuidList& lList) { lList = m_lShieldGeneratorGUIDList; }
 
         const char* Save() { return m_strInstData.c_str(); }
         void Load(const char* chrIn);

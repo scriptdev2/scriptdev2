@@ -57,7 +57,7 @@ enum
     SPELL_PURSUING_SPIKES_FAIL          = 66181,
     SPELL_PURSUING_SPIKES_DUMMY         = 67470,            // target selection spell
     SPELL_PURSUING_SPIKES_SPEED1        = 65920,
-    //SPELL_PURSUING_SPIKES_GROUND      = 65921,            // included in creature_template_addon
+    // SPELL_PURSUING_SPIKES_GROUND      = 65921,           // included in creature_template_addon
     SPELL_PURSUING_SPIKES_SPEED2        = 65922,
     SPELL_PURSUING_SPIKES_SPEED3        = 65923,
     SPELL_MARK                          = 67574,
@@ -150,7 +150,7 @@ struct MANGOS_DLL_DECL boss_anubarak_trialAI : public ScriptedAI
         m_uiFreezingSlashTimer   = 20000;
         m_uiPenetratingColdTimer = urand(15000, 25000);
         m_uiBurrowerSummonTimer  = 10000;
-        m_uiBerserkTimer         = 10*MINUTE*IN_MILLISECONDS;
+        m_uiBerserkTimer         = 10 * MINUTE * IN_MILLISECONDS;
 
         m_vSpheresGuidVector.clear();
         m_vSpheresGuidVector.resize(MAX_FROSTSPHERES, ObjectGuid());
@@ -514,13 +514,13 @@ CreatureAI* GetAI_npc_anubarak_trial_spike(Creature* pCreature)
 
 bool EffectDummyCreature_spell_dummy_permafrost(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
 {
-    //always check spellid and effectindex
+    // always check spellid and effectindex
     if (uiSpellId == SPELL_PERMAFROST_DUMMY && uiEffIndex == EFFECT_INDEX_0)
     {
         if (npc_anubarak_trial_spikeAI* pSpikeAI = dynamic_cast<npc_anubarak_trial_spikeAI*>(pCreatureTarget->AI()))
             pSpikeAI->PermafrostHit((Creature*)pCaster);
 
-        //always return true when we are handling this spell and effect
+        // always return true when we are handling this spell and effect
         return true;
     }
 
@@ -547,7 +547,7 @@ struct MANGOS_DLL_DECL npc_anubarak_trial_frostsphereAI : public Scripted_NoMove
     void MoveInLineOfSight(Unit* pWho) { }
     void AttackStart(Unit* pWho) { }
 
-    void DamageTaken(Unit* pDoneBy, uint32 &uiDamage)
+    void DamageTaken(Unit* pDoneBy, uint32& uiDamage)
     {
         if (uiDamage < m_creature->GetHealth())
             return;

@@ -85,7 +85,7 @@ struct MANGOS_DLL_DECL npc_ancient_male_vrykulAI : public ScriptedAI
 
         Creature* pFemale = GetClosestCreatureWithEntry(m_creature, NPC_FEMALE_VRYKUL, 10.0f);
 
-        switch(m_uiPhase)
+        switch (m_uiPhase)
         {
             case 0:
                 DoScriptText(SAY_VRYKUL_CURSED, m_creature);
@@ -127,7 +127,7 @@ CreatureAI* GetAI_npc_ancient_male_vrykul(Creature* pCreature)
 bool AreaTrigger_at_ancient_male_vrykul(Player* pPlayer, AreaTriggerEntry const* pAt)
 {
     if (pPlayer->isAlive() && pPlayer->GetQuestStatus(QUEST_ECHO_OF_YMIRON) == QUEST_STATUS_INCOMPLETE &&
-        pPlayer->HasAura(SPELL_ECHO_OF_YMIRON))
+            pPlayer->HasAura(SPELL_ECHO_OF_YMIRON))
     {
         if (Creature* pCreature = GetClosestCreatureWithEntry(pPlayer, NPC_MALE_VRYKUL, 20.0f))
         {
@@ -201,7 +201,7 @@ struct MANGOS_DLL_DECL npc_daegarnAI : public ScriptedAI
 
     void SummonGladiator(uint32 uiEntry)
     {
-        m_creature->SummonCreature(uiEntry, afSummon[0], afSummon[1], afSummon[2], 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 20*IN_MILLISECONDS);
+        m_creature->SummonCreature(uiEntry, afSummon[0], afSummon[1], afSummon[2], 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 20 * IN_MILLISECONDS);
     }
 
     void SummonedMovementInform(Creature* pSummoned, uint32 uiMotionType, uint32 uiPointId)
@@ -224,7 +224,7 @@ struct MANGOS_DLL_DECL npc_daegarnAI : public ScriptedAI
         uint32 uiEntry = 0;
 
         // will eventually reset the event if something goes wrong
-        switch(pSummoned->GetEntry())
+        switch (pSummoned->GetEntry())
         {
             case NPC_FIRJUS:    uiEntry = NPC_JLARBORN; break;
             case NPC_JLARBORN:  uiEntry = NPC_YOROS;    break;
@@ -287,10 +287,10 @@ struct MANGOS_DLL_DECL npc_silvermoon_harryAI : public ScriptedAI
         m_bHarryBeaten = false;
 
         // timers guessed
-        m_uiScorchTimer = 5*IN_MILLISECONDS;
-        m_uiBlastWaveTimer = 7*IN_MILLISECONDS;
+        m_uiScorchTimer = 5 * IN_MILLISECONDS;
+        m_uiBlastWaveTimer = 7 * IN_MILLISECONDS;
 
-        m_uiResetBeatenTimer = MINUTE*IN_MILLISECONDS;
+        m_uiResetBeatenTimer = MINUTE * IN_MILLISECONDS;
 
         if (m_creature->getFaction() != m_creature->GetCreatureInfo()->faction_A)
             m_creature->setFaction(m_creature->GetCreatureInfo()->faction_A);
@@ -307,7 +307,7 @@ struct MANGOS_DLL_DECL npc_silvermoon_harryAI : public ScriptedAI
 
     void DamageTaken(Unit* pDoneBy, uint32& uiDamage)
     {
-        if (uiDamage > m_creature->GetHealth() || (m_creature->GetHealth() - uiDamage)*100 / m_creature->GetMaxHealth() < 20)
+        if (uiDamage > m_creature->GetHealth() || (m_creature->GetHealth() - uiDamage) * 100 / m_creature->GetMaxHealth() < 20)
         {
             if (Player* pPlayer = pDoneBy->GetCharmerOrOwnerPlayerOrPlayerItself())
             {
@@ -341,7 +341,7 @@ struct MANGOS_DLL_DECL npc_silvermoon_harryAI : public ScriptedAI
             if (m_uiResetBeatenTimer < uiDiff)
                 EnterEvadeMode();
             else
-                m_uiResetBeatenTimer-= uiDiff;
+                m_uiResetBeatenTimer -= uiDiff;
         }
 
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
@@ -350,7 +350,7 @@ struct MANGOS_DLL_DECL npc_silvermoon_harryAI : public ScriptedAI
         if (m_uiScorchTimer < uiDiff)
         {
             DoCastSpellIfCan(m_creature->getVictim(), SPELL_SCORCH);
-            m_uiScorchTimer = 10*IN_MILLISECONDS;
+            m_uiScorchTimer = 10 * IN_MILLISECONDS;
         }
         else
             m_uiScorchTimer -= uiDiff;
@@ -358,7 +358,7 @@ struct MANGOS_DLL_DECL npc_silvermoon_harryAI : public ScriptedAI
         if (m_uiBlastWaveTimer < uiDiff)
         {
             DoCastSpellIfCan(m_creature, SPELL_BLAST_WAVE);
-            m_uiBlastWaveTimer = 50*IN_MILLISECONDS;
+            m_uiBlastWaveTimer = 50 * IN_MILLISECONDS;
         }
         else
             m_uiBlastWaveTimer -= uiDiff;
@@ -398,7 +398,7 @@ bool GossipHello_npc_silvermoon_harry(Player* pPlayer, Creature* pCreature)
 
 bool GossipSelect_npc_silvermoon_harry(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    switch(uiAction)
+    switch (uiAction)
     {
         case GOSSIP_ACTION_TRADE:
             pPlayer->SEND_VENDORLIST(pCreature->GetObjectGuid());

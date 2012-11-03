@@ -37,7 +37,7 @@ void instance_razorfen_kraul::Initialize()
 
 void instance_razorfen_kraul::OnObjectCreate(GameObject* pGo)
 {
-    switch(pGo->GetEntry())
+    switch (pGo->GetEntry())
     {
         case GO_AGATHELOS_WARD:
             m_mGoEntryGuidStore[GO_AGATHELOS_WARD] = pGo->GetObjectGuid();
@@ -50,7 +50,7 @@ void instance_razorfen_kraul::OnObjectCreate(GameObject* pGo)
 
 void instance_razorfen_kraul::OnCreatureCreate(Creature* pCreature)
 {
-    switch(pCreature->GetEntry())
+    switch (pCreature->GetEntry())
     {
         case NPC_WARD_KEEPER:
             ++m_uiWardKeepersRemaining;
@@ -60,7 +60,7 @@ void instance_razorfen_kraul::OnCreatureCreate(Creature* pCreature)
 
 void instance_razorfen_kraul::SetData(uint32 uiType, uint32 uiData)
 {
-    switch(uiType)
+    switch (uiType)
     {
         case TYPE_AGATHELOS:
             --m_uiWardKeepersRemaining;
@@ -99,7 +99,7 @@ void instance_razorfen_kraul::Load(const char* chrIn)
     std::istringstream loadStream(chrIn);
     loadStream >> m_auiEncounter[0];
 
-    for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+    for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
     {
         if (m_auiEncounter[i] == IN_PROGRESS)
             m_auiEncounter[i] = NOT_STARTED;
@@ -110,7 +110,7 @@ void instance_razorfen_kraul::Load(const char* chrIn)
 
 uint32 instance_razorfen_kraul::GetData(uint32 uiType)
 {
-    switch(uiType)
+    switch (uiType)
     {
         case TYPE_AGATHELOS:
             return m_auiEncounter[0];

@@ -39,7 +39,7 @@ enum
     SAY_KARGATH_EXECUTE_ALLY    = -1540049,
     SAY_KARGATH_EXECUTE_HORDE   = -1540050,
 
-    //AT_NETHEKURSE               = 4524,                     // Area trigger used for the execution event
+    // AT_NETHEKURSE               = 4524,                  // Area trigger used for the execution event
 };
 
 struct SpawnLocation

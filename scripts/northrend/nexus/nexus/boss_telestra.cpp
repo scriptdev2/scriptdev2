@@ -145,11 +145,11 @@ struct MANGOS_DLL_DECL boss_telestraAI : public ScriptedAI
             DoScriptText(SAY_KILL, m_creature);
     }
 
-    void SpellHit(Unit* pCaster, const SpellEntry *pSpell)
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
     {
-        switch(pSpell->Id)
+        switch (pSpell->Id)
         {
-            // eventAi must make sure clones cast spells when each of them die
+                // eventAi must make sure clones cast spells when each of them die
             case SPELL_FIRE_DIES:
             case SPELL_ARCANE_DIES:
             case SPELL_FROST_DIES:
@@ -192,7 +192,7 @@ struct MANGOS_DLL_DECL boss_telestraAI : public ScriptedAI
 
     void JustSummoned(Creature* pSummoned)
     {
-        switch(pSummoned->GetEntry())
+        switch (pSummoned->GetEntry())
         {
             case NPC_TELEST_FIRE: pSummoned->CastSpell(pSummoned, SPELL_FIRE_VISUAL, true); break;
             case NPC_TELEST_ARCANE: pSummoned->CastSpell(pSummoned, SPELL_ARCANE_VISUAL, true); break;
@@ -208,7 +208,7 @@ struct MANGOS_DLL_DECL boss_telestraAI : public ScriptedAI
         if (m_bCanCheckAchiev)
             m_uiPersonalityTimer += uiDiff;
 
-        switch(m_uiPhase)
+        switch (m_uiPhase)
         {
             case PHASE_1:
             case PHASE_3:

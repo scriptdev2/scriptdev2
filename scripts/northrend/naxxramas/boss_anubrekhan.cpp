@@ -40,16 +40,16 @@ enum
     EMOTE_INSECT_SWARM          = -1533154,
     EMOTE_CORPSE_SCARABS        = -1533155,
 
-    SPELL_IMPALE                = 28783,                    //May be wrong spell id. Causes more dmg than I expect
+    SPELL_IMPALE                = 28783,                    // May be wrong spell id. Causes more dmg than I expect
     SPELL_IMPALE_H              = 56090,
-    SPELL_LOCUSTSWARM           = 28785,                    //This is a self buff that triggers the dmg debuff
+    SPELL_LOCUSTSWARM           = 28785,                    // This is a self buff that triggers the dmg debuff
     SPELL_LOCUSTSWARM_H         = 54021,
 
-    //spellId invalid
-    //SPELL_SUMMONGUARD         = 29508,                    //Summons 1 crypt guard at targeted location - spell doesn't exist in 3.x.x
+    // spellId invalid
+    // SPELL_SUMMONGUARD         = 29508,                   // Summons 1 crypt guard at targeted location - spell doesn't exist in 3.x.x
 
-    SPELL_SELF_SPAWN_5          = 29105,                    //This spawns 5 corpse scarabs ontop of us (most likely the pPlayer casts this on death)
-    SPELL_SELF_SPAWN_10         = 28864,                    //This is used by the crypt guards when they die
+    SPELL_SELF_SPAWN_5          = 29105,                    // This spawns 5 corpse scarabs ontop of us (most likely the pPlayer casts this on death)
+    SPELL_SELF_SPAWN_10         = 28864,                    // This is used by the crypt guards when they die
 
     NPC_CRYPT_GUARD             = 16573
 };
@@ -61,7 +61,7 @@ static const DialogueEntry aIntroDialogue[] =
     {SAY_TAUNT2,  NPC_ANUB_REKHAN,  11000},
     {SAY_TAUNT3,  NPC_ANUB_REKHAN,  10000},
     {SAY_TAUNT4,  NPC_ANUB_REKHAN,  0},
-    {0,0,0}
+    {0, 0, 0}
 };
 
 static const float aCryptGuardLoc[4] = {3333.5f, -3475.9f, 287.1f, 3.17f};
@@ -91,7 +91,7 @@ struct MANGOS_DLL_DECL boss_anubrekhanAI : public ScriptedAI
     {
         m_uiImpaleTimer      = 15000;
         m_uiLocustSwarmTimer = 90000;
-        m_uiSummonTimer      = m_bIsRegularMode ? 20000 : 0;     // spawn a guardian only after 20 seconds in normal mode; in heroic there are already 2 Guards spawned
+        m_uiSummonTimer      = m_bIsRegularMode ? 20000 : 0;// spawn a guardian only after 20 seconds in normal mode; in heroic there are already 2 Guards spawned
     }
 
     void KilledUnit(Unit* pVictim)
@@ -108,7 +108,7 @@ struct MANGOS_DLL_DECL boss_anubrekhanAI : public ScriptedAI
 
     void Aggro(Unit* pWho)
     {
-        switch(urand(0, 2))
+        switch (urand(0, 2))
         {
             case 0: DoScriptText(SAY_AGGRO1, m_creature); break;
             case 1: DoScriptText(SAY_AGGRO2, m_creature); break;
@@ -190,7 +190,7 @@ struct MANGOS_DLL_DECL boss_anubrekhanAI : public ScriptedAI
         // Locust Swarm
         if (m_uiLocustSwarmTimer < uiDiff)
         {
-            if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_LOCUSTSWARM :SPELL_LOCUSTSWARM_H) == CAST_OK)
+            if (DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_LOCUSTSWARM : SPELL_LOCUSTSWARM_H) == CAST_OK)
             {
                 DoScriptText(EMOTE_INSECT_SWARM, m_creature);
 

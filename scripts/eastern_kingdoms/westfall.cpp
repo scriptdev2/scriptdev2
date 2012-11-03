@@ -62,7 +62,7 @@ struct MANGOS_DLL_DECL npc_daphne_stilwellAI : public npc_escortAI
     {
         if (HasEscortState(STATE_ESCORT_ESCORTING))
         {
-            switch(m_uiWPHolder)
+            switch (m_uiWPHolder)
             {
                 case 7: DoScriptText(SAY_DS_DOWN_1, m_creature); break;
                 case 8: DoScriptText(SAY_DS_DOWN_2, m_creature); break;
@@ -79,7 +79,7 @@ struct MANGOS_DLL_DECL npc_daphne_stilwellAI : public npc_escortAI
     {
         m_uiWPHolder = uiPointId;
 
-        switch(uiPointId)
+        switch (uiPointId)
         {
             case 4:
                 SetEquipmentSlots(false, EQUIP_NO_CHANGE, EQUIP_NO_CHANGE, EQUIP_ID_RIFLE);

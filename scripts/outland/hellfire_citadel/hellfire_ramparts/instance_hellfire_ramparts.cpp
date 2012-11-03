@@ -62,7 +62,7 @@ void instance_ramparts::OnObjectCreate(GameObject* pGo)
 
 void instance_ramparts::SetData(uint32 uiType, uint32 uiData)
 {
-    debug_log("SD2: Instance Ramparts: SetData received for type %u with data %u",uiType,uiData);
+    debug_log("SD2: Instance Ramparts: SetData received for type %u with data %u", uiType, uiData);
 
     switch (uiType)
     {
@@ -128,7 +128,7 @@ void instance_ramparts::DoFailVazruden()
             pVazruden->Respawn();
         else
         {
-            if (ScriptedAI* pVazrudenAI = dynamic_cast<ScriptedAI*> (pVazruden->AI()))
+            if (ScriptedAI* pVazrudenAI = dynamic_cast<ScriptedAI*>(pVazruden->AI()))
                 pVazrudenAI->Reset();
         }
     }

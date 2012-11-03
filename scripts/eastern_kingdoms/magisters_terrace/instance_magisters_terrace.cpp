@@ -50,7 +50,7 @@ void instance_magisters_terrace::OnCreatureCreate(Creature* pCreature)
         case NPC_DELRISSA:
         case NPC_KALECGOS_DRAGON:
         case NPC_KAELTHAS:
-        // insert Delrissa adds here, for better handling
+            // insert Delrissa adds here, for better handling
         case NPC_KAGANI:
         case NPC_ELLRYS:
         case NPC_ERAMAS:
@@ -205,7 +205,7 @@ void instance_magisters_terrace::Load(const char* chrIn)
     std::istringstream loadStream(chrIn);
     loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3];
 
-    for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+    for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
     {
         if (m_auiEncounter[i] == IN_PROGRESS)
             m_auiEncounter[i] = NOT_STARTED;

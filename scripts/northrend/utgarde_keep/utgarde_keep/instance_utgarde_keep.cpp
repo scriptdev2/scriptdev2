@@ -37,7 +37,7 @@ void instance_utgarde_keep::Initialize()
 
 void instance_utgarde_keep::OnCreatureCreate(Creature* pCreature)
 {
-    switch(pCreature->GetEntry())
+    switch (pCreature->GetEntry())
     {
         case NPC_KELESETH:
         case NPC_SKARVALD:
@@ -91,7 +91,7 @@ void instance_utgarde_keep::OnCreatureDeath(Creature* pCreature)
 
 void instance_utgarde_keep::SetData(uint32 uiType, uint32 uiData)
 {
-    switch(uiType)
+    switch (uiType)
     {
         case TYPE_KELESETH:
             if (uiData == IN_PROGRESS)
@@ -149,7 +149,7 @@ void instance_utgarde_keep::Load(const char* chrIn)
     std::istringstream loadStream(chrIn);
     loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3] >> m_auiEncounter[4] >> m_auiEncounter[5];
 
-    for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+    for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
     {
         if (m_auiEncounter[i] == IN_PROGRESS)
             m_auiEncounter[i] = NOT_STARTED;

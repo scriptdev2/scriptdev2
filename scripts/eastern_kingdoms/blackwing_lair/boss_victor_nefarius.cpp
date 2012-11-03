@@ -77,22 +77,22 @@ struct SpawnLocation
 
 static const SpawnLocation aNefarianLocs[4] =
 {
-    {-7599.32f, -1191.72f, 475.545f},                       // opening where red/blue/black darknid spawner appear (ori 3.05433)
-    {-7526.27f, -1135.04f, 473.445f},                       // same as above, closest to door (ori 5.75959)
-    {-7498.177f, -1273.277f, 481.649f},                     // nefarian spawn location (ori 1.798)
-    {-7502.002f, -1256.503f, 476.758f},                     // nefarian fly to this position
+    { -7599.32f, -1191.72f, 475.545f},                      // opening where red/blue/black darknid spawner appear (ori 3.05433)
+    { -7526.27f, -1135.04f, 473.445f},                      // same as above, closest to door (ori 5.75959)
+    { -7498.177f, -1273.277f, 481.649f},                    // nefarian spawn location (ori 1.798)
+    { -7502.002f, -1256.503f, 476.758f},                    // nefarian fly to this position
 };
 
 static const uint32 aPossibleDrake[MAX_DRAKES] = {NPC_BRONZE_DRAKANOID, NPC_BLUE_DRAKANOID, NPC_RED_DRAKANOID, NPC_GREEN_DRAKANOID, NPC_BLACK_DRAKANOID};
 
-//This script is complicated
-//Instead of morphing Victor Nefarius we will have him control phase 1
-//And then have him spawn "Nefarian" for phase 2
-//When phase 2 starts Victor Nefarius will go invisible and stop attacking
-//If Nefarian reched home because nef killed the players then nef will trigger this guy to EnterEvadeMode
-//and allow players to start the event over
-//If nefarian dies then he will kill himself then he will be despawned in Nefarian script
-//To prevent players from doing the event twice
+// This script is complicated
+// Instead of morphing Victor Nefarius we will have him control phase 1
+// And then have him spawn "Nefarian" for phase 2
+// When phase 2 starts Victor Nefarius will go invisible and stop attacking
+// If Nefarian reched home because nef killed the players then nef will trigger this guy to EnterEvadeMode
+// and allow players to start the event over
+// If nefarian dies then he will kill himself then he will be despawned in Nefarian script
+// To prevent players from doing the event twice
 
 // Dev note: Lord Victor Nefarius should despawn completely, then ~5 seconds later Nefarian should appear.
 
@@ -328,7 +328,7 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI, private Dialo
             // Add spawning mechanism
             if (m_uiAddSpawnTimer < uiDiff)
             {
-                //Spawn 2 random types of creatures at the 2 locations
+                // Spawn 2 random types of creatures at the 2 locations
                 uint32 uiCreatureId = 0;
 
                 // 1 in 3 chance it will be a chromatic
@@ -339,13 +339,13 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI, private Dialo
                 uiCreatureId = urand(0, 2) ? m_uiDrakeTypeTwo : NPC_CHROMATIC_DRAKANOID;
                 m_creature->SummonCreature(uiCreatureId, aNefarianLocs[1].m_fX, aNefarianLocs[1].m_fY, aNefarianLocs[1].m_fZ, 5.000, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 30000);
 
-                //Begin phase 2 by spawning Nefarian
+                // Begin phase 2 by spawning Nefarian
                 if (m_uiSpawnedAdds >= MAX_DRAKE_SUMMONS)
                 {
-                    //Inturrupt any spell casting
+                    // Inturrupt any spell casting
                     m_creature->InterruptNonMeleeSpells(false);
 
-                    //Make super invis
+                    // Make super invis
                     if (m_creature->GetVisibility() != VISIBILITY_OFF)
                         m_creature->SetVisibility(VISIBILITY_OFF);
 
@@ -372,7 +372,7 @@ bool GossipHello_boss_victor_nefarius(Player* pPlayer, Creature* pCreature)
     if (pCreature->GetMapId() != MAP_ID_BWL)
         return true;
 
-    pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_NEFARIUS_1 , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+    pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_NEFARIUS_1 , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_NEFARIUS_1, pCreature->GetObjectGuid());
     return true;
 }
@@ -382,16 +382,16 @@ bool GossipSelect_boss_victor_nefarius(Player* pPlayer, Creature* pCreature, uin
     if (pCreature->GetMapId() != MAP_ID_BWL)
         return true;
 
-    switch(uiAction)
+    switch (uiAction)
     {
         case GOSSIP_ACTION_INFO_DEF+1:
             pCreature->HandleEmote(EMOTE_ONESHOT_TALK);
-            pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_NEFARIUS_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+            pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_NEFARIUS_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
             pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_NEFARIUS_2, pCreature->GetObjectGuid());
             break;
         case GOSSIP_ACTION_INFO_DEF+2:
             pCreature->HandleEmote(EMOTE_ONESHOT_TALK);
-            pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_NEFARIUS_3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
+            pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_NEFARIUS_3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
             pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_NEFARIUS_3, pCreature->GetObjectGuid());
             break;
         case GOSSIP_ACTION_INFO_DEF+3:

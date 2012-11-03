@@ -30,9 +30,9 @@ EndScriptData */
 
 instance_obsidian_sanctum::instance_obsidian_sanctum(Map* pMap) : ScriptedInstance(pMap),
     m_uiAliveDragons(0)
-    {
-        Initialize();
-    }
+{
+    Initialize();
+}
 
 void instance_obsidian_sanctum::Initialize()
 {
@@ -41,10 +41,10 @@ void instance_obsidian_sanctum::Initialize()
 
 void instance_obsidian_sanctum::OnCreatureCreate(Creature* pCreature)
 {
-    switch(pCreature->GetEntry())
+    switch (pCreature->GetEntry())
     {
-        // The three dragons below set to active state once created.
-        // We must expect bigger raid to encounter main boss, and then three dragons must be active due to grid differences
+            // The three dragons below set to active state once created.
+            // We must expect bigger raid to encounter main boss, and then three dragons must be active due to grid differences
         case NPC_TENEBRON:
         case NPC_SHADRON:
         case NPC_VESPERON:

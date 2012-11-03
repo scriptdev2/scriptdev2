@@ -286,7 +286,7 @@ struct MANGOS_DLL_DECL boss_the_lich_king_iccAI : public ScriptedAI
         m_uiVileSpiritsTimer    = 20000;
     }
 
-    void Aggro(Unit *pWho)
+    void Aggro(Unit* pWho)
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_LICH_KING, IN_PROGRESS);
@@ -295,13 +295,13 @@ struct MANGOS_DLL_DECL boss_the_lich_king_iccAI : public ScriptedAI
         m_uiPhase = PHASE_ONE;
     }
 
-    void KilledUnit(Unit *pWho)
+    void KilledUnit(Unit* pWho)
     {
         if (pWho->GetTypeId() == TYPEID_PLAYER)
             DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
     }
 
-    void JustDied(Unit *pKiller)
+    void JustDied(Unit* pKiller)
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_LICH_KING, DONE);
@@ -322,7 +322,7 @@ struct MANGOS_DLL_DECL boss_the_lich_king_iccAI : public ScriptedAI
         if (uiMovementType != POINT_MOTION_TYPE)
             return;
 
-        switch(uiData)
+        switch (uiData)
         {
             case POINT_CENTER_LAND:
             {
@@ -385,7 +385,7 @@ struct MANGOS_DLL_DECL boss_the_lich_king_iccAI : public ScriptedAI
             }
         }
 
-        switch(m_uiPhase)
+        switch (m_uiPhase)
         {
             case PHASE_INTRO:
             {
@@ -408,7 +408,7 @@ struct MANGOS_DLL_DECL boss_the_lich_king_iccAI : public ScriptedAI
                 if (m_uiNecroticPlagueTimer < uiDiff)
                 {
                     // shouldn't be targeting players who already have Necrotic Plague on them
-                    if (Unit *pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1, SPELL_NECROTIC_PLAGUE, SELECT_FLAG_PLAYER))
+                    if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1, SPELL_NECROTIC_PLAGUE, SELECT_FLAG_PLAYER))
                     {
                         if (DoCastSpellIfCan(pTarget, SPELL_NECROTIC_PLAGUE) == CAST_OK)
                             m_uiNecroticPlagueTimer = 30000;
@@ -449,7 +449,7 @@ struct MANGOS_DLL_DECL boss_the_lich_king_iccAI : public ScriptedAI
                 {
                     if (m_uiShadowTrapTimer < uiDiff)
                     {
-                        if (Unit *pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1, SPELL_SHADOW_TRAP, SELECT_FLAG_PLAYER))
+                        if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1, SPELL_SHADOW_TRAP, SELECT_FLAG_PLAYER))
                         {
                             if (DoCastSpellIfCan(pTarget, SPELL_SHADOW_TRAP) == CAST_OK)
                                 m_uiShadowTrapTimer = 15000;
@@ -488,7 +488,7 @@ struct MANGOS_DLL_DECL boss_the_lich_king_iccAI : public ScriptedAI
                 // Pain and Suffering
                 if (m_uiPainSufferingTimer < uiDiff)
                 {
-                    if (Unit *pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_PAIN_AND_SUFFERING, SELECT_FLAG_PLAYER))
+                    if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_PAIN_AND_SUFFERING, SELECT_FLAG_PLAYER))
                     {
                         if (DoCastSpellIfCan(pTarget, SPELL_PAIN_AND_SUFFERING) == CAST_OK)
                             m_uiPainSufferingTimer = urand(1500, 3000);
@@ -509,7 +509,7 @@ struct MANGOS_DLL_DECL boss_the_lich_king_iccAI : public ScriptedAI
                 // Summon Raging Spirit
                 if (m_uiRagingSpiritTimer < uiDiff)
                 {
-                    if (Unit *pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_RAGING_SPIRIT, SELECT_FLAG_PLAYER))
+                    if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_RAGING_SPIRIT, SELECT_FLAG_PLAYER))
                     {
                         if (DoCastSpellIfCan(pTarget, SPELL_RAGING_SPIRIT, CAST_TRIGGERED) == CAST_OK)
                             m_uiRagingSpiritTimer = (m_uiPhase == PHASE_TRANSITION_ONE ? 20000 : 15000);
@@ -638,7 +638,7 @@ struct MANGOS_DLL_DECL boss_the_lich_king_iccAI : public ScriptedAI
                 // Harvest Soul
                 if (m_uiHarvestSoulTimer < uiDiff)
                 {
-                    Unit *pTarget = NULL;
+                    Unit* pTarget = NULL;
                     bool m_bIsHeroic = m_pInstance && m_pInstance->IsHeroicDifficulty();
                     if (m_bIsHeroic)
                         pTarget = m_creature;
@@ -651,7 +651,7 @@ struct MANGOS_DLL_DECL boss_the_lich_king_iccAI : public ScriptedAI
                         {
                             DoScriptText(SAY_HARVEST_SOUL, m_creature);
                             m_uiHarvestSoulTimer = m_bIsHeroic ? 120000 : 70000;
-                            
+
                             // TODO: prepare Frostmourne room - summon bombs and Tirion, or Tirion and the "bad spirit-guy"
 
                             if (m_bIsHeroic)

@@ -200,7 +200,7 @@ struct MANGOS_DLL_DECL boss_svalaAI : public ScriptedAI
         if (pVictim->GetEntry() == NPC_SCOURGE_HULK && m_pInstance)
             m_pInstance->SetSpecialAchievementCriteria(TYPE_ACHIEV_INCREDIBLE_HULK, true);
 
-        switch(urand(0, 2))
+        switch (urand(0, 2))
         {
             case 0: DoScriptText(SAY_SLAY_1, m_creature); break;
             case 1: DoScriptText(SAY_SLAY_2, m_creature); break;
@@ -238,7 +238,7 @@ struct MANGOS_DLL_DECL boss_svalaAI : public ScriptedAI
                 {
                     m_uiIntroTimer = 10000;
 
-                    switch(m_uiIntroCount)
+                    switch (m_uiIntroCount)
                     {
                         case 0:
                             DoScriptText(SAY_INTRO_1, m_creature);

@@ -106,7 +106,7 @@ struct MANGOS_DLL_DECL boss_anubarakAI : public ScriptedAI
         m_uiPoundTimer          = 15000;
         m_uiDarterTimer         = 5000;
 
-        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE|UNIT_FLAG_NOT_SELECTABLE);
+        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
     }
 
     void Aggro(Unit* pWho)
@@ -119,7 +119,7 @@ struct MANGOS_DLL_DECL boss_anubarakAI : public ScriptedAI
 
     void KilledUnit(Unit* pVictim)
     {
-        switch(urand(0, 2))
+        switch (urand(0, 2))
         {
             case 0: DoScriptText(SAY_KILL_1, m_creature); break;
             case 1: DoScriptText(SAY_KILL_2, m_creature); break;
@@ -221,12 +221,12 @@ struct MANGOS_DLL_DECL boss_anubarakAI : public ScriptedAI
             else
                 m_uiPoundTimer -= uiDiff;
 
-            if (m_creature->GetHealthPercent() < 100 - 25*m_uiSubmergePhase)
+            if (m_creature->GetHealthPercent() < 100 - 25 * m_uiSubmergePhase)
             {
                 DoCastSpellIfCan(m_creature, SPELL_IMPALE_AURA, CAST_TRIGGERED);
                 DoCastSpellIfCan(m_creature, SPELL_SUBMERGE, CAST_TRIGGERED);
                 DoScriptText(urand(0, 1) ? SAY_SUBMERGE_1 : SAY_SUBMERGE_2, m_creature);
-                m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE|UNIT_FLAG_NOT_SELECTABLE);
+                m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
                 m_uiPhase = PHASE_SUBMERGED;
                 m_bIsFirstWave = true;
                 m_uiSummonTimer = 5000;
@@ -298,7 +298,7 @@ struct MANGOS_DLL_DECL boss_anubarakAI : public ScriptedAI
                 DoCastSpellIfCan(m_creature, SPELL_EMERGE, CAST_INTERRUPT_PREVIOUS);
                 m_creature->RemoveAurasDueToSpell(SPELL_SUBMERGE);
                 m_creature->RemoveAurasDueToSpell(SPELL_IMPALE_AURA);
-                m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE|UNIT_FLAG_NOT_SELECTABLE);
+                m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
                 m_uiPhase = PHASE_GROUND;
             }
             else

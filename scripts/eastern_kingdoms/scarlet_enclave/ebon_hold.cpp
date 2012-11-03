@@ -98,7 +98,7 @@ enum SpecialSurprise
 
 struct MANGOS_DLL_DECL npc_a_special_surpriseAI : public ScriptedAI
 {
-    npc_a_special_surpriseAI(Creature *pCreature) : ScriptedAI(pCreature) { Reset(); }
+    npc_a_special_surpriseAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
     uint32 m_uiExecuteSpeech_Timer;
     uint32 m_uiExecuteSpeech_Counter;
@@ -113,7 +113,7 @@ struct MANGOS_DLL_DECL npc_a_special_surpriseAI : public ScriptedAI
 
     bool MeetQuestCondition(Player* pPlayer)
     {
-        switch(m_creature->GetEntry())
+        switch (m_creature->GetEntry())
         {
             case 29061:                                     // Ellen Stanbridge
                 if (pPlayer->GetQuestStatus(12742) == QUEST_STATUS_INCOMPLETE)
@@ -183,12 +183,12 @@ struct MANGOS_DLL_DECL npc_a_special_surpriseAI : public ScriptedAI
                     return;
                 }
 
-                //TODO: simplify text's selection
+                // TODO: simplify text's selection
 
-                switch(pPlayer->getRace())
+                switch (pPlayer->getRace())
                 {
                     case RACE_HUMAN:
-                        switch(m_uiExecuteSpeech_Counter)
+                        switch (m_uiExecuteSpeech_Counter)
                         {
                             case 0: DoScriptText(SAY_EXEC_START_1, m_creature, pPlayer); break;
                             case 1: m_creature->SetStandState(UNIT_STAND_STATE_STAND); break;
@@ -216,7 +216,7 @@ struct MANGOS_DLL_DECL npc_a_special_surpriseAI : public ScriptedAI
                         }
                         break;
                     case RACE_ORC:
-                        switch(m_uiExecuteSpeech_Counter)
+                        switch (m_uiExecuteSpeech_Counter)
                         {
                             case 0: DoScriptText(SAY_EXEC_START_1, m_creature, pPlayer); break;
                             case 1: m_creature->SetStandState(UNIT_STAND_STATE_STAND); break;
@@ -244,7 +244,7 @@ struct MANGOS_DLL_DECL npc_a_special_surpriseAI : public ScriptedAI
                         }
                         break;
                     case RACE_DWARF:
-                        switch(m_uiExecuteSpeech_Counter)
+                        switch (m_uiExecuteSpeech_Counter)
                         {
                             case 0: DoScriptText(SAY_EXEC_START_2, m_creature, pPlayer); break;
                             case 1: m_creature->SetStandState(UNIT_STAND_STATE_STAND); break;
@@ -272,7 +272,7 @@ struct MANGOS_DLL_DECL npc_a_special_surpriseAI : public ScriptedAI
                         }
                         break;
                     case RACE_NIGHTELF:
-                        switch(m_uiExecuteSpeech_Counter)
+                        switch (m_uiExecuteSpeech_Counter)
                         {
                             case 0: DoScriptText(SAY_EXEC_START_1, m_creature, pPlayer); break;
                             case 1: m_creature->SetStandState(UNIT_STAND_STATE_STAND); break;
@@ -300,7 +300,7 @@ struct MANGOS_DLL_DECL npc_a_special_surpriseAI : public ScriptedAI
                         }
                         break;
                     case RACE_UNDEAD:
-                        switch(m_uiExecuteSpeech_Counter)
+                        switch (m_uiExecuteSpeech_Counter)
                         {
                             case 0: DoScriptText(SAY_EXEC_START_1, m_creature, pPlayer); break;
                             case 1: m_creature->SetStandState(UNIT_STAND_STATE_STAND); break;
@@ -328,7 +328,7 @@ struct MANGOS_DLL_DECL npc_a_special_surpriseAI : public ScriptedAI
                         }
                         break;
                     case RACE_TAUREN:
-                        switch(m_uiExecuteSpeech_Counter)
+                        switch (m_uiExecuteSpeech_Counter)
                         {
                             case 0: DoScriptText(SAY_EXEC_START_1, m_creature, pPlayer); break;
                             case 1: m_creature->SetStandState(UNIT_STAND_STATE_STAND); break;
@@ -356,7 +356,7 @@ struct MANGOS_DLL_DECL npc_a_special_surpriseAI : public ScriptedAI
                         }
                         break;
                     case RACE_GNOME:
-                        switch(m_uiExecuteSpeech_Counter)
+                        switch (m_uiExecuteSpeech_Counter)
                         {
                             case 0: DoScriptText(SAY_EXEC_START_1, m_creature, pPlayer); break;
                             case 1: m_creature->SetStandState(UNIT_STAND_STATE_STAND); break;
@@ -384,7 +384,7 @@ struct MANGOS_DLL_DECL npc_a_special_surpriseAI : public ScriptedAI
                         }
                         break;
                     case RACE_TROLL:
-                        switch(m_uiExecuteSpeech_Counter)
+                        switch (m_uiExecuteSpeech_Counter)
                         {
                             case 0: DoScriptText(SAY_EXEC_START_3, m_creature, pPlayer); break;
                             case 1: m_creature->SetStandState(UNIT_STAND_STATE_STAND); break;
@@ -412,14 +412,14 @@ struct MANGOS_DLL_DECL npc_a_special_surpriseAI : public ScriptedAI
                         }
                         break;
                     case RACE_BLOODELF:
-                        switch(m_uiExecuteSpeech_Counter)
+                        switch (m_uiExecuteSpeech_Counter)
                         {
                             case 0: DoScriptText(SAY_EXEC_START_1, m_creature, pPlayer); break;
                             case 1: m_creature->SetStandState(UNIT_STAND_STATE_STAND); break;
                             case 2: DoScriptText(SAY_EXEC_PROG_1, m_creature, pPlayer); break;
                             case 3: DoScriptText(SAY_EXEC_NAME_1, m_creature, pPlayer); break;
                             case 4: DoScriptText(SAY_EXEC_RECOG_1, m_creature, pPlayer); break;
-                            //case 5: //unknown
+                                // case 5: // unknown
                             case 6: DoScriptText(SAY_EXEC_THINK_3, m_creature, pPlayer); break;
                             case 7: DoScriptText(SAY_EXEC_LISTEN_1, m_creature, pPlayer); break;
                             case 8:
@@ -440,7 +440,7 @@ struct MANGOS_DLL_DECL npc_a_special_surpriseAI : public ScriptedAI
                         }
                         break;
                     case RACE_DRAENEI:
-                        switch(m_uiExecuteSpeech_Counter)
+                        switch (m_uiExecuteSpeech_Counter)
                         {
                             case 0: DoScriptText(SAY_EXEC_START_1, m_creature, pPlayer); break;
                             case 1: m_creature->SetStandState(UNIT_STAND_STATE_STAND); break;
@@ -559,7 +559,7 @@ struct MANGOS_DLL_DECL npc_death_knight_initiateAI : public ScriptedAI
         }
     }
 
-    void DamageTaken(Unit* pDoneBy, uint32 &uiDamage)
+    void DamageTaken(Unit* pDoneBy, uint32& uiDamage)
     {
         if (m_bIsDuelInProgress && uiDamage > m_creature->GetHealth())
         {
@@ -568,7 +568,7 @@ struct MANGOS_DLL_DECL npc_death_knight_initiateAI : public ScriptedAI
             if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_duelerGuid))
                 m_creature->CastSpell(pPlayer, SPELL_DUEL_VICTORY, true);
 
-            //possibly not evade, but instead have end sequenze
+            // possibly not evade, but instead have end sequenze
             EnterEvadeMode();
         }
     }
@@ -616,7 +616,7 @@ bool GossipHello_npc_death_knight_initiate(Player* pPlayer, Creature* pCreature)
 
 bool GossipSelect_npc_death_knight_initiate(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
+    if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)
     {
         pPlayer->CLOSE_GOSSIP_MENU();
 
@@ -662,14 +662,14 @@ enum eKoltira
     NPC_HIGH_INQUISITOR_VALROTH     = 29001,
     NPC_KOLTIRA_ALT                 = 28447,
 
-    //not sure about this id
-    //NPC_DEATH_KNIGHT_MOUNT          = 29201,
+    // not sure about this id
+    // NPC_DEATH_KNIGHT_MOUNT          = 29201,
     MODEL_DEATH_KNIGHT_MOUNT        = 25278
 };
 
 struct MANGOS_DLL_DECL npc_koltira_deathweaverAI : public npc_escortAI
 {
-    npc_koltira_deathweaverAI(Creature *pCreature) : npc_escortAI(pCreature) { Reset(); }
+    npc_koltira_deathweaverAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
 
     uint32 m_uiWave;
     uint32 m_uiWave_Timer;
@@ -687,7 +687,7 @@ struct MANGOS_DLL_DECL npc_koltira_deathweaverAI : public npc_escortAI
 
     void WaypointReached(uint32 uiPointId)
     {
-        switch(uiPointId)
+        switch (uiPointId)
         {
             case 0:
                 DoScriptText(SAY_BREAKOUT1, m_creature);
@@ -697,7 +697,7 @@ struct MANGOS_DLL_DECL npc_koltira_deathweaverAI : public npc_escortAI
                 break;
             case 2:
                 m_creature->SetStandState(UNIT_STAND_STATE_STAND);
-                //m_creature->UpdateEntry(NPC_KOLTIRA_ALT); //unclear if we must update or not
+                // m_creature->UpdateEntry(NPC_KOLTIRA_ALT);// unclear if we must update or not
                 DoCastSpellIfCan(m_creature, SPELL_KOLTIRA_TRANSFORM);
                 break;
             case 3:
@@ -729,7 +729,7 @@ struct MANGOS_DLL_DECL npc_koltira_deathweaverAI : public npc_escortAI
 
     void SummonAcolyte(uint32 uiAmount)
     {
-        for(uint32 i = 0; i < uiAmount; ++i)
+        for (uint32 i = 0; i < uiAmount; ++i)
             m_creature->SummonCreature(NPC_CRIMSON_ACOLYTE, 1642.329f, -6045.818f, 127.583f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
     }
 
@@ -739,7 +739,7 @@ struct MANGOS_DLL_DECL npc_koltira_deathweaverAI : public npc_escortAI
         {
             if (m_uiWave_Timer < uiDiff)
             {
-                switch(m_uiWave)
+                switch (m_uiWave)
                 {
                     case 0:
                         DoScriptText(SAY_BREAKOUT3, m_creature);
@@ -773,7 +773,7 @@ struct MANGOS_DLL_DECL npc_koltira_deathweaverAI : public npc_escortAI
                         else
                         {
                             m_uiWave_Timer = 2500;
-                            return;                         //return, we don't want m_uiWave to increment now
+                            return;                         // return, we don't want m_uiWave to increment now
                         }
                         break;
                     }
@@ -827,8 +827,8 @@ enum
     SAY_START                       = -1609000,             // 8 texts in total, GetTextId() generates random with this as base
     SAY_AGGRO                       = -1609008,             // 8 texts in total, GetTextId() generates random with this as base
 
-    //SPELL_CHAINED_PESANT_LH         = 54602,              // not used. possible it determine side, where to go get "weapon"
-    //SPELL_CHAINED_PESANT_RH         = 54610,
+    // SPELL_CHAINED_PESANT_LH         = 54602,             // not used. possible it determine side, where to go get "weapon"
+    // SPELL_CHAINED_PESANT_RH         = 54610,
     SPELL_CHAINED_PESANT_CHEST      = 54612,
     SPELL_CHAINED_PESANT_BREATH     = 54613,
     SPELL_INITIATE_VISUAL           = 51519,
@@ -867,7 +867,7 @@ struct MANGOS_DLL_DECL npc_unworthy_initiate_anchorAI : public ScriptedAI
         if (pInitiate && pSource)
         {
             pInitiate->SetLootRecipient(pSource);
-            m_creature->CastSpell(pInitiate,SPELL_CHAINED_PESANT_BREATH,true);
+            m_creature->CastSpell(pInitiate, SPELL_CHAINED_PESANT_BREATH, true);
         }
     }
 
@@ -956,7 +956,7 @@ struct MANGOS_DLL_DECL npc_unworthy_initiateAI : public ScriptedAI
         if (m_myAnchorGuid)
             return m_creature->GetMap()->GetCreature(m_myAnchorGuid);
         else
-            return GetClosestCreatureWithEntry(m_creature, NPC_ANCHOR, INTERACTION_DISTANCE*2);
+            return GetClosestCreatureWithEntry(m_creature, NPC_ANCHOR, INTERACTION_DISTANCE * 2);
     }
 
     void SetAnchor()

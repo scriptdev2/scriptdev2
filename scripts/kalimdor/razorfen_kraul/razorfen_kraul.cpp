@@ -67,7 +67,7 @@ struct MANGOS_DLL_DECL npc_willix_the_importerAI : public npc_escortAI
     // Exact use of these texts remains unknown, it seems that he should only talk when he initiates the attack or he is the first who is attacked by a npc
     void Aggro(Unit* pWho)
     {
-        switch(urand(0, 6))                                 // Not always said
+        switch (urand(0, 6))                                // Not always said
         {
             case 0: DoScriptText(SAY_WILLIX_AGGRO_1, m_creature, pWho); break;
             case 1: DoScriptText(SAY_WILLIX_AGGRO_2, m_creature, pWho); break;
@@ -143,7 +143,7 @@ bool QuestAccept_npc_willix_the_importer(Player* pPlayer, Creature* pCreature, c
         }
     }
 
-        return true;
+    return true;
 }
 
 void AddSC_razorfen_kraul()

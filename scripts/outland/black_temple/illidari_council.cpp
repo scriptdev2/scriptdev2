@@ -26,7 +26,7 @@ EndScriptData */
 
 enum
 {
-    //Speech'n'Sounds
+    // Speech'n'Sounds
     SAY_GATH_AGGRO              = -1564069,
     SAY_GATH_SLAY               = -1564085,
     SAY_GATH_SLAY_COMNT         = -1564089,
@@ -90,7 +90,7 @@ enum
     SPELL_VANISH                = 41476,
 
     SPELL_BERSERK               = 45078,
-    //SPELL_BALANCE_OF_POWER    = 41341,                    // procs 41342 on damage - added in c_t_a
+    // SPELL_BALANCE_OF_POWER    = 41341,                   // procs 41342 on damage - added in c_t_a
     SPELL_EMPYREAL_EQUIVALENCY  = 41333,
     SPELL_EMPYREAL_BALANCE      = 41499,
 };
@@ -139,7 +139,7 @@ struct MANGOS_DLL_DECL mob_blood_elf_council_voice_triggerAI : public ScriptedAI
     void StartVoiceEvent()
     {
         m_uiAggroYellTimer = 500;
-        m_uiEnrageTimer = 15*MINUTE*IN_MILLISECONDS;
+        m_uiEnrageTimer = 15 * MINUTE * IN_MILLISECONDS;
     }
 
     void UpdateAI(const uint32 uiDiff)
@@ -322,7 +322,7 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
     }
 
     // ##### Workaround for missing spell aura proc 41342 - Remove when this is implemented in core #####
-    void DamageTaken(Unit* pDoneBy, uint32 &uiDamage)
+    void DamageTaken(Unit* pDoneBy, uint32& uiDamage)
     {
         if (pDoneBy == m_creature)
             return;
@@ -505,7 +505,7 @@ struct MANGOS_DLL_DECL boss_high_nethermancer_zerevorAI : public boss_illidari_c
         if (m_uiDampenMagicTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature, SPELL_DAMPEN_MAGIC) == CAST_OK)
-                m_uiDampenMagicTimer = 110000;                  // Almost 2 minutes
+                m_uiDampenMagicTimer = 110000;              // Almost 2 minutes
         }
         else
             m_uiDampenMagicTimer -= uiDiff;

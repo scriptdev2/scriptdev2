@@ -175,7 +175,7 @@ CreatureAI* GetAI_boss_erekem(Creature* pCreature)
 
 struct MANGOS_DLL_DECL npc_erekem_guardAI : public ScriptedAI
 {
-    npc_erekem_guardAI(Creature *pCreature) : ScriptedAI(pCreature)
+    npc_erekem_guardAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = ((instance_violet_hold*)pCreature->GetInstanceData());
         Reset();
@@ -243,7 +243,7 @@ struct MANGOS_DLL_DECL npc_erekem_guardAI : public ScriptedAI
 
 CreatureAI* GetAI_npc_erekem_guard(Creature* pCreature)
 {
-    return new npc_erekem_guardAI (pCreature);
+    return new npc_erekem_guardAI(pCreature);
 }
 
 void AddSC_boss_erekem()

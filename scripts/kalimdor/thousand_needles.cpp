@@ -44,7 +44,7 @@ enum
     NPC_GALAK_ASS               = 10720
 };
 
-const float m_afGalakLoc[] = {-4867.387695f, -1357.353760f, -48.226f};
+const float m_afGalakLoc[] = { -4867.387695f, -1357.353760f, -48.226f};
 
 struct MANGOS_DLL_DECL npc_kanatiAI : public npc_escortAI
 {
@@ -54,7 +54,7 @@ struct MANGOS_DLL_DECL npc_kanatiAI : public npc_escortAI
 
     void WaypointReached(uint32 uiPointId)
     {
-        switch(uiPointId)
+        switch (uiPointId)
         {
             case 0:
                 DoScriptText(SAY_KAN_START, m_creature);
@@ -69,10 +69,10 @@ struct MANGOS_DLL_DECL npc_kanatiAI : public npc_escortAI
 
     void DoSpawnGalak()
     {
-        for(int i = 0; i < 3; ++i)
+        for (int i = 0; i < 3; ++i)
             m_creature->SummonCreature(NPC_GALAK_ASS,
-            m_afGalakLoc[0], m_afGalakLoc[1], m_afGalakLoc[2], 0.0f,
-            TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
+                                       m_afGalakLoc[0], m_afGalakLoc[1], m_afGalakLoc[2], 0.0f,
+                                       TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
     }
 
     void JustSummoned(Creature* pSummoned)
@@ -116,14 +116,14 @@ enum
     ID_AMBUSH_3                 = 4
 };
 
-float m_afBanditLoc[6][6]=
+float m_afBanditLoc[6][6] =
 {
-    {-4905.479492f, -2062.732666f, 84.352f},
-    {-4915.201172f, -2073.528320f, 84.733f},
-    {-4878.883301f, -1986.947876f, 91.966f},
-    {-4877.503906f, -1966.113403f, 91.859f},
-    {-4767.985352f, -1873.169189f, 90.192f},
-    {-4788.861328f, -1888.007813f, 89.888f}
+    { -4905.479492f, -2062.732666f, 84.352f},
+    { -4915.201172f, -2073.528320f, 84.733f},
+    { -4878.883301f, -1986.947876f, 91.966f},
+    { -4877.503906f, -1966.113403f, 91.859f},
+    { -4767.985352f, -1873.169189f, 90.192f},
+    { -4788.861328f, -1888.007813f, 89.888f}
 };
 
 struct MANGOS_DLL_DECL npc_lakota_windsongAI : public npc_escortAI
@@ -134,7 +134,7 @@ struct MANGOS_DLL_DECL npc_lakota_windsongAI : public npc_escortAI
 
     void WaypointReached(uint32 uiPointId)
     {
-        switch(uiPointId)
+        switch (uiPointId)
         {
             case 8:
                 DoScriptText(SAY_LAKO_LOOK_OUT, m_creature);
@@ -157,10 +157,10 @@ struct MANGOS_DLL_DECL npc_lakota_windsongAI : public npc_escortAI
 
     void DoSpawnBandits(int uiAmbushId)
     {
-        for(int i = 0; i < 2; ++i)
+        for (int i = 0; i < 2; ++i)
             m_creature->SummonCreature(NPC_GRIM_BANDIT,
-            m_afBanditLoc[i+uiAmbushId][0], m_afBanditLoc[i+uiAmbushId][1], m_afBanditLoc[i+uiAmbushId][2], 0.0f,
-            TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 60000);
+                                       m_afBanditLoc[i + uiAmbushId][0], m_afBanditLoc[i + uiAmbushId][1], m_afBanditLoc[i + uiAmbushId][2], 0.0f,
+                                       TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 60000);
     }
 };
 
@@ -196,11 +196,11 @@ enum
     NPC_WYVERN          = 4107
 };
 
-float m_afWyvernLoc[3][3]=
+float m_afWyvernLoc[3][3] =
 {
-    {-4990.606f, -906.057f, -5.343f},
-    {-4970.241f, -927.378f, -4.951f},
-    {-4985.364f, -952.528f, -5.199f}
+    { -4990.606f, -906.057f, -5.343f},
+    { -4970.241f, -927.378f, -4.951f},
+    { -4985.364f, -952.528f, -5.199f}
 };
 
 struct MANGOS_DLL_DECL npc_paoka_swiftmountainAI : public npc_escortAI
@@ -211,7 +211,7 @@ struct MANGOS_DLL_DECL npc_paoka_swiftmountainAI : public npc_escortAI
 
     void WaypointReached(uint32 uiPointId)
     {
-        switch(uiPointId)
+        switch (uiPointId)
         {
             case 15:
                 DoScriptText(SAY_WYVERN, m_creature);
@@ -229,10 +229,10 @@ struct MANGOS_DLL_DECL npc_paoka_swiftmountainAI : public npc_escortAI
 
     void DoSpawnWyvern()
     {
-        for(int i = 0; i < 3; ++i)
+        for (int i = 0; i < 3; ++i)
             m_creature->SummonCreature(NPC_WYVERN,
-            m_afWyvernLoc[i][0], m_afWyvernLoc[i][1], m_afWyvernLoc[i][2], 0.0f,
-            TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 60000);
+                                       m_afWyvernLoc[i][0], m_afWyvernLoc[i][1], m_afWyvernLoc[i][2], 0.0f,
+                                       TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 60000);
     }
 };
 

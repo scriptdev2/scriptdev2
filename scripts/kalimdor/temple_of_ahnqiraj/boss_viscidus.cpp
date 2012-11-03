@@ -41,14 +41,14 @@ enum
     SPELL_VISCIDUS_EXPLODE      = 25938,
     SPELL_VISCIDUS_SUICIDE      = 26003,                    // cast when boss explodes and is below 5% Hp - should trigger 26002
 
-    //SPELL_MEMBRANE_VISCIDUS   = 25994,                    // damage reduction spell - removed from DBC
-    //SPELL_VISCIDUS_WEAKNESS   = 25926,                    // aura which procs at damage - should trigger the slow spells - removed from DBC
-    //SPELL_VISCIDUS_SHRINKS    = 25893,                    // removed from DBC
-    //SPELL_VISCIDUS_SHRINKS_2  = 27934,                    // removed from DBC
-    //SPELL_VISCIDUS_GROWS      = 25897,                    // removed from DBC
-    //SPELL_SUMMON_GLOBS        = 25885,                    // summons npc 15667 using spells from 25865 to 25884; All spells have target coords - removed from DBC
-    //SPELL_VISCIDUS_TELEPORT   = 25904,                    // removed from DBC
-    //SPELL_SUMMONT_TRIGGER     = 26564,                    // summons 15992 - removed from DBC
+    // SPELL_MEMBRANE_VISCIDUS   = 25994,                   // damage reduction spell - removed from DBC
+    // SPELL_VISCIDUS_WEAKNESS   = 25926,                   // aura which procs at damage - should trigger the slow spells - removed from DBC
+    // SPELL_VISCIDUS_SHRINKS    = 25893,                   // removed from DBC
+    // SPELL_VISCIDUS_SHRINKS_2  = 27934,                   // removed from DBC
+    // SPELL_VISCIDUS_GROWS      = 25897,                   // removed from DBC
+    // SPELL_SUMMON_GLOBS        = 25885,                   // summons npc 15667 using spells from 25865 to 25884; All spells have target coords - removed from DBC
+    // SPELL_VISCIDUS_TELEPORT   = 25904,                   // removed from DBC
+    // SPELL_SUMMONT_TRIGGER     = 26564,                   // summons 15992 - removed from DBC
 
     NPC_GLOB_OF_VISCIDUS        = 15667
 };

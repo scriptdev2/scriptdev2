@@ -64,13 +64,13 @@ struct MANGOS_DLL_DECL mob_dragonflayer_forge_masterAI : public ScriptedAI
 
     void SetMyForge()
     {
-        std::list<GameObject *> lGOList;
+        std::list<GameObject*> lGOList;
         uint32 uiGOBellow = 0;
         uint32 uiGOFire = 0;
 
         for (uint8 i = 0; i < MAX_FORGE; ++i)
         {
-            switch(i)
+            switch (i)
             {
                 case 0: uiGOBellow = GO_BELLOW_1; break;
                 case 1: uiGOBellow = GO_BELLOW_2; break;
@@ -93,7 +93,7 @@ struct MANGOS_DLL_DECL mob_dragonflayer_forge_masterAI : public ScriptedAI
             else if (lGOList.front()->getLootState() == GO_ACTIVATED)
                 lGOList.front()->ResetDoorOrButton();
 
-            switch(lGOList.front()->GetEntry())
+            switch (lGOList.front()->GetEntry())
             {
                 case GO_BELLOW_1: uiGOFire = GO_FORGEFIRE_1; m_uiForgeEncounterId = TYPE_BELLOW_1; break;
                 case GO_BELLOW_2: uiGOFire = GO_FORGEFIRE_2; m_uiForgeEncounterId = TYPE_BELLOW_2; break;

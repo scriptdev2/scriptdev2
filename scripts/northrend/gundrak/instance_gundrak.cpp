@@ -31,7 +31,7 @@ bool GOUse_go_gundrak_altar(Player* pPlayer, GameObject* pGo)
     if (!pInstance)
         return false;
 
-    switch(pGo->GetEntry())
+    switch (pGo->GetEntry())
     {
         case GO_ALTAR_OF_SLADRAN:  pInstance->SetData(TYPE_SLADRAN, SPECIAL);  break;
         case GO_ALTAR_OF_MOORABI:  pInstance->SetData(TYPE_MOORABI, SPECIAL);  break;
@@ -58,7 +58,7 @@ void instance_gundrak::Initialize()
 
 void instance_gundrak::OnCreatureCreate(Creature* pCreature)
 {
-    switch(pCreature->GetEntry())
+    switch (pCreature->GetEntry())
     {
         case NPC_SLADRAN:
         case NPC_ELEMENTAL:
@@ -93,7 +93,7 @@ void instance_gundrak::OnCreatureCreate(Creature* pCreature)
 
 void instance_gundrak::OnObjectCreate(GameObject* pGo)
 {
-    switch(pGo->GetEntry())
+    switch (pGo->GetEntry())
     {
         case GO_ECK_DOOR:
             if (m_auiEncounter[TYPE_MOORABI] == DONE && !instance->IsRegularDifficulty())
@@ -125,7 +125,7 @@ void instance_gundrak::OnObjectCreate(GameObject* pGo)
         case GO_ALTAR_OF_COLOSSUS:
             if (m_auiEncounter[TYPE_COLOSSUS] == DONE)
                 pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
-                break;
+            break;
         case GO_SNAKE_KEY:
         case GO_TROLL_KEY:
         case GO_MAMMOTH_KEY:
@@ -153,7 +153,7 @@ void instance_gundrak::Load(const char* chrIn)
     std::istringstream loadStream(chrIn);
     loadStream >> m_auiEncounter[TYPE_SLADRAN] >> m_auiEncounter[TYPE_MOORABI] >> m_auiEncounter[TYPE_COLOSSUS] >> m_auiEncounter[TYPE_GALDARAH] >> m_auiEncounter[TYPE_ECK];
 
-    for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+    for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
     {
         if (m_auiEncounter[i] == IN_PROGRESS)
             m_auiEncounter[i] = NOT_STARTED;
@@ -170,7 +170,7 @@ void instance_gundrak::SetData(uint32 uiType, uint32 uiData)
 {
     debug_log("SD2: Instance Gundrak: SetData received for type %u with data %u", uiType, uiData);
 
-    switch(uiType)
+    switch (uiType)
     {
         case TYPE_SLADRAN:
             m_auiEncounter[TYPE_SLADRAN] = uiData;
@@ -252,7 +252,7 @@ void instance_gundrak::SetData(uint32 uiType, uint32 uiData)
 
         std::ostringstream saveStream;
         saveStream << m_auiEncounter[TYPE_SLADRAN] << " " << m_auiEncounter[TYPE_MOORABI] << " " << m_auiEncounter[TYPE_COLOSSUS] << " " << m_auiEncounter[TYPE_GALDARAH] << " "
-            << m_auiEncounter[TYPE_ECK];
+                   << m_auiEncounter[TYPE_ECK];
 
         m_strInstData = saveStream.str();
 
@@ -278,10 +278,10 @@ bool instance_gundrak::CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player 
         case ACHIEV_CRIT_SHARE_LOVE:
             // Return true if all the players in the group got stampeled
             return m_uisShareLoveAchievPlayers.size() == MIN_LOVE_SHARE_PLAYERS;
-        // ToDo: enable this criteria when the script will be implemented
-        //case ACHIEV_CRIT_WHY_SNAKES:
-        //    // Return true if not found in the set
-        //    return m_uisWhySnakesAchievPlayers.find(pSource->GetGUIDLow()) == m_uisWhySnakesAchievPlayers.end();
+            // ToDo: enable this criteria when the script will be implemented
+            // case ACHIEV_CRIT_WHY_SNAKES:
+            //    // Return true if not found in the set
+            //    return m_uisWhySnakesAchievPlayers.find(pSource->GetGUIDLow()) == m_uisWhySnakesAchievPlayers.end();
 
         default:
             return false;
@@ -427,7 +427,7 @@ void instance_gundrak::Update(uint32 uiDiff)
             {
                 // Activate Bridge (and all other Keys) if we are on the last Key, and all other keys are already set
                 if (m_auiEncounter[0] == SPECIAL && m_auiEncounter[1] == SPECIAL && m_auiEncounter[2] == SPECIAL
-                    && m_mAltarInProgress.empty() && m_mBeamInProgress.empty() && m_mKeyInProgress.size() == 1)
+                        && m_mAltarInProgress.empty() && m_mBeamInProgress.empty() && m_mKeyInProgress.size() == 1)
                 {
                     DoUseDoorOrButton(GO_COLLISION);
                     DoUseDoorOrButton(GO_RHINO_KEY, 0, true);

@@ -95,7 +95,7 @@ enum
     SPELL_GREEN_DRAGON_TRANSFORM        = 25105,
     SPELL_RED_DRAGON_TRANSFORM          = 25106,
     SPELL_BLUE_DRAGON_TRANSFORM         = 25107,
-    //SPELL_BRONZE_DRAGON_TRANSFORM       = 25108,          // Spell was removed - exists only before 2.0.1
+    // SPELL_BRONZE_DRAGON_TRANSFORM       = 25108,         // Spell was removed - exists only before 2.0.1
 
     SPELL_MERITHRA_WAKE                 = 25145,            // should trigger 25172 on targets
     SPELL_ARYGOS_VENGEANCE              = 25149,
@@ -194,25 +194,25 @@ struct EventLocations
 
 static EventLocations aEternalBoardNPCs[MAX_DRAGONS] =
 {
-    {-8029.301f, 1534.612f, 2.609f, 3.121f, NPC_FANDRAL_STAGHELM},
-    {-8034.227f, 1536.580f, 2.609f, 6.161f, NPC_ARYGOS},
-    {-8031.935f, 1532.658f, 2.609f, 1.012f, NPC_CAELESTRASZ},
-    {-8034.106f, 1534.224f, 2.609f, 0.290f, NPC_MERITHRA_OF_THE_DREAM},
+    { -8029.301f, 1534.612f, 2.609f, 3.121f, NPC_FANDRAL_STAGHELM},
+    { -8034.227f, 1536.580f, 2.609f, 6.161f, NPC_ARYGOS},
+    { -8031.935f, 1532.658f, 2.609f, 1.012f, NPC_CAELESTRASZ},
+    { -8034.106f, 1534.224f, 2.609f, 0.290f, NPC_MERITHRA_OF_THE_DREAM},
 };
 
 static EventLocations aEternalBoardMovement[] =
 {
-    {-8159.951f, 1525.241f, 74.994f},           // 0 Flight position for dragons
-    {-8106.238f, 1525.948f, 2.639f},            // 1 Anachronos gate location
-    {-8103.861f, 1525.923f, 2.677f},            // 2 Fandral gate location
-    {-8107.387f, 1523.641f, 2.609f},            // 3 Shattered scepter
-    {-8100.921f, 1527.740f, 2.871f},            // 4 Fandral epilogue location
-    {-8115.270f, 1515.926f, 3.305f},            // 5 Anachronos gather broken scepter 1
-    {-8116.879f, 1530.615f, 3.762f},            // 6 Anachronos gather broken scepter 2
-    {-7997.790f, 1548.664f, 3.738f},            // 7 Fandral exit location
-    {-8061.933f, 1496.196f, 2.556f},            // 8 Anachronos launch location
-    {-8008.705f, 1446.063f, 44.104f},           // 9 Anachronos flight location
-    {-8085.748f, 1521.484f, 2.624f}             // 10 Anchor point for the army summoning
+    { -8159.951f, 1525.241f, 74.994f},          // 0 Flight position for dragons
+    { -8106.238f, 1525.948f, 2.639f},           // 1 Anachronos gate location
+    { -8103.861f, 1525.923f, 2.677f},           // 2 Fandral gate location
+    { -8107.387f, 1523.641f, 2.609f},           // 3 Shattered scepter
+    { -8100.921f, 1527.740f, 2.871f},           // 4 Fandral epilogue location
+    { -8115.270f, 1515.926f, 3.305f},           // 5 Anachronos gather broken scepter 1
+    { -8116.879f, 1530.615f, 3.762f},           // 6 Anachronos gather broken scepter 2
+    { -7997.790f, 1548.664f, 3.738f},           // 7 Fandral exit location
+    { -8061.933f, 1496.196f, 2.556f},           // 8 Anachronos launch location
+    { -8008.705f, 1446.063f, 44.104f},          // 9 Anachronos flight location
+    { -8085.748f, 1521.484f, 2.624f}            // 10 Anchor point for the army summoning
 };
 
 struct MANGOS_DLL_DECL npc_anachronos_the_ancientAI : public ScriptedAI, private DialogueHelper
@@ -245,7 +245,7 @@ struct MANGOS_DLL_DECL npc_anachronos_the_ancientAI : public ScriptedAI, private
 
     void JustDidDialogueStep(int32 iEntry)
     {
-        switch(iEntry)
+        switch (iEntry)
         {
             case NPC_ANACHRONOS_THE_ANCIENT:
                 // Call the other dragons
@@ -463,14 +463,14 @@ struct MANGOS_DLL_DECL npc_anachronos_the_ancientAI : public ScriptedAI, private
     {
         float fX, fY, fZ;
         // Summon kaldorei warriors
-        for(uint8 i = 0; i < MAX_KALDOREI; ++i)
+        for (uint8 i = 0; i < MAX_KALDOREI; ++i)
         {
             m_creature->GetRandomPoint(aEternalBoardMovement[10].m_fX, aEternalBoardMovement[10].m_fY, aEternalBoardMovement[10].m_fZ, 10.0f, fX, fY, fZ);
             m_creature->SummonCreature(NPC_KALDOREI_INFANTRY, fX, fY, fZ, 0.0f, TEMPSUMMON_CORPSE_DESPAWN, 0);
         }
 
         // Summon Qiraji warriors
-        for(uint8 i = 0; i < MAX_QIRAJI; ++i)
+        for (uint8 i = 0; i < MAX_QIRAJI; ++i)
         {
             m_creature->GetRandomPoint(aEternalBoardMovement[10].m_fX, aEternalBoardMovement[10].m_fY, aEternalBoardMovement[10].m_fZ, 15.0f, fX, fY, fZ);
             m_creature->SummonCreature(NPC_QIRAJI_WASP, fX, fY, fZ, 0.0f, TEMPSUMMON_CORPSE_DESPAWN, 0);
@@ -495,7 +495,7 @@ struct MANGOS_DLL_DECL npc_anachronos_the_ancientAI : public ScriptedAI, private
     void JustSummoned(Creature* pSummoned)
     {
         // Also remove npc flags where needed
-        switch(pSummoned->GetEntry())
+        switch (pSummoned->GetEntry())
         {
             case NPC_FANDRAL_STAGHELM:
                 m_fandralGuid = pSummoned->GetObjectGuid();
@@ -527,7 +527,7 @@ struct MANGOS_DLL_DECL npc_anachronos_the_ancientAI : public ScriptedAI, private
         if (uiType != POINT_MOTION_TYPE)
             return;
 
-        switch(uiPointId)
+        switch (uiPointId)
         {
             case POINT_ID_GATE:
                 // Cast time stop when he reaches the gate
@@ -548,7 +548,7 @@ struct MANGOS_DLL_DECL npc_anachronos_the_ancientAI : public ScriptedAI, private
                 break;
             case POINT_ID_EXIT:
                 // Spell was removed, manually change the display
-                //DoCastSpellIfCan(m_creature, SPELL_BRONZE_DRAGON_TRANSFORM);
+                // DoCastSpellIfCan(m_creature, SPELL_BRONZE_DRAGON_TRANSFORM);
                 m_creature->SetDisplayId(DISPLAY_ID_BRONZE_DRAGON);
                 m_uiEventTimer = 4000;
                 break;
@@ -562,7 +562,7 @@ struct MANGOS_DLL_DECL npc_anachronos_the_ancientAI : public ScriptedAI, private
 
         if (pSummoned->GetEntry() == NPC_FANDRAL_STAGHELM)
         {
-            switch(uiPointId)
+            switch (uiPointId)
             {
                 case POINT_ID_EPILOGUE:
                     // Face Anachronos and restart the dialogue
@@ -580,7 +580,7 @@ struct MANGOS_DLL_DECL npc_anachronos_the_ancientAI : public ScriptedAI, private
         }
         else if (uiPointId == POINT_ID_DRAGON_ATTACK)
         {
-            switch(pSummoned->GetEntry())
+            switch (pSummoned->GetEntry())
             {
                 case NPC_MERITHRA_OF_THE_DREAM:
                     StartNextDialogueText(DATA_MERITHRA_ATTACK);
@@ -600,7 +600,7 @@ struct MANGOS_DLL_DECL npc_anachronos_the_ancientAI : public ScriptedAI, private
         {
             if (m_uiEventTimer <= uiDiff)
             {
-                switch(m_uiEventStage)
+                switch (m_uiEventStage)
                 {
                     case 0:
                         // Start the dialogue

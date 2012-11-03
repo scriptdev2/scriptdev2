@@ -139,7 +139,7 @@ struct MANGOS_DLL_DECL boss_anomalusAI : public ScriptedAI
     void UpdateAI(const uint32 uiDiff)
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim() || m_creature->HasAura(SPELL_RIFT_SHIELD))
-             return;
+            return;
 
         // Create additional Chaotic Rift at 50% HP
         if (!m_bChaoticRift && m_creature->GetHealthPercent() < 50.0f)

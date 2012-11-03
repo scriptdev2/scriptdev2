@@ -66,7 +66,7 @@ enum
     MAX_PLATFORMS                   = 3,
 };
 
-static uint32 uiTrashPacks[MAX_PLATFORMS][MAX_PLATFORMS]=
+static uint32 uiTrashPacks[MAX_PLATFORMS][MAX_PLATFORMS] =
 {
     {NPC_PHANTASMAL_CLOUDSCRAPER,   NPC_PHANTASMAL_MAMMOTH, NPC_PHANTASMAL_WOLF},
     {NPC_PHANTASMAL_AIR,            NPC_PHANTASMAL_FIRE,    NPC_PHANTASMAL_WATER},
@@ -176,7 +176,7 @@ struct MANGOS_DLL_DECL boss_uromAI : public ScriptedAI
 
     void KilledUnit(Unit* pVictim)
     {
-        switch(urand(0, 2))
+        switch (urand(0, 2))
         {
             case 0: DoScriptText(SAY_KILL_1, m_creature); break;
             case 1: DoScriptText(SAY_KILL_2, m_creature); break;
@@ -231,13 +231,13 @@ struct MANGOS_DLL_DECL boss_uromAI : public ScriptedAI
         // Summon the 3 mobs contained in the pack
         for (uint8 i = 0; i < MAX_PLATFORMS; ++i)
         {
-            m_creature->GetNearPoint(m_creature, fX, fY, fZ, 0, 10.0f, M_PI_F/2 * i);
+            m_creature->GetNearPoint(m_creature, fX, fY, fZ, 0, 10.0f, M_PI_F / 2 * i);
             m_creature->SummonCreature(uiTrashPacks[m_vuiTrashPacksIds[m_uiPlatformPhase]][i], fX, fY, fZ, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
         }
 
         // Summon a fourth mob, which can be random
-        uint32 uiEntry = uiTrashPacks[m_vuiTrashPacksIds[m_uiPlatformPhase]][urand(0,2)];
-        m_creature->GetNearPoint(m_creature, fX, fY, fZ, 0, 10.0f, M_PI_F/2 * 3);
+        uint32 uiEntry = uiTrashPacks[m_vuiTrashPacksIds[m_uiPlatformPhase]][urand(0, 2)];
+        m_creature->GetNearPoint(m_creature, fX, fY, fZ, 0, 10.0f, M_PI_F / 2 * 3);
         m_creature->SummonCreature(uiEntry, fX, fY, fZ, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
     }
 

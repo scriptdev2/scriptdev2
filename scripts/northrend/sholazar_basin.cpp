@@ -70,7 +70,7 @@ struct MANGOS_DLL_DECL npc_heliceAI : public npc_escortAI
 
     void WaypointReached(uint32 uiPointId)
     {
-        switch(uiPointId)
+        switch (uiPointId)
         {
             case 2:
             {
@@ -115,7 +115,7 @@ struct MANGOS_DLL_DECL npc_heliceAI : public npc_escortAI
                 {
                     if (m_bFirstBarrel)
                     {
-                        switch(m_uiExplodePhase)
+                        switch (m_uiExplodePhase)
                         {
                             case 0:
                                 DoCastSpellIfCan(m_creature, SPELL_DETONATE_EXPLOSIVES_1);
@@ -143,7 +143,7 @@ struct MANGOS_DLL_DECL npc_heliceAI : public npc_escortAI
                     }
                     else
                     {
-                        switch(m_uiExplodePhase)
+                        switch (m_uiExplodePhase)
                         {
                             case 0:
                                 DoCastSpellIfCan(m_creature, SPELL_DETONATE_EXPLOSIVES_2);
@@ -235,7 +235,7 @@ struct MANGOS_DLL_DECL npc_injured_rainspeakerAI : public npc_escortAI
 
     void WaypointReached(uint32 uiPointId)
     {
-        switch(uiPointId)
+        switch (uiPointId)
         {
             case 22:
             {
@@ -355,7 +355,7 @@ bool GossipHello_npc_mosswalker_victim(Player* pPlayer, Creature* pCreature)
     if (pPlayer->GetQuestStatus(QUEST_MOSSWALKER_SAVIOR) == QUEST_STATUS_INCOMPLETE)
     {
         // doesn't appear they always emote
-        if (urand(0,3) == 0)
+        if (urand(0, 3) == 0)
             DoScriptText(EMOTE_PAIN, pCreature);
 
         pPlayer->ADD_GOSSIP_ITEM_ID(GOSSIP_ICON_CHAT, GOSSIP_ITEM_PULSE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
@@ -377,9 +377,9 @@ bool GossipSelect_npc_mosswalker_victim(Player* pPlayer, Creature* pCreature, ui
         else
             pCreature->SetLootRecipient(pPlayer);
 
-        if (urand(0,2))                                     // die
+        if (urand(0, 2))                                    // die
         {
-            switch(urand(0,5))
+            switch (urand(0, 5))
             {
                 case 0: DoScriptText(SAY_DIE_1, pCreature, pPlayer); break;
                 case 1: DoScriptText(SAY_DIE_2, pCreature, pPlayer); break;
@@ -391,7 +391,7 @@ bool GossipSelect_npc_mosswalker_victim(Player* pPlayer, Creature* pCreature, ui
         }
         else                                                // survive
         {
-            switch(urand(0,3))
+            switch (urand(0, 3))
             {
                 case 0: DoScriptText(SAY_RESCUE_1, pCreature, pPlayer); break;
                 case 1: DoScriptText(SAY_RESCUE_2, pCreature, pPlayer); break;
@@ -422,8 +422,8 @@ void AddSC_sholazar_basin()
     pNewScript->Name = "npc_injured_rainspeaker";
     pNewScript->GetAI = &GetAI_npc_injured_rainspeaker;
     pNewScript->pQuestAcceptNPC = &QuestAccept_npc_injured_rainspeaker;
-    //pNewScript->pGossipHello = &GossipHello_npc_injured_rainspeaker;
-    //pNewScript->pGossipSelect = &GossipSelect_npc_injured_rainspeaker;
+    // pNewScript->pGossipHello = &GossipHello_npc_injured_rainspeaker;
+    // pNewScript->pGossipSelect = &GossipSelect_npc_injured_rainspeaker;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;

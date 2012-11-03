@@ -59,8 +59,8 @@ enum
     SPELL_SEEPING_FERAL_ESSENCE         = 64458,
     SPELL_SEEPING_FERAL_ESSENCE_H       = 64676,
 
-    //NPC_SEEPING_FERAL_ESSENCE           = 34098,          // summoned by the feral defender on feign death
-    //NPC_GUARDIAN_SWARN                  = 34034,          // summoned by spell
+    // NPC_SEEPING_FERAL_ESSENCE           = 34098,         // summoned by the feral defender on feign death
+    // NPC_GUARDIAN_SWARN                  = 34034,         // summoned by spell
     NPC_FERAL_DEFENDER_STALKER          = 34096,
 };
 
@@ -85,12 +85,12 @@ struct MANGOS_DLL_DECL boss_auriayaAI : public ScriptedAI
 
     void Reset()
     {
-        m_uiEnrageTimer             = 10*MINUTE*IN_MILLISECONDS;
+        m_uiEnrageTimer             = 10 * MINUTE * IN_MILLISECONDS;
         m_uiSwarmTimer              = 50000;
         m_uiSonicScreechTimer       = 58000;
         m_uiSentinelBlastTimer      = 40000;
         m_uiTerrifyingScreechTimer  = 38000;
-        m_uiDefenderTimer           = 1*MINUTE*IN_MILLISECONDS;
+        m_uiDefenderTimer           = 1 * MINUTE * IN_MILLISECONDS;
     }
 
     void JustDied(Unit* pKiller)
@@ -189,7 +189,7 @@ struct MANGOS_DLL_DECL boss_auriayaAI : public ScriptedAI
             if (DoCastSpellIfCan(m_creature, SPELL_BERSERK) == CAST_OK)
             {
                 DoScriptText(SAY_BERSERK, m_creature);
-                m_uiEnrageTimer = 10*MINUTE*IN_MILLISECONDS;
+                m_uiEnrageTimer = 10 * MINUTE * IN_MILLISECONDS;
             }
         }
         else
@@ -258,7 +258,7 @@ struct MANGOS_DLL_DECL boss_feral_defenderAI : public ScriptedAI
             m_creature->SetHealth(0);
             m_creature->StopMoving();
             m_creature->ClearComboPointHolders();
-            //m_creature->RemoveAllAurasOnDeath(); // TODO Should only remove negative auras
+            // m_creature->RemoveAllAurasOnDeath(); // TODO Should only remove negative auras
             m_creature->ModifyAuraState(AURA_STATE_HEALTHLESS_20_PERCENT, false);
             m_creature->ModifyAuraState(AURA_STATE_HEALTHLESS_35_PERCENT, false);
             m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);

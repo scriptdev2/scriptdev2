@@ -33,7 +33,7 @@ static const DialogueEntry aIntroDialogue[] =
     {SAY_EMPERORS_INTRO_4,  NPC_VEKNILASH,   3000},
     {SAY_EMPERORS_INTRO_5,  NPC_VEKLOR,      3000},
     {SAY_EMPERORS_INTRO_6,  NPC_VEKNILASH,   0},
-    {0,0,0}
+    {0, 0, 0}
 };
 
 instance_temple_of_ahnqiraj::instance_temple_of_ahnqiraj(Map* pMap) : ScriptedInstance(pMap),
@@ -75,7 +75,7 @@ void instance_temple_of_ahnqiraj::DoHandleTempleAreaTrigger(uint32 uiTriggerId)
     }
 }
 
-void instance_temple_of_ahnqiraj::OnCreatureCreate (Creature* pCreature)
+void instance_temple_of_ahnqiraj::OnCreatureCreate(Creature* pCreature)
 {
     switch (pCreature->GetEntry())
     {
@@ -119,7 +119,7 @@ void instance_temple_of_ahnqiraj::OnObjectCreate(GameObject* pGo)
 
 void instance_temple_of_ahnqiraj::SetData(uint32 uiType, uint32 uiData)
 {
-    switch(uiType)
+    switch (uiType)
     {
         case TYPE_SKERAM:
             m_auiEncounter[uiType] = uiData;
@@ -183,8 +183,8 @@ void instance_temple_of_ahnqiraj::SetData(uint32 uiType, uint32 uiData)
 
         std::ostringstream saveStream;
         saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " " << m_auiEncounter[3] << " "
-            << m_auiEncounter[4] << " " << m_auiEncounter[5] << " " << m_auiEncounter[6] << " " << m_auiEncounter[7] << " "
-            << m_auiEncounter[8] << " " << m_auiEncounter[9];
+                   << m_auiEncounter[4] << " " << m_auiEncounter[5] << " " << m_auiEncounter[6] << " " << m_auiEncounter[7] << " "
+                   << m_auiEncounter[8] << " " << m_auiEncounter[9];
 
         m_strInstData = saveStream.str();
 
@@ -205,10 +205,10 @@ void instance_temple_of_ahnqiraj::Load(const char* chrIn)
 
     std::istringstream loadStream(chrIn);
     loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3]
-        >> m_auiEncounter[4] >> m_auiEncounter[5] >> m_auiEncounter[6] >> m_auiEncounter[7]
-        >> m_auiEncounter[8] >> m_auiEncounter[9];
+               >> m_auiEncounter[4] >> m_auiEncounter[5] >> m_auiEncounter[6] >> m_auiEncounter[7]
+               >> m_auiEncounter[8] >> m_auiEncounter[9];
 
-    for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+    for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
     {
         if (m_auiEncounter[i] == IN_PROGRESS)
             m_auiEncounter[i] = NOT_STARTED;
@@ -252,7 +252,7 @@ void instance_temple_of_ahnqiraj::Update(uint32 uiDiff)
                 }
             }
         }
-        m_uiCthunWhisperTimer = urand(1.5*MINUTE*IN_MILLISECONDS, 5*MINUTE*IN_MILLISECONDS);
+        m_uiCthunWhisperTimer = urand(1.5 * MINUTE * IN_MILLISECONDS, 5 * MINUTE * IN_MILLISECONDS);
     }
     else
         m_uiCthunWhisperTimer -= uiDiff;

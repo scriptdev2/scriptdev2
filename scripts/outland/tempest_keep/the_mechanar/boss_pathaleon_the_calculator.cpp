@@ -113,7 +113,7 @@ struct MANGOS_DLL_DECL boss_pathaleon_the_calculatorAI : public ScriptedAI
 
     void UpdateAI(const uint32 uiDiff)
     {
-        //Return since we have no target
+        // Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
@@ -230,7 +230,7 @@ struct MANGOS_DLL_DECL mob_nether_wraithAI : public ScriptedAI
             }
         }
         else
-            m_uiArcaneMissilesTimer -=uiDiff;
+            m_uiArcaneMissilesTimer -= uiDiff;
 
         if (!m_bHasDetonated && m_creature->GetHealthPercent() < 10.0f)
         {

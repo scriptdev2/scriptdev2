@@ -68,7 +68,7 @@ struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public ScriptedAI
     {
         m_uiCorrosiveAcidTimer  = urand(20000, 23000);
         m_uiFearTimer           = urand(20000, 26000);
-        m_uiEnrageTimer         = 3*MINUTE*IN_MILLISECONDS;
+        m_uiEnrageTimer         = 3 * MINUTE * IN_MILLISECONDS;
         m_bIsEnraged            = false;
     }
 
@@ -80,7 +80,7 @@ struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public ScriptedAI
 
     void Aggro(Unit* pWho)
     {
-        switch(urand(0, 2))
+        switch (urand(0, 2))
         {
             case 0: DoScriptText(SAY_AGGRO_1, m_creature); break;
             case 1: DoScriptText(SAY_AGGRO_2, m_creature); break;

@@ -77,7 +77,7 @@ struct MANGOS_DLL_DECL world_map_kalimdor : public ScriptedMap
         switch (pCreature->GetEntry())
         {
             case NPC_GREYMIST_COASTRUNNNER:
-                if (pCreature->IsTemporarySummon())             // Only count the ones summoned for Murkdeep quest
+                if (pCreature->IsTemporarySummon())         // Only count the ones summoned for Murkdeep quest
                 {
                     ++m_uiMurkdeepAdds_KilledAddCount;
 
@@ -102,7 +102,7 @@ struct MANGOS_DLL_DECL world_map_kalimdor : public ScriptedMap
                 }
                 break;
             case NPC_GREYMIST_WARRIOR:
-                if (pCreature->IsTemporarySummon())             // Only count the ones summoned for Murkdeep quest
+                if (pCreature->IsTemporarySummon())         // Only count the ones summoned for Murkdeep quest
                 {
                     ++m_uiMurkdeepAdds_KilledAddCount;
 

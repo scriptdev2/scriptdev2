@@ -56,7 +56,7 @@ static const DialogueEntry aCitadelDialogue[] =
     {0, 0, 0},
 };
 
-instance_icecrown_citadel::instance_icecrown_citadel(Map *pMap) : ScriptedInstance(pMap), DialogueHelper(aCitadelDialogue),
+instance_icecrown_citadel::instance_icecrown_citadel(Map* pMap) : ScriptedInstance(pMap), DialogueHelper(aCitadelDialogue),
     m_uiTeam(0),
     m_uiPutricideValveTimer(0),
     m_bHasMarrowgarIntroYelled(false),
@@ -101,7 +101,7 @@ void instance_icecrown_citadel::DoHandleCitadelAreaTrigger(uint32 uiTriggerId, P
     }
     else if (uiTriggerId == AREATRIGGER_SINDRAGOSA_PLATFORM)
     {
-        if (Creature *pSindragosa = GetSingleCreatureFromStorage(NPC_SINDRAGOSA))
+        if (Creature* pSindragosa = GetSingleCreatureFromStorage(NPC_SINDRAGOSA))
         {
             if (pSindragosa->isAlive() && !pSindragosa->isInCombat())
                 pSindragosa->SetInCombatWithZone();
@@ -110,7 +110,7 @@ void instance_icecrown_citadel::DoHandleCitadelAreaTrigger(uint32 uiTriggerId, P
         {
             if (!m_bHasRimefangLanded)
             {
-                if (Creature *pRimefang = GetSingleCreatureFromStorage(NPC_RIMEFANG))
+                if (Creature* pRimefang = GetSingleCreatureFromStorage(NPC_RIMEFANG))
                 {
                     pRimefang->AI()->AttackStart(pPlayer);
                     m_bHasRimefangLanded = true;
@@ -119,7 +119,7 @@ void instance_icecrown_citadel::DoHandleCitadelAreaTrigger(uint32 uiTriggerId, P
 
             if (!m_bHasSpinestalkerLanded)
             {
-                if (Creature *pSpinestalker = GetSingleCreatureFromStorage(NPC_SPINESTALKER))
+                if (Creature* pSpinestalker = GetSingleCreatureFromStorage(NPC_SPINESTALKER))
                 {
                     pSpinestalker->AI()->AttackStart(pPlayer);
                     m_bHasSpinestalkerLanded = true;
@@ -135,9 +135,9 @@ void instance_icecrown_citadel::OnPlayerEnter(Player* pPlayer)
         m_uiTeam = pPlayer->GetTeam();
 }
 
-void instance_icecrown_citadel::OnCreatureCreate(Creature *pCreature)
+void instance_icecrown_citadel::OnCreatureCreate(Creature* pCreature)
 {
-    switch(pCreature->GetEntry())
+    switch (pCreature->GetEntry())
     {
         case NPC_LORD_MARROWGAR:
         case NPC_LADY_DEATHWHISPER:
@@ -157,17 +157,17 @@ void instance_icecrown_citadel::OnCreatureCreate(Creature *pCreature)
         case NPC_SPINESTALKER:
         case NPC_VALITHRIA_COMBAT_TRIGGER:
         case NPC_BLOOD_ORB_CONTROL:
-             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
-             break;
+            m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
+            break;
         case NPC_DEATHWHISPER_SPAWN_STALKER:
             m_lDeathwhisperStalkersGuids.push_back(pCreature->GetObjectGuid());
             return;
     }
 }
 
-void instance_icecrown_citadel::OnObjectCreate(GameObject *pGo)
+void instance_icecrown_citadel::OnObjectCreate(GameObject* pGo)
 {
-    switch(pGo->GetEntry())
+    switch (pGo->GetEntry())
     {
         case GO_ICEWALL_1:
         case GO_ICEWALL_2:
@@ -295,7 +295,7 @@ void instance_icecrown_citadel::OnCreatureDeath(Creature* pCreature)
 
 void instance_icecrown_citadel::SetData(uint32 uiType, uint32 uiData)
 {
-    switch(uiType)
+    switch (uiType)
     {
         case TYPE_MARROWGAR:
             m_auiEncounter[uiType] = uiData;
@@ -309,22 +309,22 @@ void instance_icecrown_citadel::SetData(uint32 uiType, uint32 uiData)
                 DoUseDoorOrButton(GO_ORATORY_DOOR);
             }
             break;
-         case TYPE_LADY_DEATHWHISPER:
+        case TYPE_LADY_DEATHWHISPER:
             m_auiEncounter[uiType] = uiData;
             DoUseDoorOrButton(GO_ORATORY_DOOR);
             // ToDo: set the elevateor in motion when TYPE_LADY_DEATHWHISPER == DONE
             break;
-         case TYPE_GUNSHIP_BATTLE:
+        case TYPE_GUNSHIP_BATTLE:
             m_auiEncounter[uiType] = uiData;
             if (uiData == DONE)
-                DoRespawnGameObject(m_uiTeam == ALLIANCE ? GO_GUNSHIP_ARMORY_A : GO_GUNSHIP_ARMORY_H, 60*MINUTE);
+                DoRespawnGameObject(m_uiTeam == ALLIANCE ? GO_GUNSHIP_ARMORY_A : GO_GUNSHIP_ARMORY_H, 60 * MINUTE);
             break;
-         case TYPE_DEATHBRINGER_SAURFANG:
+        case TYPE_DEATHBRINGER_SAURFANG:
             m_auiEncounter[uiType] = uiData;
             if (uiData == DONE)
             {
                 DoUseDoorOrButton(GO_SAURFANG_DOOR);
-                DoRespawnGameObject(GO_SAURFANG_CACHE, 60*MINUTE);
+                DoRespawnGameObject(GO_SAURFANG_CACHE, 60 * MINUTE);
 
                 // Note: these doors may not be correct. In theory the doors should be already opened
                 DoUseDoorOrButton(GO_SCIENTIST_DOOR);
@@ -332,23 +332,23 @@ void instance_icecrown_citadel::SetData(uint32 uiType, uint32 uiData)
                 DoUseDoorOrButton(GO_GREEN_DRAGON_ENTRANCE);
             }
             break;
-         case TYPE_FESTERGUT:
+        case TYPE_FESTERGUT:
             m_auiEncounter[uiType] = uiData;
             DoUseDoorOrButton(GO_ORANGE_PLAGUE);
             if (uiData == DONE)
                 DoToggleGameObjectFlags(GO_ORANGE_VALVE, GO_FLAG_NO_INTERACT, false);
             break;
-         case TYPE_ROTFACE:
+        case TYPE_ROTFACE:
             m_auiEncounter[uiType] = uiData;
             DoUseDoorOrButton(GO_GREEN_PLAGUE);
             if (uiData == DONE)
                 DoToggleGameObjectFlags(GO_GREEN_VALVE, GO_FLAG_NO_INTERACT, false);
             break;
-         case TYPE_PROFESSOR_PUTRICIDE:
+        case TYPE_PROFESSOR_PUTRICIDE:
             m_auiEncounter[uiType] = uiData;
             DoUseDoorOrButton(GO_SCIENTIST_DOOR);
             break;
-         case TYPE_BLOOD_PRINCE_COUNCIL:
+        case TYPE_BLOOD_PRINCE_COUNCIL:
             m_auiEncounter[uiType] = uiData;
             DoUseDoorOrButton(GO_CRIMSON_HALL_DOOR);
             if (uiData == DONE)
@@ -357,13 +357,13 @@ void instance_icecrown_citadel::SetData(uint32 uiType, uint32 uiData)
                 DoUseDoorOrButton(GO_COUNCIL_DOOR_2);
             }
             break;
-         case TYPE_QUEEN_LANATHEL:
+        case TYPE_QUEEN_LANATHEL:
             m_auiEncounter[uiType] = uiData;
             DoUseDoorOrButton(GO_BLOODPRINCE_DOOR);
             if (uiData == DONE)
                 DoUseDoorOrButton(GO_ICECROWN_GRATE);
             break;
-         case TYPE_VALITHRIA:
+        case TYPE_VALITHRIA:
             m_auiEncounter[uiType] = uiData;
             DoUseDoorOrButton(GO_GREEN_DRAGON_ENTRANCE);
             // Side doors
@@ -379,14 +379,14 @@ void instance_icecrown_citadel::SetData(uint32 uiType, uint32 uiData)
             {
                 DoUseDoorOrButton(GO_GREEN_DRAGON_EXIT);
                 DoUseDoorOrButton(GO_SINDRAGOSA_ENTRANCE);
-                DoRespawnGameObject(GO_DREAMWALKER_CACHE, 60*MINUTE);
+                DoRespawnGameObject(GO_DREAMWALKER_CACHE, 60 * MINUTE);
             }
             break;
-         case TYPE_SINDRAGOSA:
+        case TYPE_SINDRAGOSA:
             m_auiEncounter[uiType] = uiData;
             DoUseDoorOrButton(GO_SINDRAGOSA_ENTRANCE);
             break;
-         case TYPE_LICH_KING:
+        case TYPE_LICH_KING:
             m_auiEncounter[uiType] = uiData;
             break;
         default:
@@ -401,9 +401,9 @@ void instance_icecrown_citadel::SetData(uint32 uiType, uint32 uiData)
         std::ostringstream saveStream;
 
         saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " "
-            << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5] << " "
-            << m_auiEncounter[6] << " " << m_auiEncounter[7] << " " << m_auiEncounter[8] << " "
-            << m_auiEncounter[9] << " " << m_auiEncounter[10] << " " << m_auiEncounter[11];
+                   << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5] << " "
+                   << m_auiEncounter[6] << " " << m_auiEncounter[7] << " " << m_auiEncounter[8] << " "
+                   << m_auiEncounter[9] << " " << m_auiEncounter[10] << " " << m_auiEncounter[11];
 
         m_strInstData = saveStream.str();
 
@@ -426,7 +426,7 @@ bool instance_icecrown_citadel::CheckAchievementCriteriaMeet(uint32 uiCriteriaId
     return false;
 }
 
-void instance_icecrown_citadel::Load(const char *strIn)
+void instance_icecrown_citadel::Load(const char* strIn)
 {
     if (!strIn)
     {
@@ -438,8 +438,8 @@ void instance_icecrown_citadel::Load(const char *strIn)
 
     std::istringstream loadStream(strIn);
     loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3]
-        >> m_auiEncounter[4] >> m_auiEncounter[5] >> m_auiEncounter[6] >> m_auiEncounter[7] >> m_auiEncounter[8]
-        >> m_auiEncounter[9] >> m_auiEncounter[10] >> m_auiEncounter[11];
+               >> m_auiEncounter[4] >> m_auiEncounter[5] >> m_auiEncounter[6] >> m_auiEncounter[7] >> m_auiEncounter[8]
+               >> m_auiEncounter[9] >> m_auiEncounter[10] >> m_auiEncounter[11];
 
     for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
     {
@@ -480,7 +480,7 @@ InstanceData* GetInstanceData_instance_icecrown_citadel(Map* pMap)
 bool AreaTrigger_at_icecrown_citadel(Player* pPlayer, AreaTriggerEntry const* pAt)
 {
     if (pAt->id == AREATRIGGER_MARROWGAR_INTRO || pAt->id == AREATRIGGER_DEATHWHISPER_INTRO ||
-        pAt->id == AREATRIGGER_SINDRAGOSA_PLATFORM)
+            pAt->id == AREATRIGGER_SINDRAGOSA_PLATFORM)
     {
         if (pPlayer->isGameMaster() || pPlayer->isDead())
             return false;

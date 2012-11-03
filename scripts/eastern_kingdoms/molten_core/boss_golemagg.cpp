@@ -91,7 +91,7 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
             if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
             {
                 if (DoCastSpellIfCan(pTarget, SPELL_PYROBLAST) == CAST_OK)
-                    m_uiPyroblastTimer = 7*IN_MILLISECONDS;
+                    m_uiPyroblastTimer = 7 * IN_MILLISECONDS;
             }
         }
         else
@@ -110,7 +110,7 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
             if (m_uiEarthquakeTimer < uiDiff)
             {
                 if (DoCastSpellIfCan(m_creature, SPELL_EARTHQUAKE) == CAST_OK)
-                    m_uiEarthquakeTimer = 3*IN_MILLISECONDS;
+                    m_uiEarthquakeTimer = 3 * IN_MILLISECONDS;
             }
             else
                 m_uiEarthquakeTimer -= uiDiff;
@@ -120,7 +120,7 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
         if (m_uiBuffTimer < uiDiff)
         {
             DoCastSpellIfCan(m_creature, SPELL_GOLEMAGG_TRUST);
-            m_uiBuffTimer = 1.5*IN_MILLISECONDS;
+            m_uiBuffTimer = 1.5 * IN_MILLISECONDS;
         }
         else
             m_uiBuffTimer -= uiDiff;
@@ -142,7 +142,7 @@ struct MANGOS_DLL_DECL mob_core_ragerAI : public ScriptedAI
 
     void Reset()
     {
-        m_uiMangleTimer = 7*IN_MILLISECONDS;                 // These times are probably wrong
+        m_uiMangleTimer = 7 * IN_MILLISECONDS;              // These times are probably wrong
     }
 
     void DamageTaken(Unit* pDoneBy, uint32& uiDamage)
@@ -167,7 +167,7 @@ struct MANGOS_DLL_DECL mob_core_ragerAI : public ScriptedAI
         if (m_uiMangleTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_MANGLE) == CAST_OK)
-                m_uiMangleTimer = 10*IN_MILLISECONDS;
+                m_uiMangleTimer = 10 * IN_MILLISECONDS;
         }
         else
             m_uiMangleTimer -= uiDiff;

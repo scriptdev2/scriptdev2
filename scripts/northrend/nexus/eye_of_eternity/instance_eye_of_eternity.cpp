@@ -56,7 +56,7 @@ bool instance_eye_of_eternity::IsEncounterInProgress() const
 
 void instance_eye_of_eternity::OnCreatureCreate(Creature* pCreature)
 {
-    switch(pCreature->GetEntry())
+    switch (pCreature->GetEntry())
     {
         case NPC_MALYGOS:
         case NPC_ALEXSTRASZA:
@@ -115,11 +115,11 @@ void instance_eye_of_eternity::JustDidDialogueStep(int32 iEntry)
         case NPC_ALEXSTRASZAS_GIFT:
             if (Creature* pGift = GetSingleCreatureFromStorage(NPC_ALEXSTRASZAS_GIFT))
                 pGift->CastSpell(pGift, SPELL_ALEXSTRASZAS_GIFT_VISUAL, false);
-            DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_ALEXSTRASZAS_GIFT : GO_ALEXSTRASZAS_GIFT_H, 30*MINUTE);
+            DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_ALEXSTRASZAS_GIFT : GO_ALEXSTRASZAS_GIFT_H, 30 * MINUTE);
             break;
         case GO_PLATFORM:
             // ToDo: respawn the platform and the portal
-            DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_HEART_OF_MAGIC : GO_HEART_OF_MAGIC_H, 30*MINUTE);
+            DoRespawnGameObject(instance->IsRegularDifficulty() ? GO_HEART_OF_MAGIC : GO_HEART_OF_MAGIC_H, 30 * MINUTE);
             break;
     }
 }

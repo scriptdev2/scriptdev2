@@ -85,7 +85,7 @@ struct MANGOS_DLL_DECL npc_nesingwary_trapperAI : public ScriptedAI
         {
             if (m_uiPhaseTimer <= uiDiff)
             {
-                switch(m_uiPhase)
+                switch (m_uiPhase)
                 {
                     case 1:
                         if (GameObject* pTrap = m_creature->GetMap()->GetGameObject(m_trapGuid))
@@ -260,7 +260,7 @@ bool EffectAuraDummy_npc_oil_stained_wolf(const Aura* pAura, bool bApply)
 bool GOUse_go_caribou_trap(Player* pPlayer, GameObject* pGo)
 {
     float fX, fY, fZ;
-    pGo->GetClosePoint(fX, fY, fZ, pGo->GetObjectBoundingRadius(), 2*INTERACTION_DISTANCE, frand(0, M_PI_F*2));
+    pGo->GetClosePoint(fX, fY, fZ, pGo->GetObjectBoundingRadius(), 2 * INTERACTION_DISTANCE, frand(0, M_PI_F * 2));
 
     if (Creature* pCreature = pGo->SummonCreature(NPC_NESINGWARY_TRAPPER, fX, fY, fZ, pGo->GetOrientation(), TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 10000))
     {
@@ -331,7 +331,7 @@ struct MANGOS_DLL_DECL npc_sinkhole_kill_creditAI : public ScriptedAI
         {
             if (m_uiCartTimer <= uiDiff)
             {
-                switch(m_uiCartPhase)
+                switch (m_uiCartPhase)
                 {
                     case 0:
                         DoCastSpellIfCan(m_creature, SPELL_SUMMON_EXPLOSIVES_CART_FIRE);
@@ -423,7 +423,7 @@ struct MANGOS_DLL_DECL npc_lurgglbrAI : public npc_escortAI
 
     void WaypointStart(uint32 uiPointId)
     {
-        switch(uiPointId)
+        switch (uiPointId)
         {
             case 1:
                 if (Player* pPlayer = GetPlayerForEscort())
@@ -437,7 +437,7 @@ struct MANGOS_DLL_DECL npc_lurgglbrAI : public npc_escortAI
 
     void WaypointReached(uint32 uiPointId)
     {
-        switch(uiPointId)
+        switch (uiPointId)
         {
             case 0:
                 if (Player* pPlayer = GetPlayerForEscort())
@@ -474,7 +474,7 @@ struct MANGOS_DLL_DECL npc_lurgglbrAI : public npc_escortAI
 
                     m_creature->SetFacingToObject(pPlayer);
 
-                    switch(m_uiSpeech)
+                    switch (m_uiSpeech)
                     {
                         case 0:
                             DoScriptText(SAY_END_2, m_creature, pPlayer);

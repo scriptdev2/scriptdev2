@@ -142,7 +142,7 @@ static const DialogueEntryTwoSide aTocDialogues[] =
     {SAY_LKING_ANUB_INTRO_2,        NPC_THE_LICHKING_VISUAL, 0, 0, 18500},
     {EVENT_DESTROY_FLOOR, 0, 0, 0,                          2500},
     {SAY_LKING_ANUB_INTRO_3,        NPC_THE_LICHKING, 0, 0, 0},
-    {0, 0, 0, 0 ,0}
+    {0, 0, 0, 0 , 0}
 };
 
 instance_trial_of_the_crusader::instance_trial_of_the_crusader(Map* pMap) : ScriptedInstance(pMap), DialogueHelper(aTocDialogues),
@@ -248,7 +248,7 @@ void instance_trial_of_the_crusader::OnPlayerEnter(Player* pPlayer)
 
 void instance_trial_of_the_crusader::SetData(uint32 uiType, uint32 uiData)
 {
-    switch(uiType)
+    switch (uiType)
     {
         case TYPE_WIPE_COUNT:
             if (IsHeroicDifficulty())
@@ -294,7 +294,7 @@ void instance_trial_of_the_crusader::SetData(uint32 uiType, uint32 uiData)
             }
             else if (uiData == DONE)
             {
-                DoRespawnGameObject(GO_CRUSADERS_CACHE, 60*MINUTE);
+                DoRespawnGameObject(GO_CRUSADERS_CACHE, 60 * MINUTE);
                 StartNextDialogueText(SAY_VARIAN_PVP_A_WIN);
             }
             m_auiEncounter[uiType] = uiData;
@@ -338,7 +338,7 @@ void instance_trial_of_the_crusader::SetData(uint32 uiType, uint32 uiData)
 
         std::ostringstream saveStream;
         saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " "
-            << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5];
+                   << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5];
 
         m_strInstData = saveStream.str();
 
@@ -367,9 +367,9 @@ void instance_trial_of_the_crusader::Load(const char* chrIn)
 
     std::istringstream loadStream(chrIn);
     loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3]
-        >> m_auiEncounter[4] >> m_auiEncounter[5];
+               >> m_auiEncounter[4] >> m_auiEncounter[5];
 
-    for(uint8 i = TYPE_NORTHREND_BEASTS; i < MAX_ENCOUNTER; ++i)
+    for (uint8 i = TYPE_NORTHREND_BEASTS; i < MAX_ENCOUNTER; ++i)
         if (m_auiEncounter[i] == IN_PROGRESS)            // Do not load an encounter as "In Progress" - reset it instead.
             m_auiEncounter[i] = NOT_STARTED;
 
@@ -411,19 +411,19 @@ void instance_trial_of_the_crusader::DoHandleEventEpilogue()
 
     pPlayer->SummonCreature(NPC_ARGENT_MAGE, aSpawnPositions[13][0], aSpawnPositions[13][1], aSpawnPositions[13][2], aSpawnPositions[13][3], TEMPSUMMON_CORPSE_DESPAWN, 0);
 
-    DoRespawnGameObject(GO_PORTAL_DALARAN, 60*MINUTE);
+    DoRespawnGameObject(GO_PORTAL_DALARAN, 60 * MINUTE);
 
     // Spawn the chest for heroic difficulty
     if (IsHeroicDifficulty())
     {
         if (GetData(TYPE_WIPE_COUNT) == 0)
-            DoRespawnGameObject(Is25ManDifficulty() ? GO_TRIBUTE_CHEST_25H_50 : GO_TRIBUTE_CHEST_10H_50, 60*MINUTE);
+            DoRespawnGameObject(Is25ManDifficulty() ? GO_TRIBUTE_CHEST_25H_50 : GO_TRIBUTE_CHEST_10H_50, 60 * MINUTE);
         else if (GetData(TYPE_WIPE_COUNT) < 5)
-            DoRespawnGameObject(Is25ManDifficulty() ? GO_TRIBUTE_CHEST_25H_45 : GO_TRIBUTE_CHEST_10H_45, 60*MINUTE);
+            DoRespawnGameObject(Is25ManDifficulty() ? GO_TRIBUTE_CHEST_25H_45 : GO_TRIBUTE_CHEST_10H_45, 60 * MINUTE);
         else if (GetData(TYPE_WIPE_COUNT) < 25)
-            DoRespawnGameObject(Is25ManDifficulty() ? GO_TRIBUTE_CHEST_25H_25 : GO_TRIBUTE_CHEST_10H_25, 60*MINUTE);
+            DoRespawnGameObject(Is25ManDifficulty() ? GO_TRIBUTE_CHEST_25H_25 : GO_TRIBUTE_CHEST_10H_25, 60 * MINUTE);
         else
-            DoRespawnGameObject(Is25ManDifficulty() ? GO_TRIBUTE_CHEST_25H_01 : GO_TRIBUTE_CHEST_10H_01, 60*MINUTE);
+            DoRespawnGameObject(Is25ManDifficulty() ? GO_TRIBUTE_CHEST_25H_01 : GO_TRIBUTE_CHEST_10H_01, 60 * MINUTE);
     }
 }
 
@@ -509,7 +509,7 @@ void instance_trial_of_the_crusader::JustDidDialogueStep(int32 iEntry)
             if (Creature* pLichKingVisual = GetSingleCreatureFromStorage(NPC_THE_LICHKING_VISUAL))
             {
                 pLichKingVisual->CastSpell(pLichKingVisual, SPELL_FROSTNOVA, true);
-                //pLichKingVisual->CastSpell(pLichKingVisual, SPELL_CORPSE_TELEPORT, true); // NYI
+                // pLichKingVisual->CastSpell(pLichKingVisual, SPELL_CORPSE_TELEPORT, true); // NYI
                 pLichKingVisual->ForcedDespawn();
             }
 

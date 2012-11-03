@@ -57,7 +57,7 @@ enum
     SPELL_SUPERCHARGE                   = 61920,
     SPELL_LIGHTNING_CHANNEL_PREFIGHT    = 61942,        // cast by Brundir on Steelbreaker
     SPELL_RUNE_OF_POWER_PREFIGHT        = 61975,        // cast by Molgeim on Stellbreaker
-    //SPELL_COUNCIL_KILL_CREDIT         = 65195,        // currently missing from DBC
+    // SPELL_COUNCIL_KILL_CREDIT         = 65195,        // currently missing from DBC
 
     // Steelbreaker
     SPELL_HIGH_VOLTAGE                  = 61890,        // phase 1 spells
@@ -238,7 +238,7 @@ struct MANGOS_DLL_DECL boss_brundirAI : public ScriptedAI
             case SPELL_CHAIN_LIGHTNING_H:
             case SPELL_LIGHTNING_WHIRL_DAMAGE:
             case SPELL_LIGHTNING_WHIRL_DAMAGE_H:
-                    m_pInstance->SetSpecialAchievementCriteria(TYPE_ACHIEV_STUNNED, false);
+                m_pInstance->SetSpecialAchievementCriteria(TYPE_ACHIEV_STUNNED, false);
                 break;
         }
     }
@@ -250,7 +250,7 @@ struct MANGOS_DLL_DECL boss_brundirAI : public ScriptedAI
 
         switch (uiPointId)
         {
-            // After lift up follow a target and set the target change timer
+                // After lift up follow a target and set the target change timer
             case POINT_ID_LIFT_OFF:
                 // TODO: the boss should follow without changing his Z position - missing core feature
                 // Current implementation with move point is wrong
@@ -262,7 +262,7 @@ struct MANGOS_DLL_DECL boss_brundirAI : public ScriptedAI
                 m_uiTendrilsTargetTimer = 5000;
                 m_uiTendrilsFollowTimer = 500;
                 break;
-            // After reached the land remove all the auras and resume basic combat
+                // After reached the land remove all the auras and resume basic combat
             case POINT_ID_LAND:
                 m_creature->SetLevitate(false);
                 SetCombatMovement(true);
@@ -302,7 +302,7 @@ struct MANGOS_DLL_DECL boss_brundirAI : public ScriptedAI
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        switch(m_uiPhase)
+        switch (m_uiPhase)
         {
             case PHASE_CHARGE_TWO:
 

@@ -45,18 +45,18 @@ enum
 
     // Troll Form
     SPELL_WHIRLWIND                 = 17207,
-    SPELL_GRIEVOUS_THROW            = 43093,                //removes debuff after full healed
+    SPELL_GRIEVOUS_THROW            = 43093,                // removes debuff after full healed
 
     // Bear Form
-    SPELL_CREEPING_PARALYSIS        = 43095,                //should cast on the whole raid
-    SPELL_OVERPOWER                 = 43456,                //use after melee attack dodged
+    SPELL_CREEPING_PARALYSIS        = 43095,                // should cast on the whole raid
+    SPELL_OVERPOWER                 = 43456,                // use after melee attack dodged
 
     // Eagle Form
-    SPELL_ENERGY_STORM              = 43983,                //enemy area aura, trigger 42577 on vortexes which cast 43137 on targets
-    SPELL_SUMMON_CYCLONE            = 43112,                //summon four feather vortex
-    NPC_FEATHER_VORTEX              = 24136,                //ToDo: script via ACID
-    SPELL_CYCLONE_VISUAL            = 43119,                //trigger 43147 visual
-    SPELL_CYCLONE_PASSIVE           = 43120,                //trigger 43121 (4y aoe) every second
+    SPELL_ENERGY_STORM              = 43983,                // enemy area aura, trigger 42577 on vortexes which cast 43137 on targets
+    SPELL_SUMMON_CYCLONE            = 43112,                // summon four feather vortex
+    NPC_FEATHER_VORTEX              = 24136,                // ToDo: script via ACID
+    SPELL_CYCLONE_VISUAL            = 43119,                // trigger 43147 visual
+    SPELL_CYCLONE_PASSIVE           = 43120,                // trigger 43121 (4y aoe) every second
 
     // Lynx Form
     SPELL_CLAW_RAGE_HASTE           = 42583,                // Charges a random target and applies dummy effect 43149 on it
@@ -64,11 +64,11 @@ enum
     SPELL_LYNX_RUSH_HASTE           = 43152,                // Charges 9 targets in a row - Dummy effect should apply 43153
 
     // Dragonhawk Form
-    SPELL_FLAME_WHIRL               = 43213,                //trigger two spells
+    SPELL_FLAME_WHIRL               = 43213,                // trigger two spells
     SPELL_FLAME_BREATH              = 43215,
-    SPELL_SUMMON_PILLAR             = 43216,                //summon 24187
+    SPELL_SUMMON_PILLAR             = 43216,                // summon 24187
     NPC_COLUMN_OF_FIRE              = 24187,
-    SPELL_PILLAR_TRIGGER            = 43218,                //trigger 43217
+    SPELL_PILLAR_TRIGGER            = 43218,                // trigger 43217
 
     // Cosmetic
     SPELL_SPIRIT_DRAINED            = 42520,
@@ -108,7 +108,7 @@ static const BossPhase aZuljinPhases[] =
     {SPELL_SHAPE_OF_THE_DRAGONHAWK, SAY_DRAGONHAWK_TRANSFORM, EMOTE_DRAGONHAWK_SPIRIT, NPC_DRAGONHAWK_SPIRIT, PHASE_DRAGONHAWK}
 };
 
-//coords for going for changing form
+// coords for going for changing form
 static const float fZuljinMoveLoc[3] = {120.148811f, 703.713684f, 45.111477f};
 
 struct MANGOS_DLL_DECL boss_zuljinAI : public ScriptedAI
@@ -231,7 +231,7 @@ struct MANGOS_DLL_DECL boss_zuljinAI : public ScriptedAI
 
     void JustSummoned(Creature* pSummoned)
     {
-        switch(pSummoned->GetEntry())
+        switch (pSummoned->GetEntry())
         {
             case NPC_FEATHER_VORTEX:
                 pSummoned->CastSpell(pSummoned, SPELL_CYCLONE_VISUAL, true);
@@ -337,7 +337,7 @@ struct MANGOS_DLL_DECL boss_zuljinAI : public ScriptedAI
         {
             case PHASE_TROLL:
 
-                if(m_uiWhirlwindTimer < uiDiff)
+                if (m_uiWhirlwindTimer < uiDiff)
                 {
                     if (DoCastSpellIfCan(m_creature, SPELL_WHIRLWIND) == CAST_OK)
                         m_uiWhirlwindTimer = urand(15000, 20000);
@@ -345,9 +345,9 @@ struct MANGOS_DLL_DECL boss_zuljinAI : public ScriptedAI
                 else
                     m_uiWhirlwindTimer -= uiDiff;
 
-                if(m_uiGrievousThrowTimer < uiDiff)
+                if (m_uiGrievousThrowTimer < uiDiff)
                 {
-                    if(Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                    if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                     {
                         if (DoCastSpellIfCan(pTarget, SPELL_GRIEVOUS_THROW) == CAST_OK)
                             m_uiGrievousThrowTimer = 10000;
@@ -359,7 +359,7 @@ struct MANGOS_DLL_DECL boss_zuljinAI : public ScriptedAI
                 break;
             case PHASE_BEAR:
 
-                if(m_uiParalysisTimer < uiDiff)
+                if (m_uiParalysisTimer < uiDiff)
                 {
                     if (DoCastSpellIfCan(m_creature, SPELL_CREEPING_PARALYSIS) == CAST_OK)
                         m_uiParalysisTimer = 27000;
@@ -367,7 +367,7 @@ struct MANGOS_DLL_DECL boss_zuljinAI : public ScriptedAI
                 else
                     m_uiParalysisTimer -= uiDiff;
 
-                if(m_uiOverpowerTimer < uiDiff)
+                if (m_uiOverpowerTimer < uiDiff)
                 {
                     if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_OVERPOWER) == CAST_OK)
                         m_uiOverpowerTimer = urand(12000, 16000);
@@ -386,7 +386,7 @@ struct MANGOS_DLL_DECL boss_zuljinAI : public ScriptedAI
                 break;
             case PHASE_DRAGONHAWK:
 
-                if(m_uiFlameWhirlTimer < uiDiff)
+                if (m_uiFlameWhirlTimer < uiDiff)
                 {
                     if (DoCastSpellIfCan(m_creature, SPELL_FLAME_WHIRL) == CAST_OK)
                         m_uiFlameWhirlTimer = 15000;
@@ -394,7 +394,7 @@ struct MANGOS_DLL_DECL boss_zuljinAI : public ScriptedAI
                 else
                     m_uiFlameWhirlTimer -= uiDiff;
 
-                if(m_uiPillarOfFireTimer < uiDiff)
+                if (m_uiPillarOfFireTimer < uiDiff)
                 {
                     if (DoCastSpellIfCan(m_creature, SPELL_SUMMON_PILLAR) == CAST_OK)
                         m_uiPillarOfFireTimer = urand(17000, 22000);
@@ -402,9 +402,9 @@ struct MANGOS_DLL_DECL boss_zuljinAI : public ScriptedAI
                 else
                     m_uiPillarOfFireTimer -= uiDiff;
 
-                if(m_uiFlameBreathTimer < uiDiff)
+                if (m_uiFlameBreathTimer < uiDiff)
                 {
-                    if(Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
+                    if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                     {
                         if (DoCastSpellIfCan(m_creature, SPELL_FLAME_BREATH) == CAST_OK)
                             m_uiFlameBreathTimer = 15000;

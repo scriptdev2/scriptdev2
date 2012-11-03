@@ -191,7 +191,7 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI, private Dia
     void MoveInLineOfSight(Unit* pWho)
     {
         if (!m_bHasTaunted && pWho->GetTypeId() == TYPEID_PLAYER && !((Player*)pWho)->isGameMaster() &&
-            m_creature->IsWithinDistInMap(pWho, 40.0) && m_creature->IsWithinLOSInMap(pWho))
+                m_creature->IsWithinDistInMap(pWho, 40.0) && m_creature->IsWithinLOSInMap(pWho))
         {
             StartNextDialogueText(SAY_INTRO_1);
             m_creature->HandleEmote(EMOTE_STATE_TALK);
@@ -541,7 +541,7 @@ struct MANGOS_DLL_DECL mob_felkael_phoenixAI : public ScriptedAI
         // ToDo: research if this is correct and how can this be done by spell
         if (m_uiBurnTimer < uiDiff)
         {
-            //spell Burn should possible do this, but it doesn't, so do this for now.
+            // spell Burn should possible do this, but it doesn't, so do this for now.
             uint32 uiDmg = urand(1650, 2050);
             if (uiDmg > m_creature->GetHealth())
                 DoSetFakeDeath();

@@ -93,7 +93,7 @@ struct MANGOS_DLL_DECL boss_felmystAI : public ScriptedAI
         DoCastSpellIfCan(m_creature, SPELL_FELBLAZE_VISUAL);
 
         m_uiPhase               = PHASE_GROUND;
-        m_uiBerserkTimer        = 10*MINUTE*IN_MILLISECONDS;
+        m_uiBerserkTimer        = 10 * MINUTE * IN_MILLISECONDS;
 
         // Ground Phase
         m_uiCorrosionTimer      = 30000;

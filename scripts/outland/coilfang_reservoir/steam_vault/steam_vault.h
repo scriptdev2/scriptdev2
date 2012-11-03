@@ -16,7 +16,7 @@ enum
     NPC_NAGA_DISTILLER              = 17954,
     NPC_STEAMRIGGER                 = 17796,
     NPC_KALITHRESH                  = 17798,
-    //NPC_THESPIA                   = 17797,
+    // NPC_THESPIA                   = 17797,
 
     GO_MAIN_CHAMBERS_DOOR           = 183049,
     GO_ACCESS_PANEL_HYDRO           = 184125,

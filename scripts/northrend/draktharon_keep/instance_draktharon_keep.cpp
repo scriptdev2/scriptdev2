@@ -225,7 +225,7 @@ bool instance_draktharon_keep::CheckAchievementCriteriaMeet(uint32 uiCriteriaId,
 
 void instance_draktharon_keep::SetData(uint32 uiType, uint32 uiData)
 {
-    switch(uiType)
+    switch (uiType)
     {
         case TYPE_TROLLGORE:
             if (uiData == IN_PROGRESS)
@@ -311,7 +311,7 @@ void instance_draktharon_keep::Load(const char* chrIn)
     std::istringstream loadStream(chrIn);
     loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3];
 
-    for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+    for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
     {
         if (m_auiEncounter[i] == IN_PROGRESS)
             m_auiEncounter[i] = NOT_STARTED;
@@ -322,7 +322,7 @@ void instance_draktharon_keep::Load(const char* chrIn)
 
 uint32 instance_draktharon_keep::GetData(uint32 uiType)
 {
-    switch(uiType)
+    switch (uiType)
     {
         case TYPE_TROLLGORE: return m_auiEncounter[uiType];
         case TYPE_NOVOS:     return m_auiEncounter[uiType];

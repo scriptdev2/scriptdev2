@@ -79,11 +79,11 @@ void instance_ruby_sanctum::OnObjectCreate(GameObject* pGo)
     switch (pGo->GetEntry())
     {
         case GO_FLAME_WALLS:
-            if(m_auiEncounter[TYPE_SAVIANA] == DONE && m_auiEncounter[TYPE_BALTHARUS] == DONE)
+            if (m_auiEncounter[TYPE_SAVIANA] == DONE && m_auiEncounter[TYPE_BALTHARUS] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_FIRE_FIELD:
-            if(m_auiEncounter[TYPE_BALTHARUS] == DONE)
+            if (m_auiEncounter[TYPE_BALTHARUS] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
         case GO_FLAME_RING:
@@ -104,13 +104,13 @@ void instance_ruby_sanctum::OnObjectCreate(GameObject* pGo)
 // Wrapper to unlock the flame wall in from of Zarithrian
 void instance_ruby_sanctum::DoHandleZarithrianDoor()
 {
-    if(m_auiEncounter[TYPE_SAVIANA] == DONE && m_auiEncounter[TYPE_BALTHARUS] == DONE)
+    if (m_auiEncounter[TYPE_SAVIANA] == DONE && m_auiEncounter[TYPE_BALTHARUS] == DONE)
         DoUseDoorOrButton(GO_FLAME_WALLS);
 }
 
 void instance_ruby_sanctum::SetData(uint32 uiType, uint32 uiData)
 {
-    switch(uiType)
+    switch (uiType)
     {
         case TYPE_SAVIANA:
             m_auiEncounter[uiType] = uiData;

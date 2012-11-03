@@ -50,7 +50,7 @@ struct MANGOS_DLL_DECL boss_ambassador_flamelashAI : public ScriptedAI
     {
         float fX, fY, fZ;
         m_creature->GetRandomPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 30.0f, fX, fY, fZ);
-        m_creature->SummonCreature(NPC_BURNING_SPIRIT, fX, fY, fZ, m_creature->GetAngle(fX, fY)+M_PI_F, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 60000);
+        m_creature->SummonCreature(NPC_BURNING_SPIRIT, fX, fY, fZ, m_creature->GetAngle(fX, fY) + M_PI_F, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 60000);
     }
 
     void Aggro(Unit* pWho)
@@ -73,11 +73,11 @@ struct MANGOS_DLL_DECL boss_ambassador_flamelashAI : public ScriptedAI
 
     void UpdateAI(const uint32 uiDiff)
     {
-        //Return since we have no target
+        // Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
 
-        //m_uiSpiritTimer
+        // m_uiSpiritTimer
         if (m_uiSpiritTimer < uiDiff)
         {
             SummonSpirits();

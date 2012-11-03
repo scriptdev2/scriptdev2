@@ -38,7 +38,7 @@ void instance_azjol_nerub::Initialize()
 
 void instance_azjol_nerub::OnObjectCreate(GameObject* pGo)
 {
-    switch(pGo->GetEntry())
+    switch (pGo->GetEntry())
     {
         case GO_DOOR_KRIKTHIR:
             if (m_auiEncounter[TYPE_KRIKTHIR] == DONE)
@@ -57,7 +57,7 @@ void instance_azjol_nerub::OnObjectCreate(GameObject* pGo)
 
 void instance_azjol_nerub::OnCreatureCreate(Creature* pCreature)
 {
-    switch(pCreature->GetEntry())
+    switch (pCreature->GetEntry())
     {
         case NPC_KRIKTHIR:
         case NPC_GASHRA:
@@ -142,7 +142,7 @@ void instance_azjol_nerub::DoSendWatcherOrKrikthir()
 
     if (pAttacker)
     {
-        switch(urand(0, 2))
+        switch (urand(0, 2))
         {
             case 0: DoScriptText(SAY_SEND_GROUP_1, pKrikthir); break;
             case 1: DoScriptText(SAY_SEND_GROUP_2, pKrikthir); break;
@@ -197,14 +197,14 @@ ObjectGuid instance_azjol_nerub::GetRandomAssassinTrigger()
 {
     // Get a random summon target
     if (m_vAssassinSummonTargetsVect.size() > 0)
-        return m_vAssassinSummonTargetsVect[urand(0, m_vAssassinSummonTargetsVect.size() -1)];
+        return m_vAssassinSummonTargetsVect[urand(0, m_vAssassinSummonTargetsVect.size() - 1)];
     else
         return ObjectGuid();
 }
 
 void instance_azjol_nerub::SetData(uint32 uiType, uint32 uiData)
 {
-    switch(uiType)
+    switch (uiType)
     {
         case TYPE_KRIKTHIR:
             m_auiEncounter[uiType] = uiData;
@@ -262,7 +262,7 @@ void instance_azjol_nerub::Load(const char* chrIn)
     std::istringstream loadStream(chrIn);
     loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2];
 
-    for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+    for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
     {
         if (m_auiEncounter[i] == IN_PROGRESS)
             m_auiEncounter[i] = NOT_STARTED;

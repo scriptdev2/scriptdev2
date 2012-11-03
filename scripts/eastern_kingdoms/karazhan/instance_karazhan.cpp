@@ -103,7 +103,7 @@ void instance_karazhan::OnCreatureCreate(Creature* pCreature)
 
 void instance_karazhan::OnObjectCreate(GameObject* pGo)
 {
-    switch(pGo->GetEntry())
+    switch (pGo->GetEntry())
     {
         case GO_STAGE_DOOR_LEFT:
         case GO_STAGE_DOOR_RIGHT:
@@ -128,7 +128,7 @@ void instance_karazhan::OnObjectCreate(GameObject* pGo)
         case GO_MASTERS_TERRACE_DOOR_2:
             break;
 
-        // Opera event backgrounds
+            // Opera event backgrounds
         case GO_OZ_BACKDROP:
         case GO_HOOD_BACKDROP:
         case GO_HOOD_HOUSE:
@@ -151,7 +151,7 @@ void instance_karazhan::OnObjectCreate(GameObject* pGo)
 
 void instance_karazhan::SetData(uint32 uiType, uint32 uiData)
 {
-    switch(uiType)
+    switch (uiType)
     {
         case TYPE_ATTUMEN:
             m_auiEncounter[uiType] = uiData;
@@ -221,7 +221,7 @@ void instance_karazhan::SetData(uint32 uiType, uint32 uiData)
             DoUseDoorOrButton(GO_MASTERS_TERRACE_DOOR_1);
             DoUseDoorOrButton(GO_MASTERS_TERRACE_DOOR_2);
             break;
-        // Store the event type for the Opera
+            // Store the event type for the Opera
         case TYPE_OPERA_PERFORMANCE:
             m_uiOperaEvent = uiData;
             break;
@@ -234,9 +234,9 @@ void instance_karazhan::SetData(uint32 uiType, uint32 uiData)
 
         std::ostringstream saveStream;
         saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " "
-            << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5] << " "
-            << m_auiEncounter[6] << " " << m_auiEncounter[7] << " " << m_auiEncounter[8] << " "
-            << m_auiEncounter[9] << " " << m_auiEncounter[10] << " " << m_uiOperaEvent;
+                   << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5] << " "
+                   << m_auiEncounter[6] << " " << m_auiEncounter[7] << " " << m_auiEncounter[8] << " "
+                   << m_auiEncounter[9] << " " << m_auiEncounter[10] << " " << m_uiOperaEvent;
 
         m_strInstData = saveStream.str();
 
@@ -280,10 +280,10 @@ void instance_karazhan::Load(const char* chrIn)
     std::istringstream loadStream(chrIn);
 
     loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3]
-        >> m_auiEncounter[4] >> m_auiEncounter[5] >> m_auiEncounter[6] >> m_auiEncounter[7]
-        >> m_auiEncounter[8] >> m_auiEncounter[9] >> m_auiEncounter[10] >> m_uiOperaEvent;
+               >> m_auiEncounter[4] >> m_auiEncounter[5] >> m_auiEncounter[6] >> m_auiEncounter[7]
+               >> m_auiEncounter[8] >> m_auiEncounter[9] >> m_auiEncounter[10] >> m_uiOperaEvent;
 
-    for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+    for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
     {
         if (m_auiEncounter[i] == IN_PROGRESS)               // Do not load an encounter as "In Progress" - reset it instead.
             m_auiEncounter[i] = NOT_STARTED;
@@ -327,22 +327,22 @@ void instance_karazhan::DoPrepareOperaStage(Creature* pOrganizer)
         case OPERA_EVENT_WIZARD_OZ:
             for (uint8 i = 0; i < MAX_OZ_OPERA_MOBS; ++i)
                 pOrganizer->SummonCreature(aOperaLocOz[i].uiEntry, aOperaLocOz[i].fX, aOperaLocOz[i].fY, aOperaLocOz[i].fZ, aOperaLocOz[i].fO, TEMPSUMMON_DEAD_DESPAWN, 0);
-            DoRespawnGameObject(GO_OZ_BACKDROP, 12*HOUR);
+            DoRespawnGameObject(GO_OZ_BACKDROP, 12 * HOUR);
             for (GuidList::const_iterator itr = m_lOperaHayGuidList.begin(); itr != m_lOperaHayGuidList.end(); ++itr)
-                DoRespawnGameObject(*itr, 12*HOUR);
+                DoRespawnGameObject(*itr, 12 * HOUR);
             break;
         case OPERA_EVENT_RED_RIDING_HOOD:
             pOrganizer->SummonCreature(aOperaLocWolf.uiEntry, aOperaLocWolf.fX, aOperaLocWolf.fY, aOperaLocWolf.fZ, aOperaLocWolf.fO, TEMPSUMMON_DEAD_DESPAWN, 0);
-            DoRespawnGameObject(GO_HOOD_BACKDROP, 12*HOUR);
-            DoRespawnGameObject(GO_HOOD_HOUSE,    12*HOUR);
+            DoRespawnGameObject(GO_HOOD_BACKDROP, 12 * HOUR);
+            DoRespawnGameObject(GO_HOOD_HOUSE,    12 * HOUR);
             for (GuidList::const_iterator itr = m_lOperaTreeGuidList.begin(); itr != m_lOperaTreeGuidList.end(); ++itr)
-                DoRespawnGameObject(*itr, 12*HOUR);
+                DoRespawnGameObject(*itr, 12 * HOUR);
             break;
         case OPERA_EVENT_ROMULO_AND_JUL:
             pOrganizer->SummonCreature(aOperaLocJul.uiEntry, aOperaLocJul.fX, aOperaLocJul.fY, aOperaLocJul.fZ, aOperaLocJul.fO, TEMPSUMMON_DEAD_DESPAWN, 0);
-            DoRespawnGameObject(GO_RAJ_BACKDROP, 12*HOUR);
-            DoRespawnGameObject(GO_RAJ_MOON,     12*HOUR);
-            DoRespawnGameObject(GO_RAJ_BALCONY,  12*HOUR);
+            DoRespawnGameObject(GO_RAJ_BACKDROP, 12 * HOUR);
+            DoRespawnGameObject(GO_RAJ_MOON,     12 * HOUR);
+            DoRespawnGameObject(GO_RAJ_BALCONY,  12 * HOUR);
             break;
     }
 

@@ -35,8 +35,8 @@ enum
     GO_DOOR_RAZORGORE_ENTER     = 176964,
     GO_DOOR_RAZORGORE_EXIT      = 176965,
     GO_DOOR_NEFARIAN            = 176966,
-    //GO_DOOR_CHROMAGGUS_ENTER  = 179115,
-    //GO_DOOR_CHROMAGGUS_SIDE   = 179116,
+    // GO_DOOR_CHROMAGGUS_ENTER  = 179115,
+    // GO_DOOR_CHROMAGGUS_SIDE   = 179116,
     GO_DOOR_CHROMAGGUS_EXIT     = 179117,
     GO_DOOR_VAELASTRASZ         = 179364,
     GO_DOOR_LASHLAYER           = 179365,
@@ -46,7 +46,7 @@ enum
 };
 
 // Coords used to spawn Nefarius at the throne
-static const float aNefariusSpawnLoc[4] = {-7466.16f, -1040.80f, 412.053f, 2.14675f};
+static const float aNefariusSpawnLoc[4] = { -7466.16f, -1040.80f, 412.053f, 2.14675f};
 
 class MANGOS_DLL_DECL instance_blackwing_lair : public ScriptedInstance
 {

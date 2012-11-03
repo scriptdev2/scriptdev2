@@ -139,7 +139,7 @@ struct MANGOS_DLL_DECL boss_anzuAI : public ScriptedAI
         float fX, fY, fZ, fAng;
         for (uint8 i = 0; i < 3; ++i)
         {
-            fAng = 2*M_PI_F/3*i;
+            fAng = 2 * M_PI_F / 3 * i;
             m_creature->GetNearPoint(m_creature, fX, fY, fZ, 0, 15.0f, fAng);
             m_creature->SummonCreature(aSpiritsEntries[i], fX, fY, fZ, fAng + M_PI_F, TEMPSUMMON_CORPSE_DESPAWN, 0);
         }

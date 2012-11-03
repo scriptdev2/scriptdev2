@@ -152,7 +152,7 @@ struct MANGOS_DLL_DECL npc_ancestral_wolfAI : public npc_escortAI
 
     void WaypointReached(uint32 uiPointId)
     {
-        switch(uiPointId)
+        switch (uiPointId)
         {
             case 0:
                 DoScriptText(EMOTE_WOLF_LIFT_HEAD, m_creature);
@@ -187,21 +187,21 @@ enum
 
     QUEST_DEMONIAC                  = 10838,
     NPC_HELLFIRE_WARDLING           = 22259,
-    NPC_BUTTRESS                    = 22267,                //the 4x nodes
-    NPC_SPAWNER                     = 22260,                //just a dummy, not used
+    NPC_BUTTRESS                    = 22267,                // the 4x nodes
+    NPC_SPAWNER                     = 22260,                // just a dummy, not used
 
     MAX_BUTTRESS                    = 4,
-    TIME_TOTAL                      = MINUTE*10*IN_MILLISECONDS,
+    TIME_TOTAL                      = MINUTE * 10 * IN_MILLISECONDS,
 
-    SPELL_SUMMONED_DEMON            = 7741,                 //visual spawn-in for demon
-    SPELL_DEMONIAC_VISITATION       = 38708,                //create item
+    SPELL_SUMMONED_DEMON            = 7741,                 // visual spawn-in for demon
+    SPELL_DEMONIAC_VISITATION       = 38708,                // create item
 
-    SPELL_BUTTRESS_APPERANCE        = 38719,                //visual on 4x bunnies + the flying ones
-    SPELL_SUCKER_CHANNEL            = 38721,                //channel to the 4x nodes
+    SPELL_BUTTRESS_APPERANCE        = 38719,                // visual on 4x bunnies + the flying ones
+    SPELL_SUCKER_CHANNEL            = 38721,                // channel to the 4x nodes
     SPELL_SUCKER_DESPAWN_MOB        = 38691
 };
 
-//script is basic support, details like end event are not implemented
+// script is basic support, details like end event are not implemented
 struct MANGOS_DLL_DECL npc_demoniac_scryerAI : public ScriptedAI
 {
     npc_demoniac_scryerAI(Creature* pCreature) : ScriptedAI(pCreature)
@@ -221,7 +221,7 @@ struct MANGOS_DLL_DECL npc_demoniac_scryerAI : public ScriptedAI
 
     void Reset() {}
 
-    //we don't want anything to happen when attacked
+    // we don't want anything to happen when attacked
     void AttackedBy(Unit* pEnemy) {}
     void AttackStart(Unit* pEnemy) {}
 
@@ -231,11 +231,11 @@ struct MANGOS_DLL_DECL npc_demoniac_scryerAI : public ScriptedAI
 
         float fAngle = 0.0f;
 
-        switch(m_uiButtressCount)
+        switch (m_uiButtressCount)
         {
             case 1: fAngle = 0.0f; break;
-            case 2: fAngle = M_PI_F+M_PI_F/2; break;
-            case 3: fAngle = M_PI_F/2; break;
+            case 2: fAngle = M_PI_F + M_PI_F / 2; break;
+            case 3: fAngle = M_PI_F / 2; break;
             case 4: fAngle = M_PI_F; break;
         }
 

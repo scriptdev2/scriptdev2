@@ -171,7 +171,7 @@ struct MANGOS_DLL_DECL npc_valentine_boss_managerAI : public ScriptedAI, private
             // I'm not sure if this unit flag should be used, but it's clear that the NPC shouldn't be attacked until the dialogue is finished
             pHummel->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
             // WARNING: workaround -> faction should be set here - FIX THIS after the aura bug in core is fixed
-            //pHummel->SetFactionTemporary(FACTION_HOSTILE, TEMPFACTION_RESTORE_REACH_HOME | TEMPFACTION_RESTORE_RESPAWN);
+            // pHummel->SetFactionTemporary(FACTION_HOSTILE, TEMPFACTION_RESTORE_REACH_HOME | TEMPFACTION_RESTORE_RESPAWN);
         }
 
         StartNextDialogueText(QUEST_BEEN_SERVED);
@@ -181,7 +181,7 @@ struct MANGOS_DLL_DECL npc_valentine_boss_managerAI : public ScriptedAI, private
         {
             pBaxter->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
             // WARNING: workaround -> faction should be set here - FIX THIS after the aura bug in core is fixed
-            //pBaxter->SetFactionTemporary(FACTION_HOSTILE, TEMPFACTION_RESTORE_REACH_HOME | TEMPFACTION_RESTORE_RESPAWN);
+            // pBaxter->SetFactionTemporary(FACTION_HOSTILE, TEMPFACTION_RESTORE_REACH_HOME | TEMPFACTION_RESTORE_RESPAWN);
 
             if (GameObject* pVials = m_pInstance->GetSingleGameObjectFromStorage(GO_APOTHECARE_VIALS))
             {
@@ -199,7 +199,7 @@ struct MANGOS_DLL_DECL npc_valentine_boss_managerAI : public ScriptedAI, private
         {
             pFrye->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
             // WARNING: workaround -> faction should be set here - FIX THIS after the aura bug in core is fixed
-            //pFrye->SetFactionTemporary(FACTION_HOSTILE, TEMPFACTION_RESTORE_REACH_HOME | TEMPFACTION_RESTORE_RESPAWN);
+            // pFrye->SetFactionTemporary(FACTION_HOSTILE, TEMPFACTION_RESTORE_REACH_HOME | TEMPFACTION_RESTORE_RESPAWN);
 
             if (GameObject* pChemistry = m_pInstance->GetSingleGameObjectFromStorage(GO_CHEMISTRY_SET))
             {

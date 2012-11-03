@@ -26,7 +26,7 @@ EndScriptData */
 
 enum
 {
-    //netherspite spells
+    // netherspite spells
     SPELL_NETHERBURN            = 30522,
     SPELL_VOID_ZONE             = 37063,
     SPELL_NETHERBREATH          = 38523,
@@ -37,10 +37,10 @@ enum
     SPELL_FACE_RANDOM_TARGET    = 38546,                // triggered by spell 38684 - currently not used
     SPELL_PORTAL_ATTUNEMENT     = 30425,
 
-    //void zone spells
+    // void zone spells
     SPELL_CONSUMPTION           = 28865,
 
-    //beam buffs
+    // beam buffs
     SPELL_SERENITY_NS           = 30467,
     SPELL_SERENITY_PLR          = 30422,
     SPELL_DOMINANCE_NS          = 30468,
@@ -48,7 +48,7 @@ enum
     SPELL_PERSEVERENCE_NS       = 30466,
     SPELL_PERSEVERENCE_PLR      = 30421,
 
-    //beam debuffs
+    // beam debuffs
     SPELL_EXHAUSTION_SER        = 38638,
     SPELL_EXHAUSTION_DOM        = 38639,
     SPELL_EXHAUSTION_PER        = 38637,
@@ -68,11 +68,11 @@ enum
     SPELL_BLUE_PORTAL           = 30491,
     SPELL_RED_PORTAL            = 30487,
 
-    //emotes
+    // emotes
     EMOTE_PHASE_BEAM            = -1532089,
     EMOTE_PHASE_BANISH          = -1532090,
 
-    //npcs
+    // npcs
     NPC_PORTAL_GREEN            = 17367,
     NPC_PORTAL_BLUE             = 17368,
     NPC_PORTAL_RED              = 17369,
@@ -89,9 +89,9 @@ struct SpawnLocation
 // at first spawn portals got fixed coords, should be shuffled in subsequent beam phases
 static const SpawnLocation aPortalCoordinates[MAX_PORTALS] =
 {
-    {-11195.14f, -1616.375f, 278.3217f, 6.230825f},
-    {-11108.13f, -1602.839f, 280.0323f, 3.717551f},
-    {-11139.78f, -1681.278f, 278.3217f, 1.396263f},
+    { -11195.14f, -1616.375f, 278.3217f, 6.230825f},
+    { -11108.13f, -1602.839f, 280.0323f, 3.717551f},
+    { -11139.78f, -1681.278f, 278.3217f, 1.396263f},
 };
 
 enum NetherspitePhases
@@ -132,9 +132,9 @@ struct MANGOS_DLL_DECL boss_netherspiteAI : public ScriptedAI
         m_uiActivePhase       = BEAM_PHASE;
 
         m_uiEmpowermentTimer  = 10000;
-        m_uiEnrageTimer       = 9*MINUTE*IN_MILLISECONDS;
+        m_uiEnrageTimer       = 9 * MINUTE * IN_MILLISECONDS;
         m_uiVoidZoneTimer     = 15000;
-        m_uiPhaseSwitchTimer  = MINUTE*IN_MILLISECONDS;
+        m_uiPhaseSwitchTimer  = MINUTE * IN_MILLISECONDS;
 
         SetCombatMovement(true);
 
@@ -197,10 +197,10 @@ struct MANGOS_DLL_DECL boss_netherspiteAI : public ScriptedAI
 
             DoSummonPortals();
             m_uiEmpowermentTimer  = 10000;
-            m_uiPhaseSwitchTimer  = MINUTE*IN_MILLISECONDS;
+            m_uiPhaseSwitchTimer  = MINUTE * IN_MILLISECONDS;
         }
 
-        //reset threat every phase switch
+        // reset threat every phase switch
         DoResetThreat();
     }
 

@@ -10,7 +10,7 @@
 #include "GridNotifiersImpl.h"
 
 
-//return closest GO in grid, with range from pSource
+// return closest GO in grid, with range from pSource
 GameObject* GetClosestGameObjectWithEntry(WorldObject* pSource, uint32 uiEntry, float fMaxSearchRange)
 {
     GameObject* pGo = NULL;
@@ -23,7 +23,7 @@ GameObject* GetClosestGameObjectWithEntry(WorldObject* pSource, uint32 uiEntry, 
     return pGo;
 }
 
-//return closest creature alive in grid, with range from pSource
+// return closest creature alive in grid, with range from pSource
 Creature* GetClosestCreatureWithEntry(WorldObject* pSource, uint32 uiEntry, float fMaxSearchRange, bool bOnlyAlive/*=true*/, bool bOnlyDead/*=false*/)
 {
     Creature* pCreature = NULL;

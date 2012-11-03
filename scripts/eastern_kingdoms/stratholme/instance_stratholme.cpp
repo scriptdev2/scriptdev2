@@ -61,7 +61,7 @@ bool instance_stratholme::StartSlaugtherSquare()
 
 void instance_stratholme::OnCreatureCreate(Creature* pCreature)
 {
-    switch(pCreature->GetEntry())
+    switch (pCreature->GetEntry())
     {
         case NPC_BARON:
         case NPC_YSIDA_TRIGGER:
@@ -93,13 +93,13 @@ void instance_stratholme::OnCreatureCreate(Creature* pCreature)
 
 void instance_stratholme::OnObjectCreate(GameObject* pGo)
 {
-    switch(pGo->GetEntry())
+    switch (pGo->GetEntry())
     {
         case GO_SERVICE_ENTRANCE:
             break;
         case GO_GAUNTLET_GATE1:
             // TODO
-            //weird, but unless flag is set, client will not respond as expected. DB bug?
+            // weird, but unless flag is set, client will not respond as expected. DB bug?
             pGo->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_LOCKED);
             break;
 
@@ -152,10 +152,10 @@ void instance_stratholme::OnObjectCreate(GameObject* pGo)
 void instance_stratholme::SetData(uint32 uiType, uint32 uiData)
 {
     // TODO: Remove the hard-coded indexes from array accessing
-    switch(uiType)
+    switch (uiType)
     {
         case TYPE_BARON_RUN:
-            switch(uiData)
+            switch (uiData)
             {
                 case IN_PROGRESS:
                     if (m_auiEncounter[uiType] == IN_PROGRESS || m_auiEncounter[uiType] == FAIL)
@@ -163,11 +163,11 @@ void instance_stratholme::SetData(uint32 uiType, uint32 uiData)
 
                     DoOrSimulateScriptTextForThisInstance(SAY_ANNOUNCE_RUN_START, NPC_BARON);
 
-                    m_uiBaronRunTimer = 45*MINUTE*IN_MILLISECONDS;
+                    m_uiBaronRunTimer = 45 * MINUTE * IN_MILLISECONDS;
                     debug_log("SD2: Instance Stratholme: Baron run in progress.");
                     break;
                 case FAIL:
-                    //may add code to remove aura from players, but in theory the time should be up already and removed.
+                    // may add code to remove aura from players, but in theory the time should be up already and removed.
                     break;
                 case DONE:
                     m_uiBaronRunTimer = 0;
@@ -197,7 +197,7 @@ void instance_stratholme::SetData(uint32 uiType, uint32 uiData)
                 }
 
                 uint32 uiCount = m_sAbomnationGUID.size();
-                for(GuidSet::iterator itr = m_sAbomnationGUID.begin(); itr != m_sAbomnationGUID.end();)
+                for (GuidSet::iterator itr = m_sAbomnationGUID.begin(); itr != m_sAbomnationGUID.end();)
                 {
                     if (Creature* pAbom = instance->GetCreature(*itr))
                     {
@@ -249,7 +249,7 @@ void instance_stratholme::SetData(uint32 uiType, uint32 uiData)
                 // Summon 5 guards
                 if (Creature* pBaron = GetSingleCreatureFromStorage(NPC_BARON))
                 {
-                    for(uint8 i = 0; i < 5; ++i)
+                    for (uint8 i = 0; i < 5; ++i)
                     {
                         float fX, fY, fZ;
                         pBaron->GetRandomPoint(aStratholmeLocation[6].m_fX, aStratholmeLocation[6].m_fY, aStratholmeLocation[6].m_fZ, 5.0f, fX, fY, fZ);
@@ -294,7 +294,7 @@ void instance_stratholme::SetData(uint32 uiType, uint32 uiData)
                 {
                     Map::PlayerList const& players = instance->GetPlayers();
 
-                    for(Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
+                    for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
                     {
                         if (Player* pPlayer = itr->getSource())
                         {
@@ -394,7 +394,7 @@ void instance_stratholme::SetData(uint32 uiType, uint32 uiData)
 
         std::ostringstream saveStream;
         saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " "
-            << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5] << " " << m_auiEncounter[6];
+                   << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5] << " " << m_auiEncounter[6];
 
         m_strInstData = saveStream.str();
 
@@ -415,7 +415,7 @@ void instance_stratholme::Load(const char* chrIn)
 
     std::istringstream loadStream(chrIn);
     loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3]
-        >> m_auiEncounter[4] >> m_auiEncounter[5] >> m_auiEncounter[6];
+               >> m_auiEncounter[4] >> m_auiEncounter[5] >> m_auiEncounter[6];
 
     for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
     {
@@ -436,7 +436,7 @@ void instance_stratholme::Load(const char* chrIn)
 
 uint32 instance_stratholme::GetData(uint32 uiType)
 {
-    switch(uiType)
+    switch (uiType)
     {
         case TYPE_BARON_RUN:
         case TYPE_BARONESS:
@@ -483,7 +483,7 @@ void instance_stratholme::DoSortZiggurats()
     }
 
     // Sort Acolytes
-    for (std::list<Creature*>::iterator itr = lAcolytes.begin(); itr != lAcolytes.end(); )
+    for (std::list<Creature*>::iterator itr = lAcolytes.begin(); itr != lAcolytes.end();)
     {
         bool bAlreadyIterated = false;
         for (uint8 i = 0; i < MAX_ZIGGURATS; ++i)
@@ -509,7 +509,7 @@ void instance_stratholme::DoSortZiggurats()
         m_luiAcolyteGUIDs.push_back((*itr)->GetObjectGuid());
 
     // Sort Crystal
-    for (GuidList::iterator itr = m_luiCrystalGUIDs.begin(); itr != m_luiCrystalGUIDs.end(); )
+    for (GuidList::iterator itr = m_luiCrystalGUIDs.begin(); itr != m_luiCrystalGUIDs.end();)
     {
         Creature* pCrystal = instance->GetCreature(*itr);
         if (!pCrystal)
@@ -546,7 +546,7 @@ void instance_stratholme::OnCreatureEnterCombat(Creature* pCreature)
         case NPC_MALEKI_THE_PALLID: SetData(TYPE_PALLID, IN_PROGRESS);   break;
         case NPC_NERUBENKAN:        SetData(TYPE_NERUB, IN_PROGRESS);    break;
         case NPC_RAMSTEIN:          SetData(TYPE_RAMSTEIN, IN_PROGRESS); break;
-        // TODO - uncomment when proper working within core! case NPC_BARON:             SetData(TYPE_BARON, IN_PROGRESS);    break;
+            // TODO - uncomment when proper working within core! case NPC_BARON:             SetData(TYPE_BARON, IN_PROGRESS);    break;
 
         case NPC_ABOM_BILE:
         case NPC_ABOM_VENOM:
@@ -570,7 +570,7 @@ void instance_stratholme::OnCreatureEvade(Creature* pCreature)
         case NPC_MALEKI_THE_PALLID: SetData(TYPE_PALLID, FAIL);   break;
         case NPC_NERUBENKAN:        SetData(TYPE_NERUB, FAIL);    break;
         case NPC_RAMSTEIN:          SetData(TYPE_RAMSTEIN, FAIL); break;
-        // TODO - uncomment when proper working within core! case NPC_BARON:             SetData(TYPE_BARON, FAIL);    break;
+            // TODO - uncomment when proper working within core! case NPC_BARON:             SetData(TYPE_BARON, FAIL);    break;
 
         case NPC_ABOM_BILE:
         case NPC_ABOM_VENOM:
@@ -629,7 +629,7 @@ void instance_stratholme::OnCreatureDeath(Creature* pCreature)
 
             break;
 
-        // Timmy spawn support
+            // Timmy spawn support
         case NPC_CRIMSON_INITIATE:
         case NPC_CRIMSON_GALLANT:
         case NPC_CRIMSON_GUARDSMAN:
@@ -693,12 +693,12 @@ void instance_stratholme::Update(uint32 uiDiff)
 
     if (m_uiBaronRunTimer)
     {
-        if (m_uiYellCounter == 0 && m_uiBaronRunTimer <= 10*MINUTE*IN_MILLISECONDS)
+        if (m_uiYellCounter == 0 && m_uiBaronRunTimer <= 10 * MINUTE * IN_MILLISECONDS)
         {
             DoOrSimulateScriptTextForThisInstance(SAY_ANNOUNCE_RUN_10_MIN, NPC_BARON);
             ++m_uiYellCounter;
         }
-        else if (m_uiYellCounter == 1 && m_uiBaronRunTimer <= 5*MINUTE*IN_MILLISECONDS)
+        else if (m_uiYellCounter == 1 && m_uiBaronRunTimer <= 5 * MINUTE * IN_MILLISECONDS)
         {
             DoOrSimulateScriptTextForThisInstance(SAY_ANNOUNCE_RUN_5_MIN, NPC_BARON);
             ++m_uiYellCounter;

@@ -117,7 +117,7 @@ struct Location
     float fX, fY, fZ;
 };
 
-static Location SpawnLoc[]=
+static Location SpawnLoc[] =
 {
     {946.992f, 397.016f, 208.374f},
     {960.748f, 382.944f, 208.374f},
@@ -163,7 +163,7 @@ struct MANGOS_DLL_DECL npc_brann_hosAI : public npc_escortAI
 
     void KilledUnit(Unit* pVictim)                          // TODO - possible better as SummonedJustDied
     {
-        switch(urand(0, 2))
+        switch (urand(0, 2))
         {
             case 0: DoScriptText(SAY_KILL_1, m_creature); break;
             case 1: DoScriptText(SAY_KILL_2, m_creature); break;
@@ -221,8 +221,8 @@ struct MANGOS_DLL_DECL npc_brann_hosAI : public npc_escortAI
         DoScriptText(SAY_ESCORT_START, m_creature);
     }
 
-     void WaypointReached(uint32 uiPointId)
-     {
+    void WaypointReached(uint32 uiPointId)
+    {
         switch (uiPointId)
         {
             case 13:                                        // Before Tribunal Event, Continue with Gossip Interaction
@@ -245,7 +245,7 @@ struct MANGOS_DLL_DECL npc_brann_hosAI : public npc_escortAI
                 m_uiPhaseTimer = 1000;
                 break;
         }
-     }
+    }
 
     void SpawnDwarf(uint32 uEntry)
     {
@@ -282,7 +282,7 @@ struct MANGOS_DLL_DECL npc_brann_hosAI : public npc_escortAI
         {
             switch (m_uiStep)
             {
-                // Begin Event
+                    // Begin Event
                 case 0:
                     // TODO, this is wrong, must be "using or similar"
                     m_creature->SetStandState(UNIT_STAND_STATE_KNEEL);
@@ -303,7 +303,7 @@ struct MANGOS_DLL_DECL npc_brann_hosAI : public npc_escortAI
                     m_uiPhaseTimer = 8500;
                     break;
 
-                // Activate Kaddrak
+                    // Activate Kaddrak
                 case 4:
                     DoScriptText(SAY_EVENT_A_1, m_creature);
                     m_uiPhaseTimer = 6500;
@@ -327,7 +327,7 @@ struct MANGOS_DLL_DECL npc_brann_hosAI : public npc_escortAI
                     m_uiPhaseTimer = 20000;
                     break;
 
-                // Activate Marnak
+                    // Activate Marnak
                 case 9:
                     DoScriptText(SAY_EVENT_B_1, m_creature);
                     m_uiPhaseTimer = 6000;
@@ -365,7 +365,7 @@ struct MANGOS_DLL_DECL npc_brann_hosAI : public npc_escortAI
                     m_uiPhaseTimer = 20000;
                     break;
 
-                // Activate Abedneum
+                    // Activate Abedneum
                 case 17:
                     if (m_pInstance)
                         m_pInstance->DoFaceSpeak(FACE_ABEDNEUM, SAY_EVENT_C_2_ABED);
@@ -425,7 +425,7 @@ struct MANGOS_DLL_DECL npc_brann_hosAI : public npc_escortAI
                     m_uiPhaseTimer = 10000;
                     break;
 
-                // End Event
+                    // End Event
                 case 29:
                     DoScriptText(SAY_EVENT_END_01, m_creature);
                     m_creature->SetStandState(UNIT_STAND_STATE_STAND);// TODO TODO
@@ -572,7 +572,7 @@ struct MANGOS_DLL_DECL npc_brann_hosAI : public npc_escortAI
     }
 
     // Respawn Handling: Relocate and Set Escort to WP 13
-   void JustRespawned()
+    void JustRespawned()
     {
         if (!m_pInstance)
             return;
@@ -593,7 +593,7 @@ struct MANGOS_DLL_DECL npc_brann_hosAI : public npc_escortAI
 
             SetCurrentWaypoint(13);
         }
-   }
+    }
 };
 
 bool GossipHello_npc_brann_hos(Player* pPlayer, Creature* pCreature)
@@ -623,11 +623,11 @@ bool GossipSelect_npc_brann_hos(Player* pPlayer, Creature* pCreature, uint32 uiS
     switch (uiAction)
     {
         case GOSSIP_ACTION_INFO_DEF + 1:
-            if (npc_brann_hosAI* pBrannAi = dynamic_cast<npc_brann_hosAI*> (pCreature->AI()))
+            if (npc_brann_hosAI* pBrannAi = dynamic_cast<npc_brann_hosAI*>(pCreature->AI()))
                 pBrannAi->Start(false, pPlayer);
             break;
         case GOSSIP_ACTION_INFO_DEF + 2:
-            if (npc_brann_hosAI* pBrannAi = dynamic_cast<npc_brann_hosAI*> (pCreature->AI()))
+            if (npc_brann_hosAI* pBrannAi = dynamic_cast<npc_brann_hosAI*>(pCreature->AI()))
                 pBrannAi->ContinueEvent();
             break;
     }

@@ -33,7 +33,7 @@ enum
     SAY_SLAY2                       = -1564004,
     SAY_SPECIAL1                    = -1564005,
     SAY_SPECIAL2                    = -1564006,
-    SAY_ENRAGE1                     = -1564007,             //is this text actually in use?
+    SAY_ENRAGE1                     = -1564007,             // is this text actually in use?
     SAY_ENRAGE2                     = -1564008,
     SAY_DEATH                       = -1564009,
 
@@ -70,7 +70,7 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
         m_bIsShielded = false;
 
         m_uiNeedleSpineTimer = 10000;
-        m_uiEnrageTimer = MINUTE*8*IN_MILLISECONDS;
+        m_uiEnrageTimer = MINUTE * 8 * IN_MILLISECONDS;
         m_uiSpecialYellTimer = urand(45000, 120000);
         m_uiTidalShieldTimer = 60000;
         m_uiImpalingSpineTimer = 20000;
@@ -129,17 +129,17 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
         // If shield expired after 45s, attack again
         if (m_bIsShielded && m_uiTidalShieldTimer < 16000 && !m_creature->HasAura(SPELL_TIDAL_SHIELD))
         {
-                m_bIsShielded = false;
+            m_bIsShielded = false;
 
-                SetCombatMovement(true);
-                m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
+            SetCombatMovement(true);
+            m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
         }
 
         if (m_uiEnrageTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature, SPELL_BERSERK, CAST_INTERRUPT_PREVIOUS) == CAST_OK)
             {
-                m_uiEnrageTimer = MINUTE*8*IN_MILLISECONDS;
+                m_uiEnrageTimer = MINUTE * 8 * IN_MILLISECONDS;
                 DoScriptText(SAY_ENRAGE2, m_creature);
             }
         }

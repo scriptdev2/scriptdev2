@@ -22,21 +22,21 @@ enum
 
     NPC_ASH                 = 3850,
     NPC_ADA                 = 3849,
-    //  NPC_ARUGAL              = 10000,                        //"Arugal" says intro text, not used
+    //  NPC_ARUGAL              = 10000,                    //"Arugal" says intro text, not used
     NPC_ARCHMAGE_ARUGAL     = 4275,                         //"Archmage Arugal" does Fenrus event
-    NPC_FENRUS              = 4274,                         //used to summon Arugal in Fenrus event
-    NPC_VINCENT             = 4444,                         //Vincent should be "dead" is Arugal is done the intro already
+    NPC_FENRUS              = 4274,                         // used to summon Arugal in Fenrus event
+    NPC_VINCENT             = 4444,                         // Vincent should be "dead" is Arugal is done the intro already
 
     NPC_HUMMEL              = 36296,                        // Love is in the Air event
     NPC_FRYE                = 36272,
     NPC_BAXTER              = 36565,
     NPC_VALENTINE_BOSS_MGR  = 36643,                        // controller npc for the apothecary event
-    NPC_APOTHECARY_GENERATOR= 36212,                        // the npc which summons the crazed apothecary
+    NPC_APOTHECARY_GENERATOR = 36212,                       // the npc which summons the crazed apothecary
 
-    GO_COURTYARD_DOOR       = 18895,                        //door to open when talking to NPC's
-    GO_SORCERER_DOOR        = 18972,                        //door to open when Fenrus the Devourer
-    GO_ARUGAL_DOOR          = 18971,                        //door to open when Wolf Master Nandos
-    GO_ARUGAL_FOCUS         = 18973,                        //this generates the lightning visual in the Fenrus event
+    GO_COURTYARD_DOOR       = 18895,                        // door to open when talking to NPC's
+    GO_SORCERER_DOOR        = 18972,                        // door to open when Fenrus the Devourer
+    GO_ARUGAL_DOOR          = 18971,                        // door to open when Wolf Master Nandos
+    GO_ARUGAL_FOCUS         = 18973,                        // this generates the lightning visual in the Fenrus event
 
     GO_APOTHECARE_VIALS     = 190678,                       // move position for Baxter
     GO_CHEMISTRY_SET        = 200335,                       // move position for Frye

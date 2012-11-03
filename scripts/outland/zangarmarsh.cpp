@@ -65,9 +65,10 @@ struct MANGOS_DLL_DECL npc_cooshcooshAI : public ScriptedAI
 
         if (m_uiLightningBolt_Timer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_LIGHTNING_BOLT);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_LIGHTNING_BOLT);
             m_uiLightningBolt_Timer = 5000;
-        }else m_uiLightningBolt_Timer -= uiDiff;
+        }
+        else m_uiLightningBolt_Timer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
@@ -105,7 +106,7 @@ struct MANGOS_DLL_DECL npc_kayra_longmaneAI : public npc_escortAI
         if (!pPlayer)
             return;
 
-        switch(i)
+        switch (i)
         {
             case 4:
                 DoScriptText(SAY_AMBUSH1, m_creature, pPlayer);

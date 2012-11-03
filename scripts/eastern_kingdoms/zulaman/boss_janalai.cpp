@@ -37,29 +37,29 @@ enum
     SAY_EVENT_STRANGERS             = -1568008,
     SAY_EVENT_FRIENDS               = -1568009,
 
-    //Jan'alai
+    // Jan'alai
     SPELL_FLAME_BREATH              = 43140,
-    SPELL_HATCH_ALL_EGGS            = 43144,                    // triggers 42493
+    SPELL_HATCH_ALL_EGGS            = 43144,                // triggers 42493
     SPELL_TELEPORT_TO_CENTER        = 43098,
-    SPELL_SUMMON_ALL_PLAYERS        = 43096,                    // triggers 43097
+    SPELL_SUMMON_ALL_PLAYERS        = 43096,                // triggers 43097
     SPELL_ENRAGE                    = 44779,
     SPELL_BERSERK                   = 47008,
     SPELL_SUMMON_HATCHER_1          = 43962,
     SPELL_SUMMON_HATCHER_2          = 45340,
 
-    //Fire Bob Spells
+    // Fire Bob Spells
     SPELL_FIRE_BOMB_CHANNEL         = 42621,
-    SPELL_FIRE_BOMB_THROW           = 42628,                    // triggers 42629
-    SPELL_FIRE_BOMB_EXPLODE         = 42631,                    // triggers 42630
+    SPELL_FIRE_BOMB_THROW           = 42628,                // triggers 42629
+    SPELL_FIRE_BOMB_EXPLODE         = 42631,                // triggers 42630
 
-    //NPCs
+    // NPCs
     NPC_FIRE_BOMB                   = 23920,
     NPC_AMANI_HATCHER_1             = 23818,
     NPC_AMANI_HATCHER_2             = 24504,
     NPC_HATCHLING                   = 23598,
     NPC_DRAGONHAWK_EGG              = 23817,
 
-    //Hatcher Spells
+    // Hatcher Spells
     SPELL_HATCH_EGG_1               = 43734,
     SPELL_HATCH_EGG_2               = 42471,
 
@@ -69,15 +69,15 @@ enum
     // Eggs spells
     SPELL_SUMMON_DRAGONHAWK         = 42493,
 
-    MAX_EGGS_ON_SIDE                = 20,                       // there are 20 eggs spawned on each side
+    MAX_EGGS_ON_SIDE                = 20,                   // there are 20 eggs spawned on each side
 };
 
 static const float afFireWallCoords[4][4] =
 {
-    {-10.13f, 1149.27f, 19.0f, M_PI_F},
-    {-33.93f, 1123.90f, 19.0f, 0.5f*M_PI_F},
-    {-54.80f, 1150.08f, 19.0f, 0.0f},
-    {-33.93f, 1175.68f, 19.0f, 1.5f*M_PI_F}
+    { -10.13f, 1149.27f, 19.0f, M_PI_F},
+    { -33.93f, 1123.90f, 19.0f, 0.5f * M_PI_F},
+    { -54.80f, 1150.08f, 19.0f, 0.0f},
+    { -33.93f, 1175.68f, 19.0f, 1.5f * M_PI_F}
 };
 
 struct WaypointDef
@@ -85,24 +85,24 @@ struct WaypointDef
     float m_fX, m_fY, m_fZ;
 };
 
-static const WaypointDef m_aHatcherRight[]=
+static const WaypointDef m_aHatcherRight[] =
 {
-    {-74.783f, 1145.827f, 5.420f},
-    {-54.476f, 1146.934f, 18.705f},
-    {-56.957f, 1146.713f, 18.725f},
-    {-45.428f, 1141.697f, 18.709f},
-    {-34.002f, 1124.427f, 18.711f},
-    {-34.085f, 1106.158f, 18.711f}
+    { -74.783f, 1145.827f, 5.420f},
+    { -54.476f, 1146.934f, 18.705f},
+    { -56.957f, 1146.713f, 18.725f},
+    { -45.428f, 1141.697f, 18.709f},
+    { -34.002f, 1124.427f, 18.711f},
+    { -34.085f, 1106.158f, 18.711f}
 };
 
-static const WaypointDef m_aHatcherLeft[]=
+static const WaypointDef m_aHatcherLeft[] =
 {
-    {-73.569f, 1154.960f, 5.510f},
-    {-54.264f, 1153.968f, 18.705f},
-    {-56.985f, 1153.373f, 18.608f},
-    {-45.515f, 1158.356f, 18.709f},
-    {-33.314f, 1174.816f, 18.709f},
-    {-33.097f, 1195.359f, 18.709f}
+    { -73.569f, 1154.960f, 5.510f},
+    { -54.264f, 1153.968f, 18.705f},
+    { -56.985f, 1153.373f, 18.608f},
+    { -45.515f, 1158.356f, 18.709f},
+    { -33.314f, 1174.816f, 18.709f},
+    { -33.097f, 1195.359f, 18.709f}
 };
 
 struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
@@ -136,15 +136,15 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
     void Reset()
     {
         m_uiFireBreathTimer = 8000;
-        m_uiEnrageTimer     = 5*MINUTE*IN_MILLISECONDS;
+        m_uiEnrageTimer     = 5 * MINUTE * IN_MILLISECONDS;
         m_uiHatcherTimer    = 10000;
-        m_uiBerserkTimer    = 10*MINUTE*IN_MILLISECONDS;
+        m_uiBerserkTimer    = 10 * MINUTE * IN_MILLISECONDS;
         m_uiBombTimer       = 30000;
         m_uiBombAuraTimer   = 0;
         m_uiExplodeTimer    = 0;
 
         m_uiEggsHatchedLeft = 0;
-        m_uiEggsHatchedRight= 0;
+        m_uiEggsHatchedRight = 0;
 
         m_bHasHatchedEggs   = false;
         m_bIsEnraged        = false;
@@ -180,7 +180,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
 
     void JustSummoned(Creature* pSummoned)
     {
-        switch(pSummoned->GetEntry())
+        switch (pSummoned->GetEntry())
         {
             case NPC_AMANI_HATCHER_1:
                 m_hatcherOneGuid = pSummoned->GetObjectGuid();
@@ -364,7 +364,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
 
         DoMeleeAttackIfReady();
 
-        //check for reset ... exploit preventing ... pulled from his podest
+        // check for reset ... exploit preventing ... pulled from his podest
         EnterEvadeIfOutOfCombatArea(uiDiff);
     }
 };

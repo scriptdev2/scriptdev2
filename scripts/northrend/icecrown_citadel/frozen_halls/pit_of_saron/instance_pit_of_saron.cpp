@@ -29,14 +29,14 @@ instance_pit_of_saron::instance_pit_of_saron(Map* pMap) : ScriptedInstance(pMap)
     Initialize();
 }
 
- void instance_pit_of_saron::Initialize()
+void instance_pit_of_saron::Initialize()
 {
     memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
 }
 
 void instance_pit_of_saron::OnCreatureCreate(Creature* pCreature)
 {
-    switch(pCreature->GetEntry())
+    switch (pCreature->GetEntry())
     {
         case NPC_TYRANNUS_INTRO:
         case NPC_GARFROST:
@@ -51,7 +51,7 @@ void instance_pit_of_saron::OnCreatureCreate(Creature* pCreature)
 
 void instance_pit_of_saron::OnObjectCreate(GameObject* pGo)
 {
-    switch(pGo->GetEntry())
+    switch (pGo->GetEntry())
     {
         case GO_ICEWALL:
             if (m_auiEncounter[TYPE_GARFROST] == DONE && m_auiEncounter[TYPE_KRICK] == DONE)
@@ -68,7 +68,7 @@ void instance_pit_of_saron::OnObjectCreate(GameObject* pGo)
 
 void instance_pit_of_saron::SetData(uint32 uiType, uint32 uiData)
 {
-    switch(uiType)
+    switch (uiType)
     {
         case TYPE_GARFROST:
             if (uiData == DONE && m_auiEncounter[TYPE_KRICK] == DONE)
@@ -114,7 +114,7 @@ void instance_pit_of_saron::Load(const char* chrIn)
     std::istringstream loadStream(chrIn);
     loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2];
 
-    for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+    for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
     {
         if (m_auiEncounter[i] == IN_PROGRESS)
             m_auiEncounter[i] = NOT_STARTED;

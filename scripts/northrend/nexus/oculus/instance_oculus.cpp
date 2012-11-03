@@ -35,7 +35,7 @@ void instance_oculus::Initialize()
     memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
 }
 
-void instance_oculus::OnPlayerEnter(Player *pPlayer)
+void instance_oculus::OnPlayerEnter(Player* pPlayer)
 {
     DoSpawnNextBossIfCan();
 }
@@ -54,7 +54,7 @@ void instance_oculus::OnCreatureCreate(Creature* pCreature)
 
 void instance_oculus::OnObjectCreate(GameObject* pGo)
 {
-    switch(pGo->GetEntry())
+    switch (pGo->GetEntry())
     {
         case GO_CACHE_EREGOS:
         case GO_CACHE_EREGOS_H:
@@ -70,7 +70,7 @@ void instance_oculus::OnObjectCreate(GameObject* pGo)
 
 void instance_oculus::SetData(uint32 uiType, uint32 uiData)
 {
-    switch(uiType)
+    switch (uiType)
     {
         case TYPE_DRAKOS:
             m_auiEncounter[TYPE_DRAKOS] = uiData;
@@ -193,7 +193,7 @@ void instance_oculus::DoSpawnNextBossIfCan()
             return;
 
         pPlayer->SummonCreature(NPC_UROM, aOculusBossSpawnLocs[0][0], aOculusBossSpawnLocs[0][1], aOculusBossSpawnLocs[0][2], aOculusBossSpawnLocs[0][3], TEMPSUMMON_DEAD_DESPAWN, 0);
-   }
+    }
 }
 
 void instance_oculus::Load(const char* chrIn)
@@ -209,7 +209,7 @@ void instance_oculus::Load(const char* chrIn)
     std::istringstream loadStream(chrIn);
     loadStream >> m_auiEncounter[TYPE_DRAKOS] >> m_auiEncounter[TYPE_VAROS] >> m_auiEncounter[TYPE_UROM] >> m_auiEncounter[TYPE_EREGOS];
 
-    for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+    for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
     {
         if (m_auiEncounter[i] == IN_PROGRESS)
             m_auiEncounter[i] = NOT_STARTED;

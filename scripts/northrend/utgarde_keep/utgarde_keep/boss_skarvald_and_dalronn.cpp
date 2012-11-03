@@ -44,14 +44,14 @@ enum
     NPC_DAL_GHOST                       = 27389,
     NPC_SKA_GHOST                       = 27390,
 
-    NPC_SKELETAL                        = 28878,            //summoned guardian in heroic
+    NPC_SKELETAL                        = 28878,            // summoned guardian in heroic
 
-    //skarvald
+    // skarvald
     SPELL_CHARGE                        = 43651,
     SPELL_STONE_STRIKE                  = 48583,
     SPELL_ENRAGE                        = 48193,
 
-    //dalronn
+    // dalronn
     SPELL_SHADOW_BOLT                   = 43649,
     SPELL_SHADOW_BOLT_H                 = 59575,
 
@@ -132,7 +132,7 @@ struct MANGOS_DLL_DECL boss_s_and_d_dummyAI : public ScriptedAI
         if (pSummoned->GetEntry() == NPC_DAL_GHOST || pSummoned->GetEntry() == NPC_SKA_GHOST)
             m_ghostGuid = pSummoned->GetObjectGuid();
 
-        Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO,1);
+        Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_TOPAGGRO, 1);
 
         if (m_creature->getVictim())
             pSummoned->AI()->AttackStart(pTarget ? pTarget : m_creature->getVictim());

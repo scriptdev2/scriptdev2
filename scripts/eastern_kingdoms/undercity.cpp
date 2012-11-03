@@ -49,7 +49,7 @@ enum
     MAX_LAMENTERS               = 4,
 };
 
-static const float aHighborneLoc[MAX_LAMENTERS][4]=
+static const float aHighborneLoc[MAX_LAMENTERS][4] =
 {
     {1285.41f, 312.47f, -61.0f, 0.51f},
     {1286.96f, 310.40f, -61.0f, 1.00f},

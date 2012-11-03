@@ -106,7 +106,7 @@ void instance_dark_portal::OnCreatureCreate(Creature* pCreature)
 
 void instance_dark_portal::SetData(uint32 uiType, uint32 uiData)
 {
-    switch(uiType)
+    switch (uiType)
     {
         case TYPE_MEDIVH:
         {
@@ -144,7 +144,7 @@ void instance_dark_portal::SetData(uint32 uiType, uint32 uiData)
 
                 if (!players.isEmpty())
                 {
-                    for(Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
+                    for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
                     {
                         if (Player* pPlayer = itr->getSource())
                         {
@@ -169,11 +169,11 @@ void instance_dark_portal::SetData(uint32 uiType, uint32 uiData)
                 DoUpdateWorldState(WORLD_STATE_SHIELD, m_uiWorldStateShieldCount);
 
                 // Yell at 75%, 50% and 25% shield
-                if (m_uiWorldStateShieldCount < 100-25*m_uiMedivhYellCount)
+                if (m_uiWorldStateShieldCount < 100 - 25 * m_uiMedivhYellCount)
                 {
                     if (Creature* pMedivh = GetSingleCreatureFromStorage(NPC_MEDIVH))
                     {
-                        DoScriptText(uiMedivhWeakYell[m_uiMedivhYellCount-1], pMedivh);
+                        DoScriptText(uiMedivhWeakYell[m_uiMedivhYellCount - 1], pMedivh);
                         ++m_uiMedivhYellCount;
                     }
                 }
@@ -198,7 +198,7 @@ void instance_dark_portal::SetData(uint32 uiType, uint32 uiData)
             // Set the delay to the next time rift from the point the rift summons it's guardian
             // ToDo: research if these timers are correct
             else if (uiData == SPECIAL)
-                m_uiNextPortalTimer = IsBossTimeRift() ? 0 : m_uiWorldStateRiftCount > 12 ? 90000 : 2*MINUTE*IN_MILLISECONDS;
+                m_uiNextPortalTimer = IsBossTimeRift() ? 0 : m_uiWorldStateRiftCount > 12 ? 90000 : 2 * MINUTE * IN_MILLISECONDS;
 
             m_auiEncounter[uiType] = uiData;
             return;
@@ -223,7 +223,7 @@ void instance_dark_portal::SetData(uint32 uiType, uint32 uiData)
 
         std::ostringstream saveStream;
         saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " "
-            << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5];
+                   << m_auiEncounter[3] << " " << m_auiEncounter[4] << " " << m_auiEncounter[5];
 
         m_strInstData = saveStream.str();
 
@@ -252,9 +252,9 @@ void instance_dark_portal::Load(const char* chrIn)
 
     std::istringstream loadStream(chrIn);
     loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3]
-        >> m_auiEncounter[4] >> m_auiEncounter[5];
+               >> m_auiEncounter[4] >> m_auiEncounter[5];
 
-    for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+    for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
     {
         if (m_auiEncounter[i] == IN_PROGRESS)
             m_auiEncounter[i] = NOT_STARTED;

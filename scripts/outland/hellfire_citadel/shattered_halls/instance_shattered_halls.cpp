@@ -25,7 +25,7 @@ EndScriptData */
 #include "shattered_halls.h"
 
 instance_shattered_halls::instance_shattered_halls(Map* pMap) : ScriptedInstance(pMap),
-    m_uiExecutionTimer(55*MINUTE*IN_MILLISECONDS),
+    m_uiExecutionTimer(55 * MINUTE* IN_MILLISECONDS),
     m_uiTeam(0),
     m_uiExecutionStage(0)
 {
@@ -43,12 +43,12 @@ void instance_shattered_halls::OnPlayerEnter(Player* pPlayer)
     if (instance->IsRegularDifficulty() || m_uiTeam)
         return;
 
-     m_uiTeam = pPlayer->GetTeam();
+    m_uiTeam = pPlayer->GetTeam();
 
-     if (m_uiTeam == ALLIANCE)
+    if (m_uiTeam == ALLIANCE)
         pPlayer->SummonCreature(aSoldiersLocs[1].m_uiAllianceEntry, aSoldiersLocs[1].m_fX, aSoldiersLocs[1].m_fY, aSoldiersLocs[1].m_fZ, aSoldiersLocs[1].m_fO, TEMPSUMMON_DEAD_DESPAWN, 0);
-     else
-         pPlayer->SummonCreature(aSoldiersLocs[0].m_uiHordeEntry, aSoldiersLocs[0].m_fX, aSoldiersLocs[0].m_fY, aSoldiersLocs[0].m_fZ, aSoldiersLocs[0].m_fO, TEMPSUMMON_DEAD_DESPAWN, 0);
+    else
+        pPlayer->SummonCreature(aSoldiersLocs[0].m_uiHordeEntry, aSoldiersLocs[0].m_fX, aSoldiersLocs[0].m_fY, aSoldiersLocs[0].m_fZ, aSoldiersLocs[0].m_fO, TEMPSUMMON_DEAD_DESPAWN, 0);
 }
 
 void instance_shattered_halls::OnObjectCreate(GameObject* pGo)
@@ -91,7 +91,7 @@ void instance_shattered_halls::OnCreatureCreate(Creature* pCreature)
 
 void instance_shattered_halls::SetData(uint32 uiType, uint32 uiData)
 {
-    switch(uiType)
+    switch (uiType)
     {
         case TYPE_NETHEKURSE:
             m_auiEncounter[uiType] = uiData;
@@ -124,7 +124,7 @@ void instance_shattered_halls::SetData(uint32 uiType, uint32 uiData)
                         pPlayer->SummonCreature(m_uiTeam == ALLIANCE ? aSoldiersLocs[i].m_uiAllianceEntry : aSoldiersLocs[i].m_uiHordeEntry, aSoldiersLocs[i].m_fX, aSoldiersLocs[i].m_fY, aSoldiersLocs[i].m_fZ, aSoldiersLocs[i].m_fO, TEMPSUMMON_DEAD_DESPAWN, 0);
 
                     // Summon the executioner for 80 min; ToDo: set the flags in DB
-                    if (Creature* pExecutioner = pPlayer->SummonCreature(NPC_EXECUTIONER, afExecutionerLoc[0], afExecutionerLoc[1], afExecutionerLoc[2], afExecutionerLoc[3], TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 80*MINUTE*IN_MILLISECONDS, true))
+                    if (Creature* pExecutioner = pPlayer->SummonCreature(NPC_EXECUTIONER, afExecutionerLoc[0], afExecutionerLoc[1], afExecutionerLoc[2], afExecutionerLoc[3], TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 80 * MINUTE * IN_MILLISECONDS, true))
                         pExecutioner->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
 
                     // cast the execution spell
@@ -167,7 +167,7 @@ void instance_shattered_halls::Load(const char* chrIn)
     std::istringstream loadStream(chrIn);
     loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3];
 
-    for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+    for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
     {
         if (m_auiEncounter[i] == IN_PROGRESS)
             m_auiEncounter[i] = NOT_STARTED;
@@ -212,7 +212,7 @@ void instance_shattered_halls::Update(uint32 uiDiff)
 
     if (m_uiExecutionTimer < uiDiff)
     {
-        switch(m_uiExecutionStage)
+        switch (m_uiExecutionStage)
         {
             case 0:
                 // Kill the officer
@@ -224,14 +224,14 @@ void instance_shattered_halls::Update(uint32 uiDiff)
 
                 // Set timer for the next execution
                 DoCastGroupDebuff(SPELL_KARGATH_EXECUTIONER_2);
-                m_uiExecutionTimer = 10*MINUTE*IN_MILLISECONDS;
+                m_uiExecutionTimer = 10 * MINUTE * IN_MILLISECONDS;
                 break;
             case 1:
                 if (Creature* pSoldier = GetSingleCreatureFromStorage(m_uiTeam == ALLIANCE ? NPC_SOLDIER_ALLIANCE_2 : NPC_SOLDIER_HORDE_2))
                     pSoldier->DealDamage(pSoldier, pSoldier->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
 
                 DoCastGroupDebuff(SPELL_KARGATH_EXECUTIONER_3);
-                m_uiExecutionTimer = 15*MINUTE*IN_MILLISECONDS;
+                m_uiExecutionTimer = 15 * MINUTE * IN_MILLISECONDS;
                 break;
             case 2:
                 if (Creature* pSoldier = GetSingleCreatureFromStorage(m_uiTeam == ALLIANCE ? NPC_SOLDIER_ALLIANCE_3 : NPC_SOLDIER_HORDE_3))

@@ -28,32 +28,32 @@
 #define SD2_CONF_VERSION    2010062001
 
 #ifdef WIN32
-  #define MANGOS_DLL_EXPORT extern "C" __declspec(dllexport)
+#define MANGOS_DLL_EXPORT extern "C" __declspec(dllexport)
 #elif defined( __GNUC__ )
-  #define MANGOS_DLL_EXPORT extern "C"
+#define MANGOS_DLL_EXPORT extern "C"
 #else
-  #define MANGOS_DLL_EXPORT extern "C" export
+#define MANGOS_DLL_EXPORT extern "C" export
 #endif
 
 #ifndef _VERSION
-  #define _VERSION "Revision [" SD2_REVISION_NR "] (" REVISION_ID ") " REVISION_DATE " " REVISION_TIME
+#define _VERSION "Revision [" SD2_REVISION_NR "] (" REVISION_ID ") " REVISION_DATE " " REVISION_TIME
 #endif
 
 // The path to config files
 #ifndef SYSCONFDIR
-  #define SYSCONFDIR ""
+#define SYSCONFDIR ""
 #endif
 
 #if PLATFORM == PLATFORM_WINDOWS
-  #ifdef _WIN64
-    #define _FULLVERSION _VERSION " (Win64)"
-  #else
-    #define _FULLVERSION _VERSION " (Win32)"
-  #endif
-  #define _SCRIPTDEV2_CONFIG  "scriptdev2.conf"
+#ifdef _WIN64
+#define _FULLVERSION _VERSION " (Win64)"
 #else
-  #define _FULLVERSION _VERSION " (Unix)"
-  #define _SCRIPTDEV2_CONFIG  SYSCONFDIR"scriptdev2.conf"
+#define _FULLVERSION _VERSION " (Win32)"
+#endif
+#define _SCRIPTDEV2_CONFIG  "scriptdev2.conf"
+#else
+#define _FULLVERSION _VERSION " (Unix)"
+#define _SCRIPTDEV2_CONFIG  SYSCONFDIR"scriptdev2.conf"
 #endif
 
 #endif

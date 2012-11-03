@@ -60,7 +60,7 @@ enum
     SPELL_FROST_BOMB            = 69846, // summons dummy target npc
     SPELL_FROST_BOMB_DMG        = 69845,
     SPELL_FROST_BOMB_VISUAL     = 70022, // circle mark
- // SPELL_FROST_BOMB_OTHER      = 70521, // no idea where it is used, wowhead says it is used by some other Sindragosa (37755)
+// SPELL_FROST_BOMB_OTHER      = 70521, // no idea where it is used, wowhead says it is used by some other Sindragosa (37755)
 
     // Phase 3
     SPELL_MYSTIC_BUFFET         = 70128,
@@ -201,7 +201,7 @@ struct MANGOS_DLL_DECL boss_sindragosaAI : public ScriptedAI
         DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
     }
 
-    void AttackStart(Unit *pWho)
+    void AttackStart(Unit* pWho)
     {
         ScriptedAI::AttackStart(pWho);
 
@@ -268,7 +268,7 @@ struct MANGOS_DLL_DECL boss_sindragosaAI : public ScriptedAI
                 SetFlying(false);
                 SetCombatMovement(true);
 
-                if (Unit *pVictim = m_creature->getVictim())
+                if (Unit* pVictim = m_creature->getVictim())
                     m_creature->GetMotionMaster()->MoveChase(pVictim);
             }
         }
@@ -324,7 +324,7 @@ struct MANGOS_DLL_DECL boss_sindragosaAI : public ScriptedAI
                 m_uiBerserkTimer -= uiDiff;
         }
 
-        switch(m_uiPhase)
+        switch (m_uiPhase)
         {
             case SINDRAGOSA_PHASE_THREE:
             {
@@ -512,12 +512,12 @@ struct MANGOS_DLL_DECL npc_rimefang_iccAI : public ScriptedAI
         m_creature->SetWalk(bIsFlying);
     }
 
-    void Aggro(Unit *pWho)
+    void Aggro(Unit* pWho)
     {
         DoCastSpellIfCan(m_creature, SPELL_RIMEFANG_FROST_AURA, CAST_TRIGGERED);
     }
 
-    void AttackStart(Unit *pWho)
+    void AttackStart(Unit* pWho)
     {
         if (!m_bIsReady)
         {
@@ -529,19 +529,19 @@ struct MANGOS_DLL_DECL npc_rimefang_iccAI : public ScriptedAI
 
             return;
         }
-        
+
         ScriptedAI::AttackStart(pWho);
     }
 
-    void JustDied(Unit *pKiller)
+    void JustDied(Unit* pKiller)
     {
         if (!m_pInstance)
             return;
 
-        Creature *pSpinestalker = m_pInstance->GetSingleCreatureFromStorage(NPC_SPINESTALKER);
+        Creature* pSpinestalker = m_pInstance->GetSingleCreatureFromStorage(NPC_SPINESTALKER);
         if (!pSpinestalker || !pSpinestalker->isAlive())
         {
-            if (Creature *pSindragosa = m_creature->SummonCreature(NPC_SINDRAGOSA, SindragosaPosition[7][0], SindragosaPosition[7][1], SindragosaPosition[7][2], 0.0f, TEMPSUMMON_MANUAL_DESPAWN, 0))
+            if (Creature* pSindragosa = m_creature->SummonCreature(NPC_SINDRAGOSA, SindragosaPosition[7][0], SindragosaPosition[7][1], SindragosaPosition[7][2], 0.0f, TEMPSUMMON_MANUAL_DESPAWN, 0))
                 pSindragosa->SetInCombatWithZone();
         }
     }
@@ -583,7 +583,7 @@ struct MANGOS_DLL_DECL npc_rimefang_iccAI : public ScriptedAI
             SetFlying(false);
             SetCombatMovement(true);
 
-            if (Unit *pVictim = m_creature->getVictim())
+            if (Unit* pVictim = m_creature->getVictim())
                 m_creature->GetMotionMaster()->MoveChase(pVictim);
         }
         else if (uiPointId == RIMEFANG_POINT_AIR)
@@ -628,7 +628,7 @@ struct MANGOS_DLL_DECL npc_rimefang_iccAI : public ScriptedAI
             // Icy Blast
             if (m_uiIcyBlastTimer <= uiDiff)
             {
-                if (Unit *pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_RIMEFANG_ICY_BLAST, SELECT_FLAG_PLAYER))
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_RIMEFANG_ICY_BLAST, SELECT_FLAG_PLAYER))
                 {
                     if (DoCastSpellIfCan(pTarget, SPELL_RIMEFANG_ICY_BLAST) == CAST_OK)
                     {
@@ -694,20 +694,20 @@ struct MANGOS_DLL_DECL npc_spinestalker_iccAI : public ScriptedAI
         m_creature->SetWalk(bIsFlying);
     }
 
-    void JustDied(Unit *pKiller)
+    void JustDied(Unit* pKiller)
     {
         if (!m_pInstance)
             return;
 
-        Creature *pRimefang = m_pInstance->GetSingleCreatureFromStorage(NPC_RIMEFANG);
+        Creature* pRimefang = m_pInstance->GetSingleCreatureFromStorage(NPC_RIMEFANG);
         if (!pRimefang || !pRimefang->isAlive())
         {
-            if (Creature *pSindragosa = m_creature->SummonCreature(NPC_SINDRAGOSA, SindragosaPosition[7][0], SindragosaPosition[7][1], SindragosaPosition[7][2], 0.0f, TEMPSUMMON_MANUAL_DESPAWN, 0))
+            if (Creature* pSindragosa = m_creature->SummonCreature(NPC_SINDRAGOSA, SindragosaPosition[7][0], SindragosaPosition[7][1], SindragosaPosition[7][2], 0.0f, TEMPSUMMON_MANUAL_DESPAWN, 0))
                 pSindragosa->SetInCombatWithZone();
         }
     }
 
-    void AttackStart(Unit *pWho)
+    void AttackStart(Unit* pWho)
     {
         if (!m_bIsReady)
         {
@@ -801,7 +801,7 @@ CreatureAI* GetAI_npc_spinestalker_icc(Creature* pCreature)
  */
 struct MANGOS_DLL_DECL mob_frost_bombAI : public ScriptedAI
 {
-    mob_frost_bombAI(Creature *pCreature) : ScriptedAI(pCreature)
+    mob_frost_bombAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (instance_icecrown_citadel*)pCreature->GetInstanceData();
         Reset();
@@ -817,7 +817,7 @@ struct MANGOS_DLL_DECL mob_frost_bombAI : public ScriptedAI
         m_uiFrostBombTimer = 6000;
     }
 
-    void AttackStart(Unit *pWho){}
+    void AttackStart(Unit* pWho) {}
 
     void UpdateAI(const uint32 uiDiff)
     {
@@ -852,7 +852,7 @@ CreatureAI* GetAI_mob_frost_bomb(Creature* pCreature)
 
 void AddSC_boss_sindragosa()
 {
-    Script *pNewScript;
+    Script* pNewScript;
 
     pNewScript = new Script;
     pNewScript->Name = "boss_sindragosa";

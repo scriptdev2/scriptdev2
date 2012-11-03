@@ -39,7 +39,7 @@ enum
     SPELL_DRAIN_LIFE_H              = 46155,
     SPELL_FEL_EXPLOSION             = 44314,
     SPELL_DRAIN_MANA                = 46153,                // Heroic only
-    //SPELL_FEL_CRYSTAL_DUMMY       = 44329,                // used by Selin to select a nearby Crystal - not used in script
+    // SPELL_FEL_CRYSTAL_DUMMY       = 44329,               // used by Selin to select a nearby Crystal - not used in script
     SPELL_MANA_RAGE                 = 44320,                // This spell triggers 44321, which changes scale and regens mana Requires an entry in spell_script_target
 
     // Crystal spells and npcs
@@ -176,7 +176,7 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
 
         if (!m_bDrainingCrystal)
         {
-            if (m_creature->GetPower(POWER_MANA)*100 / m_creature->GetMaxPower(POWER_MANA) < 10)
+            if (m_creature->GetPower(POWER_MANA) * 100 / m_creature->GetMaxPower(POWER_MANA) < 10)
             {
                 if (m_uiDrainLifeTimer < uiDiff)
                 {
@@ -271,7 +271,7 @@ struct MANGOS_DLL_DECL mob_fel_crystalAI : public ScriptedAI
     {
         // Cosmetic spell
         if (m_sWretchedGuids.find(pWho->GetObjectGuid()) == m_sWretchedGuids.end() && pWho->IsWithinDist(m_creature, 5.0f) && pWho->isAlive() &&
-            (pWho->GetEntry() == NPC_SKULER || pWho->GetEntry() == NPC_BRUISER || pWho->GetEntry() == NPC_HUSK))
+                (pWho->GetEntry() == NPC_SKULER || pWho->GetEntry() == NPC_BRUISER || pWho->GetEntry() == NPC_HUSK))
         {
             pWho->CastSpell(m_creature, SPELL_FEL_CRYSTAL_COSMETIC, false);
             m_sWretchedGuids.insert(pWho->GetObjectGuid());

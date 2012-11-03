@@ -33,7 +33,7 @@ EndContentData */
 ## mobs_bladespire_ogre
 ######*/
 
-//TODO: add support for quest 10512 + creature abilities
+// TODO: add support for quest 10512 + creature abilities
 struct MANGOS_DLL_DECL mobs_bladespire_ogreAI : public ScriptedAI
 {
     mobs_bladespire_ogreAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
@@ -113,7 +113,7 @@ struct MANGOS_DLL_DECL mobs_nether_drakeAI : public ScriptedAI
         ScriptedAI::MoveInLineOfSight(pWho);
     }
 
-    //in case creature was not summoned (not expected)
+    // in case creature was not summoned (not expected)
     void MovementInform(uint32 uiMoveType, uint32 uiPointId)
     {
         if (uiMoveType != POINT_MOTION_TYPE)
@@ -179,7 +179,7 @@ struct MANGOS_DLL_DECL mobs_nether_drakeAI : public ScriptedAI
                         break;
                     case 4:
                         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                        //take off to location above
+                        // take off to location above
                         m_creature->SetLevitate(true);
                         m_creature->SetByteFlag(UNIT_FIELD_BYTES_1, 3, UNIT_BYTE1_FLAG_ALWAYS_STAND | UNIT_BYTE1_FLAG_UNK_2);
                         m_creature->GetMotionMaster()->MovePoint(1, m_creature->GetPositionX() + 50.0f, m_creature->GetPositionY(), m_creature->GetPositionZ() + 50.0f);
@@ -191,7 +191,7 @@ struct MANGOS_DLL_DECL mobs_nether_drakeAI : public ScriptedAI
             else
                 m_uiNihilSpeechTimer -= uiDiff;
 
-            //anything below here is not interesting for Nihil, so skip it
+            // anything below here is not interesting for Nihil, so skip it
             return;
         }
 
@@ -259,7 +259,7 @@ struct MANGOS_DLL_DECL npc_daranelleAI : public ScriptedAI
             {
                 DoScriptText(SAY_SPELL_INFLUENCE, m_creature, pWho);
 
-                //TODO: Move the below to updateAI and run if this statement == true
+                // TODO: Move the below to updateAI and run if this statement == true
                 ((Player*)pWho)->KilledMonsterCredit(NPC_KALIRI_AURA_DISPEL, m_creature->GetObjectGuid());
                 pWho->RemoveAurasDueToSpell(SPELL_LASHHAN_CHANNEL);
             }

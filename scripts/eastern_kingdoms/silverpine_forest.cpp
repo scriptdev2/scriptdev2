@@ -65,7 +65,7 @@ struct MANGOS_DLL_DECL npc_deathstalker_erlandAI : public npc_escortAI
         if (!pPlayer)
             return;
 
-        switch(i)
+        switch (i)
         {
             case 0:
                 DoScriptText(SAY_START_2, m_creature, pPlayer);
@@ -101,7 +101,7 @@ struct MANGOS_DLL_DECL npc_deathstalker_erlandAI : public npc_escortAI
 
     void Aggro(Unit* who)
     {
-        switch(urand(0, 2))
+        switch (urand(0, 2))
         {
             case 0: DoScriptText(SAY_AGGRO_1, m_creature, who); break;
             case 1: DoScriptText(SAY_AGGRO_2, m_creature, who); break;
@@ -166,12 +166,12 @@ struct SpawnPoint
 
 SpawnPoint SpawnPoints[] =
 {
-    {-397.45f, 1509.56f, 18.87f, 4.73f},
-    {-398.35f, 1510.75f, 18.87f, 4.76f},
-    {-396.41f, 1511.06f, 18.87f, 4.74f}
+    { -397.45f, 1509.56f, 18.87f, 4.73f},
+    { -398.35f, 1510.75f, 18.87f, 4.76f},
+    { -396.41f, 1511.06f, 18.87f, 4.74f}
 };
 
-static float m_afMoveCoords[] = {-410.69f, 1498.04f, 19.77f};
+static float m_afMoveCoords[] = { -410.69f, 1498.04f, 19.77f};
 
 struct MANGOS_DLL_DECL npc_deathstalker_faerleiaAI : public ScriptedAI
 {
@@ -248,7 +248,7 @@ struct MANGOS_DLL_DECL npc_deathstalker_faerleiaAI : public ScriptedAI
         {
             if (m_uiWaveTimer < uiDiff)
             {
-                switch(m_uiWaveCount)
+                switch (m_uiWaveCount)
                 {
                     case 0:
                         m_creature->SummonCreature(NPC_COUNCILMAN_SMITHERS,  SpawnPoints[1].fX, SpawnPoints[1].fY, SpawnPoints[1].fZ, SpawnPoints[1].fO, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 20000);

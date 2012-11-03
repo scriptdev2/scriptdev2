@@ -61,7 +61,7 @@ struct MANGOS_DLL_DECL npc_kittenAI : public FollowerAI
 
             pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
 
-            //find a decent way to move to center of moonwell
+            // find a decent way to move to center of moonwell
         }
 
         m_uiMoonwellCooldown = 7500;
@@ -74,7 +74,7 @@ struct MANGOS_DLL_DECL npc_kittenAI : public FollowerAI
 
     void MoveInLineOfSight(Unit* pWho)
     {
-        //should not have npcflag by default, so set when expected
+        // should not have npcflag by default, so set when expected
         if (!m_creature->getVictim() && !m_creature->HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP) && HasFollowState(STATE_FOLLOW_INPROGRESS) && pWho->GetEntry() == NPC_WINNA)
         {
             if (m_creature->IsWithinDistInMap(pWho, INTERACTION_DISTANCE))
@@ -111,7 +111,7 @@ CreatureAI* GetAI_npc_kitten(Creature* pCreature)
 
 bool EffectDummyCreature_npc_kitten(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
 {
-    //always check spellid and effectindex
+    // always check spellid and effectindex
     if (uiSpellId == SPELL_CORRUPT_SABER_VISUAL && uiEffIndex == EFFECT_INDEX_0)
     {
         // Not nice way, however using UpdateEntry will not be correct.
@@ -126,7 +126,7 @@ bool EffectDummyCreature_npc_kitten(Unit* pCaster, uint32 uiSpellId, SpellEffect
         if (Unit* pOwner = pCreatureTarget->GetOwner())
             DoScriptText(EMOTE_SAB_FOLLOW, pCreatureTarget, pOwner);
 
-        //always return true when we are handling this spell and effect
+        // always return true when we are handling this spell and effect
         return true;
     }
     return false;
@@ -137,7 +137,7 @@ bool GossipHello_npc_corrupt_saber(Player* pPlayer, Creature* pCreature)
     if (pPlayer->GetQuestStatus(QUEST_CORRUPT_SABER) == QUEST_STATUS_INCOMPLETE)
     {
         if (GetClosestCreatureWithEntry(pCreature, NPC_WINNA, INTERACTION_DISTANCE))
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_RELEASE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_RELEASE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     }
 
     pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetObjectGuid());
@@ -146,7 +146,7 @@ bool GossipHello_npc_corrupt_saber(Player* pPlayer, Creature* pCreature)
 
 bool GossipSelect_npc_corrupt_saber(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
+    if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)
     {
         pPlayer->CLOSE_GOSSIP_MENU();
 
@@ -180,7 +180,7 @@ enum
 
 struct MANGOS_DLL_DECL npc_niby_the_almightyAI : public ScriptedAI
 {
-    npc_niby_the_almightyAI(Creature* pCreature) : ScriptedAI(pCreature){ Reset(); }
+    npc_niby_the_almightyAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
     uint32 m_uiSummonTimer;
     uint8  m_uiSpeech;
@@ -234,7 +234,7 @@ struct MANGOS_DLL_DECL npc_niby_the_almightyAI : public ScriptedAI
                         }
                         else
                         {
-                            //Skip Speech 5
+                            // Skip Speech 5
                             m_uiSummonTimer = 40000;
                             ++m_uiSpeech;
                         }
@@ -344,7 +344,7 @@ struct MANGOS_DLL_DECL npc_kroshiusAI : public ScriptedAI
             {
                 switch (m_uiPhase)
                 {
-                    case 1:                                         // Revived
+                    case 1:                                 // Revived
                         m_creature->SetStandState(UNIT_STAND_STATE_STAND);
                         m_uiPhaseTimer = 1000;
                         break;
@@ -352,7 +352,7 @@ struct MANGOS_DLL_DECL npc_kroshiusAI : public ScriptedAI
                         DoScriptText(SAY_KROSHIUS_REVIVE, m_creature);
                         m_uiPhaseTimer = 3500;
                         break;
-                    case 3:                                         // Attack
+                    case 3:                                 // Attack
                         m_creature->setFaction(FACTION_HOSTILE);
                         // TODO workaround will better idea
                         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);

@@ -63,7 +63,7 @@ struct MANGOS_DLL_DECL npc_gurgthockAI : public ScriptedAI
     void SummonedCreatureJustDied(Creature* pSummoned)
     {
         uint32 uiEntry = pSummoned->GetEntry();
-        for(uint8 i = 0; i < 4; ++i)
+        for (uint8 i = 0; i < 4; ++i)
         {
             if (uiEntry == m_auiBosses[i])
             {

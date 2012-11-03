@@ -236,7 +236,7 @@ struct MANGOS_DLL_DECL npc_disciple_of_naralexAI : public npc_escortAI
             {
                 switch (m_uiPoint)
                 {
-                    // Corner stop -> raptors
+                        // Corner stop -> raptors
                     case 7:
                         switch (m_uiSubeventPhase)
                         {
@@ -255,7 +255,7 @@ struct MANGOS_DLL_DECL npc_disciple_of_naralexAI : public npc_escortAI
                                 break;
                         }
                         break;
-                    // Circle stop -> vipers
+                        // Circle stop -> vipers
                     case 15:
                         switch (m_uiSubeventPhase)
                         {
@@ -272,7 +272,7 @@ struct MANGOS_DLL_DECL npc_disciple_of_naralexAI : public npc_escortAI
                             case 2:
                                 // Summon vipers at the first circle
                                 for (uint8 i = 0; i < 3; ++i)
-                                    DoSpawnMob(NPC_DEVIATE_VIPER, aSummonPositions[2][0], aSummonPositions[2][1] + 2*M_PI_F/3 * i);
+                                    DoSpawnMob(NPC_DEVIATE_VIPER, aSummonPositions[2][0], aSummonPositions[2][1] + 2 * M_PI_F / 3 * i);
                                 m_uiEventTimer = 0;
                                 ++m_uiSubeventPhase;
                                 break;
@@ -289,7 +289,7 @@ struct MANGOS_DLL_DECL npc_disciple_of_naralexAI : public npc_escortAI
                                 break;
                         }
                         break;
-                    // Chamber stop -> ritual and final boss
+                        // Chamber stop -> ritual and final boss
                     case 32:
                         switch (m_uiSubeventPhase)
                         {
@@ -314,21 +314,21 @@ struct MANGOS_DLL_DECL npc_disciple_of_naralexAI : public npc_escortAI
                             case 3:
                                 // First set of mobs
                                 for (uint8 i = 0; i < 3; ++i)
-                                    DoSpawnMob(NPC_DEVIATE_MOCCASIN, aSummonPositions[3][0], aSummonPositions[3][1] + M_PI_F /3 * i);
+                                    DoSpawnMob(NPC_DEVIATE_MOCCASIN, aSummonPositions[3][0], aSummonPositions[3][1] + M_PI_F / 3 * i);
                                 m_uiEventTimer = 20000;
                                 ++m_uiSubeventPhase;
                                 break;
                             case 4:
                                 // Second set of mobs
                                 for (uint8 i = 0; i < 7; ++i)
-                                    DoSpawnMob(NPC_NIGHTMARE_ECTOPLASM, aSummonPositions[3][0], aSummonPositions[3][1] + M_PI_F /7 * i);
+                                    DoSpawnMob(NPC_NIGHTMARE_ECTOPLASM, aSummonPositions[3][0], aSummonPositions[3][1] + M_PI_F / 7 * i);
                                 m_uiEventTimer = 0;
                                 ++m_uiSubeventPhase;
                                 break;
                             case 5:
                                 // Advance only when all mobs are dead
                                 if (Creature* pNaralex = m_pInstance->GetSingleCreatureFromStorage(NPC_NARALEX))
-                                   DoScriptText(EMOTE_BREAK_THROUGH, pNaralex);
+                                    DoScriptText(EMOTE_BREAK_THROUGH, pNaralex);
                                 ++m_uiSubeventPhase;
                                 m_uiEventTimer = 10000;
                                 break;
@@ -468,7 +468,7 @@ bool GossipSelect_npc_disciple_of_naralex(Player* pPlayer, Creature* pCreature, 
     if (!m_pInstance)
         return false;
 
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
+    if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)
     {
         if (npc_disciple_of_naralexAI* pEscortAI = dynamic_cast<npc_disciple_of_naralexAI*>(pCreature->AI()))
         {

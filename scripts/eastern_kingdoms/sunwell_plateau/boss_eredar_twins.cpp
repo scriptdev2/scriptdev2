@@ -112,7 +112,7 @@ struct MANGOS_DLL_DECL boss_alythessAI : public ScriptedAI
 
     void Reset()
     {
-        m_uiEnrageTimer = 6*MINUTE*IN_MILLISECONDS;
+        m_uiEnrageTimer = 6 * MINUTE * IN_MILLISECONDS;
         m_uiPyrogenicsTimer     = 20000;
         m_uiFlameTouchedTimer   = 30000;
         m_uiConflagrationTimer  = urand(25000, 30000);
@@ -207,7 +207,7 @@ struct MANGOS_DLL_DECL boss_alythessAI : public ScriptedAI
             if (DoCastSpellIfCan(m_creature, SPELL_TWINS_ENRAGE) == CAST_OK)
             {
                 DoScriptText(SAY_ALYTHESS_BERSERK, m_creature);
-                m_uiEnrageTimer = 6*MINUTE*IN_MILLISECONDS;
+                m_uiEnrageTimer = 6 * MINUTE * IN_MILLISECONDS;
             }
         }
         else
@@ -287,7 +287,7 @@ struct MANGOS_DLL_DECL boss_sacrolashAI : public ScriptedAI
 
     void Reset()
     {
-        m_uiEnrageTimer = 6*MINUTE*IN_MILLISECONDS;
+        m_uiEnrageTimer = 6 * MINUTE * IN_MILLISECONDS;
         m_uiDarkTouchedTimer     = 30000;
         m_uiShadowNovaTimer      = 15000;
         m_uiConfoundingBlowTimer = 30000;
@@ -354,7 +354,7 @@ struct MANGOS_DLL_DECL boss_sacrolashAI : public ScriptedAI
         std::vector<Unit*> m_vRangeTargets;
 
         ThreatList const& tList = m_creature->getThreatManager().getThreatList();
-        for (ThreatList::const_iterator iter = tList.begin();iter != tList.end(); ++iter)
+        for (ThreatList::const_iterator iter = tList.begin(); iter != tList.end(); ++iter)
         {
             if (Unit* pTempTarget = m_creature->GetMap()->GetUnit((*iter)->getUnitGuid()))
             {
@@ -390,7 +390,7 @@ struct MANGOS_DLL_DECL boss_sacrolashAI : public ScriptedAI
             if (DoCastSpellIfCan(m_creature, SPELL_TWINS_ENRAGE) == CAST_OK)
             {
                 DoScriptText(SAY_SACROLASH_BERSERK, m_creature);
-                m_uiEnrageTimer = 6*MINUTE*IN_MILLISECONDS;
+                m_uiEnrageTimer = 6 * MINUTE * IN_MILLISECONDS;
             }
         }
         else
@@ -450,7 +450,7 @@ struct MANGOS_DLL_DECL boss_sacrolashAI : public ScriptedAI
         if (m_uiSummonShadowImage < uiDiff)
         {
             // Summon 3 shadow images at the boss position
-            for(uint8 i = 0; i < 3; ++i)
+            for (uint8 i = 0; i < 3; ++i)
                 m_creature->SummonCreature(NPC_SHADOW_IMAGE, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 3000);
 
             m_uiSummonShadowImage = urand(10000, 12000);
@@ -547,17 +547,17 @@ struct MANGOS_DLL_DECL npc_shadow_imageAI : public ScriptedAI
 
 CreatureAI* GetAI_boss_alythess(Creature* pCreature)
 {
-    return new boss_alythessAI (pCreature);
+    return new boss_alythessAI(pCreature);
 }
 
 CreatureAI* GetAI_boss_sacrolash(Creature* pCreature)
 {
-    return new boss_sacrolashAI (pCreature);
+    return new boss_sacrolashAI(pCreature);
 }
 
 CreatureAI* GetAI_npc_shadow_image(Creature* pCreature)
 {
-    return new npc_shadow_imageAI (pCreature);
+    return new npc_shadow_imageAI(pCreature);
 }
 
 void AddSC_boss_eredar_twins()

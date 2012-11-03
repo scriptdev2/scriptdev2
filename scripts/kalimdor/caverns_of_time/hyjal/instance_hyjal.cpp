@@ -45,7 +45,7 @@ void instance_mount_hyjal::Initialize()
 
 bool instance_mount_hyjal::IsEncounterInProgress() const
 {
-    for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+    for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
         if (m_auiEncounter[i] == IN_PROGRESS) return true;
 
     return false;
@@ -102,7 +102,7 @@ void instance_mount_hyjal::OnCreatureDeath(Creature* pCreature)
         case NPC_AZGALOR:     SetData(TYPE_AZGALOR, DONE);     break;
         case NPC_ARCHIMONDE:  SetData(TYPE_ARCHIMONDE, DONE);  break;
 
-        // Trash Mobs summoned in waves
+            // Trash Mobs summoned in waves
         case NPC_NECRO:
         case NPC_ABOMI:
         case NPC_GHOUL:
@@ -124,7 +124,7 @@ void instance_mount_hyjal::OnCreatureDeath(Creature* pCreature)
 
 void instance_mount_hyjal::SetData(uint32 uiType, uint32 uiData)
 {
-    switch(uiType)
+    switch (uiType)
     {
         case TYPE_WINTERCHILL:
         case TYPE_ANETHERON:
@@ -150,9 +150,9 @@ void instance_mount_hyjal::SetData(uint32 uiType, uint32 uiData)
             {
                 if (!lAncientGemGUIDList.empty())
                 {
-                    for(GuidList::const_iterator itr = lAncientGemGUIDList.begin(); itr != lAncientGemGUIDList.end(); ++itr)
+                    for (GuidList::const_iterator itr = lAncientGemGUIDList.begin(); itr != lAncientGemGUIDList.end(); ++itr)
                     {
-                        //don't know how long it expected
+                        // don't know how long it expected
                         DoRespawnGameObject(*itr, DAY);
                     }
                 }
@@ -168,7 +168,7 @@ void instance_mount_hyjal::SetData(uint32 uiType, uint32 uiData)
 
         std::ostringstream saveStream;
         saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " "
-            << m_auiEncounter[3] << " " << m_auiEncounter[4];
+                   << m_auiEncounter[3] << " " << m_auiEncounter[4];
 
         m_strSaveData = saveStream.str();
 
@@ -194,7 +194,7 @@ void instance_mount_hyjal::DoSpawnArchimonde()
 
 uint32 instance_mount_hyjal::GetData(uint32 uiType)
 {
-    switch(uiType)
+    switch (uiType)
     {
         case TYPE_WINTERCHILL:
         case TYPE_ANETHERON:
@@ -222,8 +222,8 @@ void instance_mount_hyjal::Load(const char* chrIn)
     std::istringstream loadStream(chrIn);
     loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2] >> m_auiEncounter[3] >> m_auiEncounter[4];
 
-    for(uint8 i = 0; i < MAX_ENCOUNTER; ++i)
-        if (m_auiEncounter[i] == IN_PROGRESS)                // Do not load an encounter as IN_PROGRESS - reset it instead.
+    for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+        if (m_auiEncounter[i] == IN_PROGRESS)               // Do not load an encounter as IN_PROGRESS - reset it instead.
             m_auiEncounter[i] = NOT_STARTED;
 
     OUT_LOAD_INST_DATA_COMPLETE;

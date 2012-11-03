@@ -42,8 +42,8 @@ enum
     SPELL_SHADOW_CAGE_DUMMY     = 30205,                    // dummy aura - in creature_template_addon
     SPELL_BLASTNOVA             = 30616,
     SPELL_CLEAVE                = 30619,
-    //SPELL_QUAKE               = 30657,                    // spell may be related but probably used in the recent versions of the script
-    //SPELL_QUAKE_TRIGGER       = 30576,                    // spell removed from DBC - triggers 30571
+    // SPELL_QUAKE               = 30657,                   // spell may be related but probably used in the recent versions of the script
+    // SPELL_QUAKE_TRIGGER       = 30576,                   // spell removed from DBC - triggers 30571
     SPELL_QUAKE_KNOCKBACK       = 30571,
     SPELL_BLAZE                 = 30541,                    // triggers 30542
     SPELL_BERSERK               = 27680,
@@ -73,7 +73,7 @@ enum
     SPELL_FIRE_BLAST            = 37110,
 
     // summons
-    //NPC_MAGS_ROOM             = 17516,
+    // NPC_MAGS_ROOM             = 17516,
     NPC_BURNING_ABYSS           = 17454,
     NPC_RAID_TRIGGER            = 17376,
 
@@ -108,7 +108,7 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
 
     void Reset()
     {
-        m_uiBerserkTimer    = 20*MINUTE*IN_MILLISECONDS;
+        m_uiBerserkTimer    = 20 * MINUTE * IN_MILLISECONDS;
         m_uiQuakeTimer      = 30000;
         m_uiBlazeTimer      = urand(10000, 15000);
         m_uiBlastNovaTimer  = 60000;
@@ -228,8 +228,8 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
                     m_uiQuakeTimer = 1000;
                     ++m_uiQuakeCount;
                 }
-             }
-             else
+            }
+            else
             {
                 SetCombatMovement(true);
                 m_creature->GetMotionMaster()->Clear();

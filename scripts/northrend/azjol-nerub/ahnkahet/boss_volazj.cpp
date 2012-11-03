@@ -93,7 +93,7 @@ struct MANGOS_DLL_DECL boss_volazjAI : public ScriptedAI
 
     void KilledUnit(Unit* pVictim)
     {
-        switch(urand(0, 2))
+        switch (urand(0, 2))
         {
             case 0: DoScriptText(SAY_SLAY_1, m_creature); break;
             case 1: DoScriptText(SAY_SLAY_2, m_creature); break;
@@ -121,7 +121,7 @@ struct MANGOS_DLL_DECL boss_volazjAI : public ScriptedAI
 
         if (m_uiMindFlayTimer < uiDiff)
         {
-            if (DoCastSpellIfCan (m_creature->getVictim(), m_bIsRegularMode ? SPELL_MIND_FLAY : SPELL_MIND_FLAY_H) == CAST_OK)
+            if (DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_MIND_FLAY : SPELL_MIND_FLAY_H) == CAST_OK)
                 m_uiMindFlayTimer = urand(10000, 20000);
         }
         else

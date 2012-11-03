@@ -68,7 +68,7 @@ struct MANGOS_DLL_DECL boss_sarturaAI : public ScriptedAI
         m_uiWhirlWindEndTimer = 15000;
         m_uiAggroResetTimer = urand(45000, 55000);
         m_uiAggroResetEndTimer = 5000;
-        m_uiEnrageHardTimer = 10*60000;
+        m_uiEnrageHardTimer = 10 * 60000;
 
         m_bIsWhirlWind = false;
         m_bAggroReset = false;
@@ -290,7 +290,7 @@ struct MANGOS_DLL_DECL mob_sartura_royal_guardAI : public ScriptedAI
             // Remove remaining taunts, TODO
             if (m_bAggroReset)
             {
-                if (m_uiAggroResetEndTimer <uiDiff)
+                if (m_uiAggroResetEndTimer < uiDiff)
                 {
                     m_bAggroReset = false;
                     m_uiAggroResetEndTimer = 5000;

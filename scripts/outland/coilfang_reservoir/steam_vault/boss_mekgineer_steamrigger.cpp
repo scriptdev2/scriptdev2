@@ -44,7 +44,7 @@ enum
     SPELL_SUPER_SHRINK_RAY      = 31485,
     SPELL_SAW_BLADE             = 31486,
     SPELL_ELECTRIFIED_NET       = 35107,
-    //SPELL_ENRAGE_H            = 1,                       //current enrage spell not known
+    // SPELL_ENRAGE_H            = 1,                       // current enrage spell not known
 
     NPC_STEAMRIGGER_MECHANIC    = 17951,
 
@@ -62,9 +62,9 @@ struct SummonLocation
 // Spawn locations
 static const SummonLocation aSteamriggerSpawnLocs[] =
 {
-    {-316.101f, -166.444f, -7.66f},
-    {-348.497f, -161.718f, -7.66f},
-    {-331.161f, -112.212f, -7.66f},
+    { -316.101f, -166.444f, -7.66f},
+    { -348.497f, -161.718f, -7.66f},
+    { -331.161f, -112.212f, -7.66f},
 };
 
 struct MANGOS_DLL_DECL boss_mekgineer_steamriggerAI : public ScriptedAI
@@ -110,7 +110,7 @@ struct MANGOS_DLL_DECL boss_mekgineer_steamriggerAI : public ScriptedAI
 
     void KilledUnit(Unit* pVictim)
     {
-        switch(urand(0, 2))
+        switch (urand(0, 2))
         {
             case 0: DoScriptText(SAY_SLAY_1, m_creature); break;
             case 1: DoScriptText(SAY_SLAY_2, m_creature); break;
@@ -120,7 +120,7 @@ struct MANGOS_DLL_DECL boss_mekgineer_steamriggerAI : public ScriptedAI
 
     void Aggro(Unit* pWho)
     {
-        switch(urand(0, 2))
+        switch (urand(0, 2))
         {
             case 0: DoScriptText(SAY_AGGRO_1, m_creature); break;
             case 1: DoScriptText(SAY_AGGRO_2, m_creature); break;
@@ -197,7 +197,7 @@ struct MANGOS_DLL_DECL boss_mekgineer_steamriggerAI : public ScriptedAI
                 m_uiMechanicTimer -= uiDiff;
         }
 
-        if (m_creature->GetHealthPercent() < (100 - 25*m_uiMechanicPhaseCount))
+        if (m_creature->GetHealthPercent() < (100 - 25 * m_uiMechanicPhaseCount))
         {
             SummonMechanichs();
             ++m_uiMechanicPhaseCount;
@@ -255,7 +255,7 @@ struct MANGOS_DLL_DECL mob_steamrigger_mechanicAI : public ScriptedAI
             {
                 // Channel the repair spell on Steamrigger
                 // This will also stop creature movement and will allow them to continue to follow the boss after channeling is finished or the boss is out of range
-                if (m_creature->IsWithinDistInMap(pWho, 2*INTERACTION_DISTANCE))
+                if (m_creature->IsWithinDistInMap(pWho, 2 * INTERACTION_DISTANCE))
                     DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_REPAIR : SPELL_REPAIR_H);
             }
         }

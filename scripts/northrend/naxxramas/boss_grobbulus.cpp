@@ -67,12 +67,12 @@ struct MANGOS_DLL_DECL boss_grobbulusAI : public ScriptedAI
 
     void Reset()
     {
-        m_uiInjectionTimer = 12*IN_MILLISECONDS;
-        m_uiPoisonCloudTimer = urand (20*IN_MILLISECONDS, 25*IN_MILLISECONDS);
-        m_uiSlimeSprayTimer = urand(20*IN_MILLISECONDS, 30*IN_MILLISECONDS);
-        m_uiBerserkTimeSecs = m_bIsRegularMode ? 12*MINUTE : 9*MINUTE;
-        m_uiBerserkTimer = m_uiBerserkTimeSecs*IN_MILLISECONDS;
-        m_uiSlimeStreamTimer = 5*IN_MILLISECONDS;           // The first few secs it is ok to be out of range
+        m_uiInjectionTimer = 12 * IN_MILLISECONDS;
+        m_uiPoisonCloudTimer = urand(20 * IN_MILLISECONDS, 25 * IN_MILLISECONDS);
+        m_uiSlimeSprayTimer = urand(20 * IN_MILLISECONDS, 30 * IN_MILLISECONDS);
+        m_uiBerserkTimeSecs = m_bIsRegularMode ? 12 * MINUTE : 9 * MINUTE;
+        m_uiBerserkTimer = m_uiBerserkTimeSecs * IN_MILLISECONDS;
+        m_uiSlimeStreamTimer = 5 * IN_MILLISECONDS;         // The first few secs it is ok to be out of range
     }
 
     void Aggro(Unit* pWho)
@@ -128,7 +128,7 @@ struct MANGOS_DLL_DECL boss_grobbulusAI : public ScriptedAI
     void SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell)
     {
         if ((pSpell->Id == SPELL_SLIME_SPRAY || pSpell->Id == SPELL_SLIME_SPRAY_H) && pTarget->GetTypeId() == TYPEID_PLAYER)
-            m_creature->SummonCreature(NPC_FALLOUT_SLIME, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(), 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10*IN_MILLISECONDS);
+            m_creature->SummonCreature(NPC_FALLOUT_SLIME, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(), 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10 * IN_MILLISECONDS);
     }
 
     void UpdateAI(const uint32 uiDiff)
@@ -143,7 +143,7 @@ struct MANGOS_DLL_DECL boss_grobbulusAI : public ScriptedAI
             {
                 if (DoCastSpellIfCan(m_creature, SPELL_SLIME_STREAM) == CAST_OK)
                     // Give some time, to re-reach grobbulus
-                    m_uiSlimeStreamTimer = 3*IN_MILLISECONDS;
+                    m_uiSlimeStreamTimer = 3 * IN_MILLISECONDS;
             }
         }
         else
@@ -171,7 +171,7 @@ struct MANGOS_DLL_DECL boss_grobbulusAI : public ScriptedAI
         {
             if (DoCastSpellIfCan(m_creature->getVictim(), m_bIsRegularMode ? SPELL_SLIME_SPRAY : SPELL_SLIME_SPRAY_H) == CAST_OK)
             {
-                m_uiSlimeSprayTimer = urand(30*IN_MILLISECONDS, 60*IN_MILLISECONDS);
+                m_uiSlimeSprayTimer = urand(30 * IN_MILLISECONDS, 60 * IN_MILLISECONDS);
                 DoScriptText(EMOTE_SPRAY_SLIME, m_creature);
             }
         }
@@ -185,9 +185,9 @@ struct MANGOS_DLL_DECL boss_grobbulusAI : public ScriptedAI
             {
                 // Timer dependend on time of encounter  - on enrage time between 5-8s, heroic 2-5s (TODO no reliable source for heroic)
                 if (m_bIsRegularMode)
-                    m_uiInjectionTimer = urand(10*IN_MILLISECONDS, 13*IN_MILLISECONDS) -  5 * (m_uiBerserkTimeSecs*IN_MILLISECONDS - m_uiBerserkTimer) / m_uiBerserkTimeSecs;
+                    m_uiInjectionTimer = urand(10 * IN_MILLISECONDS, 13 * IN_MILLISECONDS) -  5 * (m_uiBerserkTimeSecs * IN_MILLISECONDS - m_uiBerserkTimer) / m_uiBerserkTimeSecs;
                 else
-                    m_uiInjectionTimer = urand(10*IN_MILLISECONDS, 13*IN_MILLISECONDS) -  8 * (m_uiBerserkTimeSecs*IN_MILLISECONDS - m_uiBerserkTimer) / m_uiBerserkTimeSecs;
+                    m_uiInjectionTimer = urand(10 * IN_MILLISECONDS, 13 * IN_MILLISECONDS) -  8 * (m_uiBerserkTimeSecs * IN_MILLISECONDS - m_uiBerserkTimer) / m_uiBerserkTimeSecs;
             }
         }
         else
@@ -197,7 +197,7 @@ struct MANGOS_DLL_DECL boss_grobbulusAI : public ScriptedAI
         if (m_uiPoisonCloudTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature, SPELL_POISON_CLOUD) == CAST_OK)
-                m_uiPoisonCloudTimer = 15*IN_MILLISECONDS;
+                m_uiPoisonCloudTimer = 15 * IN_MILLISECONDS;
         }
         else
             m_uiPoisonCloudTimer -= uiDiff;

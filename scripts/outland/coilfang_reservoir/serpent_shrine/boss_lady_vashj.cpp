@@ -87,8 +87,8 @@ static const float afElementPos[8][4] =
     {96.0f , -986.4f , 21.4f, 2.5f},
     {54.4f , -1010.6f, 22.0f, 1.8f},
     {9.8f  , -1012.0f, 21.7f, 1.4f},
-    {-35.0f, -987.6f , 21.5f, 0.8f},
-    {-58.9f, -901.6f , 21.5f, 6.0f}
+    { -35.0f, -987.6f , 21.5f, 0.8f},
+    { -58.9f, -901.6f , 21.5f, 6.0f}
 };
 
 const float afCoilfangElitePos[3][4] =
@@ -102,7 +102,7 @@ const float afCoilfangStriderPos[3][4] =
 {
     {66.427f, -948.778f, 41.262245f, 2.584f},
     {7.513f , -959.538f, 41.300422f, 1.0346f},
-    {-12.843f, -907.798f, 41.239620f, 6.087f}
+    { -12.843f, -907.798f, 41.239620f, 6.087f}
 };
 
 struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
@@ -157,7 +157,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
 
     void Aggro(Unit* pWho)
     {
-        switch(urand(0, 3))
+        switch (urand(0, 3))
         {
             case 0: DoScriptText(SAY_AGGRO1, m_creature); break;
             case 1: DoScriptText(SAY_AGGRO2, m_creature); break;
@@ -228,7 +228,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
 
     void KilledUnit(Unit* pVictim)
     {
-        switch(urand(0, 2))
+        switch (urand(0, 2))
         {
             case 0: DoScriptText(SAY_SLAY1, m_creature); break;
             case 1: DoScriptText(SAY_SLAY2, m_creature); break;
@@ -253,10 +253,10 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
     bool CanCastShootOrMultishot()
     {
         // It's not very clear how this should work - requires additional research!
-        if (DoCastSpellIfCan(m_creature->getVictim(), urand(0,1) ? SPELL_SHOOT : SPELL_MULTI_SHOT) == CAST_OK)
+        if (DoCastSpellIfCan(m_creature->getVictim(), urand(0, 1) ? SPELL_SHOOT : SPELL_MULTI_SHOT) == CAST_OK)
         {
             if (urand(0, 2))
-                DoScriptText(urand(0,1) ? SAY_BOWSHOT1 : SAY_BOWSHOT2, m_creature);
+                DoScriptText(urand(0, 1) ? SAY_BOWSHOT1 : SAY_BOWSHOT2, m_creature);
 
             return true;
         }
@@ -304,7 +304,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
 
             if (m_uiStaticChargeTimer < uiDiff)
             {
-                if (Unit *pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_STATIC_CHARGE, SELECT_FLAG_IN_MELEE_RANGE))
+                if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_STATIC_CHARGE, SELECT_FLAG_IN_MELEE_RANGE))
                 {
                     if (DoCastSpellIfCan(pTarget, SPELL_STATIC_CHARGE) == CAST_OK)
                         m_uiStaticChargeTimer = urand(10000, 30000);
@@ -339,7 +339,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
             // Phase 1 abilities
             if (m_uiPhase == PHASE_1)
             {
-                //m_uiPhase 2 begins when Vashj hits 70%. She will run to the middle of her platform and surround herself in a shield making her invulerable.
+                // m_uiPhase 2 begins when Vashj hits 70%. She will run to the middle of her platform and surround herself in a shield making her invulerable.
                 if (m_creature->GetHealthPercent() <= 70.0f)
                 {
                     DoScriptText(SAY_PHASE2, m_creature);

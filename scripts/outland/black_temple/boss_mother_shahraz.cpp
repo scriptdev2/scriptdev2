@@ -51,7 +51,7 @@ enum
     SPELL_BERSERK               = 45078,
 };
 
-static const uint32 aPrismaticAuras[]=
+static const uint32 aPrismaticAuras[] =
 {
     40880,                                                  // Shadow
     40882,                                                  // Fire
@@ -61,7 +61,7 @@ static const uint32 aPrismaticAuras[]=
     40897,                                                  // Holy
 };
 
-static const uint32 aPeriodicBeams[]= {SPELL_SINFUL_PERIODIC, SPELL_SINISTER_PERIODIC, SPELL_VILE_PERIODIC, SPELL_WICKED_PERIODIC};
+static const uint32 aPeriodicBeams[] = {SPELL_SINFUL_PERIODIC, SPELL_SINISTER_PERIODIC, SPELL_VILE_PERIODIC, SPELL_WICKED_PERIODIC};
 
 struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
 {
@@ -91,12 +91,12 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
         m_uiFatalAttractionTimer    = 25000;
         m_uiShriekTimer             = 30000;
         m_uiRandomYellTimer         = urand(70000, 110000);
-        m_uiBerserkTimer            = 10*MINUTE*IN_MILLISECONDS;
+        m_uiBerserkTimer            = 10 * MINUTE * IN_MILLISECONDS;
 
         m_bIsEnraged                = false;
 
         // ToDo: Enable this when the core will properly support the damage split! We can't deal 70-80k damage only to one player.
-        //DoCastSpellIfCan(m_creature, SPELL_SABER_LASH_PROC);
+        // DoCastSpellIfCan(m_creature, SPELL_SABER_LASH_PROC);
     }
 
     void Aggro(Unit* pWho)

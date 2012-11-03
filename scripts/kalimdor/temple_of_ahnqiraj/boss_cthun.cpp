@@ -30,7 +30,7 @@ enum
 
     // ***** Phase 1 ********
     SPELL_EYE_BEAM                  = 26134,
-    //SPELL_DARK_GLARE              = 26029,
+    // SPELL_DARK_GLARE              = 26029,
     SPELL_ROTATE_TRIGGER            = 26137,                // phase switch spell - triggers 26009 or 26136. These trigger the Dark Glare spell - 26029
     SPELL_ROTATE_360_LEFT           = 26009,
     SPELL_ROTATE_360_RIGHT          = 26136,
@@ -40,18 +40,18 @@ enum
     SPELL_TRANSFORM                 = 26232,
     SPELL_CTHUN_VULNERABLE          = 26235,
     SPELL_MOUTH_TENTACLE            = 26332,                // prepare target to teleport to stomach
-    //SPELL_DIGESTIVE_ACID_TELEPORT = 26220,                // removed from DBC. stomach teleport spell
+    // SPELL_DIGESTIVE_ACID_TELEPORT = 26220,               // removed from DBC. stomach teleport spell
     SPELL_EXIT_STOMACH_KNOCKBACK    = 25383,                // spell id is wrong
-    //SPELL_EXIT_STOMACH_JUMP       = 26224,                // removed from DBC. should make the player jump to the ceiling
-    //SPELL_EXIT_STOMACH_EFFECT     = 26230,                // removed from DBC. used to complete the eject effect from the stomach
-    //SPELL_PORT_OUT_STOMACH_EFFECT = 26648,                // removed from DBC. used to kill players inside the stomach on evade
+    // SPELL_EXIT_STOMACH_JUMP       = 26224,               // removed from DBC. should make the player jump to the ceiling
+    // SPELL_EXIT_STOMACH_EFFECT     = 26230,               // removed from DBC. used to complete the eject effect from the stomach
+    // SPELL_PORT_OUT_STOMACH_EFFECT = 26648,               // removed from DBC. used to kill players inside the stomach on evade
     SPELL_DIGESTIVE_ACID            = 26476,                // damage spell - should be handled by the map
-    //SPELL_EXIT_STOMACH            = 26221,                // summons 15800
+    // SPELL_EXIT_STOMACH            = 26221,               // summons 15800
 
     // ***** Summoned spells *****
     // Giant Claw tentacles
     SPELL_GIANT_GROUND_RUPTURE      = 26478,
-    //SPELL_MASSIVE_GROUND_RUPTURE  = 26100,                // spell not confirmed
+    // SPELL_MASSIVE_GROUND_RUPTURE  = 26100,               // spell not confirmed
     SPELL_GROUND_TREMOR             = 6524,
     SPELL_HAMSTRING                 = 26211,
     SPELL_THRASH                    = 3391,
@@ -80,10 +80,10 @@ enum
 
 static const float afCthunLocations[4][4] =
 {
-    {-8571.0f, 1990.0f, -98.0f, 1.22f},         // flesh tentacles locations
-    {-8525.0f, 1994.0f, -98.0f, 2.12f},
-    {-8562.0f, 2037.0f, -70.0f, 5.05f},         // stomach teleport location
-    {-8545.6f, 1987.7f, -32.9f, 0.0f},          // stomach eject location
+    { -8571.0f, 1990.0f, -98.0f, 1.22f},        // flesh tentacles locations
+    { -8525.0f, 1994.0f, -98.0f, 2.12f},
+    { -8562.0f, 2037.0f, -70.0f, 5.05f},        // stomach teleport location
+    { -8545.6f, 1987.7f, -32.9f, 0.0f},         // stomach eject location
 };
 
 enum CThunPhase
@@ -256,7 +256,7 @@ struct MANGOS_DLL_DECL boss_eye_of_cthunAI : public Scripted_NoMovementAI
 
                 if (m_uiDarkGlareTimer < uiDiff)
                 {
-                        // Cast the rotation spell
+                    // Cast the rotation spell
                     if (DoCastSpellIfCan(m_creature, SPELL_ROTATE_TRIGGER) == CAST_OK)
                     {
                         // Remove the target focus but allow the boss to face the current victim
@@ -312,7 +312,7 @@ struct MANGOS_DLL_DECL boss_eye_of_cthunAI : public Scripted_NoMovementAI
             float fX, fY, fZ;
             for (uint8 i = 0; i < MAX_EYE_TENTACLES; ++i)
             {
-                m_creature->GetNearPoint(m_creature, fX, fY, fZ, 0, 30.0f, M_PI_F/4*i);
+                m_creature->GetNearPoint(m_creature, fX, fY, fZ, 0, 30.0f, M_PI_F / 4 * i);
                 m_creature->SummonCreature(NPC_EYE_TENTACLE, fX, fY, fZ, 0, TEMPSUMMON_DEAD_DESPAWN, 0);
             }
 
@@ -450,7 +450,7 @@ struct MANGOS_DLL_DECL boss_cthunAI : public Scripted_NoMovementAI
     {
         switch (pSummoned->GetEntry())
         {
-            // Handle portal despawn on tentacle kill
+                // Handle portal despawn on tentacle kill
             case NPC_EYE_TENTACLE:
                 if (Creature* pPortal = GetClosestCreatureWithEntry(pSummoned, NPC_TENTACLE_PORTAL, 5.0f))
                     pPortal->ForcedDespawn();
@@ -460,7 +460,7 @@ struct MANGOS_DLL_DECL boss_cthunAI : public Scripted_NoMovementAI
                 if (Creature* pPortal = GetClosestCreatureWithEntry(pSummoned, NPC_GIANT_TENTACLE_PORTAL, 5.0f))
                     pPortal->ForcedDespawn();
                 break;
-            // Handle the stomach tentacles kill
+                // Handle the stomach tentacles kill
             case NPC_FLESH_TENTACLE:
                 ++m_uiFleshTentaclesKilled;
                 if (m_uiFleshTentaclesKilled == MAX_FLESH_TENTACLES)
@@ -645,7 +645,7 @@ struct MANGOS_DLL_DECL boss_cthunAI : public Scripted_NoMovementAI
             float fX, fY, fZ;
             for (uint8 i = 0; i < MAX_EYE_TENTACLES; ++i)
             {
-                m_creature->GetNearPoint(m_creature, fX, fY, fZ, 0, 30.0f, M_PI_F/4*i);
+                m_creature->GetNearPoint(m_creature, fX, fY, fZ, 0, 30.0f, M_PI_F / 4 * i);
                 m_creature->SummonCreature(NPC_EYE_TENTACLE, fX, fY, fZ, 0, TEMPSUMMON_DEAD_DESPAWN, 0);
             }
 
@@ -758,11 +758,11 @@ bool AreaTrigger_at_stomach_cthun(Player* pPlayer, AreaTriggerEntry const* pAt)
             return false;
 
         // Summon the exit trigger which should push the player outside the stomach - not used because missing eject spells
-        //if (!GetClosestCreatureWithEntry(pPlayer, NPC_EXIT_TRIGGER, 10.0f))
+        // if (!GetClosestCreatureWithEntry(pPlayer, NPC_EXIT_TRIGGER, 10.0f))
         //    pPlayer->CastSpell(pPlayer, SPELL_EXIT_STOMACH, true);
 
         // Note: because of the missing spell id 26224, we will use basic jump movement
-        pPlayer->GetMotionMaster()->MoveJump(afCthunLocations[3][0], afCthunLocations[3][1], afCthunLocations[3][2], pPlayer->GetSpeed(MOVE_RUN)*5, 0);
+        pPlayer->GetMotionMaster()->MoveJump(afCthunLocations[3][0], afCthunLocations[3][1], afCthunLocations[3][2], pPlayer->GetSpeed(MOVE_RUN) * 5, 0);
     }
     else if (pAt->id == AREATRIGGER_STOMACH_2)
     {
@@ -776,7 +776,7 @@ bool AreaTrigger_at_stomach_cthun(Player* pPlayer, AreaTriggerEntry const* pAt)
 
                 // Teleport back to C'thun and remove the Digestive Acid
                 pPlayer->RemoveAurasDueToSpell(SPELL_DIGESTIVE_ACID);
-                pPlayer->NearTeleportTo(pCthun->GetPositionX(), pCthun->GetPositionY(), pCthun->GetPositionZ() + 15.0f, frand(0, 2*M_PI_F));
+                pPlayer->NearTeleportTo(pCthun->GetPositionX(), pCthun->GetPositionY(), pCthun->GetPositionZ() + 15.0f, frand(0, 2 * M_PI_F));
 
                 // Note: the real knockback spell id should be 26230
                 pPlayer->CastSpell(pPlayer, SPELL_EXIT_STOMACH_KNOCKBACK, true, NULL, NULL, pCthun->GetObjectGuid());

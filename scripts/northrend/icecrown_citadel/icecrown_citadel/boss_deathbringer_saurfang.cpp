@@ -73,19 +73,19 @@ enum
     SAY_OUTRO_HORDE_4           = -1631069,
 
     // intro event related
-    //SPELL_GRIP_OF_AGONY       = 70572,
-    //SPELL_VEHICLE_HARDCODED   = 46598,
+    // SPELL_GRIP_OF_AGONY       = 70572,
+    // SPELL_VEHICLE_HARDCODED   = 46598,
 
     // combat spells
     SPELL_BLOOD_POWER           = 72371,
-    //SPELL_BLOOD_POWER_SCALE   = 72370,            // included in creature_template_addon
-    //SPELL_ZERO_POWER          = 72242,            // included in creature_template_addon
+    // SPELL_BLOOD_POWER_SCALE   = 72370,            // included in creature_template_addon
+    // SPELL_ZERO_POWER          = 72242,            // included in creature_template_addon
 
-    //SPELL_MARK_FALLEN_DAMAGE  = 72256,            // procs on Saurfang melee attack - 72255 - included in creature_template_addon
+    // SPELL_MARK_FALLEN_DAMAGE  = 72256,            // procs on Saurfang melee attack - 72255 - included in creature_template_addon
     SPELL_MARK_FALLEN_CHAMPION  = 72293,            // procs on target death - 72260
     SPELL_REMOVE_MARKS          = 72257,
 
-    //SPELL_RUNE_OF_BLOOD_PROC  = 72408,            // procs on Saurfang mele attack - 72409 - included in creature_template_addon
+    // SPELL_RUNE_OF_BLOOD_PROC  = 72408,            // procs on Saurfang mele attack - 72409 - included in creature_template_addon
     SPELL_RUNE_OF_BLOOD         = 72410,
 
     SPELL_BLOOD_NOVA            = 72378,
@@ -111,7 +111,7 @@ enum
     POINT_ID_EVADE              = 2,
 };
 
-static const float fIntroPosition[4] = {-491.30f, 2211.35f, 541.11f, 3.16f};
+static const float fIntroPosition[4] = { -491.30f, 2211.35f, 541.11f, 3.16f};
 
 struct MANGOS_DLL_DECL boss_deathbringer_saurfangAI : public ScriptedAI
 {
@@ -144,10 +144,10 @@ struct MANGOS_DLL_DECL boss_deathbringer_saurfangAI : public ScriptedAI
         m_uiBloodNovaTimer      = 20000;
         m_uiBloodBeastsTimer    = 40000;
         m_uiScentOfBloodTimer   = 47000;
-        m_uiBerserkTimer        = 8*MINUTE*IN_MILLISECONDS;
+        m_uiBerserkTimer        = 8 * MINUTE * IN_MILLISECONDS;
 
         if (m_pInstance && m_pInstance->IsHeroicDifficulty())
-            m_uiBerserkTimer    = 6*MINUTE*IN_MILLISECONDS;
+            m_uiBerserkTimer    = 6 * MINUTE * IN_MILLISECONDS;
 
         m_bIsFrenzied           = false;
 
@@ -163,7 +163,7 @@ struct MANGOS_DLL_DECL boss_deathbringer_saurfangAI : public ScriptedAI
             m_pInstance->SetData(TYPE_DEATHBRINGER_SAURFANG, IN_PROGRESS);
     }
 
-    void MoveInLineOfSight(Unit *pWho)
+    void MoveInLineOfSight(Unit* pWho)
     {
         if (!m_bIsIntroDone && pWho->GetTypeId() == TYPEID_PLAYER && !((Player*)pWho)->isGameMaster() && m_creature->GetDistance2d(pWho) < 50.0f)
         {

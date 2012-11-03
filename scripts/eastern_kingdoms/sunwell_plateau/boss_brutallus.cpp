@@ -124,7 +124,7 @@ struct MANGOS_DLL_DECL boss_brutallusAI : public ScriptedAI, private DialogueHel
         m_uiSlashTimer      = 11000;
         m_uiStompTimer      = 30000;
         m_uiBurnTimer       = 20000;
-        m_uiBerserkTimer    = 6*MINUTE*IN_MILLISECONDS;
+        m_uiBerserkTimer    = 6 * MINUTE * IN_MILLISECONDS;
         m_uiLoveTimer       = urand(10000, 17000);
 
         m_uiMadrigosaSpellTimer = 0;
@@ -151,7 +151,7 @@ struct MANGOS_DLL_DECL boss_brutallusAI : public ScriptedAI, private DialogueHel
         if (pVictim->GetEntry() == NPC_MADRIGOSA)
             return;
 
-        switch(urand(0, 2))
+        switch (urand(0, 2))
         {
             case 0: DoScriptText(YELL_KILL1, m_creature); break;
             case 1: DoScriptText(YELL_KILL2, m_creature); break;
@@ -389,7 +389,7 @@ struct MANGOS_DLL_DECL boss_brutallusAI : public ScriptedAI, private DialogueHel
 
         if (m_uiLoveTimer < uiDiff)
         {
-            switch(urand(0, 2))
+            switch (urand(0, 2))
             {
                 case 0: DoScriptText(YELL_LOVE1, m_creature); break;
                 case 1: DoScriptText(YELL_LOVE2, m_creature); break;
@@ -474,8 +474,8 @@ bool AreaTrigger_at_madrigosa(Player* pPlayer, AreaTriggerEntry const* pAt)
 {
     if (ScriptedInstance* pInstance = (ScriptedInstance*)pPlayer->GetInstanceData())
     {
-        //this simply set encounter state, and trigger ice barrier become active
-        //bosses can start pre-event based on this new state
+        // this simply set encounter state, and trigger ice barrier become active
+        // bosses can start pre-event based on this new state
         if (pInstance->GetData(TYPE_BRUTALLUS) == NOT_STARTED)
         {
             pInstance->SetData(TYPE_BRUTALLUS, SPECIAL);

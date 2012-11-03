@@ -58,7 +58,7 @@ enum
 
     // ***** Spells *****
     // all horsemen
-    //SPELL_SHIELDWALL      = 29061,            // not used in 3.x.x
+    // SPELL_SHIELDWALL      = 29061,            // not used in 3.x.x
     SPELL_BESERK            = 26662,
     // Note: Berserk should be applied once 100 marks are casted.
     // Also spell 59450, which is missing from DBC, is required for the achiev
@@ -90,10 +90,10 @@ enum
     SPELL_CONDEMNATION      = 57377,
 
     // horseman spirits (not used in 3.x.x)
-    //NPC_SPIRIT_OF_BLAUMEUX = 16776,
-    //NPC_SPIRIT_OF_MOGRAINE = 16775,
-    //NPC_SPIRIT_OF_KORTHAZZ = 16778,
-    //NPC_SPIRIT_OF_ZELIREK  = 16777
+    // NPC_SPIRIT_OF_BLAUMEUX = 16776,
+    // NPC_SPIRIT_OF_MOGRAINE = 16775,
+    // NPC_SPIRIT_OF_KORTHAZZ = 16778,
+    // NPC_SPIRIT_OF_ZELIREK  = 16777
 };
 
 static const float aHorseMenMoveCoords[4][3] =
@@ -245,7 +245,7 @@ struct MANGOS_DLL_DECL boss_rivendare_naxxAI : public ScriptedAI
 
     void Aggro(Unit* pWho)
     {
-        switch(urand(0, 2))
+        switch (urand(0, 2))
         {
             case 0: DoScriptText(SAY_RIVE_AGGRO1, m_creature); break;
             case 1: DoScriptText(SAY_RIVE_AGGRO2, m_creature); break;

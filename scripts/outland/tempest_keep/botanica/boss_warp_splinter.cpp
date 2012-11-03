@@ -45,7 +45,7 @@ enum
 };
 
 // Summon Saplings spells (too many to declare them above)
-static const uint32 aSaplingsSummonSpells[10] = {34727,34730,34731,34732,34733,34734,34735,34736,34737,34739};
+static const uint32 aSaplingsSummonSpells[10] = {34727, 34730, 34731, 34732, 34733, 34734, 34735, 34736, 34737, 34739};
 
 struct MANGOS_DLL_DECL boss_warp_splinterAI : public ScriptedAI
 {
@@ -148,12 +148,12 @@ struct MANGOS_DLL_DECL boss_warp_splinterAI : public ScriptedAI
 #####*/
 struct MANGOS_DLL_DECL npc_saplingAI  : public ScriptedAI
 {
-    npc_saplingAI (Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
+    npc_saplingAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
     void Reset()
     {
         // ToDo: This one may need further reserch
-        //m_creature->SetSpeedRate(MOVE_RUN, 0.5f);
+        // m_creature->SetSpeedRate(MOVE_RUN, 0.5f);
     }
 
     void MoveInLineOfSight(Unit* pWho) { }

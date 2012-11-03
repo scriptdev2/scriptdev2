@@ -29,8 +29,8 @@ enum
     EMOTE_GENERIC_FRENZY    = -1000002,
 
     SPELL_STINGER_SPRAY     = 25749,
-    SPELL_POISON_STINGER    = 25748,                //only used in phase1
-    //SPELL_SUMMON_SWARMER  = 25844,                //might be 25708    - spells were removed since 2.0.1
+    SPELL_POISON_STINGER    = 25748,                // only used in phase1
+    // SPELL_SUMMON_SWARMER  = 25844,                // might be 25708    - spells were removed since 2.0.1
     SPELL_PARALYZE          = 25725,
     SPELL_LASH              = 25852,
     SPELL_FRENZY            = 8269,
@@ -54,10 +54,10 @@ struct SummonLocation
 // Spawn locations
 static const SummonLocation aAyamissSpawnLocs[] =
 {
-    {-9674.4707f, 1528.4133f, 22.457f},         // larva
-    {-9701.6005f, 1566.9993f, 24.118f},         // larva
-    {-9647.352f, 1578.062f, 55.32f},            // anchor point for swarmers
-    {-9717.18f, 1517.72f, 27.4677f},            // teleport location - need to be hardcoded because the player is teleported after the larva is summoned
+    { -9674.4707f, 1528.4133f, 22.457f},        // larva
+    { -9701.6005f, 1566.9993f, 24.118f},        // larva
+    { -9647.352f, 1578.062f, 55.32f},           // anchor point for swarmers
+    { -9717.18f, 1517.72f, 27.4677f},           // teleport location - need to be hardcoded because the player is teleported after the larva is summoned
 };
 
 struct MANGOS_DLL_DECL boss_ayamissAI : public ScriptedAI

@@ -64,14 +64,14 @@ enum
     NPC_VORSHA              = 12940
 };
 
-static float m_afFirstNagaCoord[3][3]=
+static float m_afFirstNagaCoord[3][3] =
 {
     {3603.504150f, 1122.631104f, 1.635f},                   // rider
     {3589.293945f, 1148.664063f, 5.565f},                   // sorceress
     {3609.925537f, 1168.759521f, -1.168f}                   // razortail
 };
 
-static float m_afSecondNagaCoord[3][3]=
+static float m_afSecondNagaCoord[3][3] =
 {
     {3609.925537f, 1168.759521f, -1.168f},                  // witch
     {3645.652100f, 1139.425415f, 1.322f},                   // priest
@@ -119,7 +119,7 @@ struct MANGOS_DLL_DECL npc_muglashAI : public npc_escortAI
 
     void WaypointReached(uint32 uiPointId)
     {
-        switch(uiPointId)
+        switch (uiPointId)
         {
             case 0:
                 if (Player* pPlayer = GetPlayerForEscort())
@@ -129,9 +129,9 @@ struct MANGOS_DLL_DECL npc_muglashAI : public npc_escortAI
                 if (Player* pPlayer = GetPlayerForEscort())
                     DoScriptText(SAY_MUG_BRAZIER, m_creature, pPlayer);
 
-                if (GameObject* pGo = GetClosestGameObjectWithEntry(m_creature, GO_NAGA_BRAZIER, INTERACTION_DISTANCE*2))
+                if (GameObject* pGo = GetClosestGameObjectWithEntry(m_creature, GO_NAGA_BRAZIER, INTERACTION_DISTANCE * 2))
                 {
-                    //some kind of event flag? Update to player/group only?
+                    // some kind of event flag? Update to player/group only?
                     pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NO_INTERACT);
                     SetEscortPaused(true);
                 }
@@ -153,7 +153,7 @@ struct MANGOS_DLL_DECL npc_muglashAI : public npc_escortAI
 
     void DoWaveSummon()
     {
-        switch(m_uiWaveId)
+        switch (m_uiWaveId)
         {
             case 1:
                 m_creature->SummonCreature(NPC_WRATH_RIDER,     m_afFirstNagaCoord[0][0], m_afFirstNagaCoord[0][1], m_afFirstNagaCoord[0][2], 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
@@ -226,7 +226,7 @@ CreatureAI* GetAI_npc_muglash(Creature* pCreature)
 
 bool GOUse_go_naga_brazier(Player* pPlayer, GameObject* pGo)
 {
-    if (Creature* pCreature = GetClosestCreatureWithEntry(pGo, NPC_MUGLASH, INTERACTION_DISTANCE*2))
+    if (Creature* pCreature = GetClosestCreatureWithEntry(pGo, NPC_MUGLASH, INTERACTION_DISTANCE * 2))
     {
         if (npc_muglashAI* pEscortAI = dynamic_cast<npc_muglashAI*>(pCreature->AI()))
         {
@@ -260,7 +260,7 @@ struct MANGOS_DLL_DECL npc_ruul_snowhoofAI : public npc_escortAI
 
     void WaypointReached(uint32 uiPointId)
     {
-        switch(uiPointId)
+        switch (uiPointId)
         {
             case 13:
                 m_creature->SummonCreature(NPC_T_TOTEMIC, 3449.218018f, -587.825073f, 174.978867f, 4.714445f, TEMPSUMMON_DEAD_DESPAWN, 60000);
@@ -346,7 +346,7 @@ struct MANGOS_DLL_DECL npc_torekAI : public npc_escortAI
         if (!pPlayer)
             return;
 
-        switch(uiPointId)
+        switch (uiPointId)
         {
             case 1:
                 DoScriptText(SAY_MOVE, m_creature, pPlayer);
@@ -355,10 +355,10 @@ struct MANGOS_DLL_DECL npc_torekAI : public npc_escortAI
                 DoScriptText(SAY_PREPARE, m_creature, pPlayer);
                 break;
             case 19:
-                //TODO: verify location and creatures amount.
-                m_creature->SummonCreature(NPC_DURIEL, 1776.73f, -2049.06f, 109.83f, 1.54f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,25000);
-                m_creature->SummonCreature(NPC_SILVERWING_SENTINEL, 1774.64f, -2049.41f, 109.83f, 1.40f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,25000);
-                m_creature->SummonCreature(NPC_SILVERWING_WARRIOR, 1778.73f, -2049.50f, 109.83f, 1.67f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,25000);
+                // TODO: verify location and creatures amount.
+                m_creature->SummonCreature(NPC_DURIEL, 1776.73f, -2049.06f, 109.83f, 1.54f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
+                m_creature->SummonCreature(NPC_SILVERWING_SENTINEL, 1774.64f, -2049.41f, 109.83f, 1.40f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
+                m_creature->SummonCreature(NPC_SILVERWING_WARRIOR, 1778.73f, -2049.50f, 109.83f, 1.67f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
                 break;
             case 20:
                 DoScriptText(SAY_WIN, m_creature, pPlayer);
@@ -404,7 +404,7 @@ bool QuestAccept_npc_torek(Player* pPlayer, Creature* pCreature, const Quest* pQ
 {
     if (pQuest->GetQuestId() == QUEST_TOREK_ASSULT)
     {
-        //TODO: find companions, make them follow Torek, at any time (possibly done by mangos/database in future?)
+        // TODO: find companions, make them follow Torek, at any time (possibly done by mangos/database in future?)
         DoScriptText(SAY_READY, pCreature, pPlayer);
 
         if (npc_torekAI* pEscortAI = dynamic_cast<npc_torekAI*>(pCreature->AI()))
@@ -487,19 +487,19 @@ struct MANGOS_DLL_DECL npc_feero_ironhandAI : public npc_escortAI
 
     void WaypointReached(uint32 uiPointId)
     {
-        switch(uiPointId)
+        switch (uiPointId)
         {
             case 14:
                 // Prepare the first ambush
                 DoScriptText(SAY_FIRST_AMBUSH_START, m_creature);
                 for (uint8 i = 0; i < 4; ++i)
-                    DoSpawnMob(NPC_DARK_STRAND_ASSASSIN, aSummonPositions[0][0], aSummonPositions[0][1] - M_PI_F/4 * i);
+                    DoSpawnMob(NPC_DARK_STRAND_ASSASSIN, aSummonPositions[0][0], aSummonPositions[0][1] - M_PI_F / 4 * i);
                 break;
             case 20:
                 // Prepare the second ambush
                 DoScriptText(SAY_SECOND_AMBUSH_START, m_creature);
                 for (uint8 i = 0; i < 3; ++i)
-                    DoSpawnMob(NPC_FORSAKEN_SCOUT, aSummonPositions[1][0], aSummonPositions[1][1] - M_PI_F/3 * i);
+                    DoSpawnMob(NPC_FORSAKEN_SCOUT, aSummonPositions[1][0], aSummonPositions[1][1] - M_PI_F / 3 * i);
                 break;
             case 29:
                 // Final ambush
@@ -544,7 +544,7 @@ struct MANGOS_DLL_DECL npc_feero_ironhandAI : public npc_escortAI
 
         if (!m_uiCreaturesCount)
         {
-            switch(pSummoned->GetEntry())
+            switch (pSummoned->GetEntry())
             {
                 case NPC_DARK_STRAND_ASSASSIN:
                     DoScriptText(SAY_FIRST_AMBUSH_END, m_creature);

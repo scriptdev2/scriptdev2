@@ -139,13 +139,13 @@ static const DialogueEntry aPhaseDialogue[] =
     {SAY_KALECGOS_AWAKE_1,      NPC_KALECGOS,   6000},
     {SAY_ANVEENA_IMPRISONED,    NPC_ANVEENA,    5000},
     {SAY_PHASE_3,               NPC_KILJAEDEN,  6000},
-    {SAY_KALECGOS_ORB_1,        NPC_KALECGOS,   0},             // phase 2 transition end
+    {SAY_KALECGOS_ORB_1,        NPC_KALECGOS,   0},         // phase 2 transition end
     {PHASE_ARMAGEDDON,          0,              2000},
     {EVENT_SWITCH_PHASE_3,      0,              14000},
     {SAY_KALECGOS_AWAKE_2,      NPC_KALECGOS,   7000},
     {SAY_ANVEENA_LOST,          NPC_ANVEENA,    7000},
     {SAY_PHASE_4,               NPC_KILJAEDEN,  6000},
-    {EVENT_DRAGON_ORB,          0,              0},             // phase 3 transition end
+    {EVENT_DRAGON_ORB,          0,              0},         // phase 3 transition end
     {PHASE_SACRIFICE,           0,              2000},
     {EVENT_SWITCH_PHASE_4,      0,              5000},
     {SAY_KALECGOS_AWAKE_4,      NPC_KALECGOS,   10000},
@@ -154,7 +154,7 @@ static const DialogueEntry aPhaseDialogue[] =
     {SAY_ANVEENA_SACRIFICE,     NPC_ANVEENA,    5000},
     {SAY_PHASE_5,               NPC_KILJAEDEN,  13000},
     {SAY_KALECGOS_ORB_4,        NPC_KALECGOS,   5000},
-    {SAY_KALECGOS_ENCOURAGE,    NPC_KALECGOS,   0},             // phase 4 transition end
+    {SAY_KALECGOS_ENCOURAGE,    NPC_KALECGOS,   0},         // phase 4 transition end
     {0, 0, 0},
 };
 
@@ -251,7 +251,7 @@ struct MANGOS_DLL_DECL npc_kiljaeden_controllerAI : public Scripted_NoMovementAI
                 m_creature->SummonCreature(NPC_VELEN, aOutroLocations[1].m_fX, aOutroLocations[1].m_fY, aOutroLocations[1].m_fZ, aOutroLocations[1].m_fO, TEMPSUMMON_CORPSE_DESPAWN, 0);
                 break;
             case NPC_LIADRIN:
-                m_creature->SummonCreature(NPC_LIADRIN, aOutroLocations[2].m_fX, aOutroLocations[2].m_fY, aOutroLocations[2].m_fZ, aOutroLocations[2].m_fO, TEMPSUMMON_TIMED_DESPAWN, 4*MINUTE*IN_MILLISECONDS);
+                m_creature->SummonCreature(NPC_LIADRIN, aOutroLocations[2].m_fX, aOutroLocations[2].m_fY, aOutroLocations[2].m_fZ, aOutroLocations[2].m_fO, TEMPSUMMON_TIMED_DESPAWN, 4 * MINUTE * IN_MILLISECONDS);
                 break;
             case SPELL_CALL_ENTROPIUS:
                 if (Creature* pVelen = m_pInstance->GetSingleCreatureFromStorage(NPC_VELEN))
@@ -286,7 +286,7 @@ struct MANGOS_DLL_DECL npc_kiljaeden_controllerAI : public Scripted_NoMovementAI
 
     void JustSummoned(Creature* pSummoned)
     {
-        switch(pSummoned->GetEntry())
+        switch (pSummoned->GetEntry())
         {
             case NPC_VELEN:
                 pSummoned->GetMotionMaster()->MovePoint(0, aOutroLocations[3].m_fX, aOutroLocations[3].m_fY, aOutroLocations[3].m_fZ);
@@ -455,10 +455,10 @@ struct MANGOS_DLL_DECL boss_kiljaedenAI : public Scripted_NoMovementAI, private 
 
             // Start the movement of the shadow orb - calculate new position based on the angle between the boss and orb
             float fX, fY, fAng;
-            fAng = m_creature->GetAngle(pSummoned) + M_PI_F/8;
+            fAng = m_creature->GetAngle(pSummoned) + M_PI_F / 8;
             // Normalize angle
-            if (fAng > 2*M_PI_F)
-                fAng = fAng - 2*M_PI_F;
+            if (fAng > 2 * M_PI_F)
+                fAng = fAng - 2 * M_PI_F;
 
             m_creature->GetNearPoint2D(fX, fY, 25.0f, fAng);
 
@@ -664,7 +664,7 @@ struct MANGOS_DLL_DECL boss_kiljaedenAI : public Scripted_NoMovementAI, private 
                     {
                         // Get some random coords for the Orb
                         float fX, fY, fZ;
-                        m_creature->GetNearPoint2D(fX, fY, 25.0f, frand(0, 2*M_PI_F));
+                        m_creature->GetNearPoint2D(fX, fY, 25.0f, frand(0, 2 * M_PI_F));
                         fZ = frand(35.0f, 45.0f);
 
                         m_creature->SummonCreature(NPC_SHIELD_ORB, fX, fY, fZ, 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
@@ -733,10 +733,10 @@ struct MANGOS_DLL_DECL npc_shield_orbAI : public ScriptedAI
         {
             // Calculate new position based on the angle between the boss and self
             float fX, fY, fAng;
-            fAng = pSummoner->GetAngle(m_creature) + M_PI_F/8;
+            fAng = pSummoner->GetAngle(m_creature) + M_PI_F / 8;
             // Normalize angle
-            if (fAng > 2*M_PI_F)
-                fAng = fAng - 2*M_PI_F;
+            if (fAng > 2 * M_PI_F)
+                fAng = fAng - 2 * M_PI_F;
 
             pSummoner->GetNearPoint2D(fX, fY, 25.0f, fAng);
 
@@ -751,17 +751,17 @@ struct MANGOS_DLL_DECL npc_shield_orbAI : public ScriptedAI
     void UpdateAI(const uint32 uiDiff) { }
 };
 
-CreatureAI* GetAI_boss_kiljaeden(Creature *pCreature)
+CreatureAI* GetAI_boss_kiljaeden(Creature* pCreature)
 {
     return new boss_kiljaedenAI(pCreature);
 }
 
-CreatureAI* GetAI_npc_kiljaeden_controller(Creature *pCreature)
+CreatureAI* GetAI_npc_kiljaeden_controller(Creature* pCreature)
 {
     return new npc_kiljaeden_controllerAI(pCreature);
 }
 
-CreatureAI* GetAI_npc_shield_orb(Creature *pCreature)
+CreatureAI* GetAI_npc_shield_orb(Creature* pCreature)
 {
     return new npc_shield_orbAI(pCreature);
 }
@@ -771,18 +771,18 @@ void AddSC_boss_kiljaeden()
     Script* pNewScript;
 
     pNewScript = new Script;
-    pNewScript->Name="boss_kiljaeden";
+    pNewScript->Name = "boss_kiljaeden";
     pNewScript->GetAI = &GetAI_boss_kiljaeden;
     pNewScript->pEffectAuraDummy = &EffectAuraDummy_spell_aura_dummy_darkness_of_souls;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
-    pNewScript->Name="npc_kiljaeden_controller";
+    pNewScript->Name = "npc_kiljaeden_controller";
     pNewScript->GetAI = &GetAI_npc_kiljaeden_controller;
     pNewScript->RegisterSelf();
 
     pNewScript = new Script;
-    pNewScript->Name="npc_shield_orb";
+    pNewScript->Name = "npc_shield_orb";
     pNewScript->GetAI = &GetAI_npc_shield_orb;
     pNewScript->RegisterSelf();
 }

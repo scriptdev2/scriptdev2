@@ -36,13 +36,13 @@ enum
     SAY_SLAY3                       = -1548028,
     SAY_DEATH                       = -1548029,
 
-    //Karathress spells
+    // Karathress spells
     SPELL_CATACLYSMIC_BOLT          = 38441,
     SPELL_ENRAGE                    = 24318,                // ToDo: spell needs to be confirmed
     SPELL_SEAR_NOVA                 = 38445,
     SPELL_BLESSING_OF_THE_TIDES     = 38449,                // cast by each of the advisors when the boss reaches 75% hp
 
-    //Sharkkis spells
+    // Sharkkis spells
     SPELL_LEECHING_THROW            = 29436,
     SPELL_THE_BEAST_WITHIN          = 38373,
     SPELL_HURL_TRIDENT              = 38374,
@@ -51,7 +51,7 @@ enum
     SPELL_SUMMON_FATHOM_SPOREBAT    = 38431,
     SPELL_POWER_OF_SHARKKIS         = 38455,                // cast on Karathress, on death
 
-    //Tidalvess spells
+    // Tidalvess spells
     SPELL_FROST_SHOCK               = 38234,
     SPELL_SPITFIRE_TOTEM            = 38236,
     SPELL_POISON_CLEANSING_TOTEM    = 38306,
@@ -59,7 +59,7 @@ enum
     SPELL_WINDFURY_WEAPON           = 32911,                // triggers spell 32912 (Windfury)
     SPELL_POWER_OF_TIDALVESS        = 38452,                // cast on Karathress, on death
 
-    //Caribdis Spells
+    // Caribdis Spells
     SPELL_WATER_BOLT_VOLLEY         = 38335,
     SPELL_TIDAL_SURGE               = 38358,                // triggers 38353 which then triggers 38357
     SPELL_HEALING_WAVE              = 38330,
@@ -103,7 +103,7 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
     {
         m_uiCataclysmicBoltTimer    = 10000;
         m_uiSearingNovaTimer        = urand(20000, 30000);
-        m_uiEnrageTimer             = 10*MINUTE*IN_MILLISECONDS;
+        m_uiEnrageTimer             = 10 * MINUTE * IN_MILLISECONDS;
         m_bBlessingOfTides          = false;
     }
 
@@ -133,7 +133,7 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
 
     void KilledUnit(Unit* pVictim)
     {
-        switch(urand(0, 2))
+        switch (urand(0, 2))
         {
             case 0: DoScriptText(SAY_SLAY1, m_creature); break;
             case 1: DoScriptText(SAY_SLAY2, m_creature); break;
@@ -148,8 +148,8 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
         if (m_pInstance)
             m_pInstance->SetData(TYPE_KARATHRESS_EVENT, DONE);
 
-        //support for quest 10944
-        m_creature->SummonCreature(NPC_SEER_OLUM, afCoordsOlum[0], afCoordsOlum[1], afCoordsOlum[2], afCoordsOlum[3], TEMPSUMMON_TIMED_DESPAWN, 1*HOUR*IN_MILLISECONDS);
+        // support for quest 10944
+        m_creature->SummonCreature(NPC_SEER_OLUM, afCoordsOlum[0], afCoordsOlum[1], afCoordsOlum[2], afCoordsOlum[3], TEMPSUMMON_TIMED_DESPAWN, 1 * HOUR * IN_MILLISECONDS);
     }
 
     void JustReachedHome()
@@ -165,10 +165,10 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
 
         if (m_uiCataclysmicBoltTimer < uiDiff)
         {
-            //select a random unit other than the main tank
+            // select a random unit other than the main tank
             Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1);
 
-            //if there aren't other units, cast on the tank
+            // if there aren't other units, cast on the tank
             if (!pTarget)
                 pTarget = m_creature->getVictim();
 
@@ -187,7 +187,7 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
             {
                 if (Creature* pAdvisor = m_pInstance->GetSingleCreatureFromStorage(aAdvisors[i]))
                 {
-                    //stack max three times (one for each alive)
+                    // stack max three times (one for each alive)
                     if (pAdvisor->isAlive())
                     {
                         pAdvisor->InterruptNonMeleeSpells(false);
@@ -196,7 +196,7 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
                 }
             }
 
-            //yell if we now have the aura
+            // yell if we now have the aura
             if (m_creature->HasAura(SPELL_BLESSING_OF_THE_TIDES))
                 DoScriptText(SAY_GAIN_BLESSING, m_creature);
 

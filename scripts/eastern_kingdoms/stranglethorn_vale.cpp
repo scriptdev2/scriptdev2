@@ -99,9 +99,9 @@ struct MANGOS_DLL_DECL mob_yennikuAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_yenniku(Creature *_Creature)
+CreatureAI* GetAI_mob_yenniku(Creature* _Creature)
 {
-    return new mob_yennikuAI (_Creature);
+    return new mob_yennikuAI(_Creature);
 }
 
 /*######

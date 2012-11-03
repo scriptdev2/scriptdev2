@@ -36,10 +36,10 @@ enum
     SPELL_ENRAGE                    = 28371,
     SPELL_ENRAGE_H                  = 54427,
     SPELL_BERSERK                   = 26662,
-    //SPELL_TERRIFYING_ROAR         = 29685,                // no longer used in 3.x.x
-    //SPELL_SUMMON_ZOMBIE_CHOW      = 28216,                // removed from dbc: triggers 28217 every 6 secs
-    //SPELL_CALL_ALL_ZOMBIE_CHOW    = 29681,                // removed from dbc: triggers 29682
-    //SPELL_ZOMBIE_CHOW_SEARCH      = 28235,                // removed from dbc: triggers 28236 every 3 secs
+    // SPELL_TERRIFYING_ROAR         = 29685,               // no longer used in 3.x.x
+    // SPELL_SUMMON_ZOMBIE_CHOW      = 28216,               // removed from dbc: triggers 28217 every 6 secs
+    // SPELL_CALL_ALL_ZOMBIE_CHOW    = 29681,               // removed from dbc: triggers 29682
+    // SPELL_ZOMBIE_CHOW_SEARCH      = 28235,               // removed from dbc: triggers 28236 every 3 secs
 
     NPC_ZOMBIE_CHOW                 = 16360,                // old vanilla summoning spell 28217
 
@@ -83,7 +83,7 @@ struct MANGOS_DLL_DECL boss_gluthAI : public ScriptedAI
         m_uiSummonTimer       = 15000;
         m_uiZombieSearchTimer = 3000;
 
-        m_uiBerserkTimer     = MINUTE*8*IN_MILLISECONDS;
+        m_uiBerserkTimer     = MINUTE * 8 * IN_MILLISECONDS;
     }
 
     void JustDied(Unit* pKiller)
@@ -104,7 +104,7 @@ struct MANGOS_DLL_DECL boss_gluthAI : public ScriptedAI
         if (pVictim->GetEntry() == NPC_ZOMBIE_CHOW)
         {
             DoScriptText(EMOTE_ZOMBIE, m_creature);
-            m_creature->SetHealth(m_creature->GetHealth() + m_creature->GetMaxHealth()*0.05f);
+            m_creature->SetHealth(m_creature->GetHealth() + m_creature->GetMaxHealth() * 0.05f);
         }
     }
 
@@ -220,7 +220,7 @@ struct MANGOS_DLL_DECL boss_gluthAI : public ScriptedAI
         if (m_uiBerserkTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature, SPELL_BERSERK) == CAST_OK)
-                m_uiBerserkTimer = MINUTE*5*IN_MILLISECONDS;
+                m_uiBerserkTimer = MINUTE * 5 * IN_MILLISECONDS;
         }
         else
             m_uiBerserkTimer -= uiDiff;

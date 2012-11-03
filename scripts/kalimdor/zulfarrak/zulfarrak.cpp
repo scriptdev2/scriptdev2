@@ -43,20 +43,20 @@ enum
 };
 #define GOSSIP_BLY                  "That's it! I'm tired of helping you out. It's time we settled things on the battlefield!"
 
-//find Bly's gossip menus
+// find Bly's gossip menus
 
 struct MANGOS_DLL_DECL npc_sergeant_blyAI : public ScriptedAI
 {
     npc_sergeant_blyAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        //m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        // m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
-    //ScriptedInstance* m_pInstance;
+    // ScriptedInstance* m_pInstance;
 
     uint32 m_uiShieldBashTimer;
-    uint32 m_uiRevengeTimer;                                //this is wrong, spell should never be used unless m_creature->getVictim() dodge, parry or block attack. Mangos support required.
+    uint32 m_uiRevengeTimer;                                // this is wrong, spell should never be used unless m_creature->getVictim() dodge, parry or block attack. Mangos support required.
 
     void Reset()
     {
@@ -88,7 +88,7 @@ struct MANGOS_DLL_DECL npc_sergeant_blyAI : public ScriptedAI
 
         if (m_uiShieldBashTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_SHIELD_BASH);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_SHIELD_BASH);
             m_uiShieldBashTimer = 15000;
         }
         else
@@ -96,7 +96,7 @@ struct MANGOS_DLL_DECL npc_sergeant_blyAI : public ScriptedAI
 
         if (m_uiRevengeTimer < uiDiff)
         {
-            DoCastSpellIfCan(m_creature->getVictim(),SPELL_REVENGE);
+            DoCastSpellIfCan(m_creature->getVictim(), SPELL_REVENGE);
             m_uiRevengeTimer = 10000;
         }
         else
@@ -115,7 +115,7 @@ bool GossipHello_npc_sergeant_bly(Player* pPlayer, Creature* pCreature)
 {
     /*if (m_pInstance->GetData(0) == DONE)
     {*/
-    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_BLY, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_BLY, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     pPlayer->SEND_GOSSIP_MENU(1517, pCreature->GetObjectGuid());
     /*}
     else if (m_pInstance->GetData(0) == IN_PROGRESS)
@@ -128,7 +128,7 @@ bool GossipHello_npc_sergeant_bly(Player* pPlayer, Creature* pCreature)
 
 bool GossipSelect_npc_sergeant_bly(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
+    if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)
     {
         pPlayer->CLOSE_GOSSIP_MENU();
         pCreature->setFaction(FACTION_HOSTILE);
@@ -155,11 +155,11 @@ struct MANGOS_DLL_DECL npc_weegli_blastfuseAI : public ScriptedAI
 {
     npc_weegli_blastfuseAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        //m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        // m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
     }
 
-    //ScriptedInstance* m_pInstance;
+    // ScriptedInstance* m_pInstance;
 
     void Reset()
     {
@@ -195,25 +195,25 @@ CreatureAI* GetAI_npc_weegli_blastfuse(Creature* pCreature)
 
 bool GossipHello_npc_weegli_blastfuse(Player* pPlayer, Creature* pCreature)
 {
-    //event not implemented yet, this is only placeholder for future developement
+    // event not implemented yet, this is only placeholder for future developement
     /*if (m_pInstance->GetData(0) == DONE)
     {
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_WEEGLI, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-        pPlayer->SEND_GOSSIP_MENU(1514, pCreature->GetObjectGuid());//if event can proceed to end
+        pPlayer->SEND_GOSSIP_MENU(1514, pCreature->GetObjectGuid());// if event can proceed to end
     }
     else if (m_pInstance->GetData(0) == IN_PROGRESS)
-        pPlayer->SEND_GOSSIP_MENU(1513, pCreature->GetObjectGuid());//if event are in progress
+        pPlayer->SEND_GOSSIP_MENU(1513, pCreature->GetObjectGuid());// if event are in progress
     else*/
-    pPlayer->SEND_GOSSIP_MENU(1511, pCreature->GetObjectGuid());   //if event not started
+    pPlayer->SEND_GOSSIP_MENU(1511, pCreature->GetObjectGuid());   // if event not started
     return true;
 }
 
 bool GossipSelect_npc_weegli_blastfuse(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
+    if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)
     {
         pPlayer->CLOSE_GOSSIP_MENU();
-        //here we make him run to door, set the charge and run away off to nowhere
+        // here we make him run to door, set the charge and run away off to nowhere
     }
     return true;
 }

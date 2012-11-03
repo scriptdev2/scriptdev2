@@ -43,7 +43,7 @@ enum
     SPELL_SUMMON_SPARK                      = 52746,
     SPELL_SPARK_DESPAWN                     = 52776,
 
-    //Spark of Ionar
+    // Spark of Ionar
     SPELL_SPARK_VISUAL_TRIGGER_N            = 52667,
     SPELL_SPARK_VISUAL_TRIGGER_H            = 59833,
 
@@ -59,7 +59,7 @@ enum
 
 struct MANGOS_DLL_DECL boss_ionarAI : public ScriptedAI
 {
-    boss_ionarAI(Creature *pCreature) : ScriptedAI(pCreature)
+    boss_ionarAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         m_bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
@@ -147,9 +147,9 @@ struct MANGOS_DLL_DECL boss_ionarAI : public ScriptedAI
             m_pInstance->SetData(TYPE_IONAR, DONE);
     }
 
-    void KilledUnit(Unit *victim)
+    void KilledUnit(Unit* victim)
     {
-        switch(urand(0, 2))
+        switch (urand(0, 2))
         {
             case 0: DoScriptText(SAY_SLAY_1, m_creature); break;
             case 1: DoScriptText(SAY_SLAY_2, m_creature); break;
@@ -273,7 +273,7 @@ struct MANGOS_DLL_DECL boss_ionarAI : public ScriptedAI
             m_uiBallLightningTimer -= uiDiff;
 
         // Health check
-        if (m_creature->GetHealthPercent() < float(100 - 20*m_uiHealthAmountModifier))
+        if (m_creature->GetHealthPercent() < float(100 - 20 * m_uiHealthAmountModifier))
         {
             ++m_uiHealthAmountModifier;
 
@@ -295,7 +295,7 @@ CreatureAI* GetAI_boss_ionar(Creature* pCreature)
 
 bool EffectDummyCreature_boss_ionar(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
 {
-    //always check spellid and effectindex
+    // always check spellid and effectindex
     if (uiSpellId == SPELL_DISPERSE && uiEffIndex == EFFECT_INDEX_0)
     {
         if (pCreatureTarget->GetEntry() != NPC_IONAR)
@@ -310,7 +310,7 @@ bool EffectDummyCreature_boss_ionar(Unit* pCaster, uint32 uiSpellId, SpellEffect
         if (pCreatureTarget->GetMotionMaster()->GetCurrentMovementGeneratorType() == CHASE_MOTION_TYPE)
             pCreatureTarget->GetMotionMaster()->MovementExpired();
 
-        //always return true when we are handling this spell and effect
+        // always return true when we are handling this spell and effect
         return true;
     }
     else if (uiSpellId == SPELL_SPARK_DESPAWN && uiEffIndex == EFFECT_INDEX_0)
@@ -318,7 +318,7 @@ bool EffectDummyCreature_boss_ionar(Unit* pCaster, uint32 uiSpellId, SpellEffect
         if (pCreatureTarget->GetEntry() != NPC_IONAR)
             return true;
 
-        if (boss_ionarAI* pIonarAI = dynamic_cast<boss_ionarAI*> (pCreatureTarget->AI()))
+        if (boss_ionarAI* pIonarAI = dynamic_cast<boss_ionarAI*>(pCreatureTarget->AI()))
             pIonarAI->DespawnSpark();
 
         return true;
@@ -332,7 +332,7 @@ bool EffectDummyCreature_boss_ionar(Unit* pCaster, uint32 uiSpellId, SpellEffect
 
 struct MANGOS_DLL_DECL mob_spark_of_ionarAI : public ScriptedAI
 {
-    mob_spark_of_ionarAI(Creature *pCreature) : ScriptedAI(pCreature)
+    mob_spark_of_ionarAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
