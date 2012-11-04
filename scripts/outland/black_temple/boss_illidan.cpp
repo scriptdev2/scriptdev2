@@ -569,7 +569,9 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI, private Dia
                     pSummoned->CastSpell(pTarget, SPELL_PARALYZE, true);
 
                     // Move towards target (which is stunned)
-                    pSummoned->GetMotionMaster()->MovePoint(1, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ());
+                    float fX, fY, fZ;
+                    pTarget->GetContactPoint(pSummoned, fX, fY, fZ);
+                    pSummoned->GetMotionMaster()->MovePoint(1, fX, fY, fZ);
                 }
                 break;
             case NPC_MAIEV_SHADOWSONG:
@@ -1123,7 +1125,7 @@ struct MANGOS_DLL_DECL npc_akama_illidanAI : public npc_escortAI, private Dialog
                     if (Creature* pIllidan = m_pInstance->GetSingleCreatureFromStorage(NPC_ILLIDAN_STORMRAGE))
                     {
                         float fX, fY, fZ;
-                        m_creature->GetRandomPoint(pIllidan->GetPositionX(), pIllidan->GetPositionY(), pIllidan->GetPositionZ(), 5.0f, fX, fY, fZ);
+                        pIllidan->GetContactPoint(m_creature, fX, fY, fZ);
                         m_creature->GetMotionMaster()->MovePoint(100, fX, fY, fZ);
                     }
                 }
