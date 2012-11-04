@@ -8,6 +8,7 @@
 enum
 {
     MAX_ENCOUNTER                   = 10,
+    MAX_WARDENS                     = 7,
 
     TYPE_ENTRANCE                   = 0,
     TYPE_ZEREKETH                   = 1,
@@ -32,6 +33,8 @@ enum
     // intro event related
     NPC_PROTEAN_NIGHTMARE           = 20864,
     NPC_PROTEAN_HORROR              = 20865,
+    NPC_ARCATRAZ_WARDEN             = 20859,
+    NPC_ARCATRAZ_DEFENDER           = 20857,
 
     // Harbinger Skyriss event related (trash mobs are scripted in ACID)
     NPC_BLAZING_TRICKSTER           = 20905,                // phase 1
@@ -71,7 +74,9 @@ static const SpawnLocation aSummonPosition[5] =
 
 static const float aDalliahStartPos[4] = {118.6038f, 96.84682f, 22.44115f, 1.012f};
 static const float aSoccotharesStartPos[4] = {122.1035f, 192.7203f, 22.44115f, 5.235f};
+
 static const float aEntranceMoveLoc[3] = {82.020f, 0.306f, -11.026f};
+static const float aEntranceSpawnLoc[4] = {173.471f, -0.138f, -10.101f, 3.123f};
 
 class MANGOS_DLL_DECL instance_arcatraz : public ScriptedInstance, private DialogueHelper
 {
@@ -83,6 +88,7 @@ class MANGOS_DLL_DECL instance_arcatraz : public ScriptedInstance, private Dialo
         void OnPlayerEnter(Player* pPlayer);
         void OnObjectCreate(GameObject* pGo);
         void OnCreatureCreate(Creature* pCreature);
+        void OnCreatureDeath(Creature* pCreature);
 
         void SetData(uint32 uiType, uint32 uiData);
         uint32 GetData(uint32 uiType);
@@ -100,9 +106,9 @@ class MANGOS_DLL_DECL instance_arcatraz : public ScriptedInstance, private Dialo
 
         uint32 m_uiResetDelayTimer;
         uint32 m_uiEntranceEventTimer;
+        uint8 m_uiKilledWardens;
 
         GuidList m_lSkyrissEventMobsGuidList;
-        std::queue<ObjectGuid> m_qIntroEventMobsGuidQueue;
 };
 
 #endif

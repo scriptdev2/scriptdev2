@@ -88,7 +88,8 @@ static const DialogueEntry aArcatrazDialogue[] =
 
 instance_arcatraz::instance_arcatraz(Map* pMap) : ScriptedInstance(pMap), DialogueHelper(aArcatrazDialogue),
     m_uiEntranceEventTimer(0),
-    m_uiResetDelayTimer(0)
+    m_uiResetDelayTimer(0),
+    m_uiKilledWardens(0)
 {
     Initialize();
 }
@@ -159,12 +160,6 @@ void instance_arcatraz::OnCreatureCreate(Creature* pCreature)
         case NPC_TW_DRAKONAAR:
         case NPC_BL_DRAKONAAR:
             m_lSkyrissEventMobsGuidList.push_back(pCreature->GetObjectGuid());
-            break;
-        case NPC_PROTEAN_HORROR:
-        case NPC_PROTEAN_NIGHTMARE:
-            // Only take the mobs from the entrance
-            if (pCreature->GetPositionY() > 0 && pCreature->GetPositionY() < 1.0f)
-                m_qIntroEventMobsGuidQueue.push(pCreature->GetObjectGuid());
             break;
     }
 }
@@ -411,6 +406,21 @@ void instance_arcatraz::JustDidDialogueStep(int32 iEntry)
     }
 }
 
+void instance_arcatraz::OnCreatureDeath(Creature* pCreature)
+{
+    if (pCreature->GetEntry() == NPC_ARCATRAZ_WARDEN || pCreature->GetEntry() == NPC_ARCATRAZ_DEFENDER)
+    {
+        ++m_uiKilledWardens;
+
+        // Stop the intro spawns when the wardens are killed
+        if (m_uiKilledWardens == MAX_WARDENS)
+        {
+            SetData(TYPE_ENTRANCE, DONE);
+            m_uiEntranceEventTimer = 0;
+        }
+    }
+}
+
 void instance_arcatraz::Update(uint32 uiDiff)
 {
     DialogueUpdate(uiDiff);
@@ -431,25 +441,19 @@ void instance_arcatraz::Update(uint32 uiDiff)
     {
         if (m_uiEntranceEventTimer <= uiDiff)
         {
-            // Move the intro creatures into combat positions
-            if (Creature* pTemp = instance->GetCreature(m_qIntroEventMobsGuidQueue.front()))
-            {
-                if (pTemp->isAlive())
-                {
-                    pTemp->SetWalk(false);
-                    pTemp->GetMotionMaster()->MovePoint(0, aEntranceMoveLoc[0], aEntranceMoveLoc[1], aEntranceMoveLoc[2]);
-                }
-                m_qIntroEventMobsGuidQueue.pop();
-            }
+            Player* pPlayer = GetPlayerInMap();
+            if (!pPlayer)
+                return;
 
-            // When all intro creatures were moved, stop the timer
-            if (m_qIntroEventMobsGuidQueue.empty())
+            uint32 uiEntry = urand(0, 10) ? NPC_PROTEAN_HORROR : NPC_PROTEAN_NIGHTMARE;
+
+            // Summon and move the intro creatures into combat positions
+            if (Creature* pTemp = pPlayer->SummonCreature(uiEntry, aEntranceSpawnLoc[0], aEntranceSpawnLoc[1], aEntranceSpawnLoc[2], aEntranceSpawnLoc[3], TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 30000))
             {
-                SetData(TYPE_ENTRANCE, DONE);
-                m_uiEntranceEventTimer = 0;
+                pTemp->SetWalk(false);
+                pTemp->GetMotionMaster()->MovePoint(0, aEntranceMoveLoc[0], aEntranceMoveLoc[1], aEntranceMoveLoc[2]);
             }
-            else
-                m_uiEntranceEventTimer = urand(10000, 15000);
+            m_uiEntranceEventTimer = urand(0, 10) ? urand(1000, 2000) : urand(5000, 7000);
         }
         else
             m_uiEntranceEventTimer -= uiDiff;
