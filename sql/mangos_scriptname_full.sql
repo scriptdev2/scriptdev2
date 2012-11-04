@@ -642,6 +642,7 @@ UPDATE creature_template SET ScriptName='npc_aeranas' WHERE entry=17085;
 UPDATE creature_template SET ScriptName='npc_ancestral_wolf' WHERE entry=17077;
 UPDATE creature_template SET ScriptName='npc_demoniac_scryer' WHERE entry=22258;
 UPDATE creature_template SET ScriptName='npc_wounded_blood_elf' WHERE entry=16993;
+UPDATE creature_template SET ScriptName='npc_fel_guard_hound' WHERE entry=21847;
 
 /* HILLSBRAD FOOTHILLS */
 
