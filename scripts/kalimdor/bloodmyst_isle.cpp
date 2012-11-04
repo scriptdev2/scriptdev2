@@ -39,11 +39,13 @@ enum
 // possible creatures to be spawned (too many to be added to enum)
 const uint32 possibleSpawns[31] = {17322, 17661, 17496, 17522, 17340, 17352, 17333, 17524, 17654, 17348, 17339, 17345, 17359, 17353, 17336, 17550, 17330, 17701, 17321, 17325, 17320, 17683, 17342, 17715, 17334, 17341, 17338, 17337, 17346, 17344, 17327};
 
-struct MANGOS_DLL_DECL mob_webbed_creatureAI : public ScriptedAI
+struct MANGOS_DLL_DECL mob_webbed_creatureAI : public Scripted_NoMovementAI
 {
-    mob_webbed_creatureAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
+    mob_webbed_creatureAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature) { Reset(); }
 
     void Reset() { }
+    void AttackStart(Unit* pWho) { }
+    void MoveInLineOfSight(Unit* pWho) { }
 
     void JustDied(Unit* pKiller)
     {
