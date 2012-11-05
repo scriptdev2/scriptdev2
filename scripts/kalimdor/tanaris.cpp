@@ -70,21 +70,24 @@ struct MANGOS_DLL_DECL mob_aquementasAI : public ScriptedAI
         m_creature->setFaction(FACTION_FRIENDLY);
     }
 
-    void SendItem(Unit* pReceiver)
+    void SendItem(Player* pReceiver)
     {
-        if (((Player*)pReceiver)->HasItemCount(ITEM_BOOK_AQUOR, 1) &&
-                ((Player*)pReceiver)->HasItemCount(ITEM_SILVERY_CLAWS, 11) &&
-                ((Player*)pReceiver)->HasItemCount(ITEM_IRONTREE_HEART, 1))
+        if (pReceiver->HasItemCount(ITEM_BOOK_AQUOR, 1) &&
+                pReceiver->HasItemCount(ITEM_SILVERY_CLAWS, 11) &&
+                pReceiver->HasItemCount(ITEM_IRONTREE_HEART, 1) &&
+                !pReceiver->HasItemCount(ITEM_SILVER_TOTEM, 1))
         {
-            if (Item* pItem = ((Player*)pReceiver)->StoreNewItemInInventorySlot(ITEM_SILVER_TOTEM, 1))
-                ((Player*)pReceiver)->SendNewItem(pItem, 1, true, false);
+            if (Item* pItem = pReceiver->StoreNewItemInInventorySlot(ITEM_SILVER_TOTEM, 1))
+                pReceiver->SendNewItem(pItem, 1, true, false);
         }
     }
 
     void Aggro(Unit* pWho)
     {
         DoScriptText(AGGRO_YELL_AQUE, m_creature, pWho);
-        SendItem(pWho);
+
+        if (pWho->GetTypeId() == TYPEID_PLAYER)
+            SendItem(static_cast<Player*>(pWho));
     }
 
     void UpdateAI(const uint32 uiDiff)
