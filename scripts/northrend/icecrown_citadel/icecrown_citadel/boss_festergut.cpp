@@ -93,7 +93,7 @@ struct MANGOS_DLL_DECL boss_festergutAI : public ScriptedAI
     uint32 m_uiGasSporeTimer;
     uint32 m_uiVileGasTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiBerserkTimer = 5 * MINUTE * IN_MILLISECONDS;
         m_uiGastricBloatTimer = 10000;
@@ -102,7 +102,7 @@ struct MANGOS_DLL_DECL boss_festergutAI : public ScriptedAI
         m_uiVileGasTimer = 10000;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -114,12 +114,12 @@ struct MANGOS_DLL_DECL boss_festergutAI : public ScriptedAI
             m_pInstance->SetData(TYPE_FESTERGUT, IN_PROGRESS);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_FESTERGUT, FAIL);
@@ -127,7 +127,7 @@ struct MANGOS_DLL_DECL boss_festergutAI : public ScriptedAI
         DoCastSpellIfCan(m_creature, SPELL_REMOVE_INOCULENT, CAST_TRIGGERED);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_FESTERGUT, DONE);
@@ -136,7 +136,7 @@ struct MANGOS_DLL_DECL boss_festergutAI : public ScriptedAI
         DoCastSpellIfCan(m_creature, SPELL_REMOVE_INOCULENT, CAST_TRIGGERED);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

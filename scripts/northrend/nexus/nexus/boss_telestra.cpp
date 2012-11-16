@@ -93,7 +93,7 @@ struct MANGOS_DLL_DECL boss_telestraAI : public ScriptedAI
 
     bool m_bCanCheckAchiev;
 
-    void Reset()
+    void Reset() override
     {
         m_uiPhase = PHASE_1;
         m_uiCloneDeadCount = 0;
@@ -106,12 +106,12 @@ struct MANGOS_DLL_DECL boss_telestraAI : public ScriptedAI
         m_bCanCheckAchiev = false;
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
     }
 
-    void AttackStart(Unit* pWho)
+    void AttackStart(Unit* pWho) override
     {
         if (m_creature->Attack(pWho, true))
         {
@@ -123,7 +123,7 @@ struct MANGOS_DLL_DECL boss_telestraAI : public ScriptedAI
         }
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -131,7 +131,7 @@ struct MANGOS_DLL_DECL boss_telestraAI : public ScriptedAI
             m_pInstance->SetData(TYPE_TELESTRA, IN_PROGRESS);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -139,13 +139,13 @@ struct MANGOS_DLL_DECL boss_telestraAI : public ScriptedAI
             m_pInstance->SetData(TYPE_TELESTRA, DONE);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         if (urand(0, 1))
             DoScriptText(SAY_KILL, m_creature);
     }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
     {
         switch (pSpell->Id)
         {
@@ -190,7 +190,7 @@ struct MANGOS_DLL_DECL boss_telestraAI : public ScriptedAI
         }
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         switch (pSummoned->GetEntry())
         {
@@ -200,7 +200,7 @@ struct MANGOS_DLL_DECL boss_telestraAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

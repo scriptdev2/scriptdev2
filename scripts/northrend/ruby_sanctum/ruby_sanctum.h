@@ -59,20 +59,20 @@ class MANGOS_DLL_DECL instance_ruby_sanctum : public ScriptedInstance
     public:
         instance_ruby_sanctum(Map* pMap);
 
-        void Initialize();
-        bool IsEncounterInProgress() const;
+        void Initialize() override;
+        bool IsEncounterInProgress() const override;
 
-        void OnPlayerEnter(Player* pPlayer);
-        void OnCreatureCreate(Creature* pCreature);
-        void OnObjectCreate(GameObject* pGo);
+        void OnPlayerEnter(Player* pPlayer) override;
+        void OnCreatureCreate(Creature* pCreature) override;
+        void OnObjectCreate(GameObject* pGo) override;
 
-        void SetData(uint32 uiType, uint32 uiData);
-        uint32 GetData(uint32 uiType);
+        void SetData(uint32 uiType, uint32 uiData) override;
+        uint32 GetData(uint32 uiType) override;
 
-        void Update(uint32 uiDiff);
+        void Update(uint32 uiDiff) override;
 
-        const char* Save() { return strInstData.c_str(); }
-        void Load(const char* chrIn);
+        const char* Save() override { return strInstData.c_str(); }
+        void Load(const char* chrIn) override;
 
     protected:
         void DoHandleZarithrianDoor();

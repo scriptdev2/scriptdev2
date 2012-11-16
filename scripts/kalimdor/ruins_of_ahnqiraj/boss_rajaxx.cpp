@@ -93,14 +93,14 @@ struct MANGOS_DLL_DECL npc_general_andorovAI : public ScriptedAI, private Dialog
 
     uint8 m_uiPointId;
 
-    void Reset()
+    void Reset() override
     {
         m_uiCommandAuraTimer = urand(1000, 3000);
         m_uiBashTimer        = urand(8000, 11000);
         m_uiStrikeTimer      = urand(2000, 5000);
     }
 
-    void MoveInLineOfSight(Unit* pWho)
+    void MoveInLineOfSight(Unit* pWho) override
     {
         // If Rajaxx is in range attack him
         if (pWho->GetEntry() == NPC_RAJAXX && m_creature->IsWithinDistInMap(pWho, 50.0f))
@@ -109,7 +109,7 @@ struct MANGOS_DLL_DECL npc_general_andorovAI : public ScriptedAI, private Dialog
         ScriptedAI::MoveInLineOfSight(pWho);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         if (pKiller->GetEntry() != NPC_RAJAXX)
             return;
@@ -122,7 +122,7 @@ struct MANGOS_DLL_DECL npc_general_andorovAI : public ScriptedAI, private Dialog
         }
     }
 
-    void JustDidDialogueStep(int32 iEntry)
+    void JustDidDialogueStep(int32 iEntry) override
     {
         // Start the event when the dialogue is finished
         if (iEntry == SAY_ANDOROV_ATTACK_START)
@@ -132,7 +132,7 @@ struct MANGOS_DLL_DECL npc_general_andorovAI : public ScriptedAI, private Dialog
         }
     }
 
-    void MovementInform(uint32 uiType, uint32 uiPointId)
+    void MovementInform(uint32 uiType, uint32 uiPointId) override
     {
         if (uiType != POINT_MOTION_TYPE)
             return;
@@ -161,7 +161,7 @@ struct MANGOS_DLL_DECL npc_general_andorovAI : public ScriptedAI, private Dialog
         }
     }
 
-    void EnterEvadeMode()
+    void EnterEvadeMode() override
     {
         if (!m_pInstance)
             return;
@@ -209,7 +209,7 @@ struct MANGOS_DLL_DECL npc_general_andorovAI : public ScriptedAI, private Dialog
         StartNextDialogueText(SAY_ANDOROV_INTRO_1);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         DialogueUpdate(uiDiff);
 
@@ -312,13 +312,13 @@ struct MANGOS_DLL_DECL npc_kaldorei_eliteAI : public ScriptedAI
     uint32 m_uiCleaveTimer;
     uint32 m_uiStrikeTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiCleaveTimer      = urand(2000, 4000);
         m_uiStrikeTimer      = urand(8000, 11000);
     }
 
-    void EnterEvadeMode()
+    void EnterEvadeMode() override
     {
         if (!m_pInstance)
             return;
@@ -342,7 +342,7 @@ struct MANGOS_DLL_DECL npc_kaldorei_eliteAI : public ScriptedAI
         Reset();
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

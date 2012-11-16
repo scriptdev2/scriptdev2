@@ -94,20 +94,20 @@ class MANGOS_DLL_DECL instance_forge_of_souls : public ScriptedInstance
         instance_forge_of_souls(Map* pMap);
         ~instance_forge_of_souls() {}
 
-        void Initialize();
+        void Initialize() override;
 
-        void OnCreatureCreate(Creature* pCreature);
+        void OnCreatureCreate(Creature* pCreature) override;
 
-        void SetData(uint32 uiType, uint32 uiData);
-        uint32 GetData(uint32 uiType);
-        void SetData64(uint32 uiType, uint64 uiData);
+        void SetData(uint32 uiType, uint32 uiData) override;
+        uint32 GetData(uint32 uiType) override;
+        void SetData64(uint32 uiType, uint64 uiData) override;
 
-        void OnPlayerEnter(Player* pPlayer);
+        void OnPlayerEnter(Player* pPlayer) override;
         void ProcessEventNpcs(Player* pPlayer, bool bChanged);
-        bool CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/);
+        bool CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) override;
 
-        const char* Save() { return m_strInstData.c_str(); }
-        void Load(const char* chrIn);
+        const char* Save() override { return m_strInstData.c_str(); }
+        void Load(const char* chrIn) override;
 
     protected:
         uint32 m_auiEncounter[MAX_ENCOUNTER];

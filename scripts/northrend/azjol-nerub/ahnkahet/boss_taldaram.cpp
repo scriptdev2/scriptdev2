@@ -81,7 +81,7 @@ struct MANGOS_DLL_DECL boss_taldaramAI : public ScriptedAI
 
     GuidList m_lFlameOrbsGuidList;
 
-    void Reset()
+    void Reset() override
     {
         // Timers seem to be very random...
         m_uiBloodthirstTimer    = urand(20000, 25000);
@@ -91,7 +91,7 @@ struct MANGOS_DLL_DECL boss_taldaramAI : public ScriptedAI
         m_bIsFirstAggro         = false;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         // Aggro is called after the boss vanish expires. There is no need to call this multiple times
         if (m_bIsFirstAggro)
@@ -104,7 +104,7 @@ struct MANGOS_DLL_DECL boss_taldaramAI : public ScriptedAI
             m_pInstance->SetData(TYPE_TALDARAM, IN_PROGRESS);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         switch (urand(0, 2))
         {
@@ -114,7 +114,7 @@ struct MANGOS_DLL_DECL boss_taldaramAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -122,13 +122,13 @@ struct MANGOS_DLL_DECL boss_taldaramAI : public ScriptedAI
             m_pInstance->SetData(TYPE_TALDARAM, DONE);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_TALDARAM, FAIL);
     }
 
-    void EnterEvadeMode()
+    void EnterEvadeMode() override
     {
         // Don't allow him to evade during vanish
         if (m_uiEmbraceTimer)
@@ -148,7 +148,7 @@ struct MANGOS_DLL_DECL boss_taldaramAI : public ScriptedAI
         Reset();
     }
 
-    void MovementInform(uint32 uiMoveType, uint32 uiPointId)
+    void MovementInform(uint32 uiMoveType, uint32 uiPointId) override
     {
         if (uiMoveType != POINT_MOTION_TYPE)
             return;
@@ -161,7 +161,7 @@ struct MANGOS_DLL_DECL boss_taldaramAI : public ScriptedAI
         }
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         pSummoned->CastSpell(pSummoned, SPELL_FLAME_SPHERE_SPAWN_EFFECT, true);
         pSummoned->CastSpell(pSummoned, SPELL_FLAME_SPHERE_VISUAL, true);
@@ -169,7 +169,7 @@ struct MANGOS_DLL_DECL boss_taldaramAI : public ScriptedAI
         m_lFlameOrbsGuidList.push_back(pSummoned->GetObjectGuid());
     }
 
-    void SummonedCreatureDespawn(Creature* pSummoned)
+    void SummonedCreatureDespawn(Creature* pSummoned) override
     {
         pSummoned->CastSpell(pSummoned, SPELL_FLAME_SPHERE_DEATH_EFFECT, true);
     }
@@ -192,7 +192,7 @@ struct MANGOS_DLL_DECL boss_taldaramAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (m_uiVisualTimer)
         {

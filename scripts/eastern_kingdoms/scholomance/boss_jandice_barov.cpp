@@ -38,14 +38,14 @@ struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
     uint32 m_uiIllusionTimer;
     uint32 m_uiBanishTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiCurseOfBloodTimer = 5000;
         m_uiIllusionTimer = 15000;
         m_uiBanishTimer = urand(9000, 13000);
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         pSummoned->ApplySpellImmune(0, IMMUNITY_DAMAGE, SPELL_SCHOOL_MASK_MAGIC, true);
 
@@ -53,7 +53,7 @@ struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
             pSummoned->AI()->AttackStart(pTarget);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         // Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())

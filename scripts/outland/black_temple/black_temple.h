@@ -60,23 +60,23 @@ class MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
     public:
         instance_black_temple(Map* pMap);
 
-        void Initialize();
+        void Initialize() override;
 
-        bool IsEncounterInProgress() const;
+        bool IsEncounterInProgress() const override;
 
-        void OnPlayerEnter(Player* pPlayer);
-        void OnCreatureCreate(Creature* pCreature);
-        void OnObjectCreate(GameObject* pGo);
+        void OnPlayerEnter(Player* pPlayer) override;
+        void OnCreatureCreate(Creature* pCreature) override;
+        void OnObjectCreate(GameObject* pGo) override;
 
-        void SetData(uint32 uiType, uint32 uiData);
-        uint32 GetData(uint32 uiType);
+        void SetData(uint32 uiType, uint32 uiData) override;
+        uint32 GetData(uint32 uiType) override;
 
         void GetChannelersGuidList(GuidList& lList) { lList = m_lChannelersGuidList; }
         void GetGeneratorGuidVector(GuidVector& vVector) { vVector = m_vCreatureGeneratorGuidVector; }
         void GetGlaiveTargetGuidVector(GuidVector& vVector) { vVector = m_vGlaiveTargetGuidVector; }
 
-        const char* Save() { return m_strInstData.c_str(); }
-        void Load(const char* chrIn);
+        const char* Save() override { return m_strInstData.c_str(); }
+        void Load(const char* chrIn) override;
 
     private:
         void DoOpenPreMotherDoor();

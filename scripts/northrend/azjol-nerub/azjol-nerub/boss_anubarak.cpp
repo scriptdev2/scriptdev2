@@ -96,7 +96,7 @@ struct MANGOS_DLL_DECL boss_anubarakAI : public ScriptedAI
     bool m_bIsFirstWave;
     bool m_bDoneIntro;
 
-    void Reset()
+    void Reset() override
     {
         m_uiPhase = PHASE_GROUND;
         m_uiSubmergePhase = 1;
@@ -109,7 +109,7 @@ struct MANGOS_DLL_DECL boss_anubarakAI : public ScriptedAI
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -117,7 +117,7 @@ struct MANGOS_DLL_DECL boss_anubarakAI : public ScriptedAI
             m_pInstance->SetData(TYPE_ANUBARAK, IN_PROGRESS);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         switch (urand(0, 2))
         {
@@ -127,7 +127,7 @@ struct MANGOS_DLL_DECL boss_anubarakAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -135,13 +135,13 @@ struct MANGOS_DLL_DECL boss_anubarakAI : public ScriptedAI
             m_pInstance->SetData(TYPE_ANUBARAK, DONE);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_ANUBARAK, NOT_STARTED);
     }
 
-    void MoveInLineOfSight(Unit* pWho)
+    void MoveInLineOfSight(Unit* pWho) override
     {
         if (!m_bDoneIntro && m_creature->IsWithinDistInMap(pWho, 60.0f))
         {
@@ -152,7 +152,7 @@ struct MANGOS_DLL_DECL boss_anubarakAI : public ScriptedAI
         ScriptedAI::MoveInLineOfSight(pWho);
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (!m_pInstance)
             return;
@@ -181,7 +181,7 @@ struct MANGOS_DLL_DECL boss_anubarakAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

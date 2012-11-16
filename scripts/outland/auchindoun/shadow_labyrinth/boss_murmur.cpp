@@ -63,7 +63,7 @@ struct MANGOS_DLL_DECL boss_murmurAI : public Scripted_NoMovementAI
     uint32 m_uiSonicShockTimer;
     uint32 m_uiThunderingStormTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiSonicBoomTimer          = urand(21000, 35000);
         m_uiMurmursTouchTimer       = urand(9000, 18000);
@@ -76,7 +76,7 @@ struct MANGOS_DLL_DECL boss_murmurAI : public Scripted_NoMovementAI
         m_creature->SetHealth(uint32(m_creature->GetMaxHealth()*.4));
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         // Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())

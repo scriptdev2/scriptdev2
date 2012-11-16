@@ -95,9 +95,9 @@ struct MANGOS_DLL_DECL boss_s_and_d_dummyAI : public ScriptedAI
         return m_pInstance->GetSingleCreatureFromStorage(m_creature->GetEntry() == NPC_DALRONN ? NPC_SKARVALD : NPC_DALRONN);
     }
 
-    void Reset() { }
+    void Reset() override { }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (Creature* pBuddy = GetBuddy())
         {
@@ -112,7 +112,7 @@ struct MANGOS_DLL_DECL boss_s_and_d_dummyAI : public ScriptedAI
         }
     }
 
-    void EnterCombat(Unit* pWho)
+    void EnterCombat(Unit* pWho) override
     {
         if (!pWho)
             return;
@@ -126,7 +126,7 @@ struct MANGOS_DLL_DECL boss_s_and_d_dummyAI : public ScriptedAI
         Aggro(pWho);
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         // EventAI can probably handle ghosts
         if (pSummoned->GetEntry() == NPC_DAL_GHOST || pSummoned->GetEntry() == NPC_SKA_GHOST)
@@ -138,7 +138,7 @@ struct MANGOS_DLL_DECL boss_s_and_d_dummyAI : public ScriptedAI
             pSummoned->AI()->AttackStart(pTarget ? pTarget : m_creature->getVictim());
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         if (Creature* pBuddy = GetBuddy())
         {
@@ -175,7 +175,7 @@ struct MANGOS_DLL_DECL boss_skarvaldAI : public boss_s_and_d_dummyAI
     uint32 m_uiEnrageTimer;
     uint32 m_uiStoneStrikeTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiYellDelayTimer = 0;
         m_uiChargeTimer = urand(2000, 6000);
@@ -183,18 +183,18 @@ struct MANGOS_DLL_DECL boss_skarvaldAI : public boss_s_and_d_dummyAI
         m_uiStoneStrikeTimer = 8000;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(m_aYell[0].m_iTextId, m_creature);
         m_uiYellDelayTimer = 5000;
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         DoScriptText(SAY_SKA_KILL, m_creature);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -259,19 +259,19 @@ struct MANGOS_DLL_DECL boss_dalronnAI : public boss_s_and_d_dummyAI
     uint32 m_uiShadowBoltTimer;
     uint32 m_uiSkeletonTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiDebilitateTimer = urand(5000, 10000);
         m_uiShadowBoltTimer = urand(2500, 6000);
         m_uiSkeletonTimer = urand(25000, 35000);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         DoScriptText(SAY_DAL_KILL, m_creature);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

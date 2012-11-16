@@ -96,12 +96,12 @@ struct MANGOS_DLL_DECL npc_sinclariAI : public npc_escortAI
 
     bool m_bIsEpilogue;
 
-    void Reset()
+    void Reset() override
     {
         m_bIsEpilogue = false;
     }
 
-    void WaypointReached(uint32 uiPointId)
+    void WaypointReached(uint32 uiPointId) override
     {
         if (!m_pInstance)
             return;
@@ -135,7 +135,7 @@ struct MANGOS_DLL_DECL npc_sinclariAI : public npc_escortAI
         }
     }
 
-    void JustRespawned()
+    void JustRespawned() override
     {
         if (m_pInstance && m_pInstance->GetData(TYPE_MAIN) != DONE)
             m_pInstance->SetData(TYPE_MAIN, NOT_STARTED);
@@ -143,7 +143,7 @@ struct MANGOS_DLL_DECL npc_sinclariAI : public npc_escortAI
         npc_escortAI::JustRespawned();                      // Needed, to reset escort state, waypoints, etc
     }
 
-    void UpdateEscortAI(const uint32 uiDiff)
+    void UpdateEscortAI(const uint32 uiDiff) override
     {
         // Say outro after event is finished
         if (m_pInstance && m_pInstance->GetData(TYPE_MAIN) == DONE && !m_bIsEpilogue)
@@ -238,7 +238,7 @@ struct MANGOS_DLL_DECL npc_prison_event_controllerAI : public ScriptedAI
 
     ObjectGuid m_currentSaboteurGuid;
 
-    void Reset()
+    void Reset() override
     {
         m_uiCurrentTrashPortalId = 0;
         m_uiSaboteurPhase        = 0;
@@ -250,7 +250,7 @@ struct MANGOS_DLL_DECL npc_prison_event_controllerAI : public ScriptedAI
 
     void DoSetCurrentTrashPortal(uint8 uiPortalId) { m_uiCurrentTrashPortalId = uiPortalId; }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         switch (pSummoned->GetEntry())
         {
@@ -286,7 +286,7 @@ struct MANGOS_DLL_DECL npc_prison_event_controllerAI : public ScriptedAI
         }
     }
 
-    void SummonedMovementInform(Creature* pSummoned, uint32 uiMotionType, uint32 uiPointId)
+    void SummonedMovementInform(Creature* pSummoned, uint32 uiMotionType, uint32 uiPointId) override
     {
         if (uiMotionType != POINT_MOTION_TYPE && !uiPointId)
             return;
@@ -303,7 +303,7 @@ struct MANGOS_DLL_DECL npc_prison_event_controllerAI : public ScriptedAI
             pSummoned->CastSpell(pSummoned, SPELL_DESTROY_DOOR_SEAL, false);
     }
 
-    void SummonedCreatureJustDied(Creature* pSummoned)
+    void SummonedCreatureJustDied(Creature* pSummoned) override
     {
         switch (pSummoned->GetEntry())
         {
@@ -365,7 +365,7 @@ struct MANGOS_DLL_DECL npc_prison_event_controllerAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (m_uiSaboteurTimer)
         {
@@ -428,7 +428,7 @@ struct MANGOS_DLL_DECL npc_teleportation_portalAI : public ScriptedAI
 
     ObjectGuid m_cyanigosaGuid;
 
-    void Reset()
+    void Reset() override
     {
         DoCastSpellIfCan(m_creature, SPELL_PORTAL_PERIODIC);
 
@@ -507,7 +507,7 @@ struct MANGOS_DLL_DECL npc_teleportation_portalAI : public ScriptedAI
         }
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         switch (pSummoned->GetEntry())
         {
@@ -535,7 +535,7 @@ struct MANGOS_DLL_DECL npc_teleportation_portalAI : public ScriptedAI
         }
     }
 
-    void SummonedCreatureJustDied(Creature* pSummoned)
+    void SummonedCreatureJustDied(Creature* pSummoned) override
     {
         switch (pSummoned->GetEntry())
         {
@@ -549,7 +549,7 @@ struct MANGOS_DLL_DECL npc_teleportation_portalAI : public ScriptedAI
         }
     }
 
-    void SummonedCreatureDespawn(Creature* pSummoned)
+    void SummonedCreatureDespawn(Creature* pSummoned) override
     {
         switch (pSummoned->GetEntry())
         {
@@ -561,7 +561,7 @@ struct MANGOS_DLL_DECL npc_teleportation_portalAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (m_uiCyanigosaMoveTimer)
         {

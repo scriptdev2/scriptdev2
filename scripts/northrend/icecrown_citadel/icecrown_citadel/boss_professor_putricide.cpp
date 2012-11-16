@@ -144,7 +144,7 @@ struct MANGOS_DLL_DECL boss_professor_putricideAI : public ScriptedAI
     uint32 m_uiUnboundPlagueTimer;
     uint32 m_uiChokingGasBombTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiPhase                   = PHASE_ONE;
         m_uiHealthCheckTimer        = 1000;
@@ -155,12 +155,12 @@ struct MANGOS_DLL_DECL boss_professor_putricideAI : public ScriptedAI
         m_uiChokingGasBombTimer     = urand(10000, 15000);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_PROFESSOR_PUTRICIDE, IN_PROGRESS);
@@ -168,7 +168,7 @@ struct MANGOS_DLL_DECL boss_professor_putricideAI : public ScriptedAI
         DoScriptText(SAY_AGGRO, m_creature);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_PROFESSOR_PUTRICIDE, DONE);
@@ -176,13 +176,13 @@ struct MANGOS_DLL_DECL boss_professor_putricideAI : public ScriptedAI
         DoScriptText(SAY_DEATH, m_creature);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_PROFESSOR_PUTRICIDE, FAIL);
     }
 
-    void MovementInform(uint32 uiMovementType, uint32 uiData)
+    void MovementInform(uint32 uiMovementType, uint32 uiData) override
     {
         if (uiMovementType != POINT_MOTION_TYPE)
             return;
@@ -224,7 +224,7 @@ struct MANGOS_DLL_DECL boss_professor_putricideAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

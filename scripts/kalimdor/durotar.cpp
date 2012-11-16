@@ -54,7 +54,7 @@ struct MANGOS_DLL_DECL npc_lazy_peonAI : public ScriptedAI
     uint32 m_uiResetSleepTimer;                             // Time, until the npc stops harvesting lumber
     uint32 m_uiStopSleepingTimer;                           // Time, until the npcs (re)starts working on its own
 
-    void Reset()
+    void Reset() override
     {
         m_uiResetSleepTimer = 0;
         m_uiStopSleepingTimer = urand(90000, 120000);       // Sleeping aura has only 2min duration
@@ -85,7 +85,7 @@ struct MANGOS_DLL_DECL npc_lazy_peonAI : public ScriptedAI
             error_log("SD2: No GameObject of entry %u was found in range or something really bad happened.", GO_LUMBERPILE);
     }
 
-    void MovementInform(uint32 uiMotionType, uint32 uiPointId)
+    void MovementInform(uint32 uiMotionType, uint32 uiPointId) override
     {
         if (uiMotionType != POINT_MOTION_TYPE || !uiPointId)
             return;
@@ -95,7 +95,7 @@ struct MANGOS_DLL_DECL npc_lazy_peonAI : public ScriptedAI
         m_uiResetSleepTimer = uiPointId == 1 ? 80000 : urand(30000, 60000);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (m_uiResetSleepTimer)
         {

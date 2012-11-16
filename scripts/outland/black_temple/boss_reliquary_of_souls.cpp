@@ -124,7 +124,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public Scripted_NoMovementAI
     uint32 m_uiAnimationTimer;
     uint32 m_uiAnimResetTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiPhase               = PHASE_0_NOT_BEGUN;
         m_uiSoulDeathCount      = 0;
@@ -139,21 +139,21 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public Scripted_NoMovementAI
         m_creature->HandleEmote(EMOTE_STATE_NONE);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_RELIQUIARY, DONE);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_RELIQUIARY, FAIL);
     }
 
-    void AttackStart(Unit* pWho) { }
+    void AttackStart(Unit* pWho) override { }
 
-    void MoveInLineOfSight(Unit* pWho)
+    void MoveInLineOfSight(Unit* pWho) override
     {
         if (m_uiPhase == PHASE_0_NOT_BEGUN && pWho->GetTypeId() == TYPEID_PLAYER && !((Player*)pWho)->isGameMaster() &&
                 m_creature->IsWithinDistInMap(pWho, m_creature->GetAttackDistance(pWho)) && m_creature->IsWithinLOSInMap(pWho))
@@ -175,7 +175,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public Scripted_NoMovementAI
         }
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         switch (pSummoned->GetEntry())
         {
@@ -194,14 +194,14 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public Scripted_NoMovementAI
         pSummoned->SetInCombatWithZone();
     }
 
-    void SummonedCreatureJustDied(Creature* pSummoned)
+    void SummonedCreatureJustDied(Creature* pSummoned) override
     {
         // Self kill when the Essence of Anger is killed
         if (pSummoned->GetEntry() == NPC_ESSENCE_ANGER)
             m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
     }
 
-    void SummonedMovementInform(Creature* pSummoned, uint32 uiMoveType, uint32 uiPointId)
+    void SummonedMovementInform(Creature* pSummoned, uint32 uiMoveType, uint32 uiPointId) override
     {
         if (uiMoveType != POINT_MOTION_TYPE || !uiPointId)
             return;
@@ -242,7 +242,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public Scripted_NoMovementAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         // Animation for opening the Reliquary
         if (m_uiAnimationTimer)
@@ -335,7 +335,7 @@ struct MANGOS_DLL_DECL essence_base_AI : public ScriptedAI
 
     virtual void OnPhaseFinished() {}
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         // Reset encounter and despawn Essence
         if (m_pInstance)
@@ -347,7 +347,7 @@ struct MANGOS_DLL_DECL essence_base_AI : public ScriptedAI
         m_creature->ForcedDespawn();
     }
 
-    void DamageTaken(Unit* pKiller, uint32& uiDamage)
+    void DamageTaken(Unit* pKiller, uint32& uiDamage) override
     {
         if (uiDamage < m_creature->GetHealth())
             return;
@@ -396,7 +396,7 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public essence_base_AI
     uint32 m_uiEnrageTimer;
     uint32 m_uiSoulDrainTimer;
 
-    void Reset()
+    void Reset() override
     {
         DoCastSpellIfCan(m_creature, SPELL_AURA_OF_SUFFERING, CAST_TRIGGERED);
         DoCastSpellIfCan(m_creature, SPELL_SUFFERING_PASSIVE, CAST_TRIGGERED);
@@ -405,7 +405,7 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public essence_base_AI
         m_uiSoulDrainTimer  = 20000;
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         DoScriptText(urand(0, 1) ? SUFF_SAY_SLAY1 : SUFF_SAY_SLAY2, m_creature);
     }
@@ -415,7 +415,7 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public essence_base_AI
         DoScriptText(SUFF_SAY_RECAP, m_creature);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -456,7 +456,7 @@ struct MANGOS_DLL_DECL boss_essence_of_desireAI : public essence_base_AI
     uint32 m_uiDeadenTimer;
     uint32 m_uiSoulShockTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiRuneShieldTimer = urand(10000, 15000);
         m_uiDeadenTimer     = 15000;
@@ -465,7 +465,7 @@ struct MANGOS_DLL_DECL boss_essence_of_desireAI : public essence_base_AI
         DoCastSpellIfCan(m_creature, SPELL_AURA_OF_DESIRE);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         switch (urand(0, 2))
         {
@@ -480,7 +480,7 @@ struct MANGOS_DLL_DECL boss_essence_of_desireAI : public essence_base_AI
         DoScriptText(DESI_SAY_RECAP, m_creature);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -534,7 +534,7 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
     uint32 m_uiSoulScreamTimer;
     uint32 m_uiSpiteTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiSeetheTimer      = 5000;
         m_uiSoulScreamTimer  = 10000;
@@ -543,17 +543,17 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
         DoCastSpellIfCan(m_creature, SPELL_AURA_OF_ANGER);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         DoScriptText(urand(0, 1) ? ANGER_SAY_SLAY1 : ANGER_SAY_SLAY2, m_creature);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(ANGER_SAY_DEATH, m_creature);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         // Reset encounter and despawn Essence
         if (m_pInstance)
@@ -565,7 +565,7 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
         m_creature->ForcedDespawn();
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -615,12 +615,12 @@ struct MANGOS_DLL_DECL npc_enslaved_soulAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    void Reset()
+    void Reset() override
     {
         DoCastSpellIfCan(m_creature, SPELL_ENSLAVED_SOUL_PASSIVE);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoCastSpellIfCan(m_creature, SPELL_SOUL_RELEASE, CAST_TRIGGERED);
 
@@ -635,7 +635,7 @@ struct MANGOS_DLL_DECL npc_enslaved_soulAI : public ScriptedAI
         }
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         // Reset encounter and despawn the spirit
         if (m_pInstance)
@@ -647,7 +647,7 @@ struct MANGOS_DLL_DECL npc_enslaved_soulAI : public ScriptedAI
         m_creature->ForcedDespawn();
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

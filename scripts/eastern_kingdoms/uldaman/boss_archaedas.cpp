@@ -57,7 +57,7 @@ struct MANGOS_DLL_DECL boss_archaedasAI : public ScriptedAI
     bool m_bGuardiansAwaken;
     bool m_bWardersAwaken;
 
-    void Reset()
+    void Reset() override
     {
         m_uiAwakeningTimer  = 1000;
         m_uiSubevent        = 0;
@@ -69,31 +69,31 @@ struct MANGOS_DLL_DECL boss_archaedasAI : public ScriptedAI
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_ARCHAEDAS, IN_PROGRESS);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         DoScriptText(SAY_UNIT_SLAIN, m_creature);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         // open door to vault (handled by instance script)
         if (m_pInstance)
             m_pInstance->SetData(TYPE_ARCHAEDAS, DONE);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_ARCHAEDAS, FAIL);
     }
 
-    void SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell)
+    void SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell) override
     {
         if (pTarget->GetTypeId() != TYPEID_PLAYER)
         {
@@ -110,7 +110,7 @@ struct MANGOS_DLL_DECL boss_archaedasAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         // so many things are based in this script on instance data
         // so if we don't have access to it better do nothing
@@ -205,11 +205,11 @@ struct MANGOS_DLL_DECL npc_archaeras_addAI : public ScriptedAI
         Reset();
     }
 
-    void Reset()
+    void Reset() override
     {
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

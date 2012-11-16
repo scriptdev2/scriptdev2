@@ -36,19 +36,19 @@ class MANGOS_DLL_DECL instance_zulfarrak : public ScriptedInstance
         instance_zulfarrak(Map* pMap);
         ~instance_zulfarrak() {}
 
-        void Initialize();
+        void Initialize() override;
 
-        void OnCreatureEnterCombat(Creature* pCreature);
+        void OnCreatureEnterCombat(Creature* pCreature) override;
         void OnCreatureEvade(Creature* pCreature);
-        void OnCreatureDeath(Creature* pCreature);
+        void OnCreatureDeath(Creature* pCreature) override;
 
-        void OnCreatureCreate(Creature* pCreature);
+        void OnCreatureCreate(Creature* pCreature) override;
 
-        void SetData(uint32 uiType, uint32 uiData);
-        uint32 GetData(uint32 uiType);
+        void SetData(uint32 uiType, uint32 uiData) override;
+        uint32 GetData(uint32 uiType) override;
 
-        const char* Save() { return m_strInstData.c_str(); }
-        void Load(const char* chrIn);
+        const char* Save() override { return m_strInstData.c_str(); }
+        void Load(const char* chrIn) override;
 
     protected:
         uint32 m_auiEncounter[MAX_ENCOUNTER];

@@ -65,7 +65,7 @@ struct MANGOS_DLL_DECL boss_jindoAI : public ScriptedAI
     uint32 m_uiDelusionsTimer;
     uint32 m_uiTeleportTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiBrainWashTotemTimer     = 20000;
         m_uiHealingWardTimer        = 16000;
@@ -74,18 +74,18 @@ struct MANGOS_DLL_DECL boss_jindoAI : public ScriptedAI
         m_uiTeleportTimer           = 5000;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
     }
 
-    void SummonedCreatureJustDied(Creature* pSummoned)
+    void SummonedCreatureJustDied(Creature* pSummoned) override
     {
         if (pSummoned->GetEntry() == NPC_POWERFULL_HEALING_WARD)
             m_uiHealingWardTimer = 15000;                   // how long delay?
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -174,15 +174,15 @@ struct MANGOS_DLL_DECL mob_healing_wardAI : public ScriptedAI
 
     uint32 m_uiHealTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiHealTimer = 3000;                               // Timer unknown, sources go over 1s, per tick to 3s, keep 3s as in original script
     }
 
-    void AttackStart(Unit* pWho) {}
-    void MoveInLineOfSight(Unit* pWho) {}
+    void AttackStart(Unit* pWho) override {}
+    void MoveInLineOfSight(Unit* pWho) override {}
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         // Heal Timer
         if (m_uiHealTimer < uiDiff)

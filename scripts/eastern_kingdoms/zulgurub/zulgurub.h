@@ -49,17 +49,17 @@ class MANGOS_DLL_DECL instance_zulgurub : public ScriptedInstance
         instance_zulgurub(Map* pMap);
         ~instance_zulgurub() {}
 
-        void Initialize();
-        // IsEncounterInProgress() const { return false; }  // not active in Zul'Gurub
+        void Initialize() override;
+        // IsEncounterInProgress() const override { return false; }  // not active in Zul'Gurub
 
-        void OnCreatureCreate(Creature* pCreature);
-        void OnObjectCreate(GameObject* pGo);
+        void OnCreatureCreate(Creature* pCreature) override;
+        void OnObjectCreate(GameObject* pGo) override;
 
-        void SetData(uint32 uiType, uint32 uiData);
-        uint32 GetData(uint32 uiType);
+        void SetData(uint32 uiType, uint32 uiData) override;
+        uint32 GetData(uint32 uiType) override;
 
-        const char* Save() { return m_strInstData.c_str(); }
-        void Load(const char* chrIn);
+        const char* Save() override { return m_strInstData.c_str(); }
+        void Load(const char* chrIn) override;
 
         void DoYellAtTriggerIfCan(uint32 uiTriggerId);
 

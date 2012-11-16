@@ -33,14 +33,14 @@ struct MANGOS_DLL_DECL generic_creatureAI : public ScriptedAI
     uint32 BuffTimer;           // This variable keeps track of buffs
     bool IsSelfRooted;
 
-    void Reset()
+    void Reset() override
     {
         GlobalCooldown = 0;
         BuffTimer = 0;          // Rebuff as soon as we can
         IsSelfRooted = false;
     }
 
-    void Aggro(Unit* who)
+    void Aggro(Unit* who) override
     {
         if (!m_creature->CanReachWithMeleeAttack(who))
         {
@@ -48,7 +48,7 @@ struct MANGOS_DLL_DECL generic_creatureAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 diff) override
     {
         // Always decrease our global cooldown first
         if (GlobalCooldown > diff)

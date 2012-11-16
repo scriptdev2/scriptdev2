@@ -57,7 +57,7 @@ struct MANGOS_DLL_DECL boss_aeonusAI : public ScriptedAI
     uint32 m_uiFrenzyTimer;
     uint32 m_uiCleaveTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiSandBreathTimer = urand(15000, 30000);
         m_uiTimeStopTimer   = urand(10000, 15000);
@@ -65,12 +65,12 @@ struct MANGOS_DLL_DECL boss_aeonusAI : public ScriptedAI
         m_uiCleaveTimer     = urand(5000, 9000);
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
     }
 
-    void MoveInLineOfSight(Unit* pWho)
+    void MoveInLineOfSight(Unit* pWho) override
     {
         // Despawn Time Keeper
         if (pWho->GetTypeId() == TYPEID_UNIT && pWho->GetEntry() == NPC_TIME_KEEPER)
@@ -85,17 +85,17 @@ struct MANGOS_DLL_DECL boss_aeonusAI : public ScriptedAI
         ScriptedAI::MoveInLineOfSight(pWho);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         DoScriptText(urand(0, 1) ? SAY_SLAY1 : SAY_SLAY2, m_creature);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         // Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())

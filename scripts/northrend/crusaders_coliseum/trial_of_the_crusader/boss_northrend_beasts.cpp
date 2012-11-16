@@ -57,7 +57,7 @@ struct MANGOS_DLL_DECL npc_beast_combat_stalkerAI : public Scripted_NoMovementAI
     uint32 m_uiNextBeastTimer;
     uint32 m_uiPhase;
 
-    void Reset()
+    void Reset() override
     {
         m_uiAttackDelayTimer = 0;
         m_uiNextBeastTimer = 0;
@@ -70,14 +70,14 @@ struct MANGOS_DLL_DECL npc_beast_combat_stalkerAI : public Scripted_NoMovementAI
             m_uiBerserkTimer    = 9 * MINUTE * IN_MILLISECONDS;
     }
 
-    void MoveInLineOfSight(Unit* pWho) {}
+    void MoveInLineOfSight(Unit* pWho) override {}
 
-    void DamageTaken(Unit* pDealer, uint32& uiDamage)
+    void DamageTaken(Unit* pDealer, uint32& uiDamage) override
     {
         uiDamage = 0;
     }
 
-    void EnterEvadeMode()
+    void EnterEvadeMode() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_NORTHREND_BEASTS, FAIL);
@@ -91,13 +91,13 @@ struct MANGOS_DLL_DECL npc_beast_combat_stalkerAI : public Scripted_NoMovementAI
         m_creature->ForcedDespawn();
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_NORTHREND_BEASTS, IN_PROGRESS);
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         switch (pSummoned->GetEntry())
         {
@@ -141,7 +141,7 @@ struct MANGOS_DLL_DECL npc_beast_combat_stalkerAI : public Scripted_NoMovementAI
         }
     }
 
-    void SummonedCreatureJustDied(Creature* pSummoned)
+    void SummonedCreatureJustDied(Creature* pSummoned) override
     {
         if (!m_pInstance)
             return;
@@ -168,7 +168,7 @@ struct MANGOS_DLL_DECL npc_beast_combat_stalkerAI : public Scripted_NoMovementAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (m_uiNextBeastTimer)
         {
@@ -239,17 +239,17 @@ struct MANGOS_DLL_DECL boss_gormokAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    void Reset() {}
+    void Reset() override {}
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -277,17 +277,17 @@ struct MANGOS_DLL_DECL boss_acidmawAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    void Reset() {}
+    void Reset() override {}
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -315,17 +315,17 @@ struct MANGOS_DLL_DECL boss_dreadscaleAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    void Reset() {}
+    void Reset() override {}
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -358,17 +358,17 @@ struct MANGOS_DLL_DECL boss_icehowlAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    void Reset() {}
+    void Reset() override {}
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

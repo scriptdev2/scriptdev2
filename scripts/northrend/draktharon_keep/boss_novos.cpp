@@ -105,7 +105,7 @@ struct MANGOS_DLL_DECL boss_novosAI : public Scripted_NoMovementAI
     uint8 m_uiLostCrystals;
     Phases m_uiPhase;
 
-    void Reset()
+    void Reset() override
     {
         m_uiSummonHandlerTimer = 25000;
         m_uiSummonShadowcasterTimer = 3000;
@@ -134,7 +134,7 @@ struct MANGOS_DLL_DECL boss_novosAI : public Scripted_NoMovementAI
             m_uiPhase = PHASE_WAITING;
     }
 
-    void MoveInLineOfSight(Unit* pWho)
+    void MoveInLineOfSight(Unit* pWho) override
     {
         // An Add reached the ground, if its z-pos is near the z pos of Novos
         if (pWho->GetEntry() == NPC_HULKING_CORPSE || pWho->GetEntry() == NPC_FETID_TROLL_CORPSE || pWho->GetEntry() == NPC_RISON_SHADOWCASTER)
@@ -148,7 +148,7 @@ struct MANGOS_DLL_DECL boss_novosAI : public Scripted_NoMovementAI
         ScriptedAI::MoveInLineOfSight(pWho);
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -163,12 +163,12 @@ struct MANGOS_DLL_DECL boss_novosAI : public Scripted_NoMovementAI
             m_pInstance->SetData(TYPE_NOVOS, IN_PROGRESS);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         DoScriptText(SAY_KILL, m_creature);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -176,13 +176,13 @@ struct MANGOS_DLL_DECL boss_novosAI : public Scripted_NoMovementAI
             m_pInstance->SetData(TYPE_NOVOS, DONE);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_NOVOS, FAIL);
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         switch (pSummoned->GetEntry())
         {
@@ -194,7 +194,7 @@ struct MANGOS_DLL_DECL boss_novosAI : public Scripted_NoMovementAI
         }
     }
 
-    void SummonedCreatureJustDied(Creature* pSummoned)
+    void SummonedCreatureJustDied(Creature* pSummoned) override
     {
         if (pSummoned->GetEntry() == NPC_CRYSTAL_HANDLER)
         {
@@ -207,7 +207,7 @@ struct MANGOS_DLL_DECL boss_novosAI : public Scripted_NoMovementAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -329,12 +329,12 @@ struct MANGOS_DLL_DECL npc_crystal_channel_targetAI : public ScriptedAI
 
     instance_draktharon_keep* m_pInstance;
 
-    void Reset() {}
-    void MoveInLineOfSight(Unit* pWho) {}
-    void AttackStart(Unit* pWho) {}
-    void UpdateAI(const uint32 uiDiff) {}
+    void Reset() override {}
+    void MoveInLineOfSight(Unit* pWho) override {}
+    void AttackStart(Unit* pWho) override {}
+    void UpdateAI(const uint32 uiDiff) override {}
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (pSummoned->GetEntry() == NPC_HULKING_CORPSE || pSummoned->GetEntry() == NPC_FETID_TROLL_CORPSE || pSummoned->GetEntry() == NPC_RISON_SHADOWCASTER)
         {
@@ -350,7 +350,7 @@ struct MANGOS_DLL_DECL npc_crystal_channel_targetAI : public ScriptedAI
         }
     }
 
-    void SummonedMovementInform(Creature* pSummoned, uint32 uiMotionType, uint32 uiPointId)
+    void SummonedMovementInform(Creature* pSummoned, uint32 uiMotionType, uint32 uiPointId) override
     {
         if (uiPointId != 1 || uiMotionType != POINT_MOTION_TYPE || (pSummoned->GetEntry() != NPC_HULKING_CORPSE && pSummoned->GetEntry() != NPC_FETID_TROLL_CORPSE && pSummoned->GetEntry() != NPC_RISON_SHADOWCASTER))
             return;

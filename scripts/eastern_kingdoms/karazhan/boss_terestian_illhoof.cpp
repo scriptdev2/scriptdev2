@@ -80,7 +80,7 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
 
     bool m_bSummonedPortals;
 
-    void Reset()
+    void Reset() override
     {
         m_uiSummonKilrekTimer   = 0;
         m_uiSacrificeTimer      = 30000;
@@ -91,7 +91,7 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
         m_bSummonedPortals      = false;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -102,18 +102,18 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
             m_pInstance->SetData(TYPE_TERESTIAN, IN_PROGRESS);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         DoScriptText(urand(0, 1) ? SAY_SLAY1 : SAY_SLAY2, m_creature);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_TERESTIAN, FAIL);
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         switch (pSummoned->GetEntry())
         {
@@ -134,7 +134,7 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
         }
     }
 
-    void SummonedCreatureJustDied(Creature* pSummoned)
+    void SummonedCreatureJustDied(Creature* pSummoned) override
     {
         switch (pSummoned->GetEntry())
         {
@@ -149,7 +149,7 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -157,7 +157,7 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
             m_pInstance->SetData(TYPE_TERESTIAN, DONE);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         // Respawn Kilrek if killed
         if (m_uiSummonKilrekTimer)
@@ -233,18 +233,18 @@ struct MANGOS_DLL_DECL npc_fiendish_portalAI : public ScriptedAI
 
     uint32 m_uiSummonTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiSummonTimer = 5000;
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         pSummoned->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_FIRE, true);
         pSummoned->SetInCombatWithZone();
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (m_uiSummonTimer < uiDiff)
         {
@@ -261,10 +261,10 @@ struct MANGOS_DLL_DECL mob_demon_chainAI : public Scripted_NoMovementAI
 {
     mob_demon_chainAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature) { Reset(); }
 
-    void Reset() { }
-    void MoveInLineOfSight(Unit* pWho) { }
-    void AttackStart(Unit* pWho) { }
-    void UpdateAI(const uint32 uiDiff) { }
+    void Reset() override { }
+    void MoveInLineOfSight(Unit* pWho) override { }
+    void AttackStart(Unit* pWho) override { }
+    void UpdateAI(const uint32 uiDiff) override { }
 };
 
 CreatureAI* GetAI_boss_terestian_illhoof(Creature* pCreature)

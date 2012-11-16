@@ -55,7 +55,7 @@ struct MANGOS_DLL_DECL npc_ranger_lilathaAI : public npc_escortAI
     ObjectGuid m_goCageGuid;
     ObjectGuid m_heliosGuid;
 
-    void MoveInLineOfSight(Unit* pUnit)
+    void MoveInLineOfSight(Unit* pUnit) override
     {
         if (HasEscortState(STATE_ESCORT_ESCORTING))
         {
@@ -69,7 +69,7 @@ struct MANGOS_DLL_DECL npc_ranger_lilathaAI : public npc_escortAI
         npc_escortAI::MoveInLineOfSight(pUnit);
     }
 
-    void WaypointReached(uint32 i)
+    void WaypointReached(uint32 i) override
     {
         Player* pPlayer = GetPlayerForEscort();
 
@@ -126,7 +126,7 @@ struct MANGOS_DLL_DECL npc_ranger_lilathaAI : public npc_escortAI
         }
     }
 
-    void Reset()
+    void Reset() override
     {
         if (!HasEscortState(STATE_ESCORT_ESCORTING))
         {

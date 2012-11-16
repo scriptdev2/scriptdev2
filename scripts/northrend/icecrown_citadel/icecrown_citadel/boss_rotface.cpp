@@ -96,7 +96,7 @@ struct MANGOS_DLL_DECL boss_rotfaceAI : public ScriptedAI
     uint32 m_uiMutatedInfectionTimer;
     uint32 m_uiInfectionsRate;
 
-    void Reset()
+    void Reset() override
     {
         m_uiSlimeSprayTimer             = urand(17000, 23000);
         m_uiSlimeFlowTimer              = 20000;
@@ -104,7 +104,7 @@ struct MANGOS_DLL_DECL boss_rotfaceAI : public ScriptedAI
         m_uiInfectionsRate              = 1;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_ROTFACE, IN_PROGRESS);
@@ -115,7 +115,7 @@ struct MANGOS_DLL_DECL boss_rotfaceAI : public ScriptedAI
         DoCastSpellIfCan(m_creature, SPELL_OOZE_FLOOD_PERIODIC, CAST_TRIGGERED);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_ROTFACE, FAIL);
@@ -123,13 +123,13 @@ struct MANGOS_DLL_DECL boss_rotfaceAI : public ScriptedAI
         DoCastSpellIfCan(m_creature, SPELL_OOZE_FLOOD_REMOVE, CAST_TRIGGERED);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         if (pVictim->GetTypeId() == TYPEID_PLAYER)
             DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature, pVictim);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_ROTFACE, DONE);
@@ -137,7 +137,7 @@ struct MANGOS_DLL_DECL boss_rotfaceAI : public ScriptedAI
         DoScriptText(SAY_DEATH, m_creature);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -204,24 +204,24 @@ struct MANGOS_DLL_DECL mob_little_oozeAI : public ScriptedAI
     instance_icecrown_citadel* m_pInstance;
     uint32 m_uiStickyOozeTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiStickyOozeTimer = 5000;
     }
 
-    void EnterEvadeMode()
+    void EnterEvadeMode() override
     {
         m_creature->ForcedDespawn();
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         m_creature->AddThreat(pWho, 500000.0f); // not sure about the threat amount but should be very high
         DoCastSpellIfCan(m_creature, SPELL_WEAK_RADIATING_OOZE, CAST_TRIGGERED);
         DoCastSpellIfCan(m_creature, SPELL_LITTLE_OOZE_COMBINE, CAST_TRIGGERED);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -256,18 +256,18 @@ struct MANGOS_DLL_DECL mob_big_oozeAI : public ScriptedAI
     uint32 m_uiStickyOozeTimer;
     uint32 m_uiUnstableExplosionCheckTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiStickyOozeTimer             = 5000;
         m_uiUnstableExplosionCheckTimer = 1000;
     }
 
-    void EnterEvadeMode()
+    void EnterEvadeMode() override
     {
         m_creature->ForcedDespawn();
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         m_creature->AddThreat(pWho, 500000.0f);
         DoCastSpellIfCan(m_creature, SPELL_RADIATING_OOZE, CAST_TRIGGERED);
@@ -275,7 +275,7 @@ struct MANGOS_DLL_DECL mob_big_oozeAI : public ScriptedAI
         DoCastSpellIfCan(m_creature, SPELL_BIG_OOZE_BUFF_COMB, CAST_TRIGGERED);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

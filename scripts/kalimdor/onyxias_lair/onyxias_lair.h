@@ -34,15 +34,15 @@ class MANGOS_DLL_DECL instance_onyxias_lair : public ScriptedInstance
         instance_onyxias_lair(Map* pMap);
         ~instance_onyxias_lair() {}
 
-        void Initialize();
+        void Initialize() override;
 
-        bool IsEncounterInProgress() const;
+        bool IsEncounterInProgress() const override;
 
-        void OnCreatureCreate(Creature* pCreature);
+        void OnCreatureCreate(Creature* pCreature) override;
 
-        void SetData(uint32 uiType, uint32 uiData);
+        void SetData(uint32 uiType, uint32 uiData) override;
 
-        bool CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/);
+        bool CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) override;
 
     protected:
         uint32 m_uiEncounter;

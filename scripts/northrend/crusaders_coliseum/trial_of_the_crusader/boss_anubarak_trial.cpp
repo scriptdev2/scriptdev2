@@ -143,7 +143,7 @@ struct MANGOS_DLL_DECL boss_anubarak_trialAI : public ScriptedAI
     ObjectGuid m_PursuingSpikesGuid;
     GuidVector m_vSpheresGuidVector;
 
-    void Reset()
+    void Reset() override
     {
         m_Phase                  = PHASE_GROUND;
         m_PhaseSwitchTimer       = 80000;
@@ -156,13 +156,13 @@ struct MANGOS_DLL_DECL boss_anubarak_trialAI : public ScriptedAI
         m_vSpheresGuidVector.resize(MAX_FROSTSPHERES, ObjectGuid());
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_ANUBARAK, FAIL);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -170,7 +170,7 @@ struct MANGOS_DLL_DECL boss_anubarak_trialAI : public ScriptedAI
             m_pInstance->SetData(TYPE_ANUBARAK, DONE);
     }
 
-    void MoveInLineOfSight(Unit* pWho)
+    void MoveInLineOfSight(Unit* pWho) override
     {
         if (!m_bDidIntroYell && pWho->GetTypeId() == TYPEID_PLAYER && !((Player*)pWho)->isGameMaster() &&
                 !m_creature->IsInEvadeMode() && pWho->IsWithinDistInMap(m_creature, 100) && pWho->IsWithinLOSInMap(m_creature))
@@ -188,7 +188,7 @@ struct MANGOS_DLL_DECL boss_anubarak_trialAI : public ScriptedAI
         ScriptedAI::MoveInLineOfSight(pWho);
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -207,7 +207,7 @@ struct MANGOS_DLL_DECL boss_anubarak_trialAI : public ScriptedAI
             m_pInstance->SetData(TYPE_ANUBARAK, IN_PROGRESS);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         if (pVictim->GetTypeId() != TYPEID_PLAYER)
             return;
@@ -215,7 +215,7 @@ struct MANGOS_DLL_DECL boss_anubarak_trialAI : public ScriptedAI
         DoScriptText((urand(0, 1)) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
     }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
     {
         if (pSpell->Id == SPELL_SUBMERGE)
         {
@@ -237,7 +237,7 @@ struct MANGOS_DLL_DECL boss_anubarak_trialAI : public ScriptedAI
         }
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         switch (pSummoned->GetEntry())
         {
@@ -276,7 +276,7 @@ struct MANGOS_DLL_DECL boss_anubarak_trialAI : public ScriptedAI
         m_PursuingSpikesGuid.Clear();
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -410,7 +410,7 @@ struct MANGOS_DLL_DECL npc_anubarak_trial_spikeAI : public ScriptedAI
     PursuingSpikesPhases m_Phase;
     uint32 m_PhaseSwitchTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_Phase = PHASE_NO_MOVEMENT;
         m_PhaseSwitchTimer = 5000;
@@ -418,7 +418,7 @@ struct MANGOS_DLL_DECL npc_anubarak_trial_spikeAI : public ScriptedAI
         SetCombatMovement(false);
     }
 
-    void SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell)
+    void SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell) override
     {
         if (pSpell->Id == SPELL_PURSUING_SPIKES_DUMMY && pTarget->GetTypeId() == TYPEID_PLAYER)
         {
@@ -465,7 +465,7 @@ struct MANGOS_DLL_DECL npc_anubarak_trial_spikeAI : public ScriptedAI
         m_creature->GetMotionMaster()->MoveIdle();
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -537,17 +537,17 @@ struct MANGOS_DLL_DECL npc_anubarak_trial_frostsphereAI : public Scripted_NoMove
 
     bool m_bPermafrost;
 
-    void Reset()
+    void Reset() override
     {
         m_bPermafrost = false;
 
         m_creature->GetMotionMaster()->MoveRandomAroundPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 15.0f);
     }
 
-    void MoveInLineOfSight(Unit* pWho) { }
-    void AttackStart(Unit* pWho) { }
+    void MoveInLineOfSight(Unit* pWho) override { }
+    void AttackStart(Unit* pWho) override { }
 
-    void DamageTaken(Unit* pDoneBy, uint32& uiDamage)
+    void DamageTaken(Unit* pDoneBy, uint32& uiDamage) override
     {
         if (uiDamage < m_creature->GetHealth())
             return;
@@ -580,7 +580,7 @@ struct MANGOS_DLL_DECL npc_anubarak_trial_frostsphereAI : public Scripted_NoMove
         m_bPermafrost = true;
     }
 
-    void MovementInform(uint32 uiMotionType, uint32 uiPointId)
+    void MovementInform(uint32 uiMotionType, uint32 uiPointId) override
     {
         if (uiMotionType != POINT_MOTION_TYPE || !uiPointId)
             return;
@@ -605,10 +605,10 @@ struct MANGOS_DLL_DECL npc_nerubian_borrowAI : public Scripted_NoMovementAI
 {
     npc_nerubian_borrowAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature) { Reset(); }
 
-    void Reset() { }
-    void MoveInLineOfSight(Unit* pWho) { }
-    void AttackStart(Unit* pWho) { }
-    void UpdateAI(const uint32 uiDiff) { }
+    void Reset() override { }
+    void MoveInLineOfSight(Unit* pWho) override { }
+    void AttackStart(Unit* pWho) override { }
+    void UpdateAI(const uint32 uiDiff) override { }
 };
 
 CreatureAI* GetAI_npc_nerubian_borrow(Creature* pCreature)

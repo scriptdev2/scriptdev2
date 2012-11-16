@@ -112,24 +112,24 @@ struct MANGOS_DLL_DECL boss_valithria_dreamwalkerAI : public ScriptedAI
 
     instance_icecrown_citadel* m_pInstance;
 
-    void Reset()
+    void Reset() override
     {
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_VALITHRIA, FAIL);
     }
 
     // actually, when summoned creature kills a player
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         if (pVictim->GetTypeId() == TYPEID_PLAYER)
             DoScriptText(SAY_PLAYER_DIES, m_creature, pVictim);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_0_HEALTH, m_creature);
 
@@ -137,7 +137,7 @@ struct MANGOS_DLL_DECL boss_valithria_dreamwalkerAI : public ScriptedAI
             m_pInstance->SetData(TYPE_VALITHRIA, FAIL);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
     }
 };

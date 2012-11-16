@@ -110,7 +110,7 @@ struct MANGOS_DLL_DECL boss_alythessAI : public ScriptedAI
     uint32 m_uiFlameSearTimer;
     bool m_bDidIntro;
 
-    void Reset()
+    void Reset() override
     {
         m_uiEnrageTimer = 6 * MINUTE * IN_MILLISECONDS;
         m_uiPyrogenicsTimer     = 20000;
@@ -121,7 +121,7 @@ struct MANGOS_DLL_DECL boss_alythessAI : public ScriptedAI
         m_bDidIntro = false;
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
         {
@@ -137,7 +137,7 @@ struct MANGOS_DLL_DECL boss_alythessAI : public ScriptedAI
         }
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         if (m_pInstance)
         {
@@ -146,7 +146,7 @@ struct MANGOS_DLL_DECL boss_alythessAI : public ScriptedAI
         }
     }
 
-    void AttackStart(Unit* pWho)
+    void AttackStart(Unit* pWho) override
     {
         if (m_creature->Attack(pWho, false))
         {
@@ -159,12 +159,12 @@ struct MANGOS_DLL_DECL boss_alythessAI : public ScriptedAI
         }
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         DoScriptText(urand(0, 1) ? SAY_ALYTHESS_KILL_1 : SAY_ALYTHESS_KILL_2, m_creature);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         if (m_pInstance)
         {
@@ -187,7 +187,7 @@ struct MANGOS_DLL_DECL boss_alythessAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (m_pInstance && m_pInstance->GetData(TYPE_EREDAR_TWINS) == SPECIAL)
         {
@@ -285,7 +285,7 @@ struct MANGOS_DLL_DECL boss_sacrolashAI : public ScriptedAI
     uint32 m_uiShadowBladesTimer;
     uint32 m_uiSummonShadowImage;
 
-    void Reset()
+    void Reset() override
     {
         m_uiEnrageTimer = 6 * MINUTE * IN_MILLISECONDS;
         m_uiDarkTouchedTimer     = 30000;
@@ -295,7 +295,7 @@ struct MANGOS_DLL_DECL boss_sacrolashAI : public ScriptedAI
         m_uiSummonShadowImage    = 10000;
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
         {
@@ -311,7 +311,7 @@ struct MANGOS_DLL_DECL boss_sacrolashAI : public ScriptedAI
         }
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         if (m_pInstance)
         {
@@ -320,12 +320,12 @@ struct MANGOS_DLL_DECL boss_sacrolashAI : public ScriptedAI
         }
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         DoScriptText(urand(0, 1) ? SAY_SACROLASH_KILL_1 : SAY_SACROLASH_KILL_2, m_creature);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         if (m_pInstance)
         {
@@ -369,7 +369,7 @@ struct MANGOS_DLL_DECL boss_sacrolashAI : public ScriptedAI
             return m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1);
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (pSummoned->GetEntry() == NPC_SHADOW_IMAGE)
         {
@@ -380,7 +380,7 @@ struct MANGOS_DLL_DECL boss_sacrolashAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -482,7 +482,7 @@ struct MANGOS_DLL_DECL npc_shadow_imageAI : public ScriptedAI
     uint32 m_uiAbilityTimer;
     uint8 m_uiDarkStrikes;
 
-    void Reset()
+    void Reset() override
     {
         // Choose only one spell for attack
         m_uiChosenAbility = urand(0, 1) ? SPELL_DARK_STRIKE : SPELL_SHADOWFURY;
@@ -491,7 +491,7 @@ struct MANGOS_DLL_DECL npc_shadow_imageAI : public ScriptedAI
         m_uiSuicideTimer = 0;
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

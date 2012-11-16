@@ -138,7 +138,7 @@ struct MANGOS_DLL_DECL boss_ymironAI : public ScriptedAI
 
     std::vector<uint8> m_vuiBoatPhases;
 
-    void Reset()
+    void Reset() override
     {
         m_uiFetidRotTimer           = urand(8000, 13000);
         m_uiBaneTimer               = urand(18000, 23000);
@@ -162,7 +162,7 @@ struct MANGOS_DLL_DECL boss_ymironAI : public ScriptedAI
         std::random_shuffle(m_vuiBoatPhases.begin(), m_vuiBoatPhases.end());
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -170,7 +170,7 @@ struct MANGOS_DLL_DECL boss_ymironAI : public ScriptedAI
             m_pInstance->SetData(TYPE_YMIRON, IN_PROGRESS);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         switch (urand(0, 3))
         {
@@ -181,7 +181,7 @@ struct MANGOS_DLL_DECL boss_ymironAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -196,7 +196,7 @@ struct MANGOS_DLL_DECL boss_ymironAI : public ScriptedAI
             m_pInstance->SetData(TYPE_YMIRON, DONE);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         DoResetSpirits();
 
@@ -236,13 +236,13 @@ struct MANGOS_DLL_DECL boss_ymironAI : public ScriptedAI
         ++m_uiBoats;
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (pSummoned->GetEntry() == NPC_SPIRIT_FOUNT)
             DoCastSpellIfCan(pSummoned, SPELL_SPIRIT_FOUNT_BEAM, CAST_INTERRUPT_PREVIOUS);
     }
 
-    void MovementInform(uint32 uiMotionType, uint32 uiPointId)
+    void MovementInform(uint32 uiMotionType, uint32 uiPointId) override
     {
         if (uiMotionType != POINT_MOTION_TYPE || !uiPointId)
             return;
@@ -256,7 +256,7 @@ struct MANGOS_DLL_DECL boss_ymironAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

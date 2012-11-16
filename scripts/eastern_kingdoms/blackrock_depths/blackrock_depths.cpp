@@ -192,7 +192,7 @@ struct MANGOS_DLL_DECL npc_grimstoneAI : public npc_escortAI
 
     GuidList m_lSummonedGUIDList;
 
-    void Reset()
+    void Reset() override
     {
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
 
@@ -203,7 +203,7 @@ struct MANGOS_DLL_DECL npc_grimstoneAI : public npc_escortAI
         m_uiPhase = PHASE_MOBS;
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (!m_pInstance)
             return;
@@ -230,7 +230,7 @@ struct MANGOS_DLL_DECL npc_grimstoneAI : public npc_escortAI
         }
     }
 
-    void SummonedCreatureJustDied(Creature* pSummoned)
+    void SummonedCreatureJustDied(Creature* pSummoned) override
     {
         ++m_uiMobDeadCount;
 
@@ -270,7 +270,7 @@ struct MANGOS_DLL_DECL npc_grimstoneAI : public npc_escortAI
         m_creature->SummonCreature(uiEntry, fX, fY, fZ, 0, TEMPSUMMON_DEAD_DESPAWN, 0);
     }
 
-    void WaypointReached(uint32 uiPointId)
+    void WaypointReached(uint32 uiPointId) override
     {
         switch (uiPointId)
         {
@@ -305,7 +305,7 @@ struct MANGOS_DLL_DECL npc_grimstoneAI : public npc_escortAI
         }
     }
 
-    void UpdateEscortAI(const uint32 uiDiff)
+    void UpdateEscortAI(const uint32 uiDiff) override
     {
         if (!m_pInstance)
             return;
@@ -563,7 +563,7 @@ struct MANGOS_DLL_DECL npc_rocknotAI : public npc_escortAI
     uint32 m_uiBreakKegTimer;
     uint32 m_uiBreakDoorTimer;
 
-    void Reset()
+    void Reset() override
     {
         if (HasEscortState(STATE_ESCORT_ESCORTING))
             return;
@@ -578,7 +578,7 @@ struct MANGOS_DLL_DECL npc_rocknotAI : public npc_escortAI
             pGo->SetGoState(GOState(state));
     }
 
-    void WaypointReached(uint32 uiPointId)
+    void WaypointReached(uint32 uiPointId) override
     {
         if (!m_pInstance)
             return;
@@ -604,7 +604,7 @@ struct MANGOS_DLL_DECL npc_rocknotAI : public npc_escortAI
         }
     }
 
-    void UpdateEscortAI(const uint32 uiDiff)
+    void UpdateEscortAI(const uint32 uiDiff) override
     {
         if (!m_pInstance)
             return;
@@ -736,13 +736,13 @@ struct MANGOS_DLL_DECL npc_marshal_windsorAI : public npc_escortAI
 
     uint8 m_uiEventPhase;
 
-    void Reset()
+    void Reset() override
     {
         if (!HasEscortState(STATE_ESCORT_ESCORTING))
             m_uiEventPhase = 0;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         switch (urand(0, 2))
         {
@@ -752,7 +752,7 @@ struct MANGOS_DLL_DECL npc_marshal_windsorAI : public npc_escortAI
         }
     }
 
-    void WaypointReached(uint32 uiPointId)
+    void WaypointReached(uint32 uiPointId) override
     {
         switch (uiPointId)
         {
@@ -891,7 +891,7 @@ struct MANGOS_DLL_DECL npc_marshal_windsorAI : public npc_escortAI
         }
     }
 
-    void UpdateEscortAI(const uint32 uiDiff)
+    void UpdateEscortAI(const uint32 uiDiff) override
     {
         // Handle escort resume events
         if (m_pInstance && m_pInstance->GetData(TYPE_QUEST_JAIL_BREAK) == SPECIAL)

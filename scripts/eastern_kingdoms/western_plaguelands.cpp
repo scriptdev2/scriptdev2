@@ -35,7 +35,7 @@ struct MANGOS_DLL_DECL npc_the_scourge_cauldronAI : public ScriptedAI
 {
     npc_the_scourge_cauldronAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
-    void Reset() {}
+    void Reset() override {}
 
     void DoDie()
     {
@@ -47,7 +47,7 @@ struct MANGOS_DLL_DECL npc_the_scourge_cauldronAI : public ScriptedAI
             m_creature->SetRespawnDelay(600);
     }
 
-    void MoveInLineOfSight(Unit* who)
+    void MoveInLineOfSight(Unit* who) override
     {
         if (!who || who->GetTypeId() != TYPEID_PLAYER)
             return;

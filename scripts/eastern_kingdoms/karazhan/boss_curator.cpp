@@ -63,7 +63,7 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
 
     bool m_bIsEnraged;
 
-    void Reset()
+    void Reset() override
     {
         m_uiFlareTimer       = 10000;
         m_uiHatefulBoltTimer = 15000;                       // This time may be wrong
@@ -73,12 +73,12 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
         m_creature->ApplySpellImmune(0, IMMUNITY_DAMAGE, SPELL_SCHOOL_MASK_ARCANE, true);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         DoScriptText(urand(0, 1) ? SAY_KILL1 : SAY_KILL2, m_creature);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -86,7 +86,7 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
             m_pInstance->SetData(TYPE_CURATOR, DONE);
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -94,13 +94,13 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
             m_pInstance->SetData(TYPE_CURATOR, IN_PROGRESS);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_CURATOR, FAIL);
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (pSummoned->GetEntry() == NPC_ASTRAL_FLARE)
         {
@@ -114,7 +114,7 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

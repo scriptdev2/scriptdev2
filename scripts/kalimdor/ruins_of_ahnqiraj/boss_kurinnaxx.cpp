@@ -48,7 +48,7 @@ struct MANGOS_DLL_DECL boss_kurinnaxxAI : public ScriptedAI
 
     ObjectGuid m_sandtrapGuid;
 
-    void Reset()
+    void Reset() override
     {
         m_bEnraged = false;
 
@@ -59,7 +59,7 @@ struct MANGOS_DLL_DECL boss_kurinnaxxAI : public ScriptedAI
         m_uiTrapTriggerTimer = 0;
     }
 
-    void JustSummoned(GameObject* pGo)
+    void JustSummoned(GameObject* pGo) override
     {
         if (pGo->GetEntry() == GO_SAND_TRAP)
         {
@@ -68,7 +68,7 @@ struct MANGOS_DLL_DECL boss_kurinnaxxAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

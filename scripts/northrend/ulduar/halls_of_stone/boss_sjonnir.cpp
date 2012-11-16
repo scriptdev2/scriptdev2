@@ -96,7 +96,7 @@ struct MANGOS_DLL_DECL boss_sjonnirAI : public ScriptedAI
 
     uint8 m_uiHpCheck;
 
-    void Reset()
+    void Reset() override
     {
         m_uiChainLightningTimer     = urand(3000, 8000);    // TODO timers weak
         m_uiLightningShieldTimer    = urand(20000, 25000);
@@ -107,7 +107,7 @@ struct MANGOS_DLL_DECL boss_sjonnirAI : public ScriptedAI
         m_uiHpCheck                 = 75;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -118,7 +118,7 @@ struct MANGOS_DLL_DECL boss_sjonnirAI : public ScriptedAI
             m_pInstance->SetData(TYPE_SJONNIR, IN_PROGRESS);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -126,13 +126,13 @@ struct MANGOS_DLL_DECL boss_sjonnirAI : public ScriptedAI
             m_pInstance->SetData(TYPE_SJONNIR, DONE);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_SJONNIR, FAIL);
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (pSummoned->GetEntry() == NPC_IRON_TROGG || pSummoned->GetEntry() == NPC_IRON_DWARF || pSummoned->GetEntry() == NPC_MALFORMED_OOZE)
         {
@@ -146,7 +146,7 @@ struct MANGOS_DLL_DECL boss_sjonnirAI : public ScriptedAI
             pSummoned->AI()->AttackStart(m_creature);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         switch (urand(0, 2))
         {
@@ -172,7 +172,7 @@ struct MANGOS_DLL_DECL boss_sjonnirAI : public ScriptedAI
         return false;
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

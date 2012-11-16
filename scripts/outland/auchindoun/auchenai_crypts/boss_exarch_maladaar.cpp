@@ -54,7 +54,7 @@ struct MANGOS_DLL_DECL mob_stolen_soulAI : public ScriptedAI
 
     ObjectGuid m_targetGuid;
 
-    void Reset()
+    void Reset() override
     {
         m_uiSpellTimer = 1000;
     }
@@ -66,13 +66,13 @@ struct MANGOS_DLL_DECL mob_stolen_soulAI : public ScriptedAI
         m_creature->SetDisplayId(pTarget->GetDisplayId());
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         if (Unit* pTarget = m_creature->GetMap()->GetUnit(m_targetGuid))
             DoCastSpellIfCan(pTarget, SPELL_STOLEN_SOUL_DISPEL, CAST_TRIGGERED);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -175,7 +175,7 @@ struct MANGOS_DLL_DECL boss_exarch_maladaarAI : public ScriptedAI
     bool m_bHasTaunted;
     bool m_bHasSummonedAvatar;
 
-    void Reset()
+    void Reset() override
     {
         m_targetGuid.Clear();
 
@@ -186,7 +186,7 @@ struct MANGOS_DLL_DECL boss_exarch_maladaarAI : public ScriptedAI
         m_bHasSummonedAvatar = false;
     }
 
-    void MoveInLineOfSight(Unit* pWho)
+    void MoveInLineOfSight(Unit* pWho) override
     {
         if (!m_bHasTaunted && pWho->GetTypeId() == TYPEID_PLAYER && m_creature->IsWithinDistInMap(pWho, 150.0f) && m_creature->IsWithinLOSInMap(pWho))
         {
@@ -197,7 +197,7 @@ struct MANGOS_DLL_DECL boss_exarch_maladaarAI : public ScriptedAI
         ScriptedAI::MoveInLineOfSight(pWho);
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         switch (urand(0, 2))
         {
@@ -207,7 +207,7 @@ struct MANGOS_DLL_DECL boss_exarch_maladaarAI : public ScriptedAI
         }
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (pSummoned->GetEntry() == NPC_STOLEN_SOUL)
         {
@@ -224,7 +224,7 @@ struct MANGOS_DLL_DECL boss_exarch_maladaarAI : public ScriptedAI
         }
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         if (urand(0, 1))
             return;
@@ -232,7 +232,7 @@ struct MANGOS_DLL_DECL boss_exarch_maladaarAI : public ScriptedAI
         DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -240,13 +240,13 @@ struct MANGOS_DLL_DECL boss_exarch_maladaarAI : public ScriptedAI
         DoSpawnCreature(NPC_DORE, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN, 600000);
     }
 
-    void SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell)
+    void SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell) override
     {
         if (pSpell->Id == SPELL_STOLEN_SOUL && pTarget->GetTypeId() == TYPEID_PLAYER)
             DoSpawnCreature(NPC_STOLEN_SOUL, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10000);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

@@ -42,22 +42,22 @@ class MANGOS_DLL_DECL instance_deadmines : public ScriptedInstance
     public:
         instance_deadmines(Map* pMap);
 
-        void Initialize();
+        void Initialize() override;
 
-        void OnPlayerEnter(Player* pPlayer);
+        void OnPlayerEnter(Player* pPlayer) override;
 
-        void OnCreatureCreate(Creature* pCreature);
-        void OnObjectCreate(GameObject* pGo);
+        void OnCreatureCreate(Creature* pCreature) override;
+        void OnObjectCreate(GameObject* pGo) override;
 
-        void OnCreatureDeath(Creature* pCreature);
+        void OnCreatureDeath(Creature* pCreature) override;
 
-        void SetData(uint32 uiType, uint32 uiData);
-        uint32 GetData(uint32 uiType);
+        void SetData(uint32 uiType, uint32 uiData) override;
+        uint32 GetData(uint32 uiType) override;
 
-        const char* Save() { return m_strInstData.c_str(); }
-        void Load(const char* chrIn);
+        const char* Save() override { return m_strInstData.c_str(); }
+        void Load(const char* chrIn) override;
 
-        void Update(uint32 uiDiff);
+        void Update(uint32 uiDiff) override;
 
     private:
         uint32 m_auiEncounter[MAX_ENCOUNTER];

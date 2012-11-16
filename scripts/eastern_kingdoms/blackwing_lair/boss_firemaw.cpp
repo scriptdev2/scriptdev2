@@ -46,32 +46,32 @@ struct MANGOS_DLL_DECL boss_firemawAI : public ScriptedAI
     uint32 m_uiWingBuffetTimer;
     uint32 m_uiFlameBuffetTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiShadowFlameTimer = 30000;                       // These times are probably wrong
         m_uiWingBuffetTimer = 24000;
         m_uiFlameBuffetTimer = 5000;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_FIREMAW, IN_PROGRESS);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_FIREMAW, DONE);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_FIREMAW, FAIL);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

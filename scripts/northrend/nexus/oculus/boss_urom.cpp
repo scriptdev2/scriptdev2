@@ -106,7 +106,7 @@ struct MANGOS_DLL_DECL boss_uromAI : public ScriptedAI
 
     std::vector<uint32> m_vuiTrashPacksIds;
 
-    void Reset()
+    void Reset() override
     {
         m_bIsPlatformPhase       = true;
         m_uiPlatformPhase        = 0;
@@ -127,13 +127,13 @@ struct MANGOS_DLL_DECL boss_uromAI : public ScriptedAI
         m_uiArcaneShieldTimer   = 1000;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_UROM, IN_PROGRESS);
     }
 
-    void AttackStart(Unit* pWho)
+    void AttackStart(Unit* pWho) override
     {
         if (m_uiPlatformPhase < MAX_PLATFORMS)
         {
@@ -174,7 +174,7 @@ struct MANGOS_DLL_DECL boss_uromAI : public ScriptedAI
         }
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         switch (urand(0, 2))
         {
@@ -184,7 +184,7 @@ struct MANGOS_DLL_DECL boss_uromAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -192,13 +192,13 @@ struct MANGOS_DLL_DECL boss_uromAI : public ScriptedAI
             m_pInstance->SetData(TYPE_UROM, DONE);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_UROM, FAIL);
     }
 
-    void EnterEvadeMode()
+    void EnterEvadeMode() override
     {
         // Don't evade while casting explosion
         if (m_uiExplosionExpireTimer)
@@ -218,7 +218,7 @@ struct MANGOS_DLL_DECL boss_uromAI : public ScriptedAI
             ScriptedAI::EnterEvadeMode();
     }
 
-    void JustSummoned(Creature* pSummon)
+    void JustSummoned(Creature* pSummon) override
     {
         if (Unit* pTarget = m_creature->GetMap()->GetUnit(m_attackTarget))
             pSummon->AI()->AttackStart(pTarget);
@@ -241,7 +241,7 @@ struct MANGOS_DLL_DECL boss_uromAI : public ScriptedAI
         m_creature->SummonCreature(uiEntry, fX, fY, fZ, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
     }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
     {
         switch (pSpell->Id)
         {
@@ -254,7 +254,7 @@ struct MANGOS_DLL_DECL boss_uromAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         // Set the Arcane Shield on out of combat timer
         if (m_uiArcaneShieldTimer)

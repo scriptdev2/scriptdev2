@@ -51,31 +51,31 @@ struct MANGOS_DLL_DECL boss_garrAI : public ScriptedAI
     uint32 m_uiAntiMagicPulseTimer;
     uint32 m_uiMagmaShacklesTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiAntiMagicPulseTimer = 25000;
         m_uiMagmaShacklesTimer = 15000;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_GARR, IN_PROGRESS);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_GARR, DONE);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_GARR, FAIL);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -115,13 +115,13 @@ struct MANGOS_DLL_DECL mob_fireswornAI : public ScriptedAI
     uint32 m_uiImmolateTimer;
     uint32 m_uiSeparationCheckTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiImmolateTimer = urand(4000, 8000);              // These times are probably wrong
         m_uiSeparationCheckTimer = 5000;
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

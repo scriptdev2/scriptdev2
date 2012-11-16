@@ -71,7 +71,7 @@ struct MANGOS_DLL_DECL boss_erekemAI : public ScriptedAI
     uint32 m_uiSpecialSpellTimer;
     uint8 m_uiGuardiansDead;
 
-    void Reset()
+    void Reset() override
     {
         m_uiSpecialSpellTimer   = 0;
         m_uiEarthShieldTimer    = urand(2000, 3000);
@@ -81,17 +81,17 @@ struct MANGOS_DLL_DECL boss_erekemAI : public ScriptedAI
         m_uiGuardiansDead       = 0;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         switch (urand(0, 2))
         {
@@ -111,7 +111,7 @@ struct MANGOS_DLL_DECL boss_erekemAI : public ScriptedAI
             DoCastSpellIfCan(m_creature, SPELL_BLOODLUST, CAST_INTERRUPT_PREVIOUS);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -187,14 +187,14 @@ struct MANGOS_DLL_DECL npc_erekem_guardAI : public ScriptedAI
     uint32 m_uiHowlingScreechTimer;
     uint32 m_uiStrikeTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiGushingWoundTimer   = urand(9000, 14000);
         m_uiHowlingScreechTimer = urand(8000, 12000);
         m_uiStrikeTimer         = urand(5000, 7000);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         if (!m_pInstance)
             return;
@@ -208,7 +208,7 @@ struct MANGOS_DLL_DECL npc_erekem_guardAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

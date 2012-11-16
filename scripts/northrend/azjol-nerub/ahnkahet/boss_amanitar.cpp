@@ -66,7 +66,7 @@ struct MANGOS_DLL_DECL boss_amanitarAI : public ScriptedAI
     uint32 m_uiMiniTimer;
     uint32 m_uiMushroomTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiBashTimer       = urand(7000, 10000);
         m_uiVenomBoltTimer  = urand(10000, 15000);
@@ -75,7 +75,7 @@ struct MANGOS_DLL_DECL boss_amanitarAI : public ScriptedAI
         m_uiMushroomTimer   = urand(10000, 20000);
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoSummonMushrooms(true);
 
@@ -83,19 +83,19 @@ struct MANGOS_DLL_DECL boss_amanitarAI : public ScriptedAI
             m_pInstance->SetData(TYPE_AMANITAR, IN_PROGRESS);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_AMANITAR, DONE);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_AMANITAR, FAIL);
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (pSummoned->GetEntry() == NPC_POISONOUS_MUSHROOM)
             pSummoned->CastSpell(pSummoned, SPELL_POISON_MUSHROOM_VISUAL, true);
@@ -106,7 +106,7 @@ struct MANGOS_DLL_DECL boss_amanitarAI : public ScriptedAI
         pSummoned->CastSpell(pSummoned, SPELL_MUSHROOM_FORM, true);
     }
 
-    void SummonedCreatureJustDied(Creature* pSummoned)
+    void SummonedCreatureJustDied(Creature* pSummoned) override
     {
         if (pSummoned->GetEntry() == NPC_POISONOUS_MUSHROOM)
             pSummoned->CastSpell(pSummoned, SPELL_POISON_CLOUD, true);
@@ -132,7 +132,7 @@ struct MANGOS_DLL_DECL boss_amanitarAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -199,11 +199,11 @@ struct MANGOS_DLL_DECL npc_amanitar_mushroomAI : public Scripted_NoMovementAI
 {
     npc_amanitar_mushroomAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature) { Reset(); }
 
-    void Reset() { }
+    void Reset() override { }
 
-    void AttackStart(Unit* pWho) { }
-    void MoveInLineOfSight(Unit* pWho) { }
-    void UpdateAI(const uint32 uiDiff) { }
+    void AttackStart(Unit* pWho) override { }
+    void MoveInLineOfSight(Unit* pWho) override { }
+    void UpdateAI(const uint32 uiDiff) override { }
 };
 
 CreatureAI* GetAI_npc_amanitar_mushroom(Creature* pCreature)

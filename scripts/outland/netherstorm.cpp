@@ -90,7 +90,7 @@ struct MANGOS_DLL_DECL npc_manaforge_control_consoleAI : public ScriptedAI
     uint32 m_uiPhase;
     bool   m_bWave;
 
-    void Reset()
+    void Reset() override
     {
         m_playerGuid.Clear();
         m_consoleGuid.Clear();
@@ -100,7 +100,7 @@ struct MANGOS_DLL_DECL npc_manaforge_control_consoleAI : public ScriptedAI
         m_bWave = false;
     }
 
-    /*void SpellHit(Unit *caster, const SpellEntry *spell)
+    /*void SpellHit(Unit *caster, const SpellEntry *spell) override
     {
         // we have no way of telling the creature was hit by spell -> got aura applied after 10-12 seconds
         // then no way for the mobs to actually stop the shutdown as intended.
@@ -108,7 +108,7 @@ struct MANGOS_DLL_DECL npc_manaforge_control_consoleAI : public ScriptedAI
             ...
     }*/
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(EMOTE_ABORT, m_creature);
 
@@ -233,7 +233,7 @@ struct MANGOS_DLL_DECL npc_manaforge_control_consoleAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (m_uiEventTimer < uiDiff)
         {
@@ -401,7 +401,7 @@ struct MANGOS_DLL_DECL npc_commander_dawnforgeAI : public ScriptedAI
     uint32 m_uiPhaseTimer;
     bool   m_bIsEvent;
 
-    void Reset()
+    void Reset() override
     {
         m_playerGuid.Clear();
         m_ardonisGuid.Clear();
@@ -413,7 +413,7 @@ struct MANGOS_DLL_DECL npc_commander_dawnforgeAI : public ScriptedAI
         m_bIsEvent = false;
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (pSummoned->GetEntry() == NPC_PATHALEON_THE_CALCULATOR_IMAGE)
             m_pathaleonGuid = pSummoned->GetObjectGuid();
@@ -476,7 +476,7 @@ struct MANGOS_DLL_DECL npc_commander_dawnforgeAI : public ScriptedAI
         return false;
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         // Is event even running?
         if (!m_bIsEvent)
@@ -637,7 +637,7 @@ struct MANGOS_DLL_DECL npc_bessyAI : public npc_escortAI
 {
     npc_bessyAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
 
-    void WaypointReached(uint32 uiPointId)
+    void WaypointReached(uint32 uiPointId) override
     {
         switch (uiPointId)
         {
@@ -657,12 +657,12 @@ struct MANGOS_DLL_DECL npc_bessyAI : public npc_escortAI
         }
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         pSummoned->AI()->AttackStart(m_creature);
     }
 
-    void Reset() {}
+    void Reset() override {}
 };
 
 bool QuestAccept_npc_bessy(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
@@ -708,7 +708,7 @@ struct MANGOS_DLL_DECL npc_maxx_a_million_escortAI : public npc_escortAI
     ObjectGuid m_alleyGuid;
     ObjectGuid m_lastDraeneiMachineGuid;
 
-    void Reset()
+    void Reset() override
     {
         if (!HasEscortState(STATE_ESCORT_ESCORTING))
         {
@@ -729,7 +729,7 @@ struct MANGOS_DLL_DECL npc_maxx_a_million_escortAI : public npc_escortAI
             m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
     }
 
-    void WaypointReached(uint32 uiPoint)
+    void WaypointReached(uint32 uiPoint) override
     {
         switch (uiPoint)
         {
@@ -765,7 +765,7 @@ struct MANGOS_DLL_DECL npc_maxx_a_million_escortAI : public npc_escortAI
         }
     }
 
-    void WaypointStart(uint32 uiPoint)
+    void WaypointStart(uint32 uiPoint) override
     {
         switch (uiPoint)
         {
@@ -777,7 +777,7 @@ struct MANGOS_DLL_DECL npc_maxx_a_million_escortAI : public npc_escortAI
         }
     }
 
-    void UpdateEscortAI(const uint32 uiDiff)
+    void UpdateEscortAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() ||  !m_creature->getVictim())
         {
@@ -862,9 +862,9 @@ struct MANGOS_DLL_DECL npc_zeppitAI : public ScriptedPetAI
 {
     npc_zeppitAI(Creature* pCreature) : ScriptedPetAI(pCreature) { Reset(); }
 
-    void Reset() { }
+    void Reset() override { }
 
-    void OwnerKilledUnit(Unit* pVictim)
+    void OwnerKilledUnit(Unit* pVictim) override
     {
         if (pVictim->GetTypeId() == TYPEID_UNIT && pVictim->GetEntry() == NPC_WARP_CHASER)
         {
@@ -918,7 +918,7 @@ struct MANGOS_DLL_DECL npc_protectorate_demolitionistAI : public npc_escortAI
     uint32 m_uiEventTimer;
     uint8 m_uiEventStage;
 
-    void Reset()
+    void Reset() override
     {
         if (!HasEscortState(STATE_ESCORT_ESCORTING))
         {
@@ -927,15 +927,15 @@ struct MANGOS_DLL_DECL npc_protectorate_demolitionistAI : public npc_escortAI
         }
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(urand(0, 1) ? SAY_ATTACKED_1 : SAY_ATTACKED_2, m_creature);
     }
 
     // No attack done by this npc
-    void AttackStart(Unit* pWho) { }
+    void AttackStart(Unit* pWho) override { }
 
-    void MoveInLineOfSight(Unit* pWho)
+    void MoveInLineOfSight(Unit* pWho) override
     {
         if (HasEscortState(STATE_ESCORT_ESCORTING))
             return;
@@ -954,7 +954,7 @@ struct MANGOS_DLL_DECL npc_protectorate_demolitionistAI : public npc_escortAI
         }
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (pSummoned->GetEntry() == NPC_NEXUS_STALKER)
             DoScriptText(SAY_NEXUS_PROTECT, pSummoned);
@@ -964,7 +964,7 @@ struct MANGOS_DLL_DECL npc_protectorate_demolitionistAI : public npc_escortAI
         pSummoned->AI()->AttackStart(m_creature);
     }
 
-    void WaypointReached(uint32 uiPointId)
+    void WaypointReached(uint32 uiPointId) override
     {
         switch (uiPointId)
         {
@@ -998,7 +998,7 @@ struct MANGOS_DLL_DECL npc_protectorate_demolitionistAI : public npc_escortAI
         }
     }
 
-    void UpdateEscortAI(const uint32 uiDiff)
+    void UpdateEscortAI(const uint32 uiDiff) override
     {
         if (m_uiEventTimer)
         {
@@ -1068,19 +1068,19 @@ struct MANGOS_DLL_DECL npc_captured_vanguardAI : public npc_escortAI
     uint32 m_uiGlaiveTimer;
     uint32 m_uiHamstringTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiGlaiveTimer = urand(4000, 8000);
         m_uiHamstringTimer = urand(8000, 13000);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         // Happens only if the player helps the npc in the fight - otherwise he dies
         DoScriptText(SAY_VANGUARD_INTRO, m_creature);
     }
 
-    void WaypointReached(uint32 uiPointId)
+    void WaypointReached(uint32 uiPointId) override
     {
         switch (uiPointId)
         {
@@ -1103,7 +1103,7 @@ struct MANGOS_DLL_DECL npc_captured_vanguardAI : public npc_escortAI
         }
     }
 
-    void UpdateEscortAI(const uint32 uiDiff)
+    void UpdateEscortAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

@@ -52,7 +52,7 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
     uint32 m_uiBuffTimer;
     bool m_bEnraged;
 
-    void Reset()
+    void Reset() override
     {
         m_uiPyroblastTimer  = 7 * IN_MILLISECONDS;
         m_uiEarthquakeTimer = 3 * IN_MILLISECONDS;
@@ -62,25 +62,25 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
         m_creature->CastSpell(m_creature, SPELL_MAGMA_SPLASH, true);
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_GOLEMAGG, IN_PROGRESS);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_GOLEMAGG, DONE);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_GOLEMAGG, FAIL);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -140,12 +140,12 @@ struct MANGOS_DLL_DECL mob_core_ragerAI : public ScriptedAI
     ScriptedInstance* m_pInstance;
     uint32 m_uiMangleTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiMangleTimer = 7 * IN_MILLISECONDS;              // These times are probably wrong
     }
 
-    void DamageTaken(Unit* pDoneBy, uint32& uiDamage)
+    void DamageTaken(Unit* pDoneBy, uint32& uiDamage) override
     {
         if (m_creature->GetHealthPercent() < 50.0f)
         {
@@ -158,7 +158,7 @@ struct MANGOS_DLL_DECL mob_core_ragerAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

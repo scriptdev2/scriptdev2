@@ -55,7 +55,7 @@ struct MANGOS_DLL_DECL npc_nesingwary_trapperAI : public ScriptedAI
     ObjectGuid m_playerGuid;
     ObjectGuid m_trapGuid;
 
-    void Reset()
+    void Reset() override
     {
         m_uiPhase = 0;
         m_uiPhaseTimer = 0;
@@ -79,7 +79,7 @@ struct MANGOS_DLL_DECL npc_nesingwary_trapperAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->getVictim() && m_uiPhase)
         {
@@ -118,7 +118,7 @@ struct MANGOS_DLL_DECL npc_nesingwary_trapperAI : public ScriptedAI
         }
     }
 
-    void MovementInform(uint32 uiType, uint32 uiPointId)
+    void MovementInform(uint32 uiType, uint32 uiPointId) override
     {
         m_creature->HandleEmote(EMOTE_ONESHOT_LOOT);
         m_uiPhaseTimer = 2000;
@@ -154,13 +154,13 @@ struct MANGOS_DLL_DECL npc_oil_stained_wolfAI : public ScriptedAI
     bool m_bCanCrapInPublic;
     uint32 m_uiPooTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_bCanCrapInPublic = false;
         m_uiPooTimer = 0;
     }
 
-    void MovementInform(uint32 uiType, uint32 uiPointId)
+    void MovementInform(uint32 uiType, uint32 uiPointId) override
     {
         if (uiType != POINT_MOTION_TYPE)
             return;
@@ -172,7 +172,7 @@ struct MANGOS_DLL_DECL npc_oil_stained_wolfAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
         {
@@ -302,7 +302,7 @@ struct MANGOS_DLL_DECL npc_sinkhole_kill_creditAI : public ScriptedAI
     uint32 m_uiCartTimer;
     uint32 m_uiCartPhase;
 
-    void Reset()
+    void Reset() override
     {
         m_cartGuid.Clear();
         m_wormGuid.Clear();
@@ -310,12 +310,12 @@ struct MANGOS_DLL_DECL npc_sinkhole_kill_creditAI : public ScriptedAI
         m_uiCartPhase = 0;
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         m_wormGuid = pSummoned->GetObjectGuid();
     }
 
-    void JustSummoned(GameObject* pGo)
+    void JustSummoned(GameObject* pGo) override
     {
         // Go is not really needed, but ok to use as a check point so only one "event" can be processed at a time
         if (m_cartGuid)
@@ -325,7 +325,7 @@ struct MANGOS_DLL_DECL npc_sinkhole_kill_creditAI : public ScriptedAI
         m_cartGuid = pGo->GetObjectGuid();
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (m_cartGuid)
         {
@@ -403,7 +403,7 @@ struct MANGOS_DLL_DECL npc_lurgglbrAI : public npc_escortAI
     uint32 m_uiSayTimer;
     uint8 m_uiSpeech;
 
-    void Reset()
+    void Reset() override
     {
         if (!HasEscortState(STATE_ESCORT_ESCORTING))
         {
@@ -412,7 +412,7 @@ struct MANGOS_DLL_DECL npc_lurgglbrAI : public npc_escortAI
         }
     }
 
-    void JustStartedEscort()
+    void JustStartedEscort() override
     {
         if (GameObject* pCage = GetClosestGameObjectWithEntry(m_creature, GO_CAGE, INTERACTION_DISTANCE))
         {
@@ -421,7 +421,7 @@ struct MANGOS_DLL_DECL npc_lurgglbrAI : public npc_escortAI
         }
     }
 
-    void WaypointStart(uint32 uiPointId)
+    void WaypointStart(uint32 uiPointId) override
     {
         switch (uiPointId)
         {
@@ -435,7 +435,7 @@ struct MANGOS_DLL_DECL npc_lurgglbrAI : public npc_escortAI
         }
     }
 
-    void WaypointReached(uint32 uiPointId)
+    void WaypointReached(uint32 uiPointId) override
     {
         switch (uiPointId)
         {
@@ -456,7 +456,7 @@ struct MANGOS_DLL_DECL npc_lurgglbrAI : public npc_escortAI
         }
     }
 
-    void UpdateEscortAI(const uint32 uiDiff)
+    void UpdateEscortAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
         {

@@ -55,24 +55,24 @@ struct MANGOS_DLL_DECL boss_pandemoniusAI : public ScriptedAI
     uint32 m_uiDarkShellTimer;
     uint8 m_uiVoidBlastCounter;
 
-    void Reset()
+    void Reset() override
     {
         m_uiVoidBlastTimer   = urand(15000, 20000);
         m_uiDarkShellTimer   = 15000;
         m_uiVoidBlastCounter = 0;
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         DoScriptText(urand(0, 1) ? SAY_KILL_1 : SAY_KILL_2, m_creature);
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         switch (urand(0, 2))
         {
@@ -82,7 +82,7 @@ struct MANGOS_DLL_DECL boss_pandemoniusAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

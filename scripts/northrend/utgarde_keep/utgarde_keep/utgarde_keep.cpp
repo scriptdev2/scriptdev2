@@ -57,7 +57,7 @@ struct MANGOS_DLL_DECL mob_dragonflayer_forge_masterAI : public ScriptedAI
     uint32 m_uiForgeEncounterId;
     uint32 m_uiBurningBrandTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiBurningBrandTimer = 2000;
     }
@@ -110,23 +110,23 @@ struct MANGOS_DLL_DECL mob_dragonflayer_forge_masterAI : public ScriptedAI
         }
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         SetMyForge();
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         SetMyForge();
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         if (m_pInstance)
             m_pInstance->SetData(m_uiForgeEncounterId, DONE);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

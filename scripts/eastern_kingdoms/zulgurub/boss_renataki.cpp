@@ -40,7 +40,7 @@ struct MANGOS_DLL_DECL boss_renatakiAI : public ScriptedAI
     uint32 m_uiGougeTimer;
     uint32 m_uiThousandBladesTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiVanishTimer         = urand(25000, 30000);
         m_uiAmbushTimer         = 0;
@@ -48,7 +48,7 @@ struct MANGOS_DLL_DECL boss_renatakiAI : public ScriptedAI
         m_uiThousandBladesTimer = urand(4000, 8000);
     }
 
-    void EnterEvadeMode()
+    void EnterEvadeMode() override
     {
         // If is vanished, don't evade
         if (m_uiAmbushTimer)
@@ -57,7 +57,7 @@ struct MANGOS_DLL_DECL boss_renatakiAI : public ScriptedAI
         ScriptedAI::EnterEvadeMode();
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

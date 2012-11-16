@@ -86,7 +86,7 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
 
     GuidList m_lBombRiderGuidsList;
 
-    void Reset()
+    void Reset() override
     {
         m_uiChargeTimer         = 20000;
         m_uiSwoopTimer          = 5000;
@@ -103,7 +103,7 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
         DoCastSpellIfCan(m_creature, SPELL_GREEN_CHANNELING);
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -112,7 +112,7 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
             m_creature->SetLevitate(true);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
         DoDespawnBombRiders();
@@ -121,7 +121,7 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
             m_pInstance->SetData(TYPE_JEKLIK, DONE);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         DoDespawnBombRiders();
 
@@ -129,7 +129,7 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
             m_pInstance->SetData(TYPE_JEKLIK, FAIL);
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (pSummoned->GetEntry() == NPC_FRENZIED_BAT)
         {
@@ -158,7 +158,7 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -292,7 +292,7 @@ struct MANGOS_DLL_DECL npc_gurubashi_bat_riderAI : public ScriptedAI
     uint32 m_uiInfectedBiteTimer;
     uint32 m_uiBattleCommandTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiInfectedBiteTimer = 6500;
         m_uiBattleCommandTimer = 8000;
@@ -302,7 +302,7 @@ struct MANGOS_DLL_DECL npc_gurubashi_bat_riderAI : public ScriptedAI
         DoCastSpellIfCan(m_creature, SPELL_TRASH);
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         // Don't attack if is summoned by Jeklik - the npc gets aggro because of the Liquid Fire
         if (m_bIsSummon)
@@ -313,7 +313,7 @@ struct MANGOS_DLL_DECL npc_gurubashi_bat_riderAI : public ScriptedAI
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     }
 
-    void AttackStart(Unit* pWho)
+    void AttackStart(Unit* pWho) override
     {
         // Don't attack if is summoned by Jeklik
         if (m_bIsSummon)
@@ -322,7 +322,7 @@ struct MANGOS_DLL_DECL npc_gurubashi_bat_riderAI : public ScriptedAI
         ScriptedAI::AttackStart(pWho);
     }
 
-    void MoveInLineOfSight(Unit* pWho)
+    void MoveInLineOfSight(Unit* pWho) override
     {
         // Don't attack if is summoned by Jeklik
         if (m_bIsSummon)
@@ -331,7 +331,7 @@ struct MANGOS_DLL_DECL npc_gurubashi_bat_riderAI : public ScriptedAI
         ScriptedAI::MoveInLineOfSight(pWho);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

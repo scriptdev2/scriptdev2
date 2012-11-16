@@ -40,7 +40,7 @@ struct MANGOS_DLL_DECL npc_dalaran_guardian_mageAI : public ScriptedAI
 {
     npc_dalaran_guardian_mageAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
-    void MoveInLineOfSight(Unit* pWho)
+    void MoveInLineOfSight(Unit* pWho) override
     {
         if (m_creature->GetDistanceZ(pWho) > CREATURE_Z_ATTACK_RANGE)
             return;
@@ -62,11 +62,11 @@ struct MANGOS_DLL_DECL npc_dalaran_guardian_mageAI : public ScriptedAI
         }
     }
 
-    void AttackedBy(Unit* /*pAttacker*/) {}
+    void AttackedBy(Unit* /*pAttacker*/) override {}
 
-    void Reset() {}
+    void Reset() override {}
 
-    void UpdateAI(const uint32 /*uiDiff*/) {}
+    void UpdateAI(const uint32 /*uiDiff*/) override {}
 };
 
 CreatureAI* GetAI_npc_dalaran_guardian_mage(Creature* pCreature)

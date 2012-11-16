@@ -82,7 +82,7 @@ struct MANGOS_DLL_DECL boss_ionarAI : public ScriptedAI
 
     uint32 m_uiHealthAmountModifier;
 
-    void Reset()
+    void Reset() override
     {
         m_bIsSplitPhase = true;
         m_bIsDesperseCasting = false;
@@ -98,7 +98,7 @@ struct MANGOS_DLL_DECL boss_ionarAI : public ScriptedAI
             m_creature->SetVisibility(VISIBILITY_ON);
     }
 
-    void AttackedBy(Unit* pAttacker)
+    void AttackedBy(Unit* pAttacker) override
     {
         if (m_creature->getVictim())
             return;
@@ -109,7 +109,7 @@ struct MANGOS_DLL_DECL boss_ionarAI : public ScriptedAI
         AttackStart(pAttacker);
     }
 
-    void Aggro(Unit* who)
+    void Aggro(Unit* who) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -117,7 +117,7 @@ struct MANGOS_DLL_DECL boss_ionarAI : public ScriptedAI
             m_pInstance->SetData(TYPE_IONAR, IN_PROGRESS);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_IONAR, FAIL);
@@ -125,7 +125,7 @@ struct MANGOS_DLL_DECL boss_ionarAI : public ScriptedAI
         DespawnSpark();
     }
 
-    void AttackStart(Unit* pWho)
+    void AttackStart(Unit* pWho) override
     {
         if (m_creature->Attack(pWho, true))
         {
@@ -138,7 +138,7 @@ struct MANGOS_DLL_DECL boss_ionarAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* killer)
+    void JustDied(Unit* killer) override
     {
         DoScriptText(SAY_DEATH, m_creature);
         DespawnSpark();
@@ -147,7 +147,7 @@ struct MANGOS_DLL_DECL boss_ionarAI : public ScriptedAI
             m_pInstance->SetData(TYPE_IONAR, DONE);
     }
 
-    void KilledUnit(Unit* victim)
+    void KilledUnit(Unit* victim) override
     {
         switch (urand(0, 2))
         {
@@ -195,7 +195,7 @@ struct MANGOS_DLL_DECL boss_ionarAI : public ScriptedAI
         ++m_uiSparkAtHomeCount;
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (pSummoned->GetEntry() == NPC_SPARK_OF_IONAR)
         {
@@ -208,7 +208,7 @@ struct MANGOS_DLL_DECL boss_ionarAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -340,9 +340,9 @@ struct MANGOS_DLL_DECL mob_spark_of_ionarAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    void Reset() { }
+    void Reset() override { }
 
-    void MovementInform(uint32 uiType, uint32 uiPointId)
+    void MovementInform(uint32 uiType, uint32 uiPointId) override
     {
         if (uiType != POINT_MOTION_TYPE || !m_pInstance)
             return;

@@ -65,7 +65,7 @@ struct MANGOS_DLL_DECL boss_dalliahAI : public ScriptedAI
 
     bool m_bHasTaunted;
 
-    void Reset()
+    void Reset() override
     {
         m_uiGiftDoomsayerTimer  = urand(4000, 7000);
         m_uiHealTimer           = 0;
@@ -75,7 +75,7 @@ struct MANGOS_DLL_DECL boss_dalliahAI : public ScriptedAI
         m_bHasTaunted           = false;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -83,12 +83,12 @@ struct MANGOS_DLL_DECL boss_dalliahAI : public ScriptedAI
             m_pInstance->SetData(TYPE_DALLIAH, IN_PROGRESS);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         DoScriptText(urand(0, 1) ? SAY_KILL_1 : SAY_KILL_2, m_creature);
     }
 
-    void JustDied(Unit* pWho)
+    void JustDied(Unit* pWho) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -96,7 +96,7 @@ struct MANGOS_DLL_DECL boss_dalliahAI : public ScriptedAI
             m_pInstance->SetData(TYPE_DALLIAH, DONE);
     }
 
-    void EnterEvadeMode()
+    void EnterEvadeMode() override
     {
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
@@ -115,7 +115,7 @@ struct MANGOS_DLL_DECL boss_dalliahAI : public ScriptedAI
         Reset();
     }
 
-    void MovementInform(uint32 uiMoveType, uint32 uiPointId)
+    void MovementInform(uint32 uiMoveType, uint32 uiPointId) override
     {
         if (uiMoveType != POINT_MOTION_TYPE)
             return;
@@ -125,7 +125,7 @@ struct MANGOS_DLL_DECL boss_dalliahAI : public ScriptedAI
             m_creature->SetFacingTo(aDalliahStartPos[3]);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

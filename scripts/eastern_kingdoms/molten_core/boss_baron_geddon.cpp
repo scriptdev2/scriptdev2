@@ -49,7 +49,7 @@ struct MANGOS_DLL_DECL boss_baron_geddonAI : public ScriptedAI
     uint32 m_uiIgniteManaTimer;
     uint32 m_uiLivingBombTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_bIsArmageddon = false;
         m_uiInfernoTimer = 45000;
@@ -57,25 +57,25 @@ struct MANGOS_DLL_DECL boss_baron_geddonAI : public ScriptedAI
         m_uiLivingBombTimer = 35000;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_GEDDON, IN_PROGRESS);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_GEDDON, DONE);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_GEDDON, NOT_STARTED);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

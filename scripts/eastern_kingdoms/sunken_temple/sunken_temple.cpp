@@ -86,8 +86,8 @@ struct MANGOS_DLL_DECL npc_malfurionAI : public ScriptedAI
     uint32 m_uiSayTimer;
     uint32 m_uiSpeech;
 
-    void Reset() {}
-    void UpdateAI(const uint32 uiDiff)
+    void Reset() override {}
+    void UpdateAI(const uint32 uiDiff) override
     {
         // We are in Sunken Temple
         if (m_creature->GetMap()->IsDungeon())

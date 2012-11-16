@@ -104,7 +104,7 @@ struct MANGOS_DLL_DECL npc_a_special_surpriseAI : public ScriptedAI
     uint32 m_uiExecuteSpeech_Counter;
     ObjectGuid m_playerGuid;
 
-    void Reset()
+    void Reset() override
     {
         m_uiExecuteSpeech_Timer = 0;
         m_uiExecuteSpeech_Counter = 0;
@@ -160,7 +160,7 @@ struct MANGOS_DLL_DECL npc_a_special_surpriseAI : public ScriptedAI
         return false;
     }
 
-    void MoveInLineOfSight(Unit* pWho)
+    void MoveInLineOfSight(Unit* pWho) override
     {
         if (m_playerGuid || pWho->GetTypeId() != TYPEID_PLAYER || !pWho->IsWithinDist(m_creature, INTERACTION_DISTANCE))
             return;
@@ -169,7 +169,7 @@ struct MANGOS_DLL_DECL npc_a_special_surpriseAI : public ScriptedAI
             m_playerGuid = pWho->GetObjectGuid();
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (m_playerGuid && !m_creature->getVictim() && m_creature->isAlive())
         {
@@ -527,7 +527,7 @@ struct MANGOS_DLL_DECL npc_death_knight_initiateAI : public ScriptedAI
     uint32 m_uiDuelTimer;
     bool m_bIsDuelInProgress;
 
-    void Reset()
+    void Reset() override
     {
         if (m_creature->getFaction() != m_creature->GetCreatureInfo()->faction_A)
             m_creature->setFaction(m_creature->GetCreatureInfo()->faction_A);
@@ -539,7 +539,7 @@ struct MANGOS_DLL_DECL npc_death_knight_initiateAI : public ScriptedAI
         m_bIsDuelInProgress = false;
     }
 
-    void AttackedBy(Unit* pAttacker)
+    void AttackedBy(Unit* pAttacker) override
     {
         if (m_creature->getVictim())
             return;
@@ -550,7 +550,7 @@ struct MANGOS_DLL_DECL npc_death_knight_initiateAI : public ScriptedAI
         AttackStart(pAttacker);
     }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
     {
         if (!m_bIsDuelInProgress && pSpell->Id == SPELL_DUEL_TRIGGERED && pCaster->GetTypeId() == TYPEID_PLAYER)
         {
@@ -559,7 +559,7 @@ struct MANGOS_DLL_DECL npc_death_knight_initiateAI : public ScriptedAI
         }
     }
 
-    void DamageTaken(Unit* pDoneBy, uint32& uiDamage)
+    void DamageTaken(Unit* pDoneBy, uint32& uiDamage) override
     {
         if (m_bIsDuelInProgress && uiDamage > m_creature->GetHealth())
         {
@@ -573,7 +573,7 @@ struct MANGOS_DLL_DECL npc_death_knight_initiateAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
         {
@@ -675,7 +675,7 @@ struct MANGOS_DLL_DECL npc_koltira_deathweaverAI : public npc_escortAI
     uint32 m_uiWave_Timer;
     ObjectGuid m_valrothGuid;
 
-    void Reset()
+    void Reset() override
     {
         if (!HasEscortState(STATE_ESCORT_ESCORTING))
         {
@@ -685,7 +685,7 @@ struct MANGOS_DLL_DECL npc_koltira_deathweaverAI : public npc_escortAI
         }
     }
 
-    void WaypointReached(uint32 uiPointId)
+    void WaypointReached(uint32 uiPointId) override
     {
         switch (uiPointId)
         {
@@ -718,7 +718,7 @@ struct MANGOS_DLL_DECL npc_koltira_deathweaverAI : public npc_escortAI
         }
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (Player* pPlayer = GetPlayerForEscort())
             pSummoned->AI()->AttackStart(pPlayer);
@@ -733,7 +733,7 @@ struct MANGOS_DLL_DECL npc_koltira_deathweaverAI : public npc_escortAI
             m_creature->SummonCreature(NPC_CRIMSON_ACOLYTE, 1642.329f, -6045.818f, 127.583f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
     }
 
-    void UpdateEscortAI(const uint32 uiDiff)
+    void UpdateEscortAI(const uint32 uiDiff) override
     {
         if (HasEscortState(STATE_ESCORT_PAUSED))
         {
@@ -857,7 +857,7 @@ struct MANGOS_DLL_DECL npc_unworthy_initiate_anchorAI : public ScriptedAI
     ObjectGuid m_myInitiateGuid;
     ObjectGuid m_myPrisonGuid;
 
-    void Reset() {}
+    void Reset() override {}
 
     void NotifyMe(Unit* pSource, GameObject* pGo)
     {
@@ -910,7 +910,7 @@ struct MANGOS_DLL_DECL npc_unworthy_initiateAI : public ScriptedAI
     uint32 m_uiIcyTouch_Timer;
     uint32 m_uiPlagueStrike_Timer;
 
-    void Reset()
+    void Reset() override
     {
         if (m_creature->getFaction() != m_uiNormFaction)
             m_creature->setFaction(m_uiNormFaction);
@@ -924,7 +924,7 @@ struct MANGOS_DLL_DECL npc_unworthy_initiateAI : public ScriptedAI
         m_uiPlagueStrike_Timer = 5000;
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         SetAnchor();
 
@@ -935,7 +935,7 @@ struct MANGOS_DLL_DECL npc_unworthy_initiateAI : public ScriptedAI
         }
     }
 
-    void JustRespawned()
+    void JustRespawned() override
     {
         if (Creature* pAnchor = GetAnchor())
         {
@@ -976,7 +976,7 @@ struct MANGOS_DLL_DECL npc_unworthy_initiateAI : public ScriptedAI
         m_uiAnchorCheckTimer = 5000;
     }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
     {
         if (pSpell->Id == SPELL_CHAINED_PESANT_BREATH)
         {
@@ -990,7 +990,7 @@ struct MANGOS_DLL_DECL npc_unworthy_initiateAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (m_uiAnchorCheckTimer)
         {

@@ -60,7 +60,7 @@ struct MANGOS_DLL_DECL boss_loathebAI : public ScriptedAI
     uint32 m_uiBerserkTimer;
     uint8  m_uiNecroticAuraCount;                           // Used for emotes, 5min check
 
-    void Reset()
+    void Reset() override
     {
         m_uiDeathbloomTimer = 5000;
         m_uiNecroticAuraTimer = 12000;
@@ -70,25 +70,25 @@ struct MANGOS_DLL_DECL boss_loathebAI : public ScriptedAI
         m_uiNecroticAuraCount = 0;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_LOATHEB, IN_PROGRESS);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_LOATHEB, DONE);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_LOATHEB, NOT_STARTED);
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (pSummoned->GetEntry() != NPC_SPORE)
             return;
@@ -97,13 +97,13 @@ struct MANGOS_DLL_DECL boss_loathebAI : public ScriptedAI
             pSummoned->AddThreat(pTarget);
     }
 
-    void SummonedCreatureJustDied(Creature* pSummoned)
+    void SummonedCreatureJustDied(Creature* pSummoned) override
     {
         if (pSummoned->GetEntry() == NPC_SPORE && m_pInstance)
             m_pInstance->SetSpecialAchievementCriteria(TYPE_ACHIEV_SPORE_LOSER, false);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

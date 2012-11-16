@@ -135,7 +135,7 @@ struct MANGOS_DLL_DECL npc_air_force_botsAI : public ScriptedAI
     SpawnAssociation* m_pSpawnAssoc;
     ObjectGuid m_spawnedGuid;
 
-    void Reset() { }
+    void Reset() override { }
 
     Creature* SummonGuard()
     {
@@ -162,7 +162,7 @@ struct MANGOS_DLL_DECL npc_air_force_botsAI : public ScriptedAI
         return NULL;
     }
 
-    void MoveInLineOfSight(Unit* pWho)
+    void MoveInLineOfSight(Unit* pWho) override
     {
         if (!m_pSpawnAssoc)
             return;
@@ -268,7 +268,7 @@ struct MANGOS_DLL_DECL npc_chicken_cluckAI : public ScriptedAI
 
     uint32 m_uiResetFlagTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiResetFlagTimer = 120000;
 
@@ -276,7 +276,7 @@ struct MANGOS_DLL_DECL npc_chicken_cluckAI : public ScriptedAI
         m_creature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER);
     }
 
-    void ReceiveEmote(Player* pPlayer, uint32 uiEmote)
+    void ReceiveEmote(Player* pPlayer, uint32 uiEmote) override
     {
         if (uiEmote == TEXTEMOTE_CHICKEN)
         {
@@ -310,7 +310,7 @@ struct MANGOS_DLL_DECL npc_chicken_cluckAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         // Reset flags after a certain time has passed so that the next player has to start the 'event' again
         if (m_creature->HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER))
@@ -366,9 +366,9 @@ struct MANGOS_DLL_DECL npc_dancing_flamesAI : public ScriptedAI
 {
     npc_dancing_flamesAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
-    void Reset() {}
+    void Reset() override {}
 
-    void ReceiveEmote(Player* pPlayer, uint32 uiEmote)
+    void ReceiveEmote(Player* pPlayer, uint32 uiEmote) override
     {
         m_creature->SetFacingToObject(pPlayer);
 
@@ -486,7 +486,7 @@ struct MANGOS_DLL_DECL npc_doctorAI : public ScriptedAI
     GuidList Patients;
     std::vector<Location*> Coordinates;
 
-    void Reset()
+    void Reset() override
     {
         m_playerGuid.Clear();
 
@@ -506,7 +506,7 @@ struct MANGOS_DLL_DECL npc_doctorAI : public ScriptedAI
     void BeginEvent(Player* pPlayer);
     void PatientDied(Location* Point);
     void PatientSaved(Creature* soldier, Player* pPlayer, Location* Point);
-    void UpdateAI(const uint32 diff);
+    void UpdateAI(const uint32 diff) override;
 };
 
 /*#####
@@ -520,7 +520,7 @@ struct MANGOS_DLL_DECL npc_injured_patientAI : public ScriptedAI
     ObjectGuid m_doctorGuid;
     Location* Coord;
 
-    void Reset()
+    void Reset() override
     {
         m_doctorGuid.Clear();
         Coord = NULL;
@@ -552,7 +552,7 @@ struct MANGOS_DLL_DECL npc_injured_patientAI : public ScriptedAI
         }
     }
 
-    void SpellHit(Unit* caster, const SpellEntry* spell)
+    void SpellHit(Unit* caster, const SpellEntry* spell) override
     {
         if (caster->GetTypeId() == TYPEID_PLAYER && m_creature->isAlive() && spell->Id == 20804)
         {
@@ -601,7 +601,7 @@ struct MANGOS_DLL_DECL npc_injured_patientAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 diff) override
     {
         // lower HP on every world tick makes it a useful counter, not officlone though
         uint32 uiHPLose = uint32(0.05f * diff);
@@ -840,7 +840,7 @@ struct MANGOS_DLL_DECL npc_garments_of_questsAI : public npc_escortAI
 
     uint32 m_uiRunAwayTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_playerGuid.Clear();
 
@@ -854,7 +854,7 @@ struct MANGOS_DLL_DECL npc_garments_of_questsAI : public npc_escortAI
         m_creature->SetHealth(int(m_creature->GetMaxHealth() * 0.7));
     }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
     {
         if (pSpell->Id == SPELL_LESSER_HEAL_R2 || pSpell->Id == SPELL_FORTITUDE_R1)
         {
@@ -964,9 +964,9 @@ struct MANGOS_DLL_DECL npc_garments_of_questsAI : public npc_escortAI
         }
     }
 
-    void WaypointReached(uint32 uiPointId) {}
+    void WaypointReached(uint32 uiPointId) override {}
 
-    void UpdateEscortAI(const uint32 uiDiff)
+    void UpdateEscortAI(const uint32 uiDiff) override
     {
         if (m_bCanRun && !m_creature->isInCombat())
         {
@@ -1016,12 +1016,12 @@ struct MANGOS_DLL_DECL npc_guardianAI : public ScriptedAI
 {
     npc_guardianAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
-    void Reset()
+    void Reset() override
     {
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 diff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -1508,7 +1508,7 @@ struct MANGOS_DLL_DECL npc_spring_rabbitAI : public ScriptedPetAI
     uint32 m_uiStepTimer;
     float m_fMoveAngle;
 
-    void Reset()
+    void Reset() override
     {
         m_uiStep = 0;
         m_uiStepTimer = 0;
@@ -1546,7 +1546,7 @@ struct MANGOS_DLL_DECL npc_spring_rabbitAI : public ScriptedPetAI
     }
 
     // Event Starts when two rabbits see each other
-    void MoveInLineOfSight(Unit* pWho)
+    void MoveInLineOfSight(Unit* pWho) override
     {
         if (m_creature->getVictim())
             return;
@@ -1579,7 +1579,7 @@ struct MANGOS_DLL_DECL npc_spring_rabbitAI : public ScriptedPetAI
             return false;
     }
 
-    void MovementInform(uint32 uiMovementType, uint32 uiData)
+    void MovementInform(uint32 uiMovementType, uint32 uiData) override
     {
         if (uiMovementType != POINT_MOTION_TYPE || uiData != 1)
             return;
@@ -1604,7 +1604,7 @@ struct MANGOS_DLL_DECL npc_spring_rabbitAI : public ScriptedPetAI
     }
 
     // Overwrite ScriptedPetAI::UpdateAI, to prevent re-following while the event is active!
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_partnerGuid || !m_uiStepTimer)
         {
@@ -1686,7 +1686,7 @@ struct MANGOS_DLL_DECL npc_redemption_targetAI : public ScriptedAI
 
     ObjectGuid m_playerGuid;
 
-    void Reset()
+    void Reset() override
     {
         m_uiEvadeTimer = 0;
         m_uiHealTimer  = 0;
@@ -1707,7 +1707,7 @@ struct MANGOS_DLL_DECL npc_redemption_targetAI : public ScriptedAI
         m_uiHealTimer = 2000;
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (m_uiHealTimer)
         {

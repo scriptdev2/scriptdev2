@@ -49,7 +49,7 @@ struct MANGOS_DLL_DECL npc_kalecgosAI : public ScriptedAI
 
     uint32 m_uiTransformTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiTransformTimer = 0;
 
@@ -57,7 +57,7 @@ struct MANGOS_DLL_DECL npc_kalecgosAI : public ScriptedAI
         m_creature->GetMotionMaster()->MovePoint(1, afKaelLandPoint[0], afKaelLandPoint[1], afKaelLandPoint[2]);
     }
 
-    void MovementInform(uint32 uiType, uint32 uiPointId)
+    void MovementInform(uint32 uiType, uint32 uiPointId) override
     {
         if (uiType != POINT_MOTION_TYPE)
             return;
@@ -70,7 +70,7 @@ struct MANGOS_DLL_DECL npc_kalecgosAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (m_uiTransformTimer)
         {

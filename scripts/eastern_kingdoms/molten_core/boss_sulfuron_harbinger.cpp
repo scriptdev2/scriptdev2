@@ -54,7 +54,7 @@ struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
     uint32 m_uiKnockdownTimer;
     uint32 m_uiFlamespearTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiDarkstrikeTimer = 10000;
         m_uiDemoralizingShoutTimer = 15000;
@@ -63,25 +63,25 @@ struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
         m_uiFlamespearTimer = 2000;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_SULFURON, IN_PROGRESS);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_SULFURON, DONE);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_SULFURON, FAIL);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -164,14 +164,14 @@ struct MANGOS_DLL_DECL mob_flamewaker_priestAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    void Reset()
+    void Reset() override
     {
         m_uiHealTimer = urand(15000, 30000);
         m_uiShadowWordPainTimer = 2000;
         m_uiImmolateTimer = 8000;
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

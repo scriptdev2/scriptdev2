@@ -38,9 +38,9 @@ struct MANGOS_DLL_DECL mobs_bladespire_ogreAI : public ScriptedAI
 {
     mobs_bladespire_ogreAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
-    void Reset() { }
+    void Reset() override { }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -94,7 +94,7 @@ struct MANGOS_DLL_DECL mobs_nether_drakeAI : public ScriptedAI
     uint32 m_uiManaBurnTimer;
     uint32 m_uiIntangiblePresenceTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_bIsNihil                  = false;
         m_uiNihilSpeechTimer        = 3000;
@@ -105,7 +105,7 @@ struct MANGOS_DLL_DECL mobs_nether_drakeAI : public ScriptedAI
         m_uiIntangiblePresenceTimer = 15000;
     }
 
-    void MoveInLineOfSight(Unit* pWho)
+    void MoveInLineOfSight(Unit* pWho) override
     {
         if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE))
             return;
@@ -114,7 +114,7 @@ struct MANGOS_DLL_DECL mobs_nether_drakeAI : public ScriptedAI
     }
 
     // in case creature was not summoned (not expected)
-    void MovementInform(uint32 uiMoveType, uint32 uiPointId)
+    void MovementInform(uint32 uiMoveType, uint32 uiPointId) override
     {
         if (uiMoveType != POINT_MOTION_TYPE)
             return;
@@ -123,7 +123,7 @@ struct MANGOS_DLL_DECL mobs_nether_drakeAI : public ScriptedAI
             m_creature->ForcedDespawn();
     }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
     {
         if (pSpell->Id == SPELL_T_PHASE_MODULATOR && pCaster->GetTypeId() == TYPEID_PLAYER)
         {
@@ -157,7 +157,7 @@ struct MANGOS_DLL_DECL mobs_nether_drakeAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (m_bIsNihil)
         {
@@ -249,9 +249,9 @@ struct MANGOS_DLL_DECL npc_daranelleAI : public ScriptedAI
 {
     npc_daranelleAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
-    void Reset() { }
+    void Reset() override { }
 
-    void MoveInLineOfSight(Unit* pWho)
+    void MoveInLineOfSight(Unit* pWho) override
     {
         if (pWho->GetTypeId() == TYPEID_PLAYER)
         {

@@ -49,7 +49,7 @@ struct MANGOS_DLL_DECL boss_shazzrahAI : public ScriptedAI
     uint32 m_uiCounterspellTimer;
     uint32 m_uiBlinkTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiArcaneExplosionTimer = 6000;
         m_uiShazzrahCurseTimer = 10000;
@@ -58,25 +58,25 @@ struct MANGOS_DLL_DECL boss_shazzrahAI : public ScriptedAI
         m_uiBlinkTimer = 30000;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_SHAZZRAH, IN_PROGRESS);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_SHAZZRAH, DONE);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_SHAZZRAH, NOT_STARTED);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

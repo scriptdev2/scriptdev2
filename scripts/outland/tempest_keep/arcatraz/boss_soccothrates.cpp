@@ -85,7 +85,7 @@ struct MANGOS_DLL_DECL boss_soccothratesAI : public ScriptedAI, private Dialogue
 
     bool m_bHasYelledIntro;
 
-    void Reset()
+    void Reset() override
     {
         m_uiFelfireShockTimer   = urand(10000, 13000);
         m_uiKnockAwayTimer      = urand(22000, 25000);
@@ -95,7 +95,7 @@ struct MANGOS_DLL_DECL boss_soccothratesAI : public ScriptedAI, private Dialogue
         DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_IMMOLATION : SPELL_IMMOLATION_H);
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -103,7 +103,7 @@ struct MANGOS_DLL_DECL boss_soccothratesAI : public ScriptedAI, private Dialogue
             m_pInstance->SetData(TYPE_SOCCOTHRATES, IN_PROGRESS);
     }
 
-    void MoveInLineOfSight(Unit* pWho)
+    void MoveInLineOfSight(Unit* pWho) override
     {
         if (!m_bHasYelledIntro && pWho->GetTypeId() == TYPEID_PLAYER && m_creature->IsWithinDistInMap(pWho, 75.0f) && m_creature->IsWithinLOSInMap(pWho))
         {
@@ -114,12 +114,12 @@ struct MANGOS_DLL_DECL boss_soccothratesAI : public ScriptedAI, private Dialogue
         ScriptedAI::MoveInLineOfSight(pWho);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         DoScriptText(SAY_KILL, m_creature);
     }
 
-    void JustDied(Unit* pWho)
+    void JustDied(Unit* pWho) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -127,7 +127,7 @@ struct MANGOS_DLL_DECL boss_soccothratesAI : public ScriptedAI, private Dialogue
             m_pInstance->SetData(TYPE_SOCCOTHRATES, DONE);
     }
 
-    void EnterEvadeMode()
+    void EnterEvadeMode() override
     {
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
@@ -146,7 +146,7 @@ struct MANGOS_DLL_DECL boss_soccothratesAI : public ScriptedAI, private Dialogue
         Reset();
     }
 
-    void MovementInform(uint32 uiMoveType, uint32 uiPointId)
+    void MovementInform(uint32 uiMoveType, uint32 uiPointId) override
     {
         if (uiMoveType != POINT_MOTION_TYPE)
             return;
@@ -156,7 +156,7 @@ struct MANGOS_DLL_DECL boss_soccothratesAI : public ScriptedAI, private Dialogue
             m_creature->SetFacingTo(aSoccotharesStartPos[3]);
     }
 
-    void JustDidDialogueStep(int32 iEntry)
+    void JustDidDialogueStep(int32 iEntry) override
     {
         // Move each of them to their places
         if (iEntry == SAY_SOCCOTHRATES_INTRO_7)
@@ -171,7 +171,7 @@ struct MANGOS_DLL_DECL boss_soccothratesAI : public ScriptedAI, private Dialogue
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         DialogueUpdate(uiDiff);
 

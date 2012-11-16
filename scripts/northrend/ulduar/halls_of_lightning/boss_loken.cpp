@@ -75,7 +75,7 @@ struct MANGOS_DLL_DECL boss_lokenAI : public ScriptedAI
 
     uint32 m_uiHealthAmountModifier;
 
-    void Reset()
+    void Reset() override
     {
         m_bIsAura = false;
 
@@ -90,7 +90,7 @@ struct MANGOS_DLL_DECL boss_lokenAI : public ScriptedAI
             m_pInstance->SetData(TYPE_LOKEN, NOT_STARTED);
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -98,7 +98,7 @@ struct MANGOS_DLL_DECL boss_lokenAI : public ScriptedAI
             m_pInstance->SetData(TYPE_LOKEN, IN_PROGRESS);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -106,7 +106,7 @@ struct MANGOS_DLL_DECL boss_lokenAI : public ScriptedAI
             m_pInstance->SetData(TYPE_LOKEN, DONE);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         switch (urand(0, 2))
         {
@@ -116,7 +116,7 @@ struct MANGOS_DLL_DECL boss_lokenAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         // Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())

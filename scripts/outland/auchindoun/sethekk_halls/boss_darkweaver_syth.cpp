@@ -74,7 +74,7 @@ struct MANGOS_DLL_DECL boss_darkweaver_sythAI : public ScriptedAI
 
     float m_fHpCheck;
 
-    void Reset()
+    void Reset() override
     {
         m_uiFlameshockTimer     = 18000;
         m_uiArcaneshockTimer    = 19000;
@@ -85,7 +85,7 @@ struct MANGOS_DLL_DECL boss_darkweaver_sythAI : public ScriptedAI
         m_fHpCheck              = 90.0f;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         switch (urand(0, 2))
         {
@@ -95,12 +95,12 @@ struct MANGOS_DLL_DECL boss_darkweaver_sythAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         if (urand(0, 1))
             return;
@@ -108,7 +108,7 @@ struct MANGOS_DLL_DECL boss_darkweaver_sythAI : public ScriptedAI
         DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         switch (pSummoned->GetEntry())
         {
@@ -144,7 +144,7 @@ struct MANGOS_DLL_DECL boss_darkweaver_sythAI : public ScriptedAI
         DoCastSpellIfCan(m_creature, SPELL_SUMMON_SYTH_SHADOW, CAST_TRIGGERED); // right
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

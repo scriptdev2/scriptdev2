@@ -40,19 +40,19 @@ class MANGOS_DLL_DECL instance_eye_of_eternity : public ScriptedInstance, privat
         instance_eye_of_eternity(Map* pMap);
         ~instance_eye_of_eternity() {}
 
-        void Initialize();
+        void Initialize() override;
 
-        bool IsEncounterInProgress() const;
+        bool IsEncounterInProgress() const override;
 
-        void OnCreatureCreate(Creature* pCreature);
-        void OnObjectCreate(GameObject* pGo);
+        void OnCreatureCreate(Creature* pCreature) override;
+        void OnObjectCreate(GameObject* pGo) override;
 
-        void SetData(uint32 uiType, uint32 uiData);
+        void SetData(uint32 uiType, uint32 uiData) override;
 
         void Update(uint32 uiDiff) { DialogueUpdate(uiDiff); }
 
     protected:
-        void JustDidDialogueStep(int32 iEntry);
+        void JustDidDialogueStep(int32 iEntry) override;
 
         uint32 m_uiEncounter;
 };

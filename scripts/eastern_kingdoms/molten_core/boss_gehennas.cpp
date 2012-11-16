@@ -45,32 +45,32 @@ struct MANGOS_DLL_DECL boss_gehennasAI : public ScriptedAI
     uint32 m_uiRainOfFireTimer;
     uint32 m_uiGehennasCurseTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiShadowBoltTimer = 6000;
         m_uiRainOfFireTimer = 10000;
         m_uiGehennasCurseTimer = 12000;
     }
 
-    void Aggro(Unit* pwho)
+    void Aggro(Unit* pwho) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_GEHENNAS, IN_PROGRESS);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_GEHENNAS, DONE);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_GEHENNAS, FAIL);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

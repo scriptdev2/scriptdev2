@@ -68,7 +68,7 @@ struct MANGOS_DLL_DECL mob_anubisath_guardianAI : public ScriptedAI
 
     bool m_bIsEnraged;
 
-    void Reset()
+    void Reset() override
     {
         m_uiSpell1 = urand(0, 1) ? SPELL_METEOR : SPELL_PLAGUE;
         m_uiSpell2 = urand(0, 1) ? SPELL_SHADOW_STORM : SPELL_THUNDER_CLAP;
@@ -83,24 +83,24 @@ struct MANGOS_DLL_DECL mob_anubisath_guardianAI : public ScriptedAI
         m_bIsEnraged    = false;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         // spell reflection
         DoCastSpellIfCan(m_creature, m_uiSpell3);
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         pSummoned->AI()->AttackStart(m_creature->getVictim());
         ++m_uiSummonCount;
     }
 
-    void SummonedCreatureDespawn(Creature* pDespawned)
+    void SummonedCreatureDespawn(Creature* pDespawned) override
     {
         --m_uiSummonCount;
     }
 
-    void DamageTaken(Unit* pDoneBy, uint32& uiDamage)
+    void DamageTaken(Unit* pDoneBy, uint32& uiDamage) override
     {
         // when we reach 10% of HP explode or enrage
         if (!m_bIsEnraged && m_creature->GetHealthPercent() < 10.0f)
@@ -116,7 +116,7 @@ struct MANGOS_DLL_DECL mob_anubisath_guardianAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

@@ -43,7 +43,7 @@ struct MANGOS_DLL_DECL boss_general_angerforgeAI : public ScriptedAI
     uint32 m_uiAddsTimer;
     bool m_bSummonedMedics;
 
-    void Reset()
+    void Reset() override
     {
         m_uiMightyBlowTimer = 8000;
         m_uiHamStringTimer = 12000;
@@ -59,13 +59,13 @@ struct MANGOS_DLL_DECL boss_general_angerforgeAI : public ScriptedAI
         m_creature->SummonCreature(uiEntry, fX, fY, fZ, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 60000);
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
             pSummoned->AI()->AttackStart(pTarget);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         // Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())

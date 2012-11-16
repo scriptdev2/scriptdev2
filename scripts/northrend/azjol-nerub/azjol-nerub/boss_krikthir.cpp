@@ -72,7 +72,7 @@ struct MANGOS_DLL_DECL boss_krikthirAI : public ScriptedAI
     uint32 m_uiCurseTimer;
     uint32 m_uiMindFlayTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiSwarmTimer    = 15000;
         m_uiCurseTimer    = 20000;
@@ -82,12 +82,12 @@ struct MANGOS_DLL_DECL boss_krikthirAI : public ScriptedAI
         m_bFrenzy         = false;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         switch (urand(0, 2))
         {
@@ -97,7 +97,7 @@ struct MANGOS_DLL_DECL boss_krikthirAI : public ScriptedAI
         }
     }
 
-    void MoveInLineOfSight(Unit* pWho)
+    void MoveInLineOfSight(Unit* pWho) override
     {
         if (!m_bIntroSpeech && m_creature->IsWithinDistInMap(pWho, DEFAULT_VISIBILITY_INSTANCE))
         {
@@ -111,7 +111,7 @@ struct MANGOS_DLL_DECL boss_krikthirAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -119,14 +119,14 @@ struct MANGOS_DLL_DECL boss_krikthirAI : public ScriptedAI
             m_pInstance->SetData(TYPE_KRIKTHIR, DONE);
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         uint32 uiEntry = pSummoned->GetEntry();
         if (uiEntry == NPC_SKITTERING_SWARMER || uiEntry == NPC_SKITTERING_INFECTOR)
             pSummoned->AI()->AttackStart(m_creature->getVictim());
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

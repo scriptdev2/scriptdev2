@@ -85,7 +85,7 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
         void CorpseRemoved(uint32& uiRespawnDelay) override {}
 
         // Called when a summoned creature is killed
-        void SummonedCreatureJustDied(Creature* pSummoned) {}
+        void SummonedCreatureJustDied(Creature* pSummoned) override {}
 
         // Called at creature killing another unit
         void KilledUnit(Unit* pVictim) override {}
@@ -227,10 +227,10 @@ struct MANGOS_DLL_DECL Scripted_NoMovementAI : public ScriptedAI
 {
     Scripted_NoMovementAI(Creature* pCreature) : ScriptedAI(pCreature) {}
 
-    void GetAIInformation(ChatHandler& reader);
+    void GetAIInformation(ChatHandler& reader) override;
 
     // Called at each attack of m_creature by any victim
-    void AttackStart(Unit* pWho);
+    void AttackStart(Unit* pWho) override;
 };
 
 #endif

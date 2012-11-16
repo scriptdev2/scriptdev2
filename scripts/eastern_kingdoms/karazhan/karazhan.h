@@ -109,24 +109,24 @@ class MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
         instance_karazhan(Map* pMap);
         ~instance_karazhan() {}
 
-        void Initialize();
-        bool IsEncounterInProgress() const;
+        void Initialize() override;
+        bool IsEncounterInProgress() const override;
 
-        void OnPlayerEnter(Player* pPlayer);
-        void OnCreatureCreate(Creature* pCreature);
-        void OnObjectCreate(GameObject* pGo);
+        void OnPlayerEnter(Player* pPlayer) override;
+        void OnCreatureCreate(Creature* pCreature) override;
+        void OnObjectCreate(GameObject* pGo) override;
 
-        void OnCreatureDeath(Creature* pCreature);
+        void OnCreatureDeath(Creature* pCreature) override;
 
-        void SetData(uint32 uiType, uint32 uiData);
-        uint32 GetData(uint32 uiType);
+        void SetData(uint32 uiType, uint32 uiData) override;
+        uint32 GetData(uint32 uiType) override;
 
         void DoPrepareOperaStage(Creature* pOrganizer);
 
         void GetNightbaneTriggers(GuidList& lList, bool bGround) { lList = bGround ? m_lNightbaneGroundTriggers : m_lNightbaneAirTriggers; }
 
-        void Load(const char* chrIn);
-        const char* Save() { return m_strInstData.c_str(); }
+        void Load(const char* chrIn) override;
+        const char* Save() override { return m_strInstData.c_str(); }
 
     private:
         uint32 m_auiEncounter[MAX_ENCOUNTER];

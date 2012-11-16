@@ -74,7 +74,7 @@ struct MANGOS_DLL_DECL boss_forgemaster_garfrostAI : public ScriptedAI
     uint32 m_uiChillingWaveTimer;
     uint32 m_uiDeepFreezeTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiThrowSaroniteTimer = 13000;
         m_uiChillingWaveTimer = 10000;
@@ -83,23 +83,23 @@ struct MANGOS_DLL_DECL boss_forgemaster_garfrostAI : public ScriptedAI
         m_uiPhase = PHASE_NO_ENCHANTMENT;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature, pWho);
         DoCastSpellIfCan(m_creature, SPELL_PERMAFROST);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature, pKiller);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         DoScriptText(SAY_SLAY_1, m_creature);
     }
 
-    void MovementInform(uint32 uiMotionType, uint32 uiPointId)
+    void MovementInform(uint32 uiMotionType, uint32 uiPointId) override
     {
         // TODO Change to jump movement type when proper implemented
         if (uiMotionType != POINT_MOTION_TYPE)
@@ -123,7 +123,7 @@ struct MANGOS_DLL_DECL boss_forgemaster_garfrostAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

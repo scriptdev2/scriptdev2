@@ -99,7 +99,7 @@ struct MANGOS_DLL_DECL boss_gothikAI : public ScriptedAI
     uint32 m_uiControlZoneTimer;
     uint32 m_uiSpeechTimer;
 
-    void Reset()
+    void Reset() override
     {
         // Remove immunity
         m_creature->ApplySpellImmune(0, IMMUNITY_DAMAGE, SPELL_SCHOOL_MASK_ALL, false);
@@ -130,7 +130,7 @@ struct MANGOS_DLL_DECL boss_gothikAI : public ScriptedAI
         m_lRiderSummonPosGuids.clear();
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         if (!m_pInstance)
             return;
@@ -177,13 +177,13 @@ struct MANGOS_DLL_DECL boss_gothikAI : public ScriptedAI
         return false;
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         if (pVictim->GetTypeId() == TYPEID_PLAYER)
             DoScriptText(SAY_KILL, m_creature);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -191,7 +191,7 @@ struct MANGOS_DLL_DECL boss_gothikAI : public ScriptedAI
             m_pInstance->SetData(TYPE_GOTHIK, DONE);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_GOTHIK, FAIL);
@@ -262,14 +262,14 @@ struct MANGOS_DLL_DECL boss_gothikAI : public ScriptedAI
         }
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         m_lSummonedAddGuids.push_back(pSummoned->GetObjectGuid());
         if (!IsCentralDoorClosed())
             pSummoned->SetInCombatWithZone();
     }
 
-    void SummonedCreatureJustDied(Creature* pSummoned)
+    void SummonedCreatureJustDied(Creature* pSummoned) override
     {
         m_lSummonedAddGuids.remove(pSummoned->GetObjectGuid());
 
@@ -290,7 +290,7 @@ struct MANGOS_DLL_DECL boss_gothikAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

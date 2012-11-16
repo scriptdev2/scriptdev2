@@ -59,19 +59,19 @@ struct MANGOS_DLL_DECL example_escortAI : public npc_escortAI
     uint32 m_uiChatTimer;
 
     // Is called after each combat, so usally only reset combat-stuff here
-    void Reset()
+    void Reset() override
     {
         m_uiDeathCoilTimer = 4000;
         m_uiChatTimer = 4000;
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         pSummoned->AI()->AttackStart(m_creature);
     }
 
     // Pure Virtual Functions (Have to be implemented)
-    void WaypointReached(uint32 uiWP)
+    void WaypointReached(uint32 uiWP) override
     {
         switch (uiWP)
         {
@@ -94,7 +94,7 @@ struct MANGOS_DLL_DECL example_escortAI : public npc_escortAI
         }
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         if (HasEscortState(STATE_ESCORT_ESCORTING))
         {
@@ -106,7 +106,7 @@ struct MANGOS_DLL_DECL example_escortAI : public npc_escortAI
     }
 
     // Only overwrite if there is something special
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         if (HasEscortState(STATE_ESCORT_ESCORTING))
         {
@@ -129,7 +129,7 @@ struct MANGOS_DLL_DECL example_escortAI : public npc_escortAI
         npc_escortAI::JustDied(pKiller);
     }
 
-    void UpdateEscortAI(const uint32 uiDiff)
+    void UpdateEscortAI(const uint32 uiDiff) override
     {
         // Combat check
         if (m_creature->SelectHostileTarget() && m_creature->getVictim())

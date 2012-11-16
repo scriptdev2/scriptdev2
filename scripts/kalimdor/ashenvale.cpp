@@ -94,7 +94,7 @@ struct MANGOS_DLL_DECL npc_muglashAI : public npc_escortAI
     uint32 m_uiWaveId;
     uint32 m_uiEventTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiEventTimer = 10000;
 
@@ -105,7 +105,7 @@ struct MANGOS_DLL_DECL npc_muglashAI : public npc_escortAI
         }
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         if (HasEscortState(STATE_ESCORT_PAUSED))
         {
@@ -117,7 +117,7 @@ struct MANGOS_DLL_DECL npc_muglashAI : public npc_escortAI
         }
     }
 
-    void WaypointReached(uint32 uiPointId)
+    void WaypointReached(uint32 uiPointId) override
     {
         switch (uiPointId)
         {
@@ -175,12 +175,12 @@ struct MANGOS_DLL_DECL npc_muglashAI : public npc_escortAI
         }
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         pSummoned->AI()->AttackStart(m_creature);
     }
 
-    void UpdateEscortAI(const uint32 uiDiff)
+    void UpdateEscortAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
         {
@@ -256,9 +256,9 @@ struct MANGOS_DLL_DECL npc_ruul_snowhoofAI : public npc_escortAI
 {
     npc_ruul_snowhoofAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
 
-    void Reset() {}
+    void Reset() override {}
 
-    void WaypointReached(uint32 uiPointId)
+    void WaypointReached(uint32 uiPointId) override
     {
         switch (uiPointId)
         {
@@ -279,7 +279,7 @@ struct MANGOS_DLL_DECL npc_ruul_snowhoofAI : public npc_escortAI
         }
     }
 
-    void JustSummoned(Creature* summoned)
+    void JustSummoned(Creature* summoned) override
     {
         summoned->AI()->AttackStart(m_creature);
     }
@@ -333,13 +333,13 @@ struct MANGOS_DLL_DECL npc_torekAI : public npc_escortAI
     uint32 m_uiRend_Timer;
     uint32 m_uiThunderclap_Timer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiRend_Timer = 5000;
         m_uiThunderclap_Timer = 8000;
     }
 
-    void WaypointReached(uint32 uiPointId)
+    void WaypointReached(uint32 uiPointId) override
     {
         Player* pPlayer = GetPlayerForEscort();
 
@@ -370,12 +370,12 @@ struct MANGOS_DLL_DECL npc_torekAI : public npc_escortAI
         }
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         pSummoned->AI()->AttackStart(m_creature);
     }
 
-    void UpdateEscortAI(const uint32 uiDiff)
+    void UpdateEscortAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -476,7 +476,7 @@ struct MANGOS_DLL_DECL npc_feero_ironhandAI : public npc_escortAI
     uint8 m_uiCreaturesCount;
     bool m_bIsAttacked;
 
-    void Reset()
+    void Reset() override
     {
         if (!HasEscortState(STATE_ESCORT_ESCORTING))
         {
@@ -485,7 +485,7 @@ struct MANGOS_DLL_DECL npc_feero_ironhandAI : public npc_escortAI
         }
     }
 
-    void WaypointReached(uint32 uiPointId)
+    void WaypointReached(uint32 uiPointId) override
     {
         switch (uiPointId)
         {
@@ -516,7 +516,7 @@ struct MANGOS_DLL_DECL npc_feero_ironhandAI : public npc_escortAI
         }
     }
 
-    void AttackedBy(Unit* pWho)
+    void AttackedBy(Unit* pWho) override
     {
         // Yell only at the first attack
         if (!m_bIsAttacked)
@@ -538,7 +538,7 @@ struct MANGOS_DLL_DECL npc_feero_ironhandAI : public npc_escortAI
         m_creature->SummonCreature(uiEntry, fX, fY, fZ, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 20000);
     }
 
-    void SummonedCreatureJustDied(Creature* pSummoned)
+    void SummonedCreatureJustDied(Creature* pSummoned) override
     {
         --m_uiCreaturesCount;
 
@@ -561,7 +561,7 @@ struct MANGOS_DLL_DECL npc_feero_ironhandAI : public npc_escortAI
         }
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (pSummoned->GetEntry() == NPC_FORSAKEN_SCOUT)
         {

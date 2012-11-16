@@ -263,7 +263,7 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI, private
     GuidList m_lSkarlocAddsGuids;
     GuidList m_lTarrenMillSoldiersGuids;
 
-    void Reset()
+    void Reset() override
     {
         m_bIsLowHp           = false;
         m_uiStrikeTimer      = urand(3000, 7000);
@@ -287,7 +287,7 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI, private
         }
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         switch (urand(0, 3))
         {
@@ -304,7 +304,7 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI, private
         }
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         switch (urand(0, 2))
         {
@@ -314,7 +314,7 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI, private
         }
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         // fail, and relocation handled in instance script
         if (m_pInstance)
@@ -336,7 +336,7 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI, private
         }
     }
 
-    void CorpseRemoved(uint32& uiRespawnDelay)
+    void CorpseRemoved(uint32& uiRespawnDelay) override
     {
         uiRespawnDelay = 0;
 
@@ -345,7 +345,7 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI, private
             uiRespawnDelay = 12 * HOUR;
     }
 
-    void JustRespawned()
+    void JustRespawned() override
     {
         npc_escortAI::JustRespawned();
 
@@ -418,7 +418,7 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI, private
         }
     }
 
-    void EnterEvadeMode()
+    void EnterEvadeMode() override
     {
         if (HasEscortState(STATE_ESCORT_ESCORTING))
         {
@@ -433,7 +433,7 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI, private
         npc_escortAI::EnterEvadeMode();
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         switch (pSummoned->GetEntry())
         {
@@ -527,7 +527,7 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI, private
         }
     }
 
-    void SummonedCreatureJustDied(Creature* pSummoned)
+    void SummonedCreatureJustDied(Creature* pSummoned) override
     {
         switch (pSummoned->GetEntry())
         {
@@ -590,7 +590,7 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI, private
         }
     }
 
-    void SummonedMovementInform(Creature* pSummoned, uint32 uiType, uint32 uiPointId)
+    void SummonedMovementInform(Creature* pSummoned, uint32 uiType, uint32 uiPointId) override
     {
         if (uiType != POINT_MOTION_TYPE)
             return;
@@ -640,7 +640,7 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI, private
         }
     }
 
-    void JustDidDialogueStep(int32 iEntry)
+    void JustDidDialogueStep(int32 iEntry) override
     {
         if (!m_pInstance)
             return;
@@ -690,7 +690,7 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI, private
         }
     }
 
-    void WaypointReached(uint32 uiPoint)
+    void WaypointReached(uint32 uiPoint) override
     {
         if (!m_pInstance)
             return;
@@ -961,7 +961,7 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI, private
         }
     }
 
-    void UpdateEscortAI(const uint32 uiDiff)
+    void UpdateEscortAI(const uint32 uiDiff) override
     {
         DialogueUpdate(uiDiff);
 
@@ -1171,12 +1171,12 @@ struct MANGOS_DLL_DECL npc_tarethaAI : public npc_escortAI, private DialogueHelp
 
     bool m_bHasStartedEpilogue;
 
-    void Reset()
+    void Reset() override
     {
         m_bHasStartedEpilogue = false;
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         // Remove flags from the npc - the quest will be handled by the entrance version
         if (pSummoned->GetEntry() == NPC_EROZION)
@@ -1187,7 +1187,7 @@ struct MANGOS_DLL_DECL npc_tarethaAI : public npc_escortAI, private DialogueHelp
         }
     }
 
-    void WaypointReached(uint32 uiPoint)
+    void WaypointReached(uint32 uiPoint) override
     {
         if (uiPoint == 7)
         {
@@ -1205,7 +1205,7 @@ struct MANGOS_DLL_DECL npc_tarethaAI : public npc_escortAI, private DialogueHelp
         }
     }
 
-    void JustDidDialogueStep(int32 iEntry)
+    void JustDidDialogueStep(int32 iEntry) override
     {
         if (!m_pInstance)
             return;
@@ -1247,7 +1247,7 @@ struct MANGOS_DLL_DECL npc_tarethaAI : public npc_escortAI, private DialogueHelp
         }
     }
 
-    void UpdateEscortAI(const uint32 uiDiff)
+    void UpdateEscortAI(const uint32 uiDiff) override
     {
         DialogueUpdate(uiDiff);
 

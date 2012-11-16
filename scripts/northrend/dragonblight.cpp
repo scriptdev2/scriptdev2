@@ -73,14 +73,14 @@ struct MANGOS_DLL_DECL npc_destructive_wardAI : public Scripted_NoMovementAI
     bool m_bFirst;
     bool m_bCanPulse;
 
-    void Reset() { }
+    void Reset() override { }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         pSummoned->AI()->AttackStart(m_creature);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (m_bCanPulse)
         {

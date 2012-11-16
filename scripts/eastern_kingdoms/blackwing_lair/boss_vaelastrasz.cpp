@@ -85,7 +85,7 @@ struct MANGOS_DLL_DECL boss_vaelastraszAI : public ScriptedAI
     uint32 m_uiTailSweepTimer;
     bool m_bHasYelled;
 
-    void Reset()
+    void Reset() override
     {
         m_playerGuid.Clear();
 
@@ -129,7 +129,7 @@ struct MANGOS_DLL_DECL boss_vaelastraszAI : public ScriptedAI
         m_uiSpeechNum = 0;
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         if (urand(0, 4))
             return;
@@ -137,7 +137,7 @@ struct MANGOS_DLL_DECL boss_vaelastraszAI : public ScriptedAI
         DoScriptText(SAY_KILLTARGET, m_creature, pVictim);
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_VAELASTRASZ, IN_PROGRESS);
@@ -146,19 +146,19 @@ struct MANGOS_DLL_DECL boss_vaelastraszAI : public ScriptedAI
         DoCastSpellIfCan(m_creature, SPELL_ESSENCE_OF_THE_RED);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_VAELASTRASZ, DONE);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_VAELASTRASZ, FAIL);
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (pSummoned->GetEntry() == NPC_LORD_VICTOR_NEFARIUS)
         {
@@ -168,7 +168,7 @@ struct MANGOS_DLL_DECL boss_vaelastraszAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (m_uiIntroTimer)
         {

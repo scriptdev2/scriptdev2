@@ -63,7 +63,7 @@ struct MANGOS_DLL_DECL npc_draenei_survivorAI : public ScriptedAI
 
     bool m_bCanSayHelp;
 
-    void Reset()
+    void Reset() override
     {
         m_casterGuid.Clear();
 
@@ -81,7 +81,7 @@ struct MANGOS_DLL_DECL npc_draenei_survivorAI : public ScriptedAI
         m_creature->SetStandState(UNIT_STAND_STATE_SLEEP);
     }
 
-    void MoveInLineOfSight(Unit* pWho)
+    void MoveInLineOfSight(Unit* pWho) override
     {
         if (m_bCanSayHelp && pWho->GetTypeId() == TYPEID_PLAYER && m_creature->IsFriendlyTo(pWho) &&
                 m_creature->IsWithinDistInMap(pWho, 25.0f))
@@ -100,7 +100,7 @@ struct MANGOS_DLL_DECL npc_draenei_survivorAI : public ScriptedAI
         }
     }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
     {
         if (pSpell->IsFitToFamilyMask(UI64LIT(0x0000000000000000), 0x080000000))
         {
@@ -115,7 +115,7 @@ struct MANGOS_DLL_DECL npc_draenei_survivorAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (m_uiSayThanksTimer)
         {
@@ -213,7 +213,7 @@ struct MANGOS_DLL_DECL npc_engineer_spark_overgrindAI : public ScriptedAI
 
     bool m_bIsTreeEvent;
 
-    void Reset()
+    void Reset() override
     {
         m_creature->setFaction(m_uiNormFaction);
         m_creature->SetUInt32Value(UNIT_NPC_FLAGS, m_uiNpcFlags);
@@ -224,12 +224,12 @@ struct MANGOS_DLL_DECL npc_engineer_spark_overgrindAI : public ScriptedAI
         m_bIsTreeEvent = false;
     }
 
-    void Aggro(Unit* who)
+    void Aggro(Unit* who) override
     {
         DoScriptText(SAY_ATTACK, m_creature, who);
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 diff) override
     {
         if (!m_creature->isInCombat() && !m_bIsTreeEvent)
         {
@@ -294,7 +294,7 @@ struct MANGOS_DLL_DECL npc_injured_draeneiAI : public ScriptedAI
 {
     npc_injured_draeneiAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
-    void Reset()
+    void Reset() override
     {
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IN_COMBAT);
         m_creature->SetHealth(int(m_creature->GetMaxHealth()*.15));
@@ -305,9 +305,9 @@ struct MANGOS_DLL_DECL npc_injured_draeneiAI : public ScriptedAI
         }
     }
 
-    void MoveInLineOfSight(Unit* pWho) { }                  // ignore everyone around them (won't aggro anything)
+    void MoveInLineOfSight(Unit* pWho) override {}          // ignore everyone around them (won't aggro anything)
 
-    void UpdateAI(const uint32 uiDiff) { }
+    void UpdateAI(const uint32 uiDiff) override {}
 };
 
 CreatureAI* GetAI_npc_injured_draenei(Creature* pCreature)
@@ -335,7 +335,7 @@ struct MANGOS_DLL_DECL npc_magwinAI : public npc_escortAI
 {
     npc_magwinAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
 
-    void WaypointReached(uint32 uiPointId)
+    void WaypointReached(uint32 uiPointId) override
     {
         Player* pPlayer = GetPlayerForEscort();
 
@@ -361,12 +361,12 @@ struct MANGOS_DLL_DECL npc_magwinAI : public npc_escortAI
         }
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature, pWho);
     }
 
-    void Reset() { }
+    void Reset() override { }
 };
 
 bool QuestAccept_npc_magwin(Player* pPlayer, Creature* pCreature, const Quest* pQuest)

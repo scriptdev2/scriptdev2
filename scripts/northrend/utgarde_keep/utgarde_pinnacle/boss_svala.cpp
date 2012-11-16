@@ -100,7 +100,7 @@ struct MANGOS_DLL_DECL boss_svalaAI : public ScriptedAI
 
     ObjectGuid m_ritualTargetGuid;
 
-    void Reset()
+    void Reset() override
     {
         pArthas = NULL;
 
@@ -123,7 +123,7 @@ struct MANGOS_DLL_DECL boss_svalaAI : public ScriptedAI
         }
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         DoMoveToPosition();
 
@@ -131,7 +131,7 @@ struct MANGOS_DLL_DECL boss_svalaAI : public ScriptedAI
             m_pInstance->SetData(TYPE_SVALA, FAIL);
     }
 
-    void MoveInLineOfSight(Unit* pWho)
+    void MoveInLineOfSight(Unit* pWho) override
     {
         if (!m_bIsIntroDone)
         {
@@ -152,13 +152,13 @@ struct MANGOS_DLL_DECL boss_svalaAI : public ScriptedAI
         ScriptedAI::MoveInLineOfSight(pWho);
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         m_creature->SetLevitate(false);
         DoScriptText(SAY_AGGRO, m_creature);
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (pSummoned->GetEntry() == NPC_ARTHAS_IMAGE)
         {
@@ -176,13 +176,13 @@ struct MANGOS_DLL_DECL boss_svalaAI : public ScriptedAI
         }
     }
 
-    void SummonedCreatureDespawn(Creature* pDespawned)
+    void SummonedCreatureDespawn(Creature* pDespawned) override
     {
         if (pDespawned->GetEntry() == NPC_ARTHAS_IMAGE)
             pArthas = NULL;
     }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
     {
         if (pSpell->Id == SPELL_TRANSFORMING)
         {
@@ -194,7 +194,7 @@ struct MANGOS_DLL_DECL boss_svalaAI : public ScriptedAI
         }
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         // set achiev to true if boss kills a hulk
         if (pVictim->GetEntry() == NPC_SCOURGE_HULK && m_pInstance)
@@ -208,7 +208,7 @@ struct MANGOS_DLL_DECL boss_svalaAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -225,7 +225,7 @@ struct MANGOS_DLL_DECL boss_svalaAI : public ScriptedAI
         m_creature->GetMotionMaster()->MovePoint(0, fX, fY, fZ + 5.0f);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
         {

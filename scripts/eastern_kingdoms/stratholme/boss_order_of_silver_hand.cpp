@@ -87,13 +87,13 @@ struct MANGOS_DLL_DECL boss_silver_hand_bossesAI : public ScriptedAI
 
     UNORDERED_MAP<uint8, uint32> m_mSpellTimers;
 
-    void Reset()
+    void Reset() override
     {
         for (UNORDERED_MAP<uint8, uint32>::iterator itr = m_mSpellTimers.begin(); itr != m_mSpellTimers.end(); ++itr)
             itr->second = m_aSilverHandAbility[itr->first].m_uiInitialTimer;
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         if (m_pInstance)
         {
@@ -141,7 +141,7 @@ struct MANGOS_DLL_DECL boss_silver_hand_bossesAI : public ScriptedAI
         return false;
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         // Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())

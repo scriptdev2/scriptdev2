@@ -85,25 +85,25 @@ class MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance, privat
         instance_sunwell_plateau(Map* pMap);
         ~instance_sunwell_plateau() {}
 
-        void Initialize();
-        bool IsEncounterInProgress() const;
+        void Initialize() override;
+        bool IsEncounterInProgress() const override;
 
-        void OnPlayerEnter(Player* pPlayer);
-        void OnObjectCreate(GameObject* pGo);
-        void OnCreatureCreate(Creature* pCreature);
-        void OnCreatureDeath(Creature* pCreature);
+        void OnPlayerEnter(Player* pPlayer) override;
+        void OnObjectCreate(GameObject* pGo) override;
+        void OnCreatureCreate(Creature* pCreature) override;
+        void OnCreatureDeath(Creature* pCreature) override;
         void OnCreatureEvade(Creature* pCreature);
 
-        void SetData(uint32 uiType, uint32 uiData);
-        uint32 GetData(uint32 uiType);
+        void SetData(uint32 uiType, uint32 uiData) override;
+        uint32 GetData(uint32 uiType) override;
 
-        void Update(uint32 uiDiff);
+        void Update(uint32 uiDiff) override;
 
-        const char* Save() { return m_strInstData.c_str(); }
-        void Load(const char* chrIn);
+        const char* Save() override { return m_strInstData.c_str(); }
+        void Load(const char* chrIn) override;
 
     protected:
-        void JustDidDialogueStep(int32 iEntry);
+        void JustDidDialogueStep(int32 iEntry) override;
 
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string m_strInstData;

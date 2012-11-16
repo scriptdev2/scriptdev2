@@ -75,7 +75,7 @@ struct MANGOS_DLL_DECL boss_gluthAI : public ScriptedAI
 
     GuidList m_lZombieChowGuidList;
 
-    void Reset()
+    void Reset() override
     {
         m_uiMortalWoundTimer  = 10000;
         m_uiDecimateTimer     = 110000;
@@ -86,19 +86,19 @@ struct MANGOS_DLL_DECL boss_gluthAI : public ScriptedAI
         m_uiBerserkTimer     = MINUTE * 8 * IN_MILLISECONDS;
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_GLUTH, DONE);
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_GLUTH, IN_PROGRESS);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         // Restore 5% hp when killing a zombie
         if (pVictim->GetEntry() == NPC_ZOMBIE_CHOW)
@@ -108,19 +108,19 @@ struct MANGOS_DLL_DECL boss_gluthAI : public ScriptedAI
         }
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_GLUTH, FAIL);
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         pSummoned->GetMotionMaster()->MoveFollow(m_creature, ATTACK_DISTANCE, 0);
         m_lZombieChowGuidList.push_back(pSummoned->GetObjectGuid());
     }
 
-    void SummonedCreatureDespawn(Creature* pSummoned)
+    void SummonedCreatureDespawn(Creature* pSummoned) override
     {
         m_lZombieChowGuidList.remove(pSummoned->GetObjectGuid());
     }
@@ -152,7 +152,7 @@ struct MANGOS_DLL_DECL boss_gluthAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

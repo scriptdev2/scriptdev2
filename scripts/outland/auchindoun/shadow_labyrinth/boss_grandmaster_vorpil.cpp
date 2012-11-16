@@ -97,7 +97,7 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
     uint32 m_uiBanishTimer;
     bool m_bHasDoneIntro;
 
-    void Reset()
+    void Reset() override
     {
         m_uiShadowBoltVolleyTimer   = urand(13000, 19000);
         m_uiDrawShadowsTimer        = urand(38000, 44000);
@@ -106,7 +106,7 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
         m_uiBanishTimer             = urand(12000, 16000);
     }
 
-    void MoveInLineOfSight(Unit* pWho)
+    void MoveInLineOfSight(Unit* pWho) override
     {
         // not sure about right radius
         if (!m_bHasDoneIntro && pWho->GetTypeId() == TYPEID_PLAYER && pWho->IsWithinDistInMap(m_creature, 50.0f) && pWho->IsWithinLOSInMap(m_creature))
@@ -118,7 +118,7 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
         ScriptedAI::MoveInLineOfSight(pWho);
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         switch (urand(0, 2))
         {
@@ -137,18 +137,18 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
             m_pInstance->SetData(TYPE_VORPIL, IN_PROGRESS);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_VORPIL, FAIL);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (pSummoned->GetEntry() == NPC_VOID_TRAVELER)
             pSummoned->GetMotionMaster()->MoveFollow(m_creature, 0.0f, 0.0f);
@@ -157,7 +157,7 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
             pSummoned->CastSpell(pSummoned, SPELL_VOID_PORTAL_VISUAL, true);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -186,7 +186,7 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         // Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
@@ -271,13 +271,13 @@ struct MANGOS_DLL_DECL npc_void_travelerAI : public ScriptedAI
 
     uint32 m_uiDeathTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiDeathTimer = 0;
         m_bHasExploded = false;
     }
 
-    void MoveInLineOfSight(Unit* pWho)
+    void MoveInLineOfSight(Unit* pWho) override
     {
         if (!m_bHasExploded && pWho->GetEntry() == NPC_VORPIL && pWho->IsWithinDistInMap(m_creature, 3.0f))
         {
@@ -289,9 +289,9 @@ struct MANGOS_DLL_DECL npc_void_travelerAI : public ScriptedAI
         }
     }
 
-    void AttackStart(Unit* pWho) { }
+    void AttackStart(Unit* pWho) override { }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (m_uiDeathTimer)
         {

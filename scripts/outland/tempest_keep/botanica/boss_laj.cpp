@@ -57,7 +57,7 @@ struct MANGOS_DLL_DECL boss_lajAI : public ScriptedAI
     uint32 m_uiAllergicTimer;
     uint32 m_uiTrashTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_creature->SetDisplayId(MODEL_ID_DEFAULT);
         m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_SHADOW, true);
@@ -144,13 +144,13 @@ struct MANGOS_DLL_DECL boss_lajAI : public ScriptedAI
         }
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
             pSummoned->AI()->AttackStart(pTarget);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

@@ -78,25 +78,25 @@ struct MANGOS_DLL_DECL boss_skadiAI : public ScriptedAI
     uint32 m_uiWhirlwind;
     uint32 m_uiPoisonedSpear;
 
-    void Reset()
+    void Reset() override
     {
         m_uiCrush         = 15000;
         m_uiWhirlwind     = 23000;
         m_uiPoisonedSpear = 10000;
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_SKADI, NOT_STARTED);
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         switch (urand(0, 2))
         {
@@ -106,7 +106,7 @@ struct MANGOS_DLL_DECL boss_skadiAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -114,7 +114,7 @@ struct MANGOS_DLL_DECL boss_skadiAI : public ScriptedAI
             m_pInstance->SetData(TYPE_SKADI, DONE);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

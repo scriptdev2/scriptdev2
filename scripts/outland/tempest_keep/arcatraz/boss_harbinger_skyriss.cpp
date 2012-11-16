@@ -63,7 +63,7 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
     uint32 m_uiDominationTimer;
     uint32 m_uiManaBurnTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiSplitPhase      = 1;
         m_uiMindRendTimer   = 3000;
@@ -72,7 +72,7 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
         m_uiManaBurnTimer   = 25000;
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -80,13 +80,13 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
             m_pInstance->SetData(TYPE_HARBINGERSKYRISS, DONE);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_HARBINGERSKYRISS, FAIL);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         // won't yell killing pet/other unit
         if (pVictim->GetTypeId() != TYPEID_PLAYER)
@@ -95,13 +95,13 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
         DoScriptText(urand(0, 1) ? SAY_KILL_1 : SAY_KILL_2, m_creature);
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (m_creature->getVictim())
             pSummoned->AI()->AttackStart(m_creature->getVictim());
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

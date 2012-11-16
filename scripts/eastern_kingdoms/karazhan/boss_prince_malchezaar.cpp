@@ -91,7 +91,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
 
     uint8 m_uiPhase;
 
-    void Reset()
+    void Reset() override
     {
         for (uint8 i = 0; i < MAX_ENFEEBLE_TARGETS; ++i)
         {
@@ -115,7 +115,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
         m_creature->SetAttackTime(BASE_ATTACK, ATTACK_TIMER_DEFAULT);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         switch (urand(0, 2))
         {
@@ -125,7 +125,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -136,7 +136,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
             m_pInstance->SetData(TYPE_MALCHEZZAR, DONE);
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -144,7 +144,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
             m_pInstance->SetData(TYPE_MALCHEZZAR, IN_PROGRESS);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_MALCHEZZAR, FAIL);
@@ -153,7 +153,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
         m_creature->RemoveGuardians();
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (pSummoned->GetEntry() == NPC_NETHERSPITE_INFERNAL)
             pSummoned->CastSpell(pSummoned, SPELL_HELLFIRE, false);
@@ -161,7 +161,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
             pSummoned->SetInCombatWithZone();
     }
 
-    void SpellHitTarget(Unit* pTarget, SpellEntry const* pSpellEntry)
+    void SpellHitTarget(Unit* pTarget, SpellEntry const* pSpellEntry) override
     {
         // Target selection is already handled properly in core (doesn't affect tank)
         if (pSpellEntry->Id == SPELL_ENFEEBLE && pTarget->GetTypeId() == TYPEID_PLAYER)
@@ -191,7 +191,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
         m_uiEnfeebleIndex = 0;
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -337,10 +337,10 @@ struct MANGOS_DLL_DECL npc_infernal_targetAI : public Scripted_NoMovementAI
 {
     npc_infernal_targetAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature) { Reset(); }
 
-    void Reset() { }
-    void MoveInLineOfSight(Unit* pWho) { }
-    void AttackStart(Unit* pWho) { }
-    void UpdateAI(const uint32 uiDiff) { }
+    void Reset() override { }
+    void MoveInLineOfSight(Unit* pWho) override { }
+    void AttackStart(Unit* pWho) override { }
+    void UpdateAI(const uint32 uiDiff) override { }
 };
 
 CreatureAI* GetAI_npc_infernal_target(Creature* pCreature)

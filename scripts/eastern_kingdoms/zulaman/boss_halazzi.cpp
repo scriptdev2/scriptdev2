@@ -98,7 +98,7 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
 
     ObjectGuid m_spiritLynxGuid;
 
-    void Reset()
+    void Reset() override
     {
         m_uiPhase           = PHASE_SINGLE;
         m_uiPhaseCounter    = 3;
@@ -112,7 +112,7 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
         m_bHasTransformed   = false;
     }
 
-    void EnterEvadeMode()
+    void EnterEvadeMode() override
     {
         // Transform back on evade
         if (DoCastSpellIfCan(m_creature, SPELL_TRANSFORM_TO_ORIGINAL) == CAST_OK)
@@ -121,13 +121,13 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
         ScriptedAI::EnterEvadeMode();
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_HALAZZI, FAIL);
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -135,7 +135,7 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
             m_pInstance->SetData(TYPE_HALAZZI, IN_PROGRESS);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         if (pVictim->GetTypeId() != TYPEID_PLAYER)
             return;
@@ -143,7 +143,7 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
         DoScriptText(urand(0, 1) ? SAY_KILL1 : SAY_KILL2, m_creature);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -151,7 +151,7 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
             m_pInstance->SetData(TYPE_HALAZZI, DONE);
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (pSummoned->GetEntry() == NPC_SPIRIT_LYNX)
         {
@@ -161,7 +161,7 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
         }
     }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
     {
         if (pSpell->Id == SPELL_TRANSFIGURE_TRANSFORM)
         {
@@ -208,7 +208,7 @@ struct MANGOS_DLL_DECL boss_halazziAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -316,14 +316,14 @@ struct MANGOS_DLL_DECL boss_spirit_lynxAI : public ScriptedAI
     uint32 m_uiShredArmorTimer;
     bool m_bHasUnited;
 
-    void Reset()
+    void Reset() override
     {
         m_uiFrenzyTimer     = urand(10000, 20000);          // first frenzy after 10-20 seconds
         m_uiShredArmorTimer = 4000;
         m_bHasUnited        = false;
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         if (!m_pInstance)
             return;
@@ -332,7 +332,7 @@ struct MANGOS_DLL_DECL boss_spirit_lynxAI : public ScriptedAI
             pHalazzi->AI()->KilledUnit(pVictim);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

@@ -88,7 +88,7 @@ struct MANGOS_DLL_DECL npc_kelerun_bloodmournAI : public ScriptedAI
 
     bool m_bIsEventInProgress;
 
-    void Reset()
+    void Reset() override
     {
         m_creature->SetUInt32Value(UNIT_NPC_FLAGS, m_uiNpcFlags);
 
@@ -141,7 +141,7 @@ struct MANGOS_DLL_DECL npc_kelerun_bloodmournAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (m_bIsEventInProgress)
         {
@@ -270,10 +270,10 @@ struct MANGOS_DLL_DECL npc_prospector_anvilwardAI : public npc_escortAI
     // CreatureAI functions
     npc_prospector_anvilwardAI(Creature* pCreature) : npc_escortAI(pCreature) {Reset();}
 
-    void Reset() { }
+    void Reset() override { }
 
     // Pure Virtual Functions
-    void WaypointReached(uint32 uiPointId)
+    void WaypointReached(uint32 uiPointId) override
     {
         Player* pPlayer = GetPlayerForEscort();
 
@@ -351,14 +351,14 @@ struct MANGOS_DLL_DECL npc_apprentice_mirvedaAI : public ScriptedAI
     uint32 m_uiFireballTimer;
     ObjectGuid m_playerGuid;
 
-    void Reset()
+    void Reset() override
     {
         m_uiMobCount      = 0;
         m_playerGuid.Clear();
         m_uiFireballTimer = 0;
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid);
 
@@ -366,13 +366,13 @@ struct MANGOS_DLL_DECL npc_apprentice_mirvedaAI : public ScriptedAI
             pPlayer->SendQuestFailed(QUEST_UNEXPECTED_RESULT);
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         pSummoned->AI()->AttackStart(m_creature);
         ++m_uiMobCount;
     }
 
-    void SummonedCreatureJustDied(Creature* pKilled)
+    void SummonedCreatureJustDied(Creature* pKilled) override
     {
         --m_uiMobCount;
 
@@ -398,7 +398,7 @@ struct MANGOS_DLL_DECL npc_apprentice_mirvedaAI : public ScriptedAI
         m_creature->SummonCreature(NPC_ANGERSHADE, 8745.0f, -7134.32f, 35.22f, 0.0f, TEMPSUMMON_CORPSE_DESPAWN, 4000);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         // Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
@@ -466,14 +466,14 @@ struct MANGOS_DLL_DECL npc_infused_crystalAI : public Scripted_NoMovementAI
     uint8 m_uiKilledCount;
     uint32 m_uiFinishTimer;
 
-    void Reset() {}
+    void Reset() override {}
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         pSummoned->AI()->AttackStart(m_creature);
     }
 
-    void SummonedCreatureJustDied(Creature* pSummoned)
+    void SummonedCreatureJustDied(Creature* pSummoned) override
     {
         ++m_uiKilledCount;
 
@@ -481,7 +481,7 @@ struct MANGOS_DLL_DECL npc_infused_crystalAI : public Scripted_NoMovementAI
             m_uiWaveTimer = std::min(m_uiWaveTimer, (uint32)10000);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (m_uiWaveTimer)
         {

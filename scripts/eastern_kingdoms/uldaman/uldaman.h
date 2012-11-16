@@ -39,17 +39,17 @@ class MANGOS_DLL_DECL instance_uldaman : public ScriptedInstance
         instance_uldaman(Map* pMap);
         ~instance_uldaman() {}
 
-        void Initialize();
+        void Initialize() override;
 
-        void OnObjectCreate(GameObject* pGo);
-        void OnCreatureCreate(Creature* pCreature);
+        void OnObjectCreate(GameObject* pGo) override;
+        void OnCreatureCreate(Creature* pCreature) override;
 
-        void Update(uint32 uiDiff);
+        void Update(uint32 uiDiff) override;
 
-        void SetData(uint32 uiType, uint32 uiData);
-        void SetData64(uint32 uiData, uint64 uiGuid);
-        uint32 GetData(uint32 uiType);
-        uint64 GetData64(uint32 uiData);
+        void SetData(uint32 uiType, uint32 uiData) override;
+        void SetData64(uint32 uiData, uint64 uiGuid) override;
+        uint32 GetData(uint32 uiType) override;
+        uint64 GetData64(uint32 uiData) override;
 
         void StartEvent(uint32 uiEventId, Player* pPlayer);
 
@@ -57,8 +57,8 @@ class MANGOS_DLL_DECL instance_uldaman : public ScriptedInstance
 
         Creature* GetClosestDwarfNotInCombat(Creature* pSearcher, uint32 uiPhase);
 
-        const char* Save() { return m_strInstData.c_str(); }
-        void Load(const char* chrIn);
+        const char* Save() override { return m_strInstData.c_str(); }
+        void Load(const char* chrIn) override;
 
     protected:
         uint32 m_auiEncounter[MAX_ENCOUNTER];

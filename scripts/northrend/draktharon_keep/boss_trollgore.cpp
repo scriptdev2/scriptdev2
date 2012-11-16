@@ -75,7 +75,7 @@ struct MANGOS_DLL_DECL boss_trollgoreAI : public ScriptedAI
 
     GuidVector m_vTriggers;
 
-    void Reset()
+    void Reset() override
     {
         m_uiCorpseExplodeTimer  = 20000;
         m_uiConsumeTimer        = 15000;
@@ -85,7 +85,7 @@ struct MANGOS_DLL_DECL boss_trollgoreAI : public ScriptedAI
         m_uiConsumeStacks       = 0;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -96,13 +96,13 @@ struct MANGOS_DLL_DECL boss_trollgoreAI : public ScriptedAI
         }
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         if (pVictim->GetCharmerOrOwnerPlayerOrPlayerItself())
             DoScriptText(SAY_KILL, m_creature);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -110,13 +110,13 @@ struct MANGOS_DLL_DECL boss_trollgoreAI : public ScriptedAI
             m_pInstance->SetData(TYPE_TROLLGORE, DONE);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_TROLLGORE, FAIL);
     }
 
-    void SpellHit(Unit* pTarget, const SpellEntry* pSpell)
+    void SpellHit(Unit* pTarget, const SpellEntry* pSpell) override
     {
         if (pSpell->Id == SPELL_CONSUME_BUFF || pSpell->Id == SPELL_CONSUME_BUFF_H)
         {
@@ -131,7 +131,7 @@ struct MANGOS_DLL_DECL boss_trollgoreAI : public ScriptedAI
         }
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         // This spell taunts the boss and the boss taunts back
         pSummoned->CastSpell(m_creature, SPELL_INVADER_TAUNT, true);
@@ -174,7 +174,7 @@ struct MANGOS_DLL_DECL boss_trollgoreAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

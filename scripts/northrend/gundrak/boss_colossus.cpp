@@ -71,18 +71,18 @@ struct MANGOS_DLL_DECL boss_drakkari_elementalAI : public ScriptedAI
 
     uint32 m_uiSurgeTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_bIsFirstEmerge = true;
         m_uiSurgeTimer   = urand(9000, 13000);
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_MOJO_VOLLEY : SPELL_MOJO_VOLLEY_H);
     }
 
-    void DamageTaken(Unit* pDoneBy, uint32& uiDamage)
+    void DamageTaken(Unit* pDoneBy, uint32& uiDamage) override
     {
         if (!m_bIsFirstEmerge)
             return;
@@ -94,7 +94,7 @@ struct MANGOS_DLL_DECL boss_drakkari_elementalAI : public ScriptedAI
         }
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
         {
@@ -105,7 +105,7 @@ struct MANGOS_DLL_DECL boss_drakkari_elementalAI : public ScriptedAI
         m_creature->ForcedDespawn();
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         if (m_pInstance)
         {
@@ -122,7 +122,7 @@ struct MANGOS_DLL_DECL boss_drakkari_elementalAI : public ScriptedAI
         m_creature->SetHealth(m_creature->GetMaxHealth()*.5);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -168,7 +168,7 @@ struct MANGOS_DLL_DECL boss_drakkari_colossusAI : public ScriptedAI
     uint32 m_uiColossusStartTimer;
     uint8 m_uiMojosGathered;
 
-    void Reset()
+    void Reset() override
     {
         m_bFirstEmerge      = true;
         m_uiMightyBlowTimer = 10000;
@@ -181,7 +181,7 @@ struct MANGOS_DLL_DECL boss_drakkari_colossusAI : public ScriptedAI
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_MORTAL_STRIKES : SPELL_MORTAL_STRIKES_H);
 
@@ -189,19 +189,19 @@ struct MANGOS_DLL_DECL boss_drakkari_colossusAI : public ScriptedAI
             m_pInstance->SetData(TYPE_COLOSSUS, IN_PROGRESS);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_COLOSSUS, DONE);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_COLOSSUS, FAIL);
     }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
     {
         if (pSpell->Id == SPELL_MERGE)
         {
@@ -216,7 +216,7 @@ struct MANGOS_DLL_DECL boss_drakkari_colossusAI : public ScriptedAI
         }
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (pSummoned->GetEntry() == NPC_ELEMENTAL)
         {
@@ -233,7 +233,7 @@ struct MANGOS_DLL_DECL boss_drakkari_colossusAI : public ScriptedAI
         }
     }
 
-    void DamageTaken(Unit* pDoneBy, uint32& uiDamage)
+    void DamageTaken(Unit* pDoneBy, uint32& uiDamage) override
     {
         if (m_bFirstEmerge && m_creature->GetHealthPercent() < 50.0f)
             DoEmergeElemental();
@@ -268,7 +268,7 @@ struct MANGOS_DLL_DECL boss_drakkari_colossusAI : public ScriptedAI
             m_uiColossusStartTimer = 1000;
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (m_uiColossusStartTimer)
         {
@@ -322,12 +322,12 @@ struct MANGOS_DLL_DECL npc_living_mojoAI : public ScriptedAI
 
     uint32 m_uiMojoWaveTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiMojoWaveTimer = urand(10000, 13000);
     }
 
-    void AttackStart(Unit* pWho)
+    void AttackStart(Unit* pWho) override
     {
         // Don't attack if is part of the Colossus event
         if (m_bIsPartOfColossus)
@@ -336,7 +336,7 @@ struct MANGOS_DLL_DECL npc_living_mojoAI : public ScriptedAI
         ScriptedAI::AttackStart(pWho);
     }
 
-    void MovementInform(uint32 uiType, uint32 uiPointId)
+    void MovementInform(uint32 uiType, uint32 uiPointId) override
     {
         if (uiType != POINT_MOTION_TYPE)
             return;
@@ -357,7 +357,7 @@ struct MANGOS_DLL_DECL npc_living_mojoAI : public ScriptedAI
         }
     }
 
-    void EnterEvadeMode()
+    void EnterEvadeMode() override
     {
         if (!m_bIsPartOfColossus)
             ScriptedAI::EnterEvadeMode();
@@ -378,12 +378,12 @@ struct MANGOS_DLL_DECL npc_living_mojoAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_MOJO_PUDDLE : SPELL_MOJO_PUDDLE_H, CAST_TRIGGERED);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

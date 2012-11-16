@@ -97,7 +97,7 @@ struct MANGOS_DLL_DECL npc_calvin_montagueAI : public ScriptedAI
     uint32 m_uiPhaseTimer;
     ObjectGuid m_playerGuid;
 
-    void Reset()
+    void Reset() override
     {
         m_uiPhase = 0;
         m_uiPhaseTimer = 5000;
@@ -107,7 +107,7 @@ struct MANGOS_DLL_DECL npc_calvin_montagueAI : public ScriptedAI
             m_creature->setFaction(m_uiNormFaction);
     }
 
-    void AttackedBy(Unit* pAttacker)
+    void AttackedBy(Unit* pAttacker) override
     {
         if (m_creature->getVictim() || m_creature->IsFriendlyTo(pAttacker))
             return;
@@ -115,7 +115,7 @@ struct MANGOS_DLL_DECL npc_calvin_montagueAI : public ScriptedAI
         AttackStart(pAttacker);
     }
 
-    void DamageTaken(Unit* pDoneBy, uint32& uiDamage)
+    void DamageTaken(Unit* pDoneBy, uint32& uiDamage) override
     {
         if (uiDamage > m_creature->GetHealth() || ((m_creature->GetHealth() - uiDamage) * 100 / m_creature->GetMaxHealth() < 15))
         {
@@ -131,7 +131,7 @@ struct MANGOS_DLL_DECL npc_calvin_montagueAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (m_uiPhase)
         {

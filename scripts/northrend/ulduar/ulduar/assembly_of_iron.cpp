@@ -136,7 +136,7 @@ struct MANGOS_DLL_DECL boss_brundirAI : public ScriptedAI
 
     ObjectGuid m_followTargetGuid;
 
-    void Reset()
+    void Reset() override
     {
         m_uiPhase               = PHASE_NO_CHARGE;
         m_uiVisualTimer         = 5000;
@@ -151,7 +151,7 @@ struct MANGOS_DLL_DECL boss_brundirAI : public ScriptedAI
         m_creature->SetLevitate(false);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         if (!m_pInstance)
             return;
@@ -169,7 +169,7 @@ struct MANGOS_DLL_DECL boss_brundirAI : public ScriptedAI
         DoScriptText(urand(0, 1) ? SAY_BRUNDIR_DEATH_1 : SAY_BRUNDIR_DEATH_2, m_creature);
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_BRUNDIR_AGGRO, m_creature);
 
@@ -180,18 +180,18 @@ struct MANGOS_DLL_DECL boss_brundirAI : public ScriptedAI
         DoCastSpellIfCan(m_creature, SPELL_BERSERK, CAST_TRIGGERED);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         DoScriptText(urand(0, 1) ? SAY_BRUNDIR_SLAY_1 : SAY_BRUNDIR_SLAY_2, m_creature);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_ASSEMBLY, FAIL);
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (pSummoned->GetEntry() == NPC_OVERLOAD_VISUAL)
         {
@@ -202,7 +202,7 @@ struct MANGOS_DLL_DECL boss_brundirAI : public ScriptedAI
         }
     }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
     {
         // Increase the phase when hit with the supercharge spell by his brothers
         if (pSpell->Id == SPELL_SUPERCHARGE)
@@ -223,7 +223,7 @@ struct MANGOS_DLL_DECL boss_brundirAI : public ScriptedAI
         }
     }
 
-    void SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell)
+    void SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell) override
     {
         if (pTarget->GetTypeId() != TYPEID_PLAYER)
             return;
@@ -243,7 +243,7 @@ struct MANGOS_DLL_DECL boss_brundirAI : public ScriptedAI
         }
     }
 
-    void MovementInform(uint32 uiMoveType, uint32 uiPointId)
+    void MovementInform(uint32 uiMoveType, uint32 uiPointId) override
     {
         if (uiMoveType != POINT_MOTION_TYPE || !uiPointId)
             return;
@@ -285,7 +285,7 @@ struct MANGOS_DLL_DECL boss_brundirAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         // Pre fight visual spell
         if (m_uiVisualTimer)
@@ -438,7 +438,7 @@ struct MANGOS_DLL_DECL boss_molgeimAI : public ScriptedAI
     uint32 m_uiRuneDeathTimer;
     uint32 m_uiRuneSummonTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiPhase               = PHASE_NO_CHARGE;
         m_uiVisualTimer         = 5000;
@@ -448,7 +448,7 @@ struct MANGOS_DLL_DECL boss_molgeimAI : public ScriptedAI
         m_uiRuneDeathTimer      = 30000;
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         if (!m_pInstance)
             return;
@@ -466,7 +466,7 @@ struct MANGOS_DLL_DECL boss_molgeimAI : public ScriptedAI
         DoScriptText(urand(0, 1) ? SAY_MOLGEIM_DEATH_1 : SAY_MOLGEIM_DEATH_2, m_creature);
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_MOLGEIM_AGGRO, m_creature);
 
@@ -477,18 +477,18 @@ struct MANGOS_DLL_DECL boss_molgeimAI : public ScriptedAI
         DoCastSpellIfCan(m_creature, SPELL_BERSERK, CAST_TRIGGERED);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         DoScriptText(urand(0, 1) ? SAY_MOLGEIM_SLAY_1 : SAY_MOLGEIM_SLAY_2, m_creature);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_ASSEMBLY, FAIL);
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (pSummoned->GetEntry() == NPC_RUNE_OF_SUMMONING)
             pSummoned->CastSpell(pSummoned, SPELL_RUNE_OF_SUMMONING_AURA, true, NULL, NULL, m_creature->GetObjectGuid());
@@ -503,7 +503,7 @@ struct MANGOS_DLL_DECL boss_molgeimAI : public ScriptedAI
         }
     }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
     {
         // Increase the phase when hit with the supercharge spell by his brothers
         if (pSpell->Id == SPELL_SUPERCHARGE)
@@ -521,7 +521,7 @@ struct MANGOS_DLL_DECL boss_molgeimAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         // Pre fight visual spell
         if (m_uiVisualTimer)
@@ -618,7 +618,7 @@ struct MANGOS_DLL_DECL boss_steelbreakerAI : public ScriptedAI
     uint32 m_uiDisruptionTimer;
     uint32 m_uiPowerTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiPhase               = PHASE_NO_CHARGE;
         m_uiFusionPunchTimer    = 15000;
@@ -626,7 +626,7 @@ struct MANGOS_DLL_DECL boss_steelbreakerAI : public ScriptedAI
         m_uiPowerTimer          = 10000;
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         if (!m_pInstance)
             return;
@@ -644,7 +644,7 @@ struct MANGOS_DLL_DECL boss_steelbreakerAI : public ScriptedAI
         DoScriptText(urand(0, 1) ? SAY_STEEL_DEATH_1 : SAY_STEEL_DEATH_2, m_creature);
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_STEEL_AGGRO, m_creature);
 
@@ -655,18 +655,18 @@ struct MANGOS_DLL_DECL boss_steelbreakerAI : public ScriptedAI
         DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_HIGH_VOLTAGE : SPELL_HIGH_VOLTAGE_H, CAST_TRIGGERED);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         DoScriptText(urand(0, 1) ? SAY_STEEL_SLAY_1 : SAY_STEEL_SLAY_2, m_creature);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_ASSEMBLY, FAIL);
     }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
     {
         // Increase the phase when hit with the supercharge spell by his brothers
         if (pSpell->Id == SPELL_SUPERCHARGE)
@@ -687,7 +687,7 @@ struct MANGOS_DLL_DECL boss_steelbreakerAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

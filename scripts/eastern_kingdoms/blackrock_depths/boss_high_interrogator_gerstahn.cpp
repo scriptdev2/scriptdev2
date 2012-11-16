@@ -40,7 +40,7 @@ struct MANGOS_DLL_DECL boss_high_interrogator_gerstahnAI : public ScriptedAI
     uint32 m_uiPsychicScreamTimer;
     uint32 m_uiShadowShieldTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiShadowWordPainTimer = 4000;
         m_uiManaBurnTimer = 14000;
@@ -48,7 +48,7 @@ struct MANGOS_DLL_DECL boss_high_interrogator_gerstahnAI : public ScriptedAI
         m_uiShadowShieldTimer = 8000;
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         // Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())

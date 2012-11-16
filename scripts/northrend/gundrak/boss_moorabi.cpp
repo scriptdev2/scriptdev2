@@ -74,7 +74,7 @@ struct MANGOS_DLL_DECL boss_moorabiAI : public ScriptedAI
 
     bool m_bMammothPhase;
 
-    void Reset()
+    void Reset() override
     {
         m_bMammothPhase = false;
 
@@ -85,7 +85,7 @@ struct MANGOS_DLL_DECL boss_moorabiAI : public ScriptedAI
         m_uiPreviousTimer       = 10000;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
         DoCastSpellIfCan(m_creature, SPELL_MOJO_FRENZY);
@@ -94,7 +94,7 @@ struct MANGOS_DLL_DECL boss_moorabiAI : public ScriptedAI
             m_pInstance->SetData(TYPE_MOORABI, IN_PROGRESS);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         switch (urand(0, 2))
         {
@@ -104,7 +104,7 @@ struct MANGOS_DLL_DECL boss_moorabiAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -112,7 +112,7 @@ struct MANGOS_DLL_DECL boss_moorabiAI : public ScriptedAI
             m_pInstance->SetData(TYPE_MOORABI, DONE);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

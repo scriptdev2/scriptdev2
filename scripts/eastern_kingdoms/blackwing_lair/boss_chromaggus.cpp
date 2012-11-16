@@ -92,7 +92,7 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
     uint32 m_uiFrenzyTimer;
     bool m_bEnraged;
 
-    void Reset()
+    void Reset() override
     {
         m_uiCurrentVulnerabilitySpell = 0;                  // We use this to store our last vulnerability spell so we can remove it later
 
@@ -105,25 +105,25 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
         m_bEnraged          = false;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_CHROMAGGUS, IN_PROGRESS);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_CHROMAGGUS, DONE);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_CHROMAGGUS, FAIL);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

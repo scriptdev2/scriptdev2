@@ -151,14 +151,14 @@ struct MANGOS_DLL_DECL mob_restless_soulAI : public ScriptedAI
     uint32 m_uiDieTimer;
     bool m_bIsTagged;
 
-    void Reset()
+    void Reset() override
     {
         m_taggerGuid.Clear();
         m_uiDieTimer = 5000;
         m_bIsTagged = false;
     }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
     {
         if (pCaster->GetTypeId() == TYPEID_PLAYER)
         {
@@ -170,7 +170,7 @@ struct MANGOS_DLL_DECL mob_restless_soulAI : public ScriptedAI
         }
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (pSummoned->GetEntry() == NPC_FREED_SOUL)
         {
@@ -186,13 +186,13 @@ struct MANGOS_DLL_DECL mob_restless_soulAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* Killer)
+    void JustDied(Unit* Killer) override
     {
         if (m_bIsTagged)
             m_creature->SummonCreature(NPC_FREED_SOUL, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN, 300000);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (m_bIsTagged)
         {
@@ -229,19 +229,19 @@ struct MANGOS_DLL_DECL mobs_spectral_ghostly_citizenAI : public ScriptedAI
     uint32 m_uiDieTimer;
     bool m_bIsTagged;
 
-    void Reset()
+    void Reset() override
     {
         m_uiDieTimer = 5000;
         m_bIsTagged = false;
     }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
     {
         if (!m_bIsTagged && pSpell->Id == SPELL_EGAN_BLASTER)
             m_bIsTagged = true;
     }
 
-    void JustDied(Unit* Killer)
+    void JustDied(Unit* Killer) override
     {
         if (m_bIsTagged)
         {
@@ -258,7 +258,7 @@ struct MANGOS_DLL_DECL mobs_spectral_ghostly_citizenAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (m_bIsTagged)
         {
@@ -276,7 +276,7 @@ struct MANGOS_DLL_DECL mobs_spectral_ghostly_citizenAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 
-    void ReceiveEmote(Player* pPlayer, uint32 uiEmote)
+    void ReceiveEmote(Player* pPlayer, uint32 uiEmote) override
     {
         switch (uiEmote)
         {

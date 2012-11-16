@@ -55,12 +55,12 @@ struct MANGOS_DLL_DECL npc_gurgthockAI : public ScriptedAI
         m_playerGuid = pPlayer->GetObjectGuid();
     }
 
-    void Reset()
+    void Reset() override
     {
         m_playerGuid.Clear();
     }
 
-    void SummonedCreatureJustDied(Creature* pSummoned)
+    void SummonedCreatureJustDied(Creature* pSummoned) override
     {
         uint32 uiEntry = pSummoned->GetEntry();
         for (uint8 i = 0; i < 4; ++i)

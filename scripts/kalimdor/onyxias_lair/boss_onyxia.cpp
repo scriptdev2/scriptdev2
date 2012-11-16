@@ -137,7 +137,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
 
     bool m_bIsSummoningWhelps;
 
-    void Reset()
+    void Reset() override
     {
         if (!IsCombatMovement())
             SetCombatMovement(true);
@@ -164,7 +164,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
         m_bIsSummoningWhelps = false;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -172,7 +172,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
             m_pInstance->SetData(TYPE_ONYXIA, IN_PROGRESS);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         // in case evade in phase 2, see comments for hack where phase 2 is set
         m_creature->SetLevitate(false);
@@ -182,13 +182,13 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
             m_pInstance->SetData(TYPE_ONYXIA, FAIL);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_ONYXIA, DONE);
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (!m_pInstance)
             return;
@@ -207,7 +207,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
             ++m_uiSummonCount;
     }
 
-    void SummonedMovementInform(Creature* pSummoned, uint32 uiMoveType, uint32 uiPointId)
+    void SummonedMovementInform(Creature* pSummoned, uint32 uiMoveType, uint32 uiPointId) override
     {
         if (uiMoveType != POINT_MOTION_TYPE || uiPointId != 1 || !m_creature->getVictim())
             return;
@@ -215,12 +215,12 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
         pSummoned->SetInCombatWithZone();
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         DoScriptText(SAY_KILL, m_creature);
     }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
     {
         if (pSpell->Id == SPELL_BREATH_EAST_TO_WEST ||
                 pSpell->Id == SPELL_BREATH_WEST_TO_EAST ||
@@ -248,7 +248,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
         return NULL;
     }
 
-    void MovementInform(uint32 uiMoveType, uint32 uiPointId)
+    void MovementInform(uint32 uiMoveType, uint32 uiPointId) override
     {
         if (uiMoveType != POINT_MOTION_TYPE || !m_pInstance)
             return;
@@ -260,7 +260,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -439,7 +439,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
         }
     }
 
-    void SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell)
+    void SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell) override
     {
         // Check if players are hit by Onyxia's Deep Breath
         if (pTarget->GetTypeId() != TYPEID_PLAYER || !m_pInstance)

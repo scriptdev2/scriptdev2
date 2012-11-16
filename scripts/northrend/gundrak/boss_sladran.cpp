@@ -69,11 +69,11 @@ struct MANGOS_DLL_DECL mob_sladran_summon_targetAI : public ScriptedAI
 
     instance_gundrak* m_pInstance;
 
-    void Reset() {}
-    void MoveInLineOfSight(Unit* pWho) {}
-    void AttackStart(Unit* pWho) {}
+    void Reset() override {}
+    void MoveInLineOfSight(Unit* pWho) override {}
+    void AttackStart(Unit* pWho) override {}
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (!m_pInstance)
             return;
@@ -86,7 +86,7 @@ struct MANGOS_DLL_DECL mob_sladran_summon_targetAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 diff) {}
+    void UpdateAI(const uint32 diff) override {}
 };
 
 CreatureAI* GetAI_mob_sladran_summon_target(Creature* pCreature)
@@ -114,7 +114,7 @@ struct MANGOS_DLL_DECL boss_sladranAI : public ScriptedAI
     uint32 m_uiPowerfulBiteTimer;
     uint32 m_uiVenomBoltTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiSummonTimer       = m_bIsRegularMode ? 5000 : 3000;
         m_uiPoisonNovaTimer   = 22000;
@@ -122,7 +122,7 @@ struct MANGOS_DLL_DECL boss_sladranAI : public ScriptedAI
         m_uiVenomBoltTimer    = 15000;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -130,7 +130,7 @@ struct MANGOS_DLL_DECL boss_sladranAI : public ScriptedAI
             m_pInstance->SetData(TYPE_SLADRAN, IN_PROGRESS);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         switch (urand(0, 2))
         {
@@ -140,7 +140,7 @@ struct MANGOS_DLL_DECL boss_sladranAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -148,7 +148,7 @@ struct MANGOS_DLL_DECL boss_sladranAI : public ScriptedAI
             m_pInstance->SetData(TYPE_SLADRAN, DONE);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_SLADRAN, FAIL);
@@ -168,7 +168,7 @@ struct MANGOS_DLL_DECL boss_sladranAI : public ScriptedAI
         return *iter;
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

@@ -129,7 +129,7 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI, private Dialo
     uint32 m_uiShadowCommandTimer;
     uint32 m_uiShadowBlinkTimer;
 
-    void Reset()
+    void Reset() override
     {
         // Check the map id because the same creature entry is involved in other scripted event in other instance
         if (m_creature->GetMapId() != MAP_ID_BWL)
@@ -152,19 +152,19 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI, private Dialo
             m_creature->SetVisibility(VISIBILITY_ON);
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_NEFARIAN, IN_PROGRESS);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_NEFARIAN, FAIL);
     }
 
-    void AttackStart(Unit* pWho)
+    void AttackStart(Unit* pWho) override
     {
         if (m_creature->Attack(pWho, false))
         {
@@ -177,7 +177,7 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI, private Dialo
         }
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (m_creature->GetMapId() != MAP_ID_BWL)
             return;
@@ -203,7 +203,7 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI, private Dialo
         }
     }
 
-    void SummonedMovementInform(Creature* pSummoned, uint32 uiMotionType, uint32 uiPointId)
+    void SummonedMovementInform(Creature* pSummoned, uint32 uiMotionType, uint32 uiPointId) override
     {
         if (m_creature->GetMapId() != MAP_ID_BWL)
             return;
@@ -216,7 +216,7 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI, private Dialo
         }
     }
 
-    void SummonedCreatureJustDied(Creature* pSummoned)
+    void SummonedCreatureJustDied(Creature* pSummoned) override
     {
         if (m_creature->GetMapId() != MAP_ID_BWL)
             return;
@@ -228,7 +228,7 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI, private Dialo
             pSummoned->CastSpell(pSummoned, SPELL_SUMMON_DRAKONID_BONES, true);
     }
 
-    void JustDidDialogueStep(int32 iEntry)
+    void JustDidDialogueStep(int32 iEntry) override
     {
         // Start combat after the dialogue is finished
         if (iEntry == SPELL_SHADOWBLINK)
@@ -246,7 +246,7 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI, private Dialo
         StartNextDialogueText(SAY_GAMESBEGIN_1);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (m_creature->GetMapId() != MAP_ID_BWL)
             return;

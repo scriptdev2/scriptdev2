@@ -115,18 +115,18 @@ class MANGOS_DLL_DECL instance_culling_of_stratholme : public ScriptedInstance
         instance_culling_of_stratholme(Map* pMap);
         ~instance_culling_of_stratholme() {}
 
-        void Initialize();
+        void Initialize() override;
 
-        void OnCreatureCreate(Creature* pCreature);
-        void OnObjectCreate(GameObject* pGo);
+        void OnCreatureCreate(Creature* pCreature) override;
+        void OnObjectCreate(GameObject* pGo) override;
 
-        void SetData(uint32 uiType, uint32 uiData);
-        uint32 GetData(uint32 uiType);
+        void SetData(uint32 uiType, uint32 uiData) override;
+        uint32 GetData(uint32 uiType) override;
 
-        const char* Save() { return m_strInstData.c_str(); }
-        void Load(const char* chrIn);
+        const char* Save() override { return m_strInstData.c_str(); }
+        void Load(const char* chrIn) override;
 
-        void Update(uint32 uiDiff);
+        void Update(uint32 uiDiff) override;
 
         void GetStratAgiatedCitizenList(GuidList& lList) { lList = m_lAgiatedCitizenGUIDList; };
         void GetStratAgiatedResidentList(GuidList& lList) { lList = m_lAgiatedResidentGUIDList; };
@@ -140,7 +140,7 @@ class MANGOS_DLL_DECL instance_culling_of_stratholme : public ScriptedInstance
         void ArthasJustDied();
 
     protected:
-        void OnPlayerEnter(Player* pPlayer);
+        void OnPlayerEnter(Player* pPlayer) override;
         void DoChromieHurrySpeech();
 
         uint32 m_auiEncounter[MAX_ENCOUNTER];

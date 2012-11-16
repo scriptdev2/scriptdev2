@@ -45,32 +45,32 @@ struct MANGOS_DLL_DECL boss_lucifronAI : public ScriptedAI
     uint32 m_uiLucifronCurseTimer;
     uint32 m_uiShadowShockTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiImpendingDoomTimer = 10000;
         m_uiLucifronCurseTimer = 20000;
         m_uiShadowShockTimer   = 6000;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_LUCIFRON, IN_PROGRESS);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_LUCIFRON, DONE);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_LUCIFRON, FAIL);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

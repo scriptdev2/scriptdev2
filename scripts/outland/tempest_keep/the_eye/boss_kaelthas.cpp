@@ -202,7 +202,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
     uint8 m_uiPhase;
     uint8 m_uiPhaseSubphase;
 
-    void Reset()
+    void Reset() override
     {
         // Phases
         m_uiPhase                   = PHASE_0_NOT_BEGUN;
@@ -231,13 +231,13 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
         SetCombatMovement(true);
     }
 
-    void GetAIInformation(ChatHandler& reader)
+    void GetAIInformation(ChatHandler& reader) override
     {
         reader.PSendSysMessage("Kael'thas is currently in phase %u", m_uiPhase);
     }
 
     // Custom Move in LoS function
-    void MoveInLineOfSight(Unit* pWho)
+    void MoveInLineOfSight(Unit* pWho) override
     {
         if (m_uiPhase == PHASE_0_NOT_BEGUN && pWho->GetTypeId() == TYPEID_PLAYER && !((Player*)pWho)->isGameMaster() &&
                 m_creature->IsWithinDistInMap(pWho, m_creature->GetAttackDistance(pWho)) && m_creature->IsWithinLOSInMap(pWho))
@@ -254,7 +254,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
         }
     }
 
-    void AttackStart(Unit* pWho)
+    void AttackStart(Unit* pWho) override
     {
         if (m_creature->Attack(pWho, true))
         {
@@ -265,7 +265,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
         }
     }
 
-    void KilledUnit(Unit* pUnit)
+    void KilledUnit(Unit* pUnit) override
     {
         switch (urand(0, 2))
         {
@@ -275,7 +275,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -283,13 +283,13 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
             m_pInstance->SetData(TYPE_KAELTHAS, DONE);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_KAELTHAS, FAIL);
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (pSummoned->GetEntry() == NPC_FLAME_STRIKE_TRIGGER)
             pSummoned->CastSpell(pSummoned, SPELL_FLAME_STRIKE_DUMMY, false, NULL, NULL, m_creature->GetObjectGuid());
@@ -300,7 +300,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
             pSummoned->SetInCombatWithZone();
     }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
     {
         // Handle summon weapons event
         if (pSpell->Id == SPELL_SUMMON_WEAPONS)
@@ -313,7 +313,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
         }
     }
 
-    void SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell)
+    void SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell) override
     {
         // Handle gravity lapse teleport - each player hit has his own teleport spell
         if (pSpell->Id == SPELL_GRAVITY_LAPSE && pTarget->GetTypeId() == TYPEID_PLAYER)
@@ -325,7 +325,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
         }
     }
 
-    void MovementInform(uint32 uiMotionType, uint32 uiPointId)
+    void MovementInform(uint32 uiMotionType, uint32 uiPointId) override
     {
         if (uiMotionType != POINT_MOTION_TYPE || !uiPointId)
             return;
@@ -377,7 +377,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
             m_uiPhaseTimer = 1000;
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         switch (m_uiPhase)
         {
@@ -733,7 +733,7 @@ struct MANGOS_DLL_DECL advisor_base_ai : public ScriptedAI
     bool m_bFakeDeath;
     bool m_bCanFakeDeath;
 
-    void Reset()
+    void Reset() override
     {
         m_bCanFakeDeath = true;
         m_bFakeDeath    = false;
@@ -743,7 +743,7 @@ struct MANGOS_DLL_DECL advisor_base_ai : public ScriptedAI
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         // Reset Kael if needed
         if (m_pInstance)
@@ -755,7 +755,7 @@ struct MANGOS_DLL_DECL advisor_base_ai : public ScriptedAI
         }
     }
 
-    void DamageTaken(Unit* pDoneby, uint32& uiDamage)
+    void DamageTaken(Unit* pDoneby, uint32& uiDamage) override
     {
         // Allow fake death only in the first phase
         if (!m_bCanFakeDeath)
@@ -790,7 +790,7 @@ struct MANGOS_DLL_DECL advisor_base_ai : public ScriptedAI
         DoCastSpellIfCan(m_creature, SPELL_KAEL_PHASE_2, CAST_TRIGGERED);
     }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
     {
         // Remove fake death
         if (pSpell->Id == SPELL_RESURRECTION && pCaster->GetEntry() == NPC_KAELTHAS)
@@ -821,7 +821,7 @@ struct MANGOS_DLL_DECL boss_thaladred_the_darkenerAI : public advisor_base_ai
     uint32 m_uiSilenceTimer;
     uint32 m_uiPsychicBlowTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiGazeTimer        = 0;
         m_uiRendTimer        = urand(4000, 8000);
@@ -831,18 +831,18 @@ struct MANGOS_DLL_DECL boss_thaladred_the_darkenerAI : public advisor_base_ai
         advisor_base_ai::Reset();
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_THALADRED_AGGRO, m_creature);
         m_creature->TauntApply(pWho);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_THALADRED_DEATH, m_creature);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -902,24 +902,24 @@ struct MANGOS_DLL_DECL boss_lord_sanguinarAI : public advisor_base_ai
 
     uint32 m_uiFearTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiFearTimer = 10000;
 
         advisor_base_ai::Reset();
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_SANGUINAR_AGGRO, m_creature);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_SANGUINAR_DEATH, m_creature);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -952,7 +952,7 @@ struct MANGOS_DLL_DECL boss_grand_astromancer_capernianAI : public advisor_base_
     uint32 m_uiConflagrationTimer;
     uint32 m_uiArcaneExplosionTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiFireballTimer        = 2000;
         m_uiConflagrationTimer   = 20000;
@@ -961,7 +961,7 @@ struct MANGOS_DLL_DECL boss_grand_astromancer_capernianAI : public advisor_base_
         advisor_base_ai::Reset();
     }
 
-    void AttackStart(Unit* pWho)
+    void AttackStart(Unit* pWho) override
     {
         if (m_creature->Attack(pWho, true))
         {
@@ -973,17 +973,17 @@ struct MANGOS_DLL_DECL boss_grand_astromancer_capernianAI : public advisor_base_
         }
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_CAPERNIAN_AGGRO, m_creature);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_CAPERNIAN_DEATH, m_creature);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -1040,7 +1040,7 @@ struct MANGOS_DLL_DECL boss_master_engineer_telonicusAI : public advisor_base_ai
     uint32 m_uiBombTimer;
     uint32 m_uiRemoteToyTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiBombTimer       = 10000;
         m_uiRemoteToyTimer  = 5000;
@@ -1048,17 +1048,17 @@ struct MANGOS_DLL_DECL boss_master_engineer_telonicusAI : public advisor_base_ai
         advisor_base_ai::Reset();
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_TELONICUS_AGGRO, m_creature);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_TELONICUS_DEATH, m_creature);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -1102,18 +1102,18 @@ struct MANGOS_DLL_DECL mob_phoenix_tkAI : public ScriptedAI
 
     bool m_bFakeDeath;
 
-    void Reset()
+    void Reset() override
     {
         m_uiCycleTimer = 2000;
         m_bFakeDeath = false;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoCastSpellIfCan(m_creature, SPELL_BURN);
     }
 
-    void EnterEvadeMode()
+    void EnterEvadeMode() override
     {
         // Don't evade during ember blast
         if (m_bFakeDeath)
@@ -1122,7 +1122,7 @@ struct MANGOS_DLL_DECL mob_phoenix_tkAI : public ScriptedAI
         ScriptedAI::EnterEvadeMode();
     }
 
-    void DamageTaken(Unit* pKiller, uint32& uiDamage)
+    void DamageTaken(Unit* pKiller, uint32& uiDamage) override
     {
         if (uiDamage < m_creature->GetHealth())
             return;
@@ -1162,7 +1162,7 @@ struct MANGOS_DLL_DECL mob_phoenix_tkAI : public ScriptedAI
         m_creature->SummonCreature(NPC_PHOENIX_EGG, 0, 0, 0, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 15000);
     }
 
-    void SummonedCreatureDespawn(Creature* pSummoned)
+    void SummonedCreatureDespawn(Creature* pSummoned) override
     {
         // Remove fake death if the egg despawns after 15 secs
         m_creature->RemoveAurasDueToSpell(SPELL_EMBER_BLAST);
@@ -1180,14 +1180,14 @@ struct MANGOS_DLL_DECL mob_phoenix_tkAI : public ScriptedAI
         }
     }
 
-    void SummonedCreatureJustDied(Creature* pSummoned)
+    void SummonedCreatureJustDied(Creature* pSummoned) override
     {
         // Self kill if the egg is killed
         if (m_bFakeDeath)
             m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -1223,10 +1223,10 @@ struct MANGOS_DLL_DECL mob_phoenix_egg_tkAI : public Scripted_NoMovementAI
 {
     mob_phoenix_egg_tkAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature) { Reset(); }
 
-    void Reset() { }
-    void MoveInLineOfSight(Unit* pWho) { }
-    void AttackStart(Unit* pWho) { }
-    void UpdateAI(const uint32 uiDiff) { }
+    void Reset() override { }
+    void MoveInLineOfSight(Unit* pWho) override { }
+    void AttackStart(Unit* pWho) override { }
+    void UpdateAI(const uint32 uiDiff) override { }
 };
 
 CreatureAI* GetAI_boss_kaelthas(Creature* pCreature)

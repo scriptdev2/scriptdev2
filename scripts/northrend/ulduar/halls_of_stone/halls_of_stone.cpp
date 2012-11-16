@@ -148,7 +148,7 @@ struct MANGOS_DLL_DECL npc_brann_hosAI : public npc_escortAI
 
     GuidList m_luiDwarfGUIDs;
 
-    void Reset()
+    void Reset() override
     {
         if (!HasEscortState(STATE_ESCORT_ESCORTING))
         {
@@ -161,7 +161,7 @@ struct MANGOS_DLL_DECL npc_brann_hosAI : public npc_escortAI
         }
     }
 
-    void KilledUnit(Unit* pVictim)                          // TODO - possible better as SummonedJustDied
+    void KilledUnit(Unit* pVictim) override                          // TODO - possible better as SummonedJustDied
     {
         switch (urand(0, 2))
         {
@@ -171,7 +171,7 @@ struct MANGOS_DLL_DECL npc_brann_hosAI : public npc_escortAI
         }
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -191,7 +191,7 @@ struct MANGOS_DLL_DECL npc_brann_hosAI : public npc_escortAI
         m_luiDwarfGUIDs.clear();
     }
 
-    void AttackStart(Unit* pWho)
+    void AttackStart(Unit* pWho) override
     {
         if (!pWho)
             return;
@@ -213,7 +213,7 @@ struct MANGOS_DLL_DECL npc_brann_hosAI : public npc_escortAI
         m_bHasContinued = true;
     }
 
-    void JustStartedEscort()
+    void JustStartedEscort() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_TRIBUNAL, IN_PROGRESS);
@@ -221,7 +221,7 @@ struct MANGOS_DLL_DECL npc_brann_hosAI : public npc_escortAI
         DoScriptText(SAY_ESCORT_START, m_creature);
     }
 
-    void WaypointReached(uint32 uiPointId)
+    void WaypointReached(uint32 uiPointId) override
     {
         switch (uiPointId)
         {
@@ -269,14 +269,14 @@ struct MANGOS_DLL_DECL npc_brann_hosAI : public npc_escortAI
         }
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         m_luiDwarfGUIDs.push_back(pSummoned->GetObjectGuid());
 
         pSummoned->AI()->AttackStart(m_creature);
     }
 
-    void UpdateEscortAI(const uint32 uiDiff)
+    void UpdateEscortAI(const uint32 uiDiff) override
     {
         if (m_uiPhaseTimer && m_uiPhaseTimer <= uiDiff)
         {
@@ -572,7 +572,7 @@ struct MANGOS_DLL_DECL npc_brann_hosAI : public npc_escortAI
     }
 
     // Respawn Handling: Relocate and Set Escort to WP 13
-    void JustRespawned()
+    void JustRespawned() override
     {
         if (!m_pInstance)
             return;

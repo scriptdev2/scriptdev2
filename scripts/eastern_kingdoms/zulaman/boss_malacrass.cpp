@@ -234,7 +234,7 @@ struct MANGOS_DLL_DECL boss_malacrassAI : public ScriptedAI
     std::vector<uint32> m_vAddsEntryList;
     std::vector<uint32> m_vPlayerSpellTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiSpiritBoltsTimer    = 30000;
         m_uiDrainPowerTimer     = 0;
@@ -247,7 +247,7 @@ struct MANGOS_DLL_DECL boss_malacrassAI : public ScriptedAI
         DoInitializeAdds();
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_MALACRASS, FAIL);
@@ -288,7 +288,7 @@ struct MANGOS_DLL_DECL boss_malacrassAI : public ScriptedAI
         }
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -296,7 +296,7 @@ struct MANGOS_DLL_DECL boss_malacrassAI : public ScriptedAI
             m_pInstance->SetData(TYPE_MALACRASS, IN_PROGRESS);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         if (pVictim->GetTypeId() != TYPEID_PLAYER)
             return;
@@ -304,7 +304,7 @@ struct MANGOS_DLL_DECL boss_malacrassAI : public ScriptedAI
         DoScriptText(urand(0, 1) ? SAY_KILL1 : SAY_KILL2, m_creature);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -312,7 +312,7 @@ struct MANGOS_DLL_DECL boss_malacrassAI : public ScriptedAI
             m_pInstance->SetData(TYPE_MALACRASS, DONE);
     }
 
-    void SummonedCreatureJustDied(Creature* pSummoned)
+    void SummonedCreatureJustDied(Creature* pSummoned) override
     {
         switch (urand(0, 2))
         {
@@ -322,7 +322,7 @@ struct MANGOS_DLL_DECL boss_malacrassAI : public ScriptedAI
         }
     }
 
-    void SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell)
+    void SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell) override
     {
         // Set the player's class when hit with soul siphon
         if (pTarget->GetTypeId() == TYPEID_PLAYER && pSpell->Id == SPELL_SIPHON_SOUL)
@@ -373,7 +373,7 @@ struct MANGOS_DLL_DECL boss_malacrassAI : public ScriptedAI
         return false;
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

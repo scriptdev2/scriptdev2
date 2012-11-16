@@ -41,7 +41,7 @@ struct MANGOS_DLL_DECL boss_baroness_anastariAI : public ScriptedAI
     uint32 m_uiSilenceTimer;
     uint32 m_uiPossessTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiBansheeWailTimer    = 0;
         m_uiBansheeCurseTimer   = 10000;
@@ -49,7 +49,7 @@ struct MANGOS_DLL_DECL boss_baroness_anastariAI : public ScriptedAI
         m_uiPossessTimer        = 15000;
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

@@ -64,7 +64,7 @@ struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public ScriptedAI
     uint32 m_uiEnrageTimer;
     bool m_bIsEnraged;
 
-    void Reset()
+    void Reset() override
     {
         m_uiCorrosiveAcidTimer  = urand(20000, 23000);
         m_uiFearTimer           = urand(20000, 26000);
@@ -72,13 +72,13 @@ struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public ScriptedAI
         m_bIsEnraged            = false;
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_HELLMAW, FAIL);
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         switch (urand(0, 2))
         {
@@ -91,12 +91,12 @@ struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public ScriptedAI
             m_pInstance->SetData(TYPE_HELLMAW, IN_PROGRESS);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -104,7 +104,7 @@ struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public ScriptedAI
             m_pInstance->SetData(TYPE_HELLMAW, DONE);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

@@ -107,7 +107,7 @@ struct MANGOS_DLL_DECL boss_bjarngrimAI : public ScriptedAI
 
     ObjectGuid m_aStormforgedLieutenantGuid[2];             // TODO - not filled yet.
 
-    void Reset()
+    void Reset() override
     {
         m_bIsChangingStance = false;
 
@@ -147,7 +147,7 @@ struct MANGOS_DLL_DECL boss_bjarngrimAI : public ScriptedAI
             m_pInstance->SetData(TYPE_BJARNGRIM, NOT_STARTED);
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -155,7 +155,7 @@ struct MANGOS_DLL_DECL boss_bjarngrimAI : public ScriptedAI
             m_pInstance->SetData(TYPE_BJARNGRIM, IN_PROGRESS);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         switch (urand(0, 2))
         {
@@ -165,7 +165,7 @@ struct MANGOS_DLL_DECL boss_bjarngrimAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -173,7 +173,7 @@ struct MANGOS_DLL_DECL boss_bjarngrimAI : public ScriptedAI
             m_pInstance->SetData(TYPE_BJARNGRIM, DONE);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         // Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
@@ -330,13 +330,13 @@ struct MANGOS_DLL_DECL mob_stormforged_lieutenantAI : public ScriptedAI
     uint32 m_uiArcWeld_Timer;
     uint32 m_uiRenewSteel_Timer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiArcWeld_Timer = urand(20000, 21000);
         m_uiRenewSteel_Timer = urand(10000, 11000);
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         if (m_pInstance)
         {
@@ -348,7 +348,7 @@ struct MANGOS_DLL_DECL mob_stormforged_lieutenantAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         // Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())

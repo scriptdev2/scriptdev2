@@ -71,7 +71,7 @@ struct MANGOS_DLL_DECL boss_eregosAI : public ScriptedAI
     uint32 m_uiSummonWhelpsTimer;
     float m_fHpPercent;
 
-    void Reset()
+    void Reset() override
     {
         m_uiArcaneBarrageTimer  = 0;
         m_uiArcaneVolleyTimer   = 20000;
@@ -80,7 +80,7 @@ struct MANGOS_DLL_DECL boss_eregosAI : public ScriptedAI
         m_fHpPercent            = 60.0f;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -88,7 +88,7 @@ struct MANGOS_DLL_DECL boss_eregosAI : public ScriptedAI
             m_pInstance->SetData(TYPE_EREGOS, IN_PROGRESS);
     }
 
-    void AttackStart(Unit* pWho)
+    void AttackStart(Unit* pWho) override
     {
         if (m_creature->Attack(pWho, false))
         {
@@ -99,7 +99,7 @@ struct MANGOS_DLL_DECL boss_eregosAI : public ScriptedAI
         }
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         switch (urand(0, 2))
         {
@@ -109,7 +109,7 @@ struct MANGOS_DLL_DECL boss_eregosAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -117,13 +117,13 @@ struct MANGOS_DLL_DECL boss_eregosAI : public ScriptedAI
             m_pInstance->SetData(TYPE_EREGOS, DONE);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_EREGOS, FAIL);
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (pSummoned->GetEntry() == NPC_PLANAR_ANOMALY)
         {
@@ -140,13 +140,13 @@ struct MANGOS_DLL_DECL boss_eregosAI : public ScriptedAI
         }
     }
 
-    void SummonedCreatureDespawn(Creature* pSummoned)
+    void SummonedCreatureDespawn(Creature* pSummoned) override
     {
         if (pSummoned->GetEntry() == NPC_PLANAR_ANOMALY)
             pSummoned->CastSpell(pSummoned, SPELL_PLANAR_BLAST, true);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

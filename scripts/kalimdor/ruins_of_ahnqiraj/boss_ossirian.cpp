@@ -78,7 +78,7 @@ struct MANGOS_DLL_DECL boss_ossirianAI : public ScriptedAI
 
     bool m_bSaidIntro;
 
-    void Reset()
+    void Reset() override
     {
         m_uiCrystalPosition = 0;
         m_uiCycloneTimer = 20000;
@@ -87,19 +87,19 @@ struct MANGOS_DLL_DECL boss_ossirianAI : public ScriptedAI
         m_uiSupremeTimer = 45000;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoCastSpellIfCan(m_creature, SPELL_SUPREME, CAST_TRIGGERED);
         DoScriptText(SAY_AGGRO, m_creature);
         DoSpawnNextCrystal();
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         DoScriptText(SAY_SLAY, m_creature);
     }
@@ -136,13 +136,13 @@ struct MANGOS_DLL_DECL boss_ossirianAI : public ScriptedAI
         ++m_uiCrystalPosition %= MAX_CRYSTAL_POSITIONS;
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (pSummoned->GetEntry() == NPC_OSSIRIAN_TRIGGER)
             pSummoned->CastSpell(pSummoned, SPELL_SUMMON_CRYSTAL, true);
     }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
     {
         if (pCaster->GetTypeId() == TYPEID_UNIT && pCaster->GetEntry() == NPC_OSSIRIAN_TRIGGER)
         {
@@ -167,7 +167,7 @@ struct MANGOS_DLL_DECL boss_ossirianAI : public ScriptedAI
         }
     }
 
-    void MoveInLineOfSight(Unit* pWho)
+    void MoveInLineOfSight(Unit* pWho) override
     {
         // TODO: Range guesswork
         if (!m_bSaidIntro && pWho->GetTypeId() == TYPEID_PLAYER && m_creature->IsWithinDistInMap(pWho, 75.0f, false))
@@ -182,7 +182,7 @@ struct MANGOS_DLL_DECL boss_ossirianAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

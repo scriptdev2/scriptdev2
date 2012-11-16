@@ -64,7 +64,7 @@ struct MANGOS_DLL_DECL boss_fankrissAI : public ScriptedAI
 
     ObjectGuid m_EntangleTargetGuid;
 
-    void Reset()
+    void Reset() override
     {
         m_uiMortalWoundTimer = urand(10000, 15000);
         m_uiSummonWormTimer  = urand(30000, 50000);
@@ -72,25 +72,25 @@ struct MANGOS_DLL_DECL boss_fankrissAI : public ScriptedAI
         m_uiEntangleSummonTimer = 0;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_FANKRISS, IN_PROGRESS);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_FANKRISS, FAIL);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_FANKRISS, DONE);
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (pSummoned->GetEntry() == NPC_SPAWN_FANKRISS)
         {
@@ -104,7 +104,7 @@ struct MANGOS_DLL_DECL boss_fankrissAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

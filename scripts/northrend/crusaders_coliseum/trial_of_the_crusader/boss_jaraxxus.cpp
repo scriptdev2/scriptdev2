@@ -77,7 +77,7 @@ struct MANGOS_DLL_DECL boss_jaraxxusAI : public ScriptedAI
     uint32 m_uiBerserkTimer;
     bool m_bVolcanoSummon;
 
-    void Reset()
+    void Reset() override
     {
         m_uiFelFireballTimer        = urand(20000, 25000);  // maybe too early, and too often!
         m_uiFelLightningTimer       = urand(5000, 8000);
@@ -92,7 +92,7 @@ struct MANGOS_DLL_DECL boss_jaraxxusAI : public ScriptedAI
         DoCastSpellIfCan(m_creature, SPELL_JARAXXUS_HITTIN_YA);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_JARAXXUS, FAIL);
@@ -100,13 +100,13 @@ struct MANGOS_DLL_DECL boss_jaraxxusAI : public ScriptedAI
         m_creature->ForcedDespawn();
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_JARAXXUS, DONE);
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         if (pWho->GetEntry() == NPC_FIZZLEBANG)
             return;
@@ -118,7 +118,7 @@ struct MANGOS_DLL_DECL boss_jaraxxusAI : public ScriptedAI
         m_creature->SetInCombatWithZone();
     }
 
-    void EnterEvadeMode()
+    void EnterEvadeMode() override
     {
         if (m_pInstance && m_pInstance->GetData(TYPE_JARAXXUS) != IN_PROGRESS)
             return;
@@ -126,7 +126,7 @@ struct MANGOS_DLL_DECL boss_jaraxxusAI : public ScriptedAI
         ScriptedAI::EnterEvadeMode();
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         if (pVictim->GetEntry() == NPC_FIZZLEBANG)
             return;
@@ -134,7 +134,7 @@ struct MANGOS_DLL_DECL boss_jaraxxusAI : public ScriptedAI
         DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         switch (pSummoned->GetEntry())
         {
@@ -147,7 +147,7 @@ struct MANGOS_DLL_DECL boss_jaraxxusAI : public ScriptedAI
         }
     }
 
-    void MovementInform(uint32 uiMovementType, uint32 uiPointId)
+    void MovementInform(uint32 uiMovementType, uint32 uiPointId) override
     {
         if (uiMovementType != POINT_MOTION_TYPE)
             return;
@@ -157,7 +157,7 @@ struct MANGOS_DLL_DECL boss_jaraxxusAI : public ScriptedAI
                 m_creature->SetFacingToObject(pFizzlebang);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

@@ -64,11 +64,11 @@ struct MANGOS_DLL_DECL npc_heliceAI : public npc_escortAI
     uint32 m_uiExplodePhase;
     bool m_bFirstBarrel;
 
-    void Reset()
+    void Reset() override
     {
     }
 
-    void WaypointReached(uint32 uiPointId)
+    void WaypointReached(uint32 uiPointId) override
     {
         switch (uiPointId)
         {
@@ -102,7 +102,7 @@ struct MANGOS_DLL_DECL npc_heliceAI : public npc_escortAI
         }
     }
 
-    void UpdateEscortAI(const uint32 uiDiff)
+    void UpdateEscortAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
         {
@@ -222,9 +222,9 @@ struct MANGOS_DLL_DECL npc_injured_rainspeakerAI : public npc_escortAI
 {
     npc_injured_rainspeakerAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
 
-    void Reset() { }
+    void Reset() override { }
 
-    void JustStartedEscort()
+    void JustStartedEscort() override
     {
         if (Player* pPlayer = GetPlayerForEscort())
         {
@@ -233,7 +233,7 @@ struct MANGOS_DLL_DECL npc_injured_rainspeakerAI : public npc_escortAI
         }
     }
 
-    void WaypointReached(uint32 uiPointId)
+    void WaypointReached(uint32 uiPointId) override
     {
         switch (uiPointId)
         {
@@ -263,7 +263,7 @@ struct MANGOS_DLL_DECL npc_injured_rainspeakerAI : public npc_escortAI
         }
     }
 
-    void UpdateEscortAI(const uint32 uiDiff)
+    void UpdateEscortAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

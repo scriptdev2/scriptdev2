@@ -43,11 +43,11 @@ struct MANGOS_DLL_DECL mob_webbed_creatureAI : public Scripted_NoMovementAI
 {
     mob_webbed_creatureAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature) { Reset(); }
 
-    void Reset() { }
-    void AttackStart(Unit* pWho) { }
-    void MoveInLineOfSight(Unit* pWho) { }
+    void Reset() override { }
+    void AttackStart(Unit* pWho) override { }
+    void MoveInLineOfSight(Unit* pWho) override { }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         uint32 uiSpawnCreatureEntry = 0;
 

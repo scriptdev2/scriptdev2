@@ -107,7 +107,7 @@ struct MANGOS_DLL_DECL boss_jedogaAI : public ScriptedAI
 
     GuidList m_lVolunteerGuidList;
 
-    void Reset()
+    void Reset() override
     {
         m_uiThundershockTimer  = 40000;
         m_uiCycloneStrikeTimer = 15000;
@@ -133,7 +133,7 @@ struct MANGOS_DLL_DECL boss_jedogaAI : public ScriptedAI
         return *iter;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
         DoCallVolunteers();
@@ -142,7 +142,7 @@ struct MANGOS_DLL_DECL boss_jedogaAI : public ScriptedAI
             m_pInstance->SetData(TYPE_JEDOGA, IN_PROGRESS);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         switch (urand(0, 2))
         {
@@ -152,7 +152,7 @@ struct MANGOS_DLL_DECL boss_jedogaAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -160,13 +160,13 @@ struct MANGOS_DLL_DECL boss_jedogaAI : public ScriptedAI
             m_pInstance->SetData(TYPE_JEDOGA, DONE);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_JEDOGA, FAIL);
     }
 
-    void MoveInLineOfSight(Unit* pWho)
+    void MoveInLineOfSight(Unit* pWho) override
     {
         if (!m_bHasDoneIntro && pWho->GetTypeId() == TYPEID_PLAYER && m_creature->IsWithinDistInMap(pWho, 110.0f) && m_creature->IsWithinLOSInMap(pWho))
         {
@@ -222,7 +222,7 @@ struct MANGOS_DLL_DECL boss_jedogaAI : public ScriptedAI
         }
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (pSummoned->GetEntry() == NPC_TWILIGHT_VOLUNTEER)
         {
@@ -232,7 +232,7 @@ struct MANGOS_DLL_DECL boss_jedogaAI : public ScriptedAI
         }
     }
 
-    void SummonedCreatureJustDied(Creature* pSummoned)
+    void SummonedCreatureJustDied(Creature* pSummoned) override
     {
         if (pSummoned->GetEntry() == NPC_TWILIGHT_VOLUNTEER)
         {
@@ -248,7 +248,7 @@ struct MANGOS_DLL_DECL boss_jedogaAI : public ScriptedAI
         }
     }
 
-    void SummonedMovementInform(Creature* pSummoned, uint32 uiType, uint32 uiPointId)
+    void SummonedMovementInform(Creature* pSummoned, uint32 uiType, uint32 uiPointId) override
     {
         if (uiType != POINT_MOTION_TYPE || pSummoned->GetEntry() != NPC_TWILIGHT_VOLUNTEER)
             return;
@@ -266,7 +266,7 @@ struct MANGOS_DLL_DECL boss_jedogaAI : public ScriptedAI
         }
     }
 
-    void MovementInform(uint32 uiMoveType, uint32 uiPointId)
+    void MovementInform(uint32 uiMoveType, uint32 uiPointId) override
     {
         if (uiMoveType != POINT_MOTION_TYPE)
             return;
@@ -326,7 +326,7 @@ struct MANGOS_DLL_DECL boss_jedogaAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (m_uiVisualTimer)
         {
@@ -417,9 +417,9 @@ struct MANGOS_DLL_DECL npc_twilight_volunteerAI : public Scripted_NoMovementAI
 
     ScriptedInstance* m_pInstance;
 
-    void Reset() { }
+    void Reset() override { }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         // If it's not killed by Jedoga then set the achiev to fail
         if (pKiller->GetEntry() == NPC_JEDOGA_SHADOWSEEKER)
@@ -429,9 +429,9 @@ struct MANGOS_DLL_DECL npc_twilight_volunteerAI : public Scripted_NoMovementAI
             m_pInstance->SetData(TYPE_JEDOGA, SPECIAL);
     }
 
-    void AttackStart(Unit* pWho) { }
-    void MoveInLineOfSight(Unit* pWho) { }
-    void UpdateAI(const uint32 uiDiff) { }
+    void AttackStart(Unit* pWho) override { }
+    void MoveInLineOfSight(Unit* pWho) override { }
+    void UpdateAI(const uint32 uiDiff) override { }
 };
 
 CreatureAI* GetAI_npc_twilight_volunteer(Creature* pCreature)

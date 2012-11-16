@@ -43,11 +43,11 @@ struct MANGOS_DLL_DECL boss_zarithrianAI : public ScriptedAI
 
     instance_ruby_sanctum* m_pInstance;
 
-    void Reset()
+    void Reset() override
     {
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -55,7 +55,7 @@ struct MANGOS_DLL_DECL boss_zarithrianAI : public ScriptedAI
             m_pInstance->SetData(TYPE_ZARITHRIAN, IN_PROGRESS);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         if (pVictim->GetTypeId() != TYPEID_PLAYER)
             return;
@@ -64,7 +64,7 @@ struct MANGOS_DLL_DECL boss_zarithrianAI : public ScriptedAI
             DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -72,13 +72,13 @@ struct MANGOS_DLL_DECL boss_zarithrianAI : public ScriptedAI
             m_pInstance->SetData(TYPE_ZARITHRIAN, DONE);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_ZARITHRIAN, FAIL);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

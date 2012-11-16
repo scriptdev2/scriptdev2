@@ -78,7 +78,7 @@ struct MANGOS_DLL_DECL boss_volazjAI : public ScriptedAI
     uint32 m_uiShadowBoltTimer;
     uint32 m_uiShiverTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiCombatPhase = 1;
         m_uiMindFlayTimer = 10000;
@@ -86,12 +86,12 @@ struct MANGOS_DLL_DECL boss_volazjAI : public ScriptedAI
         m_uiShiverTimer = 18000;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         switch (urand(0, 2))
         {
@@ -101,12 +101,12 @@ struct MANGOS_DLL_DECL boss_volazjAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(urand(0, 1) ? SAY_DEATH_1 : SAY_DEATH_2, m_creature);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

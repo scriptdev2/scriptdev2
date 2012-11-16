@@ -111,9 +111,9 @@ struct MANGOS_DLL_DECL npc_barrett_ramseyAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    void Reset() {}
+    void Reset() override {}
 
-    void MovementInform(uint32 uiType, uint32 uiPointId)
+    void MovementInform(uint32 uiType, uint32 uiPointId) override
     {
         if (uiType == POINT_MOTION_TYPE && uiPointId == 1)
             m_creature->ForcedDespawn();

@@ -108,18 +108,18 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI, private DialogueHelpe
 
     ObjectGuid m_spotlightGuid;
 
-    void Reset()
+    void Reset() override
     {
         m_spotlightGuid.Clear();
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (pSummoned->GetEntry() == NPC_SPOTLIGHT)
             m_spotlightGuid = pSummoned->GetObjectGuid();
     }
 
-    void WaypointReached(uint32 uiPointId)
+    void WaypointReached(uint32 uiPointId) override
     {
         if (!m_pInstance)
             return;
@@ -155,7 +155,7 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI, private DialogueHelpe
         }
     }
 
-    void JustDidDialogueStep(int32 iEntry)
+    void JustDidDialogueStep(int32 iEntry) override
     {
         switch (iEntry)
         {
@@ -370,12 +370,12 @@ struct MANGOS_DLL_DECL npc_image_of_medivhAI : public ScriptedAI, private Dialog
 
     ObjectGuid m_eventStarterGuid;
 
-    void Reset() { }
+    void Reset() override { }
 
-    void AttackStart(Unit* pWho) { }
-    void MoveInLineOfSight(Unit* pWho) { }
+    void AttackStart(Unit* pWho) override { }
+    void MoveInLineOfSight(Unit* pWho) override { }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (pSummoned->GetEntry() == NPC_IMAGE_OF_ARCANAGOS)
         {
@@ -386,7 +386,7 @@ struct MANGOS_DLL_DECL npc_image_of_medivhAI : public ScriptedAI, private Dialog
         }
     }
 
-    void SummonedMovementInform(Creature* pSummoned, uint32 uiMotionType, uint32 uiPointId)
+    void SummonedMovementInform(Creature* pSummoned, uint32 uiMotionType, uint32 uiPointId) override
     {
         if (uiMotionType != POINT_MOTION_TYPE || pSummoned->GetEntry() != NPC_IMAGE_OF_ARCANAGOS)
             return;
@@ -407,7 +407,7 @@ struct MANGOS_DLL_DECL npc_image_of_medivhAI : public ScriptedAI, private Dialog
         }
     }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
     {
         if (pSpell->Id == SPELL_FIREBALL_REFLECT && pCaster->GetEntry() == NPC_IMAGE_OF_ARCANAGOS)
         {
@@ -416,7 +416,7 @@ struct MANGOS_DLL_DECL npc_image_of_medivhAI : public ScriptedAI, private Dialog
         }
     }
 
-    void JustDidDialogueStep(int32 iEntry)
+    void JustDidDialogueStep(int32 iEntry) override
     {
         if (!m_pInstance)
             return;
@@ -459,9 +459,9 @@ struct MANGOS_DLL_DECL npc_image_arcanagosAI : public ScriptedAI
 {
     npc_image_arcanagosAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
-    void Reset() { }
+    void Reset() override { }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
     {
         if (pSpell->Id == SPELL_FIREBALL && pCaster->GetEntry() == NPC_IMAGE_OF_MEDIVH)
         {
@@ -475,9 +475,9 @@ struct MANGOS_DLL_DECL npc_image_arcanagosAI : public ScriptedAI
         }
     }
 
-    void AttackStart(Unit* pWho) { }
-    void MoveInLineOfSight(Unit* pWho) { }
-    void UpdateAI(const uint32 uiDiff) { }
+    void AttackStart(Unit* pWho) override { }
+    void MoveInLineOfSight(Unit* pWho) override { }
+    void UpdateAI(const uint32 uiDiff) override { }
 };
 
 CreatureAI* GetAI_npc_image_arcanagosAI(Creature* pCreature)

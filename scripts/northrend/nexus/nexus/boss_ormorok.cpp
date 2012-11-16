@@ -71,7 +71,7 @@ struct MANGOS_DLL_DECL boss_ormorokAI : public ScriptedAI
     uint32 m_uiCrystalSpikeTimer;
     uint32 m_uiTanglerTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_bIsEnraged = false;
 
@@ -81,12 +81,12 @@ struct MANGOS_DLL_DECL boss_ormorokAI : public ScriptedAI
         m_uiTanglerTimer = 20000;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -94,19 +94,19 @@ struct MANGOS_DLL_DECL boss_ormorokAI : public ScriptedAI
             m_pInstance->SetData(TYPE_ORMOROK, DONE);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         if (urand(0, 1))
             DoScriptText(SAY_KILL, m_creature);
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1))
             pSummoned->AI()->AttackStart(pTarget);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

@@ -72,7 +72,7 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
 
     bool m_bIsInPhaseTwo;
 
-    void Reset()
+    void Reset() override
     {
         m_uiPoisonVolleyTimer   = 15000;
         m_uiSpawnSpiderTimer    = 55000;
@@ -85,14 +85,14 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
         m_bIsInPhaseTwo         = false;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
         DoCastSpellIfCan(m_creature, SPELL_HATCH_EGGS);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -100,13 +100,13 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
             m_pInstance->SetData(TYPE_MARLI, DONE);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_MARLI, FAIL);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

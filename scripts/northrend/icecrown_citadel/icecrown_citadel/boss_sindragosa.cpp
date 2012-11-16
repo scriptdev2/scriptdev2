@@ -158,7 +158,7 @@ struct MANGOS_DLL_DECL boss_sindragosaAI : public ScriptedAI
     uint32 m_uiFrostBombTimer;
     uint32 m_uiIceTombSingleTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiPhase                   = SINDRAGOSA_PHASE_OOC;
         m_uiPhaseTimer              = 45000;
@@ -182,13 +182,13 @@ struct MANGOS_DLL_DECL boss_sindragosaAI : public ScriptedAI
         m_creature->SetWalk(bIsFlying);
     }
 
-    void EnterEvadeMode()
+    void EnterEvadeMode() override
     {
         SetFlying(true);
         ScriptedAI::EnterEvadeMode();
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_SINDRAGOSA, FAIL);
@@ -196,12 +196,12 @@ struct MANGOS_DLL_DECL boss_sindragosaAI : public ScriptedAI
         m_creature->GetMotionMaster()->MovePoint(SINDRAGOSA_POINT_AIR_EAST, SindragosaPosition[8][0], SindragosaPosition[8][1], SindragosaPosition[8][2], false);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
     }
 
-    void AttackStart(Unit* pWho)
+    void AttackStart(Unit* pWho) override
     {
         ScriptedAI::AttackStart(pWho);
 
@@ -216,13 +216,13 @@ struct MANGOS_DLL_DECL boss_sindragosaAI : public ScriptedAI
         }
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
         // instance data set when sindragosa lands
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -230,7 +230,7 @@ struct MANGOS_DLL_DECL boss_sindragosaAI : public ScriptedAI
             m_pInstance->SetData(TYPE_SINDRAGOSA, DONE);
     }
 
-    void MovementInform(uint32 uiMovementType, uint32 uiPointId)
+    void MovementInform(uint32 uiMovementType, uint32 uiPointId) override
     {
         if (uiMovementType != POINT_MOTION_TYPE)
             return;
@@ -304,7 +304,7 @@ struct MANGOS_DLL_DECL boss_sindragosaAI : public ScriptedAI
         m_creature->CastSpell(x, y, z, SPELL_FROST_BOMB, false);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -490,7 +490,7 @@ struct MANGOS_DLL_DECL npc_rimefang_iccAI : public ScriptedAI
     bool m_bHasLanded; // landed after player entered areatrigger
     bool m_bIsReady;
 
-    void Reset()
+    void Reset() override
     {
         m_uiPhase               = RIMEFANG_PHASE_GROUND;
         m_uiPhaseTimer          = 25000;
@@ -512,12 +512,12 @@ struct MANGOS_DLL_DECL npc_rimefang_iccAI : public ScriptedAI
         m_creature->SetWalk(bIsFlying);
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoCastSpellIfCan(m_creature, SPELL_RIMEFANG_FROST_AURA, CAST_TRIGGERED);
     }
 
-    void AttackStart(Unit* pWho)
+    void AttackStart(Unit* pWho) override
     {
         if (!m_bIsReady)
         {
@@ -533,7 +533,7 @@ struct MANGOS_DLL_DECL npc_rimefang_iccAI : public ScriptedAI
         ScriptedAI::AttackStart(pWho);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         if (!m_pInstance)
             return;
@@ -547,7 +547,7 @@ struct MANGOS_DLL_DECL npc_rimefang_iccAI : public ScriptedAI
     }
 
     // evade to point on platform
-    void EnterEvadeMode()
+    void EnterEvadeMode() override
     {
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
@@ -561,7 +561,7 @@ struct MANGOS_DLL_DECL npc_rimefang_iccAI : public ScriptedAI
         Reset();
     }
 
-    void MovementInform(uint32 uiMovementType, uint32 uiPointId)
+    void MovementInform(uint32 uiMovementType, uint32 uiPointId) override
     {
         if (uiMovementType != POINT_MOTION_TYPE)
             return;
@@ -592,7 +592,7 @@ struct MANGOS_DLL_DECL npc_rimefang_iccAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -676,7 +676,7 @@ struct MANGOS_DLL_DECL npc_spinestalker_iccAI : public ScriptedAI
     bool m_bHasLanded;
     bool m_bIsReady;
 
-    void Reset()
+    void Reset() override
     {
         m_uiBellowingRoarTimer  = urand(8000, 24000);
         m_uiTailSweepTimer      = urand(4000, 8000);
@@ -694,7 +694,7 @@ struct MANGOS_DLL_DECL npc_spinestalker_iccAI : public ScriptedAI
         m_creature->SetWalk(bIsFlying);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         if (!m_pInstance)
             return;
@@ -707,7 +707,7 @@ struct MANGOS_DLL_DECL npc_spinestalker_iccAI : public ScriptedAI
         }
     }
 
-    void AttackStart(Unit* pWho)
+    void AttackStart(Unit* pWho) override
     {
         if (!m_bIsReady)
         {
@@ -723,7 +723,7 @@ struct MANGOS_DLL_DECL npc_spinestalker_iccAI : public ScriptedAI
         ScriptedAI::AttackStart(pWho);
     }
 
-    void EnterEvadeMode()
+    void EnterEvadeMode() override
     {
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
@@ -737,7 +737,7 @@ struct MANGOS_DLL_DECL npc_spinestalker_iccAI : public ScriptedAI
         Reset();
     }
 
-    void MovementInform(uint32 uiMovementType, uint32 uiPointId)
+    void MovementInform(uint32 uiMovementType, uint32 uiPointId) override
     {
         if (uiMovementType != POINT_MOTION_TYPE)
             return;
@@ -755,7 +755,7 @@ struct MANGOS_DLL_DECL npc_spinestalker_iccAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -810,16 +810,16 @@ struct MANGOS_DLL_DECL mob_frost_bombAI : public ScriptedAI
     instance_icecrown_citadel* m_pInstance;
     uint32 m_uiFrostBombTimer;
 
-    void Reset()
+    void Reset() override
     {
         SetCombatMovement(false);
         DoCastSpellIfCan(m_creature, SPELL_FROST_BOMB_VISUAL, CAST_TRIGGERED);
         m_uiFrostBombTimer = 6000;
     }
 
-    void AttackStart(Unit* pWho) {}
+    void AttackStart(Unit* pWho) override {}
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         // Frost Bomb (dmg)
         if (m_uiFrostBombTimer)

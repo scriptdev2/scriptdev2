@@ -55,7 +55,7 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
     bool m_bSummonedRend;
     bool m_bHasChromaticChaos;
 
-    void Reset()
+    void Reset() override
     {
         uiCorrosiveAcidTimer = 8000;
         uiFreezeTimer        = 11000;
@@ -66,12 +66,12 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
         DoCastSpellIfCan(m_creature, SPELL_REND_MOUNTS);
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         DoScriptText(EMOTE_KNOCKED_OFF, pSummoned);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         // Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())

@@ -81,7 +81,7 @@ struct MANGOS_DLL_DECL boss_nightbaneAI : public npc_escortAI
     uint32 m_uiSmokingBlastTimer;
     uint32 m_uiFireballBarrageTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiPhase                   = PHASE_GROUND;
         m_uiFlightPhase             = 1;
@@ -105,18 +105,18 @@ struct MANGOS_DLL_DECL boss_nightbaneAI : public npc_escortAI
         m_uiFireballBarrageTimer    = 10000;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_NIGHTBANE, DONE);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_NIGHTBANE, FAIL);
@@ -125,13 +125,13 @@ struct MANGOS_DLL_DECL boss_nightbaneAI : public npc_escortAI
         npc_escortAI::JustRespawned();
     }
 
-    void EnterEvadeMode()
+    void EnterEvadeMode() override
     {
         // Use standard AI evade, in order to reset position
         ScriptedAI::EnterEvadeMode();
     }
 
-    void WaypointReached(uint32 uiPointId)
+    void WaypointReached(uint32 uiPointId) override
     {
         // Set in combat after the intro is done
         if (uiPointId == 31)
@@ -145,7 +145,7 @@ struct MANGOS_DLL_DECL boss_nightbaneAI : public npc_escortAI
         }
     }
 
-    void MovementInform(uint32 uiMotionType, uint32 uiPointId)
+    void MovementInform(uint32 uiMotionType, uint32 uiPointId) override
     {
         if (uiMotionType != POINT_MOTION_TYPE)
             return;
@@ -171,7 +171,7 @@ struct MANGOS_DLL_DECL boss_nightbaneAI : public npc_escortAI
         }
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (m_creature->getVictim())
             pSummoned->AI()->AttackStart(m_creature->getVictim());
@@ -208,7 +208,7 @@ struct MANGOS_DLL_DECL boss_nightbaneAI : public npc_escortAI
         }
     }
 
-    void UpdateEscortAI(const uint32 uiDiff)
+    void UpdateEscortAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

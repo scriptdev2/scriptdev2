@@ -88,7 +88,7 @@ struct MANGOS_DLL_DECL boss_volkhanAI : public ScriptedAI
     uint32 m_uiHeatTimer;
     uint32 m_uiTemperTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_bHasShattered = false;
 
@@ -97,7 +97,7 @@ struct MANGOS_DLL_DECL boss_volkhanAI : public ScriptedAI
         m_uiTemperTimer = 10000;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -105,7 +105,7 @@ struct MANGOS_DLL_DECL boss_volkhanAI : public ScriptedAI
             m_pInstance->SetData(TYPE_VOLKHAN, IN_PROGRESS);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
         DespawnGolems();
@@ -114,7 +114,7 @@ struct MANGOS_DLL_DECL boss_volkhanAI : public ScriptedAI
             m_pInstance->SetData(TYPE_VOLKHAN, DONE);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         DespawnGolems();
 
@@ -122,7 +122,7 @@ struct MANGOS_DLL_DECL boss_volkhanAI : public ScriptedAI
             m_pInstance->SetData(TYPE_VOLKHAN, FAIL);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         switch (urand(0, 2))
         {
@@ -175,7 +175,7 @@ struct MANGOS_DLL_DECL boss_volkhanAI : public ScriptedAI
         }
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (pSummoned->GetEntry() == NPC_MOLTEN_GOLEM)
         {
@@ -186,7 +186,7 @@ struct MANGOS_DLL_DECL boss_volkhanAI : public ScriptedAI
         }
     }
 
-    void MovementInform(uint32 uiMoveType, uint32 uiPointId)
+    void MovementInform(uint32 uiMoveType, uint32 uiPointId) override
     {
         if (uiMoveType != POINT_MOTION_TYPE || !uiPointId)
             return;
@@ -195,7 +195,7 @@ struct MANGOS_DLL_DECL boss_volkhanAI : public ScriptedAI
         SetCombatMovement(true);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         // Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
@@ -335,13 +335,13 @@ struct MANGOS_DLL_DECL mob_molten_golemAI : public ScriptedAI
     uint32 m_uiBlastTimer;
     uint32 m_uiImmolationTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiBlastTimer = 20000;
         m_uiImmolationTimer = 5000;
     }
 
-    void EnterEvadeMode()
+    void EnterEvadeMode() override
     {
         // Evade but keep the current location
         m_creature->RemoveAllAuras();
@@ -356,7 +356,7 @@ struct MANGOS_DLL_DECL mob_molten_golemAI : public ScriptedAI
         m_creature->UpdateEntry(NPC_BRITTLE_GOLEM);
     }
 
-    void DamageTaken(Unit* pDoneBy, uint32& uiDamage)
+    void DamageTaken(Unit* pDoneBy, uint32& uiDamage) override
     {
         // Transform intro Brittle when damaged to 0 HP
         if (uiDamage >= m_creature->GetHealth())
@@ -370,7 +370,7 @@ struct MANGOS_DLL_DECL mob_molten_golemAI : public ScriptedAI
         }
     }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
     {
         // This is the dummy effect of the spells - Note: should be handled as a dummy effect in core
         if (pSpell->Id == SPELL_SHATTER || pSpell->Id == SPELL_SHATTER_H)
@@ -380,7 +380,7 @@ struct MANGOS_DLL_DECL mob_molten_golemAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         // Return since we have no target or if we are frozen
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())

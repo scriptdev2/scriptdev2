@@ -49,15 +49,15 @@ class MANGOS_DLL_DECL instance_ahnkahet : public ScriptedInstance
     public:
         instance_ahnkahet(Map* pMap);
 
-        void Initialize();
+        void Initialize() override;
 
-        void OnCreatureCreate(Creature* pCreature);
-        void OnObjectCreate(GameObject* pGo);
+        void OnCreatureCreate(Creature* pCreature) override;
+        void OnObjectCreate(GameObject* pGo) override;
 
-        void OnCreatureDeath(Creature* pCreature);
+        void OnCreatureDeath(Creature* pCreature) override;
 
-        void SetData(uint32 uiType, uint32 uiData);
-        uint32 GetData(uint32 uiType);
+        void SetData(uint32 uiType, uint32 uiData) override;
+        uint32 GetData(uint32 uiType) override;
 
         ObjectGuid SelectRandomGuardianEggGuid();
         ObjectGuid SelectRandomSwarmerEggGuid();
@@ -66,10 +66,10 @@ class MANGOS_DLL_DECL instance_ahnkahet : public ScriptedInstance
         void GetJedogaControllersList(GuidList& lList) { lList = m_lJedogaControllersGuidList; }
         void GetJedogaEventControllersList(GuidList& lList) {lList = m_lJedogaEventControllersGuidList; }
 
-        bool CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/);
+        bool CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) override;
 
-        const char* Save() { return m_strInstData.c_str(); }
-        void Load(const char* chrIn);
+        const char* Save() override { return m_strInstData.c_str(); }
+        void Load(const char* chrIn) override;
 
     private:
         uint32 m_auiEncounter[MAX_ENCOUNTER];

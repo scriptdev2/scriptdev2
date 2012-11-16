@@ -190,7 +190,7 @@ struct MANGOS_DLL_DECL boss_malygosAI : public ScriptedAI, private DialogueHelpe
     uint32 m_uiStaticFieldTimer;
     uint32 m_uiSurgeOfPowerTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiPhase               = PHASE_FLOOR;
 
@@ -214,7 +214,7 @@ struct MANGOS_DLL_DECL boss_malygosAI : public ScriptedAI, private DialogueHelpe
         SetCombatMovement(false);
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -222,7 +222,7 @@ struct MANGOS_DLL_DECL boss_malygosAI : public ScriptedAI, private DialogueHelpe
             m_pInstance->SetData(TYPE_MALYGOS, IN_PROGRESS);
     }
 
-    void MoveInLineOfSight(Unit* pWho)
+    void MoveInLineOfSight(Unit* pWho) override
     {
         if (!m_bHasDoneIntro && pWho->GetTypeId() == TYPEID_PLAYER && !((Player*)pWho)->isGameMaster() && m_creature->IsWithinDistInMap(pWho, 110.0f))
         {
@@ -233,7 +233,7 @@ struct MANGOS_DLL_DECL boss_malygosAI : public ScriptedAI, private DialogueHelpe
         ScriptedAI::MoveInLineOfSight(pWho);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         uint8 uiTextId = 0;
         switch (m_uiPhase)
@@ -259,7 +259,7 @@ struct MANGOS_DLL_DECL boss_malygosAI : public ScriptedAI, private DialogueHelpe
         }
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
         m_creature->SummonCreature(NPC_ALEXSTRASZA, aAlextraszaSpawnPos[0], aAlextraszaSpawnPos[1], aAlextraszaSpawnPos[2], aAlextraszaSpawnPos[3], TEMPSUMMON_TIMED_DESPAWN, 5 * MINUTE * IN_MILLISECONDS);
@@ -268,13 +268,13 @@ struct MANGOS_DLL_DECL boss_malygosAI : public ScriptedAI, private DialogueHelpe
             m_pInstance->SetData(TYPE_MALYGOS, DONE);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_MALYGOS, FAIL);
     }
 
-    void MovementInform(uint32 uiMoveType, uint32 uiPointId)
+    void MovementInform(uint32 uiMoveType, uint32 uiPointId) override
     {
         if (uiMoveType != POINT_MOTION_TYPE)
             return;
@@ -288,7 +288,7 @@ struct MANGOS_DLL_DECL boss_malygosAI : public ScriptedAI, private DialogueHelpe
         }
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         switch (pSummoned->GetEntry())
         {
@@ -313,7 +313,7 @@ struct MANGOS_DLL_DECL boss_malygosAI : public ScriptedAI, private DialogueHelpe
         }
     }
 
-    void SummonedCreatureJustDied(Creature* pSummoned)
+    void SummonedCreatureJustDied(Creature* pSummoned) override
     {
         if (pSummoned->GetEntry() == NPC_NEXUS_LORD || pSummoned->GetEntry() == NPC_SCION_OF_ETERNITY)
         {
@@ -335,14 +335,14 @@ struct MANGOS_DLL_DECL boss_malygosAI : public ScriptedAI, private DialogueHelpe
         }
     }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
     {
         // Handle yell on Power Spark hit
         if (pSpell->Id == SPELL_POWER_SPARK_MALYGOS && pCaster->GetEntry() == NPC_POWER_SPARK)
             DoScriptText(SAY_SPARK_BUFF, m_creature);
     }
 
-    void JustDidDialogueStep(int32 iEntry)
+    void JustDidDialogueStep(int32 iEntry) override
     {
         switch (iEntry)
         {
@@ -395,7 +395,7 @@ struct MANGOS_DLL_DECL boss_malygosAI : public ScriptedAI, private DialogueHelpe
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         DialogueUpdate(uiDiff);
 
@@ -568,12 +568,12 @@ struct MANGOS_DLL_DECL npc_power_sparkAI : public ScriptedAI
 {
     npc_power_sparkAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
-    void Reset()
+    void Reset() override
     {
         DoCastSpellIfCan(m_creature, SPELL_POWER_SPARK_VISUAL);
     }
 
-    void MoveInLineOfSight(Unit* pWho)
+    void MoveInLineOfSight(Unit* pWho) override
     {
         if (pWho->GetEntry() == NPC_MALYGOS && m_creature->CanReachWithMeleeAttack(pWho))
         {
@@ -582,14 +582,14 @@ struct MANGOS_DLL_DECL npc_power_sparkAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoCastSpellIfCan(m_creature, SPELL_POWER_SPARK_PLAYERS, CAST_TRIGGERED);
     }
 
-    void AttackStart(Unit* pWho) { }
+    void AttackStart(Unit* pWho) override { }
 
-    void UpdateAI(const uint32 uiDiff) { }
+    void UpdateAI(const uint32 uiDiff) override { }
 };
 
 CreatureAI* GetAI_npc_power_spark(Creature* pCreature)

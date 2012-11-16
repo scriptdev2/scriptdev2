@@ -109,7 +109,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
     bool m_bIsEpilogue;
     bool m_bStartEpilogue;
 
-    void Reset()
+    void Reset() override
     {
         m_uiDrainNordrassilTimer = 10000;
         m_uiFearTimer            = 40000;
@@ -126,12 +126,12 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         m_bStartEpilogue         = false;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
     }
 
-    void MoveInLineOfSight(Unit* pWho)
+    void MoveInLineOfSight(Unit* pWho) override
     {
         // If the boss reaches the tree during the fight, then he enrages - the distance is not very clear
         if (!m_bIsEnraged && pWho->GetEntry() == NPC_CHANNEL_TARGET && pWho->IsWithinDistInMap(m_creature, 75.0f))
@@ -143,7 +143,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         ScriptedAI::MoveInLineOfSight(pWho);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         if (pVictim->GetTypeId() != TYPEID_PLAYER)
             return;
@@ -175,7 +175,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         }
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         // Start epilogue at 10% hp
         if (m_bIsEpilogue)
@@ -190,7 +190,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
             m_pInstance->SetData(TYPE_ARCHIMONDE, FAIL);
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (pSummoned->GetEntry() == NPC_ANCIENT_WISP)
         {
@@ -208,7 +208,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         // Intro timer
         if (m_uiDrainNordrassilTimer)
@@ -352,14 +352,14 @@ struct MANGOS_DLL_DECL npc_doomfire_spiritAI : public ScriptedAI
     uint32 m_uiChangeTargetTimer;
     float m_fAngle;
 
-    void Reset()
+    void Reset() override
     {
         m_uiDoomfireLoadTimer = 1000;
         m_uiChangeTargetTimer = 1500;
         m_fAngle              = urand(0, M_PI_F * 2);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (m_uiDoomfireLoadTimer)
         {

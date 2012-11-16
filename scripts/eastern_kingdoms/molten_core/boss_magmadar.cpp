@@ -49,14 +49,14 @@ struct MANGOS_DLL_DECL boss_magmadarAI : public ScriptedAI
     uint32 m_uiPanicTimer;
     uint32 m_uiLavabombTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiFrenzyTimer = 30000;
         m_uiPanicTimer = 7000;
         m_uiLavabombTimer = 12000;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoCastSpellIfCan(m_creature, SPELL_MAGMASPIT, true);
 
@@ -64,19 +64,19 @@ struct MANGOS_DLL_DECL boss_magmadarAI : public ScriptedAI
             m_pInstance->SetData(TYPE_MAGMADAR, IN_PROGRESS);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_MAGMADAR, DONE);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_MAGMADAR, NOT_STARTED);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

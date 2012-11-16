@@ -55,7 +55,7 @@ struct MANGOS_DLL_DECL npc_ancient_male_vrykulAI : public ScriptedAI
     uint32 m_uiPhase;
     uint32 m_uiPhaseTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_bEventInProgress = false;
         m_uiPhase = 0;
@@ -70,7 +70,7 @@ struct MANGOS_DLL_DECL npc_ancient_male_vrykulAI : public ScriptedAI
         m_bEventInProgress = true;
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_bEventInProgress)
             return;
@@ -168,7 +168,7 @@ struct MANGOS_DLL_DECL npc_daegarnAI : public ScriptedAI
     bool m_bEventInProgress;
     ObjectGuid m_playerGuid;
 
-    void Reset()
+    void Reset() override
     {
         m_bEventInProgress = false;
         m_playerGuid.Clear();
@@ -184,7 +184,7 @@ struct MANGOS_DLL_DECL npc_daegarnAI : public ScriptedAI
         SummonGladiator(NPC_FIRJUS);
     }
 
-    void JustSummoned(Creature* pSummon)
+    void JustSummoned(Creature* pSummon) override
     {
         if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid))
         {
@@ -204,7 +204,7 @@ struct MANGOS_DLL_DECL npc_daegarnAI : public ScriptedAI
         m_creature->SummonCreature(uiEntry, afSummon[0], afSummon[1], afSummon[2], 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 20 * IN_MILLISECONDS);
     }
 
-    void SummonedMovementInform(Creature* pSummoned, uint32 uiMotionType, uint32 uiPointId)
+    void SummonedMovementInform(Creature* pSummoned, uint32 uiMotionType, uint32 uiPointId) override
     {
         Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid);
 
@@ -219,7 +219,7 @@ struct MANGOS_DLL_DECL npc_daegarnAI : public ScriptedAI
             pSummoned->AI()->AttackStart(pPlayer);
     }
 
-    void SummonedCreatureDespawn(Creature* pSummoned)
+    void SummonedCreatureDespawn(Creature* pSummoned) override
     {
         uint32 uiEntry = 0;
 
@@ -282,7 +282,7 @@ struct MANGOS_DLL_DECL npc_silvermoon_harryAI : public ScriptedAI
     uint32 m_uiScorchTimer;
     uint32 m_uiResetBeatenTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_bHarryBeaten = false;
 
@@ -296,7 +296,7 @@ struct MANGOS_DLL_DECL npc_silvermoon_harryAI : public ScriptedAI
             m_creature->setFaction(m_creature->GetCreatureInfo()->faction_A);
     }
 
-    void AttackedBy(Unit* pAttacker)
+    void AttackedBy(Unit* pAttacker) override
     {
         if (m_creature->getVictim())
             return;
@@ -305,7 +305,7 @@ struct MANGOS_DLL_DECL npc_silvermoon_harryAI : public ScriptedAI
             AttackStart(pAttacker);
     }
 
-    void DamageTaken(Unit* pDoneBy, uint32& uiDamage)
+    void DamageTaken(Unit* pDoneBy, uint32& uiDamage) override
     {
         if (uiDamage > m_creature->GetHealth() || (m_creature->GetHealth() - uiDamage) * 100 / m_creature->GetMaxHealth() < 20)
         {
@@ -334,7 +334,7 @@ struct MANGOS_DLL_DECL npc_silvermoon_harryAI : public ScriptedAI
         return m_bHarryBeaten;
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (m_bHarryBeaten)
         {

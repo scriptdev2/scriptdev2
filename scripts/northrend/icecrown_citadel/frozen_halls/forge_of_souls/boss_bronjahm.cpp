@@ -66,7 +66,7 @@ struct MANGOS_DLL_DECL boss_bronjahmAI : public ScriptedAI
     uint32 m_uiFearTimer;
     uint32 m_uiShadowboltTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiPhase = 0;
         m_uiMagicsBaneTimer = urand(8000, 12000);
@@ -76,7 +76,7 @@ struct MANGOS_DLL_DECL boss_bronjahmAI : public ScriptedAI
         SetCombatMovement(true);
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(urand(0, 1) ? SAY_AGGRO_1 : SAY_AGGRO_2, m_creature);
 
@@ -87,7 +87,7 @@ struct MANGOS_DLL_DECL boss_bronjahmAI : public ScriptedAI
         m_creature->RemoveAurasDueToSpell(SPELL_SOULSTORM_VISUAL_OOC);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         if (pVictim->GetTypeId() != TYPEID_PLAYER)
             return;
@@ -96,7 +96,7 @@ struct MANGOS_DLL_DECL boss_bronjahmAI : public ScriptedAI
             DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -104,13 +104,13 @@ struct MANGOS_DLL_DECL boss_bronjahmAI : public ScriptedAI
             m_pInstance->SetData(TYPE_BRONJAHM, DONE);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_BRONJAHM, FAIL);
     }
 
-    void SpellHitTarget(Unit* pTarget, SpellEntry const* pSpellEntry)
+    void SpellHitTarget(Unit* pTarget, SpellEntry const* pSpellEntry) override
     {
         if (pTarget == m_creature && pSpellEntry->Id == SPELL_TELEPORT)
         {
@@ -121,7 +121,7 @@ struct MANGOS_DLL_DECL boss_bronjahmAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -219,18 +219,18 @@ struct MANGOS_DLL_DECL npc_corrupted_soul_fragmentAI : public ScriptedAI
         DoCastSpellIfCan(m_creature, SPELL_BANISH_VISUAL);
     }
 
-    void Reset()
+    void Reset() override
     {
         SetCombatMovement(true);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         if (instance_forge_of_souls* pInstance = (instance_forge_of_souls*)m_creature->GetInstanceData())
             pInstance->SetGuid(DATA_SOULFRAGMENT_REMOVE, m_creature->GetObjectGuid());
     }
 
-    void MoveInLineOfSight(Unit* pWho)
+    void MoveInLineOfSight(Unit* pWho) override
     {
         if (pWho->GetEntry() == NPC_BRONJAHM)
         {

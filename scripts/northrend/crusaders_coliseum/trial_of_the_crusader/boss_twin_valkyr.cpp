@@ -46,14 +46,14 @@ struct MANGOS_DLL_DECL boss_fjolaAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    void Reset() {}
+    void Reset() override {}
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         m_creature->SetInCombatWithZone();
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -75,14 +75,14 @@ struct MANGOS_DLL_DECL boss_eydisAI : public ScriptedAI
 {
     boss_eydisAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
-    void Reset() {}
+    void Reset() override {}
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         m_creature->SetInCombatWithZone();
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

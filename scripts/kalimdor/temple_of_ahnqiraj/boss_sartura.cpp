@@ -61,7 +61,7 @@ struct MANGOS_DLL_DECL boss_sarturaAI : public ScriptedAI
     bool m_bIsWhirlWind;
     bool m_bAggroReset;
 
-    void Reset()
+    void Reset() override
     {
         m_uiWhirlWindTimer = 30000;
         m_uiWhirlWindRandomTimer = urand(3000, 7000);
@@ -76,7 +76,7 @@ struct MANGOS_DLL_DECL boss_sarturaAI : public ScriptedAI
         m_bIsEnragedHard = false;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -84,12 +84,12 @@ struct MANGOS_DLL_DECL boss_sarturaAI : public ScriptedAI
             m_pInstance->SetData(TYPE_SARTURA, IN_PROGRESS);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         DoScriptText(SAY_SLAY, m_creature);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -97,13 +97,13 @@ struct MANGOS_DLL_DECL boss_sarturaAI : public ScriptedAI
             m_pInstance->SetData(TYPE_SARTURA, DONE);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_SARTURA, FAIL);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -215,7 +215,7 @@ struct MANGOS_DLL_DECL mob_sartura_royal_guardAI : public ScriptedAI
     bool m_IsWhirlWind;
     bool m_bAggroReset;
 
-    void Reset()
+    void Reset() override
     {
         m_uiWhirlWindTimer = 30000;
         m_uiWhirlWindRandomTimer = urand(3000, 7000);
@@ -228,7 +228,7 @@ struct MANGOS_DLL_DECL mob_sartura_royal_guardAI : public ScriptedAI
         m_bAggroReset = false;
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

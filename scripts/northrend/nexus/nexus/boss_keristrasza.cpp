@@ -73,7 +73,7 @@ struct MANGOS_DLL_DECL boss_keristraszaAI : public ScriptedAI
 
     bool m_bIsEnraged;
 
-    void Reset()
+    void Reset() override
     {
         uiCrystalChainTimer = 30000;
         uiTailSweepTimer = urand(5000, 7500);
@@ -93,7 +93,7 @@ struct MANGOS_DLL_DECL boss_keristraszaAI : public ScriptedAI
         }
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -103,7 +103,7 @@ struct MANGOS_DLL_DECL boss_keristraszaAI : public ScriptedAI
             m_pInstance->SetData(TYPE_KERISTRASZA, IN_PROGRESS);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -111,13 +111,13 @@ struct MANGOS_DLL_DECL boss_keristraszaAI : public ScriptedAI
             m_pInstance->SetData(TYPE_KERISTRASZA, DONE);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         if (urand(0, 1))
             DoScriptText(SAY_KILL, m_creature);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

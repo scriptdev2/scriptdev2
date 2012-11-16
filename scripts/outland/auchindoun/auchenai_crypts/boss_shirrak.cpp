@@ -54,7 +54,7 @@ struct MANGOS_DLL_DECL boss_shirrakAI : public ScriptedAI
 
     ObjectGuid m_focusTargetGuid;
 
-    void Reset()
+    void Reset() override
     {
         m_uiCarnivorousBiteTimer    = urand(4000, 7000);
         m_uiFocusFireTimer          = 15000;
@@ -64,14 +64,14 @@ struct MANGOS_DLL_DECL boss_shirrakAI : public ScriptedAI
         DoCastSpellIfCan(m_creature, SPELL_INHIBIT_MAGIC);
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         // The focus fire creature casts the focus fire visual
         if (pSummoned->GetEntry() == NPC_FOCUS_FIRE)
             pSummoned->CastSpell(pSummoned, SPELL_FOCUS_TARGET_VISUAL, true);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

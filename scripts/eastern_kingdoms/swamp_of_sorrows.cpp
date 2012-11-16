@@ -54,18 +54,18 @@ struct MANGOS_DLL_DECL npc_galen_goodwardAI : public npc_escortAI
     ObjectGuid m_galensCageGuid;
     uint32 m_uiPeriodicSay;
 
-    void Reset()
+    void Reset() override
     {
         m_uiPeriodicSay = 6000;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         if (HasEscortState(STATE_ESCORT_ESCORTING))
             DoScriptText(urand(0, 1) ? SAY_ATTACKED_1 : SAY_ATTACKED_2, m_creature, pWho);
     }
 
-    void WaypointStart(uint32 uiPointId)
+    void WaypointStart(uint32 uiPointId) override
     {
         switch (uiPointId)
         {
@@ -90,7 +90,7 @@ struct MANGOS_DLL_DECL npc_galen_goodwardAI : public npc_escortAI
         }
     }
 
-    void WaypointReached(uint32 uiPointId)
+    void WaypointReached(uint32 uiPointId) override
     {
         switch (uiPointId)
         {
@@ -111,7 +111,7 @@ struct MANGOS_DLL_DECL npc_galen_goodwardAI : public npc_escortAI
         }
     }
 
-    void UpdateEscortAI(const uint32 uiDiff)
+    void UpdateEscortAI(const uint32 uiDiff) override
     {
 
         if (m_uiPeriodicSay < uiDiff)

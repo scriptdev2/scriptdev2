@@ -265,7 +265,7 @@ struct MANGOS_DLL_DECL boss_the_lich_king_iccAI : public ScriptedAI
     uint32 m_uiFrostmournePhaseTimer;
     uint32 m_uiVileSpiritsTimer;
 
-    void Reset()
+    void Reset() override
     {
         // TODO: handling phases "intro" and "one" and aggroing depending on resetting encounter
         m_uiPhase               = PHASE_INTRO;
@@ -286,7 +286,7 @@ struct MANGOS_DLL_DECL boss_the_lich_king_iccAI : public ScriptedAI
         m_uiVileSpiritsTimer    = 20000;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_LICH_KING, IN_PROGRESS);
@@ -295,13 +295,13 @@ struct MANGOS_DLL_DECL boss_the_lich_king_iccAI : public ScriptedAI
         m_uiPhase = PHASE_ONE;
     }
 
-    void KilledUnit(Unit* pWho)
+    void KilledUnit(Unit* pWho) override
     {
         if (pWho->GetTypeId() == TYPEID_PLAYER)
             DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_LICH_KING, DONE);
@@ -311,13 +311,13 @@ struct MANGOS_DLL_DECL boss_the_lich_king_iccAI : public ScriptedAI
         // TODO: finish event, after around 8 seconds play cinematic
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_LICH_KING, FAIL);
     }
 
-    void MovementInform(uint32 uiMovementType, uint32 uiData)
+    void MovementInform(uint32 uiMovementType, uint32 uiData) override
     {
         if (uiMovementType != POINT_MOTION_TYPE)
             return;
@@ -361,7 +361,7 @@ struct MANGOS_DLL_DECL boss_the_lich_king_iccAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (m_uiPhase != PHASE_INTRO && m_uiPhase != PHASE_DEATH_AWAITS)
         {

@@ -65,22 +65,22 @@ struct MANGOS_DLL_DECL hyjalAI : public ScriptedAI
         }
 
         // Generically used to reset our variables. Do *not* call in EnterEvadeMode as this may make problems if the raid is still in combat
-        void Reset();
+        void Reset() override;
 
         // Send creature back to spawn location and evade.
-        void EnterEvadeMode();
+        void EnterEvadeMode() override;
 
         // Called when creature reached home location after evade.
-        void JustReachedHome();
+        void JustReachedHome() override;
 
         // Used to reset cooldowns for our spells and to inform the raid that we're under attack
-        void Aggro(Unit* pWho);
+        void Aggro(Unit* pWho) override;
 
         // Called to summon waves, check for boss deaths and to cast our spells.
-        void UpdateAI(const uint32 uiDiff);
+        void UpdateAI(const uint32 uiDiff) override;
 
         // Called on death, informs the raid that they have failed.
-        void JustDied(Unit* pKiller);
+        void JustDied(Unit* pKiller) override;
 
         // "Teleport" all friendly creatures away from the base.
         void Retreat();
@@ -88,7 +88,7 @@ struct MANGOS_DLL_DECL hyjalAI : public ScriptedAI
         // Summons a creature for that wave in that base
         void SpawnCreatureForWave(uint32 uiMobEntry);
 
-        void JustSummoned(Creature*);
+        void JustSummoned(Creature*) override;
 
         // Summons the next wave, calls SummonCreature
         void SummonNextWave();
@@ -100,7 +100,7 @@ struct MANGOS_DLL_DECL hyjalAI : public ScriptedAI
         void DoTalk(YellType pYellType);
 
         // Used to filter who to despawn after mass teleport
-        void SpellHitTarget(Unit*, const SpellEntry*);
+        void SpellHitTarget(Unit*, const SpellEntry*) override;
 
     public:
 

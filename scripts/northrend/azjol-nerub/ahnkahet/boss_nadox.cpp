@@ -63,11 +63,11 @@ struct MANGOS_DLL_DECL mob_ahnkahar_eggAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    void Reset() {}
-    void MoveInLineOfSight(Unit* pWho) {}
-    void AttackStart(Unit* pWho) {}
+    void Reset() override {}
+    void MoveInLineOfSight(Unit* pWho) override {}
+    void AttackStart(Unit* pWho) override {}
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (pSummoned->GetEntry() == NPC_AHNKAHAR_GUARDIAN)
         {
@@ -87,7 +87,7 @@ struct MANGOS_DLL_DECL mob_ahnkahar_eggAI : public ScriptedAI
         }
     }
 
-    void SummonedCreatureJustDied(Creature* pSummoned)
+    void SummonedCreatureJustDied(Creature* pSummoned) override
     {
         // If the Guardian is killed set the achiev criteria to false
         if (pSummoned->GetEntry() == NPC_AHNKAHAR_GUARDIAN)
@@ -125,7 +125,7 @@ struct MANGOS_DLL_DECL boss_nadoxAI : public ScriptedAI
     uint32 m_uiBroodRageTimer;
     uint32 m_uiSummonTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_bBerserk = false;
         m_bGuardianSummoned = false;
@@ -134,7 +134,7 @@ struct MANGOS_DLL_DECL boss_nadoxAI : public ScriptedAI
         m_uiBroodRageTimer = 20000;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -142,13 +142,13 @@ struct MANGOS_DLL_DECL boss_nadoxAI : public ScriptedAI
             m_pInstance->SetData(TYPE_NADOX, IN_PROGRESS);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_NADOX, FAIL);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         switch (urand(0, 2))
         {
@@ -158,7 +158,7 @@ struct MANGOS_DLL_DECL boss_nadoxAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -166,7 +166,7 @@ struct MANGOS_DLL_DECL boss_nadoxAI : public ScriptedAI
             m_pInstance->SetData(TYPE_NADOX, DONE);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

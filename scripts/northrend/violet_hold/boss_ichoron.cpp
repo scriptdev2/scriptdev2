@@ -76,26 +76,26 @@ struct MANGOS_DLL_DECL boss_ichoronAI : public ScriptedAI
     uint32 m_uiWaterBlastTimer;
     bool m_bIsFrenzy;
 
-    void Reset()
+    void Reset() override
     {
         m_uiWaterBoltVolleyTimer = urand(10000, 12000);
         m_uiWaterBlastTimer      = 10000;
         m_bIsFrenzy              = false;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
         DoCastSpellIfCan(m_creature, SPELL_PROTECTIVE_BUBBLE);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
     }
 
-    void KilledUnit(Unit* pWho)
+    void KilledUnit(Unit* pWho) override
     {
         if (pWho->GetTypeId() != TYPEID_PLAYER)
             return;
@@ -108,7 +108,7 @@ struct MANGOS_DLL_DECL boss_ichoronAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

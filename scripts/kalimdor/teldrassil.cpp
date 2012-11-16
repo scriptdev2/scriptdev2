@@ -45,9 +45,9 @@ struct MANGOS_DLL_DECL npc_mistAI : public FollowerAI
 {
     npc_mistAI(Creature* pCreature) : FollowerAI(pCreature) { Reset(); }
 
-    void Reset() { }
+    void Reset() override { }
 
-    void MoveInLineOfSight(Unit* pWho)
+    void MoveInLineOfSight(Unit* pWho) override
     {
         FollowerAI::MoveInLineOfSight(pWho);
 
@@ -76,7 +76,7 @@ struct MANGOS_DLL_DECL npc_mistAI : public FollowerAI
     }
 
     // call not needed here, no known abilities
-    /*void UpdateFollowerAI(const uint32 uiDiff)
+    /*void UpdateFollowerAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

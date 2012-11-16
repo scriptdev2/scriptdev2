@@ -194,10 +194,10 @@ class MANGOS_DLL_DECL instance_violet_hold : public ScriptedInstance
         instance_violet_hold(Map* pMap);
         ~instance_violet_hold();                            // Destructor used to free m_vRandomBosses
 
-        void Initialize();
+        void Initialize() override;
 
-        void OnCreatureCreate(Creature* pCreature);
-        void OnObjectCreate(GameObject* pGo);
+        void OnCreatureCreate(Creature* pCreature) override;
+        void OnObjectCreate(GameObject* pGo) override;
 
         void UpdateCellForBoss(uint32 uiBossEntry, bool bForceClosing = false);
 
@@ -226,21 +226,21 @@ class MANGOS_DLL_DECL instance_violet_hold : public ScriptedInstance
         void GetErekemGuardList(GuidList& lList) { lList = m_lErekemGuardList; }
         void GetIchoronTriggerList(GuidList& lList) { lList = m_lIchoronTargetsList; }
 
-        void OnPlayerEnter(Player* pPlayer);
+        void OnPlayerEnter(Player* pPlayer) override;
 
-        void OnCreatureEnterCombat(Creature* pCreature);
+        void OnCreatureEnterCombat(Creature* pCreature) override;
         void OnCreatureEvade(Creature* pCreature);
-        void OnCreatureDeath(Creature* pCreature);
+        void OnCreatureDeath(Creature* pCreature) override;
 
-        void SetData(uint32 uiType, uint32 uiData);
-        uint32 GetData(uint32 uiType);
+        void SetData(uint32 uiType, uint32 uiData) override;
+        uint32 GetData(uint32 uiType) override;
 
-        bool CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/);
+        bool CheckAchievementCriteriaMeet(uint32 uiCriteriaId, Player const* pSource, Unit const* pTarget, uint32 uiMiscValue1 /* = 0*/) override;
 
-        const char* Save() { return m_strInstData.c_str(); }
-        void Load(const char* chrIn);
+        const char* Save() override { return m_strInstData.c_str(); }
+        void Load(const char* chrIn) override;
 
-        void Update(uint32 uiDiff);
+        void Update(uint32 uiDiff) override;
 
         typedef std::multimap<uint32, ObjectGuid> BossToCellMap;
 

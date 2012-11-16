@@ -46,7 +46,7 @@ struct MANGOS_DLL_DECL npc_shenthulAI : public ScriptedAI
 
     ObjectGuid m_playerGuid;
 
-    void Reset()
+    void Reset() override
     {
         m_uiSaluteTimer = 0;
         m_uiResetTimer = 0;
@@ -54,7 +54,7 @@ struct MANGOS_DLL_DECL npc_shenthulAI : public ScriptedAI
         m_playerGuid.Clear();
     }
 
-    void ReceiveEmote(Player* pPlayer, uint32 uiTextEmote)
+    void ReceiveEmote(Player* pPlayer, uint32 uiTextEmote) override
     {
         if (m_uiResetTimer && uiTextEmote == TEXTEMOTE_SALUTE && pPlayer->GetQuestStatus(QUEST_SHATTERED_SALUTE) == QUEST_STATUS_INCOMPLETE)
         {
@@ -69,7 +69,7 @@ struct MANGOS_DLL_DECL npc_shenthulAI : public ScriptedAI
         m_uiSaluteTimer = 6000;
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (m_uiResetTimer)
         {

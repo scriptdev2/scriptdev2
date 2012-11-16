@@ -192,7 +192,7 @@ struct MANGOS_DLL_DECL boss_sartharionAI : public ScriptedAI
     bool m_bHasCalledShadron;
     bool m_bHasCalledVesperon;
 
-    void Reset()
+    void Reset() override
     {
         m_bIsBerserk = false;
         m_bIsSoftEnraged = false;
@@ -218,13 +218,13 @@ struct MANGOS_DLL_DECL boss_sartharionAI : public ScriptedAI
             m_creature->RemoveAurasDueToSpell(SPELL_TWILIGHT_REVENGE);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_SARTHARION_EVENT, FAIL);
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_SARTHARION_AGGRO, m_creature);
 
@@ -235,7 +235,7 @@ struct MANGOS_DLL_DECL boss_sartharionAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_SARTHARION_DEATH, m_creature);
 
@@ -243,7 +243,7 @@ struct MANGOS_DLL_DECL boss_sartharionAI : public ScriptedAI
             m_pInstance->SetData(TYPE_SARTHARION_EVENT, DONE);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         switch (urand(0, 2))
         {
@@ -352,7 +352,7 @@ struct MANGOS_DLL_DECL boss_sartharionAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         // Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
@@ -533,7 +533,7 @@ struct MANGOS_DLL_DECL dummy_dragonAI : public ScriptedAI
     int32 m_iPortalRespawnTime;
     bool m_bCanMoveFree;
 
-    void Reset()
+    void Reset() override
     {
         if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE))
             m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
@@ -544,7 +544,7 @@ struct MANGOS_DLL_DECL dummy_dragonAI : public ScriptedAI
         m_bCanMoveFree = false;
     }
 
-    void MovementInform(uint32 uiType, uint32 uiPointId)
+    void MovementInform(uint32 uiType, uint32 uiPointId) override
     {
         if (!m_pInstance || uiType != POINT_MOTION_TYPE)
             return;
@@ -655,7 +655,7 @@ struct MANGOS_DLL_DECL dummy_dragonAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         int32 iTextId = 0;
         uint32 uiSpellId = 0;
@@ -695,7 +695,7 @@ struct MANGOS_DLL_DECL dummy_dragonAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (m_bCanMoveFree && m_uiMoveNextTimer)
         {
@@ -725,25 +725,25 @@ struct MANGOS_DLL_DECL mob_tenebronAI : public dummy_dragonAI
     uint32 m_uiShadowFissureTimer;
     uint32 m_uiHatchEggTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiShadowBreathTimer = 20000;
         m_uiShadowFissureTimer = 5000;
         m_uiHatchEggTimer = 30000;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_TENEBRON_AGGRO, m_creature);
         DoCastSpellIfCan(m_creature, SPELL_POWER_OF_TENEBRON);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         DoScriptText(urand(0, 1) ? SAY_TENEBRON_SLAY_1 : SAY_TENEBRON_SLAY_2, m_creature);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         // if no target, update dummy and return
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
@@ -794,7 +794,7 @@ struct MANGOS_DLL_DECL mob_shadronAI : public dummy_dragonAI
     uint32 m_uiShadowFissureTimer;
     uint32 m_uiAcolyteShadronTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiShadowBreathTimer = 20000;
         m_uiShadowFissureTimer = 5000;
@@ -807,18 +807,18 @@ struct MANGOS_DLL_DECL mob_shadronAI : public dummy_dragonAI
             m_creature->RemoveAurasDueToSpell(SPELL_GIFT_OF_TWILIGTH_SHA);
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_SHADRON_AGGRO, m_creature);
         DoCastSpellIfCan(m_creature, SPELL_POWER_OF_SHADRON);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         DoScriptText(urand(0, 1) ? SAY_SHADRON_SLAY_1 : SAY_SHADRON_SLAY_2, m_creature);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         // if no target, update dummy and return
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
@@ -869,25 +869,25 @@ struct MANGOS_DLL_DECL mob_vesperonAI : public dummy_dragonAI
     uint32 m_uiShadowFissureTimer;
     uint32 m_uiAcolyteVesperonTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiShadowBreathTimer = 20000;
         m_uiShadowFissureTimer = 5000;
         m_uiAcolyteVesperonTimer = 60000;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_VESPERON_AGGRO, m_creature);
         DoCastSpellIfCan(m_creature, SPELL_POWER_OF_VESPERON);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         DoScriptText(urand(0, 1) ? SAY_VESPERON_SLAY_1 : SAY_VESPERON_SLAY_2, m_creature);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         // if no target, update dummy and return
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
@@ -940,7 +940,7 @@ struct MANGOS_DLL_DECL mob_acolyte_of_shadronAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    void Reset()
+    void Reset() override
     {
         if (m_pInstance)
         {
@@ -952,7 +952,7 @@ struct MANGOS_DLL_DECL mob_acolyte_of_shadronAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* killer)
+    void JustDied(Unit* killer) override
     {
         if (m_pInstance)
         {
@@ -977,7 +977,7 @@ struct MANGOS_DLL_DECL mob_acolyte_of_shadronAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -1005,12 +1005,12 @@ struct MANGOS_DLL_DECL mob_acolyte_of_vesperonAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    void Reset()
+    void Reset() override
     {
         DoCastSpellIfCan(m_creature, SPELL_TWILIGHT_TORMENT_VESP_ACO);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         // remove twilight torment on Vesperon
         if (m_pInstance)
@@ -1022,7 +1022,7 @@ struct MANGOS_DLL_DECL mob_acolyte_of_vesperonAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -1044,12 +1044,12 @@ struct MANGOS_DLL_DECL mob_twilight_eggsAI : public ScriptedAI
 {
     mob_twilight_eggsAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
-    void Reset()
+    void Reset() override
     {
     }
 
-    void AttackStart(Unit* pWho) { }
-    void MoveInLineOfSight(Unit* pWho) { }
+    void AttackStart(Unit* pWho) override { }
+    void MoveInLineOfSight(Unit* pWho) override { }
 };
 
 CreatureAI* GetAI_mob_twilight_eggs(Creature* pCreature)
@@ -1067,12 +1067,12 @@ struct MANGOS_DLL_DECL mob_twilight_whelpAI : public ScriptedAI
 
     uint32 m_uiFadeArmorTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiFadeArmorTimer = 1000;
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         // Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())

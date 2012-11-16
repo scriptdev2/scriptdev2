@@ -50,11 +50,11 @@ struct MANGOS_DLL_DECL npc_medivh_black_morassAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    void Reset() { }
+    void Reset() override { }
 
-    void AttackStart(Unit* pWho) { }
+    void AttackStart(Unit* pWho) override { }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         // The rift trash mobs are summoned by Medivh, so we can control the movement
         if (pSummoned->GetEntry() != NPC_TIME_RIFT && pSummoned->GetEntry() != NPC_COUNCIL_ENFORCER)
@@ -66,7 +66,7 @@ struct MANGOS_DLL_DECL npc_medivh_black_morassAI : public ScriptedAI
         }
     }
 
-    void SummonedMovementInform(Creature* pSummoned, uint32 uiMotionType, uint32 uiPointId)
+    void SummonedMovementInform(Creature* pSummoned, uint32 uiMotionType, uint32 uiPointId) override
     {
         if (uiMotionType != POINT_MOTION_TYPE || !uiPointId)
             return;
@@ -74,7 +74,7 @@ struct MANGOS_DLL_DECL npc_medivh_black_morassAI : public ScriptedAI
         pSummoned->CastSpell(m_creature, SPELL_CORRUPT, false);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_MEDIVH, FAIL);
@@ -82,7 +82,7 @@ struct MANGOS_DLL_DECL npc_medivh_black_morassAI : public ScriptedAI
         DoScriptText(SAY_DEATH, m_creature);
     }
 
-    void UpdateAI(const uint32 uiDiff) { }
+    void UpdateAI(const uint32 uiDiff) override { }
 };
 
 CreatureAI* GetAI_npc_medivh_black_morass(Creature* pCreature)
@@ -152,7 +152,7 @@ struct MANGOS_DLL_DECL npc_time_riftAI : public ScriptedAI
     uint8 m_uiRiftNumber;
     uint8 m_uiRiftWaveId;
 
-    void Reset()
+    void Reset() override
     {
         DoCastSpellIfCan(m_creature, SPELL_RIFT_PERIODIC);
 
@@ -242,7 +242,7 @@ struct MANGOS_DLL_DECL npc_time_riftAI : public ScriptedAI
         }
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         switch (pSummoned->GetEntry())
         {
@@ -279,7 +279,7 @@ struct MANGOS_DLL_DECL npc_time_riftAI : public ScriptedAI
         }
     }
 
-    void SummonedCreatureJustDied(Creature* pSummoned)
+    void SummonedCreatureJustDied(Creature* pSummoned) override
     {
         switch (pSummoned->GetEntry())
         {
@@ -300,7 +300,7 @@ struct MANGOS_DLL_DECL npc_time_riftAI : public ScriptedAI
         }
     }
 
-    void SummonedCreatureDespawn(Creature* pSummoned)
+    void SummonedCreatureDespawn(Creature* pSummoned) override
     {
         switch (pSummoned->GetEntry())
         {
@@ -317,7 +317,7 @@ struct MANGOS_DLL_DECL npc_time_riftAI : public ScriptedAI
         }
     }
 
-    void SummonedMovementInform(Creature* pSummoned, uint32 uiMotionType, uint32 uiPointId)
+    void SummonedMovementInform(Creature* pSummoned, uint32 uiMotionType, uint32 uiPointId) override
     {
         if (uiMotionType != POINT_MOTION_TYPE || !uiPointId || pSummoned->GetEntry() != NPC_AEONUS)
             return;
@@ -325,7 +325,7 @@ struct MANGOS_DLL_DECL npc_time_riftAI : public ScriptedAI
         pSummoned->CastSpell(pSummoned, SPELL_CORRUPT_AEONUS, false);
     }
 
-    void UpdateAI(const uint32 uiDiff) { }
+    void UpdateAI(const uint32 uiDiff) override { }
 };
 
 CreatureAI* GetAI_npc_time_rift(Creature* pCreature)

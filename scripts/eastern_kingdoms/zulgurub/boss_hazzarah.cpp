@@ -42,7 +42,7 @@ struct MANGOS_DLL_DECL boss_hazzarahAI : public ScriptedAI
     uint32 m_uiEarthShockTimer;
     uint32 m_uiIllusionsTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiManaBurnTimer   = urand(4000, 10000);
         m_uiSleepTimer      = urand(10000, 18000);
@@ -50,13 +50,13 @@ struct MANGOS_DLL_DECL boss_hazzarahAI : public ScriptedAI
         m_uiIllusionsTimer  = urand(10000, 18000);
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
             pSummoned->AI()->AttackStart(pTarget);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

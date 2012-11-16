@@ -87,7 +87,7 @@ struct MANGOS_DLL_DECL boss_felmystAI : public ScriptedAI
     uint32 m_uiEncapsulateTimer;
     uint32 m_uiGasNovaTimer;
 
-    void Reset()
+    void Reset() override
     {
         // Transform into Felmyst dragon
         DoCastSpellIfCan(m_creature, SPELL_FELBLAZE_VISUAL);
@@ -103,7 +103,7 @@ struct MANGOS_DLL_DECL boss_felmystAI : public ScriptedAI
         m_uiFlyPhaseTimer       = 60000;        // flight phase after 1 min
     }
 
-    void MoveInLineOfSight(Unit* pWho)
+    void MoveInLineOfSight(Unit* pWho) override
     {
         if (!m_bHasTransformed)
         {
@@ -117,7 +117,7 @@ struct MANGOS_DLL_DECL boss_felmystAI : public ScriptedAI
         ScriptedAI::MoveInLineOfSight(pWho);
     }
 
-    void EnterEvadeMode()
+    void EnterEvadeMode() override
     {
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
@@ -134,7 +134,7 @@ struct MANGOS_DLL_DECL boss_felmystAI : public ScriptedAI
         Reset();
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoCastSpellIfCan(m_creature, SPELL_NOXIOUS_FUMES);
 
@@ -142,12 +142,12 @@ struct MANGOS_DLL_DECL boss_felmystAI : public ScriptedAI
             m_pInstance->SetData(TYPE_FELMYST, IN_PROGRESS);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         DoScriptText(urand(0, 1) ? SAY_KILL_1 : SAY_KILL_2, m_creature);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -155,19 +155,19 @@ struct MANGOS_DLL_DECL boss_felmystAI : public ScriptedAI
             m_pInstance->SetData(TYPE_FELMYST, DONE);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_FELMYST, FAIL);
     }
 
-    void SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell)
+    void SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell) override
     {
         if (pTarget->GetTypeId() == TYPEID_PLAYER && pSpell->Id == SPELL_ENCAPSULATE_CHANNEL)
             pTarget->CastSpell(pTarget, SPELL_ENCAPSULATE, true, NULL, NULL, m_creature->GetObjectGuid());
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

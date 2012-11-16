@@ -55,14 +55,14 @@ struct MANGOS_DLL_DECL boss_broggokAI : public ScriptedAI
     uint32 m_uiPoisonSpawnTimer;
     uint32 m_uiPoisonBoltTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiAcidSprayTimer = 10000;
         m_uiPoisonSpawnTimer = 5000;
         m_uiPoisonBoltTimer = 7000;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -70,7 +70,7 @@ struct MANGOS_DLL_DECL boss_broggokAI : public ScriptedAI
             m_pInstance->SetData(TYPE_BROGGOK_EVENT, IN_PROGRESS);
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         // ToDo: set correct flags and data in DB!!!
         pSummoned->setFaction(16);
@@ -79,13 +79,13 @@ struct MANGOS_DLL_DECL boss_broggokAI : public ScriptedAI
         pSummoned->CastSpell(pSummoned, SPELL_POISON, false, NULL, NULL, m_creature->GetObjectGuid());
     }
 
-    void JustDied(Unit* pWho)
+    void JustDied(Unit* pWho) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_BROGGOK_EVENT, DONE);
     }
 
-    void EnterEvadeMode()
+    void EnterEvadeMode() override
     {
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
@@ -112,7 +112,7 @@ struct MANGOS_DLL_DECL boss_broggokAI : public ScriptedAI
     }
 
     // Reset Orientation
-    void MovementInform(uint32 uiMotionType, uint32 uiPointId)
+    void MovementInform(uint32 uiMotionType, uint32 uiPointId) override
     {
         if (uiMotionType != POINT_MOTION_TYPE || uiPointId != POINT_EVENT_COMBAT)
             return;
@@ -121,7 +121,7 @@ struct MANGOS_DLL_DECL boss_broggokAI : public ScriptedAI
             m_creature->SetFacingToObject(pFrontDoor);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -158,9 +158,9 @@ struct MANGOS_DLL_DECL mob_broggok_poisoncloudAI : public ScriptedAI
 {
     mob_broggok_poisoncloudAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
-    void Reset() { }
-    void MoveInLineOfSight(Unit* who) { }
-    void AttackStart(Unit* who) { }
+    void Reset() override { }
+    void MoveInLineOfSight(Unit* who) override { }
+    void AttackStart(Unit* who) override { }
 };
 
 CreatureAI* GetAI_boss_broggok(Creature* pCreature)

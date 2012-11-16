@@ -50,7 +50,7 @@ struct MANGOS_DLL_DECL boss_azuregosAI : public ScriptedAI
     uint32 m_uiCleaveTimer;
     bool m_bEnraged;
 
-    void Reset()
+    void Reset() override
     {
         m_uiManaStormTimer  = urand(5000, 17000);
         m_uiChillTimer      = urand(10000, 30000);
@@ -61,20 +61,20 @@ struct MANGOS_DLL_DECL boss_azuregosAI : public ScriptedAI
         m_bEnraged          = false;
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         // Mark killed players with Mark of Frost
         if (pVictim->GetTypeId() == TYPEID_PLAYER)
             pVictim->CastSpell(pVictim, SPELL_MARK_OF_FROST_PLAYER, true, NULL, NULL, m_creature->GetObjectGuid());
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         // Boss aura which triggers the stun effect on dead players who resurrect
         DoCastSpellIfCan(m_creature, SPELL_MARK_OF_FROST_AURA);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         // Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())

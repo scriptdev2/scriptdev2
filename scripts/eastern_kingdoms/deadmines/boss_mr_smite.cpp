@@ -56,7 +56,7 @@ struct MANGOS_DLL_DECL boss_mr_smiteAI : public ScriptedAI
     uint32 m_uiEquipTimer;
     uint32 m_uiSlamTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiPhase = PHASE_1;
         m_uiEquipTimer = 0;
@@ -68,7 +68,7 @@ struct MANGOS_DLL_DECL boss_mr_smiteAI : public ScriptedAI
         SetEquipmentSlots(true);
     }
 
-    void AttackedBy(Unit* pAttacker)
+    void AttackedBy(Unit* pAttacker) override
     {
         if (m_creature->getVictim())
             return;
@@ -79,7 +79,7 @@ struct MANGOS_DLL_DECL boss_mr_smiteAI : public ScriptedAI
         AttackStart(pAttacker);
     }
 
-    void AttackStart(Unit* pWho)
+    void AttackStart(Unit* pWho) override
     {
         if (m_uiPhase > PHASE_3)
             return;
@@ -94,7 +94,7 @@ struct MANGOS_DLL_DECL boss_mr_smiteAI : public ScriptedAI
         }
     }
 
-    void MovementInform(uint32 uiMotionType, uint32 uiPointId)
+    void MovementInform(uint32 uiMotionType, uint32 uiPointId) override
     {
         if (uiMotionType != POINT_MOTION_TYPE)
             return;
@@ -165,7 +165,7 @@ struct MANGOS_DLL_DECL boss_mr_smiteAI : public ScriptedAI
         AttackStart(pVictim);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
         {

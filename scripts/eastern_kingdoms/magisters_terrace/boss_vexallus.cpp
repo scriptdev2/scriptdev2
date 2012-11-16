@@ -74,7 +74,7 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
     uint32 m_uiIntervalHealthAmount;
     bool m_bEnraged;
 
-    void Reset()
+    void Reset() override
     {
         m_uiChainLightningTimer  = 8000;
         m_uiArcaneShockTimer     = 5000;
@@ -83,24 +83,24 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
         m_bEnraged               = false;
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         DoScriptText(SAY_KILL, m_creature);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_VEXALLUS, FAIL);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_VEXALLUS, DONE);
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -108,7 +108,7 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
             m_pInstance->SetData(TYPE_VEXALLUS, IN_PROGRESS);
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
             pSummoned->GetMotionMaster()->MoveFollow(pTarget, 0.0f, 0.0f);
@@ -117,7 +117,7 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
         pSummoned->CastSpell(pSummoned, SPELL_ENERGY_BOLT, true, NULL, NULL, m_creature->GetObjectGuid());
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;
@@ -193,9 +193,9 @@ struct MANGOS_DLL_DECL mob_pure_energyAI : public ScriptedAI
 {
     mob_pure_energyAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
 
-    void Reset() { }
+    void Reset() override { }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         if (m_creature->IsTemporarySummon())
         {
@@ -214,8 +214,8 @@ struct MANGOS_DLL_DECL mob_pure_energyAI : public ScriptedAI
         }
     }
 
-    void MoveInLineOfSight(Unit* pWho) { }
-    void AttackStart(Unit* pWho) { }
+    void MoveInLineOfSight(Unit* pWho) override { }
+    void AttackStart(Unit* pWho) override { }
 };
 
 CreatureAI* GetAI_mob_pure_energy(Creature* pCreature)

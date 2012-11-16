@@ -132,29 +132,29 @@ class MANGOS_DLL_DECL instance_trial_of_the_crusader : public ScriptedInstance, 
     public:
         instance_trial_of_the_crusader(Map* pMap);
 
-        void Initialize();
-        bool IsEncounterInProgress() const;
+        void Initialize() override;
+        bool IsEncounterInProgress() const override;
 
-        void OnCreatureCreate(Creature* pCreature);
-        void OnObjectCreate(GameObject* pGo);
+        void OnCreatureCreate(Creature* pCreature) override;
+        void OnObjectCreate(GameObject* pGo) override;
 
-        void OnPlayerEnter(Player* pPlayer);
+        void OnPlayerEnter(Player* pPlayer) override;
 
-        void SetData(uint32 uiType, uint32 uiData);
-        uint32 GetData(uint32 uiType);
+        void SetData(uint32 uiType, uint32 uiData) override;
+        uint32 GetData(uint32 uiType) override;
 
         // Difficulty wrappers
         bool IsHeroicDifficulty() { return instance->GetDifficulty() == RAID_DIFFICULTY_10MAN_HEROIC || instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC; }
         bool Is25ManDifficulty() { return instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL || instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC; }
 
-        const char* Save() { return m_strInstData.c_str(); }
-        void Load(const char* chrIn);
+        const char* Save() override { return m_strInstData.c_str(); }
+        void Load(const char* chrIn) override;
 
         void Update(uint32 uiDiff) { DialogueUpdate(uiDiff); }
 
     private:
         void DoSummonRamsey(uint32 uiEntry);
-        void JustDidDialogueStep(int32 iEntry);
+        void JustDidDialogueStep(int32 iEntry) override;
         void DoHandleEventEpilogue();
 
         uint32 m_auiEncounter[MAX_ENCOUNTER];

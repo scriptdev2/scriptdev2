@@ -62,7 +62,7 @@ struct MANGOS_DLL_DECL boss_doomlordkazzakAI : public ScriptedAI
     uint32 m_uiGreatEnrageTimer;
     uint32 m_uiTwistedReflectionTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiShadowVolleyTimer       = urand(6000, 10000);
         m_uiCleaveTimer             = 7000;
@@ -74,18 +74,18 @@ struct MANGOS_DLL_DECL boss_doomlordkazzakAI : public ScriptedAI
         m_uiTwistedReflectionTimer  = 33000;                // Timer may be incorrect
     }
 
-    void JustRespawned()
+    void JustRespawned() override
     {
         DoScriptText(SAY_INTRO, m_creature);
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         DoScriptText(urand(0, 1) ? SAY_AGGRO1 : SAY_AGGRO2, m_creature);
         DoCastSpellIfCan(m_creature, SPELL_CAPTURE_SOUL, CAST_TRIGGERED);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         // When Kazzak kills a player (not pets/totems), he regens some health
         if (pVictim->GetTypeId() != TYPEID_PLAYER)
@@ -99,12 +99,12 @@ struct MANGOS_DLL_DECL boss_doomlordkazzakAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH, m_creature);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         // Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())

@@ -89,13 +89,13 @@ struct MANGOS_DLL_DECL npc_belnistraszAI : public npc_escortAI
     uint32 m_uiFireballTimer;
     uint32 m_uiFrostNovaTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_uiFireballTimer  = 1000;
         m_uiFrostNovaTimer = 6000;
     }
 
-    void AttackedBy(Unit* pAttacker)
+    void AttackedBy(Unit* pAttacker) override
     {
         if (HasEscortState(STATE_ESCORT_PAUSED))
         {
@@ -146,7 +146,7 @@ struct MANGOS_DLL_DECL npc_belnistraszAI : public npc_escortAI
         }
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         SpawnerSummon(pSummoned);
     }
@@ -156,7 +156,7 @@ struct MANGOS_DLL_DECL npc_belnistraszAI : public npc_escortAI
         m_creature->SummonCreature(NPC_IDOL_ROOM_SPAWNER, m_fSpawnerCoord[iType][0], m_fSpawnerCoord[iType][1], m_fSpawnerCoord[iType][2], m_fSpawnerCoord[iType][3], TEMPSUMMON_TIMED_DESPAWN, 10000);
     }
 
-    void WaypointReached(uint32 uiPointId)
+    void WaypointReached(uint32 uiPointId) override
     {
         if (uiPointId == 24)
         {
@@ -165,7 +165,7 @@ struct MANGOS_DLL_DECL npc_belnistraszAI : public npc_escortAI
         }
     }
 
-    void UpdateEscortAI(const uint32 uiDiff)
+    void UpdateEscortAI(const uint32 uiDiff) override
     {
         if (HasEscortState(STATE_ESCORT_PAUSED))
         {

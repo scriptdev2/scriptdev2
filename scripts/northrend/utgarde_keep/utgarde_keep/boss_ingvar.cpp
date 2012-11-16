@@ -102,7 +102,7 @@ struct MANGOS_DLL_DECL boss_ingvarAI : public ScriptedAI
     uint32 m_uiStaggeringRoarTimer;
     uint32 m_uiEnrageTimer;
 
-    void Reset()
+    void Reset() override
     {
         m_bIsResurrected = false;
         m_bIsFakingDeath = false;
@@ -113,7 +113,7 @@ struct MANGOS_DLL_DECL boss_ingvarAI : public ScriptedAI
         m_uiEnrageTimer = 30000;
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         // don't yell for her
         if (pWho->GetEntry() == NPC_ANNHYLDE)
@@ -123,7 +123,7 @@ struct MANGOS_DLL_DECL boss_ingvarAI : public ScriptedAI
         DoScriptText(SAY_AGGRO_FIRST, m_creature);
     }
 
-    void DamageTaken(Unit* pDealer, uint32& uiDamage)
+    void DamageTaken(Unit* pDealer, uint32& uiDamage) override
     {
         if (m_bIsResurrected)
             return;
@@ -148,7 +148,7 @@ struct MANGOS_DLL_DECL boss_ingvarAI : public ScriptedAI
         }
     }
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
+    void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override
     {
         if (pSpell->Id == SPELL_TRANSFORM)
         {
@@ -160,7 +160,7 @@ struct MANGOS_DLL_DECL boss_ingvarAI : public ScriptedAI
         }
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         switch (pSummoned->GetEntry())
         {
@@ -184,18 +184,18 @@ struct MANGOS_DLL_DECL boss_ingvarAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         DoScriptText(SAY_DEATH_SECOND, m_creature);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         if (urand(0, 1))
             DoScriptText(m_bIsResurrected ? SAY_KILL_SECOND : SAY_KILL_FIRST, m_creature);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim() || m_bIsFakingDeath)
             return;
@@ -301,17 +301,17 @@ struct MANGOS_DLL_DECL npc_annhyldeAI : public ScriptedAI
     uint32 m_uiResurrectTimer;
     uint8 m_uiResurrectPhase;
 
-    void Reset()
+    void Reset() override
     {
         m_uiResurrectTimer = 0;
         m_uiResurrectPhase = 0;
     }
 
     // No attacking
-    void MoveInLineOfSight(Unit*) {}
-    void AttackStart(Unit*) {}
+    void MoveInLineOfSight(Unit*) override {}
+    void AttackStart(Unit*) override {}
 
-    void MovementInform(uint32 uiMotionType, uint32 uiPointId)
+    void MovementInform(uint32 uiMotionType, uint32 uiPointId) override
     {
         if (uiMotionType != POINT_MOTION_TYPE || uiPointId != POINT_ID_ANNHYLDE)
             return;
@@ -320,7 +320,7 @@ struct MANGOS_DLL_DECL npc_annhyldeAI : public ScriptedAI
         m_uiResurrectTimer = 3000;
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         if (m_uiResurrectTimer)
         {

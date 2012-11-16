@@ -69,7 +69,7 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
 
     bool m_bIsImage;
 
-    void Reset()
+    void Reset() override
     {
         m_uiArcaneExplosionTimer = urand(6000, 12000);
         m_uiFullFillmentTimer    = 15000;
@@ -81,7 +81,7 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
             m_creature->SetVisibility(VISIBILITY_ON);
     }
 
-    void KilledUnit(Unit* pVictim)
+    void KilledUnit(Unit* pVictim) override
     {
         switch (urand(0, 2))
         {
@@ -91,7 +91,7 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* pKiller) override
     {
         if (!m_bIsImage)
         {
@@ -105,7 +105,7 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
             m_creature->ForcedDespawn();
     }
 
-    void Aggro(Unit* pWho)
+    void Aggro(Unit* pWho) override
     {
         if (m_bIsImage)
             return;
@@ -121,7 +121,7 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
             m_pInstance->SetData(TYPE_SKERAM, IN_PROGRESS);
     }
 
-    void JustReachedHome()
+    void JustReachedHome() override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_SKERAM, FAIL);
@@ -130,7 +130,7 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
             m_creature->ForcedDespawn();
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* pSummoned) override
     {
         if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
             pSummoned->AI()->AttackStart(pTarget);
@@ -164,7 +164,7 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 uiDiff) override
     {
         // Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
