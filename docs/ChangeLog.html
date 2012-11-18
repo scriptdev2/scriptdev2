@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
 <meta name="generator" content="AsciiDoc 8.6.6" />
-<title>Overview of ScriptDev2 Documentation Section</title>
+<title>ScriptDev2 Milestones</title>
 <style type="text/css">
 /* Shared CSS for AsciiDoc xhtml11 and html5 backends */
 
@@ -735,71 +735,202 @@ asciidoc.install();
 </head>
 <body class="article">
 <div id="header">
-<h1>Overview of ScriptDev2 Documentation Section</h1>
+<h1>ScriptDev2 Milestones</h1>
 </div>
 <div id="content">
-<div class="sect1">
-<h2 id="_license">1. License</h2>
+<div id="preamble">
 <div class="sectionbody">
-<div class="paragraph"><p>ScriptDev2 is GPL Software, you can find the <a href="LICENSE.txt">GNU General Public License</a> here.</p></div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_basic_installation_instructions">2. Basic Installation instructions</h2>
-<div class="sectionbody">
-<div class="paragraph"><p>See <a href="How_to_install.html">How to install</a> for basic instructions</p></div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_scriptdev2_changelog_and_todo_list">3. ScriptDev2 ChangeLog and TODO list</h2>
-<div class="sectionbody">
-<div class="paragraph"><p>See <a href="ChangeLog.html">Changelog</a> for basic points reached with the last milestones</p></div>
-<div class="paragraph"><p>See <a href="ToDo.html">TODO List</a> for rough points that the SD2-Team wants to be adressed in the next milestones</p></div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_various_guides_related_to_git">4. Various Guides related to Git</h2>
-<div class="sectionbody">
-<div class="paragraph"><p><a href="GIT_guide_1_easy_use.html">Easy use of Git</a> - Look here if you are new to Git</p></div>
-<div class="paragraph"><p><a href="GIT_guide_2_normal_use.html">Normal use of Git</a> - Look here if you want to do basic work with Git</p></div>
-<div class="paragraph"><p><a href="GIT_guide_3_advanced_use.html">Advanced use of Git</a> - Look here if you want to dig deeper into Git, this also contains some configuration settings for Git</p></div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_database_content_used_with_sd2">5. Database content used with SD2</h2>
-<div class="sectionbody">
-<div class="paragraph"><p><a href="SQL_guide.html">Guide for SD2 SQL-Files</a> - Look here for an overview how to manipulate the database content in SD2</p></div>
-<div class="paragraph"><p><a href="Text-tables.txt">Text-tables.txt</a> - Manual like documentation for the tables `script_texts` and `custom_texts`</p></div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_old_documentation_files">6. Old documentation files</h2>
-<div class="sectionbody">
-<div class="dlist"><dl>
-<dt class="hdlist1">
-<a href="Script_Layout.txt">Script_Layout.txt</a> 
-</dt>
-<dd>
+<div class="paragraph"><p><strong>Current Version: <a href="#currentMS">ScriptDev2 - 0.6  (18 November 2012)</a></strong></p></div>
+<div class="paragraph"><p><strong>Supports:</strong></p></div>
+<div class="ulist"><ul>
+<li>
 <p>
-Information about the subfolders of the <tt>scripts</tt> directory
+Classic (1.12.1), see <a href="https://github.com/scriptdev2/scriptdev2-classic">https://github.com/scriptdev2/scriptdev2-classic</a>
 </p>
-</dd>
-<dt class="hdlist1">
-<a href="Text-tables.txt">Text-tables.txt</a> 
-</dt>
-<dd>
+</li>
+<li>
 <p>
-Documentation of the layout of the tables `script_texts`, `custom_texts` and `gossip_texts`
+TBC (2.4.3), see <a href="https://github.com/scriptdev2/scriptdev2-tbc">https://github.com/scriptdev2/scriptdev2-tbc</a>
 </p>
-</dd>
-</dl></div>
+</li>
+<li>
+<p>
+WotLK (3.3.5a), see  <a href="https://github.com/scriptdev2/scriptdev2">https://github.com/scriptdev2/scriptdev2</a>
+</p>
+</li>
+<li>
+<p>
+Cata (4.3.4), see  <a href="https://github.com/scriptdev2/scriptdev2-cata">https://github.com/scriptdev2/scriptdev2-cata</a>
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="currentMS">1. Milestone ScriptDev2 - 0.6</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_general">1.1. General</h3>
+<div class="ulist"><ul>
+<li>
+<p>
+Added distinct script library support for all the server versions
+</p>
+</li>
+<li>
+<p>
+Unified instance handling and added some generic patterns
+</p>
+</li>
+<li>
+<p>
+Added support for spell scripts
+</p>
+</li>
+<li>
+<p>
+Added support for world scripts for more complicated events
+</p>
+</li>
+<li>
+<p>
+Codestyle cleanup on all scripts
+</p>
+</li>
+<li>
+<p>
+Convert many old scripts to EventAI
+</p>
+</li>
+<li>
+<p>
+Convert many old gossip scripts to DB-gossip system
+</p>
+</li>
+<li>
+<p>
+Added script placeholders for future 4.x content
+</p>
+</li>
+<li>
+<p>
+Implemented various missing quest scripts and similar events
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="_wotlk_content">1.2. WotLK content</h3>
+<div class="ulist"><ul>
+<li>
+<p>
+Added script content for the following dungeons: Azjol Nerub, Ahn-Kahet, Drak&#8217;tharon Keep, Gundrak, Halls of Stone, Oculus, Utgarde Keep, Utgarde Pinnacle, Violet Hold, Nexus
+</p>
+</li>
+<li>
+<p>
+Finished raid script for Naxxramas and Onyxia
+</p>
+</li>
+<li>
+<p>
+Added partial script content for the following: Eye of Eternity, Ruby Sanctum, Trial of the Crusader, Ulduar, Death Knight area quests.
+</p>
+</li>
+<li>
+<p>
+Added some basic script support for all bosses in Icecrown Citadel
+</p>
+</li>
+<li>
+<p>
+Implemented Year event boss - Apothecary Hummel
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="_tbc_content">1.3. TBC content</h3>
+<div class="ulist"><ul>
+<li>
+<p>
+Cleanup and improve all the existing scripts by removing workarounds and adding missing content for all dungeons and raids.
+</p>
+</li>
+<li>
+<p>
+Added script for the following dungeons or bosses: Arcatraz, Blood Furnace, Sunwell Plateau, A&#8217;lar, The Lurker Below, Malacras, Zul&#8217;jin.
+</p>
+</li>
+<li>
+<p>
+Improve scripts for: Auchenai Crypts, Sethekk Halls, Shadow Labyrinth, Black Morass, Old Hillsbrad Foothills, Steamvault, Shattered Halls, Botanica, Mechanar, Karazhan, Black Temple, The Eye, Serperntshrine Cavern, Zul&#8217;Aman.
+</p>
+</li>
+<li>
+<p>
+Properly downgraded Naxxramas and Onyxia for TBC and Classic versions
+</p>
+</li>
+<li>
+<p>
+Implemented Year event boss - Coren Direbrew
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="_classic_content">1.4. Classic content</h3>
+<div class="ulist"><ul>
+<li>
+<p>
+Implemented epic quests script for the opening of Ahn&#8217;Qiraj and Onyxia events.
+</p>
+</li>
+<li>
+<p>
+Cleanup and improve all the existing scripts by removing workarounds and adding missing content for all dungeons and raids.
+</p>
+</li>
+<li>
+<p>
+Added or substantially improved script for the following dungeons: Blackrock Depths, Deathmines, Dire Maul, Gnomeregan, Razorfen Kraul, Shadowfang Keep, Sunken Temple, Wailing Caverns, Uldaman, Ruins of AQ
+</p>
+</li>
+<li>
+<p>
+Improve script for the following dungeons: Blackrock Spire, Blackfathom Deeps, Marauudon, Scholomance, Stratholme, Blackwing Lair, Molten Core, Emerald Dragons, Temple of AQ, Zul&#8217;Gurub
+</p>
+</li>
+<li>
+<p>
+Properly downgraded Lord Kazzak for Classic version
+</p>
+</li>
+</ul></div>
+<div class="sect3">
+<h4 id="_statistics">1.4.1. Statistics</h4>
+<div class="ulist"><ul>
+<li>
+<p>
+Total number of changes: over 1300 revisions (1300 commits)
+</p>
+</li>
+<li>
+<p>
+Lots of bugs from forum and issues from github fixed
+</p>
+</li>
+</ul></div>
+</div>
+</div>
 </div>
 </div>
 </div>
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2012-11-18 01:15:03 Mitteleuropäische Zeit
+Last updated 2012-11-18 01:24:03 Mitteleuropäische Zeit
 </div>
 </div>
 </body>

@@ -12,6 +12,11 @@ Basic Installation instructions
 
 See link:How_to_install.html[How to install] for basic instructions
 
+ScriptDev2 ChangeLog and TODO list
+----------------------------------
+See link:ChangeLog.html[Changelog] for basic points reached with the last milestones
+
+See link:ToDo.html[TODO List] for rough points that the SD2-Team wants to be adressed in the next milestones
 
 Various Guides related to Git
 -----------------------------
