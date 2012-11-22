@@ -18,7 +18,7 @@ void ScriptedInstance::DoUseDoorOrButton(ObjectGuid guid, uint32 uiWithRestoreTi
 
     if (GameObject* pGo = instance->GetGameObject(guid))
     {
-        if (pGo->GetGoType() == GAMEOBJECT_TYPE_DOOR || pGo->GetGoType() == GAMEOBJECT_TYPE_BUTTON)
+        if (pGo->GetGoType() == GAMEOBJECT_TYPE_DOOR || pGo->GetGoType() == GAMEOBJECT_TYPE_BUTTON || pGo->GetGoType() == GAMEOBJECT_TYPE_TRAPDOOR)
         {
             if (pGo->getLootState() == GO_READY)
                 pGo->UseDoorOrButton(uiWithRestoreTime, bUseAlternativeState);
