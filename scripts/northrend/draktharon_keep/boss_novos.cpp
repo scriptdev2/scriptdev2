@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Novos
-SD%Complete: 80%
-SDComment: Summon Timers are vague, many visual spells fail (LoS)
+SD%Complete: 90%
+SDComment: Summon Timers are vague
 SDCategory: Drak'Tharon Keep
 EndScriptData */
 
