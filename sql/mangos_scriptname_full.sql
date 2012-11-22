@@ -543,6 +543,8 @@ UPDATE creature_template SET ScriptName='npc_a_special_surprise' WHERE entry IN 
 UPDATE creature_template SET ScriptName='npc_koltira_deathweaver' WHERE entry=28912;
 UPDATE creature_template SET ScriptName='npc_eye_of_acherus' WHERE entry=28511;
 UPDATE creature_template SET ScriptName='npc_scarlet_ghoul' WHERE entry=28845;
+UPDATE creature_template SET ScriptName='npc_highlord_darion_mograine' WHERE entry=29173;
+UPDATE creature_template SET ScriptName='npc_fellow_death_knight' WHERE entry IN (29199, 29204, 29200);
 
 /* ELWYNN FOREST */
 
