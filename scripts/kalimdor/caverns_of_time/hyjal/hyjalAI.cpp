@@ -308,7 +308,7 @@ void hyjalAI::SummonNextWave()
 
     if (!pWaveData)
     {
-        error_log("SD2: hyjalAI not able to obtain wavedata for SummonNextWave.");
+        script_error_log("hyjalAI not able to obtain wavedata for SummonNextWave.");
         return;
     }
 

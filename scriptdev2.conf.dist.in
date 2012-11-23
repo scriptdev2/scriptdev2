@@ -2,7 +2,7 @@
 # This file must be placed within the directory which holds mangosd.conf and realmd.conf
 
 [ScriptDev2Conf]
-ConfVersion=2010062001
+ConfVersion=2012112301
 
 # Database connection settings for the world server.
 # Default: hostname;port;username;password;database
@@ -11,3 +11,6 @@ ConfVersion=2010062001
 #          .;/path/to/unix_socket;username;password;database - use Unix sockets at Unix/Linux
 #                Unix sockets: experimental, not tested
 ScriptDev2DatabaseInfo     = "127.0.0.1;3306;mangos;mangos;scriptdev2"
+
+# Log File for SD2-Errors
+SD2ErrorLogFile = "SD2Errors.log"

@@ -36,7 +36,7 @@ void SystemMgr::LoadVersion()
         delete pResult;
     }
     else
-        error_log("SD2: Missing `sd2_db_version` information.");
+        script_error_log("Missing `sd2_db_version` information.");
 
     // Setup version info and display it
     if (strSD2Version.empty())

@@ -244,7 +244,7 @@ struct MANGOS_DLL_DECL boss_volkhanAI : public ScriptedAI
                         m_creature->GetMotionMaster()->MovePoint(1, fX, fY, fZ);
                     }
                     else
-                        error_log("SD2: Npc %u couldn't be found or something really bad happened.", NPC_VOLKHAN_ANVIL);
+                        script_error_log("Npc %u couldn't be found or something really bad happened.", NPC_VOLKHAN_ANVIL);
                 }
                 m_uiTemperTimer = 30000;
             }

@@ -109,7 +109,7 @@ bool GOUse_go_ethereum_prison(Player* pPlayer, GameObject* pGo)
                 if (uiSpell)
                     pCreature->CastSpell(pPlayer, uiSpell, false);
                 else
-                    error_log("SD2: go_ethereum_prison summoned creature (entry %u) but faction (%u) are not expected by script.", pCreature->GetEntry(), pCreature->getFaction());
+                    script_error_log("go_ethereum_prison summoned creature (entry %u) but faction (%u) are not expected by script.", pCreature->GetEntry(), pCreature->getFaction());
             }
         }
     }

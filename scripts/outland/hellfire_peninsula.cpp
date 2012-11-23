@@ -142,7 +142,7 @@ struct MANGOS_DLL_DECL npc_ancestral_wolfAI : public npc_escortAI
         if (pCreature->GetOwner() && pCreature->GetOwner()->GetTypeId() == TYPEID_PLAYER)
             Start(false, (Player*)pCreature->GetOwner());
         else
-            error_log("SD2: npc_ancestral_wolf can not obtain owner or owner is not a player.");
+            script_error_log("npc_ancestral_wolf can not obtain owner or owner is not a player.");
 
         Reset();
     }

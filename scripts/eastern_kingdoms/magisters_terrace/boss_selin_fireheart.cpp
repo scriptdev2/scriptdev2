@@ -147,7 +147,7 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
         else
         {
             // Make an error message in case something weird happened here
-            error_log("SD2: Selin Fireheart unable to drain crystal as the crystal is either dead or deleted..");
+            script_error_log("Selin Fireheart unable to drain crystal as the crystal is either dead or deleted..");
             m_bDrainingCrystal = false;
         }
     }

@@ -242,7 +242,7 @@ void instance_gundrak::SetData(uint32 uiType, uint32 uiData)
                 m_uisShareLoveAchievPlayers.insert(uiData);
             break;
         default:
-            error_log("SD2: Instance Gundrak: ERROR SetData = %u for type %u does not exist/not implemented.", uiType, uiData);
+            script_error_log("Instance Gundrak: ERROR SetData = %u for type %u does not exist/not implemented.", uiType, uiData);
             return;
     }
 

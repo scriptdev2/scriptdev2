@@ -26,7 +26,7 @@ void ScriptedInstance::DoUseDoorOrButton(ObjectGuid guid, uint32 uiWithRestoreTi
                 pGo->ResetDoorOrButton();
         }
         else
-            error_log("SD2: Script call DoUseDoorOrButton, but gameobject entry %u is type %u.", pGo->GetEntry(), pGo->GetGoType());
+            script_error_log("Script call DoUseDoorOrButton, but gameobject entry %u is type %u.", pGo->GetEntry(), pGo->GetGoType());
     }
 }
 
@@ -38,7 +38,7 @@ void ScriptedInstance::DoUseDoorOrButton(uint32 uiEntry, uint32 uiWithRestoreTim
         DoUseDoorOrButton(find->second, uiWithRestoreTime, bUseAlternativeState);
     else
         // Output log, possible reason is not added GO to storage, or not yet loaded
-        debug_log("SD2: Script call DoUseDoorOrButton(by Entry), but no gameobject of entry %u was created yet, or it was not stored by script for map %u.", uiEntry, instance->GetId());
+        script_error_log("Script call DoUseDoorOrButton(by Entry), but no gameobject of entry %u was created yet, or it was not stored by script for map %u.", uiEntry, instance->GetId());
 }
 
 /**
@@ -75,7 +75,7 @@ void ScriptedInstance::DoToggleGameObjectFlags(uint32 uiEntry, uint32 uiGOflags,
         DoToggleGameObjectFlags(find->second, uiGOflags, bApply);
     else
         // Output log, possible reason is not added GO to storage, or not yet loaded
-        debug_log("SD2: Script call ToogleTameObjectFlags (by Entry), but no gameobject of entry %u was created yet, or it was not stored by script for map %u.", uiEntry, instance->GetId());
+        script_error_log("Script call ToogleTameObjectFlags (by Entry), but no gameobject of entry %u was created yet, or it was not stored by script for map %u.", uiEntry, instance->GetId());
 }
 
 /**
@@ -108,7 +108,7 @@ void ScriptedInstance::DoRespawnGameObject(uint32 uiEntry, uint32 uiTimeToDespaw
         DoRespawnGameObject(find->second, uiTimeToDespawn);
     else
         // Output log, possible reason is not added GO to storage, or not yet loaded;
-        debug_log("SD2: Script call DoRespawnGameObject(by Entry), but no gameobject of entry %u was created yet, or it was not stored by script for map %u.", uiEntry, instance->GetId());
+        script_error_log(" Script call DoRespawnGameObject(by Entry), but no gameobject of entry %u was created yet, or it was not stored by script for map %u.", uiEntry, instance->GetId());
 }
 
 /**
@@ -266,7 +266,7 @@ void DialogueHelper::StartNextDialogueText(int32 iTextEntry)
 
     if (!bFound)
     {
-        error_log("SD2: Script call DialogueHelper::StartNextDialogueText, but textEntry %i is not in provided dialogue (on map id %u)", iTextEntry, m_pInstance ? m_pInstance->instance->GetId() : 0);
+        script_error_log("Script call DialogueHelper::StartNextDialogueText, but textEntry %i is not in provided dialogue (on map id %u)", iTextEntry, m_pInstance ? m_pInstance->instance->GetId() : 0);
         return;
     }
 

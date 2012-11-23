@@ -82,7 +82,7 @@ struct MANGOS_DLL_DECL npc_lazy_peonAI : public ScriptedAI
                 m_creature->GetMotionMaster()->MovePoint(2, fX, fY, fZ);
         }
         else
-            error_log("SD2: No GameObject of entry %u was found in range or something really bad happened.", GO_LUMBERPILE);
+            script_error_log("No GameObject of entry %u was found in range or something really bad happened.", GO_LUMBERPILE);
     }
 
     void MovementInform(uint32 uiMotionType, uint32 uiPointId) override

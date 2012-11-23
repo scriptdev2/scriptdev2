@@ -385,7 +385,7 @@ void npc_escortAI::MovementInform(uint32 uiMoveType, uint32 uiPointId)
         // Make sure that we are still on the right waypoint
         if (CurrentWP->uiId != uiPointId)
         {
-            error_log("SD2: EscortAI for Npc %u reached waypoint out of order %u, expected %u.", m_creature->GetEntry(), uiPointId, CurrentWP->uiId);
+            script_error_log("EscortAI for Npc %u reached waypoint out of order %u, expected %u.", m_creature->GetEntry(), uiPointId, CurrentWP->uiId);
             return;
         }
 
@@ -489,13 +489,13 @@ void npc_escortAI::Start(bool bRun, const Player* pPlayer, const Quest* pQuest, 
 {
     if (m_creature->getVictim())
     {
-        error_log("SD2: EscortAI attempt to Start while in combat.");
+        script_error_log("EscortAI attempt to Start while in combat.");
         return;
     }
 
     if (HasEscortState(STATE_ESCORT_ESCORTING))
     {
-        error_log("SD2: EscortAI attempt to Start while already escorting.");
+        script_error_log("EscortAI attempt to Start while already escorting.");
         return;
     }
 

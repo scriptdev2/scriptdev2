@@ -158,7 +158,7 @@ void instance_ahnkahet::SetData(uint32 uiType, uint32 uiData)
             break;
 
         default:
-            error_log("SD2: Instance Ahn'Kahet: ERROR SetData = %u for type %u does not exist/not implemented.", uiType, uiData);
+            script_error_log("Instance Ahn'Kahet: ERROR SetData = %u for type %u does not exist/not implemented.", uiType, uiData);
             break;
     }
 

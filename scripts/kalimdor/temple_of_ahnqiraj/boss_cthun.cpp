@@ -144,7 +144,7 @@ struct MANGOS_DLL_DECL boss_eye_of_cthunAI : public Scripted_NoMovementAI
             if (Creature* pCthun = m_pInstance->GetSingleCreatureFromStorage(NPC_CTHUN))
                 pCthun->AI()->AttackStart(pKiller);
             else
-                error_log("SD2: C'thun could not be found. Please check your database!");
+                script_error_log("C'thun could not be found. Please check your database!");
         }
     }
 

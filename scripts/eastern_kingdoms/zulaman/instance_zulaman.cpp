@@ -295,7 +295,7 @@ void instance_zulaman::SetData(uint32 uiType, uint32 uiData)
             break;
 
         default:
-            error_log("SD2: Instance Zulaman: ERROR SetData = %u for type %u does not exist/not implemented.", uiType, uiData);
+            script_error_log("Instance Zulaman: ERROR SetData = %u for type %u does not exist/not implemented.", uiType, uiData);
             return;
     }
 

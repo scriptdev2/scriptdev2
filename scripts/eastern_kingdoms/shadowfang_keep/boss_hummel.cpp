@@ -191,7 +191,7 @@ struct MANGOS_DLL_DECL npc_valentine_boss_managerAI : public ScriptedAI, private
                 pBaxter->GetMotionMaster()->MovePoint(1, fX, fY, fZ);
             }
             else
-                error_log("SD2: Gameobject %u couldn't be found or something really bad happened.", GO_APOTHECARE_VIALS);
+                script_error_log("Gameobject %u couldn't be found or something really bad happened.", GO_APOTHECARE_VIALS);
         }
 
         // Move Frye to position
@@ -209,7 +209,7 @@ struct MANGOS_DLL_DECL npc_valentine_boss_managerAI : public ScriptedAI, private
                 pFrye->GetMotionMaster()->MovePoint(1, fX, fY, fZ);
             }
             else
-                error_log("SD2: Gameobject %u couldn't be found or something really bad happened.", GO_CHEMISTRY_SET);
+                script_error_log("Gameobject %u couldn't be found or something really bad happened.", GO_CHEMISTRY_SET);
         }
     }
 

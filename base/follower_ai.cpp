@@ -283,7 +283,7 @@ void FollowerAI::StartFollow(Player* pLeader, uint32 uiFactionForFollower, const
 
     if (HasFollowState(STATE_FOLLOW_INPROGRESS))
     {
-        error_log("SD2: FollowerAI attempt to StartFollow while already following.");
+        script_error_log("FollowerAI attempt to StartFollow while already following.");
         return;
     }
 

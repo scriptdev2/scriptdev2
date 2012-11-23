@@ -162,7 +162,7 @@ void instance_blood_furnace::SetData(uint32 uiType, uint32 uiData)
             m_auiEncounter[uiType] = uiData;
             break;
         default:
-            error_log("SD2: Instance Blood Furnace SetData with Type %u Data %u, but this is not implemented.", uiType, uiData);
+            script_error_log("Instance Blood Furnace SetData with Type %u Data %u, but this is not implemented.", uiType, uiData);
             return;
     }
 

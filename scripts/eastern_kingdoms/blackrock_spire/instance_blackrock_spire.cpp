@@ -397,7 +397,7 @@ void instance_blackrock_spire::DoProcessEmberseerEvent()
 
     if (m_lIncarceratorGUIDList.empty())
     {
-        error_log("SD2: Npc %u couldn't be found. Please check your DB content!", NPC_BLACKHAND_INCARCERATOR);
+        script_error_log("Npc %u couldn't be found. Please check your DB content!", NPC_BLACKHAND_INCARCERATOR);
         return;
     }
 

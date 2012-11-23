@@ -126,7 +126,7 @@ void instance_nexus::SetData(uint32 uiType, uint32 uiData)
                 m_sIntenseColdFailPlayers.insert(uiData);
             break;
         default:
-            error_log("SD2: Instance Nexus: ERROR SetData = %u for type %u does not exist/not implemented.", uiType, uiData);
+            script_error_log("Instance Nexus: ERROR SetData = %u for type %u does not exist/not implemented.", uiType, uiData);
             return;
     }
 

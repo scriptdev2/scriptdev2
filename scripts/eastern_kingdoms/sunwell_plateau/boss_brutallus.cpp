@@ -201,7 +201,7 @@ struct MANGOS_DLL_DECL boss_brutallusAI : public ScriptedAI, private DialogueHel
     {
         // Error log if Madrigosa dies
         if (pSummoned->GetEntry() == NPC_MADRIGOSA)
-            error_log("SD2: Npc %u, %s, died unexpectedly. Felmyst won't be summoned anymore.", pSummoned->GetEntry(), pSummoned->GetName());
+            script_error_log("Npc %u, %s, died unexpectedly. Felmyst won't be summoned anymore.", pSummoned->GetEntry(), pSummoned->GetName());
     }
 
     void SummonedCreatureDespawn(Creature* pSummoned) override

@@ -167,7 +167,7 @@ struct MANGOS_DLL_DECL npc_anubisath_sentinelAI : public ScriptedAI
         }
 
         if (m_lAssistList.size() != MAX_BUDDY)
-            error_log("SD2: npc_anubisath_sentinel for %s found too few/too many buddies, expected %u.", m_creature->GetGuidStr().c_str(), MAX_BUDDY);
+            script_error_log("npc_anubisath_sentinel for %s found too few/too many buddies, expected %u.", m_creature->GetGuidStr().c_str(), MAX_BUDDY);
     }
 
     void UpdateAI(const uint32 uiDiff) override

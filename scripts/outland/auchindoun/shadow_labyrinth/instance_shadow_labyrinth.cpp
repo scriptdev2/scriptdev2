@@ -88,7 +88,7 @@ void instance_shadow_labyrinth::SetData(uint32 uiType, uint32 uiData)
         case TYPE_OVERSEER:
             if (uiData != DONE)
             {
-                error_log("SD2: Shadow Labyrinth: TYPE_OVERSEER did not expect other data than DONE");
+                script_error_log("Shadow Labyrinth: TYPE_OVERSEER did not expect other data than DONE");
                 return;
             }
             if (m_uiFelOverseerCount)
