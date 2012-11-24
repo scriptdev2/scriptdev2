@@ -4575,6 +4575,11 @@ INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 (-3608001,'Get your people to safety, we\'ll keep the Blue Dragonflight\'s forces at bay.','sinclari GOSSIP_ITEM_START'),
 (-3608002,'I\'m not fighting, so send me in now!','sinclari GOSSIP_ITEM_TELEPORT');
 
+-- -3 609 000 EBON HOLD (DK START)
+INSERT INTO gossip_texts (entry,content_default,comment) VALUES
+(-3609000,'I challenge you, death knight!','Death Knight Initiate GOSSIP_ITEM_ACCEPT_DUEL'),
+(-3609001,'I am ready, Highlord. Let the siege of Light\'s Hope begin!','Highlord Darion Mograine GOSSIP_ITEM_READY');
+
 -- -3 649 000 TRIAL OF CRUSADER
 INSERT INTO gossip_texts (entry,content_default,comment) VALUES
 (-3649000,'Yes. We are prepared for the challenges ahead of us.','barrett GOSSIP_ITEM_BEAST_INIT'),
