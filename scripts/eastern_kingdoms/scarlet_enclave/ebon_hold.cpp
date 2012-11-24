@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Ebon_Hold
 SD%Complete: 95
-SDComment: Quest support: 12641, 12698, 12733, 12739(and 12742 to 12750), 12727, 12801, 12848
+SDComment: Quest support: 12641, 12687, 12698, 12727, 12733, 12739(and 12742 to 12750), 12801, 12848
 SDCategory: Ebon Hold
 EndScriptData */
 
@@ -31,6 +31,7 @@ npc_eye_of_acherus
 npc_scarlet_ghoul
 npc_highlord_darion_mograine
 npc_fellow_death_knight
+npc_acherus_deathcharger
 EndContentData */
 
 #include "precompiled.h"
@@ -2706,6 +2707,145 @@ CreatureAI* GetAI_npc_fellow_death_knight(Creature* pCreature)
     return new npc_fellow_death_knightAI(pCreature);
 }
 
+/*######
+## npc_acherus_deathcharger
+######*/
+
+enum
+{
+    EMOTE_HORSE_READY           = -1609287,
+    SAY_RACE_FINISHED           = -1609288,
+
+    SPELL_HORSEMAN_SLAIN        = 52692,
+    SPELL_RACE_COMPLETE         = 52361,
+
+    NPC_DARK_RIDER_OF_ACHERUS   = 28768,
+    NPC_SALANAR_THE_HORSEMAN    = 28788,
+
+    FACTION_FRIENDLY            = 35,
+};
+
+struct MANGOS_DLL_DECL npc_acherus_deathchargerAI : public ScriptedAI
+{
+    npc_acherus_deathchargerAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
+
+    bool m_bIsRiderDead;
+
+    uint8 m_uiQuestEndStage;
+    uint32 m_uiQuestEndTimer;
+
+    ObjectGuid m_salaranGuid;
+
+    void Reset() override
+    {
+        m_bIsRiderDead = false;
+        m_uiQuestEndStage = 0;
+        m_uiQuestEndTimer = 0;
+
+        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+    }
+
+    void EnterEvadeMode() override
+    {
+        if (m_bIsRiderDead)
+        {
+            m_creature->RemoveAllAuras();
+            m_creature->DeleteThreatList();
+            m_creature->CombatStop(true);
+            m_creature->LoadCreatureAddon(true);
+            m_creature->SetLootRecipient(NULL);
+
+            // Stop movemnet
+            m_creature->GetMotionMaster()->Clear();
+            m_creature->GetMotionMaster()->MoveIdle();
+
+            // Prepare to be mounted
+            DoScriptText(EMOTE_HORSE_READY, m_creature);
+            m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+            m_creature->SetFactionTemporary(FACTION_FRIENDLY, TEMPFACTION_RESTORE_RESPAWN);
+        }
+        else
+            ScriptedAI::EnterEvadeMode();
+    }
+
+    void JustSummoned(Creature* pSummoned) override
+    {
+        if (pSummoned->GetEntry() == NPC_SALANAR_THE_HORSEMAN)
+        {
+            float fX, fY, fZ;
+            m_creature->GetContactPoint(pSummoned, fX, fY, fZ, INTERACTION_DISTANCE);
+            pSummoned->GetMotionMaster()->MovePoint(1, fX, fY, fZ);
+
+            m_salaranGuid = pSummoned->GetObjectGuid();
+            m_uiQuestEndTimer = 4000;
+        }
+    }
+
+    void SummonedCreatureJustDied(Creature* pSummoned) override
+    {
+        // Initial vehicle rider - handled in DB
+        if (pSummoned->GetEntry() == NPC_DARK_RIDER_OF_ACHERUS)
+        {
+            m_bIsRiderDead = true;
+            DoCastSpellIfCan(m_creature, SPELL_HORSEMAN_SLAIN, CAST_TRIGGERED);
+        }
+    }
+
+    void UpdateAI(const uint32 uiDiff) override
+    {
+        if (m_uiQuestEndTimer)
+        {
+            if (m_uiQuestEndTimer <= uiDiff)
+            {
+                switch (m_uiQuestEndStage)
+                {
+                    case 0:
+                        if (Creature* pSalaran = m_creature->GetMap()->GetCreature(m_salaranGuid))
+                            DoScriptText(SAY_RACE_FINISHED, pSalaran);
+
+                        m_uiQuestEndTimer = 5000;
+                        break;
+                    case 1:
+                        // Cast completion spell on player
+                        Creature* pSalaran = m_creature->GetMap()->GetCreature(m_salaranGuid);
+                        Player* pPlayer = m_creature->GetCharmerOrOwnerPlayerOrPlayerItself();
+                        if (!pPlayer || !pSalaran)
+                            return;
+
+                        pSalaran->CastSpell(pPlayer, SPELL_RACE_COMPLETE, true);
+                        pSalaran->ForcedDespawn(1000);
+                        m_creature->ForcedDespawn(1000);
+                        m_uiQuestEndTimer = 0;
+                        break;
+                }
+                ++m_uiQuestEndStage;
+            }
+            else
+                m_uiQuestEndTimer -= uiDiff;
+        }
+    }
+};
+
+CreatureAI* GetAI_npc_acherus_deathcharger(Creature* pCreature)
+{
+    return new npc_acherus_deathchargerAI(pCreature);
+}
+
+bool EffectDummyCreature_npc_acherus_deathcharger(Unit* pCaster, uint32 uiSpellId, SpellEffectIndex uiEffIndex, Creature* pCreatureTarget)
+{
+    // always check spellid and effectindex
+    if (uiSpellId == SPELL_HORSEMAN_SLAIN && uiEffIndex == EFFECT_INDEX_0)
+    {
+        // Make horse evade
+        pCreatureTarget->AI()->EnterEvadeMode();
+
+        // always return true when we are handling this spell and effect
+        return true;
+    }
+
+    return false;
+}
+
 void AddSC_ebon_hold()
 {
     Script* pNewScript;
@@ -2764,5 +2904,11 @@ void AddSC_ebon_hold()
     pNewScript = new Script;
     pNewScript->Name = "npc_fellow_death_knight";
     pNewScript->GetAI = &GetAI_npc_fellow_death_knight;
+    pNewScript->RegisterSelf();
+
+    pNewScript = new Script;
+    pNewScript->Name = "npc_acherus_deathcharger";
+    pNewScript->GetAI = &GetAI_npc_acherus_deathcharger;
+    pNewScript->pEffectDummyNPC = &EffectDummyCreature_npc_acherus_deathcharger;
     pNewScript->RegisterSelf();
 }
