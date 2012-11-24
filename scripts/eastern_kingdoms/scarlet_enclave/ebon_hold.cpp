@@ -2713,8 +2713,8 @@ CreatureAI* GetAI_npc_fellow_death_knight(Creature* pCreature)
 
 enum
 {
-    EMOTE_HORSE_READY           = -1609287,
-    SAY_RACE_FINISHED           = -1609288,
+    EMOTE_HORSE_READY           = -1609097,
+    SAY_RACE_FINISHED           = -1609098,
 
     SPELL_HORSEMAN_SLAIN        = 52692,
     SPELL_RACE_COMPLETE         = 52361,
