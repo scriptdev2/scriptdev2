@@ -42,9 +42,10 @@ enum
 
     // object
     GO_LIGHT_OF_DAWN                    = 191330,
+    GO_HOLY_LIGHTNING_1                 = 191301,
+    GO_HOLY_LIGHTNING_2                 = 191302,
 
     // spells
-    SPELL_THE_LIGHT_OF_DAWN_DAMAGE      = 53645,            // kill each scourge
     SPELL_CHAPTER_IV                    = 53405,            // phase aura
 
     // variables
@@ -99,22 +100,17 @@ static sSpawnLocation aGuardsSpawnLoc[MAX_LIGHT_GUARDS] =
 // When he reach the chapel he cast some powerfull light spell and the battle ends
 static sSpawnLocation aEventLocations[] =
 {
-    {2181.36f, -5234.03f, 83.15f, 0.0f},            // 0 Tirion spawn location
-    {2281.39f, -5299.98f, 85.07f, 1.61f},           // 1 Tirion move location
+    {2165.711f, -5266.124f, 95.50f, 0.13f},         // 0 Tirion spawn location
+    {2281.390f, -5299.98f,  85.07f, 1.61f},         // 1 Tirion move location
     {2289.259f, -5280.350f, 82.11f, 0.0f},          // 2 Koltira chapel loc
     {2273.289f, -5273.675f, 81.70f, 0.0f},          // 3 Thassarian chapel loc
-    {2281.198f, -5257.397f, 80.22f, 4.66f},         // 4 Alexandros summon location
-    {2281.156f, -5259.934f, 80.64f, 0.0f},          // 5 Alexandros move loc
-    {2281.294f, -5281.895f, 82.44f, 1.35f},         // 6 Young Darion spawn
-    {2281.093f, -5263.013f, 81.12f, 0.0f},          // 7 Young Darion move
-    {2281.313f, -5250.282f, 79.32f, 4.69f},         // 8 Lich King spawn
+    {2280.159f, -5263.561f, 81.15f, 4.70f},         // 4 Alexandros summon location
+    {2279.927f, -5265.84f,  81.39f, 0.0f},          // 5 Alexandros move loc
+    {2280.538f, -5280.103f, 82.41f, 1.60f},         // 6 Young Darion spawn
+    {2279.895f, -5269.334f, 81.73f, 0.0f},          // 7 Young Darion move
+    {2280.304f, -5257.205f, 80.09f, 4.62f},         // 8 Lich King spawn
     {2281.523f, -5261.058f, 80.87f, 0.0f},          // 9 Lich King move
-    {2259.963f, -5299.262f, 82.16f, 0.99f},         // 10 Darion relocation on Lich King kick
-    {2261.234f, -5296.016f, 82.16f, 0.0f},          // 11 Tirion goes to Darion
-    {2273.071f, -5293.428f, 83.06f, 0.0f},          // 12 Tirion final point
-    {2282.579f, -5270.912f, 81.83f, 1.28f},         // 13 workaround - Lich King attack
-    {2307.055f, -5292.831f, 81.99f, 0.0f},          // 14 workaround - Lich King kick
-    {2252.441f, -5311.426f, 82.16f, 0.0f},          // 15 workaround - Lich King kick
+    {2273.071f, -5293.428f, 83.06f, 0.0f},          // 10 Tirion final point
 };
 
 class MANGOS_DLL_DECL world_map_ebon_hold : public ScriptedInstance
@@ -138,6 +134,8 @@ class MANGOS_DLL_DECL world_map_ebon_hold : public ScriptedInstance
 
         void DoUpdateBattleWorldState(uint32 uiStateId, uint32 uiStateData);
 
+        void DoEnableHolyTraps();
+
         // Move the behemots and abominations and make them attack
         void DoMoveArmy();
         void DoDespawnArmy();
@@ -149,6 +147,7 @@ class MANGOS_DLL_DECL world_map_ebon_hold : public ScriptedInstance
         uint32 m_uiBattleEncounter;                         // Store state of the battle around  "The Light of Dawn"
 
         GuidList m_lArmyGuids;
+        GuidList m_lLightTrapsGuids;
 };
 
 #endif

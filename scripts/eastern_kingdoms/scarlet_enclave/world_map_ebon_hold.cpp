@@ -124,8 +124,16 @@ void world_map_ebon_hold::OnCreatureEvade(Creature* pCreature)
 
 void world_map_ebon_hold::OnObjectCreate(GameObject* pGo)
 {
-    if (pGo->GetEntry() == GO_LIGHT_OF_DAWN)
-        m_mGoEntryGuidStore[GO_LIGHT_OF_DAWN] = pGo->GetObjectGuid();
+    switch (pGo->GetEntry())
+    {
+        case GO_LIGHT_OF_DAWN:
+            m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
+            break;
+        case GO_HOLY_LIGHTNING_1:
+        case GO_HOLY_LIGHTNING_2:
+            m_lLightTrapsGuids.push_back(pGo->GetObjectGuid());
+            break;
+    }
 }
 
 void world_map_ebon_hold::SetData(uint32 uiType, uint32 uiData)
@@ -239,12 +247,15 @@ void world_map_ebon_hold::DoDespawnArmy()
         if (Creature* pTemp = instance->GetCreature(*itr))
         {
             if (pTemp->isAlive())
-            {
-                pTemp->CastSpell(pTemp, SPELL_THE_LIGHT_OF_DAWN_DAMAGE, true);
                 pTemp->DealDamage(pTemp, pTemp->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-            }
         }
     }
+}
+
+void world_map_ebon_hold::DoEnableHolyTraps()
+{
+    for (GuidList::const_iterator itr = m_lLightTrapsGuids.begin(); itr != m_lLightTrapsGuids.end(); ++itr)
+        DoRespawnGameObject(*itr, 25);
 }
 
 void world_map_ebon_hold::Update(uint32 uiDiff)
