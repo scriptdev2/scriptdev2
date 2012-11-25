@@ -25,7 +25,8 @@ EndScriptData */
 #include "dire_maul.h"
 
 instance_dire_maul::instance_dire_maul(Map* pMap) : ScriptedInstance(pMap),
-    m_bWallDestroyed(false)
+    m_bWallDestroyed(false),
+    m_bDoNorthBeforeWest(false)
 {
     Initialize();
 }
@@ -33,6 +34,19 @@ instance_dire_maul::instance_dire_maul(Map* pMap) : ScriptedInstance(pMap),
 void instance_dire_maul::Initialize()
 {
     memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
+}
+
+void instance_dire_maul::OnPlayerEnter(Player* pPlayer)
+{
+    // figure where to enter to set library doors accordingly
+    // Enter DM North first
+    if (pPlayer->IsWithinDist2d(260.0f, -20.0f, 20.0f) && m_auiEncounter[TYPE_WARPWOOD] != DONE)
+        m_bDoNorthBeforeWest = true;
+    else
+        m_bDoNorthBeforeWest = false;
+
+    DoToggleGameObjectFlags(GO_WEST_LIBRARY_DOOR, GO_FLAG_NO_INTERACT, m_bDoNorthBeforeWest);
+    DoToggleGameObjectFlags(GO_WEST_LIBRARY_DOOR, GO_FLAG_LOCKED, !m_bDoNorthBeforeWest);
 }
 
 void instance_dire_maul::OnCreatureCreate(Creature* pCreature)
@@ -127,6 +141,15 @@ void instance_dire_maul::OnObjectCreate(GameObject* pGo)
             if (m_auiEncounter[TYPE_WARPWOOD] == DONE)
                 pGo->SetGoState(GO_STATE_ACTIVE);
             break;
+        case GO_WEST_LIBRARY_DOOR:
+            pGo->SetFlag(GAMEOBJECT_FLAGS, m_bDoNorthBeforeWest ? GO_FLAG_NO_INTERACT : GO_FLAG_LOCKED);
+            pGo->RemoveFlag(GAMEOBJECT_FLAGS, m_bDoNorthBeforeWest ? GO_FLAG_LOCKED : GO_FLAG_NO_INTERACT);
+            break;
+
+            // North
+        case GO_NORTH_LIBRARY_DOOR:
+            break;
+
         default:
             return;
     }
@@ -394,7 +417,7 @@ void instance_dire_maul::SortPylonGuards()
                     continue;
                 }
 
-                if (pGuard->IsWithinDistInMap(pGenerator, 20.0f))
+                if (pGuard->IsWithinDist2d(pGenerator->GetPositionX(), pGenerator->GetPositionY(), 20.0f))
                 {
                     m_sSortedGeneratorGuards[i].insert(pGuard->GetGUIDLow());
                     m_lGeneratorGuardGUIDs.erase(itr++);

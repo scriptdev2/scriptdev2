@@ -55,6 +55,7 @@ enum
     GO_CRYSTAL_GENERATOR_5      = 179505,
     GO_FORCEFIELD               = 179503,
     GO_WARPWOOD_DOOR            = 177221,
+    GO_WEST_LIBRARY_DOOR        = 179550,
 
     // North
     NPC_GUARD_MOLDAR            = 14326,
@@ -69,6 +70,7 @@ enum
     GO_KNOTS_CACHE              = 179501,
     GO_KNOTS_BALL_AND_CHAIN     = 179511,
     GO_GORDOK_TRIBUTE           = 179564,
+    GO_NORTH_LIBRARY_DOOR       = 179549,
 
     SAY_FREE_IMMOLTHAR          = -1429000,
     SAY_KILL_IMMOLTHAR          = -1429001,
@@ -85,6 +87,8 @@ class MANGOS_DLL_DECL instance_dire_maul : public ScriptedInstance
         ~instance_dire_maul() {}
 
         void Initialize() override;
+
+        void OnPlayerEnter(Player* pPlayer) override;
 
         void OnCreatureCreate(Creature* pCreature) override;
         void OnObjectCreate(GameObject* pGo) override;
@@ -117,6 +121,9 @@ class MANGOS_DLL_DECL instance_dire_maul : public ScriptedInstance
         GuidList m_luiHighborneSummonerGUIDs;
         GuidList m_lGeneratorGuardGUIDs;
         std::set<uint32> m_sSortedGeneratorGuards[MAX_GENERATORS];
+
+        // North
+        bool m_bDoNorthBeforeWest;
 };
 
 #endif
