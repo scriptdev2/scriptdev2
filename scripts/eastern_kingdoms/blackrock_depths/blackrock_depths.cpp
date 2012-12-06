@@ -630,7 +630,7 @@ struct MANGOS_DLL_DECL npc_rocknotAI : public npc_escortAI
                 // spell by trap has effect61, this indicate the bar go hostile
 
                 if (Creature* pTmp = m_pInstance->GetSingleCreatureFromStorage(NPC_PHALANX))
-                    pTmp->setFaction(14);
+                    pTmp->SetFactionTemporary(14, TEMPFACTION_NONE);
 
                 // for later, this event(s) has alot more to it.
                 // optionally, DONE can trigger bar to go hostile.

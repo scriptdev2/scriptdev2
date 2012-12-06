@@ -269,7 +269,7 @@ bool GossipSelect_example_creature(Player* pPlayer, Creature* pCreature, uint32 
     {
         pPlayer->CLOSE_GOSSIP_MENU();
         // Set our faction to hostile towards all
-        pCreature->setFaction(FACTION_WORGEN);
+        pCreature->SetFactionTemporary(FACTION_WORGEN, TEMPFACTION_RESTORE_RESPAWN);
         pCreature->AI()->AttackStart(pPlayer);
     }
 

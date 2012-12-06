@@ -669,8 +669,7 @@ bool QuestAccept_npc_bessy(Player* pPlayer, Creature* pCreature, const Quest* pQ
 {
     if (pQuest->GetQuestId() == QUEST_COWS_COME_HOME)
     {
-        pCreature->setFaction(FACTION_ESCORT_N_NEUTRAL_PASSIVE);
-        pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+        pCreature->SetFactionTemporary(FACTION_ESCORT_N_NEUTRAL_PASSIVE, TEMPFACTION_RESTORE_RESPAWN | TEMPFACTION_TOGGLE_NON_ATTACKABLE);
 
         if (npc_bessyAI* pBessyAI = dynamic_cast<npc_bessyAI*>(pCreature->AI()))
             pBessyAI->Start(true, pPlayer, pQuest);
@@ -719,14 +718,7 @@ struct MANGOS_DLL_DECL npc_maxx_a_million_escortAI : public npc_escortAI
 
             // Reset fields, that were changed on escort-start
             m_creature->HandleEmote(EMOTE_STATE_STUN);
-            // Faction is reset with npc_escortAI::JustRespawned();
-
-            // Unclear how these flags are set/removed in relation to the faction change at start of escort.
-            // Workaround here, so that the flags are removed during escort (and while not in evade mode)
-            m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE + UNIT_FLAG_PASSIVE);
         }
-        else
-            m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
     }
 
     void WaypointReached(uint32 uiPoint) override
@@ -835,11 +827,9 @@ bool QuestAccept_npc_maxx_a_million(Player* pPlayer, Creature* pCreature, const 
         if (npc_maxx_a_million_escortAI* pEscortAI = dynamic_cast<npc_maxx_a_million_escortAI*>(pCreature->AI()))
         {
             // Set Faction to Escort Faction
-            pCreature->setFaction(FACTION_ESCORT_N_NEUTRAL_PASSIVE);
+            pCreature->SetFactionTemporary(FACTION_ESCORT_N_NEUTRAL_PASSIVE, TEMPFACTION_RESTORE_RESPAWN | TEMPFACTION_TOGGLE_OOC_NOT_ATTACK | TEMPFACTION_TOGGLE_PASSIVE);
             // Set emote-state to 0 (is EMOTE_STATE_STUN by default)
             pCreature->HandleEmote(EMOTE_ONESHOT_NONE);
-            // Remove unit_flags (see comment in JustReachedHome)
-            pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE + UNIT_FLAG_PASSIVE);
 
             pEscortAI->Start(false, pPlayer, pQuest, true);
         }

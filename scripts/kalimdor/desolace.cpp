@@ -211,7 +211,7 @@ bool QuestAccept_npc_dalinda_malem(Player* pPlayer, Creature* pCreature, const Q
         if (npc_dalinda_malemAI* pEscortAI = dynamic_cast<npc_dalinda_malemAI*>(pCreature->AI()))
         {
             // TODO This faction change needs confirmation, also possible that we need to drop her PASSIVE flag
-            pCreature->setFaction(FACTION_ESCORT_A_NEUTRAL_PASSIVE);
+            pCreature->SetFactionTemporary(FACTION_ESCORT_A_NEUTRAL_PASSIVE, TEMPFACTION_RESTORE_RESPAWN | TEMPFACTION_TOGGLE_PASSIVE);
             pEscortAI->Start(false, pPlayer, pQuest);
         }
     }
@@ -277,11 +277,8 @@ struct MANGOS_DLL_DECL npc_melizza_brimbuzzleAI : public npc_escortAI, private D
     npc_melizza_brimbuzzleAI(Creature* m_creature) : npc_escortAI(m_creature),
         DialogueHelper(aIntroDialogue)
     {
-        m_uiNormalFaction = m_creature->getFaction();
         Reset();
     }
-
-    uint32 m_uiNormalFaction;
 
     void Reset() override {}
 
@@ -307,7 +304,7 @@ struct MANGOS_DLL_DECL npc_melizza_brimbuzzleAI : public npc_escortAI, private D
                 if (Player* pPlayer = GetPlayerForEscort())
                     DoScriptText(SAY_MELIZZA_START, m_creature, pPlayer);
 
-                m_creature->setFaction(FACTION_ESCORT_N_NEUTRAL_PASSIVE);
+                m_creature->SetFactionTemporary(FACTION_ESCORT_N_NEUTRAL_PASSIVE, TEMPFACTION_RESTORE_RESPAWN);
                 break;
             case 4:
                 for (uint8 i = 0; i < MAX_MARAUDERS; ++i)
@@ -356,7 +353,7 @@ struct MANGOS_DLL_DECL npc_melizza_brimbuzzleAI : public npc_escortAI, private D
                     pPlayer->GroupEventHappens(QUEST_GET_ME_OUT_OF_HERE, m_creature);
                 }
 
-                m_creature->setFaction(m_uiNormalFaction);
+                m_creature->ClearTemporaryFaction();
                 SetRun(true);
                 SetEscortPaused(false);
                 break;

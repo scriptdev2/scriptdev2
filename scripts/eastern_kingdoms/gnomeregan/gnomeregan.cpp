@@ -347,7 +347,7 @@ struct MANGOS_DLL_DECL npc_blastmaster_emi_shortfuseAI : public npc_escortAI
                 {
                     case 1:
                         DoScriptText(SAY_START, m_creature);
-                        m_creature->setFaction(FACTION_ESCORT_N_NEUTRAL_PASSIVE);
+                        m_creature->SetFactionTemporary(FACTION_ESCORT_N_NEUTRAL_PASSIVE, TEMPFACTION_RESTORE_RESPAWN);
                         m_creature->SetUInt32Value(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_NONE);
                         m_creature->SetUInt32Value(UNIT_DYNAMIC_FLAGS, 0);
                         m_uiPhaseTimer = 5000;

@@ -207,9 +207,6 @@ void npc_escortAI::JustRespawned()
     // add a small delay before going to first waypoint, normal in near all cases
     m_uiWPWaitTimer = 2500;
 
-    if (m_creature->getFaction() != m_creature->GetCreatureInfo()->faction_A)
-        m_creature->setFaction(m_creature->GetCreatureInfo()->faction_A);
-
     Reset();
 }
 

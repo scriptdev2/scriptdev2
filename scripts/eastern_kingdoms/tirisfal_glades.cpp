@@ -88,11 +88,9 @@ struct MANGOS_DLL_DECL npc_calvin_montagueAI : public ScriptedAI
 {
     npc_calvin_montagueAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        m_uiNormFaction = pCreature->getFaction();
         Reset();
     }
 
-    uint32 m_uiNormFaction;
     uint32 m_uiPhase;
     uint32 m_uiPhaseTimer;
     ObjectGuid m_playerGuid;
@@ -102,9 +100,6 @@ struct MANGOS_DLL_DECL npc_calvin_montagueAI : public ScriptedAI
         m_uiPhase = 0;
         m_uiPhaseTimer = 5000;
         m_playerGuid.Clear();
-
-        if (m_creature->getFaction() != m_uiNormFaction)
-            m_creature->setFaction(m_uiNormFaction);
     }
 
     void AttackedBy(Unit* pAttacker) override
@@ -121,7 +116,6 @@ struct MANGOS_DLL_DECL npc_calvin_montagueAI : public ScriptedAI
         {
             uiDamage = 0;
 
-            m_creature->setFaction(m_uiNormFaction);
             m_creature->CombatStop(true);
 
             m_uiPhase = 1;
@@ -180,7 +174,7 @@ bool QuestAccept_npc_calvin_montague(Player* pPlayer, Creature* pCreature, const
 {
     if (pQuest->GetQuestId() == QUEST_590)
     {
-        pCreature->setFaction(FACTION_HOSTILE);
+        pCreature->SetFactionTemporary(FACTION_HOSTILE, TEMPFACTION_RESTORE_COMBAT_STOP | TEMPFACTION_RESTORE_RESPAWN);
         pCreature->AI()->AttackStart(pPlayer);
     }
     return true;

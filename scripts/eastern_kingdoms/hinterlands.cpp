@@ -115,7 +115,7 @@ bool QuestAccept_npc_00x09hl(Player* pPlayer, Creature* pCreature, const Quest* 
     if (pQuest->GetQuestId() == QUEST_RESQUE_OOX_09)
     {
         pCreature->SetStandState(UNIT_STAND_STATE_STAND);
-        pCreature->setFaction((pPlayer->GetTeam() == ALLIANCE) ? FACTION_ESCORT_A_PASSIVE : FACTION_ESCORT_H_PASSIVE);
+        pCreature->SetFactionTemporary(pPlayer->GetTeam() == ALLIANCE ? FACTION_ESCORT_A_PASSIVE : FACTION_ESCORT_H_PASSIVE, TEMPFACTION_RESTORE_RESPAWN);
 
         DoScriptText(SAY_OOX_START, pCreature, pPlayer);
 

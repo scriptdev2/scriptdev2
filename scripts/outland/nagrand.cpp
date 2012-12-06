@@ -284,7 +284,7 @@ bool QuestAccept_npc_maghar_captive(Player* pPlayer, Creature* pCreature, const 
         if (npc_maghar_captiveAI* pEscortAI = dynamic_cast<npc_maghar_captiveAI*>(pCreature->AI()))
         {
             pCreature->SetStandState(UNIT_STAND_STATE_STAND);
-            pCreature->setFaction(FACTION_ESCORT_H_NEUTRAL_ACTIVE);
+            pCreature->SetFactionTemporary(FACTION_ESCORT_H_NEUTRAL_ACTIVE, TEMPFACTION_RESTORE_RESPAWN);
 
             pEscortAI->Start(false, pPlayer, pQuest);
 

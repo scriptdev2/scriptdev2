@@ -64,7 +64,7 @@ struct MANGOS_DLL_DECL npc_tapoke_slim_jahnAI : public npc_escortAI
                     m_creature->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
                 SetRun();
-                m_creature->setFaction(FACTION_ENEMY);
+                m_creature->SetFactionTemporary(FACTION_ENEMY, TEMPFACTION_RESTORE_RESPAWN | TEMPFACTION_RESTORE_COMBAT_STOP);
                 break;
         }
     }
@@ -109,7 +109,6 @@ struct MANGOS_DLL_DECL npc_tapoke_slim_jahnAI : public npc_escortAI
 
                 uiDamage = 0;
 
-                m_creature->setFaction(m_creature->GetCreatureInfo()->faction_A);
                 m_creature->RemoveAllAuras();
                 m_creature->DeleteThreatList();
                 m_creature->CombatStop(true);

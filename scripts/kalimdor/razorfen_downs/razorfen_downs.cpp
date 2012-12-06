@@ -280,7 +280,7 @@ bool QuestAccept_npc_belnistrasz(Player* pPlayer, Creature* pCreature, const Que
         {
             pEscortAI->Start(true, pPlayer, pQuest);
             DoScriptText(SAY_BELNISTRASZ_READY, pCreature, pPlayer);
-            pCreature->setFaction(FACTION_ESCORT_N_NEUTRAL_ACTIVE);
+            pCreature->SetFactionTemporary(FACTION_ESCORT_N_NEUTRAL_ACTIVE, TEMPFACTION_RESTORE_RESPAWN);
         }
     }
 

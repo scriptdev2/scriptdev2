@@ -585,7 +585,7 @@ bool QuestAccept_npc_ogron(Player* pPlayer, Creature* pCreature, const Quest* pQ
         if (npc_ogronAI* pEscortAI = dynamic_cast<npc_ogronAI*>(pCreature->AI()))
         {
             pEscortAI->Start(false, pPlayer, pQuest, true);
-            pCreature->setFaction(FACTION_ESCORT_N_FRIEND_PASSIVE);
+            pCreature->SetFactionTemporary(FACTION_ESCORT_N_FRIEND_PASSIVE, TEMPFACTION_RESTORE_RESPAWN);
             DoScriptText(SAY_OGR_START, pCreature, pPlayer);
         }
     }
@@ -623,11 +623,7 @@ struct MANGOS_DLL_DECL npc_private_hendelAI : public ScriptedAI
 {
     npc_private_hendelAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
 
-    void Reset() override
-    {
-        if (m_creature->getFaction() != m_creature->GetCreatureInfo()->faction_A)
-            m_creature->setFaction(m_creature->GetCreatureInfo()->faction_A);
-    }
+    void Reset() override {}
 
     void AttackedBy(Unit* pAttacker) override
     {
@@ -658,7 +654,7 @@ struct MANGOS_DLL_DECL npc_private_hendelAI : public ScriptedAI
 bool QuestAccept_npc_private_hendel(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_MISSING_DIPLO_PT16)
-        pCreature->setFaction(FACTION_HOSTILE);
+        pCreature->SetFactionTemporary(FACTION_HOSTILE, TEMPFACTION_RESTORE_COMBAT_STOP | TEMPFACTION_RESTORE_RESPAWN);
 
     return true;
 }

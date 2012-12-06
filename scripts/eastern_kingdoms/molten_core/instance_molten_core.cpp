@@ -197,7 +197,7 @@ void instance_molten_core::DoSpawnMajordomoIfCan(bool bByPlayerEnter)
     {
         if (uiSummonPos)                                    // Majordomo encounter already done, set faction
         {
-            pMajordomo->setFaction(FACTION_MAJORDOMO_FRIENDLY);
+            pMajordomo->SetFactionTemporary(FACTION_MAJORDOMO_FRIENDLY, TEMPFACTION_RESTORE_RESPAWN);
             pMajordomo->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
             pMajordomo->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
         }

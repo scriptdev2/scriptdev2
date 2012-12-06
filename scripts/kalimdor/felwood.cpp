@@ -307,13 +307,7 @@ struct MANGOS_DLL_DECL npc_kroshiusAI : public ScriptedAI
         m_playerGuid.Clear();
 
         if (!m_uiPhase)
-        {
-            m_creature->setFaction(m_creature->GetCreatureInfo()->faction_A);
-            // TODO: Workaround? till better solution
-            m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
-            m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE);
             m_creature->SetStandState(UNIT_STAND_STATE_DEAD);
-        }
     }
 
     void DoRevive(Player* pSource)
@@ -353,10 +347,7 @@ struct MANGOS_DLL_DECL npc_kroshiusAI : public ScriptedAI
                         m_uiPhaseTimer = 3500;
                         break;
                     case 3:                                 // Attack
-                        m_creature->setFaction(FACTION_HOSTILE);
-                        // TODO workaround will better idea
-                        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
-                        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE);
+                        m_creature->SetFactionTemporary(FACTION_HOSTILE, TEMPFACTION_RESTORE_COMBAT_STOP | TEMPFACTION_RESTORE_RESPAWN |  TEMPFACTION_TOGGLE_OOC_NOT_ATTACK | TEMPFACTION_TOGGLE_PASSIVE);
                         if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_playerGuid))
                         {
                             if (m_creature->IsWithinDistInMap(pPlayer, 30.0f))

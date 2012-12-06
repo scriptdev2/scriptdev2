@@ -296,7 +296,7 @@ bool QuestAccept_npc_prospector_remtravel(Player* pPlayer, Creature* pCreature, 
 {
     if (pQuest->GetQuestId() == QUEST_ABSENT_MINDED_PT2)
     {
-        pCreature->setFaction(FACTION_ESCORT_A_NEUTRAL_PASSIVE);
+        pCreature->SetFactionTemporary(FACTION_ESCORT_A_NEUTRAL_PASSIVE, TEMPFACTION_RESTORE_RESPAWN);
 
         if (npc_prospector_remtravelAI* pEscortAI = dynamic_cast<npc_prospector_remtravelAI*>(pCreature->AI()))
             pEscortAI->Start(false, pPlayer, pQuest, true);
@@ -342,7 +342,7 @@ struct MANGOS_DLL_DECL npc_threshwackonatorAI : public FollowerAI
 
     void DoAtEnd()
     {
-        m_creature->setFaction(FACTION_HOSTILE);
+        m_creature->SetFactionTemporary(FACTION_HOSTILE, TEMPFACTION_RESTORE_RESPAWN);
 
         if (Player* pHolder = GetLeaderForFollower())
             m_creature->AI()->AttackStart(pHolder);

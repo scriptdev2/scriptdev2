@@ -151,7 +151,7 @@ bool QuestAccept_npc_gilthares(Player* pPlayer, Creature* pCreature, const Quest
 {
     if (pQuest->GetQuestId() == QUEST_FREE_FROM_HOLD)
     {
-        pCreature->setFaction(FACTION_ESCORT_H_NEUTRAL_ACTIVE);
+        pCreature->SetFactionTemporary(FACTION_ESCORT_H_NEUTRAL_ACTIVE, TEMPFACTION_RESTORE_RESPAWN);
         pCreature->SetStandState(UNIT_STAND_STATE_STAND);
 
         DoScriptText(SAY_GIL_START, pCreature, pPlayer);
@@ -608,7 +608,7 @@ bool QuestAccept_npc_wizzlecranks_shredder(Player* pPlayer, Creature* pCreature,
     if (pQuest->GetQuestId() == QUEST_ESCAPE)
     {
         DoScriptText(SAY_START, pCreature);
-        pCreature->setFaction(FACTION_RATCHET);
+        pCreature->SetFactionTemporary(FACTION_RATCHET, TEMPFACTION_RESTORE_RESPAWN);
 
         if (npc_wizzlecranks_shredderAI* pEscortAI = dynamic_cast<npc_wizzlecranks_shredderAI*>(pCreature->AI()))
             pEscortAI->Start(true, pPlayer, pQuest);

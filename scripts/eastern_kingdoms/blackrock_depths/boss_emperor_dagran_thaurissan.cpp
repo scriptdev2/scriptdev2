@@ -70,7 +70,7 @@ struct MANGOS_DLL_DECL boss_emperor_dagran_thaurissanAI : public ScriptedAI
         {
             if (pPrincess->isAlive())
             {
-                pPrincess->setFaction(FACTION_NEUTRAL);
+                pPrincess->SetFactionTemporary(FACTION_NEUTRAL, TEMPFACTION_NONE);
                 pPrincess->AI()->EnterEvadeMode();
             }
         }

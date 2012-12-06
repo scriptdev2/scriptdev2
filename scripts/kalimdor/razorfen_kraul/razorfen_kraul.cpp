@@ -139,7 +139,7 @@ bool QuestAccept_npc_willix_the_importer(Player* pPlayer, Creature* pCreature, c
             // After 4.0.1 set run = true
             pEscortAI->Start(false, pPlayer, pQuest);
             DoScriptText(SAY_WILLIX_READY, pCreature, pPlayer);
-            pCreature->setFaction(FACTION_ESCORT_N_NEUTRAL_PASSIVE);
+            pCreature->SetFactionTemporary(FACTION_ESCORT_N_NEUTRAL_PASSIVE, TEMPFACTION_RESTORE_RESPAWN);
         }
     }
 

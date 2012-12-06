@@ -505,7 +505,7 @@ bool QuestAccept_npc_lurgglbr(Player* pPlayer, Creature* pCreature, const Quest*
     {
         if (npc_lurgglbrAI* pEscortAI = dynamic_cast<npc_lurgglbrAI*>(pCreature->AI()))
         {
-            pCreature->setFaction(FACTION_ESCORT_N_NEUTRAL_PASSIVE);
+            pCreature->SetFactionTemporary(FACTION_ESCORT_N_NEUTRAL_PASSIVE, TEMPFACTION_RESTORE_RESPAWN);
             pEscortAI->Start(false, pPlayer, pQuest);
         }
     }

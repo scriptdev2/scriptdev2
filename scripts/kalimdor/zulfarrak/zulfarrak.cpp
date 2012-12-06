@@ -63,8 +63,6 @@ struct MANGOS_DLL_DECL npc_sergeant_blyAI : public ScriptedAI
         m_uiShieldBashTimer = 5000;
         m_uiRevengeTimer    = 8000;
 
-        m_creature->setFaction(FACTION_FRIENDLY);
-
         /*if (m_pInstance)
             m_pInstance->SetData(0, NOT_STARTED);*/
     }
@@ -131,7 +129,7 @@ bool GossipSelect_npc_sergeant_bly(Player* pPlayer, Creature* pCreature, uint32 
     if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)
     {
         pPlayer->CLOSE_GOSSIP_MENU();
-        pCreature->setFaction(FACTION_HOSTILE);
+        pCreature->SetFactionTemporary(FACTION_HOSTILE, TEMPFACTION_RESTORE_COMBAT_STOP | TEMPFACTION_RESTORE_RESPAWN);
         pCreature->AI()->AttackStart(pPlayer);
     }
     return true;

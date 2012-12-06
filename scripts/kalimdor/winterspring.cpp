@@ -429,7 +429,7 @@ bool QuestAccept_npc_ranshalla(Player* pPlayer, Creature* pCreature, const Quest
     if (pQuest->GetQuestId() == QUEST_GUARDIANS_ALTAR)
     {
         DoScriptText(SAY_QUEST_START, pCreature);
-        pCreature->setFaction(FACTION_ESCORT_A_NEUTRAL_PASSIVE);
+        pCreature->SetFactionTemporary(FACTION_ESCORT_A_NEUTRAL_PASSIVE, TEMPFACTION_RESTORE_RESPAWN);
 
         if (npc_ranshallaAI* pEscortAI = dynamic_cast<npc_ranshallaAI*>(pCreature->AI()))
             pEscortAI->Start(false, pPlayer, pQuest, true);

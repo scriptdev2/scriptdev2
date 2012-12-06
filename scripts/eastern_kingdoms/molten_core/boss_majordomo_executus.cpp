@@ -136,7 +136,7 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
 
             // Set friendly
             m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
-            m_creature->setFaction(FACTION_MAJORDOMO_FRIENDLY);
+            m_creature->SetFactionTemporary(FACTION_MAJORDOMO_FRIENDLY, TEMPFACTION_RESTORE_RESPAWN);
 
             // Reset orientation
             m_creature->SetFacingTo(m_aMajordomoLocations[0].m_fO);

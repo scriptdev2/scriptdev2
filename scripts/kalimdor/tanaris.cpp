@@ -67,7 +67,7 @@ struct MANGOS_DLL_DECL mob_aquementasAI : public ScriptedAI
         m_uiAquaJetTimer        = 5000;
         m_uiFrostShockTimer     = 1000;
 
-        m_creature->setFaction(FACTION_FRIENDLY);
+        m_creature->setFaction(FACTION_FRIENDLY);           // TODO: Either do this way, or might require a DB change
     }
 
     void SendItem(Player* pReceiver)
@@ -86,8 +86,9 @@ struct MANGOS_DLL_DECL mob_aquementasAI : public ScriptedAI
     {
         DoScriptText(AGGRO_YELL_AQUE, m_creature, pWho);
 
-        if (pWho->GetTypeId() == TYPEID_PLAYER)
-            SendItem(static_cast<Player*>(pWho));
+        Player* pInvokedPlayer = pWho->GetCharmerOrOwnerPlayerOrPlayerItself();
+        if (pInvokedPlayer)
+            SendItem(pInvokedPlayer);
     }
 
     void UpdateAI(const uint32 uiDiff) override
@@ -311,10 +312,10 @@ bool QuestAccept_npc_oox17tn(Player* pPlayer, Creature* pCreature, const Quest* 
         pCreature->SetStandState(UNIT_STAND_STATE_STAND);
 
         if (pPlayer->GetTeam() == ALLIANCE)
-            pCreature->setFaction(FACTION_ESCORT_A_PASSIVE);
+            pCreature->SetFactionTemporary(FACTION_ESCORT_A_PASSIVE, TEMPFACTION_RESTORE_RESPAWN);
 
         if (pPlayer->GetTeam() == HORDE)
-            pCreature->setFaction(FACTION_ESCORT_H_PASSIVE);
+            pCreature->SetFactionTemporary(FACTION_ESCORT_H_PASSIVE, TEMPFACTION_RESTORE_RESPAWN);
 
         if (npc_oox17tnAI* pEscortAI = dynamic_cast<npc_oox17tnAI*>(pCreature->AI()))
             pEscortAI->Start(false, pPlayer, pQuest);

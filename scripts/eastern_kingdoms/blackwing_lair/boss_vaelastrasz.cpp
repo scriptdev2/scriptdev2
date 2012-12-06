@@ -224,7 +224,7 @@ struct MANGOS_DLL_DECL boss_vaelastraszAI : public ScriptedAI
                         ++m_uiSpeechNum;
                         break;
                     case 2:
-                        m_creature->setFaction(FACTION_HOSTILE);
+                        m_creature->SetFactionTemporary(FACTION_HOSTILE, TEMPFACTION_RESTORE_RESPAWN);
 
                         if (m_playerGuid)
                         {

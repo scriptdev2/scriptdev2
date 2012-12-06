@@ -186,7 +186,7 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
             pKalec->ForcedDespawn();
 
         EnterEvadeMode();
-        m_creature->setFaction(35);
+        m_creature->SetFactionTemporary(35, TEMPFACTION_RESTORE_RESPAWN);
         m_creature->GetMotionMaster()->MoveIdle();
         DoScriptText(SAY_GOOD_PLRWIN, m_creature);
         m_uiExitTimer = 10000;

@@ -47,17 +47,12 @@ struct MANGOS_DLL_DECL npc_bartlebyAI : public ScriptedAI
 {
     npc_bartlebyAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        m_uiNormalFaction = pCreature->getFaction();
         Reset();
     }
 
     uint32 m_uiNormalFaction;
 
-    void Reset() override
-    {
-        if (m_creature->getFaction() != m_uiNormalFaction)
-            m_creature->setFaction(m_uiNormalFaction);
-    }
+    void Reset() override {}
 
     void AttackedBy(Unit* pAttacker) override
     {
@@ -88,7 +83,7 @@ bool QuestAccept_npc_bartleby(Player* pPlayer, Creature* pCreature, const Quest*
 {
     if (pQuest->GetQuestId() == QUEST_BEAT)
     {
-        pCreature->setFaction(FACTION_ENEMY);
+        pCreature->SetFactionTemporary(FACTION_ENEMY, TEMPFACTION_RESTORE_RESPAWN | TEMPFACTION_RESTORE_COMBAT_STOP);
         pCreature->AI()->AttackStart(pPlayer);
     }
     return true;
@@ -113,17 +108,10 @@ struct MANGOS_DLL_DECL npc_dashel_stonefistAI : public ScriptedAI
 {
     npc_dashel_stonefistAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        m_uiNormalFaction = pCreature->getFaction();
         Reset();
     }
 
-    uint32 m_uiNormalFaction;
-
-    void Reset() override
-    {
-        if (m_creature->getFaction() != m_uiNormalFaction)
-            m_creature->setFaction(m_uiNormalFaction);
-    }
+    void Reset() override {}
 
     void AttackedBy(Unit* pAttacker) override
     {
@@ -154,7 +142,7 @@ bool QuestAccept_npc_dashel_stonefist(Player* pPlayer, Creature* pCreature, cons
 {
     if (pQuest->GetQuestId() == QUEST_MISSING_DIPLO_PT8)
     {
-        pCreature->setFaction(FACTION_HOSTILE);
+        pCreature->SetFactionTemporary(FACTION_HOSTILE, TEMPFACTION_RESTORE_COMBAT_STOP | TEMPFACTION_RESTORE_RESPAWN);
         pCreature->AI()->AttackStart(pPlayer);
     }
     return true;

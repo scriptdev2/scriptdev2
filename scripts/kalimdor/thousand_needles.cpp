@@ -174,7 +174,7 @@ bool QuestAccept_npc_lakota_windsong(Player* pPlayer, Creature* pCreature, const
     if (pQuest->GetQuestId() == QUEST_FREE_AT_LAST)
     {
         DoScriptText(SAY_LAKO_START, pCreature, pPlayer);
-        pCreature->setFaction(FACTION_ESCORT_H_NEUTRAL_ACTIVE);
+        pCreature->SetFactionTemporary(FACTION_ESCORT_H_NEUTRAL_ACTIVE, TEMPFACTION_RESTORE_RESPAWN);
 
         if (npc_lakota_windsongAI* pEscortAI = dynamic_cast<npc_lakota_windsongAI*>(pCreature->AI()))
             pEscortAI->Start(false, pPlayer, pQuest);
@@ -246,7 +246,7 @@ bool QuestAccept_npc_paoka_swiftmountain(Player* pPlayer, Creature* pCreature, c
     if (pQuest->GetQuestId() == QUEST_HOMEWARD)
     {
         DoScriptText(SAY_START, pCreature, pPlayer);
-        pCreature->setFaction(FACTION_ESCORT_H_NEUTRAL_ACTIVE);
+        pCreature->SetFactionTemporary(FACTION_ESCORT_H_NEUTRAL_ACTIVE, TEMPFACTION_RESTORE_RESPAWN);
 
         if (npc_paoka_swiftmountainAI* pEscortAI = dynamic_cast<npc_paoka_swiftmountainAI*>(pCreature->AI()))
             pEscortAI->Start(false, pPlayer, pQuest);
@@ -272,19 +272,14 @@ struct MANGOS_DLL_DECL npc_plucky_johnsonAI : public ScriptedAI
 {
     npc_plucky_johnsonAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        m_uiNormFaction = pCreature->getFaction();
         Reset();
     }
 
-    uint32 m_uiNormFaction;
     uint32 m_uiResetTimer;
 
     void Reset() override
     {
         m_uiResetTimer = 120000;
-
-        if (m_creature->getFaction() != m_uiNormFaction)
-            m_creature->setFaction(m_uiNormFaction);
 
         if (m_creature->HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP))
             m_creature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
@@ -298,7 +293,7 @@ struct MANGOS_DLL_DECL npc_plucky_johnsonAI : public ScriptedAI
         {
             if (uiTextEmote == TEXTEMOTE_BECKON)
             {
-                m_creature->setFaction(FACTION_FRIENDLY);
+                m_creature->SetFactionTemporary(FACTION_FRIENDLY, TEMPFACTION_RESTORE_RESPAWN | TEMPFACTION_RESTORE_COMBAT_STOP);
                 m_creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
                 m_creature->CastSpell(m_creature, SPELL_PLUCKY_HUMAN, false);
             }
@@ -310,7 +305,7 @@ struct MANGOS_DLL_DECL npc_plucky_johnsonAI : public ScriptedAI
                 return;
             else
             {
-                m_creature->setFaction(FACTION_FRIENDLY);
+                m_creature->SetFactionTemporary(FACTION_FRIENDLY, TEMPFACTION_RESTORE_RESPAWN | TEMPFACTION_RESTORE_COMBAT_STOP);
                 m_creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
                 m_creature->CastSpell(m_creature, SPELL_PLUCKY_HUMAN, false);
                 m_creature->HandleEmote(EMOTE_ONESHOT_WAVE);

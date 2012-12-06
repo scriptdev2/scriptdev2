@@ -869,7 +869,7 @@ struct MANGOS_DLL_DECL npc_deathstalker_vincentAI : public ScriptedAI
         if (uiDamage >= m_creature->GetHealth())
         {
             m_creature->GetHealth() > 1 ? uiDamage = m_creature->GetHealth() - 1 : uiDamage = 0;
-            m_creature->setFaction(FACTION_FRIENDLY);
+            m_creature->SetFactionTemporary(FACTION_FRIENDLY, TEMPFACTION_NONE);
             EnterEvadeMode();
             DoScriptText(SAY_VINCENT_DIE, m_creature);
         }
