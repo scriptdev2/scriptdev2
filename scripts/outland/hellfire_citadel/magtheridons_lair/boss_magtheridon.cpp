@@ -388,9 +388,9 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
 
         if (m_uiDarkMendingTimer < uiDiff)
         {
-            if (Unit* pTarget = DoSelectLowestHpFriendly(50.0f))
+            if (Unit* pTarget = DoSelectLowestHpFriendly(30.0f))
             {
-                if (DoCastSpellIfCan(m_creature, SPELL_DARK_MENDING) == CAST_OK)
+                if (DoCastSpellIfCan(pTarget, SPELL_DARK_MENDING) == CAST_OK)
                     m_uiDarkMendingTimer = urand(10000, 20000);
             }
         }

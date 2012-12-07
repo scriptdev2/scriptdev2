@@ -281,8 +281,8 @@ class MANGOS_DLL_DECL instance_violet_hold : public ScriptedInstance
         uint32 m_uiEventResetTimer;
 
         bool m_bIsVoidDance;
-        bool m_bIsDehydratation;
         bool m_bIsDefenseless;
+        bool m_bIsDehydratation;
 
         BossToCellMap m_mBossToCellMap;
 

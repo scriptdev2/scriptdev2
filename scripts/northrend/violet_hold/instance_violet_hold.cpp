@@ -228,7 +228,7 @@ void instance_violet_hold::OnPlayerEnter(Player* pPlayer)
 
 void instance_violet_hold::SetData(uint32 uiType, uint32 uiData)
 {
-    debug_log("SD2: instance_violet_hold: SetData got type % u, data %u.", uiType, uiData);
+    debug_log("SD2: instance_violet_hold: SetData got type %u, data %u.", uiType, uiData);
 
     switch (uiType)
     {
