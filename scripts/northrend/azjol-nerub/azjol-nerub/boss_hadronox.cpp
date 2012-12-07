@@ -82,7 +82,7 @@ struct MANGOS_DLL_DECL boss_hadronoxAI : public ScriptedAI
         m_uiGrabTimer   = urand(15000, 19000);
     }
 
-    void KilledUnit(Unit* pVictim) override
+    void KilledUnit(Unit* /*pVictim*/) override
     {
         m_creature->SetHealth(m_creature->GetHealth() + (m_creature->GetMaxHealth() * 0.1));
     }

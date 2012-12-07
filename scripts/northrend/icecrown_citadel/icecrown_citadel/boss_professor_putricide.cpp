@@ -155,7 +155,7 @@ struct MANGOS_DLL_DECL boss_professor_putricideAI : public ScriptedAI
         m_uiChokingGasBombTimer     = urand(10000, 15000);
     }
 
-    void KilledUnit(Unit* pVictim) override
+    void KilledUnit(Unit* /*pVictim*/) override
     {
         DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
     }
@@ -168,7 +168,7 @@ struct MANGOS_DLL_DECL boss_professor_putricideAI : public ScriptedAI
         DoScriptText(SAY_AGGRO, m_creature);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_PROFESSOR_PUTRICIDE, DONE);

@@ -138,11 +138,10 @@ class MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
         uint32 m_uiWorldStateShieldCount;
 
         bool m_bHasIntroYelled;
+        uint32 m_uiMedivhYellCount;
 
         uint32 m_uiNextPortalTimer;
         uint8 m_uiCurrentRiftId;
-
-        uint32 m_uiMedivhYellCount;
 };
 
 #endif

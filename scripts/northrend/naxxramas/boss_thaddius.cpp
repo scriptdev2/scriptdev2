@@ -165,7 +165,7 @@ struct MANGOS_DLL_DECL boss_thaddiusAI : public Scripted_NoMovementAI
         DoScriptText(SAY_SLAY, m_creature);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -662,7 +662,7 @@ struct MANGOS_DLL_DECL boss_stalaggAI : public boss_thaddiusAddsAI
         boss_thaddiusAddsAI::Aggro(pWho);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         DoScriptText(SAY_STAL_DEATH, m_creature);
     }
@@ -716,7 +716,7 @@ struct MANGOS_DLL_DECL boss_feugenAI : public boss_thaddiusAddsAI
         boss_thaddiusAddsAI::Aggro(pWho);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         DoScriptText(SAY_FEUG_DEATH, m_creature);
     }

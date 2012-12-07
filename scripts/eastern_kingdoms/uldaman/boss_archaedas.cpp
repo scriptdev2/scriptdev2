@@ -75,12 +75,12 @@ struct MANGOS_DLL_DECL boss_archaedasAI : public ScriptedAI
             m_pInstance->SetData(TYPE_ARCHAEDAS, IN_PROGRESS);
     }
 
-    void KilledUnit(Unit* pVictim) override
+    void KilledUnit(Unit* /*pVictim*/) override
     {
         DoScriptText(SAY_UNIT_SLAIN, m_creature);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         // open door to vault (handled by instance script)
         if (m_pInstance)

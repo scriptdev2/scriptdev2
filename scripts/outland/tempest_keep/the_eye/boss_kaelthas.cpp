@@ -275,7 +275,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -837,7 +837,7 @@ struct MANGOS_DLL_DECL boss_thaladred_the_darkenerAI : public advisor_base_ai
         m_creature->TauntApply(pWho);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         DoScriptText(SAY_THALADRED_DEATH, m_creature);
     }
@@ -914,7 +914,7 @@ struct MANGOS_DLL_DECL boss_lord_sanguinarAI : public advisor_base_ai
         DoScriptText(SAY_SANGUINAR_AGGRO, m_creature);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         DoScriptText(SAY_SANGUINAR_DEATH, m_creature);
     }
@@ -978,7 +978,7 @@ struct MANGOS_DLL_DECL boss_grand_astromancer_capernianAI : public advisor_base_
         DoScriptText(SAY_CAPERNIAN_AGGRO, m_creature);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         DoScriptText(SAY_CAPERNIAN_DEATH, m_creature);
     }
@@ -1053,7 +1053,7 @@ struct MANGOS_DLL_DECL boss_master_engineer_telonicusAI : public advisor_base_ai
         DoScriptText(SAY_TELONICUS_AGGRO, m_creature);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         DoScriptText(SAY_TELONICUS_DEATH, m_creature);
     }

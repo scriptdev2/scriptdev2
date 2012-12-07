@@ -66,7 +66,7 @@ struct MANGOS_DLL_DECL npc_escortAI : public ScriptedAI
         // void AddWaypoint(uint32 id, float x, float y, float z, uint32 WaitTimeMs = 0);
 
         virtual void WaypointReached(uint32 uiPointId) = 0;
-        virtual void WaypointStart(uint32 uiPointId) {}
+        virtual void WaypointStart(uint32 /*uiPointId*/) {}
 
         void Start(bool bRun = false, const Player* pPlayer = NULL, const Quest* pQuest = NULL, bool bInstantRespawn = false, bool bCanLoopPath = false);
 

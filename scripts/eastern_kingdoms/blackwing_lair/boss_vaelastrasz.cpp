@@ -146,7 +146,7 @@ struct MANGOS_DLL_DECL boss_vaelastraszAI : public ScriptedAI
         DoCastSpellIfCan(m_creature, SPELL_ESSENCE_OF_THE_RED);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_VAELASTRASZ, DONE);

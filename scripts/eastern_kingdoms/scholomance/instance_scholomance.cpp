@@ -200,9 +200,9 @@ void instance_scholomance::HandlePortalEvent(uint32 uiEventId, uint32 uiData)
     // Toggle door and event state in case of state-switch
     else
     {
-        if (uiData == IN_PROGRESS && !find->second.m_bIsActive ||
-                uiData == FAIL && find->second.m_bIsActive ||
-                uiData == DONE && find->second.m_bIsActive)
+        if ((uiData == IN_PROGRESS && !find->second.m_bIsActive) ||
+                (uiData == FAIL && find->second.m_bIsActive) ||
+                (uiData == DONE && find->second.m_bIsActive))
         {
             find->second.m_bIsActive = !find->second.m_bIsActive;
             DoUseDoorOrButton(find->second.m_doorGuid);

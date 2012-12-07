@@ -411,7 +411,7 @@ struct MANGOS_DLL_DECL boss_illidan_stormrageAI : public ScriptedAI, private Dia
             m_pInstance->SetData(TYPE_ILLIDAN, FAIL);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 
@@ -1529,9 +1529,8 @@ struct MANGOS_DLL_DECL npc_flame_of_azzinothAI : public ScriptedAI
         {
             std::vector<Unit*> suitableTargets;
             ThreatList const& threatList = m_creature->getThreatManager().getThreatList();
-            ThreatList::const_iterator itr = threatList.begin();
 
-            for (itr; itr != threatList.end(); ++itr)
+            for (ThreatList::const_iterator itr = threatList.begin(); itr != threatList.end(); ++itr)
             {
                 if (Unit* pTarget = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid()))
                 {
@@ -1580,7 +1579,7 @@ struct MANGOS_DLL_DECL npc_shadow_demonAI : public ScriptedAI
 
     void MoveInLineOfSight(Unit* pWho) override { }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         if (Player* pPlayer = m_creature->GetMap()->GetPlayer(m_targetGuid))
             pPlayer->RemoveAurasDueToSpell(SPELL_PARALYZE);

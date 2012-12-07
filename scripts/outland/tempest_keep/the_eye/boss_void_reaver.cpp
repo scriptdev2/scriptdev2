@@ -78,7 +78,7 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -129,9 +129,8 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
             // Search only for players which are not within 18 yards of the boss
             std::vector<Unit*> suitableTargets;
             ThreatList const& threatList = m_creature->getThreatManager().getThreatList();
-            ThreatList::const_iterator itr = threatList.begin();
 
-            for (itr; itr != threatList.end(); ++itr)
+            for (ThreatList::const_iterator itr = threatList.begin(); itr != threatList.end(); ++itr)
             {
                 if (Unit* pTarget = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid()))
                 {

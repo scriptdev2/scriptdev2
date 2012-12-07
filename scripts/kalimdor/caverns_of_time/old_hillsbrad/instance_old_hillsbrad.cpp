@@ -135,7 +135,7 @@ void instance_old_hillsbrad::HandleThrallRelocation()
             pThrall->Respawn();
 
         // epoch failed, reloc to inn
-        if (GetData(TYPE_ESCORT_INN == DONE))
+        if (GetData(TYPE_ESCORT_INN) == DONE)
             pThrall->GetMap()->CreatureRelocation(pThrall, 2660.57f, 659.173f, 61.9370f, 5.76f);
         // barn to inn failed, reloc to barn
         else if (GetData(TYPE_ESCORT_BARN) == DONE)

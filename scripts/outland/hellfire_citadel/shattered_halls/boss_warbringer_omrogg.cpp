@@ -225,7 +225,7 @@ struct MANGOS_DLL_DECL boss_warbringer_omroggAI : public ScriptedAI
             m_rightHeadGuid = pSummoned->GetObjectGuid();
     }
 
-    void KilledUnit(Unit* pVictim) override
+    void KilledUnit(Unit* /*pVictim*/) override
     {
         Creature* pLeftHead  = m_creature->GetMap()->GetCreature(m_leftHeadGuid);
         Creature* pRightHead = m_creature->GetMap()->GetCreature(m_rightHeadGuid);
@@ -251,7 +251,7 @@ struct MANGOS_DLL_DECL boss_warbringer_omroggAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         Creature* pLeftHead  = m_creature->GetMap()->GetCreature(m_leftHeadGuid);
         Creature* pRightHead = m_creature->GetMap()->GetCreature(m_rightHeadGuid);

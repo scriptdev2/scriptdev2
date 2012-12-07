@@ -86,7 +86,7 @@ struct MANGOS_DLL_DECL boss_anzuAI : public ScriptedAI
             m_pInstance->SetData(TYPE_ANZU, IN_PROGRESS);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         DespawnBirdHelpers();
 

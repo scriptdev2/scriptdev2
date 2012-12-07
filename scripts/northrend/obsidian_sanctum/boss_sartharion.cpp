@@ -235,7 +235,7 @@ struct MANGOS_DLL_DECL boss_sartharionAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         DoScriptText(SAY_SARTHARION_DEATH, m_creature);
 
@@ -243,7 +243,7 @@ struct MANGOS_DLL_DECL boss_sartharionAI : public ScriptedAI
             m_pInstance->SetData(TYPE_SARTHARION_EVENT, DONE);
     }
 
-    void KilledUnit(Unit* pVictim) override
+    void KilledUnit(Unit* /*pVictim*/) override
     {
         switch (urand(0, 2))
         {
@@ -655,7 +655,7 @@ struct MANGOS_DLL_DECL dummy_dragonAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         int32 iTextId = 0;
         uint32 uiSpellId = 0;
@@ -738,7 +738,7 @@ struct MANGOS_DLL_DECL mob_tenebronAI : public dummy_dragonAI
         DoCastSpellIfCan(m_creature, SPELL_POWER_OF_TENEBRON);
     }
 
-    void KilledUnit(Unit* pVictim) override
+    void KilledUnit(Unit* /*pVictim*/) override
     {
         DoScriptText(urand(0, 1) ? SAY_TENEBRON_SLAY_1 : SAY_TENEBRON_SLAY_2, m_creature);
     }
@@ -813,7 +813,7 @@ struct MANGOS_DLL_DECL mob_shadronAI : public dummy_dragonAI
         DoCastSpellIfCan(m_creature, SPELL_POWER_OF_SHADRON);
     }
 
-    void KilledUnit(Unit* pVictim) override
+    void KilledUnit(Unit* /*pVictim*/) override
     {
         DoScriptText(urand(0, 1) ? SAY_SHADRON_SLAY_1 : SAY_SHADRON_SLAY_2, m_creature);
     }
@@ -882,7 +882,7 @@ struct MANGOS_DLL_DECL mob_vesperonAI : public dummy_dragonAI
         DoCastSpellIfCan(m_creature, SPELL_POWER_OF_VESPERON);
     }
 
-    void KilledUnit(Unit* pVictim) override
+    void KilledUnit(Unit* /*pVictim*/) override
     {
         DoScriptText(urand(0, 1) ? SAY_VESPERON_SLAY_1 : SAY_VESPERON_SLAY_2, m_creature);
     }
@@ -1010,7 +1010,7 @@ struct MANGOS_DLL_DECL mob_acolyte_of_vesperonAI : public ScriptedAI
         DoCastSpellIfCan(m_creature, SPELL_TWILIGHT_TORMENT_VESP_ACO);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         // remove twilight torment on Vesperon
         if (m_pInstance)

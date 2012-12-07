@@ -261,7 +261,7 @@ struct MANGOS_DLL_DECL boss_kelesethAI : public ScriptedAI
             pSummoned->ApplySpellImmune(0, IMMUNITY_DAMAGE, SPELL_SCHOOL_MASK_FROST, true);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -277,7 +277,7 @@ struct MANGOS_DLL_DECL boss_kelesethAI : public ScriptedAI
             m_pInstance->SetData(TYPE_KELESETH, FAIL);
     }
 
-    void KilledUnit(Unit* pVictim) override
+    void KilledUnit(Unit* /*pVictim*/) override
     {
         DoScriptText(SAY_KILL, m_creature);
     }

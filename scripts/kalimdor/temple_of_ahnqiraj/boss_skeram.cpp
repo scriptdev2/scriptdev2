@@ -81,7 +81,7 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
             m_creature->SetVisibility(VISIBILITY_ON);
     }
 
-    void KilledUnit(Unit* pVictim) override
+    void KilledUnit(Unit* /*pVictim*/) override
     {
         switch (urand(0, 2))
         {
@@ -91,7 +91,7 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         if (!m_bIsImage)
         {

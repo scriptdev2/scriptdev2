@@ -42,10 +42,10 @@ static const DialogueEntry aFelmystOutroDialogue[] =
 };
 
 instance_sunwell_plateau::instance_sunwell_plateau(Map* pMap) : ScriptedInstance(pMap), DialogueHelper(aFelmystOutroDialogue),
-    m_uiMuruBerserkTimer(0),
     m_uiDeceiversKilled(0),
-    m_uiKalecRespawnTimer(0),
     m_uiSpectralRealmTimer(5000),
+    m_uiKalecRespawnTimer(0),
+    m_uiMuruBerserkTimer(0),
     m_uiKiljaedenYellTimer(90000)
 {
     Initialize();

@@ -66,7 +66,7 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
         DoScriptText(SAY_AGGRO, m_creature);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_LASHLAYER, DONE);

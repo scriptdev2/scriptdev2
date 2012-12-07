@@ -29,11 +29,11 @@ instance_dark_portal::instance_dark_portal(Map* pMap) : ScriptedInstance(pMap),
     m_uiWorldStateRiftCount(0),
     m_uiWorldStateShieldCount(100),
 
+    m_bHasIntroYelled(false),
     m_uiMedivhYellCount(1),
-    m_uiNextPortalTimer(0),
-    m_uiCurrentRiftId(0),
 
-    m_bHasIntroYelled(false)
+    m_uiNextPortalTimer(0),
+    m_uiCurrentRiftId(0)
 {
     Initialize();
 }

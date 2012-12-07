@@ -39,8 +39,8 @@ EndScriptData */
 */
 
 instance_karazhan::instance_karazhan(Map* pMap) : ScriptedInstance(pMap),
-    m_uiOzDeathCount(0),
-    m_uiOperaEvent(0)
+    m_uiOperaEvent(0),
+    m_uiOzDeathCount(0)
 {
     Initialize();
 }

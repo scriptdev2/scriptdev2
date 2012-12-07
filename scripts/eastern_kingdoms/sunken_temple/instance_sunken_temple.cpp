@@ -25,13 +25,13 @@ EndScriptData */
 #include "sunken_temple.h"
 
 instance_sunken_temple::instance_sunken_temple(Map* pMap) : ScriptedInstance(pMap),
+    m_uiProtectorsRemaining(0),
     m_uiStatueCounter(0),
+    m_uiFlameCounter(0),
     m_uiAvatarSummonTimer(0),
     m_uiSupressorTimer(0),
-    m_uiFlameCounter(0),
-    m_uiProtectorsRemaining(0),
-    m_bCanSummonBloodkeeper(false),
-    m_bIsFirstHakkarWave(false)
+    m_bIsFirstHakkarWave(false),
+    m_bCanSummonBloodkeeper(false)
 {
     Initialize();
 }

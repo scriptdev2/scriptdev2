@@ -163,12 +163,12 @@ struct MANGOS_DLL_DECL boss_novosAI : public Scripted_NoMovementAI
             m_pInstance->SetData(TYPE_NOVOS, IN_PROGRESS);
     }
 
-    void KilledUnit(Unit* pVictim) override
+    void KilledUnit(Unit* /*pVictim*/) override
     {
         DoScriptText(SAY_KILL, m_creature);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 

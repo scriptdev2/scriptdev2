@@ -132,12 +132,12 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
         m_creature->RemoveAurasDueToSpell(SPELL_SHADOW_CAGE_DUMMY);
     }
 
-    void KilledUnit(Unit* pVictim) override
+    void KilledUnit(Unit* /*pVictim*/) override
     {
         DoScriptText(SAY_PLAYER_KILLED, m_creature);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_MAGTHERIDON_EVENT, DONE);
@@ -338,7 +338,7 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
     // Don't attack on LoS check
     void MoveInLineOfSight(Unit* pWho) override { }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         DoCastSpellIfCan(m_creature, SPELL_SOUL_TRANSFER, CAST_TRIGGERED);
     }

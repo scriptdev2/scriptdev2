@@ -139,7 +139,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public Scripted_NoMovementAI
         m_creature->HandleEmote(EMOTE_STATE_NONE);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_RELIQUIARY, DONE);
@@ -405,7 +405,7 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public essence_base_AI
         m_uiSoulDrainTimer  = 20000;
     }
 
-    void KilledUnit(Unit* pVictim) override
+    void KilledUnit(Unit* /*pVictim*/) override
     {
         DoScriptText(urand(0, 1) ? SUFF_SAY_SLAY1 : SUFF_SAY_SLAY2, m_creature);
     }
@@ -465,7 +465,7 @@ struct MANGOS_DLL_DECL boss_essence_of_desireAI : public essence_base_AI
         DoCastSpellIfCan(m_creature, SPELL_AURA_OF_DESIRE);
     }
 
-    void KilledUnit(Unit* pVictim) override
+    void KilledUnit(Unit* /*pVictim*/) override
     {
         switch (urand(0, 2))
         {
@@ -543,12 +543,12 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
         DoCastSpellIfCan(m_creature, SPELL_AURA_OF_ANGER);
     }
 
-    void KilledUnit(Unit* pVictim) override
+    void KilledUnit(Unit* /*pVictim*/) override
     {
         DoScriptText(urand(0, 1) ? ANGER_SAY_SLAY1 : ANGER_SAY_SLAY2, m_creature);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         DoScriptText(ANGER_SAY_DEATH, m_creature);
     }
@@ -620,7 +620,7 @@ struct MANGOS_DLL_DECL npc_enslaved_soulAI : public ScriptedAI
         DoCastSpellIfCan(m_creature, SPELL_ENSLAVED_SOUL_PASSIVE);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         DoCastSpellIfCan(m_creature, SPELL_SOUL_RELEASE, CAST_TRIGGERED);
 

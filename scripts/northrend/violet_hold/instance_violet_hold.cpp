@@ -29,16 +29,16 @@ instance_violet_hold::instance_violet_hold(Map* pMap) : ScriptedInstance(pMap),
     m_uiWorldStateSealCount(100),
     m_uiWorldStatePortalCount(0),
 
-    m_bIsVoidDance(false),
-    m_bIsDefenseless(false),
-    m_bIsDehydratation(false),
+    m_uiPortalId(0),
+    m_uiPortalTimer(0),
+    m_uiMaxCountPortalLoc(0),
 
     m_uiSealYellCount(0),
     m_uiEventResetTimer(0),
 
-    m_uiPortalId(0),
-    m_uiPortalTimer(0),
-    m_uiMaxCountPortalLoc(0)
+    m_bIsVoidDance(false),
+    m_bIsDefenseless(false),
+    m_bIsDehydratation(false)
 {
     Initialize();
 }

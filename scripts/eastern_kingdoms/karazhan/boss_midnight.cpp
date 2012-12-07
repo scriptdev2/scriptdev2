@@ -80,7 +80,7 @@ struct MANGOS_DLL_DECL boss_midnightAI : public ScriptedAI
             m_pInstance->SetData(TYPE_ATTUMEN, IN_PROGRESS);
     }
 
-    void KilledUnit(Unit* pVictim) override
+    void KilledUnit(Unit* /*pVictim*/) override
     {
         if (m_uiPhase == 1 && m_pInstance)
         {
@@ -219,7 +219,7 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
         m_bHasSummonRider   = false;
     }
 
-    void KilledUnit(Unit* pVictim) override
+    void KilledUnit(Unit* /*pVictim*/) override
     {
         DoScriptText(urand(0, 1) ? SAY_KILL1 : SAY_KILL2, m_creature);
     }

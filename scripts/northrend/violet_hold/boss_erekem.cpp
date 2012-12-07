@@ -86,12 +86,12 @@ struct MANGOS_DLL_DECL boss_erekemAI : public ScriptedAI
         DoScriptText(SAY_AGGRO, m_creature);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         DoScriptText(SAY_DEATH, m_creature);
     }
 
-    void KilledUnit(Unit* pVictim) override
+    void KilledUnit(Unit* /*pVictim*/) override
     {
         switch (urand(0, 2))
         {
@@ -194,7 +194,7 @@ struct MANGOS_DLL_DECL npc_erekem_guardAI : public ScriptedAI
         m_uiStrikeTimer         = urand(5000, 7000);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         if (!m_pInstance)
             return;

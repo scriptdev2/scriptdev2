@@ -25,9 +25,9 @@ EndScriptData */
 #include "magtheridons_lair.h"
 
 instance_magtheridons_lair::instance_magtheridons_lair(Map* pMap) : ScriptedInstance(pMap),
+    m_uiRandYellTimer(90000),
     m_uiCageBreakTimer(0),
-    m_uiCageBreakStage(0),
-    m_uiRandYellTimer(90000)
+    m_uiCageBreakStage(0)
 {
     Initialize();
 }

@@ -63,7 +63,7 @@ struct MANGOS_DLL_DECL boss_garrAI : public ScriptedAI
             m_pInstance->SetData(TYPE_GARR, IN_PROGRESS);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_GARR, DONE);

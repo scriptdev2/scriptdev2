@@ -114,7 +114,7 @@ struct MANGOS_DLL_DECL boss_soccothratesAI : public ScriptedAI, private Dialogue
         ScriptedAI::MoveInLineOfSight(pWho);
     }
 
-    void KilledUnit(Unit* pVictim) override
+    void KilledUnit(Unit* /*pVictim*/) override
     {
         DoScriptText(SAY_KILL, m_creature);
     }

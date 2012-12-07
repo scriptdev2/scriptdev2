@@ -75,7 +75,7 @@ struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
             m_pInstance->SetData(TYPE_HYDROMANCER_THESPIA, FAIL);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         DoScriptText(SAY_DEAD, m_creature);
 
@@ -83,7 +83,7 @@ struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
             m_pInstance->SetData(TYPE_HYDROMANCER_THESPIA, DONE);
     }
 
-    void KilledUnit(Unit* pVictim) override
+    void KilledUnit(Unit* /*pVictim*/) override
     {
         DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
     }

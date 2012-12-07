@@ -114,7 +114,7 @@ struct MANGOS_DLL_DECL boss_festergutAI : public ScriptedAI
             m_pInstance->SetData(TYPE_FESTERGUT, IN_PROGRESS);
     }
 
-    void KilledUnit(Unit* pVictim) override
+    void KilledUnit(Unit* /*pVictim*/) override
     {
         DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
     }
@@ -127,7 +127,7 @@ struct MANGOS_DLL_DECL boss_festergutAI : public ScriptedAI
         DoCastSpellIfCan(m_creature, SPELL_REMOVE_INOCULENT, CAST_TRIGGERED);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_FESTERGUT, DONE);

@@ -83,7 +83,7 @@ struct MANGOS_DLL_DECL boss_dalliahAI : public ScriptedAI
             m_pInstance->SetData(TYPE_DALLIAH, IN_PROGRESS);
     }
 
-    void KilledUnit(Unit* pVictim) override
+    void KilledUnit(Unit* /*pVictim*/) override
     {
         DoScriptText(urand(0, 1) ? SAY_KILL_1 : SAY_KILL_2, m_creature);
     }

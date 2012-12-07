@@ -133,7 +133,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
         SetCombatMovement(true);
     }
 
-    void KilledUnit(Unit* pVictim) override
+    void KilledUnit(Unit* /*pVictim*/) override
     {
         DoScriptText(urand(0, 1) ? SAY_KILL1 : SAY_KILL2, m_creature);
     }

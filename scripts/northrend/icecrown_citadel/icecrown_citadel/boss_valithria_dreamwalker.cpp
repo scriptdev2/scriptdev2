@@ -129,7 +129,7 @@ struct MANGOS_DLL_DECL boss_valithria_dreamwalkerAI : public ScriptedAI
             DoScriptText(SAY_PLAYER_DIES, m_creature, pVictim);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         DoScriptText(SAY_0_HEALTH, m_creature);
 

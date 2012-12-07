@@ -62,7 +62,7 @@ struct MANGOS_DLL_DECL boss_kriAI : public ScriptedAI
         m_uiToxicVolleyTimer = urand(6000, 12000);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         // poison cloud on death
         DoCastSpellIfCan(m_creature, SPELL_SUMMON_CLOUD, CAST_TRIGGERED);
@@ -131,7 +131,7 @@ struct MANGOS_DLL_DECL boss_vemAI : public ScriptedAI
         m_uiKnockBackTimer  = urand(8000, 20000);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         // Enrage the other bugs
         DoCastSpellIfCan(m_creature, SPELL_VENGEANCE, CAST_TRIGGERED);

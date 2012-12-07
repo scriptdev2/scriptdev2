@@ -270,7 +270,7 @@ static const SummonLocation aMarauderSpawn[] =
     { -1306.730f, 2675.163f, 111.561f},
 };
 
-static const SummonLocation aWranglerSpawn[] = { -1393.194f, 2429.465f, 88.689f};
+static const SummonLocation wranglerSpawn = { -1393.194f, 2429.465f, 88.689f };
 
 struct MANGOS_DLL_DECL npc_melizza_brimbuzzleAI : public npc_escortAI, private DialogueHelper
 {
@@ -322,10 +322,10 @@ struct MANGOS_DLL_DECL npc_melizza_brimbuzzleAI : public npc_escortAI, private D
                 for (uint8 i = 0; i < MAX_WRANGLERS; ++i)
                 {
                     float fX, fY, fZ;
-                    m_creature->GetRandomPoint(aWranglerSpawn[0].m_fX, aWranglerSpawn[0].m_fY, aWranglerSpawn[0].m_fZ, 10.0f, fX, fY, fZ);
+                    m_creature->GetRandomPoint(wranglerSpawn.m_fX, wranglerSpawn.m_fY, wranglerSpawn.m_fZ, 10.0f, fX, fY, fZ);
                     m_creature->SummonCreature(NPC_MARAUDINE_BONEPAW, fX, fY, fZ, 0.0f, TEMPSUMMON_DEAD_DESPAWN, 0);
 
-                    m_creature->GetRandomPoint(aWranglerSpawn[0].m_fX, aWranglerSpawn[0].m_fY, aWranglerSpawn[0].m_fZ, 10.0f, fX, fY, fZ);
+                    m_creature->GetRandomPoint(wranglerSpawn.m_fX, wranglerSpawn.m_fY, wranglerSpawn.m_fZ, 10.0f, fX, fY, fZ);
                     m_creature->SummonCreature(NPC_MARAUDINE_WRANGLER, fX, fY, fZ, 0.0f, TEMPSUMMON_DEAD_DESPAWN, 0);
                 }
                 break;

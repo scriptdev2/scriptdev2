@@ -98,7 +98,7 @@ struct MANGOS_DLL_DECL boss_arlokkAI : public ScriptedAI
         m_creature->ForcedDespawn();
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         DoScriptText(SAY_DEATH, m_creature);
         // Restore visibility in case of killed by dots

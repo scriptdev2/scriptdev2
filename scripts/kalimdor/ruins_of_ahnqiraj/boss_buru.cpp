@@ -204,7 +204,7 @@ struct MANGOS_DLL_DECL npc_buru_eggAI : public Scripted_NoMovementAI
         }
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         // Explode and Summon hatchling
         DoCastSpellIfCan(m_creature, SPELL_EXPLODE, CAST_TRIGGERED);

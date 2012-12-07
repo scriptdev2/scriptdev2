@@ -196,7 +196,7 @@ struct MANGOS_DLL_DECL boss_sindragosaAI : public ScriptedAI
         m_creature->GetMotionMaster()->MovePoint(SINDRAGOSA_POINT_AIR_EAST, SindragosaPosition[8][0], SindragosaPosition[8][1], SindragosaPosition[8][2], false);
     }
 
-    void KilledUnit(Unit* pVictim) override
+    void KilledUnit(Unit* /*pVictim*/) override
     {
         DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
     }
@@ -222,7 +222,7 @@ struct MANGOS_DLL_DECL boss_sindragosaAI : public ScriptedAI
         // instance data set when sindragosa lands
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -533,7 +533,7 @@ struct MANGOS_DLL_DECL npc_rimefang_iccAI : public ScriptedAI
         ScriptedAI::AttackStart(pWho);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         if (!m_pInstance)
             return;
@@ -694,7 +694,7 @@ struct MANGOS_DLL_DECL npc_spinestalker_iccAI : public ScriptedAI
         m_creature->SetWalk(bIsFlying);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         if (!m_pInstance)
             return;

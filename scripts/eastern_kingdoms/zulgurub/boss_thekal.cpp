@@ -181,7 +181,7 @@ struct MANGOS_DLL_DECL boss_thekalAI : public boss_thekalBaseAI
         DoScriptText(SAY_AGGRO, m_creature);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 

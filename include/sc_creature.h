@@ -73,40 +73,40 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
         // void HealBy(Unit* pHealer, uint32 uiAmountHealed) override {}
 
         // Called at any Damage to any victim (before damage apply)
-        void DamageDeal(Unit* pDoneTo, uint32& uiDamage) override {}
+        void DamageDeal(Unit* /*pDoneTo*/, uint32& /*uiDamage*/) override {}
 
         // Called at any Damage from any attacker (before damage apply)
-        void DamageTaken(Unit* pDealer, uint32& uiDamage) override {}
+        void DamageTaken(Unit* /*pDealer*/, uint32& /*uiDamage*/) override {}
 
         // Called at creature death
-        void JustDied(Unit* pKiller) override {}
+        void JustDied(Unit* /*pKiller*/) override {}
 
         // Called when the corpse of this creature gets removed
-        void CorpseRemoved(uint32& uiRespawnDelay) override {}
+        void CorpseRemoved(uint32& /*uiRespawnDelay*/) override {}
 
         // Called when a summoned creature is killed
-        void SummonedCreatureJustDied(Creature* pSummoned) override {}
+        void SummonedCreatureJustDied(Creature* /*pSummoned*/) override {}
 
         // Called at creature killing another unit
-        void KilledUnit(Unit* pVictim) override {}
+        void KilledUnit(Unit* /*pVictim*/) override {}
 
         // Called when owner of m_creature (if m_creature is PROTECTOR_PET) kills a unit
-        void OwnerKilledUnit(Unit* pVictim) override {}
+        void OwnerKilledUnit(Unit* /*pVictim*/) override {}
 
         // Called when the creature successfully summons a creature
-        void JustSummoned(Creature* pSummoned) override {}
+        void JustSummoned(Creature* /*pSummoned*/) override {}
 
         // Called when the creature successfully summons a gameobject
-        void JustSummoned(GameObject* pGo) override {}
+        void JustSummoned(GameObject* /*pGo*/) override {}
 
         // Called when a summoned creature gets TemporarySummon::UnSummon ed
-        void SummonedCreatureDespawn(Creature* pSummoned) override {}
+        void SummonedCreatureDespawn(Creature* /*pSummoned*/) override {}
 
         // Called when hit by a spell
-        void SpellHit(Unit* pCaster, const SpellEntry* pSpell) override {}
+        void SpellHit(Unit* /*pCaster*/, const SpellEntry* /*pSpell*/) override {}
 
         // Called when spell hits creature's target
-        void SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell) override {}
+        void SpellHitTarget(Unit* /*pTarget*/, const SpellEntry* /*pSpell*/) override {}
 
         // Called when the creature is target of hostile action: swing, hostile spell landed, fear/etc)
         /// This will by default result in reattacking, if the creature has no victim
@@ -116,13 +116,13 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
         void JustRespawned() override;
 
         // Called at waypoint reached or point movement finished
-        void MovementInform(uint32 uiMovementType, uint32 uiData) override {}
+        void MovementInform(uint32 /*uiMovementType*/, uint32 /*uiData*/) override {}
 
         // Called if a temporary summoned of m_creature reach a move point
-        void SummonedMovementInform(Creature* pSummoned, uint32 uiMotionType, uint32 uiData) override {}
+        void SummonedMovementInform(Creature* /*pSummoned*/, uint32 /*uiMotionType*/, uint32 /*uiData*/) override {}
 
         // Called at text emote receive from player
-        void ReceiveEmote(Player* pPlayer, uint32 uiEmote) override {}
+        void ReceiveEmote(Player* /*pPlayer*/, uint32 /*uiEmote*/) override {}
 
         // Called at each attack of m_creature by any victim
         void AttackStart(Unit* pWho) override;
@@ -159,7 +159,7 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
          * This is a SD2 internal function
          * Called by default on creature EnterCombat with an enemy
          */
-        virtual void Aggro(Unit*) {}
+        virtual void Aggro(Unit* /*pWho*/) {}
 
         // *************
         // AI Helper Functions

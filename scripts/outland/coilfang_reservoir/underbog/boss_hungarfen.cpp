@@ -57,7 +57,7 @@ struct MANGOS_DLL_DECL boss_hungarfenAI : public ScriptedAI
         m_uiAcidGeyserTimer = 10000;
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         DoCastSpellIfCan(m_creature, SPELL_DESPAWN_MUSHROOMS, CAST_TRIGGERED);
     }

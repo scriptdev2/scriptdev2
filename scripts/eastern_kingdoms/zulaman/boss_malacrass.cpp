@@ -280,7 +280,7 @@ struct MANGOS_DLL_DECL boss_malacrassAI : public ScriptedAI
             for (uint8 i = 0; i < MAX_ACTIVE_ADDS; ++i)
             {
                 // If we already have the creature on the map, then don't summon it
-                if (Creature* pAdd = m_pInstance->GetSingleCreatureFromStorage(m_vAddsEntryList[i], true))
+                if (m_pInstance->GetSingleCreatureFromStorage(m_vAddsEntryList[i], true))
                     continue;
 
                 m_creature->SummonCreature(m_vAddsEntryList[i], m_aAddPositions[i][0], m_aAddPositions[i][1], m_aAddPositions[i][2], m_aAddPositions[i][3], TEMPSUMMON_CORPSE_DESPAWN, 0);
@@ -304,7 +304,7 @@ struct MANGOS_DLL_DECL boss_malacrassAI : public ScriptedAI
         DoScriptText(urand(0, 1) ? SAY_KILL1 : SAY_KILL2, m_creature);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 

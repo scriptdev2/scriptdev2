@@ -407,7 +407,7 @@ struct MANGOS_DLL_DECL npc_blood_orb_controlAI : public Scripted_NoMovementAI
             m_pInstance->SetData(TYPE_BLOOD_PRINCE_COUNCIL, IN_PROGRESS);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         if (m_pInstance)
         {
@@ -627,7 +627,7 @@ struct MANGOS_DLL_DECL boss_valanar_iccAI : public blood_prince_council_baseAI
             DoScriptText(urand(0, 1) ? SAY_VALANAR_SLAY_1 : SAY_VALANAR_SLAY_2, m_creature);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         DoScriptText(SAY_VALANAR_DEATH, m_creature);
     }
@@ -731,7 +731,7 @@ struct MANGOS_DLL_DECL boss_keleseth_iccAI : public blood_prince_council_baseAI
             DoScriptText(urand(0, 1) ? SAY_KELESETH_SLAY_1 : SAY_KELESETH_SLAY_2, m_creature);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         DoScriptText(SAY_KELESETH_DEATH, m_creature);
     }
@@ -808,7 +808,7 @@ struct MANGOS_DLL_DECL boss_taldaram_iccAI : public blood_prince_council_baseAI
             DoScriptText(urand(0, 1) ? SAY_TALDARAM_SLAY_1 : SAY_TALDARAM_SLAY_2, m_creature);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         DoScriptText(SAY_TALDARAM_DEATH, m_creature);
     }

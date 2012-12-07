@@ -110,7 +110,7 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
         return false;
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -124,7 +124,7 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
             m_pInstance->SetData(TYPE_SELIN, FAIL);
     }
 
-    void KilledUnit(Unit* pVictim) override
+    void KilledUnit(Unit* /*pVictim*/) override
     {
         DoScriptText(urand(0, 1) ? SAY_KILL_1 : SAY_KILL_2, m_creature);
     }
@@ -152,7 +152,7 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -265,7 +265,7 @@ struct MANGOS_DLL_DECL mob_fel_crystalAI : public ScriptedAI
         m_sWretchedGuids.clear();
     }
 
-    void AttackStart(Unit* pWho) override {}
+    void AttackStart(Unit* /*pWho*/) override {}
 
     void MoveInLineOfSight(Unit* pWho) override
     {
@@ -278,7 +278,7 @@ struct MANGOS_DLL_DECL mob_fel_crystalAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         if (ScriptedInstance* pInstance = (ScriptedInstance*)m_creature->GetInstanceData())
         {

@@ -81,8 +81,8 @@ static const DialogueEntry aStadiumDialogue[] =
 
 instance_blackrock_spire::instance_blackrock_spire(Map* pMap) : ScriptedInstance(pMap), DialogueHelper(aStadiumDialogue),
     m_uiStadiumEventTimer(0),
-    m_uiStadiumMobsAlive(0),
-    m_uiStadiumWaves(0)
+    m_uiStadiumWaves(0),
+    m_uiStadiumMobsAlive(0)
 {
     Initialize();
 }

@@ -155,7 +155,7 @@ struct MANGOS_DLL_DECL boss_netherspiteAI : public ScriptedAI
         DoCastSpellIfCan(m_creature, SPELL_NETHERBURN);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_NETHERSPITE, DONE);

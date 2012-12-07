@@ -90,7 +90,7 @@ struct MANGOS_DLL_DECL boss_ichoronAI : public ScriptedAI
         DoCastSpellIfCan(m_creature, SPELL_PROTECTIVE_BUBBLE);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         DoScriptText(SAY_DEATH, m_creature);
     }

@@ -233,7 +233,7 @@ struct MANGOS_DLL_DECL boss_malygosAI : public ScriptedAI, private DialogueHelpe
         ScriptedAI::MoveInLineOfSight(pWho);
     }
 
-    void KilledUnit(Unit* pVictim) override
+    void KilledUnit(Unit* /*pVictim*/) override
     {
         uint8 uiTextId = 0;
         switch (m_uiPhase)
@@ -259,7 +259,7 @@ struct MANGOS_DLL_DECL boss_malygosAI : public ScriptedAI, private DialogueHelpe
         }
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         DoScriptText(SAY_DEATH, m_creature);
         m_creature->SummonCreature(NPC_ALEXSTRASZA, aAlextraszaSpawnPos[0], aAlextraszaSpawnPos[1], aAlextraszaSpawnPos[2], aAlextraszaSpawnPos[3], TEMPSUMMON_TIMED_DESPAWN, 5 * MINUTE * IN_MILLISECONDS);
@@ -582,7 +582,7 @@ struct MANGOS_DLL_DECL npc_power_sparkAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         DoCastSpellIfCan(m_creature, SPELL_POWER_SPARK_PLAYERS, CAST_TRIGGERED);
     }

@@ -37,7 +37,7 @@ struct MANGOS_DLL_DECL guardAI : public ScriptedAI
 
         void Aggro(Unit* pWho) override;
 
-        void JustDied(Unit* pKiller) override;
+        void JustDied(Unit* /*pKiller*/) override;
 
         void UpdateAI(const uint32 uiDiff) override;
 

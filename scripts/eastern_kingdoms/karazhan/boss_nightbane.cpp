@@ -110,7 +110,7 @@ struct MANGOS_DLL_DECL boss_nightbaneAI : public npc_escortAI
         DoScriptText(SAY_AGGRO, m_creature);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_NIGHTBANE, DONE);

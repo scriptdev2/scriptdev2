@@ -87,8 +87,8 @@ static const DialogueEntry aArcatrazDialogue[] =
 };
 
 instance_arcatraz::instance_arcatraz(Map* pMap) : ScriptedInstance(pMap), DialogueHelper(aArcatrazDialogue),
-    m_uiEntranceEventTimer(0),
     m_uiResetDelayTimer(0),
+    m_uiEntranceEventTimer(0),
     m_uiKilledWardens(0)
 {
     Initialize();

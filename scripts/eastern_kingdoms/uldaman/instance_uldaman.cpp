@@ -26,8 +26,8 @@ EndScriptData
 #include "uldaman.h"
 
 instance_uldaman::instance_uldaman(Map* pMap) : ScriptedInstance(pMap),
-    m_uiStoneKeepersFallen(0),
-    m_uiKeeperCooldown(5000)
+    m_uiKeeperCooldown(5000),
+    m_uiStoneKeepersFallen(0)
 {
     Initialize();
 }

@@ -101,7 +101,7 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
             m_pInstance->SetData(TYPE_MOROES, IN_PROGRESS);
     }
 
-    void KilledUnit(Unit* pVictim) override
+    void KilledUnit(Unit* /*pVictim*/) override
     {
         switch (urand(0, 2))
         {
@@ -168,7 +168,7 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
             for (uint8 i = 0; i < MAX_ACTIVE_GUESTS; ++i)
             {
                 // If we already have the creature on the map, then don't summon it
-                if (Creature* pAdd = m_pInstance->GetSingleCreatureFromStorage(m_vGuestsEntryList[i], true))
+                if (m_pInstance->GetSingleCreatureFromStorage(m_vGuestsEntryList[i], true))
                     continue;
 
                 m_creature->SummonCreature(m_vGuestsEntryList[i], afLocations[i][0], afLocations[i][1], afLocations[i][2], afLocations[i][3], TEMPSUMMON_CORPSE_DESPAWN, 0);

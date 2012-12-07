@@ -100,7 +100,7 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
         m_uiSpeech = 0;
     }
 
-    void KilledUnit(Unit* pVictim) override
+    void KilledUnit(Unit* /*pVictim*/) override
     {
         if (urand(0, 4))
             return;
@@ -154,7 +154,7 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
         m_creature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
 
         // Prevent possible exploits with double summoning
-        if (Creature* pRagnaros = m_creature->GetMap()->GetCreature(m_ragnarosGuid))
+        if (m_creature->GetMap()->GetCreature(m_ragnarosGuid))
             return;
 
         DoScriptText(SAY_SUMMON_0, m_creature, pPlayer);

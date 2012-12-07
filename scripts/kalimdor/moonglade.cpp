@@ -514,7 +514,7 @@ struct MANGOS_DLL_DECL npc_keeper_remulosAI : public npc_escortAI, private Dialo
                 // Summon 3 shades per turn until the maximum summon turns are reached
                 float fX, fY, fZ;
                 // Randomize the summon point
-                uint8 uiSummonPoint = roll_chance_i(70) ? MAX_SHADOWS : urand(MAX_SHADOWS + 1, MAX_SHADOWS + 2);
+                uint8 uiSummonPoint = roll_chance_i(70) ? uint32(MAX_SHADOWS) : urand(MAX_SHADOWS + 1, MAX_SHADOWS + 2);
 
                 if (m_uiSummonCount < MAX_SUMMON_TURNS)
                 {

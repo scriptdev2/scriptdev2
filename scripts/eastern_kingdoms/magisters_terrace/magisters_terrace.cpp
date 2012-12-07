@@ -96,7 +96,7 @@ CreatureAI* GetAI_npc_kalecgos(Creature* pCreature)
     return new npc_kalecgosAI(pCreature);
 }
 
-bool ProcessEventId_event_go_scrying_orb(uint32 uiEventId, Object* pSource, Object* pTarget, bool bIsStart)
+bool ProcessEventId_event_go_scrying_orb(uint32 /*uiEventId*/, Object* pSource, Object* /*pTarget*/, bool bIsStart)
 {
     if (bIsStart && pSource->GetTypeId() == TYPEID_PLAYER)
     {

@@ -58,7 +58,7 @@ struct MANGOS_DLL_DECL boss_gehennasAI : public ScriptedAI
             m_pInstance->SetData(TYPE_GEHENNAS, IN_PROGRESS);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_GEHENNAS, DONE);

@@ -118,7 +118,7 @@ struct MANGOS_DLL_DECL boss_sjonnirAI : public ScriptedAI
             m_pInstance->SetData(TYPE_SJONNIR, IN_PROGRESS);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -146,7 +146,7 @@ struct MANGOS_DLL_DECL boss_sjonnirAI : public ScriptedAI
             pSummoned->AI()->AttackStart(m_creature);
     }
 
-    void KilledUnit(Unit* pVictim) override
+    void KilledUnit(Unit* /*pVictim*/) override
     {
         switch (urand(0, 2))
         {

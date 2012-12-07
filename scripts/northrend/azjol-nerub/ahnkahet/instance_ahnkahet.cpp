@@ -27,8 +27,8 @@ EndScriptData */
 instance_ahnkahet::instance_ahnkahet(Map* pMap) : ScriptedInstance(pMap),
     m_bRespectElders(false),
     m_bVolunteerWork(false),
-    m_uiInitiatesKilled(0),
-    m_uiDevicesActivated(0)
+    m_uiDevicesActivated(0),
+    m_uiInitiatesKilled(0)
 {
     Initialize();
 }

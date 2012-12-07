@@ -47,10 +47,10 @@ static const DialogueEntry aNaxxDialogue[] =
 instance_naxxramas::instance_naxxramas(Map* pMap) : ScriptedInstance(pMap),
     m_uiTauntTimer(0),
     m_uiHorseMenKilled(0),
-    m_dialogueHelper(aNaxxDialogue),
     m_fChamberCenterX(0.0f),
     m_fChamberCenterY(0.0f),
-    m_fChamberCenterZ(0.0f)
+    m_fChamberCenterZ(0.0f),
+    m_dialogueHelper(aNaxxDialogue)
 {
     Initialize();
 }

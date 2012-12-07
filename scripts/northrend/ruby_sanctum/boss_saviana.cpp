@@ -64,7 +64,7 @@ struct MANGOS_DLL_DECL boss_savianaAI : public ScriptedAI
             DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         DoPlaySoundToSet(m_creature, SOUND_DEATH);
 

@@ -417,7 +417,7 @@ struct MANGOS_DLL_DECL boss_cthunAI : public Scripted_NoMovementAI
             m_pInstance->SetData(TYPE_CTHUN, FAIL);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         m_creature->SetActiveObjectState(false);
 

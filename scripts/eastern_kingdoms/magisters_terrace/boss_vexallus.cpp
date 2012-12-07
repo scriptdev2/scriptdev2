@@ -83,7 +83,7 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
         m_bEnraged               = false;
     }
 
-    void KilledUnit(Unit* pVictim) override
+    void KilledUnit(Unit* /*pVictim*/) override
     {
         DoScriptText(SAY_KILL, m_creature);
     }
@@ -94,13 +94,13 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
             m_pInstance->SetData(TYPE_VEXALLUS, FAIL);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_VEXALLUS, DONE);
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
@@ -214,8 +214,8 @@ struct MANGOS_DLL_DECL mob_pure_energyAI : public ScriptedAI
         }
     }
 
-    void MoveInLineOfSight(Unit* pWho) override { }
-    void AttackStart(Unit* pWho) override { }
+    void MoveInLineOfSight(Unit* /*pWho*/) override {}
+    void AttackStart(Unit* /*pWho*/) override {}
 };
 
 CreatureAI* GetAI_mob_pure_energy(Creature* pCreature)

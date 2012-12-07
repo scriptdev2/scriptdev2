@@ -161,7 +161,7 @@ struct MANGOS_DLL_DECL npc_brann_hosAI : public npc_escortAI
         }
     }
 
-    void KilledUnit(Unit* pVictim) override                          // TODO - possible better as SummonedJustDied
+    void KilledUnit(Unit* /*pVictim*/) override                          // TODO - possible better as SummonedJustDied
     {
         switch (urand(0, 2))
         {
@@ -171,7 +171,7 @@ struct MANGOS_DLL_DECL npc_brann_hosAI : public npc_escortAI
         }
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 

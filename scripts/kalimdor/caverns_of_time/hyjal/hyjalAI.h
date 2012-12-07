@@ -80,7 +80,7 @@ struct MANGOS_DLL_DECL hyjalAI : public ScriptedAI
         void UpdateAI(const uint32 uiDiff) override;
 
         // Called on death, informs the raid that they have failed.
-        void JustDied(Unit* pKiller) override;
+        void JustDied(Unit* /*pKiller*/) override;
 
         // "Teleport" all friendly creatures away from the base.
         void Retreat();

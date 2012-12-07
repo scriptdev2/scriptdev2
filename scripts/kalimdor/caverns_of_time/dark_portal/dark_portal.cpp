@@ -74,7 +74,7 @@ struct MANGOS_DLL_DECL npc_medivh_black_morassAI : public ScriptedAI
         pSummoned->CastSpell(m_creature, SPELL_CORRUPT, false);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_MEDIVH, FAIL);
@@ -126,9 +126,9 @@ struct RiftWaveData
 
 static const RiftWaveData aPortalWaves[] =
 {
-    {NPC_ASSASSIN,    NPC_WHELP,        NPC_CHRONOMANCER, 0},
-    {NPC_EXECUTIONER, NPC_CHRONOMANCER, NPC_WHELP,        NPC_ASSASSIN},
-    {NPC_EXECUTIONER, NPC_VANQUISHER,   NPC_CHRONOMANCER, NPC_ASSASSIN}
+    {{NPC_ASSASSIN,    NPC_WHELP,        NPC_CHRONOMANCER, 0}},
+    {{NPC_EXECUTIONER, NPC_CHRONOMANCER, NPC_WHELP,        NPC_ASSASSIN}},
+    {{NPC_EXECUTIONER, NPC_VANQUISHER,   NPC_CHRONOMANCER, NPC_ASSASSIN}}
 };
 
 struct MANGOS_DLL_DECL npc_time_riftAI : public ScriptedAI

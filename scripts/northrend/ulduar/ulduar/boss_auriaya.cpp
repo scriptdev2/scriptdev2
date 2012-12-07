@@ -93,7 +93,7 @@ struct MANGOS_DLL_DECL boss_auriayaAI : public ScriptedAI
         m_uiDefenderTimer           = 1 * MINUTE * IN_MILLISECONDS;
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -109,7 +109,7 @@ struct MANGOS_DLL_DECL boss_auriayaAI : public ScriptedAI
         DoScriptText(SAY_AGGRO, m_creature);
     }
 
-    void KilledUnit(Unit* pVictim) override
+    void KilledUnit(Unit* /*pVictim*/) override
     {
         DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
     }
@@ -231,7 +231,7 @@ struct MANGOS_DLL_DECL boss_feral_defenderAI : public ScriptedAI
         DoCastSpellIfCan(m_creature, SPELL_FERAL_ESSENCE);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         // Set achiev criteria to true
         if (m_pInstance)

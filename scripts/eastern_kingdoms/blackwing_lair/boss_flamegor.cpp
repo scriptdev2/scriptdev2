@@ -61,7 +61,7 @@ struct MANGOS_DLL_DECL boss_flamegorAI : public ScriptedAI
             m_pInstance->SetData(TYPE_FLAMEGOR, IN_PROGRESS);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_FLAMEGOR, DONE);

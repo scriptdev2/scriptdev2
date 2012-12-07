@@ -86,7 +86,7 @@ struct MANGOS_DLL_DECL boss_viscidusAI : public ScriptedAI
             m_pInstance->SetData(TYPE_VISCIDUS, FAIL);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_VISCIDUS, DONE);

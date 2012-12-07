@@ -145,7 +145,7 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
             for (uint8 i = 0; i < MAX_DELRISSA_ADDS; ++i)
             {
                 // If we already have the creature on the map, then don't summon it
-                if (Creature* pAdd = m_pInstance->GetSingleCreatureFromStorage(m_vuiLackeyEnties[i], true))
+                if (m_pInstance->GetSingleCreatureFromStorage(m_vuiLackeyEnties[i], true))
                     continue;
 
                 m_creature->SummonCreature(m_vuiLackeyEnties[i], aLackeyLocations[i][0], aLackeyLocations[i][1], aLackeyLocations[i][2], aLackeyLocations[i][3], TEMPSUMMON_CORPSE_DESPAWN, 0);
@@ -166,7 +166,7 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
             m_uiPlayersKilled = 0;
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -319,7 +319,7 @@ struct MANGOS_DLL_DECL priestess_companion_commonAI : public ScriptedAI
     }
 
     // Return true to handle shared timers and MeleeAttack
-    virtual bool UpdateCompanionAI(const uint32 uiDiff) { return true; }
+    virtual bool UpdateCompanionAI(const uint32 /*uiDiff*/) { return true; }
 
     void UpdateAI(const uint32 uiDiff) override
     {
@@ -851,7 +851,7 @@ struct MANGOS_DLL_DECL npc_warlord_salarisAI : public priestess_companion_common
         priestess_companion_commonAI::Reset();
     }
 
-    void Aggro(Unit* pWho) override
+    void Aggro(Unit* /*pWho*/) override
     {
         DoCastSpellIfCan(m_creature, SPELL_BATTLE_SHOUT);
     }

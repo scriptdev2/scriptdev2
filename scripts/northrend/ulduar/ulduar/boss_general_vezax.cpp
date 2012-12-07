@@ -110,7 +110,7 @@ struct MANGOS_DLL_DECL boss_general_vezaxAI : public ScriptedAI
             m_pInstance->SetData(TYPE_VEZAX, FAIL);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_VEZAX, DONE);
@@ -118,7 +118,7 @@ struct MANGOS_DLL_DECL boss_general_vezaxAI : public ScriptedAI
         DoScriptText(SAY_DEATH, m_creature);
     }
 
-    void KilledUnit(Unit* pVictim) override
+    void KilledUnit(Unit* /*pVictim*/) override
     {
         DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
     }

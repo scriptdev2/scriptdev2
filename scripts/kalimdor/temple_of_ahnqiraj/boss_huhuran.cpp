@@ -74,7 +74,7 @@ struct MANGOS_DLL_DECL boss_huhuranAI : public ScriptedAI
             m_pInstance->SetData(TYPE_HUHURAN, FAIL);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_HUHURAN, DONE);

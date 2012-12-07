@@ -86,7 +86,7 @@ struct MANGOS_DLL_DECL boss_ormorokAI : public ScriptedAI
         DoScriptText(SAY_AGGRO, m_creature);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -94,7 +94,7 @@ struct MANGOS_DLL_DECL boss_ormorokAI : public ScriptedAI
             m_pInstance->SetData(TYPE_ORMOROK, DONE);
     }
 
-    void KilledUnit(Unit* pVictim) override
+    void KilledUnit(Unit* /*pVictim*/) override
     {
         if (urand(0, 1))
             DoScriptText(SAY_KILL, m_creature);

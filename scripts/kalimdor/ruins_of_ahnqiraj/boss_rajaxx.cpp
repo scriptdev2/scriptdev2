@@ -284,11 +284,8 @@ bool GossipSelect_npc_general_andorov(Player* pPlayer, Creature* pCreature, uint
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)
     {
-        if (instance_ruins_of_ahnqiraj* pInstance = (instance_ruins_of_ahnqiraj*)pCreature->GetInstanceData())
-        {
-            if (npc_general_andorovAI* pAndorovAI = dynamic_cast<npc_general_andorovAI*>(pCreature->AI()))
-                pAndorovAI->DoMoveToEventLocation();
-        }
+        if (npc_general_andorovAI* pAndorovAI = dynamic_cast<npc_general_andorovAI*>(pCreature->AI()))
+            pAndorovAI->DoMoveToEventLocation();
 
         pPlayer->CLOSE_GOSSIP_MENU();
     }

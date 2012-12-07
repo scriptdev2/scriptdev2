@@ -25,8 +25,8 @@ EndScriptData */
 #include "azjol-nerub.h"
 
 instance_azjol_nerub::instance_azjol_nerub(Map* pMap) : ScriptedInstance(pMap),
-    m_bWatchHimDie(true),
-    m_uiWatcherTimer(0)
+    m_uiWatcherTimer(0),
+    m_bWatchHimDie(true)
 {
     Initialize();
 }

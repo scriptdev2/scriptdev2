@@ -102,7 +102,7 @@ struct MANGOS_DLL_DECL boss_trollgoreAI : public ScriptedAI
             DoScriptText(SAY_KILL, m_creature);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 

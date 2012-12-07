@@ -84,12 +84,12 @@ struct MANGOS_DLL_DECL boss_the_makerAI : public ScriptedAI
             m_pInstance->SetData(TYPE_THE_MAKER_EVENT, FAIL);
     }
 
-    void KilledUnit(Unit* pVictim) override
+    void KilledUnit(Unit* /*pVictim*/) override
     {
         DoScriptText(urand(0, 1) ? SAY_KILL_1 : SAY_KILL_2, m_creature);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         DoScriptText(SAY_DIE, m_creature);
 

@@ -162,7 +162,7 @@ struct MANGOS_DLL_DECL boss_anubarak_trialAI : public ScriptedAI
             m_pInstance->SetData(TYPE_ANUBARAK, FAIL);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 

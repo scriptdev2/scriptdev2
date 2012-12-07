@@ -113,9 +113,9 @@ class DialogueHelper
 
     protected:
         /// Will be called when a dialogue step was done
-        virtual void JustDidDialogueStep(int32 iEntry) {}
+        virtual void JustDidDialogueStep(int32 /*iEntry*/) {}
         /// Will be called to get a speaker, MUST be implemented if not used in instances
-        virtual Creature* GetSpeakerByEntry(uint32 uiEntry) { return NULL; }
+        virtual Creature* GetSpeakerByEntry(uint32 /*uiEntry*/) { return NULL; }
 
     private:
         void DoNextDialogueStep();

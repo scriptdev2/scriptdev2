@@ -105,7 +105,7 @@ struct MANGOS_DLL_DECL boss_drakkari_elementalAI : public ScriptedAI
         m_creature->ForcedDespawn();
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         if (m_pInstance)
         {
@@ -189,7 +189,7 @@ struct MANGOS_DLL_DECL boss_drakkari_colossusAI : public ScriptedAI
             m_pInstance->SetData(TYPE_COLOSSUS, IN_PROGRESS);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_COLOSSUS, DONE);
@@ -378,7 +378,7 @@ struct MANGOS_DLL_DECL npc_living_mojoAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_MOJO_PUDDLE : SPELL_MOJO_PUDDLE_H, CAST_TRIGGERED);
     }

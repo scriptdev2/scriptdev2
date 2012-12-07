@@ -151,7 +151,7 @@ struct MANGOS_DLL_DECL boss_brundirAI : public ScriptedAI
         m_creature->SetLevitate(false);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         if (!m_pInstance)
             return;
@@ -180,7 +180,7 @@ struct MANGOS_DLL_DECL boss_brundirAI : public ScriptedAI
         DoCastSpellIfCan(m_creature, SPELL_BERSERK, CAST_TRIGGERED);
     }
 
-    void KilledUnit(Unit* pVictim) override
+    void KilledUnit(Unit* /*pVictim*/) override
     {
         DoScriptText(urand(0, 1) ? SAY_BRUNDIR_SLAY_1 : SAY_BRUNDIR_SLAY_2, m_creature);
     }
@@ -448,7 +448,7 @@ struct MANGOS_DLL_DECL boss_molgeimAI : public ScriptedAI
         m_uiRuneDeathTimer      = 30000;
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         if (!m_pInstance)
             return;
@@ -477,7 +477,7 @@ struct MANGOS_DLL_DECL boss_molgeimAI : public ScriptedAI
         DoCastSpellIfCan(m_creature, SPELL_BERSERK, CAST_TRIGGERED);
     }
 
-    void KilledUnit(Unit* pVictim) override
+    void KilledUnit(Unit* /*pVictim*/) override
     {
         DoScriptText(urand(0, 1) ? SAY_MOLGEIM_SLAY_1 : SAY_MOLGEIM_SLAY_2, m_creature);
     }
@@ -626,7 +626,7 @@ struct MANGOS_DLL_DECL boss_steelbreakerAI : public ScriptedAI
         m_uiPowerTimer          = 10000;
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         if (!m_pInstance)
             return;
@@ -655,7 +655,7 @@ struct MANGOS_DLL_DECL boss_steelbreakerAI : public ScriptedAI
         DoCastSpellIfCan(m_creature, m_bIsRegularMode ? SPELL_HIGH_VOLTAGE : SPELL_HIGH_VOLTAGE_H, CAST_TRIGGERED);
     }
 
-    void KilledUnit(Unit* pVictim) override
+    void KilledUnit(Unit* /*pVictim*/) override
     {
         DoScriptText(urand(0, 1) ? SAY_STEEL_SLAY_1 : SAY_STEEL_SLAY_2, m_creature);
     }

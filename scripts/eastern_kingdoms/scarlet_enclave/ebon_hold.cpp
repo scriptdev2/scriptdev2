@@ -1123,7 +1123,7 @@ struct MANGOS_DLL_DECL npc_eye_of_acherusAI : public ScriptedAI
 
     void Reset() override {}
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         m_creature->CastSpell(m_creature, 52694, true);     // HACK - Remove this when mangos supports proper spell casting
     }
@@ -1224,7 +1224,7 @@ struct MANGOS_DLL_DECL npc_scarlet_ghoulAI : public ScriptedPetAI
         }
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         DoCastSpellIfCan(m_creature, SPELL_GHOUL_UNSUMMON, CAST_TRIGGERED);
     }
@@ -1780,18 +1780,17 @@ struct MANGOS_DLL_DECL npc_highlord_darion_mograineAI : public npc_escortAI
                 // make army attack
                 for (GuidList::const_iterator itr = m_lAttackersGUIDs.begin(); itr != m_lAttackersGUIDs.end(); ++itr)
                 {
-                    if (Creature* pTemp = m_creature->GetMap()->GetCreature(*itr))
-                    {
-                        if (Creature* pChamp = m_pInstance->GetSingleCreatureFromStorage(aLightArmySpawnLoc[urand(0, MAX_LIGHT_CHAMPIONS - 1)].m_uiEntry))
-                            m_creature->AI()->AttackStart(pTemp);
-                    }
+                    Creature* pAttacker = m_creature->GetMap()->GetCreature(*itr);
+                    Creature* pChamp = m_pInstance->GetSingleCreatureFromStorage(aLightArmySpawnLoc[urand(0, MAX_LIGHT_CHAMPIONS - 1)].m_uiEntry);
+                    if (pAttacker && pChamp)
+                        pAttacker->AI()->AttackStart(pChamp);
                 }
 
                 // need to make sure that all defenders attack
                 for (GuidList::const_iterator itr = m_lDefendersGUIDs.begin(); itr != m_lDefendersGUIDs.end(); ++itr)
                 {
-                    if (Creature* pTemp = m_creature->GetMap()->GetCreature(*itr))
-                        pTemp->AI()->AttackStart(m_creature);
+                    if (Creature* pDefender = m_creature->GetMap()->GetCreature(*itr))
+                        pDefender->AI()->AttackStart(m_creature);
                 }
                 break;
             case 5:

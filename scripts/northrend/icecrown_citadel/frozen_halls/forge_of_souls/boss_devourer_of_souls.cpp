@@ -132,7 +132,7 @@ struct MANGOS_DLL_DECL boss_devourer_of_soulsAI : public ScriptedAI
             DoScriptText(aTexts[urand(1, 2)][m_uiFace], m_creature);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         DoScriptText(aTexts[3][m_uiFace], m_creature);
 

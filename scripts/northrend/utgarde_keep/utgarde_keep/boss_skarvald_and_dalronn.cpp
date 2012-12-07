@@ -138,7 +138,7 @@ struct MANGOS_DLL_DECL boss_s_and_d_dummyAI : public ScriptedAI
             pSummoned->AI()->AttackStart(pTarget ? pTarget : m_creature->getVictim());
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         if (Creature* pBuddy = GetBuddy())
         {
@@ -189,7 +189,7 @@ struct MANGOS_DLL_DECL boss_skarvaldAI : public boss_s_and_d_dummyAI
         m_uiYellDelayTimer = 5000;
     }
 
-    void KilledUnit(Unit* pVictim) override
+    void KilledUnit(Unit* /*pVictim*/) override
     {
         DoScriptText(SAY_SKA_KILL, m_creature);
     }
@@ -266,7 +266,7 @@ struct MANGOS_DLL_DECL boss_dalronnAI : public boss_s_and_d_dummyAI
         m_uiSkeletonTimer = urand(25000, 35000);
     }
 
-    void KilledUnit(Unit* pVictim) override
+    void KilledUnit(Unit* /*pVictim*/) override
     {
         DoScriptText(SAY_DAL_KILL, m_creature);
     }

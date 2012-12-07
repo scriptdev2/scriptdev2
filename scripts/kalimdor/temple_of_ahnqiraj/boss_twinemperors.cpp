@@ -111,7 +111,7 @@ struct MANGOS_DLL_DECL boss_twin_emperorsAI : public ScriptedAI
             m_pInstance->SetData(TYPE_TWINS, IN_PROGRESS);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         if (m_pInstance)
             m_pInstance->SetData(TYPE_TWINS, DONE);
@@ -217,7 +217,7 @@ struct MANGOS_DLL_DECL boss_veknilashAI : public boss_twin_emperorsAI
         }
     }
 
-    void KilledUnit(Unit* pVictim) override
+    void KilledUnit(Unit* /*pVictim*/) override
     {
         DoScriptText(SAY_VEKNILASH_SLAY, m_creature);
     }
@@ -327,7 +327,7 @@ struct MANGOS_DLL_DECL boss_veklorAI : public boss_twin_emperorsAI
         }
     }
 
-    void KilledUnit(Unit* pVictim) override
+    void KilledUnit(Unit* /*pVictim*/) override
     {
         DoScriptText(SAY_VEKLOR_SLAY, m_creature);
     }

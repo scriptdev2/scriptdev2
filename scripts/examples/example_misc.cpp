@@ -28,20 +28,20 @@ enum
     SAY_HI  = -1999925
 };
 
-bool AreaTrigger_at_example(Player* pPlayer, AreaTriggerEntry const* pAt)
+bool AreaTrigger_at_example(Player* pPlayer, AreaTriggerEntry const* /*pAt*/)
 {
     DoScriptText(SAY_HI, pPlayer);
     return true;
 }
 
 extern void LoadDatabase();
-bool ItemUse_example_item(Player* pPlayer, Item* pItem, SpellCastTargets const& scTargets)
+bool ItemUse_example_item(Player* /*pPlayer*/, Item* /*pItem*/, SpellCastTargets const& /*scTargets*/)
 {
     LoadDatabase();
     return true;
 }
 
-bool GOUse_example_go_teleporter(Player* pPlayer, GameObject* pGo)
+bool GOUse_example_go_teleporter(Player* pPlayer, GameObject* /*pGo*/)
 {
     pPlayer->TeleportTo(0, 1807.07f, 336.105f, 70.3975f, 0.0f);
     return false;

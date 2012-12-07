@@ -332,11 +332,11 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI, private Dialo
                 uint32 uiCreatureId = 0;
 
                 // 1 in 3 chance it will be a chromatic
-                uiCreatureId = urand(0, 2) ? m_uiDrakeTypeOne : NPC_CHROMATIC_DRAKANOID;
+                uiCreatureId = urand(0, 2) ? m_uiDrakeTypeOne : uint32(NPC_CHROMATIC_DRAKANOID);
                 m_creature->SummonCreature(uiCreatureId, aNefarianLocs[0].m_fX, aNefarianLocs[0].m_fY, aNefarianLocs[0].m_fZ, 5.000f, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 30000);
 
                 // 1 in 3 chance it will be a chromatic
-                uiCreatureId = urand(0, 2) ? m_uiDrakeTypeTwo : NPC_CHROMATIC_DRAKANOID;
+                uiCreatureId = urand(0, 2) ? m_uiDrakeTypeTwo : uint32(NPC_CHROMATIC_DRAKANOID);
                 m_creature->SummonCreature(uiCreatureId, aNefarianLocs[1].m_fX, aNefarianLocs[1].m_fY, aNefarianLocs[1].m_fZ, 5.000, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 30000);
 
                 // Begin phase 2 by spawning Nefarian

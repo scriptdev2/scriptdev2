@@ -185,7 +185,7 @@ struct MANGOS_DLL_DECL boss_deathbringer_saurfangAI : public ScriptedAI
             DoScriptText(urand(0, 1) ? SAY_SLAY_1 : SAY_SLAY_2, m_creature);
     }
 
-    void JustDied(Unit* pKiller) override
+    void JustDied(Unit* /*pKiller*/) override
     {
         DoScriptText(SAY_DEATH, m_creature);
         DoCastSpellIfCan(m_creature, SPELL_REMOVE_MARKS, CAST_TRIGGERED);
@@ -257,9 +257,8 @@ struct MANGOS_DLL_DECL boss_deathbringer_saurfangAI : public ScriptedAI
         // Search only for players which are not within 18 yards of the boss
         std::vector<Unit*> suitableTargets;
         ThreatList const& threatList = m_creature->getThreatManager().getThreatList();
-        ThreatList::const_iterator itr = threatList.begin();
 
-        for (itr; itr != threatList.end(); ++itr)
+        for (ThreatList::const_iterator itr = threatList.begin(); itr != threatList.end(); ++itr)
         {
             if (Unit* pTarget = m_creature->GetMap()->GetUnit((*itr)->getUnitGuid()))
             {

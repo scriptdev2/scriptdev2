@@ -136,7 +136,8 @@ void instance_blackrock_depths::SetData(uint32 uiType, uint32 uiData)
                     // Activate vault constructs
                     for (GuidSet::const_iterator itr = m_sVaultNpcGuids.begin(); itr != m_sVaultNpcGuids.end(); ++itr)
                     {
-                        if (pConstruct = instance->GetCreature(*itr))
+                        pConstruct = instance->GetCreature(*itr);
+                        if (pConstruct)
                             pConstruct->RemoveAurasDueToSpell(SPELL_STONED);
                     }
 
